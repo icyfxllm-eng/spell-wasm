@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">Spell</string>
+    <string name="title_activity_main">Spell</string>
+    <string name="package_name">net.spellgame.app</string>
+    <string name="custom_url_scheme">net.spellgame.app</string>
+</resources>

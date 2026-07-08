@@ -1,0 +1,7 @@
+tunnel: 37bfdf16-54b6-4f07-bc93-218382064786
+credentials-file: /etc/cloudflared/creds.json
+
+ingress:
+  - hostname: spellgame.net
+    service: http://localhost:8080
+  - service: http_status:404

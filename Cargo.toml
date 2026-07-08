@@ -1,0 +1,42 @@
+[workspace]
+
+[package]
+name = "spell_wasm"
+version = "0.1.0"
+edition = "2021"
+
+[lib]
+crate-type = ["cdylib"]
+
+[dependencies]
+wasm-bindgen = "0.2"
+wasm-bindgen-futures = "0.4"
+js-sys = "0.3"
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+regex = "1"
+unicode-normalization = "0.1"
+console_error_panic_hook = "0.1"
+
+[dependencies.web-sys]
+version = "0.3"
+features = [
+  "console",
+  "Window", "Document", "Element", "HtmlElement", "Node", "NodeList", "DomTokenList",
+  "HtmlInputElement", "HtmlSelectElement", "HtmlTextAreaElement", "HtmlButtonElement",
+  "HtmlCanvasElement", "CanvasRenderingContext2d", "HtmlMediaElement", "HtmlAudioElement",
+  "Event", "EventTarget", "MouseEvent", "PointerEvent", "KeyboardEvent", "InputEvent",
+  "Storage",
+  "Request", "RequestInit", "RequestMode", "Response", "Headers",
+  "SpeechSynthesis", "SpeechSynthesisUtterance", "SpeechSynthesisVoice", "SpeechSynthesisEvent",
+  "DomParser", "SupportedType",
+  "CssStyleDeclaration",
+  "DomRect",
+  "Performance",
+  "AudioContext", "AudioContextState", "GainNode", "AudioNode", "AudioParam", "MediaElementAudioSourceNode",
+  "AudioDestinationNode",
+]
+
+[profile.release]
+opt-level = "s"
+lto = true

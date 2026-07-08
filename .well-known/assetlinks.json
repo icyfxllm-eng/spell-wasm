@@ -1,0 +1,13 @@
+[
+  {
+    "relation": ["delegate_permission/common.handle_all_urls"],
+    "target": {
+      "namespace": "android_app",
+      "package_name": "net.spellgame.app",
+      "sha256_cert_fingerprints": [
+        "53:E4:9F:38:49:C5:B3:19:0D:DF:D5:D4:9B:F2:EB:E0:53:62:90:98:6E:F3:13:D3:5B:2F:F2:03:62:98:7E:4D",
+        "C0:63:0B:A0:24:81:A0:38:9D:D5:9C:08:86:70:1C:65:31:99:4C:46:AC:DD:12:C1:79:9A:1E:13:B2:2B:79:35"
+      ]
+    }
+  }
+]

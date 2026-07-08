@@ -1,0 +1,28 @@
+{
+  "name": "spell",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Spell — hear it, spell it. Capacitor native wrapper around the Rust/WASM PWA.",
+  "scripts": {
+    "build": "bash scripts/build-web.sh",
+    "sync": "npm run build && cap sync",
+    "android": "npm run sync && cap run android",
+    "release:android": "npm run sync && cd android && ./gradlew :app:bundleRelease",
+    "sync:ios": "npm run build && cap sync ios",
+    "version:set": "node scripts/bump-version.mjs"
+  },
+  "dependencies": {
+    "@capacitor-community/native-audio": "^8.0.0",
+    "@capacitor/android": "^8.4.1",
+    "@capacitor/cli": "^8.4.1",
+    "@capacitor/core": "^8.4.1",
+    "@capacitor/filesystem": "^8.1.2",
+    "@capacitor/haptics": "^8.0.2",
+    "@capacitor/ios": "^8.4.1",
+    "@capacitor/local-notifications": "^8.2.0",
+    "@capacitor/share": "^8.0.1"
+  },
+  "devDependencies": {
+    "@capacitor/assets": "^3.0.5"
+  }
+}

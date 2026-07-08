@@ -1,0 +1,38 @@
+services:
+  spell:
+    build: .
+    restart: unless-stopped
+    depends_on:
+      - backend
+    ports:
+      # spellgame.net goes through a Cloudflare Tunnel pointed at this port
+      # (see DEPLOY.md). For direct exposure instead, swap this for
+      # "80:80" / "443:443" and switch the Caddyfile back to its domain block.
+      - "8080:8080"
+    volumes:
+      - caddy_data:/data
+      - caddy_config:/config
+
+  backend:
+    build: ./backend
+    restart: unless-stopped
+    env_file:
+      - .env
+    volumes:
+      - audio_cache:/data/audio_cache
+
+  cloudflared:
+    image: cloudflare/cloudflared:latest
+    restart: unless-stopped
+    network_mode: host
+    depends_on:
+      - spell
+    volumes:
+      - ./cloudflared/config.yml:/etc/cloudflared/config.yml:ro
+      - ${CLOUDFLARE_CREDENTIALS_FILE}:/etc/cloudflared/creds.json:ro
+    command: tunnel --no-autoupdate --config /etc/cloudflared/config.yml run
+
+volumes:
+  caddy_data:
+  caddy_config:
+  audio_cache:

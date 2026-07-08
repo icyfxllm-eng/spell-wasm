@@ -1,0 +1,41 @@
+/target
+.env
+backend/audio_cache/
+backend/__pycache__/
+
+# Capacitor / web build
+node_modules/
+dist/
+
+# Signing material — NEVER commit (see DEPLOY.md / CLAUDE.md)
+keys/
+*.jks
+*.keystore
+*.p12
+*.mobileprovision
+keystore.properties
+android/app/google-services.json
+
+# Android Gradle caches
+android/.gradle/
+android/app/build/
+android/build/
+android/local.properties
+android/.idea/
+*.iml
+
+# iOS / fastlane build artifacts
+build/
+*.ipa
+*.dSYM.zip
+fastlane/report.xml
+fastlane/Preview.html
+fastlane/test_output/
+ios/App/Pods/
+ios/App/build/
+ios/DerivedData/
+ios/App/output/
+
+# OS / editor cruft
+.DS_Store
+*.log

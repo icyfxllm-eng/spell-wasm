@@ -1,0 +1,108 @@
+pub const TIER_ORDER: [&str; 4] = ["easy", "medium", "hard", "expert"];
+
+pub fn tier_time(tier: &str) -> u32 {
+    match tier {
+        "easy" => 12,
+        "medium" => 16,
+        "hard" => 22,
+        "expert" => 32,
+        _ => 16,
+    }
+}
+
+pub const LEVEL_OPTS: [(&str, &str); 5] = [
+    ("climb", "Climb \u{2192}"),
+    ("easy", "Easy"),
+    ("medium", "Medium"),
+    ("hard", "Hard"),
+    ("expert", "Expert"),
+];
+
+pub const MINE: &str = "__mine";
+pub const REVIEW: &str = "__review";
+/// The built-in English word source. Its audio comes from the backend's
+/// `/api/speak`; the word itself is still picked and known client-side.
+pub const EN: &str = "en";
+
+pub const CORRECT_DELAY_MS: i32 = 2200;
+
+/// Attempts allowed per word, across every mode (English, My Words, Misses).
+pub const MAX_TRIES: u32 = 3;
+
+pub const SR_MAXBOX: u32 = 5;
+// ms intervals per box, index = box number (box 0 unused)
+pub const SR_INT: [i64; 6] = [0, 0, 10 * 60 * 1000, 24 * 3600 * 1000, 3 * 24 * 3600 * 1000, 7 * 24 * 3600 * 1000];
+
+pub const PRAISE: [&str; 8] = [
+    "Clean.", "Locked in.", "On a roll.", "Nice ear.", "Spot on.", "Sharp.", "Chain grows.", "Perfect.",
+];
+
+/// Spoken letter-name -> letter, for parsing "spell it out loud" transcripts.
+pub fn letter_name(tok: &str) -> Option<char> {
+    let c = match tok {
+        "ay" => 'a',
+        "bee" => 'b',
+        "cee" | "see" | "sea" => 'c',
+        "dee" => 'd',
+        "ee" => 'e',
+        "eff" | "ef" => 'f',
+        "gee" => 'g',
+        "aitch" | "haitch" => 'h',
+        "eye" => 'i',
+        "jay" => 'j',
+        "kay" => 'k',
+        "el" | "ell" => 'l',
+        "em" => 'm',
+        "en" => 'n',
+        "oh" => 'o',
+        "pee" | "pea" => 'p',
+        "cue" | "queue" => 'q',
+        "ar" | "are" => 'r',
+        "ess" | "es" => 's',
+        "tee" | "tea" => 't',
+        "you" | "yew" => 'u',
+        "vee" => 'v',
+        "ex" => 'x',
+        "why" => 'y',
+        "zee" | "zed" => 'z',
+        "double-u" | "doubleu" => 'w',
+        _ => return None,
+    };
+    Some(c)
+}
+
+/// Maps a base language code to the dictionaryapi.dev language code it supports.
+pub fn def_lang(base: &str) -> Option<&'static str> {
+    match base {
+        "en" => Some("en"),
+        "es" => Some("es"),
+        "fr" => Some("fr"),
+        "de" => Some("de"),
+        "it" => Some("it"),
+        "pt" => Some("pt-BR"),
+        "ru" => Some("ru"),
+        "ja" => Some("ja"),
+        "ko" => Some("ko"),
+        "ar" => Some("ar"),
+        "tr" => Some("tr"),
+        "hi" => Some("hi"),
+        _ => None,
+    }
+}
+
+pub struct Achievement {
+    pub id: &'static str,
+    pub ic: &'static str,
+    pub nm: &'static str,
+    pub desc: &'static str,
+}
+
+pub const ACHIEVEMENTS: [Achievement; 7] = [
+    Achievement { id: "first", ic: "\u{1F3AF}", nm: "First Word", desc: "Spell your first word correctly." },
+    Achievement { id: "chain5", ic: "\u{1F525}", nm: "On a Roll", desc: "Reach a 5-word chain." },
+    Achievement { id: "chain10", ic: "\u{26A1}", nm: "Locked In", desc: "Reach a 10-word chain." },
+    Achievement { id: "chain25", ic: "\u{1F31F}", nm: "Unstoppable", desc: "Reach a 25-word chain." },
+    Achievement { id: "timed10", ic: "\u{23F1}", nm: "Beat the Clock", desc: "Reach a 10-chain in Timed mode." },
+    Achievement { id: "cleared", ic: "\u{2728}", nm: "Clean Slate", desc: "Clear all your missed words." },
+    Achievement { id: "importer", ic: "\u{1F4E5}", nm: "Own Words", desc: "Import your own word list." },
+];

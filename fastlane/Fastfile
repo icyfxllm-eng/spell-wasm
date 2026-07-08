@@ -1,0 +1,37 @@
+default_platform(:ios)
+
+# Assumes the web assets are already built and synced into the iOS project:
+#   npm run build && npx cap sync ios
+# (The GitHub Actions ios job / your release script does this before calling
+# these lanes.)
+platform :ios do
+  desc "Fetch signing certs & profiles (read-only)"
+  lane :certs do
+    match(type: "appstore", readonly: true)
+  end
+
+  desc "Build a signed App Store IPA and upload to TestFlight"
+  lane :beta do
+    match(type: "appstore", readonly: is_ci)
+    gym(
+      workspace: "ios/App/App.xcworkspace",
+      scheme: "App",
+      configuration: "Release",
+      export_method: "app-store",
+      output_directory: "build",
+      clean: true
+    )
+    pilot(
+      skip_waiting_for_build_processing: true,
+      changelog: "See release notes."
+    )
+  end
+
+  desc "Bump the iOS build number to the next TestFlight number"
+  lane :bump do
+    increment_build_number(
+      xcodeproj: "ios/App/App.xcodeproj",
+      build_number: latest_testflight_build_number(initial_build_number: 0) + 1
+    )
+  end
+end

@@ -1,0 +1,109 @@
+# Release pipeline for Spell.
+#
+# Trigger: push a version tag (created via `npm run version:set X.Y.Z` then
+# `git tag vX.Y.Z && git push --tags`). One tag -> signed Android AAB.
+#
+# Required repository secrets (Settings -> Secrets and variables -> Actions):
+#   ANDROID_KEYSTORE_BASE64   base64 of keys/spell-upload.jks  (`base64 -w0 keys/spell-upload.jks`)
+#   ANDROID_KEYSTORE_PASSWORD store password
+#   ANDROID_KEY_ALIAS         e.g. spell-upload
+#   ANDROID_KEY_PASSWORD      key password
+# (Optional, to auto-publish to Play internal track: PLAY_SERVICE_ACCOUNT_JSON)
+name: Release
+
+on:
+  push:
+    tags: ["v*"]
+
+jobs:
+  android:
+    name: Android AAB
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: npm
+
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "21"
+
+      - name: Rust wasm toolchain
+        run: |
+          rustup target add wasm32-unknown-unknown
+          cargo install wasm-bindgen-cli --version 0.2.126 --locked || true
+
+      - name: Cache cargo
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.cargo/registry
+            ~/.cargo/git
+            target
+          key: cargo-${{ runner.os }}-${{ hashFiles('Cargo.lock') }}
+
+      - run: npm ci
+
+      - name: Build web (wasm -> dist) + sync
+        run: |
+          npm run build
+          npx cap sync android
+
+      - name: Write signing config from secrets
+        env:
+          ANDROID_KEYSTORE_BASE64: ${{ secrets.ANDROID_KEYSTORE_BASE64 }}
+          ANDROID_KEYSTORE_PASSWORD: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
+          ANDROID_KEY_ALIAS: ${{ secrets.ANDROID_KEY_ALIAS }}
+          ANDROID_KEY_PASSWORD: ${{ secrets.ANDROID_KEY_PASSWORD }}
+        run: |
+          mkdir -p keys
+          echo "$ANDROID_KEYSTORE_BASE64" | base64 -d > keys/spell-upload.jks
+          cat > keystore.properties <<EOF
+          storeFile=../../keys/spell-upload.jks
+          storePassword=$ANDROID_KEYSTORE_PASSWORD
+          keyAlias=$ANDROID_KEY_ALIAS
+          keyPassword=$ANDROID_KEY_PASSWORD
+          EOF
+
+      - name: Build signed AAB
+        run: cd android && ./gradlew :app:bundleRelease
+
+      - name: Clean up secrets
+        if: always()
+        run: rm -f keys/spell-upload.jks keystore.properties
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: app-release-aab
+          path: android/app/build/outputs/bundle/release/app-release.aab
+          if-no-files-found: error
+
+      # Optional: publish to the Play internal testing track automatically.
+      # Requires a Play service account JSON in PLAY_SERVICE_ACCOUNT_JSON and
+      # the app already created in Play Console with one manual upload done.
+      # - uses: r0adkll/upload-google-play@v1
+      #   with:
+      #     serviceAccountJsonPlainText: ${{ secrets.PLAY_SERVICE_ACCOUNT_JSON }}
+      #     packageName: net.spellgame.app
+      #     releaseFiles: android/app/build/outputs/bundle/release/app-release.aab
+      #     track: internal
+
+  # iOS build runs on the MacStadium box registered as a self-hosted runner
+  # (Phase 4 Mode B). Left disabled until that runner + fastlane match are set
+  # up; enable by removing `if: false` and configuring the Apple secrets.
+  ios:
+    name: iOS TestFlight
+    if: false
+    runs-on: [self-hosted, macos]
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build web + sync
+        run: |
+          npm run build
+          npx cap sync ios
+      # - run: cd ios/App && pod install
+      # - run: bundle exec fastlane ios beta   # gym + pilot via fastlane match

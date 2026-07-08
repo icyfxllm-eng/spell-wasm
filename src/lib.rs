@@ -1,0 +1,713 @@
+mod achievements;
+mod api;
+mod audio_boost;
+mod board;
+mod consts;
+mod deck;
+mod dom;
+mod drawing;
+mod game;
+mod haptics;
+mod importer;
+mod mic;
+mod misses;
+mod model;
+mod native_audio;
+mod notifications;
+mod settings;
+mod share;
+mod speech_in;
+mod speech_out;
+mod stats;
+mod storage;
+mod words;
+
+use std::cell::RefCell;
+use std::rc::Rc;
+
+use wasm_bindgen::closure::Closure;
+use wasm_bindgen::prelude::*;
+use wasm_bindgen::JsCast;
+use wasm_bindgen_futures::spawn_local;
+
+use consts::{EN, MINE};
+use model::AppState;
+
+pub type App = Rc<RefCell<AppState>>;
+
+#[wasm_bindgen(start)]
+pub fn start() -> Result<(), JsValue> {
+    console_error_panic_hook::set_once();
+
+    let mut state = AppState::default();
+    settings::load_prefs(&mut state);
+    importer::load_custom(&mut state);
+    misses::load(&mut state);
+    achievements::load(&mut state);
+    stats::load(&mut state);
+
+    state.lang = match state.last_lang.clone() {
+        Some(l) if l == MINE && !state.custom.words.is_empty() => MINE.to_string(),
+        _ => EN.to_string(),
+    };
+    state.cur_lang = state.lang.clone();
+
+    let app: App = Rc::new(RefCell::new(state));
+
+    let glow = app.borrow().glow.clone();
+    settings::set_glow(&app, &glow);
+    let bg_color = app.borrow().bg_color.clone();
+    settings::set_bg_color(&app, &bg_color);
+    let orb_color = app.borrow().orb_color.clone();
+    settings::set_orb_color(&app, &orb_color);
+    settings::apply_settings(&app);
+    game::build_source_options(&app);
+    game::build_level_options(&app);
+    game::render_access(&app);
+    game::refresh_mode_buttons(&app);
+    mic::setup(&app);
+    game::render_letters(&app, false);
+    {
+        let app2 = app.clone();
+        speech_out::setup_voice_loading(move || game::update_voice_note(&app2));
+    }
+    stats::render(&app.borrow());
+    achievements::render(&app.borrow());
+    board::render(&app.borrow());
+
+    // Native build only: warm the on-device audio cache for the current
+    // English tier so the first turns are instant and work offline.
+    game::preload_pool(&app);
+
+    // Re-assert the daily-reminder schedule from saved prefs (native only).
+    settings::apply_reminder(&app.borrow());
+
+    // Reveal the Share button only where a share sheet actually exists
+    // (native app or mobile web); it stays hidden on desktop browsers.
+    if share::available() {
+        dom::remove_class("shareBtn", "btn-hide");
+    }
+
+    wire(&app);
+    Ok(())
+}
+
+fn wire(app: &App) {
+    wire_orb_and_answer(app);
+    wire_glow_and_settings(app);
+    wire_drawing(app);
+    wire_modes(app);
+    wire_source_level(app);
+    wire_import(app);
+    wire_stats_board_modal(app);
+}
+
+fn wire_orb_and_answer(app: &App) {
+    {
+        let a = app.clone();
+        dom::on_click("orbWrap", move || {
+            audio_boost::unlock();
+            let (answered, active) = {
+                let s = a.borrow();
+                (s.answered, game::has_active_word(&s))
+            };
+            if !active || answered {
+                game::next_word(&a);
+            } else {
+                game::speak_current(&a);
+            }
+        });
+    }
+    {
+        let a = app.clone();
+        dom::on::<web_sys::KeyboardEvent, _>("orbWrap", "keydown", move |e| {
+            let key = e.key();
+            if key == "Enter" || key == " " {
+                e.prevent_default();
+                let (answered, active) = {
+                    let s = a.borrow();
+                    (s.answered, game::has_active_word(&s))
+                };
+                if !active || answered {
+                    game::next_word(&a);
+                } else {
+                    game::speak_current(&a);
+                }
+            }
+        });
+    }
+    {
+        let a = app.clone();
+        dom::on_click("replayBtn", move || game::speak_current(&a));
+    }
+    {
+        let a = app.clone();
+        dom::on_click("slowBtn", move || game::replay_slow(&a));
+    }
+    {
+        let a = app.clone();
+        dom::on_click("shareBtn", move || {
+            let s = a.borrow();
+            share::share_result(s.streak, s.best);
+        });
+    }
+    {
+        let a = app.clone();
+        dom::on_click("checkBtn", move || {
+            // If the player drew their answer instead of typing it (and
+            // hasn't already run "Read my writing" to fill the box), read
+            // the drawing first so Check works directly on a drawn
+            // submission — not just on typed/spoken text.
+            if dom::input("guess").value().trim().is_empty() && drawing::has_strokes() {
+                let a2 = a.clone();
+                dom::set_disabled("checkBtn", true);
+                spawn_local(async move {
+                    dom::set_text("drawStatus", "Reading your writing\u{2026}");
+                    match drawing::read_writing().await {
+                        drawing::OcrOutcome::Confident(txt) => {
+                            dom::input("guess").set_value(&txt);
+                            game::render_letters(&a2, true);
+                            dom::set_text("drawStatus", &format!("Read \u{201c}{}\u{201d} \u{2014} checking\u{2026}", txt));
+                            dom::set_disabled("checkBtn", false);
+                            game::submit_guess(&a2);
+                        }
+                        drawing::OcrOutcome::Unsure(txt) => {
+                            // Not confident enough to score automatically —
+                            // a bad read would otherwise silently mark a
+                            // correctly-spelled word wrong. Fill the box for
+                            // the player to confirm or fix, then Check again.
+                            dom::input("guess").set_value(&txt);
+                            game::render_letters(&a2, true);
+                            dom::set_text("drawStatus", &format!("Not sure I read that right \u{2014} got \u{201c}{}\u{201d}. Fix it if needed, then press Check again.", txt));
+                            dom::input("guess").focus().ok();
+                            dom::set_disabled("checkBtn", false);
+                        }
+                        drawing::OcrOutcome::Empty => {
+                            dom::set_text("drawStatus", "Couldn't read that \u{2014} try clearer block letters, or type it.");
+                            dom::set_disabled("checkBtn", false);
+                        }
+                        drawing::OcrOutcome::Failed => {
+                            dom::set_text("drawStatus", "The handwriting reader couldn't load here \u{2014} type the letters to check.");
+                            dom::set_disabled("checkBtn", false);
+                        }
+                    }
+                });
+                return;
+            }
+            game::submit_guess(&a);
+        });
+    }
+    {
+        let a = app.clone();
+        dom::on::<web_sys::KeyboardEvent, _>("guess", "keydown", move |e| {
+            if e.key() == "Enter" {
+                game::submit_guess(&a);
+            }
+        });
+    }
+    {
+        let a = app.clone();
+        dom::on::<web_sys::Event, _>("guess", "input", move |_| game::render_letters(&a, false));
+    }
+    dom::on::<web_sys::Event, _>("guess", "focus", |_| dom::add_class("spellbox", "focus"));
+    dom::on::<web_sys::Event, _>("guess", "blur", |_| dom::remove_class("spellbox", "focus"));
+    {
+        let a = app.clone();
+        dom::on_click("hintBtn", move || game::show_hint(&a));
+    }
+    {
+        let a = app.clone();
+        dom::on_click("defBtn", move || game::show_definition_hint(&a));
+    }
+    {
+        let a = app.clone();
+        dom::on_click("sentenceBtn", move || game::show_sentence_hint(&a));
+    }
+    {
+        let a = app.clone();
+        dom::on_click("giveupBtn", move || game::give_up(&a));
+    }
+    {
+        let a = app.clone();
+        dom::on_click("micBtn", move || mic::toggle(&a));
+    }
+}
+
+fn wire_swatches(selector: &str, app: &App, setter: fn(&App, &str)) {
+    if let Ok(list) = dom::doc().query_selector_all(selector) {
+        for i in 0..list.length() {
+            if let Some(node) = list.get(i) {
+                if let Some(el) = node.dyn_ref::<web_sys::HtmlElement>() {
+                    let a = app.clone();
+                    let color = el.get_attribute("data-c").unwrap_or_default();
+                    let cb = Closure::<dyn FnMut()>::new(move || setter(&a, &color));
+                    el.add_event_listener_with_callback("click", cb.as_ref().unchecked_ref()).ok();
+                    cb.forget();
+                }
+            }
+        }
+    }
+}
+
+fn wire_glow_and_settings(app: &App) {
+    wire_swatches("#glowPick .swatch[data-c]", app, settings::set_glow);
+    wire_swatches("#bgPick .theme-swatch[data-c]", app, settings::set_bg_color);
+    wire_swatches("#orbPick .theme-swatch[data-c]", app, settings::set_orb_color);
+    {
+        let a = app.clone();
+        dom::on::<web_sys::Event, _>("glowColor", "input", move |_| {
+            let v = dom::input("glowColor").value();
+            settings::set_glow(&a, &v);
+        });
+    }
+    {
+        let a = app.clone();
+        dom::on::<web_sys::Event, _>("bgColorInput", "input", move |_| {
+            let v = dom::input("bgColorInput").value();
+            settings::set_bg_color(&a, &v);
+        });
+    }
+    {
+        let a = app.clone();
+        dom::on::<web_sys::Event, _>("orbColorInput", "input", move |_| {
+            let v = dom::input("orbColorInput").value();
+            settings::set_orb_color(&a, &v);
+        });
+    }
+
+    {
+        let a = app.clone();
+        dom::on_click("setBtn", move || {
+            settings::apply_settings(&a);
+            dom::add_class("setScrim", "show");
+        });
+    }
+    {
+        let a = app.clone();
+        dom::on::<web_sys::Event, _>("kidToggle", "change", move |_| {
+            let v = dom::input("kidToggle").checked();
+            a.borrow_mut().kid = v;
+            settings::save_prefs(&a.borrow());
+            settings::apply_settings(&a);
+            // Kid Mode suppresses the daily reminder — reschedule/cancel.
+            settings::apply_reminder(&a.borrow());
+        });
+    }
+    {
+        let a = app.clone();
+        dom::on::<web_sys::Event, _>("readToggle", "change", move |_| {
+            let v = dom::input("readToggle").checked();
+            a.borrow_mut().readable = v;
+            settings::save_prefs(&a.borrow());
+            settings::apply_settings(&a);
+        });
+    }
+    {
+        let a = app.clone();
+        dom::on::<web_sys::Event, _>("slowToggle", "change", move |_| {
+            let v = dom::input("slowToggle").checked();
+            a.borrow_mut().slow = v;
+            settings::save_prefs(&a.borrow());
+            settings::apply_settings(&a);
+        });
+    }
+    {
+        let a = app.clone();
+        dom::on::<web_sys::Event, _>("remindToggle", "change", move |_| {
+            a.borrow_mut().remind = dom::input("remindToggle").checked();
+            settings::save_prefs(&a.borrow());
+            settings::apply_reminder(&a.borrow());
+        });
+    }
+    {
+        let a = app.clone();
+        dom::on::<web_sys::Event, _>("remindTime", "change", move |_| {
+            let t = dom::input("remindTime").value();
+            if !t.is_empty() {
+                a.borrow_mut().remind_time = t;
+            }
+            settings::save_prefs(&a.borrow());
+            settings::apply_reminder(&a.borrow());
+        });
+    }
+    {
+        let a = app.clone();
+        dom::on::<web_sys::Event, _>("volumeSlider", "input", move |_| {
+            let v: f32 = dom::input("volumeSlider").value().parse().unwrap_or(1.0);
+            settings::set_volume(&a, v);
+        });
+    }
+    dom::on_click("setDone", || dom::remove_class("setScrim", "show"));
+    dom::on::<web_sys::Event, _>("setScrim", "click", |e| {
+        if dom::is_self_target(&e, "setScrim") {
+            dom::remove_class("setScrim", "show");
+        }
+    });
+}
+
+fn set_active_tool_button(id: &str) {
+    for b in ["toolPen", "toolEraser", "toolLine"] {
+        dom::toggle_class(b, "on", b == id);
+    }
+}
+
+fn wire_drawing(app: &App) {
+    dom::on_click("drawBtn", || {
+        let showing = !dom::el("drawpad").class_list().contains("show");
+        dom::toggle_class("drawpad", "show", showing);
+        dom::toggle_class("drawBtn", "on", showing);
+        if showing {
+            drawing::size_canvas();
+            dom::set_text("drawStatus", "Write the word, then tap \u{201c}Read my writing\u{201d}.");
+        }
+    });
+
+    dom::on::<web_sys::PointerEvent, _>("canvas", "pointerdown", |e| drawing::start_stroke(&e));
+    dom::on::<web_sys::PointerEvent, _>("canvas", "pointermove", |e| drawing::move_stroke(&e));
+    dom::on::<web_sys::PointerEvent, _>("canvas", "pointerup", |e| drawing::end_stroke(&e));
+    dom::on::<web_sys::PointerEvent, _>("canvas", "pointercancel", |e| drawing::end_stroke(&e));
+    dom::on::<web_sys::PointerEvent, _>("canvas", "pointerleave", |e| drawing::end_stroke(&e));
+
+    dom::on_click("undoStroke", || drawing::undo_stroke());
+    dom::on_click("clearCanvas", || {
+        drawing::clear_canvas();
+        dom::set_text("drawStatus", "");
+    });
+
+    dom::on_click("toolPen", || {
+        drawing::set_tool(drawing::Tool::Pen);
+        set_active_tool_button("toolPen");
+    });
+    dom::on_click("toolEraser", || {
+        drawing::set_tool(drawing::Tool::Eraser);
+        set_active_tool_button("toolEraser");
+    });
+    dom::on_click("toolLine", || {
+        drawing::set_tool(drawing::Tool::Line);
+        set_active_tool_button("toolLine");
+    });
+    dom::on::<web_sys::Event, _>("brushSize", "input", |_| {
+        let v: f64 = dom::input("brushSize").value().parse().unwrap_or(4.0);
+        drawing::set_brush(v);
+    });
+    dom::on_click("guideToggle", || {
+        let now_on = !dom::el("guideToggle").class_list().contains("on");
+        drawing::set_guide(now_on);
+        dom::toggle_class("guideToggle", "on", now_on);
+    });
+    if let Ok(list) = dom::doc().query_selector_all(".d-swatch[data-c]") {
+        for i in 0..list.length() {
+            if let Some(node) = list.get(i) {
+                if let Some(el) = node.dyn_ref::<web_sys::HtmlElement>() {
+                    let color = el.get_attribute("data-c").unwrap_or_default();
+                    let cb = Closure::<dyn FnMut()>::new(move || drawing::set_color(&color));
+                    el.add_event_listener_with_callback("click", cb.as_ref().unchecked_ref()).ok();
+                    cb.forget();
+                }
+            }
+        }
+    }
+    dom::on::<web_sys::Event, _>("drawColor", "input", |_| {
+        let v = dom::input("drawColor").value();
+        drawing::set_color(&v);
+    });
+
+    dom::on_window::<web_sys::Event, _>("resize", |_| {
+        if dom::el("drawpad").class_list().contains("show") {
+            // size_canvas() already calls redraw_all(), which replays the
+            // existing strokes at the new scale — no need to (and
+            // shouldn't) clear them first, or an orientation change would
+            // wipe out whatever the player had drawn.
+            drawing::size_canvas();
+        }
+    });
+
+    {
+        let a = app.clone();
+        dom::on_click("readWriting", move || {
+            let a2 = a.clone();
+            spawn_local(async move {
+                dom::set_disabled("readWriting", true);
+                let (answered, active) = {
+                    let s = a2.borrow();
+                    (s.answered, game::has_active_word(&s))
+                };
+                if !active || answered {
+                    dom::set_text("drawStatus", "Press the orb for a word, then write it.");
+                    dom::set_disabled("readWriting", false);
+                    return;
+                }
+                if !drawing::has_strokes() {
+                    dom::set_text("drawStatus", "Write a word on the pad first.");
+                    dom::set_disabled("readWriting", false);
+                    return;
+                }
+                dom::set_text("drawStatus", "Reading your writing\u{2026} (first use loads the reader)");
+                match drawing::read_writing().await {
+                    drawing::OcrOutcome::Confident(txt) => {
+                        dom::input("guess").set_value(&txt);
+                        game::render_letters(&a2, true);
+                        dom::input("guess").focus().ok();
+                        dom::set_text("drawStatus", &format!("Read \u{201c}{}\u{201d} \u{2014} confirm or fix, then Check.", txt));
+                    }
+                    drawing::OcrOutcome::Unsure(txt) => {
+                        dom::input("guess").set_value(&txt);
+                        game::render_letters(&a2, true);
+                        dom::input("guess").focus().ok();
+                        dom::set_text("drawStatus", &format!("Not sure I read that right \u{2014} got \u{201c}{}\u{201d}. Fix it if needed, then Check.", txt));
+                    }
+                    drawing::OcrOutcome::Empty => {
+                        dom::set_text("drawStatus", "Couldn't read that \u{2014} try clearer block letters, or type it.");
+                    }
+                    drawing::OcrOutcome::Failed => {
+                        dom::set_text("drawStatus", "The handwriting reader couldn't load here \u{2014} your writing is saved; type the letters to check.");
+                    }
+                }
+                dom::set_disabled("readWriting", false);
+            });
+        });
+    }
+}
+
+fn wire_modes(app: &App) {
+    {
+        let a = app.clone();
+        dom::on_click("missesBtn", move || {
+            if a.borrow().review {
+                game::exit_review(&a, Some("Back to normal play."));
+            } else {
+                game::enter_review(&a);
+            }
+        });
+    }
+    {
+        let a = app.clone();
+        dom::on::<web_sys::Event, _>("modeSel", "change", move |_| {
+            let on = dom::select("modeSel").value() == "on";
+            a.borrow_mut().timed = on;
+            dom::toggle_class("orbWrap", "timed", on);
+            let (active, answered, cur_tier) = {
+                let s = a.borrow();
+                (game::has_active_word(&s), s.answered, s.cur_tier.clone())
+            };
+            if on && active && !answered {
+                game::start_timer(&a, &cur_tier);
+            } else {
+                game::stop_timer(true);
+            }
+        });
+    }
+}
+
+fn wire_source_level(app: &App) {
+    {
+        let a = app.clone();
+        dom::on::<web_sys::Event, _>("langSel", "change", move |_| {
+            let v = dom::select("langSel").value();
+            {
+                let mut s = a.borrow_mut();
+                s.lang = v.clone();
+                s.cur_lang = v;
+            }
+            game::update_voice_note(&a);
+            settings::save_prefs(&a.borrow());
+            game::stop_timer(true);
+            game::clear_meaning();
+            {
+                let mut s = a.borrow_mut();
+                s.word = String::new();
+                s.answered = false;
+            }
+            dom::set_html("orbGlyph", "tap to<br/>hear a word");
+            dom::input("guess").set_value("");
+            game::render_letters(&a, false);
+            drawing::clear_canvas();
+            dom::set_text("feedback", "");
+            dom::set_text("hintLine", "");
+            game::build_level_options(&a);
+            game::render_access(&a);
+            stats::render(&a.borrow());
+            board::render(&a.borrow());
+        });
+    }
+    {
+        let a = app.clone();
+        dom::on::<web_sys::Event, _>("levelSel", "change", move |_| {
+            a.borrow_mut().level = dom::select("levelSel").value();
+            // Pull a fresh word at the newly-selected difficulty right away,
+            // instead of leaving the old (wrong-tier) word on screen until
+            // the current round ends on its own.
+            if a.borrow().review {
+                return;
+            }
+            game::stop_timer(true);
+            game::next_word(&a);
+        });
+    }
+}
+
+fn build_import_lang_options(app: &App) {
+    let s = app.borrow();
+    let opts: String = words::LANGUAGES
+        .iter()
+        .map(|(_, l)| format!("<option value=\"{}\">{}</option>", l.code, dom::escape_html(l.name)))
+        .collect();
+    dom::set_html("importLang", &opts);
+    let value = if !s.custom.speak_lang.is_empty() { s.custom.speak_lang.clone() } else { "en-US".to_string() };
+    dom::select("importLang").set_value(&value);
+}
+
+fn update_import_count() {
+    let n = importer::extract_words(&dom::textarea("importText").value()).len();
+    dom::set_text("importCount", &format!("{} word{}", n, if n == 1 { "" } else { "s" }));
+}
+
+fn wire_import(app: &App) {
+    {
+        let a = app.clone();
+        dom::on_click("importBtn", move || {
+            build_import_lang_options(&a);
+            let joined = a.borrow().custom.words.join(" ");
+            dom::textarea("importText").set_value(&joined);
+            update_import_count();
+            dom::set_text(
+                "importNote",
+                "Words stay on this device. Fetching a link can be blocked by the site \u{2014} if it fails, copy the text and paste it above.",
+            );
+            dom::add_class("importScrim", "show");
+            dom::textarea("importText").focus().ok();
+        });
+    }
+    dom::on::<web_sys::Event, _>("importText", "input", |_| update_import_count());
+
+    dom::on_click("fetchUrl", || {
+        let url = dom::input("importUrl").value().trim().to_string();
+        if url.is_empty() {
+            return;
+        }
+        dom::set_text("importNote", "Fetching\u{2026}");
+        spawn_local(async move {
+            match importer::fetch_words_from_url(&url).await {
+                Ok(words) => {
+                    let ta = dom::textarea("importText");
+                    let existing = ta.value();
+                    let joined = words.join(" ");
+                    ta.set_value(&if existing.is_empty() { joined.clone() } else { format!("{}\n{}", existing, joined) });
+                    update_import_count();
+                    if words.is_empty() {
+                        dom::set_text("importNote", "No words found at that link.");
+                    } else {
+                        dom::set_text("importNote", &format!("Added {} words from the link.", words.len()));
+                    }
+                }
+                Err(_) => {
+                    dom::set_text("importNote", "Couldn't fetch that link (the site may block it). Copy the text and paste it above instead.");
+                }
+            }
+        });
+    });
+
+    {
+        let a = app.clone();
+        dom::on_click("saveWords", move || {
+            let words = importer::extract_words(&dom::textarea("importText").value());
+            if words.is_empty() {
+                dom::set_text("importNote", "Add at least one word to save.");
+                return;
+            }
+            let speak_lang = dom::select("importLang").value();
+            let count = words.len();
+            importer::save_words(&mut a.borrow_mut(), words, speak_lang);
+            achievements::unlock(&mut a.borrow_mut(), "importer");
+            let was_review = a.borrow().review;
+            if was_review {
+                game::exit_review(&a, None);
+            }
+            {
+                let mut s = a.borrow_mut();
+                s.lang = MINE.to_string();
+                s.cur_lang = MINE.to_string();
+            }
+            game::update_voice_note(&a);
+            settings::save_prefs(&a.borrow());
+            game::build_source_options(&a);
+            game::build_level_options(&a);
+            game::render_access(&a);
+            stats::render(&a.borrow());
+            board::render(&a.borrow());
+            game::refresh_mode_buttons(&a);
+            {
+                let mut s = a.borrow_mut();
+                s.word = String::new();
+                s.answered = false;
+            }
+            dom::set_html("orbGlyph", "tap to<br/>hear a word");
+            dom::input("guess").set_value("");
+            game::render_letters(&a, false);
+            game::clear_meaning();
+            dom::remove_class("importScrim", "show");
+            dom::set_text("feedback", &format!("Saved {} of your words \u{2014} press the orb to start.", count));
+            dom::el("feedback").set_class_name("feedback good");
+        });
+    }
+
+    {
+        let a = app.clone();
+        dom::on_click("clearWords", move || {
+            importer::clear_words(&mut a.borrow_mut());
+            dom::textarea("importText").set_value("");
+            update_import_count();
+            if a.borrow().lang == MINE {
+                {
+                    let mut s = a.borrow_mut();
+                    s.lang = EN.to_string();
+                    s.cur_lang = EN.to_string();
+                }
+                game::update_voice_note(&a);
+                settings::save_prefs(&a.borrow());
+            }
+            game::build_source_options(&a);
+            game::build_level_options(&a);
+            game::render_access(&a);
+            stats::render(&a.borrow());
+            dom::set_text("importNote", "Your words were cleared.");
+        });
+    }
+    dom::on_click("cancelImport", || dom::remove_class("importScrim", "show"));
+    dom::on::<web_sys::Event, _>("importScrim", "click", |e| {
+        if dom::is_self_target(&e, "importScrim") {
+            dom::remove_class("importScrim", "show");
+        }
+    });
+}
+
+fn wire_stats_board_modal(app: &App) {
+    {
+        let a = app.clone();
+        dom::on_click("resetStats", move || stats::reset_current_lang(&mut a.borrow_mut()));
+    }
+    {
+        let a = app.clone();
+        dom::on_click("saveScore", move || game::commit_save(&a));
+    }
+    {
+        let a = app.clone();
+        dom::on_click("skipSave", move || game::close_save(&a));
+    }
+    {
+        let a = app.clone();
+        dom::on::<web_sys::KeyboardEvent, _>("nameInput", "keydown", move |e| {
+            if e.key() == "Enter" {
+                game::commit_save(&a);
+            }
+        });
+    }
+    {
+        let a = app.clone();
+        dom::on::<web_sys::Event, _>("scrim", "click", move |e| {
+            if dom::is_self_target(&e, "scrim") {
+                game::close_save(&a);
+            }
+        });
+    }
+}

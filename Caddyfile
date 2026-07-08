@@ -1,0 +1,55 @@
+# Direct-exposure mode (no tunnel): replace with your real domain and Caddy
+# gets HTTPS certs for it automatically. Not used for spellgame.net, which
+# goes through a Cloudflare Tunnel instead (see the :8080 block below).
+#spell.yourdomain.com {
+#	handle /api/* {
+#		reverse_proxy backend:8000
+#	}
+#	handle {
+#		root * /srv
+#		file_server
+#		header /pkg/*.wasm Content-Type application/wasm
+#	}
+#	encode gzip
+#}
+
+# spellgame.net — Cloudflare Tunnel terminates TLS at the edge and forwards
+# here in plaintext. /api/* goes to the backend container; everything else
+# is the static frontend. Same origin for both means the browser never
+# needs CORS.
+:8080 {
+	handle /api/* {
+		reverse_proxy backend:8000
+	}
+	# Android App Links verification file. Must be served as JSON over HTTPS
+	# at exactly this path for https://spellgame.net/app deep links to open
+	# the native app. (iOS Universal Links would add apple-app-site-association
+	# here too.)
+	handle /.well-known/* {
+		root * /srv
+		file_server
+		header /.well-known/assetlinks.json Content-Type application/json
+		# iOS Universal Links file has no extension — set JSON type explicitly.
+		header /.well-known/apple-app-site-association Content-Type application/json
+	}
+	# Deep-link landing: users with the app installed get it opened directly
+	# (App Links); everyone else (desktop, no app) falls back to the web game.
+	handle /app* {
+		root * /srv
+		rewrite * /index.html
+		file_server
+	}
+	handle {
+		root * /srv
+		file_server
+		header /pkg/*.wasm Content-Type application/wasm
+		# The service worker script itself must never be cached (by the
+		# browser or, worse, by Cloudflare's edge) — without this, Cloudflare
+		# applies its own default caching heuristic for .js files (observed:
+		# 4 hours) regardless of what the SW's own update-checking logic
+		# wants, silently delaying every future deploy from reaching anyone
+		# for up to that long.
+		header /sw.js Cache-Control "no-cache"
+	}
+	encode gzip
+}
