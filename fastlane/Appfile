@@ -1,6 +1,5 @@
 app_identifier("net.spellgame.app")
 apple_id("icyfxllm@gmail.com")   # Apple ID for the Developer account — change if different
 
-# Set once you're enrolled (Apple Developer → Membership → Team ID):
-# itc_team_id("XXXXXXX")     # App Store Connect team (usually auto-detected)
-# team_id("XXXXXXXXXX")      # Developer Portal Team ID
+team_id("WCH6H5NAWH")        # Developer Portal Team ID
+# itc_team_id("XXXXXXX")     # App Store Connect team — leave commented; auto-detected

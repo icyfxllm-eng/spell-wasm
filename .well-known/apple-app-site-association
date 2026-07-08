@@ -3,7 +3,7 @@
     "apps": [],
     "details": [
       {
-        "appID": "TEAMID.net.spellgame.app",
+        "appID": "WCH6H5NAWH.net.spellgame.app",
         "paths": ["/app", "/app/*", "/challenge/*"]
       }
     ]

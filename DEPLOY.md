@@ -167,10 +167,10 @@ the site, then confirm with:
 
 **iOS Universal Links** use the sibling file
 `.well-known/apple-app-site-association` (no extension, served as JSON — the
-[Caddyfile](Caddyfile) sets that). Before iOS ships, replace the `TEAMID`
-placeholder in its `appID` with your Apple Developer **Team ID**
-(Membership page), i.e. `TEAMID.net.spellgame.app`, and add the "Associated
-Domains" capability (`applinks:spellgame.net`) to the Xcode project on the Mac.
+[Caddyfile](Caddyfile) sets that). Its `appID` is set to the Apple Team ID
+`WCH6H5NAWH.net.spellgame.app`. Before iOS ships, add the "Associated Domains"
+capability (`applinks:spellgame.net`) to the Xcode project on the Mac, then
+deploy this file to prod so Universal Links verify.
 
 ## Android release build (Play / Amazon AAB)
 
@@ -217,8 +217,8 @@ npx capacitor-assets generate --ios   # icons + splash from assets/
 npx cap open ios         # Xcode: set Team, add Associated Domains (applinks:spellgame.net)
 ```
 
-Then replace `TEAMID` in `.well-known/apple-app-site-association` with your Apple
-Team ID and redeploy the site, so Universal Links verify.
+The AASA file `.well-known/apple-app-site-association` is already set to
+`WCH6H5NAWH.net.spellgame.app`; just redeploy the site so Universal Links verify.
 
 **TestFlight** — either Xcode (Product → Archive → Distribute → TestFlight) or
 fastlane (preferred, repeatable):

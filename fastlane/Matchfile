@@ -1,7 +1,7 @@
 # fastlane match stores encrypted signing certs + profiles in a SEPARATE
 # PRIVATE git repo — this solves "certs on a disposable remote Mac" cleanly.
 # Create an empty private repo (e.g. spell-certs) and point git_url at it.
-git_url("git@github.com:YOURORG/spell-certs.git")
+git_url("git@github.com:icyfxllm-eng/spell-certs.git")
 storage_mode("git")
 type("appstore")            # `development` / `adhoc` also available
 app_identifier(["net.spellgame.app"])
