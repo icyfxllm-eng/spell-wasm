@@ -136,7 +136,7 @@ fn tier_for_streak(streak: u32) -> &'static str {
 // ---------- rendering ----------
 
 pub fn render_letters(app: &App, animate_all: bool) {
-    let value = dom::input("guess").value();
+    let value = app.borrow().answer.clone();
     if value.is_empty() {
         dom::set_html("letters", "<span class=\"placeholder\">type what you heard</span><span class=\"caret\"></span>");
         app.borrow_mut().prev_letter_len = 0;
@@ -155,6 +155,62 @@ pub fn render_letters(app: &App, animate_all: bool) {
     html.push_str("<span class=\"caret\"></span>");
     dom::set_html("letters", &html);
     app.borrow_mut().prev_letter_len = value.chars().count();
+}
+
+// ---------- answer input (no DOM <input>: keeps the iOS keyboard closed) ----------
+
+/// True while the player may type — there's a live, unanswered word on screen.
+pub fn can_type(state: &AppState) -> bool {
+    has_active_word(state) && !state.answered
+}
+
+/// Enable/disable the on-screen keyboard and answer caret to match `can_type`,
+/// and reveal the apostrophe/hyphen keys only for My Words (the built-in
+/// English tiers never use them).
+pub fn sync_keyboard(app: &App) {
+    let (enabled, mine) = {
+        let s = app.borrow();
+        (can_type(&s), s.lang == MINE)
+    };
+    dom::toggle_class("gameKeyboard", "locked", !enabled);
+    dom::toggle_class("gameKeyboard", "show-punct", mine);
+    dom::toggle_class("spellbox", "focus", enabled);
+}
+
+/// Replace the whole answer (mic transcript, handwriting OCR) and re-render.
+pub fn set_answer(app: &App, value: &str) {
+    app.borrow_mut().answer = value.to_string();
+    render_letters(app, true);
+}
+
+/// Append one typed character (on-screen key or physical keydown). Single char
+/// only — multi-char inserts (dictation/paste) can't reach this path.
+pub fn type_char(app: &App, ch: char) {
+    if !can_type(&app.borrow()) {
+        return;
+    }
+    app.borrow_mut().answer.push(ch);
+    render_letters(app, false);
+    crate::haptics::key_tap();
+    announce(&ch.to_string());
+}
+
+/// Delete the last character of the answer.
+pub fn backspace(app: &App) {
+    if !can_type(&app.borrow()) {
+        return;
+    }
+    let popped = app.borrow_mut().answer.pop();
+    render_letters(app, false);
+    if popped.is_some() {
+        crate::haptics::key_tap();
+        announce("delete");
+    }
+}
+
+/// Screen-reader announcement of the last key, via a visually-hidden live region.
+fn announce(msg: &str) {
+    dom::set_text("kbAnnounce", msg);
 }
 
 pub fn update_voice_note(app: &App) {
@@ -460,8 +516,7 @@ pub fn next_word(app: &App) {
     dom::remove_class("orbWrap", "good");
     dom::remove_class("orbWrap", "bad");
     dom::set_html("orbGlyph", "listen\u{2026}");
-    dom::input("guess").set_value("");
-    dom::input("guess").set_disabled(false);
+    app.borrow_mut().answer.clear();
     render_letters(app, false);
     drawing::clear_canvas();
     dom::set_disabled("checkBtn", false);
@@ -482,7 +537,7 @@ pub fn next_word(app: &App) {
     dom::el("feedback").set_class_name("feedback");
     dom::set_text("feedback", "");
     update_voice_note(app);
-    dom::input("guess").focus().ok();
+    sync_keyboard(app);
     speak_current(app);
     let cur_tier = app.borrow().cur_tier.clone();
     start_timer(app, &cur_tier);
@@ -493,7 +548,8 @@ fn norm(s: &str) -> String {
 }
 
 fn lock_inputs() {
-    dom::input("guess").set_disabled(true);
+    dom::add_class("gameKeyboard", "locked");
+    dom::remove_class("spellbox", "focus");
     dom::set_disabled("checkBtn", true);
     dom::set_disabled("hintBtn", true);
     dom::set_disabled("giveupBtn", true);
@@ -509,9 +565,8 @@ pub fn submit_guess(app: &App) {
     if answered || word.is_empty() {
         return;
     }
-    let typed = dom::input("guess").value().trim().to_string();
+    let typed = app.borrow().answer.trim().to_string();
     if typed.is_empty() {
-        dom::input("guess").focus().ok();
         return;
     }
     app.borrow_mut().answered = true;
@@ -606,14 +661,13 @@ fn use_a_try(app: &App) -> u32 {
 /// the round, since they still have tries left.
 fn retry_wrong(app: &App, tries_left: u32, verb: &str) {
     app.borrow_mut().answered = false;
-    dom::input("guess").set_disabled(false);
     dom::set_disabled("checkBtn", false);
     dom::set_disabled("hintBtn", false);
     dom::set_disabled("giveupBtn", false);
     let is_en = app.borrow().cur_lang == EN;
     dom::set_disabled("defBtn", !is_en);
     dom::set_disabled("sentenceBtn", !is_en);
-    dom::input("guess").set_value("");
+    app.borrow_mut().answer.clear();
     render_letters(app, false);
     drawing::clear_canvas();
     dom::add_class("orbWrap", "bad");
@@ -623,7 +677,7 @@ fn retry_wrong(app: &App, tries_left: u32, verb: &str) {
         &format!("{} \u{2014} {} {} left", verb, tries_left, if tries_left == 1 { "try" } else { "tries" }),
     );
     dom::el("feedback").set_class_name("feedback bad");
-    dom::input("guess").focus().ok();
+    sync_keyboard(app);
     schedule(app, 550, |_| {
         dom::remove_class("orbWrap", "bad");
         dom::set_html("orbGlyph", "listen\u{2026}");
@@ -856,7 +910,7 @@ pub fn enter_review(app: &App) {
         s.answered = false;
     }
     dom::set_html("orbGlyph", "tap to<br/>practice misses");
-    dom::input("guess").set_value("");
+    app.borrow_mut().answer.clear();
     render_letters(app, false);
     drawing::clear_canvas();
     dom::set_text("hintLine", "");
@@ -879,7 +933,7 @@ pub fn exit_review(app: &App, msg: Option<&str>) {
         s.answered = false;
     }
     dom::set_html("orbGlyph", "tap to<br/>hear a word");
-    dom::input("guess").set_value("");
+    app.borrow_mut().answer.clear();
     render_letters(app, false);
     drawing::clear_canvas();
     dom::set_text("hintLine", "");
@@ -974,7 +1028,7 @@ pub fn exit_versus(app: &App) {
     dom::remove_class("orbWrap", "good");
     dom::remove_class("orbWrap", "bad");
     dom::set_html("orbGlyph", "tap to<br/>hear a word");
-    dom::input("guess").set_value("");
+    app.borrow_mut().answer.clear();
     render_letters(app, false);
     drawing::clear_canvas();
     dom::set_text("hintLine", "");
@@ -1012,9 +1066,9 @@ fn begin_versus_turn(app: &App) {
     dom::remove_class("orbWrap", "bad");
     let name = app.borrow().versus.active_player().name.clone();
     dom::set_html("orbGlyph", &format!("{}<br/>tap for a word", dom::escape_html(&name)));
-    dom::input("guess").set_value("");
-    dom::input("guess").set_disabled(false);
+    app.borrow_mut().answer.clear();
     render_letters(app, false);
+    sync_keyboard(app);
     drawing::clear_canvas();
     dom::set_text("hintLine", "");
     render_tries(app);

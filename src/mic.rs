@@ -25,8 +25,7 @@ pub fn setup(app: &App) {
     let onresult = Closure::<dyn FnMut(JsValue)>::new(move |ev: JsValue| {
         let raw = speech_in::extract_transcript(&ev).unwrap_or_default();
         let parsed = speech_in::parse_spoken(&raw);
-        dom::input("guess").set_value(&parsed);
-        game::render_letters(&app_result, true);
+        game::set_answer(&app_result, &parsed);
         dom::set_text("feedback", &format!("heard: \u{201c}{}\u{201d} \u{2014} edit if needed, then check", raw.trim()));
         dom::el("feedback").set_class_name("feedback");
     });

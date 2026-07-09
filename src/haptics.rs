@@ -41,6 +41,14 @@ pub fn correct() {
     }
 }
 
+/// Very light tick for an on-screen keyboard key press (native only; the game
+/// has no key sound effect, so this is the tactile substitute).
+pub fn key_tap() {
+    if let Some(h) = plugin() {
+        call(&h, "impact", "style", "LIGHT");
+    }
+}
+
 /// Marks an incorrect spelling: a double-buzz normally, softened to a single
 /// medium tap in Kid Mode.
 pub fn incorrect(kid: bool) {

@@ -9,6 +9,7 @@ mod drawing;
 mod game;
 mod haptics;
 mod importer;
+mod keyboard;
 mod mic;
 mod misses;
 mod model;
@@ -102,6 +103,7 @@ fn wire(app: &App) {
     wire_import(app);
     wire_stats_board_modal(app);
     wire_versus(app);
+    keyboard::setup(app);
 }
 
 fn wire_orb_and_answer(app: &App) {
@@ -160,15 +162,14 @@ fn wire_orb_and_answer(app: &App) {
             // hasn't already run "Read my writing" to fill the box), read
             // the drawing first so Check works directly on a drawn
             // submission — not just on typed/spoken text.
-            if dom::input("guess").value().trim().is_empty() && drawing::has_strokes() {
+            if a.borrow().answer.trim().is_empty() && drawing::has_strokes() {
                 let a2 = a.clone();
                 dom::set_disabled("checkBtn", true);
                 spawn_local(async move {
                     dom::set_text("drawStatus", "Reading your writing\u{2026}");
                     match drawing::read_writing().await {
                         drawing::OcrOutcome::Confident(txt) => {
-                            dom::input("guess").set_value(&txt);
-                            game::render_letters(&a2, true);
+                            game::set_answer(&a2, &txt);
                             dom::set_text("drawStatus", &format!("Read \u{201c}{}\u{201d} \u{2014} checking\u{2026}", txt));
                             dom::set_disabled("checkBtn", false);
                             game::submit_guess(&a2);
@@ -178,10 +179,8 @@ fn wire_orb_and_answer(app: &App) {
                             // a bad read would otherwise silently mark a
                             // correctly-spelled word wrong. Fill the box for
                             // the player to confirm or fix, then Check again.
-                            dom::input("guess").set_value(&txt);
-                            game::render_letters(&a2, true);
+                            game::set_answer(&a2, &txt);
                             dom::set_text("drawStatus", &format!("Not sure I read that right \u{2014} got \u{201c}{}\u{201d}. Fix it if needed, then press Check again.", txt));
-                            dom::input("guess").focus().ok();
                             dom::set_disabled("checkBtn", false);
                         }
                         drawing::OcrOutcome::Empty => {
@@ -199,20 +198,9 @@ fn wire_orb_and_answer(app: &App) {
             game::submit_guess(&a);
         });
     }
-    {
-        let a = app.clone();
-        dom::on::<web_sys::KeyboardEvent, _>("guess", "keydown", move |e| {
-            if e.key() == "Enter" {
-                game::submit_guess(&a);
-            }
-        });
-    }
-    {
-        let a = app.clone();
-        dom::on::<web_sys::Event, _>("guess", "input", move |_| game::render_letters(&a, false));
-    }
-    dom::on::<web_sys::Event, _>("guess", "focus", |_| dom::add_class("spellbox", "focus"));
-    dom::on::<web_sys::Event, _>("guess", "blur", |_| dom::remove_class("spellbox", "focus"));
+    // NOTE: the answer is typed via the custom on-screen keyboard + physical
+    // keydown (see wire_keyboard) — there is no #guess <input>, so the system
+    // keyboard (dictation / autocorrect) never opens during a round.
     {
         let a = app.clone();
         dom::on_click("hintBtn", move || game::show_hint(&a));
@@ -456,15 +444,11 @@ fn wire_drawing(app: &App) {
                 dom::set_text("drawStatus", "Reading your writing\u{2026} (first use loads the reader)");
                 match drawing::read_writing().await {
                     drawing::OcrOutcome::Confident(txt) => {
-                        dom::input("guess").set_value(&txt);
-                        game::render_letters(&a2, true);
-                        dom::input("guess").focus().ok();
+                        game::set_answer(&a2, &txt);
                         dom::set_text("drawStatus", &format!("Read \u{201c}{}\u{201d} \u{2014} confirm or fix, then Check.", txt));
                     }
                     drawing::OcrOutcome::Unsure(txt) => {
-                        dom::input("guess").set_value(&txt);
-                        game::render_letters(&a2, true);
-                        dom::input("guess").focus().ok();
+                        game::set_answer(&a2, &txt);
                         dom::set_text("drawStatus", &format!("Not sure I read that right \u{2014} got \u{201c}{}\u{201d}. Fix it if needed, then Check.", txt));
                     }
                     drawing::OcrOutcome::Empty => {
@@ -530,7 +514,7 @@ fn wire_source_level(app: &App) {
                 s.answered = false;
             }
             dom::set_html("orbGlyph", "tap to<br/>hear a word");
-            dom::input("guess").set_value("");
+            a.borrow_mut().answer.clear();
             game::render_letters(&a, false);
             drawing::clear_canvas();
             dom::set_text("feedback", "");
@@ -658,7 +642,7 @@ fn wire_import(app: &App) {
                 s.answered = false;
             }
             dom::set_html("orbGlyph", "tap to<br/>hear a word");
-            dom::input("guess").set_value("");
+            a.borrow_mut().answer.clear();
             game::render_letters(&a, false);
             game::clear_meaning();
             dom::remove_class("importScrim", "show");

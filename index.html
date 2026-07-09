@@ -164,8 +164,30 @@
   .caret{display:inline-block;width:2px;height:26px;background:var(--glow);margin-left:3px;border-radius:1px;opacity:0;box-shadow:0 0 6px var(--glow)}
   .spellbox.focus .caret{opacity:1;animation:blink 1.05s step-end infinite}
   @keyframes blink{50%{opacity:0}}
-  .guess{position:absolute;inset:0;z-index:2;width:100%;background:transparent;border:none;padding:18px;color:transparent;caret-color:transparent;font-family:var(--mono);font-size:24px;font-weight:700;letter-spacing:.14em;text-align:center}
-  .guess:focus{outline:none}
+  /* Visually-hidden live region (announces typed letters to screen readers). */
+  .sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;border:0}
+
+  /* Custom on-screen keyboard — the answer input (no real <input>). */
+  .game-kb{width:100%;margin-top:14px;display:flex;flex-direction:column;gap:7px;user-select:none;
+    padding-bottom:env(safe-area-inset-bottom, 0px)}
+  .game-kb.locked{opacity:.5;pointer-events:none}
+  .kb-row{display:flex;justify-content:center;gap:6px}
+  .kb-key,.kb-back,.kb-submit{min-width:32px;min-height:46px;flex:1 1 0;max-width:46px;border:1px solid var(--edge);
+    background:var(--panel);color:var(--ink);border-radius:9px;font-family:var(--body);font-size:17px;font-weight:600;
+    cursor:pointer;display:inline-flex;align-items:center;justify-content:center;transition:background .08s,transform .06s,border-color .08s;
+    -webkit-tap-highlight-color:transparent;touch-action:manipulation}
+  .kb-key:active,.kb-back:active{background:var(--amber);color:#36210a;border-color:var(--amber);transform:translateY(1px)}
+  .kb-key.kb-punct{display:none}
+  .game-kb.show-punct .kb-key.kb-punct{display:inline-flex}
+  .kb-actions{gap:8px;margin-top:2px}
+  .kb-back{flex:0 0 auto;min-width:64px;max-width:none;font-size:19px;color:var(--muted)}
+  .kb-submit{flex:1 1 auto;max-width:none;background:var(--amber);color:#36210a;border-color:var(--amber);font-weight:700}
+  .kb-submit:active{filter:brightness(1.06);transform:translateY(1px)}
+  /* Accessibility: Big text / Kid mode → larger keys; Readable → high contrast. */
+  body.kid .kb-key,body.kid .kb-back,body.kid .kb-submit,
+  body.big-text .kb-key,body.big-text .kb-back,body.big-text .kb-submit{min-height:56px;font-size:21px;max-width:56px}
+  body.big-text .kb-back,body.big-text .kb-submit,body.kid .kb-back,body.kid .kb-submit{max-width:none}
+  body.readable .kb-key,body.readable .kb-back{border-color:var(--muted);border-width:2px;color:var(--ink)}
 
   .action-row{width:100%;display:flex;gap:10px;margin-top:12px}
   .btn{flex:1;border:none;border-radius:12px;padding:14px;font-family:var(--body);font-size:15px;font-weight:600;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;gap:8px;transition:filter .15s,transform .1s,opacity .15s}
@@ -398,9 +420,22 @@
       </span>
     </div>
 
-    <div class="spellbox" id="spellbox">
+    <div class="spellbox" id="spellbox" role="group" aria-label="Your spelling">
       <div class="letters" id="letters"></div>
-      <input class="guess" id="guess" type="text" inputmode="text" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" data-gramm="false" data-gramm_editor="false" data-enable-grammarly="false" aria-label="Type your spelling" disabled />
+    </div>
+    <div id="kbAnnounce" class="sr-only" aria-live="polite" aria-atomic="true"></div>
+
+    <!-- Custom on-screen keyboard. The answer is never a real <input>, so the
+         iOS system keyboard — with its dictation key and autocorrect — can't
+         open during a round. Letter keys are built + wired in keyboard.rs. -->
+    <div class="game-kb locked" id="gameKeyboard" role="group" aria-label="On-screen keyboard">
+      <div class="kb-row" id="kbRow1"></div>
+      <div class="kb-row" id="kbRow2"></div>
+      <div class="kb-row" id="kbRow3"></div>
+      <div class="kb-row kb-actions">
+        <button class="kb-key kb-back" id="kbBackspace" aria-label="Delete last letter">⌫</button>
+        <button class="kb-submit" id="kbSubmit">Enter</button>
+      </div>
     </div>
 
     <div class="action-row">
@@ -501,7 +536,7 @@
       <p>Practice the exact words you keep getting wrong — paste text, type a list, or pull from a link.</p>
       <textarea id="importText" placeholder="Paste any text or a list of words here…" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"></textarea>
       <div class="url-row">
-        <input id="importUrl" type="url" placeholder="https://…  (optional)" />
+        <input id="importUrl" type="url" placeholder="https://…  (optional)" autocomplete="off" autocorrect="off" autocapitalize="none" spellcheck="false" />
         <button class="pill" id="fetchUrl">Fetch</button>
       </div>
       <div class="imp-foot">
