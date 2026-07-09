@@ -39,6 +39,12 @@
 		rewrite * /index.html
 		file_server
 	}
+	# Privacy policy — required by both app stores. Clean /privacy URL.
+	handle /privacy* {
+		root * /srv
+		rewrite * /privacy.html
+		file_server
+	}
 	handle {
 		root * /srv
 		file_server
