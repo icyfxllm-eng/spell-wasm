@@ -33,6 +33,16 @@ os.makedirs(CACHE_DIR, exist_ok=True)
 
 VOICE_NAME = "en-US-Neural2-D"
 LANGUAGE_CODE = "en-US"
+
+# Backend Google-TTS voice per built-in language. To add a language: add an
+# entry here + its word bank on the client (words.rs) — audio + spelling then
+# work end-to-end. (`en-US-Neural2-D` above stays the default / sentence voice.)
+LANG_VOICES = {
+    "en": ("en-US", "en-US-Neural2-D"),
+    "es": ("es-ES", "es-ES-Neural2-B"),
+}
+DEFAULT_LANG = "en"
+
 SPEAKING_RATE_NORMAL = 0.85  # slower, clearer enunciation
 SPEAKING_RATE_SLOW = 0.6
 VOLUME_GAIN_DB = 4.0  # louder baseline; stay well under the 16 max to avoid clipping
@@ -100,8 +110,11 @@ def validate_word(word: str):
     return word
 
 
-def cache_path_for(word: str, variant: str) -> str:
-    digest = hashlib.md5(word.encode()).hexdigest()
+def cache_path_for(word: str, variant: str, lang: str = "en") -> str:
+    # `lang` is part of the key so e.g. Spanish "casa" and English "casa" don't
+    # share a clip. Existing English clips (no lang prefix) stay valid via "en".
+    key = word if lang == "en" else f"{lang}:{word}"
+    digest = hashlib.md5(key.encode()).hexdigest()
     return os.path.join(CACHE_DIR, f"{CACHE_VERSION}_{digest}_{variant}.mp3")
 
 
@@ -115,7 +128,7 @@ def _audio_config(speaking_rate: float) -> texttospeech.AudioConfig:
     )
 
 
-def synthesize_to_cache(word: str, variant: str, path: str) -> None:
+def synthesize_to_cache(word: str, variant: str, path: str, lang: str = "en") -> None:
     """Call Google TTS once and store the MP3 permanently.
 
     Each variant is spoken once — the player already has a dedicated Repeat
@@ -124,12 +137,13 @@ def synthesize_to_cache(word: str, variant: str, path: str) -> None:
     """
     synthesis_input = texttospeech.SynthesisInput(text=word)
     rate = SPEAKING_RATE_SLOW if variant == "slow" else SPEAKING_RATE_NORMAL
+    language_code, voice_name = LANG_VOICES.get(lang, LANG_VOICES[DEFAULT_LANG])
 
     response = tts_client.synthesize_speech(
         input=synthesis_input,
         voice=texttospeech.VoiceSelectionParams(
-            language_code=LANGUAGE_CODE,
-            name=VOICE_NAME,
+            language_code=language_code,
+            name=voice_name,
         ),
         audio_config=_audio_config(rate),
     )
@@ -207,12 +221,15 @@ def speak():
     if word is None:
         return jsonify({"error": "invalid word"}), 400
     variant = "slow" if request.args.get("variant") == "slow" else "normal"
+    lang = request.args.get("lang", DEFAULT_LANG)
+    if lang not in LANG_VOICES:
+        lang = DEFAULT_LANG
 
-    path = cache_path_for(word, variant)
+    path = cache_path_for(word, variant, lang)
 
     if not os.path.exists(path):
         try:
-            synthesize_to_cache(word, variant, path)
+            synthesize_to_cache(word, variant, path, lang)
         except Exception as e:
             app.logger.error(f"TTS failed for '{word}' ({variant}): {e}")
             return jsonify({"error": "speech synthesis failed"}), 502

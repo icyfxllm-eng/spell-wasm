@@ -12,14 +12,14 @@ use web_sys::HtmlAudioElement;
 use crate::{audio_boost, dom, native_audio, storage};
 
 thread_local! {
-    static CURRENT: RefCell<Option<(String, String, HtmlAudioElement)>> = RefCell::new(None);
+    static CURRENT: RefCell<Option<(String, String, String, HtmlAudioElement)>> = RefCell::new(None);
 }
 
 /// Stop any backend word/sentence audio that's currently playing (used when
 /// tearing a mode down, e.g. leaving head-to-head, so nothing keeps playing).
 pub fn stop() {
     CURRENT.with(|c| {
-        if let Some((_, _, audio)) = c.borrow_mut().take() {
+        if let Some((_, _, _, audio)) = c.borrow_mut().take() {
             let _ = audio.pause();
         }
     });
@@ -47,8 +47,8 @@ fn urlencode(s: &str) -> String {
     js_sys::encode_uri_component(s).as_string().unwrap_or_else(|| s.to_string())
 }
 
-fn speak_url(word: &str, variant: &str) -> String {
-    format!("{}/api/speak?word={}&variant={}", api_base(), urlencode(word), variant)
+fn speak_url(word: &str, variant: &str, lang: &str) -> String {
+    format!("{}/api/speak?word={}&variant={}&lang={}", api_base(), urlencode(word), variant, lang)
 }
 
 /// Plays `word`'s audio (rewinding + reusing the element if it's already the
@@ -72,32 +72,33 @@ fn speak_url(word: &str, variant: &str) -> String {
 /// server-rendered "slow" *variant*, which is a different clip and plays
 /// natively just fine. `rate` still applies on the browser `<audio>` fallback
 /// (and on the web build, which never takes the native path).
-pub fn play_word(word: &str, variant: &str, rate: f64, on_fail: impl FnOnce() + 'static) {
+pub fn play_word(word: &str, variant: &str, rate: f64, lang: &str, on_fail: impl FnOnce() + 'static) {
     if native_audio::available() {
-        let asset_id = native_audio::asset_id(word, variant);
-        let url = speak_url(word, variant);
+        let asset_id = native_audio::asset_id(word, variant, lang);
+        let url = speak_url(word, variant, lang);
         if let Some(promise) = native_audio::play_word(&asset_id, &url) {
             let word = word.to_string();
             let variant = variant.to_string();
+            let lang = lang.to_string();
             spawn_local(async move {
                 // On reject (download failed, plugin error, …) fall through to
                 // the browser <audio> path, which owns the final on_fail hop.
                 if JsFuture::from(promise).await.is_err() {
-                    play_word_html(&word, &variant, rate, on_fail);
+                    play_word_html(&word, &variant, rate, &lang, on_fail);
                 }
             });
             return;
         }
     }
-    play_word_html(word, variant, rate, on_fail);
+    play_word_html(word, variant, rate, lang, on_fail);
 }
 
-fn play_word_html(word: &str, variant: &str, rate: f64, on_fail: impl FnOnce() + 'static) {
+fn play_word_html(word: &str, variant: &str, rate: f64, lang: &str, on_fail: impl FnOnce() + 'static) {
     let already_current =
-        CURRENT.with(|c| c.borrow().as_ref().map(|(w, v, _)| w == word && v == variant).unwrap_or(false));
+        CURRENT.with(|c| c.borrow().as_ref().map(|(w, v, l, _)| w == word && v == variant && l == lang).unwrap_or(false));
     if already_current {
         CURRENT.with(|c| {
-            if let Some((_, _, audio)) = c.borrow().as_ref() {
+            if let Some((_, _, _, audio)) = c.borrow().as_ref() {
                 audio.set_playback_rate(rate);
                 audio.set_current_time(0.0);
                 let _ = audio.play();
@@ -106,7 +107,7 @@ fn play_word_html(word: &str, variant: &str, rate: f64, on_fail: impl FnOnce() +
         return;
     }
 
-    let url = speak_url(word, variant);
+    let url = speak_url(word, variant, lang);
     let Ok(audio) = HtmlAudioElement::new_with_src(&url) else {
         on_fail();
         return;
@@ -132,20 +133,20 @@ fn play_word_html(word: &str, variant: &str, rate: f64, on_fail: impl FnOnce() +
     err_cb.forget();
 
     let _ = audio.play();
-    CURRENT.with(|c| *c.borrow_mut() = Some((word.to_string(), variant.to_string(), audio)));
+    CURRENT.with(|c| *c.borrow_mut() = Some((word.to_string(), variant.to_string(), lang.to_string(), audio)));
 }
 
 /// Fire-and-forget warm-up of a word's normal-variant audio in the browser's
 /// HTTP cache (the backend sends a long-lived `Cache-Control` header), so
 /// that when the player actually reaches this word moments later,
 /// `play_word` resolves instantly instead of waiting on a fresh TTS fetch.
-pub fn preload_word(word: &str) {
-    let url = speak_url(word, "normal");
+pub fn preload_word(word: &str, lang: &str) {
+    let url = speak_url(word, "normal", lang);
     // On the native build, warming means downloading the clip to on-device
     // storage (so it's instant AND offline later); the browser HTTP-cache
     // warm-up below is redundant there.
     if native_audio::available() {
-        native_audio::prefetch(&native_audio::asset_id(word, "normal"), &url);
+        native_audio::prefetch(&native_audio::asset_id(word, "normal", lang), &url);
         return;
     }
     let opts = web_sys::RequestInit::new();

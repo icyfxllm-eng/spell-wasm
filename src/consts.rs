@@ -23,6 +23,18 @@ pub const REVIEW: &str = "__review";
 /// The built-in English word source. Its audio comes from the backend's
 /// `/api/speak`; the word itself is still picked and known client-side.
 pub const EN: &str = "en";
+/// Built-in Spanish word source (backend TTS voice `es-ES`).
+pub const ES: &str = "es";
+
+/// Built-in word-source languages: (lang code, display name). Adding a language
+/// here + its word bank in `words.rs` + a voice in the backend's `LANG_VOICES`
+/// makes it fully supported (audio + spelling). `MINE`/`REVIEW` aren't here.
+pub const BUILTIN_LANGS: [(&str, &str); 2] = [(EN, "English"), (ES, "Espa\u{f1}ol")];
+
+/// Whether `lang` is a built-in, backend-voiced language (not My Words/Misses).
+pub fn is_builtin_lang(lang: &str) -> bool {
+    BUILTIN_LANGS.iter().any(|(code, _)| *code == lang)
+}
 
 pub const CORRECT_DELAY_MS: i32 = 2200;
 

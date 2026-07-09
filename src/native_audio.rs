@@ -38,8 +38,8 @@ pub fn available() -> bool {
 
 /// Stable key for a word+variant clip, shared as the NativeAudio assetId and
 /// (sanitized) the on-disk cache filename.
-pub fn asset_id(word: &str, variant: &str) -> String {
-    format!("w:{variant}:{word}")
+pub fn asset_id(word: &str, variant: &str, lang: &str) -> String {
+    format!("w:{lang}:{variant}:{word}")
 }
 
 /// Start native playback of a word clip, downloading+caching it on first use.

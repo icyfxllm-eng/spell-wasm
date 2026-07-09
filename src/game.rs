@@ -5,7 +5,7 @@ use wasm_bindgen::closure::Closure;
 use wasm_bindgen::JsCast;
 use wasm_bindgen_futures::spawn_local;
 
-use crate::consts::{tier_time, CORRECT_DELAY_MS, EN, LEVEL_OPTS, MAX_TRIES, MINE, PRAISE, REVIEW};
+use crate::consts::{is_builtin_lang, tier_time, CORRECT_DELAY_MS, EN, ES, LEVEL_OPTS, MAX_TRIES, MINE, PRAISE, REVIEW};
 use crate::model::AppState;
 use crate::versus::Side;
 use crate::{achievements, api, board, dom, drawing, misses, speech_out, stats, wordstats, words};
@@ -19,7 +19,10 @@ pub fn code_for(state: &AppState, key: &str) -> String {
     if key == MINE {
         return if state.custom.speak_lang.is_empty() { "en-US".to_string() } else { state.custom.speak_lang.clone() };
     }
-    "en-US".to_string()
+    match key {
+        ES => "es-ES".to_string(),
+        _ => "en-US".to_string(),
+    }
 }
 
 /// My Words can route through the backend's real TTS (reliable, unlike the
@@ -39,7 +42,11 @@ pub fn name_for(_state: &AppState, key: &str) -> String {
     if key == REVIEW {
         return "Misses".to_string();
     }
-    "English".to_string()
+    crate::consts::BUILTIN_LANGS
+        .iter()
+        .find(|(code, _)| *code == key)
+        .map(|(_, name)| name.to_string())
+        .unwrap_or_else(|| "English".to_string())
 }
 
 fn length_tier(word: &str) -> &'static str {
@@ -72,7 +79,7 @@ fn active_word_list(state: &AppState, tier: &str) -> Vec<String> {
     if state.lang == MINE {
         pool_for_tier(state, tier)
     } else {
-        words::en_tier(tier).iter().map(|s| s.to_string()).collect()
+        words::tier_for(&state.lang, tier).iter().map(|s| s.to_string()).collect()
     }
 }
 
@@ -103,7 +110,7 @@ pub fn preload_pool(app: &App) {
         return;
     }
     let s = app.borrow();
-    if s.lang != EN {
+    if !is_builtin_lang(&s.lang) {
         return;
     }
     let mut tier = if s.level == "climb" {
@@ -115,9 +122,10 @@ pub fn preload_pool(app: &App) {
         tier = "medium".to_string();
     }
     let pool = active_word_list(&s, &tier);
+    let lang = s.lang.clone();
     drop(s);
     for word in pool.into_iter().take(PRELOAD_AT_OPEN) {
-        api::preload_word(&word);
+        api::preload_word(&word, &lang);
     }
 }
 
@@ -219,7 +227,7 @@ pub fn update_voice_note(app: &App) {
     let word = s.word.clone();
     // Backend-voiced words (built-in English, or plain-English My Words)
     // don't depend on a browser voice at all.
-    if cur_lang == EN || (cur_lang == MINE && backend_speakable(&s, &word)) {
+    if is_builtin_lang(&cur_lang) || (cur_lang == MINE && backend_speakable(&s, &word)) {
         drop(s);
         dom::set_text("voiceNote", "");
         return;
@@ -266,7 +274,10 @@ pub fn refresh_mode_buttons(app: &App) {
 
 pub fn build_source_options(app: &App) {
     let s = app.borrow();
-    let mut opts = format!("<option value=\"{}\">English</option>", EN);
+    let mut opts = String::new();
+    for (code, name) in crate::consts::BUILTIN_LANGS {
+        opts.push_str(&format!("<option value=\"{}\">{}</option>", code, name));
+    }
     if !s.custom.words.is_empty() {
         opts.push_str(&format!("<option value=\"{}\">My Words \u{270f}</option>", MINE));
     }
@@ -442,16 +453,18 @@ fn speak_word(app: &App, variant: &str, rate: f32) {
     let word = s.word.clone();
     let code = code_for(&s, &s.cur_lang);
 
-    if s.cur_lang == EN {
+    if is_builtin_lang(&s.cur_lang) {
+        let lang = s.cur_lang.clone();
         drop(s);
-        api::play_word(&word, variant, rate as f64, || {});
+        api::play_word(&word, variant, rate as f64, &lang, || {});
         return;
     }
     if s.cur_lang == MINE && backend_speakable(&s, &word) {
         drop(s);
         let fallback_word = word.clone();
         let fallback_rate = if variant == "slow" { 0.55 } else { rate };
-        api::play_word(&word, variant, rate as f64, move || speech_out::speak(&fallback_word, fallback_rate, &code));
+        // Plain-English My Words route through the backend's English voice.
+        api::play_word(&word, variant, rate as f64, EN, move || speech_out::speak(&fallback_word, fallback_rate, &code));
         return;
     }
     drop(s);
@@ -514,9 +527,9 @@ pub fn next_word(app: &App) {
                 // Warm the browser's audio cache for whatever this same
                 // pool will hand out next time, so that turn's playback is
                 // instant instead of waiting on a fresh TTS fetch.
-                if s.cur_lang == EN {
+                if is_builtin_lang(&s.cur_lang) {
                     if let Some(next_up) = s.decks.get(&key).and_then(|d| d.peek()) {
-                        api::preload_word(&next_up);
+                        api::preload_word(&next_up, &s.cur_lang);
                     }
                 }
             }
