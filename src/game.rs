@@ -8,7 +8,7 @@ use wasm_bindgen_futures::spawn_local;
 use crate::consts::{tier_time, CORRECT_DELAY_MS, EN, LEVEL_OPTS, MAX_TRIES, MINE, PRAISE, REVIEW};
 use crate::model::AppState;
 use crate::versus::Side;
-use crate::{achievements, api, board, dom, drawing, misses, speech_out, stats, words};
+use crate::{achievements, api, board, dom, drawing, misses, speech_out, stats, wordstats, words};
 use crate::App;
 
 const RING_C: f64 = 2.0 * std::f64::consts::PI * 108.0;
@@ -498,7 +498,18 @@ pub fn next_word(app: &App) {
             let pool = active_word_list(&s, &tier);
             if !pool.is_empty() {
                 let key = format!("{}:{}", s.lang, tier);
-                let w = s.decks.entry(key.clone()).or_default().next(&pool);
+                // Solo practice uses adaptive, spaced-repetition-weighted picking;
+                // head-to-head keeps the plain shuffled deck so both players face
+                // the same distribution. Adaptive falls back to the deck if the
+                // pool somehow yields nothing.
+                let w = if s.versus.enabled {
+                    s.decks.entry(key.clone()).or_default().next(&pool)
+                } else {
+                    match wordstats::pick(&pool) {
+                        Some(w) => w,
+                        None => s.decks.entry(key.clone()).or_default().next(&pool),
+                    }
+                };
                 s.word = w;
                 // Warm the browser's audio cache for whatever this same
                 // pool will hand out next time, so that turn's playback is
@@ -631,6 +642,10 @@ fn on_correct(app: &App) {
         (s.cur_lang.clone(), s.cur_tier.clone(), s.word.clone())
     };
     stats::record(&mut app.borrow_mut(), &cur_lang, &cur_tier, true);
+    // Adaptive word stats: solo practice only (Misses/review has its own SR).
+    if !app.borrow().review {
+        wordstats::record(&word, true);
+    }
     let cleared = misses::promote_miss(&mut app.borrow_mut(), &word, &cur_lang);
     refresh_mode_buttons(app);
     if cleared {
@@ -698,6 +713,11 @@ fn finalize_incorrect(app: &App, glyph: &str, prefix: &str, feedback_class: &str
     if !versus_on {
         misses::add_miss(&mut app.borrow_mut(), &word, &cur_lang, &cur_tier);
         refresh_mode_buttons(app);
+    }
+    // Adaptive word stats: a loss (out of tries / timeout / give-up) is a miss,
+    // for solo practice only (not head-to-head, not Misses/review).
+    if !versus_on && !app.borrow().review {
+        wordstats::record(&word, false);
     }
 
     dom::add_class("orbWrap", "bad");

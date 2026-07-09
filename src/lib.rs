@@ -25,6 +25,7 @@ mod stats;
 mod storage;
 mod versus;
 mod words;
+mod wordstats;
 
 use std::cell::RefCell;
 use std::rc::Rc;
@@ -850,7 +851,11 @@ fn wire_versus(app: &App) {
 fn wire_stats_board_modal(app: &App) {
     {
         let a = app.clone();
-        dom::on_click("resetStats", move || stats::reset_current_lang(&mut a.borrow_mut()));
+        dom::on_click("resetStats", move || {
+            stats::reset_current_lang(&mut a.borrow_mut());
+            // Also clear adaptive word stats (the only reset affordance today).
+            wordstats::clear();
+        });
     }
     {
         let a = app.clone();
