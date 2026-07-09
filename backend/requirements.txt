@@ -2,3 +2,6 @@ Flask==3.1.3
 flask-cors==6.0.5
 google-cloud-texttospeech==2.37.0
 gunicorn==23.0.0
+# The Climb — accounts + leaderboard
+bcrypt==4.2.1
+better-profanity==0.7.0

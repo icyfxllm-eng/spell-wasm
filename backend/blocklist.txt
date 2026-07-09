@@ -1,0 +1,39 @@
+# Username blocklist for The Climb — one term per line, lowercase.
+# Matched after normalization (leetspeak folded, non-letters stripped), as an
+# exact or >=4-char substring. This file is meant to be APPENDED to by the
+# owner; keep the general-profanity library (better_profanity) as the first
+# line of defence and use this for slurs, sexual/hate terms, and impersonation
+# not already covered. Impersonation terms (admin/moderator/spellgame/...) are
+# also hardcoded in usernames.py.
+#
+# Starter set (extend as needed):
+fuck
+shit
+cunt
+nigger
+nigga
+faggot
+bitch
+whore
+slut
+rape
+rapist
+pedo
+pedophile
+molest
+porn
+cum
+dick
+cock
+pussy
+asshole
+bastard
+retard
+kike
+spic
+chink
+wetback
+tranny
+nazi
+hitler
+kkk
