@@ -17,7 +17,7 @@
 // deploys). Falling back to cache only when the network request itself
 // fails means an actual offline visit still works, but anyone with a live
 // connection always gets the current deployed version.
-const CACHE_VERSION = "v9";
+const CACHE_VERSION = "v10";
 const CACHE_NAME = `spell-shell-${CACHE_VERSION}`;
 
 const STATIC_ASSETS = [
@@ -26,8 +26,8 @@ const STATIC_ASSETS = [
   "./manifest.json",
   "./ocr-shim.js",
   "./audio-native.js",
-  "./pkg/spell_wasm.js",
-  "./pkg/spell_wasm_bg.wasm",
+  "./pkg/spell_wasm.js?v=DEV",
+  "./pkg/spell_wasm_bg.wasm?v=DEV",
   "./icons/icon-192.png",
   "./icons/icon-512.png",
   "./icons/icon-512-maskable.png",
