@@ -76,6 +76,14 @@ tts_client = texttospeech.TextToSpeechClient(
     client_options={"api_key": API_KEY}
 )
 
+# ---------- The Climb (accounts + leaderboard) ----------
+# Same origin as the word API (Caddy proxies /api/* here), so no extra CORS.
+import db  # noqa: E402
+import climb  # noqa: E402
+
+db.init()
+app.register_blueprint(climb.bp)
+
 # ---------------------------------------------------------------
 # Helpers
 # ---------------------------------------------------------------

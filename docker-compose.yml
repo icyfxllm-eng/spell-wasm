@@ -20,6 +20,8 @@ services:
       - .env
     volumes:
       - audio_cache:/data/audio_cache
+      # The Climb accounts/leaderboard SQLite DB (see backend/db.py).
+      - climb_data:/data/climb
 
   cloudflared:
     image: cloudflare/cloudflared:latest
@@ -36,3 +38,4 @@ volumes:
   caddy_data:
   caddy_config:
   audio_cache:
+  climb_data:
