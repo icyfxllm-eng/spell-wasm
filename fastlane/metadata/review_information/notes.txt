@@ -1,0 +1,11 @@
+Spell is a native iOS spelling game, fully playable offline. All content and game logic ship in the app bundle.
+
+How to test:
+1. Tap the glowing orb ("tap to hear a word") to hear a word spoken aloud.
+2. Spell it on the on-screen keyboard and tap "Check spelling."
+3. Correct answers grow your chain; try the Definition/Sentence hints.
+4. Offline: enable Airplane Mode and keep playing — recently-heard words still play from the on-device cache.
+
+No account, login, or personal information is required. No demo account needed.
+
+Privacy: no personal data is collected. Progress and any custom word lists are stored only on the device. See https://spellgame.net/privacy.
