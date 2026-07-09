@@ -37,39 +37,6 @@ pub const PRAISE: [&str; 8] = [
     "Clean.", "Locked in.", "On a roll.", "Nice ear.", "Spot on.", "Sharp.", "Chain grows.", "Perfect.",
 ];
 
-/// Spoken letter-name -> letter, for parsing "spell it out loud" transcripts.
-pub fn letter_name(tok: &str) -> Option<char> {
-    let c = match tok {
-        "ay" => 'a',
-        "bee" => 'b',
-        "cee" | "see" | "sea" => 'c',
-        "dee" => 'd',
-        "ee" => 'e',
-        "eff" | "ef" => 'f',
-        "gee" => 'g',
-        "aitch" | "haitch" => 'h',
-        "eye" => 'i',
-        "jay" => 'j',
-        "kay" => 'k',
-        "el" | "ell" => 'l',
-        "em" => 'm',
-        "en" => 'n',
-        "oh" => 'o',
-        "pee" | "pea" => 'p',
-        "cue" | "queue" => 'q',
-        "ar" | "are" => 'r',
-        "ess" | "es" => 's',
-        "tee" | "tea" => 't',
-        "you" | "yew" => 'u',
-        "vee" => 'v',
-        "ex" => 'x',
-        "why" => 'y',
-        "zee" | "zed" => 'z',
-        "double-u" | "doubleu" => 'w',
-        _ => return None,
-    };
-    Some(c)
-}
 
 /// Maps a base language code to the dictionaryapi.dev language code it supports.
 pub fn def_lang(base: &str) -> Option<&'static str> {

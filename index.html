@@ -202,8 +202,6 @@
   .btn-icon{flex:0 0 auto;background:var(--panel);color:var(--ink);border:1px solid var(--edge);font-size:17px}
   .btn-icon:hover{border-color:var(--amber)}
   .btn-icon.on{border-color:var(--amber);color:var(--amber-soft)}
-  .btn-mic.listening{background:var(--coral);color:#fff;border-color:transparent;animation:miclive 1s ease-in-out infinite}
-  @keyframes miclive{50%{filter:brightness(1.18)}}
   .btn-icon[hidden]{display:none}
 
   .drawpad{width:100%;margin-top:12px;display:none}
@@ -362,7 +360,7 @@
     canvas#canvas{height:min(52vh,320px)}
   }
   @media (prefers-reduced-motion: reduce){
-    .orb,.orb-wrap.speaking .orb,.orb-wrap.speaking .ring,.btn-mic.listening,.sfill,.ltr.pop,.caret{animation:none!important;transition:none!important}
+    .orb,.orb-wrap.speaking .orb,.orb-wrap.speaking .ring,.sfill,.ltr.pop,.caret{animation:none!important;transition:none!important}
   }
 </style>
 </head>
@@ -452,7 +450,6 @@
     </div>
 
     <div class="action-row">
-      <button class="btn btn-icon btn-mic" id="micBtn" title="Spell out loud" hidden><svg width="18" height="18" viewBox="0 0 18 18" fill="none"><rect x="6.2" y="2" width="5.6" height="9" rx="2.8" fill="currentColor"/><path d="M4 8a5 5 0 0010 0M9 13v3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></button>
       <button class="btn btn-icon" id="drawBtn" title="Draw the letters">✏</button>
       <button class="btn btn-check" id="checkBtn" disabled>Check spelling</button>
     </div>

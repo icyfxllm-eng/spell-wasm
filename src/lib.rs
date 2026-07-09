@@ -11,7 +11,6 @@ mod game;
 mod haptics;
 mod importer;
 mod keyboard;
-mod mic;
 mod misses;
 mod model;
 mod native_audio;
@@ -19,7 +18,6 @@ mod notifications;
 mod profanity;
 mod settings;
 mod share;
-mod speech_in;
 mod speech_out;
 mod stats;
 mod storage;
@@ -77,7 +75,6 @@ pub fn start() -> Result<(), JsValue> {
     game::build_source_options(&app);
     game::build_level_options(&app);
     game::refresh_mode_buttons(&app);
-    mic::setup(&app);
     game::render_letters(&app, false);
     {
         let app2 = app.clone();
@@ -309,10 +306,6 @@ fn wire_orb_and_answer(app: &App) {
     {
         let a = app.clone();
         dom::on_click("giveupBtn", move || game::give_up(&a));
-    }
-    {
-        let a = app.clone();
-        dom::on_click("micBtn", move || mic::toggle(&a));
     }
 }
 

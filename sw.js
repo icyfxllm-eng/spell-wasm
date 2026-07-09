@@ -17,7 +17,7 @@
 // deploys). Falling back to cache only when the network request itself
 // fails means an actual offline visit still works, but anyone with a live
 // connection always gets the current deployed version.
-const CACHE_VERSION = "v8";
+const CACHE_VERSION = "v9";
 const CACHE_NAME = `spell-shell-${CACHE_VERSION}`;
 
 const STATIC_ASSETS = [
