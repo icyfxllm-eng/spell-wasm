@@ -764,7 +764,7 @@
   <script src="./audio-native.js"></script>
   <script type="module" src="./ocr-shim.js"></script>
   <script type="module">
-    import init from './pkg/spell_wasm.js';
+    import init from './pkg/spell_wasm.js?v=DEV';
     // The compiled app (~1.4MB of WASM) has to finish downloading and
     // initializing before the orb does anything. On mobile this has been
     // observed failing mid-download (a flaky connection canceling the
@@ -779,7 +779,7 @@
     //    whole fetch from scratch — retry a few times automatically so a
     //    transient blip fixes itself without the player noticing.
     const MAX_ATTEMPTS = 4;
-    const WASM_URL = new URL('./pkg/spell_wasm_bg.wasm', import.meta.url);
+    const WASM_URL = new URL('./pkg/spell_wasm_bg.wasm?v=DEV', import.meta.url);
 
     function setGlyph(html) {
       const glyph = document.getElementById('orbGlyph');
