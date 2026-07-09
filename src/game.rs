@@ -1016,6 +1016,7 @@ pub fn exit_versus(app: &App) {
     dom::add_class("vsBar", "btn-hide");
     dom::remove_class("vsResultScrim", "show");
     dom::remove_class("vsSetupScrim", "show");
+    dom::remove_class("vsQuitScrim", "show");
     dom::set_disabled("missesBtn", false);
     stop_timer(true);
     clear_meaning();

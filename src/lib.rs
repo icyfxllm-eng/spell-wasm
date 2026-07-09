@@ -821,10 +821,22 @@ fn wire_versus(app: &App) {
             dom::remove_class("vsSetupScrim", "show");
         }
     });
+    // Mid-match "End" confirms before forfeiting (leaving affects the other
+    // player); the setup/lobby "Cancel" and the result screen exit instantly.
+    dom::on_click("vsExit", || dom::add_class("vsQuitScrim", "show"));
     {
         let a = app.clone();
-        dom::on_click("vsExit", move || game::exit_versus(&a));
+        dom::on_click("vsQuitConfirm", move || {
+            dom::remove_class("vsQuitScrim", "show");
+            game::exit_versus(&a);
+        });
     }
+    dom::on_click("vsQuitCancel", || dom::remove_class("vsQuitScrim", "show"));
+    dom::on::<web_sys::Event, _>("vsQuitScrim", "click", |e| {
+        if dom::is_self_target(&e, "vsQuitScrim") {
+            dom::remove_class("vsQuitScrim", "show");
+        }
+    });
     {
         let a = app.clone();
         dom::on_click("vsRematch", move || game::versus_rematch(&a));

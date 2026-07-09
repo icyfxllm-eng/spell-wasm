@@ -606,8 +606,20 @@
       <h3 id="vsResultTitle">Winner</h3>
       <p id="vsResultMsg"></p>
       <div class="row">
-        <button class="btn btn-icon" id="vsResultClose" style="flex:1;border-radius:12px">Done</button>
+        <button class="btn btn-icon" id="vsResultClose" style="flex:1;border-radius:12px">Back to solo</button>
         <button class="btn btn-check" id="vsRematch">Rematch</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- head-to-head "leave mid-match" confirm -->
+  <div class="scrim" id="vsQuitScrim">
+    <div class="modal">
+      <h3>Leave the match?</h3>
+      <p>The head-to-head match will end and you'll return to the solo game. The current chains won't be saved.</p>
+      <div class="row">
+        <button class="btn btn-icon" id="vsQuitCancel" style="flex:1;border-radius:12px">Keep playing</button>
+        <button class="btn btn-check" id="vsQuitConfirm">Leave match</button>
       </div>
     </div>
   </div>
