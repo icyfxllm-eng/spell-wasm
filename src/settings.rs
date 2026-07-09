@@ -187,4 +187,7 @@ pub fn apply_settings(app: &App) {
     dom::input("remindTime").set_value(&s.remind_time);
     dom::input("volumeSlider").set_value(&s.volume.to_string());
     audio_boost::set_gain(s.volume);
+    drop(s);
+    // Kid Mode hides the account/leaderboard entry points entirely.
+    crate::climb::reflect_auth();
 }

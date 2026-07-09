@@ -652,6 +652,10 @@ fn on_correct(app: &App) {
         achievements::unlock(&mut app.borrow_mut(), "cleared");
     }
 
+    // Stamp the run's start when a fresh chain begins (for The Climb's timing).
+    if app.borrow().streak == 0 {
+        app.borrow_mut().run_start_ms = now_ms();
+    }
     let streak = bump_streak(app);
     dom::set_text("streakNum", &streak.to_string());
     dom::set_text("bestNum", &app.borrow().best.to_string());
@@ -778,7 +782,17 @@ pub fn give_up(app: &App) {
 }
 
 fn end_chain(app: &App) {
-    let reached = app.borrow().streak;
+    let (reached, level, run_start, kid) = {
+        let s = app.borrow();
+        (s.streak, s.level.clone(), s.run_start_ms, s.kid)
+    };
+    // Post to The Climb: ranked difficulty (submit_run filters to medium/hard/
+    // expert) and logged-in only; never in Kid Mode. A plausible run duration
+    // feeds the server-side anti-cheat.
+    if reached > 0 && !kid {
+        let duration = (now_ms() - run_start).max(0.0);
+        crate::climb::submit_run(&level, reached, duration);
+    }
     let delay = if reached > 0 { 950 } else { 650 };
     let app2 = app.clone();
     schedule_raw(delay, move || {

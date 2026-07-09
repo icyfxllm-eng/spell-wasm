@@ -116,6 +116,9 @@ pub struct AppState {
     pub saved_name: String,
     pub pending_score: u32,
     pub prev_letter_len: usize,
+    /// Unix ms when the current solo chain started (streak 0 -> 1), used to send
+    /// a plausible run duration to The Climb's anti-cheat. Session-only.
+    pub run_start_ms: f64,
     /// Head-to-head match state. Session-only (never persisted); `enabled` is
     /// false during normal single-player play. See `crate::versus`.
     pub versus: crate::versus::Versus,
@@ -160,6 +163,7 @@ impl Default for AppState {
             saved_name: String::new(),
             pending_score: 0,
             prev_letter_len: 0,
+            run_start_ms: 0.0,
             versus: crate::versus::Versus::default(),
             decks: HashMap::new(),
         }

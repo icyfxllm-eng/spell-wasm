@@ -3,6 +3,7 @@ mod agegate;
 mod api;
 mod audio_boost;
 mod board;
+mod climb;
 mod consts;
 mod deck;
 mod dom;
@@ -123,6 +124,7 @@ fn wire(app: &App) {
     wire_versus(app);
     wire_age_gate(app);
     keyboard::setup(app);
+    climb::setup(app);
 }
 
 thread_local! {

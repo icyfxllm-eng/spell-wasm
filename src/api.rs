@@ -29,7 +29,7 @@ pub fn stop() {
 /// `index.html`. Deploying to a new backend (e.g. a Replit URL) is then a
 /// one-line HTML edit — no Rust rebuild needed. Falls back to local dev
 /// defaults if it's missing or blank.
-fn api_base() -> String {
+pub fn api_base() -> String {
     if let Some(win) = web_sys::window() {
         if let Ok(v) = js_sys::Reflect::get(&win, &JsValue::from_str("SPELL_API_BASE")) {
             if let Some(s) = v.as_string() {
