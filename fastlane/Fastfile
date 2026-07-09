@@ -48,6 +48,49 @@ platform :ios do
     )
   end
 
+  desc "Build, upload, and submit to external TestFlight (Beta App Review)"
+  lane :beta_external do
+    match(type: "appstore", readonly: is_ci)
+    profile_name = ENV["sigh_net.spellgame.app_appstore_profile-name"]
+    update_code_signing_settings(
+      use_automatic_signing: false,
+      path: "ios/App/App.xcodeproj",
+      team_id: "WCH6H5NAWH",
+      bundle_identifier: "net.spellgame.app",
+      code_sign_identity: "Apple Distribution",
+      profile_name: profile_name,
+      targets: ["App"]
+    )
+    gym(
+      project: "ios/App/App.xcodeproj",
+      scheme: "App",
+      configuration: "Release",
+      export_method: "app-store",
+      output_directory: "build",
+      clean: true,
+      export_options: {
+        signingStyle: "manual",
+        provisioningProfiles: { "net.spellgame.app" => profile_name }
+      }
+    )
+    pilot(
+      distribute_external: true,
+      groups: ["External Testers"],
+      notify_external_testers: true,
+      beta_app_feedback_email: "icyfxllm@gmail.com",
+      beta_app_description: "Spell is a spelling game you play by ear. Tap the glowing orb to hear a word, then spell it on the on-screen keyboard and press Check. Replay or slow the word, use Definition/Sentence hints, and grow your chain. Fully playable offline after first load.",
+      changelog: "Please try: tapping the orb to hear words, spelling on the on-screen keyboard, Replay/Slow, Definition/Sentence hints, head-to-head mode, and Kid Mode / Big Text in Settings.",
+      beta_app_review_info: {
+        contact_email: "icyfxllm@gmail.com",
+        contact_first_name: "Eric",
+        contact_last_name: "Hillman",
+        contact_phone: "2604584592",
+        demo_account_required: false,
+        notes: "Native iOS spelling game, fully playable offline. No account or login required; no demo account needed. Tap the orb to hear a word, spell it on the on-screen keyboard, and press Check spelling."
+      }
+    )
+  end
+
   desc "Bump the iOS build number to the next TestFlight number"
   lane :bump do
     increment_build_number(
