@@ -298,3 +298,163 @@ def report_name():
     )
     c.commit()
     return jsonify(ok=True)
+
+
+# ---------- password recovery ----------
+
+RESET_EMAIL_TTL = 30 * 60   # 30 minutes
+RESET_SMS_TTL = 10 * 60     # 10 minutes
+RESET_SMS_MAX_ATTEMPTS = 3
+
+
+@bp.route("/api/auth/request-reset-email", methods=["POST"])
+def request_reset_email():
+    if not auth.rate_limit(f"reset-email:{auth.client_ip()}", 5, 3600):
+        return jsonify(error="Too many requests. Please try again later."), 429
+    data = request.get_json(silent=True) or {}
+    email = (data.get("email") or "").strip().lower()
+    c = db.conn()
+    row = c.execute("SELECT id FROM users WHERE email_lc=?", (email,)).fetchone()
+    token = None
+    if row:
+        token = secrets.token_urlsafe(32)
+        c.execute(
+            "INSERT INTO password_resets(token,user_id,kind,expires_at) VALUES(?,?,?,?)",
+            (token, row["id"], "email", time.time() + RESET_EMAIL_TTL),
+        )
+        c.commit()
+        link = f"{auth.FRONTEND_BASE}/?reset={token}"
+        auth.send_email(
+            email,
+            "Reset your Spell password",
+            f'<p>Reset your Spell password (link valid 30 minutes):</p>'
+            f'<p><a href="{link}">Reset password</a></p>',
+        )
+    # Never reveal whether the account exists.
+    body = {"ok": True, "message": "If that account exists, we've sent a reset link."}
+    if auth.DEV and token:
+        body["devResetToken"] = token
+    return jsonify(body)
+
+
+@bp.route("/api/auth/request-reset-sms", methods=["POST"])
+def request_reset_sms():
+    if not auth.rate_limit(f"reset-sms:{auth.client_ip()}", 5, 3600):
+        return jsonify(error="Too many requests. Please try again later."), 429
+    data = request.get_json(silent=True) or {}
+    identifier = (data.get("identifier") or "").strip().lower()
+    c = db.conn()
+    row = c.execute(
+        "SELECT id, phone, phone_verified FROM users WHERE username_lc=? OR email_lc=?",
+        (identifier, identifier),
+    ).fetchone()
+    # Always return a token so absence can't be probed; it maps to a real reset
+    # row only when the account exists AND has a verified phone.
+    token = secrets.token_urlsafe(24)
+    dev_code = None
+    if row and row["phone"] and row["phone_verified"]:
+        code = f"{secrets.randbelow(1000000):06d}"
+        c.execute(
+            "INSERT INTO password_resets(token,user_id,kind,code_hash,expires_at) VALUES(?,?,?,?,?)",
+            (token, row["id"], "sms", auth.hash_password(code), time.time() + RESET_SMS_TTL),
+        )
+        c.commit()
+        auth.send_sms(row["phone"], f"Your Spell reset code is {code}")
+        dev_code = code
+    body = {"ok": True, "message": "If that account has a verified phone, we've sent a code.", "token": token}
+    if auth.DEV and dev_code:
+        body["devSmsCode"] = dev_code
+    return jsonify(body)
+
+
+@bp.route("/api/auth/confirm-reset", methods=["POST"])
+def confirm_reset():
+    if not auth.rate_limit(f"confirm-reset:{auth.client_ip()}", 10, 900):
+        return jsonify(error="Too many attempts. Please try again later."), 429
+    data = request.get_json(silent=True) or {}
+    token = data.get("token") or ""
+    new_password = data.get("newPassword") or ""
+    code = (data.get("code") or "").strip()
+    if len(new_password) < 8:
+        return jsonify(error="Password must be at least 8 characters.", field="password"), 400
+
+    c = db.conn()
+    row = c.execute("SELECT * FROM password_resets WHERE token=?", (token,)).fetchone()
+    if not row or row["used"] or row["expires_at"] < time.time():
+        return jsonify(error="This reset link or code is invalid or has expired."), 400
+
+    if row["kind"] == "sms":
+        if row["attempts"] >= RESET_SMS_MAX_ATTEMPTS:
+            c.execute("UPDATE password_resets SET used=1 WHERE token=?", (token,))
+            c.commit()
+            return jsonify(error="Too many incorrect codes. Request a new one."), 400
+        if not auth.verify_password(code, row["code_hash"] or ""):
+            c.execute("UPDATE password_resets SET attempts=attempts+1 WHERE token=?", (token,))
+            c.commit()
+            return jsonify(error="Incorrect code."), 400
+
+    # Success: set the new password, consume the token, and invalidate ALL
+    # existing sessions (both reset flows).
+    c.execute("UPDATE users SET pw_hash=? WHERE id=?", (auth.hash_password(new_password), row["user_id"]))
+    c.execute("UPDATE password_resets SET used=1 WHERE token=?", (token,))
+    c.commit()
+    auth.revoke_all_for_user(row["user_id"])
+    return jsonify(ok=True)
+
+
+# ---------- account management ----------
+
+@bp.route("/api/auth/change-username", methods=["POST"])
+def change_username():
+    u = auth.current_user()
+    if not u:
+        return jsonify(error="Not signed in."), 401
+    if not auth.rate_limit(f"rename:{u['id']}", 5, 86400):
+        return jsonify(error="You can only change your username a few times a day."), 429
+    data = request.get_json(silent=True) or {}
+    new = (data.get("username") or "").strip()
+    if not usernames.is_acceptable(new):
+        return jsonify(error="That username isn't available.", field="username"), 400
+
+    c = db.conn()
+    nlc, old_lc = new.lower(), u["username_lc"]
+    if nlc == old_lc:
+        return jsonify(ok=True, username=new)  # case-only / no-op change
+    taken = c.execute("SELECT 1 FROM users WHERE username_lc=? AND id<>?", (nlc, u["id"])).fetchone() or c.execute(
+        "SELECT 1 FROM reserved_usernames WHERE username_lc=? AND reserved_until>?", (nlc, time.time())
+    ).fetchone()
+    if taken:
+        return jsonify(error="That username isn't available.", field="username"), 400
+
+    t = time.time()
+    # Hold the old handle for 30 days so it can't be grabbed to impersonate.
+    c.execute(
+        "INSERT OR REPLACE INTO reserved_usernames(username_lc, reserved_until) VALUES(?,?)",
+        (old_lc, t + 30 * 86400),
+    )
+    c.execute(
+        "UPDATE users SET username=?, username_lc=?, username_changed_at=? WHERE id=?",
+        (new, nlc, t, u["id"]),
+    )
+    c.commit()
+    return jsonify(ok=True, username=new)
+
+
+@bp.route("/api/auth/delete-account", methods=["POST"])
+def delete_account():
+    """In-app account deletion (Apple App Review 5.1.1(v)). Removes the user and
+    ALL their data — sessions, leaderboard entries, resets, reports — via ON
+    DELETE CASCADE, plus the un-cascaded submit_log."""
+    u = auth.current_user()
+    if not u:
+        return jsonify(error="Not signed in."), 401
+    data = request.get_json(silent=True) or {}
+    if not auth.verify_password(data.get("password") or "", u["pw_hash"]):
+        return jsonify(error="Incorrect password."), 401
+
+    c = db.conn()
+    c.execute("DELETE FROM submit_log WHERE user_id=?", (u["id"],))
+    c.execute("DELETE FROM users WHERE id=?", (u["id"],))  # CASCADE clears the rest
+    c.commit()
+    resp = make_response(jsonify(ok=True))
+    return auth.clear_session_cookie(resp)
