@@ -7,6 +7,7 @@ use wasm_bindgen_futures::spawn_local;
 
 use crate::consts::{tier_time, CORRECT_DELAY_MS, EN, LEVEL_OPTS, MAX_TRIES, MINE, PRAISE, REVIEW};
 use crate::model::AppState;
+use crate::versus::Side;
 use crate::{achievements, api, board, dom, drawing, misses, speech_out, stats, words};
 use crate::App;
 
@@ -445,7 +446,10 @@ pub fn next_word(app: &App) {
             s.cur_tier = m.tier.clone();
         } else {
             s.cur_lang = s.lang.clone();
-            let mut tier = if s.level == "climb" { tier_for_streak(s.streak).to_string() } else { s.level.clone() };
+            // In head-to-head, "Climb" difficulty tracks the active player's
+            // current chain rather than the (unused) single-player streak.
+            let climb_from = if s.versus.enabled { s.versus.active_player().current } else { s.streak };
+            let mut tier = if s.level == "climb" { tier_for_streak(climb_from).to_string() } else { s.level.clone() };
             if s.kid && (tier == "hard" || tier == "expert") {
                 tier = "medium".to_string();
             }
@@ -577,6 +581,10 @@ fn bump_streak(app: &App) -> u32 {
 }
 
 fn on_correct(app: &App) {
+    if app.borrow().versus.enabled {
+        versus_on_correct(app);
+        return;
+    }
     crate::haptics::correct();
     let (review, cur_lang, cur_tier, word) = {
         let s = app.borrow();
@@ -644,20 +652,28 @@ fn retry_wrong(app: &App, tries_left: u32, verb: &str) {
 
 /// Out of tries (or timed out / gave up): record the miss and reveal the word.
 fn finalize_incorrect(app: &App, glyph: &str, prefix: &str, feedback_class: &str) {
-    let (cur_lang, cur_tier, word) = {
+    let (versus_on, cur_lang, cur_tier, word) = {
         let s = app.borrow();
-        (s.cur_lang.clone(), s.cur_tier.clone(), s.word.clone())
+        (s.versus.enabled, s.cur_lang.clone(), s.cur_tier.clone(), s.word.clone())
     };
     stats::record(&mut app.borrow_mut(), &cur_lang, &cur_tier, false);
-    misses::add_miss(&mut app.borrow_mut(), &word, &cur_lang, &cur_tier);
-    refresh_mode_buttons(app);
+    // Head-to-head doesn't feed the spaced-repetition Misses queue or the
+    // single-player leaderboard — a missed word just ends the turn.
+    if !versus_on {
+        misses::add_miss(&mut app.borrow_mut(), &word, &cur_lang, &cur_tier);
+        refresh_mode_buttons(app);
+    }
 
     dom::add_class("orbWrap", "bad");
     dom::set_text("orbGlyph", glyph);
     dom::set_html("feedback", &format!("{}<span class=\"reveal\">{}</span>", prefix, dom::escape_html(&word)));
     dom::el("feedback").set_class_name(feedback_class);
     show_meaning(app, word, cur_lang);
-    end_chain(app);
+    if versus_on {
+        versus_end_turn(app);
+    } else {
+        end_chain(app);
+    }
 }
 
 fn on_wrong(app: &App) {
@@ -921,4 +937,191 @@ pub fn commit_save(app: &App) {
 pub fn close_save(app: &App) {
     dom::remove_class("scrim", "show");
     reset_chain_soft(app);
+}
+
+// ---------- head-to-head (versus) ----------
+
+fn clean_name(name: &str, fallback: &str) -> String {
+    let t = name.trim();
+    if t.is_empty() {
+        fallback.to_string()
+    } else {
+        t.to_string()
+    }
+}
+
+/// Enters head-to-head and starts the first turn. Kid Mode shortens the match
+/// (2 turns each vs 3) so it stays quick for younger players.
+pub fn start_versus(app: &App, name1: String, name2: String) {
+    if app.borrow().review {
+        exit_review(app, None);
+    }
+    stop_timer(true);
+    clear_meaning();
+    let turns = if app.borrow().kid { 2 } else { 3 };
+    let n1 = clean_name(&name1, "Player 1");
+    let n2 = clean_name(&name2, "Player 2");
+    app.borrow_mut().versus = crate::versus::Versus::start(n1, n2, turns);
+    if let Some(body) = dom::doc().body() {
+        let _ = body.class_list().add_1("versus");
+    }
+    dom::remove_class("vsBar", "btn-hide");
+    dom::remove_class("vsResultScrim", "show");
+    // Misses/review don't apply during a match.
+    dom::set_disabled("missesBtn", true);
+    render_versus_bar(app);
+    begin_versus_turn(app);
+}
+
+/// Leaves head-to-head and restores normal single-player play.
+pub fn exit_versus(app: &App) {
+    app.borrow_mut().versus = crate::versus::Versus::default();
+    if let Some(body) = dom::doc().body() {
+        let _ = body.class_list().remove_1("versus");
+    }
+    dom::add_class("vsBar", "btn-hide");
+    dom::remove_class("vsResultScrim", "show");
+    dom::remove_class("vsSetupScrim", "show");
+    dom::set_disabled("missesBtn", false);
+    stop_timer(true);
+    clear_meaning();
+    {
+        let mut s = app.borrow_mut();
+        s.streak = 0;
+        s.word = String::new();
+        s.answered = false;
+    }
+    dom::remove_class("orbWrap", "good");
+    dom::remove_class("orbWrap", "bad");
+    dom::set_html("orbGlyph", "tap to<br/>hear a word");
+    dom::input("guess").set_value("");
+    render_letters(app, false);
+    drawing::clear_canvas();
+    dom::set_text("hintLine", "");
+    render_tries(app);
+    dom::set_text("streakNum", "0");
+    dom::set_text("bestNum", &app.borrow().best.to_string());
+    dom::set_text("feedback", "");
+    dom::el("feedback").set_class_name("feedback");
+    refresh_mode_buttons(app);
+    render_access(app);
+    update_voice_note(app);
+}
+
+/// Restarts a fresh match with the same two players (from the winner screen).
+pub fn versus_rematch(app: &App) {
+    let (n1, n2) = {
+        let v = &app.borrow().versus;
+        (v.p1.name.clone(), v.p2.name.clone())
+    };
+    dom::remove_class("vsResultScrim", "show");
+    start_versus(app, n1, n2);
+}
+
+/// Sets the stage for the active player to start their turn (idle, waiting for
+/// an orb tap to hear the first word).
+fn begin_versus_turn(app: &App) {
+    stop_timer(true);
+    clear_meaning();
+    {
+        let mut s = app.borrow_mut();
+        s.word = String::new();
+        s.answered = false;
+        s.tries_left = MAX_TRIES;
+    }
+    dom::remove_class("orbWrap", "good");
+    dom::remove_class("orbWrap", "bad");
+    let name = app.borrow().versus.active_player().name.clone();
+    dom::set_html("orbGlyph", &format!("{}<br/>tap for a word", dom::escape_html(&name)));
+    dom::input("guess").set_value("");
+    dom::input("guess").set_disabled(false);
+    render_letters(app, false);
+    drawing::clear_canvas();
+    dom::set_text("hintLine", "");
+    render_tries(app);
+    dom::set_text(
+        "feedback",
+        &format!("{}\u{2019}s turn \u{2014} spell as many as you can before a miss.", name),
+    );
+    dom::el("feedback").set_class_name("feedback");
+    render_versus_bar(app);
+}
+
+/// Versus counterpart of `on_correct`: extends the active player's chain and
+/// keeps their turn going, without the single-player streak/board/misses/
+/// achievement machinery.
+fn versus_on_correct(app: &App) {
+    crate::haptics::correct();
+    let (cur_lang, cur_tier, word) = {
+        let s = app.borrow();
+        (s.cur_lang.clone(), s.cur_tier.clone(), s.word.clone())
+    };
+    stats::record(&mut app.borrow_mut(), &cur_lang, &cur_tier, true);
+    app.borrow_mut().versus.record_correct();
+    render_versus_bar(app);
+
+    dom::add_class("orbWrap", "good");
+    dom::set_text("orbGlyph", "\u{2713}");
+    let praise = {
+        let s = app.borrow();
+        let p = s.versus.active_player();
+        format!("{} \u{2014} chain of {}", p.name, p.current)
+    };
+    dom::set_text("feedback", &praise);
+    dom::el("feedback").set_class_name("feedback good");
+    show_meaning(app, word, cur_lang);
+    schedule(app, CORRECT_DELAY_MS, |app| next_word(app));
+}
+
+/// A miss ends the active player's turn; hand off to the other player, or show
+/// the winner screen if the match is over.
+fn versus_end_turn(app: &App) {
+    app.borrow_mut().versus.end_turn();
+    render_versus_bar(app);
+    let over = app.borrow().versus.over;
+    if over {
+        schedule(app, 1300, |app| show_versus_result(app));
+    } else {
+        schedule(app, 1300, |app| begin_versus_turn(app));
+    }
+}
+
+/// Repaints the two-player scoreboard (names, current + best chain, active
+/// indicator). Safe no-op outside a match.
+pub fn render_versus_bar(app: &App) {
+    let s = app.borrow();
+    if !s.versus.enabled {
+        return;
+    }
+    let v = &s.versus;
+    for (side, name_id, cur_id, best_id, cell_id) in [
+        (Side::P1, "vsP1Name", "vsP1Cur", "vsP1Best", "vsP1"),
+        (Side::P2, "vsP2Name", "vsP2Cur", "vsP2Best", "vsP2"),
+    ] {
+        let p = v.player(side);
+        dom::set_text(name_id, &p.name);
+        dom::set_text(cur_id, &p.current.to_string());
+        dom::set_text(best_id, &p.best.to_string());
+        dom::toggle_class(cell_id, "active", !v.over && v.active == side);
+    }
+}
+
+fn show_versus_result(app: &App) {
+    let (title, msg) = {
+        let s = app.borrow();
+        let v = &s.versus;
+        match v.winner() {
+            Some(side) => (
+                format!("{} wins!", v.player(side).name),
+                format!("{} {} vs {} {} \u{2014} longest chain wins.", v.p1.name, v.p1.best, v.p2.name, v.p2.best),
+            ),
+            None => (
+                "It\u{2019}s a tie!".to_string(),
+                format!("Both reached a chain of {}.", v.p1.best),
+            ),
+        }
+    };
+    dom::set_text("vsResultTitle", &title);
+    dom::set_text("vsResultMsg", &msg);
+    dom::add_class("vsResultScrim", "show");
 }

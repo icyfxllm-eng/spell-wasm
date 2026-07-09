@@ -12,6 +12,8 @@ pub struct Prefs {
     pub last_lang: Option<String>,
     pub kid: bool,
     pub readable: bool,
+    #[serde(rename = "bigText", default)]
+    pub big_text: bool,
     pub slow: bool,
     pub volume: Option<f32>,
     #[serde(default)]
@@ -90,6 +92,7 @@ pub struct AppState {
     pub last_lang: Option<String>,
     pub kid: bool,
     pub readable: bool,
+    pub big_text: bool,
     pub slow: bool,
     pub volume: f32,
     /// Daily practice reminder (native local notification). `remind_time` is
@@ -104,6 +107,9 @@ pub struct AppState {
     pub saved_name: String,
     pub pending_score: u32,
     pub prev_letter_len: usize,
+    /// Head-to-head match state. Session-only (never persisted); `enabled` is
+    /// false during normal single-player play. See `crate::versus`.
+    pub versus: crate::versus::Versus,
     /// Shuffled-deck word selection, one per lang+tier pool (keyed
     /// `"{lang}:{tier}"`) plus `"__review"` for misses practice. Session-only
     /// — not persisted to storage.
@@ -131,6 +137,7 @@ impl Default for AppState {
             last_lang: None,
             kid: false,
             readable: false,
+            big_text: false,
             slow: false,
             volume: 1.0,
             remind: false,
@@ -142,6 +149,7 @@ impl Default for AppState {
             saved_name: String::new(),
             pending_score: 0,
             prev_letter_len: 0,
+            versus: crate::versus::Versus::default(),
             decks: HashMap::new(),
         }
     }

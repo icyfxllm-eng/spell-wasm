@@ -2,6 +2,7 @@ use std::collections::HashSet;
 use wasm_bindgen::JsValue;
 
 use crate::model::{AppState, CustomSet, CUSTOM_KEY};
+use crate::profanity;
 use crate::storage;
 use regex::Regex;
 
@@ -38,8 +39,17 @@ pub async fn fetch_words_from_url(url: &str) -> Result<Vec<String>, JsValue> {
 }
 
 pub fn load_custom(state: &mut AppState) {
-    if let Some(c) = storage::get_json::<CustomSet>(CUSTOM_KEY) {
+    if let Some(mut c) = storage::get_json::<CustomSet>(CUSTOM_KEY) {
+        // Screen already-stored words too: a list saved before a term entered
+        // the blocklist (or carried over from an older build) still gets
+        // cleaned on load. Re-persist only if something was actually removed.
+        let before = c.words.len();
+        let (clean, blocked) = profanity::filter_allowed(c.words);
+        c.words = clean;
         state.custom = c;
+        if blocked > 0 && before != state.custom.words.len() {
+            save_custom(state);
+        }
     }
 }
 

@@ -14,12 +14,14 @@ mod misses;
 mod model;
 mod native_audio;
 mod notifications;
+mod profanity;
 mod settings;
 mod share;
 mod speech_in;
 mod speech_out;
 mod stats;
 mod storage;
+mod versus;
 mod words;
 
 use std::cell::RefCell;
@@ -100,6 +102,7 @@ fn wire(app: &App) {
     wire_source_level(app);
     wire_import(app);
     wire_stats_board_modal(app);
+    wire_versus(app);
 }
 
 fn wire_orb_and_answer(app: &App) {
@@ -298,6 +301,15 @@ fn wire_glow_and_settings(app: &App) {
         dom::on::<web_sys::Event, _>("readToggle", "change", move |_| {
             let v = dom::input("readToggle").checked();
             a.borrow_mut().readable = v;
+            settings::save_prefs(&a.borrow());
+            settings::apply_settings(&a);
+        });
+    }
+    {
+        let a = app.clone();
+        dom::on::<web_sys::Event, _>("bigTextToggle", "change", move |_| {
+            let v = dom::input("bigTextToggle").checked();
+            a.borrow_mut().big_text = v;
             settings::save_prefs(&a.borrow());
             settings::apply_settings(&a);
         });
@@ -615,6 +627,13 @@ fn wire_import(app: &App) {
                 dom::set_text("importNote", "Add at least one word to save.");
                 return;
             }
+            // Screen out profanity before saving (also re-checked on load). This
+            // guards Kid Mode — a custom list can't smuggle in slurs.
+            let (words, blocked) = profanity::filter_allowed(words);
+            if words.is_empty() {
+                dom::set_text("importNote", profanity::rejection_message());
+                return;
+            }
             let speak_lang = dom::select("importLang").value();
             let count = words.len();
             importer::save_words(&mut a.borrow_mut(), words, speak_lang);
@@ -646,7 +665,15 @@ fn wire_import(app: &App) {
             game::render_letters(&a, false);
             game::clear_meaning();
             dom::remove_class("importScrim", "show");
-            dom::set_text("feedback", &format!("Saved {} of your words \u{2014} press the orb to start.", count));
+            let saved_msg = if blocked > 0 {
+                format!(
+                    "Saved {} of your words ({} skipped) \u{2014} press the orb to start.",
+                    count, blocked
+                )
+            } else {
+                format!("Saved {} of your words \u{2014} press the orb to start.", count)
+            };
+            dom::set_text("feedback", &saved_msg);
             dom::el("feedback").set_class_name("feedback good");
         });
     }
@@ -679,6 +706,54 @@ fn wire_import(app: &App) {
             dom::remove_class("importScrim", "show");
         }
     });
+}
+
+fn wire_versus(app: &App) {
+    {
+        let a = app.clone();
+        dom::on_click("vsBtn", move || {
+            // If a match is already running, this button just re-opens setup —
+            // exit the current one first so names/turns start clean.
+            if a.borrow().versus.enabled {
+                game::exit_versus(&a);
+            }
+            let (n1, n2) = {
+                let s = a.borrow();
+                (s.versus.p1.name.clone(), s.versus.p2.name.clone())
+            };
+            dom::input("vsName1").set_value(&n1);
+            dom::input("vsName2").set_value(&n2);
+            dom::add_class("vsSetupScrim", "show");
+            dom::input("vsName1").focus().ok();
+        });
+    }
+    {
+        let a = app.clone();
+        dom::on_click("vsStart", move || {
+            let n1 = dom::input("vsName1").value();
+            let n2 = dom::input("vsName2").value();
+            dom::remove_class("vsSetupScrim", "show");
+            game::start_versus(&a, n1, n2);
+        });
+    }
+    dom::on_click("vsCancel", || dom::remove_class("vsSetupScrim", "show"));
+    dom::on::<web_sys::Event, _>("vsSetupScrim", "click", |e| {
+        if dom::is_self_target(&e, "vsSetupScrim") {
+            dom::remove_class("vsSetupScrim", "show");
+        }
+    });
+    {
+        let a = app.clone();
+        dom::on_click("vsExit", move || game::exit_versus(&a));
+    }
+    {
+        let a = app.clone();
+        dom::on_click("vsRematch", move || game::versus_rematch(&a));
+    }
+    {
+        let a = app.clone();
+        dom::on_click("vsResultClose", move || game::exit_versus(&a));
+    }
 }
 
 fn wire_stats_board_modal(app: &App) {

@@ -52,6 +52,46 @@
   body.kid .access-line,body.kid .foot{ display:none; }
   body.kid .brand .tag::after{ content:" · just for fun"; }
 
+  /* Big text — enlarges the interface/reading text to ~1.5x its normal size
+     from one grouped class, rather than per-element inline hacks. Explicit
+     target px (not em/%) so every element scales ~1.5x of its OWN size and
+     nested text doesn't compound. Deliberately leaves the spellbox letters,
+     orb glyph and canvas alone (the typed-answer overlay must stay pixel-
+     aligned with its hidden input, and the orb/canvas are already large);
+     everything here is a reflowing text block, so growing it doesn't break
+     layout. Extend this list to cover any new interface text. */
+  body.big-text .brand .tag{ font-size:19px; }
+  body.big-text .glow-pick .gl,
+  body.big-text .chain .lbl,
+  body.big-text .card h2 .scope,
+  body.big-text .board .meta,
+  body.big-text .demo-note{ font-size:16px; }
+  body.big-text .access-line,
+  body.big-text .voice-note,
+  body.big-text .field-label,
+  body.big-text .set-row .lbl2 small,
+  body.big-text .foot{ font-size:17px; }
+  body.big-text .snum,
+  body.big-text .stats-foot .total,
+  body.big-text .imp-lang,
+  body.big-text .imp-count{ font-size:18px; }
+  body.big-text .pill,
+  body.big-text select,
+  body.big-text .srow,
+  body.big-text .problem .ans,
+  body.big-text .ghost{ font-size:19px; }
+  body.big-text .meaning,
+  body.big-text .stats-empty,
+  body.big-text .modal p{ font-size:20px; }
+  body.big-text .board li,
+  body.big-text .problem blockquote{ font-size:21px; }
+  body.big-text .feedback,
+  body.big-text .btn{ font-size:22px; }
+  body.big-text .set-row .lbl2{ font-size:21px; }
+  body.big-text .hint-line{ font-size:27px; }
+  body.big-text .card h2{ font-size:24px; }
+  body.big-text .modal h3{ font-size:33px; }
+
   .topbar{width:100%;max-width:600px;display:flex;align-items:flex-start;justify-content:space-between;gap:14px;margin-bottom:12px;flex-wrap:wrap}
   .brand .mark{font-family:var(--display);font-weight:800;font-size:30px;letter-spacing:-0.5px;line-height:1}
   .brand .mark b{color:var(--amber)}
@@ -194,6 +234,23 @@
   .chain .lbl{margin-top:5px;color:var(--muted-on-bg);font-size:11px;text-transform:uppercase;letter-spacing:.16em}
   .chain .divider{width:1px;height:42px;background:var(--edge)}
 
+  /* head-to-head scoreboard */
+  .vs-bar{width:100%;max-width:600px;margin:0 0 14px;display:flex;align-items:stretch;gap:10px}
+  .vs-bar.btn-hide{display:none}
+  .vs-side{flex:1;min-width:0;background:var(--panel);border:1.5px solid var(--edge);border-radius:14px;padding:11px 12px;text-align:center;transition:border-color .2s,box-shadow .2s}
+  .vs-side.active{border-color:var(--amber);box-shadow:0 0 0 3px rgba(255,177,77,.14)}
+  .vs-name{font-size:12px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .vs-side.active .vs-name{color:var(--amber-soft)}
+  .vs-cur{font-family:var(--display);font-weight:800;font-size:34px;line-height:1.15;color:var(--ink)}
+  .vs-side.active .vs-cur{color:var(--amber)}
+  .vs-best{font-size:11px;color:var(--muted-2)}
+  .vs-best b{color:var(--amber-soft);font-family:var(--mono)}
+  .vs-mid{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;flex:0 0 auto}
+  .vs-vs{font-family:var(--display);font-weight:700;color:var(--muted-2);font-size:14px}
+  .vs-mid .ghost{padding:4px 8px;font-size:12px}
+  /* Focus the screen during a match: hide single-player chrome. */
+  body.versus .access-line,body.versus .chain,body.versus .card,body.versus #shareBtn,body.versus .foot{display:none}
+
   .card{width:100%;max-width:600px;margin-top:22px;background:var(--panel);border:1px solid var(--edge);border-radius:16px;padding:18px 20px}
   .card h2{font-family:var(--display);font-weight:700;font-size:16px;display:flex;align-items:center;justify-content:space-between;gap:10px}
   .card h2 .scope{font-family:var(--body);font-size:11px;font-weight:500;color:var(--muted-2);letter-spacing:.04em}
@@ -293,11 +350,30 @@
         <option value="on">Timed ⏱</option>
       </select>
       <button class="pill" id="missesBtn">↻ Misses</button>
+      <button class="pill" id="vsBtn">⚔ Head-to-head</button>
       <button class="pill" id="importBtn">＋ My words</button>
       <button class="pill" id="setBtn" aria-label="Settings">⚙</button>
     </div>
   </div>
   <div class="access-line" id="accessLine"></div>
+
+  <!-- head-to-head scoreboard (hidden outside a match) -->
+  <div class="vs-bar btn-hide" id="vsBar" aria-live="polite">
+    <div class="vs-side" id="vsP1">
+      <div class="vs-name" id="vsP1Name">Player 1</div>
+      <div class="vs-cur" id="vsP1Cur">0</div>
+      <div class="vs-best">best <b id="vsP1Best">0</b></div>
+    </div>
+    <div class="vs-mid">
+      <span class="vs-vs">vs</span>
+      <button class="ghost" id="vsExit">End</button>
+    </div>
+    <div class="vs-side" id="vsP2">
+      <div class="vs-name" id="vsP2Name">Player 2</div>
+      <div class="vs-cur" id="vsP2Cur">0</div>
+      <div class="vs-best">best <b id="vsP2Best">0</b></div>
+    </div>
+  </div>
 
   <main class="stage">
     <div class="orb-wrap" id="orbWrap" role="button" tabindex="0" aria-label="Play the word">
@@ -453,12 +529,39 @@
     </div>
   </div>
 
+  <!-- head-to-head setup modal -->
+  <div class="scrim" id="vsSetupScrim">
+    <div class="modal">
+      <h3>Head-to-head</h3>
+      <p>Two players, one device. Take turns spelling — a miss ends your turn. The longest chain wins.</p>
+      <input id="vsName1" type="text" maxlength="14" placeholder="Player 1" autocomplete="off" autocorrect="off" autocapitalize="none" spellcheck="false" />
+      <input id="vsName2" type="text" maxlength="14" placeholder="Player 2" autocomplete="off" autocorrect="off" autocapitalize="none" spellcheck="false" />
+      <div class="row">
+        <button class="btn btn-icon" id="vsCancel" style="flex:1;border-radius:12px">Cancel</button>
+        <button class="btn btn-check" id="vsStart">Start match</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- head-to-head result modal -->
+  <div class="scrim" id="vsResultScrim">
+    <div class="modal">
+      <h3 id="vsResultTitle">Winner</h3>
+      <p id="vsResultMsg"></p>
+      <div class="row">
+        <button class="btn btn-icon" id="vsResultClose" style="flex:1;border-radius:12px">Done</button>
+        <button class="btn btn-check" id="vsRematch">Rematch</button>
+      </div>
+    </div>
+  </div>
+
   <!-- settings modal -->
   <div class="scrim" id="setScrim">
     <div class="modal">
       <h3>Settings</h3>
       <label class="set-row"><span class="lbl2">Kid mode<small>Bigger text, friendly words, no prices</small></span><input type="checkbox" class="switch" id="kidToggle" /></label>
       <label class="set-row"><span class="lbl2">Readable mode<small>Larger, spaced, dyslexia-friendly type</small></span><input type="checkbox" class="switch" id="readToggle" /></label>
+      <label class="set-row"><span class="lbl2">Big text<small>Enlarge the interface text (about 1.5×)</small></span><input type="checkbox" class="switch" id="bigTextToggle" /></label>
       <label class="set-row"><span class="lbl2">Slower voice<small>Speak each word more slowly</small></span><input type="checkbox" class="switch" id="slowToggle" /></label>
       <label class="set-row"><span class="lbl2">Daily reminder<small>One gentle nudge a day to practice</small></span><input type="checkbox" class="switch" id="remindToggle" /></label>
       <label class="set-row" id="remindTimeRow"><span class="lbl2">Reminder time<small>When to send the daily nudge</small></span><input type="time" id="remindTime" value="17:00" aria-label="Daily reminder time" /></label>

@@ -15,6 +15,7 @@ pub fn load_prefs(state: &mut AppState) {
     state.last_lang = p.last_lang;
     state.kid = p.kid;
     state.readable = p.readable;
+    state.big_text = p.big_text;
     state.slow = p.slow;
     state.rate = if state.slow { 0.7 } else { 0.9 };
     state.volume = audio_boost::clamp_gain(p.volume.unwrap_or(1.0));
@@ -30,6 +31,7 @@ pub fn save_prefs(state: &AppState) {
         last_lang: Some(state.lang.clone()),
         kid: state.kid,
         readable: state.readable,
+        big_text: state.big_text,
         slow: state.slow,
         volume: Some(state.volume),
         remind: state.remind,
@@ -176,8 +178,10 @@ pub fn apply_settings(app: &App) {
     let body = dom::doc().body().unwrap();
     let _ = body.class_list().toggle_with_force("kid", s.kid);
     let _ = body.class_list().toggle_with_force("readable", s.readable);
+    let _ = body.class_list().toggle_with_force("big-text", s.big_text);
     dom::input("kidToggle").set_checked(s.kid);
     dom::input("readToggle").set_checked(s.readable);
+    dom::input("bigTextToggle").set_checked(s.big_text);
     dom::input("slowToggle").set_checked(s.slow);
     dom::input("remindToggle").set_checked(s.remind);
     dom::input("remindTime").set_value(&s.remind_time);
