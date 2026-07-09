@@ -36,7 +36,10 @@
     --mono:'Space Mono',ui-monospace,monospace;
   }
   *{box-sizing:border-box;margin:0;padding:0}
-  html,body{height:100%}
+  /* No horizontal scroll on any screen: page width == viewport width. Real
+     causes are fixed at the source below; overflow-x:clip is only a safety net. */
+  html,body{height:100%;max-width:100%;overflow-x:clip}
+  img,svg,canvas{max-width:100%}
   body{
     font-family:var(--body); color:var(--ink-on-bg);
     background:radial-gradient(1200px 700px at 50% -10%, color-mix(in srgb, var(--bg-color) 55%, white 20%) 0%, transparent 60%), linear-gradient(180deg, var(--bg-color) 0%, color-mix(in srgb, var(--bg-color) 78%, black) 70%);
@@ -172,7 +175,9 @@
     padding-bottom:env(safe-area-inset-bottom, 0px)}
   .game-kb.locked{opacity:.5;pointer-events:none}
   .kb-row{display:flex;justify-content:center;gap:6px}
-  .kb-key,.kb-back,.kb-submit{min-width:32px;min-height:46px;flex:1 1 0;max-width:46px;border:1px solid var(--edge);
+  /* min-width:0 lets the 10-key top row shrink to fit 320px phones (fixed
+     min-widths summed past the viewport and caused horizontal scroll). */
+  .kb-key,.kb-back,.kb-submit{min-width:0;min-height:46px;flex:1 1 0;max-width:46px;border:1px solid var(--edge);
     background:var(--panel);color:var(--ink);border-radius:9px;font-family:var(--body);font-size:17px;font-weight:600;
     cursor:pointer;display:inline-flex;align-items:center;justify-content:center;transition:background .08s,transform .06s,border-color .08s;
     -webkit-tap-highlight-color:transparent;touch-action:manipulation}
@@ -240,7 +245,7 @@
   .tries-line .try-dot{color:var(--amber-soft)}
   .tries-line .try-dot.used{color:var(--edge)}
 
-  .meaning{width:100%;margin-top:12px;text-align:center;color:var(--muted);font-size:13.5px;line-height:1.55;min-height:0}
+  .meaning{width:100%;margin-top:12px;text-align:center;color:var(--muted);font-size:13.5px;line-height:1.55;min-height:0;overflow-wrap:anywhere}
   .meaning.show{padding:12px 16px;background:var(--panel-2);border:1px solid var(--edge);border-radius:12px}
   .meaning .m-word{color:var(--ink);font-weight:700}
   .meaning .m-pos{color:var(--muted-2);font-style:italic;font-size:12px;margin-left:4px}
@@ -299,7 +304,7 @@
   .board li:first-child{border-top:none}
   .board .rank{font-family:var(--mono);color:var(--muted-2);font-size:13px}
   .board li.top .rank{color:var(--amber)}
-  .board .who{font-weight:600;letter-spacing:.02em;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .board .who{font-weight:600;letter-spacing:.02em;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;min-width:0}
   .board .meta{color:var(--muted-2);font-size:11px;text-transform:uppercase;letter-spacing:.06em;white-space:nowrap}
   .board .score{font-family:var(--mono);font-weight:700;color:var(--amber-soft);font-size:15px}
   .board .empty{color:var(--muted-2);font-size:13.5px;padding:8px 0 12px;text-align:center}
