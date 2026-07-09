@@ -65,7 +65,6 @@ pub fn start() -> Result<(), JsValue> {
     settings::apply_settings(&app);
     game::build_source_options(&app);
     game::build_level_options(&app);
-    game::render_access(&app);
     game::refresh_mode_buttons(&app);
     mic::setup(&app);
     game::render_letters(&app, false);
@@ -537,7 +536,6 @@ fn wire_source_level(app: &App) {
             dom::set_text("feedback", "");
             dom::set_text("hintLine", "");
             game::build_level_options(&a);
-            game::render_access(&a);
             stats::render(&a.borrow());
             board::render(&a.borrow());
         });
@@ -651,7 +649,6 @@ fn wire_import(app: &App) {
             settings::save_prefs(&a.borrow());
             game::build_source_options(&a);
             game::build_level_options(&a);
-            game::render_access(&a);
             stats::render(&a.borrow());
             board::render(&a.borrow());
             game::refresh_mode_buttons(&a);
@@ -695,7 +692,6 @@ fn wire_import(app: &App) {
             }
             game::build_source_options(&a);
             game::build_level_options(&a);
-            game::render_access(&a);
             stats::render(&a.borrow());
             dom::set_text("importNote", "Your words were cleared.");
         });
