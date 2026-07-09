@@ -707,10 +707,10 @@ fn finalize_incorrect(app: &App, glyph: &str, prefix: &str, feedback_class: &str
         let s = app.borrow();
         (s.versus.enabled, s.cur_lang.clone(), s.cur_tier.clone(), s.word.clone())
     };
-    stats::record(&mut app.borrow_mut(), &cur_lang, &cur_tier, false);
-    // Head-to-head doesn't feed the spaced-repetition Misses queue or the
-    // single-player leaderboard — a missed word just ends the turn.
+    // Head-to-head records nothing persistent (accuracy, Misses, leaderboard,
+    // word stats) — the match never counts toward solo progress.
     if !versus_on {
+        stats::record(&mut app.borrow_mut(), &cur_lang, &cur_tier, false);
         misses::add_miss(&mut app.borrow_mut(), &word, &cur_lang, &cur_tier);
         refresh_mode_buttons(app);
     }
@@ -1039,6 +1039,9 @@ pub fn exit_versus(app: &App) {
     dom::remove_class("vsQuitScrim", "show");
     dom::set_disabled("missesBtn", false);
     stop_timer(true);
+    // Tear down any in-flight word audio so nothing keeps playing after exit.
+    api::stop();
+    speech_out::stop();
     clear_meaning();
     {
         let mut s = app.borrow_mut();
@@ -1106,11 +1109,13 @@ fn begin_versus_turn(app: &App) {
 /// achievement machinery.
 fn versus_on_correct(app: &App) {
     crate::haptics::correct();
-    let (cur_lang, cur_tier, word) = {
+    // Head-to-head writes NOTHING to persistent stats (accuracy, achievements,
+    // leaderboard, misses, word stats) — an abandoned or finished match never
+    // pollutes solo progress. Only the in-memory versus scoreboard updates.
+    let (cur_lang, word) = {
         let s = app.borrow();
-        (s.cur_lang.clone(), s.cur_tier.clone(), s.word.clone())
+        (s.cur_lang.clone(), s.word.clone())
     };
-    stats::record(&mut app.borrow_mut(), &cur_lang, &cur_tier, true);
     app.borrow_mut().versus.record_correct();
     render_versus_bar(app);
 

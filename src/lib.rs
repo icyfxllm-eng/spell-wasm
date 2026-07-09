@@ -846,6 +846,26 @@ fn wire_versus(app: &App) {
         let a = app.clone();
         dom::on_click("vsResultClose", move || game::exit_versus(&a));
     }
+    // Escape mirrors the on-screen exit controls: dismiss an open dialog, exit
+    // from the result screen, or (mid-match) open the forfeit confirm. (Hardware
+    // "back" would wire the same flow — TODO once the app adds back-handling.)
+    {
+        let a = app.clone();
+        dom::on_window::<web_sys::KeyboardEvent, _>("keydown", move |e| {
+            if e.key() != "Escape" {
+                return;
+            }
+            if dom::el("vsQuitScrim").class_list().contains("show") {
+                dom::remove_class("vsQuitScrim", "show");
+            } else if dom::el("vsSetupScrim").class_list().contains("show") {
+                dom::remove_class("vsSetupScrim", "show");
+            } else if dom::el("vsResultScrim").class_list().contains("show") {
+                game::exit_versus(&a);
+            } else if a.borrow().versus.enabled {
+                dom::add_class("vsQuitScrim", "show");
+            }
+        });
+    }
 }
 
 fn wire_stats_board_modal(app: &App) {

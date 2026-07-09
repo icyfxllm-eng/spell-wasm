@@ -63,6 +63,13 @@ pub fn setup_voice_loading<F: Fn() + 'static>(on_change: F) {
     }
 }
 
+/// Cancel any queued/speaking browser TTS (used on mode teardown).
+pub fn stop() {
+    if let Some(s) = synth() {
+        s.cancel();
+    }
+}
+
 pub fn speak(text: &str, rate: f32, code: &str) {
     let Some(s) = synth() else {
         dom::set_text("feedback", "This browser can't speak \u{2014} try Chrome or Edge.");

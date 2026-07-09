@@ -15,6 +15,16 @@ thread_local! {
     static CURRENT: RefCell<Option<(String, String, HtmlAudioElement)>> = RefCell::new(None);
 }
 
+/// Stop any backend word/sentence audio that's currently playing (used when
+/// tearing a mode down, e.g. leaving head-to-head, so nothing keeps playing).
+pub fn stop() {
+    CURRENT.with(|c| {
+        if let Some((_, _, audio)) = c.borrow_mut().take() {
+            let _ = audio.pause();
+        }
+    });
+}
+
 /// Reads the backend's base URL from `window.SPELL_API_BASE`, set in
 /// `index.html`. Deploying to a new backend (e.g. a Replit URL) is then a
 /// one-line HTML edit — no Rust rebuild needed. Falls back to local dev

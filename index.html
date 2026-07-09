@@ -273,7 +273,10 @@
   .vs-best b{color:var(--amber-soft);font-family:var(--mono)}
   .vs-mid{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;flex:0 0 auto}
   .vs-vs{font-family:var(--display);font-weight:700;color:var(--muted-2);font-size:14px}
-  .vs-mid .ghost{padding:4px 8px;font-size:12px}
+  /* 44x44 minimum touch target for the always-visible in-match exit. */
+  #vsExit{min-width:44px;min-height:44px;padding:6px 10px;font-size:13px;font-weight:600;
+    border:1px solid var(--edge);border-radius:10px;color:var(--muted)}
+  #vsExit:hover{border-color:var(--coral);color:var(--coral)}
   /* Focus the screen during a match: hide single-player chrome. */
   body.versus .chain,body.versus .card,body.versus #shareBtn,body.versus .foot{display:none}
 
@@ -392,7 +395,7 @@
     </div>
     <div class="vs-mid">
       <span class="vs-vs">vs</span>
-      <button class="ghost" id="vsExit">End</button>
+      <button class="ghost" id="vsExit" aria-label="Exit head-to-head">✕ Exit</button>
     </div>
     <div class="vs-side" id="vsP2">
       <div class="vs-name" id="vsP2Name">Player 2</div>
