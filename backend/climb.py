@@ -7,6 +7,7 @@ rate-limited and Turnstile-gated (skipped when unconfigured); errors are generic
 to avoid revealing which rule failed or whether an account exists.
 """
 
+import json
 import secrets
 import time
 
@@ -17,6 +18,16 @@ import db
 import usernames
 
 bp = Blueprint("climb", __name__)
+
+VALID_DIFFICULTIES = ("medium", "hard", "expert")  # no 'easy' board, ever
+
+# Anti-cheat (minimum viable). Client-submitted scores are only trustable so
+# far — these are sanity gates, not proof. FUTURE: server-side word
+# verification (server picks/verifies the words for a ranked run) would make
+# submissions authoritative; the run_meta stored per entry is the hook for it.
+MAX_CHAIN = 500                 # implausibly long streak ceiling
+MIN_MS_PER_WORD = 800           # hear+spell floor; a 40-chain in 20s is rejected
+SUBMIT_LIMIT_PER_HOUR = 40      # per-account submission rate limit
 
 
 def _public_user(u):
@@ -158,3 +169,132 @@ def verify_email():
     resp = make_response("", 302)
     resp.headers["Location"] = f"{auth.FRONTEND_BASE}/?verified=1"
     return resp
+
+
+# ---------- leaderboard ("The Climb") ----------
+
+def _rank_for(c, difficulty, user_id):
+    """1-based rank of a player in a category (ties broken by earliest
+    achievement), or None if they have no entry there."""
+    row = c.execute(
+        "SELECT best_chain, achieved_at FROM leaderboard_entries WHERE user_id=? AND difficulty=?",
+        (user_id, difficulty),
+    ).fetchone()
+    if not row:
+        return None
+    better = c.execute(
+        "SELECT COUNT(*) AS n FROM leaderboard_entries WHERE difficulty=? "
+        "AND (best_chain > ? OR (best_chain = ? AND achieved_at < ?))",
+        (difficulty, row["best_chain"], row["best_chain"], row["achieved_at"]),
+    ).fetchone()["n"]
+    return better + 1
+
+
+@bp.route("/api/climb/submit-chain", methods=["POST"])
+def submit_chain():
+    u = auth.current_user()
+    if not u:
+        return jsonify(error="Log in to post your chain to The Climb."), 401
+    data = request.get_json(silent=True) or {}
+    difficulty = (data.get("difficulty") or "").strip().lower()
+    chain = data.get("chain")
+    meta = data.get("meta") or {}
+
+    if difficulty not in VALID_DIFFICULTIES:
+        return jsonify(error="That difficulty isn't ranked."), 400
+    if not isinstance(chain, int) or isinstance(chain, bool) or chain < 1 or chain > MAX_CHAIN:
+        return jsonify(error="Score rejected."), 400
+
+    c = db.conn()
+    t = time.time()
+
+    # Per-account submission rate limit (server-side, DB-backed).
+    recent = c.execute(
+        "SELECT COUNT(*) AS n FROM submit_log WHERE user_id=? AND ts>?", (u["id"], t - 3600)
+    ).fetchone()["n"]
+    if recent >= SUBMIT_LIMIT_PER_HOUR:
+        return jsonify(error="Too many submissions. Please try again later."), 429
+
+    # Timing/shape sanity: must have spelled at least `chain` words, and a run
+    # can't be implausibly fast (a 40-chain in 20s => 500ms/word => rejected).
+    word_count = meta.get("wordCount")
+    duration_ms = meta.get("durationMs")
+    if isinstance(word_count, int) and word_count < chain:
+        return jsonify(error="Score rejected."), 400
+    if isinstance(duration_ms, (int, float)) and duration_ms < chain * MIN_MS_PER_WORD:
+        return jsonify(error="Score rejected."), 400
+
+    c.execute("INSERT INTO submit_log(user_id, ts) VALUES(?,?)", (u["id"], t))
+    c.commit()
+
+    prev = c.execute(
+        "SELECT best_chain FROM leaderboard_entries WHERE user_id=? AND difficulty=?",
+        (u["id"], difficulty),
+    ).fetchone()
+    is_record = prev is None or chain > prev["best_chain"]
+    if is_record:
+        # Server-side timestamp; run_meta kept for future verification/audit.
+        run_meta = json.dumps({"wordCount": word_count, "durationMs": duration_ms})
+        c.execute(
+            "INSERT INTO leaderboard_entries(user_id,difficulty,best_chain,achieved_at,run_meta) "
+            "VALUES(?,?,?,?,?) ON CONFLICT(user_id,difficulty) DO UPDATE SET "
+            "best_chain=excluded.best_chain, achieved_at=excluded.achieved_at, run_meta=excluded.run_meta",
+            (u["id"], difficulty, chain, t, run_meta),
+        )
+        c.commit()
+
+    best = chain if is_record else prev["best_chain"]
+    return jsonify(record=is_record, best=best, rank=_rank_for(c, difficulty, u["id"]))
+
+
+@bp.route("/api/climb/leaderboard")
+def leaderboard():
+    difficulty = (request.args.get("difficulty") or "").strip().lower()
+    if difficulty not in VALID_DIFFICULTIES:
+        return jsonify(error="That difficulty isn't ranked."), 400
+    c = db.conn()
+    rows = c.execute(
+        "SELECT u.id, u.username, e.best_chain, e.achieved_at "
+        "FROM leaderboard_entries e JOIN users u ON u.id=e.user_id "
+        "WHERE e.difficulty=? ORDER BY e.best_chain DESC, e.achieved_at ASC LIMIT 50",
+        (difficulty,),
+    ).fetchall()
+    # Only rank, username, chain, date — never email/real name.
+    top = [
+        {"rank": i + 1, "userId": r["id"], "username": r["username"],
+         "chain": r["best_chain"], "achievedAt": r["achieved_at"]}
+        for i, r in enumerate(rows)
+    ]
+
+    me = None
+    u = auth.current_user()
+    if u:
+        rank = _rank_for(c, difficulty, u["id"])
+        if rank and rank > 50:  # pin the player's own row when outside the top 50
+            row = c.execute(
+                "SELECT best_chain, achieved_at FROM leaderboard_entries WHERE user_id=? AND difficulty=?",
+                (u["id"], difficulty),
+            ).fetchone()
+            me = {"rank": rank, "userId": u["id"], "username": u["username"],
+                  "chain": row["best_chain"], "achievedAt": row["achieved_at"]}
+    return jsonify(difficulty=difficulty, top=top, me=me)
+
+
+@bp.route("/api/climb/report-name", methods=["POST"])
+def report_name():
+    if not auth.rate_limit(f"report:{auth.client_ip()}", 20, 3600):
+        return jsonify(error="Too many reports. Please try again later."), 429
+    data = request.get_json(silent=True) or {}
+    reported = data.get("userId")
+    if not isinstance(reported, int) or isinstance(reported, bool):
+        return jsonify(error="Invalid report."), 400
+    c = db.conn()
+    if not c.execute("SELECT 1 FROM users WHERE id=?", (reported,)).fetchone():
+        return jsonify(error="Invalid report."), 400
+    reporter = auth.current_user()
+    c.execute(
+        "INSERT INTO name_reports(reported_user_id, reporter_user_id, created_at) VALUES(?,?,?)",
+        (reported, reporter["id"] if reporter else None, time.time()),
+    )
+    c.commit()
+    return jsonify(ok=True)
