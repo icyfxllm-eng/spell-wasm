@@ -6,6 +6,10 @@ storage_mode("git")
 type("appstore")            # `development` / `adhoc` also available
 app_identifier(["net.spellgame.app"])
 
+# Non-interactive keychain so cert import + partition-list setting don't need a GUI prompt.
+keychain_name("fastlane_tmp.keychain-db")
+keychain_password("fastlane_ci_temp_pw")
+
 # First run (once, on the Mac, to create + upload the certs):
 #   bundle exec fastlane match appstore
 # CI / subsequent runs pull read-only (see Fastfile).

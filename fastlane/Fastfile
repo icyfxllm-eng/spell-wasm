@@ -13,13 +13,34 @@ platform :ios do
   desc "Build a signed App Store IPA and upload to TestFlight"
   lane :beta do
     match(type: "appstore", readonly: is_ci)
+
+    # match installs an "Apple Distribution" cert + this App Store profile and
+    # exports its name via ENV. Force MANUAL signing so a headless/CI archive
+    # never needs Xcode to interactively create a distribution profile.
+    profile_name = ENV["sigh_net.spellgame.app_appstore_profile-name"]
+    update_code_signing_settings(
+      use_automatic_signing: false,
+      path: "ios/App/App.xcodeproj",
+      team_id: "WCH6H5NAWH",
+      bundle_identifier: "net.spellgame.app",
+      code_sign_identity: "Apple Distribution",
+      profile_name: profile_name,
+      targets: ["App"]
+    )
+
     gym(
-      workspace: "ios/App/App.xcworkspace",
+      project: "ios/App/App.xcodeproj",
       scheme: "App",
       configuration: "Release",
       export_method: "app-store",
       output_directory: "build",
-      clean: true
+      clean: true,
+      export_options: {
+        signingStyle: "manual",
+        provisioningProfiles: {
+          "net.spellgame.app" => profile_name
+        }
+      }
     )
     pilot(
       skip_waiting_for_build_processing: true,
