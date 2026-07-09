@@ -316,6 +316,11 @@
   .modal input:focus{outline:none;border-color:var(--amber)}
   .modal .row{display:flex;gap:10px}
   .demo-note{margin-top:14px;color:var(--muted-2);font-size:10.5px;line-height:1.5}
+  /* Age gate — sits above every other scrim; must be answered to proceed. */
+  .age-scrim{z-index:60}
+  .dob-row{display:flex;gap:8px;margin-bottom:8px}
+  .dob-row select{flex:1;min-width:0;text-align:center}
+  .dob-err{min-height:18px;margin-bottom:10px;color:var(--coral);font-size:12.5px;font-weight:600}
   .modal textarea{width:100%;min-height:112px;resize:vertical;background:var(--panel-2);border:1.5px solid var(--edge);border-radius:12px;padding:12px;color:var(--ink);font-family:var(--body);font-size:14px;line-height:1.5;margin-bottom:10px}
   .modal textarea:focus{outline:none;border-color:var(--amber)}
   .url-row{display:flex;gap:8px;margin-bottom:12px}
@@ -549,6 +554,35 @@
         <button class="ghost" id="cancelImport" style="margin-left:auto">Close</button>
       </div>
       <div class="demo-note" id="importNote">Words stay on this device. Fetching a link can be blocked by the site — if it fails, copy the text and paste it above.</div>
+    </div>
+  </div>
+
+  <!-- age gate: first-launch date-of-birth prompt (only the verdict is stored) -->
+  <div class="scrim age-scrim" id="ageScrim">
+    <div class="modal">
+      <h3>When's your birthday?</h3>
+      <p>We ask so we can show the right experience.</p>
+      <div class="dob-row">
+        <select id="ageMonth" aria-label="Birth month"></select>
+        <select id="ageDay" aria-label="Birth day"></select>
+        <select id="ageYear" aria-label="Birth year"></select>
+      </div>
+      <div class="dob-err" id="ageErr"></div>
+      <button class="btn btn-check" id="ageSubmit" style="width:100%">Continue</button>
+    </div>
+  </div>
+
+  <!-- parent gate: worded-math challenge to change a kid-locked verdict -->
+  <div class="scrim age-scrim" id="parentScrim">
+    <div class="modal">
+      <h3>Ask a grown-up</h3>
+      <p id="parentQ">Solve to continue.</p>
+      <input id="parentAnswer" type="tel" inputmode="numeric" maxlength="3" placeholder="answer" autocomplete="off" autocorrect="off" autocapitalize="none" spellcheck="false" />
+      <div class="dob-err" id="parentErr"></div>
+      <div class="row">
+        <button class="btn btn-icon" id="parentCancel" style="flex:1;border-radius:12px">Cancel</button>
+        <button class="btn btn-check" id="parentSubmit">Check</button>
+      </div>
     </div>
   </div>
 

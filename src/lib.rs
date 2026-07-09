@@ -1,4 +1,5 @@
 mod achievements;
+mod agegate;
 mod api;
 mod audio_boost;
 mod board;
@@ -55,6 +56,14 @@ pub fn start() -> Result<(), JsValue> {
     };
     state.cur_lang = state.lang.clone();
 
+    // Age gate: a stored "kid" verdict (under the cutoff) locks Kid Mode on
+    // every launch; leaving it needs the parent gate. First-launch / existing
+    // users with no stored verdict get the DOB prompt after wiring (below).
+    if agegate::is_kid_locked() {
+        state.kid = true;
+        state.age_locked = true;
+    }
+
     let app: App = Rc::new(RefCell::new(state));
 
     let glow = app.borrow().glow.clone();
@@ -91,6 +100,14 @@ pub fn start() -> Result<(), JsValue> {
     }
 
     wire(&app);
+
+    // First launch (or existing user pre-dating the age gate): ask DOB before
+    // anything else. The scrim sits above the game and must be answered.
+    if agegate::stored().is_none() {
+        agegate::populate_selects();
+        dom::add_class("ageScrim", "show");
+    }
+
     Ok(())
 }
 
@@ -103,7 +120,82 @@ fn wire(app: &App) {
     wire_import(app);
     wire_stats_board_modal(app);
     wire_versus(app);
+    wire_age_gate(app);
     keyboard::setup(app);
+}
+
+thread_local! {
+    /// Expected answer to the current parent-gate math challenge.
+    static PARENT_ANSWER: std::cell::Cell<i32> = const { std::cell::Cell::new(0) };
+}
+
+/// Opens the parent gate (a fresh worded-math challenge). Passing it lets a
+/// grown-up re-run DOB entry / unlock the full app — the only way out of a
+/// kid-locked device, so it's never offered directly in kid-reachable UI.
+fn open_parent_gate() {
+    let (q, ans) = agegate::parent_problem();
+    PARENT_ANSWER.with(|c| c.set(ans));
+    dom::set_text("parentQ", &q);
+    dom::input("parentAnswer").set_value("");
+    dom::set_text("parentErr", "");
+    dom::add_class("parentScrim", "show");
+    dom::input("parentAnswer").focus().ok();
+}
+
+fn wire_age_gate(app: &App) {
+    // DOB prompt → compute age locally, store the verdict only.
+    {
+        let a = app.clone();
+        dom::on_click("ageSubmit", move || {
+            let (y, m, d) = agegate::read_selection();
+            if !agegate::valid_date(y, m, d) {
+                dom::set_text("ageErr", "Please pick a real date that isn't in the future.");
+                return;
+            }
+            let was_locked = a.borrow().age_locked;
+            let full = agegate::save(agegate::age_from(y, m, d));
+            {
+                let mut s = a.borrow_mut();
+                if full {
+                    s.age_locked = false;
+                    // Reaching a full verdict via the parent gate reveals the
+                    // full app; a first-launch full verdict leaves prefs as-is.
+                    if was_locked {
+                        s.kid = false;
+                    }
+                } else {
+                    s.kid = true;
+                    s.age_locked = true;
+                }
+            }
+            settings::save_prefs(&a.borrow());
+            settings::apply_settings(&a);
+            dom::set_text("ageErr", "");
+            dom::remove_class("ageScrim", "show");
+        });
+    }
+    // Parent gate answer (uses no app state — just the challenge answer).
+    dom::on_click("parentSubmit", || {
+        let expected = PARENT_ANSWER.with(|c| c.get());
+        let given = dom::input("parentAnswer").value().trim().parse::<i32>().unwrap_or(i32::MIN);
+        if given == expected {
+            dom::remove_class("parentScrim", "show");
+            dom::set_text("parentErr", "");
+            // Let the grown-up re-run DOB entry (an adult date unlocks).
+            agegate::populate_selects();
+            dom::add_class("ageScrim", "show");
+        } else {
+            dom::set_text("parentErr", "Not quite \u{2014} try again.");
+        }
+    });
+    dom::on_click("parentCancel", || dom::remove_class("parentScrim", "show"));
+    dom::on::<web_sys::KeyboardEvent, _>("parentAnswer", "keydown", |e| {
+        if e.key() == "Enter" {
+            if let Some(el) = dom::el("parentSubmit").dyn_ref::<web_sys::HtmlElement>() {
+                el.click();
+            }
+        }
+    });
 }
 
 fn wire_orb_and_answer(app: &App) {
@@ -276,6 +368,13 @@ fn wire_glow_and_settings(app: &App) {
         let a = app.clone();
         dom::on::<web_sys::Event, _>("kidToggle", "change", move |_| {
             let v = dom::input("kidToggle").checked();
+            // Under-cutoff (age-gate) device: Kid Mode can't be turned off
+            // without the parent gate. Re-check the box and challenge instead.
+            if !v && a.borrow().age_locked {
+                dom::input("kidToggle").set_checked(true);
+                open_parent_gate();
+                return;
+            }
             a.borrow_mut().kid = v;
             settings::save_prefs(&a.borrow());
             settings::apply_settings(&a);

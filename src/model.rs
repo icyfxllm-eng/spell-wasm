@@ -96,6 +96,10 @@ pub struct AppState {
     pub orb_color: String,
     pub last_lang: Option<String>,
     pub kid: bool,
+    /// True when a stored "kid" age-gate verdict locks the app in Kid Mode;
+    /// leaving Kid Mode then requires the parent gate. Session-only, derived at
+    /// boot from the persisted verdict (see `crate::agegate`).
+    pub age_locked: bool,
     pub readable: bool,
     pub big_text: bool,
     pub slow: bool,
@@ -142,6 +146,7 @@ impl Default for AppState {
             orb_color: "#ffb14d".into(),
             last_lang: None,
             kid: false,
+            age_locked: false,
             readable: false,
             big_text: false,
             slow: false,
