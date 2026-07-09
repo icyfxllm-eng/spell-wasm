@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
 <title>Spell — a spelling game you play with your ears</title>
 <link rel="manifest" href="./manifest.json" />
 <meta name="theme-color" content="#1c1830" />
@@ -41,15 +41,19 @@
     font-family:var(--body); color:var(--ink-on-bg);
     background:radial-gradient(1200px 700px at 50% -10%, color-mix(in srgb, var(--bg-color) 55%, white 20%) 0%, transparent 60%), linear-gradient(180deg, var(--bg-color) 0%, color-mix(in srgb, var(--bg-color) 78%, black) 70%);
     min-height:100vh; display:flex; flex-direction:column; align-items:center;
-    padding:24px 18px 56px; -webkit-font-smoothing:antialiased;
+    /* Respect the iPhone safe area (viewport-fit=cover): keep the SPELL header
+       clear of the status bar / Dynamic Island and the footer clear of the
+       home indicator. env() is 0 on desktop, so the layout is unchanged there. */
+    padding:calc(env(safe-area-inset-top, 0px) + 24px) 18px calc(env(safe-area-inset-bottom, 0px) + 56px);
+    -webkit-font-smoothing:antialiased;
     transition:background .25s ease;
   }
   body.readable{ font-family:'OpenDyslexic','Instrument Sans',system-ui,sans-serif; letter-spacing:.01em; }
   body.readable .ltr{ letter-spacing:.05em; }
-  body.readable .access-line,body.readable .foot{ font-size:13px; }
+  body.readable .foot{ font-size:13px; }
   body.kid .ltr{ font-size:30px; }
   body.kid .orb-glyph{ font-size:18px; }
-  body.kid .access-line,body.kid .foot{ display:none; }
+  body.kid .foot{ display:none; }
   body.kid .brand .tag::after{ content:" · just for fun"; }
 
   .topbar{width:100%;max-width:600px;display:flex;align-items:flex-start;justify-content:space-between;gap:14px;margin-bottom:12px;flex-wrap:wrap}
@@ -70,8 +74,6 @@
   .pill.access{border-color:var(--amber);color:var(--amber-soft)}
   .pill.access.owned{border-color:var(--teal);color:var(--teal)}
 
-  .access-line{width:100%;max-width:600px;margin:0 0 16px;color:var(--muted-on-bg);font-size:11.5px;line-height:1.5}
-  .access-line b{color:var(--ink-on-bg)}
 
   .stage{width:100%;max-width:600px;display:flex;flex-direction:column;align-items:center}
 
@@ -226,9 +228,6 @@
   .board .score{font-family:var(--mono);font-weight:700;color:var(--amber-soft);font-size:15px}
   .board .empty{color:var(--muted-2);font-size:13.5px;padding:8px 0 12px;text-align:center}
 
-  .problem blockquote{margin:12px 0 0;padding:13px 16px;border-left:3px solid var(--amber);background:var(--panel-2);border-radius:0 10px 10px 0;color:var(--ink);font-size:14px;line-height:1.55;font-style:italic}
-  .problem .ans{margin-top:13px;color:var(--muted);font-size:13px;line-height:1.6}
-  .problem .ans b{color:var(--ink)}
 
   .scrim{position:fixed;inset:0;background:rgba(10,8,18,.72);backdrop-filter:blur(4px);display:none;place-items:center;padding:20px;z-index:30;overflow:auto}
   .scrim.show{display:grid}
@@ -297,8 +296,6 @@
       <button class="pill" id="setBtn" aria-label="Settings">⚙</button>
     </div>
   </div>
-  <div class="access-line" id="accessLine"></div>
-
   <main class="stage">
     <div class="orb-wrap" id="orbWrap" role="button" tabindex="0" aria-label="Play the word">
       <svg class="timer-ring" id="timerRing" viewBox="0 0 230 230" aria-hidden="true">
@@ -403,12 +400,6 @@
   <section class="card board">
     <h2>Longest chains <span class="scope" id="boardScope">this device only</span></h2>
     <ol id="boardList"><li class="empty">No chains yet — be the first to start one.</li></ol>
-  </section>
-
-  <section class="card problem">
-    <h2>The problem it solves</h2>
-    <blockquote>“I want to spell more words better. I'm tired of typing a document with so many red lines under the words I type — and I want to understand words more.”</blockquote>
-    <div class="ans">Spell turns that frustration into practice: a clear voice reads a word, you spell it from sound alone — by typing, speaking, or <b>writing it by hand</b> — and after each one you see its <b>meaning and a sentence</b>. Missed words return on a <b>spaced schedule</b> under Misses, <b>Hint</b> and per-difficulty <b>stats</b> are always on, plus <b>achievements</b> to keep you coming back, <b>Kid</b> and <b>readable</b> modes in Settings, and a drawing pad with pen/line/eraser tools and letter guides for handwriting practice.</div>
   </section>
 
   <div class="foot">

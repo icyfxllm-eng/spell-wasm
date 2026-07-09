@@ -206,21 +206,6 @@ pub fn refresh_mode_buttons(app: &App) {
     dom::set_disabled("missesBtn", !s.review && total == 0);
 }
 
-pub fn render_access(app: &App) {
-    let s = app.borrow();
-    if s.review {
-        dom::set_html(
-            "accessLine",
-            &format!("<b>Practicing your misses</b> \u{2014} {} due now; spell one correctly to push it further out.", misses::due_misses(&s).len()),
-        );
-        return;
-    }
-    if s.lang == MINE {
-        dom::set_html("accessLine", "<b>Practicing your imported words</b> \u{2014} typed, spoken, or hand-written, with browser text-to-speech.");
-        return;
-    }
-    dom::set_html("accessLine", "<b>Practicing English</b> \u{2014} audio for each word comes from your word server.");
-}
 
 pub fn build_source_options(app: &App) {
     let s = app.borrow();
@@ -578,16 +563,13 @@ fn bump_streak(app: &App) -> u32 {
 
 fn on_correct(app: &App) {
     crate::haptics::correct();
-    let (review, cur_lang, cur_tier, word) = {
+    let (cur_lang, cur_tier, word) = {
         let s = app.borrow();
-        (s.review, s.cur_lang.clone(), s.cur_tier.clone(), s.word.clone())
+        (s.cur_lang.clone(), s.cur_tier.clone(), s.word.clone())
     };
     stats::record(&mut app.borrow_mut(), &cur_lang, &cur_tier, true);
     let cleared = misses::promote_miss(&mut app.borrow_mut(), &word, &cur_lang);
     refresh_mode_buttons(app);
-    if review {
-        render_access(app);
-    }
     if cleared {
         achievements::unlock(&mut app.borrow_mut(), "cleared");
     }
@@ -866,7 +848,6 @@ pub fn enter_review(app: &App) {
     dom::set_text("feedback", &format!("Practicing your misses \u{2014} {} due now.", due));
     dom::el("feedback").set_class_name("feedback");
     refresh_mode_buttons(app);
-    render_access(app);
 }
 
 pub fn exit_review(app: &App, msg: Option<&str>) {
@@ -889,7 +870,6 @@ pub fn exit_review(app: &App, msg: Option<&str>) {
     render_tries(app);
     update_voice_note(app);
     refresh_mode_buttons(app);
-    render_access(app);
     if let Some(m) = msg {
         dom::set_text("feedback", m);
         dom::el("feedback").set_class_name("feedback good");
