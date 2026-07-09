@@ -89,10 +89,97 @@ pub fn es_tier(tier: &str) -> &'static [&'static str] {
     }
 }
 
+// French.
+pub const FR_EASY: &[&str] = &[
+    "eau","pain","chat","chien","roi","nuit","jour","main","pied","nez","mer","ciel","lune","feu","vent","ami","chaud","froid","noir","blanc",
+    "bleu","vert","rouge","jaune","fleur","arbre","livre","table","porte","chaise","lait","pomme","poire","clé","café","thé","loup","ours","dent","robe",
+];
+pub const FR_MEDIUM: &[&str] = &[
+    "maison","jardin","cuisine","fenêtre","école","voiture","bateau","avion","cheval","lapin","souris","tortue","oiseau","poisson","fromage","gâteau","orange","banane","fraise","carotte",
+    "tomate","chapeau","chemise","manteau","guitare","musique","peinture","montagne","rivière","village","marché","couteau","famille","enfant","garçon","frère","tante","oncle","cousin","château",
+];
+pub const FR_HARD: &[&str] = &[
+    "bibliothèque","ordinateur","téléphone","télévision","réfrigérateur","ascenseur","escalier","parapluie","aventure","dinosaure","squelette","bicyclette","calendrier","restaurant","boulangerie","pharmacie","hôpital","aéroport","université","anniversaire",
+    "papillon","crocodile","éléphant","serpent","pingouin","girafe","écureuil","grenouille","hirondelle","coquillage","tournesol","champignon","framboise","pâtisserie","confiture","casserole","fourchette","couverture","ceinture","chaussette",
+];
+pub const FR_EXPERT: &[&str] = &[
+    "accueil","cueillir","orgueil","chrysanthème","parallèle","dictionnaire","gouvernement","révolutionnaire","extraordinaire","psychologie","rythme","exhaustif","dénouement","éblouissant","hétérogène","kaléidoscope","labyrinthe","onomatopée","paradoxe","quincaillerie",
+    "serrurier","vraisemblable","aquarelle","chuchotement","embarras","immédiatement","nécessaire","occurrence","quotidien","réciproque","susceptible","tranquille","vertigineux","xénophobie","zoologique","hippopotame","kilomètre","majuscule","minuscule","obstacle",
+];
+
+// German (nouns capitalized; ß handled by norm()).
+pub const DE_EASY: &[&str] = &[
+    "Hund","Katze","Baum","Haus","Sonne","Mond","Buch","Tisch","Stuhl","Tür","Hand","Fuß","Auge","Nase","Mund","Ohr","Milch","Brot","Käse","Ei",
+    "Wasser","Feuer","Wind","Blume","Vogel","Fisch","Bär","Wolf","Maus","Ente","rot","blau","grün","gelb","schwarz","weiß","groß","klein","Tag","Nacht",
+];
+pub const DE_MEDIUM: &[&str] = &[
+    "Fenster","Küche","Garten","Schule","Auto","Flugzeug","Pferd","Kaninchen","Schildkröte","Kartoffel","Tomate","Zwiebel","Karotte","Erdbeere","Banane","Orange","Schokolade","Kuchen","Brille","Hemd",
+    "Jacke","Schuhe","Gitarre","Musik","Gemälde","Berg","Fluss","Dorf","Markt","Löffel","Gabel","Messer","Familie","Kind","Junge","Mädchen","Bruder","Schwester","Tante","Onkel",
+];
+pub const DE_HARD: &[&str] = &[
+    "Bibliothek","Computer","Telefon","Fernseher","Kühlschrank","Aufzug","Treppe","Regenschirm","Abenteuer","Dinosaurier","Skelett","Fahrrad","Kalender","Restaurant","Bäckerei","Apotheke","Krankenhaus","Flughafen","Universität","Geburtstag",
+    "Schmetterling","Krokodil","Elefant","Schlange","Pinguin","Giraffe","Eichhörnchen","Frosch","Muschel","Sonnenblume","Pilz","Himbeere","Marmelade","Serviette","Handschuh","Wörterbuch","Regierung","Fußball","Straße","Frühstück",
+];
+pub const DE_EXPERT: &[&str] = &[
+    "Rhythmus","Gewissen","Bürgersteig","Sehenswürdigkeit","Wahrscheinlichkeit","Verantwortung","Persönlichkeit","Gemütlichkeit","Freundschaft","Wissenschaft","Gesellschaft","Entschuldigung","Überraschung","Fußgängerzone","Kaugummi","Xylophon","Höflichkeit","Jahreszeit","Löwenzahn","Möglichkeit",
+    "Obstgarten","Pünktlichkeit","Qualität","Rücksicht","Tätigkeit","Verständnis","Weihnachten","Zärtlichkeit","Nußknacker","Anführungszeichen","Geschwindigkeit","Nachbarschaft","Aufmerksamkeit","Bewusstsein","Erfahrung","Genehmigung","Krankenversicherung","Selbstständigkeit","Unabhängigkeit","Zusammenarbeit",
+];
+
+// Portuguese (pt-BR).
+pub const PT_EASY: &[&str] = &[
+    "sol","lua","casa","gato","cão","pão","luz","mar","flor","azul","verde","mão","pé","olho","dois","três","água","mesa","livro","papel",
+    "dedo","boca","céu","nuvem","chuva","vento","fogo","folha","sapo","pato","urso","peixe","ninho","leite","queijo","ovo","mel","sal","uva","rosa",
+];
+pub const PT_MEDIUM: &[&str] = &[
+    "janela","cozinha","jardim","montanha","caminho","família","escola","trabalho","cidade","número","música","garrafa","laranja","banana","tomate","cebola","cavalo","coelho","girafa","baleia",
+    "tartaruga","chapéu","sapato","camisa","vestido","guitarra","bola","brinquedo","castelo","floresta","ponte","igreja","mercado","colher","garfo","faca","maçã","morango","limão","abelha",
+];
+pub const PT_HARD: &[&str] = &[
+    "morcego","esqueleto","bicicleta","calendário","aventura","dinossauro","hambúrguer","computador","telefone","televisão","elevador","escada","chaminé","ventilador","farmácia","mochila","caderno","tesoura","cinto","jaqueta",
+    "cachecol","meia","almofada","cortina","espelho","lâmpada","tapete","armário","cenoura","brócolis","espinafre","abacate","abóbora","borboleta","crocodilo","elefante","serpente","pinguim","biblioteca","padaria",
+];
+pub const PT_EXPERT: &[&str] = &[
+    "ambiguidade","vergonha","cegonha","bilíngue","linguística","exausto","exibição","exuberante","exagero","exceção","adjacente","justaposição","hemorragia","hipopótamo","hieróglifo","quilômetro","maiúscula","minúscula","obstáculo","ortográfico",
+    "psicólogo","reivindicar","satisfação","vicissitude","xilofone","jazigo","veículo","excêntrico","sublinhar","desenvolver","idiossincrasia","transatlântico","inconstitucional","desidratação","imprescindível","extraordinário","circunferência","perpendicular","eletrodoméstico","arquitetônico",
+];
+
+// Italian.
+pub const IT_EASY: &[&str] = &[
+    "sole","luna","casa","gatto","cane","pane","luce","mare","fiore","blu","verde","mano","piede","occhio","due","tre","acqua","tavolo","libro","carta",
+    "dito","bocca","cielo","nuvola","pioggia","vento","fuoco","foglia","rana","anatra","orso","pesce","nido","latte","uovo","miele","sale","uva","rosa","naso",
+];
+pub const IT_MEDIUM: &[&str] = &[
+    "finestra","cucina","giardino","montagna","cammino","famiglia","scuola","lavoro","città","numero","musica","bottiglia","arancia","banana","pomodoro","cipolla","cavallo","coniglio","giraffa","balena",
+    "tartaruga","cappello","scarpa","camicia","vestito","chitarra","palla","giocattolo","castello","foresta","ponte","chiesa","mercato","cucchiaio","forchetta","coltello","mela","fragola","limone","ape",
+];
+pub const IT_HARD: &[&str] = &[
+    "pipistrello","scheletro","bicicletta","calendario","avventura","dinosauro","hamburger","computer","telefono","televisione","ascensore","scala","camino","ventilatore","ombrello","zaino","quaderno","forbici","cintura","giacca",
+    "sciarpa","calzino","cuscino","tenda","specchio","lampada","tappeto","armadio","colazione","carota","broccoli","spinaci","avocado","zucca","farfalla","coccodrillo","elefante","serpente","pinguino","biblioteca",
+];
+pub const IT_EXPERT: &[&str] = &[
+    "ambiguità","vergogna","cicogna","bilingue","linguistica","esausto","esibizione","esuberante","esagerazione","eccezione","adiacente","giustapposizione","emorragia","ippopotamo","geroglifico","chilometro","maiuscola","minuscola","ostacolo","ortografico",
+    "psicologo","rivendicare","soddisfazione","vicissitudine","xilofono","giacimento","veicolo","eccentrico","sottolineare","sviluppare","idiosincrasia","transatlantico","incostituzionale","disidratazione","imprescindibile","straordinario","circonferenza","perpendicolare","elettrodomestico","architettonico",
+];
+
+fn simple_tier<'a>(easy: &'a [&'a str], medium: &'a [&'a str], hard: &'a [&'a str], expert: &'a [&'a str], tier: &str) -> &'a [&'a str] {
+    match tier {
+        "easy" => easy,
+        "medium" => medium,
+        "hard" => hard,
+        "expert" => expert,
+        _ => medium,
+    }
+}
+
 /// Word bank for a built-in language + tier (English by default).
 pub fn tier_for(lang: &str, tier: &str) -> &'static [&'static str] {
+    use crate::consts::{DE, ES, FR, IT, PT};
     match lang {
-        crate::consts::ES => es_tier(tier),
+        ES => es_tier(tier),
+        FR => simple_tier(FR_EASY, FR_MEDIUM, FR_HARD, FR_EXPERT, tier),
+        DE => simple_tier(DE_EASY, DE_MEDIUM, DE_HARD, DE_EXPERT, tier),
+        PT => simple_tier(PT_EASY, PT_MEDIUM, PT_HARD, PT_EXPERT, tier),
+        IT => simple_tier(IT_EASY, IT_MEDIUM, IT_HARD, IT_EXPERT, tier),
         _ => en_tier(tier),
     }
 }

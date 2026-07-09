@@ -568,7 +568,11 @@ pub fn next_word(app: &App) {
 }
 
 fn norm(s: &str) -> String {
-    s.nfd().filter(|c| !(*c >= '\u{0300}' && *c <= '\u{036f}')).collect::<String>().to_lowercase().chars().filter(|c| !c.is_whitespace()).collect()
+    // Strip combining accents (á->a, ñ->n, ç->c), then map German ß->ss (it has
+    // no NFD decomposition), lowercase, and drop whitespace — so answers can be
+    // typed on the plain A-Z keyboard without accents/ß.
+    let stripped: String = s.nfd().filter(|c| !('\u{0300}'..='\u{036f}').contains(c)).collect();
+    stripped.to_lowercase().replace('\u{df}', "ss").chars().filter(|c| !c.is_whitespace()).collect()
 }
 
 fn lock_inputs() {

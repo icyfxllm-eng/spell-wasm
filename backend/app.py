@@ -40,6 +40,10 @@ LANGUAGE_CODE = "en-US"
 LANG_VOICES = {
     "en": ("en-US", "en-US-Neural2-D"),
     "es": ("es-ES", "es-ES-Neural2-B"),
+    "fr": ("fr-FR", "fr-FR-Neural2-A"),
+    "de": ("de-DE", "de-DE-Neural2-B"),
+    "pt": ("pt-BR", "pt-BR-Neural2-B"),
+    "it": ("it-IT", "it-IT-Neural2-A"),
 }
 DEFAULT_LANG = "en"
 
