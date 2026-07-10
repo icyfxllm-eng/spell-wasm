@@ -97,7 +97,7 @@ platform :ios do
       skip_binary_upload: true,
       skip_metadata: true,
       skip_screenshots: true,
-      build_number: "20",
+      build_number: ENV["SUBMIT_BUILD"] || "21",
       submit_for_review: true,
       run_precheck_before_submit: false,   # app has no IAP; precheck can't check IAP via API key
       automatic_release: true,
@@ -117,7 +117,7 @@ platform :ios do
       skip_metadata: false,
       skip_screenshots: false,
       overwrite_screenshots: true,
-      build_number: "20",
+      build_number: ENV["SUBMIT_BUILD"] || "21",
       submit_for_review: true,
       run_precheck_before_submit: false,
       automatic_release: true,
