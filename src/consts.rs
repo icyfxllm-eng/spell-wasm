@@ -29,17 +29,27 @@ pub const FR: &str = "fr";
 pub const DE: &str = "de";
 pub const PT: &str = "pt";
 pub const IT: &str = "it";
+pub const NL: &str = "nl";
+pub const PL: &str = "pl";
+pub const SV: &str = "sv";
+pub const NB: &str = "nb";
+pub const TR: &str = "tr";
 
 /// Built-in word-source languages: (lang code, display name). Adding a language
 /// here + its word bank in `words.rs` + a voice in the backend's `LANG_VOICES`
 /// makes it fully supported (audio + spelling). `MINE`/`REVIEW` aren't here.
-pub const BUILTIN_LANGS: [(&str, &str); 6] = [
+pub const BUILTIN_LANGS: [(&str, &str); 11] = [
     (EN, "English"),
     (ES, "Espa\u{f1}ol"),
     (FR, "Fran\u{e7}ais"),
     (DE, "Deutsch"),
     (PT, "Portugu\u{ea}s"),
     (IT, "Italiano"),
+    (NL, "Nederlands"),
+    (PL, "Polski"),
+    (SV, "Svenska"),
+    (NB, "Norsk"),
+    (TR, "T\u{fc}rk\u{e7}e"),
 ];
 
 /// Whether `lang` is a built-in, backend-voiced language (not My Words/Misses).

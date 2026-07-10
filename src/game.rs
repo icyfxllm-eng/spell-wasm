@@ -568,11 +568,24 @@ pub fn next_word(app: &App) {
 }
 
 fn norm(s: &str) -> String {
-    // Strip combining accents (á->a, ñ->n, ç->c), then map German ß->ss (it has
-    // no NFD decomposition), lowercase, and drop whitespace — so answers can be
-    // typed on the plain A-Z keyboard without accents/ß.
+    // Strip combining accents (á->a, ñ->n, ç->c), then map the letters that have
+    // NO NFD decomposition to their A-Z equivalents so every built-in word is
+    // typeable on the plain keyboard: German ß->ss, Norwegian/Danish æ->ae/ø->o,
+    // Polish ł->l, Turkish dotless ı->i. Lowercased, whitespace dropped.
     let stripped: String = s.nfd().filter(|c| !('\u{0300}'..='\u{036f}').contains(c)).collect();
-    stripped.to_lowercase().replace('\u{df}', "ss").chars().filter(|c| !c.is_whitespace()).collect()
+    stripped
+        .to_lowercase()
+        .replace('\u{df}', "ss") // ß
+        .replace('\u{e6}', "ae") // æ
+        .chars()
+        .map(|c| match c {
+            '\u{142}' => 'l', // ł
+            '\u{f8}' => 'o',  // ø
+            '\u{131}' => 'i', // ı (dotless)
+            other => other,
+        })
+        .filter(|c| !c.is_whitespace())
+        .collect()
 }
 
 fn lock_inputs() {

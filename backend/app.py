@@ -44,6 +44,11 @@ LANG_VOICES = {
     "de": ("de-DE", "de-DE-Neural2-B"),
     "pt": ("pt-BR", "pt-BR-Neural2-B"),
     "it": ("it-IT", "it-IT-Neural2-A"),
+    "nl": ("nl-NL", "nl-NL-Wavenet-B"),
+    "pl": ("pl-PL", "pl-PL-Wavenet-B"),
+    "sv": ("sv-SE", "sv-SE-Wavenet-C"),
+    "nb": ("nb-NO", "nb-NO-Wavenet-B"),
+    "tr": ("tr-TR", "tr-TR-Wavenet-B"),
 }
 DEFAULT_LANG = "en"
 
