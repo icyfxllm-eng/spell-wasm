@@ -1,0 +1,70 @@
+# Desktop (Tauri) build matrix — Windows / macOS / Linux native binaries.
+#
+# Trigger: a version tag (shared with the mobile release train) or manual run.
+# Produces installers as workflow artifacts. Code signing / notarization / MAS
+# submission activate only when the corresponding secrets are present, so the
+# build is green out of the box and hardens as secrets are added.
+name: Desktop
+
+on:
+  push:
+    tags: ["v*"]
+  workflow_dispatch:
+
+jobs:
+  build:
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: ubuntu-latest
+            bundles: "deb,appimage"
+          - os: windows-latest
+            bundles: "msi,nsis"
+          - os: macos-latest
+            bundles: "app,dmg"
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: npm
+
+      - name: Rust toolchain
+        run: |
+          rustup target add wasm32-unknown-unknown
+          cargo install wasm-bindgen-cli --version 0.2.126 --locked || true
+
+      - name: Linux webkit deps
+        if: matrix.os == 'ubuntu-latest'
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y libwebkit2gtk-4.1-dev libappindicator3-dev librsvg2-dev patchelf
+
+      - name: Install deps
+        run: npm ci
+
+      - name: Install Tauri CLI
+        run: cargo install tauri-cli --version '^2' --locked
+
+      - name: Generate icons
+        working-directory: desktop/src-tauri
+        run: cargo tauri icon icons/icon.png
+
+      - name: Build
+        working-directory: desktop/src-tauri
+        run: cargo tauri build --bundles ${{ matrix.bundles }}
+
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: spellgame-${{ matrix.os }}
+          path: |
+            desktop/src-tauri/target/release/bundle/**/*.deb
+            desktop/src-tauri/target/release/bundle/**/*.AppImage
+            desktop/src-tauri/target/release/bundle/**/*.msi
+            desktop/src-tauri/target/release/bundle/**/*.exe
+            desktop/src-tauri/target/release/bundle/**/*.dmg
+          if-no-files-found: ignore

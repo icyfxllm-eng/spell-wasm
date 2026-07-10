@@ -1,0 +1,22 @@
+[package]
+name = "spellgame-desktop"
+version = "1.1.0"
+description = "SpellGame desktop (Tauri) — wraps the same web build as iOS/PWA."
+edition = "2021"
+rust-version = "1.77"
+
+[lib]
+name = "spellgame_desktop_lib"
+crate-type = ["staticlib", "cdylib", "rlib"]
+
+[build-dependencies]
+tauri-build = { version = "2", features = [] }
+
+[dependencies]
+tauri = { version = "2", features = [] }
+tauri-plugin-window-state = "2"
+tauri-plugin-os = "2"
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+# In Tauri v2 the bundled frontend is served from the binary automatically in
+# release builds (offline-capable) — no custom-protocol feature needed as in v1.

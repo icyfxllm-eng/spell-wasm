@@ -1,0 +1,12 @@
+# Tauri build output + generated files
+/target
+/gen
+# Generated platform icons (regenerate with `cargo tauri icon icons/icon.png`).
+# The 1024px source icon.png IS committed; the derived sizes are not.
+/icons/32x32.png
+/icons/128x128.png
+/icons/128x128@2x.png
+/icons/icon.icns
+/icons/icon.ico
+/icons/Square*.png
+/icons/StoreLogo.png

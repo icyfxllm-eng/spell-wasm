@@ -1,0 +1,12 @@
+{
+  "$schema": "../gen/schemas/desktop-schema.json",
+  "identifier": "default",
+  "description": "Core capability for the main SpellGame window. The Climb API is reached over plain HTTPS from the web layer's fetch(), so no extra network permission is required.",
+  "windows": ["main"],
+  "permissions": [
+    "core:default",
+    "os:default",
+    "core:window:default",
+    "core:window:allow-start-dragging"
+  ]
+}
