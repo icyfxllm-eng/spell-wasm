@@ -19,6 +19,7 @@ mod misses;
 mod model;
 mod native_audio;
 mod norm;
+mod pinyin;
 mod notifications;
 mod profanity;
 mod settings;
