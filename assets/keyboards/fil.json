@@ -1,0 +1,10 @@
+{
+  "rows": [
+    "qwertyuiop",
+    "asdfghjklñ",
+    "zxcvbnm-"
+  ],
+  "longPress": {
+    "n": "ñ"
+  }
+}

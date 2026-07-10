@@ -106,6 +106,18 @@ mod tests {
     }
 
     #[test]
+    fn filipino_charset_and_folding() {
+        // ñ composed (U+00F1) vs decomposed (n + U+0303) fold to the same thing.
+        assert_eq!(fold_strict("piña"), fold_strict("pin\u{303}a"));
+        assert!(answer_matches("piña", "pin\u{303}a", false));
+        // Hyphen is kept (orthographic); case folds.
+        assert_eq!(fold_strict("Mag-Aral"), "mag-aral");
+        assert!(answer_matches("Mag-Aral", "mag-aral", false));
+        // Normal mode is ñ-strict: "pina" must not match "piña".
+        assert!(!answer_matches("pina", "piña", false));
+    }
+
+    #[test]
     fn english_unaffected_by_mode() {
         // No diacritics -> strict and lenient agree.
         assert!(answer_matches("Rhythm", "rhythm", false));

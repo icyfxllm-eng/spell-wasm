@@ -1,0 +1,9 @@
+# Filipino (Tagalog) exclusions — EXACT whole-word match (boundary-safe, so
+# puti/putahe are NOT affected). Seed; extend from LDNOOBW 'tl'. REVIEW GATE.
+puta
+gago
+putangina
+tangina
+kantot
+leche
+ulol

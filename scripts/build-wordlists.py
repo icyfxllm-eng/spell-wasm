@@ -31,7 +31,7 @@ import unicodedata
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
-LANGS = ["en", "es", "fr", "de", "pt", "it", "nl", "pl", "sv", "nb", "tr", "vi", "ko", "ja"]
+LANGS = ["en", "es", "fr", "de", "pt", "it", "nl", "pl", "sv", "nb", "tr", "vi", "ko", "ja", "fil"]
 TIERS = ["easy", "medium", "hard", "expert"]
 MIN_LEN, MAX_LEN = 2, 16
 BALANCE_TOL = 0.20
@@ -122,7 +122,8 @@ def build():
                 where = f"{code}/{tier}: {w!r}"
                 # Curation filters (drop + warn): non-letters (fr apostrophe/hyphen
                 # forms, §3.3) and the length cap (de/nl/sv compounds, §3.3).
-                if not all(c.isalpha() for c in w):
+                # Filipino keeps the hyphen — orthographic (mag-aral, pag-ibig).
+                if not all(c.isalpha() or (code == "fil" and c == "-") for c in w):
                     warnings.append(f"{where} — dropped (non-alphabetic)")
                     continue
                 if not (min_len <= len(w) <= MAX_LEN):

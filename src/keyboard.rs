@@ -88,6 +88,10 @@ const JA: Layout = Layout {
         ('や', "ゃ"), ('ゆ', "ゅ"), ('よ', "ょ"), ('わ', "ゎ"),
     ],
 };
+// Filipino (Tagalog): QWERTY + a visible ñ key (right of l, Spanish convention)
+// and a hyphen key on the primary layer (orthographic in mag-aaral, pag-ibig).
+// No composition engine — plain Latin spelling + ñ + hyphen.
+const FIL: Layout = Layout { rows: &["qwertyuiop", "asdfghjklñ", "zxcvbnm-"], long_press: &[('n', "ñ")] };
 
 fn layout_for(locale: &str) -> &'static Layout {
     match locale {
@@ -104,6 +108,7 @@ fn layout_for(locale: &str) -> &'static Layout {
         "vi" => &VI,
         "ko" => &KO,
         "ja" => &JA,
+        "fil" => &FIL,
         _ => &EN,
     }
 }
@@ -533,6 +538,7 @@ mod tests {
             ("vi", include_str!("../assets/keyboards/vi.json")),
             ("ko", include_str!("../assets/keyboards/ko.json")),
             ("ja", include_str!("../assets/keyboards/ja.json")),
+            ("fil", include_str!("../assets/keyboards/fil.json")),
         ];
         for (code, json) in jsons {
             let v: serde_json::Value = serde_json::from_str(json).unwrap();
