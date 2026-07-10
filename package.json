@@ -5,10 +5,11 @@
   "description": "Spell — hear it, spell it. Capacitor native wrapper around the Rust/WASM PWA.",
   "scripts": {
     "i18n:check": "node scripts/i18n-check.mjs",
+    "viewport:check": "node scripts/viewport-check.mjs",
     "words:build": "python3 scripts/build-wordlists.py",
     "words:check": "python3 scripts/build-wordlists.py --check",
     "kb:check": "node scripts/kb-layout-check.mjs",
-    "build": "node scripts/i18n-check.mjs && python3 scripts/build-wordlists.py --check && bash scripts/build-web.sh",
+    "build": "node scripts/i18n-check.mjs && node scripts/viewport-check.mjs && python3 scripts/build-wordlists.py --check && bash scripts/build-web.sh",
     "sync": "npm run build && cap sync",
     "android": "npm run sync && cap run android",
     "release:android": "npm run sync && cd android && ./gradlew :app:bundleRelease",
