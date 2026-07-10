@@ -10,6 +10,7 @@ import os
 import re
 import json
 import hashlib
+import unicodedata
 import urllib.parse
 import urllib.request
 from flask import Flask, request, jsonify, send_file
@@ -113,14 +114,31 @@ app.register_blueprint(climb.bp)
 # Helpers
 # ---------------------------------------------------------------
 
+# Hyphen/apostrophe appear inside real words (e.g. Filipino "pang-uri",
+# and apostrophes in some Latin scripts) — allowed alongside letters/marks.
+_EXTRA_WORD_CHARS = set("-'’")
+
+
+def _is_word_char(ch: str) -> bool:
+    if ch in _EXTRA_WORD_CHARS:
+        return True
+    # Unicode Letters (L*) AND combining Marks (M*). The marks matter: Thai
+    # vowel/tone signs (SARA I/II, MAI HAN-AKAT, …), Devanagari matras, etc. are
+    # category Mn/Mc, so a plain str.isalpha() wrongly rejects any multi-syllable
+    # Thai word — which is exactly why Thai "expert" words returned 400.
+    return unicodedata.category(ch)[0] in ("L", "M")
+
+
 def validate_word(word: str):
     """Normalize and validate a word. Returns cleaned word or None."""
     word = word.lower().strip()
     if not word or len(word) > MAX_WORD_LENGTH:
         return None
-    # Letters only — blocks injection of arbitrary text into TTS,
-    # which protects both your quota and your cache directory.
-    if not word.isalpha():
+    # Letters + combining marks (+ hyphen/apostrophe) only — still blocks
+    # whitespace, digits, and punctuation that could inject arbitrary text into
+    # TTS (protecting both your quota and the cache), while accepting every
+    # supported script.
+    if not all(_is_word_char(ch) for ch in word):
         return None
     return word
 
