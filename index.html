@@ -813,9 +813,20 @@
     bootWithRetry();
   </script>
   <script>
-    if ('serviceWorker' in navigator) {
-      window.addEventListener('load', () => navigator.serviceWorker.register('./sw.js'));
-    }
+    // Only the plain web/PWA build runs the service worker. Inside a native
+    // wrapper (Capacitor iOS, or Tauri desktop) the shell is already served
+    // locally from the bundle — a second SW cache layer there causes stale-build
+    // bugs (and breaks App Store review). Keep this the single source of truth
+    // for "am I wrapped?"; Tauri/desktop reuses it too.
+    window.isWrappedPlatform = function () {
+      return !!(window.Capacitor && window.Capacitor.isNativePlatform && window.Capacitor.isNativePlatform())
+        || !!window.__TAURI__ || !!window.__TAURI_INTERNALS__;
+    };
+    window.addEventListener('load', () => {
+      if ('serviceWorker' in navigator && !window.isWrappedPlatform()) {
+        navigator.serviceWorker.register('./sw.js');
+      }
+    });
   </script>
 </body>
 </html>

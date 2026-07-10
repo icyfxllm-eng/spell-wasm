@@ -48,5 +48,6 @@
   "settings.backgroundSmall": "Achtergrondkleur van de pagina",
   "settings.orb": "Orb-kleur",
   "settings.orbSmall": "Kleur van de spel-orb",
-  "settings.done": "Klaar"
+  "settings.done": "Klaar",
+  "error.offline": "Je bent offline — ranglijst en duel hebben een verbinding nodig."
 }

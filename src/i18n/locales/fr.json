@@ -48,5 +48,6 @@
   "settings.backgroundSmall": "Couleur de fond de la page",
   "settings.orb": "Couleur de l'orbe",
   "settings.orbSmall": "Couleur de l'orbe d'épellation",
-  "settings.done": "Terminé"
+  "settings.done": "Terminé",
+  "error.offline": "Vous êtes hors ligne — le classement et le duel nécessitent une connexion."
 }

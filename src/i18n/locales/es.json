@@ -48,5 +48,6 @@
   "settings.backgroundSmall": "Color de fondo de la página",
   "settings.orb": "Color del orbe",
   "settings.orbSmall": "Color del orbe de ortografía",
-  "settings.done": "Hecho"
+  "settings.done": "Hecho",
+  "error.offline": "Estás sin conexión: la clasificación y el duelo necesitan internet."
 }

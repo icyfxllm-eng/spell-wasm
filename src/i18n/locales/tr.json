@@ -48,5 +48,6 @@
   "settings.backgroundSmall": "Sayfa arka plan rengi",
   "settings.orb": "Küre rengi",
   "settings.orbSmall": "Heceleme küresinin rengi",
-  "settings.done": "Bitti"
+  "settings.done": "Bitti",
+  "error.offline": "Çevrimdışısın — sıralama ve düello için bağlantı gerekir."
 }

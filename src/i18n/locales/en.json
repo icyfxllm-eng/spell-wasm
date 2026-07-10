@@ -48,5 +48,6 @@
   "settings.backgroundSmall": "Page background color",
   "settings.orb": "Orb color",
   "settings.orbSmall": "Color of the spelling orb",
-  "settings.done": "Done"
+  "settings.done": "Done",
+  "error.offline": "You're offline — leaderboard and head-to-head need a connection."
 }

@@ -48,5 +48,6 @@
   "settings.backgroundSmall": "Hintergrundfarbe der Seite",
   "settings.orb": "Orb-Farbe",
   "settings.orbSmall": "Farbe des Buchstabier-Orbs",
-  "settings.done": "Fertig"
+  "settings.done": "Fertig",
+  "error.offline": "Du bist offline — Bestenliste und Duell brauchen eine Verbindung."
 }

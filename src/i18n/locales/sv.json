@@ -48,5 +48,6 @@
   "settings.backgroundSmall": "Sidans bakgrundsfärg",
   "settings.orb": "Klotfärg",
   "settings.orbSmall": "Färg på stavningsklotet",
-  "settings.done": "Klar"
+  "settings.done": "Klar",
+  "error.offline": "Du är offline — topplista och dust kräver anslutning."
 }

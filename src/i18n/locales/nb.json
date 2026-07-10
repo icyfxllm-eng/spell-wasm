@@ -48,5 +48,6 @@
   "settings.backgroundSmall": "Bakgrunnsfarge på siden",
   "settings.orb": "Orb-farge",
   "settings.orbSmall": "Farge på stave-orben",
-  "settings.done": "Ferdig"
+  "settings.done": "Ferdig",
+  "error.offline": "Du er frakoblet — resultatliste og dyst krever tilkobling."
 }

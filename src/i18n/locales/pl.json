@@ -48,5 +48,6 @@
   "settings.backgroundSmall": "Kolor tła strony",
   "settings.orb": "Kolor kuli",
   "settings.orbSmall": "Kolor kuli do literowania",
-  "settings.done": "Gotowe"
+  "settings.done": "Gotowe",
+  "error.offline": "Jesteś offline — ranking i pojedynek wymagają połączenia."
 }

@@ -48,5 +48,6 @@
   "settings.backgroundSmall": "Cor de fundo da página",
   "settings.orb": "Cor do orbe",
   "settings.orbSmall": "Cor do orbe de soletração",
-  "settings.done": "Concluído"
+  "settings.done": "Concluído",
+  "error.offline": "Você está offline — o ranking e o duelo precisam de conexão."
 }

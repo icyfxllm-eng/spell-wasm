@@ -48,5 +48,6 @@
   "settings.backgroundSmall": "Colore di sfondo della pagina",
   "settings.orb": "Colore dell'orbe",
   "settings.orbSmall": "Colore dell'orbe di ortografia",
-  "settings.done": "Fatto"
+  "settings.done": "Fatto",
+  "error.offline": "Sei offline — classifica e sfida richiedono una connessione."
 }
