@@ -260,8 +260,10 @@ fn render_tab(difficulty: &str) {
     }
     dom::set_html("climbList", "<div class=\"climb-loading\">Loading\u{2026}</div>");
     let difficulty = difficulty.to_string();
+    // Default the board to the player's current language (§4.4).
+    let locale = crate::i18n::current();
     spawn_local(async move {
-        match call("GET", &format!("/api/climb/leaderboard?difficulty={difficulty}"), None).await {
+        match call("GET", &format!("/api/climb/leaderboard?difficulty={difficulty}&locale={locale}"), None).await {
             Ok(v) => dom::set_html("climbList", &render_rows(&v)),
             Err(e) => dom::set_html("climbList", &format!("<div class=\"climb-empty\">{}</div>", dom::escape_html(&e.message))),
         }
@@ -327,10 +329,13 @@ pub fn submit_run(difficulty: &str, chain: u32, duration_ms: f64) {
         return;
     }
     let difficulty = difficulty.to_string();
+    // The run's word language segments the leaderboard (§4.4).
+    let locale = crate::i18n::current();
     spawn_local(async move {
         let meta = serde_json::json!({"wordCount": chain, "durationMs": duration_ms});
         let b = body(&[
             ("difficulty", s(&difficulty)),
+            ("locale", s(&locale)),
             ("chain", serde_json::json!(chain)),
             ("meta", meta),
         ]);

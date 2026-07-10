@@ -74,10 +74,11 @@ CREATE TABLE IF NOT EXISTS password_resets (
 CREATE TABLE IF NOT EXISTS leaderboard_entries (
   user_id     INTEGER NOT NULL,
   difficulty  TEXT NOT NULL CHECK (difficulty IN ('medium','hard','expert')),
+  locale      TEXT NOT NULL DEFAULT 'en',         -- word language of the run (§4.4)
   best_chain  INTEGER NOT NULL,
   achieved_at REAL NOT NULL,
   run_meta    TEXT,                                -- JSON: word_count, duration_ms, ...
-  PRIMARY KEY (user_id, difficulty),
+  PRIMARY KEY (user_id, difficulty, locale),
   FOREIGN KEY(user_id) REFERENCES users(id) ON DELETE CASCADE
 );
 
@@ -96,8 +97,8 @@ CREATE TABLE IF NOT EXISTS submit_log (
 );
 
 CREATE INDEX IF NOT EXISTS idx_submit_log_user ON submit_log(user_id, ts);
--- Ranking: highest chain first, ties broken by earliest achieved.
-CREATE INDEX IF NOT EXISTS idx_lb_rank ON leaderboard_entries(difficulty, best_chain DESC, achieved_at ASC);
+-- Ranking within a (difficulty, locale) board: highest chain first, ties by earliest.
+CREATE INDEX IF NOT EXISTS idx_lb_rank ON leaderboard_entries(difficulty, locale, best_chain DESC, achieved_at ASC);
 """
 
 
@@ -119,5 +120,43 @@ def init() -> None:
     if parent:
         os.makedirs(parent, exist_ok=True)
     c = conn()
+    # Migrate BEFORE running SCHEMA: the SCHEMA index references the locale
+    # column, which an old table won't have until this rebuild adds it.
+    _migrate_leaderboard_locale(c)
     c.executescript(SCHEMA)
+    c.commit()
+
+
+def _migrate_leaderboard_locale(c) -> None:
+    """Add the per-locale segmentation (§4.4) to a leaderboard_entries table that
+    predates it. Existing rows backfill as locale='en'. SQLite can't alter a
+    primary key in place, so rebuild the table when the column is missing."""
+    exists = c.execute(
+        "SELECT 1 FROM sqlite_master WHERE type='table' AND name='leaderboard_entries'"
+    ).fetchone()
+    if not exists:
+        return  # fresh DB — SCHEMA will create it with the locale column
+    cols = [r["name"] for r in c.execute("PRAGMA table_info(leaderboard_entries)").fetchall()]
+    if "locale" in cols:
+        return
+    c.executescript(
+        """
+        DROP INDEX IF EXISTS idx_lb_rank;
+        ALTER TABLE leaderboard_entries RENAME TO leaderboard_entries_old;
+        CREATE TABLE leaderboard_entries (
+          user_id     INTEGER NOT NULL,
+          difficulty  TEXT NOT NULL CHECK (difficulty IN ('medium','hard','expert')),
+          locale      TEXT NOT NULL DEFAULT 'en',
+          best_chain  INTEGER NOT NULL,
+          achieved_at REAL NOT NULL,
+          run_meta    TEXT,
+          PRIMARY KEY (user_id, difficulty, locale),
+          FOREIGN KEY(user_id) REFERENCES users(id) ON DELETE CASCADE
+        );
+        INSERT INTO leaderboard_entries(user_id, difficulty, locale, best_chain, achieved_at, run_meta)
+          SELECT user_id, difficulty, 'en', best_chain, achieved_at, run_meta FROM leaderboard_entries_old;
+        DROP TABLE leaderboard_entries_old;
+        CREATE INDEX IF NOT EXISTS idx_lb_rank ON leaderboard_entries(difficulty, locale, best_chain DESC, achieved_at ASC);
+        """
+    )
     c.commit()

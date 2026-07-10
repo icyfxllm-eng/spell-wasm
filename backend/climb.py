@@ -173,19 +173,29 @@ def verify_email():
 
 # ---------- leaderboard ("The Climb") ----------
 
-def _rank_for(c, difficulty, user_id):
-    """1-based rank of a player in a category (ties broken by earliest
-    achievement), or None if they have no entry there."""
+# Leaderboards are segmented by the run's word language (§4.4). Unknown/absent
+# codes fall back to English so pre-locale clients keep working.
+SUPPORTED_LOCALES = {"en", "es", "fr", "de", "pt", "it", "nl", "pl", "sv", "nb", "tr"}
+
+
+def _locale(raw) -> str:
+    code = (raw or "en").strip().lower()
+    return code if code in SUPPORTED_LOCALES else "en"
+
+
+def _rank_for(c, difficulty, locale, user_id):
+    """1-based rank of a player within a (difficulty, locale) board (ties broken
+    by earliest achievement), or None if they have no entry there."""
     row = c.execute(
-        "SELECT best_chain, achieved_at FROM leaderboard_entries WHERE user_id=? AND difficulty=?",
-        (user_id, difficulty),
+        "SELECT best_chain, achieved_at FROM leaderboard_entries WHERE user_id=? AND difficulty=? AND locale=?",
+        (user_id, difficulty, locale),
     ).fetchone()
     if not row:
         return None
     better = c.execute(
-        "SELECT COUNT(*) AS n FROM leaderboard_entries WHERE difficulty=? "
+        "SELECT COUNT(*) AS n FROM leaderboard_entries WHERE difficulty=? AND locale=? "
         "AND (best_chain > ? OR (best_chain = ? AND achieved_at < ?))",
-        (difficulty, row["best_chain"], row["best_chain"], row["achieved_at"]),
+        (difficulty, locale, row["best_chain"], row["best_chain"], row["achieved_at"]),
     ).fetchone()["n"]
     return better + 1
 
@@ -197,6 +207,7 @@ def submit_chain():
         return jsonify(error="Log in to post your chain to The Climb."), 401
     data = request.get_json(silent=True) or {}
     difficulty = (data.get("difficulty") or "").strip().lower()
+    locale = _locale(data.get("locale"))
     chain = data.get("chain")
     meta = data.get("meta") or {}
 
@@ -228,36 +239,37 @@ def submit_chain():
     c.commit()
 
     prev = c.execute(
-        "SELECT best_chain FROM leaderboard_entries WHERE user_id=? AND difficulty=?",
-        (u["id"], difficulty),
+        "SELECT best_chain FROM leaderboard_entries WHERE user_id=? AND difficulty=? AND locale=?",
+        (u["id"], difficulty, locale),
     ).fetchone()
     is_record = prev is None or chain > prev["best_chain"]
     if is_record:
         # Server-side timestamp; run_meta kept for future verification/audit.
         run_meta = json.dumps({"wordCount": word_count, "durationMs": duration_ms})
         c.execute(
-            "INSERT INTO leaderboard_entries(user_id,difficulty,best_chain,achieved_at,run_meta) "
-            "VALUES(?,?,?,?,?) ON CONFLICT(user_id,difficulty) DO UPDATE SET "
+            "INSERT INTO leaderboard_entries(user_id,difficulty,locale,best_chain,achieved_at,run_meta) "
+            "VALUES(?,?,?,?,?,?) ON CONFLICT(user_id,difficulty,locale) DO UPDATE SET "
             "best_chain=excluded.best_chain, achieved_at=excluded.achieved_at, run_meta=excluded.run_meta",
-            (u["id"], difficulty, chain, t, run_meta),
+            (u["id"], difficulty, locale, chain, t, run_meta),
         )
         c.commit()
 
     best = chain if is_record else prev["best_chain"]
-    return jsonify(record=is_record, best=best, rank=_rank_for(c, difficulty, u["id"]))
+    return jsonify(record=is_record, best=best, locale=locale, rank=_rank_for(c, difficulty, locale, u["id"]))
 
 
 @bp.route("/api/climb/leaderboard")
 def leaderboard():
     difficulty = (request.args.get("difficulty") or "").strip().lower()
+    locale = _locale(request.args.get("locale"))
     if difficulty not in VALID_DIFFICULTIES:
         return jsonify(error="That difficulty isn't ranked."), 400
     c = db.conn()
     rows = c.execute(
         "SELECT u.id, u.username, e.best_chain, e.achieved_at "
         "FROM leaderboard_entries e JOIN users u ON u.id=e.user_id "
-        "WHERE e.difficulty=? ORDER BY e.best_chain DESC, e.achieved_at ASC LIMIT 50",
-        (difficulty,),
+        "WHERE e.difficulty=? AND e.locale=? ORDER BY e.best_chain DESC, e.achieved_at ASC LIMIT 50",
+        (difficulty, locale),
     ).fetchall()
     # Only rank, username, chain, date — never email/real name.
     top = [
@@ -269,15 +281,15 @@ def leaderboard():
     me = None
     u = auth.current_user()
     if u:
-        rank = _rank_for(c, difficulty, u["id"])
+        rank = _rank_for(c, difficulty, locale, u["id"])
         if rank and rank > 50:  # pin the player's own row when outside the top 50
             row = c.execute(
-                "SELECT best_chain, achieved_at FROM leaderboard_entries WHERE user_id=? AND difficulty=?",
-                (u["id"], difficulty),
+                "SELECT best_chain, achieved_at FROM leaderboard_entries WHERE user_id=? AND difficulty=? AND locale=?",
+                (u["id"], difficulty, locale),
             ).fetchone()
             me = {"rank": rank, "userId": u["id"], "username": u["username"],
                   "chain": row["best_chain"], "achievedAt": row["achieved_at"]}
-    return jsonify(difficulty=difficulty, top=top, me=me)
+    return jsonify(difficulty=difficulty, locale=locale, top=top, me=me)
 
 
 @bp.route("/api/climb/report-name", methods=["POST"])
