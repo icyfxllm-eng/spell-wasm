@@ -627,11 +627,12 @@ async fn backend_verify(app: App, word: String, typed: String, kid: bool) {
 fn pick_praise(app: &App) -> String {
     let s = app.borrow();
     if s.review {
-        return "Got it \u{2014} scheduled to return later.".to_string();
+        return crate::i18n::t("fb.gotItReview");
     }
-    let mut base = PRAISE[rand_index(PRAISE.len())].to_string();
+    let idx = rand_index(PRAISE.len());
+    let mut base = crate::i18n::t(&format!("praise.{}", idx + 1));
     if s.streak >= 5 {
-        base.push_str(&format!(" {} in a row.", s.streak));
+        base.push_str(&crate::i18n::tp("fb.inARow", &[("n", &s.streak.to_string())]));
     }
     base
 }
@@ -755,10 +756,10 @@ fn on_wrong(app: &App) {
     let tries_left = use_a_try(app);
     render_tries(app);
     if tries_left > 0 {
-        retry_wrong(app, tries_left, "Not quite");
+        retry_wrong(app, tries_left, &crate::i18n::t("fb.notQuite"));
         return;
     }
-    finalize_incorrect(app, "\u{2717}", "It was ", "feedback bad");
+    finalize_incorrect(app, "\u{2717}", &crate::i18n::t("fb.itWas"), "feedback bad");
 }
 
 fn on_timeout(app: &App) {
@@ -775,7 +776,7 @@ fn on_timeout(app: &App) {
         retry_wrong(app, tries_left, "Time's up");
         return;
     }
-    finalize_incorrect(app, "\u{23f1}", "Time's up \u{2014} it was ", "feedback bad");
+    finalize_incorrect(app, "\u{23f1}", &crate::i18n::t("fb.timesUp"), "feedback bad");
 }
 
 pub fn give_up(app: &App) {
@@ -792,7 +793,7 @@ pub fn give_up(app: &App) {
 
     app.borrow_mut().tries_left = 0;
     render_tries(app);
-    finalize_incorrect(app, "\u{2013}", "The word was ", "feedback");
+    finalize_incorrect(app, "\u{2013}", &crate::i18n::t("fb.wordWas"), "feedback");
 }
 
 fn end_chain(app: &App) {
@@ -937,13 +938,13 @@ pub fn schedule_raw(delay_ms: i32, f: impl FnOnce() + 'static) {
 pub fn enter_review(app: &App) {
     let total = app.borrow().misses.len();
     if total == 0 {
-        dom::set_text("feedback", "No misses yet \u{2014} they collect here as you play.");
+        dom::set_text("feedback", &crate::i18n::t("fb.noMisses"));
         dom::el("feedback").set_class_name("feedback");
         return;
     }
     let due = misses::due_misses(&app.borrow()).len();
     if due == 0 {
-        dom::set_text("feedback", &format!("All caught up \u{2014} {} word{} scheduled for later review.", total, if total == 1 { "" } else { "s" }));
+        dom::set_text("feedback", &if total == 1 { crate::i18n::t("fb.allCaughtOne") } else { crate::i18n::tp("fb.allCaughtMany", &[("n", &total.to_string())]) });
         dom::el("feedback").set_class_name("feedback");
         return;
     }

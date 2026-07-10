@@ -311,7 +311,7 @@ fn render_rows(v: &serde_json::Value) -> String {
 fn report_name(uid: i64) {
     spawn_local(async move {
         let _ = call("POST", "/api/climb/report-name", Some(body(&[("userId", serde_json::json!(uid))]))).await;
-        dom::show_toast("Thanks \u{2014} that name was reported.");
+        dom::show_toast(&crate::i18n::t("toast.nameReported"));
     });
 }
 
@@ -325,7 +325,7 @@ pub fn submit_run(difficulty: &str, chain: u32, duration_ms: f64) {
         return;
     }
     if !is_logged_in() {
-        dom::show_toast("Log in to post your chain to The Climb.");
+        dom::show_toast(&crate::i18n::t("toast.loginToPost"));
         return;
     }
     let difficulty = difficulty.to_string();
@@ -342,7 +342,8 @@ pub fn submit_run(difficulty: &str, chain: u32, duration_ms: f64) {
         if let Ok(v) = call("POST", "/api/climb/submit-chain", Some(b)).await {
             if v.get("record").and_then(|r| r.as_bool()).unwrap_or(false) {
                 let rank = v.get("rank").and_then(|r| r.as_i64()).unwrap_or(0);
-                dom::show_toast(&format!("New record! Posted to The Climb \u{2014} #{rank} on {difficulty}."));
+                let dn = crate::i18n::t(&format!("level.{difficulty}"));
+                dom::show_toast(&crate::i18n::tp("toast.newRecord", &[("rank", &rank.to_string()), ("difficulty", &dn)]));
             }
         }
     });

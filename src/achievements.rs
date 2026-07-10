@@ -27,7 +27,7 @@ pub fn unlock(state: &mut AppState, id: &str) {
     save(state);
     render(state);
     if let Some(a) = ACHIEVEMENTS.iter().find(|a| a.id == id) {
-        dom::show_toast(a.nm);
+        dom::show_toast(&crate::i18n::t(&format!("ach.{}.nm", a.id)));
     }
 }
 
@@ -53,12 +53,14 @@ pub fn render(state: &AppState) {
         .iter()
         .map(|a| {
             let got = has(state, a.id);
+            let nm = crate::i18n::t(&format!("ach.{}.nm", a.id));
+            let desc = crate::i18n::t(&format!("ach.{}.desc", a.id));
             format!(
                 "<div class=\"ach-badge {}\" title=\"{}\"><span class=\"ic\">{}</span><span class=\"nm\">{}</span></div>",
                 if got { "got" } else { "" },
-                escape_html(a.desc),
+                escape_html(&desc),
                 a.ic,
-                escape_html(a.nm)
+                escape_html(&nm)
             )
         })
         .collect();
