@@ -144,7 +144,7 @@ pub fn reflect_auth() {
     }
     match username() {
         Some(name) => dom::set_text("accountBtn", &format!("\u{1F464} {name}")),
-        None => dom::set_text("accountBtn", "\u{1F464} Sign in"),
+        None => dom::set_text("accountBtn", &crate::i18n::t("top.signIn")),
     }
 }
 

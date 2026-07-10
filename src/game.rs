@@ -146,7 +146,7 @@ fn tier_for_streak(streak: u32) -> &'static str {
 pub fn render_letters(app: &App, animate_all: bool) {
     let value = app.borrow().answer.clone();
     if value.is_empty() {
-        dom::set_html("letters", "<span class=\"placeholder\">type what you heard</span><span class=\"caret\"></span>");
+        dom::set_html("letters", &format!("<span class=\"placeholder\">{}</span><span class=\"caret\"></span>", crate::i18n::t("ph.typeHeard")));
         app.borrow_mut().prev_letter_len = 0;
         return;
     }
@@ -265,7 +265,7 @@ pub fn refresh_mode_buttons(app: &App) {
     let s = app.borrow();
     let total = s.misses.len();
     let due = misses::due_misses(&s).len();
-    dom::set_text("missesBtn", &if s.review { "Exit misses".to_string() } else { format!("\u{21bb} Misses \u{b7} {}", due) });
+    dom::set_text("missesBtn", &if s.review { crate::i18n::t("top.missesExit") } else { format!("\u{21bb} {} \u{b7} {}", crate::i18n::t("top.misses"), due) });
     dom::el("missesBtn").set_attribute("title", &if total > 0 { format!("{} saved \u{b7} {} due now", total, due) } else { String::new() }).ok();
     dom::toggle_class("missesBtn", "on", s.review);
     dom::set_disabled("missesBtn", !s.review && total == 0);
@@ -294,7 +294,13 @@ pub fn build_source_options(app: &App) {
 
 pub fn build_level_options(app: &App) {
     let s = app.borrow();
-    let opts: String = LEVEL_OPTS.iter().map(|(v, l)| format!("<option value=\"{}\">{}</option>", v, l)).collect();
+    let opts: String = LEVEL_OPTS
+        .iter()
+        .map(|(v, _)| {
+            let label = crate::i18n::t(&format!("level.{v}"));
+            format!("<option value=\"{v}\">{label}</option>")
+        })
+        .collect();
     dom::set_html("levelSel", &opts);
     dom::select("levelSel").set_value(&s.level);
 }
@@ -539,7 +545,7 @@ pub fn next_word(app: &App) {
     app.borrow_mut().answered = false;
     dom::remove_class("orbWrap", "good");
     dom::remove_class("orbWrap", "bad");
-    dom::set_html("orbGlyph", "listen\u{2026}");
+    dom::set_html("orbGlyph", &crate::i18n::t("orb.listen"));
     app.borrow_mut().answer.clear();
     render_letters(app, false);
     drawing::clear_canvas();
@@ -729,7 +735,7 @@ fn retry_wrong(app: &App, tries_left: u32, verb: &str) {
     sync_keyboard(app);
     schedule(app, 550, |_| {
         dom::remove_class("orbWrap", "bad");
-        dom::set_html("orbGlyph", "listen\u{2026}");
+        dom::set_html("orbGlyph", &crate::i18n::t("orb.listen"));
     });
     let cur_tier = app.borrow().cur_tier.clone();
     start_timer(app, &cur_tier);
@@ -838,7 +844,7 @@ fn reset_chain_soft(app: &App) {
     app.borrow_mut().streak = 0;
     dom::set_text("streakNum", "0");
     let review = app.borrow().review;
-    dom::set_html("orbGlyph", if review { "tap to<br/>continue" } else { "tap for<br/>next word" });
+    dom::set_html("orbGlyph", &if review { crate::i18n::t("orb.continue") } else { crate::i18n::t("orb.next") });
 }
 
 pub fn show_hint(app: &App) {
@@ -996,7 +1002,7 @@ pub fn exit_review(app: &App, msg: Option<&str>) {
         s.word = String::new();
         s.answered = false;
     }
-    dom::set_html("orbGlyph", "tap to<br/>hear a word");
+    dom::set_html("orbGlyph", &crate::i18n::t("orb.tap"));
     app.borrow_mut().answer.clear();
     render_letters(app, false);
     drawing::clear_canvas();
@@ -1095,7 +1101,7 @@ pub fn exit_versus(app: &App) {
     }
     dom::remove_class("orbWrap", "good");
     dom::remove_class("orbWrap", "bad");
-    dom::set_html("orbGlyph", "tap to<br/>hear a word");
+    dom::set_html("orbGlyph", &crate::i18n::t("orb.tap"));
     app.borrow_mut().answer.clear();
     render_letters(app, false);
     drawing::clear_canvas();

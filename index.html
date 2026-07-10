@@ -389,20 +389,20 @@
   <div class="topbar">
     <div class="brand">
       <div class="mark">SPELL</div>
-      <div class="tag">hear it · spell it · keep the chain</div>
+      <div class="tag" data-i18n="brand.tag">hear it · spell it · keep the chain</div>
     </div>
     <div class="controls">
       <select id="langSel" aria-label="Word source"></select>
       <select id="levelSel" aria-label="Difficulty"></select>
       <select id="modeSel" aria-label="Timer">
-        <option value="off">Untimed</option>
-        <option value="on">Timed ⏱</option>
+        <option value="off" data-i18n="mode.untimed">Untimed</option>
+        <option value="on" data-i18n="mode.timed">Timed ⏱</option>
       </select>
       <button class="pill" id="missesBtn">↻ Misses</button>
-      <button class="pill" id="vsBtn">⚔ Head-to-head</button>
-      <button class="pill" id="climbBtn">🏔 The Climb</button>
+      <button class="pill" id="vsBtn" data-i18n="top.headToHead">⚔ Head-to-head</button>
+      <button class="pill" id="climbBtn" data-i18n="top.theClimb">🏔 The Climb</button>
       <button class="pill" id="accountBtn">👤 Sign in</button>
-      <button class="pill" id="importBtn">＋ My words</button>
+      <button class="pill" id="importBtn" data-i18n="top.myWords">＋ My words</button>
       <button class="pill" id="setBtn" aria-label="Settings">⚙</button>
     </div>
   </div>
@@ -436,13 +436,13 @@
     </div>
 
     <div class="replay-row">
-      <button class="pill" id="replayBtn" disabled><svg width="14" height="14" viewBox="0 0 16 16" fill="none"><path d="M4 3l9 5-9 5V3z" fill="currentColor"/></svg>Replay</button>
-      <button class="pill" id="slowBtn" disabled><svg width="15" height="15" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="6.2" stroke="currentColor" stroke-width="1.4"/><path d="M8 4.6V8l2.4 1.6" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg>Slow</button>
+      <button class="pill" id="replayBtn" disabled><svg width="14" height="14" viewBox="0 0 16 16" fill="none"><path d="M4 3l9 5-9 5V3z" fill="currentColor"/></svg><span data-i18n="btn.replay">Replay</span></button>
+      <button class="pill" id="slowBtn" disabled><svg width="15" height="15" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="6.2" stroke="currentColor" stroke-width="1.4"/><path d="M8 4.6V8l2.4 1.6" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg><span data-i18n="btn.slow">Slow</span></button>
     </div>
     <div class="voice-note" id="voiceNote"></div>
 
     <div class="field-head">
-      <span class="field-label">your spelling</span>
+      <span class="field-label" data-i18n="label.yourSpelling">your spelling</span>
       <span class="glow-pick" id="glowPick">
         <span class="gl">glow</span>
         <button class="swatch" style="--s:#ffb14d" data-c="#ffb14d" aria-label="Amber glow"></button>
@@ -467,13 +467,13 @@
       <div class="kb-row" id="kbRow3"></div>
       <div class="kb-row kb-actions">
         <button class="kb-key kb-back" id="kbBackspace" aria-label="Delete last letter">⌫</button>
-        <button class="kb-submit" id="kbSubmit">Enter</button>
+        <button class="kb-submit" id="kbSubmit" data-i18n="kb.enter">Enter</button>
       </div>
     </div>
 
     <div class="action-row">
       <button class="btn btn-icon" id="drawBtn" title="Draw the letters">✏</button>
-      <button class="btn btn-check" id="checkBtn" disabled>Check spelling</button>
+      <button class="btn btn-check" id="checkBtn" data-i18n="btn.check" disabled>Check spelling</button>
     </div>
 
     <div class="drawpad" id="drawpad">
@@ -507,10 +507,10 @@
     </div>
 
     <div class="minor-row">
-      <button class="ghost" id="hintBtn" disabled>Hint</button>
-      <button class="ghost" id="defBtn" disabled title="Shows a masked definition — helps tell apart tricky homonyms">📖 Definition</button>
-      <button class="ghost" id="sentenceBtn" disabled title="Hear (and see a masked version of) the word used in a sentence">💬 Sentence</button>
-      <button class="ghost danger" id="giveupBtn" disabled>Give up</button>
+      <button class="ghost" id="hintBtn" data-i18n="btn.hint" disabled>Hint</button>
+      <button class="ghost" id="defBtn" data-i18n="btn.definition" disabled title="Shows a masked definition — helps tell apart tricky homonyms">📖 Definition</button>
+      <button class="ghost" id="sentenceBtn" data-i18n="btn.sentence" disabled title="Hear (and see a masked version of) the word used in a sentence">💬 Sentence</button>
+      <button class="ghost danger" id="giveupBtn" data-i18n="btn.giveUp" disabled>Give up</button>
     </div>
 
     <div class="hint-line" id="hintLine" aria-hidden="true"></div>
@@ -520,9 +520,9 @@
   </main>
 
   <div class="chain">
-    <div class="stat"><div class="num live" id="streakNum">0</div><div class="lbl">current chain</div></div>
+    <div class="stat"><div class="num live" id="streakNum">0</div><div class="lbl" data-i18n="chain.current">current chain</div></div>
     <div class="divider"></div>
-    <div class="stat"><div class="num" id="bestNum">0</div><div class="lbl">your best</div></div>
+    <div class="stat"><div class="num" id="bestNum">0</div><div class="lbl" data-i18n="chain.best">your best</div></div>
   </div>
   <button class="pill btn-hide" id="shareBtn" aria-label="Share your chain" style="margin:0 auto 6px;display:block">↗ Share your chain</button>
 
@@ -710,19 +710,19 @@
   <!-- settings modal -->
   <div class="scrim" id="setScrim">
     <div class="modal">
-      <h3>Settings</h3>
-      <label class="set-row"><span class="lbl2">Kid mode<small>Bigger text, friendly words, no prices</small></span><input type="checkbox" class="switch" id="kidToggle" /></label>
-      <label class="set-row"><span class="lbl2">Readable mode<small>Larger, spaced, dyslexia-friendly type</small></span><input type="checkbox" class="switch" id="readToggle" /></label>
-      <label class="set-row"><span class="lbl2">Big text<small>Enlarge the interface text (about 1.5×)</small></span><input type="checkbox" class="switch" id="bigTextToggle" /></label>
-      <label class="set-row"><span class="lbl2">Slower voice<small>Speak each word more slowly</small></span><input type="checkbox" class="switch" id="slowToggle" /></label>
-      <label class="set-row"><span class="lbl2">Daily reminder<small>One gentle nudge a day to practice</small></span><input type="checkbox" class="switch" id="remindToggle" /></label>
-      <label class="set-row" id="remindTimeRow"><span class="lbl2">Reminder time<small>When to send the daily nudge</small></span><input type="time" id="remindTime" value="17:00" aria-label="Daily reminder time" /></label>
+      <h3 data-i18n="settings.title">Settings</h3>
+      <label class="set-row"><span class="lbl2"><span data-i18n="settings.kid">Kid mode</span><small data-i18n="settings.kidSmall">Bigger text, friendly words, no prices</small></span><input type="checkbox" class="switch" id="kidToggle" /></label>
+      <label class="set-row"><span class="lbl2"><span data-i18n="settings.readable">Readable mode</span><small data-i18n="settings.readableSmall">Larger, spaced, dyslexia-friendly type</small></span><input type="checkbox" class="switch" id="readToggle" /></label>
+      <label class="set-row"><span class="lbl2"><span data-i18n="settings.bigText">Big text</span><small data-i18n="settings.bigTextSmall">Enlarge the interface text (about 1.5×)</small></span><input type="checkbox" class="switch" id="bigTextToggle" /></label>
+      <label class="set-row"><span class="lbl2"><span data-i18n="settings.slow">Slower voice</span><small data-i18n="settings.slowSmall">Speak each word more slowly</small></span><input type="checkbox" class="switch" id="slowToggle" /></label>
+      <label class="set-row"><span class="lbl2"><span data-i18n="settings.remind">Daily reminder</span><small data-i18n="settings.remindSmall">One gentle nudge a day to practice</small></span><input type="checkbox" class="switch" id="remindToggle" /></label>
+      <label class="set-row" id="remindTimeRow"><span class="lbl2"><span data-i18n="settings.remindTime">Reminder time</span><small data-i18n="settings.remindTimeSmall">When to send the daily nudge</small></span><input type="time" id="remindTime" value="17:00" aria-label="Daily reminder time" /></label>
       <div class="set-row">
-        <span class="lbl2">Volume boost<small>Louder than 100% for quiet speakers</small></span>
+        <span class="lbl2"><span data-i18n="settings.volume">Volume boost</span><small data-i18n="settings.volumeSmall">Louder than 100% for quiet speakers</small></span>
         <input type="range" id="volumeSlider" min="0.5" max="2" step="0.1" value="1" aria-label="Volume boost" />
       </div>
       <div class="set-row">
-        <span class="lbl2">Background<small>Page background color</small></span>
+        <span class="lbl2"><span data-i18n="settings.background">Background</span><small data-i18n="settings.backgroundSmall">Page background color</small></span>
         <span class="theme-pick" id="bgPick">
           <button class="theme-swatch" style="--s:#1c1830" data-c="#1c1830" aria-label="Violet background"></button>
           <button class="theme-swatch" style="--s:#151d2e" data-c="#151d2e" aria-label="Navy background"></button>
@@ -733,7 +733,7 @@
         </span>
       </div>
       <div class="set-row">
-        <span class="lbl2">Orb color<small>Color of the spelling orb</small></span>
+        <span class="lbl2"><span data-i18n="settings.orb">Orb color</span><small data-i18n="settings.orbSmall">Color of the spelling orb</small></span>
         <span class="theme-pick" id="orbPick">
           <button class="theme-swatch" style="--s:#ffb14d" data-c="#ffb14d" aria-label="Amber orb"></button>
           <button class="theme-swatch" style="--s:#46d6b8" data-c="#46d6b8" aria-label="Teal orb"></button>
@@ -743,7 +743,7 @@
           <label class="theme-swatch custom" aria-label="Pick a custom orb color"><input type="color" id="orbColorInput" value="#ffb14d" /></label>
         </span>
       </div>
-      <button class="btn btn-check" id="setDone" style="width:100%;margin-top:16px">Done</button>
+      <button class="btn btn-check" id="setDone" data-i18n="settings.done" style="width:100%;margin-top:16px">Done</button>
     </div>
   </div>
 

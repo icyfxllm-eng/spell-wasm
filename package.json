@@ -4,7 +4,8 @@
   "private": true,
   "description": "Spell — hear it, spell it. Capacitor native wrapper around the Rust/WASM PWA.",
   "scripts": {
-    "build": "bash scripts/build-web.sh",
+    "i18n:check": "node scripts/i18n-check.mjs",
+    "build": "node scripts/i18n-check.mjs && bash scripts/build-web.sh",
     "sync": "npm run build && cap sync",
     "android": "npm run sync && cap run android",
     "release:android": "npm run sync && cd android && ./gradlew :app:bundleRelease",

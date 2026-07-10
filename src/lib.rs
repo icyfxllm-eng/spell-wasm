@@ -10,6 +10,7 @@ mod dom;
 mod drawing;
 mod game;
 mod haptics;
+mod i18n;
 mod importer;
 mod keyboard;
 mod misses;
@@ -73,10 +74,12 @@ pub fn start() -> Result<(), JsValue> {
     let orb_color = app.borrow().orb_color.clone();
     settings::set_orb_color(&app, &orb_color);
     settings::apply_settings(&app);
+    i18n::init(&app.borrow().lang);
     game::build_source_options(&app);
     game::build_level_options(&app);
     game::refresh_mode_buttons(&app);
     game::render_letters(&app, false);
+    i18n::translate_page();
     {
         let app2 = app.clone();
         speech_out::setup_voice_loading(move || game::update_voice_note(&app2));
@@ -597,7 +600,12 @@ fn wire_source_level(app: &App) {
             {
                 let mut s = a.borrow_mut();
                 s.lang = v.clone();
-                s.cur_lang = v;
+                s.cur_lang = v.clone();
+            }
+            // UI language follows the word-list selector (one setting). Keep the
+            // last built-in locale when "My Words" is picked (it isn't a locale).
+            if i18n::is_supported(&v) {
+                i18n::set_and_persist(&v);
             }
             game::update_voice_note(&a);
             settings::save_prefs(&a.borrow());
@@ -608,13 +616,16 @@ fn wire_source_level(app: &App) {
                 s.word = String::new();
                 s.answered = false;
             }
-            dom::set_html("orbGlyph", "tap to<br/>hear a word");
+            dom::set_html("orbGlyph", &i18n::t("orb.tap"));
             a.borrow_mut().answer.clear();
             game::render_letters(&a, false);
             drawing::clear_canvas();
             dom::set_text("feedback", "");
             dom::set_text("hintLine", "");
             game::build_level_options(&a);
+            game::refresh_mode_buttons(&a);
+            i18n::translate_page();
+            climb::reflect_auth();
             stats::render(&a.borrow());
             board::render(&a.borrow());
         });

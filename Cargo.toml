@@ -22,7 +22,7 @@ console_error_panic_hook = "0.1"
 version = "0.3"
 features = [
   "console",
-  "Window", "Document", "Element", "HtmlElement", "Node", "NodeList", "DomTokenList",
+  "Window", "Navigator", "Document", "Element", "HtmlElement", "Node", "NodeList", "DomTokenList",
   "HtmlInputElement", "HtmlSelectElement", "HtmlTextAreaElement", "HtmlButtonElement",
   "HtmlCanvasElement", "CanvasRenderingContext2d", "HtmlMediaElement", "HtmlAudioElement",
   "Event", "EventTarget", "MouseEvent", "PointerEvent", "KeyboardEvent", "InputEvent",
