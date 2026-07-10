@@ -31,7 +31,7 @@ import unicodedata
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
-LANGS = ["en", "es", "fr", "de", "pt", "it", "nl", "pl", "sv", "nb", "tr", "vi"]
+LANGS = ["en", "es", "fr", "de", "pt", "it", "nl", "pl", "sv", "nb", "tr", "vi", "ko"]
 TIERS = ["easy", "medium", "hard", "expert"]
 MIN_LEN, MAX_LEN = 2, 16
 BALANCE_TOL = 0.20
@@ -73,6 +73,9 @@ def reachable_chars(code: str) -> set:
             base, lm = dec[0], [m for m in dec[1:] if m in letter_marks]
             for t in tones:
                 chars.update(unicodedata.normalize("NFC", base + "".join(lm) + t))
+    if code == "ko":
+        # Dubeolsik + the Hangul automaton compose every precomposed syllable.
+        chars.update(chr(u) for u in range(0xAC00, 0xD7A4))
     return chars
 
 
@@ -106,6 +109,8 @@ def build():
     for code in LANGS:
         reach = reachable_chars(code)
         roots, exact = load_exclusions(code)
+        # CJK scripts: one character is a whole word, so allow length 1.
+        min_len = 1 if code in ("ko", "ja", "zh") else MIN_LEN
         seen = set()
         for tier in TIERS:
             src = ROOT / "assets" / "words" / code / f"{tier}.txt"
@@ -120,7 +125,7 @@ def build():
                 if not all(c.isalpha() for c in w):
                     warnings.append(f"{where} — dropped (non-alphabetic)")
                     continue
-                if not (MIN_LEN <= len(w) <= MAX_LEN):
+                if not (min_len <= len(w) <= MAX_LEN):
                     warnings.append(f"{where} — dropped (length {len(w)} outside {MIN_LEN}..{MAX_LEN})")
                     continue
                 # Hard gates (fail the build).

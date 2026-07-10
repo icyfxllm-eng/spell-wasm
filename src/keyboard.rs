@@ -67,6 +67,13 @@ const VI: Layout = Layout {
     rows: ["qwertyuiop", "asdfghjkl", "zxcvbnm"],
     long_press: &[('a', "ăâ"), ('e', "ê"), ('o', "ôơ"), ('u', "ư"), ('d', "đ")],
 };
+// Korean Dubeolsik (2-set): consonants left, vowels right. Keys emit jamo; the
+// Hangul automaton (crate::hangul, via game::type_jamo) composes syllable blocks
+// live. Tense consonants + ㅒ/ㅖ are on long-press instead of a shift layer.
+const KO: Layout = Layout {
+    rows: ["ㅂㅈㄷㄱㅅㅛㅕㅑㅐㅔ", "ㅁㄴㅇㄹㅎㅗㅓㅏㅣ", "ㅋㅌㅊㅍㅠㅜㅡ"],
+    long_press: &[('ㅂ', "ㅃ"), ('ㅈ', "ㅉ"), ('ㄷ', "ㄸ"), ('ㄱ', "ㄲ"), ('ㅅ', "ㅆ"), ('ㅐ', "ㅒ"), ('ㅔ', "ㅖ")],
+};
 
 fn layout_for(locale: &str) -> &'static Layout {
     match locale {
@@ -81,6 +88,7 @@ fn layout_for(locale: &str) -> &'static Layout {
         "nb" => &NB,
         "tr" => &TR,
         "vi" => &VI,
+        "ko" => &KO,
         _ => &EN,
     }
 }
@@ -94,6 +102,13 @@ fn keyboard_locale(app: &App) -> String {
     } else {
         lang
     }
+}
+
+/// True when the active keyboard composes Hangul (Korean) — key taps and
+/// backspace route through the composition engine (crate::hangul) instead of a
+/// plain append/pop.
+pub fn active_is_korean(app: &App) -> bool {
+    keyboard_locale(app) == "ko"
 }
 
 pub fn setup(app: &App) {
@@ -185,7 +200,7 @@ fn build_keys(app: &App) {
                 }) {
                     return; // the popover already typed a character
                 }
-                game::type_char(&a, ch);
+                game::emit_key(&a, ch);
             });
             let _ = el.add_event_listener_with_callback("click", cb.as_ref().unchecked_ref());
             cb.forget();
@@ -355,7 +370,7 @@ fn commit(app: &App) {
     close_popover();
     if let Some(c) = ch {
         HOLD.with(|h| h.borrow_mut().suppress_click = true);
-        game::type_char(app, c);
+        game::emit_key(app, c);
     }
 }
 
@@ -440,7 +455,7 @@ fn wire_physical(app: &App) {
             if c.is_alphabetic() || c == '\'' || c == '-' {
                 e.prevent_default();
                 let lower = c.to_lowercase().next().unwrap_or(c);
-                game::type_char(&a, lower);
+                game::emit_key(&a, lower);
             }
         }
     });
@@ -499,6 +514,7 @@ mod tests {
             ("nb", include_str!("../assets/keyboards/nb.json")),
             ("tr", include_str!("../assets/keyboards/tr.json")),
             ("vi", include_str!("../assets/keyboards/vi.json")),
+            ("ko", include_str!("../assets/keyboards/ko.json")),
         ];
         for (code, json) in jsons {
             let v: serde_json::Value = serde_json::from_str(json).unwrap();
@@ -531,6 +547,14 @@ mod tests {
                         if let Some(s) = crate::viet::retone(v, t) {
                             reach.extend(s.chars());
                         }
+                    }
+                }
+            }
+            if code == "ko" {
+                // The Dubeolsik keyboard + Hangul automaton compose every syllable.
+                for u in 0xAC00u32..=0xD7A3 {
+                    if let Some(c) = char::from_u32(u) {
+                        reach.insert(c);
                     }
                 }
             }

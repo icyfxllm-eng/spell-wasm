@@ -202,6 +202,29 @@ pub fn type_char(app: &App, ch: char) {
     announce(&ch.to_string());
 }
 
+/// Route a key press to the right input path for the active keyboard: Korean
+/// composes jamo into syllables (crate::hangul); everything else appends.
+pub fn emit_key(app: &App, ch: char) {
+    if crate::keyboard::active_is_korean(app) {
+        type_jamo(app, ch);
+    } else {
+        type_char(app, ch);
+    }
+}
+
+/// Korean: feed one jamo through the Hangul composition automaton and replace
+/// the answer with the recomposed buffer.
+pub fn type_jamo(app: &App, jamo: char) {
+    if !can_type(&app.borrow()) {
+        return;
+    }
+    let composed = crate::hangul::feed(&app.borrow().answer, jamo);
+    app.borrow_mut().answer = composed;
+    render_letters(app, true);
+    crate::haptics::key_tap();
+    announce(&jamo.to_string());
+}
+
 /// Vietnamese tone key: apply `tone` to the last typed vowel (replacing any
 /// existing tone). No-op if the last character isn't a Vietnamese vowel.
 pub fn apply_vi_tone(app: &App, tone: char) {
@@ -226,12 +249,23 @@ pub fn backspace(app: &App) {
     if !can_type(&app.borrow()) {
         return;
     }
-    let popped = app.borrow_mut().answer.pop();
-    render_letters(app, false);
-    if popped.is_some() {
-        crate::haptics::key_tap();
-        announce("delete");
+    let ko = crate::keyboard::active_is_korean(app);
+    let ans = app.borrow().answer.clone();
+    if ans.is_empty() {
+        return;
     }
+    // Korean decomposes one jamo at a time (한 → 하 → ㅎ → ∅); others pop a char.
+    let next = if ko {
+        crate::hangul::backspace(&ans)
+    } else {
+        let mut s = ans;
+        s.pop();
+        s
+    };
+    app.borrow_mut().answer = next;
+    render_letters(app, true);
+    crate::haptics::key_tap();
+    announce("delete");
 }
 
 /// Screen-reader announcement of the last key, via a visually-hidden live region.

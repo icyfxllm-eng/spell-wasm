@@ -36,6 +36,7 @@ fn tables() -> &'static HashMap<&'static str, Table> {
         m.insert("nb", parse(include_str!("i18n/locales/nb.json")));
         m.insert("tr", parse(include_str!("i18n/locales/tr.json")));
         m.insert("vi", parse(include_str!("i18n/locales/vi.json")));
+        m.insert("ko", parse(include_str!("i18n/locales/ko.json")));
         m
     })
 }
@@ -90,13 +91,19 @@ pub fn set_and_persist(code: &str) {
 
 /// Base subtag of `navigator.language` (e.g. "pt-BR" -> "pt"), if supported.
 fn device_locale() -> Option<String> {
+    device_base().filter(|b| is_supported(b))
+}
+
+/// The device's base language subtag (e.g. "ko-KR" -> "ko"), lowercased.
+fn device_base() -> Option<String> {
     let lang = web_sys::window()?.navigator().language()?;
-    let base = lang.split(['-', '_']).next()?.to_lowercase();
-    if is_supported(&base) {
-        Some(base)
-    } else {
-        None
-    }
+    Some(lang.split(['-', '_']).next()?.to_lowercase())
+}
+
+/// The device's language if it's a built-in *study* language, so a fresh install
+/// opens matched to the player's device (words + UI), not English.
+pub fn device_lang() -> Option<String> {
+    device_base().filter(|b| crate::consts::is_builtin_lang(b))
 }
 
 /// Translate a key. active locale -> en -> key.

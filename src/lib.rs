@@ -56,9 +56,13 @@ pub fn start() -> Result<(), JsValue> {
     achievements::load(&mut state);
     stats::load(&mut state);
 
+    // Study language: a saved choice wins; otherwise a fresh install opens in the
+    // device's language (if it's one we support), else English — so a Korean
+    // phone opens to Korean words + UI without any tapping.
     state.lang = match state.last_lang.clone() {
         Some(l) if l == MINE && !state.custom.words.is_empty() => MINE.to_string(),
-        _ => EN.to_string(),
+        Some(l) if consts::is_builtin_lang(&l) => l,
+        _ => i18n::device_lang().unwrap_or_else(|| EN.to_string()),
     };
     state.cur_lang = state.lang.clone();
 

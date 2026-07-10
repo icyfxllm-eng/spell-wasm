@@ -1,0 +1,1 @@
+# Korean exclusions (NFC, exact match). Extend from LDNOOBW ko.
