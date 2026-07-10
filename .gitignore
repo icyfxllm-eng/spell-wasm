@@ -48,3 +48,10 @@ ios/App/output/
 # OS / editor cruft
 .DS_Store
 *.log
+
+# E2E test build artifacts (seam-enabled — never shipped)
+dist-test/
+pkg-test/
+tests/e2e/TEST-REPORT.md
+tools/*/out/
+tools/*/review-packet/

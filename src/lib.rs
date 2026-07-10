@@ -27,6 +27,8 @@ mod share;
 mod speech_out;
 mod stats;
 mod storage;
+#[cfg(feature = "testseam")]
+mod testseam;
 mod versus;
 mod viet;
 mod word_data;
@@ -113,6 +115,11 @@ pub fn start() -> Result<(), JsValue> {
     }
 
     wire(&app);
+
+    // Observation-only E2E test seam — dev builds only (`--features testseam`);
+    // stripped from production (proven by scripts/seam-absence-check.mjs).
+    #[cfg(feature = "testseam")]
+    testseam::install(&app);
 
     // First launch (or existing user pre-dating the age gate): ask DOB before
     // anything else. The scrim sits above the game and must be answered.

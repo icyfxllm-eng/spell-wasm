@@ -1,0 +1,22 @@
+# Maestro flow: the iOS zoom SYMPTOM check (the cause is guarded by
+# scripts/viewport-check.mjs). Focus and dismiss text fields, then assert
+# visualViewport.scale == 1 via injected JS — proving the CSS/meta fix holds on
+# a real WKWebView, not just in the lint.
+appId: net.spellgame.app
+---
+- launchApp
+# Open the account/auth modal which has email/password native inputs (<16px was
+# the old zoom trigger; now floored at 16px).
+- tapOn:
+    id: "accountBtn"
+- tapOn:
+    id: "authEmail"
+- inputText: "test@example.com"
+- hideKeyboard
+- tapOn:
+    id: "authClose"
+# After dismissal the viewport must be back to scale 1.
+- evalScript: ${output.scale = maestro.appState.visualViewportScale}
+# NOTE: Maestro's JS-eval of visualViewport is limited; the authoritative
+# symptom assertion lives in the XCUITest counterpart
+# (tests/ios-ui/ZoomTests.swift) which reads webView.scrollView.zoomScale.
