@@ -147,6 +147,16 @@ fn build_keys(app: &App) {
     dom::set_html("kbRow2", &row(layout.rows[1], false));
     dom::set_html("kbRow3", &row(layout.rows[2], true));
 
+    // Uniform key width is derived from the widest row's column count (10 for
+    // QWERTY, 11 for QWERTZ/Swedish), so every key is the same size regardless
+    // of language. The +2 accounts for the apostrophe/hyphen keys shown in My
+    // Words so its bottom row still fits without shrinking the others.
+    let base_cols = layout.rows.iter().map(|r| r.chars().count()).max().unwrap_or(10);
+    let cols = base_cols.max(layout.rows[2].chars().count() + 2);
+    if let Some(el) = dom::doc().get_element_by_id("gameKeyboard").and_then(|e| e.dyn_into::<web_sys::HtmlElement>().ok()) {
+        let _ = el.style().set_property("--kb-cols", &cols.to_string());
+    }
+
     // Wire each letter/punctuation key: a tap types its base character (unless a
     // long-press popover consumed the gesture — see wire_long_press).
     if let Ok(list) = dom::doc().query_selector_all("#gameKeyboard .kb-key[data-k]") {
