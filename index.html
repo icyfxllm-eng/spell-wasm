@@ -285,6 +285,13 @@
   /* head-to-head scoreboard */
   .vs-bar{width:100%;max-width:600px;margin:0 0 14px;display:flex;align-items:stretch;gap:10px}
   .vs-bar.btn-hide{display:none}
+  .daily-bar{width:100%;max-width:600px;margin:0 auto 10px;text-align:center;font-family:var(--display);
+    font-weight:700;font-size:15px;letter-spacing:.02em;color:var(--amber-soft);
+    background:var(--panel);border:1px solid var(--edge);border-radius:12px;padding:9px 14px}
+  .daily-bar.btn-hide{display:none}
+  #dailyBtn.on{border-color:var(--amber);color:var(--amber-soft)}
+  #dailyBtn.done{color:var(--muted)}
+  .daily-best{color:var(--muted);font-size:13px;margin-top:-4px}
   .vs-side{flex:1;min-width:0;background:var(--panel);border:1.5px solid var(--edge);border-radius:14px;padding:11px 12px;text-align:center;transition:border-color .2s,box-shadow .2s}
   .vs-side.active{border-color:var(--amber);box-shadow:0 0 0 3px rgba(255,177,77,.14)}
   .vs-name{font-size:12px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
@@ -425,6 +432,7 @@
       <button class="pill" id="missesBtn">↻ Misses</button>
       <button class="pill" id="vsBtn" data-i18n="top.headToHead">⚔ Head-to-head</button>
       <button class="pill" id="climbBtn" data-i18n="top.theClimb">🏔 The Climb</button>
+      <button class="pill" id="dailyBtn">🗓 Daily</button>
       <button class="pill" id="accountBtn">👤 Sign in</button>
       <button class="pill" id="importBtn" data-i18n="top.myWords">＋ My words</button>
       <button class="pill" id="setBtn" aria-label="Settings">⚙</button>
@@ -447,6 +455,9 @@
       <div class="vs-best">best <b id="vsP2Best">0</b></div>
     </div>
   </div>
+
+  <!-- Daily Challenge progress banner (hidden outside a daily run) -->
+  <div class="daily-bar btn-hide" id="dailyBar" aria-live="polite"></div>
 
   <main class="stage">
     <div class="orb-wrap" id="orbWrap" role="button" tabindex="0" aria-label="Play the word">
@@ -696,6 +707,20 @@
       </div>
       <div class="dob-err" id="authErr"></div>
       <button class="ghost" id="authClose" data-i18n="auth.close" style="width:100%">Close</button>
+    </div>
+  </div>
+
+  <!-- Daily Challenge result -->
+  <div class="scrim" id="dailyResScrim">
+    <div class="modal">
+      <h3 data-i18n="daily.resultTitle">Daily Challenge</h3>
+      <div class="score-pop" id="dailyResScore">0/0</div>
+      <p id="dailyResStreak"></p>
+      <p class="daily-best" id="dailyResBest"></p>
+      <div class="row">
+        <button class="btn btn-icon" id="dailyShare" data-i18n="daily.share" style="flex:1;border-radius:12px">Share</button>
+        <button class="btn btn-check" id="dailyResClose" data-i18n="daily.close">Close</button>
+      </div>
     </div>
   </div>
 

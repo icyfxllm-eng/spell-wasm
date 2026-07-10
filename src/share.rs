@@ -91,6 +91,16 @@ fn share_text(text: &str) {
     }
 }
 
+/// Share a Daily Challenge result (text + link; best-effort).
+pub fn share_daily(correct: u32, total: u32, streak: u32) {
+    let text = if streak > 1 {
+        format!("\u{1f5d3} SpellGame Daily: {correct}/{total} \u{2014} \u{1f525} {streak}-day streak! hear it \u{b7} spell it \u{2192}")
+    } else {
+        format!("\u{1f5d3} SpellGame Daily: {correct}/{total}. hear it \u{b7} spell it \u{2192}")
+    };
+    share_text(&text);
+}
+
 /// Open the native share sheet with the player's current chain result.
 /// Prefers a rendered result-card image (native app); falls back to a
 /// text + link share. Best-effort — does nothing if no share sheet exists.

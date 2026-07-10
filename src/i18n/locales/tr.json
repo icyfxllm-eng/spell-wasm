@@ -144,5 +144,14 @@
   "toast.loginToPost": "Zincirini The Climb'e göndermek için giriş yap.",
   "toast.newRecord": "Yeni rekor! The Climb'e gönderildi — {difficulty} #{rank}.",
   "fb.gotItReview": "Tamam — sonra tekrar gelecek.",
-  "fb.inARow": " üst üste {n}."
+  "fb.inARow": " üst üste {n}.",
+  "daily.title": "Günlük",
+  "daily.exit": "Günlükten çık",
+  "daily.tapStart": "bugünün görevini<br/>başlatmak için dokun",
+  "daily.progress": "🗓 {i}/{n} · ✓{c}",
+  "daily.streakDays": "🔥 {n} günlük seri",
+  "daily.bestStreak": "en iyi: {n}",
+  "daily.resultTitle": "Günlük görev",
+  "daily.share": "Paylaş",
+  "daily.close": "Kapat"
 }

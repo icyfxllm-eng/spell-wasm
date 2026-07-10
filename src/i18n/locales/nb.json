@@ -144,5 +144,14 @@
   "toast.loginToPost": "Logg inn for å legge ut kjeden din på The Climb.",
   "toast.newRecord": "Ny rekord! Lagt ut på The Climb — #{rank} i {difficulty}.",
   "fb.gotItReview": "Notert — kommer tilbake senere.",
-  "fb.inARow": " {n} på rad."
+  "fb.inARow": " {n} på rad.",
+  "daily.title": "Daglig",
+  "daily.exit": "Avslutt daglig",
+  "daily.tapStart": "trykk for å starte<br/>dagens utfordring",
+  "daily.progress": "🗓 {i}/{n} · ✓{c}",
+  "daily.streakDays": "🔥 {n} dagers rekke",
+  "daily.bestStreak": "best: {n}",
+  "daily.resultTitle": "Dagens utfordring",
+  "daily.share": "Del",
+  "daily.close": "Lukk"
 }

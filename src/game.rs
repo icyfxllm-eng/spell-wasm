@@ -479,10 +479,24 @@ fn speak_word(app: &App, variant: &str, rate: f32) {
 
 pub fn next_word(app: &App) {
     clear_meaning();
+    // Daily Challenge: finish once the fixed set is exhausted.
+    if {
+        let s = app.borrow();
+        s.daily.active && s.daily.idx >= s.daily.words.len()
+    } {
+        finish_daily(app);
+        return;
+    }
     {
         let mut s = app.borrow_mut();
         s.tries_left = MAX_TRIES;
-        if s.review {
+        if s.daily.active {
+            let w = s.daily.words[s.daily.idx].clone();
+            s.daily.idx += 1;
+            s.cur_lang = s.daily.locale.clone();
+            s.cur_tier = length_tier(&w).to_string();
+            s.word = w;
+        } else if s.review {
             let due = misses::due_misses(&s);
             if due.is_empty() {
                 drop(s);
@@ -567,6 +581,9 @@ pub fn next_word(app: &App) {
     dom::set_text("feedback", "");
     update_voice_note(app);
     sync_keyboard(app);
+    if app.borrow().daily.active {
+        render_daily_bar(app);
+    }
     speak_current(app);
     let cur_tier = app.borrow().cur_tier.clone();
     start_timer(app, &cur_tier);
@@ -649,6 +666,10 @@ fn bump_streak(app: &App) -> u32 {
 fn on_correct(app: &App) {
     if app.borrow().versus.enabled {
         versus_on_correct(app);
+        return;
+    }
+    if app.borrow().daily.active {
+        daily_answer(app, true);
         return;
     }
     crate::haptics::correct();
@@ -752,6 +773,10 @@ fn finalize_incorrect(app: &App, glyph: &str, prefix: &str, feedback_class: &str
 }
 
 fn on_wrong(app: &App) {
+    if app.borrow().daily.active {
+        daily_answer(app, false);
+        return;
+    }
     crate::haptics::incorrect(app.borrow().kid);
     let tries_left = use_a_try(app);
     render_tries(app);
@@ -858,9 +883,173 @@ fn now_ms() -> f64 {
     js_sys::Date::now()
 }
 
+// ---------- Daily Challenge (see crate::daily) ----------
+
+/// Start today's Daily Challenge: a fixed, date+language-seeded set played once
+/// through, one attempt per word, isolated from streak/stats/Misses/Climb.
+pub fn enter_daily(app: &App) {
+    let (lang, kid) = {
+        let s = app.borrow();
+        (s.lang.clone(), s.kid)
+    };
+    let date = crate::daily::today();
+    let (locale, words) = crate::daily::build_words(&lang, &date, kid);
+    if words.is_empty() {
+        return;
+    }
+    {
+        let mut s = app.borrow_mut();
+        s.review = false;
+        s.daily.active = true;
+        s.daily.locale = locale;
+        s.daily.date = date;
+        s.daily.words = words;
+        s.daily.idx = 0;
+        s.daily.correct = 0;
+        s.word = String::new();
+        s.answered = false;
+    }
+    stop_timer(true);
+    clear_meaning();
+    dom::set_disabled("langSel", true);
+    dom::set_disabled("levelSel", true);
+    dom::set_disabled("modeSel", true);
+    app.borrow_mut().answer.clear();
+    render_letters(app, false);
+    drawing::clear_canvas();
+    dom::set_text("hintLine", "");
+    dom::set_text("feedback", "");
+    dom::el("feedback").set_class_name("feedback");
+    dom::set_html("orbGlyph", &crate::i18n::t("daily.tapStart"));
+    dom::remove_class("dailyBar", "btn-hide");
+    render_tries(app);
+    render_daily_bar(app);
+    refresh_daily_btn(app);
+}
+
+/// Leave the Daily Challenge mid-run (progress is discarded — it isn't recorded
+/// until the run is finished).
+pub fn exit_daily(app: &App) {
+    {
+        let mut s = app.borrow_mut();
+        s.daily.active = false;
+        s.word = String::new();
+        s.answered = false;
+        s.cur_lang = s.lang.clone();
+    }
+    leave_daily_ui(app);
+}
+
+fn finish_daily(app: &App) {
+    let (date, correct, total) = {
+        let s = app.borrow();
+        (s.daily.date.clone(), s.daily.correct, s.daily.words.len() as u32)
+    };
+    let (streak, best) = crate::daily::record_result(&date, correct);
+    {
+        let mut s = app.borrow_mut();
+        s.daily.active = false;
+        s.word = String::new();
+        s.answered = false;
+        s.cur_lang = s.lang.clone();
+    }
+    leave_daily_ui(app);
+    show_daily_result(app, correct, total, streak, best);
+}
+
+/// Shared teardown when leaving daily mode (finish or abandon).
+fn leave_daily_ui(app: &App) {
+    stop_timer(true);
+    clear_meaning();
+    dom::set_disabled("langSel", false);
+    dom::set_disabled("levelSel", false);
+    dom::set_disabled("modeSel", false);
+    dom::add_class("dailyBar", "btn-hide");
+    dom::set_html("orbGlyph", &crate::i18n::t("orb.tap"));
+    app.borrow_mut().answer.clear();
+    render_letters(app, false);
+    dom::set_text("feedback", "");
+    dom::el("feedback").set_class_name("feedback");
+    dom::set_text("hintLine", "");
+    render_tries(app);
+    update_voice_note(app);
+    refresh_daily_btn(app);
+}
+
+/// One daily answer — count it, reveal on a miss, show the meaning; the player
+/// taps the orb to advance (which runs `next_word` → serves the next word or
+/// finishes). Single attempt: no retries in the Daily Challenge.
+fn daily_answer(app: &App, correct: bool) {
+    let (cur_lang, word, kid) = {
+        let s = app.borrow();
+        (s.cur_lang.clone(), s.word.clone(), s.kid)
+    };
+    if correct {
+        crate::haptics::correct();
+        app.borrow_mut().daily.correct += 1;
+        dom::add_class("orbWrap", "good");
+        dom::set_text("orbGlyph", "\u{2713}");
+        dom::set_text("feedback", &crate::i18n::t(&format!("praise.{}", rand_index(8) + 1)));
+        dom::el("feedback").set_class_name("feedback good");
+    } else {
+        crate::haptics::incorrect(kid);
+        dom::add_class("orbWrap", "bad");
+        dom::set_text("orbGlyph", "\u{2717}");
+        dom::set_html("feedback", &format!("{}<span class=\"reveal\">{}</span>", crate::i18n::t("fb.itWas"), dom::escape_html(&word)));
+        dom::el("feedback").set_class_name("feedback bad");
+    }
+    show_meaning(app, word, cur_lang);
+    render_daily_bar(app);
+}
+
+fn render_daily_bar(app: &App) {
+    let s = app.borrow();
+    let n = s.daily.words.len();
+    let i = s.daily.idx.min(n);
+    dom::set_html("dailyBar", &crate::i18n::tp("daily.progress", &[("i", &i.to_string()), ("n", &n.to_string()), ("c", &s.daily.correct.to_string())]));
+}
+
+fn show_daily_result(_app: &App, correct: u32, total: u32, streak: u32, best: u32) {
+    dom::set_text("dailyResScore", &format!("{correct}/{total}"));
+    dom::set_text("dailyResStreak", &crate::i18n::tp("daily.streakDays", &[("n", &streak.to_string())]));
+    dom::set_text("dailyResBest", &crate::i18n::tp("daily.bestStreak", &[("n", &best.to_string())]));
+    dom::add_class("dailyResScrim", "show");
+}
+
+/// Re-show today's result (when the Daily button is tapped after it's done).
+pub fn show_today_result(app: &App) {
+    let r = crate::daily::load();
+    let today = crate::daily::today();
+    let correct = r.history.get(&today).copied().unwrap_or(0);
+    let (lang, kid) = {
+        let s = app.borrow();
+        (s.lang.clone(), s.kid)
+    };
+    let (_, words) = crate::daily::build_words(&lang, &today, kid);
+    show_daily_result(app, correct, words.len() as u32, r.streak, r.best_streak);
+}
+
+/// Update the Daily button label/state (Rust-managed, like the Misses button).
+pub fn refresh_daily_btn(app: &App) {
+    let active = app.borrow().daily.active;
+    let done = crate::daily::is_done_today();
+    let label = if active {
+        crate::i18n::t("daily.exit")
+    } else if done {
+        format!("\u{1F5D3} {} \u{2713}", crate::i18n::t("daily.title"))
+    } else {
+        format!("\u{1F5D3} {}", crate::i18n::t("daily.title"))
+    };
+    dom::set_text("dailyBtn", &label);
+    dom::toggle_class("dailyBtn", "on", active);
+    dom::toggle_class("dailyBtn", "done", done && !active);
+}
+
 pub fn start_timer(app: &App, tier: &str) {
     stop_timer(true);
-    let timed = app.borrow().timed;
+    let s = app.borrow();
+    let timed = s.timed && !s.daily.active; // the Daily Challenge is always untimed
+    drop(s);
     if !timed {
         return;
     }

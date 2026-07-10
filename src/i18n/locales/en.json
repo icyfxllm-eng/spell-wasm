@@ -144,5 +144,14 @@
   "toast.loginToPost": "Log in to post your chain to The Climb.",
   "toast.newRecord": "New record! Posted to The Climb — #{rank} on {difficulty}.",
   "fb.gotItReview": "Got it — scheduled to return later.",
-  "fb.inARow": " {n} in a row."
+  "fb.inARow": " {n} in a row.",
+  "daily.title": "Daily",
+  "daily.exit": "Exit daily",
+  "daily.tapStart": "tap to start<br/>today's challenge",
+  "daily.progress": "🗓 {i}/{n} · ✓{c}",
+  "daily.streakDays": "🔥 {n}-day streak",
+  "daily.bestStreak": "best: {n}",
+  "daily.resultTitle": "Daily Challenge",
+  "daily.share": "Share",
+  "daily.close": "Close"
 }

@@ -5,6 +5,7 @@ mod audio_boost;
 mod board;
 mod climb;
 mod consts;
+mod daily;
 mod deck;
 mod dom;
 mod drawing;
@@ -80,6 +81,7 @@ pub fn start() -> Result<(), JsValue> {
     game::build_source_options(&app);
     game::build_level_options(&app);
     game::refresh_mode_buttons(&app);
+    game::refresh_daily_btn(&app);
     game::render_letters(&app, false);
     i18n::translate_page();
     {
@@ -577,6 +579,33 @@ fn wire_modes(app: &App) {
     }
     {
         let a = app.clone();
+        dom::on_click("dailyBtn", move || {
+            if a.borrow().daily.active {
+                game::exit_daily(&a);
+            } else if daily::is_done_today() {
+                game::show_today_result(&a);
+            } else {
+                game::enter_daily(&a);
+            }
+        });
+    }
+    dom::on_click("dailyResClose", || dom::remove_class("dailyResScrim", "show"));
+    {
+        let a = app.clone();
+        dom::on_click("dailyShare", move || {
+            let r = daily::load();
+            let today = daily::today();
+            let correct = r.history.get(&today).copied().unwrap_or(0);
+            let (lang, kid) = {
+                let s = a.borrow();
+                (s.lang.clone(), s.kid)
+            };
+            let (_, words) = daily::build_words(&lang, &today, kid);
+            share::share_daily(correct, words.len() as u32, r.streak);
+        });
+    }
+    {
+        let a = app.clone();
         dom::on::<web_sys::Event, _>("modeSel", "change", move |_| {
             let on = dom::select("modeSel").value() == "on";
             a.borrow_mut().timed = on;
@@ -626,6 +655,7 @@ fn wire_source_level(app: &App) {
             dom::set_text("hintLine", "");
             game::build_level_options(&a);
             game::refresh_mode_buttons(&a);
+            game::refresh_daily_btn(&a);
             keyboard::rebuild(&a);
             i18n::translate_page();
             climb::reflect_auth();

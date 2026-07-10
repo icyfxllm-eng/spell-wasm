@@ -144,5 +144,14 @@
   "toast.loginToPost": "Zaloguj się, aby opublikować serię w The Climb.",
   "toast.newRecord": "Nowy rekord! Opublikowano w The Climb — #{rank} w {difficulty}.",
   "fb.gotItReview": "Zapisane — wróci później.",
-  "fb.inARow": " {n} z rzędu."
+  "fb.inARow": " {n} z rzędu.",
+  "daily.title": "Codzienne",
+  "daily.exit": "Wyjdź z codziennego",
+  "daily.tapStart": "dotknij, aby zacząć<br/>dzisiejsze wyzwanie",
+  "daily.progress": "🗓 {i}/{n} · ✓{c}",
+  "daily.streakDays": "🔥 seria {n} dni",
+  "daily.bestStreak": "rekord: {n}",
+  "daily.resultTitle": "Codzienne wyzwanie",
+  "daily.share": "Udostępnij",
+  "daily.close": "Zamknij"
 }

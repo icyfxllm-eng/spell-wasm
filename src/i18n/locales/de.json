@@ -144,5 +144,14 @@
   "toast.loginToPost": "Melde dich an, um deine Kette in The Climb zu posten.",
   "toast.newRecord": "Neuer Rekord! In The Climb gepostet — #{rank} in {difficulty}.",
   "fb.gotItReview": "Erfasst — kommt später wieder.",
-  "fb.inARow": " {n} in Folge."
+  "fb.inARow": " {n} in Folge.",
+  "daily.title": "Täglich",
+  "daily.exit": "Täglich beenden",
+  "daily.tapStart": "tippen, um die<br/>Tagesaufgabe zu starten",
+  "daily.progress": "🗓 {i}/{n} · ✓{c}",
+  "daily.streakDays": "🔥 {n}-Tage-Serie",
+  "daily.bestStreak": "Rekord: {n}",
+  "daily.resultTitle": "Tagesaufgabe",
+  "daily.share": "Teilen",
+  "daily.close": "Schließen"
 }

@@ -144,5 +144,14 @@
   "toast.loginToPost": "Log in om je reeks op The Climb te plaatsen.",
   "toast.newRecord": "Nieuw record! Geplaatst op The Climb — #{rank} in {difficulty}.",
   "fb.gotItReview": "Genoteerd — komt later terug.",
-  "fb.inARow": " {n} op rij."
+  "fb.inARow": " {n} op rij.",
+  "daily.title": "Dagelijks",
+  "daily.exit": "Sluit dagelijks",
+  "daily.tapStart": "tik om de<br/>dagchallenge te starten",
+  "daily.progress": "🗓 {i}/{n} · ✓{c}",
+  "daily.streakDays": "🔥 reeks van {n} dagen",
+  "daily.bestStreak": "beste: {n}",
+  "daily.resultTitle": "Dagelijkse challenge",
+  "daily.share": "Delen",
+  "daily.close": "Sluiten"
 }

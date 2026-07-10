@@ -144,5 +144,14 @@
   "toast.loginToPost": "Entre para publicar sua corrente no The Climb.",
   "toast.newRecord": "Novo recorde! Publicado no The Climb — #{rank} em {difficulty}.",
   "fb.gotItReview": "Anotado — voltará mais tarde.",
-  "fb.inARow": " {n} seguidas."
+  "fb.inARow": " {n} seguidas.",
+  "daily.title": "Diário",
+  "daily.exit": "Sair do diário",
+  "daily.tapStart": "toque para começar<br/>o desafio de hoje",
+  "daily.progress": "🗓 {i}/{n} · ✓{c}",
+  "daily.streakDays": "🔥 sequência de {n} dias",
+  "daily.bestStreak": "recorde: {n}",
+  "daily.resultTitle": "Desafio diário",
+  "daily.share": "Compartilhar",
+  "daily.close": "Fechar"
 }

@@ -144,5 +144,14 @@
   "toast.loginToPost": "Logga in för att lägga upp din kedja på The Climb.",
   "toast.newRecord": "Nytt rekord! Upplagt på The Climb — #{rank} i {difficulty}.",
   "fb.gotItReview": "Klart — kommer tillbaka senare.",
-  "fb.inARow": " {n} i rad."
+  "fb.inARow": " {n} i rad.",
+  "daily.title": "Daglig",
+  "daily.exit": "Avsluta daglig",
+  "daily.tapStart": "tryck för att starta<br/>dagens utmaning",
+  "daily.progress": "🗓 {i}/{n} · ✓{c}",
+  "daily.streakDays": "🔥 {n} dagars svit",
+  "daily.bestStreak": "bäst: {n}",
+  "daily.resultTitle": "Dagens utmaning",
+  "daily.share": "Dela",
+  "daily.close": "Stäng"
 }

@@ -122,6 +122,10 @@ pub struct AppState {
     /// Head-to-head match state. Session-only (never persisted); `enabled` is
     /// false during normal single-player play. See `crate::versus`.
     pub versus: crate::versus::Versus,
+    /// Daily Challenge run state — a fixed, date+locale-seeded word set played
+    /// once a day. Session-only; the streak/history is persisted separately by
+    /// `crate::daily`. See §4.3.
+    pub daily: crate::daily::DailyState,
     /// Shuffled-deck word selection, one per lang+tier pool (keyed
     /// `"{lang}:{tier}"`) plus `"__review"` for misses practice. Session-only
     /// — not persisted to storage.
@@ -165,6 +169,7 @@ impl Default for AppState {
             prev_letter_len: 0,
             run_start_ms: 0.0,
             versus: crate::versus::Versus::default(),
+            daily: crate::daily::DailyState::default(),
             decks: HashMap::new(),
         }
     }
