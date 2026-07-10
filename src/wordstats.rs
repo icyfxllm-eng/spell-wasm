@@ -62,10 +62,11 @@ fn now_secs() -> f64 {
     js_sys::Date::now() / 1000.0
 }
 
-fn norm_key(word: &str) -> String {
-    // Case-normalized to match how answers are compared; word lists are already
-    // lowercase, so this keys words by their canonical string.
-    word.to_lowercase()
+fn norm_key(lang: &str, word: &str) -> String {
+    // Keyed by (locale, word) so mastery in Español never pollutes Français
+    // (§4.1) — words like "sol"/"casa"/"banana" exist in several languages.
+    // Case-normalized to match how answers are compared.
+    format!("{}::{}", lang, word.to_lowercase())
 }
 
 thread_local! {
@@ -106,9 +107,9 @@ fn evict(b: &mut Blob) {
 
 /// Record a round's outcome for `word`. Called once per solo round at its final
 /// result (a win, or a loss via out-of-tries / timeout / give-up — all misses).
-pub fn record(word: &str, correct: bool) {
+pub fn record(lang: &str, word: &str, correct: bool) {
     let mut b = load();
-    let e = b.words.entry(norm_key(word)).or_default();
+    let e = b.words.entry(norm_key(lang, word)).or_default();
     e.a = e.a.saturating_add(1);
     if correct {
         e.s = e.s.saturating_add(1);
@@ -122,7 +123,7 @@ pub fn record(word: &str, correct: bool) {
 
 /// Weighted pick from `pool` (the active tier/mode list, unchanged). Returns
 /// None only for an empty pool, so callers can fall back to the deck.
-pub fn pick(pool: &[String]) -> Option<String> {
+pub fn pick(lang: &str, pool: &[String]) -> Option<String> {
     if pool.is_empty() {
         return None;
     }
@@ -143,7 +144,7 @@ pub fn pick(pool: &[String]) -> Option<String> {
     let mut cum: Vec<f64> = Vec::with_capacity(candidates.len());
     let mut total = 0.0f64;
     for w in &candidates {
-        let (a, m, s, seen) = match b.words.get(&norm_key(w)) {
+        let (a, m, s, seen) = match b.words.get(&norm_key(lang, w)) {
             Some(x) => (x.a as f64, x.m as f64, x.s as f64, true),
             None => (0.0, 0.0, 0.0, false),
         };
@@ -163,7 +164,7 @@ pub fn pick(pool: &[String]) -> Option<String> {
     let chosen = candidates[idx].clone();
 
     // Stamp last-shown, evict, persist once; update the recency ring.
-    b.words.entry(norm_key(&chosen)).or_default().t = now_secs();
+    b.words.entry(norm_key(lang, &chosen)).or_default().t = now_secs();
     evict(&mut b);
     store(&b);
     push_recent(&chosen);

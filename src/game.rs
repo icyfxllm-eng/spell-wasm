@@ -523,7 +523,7 @@ pub fn next_word(app: &App) {
                 let w = if s.versus.enabled {
                     s.decks.entry(key.clone()).or_default().next(&pool)
                 } else {
-                    match wordstats::pick(&pool) {
+                    match wordstats::pick(&s.lang, &pool) {
                         Some(w) => w,
                         None => s.decks.entry(key.clone()).or_default().next(&pool),
                     }
@@ -658,7 +658,7 @@ fn on_correct(app: &App) {
     stats::record(&mut app.borrow_mut(), &cur_lang, &cur_tier, true);
     // Adaptive word stats: solo practice only (Misses/review has its own SR).
     if !app.borrow().review {
-        wordstats::record(&word, true);
+        wordstats::record(&cur_lang, &word, true);
     }
     let cleared = misses::promote_miss(&mut app.borrow_mut(), &word, &cur_lang);
     refresh_mode_buttons(app);
@@ -735,7 +735,7 @@ fn finalize_incorrect(app: &App, glyph: &str, prefix: &str, feedback_class: &str
     // Adaptive word stats: a loss (out of tries / timeout / give-up) is a miss,
     // for solo practice only (not head-to-head, not Misses/review).
     if !versus_on && !app.borrow().review {
-        wordstats::record(&word, false);
+        wordstats::record(&cur_lang, &word, false);
     }
 
     dom::add_class("orbWrap", "bad");
