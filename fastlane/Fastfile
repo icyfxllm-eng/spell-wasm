@@ -21,7 +21,9 @@ platform :ios do
     # version (MARKETING_VERSION / CFBundleShortVersionString) is untouched.
     next_build = latest_testflight_build_number(initial_build_number: 0) + 1
     UI.important("Build number -> #{next_build} (App Store Connect latest + 1)")
-    pbxproj = "ios/App/App.xcodeproj/project.pbxproj"
+    # __dir__ is the fastlane/ folder, so this resolves regardless of the CWD
+    # fastlane runs from.
+    pbxproj = File.expand_path("../ios/App/App.xcodeproj/project.pbxproj", __dir__)
     contents = File.read(pbxproj)
     contents.gsub!(/CURRENT_PROJECT_VERSION = \d+;/, "CURRENT_PROJECT_VERSION = #{next_build};")
     File.write(pbxproj, contents)
