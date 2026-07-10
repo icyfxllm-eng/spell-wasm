@@ -1,0 +1,14 @@
+{
+  "rows": [
+    "qwertyuiop",
+    "asdfghjkl",
+    "zxcvbnm"
+  ],
+  "longPress": {
+    "a": "à",
+    "e": "èé",
+    "i": "ì",
+    "o": "ò",
+    "u": "ù"
+  }
+}

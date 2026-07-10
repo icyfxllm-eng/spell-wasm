@@ -1,0 +1,9 @@
+# Substring roots excluded from ALL gameplay pools and Climb usernames.
+# Seed from src/profanity.rs; extend per-language from the LDNOOBW lists
+# (github.com/LDNOOBW/List-of-Dirty-Naughty-Obscene-and-Otherwise-Bad-Words).
+# Matched (accent-lenient, lowercased) as substrings.
+fuck
+shit
+cunt
+nigg
+faggot

@@ -1,0 +1,2 @@
+# Exact words excluded for this locale (accent-lenient, lowercased match).
+# Extend from the LDNOOBW per-language list before launch (§3.1).

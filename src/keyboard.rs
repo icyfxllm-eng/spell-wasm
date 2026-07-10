@@ -425,6 +425,43 @@ mod tests {
         s
     }
 
+    /// The keyboard layout SSOT (assets/keyboards/{code}.json, consumed by the
+    /// word-list pipeline's charset gate) must match the Rust layouts, so the
+    /// gate and the runtime keyboard can never diverge.
+    #[test]
+    fn json_layouts_match_rust() {
+        // (code, json) pairs — embedded at compile time from the SSOT files.
+        let jsons: &[(&str, &str)] = &[
+            ("en", include_str!("../assets/keyboards/en.json")),
+            ("es", include_str!("../assets/keyboards/es.json")),
+            ("fr", include_str!("../assets/keyboards/fr.json")),
+            ("de", include_str!("../assets/keyboards/de.json")),
+            ("pt", include_str!("../assets/keyboards/pt.json")),
+            ("it", include_str!("../assets/keyboards/it.json")),
+            ("nl", include_str!("../assets/keyboards/nl.json")),
+            ("pl", include_str!("../assets/keyboards/pl.json")),
+            ("sv", include_str!("../assets/keyboards/sv.json")),
+            ("nb", include_str!("../assets/keyboards/nb.json")),
+            ("tr", include_str!("../assets/keyboards/tr.json")),
+        ];
+        for (code, json) in jsons {
+            let v: serde_json::Value = serde_json::from_str(json).unwrap();
+            let layout = layout_for(code);
+            let rows: Vec<String> = v["rows"].as_array().unwrap().iter().map(|r| r.as_str().unwrap().to_string()).collect();
+            assert_eq!(rows, layout.rows.to_vec(), "{code} rows differ from JSON");
+            let lp = &v["longPress"];
+            assert_eq!(
+                lp.as_object().map(|o| o.len()).unwrap_or(0),
+                layout.long_press.len(),
+                "{code} longPress count differs from JSON"
+            );
+            for (base, acc) in layout.long_press {
+                let got = lp[base.to_string()].as_str().unwrap_or("");
+                assert_eq!(got, *acc, "{code} longPress[{base}] differs from JSON");
+            }
+        }
+    }
+
     /// §3.4 gate 1: every character in every built-in word (after the strict
     /// fold the player must reproduce) is reachable on that locale's keyboard.
     #[test]
