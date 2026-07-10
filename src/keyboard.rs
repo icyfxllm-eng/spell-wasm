@@ -60,6 +60,13 @@ const TR: Layout = Layout {
     rows: ["qwertyuıopğ", "asdfghjklşi", "zxcvbnmöçü"],
     long_press: &[],
 };
+// Vietnamese: QWERTY + long-press for the letter-modified vowels (ă â ê ô ơ ư)
+// and đ; the five tones are applied post-fix via a dedicated tone row (see
+// build_keys / crate::viet). Every vowel form is thus reachable in ≤2 taps.
+const VI: Layout = Layout {
+    rows: ["qwertyuiop", "asdfghjkl", "zxcvbnm"],
+    long_press: &[('a', "ăâ"), ('e', "ê"), ('o', "ôơ"), ('u', "ư"), ('d', "đ")],
+};
 
 fn layout_for(locale: &str) -> &'static Layout {
     match locale {
@@ -73,6 +80,7 @@ fn layout_for(locale: &str) -> &'static Layout {
         "sv" => &SV,
         "nb" => &NB,
         "tr" => &TR,
+        "vi" => &VI,
         _ => &EN,
     }
 }
@@ -156,6 +164,9 @@ fn build_keys(app: &App) {
     if let Some(el) = dom::doc().get_element_by_id("gameKeyboard").and_then(|e| e.dyn_into::<web_sys::HtmlElement>().ok()) {
         let _ = el.style().set_property("--kb-cols", &cols.to_string());
     }
+
+    // Vietnamese gets a tone row; other languages hide it.
+    build_tone_row(app, locale == "vi");
 
     // Wire each letter/punctuation key: a tap types its base character (unless a
     // long-press popover consumed the gesture — see wire_long_press).
@@ -355,6 +366,40 @@ fn close_popover() {
     }
 }
 
+/// Build + wire the Vietnamese tone row (five keys applying huyền/sắc/hỏi/ngã/
+/// nặng to the last vowel via crate::viet). Hidden for every other language.
+fn build_tone_row(app: &App, show: bool) {
+    if !show {
+        dom::set_html("kbToneRow", "");
+        dom::add_class("kbToneRow", "btn-hide");
+        return;
+    }
+    let mut h = String::new();
+    for mark in crate::viet::TONE_MARKS {
+        // Render the mark on a dotted circle so it's visible on the keycap.
+        let face = format!("\u{25cc}{mark}");
+        h.push_str(&format!("<button class=\"kb-key kb-tone\" data-tone=\"{:x}\" aria-label=\"tone mark\">{face}</button>", mark as u32));
+    }
+    dom::set_html("kbToneRow", &h);
+    dom::remove_class("kbToneRow", "btn-hide");
+    if let Ok(list) = dom::doc().query_selector_all("#kbToneRow .kb-tone[data-tone]") {
+        for i in 0..list.length() {
+            let Some(el) = list.get(i).and_then(|n| n.dyn_into::<web_sys::HtmlElement>().ok()) else { continue };
+            let Some(mark) = el
+                .get_attribute("data-tone")
+                .and_then(|t| u32::from_str_radix(&t, 16).ok())
+                .and_then(char::from_u32)
+            else {
+                continue;
+            };
+            let a = app.clone();
+            let cb = Closure::<dyn FnMut()>::new(move || game::apply_vi_tone(&a, mark));
+            let _ = el.add_event_listener_with_callback("click", cb.as_ref().unchecked_ref());
+            cb.forget();
+        }
+    }
+}
+
 fn wire_actions(app: &App) {
     {
         let a = app.clone();
@@ -453,6 +498,7 @@ mod tests {
             ("sv", include_str!("../assets/keyboards/sv.json")),
             ("nb", include_str!("../assets/keyboards/nb.json")),
             ("tr", include_str!("../assets/keyboards/tr.json")),
+            ("vi", include_str!("../assets/keyboards/vi.json")),
         ];
         for (code, json) in jsons {
             let v: serde_json::Value = serde_json::from_str(json).unwrap();
@@ -477,7 +523,17 @@ mod tests {
     #[test]
     fn every_word_char_is_typeable() {
         for (code, _) in crate::consts::BUILTIN_LANGS {
-            let reach = reachable(layout_for(code));
+            let mut reach = reachable(layout_for(code));
+            if code == "vi" {
+                // The tone row makes every tone of every reachable vowel typeable.
+                for v in reach.iter().copied().collect::<Vec<_>>() {
+                    for t in crate::viet::TONE_MARKS {
+                        if let Some(s) = crate::viet::retone(v, t) {
+                            reach.extend(s.chars());
+                        }
+                    }
+                }
+            }
             for tier in ["easy", "medium", "hard", "expert"] {
                 for w in crate::words::tier_for(code, tier) {
                     for c in crate::norm::fold_strict(w).chars() {

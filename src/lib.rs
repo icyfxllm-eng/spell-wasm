@@ -26,6 +26,7 @@ mod speech_out;
 mod stats;
 mod storage;
 mod versus;
+mod viet;
 mod word_data;
 mod words;
 mod wordstats;

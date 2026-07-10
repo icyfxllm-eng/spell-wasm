@@ -198,6 +198,9 @@
   .kb-submit{flex:1 1 auto;background:var(--amber);color:#36210a;border-color:var(--amber);font-weight:700}
   .kb-back{flex:0 0 auto;width:auto;min-width:64px;font-size:19px;color:var(--muted)}
   .kb-submit:active{filter:brightness(1.06);transform:translateY(1px)}
+  /* Vietnamese tone row: applies huyền/sắc/hỏi/ngã/nặng to the last vowel. */
+  .kb-tones.btn-hide{display:none}
+  .kb-tone{font-size:23px;color:var(--amber-soft)}
   /* Long-press accent keys: a dot hint, and a popover of alternatives that
      opens above the key after a 350ms hold (built in keyboard.rs). The popover
      is pointer-events:none so the finger stays "down" on the key and window
@@ -500,6 +503,8 @@
       <div class="kb-row" id="kbRow1"></div>
       <div class="kb-row" id="kbRow2"></div>
       <div class="kb-row" id="kbRow3"></div>
+      <!-- Vietnamese tone row (built + shown only for vi in keyboard.rs) -->
+      <div class="kb-row kb-tones btn-hide" id="kbToneRow"></div>
       <div class="kb-row kb-actions">
         <button class="kb-submit" id="kbSubmit" data-i18n="kb.enter">Enter</button>
         <button class="kb-back" id="kbBackspace" aria-label="Delete last letter">⌫</button>

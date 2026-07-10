@@ -202,6 +202,25 @@ pub fn type_char(app: &App, ch: char) {
     announce(&ch.to_string());
 }
 
+/// Vietnamese tone key: apply `tone` to the last typed vowel (replacing any
+/// existing tone). No-op if the last character isn't a Vietnamese vowel.
+pub fn apply_vi_tone(app: &App, tone: char) {
+    if !can_type(&app.borrow()) {
+        return;
+    }
+    let mut ans = app.borrow().answer.clone();
+    let Some(last) = ans.chars().last() else {
+        return;
+    };
+    if let Some(retoned) = crate::viet::retone(last, tone) {
+        ans.pop();
+        ans.push_str(&retoned);
+        app.borrow_mut().answer = ans;
+        render_letters(app, true);
+        crate::haptics::key_tap();
+    }
+}
+
 /// Delete the last character of the answer.
 pub fn backspace(app: &App) {
     if !can_type(&app.borrow()) {

@@ -31,7 +31,7 @@ import unicodedata
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
-LANGS = ["en", "es", "fr", "de", "pt", "it", "nl", "pl", "sv", "nb", "tr"]
+LANGS = ["en", "es", "fr", "de", "pt", "it", "nl", "pl", "sv", "nb", "tr", "vi"]
 TIERS = ["easy", "medium", "hard", "expert"]
 MIN_LEN, MAX_LEN = 2, 16
 BALANCE_TOL = 0.20
@@ -62,6 +62,17 @@ def reachable_chars(code: str) -> set:
     for base, accents in layout.get("longPress", {}).items():
         chars.add(base)
         chars.update(accents)
+    if code == "vi":
+        # The Vietnamese tone row applies any of the five tones to any reachable
+        # vowel (mirrors src/viet.rs), so every toned form is typeable too.
+        tones = ["̀", "́", "̉", "̃", "̣"]
+        letter_marks = {"̂", "̆", "̛"}
+        vowels = [c for c in list(chars) if unicodedata.normalize("NFD", c)[0].lower() in "aeiouy"]
+        for v in vowels:
+            dec = unicodedata.normalize("NFD", v)
+            base, lm = dec[0], [m for m in dec[1:] if m in letter_marks]
+            for t in tones:
+                chars.update(unicodedata.normalize("NFC", base + "".join(lm) + t))
     return chars
 
 
