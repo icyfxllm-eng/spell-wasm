@@ -1,0 +1,4 @@
+# Downloaded dictionary dumps — large, license-varied, never committed.
+# Commit only the pinned manifest (URLs + SHA-256) and data/<lang>/SOURCES.md.
+*
+!.gitignore

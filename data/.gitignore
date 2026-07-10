@@ -1,0 +1,3 @@
+# Migrated/derived lexicons are build artifacts (regenerate via tools/lexicon-ingest).
+# Committed: LEXICON.md, LICENSES.md, per-language SOURCES.md.
+*/lexicon.jsonl
