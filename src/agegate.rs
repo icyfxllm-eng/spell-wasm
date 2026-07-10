@@ -132,12 +132,29 @@ pub fn read_selection() -> (i32, u32, u32) {
 }
 
 /// A worded multiplication challenge for the parent gate, and its answer.
-/// Worded (not digits) so it's a real speed bump for a young child.
+/// Worded (not digits) so it's a real speed bump for a young child — in the
+/// active UI language.
 pub fn parent_problem() -> (String, i32) {
-    const WORDS: [&str; 10] = [
-        "zero", "one", "two", "three", "four", "five", "six", "seven", "eight", "nine",
-    ];
     let a = 3 + (js_sys::Math::random() * 6.0) as i32; // 3..=8
     let b = 3 + (js_sys::Math::random() * 6.0) as i32;
-    (format!("What is {} times {}?", WORDS[a as usize], WORDS[b as usize]), a * b)
+    let words = number_words(&crate::i18n::current());
+    let q = crate::i18n::tp("parent.question", &[("a", words[a as usize]), ("b", words[b as usize])]);
+    (q, a * b)
+}
+
+/// Spelled-out 0–9 for each supported UI locale (only 3–8 are ever used).
+fn number_words(locale: &str) -> [&'static str; 10] {
+    match locale {
+        "es" => ["cero", "uno", "dos", "tres", "cuatro", "cinco", "seis", "siete", "ocho", "nueve"],
+        "fr" => ["z\u{e9}ro", "un", "deux", "trois", "quatre", "cinq", "six", "sept", "huit", "neuf"],
+        "de" => ["null", "eins", "zwei", "drei", "vier", "f\u{fc}nf", "sechs", "sieben", "acht", "neun"],
+        "pt" => ["zero", "um", "dois", "tr\u{ea}s", "quatro", "cinco", "seis", "sete", "oito", "nove"],
+        "it" => ["zero", "uno", "due", "tre", "quattro", "cinque", "sei", "sette", "otto", "nove"],
+        "nl" => ["nul", "een", "twee", "drie", "vier", "vijf", "zes", "zeven", "acht", "negen"],
+        "pl" => ["zero", "jeden", "dwa", "trzy", "cztery", "pi\u{119}\u{107}", "sze\u{15b}\u{107}", "siedem", "osiem", "dziewi\u{119}\u{107}"],
+        "sv" => ["noll", "ett", "tv\u{e5}", "tre", "fyra", "fem", "sex", "sju", "\u{e5}tta", "nio"],
+        "nb" => ["null", "en", "to", "tre", "fire", "fem", "seks", "sju", "\u{e5}tte", "ni"],
+        "tr" => ["s\u{131}f\u{131}r", "bir", "iki", "\u{fc}\u{e7}", "d\u{f6}rt", "be\u{15f}", "alt\u{131}", "yedi", "sekiz", "dokuz"],
+        _ => ["zero", "one", "two", "three", "four", "five", "six", "seven", "eight", "nine"],
+    }
 }

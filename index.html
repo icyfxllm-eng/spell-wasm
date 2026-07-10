@@ -611,28 +611,28 @@
   <!-- age gate: first-launch date-of-birth prompt (only the verdict is stored) -->
   <div class="scrim age-scrim" id="ageScrim">
     <div class="modal">
-      <h3>When's your birthday?</h3>
-      <p>We ask so we can show the right experience.</p>
+      <h3 data-i18n="age.title">When's your birthday?</h3>
+      <p data-i18n="age.blurb">We ask so we can show the right experience.</p>
       <div class="dob-row">
         <select id="ageMonth" aria-label="Birth month"></select>
         <select id="ageDay" aria-label="Birth day"></select>
         <select id="ageYear" aria-label="Birth year"></select>
       </div>
       <div class="dob-err" id="ageErr"></div>
-      <button class="btn btn-check" id="ageSubmit" style="width:100%">Continue</button>
+      <button class="btn btn-check" id="ageSubmit" data-i18n="age.continue" style="width:100%">Continue</button>
     </div>
   </div>
 
   <!-- parent gate: worded-math challenge to change a kid-locked verdict -->
   <div class="scrim age-scrim" id="parentScrim">
     <div class="modal">
-      <h3>Ask a grown-up</h3>
+      <h3 data-i18n="parent.title">Ask a grown-up</h3>
       <p id="parentQ">Solve to continue.</p>
-      <input id="parentAnswer" type="tel" inputmode="numeric" maxlength="3" placeholder="answer" autocomplete="off" autocorrect="off" autocapitalize="none" spellcheck="false" />
+      <input id="parentAnswer" type="tel" inputmode="numeric" maxlength="3" placeholder="answer" data-i18n-ph="ph.parentAnswer" autocomplete="off" autocorrect="off" autocapitalize="none" spellcheck="false" />
       <div class="dob-err" id="parentErr"></div>
       <div class="row">
-        <button class="btn btn-icon" id="parentCancel" style="flex:1;border-radius:12px">Cancel</button>
-        <button class="btn btn-check" id="parentSubmit">Check</button>
+        <button class="btn btn-icon" id="parentCancel" data-i18n="parent.cancel" style="flex:1;border-radius:12px">Cancel</button>
+        <button class="btn btn-check" id="parentSubmit" data-i18n="parent.check">Check</button>
       </div>
     </div>
   </div>
@@ -640,13 +640,13 @@
   <!-- head-to-head setup modal -->
   <div class="scrim" id="vsSetupScrim">
     <div class="modal">
-      <h3>Head-to-head</h3>
-      <p>Two players, one device. Take turns spelling — a miss ends your turn. The longest chain wins.</p>
-      <input id="vsName1" type="text" maxlength="14" placeholder="Player 1" autocomplete="off" autocorrect="off" autocapitalize="none" spellcheck="false" />
-      <input id="vsName2" type="text" maxlength="14" placeholder="Player 2" autocomplete="off" autocorrect="off" autocapitalize="none" spellcheck="false" />
+      <h3 data-i18n="vs.title">Head-to-head</h3>
+      <p data-i18n="vs.blurb">Two players, one device. Take turns spelling — a miss ends your turn. The longest chain wins.</p>
+      <input id="vsName1" type="text" maxlength="14" placeholder="Player 1" data-i18n-ph="ph.vsName1" autocomplete="off" autocorrect="off" autocapitalize="none" spellcheck="false" />
+      <input id="vsName2" type="text" maxlength="14" placeholder="Player 2" data-i18n-ph="ph.vsName2" autocomplete="off" autocorrect="off" autocapitalize="none" spellcheck="false" />
       <div class="row">
-        <button class="btn btn-icon" id="vsCancel" style="flex:1;border-radius:12px">Cancel</button>
-        <button class="btn btn-check" id="vsStart">Start match</button>
+        <button class="btn btn-icon" id="vsCancel" data-i18n="vs.cancel" style="flex:1;border-radius:12px">Cancel</button>
+        <button class="btn btn-check" id="vsStart" data-i18n="vs.start">Start match</button>
       </div>
     </div>
   </div>
@@ -657,8 +657,8 @@
       <h3 id="vsResultTitle">Winner</h3>
       <p id="vsResultMsg"></p>
       <div class="row">
-        <button class="btn btn-icon" id="vsResultClose" style="flex:1;border-radius:12px">Back to solo</button>
-        <button class="btn btn-check" id="vsRematch">Rematch</button>
+        <button class="btn btn-icon" id="vsResultClose" data-i18n="vs.close" style="flex:1;border-radius:12px">Back to solo</button>
+        <button class="btn btn-check" id="vsRematch" data-i18n="vs.rematch">Rematch</button>
       </div>
     </div>
   </div>
@@ -666,11 +666,11 @@
   <!-- head-to-head "leave mid-match" confirm -->
   <div class="scrim" id="vsQuitScrim">
     <div class="modal">
-      <h3>Leave the match?</h3>
-      <p>The head-to-head match will end and you'll return to the solo game. The current chains won't be saved.</p>
+      <h3 data-i18n="vs.leaveTitle">Leave the match?</h3>
+      <p data-i18n="vs.leaveBlurb">The head-to-head match will end and you'll return to the solo game. The current chains won't be saved.</p>
       <div class="row">
-        <button class="btn btn-icon" id="vsQuitCancel" style="flex:1;border-radius:12px">Keep playing</button>
-        <button class="btn btn-check" id="vsQuitConfirm">Leave match</button>
+        <button class="btn btn-icon" id="vsQuitCancel" data-i18n="vs.keepPlaying" style="flex:1;border-radius:12px">Keep playing</button>
+        <button class="btn btn-check" id="vsQuitConfirm" data-i18n="vs.leave">Leave match</button>
       </div>
     </div>
   </div>
@@ -679,40 +679,40 @@
   <div class="scrim" id="authScrim">
     <div class="modal">
       <div class="auth-signup">
-        <h3>Create your account</h3>
-        <p>Post your best chains to The Climb. Your email is used only to verify your account and reset your password — never shown to anyone.</p>
-        <input id="authUsername" type="text" maxlength="16" placeholder="username" autocomplete="off" autocorrect="off" autocapitalize="none" spellcheck="false" />
-        <input id="authEmail" type="email" placeholder="email" autocomplete="off" autocorrect="off" autocapitalize="none" spellcheck="false" />
-        <input id="authPassword" type="password" placeholder="password (8+ characters)" autocomplete="off" />
-        <button class="btn btn-check" id="authSignupBtn" style="width:100%">Create account</button>
-        <button class="ghost" id="authToLogin" style="margin-top:8px">Have an account? Log in</button>
+        <h3 data-i18n="auth.createTitle">Create your account</h3>
+        <p data-i18n="auth.createBlurb">Post your best chains to The Climb. Your email is used only to verify your account and reset your password — never shown to anyone.</p>
+        <input id="authUsername" type="text" maxlength="16" placeholder="username" data-i18n-ph="ph.username" autocomplete="off" autocorrect="off" autocapitalize="none" spellcheck="false" />
+        <input id="authEmail" type="email" placeholder="email" data-i18n-ph="ph.email" autocomplete="off" autocorrect="off" autocapitalize="none" spellcheck="false" />
+        <input id="authPassword" type="password" placeholder="password (8+ characters)" data-i18n-ph="ph.password8" autocomplete="off" />
+        <button class="btn btn-check" id="authSignupBtn" data-i18n="auth.create" style="width:100%">Create account</button>
+        <button class="ghost" id="authToLogin" data-i18n="auth.haveAccount" style="margin-top:8px">Have an account? Log in</button>
       </div>
       <div class="auth-login">
-        <h3>Welcome back</h3>
-        <input id="authIdentifier" type="text" placeholder="username or email" autocomplete="off" autocorrect="off" autocapitalize="none" spellcheck="false" />
-        <input id="authLoginPassword" type="password" placeholder="password" autocomplete="off" />
-        <button class="btn btn-check" id="authLoginBtn" style="width:100%">Log in</button>
-        <button class="ghost" id="authToSignup" style="margin-top:8px">New here? Sign up</button>
+        <h3 data-i18n="auth.welcomeBack">Welcome back</h3>
+        <input id="authIdentifier" type="text" placeholder="username or email" data-i18n-ph="ph.usernameOrEmail" autocomplete="off" autocorrect="off" autocapitalize="none" spellcheck="false" />
+        <input id="authLoginPassword" type="password" placeholder="password" data-i18n-ph="ph.password" autocomplete="off" />
+        <button class="btn btn-check" id="authLoginBtn" data-i18n="auth.login" style="width:100%">Log in</button>
+        <button class="ghost" id="authToSignup" data-i18n="auth.newHere" style="margin-top:8px">New here? Sign up</button>
       </div>
       <div class="dob-err" id="authErr"></div>
-      <button class="ghost" id="authClose" style="width:100%">Close</button>
+      <button class="ghost" id="authClose" data-i18n="auth.close" style="width:100%">Close</button>
     </div>
   </div>
 
   <!-- The Climb: account settings modal -->
   <div class="scrim" id="accountScrim">
     <div class="modal">
-      <h3>Your account</h3>
-      <p>Signed in as <b id="acctUsername"></b></p>
-      <input id="acctNewUsername" type="text" maxlength="16" placeholder="new username" autocomplete="off" autocorrect="off" autocapitalize="none" spellcheck="false" />
-      <button class="btn btn-icon" id="acctChangeName" style="width:100%;border-radius:12px">Update username</button>
+      <h3 data-i18n="acct.title">Your account</h3>
+      <p><span data-i18n="acct.signedInAs">Signed in as</span> <b id="acctUsername"></b></p>
+      <input id="acctNewUsername" type="text" maxlength="16" placeholder="new username" data-i18n-ph="ph.newUsername" autocomplete="off" autocorrect="off" autocapitalize="none" spellcheck="false" />
+      <button class="btn btn-icon" id="acctChangeName" data-i18n="acct.changeName" style="width:100%;border-radius:12px">Update username</button>
       <div class="dob-err" id="acctErr"></div>
-      <div class="set-row"><span class="lbl2">Delete account<small>Removes your account and all Climb entries. This can't be undone.</small></span></div>
-      <input id="acctDeletePassword" type="password" placeholder="password to confirm" autocomplete="off" />
-      <button class="ghost danger" id="acctDelete" style="width:100%">Delete my account</button>
+      <div class="set-row"><span class="lbl2"><span data-i18n="acct.deleteLabel">Delete account</span><small data-i18n="acct.deleteSmall">Removes your account and all Climb entries. This can't be undone.</small></span></div>
+      <input id="acctDeletePassword" type="password" placeholder="password to confirm" data-i18n-ph="ph.passwordConfirm" autocomplete="off" />
+      <button class="ghost danger" id="acctDelete" data-i18n="acct.deleteBtn" style="width:100%">Delete my account</button>
       <div class="row" style="margin-top:12px">
-        <button class="ghost" id="acctLogout">Log out</button>
-        <button class="ghost" id="acctClose" style="margin-left:auto">Close</button>
+        <button class="ghost" id="acctLogout" data-i18n="acct.logout">Log out</button>
+        <button class="ghost" id="acctClose" data-i18n="acct.close" style="margin-left:auto">Close</button>
       </div>
     </div>
   </div>
