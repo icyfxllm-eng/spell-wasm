@@ -183,6 +183,7 @@
     padding-left:env(safe-area-inset-left, 0px);padding-right:env(safe-area-inset-right, 0px);
     padding-bottom:env(safe-area-inset-bottom, 0px)}
   .game-kb.locked{opacity:.5;pointer-events:none}
+  #kbLetters{display:flex;flex-direction:column;gap:7px}
   .kb-row{display:flex;justify-content:center;gap:var(--kb-gap)}
   .kb-key,.kb-back,.kb-submit{min-height:46px;border:1px solid var(--edge);
     background:var(--panel);color:var(--ink);border-radius:9px;font-family:var(--body);font-size:17px;font-weight:600;
@@ -500,9 +501,9 @@
          iOS system keyboard — with its dictation key and autocorrect — can't
          open during a round. Letter keys are built + wired in keyboard.rs. -->
     <div class="game-kb locked" id="gameKeyboard" role="group" aria-label="On-screen keyboard">
-      <div class="kb-row" id="kbRow1"></div>
-      <div class="kb-row" id="kbRow2"></div>
-      <div class="kb-row" id="kbRow3"></div>
+      <!-- Letter rows are generated per language (3 for QWERTY, 5 for the kana
+           grid) into this container by keyboard.rs. -->
+      <div id="kbLetters"></div>
       <!-- Vietnamese tone row (built + shown only for vi in keyboard.rs) -->
       <div class="kb-row kb-tones btn-hide" id="kbToneRow"></div>
       <div class="kb-row kb-actions">

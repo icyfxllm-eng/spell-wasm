@@ -22,57 +22,71 @@ use crate::{dom, game};
 /// A keyboard layout: three base rows (lowercase, extra letter keys already
 /// placed) plus long-press accent sets keyed by base character.
 struct Layout {
-    rows: [&'static str; 3],
+    rows: &'static [&'static str],
     long_press: &'static [(char, &'static str)],
 }
 
 // Accent popovers per §2.2. The base key is prepended automatically, so these
 // list only the accented alternatives.
-const EN: Layout = Layout { rows: ["qwertyuiop", "asdfghjkl", "zxcvbnm"], long_press: &[] };
+const EN: Layout = Layout { rows: &["qwertyuiop", "asdfghjkl", "zxcvbnm"], long_press: &[] };
 const ES: Layout = Layout {
-    rows: ["qwertyuiop", "asdfghjklñ", "zxcvbnm"],
+    rows: &["qwertyuiop", "asdfghjklñ", "zxcvbnm"],
     long_press: &[('a', "á"), ('e', "é"), ('i', "í"), ('o', "ó"), ('u', "úü")],
 };
 const FR: Layout = Layout {
-    rows: ["azertyuiop", "qsdfghjklm", "wxcvbn"],
+    rows: &["azertyuiop", "qsdfghjklm", "wxcvbn"],
     long_press: &[('e', "éèêë"), ('a', "àâ"), ('c', "ç"), ('i', "îï"), ('o', "ôœ"), ('u', "ùûü"), ('y', "ÿ")],
 };
-const DE: Layout = Layout { rows: ["qwertzuiopü", "asdfghjklöä", "yxcvbnm"], long_press: &[('s', "ß")] };
+const DE: Layout = Layout { rows: &["qwertzuiopü", "asdfghjklöä", "yxcvbnm"], long_press: &[('s', "ß")] };
 const PT: Layout = Layout {
-    rows: ["qwertyuiop", "asdfghjklç", "zxcvbnm"],
+    rows: &["qwertyuiop", "asdfghjklç", "zxcvbnm"],
     long_press: &[('a', "áàâã"), ('e', "éê"), ('i', "í"), ('o', "óôõ"), ('u', "ú")],
 };
 const IT: Layout = Layout {
-    rows: ["qwertyuiop", "asdfghjkl", "zxcvbnm"],
+    rows: &["qwertyuiop", "asdfghjkl", "zxcvbnm"],
     long_press: &[('a', "à"), ('e', "èé"), ('i', "ì"), ('o', "ò"), ('u', "ù")],
 };
 const NL: Layout = Layout {
-    rows: ["qwertyuiop", "asdfghjkl", "zxcvbnm"],
+    rows: &["qwertyuiop", "asdfghjkl", "zxcvbnm"],
     long_press: &[('e', "éë"), ('i', "ï"), ('o', "ö")],
 };
 const PL: Layout = Layout {
-    rows: ["qwertyuiop", "asdfghjkl", "zxcvbnm"],
+    rows: &["qwertyuiop", "asdfghjkl", "zxcvbnm"],
     long_press: &[('a', "ą"), ('c', "ć"), ('e', "ę"), ('l', "ł"), ('n', "ń"), ('o', "ó"), ('s', "ś"), ('z', "źż")],
 };
-const SV: Layout = Layout { rows: ["qwertyuiopå", "asdfghjklöä", "zxcvbnm"], long_press: &[] };
-const NB: Layout = Layout { rows: ["qwertyuiopå", "asdfghjkløæ", "zxcvbnm"], long_press: &[] };
+const SV: Layout = Layout { rows: &["qwertyuiopå", "asdfghjklöä", "zxcvbnm"], long_press: &[] };
+const NB: Layout = Layout { rows: &["qwertyuiopå", "asdfghjkløæ", "zxcvbnm"], long_press: &[] };
 const TR: Layout = Layout {
-    rows: ["qwertyuıopğ", "asdfghjklşi", "zxcvbnmöçü"],
+    rows: &["qwertyuıopğ", "asdfghjklşi", "zxcvbnmöçü"],
     long_press: &[],
 };
 // Vietnamese: QWERTY + long-press for the letter-modified vowels (ă â ê ô ơ ư)
 // and đ; the five tones are applied post-fix via a dedicated tone row (see
 // build_keys / crate::viet). Every vowel form is thus reachable in ≤2 taps.
 const VI: Layout = Layout {
-    rows: ["qwertyuiop", "asdfghjkl", "zxcvbnm"],
+    rows: &["qwertyuiop", "asdfghjkl", "zxcvbnm"],
     long_press: &[('a', "ăâ"), ('e', "ê"), ('o', "ôơ"), ('u', "ư"), ('d', "đ")],
 };
 // Korean Dubeolsik (2-set): consonants left, vowels right. Keys emit jamo; the
 // Hangul automaton (crate::hangul, via game::type_jamo) composes syllable blocks
 // live. Tense consonants + ㅒ/ㅖ are on long-press instead of a shift layer.
 const KO: Layout = Layout {
-    rows: ["ㅂㅈㄷㄱㅅㅛㅕㅑㅐㅔ", "ㅁㄴㅇㄹㅎㅗㅓㅏㅣ", "ㅋㅌㅊㅍㅠㅜㅡ"],
+    rows: &["ㅂㅈㄷㄱㅅㅛㅕㅑㅐㅔ", "ㅁㄴㅇㄹㅎㅗㅓㅏㅣ", "ㅋㅌㅊㅍㅠㅜㅡ"],
     long_press: &[('ㅂ', "ㅃ"), ('ㅈ', "ㅉ"), ('ㄷ', "ㄸ"), ('ㄱ', "ㄲ"), ('ㅅ', "ㅆ"), ('ㅐ', "ㅒ"), ('ㅔ', "ㅖ")],
+};
+// Japanese: 50-on hiragana grid (5 rows). Voiced (dakuten), semi-voiced
+// (handakuten) and small kana are on long-press, producing the precomposed kana
+// directly (か→が, は→ばぱ, つ→づっ, や→ゃ …). Every kana is reachable in ≤2 taps.
+const JA: Layout = Layout {
+    rows: &["あいうえお", "かきくけこさしすせそ", "たちつてとなにぬねの", "はひふへほまみむめも", "やゆよらりるれろわをん"],
+    long_press: &[
+        ('あ', "ぁ"), ('い', "ぃ"), ('う', "ぅゔ"), ('え', "ぇ"), ('お', "ぉ"),
+        ('か', "が"), ('き', "ぎ"), ('く', "ぐ"), ('け', "げ"), ('こ', "ご"),
+        ('さ', "ざ"), ('し', "じ"), ('す', "ず"), ('せ', "ぜ"), ('そ', "ぞ"),
+        ('た', "だ"), ('ち', "ぢ"), ('つ', "づっ"), ('て', "で"), ('と', "ど"),
+        ('は', "ばぱ"), ('ひ', "びぴ"), ('ふ', "ぶぷ"), ('へ', "べぺ"), ('ほ', "ぼぽ"),
+        ('や', "ゃ"), ('ゆ', "ゅ"), ('よ', "ょ"), ('わ', "ゎ"),
+    ],
 };
 
 fn layout_for(locale: &str) -> &'static Layout {
@@ -89,6 +103,7 @@ fn layout_for(locale: &str) -> &'static Layout {
         "tr" => &TR,
         "vi" => &VI,
         "ko" => &KO,
+        "ja" => &JA,
         _ => &EN,
     }
 }
@@ -155,27 +170,29 @@ fn build_keys(app: &App) {
     let layout = layout_for(&locale);
     let accents_for = |c: char| -> &'static str { layout.long_press.iter().find(|(k, _)| *k == c).map(|(_, a)| *a).unwrap_or("") };
 
-    let row = |letters: &str, punct: bool| {
-        let mut h = String::new();
+    // Render a <div class="kb-row"> per layout row into the letters container.
+    // Rows vary by language (3 for QWERTY-family, 5 for the Japanese kana grid);
+    // the apostrophe/hyphen keys append to the last row for My Words.
+    let last = layout.rows.len().saturating_sub(1);
+    let mut html = String::new();
+    for (ri, letters) in layout.rows.iter().enumerate() {
+        html.push_str("<div class=\"kb-row\">");
         for c in letters.chars() {
-            h.push_str(&key_button(c, false, accents_for(c)));
+            html.push_str(&key_button(c, false, accents_for(c)));
         }
-        if punct {
-            h.push_str(&key_button('\'', true, ""));
-            h.push_str(&key_button('-', true, ""));
+        if ri == last {
+            html.push_str(&key_button('\'', true, ""));
+            html.push_str(&key_button('-', true, ""));
         }
-        h
-    };
-    dom::set_html("kbRow1", &row(layout.rows[0], false));
-    dom::set_html("kbRow2", &row(layout.rows[1], false));
-    dom::set_html("kbRow3", &row(layout.rows[2], true));
+        html.push_str("</div>");
+    }
+    dom::set_html("kbLetters", &html);
 
     // Uniform key width is derived from the widest row's column count (10 for
-    // QWERTY, 11 for QWERTZ/Swedish), so every key is the same size regardless
-    // of language. The +2 accounts for the apostrophe/hyphen keys shown in My
-    // Words so its bottom row still fits without shrinking the others.
+    // QWERTY, 11 for QWERTZ/kana), so every key is the same size regardless of
+    // language. The +2 accounts for the apostrophe/hyphen keys shown in My Words.
     let base_cols = layout.rows.iter().map(|r| r.chars().count()).max().unwrap_or(10);
-    let cols = base_cols.max(layout.rows[2].chars().count() + 2);
+    let cols = base_cols.max(layout.rows[last].chars().count() + 2);
     if let Some(el) = dom::doc().get_element_by_id("gameKeyboard").and_then(|e| e.dyn_into::<web_sys::HtmlElement>().ok()) {
         let _ = el.style().set_property("--kb-cols", &cols.to_string());
     }
@@ -515,6 +532,7 @@ mod tests {
             ("tr", include_str!("../assets/keyboards/tr.json")),
             ("vi", include_str!("../assets/keyboards/vi.json")),
             ("ko", include_str!("../assets/keyboards/ko.json")),
+            ("ja", include_str!("../assets/keyboards/ja.json")),
         ];
         for (code, json) in jsons {
             let v: serde_json::Value = serde_json::from_str(json).unwrap();

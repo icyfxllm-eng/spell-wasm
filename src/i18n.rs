@@ -37,6 +37,7 @@ fn tables() -> &'static HashMap<&'static str, Table> {
         m.insert("tr", parse(include_str!("i18n/locales/tr.json")));
         m.insert("vi", parse(include_str!("i18n/locales/vi.json")));
         m.insert("ko", parse(include_str!("i18n/locales/ko.json")));
+        m.insert("ja", parse(include_str!("i18n/locales/ja.json")));
         m
     })
 }

@@ -51,6 +51,7 @@ LANG_VOICES = {
     "tr": ("tr-TR", "tr-TR-Wavenet-B"),
     "vi": ("vi-VN", "vi-VN-Wavenet-A"),
     "ko": ("ko-KR", "ko-KR-Wavenet-A"),
+    "ja": ("ja-JP", "ja-JP-Wavenet-B"),
 }
 DEFAULT_LANG = "en"
 

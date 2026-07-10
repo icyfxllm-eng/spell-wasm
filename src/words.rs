@@ -61,7 +61,7 @@ fn simple_tier(easy: &'static [&'static str], medium: &'static [&'static str], h
 
 /// Word bank for a built-in language + tier (English by default).
 pub fn tier_for(lang: &str, tier: &str) -> &'static [&'static str] {
-    use crate::consts::{DE, ES, FR, IT, KO, NB, NL, PL, PT, SV, TR, VI};
+    use crate::consts::{DE, ES, FR, IT, JA, KO, NB, NL, PL, PT, SV, TR, VI};
     match lang {
         ES => es_tier(tier),
         FR => simple_tier(FR_EASY, FR_MEDIUM, FR_HARD, FR_EXPERT, tier),
@@ -75,6 +75,7 @@ pub fn tier_for(lang: &str, tier: &str) -> &'static [&'static str] {
         TR => simple_tier(TR_EASY, TR_MEDIUM, TR_HARD, TR_EXPERT, tier),
         VI => simple_tier(VI_EASY, VI_MEDIUM, VI_HARD, VI_EXPERT, tier),
         KO => simple_tier(KO_EASY, KO_MEDIUM, KO_HARD, KO_EXPERT, tier),
+        JA => simple_tier(JA_EASY, JA_MEDIUM, JA_HARD, JA_EXPERT, tier),
         _ => en_tier(tier),
     }
 }

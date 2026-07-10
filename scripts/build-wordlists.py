@@ -31,7 +31,7 @@ import unicodedata
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
-LANGS = ["en", "es", "fr", "de", "pt", "it", "nl", "pl", "sv", "nb", "tr", "vi", "ko"]
+LANGS = ["en", "es", "fr", "de", "pt", "it", "nl", "pl", "sv", "nb", "tr", "vi", "ko", "ja"]
 TIERS = ["easy", "medium", "hard", "expert"]
 MIN_LEN, MAX_LEN = 2, 16
 BALANCE_TOL = 0.20
