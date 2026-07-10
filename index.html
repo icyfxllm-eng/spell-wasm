@@ -188,6 +188,19 @@
   .kb-back{flex:0 0 auto;min-width:64px;max-width:none;font-size:19px;color:var(--muted)}
   .kb-submit{flex:1 1 auto;max-width:none;background:var(--amber);color:#36210a;border-color:var(--amber);font-weight:700}
   .kb-submit:active{filter:brightness(1.06);transform:translateY(1px)}
+  /* Long-press accent keys: a dot hint, and a popover of alternatives that
+     opens above the key after a 350ms hold (built in keyboard.rs). The popover
+     is pointer-events:none so the finger stays "down" on the key and window
+     pointermove/up drive drag-to-select + commit. */
+  .kb-key{position:relative}
+  .kb-key.has-acc::after{content:"";position:absolute;top:4px;right:5px;width:4px;height:4px;border-radius:50%;
+    background:var(--muted);opacity:.55}
+  .kb-popover{position:fixed;transform:translate(-50%,-100%);display:none;gap:5px;padding:6px;border-radius:12px;
+    background:var(--panel);border:1px solid var(--edge);box-shadow:0 12px 32px rgba(0,0,0,.5);z-index:60;pointer-events:none}
+  .kb-popover.show{display:flex}
+  .kb-popover .kb-acc{min-width:42px;min-height:50px;border:1px solid var(--edge);border-radius:9px;background:var(--panel);
+    color:var(--ink);font-family:var(--body);font-size:20px;font-weight:600;display:inline-flex;align-items:center;justify-content:center}
+  .kb-popover .kb-acc.sel{background:var(--amber);color:#36210a;border-color:var(--amber)}
   /* Accessibility: Big text / Kid mode → larger keys; Readable → high contrast. */
   body.kid .kb-key,body.kid .kb-back,body.kid .kb-submit,
   body.big-text .kb-key,body.big-text .kb-back,body.big-text .kb-submit{min-height:56px;font-size:21px;max-width:56px}

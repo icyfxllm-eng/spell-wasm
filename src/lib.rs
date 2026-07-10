@@ -16,6 +16,7 @@ mod keyboard;
 mod misses;
 mod model;
 mod native_audio;
+mod norm;
 mod notifications;
 mod profanity;
 mod settings;
@@ -624,6 +625,7 @@ fn wire_source_level(app: &App) {
             dom::set_text("hintLine", "");
             game::build_level_options(&a);
             game::refresh_mode_buttons(&a);
+            keyboard::rebuild(&a);
             i18n::translate_page();
             climb::reflect_auth();
             stats::render(&a.borrow());

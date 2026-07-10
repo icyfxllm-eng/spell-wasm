@@ -1,6 +1,5 @@
 use std::cell::RefCell;
 
-use unicode_normalization::UnicodeNormalization;
 use wasm_bindgen::closure::Closure;
 use wasm_bindgen::JsCast;
 use wasm_bindgen_futures::spawn_local;
@@ -573,27 +572,6 @@ pub fn next_word(app: &App) {
     start_timer(app, &cur_tier);
 }
 
-fn norm(s: &str) -> String {
-    // Strip combining accents (á->a, ñ->n, ç->c), then map the letters that have
-    // NO NFD decomposition to their A-Z equivalents so every built-in word is
-    // typeable on the plain keyboard: German ß->ss, Norwegian/Danish æ->ae/ø->o,
-    // Polish ł->l, Turkish dotless ı->i. Lowercased, whitespace dropped.
-    let stripped: String = s.nfd().filter(|c| !('\u{0300}'..='\u{036f}').contains(c)).collect();
-    stripped
-        .to_lowercase()
-        .replace('\u{df}', "ss") // ß
-        .replace('\u{e6}', "ae") // æ
-        .chars()
-        .map(|c| match c {
-            '\u{142}' => 'l', // ł
-            '\u{f8}' => 'o',  // ø
-            '\u{131}' => 'i', // ı (dotless)
-            other => other,
-        })
-        .filter(|c| !c.is_whitespace())
-        .collect()
-}
-
 fn lock_inputs() {
     dom::add_class("gameKeyboard", "locked");
     dom::remove_class("spellbox", "focus");
@@ -605,9 +583,9 @@ fn lock_inputs() {
 }
 
 pub fn submit_guess(app: &App) {
-    let (answered, cur_lang, word) = {
+    let (answered, cur_lang, word, kid) = {
         let s = app.borrow();
-        (s.answered, s.cur_lang.clone(), s.word.clone())
+        (s.answered, s.cur_lang.clone(), s.word.clone(), s.kid)
     };
     if answered || word.is_empty() {
         return;
@@ -621,10 +599,10 @@ pub fn submit_guess(app: &App) {
     lock_inputs();
 
     if cur_lang == EN {
-        spawn_local(backend_verify(app.clone(), word, typed));
+        spawn_local(backend_verify(app.clone(), word, typed, kid));
         return;
     }
-    if norm(&typed) == norm(&word) {
+    if crate::norm::answer_matches(&typed, &word, kid) {
         on_correct(app);
     } else {
         on_wrong(app);
@@ -634,10 +612,10 @@ pub fn submit_guess(app: &App) {
 /// English words get double-checked against the backend's /api/check; if
 /// that request fails (server down, etc.) we fall back to comparing
 /// locally so a network hiccup doesn't stall the game.
-async fn backend_verify(app: App, word: String, typed: String) {
+async fn backend_verify(app: App, word: String, typed: String, kid: bool) {
     let correct = match api::check_answer(&word, &typed).await {
         Ok(c) => c,
-        Err(_) => norm(&typed) == norm(&word),
+        Err(_) => crate::norm::answer_matches(&typed, &word, kid),
     };
     if correct {
         on_correct(&app);
