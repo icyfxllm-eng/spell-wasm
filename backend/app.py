@@ -53,6 +53,7 @@ LANG_VOICES = {
     "ko": ("ko-KR", "ko-KR-Wavenet-A"),
     "ja": ("ja-JP", "ja-JP-Wavenet-B"),
     "fil": ("fil-PH", "fil-PH-Wavenet-A"),
+    "zh": ("cmn-CN", "cmn-CN-Wavenet-A"),
 }
 DEFAULT_LANG = "en"
 

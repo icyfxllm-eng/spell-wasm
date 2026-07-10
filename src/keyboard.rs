@@ -92,6 +92,10 @@ const JA: Layout = Layout {
 // and a hyphen key on the primary layer (orthographic in mag-aaral, pag-ibig).
 // No composition engine — plain Latin spelling + ñ + hyphen.
 const FIL: Layout = Layout { rows: &["qwertyuiop", "asdfghjklñ", "zxcvbnm-"], long_press: &[('n', "ñ")] };
+// Mandarin: QWERTY for pinyin letters + a tone-number row (1-4, 5=neutral) and
+// ü on long-press v (v→ü is the standard pinyin-input convention, also folded in
+// the normalizer). The typed answer is pinyin; audio + reveal are the hanzi.
+const ZH: Layout = Layout { rows: &["qwertyuiop", "asdfghjkl", "zxcvbnm", "12345"], long_press: &[('v', "ü")] };
 
 fn layout_for(locale: &str) -> &'static Layout {
     match locale {
@@ -109,6 +113,7 @@ fn layout_for(locale: &str) -> &'static Layout {
         "ko" => &KO,
         "ja" => &JA,
         "fil" => &FIL,
+        "zh" => &ZH,
         _ => &EN,
     }
 }
@@ -474,7 +479,9 @@ fn wire_physical(app: &App) {
         // Exactly one printable char, and one we accept.
         let mut chars = key.chars();
         if let (Some(c), None) = (chars.next(), chars.next()) {
-            if c.is_alphabetic() || c == '\'' || c == '-' {
+            // Digits are accepted for Mandarin pinyin tone numbers; letters/ñ/etc.
+            // for every language; apostrophe/hyphen for My Words / Filipino.
+            if c.is_alphabetic() || c.is_ascii_digit() || c == '\'' || c == '-' {
                 e.prevent_default();
                 let lower = c.to_lowercase().next().unwrap_or(c);
                 game::emit_key(&a, lower);
@@ -539,6 +546,7 @@ mod tests {
             ("ko", include_str!("../assets/keyboards/ko.json")),
             ("ja", include_str!("../assets/keyboards/ja.json")),
             ("fil", include_str!("../assets/keyboards/fil.json")),
+            ("zh", include_str!("../assets/keyboards/zh.json")),
         ];
         for (code, json) in jsons {
             let v: serde_json::Value = serde_json::from_str(json).unwrap();
@@ -584,7 +592,10 @@ mod tests {
             }
             for tier in ["easy", "medium", "hard", "expert"] {
                 for w in crate::words::tier_for(code, tier) {
-                    for c in crate::norm::fold_strict(w).chars() {
+                    // Mandarin entries are "pinyin|hanzi"; only the pinyin (the
+                    // typed answer) has to be reachable on the keyboard.
+                    let answer = if code == "zh" { w.split('|').next().unwrap_or(w) } else { w };
+                    for c in crate::norm::fold_strict(answer).chars() {
                         assert!(reach.contains(&c), "locale {code}: char {c:?} in {w:?} not reachable on keyboard");
                     }
                 }

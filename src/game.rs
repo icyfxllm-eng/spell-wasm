@@ -508,7 +508,8 @@ fn speak_word(app: &App, variant: &str, rate: f32) {
     if s.word.is_empty() {
         return;
     }
-    let word = s.word.clone();
+    // Speak `spoken` (the hanzi for Mandarin; identical to `word` elsewhere).
+    let word = if s.spoken.is_empty() { s.word.clone() } else { s.spoken.clone() };
     let code = code_for(&s, &s.cur_lang);
 
     if is_builtin_lang(&s.cur_lang) {
@@ -608,6 +609,19 @@ pub fn next_word(app: &App) {
         }
     }
 
+    // Mandarin stores "pinyin|hanzi": the player types the pinyin, but TTS speaks
+    // and the reveal shows the hanzi. Every other language sets spoken = word.
+    {
+        let mut s = app.borrow_mut();
+        if let Some((pinyin, hanzi)) = s.word.split_once('|') {
+            let (p, h) = (pinyin.to_string(), hanzi.to_string());
+            s.word = p;
+            s.spoken = h;
+        } else {
+            s.spoken = s.word.clone();
+        }
+    }
+
     app.borrow_mut().answered = false;
     dom::remove_class("orbWrap", "good");
     dom::remove_class("orbWrap", "bad");
@@ -672,7 +686,14 @@ pub fn submit_guess(app: &App) {
         spawn_local(backend_verify(app.clone(), word, typed, kid));
         return;
     }
-    if crate::norm::answer_matches(&typed, &word, kid) {
+    // Mandarin compares tone-numbered pinyin (v→ü, neutral-5 optional); every
+    // other language uses the NFC/case fold (accent-strict, Kid-lenient).
+    let correct = if cur_lang == crate::consts::ZH {
+        crate::pinyin::matches(&typed, &word)
+    } else {
+        crate::norm::answer_matches(&typed, &word, kid)
+    };
+    if correct {
         on_correct(app);
     } else {
         on_wrong(app);
@@ -815,7 +836,14 @@ fn finalize_incorrect(app: &App, glyph: &str, prefix: &str, feedback_class: &str
 
     dom::add_class("orbWrap", "bad");
     dom::set_text("orbGlyph", glyph);
-    dom::set_html("feedback", &format!("{}<span class=\"reveal\">{}</span>", prefix, dom::escape_html(&word)));
+    // Mandarin reveals the pinyin answer + the hanzi it stands for.
+    let reveal = if cur_lang == crate::consts::ZH {
+        let hanzi = app.borrow().spoken.clone();
+        format!("{} {}", word, hanzi)
+    } else {
+        word.clone()
+    };
+    dom::set_html("feedback", &format!("{}<span class=\"reveal\">{}</span>", prefix, dom::escape_html(&reveal)));
     dom::el("feedback").set_class_name(feedback_class);
     show_meaning(app, word, cur_lang);
     if versus_on {

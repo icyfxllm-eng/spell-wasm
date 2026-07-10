@@ -59,9 +59,45 @@ fn simple_tier(easy: &'static [&'static str], medium: &'static [&'static str], h
     }
 }
 
+// Mandarin: entries are "pinyin|hanzi" — the pinyin (before '|') is the typed
+// answer, the hanzi (after '|') is what TTS speaks + what's revealed. Hand-
+// curated small set (2-syllable to avoid homophone ambiguity); native review
+// flagged. Not run through the pipeline (its charset gate is for single-string
+// words); the keyboard charset test validates the pinyin side separately.
+pub const ZH_EASY: &[&str] = &[
+    "ping2guo3|苹果", "xiang1jiao1|香蕉", "mi3fan4|米饭", "mian4bao1|面包", "niu2nai3|牛奶",
+    "ji1dan4|鸡蛋", "shui3guo3|水果", "lao3shi1|老师", "xue2sheng1|学生", "peng2you3|朋友",
+    "yi1fu2|衣服", "mao4zi5|帽子", "zhuo1zi5|桌子", "yi3zi5|椅子", "xie2zi5|鞋子",
+];
+pub const ZH_MEDIUM: &[&str] = &[
+    "xue2xiao4|学校", "yi1yuan4|医院", "shang1dian4|商店", "gong1yuan2|公园", "che1zhan4|车站",
+    "fei1ji1|飞机", "huo3che1|火车", "qi4che1|汽车", "dian4nao3|电脑", "dian4hua4|电话",
+    "dian4shi4|电视", "shou3ji1|手机", "bing1xiang1|冰箱", "shou3biao3|手表", "yan3jing4|眼镜",
+];
+pub const ZH_HARD: &[&str] = &[
+    "tu2shu1guan3|图书馆", "can1ting1|餐厅", "ji1chang3|机场", "you2ju2|邮局", "yin2hang2|银行",
+    "chao1shi4|超市", "gong1si1|公司", "jiao4shi4|教室", "cao1chang3|操场", "dian4ti1|电梯",
+    "lou2ti1|楼梯", "yang2tai2|阳台", "chu2fang2|厨房", "zou3lang2|走廊", "yang2guang1|阳光",
+];
+pub const ZH_EXPERT: &[&str] = &[
+    "lü3you2|旅游", "lü4se4|绿色", "nü3er2|女儿", "zi4xing2che1|自行车", "dong4wu4yuan2|动物园",
+    "ni3hao3|你好", "hen3hao3|很好", "suo3yi3|所以", "yi1qi3|一起", "bu4dui4|不对",
+    "ju2zi5|橘子", "xi3huan1|喜欢", "xie4xie5|谢谢", "kao3lü4|考虑", "gong1gong4|公共",
+];
+
+pub fn zh_tier(tier: &str) -> &'static [&'static str] {
+    match tier {
+        "easy" => ZH_EASY,
+        "medium" => ZH_MEDIUM,
+        "hard" => ZH_HARD,
+        "expert" => ZH_EXPERT,
+        _ => ZH_MEDIUM,
+    }
+}
+
 /// Word bank for a built-in language + tier (English by default).
 pub fn tier_for(lang: &str, tier: &str) -> &'static [&'static str] {
-    use crate::consts::{DE, ES, FIL, FR, IT, JA, KO, NB, NL, PL, PT, SV, TR, VI};
+    use crate::consts::{DE, ES, FIL, FR, IT, JA, KO, NB, NL, PL, PT, SV, TR, VI, ZH};
     match lang {
         ES => es_tier(tier),
         FR => simple_tier(FR_EASY, FR_MEDIUM, FR_HARD, FR_EXPERT, tier),
@@ -77,6 +113,7 @@ pub fn tier_for(lang: &str, tier: &str) -> &'static [&'static str] {
         KO => simple_tier(KO_EASY, KO_MEDIUM, KO_HARD, KO_EXPERT, tier),
         JA => simple_tier(JA_EASY, JA_MEDIUM, JA_HARD, JA_EXPERT, tier),
         FIL => simple_tier(FIL_EASY, FIL_MEDIUM, FIL_HARD, FIL_EXPERT, tier),
+        ZH => zh_tier(tier),
         _ => en_tier(tier),
     }
 }

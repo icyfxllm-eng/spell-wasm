@@ -79,6 +79,10 @@ pub struct AppState {
     pub timed: bool,
     pub review: bool,
     pub word: String,
+    /// The string spoken by TTS and revealed after answering. Equals `word` for
+    /// every language except Mandarin, where the player types pinyin (`word`) but
+    /// hears + sees the hanzi (`spoken`). Set per turn in `next_word`.
+    pub spoken: String,
     /// The player's in-progress spelling. Held here (not in a DOM `<input>`) so
     /// the iOS system keyboard — with its dictation key and autocorrect — never
     /// opens during a round. Driven by the custom on-screen keyboard, physical
@@ -140,6 +144,7 @@ impl Default for AppState {
             timed: false,
             review: false,
             word: String::new(),
+            spoken: String::new(),
             answer: String::new(),
             cur_lang: crate::consts::EN.into(),
             cur_tier: "easy".into(),
