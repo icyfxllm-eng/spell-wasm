@@ -48,7 +48,7 @@ pub fn render(state: &AppState) {
         ));
     }
     if total_seen == 0 {
-        dom::set_html("statsBody", "<div class=\"stats-empty\">Spell a few words to start tracking your accuracy by difficulty.</div>");
+        dom::set_html("statsBody", &format!("<div class=\"stats-empty\">{}</div>", crate::i18n::t("card.accuracyEmpty")));
         dom::set_text("statsTotal", "");
     } else {
         dom::set_html("statsBody", &rows);

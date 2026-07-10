@@ -526,7 +526,7 @@
         <button class="ghost" id="undoStroke">Undo</button>
         <button class="ghost danger" id="clearCanvas">Clear</button>
         <span class="draw-status" id="drawStatus"></span>
-        <button class="btn-mini" id="readWriting">Read my writing</button>
+        <button class="btn-mini" id="readWriting" data-i18n="btn.readWriting">Read my writing</button>
       </div>
     </div>
 
@@ -551,18 +551,18 @@
   <button class="pill btn-hide" id="shareBtn" aria-label="Share your chain" style="margin:0 auto 6px;display:block">↗ Share your chain</button>
 
   <section class="card stats">
-    <h2>Your accuracy <span class="scope" id="statsLang"></span></h2>
+    <h2><span data-i18n="card.accuracy">Your accuracy</span> <span class="scope" id="statsLang"></span></h2>
     <div id="statsBody"><div class="stats-empty">Spell a few words to start tracking your accuracy by difficulty.</div></div>
-    <div class="stats-foot"><span class="total" id="statsTotal"></span><button class="ghost danger" id="resetStats">reset this language</button></div>
+    <div class="stats-foot"><span class="total" id="statsTotal"></span><button class="ghost danger" id="resetStats" data-i18n="card.resetLang">reset this language</button></div>
   </section>
 
   <section class="card ach">
-    <h2>Achievements <span class="scope" id="achCount"></span></h2>
+    <h2><span data-i18n="card.achievements">Achievements</span> <span class="scope" id="achCount"></span></h2>
     <div class="ach-grid" id="achGrid"></div>
   </section>
 
   <section class="card board">
-    <h2>Longest chains <span class="scope" id="boardScope">this device only</span></h2>
+    <h2><span data-i18n="card.longestChains">Longest chains</span> <span class="scope" id="boardScope">this device only</span></h2>
     <ol id="boardList"><li class="empty">No chains yet — be the first to start one.</li></ol>
   </section>
 
@@ -588,23 +588,23 @@
   <!-- import modal -->
   <div class="scrim" id="importScrim">
     <div class="modal wide">
-      <h3>Bring your own words</h3>
-      <p>Practice the exact words you keep getting wrong — paste text, type a list, or pull from a link.</p>
-      <textarea id="importText" placeholder="Paste any text or a list of words here…" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"></textarea>
+      <h3 data-i18n="import.title">Bring your own words</h3>
+      <p data-i18n="import.blurb">Practice the exact words you keep getting wrong — paste text, type a list, or pull from a link.</p>
+      <textarea id="importText" placeholder="Paste any text or a list of words here…" data-i18n-ph="ph.importText" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"></textarea>
       <div class="url-row">
-        <input id="importUrl" type="url" placeholder="https://…  (optional)" autocomplete="off" autocorrect="off" autocapitalize="none" spellcheck="false" />
-        <button class="pill" id="fetchUrl">Fetch</button>
+        <input id="importUrl" type="url" placeholder="https://…  (optional)" data-i18n-ph="ph.importUrl" autocomplete="off" autocorrect="off" autocapitalize="none" spellcheck="false" />
+        <button class="pill" id="fetchUrl" data-i18n="import.fetch">Fetch</button>
       </div>
       <div class="imp-foot">
-        <label class="imp-lang">Speak in <select id="importLang" aria-label="Pronunciation language"></select></label>
+        <label class="imp-lang"><span data-i18n="import.speakIn">Speak in</span> <select id="importLang" aria-label="Pronunciation language"></select></label>
         <span class="imp-count" id="importCount">0 words</span>
       </div>
-      <button class="btn btn-check" id="saveWords" style="width:100%">Save my words</button>
+      <button class="btn btn-check" id="saveWords" data-i18n="import.save" style="width:100%">Save my words</button>
       <div class="row" style="margin-top:8px">
-        <button class="ghost danger" id="clearWords">Clear my words</button>
-        <button class="ghost" id="cancelImport" style="margin-left:auto">Close</button>
+        <button class="ghost danger" id="clearWords" data-i18n="import.clear">Clear my words</button>
+        <button class="ghost" id="cancelImport" data-i18n="import.close" style="margin-left:auto">Close</button>
       </div>
-      <div class="demo-note" id="importNote">Words stay on this device. Fetching a link can be blocked by the site — if it fails, copy the text and paste it above.</div>
+      <div class="demo-note" id="importNote" data-i18n="import.note">Words stay on this device. Fetching a link can be blocked by the site — if it fails, copy the text and paste it above.</div>
     </div>
   </div>
 

@@ -24,10 +24,10 @@ pub fn qualifies(streak: u32) -> bool {
 }
 
 pub fn render(state: &AppState) {
-    dom::set_text("boardScope", "this device only");
+    dom::set_text("boardScope", &crate::i18n::t("card.boardScopeDevice"));
     let board = get_board();
     if board.is_empty() {
-        dom::set_html("boardList", "<li class=\"empty\">No chains yet \u{2014} be the first to start one.</li>");
+        dom::set_html("boardList", &format!("<li class=\"empty\">{}</li>", crate::i18n::t("card.boardEmpty")));
         return;
     }
     let mut sorted = board;
