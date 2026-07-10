@@ -9,7 +9,7 @@
   :root { color-scheme: dark; }
   * { box-sizing: border-box; }
   body {
-    margin: 0; background: #1c1830; color: #e7e3f3;
+    margin: 0; background: #0c0a12; color: #e7e3f3;
     font: 16px/1.65 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, system-ui, sans-serif;
     -webkit-text-size-adjust: 100%;
   }
@@ -17,22 +17,23 @@
   header { display: flex; align-items: center; gap: 14px; margin-bottom: 8px; }
   .orb {
     width: 44px; height: 44px; border-radius: 50%; flex: 0 0 auto;
-    background: radial-gradient(circle at 32% 30%, #b79cff, #6a49d6 60%, #3a2a7a);
-    box-shadow: 0 0 22px rgba(150,110,255,.55);
-    display: grid; place-items: center; font-weight: 700; color: #fff;
+    background: radial-gradient(circle at 42% 38%, #fffdf2, #ffe07a 46%, #f2b400 72%, #8a6400);
+    box-shadow: 0 0 26px rgba(255,205,80,.65);
+    display: grid; place-items: center; font-weight: 800; color: #100c02;
   }
   h1 { font-size: 1.6rem; margin: 0; }
   .sub { color: #a79fc4; margin: 2px 0 28px; font-size: .95rem; }
-  h2 { font-size: 1.15rem; margin: 32px 0 10px; color: #c9bfff; }
+  h2 { font-size: 1.15rem; margin: 32px 0 10px; color: #ffd98a; }
   p, li { color: #ded9ef; }
   ul { padding-left: 20px; }
   li { margin: 6px 0; }
-  a { color: #b79cff; }
+  a { color: #ffcf5f; }
   strong { color: #fff; }
   .card {
     background: rgba(255,255,255,.04); border: 1px solid rgba(255,255,255,.08);
     border-radius: 14px; padding: 14px 18px; margin: 18px 0;
   }
+  code { background: rgba(255,255,255,.06); padding: 1px 5px; border-radius: 5px; font-size: .9em; }
   footer { margin-top: 48px; color: #8b83a8; font-size: .85rem; }
   footer a { color: #8b83a8; }
 </style>
@@ -43,59 +44,77 @@
     <div class="orb">S</div>
     <h1>Spell — Privacy Policy</h1>
   </header>
-  <p class="sub">Effective 9 July 2026</p>
+  <p class="sub">Effective 10 July 2026</p>
 
   <p>Spell is a spelling game published by the maker of <a href="https://spellgame.net">spellgame.net</a>.
      We built Spell to be private by design. This policy explains, in plain language, exactly what
      happens to information when you use the app or the website.</p>
 
   <div class="card">
-    <strong>The short version:</strong> Spell has no accounts and no sign-in. We do not collect,
-    sell, or share your personal information. Your progress stays on your device. We show no ads
-    and use no third-party analytics or tracking.
+    <strong>The short version:</strong> Playing Spell requires no account and collects no personal
+    information — your progress stays on your device. The only time we collect personal data is if you
+    <em>choose</em> to create an account to compete on the online leaderboard ("The Climb"). We never
+    show ads, and we use no third-party analytics or tracking.
   </div>
 
-  <h2>Information we do <em>not</em> collect</h2>
+  <h2>Playing the game — no data collected</h2>
+  <p>You can play Spell fully without an account. Your gameplay — streaks, statistics, settings, custom
+     word lists, and language choices — is saved only in your device's local storage. It stays on your
+     device, is never sent to us, and is removed if you delete the app or clear its data.</p>
+
+  <h2>What the app sends to our server to play</h2>
+  <p>To play a word, the app asks our server (<code>spellgame.net</code>) for that word's pronunciation
+     audio and dictionary definition. Only the dictionary word is sent — never anything about you. Our
+     server generates and caches audio for common words (using Google Cloud Text-to-Speech) so the app
+     loads quickly; this cache is by word, not by user. All traffic uses HTTPS. We keep standard,
+     short-lived server logs for security and reliability; they are not used to identify or profile you.</p>
+
+  <h2>The Climb — optional accounts &amp; leaderboard</h2>
+  <p>"The Climb" is an optional online leaderboard. It is the only part of Spell that collects personal
+     information, and only if you create an account. If you never create one, none of the following
+     applies to you.</p>
+  <p>When you create a Climb account, we store:</p>
   <ul>
-    <li>No name, email, phone number, or account of any kind.</li>
-    <li>No location, contacts, photos, or advertising identifiers.</li>
-    <li>No third-party advertising, analytics, or tracking software.</li>
+    <li><strong>Username and display name</strong> — shown publicly on the leaderboard.</li>
+    <li><strong>Email address</strong> — used to verify your account and to reset your password. Not shown publicly.</li>
+    <li><strong>Phone number</strong> — only if you choose to add one for SMS password reset. Never shown publicly.</li>
+    <li><strong>Password</strong> — stored only as a salted <code>bcrypt</code> hash. We never store or log your actual password.</li>
+    <li><strong>Your leaderboard results</strong> — your best word chain per difficulty, when you achieved it,
+        and basic run details (e.g. word count and duration) used to rank fairly and detect cheating.</li>
   </ul>
-
-  <h2>Information stored on your device only</h2>
-  <p>Your gameplay — streaks, statistics, settings, and any custom word lists you create — is saved
-     in your device's local storage. It stays on your device, is never sent to us, and is removed if
-     you delete the app or clear its data.</p>
-
-  <h2>What the app sends to our server</h2>
-  <p>To play a word, the app asks our server (<code>spellgame.net</code>) for that word's
-     pronunciation audio and dictionary definition. Only the dictionary word is sent — never anything
-     about you. Our server generates and caches audio for common words (using Google Cloud
-     Text-to-Speech) so the app loads quickly; this cache is by word, not by user. All traffic uses
-     HTTPS encryption. We keep standard, short-lived server logs for security and reliability; these
-     are not used to identify or profile you.</p>
+  <p>We use this information only to run the leaderboard: to sign you in, show and rank scores, verify your
+     email, reset your password, prevent abuse, and let players report inappropriate usernames. We do
+     <strong>not</strong> sell or share it, and we do not use it for advertising.</p>
+  <p><strong>Service providers.</strong> To send verification and password-reset messages we use an email
+     provider, and to block automated sign-ups we use Cloudflare Turnstile (an anti-bot check that receives
+     your IP address to score the request — we do not store your IP address). These providers process the
+     minimum needed to perform their function.</p>
+  <p><strong>Delete your account any time.</strong> The app has a "Delete account" option that permanently
+     removes your account and all associated data — profile, leaderboard entries, and sessions — from our
+     database. You can also email us to request deletion.</p>
 
   <h2>Microphone and camera</h2>
-  <p>The optional "speak the word" feature uses your device's own built-in speech recognition to hear
-     your answer. Spell does not record, store, or transmit your voice to our servers. The optional
-     handwriting feature recognizes letters you draw on your own screen; the drawing is processed on
-     your device and is not uploaded.</p>
+  <p>The optional handwriting feature recognizes letters you draw on your own screen; the drawing is
+     processed on your device and is not uploaded. Spell does not record audio or use your camera.</p>
 
   <h2>Notifications</h2>
-  <p>If you turn on the daily practice reminder, it is scheduled locally on your device. We do not run
-     a push-notification server and cannot send you messages.</p>
+  <p>If you turn on the daily practice reminder, it is scheduled locally on your device. We do not run a
+     push-notification server and cannot send you messages.</p>
 
   <h2>Children's privacy</h2>
-  <p>Spell is suitable for all ages and is designed so that no personal information is collected from
-     anyone, including children. Because we collect no personal data, there is nothing about a child
-     (or anyone) for us to store, sell, or share.</p>
+  <p>The game itself collects no personal information from anyone, including children. Creating a Climb
+     account requires an email address and is intended for players old enough to have one; children
+     playing in Kid Mode do not create accounts, and no personal information is collected from them. We
+     do not knowingly collect personal information from children under 13. If you believe a child has
+     created an account, contact us and we will delete it.</p>
 
   <h2>Changes to this policy</h2>
-  <p>If we ever change how the app handles information, we will update this page and revise the date
-     above. Material changes will be reflected here before they take effect.</p>
+  <p>If we change how the app handles information, we will update this page and revise the date above.
+     Material changes will be reflected here before they take effect.</p>
 
   <h2>Contact</h2>
-  <p>Questions about privacy? Email <a href="mailto:icyfxllm@gmail.com">icyfxllm@gmail.com</a>.</p>
+  <p>Questions about privacy, or want your data deleted? Email
+     <a href="mailto:icyfxllm@gmail.com">icyfxllm@gmail.com</a>.</p>
 
   <footer>
     Spell · <a href="https://spellgame.net">spellgame.net</a> · Package <code>net.spellgame.app</code>

@@ -66,22 +66,38 @@ Spell is free. Hear it, spell it, keep the chain.
 
 ## Data safety form (answer truthfully — this is a listing asset)
 
-**Does your app collect or share any of the required user data types?**
-→ **No.**
+> UPDATED 2026-07-10: "The Climb" added an **optional** online leaderboard with
+> accounts, so the app now DOES collect data — but only for users who opt in.
+> The base game still collects nothing. Answer per the tables below.
 
-Rationale (keep for the reviewer notes and the privacy policy):
-- No account, no sign-in, no personal identifiers, no location, no contacts.
-- Gameplay progress (streak, stats, custom word lists) is stored **only in the
-  device's local storage** and never leaves the device.
-- The app sends the **dictionary word being practiced** to the developer's own
-  server to fetch pre-rendered audio and definitions. These requests are not
-  tied to any user identity, are not used for tracking or advertising, and are
-  not sold or shared with third parties. (The server uses Google Cloud
-  Text-to-Speech to render word audio.)
-- No third-party analytics or ad SDKs are bundled.
+**Does your app collect or share any of the required user data types?**
+→ **Yes** (only if the user creates an optional Climb leaderboard account).
+
+**Data collected** (Collected = yes; Shared = no for all; not used for
+advertising/tracking for any):
+
+| Data type | Collected | Purpose | Optional? |
+|---|---|---|---|
+| Name (username / display name) | Yes | App functionality (leaderboard identity — shown publicly) | User-provided at signup |
+| Email address | Yes | App functionality, Account management (verify + password reset) | Required only if creating an account |
+| Phone number | Yes | Account management (optional SMS password reset) | User-provided, optional |
+| User IDs | Yes | App functionality (account + session) | — |
+| App activity (leaderboard scores + run metadata) | Yes | App functionality (ranking, anti-cheat) | — |
+
+- **Sharing:** No data is shared with third parties. (Email delivery and the
+  Cloudflare Turnstile anti-bot check are *service providers/processors*, not
+  "sharing" in Play's sense — they process the minimum to perform the function.)
+- **Purpose:** App functionality + account management only. **Not** used for
+  advertising, marketing, analytics, or tracking. No ad/analytics SDKs bundled.
+- The base game (no account) still stores gameplay progress **only in device
+  local storage**; the dictionary word sent to fetch audio/definitions is not
+  tied to any identity.
 
 **Data encrypted in transit:** Yes (HTTPS).
-**Users can request deletion:** N/A — no user data is collected/stored server-side.
+**Password storage:** salted bcrypt hash; plaintext never stored or logged.
+**Users can request deletion:** **Yes** — in-app "Delete account" permanently
+removes the account and all associated data (CASCADE), or by emailing
+icyfxllm@gmail.com. Declare the in-app deletion path + the email in the form.
 
 ---
 
