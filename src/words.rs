@@ -12,7 +12,7 @@ pub struct LangInfo {
     pub code: &'static str,
 }
 
-pub const LANGUAGES: [(&str, LangInfo); 14] = [
+pub const LANGUAGES: [(&str, LangInfo); 20] = [
     ("en", LangInfo { name: "English", code: "en-US" }),
     ("es", LangInfo { name: "Espa\u{f1}ol", code: "es-ES" }),
     ("fr", LangInfo { name: "Fran\u{e7}ais", code: "fr-FR" }),
@@ -23,6 +23,15 @@ pub const LANGUAGES: [(&str, LangInfo); 14] = [
     ("sv", LangInfo { name: "Svenska", code: "sv-SE" }),
     ("pl", LangInfo { name: "Polski", code: "pl-PL" }),
     ("tr", LangInfo { name: "T\u{fc}rk\u{e7}e", code: "tr-TR" }),
+    // New languages with their own keyboard + backend voice (My Words matches).
+    ("vi", LangInfo { name: "Ti\u{1ebf}ng Vi\u{1ec7}t", code: "vi-VN" }),
+    ("ko", LangInfo { name: "\u{d55c}\u{ad6d}\u{c5b4}", code: "ko-KR" }),
+    ("ja", LangInfo { name: "\u{65e5}\u{672c}\u{8a9e}", code: "ja-JP" }),
+    ("th", LangInfo { name: "\u{e44}\u{e17}\u{e22}", code: "th-TH" }),
+    ("fil", LangInfo { name: "Filipino", code: "fil-PH" }),
+    // Mandarin: native audio for imported hanzi (the pinyin keyboard can't type
+    // arbitrary hanzi, so My Words Chinese keeps the English layout).
+    ("zh", LangInfo { name: "\u{4e2d}\u{6587}", code: "cmn-CN" }),
     ("ro", LangInfo { name: "Rom\u{e2}n\u{103}", code: "ro-RO" }),
     ("id", LangInfo { name: "Indonesia", code: "id-ID" }),
     ("nb", LangInfo { name: "Norsk", code: "nb-NO" }),

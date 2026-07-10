@@ -131,11 +131,18 @@ fn layout_for(locale: &str) -> &'static Layout {
 /// Which keyboard to show: My Words always uses the English layout (its words
 /// are English + apostrophe/hyphen); built-in languages use their own.
 fn keyboard_locale(app: &App) -> String {
-    let lang = app.borrow().lang.clone();
-    if lang == MINE {
-        "en".to_string()
-    } else {
-        lang
+    let s = app.borrow();
+    if s.lang != MINE {
+        return s.lang.clone();
+    }
+    // My Words: match the imported list's "Speak in" language so the right
+    // keyboard shows (Korean Dubeolsik, kana grid, Thai Kedmanee, …). Mandarin
+    // is the exception — its keyboard types pinyin, not the hanzi a user imports,
+    // so My Words Chinese stays on the English layout. Unsupported/browser-only
+    // picks also fall back to English.
+    match game::mine_lang(&s) {
+        Some("zh") | None => "en".to_string(),
+        Some(code) => code.to_string(),
     }
 }
 

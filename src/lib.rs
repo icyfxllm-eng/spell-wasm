@@ -779,6 +779,7 @@ fn wire_import(app: &App) {
             settings::save_prefs(&a.borrow());
             game::build_source_options(&a);
             game::build_level_options(&a);
+            keyboard::rebuild(&a); // match the imported list's "Speak in" language
             stats::render(&a.borrow());
             board::render(&a.borrow());
             game::refresh_mode_buttons(&a);
@@ -787,7 +788,7 @@ fn wire_import(app: &App) {
                 s.word = String::new();
                 s.answered = false;
             }
-            dom::set_html("orbGlyph", "tap to<br/>hear a word");
+            dom::set_html("orbGlyph", &i18n::t("orb.tap"));
             a.borrow_mut().answer.clear();
             game::render_letters(&a, false);
             game::clear_meaning();

@@ -24,14 +24,34 @@ pub fn code_for(state: &AppState, key: &str) -> String {
     }
 }
 
+/// For My Words: the short language code of the "Speak in" selection when it's a
+/// language the app fully supports (its own keyboard + a backend TTS voice) —
+/// e.g. "ko-KR" -> "ko", "cmn-CN" -> "zh". None for browser-synth-only picks
+/// (Romanian/Indonesian/Catalan), which keep the English keyboard + browser
+/// voice. This makes an imported Korean/Japanese/Thai/… list get the matching
+/// keyboard and native audio, not just English.
+pub fn mine_lang(state: &AppState) -> Option<&'static str> {
+    let code = if state.custom.speak_lang.is_empty() { "en" } else { state.custom.speak_lang.as_str() };
+    match code.split(['-', '_']).next().unwrap_or("") {
+        "en" => Some("en"), "es" => Some("es"), "fr" => Some("fr"), "de" => Some("de"),
+        "pt" => Some("pt"), "it" => Some("it"), "nl" => Some("nl"), "pl" => Some("pl"),
+        "sv" => Some("sv"), "nb" => Some("nb"), "tr" => Some("tr"), "vi" => Some("vi"),
+        "ko" => Some("ko"), "ja" => Some("ja"), "th" => Some("th"), "fil" => Some("fil"),
+        "cmn" | "zh" => Some("zh"),
+        _ => None,
+    }
+}
+
 /// My Words can route through the backend's real TTS (reliable, unlike the
-/// browser's built-in voices which may not exist at all on this machine)
-/// as long as the word is plain English letters — the backend rejects
-/// anything else (spaces, apostrophes, hyphens, non-English speak_lang).
+/// browser's built-in voices which may not exist at all on this machine).
+/// The backend accepts any script Python's str.isalpha() allows — including
+/// CJK/Thai/Hangul — so a word is backend-speakable when the "Speak in" language
+/// is a supported one (mine_lang) and the word carries no spaces/punctuation
+/// (which the backend rejects).
 fn backend_speakable(state: &AppState, word: &str) -> bool {
-    let code = code_for(state, MINE);
-    let is_english = code.split('-').next().unwrap_or(&code).eq_ignore_ascii_case("en");
-    is_english && !word.is_empty() && word.chars().all(|c| c.is_ascii_alphabetic())
+    mine_lang(state).is_some()
+        && !word.is_empty()
+        && word.chars().all(|c| c.is_alphabetic())
 }
 
 pub fn name_for(_state: &AppState, key: &str) -> String {
@@ -175,12 +195,15 @@ pub fn can_type(state: &AppState) -> bool {
 /// and reveal the apostrophe/hyphen keys only for My Words (the built-in
 /// English tiers never use them).
 pub fn sync_keyboard(app: &App) {
-    let (enabled, mine) = {
+    let (enabled, punct) = {
         let s = app.borrow();
-        (can_type(&s), s.lang == MINE)
+        // Apostrophe/hyphen keys are for English imports (contractions, hyphens);
+        // My Words in another language uses that language's own keyboard instead.
+        let punct = s.lang == MINE && matches!(mine_lang(&s), None | Some("en") | Some("zh"));
+        (can_type(&s), punct)
     };
     dom::toggle_class("gameKeyboard", "locked", !enabled);
-    dom::toggle_class("gameKeyboard", "show-punct", mine);
+    dom::toggle_class("gameKeyboard", "show-punct", punct);
     dom::toggle_class("spellbox", "focus", enabled);
 }
 
@@ -519,11 +542,14 @@ fn speak_word(app: &App, variant: &str, rate: f32) {
         return;
     }
     if s.cur_lang == MINE && backend_speakable(&s, &word) {
+        // My Words with a supported "Speak in" language: use that language's
+        // native backend voice (ko-KR, ja-JP, …), falling back to the browser's
+        // voice for that locale if the backend request fails.
+        let lang = mine_lang(&s).unwrap_or(EN);
         drop(s);
         let fallback_word = word.clone();
         let fallback_rate = if variant == "slow" { 0.55 } else { rate };
-        // Plain-English My Words route through the backend's English voice.
-        api::play_word(&word, variant, rate as f64, EN, move || speech_out::speak(&fallback_word, fallback_rate, &code));
+        api::play_word(&word, variant, rate as f64, lang, move || speech_out::speak(&fallback_word, fallback_rate, &code));
         return;
     }
     drop(s);
