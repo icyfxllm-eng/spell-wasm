@@ -83,15 +83,22 @@ jobs:
           path: android/app/build/outputs/bundle/release/app-release.aab
           if-no-files-found: error
 
-      # Optional: publish to the Play internal testing track automatically.
-      # Requires a Play service account JSON in PLAY_SERVICE_ACCOUNT_JSON and
-      # the app already created in Play Console with one manual upload done.
-      # - uses: r0adkll/upload-google-play@v1
-      #   with:
-      #     serviceAccountJsonPlainText: ${{ secrets.PLAY_SERVICE_ACCOUNT_JSON }}
-      #     packageName: net.spellgame.app
-      #     releaseFiles: android/app/build/outputs/bundle/release/app-release.aab
-      #     track: internal
+      # Auto-publish to the Play internal-testing track. Skips cleanly (never
+      # fails the build) until PLAY_SERVICE_ACCOUNT_JSON is set — so the AAB
+      # artifact is always produced, and publishing turns on the moment the
+      # service-account secret exists AND the app has had its first manual
+      # upload in Play Console (a Play requirement for API publishing).
+      - name: Publish to Play (internal track)
+        if: ${{ env.PLAY_SA != '' }}
+        env:
+          PLAY_SA: ${{ secrets.PLAY_SERVICE_ACCOUNT_JSON }}
+        uses: r0adkll/upload-google-play@v1
+        with:
+          serviceAccountJsonPlainText: ${{ secrets.PLAY_SERVICE_ACCOUNT_JSON }}
+          packageName: net.spellgame.app
+          releaseFiles: android/app/build/outputs/bundle/release/app-release.aab
+          track: internal
+          status: completed
 
   # iOS build runs on the MacStadium box registered as a self-hosted runner
   # (Phase 4 Mode B). Left disabled until that runner + fastlane match are set
