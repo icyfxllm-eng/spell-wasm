@@ -11,6 +11,7 @@ mod dom;
 mod drawing;
 mod game;
 mod haptics;
+mod hangul;
 mod i18n;
 mod importer;
 mod keyboard;
