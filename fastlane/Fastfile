@@ -91,13 +91,13 @@ platform :ios do
     )
   end
 
-  desc "Submit build 14 to App Store review (metadata/screenshots already uploaded)"
+  desc "Submit the latest build to App Store review (metadata/screenshots already uploaded)"
   lane :submit_review do
     deliver(
       skip_binary_upload: true,
       skip_metadata: true,
       skip_screenshots: true,
-      build_number: "14",
+      build_number: "20",
       submit_for_review: true,
       run_precheck_before_submit: false,   # app has no IAP; precheck can't check IAP via API key
       automatic_release: true,
