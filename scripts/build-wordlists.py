@@ -31,7 +31,7 @@ import unicodedata
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
-LANGS = ["en", "es", "fr", "de", "pt", "it", "nl", "pl", "sv", "nb", "tr", "vi", "ko", "ja", "fil"]
+LANGS = ["en", "es", "fr", "de", "pt", "it", "nl", "pl", "sv", "nb", "tr", "vi", "ko", "ja", "fil", "th"]
 TIERS = ["easy", "medium", "hard", "expert"]
 MIN_LEN, MAX_LEN = 2, 16
 BALANCE_TOL = 0.20
@@ -122,8 +122,9 @@ def build():
                 where = f"{code}/{tier}: {w!r}"
                 # Curation filters (drop + warn): non-letters (fr apostrophe/hyphen
                 # forms, §3.3) and the length cap (de/nl/sv compounds, §3.3).
-                # Filipino keeps the hyphen — orthographic (mag-aral, pag-ibig).
-                if not all(c.isalpha() or (code == "fil" and c == "-") for c in w):
+                # Filipino keeps the hyphen; Thai has combining vowels/tone marks
+                # (U+0E00–0E7F) that aren't Unicode "alphabetic".
+                if not all(c.isalpha() or (code == "fil" and c == "-") or (code == "th" and 0x0E00 <= ord(c) <= 0x0E7F) for c in w):
                     warnings.append(f"{where} — dropped (non-alphabetic)")
                     continue
                 if not (min_len <= len(w) <= MAX_LEN):

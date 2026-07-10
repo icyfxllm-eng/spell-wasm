@@ -54,6 +54,7 @@ LANG_VOICES = {
     "ja": ("ja-JP", "ja-JP-Wavenet-B"),
     "fil": ("fil-PH", "fil-PH-Wavenet-A"),
     "zh": ("cmn-CN", "cmn-CN-Wavenet-A"),
+    "th": ("th-TH", "th-TH-Neural2-C"),
 }
 DEFAULT_LANG = "en"
 

@@ -1,0 +1,1 @@
+# Thai exclusions (NFC, exact match). Extend from LDNOOBW th. REVIEW GATE.

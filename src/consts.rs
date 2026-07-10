@@ -39,11 +39,12 @@ pub const KO: &str = "ko";
 pub const JA: &str = "ja";
 pub const FIL: &str = "fil";
 pub const ZH: &str = "zh";
+pub const TH: &str = "th";
 
 /// Built-in word-source languages: (lang code, display name). Adding a language
 /// here + its word bank in `words.rs` + a voice in the backend's `LANG_VOICES`
 /// makes it fully supported (audio + spelling). `MINE`/`REVIEW` aren't here.
-pub const BUILTIN_LANGS: [(&str, &str); 16] = [
+pub const BUILTIN_LANGS: [(&str, &str); 17] = [
     (EN, "English"),
     (ES, "Espa\u{f1}ol"),
     (FR, "Fran\u{e7}ais"),
@@ -60,6 +61,7 @@ pub const BUILTIN_LANGS: [(&str, &str); 16] = [
     (JA, "\u{65e5}\u{672c}\u{8a9e}"),
     (FIL, "Filipino"),
     (ZH, "\u{4e2d}\u{6587}"),
+    (TH, "\u{e44}\u{e17}\u{e22}"),
 ];
 
 /// Whether `lang` is a built-in, backend-voiced language (not My Words/Misses).
