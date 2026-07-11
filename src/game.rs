@@ -1113,7 +1113,16 @@ fn render_daily_bar(app: &App) {
     let s = app.borrow();
     let n = s.daily.words.len();
     let i = s.daily.idx.min(n);
-    dom::set_html("dailyBar", &crate::i18n::tp("daily.progress", &[("i", &i.to_string()), ("n", &n.to_string()), ("c", &s.daily.correct.to_string())]));
+    let progress = crate::i18n::tp("daily.progress", &[("i", &i.to_string()), ("n", &n.to_string()), ("c", &s.daily.correct.to_string())]);
+    // Expert finale: the last two words (idx 8-9 of the 10-word arc) get a "peak"
+    // badge — the visual beat that the hard part has begun.
+    let is_finale = !s.kid && s.daily.idx >= crate::daily::FINALE_START && s.daily.idx < n;
+    dom::toggle_class("dailyBar", "finale", is_finale);
+    if is_finale {
+        dom::set_html("dailyBar", &format!("{}<span class=\"daily-finale\">{}</span>", progress, crate::i18n::t("daily.finale")));
+    } else {
+        dom::set_html("dailyBar", &progress);
+    }
 }
 
 fn show_daily_result(_app: &App, correct: u32, total: u32, streak: u32, best: u32) {

@@ -121,15 +121,29 @@ fn pick(pool: &[&str], count: usize, rng: &mut u64) -> Vec<String> {
     idx[..take].iter().map(|&i| pool[i].to_string()).collect()
 }
 
+/// Arc position (0-based) where the Expert finale begins: slots 9 and 10 (idx 8,
+/// 9) are the "boss words" that get the Expert badge.
+pub const FINALE_START: usize = 8;
+
 /// Build today's word set for a language. Deterministic for a given
-/// (date, locale, kid) triple.
+/// (date, locale, kid) triple. Words within each tier are ordered easiest→
+/// hardest (length proxy until the scoring pipeline ships per-word scores) so
+/// slots 1-8 ramp smoothly; slots 9-10 come from the Expert tier as the finale.
+///
+/// The spec's 90/180-day rolling exclusion is intentionally NOT applied yet: the
+/// current ~40-word tiers are too small to honor it (the Expert pool would
+/// exhaust in ~20 days), and a wall-clock-based exclusion would break
+/// determinism. It lands once the difficulty pipeline expands the pools.
 pub fn build_words(lang: &str, date: &str, kid: bool) -> (String, Vec<String>) {
     let locale = locale_for(lang);
     let mut rng = seed(date, &locale, kid);
     let arc: &[(&str, usize)] = if kid { &KID_ARC } else { &ARC };
     let mut out = Vec::new();
     for (tier, count) in arc {
-        out.extend(pick(words::tier_for(&locale, tier), *count, &mut rng));
+        let mut picked = pick(words::tier_for(&locale, tier), *count, &mut rng);
+        // Ramp within the tier: easiest first (shorter = easier proxy for now).
+        picked.sort_by_key(|w| w.chars().count());
+        out.extend(picked);
     }
     (locale, out)
 }
