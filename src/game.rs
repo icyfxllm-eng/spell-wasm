@@ -137,8 +137,11 @@ pub fn preload_pool(app: &App) {
     } else {
         s.level.clone()
     };
-    if s.kid && (tier == "hard" || tier == "expert") {
-        tier = "medium".to_string();
+    // Kid Mode caps difficulty at Hard: only Expert (the spelling nightmares)
+    // steps down, so easy→medium→hard stay distinct instead of collapsing to
+    // one pool.
+    if s.kid && tier == "expert" {
+        tier = "hard".to_string();
     }
     let pool = active_word_list(&s, &tier);
     let lang = s.lang.clone();
@@ -631,8 +634,10 @@ pub fn next_word(app: &App) {
             // current chain rather than the (unused) single-player streak.
             let climb_from = if s.versus.enabled { s.versus.active_player().current } else { s.streak };
             let mut tier = if s.level == "climb" { tier_for_streak(climb_from).to_string() } else { s.level.clone() };
-            if s.kid && (tier == "hard" || tier == "expert") {
-                tier = "medium".to_string();
+            // Kid Mode caps at Hard (Expert nightmares excluded) while keeping
+            // easy→medium→hard distinct.
+            if s.kid && tier == "expert" {
+                tier = "hard".to_string();
             }
             s.cur_tier = tier.clone();
             let pool = active_word_list(&s, &tier);
