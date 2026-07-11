@@ -203,7 +203,13 @@ def send_email(to: str, subject: str, html: str) -> bool:
             req = urllib.request.Request(
                 "https://api.resend.com/emails",
                 data=payload,
-                headers={"Authorization": f"Bearer {api_key}", "Content-Type": "application/json"},
+                headers={
+                    "Authorization": f"Bearer {api_key}",
+                    "Content-Type": "application/json",
+                    # Cloudflare fronts the Resend API and returns 403/1010 to
+                    # clients with no User-Agent (e.g. bare urllib), so set one.
+                    "User-Agent": "SpellRPS-backend/1.0",
+                },
             )
             urllib.request.urlopen(req, timeout=10).read()
             return True
