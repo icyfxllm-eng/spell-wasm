@@ -154,5 +154,11 @@
   "daily.resultTitle": "Daily Challenge",
   "daily.share": "Share",
   "daily.close": "Close",
-  "daily.finale": "🔥 Expert finale"
+  "daily.finale": "🔥 Expert finale",
+  "draw.correct": "Perfect! 🎉",
+  "draw.almost.mirror": "So close! That letter is facing the wrong way — try flipping it around.",
+  "draw.almost.oneLetter": "Almost! One letter looks off — check your spelling.",
+  "draw.almost.generic": "Nearly there — take another look!",
+  "draw.tryAgain": "Not quite — give it another go!",
+  "draw.empty": "I don't see a word yet — write it on the pad!"
 }

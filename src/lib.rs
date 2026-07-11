@@ -8,6 +8,7 @@ mod consts;
 mod daily;
 mod deck;
 mod dom;
+mod draw_judge;
 mod drawing;
 mod enrich;
 mod game;

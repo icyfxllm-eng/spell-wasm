@@ -1,0 +1,46 @@
+{
+  "_doc": [
+    "Offline eval set for the drawing JUDGE (src/draw_judge.rs). Each case is a",
+    "recognizer output + the known target + the verdict a good judge SHOULD reach.",
+    "`candidates` is a ranked list of [text, score] the handwriting recognizer",
+    "returned (ML Kit Digital Ink shape; the current Tesseract path is a 1-element",
+    "list). `truth` is the expected verdict class: correct | almost | tryagain | empty.",
+    "As real kid strokes are collected in beta, dump the recognizer's actual",
+    "candidate lists here with a human-labeled truth so accuracy becomes a number",
+    "we can watch. Scored by the `eval` test in src/draw_judge.rs (cargo test)."
+  ],
+  "cases": [
+    {"id": "en-exact", "locale": "en", "target": "dog", "candidates": [["dog", 0.98]], "truth": "correct"},
+    {"id": "en-exact-longer", "locale": "en", "target": "giraffe", "candidates": [["giraffe", 0.92]], "truth": "correct"},
+    {"id": "en-lowrank-target", "locale": "en", "target": "dog", "candidates": [["bog", 0.71], ["dog", 0.28]], "truth": "correct"},
+    {"id": "en-lowrank-target2", "locale": "en", "target": "cat", "candidates": [["cot", 0.55], ["cet", 0.4], ["cat", 0.22]], "truth": "correct"},
+    {"id": "en-noise-exact", "locale": "en", "target": "dog", "candidates": [["dog", 0.06]], "truth": "almost"},
+    {"id": "en-mirror-bd", "locale": "en", "target": "dog", "candidates": [["bog", 0.9]], "truth": "almost"},
+    {"id": "en-mirror-pq", "locale": "en", "target": "quilt", "candidates": [["puilt", 0.85]], "truth": "almost"},
+    {"id": "en-oneoff-sub", "locale": "en", "target": "cat", "candidates": [["cot", 0.9]], "truth": "almost"},
+    {"id": "en-missing-letter", "locale": "en", "target": "frog", "candidates": [["fog", 0.88]], "truth": "almost"},
+    {"id": "en-extra-letter", "locale": "en", "target": "sun", "candidates": [["suun", 0.8]], "truth": "almost"},
+    {"id": "en-different-word", "locale": "en", "target": "cat", "candidates": [["dog", 0.95]], "truth": "tryagain"},
+    {"id": "en-scribble", "locale": "en", "target": "house", "candidates": [["xz", 0.4]], "truth": "tryagain"},
+    {"id": "en-empty-none", "locale": "en", "target": "cat", "candidates": [], "truth": "empty"},
+    {"id": "en-empty-blank", "locale": "en", "target": "cat", "candidates": [["  ", 0.9]], "truth": "empty"},
+    {"id": "en-uv-confusion", "locale": "en", "target": "vase", "candidates": [["uase", 0.85]], "truth": "almost"},
+    {"id": "en-mn-confusion", "locale": "en", "target": "moon", "candidates": [["noon", 0.8]], "truth": "almost"},
+
+    {"id": "es-accent-lenient", "locale": "es", "target": "café", "candidates": [["cafe", 0.9]], "truth": "correct"},
+    {"id": "es-exact", "locale": "es", "target": "gato", "candidates": [["gato", 0.95]], "truth": "correct"},
+    {"id": "es-oneoff", "locale": "es", "target": "perro", "candidates": [["pero", 0.85]], "truth": "almost"},
+    {"id": "es-different", "locale": "es", "target": "sol", "candidates": [["luz", 0.9]], "truth": "tryagain"},
+
+    {"id": "fr-accent-lenient", "locale": "fr", "target": "éléphant", "candidates": [["elephant", 0.88]], "truth": "correct"},
+    {"id": "fr-exact", "locale": "fr", "target": "chat", "candidates": [["chat", 0.94]], "truth": "correct"},
+    {"id": "fr-oneoff", "locale": "fr", "target": "lune", "candidates": [["luno", 0.8]], "truth": "almost"},
+
+    {"id": "de-exact", "locale": "de", "target": "Hund", "candidates": [["hund", 0.93]], "truth": "correct"},
+    {"id": "de-sz-lenient", "locale": "de", "target": "Straße", "candidates": [["strasse", 0.85]], "truth": "correct"},
+    {"id": "de-different", "locale": "de", "target": "Katze", "candidates": [["Maus", 0.9]], "truth": "tryagain"},
+
+    {"id": "vi-exact", "locale": "vi", "target": "mèo", "candidates": [["mèo", 0.9]], "truth": "correct"},
+    {"id": "vi-tone-off", "locale": "vi", "target": "mèo", "candidates": [["meo", 0.85]], "truth": "correct"}
+  ]
+}
