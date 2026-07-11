@@ -17,6 +17,7 @@ mod haptics;
 mod hangul;
 mod i18n;
 mod importer;
+mod jamo;
 mod keyboard;
 mod misses;
 mod model;

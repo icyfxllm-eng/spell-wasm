@@ -65,6 +65,13 @@ fn decompose(c: char) -> Option<(usize, usize, usize)> {
     Some((s / (21 * 28), (s / 28) % 21, s % 28))
 }
 
+/// The three components of a precomposed syllable as compatibility jamo:
+/// (initial 초성, medial 중성, final 종성). Final is `'\0'` when the syllable has
+/// none. `None` for a non-syllable char. Used by the jamo grader (Phase 3).
+pub fn parts(c: char) -> Option<(char, char, char)> {
+    decompose(c).map(|(i, m, f)| (INITIALS[i], MEDIALS[m], FINALS[f]))
+}
+
 fn compound_medial(a: char, b: char) -> Option<char> {
     COMPOUND_MEDIAL.iter().find(|(x, y, _)| *x == a && *y == b).map(|(_, _, z)| *z)
 }
