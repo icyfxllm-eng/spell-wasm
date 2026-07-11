@@ -72,6 +72,8 @@ pub fn is_builtin_lang(lang: &str) -> bool {
 /// Feature flag: Korean + Thai handwriting are OFF by default, pending
 /// native-auditor review of their cultural practice grids (spec step 10).
 pub const DRAW_KO_TH_ENABLED: bool = false;
+/// Master flag: draw stays fully off until the ML Kit recognizer ships (steps 3-10).
+pub const DRAW_MLKIT_READY: bool = false;
 
 /// Per-locale input-mode gating for the handwriting (draw) mode. Handwriting is
 /// offered ONLY where it's a genuine literacy skill AND a stroke recognizer
@@ -80,6 +82,13 @@ pub const DRAW_KO_TH_ENABLED: bool = false;
 /// tone marks are a keyboard skill), Filipino, and Latin My Words — is
 /// type + speak only, and the draw button must not render at all.
 pub fn draw_available(lang: &str) -> bool {
+    // Master gate: the ML Kit Digital Ink stroke recognizer + cultural practice
+    // grids aren't built yet (spec steps 3-10), so ALL handwriting stays hidden
+    // for now — no half-working draw button ships. Flip DRAW_MLKIT_READY to true
+    // when the DigitalInkPlugin lands; the per-locale config below then applies.
+    if !DRAW_MLKIT_READY {
+        return false;
+    }
     match lang {
         ZH | JA => true,
         KO | TH => DRAW_KO_TH_ENABLED,
