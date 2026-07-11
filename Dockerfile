@@ -5,6 +5,10 @@ RUN rustup target add wasm32-unknown-unknown \
 WORKDIR /src
 COPY Cargo.toml Cargo.lock ./
 COPY src ./src
+# src/ embeds word-list data at compile time via include_str!("../assets/...")
+# (e.g. the Kid Mode friendly-words filter), so assets/ must be in the build
+# context too — otherwise the WASM build fails with "couldn't read ... .txt".
+COPY assets ./assets
 RUN cargo build --release --target wasm32-unknown-unknown \
     && wasm-bindgen target/wasm32-unknown-unknown/release/spell_wasm.wasm \
        --out-dir /out/pkg --target web --no-typescript
