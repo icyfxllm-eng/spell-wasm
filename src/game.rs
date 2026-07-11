@@ -503,7 +503,7 @@ pub fn show_definition_hint(app: &App) {
         let (pos, definition) = match api::fetch_meaning(&word, true).await {
             Ok((pos, definition, _)) if !definition.is_empty() => (pos, definition),
             _ => {
-                dom::set_html("meaning", "<span class=\"m-pos\">No definition found for this word.</span>");
+                dom::set_html("meaning", &format!("<span class=\"m-pos\">{}</span>", crate::i18n::t("meaning.noDef")));
                 dom::add_class("meaning", "show");
                 return;
             }
@@ -533,7 +533,7 @@ pub fn show_sentence_hint(app: &App) {
         let example = match api::fetch_meaning(&word, true).await {
             Ok((_, _, example)) if !example.is_empty() => example,
             _ => {
-                dom::set_html("meaning", "<span class=\"m-pos\">No example sentence found for this word.</span>");
+                dom::set_html("meaning", &format!("<span class=\"m-pos\">{}</span>", crate::i18n::t("meaning.noExample")));
                 dom::add_class("meaning", "show");
                 return;
             }
@@ -1334,7 +1334,7 @@ pub fn enter_review(app: &App) {
         s.word = String::new();
         s.answered = false;
     }
-    dom::set_html("orbGlyph", "tap to<br/>practice misses");
+    dom::set_html("orbGlyph", &crate::i18n::t("orb.practiceMisses"));
     app.borrow_mut().answer.clear();
     render_letters(app, false);
     drawing::clear_canvas();

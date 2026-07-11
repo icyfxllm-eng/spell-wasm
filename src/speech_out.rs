@@ -72,7 +72,7 @@ pub fn stop() {
 
 pub fn speak(text: &str, rate: f32, code: &str) {
     let Some(s) = synth() else {
-        dom::set_text("feedback", "This browser can't speak \u{2014} try Chrome or Edge.");
+        dom::set_text("feedback", &crate::i18n::t("speech.noVoice"));
         dom::el("feedback").set_class_name("feedback bad");
         return;
     };

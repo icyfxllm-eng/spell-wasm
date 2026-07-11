@@ -215,7 +215,7 @@ fn do_change_username() {
                         }
                     });
                 }
-                dom::set_text("acctErr", "Username updated.");
+                dom::set_text("acctErr", &crate::i18n::t("climb.userUpdated"));
                 reflect_auth();
             }
             Err(e) => dom::set_text("acctErr", &e.message),
@@ -258,7 +258,7 @@ fn render_tab(difficulty: &str) {
     for d in DIFFICULTIES {
         dom::toggle_class(&format!("climbTab-{d}"), "on", d == difficulty);
     }
-    dom::set_html("climbList", "<div class=\"climb-loading\">Loading\u{2026}</div>");
+    dom::set_html("climbList", &format!("<div class=\"climb-loading\">{}</div>", crate::i18n::t("climb.loading")));
     let difficulty = difficulty.to_string();
     // Default the board to the player's current language (§4.4).
     let locale = crate::i18n::current();

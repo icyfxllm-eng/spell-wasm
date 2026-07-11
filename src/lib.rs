@@ -175,7 +175,7 @@ fn wire_age_gate(app: &App) {
         dom::on_click("ageSubmit", move || {
             let (y, m, d) = agegate::read_selection();
             if !agegate::valid_date(y, m, d) {
-                dom::set_text("ageErr", "Please pick a real date that isn't in the future.");
+                dom::set_text("ageErr", &i18n::t("age.badDate"));
                 return;
             }
             let was_locked = a.borrow().age_locked;
@@ -211,7 +211,7 @@ fn wire_age_gate(app: &App) {
             agegate::populate_selects();
             dom::add_class("ageScrim", "show");
         } else {
-            dom::set_text("parentErr", "Not quite \u{2014} try again.");
+            dom::set_text("parentErr", &i18n::t("parent.tryAgain"));
         }
     });
     dom::on_click("parentCancel", || dom::remove_class("parentScrim", "show"));
@@ -284,7 +284,7 @@ fn wire_orb_and_answer(app: &App) {
                 let a2 = a.clone();
                 dom::set_disabled("checkBtn", true);
                 spawn_local(async move {
-                    dom::set_text("drawStatus", "Reading your writing\u{2026}");
+                    dom::set_text("drawStatus", &i18n::t("draw.reading"));
                     match drawing::read_writing().await {
                         drawing::OcrOutcome::Confident(txt) => {
                             game::set_answer(&a2, &txt);
@@ -302,11 +302,11 @@ fn wire_orb_and_answer(app: &App) {
                             dom::set_disabled("checkBtn", false);
                         }
                         drawing::OcrOutcome::Empty => {
-                            dom::set_text("drawStatus", "Couldn't read that \u{2014} try clearer block letters, or type it.");
+                            dom::set_text("drawStatus", &i18n::t("draw.unreadable"));
                             dom::set_disabled("checkBtn", false);
                         }
                         drawing::OcrOutcome::Failed => {
-                            dom::set_text("drawStatus", "The handwriting reader couldn't load here \u{2014} type the letters to check.");
+                            dom::set_text("drawStatus", &i18n::t("draw.readerFail"));
                             dom::set_disabled("checkBtn", false);
                         }
                     }
@@ -478,7 +478,7 @@ fn wire_drawing(app: &App) {
         dom::toggle_class("drawBtn", "on", showing);
         if showing {
             drawing::size_canvas();
-            dom::set_text("drawStatus", "Write the word, then tap \u{201c}Read my writing\u{201d}.");
+            dom::set_text("drawStatus", &i18n::t("draw.prompt"));
         }
     });
 
@@ -553,16 +553,16 @@ fn wire_drawing(app: &App) {
                     (s.answered, game::has_active_word(&s))
                 };
                 if !active || answered {
-                    dom::set_text("drawStatus", "Press the orb for a word, then write it.");
+                    dom::set_text("drawStatus", &i18n::t("draw.needWord"));
                     dom::set_disabled("readWriting", false);
                     return;
                 }
                 if !drawing::has_strokes() {
-                    dom::set_text("drawStatus", "Write a word on the pad first.");
+                    dom::set_text("drawStatus", &i18n::t("draw.needStrokes"));
                     dom::set_disabled("readWriting", false);
                     return;
                 }
-                dom::set_text("drawStatus", "Reading your writing\u{2026} (first use loads the reader)");
+                dom::set_text("drawStatus", &i18n::t("draw.readingFirst"));
                 match drawing::read_writing().await {
                     drawing::OcrOutcome::Confident(txt) => {
                         game::set_answer(&a2, &txt);
@@ -573,10 +573,10 @@ fn wire_drawing(app: &App) {
                         dom::set_text("drawStatus", &format!("Not sure I read that right \u{2014} got \u{201c}{}\u{201d}. Fix it if needed, then Check.", txt));
                     }
                     drawing::OcrOutcome::Empty => {
-                        dom::set_text("drawStatus", "Couldn't read that \u{2014} try clearer block letters, or type it.");
+                        dom::set_text("drawStatus", &i18n::t("draw.unreadable"));
                     }
                     drawing::OcrOutcome::Failed => {
-                        dom::set_text("drawStatus", "The handwriting reader couldn't load here \u{2014} your writing is saved; type the letters to check.");
+                        dom::set_text("drawStatus", &i18n::t("draw.readerFailSaved"));
                     }
                 }
                 dom::set_disabled("readWriting", false);
@@ -738,7 +738,7 @@ fn wire_import(app: &App) {
         if url.is_empty() {
             return;
         }
-        dom::set_text("importNote", "Fetching\u{2026}");
+        dom::set_text("importNote", &i18n::t("import.fetching"));
         spawn_local(async move {
             match importer::fetch_words_from_url(&url).await {
                 Ok(words) => {
@@ -748,13 +748,13 @@ fn wire_import(app: &App) {
                     ta.set_value(&if existing.is_empty() { joined.clone() } else { format!("{}\n{}", existing, joined) });
                     update_import_count();
                     if words.is_empty() {
-                        dom::set_text("importNote", "No words found at that link.");
+                        dom::set_text("importNote", &i18n::t("import.noWords"));
                     } else {
                         dom::set_text("importNote", &format!("Added {} words from the link.", words.len()));
                     }
                 }
                 Err(_) => {
-                    dom::set_text("importNote", "Couldn't fetch that link (the site may block it). Copy the text and paste it above instead.");
+                    dom::set_text("importNote", &i18n::t("import.fetchFail"));
                 }
             }
         });
@@ -765,7 +765,7 @@ fn wire_import(app: &App) {
         dom::on_click("saveWords", move || {
             let words = importer::extract_words(&dom::textarea("importText").value());
             if words.is_empty() {
-                dom::set_text("importNote", "Add at least one word to save.");
+                dom::set_text("importNote", &i18n::t("import.needWord"));
                 return;
             }
             // Screen out profanity before saving (also re-checked on load). This
@@ -838,7 +838,7 @@ fn wire_import(app: &App) {
             game::build_source_options(&a);
             game::build_level_options(&a);
             stats::render(&a.borrow());
-            dom::set_text("importNote", "Your words were cleared.");
+            dom::set_text("importNote", &i18n::t("import.cleared"));
         });
     }
     dom::on_click("cancelImport", || dom::remove_class("importScrim", "show"));

@@ -126,7 +126,7 @@ fn play_word_html(word: &str, variant: &str, rate: f64, lang: &str, on_fail: imp
     audio_boost::wire(&audio);
 
     let err_cb = Closure::once(move || {
-        dom::set_text("voiceNote", "Couldn't reach the audio server for this word \u{2014} spelling still counts.");
+        dom::set_text("voiceNote", &crate::i18n::t("voice.audioFail"));
         on_fail();
     });
     audio.set_onerror(Some(err_cb.as_ref().unchecked_ref()));
