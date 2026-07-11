@@ -18,6 +18,22 @@
 # is the static frontend. Same origin for both means the browser never
 # needs CORS.
 :8080 {
+	# Force HTTPS at the origin too. Cloudflare terminates TLS and forwards the
+	# client's original scheme in X-Forwarded-Proto; if the client used plain
+	# http, redirect to https so the site is never served unencrypted. (Belt-
+	# and-suspenders with Cloudflare's edge "Always Use HTTPS" setting.)
+	@insecure header X-Forwarded-Proto http
+	redir @insecure https://{host}{uri} permanent
+
+	# Security headers on every response — Cloudflare passes these to the
+	# browser. HSTS locks browsers onto HTTPS for a year (no silent downgrade).
+	header {
+		Strict-Transport-Security "max-age=31536000; includeSubDomains"
+		X-Content-Type-Options "nosniff"
+		X-Frame-Options "SAMEORIGIN"
+		Referrer-Policy "strict-origin-when-cross-origin"
+	}
+
 	handle /api/* {
 		reverse_proxy backend:8000
 	}
