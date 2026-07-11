@@ -67,7 +67,7 @@
   "import.save": "保存我的词",
   "import.clear": "清除我的词",
   "import.close": "关闭",
-  "import.note": "词汇仅保存在本设备。链接获取可能被网站阻止 — 若失败，请复制文本粘贴到上方。",
+  "import.note": "单词仅保存在本设备。链接可能被网站屏蔽 — 如果失败，请复制文本粘贴到上方。",
   "age.title": "你的生日是哪天？",
   "age.blurb": "我们询问是为了显示合适的体验。",
   "age.continue": "继续",
@@ -189,5 +189,14 @@
   "jamo.checkInitial": "检查第一个辅音。",
   "jamo.checkMedial": "检查元音。",
   "jamo.checkFinal": "检查收尾辅音（받침）。",
-  "jamo.spelledOut": "这样拼写：{j}"
+  "jamo.spelledOut": "这样拼写：{j}",
+  "share.button": "分享你的连胜",
+  "share.chain": "🔥 我刚在 Spell 拼出了 {n} 个词的连胜！最好成绩 {best}。听一听 · 拼一拼 · 保持连胜 →",
+  "share.chainBest": "我在 Spell 上练习拼写 — 最好的连胜是 {best} 个词。听一听 · 拼一拼 · 保持连胜 →",
+  "share.tagline": "Spell — 听一听，拼一拼。用耳朵玩的拼写游戏。",
+  "share.dailyStreak": "🗓 SpellGame 每日挑战：{c}/{t} — 🔥 连续 {n} 天！听一听 · 拼一拼 →",
+  "share.daily": "🗓 SpellGame 每日挑战：{c}/{t}。听一听 · 拼一拼 →",
+  "import.addedFromLink": "已从链接添加 {n} 个单词。",
+  "import.saved": "已保存你的 {n} 个单词 — 按下光球开始。",
+  "import.savedSkipped": "已保存你的 {n} 个单词（跳过 {b} 个）— 按下光球开始。"
 }

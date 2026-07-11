@@ -67,7 +67,7 @@
   "import.save": "Lưu từ của tôi",
   "import.clear": "Xóa từ của tôi",
   "import.close": "Đóng",
-  "import.note": "Từ được lưu trên thiết bị này. Lấy từ liên kết có thể bị trang web chặn — nếu lỗi, hãy sao chép văn bản và dán ở trên.",
+  "import.note": "Các từ chỉ lưu trên thiết bị này. Một liên kết có thể bị trang chặn — nếu lỗi, hãy sao chép văn bản và dán vào ô trên.",
   "age.title": "Sinh nhật của bạn là khi nào?",
   "age.blurb": "Chúng tôi hỏi để hiển thị trải nghiệm phù hợp.",
   "age.continue": "Tiếp tục",
@@ -189,5 +189,14 @@
   "jamo.checkInitial": "Kiểm tra phụ âm đầu nhé.",
   "jamo.checkMedial": "Kiểm tra nguyên âm nhé.",
   "jamo.checkFinal": "Kiểm tra phụ âm cuối (받침) nhé.",
-  "jamo.spelledOut": "Viết thế này: {j}"
+  "jamo.spelledOut": "Viết thế này: {j}",
+  "share.button": "Chia sẻ chuỗi của bạn",
+  "share.chain": "🔥 Mình vừa đánh vần chuỗi {n} từ trên Spell! Kỷ lục của mình là {best}. nghe · đánh vần · giữ chuỗi →",
+  "share.chainBest": "Mình đang luyện đánh vần trên Spell — chuỗi tốt nhất của mình là {best} từ. nghe · đánh vần · giữ chuỗi →",
+  "share.tagline": "Spell — nghe rồi đánh vần. Trò chơi chính tả bạn chơi bằng tai.",
+  "share.dailyStreak": "🗓 Thử thách hằng ngày SpellGame: {c}/{t} — 🔥 chuỗi {n} ngày! nghe · đánh vần →",
+  "share.daily": "🗓 Thử thách hằng ngày SpellGame: {c}/{t}. nghe · đánh vần →",
+  "import.addedFromLink": "Đã thêm {n} từ từ liên kết.",
+  "import.saved": "Đã lưu {n} từ của bạn — nhấn vào quả cầu để bắt đầu.",
+  "import.savedSkipped": "Đã lưu {n} từ của bạn (bỏ qua {b}) — nhấn vào quả cầu để bắt đầu."
 }

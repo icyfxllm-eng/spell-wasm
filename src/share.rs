@@ -57,12 +57,13 @@ pub fn available() -> bool {
 }
 
 fn build_message(streak: u32, best: u32) -> String {
+    use crate::i18n::tp;
     if streak > 1 {
-        format!("\u{1f525} I just spelled a {streak}-word chain on Spell! My best is {best}. hear it \u{b7} spell it \u{b7} keep the chain \u{2192}")
+        tp("share.chain", &[("n", &streak.to_string()), ("best", &best.to_string())])
     } else if best > 0 {
-        format!("I'm practicing spelling on Spell \u{2014} my best chain is {best} words. hear it \u{b7} spell it \u{b7} keep the chain \u{2192}")
+        tp("share.chainBest", &[("best", &best.to_string())])
     } else {
-        "Spell \u{2014} hear it, spell it. A spelling game you play with your ears.".to_string()
+        crate::i18n::t("share.tagline")
     }
 }
 
@@ -72,7 +73,7 @@ fn base_opts(text: &str) -> Object {
     let _ = Reflect::set(&opts, &JsValue::from_str("text"), &JsValue::from_str(text));
     let _ = Reflect::set(&opts, &JsValue::from_str("url"), &JsValue::from_str(SHARE_URL));
     // Capacitor's Share also uses `dialogTitle` for the Android chooser.
-    let _ = Reflect::set(&opts, &JsValue::from_str("dialogTitle"), &JsValue::from_str("Share your chain"));
+    let _ = Reflect::set(&opts, &JsValue::from_str("dialogTitle"), &JsValue::from_str(&crate::i18n::t("share.button")));
     opts
 }
 
@@ -93,10 +94,11 @@ fn share_text(text: &str) {
 
 /// Share a Daily Challenge result (text + link; best-effort).
 pub fn share_daily(correct: u32, total: u32, streak: u32) {
+    use crate::i18n::tp;
     let text = if streak > 1 {
-        format!("\u{1f5d3} SpellGame Daily: {correct}/{total} \u{2014} \u{1f525} {streak}-day streak! hear it \u{b7} spell it \u{2192}")
+        tp("share.dailyStreak", &[("c", &correct.to_string()), ("t", &total.to_string()), ("n", &streak.to_string())])
     } else {
-        format!("\u{1f5d3} SpellGame Daily: {correct}/{total}. hear it \u{b7} spell it \u{2192}")
+        tp("share.daily", &[("c", &correct.to_string()), ("t", &total.to_string())])
     };
     share_text(&text);
 }

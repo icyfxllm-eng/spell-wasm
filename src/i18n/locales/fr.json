@@ -189,5 +189,14 @@
   "jamo.checkInitial": "Vérifie la première consonne.",
   "jamo.checkMedial": "Vérifie la voyelle.",
   "jamo.checkFinal": "Vérifie la consonne finale (받침).",
-  "jamo.spelledOut": "Ça s'écrit : {j}"
+  "jamo.spelledOut": "Ça s'écrit : {j}",
+  "share.button": "Partage ta chaîne",
+  "share.chain": "🔥 Je viens d'épeler une chaîne de {n} mots sur Spell ! Mon record est {best}. écoute · épelle · garde la chaîne →",
+  "share.chainBest": "Je m'entraîne à l'orthographe sur Spell — ma meilleure chaîne est de {best} mots. écoute · épelle · garde la chaîne →",
+  "share.tagline": "Spell — écoute, épelle. Un jeu d'orthographe qui se joue avec les oreilles.",
+  "share.dailyStreak": "🗓 Défi quotidien SpellGame : {c}/{t} — 🔥 série de {n} jours ! écoute · épelle →",
+  "share.daily": "🗓 Défi quotidien SpellGame : {c}/{t}. écoute · épelle →",
+  "import.addedFromLink": "{n} mots ajoutés depuis le lien.",
+  "import.saved": "{n} de tes mots enregistrés — appuie sur l'orbe pour commencer.",
+  "import.savedSkipped": "{n} de tes mots enregistrés ({b} ignorés) — appuie sur l'orbe pour commencer."
 }

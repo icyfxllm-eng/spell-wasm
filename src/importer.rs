@@ -57,13 +57,26 @@ fn save_custom(state: &AppState) {
     storage::set_json(CUSTOM_KEY, &state.custom);
 }
 
+/// Save a batch of words. **Additive**: the batch is merged into the already-
+/// saved set (dedup, existing first) rather than replacing it — the input screen
+/// is a clean slate for adding MORE words. Each new word is tagged with this
+/// batch's "Speak in" language, so a list built from several batches in different
+/// languages speaks each batch in its own voice.
 pub fn save_words(state: &mut AppState, words: Vec<String>, speak_lang: String) {
-    state.custom = CustomSet { words, speak_lang };
+    let mut merged = state.custom.words.clone();
+    let mut word_lang = std::mem::take(&mut state.custom.word_lang);
+    for w in words {
+        if !merged.iter().any(|e| e == &w) {
+            merged.push(w.clone());
+        }
+        word_lang.insert(w, speak_lang.clone());
+    }
+    state.custom = CustomSet { words: merged, speak_lang, word_lang };
     save_custom(state);
 }
 
 pub fn clear_words(state: &mut AppState) {
     let speak_lang = state.custom.speak_lang.clone();
-    state.custom = CustomSet { words: Vec::new(), speak_lang };
+    state.custom = CustomSet { words: Vec::new(), speak_lang, word_lang: Default::default() };
     save_custom(state);
 }

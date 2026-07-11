@@ -722,13 +722,12 @@ fn wire_import(app: &App) {
         let a = app.clone();
         dom::on_click("importBtn", move || {
             build_import_lang_options(&a);
-            let joined = a.borrow().custom.words.join(" ");
-            dom::textarea("importText").set_value(&joined);
+            // Do NOT repopulate with saved words (that was the stale-input bug),
+            // and do NOT wipe an in-progress draft either — the textarea keeps
+            // whatever the player last typed. Only a successful Save clears it
+            // (saved words persist; save is additive).
             update_import_count();
-            dom::set_text(
-                "importNote",
-                "Words stay on this device. Fetching a link can be blocked by the site \u{2014} if it fails, copy the text and paste it above.",
-            );
+            dom::set_text("importNote", &i18n::t("import.note"));
             dom::add_class("importScrim", "show");
             dom::textarea("importText").focus().ok();
         });
@@ -752,7 +751,7 @@ fn wire_import(app: &App) {
                     if words.is_empty() {
                         dom::set_text("importNote", &i18n::t("import.noWords"));
                     } else {
-                        dom::set_text("importNote", &format!("Added {} words from the link.", words.len()));
+                        dom::set_text("importNote", &i18n::tp("import.addedFromLink", &[("n", &words.len().to_string())]));
                     }
                 }
                 Err(_) => {
@@ -808,14 +807,16 @@ fn wire_import(app: &App) {
             a.borrow_mut().answer.clear();
             game::render_letters(&a, false);
             game::clear_meaning();
+            // Clean slate: clear the input now it's saved (words persist — save is
+            // additive), so reopening My Words is empty.
+            dom::textarea("importText").set_value("");
+            dom::input("importUrl").set_value("");
+            update_import_count();
             dom::remove_class("importScrim", "show");
             let saved_msg = if blocked > 0 {
-                format!(
-                    "Saved {} of your words ({} skipped) \u{2014} press the orb to start.",
-                    count, blocked
-                )
+                i18n::tp("import.savedSkipped", &[("n", &count.to_string()), ("b", &blocked.to_string())])
             } else {
-                format!("Saved {} of your words \u{2014} press the orb to start.", count)
+                i18n::tp("import.saved", &[("n", &count.to_string())])
             };
             dom::set_text("feedback", &saved_msg);
             dom::el("feedback").set_class_name("feedback good");

@@ -67,7 +67,7 @@
   "import.save": "Zapisz moje słowa",
   "import.clear": "Wyczyść moje słowa",
   "import.close": "Zamknij",
-  "import.note": "Słowa pozostają na tym urządzeniu. Link może zostać zablokowany przez stronę — jeśli się nie uda, skopiuj tekst i wklej powyżej.",
+  "import.note": "Słowa zostają na tym urządzeniu. Link może być zablokowany przez stronę — jeśli się nie uda, skopiuj tekst i wklej powyżej.",
   "age.title": "Kiedy masz urodziny?",
   "age.blurb": "Pytamy, aby pokazać odpowiednie doświadczenie.",
   "age.continue": "Dalej",
@@ -189,5 +189,14 @@
   "jamo.checkInitial": "Sprawdź pierwszą spółgłoskę.",
   "jamo.checkMedial": "Sprawdź samogłoskę.",
   "jamo.checkFinal": "Sprawdź spółgłoskę końcową (받침).",
-  "jamo.spelledOut": "Pisze się: {j}"
+  "jamo.spelledOut": "Pisze się: {j}",
+  "share.button": "Udostępnij swój łańcuch",
+  "share.chain": "🔥 Właśnie przeliterowałem łańcuch {n} słów w Spell! Mój rekord to {best}. słuchaj · literuj · utrzymaj łańcuch →",
+  "share.chainBest": "Ćwiczę ortografię w Spell — mój najlepszy łańcuch to {best} słów. słuchaj · literuj · utrzymaj łańcuch →",
+  "share.tagline": "Spell — słuchaj, literuj. Gra ortograficzna, w którą grasz uszami.",
+  "share.dailyStreak": "🗓 Codzienne SpellGame: {c}/{t} — 🔥 seria {n} dni! słuchaj · literuj →",
+  "share.daily": "🗓 Codzienne SpellGame: {c}/{t}. słuchaj · literuj →",
+  "import.addedFromLink": "Dodano {n} słów z linku.",
+  "import.saved": "Zapisano {n} twoich słów — naciśnij kulę, aby zacząć.",
+  "import.savedSkipped": "Zapisano {n} twoich słów (pominięto {b}) — naciśnij kulę, aby zacząć."
 }

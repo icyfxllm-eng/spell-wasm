@@ -67,7 +67,7 @@
   "import.save": "Spara mina ord",
   "import.clear": "Rensa mina ord",
   "import.close": "Stäng",
-  "import.note": "Orden stannar på den här enheten. En länk kan blockeras av sajten — om det misslyckas, kopiera texten och klistra in ovan.",
+  "import.note": "Orden stannar på den här enheten. En länk kan blockeras av sidan — om det inte funkar, kopiera texten och klistra in ovan.",
   "age.title": "När fyller du år?",
   "age.blurb": "Vi frågar för att visa rätt upplevelse.",
   "age.continue": "Fortsätt",
@@ -189,5 +189,14 @@
   "jamo.checkInitial": "Kolla den första konsonanten.",
   "jamo.checkMedial": "Kolla vokalen.",
   "jamo.checkFinal": "Kolla slutkonsonanten (받침).",
-  "jamo.spelledOut": "Det stavas: {j}"
+  "jamo.spelledOut": "Det stavas: {j}",
+  "share.button": "Dela din kedja",
+  "share.chain": "🔥 Jag stavade precis en kedja på {n} ord i Spell! Mitt rekord är {best}. hör · stava · håll kedjan →",
+  "share.chainBest": "Jag övar stavning i Spell — min bästa kedja är {best} ord. hör · stava · håll kedjan →",
+  "share.tagline": "Spell — hör, stava. Ett stavningsspel du spelar med öronen.",
+  "share.dailyStreak": "🗓 SpellGame Dagligen: {c}/{t} — 🔥 {n} dagar i rad! hör · stava →",
+  "share.daily": "🗓 SpellGame Dagligen: {c}/{t}. hör · stava →",
+  "import.addedFromLink": "La till {n} ord från länken.",
+  "import.saved": "Sparade {n} av dina ord — tryck på klotet för att börja.",
+  "import.savedSkipped": "Sparade {n} av dina ord ({b} hoppades över) — tryck på klotet för att börja."
 }

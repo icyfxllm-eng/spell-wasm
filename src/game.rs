@@ -16,6 +16,11 @@ const RING_C: f64 = 2.0 * std::f64::consts::PI * 108.0;
 
 pub fn code_for(state: &AppState, key: &str) -> String {
     if key == MINE {
+        // Per-word "Speak in" language (mixed-language lists) — the current word's
+        // batch language wins, then the set default, then English.
+        if let Some(l) = state.custom.word_lang.get(&state.word).filter(|l| !l.is_empty()) {
+            return l.clone();
+        }
         return if state.custom.speak_lang.is_empty() { "en-US".to_string() } else { state.custom.speak_lang.clone() };
     }
     match key {

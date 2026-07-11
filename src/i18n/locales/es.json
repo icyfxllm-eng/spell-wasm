@@ -67,7 +67,7 @@
   "import.save": "Guardar mis palabras",
   "import.clear": "Borrar mis palabras",
   "import.close": "Cerrar",
-  "import.note": "Las palabras se quedan en este dispositivo. Un enlace puede ser bloqueado por el sitio; si falla, copia el texto y pégalo arriba.",
+  "import.note": "Las palabras quedan en este dispositivo. Un enlace puede ser bloqueado por el sitio — si falla, copia el texto y pégalo arriba.",
   "age.title": "¿Cuándo es tu cumpleaños?",
   "age.blurb": "Lo preguntamos para mostrarte la experiencia adecuada.",
   "age.continue": "Continuar",
@@ -189,5 +189,14 @@
   "jamo.checkInitial": "Revisa la primera consonante.",
   "jamo.checkMedial": "Revisa la vocal.",
   "jamo.checkFinal": "Revisa la consonante final (받침).",
-  "jamo.spelledOut": "Se escribe: {j}"
+  "jamo.spelledOut": "Se escribe: {j}",
+  "share.button": "Comparte tu cadena",
+  "share.chain": "🔥 ¡Acabo de deletrear una cadena de {n} palabras en Spell! Mi récord es {best}. escúchalo · deletréalo · mantén la cadena →",
+  "share.chainBest": "Practico ortografía en Spell — mi mejor cadena es de {best} palabras. escúchalo · deletréalo · mantén la cadena →",
+  "share.tagline": "Spell — escúchalo, deletréalo. Un juego de ortografía que juegas con los oídos.",
+  "share.dailyStreak": "🗓 Reto diario de SpellGame: {c}/{t} — 🔥 ¡racha de {n} días! escúchalo · deletréalo →",
+  "share.daily": "🗓 Reto diario de SpellGame: {c}/{t}. escúchalo · deletréalo →",
+  "import.addedFromLink": "Se añadieron {n} palabras del enlace.",
+  "import.saved": "Se guardaron {n} de tus palabras — pulsa el orbe para empezar.",
+  "import.savedSkipped": "Se guardaron {n} de tus palabras ({b} omitidas) — pulsa el orbe para empezar."
 }

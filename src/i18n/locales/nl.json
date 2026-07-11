@@ -67,7 +67,7 @@
   "import.save": "Mijn woorden opslaan",
   "import.clear": "Mijn woorden wissen",
   "import.close": "Sluiten",
-  "import.note": "Woorden blijven op dit apparaat. Een link kan door de site geblokkeerd worden — kopieer bij mislukking de tekst en plak die hierboven.",
+  "import.note": "Woorden blijven op dit apparaat. Een link kan door de site geblokkeerd worden — lukt het niet, kopieer de tekst en plak die hierboven.",
   "age.title": "Wanneer ben je jarig?",
   "age.blurb": "We vragen dit om de juiste ervaring te tonen.",
   "age.continue": "Doorgaan",
@@ -189,5 +189,14 @@
   "jamo.checkInitial": "Controleer de eerste medeklinker.",
   "jamo.checkMedial": "Controleer de klinker.",
   "jamo.checkFinal": "Controleer de slotmedeklinker (받침).",
-  "jamo.spelledOut": "Het schrijf je: {j}"
+  "jamo.spelledOut": "Het schrijf je: {j}",
+  "share.button": "Deel je reeks",
+  "share.chain": "🔥 Ik heb net een reeks van {n} woorden gespeld op Spell! Mijn record is {best}. hoor het · spel het · houd de reeks →",
+  "share.chainBest": "Ik oefen spelling op Spell — mijn beste reeks is {best} woorden. hoor het · spel het · houd de reeks →",
+  "share.tagline": "Spell — hoor het, spel het. Een spellingspel dat je met je oren speelt.",
+  "share.dailyStreak": "🗓 SpellGame Dagelijks: {c}/{t} — 🔥 reeks van {n} dagen! hoor het · spel het →",
+  "share.daily": "🗓 SpellGame Dagelijks: {c}/{t}. hoor het · spel het →",
+  "import.addedFromLink": "{n} woorden toegevoegd via de link.",
+  "import.saved": "{n} van je woorden opgeslagen — druk op de bol om te beginnen.",
+  "import.savedSkipped": "{n} van je woorden opgeslagen ({b} overgeslagen) — druk op de bol om te beginnen."
 }

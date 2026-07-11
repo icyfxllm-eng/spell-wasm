@@ -36,6 +36,13 @@ pub struct CustomSet {
     pub words: Vec<String>,
     #[serde(rename = "speakLang")]
     pub speak_lang: String,
+    /// Per-word "Speak in" language (word text -> lang code), so a list saved as
+    /// several batches in different languages speaks each batch in its own voice.
+    /// Words saved before this field existed aren't present here and fall back to
+    /// `speak_lang` (then English). Kept as a side map so `words: Vec<String>`
+    /// and all its call sites stay unchanged.
+    #[serde(default, rename = "wordLang")]
+    pub word_lang: std::collections::HashMap<String, String>,
 }
 
 #[derive(Serialize, Deserialize, Default, Clone)]
@@ -165,7 +172,7 @@ impl Default for AppState {
             volume: 1.0,
             remind: false,
             remind_time: "17:00".into(),
-            custom: CustomSet { words: Vec::new(), speak_lang: "en-US".into() },
+            custom: CustomSet { words: Vec::new(), speak_lang: "en-US".into(), word_lang: Default::default() },
             misses: Vec::new(),
             achievements: AchState::default(),
             stats: Stats::default(),

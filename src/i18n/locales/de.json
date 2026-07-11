@@ -67,7 +67,7 @@
   "import.save": "Meine Wörter speichern",
   "import.clear": "Meine Wörter löschen",
   "import.close": "Schließen",
-  "import.note": "Die Wörter bleiben auf diesem Gerät. Ein Link kann von der Seite blockiert werden – wenn es fehlschlägt, kopiere den Text und füge ihn oben ein.",
+  "import.note": "Die Wörter bleiben auf diesem Gerät. Ein Link kann von der Seite blockiert werden — wenn es fehlschlägt, kopiere den Text und füge ihn oben ein.",
   "age.title": "Wann hast du Geburtstag?",
   "age.blurb": "Wir fragen, um dir das passende Erlebnis zu zeigen.",
   "age.continue": "Weiter",
@@ -189,5 +189,14 @@
   "jamo.checkInitial": "Prüf den ersten Konsonanten.",
   "jamo.checkMedial": "Prüf den Vokal.",
   "jamo.checkFinal": "Prüf den Endkonsonanten (받침).",
-  "jamo.spelledOut": "So schreibt man's: {j}"
+  "jamo.spelledOut": "So schreibt man's: {j}",
+  "share.button": "Teile deine Kette",
+  "share.chain": "🔥 Ich habe gerade eine Kette von {n} Wörtern bei Spell geschafft! Mein Rekord ist {best}. hören · schreiben · Kette halten →",
+  "share.chainBest": "Ich übe Rechtschreibung bei Spell — meine beste Kette sind {best} Wörter. hören · schreiben · Kette halten →",
+  "share.tagline": "Spell — hören, schreiben. Ein Rechtschreibspiel für die Ohren.",
+  "share.dailyStreak": "🗓 SpellGame Täglich: {c}/{t} — 🔥 {n}-Tage-Serie! hören · schreiben →",
+  "share.daily": "🗓 SpellGame Täglich: {c}/{t}. hören · schreiben →",
+  "import.addedFromLink": "{n} Wörter aus dem Link hinzugefügt.",
+  "import.saved": "{n} deiner Wörter gespeichert — tippe auf die Kugel zum Starten.",
+  "import.savedSkipped": "{n} deiner Wörter gespeichert ({b} übersprungen) — tippe auf die Kugel zum Starten."
 }

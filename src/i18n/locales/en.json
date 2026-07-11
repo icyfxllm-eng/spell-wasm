@@ -189,5 +189,14 @@
   "jamo.checkInitial": "Check the first consonant.",
   "jamo.checkMedial": "Check the vowel.",
   "jamo.checkFinal": "Check the final consonant (받침).",
-  "jamo.spelledOut": "It's spelled: {j}"
+  "jamo.spelledOut": "It's spelled: {j}",
+  "share.button": "Share your chain",
+  "share.chain": "🔥 I just spelled a {n}-word chain on Spell! My best is {best}. hear it · spell it · keep the chain →",
+  "share.chainBest": "I'm practicing spelling on Spell — my best chain is {best} words. hear it · spell it · keep the chain →",
+  "share.tagline": "Spell — hear it, spell it. A spelling game you play with your ears.",
+  "share.dailyStreak": "🗓 SpellGame Daily: {c}/{t} — 🔥 {n}-day streak! hear it · spell it →",
+  "share.daily": "🗓 SpellGame Daily: {c}/{t}. hear it · spell it →",
+  "import.addedFromLink": "Added {n} words from the link.",
+  "import.saved": "Saved {n} of your words — press the orb to start.",
+  "import.savedSkipped": "Saved {n} of your words ({b} skipped) — press the orb to start."
 }

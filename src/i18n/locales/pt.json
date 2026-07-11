@@ -189,5 +189,14 @@
   "jamo.checkInitial": "Confira a primeira consoante.",
   "jamo.checkMedial": "Confira a vogal.",
   "jamo.checkFinal": "Confira a consoante final (받침).",
-  "jamo.spelledOut": "Escreve-se: {j}"
+  "jamo.spelledOut": "Escreve-se: {j}",
+  "share.button": "Compartilhe sua sequência",
+  "share.chain": "🔥 Acabei de soletrar uma sequência de {n} palavras no Spell! Meu recorde é {best}. ouça · soletre · mantenha a sequência →",
+  "share.chainBest": "Estou praticando ortografia no Spell — minha melhor sequência é de {best} palavras. ouça · soletre · mantenha a sequência →",
+  "share.tagline": "Spell — ouça, soletre. Um jogo de ortografia que você joga com os ouvidos.",
+  "share.dailyStreak": "🗓 Desafio diário do SpellGame: {c}/{t} — 🔥 sequência de {n} dias! ouça · soletre →",
+  "share.daily": "🗓 Desafio diário do SpellGame: {c}/{t}. ouça · soletre →",
+  "import.addedFromLink": "{n} palavras adicionadas do link.",
+  "import.saved": "{n} das suas palavras salvas — toque no orbe para começar.",
+  "import.savedSkipped": "{n} das suas palavras salvas ({b} ignoradas) — toque no orbe para começar."
 }

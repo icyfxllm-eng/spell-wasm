@@ -67,7 +67,7 @@
   "import.save": "Kelimelerimi kaydet",
   "import.clear": "Kelimelerimi temizle",
   "import.close": "Kapat",
-  "import.note": "Kelimeler bu cihazda kalır. Bir bağlantı site tarafından engellenebilir — başarısız olursa metni kopyalayıp yukarı yapıştır.",
+  "import.note": "Kelimeler bu cihazda kalır. Bir bağlantı site tarafından engellenebilir — başarısız olursa metni kopyalayıp yukarıya yapıştır.",
   "age.title": "Doğum günün ne zaman?",
   "age.blurb": "Doğru deneyimi göstermek için soruyoruz.",
   "age.continue": "Devam",
@@ -189,5 +189,14 @@
   "jamo.checkInitial": "İlk ünsüzü kontrol et.",
   "jamo.checkMedial": "Ünlüyü kontrol et.",
   "jamo.checkFinal": "Son ünsüzü (받침) kontrol et.",
-  "jamo.spelledOut": "Şöyle yazılır: {j}"
+  "jamo.spelledOut": "Şöyle yazılır: {j}",
+  "share.button": "Zincirini paylaş",
+  "share.chain": "🔥 Spell'de {n} kelimelik bir zincir yazdım! Rekorum {best}. dinle · yaz · zinciri koru →",
+  "share.chainBest": "Spell'de yazım pratiği yapıyorum — en iyi zincirim {best} kelime. dinle · yaz · zinciri koru →",
+  "share.tagline": "Spell — dinle, yaz. Kulaklarınla oynadığın bir yazım oyunu.",
+  "share.dailyStreak": "🗓 SpellGame Günlük: {c}/{t} — 🔥 {n} günlük seri! dinle · yaz →",
+  "share.daily": "🗓 SpellGame Günlük: {c}/{t}. dinle · yaz →",
+  "import.addedFromLink": "Bağlantıdan {n} kelime eklendi.",
+  "import.saved": "{n} kelimen kaydedildi — başlamak için küreye bas.",
+  "import.savedSkipped": "{n} kelimen kaydedildi ({b} atlandı) — başlamak için küreye bas."
 }

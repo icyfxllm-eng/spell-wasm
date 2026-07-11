@@ -189,5 +189,14 @@
   "jamo.checkInitial": "Controlla la prima consonante.",
   "jamo.checkMedial": "Controlla la vocale.",
   "jamo.checkFinal": "Controlla la consonante finale (받침).",
-  "jamo.spelledOut": "Si scrive: {j}"
+  "jamo.spelledOut": "Si scrive: {j}",
+  "share.button": "Condividi la tua catena",
+  "share.chain": "🔥 Ho appena scritto una catena di {n} parole su Spell! Il mio record è {best}. ascolta · scrivi · tieni la catena →",
+  "share.chainBest": "Mi alleno con l'ortografia su Spell — la mia catena migliore è di {best} parole. ascolta · scrivi · tieni la catena →",
+  "share.tagline": "Spell — ascolta, scrivi. Un gioco di ortografia che giochi con le orecchie.",
+  "share.dailyStreak": "🗓 Sfida giornaliera di SpellGame: {c}/{t} — 🔥 serie di {n} giorni! ascolta · scrivi →",
+  "share.daily": "🗓 Sfida giornaliera di SpellGame: {c}/{t}. ascolta · scrivi →",
+  "import.addedFromLink": "Aggiunte {n} parole dal link.",
+  "import.saved": "Salvate {n} delle tue parole — premi l'orbe per iniziare.",
+  "import.savedSkipped": "Salvate {n} delle tue parole ({b} saltate) — premi l'orbe per iniziare."
 }

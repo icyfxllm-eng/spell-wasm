@@ -67,7 +67,7 @@
   "import.save": "マイ単語を保存",
   "import.clear": "マイ単語を削除",
   "import.close": "閉じる",
-  "import.note": "単語はこの端末にのみ保存されます。リンク取得はサイトにブロックされることがあります — 失敗したらテキストをコピーして上に貼り付けてください。",
+  "import.note": "単語はこの端末に保存されます。リンクはサイト側でブロックされることがあります — 失敗したらテキストをコピーして上に貼り付けてね。",
   "age.title": "お誕生日はいつ？",
   "age.blurb": "最適な体験を表示するためにお聞きします。",
   "age.continue": "つづける",
@@ -189,5 +189,14 @@
   "jamo.checkInitial": "最初の子音を確認してね。",
   "jamo.checkMedial": "母音を確認してね。",
   "jamo.checkFinal": "パッチム(받침)を確認してね。",
-  "jamo.spelledOut": "こう書くよ: {j}"
+  "jamo.spelledOut": "こう書くよ: {j}",
+  "share.button": "チェーンをシェア",
+  "share.chain": "🔥 Spellで{n}語のチェーンを達成！自己ベストは{best}。聞いて · 書いて · チェーンをつなげ →",
+  "share.chainBest": "Spellでスペルを練習中 — 自己ベストのチェーンは{best}語。聞いて · 書いて · チェーンをつなげ →",
+  "share.tagline": "Spell — 聞いて、書く。耳で遊ぶスペルゲーム。",
+  "share.dailyStreak": "🗓 SpellGame デイリー: {c}/{t} — 🔥 {n}日連続！聞いて · 書いて →",
+  "share.daily": "🗓 SpellGame デイリー: {c}/{t}。聞いて · 書いて →",
+  "import.addedFromLink": "リンクから{n}語を追加しました。",
+  "import.saved": "あなたの単語を{n}語保存しました — オーブを押して開始。",
+  "import.savedSkipped": "あなたの単語を{n}語保存しました（{b}語スキップ） — オーブを押して開始。"
 }

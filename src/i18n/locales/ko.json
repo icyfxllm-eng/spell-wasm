@@ -67,7 +67,7 @@
   "import.save": "내 단어 저장",
   "import.clear": "내 단어 삭제",
   "import.close": "닫기",
-  "import.note": "단어는 이 기기에만 저장됩니다. 링크 가져오기는 사이트에서 막을 수 있습니다 — 실패하면 텍스트를 복사해 위에 붙여넣으세요.",
+  "import.note": "단어는 이 기기에만 저장돼요. 링크는 사이트가 차단할 수 있어요 — 안 되면 텍스트를 복사해서 위에 붙여넣어요.",
   "age.title": "생일이 언제인가요?",
   "age.blurb": "알맞은 경험을 보여드리기 위해 여쭤봅니다.",
   "age.continue": "계속",
@@ -189,5 +189,14 @@
   "jamo.checkInitial": "첫 자음을 확인해 보세요.",
   "jamo.checkMedial": "모음을 확인해 보세요.",
   "jamo.checkFinal": "받침을 확인해 보세요.",
-  "jamo.spelledOut": "이렇게 써요: {j}"
+  "jamo.spelledOut": "이렇게 써요: {j}",
+  "share.button": "체인 공유하기",
+  "share.chain": "🔥 방금 Spell에서 {n}단어 체인을 맞혔어요! 최고 기록은 {best}. 듣고 · 쓰고 · 체인 이어가기 →",
+  "share.chainBest": "Spell에서 철자 연습 중이에요 — 최고 체인은 {best}단어예요. 듣고 · 쓰고 · 체인 이어가기 →",
+  "share.tagline": "Spell — 듣고 쓰세요. 귀로 하는 철자 게임.",
+  "share.dailyStreak": "🗓 SpellGame 데일리: {c}/{t} — 🔥 {n}일 연속! 듣고 · 쓰기 →",
+  "share.daily": "🗓 SpellGame 데일리: {c}/{t}. 듣고 · 쓰기 →",
+  "import.addedFromLink": "링크에서 {n}개 단어를 추가했어요.",
+  "import.saved": "단어 {n}개를 저장했어요 — 구슬을 눌러 시작하세요.",
+  "import.savedSkipped": "단어 {n}개를 저장했어요 ({b}개 제외) — 구슬을 눌러 시작하세요."
 }

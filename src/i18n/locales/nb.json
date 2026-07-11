@@ -67,7 +67,7 @@
   "import.save": "Lagre ordene mine",
   "import.clear": "Tøm ordene mine",
   "import.close": "Lukk",
-  "import.note": "Ordene blir på denne enheten. En lenke kan blokkeres av nettstedet — kopier teksten og lim inn over hvis det feiler.",
+  "import.note": "Ordene blir på denne enheten. En lenke kan blokkeres av nettstedet — hvis det feiler, kopier teksten og lim den inn over.",
   "age.title": "Når har du bursdag?",
   "age.blurb": "Vi spør for å vise riktig opplevelse.",
   "age.continue": "Fortsett",
@@ -189,5 +189,14 @@
   "jamo.checkInitial": "Sjekk den første konsonanten.",
   "jamo.checkMedial": "Sjekk vokalen.",
   "jamo.checkFinal": "Sjekk sluttkonsonanten (받침).",
-  "jamo.spelledOut": "Det staves: {j}"
+  "jamo.spelledOut": "Det staves: {j}",
+  "share.button": "Del kjeden din",
+  "share.chain": "🔥 Jeg stavet nettopp en kjede på {n} ord i Spell! Rekorden min er {best}. hør · stav · hold kjeden →",
+  "share.chainBest": "Jeg øver på staving i Spell — min beste kjede er {best} ord. hør · stav · hold kjeden →",
+  "share.tagline": "Spell — hør, stav. Et stavespill du spiller med ørene.",
+  "share.dailyStreak": "🗓 SpellGame Daglig: {c}/{t} — 🔥 {n} dager på rad! hør · stav →",
+  "share.daily": "🗓 SpellGame Daglig: {c}/{t}. hør · stav →",
+  "import.addedFromLink": "La til {n} ord fra lenken.",
+  "import.saved": "Lagret {n} av ordene dine — trykk på kulen for å starte.",
+  "import.savedSkipped": "Lagret {n} av ordene dine ({b} hoppet over) — trykk på kulen for å starte."
 }

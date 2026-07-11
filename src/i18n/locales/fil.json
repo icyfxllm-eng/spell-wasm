@@ -67,7 +67,7 @@
   "import.save": "I-save ang salita ko",
   "import.clear": "Burahin ang salita ko",
   "import.close": "Isara",
-  "import.note": "Nananatili ang mga salita sa device na ito. Maaaring harangan ng site ang pagkuha ng link — kung mabigo, kopyahin ang teksto at i-paste sa itaas.",
+  "import.note": "Nananatili sa device na ito ang mga salita. Maaaring harangin ng site ang link — kung mabigo, kopyahin ang teksto at i-paste sa itaas.",
   "age.title": "Kailan ang kaarawan mo?",
   "age.blurb": "Nagtatanong kami para maipakita ang tamang karanasan.",
   "age.continue": "Magpatuloy",
@@ -189,5 +189,14 @@
   "jamo.checkInitial": "Tingnan ang unang katinig.",
   "jamo.checkMedial": "Tingnan ang patinig.",
   "jamo.checkFinal": "Tingnan ang huling katinig (받침).",
-  "jamo.spelledOut": "Ganito baybayin: {j}"
+  "jamo.spelledOut": "Ganito baybayin: {j}",
+  "share.button": "Ibahagi ang iyong tanikala",
+  "share.chain": "🔥 Nakabaybay ako ng tanikala na {n} salita sa Spell! Ang record ko ay {best}. pakinggan · baybayin · panatilihin ang tanikala →",
+  "share.chainBest": "Nagsasanay ako mag-ispeling sa Spell — ang pinakamahaba kong tanikala ay {best} salita. pakinggan · baybayin · panatilihin ang tanikala →",
+  "share.tagline": "Spell — pakinggan, baybayin. Larong ispeling na nilalaro mo gamit ang tainga.",
+  "share.dailyStreak": "🗓 SpellGame Araw-araw: {c}/{t} — 🔥 {n}-araw na streak! pakinggan · baybayin →",
+  "share.daily": "🗓 SpellGame Araw-araw: {c}/{t}. pakinggan · baybayin →",
+  "import.addedFromLink": "Nagdagdag ng {n} salita mula sa link.",
+  "import.saved": "Na-save ang {n} sa mga salita mo — pindutin ang orb para magsimula.",
+  "import.savedSkipped": "Na-save ang {n} sa mga salita mo ({b} nilaktawan) — pindutin ang orb para magsimula."
 }
