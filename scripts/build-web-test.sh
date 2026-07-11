@@ -19,7 +19,7 @@ wasm-bindgen target/wasm32-unknown-unknown/release/spell_wasm.wasm \
 echo "==> assembling dist-test/"
 rm -rf "$DIST"
 mkdir -p "$DIST"
-cp index.html ocr-shim.js audio-native.js manifest.json sw.js "$DIST/"
+cp index.html audio-native.js manifest.json sw.js "$DIST/"
 cp -r icons "$DIST/icons"
 cp -r pkg-test "$DIST/pkg"
 

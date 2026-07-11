@@ -24,7 +24,6 @@ const STATIC_ASSETS = [
   "./",
   "./index.html",
   "./manifest.json",
-  "./ocr-shim.js",
   "./audio-native.js",
   "./pkg/spell_wasm.js?v=DEV",
   "./pkg/spell_wasm_bg.wasm?v=DEV",

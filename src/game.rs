@@ -7,7 +7,7 @@ use wasm_bindgen_futures::spawn_local;
 use crate::consts::{is_builtin_lang, tier_time, CORRECT_DELAY_MS, EN, ES, LEVEL_OPTS, MAX_TRIES, MINE, PRAISE, REVIEW};
 use crate::model::AppState;
 use crate::versus::Side;
-use crate::{achievements, api, board, dom, drawing, misses, selection, speech_out, stats, wordstats, words};
+use crate::{achievements, api, board, dom, misses, selection, speech_out, stats, wordstats, words};
 use crate::App;
 
 const RING_C: f64 = 2.0 * std::f64::consts::PI * 108.0;
@@ -123,7 +123,7 @@ fn rand_index(len: usize) -> usize {
 }
 
 /// True while there's a word on screen the player can act on (answer,
-/// replay, draw...).
+/// replay...).
 pub fn has_active_word(state: &AppState) -> bool {
     !state.word.is_empty()
 }
@@ -221,12 +221,6 @@ pub fn sync_keyboard(app: &App) {
     dom::toggle_class("gameKeyboard", "locked", !enabled);
     dom::toggle_class("gameKeyboard", "show-punct", punct);
     dom::toggle_class("spellbox", "focus", enabled);
-}
-
-/// Replace the whole answer (mic transcript, handwriting OCR) and re-render.
-pub fn set_answer(app: &App, value: &str) {
-    app.borrow_mut().answer = value.to_string();
-    render_letters(app, true);
 }
 
 /// Append one typed character (on-screen key or physical keydown). Single char
@@ -703,7 +697,6 @@ pub fn next_word(app: &App) {
     dom::set_html("orbGlyph", &crate::i18n::t("orb.listen"));
     app.borrow_mut().answer.clear();
     render_letters(app, false);
-    drawing::clear_canvas();
     dom::set_disabled("checkBtn", false);
     dom::set_disabled("hintBtn", false);
     dom::set_disabled("giveupBtn", false);
@@ -878,7 +871,6 @@ fn retry_wrong(app: &App, tries_left: u32, verb: &str) {
     dom::set_disabled("sentenceBtn", !is_en);
     app.borrow_mut().answer.clear();
     render_letters(app, false);
-    drawing::clear_canvas();
     dom::add_class("orbWrap", "bad");
     dom::set_text("orbGlyph", "\u{2717}");
     dom::set_html(
@@ -1111,7 +1103,6 @@ pub fn enter_daily(app: &App) {
     dom::set_disabled("modeSel", true);
     app.borrow_mut().answer.clear();
     render_letters(app, false);
-    drawing::clear_canvas();
     dom::set_text("hintLine", "");
     dom::set_text("feedback", "");
     dom::el("feedback").set_class_name("feedback");
@@ -1243,29 +1234,6 @@ pub fn show_today_result(app: &App) {
     show_daily_result(app, correct, words.len() as u32, r.streak, r.best_streak);
 }
 
-/// Show or hide the handwriting (draw) button per the active language's input
-/// modes. Handwriting is only offered where it's a genuine literacy skill (zh/ja;
-/// ko/th behind a flag) — see consts::draw_available. For My Words the eligible
-/// language is the imported list's "Speak in" language. When draw isn't
-/// available the button is removed entirely (not disabled) and any open drawpad
-/// is closed. Call at boot + on every language change.
-pub fn sync_draw_button(app: &App) {
-    let lang = {
-        let s = app.borrow();
-        if s.lang == MINE {
-            mine_lang(&s).unwrap_or("en").to_string()
-        } else {
-            s.lang.clone()
-        }
-    };
-    let available = crate::consts::draw_available(&lang);
-    dom::toggle_class("drawBtn", "btn-hide", !available);
-    if !available {
-        dom::remove_class("drawpad", "show");
-        dom::remove_class("drawBtn", "on");
-    }
-}
-
 /// Update the Daily button label/state (Rust-managed, like the Misses button).
 pub fn refresh_daily_btn(app: &App) {
     let active = app.borrow().daily.active;
@@ -1387,7 +1355,6 @@ pub fn enter_review(app: &App) {
     dom::set_html("orbGlyph", &crate::i18n::t("orb.practiceMisses"));
     app.borrow_mut().answer.clear();
     render_letters(app, false);
-    drawing::clear_canvas();
     dom::set_text("hintLine", "");
     render_tries(app);
     dom::set_text("feedback", &format!("Practicing your misses \u{2014} {} due now.", due));
@@ -1410,7 +1377,6 @@ pub fn exit_review(app: &App, msg: Option<&str>) {
     dom::set_html("orbGlyph", &crate::i18n::t("orb.tap"));
     app.borrow_mut().answer.clear();
     render_letters(app, false);
-    drawing::clear_canvas();
     dom::set_text("hintLine", "");
     render_tries(app);
     update_voice_note(app);
@@ -1509,7 +1475,6 @@ pub fn exit_versus(app: &App) {
     dom::set_html("orbGlyph", &crate::i18n::t("orb.tap"));
     app.borrow_mut().answer.clear();
     render_letters(app, false);
-    drawing::clear_canvas();
     dom::set_text("hintLine", "");
     render_tries(app);
     dom::set_text("streakNum", "0");
@@ -1548,7 +1513,6 @@ fn begin_versus_turn(app: &App) {
     app.borrow_mut().answer.clear();
     render_letters(app, false);
     sync_keyboard(app);
-    drawing::clear_canvas();
     dom::set_text("hintLine", "");
     render_tries(app);
     dom::set_text(

@@ -2,7 +2,6 @@ use wasm_bindgen::JsCast;
 
 use crate::audio_boost;
 use crate::dom;
-use crate::drawing;
 use crate::model::{AppState, Prefs, PREFS_KEY};
 use crate::storage;
 use crate::App;
@@ -66,7 +65,6 @@ pub fn set_glow(app: &App, color: &str) {
     app.borrow_mut().glow = color.to_string();
     dom::set_css_var("--glow", color);
     dom::input("glowColor").set_value(color);
-    drawing::set_color(color);
     sync_swatches("glowPick", ".swatch[data-c]", color);
     save_prefs(&app.borrow());
 }

@@ -240,27 +240,7 @@
   .btn-icon.on{border-color:var(--amber);color:var(--amber-soft)}
   .btn-icon[hidden]{display:none}
 
-  .drawpad{width:100%;margin-top:12px;display:none}
-  .drawpad.show{display:block}
-  .canvas-wrap{position:relative;border:1.5px dashed var(--edge);border-radius:14px;overflow:hidden;background:var(--panel-2)}
-  canvas#canvas{display:block;width:100%;height:160px;touch-action:none;overscroll-behavior:contain;cursor:crosshair;background:repeating-linear-gradient(transparent,transparent 38px,rgba(255,255,255,.05) 39px,rgba(255,255,255,.05) 40px)}
-  .draw-hint{position:absolute;left:16px;top:12px;color:var(--muted-2);font-size:13px;pointer-events:none;transition:opacity .2s}
-  .draw-hint.gone{opacity:0}
 
-  .draw-tool-row{display:flex;align-items:center;gap:6px;flex-wrap:wrap;margin-top:10px}
-  .btn-icon-sm{background:var(--panel);color:var(--ink);border:1px solid var(--edge);border-radius:9px;padding:7px 10px;font-family:var(--body);font-size:12px;font-weight:600;cursor:pointer;display:inline-flex;align-items:center;gap:5px}
-  .btn-icon-sm:hover{border-color:var(--amber)}
-  .btn-icon-sm.on{border-color:var(--amber);color:var(--amber-soft);background:rgba(255,177,77,.1)}
-  .brush-row{display:flex;align-items:center;gap:6px;color:var(--muted-on-bg);font-size:11.5px}
-  .brush-row input[type=range]{width:80px;accent-color:var(--amber)}
-  .draw-palette{display:flex;align-items:center;gap:7px;margin-top:8px;flex-wrap:wrap}
-  .d-swatch{width:18px;height:18px;border-radius:50%;border:2px solid transparent;background:var(--s);cursor:pointer;padding:0;box-shadow:0 0 6px var(--s);transition:transform .12s}
-  .d-swatch:hover{transform:scale(1.12)}
-  .d-swatch.active{border-color:var(--ink)}
-  #drawColor{width:22px;height:22px;border:none;border-radius:6px;padding:0;background:none;cursor:pointer}
-
-  .draw-tools{display:flex;align-items:center;gap:8px;margin-top:10px}
-  .draw-status{flex:1;color:var(--muted-on-bg);font-size:12px;min-height:16px;line-height:1.4}
   .btn-mini{background:var(--amber);color:#36210a;border:none;border-radius:10px;padding:9px 14px;font-family:var(--body);font-weight:600;font-size:13px;cursor:pointer}
   .btn-mini:disabled{opacity:.5;cursor:default}
 
@@ -425,7 +405,6 @@
     .orb-wrap{width:200px;height:200px}
     .orb{width:128px;height:128px}
     .chain .num{font-size:34px}
-    canvas#canvas{height:min(52vh,320px)}
   }
   @media (prefers-reduced-motion: reduce){
     .orb,.orb-wrap.speaking .orb,.orb-wrap.speaking .ring,.sfill,.ltr.pop,.caret{animation:none!important;transition:none!important}
@@ -526,39 +505,9 @@
     </div>
 
     <div class="action-row">
-      <button class="btn btn-icon" id="drawBtn" title="Draw the letters">✏</button>
       <button class="btn btn-check" id="checkBtn" data-i18n="btn.check" disabled>Check spelling</button>
     </div>
 
-    <div class="drawpad" id="drawpad">
-      <div class="canvas-wrap">
-        <canvas id="canvas" aria-label="Draw the word"></canvas>
-        <div class="draw-hint" id="drawHint">write the word here</div>
-      </div>
-
-      <div class="draw-tool-row">
-        <button class="btn-icon-sm on" id="toolPen" title="Pen">✏ Pen</button>
-        <button class="btn-icon-sm" id="toolLine" title="Straight line / ruler">📏 Line</button>
-        <button class="btn-icon-sm" id="toolEraser" title="Eraser">🧹 Eraser</button>
-        <label class="brush-row">size <input type="range" id="brushSize" min="2" max="14" step="1" value="4" aria-label="Brush size" /></label>
-        <button class="btn-icon-sm" id="guideToggle" title="Letter guide lines (baseline &amp; x-height)">▤ Guide</button>
-      </div>
-      <div class="draw-palette" id="drawPalette">
-        <button class="d-swatch" style="--s:#ffffff" data-c="#ffffff" aria-label="White ink"></button>
-        <button class="d-swatch" style="--s:#ffb14d" data-c="#ffb14d" aria-label="Amber ink"></button>
-        <button class="d-swatch" style="--s:#46d6b8" data-c="#46d6b8" aria-label="Teal ink"></button>
-        <button class="d-swatch" style="--s:#ff6b7a" data-c="#ff6b7a" aria-label="Coral ink"></button>
-        <button class="d-swatch" style="--s:#7aa2ff" data-c="#7aa2ff" aria-label="Blue ink"></button>
-        <input type="color" id="drawColor" value="#ffb14d" aria-label="Custom ink color" />
-      </div>
-
-      <div class="draw-tools">
-        <button class="ghost" id="undoStroke">Undo</button>
-        <button class="ghost danger" id="clearCanvas">Clear</button>
-        <span class="draw-status" id="drawStatus"></span>
-        <button class="btn-mini" id="readWriting" data-i18n="btn.readWriting">Read my writing</button>
-      </div>
-    </div>
 
     <div class="minor-row">
       <button class="ghost" id="hintBtn" data-i18n="btn.hint" disabled>Hint</button>
@@ -597,7 +546,7 @@
   </section>
 
   <div class="foot" data-i18n-html="help.howItWorks">
-    <b>How it works:</b> press the orb to hear a word, then type, speak, or draw its spelling — a meaning appears after each answer, and misses return over days under <b>↻ Misses</b>.
+    <b>How it works:</b> press the orb to hear a word, then type or speak its spelling — a meaning appears after each answer, and misses return over days under <b>↻ Misses</b>.
     Everything is free. English words are read aloud by your word server; import your own under <b>＋ My words</b> to practice anything, spoken with your browser's voices — smoothest in Chrome or Edge on a computer. Progress is saved in this browser only.
   </div>
 
@@ -831,7 +780,6 @@
        Classic script so window.SpellAudio is defined before the WASM module
        runs. -->
   <script src="./audio-native.js"></script>
-  <script type="module" src="./ocr-shim.js"></script>
   <script type="module">
     import init from './pkg/spell_wasm.js?v=DEV';
     // The compiled app (~1.4MB of WASM) has to finish downloading and

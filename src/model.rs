@@ -93,7 +93,7 @@ pub struct AppState {
     /// The player's in-progress spelling. Held here (not in a DOM `<input>`) so
     /// the iOS system keyboard — with its dictation key and autocorrect — never
     /// opens during a round. Driven by the custom on-screen keyboard, physical
-    /// keydown (desktop), and handwriting OCR; rendered into #letters.
+    /// keydown (desktop); rendered into #letters.
     pub answer: String,
     pub cur_lang: String,
     pub cur_tier: String,

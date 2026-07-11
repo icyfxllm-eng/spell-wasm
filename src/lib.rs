@@ -7,10 +7,7 @@ mod climb;
 mod consts;
 mod daily;
 mod deck;
-mod digital_ink;
 mod dom;
-mod draw_judge;
-mod drawing;
 pub mod editor;
 mod enrich;
 mod game;
@@ -98,7 +95,6 @@ pub fn start() -> Result<(), JsValue> {
     game::build_level_options(&app);
     game::refresh_mode_buttons(&app);
     game::refresh_daily_btn(&app);
-    game::sync_draw_button(&app);
     game::render_letters(&app, false);
     i18n::translate_page();
     {
@@ -142,7 +138,6 @@ pub fn start() -> Result<(), JsValue> {
 fn wire(app: &App) {
     wire_orb_and_answer(app);
     wire_glow_and_settings(app);
-    wire_drawing(app);
     wire_modes(app);
     wire_source_level(app);
     wire_import(app);
@@ -279,43 +274,6 @@ fn wire_orb_and_answer(app: &App) {
     {
         let a = app.clone();
         dom::on_click("checkBtn", move || {
-            // If the player drew their answer instead of typing it (and
-            // hasn't already run "Read my writing" to fill the box), read
-            // the drawing first so Check works directly on a drawn
-            // submission — not just on typed/spoken text.
-            if a.borrow().answer.trim().is_empty() && drawing::has_strokes() {
-                let a2 = a.clone();
-                dom::set_disabled("checkBtn", true);
-                spawn_local(async move {
-                    dom::set_text("drawStatus", &i18n::t("draw.reading"));
-                    match drawing::read_writing().await {
-                        drawing::OcrOutcome::Confident(txt) => {
-                            game::set_answer(&a2, &txt);
-                            dom::set_text("drawStatus", &format!("Read \u{201c}{}\u{201d} \u{2014} checking\u{2026}", txt));
-                            dom::set_disabled("checkBtn", false);
-                            game::submit_guess(&a2);
-                        }
-                        drawing::OcrOutcome::Unsure(txt) => {
-                            // Not confident enough to score automatically —
-                            // a bad read would otherwise silently mark a
-                            // correctly-spelled word wrong. Fill the box for
-                            // the player to confirm or fix, then Check again.
-                            game::set_answer(&a2, &txt);
-                            dom::set_text("drawStatus", &format!("Not sure I read that right \u{2014} got \u{201c}{}\u{201d}. Fix it if needed, then press Check again.", txt));
-                            dom::set_disabled("checkBtn", false);
-                        }
-                        drawing::OcrOutcome::Empty => {
-                            dom::set_text("drawStatus", &i18n::t("draw.unreadable"));
-                            dom::set_disabled("checkBtn", false);
-                        }
-                        drawing::OcrOutcome::Failed => {
-                            dom::set_text("drawStatus", &i18n::t("draw.readerFail"));
-                            dom::set_disabled("checkBtn", false);
-                        }
-                    }
-                });
-                return;
-            }
             game::submit_guess(&a);
         });
     }
@@ -468,126 +426,6 @@ fn wire_glow_and_settings(app: &App) {
     });
 }
 
-fn set_active_tool_button(id: &str) {
-    for b in ["toolPen", "toolEraser", "toolLine"] {
-        dom::toggle_class(b, "on", b == id);
-    }
-}
-
-fn wire_drawing(app: &App) {
-    dom::on_click("drawBtn", || {
-        let showing = !dom::el("drawpad").class_list().contains("show");
-        dom::toggle_class("drawpad", "show", showing);
-        dom::toggle_class("drawBtn", "on", showing);
-        if showing {
-            drawing::size_canvas();
-            dom::set_text("drawStatus", &i18n::t("draw.prompt"));
-        }
-    });
-
-    dom::on::<web_sys::PointerEvent, _>("canvas", "pointerdown", |e| drawing::start_stroke(&e));
-    dom::on::<web_sys::PointerEvent, _>("canvas", "pointermove", |e| drawing::move_stroke(&e));
-    dom::on::<web_sys::PointerEvent, _>("canvas", "pointerup", |e| drawing::end_stroke(&e));
-    dom::on::<web_sys::PointerEvent, _>("canvas", "pointercancel", |e| drawing::end_stroke(&e));
-    dom::on::<web_sys::PointerEvent, _>("canvas", "pointerleave", |e| drawing::end_stroke(&e));
-
-    dom::on_click("undoStroke", || drawing::undo_stroke());
-    dom::on_click("clearCanvas", || {
-        drawing::clear_canvas();
-        dom::set_text("drawStatus", "");
-    });
-
-    dom::on_click("toolPen", || {
-        drawing::set_tool(drawing::Tool::Pen);
-        set_active_tool_button("toolPen");
-    });
-    dom::on_click("toolEraser", || {
-        drawing::set_tool(drawing::Tool::Eraser);
-        set_active_tool_button("toolEraser");
-    });
-    dom::on_click("toolLine", || {
-        drawing::set_tool(drawing::Tool::Line);
-        set_active_tool_button("toolLine");
-    });
-    dom::on::<web_sys::Event, _>("brushSize", "input", |_| {
-        let v: f64 = dom::input("brushSize").value().parse().unwrap_or(4.0);
-        drawing::set_brush(v);
-    });
-    dom::on_click("guideToggle", || {
-        let now_on = !dom::el("guideToggle").class_list().contains("on");
-        drawing::set_guide(now_on);
-        dom::toggle_class("guideToggle", "on", now_on);
-    });
-    if let Ok(list) = dom::doc().query_selector_all(".d-swatch[data-c]") {
-        for i in 0..list.length() {
-            if let Some(node) = list.get(i) {
-                if let Some(el) = node.dyn_ref::<web_sys::HtmlElement>() {
-                    let color = el.get_attribute("data-c").unwrap_or_default();
-                    let cb = Closure::<dyn FnMut()>::new(move || drawing::set_color(&color));
-                    el.add_event_listener_with_callback("click", cb.as_ref().unchecked_ref()).ok();
-                    cb.forget();
-                }
-            }
-        }
-    }
-    dom::on::<web_sys::Event, _>("drawColor", "input", |_| {
-        let v = dom::input("drawColor").value();
-        drawing::set_color(&v);
-    });
-
-    dom::on_window::<web_sys::Event, _>("resize", |_| {
-        if dom::el("drawpad").class_list().contains("show") {
-            // size_canvas() already calls redraw_all(), which replays the
-            // existing strokes at the new scale — no need to (and
-            // shouldn't) clear them first, or an orientation change would
-            // wipe out whatever the player had drawn.
-            drawing::size_canvas();
-        }
-    });
-
-    {
-        let a = app.clone();
-        dom::on_click("readWriting", move || {
-            let a2 = a.clone();
-            spawn_local(async move {
-                dom::set_disabled("readWriting", true);
-                let (answered, active) = {
-                    let s = a2.borrow();
-                    (s.answered, game::has_active_word(&s))
-                };
-                if !active || answered {
-                    dom::set_text("drawStatus", &i18n::t("draw.needWord"));
-                    dom::set_disabled("readWriting", false);
-                    return;
-                }
-                if !drawing::has_strokes() {
-                    dom::set_text("drawStatus", &i18n::t("draw.needStrokes"));
-                    dom::set_disabled("readWriting", false);
-                    return;
-                }
-                dom::set_text("drawStatus", &i18n::t("draw.readingFirst"));
-                match drawing::read_writing().await {
-                    drawing::OcrOutcome::Confident(txt) => {
-                        game::set_answer(&a2, &txt);
-                        dom::set_text("drawStatus", &format!("Read \u{201c}{}\u{201d} \u{2014} confirm or fix, then Check.", txt));
-                    }
-                    drawing::OcrOutcome::Unsure(txt) => {
-                        game::set_answer(&a2, &txt);
-                        dom::set_text("drawStatus", &format!("Not sure I read that right \u{2014} got \u{201c}{}\u{201d}. Fix it if needed, then Check.", txt));
-                    }
-                    drawing::OcrOutcome::Empty => {
-                        dom::set_text("drawStatus", &i18n::t("draw.unreadable"));
-                    }
-                    drawing::OcrOutcome::Failed => {
-                        dom::set_text("drawStatus", &i18n::t("draw.readerFailSaved"));
-                    }
-                }
-                dom::set_disabled("readWriting", false);
-            });
-        });
-    }
-}
-
 fn wire_modes(app: &App) {
     {
         let a = app.clone();
@@ -672,13 +510,11 @@ fn wire_source_level(app: &App) {
             dom::set_html("orbGlyph", &i18n::t("orb.tap"));
             a.borrow_mut().answer.clear();
             game::render_letters(&a, false);
-            drawing::clear_canvas();
             dom::set_text("feedback", "");
             dom::set_text("hintLine", "");
             game::build_level_options(&a);
             game::refresh_mode_buttons(&a);
             game::refresh_daily_btn(&a);
-            game::sync_draw_button(&a);
             keyboard::rebuild(&a);
             i18n::translate_page();
             climb::reflect_auth();
@@ -795,7 +631,6 @@ fn wire_import(app: &App) {
             game::build_source_options(&a);
             game::build_level_options(&a);
             keyboard::rebuild(&a); // match the imported list's "Speak in" language
-            game::sync_draw_button(&a);
             stats::render(&a.borrow());
             board::render(&a.borrow());
             game::refresh_mode_buttons(&a);

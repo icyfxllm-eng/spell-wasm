@@ -1,6 +1,6 @@
 use wasm_bindgen::closure::Closure;
 use wasm_bindgen::JsCast;
-use web_sys::{Document, Element, HtmlCanvasElement, HtmlInputElement, HtmlSelectElement, HtmlTextAreaElement, Window};
+use web_sys::{Document, Element, HtmlInputElement, HtmlSelectElement, HtmlTextAreaElement, Window};
 
 pub fn window() -> Window {
     web_sys::window().expect("no window")
@@ -30,10 +30,6 @@ pub fn select(id: &str) -> HtmlSelectElement {
 
 pub fn textarea(id: &str) -> HtmlTextAreaElement {
     el(id).dyn_into::<HtmlTextAreaElement>().unwrap_or_else(|_| panic!("#{id} is not a textarea"))
-}
-
-pub fn canvas(id: &str) -> HtmlCanvasElement {
-    el(id).dyn_into::<HtmlCanvasElement>().unwrap_or_else(|_| panic!("#{id} is not a canvas"))
 }
 
 pub fn set_text(id: &str, text: &str) {
