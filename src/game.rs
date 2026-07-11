@@ -1197,16 +1197,20 @@ fn daily_answer(app: &App, correct: bool) {
         crate::haptics::correct();
         app.borrow_mut().daily.correct += 1;
         dom::add_class("orbWrap", "good");
+        spell_feedback(true);
         dom::set_text("orbGlyph", "\u{2713}");
         dom::set_text("feedback", &crate::i18n::t(&format!("praise.{}", rand_index(8) + 1)));
         dom::el("feedback").set_class_name("feedback good");
     } else {
         crate::haptics::incorrect(kid);
         dom::add_class("orbWrap", "bad");
+        spell_feedback(false);
         dom::set_text("orbGlyph", "\u{2717}");
         dom::set_html("feedback", &format!("{}<span class=\"reveal\">{}</span>", crate::i18n::t("fb.itWas"), dom::escape_html(&word)));
         dom::el("feedback").set_class_name("feedback bad");
     }
+    // Streak warmth in Daily rides the run's cumulative correct count.
+    set_streak_tier(app.borrow().daily.correct);
     show_meaning(app, word, cur_lang);
     render_daily_bar(app);
 }
@@ -1562,6 +1566,9 @@ fn versus_on_correct(app: &App) {
     render_versus_bar(app);
 
     dom::add_class("orbWrap", "good");
+    spell_feedback(true);
+    // Head-to-head warmth rides the active player's current chain.
+    set_streak_tier(app.borrow().versus.active_player().current);
     dom::set_text("orbGlyph", "\u{2713}");
     let praise = {
         let s = app.borrow();
