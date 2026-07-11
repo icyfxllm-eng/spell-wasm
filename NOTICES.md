@@ -14,3 +14,16 @@ build inputs and are not redistributed.
 
 Derived works (definitions shown in-app) are shared under CC BY-SA 4.0 where
 CC-CEDICT-derived, per that license's share-alike terms.
+
+## Japanese (ja)
+- **JLPT word lists** — via `elzup/jlpt-word-list` (GitHub): word + reading +
+  meaning + JLPT level. Meanings are JMdict-derived (EDRDG, CC BY-SA).
+- **KANJIDIC2** — © EDRDG, **Creative Commons BY-SA**. Kyōiku school grade per kanji.
+
+## Korean (ko) / Thai (th)
+- **OpenSubtitles frequency lists** — `hermitdave/FrequencyWords`, **CC BY-SA 4.0**.
+  Used as a documented SUBSTITUTE for TOPIK / Thai school-grade lists (not freely
+  redistributable). Tiering signal only.
+- **PyThaiNLP** word list (th) — Apache-2.0. Dictionary validation.
+- NOTE: no open ko-en / th-en dictionary was reachable; these pools ship without
+  English definitions pending a licensed source.
