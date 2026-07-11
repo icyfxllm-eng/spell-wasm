@@ -32,6 +32,8 @@
   },
   "devDependencies": {
     "@capacitor/assets": "^3.0.5",
-    "playwright": "^1.61.1"
+    "playwright": "^1.61.1",
+    "hanzi-writer": "^3.7.3",
+    "hanzi-writer-data": "^2.0.1"
   }
 }
