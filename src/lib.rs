@@ -146,6 +146,13 @@ fn wire(app: &App) {
     wire_age_gate(app);
     keyboard::setup(app);
     climb::setup(app);
+
+    // Clear the spell-box feedback color state (F1) when its animation ends —
+    // animationend, never a timeout, so it can't race a rapid next answer.
+    dom::on::<web_sys::Event, _>("spellbox", "animationend", |_| {
+        dom::remove_class("spellbox", "is-correct");
+        dom::remove_class("spellbox", "is-wrong");
+    });
 }
 
 thread_local! {

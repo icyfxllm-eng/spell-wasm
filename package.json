@@ -17,7 +17,8 @@
     "android": "npm run sync && cap run android",
     "release:android": "npm run sync && cd android && ./gradlew :app:bundleRelease",
     "sync:ios": "npm run build && cap sync ios",
-    "version:set": "node scripts/bump-version.mjs"
+    "version:set": "node scripts/bump-version.mjs",
+    "check:contrast": "node scripts/check-contrast.mjs"
   },
   "dependencies": {
     "@capacitor-community/native-audio": "^8.0.0",

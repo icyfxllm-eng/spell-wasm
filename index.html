@@ -30,6 +30,13 @@
     --glow:#ffb14d;
     --bg-color:#1c1830;
     --orb-color:#ffb14d;
+    /* Feedback + streak state tokens. GLOBAL — identical across every language
+       and in Kid + non-Kid mode (kids learn one signal). success=green family,
+       warn=WARM AMBER (never red / screen-flash, D3). */
+    --success:#46d6b8; --success-glow:rgba(70,214,184,.55);
+    --warn:#ff9e57; --warn-glow:rgba(255,158,87,.5);
+    /* Streak warmth: --glow nudges warmer in pre-designed steps (D5); accent only. */
+    --glow-streak-1:#ffb14d; --glow-streak-2:#ff9a3f; --glow-streak-3:#ff8330;
     --orb-text:#3a230a;
     --display:'Bricolage Grotesque',sans-serif;
     --body:'Instrument Sans',system-ui,sans-serif;
@@ -164,8 +171,25 @@
   .swatch.custom input,.theme-swatch.custom input{position:absolute;inset:-6px;opacity:0;cursor:pointer}
   .theme-pick{display:flex;align-items:center;gap:7px;flex-wrap:wrap}
 
-  .spellbox{position:relative;width:100%;background:var(--panel-2);border:1.5px solid var(--edge);border-radius:14px;transition:border-color .15s,box-shadow .15s}
+  .spellbox{position:relative;width:100%;background:var(--panel-2);border:1.5px solid var(--edge);border-radius:14px;transition:border-color .3s ease,box-shadow .3s ease}
   .spellbox.focus{border-color:var(--amber);box-shadow:0 0 0 4px rgba(255,177,77,.12)}
+  /* F1 answer feedback (global, identical every language + Kid Mode). Input is
+     preserved so the player can fix, not retype. Classes cleared on animationend. */
+  .spellbox.is-correct{border-color:var(--success);box-shadow:0 0 0 4px var(--success-glow);animation:fbHold .5s ease}
+  .spellbox.is-wrong{border-color:var(--warn);box-shadow:0 0 0 4px var(--warn-glow);animation:wrongFb .4s ease}
+  /* Both animations exist so the state class is removed on animationend (no
+     timeouts racing). Correct holds ≤500ms; wrong shakes ≤160ms (≤6px, warm,
+     never a screen flash — D3) then holds the glow to 400ms. */
+  @keyframes fbHold{0%,100%{opacity:1}}
+  @keyframes wrongFb{0%,40%,100%{transform:translateX(0)}10%{transform:translateX(-6px)}20%{transform:translateX(5px)}30%{transform:translateX(-3px)}}
+  /* F2 streak warmth: consecutive-correct tier warms --glow only, never text/ink (D5). */
+  .stage[data-streak-tier="1"]{--glow:var(--glow-streak-1)}
+  .stage[data-streak-tier="2"]{--glow:var(--glow-streak-2)}
+  .stage[data-streak-tier="3"]{--glow:var(--glow-streak-3)}
+  /* F3 per-language accents — REVIEW-GATED palette (ja: sakura, zh: red-gold).
+     Only accent/glow tokens; success/warn stay GLOBAL (I5). Other 15 langs = default. */
+  :root[data-lang="ja"]{--glow:#ff8fab;--amber:#ff8fab;--amber-soft:#ffc2d1;--glow-streak-1:#ff8fab;--glow-streak-2:#ff6f91;--glow-streak-3:#ff4f77}
+  :root[data-lang="zh"]{--glow:#e6b422;--amber:#e63946;--amber-soft:#f4c95d;--glow-streak-1:#e6b422;--glow-streak-2:#e0952a;--glow-streak-3:#d67d2e}
   .letters{position:relative;z-index:1;min-height:62px;display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:.02em;padding:18px;pointer-events:none}
   .ltr{font-family:var(--mono);font-size:24px;font-weight:700;color:var(--glow);text-shadow:0 0 7px var(--glow),0 0 16px var(--glow);line-height:1}
   .ltr.space{width:.45em;text-shadow:none}
@@ -407,7 +431,8 @@
     .chain .num{font-size:34px}
   }
   @media (prefers-reduced-motion: reduce){
-    .orb,.orb-wrap.speaking .orb,.orb-wrap.speaking .ring,.sfill,.ltr.pop,.caret{animation:none!important;transition:none!important}
+    /* D8: motion is garnish — kill shake/pop; color state (success/warn/streak) stays perceivable. */
+    .orb,.orb-wrap.speaking .orb,.orb-wrap.speaking .ring,.sfill,.ltr.pop,.caret,.orb-wrap.bad .orb,.spellbox.is-wrong{animation:none!important;transition:none!important}
   }
 </style>
 </head>
@@ -455,7 +480,7 @@
   <!-- Daily Challenge progress banner (hidden outside a daily run) -->
   <div class="daily-bar btn-hide" id="dailyBar" aria-live="polite"></div>
 
-  <main class="stage">
+  <main class="stage" id="stage">
     <div class="orb-wrap" id="orbWrap" role="button" tabindex="0" aria-label="Play the word">
       <svg class="timer-ring" id="timerRing" viewBox="0 0 230 230" aria-hidden="true">
         <circle class="t-track" cx="115" cy="115" r="108"></circle>

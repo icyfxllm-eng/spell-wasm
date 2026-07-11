@@ -150,6 +150,9 @@ pub fn translate_page() {
     update_tagline();
     if let Some(de) = dom::doc().document_element() {
         let _ = de.set_attribute("lang", &current());
+        // data-lang drives the per-language accent tokens (F3); only ja/zh have a
+        // theme block, every other language falls through to the default palette.
+        let _ = de.set_attribute("data-lang", &current());
     }
 }
 

@@ -843,6 +843,8 @@ fn on_correct(app: &App) {
     dom::set_text("streakNum", &streak.to_string());
     dom::set_text("bestNum", &app.borrow().best.to_string());
     dom::add_class("orbWrap", "good");
+    spell_feedback(true);
+    set_streak_tier(streak);
     dom::set_text("orbGlyph", "\u{2713}");
     dom::set_text("feedback", &pick_praise(app));
     dom::el("feedback").set_class_name("feedback good");
@@ -850,6 +852,23 @@ fn on_correct(app: &App) {
     achievements::check_streak(&mut app.borrow_mut());
 
     schedule(app, CORRECT_DELAY_MS, |app| next_word(app));
+}
+
+/// Feedback color state on the spell box (F1). GLOBAL — identical in every
+/// language and in Kid + non-Kid mode (kids learn one signal). Removing both
+/// classes first restarts cleanly on rapid consecutive answers; the class is
+/// then cleared on animationend (wired in lib.rs).
+fn spell_feedback(correct: bool) {
+    dom::remove_class("spellbox", "is-correct");
+    dom::remove_class("spellbox", "is-wrong");
+    dom::add_class("spellbox", if correct { "is-correct" } else { "is-wrong" });
+}
+
+/// Streak warmth tier (F2, D5): 0 (<3 in a row), 1 (3–5), 2 (6+). Warms the
+/// `--glow` accent only — never text or button ink. A miss sets 0 immediately.
+fn set_streak_tier(streak: u32) {
+    let tier = if streak >= 6 { "2" } else if streak >= 3 { "1" } else { "0" };
+    let _ = dom::el("stage").set_attribute("data-streak-tier", tier);
 }
 
 /// Consumes one attempt at the current word, returning how many remain.
@@ -872,6 +891,8 @@ fn retry_wrong(app: &App, tries_left: u32, verb: &str) {
     app.borrow_mut().answer.clear();
     render_letters(app, false);
     dom::add_class("orbWrap", "bad");
+    spell_feedback(false);
+    set_streak_tier(0);
     dom::set_text("orbGlyph", "\u{2717}");
     dom::set_html(
         "feedback",
@@ -908,6 +929,8 @@ fn finalize_incorrect(app: &App, glyph: &str, prefix: &str, feedback_class: &str
     }
 
     dom::add_class("orbWrap", "bad");
+    spell_feedback(false);
+    set_streak_tier(0);
     dom::set_text("orbGlyph", glyph);
     // Mandarin reveals the pinyin answer + the hanzi it stands for.
     let reveal = if cur_lang == crate::consts::ZH {
