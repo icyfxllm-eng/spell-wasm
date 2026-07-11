@@ -1136,6 +1136,29 @@ pub fn show_today_result(app: &App) {
     show_daily_result(app, correct, words.len() as u32, r.streak, r.best_streak);
 }
 
+/// Show or hide the handwriting (draw) button per the active language's input
+/// modes. Handwriting is only offered where it's a genuine literacy skill (zh/ja;
+/// ko/th behind a flag) — see consts::draw_available. For My Words the eligible
+/// language is the imported list's "Speak in" language. When draw isn't
+/// available the button is removed entirely (not disabled) and any open drawpad
+/// is closed. Call at boot + on every language change.
+pub fn sync_draw_button(app: &App) {
+    let lang = {
+        let s = app.borrow();
+        if s.lang == MINE {
+            mine_lang(&s).unwrap_or("en").to_string()
+        } else {
+            s.lang.clone()
+        }
+    };
+    let available = crate::consts::draw_available(&lang);
+    dom::toggle_class("drawBtn", "btn-hide", !available);
+    if !available {
+        dom::remove_class("drawpad", "show");
+        dom::remove_class("drawBtn", "on");
+    }
+}
+
 /// Update the Daily button label/state (Rust-managed, like the Misses button).
 pub fn refresh_daily_btn(app: &App) {
     let active = app.borrow().daily.active;

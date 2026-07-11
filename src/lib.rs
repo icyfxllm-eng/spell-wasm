@@ -91,6 +91,7 @@ pub fn start() -> Result<(), JsValue> {
     game::build_level_options(&app);
     game::refresh_mode_buttons(&app);
     game::refresh_daily_btn(&app);
+    game::sync_draw_button(&app);
     game::render_letters(&app, false);
     i18n::translate_page();
     {
@@ -670,6 +671,7 @@ fn wire_source_level(app: &App) {
             game::build_level_options(&a);
             game::refresh_mode_buttons(&a);
             game::refresh_daily_btn(&a);
+            game::sync_draw_button(&a);
             keyboard::rebuild(&a);
             i18n::translate_page();
             climb::reflect_auth();
@@ -787,6 +789,7 @@ fn wire_import(app: &App) {
             game::build_source_options(&a);
             game::build_level_options(&a);
             keyboard::rebuild(&a); // match the imported list's "Speak in" language
+            game::sync_draw_button(&a);
             stats::render(&a.borrow());
             board::render(&a.borrow());
             game::refresh_mode_buttons(&a);

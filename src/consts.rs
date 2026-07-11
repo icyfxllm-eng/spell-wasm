@@ -69,6 +69,24 @@ pub fn is_builtin_lang(lang: &str) -> bool {
     BUILTIN_LANGS.iter().any(|(code, _)| *code == lang)
 }
 
+/// Feature flag: Korean + Thai handwriting are OFF by default, pending
+/// native-auditor review of their cultural practice grids (spec step 10).
+pub const DRAW_KO_TH_ENABLED: bool = false;
+
+/// Per-locale input-mode gating for the handwriting (draw) mode. Handwriting is
+/// offered ONLY where it's a genuine literacy skill AND a stroke recognizer
+/// exists — Chinese and Japanese (Korean/Thai behind DRAW_KO_TH_ENABLED).
+/// Every other locale — English, all European, Vietnamese (Latin script;
+/// tone marks are a keyboard skill), Filipino, and Latin My Words — is
+/// type + speak only, and the draw button must not render at all.
+pub fn draw_available(lang: &str) -> bool {
+    match lang {
+        ZH | JA => true,
+        KO | TH => DRAW_KO_TH_ENABLED,
+        _ => false,
+    }
+}
+
 pub const CORRECT_DELAY_MS: i32 = 2200;
 
 /// Attempts allowed per word, across every mode (English, My Words, Misses).
