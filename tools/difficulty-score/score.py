@@ -48,7 +48,7 @@ def features(word: str, lang: str) -> list[str]:
 def report(lang: str) -> dict:
     ext = EXTRACTORS.get(lang)
     if not ext:
-        return {"lang": lang, "skipped": "no extractor (pilot: en/zh/vi)"}
+        return {"lang": lang, "skipped": "no extractor"}
     expert = load_tier(lang, "expert")
     if not expert and lang == "zh":
         # zh Expert lives in src/words.rs; sample a few known entries for the pilot.
@@ -70,11 +70,11 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--lang")
     args = ap.parse_args()
-    langs = [args.lang] if args.lang else ["en", "zh", "vi"]
+    langs = [args.lang] if args.lang else list(EXTRACTORS.keys())
 
     out = ROOT / "tools" / "difficulty-score" / "out"
     out.mkdir(exist_ok=True)
-    lines = ["# Expert-pool feature coverage (pilot: en, zh, vi)", "",
+    lines = ["# Expert-pool feature coverage — all 17 languages", "",
              "Every Expert word should carry ≥1 `hardBecause` feature. Words listed",
              "under 'no feature' are long/rare but not verifiably hard to SPELL —",
              "candidates to demote or replace once the scoring pipeline has real",
