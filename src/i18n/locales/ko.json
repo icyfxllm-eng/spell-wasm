@@ -185,5 +185,9 @@
   "speech.noVoice": "이 브라우저는 음성을 낼 수 없어요 — Chrome이나 Edge를 사용해 보세요.",
   "meaning.noDef": "이 단어의 뜻을 찾지 못했어요.",
   "meaning.noExample": "이 단어의 예문을 찾지 못했어요.",
-  "orb.practiceMisses": "틀린 단어<br/>연습하려면 누르기"
+  "orb.practiceMisses": "틀린 단어<br/>연습하려면 누르기",
+  "jamo.checkInitial": "첫 자음을 확인해 보세요.",
+  "jamo.checkMedial": "모음을 확인해 보세요.",
+  "jamo.checkFinal": "받침을 확인해 보세요.",
+  "jamo.spelledOut": "이렇게 써요: {j}"
 }

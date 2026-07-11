@@ -185,5 +185,9 @@
   "speech.noVoice": "此浏览器无法朗读 — 请试试 Chrome 或 Edge。",
   "meaning.noDef": "没有找到这个单词的释义。",
   "meaning.noExample": "没有找到这个单词的例句。",
-  "orb.practiceMisses": "点击<br/>练习错词"
+  "orb.practiceMisses": "点击<br/>练习错词",
+  "jamo.checkInitial": "检查第一个辅音。",
+  "jamo.checkMedial": "检查元音。",
+  "jamo.checkFinal": "检查收尾辅音（받침）。",
+  "jamo.spelledOut": "这样拼写：{j}"
 }

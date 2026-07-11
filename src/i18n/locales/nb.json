@@ -185,5 +185,9 @@
   "speech.noVoice": "Denne nettleseren kan ikke snakke — prøv Chrome eller Edge.",
   "meaning.noDef": "Fant ingen definisjon for dette ordet.",
   "meaning.noExample": "Fant ingen eksempelsetning for dette ordet.",
-  "orb.practiceMisses": "trykk for å<br/>øve på bom"
+  "orb.practiceMisses": "trykk for å<br/>øve på bom",
+  "jamo.checkInitial": "Sjekk den første konsonanten.",
+  "jamo.checkMedial": "Sjekk vokalen.",
+  "jamo.checkFinal": "Sjekk sluttkonsonanten (받침).",
+  "jamo.spelledOut": "Det staves: {j}"
 }

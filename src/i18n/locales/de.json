@@ -185,5 +185,9 @@
   "speech.noVoice": "Dieser Browser kann nicht sprechen — versuch Chrome oder Edge.",
   "meaning.noDef": "Keine Definition für dieses Wort gefunden.",
   "meaning.noExample": "Kein Beispielsatz für dieses Wort gefunden.",
-  "orb.practiceMisses": "tippen zum<br/>Fehler üben"
+  "orb.practiceMisses": "tippen zum<br/>Fehler üben",
+  "jamo.checkInitial": "Prüf den ersten Konsonanten.",
+  "jamo.checkMedial": "Prüf den Vokal.",
+  "jamo.checkFinal": "Prüf den Endkonsonanten (받침).",
+  "jamo.spelledOut": "So schreibt man's: {j}"
 }

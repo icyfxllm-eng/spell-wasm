@@ -185,5 +185,9 @@
   "speech.noVoice": "เบราว์เซอร์นี้พูดไม่ได้ — ลองใช้ Chrome หรือ Edge",
   "meaning.noDef": "ไม่พบคำนิยามของคำนี้",
   "meaning.noExample": "ไม่พบประโยคตัวอย่างของคำนี้",
-  "orb.practiceMisses": "แตะเพื่อ<br/>ฝึกคำที่ผิด"
+  "orb.practiceMisses": "แตะเพื่อ<br/>ฝึกคำที่ผิด",
+  "jamo.checkInitial": "ตรวจพยัญชนะตัวแรกดูนะ",
+  "jamo.checkMedial": "ตรวจสระดูนะ",
+  "jamo.checkFinal": "ตรวจตัวสะกด (받침) ดูนะ",
+  "jamo.spelledOut": "สะกดแบบนี้: {j}"
 }

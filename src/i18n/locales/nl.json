@@ -185,5 +185,9 @@
   "speech.noVoice": "Deze browser kan niet spreken — probeer Chrome of Edge.",
   "meaning.noDef": "Geen definitie gevonden voor dit woord.",
   "meaning.noExample": "Geen voorbeeldzin gevonden voor dit woord.",
-  "orb.practiceMisses": "tik om<br/>fouten te oefenen"
+  "orb.practiceMisses": "tik om<br/>fouten te oefenen",
+  "jamo.checkInitial": "Controleer de eerste medeklinker.",
+  "jamo.checkMedial": "Controleer de klinker.",
+  "jamo.checkFinal": "Controleer de slotmedeklinker (받침).",
+  "jamo.spelledOut": "Het schrijf je: {j}"
 }

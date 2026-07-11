@@ -185,5 +185,9 @@
   "speech.noVoice": "このブラウザは音声を出せません — Chrome か Edge を試してね。",
   "meaning.noDef": "この単語の定義が見つかりませんでした。",
   "meaning.noExample": "この単語の例文が見つかりませんでした。",
-  "orb.practiceMisses": "タップして<br/>間違いを練習"
+  "orb.practiceMisses": "タップして<br/>間違いを練習",
+  "jamo.checkInitial": "最初の子音を確認してね。",
+  "jamo.checkMedial": "母音を確認してね。",
+  "jamo.checkFinal": "パッチム(받침)を確認してね。",
+  "jamo.spelledOut": "こう書くよ: {j}"
 }

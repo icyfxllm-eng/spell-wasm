@@ -185,5 +185,9 @@
   "speech.noVoice": "Hindi makapagsalita ang browser na ito — subukan ang Chrome o Edge.",
   "meaning.noDef": "Walang depinisyong nakita para sa salitang ito.",
   "meaning.noExample": "Walang halimbawang pangungusap na nakita para sa salitang ito.",
-  "orb.practiceMisses": "pindutin para<br/>sanayin ang mali"
+  "orb.practiceMisses": "pindutin para<br/>sanayin ang mali",
+  "jamo.checkInitial": "Tingnan ang unang katinig.",
+  "jamo.checkMedial": "Tingnan ang patinig.",
+  "jamo.checkFinal": "Tingnan ang huling katinig (받침).",
+  "jamo.spelledOut": "Ganito baybayin: {j}"
 }

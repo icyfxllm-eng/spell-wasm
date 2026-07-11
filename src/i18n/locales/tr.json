@@ -185,5 +185,9 @@
   "speech.noVoice": "Bu tarayıcı konuşamıyor — Chrome ya da Edge dene.",
   "meaning.noDef": "Bu kelime için tanım bulunamadı.",
   "meaning.noExample": "Bu kelime için örnek cümle bulunamadı.",
-  "orb.practiceMisses": "yanlışları<br/>çalışmak için dokun"
+  "orb.practiceMisses": "yanlışları<br/>çalışmak için dokun",
+  "jamo.checkInitial": "İlk ünsüzü kontrol et.",
+  "jamo.checkMedial": "Ünlüyü kontrol et.",
+  "jamo.checkFinal": "Son ünsüzü (받침) kontrol et.",
+  "jamo.spelledOut": "Şöyle yazılır: {j}"
 }

@@ -185,5 +185,9 @@
   "speech.noVoice": "Ce navigateur ne peut pas parler — essaie Chrome ou Edge.",
   "meaning.noDef": "Aucune définition trouvée pour ce mot.",
   "meaning.noExample": "Aucune phrase d'exemple trouvée pour ce mot.",
-  "orb.practiceMisses": "touche pour<br/>revoir les erreurs"
+  "orb.practiceMisses": "touche pour<br/>revoir les erreurs",
+  "jamo.checkInitial": "Vérifie la première consonne.",
+  "jamo.checkMedial": "Vérifie la voyelle.",
+  "jamo.checkFinal": "Vérifie la consonne finale (받침).",
+  "jamo.spelledOut": "Ça s'écrit : {j}"
 }

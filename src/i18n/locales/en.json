@@ -185,5 +185,9 @@
   "speech.noVoice": "This browser can't speak — try Chrome or Edge.",
   "meaning.noDef": "No definition found for this word.",
   "meaning.noExample": "No example sentence found for this word.",
-  "orb.practiceMisses": "tap to<br/>practice misses"
+  "orb.practiceMisses": "tap to<br/>practice misses",
+  "jamo.checkInitial": "Check the first consonant.",
+  "jamo.checkMedial": "Check the vowel.",
+  "jamo.checkFinal": "Check the final consonant (받침).",
+  "jamo.spelledOut": "It's spelled: {j}"
 }

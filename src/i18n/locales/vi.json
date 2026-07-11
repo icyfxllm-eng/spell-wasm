@@ -185,5 +185,9 @@
   "speech.noVoice": "Trình duyệt này không nói được — hãy thử Chrome hoặc Edge.",
   "meaning.noDef": "Không tìm thấy định nghĩa cho từ này.",
   "meaning.noExample": "Không tìm thấy câu ví dụ cho từ này.",
-  "orb.practiceMisses": "chạm để<br/>luyện từ sai"
+  "orb.practiceMisses": "chạm để<br/>luyện từ sai",
+  "jamo.checkInitial": "Kiểm tra phụ âm đầu nhé.",
+  "jamo.checkMedial": "Kiểm tra nguyên âm nhé.",
+  "jamo.checkFinal": "Kiểm tra phụ âm cuối (받침) nhé.",
+  "jamo.spelledOut": "Viết thế này: {j}"
 }

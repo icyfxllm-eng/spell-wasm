@@ -752,6 +752,10 @@ pub fn submit_guess(app: &App) {
     // other language uses the NFC/case fold (accent-strict, Kid-lenient).
     let correct = if cur_lang == crate::consts::ZH {
         crate::pinyin::matches(&typed, &word)
+    } else if cur_lang == crate::consts::KO {
+        // Korean grades at jamo granularity (Phase 3); an exact block match is
+        // score 1.0. The per-jamo diff drives the wrong-answer coaching below.
+        crate::jamo::grade(&typed, &word).correct
     } else {
         crate::norm::answer_matches(&typed, &word, kid)
     };
@@ -917,6 +921,38 @@ fn finalize_incorrect(app: &App, glyph: &str, prefix: &str, feedback_class: &str
     }
 }
 
+/// Korean (Phase 3): on a wrong answer, point the player at the jamo that's off
+/// (initial / medial / 받침), and in Kid Mode after 2 misses spell the target out
+/// in jamo. Rendered in the hint line; no-op for other languages. Cleared with
+/// the hint line on the next word.
+fn korean_coaching(app: &App, tries_left: u32) {
+    let (lang, typed, word, kid) = {
+        let s = app.borrow();
+        (s.cur_lang.clone(), s.answer.clone(), s.word.clone(), s.kid)
+    };
+    if lang != crate::consts::KO {
+        return;
+    }
+    let g = crate::jamo::grade(&typed, &word);
+    let mut msg = g
+        .syllables
+        .iter()
+        .find(|s| !s.wrong.is_empty())
+        .map(|s| match s.wrong[0] {
+            crate::jamo::Part::Initial => crate::i18n::t("jamo.checkInitial"),
+            crate::jamo::Part::Medial => crate::i18n::t("jamo.checkMedial"),
+            crate::jamo::Part::Final => crate::i18n::t("jamo.checkFinal"),
+        })
+        .unwrap_or_default();
+    if kid && MAX_TRIES.saturating_sub(tries_left) >= 2 {
+        let hint = crate::i18n::tp("jamo.spelledOut", &[("j", &crate::jamo::spell_jamo(&word))]);
+        msg = if msg.is_empty() { hint } else { format!("{msg} \u{b7} {hint}") };
+    }
+    if !msg.is_empty() {
+        dom::set_text("hintLine", &msg);
+    }
+}
+
 fn on_wrong(app: &App) {
     if app.borrow().daily.active {
         daily_answer(app, false);
@@ -925,6 +961,7 @@ fn on_wrong(app: &App) {
     crate::haptics::incorrect(app.borrow().kid);
     let tries_left = use_a_try(app);
     render_tries(app);
+    korean_coaching(app, tries_left);
     if tries_left > 0 {
         retry_wrong(app, tries_left, &crate::i18n::t("fb.notQuite"));
         return;

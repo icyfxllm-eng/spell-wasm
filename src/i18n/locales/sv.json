@@ -185,5 +185,9 @@
   "speech.noVoice": "Den här webbläsaren kan inte tala — prova Chrome eller Edge.",
   "meaning.noDef": "Ingen definition hittades för det här ordet.",
   "meaning.noExample": "Ingen exempelmening hittades för det här ordet.",
-  "orb.practiceMisses": "tryck för att<br/>öva missar"
+  "orb.practiceMisses": "tryck för att<br/>öva missar",
+  "jamo.checkInitial": "Kolla den första konsonanten.",
+  "jamo.checkMedial": "Kolla vokalen.",
+  "jamo.checkFinal": "Kolla slutkonsonanten (받침).",
+  "jamo.spelledOut": "Det stavas: {j}"
 }
