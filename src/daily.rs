@@ -140,7 +140,16 @@ pub fn build_words(lang: &str, date: &str, kid: bool) -> (String, Vec<String>) {
     let arc: &[(&str, usize)] = if kid { &KID_ARC } else { &ARC };
     let mut out = Vec::new();
     for (tier, count) in arc {
-        let mut picked = pick(words::tier_for(&locale, tier), *count, &mut rng);
+        let full = words::tier_for(&locale, tier);
+        // Kid Mode "friendly words": filter age-inappropriate terms from the
+        // daily pool too (deterministic — same list for everyone).
+        let kept: Vec<&str> = if kid {
+            full.iter().copied().filter(|w| crate::kid_filter::kid_allowed(&locale, w)).collect()
+        } else {
+            Vec::new()
+        };
+        let pool: &[&str] = if kid && !kept.is_empty() { &kept } else { full };
+        let mut picked = pick(pool, *count, &mut rng);
         // Ramp within the tier: easiest first (shorter = easier proxy for now).
         picked.sort_by_key(|w| w.chars().count());
         out.extend(picked);

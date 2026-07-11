@@ -19,6 +19,7 @@ mod i18n;
 mod importer;
 mod jamo;
 mod keyboard;
+mod kid_filter;
 mod misses;
 mod model;
 mod native_audio;

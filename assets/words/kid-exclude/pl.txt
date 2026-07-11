@@ -1,0 +1,7 @@
+# Kid Mode exclusion list — pl
+# Words filtered from the served pools when Kid Mode is on (the "friendly words"
+# promise): alcohol, weapons, death-related, and adult-context terms. One word
+# per line (case/accent-insensitive match, lenient fold). Extends the global
+# profanity filter — this is the age-appropriateness layer on top.
+# ⚠ AUDITOR-EXTENSIBLE: native reviewers should add culture-specific terms.
+

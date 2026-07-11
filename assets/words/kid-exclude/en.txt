@@ -1,0 +1,32 @@
+# Kid Mode exclusion list — en
+# Words filtered from the served pools when Kid Mode is on (the "friendly words"
+# promise): alcohol, weapons, death-related, and adult-context terms. One word
+# per line (case/accent-insensitive match, lenient fold). Extends the global
+# profanity filter — this is the age-appropriateness layer on top.
+# ⚠ AUDITOR-EXTENSIBLE: native reviewers should add culture-specific terms.
+
+beer
+blood
+bomb
+bullet
+casino
+cemetery
+cigarette
+cocktail
+coffin
+corpse
+dagger
+gamble
+grave
+gun
+knife
+murder
+pistol
+rifle
+skull
+sword
+tobacco
+vodka
+weapon
+whiskey
+wine

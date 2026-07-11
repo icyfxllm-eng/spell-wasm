@@ -95,10 +95,18 @@ fn pool_for_tier(state: &AppState, tier: &str) -> Vec<String> {
 }
 
 fn active_word_list(state: &AppState, tier: &str) -> Vec<String> {
-    if state.lang == MINE {
+    let pool = if state.lang == MINE {
         pool_for_tier(state, tier)
     } else {
         words::tier_for(&state.lang, tier).iter().map(|s| s.to_string()).collect()
+    };
+    // Kid Mode "friendly words": drop age-inappropriate terms (the content layer
+    // Kid Mode's tier cap doesn't cover). Built-in pools only — My Words is
+    // parent-curated (and still runs the global profanity filter).
+    if state.kid && state.lang != MINE {
+        crate::kid_filter::filter_kid(&state.lang, pool)
+    } else {
+        pool
     }
 }
 
