@@ -448,10 +448,10 @@
       <select id="levelSel" aria-label="Difficulty"></select>
       <select id="modeSel" aria-label="Timer">
         <option value="off" data-i18n="mode.untimed">Untimed</option>
-        <option value="on" data-i18n="mode.timed">Timed ⏱</option>
+        <option value="on" data-i18n="mode.timed">Quick Bee</option>
       </select>
       <button class="pill" id="missesBtn">↻ Misses</button>
-      <button class="pill" id="vsBtn" data-i18n="top.headToHead">⚔ Head-to-head</button>
+      <button class="pill" id="vsBtn" data-i18n="top.headToHead">Spell-Off</button>
       <button class="pill" id="climbBtn" data-i18n="top.theClimb">🏔 The Climb</button>
       <button class="pill" id="dailyBtn">🗓 Daily</button>
       <button class="pill" id="accountBtn">👤 Sign in</button>
@@ -468,7 +468,7 @@
     </div>
     <div class="vs-mid">
       <span class="vs-vs">vs</span>
-      <button class="ghost" id="vsExit" aria-label="Exit head-to-head">✕ Exit</button>
+      <button class="ghost" id="vsExit" data-i18n-aria="vs.title" aria-label="Exit Spell-Off">✕ Exit</button>
     </div>
     <div class="vs-side" id="vsP2">
       <div class="vs-name" id="vsP2Name">Player 2</div>
@@ -644,7 +644,7 @@
   <!-- head-to-head setup modal -->
   <div class="scrim" id="vsSetupScrim">
     <div class="modal">
-      <h3 data-i18n="vs.title">Head-to-head</h3>
+      <h3 data-i18n="vs.title">Spell-Off</h3>
       <p data-i18n="vs.blurb">Two players, one device. Take turns spelling — a miss ends your turn. The longest chain wins.</p>
       <input id="vsName1" type="text" maxlength="14" placeholder="Player 1" data-i18n-ph="ph.vsName1" autocomplete="off" autocorrect="off" autocapitalize="none" spellcheck="false" />
       <input id="vsName2" type="text" maxlength="14" placeholder="Player 2" data-i18n-ph="ph.vsName2" autocomplete="off" autocorrect="off" autocapitalize="none" spellcheck="false" />
@@ -671,7 +671,7 @@
   <div class="scrim" id="vsQuitScrim">
     <div class="modal">
       <h3 data-i18n="vs.leaveTitle">Leave the match?</h3>
-      <p data-i18n="vs.leaveBlurb">The head-to-head match will end and you'll return to the solo game. The current chains won't be saved.</p>
+      <p data-i18n="vs.leaveBlurb">The Spell-Off match will end and you'll return to the solo game. The current chains won't be saved.</p>
       <div class="row">
         <button class="btn btn-icon" id="vsQuitCancel" data-i18n="vs.keepPlaying" style="flex:1;border-radius:12px">Keep playing</button>
         <button class="btn btn-check" id="vsQuitConfirm" data-i18n="vs.leave">Leave match</button>
@@ -754,7 +754,7 @@
   <div class="scrim" id="setScrim">
     <div class="modal">
       <h3 data-i18n="settings.title">Settings</h3>
-      <label class="set-row"><span class="lbl2"><span data-i18n="settings.kid">Kid mode</span><small data-i18n="settings.kidSmall">Bigger text, friendly words, no prices</small></span><input type="checkbox" class="switch" id="kidToggle" /></label>
+      <label class="set-row"><span class="lbl2"><span data-i18n="settings.kid">Little Spellers</span><small data-i18n="settings.kidSmall">Bigger text, friendly words, no prices</small></span><input type="checkbox" class="switch" id="kidToggle" /></label>
       <label class="set-row"><span class="lbl2"><span data-i18n="settings.readable">Readable mode</span><small data-i18n="settings.readableSmall">Larger, spaced, dyslexia-friendly type</small></span><input type="checkbox" class="switch" id="readToggle" /></label>
       <label class="set-row"><span class="lbl2"><span data-i18n="settings.bigText">Big text</span><small data-i18n="settings.bigTextSmall">Enlarge the interface text (about 1.5×)</small></span><input type="checkbox" class="switch" id="bigTextToggle" /></label>
       <label class="set-row"><span class="lbl2"><span data-i18n="settings.slow">Slower voice</span><small data-i18n="settings.slowSmall">Speak each word more slowly</small></span><input type="checkbox" class="switch" id="slowToggle" /></label>
