@@ -1,0 +1,62 @@
+{
+  "休": {
+    "type": "components",
+    "text": "人 (person) 亻 resting against 木 (tree) — to rest.",
+    "verified": false
+  },
+  "明": {
+    "type": "components",
+    "text": "日 (sun) + 月 (moon) together — bright.",
+    "verified": false
+  },
+  "林": {
+    "type": "components",
+    "text": "Two 木 (tree) side by side — a woods.",
+    "verified": false
+  },
+  "森": {
+    "type": "components",
+    "text": "Three 木 (tree) stacked — a deep forest.",
+    "verified": false
+  },
+  "好": {
+    "type": "components",
+    "text": "女 (woman) + 子 (child) — good.",
+    "verified": false
+  },
+  "安": {
+    "type": "components",
+    "text": "女 (woman) under 宀 (roof) — peace, safe.",
+    "verified": false
+  },
+  "家": {
+    "type": "components",
+    "text": "宀 (roof) over 豕 (pig) — the home.",
+    "verified": false
+  },
+  "水": {
+    "type": "components",
+    "text": "A pictograph of flowing water.",
+    "verified": false
+  },
+  "火": {
+    "type": "components",
+    "text": "A pictograph of rising flames — fire.",
+    "verified": false
+  },
+  "山": {
+    "type": "components",
+    "text": "Three peaks — a mountain.",
+    "verified": false
+  },
+  "田": {
+    "type": "components",
+    "text": "A field divided into plots, seen from above.",
+    "verified": false
+  },
+  "旅游": {
+    "type": "compound",
+    "text": "旅 (travel) + 游 (roam) — to tour.",
+    "verified": false
+  }
+}

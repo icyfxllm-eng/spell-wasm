@@ -424,6 +424,21 @@ pub fn show_meaning(app: &App, word: String, lang_key: String) {
     clear_meaning();
     let my_seq = MEANING_SEQ.with(|c| *c.borrow());
     let code = code_for(&app.borrow(), &lang_key);
+    // Language beauty layer: an optional per-word insight (etymology, character
+    // components, tone family…). Keyed on the hanzi for Mandarin (the insight is
+    // about the character, not the pinyin), else the word. Shown as a subordinate
+    // second line; and since non-English words have no backend definition, it
+    // renders the card on its own when present.
+    let insight_html = {
+        let s = app.borrow();
+        let key = if s.cur_lang == crate::consts::ZH { s.spoken.clone() } else { word.clone() };
+        crate::enrich::insight(&lang_key, &key)
+            .map(|ins| format!("<span class=\"m-insight\">{}</span>", dom::escape_html(&ins.text)))
+    };
+    if let Some(ref ins) = insight_html {
+        dom::set_html("meaning", &format!("<span class=\"m-word\">{}</span>{}", dom::escape_html(&word), ins));
+        dom::add_class("meaning", "show");
+    }
     let app = app.clone();
     spawn_local(async move {
         let Some((pos, def, example)) = fetch_definition(word.clone(), code).await else { return };
@@ -437,6 +452,9 @@ pub fn show_meaning(app: &App, word: String, lang_key: String) {
             dom::escape_html(&pos),
             dom::escape_html(&def)
         );
+        if let Some(ins) = &insight_html {
+            html.push_str(ins);
+        }
         if !example.is_empty() {
             html.push_str(&format!(
                 "<span class=\"m-ex\">\u{201c}{}\u{201d} <button class=\"m-spk\" id=\"spkEx\">\u{1f50a} sentence</button></span>",

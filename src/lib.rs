@@ -9,6 +9,7 @@ mod daily;
 mod deck;
 mod dom;
 mod drawing;
+mod enrich;
 mod game;
 mod haptics;
 mod hangul;

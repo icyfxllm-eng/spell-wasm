@@ -1,0 +1,52 @@
+{
+  "Handschuh": {
+    "type": "compound",
+    "text": "Hand (hand) + Schuh (shoe) — a glove.",
+    "verified": false
+  },
+  "Fernseher": {
+    "type": "compound",
+    "text": "fern (far) + Seher (seer) — a television.",
+    "verified": false
+  },
+  "Kühlschrank": {
+    "type": "compound",
+    "text": "kühl (cool) + Schrank (cupboard) — a fridge.",
+    "verified": false
+  },
+  "Krankenhaus": {
+    "type": "compound",
+    "text": "Kranken (sick) + Haus (house) — a hospital.",
+    "verified": false
+  },
+  "Flugzeug": {
+    "type": "compound",
+    "text": "Flug (flight) + Zeug (stuff) — an aeroplane.",
+    "verified": false
+  },
+  "Regenschirm": {
+    "type": "compound",
+    "text": "Regen (rain) + Schirm (screen) — an umbrella.",
+    "verified": false
+  },
+  "Wörterbuch": {
+    "type": "compound",
+    "text": "Wörter (words) + Buch (book) — a dictionary.",
+    "verified": false
+  },
+  "Schmetterling": {
+    "type": "etymology",
+    "text": "From dialect 'Schmetten' (cream) — a butterfly.",
+    "verified": false
+  },
+  "Geburtstag": {
+    "type": "compound",
+    "text": "Geburt (birth) + Tag (day) — a birthday.",
+    "verified": false
+  },
+  "Nachbarschaft": {
+    "type": "compound",
+    "text": "Nachbar (neighbour) + -schaft (-hood).",
+    "verified": false
+  }
+}

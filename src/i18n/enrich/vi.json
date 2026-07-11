@@ -1,0 +1,52 @@
+{
+  "ma": {
+    "type": "tone_family",
+    "text": "ma·má·mà·mả·mã·mạ — six words, one syllable, six tones.",
+    "verified": false
+  },
+  "bàn": {
+    "type": "tone_family",
+    "text": "ban·bán·bàn·bản·bãn·bạn — the tone picks the meaning.",
+    "verified": false
+  },
+  "cửa": {
+    "type": "tone_family",
+    "text": "hỏi tone (ả) — the classic dictation test even for natives.",
+    "verified": false
+  },
+  "mã": {
+    "type": "tone_family",
+    "text": "ngã tone (ã) — a rising-broken tone, hardest to hear.",
+    "verified": false
+  },
+  "phở": {
+    "type": "tone_family",
+    "text": "hỏi tone on ơ — the bowl every learner spells wrong first.",
+    "verified": false
+  },
+  "nướng": {
+    "type": "tone_family",
+    "text": "ươ + sắc — a stacked vowel with a rising tone.",
+    "verified": false
+  },
+  "biết": {
+    "type": "tone_family",
+    "text": "iê + sắc — 'to know', a three-part vowel.",
+    "verified": false
+  },
+  "người": {
+    "type": "tone_family",
+    "text": "ươ + huyền — 'person', the vowel that trips typists.",
+    "verified": false
+  },
+  "yêu": {
+    "type": "tone_family",
+    "text": "y+ê+u — 'to love', all vowels, no tone mark.",
+    "verified": false
+  },
+  "trường": {
+    "type": "tone_family",
+    "text": "tr + ươ + huyền — 'school', initial + stacked vowel.",
+    "verified": false
+  }
+}
