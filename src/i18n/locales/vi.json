@@ -154,5 +154,14 @@
   "daily.resultTitle": "Thử thách hằng ngày",
   "daily.share": "Chia sẻ",
   "daily.close": "Đóng",
-  "daily.finale": "🔥 Vòng chung kết"
+  "daily.finale": "🔥 Vòng chung kết",
+  "brand.tagFun": "chỉ để cho vui",
+  "card.overall": "{c}/{s} đúng tổng cộng · {p}%",
+  "help.howItWorks": "<b>Cách chơi:</b> nhấn vào quả cầu để nghe một từ, rồi gõ, nói hoặc viết cách đánh vần — nghĩa hiện ra sau mỗi câu trả lời, và các từ sai quay lại qua nhiều ngày trong <b>↻ Từ sai</b>. Mọi thứ đều miễn phí. Từ tiếng Anh được đọc bởi máy chủ từ của bạn; nhập từ của riêng bạn tại <b>＋ Từ của tôi</b> để luyện bất cứ thứ gì, đọc bằng giọng của trình duyệt — mượt nhất trên Chrome hoặc Edge trên máy tính. Tiến trình chỉ được lưu trong trình duyệt này.",
+  "draw.correct": "Tuyệt vời! 🎉",
+  "draw.almost.mirror": "Gần đúng rồi! Chữ đó bị ngược — thử lật lại xem.",
+  "draw.almost.oneLetter": "Gần đúng! Một chữ trông chưa đúng — kiểm tra lại cách viết.",
+  "draw.almost.generic": "Sắp được rồi — nhìn lại nhé!",
+  "draw.tryAgain": "Chưa đúng — thử lại nhé!",
+  "draw.empty": "Mình chưa thấy từ nào — viết lên bảng nhé!"
 }

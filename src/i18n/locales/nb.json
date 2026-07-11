@@ -154,5 +154,14 @@
   "daily.resultTitle": "Dagens utfordring",
   "daily.share": "Del",
   "daily.close": "Lukk",
-  "daily.finale": "🔥 Ekspertfinale"
+  "daily.finale": "🔥 Ekspertfinale",
+  "brand.tagFun": "bare for moro skyld",
+  "card.overall": "{c}/{s} riktige totalt · {p}%",
+  "help.howItWorks": "<b>Slik fungerer det:</b> trykk på kulen for å høre et ord, skriv, si eller tegn så stavemåten — en betydning vises etter hvert svar, og bom kommer tilbake over dager under <b>↻ Bom</b>. Alt er gratis. Engelske ord leses opp av ordserveren din; importer dine egne under <b>＋ Mine ord</b> for å øve på hva som helst, uttalt med nettleserens stemmer — best i Chrome eller Edge på datamaskin. Fremgang lagres bare i denne nettleseren.",
+  "draw.correct": "Perfekt! 🎉",
+  "draw.almost.mirror": "Nesten! Bokstaven vender feil vei — prøv å snu den.",
+  "draw.almost.oneLetter": "Nesten! Én bokstav ser feil ut — sjekk stavemåten.",
+  "draw.almost.generic": "Nesten der — se en gang til!",
+  "draw.tryAgain": "Ikke helt — prøv igjen!",
+  "draw.empty": "Jeg ser ikke et ord ennå — skriv det på feltet!"
 }

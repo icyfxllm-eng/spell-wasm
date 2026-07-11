@@ -24,6 +24,11 @@ pub fn record(state: &mut AppState, lang: &str, tier: &str, correct: bool) {
 }
 
 pub fn render(state: &AppState) {
+    // Achievements live on the stats screen and must re-render here so a UI
+    // language change (which calls stats::render) refreshes their titles too —
+    // otherwise they keep the boot locale while the headers switch (the
+    // mixed-language bug).
+    crate::achievements::render(state);
     dom::set_text("statsLang", &name_for(state, &state.lang));
     let empty = TierStat::default();
     let by_tier = state.stats.get(&state.lang);
@@ -53,7 +58,17 @@ pub fn render(state: &AppState) {
     } else {
         dom::set_html("statsBody", &rows);
         let pct = (100 * total_correct) / total_seen;
-        dom::set_text("statsTotal", &format!("{}/{} correct overall \u{b7} {}%", total_correct, total_seen, pct));
+        dom::set_text(
+            "statsTotal",
+            &crate::i18n::tp(
+                "card.overall",
+                &[
+                    ("c", &total_correct.to_string()),
+                    ("s", &total_seen.to_string()),
+                    ("p", &pct.to_string()),
+                ],
+            ),
+        );
     }
 }
 

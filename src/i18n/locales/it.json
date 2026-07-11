@@ -154,5 +154,14 @@
   "daily.resultTitle": "Sfida giornaliera",
   "daily.share": "Condividi",
   "daily.close": "Chiudi",
-  "daily.finale": "🔥 Finale esperto"
+  "daily.finale": "🔥 Finale esperto",
+  "brand.tagFun": "solo per divertimento",
+  "card.overall": "{c}/{s} corrette in totale · {p}%",
+  "help.howItWorks": "<b>Come funziona:</b> premi l'orbe per sentire una parola, poi scrivi, pronuncia o disegna la sua ortografia — dopo ogni risposta appare un significato, e gli errori tornano nei giorni sotto <b>↻ Errori</b>. Tutto è gratis. Le parole inglesi sono lette dal tuo word server; importa le tue in <b>＋ Le mie parole</b> per esercitarti su tutto, con le voci del browser — meglio su Chrome o Edge su computer. I progressi sono salvati solo in questo browser.",
+  "draw.correct": "Perfetto! 🎉",
+  "draw.almost.mirror": "Ci sei quasi! Quella lettera è girata al contrario — prova a capovolgerla.",
+  "draw.almost.oneLetter": "Ci sei quasi! Una lettera non torna — controlla l'ortografia.",
+  "draw.almost.generic": "Ci sei quasi — guarda ancora!",
+  "draw.tryAgain": "Non proprio — riprova!",
+  "draw.empty": "Non vedo ancora una parola — scrivila sul riquadro!"
 }

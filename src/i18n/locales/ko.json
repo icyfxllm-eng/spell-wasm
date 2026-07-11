@@ -154,5 +154,14 @@
   "daily.resultTitle": "오늘의 도전",
   "daily.share": "공유",
   "daily.close": "닫기",
-  "daily.finale": "🔥 전문가 결선"
+  "daily.finale": "🔥 전문가 결선",
+  "brand.tagFun": "그냥 재미로",
+  "card.overall": "전체 {c}/{s} 정답 · {p}%",
+  "help.howItWorks": "<b>이렇게 해요:</b> 구슬을 눌러 단어를 듣고, 철자를 입력하거나 말하거나 그려 보세요 — 답할 때마다 뜻이 나타나고, 틀린 단어는 며칠에 걸쳐 <b>↻ 틀린 단어</b>에 다시 나와요. 모두 무료예요. 영어 단어는 단어 서버가 읽어 줘요; <b>＋ 내 단어</b>에서 직접 가져와 무엇이든 연습하고 브라우저 음성으로 들을 수 있어요 — 컴퓨터의 Chrome이나 Edge에서 가장 매끄러워요. 진행 상황은 이 브라우저에만 저장돼요.",
+  "draw.correct": "완벽해요! 🎉",
+  "draw.almost.mirror": "거의 다 왔어요! 그 글자가 뒤집혔어요 — 방향을 바꿔 보세요.",
+  "draw.almost.oneLetter": "거의 다 왔어요! 한 글자가 이상해요 — 철자를 확인해 보세요.",
+  "draw.almost.generic": "거의 다 왔어요 — 다시 한번 봐요!",
+  "draw.tryAgain": "조금 아쉬워요 — 다시 해봐요!",
+  "draw.empty": "아직 글자가 안 보여요 — 판에 써 보세요!"
 }

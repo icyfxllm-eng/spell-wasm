@@ -138,15 +138,36 @@ pub fn tp(key: &str, params: &[(&str, &str)]) -> String {
 /// `[data-i18n-aria]` (aria-label) in the static HTML, and set `<html lang>`.
 pub fn translate_page() {
     apply("[data-i18n]", "data-i18n", |el, s| el.set_text_content(Some(s)));
+    // Rich strings (embedded <b>, symbols) — locale text is our own/trusted, so
+    // innerHTML is acceptable here. Used for the "How it works" block.
+    apply("[data-i18n-html]", "data-i18n-html", |el, s| el.set_inner_html(s));
     apply("[data-i18n-ph]", "data-i18n-ph", |el, s| {
         let _ = el.set_attribute("placeholder", s);
     });
     apply("[data-i18n-aria]", "data-i18n-aria", |el, s| {
         let _ = el.set_attribute("aria-label", s);
     });
+    update_tagline();
     if let Some(de) = dom::doc().document_element() {
         let _ = de.set_attribute("lang", &current());
     }
+}
+
+/// Set the brand tagline, appending the localized "just for fun" segment in Kid
+/// Mode. Reads the `kid` body class so it stays correct however it's triggered
+/// (boot, language change, Kid toggle). Replaces the old hardcoded CSS `::after`
+/// that pinned "just for fun" to English.
+pub fn update_tagline() {
+    let kid = dom::doc()
+        .body()
+        .map(|b| b.class_list().contains("kid"))
+        .unwrap_or(false);
+    let text = if kid {
+        format!("{} \u{b7} {}", t("brand.tag"), t("brand.tagFun"))
+    } else {
+        t("brand.tag")
+    };
+    dom::set_text("brandTag", &text);
 }
 
 fn apply(selector: &str, attr: &str, set: impl Fn(&web_sys::Element, &str)) {

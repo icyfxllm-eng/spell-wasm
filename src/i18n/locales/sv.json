@@ -154,5 +154,14 @@
   "daily.resultTitle": "Dagens utmaning",
   "daily.share": "Dela",
   "daily.close": "Stäng",
-  "daily.finale": "🔥 Expertfinal"
+  "daily.finale": "🔥 Expertfinal",
+  "brand.tagFun": "bara på skoj",
+  "card.overall": "{c}/{s} rätt totalt · {p}%",
+  "help.howItWorks": "<b>Så funkar det:</b> tryck på klotet för att höra ett ord, skriv, säg eller rita sedan stavningen — en betydelse visas efter varje svar, och missar återkommer under dagarna i <b>↻ Missar</b>. Allt är gratis. Engelska ord läses upp av din ordserver; importera egna under <b>＋ Mina ord</b> för att öva på vad som helst, uttalat med webbläsarens röster — bäst i Chrome eller Edge på dator. Framsteg sparas bara i denna webbläsare.",
+  "draw.correct": "Perfekt! 🎉",
+  "draw.almost.mirror": "Nästan! Bokstaven är vänd åt fel håll — prova att vända den.",
+  "draw.almost.oneLetter": "Nästan! En bokstav ser fel ut — kolla stavningen.",
+  "draw.almost.generic": "Nästan där — titta igen!",
+  "draw.tryAgain": "Inte riktigt — försök igen!",
+  "draw.empty": "Jag ser inget ord än — skriv det på plattan!"
 }

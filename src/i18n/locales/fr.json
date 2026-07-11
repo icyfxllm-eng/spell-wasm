@@ -154,5 +154,14 @@
   "daily.resultTitle": "Défi du jour",
   "daily.share": "Partager",
   "daily.close": "Fermer",
-  "daily.finale": "🔥 Finale expert"
+  "daily.finale": "🔥 Finale expert",
+  "brand.tagFun": "juste pour le plaisir",
+  "card.overall": "{c}/{s} correctes au total · {p}%",
+  "help.howItWorks": "<b>Comment ça marche :</b> appuie sur l'orbe pour entendre un mot, puis tape, prononce ou dessine son orthographe — un sens apparaît après chaque réponse, et les erreurs reviennent au fil des jours dans <b>↻ Erreurs</b>. Tout est gratuit. Les mots anglais sont lus par ton serveur de mots ; importe les tiens dans <b>＋ Mes mots</b> pour t'entraîner sur tout, avec les voix de ton navigateur — idéal sur Chrome ou Edge sur ordinateur. La progression est enregistrée dans ce navigateur uniquement.",
+  "draw.correct": "Parfait ! 🎉",
+  "draw.almost.mirror": "Presque ! Cette lettre est à l'envers — essaie de la retourner.",
+  "draw.almost.oneLetter": "Presque ! Une lettre ne va pas — vérifie l'orthographe.",
+  "draw.almost.generic": "Presque — regarde encore !",
+  "draw.tryAgain": "Pas tout à fait — réessaie !",
+  "draw.empty": "Je ne vois pas encore de mot — écris-le sur le pavé !"
 }

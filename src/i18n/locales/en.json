@@ -160,5 +160,8 @@
   "draw.almost.oneLetter": "Almost! One letter looks off — check your spelling.",
   "draw.almost.generic": "Nearly there — take another look!",
   "draw.tryAgain": "Not quite — give it another go!",
-  "draw.empty": "I don't see a word yet — write it on the pad!"
+  "draw.empty": "I don't see a word yet — write it on the pad!",
+  "brand.tagFun": "just for fun",
+  "card.overall": "{c}/{s} correct overall · {p}%",
+  "help.howItWorks": "<b>How it works:</b> press the orb to hear a word, then type, speak, or draw its spelling — a meaning appears after each answer, and misses return over days under <b>↻ Misses</b>. Everything is free. English words are read aloud by your word server; import your own under <b>＋ My words</b> to practice anything, spoken with your browser's voices — smoothest in Chrome or Edge on a computer. Progress is saved in this browser only."
 }

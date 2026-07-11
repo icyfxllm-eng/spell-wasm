@@ -154,5 +154,14 @@
   "daily.resultTitle": "Hamon ng Araw",
   "daily.share": "Ibahagi",
   "daily.close": "Isara",
-  "daily.finale": "🔥 Eksperto na pinal"
+  "daily.finale": "🔥 Eksperto na pinal",
+  "brand.tagFun": "para lang masaya",
+  "card.overall": "{c}/{s} tama sa kabuuan · {p}%",
+  "help.howItWorks": "<b>Paano ito gumagana:</b> pindutin ang orb para marinig ang salita, tapos i-type, sabihin, o iguhit ang ispeling — may kahulugang lalabas pagkatapos ng bawat sagot, at babalik ang mga mali sa paglipas ng araw sa <b>↻ Mga Mali</b>. Libre ang lahat. Binabasa ang mga salitang Ingles ng iyong word server; mag-import ng sarili mo sa <b>＋ Mga salita ko</b> para magsanay ng kahit ano, binabasa ng mga boses ng browser mo — pinakamaayos sa Chrome o Edge sa kompyuter. Naka-save ang progreso sa browser na ito lang.",
+  "draw.correct": "Perpekto! 🎉",
+  "draw.almost.mirror": "Muntik na! Baligtad ang letrang iyon — subukang ibaligtad.",
+  "draw.almost.oneLetter": "Muntik na! May isang letrang mukhang mali — tingnan ang ispeling.",
+  "draw.almost.generic": "Malapit na — tingnan ulit!",
+  "draw.tryAgain": "Hindi pa — subukan ulit!",
+  "draw.empty": "Wala pa akong nakikitang salita — isulat ito sa pad!"
 }

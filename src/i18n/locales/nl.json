@@ -154,5 +154,14 @@
   "daily.resultTitle": "Dagelijkse challenge",
   "daily.share": "Delen",
   "daily.close": "Sluiten",
-  "daily.finale": "🔥 Expertfinale"
+  "daily.finale": "🔥 Expertfinale",
+  "brand.tagFun": "gewoon voor de lol",
+  "card.overall": "{c}/{s} totaal goed · {p}%",
+  "help.howItWorks": "<b>Hoe het werkt:</b> druk op de bol om een woord te horen, typ, spreek of teken dan de spelling — na elk antwoord verschijnt een betekenis, en fouten keren over dagen terug onder <b>↻ Fouten</b>. Alles is gratis. Engelse woorden worden voorgelezen door je woordserver; importeer je eigen bij <b>＋ Mijn woorden</b> om alles te oefenen, uitgesproken met je browserstemmen — het best in Chrome of Edge op een computer. Voortgang wordt alleen in deze browser bewaard.",
+  "draw.correct": "Perfect! 🎉",
+  "draw.almost.mirror": "Bijna! Die letter staat verkeerd om — draai hem eens om.",
+  "draw.almost.oneLetter": "Bijna! Eén letter klopt niet — controleer je spelling.",
+  "draw.almost.generic": "Bijna — kijk nog eens!",
+  "draw.tryAgain": "Net niet — probeer nog eens!",
+  "draw.empty": "Ik zie nog geen woord — schrijf het op het vlak!"
 }

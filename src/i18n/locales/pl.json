@@ -154,5 +154,14 @@
   "daily.resultTitle": "Codzienne wyzwanie",
   "daily.share": "Udostępnij",
   "daily.close": "Zamknij",
-  "daily.finale": "🔥 Finał eksperta"
+  "daily.finale": "🔥 Finał eksperta",
+  "brand.tagFun": "tak dla zabawy",
+  "card.overall": "{c}/{s} poprawnych łącznie · {p}%",
+  "help.howItWorks": "<b>Jak to działa:</b> naciśnij kulę, aby usłyszeć słowo, a potem wpisz, wymów lub narysuj jego pisownię — po każdej odpowiedzi pojawia się znaczenie, a błędy wracają przez kolejne dni w <b>↻ Błędy</b>. Wszystko jest darmowe. Angielskie słowa czyta twój serwer słów; zaimportuj własne w <b>＋ Moje słowa</b>, aby ćwiczyć cokolwiek, wymawiane głosami przeglądarki — najlepiej w Chrome lub Edge na komputerze. Postęp jest zapisywany tylko w tej przeglądarce.",
+  "draw.correct": "Idealnie! 🎉",
+  "draw.almost.mirror": "Prawie! Ta litera jest odwrócona — spróbuj ją obrócić.",
+  "draw.almost.oneLetter": "Prawie! Jedna litera się nie zgadza — sprawdź pisownię.",
+  "draw.almost.generic": "Już prawie — spójrz jeszcze raz!",
+  "draw.tryAgain": "Nie do końca — spróbuj jeszcze raz!",
+  "draw.empty": "Nie widzę jeszcze słowa — napisz je na polu!"
 }

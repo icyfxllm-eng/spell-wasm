@@ -154,5 +154,14 @@
   "daily.resultTitle": "每日挑战",
   "daily.share": "分享",
   "daily.close": "关闭",
-  "daily.finale": "🔥 专家决赛"
+  "daily.finale": "🔥 专家决赛",
+  "brand.tagFun": "只是为了好玩",
+  "card.overall": "总计 {c}/{s} 正确 · {p}%",
+  "help.howItWorks": "<b>玩法：</b>按下光球听一个单词，然后输入、朗读或书写它的拼写 — 每次作答后会出现释义，答错的词会在接下来的几天里在 <b>↻ 错词</b> 中重现。全部免费。英语单词由你的单词服务器朗读；在 <b>＋ 我的单词</b> 中导入自己的词表即可练习任何内容，用浏览器的语音朗读 — 在电脑上的 Chrome 或 Edge 中最流畅。进度仅保存在此浏览器中。",
+  "draw.correct": "完美！🎉",
+  "draw.almost.mirror": "就差一点！那个字母写反了 — 试着翻过来。",
+  "draw.almost.oneLetter": "就差一点！有个字母不对 — 检查一下拼写。",
+  "draw.almost.generic": "快好了 — 再看看！",
+  "draw.tryAgain": "还不对 — 再试一次！",
+  "draw.empty": "还没看到字 — 在板上写出来吧！"
 }

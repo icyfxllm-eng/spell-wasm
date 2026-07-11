@@ -154,5 +154,14 @@
   "daily.resultTitle": "Desafio diário",
   "daily.share": "Compartilhar",
   "daily.close": "Fechar",
-  "daily.finale": "🔥 Final experto"
+  "daily.finale": "🔥 Final experto",
+  "brand.tagFun": "só por diversão",
+  "card.overall": "{c}/{s} corretas no total · {p}%",
+  "help.howItWorks": "<b>Como funciona:</b> toque no orbe para ouvir uma palavra, depois digite, fale ou desenhe a ortografia — um significado aparece após cada resposta, e os erros voltam ao longo dos dias em <b>↻ Erros</b>. Tudo é grátis. As palavras em inglês são lidas pelo seu servidor de palavras; importe as suas em <b>＋ Minhas palavras</b> para praticar qualquer coisa, faladas pelas vozes do navegador — melhor no Chrome ou Edge no computador. O progresso é salvo apenas neste navegador.",
+  "draw.correct": "Perfeito! 🎉",
+  "draw.almost.mirror": "Quase! Essa letra está virada ao contrário — tente girá-la.",
+  "draw.almost.oneLetter": "Quase! Uma letra parece errada — confira a ortografia.",
+  "draw.almost.generic": "Quase lá — olhe de novo!",
+  "draw.tryAgain": "Não é bem isso — tente de novo!",
+  "draw.empty": "Ainda não vejo uma palavra — escreva no quadro!"
 }

@@ -177,6 +177,9 @@ pub fn apply_settings(app: &App) {
     let s = app.borrow();
     let body = dom::doc().body().unwrap();
     let _ = body.class_list().toggle_with_force("kid", s.kid);
+    // Kid Mode appends a localized "just for fun" to the tagline (was a
+    // hardcoded English CSS ::after).
+    crate::i18n::update_tagline();
     let _ = body.class_list().toggle_with_force("readable", s.readable);
     let _ = body.class_list().toggle_with_force("big-text", s.big_text);
     dom::input("kidToggle").set_checked(s.kid);

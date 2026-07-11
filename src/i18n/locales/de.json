@@ -154,5 +154,14 @@
   "daily.resultTitle": "Tagesaufgabe",
   "daily.share": "Teilen",
   "daily.close": "Schließen",
-  "daily.finale": "🔥 Experten-Finale"
+  "daily.finale": "🔥 Experten-Finale",
+  "brand.tagFun": "einfach zum Spaß",
+  "card.overall": "{c}/{s} insgesamt richtig · {p}%",
+  "help.howItWorks": "<b>So funktioniert's:</b> Tippe auf die Kugel, um ein Wort zu hören, dann tippe, sprich oder zeichne die Schreibweise — nach jeder Antwort erscheint eine Bedeutung, und Fehler kehren über Tage unter <b>↻ Fehler</b> zurück. Alles ist kostenlos. Englische Wörter liest dein Wortserver vor; importiere eigene unter <b>＋ Meine Wörter</b>, um alles zu üben, gesprochen mit den Stimmen deines Browsers — am besten in Chrome oder Edge am Computer. Der Fortschritt wird nur in diesem Browser gespeichert.",
+  "draw.correct": "Perfekt! 🎉",
+  "draw.almost.mirror": "Fast! Der Buchstabe zeigt in die falsche Richtung — dreh ihn um.",
+  "draw.almost.oneLetter": "Fast! Ein Buchstabe stimmt nicht — prüf die Schreibweise.",
+  "draw.almost.generic": "Fast geschafft — schau nochmal!",
+  "draw.tryAgain": "Nicht ganz — versuch es nochmal!",
+  "draw.empty": "Ich sehe noch kein Wort — schreib es aufs Feld!"
 }
