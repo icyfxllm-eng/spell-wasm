@@ -7,7 +7,7 @@ use wasm_bindgen_futures::spawn_local;
 use crate::consts::{is_builtin_lang, tier_time, CORRECT_DELAY_MS, EN, ES, LEVEL_OPTS, MAX_TRIES, MINE, PRAISE, REVIEW};
 use crate::model::AppState;
 use crate::versus::Side;
-use crate::{achievements, api, board, dom, drawing, misses, speech_out, stats, wordstats, words};
+use crate::{achievements, api, board, dom, drawing, misses, selection, speech_out, stats, wordstats, words};
 use crate::App;
 
 const RING_C: f64 = 2.0 * std::f64::consts::PI * 108.0;
@@ -650,7 +650,10 @@ pub fn next_word(app: &App) {
                 let w = if s.versus.enabled {
                     s.decks.entry(key.clone()).or_default().next(&pool)
                 } else {
-                    match wordstats::pick(&s.lang, &pool) {
+                    // Solo: rolling exclusion + within-tier sub-band cycling +
+                    // first-impression rule (Part 2), with the adaptive
+                    // miss-weighting preserved inside the chosen band.
+                    match selection::pick_solo(&s.lang, &tier, &pool) {
                         Some(w) => w,
                         None => s.decks.entry(key.clone()).or_default().next(&pool),
                     }
@@ -814,6 +817,7 @@ fn on_correct(app: &App) {
     // Adaptive word stats: solo practice only (Misses/review has its own SR).
     if !app.borrow().review {
         wordstats::record(&cur_lang, &word, true);
+        selection::note_outcome(&cur_lang, &word, true);
     }
     let cleared = misses::promote_miss(&mut app.borrow_mut(), &word, &cur_lang);
     refresh_mode_buttons(app);
@@ -891,6 +895,7 @@ fn finalize_incorrect(app: &App, glyph: &str, prefix: &str, feedback_class: &str
     // for solo practice only (not head-to-head, not Misses/review).
     if !versus_on && !app.borrow().review {
         wordstats::record(&cur_lang, &word, false);
+        selection::note_outcome(&cur_lang, &word, false);
     }
 
     dom::add_class("orbWrap", "bad");

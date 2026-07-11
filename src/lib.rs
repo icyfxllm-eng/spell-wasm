@@ -24,6 +24,7 @@ mod norm;
 mod pinyin;
 mod notifications;
 mod profanity;
+mod selection;
 mod settings;
 mod share;
 mod speech_out;
