@@ -77,6 +77,67 @@ pub fn insight(lang: &str, key: &str) -> Option<Insight> {
     }
 }
 
+impl Insight {
+    /// "Beloved" words — the no_equivalent / usage_gem gems that earn a subtle
+    /// sparkle on the meaning card (at most one per session).
+    pub fn is_beloved(&self) -> bool {
+        matches!(self.kind.as_str(), "no_equivalent" | "usage_gem")
+    }
+}
+
+// ---------------------------------------------------------------- picker notes
+
+#[derive(Deserialize, Clone)]
+struct Note {
+    text: String,
+    #[serde(default)]
+    verified: bool,
+}
+
+fn notes() -> &'static HashMap<String, Note> {
+    static N: OnceLock<HashMap<String, Note>> = OnceLock::new();
+    N.get_or_init(|| serde_json::from_str(include_str!("i18n/enrich/notes.json")).unwrap_or_default())
+}
+
+/// The writing-system note for `lang` (shown once on first selection), gated.
+pub fn picker_note(lang: &str) -> Option<String> {
+    let n = notes().get(lang)?;
+    (n.verified || show_unverified()).then(|| n.text.clone())
+}
+
+// ---------------------------------------------------------------- proverbs
+
+#[derive(Deserialize, Clone)]
+pub struct Proverb {
+    pub o: String,
+    pub t: String,
+    #[serde(default)]
+    verified: bool,
+}
+
+fn proverbs() -> &'static HashMap<String, Vec<Proverb>> {
+    static P: OnceLock<HashMap<String, Vec<Proverb>>> = OnceLock::new();
+    P.get_or_init(|| serde_json::from_str(include_str!("i18n/enrich/proverbs.json")).unwrap_or_default())
+}
+
+/// A deterministically-chosen verified proverb for `lang`, or None to fall back
+/// to the standard congratulation. `seed` (a date hash) picks which one and
+/// whether one shows (~1 in 3), so it's stable per day.
+pub fn proverb(lang: &str, seed: u64) -> Option<Proverb> {
+    if seed % 3 != 0 {
+        return None;
+    }
+    let pool: Vec<&Proverb> = proverbs()
+        .get(lang)?
+        .iter()
+        .filter(|p| p.verified || show_unverified())
+        .collect();
+    if pool.is_empty() {
+        return None;
+    }
+    Some(pool[(seed / 3) as usize % pool.len()].clone())
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;

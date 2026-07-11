@@ -1,0 +1,716 @@
+{
+  "en": [
+    {
+      "o": "Little strokes fell great oaks.",
+      "t": "Small efforts add up.",
+      "verified": false
+    },
+    {
+      "o": "Practice makes perfect.",
+      "t": "Keep going.",
+      "verified": false
+    },
+    {
+      "o": "Slow and steady wins the race.",
+      "t": "Patience pays.",
+      "verified": false
+    },
+    {
+      "o": "Where there's a will, there's a way.",
+      "t": "Try and you'll find a way.",
+      "verified": false
+    },
+    {
+      "o": "Rome wasn't built in a day.",
+      "t": "Big things take time.",
+      "verified": false
+    },
+    {
+      "o": "Many hands make light work.",
+      "t": "Together is easier.",
+      "verified": false
+    },
+    {
+      "o": "A journey of a thousand miles begins with a single step.",
+      "t": "Just begin.",
+      "verified": false
+    },
+    {
+      "o": "Look before you leap.",
+      "t": "Think first.",
+      "verified": false
+    }
+  ],
+  "es": [
+    {
+      "o": "El que persevera, alcanza.",
+      "t": "Who perseveres, achieves.",
+      "verified": false
+    },
+    {
+      "o": "Poco a poco se anda lejos.",
+      "t": "Step by step you go far.",
+      "verified": false
+    },
+    {
+      "o": "Querer es poder.",
+      "t": "To want is to be able.",
+      "verified": false
+    },
+    {
+      "o": "No dejes para mañana lo que puedas hacer hoy.",
+      "t": "Don't put off today's task.",
+      "verified": false
+    },
+    {
+      "o": "A quien madruga, Dios le ayuda.",
+      "t": "The early riser gets ahead.",
+      "verified": false
+    },
+    {
+      "o": "Más vale tarde que nunca.",
+      "t": "Better late than never.",
+      "verified": false
+    },
+    {
+      "o": "Gota a gota se llena la copa.",
+      "t": "Drop by drop the cup fills.",
+      "verified": false
+    },
+    {
+      "o": "El saber no ocupa lugar.",
+      "t": "Knowledge takes no space.",
+      "verified": false
+    }
+  ],
+  "fr": [
+    {
+      "o": "Petit à petit, l'oiseau fait son nid.",
+      "t": "Little by little, the bird builds its nest.",
+      "verified": false
+    },
+    {
+      "o": "Vouloir, c'est pouvoir.",
+      "t": "To want is to be able.",
+      "verified": false
+    },
+    {
+      "o": "Qui n'avance pas recule.",
+      "t": "Not moving forward is falling back.",
+      "verified": false
+    },
+    {
+      "o": "Rome ne s'est pas faite en un jour.",
+      "t": "Rome wasn't built in a day.",
+      "verified": false
+    },
+    {
+      "o": "C'est en forgeant qu'on devient forgeron.",
+      "t": "Practice makes the smith.",
+      "verified": false
+    },
+    {
+      "o": "Après la pluie, le beau temps.",
+      "t": "After rain comes fair weather.",
+      "verified": false
+    },
+    {
+      "o": "Il n'y a que le premier pas qui coûte.",
+      "t": "Only the first step is hard.",
+      "verified": false
+    },
+    {
+      "o": "Chaque chose en son temps.",
+      "t": "Everything in its time.",
+      "verified": false
+    }
+  ],
+  "de": [
+    {
+      "o": "Übung macht den Meister.",
+      "t": "Practice makes the master.",
+      "verified": false
+    },
+    {
+      "o": "Wer rastet, der rostet.",
+      "t": "Who rests, rusts.",
+      "verified": false
+    },
+    {
+      "o": "Ende gut, alles gut.",
+      "t": "All's well that ends well.",
+      "verified": false
+    },
+    {
+      "o": "Steter Tropfen höhlt den Stein.",
+      "t": "A steady drop hollows the stone.",
+      "verified": false
+    },
+    {
+      "o": "Aller Anfang ist schwer.",
+      "t": "Every beginning is hard.",
+      "verified": false
+    },
+    {
+      "o": "Der frühe Vogel fängt den Wurm.",
+      "t": "The early bird catches the worm.",
+      "verified": false
+    },
+    {
+      "o": "Viele Wege führen nach Rom.",
+      "t": "Many roads lead to Rome.",
+      "verified": false
+    },
+    {
+      "o": "Wer wagt, gewinnt.",
+      "t": "Who dares, wins.",
+      "verified": false
+    }
+  ],
+  "pt": [
+    {
+      "o": "Água mole em pedra dura tanto bate até que fura.",
+      "t": "Soft water on hard stone wins in time.",
+      "verified": false
+    },
+    {
+      "o": "Devagar se vai ao longe.",
+      "t": "Slowly one goes far.",
+      "verified": false
+    },
+    {
+      "o": "Querer é poder.",
+      "t": "To want is to be able.",
+      "verified": false
+    },
+    {
+      "o": "Quem não arrisca não petisca.",
+      "t": "No risk, no reward.",
+      "verified": false
+    },
+    {
+      "o": "Antes tarde do que nunca.",
+      "t": "Better late than never.",
+      "verified": false
+    },
+    {
+      "o": "De grão em grão a galinha enche o papo.",
+      "t": "Grain by grain the hen is fed.",
+      "verified": false
+    },
+    {
+      "o": "A pressa é inimiga da perfeição.",
+      "t": "Haste is perfection's enemy.",
+      "verified": false
+    },
+    {
+      "o": "Cada coisa a seu tempo.",
+      "t": "Everything in its time.",
+      "verified": false
+    }
+  ],
+  "it": [
+    {
+      "o": "Chi va piano va sano e va lontano.",
+      "t": "Who goes slowly goes safe and far.",
+      "verified": false
+    },
+    {
+      "o": "Volere è potere.",
+      "t": "To want is to be able.",
+      "verified": false
+    },
+    {
+      "o": "A goccia a goccia si scava la roccia.",
+      "t": "Drop by drop carves the rock.",
+      "verified": false
+    },
+    {
+      "o": "Chi la dura la vince.",
+      "t": "Who endures, wins.",
+      "verified": false
+    },
+    {
+      "o": "Meglio tardi che mai.",
+      "t": "Better late than never.",
+      "verified": false
+    },
+    {
+      "o": "L'unione fa la forza.",
+      "t": "Union makes strength.",
+      "verified": false
+    },
+    {
+      "o": "Roma non fu fatta in un giorno.",
+      "t": "Rome wasn't built in a day.",
+      "verified": false
+    },
+    {
+      "o": "Sbagliando s'impara.",
+      "t": "We learn by erring.",
+      "verified": false
+    }
+  ],
+  "nl": [
+    {
+      "o": "Al doende leert men.",
+      "t": "By doing, one learns.",
+      "verified": false
+    },
+    {
+      "o": "Wie het kleine niet eert, is het grote niet weerd.",
+      "t": "Honour small things.",
+      "verified": false
+    },
+    {
+      "o": "Oefening baart kunst.",
+      "t": "Practice makes skill.",
+      "verified": false
+    },
+    {
+      "o": "De aanhouder wint.",
+      "t": "The persistent one wins.",
+      "verified": false
+    },
+    {
+      "o": "Beter laat dan nooit.",
+      "t": "Better late than never.",
+      "verified": false
+    },
+    {
+      "o": "Al is de leugen nog zo snel, de waarheid achterhaalt haar wel.",
+      "t": "Truth catches up.",
+      "verified": false
+    },
+    {
+      "o": "Rome is niet op één dag gebouwd.",
+      "t": "Rome wasn't built in a day.",
+      "verified": false
+    },
+    {
+      "o": "Wie goed doet, goed ontmoet.",
+      "t": "Do good, meet good.",
+      "verified": false
+    }
+  ],
+  "pl": [
+    {
+      "o": "Cierpliwość i praca wszystko przezwycięża.",
+      "t": "Patience and work overcome all.",
+      "verified": false
+    },
+    {
+      "o": "Ziarnko do ziarnka, a zbierze się miarka.",
+      "t": "Grain by grain fills the measure.",
+      "verified": false
+    },
+    {
+      "o": "Bez pracy nie ma kołaczy.",
+      "t": "No work, no reward.",
+      "verified": false
+    },
+    {
+      "o": "Kto pyta, nie błądzi.",
+      "t": "Who asks, doesn't get lost.",
+      "verified": false
+    },
+    {
+      "o": "Nie od razu Kraków zbudowano.",
+      "t": "Kraków wasn't built at once.",
+      "verified": false
+    },
+    {
+      "o": "Trening czyni mistrza.",
+      "t": "Practice makes the master.",
+      "verified": false
+    },
+    {
+      "o": "Co nagle, to po diable.",
+      "t": "Haste ends badly.",
+      "verified": false
+    },
+    {
+      "o": "Gdzie chęć, tam i możność.",
+      "t": "Where there's will, there's a way.",
+      "verified": false
+    }
+  ],
+  "sv": [
+    {
+      "o": "Övning ger färdighet.",
+      "t": "Practice gives skill.",
+      "verified": false
+    },
+    {
+      "o": "Droppen urholkar stenen.",
+      "t": "The drop hollows the stone.",
+      "verified": false
+    },
+    {
+      "o": "Den som väntar på något gott väntar aldrig för länge.",
+      "t": "Good things are worth the wait.",
+      "verified": false
+    },
+    {
+      "o": "Ingen ko på isen.",
+      "t": "No cow on the ice — no worries.",
+      "verified": false
+    },
+    {
+      "o": "Bättre sent än aldrig.",
+      "t": "Better late than never.",
+      "verified": false
+    },
+    {
+      "o": "Många bäckar små blir en stor å.",
+      "t": "Many small streams make a river.",
+      "verified": false
+    },
+    {
+      "o": "Träget arbete lönar sig.",
+      "t": "Steady work pays off.",
+      "verified": false
+    },
+    {
+      "o": "Först till kvarn får först mala.",
+      "t": "First to the mill grinds first.",
+      "verified": false
+    }
+  ],
+  "nb": [
+    {
+      "o": "Øvelse gjør mester.",
+      "t": "Practice makes the master.",
+      "verified": false
+    },
+    {
+      "o": "Sakte, men sikkert.",
+      "t": "Slow, but sure.",
+      "verified": false
+    },
+    {
+      "o": "Den som venter på noe godt, venter ikke forgjeves.",
+      "t": "Good things are worth waiting for.",
+      "verified": false
+    },
+    {
+      "o": "Dråpen uthuler steinen.",
+      "t": "The drop hollows the stone.",
+      "verified": false
+    },
+    {
+      "o": "Bedre sent enn aldri.",
+      "t": "Better late than never.",
+      "verified": false
+    },
+    {
+      "o": "Mange bekker små gjør en stor å.",
+      "t": "Many streams make a river.",
+      "verified": false
+    },
+    {
+      "o": "Ingen roser uten torner.",
+      "t": "No roses without thorns.",
+      "verified": false
+    },
+    {
+      "o": "Den som intet våger, intet vinner.",
+      "t": "No risk, no gain.",
+      "verified": false
+    }
+  ],
+  "tr": [
+    {
+      "o": "Damlaya damlaya göl olur.",
+      "t": "Drop by drop a lake forms.",
+      "verified": false
+    },
+    {
+      "o": "Sabreden derviş muradına ermiş.",
+      "t": "The patient reach their goal.",
+      "verified": false
+    },
+    {
+      "o": "İşleyen demir ışıldar.",
+      "t": "Iron in use shines.",
+      "verified": false
+    },
+    {
+      "o": "Azıcık aşım, kaygısız başım.",
+      "t": "A little is enough for peace.",
+      "verified": false
+    },
+    {
+      "o": "Ağaç yaşken eğilir.",
+      "t": "Bend the tree while young.",
+      "verified": false
+    },
+    {
+      "o": "Bir elin nesi var, iki elin sesi var.",
+      "t": "Two hands make sound.",
+      "verified": false
+    },
+    {
+      "o": "Son gülen iyi güler.",
+      "t": "Who laughs last laughs best.",
+      "verified": false
+    },
+    {
+      "o": "Sakla samanı, gelir zamanı.",
+      "t": "Save it; its time will come.",
+      "verified": false
+    }
+  ],
+  "vi": [
+    {
+      "o": "Có công mài sắt, có ngày nên kim.",
+      "t": "Grind iron long enough, it becomes a needle.",
+      "verified": false
+    },
+    {
+      "o": "Kiến tha lâu đầy tổ.",
+      "t": "The ant carries little but fills its nest.",
+      "verified": false
+    },
+    {
+      "o": "Đi một ngày đàng, học một sàng khôn.",
+      "t": "Travel a day, learn a basketful.",
+      "verified": false
+    },
+    {
+      "o": "Chậm mà chắc.",
+      "t": "Slow but sure.",
+      "verified": false
+    },
+    {
+      "o": "Thất bại là mẹ thành công.",
+      "t": "Failure is the mother of success.",
+      "verified": false
+    },
+    {
+      "o": "Học thầy không tày học bạn.",
+      "t": "Learn from friends too.",
+      "verified": false
+    },
+    {
+      "o": "Góp gió thành bão.",
+      "t": "Gathered winds make a storm.",
+      "verified": false
+    },
+    {
+      "o": "Muốn biết phải hỏi.",
+      "t": "To know, you must ask.",
+      "verified": false
+    }
+  ],
+  "ko": [
+    {
+      "o": "천 리 길도 한 걸음부터.",
+      "t": "A thousand-mile road starts with one step.",
+      "verified": false
+    },
+    {
+      "o": "티끌 모아 태산.",
+      "t": "Specks of dust gather into a mountain.",
+      "verified": false
+    },
+    {
+      "o": "시작이 반이다.",
+      "t": "Starting is half the task.",
+      "verified": false
+    },
+    {
+      "o": "공든 탑이 무너지랴.",
+      "t": "A tower built with care won't fall.",
+      "verified": false
+    },
+    {
+      "o": "서두르면 일을 그르친다.",
+      "t": "Haste spoils the work.",
+      "verified": false
+    },
+    {
+      "o": "낙숫물이 댓돌을 뚫는다.",
+      "t": "Dripping water bores the stone.",
+      "verified": false
+    },
+    {
+      "o": "가는 말이 고와야 오는 말이 곱다.",
+      "t": "Kind words bring kind words.",
+      "verified": false
+    },
+    {
+      "o": "하면 된다.",
+      "t": "If you try, it's done.",
+      "verified": false
+    }
+  ],
+  "ja": [
+    {
+      "o": "継続は力なり。",
+      "t": "Continuing is strength.",
+      "verified": false
+    },
+    {
+      "o": "塵も積もれば山となる。",
+      "t": "Dust piled up becomes a mountain.",
+      "verified": false
+    },
+    {
+      "o": "千里の道も一歩から。",
+      "t": "A thousand-mile road starts with one step.",
+      "verified": false
+    },
+    {
+      "o": "七転び八起き。",
+      "t": "Fall seven times, rise eight.",
+      "verified": false
+    },
+    {
+      "o": "急がば回れ。",
+      "t": "When in a hurry, take the long way.",
+      "verified": false
+    },
+    {
+      "o": "石の上にも三年。",
+      "t": "Three years on a rock, and it warms.",
+      "verified": false
+    },
+    {
+      "o": "好きこそ物の上手なれ。",
+      "t": "What you love, you do well.",
+      "verified": false
+    },
+    {
+      "o": "為せば成る。",
+      "t": "If you do it, it's done.",
+      "verified": false
+    }
+  ],
+  "zh": [
+    {
+      "o": "水滴石穿。",
+      "t": "Dripping water pierces stone.",
+      "verified": false
+    },
+    {
+      "o": "千里之行，始于足下。",
+      "t": "A thousand-mile journey starts beneath your feet.",
+      "verified": false
+    },
+    {
+      "o": "熟能生巧。",
+      "t": "Practice breeds skill.",
+      "verified": false
+    },
+    {
+      "o": "有志者事竟成。",
+      "t": "Where there's a will, there's a way.",
+      "verified": false
+    },
+    {
+      "o": "不积跬步，无以至千里。",
+      "t": "Without small steps, no thousand miles.",
+      "verified": false
+    },
+    {
+      "o": "一分耕耘，一分收获。",
+      "t": "One part effort, one part harvest.",
+      "verified": false
+    },
+    {
+      "o": "温故而知新。",
+      "t": "Review the old to learn the new.",
+      "verified": false
+    },
+    {
+      "o": "三人行，必有我师。",
+      "t": "In any three, one can teach me.",
+      "verified": false
+    }
+  ],
+  "th": [
+    {
+      "o": "ช้าๆ ได้พร้าเล่มงาม.",
+      "t": "Slow work yields a fine blade.",
+      "verified": false
+    },
+    {
+      "o": "ความพยายามอยู่ที่ไหน ความสำเร็จอยู่ที่นั่น.",
+      "t": "Where there's effort, there's success.",
+      "verified": false
+    },
+    {
+      "o": "น้ำหยดลงหิน ทุกวันหินยังกร่อน.",
+      "t": "Daily drops wear the stone.",
+      "verified": false
+    },
+    {
+      "o": "ฝนทั่งให้เป็นเข็ม.",
+      "t": "Grind the anvil into a needle.",
+      "verified": false
+    },
+    {
+      "o": "รู้ไว้ใช่ว่า ใส่บ่าแบกหาม.",
+      "t": "Knowing costs nothing to carry.",
+      "verified": false
+    },
+    {
+      "o": "อดเปรี้ยวไว้กินหวาน.",
+      "t": "Endure the sour to taste the sweet.",
+      "verified": false
+    },
+    {
+      "o": "ทำดีได้ดี.",
+      "t": "Do good, receive good.",
+      "verified": false
+    },
+    {
+      "o": "ช้าเป็นการ นานเป็นคุณ.",
+      "t": "Care and time bring quality.",
+      "verified": false
+    }
+  ],
+  "fil": [
+    {
+      "o": "Kung may tiyaga, may nilaga.",
+      "t": "With patience, there's reward.",
+      "verified": false
+    },
+    {
+      "o": "Nasa Diyos ang awa, nasa tao ang gawa.",
+      "t": "Do your part.",
+      "verified": false
+    },
+    {
+      "o": "Kapag maikli ang kumot, matutong mamaluktot.",
+      "t": "Adapt to what you have.",
+      "verified": false
+    },
+    {
+      "o": "Ang di lumingon sa pinanggalingan ay di makararating sa paroroonan.",
+      "t": "Remember your roots.",
+      "verified": false
+    },
+    {
+      "o": "Daig ng maagap ang masipag.",
+      "t": "The prompt beat the merely busy.",
+      "verified": false
+    },
+    {
+      "o": "Isang kahig, isang tuka.",
+      "t": "Step by step, day by day.",
+      "verified": false
+    },
+    {
+      "o": "Ubos-ubos biyaya, bukas ay wala.",
+      "t": "Use gifts wisely.",
+      "verified": false
+    },
+    {
+      "o": "Ang taong nagigipit, sa patalim kumakapit.",
+      "t": "Persevere through hardship.",
+      "verified": false
+    }
+  ]
+}

@@ -1,0 +1,70 @@
+{
+  "en": {
+    "text": "English spelling is a museum: silent letters preserve how words sounded centuries ago.",
+    "verified": false
+  },
+  "es": {
+    "text": "Spanish writes almost exactly as it sounds — but ñ, accents and the silent h keep their own rules.",
+    "verified": false
+  },
+  "fr": {
+    "text": "French keeps letters it no longer says: circumflexes mark an s that vanished long ago.",
+    "verified": false
+  },
+  "de": {
+    "text": "German builds long words by joining short ones — a whole idea in a single compound.",
+    "verified": false
+  },
+  "pt": {
+    "text": "Portuguese carries nasal vowels (ão, õe) that no other major European language spells this way.",
+    "verified": false
+  },
+  "it": {
+    "text": "Italian says every letter — and its doubled consonants are always heard, never silent.",
+    "verified": false
+  },
+  "nl": {
+    "text": "Dutch has a letter made of two: 'ij', written together and counted as one.",
+    "verified": false
+  },
+  "pl": {
+    "text": "Polish stacks consonants into clusters that look fierce but flow once you feel the rhythm.",
+    "verified": false
+  },
+  "sv": {
+    "text": "Swedish loves compounds and one famous sound — 'sj' — spelled a dozen different ways.",
+    "verified": false
+  },
+  "nb": {
+    "text": "Norwegian keeps three extra vowels — æ, ø, å — each its own clear sound.",
+    "verified": false
+  },
+  "tr": {
+    "text": "Turkish is almost perfectly phonetic, and its vowels harmonise so words sing in one key.",
+    "verified": false
+  },
+  "vi": {
+    "text": "Vietnamese quốc ngữ uses tone marks so one syllable can become six different words.",
+    "verified": false
+  },
+  "ko": {
+    "text": "Hangul was created in 1443 so everyone could learn to read — its letters mirror the mouth.",
+    "verified": false
+  },
+  "ja": {
+    "text": "Japanese kana were born from simplified kanji — a whole syllabary shaped from characters.",
+    "verified": false
+  },
+  "zh": {
+    "text": "Chinese characters are built from parts that picture meaning — a story inside each one.",
+    "verified": false
+  },
+  "th": {
+    "text": "Thai script descends from Khmer and Indic writing, carrying Sanskrit and Pali history.",
+    "verified": false
+  },
+  "fil": {
+    "text": "Filipino layers Spanish, Malay and English — its spelling tells the islands' history.",
+    "verified": false
+  }
+}

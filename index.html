@@ -306,6 +306,8 @@
   #dailyBtn.on{border-color:var(--amber);color:var(--amber-soft)}
   #dailyBtn.done{color:var(--muted)}
   .daily-best{color:var(--muted);font-size:13px;margin-top:-4px}
+  .daily-proverb{margin-top:12px;font-style:italic;color:var(--amber-soft);font-size:15px;line-height:1.4}
+  .daily-proverb .dp-tr{display:block;font-style:normal;color:var(--muted);font-size:13px;margin-top:3px}
   .vs-side{flex:1;min-width:0;background:var(--panel);border:1.5px solid var(--edge);border-radius:14px;padding:11px 12px;text-align:center;transition:border-color .2s,box-shadow .2s}
   .vs-side.active{border-color:var(--amber);box-shadow:0 0 0 3px rgba(255,177,77,.14)}
   .vs-name{font-size:12px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
@@ -733,6 +735,7 @@
       <div class="score-pop" id="dailyResScore">0/0</div>
       <p id="dailyResStreak"></p>
       <p class="daily-best" id="dailyResBest"></p>
+      <p class="daily-proverb" id="dailyResProverb"></p>
       <div class="row">
         <button class="btn btn-icon" id="dailyShare" data-i18n="daily.share" style="flex:1;border-radius:12px">Share</button>
         <button class="btn btn-check" id="dailyResClose" data-i18n="daily.close">Close</button>

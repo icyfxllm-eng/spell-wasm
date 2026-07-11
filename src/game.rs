@@ -384,6 +384,8 @@ pub fn build_level_options(app: &App) {
 
 thread_local! {
     static MEANING_SEQ: RefCell<u64> = RefCell::new(0);
+    // One beloved-word sparkle per session.
+    static BELOVED_SHOWN: std::cell::Cell<bool> = const { std::cell::Cell::new(false) };
 }
 
 pub fn clear_meaning() {
@@ -432,8 +434,16 @@ pub fn show_meaning(app: &App, word: String, lang_key: String) {
     let insight_html = {
         let s = app.borrow();
         let key = if s.cur_lang == crate::consts::ZH { s.spoken.clone() } else { word.clone() };
-        crate::enrich::insight(&lang_key, &key)
-            .map(|ins| format!("<span class=\"m-insight\">{}</span>", dom::escape_html(&ins.text)))
+        crate::enrich::insight(&lang_key, &key).map(|ins| {
+            // Beloved words (no_equivalent / usage_gem gems) get a subtle sparkle,
+            // at most once per session.
+            let sparkle = if ins.is_beloved() && !BELOVED_SHOWN.with(|c| c.replace(true)) {
+                " \u{2728}"
+            } else {
+                ""
+            };
+            format!("<span class=\"m-insight\">{}{}</span>", dom::escape_html(&ins.text), sparkle)
+        })
     };
     if let Some(ref ins) = insight_html {
         dom::set_html("meaning", &format!("<span class=\"m-word\">{}</span>{}", dom::escape_html(&word), ins));
@@ -1143,10 +1153,20 @@ fn render_daily_bar(app: &App) {
     }
 }
 
-fn show_daily_result(_app: &App, correct: u32, total: u32, streak: u32, best: u32) {
+fn show_daily_result(app: &App, correct: u32, total: u32, streak: u32, best: u32) {
     dom::set_text("dailyResScore", &format!("{correct}/{total}"));
     dom::set_text("dailyResStreak", &crate::i18n::tp("daily.streakDays", &[("n", &streak.to_string())]));
     dom::set_text("dailyResBest", &crate::i18n::tp("daily.bestStreak", &[("n", &best.to_string())]));
+    // Occasionally (~1 in 3, seeded by date+language so it's stable per day and
+    // non-repeating) surface a proverb in the session's language beneath the
+    // result — a language-honoring beat, not a new screen. Else stays blank.
+    let lang = app.borrow().lang.clone();
+    let date = crate::daily::today();
+    let seed = date.bytes().chain(lang.bytes()).fold(0xcbf29ce484222325u64, |h, b| (h ^ b as u64).wrapping_mul(0x100000001b3));
+    match crate::enrich::proverb(&lang, seed) {
+        Some(pv) => dom::set_html("dailyResProverb", &format!("\u{201c}{}\u{201d}<span class=\"dp-tr\">{}</span>", dom::escape_html(&pv.o), dom::escape_html(&pv.t))),
+        None => dom::set_text("dailyResProverb", ""),
+    }
     dom::add_class("dailyResScrim", "show");
 }
 
