@@ -1,0 +1,52 @@
+{
+  "hôpital": {
+    "type": "etymology",
+    "text": "The circumflex marks a lost s — old 'hospital', kin to English.",
+    "verified": false
+  },
+  "château": {
+    "type": "etymology",
+    "text": "Circumflex = a dropped s (castel); -eau ending — a castle.",
+    "verified": false
+  },
+  "oiseau": {
+    "type": "usage_gem",
+    "text": "Holds all five vowels, and not one is pronounced as written — a bird.",
+    "verified": false
+  },
+  "accueil": {
+    "type": "components",
+    "text": "The u after c keeps the hard sound before e — a welcome.",
+    "verified": false
+  },
+  "orgueil": {
+    "type": "components",
+    "text": "Same 'ueil' spelling that keeps c/g hard — pride.",
+    "verified": false
+  },
+  "chrysanthème": {
+    "type": "etymology",
+    "text": "Greek khrusos (gold) + anthemon (flower).",
+    "verified": false
+  },
+  "parapluie": {
+    "type": "compound",
+    "text": "para (against) + pluie (rain) — an umbrella.",
+    "verified": false
+  },
+  "tournesol": {
+    "type": "compound",
+    "text": "tourne (turns) + sol (sun) — a sunflower that follows the light.",
+    "verified": false
+  },
+  "rythme": {
+    "type": "etymology",
+    "text": "From Greek; a silent-final e and a y — rhythm.",
+    "verified": false
+  },
+  "quincaillerie": {
+    "type": "usage_gem",
+    "text": "A hardware shop; qu, ill and -erie stacked — a spelling marathon.",
+    "verified": false
+  }
+}

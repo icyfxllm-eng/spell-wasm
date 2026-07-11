@@ -1,0 +1,52 @@
+{
+  "kjøleskap": {
+    "type": "compound",
+    "text": "kjøle (cool) + skap (cupboard); kj is the soft sound — a fridge.",
+    "verified": false
+  },
+  "sommerfugl": {
+    "type": "compound",
+    "text": "sommer (summer) + fugl (bird) — a butterfly.",
+    "verified": false
+  },
+  "sykehus": {
+    "type": "compound",
+    "text": "syke (sick) + hus (house) — a hospital.",
+    "verified": false
+  },
+  "flodhest": {
+    "type": "compound",
+    "text": "flod (river) + hest (horse) — a hippopotamus.",
+    "verified": false
+  },
+  "solsikke": {
+    "type": "compound",
+    "text": "sol (sun) + sikke — a sunflower.",
+    "verified": false
+  },
+  "ordbok": {
+    "type": "compound",
+    "text": "ord (word) + bok (book) — a dictionary.",
+    "verified": false
+  },
+  "bursdag": {
+    "type": "compound",
+    "text": "burs (birth) + dag (day) — a birthday.",
+    "verified": false
+  },
+  "kjøkken": {
+    "type": "usage_gem",
+    "text": "kj spells the soft ç-sound — a kitchen.",
+    "verified": false
+  },
+  "skilpadde": {
+    "type": "compound",
+    "text": "skil (shield) + padde (toad) — a turtle.",
+    "verified": false
+  },
+  "datamaskin": {
+    "type": "compound",
+    "text": "data + maskin (machine) — a computer.",
+    "verified": false
+  }
+}

@@ -1,0 +1,52 @@
+{
+  "sjukhus": {
+    "type": "compound",
+    "text": "sjuk (sick) + hus (house); sj is the famous Swedish sound — a hospital.",
+    "verified": false
+  },
+  "kylskåp": {
+    "type": "compound",
+    "text": "kyl (cool) + skåp (cupboard) — a fridge.",
+    "verified": false
+  },
+  "glasögon": {
+    "type": "compound",
+    "text": "glas (glass) + ögon (eyes) — glasses.",
+    "verified": false
+  },
+  "fjäril": {
+    "type": "usage_gem",
+    "text": "The fj opening glides like wings — a butterfly.",
+    "verified": false
+  },
+  "sköldpadda": {
+    "type": "compound",
+    "text": "sköld (shield) + padda (toad) — a turtle.",
+    "verified": false
+  },
+  "flodhäst": {
+    "type": "compound",
+    "text": "flod (river) + häst (horse) — a hippopotamus.",
+    "verified": false
+  },
+  "solros": {
+    "type": "compound",
+    "text": "sol (sun) + ros (rose) — a sunflower.",
+    "verified": false
+  },
+  "födelsedag": {
+    "type": "compound",
+    "text": "födelse (birth) + dag (day) — a birthday.",
+    "verified": false
+  },
+  "ordbok": {
+    "type": "compound",
+    "text": "ord (word) + bok (book) — a dictionary.",
+    "verified": false
+  },
+  "trädgård": {
+    "type": "compound",
+    "text": "träd (tree) + gård (yard) — a garden.",
+    "verified": false
+  }
+}

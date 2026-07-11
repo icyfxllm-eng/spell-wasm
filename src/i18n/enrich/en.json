@@ -1,0 +1,52 @@
+{
+  "yacht": {
+    "type": "etymology",
+    "text": "From Dutch 'jacht' (a hunt) — a fast ship; the spelling stayed Dutch.",
+    "verified": false
+  },
+  "rhythm": {
+    "type": "etymology",
+    "text": "From Greek rhythmos — flow; famously written with no standard vowel.",
+    "verified": false
+  },
+  "silhouette": {
+    "type": "etymology",
+    "text": "Named after Étienne de Silhouette, an 18th-century French minister.",
+    "verified": false
+  },
+  "chocolate": {
+    "type": "etymology",
+    "text": "From Nahuatl (Aztec) 'xocolatl' — bitter water.",
+    "verified": false
+  },
+  "schadenfreude": {
+    "type": "etymology",
+    "text": "Borrowed whole from German: Schaden (harm) + Freude (joy).",
+    "verified": false
+  },
+  "kaleidoscope": {
+    "type": "etymology",
+    "text": "Greek: kalos (beautiful) + eidos (form) + skopeo (to look).",
+    "verified": false
+  },
+  "onomatopoeia": {
+    "type": "etymology",
+    "text": "Greek 'name-making' — words that sound like what they mean.",
+    "verified": false
+  },
+  "quinoa": {
+    "type": "etymology",
+    "text": "From Quechua 'kinwa' — the Andean grain; spelling kept from the source.",
+    "verified": false
+  },
+  "mnemonic": {
+    "type": "etymology",
+    "text": "From Mnemosyne, Greek goddess of memory — hence the silent m.",
+    "verified": false
+  },
+  "hierarchy": {
+    "type": "etymology",
+    "text": "Greek hieros (sacred) + arkhia (rule) — a sacred order.",
+    "verified": false
+  }
+}

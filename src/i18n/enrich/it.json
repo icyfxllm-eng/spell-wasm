@@ -1,0 +1,52 @@
+{
+  "farfalla": {
+    "type": "usage_gem",
+    "text": "The double l flutters; every Italian double is heard — a butterfly.",
+    "verified": false
+  },
+  "ombrello": {
+    "type": "usage_gem",
+    "text": "Double l, clearly pronounced — an umbrella.",
+    "verified": false
+  },
+  "coniglio": {
+    "type": "usage_gem",
+    "text": "gli is one liquid sound, not g-l-i — a rabbit.",
+    "verified": false
+  },
+  "specchio": {
+    "type": "usage_gem",
+    "text": "cch keeps the hard k before i — a mirror.",
+    "verified": false
+  },
+  "pipistrello": {
+    "type": "usage_gem",
+    "text": "A bat — five syllables of pure Italian rhythm, ending in a double l.",
+    "verified": false
+  },
+  "ippopotamo": {
+    "type": "etymology",
+    "text": "Greek 'river horse'; the double p is heard — a hippopotamus.",
+    "verified": false
+  },
+  "cucchiaio": {
+    "type": "usage_gem",
+    "text": "cch hard-k plus i-a-i-o — a spoon.",
+    "verified": false
+  },
+  "giraffa": {
+    "type": "usage_gem",
+    "text": "Soft gi and a double f — a giraffe.",
+    "verified": false
+  },
+  "sciarpa": {
+    "type": "usage_gem",
+    "text": "sci spells the /sh/ sound — a scarf.",
+    "verified": false
+  },
+  "cipolla": {
+    "type": "usage_gem",
+    "text": "Double l, always pronounced — an onion.",
+    "verified": false
+  }
+}

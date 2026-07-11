@@ -1,0 +1,52 @@
+{
+  "kompyuter": {
+    "type": "etymology",
+    "text": "English 'computer' respelled to Filipino sound — a teaching word.",
+    "verified": false
+  },
+  "tsokolate": {
+    "type": "etymology",
+    "text": "Spanish 'chocolate' becomes ts- and k — chocolate.",
+    "verified": false
+  },
+  "iskedyul": {
+    "type": "etymology",
+    "text": "English 'schedule' respelled — the spelling that fights English.",
+    "verified": false
+  },
+  "titser": {
+    "type": "etymology",
+    "text": "English 'teacher' spelled as it sounds — a teacher.",
+    "verified": false
+  },
+  "drayber": {
+    "type": "etymology",
+    "text": "English 'driver' respelled phonetically — a driver.",
+    "verified": false
+  },
+  "kapatid": {
+    "type": "no_equivalent",
+    "text": "One word for sibling — brother or sister, no gender.",
+    "verified": false
+  },
+  "mag-aral": {
+    "type": "components",
+    "text": "mag- (verb) + aral (study); the hyphen marks a glottal stop.",
+    "verified": false
+  },
+  "pag-ibig": {
+    "type": "components",
+    "text": "pag- + ibig (love); the hyphen is a glottal catch before the vowel.",
+    "verified": false
+  },
+  "paruparo": {
+    "type": "usage_gem",
+    "text": "The doubled 'paru' flutters — a butterfly.",
+    "verified": false
+  },
+  "sombrero": {
+    "type": "etymology",
+    "text": "Kept from Spanish — a hat.",
+    "verified": false
+  }
+}

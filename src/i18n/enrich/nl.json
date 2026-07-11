@@ -1,0 +1,52 @@
+{
+  "handschoen": {
+    "type": "compound",
+    "text": "hand + schoen (shoe) — a glove.",
+    "verified": false
+  },
+  "vliegtuig": {
+    "type": "compound",
+    "text": "vlieg (fly) + tuig (gear) — an aeroplane.",
+    "verified": false
+  },
+  "ziekenhuis": {
+    "type": "compound",
+    "text": "zieken (sick) + huis (house) — a hospital.",
+    "verified": false
+  },
+  "woordenboek": {
+    "type": "compound",
+    "text": "woorden (words) + boek (book) — a dictionary.",
+    "verified": false
+  },
+  "koelkast": {
+    "type": "compound",
+    "text": "koel (cool) + kast (cupboard) — a fridge.",
+    "verified": false
+  },
+  "verjaardag": {
+    "type": "compound",
+    "text": "ver + jaar (year) + dag (day) — a birthday.",
+    "verified": false
+  },
+  "nijlpaard": {
+    "type": "compound",
+    "text": "Nijl (Nile) + paard (horse) — a hippopotamus.",
+    "verified": false
+  },
+  "zonnebloem": {
+    "type": "compound",
+    "text": "zonne (sun) + bloem (flower) — a sunflower.",
+    "verified": false
+  },
+  "meisje": {
+    "type": "usage_gem",
+    "text": "The 'ei' sound; ei and ij are homophones — the Dutch spelling test.",
+    "verified": false
+  },
+  "vlinder": {
+    "type": "usage_gem",
+    "text": "The v-l opening flutters — a butterfly.",
+    "verified": false
+  }
+}

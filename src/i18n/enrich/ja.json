@@ -1,0 +1,52 @@
+{
+  "みず": {
+    "type": "etymology",
+    "text": "水 — one of the first kanji learned, a picture of flowing water.",
+    "verified": false
+  },
+  "やま": {
+    "type": "components",
+    "text": "山 — three peaks; a mountain.",
+    "verified": false
+  },
+  "はな": {
+    "type": "usage_gem",
+    "text": "花 (flower) and 鼻 (nose) are both 'hana' — same sound, different kanji.",
+    "verified": false
+  },
+  "びょういん": {
+    "type": "usage_gem",
+    "text": "びょういん (hospital) vs びよういん (salon) — the small ょ decides.",
+    "verified": false
+  },
+  "がっこう": {
+    "type": "usage_gem",
+    "text": "Small っ plus long おう — two spelling traps in one word: school.",
+    "verified": false
+  },
+  "せんせい": {
+    "type": "usage_gem",
+    "text": "えい is written with い but sounds like long e — a teacher.",
+    "verified": false
+  },
+  "ちず": {
+    "type": "usage_gem",
+    "text": "Written ず, not づ — the rendaku spelling rule; a map.",
+    "verified": false
+  },
+  "でんしゃ": {
+    "type": "components",
+    "text": "電車 — electric + car; a train.",
+    "verified": false
+  },
+  "とけい": {
+    "type": "usage_gem",
+    "text": "えい, a long-e written with い — a clock.",
+    "verified": false
+  },
+  "つくえ": {
+    "type": "components",
+    "text": "机 — a desk; note there is no small っ here.",
+    "verified": false
+  }
+}

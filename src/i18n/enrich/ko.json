@@ -1,0 +1,52 @@
+{
+  "엄마": {
+    "type": "components",
+    "text": "The ㅁ is drawn like closed lips — the first sound a baby makes: mom.",
+    "verified": false
+  },
+  "학교": {
+    "type": "sound_change",
+    "text": "Written 학+교 but pronounced 학꾜 — the k tenses; a school.",
+    "verified": false
+  },
+  "물고기": {
+    "type": "components",
+    "text": "물 (water) + 고기 (flesh) — a fish.",
+    "verified": false
+  },
+  "냉장고": {
+    "type": "components",
+    "text": "냉 (cold) + 장 (store) + 고 (box) — a fridge.",
+    "verified": false
+  },
+  "무지개": {
+    "type": "usage_gem",
+    "text": "A soft, lovely word — a rainbow.",
+    "verified": false
+  },
+  "친구": {
+    "type": "etymology",
+    "text": "From Hanja 親舊: close + old — a friend.",
+    "verified": false
+  },
+  "선생님": {
+    "type": "components",
+    "text": "선생 (teacher) + 님 (honorific) — the respectful 'teacher'.",
+    "verified": false
+  },
+  "도서관": {
+    "type": "components",
+    "text": "도서 (books) + 관 (hall) — a library.",
+    "verified": false
+  },
+  "얼굴": {
+    "type": "usage_gem",
+    "text": "A face — where the spirit shows.",
+    "verified": false
+  },
+  "할아버지": {
+    "type": "components",
+    "text": "A warm three-block family word — a grandfather.",
+    "verified": false
+  }
+}

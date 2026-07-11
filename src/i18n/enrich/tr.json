@@ -1,0 +1,52 @@
+{
+  "buzdolabı": {
+    "type": "compound",
+    "text": "buz (ice) + dolap (cupboard); note the vowel harmony — a fridge.",
+    "verified": false
+  },
+  "kütüphane": {
+    "type": "etymology",
+    "text": "From Arabic/Persian; front vowels ü-ü-a-e — a library.",
+    "verified": false
+  },
+  "kelebek": {
+    "type": "usage_gem",
+    "text": "Even e-e-e vowel harmony, soft and light — a butterfly.",
+    "verified": false
+  },
+  "ayçiçeği": {
+    "type": "compound",
+    "text": "ay (moon) + çiçek (flower); the soft ğ never sounds — a sunflower.",
+    "verified": false
+  },
+  "kaplumbağa": {
+    "type": "usage_gem",
+    "text": "The soft ğ only lengthens the vowel — a turtle.",
+    "verified": false
+  },
+  "suaygırı": {
+    "type": "compound",
+    "text": "su (water) + aygır (stallion) — a hippopotamus.",
+    "verified": false
+  },
+  "üniversite": {
+    "type": "etymology",
+    "text": "From French; front-vowel harmony ü-i-e-i-e — a university.",
+    "verified": false
+  },
+  "bilgisayar": {
+    "type": "compound",
+    "text": "bilgi (knowledge) + sayar (counter) — a computer, coined in Turkish.",
+    "verified": false
+  },
+  "doğumgünü": {
+    "type": "compound",
+    "text": "doğum (birth) + gün (day), with vowel harmony — a birthday.",
+    "verified": false
+  },
+  "gözlük": {
+    "type": "compound",
+    "text": "göz (eye) + -lük — glasses; back-to-front vowel harmony.",
+    "verified": false
+  }
+}

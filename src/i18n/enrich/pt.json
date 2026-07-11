@@ -1,0 +1,52 @@
+{
+  "saudade": {
+    "type": "no_equivalent",
+    "text": "A tender longing for what is absent — Portuguese's flagship word.",
+    "verified": false
+  },
+  "cegonha": {
+    "type": "usage_gem",
+    "text": "nh spells the /ny/ sound — a stork.",
+    "verified": false
+  },
+  "borboleta": {
+    "type": "usage_gem",
+    "text": "b-r-b-l flutters like the thing it names — a butterfly.",
+    "verified": false
+  },
+  "abóbora": {
+    "type": "usage_gem",
+    "text": "Stress on the third-to-last syllable (esdrúxula) — a pumpkin.",
+    "verified": false
+  },
+  "hipopótamo": {
+    "type": "etymology",
+    "text": "Silent h and an accented ó — a hippopotamus, 'river horse'.",
+    "verified": false
+  },
+  "montanha": {
+    "type": "usage_gem",
+    "text": "nh spells /ny/ — a mountain.",
+    "verified": false
+  },
+  "chaminé": {
+    "type": "usage_gem",
+    "text": "ch spells /sh/, with an accented final é — a chimney.",
+    "verified": false
+  },
+  "guitarra": {
+    "type": "usage_gem",
+    "text": "gu keeps the hard g, double r trills — a guitar.",
+    "verified": false
+  },
+  "xilofone": {
+    "type": "usage_gem",
+    "text": "Here x sounds like /z/; x has four sounds in Portuguese.",
+    "verified": false
+  },
+  "coração": {
+    "type": "usage_gem",
+    "text": "The ção nasal ending — heart; the warmth of the language.",
+    "verified": false
+  }
+}

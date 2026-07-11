@@ -30,9 +30,23 @@ fn tables() -> &'static HashMap<&'static str, Table> {
     T.get_or_init(|| {
         let mut m: HashMap<&'static str, Table> = HashMap::new();
         // Pilot languages (spec step 3): components / tone_family / compound.
-        m.insert("zh", parse(include_str!("i18n/enrich/zh.json")));
-        m.insert("vi", parse(include_str!("i18n/enrich/vi.json")));
+        m.insert("en", parse(include_str!("i18n/enrich/en.json")));
+        m.insert("es", parse(include_str!("i18n/enrich/es.json")));
+        m.insert("fr", parse(include_str!("i18n/enrich/fr.json")));
         m.insert("de", parse(include_str!("i18n/enrich/de.json")));
+        m.insert("pt", parse(include_str!("i18n/enrich/pt.json")));
+        m.insert("it", parse(include_str!("i18n/enrich/it.json")));
+        m.insert("nl", parse(include_str!("i18n/enrich/nl.json")));
+        m.insert("pl", parse(include_str!("i18n/enrich/pl.json")));
+        m.insert("sv", parse(include_str!("i18n/enrich/sv.json")));
+        m.insert("nb", parse(include_str!("i18n/enrich/nb.json")));
+        m.insert("tr", parse(include_str!("i18n/enrich/tr.json")));
+        m.insert("vi", parse(include_str!("i18n/enrich/vi.json")));
+        m.insert("ko", parse(include_str!("i18n/enrich/ko.json")));
+        m.insert("ja", parse(include_str!("i18n/enrich/ja.json")));
+        m.insert("zh", parse(include_str!("i18n/enrich/zh.json")));
+        m.insert("th", parse(include_str!("i18n/enrich/th.json")));
+        m.insert("fil", parse(include_str!("i18n/enrich/fil.json")));
         m
     })
 }
@@ -69,7 +83,7 @@ mod tests {
 
     #[test]
     fn pilots_load_and_are_within_budget() {
-        for lang in ["zh", "vi", "de"] {
+        for lang in ["en","es","fr","de","pt","it","nl","pl","sv","nb","tr","vi","ko","ja","zh","th","fil"] {
             let t = tables().get(lang).expect("pilot table missing");
             assert!(!t.is_empty(), "{lang} enrichment empty");
             for (word, ins) in t {

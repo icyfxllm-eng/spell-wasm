@@ -1,0 +1,52 @@
+{
+  "murciélago": {
+    "type": "usage_gem",
+    "text": "The one common Spanish word holding all five vowels — a bat.",
+    "verified": false
+  },
+  "cigüeña": {
+    "type": "components",
+    "text": "The diéresis on ü makes it sound before e — a stork.",
+    "verified": false
+  },
+  "vergüenza": {
+    "type": "components",
+    "text": "Diéresis again: g-u-e all pronounced — shame.",
+    "verified": false
+  },
+  "jirafa": {
+    "type": "usage_gem",
+    "text": "The j spells the /x/ sound; g before i would sound the same — a giraffe.",
+    "verified": false
+  },
+  "almohada": {
+    "type": "etymology",
+    "text": "From Arabic 'al-mihadda'; the h is silent — a pillow.",
+    "verified": false
+  },
+  "zanahoria": {
+    "type": "usage_gem",
+    "text": "Silent h inside, z for the /s/ sound (seseo) — a carrot.",
+    "verified": false
+  },
+  "psicólogo": {
+    "type": "etymology",
+    "text": "From Greek psykhe; the p is silent — a psychologist.",
+    "verified": false
+  },
+  "bilingüe": {
+    "type": "components",
+    "text": "The diéresis on ü makes it heard — bilingual.",
+    "verified": false
+  },
+  "guitarra": {
+    "type": "usage_gem",
+    "text": "gu keeps the hard g before i; the double r trills — a guitar.",
+    "verified": false
+  },
+  "xilófono": {
+    "type": "etymology",
+    "text": "Greek xylon (wood) + phone (sound) — a xylophone.",
+    "verified": false
+  }
+}

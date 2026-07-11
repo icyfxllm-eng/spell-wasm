@@ -1,0 +1,52 @@
+{
+  "żyrafa": {
+    "type": "usage_gem",
+    "text": "ż (dotted) spells the /zh/ sound — a giraffe.",
+    "verified": false
+  },
+  "wiewiórka": {
+    "type": "usage_gem",
+    "text": "A squirrel — the cluster Polish children love to say.",
+    "verified": false
+  },
+  "słoń": {
+    "type": "usage_gem",
+    "text": "The ń softens the ending — an elephant.",
+    "verified": false
+  },
+  "pomarańcza": {
+    "type": "usage_gem",
+    "text": "ń plus the cz cluster — an orange.",
+    "verified": false
+  },
+  "grzyb": {
+    "type": "usage_gem",
+    "text": "rz spells /zh/ — a mushroom.",
+    "verified": false
+  },
+  "dżem": {
+    "type": "etymology",
+    "text": "dż spells /j/ — borrowed from English 'jam'.",
+    "verified": false
+  },
+  "przygoda": {
+    "type": "usage_gem",
+    "text": "The prz cluster to open — an adventure.",
+    "verified": false
+  },
+  "czekolada": {
+    "type": "usage_gem",
+    "text": "cz spells /ch/ — chocolate.",
+    "verified": false
+  },
+  "słonecznik": {
+    "type": "compound",
+    "text": "słońce (sun) + -nik — a sunflower.",
+    "verified": false
+  },
+  "żółw": {
+    "type": "usage_gem",
+    "text": "ż, ó and ł — three tricky letters in one small word for turtle.",
+    "verified": false
+  }
+}
