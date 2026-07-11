@@ -6,7 +6,9 @@ version = "0.1.0"
 edition = "2021"
 
 [lib]
-crate-type = ["cdylib"]
+# rlib in addition to cdylib so integration tests (tests/*.rs) can link the core
+# for the editor/mywords property tests; the wasm build still emits the cdylib.
+crate-type = ["cdylib", "rlib"]
 
 [features]
 # Exposes window.__spelltest (observation-only test seam) for the Playwright
@@ -22,7 +24,11 @@ serde = { version = "1", features = ["derive"] }
 serde_json = "1"
 regex = "1"
 unicode-normalization = "0.1"
+unicode-segmentation = "1"
 console_error_panic_hook = "0.1"
+
+[dev-dependencies]
+proptest = "1"
 
 [dependencies.web-sys]
 version = "0.3"

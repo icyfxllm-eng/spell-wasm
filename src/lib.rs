@@ -11,6 +11,7 @@ mod digital_ink;
 mod dom;
 mod draw_judge;
 mod drawing;
+pub mod editor;
 mod enrich;
 mod game;
 mod haptics;
