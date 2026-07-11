@@ -58,6 +58,7 @@ pub fn answer_matches(typed: &str, word: &str, kid: bool) -> bool {
 #[cfg(test)]
 mod tests {
     use super::*;
+    use unicode_normalization::UnicodeNormalization;
 
     #[test]
     fn case_insensitive_with_diacritics() {
@@ -115,6 +116,28 @@ mod tests {
         assert!(answer_matches("Mag-Aral", "mag-aral", false));
         // Normal mode is ñ-strict: "pina" must not match "piña".
         assert!(!answer_matches("pina", "piña", false));
+    }
+
+    #[test]
+    fn korean_precomposed_matches_decomposed_jamo() {
+        // Phase 0.1: the NFC chokepoint must make conjoining-jamo input match a
+        // precomposed syllable. 한 (simple), 값 (double final consonant ㅄ), 의
+        // (compound vowel) — decomposed via NFD, must recompose and match.
+        for w in ["\u{d55c}", "\u{ac12}", "\u{c758}"] {
+            let decomposed: String = w.nfd().collect();
+            assert_ne!(w, decomposed.as_str(), "{w} must actually decompose");
+            assert!(answer_matches(&decomposed, w, false), "{w}: decomposed jamo must match NFC");
+        }
+    }
+
+    #[test]
+    fn vietnamese_precomposed_matches_decomposed() {
+        // Phase 0.1: ế / ệ (base + circumflex + tone) decomposed must match NFC.
+        for w in ["\u{1ebf}", "\u{1ec7}"] {
+            let decomposed: String = w.nfd().collect();
+            assert_ne!(w, decomposed.as_str(), "{w} must actually decompose");
+            assert!(answer_matches(&decomposed, w, false), "{w}: decomposed must match NFC");
+        }
     }
 
     #[test]
