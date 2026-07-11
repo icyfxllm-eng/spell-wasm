@@ -815,3 +815,36 @@ pub fn tier_for(lang: &str, tier: &str) -> &'static [&'static str] {
         _ => en_tier(tier),
     }
 }
+
+#[cfg(test)]
+mod tier_dump {
+    //! Read-only diagnostic support: dump exactly what `tier_for` ships, for the
+    //! tier-health report. Ignored by default; run explicitly:
+    //!   cargo test --lib tier_dump::dump -- --ignored --nocapture
+    use crate::consts::BUILTIN_LANGS;
+
+    #[test]
+    #[ignore]
+    fn dump() {
+        let tiers = ["easy", "medium", "hard", "expert"];
+        let mut obj = String::from("{\n");
+        for (li, (lang, _)) in BUILTIN_LANGS.iter().enumerate() {
+            obj.push_str(&format!("  \"{lang}\": {{\n"));
+            for (ti, tier) in tiers.iter().enumerate() {
+                let words = super::tier_for(lang, tier);
+                let items: Vec<String> = words
+                    .iter()
+                    // raw UTF-8, JSON-escape only " and \ (keep CJK/Thai literal)
+                    .map(|w| format!("\"{}\"", w.replace('\\', "\\\\").replace('"', "\\\"")))
+                    .collect();
+                let comma = if ti + 1 < tiers.len() { "," } else { "" };
+                obj.push_str(&format!("    \"{tier}\": [{}]{comma}\n", items.join(", ")));
+            }
+            let comma = if li + 1 < BUILTIN_LANGS.len() { "," } else { "" };
+            obj.push_str(&format!("  }}{comma}\n"));
+        }
+        obj.push_str("}\n");
+        std::fs::write("tools/tierhealth/tiers_dump.json", obj).expect("write dump");
+        eprintln!("wrote tools/tierhealth/tiers_dump.json");
+    }
+}
