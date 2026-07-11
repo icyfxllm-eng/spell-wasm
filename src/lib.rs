@@ -7,6 +7,7 @@ mod climb;
 mod consts;
 mod daily;
 mod deck;
+mod digital_ink;
 mod dom;
 mod draw_judge;
 mod drawing;

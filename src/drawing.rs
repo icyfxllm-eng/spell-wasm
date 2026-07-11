@@ -101,6 +101,22 @@ pub fn has_strokes() -> bool {
     STATE.with(|s| !s.borrow().strokes.is_empty())
 }
 
+/// The pen strokes (erase strokes excluded) as polylines of (x, y) points in
+/// canvas/CSS pixels — the input the ML Kit Digital Ink recognizer consumes via
+/// `digital_ink::read_drawn`. Kept separate from `render_for_ocr` (which
+/// rasterizes for the legacy Tesseract path); stroke data is far richer than a
+/// bitmap for handwriting.
+pub fn ink_strokes() -> Vec<Vec<(f64, f64)>> {
+    STATE.with(|s| {
+        s.borrow()
+            .strokes
+            .iter()
+            .filter(|st| !st.erase)
+            .map(|st| st.pts.clone())
+            .collect()
+    })
+}
+
 pub fn size_canvas() {
     let canvas = dom::canvas("canvas");
     let dpr = dom::window().device_pixel_ratio();
