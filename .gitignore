@@ -64,3 +64,7 @@ vendor-hanzi-writer.min.js
 tools/langdata/sources/
 tools/langdata/out/
 spell-wasm/
+
+# wordpipe open corpora (large, regenerable)
+tools/wordpipe/sources/
+tools/wordpipe/out/
