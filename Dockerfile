@@ -12,7 +12,7 @@ RUN cargo build --release --target wasm32-unknown-unknown \
 # Stage 2: serve the static site with Caddy (automatic HTTPS included).
 FROM caddy:2-alpine
 COPY Caddyfile /etc/caddy/Caddyfile
-COPY index.html privacy.html ocr-shim.js audio-native.js manifest.json sw.js /srv/
+COPY index.html privacy.html audio-native.js manifest.json sw.js /srv/
 COPY icons /srv/icons
 # Android App Links verification file, served at /.well-known/assetlinks.json.
 COPY .well-known /srv/.well-known
