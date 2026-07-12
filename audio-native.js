@@ -71,10 +71,25 @@
   var preloadInFlight = new Map();  // assetId -> Promise<void>     (single-flight)
   var current = null;               // assetId currently playing (to stop before next)
 
-  // A stable, filesystem-safe filename for an assetId. assetIds are like
-  // "w:normal:apple"; keep them unique but path-safe.
+  // A stable, filesystem-safe, UNIQUE filename for an assetId. assetIds are like
+  // "w:normal:apple" or "w:zh:normal:认识".
+  //
+  // The old version replaced every non-[a-zA-Z0-9._-] char with "_", which
+  // collapsed non-ASCII text: "w:zh:normal:认识" and "w:zh:normal:直接" both
+  // became "w_zh_normal___.mp3". So every 2-character Chinese (and Japanese /
+  // Korean / Thai) word shared one cache file — the first clip cached replayed
+  // for all of them, i.e. "the same word on every difficulty" on the native app.
+  //
+  // Hash the full assetId (djb2, unsigned 32-bit) so the name is unique per word
+  // regardless of script; keep a short ASCII prefix for debuggability. Existing
+  // (collided) cache files simply go unused — no migration needed.
   function fileName(assetId) {
-    return "spell-audio/" + assetId.replace(/[^a-zA-Z0-9._-]/g, "_") + ".mp3";
+    var h = 5381;
+    for (var i = 0; i < assetId.length; i++) {
+      h = (((h << 5) + h) + assetId.charCodeAt(i)) >>> 0;
+    }
+    var prefix = assetId.replace(/[^a-zA-Z0-9]/g, "").slice(0, 24);
+    return "spell-audio/" + prefix + "-" + ("0000000" + h.toString(16)).slice(-8) + ".mp3";
   }
 
   function arrayBufferToBase64(buf) {
