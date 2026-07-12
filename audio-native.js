@@ -46,9 +46,15 @@
     var P = window.Capacitor.Plugins;
     if (!_configured) {
       _configured = true;
-      // Don't steal audio focus from the user's music/podcast; clips mix in.
+      // focus:true → the plugin sets AVAudioSession category .playback, so word
+      // audio is AUDIBLE EVEN WHEN THE RING/SILENT SWITCH IS ON. Audio *is* the
+      // game ("hear it, spell it"), so it must never be muted by the hardware
+      // switch. (focus:false maps to .ambient, which respects the mute switch and
+      // silenced every word for anyone with their phone on silent — the P0 bug.)
+      // Trade-off: .playback interrupts background music, which is the right call
+      // for a spelling game where the word must be heard.
       if (typeof P.NativeAudio.configure === "function") {
-        P.NativeAudio.configure({ focus: false, fade: false }).catch(function () {});
+        P.NativeAudio.configure({ focus: true, fade: false }).catch(function () {});
       }
     }
     return { NativeAudio: P.NativeAudio, Filesystem: P.Filesystem };
