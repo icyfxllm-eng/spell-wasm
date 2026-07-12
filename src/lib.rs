@@ -45,7 +45,6 @@ use std::rc::Rc;
 use wasm_bindgen::closure::Closure;
 use wasm_bindgen::prelude::*;
 use wasm_bindgen::JsCast;
-use wasm_bindgen_futures::spawn_local;
 
 use consts::{EN, MINE};
 use model::AppState;
@@ -591,33 +590,6 @@ fn wire_import(app: &App) {
     }
     dom::on::<web_sys::Event, _>("importText", "input", |_| update_import_count());
 
-    dom::on_click("fetchUrl", || {
-        let url = dom::input("importUrl").value().trim().to_string();
-        if url.is_empty() {
-            return;
-        }
-        dom::set_text("importNote", &i18n::t("import.fetching"));
-        spawn_local(async move {
-            match importer::fetch_words_from_url(&url).await {
-                Ok(words) => {
-                    let ta = dom::textarea("importText");
-                    let existing = ta.value();
-                    let joined = words.join(" ");
-                    ta.set_value(&if existing.is_empty() { joined.clone() } else { format!("{}\n{}", existing, joined) });
-                    update_import_count();
-                    if words.is_empty() {
-                        dom::set_text("importNote", &i18n::t("import.noWords"));
-                    } else {
-                        dom::set_text("importNote", &i18n::tp("import.addedFromLink", &[("n", &words.len().to_string())]));
-                    }
-                }
-                Err(_) => {
-                    dom::set_text("importNote", &i18n::t("import.fetchFail"));
-                }
-            }
-        });
-    });
-
     {
         let a = app.clone();
         dom::on_click("saveWords", move || {
@@ -666,7 +638,6 @@ fn wire_import(app: &App) {
             // Clean slate: clear the input now it's saved (words persist — save is
             // additive), so reopening My Words is empty.
             dom::textarea("importText").set_value("");
-            dom::input("importUrl").set_value("");
             update_import_count();
             dom::remove_class("importScrim", "show");
             let saved_msg = if blocked > 0 {

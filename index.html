@@ -456,9 +456,6 @@
   .climb-empty,.climb-loading{color:var(--muted-2);text-align:center;padding:16px;font-size:13.5px}
   .modal textarea{width:100%;min-height:112px;resize:vertical;background:var(--panel-2);border:1.5px solid var(--edge);border-radius:12px;padding:12px;color:var(--ink);font-family:var(--body);font-size:16px;line-height:1.5;margin-bottom:10px}
   .modal textarea:focus{outline:none;border-color:var(--amber)}
-  .url-row{display:flex;gap:8px;margin-bottom:12px}
-  .url-row input{flex:1;width:auto;background:var(--panel-2);border:1.5px solid var(--edge);border-radius:12px;padding:11px;color:var(--ink);font-family:var(--body);font-size:16px;text-align:left;text-transform:none;letter-spacing:0;margin:0}
-  .url-row input:focus{outline:none;border-color:var(--amber)}
   .imp-foot{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:14px}
   .imp-lang{font-size:12px;color:var(--muted);display:flex;align-items:center;gap:8px}
   .imp-lang select{padding:7px 26px 7px 10px;font-size:16px}
@@ -667,12 +664,8 @@
   <div class="scrim" id="importScrim">
     <div class="modal wide">
       <h3 data-i18n="import.title">Bring your own words</h3>
-      <p data-i18n="import.blurb">Practice the exact words you keep getting wrong — paste text, type a list, or pull from a link.</p>
+      <p data-i18n="import.blurb">Practice the exact words you keep getting wrong — paste text or type a list.</p>
       <textarea id="importText" placeholder="Paste any text or a list of words here…" data-i18n-ph="ph.importText" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"></textarea>
-      <div class="url-row">
-        <input id="importUrl" type="url" placeholder="https://…  (optional)" data-i18n-ph="ph.importUrl" autocomplete="off" autocorrect="off" autocapitalize="none" spellcheck="false" />
-        <button class="pill" id="fetchUrl" data-i18n="import.fetch">Fetch</button>
-      </div>
       <div class="imp-foot">
         <label class="imp-lang"><span data-i18n="import.speakIn">Speak in</span> <select id="importLang" aria-label="Pronunciation language"></select></label>
         <span class="imp-count" id="importCount">0 words</span>

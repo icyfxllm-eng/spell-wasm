@@ -1,5 +1,4 @@
 use std::collections::HashSet;
-use wasm_bindgen::JsValue;
 
 use crate::model::{AppState, CustomSet, CUSTOM_KEY};
 use crate::profanity;
@@ -30,12 +29,6 @@ pub fn extract_words(text: &str) -> Vec<String> {
         }
     }
     out
-}
-
-pub async fn fetch_words_from_url(url: &str) -> Result<Vec<String>, JsValue> {
-    let text = storage::fetch_text(url).await?;
-    let stripped = storage::strip_html_if_needed(&text);
-    Ok(extract_words(&stripped))
 }
 
 pub fn load_custom(state: &mut AppState) {
