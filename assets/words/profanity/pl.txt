@@ -1,0 +1,47 @@
+# Exact words excluded for this locale (accent-lenient, lowercased match).
+# Extend from the LDNOOBW per-language list before launch (§3.1).
+# --- LDNOOBW pl (44 terms) ---
+burdel
+burdelmama
+chuj
+chujnia
+ciota
+cipa
+cyc
+debil
+dmuchać
+dupa
+dupek
+duperele
+dziwka
+fiut
+gówno
+huj
+jajco
+jajko
+jebać
+jebany
+kurwa
+kurwy
+kutafon
+kutas
+pieprzyć
+pierdolec
+pierdolić
+pierdolnąć
+pierdolnięty
+pierdoła
+pierdzieć
+pizda
+pojeb
+pojebany
+popierdolony
+ruchać
+rzygać
+skurwysyn
+sraczka
+srać
+suka
+syf
+wkurwiać
+zajebisty

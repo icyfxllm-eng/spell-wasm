@@ -1,0 +1,41 @@
+# Exact words excluded for this locale (accent-lenient, lowercased match).
+# Extend from the LDNOOBW per-language list before launch (§3.1).
+# --- LDNOOBW no (38 terms) ---
+asshole
+dritt
+drittsekk
+faen
+fan
+fanken
+fitte
+forbanna
+forbannet
+forjævlig
+fuck
+føkk
+føkka
+føkkings
+jævla
+jævlig
+helvete
+helvetet
+kuk
+kukene
+kuker
+morraknuller
+morrapuler
+nigger
+pakkis
+pikk
+pokker
+ræva
+ræven
+satan
+shit
+sinnsykt
+skitt
+sotrør
+ståpikk
+ståpikkene
+ståpikker
+svartheiteste

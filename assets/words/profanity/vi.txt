@@ -1,0 +1,1 @@
+# Vietnamese exclusions (accent-lenient, lowercased match). Extend from LDNOOBW vi.

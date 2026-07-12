@@ -1,0 +1,42 @@
+# Exact words excluded for this locale (accent-lenient, lowercased match).
+# Extend from the LDNOOBW per-language list before launch (§3.1).
+# --- LDNOOBW sv (39 terms) ---
+arsle
+brutta
+discofitta
+fan
+fitta
+fittig
+helvete
+hård
+jävlar
+knulla
+kuk
+kuksås
+kötthuvud
+köttnacke
+moona
+moonade
+moonar
+moonat
+mutta
+nigger
+neger
+olla
+pippa
+pitt
+prutt
+pök
+runka
+röv
+rövhål
+rövknulla
+satan
+skita
+skäggbiff
+snedfitta
+snefitta
+stake
+subba
+sås
+tusan

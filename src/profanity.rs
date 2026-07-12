@@ -17,8 +17,56 @@
 //! ("f-u-c-k"), and keeps only a–z before matching.
 
 use std::cell::Cell;
+use std::collections::HashSet;
+use std::sync::OnceLock;
 
 use unicode_normalization::UnicodeNormalization;
+
+/// Per-language profanity lists (LDNOOBW-sourced) for screening user-imported
+/// My Words in every language — the English `BANNED_*` sets above only catch
+/// Latin/leet English, so without this a non-English (or CJK/Thai) import could
+/// smuggle in slurs, which matters most in Kid Mode. Matched as exact whole
+/// words (NFC + lowercased) against the union of all languages, so a term that's
+/// profane in ANY language is blocked regardless of the import's declared voice.
+/// These lists are crowd-sourced and skew toward over-blocking (e.g. an innocent
+/// common word occasionally appears) — the safe direction for a kids' app: a
+/// rejected import is a minor annoyance, a smuggled slur is not. Native review
+/// can prune false positives later without changing this wiring.
+static EXTRA_BLOCKLIST: OnceLock<HashSet<String>> = OnceLock::new();
+
+fn extra_blocklist() -> &'static HashSet<String> {
+    EXTRA_BLOCKLIST.get_or_init(|| {
+        let mut set = HashSet::new();
+        for raw in [
+            include_str!("../assets/words/profanity/en.txt"),
+            include_str!("../assets/words/profanity/es.txt"),
+            include_str!("../assets/words/profanity/fr.txt"),
+            include_str!("../assets/words/profanity/de.txt"),
+            include_str!("../assets/words/profanity/pt.txt"),
+            include_str!("../assets/words/profanity/it.txt"),
+            include_str!("../assets/words/profanity/nl.txt"),
+            include_str!("../assets/words/profanity/pl.txt"),
+            include_str!("../assets/words/profanity/sv.txt"),
+            include_str!("../assets/words/profanity/nb.txt"),
+            include_str!("../assets/words/profanity/tr.txt"),
+            include_str!("../assets/words/profanity/vi.txt"),
+            include_str!("../assets/words/profanity/ko.txt"),
+            include_str!("../assets/words/profanity/ja.txt"),
+            include_str!("../assets/words/profanity/th.txt"),
+            include_str!("../assets/words/profanity/fil.txt"),
+            include_str!("../assets/words/profanity/zh.txt"),
+        ] {
+            for line in raw.lines() {
+                let t = line.trim();
+                if t.is_empty() || t.starts_with('#') {
+                    continue;
+                }
+                set.insert(t.nfc().collect::<String>().to_lowercase());
+            }
+        }
+        set
+    })
+}
 
 /// Roots that never legitimately occur inside a normal English spelling word,
 /// so they're safe to match as a substring (catches "motherfucker",
@@ -64,14 +112,21 @@ fn normalize(word: &str) -> String {
 
 /// True if this custom word should be blocked from "My Words".
 pub fn is_blocked(word: &str) -> bool {
+    // English/Latin + leetspeak layer (accent-strip + homoglyph fold to a-z).
     let n = normalize(word);
-    if n.is_empty() {
-        return false;
+    if !n.is_empty() {
+        if BANNED_EXACT.contains(&n.as_str()) {
+            return true;
+        }
+        if BANNED_ROOTS.iter().any(|root| n.contains(root)) {
+            return true;
+        }
     }
-    if BANNED_EXACT.contains(&n.as_str()) {
-        return true;
-    }
-    BANNED_ROOTS.iter().any(|root| n.contains(root))
+    // Per-language layer: exact whole-word match (NFC + lowercased) against the
+    // union of every language's list — screens non-English and CJK/Thai imports
+    // that the a-z fold above can't see (it strips them to nothing).
+    let raw: String = word.trim().nfc().collect::<String>().to_lowercase();
+    !raw.is_empty() && extra_blocklist().contains(&raw)
 }
 
 /// Splits a word list into the allowed words (order preserved) and a count of
@@ -117,4 +172,27 @@ pub fn rejection_message() -> &'static str {
         last.set(idx);
         MESSAGES[idx]
     })
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn english_layer_still_blocks() {
+        assert!(is_blocked("fuck"));
+        assert!(is_blocked("sh1t")); // leet
+        assert!(is_blocked("ASS"));
+        assert!(!is_blocked("class")); // "ass" only blocks as a whole word
+    }
+
+    #[test]
+    fn non_english_layer_blocks_and_allows() {
+        // Present in the es/fil runtime lists -> blocked in any My Words import.
+        assert!(is_blocked("puta"));
+        // Ordinary words are not on any list.
+        assert!(!is_blocked("elephant"));
+        assert!(!is_blocked("manzana")); // Spanish "apple"
+        assert!(!is_blocked("casa")); // Spanish "house"
+    }
 }
