@@ -53,7 +53,15 @@ export async function openApp(browser, base, { lang = null, device = 'se' } = {}
   await page.goto(base, { waitUntil: 'load' });
   // Wait for wasm boot: the seam installs once the app is up.
   await page.waitForFunction(() => window.__spelltest && window.__spelltest.build() === 'testseam', null, { timeout: 30000 });
-  if (lang) { await page.selectOption('#langSel', lang).catch(() => {}); await page.waitForTimeout(200); }
+  // The language picker lives in the setup sheet (home-regroup F3), so open the
+  // sheet before selecting, then close it. Behaviour is unchanged — this is a
+  // relocation of the same #langSel control.
+  if (lang) {
+    await page.click('#setupChip').catch(() => {});
+    await page.selectOption('#langSel', lang).catch(() => {});
+    await page.click('#setupDone').catch(() => {});
+    await page.waitForTimeout(200);
+  }
   return { ctx, page };
 }
 

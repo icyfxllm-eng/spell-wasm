@@ -350,10 +350,44 @@ pub fn refresh_mode_buttons(app: &App) {
     let s = app.borrow();
     let total = s.misses.len();
     let due = misses::due_misses(&s).len();
-    dom::set_text("missesBtn", &if s.review { crate::i18n::t("top.missesExit") } else { format!("\u{21bb} {} \u{b7} {}", crate::i18n::t("top.misses"), due) });
+    // Data-chip markup: icon + label + live count badge (home-regroup F5). In
+    // review mode the chip becomes the "exit" affordance (no badge). Labels come
+    // from our own locale strings (no untrusted HTML).
+    let html = if s.review {
+        format!("<span class=\"dc-ico\">\u{21bb}</span><span class=\"dc-lbl\">{}</span>", crate::i18n::t("top.missesExit"))
+    } else {
+        format!(
+            "<span class=\"dc-ico\">\u{21bb}</span><span class=\"dc-lbl\">{}</span><b class=\"dc-badge\">{}</b>",
+            crate::i18n::t("top.misses"),
+            due
+        )
+    };
+    dom::set_html("missesBtn", &html);
     dom::el("missesBtn").set_attribute("title", &if total > 0 { format!("{} saved \u{b7} {} due now", total, due) } else { String::new() }).ok();
     dom::toggle_class("missesBtn", "on", s.review);
     dom::set_disabled("missesBtn", !s.review && total == 0);
+}
+
+/// Keep the setup chip's summary in lock-step with the three round-parameter
+/// pickers (home-regroup F3 — the chip and the actual round config never
+/// disagree). Labels are computed from the same state + locale strings the
+/// selects are built from, so the chip always matches what a tap would start.
+/// The trailing affordance arrow on "Climb →" is trimmed for the value list.
+pub fn update_setup_chip(app: &App) {
+    let s = app.borrow();
+    let lang_label = if s.lang == MINE {
+        "My Words".to_string()
+    } else {
+        crate::consts::BUILTIN_LANGS
+            .iter()
+            .find(|(c, _)| *c == s.lang)
+            .map(|(_, n)| (*n).to_string())
+            .unwrap_or_else(|| s.lang.clone())
+    };
+    let level_label = crate::i18n::t(&format!("level.{}", s.level));
+    let level_label = level_label.trim_end_matches(|c: char| c == '\u{2192}' || c.is_whitespace());
+    let timing_label = crate::i18n::t(if s.timed { "mode.timed" } else { "mode.untimed" });
+    dom::set_text("setupChipText", &format!("{} \u{b7} {} \u{b7} {}", lang_label, level_label, timing_label));
 }
 
 
@@ -375,6 +409,7 @@ pub fn build_source_options(app: &App) {
     let lang = s.lang.clone();
     drop(s);
     dom::select("langSel").set_value(&lang);
+    update_setup_chip(app);
 }
 
 pub fn build_level_options(app: &App) {
@@ -388,6 +423,8 @@ pub fn build_level_options(app: &App) {
         .collect();
     dom::set_html("levelSel", &opts);
     dom::select("levelSel").set_value(&s.level);
+    drop(s);
+    update_setup_chip(app);
 }
 
 // ---------- meanings (dictionary lookups) ----------
