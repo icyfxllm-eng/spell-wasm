@@ -61,6 +61,9 @@ pub fn start() -> Result<(), JsValue> {
     misses::load(&mut state);
     achievements::load(&mut state);
     stats::load(&mut state);
+    // Restore the persisted free-play decks so no-repeat continues across
+    // restarts and days (Feature 2 / I4), rather than reshuffling every launch.
+    state.decks = storage::get_json(model::DECKS_KEY).unwrap_or_default();
 
     // Study language: a saved choice wins; otherwise a fresh install opens in the
     // device's language (if it's one we support), else English — so a Korean

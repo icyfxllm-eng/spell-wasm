@@ -728,21 +728,12 @@ pub fn next_word(app: &App) {
             let pool = active_word_list(&s, &tier);
             if !pool.is_empty() {
                 let key = format!("{}:{}", s.lang, tier);
-                // Solo practice uses adaptive, spaced-repetition-weighted picking;
-                // head-to-head keeps the plain shuffled deck so both players face
-                // the same distribution. Adaptive falls back to the deck if the
-                // pool somehow yields nothing.
-                let w = if s.versus.enabled {
-                    s.decks.entry(key.clone()).or_default().next(&pool)
-                } else {
-                    // Solo: rolling exclusion + within-tier sub-band cycling +
-                    // first-impression rule (Part 2), with the adaptive
-                    // miss-weighting preserved inside the chosen band.
-                    match selection::pick_solo(&s.lang, &tier, &pool) {
-                        Some(w) => w,
-                        None => s.decks.entry(key.clone()).or_default().next(&pool),
-                    }
-                };
+                // Every mode draws from the same persisted, no-repeat shuffled
+                // deck per (language, tier): a word never recurs until the whole
+                // pool is exhausted, and the deck survives app restarts (I3/I4).
+                // Missed-word resurfacing is handled separately by Misses review
+                // (spaced repetition), which the deck deliberately doesn't touch.
+                let w = s.decks.entry(key.clone()).or_default().next(&pool);
                 s.word = w;
                 // Warm the browser's audio cache for whatever this same
                 // pool will hand out next time, so that turn's playback is
@@ -755,6 +746,10 @@ pub fn next_word(app: &App) {
             }
         }
     }
+
+    // Persist the decks so the free-play no-repeat cursor survives an app
+    // restart and carries across days (Feature 2 / I4).
+    crate::storage::set_json(crate::model::DECKS_KEY, &app.borrow().decks);
 
     // Mandarin stores "pinyin|hanzi": the player types the pinyin, but TTS speaks
     // and the reveal shows the hanzi. Every other language sets spoken = word.

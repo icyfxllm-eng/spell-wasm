@@ -78,6 +78,9 @@ pub const CUSTOM_KEY: &str = "byear_custom_v1";
 pub const ACH_KEY: &str = "byear_ach_v1";
 pub const MISS_KEY: &str = "byear_misses_v1";
 pub const MISS_CAP: usize = 300;
+/// Persisted per-(lang:tier) shuffled decks, so free-play no-repeat survives
+/// app restarts and days (I4). Keyed like the in-memory `AppState.decks` map.
+pub const DECKS_KEY: &str = "spell_decks_v1";
 
 /// Mirrors the JS `state` object.
 pub struct AppState {
