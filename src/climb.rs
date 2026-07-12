@@ -142,9 +142,19 @@ pub fn reflect_auth() {
     if gated {
         return;
     }
+    // accountBtn is now an icon-only meta affordance (home-regroup F2): keep its
+    // 👤 glyph and convey state via aria-label + a `signed-in` accent class,
+    // rather than overwriting its text.
+    let el = dom::el("accountBtn");
     match username() {
-        Some(name) => dom::set_text("accountBtn", &format!("\u{1F464} {name}")),
-        None => dom::set_text("accountBtn", &crate::i18n::t("top.signIn")),
+        Some(name) => {
+            let _ = el.set_attribute("aria-label", &name);
+            dom::toggle_class("accountBtn", "signed-in", true);
+        }
+        None => {
+            let _ = el.set_attribute("aria-label", &crate::i18n::t("top.signIn"));
+            dom::toggle_class("accountBtn", "signed-in", false);
+        }
     }
 }
 

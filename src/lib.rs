@@ -431,6 +431,16 @@ fn wire_glow_and_settings(app: &App) {
             dom::remove_class("setScrim", "show");
         }
     });
+
+    // Setup sheet (home-regroup F3): the chip opens the relocated pickers; Done
+    // and a backdrop tap close it. The pickers themselves are unchanged.
+    dom::on_click("setupChip", || dom::add_class("setupScrim", "show"));
+    dom::on_click("setupDone", || dom::remove_class("setupScrim", "show"));
+    dom::on::<web_sys::Event, _>("setupScrim", "click", |e| {
+        if dom::is_self_target(&e, "setupScrim") {
+            dom::remove_class("setupScrim", "show");
+        }
+    });
 }
 
 fn wire_modes(app: &App) {
@@ -486,6 +496,7 @@ fn wire_modes(app: &App) {
             } else {
                 game::stop_timer(true);
             }
+            game::update_setup_chip(&a);
         });
     }
 }
@@ -525,6 +536,7 @@ fn wire_source_level(app: &App) {
             keyboard::rebuild(&a);
             i18n::translate_page();
             climb::reflect_auth();
+            game::update_setup_chip(&a);
             stats::render(&a.borrow());
             board::render(&a.borrow());
         });
@@ -533,6 +545,7 @@ fn wire_source_level(app: &App) {
         let a = app.clone();
         dom::on::<web_sys::Event, _>("levelSel", "change", move |_| {
             a.borrow_mut().level = dom::select("levelSel").value();
+            game::update_setup_chip(&a);
             // Pull a fresh word at the newly-selected difficulty right away,
             // instead of leaving the old (wrong-tier) word on screen until
             // the current round ends on its own.

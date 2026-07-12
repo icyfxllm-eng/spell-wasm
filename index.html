@@ -129,6 +129,61 @@
   .pill.access{border-color:var(--amber);color:var(--amber-soft)}
   .pill.access.owned{border-color:var(--teal);color:var(--teal)}
 
+  /* ==== Home functional groups (CC-HOME-REGROUP) ==========================
+     visual class = functional class. Exactly three families on the home body
+     (data chips · launchers · config chip) + meta icons in the header corner.
+     No family borrows another's treatment (the screen's invariant). Breakpoint
+     behaviour lives only in the media queries below — no per-component forks. */
+
+  /* Meta corner (F2): icon-only, ≥44pt, top-right, persistent across breakpoints */
+  .meta-corner{display:flex;gap:10px;flex:0 0 auto}
+  .meta-icon{width:44px;height:44px;border-radius:50%;background:var(--panel);border:1px solid var(--edge);color:var(--muted);font-size:19px;line-height:1;display:grid;place-items:center;cursor:pointer;padding:0;transition:border-color .15s,color .15s,transform .1s}
+  .meta-icon:hover{border-color:var(--amber);color:var(--ink)}
+  .meta-icon:active{transform:translateY(1px)}
+  .meta-icon.signed-in{border-color:var(--teal);color:var(--teal)}
+  .meta-icon.btn-hide{display:none}
+
+  /* Group rows inside the centered stage, one per functional class */
+  .home-group{width:100%;max-width:600px;display:flex;gap:8px;margin-bottom:10px}
+
+  /* Data chips (F5): word inventory — outlined, muted, badge-capable. Not a launcher. */
+  .data-chip{flex:1;min-height:48px;background:transparent;border:1px solid var(--edge);color:var(--ink);border-radius:12px;padding:8px 14px;font-size:14px;font-weight:600;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;gap:8px;transition:border-color .15s,background .15s,transform .1s}
+  .data-chip:hover{border-color:var(--amber)}
+  .data-chip:active{transform:translateY(1px)}
+  .data-chip:disabled{opacity:.45;cursor:default}
+  .data-chip.on{border-color:var(--teal);color:var(--teal)}
+  .data-chip .dc-ico{color:var(--muted);font-weight:700}
+  .data-chip .dc-badge{background:var(--panel-2);border:1px solid var(--edge);color:var(--muted);border-radius:999px;min-width:22px;padding:1px 7px;font-size:12px;font-weight:700;text-align:center}
+
+  /* Launchers (F4): ways to play — brightest family, filled card, equal width, iconed */
+  .modes-row{gap:8px}
+  .launch{flex:1;min-height:62px;background:var(--panel-2);border:1px solid var(--edge);color:var(--ink);border-radius:14px;padding:10px 8px;font-size:14px;font-weight:700;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;gap:7px;text-align:center;line-height:1.15;box-shadow:inset 0 1px 0 rgba(255,255,255,.03);transition:border-color .15s,background .15s,transform .1s}
+  .launch:hover{border-color:var(--amber);background:color-mix(in srgb, var(--panel-2) 82%, var(--amber))}
+  .launch:active{transform:translateY(1px)}
+  .launch.on{border-color:var(--amber);color:var(--amber-soft)}
+  .launch.done{color:var(--muted)}
+  .launch.btn-hide{display:none}
+
+  /* Setup chip (F3): config family — muted, chevroned, full width, directly above
+     the play button. It configures; it must not read as a launcher. */
+  .setup-chip{width:100%;max-width:600px;min-height:44px;background:var(--panel);border:1px solid var(--edge);border-radius:12px;padding:9px 16px;margin:2px 0 8px;font-size:13px;font-weight:600;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:10px;transition:border-color .15s,transform .1s}
+  .setup-chip:hover{border-color:var(--amber)}
+  .setup-chip:active{transform:translateY(1px)}
+  .setup-chip-text{color:var(--ink);white-space:nowrap}
+  .setup-chip-chev{color:var(--muted);font-size:14px;flex:0 0 auto}
+
+  /* Setup sheet fields (icon + native picker; no text labels → no new i18n keys) */
+  .setup-card .setup-field{display:flex;align-items:center;gap:10px;margin:12px 0}
+  .setup-field-ico{font-size:18px;flex:0 0 auto;width:24px;text-align:center}
+  .setup-field select{flex:1;width:100%}
+
+  /* Little Speller (F7): same families + order, larger kid targets preserved */
+  body.kid .launch{min-height:74px;font-size:16px}
+  body.kid .data-chip{min-height:58px;font-size:16px}
+  body.kid .setup-chip{min-height:52px;font-size:14.5px}
+  body.kid .meta-icon{width:52px;height:52px;font-size:22px}
+  body.big-text .launch,body.big-text .data-chip{font-size:16px}
+  body.big-text .setup-chip-text{font-size:14px}
 
   .stage{width:100%;max-width:600px;display:flex;flex-direction:column;align-items:center}
 
@@ -443,20 +498,12 @@
       <div class="mark">SPELL</div>
       <div class="tag" id="brandTag">hear it · spell it · keep the chain</div>
     </div>
-    <div class="controls">
-      <select id="langSel" aria-label="Word source"></select>
-      <select id="levelSel" aria-label="Difficulty"></select>
-      <select id="modeSel" aria-label="Timer">
-        <option value="off" data-i18n="mode.untimed">Untimed</option>
-        <option value="on" data-i18n="mode.timed">Quick Bee</option>
-      </select>
-      <button class="pill" id="missesBtn">↻ Misses</button>
-      <button class="pill" id="vsBtn" data-i18n="top.headToHead">Spell Off</button>
-      <button class="pill" id="climbBtn" data-i18n="top.theClimb">🏔 The Climb</button>
-      <button class="pill" id="dailyBtn">🗓 Daily</button>
-      <button class="pill" id="accountBtn">👤 Sign in</button>
-      <button class="pill" id="importBtn" data-i18n="top.myWords">＋ My words</button>
-      <button class="pill" id="setBtn" aria-label="Settings">⚙</button>
+    <!-- Meta corner: account + settings as icon-only affordances (Feature 2).
+         The only "meta" family; never borrows config/launcher/data treatments.
+         accountBtn's signed-in state (aria-label + .signed-in) is set in climb.rs. -->
+    <div class="meta-corner">
+      <button class="meta-icon" id="accountBtn" aria-label="Sign in">👤</button>
+      <button class="meta-icon" id="setBtn" aria-label="Settings">⚙</button>
     </div>
   </div>
   <!-- head-to-head scoreboard (hidden outside a match) -->
@@ -481,6 +528,33 @@
   <div class="daily-bar btn-hide" id="dailyBar" aria-live="polite"></div>
 
   <main class="stage" id="stage">
+    <!-- Home control groups, ordered header → my-data → modes → setup → play
+         (Feature 6). Three visual families, one per functional class:
+           .data-chip  = your words (badge-capable)   — My data cluster (F5)
+           .launch     = ways to play (bright/iconed)  — Modes row (F4)
+           .setup-chip = config (muted, chevroned)     — Setup strip (F3)
+         Kid Mode hides climbBtn + accountBtn via btn-hide (climb.rs); the flex
+         rows reflow with no gaps, so Little Speller gets the same families. -->
+    <div class="home-group data-group" role="group" aria-label="Your words">
+      <button class="data-chip" id="importBtn" data-i18n="top.myWords">＋ My words</button>
+      <!-- missesBtn content (icon + label + count badge) is rendered by
+           game::refresh_mode_buttons so the live due-count stays authoritative. -->
+      <button class="data-chip" id="missesBtn"></button>
+    </div>
+    <div class="home-group modes-row" role="group" aria-label="Ways to play">
+      <!-- Launchers keep their existing label sources: vsBtn's icon is static
+           (the shared mode-name string stays icon-free for prose reuse); climbBtn
+           uses top.theClimb (emoji in string); dailyBtn text is set by
+           game::refresh_daily_btn. All three render as icon + label cards. -->
+      <button class="launch" id="vsBtn">⚡ <span data-i18n="top.headToHead">Spell Off</span></button>
+      <button class="launch" id="climbBtn" data-i18n="top.theClimb">🏔 The Climb</button>
+      <button class="launch" id="dailyBtn">🗓 Daily</button>
+    </div>
+    <button class="setup-chip" id="setupChip" aria-haspopup="dialog" aria-label="Round setup">
+      <span class="setup-chip-text" id="setupChipText">English · Climb · Untimed</span>
+      <span class="setup-chip-chev" aria-hidden="true">⚙</span>
+    </button>
+
     <div class="orb-wrap" id="orbWrap" role="button" tabindex="0" aria-label="Play the word">
       <svg class="timer-ring" id="timerRing" viewBox="0 0 230 230" aria-hidden="true">
         <circle class="t-track" cx="115" cy="115" r="108"></circle>
@@ -751,6 +825,25 @@
   </div>
 
   <!-- settings modal -->
+  <!-- Setup sheet (Feature 3, option a): the three round-parameter pickers live
+       here, opened by #setupChip. Icon-prefixed rows (no text labels) so no new
+       i18n keys are needed; the pickers keep their IDs/options/handlers, so this
+       is a pure relocation — behaviour is unchanged. -->
+  <div class="scrim" id="setupScrim">
+    <div class="modal setup-card">
+      <label class="setup-field"><span class="setup-field-ico" aria-hidden="true">🌐</span>
+        <select id="langSel" aria-label="Word source"></select></label>
+      <label class="setup-field"><span class="setup-field-ico" aria-hidden="true">🎚</span>
+        <select id="levelSel" aria-label="Difficulty"></select></label>
+      <label class="setup-field"><span class="setup-field-ico" aria-hidden="true">⏱</span>
+        <select id="modeSel" aria-label="Timer">
+          <option value="off" data-i18n="mode.untimed">Untimed</option>
+          <option value="on" data-i18n="mode.timed">Quick Bee</option>
+        </select></label>
+      <button class="btn btn-check" id="setupDone" data-i18n="settings.done" style="width:100%;margin-top:16px">Done</button>
+    </div>
+  </div>
+
   <div class="scrim" id="setScrim">
     <div class="modal">
       <h3 data-i18n="settings.title">Settings</h3>
