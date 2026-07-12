@@ -176,6 +176,39 @@ fn tier_for_streak(streak: u32) -> &'static str {
     }
 }
 
+/// Climb band index → tier name (0=easy … 3=expert).
+fn band_to_tier(band: u8) -> &'static str {
+    match band.min(3) {
+        0 => "easy",
+        1 => "medium",
+        2 => "hard",
+        _ => "expert",
+    }
+}
+
+/// Option A — Climb's gentle band. Promote after CLIMB_PROMOTE correct answers;
+/// on a miss drop just ONE tier instead of crashing to easy, so hard languages
+/// (e.g. Mandarin pinyin, where a low streak is easy to hit) keep climbing. Solo
+/// Climb only — versus keeps its per-player chain, and the streak/chain itself is
+/// left completely untouched. Session-only.
+const CLIMB_PROMOTE: u8 = 3;
+fn note_climb(app: &App, correct: bool) {
+    let mut s = app.borrow_mut();
+    if s.level != "climb" || s.versus.enabled || s.daily.active || s.review {
+        return;
+    }
+    if correct {
+        s.climb_prog += 1;
+        if s.climb_prog >= CLIMB_PROMOTE {
+            s.climb_band = (s.climb_band + 1).min(3);
+            s.climb_prog = 0;
+        }
+    } else {
+        s.climb_band = s.climb_band.saturating_sub(1);
+        s.climb_prog = 0;
+    }
+}
+
 // ---------- rendering ----------
 
 pub fn render_letters(app: &App, animate_all: bool) {
@@ -674,10 +707,18 @@ pub fn next_word(app: &App) {
             s.cur_tier = m.tier.clone();
         } else {
             s.cur_lang = s.lang.clone();
-            // In head-to-head, "Climb" difficulty tracks the active player's
-            // current chain rather than the (unused) single-player streak.
-            let climb_from = if s.versus.enabled { s.versus.active_player().current } else { s.streak };
-            let mut tier = if s.level == "climb" { tier_for_streak(climb_from).to_string() } else { s.level.clone() };
+            // Climb tier: head-to-head tracks the active player's current chain;
+            // solo uses the gentle band (Option A) so a miss drops one tier, not
+            // all the way to easy — hard languages keep progressing.
+            let mut tier = if s.level == "climb" {
+                if s.versus.enabled {
+                    tier_for_streak(s.versus.active_player().current).to_string()
+                } else {
+                    band_to_tier(s.climb_band).to_string()
+                }
+            } else {
+                s.level.clone()
+            };
             // Kid Mode caps at Hard (Expert nightmares excluded) while keeping
             // easy→medium→hard distinct.
             if s.kid && tier == "expert" {
@@ -877,6 +918,7 @@ fn on_correct(app: &App) {
         app.borrow_mut().run_start_ms = now_ms();
     }
     let streak = bump_streak(app);
+    note_climb(app, true); // Option A: advance the Climb band on a correct answer
     dom::set_text("streakNum", &streak.to_string());
     dom::set_text("bestNum", &app.borrow().best.to_string());
     dom::add_class("orbWrap", "good");
@@ -1092,6 +1134,7 @@ fn end_chain(app: &App) {
 }
 
 fn reset_chain_soft(app: &App) {
+    note_climb(app, false); // Option A: drop the Climb band one step (not to easy)
     app.borrow_mut().streak = 0;
     dom::set_text("streakNum", "0");
     let review = app.borrow().review;
@@ -1669,4 +1712,49 @@ fn show_versus_result(app: &App) {
     dom::set_text("vsResultTitle", &title);
     dom::set_text("vsResultMsg", &msg);
     dom::add_class("vsResultScrim", "show");
+}
+
+#[cfg(test)]
+mod climb_band_tests {
+    //! Option A — the solo Climb band promotes after CLIMB_PROMOTE correct
+    //! answers and drops exactly ONE tier on a miss (never straight to easy), so
+    //! hard languages keep progressing. The streak/chain is not involved here.
+    use super::*;
+    use crate::model::AppState;
+    use std::cell::RefCell;
+    use std::rc::Rc;
+
+    fn app() -> App {
+        Rc::new(RefCell::new(AppState::default())) // default level == "climb", solo
+    }
+
+    #[test]
+    fn promotes_after_three_and_drops_one_on_miss() {
+        let a = app();
+        assert_eq!(band_to_tier(a.borrow().climb_band), "easy");
+        for _ in 0..3 {
+            note_climb(&a, true);
+        }
+        assert_eq!(band_to_tier(a.borrow().climb_band), "medium"); // 3 correct → +1
+        for _ in 0..3 {
+            note_climb(&a, true);
+        }
+        assert_eq!(band_to_tier(a.borrow().climb_band), "hard");
+        note_climb(&a, false); // one miss → down ONE, not to easy
+        assert_eq!(band_to_tier(a.borrow().climb_band), "medium");
+        note_climb(&a, false);
+        note_climb(&a, false); // saturates at easy, never below
+        assert_eq!(band_to_tier(a.borrow().climb_band), "easy");
+    }
+
+    #[test]
+    fn untouched_on_a_fixed_level() {
+        let a = app();
+        a.borrow_mut().level = "expert".into();
+        for _ in 0..5 {
+            note_climb(&a, true);
+        }
+        note_climb(&a, false);
+        assert_eq!(a.borrow().climb_band, 0); // fixed level: band never moves
+    }
 }

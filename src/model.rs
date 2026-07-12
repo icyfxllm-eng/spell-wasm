@@ -100,6 +100,13 @@ pub struct AppState {
     pub tries_left: u32,
     pub streak: u32,
     pub best: u32,
+    /// Climb difficulty band (0=easy … 3=expert), session-only. Distinct from the
+    /// streak/chain: it promotes after a few correct answers and drops only ONE
+    /// step on a miss, so hard languages (Mandarin pinyin) keep progressing
+    /// instead of being trapped on easy every time the streak resets (Option A).
+    pub climb_band: u8,
+    /// Correct answers accumulated toward the next Climb promotion.
+    pub climb_prog: u8,
     pub answered: bool,
     pub rate: f32,
     pub glow: String,
@@ -158,6 +165,8 @@ impl Default for AppState {
             tries_left: crate::consts::MAX_TRIES,
             streak: 0,
             best: 0,
+            climb_band: 0,
+            climb_prog: 0,
             answered: false,
             rate: 0.9,
             glow: "#ffb14d".into(),
