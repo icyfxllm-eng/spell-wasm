@@ -4,11 +4,12 @@
 // anti-dictation keyboard is under test), never input.fill.
 import { openApp, typeOnKeyboard, assert } from '../harness.mjs';
 
-// Latin languages where the answer string is directly clickable key-by-key.
 // Active study languages only — coming-soon languages are gated from play (the
-// orb + answer flow are hidden), so a round can't start in them by design. The
-// gameplay flow itself is language-agnostic and fully covered by en/es.
-const LANGS = ['en', 'es'];
+// orb + answer flow are hidden), so a round can't start in them by design. For
+// the English-only launch that's just 'en'; the gameplay flow is
+// language-agnostic and the (gated) Spanish grading path stays covered by the
+// Rust `homophones`/`norm` unit tests.
+const LANGS = ['en'];
 
 export async function run(browser, base, suite) {
   for (const lang of LANGS) {

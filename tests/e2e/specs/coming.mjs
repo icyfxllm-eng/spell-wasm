@@ -43,13 +43,23 @@ export async function run(browser, base, suite) {
     });
   }
 
-  await suite.test('coming: active language (es) is playable (not gated)', async () => {
+  await suite.test('coming: Spanish is now gated (English-only launch)', async () => {
     const { ctx, page } = await openApp(browser, base, { lang: 'es' });
     try {
       const gated = await page.evaluate(() => document.body.classList.contains('coming-soon'));
-      assert(!gated, 'active language should not be gated');
+      assert(gated, 'Spanish should be coming-soon (gated) in the English-only launch');
+      const notify = await page.$eval('#notifyBtn', (e) => e.textContent.trim().length > 0 && getComputedStyle(e).display !== 'none');
+      assert(notify, 'Notify Me button missing for gated Spanish');
+    } finally { await ctx.close(); }
+  });
+
+  await suite.test('coming: English is playable (not gated)', async () => {
+    const { ctx, page } = await openApp(browser, base, { lang: 'en' });
+    try {
+      const gated = await page.evaluate(() => document.body.classList.contains('coming-soon'));
+      assert(!gated, 'English should not be gated');
       const orbShown = await page.evaluate(() => getComputedStyle(document.querySelector('#orbWrap')).display !== 'none');
-      assert(orbShown, 'active language should show the play orb');
+      assert(orbShown, 'English should show the play orb');
     } finally { await ctx.close(); }
   });
 

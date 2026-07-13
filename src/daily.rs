@@ -265,10 +265,13 @@ mod tests {
     }
 
     #[test]
-    fn locale_changes_the_set() {
+    fn inactive_locale_falls_back_to_en() {
+        // English-only launch: a coming-soon locale (es) is gated by `locale_for`
+        // to the English pool, so its Daily set matches English exactly. (When a
+        // second locale is reactivated, this becomes assert_ne! again.)
         let (_, en) = build_words("en", "2026-07-10", false);
         let (_, es) = build_words("es", "2026-07-10", false);
-        assert_ne!(en, es, "different locale should differ");
+        assert_eq!(en, es, "a gated locale should fall back to the English set");
     }
 
     #[test]

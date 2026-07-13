@@ -7,8 +7,8 @@ import { openApp, assert, assertEq } from '../harness.mjs';
 // Active study languages only — coming-soon languages are gated from play, so
 // their on-screen keyboard is not UI-reachable. Their layouts remain in the code
 // (preserved for reactivation) and stay covered by the Rust `keyboard::tests`
-// (json_layouts_match_rust) + `hangul`/`jamo` unit tests.
-const LANGS = ['en', 'es'];
+// (json_layouts_match_rust) + `hangul`/`jamo` unit tests. English-only launch.
+const LANGS = ['en'];
 
 export async function run(browser, base, suite) {
   for (const lang of LANGS) {

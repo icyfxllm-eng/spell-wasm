@@ -59,7 +59,7 @@ use LangStatus::{Active, ComingSoon};
 
 pub const BUILTIN_LANGS: [(&str, &str, LangStatus); 17] = [
     (EN, "English", Active),
-    (ES, "Espa\u{f1}ol", Active),
+    (ES, "Espa\u{f1}ol", ComingSoon),
     (FR, "Fran\u{e7}ais", ComingSoon),
     (DE, "Deutsch", ComingSoon),
     (PT, "Portugu\u{ea}s", ComingSoon),
@@ -155,13 +155,15 @@ mod tests {
 mod registry_tests {
     use super::*;
     #[test]
-    fn only_en_es_active() {
-        assert!(is_active_lang("en") && is_active_lang("es"));
+    fn only_en_active() {
+        // English-only launch: every other language (incl. Spanish, whose content
+        // is ready but gated) is Coming Soon until Eric reactivates it.
+        assert!(is_active_lang("en"));
+        assert!(!is_active_lang("es"), "es should be coming_soon for the English-only launch");
         for (code, _, _) in BUILTIN_LANGS {
-            if code != "en" && code != "es" {
+            if code != "en" {
                 assert!(!is_active_lang(code), "{code} should be coming_soon");
             }
         }
-        assert!(!is_active_lang("ko") && !is_active_lang("zh") && !is_active_lang("fil"));
     }
 }
