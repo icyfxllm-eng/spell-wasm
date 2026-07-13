@@ -600,7 +600,7 @@ mod tests {
     /// fold the player must reproduce) is reachable on that locale's keyboard.
     #[test]
     fn every_word_char_is_typeable() {
-        for (code, _) in crate::consts::BUILTIN_LANGS {
+        for (code, _, _) in crate::consts::BUILTIN_LANGS {
             let mut reach = reachable(layout_for(code));
             if code == "vi" {
                 // The tone row makes every tone of every reachable vowel typeable.

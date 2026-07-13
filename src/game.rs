@@ -68,8 +68,8 @@ pub fn name_for(_state: &AppState, key: &str) -> String {
     }
     crate::consts::BUILTIN_LANGS
         .iter()
-        .find(|(code, _)| *code == key)
-        .map(|(_, name)| name.to_string())
+        .find(|(code, _, _)| *code == key)
+        .map(|(_, name, _)| name.to_string())
         .unwrap_or_else(|| "English".to_string())
 }
 
@@ -413,8 +413,8 @@ pub fn update_setup_chip(app: &App) {
     } else {
         crate::consts::BUILTIN_LANGS
             .iter()
-            .find(|(c, _)| *c == s.lang)
-            .map(|(_, n)| (*n).to_string())
+            .find(|(c, _, _)| *c == s.lang)
+            .map(|(_, n, _)| (*n).to_string())
             .unwrap_or_else(|| s.lang.clone())
     };
     let level_label = crate::i18n::t(&format!("level.{}", s.level));
@@ -427,7 +427,13 @@ pub fn update_setup_chip(app: &App) {
 pub fn build_source_options(app: &App) {
     let s = app.borrow();
     let mut opts = String::new();
-    for (code, name) in crate::consts::BUILTIN_LANGS {
+    // NOTE: play-gating of coming-soon languages in the picker is intentionally
+    // NOT applied here yet — langSel currently drives BOTH the study language and
+    // the UI language (home-regroup unification), so disabling coming-soon here
+    // would also strand UI-language selection, which this feature must leave
+    // untouched. Pending the study/UI separation decision. Registry is the source
+    // of truth (consts::is_active_lang) once that lands.
+    for (code, name, _status) in crate::consts::BUILTIN_LANGS {
         opts.push_str(&format!("<option value=\"{}\">{}</option>", code, name));
     }
     if !s.custom.words.is_empty() {

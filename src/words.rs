@@ -828,7 +828,7 @@ mod tier_dump {
     fn dump() {
         let tiers = ["easy", "medium", "hard", "expert"];
         let mut obj = String::from("{\n");
-        for (li, (lang, _)) in BUILTIN_LANGS.iter().enumerate() {
+        for (li, (lang, _, _)) in BUILTIN_LANGS.iter().enumerate() {
             obj.push_str(&format!("  \"{lang}\": {{\n"));
             for (ti, tier) in tiers.iter().enumerate() {
                 let words = super::tier_for(lang, tier);

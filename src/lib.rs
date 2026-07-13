@@ -65,9 +65,12 @@ pub fn start() -> Result<(), JsValue> {
     // restarts and days (Feature 2 / I4), rather than reshuffling every launch.
     state.decks = storage::get_json(model::DECKS_KEY).unwrap_or_default();
 
-    // Study language: a saved choice wins; otherwise a fresh install opens in the
-    // device's language (if it's one we support), else English — so a Korean
-    // phone opens to Korean words + UI without any tapping.
+    // Study language: a saved choice wins; otherwise the device's language (if
+    // supported), else English. NOTE: study-play gating to active languages is
+    // NOT applied here yet — state.lang also drives the UI-language fallback
+    // (home-regroup unification), and gating it would force English UI on a
+    // coming-soon-language device, which this feature must NOT do (uiLang stays
+    // untouched). Deferred to the study/UI separation decision.
     state.lang = match state.last_lang.clone() {
         Some(l) if l == MINE && !state.custom.words.is_empty() => MINE.to_string(),
         Some(l) if consts::is_builtin_lang(&l) => l,

@@ -10,7 +10,7 @@ use std::collections::HashMap;
 
 use serde::{Deserialize, Serialize};
 
-use crate::consts::{is_builtin_lang, EN};
+use crate::consts::EN;
 use crate::{storage, words};
 
 /// How many words a daily run contains, and its difficulty arc.
@@ -67,10 +67,11 @@ fn yesterday() -> String {
     ymd(&d)
 }
 
-/// Which locale a daily run uses: the active built-in language, else English
-/// (My Words / unknown langs don't have a shared daily set).
+/// Which locale a daily run uses: the active built-in language, else English.
+/// Coming-soon (and My Words / unknown) languages fall back to English so the
+/// Daily Challenge only ever draws from audited, active languages (Feature 3).
 pub fn locale_for(lang: &str) -> String {
-    if is_builtin_lang(lang) {
+    if crate::consts::is_active_lang(lang) {
         lang.to_string()
     } else {
         EN.to_string()
