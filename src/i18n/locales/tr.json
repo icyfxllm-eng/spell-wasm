@@ -180,5 +180,9 @@
   "import.savedSkipped": "{n} kelimen kaydedildi ({b} atlandı) — başlamak için küreye bas.",
   "mode.timed.subtitle": "Klasik süreli tur",
   "mode.tricky_words.title": "Yanıltıcı Kelimeler",
-  "mode.tricky_words.subtitle": "Seni yanıltan kelimeleri çalış"
+  "mode.tricky_words.subtitle": "Seni yanıltan kelimeleri çalış",
+  "coming.notice": "{lang} ana dili konuşanlar tarafından iyileştiriliyor — yakında geri gelecek.",
+  "coming.notify": "Hazır olduğunda bana haber ver",
+  "coming.confirmed": "Listedesin ✓",
+  "coming.badge": "Yakında"
 }

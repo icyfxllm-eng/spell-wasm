@@ -15,12 +15,14 @@ import * as keyboard from './specs/keyboard.mjs';
 import * as gameplay from './specs/gameplay.mjs';
 import * as modes from './specs/modes.mjs';
 import * as menu from './specs/menu.mjs';
+import * as coming from './specs/coming.mjs';
 
 const SPECS = [
   ['keyboard', keyboard],
   ['gameplay', gameplay],
   ['modes', modes],
   ['menu', menu],
+  ['coming', coming],
 ];
 
 const ROOT = join(fileURLToPath(import.meta.url), '..', '..', '..');

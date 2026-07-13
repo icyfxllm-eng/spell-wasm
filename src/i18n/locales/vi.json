@@ -180,5 +180,9 @@
   "import.savedSkipped": "Đã lưu {n} từ của bạn (bỏ qua {b}) — nhấn vào quả cầu để bắt đầu.",
   "mode.timed.subtitle": "Vòng tính giờ cổ điển",
   "mode.tricky_words.title": "Từ Khó Nhằn",
-  "mode.tricky_words.subtitle": "Luyện những từ hay đánh lừa bạn"
+  "mode.tricky_words.subtitle": "Luyện những từ hay đánh lừa bạn",
+  "coming.notice": "{lang} đang được người bản ngữ hoàn thiện — sắp trở lại.",
+  "coming.notify": "Báo cho tôi khi sẵn sàng",
+  "coming.confirmed": "Bạn đã trong danh sách ✓",
+  "coming.badge": "Sắp có"
 }

@@ -180,5 +180,9 @@
   "import.savedSkipped": "Lagret {n} av ordene dine ({b} hoppet over) — trykk på kulen for å starte.",
   "mode.timed.subtitle": "Klassisk runde på tid",
   "mode.tricky_words.title": "Lure Ord",
-  "mode.tricky_words.subtitle": "Øv på de som lurer deg"
+  "mode.tricky_words.subtitle": "Øv på de som lurer deg",
+  "coming.notice": "{lang} finpusses av morsmålsbrukere — snart tilbake.",
+  "coming.notify": "Gi meg beskjed når det er klart",
+  "coming.confirmed": "Du er på listen ✓",
+  "coming.badge": "Kommer snart"
 }

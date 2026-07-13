@@ -180,5 +180,9 @@
   "import.savedSkipped": "{n} das suas palavras salvas ({b} ignoradas) — toque no orbe para começar.",
   "mode.timed.subtitle": "Rodada clássica cronometrada",
   "mode.tricky_words.title": "Palavras Traiçoeiras",
-  "mode.tricky_words.subtitle": "Pratique as que te enganam"
+  "mode.tricky_words.subtitle": "Pratique as que te enganam",
+  "coming.notice": "{lang} está sendo revisado por falantes nativos — volta em breve.",
+  "coming.notify": "Avise-me quando estiver pronto",
+  "coming.confirmed": "Você está na lista ✓",
+  "coming.badge": "Em breve"
 }

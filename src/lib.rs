@@ -24,6 +24,7 @@ mod native_audio;
 mod norm;
 mod pinyin;
 mod notifications;
+mod notify;
 mod profanity;
 mod selection;
 mod settings;
@@ -125,6 +126,17 @@ pub fn start() -> Result<(), JsValue> {
 
     wire(&app);
 
+    // Language availability (registry): retry any queued Notify Me taps, and if
+    // the current study language isn't active yet, show the coming-soon panel —
+    // play is gated while the interface stays in that language (uiLang untouched).
+    notify::flush();
+    {
+        let lang = app.borrow().lang.clone();
+        if lang != MINE && !consts::is_active_lang(&lang) {
+            game::render_coming_soon(&lang);
+        }
+    }
+
     // Observation-only E2E test seam — dev builds only (`--features testseam`);
     // stripped from production (proven by scripts/seam-absence-check.mjs).
     #[cfg(feature = "testseam")]
@@ -151,6 +163,15 @@ fn wire(app: &App) {
     wire_age_gate(app);
     keyboard::setup(app);
     climb::setup(app);
+
+    // Notify Me (coming-soon languages): record anonymous interest for the
+    // language on the panel, then flip the button to its confirmed state.
+    dom::on_click("notifyBtn", || {
+        if let Some(lang) = dom::el("notifyBtn").get_attribute("data-lang") {
+            notify::record(&lang);
+            game::render_coming_soon(&lang);
+        }
+    });
 
     // Clear the spell-box feedback color state (F1) when its animation ends —
     // animationend, never a timeout, so it can't race a rapid next answer.
@@ -544,6 +565,14 @@ fn wire_source_level(app: &App) {
             game::update_setup_chip(&a);
             stats::render(&a.borrow());
             board::render(&a.borrow());
+            // One picker, gate play: the interface switched to `v` above (uiLang
+            // untouched); if `v` isn't an active study language, show the
+            // coming-soon panel instead of a round, else restore the play area.
+            if v == MINE || consts::is_active_lang(&v) {
+                game::clear_coming_soon();
+            } else {
+                game::render_coming_soon(&v);
+            }
         });
     }
     {

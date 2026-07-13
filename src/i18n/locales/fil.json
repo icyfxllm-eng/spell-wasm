@@ -180,5 +180,9 @@
   "import.savedSkipped": "Na-save ang {n} sa mga salita mo ({b} nilaktawan) — pindutin ang orb para magsimula.",
   "mode.timed.subtitle": "Klasikong timed round",
   "mode.tricky_words.title": "Mga Mailap na Salita",
-  "mode.tricky_words.subtitle": "Sanayin ang mga nakakalito"
+  "mode.tricky_words.subtitle": "Sanayin ang mga nakakalito",
+  "coming.notice": "Pinipino ng mga katutubong nagsasalita ang {lang} — babalik na malapit na.",
+  "coming.notify": "Ipaalam kapag handa na",
+  "coming.confirmed": "Nasa listahan ka na ✓",
+  "coming.badge": "Malapit na"
 }

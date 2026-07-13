@@ -180,5 +180,9 @@
   "import.savedSkipped": "{n} de tes mots enregistrés ({b} ignorés) — appuie sur l'orbe pour commencer.",
   "mode.timed.subtitle": "Manche chronométrée classique",
   "mode.tricky_words.title": "Mots malins",
-  "mode.tricky_words.subtitle": "Entraîne-toi sur celles qui piègent"
+  "mode.tricky_words.subtitle": "Entraîne-toi sur celles qui piègent",
+  "coming.notice": "{lang} est peaufiné par des locuteurs natifs — bientôt de retour.",
+  "coming.notify": "Préviens-moi quand c'est prêt",
+  "coming.confirmed": "Tu es sur la liste ✓",
+  "coming.badge": "Bientôt"
 }

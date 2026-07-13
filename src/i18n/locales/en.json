@@ -180,5 +180,9 @@
   "import.savedSkipped": "Saved {n} of your words ({b} skipped) — press the orb to start.",
   "mode.timed.subtitle": "Classic timed round",
   "mode.tricky_words.title": "Tricky Words",
-  "mode.tricky_words.subtitle": "Practice the ones that trip you up"
+  "mode.tricky_words.subtitle": "Practice the ones that trip you up",
+  "coming.notice": "{lang} is being polished by native speakers — coming back soon.",
+  "coming.notify": "Notify me when it's ready",
+  "coming.confirmed": "You're on the list ✓",
+  "coming.badge": "Coming soon"
 }

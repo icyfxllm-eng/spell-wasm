@@ -180,5 +180,9 @@
   "import.savedSkipped": "Zapisano {n} twoich słów (pominięto {b}) — naciśnij kulę, aby zacząć.",
   "mode.timed.subtitle": "Klasyczna runda na czas",
   "mode.tricky_words.title": "Podchwytliwe Słowa",
-  "mode.tricky_words.subtitle": "Ćwicz te, które cię podchodzą"
+  "mode.tricky_words.subtitle": "Ćwicz te, które cię podchodzą",
+  "coming.notice": "{lang} jest dopracowywany przez rodzimych użytkowników — wkrótce wróci.",
+  "coming.notify": "Powiadom mnie, gdy będzie gotowe",
+  "coming.confirmed": "Jesteś na liście ✓",
+  "coming.badge": "Wkrótce"
 }

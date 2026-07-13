@@ -176,6 +176,30 @@ fn tier_for_streak(streak: u32) -> &'static str {
     }
 }
 
+/// Show the coming-soon panel for a not-yet-active study language (registry):
+/// fills the localized notice + the Notify Me button (confirmed if already
+/// tapped on this device) and hides the play area via `body.coming-soon`. The
+/// interface language is switched separately by the caller (uiLang untouched).
+pub fn render_coming_soon(lang: &str) {
+    let name = crate::consts::BUILTIN_LANGS.iter().find(|(c, _, _)| *c == lang).map(|(_, n, _)| *n).unwrap_or(lang);
+    dom::set_text("comingNotice", &crate::i18n::tp("coming.notice", &[("lang", name)]));
+    let done = crate::notify::has(lang);
+    dom::set_text("notifyBtn", &crate::i18n::t(if done { "coming.confirmed" } else { "coming.notify" }));
+    dom::toggle_class("notifyBtn", "confirmed", done);
+    dom::set_disabled("notifyBtn", done);
+    let _ = dom::el("notifyBtn").set_attribute("data-lang", lang);
+    if let Some(b) = dom::doc().body() {
+        let _ = b.class_list().add_1("coming-soon");
+    }
+}
+
+/// Hide the coming-soon panel and restore the play area (active language).
+pub fn clear_coming_soon() {
+    if let Some(b) = dom::doc().body() {
+        let _ = b.class_list().remove_1("coming-soon");
+    }
+}
+
 /// Climb band index → tier name (0=easy … 3=expert).
 fn band_to_tier(band: u8) -> &'static str {
     match band.min(3) {

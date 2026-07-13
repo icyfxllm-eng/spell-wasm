@@ -180,5 +180,9 @@
   "import.savedSkipped": "{n} van je woorden opgeslagen ({b} overgeslagen) — druk op de bol om te beginnen.",
   "mode.timed.subtitle": "Klassieke ronde op tijd",
   "mode.tricky_words.title": "Lastige Woorden",
-  "mode.tricky_words.subtitle": "Oefen de woorden die je beetnemen"
+  "mode.tricky_words.subtitle": "Oefen de woorden die je beetnemen",
+  "coming.notice": "{lang} wordt bijgeschaafd door moedertaalsprekers — binnenkort terug.",
+  "coming.notify": "Laat het me weten als het klaar is",
+  "coming.confirmed": "Je staat op de lijst ✓",
+  "coming.badge": "Binnenkort"
 }

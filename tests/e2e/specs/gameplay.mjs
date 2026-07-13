@@ -5,7 +5,10 @@
 import { openApp, typeOnKeyboard, assert } from '../harness.mjs';
 
 // Latin languages where the answer string is directly clickable key-by-key.
-const LANGS = ['en', 'es', 'fr', 'de', 'it', 'nl', 'pl', 'sv', 'nb', 'tr', 'vi', 'fil'];
+// Active study languages only — coming-soon languages are gated from play (the
+// orb + answer flow are hidden), so a round can't start in them by design. The
+// gameplay flow itself is language-agnostic and fully covered by en/es.
+const LANGS = ['en', 'es'];
 
 export async function run(browser, base, suite) {
   for (const lang of LANGS) {

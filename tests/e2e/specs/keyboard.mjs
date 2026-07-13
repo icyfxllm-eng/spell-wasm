@@ -4,7 +4,11 @@
 // tests with a small representative set).
 import { openApp, assert, assertEq } from '../harness.mjs';
 
-const LANGS = ['en', 'fr', 'de', 'ko', 'ja', 'th', 'vi', 'zh'];
+// Active study languages only — coming-soon languages are gated from play, so
+// their on-screen keyboard is not UI-reachable. Their layouts remain in the code
+// (preserved for reactivation) and stay covered by the Rust `keyboard::tests`
+// (json_layouts_match_rust) + `hangul`/`jamo` unit tests.
+const LANGS = ['en', 'es'];
 
 export async function run(browser, base, suite) {
   for (const lang of LANGS) {
@@ -34,23 +38,9 @@ export async function run(browser, base, suite) {
     } finally { await ctx.close(); }
   });
 
-  await suite.test('keyboard[ko]: ㅎㅏㄴ composes to 한 in the input', async () => {
-    const { ctx, page } = await openApp(browser, base, { lang: 'ko', device: 'se' });
-    try {
-      await page.click('#orbWrap'); await page.waitForTimeout(400);
-      for (const j of ['ㅎ', 'ㅏ', 'ㄴ']) await page.click(`#gameKeyboard .kb-key[data-k="${j}"]`);
-      const letters = await page.$eval('#letters', (e) => e.textContent);
-      assert(letters.includes('한'), `expected 한 in "${letters}"`);
-    } finally { await ctx.close(); }
-  });
-
-  await suite.test('keyboard[ja]: か + dakuten long-press → が reachable', async () => {
-    const { ctx, page } = await openApp(browser, base, { lang: 'ja', device: 'se' });
-    try {
-      const hasKa = await page.$('#gameKeyboard .kb-key[data-k="か"]');
-      const dakutenMarked = await page.$$eval('#gameKeyboard .kb-key.has-acc', (els) =>
-        els.some((e) => e.getAttribute('data-k') === 'か'));
-      assert(hasKa && dakutenMarked, 'か missing or has no dakuten long-press');
-    } finally { await ctx.close(); }
-  });
+  // Korean Hangul composition (ㅎㅏㄴ→한) and Japanese kana + dakuten long-press
+  // were UI-driven here, but ko/ja are now coming-soon (gated from play), so their
+  // keyboards aren't reachable via the UI. That behavior is preserved and covered
+  // at the unit level: `hangul` (composition), `jamo` (grading), and
+  // `keyboard::tests::json_layouts_match_rust` (kana/dakuten layout).
 }

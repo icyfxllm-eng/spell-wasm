@@ -9,6 +9,7 @@ Replit: add GOOGLE_TTS_API_KEY in Tools -> Secrets
 import os
 import re
 import json
+import threading
 import hashlib
 import unicodedata
 import urllib.parse
@@ -347,6 +348,48 @@ def sentence_audio():
     resp = send_file(path, mimetype="audio/mpeg")
     resp.headers["Cache-Control"] = "public, max-age=31536000, immutable"
     return resp
+
+# ---------------------------------------------------------------
+# Notify Me — anonymous per-language interest for coming-soon languages.
+# No email / account / PII: just a de-duplicated tap count (unique anonymous
+# install ids) per language, so Eric can rank which languages return first.
+# Client queues + retries these, so we may receive the same tap more than once.
+# ---------------------------------------------------------------
+NOTIFY_PATH = os.path.join(CACHE_DIR, "notify_interest_v1.json")
+_notify_lock = threading.Lock()
+
+
+def _load_notify() -> dict:
+    try:
+        with open(NOTIFY_PATH, encoding="utf-8") as f:
+            return json.load(f)
+    except (OSError, ValueError):
+        return {}
+
+
+@app.route("/api/notify", methods=["POST"])
+def notify_interest():
+    data = request.get_json(silent=True) or {}
+    lang = str(data.get("language", ""))
+    install = str(data.get("id", ""))[:64]
+    if not re.fullmatch(r"[a-z]{2,3}", lang):
+        return jsonify({"error": "invalid language"}), 400
+    with _notify_lock:
+        store = _load_notify()
+        ids = store.setdefault(lang, [])
+        if install and install not in ids:  # de-dupe retries / repeat taps
+            ids.append(install)
+        with open(NOTIFY_PATH, "w", encoding="utf-8") as f:
+            json.dump(store, f)
+    return jsonify({"status": "ok"})
+
+
+@app.route("/api/notify/totals")
+def notify_totals():
+    # Admin read: unique-install tap count per language, for demand ranking.
+    store = _load_notify()
+    return jsonify({lang: len(ids) for lang, ids in store.items()})
+
 
 # ---------------------------------------------------------------
 # Entry point

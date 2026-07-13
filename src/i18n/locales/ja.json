@@ -180,5 +180,9 @@
   "import.savedSkipped": "あなたの単語を{n}語保存しました（{b}語スキップ） — オーブを押して開始。",
   "mode.timed.subtitle": "定番のタイムラウンド",
   "mode.tricky_words.title": "てごわい言葉",
-  "mode.tricky_words.subtitle": "引っかかりやすい言葉を練習"
+  "mode.tricky_words.subtitle": "引っかかりやすい言葉を練習",
+  "coming.notice": "{lang}はネイティブが調整中です — もうすぐ戻ります。",
+  "coming.notify": "準備できたら知らせて",
+  "coming.confirmed": "リストに登録しました ✓",
+  "coming.badge": "近日公開"
 }

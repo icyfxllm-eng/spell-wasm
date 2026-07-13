@@ -215,6 +215,23 @@
   /* glassy sheen reflection over the top-left */
   .orb::before{content:"";position:absolute;top:8%;left:15%;width:50%;height:38%;border-radius:50%;background:radial-gradient(circle at 50% 45%, rgba(255,255,255,.72), rgba(255,255,255,0) 68%);filter:blur(1px);pointer-events:none}
   .orb-glyph{position:relative;z-index:1}
+
+  /* Coming-soon panel: replaces the play area when a not-yet-active study
+     language is selected (language-availability registry). The interface still
+     switches to that language; only playing is gated. */
+  .coming-panel{display:none;flex-direction:column;align-items:center;gap:16px;max-width:340px;margin:44px 0;text-align:center}
+  body.coming-soon .coming-panel{display:flex}
+  /* Coming-soon gates PLAY in BOTH modes (Little Speller + Standard): hide the
+     play area AND the mode launchers so no round can start in a gated language.
+     The picker (setup chip) + header stay so the player can switch back. */
+  body.coming-soon .orb-wrap,body.coming-soon .replay-row,body.coming-soon .voice-note,
+  body.coming-soon #gameKeyboard,body.coming-soon #spellbox,body.coming-soon .field-head,
+  body.coming-soon .modes-row,body.coming-soon .action-row,body.coming-soon .minor-row,
+  body.coming-soon .tries-line{display:none!important}
+  .coming-badge{font-size:11.5px;text-transform:uppercase;letter-spacing:.16em;color:var(--amber-soft);border:1px solid var(--amber);border-radius:999px;padding:5px 15px}
+  .coming-notice{color:var(--ink);font-size:16px;line-height:1.5;margin:0}
+  .coming-notify{min-width:230px}
+  .coming-notify.confirmed{background:var(--teal);color:#062b23;border-color:var(--teal);cursor:default}
   @keyframes breathe{0%,100%{transform:scale(.98)}50%{transform:scale(1.02)}}
   .orb-wrap.speaking .orb{animation:pulse .55s ease-in-out infinite}
   @keyframes pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.06)}}
@@ -564,6 +581,16 @@
       <span class="setup-chip-text" id="setupChipText">English · Climb · Untimed</span>
       <span class="setup-chip-chev" aria-hidden="true">⚙</span>
     </button>
+
+    <!-- Coming-soon panel: shown (via body.coming-soon) when the selected study
+         language isn't active yet. The interface still switches to that language
+         (uiLang untouched); the play area shows this instead of a round. Its text
+         is filled by game::render_coming_soon. -->
+    <div class="coming-panel" id="comingPanel" aria-live="polite">
+      <div class="coming-badge" data-i18n="coming.badge">Coming soon</div>
+      <p class="coming-notice" id="comingNotice"></p>
+      <button class="btn btn-check coming-notify" id="notifyBtn"></button>
+    </div>
 
     <div class="orb-wrap" id="orbWrap" role="button" tabindex="0" aria-label="Play the word">
       <svg class="timer-ring" id="timerRing" viewBox="0 0 230 230" aria-hidden="true">
