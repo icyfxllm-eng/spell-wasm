@@ -866,7 +866,11 @@ pub fn submit_guess(app: &App) {
         // score 1.0. The per-jamo diff drives the wrong-answer coaching below.
         crate::jamo::grade(&typed, &word).correct
     } else {
+        // Normal fold, plus the data-driven accept-any homophone layer: a real
+        // homophone of the prompt (audio can't carry b/v, silent h, seseo,
+        // yeísmo) is accepted. Empty table for languages without a file -> no-op.
         crate::norm::answer_matches(&typed, &word, kid)
+            || crate::homophones::accepts(&cur_lang, &word, &typed)
     };
     if correct {
         on_correct(app);

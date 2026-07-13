@@ -63,7 +63,7 @@
       "class": "phonetic",
       "file": "assets/words/es/",
       "key": "ave",
-      "detail": "[b/v · silent-h · s/z/c (seseo) · ll/y (yeísmo) · g/j] sounds identical to: ['abe', 'ave', 'have'] — a player typing a correct-sounding twin would be marked wrong. Twins in lists: ['ave']; other real words: ['abe', 'have']",
+      "detail": "[b/v · silent-h · s/z/c (seseo) · ll/y (yeísmo) · g/j] sounds identical to: ['abe', 'ave', 'have'] | PROPOSED BUCKET: accept-any (both members common) — PROPOSED, confirm | Twins in lists: ['ave']; other real words: ['abe', 'have']",
       "proposed_fix": "Eric to pick homophone policy (D2): accept-any / remove-rarer / require-sentence"
     },
     {
@@ -72,7 +72,7 @@
       "class": "phonetic",
       "file": "assets/words/es/",
       "key": "árbol",
-      "detail": "[b/v · silent-h · s/z/c (seseo) · ll/y (yeísmo) · g/j] sounds identical to: ['arbol', 'árbol'] — a player typing a correct-sounding twin would be marked wrong. Twins in lists: ['árbol']; other real words: ['arbol']",
+      "detail": "[b/v · silent-h · s/z/c (seseo) · ll/y (yeísmo) · g/j] sounds identical to: ['arbol', 'árbol'] | PROPOSED BUCKET: accept-any (both members common) — PROPOSED, confirm | Twins in lists: ['árbol']; other real words: ['arbol']",
       "proposed_fix": "Eric to pick homophone policy (D2): accept-any / remove-rarer / require-sentence"
     },
     {
@@ -81,7 +81,7 @@
       "class": "phonetic",
       "file": "assets/words/es/",
       "key": "vergüenza",
-      "detail": "[b/v · silent-h · s/z/c (seseo) · ll/y (yeísmo) · g/j] sounds identical to: ['verguenza', 'vergüenza'] — a player typing a correct-sounding twin would be marked wrong. Twins in lists: ['vergüenza']; other real words: ['verguenza']",
+      "detail": "[b/v · silent-h · s/z/c (seseo) · ll/y (yeísmo) · g/j] sounds identical to: ['verguenza', 'vergüenza'] | PROPOSED BUCKET: accept-any (both members common) — PROPOSED, confirm | Twins in lists: ['vergüenza']; other real words: ['verguenza']",
       "proposed_fix": "Eric to pick homophone policy (D2): accept-any / remove-rarer / require-sentence"
     },
     {
@@ -90,7 +90,7 @@
       "class": "phonetic",
       "file": "assets/words/es/",
       "key": "camino",
-      "detail": "[b/v · silent-h · s/z/c (seseo) · ll/y (yeísmo) · g/j] sounds identical to: ['camino', 'caminó'] — a player typing a correct-sounding twin would be marked wrong. Twins in lists: ['camino']; other real words: ['caminó']",
+      "detail": "[b/v · silent-h · s/z/c (seseo) · ll/y (yeísmo) · g/j] sounds identical to: ['camino', 'caminó'] | PROPOSED BUCKET: accept-any (both members common) — PROPOSED, confirm | Twins in lists: ['camino']; other real words: ['caminó']",
       "proposed_fix": "Eric to pick homophone policy (D2): accept-any / remove-rarer / require-sentence"
     },
     {
@@ -99,7 +99,7 @@
       "class": "phonetic",
       "file": "assets/words/es/",
       "key": "casa",
-      "detail": "[b/v · silent-h · s/z/c (seseo) · ll/y (yeísmo) · g/j] sounds identical to: ['casa', 'caza'] — a player typing a correct-sounding twin would be marked wrong. Twins in lists: ['casa']; other real words: ['caza']",
+      "detail": "[b/v · silent-h · s/z/c (seseo) · ll/y (yeísmo) · g/j] sounds identical to: ['casa', 'caza'] | PROPOSED BUCKET: accept-any — CONFIRMED (Eric), already wired in homophones.txt | Twins in lists: ['casa']; other real words: ['caza']",
       "proposed_fix": "Eric to pick homophone policy (D2): accept-any / remove-rarer / require-sentence"
     },
     {
@@ -108,7 +108,7 @@
       "class": "phonetic",
       "file": "assets/words/es/",
       "key": "león",
-      "detail": "[b/v · silent-h · s/z/c (seseo) · ll/y (yeísmo) · g/j] sounds identical to: ['leon', 'león'] — a player typing a correct-sounding twin would be marked wrong. Twins in lists: ['león']; other real words: ['leon']",
+      "detail": "[b/v · silent-h · s/z/c (seseo) · ll/y (yeísmo) · g/j] sounds identical to: ['leon', 'león'] | PROPOSED BUCKET: accept-any (both members common) — PROPOSED, confirm | Twins in lists: ['león']; other real words: ['leon']",
       "proposed_fix": "Eric to pick homophone policy (D2): accept-any / remove-rarer / require-sentence"
     },
     {
@@ -117,7 +117,7 @@
       "class": "phonetic",
       "file": "assets/words/es/",
       "key": "música",
-      "detail": "[b/v · silent-h · s/z/c (seseo) · ll/y (yeísmo) · g/j] sounds identical to: ['musica', 'música'] — a player typing a correct-sounding twin would be marked wrong. Twins in lists: ['música']; other real words: ['musica']",
+      "detail": "[b/v · silent-h · s/z/c (seseo) · ll/y (yeísmo) · g/j] sounds identical to: ['musica', 'música'] | PROPOSED BUCKET: accept-any (both members common) — PROPOSED, confirm | Twins in lists: ['música']; other real words: ['musica']",
       "proposed_fix": "Eric to pick homophone policy (D2): accept-any / remove-rarer / require-sentence"
     },
     {
@@ -126,7 +126,7 @@
       "class": "phonetic",
       "file": "assets/words/es/",
       "key": "número",
-      "detail": "[b/v · silent-h · s/z/c (seseo) · ll/y (yeísmo) · g/j] sounds identical to: ['numero', 'número'] — a player typing a correct-sounding twin would be marked wrong. Twins in lists: ['número']; other real words: ['numero']",
+      "detail": "[b/v · silent-h · s/z/c (seseo) · ll/y (yeísmo) · g/j] sounds identical to: ['numero', 'número'] | PROPOSED BUCKET: accept-any (both members common) — PROPOSED, confirm | Twins in lists: ['número']; other real words: ['numero']",
       "proposed_fix": "Eric to pick homophone policy (D2): accept-any / remove-rarer / require-sentence"
     },
     {
@@ -135,7 +135,7 @@
       "class": "phonetic",
       "file": "assets/words/es/",
       "key": "pie",
-      "detail": "[b/v · silent-h · s/z/c (seseo) · ll/y (yeísmo) · g/j] sounds identical to: ['pie', 'pié'] — a player typing a correct-sounding twin would be marked wrong. Twins in lists: ['pie']; other real words: ['pié']",
+      "detail": "[b/v · silent-h · s/z/c (seseo) · ll/y (yeísmo) · g/j] sounds identical to: ['pie', 'pié'] | PROPOSED BUCKET: accept-any (both members common) — PROPOSED, confirm | Twins in lists: ['pie']; other real words: ['pié']",
       "proposed_fix": "Eric to pick homophone policy (D2): accept-any / remove-rarer / require-sentence"
     },
     {
@@ -144,7 +144,7 @@
       "class": "phonetic",
       "file": "assets/words/es/",
       "key": "teléfono",
-      "detail": "[b/v · silent-h · s/z/c (seseo) · ll/y (yeísmo) · g/j] sounds identical to: ['telefono', 'teléfono'] — a player typing a correct-sounding twin would be marked wrong. Twins in lists: ['teléfono']; other real words: ['telefono']",
+      "detail": "[b/v · silent-h · s/z/c (seseo) · ll/y (yeísmo) · g/j] sounds identical to: ['telefono', 'teléfono'] | PROPOSED BUCKET: accept-any (both members common) — PROPOSED, confirm | Twins in lists: ['teléfono']; other real words: ['telefono']",
       "proposed_fix": "Eric to pick homophone policy (D2): accept-any / remove-rarer / require-sentence"
     },
     {
@@ -153,7 +153,7 @@
       "class": "phonetic",
       "file": "assets/words/es/",
       "key": "tomate",
-      "detail": "[b/v · silent-h · s/z/c (seseo) · ll/y (yeísmo) · g/j] sounds identical to: ['tomate', 'tómate'] — a player typing a correct-sounding twin would be marked wrong. Twins in lists: ['tomate']; other real words: ['tómate']",
+      "detail": "[b/v · silent-h · s/z/c (seseo) · ll/y (yeísmo) · g/j] sounds identical to: ['tomate', 'tómate'] | PROPOSED BUCKET: accept-any (both members common) — PROPOSED, confirm | Twins in lists: ['tomate']; other real words: ['tómate']",
       "proposed_fix": "Eric to pick homophone policy (D2): accept-any / remove-rarer / require-sentence"
     },
     {
@@ -162,7 +162,7 @@
       "class": "phonetic",
       "file": "assets/words/es/",
       "key": "trabajo",
-      "detail": "[b/v · silent-h · s/z/c (seseo) · ll/y (yeísmo) · g/j] sounds identical to: ['trabajo', 'trabajó'] — a player typing a correct-sounding twin would be marked wrong. Twins in lists: ['trabajo']; other real words: ['trabajó']",
+      "detail": "[b/v · silent-h · s/z/c (seseo) · ll/y (yeísmo) · g/j] sounds identical to: ['trabajo', 'trabajó'] | PROPOSED BUCKET: accept-any (both members common) — PROPOSED, confirm | Twins in lists: ['trabajo']; other real words: ['trabajó']",
       "proposed_fix": "Eric to pick homophone policy (D2): accept-any / remove-rarer / require-sentence"
     },
     {
@@ -171,7 +171,7 @@
       "class": "accent",
       "file": "assets/words/es/",
       "key": "árbol",
-      "detail": "[accent-only pairs (papa/papá)] sounds identical to: ['arbol', 'árbol'] — a player typing a correct-sounding twin would be marked wrong. Twins in lists: ['árbol']; other real words: ['arbol']",
+      "detail": "[accent-only pairs (papa/papá)] sounds identical to: ['arbol', 'árbol'] | PROPOSED BUCKET: no-action — the accent is a stress difference the audio CAN carry, so this is a legitimate spelling test (many 'twins' here are just unaccented corpus typos) | Twins in lists: ['árbol']; other real words: ['arbol']",
       "proposed_fix": "Eric to pick homophone policy (D2): accept-any / remove-rarer / require-sentence"
     },
     {
@@ -180,7 +180,7 @@
       "class": "accent",
       "file": "assets/words/es/",
       "key": "camino",
-      "detail": "[accent-only pairs (papa/papá)] sounds identical to: ['camino', 'caminó'] — a player typing a correct-sounding twin would be marked wrong. Twins in lists: ['camino']; other real words: ['caminó']",
+      "detail": "[accent-only pairs (papa/papá)] sounds identical to: ['camino', 'caminó'] | PROPOSED BUCKET: no-action — the accent is a stress difference the audio CAN carry, so this is a legitimate spelling test (many 'twins' here are just unaccented corpus typos) | Twins in lists: ['camino']; other real words: ['caminó']",
       "proposed_fix": "Eric to pick homophone policy (D2): accept-any / remove-rarer / require-sentence"
     },
     {
@@ -189,7 +189,7 @@
       "class": "accent",
       "file": "assets/words/es/",
       "key": "león",
-      "detail": "[accent-only pairs (papa/papá)] sounds identical to: ['leon', 'león'] — a player typing a correct-sounding twin would be marked wrong. Twins in lists: ['león']; other real words: ['leon']",
+      "detail": "[accent-only pairs (papa/papá)] sounds identical to: ['leon', 'león'] | PROPOSED BUCKET: no-action — the accent is a stress difference the audio CAN carry, so this is a legitimate spelling test (many 'twins' here are just unaccented corpus typos) | Twins in lists: ['león']; other real words: ['leon']",
       "proposed_fix": "Eric to pick homophone policy (D2): accept-any / remove-rarer / require-sentence"
     },
     {
@@ -198,7 +198,7 @@
       "class": "accent",
       "file": "assets/words/es/",
       "key": "música",
-      "detail": "[accent-only pairs (papa/papá)] sounds identical to: ['musica', 'música'] — a player typing a correct-sounding twin would be marked wrong. Twins in lists: ['música']; other real words: ['musica']",
+      "detail": "[accent-only pairs (papa/papá)] sounds identical to: ['musica', 'música'] | PROPOSED BUCKET: no-action — the accent is a stress difference the audio CAN carry, so this is a legitimate spelling test (many 'twins' here are just unaccented corpus typos) | Twins in lists: ['música']; other real words: ['musica']",
       "proposed_fix": "Eric to pick homophone policy (D2): accept-any / remove-rarer / require-sentence"
     },
     {
@@ -207,7 +207,7 @@
       "class": "accent",
       "file": "assets/words/es/",
       "key": "número",
-      "detail": "[accent-only pairs (papa/papá)] sounds identical to: ['numero', 'número'] — a player typing a correct-sounding twin would be marked wrong. Twins in lists: ['número']; other real words: ['numero']",
+      "detail": "[accent-only pairs (papa/papá)] sounds identical to: ['numero', 'número'] | PROPOSED BUCKET: no-action — the accent is a stress difference the audio CAN carry, so this is a legitimate spelling test (many 'twins' here are just unaccented corpus typos) | Twins in lists: ['número']; other real words: ['numero']",
       "proposed_fix": "Eric to pick homophone policy (D2): accept-any / remove-rarer / require-sentence"
     },
     {
@@ -216,7 +216,7 @@
       "class": "accent",
       "file": "assets/words/es/",
       "key": "pie",
-      "detail": "[accent-only pairs (papa/papá)] sounds identical to: ['pie', 'pié'] — a player typing a correct-sounding twin would be marked wrong. Twins in lists: ['pie']; other real words: ['pié']",
+      "detail": "[accent-only pairs (papa/papá)] sounds identical to: ['pie', 'pié'] | PROPOSED BUCKET: no-action — the accent is a stress difference the audio CAN carry, so this is a legitimate spelling test (many 'twins' here are just unaccented corpus typos) | Twins in lists: ['pie']; other real words: ['pié']",
       "proposed_fix": "Eric to pick homophone policy (D2): accept-any / remove-rarer / require-sentence"
     },
     {
@@ -225,7 +225,7 @@
       "class": "accent",
       "file": "assets/words/es/",
       "key": "teléfono",
-      "detail": "[accent-only pairs (papa/papá)] sounds identical to: ['telefono', 'teléfono'] — a player typing a correct-sounding twin would be marked wrong. Twins in lists: ['teléfono']; other real words: ['telefono']",
+      "detail": "[accent-only pairs (papa/papá)] sounds identical to: ['telefono', 'teléfono'] | PROPOSED BUCKET: no-action — the accent is a stress difference the audio CAN carry, so this is a legitimate spelling test (many 'twins' here are just unaccented corpus typos) | Twins in lists: ['teléfono']; other real words: ['telefono']",
       "proposed_fix": "Eric to pick homophone policy (D2): accept-any / remove-rarer / require-sentence"
     },
     {
@@ -234,7 +234,7 @@
       "class": "accent",
       "file": "assets/words/es/",
       "key": "tomate",
-      "detail": "[accent-only pairs (papa/papá)] sounds identical to: ['tomate', 'tómate'] — a player typing a correct-sounding twin would be marked wrong. Twins in lists: ['tomate']; other real words: ['tómate']",
+      "detail": "[accent-only pairs (papa/papá)] sounds identical to: ['tomate', 'tómate'] | PROPOSED BUCKET: no-action — the accent is a stress difference the audio CAN carry, so this is a legitimate spelling test (many 'twins' here are just unaccented corpus typos) | Twins in lists: ['tomate']; other real words: ['tómate']",
       "proposed_fix": "Eric to pick homophone policy (D2): accept-any / remove-rarer / require-sentence"
     },
     {
@@ -243,26 +243,8 @@
       "class": "accent",
       "file": "assets/words/es/",
       "key": "trabajo",
-      "detail": "[accent-only pairs (papa/papá)] sounds identical to: ['trabajo', 'trabajó'] — a player typing a correct-sounding twin would be marked wrong. Twins in lists: ['trabajo']; other real words: ['trabajó']",
+      "detail": "[accent-only pairs (papa/papá)] sounds identical to: ['trabajo', 'trabajó'] | PROPOSED BUCKET: no-action — the accent is a stress difference the audio CAN carry, so this is a legitimate spelling test (many 'twins' here are just unaccented corpus typos) | Twins in lists: ['trabajo']; other real words: ['trabajó']",
       "proposed_fix": "Eric to pick homophone policy (D2): accept-any / remove-rarer / require-sentence"
-    },
-    {
-      "feature": 5,
-      "severity": "critical",
-      "class": "profanity-in-list",
-      "file": "assets/words/es/easy.txt",
-      "key": "26",
-      "detail": "'negro' is on the profanity filter but present in a word list",
-      "proposed_fix": "remove from list (Eric approves)"
-    },
-    {
-      "feature": 5,
-      "severity": "critical",
-      "class": "profanity-in-list",
-      "file": "assets/words/es/easy.txt",
-      "key": "39",
-      "detail": "'leche' is on the profanity filter but present in a word list",
-      "proposed_fix": "remove from list (Eric approves)"
     },
     {
       "feature": 5,
@@ -270,7 +252,25 @@
       "class": "filter-layers",
       "file": "assets/words/profanity/es.txt",
       "key": "-",
-      "detail": "es seed layer: 58 terms; global union (all langs): 1689 terms; exclusions(build): 0; kid-exclude: 9",
+      "detail": "es seed layer: 58 terms. Curation scan below is language-scoped (es seed + universal hard slurs). Runtime My Words screening (src/profanity.rs is_blocked) separately uses the 1689-term all-language union — that over-block is intentional for user imports.",
+      "proposed_fix": null
+    },
+    {
+      "feature": 5,
+      "severity": "info",
+      "class": "cross-lang-profanity",
+      "file": "assets/words/es/easy.txt",
+      "key": "26",
+      "detail": "'negro' is a valid es word but is on the profanity seed for: ['en', 'fr']. Not flagged for es (kept per decision addendum). Note: it stays blocked in free-text usernames via the global/English path.",
+      "proposed_fix": null
+    },
+    {
+      "feature": 5,
+      "severity": "info",
+      "class": "cross-lang-profanity",
+      "file": "assets/words/es/easy.txt",
+      "key": "39",
+      "detail": "'leche' is a valid es word but is on the profanity seed for: ['fil']. Not flagged for es (kept per decision addendum). Note: it stays blocked in free-text usernames via the global/English path.",
       "proposed_fix": null
     },
     {

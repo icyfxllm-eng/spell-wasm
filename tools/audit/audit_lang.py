@@ -197,6 +197,14 @@ if lang == "es":
     except Exception as e:
         add(4, "info", "freq-fetch-failed", "-", "-", f"couldn't fetch es frequency list ({e}); homophone pass limited to list-internal pairs", None)
 universe = list_words | common
+# Eric-confirmed accept-any pairs already wired into grading (assets/words/es/homophones.txt).
+CONFIRMED = set()
+hp = ROOT / "assets" / "words" / lang / "homophones.txt"
+if hp.exists():
+    for line in hp.read_text(encoding="utf-8").splitlines():
+        line = line.strip()
+        if line and not line.startswith("#"):
+            CONFIRMED |= set(line.split())
 CLASSES = [("phonetic", fold_phonetic, "b/v · silent-h · s/z/c (seseo) · ll/y (yeísmo) · g/j"),
            ("accent", fold_accent, "accent-only pairs (papa/papá)")]
 for cls_name, fold, desc in CLASSES:
@@ -208,10 +216,20 @@ for cls_name, fold, desc in CLASSES:
         if len(group) >= 2 and involving_list:
             # a genuine ambiguity a player could hit: a list word + ≥1 other real word
             others = sorted(group - involving_list) or sorted(group - {list(involving_list)[0]})
+            # proposed bucket (review-gated; native auditor confirms):
+            if group & CONFIRMED:
+                bucket = "accept-any — CONFIRMED (Eric), already wired in homophones.txt"
+            elif cls_name == "accent":
+                bucket = ("no-action — the accent is a stress difference the audio CAN carry, so this is a "
+                          "legitimate spelling test (many 'twins' here are just unaccented corpus typos)")
+            elif all(o in common for o in others):
+                bucket = "accept-any (both members common) — PROPOSED, confirm"
+            else:
+                bucket = "remove-rarer if the rare twin is ever added (not in lists today) — PROPOSED, confirm"
             add(4, "warning", cls_name,
                 f"assets/words/{lang}/", ",".join(sorted(involving_list)),
-                f"[{desc}] sounds identical to: {sorted(group)} — a player typing a correct-sounding twin "
-                f"would be marked wrong. Twins in lists: {sorted(involving_list)}; other real words: {others}",
+                f"[{desc}] sounds identical to: {sorted(group)} | PROPOSED BUCKET: {bucket} | "
+                f"Twins in lists: {sorted(involving_list)}; other real words: {others}",
                 "Eric to pick homophone policy (D2): accept-any / remove-rarer / require-sentence")
 
 # ============================================================ FEATURE 5: profanity coverage
@@ -220,22 +238,38 @@ def load_terms(p):
             if ln.strip() and not ln.strip().startswith("#")} if p.exists() else set()
 prof_dir = ROOT / "assets" / "words" / "profanity"
 seed = load_terms(prof_dir / f"{lang}.txt")
-union = set()
+union = {}  # term -> [langs it's seeded in], for cross-language context only
 for p in prof_dir.glob("*.txt"):
-    union |= load_terms(p)
+    for t in load_terms(p):
+        union.setdefault(t, []).append(p.stem)
+# Universal hard slurs (mirrors src/profanity.rs BANNED_ROOTS/EXACT): profane in
+# essentially every language, so they DO disqualify any word list. Everything
+# else is judged against THIS language's own seed only — a word that is profane
+# only in another language (e.g. es "negro"=black, on the en/fr slur seed;
+# "leche"=milk, a Filipino expletive) is legitimate here and must NOT be flagged
+# (decision addendum, 2026-07: puzzle words are seen only inside their own mode).
+UNIVERSAL_ROOTS = ("fuck", "shit", "cunt", "nigg", "faggot")
+UNIVERSAL_EXACT = {"cunt", "faggot", "rape", "rapist"}
 add(5, "info", "filter-layers", f"assets/words/profanity/{lang}.txt", "-",
-    f"{lang} seed layer: {len(seed)} terms; global union (all langs): {len(union)} terms; "
-    f"exclusions(build): {len(load_terms(ROOT/'assets/words/exclusions'/f'{lang}.txt'))}; "
-    f"kid-exclude: {len(load_terms(ROOT/'assets/words/kid-exclude'/f'{lang}.txt'))}", None)
+    f"{lang} seed layer: {len(seed)} terms. Curation scan below is language-scoped ({lang} seed + "
+    f"universal hard slurs). Runtime My Words screening (src/profanity.rs is_blocked) separately uses "
+    f"the {len(union)}-term all-language union — that over-block is intentional for user imports.", None)
 if not seed:
     add(5, "critical", "no-seed", f"assets/words/profanity/{lang}.txt", "-", f"no {lang} profanity seed layer", None)
-# cross-check every list word against the assembled filter — any hit is critical
+# cross-check every curated word against the LANGUAGE-SCOPED filter — a hit is critical
 for tier, rows in tiers.items():
     for ln, raw in rows:
         w = nfc(spoken(raw.strip())).lower()
-        if w in union:
+        universal = any(r in w for r in UNIVERSAL_ROOTS) or w in UNIVERSAL_EXACT
+        if w in seed or universal:
             add(5, "critical", "profanity-in-list", f"assets/words/{lang}/{tier}.txt", ln,
-                f"'{raw.strip()}' is on the profanity filter but present in a word list", "remove from list (Eric approves)")
+                f"'{raw.strip()}' is on the {lang} profanity seed / universal slur set but present in a word list",
+                "remove from list (Eric approves)")
+        elif w in union:  # profane only in OTHER languages -> context, not a violation
+            add(5, "info", "cross-lang-profanity", f"assets/words/{lang}/{tier}.txt", ln,
+                f"'{raw.strip()}' is a valid {lang} word but is on the profanity seed for: "
+                f"{sorted(set(union[w]))}. Not flagged for {lang} (kept per decision addendum). "
+                f"Note: it stays blocked in free-text usernames via the global/English path.", None)
 # regional-vulgar innocents present in lists → auditor flag
 REGIONAL = {"es": {"coger": "vulgar (sexual) in Mexico/Argentina", "concha": "vulgar in Rioplatense",
                     "pico": "vulgar in Chile", "polla": "vulgar in Spain", "pija": "vulgar in Rioplatense",
@@ -324,10 +358,21 @@ for feat in range(1, 7):
 # auditor packet: the judgment-call subset
 pk = [f"# {lang} native-speaker auditor packet", "",
       "Machine checks are done; these need a human who reads the language.", ""]
-groups = [("PROFANITY ↔ word-list conflicts (a word is BOTH taught and filtered — resolve per pair)",
-           [x for x in findings if x["class"] == "profanity-in-list"]),
-          ("Regional vocabulary / English cognates to confirm", [x for x in findings if x["class"] in ("english-contamination",)]),
-          ("Homophone pairs — pick a policy per pair (accept / remove rarer / require sentence)", [x for x in findings if x["feature"] == 4]),
+# What the 2026-07 decision addendum already resolved (for the auditor to ratify).
+resolved = [x for x in findings if x["class"] == "cross-lang-profanity"]
+pk.append(f"## Already resolved (decision addendum 2026-07 — please ratify)  ({len(resolved) + 1})\n")
+for x in resolved:
+    pk.append(f"- **{x['key']}** — {x['detail']}")
+pk.append("- **negro (username)** — now in `backend/blocklist.txt`; rejected as a username in ANY locale "
+          "(`backend/test_usernames.py`), while staying a valid Spanish puzzle word. Checklist item: "
+          "“any word inappropriate in your region?”")
+pk.append("- **accept-any homophones** — casa/caza, botar/votar, cocer/coser are wired into grading "
+          "(`assets/words/es/homophones.txt`, consumed by `src/homophones.rs`): typing either spelling "
+          "scores correct. Confirm these three and rule on the proposed buckets below.\n")
+groups = [("Regional vocabulary / English cognates to confirm", [x for x in findings if x["class"] in ("english-contamination",)]),
+          ("Homophone pairs — confirm the PROPOSED BUCKET on each (accept-any / remove-rarer / no-action; "
+           "require-sentence is parked, see docs/features/homophone-carrier-sentences.md)",
+           [x for x in findings if x["feature"] == 4 and x["severity"] == "warning"]),
           ("Regionally-vulgar innocent words (Kid Mode risk)", [x for x in findings if x["class"] == "regional-vulgar"]),
           ("Open questions", [x for x in findings if x["class"] in ("min-pool-undefined", "audio-coverage", "tts-voice")])]
 for title, items in groups:

@@ -12,6 +12,10 @@ shit
 cunt
 nigger
 nigga
+# 'negro' is an English racial slur -> blocked in free-text USERNAMES (this list
+# is the global/English seed). It stays a valid Spanish puzzle word (the color)
+# — word lists are curated content, not free-text, and are not screened here.
+negro
 faggot
 bitch
 whore

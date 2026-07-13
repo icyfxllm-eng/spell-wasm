@@ -1,0 +1,16 @@
+# Spanish "accept-any" homophone groups — DATA consumed by grading, one
+# equivalence group per line, members space-separated. When the prompt word is
+# in a group, typing ANY member of that group is scored correct (the audio
+# cannot carry the distinction — b/v, silent h, seseo s/z/c, yeísmo y/ll).
+#
+# Scope: ACCEPT-ANY bucket only. remove-rarer and require-sentence are handled
+# elsewhere (removals are review-gated; require-sentence is a parked feature).
+#
+# CONFIRMED by Eric (decision addendum, 2026-07): the three pairs below.
+# Everything else in audit/es/auditor-packet.md is PROVISIONAL pending the
+# native auditor — add lines here only after sign-off.
+#
+# format: <member> <member> [<member> ...]   (lowercase; accents kept)
+casa caza
+botar votar
+cocer coser

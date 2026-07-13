@@ -13,6 +13,7 @@ mod enrich;
 mod game;
 mod haptics;
 mod hangul;
+mod homophones;
 mod i18n;
 mod importer;
 mod jamo;

@@ -1,6 +1,6 @@
 # Spanish content audit — `es`  (machine pass, REVIEW-GATED)
 
-Totals: **2 critical · 1 violation · 24 warning · 4 info**
+Totals: **0 critical · 1 violation · 24 warning · 6 info**
 
 ## Feature 1 — Word list integrity
 
@@ -41,38 +41,35 @@ _Note: `accent` twins are bucketed against a web frequency corpus, which contain
 
 **WARNING (21)**
 
-- `assets/words/es/:ave` [phonetic] [b/v · silent-h · s/z/c (seseo) · ll/y (yeísmo) · g/j] sounds identical to: ['abe', 'ave', 'have'] — a player typing a correct-sounding twin would be marked wrong. Twins in lists: ['ave']; other real words: ['abe', 'have']
-- `assets/words/es/:árbol` [phonetic] [b/v · silent-h · s/z/c (seseo) · ll/y (yeísmo) · g/j] sounds identical to: ['arbol', 'árbol'] — a player typing a correct-sounding twin would be marked wrong. Twins in lists: ['árbol']; other real words: ['arbol']
-- `assets/words/es/:vergüenza` [phonetic] [b/v · silent-h · s/z/c (seseo) · ll/y (yeísmo) · g/j] sounds identical to: ['verguenza', 'vergüenza'] — a player typing a correct-sounding twin would be marked wrong. Twins in lists: ['vergüenza']; other real words: ['verguenza']
-- `assets/words/es/:camino` [phonetic] [b/v · silent-h · s/z/c (seseo) · ll/y (yeísmo) · g/j] sounds identical to: ['camino', 'caminó'] — a player typing a correct-sounding twin would be marked wrong. Twins in lists: ['camino']; other real words: ['caminó']
-- `assets/words/es/:casa` [phonetic] [b/v · silent-h · s/z/c (seseo) · ll/y (yeísmo) · g/j] sounds identical to: ['casa', 'caza'] — a player typing a correct-sounding twin would be marked wrong. Twins in lists: ['casa']; other real words: ['caza']
-- `assets/words/es/:león` [phonetic] [b/v · silent-h · s/z/c (seseo) · ll/y (yeísmo) · g/j] sounds identical to: ['leon', 'león'] — a player typing a correct-sounding twin would be marked wrong. Twins in lists: ['león']; other real words: ['leon']
-- `assets/words/es/:música` [phonetic] [b/v · silent-h · s/z/c (seseo) · ll/y (yeísmo) · g/j] sounds identical to: ['musica', 'música'] — a player typing a correct-sounding twin would be marked wrong. Twins in lists: ['música']; other real words: ['musica']
-- `assets/words/es/:número` [phonetic] [b/v · silent-h · s/z/c (seseo) · ll/y (yeísmo) · g/j] sounds identical to: ['numero', 'número'] — a player typing a correct-sounding twin would be marked wrong. Twins in lists: ['número']; other real words: ['numero']
-- `assets/words/es/:pie` [phonetic] [b/v · silent-h · s/z/c (seseo) · ll/y (yeísmo) · g/j] sounds identical to: ['pie', 'pié'] — a player typing a correct-sounding twin would be marked wrong. Twins in lists: ['pie']; other real words: ['pié']
-- `assets/words/es/:teléfono` [phonetic] [b/v · silent-h · s/z/c (seseo) · ll/y (yeísmo) · g/j] sounds identical to: ['telefono', 'teléfono'] — a player typing a correct-sounding twin would be marked wrong. Twins in lists: ['teléfono']; other real words: ['telefono']
-- `assets/words/es/:tomate` [phonetic] [b/v · silent-h · s/z/c (seseo) · ll/y (yeísmo) · g/j] sounds identical to: ['tomate', 'tómate'] — a player typing a correct-sounding twin would be marked wrong. Twins in lists: ['tomate']; other real words: ['tómate']
-- `assets/words/es/:trabajo` [phonetic] [b/v · silent-h · s/z/c (seseo) · ll/y (yeísmo) · g/j] sounds identical to: ['trabajo', 'trabajó'] — a player typing a correct-sounding twin would be marked wrong. Twins in lists: ['trabajo']; other real words: ['trabajó']
-- `assets/words/es/:árbol` [accent] [accent-only pairs (papa/papá)] sounds identical to: ['arbol', 'árbol'] — a player typing a correct-sounding twin would be marked wrong. Twins in lists: ['árbol']; other real words: ['arbol']
-- `assets/words/es/:camino` [accent] [accent-only pairs (papa/papá)] sounds identical to: ['camino', 'caminó'] — a player typing a correct-sounding twin would be marked wrong. Twins in lists: ['camino']; other real words: ['caminó']
-- `assets/words/es/:león` [accent] [accent-only pairs (papa/papá)] sounds identical to: ['leon', 'león'] — a player typing a correct-sounding twin would be marked wrong. Twins in lists: ['león']; other real words: ['leon']
-- `assets/words/es/:música` [accent] [accent-only pairs (papa/papá)] sounds identical to: ['musica', 'música'] — a player typing a correct-sounding twin would be marked wrong. Twins in lists: ['música']; other real words: ['musica']
-- `assets/words/es/:número` [accent] [accent-only pairs (papa/papá)] sounds identical to: ['numero', 'número'] — a player typing a correct-sounding twin would be marked wrong. Twins in lists: ['número']; other real words: ['numero']
-- `assets/words/es/:pie` [accent] [accent-only pairs (papa/papá)] sounds identical to: ['pie', 'pié'] — a player typing a correct-sounding twin would be marked wrong. Twins in lists: ['pie']; other real words: ['pié']
-- `assets/words/es/:teléfono` [accent] [accent-only pairs (papa/papá)] sounds identical to: ['telefono', 'teléfono'] — a player typing a correct-sounding twin would be marked wrong. Twins in lists: ['teléfono']; other real words: ['telefono']
-- `assets/words/es/:tomate` [accent] [accent-only pairs (papa/papá)] sounds identical to: ['tomate', 'tómate'] — a player typing a correct-sounding twin would be marked wrong. Twins in lists: ['tomate']; other real words: ['tómate']
-- `assets/words/es/:trabajo` [accent] [accent-only pairs (papa/papá)] sounds identical to: ['trabajo', 'trabajó'] — a player typing a correct-sounding twin would be marked wrong. Twins in lists: ['trabajo']; other real words: ['trabajó']
+- `assets/words/es/:ave` [phonetic] [b/v · silent-h · s/z/c (seseo) · ll/y (yeísmo) · g/j] sounds identical to: ['abe', 'ave', 'have'] | PROPOSED BUCKET: accept-any (both members common) — PROPOSED, confirm | Twins in lists: ['ave']; other real words: ['abe', 'have']
+- `assets/words/es/:árbol` [phonetic] [b/v · silent-h · s/z/c (seseo) · ll/y (yeísmo) · g/j] sounds identical to: ['arbol', 'árbol'] | PROPOSED BUCKET: accept-any (both members common) — PROPOSED, confirm | Twins in lists: ['árbol']; other real words: ['arbol']
+- `assets/words/es/:vergüenza` [phonetic] [b/v · silent-h · s/z/c (seseo) · ll/y (yeísmo) · g/j] sounds identical to: ['verguenza', 'vergüenza'] | PROPOSED BUCKET: accept-any (both members common) — PROPOSED, confirm | Twins in lists: ['vergüenza']; other real words: ['verguenza']
+- `assets/words/es/:camino` [phonetic] [b/v · silent-h · s/z/c (seseo) · ll/y (yeísmo) · g/j] sounds identical to: ['camino', 'caminó'] | PROPOSED BUCKET: accept-any (both members common) — PROPOSED, confirm | Twins in lists: ['camino']; other real words: ['caminó']
+- `assets/words/es/:casa` [phonetic] [b/v · silent-h · s/z/c (seseo) · ll/y (yeísmo) · g/j] sounds identical to: ['casa', 'caza'] | PROPOSED BUCKET: accept-any — CONFIRMED (Eric), already wired in homophones.txt | Twins in lists: ['casa']; other real words: ['caza']
+- `assets/words/es/:león` [phonetic] [b/v · silent-h · s/z/c (seseo) · ll/y (yeísmo) · g/j] sounds identical to: ['leon', 'león'] | PROPOSED BUCKET: accept-any (both members common) — PROPOSED, confirm | Twins in lists: ['león']; other real words: ['leon']
+- `assets/words/es/:música` [phonetic] [b/v · silent-h · s/z/c (seseo) · ll/y (yeísmo) · g/j] sounds identical to: ['musica', 'música'] | PROPOSED BUCKET: accept-any (both members common) — PROPOSED, confirm | Twins in lists: ['música']; other real words: ['musica']
+- `assets/words/es/:número` [phonetic] [b/v · silent-h · s/z/c (seseo) · ll/y (yeísmo) · g/j] sounds identical to: ['numero', 'número'] | PROPOSED BUCKET: accept-any (both members common) — PROPOSED, confirm | Twins in lists: ['número']; other real words: ['numero']
+- `assets/words/es/:pie` [phonetic] [b/v · silent-h · s/z/c (seseo) · ll/y (yeísmo) · g/j] sounds identical to: ['pie', 'pié'] | PROPOSED BUCKET: accept-any (both members common) — PROPOSED, confirm | Twins in lists: ['pie']; other real words: ['pié']
+- `assets/words/es/:teléfono` [phonetic] [b/v · silent-h · s/z/c (seseo) · ll/y (yeísmo) · g/j] sounds identical to: ['telefono', 'teléfono'] | PROPOSED BUCKET: accept-any (both members common) — PROPOSED, confirm | Twins in lists: ['teléfono']; other real words: ['telefono']
+- `assets/words/es/:tomate` [phonetic] [b/v · silent-h · s/z/c (seseo) · ll/y (yeísmo) · g/j] sounds identical to: ['tomate', 'tómate'] | PROPOSED BUCKET: accept-any (both members common) — PROPOSED, confirm | Twins in lists: ['tomate']; other real words: ['tómate']
+- `assets/words/es/:trabajo` [phonetic] [b/v · silent-h · s/z/c (seseo) · ll/y (yeísmo) · g/j] sounds identical to: ['trabajo', 'trabajó'] | PROPOSED BUCKET: accept-any (both members common) — PROPOSED, confirm | Twins in lists: ['trabajo']; other real words: ['trabajó']
+- `assets/words/es/:árbol` [accent] [accent-only pairs (papa/papá)] sounds identical to: ['arbol', 'árbol'] | PROPOSED BUCKET: no-action — the accent is a stress difference the audio CAN carry, so this is a legitimate spelling test (many 'twins' here are just unaccented corpus typos) | Twins in lists: ['árbol']; other real words: ['arbol']
+- `assets/words/es/:camino` [accent] [accent-only pairs (papa/papá)] sounds identical to: ['camino', 'caminó'] | PROPOSED BUCKET: no-action — the accent is a stress difference the audio CAN carry, so this is a legitimate spelling test (many 'twins' here are just unaccented corpus typos) | Twins in lists: ['camino']; other real words: ['caminó']
+- `assets/words/es/:león` [accent] [accent-only pairs (papa/papá)] sounds identical to: ['leon', 'león'] | PROPOSED BUCKET: no-action — the accent is a stress difference the audio CAN carry, so this is a legitimate spelling test (many 'twins' here are just unaccented corpus typos) | Twins in lists: ['león']; other real words: ['leon']
+- `assets/words/es/:música` [accent] [accent-only pairs (papa/papá)] sounds identical to: ['musica', 'música'] | PROPOSED BUCKET: no-action — the accent is a stress difference the audio CAN carry, so this is a legitimate spelling test (many 'twins' here are just unaccented corpus typos) | Twins in lists: ['música']; other real words: ['musica']
+- `assets/words/es/:número` [accent] [accent-only pairs (papa/papá)] sounds identical to: ['numero', 'número'] | PROPOSED BUCKET: no-action — the accent is a stress difference the audio CAN carry, so this is a legitimate spelling test (many 'twins' here are just unaccented corpus typos) | Twins in lists: ['número']; other real words: ['numero']
+- `assets/words/es/:pie` [accent] [accent-only pairs (papa/papá)] sounds identical to: ['pie', 'pié'] | PROPOSED BUCKET: no-action — the accent is a stress difference the audio CAN carry, so this is a legitimate spelling test (many 'twins' here are just unaccented corpus typos) | Twins in lists: ['pie']; other real words: ['pié']
+- `assets/words/es/:teléfono` [accent] [accent-only pairs (papa/papá)] sounds identical to: ['telefono', 'teléfono'] | PROPOSED BUCKET: no-action — the accent is a stress difference the audio CAN carry, so this is a legitimate spelling test (many 'twins' here are just unaccented corpus typos) | Twins in lists: ['teléfono']; other real words: ['telefono']
+- `assets/words/es/:tomate` [accent] [accent-only pairs (papa/papá)] sounds identical to: ['tomate', 'tómate'] | PROPOSED BUCKET: no-action — the accent is a stress difference the audio CAN carry, so this is a legitimate spelling test (many 'twins' here are just unaccented corpus typos) | Twins in lists: ['tomate']; other real words: ['tómate']
+- `assets/words/es/:trabajo` [accent] [accent-only pairs (papa/papá)] sounds identical to: ['trabajo', 'trabajó'] | PROPOSED BUCKET: no-action — the accent is a stress difference the audio CAN carry, so this is a legitimate spelling test (many 'twins' here are just unaccented corpus typos) | Twins in lists: ['trabajo']; other real words: ['trabajó']
 
 ## Feature 5 — Profanity filter coverage
 
-**CRITICAL (2)**
+**INFO (3)**
 
-- `assets/words/es/easy.txt:26` [profanity-in-list] 'negro' is on the profanity filter but present in a word list
-- `assets/words/es/easy.txt:39` [profanity-in-list] 'leche' is on the profanity filter but present in a word list
-
-**INFO (1)**
-
-- `assets/words/profanity/es.txt:-` [filter-layers] es seed layer: 58 terms; global union (all langs): 1689 terms; exclusions(build): 0; kid-exclude: 9
+- `assets/words/profanity/es.txt:-` [filter-layers] es seed layer: 58 terms. Curation scan below is language-scoped (es seed + universal hard slurs). Runtime My Words screening (src/profanity.rs is_blocked) separately uses the 1689-term all-language union — that over-block is intentional for user imports.
+- `assets/words/es/easy.txt:26` [cross-lang-profanity] 'negro' is a valid es word but is on the profanity seed for: ['en', 'fr']. Not flagged for es (kept per decision addendum). Note: it stays blocked in free-text usernames via the global/English path.
+- `assets/words/es/easy.txt:39` [cross-lang-profanity] 'leche' is a valid es word but is on the profanity seed for: ['fil']. Not flagged for es (kept per decision addendum). Note: it stays blocked in free-text usernames via the global/English path.
 
 ## Feature 6 — UI localization completeness
 
