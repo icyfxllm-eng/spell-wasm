@@ -931,6 +931,11 @@
        Classic script so window.SpellAudio is defined before the WASM module
        runs. -->
   <script src="./audio-native.js"></script>
+  <!-- Native language capabilities bridge (offline TTS / word-check / language
+       detection). Loads on every platform; window.SpellNativeLang.available() is
+       false off iOS, so this is a no-op stub on the web. Classic script so the
+       interface exists before the WASM module runs. -->
+  <script src="./native-language-kit.js"></script>
   <script type="module">
     import init from './pkg/spell_wasm.js?v=DEV';
     // The compiled app (~1.4MB of WASM) has to finish downloading and
