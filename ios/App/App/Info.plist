@@ -27,9 +27,9 @@
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 	<key>NSMicrophoneUsageDescription</key>
-	<string>Spell can listen so you can say your answer out loud.</string>
+	<string>Spell listens so you can say a word out loud. Your voice is checked on this device and never leaves it.</string>
 	<key>NSSpeechRecognitionUsageDescription</key>
-	<string>Spell uses speech recognition to check answers you speak aloud.</string>
+	<string>Spell recognizes the word you say — entirely on your device. Your voice is never recorded, saved, or sent anywhere.</string>
 	<key>UILaunchStoryboardName</key>
 	<string>LaunchScreen</string>
 	<key>UIMainStoryboardFile</key>

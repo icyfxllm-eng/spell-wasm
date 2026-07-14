@@ -188,5 +188,22 @@
   "coming.badge": "เร็ว ๆ นี้",
   "import.dictSkipped": "Skipped {d} not found in the dictionary.",
   "import.dictAllSkipped": "None of those were found in the dictionary.",
-  "import.langHint": "These look like {lang}."
+  "import.langHint": "These look like {lang}.",
+  "top.sayIt": "พูดเลย",
+  "sayit.title": "🗣 พูดเลย",
+  "sayit.blurb": "ดูคำ แล้วพูดออกมาดัง ๆ เราตรวจสิ่งที่คุณพูดตรงนี้ บนอุปกรณ์ของคุณเลย",
+  "sayit.privacy": "เสียงของคุณไม่เคยออกจากโทรศัพท์เครื่องนี้ ไม่มีการบันทึก ไม่มีการเก็บ และไม่ส่งไปที่ไหนทั้งสิ้น",
+  "sayit.permNote": "iPhone ของคุณจะขออนุญาตใช้ไมโครโฟนและการรู้จำเสียงพูด",
+  "sayit.cancel": "ไว้ก่อน",
+  "sayit.begin": "ต่อไป",
+  "sayit.unavailable": "พูดเลยยังไม่รองรับภาษานี้บนอุปกรณ์นี้ — ต้องใช้การรู้จำเสียงพูดบนอุปกรณ์ ซึ่งช่วยให้เสียงของคุณเป็นส่วนตัว",
+  "sayit.needsMic": "พูดเลยต้องใช้ไมโครโฟน เปิดไมโครโฟนและการรู้จำเสียงพูดให้ Spell ในการตั้งค่า แล้วกลับมาใหม่",
+  "sayit.close": "ปิด",
+  "sayit.exit": "ออก",
+  "sayit.next": "คำถัดไป",
+  "sayit.tapMic": "แตะไมโครโฟนแล้วพูดคำนั้น",
+  "sayit.listening": "กำลังฟัง…",
+  "sayit.correct": "ถูกต้อง!",
+  "sayit.tryAgain": "เกือบแล้ว — ลองคำถัดไป",
+  "sayit.didntCatch": "ฟังไม่ทัน — แตะแล้วลองอีกครั้ง"
 }

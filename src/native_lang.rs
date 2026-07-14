@@ -192,3 +192,84 @@ pub async fn detect_language_await(text: &str) -> (bool, String, f64) {
     let confidence = get(&v, "confidence").and_then(|x| x.as_f64()).unwrap_or(0.0);
     (supported, lang, confidence)
 }
+
+// ---- Say It (Feature F2): on-device speech recognition bridge ----
+
+/// Parsed `speechCapabilities(lang)` verdict. `available` already implies
+/// on-device support (the JS/Swift contract), so callers only branch on it;
+/// `supports_on_device` is retained for diagnostics/telemetry and to make the
+/// on-device-only invariant legible at the type level.
+#[allow(dead_code)]
+pub struct SpeechCapability {
+    pub available: bool,
+    pub supports_on_device: bool,
+}
+
+fn speech_capabilities_promise(lang: &str) -> Option<Promise> {
+    call1_promise("speechCapabilities", lang)
+}
+
+/// Await `speechCapabilities(lang)`. Returns an all-false verdict whenever the
+/// bridge is absent (web/PWA) or the call fails — so off-iOS the mode is uniformly
+/// treated as UNAVAILABLE, never as a cue to try anything server-based.
+pub async fn speech_capabilities(lang: &str) -> SpeechCapability {
+    let fallback = SpeechCapability { available: false, supports_on_device: false };
+    let Some(promise) = speech_capabilities_promise(lang) else { return fallback };
+    let Ok(v) = JsFuture::from(promise).await else { return fallback };
+    let available = get(&v, "available").and_then(|x| x.as_bool()).unwrap_or(false);
+    let supports_on_device = get(&v, "supportsOnDevice").and_then(|x| x.as_bool()).unwrap_or(false);
+    // Defensive: never report available without on-device support, even if a
+    // future bridge regressed the invariant.
+    SpeechCapability { available: available && supports_on_device, supports_on_device }
+}
+
+/// Kick off on-device listening for `lang`. Returns the JS promise resolving to
+/// `{ transcription }` (on-device only) or rejecting with a code string
+/// ("UNAVAILABLE" | "PERMISSION_DENIED" | "BUSY" | "AUDIO_ERROR" | "NO_SPEECH").
+/// `None` when the bridge isn't callable (web) — caller treats as UNAVAILABLE.
+pub fn start_listening(lang: &str) -> Option<Promise> {
+    let obj = bridge()?;
+    let f = method(&obj, "startListening")?;
+    let opts = js_sys::Object::new();
+    Reflect::set(&opts, &JsValue::from_str("lang"), &JsValue::from_str(lang)).ok()?;
+    f.call1(&obj, &opts).ok()?.dyn_into::<Promise>().ok()
+}
+
+/// Outcome of an on-device listen attempt.
+pub enum ListenOutcome {
+    /// The recognizer's final on-device transcription.
+    Heard(String),
+    /// Rejected with one of the documented codes (or "UNAVAILABLE" if the bridge
+    /// was missing / unparseable).
+    Error(String),
+}
+
+/// Await `startListening(lang)` into a parsed outcome. Never panics; a missing
+/// bridge or unparseable result becomes `Error("UNAVAILABLE")`.
+pub async fn start_listening_await(lang: &str) -> ListenOutcome {
+    let Some(promise) = start_listening(lang) else { return ListenOutcome::Error("UNAVAILABLE".into()) };
+    match JsFuture::from(promise).await {
+        Ok(v) => match get(&v, "transcription").and_then(|x| x.as_string()) {
+            Some(t) => ListenOutcome::Heard(t),
+            None => ListenOutcome::Error("UNAVAILABLE".into()),
+        },
+        Err(e) => {
+            // Capacitor rejects with an Error-like object; pull `.message` (the code).
+            let code = get(&e, "message")
+                .and_then(|x| x.as_string())
+                .or_else(|| e.as_string())
+                .unwrap_or_else(|| "UNAVAILABLE".into());
+            ListenOutcome::Error(code)
+        }
+    }
+}
+
+/// Stop any in-flight listen (fire-and-forget). The pending `startListening`
+/// promise then resolves with whatever was captured.
+pub fn stop_listening() {
+    if let Some(obj) = bridge() {
+        if let Some(f) = method(&obj, "stopListening") {
+            let _ = f.call0(&obj);
+        }
+    }
+}

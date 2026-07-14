@@ -188,5 +188,22 @@
   "coming.badge": "Malapit na",
   "import.dictSkipped": "Skipped {d} not found in the dictionary.",
   "import.dictAllSkipped": "None of those were found in the dictionary.",
-  "import.langHint": "These look like {lang}."
+  "import.langHint": "These look like {lang}.",
+  "top.sayIt": "Sabihin",
+  "sayit.title": "🗣 Sabihin",
+  "sayit.blurb": "Tingnan ang salita, tapos sabihin nang malakas. Sinusuri namin ang sinabi mo dito mismo sa device mo.",
+  "sayit.privacy": "Hindi kailanman lumalabas ang boses mo sa telepono na ito. Walang iniré-record, ini-save, o ipinapadala kahit saan.",
+  "sayit.permNote": "Hihingi ang iPhone mo ng pahintulot na gamitin ang mikropono at speech recognition.",
+  "sayit.cancel": "Hindi muna",
+  "sayit.begin": "Magpatuloy",
+  "sayit.unavailable": "Hindi pa available ang Sabihin para sa wikang ito sa device na ito — kailangan nito ng on-device speech recognition na nagpapanatiling pribado ng boses mo.",
+  "sayit.needsMic": "Kailangan ng Sabihin ang mikropono. I-on ang Mikropono at Speech Recognition para sa Spell sa Settings, tapos bumalik.",
+  "sayit.close": "Isara",
+  "sayit.exit": "Lumabas",
+  "sayit.next": "Susunod na salita",
+  "sayit.tapMic": "I-tap ang mikropono at sabihin ang salita.",
+  "sayit.listening": "Nakikinig…",
+  "sayit.correct": "Tama!",
+  "sayit.tryAgain": "Muntik na — subukan ang susunod.",
+  "sayit.didntCatch": "Hindi ko naintindihan — i-tap at subukang muli."
 }

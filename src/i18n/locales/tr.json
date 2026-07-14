@@ -188,5 +188,22 @@
   "coming.badge": "Yakında",
   "import.dictSkipped": "Skipped {d} not found in the dictionary.",
   "import.dictAllSkipped": "None of those were found in the dictionary.",
-  "import.langHint": "These look like {lang}."
+  "import.langHint": "These look like {lang}.",
+  "top.sayIt": "Söyle",
+  "sayit.title": "🗣 Söyle",
+  "sayit.blurb": "Kelimeyi gör ve yüksek sesle söyle. Söylediğini tam burada, cihazında kontrol ediyoruz.",
+  "sayit.privacy": "Sesin bu telefondan asla çıkmaz. Hiçbir şey kaydedilmez, saklanmaz veya bir yere gönderilmez.",
+  "sayit.permNote": "iPhone'un mikrofon ve konuşma tanıma için izin isteyecek.",
+  "sayit.cancel": "Şimdi değil",
+  "sayit.begin": "Devam et",
+  "sayit.unavailable": "Söyle bu cihazda bu dil için henüz kullanılamıyor — sesini gizli tutan, cihaz üzerinde konuşma tanıma gerektiriyor.",
+  "sayit.needsMic": "Söyle mikrofona ihtiyaç duyar. Ayarlar'da Spell için Mikrofon ve Konuşma Tanıma'yı aç ve geri dön.",
+  "sayit.close": "Kapat",
+  "sayit.exit": "Çık",
+  "sayit.next": "Sonraki kelime",
+  "sayit.tapMic": "Mikrofona dokun ve kelimeyi söyle.",
+  "sayit.listening": "Dinliyor…",
+  "sayit.correct": "Doğru!",
+  "sayit.tryAgain": "Az kaldı — sonrakini dene.",
+  "sayit.didntCatch": "Anlayamadım — dokun ve tekrar dene."
 }

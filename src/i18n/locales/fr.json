@@ -188,5 +188,22 @@
   "coming.badge": "Bientôt",
   "import.dictSkipped": "Skipped {d} not found in the dictionary.",
   "import.dictAllSkipped": "None of those were found in the dictionary.",
-  "import.langHint": "These look like {lang}."
+  "import.langHint": "These look like {lang}.",
+  "top.sayIt": "Dis-le",
+  "sayit.title": "🗣 Dis-le",
+  "sayit.blurb": "Regarde le mot, puis dis-le à voix haute. On vérifie ce que tu as dit directement sur ton appareil.",
+  "sayit.privacy": "Ta voix ne quitte jamais ce téléphone. Rien n'est enregistré, sauvegardé ni envoyé nulle part.",
+  "sayit.permNote": "Ton iPhone va demander l'accès au micro et à la reconnaissance vocale.",
+  "sayit.cancel": "Pas maintenant",
+  "sayit.begin": "Continuer",
+  "sayit.unavailable": "Dis-le n'est pas encore disponible pour cette langue sur cet appareil — il faut la reconnaissance vocale sur l'appareil, qui garde ta voix privée.",
+  "sayit.needsMic": "Dis-le a besoin du micro. Active le micro et la reconnaissance vocale pour Spell dans Réglages, puis reviens.",
+  "sayit.close": "Fermer",
+  "sayit.exit": "Quitter",
+  "sayit.next": "Mot suivant",
+  "sayit.tapMic": "Touche le micro et dis le mot.",
+  "sayit.listening": "J'écoute…",
+  "sayit.correct": "Correct !",
+  "sayit.tryAgain": "Presque — essaie le suivant.",
+  "sayit.didntCatch": "Je n'ai pas compris — touche et réessaie."
 }

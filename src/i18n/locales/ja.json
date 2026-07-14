@@ -188,5 +188,22 @@
   "coming.badge": "近日公開",
   "import.dictSkipped": "Skipped {d} not found in the dictionary.",
   "import.dictAllSkipped": "None of those were found in the dictionary.",
-  "import.langHint": "These look like {lang}."
+  "import.langHint": "These look like {lang}.",
+  "top.sayIt": "言ってみて",
+  "sayit.title": "🗣 言ってみて",
+  "sayit.blurb": "単語を見て、声に出して言ってみて。言った内容はこの端末の中だけで確認します。",
+  "sayit.privacy": "あなたの声はこの端末から出ません。録音も保存もされず、どこにも送られません。",
+  "sayit.permNote": "iPhoneがマイクと音声認識の使用許可を求めます。",
+  "sayit.cancel": "あとで",
+  "sayit.begin": "続ける",
+  "sayit.unavailable": "言ってみては、この端末のこの言語ではまだ使えません — 声を非公開に保つ、端末内の音声認識が必要です。",
+  "sayit.needsMic": "言ってみてにはマイクが必要です。設定でSpellのマイクと音声認識をオンにして戻ってきてください。",
+  "sayit.close": "閉じる",
+  "sayit.exit": "やめる",
+  "sayit.next": "次の単語",
+  "sayit.tapMic": "マイクをタップして単語を言ってね。",
+  "sayit.listening": "聞いています…",
+  "sayit.correct": "正解！",
+  "sayit.tryAgain": "惜しい — 次にいこう。",
+  "sayit.didntCatch": "聞き取れなかった — タップしてもう一度。"
 }

@@ -188,5 +188,22 @@
   "coming.badge": "Sắp có",
   "import.dictSkipped": "Skipped {d} not found in the dictionary.",
   "import.dictAllSkipped": "None of those were found in the dictionary.",
-  "import.langHint": "These look like {lang}."
+  "import.langHint": "These look like {lang}.",
+  "top.sayIt": "Nói đi",
+  "sayit.title": "🗣 Nói đi",
+  "sayit.blurb": "Xem từ rồi nói to lên. Chúng tôi kiểm tra điều bạn nói ngay trên thiết bị của bạn.",
+  "sayit.privacy": "Giọng nói của bạn không bao giờ rời khỏi điện thoại này. Không có gì được ghi âm, lưu lại hay gửi đi đâu cả.",
+  "sayit.permNote": "iPhone của bạn sẽ xin quyền dùng micrô và nhận dạng giọng nói.",
+  "sayit.cancel": "Để sau",
+  "sayit.begin": "Tiếp tục",
+  "sayit.unavailable": "Nói đi chưa khả dụng cho ngôn ngữ này trên thiết bị này — nó cần nhận dạng giọng nói trên thiết bị, giúp giữ riêng tư giọng nói của bạn.",
+  "sayit.needsMic": "Nói đi cần micrô. Hãy bật Micrô và Nhận dạng giọng nói cho Spell trong Cài đặt rồi quay lại.",
+  "sayit.close": "Đóng",
+  "sayit.exit": "Thoát",
+  "sayit.next": "Từ tiếp theo",
+  "sayit.tapMic": "Chạm vào micrô và nói từ đó.",
+  "sayit.listening": "Đang nghe…",
+  "sayit.correct": "Chính xác!",
+  "sayit.tryAgain": "Suýt rồi — thử từ tiếp theo.",
+  "sayit.didntCatch": "Chưa nghe rõ — chạm và thử lại."
 }

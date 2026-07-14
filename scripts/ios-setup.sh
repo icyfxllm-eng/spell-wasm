@@ -30,11 +30,12 @@ add_string_key() {
     echo "    added $1"
   fi
 }
-# The mic / speech features are inert in the iOS WKWebView (SpeechRecognition
-# isn't available there), but include the strings so review static analysis is
-# happy if any mic-capable code path is ever reached.
-add_string_key "NSMicrophoneUsageDescription" "Spell can listen so you can say your answer out loud."
-add_string_key "NSSpeechRecognitionUsageDescription" "Spell uses speech recognition to check answers you speak aloud."
+# Required by Feature F2 "Say It": the NativeLanguageKit plugin uses the native
+# microphone + SFSpeechRecognizer (ON-DEVICE only) so a child can say a shown word
+# and have it checked locally. The prompts appear at first use of the mode. These
+# strings are shown in the system permission dialogs.
+add_string_key "NSMicrophoneUsageDescription" "Spell listens so you can say a word out loud. Your voice is checked on this device and never leaves it."
+add_string_key "NSSpeechRecognitionUsageDescription" "Spell recognizes the word you say — entirely on your device. Your voice is never recorded, saved, or sent anywhere."
 
 echo "==> AVAudioSession (.playback) in AppDelegate"
 if grep -q "SPELL_AUDIO_SESSION" "$APPDELEGATE"; then

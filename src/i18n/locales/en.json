@@ -188,5 +188,22 @@
   "coming.badge": "Coming soon",
   "import.dictSkipped": "Skipped {d} not found in the dictionary.",
   "import.dictAllSkipped": "None of those were found in the dictionary.",
-  "import.langHint": "These look like {lang}."
+  "import.langHint": "These look like {lang}.",
+  "top.sayIt": "Say It",
+  "sayit.title": "🗣 Say It",
+  "sayit.blurb": "See the word, then say it out loud. We check what you said right here on your device.",
+  "sayit.privacy": "Your voice never leaves this phone. Nothing is recorded, saved, or sent anywhere.",
+  "sayit.permNote": "Your iPhone will ask to use the microphone and speech recognition.",
+  "sayit.cancel": "Not now",
+  "sayit.begin": "Continue",
+  "sayit.unavailable": "Say It isn't available for this language on this device yet — it needs on-device speech recognition, which keeps your voice private.",
+  "sayit.needsMic": "Say It needs the microphone. Turn on Microphone and Speech Recognition for Spell in Settings, then come back.",
+  "sayit.close": "Close",
+  "sayit.exit": "Exit",
+  "sayit.next": "Next word",
+  "sayit.tapMic": "Tap the mic and say the word.",
+  "sayit.listening": "Listening…",
+  "sayit.correct": "Correct!",
+  "sayit.tryAgain": "Not quite — try the next one.",
+  "sayit.didntCatch": "Didn't catch that — tap and try again."
 }

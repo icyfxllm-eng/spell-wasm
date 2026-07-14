@@ -188,5 +188,22 @@
   "coming.badge": "Wkrótce",
   "import.dictSkipped": "Skipped {d} not found in the dictionary.",
   "import.dictAllSkipped": "None of those were found in the dictionary.",
-  "import.langHint": "These look like {lang}."
+  "import.langHint": "These look like {lang}.",
+  "top.sayIt": "Powiedz",
+  "sayit.title": "🗣 Powiedz",
+  "sayit.blurb": "Zobacz słowo i powiedz je na głos. Sprawdzamy, co powiedziałeś, tu, na twoim urządzeniu.",
+  "sayit.privacy": "Twój głos nigdy nie opuszcza tego telefonu. Nic nie jest nagrywane, zapisywane ani nigdzie wysyłane.",
+  "sayit.permNote": "Twój iPhone poprosi o dostęp do mikrofonu i rozpoznawania mowy.",
+  "sayit.cancel": "Nie teraz",
+  "sayit.begin": "Dalej",
+  "sayit.unavailable": "Powiedz nie jest jeszcze dostępne dla tego języka na tym urządzeniu — potrzebuje rozpoznawania mowy na urządzeniu, które chroni prywatność twojego głosu.",
+  "sayit.needsMic": "Powiedz potrzebuje mikrofonu. Włącz mikrofon i rozpoznawanie mowy dla Spell w Ustawieniach i wróć.",
+  "sayit.close": "Zamknij",
+  "sayit.exit": "Wyjdź",
+  "sayit.next": "Następne słowo",
+  "sayit.tapMic": "Dotknij mikrofonu i powiedz słowo.",
+  "sayit.listening": "Słucham…",
+  "sayit.correct": "Dobrze!",
+  "sayit.tryAgain": "Prawie — spróbuj następnego.",
+  "sayit.didntCatch": "Nie zrozumiałem — dotknij i spróbuj ponownie."
 }

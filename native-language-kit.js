@@ -18,6 +18,8 @@
 //             langDetect:{available:boolean} }} CapabilityReport
 // @typedef {{ supported:boolean, isWord:boolean }} WordCheckResult
 // @typedef {{ supported:boolean, lang:string, confidence:number }} LanguageGuess
+// @typedef {{ available:boolean, supportsOnDevice:boolean, locale:string }} SpeechCapability
+// @typedef {{ transcription:string }} SpeechResult
 (function () {
   'use strict';
 
@@ -150,6 +152,50 @@
       if (!available()) return Promise.resolve({ supported: false, lang: '', confidence: 0 });
       return plugin().detectLanguage({ text: text })
         .catch(function () { return { supported: false, lang: '', confidence: 0 }; });
+    },
+
+    // ---- Say It (Feature F2): ON-DEVICE speech recognition ONLY ----
+
+    /**
+     * Can `lang` be recognized entirely ON-DEVICE on this platform? The privacy
+     * contract lives in the shape: `available` is NEVER true unless on-device
+     * recognition is supported. Treat `available:false` as "the Say-It mode is
+     * UNAVAILABLE for this language" — it must NEVER be read as permission to use
+     * server-based recognition (a child's voice never leaves the phone).
+     * @param {string} lang bare app language code, e.g. "en"
+     * @returns {Promise<SpeechCapability>} all-false off iOS; never rejects.
+     */
+    speechCapabilities: function (lang) {
+      var off = { available: false, supportsOnDevice: false, locale: '' };
+      if (!available()) return Promise.resolve(off);
+      return plugin().speechCapabilities({ lang: lang }).catch(function () { return off; });
+    },
+
+    /**
+     * Start listening and return the ON-DEVICE transcription. On iOS this sets
+     * SFSpeechRecognizer `requiresOnDeviceRecognition = true`; the mic audio is
+     * streamed only to the on-device recognizer and never persisted or uploaded.
+     * The OS mic + speech permission prompts appear on the FIRST call (the caller
+     * shows a plain-language pre-prompt first).
+     * @param {{ lang:string }} opts
+     * @returns {Promise<SpeechResult>} resolves `{ transcription }`. REJECTS with
+     *   an Error whose message is one of: "UNAVAILABLE" (no on-device path — do
+     *   NOT fall back to a server), "PERMISSION_DENIED" (→ needs-mic state),
+     *   "BUSY", "AUDIO_ERROR", "NO_SPEECH". Off iOS: rejects "UNAVAILABLE".
+     */
+    startListening: function (opts) {
+      if (!available()) return Promise.reject(new Error('UNAVAILABLE'));
+      return plugin().startListening({ lang: (opts && opts.lang) || '' });
+    },
+
+    /**
+     * Stop listening; the in-flight startListening resolves with whatever
+     * on-device transcription was captured. No-op (resolves) off iOS.
+     * @returns {Promise<void>}
+     */
+    stopListening: function () {
+      if (!available()) return Promise.resolve();
+      return plugin().stopListening();
     },
   };
 })();

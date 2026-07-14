@@ -188,5 +188,22 @@
   "coming.badge": "곧 출시",
   "import.dictSkipped": "Skipped {d} not found in the dictionary.",
   "import.dictAllSkipped": "None of those were found in the dictionary.",
-  "import.langHint": "These look like {lang}."
+  "import.langHint": "These look like {lang}.",
+  "top.sayIt": "말해요",
+  "sayit.title": "🗣 말해요",
+  "sayit.blurb": "단어를 보고 소리 내어 말하세요. 말한 내용을 바로 이 기기에서 확인합니다.",
+  "sayit.privacy": "목소리는 이 휴대폰을 절대 벗어나지 않습니다. 아무것도 녹음하거나 저장하거나 어디로도 보내지 않습니다.",
+  "sayit.permNote": "iPhone이 마이크와 음성 인식 사용 권한을 요청합니다.",
+  "sayit.cancel": "나중에",
+  "sayit.begin": "계속",
+  "sayit.unavailable": "말해요는 아직 이 기기의 이 언어에서 사용할 수 없어요 — 목소리를 비공개로 지키는 기기 내 음성 인식이 필요합니다.",
+  "sayit.needsMic": "말해요에는 마이크가 필요해요. 설정에서 Spell의 마이크와 음성 인식을 켠 뒤 다시 오세요.",
+  "sayit.close": "닫기",
+  "sayit.exit": "나가기",
+  "sayit.next": "다음 단어",
+  "sayit.tapMic": "마이크를 누르고 단어를 말하세요.",
+  "sayit.listening": "듣는 중…",
+  "sayit.correct": "정답!",
+  "sayit.tryAgain": "아쉬워요 — 다음 걸 해봐요.",
+  "sayit.didntCatch": "잘 못 들었어요 — 눌러서 다시 해보세요."
 }
