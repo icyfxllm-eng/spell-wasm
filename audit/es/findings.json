@@ -23,15 +23,6 @@
     },
     {
       "feature": 2,
-      "severity": "violation",
-      "class": "non-monotonic-trap",
-      "file": "assets/words/es/hard.txt",
-      "key": "hard",
-      "detail": "trap density 0.560 < previous tier 0.680",
-      "proposed_fix": null
-    },
-    {
-      "feature": 2,
       "severity": "info",
       "class": "min-pool-undefined",
       "file": "src/consts.rs",

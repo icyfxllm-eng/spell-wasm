@@ -1,4 +1,4 @@
-# es native-speaker auditor packet
+# Spanish (es) native-speaker auditor packet
 
 Machine checks are done; these need a human who reads the language.
 
@@ -6,14 +6,10 @@ Machine checks are done; these need a human who reads the language.
 
 - **26** — 'negro' is a valid es word but is on the profanity seed for: ['en', 'fr']. Not flagged for es (kept per decision addendum). Note: it stays blocked in free-text usernames via the global/English path.
 - **39** — 'leche' is a valid es word but is on the profanity seed for: ['fil']. Not flagged for es (kept per decision addendum). Note: it stays blocked in free-text usernames via the global/English path.
-- **negro (username)** — now in `backend/blocklist.txt`; rejected as a username in ANY locale (`backend/test_usernames.py`), while staying a valid Spanish puzzle word. Checklist item: “any word inappropriate in your region?”
-- **accept-any homophones** — casa/caza, botar/votar, cocer/coser are wired into grading (`assets/words/es/homophones.txt`, consumed by `src/homophones.rs`): typing either spelling scores correct. Confirm these three and rule on the proposed buckets below.
+- **negro (username)** — now in `backend/blocklist.txt`; rejected as a username in ANY locale (`backend/test_usernames.py`), while staying a valid Spanish puzzle word.
+- **accept-any homophones** — casa/caza, botar/votar, cocer/coser wired into grading.
 
-## Regional vocabulary / English cognates to confirm  (1)
-
-- **34** — 'hospital' also appears in the English word lists — confirm it's a legitimate es word
-
-## Homophone pairs — confirm the PROPOSED BUCKET on each (accept-any / remove-rarer / no-action; require-sentence is parked, see docs/features/homophone-carrier-sentences.md)  (21)
+## Homophones / same-sound spellings — list any (grading can then accept-any via assets/words/es/homophones.txt)  (21)
 
 - **ave** — [b/v · silent-h · s/z/c (seseo) · ll/y (yeísmo) · g/j] sounds identical to: ['abe', 'ave', 'have'] | PROPOSED BUCKET: accept-any (both members common) — PROPOSED, confirm | Twins in lists: ['ave']; other real words: ['abe', 'have']
 - **árbol** — [b/v · silent-h · s/z/c (seseo) · ll/y (yeísmo) · g/j] sounds identical to: ['arbol', 'árbol'] | PROPOSED BUCKET: accept-any (both members common) — PROPOSED, confirm | Twins in lists: ['árbol']; other real words: ['arbol']
@@ -37,8 +33,9 @@ Machine checks are done; these need a human who reads the language.
 - **tomate** — [accent-only pairs (papa/papá)] sounds identical to: ['tomate', 'tómate'] | PROPOSED BUCKET: no-action — the accent is a stress difference the audio CAN carry, so this is a legitimate spelling test (many 'twins' here are just unaccented corpus typos) | Twins in lists: ['tomate']; other real words: ['tómate']
 - **trabajo** — [accent-only pairs (papa/papá)] sounds identical to: ['trabajo', 'trabajó'] | PROPOSED BUCKET: no-action — the accent is a stress difference the audio CAN carry, so this is a legitimate spelling test (many 'twins' here are just unaccented corpus typos) | Twins in lists: ['trabajo']; other real words: ['trabajó']
 
-## Regionally-vulgar innocent words (Kid Mode risk)  (0)
+## English cognates to confirm  (1)
 
+- **34** — 'hospital' also appears in the English word lists — confirm it's a legitimate es word
 
 ## Open questions  (3)
 
@@ -47,4 +44,4 @@ Machine checks are done; these need a human who reads the language.
 - **-** — 202 unique words emitted to audio-manifest.txt. Cache coverage lives on the server (audio_cache, keyed md5('{lang}:'+word)); not verifiable from the repo and NOT probed (probing /api/speak would bulk-generate). Verify against the cache in a separate approved run.
 
 ## Voice note
-The Spanish TTS voice is **es-ES (Castilian, Spain)**. The seseo/yeísmo homophone pairs above (casa/caza, valla/vaya) are only homophones for *Latin American* speakers — a Castilian voice distinguishes s/z/c. If the target audience is Latin American (recommendation on file: es-419), the voice choice itself is an auditor/Eric decision.
+The Spanish TTS voice is **es-ES (Castilian)**. seseo pairs (casa/caza) are homophones only for Latin-American ears; if the audience is Latin American (es-419 on file), the voice is an Eric decision.

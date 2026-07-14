@@ -1,6 +1,6 @@
 # Spanish content audit — `es`  (machine pass, REVIEW-GATED)
 
-Totals: **0 critical · 1 violation · 24 warning · 6 info**
+Totals: **0 critical · 0 violation · 24 warning · 6 info**
 
 ## Feature 1 — Word list integrity
 
@@ -10,19 +10,15 @@ Totals: **0 critical · 1 violation · 24 warning · 6 info**
 
 ## Feature 2 — Difficulty tier calibration
 
-Tier stats:
+Tier stats (len = characters):
 
 | tier | count | mean len | median len | accent% | trap% |
 |--|--|--|--|--|--|
-| easy | 50 | 4.12 | 4.0 | 6% | 46% |
-| medium | 50 | 6.54 | 7.0 | 20% | 68% |
-| hard | 50 | 8.66 | 8.0 | 18% | 56% |
-| expert | 52 | 10.77 | 10.0 | 62% | 94% |
+| easy | 50 | 4.12 | 4.0 | 6% | 42% |
+| medium | 50 | 6.54 | 7.0 | 20% | 50% |
+| hard | 50 | 8.66 | 8.0 | 18% | 50% |
+| expert | 52 | 10.77 | 10.0 | 62% | 67% |
 
-
-**VIOLATION (1)**
-
-- `assets/words/es/hard.txt:hard` [non-monotonic-trap] trap density 0.560 < previous tier 0.680
 
 **INFO (1)**
 

@@ -22,6 +22,8 @@ TIERS = ["easy", "medium", "hard", "expert"]
 SEV_ORDER = {"critical": 0, "violation": 1, "warning": 2, "info": 3}
 
 lang = sys.argv[1] if len(sys.argv) > 1 else "es"
+LANG_TITLE_EARLY = {"es": "Spanish", "th": "Thai", "en": "English", "fr": "French", "de": "German",
+                    "zh": "Chinese", "ja": "Japanese", "ko": "Korean", "fil": "Filipino"}.get(lang, lang)
 OUT = ROOT / "audit" / lang
 OUT.mkdir(parents=True, exist_ok=True)
 findings: list[dict] = []
@@ -54,8 +56,24 @@ tiers = {t: read_words(WORDS_DIR / f"{t}.txt") for t in TIERS}
 def spoken(w):
     return w.split("|")[1] if "|" in w else w
 
-# ============================================================ FEATURE 1: integrity
-CHARSET = {"es": r"[a-záéíóúüñ]+(?:[- ][a-záéíóúüñ]+)*"}.get(lang, r"[a-z]+(?:[- ][a-z]+)*")
+# ---- per-language config -------------------------------------------------------
+# Thai has no inter-word spaces, no case, and stacks vowels/tone marks as
+# combining code points; Spanish is Latin+accents. Everything below keys off lang
+# so the same script audits either (and the next language) without Spanish
+# assumptions leaking into a non-Latin script.
+CHARSET = {
+    "es": r"[a-záéíóúüñ]+(?:[- ][a-záéíóúüñ]+)*",
+    "th": "[฀-๿]+",  # Thai block, no spaces within a word
+}.get(lang, r"[a-z]+(?:[- ][a-z]+)*")
+# Thai combining marks (above/below vowels, tone marks, signs) — they don't
+# advance the visual cursor, so a grapheme-ish length excludes them.
+TH_COMBINING = set("ั") | {chr(c) for c in range(0x0e34, 0x0e3b)} | {chr(c) for c in range(0x0e47, 0x0e4f)}
+def wlen(w):
+    """Display length: Thai counts base clusters (combining marks don't count);
+    Latin counts characters."""
+    if lang == "th":
+        return sum(1 for c in w if c not in TH_COMBINING)
+    return len(w)
 INPUT_LIMIT = 40  # generous cap; entries beyond this are suspect
 seen_global = {}  # word -> tier (cross-tier dup)
 for tier, rows in tiers.items():
@@ -109,12 +127,26 @@ if lang != "en":
                     None)
 
 # ============================================================ FEATURE 2: tier calibration
-ACCENTS = set("áéíóúüñ")
-def has_trap(w):
-    lw = w.lower()
-    return bool(re.search(r"h|[bv]|ll|y|z|c[ei]|g[ei]|j", lw) or any(c in ACCENTS for c in lw))
+# Difficulty signals are language-specific. Spanish: accents + tricky graphemes.
+# Thai: tone marks + complex orthography (leading vowels, silent/cluster signs).
+if lang == "es":
+    ACCENTS = set("áéíóúüñ")
+    def m_a(w): return any(c in ACCENTS for c in w.lower())
+    def m_b(w): return bool(re.search(r"h|[bv]|ll|y|z|c[ei]|g[ei]|j", w.lower()))
+    METRIC_A, METRIC_B = "accent", "trap"
+elif lang == "th":
+    TONE = {chr(c) for c in range(0x0e48, 0x0e4c)}  # ่ ้ ๊ ๋
+    LEAD_VOWEL = set("เแโใไ")                          # written before their consonant
+    SIGN = set("็์ฺ")                                  # maitaikhu, thanthakhat(silent), phinthu
+    def m_a(w): return any(c in TONE for c in w)
+    def m_b(w): return any(c in LEAD_VOWEL or c in SIGN for c in w)
+    METRIC_A, METRIC_B = "tone-mark", "complex-orth"
+else:
+    def m_a(w): return False
+    def m_b(w): return wlen(w) > 6
+    METRIC_A, METRIC_B = "n/a", "long"
 tier_stats = {}
-prev_len = prev_trap = -1
+prev_len = prev_b = -1
 for tier in TIERS:
     ws = [spoken(r.strip()) for _, r in tiers[tier]]
     n = len(ws)
@@ -122,19 +154,19 @@ for tier in TIERS:
         add(2, "critical", "empty-tier", f"assets/words/{lang}/{tier}.txt", tier, "tier is empty", None)
         tier_stats[tier] = None
         continue
-    lens = [len(w) for w in ws]
-    acc = sum(1 for w in ws if any(c in ACCENTS for c in w)) / n
-    trap = sum(1 for w in ws if has_trap(w)) / n
+    lens = [wlen(w) for w in ws]
+    a = sum(1 for w in ws if m_a(w)) / n
+    b = sum(1 for w in ws if m_b(w)) / n
     tier_stats[tier] = {"count": n, "mean_len": round(mean(lens), 2), "median_len": median(lens),
-                        "accent_density": round(acc, 3), "trap_density": round(trap, 3)}
-    # monotonic difficulty signal (mean length + trap density must not decrease)
+                        "a_density": round(a, 3), "b_density": round(b, 3)}
+    # monotonic difficulty signal (mean length + the second metric must not decrease)
     if prev_len >= 0 and mean(lens) < prev_len - 0.01:
         add(2, "violation", "non-monotonic-length", f"assets/words/{lang}/{tier}.txt", tier,
             f"mean length {mean(lens):.2f} < previous tier {prev_len:.2f}", None)
-    if prev_trap >= 0 and trap < prev_trap - 0.001:
-        add(2, "violation", "non-monotonic-trap", f"assets/words/{lang}/{tier}.txt", tier,
-            f"trap density {trap:.3f} < previous tier {prev_trap:.3f}", None)
-    prev_len, prev_trap = mean(lens), trap
+    if prev_b >= 0 and b < prev_b - 0.001:
+        add(2, "violation", f"non-monotonic-{METRIC_B}", f"assets/words/{lang}/{tier}.txt", tier,
+            f"{METRIC_B} density {b:.3f} < previous tier {prev_b:.3f}", None)
+    prev_len, prev_b = mean(lens), b
 # min-pool: no code constant exists (see report open questions)
 add(2, "info", "min-pool-undefined", "src/consts.rs", "-",
     "No minimum-pool-size constant exists in code; the 'above minimum pool' invariant "
@@ -205,32 +237,46 @@ if hp.exists():
         line = line.strip()
         if line and not line.startswith("#"):
             CONFIRMED |= set(line.split())
-CLASSES = [("phonetic", fold_phonetic, "b/v · silent-h · s/z/c (seseo) · ll/y (yeísmo) · g/j"),
-           ("accent", fold_accent, "accent-only pairs (papa/papá)")]
-for cls_name, fold, desc in CLASSES:
-    buckets: dict[str, set] = {}
-    for w in universe:
-        buckets.setdefault(fold(w), set()).add(w)
-    for key, group in sorted(buckets.items()):
-        involving_list = group & list_words
-        if len(group) >= 2 and involving_list:
-            # a genuine ambiguity a player could hit: a list word + ≥1 other real word
-            others = sorted(group - involving_list) or sorted(group - {list(involving_list)[0]})
-            # proposed bucket (review-gated; native auditor confirms):
-            if group & CONFIRMED:
-                bucket = "accept-any — CONFIRMED (Eric), already wired in homophones.txt"
-            elif cls_name == "accent":
-                bucket = ("no-action — the accent is a stress difference the audio CAN carry, so this is a "
-                          "legitimate spelling test (many 'twins' here are just unaccented corpus typos)")
-            elif all(o in common for o in others):
-                bucket = "accept-any (both members common) — PROPOSED, confirm"
-            else:
-                bucket = "remove-rarer if the rare twin is ever added (not in lists today) — PROPOSED, confirm"
-            add(4, "warning", cls_name,
-                f"assets/words/{lang}/", ",".join(sorted(involving_list)),
-                f"[{desc}] sounds identical to: {sorted(group)} | PROPOSED BUCKET: {bucket} | "
-                f"Twins in lists: {sorted(involving_list)}; other real words: {others}",
-                "Eric to pick homophone policy (D2): accept-any / remove-rarer / require-sentence")
+# Automated homophone folding is implemented for Spanish only (seseo/yeísmo/b-v
+# etc.). Thai homophones are just as real — many consonants map to one sound, so
+# same-pronunciation/different-spelling pairs abound — but detecting them needs a
+# Thai phonetic transcription the tool doesn't have. Flag for the native auditor
+# rather than run Spanish folds on a non-Latin script.
+if lang == "es":
+    CLASSES = [("phonetic", fold_phonetic, "b/v · silent-h · s/z/c (seseo) · ll/y (yeísmo) · g/j"),
+               ("accent", fold_accent, "accent-only pairs (papa/papá)")]
+    for cls_name, fold, desc in CLASSES:
+        buckets: dict[str, set] = {}
+        for w in universe:
+            buckets.setdefault(fold(w), set()).add(w)
+        for key, group in sorted(buckets.items()):
+            involving_list = group & list_words
+            if len(group) >= 2 and involving_list:
+                # a genuine ambiguity a player could hit: a list word + ≥1 other real word
+                others = sorted(group - involving_list) or sorted(group - {list(involving_list)[0]})
+                # proposed bucket (review-gated; native auditor confirms):
+                if group & CONFIRMED:
+                    bucket = "accept-any — CONFIRMED (Eric), already wired in homophones.txt"
+                elif cls_name == "accent":
+                    bucket = ("no-action — the accent is a stress difference the audio CAN carry, so this is a "
+                              "legitimate spelling test (many 'twins' here are just unaccented corpus typos)")
+                elif all(o in common for o in others):
+                    bucket = "accept-any (both members common) — PROPOSED, confirm"
+                else:
+                    bucket = "remove-rarer if the rare twin is ever added (not in lists today) — PROPOSED, confirm"
+                add(4, "warning", cls_name,
+                    f"assets/words/{lang}/", ",".join(sorted(involving_list)),
+                    f"[{desc}] sounds identical to: {sorted(group)} | PROPOSED BUCKET: {bucket} | "
+                    f"Twins in lists: {sorted(involving_list)}; other real words: {others}",
+                    "Eric to pick homophone policy (D2): accept-any / remove-rarer / require-sentence")
+else:
+    add(4, "info", "homophones-manual", f"assets/words/{lang}/", "-",
+        f"Automated homophone detection is Spanish-only. {LANG_TITLE_EARLY} has real "
+        "same-sound/different-spelling homophones that a spell-by-ear player could miss, but "
+        "flagging them needs a native speaker + phonetic transcription. AUDITOR TASK: list any "
+        "list words whose pronunciation matches another common word, so grading can accept-any "
+        "(the accept-any mechanism in src/homophones.rs already supports any language via "
+        f"assets/words/{lang}/homophones.txt).", None)
 
 # ============================================================ FEATURE 5: profanity coverage
 def load_terms(p):
@@ -256,6 +302,13 @@ add(5, "info", "filter-layers", f"assets/words/profanity/{lang}.txt", "-",
     f"the {len(union)}-term all-language union — that over-block is intentional for user imports.", None)
 if not seed:
     add(5, "critical", "no-seed", f"assets/words/profanity/{lang}.txt", "-", f"no {lang} profanity seed layer", None)
+# support files that gate Kid Mode / build-time exclusion — missing = nothing held out
+for kind in ("kid-exclude", "exclusions"):
+    p = ROOT / "assets" / "words" / kind / f"{lang}.txt"
+    if not p.exists():
+        add(5, "info", "missing-support-files", f"assets/words/{kind}/{lang}.txt", "-",
+            f"no {kind} file for {lang}: nothing is held out via {kind}. Fine if intentional; if the "
+            f"list has any word too mature for Little Speller, add it to kid-exclude/{lang}.txt.", None)
 # cross-check every curated word against the LANGUAGE-SCOPED filter — a hit is critical
 for tier, rows in tiers.items():
     for ln, raw in rows:
@@ -326,22 +379,26 @@ def by(feat=None, sev=None):
 
 FEAT_NAMES = {1: "Word list integrity", 2: "Difficulty tier calibration", 3: "Audio & TTS config",
               4: "Homophone / hearing-ambiguity map", 5: "Profanity filter coverage", 6: "UI localization completeness"}
-rep = [f"# Spanish content audit — `{lang}`  (machine pass, REVIEW-GATED)", "",
+LANG_TITLE = LANG_TITLE_EARLY
+rep = [f"# {LANG_TITLE} content audit — `{lang}`  (machine pass, REVIEW-GATED)", "",
        f"Totals: **{len(by(sev='critical'))} critical · {len(by(sev='violation'))} violation · "
        f"{len(by(sev='warning'))} warning · {len(by(sev='info'))} info**", ""]
-CAVEATS = {4: "_Note: `accent` twins are bucketed against a web frequency corpus, which contains "
-              "unaccented misspellings (e.g. `arbol` for `árbol`). Treat those as noise; genuine minimal "
-              "pairs like `camino/caminó`, `tomate/tómate`, `trabajo/trabajó` are the ones to rule on._"}
+CAVEATS = {}
+if lang == "es":
+    CAVEATS[4] = ("_Note: `accent` twins are bucketed against a web frequency corpus, which contains "
+                  "unaccented misspellings (e.g. `arbol` for `árbol`). Treat those as noise; genuine minimal "
+                  "pairs like `camino/caminó`, `tomate/tómate`, `trabajo/trabajó` are the ones to rule on._")
 for feat in range(1, 7):
     rep.append(f"## Feature {feat} — {FEAT_NAMES[feat]}")
     if feat in CAVEATS:
         rep.append("\n" + CAVEATS[feat])
     fs = by(feat)
     if feat == 2:
-        rep.append("\nTier stats:\n\n| tier | count | mean len | median len | accent% | trap% |\n|--|--|--|--|--|--|")
+        rep.append(f"\nTier stats (len = {'base clusters' if lang=='th' else 'characters'}):\n\n"
+                   f"| tier | count | mean len | median len | {METRIC_A}% | {METRIC_B}% |\n|--|--|--|--|--|--|")
         for t in TIERS:
             s = tier_stats.get(t)
-            rep.append(f"| {t} | {s['count']} | {s['mean_len']} | {s['median_len']} | {s['accent_density']*100:.0f}% | {s['trap_density']*100:.0f}% |" if s else f"| {t} | 0 | — | — | — | — |")
+            rep.append(f"| {t} | {s['count']} | {s['mean_len']} | {s['median_len']} | {s['a_density']*100:.0f}% | {s['b_density']*100:.0f}% |" if s else f"| {t} | 0 | — | — | — | — |")
         rep.append("")
     if not fs:
         rep.append("\n**0 findings.**\n")
@@ -356,34 +413,41 @@ for feat in range(1, 7):
 (OUT / "report.md").write_text("\n".join(rep) + "\n", encoding="utf-8")
 
 # auditor packet: the judgment-call subset
-pk = [f"# {lang} native-speaker auditor packet", "",
+pk = [f"# {LANG_TITLE} ({lang}) native-speaker auditor packet", "",
       "Machine checks are done; these need a human who reads the language.", ""]
-# What the 2026-07 decision addendum already resolved (for the auditor to ratify).
-resolved = [x for x in findings if x["class"] == "cross-lang-profanity"]
-pk.append(f"## Already resolved (decision addendum 2026-07 — please ratify)  ({len(resolved) + 1})\n")
-for x in resolved:
-    pk.append(f"- **{x['key']}** — {x['detail']}")
-pk.append("- **negro (username)** — now in `backend/blocklist.txt`; rejected as a username in ANY locale "
-          "(`backend/test_usernames.py`), while staying a valid Spanish puzzle word. Checklist item: "
-          "“any word inappropriate in your region?”")
-pk.append("- **accept-any homophones** — casa/caza, botar/votar, cocer/coser are wired into grading "
-          "(`assets/words/es/homophones.txt`, consumed by `src/homophones.rs`): typing either spelling "
-          "scores correct. Confirm these three and rule on the proposed buckets below.\n")
-groups = [("Regional vocabulary / English cognates to confirm", [x for x in findings if x["class"] in ("english-contamination",)]),
-          ("Homophone pairs — confirm the PROPOSED BUCKET on each (accept-any / remove-rarer / no-action; "
-           "require-sentence is parked, see docs/features/homophone-carrier-sentences.md)",
-           [x for x in findings if x["feature"] == 4 and x["severity"] == "warning"]),
-          ("Regionally-vulgar innocent words (Kid Mode risk)", [x for x in findings if x["class"] == "regional-vulgar"]),
-          ("Open questions", [x for x in findings if x["class"] in ("min-pool-undefined", "audio-coverage", "tts-voice")])]
+if lang == "es":
+    # What the 2026-07 decision addendum already resolved (for the auditor to ratify).
+    resolved = [x for x in findings if x["class"] == "cross-lang-profanity"]
+    pk.append(f"## Already resolved (decision addendum 2026-07 — please ratify)  ({len(resolved) + 1})\n")
+    for x in resolved:
+        pk.append(f"- **{x['key']}** — {x['detail']}")
+    pk.append("- **negro (username)** — now in `backend/blocklist.txt`; rejected as a username in ANY locale "
+              "(`backend/test_usernames.py`), while staying a valid Spanish puzzle word.")
+    pk.append("- **accept-any homophones** — casa/caza, botar/votar, cocer/coser wired into grading.\n")
+groups = [("Cross-language profanity (valid here, on another language's seed — kept, not flagged)",
+           [x for x in findings if x["class"] == "cross-lang-profanity"]) if lang != "es" else (None, []),
+          ("Homophones / same-sound spellings — list any (grading can then accept-any via "
+           f"assets/words/{lang}/homophones.txt)",
+           [x for x in findings if x["feature"] == 4]),
+          ("English cognates to confirm", [x for x in findings if x["class"] == "english-contamination"]),
+          ("Open questions", [x for x in findings if x["class"] in ("min-pool-undefined", "audio-coverage", "tts-voice", "missing-support-files")])]
 for title, items in groups:
+    if title is None:
+        continue
     pk.append(f"## {title}  ({len(items)})\n")
     for x in items[:300]:
         pk.append(f"- **{x['key']}** — {x['detail']}")
     pk.append("")
-pk.append("## Voice note\nThe Spanish TTS voice is **es-ES (Castilian, Spain)**. The seseo/yeísmo homophone "
-          "pairs above (casa/caza, valla/vaya) are only homophones for *Latin American* speakers — a Castilian "
-          "voice distinguishes s/z/c. If the target audience is Latin American (recommendation on file: es-419), "
-          "the voice choice itself is an auditor/Eric decision.")
+VOICE_NOTE = {
+    "es": "The Spanish TTS voice is **es-ES (Castilian)**. seseo pairs (casa/caza) are homophones only for "
+          "Latin-American ears; if the audience is Latin American (es-419 on file), the voice is an Eric decision.",
+    "th": "The Thai TTS voice is **th-TH-Neural2-C**. Thai spelling is highly non-phonemic (multiple consonants "
+          "per sound, silent letters via ์, unwritten inherent vowels), so hear-then-spell is genuinely hard — "
+          "confirm the voice pronounces each list word the way the spelling implies, and flag any word whose "
+          "audio would lead a learner to a different (homophone) spelling.",
+}.get(lang)
+if VOICE_NOTE:
+    pk.append(f"## Voice note\n{VOICE_NOTE}")
 (OUT / "auditor-packet.md").write_text("\n".join(pk) + "\n", encoding="utf-8")
 
 print(f"audit[{lang}]: {len(by(sev='critical'))} critical, {len(by(sev='violation'))} violation, "
