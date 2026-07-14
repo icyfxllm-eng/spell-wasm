@@ -184,5 +184,9 @@
   "coming.notice": "{lang} jest dopracowywany przez rodzimych użytkowników — wkrótce wróci.",
   "coming.notify": "Powiadom mnie, gdy będzie gotowe",
   "coming.confirmed": "Jesteś na liście ✓",
-  "coming.badge": "Wkrótce"
+  "coming.badge": "Wkrótce",
+  "ghost.ahead": "👻 Przewaga {n}",
+  "ghost.behind": "👻 Strata {n}",
+  "ghost.even": "👻 Łeb w łeb",
+  "ghost.beat": "Nowy rekord! Pokonałeś swojego ducha 👻"
 }

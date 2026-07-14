@@ -184,5 +184,9 @@
   "coming.notice": "Pinipino ng mga katutubong nagsasalita ang {lang} — babalik na malapit na.",
   "coming.notify": "Ipaalam kapag handa na",
   "coming.confirmed": "Nasa listahan ka na ✓",
-  "coming.badge": "Malapit na"
+  "coming.badge": "Malapit na",
+  "ghost.ahead": "👻 Nangunguna ng {n}",
+  "ghost.behind": "👻 Nahuhuli ng {n}",
+  "ghost.even": "👻 Sabay-sabay",
+  "ghost.beat": "Bagong record! Natalo mo ang iyong multo 👻"
 }

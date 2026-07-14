@@ -184,5 +184,9 @@
   "coming.notice": "{lang}正由母语者润色 — 很快回来。",
   "coming.notify": "准备好后通知我",
   "coming.confirmed": "已加入名单 ✓",
-  "coming.badge": "即将推出"
+  "coming.badge": "即将推出",
+  "ghost.ahead": "👻 领先 {n}",
+  "ghost.behind": "👻 落后 {n}",
+  "ghost.even": "👻 势均力敌",
+  "ghost.beat": "新纪录！你击败了自己的幽灵 👻"
 }

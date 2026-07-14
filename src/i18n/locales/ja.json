@@ -184,5 +184,9 @@
   "coming.notice": "{lang}はネイティブが調整中です — もうすぐ戻ります。",
   "coming.notify": "準備できたら知らせて",
   "coming.confirmed": "リストに登録しました ✓",
-  "coming.badge": "近日公開"
+  "coming.badge": "近日公開",
+  "ghost.ahead": "👻 {n}リード",
+  "ghost.behind": "👻 {n}遅れ",
+  "ghost.even": "👻 互角",
+  "ghost.beat": "自己ベスト更新！ゴーストに勝った 👻"
 }

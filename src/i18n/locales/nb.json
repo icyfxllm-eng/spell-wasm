@@ -184,5 +184,9 @@
   "coming.notice": "{lang} finpusses av morsmålsbrukere — snart tilbake.",
   "coming.notify": "Gi meg beskjed når det er klart",
   "coming.confirmed": "Du er på listen ✓",
-  "coming.badge": "Kommer snart"
+  "coming.badge": "Kommer snart",
+  "ghost.ahead": "👻 {n} foran",
+  "ghost.behind": "👻 {n} bak",
+  "ghost.even": "👻 Dødt løp",
+  "ghost.beat": "Ny rekord! Du slo spøkelset ditt 👻"
 }

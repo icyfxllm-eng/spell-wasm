@@ -948,6 +948,20 @@ fn on_correct(app: &App) {
     }
     let streak = bump_streak(app);
     note_climb(app, true); // Option A: advance the Climb band on a correct answer
+    // Ghost racing (F6): in a solo Climb run, log this correct answer's elapsed
+    // time and refresh the live pace marker. Flag-gated inside crate::ghost.
+    {
+        let (climb_run, run_start, lang) = {
+            let s = app.borrow();
+            (s.level == "climb" && !s.review, s.run_start_ms, s.lang.clone())
+        };
+        if climb_run {
+            if streak == 1 {
+                crate::ghost::start_run(&lang);
+            }
+            crate::ghost::note_correct(streak, now_ms() - run_start);
+        }
+    }
     dom::set_text("streakNum", &streak.to_string());
     dom::set_text("bestNum", &app.borrow().best.to_string());
     dom::add_class("orbWrap", "good");
@@ -1140,9 +1154,9 @@ pub fn give_up(app: &App) {
 }
 
 fn end_chain(app: &App) {
-    let (reached, level, run_start, kid) = {
+    let (reached, level, run_start, kid, review) = {
         let s = app.borrow();
-        (s.streak, s.level.clone(), s.run_start_ms, s.kid)
+        (s.streak, s.level.clone(), s.run_start_ms, s.kid, s.review)
     };
     // Post to The Climb: ranked difficulty (submit_run filters to medium/hard/
     // expert) and logged-in only; never in Kid Mode. A plausible run duration
@@ -1150,6 +1164,15 @@ fn end_chain(app: &App) {
     if reached > 0 && !kid {
         let duration = (now_ms() - run_start).max(0.0);
         crate::climb::submit_run(&level, reached, duration);
+    }
+    // Ghost racing (F6): a solo Climb run just ended. Record the terminating
+    // miss, then keep the run if it's a new best; celebrate beating a prior
+    // ghost. Local-only; independent of The Climb leaderboard above.
+    if level == "climb" && !review {
+        crate::ghost::note_incorrect((now_ms() - run_start).max(0.0));
+        if let crate::ghost::Outcome::Beat = crate::ghost::finish_run() {
+            dom::show_toast(&crate::i18n::t("ghost.beat"));
+        }
     }
     let delay = if reached > 0 { 950 } else { 650 };
     let app2 = app.clone();
@@ -1164,6 +1187,7 @@ fn end_chain(app: &App) {
 
 fn reset_chain_soft(app: &App) {
     note_climb(app, false); // Option A: drop the Climb band one step (not to easy)
+    crate::ghost::hide_pace(); // F6: no live ghost between runs
     app.borrow_mut().streak = 0;
     dom::set_text("streakNum", "0");
     let review = app.borrow().review;
@@ -1229,6 +1253,7 @@ pub fn enter_daily(app: &App) {
         s.answered = false;
     }
     stop_timer(true);
+    crate::ghost::hide_pace(); // F6: leaving Climb for the Daily Challenge
     clear_meaning();
     dom::set_disabled("langSel", true);
     dom::set_disabled("levelSel", true);
@@ -1480,6 +1505,7 @@ pub fn enter_review(app: &App) {
     }
     app.borrow_mut().review = true;
     stop_timer(true);
+    crate::ghost::hide_pace(); // F6: leaving Climb for Misses review
     clear_meaning();
     dom::set_disabled("langSel", true);
     dom::set_disabled("levelSel", true);

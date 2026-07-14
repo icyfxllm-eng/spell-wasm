@@ -184,5 +184,9 @@
   "coming.notice": "{lang} ana dili konuşanlar tarafından iyileştiriliyor — yakında geri gelecek.",
   "coming.notify": "Hazır olduğunda bana haber ver",
   "coming.confirmed": "Listedesin ✓",
-  "coming.badge": "Yakında"
+  "coming.badge": "Yakında",
+  "ghost.ahead": "👻 {n} önde",
+  "ghost.behind": "👻 {n} geride",
+  "ghost.even": "👻 Başa baş",
+  "ghost.beat": "Yeni rekor! Hayaletini yendin 👻"
 }

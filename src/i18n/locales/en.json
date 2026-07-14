@@ -184,5 +184,9 @@
   "coming.notice": "{lang} is being polished by native speakers — coming back soon.",
   "coming.notify": "Notify me when it's ready",
   "coming.confirmed": "You're on the list ✓",
-  "coming.badge": "Coming soon"
+  "coming.badge": "Coming soon",
+  "ghost.ahead": "👻 Ahead by {n}",
+  "ghost.behind": "👻 Behind by {n}",
+  "ghost.even": "👻 Neck and neck",
+  "ghost.beat": "New best! You beat your ghost 👻"
 }

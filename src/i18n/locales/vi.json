@@ -184,5 +184,9 @@
   "coming.notice": "{lang} đang được người bản ngữ hoàn thiện — sắp trở lại.",
   "coming.notify": "Báo cho tôi khi sẵn sàng",
   "coming.confirmed": "Bạn đã trong danh sách ✓",
-  "coming.badge": "Sắp có"
+  "coming.badge": "Sắp có",
+  "ghost.ahead": "👻 Dẫn trước {n}",
+  "ghost.behind": "👻 Kém {n}",
+  "ghost.even": "👻 Ngang ngửa",
+  "ghost.beat": "Kỷ lục mới! Bạn đã đánh bại bóng ma của mình 👻"
 }

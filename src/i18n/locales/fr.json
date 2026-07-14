@@ -184,5 +184,9 @@
   "coming.notice": "{lang} est peaufiné par des locuteurs natifs — bientôt de retour.",
   "coming.notify": "Préviens-moi quand c'est prêt",
   "coming.confirmed": "Tu es sur la liste ✓",
-  "coming.badge": "Bientôt"
+  "coming.badge": "Bientôt",
+  "ghost.ahead": "👻 En avance de {n}",
+  "ghost.behind": "👻 En retard de {n}",
+  "ghost.even": "👻 Au coude à coude",
+  "ghost.beat": "Nouveau record ! Tu as battu ton fantôme 👻"
 }
