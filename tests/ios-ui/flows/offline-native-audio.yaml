@@ -1,0 +1,47 @@
+# Maestro flow: offline word audio via the native AVSpeech path (NativeLanguageKit).
+#
+# Run: maestro test tests/ios-ui/flows/offline-native-audio.yaml
+# Simulator matrix is pinned in fastlane (lane :ui_tests); Maestro is provided by
+# that lane / CI, not the local dev shell.
+#
+# Intent (Feature 3 / Feature 2): with the server "server-cache" source disabled,
+# a word must still be audible through the on-device AVSpeech source and the round
+# must complete — the core loop survives with zero network.
+#
+# Disabling the server source: the router reads localStorage `spell_audio_src`
+# (see src/api.rs::source_order). Set it to "native-only" before playing. Maestro
+# cannot reliably write WKWebView localStorage, so the :ui_tests harness seeds it
+# (Capacitor Preferences / an injected boot script) OR the device is put in true
+# airplane mode; this flow asserts the offline-audio UX given that precondition.
+appId: net.spellgame.app
+---
+- launchApp:
+    clearState: true
+    # The harness sets this so the router skips the server clip and uses AVSpeech.
+    # (No production code path depends on it; default order is server-first.)
+    arguments:
+      spell_audio_src: "native-only"
+- assertVisible:
+    id: "ageScrim"
+- # Adult path to reach the game (age selects are DOM <select>; the ui_tests
+  # XCUITest helper drives them — see tests/ios-ui/README.md).
+- assertVisible:
+    id: "ageSubmit"
+- tapOn:
+    id: "ageSubmit"
+- # Main play surface: tap the orb to hear the word (native AVSpeech synthesizes
+  # it on-device — no /api/speak fetch).
+- assertVisible:
+    id: "orbWrap"
+- tapOn:
+    id: "orbWrap"
+- # The word is now spelling-ready even offline: the keyboard + answer flow appear.
+  # (Audio itself is on-device; assert the round is playable, which is the product
+  # guarantee — a plane, a dead Pi, or a tunnel hiccup no longer blocks the loop.)
+- assertVisible:
+    id: "gameKeyboard"
+- assertVisible:
+    id: "checkBtn"
+- # A round completes: type is exercised in gameplay.spec (web e2e) and the native
+  # audio source is unit-covered (src/api.rs router tests + the Swift Speaker
+  # completion test). This flow guards the offline *entry* to the loop.
