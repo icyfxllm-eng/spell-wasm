@@ -25,6 +25,7 @@ mod misses;
 mod model;
 mod native_audio;
 mod native_lang;
+mod photo_list;
 mod norm;
 mod pinyin;
 mod notifications;
@@ -165,6 +166,7 @@ fn wire(app: &App) {
     wire_modes(app);
     wire_source_level(app);
     wire_import(app);
+    photo_list::wire(app);
     wire_stats_board_modal(app);
     wire_versus(app);
     wire_age_gate(app);
@@ -616,6 +618,41 @@ fn build_import_lang_options(app: &App) {
 fn update_import_count() {
     let n = importer::extract_words(&dom::textarea("importText").value()).len();
     dom::set_text("importCount", &format!("{} word{}", n, if n == 1 { "" } else { "s" }));
+}
+
+/// Persist a screened batch of "My Words" and refresh every surface that
+/// reflects the active list. Shared by the typed importer and the photo
+/// importer (`photo_list::confirm`) — the caller has already run the words
+/// through the charset + profanity gate and owns the "saved" message.
+pub(crate) fn apply_saved_words(app: &App, words: Vec<String>, speak_lang: String) {
+    importer::save_words(&mut app.borrow_mut(), words, speak_lang);
+    achievements::unlock(&mut app.borrow_mut(), "importer");
+    let was_review = app.borrow().review;
+    if was_review {
+        game::exit_review(app, None);
+    }
+    {
+        let mut s = app.borrow_mut();
+        s.lang = MINE.to_string();
+        s.cur_lang = MINE.to_string();
+    }
+    game::update_voice_note(app);
+    settings::save_prefs(&app.borrow());
+    game::build_source_options(app);
+    game::build_level_options(app);
+    keyboard::rebuild(app);
+    stats::render(&app.borrow());
+    board::render(&app.borrow());
+    game::refresh_mode_buttons(app);
+    {
+        let mut s = app.borrow_mut();
+        s.word = String::new();
+        s.answered = false;
+    }
+    dom::set_html("orbGlyph", &i18n::t("orb.tap"));
+    app.borrow_mut().answer.clear();
+    game::render_letters(app, false);
+    game::clear_meaning();
 }
 
 fn wire_import(app: &App) {

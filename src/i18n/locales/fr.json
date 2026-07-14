@@ -211,5 +211,16 @@
   "ghost.even": "👻 Au coude à coude",
   "ghost.beat": "Nouveau record ! Tu as battu ton fantôme 👻",
   "story.heading": "Le saviez-vous ?",
-  "story.dismiss": "Fermer"
+  "story.dismiss": "Fermer",
+  "photo.button": "📷 Depuis une photo",
+  "photo.title": "Photographiez une liste de mots",
+  "photo.blurb": "Photographiez une liste d'orthographe — nous la lisons sur votre appareil.",
+  "photo.reading": "Lecture de la photo…",
+  "photo.review": "Vérifiez ces mots, corrigez les erreurs, puis enregistrez.",
+  "photo.save": "Enregistrer ces mots",
+  "photo.empty": "Aucun mot trouvé — essayez une photo plus nette.",
+  "photo.remove": "Supprimer le mot",
+  "photo.note": "Les photos sont lues sur votre appareil et n'en sortent jamais.",
+  "photo.flag.blocked": "non autorisé",
+  "photo.flag.charset": "illisible"
 }

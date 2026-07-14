@@ -211,5 +211,16 @@
   "ghost.even": "👻 Başa baş",
   "ghost.beat": "Yeni rekor! Hayaletini yendin 👻",
   "story.heading": "Biliyor muydun?",
-  "story.dismiss": "Kapat"
+  "story.dismiss": "Kapat",
+  "photo.button": "📷 Fotoğraftan",
+  "photo.title": "Kelime listesini çek",
+  "photo.blurb": "Bir yazım listesi çek — cihazında okuyoruz.",
+  "photo.reading": "Fotoğraf okunuyor…",
+  "photo.review": "Bu kelimeleri kontrol et, hataları düzelt ve kaydet.",
+  "photo.save": "Bu kelimeleri kaydet",
+  "photo.empty": "Kelime bulunamadı — daha net bir fotoğraf dene.",
+  "photo.remove": "Kelimeyi kaldır",
+  "photo.note": "Fotoğraflar cihazında okunur ve asla dışına çıkmaz.",
+  "photo.flag.blocked": "izin verilmiyor",
+  "photo.flag.charset": "okunamıyor"
 }

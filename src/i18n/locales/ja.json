@@ -211,5 +211,16 @@
   "ghost.even": "👻 互角",
   "ghost.beat": "自己ベスト更新！ゴーストに勝った 👻",
   "story.heading": "知ってた？",
-  "story.dismiss": "閉じる"
+  "story.dismiss": "閉じる",
+  "photo.button": "📷 写真から",
+  "photo.title": "単語リストを撮影",
+  "photo.blurb": "スペルのリストを撮影すると、端末内で読み取ります。",
+  "photo.reading": "写真を読み取り中…",
+  "photo.review": "単語を確認し、誤読を直して保存してください。",
+  "photo.save": "この単語を保存",
+  "photo.empty": "単語が見つかりませんでした。もっと鮮明な写真をお試しください。",
+  "photo.remove": "単語を削除",
+  "photo.note": "写真は端末内で読み取られ、外部に送信されることはありません。",
+  "photo.flag.blocked": "使用不可",
+  "photo.flag.charset": "読み取り不可"
 }

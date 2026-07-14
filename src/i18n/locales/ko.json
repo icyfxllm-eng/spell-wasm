@@ -211,5 +211,16 @@
   "ghost.even": "👻 막상막하",
   "ghost.beat": "최고 기록! 고스트를 이겼어요 👻",
   "story.heading": "알고 있나요?",
-  "story.dismiss": "닫기"
+  "story.dismiss": "닫기",
+  "photo.button": "📷 사진에서",
+  "photo.title": "단어 목록 촬영",
+  "photo.blurb": "받아쓰기 목록을 촬영하세요. 기기에서 바로 읽어 드려요.",
+  "photo.reading": "사진을 읽는 중…",
+  "photo.review": "단어를 확인하고 잘못 읽은 부분을 고친 뒤 저장하세요.",
+  "photo.save": "이 단어 저장",
+  "photo.empty": "단어를 찾지 못했어요. 더 선명한 사진으로 시도해 보세요.",
+  "photo.remove": "단어 삭제",
+  "photo.note": "사진은 기기에서만 읽히며 절대 외부로 전송되지 않습니다.",
+  "photo.flag.blocked": "허용 안 됨",
+  "photo.flag.charset": "읽을 수 없음"
 }

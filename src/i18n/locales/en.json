@@ -211,5 +211,16 @@
   "ghost.even": "👻 Neck and neck",
   "ghost.beat": "New best! You beat your ghost 👻",
   "story.heading": "Did you know?",
-  "story.dismiss": "Dismiss"
+  "story.dismiss": "Dismiss",
+  "photo.button": "📷 From a photo",
+  "photo.title": "Snap a word list",
+  "photo.blurb": "Photograph a spelling list — we read it right on your device.",
+  "photo.reading": "Reading the photo…",
+  "photo.review": "Check these words, fix any misreads, then save.",
+  "photo.save": "Save these words",
+  "photo.empty": "No words found — try a clearer photo.",
+  "photo.remove": "Remove word",
+  "photo.note": "Photos are read on your device and never leave it.",
+  "photo.flag.blocked": "not allowed",
+  "photo.flag.charset": "can't read"
 }

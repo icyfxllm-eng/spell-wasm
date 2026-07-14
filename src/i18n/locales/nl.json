@@ -211,5 +211,16 @@
   "ghost.even": "👻 Nek aan nek",
   "ghost.beat": "Nieuw record! Je hebt je ghost verslagen 👻",
   "story.heading": "Wist je dat?",
-  "story.dismiss": "Sluiten"
+  "story.dismiss": "Sluiten",
+  "photo.button": "📷 Vanaf een foto",
+  "photo.title": "Fotografeer een woordenlijst",
+  "photo.blurb": "Fotografeer een spellinglijst — we lezen hem op je apparaat.",
+  "photo.reading": "Foto lezen…",
+  "photo.review": "Controleer deze woorden, verbeter fouten en sla op.",
+  "photo.save": "Deze woorden opslaan",
+  "photo.empty": "Geen woorden gevonden — probeer een scherpere foto.",
+  "photo.remove": "Woord verwijderen",
+  "photo.note": "Foto's worden op je apparaat gelezen en verlaten het nooit.",
+  "photo.flag.blocked": "niet toegestaan",
+  "photo.flag.charset": "onleesbaar"
 }

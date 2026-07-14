@@ -197,5 +197,34 @@
       if (!available()) return Promise.resolve();
       return plugin().stopListening();
     },
+
+    /**
+     * True only where the on-device VisionKit text recognizer is available
+     * (iOS + the NativeLanguageKit plugin). The photo-list camera affordance is
+     * shown off this capability check (Feature F1). @returns {boolean}
+     */
+    supported: function () {
+      return !!plugin();
+    },
+
+    /**
+     * Capture a photo and recognize a word list entirely on-device (Feature F1).
+     * The image goes straight from the native picker to Vision — never uploaded,
+     * cached, or exposed to JS as bytes; only recognized text lines return.
+     * @param {{ lang?: string, source?: ("camera"|"library"|"auto") }} [opts]
+     * @returns {Promise<{ supported: boolean, lines: string[] }>} on non-iOS
+     *   resolves { supported:false, lines:[] }.
+     */
+    recognizeWordList: function (opts) {
+      var P = plugin();
+      if (!P) return Promise.resolve({ supported: false, lines: [] });
+      var args = {
+        lang: (opts && opts.lang) || 'en-US',
+        source: (opts && opts.source) || 'auto',
+      };
+      return P.recognizeWordList(args).then(function (res) {
+        return { supported: true, lines: (res && Array.isArray(res.lines)) ? res.lines : [] };
+      });
+    },
   };
 })();

@@ -211,5 +211,16 @@
   "ghost.even": "👻 势均力敌",
   "ghost.beat": "新纪录！你击败了自己的幽灵 👻",
   "story.heading": "你知道吗？",
-  "story.dismiss": "关闭"
+  "story.dismiss": "关闭",
+  "photo.button": "📷 从照片",
+  "photo.title": "拍下单词表",
+  "photo.blurb": "拍下拼写单词表——我们直接在你的设备上识别。",
+  "photo.reading": "正在识别照片…",
+  "photo.review": "检查这些单词，修正识别错误后保存。",
+  "photo.save": "保存这些单词",
+  "photo.empty": "未找到单词——请换一张更清晰的照片。",
+  "photo.remove": "移除单词",
+  "photo.note": "照片只在你的设备上识别，绝不外传。",
+  "photo.flag.blocked": "不允许",
+  "photo.flag.charset": "无法识别"
 }

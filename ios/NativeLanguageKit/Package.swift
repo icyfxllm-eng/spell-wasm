@@ -32,7 +32,10 @@ let package = Package(
         .target(name: "NativeLanguageKitCore"),
         .testTarget(
             name: "NativeLanguageKitCoreTests",
-            dependencies: ["NativeLanguageKitCore"]
+            dependencies: ["NativeLanguageKitCore"],
+            // F1 bundles a printed-words PNG the WordListRecognizer test feeds to
+            // Vision; declaring it makes `Bundle.module` resolve.
+            resources: [.process("Resources")]
         ),
     ]
 )

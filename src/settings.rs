@@ -194,4 +194,7 @@ pub fn apply_settings(app: &App) {
     // Kid Mode also hard-disables Say It (COPPA D5); re-hide the launcher on any
     // Kid-Mode change. No-op when the feature flag is off.
     crate::say_it::reflect_gating(app);
+    // ...and the photo-list camera affordance (a parent-only list surface,
+    // hidden in Kid Mode). No-op when the feature flag is off.
+    crate::photo_list::reflect_visibility();
 }

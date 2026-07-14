@@ -211,5 +211,16 @@
   "ghost.even": "👻 Jämnt lopp",
   "ghost.beat": "Nytt rekord! Du slog ditt spöke 👻",
   "story.heading": "Visste du?",
-  "story.dismiss": "Stäng"
+  "story.dismiss": "Stäng",
+  "photo.button": "📷 Från ett foto",
+  "photo.title": "Fota en ordlista",
+  "photo.blurb": "Fota en stavningslista — vi läser den direkt på din enhet.",
+  "photo.reading": "Läser fotot…",
+  "photo.review": "Kontrollera orden, rätta fel och spara.",
+  "photo.save": "Spara dessa ord",
+  "photo.empty": "Inga ord hittades — testa ett skarpare foto.",
+  "photo.remove": "Ta bort ord",
+  "photo.note": "Foton läses på din enhet och lämnar den aldrig.",
+  "photo.flag.blocked": "otillåtet",
+  "photo.flag.charset": "oläsligt"
 }

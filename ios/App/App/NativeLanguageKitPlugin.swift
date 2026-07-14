@@ -23,11 +23,19 @@ public class NativeLanguageKitPlugin: CAPPlugin, CAPBridgedPlugin {
         CAPPluginMethod(name: "speechCapabilities", returnType: CAPPluginReturnPromise),
         CAPPluginMethod(name: "startListening", returnType: CAPPluginReturnPromise),
         CAPPluginMethod(name: "stopListening", returnType: CAPPluginReturnPromise),
+        // Feature F1 "Photo-to-word-list" — on-device VisionKit OCR (see
+        // NativeLanguageKitPlugin+PhotoList.swift).
+        CAPPluginMethod(name: "recognizeWordList", returnType: CAPPluginReturnPromise),
     ]
 
     private let speaker = Speaker()
     private let syllableSpeaker = SyllableSpeaker()
     private let listener = SpeechListener()
+
+    // F1 async state — internal (not private) so the +PhotoList extension file
+    // can reach it. Holds the in-flight JS call while the picker + Vision run.
+    var pendingCall: CAPPluginCall?
+    var recognitionLanguages: [String] = ["en-US"]
 
     @objc func capabilities(_ call: CAPPluginCall) {
         let report = Capabilities.report(lang: call.getString("lang") ?? "")

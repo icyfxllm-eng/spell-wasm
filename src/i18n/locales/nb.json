@@ -211,5 +211,16 @@
   "ghost.even": "👻 Dødt løp",
   "ghost.beat": "Ny rekord! Du slo spøkelset ditt 👻",
   "story.heading": "Visste du?",
-  "story.dismiss": "Lukk"
+  "story.dismiss": "Lukk",
+  "photo.button": "📷 Fra et bilde",
+  "photo.title": "Ta bilde av en ordliste",
+  "photo.blurb": "Ta bilde av en staveliste — vi leser den rett på enheten din.",
+  "photo.reading": "Leser bildet…",
+  "photo.review": "Sjekk disse ordene, rett feil og lagre.",
+  "photo.save": "Lagre disse ordene",
+  "photo.empty": "Fant ingen ord — prøv et skarpere bilde.",
+  "photo.remove": "Fjern ord",
+  "photo.note": "Bilder leses på enheten din og forlater den aldri.",
+  "photo.flag.blocked": "ikke tillatt",
+  "photo.flag.charset": "uleselig"
 }

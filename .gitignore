@@ -68,3 +68,4 @@ spell-wasm/
 # wordpipe open corpora (large, regenerable)
 tools/wordpipe/sources/
 tools/wordpipe/out/
+.claude/worktrees/

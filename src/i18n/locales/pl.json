@@ -211,5 +211,16 @@
   "ghost.even": "👻 Łeb w łeb",
   "ghost.beat": "Nowy rekord! Pokonałeś swojego ducha 👻",
   "story.heading": "Czy wiesz, że?",
-  "story.dismiss": "Zamknij"
+  "story.dismiss": "Zamknij",
+  "photo.button": "📷 Ze zdjęcia",
+  "photo.title": "Zrób zdjęcie listy słów",
+  "photo.blurb": "Sfotografuj listę słówek — odczytamy ją na Twoim urządzeniu.",
+  "photo.reading": "Odczytywanie zdjęcia…",
+  "photo.review": "Sprawdź te słowa, popraw błędy i zapisz.",
+  "photo.save": "Zapisz te słowa",
+  "photo.empty": "Nie znaleziono słów — spróbuj wyraźniejszego zdjęcia.",
+  "photo.remove": "Usuń słowo",
+  "photo.note": "Zdjęcia są odczytywane na Twoim urządzeniu i nigdy go nie opuszczają.",
+  "photo.flag.blocked": "niedozwolone",
+  "photo.flag.charset": "nieczytelne"
 }

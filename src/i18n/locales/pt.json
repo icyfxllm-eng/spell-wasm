@@ -211,5 +211,16 @@
   "ghost.even": "👻 Empate técnico",
   "ghost.beat": "Novo recorde! Você superou seu fantasma 👻",
   "story.heading": "Você sabia?",
-  "story.dismiss": "Dispensar"
+  "story.dismiss": "Dispensar",
+  "photo.button": "📷 De uma foto",
+  "photo.title": "Fotografe uma lista de palavras",
+  "photo.blurb": "Fotografe uma lista de ortografia — lemos tudo no seu aparelho.",
+  "photo.reading": "Lendo a foto…",
+  "photo.review": "Confira estas palavras, corrija os erros e salve.",
+  "photo.save": "Salvar estas palavras",
+  "photo.empty": "Nenhuma palavra encontrada — tente uma foto mais nítida.",
+  "photo.remove": "Remover palavra",
+  "photo.note": "As fotos são lidas no seu aparelho e nunca saem dele.",
+  "photo.flag.blocked": "não permitida",
+  "photo.flag.charset": "ilegível"
 }

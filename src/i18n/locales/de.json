@@ -211,5 +211,16 @@
   "ghost.even": "👻 Kopf-an-Kopf",
   "ghost.beat": "Neuer Rekord! Du hast deinen Geist geschlagen 👻",
   "story.heading": "Wusstest du schon?",
-  "story.dismiss": "Schließen"
+  "story.dismiss": "Schließen",
+  "photo.button": "📷 Aus einem Foto",
+  "photo.title": "Wortliste abfotografieren",
+  "photo.blurb": "Fotografiere eine Rechtschreibliste — wir lesen sie direkt auf deinem Gerät.",
+  "photo.reading": "Foto wird gelesen…",
+  "photo.review": "Prüfe diese Wörter, korrigiere Lesefehler und speichere.",
+  "photo.save": "Diese Wörter speichern",
+  "photo.empty": "Keine Wörter erkannt — versuch ein schärferes Foto.",
+  "photo.remove": "Wort entfernen",
+  "photo.note": "Fotos werden auf deinem Gerät gelesen und verlassen es nie.",
+  "photo.flag.blocked": "nicht erlaubt",
+  "photo.flag.charset": "unlesbar"
 }

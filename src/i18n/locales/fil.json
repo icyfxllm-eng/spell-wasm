@@ -211,5 +211,16 @@
   "ghost.even": "👻 Sabay-sabay",
   "ghost.beat": "Bagong record! Natalo mo ang iyong multo 👻",
   "story.heading": "Alam mo ba?",
-  "story.dismiss": "Isara"
+  "story.dismiss": "Isara",
+  "photo.button": "📷 Mula sa larawan",
+  "photo.title": "Kunan ng litrato ang listahan",
+  "photo.blurb": "Kunan ng litrato ang listahan ng spelling — babasahin namin ito sa iyong device.",
+  "photo.reading": "Binabasa ang litrato…",
+  "photo.review": "Suriin ang mga salitang ito, itama ang mali, tapos i-save.",
+  "photo.save": "I-save ang mga salitang ito",
+  "photo.empty": "Walang nakitang salita — subukan ang mas malinaw na litrato.",
+  "photo.remove": "Alisin ang salita",
+  "photo.note": "Binabasa ang mga litrato sa iyong device at hindi kailanman umaalis dito.",
+  "photo.flag.blocked": "hindi pinapayagan",
+  "photo.flag.charset": "hindi mabasa"
 }

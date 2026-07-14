@@ -211,5 +211,16 @@
   "ghost.even": "👻 Testa a testa",
   "ghost.beat": "Nuovo record! Hai battuto il tuo fantasma 👻",
   "story.heading": "Lo sapevi?",
-  "story.dismiss": "Chiudi"
+  "story.dismiss": "Chiudi",
+  "photo.button": "📷 Da una foto",
+  "photo.title": "Fotografa un elenco di parole",
+  "photo.blurb": "Fotografa un elenco di ortografia: lo leggiamo sul tuo dispositivo.",
+  "photo.reading": "Lettura della foto…",
+  "photo.review": "Controlla queste parole, correggi gli errori e salva.",
+  "photo.save": "Salva queste parole",
+  "photo.empty": "Nessuna parola trovata: prova una foto più nitida.",
+  "photo.remove": "Rimuovi parola",
+  "photo.note": "Le foto vengono lette sul tuo dispositivo e non escono mai.",
+  "photo.flag.blocked": "non consentita",
+  "photo.flag.charset": "illeggibile"
 }

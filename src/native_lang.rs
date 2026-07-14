@@ -15,6 +15,7 @@ use std::collections::HashMap;
 use js_sys::{Function, Promise, Reflect};
 use wasm_bindgen::{JsCast, JsValue};
 use wasm_bindgen_futures::JsFuture;
+use unicode_normalization::UnicodeNormalization;
 
 fn bridge() -> Option<JsValue> {
     let win = web_sys::window()?;
@@ -271,5 +272,200 @@ pub fn stop_listening() {
         if let Some(f) = method(&obj, "stopListening") {
             let _ = f.call0(&obj);
         }
+    }
+}
+/// True only on a build where the native VisionKit text recognizer is present
+/// (iOS + the NativeLanguageKit plugin). Capability check — the camera
+/// affordance is shown off this, never off a platform string.
+pub fn supported() -> bool {
+    (|| -> Option<bool> {
+        let obj = bridge()?;
+        let f = method(&obj, "supported")?;
+        let r = f.call0(&obj).ok()?;
+        Some(r.as_bool().unwrap_or(false))
+    })()
+    .unwrap_or(false)
+}
+
+/// Ask the native plugin to capture a photo (camera / library) and run
+/// on-device text recognition, returning the JS promise that resolves to
+/// `{ supported: bool, lines: string[] }`. `source` is "camera" or "library";
+/// `lang` seeds Vision's `recognitionLanguages`. `None` means the bridge isn't
+/// callable at all (fall back / hide the feature).
+pub fn recognize_word_list(lang: &str, source: &str) -> Option<Promise> {
+    let obj = bridge()?;
+    let f = method(&obj, "recognizeWordList")?;
+    let arg = js_sys::Object::new();
+    let _ = Reflect::set(&arg, &JsValue::from_str("lang"), &JsValue::from_str(lang));
+    let _ = Reflect::set(&arg, &JsValue::from_str("source"), &JsValue::from_str(source));
+    let r = f.call1(&obj, &arg).ok()?;
+    r.dyn_into::<Promise>().ok()
+}
+
+/// One-letter tokens that are legitimate words in the app's Latin languages
+/// (Spanish "y/o/e/u/a", English "a"). Every other lone letter is OCR noise
+/// (a stray stroke, a bullet the recognizer read as "l") and is dropped.
+const ONE_LETTER_WORDS: &[char] = &['a', 'y', 'o', 'e', 'u'];
+
+/// Strip the leading/trailing junk that clings to a handout token — list
+/// numbering ("1.", "2)"), bullets ("•", "-", "*"), and surrounding
+/// punctuation/quotes — by trimming any non-letter run from both ends. Internal
+/// apostrophes and hyphens ("don't", "co-op") survive because they sit between
+/// letters. Returns the trimmed slice (may be empty).
+fn strip_edges(tok: &str) -> &str {
+    tok.trim_matches(|c: char| !c.is_alphabetic())
+}
+
+/// Turn raw recognized lines into de-duplicated candidate words, applying only
+/// *shape* cleanup — the trust gate (charset + profanity) is applied separately
+/// so OCR output and typed input share one code path. Rules:
+///   * split each line on whitespace;
+///   * strip list numbering / bullets / edge punctuation;
+///   * NFC-normalize;
+///   * drop tokens containing an ASCII digit (page numbers, "H2O" noise);
+///   * drop lone letters except the valid one-letter es/en words;
+///   * de-dupe case-insensitively, preserving first-seen order and casing.
+pub fn parse_candidates(lines: &[String]) -> Vec<String> {
+    use std::collections::HashSet;
+    let mut seen: HashSet<String> = HashSet::new();
+    let mut out: Vec<String> = Vec::new();
+    for line in lines {
+        for raw_tok in line.split_whitespace() {
+            // NFC first so a trailing combining mark composes onto its letter
+            // ("e" + U+0301 -> "é") instead of being trimmed off as a non-letter;
+            // this also matches the profanity screen, which works in NFC.
+            let composed: String = raw_tok.nfc().collect();
+            let trimmed = strip_edges(&composed);
+            if trimmed.is_empty() {
+                continue;
+            }
+            let word: String = trimmed.to_string();
+            // A word must contain at least one letter and no ASCII digit —
+            // spelling words don't carry digits; anything with one is noise.
+            if !word.chars().any(|c| c.is_alphabetic()) {
+                continue;
+            }
+            if word.chars().any(|c| c.is_ascii_digit()) {
+                continue;
+            }
+            // Lone letters: only the handful of real one-letter words survive.
+            let mut chars = word.chars();
+            let first = chars.next();
+            if let (Some(c), None) = (first, chars.next()) {
+                if !ONE_LETTER_WORDS.contains(&c.to_ascii_lowercase()) {
+                    continue;
+                }
+            }
+            let key = word.to_lowercase();
+            if seen.insert(key) {
+                out.push(word);
+                if out.len() >= 2000 {
+                    return out;
+                }
+            }
+        }
+    }
+    out
+}
+
+/// Why the standard save gate would reject this candidate, or `None` if it
+/// passes. Reuses the exact checks the typed importer uses — this only
+/// *reports* the verdict for the review screen; the real gate still runs at
+/// save time (`importer::save_words` path), so a candidate can never be saved
+/// on the strength of this advisory alone.
+pub fn gate_reason(word: &str) -> Option<GateFail> {
+    if crate::profanity::is_blocked(word) {
+        return Some(GateFail::Blocked);
+    }
+    if crate::importer::extract_words(word).is_empty() {
+        return Some(GateFail::Charset);
+    }
+    None
+}
+
+/// Machine-readable reason a candidate failed the gate, mapped to a localized
+/// label by the review UI.
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum GateFail {
+    /// Blocked by the profanity screen.
+    Blocked,
+    /// No usable letters for the current charset (empty after extraction).
+    Charset,
+}
+
+impl GateFail {
+    /// i18n key for the short reason shown on a flagged chip.
+    pub fn i18n_key(self) -> &'static str {
+        match self {
+            GateFail::Blocked => "photo.flag.blocked",
+            GateFail::Charset => "photo.flag.charset",
+        }
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    fn parse(lines: &[&str]) -> Vec<String> {
+        parse_candidates(&lines.iter().map(|s| s.to_string()).collect::<Vec<_>>())
+    }
+
+    #[test]
+    fn strips_numbering_bullets_and_trailing_punct() {
+        assert_eq!(parse(&["1. apple"]), vec!["apple"]);
+        assert_eq!(parse(&["2) banana"]), vec!["banana"]);
+        assert_eq!(parse(&["• cherry,"]), vec!["cherry"]);
+        assert_eq!(parse(&["- pear."]), vec!["pear"]);
+        assert_eq!(parse(&["\"quote\""]), vec!["quote"]);
+        // Numbering fused to the word with no space.
+        assert_eq!(parse(&["3.grape"]), vec!["grape"]);
+    }
+
+    #[test]
+    fn keeps_internal_apostrophes_and_hyphens() {
+        assert_eq!(parse(&["don't"]), vec!["don't"]);
+        assert_eq!(parse(&["co-op"]), vec!["co-op"]);
+    }
+
+    #[test]
+    fn drops_pure_digits_and_digit_bearing_tokens() {
+        assert_eq!(parse(&["12"]), Vec::<String>::new());
+        assert_eq!(parse(&["H2O"]), Vec::<String>::new());
+        assert_eq!(parse(&["3", "words", "42"]), vec!["words"]);
+    }
+
+    #[test]
+    fn one_letter_words_kept_only_for_allowed_set() {
+        // Allowed es/en one-letter words survive.
+        assert_eq!(parse(&["a y o e u"]), vec!["a", "y", "o", "e", "u"]);
+        // Case-insensitive on the allow-list.
+        assert_eq!(parse(&["A"]), vec!["A"]);
+        // Every other lone letter is dropped as noise.
+        assert_eq!(parse(&["b c x l I"]), Vec::<String>::new());
+    }
+
+    #[test]
+    fn multiple_words_per_line_and_dedup() {
+        assert_eq!(parse(&["cat dog cat"]), vec!["cat", "dog"]);
+        // Dedup is case-insensitive; first casing wins.
+        assert_eq!(parse(&["Cat", "cat", "CAT"]), vec!["Cat"]);
+    }
+
+    #[test]
+    fn nfc_normalizes_accented_words() {
+        // Decomposed "café" (e + combining acute) folds to the composed form.
+        let decomposed = "cafe\u{0301}";
+        let got = parse(&[decomposed]);
+        assert_eq!(got, vec!["café"]);
+        assert_eq!(got[0].chars().count(), 4); // composed é, not e + mark
+    }
+
+    #[test]
+    fn gate_flags_profanity_and_passes_clean_words() {
+        assert_eq!(gate_reason("apple"), None);
+        assert_eq!(gate_reason("fuck"), Some(GateFail::Blocked));
+        // A non-letter blob (shouldn't survive parse, but gate is defensive).
+        assert_eq!(gate_reason("---"), Some(GateFail::Charset));
     }
 }

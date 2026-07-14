@@ -211,5 +211,16 @@
   "ghost.even": "👻 Ngang ngửa",
   "ghost.beat": "Kỷ lục mới! Bạn đã đánh bại bóng ma của mình 👻",
   "story.heading": "Bạn có biết?",
-  "story.dismiss": "Đóng"
+  "story.dismiss": "Đóng",
+  "photo.button": "📷 Từ ảnh",
+  "photo.title": "Chụp danh sách từ",
+  "photo.blurb": "Chụp một danh sách chính tả — chúng tôi đọc ngay trên thiết bị của bạn.",
+  "photo.reading": "Đang đọc ảnh…",
+  "photo.review": "Kiểm tra các từ này, sửa lỗi rồi lưu.",
+  "photo.save": "Lưu các từ này",
+  "photo.empty": "Không tìm thấy từ nào — hãy thử ảnh rõ hơn.",
+  "photo.remove": "Xóa từ",
+  "photo.note": "Ảnh được đọc trên thiết bị của bạn và không bao giờ rời khỏi đó.",
+  "photo.flag.blocked": "không được phép",
+  "photo.flag.charset": "không đọc được"
 }
