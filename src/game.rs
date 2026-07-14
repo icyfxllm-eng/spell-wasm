@@ -1264,6 +1264,10 @@ fn finish_daily(app: &App) {
         (s.daily.date.clone(), s.daily.correct, s.daily.words.len() as u32)
     };
     let (streak, best) = crate::daily::record_result(&date, correct);
+    // F3: the ONE call site where the persisted streak + daily record just
+    // updated — mirror the fresh snapshot to the home-screen widget container.
+    // No-op off iOS and when the widgets flag (D1: default ON) is OFF.
+    crate::widgets::sync_after_daily(&app.borrow().lang);
     {
         let mut s = app.borrow_mut();
         s.daily.active = false;

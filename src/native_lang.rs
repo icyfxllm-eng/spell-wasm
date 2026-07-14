@@ -70,6 +70,17 @@ pub fn stop() {
     }
 }
 
+/// F3 — mirror the widget-state JSON (see `crate::widgets`) into the native App
+/// Group container so the WidgetKit extension (and F4 App Intents) can read it.
+/// Fire-and-forget; no-op when the bridge is absent (web/PWA/Android/Tauri).
+pub fn sync_widget_state(state_json: &str) {
+    if let Some(obj) = bridge() {
+        if let Some(f) = method(&obj, "syncWidgetState") {
+            let _ = f.call1(&obj, &JsValue::from_str(state_json));
+        }
+    }
+}
+
 fn call1_promise(name: &str, arg0: &str) -> Option<Promise> {
     let obj = bridge()?;
     let f = method(&obj, name)?;

@@ -2,6 +2,7 @@ import Foundation
 import AVFoundation
 import Capacitor
 import NativeLanguageKitCore
+import WidgetKit
 
 /// Thin Capacitor bridge over NativeLanguageKitCore. All real logic lives in the
 /// (unit-tested) package; this only marshals CAPPluginCall <-> the core and owns
@@ -17,6 +18,7 @@ public class NativeLanguageKitPlugin: CAPPlugin, CAPBridgedPlugin {
         CAPPluginMethod(name: "stop", returnType: CAPPluginReturnPromise),
         CAPPluginMethod(name: "checkWord", returnType: CAPPluginReturnPromise),
         CAPPluginMethod(name: "detectLanguage", returnType: CAPPluginReturnPromise),
+        CAPPluginMethod(name: "syncWidgetState", returnType: CAPPluginReturnPromise),
     ]
 
     private let speaker = Speaker()
@@ -65,6 +67,20 @@ public class NativeLanguageKitPlugin: CAPPlugin, CAPBridgedPlugin {
     @objc func detectLanguage(_ call: CAPPluginCall) {
         let g = LanguageDetector.detect(text: call.getString("text") ?? "")
         call.resolve(["supported": g.supported, "lang": g.lang, "confidence": g.confidence])
+    }
+
+    /// F3 — persist the widget-state JSON (verbatim) into the App Group container
+    /// the WidgetKit extension + F4 App Intents read, then nudge WidgetCenter so
+    /// the home-screen widgets refresh promptly. Best-effort: a missing App Group
+    /// (misprovisioned build) just no-ops rather than disturbing game flow.
+    @objc func syncWidgetState(_ call: CAPPluginCall) {
+        guard let state = call.getString("state") else {
+            call.reject("state is required", "BAD_ARGS")
+            return
+        }
+        WidgetShared.write(rawJSON: state)
+        WidgetCenter.shared.reloadAllTimelines()
+        call.resolve()
     }
 }
 

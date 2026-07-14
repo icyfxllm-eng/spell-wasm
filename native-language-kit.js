@@ -101,6 +101,21 @@
     },
 
     /**
+     * F3 — mirror the game's streak + daily-challenge snapshot into the iOS App
+     * Group container (`group.net.spellgame.app`, key `widget_state_v1`) so the
+     * home-screen widgets and F4 App Intents can read it. `state` is the
+     * JSON-STRING encoding of the Rust core's WidgetState (see src/widgets.rs for
+     * the key schema). No-op (resolves) off iOS. Never rejects — widget sync is
+     * best-effort and must never disturb game flow.
+     * @param {string} state JSON-encoded WidgetState
+     * @returns {Promise<void>}
+     */
+    syncWidgetState: function (state) {
+      if (!available()) return Promise.resolve();
+      return plugin().syncWidgetState({ state: state }).catch(function () {});
+    },
+
+    /**
      * Detect the language of `text` (NLLanguageRecognizer). Single words give a
      * weak signal — the caller uses a high confidence bar and only ever shows a
      * non-blocking hint. Never blocks entry.
