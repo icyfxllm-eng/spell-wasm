@@ -43,6 +43,7 @@ mod testseam;
 mod versus;
 mod viet;
 mod word_data;
+mod word_stories;
 mod words;
 mod wordstats;
 

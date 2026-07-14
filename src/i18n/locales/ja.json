@@ -209,5 +209,7 @@
   "ghost.ahead": "👻 {n}リード",
   "ghost.behind": "👻 {n}遅れ",
   "ghost.even": "👻 互角",
-  "ghost.beat": "自己ベスト更新！ゴーストに勝った 👻"
+  "ghost.beat": "自己ベスト更新！ゴーストに勝った 👻",
+  "story.heading": "知ってた？",
+  "story.dismiss": "閉じる"
 }

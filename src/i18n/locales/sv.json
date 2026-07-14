@@ -209,5 +209,7 @@
   "ghost.ahead": "👻 {n} före",
   "ghost.behind": "👻 {n} efter",
   "ghost.even": "👻 Jämnt lopp",
-  "ghost.beat": "Nytt rekord! Du slog ditt spöke 👻"
+  "ghost.beat": "Nytt rekord! Du slog ditt spöke 👻",
+  "story.heading": "Visste du?",
+  "story.dismiss": "Stäng"
 }

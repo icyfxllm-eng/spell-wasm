@@ -209,5 +209,7 @@
   "ghost.ahead": "👻 Ahead by {n}",
   "ghost.behind": "👻 Behind by {n}",
   "ghost.even": "👻 Neck and neck",
-  "ghost.beat": "New best! You beat your ghost 👻"
+  "ghost.beat": "New best! You beat your ghost 👻",
+  "story.heading": "Did you know?",
+  "story.dismiss": "Dismiss"
 }

@@ -9,6 +9,8 @@ their own reviewed row, out of scope for the scaffold).
 from __future__ import annotations
 
 import json
+import re
+import unicodedata
 from pathlib import Path
 
 from schema import Entry
@@ -22,6 +24,48 @@ POS_MAP = {
     "pron": "pron", "det": "det", "prep": "prep", "conj": "conj",
     "particle": "part", "intj": "interj",
 }
+
+# F5 "word stories": one first-hop origin sentence, NFC, <= this many chars.
+# Mirrors src/word_stories.rs::compress so the pipeline output and the runtime
+# defensive re-compression agree.
+ETY_MAX_LEN = 120
+_HOP_STOP = re.compile(r"[—–;:.!?]")  # em/en dash, ; : . ! ?
+
+
+def compress_etymology(text: str | None) -> str | None:
+    """Compress a raw Wiktionary etymology to one first-hop sentence.
+
+    origin language + root + gloss, truncated at the FIRST hop (no chains) and
+    hard-capped at ETY_MAX_LEN chars on a word boundary. Returns None if there
+    is nothing usable. NFC-normalized. Language-agnostic.
+    """
+    if not text:
+        return None
+    nfc = unicodedata.normalize("NFC", text)
+    collapsed = " ".join(nfc.split())
+    if not collapsed:
+        return None
+    # First hop: cut at the first sentence terminator / hop separator.
+    m = _HOP_STOP.search(collapsed)
+    first = (collapsed[: m.start()] if m else collapsed).strip()
+    # Drop chains: keep up to (excluding) a second "from" token.
+    out, seen_from = [], 0
+    for tok in first.split():
+        bare = re.sub(r"[^\w]", "", tok, flags=re.UNICODE).lower()
+        if bare == "from":
+            seen_from += 1
+            if seen_from >= 2:
+                break
+        out.append(tok)
+    hop = " ".join(out).strip()
+    # Hard length cap at a word boundary, with an ellipsis.
+    if len(hop) > ETY_MAX_LEN:
+        cut = hop[: ETY_MAX_LEN - 1]
+        if " " in cut:
+            cut = cut[: cut.rfind(" ")]
+        hop = cut.rstrip() + "…"
+    hop = hop.strip().rstrip(",;:-–— ").strip()
+    return hop or None
 
 
 def parse(path, lang):
@@ -53,11 +97,16 @@ def parse(path, lang):
             if "ipa" in s:
                 pron = s["ipa"]
                 break
+        # F5 word stories: kaikki exposes the raw Wiktionary etymology prose as
+        # `etymology_text`; compress it to one first-hop sentence. CC BY-SA —
+        # attribution recorded in data/<lang>/SOURCES.md.
+        etymology = compress_etymology(obj.get("etymology_text"))
         yield Entry(
             word=word,
             lang=lang,
             pos=[pos] if pos else [],
             gloss=gloss,
             pron=pron,
+            etymology=etymology,
             sources=[f"kaikki-{lang}"],
         )

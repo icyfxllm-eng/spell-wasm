@@ -209,5 +209,7 @@
   "ghost.ahead": "👻 En avance de {n}",
   "ghost.behind": "👻 En retard de {n}",
   "ghost.even": "👻 Au coude à coude",
-  "ghost.beat": "Nouveau record ! Tu as battu ton fantôme 👻"
+  "ghost.beat": "Nouveau record ! Tu as battu ton fantôme 👻",
+  "story.heading": "Le saviez-vous ?",
+  "story.dismiss": "Fermer"
 }

@@ -209,5 +209,7 @@
   "ghost.ahead": "👻 {n} önde",
   "ghost.behind": "👻 {n} geride",
   "ghost.even": "👻 Başa baş",
-  "ghost.beat": "Yeni rekor! Hayaletini yendin 👻"
+  "ghost.beat": "Yeni rekor! Hayaletini yendin 👻",
+  "story.heading": "Biliyor muydun?",
+  "story.dismiss": "Kapat"
 }

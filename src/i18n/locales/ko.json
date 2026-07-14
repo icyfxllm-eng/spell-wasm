@@ -209,5 +209,7 @@
   "ghost.ahead": "👻 {n} 앞서는 중",
   "ghost.behind": "👻 {n} 뒤처짐",
   "ghost.even": "👻 막상막하",
-  "ghost.beat": "최고 기록! 고스트를 이겼어요 👻"
+  "ghost.beat": "최고 기록! 고스트를 이겼어요 👻",
+  "story.heading": "알고 있나요?",
+  "story.dismiss": "닫기"
 }

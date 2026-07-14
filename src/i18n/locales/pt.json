@@ -209,5 +209,7 @@
   "ghost.ahead": "👻 {n} à frente",
   "ghost.behind": "👻 {n} atrás",
   "ghost.even": "👻 Empate técnico",
-  "ghost.beat": "Novo recorde! Você superou seu fantasma 👻"
+  "ghost.beat": "Novo recorde! Você superou seu fantasma 👻",
+  "story.heading": "Você sabia?",
+  "story.dismiss": "Dispensar"
 }

@@ -209,5 +209,7 @@
   "ghost.ahead": "👻 นำอยู่ {n}",
   "ghost.behind": "👻 ตามหลัง {n}",
   "ghost.even": "👻 สูสี",
-  "ghost.beat": "สถิติใหม่! คุณเอาชนะโกสต์ได้แล้ว 👻"
+  "ghost.beat": "สถิติใหม่! คุณเอาชนะโกสต์ได้แล้ว 👻",
+  "story.heading": "รู้หรือไม่?",
+  "story.dismiss": "ปิด"
 }

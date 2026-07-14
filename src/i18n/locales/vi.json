@@ -209,5 +209,7 @@
   "ghost.ahead": "👻 Dẫn trước {n}",
   "ghost.behind": "👻 Kém {n}",
   "ghost.even": "👻 Ngang ngửa",
-  "ghost.beat": "Kỷ lục mới! Bạn đã đánh bại bóng ma của mình 👻"
+  "ghost.beat": "Kỷ lục mới! Bạn đã đánh bại bóng ma của mình 👻",
+  "story.heading": "Bạn có biết?",
+  "story.dismiss": "Đóng"
 }

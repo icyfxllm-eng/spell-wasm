@@ -209,5 +209,7 @@
   "ghost.ahead": "👻 {n} voor",
   "ghost.behind": "👻 {n} achter",
   "ghost.even": "👻 Nek aan nek",
-  "ghost.beat": "Nieuw record! Je hebt je ghost verslagen 👻"
+  "ghost.beat": "Nieuw record! Je hebt je ghost verslagen 👻",
+  "story.heading": "Wist je dat?",
+  "story.dismiss": "Sluiten"
 }

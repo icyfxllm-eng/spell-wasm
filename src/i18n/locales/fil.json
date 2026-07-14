@@ -209,5 +209,7 @@
   "ghost.ahead": "👻 Nangunguna ng {n}",
   "ghost.behind": "👻 Nahuhuli ng {n}",
   "ghost.even": "👻 Sabay-sabay",
-  "ghost.beat": "Bagong record! Natalo mo ang iyong multo 👻"
+  "ghost.beat": "Bagong record! Natalo mo ang iyong multo 👻",
+  "story.heading": "Alam mo ba?",
+  "story.dismiss": "Isara"
 }

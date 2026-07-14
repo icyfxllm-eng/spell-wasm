@@ -209,5 +209,7 @@
   "ghost.ahead": "👻 {n} voraus",
   "ghost.behind": "👻 {n} zurück",
   "ghost.even": "👻 Kopf-an-Kopf",
-  "ghost.beat": "Neuer Rekord! Du hast deinen Geist geschlagen 👻"
+  "ghost.beat": "Neuer Rekord! Du hast deinen Geist geschlagen 👻",
+  "story.heading": "Wusstest du schon?",
+  "story.dismiss": "Schließen"
 }
