@@ -99,6 +99,35 @@ final class NativeLanguageKitCoreTests: XCTestCase {
         XCTAssertEqual(g.lang, "en")
     }
 
+    // MARK: Speaker
+
+    func testSpeakRejectsUnknownVoiceImmediately() {
+        let speaker = Speaker()
+        let done = expectation(description: "completes")
+        var result = true
+        speaker.speak(text: "hola", voiceId: "not-a-real-voice-id", gameRate: 0.9) { ok in
+            result = ok; done.fulfill()
+        }
+        wait(for: [done], timeout: 2)
+        XCTAssertFalse(result, "an unknown voiceId must complete as failure, never pick a voice")
+    }
+
+    func testSpeakCompletesWithARealVoice() throws {
+        // Use the first available en voice from the catalog and confirm the
+        // utterance drives to a natural finish on the simulator.
+        guard let voice = VoiceCatalog.voices(lang: "en").first else {
+            throw XCTSkip("no en voice on this simulator")
+        }
+        let speaker = Speaker()
+        let done = expectation(description: "finishes speaking")
+        var finished = false
+        speaker.speak(text: "hi", voiceId: voice.id, gameRate: 0.9) { ok in
+            finished = ok; done.fulfill()
+        }
+        wait(for: [done], timeout: 15)
+        XCTAssertTrue(finished, "speak() should resolve on completion")
+    }
+
     // MARK: SpeechRate mapping
 
     func testRateMapping() {
