@@ -7,7 +7,7 @@
 # Climb/leaderboard writes DO touch prod. Before Paul does the leaderboard
 # section, switch the reverse_proxy target to a sandbox `backend-audit:8000`
 # (separate CLIMB_DB_PATH, shared TTS cache) per DEPLOY-AUDIT-BUILD.md.
-:8001 {
+:8091 {
 	header {
 		Strict-Transport-Security "max-age=31536000; includeSubDomains"
 		X-Content-Type-Options "nosniff"
