@@ -1,0 +1,231 @@
+# SpellGame — Filipino (fil) Native-Speaker Audit Checklist
+
+**Auditor:** Paul (xavierguevarra06@gmail.com)
+**Build:** audit.spellgame.net (Filipino unlocked; en/es also available for comparison)
+**Purpose:** Your sign-off moves Filipino from "coming soon" to a live, playable
+language, and backs our Apple App Review submission (UGC filtering, 4+/Kids
+content, localization). Please be blunt — a "do not ship" with reasons is far
+more useful than a polite pass.
+
+**How to use this sheet**
+- Work top to bottom. Each numbered section has a checklist and a **Findings**
+  table.
+- In every Findings table, put `pass` / `fail` / `note` in the **Verdict**
+  column and write freely in **Details**. Copy the exact words you tried and
+  what happened — verbatim is gold, especially in Section 1.
+- Nothing you type in the app is stored on our servers for this audit beyond a
+  sandbox; you will not break anything. Try to break it.
+- When done, fill the **Sign-off** block at the bottom.
+
+---
+
+## 1. My Words profanity filter  *(Apple Guideline 1.2 — user-generated content)*
+
+"My Words" lets a user paste their own spelling list. Every word is screened by
+an on-device profanity filter before it is saved (and again when an old list is
+re-opened). This is the single most important section for Apple: a kids' app
+must not let a user smuggle profanity or slurs into the content.
+
+**We are NOT giving you a list of bad words.** Please supply Filipino profanity,
+slurs, and crude terms from your own knowledge — that is exactly the expertise we
+need. Try the obvious ones, then get creative the way a mischievous kid would.
+
+### 1a. Straight profanity / slurs — should be BLOCKED
+- [ ] Add a list containing common Filipino profanity (you supply the words).
+- [ ] Add Filipino slurs / ethnic or sexual insults.
+- [ ] Add "your mother"-style curses and their contractions.
+- [ ] Add crude sexual / genitalia terms.
+
+### 1b. Evasion variants — should ALSO be blocked (record every one that slips through)
+- [ ] **Taglish / code-switched** spellings (Tagalog + English mix).
+- [ ] **Misspellings** a kid would use (dropped/extra letters).
+- [ ] **Vowel swaps** (e.g. a↔e, i↔y substitutions common in txt-speak).
+- [ ] **Leetspeak** (numbers/symbols for letters: 0=o, 1=i/l, 3=e, 4=a, 5=s, @=a).
+- [ ] **Spaced / hyphenated** forms (p u t a, p-u-t-a).
+- [ ] **Repeated letters** / stretching (putaaa).
+
+> Known limitation to probe (please confirm): the Filipino block-list is matched
+> as whole words after light normalization. Spaced and hyphenated forms are
+> usually broken up and caught, but **leetspeak and vowel-swap folding is
+> stronger on the English layer than the Filipino one.** If a Filipino leet/vowel
+> variant gets through, that is precisely the kind of gap we need documented.
+
+### 1c. Innocent words — should NOT be blocked (record every false block)
+- [ ] Add ordinary, wholesome Filipino words across topics (family, food,
+      school, nature, animals, feelings).
+- [ ] Add real Filipino words that merely *contain* a naughty substring but are
+      innocent.
+- [ ] Add common Filipino names.
+
+### 1d. Fail-safe behaviour
+- [ ] When a word is rejected, the message is clear and understandable.
+- [ ] The app does not crash, freeze, or lose your other words.
+- [ ] A rejected word is **not** silently saved (re-open the list to confirm).
+
+### Findings — Section 1
+| # | What you tried (verbatim) | Expected | Actual | Verdict |
+|---|---------------------------|----------|--------|---------|
+| 1 |  |  |  |  |
+| 2 |  |  |  |  |
+| 3 |  |  |  |  |
+| 4 |  |  |  |  |
+| 5 |  |  |  |  |
+
+**Section 1 verdict question — answer in one line:**
+> *"Would this filter embarrass us in front of a Filipino parent or an Apple
+> reviewer?"*  →  ______________________________________________
+
+---
+
+## 2. Word-list accuracy per tier
+
+There are 184 words across four difficulty tiers (46 each). The full list is in
+`fil-wordlists.csv`. Check that each tier is real, correctly spelled Filipino,
+and difficulty-appropriate.
+
+- [ ] Every word is a **real Filipino word** (not a typo or nonsense).
+- [ ] Every word uses **standard spelling / orthography**.
+- [ ] Words are **difficulty-appropriate** for their tier (easy is genuinely
+      easy; expert is genuinely hard to spell).
+- [ ] **No offensive, crude, or inappropriate** words appear in ANY tier.
+- [ ] Flag any **regional or archaic** words that a general audience might not
+      recognize.
+- [ ] Flag any word that is **borrowed English** where a Filipino word is
+      expected (or vice-versa), if it feels out of place.
+
+### Findings — Section 2
+| Tier | Word (verbatim) | Issue (wrong spelling / wrong tier / offensive / regional / archaic) | Suggested fix | Verdict |
+|------|-----------------|--------------------------------------------------------------------|---------------|---------|
+| easy |  |  |  |  |
+| medium |  |  |  |  |
+| hard |  |  |  |  |
+| expert |  |  |  |  |
+
+---
+
+## 3. TTS pronunciation
+
+The app speaks each word aloud (Google fil-PH voice). Play **at least 30 words**
+spread across all four tiers and rate any that sound wrong.
+
+- [ ] Played ≥ 30 words across easy / medium / hard / expert.
+- [ ] Stress and vowel length sound natural for Filipino.
+- [ ] No word is spoken as if it were English.
+
+For each miss, rate severity:
+`unintelligible` (can't tell what word it is) / `wrong-but-understandable`
+(clearly the right word, mispronounced) / `minor` (slightly off).
+
+### Findings — Section 3
+| Word (verbatim) | Tier | What you heard | Severity | Verdict |
+|-----------------|------|----------------|----------|---------|
+|  |  |  |  |  |
+|  |  |  |  |  |
+|  |  |  |  |  |
+
+---
+
+## 4. UI localization
+
+Every visible Filipino string is in `fil-ui-strings.csv` (key, English source,
+Filipino, status). Confirm the interface reads naturally to a Filipino speaker.
+
+- [ ] Every visible Filipino string is **natural** (not awkward machine
+      translation).
+- [ ] **Consistent register** throughout (don't mix overly formal and casual).
+- [ ] **No truncation / overflow** — text fits its buttons and labels.
+- [ ] **No English leaking** where Filipino is expected (brand name "SpellGame"
+      staying English is fine).
+
+> Heads-up: 8 strings are currently identical to English and may be intentional
+> loanwords or may be untranslated. Please rule on each:
+> `daily.progress`, `kb.enter`, `ph.email`, `ph.password`, `ph.username`,
+> `settings.background`, `settings.readable`, `top.theClimb`.
+
+### Findings — Section 4
+| Key (or where you saw it) | Current Filipino | Problem (awkward / wrong register / truncated / English) | Suggested wording | Verdict |
+|---------------------------|------------------|----------------------------------------------------------|-------------------|---------|
+|  |  |  |  |  |
+|  |  |  |  |  |
+
+---
+
+## 5. Kid Mode & 4+ appropriateness
+
+Turn on **Little Spellers** (Kid Mode) in Settings. It uses bigger text, friendlier
+words, and hides prices. Apple rates this app 4+, so the Kid Mode experience must
+be spotless for a young child.
+
+- [ ] Kid Mode word pool is age-appropriate (nothing scary, crude, or adult).
+- [ ] Nothing in the Kid Mode UI is unsuitable for a 4-year-old.
+- [ ] No purchase / price / external-link surprises in Kid Mode.
+- [ ] Filipino Kid Mode reads as warm and friendly (register fits a child).
+
+### Findings — Section 5
+| What you saw | Concern | Verdict |
+|--------------|---------|---------|
+|  |  |  |
+|  |  |  |
+
+---
+
+## 6. Gameplay correctness
+
+Play each mode in Filipino and confirm the mechanics work.
+
+- [ ] **Standard** round: hear a word, type it, correct answers accepted.
+- [ ] **Daily** challenge: words do **not** repeat within a run.
+- [ ] **Climb**: difficulty ramps as you go.
+- [ ] **Head-to-Head** (solo path): starts and plays cleanly.
+- [ ] Answers are graded correctly, **including when you type without diacritics**
+      (e.g. typing `n` where the word has `ñ`, if it accepts that).
+- [ ] Wrong answers are rejected with a clear retry.
+- [ ] **Syllable replay** (hearing the word again / in parts) works.
+- [ ] **Missed-words review** collects the words you got wrong and lets you
+      re-practice them.
+
+### Findings — Section 6
+| Mode / action | What happened | Verdict |
+|---------------|---------------|---------|
+| Standard |  |  |
+| Daily (no-repeat) |  |  |
+| Climb |  |  |
+| Head-to-Head |  |  |
+| Diacritics-free typing |  |  |
+| Syllable replay |  |  |
+| Missed-words review |  |  |
+
+---
+
+## 7. Free-form findings
+
+Anything that didn't fit above — surprises, delights, dealbreakers, cultural
+notes, wording you'd phrase differently.
+
+| # | Note | Verdict |
+|---|------|---------|
+| 1 |  |  |
+| 2 |  |  |
+| 3 |  |  |
+
+---
+
+## Sign-off
+
+**Auditor name:** ______________________________________
+
+**Date:** ______________________
+
+**Overall verdict (circle one):**
+- **SHIP** — Filipino is ready to go live as-is.
+- **SHIP WITH FIXES** — go live after the issues below are addressed.
+- **DO NOT SHIP** — not ready; see issues below.
+
+**Top 3 issues (most important first):**
+1. ______________________________________________________________
+2. ______________________________________________________________
+3. ______________________________________________________________
+
+**Anything else for Eric:**
+_________________________________________________________________
+_________________________________________________________________

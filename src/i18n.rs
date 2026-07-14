@@ -41,6 +41,18 @@ fn tables() -> &'static HashMap<&'static str, Table> {
         m.insert("zh", parse(include_str!("i18n/locales/zh.json")));
         m.insert("th", parse(include_str!("i18n/locales/th.json")));
         m.insert("fil", parse(include_str!("i18n/locales/fil.json")));
+        // Audit-review build only: overlay the audit-UI strings (badge, banner)
+        // onto English so Feature 7 stays wired through `t()` — no hardcoded UI
+        // text. The file lives outside `locales/` so the i18n key-parity gate
+        // (which requires every locale to match en.json) never sees it, and it is
+        // `include_str!`'d only under `--features audit`, so production en/wasm
+        // are unchanged and these keys never ship.
+        #[cfg(feature = "audit")]
+        if let Some(en) = m.get_mut("en") {
+            for (k, v) in parse(include_str!("i18n/audit.en.json")) {
+                en.insert(k, v);
+            }
+        }
         m
     })
 }

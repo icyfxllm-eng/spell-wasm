@@ -1,15 +1,30 @@
 #!/usr/bin/env node
-// Production-safety guard: the E2E test seam (window.__spelltest) must NEVER be
-// present in a shipped build. This greps the production dist/ (index.html + the
-// compiled wasm + JS glue) for any trace of the seam and fails if found.
-// Run against the PRODUCTION dist (built by scripts/build-web.sh, no
-// --features testseam), not dist-test/.
+// Production-safety guard: neither the E2E test seam (window.__spelltest) nor
+// the review-gated audit build (--features audit) may EVER be present in a
+// shipped build. This greps the production dist/ (index.html + the compiled wasm
+// + JS glue) for any trace of them and fails if found. Run against the
+// PRODUCTION dist (built by scripts/build-web.sh with no --features), not
+// dist-test/ or dist-audit/.
+//
+// The audit needles are the audit build's own identifiers/i18n keys/storage
+// keys (Feature 1 + Feature 7). They are specific enough not to collide with
+// ordinary content (unlike the bare word "audit"), so a zero count is a hard
+// proof that the audit path — the Filipino unlock, the AUDIT badge, the
+// preselect and the first-launch banner — left no byte in production.
 import { readdirSync, readFileSync, statSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import { dirname, join } from 'node:path';
 
 const dist = join(dirname(fileURLToPath(import.meta.url)), '..', process.argv[2] || 'dist');
-const NEEDLES = ['__spelltest', 'testseam'];
+const NEEDLES = [
+  '__spelltest',
+  'testseam',
+  'auditBanner',
+  'audit.banner',
+  'audit.badge',
+  'spellgame.audit',
+  'audit_pinned_options',
+];
 
 function walk(dir) {
   const out = [];
@@ -34,8 +49,8 @@ for (const file of walk(dist)) {
 }
 
 if (hits) {
-  console.error(`\nseam-absence-check: FAILED — ${hits} test-seam trace(s) in the production build.`);
-  console.error('Production must be built WITHOUT --features testseam (scripts/build-web.sh).');
+  console.error(`\nseam-absence-check: FAILED — ${hits} test-seam / audit-build trace(s) in the production build.`);
+  console.error('Production must be built with NO --features (scripts/build-web.sh, no AUDIT_LANGS).');
   process.exit(1);
 }
-console.log(`seam-absence-check: OK — no __spelltest/testseam trace in ${process.argv[2] || 'dist'}.`);
+console.log(`seam-absence-check: OK — no test-seam / audit-build trace in ${process.argv[2] || 'dist'}.`);

@@ -52,6 +52,11 @@ ios/App/output/
 # E2E test build artifacts (seam-enabled — never shipped)
 dist-test/
 pkg-test/
+# Audit build artifacts (--features audit — never shipped to production)
+dist-audit/
+pkg-audit/
+dist-test-audit/
+pkg-test-audit/
 tests/e2e/TEST-REPORT.md
 tools/*/out/
 tools/*/review-packet/

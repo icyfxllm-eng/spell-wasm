@@ -457,7 +457,18 @@ pub fn build_source_options(app: &App) {
     // would also strand UI-language selection, which this feature must leave
     // untouched. Pending the study/UI separation decision. Registry is the source
     // of truth (consts::is_active_lang) once that lands.
+    // Audit-review build only (Feature 7): pin the audited language(s) to the TOP
+    // with an AUDIT badge so the reviewer can't miss them, and skip them in the
+    // normal loop below so there's no duplicate option. Gated entirely by the
+    // build-time audit set — in every production build this statement is compiled
+    // out and the option list is byte-identical. No `code == "fil"` check.
+    #[cfg(feature = "audit")]
+    audit_pinned_options(&mut opts);
     for (code, name, _status) in crate::consts::BUILTIN_LANGS {
+        #[cfg(feature = "audit")]
+        if crate::consts::is_audit_lang(code) {
+            continue;
+        }
         opts.push_str(&format!("<option value=\"{}\">{}</option>", code, name));
     }
     if !s.custom.words.is_empty() {
@@ -473,6 +484,23 @@ pub fn build_source_options(app: &App) {
     drop(s);
     dom::select("langSel").set_value(&lang);
     update_setup_chip(app);
+}
+
+/// Audit-review build only: the pinned, AUDIT-badged option(s) for the audited
+/// language(s), emitted at the top of the source picker. The badge text is
+/// localized through `i18n::t` (no hardcoded UI string). Compiled out of
+/// production entirely.
+#[cfg(feature = "audit")]
+fn audit_pinned_options(opts: &mut String) {
+    let badge = crate::i18n::t("audit.badge");
+    for (code, name, _) in crate::consts::BUILTIN_LANGS {
+        if crate::consts::is_audit_lang(code) {
+            opts.push_str(&format!(
+                "<option value=\"{}\">{} \u{b7} {}</option>",
+                code, name, badge
+            ));
+        }
+    }
 }
 
 pub fn build_level_options(app: &App) {

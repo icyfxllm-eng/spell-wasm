@@ -11,16 +11,20 @@ import { fileURLToPath } from 'node:url';
 import { chromium } from 'playwright';
 
 const ROOT = join(fileURLToPath(import.meta.url), '..', '..', '..');
-const DIST = join(ROOT, 'dist-test');
 const AGE = JSON.stringify({ verdict: 'full', checkedAt: 1700000000 });
 const MIME = { '.html': 'text/html', '.js': 'text/javascript', '.wasm': 'application/wasm', '.json': 'application/json', '.png': 'image/png', '.mjs': 'text/javascript' };
 
-export function startServer(port = 8129) {
+// Serve a built bundle over a local HTTP server. Defaults to the seam-enabled
+// dist-test/ (production-parity); the audit spec passes distName='dist-test-audit'
+// (the seam + `--features audit` twin) so it can drive the Filipino unlock and
+// Feature-7 preselect/pin/banner. Never serves production / spellgame.net.
+export function startServer(port = 8129, distName = 'dist-test') {
+  const dist = join(ROOT, distName);
   const server = createServer((req, res) => {
     let p = decodeURIComponent(req.url.split('?')[0]);
     if (p === '/') p = '/index.html';
-    const file = join(DIST, p);
-    if (!file.startsWith(DIST) || !existsSync(file) || statSync(file).isDirectory()) {
+    const file = join(dist, p);
+    if (!file.startsWith(dist) || !existsSync(file) || statSync(file).isDirectory()) {
       res.writeHead(404); res.end(); return;
     }
     res.writeHead(200, { 'Content-Type': MIME[extname(file)] || 'application/octet-stream' });

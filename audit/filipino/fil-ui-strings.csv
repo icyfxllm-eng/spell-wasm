@@ -1,0 +1,187 @@
+key,english_source,filipino,status
+acct.changeName,Update username,I-update ang username,ok
+acct.close,Close,Isara,ok
+acct.deleteBtn,Delete my account,Burahin ang account ko,ok
+acct.deleteLabel,Delete account,Burahin ang account,ok
+acct.deleteSmall,Removes your account and all Climb entries. This can't be undone.,Inaalis ang iyong account at lahat ng entry sa Climb. Hindi ito mababawi.,ok
+acct.logout,Log out,Mag-log out,ok
+acct.signedInAs,Signed in as,Naka-sign in bilang,ok
+acct.title,Your account,Iyong account,ok
+ach.chain10.desc,Reach a 10-word chain.,Umabot sa 10-salitang tanikala.,ok
+ach.chain10.nm,Locked In,Nakapokus,ok
+ach.chain25.desc,Reach a 25-word chain.,Umabot sa 25-salitang tanikala.,ok
+ach.chain25.nm,Unstoppable,Di mapipigil,ok
+ach.chain5.desc,Reach a 5-word chain.,Umabot sa 5-salitang tanikala.,ok
+ach.chain5.nm,On a Roll,Umaandar,ok
+ach.cleared.desc,Clear all your missed words.,Linisin ang lahat ng namaling salita.,ok
+ach.cleared.nm,Clean Slate,Malinis na simula,ok
+ach.first.desc,Spell your first word correctly.,Tama mong maispeling ang unang salita.,ok
+ach.first.nm,First Word,Unang salita,ok
+ach.importer.desc,Import your own word list.,Mag-import ng sariling listahan ng salita.,ok
+ach.importer.nm,Own Words,Sariling salita,ok
+ach.timed10.desc,Reach a 10-chain in Quick Bee.,Umabot sa 10-tanikala sa Timed mode.,ok
+ach.timed10.nm,Beat the Clock,Talunin ang orasan,ok
+age.badDate,Please pick a real date that isn't in the future.,Pumili ng totoong petsa na wala sa hinaharap.,ok
+age.blurb,We ask so we can show the right experience.,Nagtatanong kami para maipakita ang tamang karanasan.,ok
+age.continue,Continue,Magpatuloy,ok
+age.title,When's your birthday?,Kailan ang kaarawan mo?,ok
+auth.close,Close,Isara,ok
+auth.create,Create account,Gumawa ng account,ok
+auth.createBlurb,Post your best chains to The Climb. Your email is used only to verify your account and reset your password — never shown to anyone.,I-post ang pinakamahuhusay mong tanikala sa The Climb. Ang email ay ginagamit lang para patunayan ang account at i-reset ang password — hindi ipinapakita kaninuman.,ok
+auth.createTitle,Create your account,Gumawa ng account,ok
+auth.haveAccount,Have an account? Log in,May account na? Mag-log in,ok
+auth.login,Log in,Mag-log in,ok
+auth.newHere,New here? Sign up,Bago rito? Mag-sign up,ok
+auth.welcomeBack,Welcome back,Maligayang pagbabalik,ok
+brand.tag,hear it · spell it · keep the chain,pakinggan · baybayin · panatilihin ang tanikala,ok
+brand.tagFun,just for fun,para lang masaya,ok
+btn.check,Check spelling,Suriin,ok
+btn.definition,📖 Definition,📖 Kahulugan,ok
+btn.giveUp,Give up,Sumuko,ok
+btn.hint,Hint,Pahiwatig,ok
+btn.replay,Replay,Ulitin,ok
+btn.sentence,💬 Sentence,💬 Pangungusap,ok
+btn.slow,Slow,Mabagal,ok
+card.accuracy,Your accuracy,Iyong katumpakan,ok
+card.accuracyEmpty,Spell a few words to start tracking your accuracy by difficulty.,Mag-ispeling ng ilang salita para simulan ang pagsubaybay ng iyong katumpakan ayon sa hirap.,ok
+card.achievements,Achievements,Mga tagumpay,ok
+card.boardEmpty,No chains yet — be the first to start one.,Wala pang tanikala — ikaw ang mauna.,ok
+card.boardScopeDevice,this device only,sa device na ito lang,ok
+card.longestChains,Longest chains,Pinakamahabang tanikala,ok
+card.overall,{c}/{s} correct overall · {p}%,{c}/{s} tama sa kabuuan · {p}%,ok
+card.resetLang,reset this language,i-reset ang wikang ito,ok
+chain.best,your best,iyong rekord,ok
+chain.current,current chain,kasalukuyang tanikala,ok
+climb.loading,Loading…,Naglo-load…,ok
+climb.userUpdated,Username updated.,Na-update ang username.,ok
+coming.badge,Coming soon,Malapit na,ok
+coming.confirmed,You're on the list ✓,Nasa listahan ka na ✓,ok
+coming.notice,{lang} is being polished by native speakers — coming back soon.,Pinipino ng mga katutubong nagsasalita ang {lang} — babalik na malapit na.,ok
+coming.notify,Notify me when it's ready,Ipaalam kapag handa na,ok
+daily.bestStreak,best: {n},pinakamahusay: {n},ok
+daily.close,Close,Isara,ok
+daily.exit,Exit daily,Lumabas sa araw-araw,ok
+daily.finale,🔥 Expert finale,🔥 Eksperto na pinal,ok
+daily.progress,🗓 {i}/{n} · ✓{c},🗓 {i}/{n} · ✓{c},same_as_english
+daily.resultTitle,Daily Challenge,Hamon ng Araw,ok
+daily.share,Share,Ibahagi,ok
+daily.streakDays,🔥 {n}-day streak,🔥 {n}-araw na sunod,ok
+daily.tapStart,tap to start<br/>today's challenge,pindutin para simulan<br/>ang hamon ngayong araw,ok
+daily.title,Daily,Araw-araw,ok
+error.offline,You're offline — leaderboard and Spell Off need a connection.,Offline ka — kailangan ng koneksyon ang leaderboard at harapan.,ok
+fb.allCaughtMany,All caught up — {n} words scheduled for later review.,Kumpleto na — {n} salita ang nakatakda para sa susunod na pagbabalik-aral.,ok
+fb.allCaughtOne,All caught up — 1 word scheduled for later review.,Kumpleto na — 1 salita ang nakatakda para sa susunod na pagbabalik-aral.,ok
+fb.gotItReview,Got it — scheduled to return later.,Nakuha — babalik ito mamaya.,ok
+fb.inARow, {n} in a row., {n} sunod-sunod.,ok
+fb.itWas,It was ,Ito ay ,ok
+fb.noMisses,No misses yet — they collect here as you play.,Wala pang mali — magtitipon dito habang naglalaro ka.,ok
+fb.notQuite,Not quite,Halos na,ok
+fb.timesUp,Time's up — it was ,Tapos na ang oras — ito ay ,ok
+fb.wordWas,The word was ,Ang salita ay ,ok
+help.howItWorks,"<b>How it works:</b> press the orb to hear a word, then type or speak its spelling — a meaning appears after each answer, and misses return over days under <b>↻ Misses</b>. Everything is free. English words are read aloud by your word server; import your own under <b>＋ My words</b> to practice anything, spoken with your browser's voices — smoothest in Chrome or Edge on a computer. Progress is saved in this browser only.","<b>Paano ito gumagana:</b> pindutin ang orb para marinig ang salita, tapos i-type o sabihin ang ispeling — may kahulugang lalabas pagkatapos ng bawat sagot, at babalik ang mga mali sa paglipas ng araw sa <b>↻ Mga Mali</b>. Libre ang lahat. Binabasa ang mga salitang Ingles ng iyong word server; mag-import ng sarili mo sa <b>＋ Mga salita ko</b> para magsanay ng kahit ano, binabasa ng mga boses ng browser mo — pinakamaayos sa Chrome o Edge sa kompyuter. Naka-save ang progreso sa browser na ito lang.",ok
+import.blurb,Practice the exact words you keep getting wrong,Sanayin ang mismong mga salitang lagi mong namamali,ok
+import.clear,Clear my words,Burahin ang salita ko,ok
+import.cleared,Your words were cleared.,Na-clear ang mga salita mo.,ok
+import.close,Close,Isara,ok
+import.needWord,Add at least one word to save.,Magdagdag ng kahit isang salita para makapag-save.,ok
+import.note,Words stay on this device.,Nananatili sa device na ito ang mga salita.,ok
+import.save,Save my words,I-save ang salita ko,ok
+import.saved,Saved {n} of your words — press the orb to start.,Na-save ang {n} sa mga salita mo — pindutin ang orb para magsimula.,ok
+import.savedSkipped,Saved {n} of your words ({b} skipped) — press the orb to start.,Na-save ang {n} sa mga salita mo ({b} nilaktawan) — pindutin ang orb para magsimula.,ok
+import.speakIn,Speak in,Bigkasin sa,ok
+import.title,Bring your own words,Magdagdag ng sariling salita,ok
+jamo.checkFinal,Check the final consonant (받침).,Tingnan ang huling katinig (받침).,ok
+jamo.checkInitial,Check the first consonant.,Tingnan ang unang katinig.,ok
+jamo.checkMedial,Check the vowel.,Tingnan ang patinig.,ok
+jamo.spelledOut,It's spelled: {j},Ganito baybayin: {j},ok
+kb.enter,Enter,Enter,same_as_english
+label.yourSpelling,your spelling,iyong ispeling,ok
+level.climb,Climb →,Akyat →,ok
+level.easy,Easy,Madali,ok
+level.expert,Expert,Eksperto,ok
+level.hard,Hard,Mahirap,ok
+level.medium,Medium,Katamtaman,ok
+meaning.noDef,No definition found for this word.,Walang depinisyong nakita para sa salitang ito.,ok
+meaning.noExample,No example sentence found for this word.,Walang halimbawang pangungusap na nakita para sa salitang ito.,ok
+mode.timed,Quick Bee,Mabilis na Round,ok
+mode.timed.subtitle,Classic timed round,Klasikong timed round,ok
+mode.tricky_words.subtitle,Practice the ones that trip you up,Sanayin ang mga nakakalito,ok
+mode.tricky_words.title,Tricky Words,Mga Mailap na Salita,ok
+mode.untimed,Untimed,Walang oras,ok
+orb.continue,tap to<br/>continue,pindutin para<br/>magpatuloy,ok
+orb.listen,listen…,nakikinig…,ok
+orb.next,tap for<br/>next word,pindutin para sa<br/>susunod na salita,ok
+orb.practiceMisses,tap to<br/>practice misses,pindutin para<br/>sanayin ang mali,ok
+orb.tap,tap to<br/>hear a word,pindutin para<br/>marinig ang salita,ok
+parent.cancel,Cancel,Kanselahin,ok
+parent.check,Check,Suriin,ok
+parent.question,What is {a} times {b}?,Ano ang {a} beses {b}?,ok
+parent.title,Ask a grown-up,Magtanong sa nakatatanda,ok
+parent.tryAgain,Not quite — try again.,Hindi pa — subukan ulit.,ok
+ph.email,email,email,same_as_english
+ph.importText,Paste any text or a list of words here…,I-paste dito ang anumang teksto o listahan ng salita…,ok
+ph.newUsername,new username,bagong username,ok
+ph.parentAnswer,answer,sagot,ok
+ph.password,password,password,same_as_english
+ph.password8,password (8+ characters),password (8+ na karakter),ok
+ph.passwordConfirm,password to confirm,password para kumpirmahin,ok
+ph.typeHeard,type what you heard,i-type ang narinig,ok
+ph.username,username,username,same_as_english
+ph.usernameOrEmail,username or email,username o email,ok
+ph.vsName1,Player 1,Manlalaro 1,ok
+ph.vsName2,Player 2,Manlalaro 2,ok
+praise.1,Clean.,Malinis!,ok
+praise.2,Locked in.,Nakapokus!,ok
+praise.3,On a roll.,Umaandar!,ok
+praise.4,Nice ear.,Magaling makinig!,ok
+praise.5,Spot on.,Tama na tama!,ok
+praise.6,Sharp.,Talas!,ok
+praise.7,Chain grows.,Humahaba ang tanikala!,ok
+praise.8,Perfect.,Perpekto!,ok
+settings.background,Background,Background,same_as_english
+settings.backgroundSmall,Page background color,Kulay ng background ng pahina,ok
+settings.bigText,Big text,Malaking teksto,ok
+settings.bigTextSmall,Enlarge the interface text (about 1.5×),Palakihin ang teksto ng interface (mga 1.5×),ok
+settings.done,Done,Tapos,ok
+settings.kid,Little Spellers,Munting Speller,ok
+settings.kidSmall,"Bigger text, friendly words, no prices","Mas malaking teksto, magiliw na salita, walang presyo",ok
+settings.orb,Orb color,Kulay ng orb,ok
+settings.orbSmall,Color of the spelling orb,Kulay ng orb ng ispeling,ok
+settings.readable,Readable mode,Readable mode,same_as_english
+settings.readableSmall,"Larger, spaced, dyslexia-friendly type","Mas malaki, may puwang, dyslexia-friendly na font",ok
+settings.remind,Daily reminder,Pang-araw-araw na paalala,ok
+settings.remindSmall,One gentle nudge a day to practice,Isang magiliw na paalala kada araw para mag-ensayo,ok
+settings.remindTime,Reminder time,Oras ng paalala,ok
+settings.remindTimeSmall,When to send the daily nudge,Kailan ipapadala ang pang-araw-araw na paalala,ok
+settings.slow,Slower voice,Mas mabagal na boses,ok
+settings.slowSmall,Speak each word more slowly,Bigkasin ang bawat salita nang mas mabagal,ok
+settings.title,Settings,Mga setting,ok
+settings.volume,Volume boost,Palakas ng tunog,ok
+settings.volumeSmall,Louder than 100% for quiet speakers,Mas malakas sa 100% para sa mahihinang speaker,ok
+share.button,Share your chain,Ibahagi ang iyong tanikala,ok
+share.chain,🔥 I just spelled a {n}-word chain on Spell! My best is {best}. hear it · spell it · keep the chain →,🔥 Nakabaybay ako ng tanikala na {n} salita sa Spell! Ang record ko ay {best}. pakinggan · baybayin · panatilihin ang tanikala →,ok
+share.chainBest,I'm practicing spelling on Spell — my best chain is {best} words. hear it · spell it · keep the chain →,Nagsasanay ako mag-ispeling sa Spell — ang pinakamahaba kong tanikala ay {best} salita. pakinggan · baybayin · panatilihin ang tanikala →,ok
+share.daily,🗓 SpellGame Daily: {c}/{t}. hear it · spell it →,🗓 SpellGame Araw-araw: {c}/{t}. pakinggan · baybayin →,ok
+share.dailyStreak,🗓 SpellGame Daily: {c}/{t} — 🔥 {n}-day streak! hear it · spell it →,🗓 SpellGame Araw-araw: {c}/{t} — 🔥 {n}-araw na streak! pakinggan · baybayin →,ok
+share.tagline,"Spell — hear it, spell it. A spelling game you play with your ears.","Spell — pakinggan, baybayin. Larong ispeling na nilalaro mo gamit ang tainga.",ok
+speech.noVoice,This browser can't speak — try Chrome or Edge.,Hindi makapagsalita ang browser na ito — subukan ang Chrome o Edge.,ok
+toast.loginToPost,Log in to post your chain to The Climb.,Mag-log in para i-post ang tanikala sa The Climb.,ok
+toast.nameReported,Thanks — that name was reported.,Salamat — naiulat ang pangalang iyon.,ok
+toast.newRecord,New record! Posted to The Climb — #{rank} on {difficulty}.,Bagong rekord! Nai-post sa The Climb — #{rank} sa {difficulty}.,ok
+top.headToHead,Spell Off,Labanan sa Ispeling,ok
+top.misses,Misses,Mga mali,ok
+top.missesExit,Exit misses,Lumabas sa mali,ok
+top.myWords,＋ My words,＋ Aking salita,ok
+top.signIn,👤 Sign in,👤 Mag-sign in,ok
+top.theClimb,🏔 The Climb,🏔 The Climb,same_as_english
+voice.audioFail,Couldn't reach the audio server for this word — spelling still counts.,Hindi maabot ang audio server para sa salitang ito — bilang pa rin ang ispeling.,ok
+vs.blurb,"Two players, one device. Take turns spelling — a miss ends your turn. The longest chain wins.","Dalawang manlalaro, isang device. Magpalitan sa pag-ispeling — ang mali ay nagtatapos ng iyong pagliko. Nananalo ang pinakamahabang tanikala.",ok
+vs.cancel,Cancel,Kanselahin,ok
+vs.close,Back to solo,Balik sa solo,ok
+vs.keepPlaying,Keep playing,Magpatuloy,ok
+vs.leave,Leave match,Umalis,ok
+vs.leaveBlurb,The Spell Off match will end and you'll return to the solo game. The current chains won't be saved.,Matatapos ang harapan at babalik ka sa solong laro. Hindi mase-save ang kasalukuyang tanikala.,ok
+vs.leaveTitle,Leave the match?,Aalis sa laro?,ok
+vs.rematch,Rematch,Muling laro,ok
+vs.start,Start match,Simulan,ok
+vs.title,Spell Off,Labanan sa Ispeling,ok

@@ -1,0 +1,33 @@
+# Caddy config for the Filipino AUDIT host (audit.spellgame.net), served on
+# :8081 via the Cloudflare Tunnel (see DEPLOY-AUDIT-BUILD.md). This is NOT the
+# production Caddyfile — it points /api/* at the sandbox backend and adds a
+# noindex header. Never use this for spellgame.net.
+:8081 {
+	header {
+		Strict-Transport-Security "max-age=31536000; includeSubDomains"
+		X-Content-Type-Options "nosniff"
+		X-Frame-Options "SAMEORIGIN"
+		Referrer-Policy "strict-origin-when-cross-origin"
+		# Keep the audit host out of search indexes (belt-and-suspenders with
+		# Cloudflare Access, which already blocks unauthenticated crawlers).
+		X-Robots-Tag "noindex, nofollow"
+	}
+
+	# API goes to the SANDBOX backend (separate Climb DB; shared TTS cache).
+	handle /api/* {
+		reverse_proxy backend-audit:8000
+	}
+
+	handle /robots.txt {
+		root * /srv
+		file_server
+	}
+
+	handle {
+		root * /srv
+		file_server
+		header /pkg/*.wasm Content-Type application/wasm
+		header /sw.js Cache-Control "no-cache"
+	}
+	encode gzip
+}

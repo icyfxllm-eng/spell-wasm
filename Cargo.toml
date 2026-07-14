@@ -15,6 +15,13 @@ crate-type = ["cdylib", "rlib"]
 # E2E suite. NEVER enabled in production builds — CI greps the shipped bundle to
 # prove its absence (scripts/seam-absence-check.mjs).
 testseam = []
+# Review-gated audit build: force-activates the languages listed in the
+# compile-time AUDIT_LANGS env (fed by scripts/build-web.sh) via the single
+# consts::is_active_lang gate, and enables the Feature-7 preselect/pin/badge/
+# banner. NEVER enabled in production/TestFlight — off by default, so every
+# `#[cfg(feature = "audit")]` block is compiled out and the shipped bundle is
+# byte-identical to a build from before this feature (same pattern as testseam).
+audit = []
 
 [dependencies]
 wasm-bindgen = "0.2"

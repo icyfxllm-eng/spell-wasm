@@ -84,8 +84,43 @@ pub fn lang_status(lang: &str) -> LangStatus {
 
 /// True only for languages playable right now (passed audit). Gating for study
 /// languages; `uiLang` / interface localization is unaffected.
+///
+/// Production build: exactly the registry `Active` check — byte-for-byte the
+/// original, so the shipped bundle carries no trace of the audit path.
+#[cfg(not(feature = "audit"))]
 pub fn is_active_lang(lang: &str) -> bool {
     lang_status(lang) == Active
+}
+
+/// Audit-review build (`--features audit`, list from the compile-time
+/// `AUDIT_LANGS` env): the listed languages are force-activated here, IN ADDITION
+/// to the registry's `Active` set, so a reviewer can play a not-yet-launched
+/// language. This whole function (and `is_audit_lang`/`audit_langs`) is compiled
+/// ONLY in the audit build — there is no per-language `if lang == "fil"` anywhere;
+/// the audit set feeds this one gate.
+#[cfg(feature = "audit")]
+pub fn is_active_lang(lang: &str) -> bool {
+    lang_status(lang) == Active || is_audit_lang(lang)
+}
+
+/// Audit-review build only: the extra languages `AUDIT_LANGS` marks Active.
+#[cfg(feature = "audit")]
+#[inline]
+pub fn is_audit_lang(lang: &str) -> bool {
+    audit_langs().iter().any(|c| *c == lang)
+}
+
+/// The build-time audit language list (`AUDIT_LANGS`, comma-separated), audit
+/// builds only. Read at compile time via `option_env!` — unset yields an empty
+/// list (no-op). Absent from production — nothing references it there.
+#[cfg(feature = "audit")]
+pub fn audit_langs() -> Vec<&'static str> {
+    option_env!("AUDIT_LANGS")
+        .unwrap_or("")
+        .split(',')
+        .map(str::trim)
+        .filter(|s| !s.is_empty())
+        .collect()
 }
 
 /// Whether `lang` is a built-in, backend-voiced language (not My Words/Misses).

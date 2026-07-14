@@ -1,6 +1,8 @@
 mod achievements;
 mod agegate;
 mod api;
+#[cfg(feature = "audit")]
+mod audit;
 mod audio_boost;
 mod board;
 mod climb;
@@ -78,6 +80,17 @@ pub fn start() -> Result<(), JsValue> {
         Some(l) if consts::is_builtin_lang(&l) => l,
         _ => i18n::device_lang().unwrap_or_else(|| EN.to_string()),
     };
+    // Audit-review build (Feature 7): on first launch (no saved choice yet) land
+    // the reviewer on the audited language so it is unmissable. Once they pick
+    // anything it persists via `last_lang` and this no longer fires, so a later
+    // switch to English to compare is respected. Reads the same build-time audit
+    // set as the gate — no `lang == "fil"` here.
+    #[cfg(feature = "audit")]
+    if state.last_lang.is_none() {
+        if let Some(first) = consts::audit_langs().first() {
+            state.lang = (*first).to_string();
+        }
+    }
     state.cur_lang = state.lang.clone();
 
     // Age gate: a stored "kid" verdict (under the cutoff) locks Kid Mode on
@@ -142,6 +155,12 @@ pub fn start() -> Result<(), JsValue> {
     // stripped from production (proven by scripts/seam-absence-check.mjs).
     #[cfg(feature = "testseam")]
     testseam::install(&app);
+
+    // Audit-review build only (Feature 7): one-time first-launch banner telling
+    // the reviewer the audited language is preselected + how to switch. Absent
+    // from production (module isn't compiled).
+    #[cfg(feature = "audit")]
+    audit::show_first_launch_banner();
 
     // First launch (or existing user pre-dating the age gate): ask DOB before
     // anything else. The scrim sits above the game and must be answered.

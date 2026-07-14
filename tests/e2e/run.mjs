@@ -6,7 +6,8 @@
 //
 //   bash scripts/build-web-test.sh   # produces dist-test/ with __spelltest
 //   node tests/e2e/run.mjs
-import { writeFileSync } from 'node:fs';
+import { writeFileSync, existsSync } from 'node:fs';
+import { execSync } from 'node:child_process';
 import { join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { startServer, launch, Suite } from './harness.mjs';
@@ -16,6 +17,7 @@ import * as gameplay from './specs/gameplay.mjs';
 import * as modes from './specs/modes.mjs';
 import * as menu from './specs/menu.mjs';
 import * as coming from './specs/coming.mjs';
+import * as audit from './specs/audit.mjs';
 
 const SPECS = [
   ['keyboard', keyboard],
@@ -28,6 +30,25 @@ const SPECS = [
 const ROOT = join(fileURLToPath(import.meta.url), '..', '..', '..');
 
 const { server, base } = await startServer();
+// The audit spec needs BOTH the production-parity bundle (dist-test) and the
+// audit bundle (dist-test-audit, the seam + `--features audit` twin). Build the
+// latter on demand if it's missing, so the canonical gate
+// `bash scripts/build-web-test.sh && node tests/e2e/run.mjs` (which only builds
+// dist-test) still exercises the audit spec.
+const auditDist = join(ROOT, 'dist-test-audit');
+if (!existsSync(auditDist)) {
+  process.stdout.write('\n▶ building dist-test-audit (AUDIT_LANGS=fil) for the audit spec…\n');
+  try {
+    execSync('AUDIT_LANGS=fil bash scripts/build-web-test.sh', { cwd: ROOT, stdio: 'inherit' });
+  } catch (e) {
+    process.stderr.write(`  ⚠ could not build dist-test-audit: ${e.message}\n`);
+  }
+}
+let auditServer = null;
+let auditBase = null;
+if (existsSync(auditDist)) {
+  ({ server: auditServer, base: auditBase } = await startServer(8130, 'dist-test-audit'));
+}
 const browser = await launch();
 const suites = [];
 try {
@@ -38,9 +59,17 @@ try {
     for (const r of suite.results) process.stdout.write(`  ${r.ok ? '✓' : '✗'} ${r.title}${r.ok ? '' : ' — ' + r.err}\n`);
     suites.push(suite);
   }
+  {
+    const suite = new Suite('audit');
+    process.stdout.write(`\n▶ audit\n`);
+    await audit.run(browser, base, suite, auditBase);
+    for (const r of suite.results) process.stdout.write(`  ${r.ok ? '✓' : '✗'} ${r.title}${r.ok ? '' : ' — ' + r.err}\n`);
+    suites.push(suite);
+  }
 } finally {
   await browser.close();
   server.close();
+  if (auditServer) auditServer.close();
 }
 
 const total = suites.reduce((n, s) => n + s.results.length, 0);
