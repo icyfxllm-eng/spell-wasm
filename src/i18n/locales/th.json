@@ -184,5 +184,7 @@
   "coming.notice": "{lang} กำลังได้รับการขัดเกลาโดยเจ้าของภาษา — จะกลับมาเร็ว ๆ นี้",
   "coming.notify": "แจ้งฉันเมื่อพร้อม",
   "coming.confirmed": "คุณอยู่ในรายชื่อแล้ว ✓",
-  "coming.badge": "เร็ว ๆ นี้"
+  "coming.badge": "เร็ว ๆ นี้",
+  "story.heading": "รู้หรือไม่?",
+  "story.dismiss": "ปิด"
 }

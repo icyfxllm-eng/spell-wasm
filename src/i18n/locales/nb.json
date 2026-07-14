@@ -184,5 +184,7 @@
   "coming.notice": "{lang} finpusses av morsmålsbrukere — snart tilbake.",
   "coming.notify": "Gi meg beskjed når det er klart",
   "coming.confirmed": "Du er på listen ✓",
-  "coming.badge": "Kommer snart"
+  "coming.badge": "Kommer snart",
+  "story.heading": "Visste du?",
+  "story.dismiss": "Lukk"
 }

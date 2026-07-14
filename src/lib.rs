@@ -10,6 +10,7 @@ mod deck;
 mod dom;
 pub mod editor;
 mod enrich;
+mod flags;
 mod game;
 mod haptics;
 mod hangul;
@@ -38,6 +39,7 @@ mod testseam;
 mod versus;
 mod viet;
 mod word_data;
+mod word_stories;
 mod words;
 mod wordstats;
 

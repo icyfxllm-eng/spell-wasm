@@ -11,6 +11,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parent))
 
 from schema import Entry, merge, validate
 from normalize import normalize, charset_ok
+from parsers.kaikki import compress_etymology, ETY_MAX_LEN
 import ingest
 
 FAILS = []
@@ -66,6 +67,30 @@ e1, _ = ingest.ingest("ja", [("plainlist", None)])
 e2, _ = ingest.ingest("ja", [("plainlist", None)])
 check([x.to_json() for x in e1] == [x.to_json() for x in e2], "deterministic ingest")
 check(len(e1) > 100, "ja migration non-empty")
+
+# --- F5 word stories: etymology compression (mirrors src/word_stories.rs) ---
+check(compress_etymology(None) is None, "ety None -> None")
+check(compress_etymology("") is None, "ety empty -> None")
+# One first-hop sentence: cut at the em dash / semicolon.
+check(compress_etymology("From Dutch 'jacht' (a hunt) — a fast ship; kept Dutch.")
+      == "From Dutch 'jacht' (a hunt)", "ety first hop only")
+# Chains: keep only up to the second 'from'.
+_chain = "From Latin iudicare from Proto-Italic from Proto-Indo-European deik"
+check(compress_etymology(_chain) == "From Latin iudicare", "ety drops chains")
+check(compress_etymology(_chain).lower().count("from") == 1, "ety one hop")
+# 120-char cap on a word boundary + ellipsis.
+_long = "From Latin " + ("verylongrootword " * 20)
+_out = compress_etymology(_long)
+check(len(_out) <= ETY_MAX_LEN, "ety <=120 chars")
+check(_out.endswith("…"), "ety ellipsis on truncation")
+# NFC: decomposed é folds to precomposed.
+check("\u00e9" in compress_etymology("From French e\u0301tude"), "ety NFC folds e-acute")
+check("\u0301" not in compress_etymology("From French e\u0301tude"), "ety no combining mark")
+# Etymology rides through the schema (merge prefers first non-None).
+_a = Entry(word="w", lang="en", etymology=None)
+_b = Entry(word="w", lang="en", etymology="From Latin x")
+check(merge(_a, _b).etymology == "From Latin x", "merge carries etymology")
+check("etymology" in _b.to_json(), "etymology serialized")
 
 # --- validate rejects bad charset/POS ---
 check(validate(Entry(word="café", lang="en"), lambda w: charset_ok(w, "en")), "validate flags é")

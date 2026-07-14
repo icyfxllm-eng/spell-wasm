@@ -32,6 +32,7 @@ class Entry:
     pron: str | None = None         # collision key (romanization/reading)
     grade: str | None = None        # HSK-1 / JLPT-N5 / TOPIK-1 / … ; None if none
     gloss: str | None = None        # short English gloss (internal)
+    etymology: str | None = None    # one first-hop origin story (F5 word stories)
     kid_ok: bool | None = None      # tri-state: reviewed-in / -out / unreviewed
     sources: list[str] = field(default_factory=list)
     flags: list[str] = field(default_factory=list)  # homophone|sandhi|loanword|function_word
@@ -79,6 +80,7 @@ def merge(a: Entry, b: Entry) -> Entry:
         pron=a.pron or b.pron,
         grade=a.grade or b.grade,
         gloss=a.gloss or b.gloss,
+        etymology=a.etymology or b.etymology,
         kid_ok=a.kid_ok if a.kid_ok is not None else b.kid_ok,
         sources=a.sources + b.sources,
         flags=a.flags + b.flags,

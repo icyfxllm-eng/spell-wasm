@@ -184,5 +184,7 @@
   "coming.notice": "{lang} is being polished by native speakers — coming back soon.",
   "coming.notify": "Notify me when it's ready",
   "coming.confirmed": "You're on the list ✓",
-  "coming.badge": "Coming soon"
+  "coming.badge": "Coming soon",
+  "story.heading": "Did you know?",
+  "story.dismiss": "Dismiss"
 }

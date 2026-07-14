@@ -184,5 +184,7 @@
   "coming.notice": "{lang} đang được người bản ngữ hoàn thiện — sắp trở lại.",
   "coming.notify": "Báo cho tôi khi sẵn sàng",
   "coming.confirmed": "Bạn đã trong danh sách ✓",
-  "coming.badge": "Sắp có"
+  "coming.badge": "Sắp có",
+  "story.heading": "Bạn có biết?",
+  "story.dismiss": "Đóng"
 }

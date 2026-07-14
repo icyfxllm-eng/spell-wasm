@@ -103,6 +103,7 @@ def coverage(entries: list[Entry]) -> dict:
         "with_pos": sum(1 for e in entries if e.pos) * 100 // n,
         "with_pron": sum(1 for e in entries if e.pron) * 100 // n,
         "with_grade": sum(1 for e in entries if e.grade) * 100 // n,
+        "with_etymology": sum(1 for e in entries if e.etymology) * 100 // n,
     }
 
 
@@ -132,6 +133,7 @@ def write_outputs(lang: str, entries: list[Entry], stats, sources):
         f"- pos: {cov['with_pos']}%",
         f"- pron: {cov['with_pron']}%",
         f"- grade: {cov['with_grade']}%",
+        f"- etymology: {cov['with_etymology']}%",
     ]
     (rep_dir / f"{lang}.md").write_text("\n".join(lines) + "\n", encoding="utf-8")
     return out, cov

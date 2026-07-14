@@ -184,5 +184,7 @@
   "coming.notice": "Pinipino ng mga katutubong nagsasalita ang {lang} — babalik na malapit na.",
   "coming.notify": "Ipaalam kapag handa na",
   "coming.confirmed": "Nasa listahan ka na ✓",
-  "coming.badge": "Malapit na"
+  "coming.badge": "Malapit na",
+  "story.heading": "Alam mo ba?",
+  "story.dismiss": "Isara"
 }

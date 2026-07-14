@@ -184,5 +184,7 @@
   "coming.notice": "{lang} è in rifinitura da madrelingua — torna presto.",
   "coming.notify": "Avvisami quando è pronto",
   "coming.confirmed": "Sei in lista ✓",
-  "coming.badge": "In arrivo"
+  "coming.badge": "In arrivo",
+  "story.heading": "Lo sapevi?",
+  "story.dismiss": "Chiudi"
 }

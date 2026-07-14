@@ -184,5 +184,7 @@
   "coming.notice": "{lang} ana dili konuşanlar tarafından iyileştiriliyor — yakında geri gelecek.",
   "coming.notify": "Hazır olduğunda bana haber ver",
   "coming.confirmed": "Listedesin ✓",
-  "coming.badge": "Yakında"
+  "coming.badge": "Yakında",
+  "story.heading": "Biliyor muydun?",
+  "story.dismiss": "Kapat"
 }

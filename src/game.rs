@@ -502,6 +502,7 @@ pub fn clear_meaning() {
     MEANING_SEQ.with(|c| *c.borrow_mut() += 1);
     dom::set_html("meaning", "");
     dom::remove_class("meaning", "show");
+    crate::word_stories::clear();
 }
 
 /// Post-answer reveal only (the round is already over, so there's nothing
@@ -544,7 +545,13 @@ pub fn show_meaning(app: &App, word: String, lang_key: String) {
     let insight_html = {
         let s = app.borrow();
         let key = if s.cur_lang == crate::consts::ZH { s.spoken.clone() } else { word.clone() };
-        crate::enrich::insight(&lang_key, &key).map(|ins| {
+        crate::enrich::insight(&lang_key, &key).and_then(|ins| {
+            // Word Stories (F5): when the flag is on, etymology insights render in
+            // their own "did you know?" card, so drop them from the meaning card's
+            // second line to avoid a double display. Flag off -> unchanged.
+            if crate::flags::word_stories() && ins.kind == "etymology" {
+                return None;
+            }
             // Beloved words (no_equivalent / usage_gem gems) get a subtle sparkle,
             // at most once per session.
             let sparkle = if ins.is_beloved() && !BELOVED_SHOWN.with(|c| c.replace(true)) {
@@ -552,9 +559,13 @@ pub fn show_meaning(app: &App, word: String, lang_key: String) {
             } else {
                 ""
             };
-            format!("<span class=\"m-insight\">{}{}</span>", dom::escape_html(&ins.text), sparkle)
+            Some(format!("<span class=\"m-insight\">{}{}</span>", dom::escape_html(&ins.text), sparkle))
         })
     };
+    // Word Stories (F5): a small dismissible etymology card on the result
+    // surface, shown only when a story exists and the flag is on (Kid Mode too).
+    // A no-op while the flag is off, so it never blocks the next word.
+    crate::word_stories::render(&lang_key, &word);
     if let Some(ref ins) = insight_html {
         dom::set_html("meaning", &format!("<span class=\"m-word\">{}</span>{}", dom::escape_html(&word), ins));
         dom::add_class("meaning", "show");
