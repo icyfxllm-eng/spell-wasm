@@ -936,6 +936,26 @@
        false off iOS, so this is a no-op stub on the web. Classic script so the
        interface exists before the WASM module runs. -->
   <script src="./native-language-kit.js"></script>
+  <!-- F4 deep-link shim. The native AppDelegate hands an opened spellgame:// URL
+       to the webview as window.SpellHandleUrl("spellgame://…"). The Rust core
+       installs the real router as window.SpellRouter.open; until it does (cold
+       launch), a URL is buffered in __spellPendingUrl and drained by the router
+       when it comes up. Classic script so the shim exists before the WASM runs. -->
+  <script>
+    window.__spellPendingUrl = window.__spellPendingUrl || null;
+    window.SpellHandleUrl = function (url) {
+      try {
+        if (window.SpellRouter && typeof window.SpellRouter.open === 'function') {
+          window.SpellRouter.open(String(url));
+        } else {
+          // Router not up yet (cold launch) — buffer for the core to drain.
+          window.__spellPendingUrl = String(url);
+        }
+      } catch (e) {
+        console.error('[deeplink] failed to route', url, e);
+      }
+    };
+  </script>
   <script type="module">
     import init from './pkg/spell_wasm.js?v=DEV';
     // The compiled app (~1.4MB of WASM) has to finish downloading and

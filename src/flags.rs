@@ -50,6 +50,19 @@ pub fn widgets() -> bool {
     resolve(stored("widgets").as_deref(), true)
 }
 
+/// F4 — Siri / App Intents. Default OFF per Decision D1.
+///
+/// HONEST SEMANTICS (see the PR): this flag does NOT gate the deep-link router
+/// (`crate::deeplink`), which is always live and harmless. Nor can it stop iOS
+/// from registering the app's `AppShortcuts` — those are compiled into the app
+/// binary and iOS indexes them at install time regardless of any runtime flag.
+/// So OFF means the feature is "dark": we don't ADVERTISE the intents (no in-app
+/// promotion / tip surfacing them), even though a user who already knows the
+/// phrase could still invoke them. Flip ON when we're ready to promote Siri entry.
+pub fn app_intents() -> bool {
+    resolve(stored("app_intents").as_deref(), false)
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -77,6 +90,17 @@ mod tests {
         assert!(!widgets());
         set_test_override(Some("on"));
         assert!(widgets());
+        set_test_override(None);
+    }
+
+    #[test]
+    fn app_intents_default_off_and_overridable() {
+        set_test_override(None);
+        assert!(!app_intents(), "D1: app_intents defaults OFF (dark)");
+        set_test_override(Some("on"));
+        assert!(app_intents());
+        set_test_override(Some("off"));
+        assert!(!app_intents());
         set_test_override(None);
     }
 }

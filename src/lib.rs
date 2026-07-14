@@ -7,6 +7,7 @@ mod climb;
 mod consts;
 mod daily;
 mod deck;
+mod deeplink;
 mod dom;
 pub mod editor;
 mod enrich;
@@ -129,6 +130,12 @@ pub fn start() -> Result<(), JsValue> {
     }
 
     wire(&app);
+
+    // F4 — install the deep-link router (`window.SpellRouter.open`) and drain any
+    // cold-launch `spellgame://` URL the page shell buffered. ONE entry path for
+    // F3's widgets and F4's App Intents; inert off iOS. Always live (NOT gated by
+    // flags::app_intents) — routing a tap is harmless and F3's widgets ship it.
+    deeplink::install(&app);
 
     // Language availability (registry): retry any queued Notify Me taps, and if
     // the current study language isn't active yet, show the coming-soon panel —

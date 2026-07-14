@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		14BB9C594166DD929999E0A9 /* WidgetSupport.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5603FB9B46B29D22CB89A620 /* WidgetSupport.swift */; };
+		2B3B2D49520018D2610654C3 /* SpellURLRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 372B6B5657844FE1426EDAC4 /* SpellURLRouter.swift */; };
 		2FAD9763203C412B000D30F8 /* config.xml in Resources */ = {isa = PBXBuildFile; fileRef = 2FAD9762203C412B000D30F8 /* config.xml */; };
 		414409BD1838B357D31D9C1A /* NativeLanguageKitPlugin.swift in Sources */ = {isa = PBXBuildFile; fileRef = F60E6967C62728C402EE9227 /* NativeLanguageKitPlugin.swift */; };
 		4D22ABE92AF431CB00220026 /* CapApp-SPM in Frameworks */ = {isa = PBXBuildFile; productRef = 4D22ABE82AF431CB00220026 /* CapApp-SPM */; };
@@ -20,6 +21,7 @@
 		5A350C237062C258BE4B2381 /* SpellWidgets.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 8C6AEECBEC0F6155B79E9A7E /* SpellWidgets.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		6025087CB3E427B56EC90B8A /* WidgetSharedState.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF3A29B94695AA40740980EF /* WidgetSharedState.swift */; };
 		634DB2129291F6AB52AAF140 /* WidgetStrings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 842058BAF473350E1FFA99D9 /* WidgetStrings.swift */; };
+		7467800C27E4D0CCA330F952 /* SpellAppIntents.swift in Sources */ = {isa = PBXBuildFile; fileRef = 414A172E1D972676D8312430 /* SpellAppIntents.swift */; };
 		A4C979713BFA059356A2CD05 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7C78B316D7064312764B060D /* Foundation.framework */; };
 		A63239C3A82581B344397E28 /* StreakWidget.swift in Sources */ = {isa = PBXBuildFile; fileRef = E580981497D62DC4FF7452C5 /* StreakWidget.swift */; };
 		AEA6546463FE12AF0AF3BF2B /* SpellWidgetBundle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2FA59622B562CBA8D2A8D007 /* SpellWidgetBundle.swift */; };
@@ -60,7 +62,9 @@
 		31F88C7024A3977CAFE320BD /* SwiftUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SwiftUI.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS26.0.sdk/System/Library/Frameworks/SwiftUI.framework; sourceTree = DEVELOPER_DIR; };
 		3271FB7320892F272EE6A3D3 /* Info.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		343B28B9906AF428A08100C4 /* SpellWidgets.entitlements */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.entitlements; path = SpellWidgets.entitlements; sourceTree = "<group>"; };
+		372B6B5657844FE1426EDAC4 /* SpellURLRouter.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = SpellURLRouter.swift; sourceTree = "<group>"; };
 		3D586DD5947AFE287057586D /* WidgetKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WidgetKit.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS26.0.sdk/System/Library/Frameworks/WidgetKit.framework; sourceTree = DEVELOPER_DIR; };
+		414A172E1D972676D8312430 /* SpellAppIntents.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = SpellAppIntents.swift; sourceTree = "<group>"; };
 		50379B222058CBB4000EE86E /* capacitor.config.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = capacitor.config.json; sourceTree = "<group>"; };
 		504EC3041FED79650016851F /* App.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = App.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		504EC3071FED79650016851F /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -170,6 +174,8 @@
 				50B271D01FEDC1A000F3C39B /* public */,
 				F60E6967C62728C402EE9227 /* NativeLanguageKitPlugin.swift */,
 				60A210C2A793613F6E121121 /* App.entitlements */,
+				372B6B5657844FE1426EDAC4 /* SpellURLRouter.swift */,
+				414A172E1D972676D8312430 /* SpellAppIntents.swift */,
 			);
 			path = App;
 			sourceTree = "<group>";
@@ -297,6 +303,8 @@
 				504EC3081FED79650016851F /* AppDelegate.swift in Sources */,
 				414409BD1838B357D31D9C1A /* NativeLanguageKitPlugin.swift in Sources */,
 				F1F5D55C5432B7013C76012A /* WidgetSharedState.swift in Sources */,
+				2B3B2D49520018D2610654C3 /* SpellURLRouter.swift in Sources */,
+				7467800C27E4D0CCA330F952 /* SpellAppIntents.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
