@@ -10,6 +10,7 @@ mod deck;
 mod dom;
 pub mod editor;
 mod enrich;
+mod flags;
 mod game;
 mod haptics;
 mod hangul;
@@ -34,6 +35,7 @@ mod share;
 mod speech_out;
 mod stats;
 mod storage;
+mod syllable;
 #[cfg(feature = "testseam")]
 mod testseam;
 mod versus;

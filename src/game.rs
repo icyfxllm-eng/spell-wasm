@@ -7,7 +7,7 @@ use wasm_bindgen_futures::spawn_local;
 use crate::consts::{is_builtin_lang, tier_time, CORRECT_DELAY_MS, EN, ES, LEVEL_OPTS, MAX_TRIES, MINE, PRAISE, REVIEW};
 use crate::model::AppState;
 use crate::versus::Side;
-use crate::{achievements, api, board, dom, misses, selection, speech_out, stats, wordstats, words};
+use crate::{achievements, api, board, dom, misses, native_lang, selection, speech_out, stats, wordstats, words};
 use crate::App;
 
 const RING_C: f64 = 2.0 * std::f64::consts::PI * 108.0;
@@ -1047,13 +1047,139 @@ fn finalize_incorrect(app: &App, glyph: &str, prefix: &str, feedback_class: &str
     } else {
         word.clone()
     };
-    dom::set_html("feedback", &format!("{}<span class=\"reveal\">{}</span>", prefix, dom::escape_html(&reveal)));
-    dom::el("feedback").set_class_name(feedback_class);
+    // F7 "Syllable replay on misses" (flag-gated, es only): reveal the spelling
+    // split into syllables with a "hear it slowly" control that replays the word
+    // syllable-by-syllable, highlighting each in turn. Flag OFF (default) ⇒ the
+    // classic single-span reveal below, i.e. zero behavioral difference.
+    let sylls: Vec<String> = if crate::flags::syllable_replay() && cur_lang == ES {
+        crate::syllable::syllabify(&word)
+    } else {
+        Vec::new()
+    };
+    if sylls.len() >= 2 {
+        let mut spans = String::new();
+        for (i, s) in sylls.iter().enumerate() {
+            spans.push_str(&format!("<span class=\"syl\" data-syl=\"{}\">{}</span>", i, dom::escape_html(s)));
+        }
+        let label = dom::escape_html(&crate::i18n::t("btn.hearSlowly"));
+        dom::set_html(
+            "feedback",
+            &format!(
+                "{}<span class=\"reveal syllabified\">{}</span> <button type=\"button\" class=\"syl-slow\" id=\"sylSlowBtn\" aria-label=\"{}\">\u{1f50a} {}</button>",
+                prefix, spans, label, label
+            ),
+        );
+        dom::el("feedback").set_class_name(feedback_class);
+        wire_syllable_replay(app, sylls);
+    } else {
+        dom::set_html("feedback", &format!("{}<span class=\"reveal\">{}</span>", prefix, dom::escape_html(&reveal)));
+        dom::el("feedback").set_class_name(feedback_class);
+    }
     show_meaning(app, word, cur_lang);
     if versus_on {
         versus_end_turn(app);
     } else {
         end_chain(app);
+    }
+}
+
+// ---------- F7: syllable replay on the reveal surface ----------
+
+/// Wire the "hear it slowly" button injected into the reveal. Clicking replays
+/// the word syllable-by-syllable, highlighting each `.syl` span in turn.
+fn wire_syllable_replay(app: &App, sylls: Vec<String>) {
+    let Ok(btn) = dom::el("sylSlowBtn").dyn_into::<web_sys::HtmlElement>() else {
+        return;
+    };
+    let a = app.clone();
+    let cb = Closure::<dyn FnMut()>::new(move || play_syllables(&a, &sylls));
+    let _ = btn.add_event_listener_with_callback("click", cb.as_ref().unchecked_ref());
+    cb.forget();
+}
+
+/// Replay the reveal word syllable-by-syllable. Native path: AVSpeech speaks the
+/// tokens in one utterance and its boundary callbacks drive the highlight (exact
+/// timing). Web path: the browser voice speaks the word slowly and the SAME
+/// highlight is driven by per-syllable time estimates — identical on screen.
+/// Capability is discovered via `native_lang::available()`; no platform ifs.
+fn play_syllables(app: &App, sylls: &[String]) {
+    clear_syllable_highlight();
+    let rate = app.borrow().rate as f64;
+    if native_lang::available() {
+        let owned: Vec<String> = sylls.to_vec();
+        spawn_local(async move {
+            // The native path needs an installed es voice; if none, use the web
+            // timer path so the affordance still works.
+            let Some(voice) = native_lang::session_voice(ES).await else {
+                web_syllable_fallback(&owned, rate);
+                return;
+            };
+            let on_index = Closure::<dyn FnMut(wasm_bindgen::JsValue)>::new(|v: wasm_bindgen::JsValue| {
+                if let Some(idx) = v.as_f64() {
+                    highlight_syllable(idx as usize);
+                }
+            });
+            let f: &js_sys::Function = on_index.as_ref().unchecked_ref();
+            match native_lang::speak_syllables(&owned, &voice, rate.min(0.7), f) {
+                Some(promise) => {
+                    let _ = wasm_bindgen_futures::JsFuture::from(promise).await;
+                    clear_syllable_highlight();
+                }
+                None => web_syllable_fallback(&owned, rate),
+            }
+            // Keep the boundary callback alive for the whole utterance, then let
+            // it leak (bounded: one per manual replay tap), matching the app's
+            // other forget()-ed one-shot DOM closures.
+            on_index.forget();
+        });
+    } else {
+        web_syllable_fallback(sylls, rate);
+    }
+}
+
+/// No native boundary callbacks (web/PWA): speak the whole word slowly through
+/// the browser voice (syllables joined by spaces so it separates them audibly)
+/// and drive the reveal highlight from char-count-weighted time estimates.
+fn web_syllable_fallback(sylls: &[String], _rate: f64) {
+    speech_out::speak(&sylls.join(" "), 0.55, "es-ES");
+    let Some(win) = web_sys::window() else { return };
+    let mut acc = 0.0f64;
+    for (i, s) in sylls.iter().enumerate() {
+        let idx = i;
+        let cb = Closure::<dyn FnMut()>::new(move || highlight_syllable(idx));
+        let _ = win.set_timeout_with_callback_and_timeout_and_arguments_0(cb.as_ref().unchecked_ref(), acc as i32);
+        cb.forget();
+        // Slow-rate estimate: a base per syllable plus per-character time.
+        acc += 420.0 + 150.0 * s.chars().count() as f64;
+    }
+    let done = Closure::<dyn FnMut()>::new(clear_syllable_highlight);
+    let _ = win.set_timeout_with_callback_and_timeout_and_arguments_0(done.as_ref().unchecked_ref(), acc as i32);
+    done.forget();
+}
+
+/// Highlight syllable `index` in the revealed spelling, clearing the others.
+fn highlight_syllable(index: usize) {
+    let Some(doc) = web_sys::window().and_then(|w| w.document()) else { return };
+    let Ok(nodes) = doc.query_selector_all(".reveal.syllabified .syl") else { return };
+    for k in 0..nodes.length() {
+        if let Some(el) = nodes.item(k).and_then(|n| n.dyn_into::<web_sys::Element>().ok()) {
+            if k as usize == index {
+                let _ = el.class_list().add_1("syl-on");
+            } else {
+                let _ = el.class_list().remove_1("syl-on");
+            }
+        }
+    }
+}
+
+/// Remove the current-syllable highlight from every span.
+fn clear_syllable_highlight() {
+    let Some(doc) = web_sys::window().and_then(|w| w.document()) else { return };
+    let Ok(nodes) = doc.query_selector_all(".reveal.syllabified .syl.syl-on") else { return };
+    for k in 0..nodes.length() {
+        if let Some(el) = nodes.item(k).and_then(|n| n.dyn_into::<web_sys::Element>().ok()) {
+            let _ = el.class_list().remove_1("syl-on");
+        }
     }
 }
 

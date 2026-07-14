@@ -14,12 +14,14 @@ public class NativeLanguageKitPlugin: CAPPlugin, CAPBridgedPlugin {
     public let pluginMethods: [CAPPluginMethod] = [
         CAPPluginMethod(name: "capabilities", returnType: CAPPluginReturnPromise),
         CAPPluginMethod(name: "speak", returnType: CAPPluginReturnPromise),
+        CAPPluginMethod(name: "speakSyllables", returnType: CAPPluginReturnPromise),
         CAPPluginMethod(name: "stop", returnType: CAPPluginReturnPromise),
         CAPPluginMethod(name: "checkWord", returnType: CAPPluginReturnPromise),
         CAPPluginMethod(name: "detectLanguage", returnType: CAPPluginReturnPromise),
     ]
 
     private let speaker = Speaker()
+    private let syllableSpeaker = SyllableSpeaker()
 
     @objc func capabilities(_ call: CAPPluginCall) {
         let report = Capabilities.report(lang: call.getString("lang") ?? "")
@@ -50,9 +52,41 @@ public class NativeLanguageKitPlugin: CAPPlugin, CAPBridgedPlugin {
         }
     }
 
+    @objc func speakSyllables(_ call: CAPPluginCall) {
+        // voiceId is REQUIRED — the plugin never picks a voice (Decision D3).
+        guard let syllables = call.getArray("syllables", String.self), !syllables.isEmpty,
+              let voiceId = call.getString("voiceId") else {
+            call.reject("syllables and voiceId are required", "BAD_ARGS")
+            return
+        }
+        let rate = Float(call.getDouble("rate") ?? Double(SpeechRate.gameNormal))
+        // Same audio-session handling as `speak`: .playback so the offline
+        // syllable replay respects the silent switch like the cached-audio path.
+        try? AVAudioSession.sharedInstance().setCategory(.playback, mode: .default)
+        try? AVAudioSession.sharedInstance().setActive(true)
+        DispatchQueue.main.async {
+            self.syllableSpeaker.speak(
+                syllables: syllables, voiceId: voiceId, gameRate: rate,
+                onSyllable: { idx in
+                    // Stream each syllable boundary to the web layer as an event;
+                    // the JS bridge relays it to the highlight callback.
+                    self.notifyListeners("syllableBoundary", data: ["index": idx])
+                },
+                onComplete: { ok in
+                    if ok {
+                        call.resolve()
+                    } else {
+                        call.reject("speech did not complete", "SPEAK_INCOMPLETE")
+                    }
+                }
+            )
+        }
+    }
+
     @objc func stop(_ call: CAPPluginCall) {
         DispatchQueue.main.async {
             self.speaker.stop()
+            self.syllableSpeaker.stop()
             call.resolve()
         }
     }

@@ -61,6 +61,23 @@ pub fn speak(text: &str, voice_id: &str, rate: f64) -> Option<Promise> {
     r.dyn_into::<Promise>().ok()
 }
 
+/// Offline syllable replay (Feature F7): speak `syllables` in order as ONE
+/// native utterance, invoking `on_index` with the 0-based syllable index at each
+/// AVSpeech word boundary (`willSpeakRangeOfSpeechString`) so the caller can
+/// highlight the revealed spelling in exact sync. Returns the completion promise
+/// (resolves on natural finish, rejects on cancel/failure). `None` when the
+/// bridge isn't callable — the caller then drives the highlight from web timers.
+pub fn speak_syllables(syllables: &[String], voice_id: &str, rate: f64, on_index: &Function) -> Option<Promise> {
+    let obj = bridge()?;
+    let f = method(&obj, "speakSyllables")?;
+    let arr = js_sys::Array::new();
+    for s in syllables {
+        arr.push(&JsValue::from_str(s));
+    }
+    let args = js_sys::Array::of4(&arr, &JsValue::from_str(voice_id), &JsValue::from_f64(rate), on_index);
+    f.apply(&obj, &args).ok()?.dyn_into::<Promise>().ok()
+}
+
 /// Stop any in-flight native utterance (fire-and-forget).
 pub fn stop() {
     if let Some(obj) = bridge() {

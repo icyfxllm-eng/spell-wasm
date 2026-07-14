@@ -128,6 +128,84 @@ final class NativeLanguageKitCoreTests: XCTestCase {
         XCTAssertTrue(finished, "speak() should resolve on completion")
     }
 
+    // MARK: SyllablePlan (boundary → syllable mapping, Feature F7)
+
+    func testSyllablePlanJoinsWithSeparatorAndOffsets() {
+        let plan = SyllablePlan(syllables: ["ca", "sa"])
+        XCTAssertEqual(plan.text, "ca sa")           // space-joined tokens
+        XCTAssertEqual(plan.starts, [0, 3])           // "ca"=0..2, sep=2, "sa"=3
+    }
+
+    func testSyllablePlanMapsOffsetsToSyllableIndex() {
+        let plan = SyllablePlan(syllables: ["trans", "por", "te"])
+        XCTAssertEqual(plan.text, "trans por te")
+        XCTAssertEqual(plan.starts, [0, 6, 10])
+        // A boundary location lands on each token start.
+        XCTAssertEqual(plan.syllableIndex(forUTF16Offset: 0), 0)
+        XCTAssertEqual(plan.syllableIndex(forUTF16Offset: 6), 1)
+        XCTAssertEqual(plan.syllableIndex(forUTF16Offset: 10), 2)
+        // Interior offsets resolve to the owning syllable; past-the-end clamps.
+        XCTAssertEqual(plan.syllableIndex(forUTF16Offset: 3), 0)
+        XCTAssertEqual(plan.syllableIndex(forUTF16Offset: 8), 1)
+        XCTAssertEqual(plan.syllableIndex(forUTF16Offset: 99), 2)
+    }
+
+    func testSyllablePlanEmptyIsSafe() {
+        let plan = SyllablePlan(syllables: [])
+        XCTAssertEqual(plan.text, "")
+        XCTAssertEqual(plan.syllableIndex(forUTF16Offset: 0), 0)
+    }
+
+    func testSyllablePlanUTF16OffsetsForAccentedSyllables() {
+        // Precomposed "í" is a single UTF-16 unit; offsets must stay consistent.
+        let plan = SyllablePlan(syllables: ["dí", "a"])
+        XCTAssertEqual(plan.text, "dí a")
+        XCTAssertEqual(plan.starts, [0, 3])
+        XCTAssertEqual(plan.syllableIndex(forUTF16Offset: 3), 1)
+    }
+
+    // MARK: SyllableSpeaker
+
+    func testSyllableSpeakRejectsUnknownVoiceImmediately() {
+        let speaker = SyllableSpeaker()
+        let done = expectation(description: "completes")
+        var result = true
+        speaker.speak(syllables: ["ca", "sa"], voiceId: "not-a-real-voice-id", gameRate: 0.9,
+                      onSyllable: { _ in }, onComplete: { ok in result = ok; done.fulfill() })
+        wait(for: [done], timeout: 2)
+        XCTAssertFalse(result, "an unknown voiceId must complete as failure, never pick a voice")
+    }
+
+    func testSyllableSpeakRejectsEmptyList() {
+        let speaker = SyllableSpeaker()
+        let done = expectation(description: "completes")
+        var result = true
+        speaker.speak(syllables: [], voiceId: "whatever", gameRate: 0.9,
+                      onSyllable: { _ in }, onComplete: { ok in result = ok; done.fulfill() })
+        wait(for: [done], timeout: 2)
+        XCTAssertFalse(result, "an empty syllable list must complete as failure")
+    }
+
+    func testSyllableSpeakDrivesBoundariesAndCompletes() throws {
+        guard let voice = VoiceCatalog.voices(lang: "en").first else {
+            throw XCTSkip("no en voice on this simulator")
+        }
+        let speaker = SyllableSpeaker()
+        let done = expectation(description: "finishes speaking")
+        var finished = false
+        var maxIndex = -1
+        var reported: [Int] = []
+        speaker.speak(syllables: ["ca", "sa"], voiceId: voice.id, gameRate: 0.9,
+                      onSyllable: { idx in reported.append(idx); maxIndex = max(maxIndex, idx) },
+                      onComplete: { ok in finished = ok; done.fulfill() })
+        wait(for: [done], timeout: 20)
+        XCTAssertTrue(finished, "syllable speak should resolve on completion")
+        // The boundary callback must have fired for at least the first syllable,
+        // and indices are non-decreasing (0-based, in order).
+        XCTAssertGreaterThanOrEqual(maxIndex, 0, "willSpeakRange should report ≥1 syllable")
+        XCTAssertEqual(reported, reported.sorted(), "syllable indices must arrive in order")
+    }
+
     // MARK: SpeechRate mapping
 
     func testRateMapping() {

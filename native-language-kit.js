@@ -78,6 +78,45 @@
     },
 
     /**
+     * Speak `syllables` (in order) as ONE offline utterance, reporting each
+     * syllable boundary as AVSpeech reaches it so the caller can highlight the
+     * revealed spelling in sync (Feature F7). `onIndex(i)` fires with the
+     * 0-based syllable index each time a new syllable begins; the plugin emits
+     * these via the `syllableBoundary` event, wired to a per-call listener that
+     * is torn down when the promise settles. `voiceId` is REQUIRED (from
+     * capabilities().tts.voices) — the plugin never picks a voice.
+     * @param {string[]} syllables ordered syllable tokens, e.g. ["ca","sa"]
+     * @param {string} voiceId AVSpeech voice identifier from the catalog
+     * @param {number} [rate] game rate (0.9 normal, 0.7 slow); defaults to normal
+     * @param {(index:number)=>void} [onIndex] per-syllable highlight callback
+     * @returns {Promise<void>} resolves on natural completion; REJECTS with
+     *   "SPEAK_INCOMPLETE" if cancelled/superseded or the voice is unknown, and
+     *   "BAD_ARGS" if syllables/voiceId missing. Off iOS: rejects "UNAVAILABLE".
+     */
+    speakSyllables: function (syllables, voiceId, rate, onIndex) {
+      if (!available()) return Promise.reject(new Error('UNAVAILABLE'));
+      var p = plugin();
+      // addListener may return a handle or a Promise<handle> depending on the
+      // Capacitor version — normalize both so cleanup always works.
+      var listening = (typeof onIndex === 'function')
+        ? p.addListener('syllableBoundary', function (ev) {
+            onIndex(ev && typeof ev.index === 'number' ? ev.index : 0);
+          })
+        : null;
+      function cleanup() {
+        if (!listening) return;
+        if (typeof listening.then === 'function') {
+          listening.then(function (h) { if (h && h.remove) h.remove(); });
+        } else if (listening.remove) {
+          listening.remove();
+        }
+      }
+      return p.speakSyllables({ syllables: syllables, voiceId: voiceId, rate: rate })
+        .then(function (r) { cleanup(); return r; },
+              function (e) { cleanup(); throw e; });
+    },
+
+    /**
      * Stop any in-flight utterance. No-op (resolves) off iOS.
      * @returns {Promise<void>}
      */
