@@ -205,5 +205,9 @@
   "sayit.listening": "듣는 중…",
   "sayit.correct": "정답!",
   "sayit.tryAgain": "아쉬워요 — 다음 걸 해봐요.",
-  "sayit.didntCatch": "잘 못 들었어요 — 눌러서 다시 해보세요."
+  "sayit.didntCatch": "잘 못 들었어요 — 눌러서 다시 해보세요.",
+  "ghost.ahead": "👻 {n} 앞서는 중",
+  "ghost.behind": "👻 {n} 뒤처짐",
+  "ghost.even": "👻 막상막하",
+  "ghost.beat": "최고 기록! 고스트를 이겼어요 👻"
 }

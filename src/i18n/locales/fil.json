@@ -205,5 +205,9 @@
   "sayit.listening": "Nakikinig…",
   "sayit.correct": "Tama!",
   "sayit.tryAgain": "Muntik na — subukan ang susunod.",
-  "sayit.didntCatch": "Hindi ko naintindihan — i-tap at subukang muli."
+  "sayit.didntCatch": "Hindi ko naintindihan — i-tap at subukang muli.",
+  "ghost.ahead": "👻 Nangunguna ng {n}",
+  "ghost.behind": "👻 Nahuhuli ng {n}",
+  "ghost.even": "👻 Sabay-sabay",
+  "ghost.beat": "Bagong record! Natalo mo ang iyong multo 👻"
 }

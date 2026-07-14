@@ -205,5 +205,9 @@
   "sayit.listening": "Lyssnar…",
   "sayit.correct": "Rätt!",
   "sayit.tryAgain": "Nästan — prova nästa.",
-  "sayit.didntCatch": "Uppfattade inte — tryck och försök igen."
+  "sayit.didntCatch": "Uppfattade inte — tryck och försök igen.",
+  "ghost.ahead": "👻 {n} före",
+  "ghost.behind": "👻 {n} efter",
+  "ghost.even": "👻 Jämnt lopp",
+  "ghost.beat": "Nytt rekord! Du slog ditt spöke 👻"
 }

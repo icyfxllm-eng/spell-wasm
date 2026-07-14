@@ -205,5 +205,9 @@
   "sayit.listening": "聞いています…",
   "sayit.correct": "正解！",
   "sayit.tryAgain": "惜しい — 次にいこう。",
-  "sayit.didntCatch": "聞き取れなかった — タップしてもう一度。"
+  "sayit.didntCatch": "聞き取れなかった — タップしてもう一度。",
+  "ghost.ahead": "👻 {n}リード",
+  "ghost.behind": "👻 {n}遅れ",
+  "ghost.even": "👻 互角",
+  "ghost.beat": "自己ベスト更新！ゴーストに勝った 👻"
 }

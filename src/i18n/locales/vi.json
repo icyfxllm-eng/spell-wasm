@@ -205,5 +205,9 @@
   "sayit.listening": "Đang nghe…",
   "sayit.correct": "Chính xác!",
   "sayit.tryAgain": "Suýt rồi — thử từ tiếp theo.",
-  "sayit.didntCatch": "Chưa nghe rõ — chạm và thử lại."
+  "sayit.didntCatch": "Chưa nghe rõ — chạm và thử lại.",
+  "ghost.ahead": "👻 Dẫn trước {n}",
+  "ghost.behind": "👻 Kém {n}",
+  "ghost.even": "👻 Ngang ngửa",
+  "ghost.beat": "Kỷ lục mới! Bạn đã đánh bại bóng ma của mình 👻"
 }

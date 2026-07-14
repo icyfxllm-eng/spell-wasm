@@ -205,5 +205,9 @@
   "sayit.listening": "Listening…",
   "sayit.correct": "Correct!",
   "sayit.tryAgain": "Not quite — try the next one.",
-  "sayit.didntCatch": "Didn't catch that — tap and try again."
+  "sayit.didntCatch": "Didn't catch that — tap and try again.",
+  "ghost.ahead": "👻 Ahead by {n}",
+  "ghost.behind": "👻 Behind by {n}",
+  "ghost.even": "👻 Neck and neck",
+  "ghost.beat": "New best! You beat your ghost 👻"
 }

@@ -205,5 +205,9 @@
   "sayit.listening": "กำลังฟัง…",
   "sayit.correct": "ถูกต้อง!",
   "sayit.tryAgain": "เกือบแล้ว — ลองคำถัดไป",
-  "sayit.didntCatch": "ฟังไม่ทัน — แตะแล้วลองอีกครั้ง"
+  "sayit.didntCatch": "ฟังไม่ทัน — แตะแล้วลองอีกครั้ง",
+  "ghost.ahead": "👻 นำอยู่ {n}",
+  "ghost.behind": "👻 ตามหลัง {n}",
+  "ghost.even": "👻 สูสี",
+  "ghost.beat": "สถิติใหม่! คุณเอาชนะโกสต์ได้แล้ว 👻"
 }

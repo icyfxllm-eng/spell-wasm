@@ -205,5 +205,9 @@
   "sayit.listening": "正在聆听…",
   "sayit.correct": "正确！",
   "sayit.tryAgain": "差一点 — 试试下一个。",
-  "sayit.didntCatch": "没听清 — 点一下再试一次。"
+  "sayit.didntCatch": "没听清 — 点一下再试一次。",
+  "ghost.ahead": "👻 领先 {n}",
+  "ghost.behind": "👻 落后 {n}",
+  "ghost.even": "👻 势均力敌",
+  "ghost.beat": "新纪录！你击败了自己的幽灵 👻"
 }

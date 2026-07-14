@@ -17,6 +17,7 @@ import * as modes from './specs/modes.mjs';
 import * as menu from './specs/menu.mjs';
 import * as coming from './specs/coming.mjs';
 import * as sayit from './specs/sayit.mjs';
+import * as ghost from './specs/ghost.mjs';
 
 const SPECS = [
   ['keyboard', keyboard],
@@ -25,6 +26,7 @@ const SPECS = [
   ['menu', menu],
   ['coming', coming],
   ['sayit', sayit],
+  ['ghost', ghost],
 ];
 
 const ROOT = join(fileURLToPath(import.meta.url), '..', '..', '..');

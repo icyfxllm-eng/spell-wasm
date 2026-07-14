@@ -205,5 +205,9 @@
   "sayit.listening": "Aan het luisteren…",
   "sayit.correct": "Goed!",
   "sayit.tryAgain": "Bijna — probeer de volgende.",
-  "sayit.didntCatch": "Niet verstaan — tik en probeer opnieuw."
+  "sayit.didntCatch": "Niet verstaan — tik en probeer opnieuw.",
+  "ghost.ahead": "👻 {n} voor",
+  "ghost.behind": "👻 {n} achter",
+  "ghost.even": "👻 Nek aan nek",
+  "ghost.beat": "Nieuw record! Je hebt je ghost verslagen 👻"
 }

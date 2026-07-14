@@ -390,6 +390,16 @@
   .chain .lbl{margin-top:5px;color:var(--muted-on-bg);font-size:11px;text-transform:uppercase;letter-spacing:.16em}
   .chain .divider{width:1px;height:42px;background:var(--edge)}
 
+  /* Ghost racing pace marker (F6). Augments the chain bar; a subtle pill that
+     appears only during a Climb run when a stored best exists. */
+  .ghost-pace{width:fit-content;max-width:92%;margin:-2px auto 10px;padding:5px 13px;border-radius:999px;
+    background:var(--panel);border:1px solid var(--edge);color:var(--muted-on-bg);
+    font-size:12px;font-weight:700;letter-spacing:.02em;text-align:center;
+    transition:color .15s,border-color .15s,background .15s}
+  .ghost-pace.btn-hide{display:none}
+  .ghost-pace.ahead{color:var(--good,#46d6b8);border-color:color-mix(in srgb,var(--good,#46d6b8) 55%,transparent)}
+  .ghost-pace.behind{color:var(--bad,#ff6b7a);border-color:color-mix(in srgb,var(--bad,#ff6b7a) 55%,transparent)}
+
   /* head-to-head scoreboard */
   .vs-bar{width:100%;max-width:600px;margin:0 0 14px;display:flex;align-items:stretch;gap:10px}
   .vs-bar.btn-hide{display:none}
@@ -685,6 +695,10 @@
     <div class="divider"></div>
     <div class="stat"><div class="num" id="bestNum">0</div><div class="lbl" data-i18n="chain.best">your best</div></div>
   </div>
+  <!-- Ghost racing pace marker (F6): shown only during a Climb run when a stored
+       best run exists for the language. Augments the chain bar without obscuring
+       it; stays hidden otherwise (and entirely when the feature flag is off). -->
+  <div class="ghost-pace btn-hide" id="ghostPace" aria-live="polite"></div>
   <button class="pill btn-hide" id="shareBtn" data-i18n-aria="share.button" aria-label="Share your chain" style="margin:0 auto 6px;display:block">↗ <span data-i18n="share.button">Share your chain</span></button>
 
   <section class="card stats">

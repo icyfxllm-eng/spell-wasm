@@ -205,5 +205,9 @@
   "sayit.listening": "Dinliyor…",
   "sayit.correct": "Doğru!",
   "sayit.tryAgain": "Az kaldı — sonrakini dene.",
-  "sayit.didntCatch": "Anlayamadım — dokun ve tekrar dene."
+  "sayit.didntCatch": "Anlayamadım — dokun ve tekrar dene.",
+  "ghost.ahead": "👻 {n} önde",
+  "ghost.behind": "👻 {n} geride",
+  "ghost.even": "👻 Başa baş",
+  "ghost.beat": "Yeni rekor! Hayaletini yendin 👻"
 }

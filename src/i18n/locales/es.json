@@ -205,5 +205,9 @@
   "sayit.listening": "Escuchando…",
   "sayit.correct": "¡Correcto!",
   "sayit.tryAgain": "Casi — prueba con la siguiente.",
-  "sayit.didntCatch": "No te entendí — toca e inténtalo de nuevo."
+  "sayit.didntCatch": "No te entendí — toca e inténtalo de nuevo.",
+  "ghost.ahead": "👻 Ventaja de {n}",
+  "ghost.behind": "👻 Detrás por {n}",
+  "ghost.even": "👻 Empate reñido",
+  "ghost.beat": "¡Nuevo récord! Superaste a tu fantasma 👻"
 }

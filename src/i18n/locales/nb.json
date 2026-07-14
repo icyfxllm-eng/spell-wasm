@@ -205,5 +205,9 @@
   "sayit.listening": "Lytter…",
   "sayit.correct": "Riktig!",
   "sayit.tryAgain": "Nesten — prøv det neste.",
-  "sayit.didntCatch": "Fikk ikke med meg det — trykk og prøv igjen."
+  "sayit.didntCatch": "Fikk ikke med meg det — trykk og prøv igjen.",
+  "ghost.ahead": "👻 {n} foran",
+  "ghost.behind": "👻 {n} bak",
+  "ghost.even": "👻 Dødt løp",
+  "ghost.beat": "Ny rekord! Du slo spøkelset ditt 👻"
 }

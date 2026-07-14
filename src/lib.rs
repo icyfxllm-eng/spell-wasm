@@ -12,6 +12,7 @@ pub mod editor;
 mod enrich;
 mod flags;
 mod game;
+mod ghost;
 mod haptics;
 mod hangul;
 mod homophones;

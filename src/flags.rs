@@ -1,51 +1,102 @@
 //! Runtime feature flags — the one place a shipped-dark feature is switched on.
 //!
-//! Each flag is a `pub fn -> bool`. A per-flag localStorage key
-//! (`spell_flag_<name>`) overrides the coded default, so QA can flip a feature on
-//! a device without a rebuild. A flag being OFF must be a true no-op: the feature
-//! registers nothing, wires nothing, renders nothing — zero observable diff.
+//! Each flag is a `pub fn -> bool`, read from localStorage (`spell_flag_<name>`
+//! = "on"/"off"/…); when absent it falls back to the compiled-in default. A flag
+//! being OFF must be a true no-op: the feature registers nothing, wires nothing,
+//! renders nothing — zero observable diff. Under `cargo test` the storage read is
+//! replaced by a settable in-process override so gates are unit-testable.
 //!
 //! This is the UNIFIED Feature Pack 2 module (the sibling branches each authored
-//! their own copy; this reconciles them). Defaults below are set for the FP2
-//! **integration / TestFlight build**: F1, F2, F6, F7 are ON so testers exercise
-//! them; F5 word-stories stays OFF (its CC BY-SA attribution gate is unresolved).
-//! For the App Store, these defaults would revert to OFF per each feature's PR.
+//! their own copy; this reconciles them, keeping F6's testable design). Defaults
+//! below are set for the FP2 **integration / TestFlight build**: F1, F2, F6, F7
+//! are ON so testers exercise them; F5 word-stories stays OFF (its CC BY-SA
+//! attribution gate is unresolved). For the App Store these revert to OFF per PR.
 
-fn flag(key: &str, default: bool) -> bool {
-    match crate::storage::get_raw(key).as_deref() {
-        Some("1") | Some("on") | Some("true") | Some("yes") => true,
-        Some("0") | Some("off") | Some("false") | Some("no") => false,
+#[cfg(not(test))]
+use crate::storage;
+
+/// Pure flag resolver (unit-tested). "on"/"1"/"true"/"yes" → true,
+/// "off"/"0"/"false"/"no" → false, anything else (incl. absent) → `default`.
+fn resolve(stored: Option<&str>, default: bool) -> bool {
+    match stored {
+        Some("on") | Some("1") | Some("true") | Some("yes") => true,
+        Some("off") | Some("0") | Some("false") | Some("no") => false,
         _ => default,
     }
 }
 
+#[cfg(not(test))]
+fn stored(name: &str) -> Option<String> {
+    storage::get_raw(&format!("spell_flag_{name}"))
+}
+
+#[cfg(test)]
+thread_local! {
+    static TEST_OVERRIDE: std::cell::RefCell<Option<String>> = const { std::cell::RefCell::new(None) };
+}
+
+#[cfg(test)]
+fn stored(_name: &str) -> Option<String> {
+    TEST_OVERRIDE.with(|c| c.borrow().clone())
+}
+
+/// Test-only: force the next flag read (`Some("on")`/`Some("off")`) or clear
+/// (`None`) so both branches of a flag-gated path are reachable in unit tests.
+#[cfg(test)]
+pub fn set_test_override(v: Option<&str>) {
+    TEST_OVERRIDE.with(|c| *c.borrow_mut() = v.map(|s| s.to_string()));
+}
+
 /// F6 "Ghost racing in The Climb" — race your best local run. Cross-platform.
 pub fn ghost_racing() -> bool {
-    flag("spell_flag_ghost_racing", true)
+    resolve(stored("ghost_racing").as_deref(), true)
 }
 
 /// F7 "Syllable replay on misses" — the "hear it slowly" affordance on the
-/// reveal / spaced-repetition surface (es-only). Native syllable-by-syllable
-/// AVSpeech with highlight; web falls back to a slow whole-word replay.
+/// reveal / spaced-repetition surface (es-only).
 pub fn syllable_replay() -> bool {
-    flag("spell_flag_syllable_replay", true)
+    resolve(stored("syllable_replay").as_deref(), true)
 }
 
-/// F2 "Say It" — on-device pronunciation practice (see the word, say it).
-/// iOS-only at runtime (needs the on-device SFSpeechRecognizer bridge); the mode
-/// is hard-disabled in Kid Mode regardless of this flag (COPPA).
+/// F2 "Say It" — on-device pronunciation practice; iOS-only at runtime, and
+/// hard-disabled in Kid Mode regardless of this flag (COPPA).
 pub fn say_it() -> bool {
-    flag("spell_flag_say_it", true)
+    resolve(stored("say_it").as_deref(), true)
 }
 
-/// F1 "Photo-to-word-list" — VisionKit OCR of a handout into a custom list.
-/// iOS-only; hidden in Kid Mode (list management is a parent surface).
+/// F1 "Photo-to-word-list" — VisionKit OCR of a handout; iOS-only, hidden in Kid Mode.
 pub fn photo_list() -> bool {
-    flag("spell_flag_photo_list", true)
+    resolve(stored("photo_list").as_deref(), true)
 }
 
-/// F5 "Word stories" — one-line etymology cards. **Default OFF**: ships dark
-/// until the CC BY-SA attribution approach is approved.
+/// F5 "Word stories" — etymology cards. **Default OFF**: dark until the CC BY-SA
+/// attribution approach is approved.
 pub fn word_stories() -> bool {
-    flag("spell_flag_word_stories", false)
+    resolve(stored("word_stories").as_deref(), false)
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn resolve_semantics() {
+        assert!(resolve(Some("on"), false));
+        assert!(resolve(Some("1"), false));
+        assert!(!resolve(Some("off"), true));
+        assert!(!resolve(Some("0"), true));
+        assert!(resolve(None, true));
+        assert!(!resolve(None, false));
+        assert!(resolve(Some("garbage"), true));
+    }
+
+    #[test]
+    fn defaults_match_the_integration_build() {
+        set_test_override(None);
+        assert!(ghost_racing() && syllable_replay() && say_it() && photo_list());
+        assert!(!word_stories(), "F5 ships dark");
+        set_test_override(Some("off"));
+        assert!(!ghost_racing());
+        set_test_override(None);
+    }
 }
