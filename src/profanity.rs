@@ -195,4 +195,18 @@ mod tests {
         assert!(!is_blocked("manzana")); // Spanish "apple"
         assert!(!is_blocked("casa")); // Spanish "house"
     }
+
+    #[test]
+    fn filipino_seed_blocks_profanity_but_not_clean_words() {
+        // Expanded fil seed (audit for Paul): core profanity, insults, sexual
+        // terms, and a common numeric-leet form are blocked.
+        for w in ["gaga", "putangina", "tarantado", "kupal", "pekpek", "g4go"] {
+            assert!(is_blocked(w), "fil profanity '{w}' should be blocked");
+        }
+        // Legitimate Filipino vocabulary (incl. words we deliberately kept OUT of
+        // the seed to avoid false-blocks) must remain addable.
+        for w in ["bulaklak", "kaibigan", "hayop", "itlog", "pusa", "bahay"] {
+            assert!(!is_blocked(w), "clean fil word '{w}' must not be blocked");
+        }
+    }
 }

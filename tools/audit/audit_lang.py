@@ -64,6 +64,9 @@ def spoken(w):
 CHARSET = {
     "es": r"[a-záéíóúüñ]+(?:[- ][a-záéíóúüñ]+)*",
     "th": "[฀-๿]+",  # Thai block, no spaces within a word
+    # Filipino: Latin a-z + ñ (Spanish loanwords: niño, señora), hyphen for
+    # compounds (mag-aral).
+    "fil": r"[a-zñ]+(?:[- ][a-zñ]+)*",
 }.get(lang, r"[a-z]+(?:[- ][a-z]+)*")
 # Thai combining marks (above/below vowels, tone marks, signs) — they don't
 # advance the visual cursor, so a grapheme-ish length excludes them.
@@ -175,7 +178,7 @@ add(2, "info", "min-pool-undefined", "src/consts.rs", "-",
 
 # ============================================================ FEATURE 3: audio + TTS config
 app_py = (ROOT / "backend" / "app.py").read_text(encoding="utf-8")
-voice_defs = re.findall(r'"([a-z]{2})":\s*\(\s*"([^"]+)",\s*"([^"]+)"\)', app_py)
+voice_defs = re.findall(r'"([a-z]{2,3})":\s*\(\s*"([^"]+)",\s*"([^"]+)"\)', app_py)
 voice = next(((lc, vn) for code, lc, vn in voice_defs if code == lang), None)
 # single-source check: count where a voice/locale for this lang is configured
 occurrences = len(re.findall(rf'"{lang}":\s*\(', app_py))

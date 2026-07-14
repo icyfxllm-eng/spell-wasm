@@ -1,16 +1,120 @@
-# Filipino (Tagalog) exclusions — EXACT whole-word match (boundary-safe, so
-# puti/putahe are NOT affected). Seed; extend from LDNOOBW 'tl'. REVIEW GATE.
+# Filipino (Tagalog) profanity block-seed — EXACT whole-word match (NFC,
+# lowercased), boundary-safe so innocent words that merely CONTAIN these
+# substrings (puti, putahe, bobojet…) are unaffected. This is a defensive
+# User-Generated-Content filter for "My Words" (Apple Guideline 1.2): it blocks
+# a child from ADDING these; it never appears in any word list or UI.
+#
+# Deliberately EXCLUDED to avoid false-blocking legitimate/neutral words:
+#   hayop (animal), itlog (egg), pepe (a common name), pusa (cat), dumi (dirt),
+#   and identity terms (bakla/bading/tomboy) — often neutral, not slurs.
+#
+# NOTE (follow-up, not fixed here per the audit work order): the per-language
+# layer is EXACT-match, so it does NOT leet-fold or de-space like the English
+# layer. Sophisticated evasions (g4g0 with mixed digits, s p a c e d letters)
+# can still slip. The high-value fix is applying src/profanity.rs `normalize`
+# to the per-language union check too — an architecture change, out of scope
+# here. A handful of the most common numeric-leet forms are seeded below.
+
+# --- core profanity / "your mother" family + contractions ---
 puta
-gago
+putah
+pota
+potah
+putragis
+punyeta
+punyetera
 putangina
+putang-ina
+putanginamo
+potangina
+ptangina
 tangina
-kantot
-leche
-ulol
-# --- LDNOOBW fil (6 terms) ---
-burat
-bayag
-bobo
-nognog
+tanginamo
+tangna
+taena
+taenamo
+kingina
+kinangina
+kinginamo
+
+# --- insults ---
+gago
+gaga
+gagi
+gagong
+kagaguhan
+ogag
 tanga
+tangang
+katangahan
+bobo
+boba
+ulol
+ululan
+tarantado
+tarantada
+hinayupak
+inutil
+kupal
+gunggong
+ungas
+engot
+timang
+hangal
+siraulo
+sira-ulo
+sirang-ulo
+
+# --- crude curses / exclamations ---
+leche
+letse
+letche
+lintik
+lintek
+bwisit
+buwisit
+bwiset
+peste
+pesteng
+yawa
+pakshet
+pakingshet
+pakyu
+shet
+syet
+tae
+
+# --- sexual / genitalia (blocked for a 4+/Kids app) ---
+kantot
+kantutan
+iyot
+iyutan
 jakol
+salsal
+tsupa
+chupa
+titi
+tite
+etiti
+uten
+oten
+burat
+betlog
+bayag
+puke
+puki
+pekpek
+kepyas
+kiki
+
+# --- slurs ---
+nognog
+tsekwa
+
+# --- highest-frequency numeric-leet forms (exact-match; see header note) ---
+g4go
+b0b0
+put4ngina
+t4ngina
+tang1na
+put4
