@@ -23,10 +23,21 @@
 (function () {
   'use strict';
 
-  /** @returns {any} the native plugin proxy, or undefined off-iOS. */
+  var _proxy;
+  /**
+   * The native plugin proxy. This plugin ships as native-only Swift with NO npm
+   * JS package, so `Capacitor.Plugins.NativeLanguageKit` is never auto-populated
+   * — we must create the proxy ourselves via `Capacitor.registerPlugin` (the
+   * documented Capacitor way for a custom plugin). Cached after first call.
+   * @returns {any} the proxy, or undefined when Capacitor isn't present (web).
+   */
   function plugin() {
     var cap = window.Capacitor;
-    return cap && cap.Plugins && cap.Plugins.NativeLanguageKit;
+    if (!cap) return undefined;
+    if (!_proxy && typeof cap.registerPlugin === 'function') {
+      _proxy = cap.registerPlugin('NativeLanguageKit');
+    }
+    return _proxy || (cap.Plugins && cap.Plugins.NativeLanguageKit);
   }
 
   /**
@@ -204,7 +215,10 @@
      * shown off this capability check (Feature F1). @returns {boolean}
      */
     supported: function () {
-      return !!plugin();
+      // Gate on native platform, not just proxy presence — registerPlugin returns
+      // a (non-null) proxy even in a Capacitor web context, so the camera button
+      // must not appear off a real device.
+      return available();
     },
 
     /**
