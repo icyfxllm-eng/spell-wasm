@@ -1,0 +1,1041 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover" />
+<title>Spell — a spelling game you play with your ears</title>
+<link rel="manifest" href="./manifest.json" />
+<meta name="theme-color" content="#1c1830" />
+<link rel="apple-touch-icon" href="./icons/icon-192.png" />
+<link rel="icon" href="./icons/icon-192.png" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Instrument+Sans:wght@400;500;600&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet" />
+<style>
+  @font-face{ font-family:'OpenDyslexic'; src:url('https://cdn.jsdelivr.net/npm/open-dyslexic@1.0.3/woff/OpenDyslexic-Regular.woff') format('woff'); font-display:swap; font-weight:400; }
+  :root{
+    --bg:#14111f; --bg2:#1c1830; --panel:#221d36; --panel-2:#1b1730;
+    --edge:#322a4f; --ink:#efeaf7; --muted:#968cb4; --muted-2:#6f6690;
+    /* Text that sits directly on --bg-color (not inside a --panel/--panel-2
+       card) — --ink-on-bg is recomputed by set_bg_color() (actual WCAG
+       contrast ratio against the chosen background, not just a brightness
+       guess), so a light custom background doesn't wash out its own text.
+       --muted-on-bg derives from it via color-mix, so it stays legible
+       relative to whichever ink was picked instead of a second fixed guess.
+       Panel-hosted text keeps using the static --ink/--muted above, since
+       panels don't change color with the background picker. */
+    --ink-on-bg:#efeaf7;
+    --muted-on-bg:color-mix(in srgb, var(--ink-on-bg) 62%, var(--bg-color));
+    --amber:#ffb14d; --amber-soft:#ffd9a0; --teal:#46d6b8; --coral:#ff6b7a;
+    --glow:#ffb14d;
+    --bg-color:#1c1830;
+    --orb-color:#ffb14d;
+    /* Feedback + streak state tokens. GLOBAL — identical across every language
+       and in Kid + non-Kid mode (kids learn one signal). success=green family,
+       warn=WARM AMBER (never red / screen-flash, D3). */
+    --success:#46d6b8; --success-glow:rgba(70,214,184,.55);
+    --warn:#ff9e57; --warn-glow:rgba(255,158,87,.5);
+    /* Streak warmth: --glow nudges warmer in pre-designed steps (D5); accent only. */
+    --glow-streak-1:#ffb14d; --glow-streak-2:#ff9a3f; --glow-streak-3:#ff8330;
+    --orb-text:#3a230a;
+    --display:'Bricolage Grotesque',sans-serif;
+    --body:'Instrument Sans',system-ui,sans-serif;
+    --mono:'Space Mono',ui-monospace,monospace;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  /* iOS WKWebView auto-zooms when a focused field's font-size is < 16px and
+     often fails to zoom back out. Enforce a 16px floor on every focusable field
+     so it never triggers (component rules may set a LARGER size). The CI lint in
+     scripts/viewport-check.mjs exists because of a real bug — do not delete it. */
+  input, textarea, select, [contenteditable]{font-size:max(16px, 1em)}
+  /* Every tappable control opts out of double-tap-to-zoom + the 300ms tap delay. */
+  button, .kb-key, .pill, .ghost, .btn, select, input[type=range], input[type=color]{touch-action:manipulation}
+  /* No horizontal scroll on any screen: page width == viewport width. Real
+     causes are fixed at the source below; overflow-x:clip is only a safety net. */
+  html,body{height:100%;max-width:100%;overflow-x:clip}
+  img,svg,canvas{max-width:100%}
+  body{
+    font-family:var(--body); color:var(--ink-on-bg);
+    background:radial-gradient(1200px 700px at 50% -10%, color-mix(in srgb, var(--bg-color) 55%, white 20%) 0%, transparent 60%), linear-gradient(180deg, var(--bg-color) 0%, color-mix(in srgb, var(--bg-color) 78%, black) 70%);
+    min-height:100vh; display:flex; flex-direction:column; align-items:center;
+    /* Respect the iPhone safe area (viewport-fit=cover): keep the SPELL header
+       clear of the status bar / Dynamic Island and the footer clear of the
+       home indicator. env() is 0 on desktop, so the layout is unchanged there. */
+    padding:calc(env(safe-area-inset-top, 0px) + 24px) 18px calc(env(safe-area-inset-bottom, 0px) + 56px);
+    -webkit-font-smoothing:antialiased;
+    transition:background .25s ease;
+  }
+  body.readable{ font-family:'OpenDyslexic','Instrument Sans',system-ui,sans-serif; letter-spacing:.01em; }
+  body.readable .ltr{ letter-spacing:.05em; }
+  body.readable .foot{ font-size:13px; }
+  body.kid .ltr{ font-size:30px; }
+  body.kid .orb-glyph{ font-size:18px; }
+  body.kid .foot{ display:none; }
+  /* Kid-mode "just for fun" is set as localized text via i18n (brand.tagFun),
+     not a hardcoded CSS ::after — see i18n::update_tagline. */
+
+  /* Big text — enlarges the interface/reading text to ~1.5x its normal size
+     from one grouped class, rather than per-element inline hacks. Explicit
+     target px (not em/%) so every element scales ~1.5x of its OWN size and
+     nested text doesn't compound. Deliberately leaves the spellbox letters,
+     orb glyph and canvas alone (the typed-answer overlay must stay pixel-
+     aligned with its hidden input, and the orb/canvas are already large);
+     everything here is a reflowing text block, so growing it doesn't break
+     layout. Extend this list to cover any new interface text. */
+  body.big-text .brand .tag{ font-size:19px; }
+  body.big-text .glow-pick .gl,
+  body.big-text .chain .lbl,
+  body.big-text .card h2 .scope,
+  body.big-text .board .meta,
+  body.big-text .demo-note{ font-size:16px; }
+  body.big-text .voice-note,
+  body.big-text .field-label,
+  body.big-text .set-row .lbl2 small,
+  body.big-text .foot{ font-size:17px; }
+  body.big-text .snum,
+  body.big-text .stats-foot .total,
+  body.big-text .imp-lang,
+  body.big-text .imp-count{ font-size:18px; }
+  body.big-text .pill,
+  body.big-text select,
+  body.big-text .srow,
+  body.big-text .ghost{ font-size:19px; }
+  body.big-text .meaning,
+  body.big-text .stats-empty,
+  body.big-text .modal p{ font-size:20px; }
+  body.big-text .board li{ font-size:21px; }
+  body.big-text .feedback,
+  body.big-text .btn{ font-size:22px; }
+  body.big-text .set-row .lbl2{ font-size:21px; }
+  body.big-text .hint-line{ font-size:27px; }
+  body.big-text .card h2{ font-size:24px; }
+  body.big-text .modal h3{ font-size:33px; }
+
+  .topbar{width:100%;max-width:600px;display:flex;align-items:flex-start;justify-content:space-between;gap:14px;margin-bottom:12px;flex-wrap:wrap}
+  .brand .mark{font-family:var(--display);font-weight:800;font-size:30px;letter-spacing:-0.5px;line-height:1}
+  .brand .mark b{color:var(--amber)}
+  .brand .tag{margin-top:6px;color:var(--muted-on-bg);font-size:12.5px;letter-spacing:.04em}
+  .controls{display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end}
+  select{appearance:none;background:var(--panel);color:var(--ink);border:1px solid var(--edge);border-radius:10px;padding:8px 28px 8px 11px;font-family:var(--body);font-size:16px;font-weight:500;cursor:pointer;
+    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%23968cb4' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+    background-repeat:no-repeat;background-position:right 10px center}
+  select:focus-visible{outline:2px solid var(--amber);outline-offset:2px}
+  select:disabled{opacity:.45;cursor:default}
+  .pill{background:var(--panel);border:1px solid var(--edge);color:var(--ink);border-radius:999px;padding:9px 16px;font-size:13px;font-weight:600;cursor:pointer;display:inline-flex;align-items:center;gap:7px;transition:border-color .15s,background .15s,transform .1s}
+  .pill:hover{border-color:var(--amber)}
+  .pill:active{transform:translateY(1px)}
+  .pill:disabled{opacity:.45;cursor:default}
+  .pill.on{border-color:var(--teal);color:var(--teal)}
+  .pill.access{border-color:var(--amber);color:var(--amber-soft)}
+  .pill.access.owned{border-color:var(--teal);color:var(--teal)}
+
+  /* ==== Home functional groups (CC-HOME-REGROUP) ==========================
+     visual class = functional class. Exactly three families on the home body
+     (data chips · launchers · config chip) + meta icons in the header corner.
+     No family borrows another's treatment (the screen's invariant). Breakpoint
+     behaviour lives only in the media queries below — no per-component forks. */
+
+  /* Meta corner (F2): icon-only, ≥44pt, top-right, persistent across breakpoints */
+  .meta-corner{display:flex;gap:10px;flex:0 0 auto}
+  .meta-icon{width:44px;height:44px;border-radius:50%;background:var(--panel);border:1px solid var(--edge);color:var(--muted);font-size:19px;line-height:1;display:grid;place-items:center;cursor:pointer;padding:0;transition:border-color .15s,color .15s,transform .1s}
+  .meta-icon:hover{border-color:var(--amber);color:var(--ink)}
+  .meta-icon:active{transform:translateY(1px)}
+  .meta-icon.signed-in{border-color:var(--teal);color:var(--teal)}
+  .meta-icon.btn-hide{display:none}
+
+  /* Group rows inside the centered stage, one per functional class */
+  .home-group{width:100%;max-width:600px;display:flex;gap:8px;margin-bottom:10px}
+
+  /* Data chips (F5): word inventory — outlined, muted, badge-capable. Not a launcher. */
+  .data-chip{flex:1;min-height:48px;background:transparent;border:1px solid var(--edge);color:var(--ink);border-radius:12px;padding:8px 14px;font-size:14px;font-weight:600;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;gap:8px;transition:border-color .15s,background .15s,transform .1s}
+  .data-chip:hover{border-color:var(--amber)}
+  .data-chip:active{transform:translateY(1px)}
+  .data-chip:disabled{opacity:.45;cursor:default}
+  .data-chip.on{border-color:var(--teal);color:var(--teal)}
+  .data-chip .dc-ico{color:var(--muted);font-weight:700}
+  .data-chip .dc-badge{background:var(--panel-2);border:1px solid var(--edge);color:var(--muted);border-radius:999px;min-width:22px;padding:1px 7px;font-size:12px;font-weight:700;text-align:center}
+
+  /* Launchers (F4): ways to play — brightest family, filled card, equal width, iconed */
+  .modes-row{gap:8px}
+  .launch{flex:1;min-height:62px;background:var(--panel-2);border:1px solid var(--edge);color:var(--ink);border-radius:14px;padding:10px 8px;font-size:14px;font-weight:700;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;gap:7px;text-align:center;line-height:1.15;box-shadow:inset 0 1px 0 rgba(255,255,255,.03);transition:border-color .15s,background .15s,transform .1s}
+  .launch:hover{border-color:var(--amber);background:color-mix(in srgb, var(--panel-2) 82%, var(--amber))}
+  .launch:active{transform:translateY(1px)}
+  .launch.on{border-color:var(--amber);color:var(--amber-soft)}
+  .launch.done{color:var(--muted)}
+  .launch.btn-hide{display:none}
+
+  /* Setup chip (F3): config family — muted, chevroned, full width, directly above
+     the play button. It configures; it must not read as a launcher. */
+  .setup-chip{width:100%;max-width:600px;min-height:44px;background:var(--panel);border:1px solid var(--edge);border-radius:12px;padding:9px 16px;margin:2px 0 8px;font-size:13px;font-weight:600;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:10px;transition:border-color .15s,transform .1s}
+  .setup-chip:hover{border-color:var(--amber)}
+  .setup-chip:active{transform:translateY(1px)}
+  .setup-chip-text{color:var(--ink);white-space:nowrap}
+  .setup-chip-chev{color:var(--muted);font-size:14px;flex:0 0 auto}
+
+  /* Setup sheet fields (icon + native picker; no text labels → no new i18n keys) */
+  .setup-card .setup-field{display:flex;align-items:center;gap:10px;margin:12px 0}
+  .setup-field-ico{font-size:18px;flex:0 0 auto;width:24px;text-align:center}
+  .setup-field select{flex:1;width:100%}
+
+  /* Little Speller (F7): same families + order, larger kid targets preserved */
+  body.kid .launch{min-height:74px;font-size:16px}
+  body.kid .data-chip{min-height:58px;font-size:16px}
+  body.kid .setup-chip{min-height:52px;font-size:14.5px}
+  body.kid .meta-icon{width:52px;height:52px;font-size:22px}
+  body.big-text .launch,body.big-text .data-chip{font-size:16px}
+  body.big-text .setup-chip-text{font-size:14px}
+
+  .stage{width:100%;max-width:600px;display:flex;flex-direction:column;align-items:center}
+
+  .orb-wrap{position:relative;width:230px;height:230px;display:grid;place-items:center;margin:18px 0 8px;cursor:pointer;user-select:none}
+  .timer-ring{position:absolute;inset:0;width:100%;height:100%;transform:rotate(-90deg);pointer-events:none;opacity:0;transition:opacity .3s ease}
+  .orb-wrap.timed .timer-ring{opacity:1}
+  .t-track{fill:none;stroke:rgba(255,255,255,.07);stroke-width:3}
+  .t-prog{fill:none;stroke:var(--amber);stroke-width:3;stroke-linecap:round;transition:stroke .25s ease}
+  .t-prog.low{stroke:var(--coral)}
+  .timer-badge{position:absolute;top:-4px;left:50%;transform:translateX(-50%);font-family:var(--mono);font-size:12px;color:var(--muted);background:var(--panel);border:1px solid var(--edge);padding:2px 9px;border-radius:999px;opacity:0;transition:opacity .3s ease}
+  .orb-wrap.timed .timer-badge{opacity:1}
+  .timer-badge.low{color:var(--coral);border-color:var(--coral)}
+  .ring{position:absolute;inset:0;border-radius:50%;border:1.5px solid var(--amber);opacity:0}
+  .orb-wrap.speaking .ring{animation:emit 1.5s ease-out infinite}
+  .orb-wrap.speaking .ring:nth-child(4){animation-delay:.5s}
+  .orb-wrap.speaking .ring:nth-child(5){animation-delay:1s}
+  @keyframes emit{0%{transform:scale(.62);opacity:.7}100%{transform:scale(1.18);opacity:0}}
+  .orb{width:150px;height:150px;border-radius:50%;
+    /* Brighter, glossier gem: a hot white specular near the top-left, a vivid
+       saturated body, a rich rim, plus a glassy top light and depth shadow —
+       all derived from --orb-color, so every orb color stays luminous. */
+    background:radial-gradient(circle at 35% 28%, color-mix(in srgb, var(--orb-color) 20%, white) 0%, color-mix(in srgb, var(--orb-color) 82%, white) 24%, var(--orb-color) 58%, color-mix(in srgb, var(--orb-color) 78%, black) 100%);
+    box-shadow:0 0 0 1px color-mix(in srgb, var(--orb-color) 40%, white 60%),
+      0 0 22px 1px color-mix(in srgb, var(--orb-color) 78%, transparent),
+      0 0 68px 12px color-mix(in srgb, var(--orb-color) 50%, transparent),
+      inset 0 -16px 30px color-mix(in srgb, var(--orb-color) 60%, black),
+      inset 0 10px 22px color-mix(in srgb, white 34%, transparent);
+    display:grid;place-items:center;position:relative;animation:breathe 4.5s ease-in-out infinite;transition:background .35s ease, box-shadow .35s ease}
+  /* glassy sheen reflection over the top-left */
+  .orb::before{content:"";position:absolute;top:8%;left:15%;width:50%;height:38%;border-radius:50%;background:radial-gradient(circle at 50% 45%, rgba(255,255,255,.72), rgba(255,255,255,0) 68%);filter:blur(1px);pointer-events:none}
+  .orb-glyph{position:relative;z-index:1}
+
+  /* Coming-soon panel: replaces the play area when a not-yet-active study
+     language is selected (language-availability registry). The interface still
+     switches to that language; only playing is gated. */
+  .coming-panel{display:none;flex-direction:column;align-items:center;gap:16px;max-width:340px;margin:44px 0;text-align:center}
+  body.coming-soon .coming-panel{display:flex}
+  /* Coming-soon gates PLAY in BOTH modes (Little Speller + Standard): hide the
+     play area AND the mode launchers so no round can start in a gated language.
+     The picker (setup chip) + header stay so the player can switch back. */
+  body.coming-soon .orb-wrap,body.coming-soon .replay-row,body.coming-soon .voice-note,
+  body.coming-soon #gameKeyboard,body.coming-soon #spellbox,body.coming-soon .field-head,
+  body.coming-soon .modes-row,body.coming-soon .action-row,body.coming-soon .minor-row,
+  body.coming-soon .tries-line{display:none!important}
+  .coming-badge{font-size:11.5px;text-transform:uppercase;letter-spacing:.16em;color:var(--amber-soft);border:1px solid var(--amber);border-radius:999px;padding:5px 15px}
+  .coming-notice{color:var(--ink);font-size:16px;line-height:1.5;margin:0}
+  .coming-notify{min-width:230px}
+  .coming-notify.confirmed{background:var(--teal);color:#062b23;border-color:var(--teal);cursor:default}
+  @keyframes breathe{0%,100%{transform:scale(.98)}50%{transform:scale(1.02)}}
+  .orb-wrap.speaking .orb{animation:pulse .55s ease-in-out infinite}
+  @keyframes pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.06)}}
+  .orb-glyph{font-family:var(--display);font-weight:700;font-size:15px;color:var(--orb-text);letter-spacing:.06em;text-align:center;padding:0 14px;line-height:1.25}
+  .orb-wrap.good .orb{background:radial-gradient(circle at 38% 32%, #c8fff0 0%, var(--teal) 42%, #1e8f79 100%);box-shadow:0 0 0 1px rgba(180,255,235,.4), 0 0 48px 6px rgba(70,214,184,.5);animation:none}
+  .orb-wrap.good .orb-glyph{color:#073a30}
+  .orb-wrap.bad .orb{background:radial-gradient(circle at 38% 32%, #ffd2d8 0%, var(--coral) 42%, #b53a48 100%);box-shadow:0 0 0 1px rgba(255,200,205,.4), 0 0 40px 4px rgba(255,107,122,.45);animation:shake .4s ease}
+  .orb-wrap.bad .orb-glyph{color:#4a0e16}
+  @keyframes shake{0%,100%{transform:translateX(0)}20%{transform:translateX(-8px)}40%{transform:translateX(7px)}60%{transform:translateX(-5px)}80%{transform:translateX(3px)}}
+
+  .replay-row{display:flex;gap:10px;margin-bottom:8px}
+  .voice-note{min-height:16px;margin-bottom:14px;color:var(--muted-on-bg);font-size:11.5px;text-align:center;max-width:320px}
+
+  .field-head{width:100%;display:flex;align-items:center;justify-content:space-between;gap:12px;margin:0 0 8px}
+  .field-label{font-size:11.5px;text-transform:uppercase;letter-spacing:.18em;color:var(--muted-on-bg)}
+  .glow-pick{display:flex;align-items:center;gap:7px}
+  .glow-pick .gl{font-size:10px;color:var(--muted-on-bg);text-transform:uppercase;letter-spacing:.12em}
+  .swatch,.theme-swatch{width:17px;height:17px;border-radius:50%;border:2px solid transparent;background:var(--s);cursor:pointer;padding:0;box-shadow:0 0 6px var(--s);transition:transform .12s}
+  .swatch:hover,.theme-swatch:hover{transform:scale(1.12)}
+  .swatch.active,.theme-swatch.active{border-color:var(--ink)}
+  .swatch.custom,.theme-swatch.custom{background:conic-gradient(#ff6b7a,#ffb14d,#ffe14d,#46d6b8,#7aa2ff,#c792ff,#ff6b7a);position:relative;overflow:hidden;box-shadow:none}
+  .swatch.custom input,.theme-swatch.custom input{position:absolute;inset:-6px;opacity:0;cursor:pointer}
+  .theme-pick{display:flex;align-items:center;gap:7px;flex-wrap:wrap}
+
+  .spellbox{position:relative;width:100%;background:var(--panel-2);border:1.5px solid var(--edge);border-radius:14px;transition:border-color .3s ease,box-shadow .3s ease}
+  .spellbox.focus{border-color:var(--amber);box-shadow:0 0 0 4px rgba(255,177,77,.12)}
+  /* F1 answer feedback (global, identical every language + Kid Mode). Input is
+     preserved so the player can fix, not retype. Classes cleared on animationend. */
+  .spellbox.is-correct{border-color:var(--success);box-shadow:0 0 0 4px var(--success-glow);animation:fbHold .5s ease}
+  .spellbox.is-wrong{border-color:var(--warn);box-shadow:0 0 0 4px var(--warn-glow);animation:wrongFb .4s ease}
+  /* Both animations exist so the state class is removed on animationend (no
+     timeouts racing). Correct holds ≤500ms; wrong shakes ≤160ms (≤6px, warm,
+     never a screen flash — D3) then holds the glow to 400ms. */
+  @keyframes fbHold{0%,100%{opacity:1}}
+  @keyframes wrongFb{0%,40%,100%{transform:translateX(0)}10%{transform:translateX(-6px)}20%{transform:translateX(5px)}30%{transform:translateX(-3px)}}
+  /* F2 streak warmth: consecutive-correct tier warms --glow only, never text/ink (D5). */
+  .stage[data-streak-tier="1"]{--glow:var(--glow-streak-1)}
+  .stage[data-streak-tier="2"]{--glow:var(--glow-streak-2)}
+  .stage[data-streak-tier="3"]{--glow:var(--glow-streak-3)}
+  /* F3 per-language accents — REVIEW-GATED palette (ja: sakura, zh: red-gold).
+     Only accent/glow tokens; success/warn stay GLOBAL (I5). Other 15 langs = default. */
+  :root[data-lang="ja"]{--glow:#ff8fab;--amber:#ff8fab;--amber-soft:#ffc2d1;--glow-streak-1:#ff8fab;--glow-streak-2:#ff6f91;--glow-streak-3:#ff4f77}
+  :root[data-lang="zh"]{--glow:#e6b422;--amber:#e63946;--amber-soft:#f4c95d;--glow-streak-1:#e6b422;--glow-streak-2:#e0952a;--glow-streak-3:#d67d2e}
+  .letters{position:relative;z-index:1;min-height:62px;display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:.02em;padding:18px;pointer-events:none}
+  .ltr{font-family:var(--mono);font-size:24px;font-weight:700;color:var(--glow);text-shadow:0 0 7px var(--glow),0 0 16px var(--glow);line-height:1}
+  .ltr.space{width:.45em;text-shadow:none}
+  .ltr.pop{animation:pop .28s ease}
+  @keyframes pop{0%{transform:scale(.4);opacity:0}60%{transform:scale(1.18)}100%{transform:scale(1);opacity:1}}
+  .placeholder{font-family:var(--mono);color:var(--muted-2);font-weight:400;font-size:16px;letter-spacing:.04em}
+  .caret{display:inline-block;width:2px;height:26px;background:var(--glow);margin-left:3px;border-radius:1px;opacity:0;box-shadow:0 0 6px var(--glow)}
+  .spellbox.focus .caret{opacity:1;animation:blink 1.05s step-end infinite}
+  @keyframes blink{50%{opacity:0}}
+  /* Visually-hidden live region (announces typed letters to screen readers). */
+  .sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;border:0}
+
+  /* Custom on-screen keyboard — the answer input (no real <input>). */
+  /* Every letter key is the SAME size: a single --kb-key width derived from the
+     column count (--kb-cols, set per layout in keyboard.rs — 10 for QWERTY, 11
+     for QWERTZ/Swedish). Rows with fewer keys stay centered instead of
+     stretching their keys to fill the row (the old flex:1 1 0 caused a 7-key row
+     to have wider keys than a 10-key row). Big Text / Kid raise --kb-key-max so
+     uniformity is preserved automatically. */
+  .game-kb{width:100%;margin-top:14px;display:flex;flex-direction:column;gap:7px;user-select:none;
+    --kb-cols:10; --kb-gap:6px; --kb-key-max:46px;
+    --kb-key:min(var(--kb-key-max), calc((100% - (var(--kb-cols) - 1) * var(--kb-gap)) / var(--kb-cols)));
+    padding-left:env(safe-area-inset-left, 0px);padding-right:env(safe-area-inset-right, 0px);
+    padding-bottom:env(safe-area-inset-bottom, 0px)}
+  .game-kb.locked{opacity:.5;pointer-events:none}
+  #kbLetters{display:flex;flex-direction:column;gap:7px}
+  .kb-row{display:flex;justify-content:center;gap:var(--kb-gap)}
+  .kb-key,.kb-back,.kb-submit{min-height:46px;border:1px solid var(--edge);
+    background:var(--panel);color:var(--ink);border-radius:9px;font-family:var(--body);font-size:17px;font-weight:600;
+    cursor:pointer;display:inline-flex;align-items:center;justify-content:center;transition:background .08s,transform .06s,border-color .08s;
+    -webkit-tap-highlight-color:transparent;touch-action:manipulation}
+  .kb-key{flex:0 0 auto;width:var(--kb-key)}
+  .kb-key:active,.kb-back:active{background:var(--amber);color:#36210a;border-color:var(--amber);transform:translateY(1px)}
+  .kb-key.kb-punct{display:none}
+  .game-kb.show-punct .kb-key.kb-punct{display:inline-flex}
+  .kb-actions{gap:8px;margin-top:2px}
+  /* Enter grows to fill; Delete sits at the far right (thumb reach, standard
+     convention), a touch wider than a letter key. */
+  .kb-submit{flex:1 1 auto;background:var(--amber);color:#36210a;border-color:var(--amber);font-weight:700}
+  .kb-back{flex:0 0 auto;width:auto;min-width:64px;font-size:19px;color:var(--muted)}
+  .kb-submit:active{filter:brightness(1.06);transform:translateY(1px)}
+  /* Vietnamese tone row: applies huyền/sắc/hỏi/ngã/nặng to the last vowel. */
+  .kb-tones.btn-hide{display:none}
+  .kb-tone{font-size:23px;color:var(--amber-soft)}
+  /* Long-press accent keys: a dot hint, and a popover of alternatives that
+     opens above the key after a 350ms hold (built in keyboard.rs). The popover
+     is pointer-events:none so the finger stays "down" on the key and window
+     pointermove/up drive drag-to-select + commit. */
+  .kb-key{position:relative}
+  .kb-key.has-acc::after{content:"";position:absolute;top:4px;right:5px;width:4px;height:4px;border-radius:50%;
+    background:var(--muted);opacity:.55}
+  .kb-popover{position:fixed;transform:translate(-50%,-100%);display:none;gap:5px;padding:6px;border-radius:12px;
+    background:var(--panel);border:1px solid var(--edge);box-shadow:0 12px 32px rgba(0,0,0,.5);z-index:60;pointer-events:none}
+  .kb-popover.show{display:flex}
+  .kb-popover .kb-acc{min-width:42px;min-height:50px;border:1px solid var(--edge);border-radius:9px;background:var(--panel);
+    color:var(--ink);font-family:var(--body);font-size:20px;font-weight:600;display:inline-flex;align-items:center;justify-content:center}
+  .kb-popover .kb-acc.sel{background:var(--amber);color:#36210a;border-color:var(--amber)}
+  /* Accessibility: Big text / Kid mode → larger keys (raise the shared width cap
+     + height/font so every key scales together); Readable → high contrast. */
+  body.kid .game-kb,body.big-text .game-kb{--kb-key-max:56px}
+  body.kid .kb-key,body.kid .kb-back,body.kid .kb-submit,
+  body.big-text .kb-key,body.big-text .kb-back,body.big-text .kb-submit{min-height:56px;font-size:21px}
+  body.readable .kb-key,body.readable .kb-back{border-color:var(--muted);border-width:2px;color:var(--ink)}
+
+  .action-row{width:100%;display:flex;gap:10px;margin-top:12px}
+  .btn{flex:1;border:none;border-radius:12px;padding:14px;font-family:var(--body);font-size:15px;font-weight:600;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;gap:8px;transition:filter .15s,transform .1s,opacity .15s}
+  .btn:active{transform:translateY(1px)}
+  .btn-check{background:var(--amber);color:#36210a}
+  .btn-check:hover{filter:brightness(1.06)}
+  .btn-icon{flex:0 0 auto;background:var(--panel);color:var(--ink);border:1px solid var(--edge);font-size:17px}
+  .btn-icon:hover{border-color:var(--amber)}
+  .btn-icon.on{border-color:var(--amber);color:var(--amber-soft)}
+  .btn-icon[hidden]{display:none}
+
+
+  .btn-mini{background:var(--amber);color:#36210a;border:none;border-radius:10px;padding:9px 14px;font-family:var(--body);font-weight:600;font-size:13px;cursor:pointer}
+  .btn-mini:disabled{opacity:.5;cursor:default}
+
+  .minor-row{width:100%;display:flex;justify-content:space-between;align-items:center;gap:6px;flex-wrap:wrap;margin-top:14px}
+  .ghost{background:none;border:none;color:var(--muted-on-bg);font-family:var(--body);font-size:13px;font-weight:600;cursor:pointer;padding:6px 4px}
+  .ghost:hover{color:var(--ink-on-bg)}
+  .ghost.btn-hide{display:none}
+  .ghost.danger:hover{color:var(--coral)}
+
+  .feedback{min-height:30px;margin-top:18px;text-align:center;font-size:15px;font-weight:600}
+  .feedback .reveal{font-family:var(--mono);color:var(--amber-soft);letter-spacing:.1em;word-break:break-word}
+  .feedback.good{color:var(--teal)}
+  .feedback.bad{color:var(--coral)}
+  .hint-line{text-align:center;margin-top:6px;font-family:var(--mono);font-size:18px;letter-spacing:.28em;color:var(--muted-on-bg);min-height:22px;word-break:break-word}
+  .tries-line{text-align:center;margin-top:6px;font-size:11px;letter-spacing:.3em;min-height:14px}
+  .tries-line .try-dot{color:var(--amber-soft)}
+  .tries-line .try-dot.used{color:var(--edge)}
+
+  .meaning{width:100%;margin-top:12px;text-align:center;color:var(--muted);font-size:13.5px;line-height:1.55;min-height:0;overflow-wrap:anywhere}
+  .meaning.show{padding:12px 16px;background:var(--panel-2);border:1px solid var(--edge);border-radius:12px}
+  .meaning .m-word{color:var(--ink);font-weight:700}
+  .meaning .m-pos{color:var(--muted-2);font-style:italic;font-size:12px;margin-left:4px}
+  .meaning .m-ex{display:block;margin-top:8px;color:var(--muted-2);font-style:italic}
+  .m-insight{display:block;margin-top:5px;font-size:13px;color:var(--muted);opacity:.85;line-height:1.35}
+  .meaning .m-spk{background:none;border:1px solid var(--edge);color:var(--muted);border-radius:999px;padding:3px 9px;font-size:11px;cursor:pointer;margin-left:8px;font-style:normal;vertical-align:middle}
+  .meaning .m-spk:hover{border-color:var(--amber);color:var(--ink)}
+
+  .chain{width:100%;max-width:600px;margin:30px 0 10px;display:flex;align-items:center;justify-content:center;gap:22px}
+  .chain .stat{text-align:center}
+  .chain .num{font-family:var(--display);font-weight:800;font-size:40px;line-height:1}
+  .chain .num.live{color:var(--amber)}
+  .chain .lbl{margin-top:5px;color:var(--muted-on-bg);font-size:11px;text-transform:uppercase;letter-spacing:.16em}
+  .chain .divider{width:1px;height:42px;background:var(--edge)}
+
+  /* head-to-head scoreboard */
+  .vs-bar{width:100%;max-width:600px;margin:0 0 14px;display:flex;align-items:stretch;gap:10px}
+  .vs-bar.btn-hide{display:none}
+  .daily-bar{width:100%;max-width:600px;margin:0 auto 10px;text-align:center;font-family:var(--display);
+    font-weight:700;font-size:15px;letter-spacing:.02em;color:var(--amber-soft);
+    background:var(--panel);border:1px solid var(--edge);border-radius:12px;padding:9px 14px}
+  .daily-bar.btn-hide{display:none}
+  .daily-bar.finale{border-color:var(--amber);color:var(--amber-soft);box-shadow:0 0 14px -4px var(--amber)}
+  .daily-finale{margin-left:8px;font-weight:800}
+  #dailyBtn.on{border-color:var(--amber);color:var(--amber-soft)}
+  #dailyBtn.done{color:var(--muted)}
+  .daily-best{color:var(--muted);font-size:13px;margin-top:-4px}
+  .daily-proverb{margin-top:12px;font-style:italic;color:var(--amber-soft);font-size:15px;line-height:1.4}
+  .daily-proverb .dp-tr{display:block;font-style:normal;color:var(--muted);font-size:13px;margin-top:3px}
+  .vs-side{flex:1;min-width:0;background:var(--panel);border:1.5px solid var(--edge);border-radius:14px;padding:11px 12px;text-align:center;transition:border-color .2s,box-shadow .2s}
+  .vs-side.active{border-color:var(--amber);box-shadow:0 0 0 3px rgba(255,177,77,.14)}
+  .vs-name{font-size:12px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .vs-side.active .vs-name{color:var(--amber-soft)}
+  .vs-cur{font-family:var(--display);font-weight:800;font-size:34px;line-height:1.15;color:var(--ink)}
+  .vs-side.active .vs-cur{color:var(--amber)}
+  .vs-best{font-size:11px;color:var(--muted-2)}
+  .vs-best b{color:var(--amber-soft);font-family:var(--mono)}
+  .vs-mid{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;flex:0 0 auto}
+  .vs-vs{font-family:var(--display);font-weight:700;color:var(--muted-2);font-size:14px}
+  /* 44x44 minimum touch target for the always-visible in-match exit. */
+  #vsExit{min-width:44px;min-height:44px;padding:6px 10px;font-size:13px;font-weight:600;
+    border:1px solid var(--edge);border-radius:10px;color:var(--muted)}
+  #vsExit:hover{border-color:var(--coral);color:var(--coral)}
+  /* Focus the screen during a match: hide single-player chrome. */
+  body.versus .chain,body.versus .card,body.versus #shareBtn,body.versus .foot{display:none}
+
+  .card{width:100%;max-width:600px;margin-top:22px;background:var(--panel);border:1px solid var(--edge);border-radius:16px;padding:18px 20px}
+  .card h2{font-family:var(--display);font-weight:700;font-size:16px;display:flex;align-items:center;justify-content:space-between;gap:10px}
+  .card h2 .scope{font-family:var(--body);font-size:11px;font-weight:500;color:var(--muted-2);letter-spacing:.04em}
+  .srow{display:grid;grid-template-columns:74px 1fr auto;align-items:center;gap:12px;padding:9px 0;border-top:1px solid rgba(255,255,255,.04);font-size:13px}
+  .srow:first-of-type{border-top:none}
+  .stier{color:var(--muted);font-weight:600;text-transform:capitalize}
+  .sbar{height:7px;border-radius:99px;background:rgba(255,255,255,.06);overflow:hidden}
+  .sfill{height:100%;border-radius:99px;background:linear-gradient(90deg,#c97a23,var(--amber));transition:width .5s ease}
+  .snum{font-family:var(--mono);color:var(--muted-2);font-size:12px;white-space:nowrap}
+  .snum b{color:var(--amber-soft)}
+  .stats-empty{color:var(--muted-2);font-size:13.5px;padding:8px 0 4px}
+  .stats-foot{display:flex;justify-content:space-between;align-items:center;margin-top:10px;padding-top:10px;border-top:1px solid rgba(255,255,255,.04)}
+  .stats-foot .total{font-size:12px;color:var(--muted-2)}
+
+  .ach-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(84px,1fr));gap:10px;margin-top:14px}
+  .ach-badge{display:flex;flex-direction:column;align-items:center;text-align:center;gap:6px;padding:11px 6px;border-radius:12px;background:var(--panel-2);border:1px solid var(--edge)}
+  .ach-badge .ic{font-size:23px;filter:grayscale(1);opacity:.38;transition:filter .2s,opacity .2s}
+  .ach-badge.got{border-color:rgba(70,214,184,.4)}
+  .ach-badge.got .ic{filter:none;opacity:1}
+  .ach-badge .nm{font-size:10px;color:var(--muted-2);line-height:1.2}
+  .ach-badge.got .nm{color:var(--ink)}
+
+  .board ol{list-style:none;margin:14px 0 4px}
+  .board li{display:grid;grid-template-columns:24px 1fr auto auto;align-items:center;gap:12px;padding:9px 0;border-top:1px solid rgba(255,255,255,.04);font-size:14px}
+  .board li:first-child{border-top:none}
+  .board .rank{font-family:var(--mono);color:var(--muted-2);font-size:13px}
+  .board li.top .rank{color:var(--amber)}
+  .board .who{font-weight:600;letter-spacing:.02em;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;min-width:0}
+  .board .meta{color:var(--muted-2);font-size:11px;text-transform:uppercase;letter-spacing:.06em;white-space:nowrap}
+  .board .score{font-family:var(--mono);font-weight:700;color:var(--amber-soft);font-size:15px}
+  .board .empty{color:var(--muted-2);font-size:13.5px;padding:8px 0 12px;text-align:center}
+
+
+  .scrim{position:fixed;inset:0;background:rgba(10,8,18,.72);backdrop-filter:blur(4px);display:none;place-items:center;padding:20px;z-index:30;overflow:auto}
+  .scrim.show{display:grid}
+  .modal{width:100%;max-width:380px;background:var(--panel);border:1px solid var(--edge);border-radius:18px;padding:26px 24px;text-align:center}
+  .modal.wide{max-width:460px}
+  .modal h3{font-family:var(--display);font-weight:700;font-size:22px;margin-bottom:6px}
+  .modal p{color:var(--muted);font-size:13.5px;margin-bottom:18px;line-height:1.5}
+  .modal .score-pop{color:var(--amber);font-family:var(--display);font-weight:800;font-size:46px;line-height:1;margin:4px 0 14px}
+  .modal input[type=text]{width:100%;background:var(--panel-2);border:1.5px solid var(--edge);border-radius:12px;padding:13px;color:var(--ink);font-family:var(--mono);font-size:16px;text-align:center;letter-spacing:.08em;text-transform:uppercase;margin-bottom:14px}
+  .modal input:focus{outline:none;border-color:var(--amber)}
+  .modal .row{display:flex;gap:10px}
+  .demo-note{margin-top:14px;color:var(--muted-2);font-size:10.5px;line-height:1.5}
+  /* Age gate — sits above every other scrim; must be answered to proceed. */
+  .age-scrim{z-index:60}
+  .dob-row{display:flex;gap:8px;margin-bottom:8px}
+  .dob-row select{flex:1;min-width:0;text-align:center}
+  .dob-err{min-height:18px;margin-bottom:10px;color:var(--coral);font-size:12.5px;font-weight:600}
+  /* The Climb — accounts + leaderboard */
+  .modal input[type=email],.modal input[type=password]{width:100%;background:var(--panel-2);border:1.5px solid var(--edge);border-radius:12px;padding:13px;color:var(--ink);font-family:var(--body);font-size:16px;margin-bottom:10px}
+  .modal input[type=email]:focus,.modal input[type=password]:focus{outline:none;border-color:var(--amber)}
+  .auth-login{display:none}
+  #authScrim.login-mode .auth-signup{display:none}
+  #authScrim.login-mode .auth-login{display:block}
+  .climb-tabs{display:flex;gap:6px;justify-content:center;margin-bottom:12px;flex-wrap:wrap}
+  .climb-tab{font-size:12px;padding:7px 12px}
+  .climb-tab.on{border-color:var(--amber);color:var(--amber-soft)}
+  .climb-list{text-align:left;max-height:52vh;overflow-y:auto;overflow-x:hidden}
+  .climb-row{display:grid;grid-template-columns:34px 1fr auto 26px;align-items:center;gap:10px;padding:8px 4px;border-top:1px solid rgba(255,255,255,.05);font-size:14px}
+  .climb-row:first-child{border-top:none}
+  .climb-row.me{background:rgba(255,177,77,.1);border-radius:8px}
+  .c-rank{font-family:var(--mono);color:var(--muted-2);font-size:13px}
+  .c-name{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;min-width:0;font-weight:600}
+  .c-chain{font-family:var(--mono);color:var(--amber-soft);font-weight:700}
+  .c-report{background:none;border:none;color:var(--muted-2);cursor:pointer;font-size:13px;padding:2px}
+  .c-report:hover{color:var(--coral)}
+  .climb-sep{text-align:center;color:var(--muted-2);padding:2px}
+  .climb-empty,.climb-loading{color:var(--muted-2);text-align:center;padding:16px;font-size:13.5px}
+  .modal textarea{width:100%;min-height:112px;resize:vertical;background:var(--panel-2);border:1.5px solid var(--edge);border-radius:12px;padding:12px;color:var(--ink);font-family:var(--body);font-size:16px;line-height:1.5;margin-bottom:10px}
+  .modal textarea:focus{outline:none;border-color:var(--amber)}
+  .imp-foot{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:14px}
+  .imp-lang{font-size:12px;color:var(--muted);display:flex;align-items:center;gap:8px}
+  .imp-lang select{padding:7px 26px 7px 10px;font-size:16px}
+  .imp-count{font-family:var(--mono);font-size:12px;color:var(--amber-soft)}
+  .set-row{display:flex;align-items:center;justify-content:space-between;gap:14px;text-align:left;padding:13px 0;border-top:1px solid rgba(255,255,255,.05)}
+  .set-row:first-of-type{border-top:none}
+  .set-row .lbl2{display:flex;flex-direction:column;font-size:14px;font-weight:600;color:var(--ink)}
+  .set-row .lbl2 small{font-weight:400;color:var(--muted-2);font-size:11.5px;margin-top:2px}
+  .switch{position:relative;appearance:none;width:44px;height:25px;flex:0 0 auto;background:var(--edge);border-radius:99px;cursor:pointer;transition:background .2s}
+  .switch:checked{background:var(--teal)}
+  .switch::after{content:"";position:absolute;top:2px;left:2px;width:21px;height:21px;border-radius:50%;background:#fff;transition:transform .2s}
+  .switch:checked::after{transform:translateX(19px)}
+
+  .foot{max-width:600px;margin-top:34px;text-align:center;color:var(--muted-on-bg);font-size:11.5px;line-height:1.6}
+  .foot b{color:var(--ink-on-bg)}
+
+  #toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%) translateY(20px);background:var(--panel);border:1px solid var(--teal);color:var(--ink);padding:11px 18px;border-radius:12px;font-size:13px;font-weight:600;opacity:0;pointer-events:none;transition:opacity .25s,transform .25s;z-index:40;box-shadow:0 8px 30px rgba(0,0,0,.45)}
+  #toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+  #toast .ti{margin-right:8px}
+
+  @media (max-width:480px){
+    .brand .mark{font-size:24px}
+    .orb-wrap{width:200px;height:200px}
+    .orb{width:128px;height:128px}
+    .chain .num{font-size:34px}
+  }
+  @media (prefers-reduced-motion: reduce){
+    /* D8: motion is garnish — kill shake/pop; color state (success/warn/streak) stays perceivable. */
+    .orb,.orb-wrap.speaking .orb,.orb-wrap.speaking .ring,.sfill,.ltr.pop,.caret,.orb-wrap.bad .orb,.spellbox.is-wrong{animation:none!important;transition:none!important}
+  }
+</style>
+</head>
+<body>
+
+  <div class="topbar">
+    <div class="brand">
+      <div class="mark">SPELL</div>
+      <div class="tag" id="brandTag">hear it · spell it · keep the chain</div>
+    </div>
+    <!-- Meta corner: account + settings as icon-only affordances (Feature 2).
+         The only "meta" family; never borrows config/launcher/data treatments.
+         accountBtn's signed-in state (aria-label + .signed-in) is set in climb.rs. -->
+    <div class="meta-corner">
+      <button class="meta-icon" id="accountBtn" aria-label="Sign in">👤</button>
+      <button class="meta-icon" id="setBtn" aria-label="Settings">⚙</button>
+    </div>
+  </div>
+  <!-- head-to-head scoreboard (hidden outside a match) -->
+  <div class="vs-bar btn-hide" id="vsBar" aria-live="polite">
+    <div class="vs-side" id="vsP1">
+      <div class="vs-name" id="vsP1Name">Player 1</div>
+      <div class="vs-cur" id="vsP1Cur">0</div>
+      <div class="vs-best">best <b id="vsP1Best">0</b></div>
+    </div>
+    <div class="vs-mid">
+      <span class="vs-vs">vs</span>
+      <button class="ghost" id="vsExit" data-i18n-aria="vs.title" aria-label="Exit Spell Off">✕ Exit</button>
+    </div>
+    <div class="vs-side" id="vsP2">
+      <div class="vs-name" id="vsP2Name">Player 2</div>
+      <div class="vs-cur" id="vsP2Cur">0</div>
+      <div class="vs-best">best <b id="vsP2Best">0</b></div>
+    </div>
+  </div>
+
+  <!-- Daily Challenge progress banner (hidden outside a daily run) -->
+  <div class="daily-bar btn-hide" id="dailyBar" aria-live="polite"></div>
+
+  <main class="stage" id="stage">
+    <!-- Home control groups, ordered header → my-data → modes → setup → play
+         (Feature 6). Three visual families, one per functional class:
+           .data-chip  = your words (badge-capable)   — My data cluster (F5)
+           .launch     = ways to play (bright/iconed)  — Modes row (F4)
+           .setup-chip = config (muted, chevroned)     — Setup strip (F3)
+         Kid Mode hides climbBtn + accountBtn via btn-hide (climb.rs); the flex
+         rows reflow with no gaps, so Little Speller gets the same families. -->
+    <div class="home-group data-group" role="group" aria-label="Your words">
+      <button class="data-chip" id="importBtn" data-i18n="top.myWords">＋ My words</button>
+      <!-- missesBtn content (icon + label + count badge) is rendered by
+           game::refresh_mode_buttons so the live due-count stays authoritative. -->
+      <button class="data-chip" id="missesBtn"></button>
+    </div>
+    <div class="home-group modes-row" role="group" aria-label="Ways to play">
+      <!-- Launchers keep their existing label sources: vsBtn's icon is static
+           (the shared mode-name string stays icon-free for prose reuse); climbBtn
+           uses top.theClimb (emoji in string); dailyBtn text is set by
+           game::refresh_daily_btn. All three render as icon + label cards. -->
+      <button class="launch" id="vsBtn">⚡ <span data-i18n="top.headToHead">Spell Off</span></button>
+      <button class="launch" id="climbBtn" data-i18n="top.theClimb">🏔 The Climb</button>
+      <button class="launch" id="dailyBtn">🗓 Daily</button>
+    </div>
+    <button class="setup-chip" id="setupChip" aria-haspopup="dialog" aria-label="Round setup">
+      <span class="setup-chip-text" id="setupChipText">English · Climb · Untimed</span>
+      <span class="setup-chip-chev" aria-hidden="true">⚙</span>
+    </button>
+
+    <!-- Coming-soon panel: shown (via body.coming-soon) when the selected study
+         language isn't active yet. The interface still switches to that language
+         (uiLang untouched); the play area shows this instead of a round. Its text
+         is filled by game::render_coming_soon. -->
+    <div class="coming-panel" id="comingPanel" aria-live="polite">
+      <div class="coming-badge" data-i18n="coming.badge">Coming soon</div>
+      <p class="coming-notice" id="comingNotice"></p>
+      <button class="btn btn-check coming-notify" id="notifyBtn"></button>
+    </div>
+
+    <div class="orb-wrap" id="orbWrap" role="button" tabindex="0" aria-label="Play the word">
+      <svg class="timer-ring" id="timerRing" viewBox="0 0 230 230" aria-hidden="true">
+        <circle class="t-track" cx="115" cy="115" r="108"></circle>
+        <circle class="t-prog" id="tProg" cx="115" cy="115" r="108"></circle>
+      </svg>
+      <div class="timer-badge" id="timerBadge"></div>
+      <span class="ring"></span><span class="ring"></span><span class="ring"></span>
+      <div class="orb"><div class="orb-glyph" id="orbGlyph">loading…</div></div>
+    </div>
+
+    <div class="replay-row">
+      <button class="pill" id="replayBtn" disabled><svg width="14" height="14" viewBox="0 0 16 16" fill="none"><path d="M4 3l9 5-9 5V3z" fill="currentColor"/></svg><span data-i18n="btn.replay">Replay</span></button>
+      <button class="pill" id="slowBtn" disabled><svg width="15" height="15" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="6.2" stroke="currentColor" stroke-width="1.4"/><path d="M8 4.6V8l2.4 1.6" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg><span data-i18n="btn.slow">Slow</span></button>
+    </div>
+    <div class="voice-note" id="voiceNote"></div>
+
+    <div class="field-head">
+      <span class="field-label" data-i18n="label.yourSpelling">your spelling</span>
+      <span class="glow-pick" id="glowPick">
+        <span class="gl">glow</span>
+        <button class="swatch" style="--s:#ffb14d" data-c="#ffb14d" aria-label="Amber glow"></button>
+        <button class="swatch" style="--s:#46d6b8" data-c="#46d6b8" aria-label="Teal glow"></button>
+        <button class="swatch" style="--s:#ff6b7a" data-c="#ff6b7a" aria-label="Coral glow"></button>
+        <button class="swatch" style="--s:#7aa2ff" data-c="#7aa2ff" aria-label="Blue glow"></button>
+        <label class="swatch custom" aria-label="Pick a custom glow color"><input type="color" id="glowColor" value="#ffb14d" /></label>
+      </span>
+    </div>
+
+    <div class="spellbox" id="spellbox" role="group" aria-label="Your spelling">
+      <div class="letters" id="letters"></div>
+    </div>
+    <div id="kbAnnounce" class="sr-only" aria-live="polite" aria-atomic="true"></div>
+
+    <!-- Custom on-screen keyboard. The answer is never a real <input>, so the
+         iOS system keyboard — with its dictation key and autocorrect — can't
+         open during a round. Letter keys are built + wired in keyboard.rs. -->
+    <div class="game-kb locked" id="gameKeyboard" role="group" aria-label="On-screen keyboard">
+      <!-- Letter rows are generated per language (3 for QWERTY, 5 for the kana
+           grid) into this container by keyboard.rs. -->
+      <div id="kbLetters"></div>
+      <!-- Vietnamese tone row (built + shown only for vi in keyboard.rs) -->
+      <div class="kb-row kb-tones btn-hide" id="kbToneRow"></div>
+      <div class="kb-row kb-actions">
+        <button class="kb-submit" id="kbSubmit" data-i18n="kb.enter">Enter</button>
+        <button class="kb-back" id="kbBackspace" aria-label="Delete last letter">⌫</button>
+      </div>
+    </div>
+
+    <div class="action-row">
+      <button class="btn btn-check" id="checkBtn" data-i18n="btn.check" disabled>Check spelling</button>
+    </div>
+
+
+    <div class="minor-row">
+      <button class="ghost" id="hintBtn" data-i18n="btn.hint" disabled>Hint</button>
+      <button class="ghost" id="defBtn" data-i18n="btn.definition" disabled title="Shows a masked definition — helps tell apart tricky homonyms">📖 Definition</button>
+      <button class="ghost" id="sentenceBtn" data-i18n="btn.sentence" disabled title="Hear (and see a masked version of) the word used in a sentence">💬 Sentence</button>
+      <button class="ghost danger" id="giveupBtn" data-i18n="btn.giveUp" disabled>Give up</button>
+    </div>
+
+    <div class="hint-line" id="hintLine" aria-hidden="true"></div>
+    <div class="tries-line" id="triesLine" aria-hidden="true"></div>
+    <div class="feedback" id="feedback" aria-live="polite"></div>
+    <div class="meaning" id="meaning" aria-live="polite"></div>
+  </main>
+
+  <div class="chain">
+    <div class="stat"><div class="num live" id="streakNum">0</div><div class="lbl" data-i18n="chain.current">current chain</div></div>
+    <div class="divider"></div>
+    <div class="stat"><div class="num" id="bestNum">0</div><div class="lbl" data-i18n="chain.best">your best</div></div>
+  </div>
+  <button class="pill btn-hide" id="shareBtn" data-i18n-aria="share.button" aria-label="Share your chain" style="margin:0 auto 6px;display:block">↗ <span data-i18n="share.button">Share your chain</span></button>
+
+  <section class="card stats">
+    <h2><span data-i18n="card.accuracy">Your accuracy</span> <span class="scope" id="statsLang"></span></h2>
+    <div id="statsBody"><div class="stats-empty">Spell a few words to start tracking your accuracy by difficulty.</div></div>
+    <div class="stats-foot"><span class="total" id="statsTotal"></span><button class="ghost danger" id="resetStats" data-i18n="card.resetLang">reset this language</button></div>
+  </section>
+
+  <section class="card ach">
+    <h2><span data-i18n="card.achievements">Achievements</span> <span class="scope" id="achCount"></span></h2>
+    <div class="ach-grid" id="achGrid"></div>
+  </section>
+
+  <section class="card board">
+    <h2><span data-i18n="card.longestChains">Longest chains</span> <span class="scope" id="boardScope">this device only</span></h2>
+    <ol id="boardList"><li class="empty">No chains yet — be the first to start one.</li></ol>
+  </section>
+
+  <div class="foot" data-i18n-html="help.howItWorks">
+    <b>How it works:</b> press the orb to hear a word, then type or speak its spelling — a meaning appears after each answer, and misses return over days under <b>↻ Misses</b>.
+    Everything is free. English words are read aloud by your word server; import your own under <b>＋ My words</b> to practice anything, spoken with your browser's voices — smoothest in Chrome or Edge on a computer. Progress is saved in this browser only.
+  </div>
+
+  <!-- name modal -->
+  <div class="scrim" id="scrim">
+    <div class="modal">
+      <h3 id="modalTitle">Chain broken!</h3>
+      <div class="score-pop" id="modalScore">0</div>
+      <p id="modalMsg">Words spelled in a row. Add your name to the board.</p>
+      <input id="nameInput" type="text" maxlength="14" placeholder="your name" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" />
+      <div class="row">
+        <button class="btn btn-icon" id="skipSave" style="flex:1;border-radius:12px">Skip</button>
+        <button class="btn btn-check" id="saveScore">Save to board</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- import modal -->
+  <div class="scrim" id="importScrim">
+    <div class="modal wide">
+      <h3 data-i18n="import.title">Bring your own words</h3>
+      <p data-i18n="import.blurb">Practice the exact words you keep getting wrong — paste text or type a list.</p>
+      <textarea id="importText" placeholder="Paste any text or a list of words here…" data-i18n-ph="ph.importText" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"></textarea>
+      <div class="imp-foot">
+        <label class="imp-lang"><span data-i18n="import.speakIn">Speak in</span> <select id="importLang" aria-label="Pronunciation language"></select></label>
+        <span class="imp-count" id="importCount">0 words</span>
+      </div>
+      <button class="btn btn-check" id="saveWords" data-i18n="import.save" style="width:100%">Save my words</button>
+      <div class="row" style="margin-top:8px">
+        <button class="ghost danger" id="clearWords" data-i18n="import.clear">Clear my words</button>
+        <button class="ghost" id="cancelImport" data-i18n="import.close" style="margin-left:auto">Close</button>
+      </div>
+      <div class="demo-note" id="importNote" data-i18n="import.note">Words stay on this device. Fetching a link can be blocked by the site — if it fails, copy the text and paste it above.</div>
+    </div>
+  </div>
+
+  <!-- age gate: first-launch date-of-birth prompt (only the verdict is stored) -->
+  <div class="scrim age-scrim" id="ageScrim">
+    <div class="modal">
+      <h3 data-i18n="age.title">When's your birthday?</h3>
+      <p data-i18n="age.blurb">We ask so we can show the right experience.</p>
+      <div class="dob-row">
+        <select id="ageMonth" aria-label="Birth month"></select>
+        <select id="ageDay" aria-label="Birth day"></select>
+        <select id="ageYear" aria-label="Birth year"></select>
+      </div>
+      <div class="dob-err" id="ageErr"></div>
+      <button class="btn btn-check" id="ageSubmit" data-i18n="age.continue" style="width:100%">Continue</button>
+    </div>
+  </div>
+
+  <!-- parent gate: worded-math challenge to change a kid-locked verdict -->
+  <div class="scrim age-scrim" id="parentScrim">
+    <div class="modal">
+      <h3 data-i18n="parent.title">Ask a grown-up</h3>
+      <p id="parentQ">Solve to continue.</p>
+      <input id="parentAnswer" type="tel" inputmode="numeric" maxlength="3" placeholder="answer" data-i18n-ph="ph.parentAnswer" autocomplete="off" autocorrect="off" autocapitalize="none" spellcheck="false" />
+      <div class="dob-err" id="parentErr"></div>
+      <div class="row">
+        <button class="btn btn-icon" id="parentCancel" data-i18n="parent.cancel" style="flex:1;border-radius:12px">Cancel</button>
+        <button class="btn btn-check" id="parentSubmit" data-i18n="parent.check">Check</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- head-to-head setup modal -->
+  <div class="scrim" id="vsSetupScrim">
+    <div class="modal">
+      <h3 data-i18n="vs.title">Spell Off</h3>
+      <p data-i18n="vs.blurb">Two players, one device. Take turns spelling — a miss ends your turn. The longest chain wins.</p>
+      <input id="vsName1" type="text" maxlength="14" placeholder="Player 1" data-i18n-ph="ph.vsName1" autocomplete="off" autocorrect="off" autocapitalize="none" spellcheck="false" />
+      <input id="vsName2" type="text" maxlength="14" placeholder="Player 2" data-i18n-ph="ph.vsName2" autocomplete="off" autocorrect="off" autocapitalize="none" spellcheck="false" />
+      <div class="row">
+        <button class="btn btn-icon" id="vsCancel" data-i18n="vs.cancel" style="flex:1;border-radius:12px">Cancel</button>
+        <button class="btn btn-check" id="vsStart" data-i18n="vs.start">Start match</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- head-to-head result modal -->
+  <div class="scrim" id="vsResultScrim">
+    <div class="modal">
+      <h3 id="vsResultTitle">Winner</h3>
+      <p id="vsResultMsg"></p>
+      <div class="row">
+        <button class="btn btn-icon" id="vsResultClose" data-i18n="vs.close" style="flex:1;border-radius:12px">Back to solo</button>
+        <button class="btn btn-check" id="vsRematch" data-i18n="vs.rematch">Rematch</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- head-to-head "leave mid-match" confirm -->
+  <div class="scrim" id="vsQuitScrim">
+    <div class="modal">
+      <h3 data-i18n="vs.leaveTitle">Leave the match?</h3>
+      <p data-i18n="vs.leaveBlurb">The Spell Off match will end and you'll return to the solo game. The current chains won't be saved.</p>
+      <div class="row">
+        <button class="btn btn-icon" id="vsQuitCancel" data-i18n="vs.keepPlaying" style="flex:1;border-radius:12px">Keep playing</button>
+        <button class="btn btn-check" id="vsQuitConfirm" data-i18n="vs.leave">Leave match</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- The Climb: auth (signup/login) modal -->
+  <div class="scrim" id="authScrim">
+    <div class="modal">
+      <div class="auth-signup">
+        <h3 data-i18n="auth.createTitle">Create your account</h3>
+        <p data-i18n="auth.createBlurb">Post your best chains to The Climb. Your email is used only to verify your account and reset your password — never shown to anyone.</p>
+        <input id="authUsername" type="text" maxlength="16" placeholder="username" data-i18n-ph="ph.username" autocomplete="off" autocorrect="off" autocapitalize="none" spellcheck="false" />
+        <input id="authEmail" type="email" placeholder="email" data-i18n-ph="ph.email" autocomplete="off" autocorrect="off" autocapitalize="none" spellcheck="false" />
+        <input id="authPassword" type="password" placeholder="password (8+ characters)" data-i18n-ph="ph.password8" autocomplete="off" />
+        <button class="btn btn-check" id="authSignupBtn" data-i18n="auth.create" style="width:100%">Create account</button>
+        <button class="ghost" id="authToLogin" data-i18n="auth.haveAccount" style="margin-top:8px">Have an account? Log in</button>
+      </div>
+      <div class="auth-login">
+        <h3 data-i18n="auth.welcomeBack">Welcome back</h3>
+        <input id="authIdentifier" type="text" placeholder="username or email" data-i18n-ph="ph.usernameOrEmail" autocomplete="off" autocorrect="off" autocapitalize="none" spellcheck="false" />
+        <input id="authLoginPassword" type="password" placeholder="password" data-i18n-ph="ph.password" autocomplete="off" />
+        <button class="btn btn-check" id="authLoginBtn" data-i18n="auth.login" style="width:100%">Log in</button>
+        <button class="ghost" id="authToSignup" data-i18n="auth.newHere" style="margin-top:8px">New here? Sign up</button>
+      </div>
+      <div class="dob-err" id="authErr"></div>
+      <button class="ghost" id="authClose" data-i18n="auth.close" style="width:100%">Close</button>
+    </div>
+  </div>
+
+  <!-- Daily Challenge result -->
+  <div class="scrim" id="dailyResScrim">
+    <div class="modal">
+      <h3 data-i18n="daily.resultTitle">Daily Challenge</h3>
+      <div class="score-pop" id="dailyResScore">0/0</div>
+      <p id="dailyResStreak"></p>
+      <p class="daily-best" id="dailyResBest"></p>
+      <p class="daily-proverb" id="dailyResProverb"></p>
+      <div class="row">
+        <button class="btn btn-icon" id="dailyShare" data-i18n="daily.share" style="flex:1;border-radius:12px">Share</button>
+        <button class="btn btn-check" id="dailyResClose" data-i18n="daily.close">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- The Climb: account settings modal -->
+  <div class="scrim" id="accountScrim">
+    <div class="modal">
+      <h3 data-i18n="acct.title">Your account</h3>
+      <p><span data-i18n="acct.signedInAs">Signed in as</span> <b id="acctUsername"></b></p>
+      <input id="acctNewUsername" type="text" maxlength="16" placeholder="new username" data-i18n-ph="ph.newUsername" autocomplete="off" autocorrect="off" autocapitalize="none" spellcheck="false" />
+      <button class="btn btn-icon" id="acctChangeName" data-i18n="acct.changeName" style="width:100%;border-radius:12px">Update username</button>
+      <div class="dob-err" id="acctErr"></div>
+      <div class="set-row"><span class="lbl2"><span data-i18n="acct.deleteLabel">Delete account</span><small data-i18n="acct.deleteSmall">Removes your account and all Climb entries. This can't be undone.</small></span></div>
+      <input id="acctDeletePassword" type="password" placeholder="password to confirm" data-i18n-ph="ph.passwordConfirm" autocomplete="off" />
+      <button class="ghost danger" id="acctDelete" data-i18n="acct.deleteBtn" style="width:100%">Delete my account</button>
+      <div class="row" style="margin-top:12px">
+        <button class="ghost" id="acctLogout" data-i18n="acct.logout">Log out</button>
+        <button class="ghost" id="acctClose" data-i18n="acct.close" style="margin-left:auto">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- The Climb: leaderboard modal -->
+  <div class="scrim" id="climbScrim">
+    <div class="modal wide">
+      <h3>🏔 The Climb</h3>
+      <div class="climb-tabs">
+        <button class="pill climb-tab on" id="climbTab-medium">Medium</button>
+        <button class="pill climb-tab" id="climbTab-hard">Hard</button>
+        <button class="pill climb-tab" id="climbTab-expert">Expert</button>
+      </div>
+      <div class="climb-list" id="climbList"></div>
+      <button class="ghost" id="climbClose" style="width:100%;margin-top:10px">Close</button>
+    </div>
+  </div>
+
+  <!-- settings modal -->
+  <!-- Setup sheet (Feature 3, option a): the three round-parameter pickers live
+       here, opened by #setupChip. Icon-prefixed rows (no text labels) so no new
+       i18n keys are needed; the pickers keep their IDs/options/handlers, so this
+       is a pure relocation — behaviour is unchanged. -->
+  <div class="scrim" id="setupScrim">
+    <div class="modal setup-card">
+      <label class="setup-field"><span class="setup-field-ico" aria-hidden="true">🌐</span>
+        <select id="langSel" aria-label="Word source"></select></label>
+      <label class="setup-field"><span class="setup-field-ico" aria-hidden="true">🎚</span>
+        <select id="levelSel" aria-label="Difficulty"></select></label>
+      <label class="setup-field"><span class="setup-field-ico" aria-hidden="true">⏱</span>
+        <select id="modeSel" aria-label="Timer">
+          <option value="off" data-i18n="mode.untimed">Untimed</option>
+          <option value="on" data-i18n="mode.timed">Quick Bee</option>
+        </select></label>
+      <button class="btn btn-check" id="setupDone" data-i18n="settings.done" style="width:100%;margin-top:16px">Done</button>
+    </div>
+  </div>
+
+  <div class="scrim" id="setScrim">
+    <div class="modal">
+      <h3 data-i18n="settings.title">Settings</h3>
+      <label class="set-row"><span class="lbl2"><span data-i18n="settings.kid">Little Spellers</span><small data-i18n="settings.kidSmall">Bigger text, friendly words, no prices</small></span><input type="checkbox" class="switch" id="kidToggle" /></label>
+      <label class="set-row"><span class="lbl2"><span data-i18n="settings.readable">Readable mode</span><small data-i18n="settings.readableSmall">Larger, spaced, dyslexia-friendly type</small></span><input type="checkbox" class="switch" id="readToggle" /></label>
+      <label class="set-row"><span class="lbl2"><span data-i18n="settings.bigText">Big text</span><small data-i18n="settings.bigTextSmall">Enlarge the interface text (about 1.5×)</small></span><input type="checkbox" class="switch" id="bigTextToggle" /></label>
+      <label class="set-row"><span class="lbl2"><span data-i18n="settings.slow">Slower voice</span><small data-i18n="settings.slowSmall">Speak each word more slowly</small></span><input type="checkbox" class="switch" id="slowToggle" /></label>
+      <label class="set-row"><span class="lbl2"><span data-i18n="settings.remind">Daily reminder</span><small data-i18n="settings.remindSmall">One gentle nudge a day to practice</small></span><input type="checkbox" class="switch" id="remindToggle" /></label>
+      <label class="set-row" id="remindTimeRow"><span class="lbl2"><span data-i18n="settings.remindTime">Reminder time</span><small data-i18n="settings.remindTimeSmall">When to send the daily nudge</small></span><input type="time" id="remindTime" value="17:00" aria-label="Daily reminder time" /></label>
+      <div class="set-row">
+        <span class="lbl2"><span data-i18n="settings.volume">Volume boost</span><small data-i18n="settings.volumeSmall">Louder than 100% for quiet speakers</small></span>
+        <input type="range" id="volumeSlider" min="0.5" max="2" step="0.1" value="1" aria-label="Volume boost" />
+      </div>
+      <div class="set-row">
+        <span class="lbl2"><span data-i18n="settings.background">Background</span><small data-i18n="settings.backgroundSmall">Page background color</small></span>
+        <span class="theme-pick" id="bgPick">
+          <button class="theme-swatch" style="--s:#1c1830" data-c="#1c1830" aria-label="Violet background"></button>
+          <button class="theme-swatch" style="--s:#151d2e" data-c="#151d2e" aria-label="Navy background"></button>
+          <button class="theme-swatch" style="--s:#132018" data-c="#132018" aria-label="Forest background"></button>
+          <button class="theme-swatch" style="--s:#241318" data-c="#241318" aria-label="Maroon background"></button>
+          <button class="theme-swatch" style="--s:#181818" data-c="#181818" aria-label="Charcoal background"></button>
+          <label class="theme-swatch custom" aria-label="Pick a custom background color"><input type="color" id="bgColorInput" value="#1c1830" /></label>
+        </span>
+      </div>
+      <div class="set-row">
+        <span class="lbl2"><span data-i18n="settings.orb">Orb color</span><small data-i18n="settings.orbSmall">Color of the spelling orb</small></span>
+        <span class="theme-pick" id="orbPick">
+          <button class="theme-swatch" style="--s:#ffb14d" data-c="#ffb14d" aria-label="Amber orb"></button>
+          <button class="theme-swatch" style="--s:#46d6b8" data-c="#46d6b8" aria-label="Teal orb"></button>
+          <button class="theme-swatch" style="--s:#ff6b7a" data-c="#ff6b7a" aria-label="Coral orb"></button>
+          <button class="theme-swatch" style="--s:#7aa2ff" data-c="#7aa2ff" aria-label="Blue orb"></button>
+          <button class="theme-swatch" style="--s:#b18cff" data-c="#b18cff" aria-label="Violet orb"></button>
+          <label class="theme-swatch custom" aria-label="Pick a custom orb color"><input type="color" id="orbColorInput" value="#ffb14d" /></label>
+        </span>
+      </div>
+      <button class="btn btn-check" id="setDone" data-i18n="settings.done" style="width:100%;margin-top:16px">Done</button>
+    </div>
+  </div>
+
+  <div id="toast"></div>
+
+  <script>
+    // ↓ Word-server backend URL. Change ONLY this line when you deploy.
+    // The Caddyfile in this repo reverse-proxies /api/* on the same domain
+    // to the backend container, so in production this should just be the
+    // site's own origin. For local development, point it at wherever
+    // `backend/app.py` is running instead (e.g. http://127.0.0.1:5000).
+    // No rebuild needed; this is read at runtime by the compiled app.
+    window.SPELL_API_BASE = "https://spellgame.net";
+  </script>
+  <!-- Native-audio bridge (Capacitor build only; a no-op stub on the web).
+       Classic script so window.SpellAudio is defined before the WASM module
+       runs. -->
+  <script src="./audio-native.js"></script>
+  <script type="module">
+    import init from './pkg/spell_wasm.js?v=DEV';
+    // The compiled app (~1.4MB of WASM) has to finish downloading and
+    // initializing before the orb does anything. On mobile this has been
+    // observed failing mid-download (a flaky connection canceling the
+    // transfer, confirmed server-side). Two defenses against that:
+    // 1. Fetch the raw bytes ourselves and hand init() a plain ArrayBuffer
+    //    instead of letting it use WebAssembly.instantiateStreaming — some
+    //    mobile browsers have had bugs specifically in the streaming-
+    //    compile path; plain fetch+arrayBuffer+instantiate is slower to
+    //    start but much more universally reliable.
+    // 2. init() only reaches its "already loaded" short-circuit after a
+    //    full success, so a fresh call after a failure safely restarts the
+    //    whole fetch from scratch — retry a few times automatically so a
+    //    transient blip fixes itself without the player noticing.
+    const MAX_ATTEMPTS = 4;
+    const WASM_URL = new URL('./pkg/spell_wasm_bg.wasm?v=DEV', import.meta.url);
+
+    function setGlyph(html) {
+      const glyph = document.getElementById('orbGlyph');
+      if (glyph) glyph.innerHTML = html;
+    }
+
+    async function bootWithRetry() {
+      for (let attempt = 1; attempt <= MAX_ATTEMPTS; attempt++) {
+        try {
+          const res = await fetch(WASM_URL);
+          if (!res.ok) throw new Error(`HTTP ${res.status} fetching wasm`);
+          const bytes = await res.arrayBuffer();
+          await init({ module_or_path: bytes });
+          setGlyph('tap to<br/>hear a word');
+          return;
+        } catch (err) {
+          console.error(`Spell failed to load (attempt ${attempt}/${MAX_ATTEMPTS}):`, err);
+          if (attempt < MAX_ATTEMPTS) {
+            setGlyph(`loading… (retry ${attempt}/${MAX_ATTEMPTS - 1})`);
+            await new Promise((r) => setTimeout(r, 900 * attempt));
+          }
+        }
+      }
+      setGlyph('couldn’t load —<br/>tap to retry');
+      document.getElementById('orbWrap')?.addEventListener(
+        'click',
+        () => location.reload(),
+        { once: true }
+      );
+    }
+    bootWithRetry();
+  </script>
+  <script>
+    // Only the plain web/PWA build runs the service worker. Inside a native
+    // wrapper (Capacitor iOS, or Tauri desktop) the shell is already served
+    // locally from the bundle — a second SW cache layer there causes stale-build
+    // bugs (and breaks App Store review). Keep this the single source of truth
+    // for "am I wrapped?"; Tauri/desktop reuses it too.
+    window.isWrappedPlatform = function () {
+      return !!(window.Capacitor && window.Capacitor.isNativePlatform && window.Capacitor.isNativePlatform())
+        || !!window.__TAURI__ || !!window.__TAURI_INTERNALS__;
+    };
+    if ('serviceWorker' in navigator && !window.isWrappedPlatform()) {
+      // If a controller already exists, a later controllerchange means a NEW
+      // service worker (a deploy) took over — reload once so the page runs the
+      // fresh assets instead of a stale cached mix (a recurring cause of the
+      // app loading but audio/logic being stale). Guarded by hadController so
+      // the first-ever install (no prior controller) never triggers a reload.
+      const hadController = !!navigator.serviceWorker.controller;
+      let reloaded = false;
+      navigator.serviceWorker.addEventListener('controllerchange', () => {
+        if (!hadController || reloaded) return;
+        reloaded = true;
+        window.location.reload();
+      });
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('./sw.js').then((reg) => reg.update());
+      });
+    }
+  </script>
+  <script>
+    // iOS zoom recovery net (defense in depth behind the CSS/viewport fixes).
+    // If iOS still zooms a focused field and fails to restore scale, re-assert
+    // the viewport meta on blur / viewport-scale change to nudge it back to 1.
+    // iOS WKWebView only; logs when it fires so we can tell if Fixes 1-3 missed.
+    (function () {
+      var isIOS = /iP(hone|ad|od)/.test(navigator.platform) ||
+        (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1) ||
+        (window.Capacitor && window.Capacitor.getPlatform && window.Capacitor.getPlatform() === 'ios');
+      if (!isIOS || !window.visualViewport) return;
+      var vp = document.querySelector('meta[name="viewport"]');
+      if (!vp) return;
+      var content = vp.getAttribute('content');
+      function reassert() {
+        if (window.visualViewport.scale <= 1.01) return;
+        console.warn('[zoom-guard] scale ' + window.visualViewport.scale.toFixed(2) + ' — re-asserting viewport');
+        vp.setAttribute('content', content + ', maximum-scale=1');
+        // toggle back so a future intentional change (none here) isn't blocked
+        requestAnimationFrame(function () { vp.setAttribute('content', content); });
+      }
+      document.addEventListener('focusout', function () {
+        // let the keyboard dismiss first, then check
+        setTimeout(reassert, 300);
+      }, true);
+      window.visualViewport.addEventListener('scale', function () {
+        if (!document.querySelector('input:focus, textarea:focus, select:focus')) reassert();
+      });
+    })();
+  </script>
+</body>
+</html>
