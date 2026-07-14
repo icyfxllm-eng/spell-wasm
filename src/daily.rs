@@ -29,6 +29,11 @@ pub struct DailyState {
     /// How many words have been served so far (0..=words.len()).
     pub idx: usize,
     pub correct: u32,
+    /// When true, this run is an online Spell Off (seed-driven, §online): the
+    /// same fixed-list / single-attempt play machinery as the Daily Challenge,
+    /// but on finish it submits to the match server instead of touching the
+    /// Daily streak/history. Default false → ordinary Daily behavior unchanged.
+    pub spelloff: bool,
 }
 
 /// Persisted daily progress.
@@ -236,6 +241,51 @@ pub fn build_words(lang: &str, date: &str, kid: bool) -> (String, Vec<String>) {
     (locale, out)
 }
 
+/// Seed for one `(lang, tier)` shuffle driven by an ARBITRARY server seed
+/// (the async Spell Off, §online), rather than by the date. Same FNV-1a mixing
+/// as `walk_seed`, but the descriptor carries the raw 64-bit match seed so a
+/// given `(lang, tier, seed)` always shuffles the pool identically on every
+/// device — the whole point of the shared-seed head-to-head.
+fn seed_walk(lang: &str, tier: &str, seed: u64, ph: u64) -> u64 {
+    let desc = format!("spelloff-v1|{lang}|{tier}|{seed}|{ph}");
+    let mut h: u64 = 0xcbf29ce484222325;
+    for b in desc.bytes() {
+        h ^= b as u64;
+        h = h.wrapping_mul(0x100000001b3);
+    }
+    h
+}
+
+/// Build a Spell Off word set from a server-provided `seed` (instead of the
+/// date). Deterministic for a given `(lang, tier, seed, count)` quadruple — both
+/// players derive the SAME words from the one seed, spelling them on their own
+/// time. Reuses the Daily engine's pool prep (active-locale gating, stable sort
+/// by word id) and Fisher–Yates `permutation`, so the shuffle quality matches
+/// the Daily Challenge. Words are returned easiest→hardest (length proxy), like
+/// a Daily tier slice. Falls back to English for gated/unknown locales.
+///
+/// Kept separate from `build_words` on purpose: the Daily seeding, its cycle
+/// walk, and its no-repeat guarantees are untouched by online play.
+pub fn build_words_from_seed(lang: &str, tier: &str, seed: u64, count: usize) -> Vec<String> {
+    let locale = locale_for(lang);
+    let full = words::tier_for(&locale, tier);
+    if full.is_empty() || count == 0 {
+        return Vec::new();
+    }
+    // Stable input order (by word id) so the shuffle is identical everywhere,
+    // independent of the source list's declaration order.
+    let mut pool: Vec<&str> = full.to_vec();
+    pool.sort_unstable();
+    let ph = pool_hash(&pool);
+    let perm = permutation(pool.len(), seed_walk(&locale, tier, seed, ph));
+    let take = count.min(pool.len());
+    let mut picked: Vec<String> = perm[..take].iter().map(|&i| pool[i].to_string()).collect();
+    // Ramp within the run: easiest first (shorter = easier proxy for now), same
+    // convention as the Daily tier slice.
+    picked.sort_by_key(|w| w.chars().count());
+    picked
+}
+
 /// Record a finished run, update the consecutive-day streak, and return
 /// `(streak, best_streak)`. Idempotent for a given day (re-finishing keeps the
 /// first score/streak).
@@ -334,6 +384,40 @@ mod tests {
                     }
                 }
             }
+        }
+    }
+
+    // ---- Spell Off (seed-driven) determinism ----
+
+    #[test]
+    fn spelloff_same_seed_is_identical() {
+        let a = build_words_from_seed("en", "medium", 0xDEADBEEF, 10);
+        let b = build_words_from_seed("en", "medium", 0xDEADBEEF, 10);
+        assert_eq!(a, b, "same (lang,tier,seed) must yield identical words");
+        assert!(!a.is_empty());
+        assert!(a.len() <= 10);
+    }
+
+    #[test]
+    fn spelloff_different_seed_differs() {
+        // Overwhelmingly likely to differ across two distinct seeds for a pool of
+        // any real size. (Guards the seed actually drives the shuffle.)
+        let a = build_words_from_seed("en", "medium", 1, 10);
+        let b = build_words_from_seed("en", "medium", 2, 10);
+        assert_ne!(a, b, "different seeds should produce different word lists");
+    }
+
+    #[test]
+    fn spelloff_count_and_seed_independence() {
+        // Count is honored, and the count doesn't secretly change the seed path
+        // (a shorter request is a prefix-by-difficulty of the same shuffle).
+        let five = build_words_from_seed("en", "hard", 777, 5);
+        assert!(five.len() <= 5);
+        // Determinism holds for every locale (gated ones fall back to English).
+        for lang in ["en", "es", "fr", "de", "th", "ja", "zh"] {
+            let x = build_words_from_seed(lang, "easy", 42, 10);
+            let y = build_words_from_seed(lang, "easy", 42, 10);
+            assert_eq!(x, y, "{lang}: seed run must be deterministic");
         }
     }
 

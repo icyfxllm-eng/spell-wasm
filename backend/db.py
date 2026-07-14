@@ -99,6 +99,32 @@ CREATE TABLE IF NOT EXISTS submit_log (
 CREATE INDEX IF NOT EXISTS idx_submit_log_user ON submit_log(user_id, ts);
 -- Ranking within a (difficulty, locale) board: highest chain first, ties by earliest.
 CREATE INDEX IF NOT EXISTS idx_lb_rank ON leaderboard_entries(difficulty, locale, best_chain DESC, achieved_at ASC);
+
+-- Async 1v1 "Spell Off" matches (see matches.py). Two friends spell the SAME
+-- words — derived deterministically client-side from the server-owned `seed` —
+-- on their own time; the server compares results and declares the winner. The
+-- seed lives server-side so it's the integrity foundation for a later
+-- server-side re-derivation + answer/timing audit (see the TODO in matches.py).
+-- Account-gated only (no anonymous/Kid-Mode/stranger play) — COPPA-safe.
+CREATE TABLE IF NOT EXISTS matches (
+  code        TEXT PRIMARY KEY,               -- short share code (8 chars)
+  seed        TEXT NOT NULL,                  -- server-generated hex (the shared PRNG seed)
+  lang        TEXT NOT NULL,
+  tier        TEXT NOT NULL,
+  word_count  INTEGER NOT NULL,
+  player_a    INTEGER NOT NULL,               -- creator (user id)
+  player_b    INTEGER,                        -- joiner (user id), NULL while open
+  status      TEXT NOT NULL DEFAULT 'open'    -- open | active | complete
+                CHECK (status IN ('open','active','complete')),
+  score_a     INTEGER, correct_a INTEGER, elapsed_a INTEGER,
+  score_b     INTEGER, correct_b INTEGER, elapsed_b INTEGER,
+  winner      TEXT,                           -- 'a' | 'b' | 'tie' (once complete)
+  created_at  REAL NOT NULL,
+  expires_at  REAL NOT NULL,
+  FOREIGN KEY(player_a) REFERENCES users(id) ON DELETE CASCADE,
+  FOREIGN KEY(player_b) REFERENCES users(id) ON DELETE CASCADE
+);
+CREATE INDEX IF NOT EXISTS idx_matches_players ON matches(player_a, player_b);
 """
 
 

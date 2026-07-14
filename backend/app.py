@@ -107,9 +107,11 @@ tts_client = texttospeech.TextToSpeechClient(
 # Same origin as the word API (Caddy proxies /api/* here), so no extra CORS.
 import db  # noqa: E402
 import climb  # noqa: E402
+import matches  # noqa: E402
 
 db.init()
 app.register_blueprint(climb.bp)
+app.register_blueprint(matches.bp)  # async 1v1 "Spell Off" (account-gated)
 
 # ---------------------------------------------------------------
 # Helpers

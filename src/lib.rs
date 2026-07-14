@@ -10,6 +10,7 @@ mod deck;
 mod dom;
 pub mod editor;
 mod enrich;
+mod flags;
 mod game;
 mod haptics;
 mod hangul;
@@ -23,6 +24,7 @@ mod misses;
 mod model;
 mod native_audio;
 mod norm;
+mod online_spelloff;
 mod pinyin;
 mod notifications;
 mod notify;
@@ -164,6 +166,7 @@ fn wire(app: &App) {
     wire_age_gate(app);
     keyboard::setup(app);
     climb::setup(app);
+    online_spelloff::setup(app);
 
     // Notify Me (coming-soon languages): record anonymous interest for the
     // language on the panel, then flip the button to its confirmed state.

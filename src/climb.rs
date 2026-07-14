@@ -49,6 +49,13 @@ pub fn is_logged_in() -> bool {
     USER.with(|c| c.borrow().is_some())
 }
 
+/// The saved session token, if any — shared with sibling account-gated modules
+/// (e.g. the online Spell Off) so they authenticate as the same signed-in user
+/// without duplicating token storage.
+pub fn bearer() -> Option<String> {
+    token()
+}
+
 fn username() -> Option<String> {
     USER.with(|c| c.borrow().as_ref().map(|u| u.username.clone()))
 }
@@ -139,6 +146,9 @@ pub fn reflect_auth() {
     let gated = dom::doc().body().map(|b| b.class_list().contains("kid")).unwrap_or(false);
     dom::toggle_class("climbBtn", "btn-hide", gated);
     dom::toggle_class("accountBtn", "btn-hide", gated);
+    // The online Spell Off entry follows the same account + Kid-Mode gate (plus
+    // its own feature flag); keep it in sync whenever auth state changes.
+    crate::online_spelloff::reflect_gate();
     if gated {
         return;
     }
