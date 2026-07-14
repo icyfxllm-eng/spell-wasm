@@ -629,6 +629,10 @@
            stays btn-hide until the feature flag is on AND the native speech
            bridge is present AND Kid Mode is off (say_it::reflect_gating). -->
       <button class="launch btn-hide" id="sayItBtn">🗣 <span data-i18n="top.sayIt">Say It</span></button>
+      <!-- Online Spell Off (async 1v1). Hidden by default (btn-hide): shown by
+           online_spelloff::reflect_gate only when the feature flag is ON, the
+           player is signed in, and it isn't Kid Mode (COPPA — accounts only). -->
+      <button class="launch btn-hide" id="soBtn" data-i18n="so.entry">🌍 Challenge a friend</button>
     </div>
     <button class="setup-chip" id="setupChip" aria-haspopup="dialog" aria-label="Round setup">
       <span class="setup-chip-text" id="setupChipText">English · Climb · Untimed</span>
@@ -905,6 +909,42 @@
         <h3 data-i18n="sayit.title">🗣 Say It</h3>
         <p data-i18n="sayit.needsMic">Say It needs the microphone. Turn on Microphone and Speech Recognition for Spell in Settings, then come back.</p>
         <button class="btn btn-check" id="sayItNeedsMicClose" data-i18n="sayit.close" style="width:100%">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Online Spell Off: create / join modal (async 1v1 via a shared seed).
+       Account-gated + friend-code only (no anonymous play, no strangers, no
+       chat) — see online_spelloff.rs. -->
+  <div class="scrim" id="soScrim">
+    <div class="modal">
+      <h3 data-i18n="so.title">Challenge a friend</h3>
+      <p data-i18n="so.blurb">Play the same words as a friend, on your own time. Create a match and share the code, or enter a friend's code. Winner has the most correct.</p>
+      <button class="btn btn-check" id="soCreateBtn" data-i18n="so.create" style="width:100%">Create a match</button>
+      <!-- Revealed after a match is created: the code to share + a Play button. -->
+      <div class="so-code-box btn-hide" id="soCodeBox">
+        <p data-i18n="so.shareHint">Share this code with your friend, then start:</p>
+        <div class="so-code" id="soCode">--------</div>
+        <button class="btn btn-check" id="soPlay" data-i18n="so.play" style="width:100%">Play your words</button>
+      </div>
+      <div class="so-divider" data-i18n="so.or">or</div>
+      <input id="soJoinCode" type="text" maxlength="8" placeholder="CODE" data-i18n-ph="so.codePh" autocomplete="off" autocorrect="off" autocapitalize="characters" spellcheck="false" />
+      <button class="btn btn-check" id="soJoinBtn" data-i18n="so.join" style="width:100%">Join with a code</button>
+      <p class="err" id="soErr" aria-live="polite"></p>
+      <div class="row">
+        <button class="btn btn-icon" id="soClose" data-i18n="so.close" style="flex:1;border-radius:12px">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Online Spell Off: result / outcome view -->
+  <div class="scrim" id="soResultScrim">
+    <div class="modal">
+      <h3 id="soResultTitle" data-i18n="so.doneTitle">Submitted</h3>
+      <p id="soResultMsg"></p>
+      <div class="row">
+        <button class="btn btn-icon" id="soResultClose" data-i18n="so.close" style="flex:1;border-radius:12px">Close</button>
+        <button class="btn btn-check" id="soResultRefresh" data-i18n="so.refresh">Check again</button>
       </div>
     </div>
   </div>

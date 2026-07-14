@@ -75,6 +75,13 @@ pub fn word_stories() -> bool {
     resolve(stored("word_stories").as_deref(), false)
 }
 
+/// Online "Spell Off" (async 1v1, server-owned seed — see online_spelloff.rs +
+/// backend/matches.py). **Default OFF**: the /api/match backend must be deployed
+/// to the Pi before this can function, so it ships dark until then.
+pub fn online_spelloff() -> bool {
+    resolve(stored("online_spelloff").as_deref(), false)
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;

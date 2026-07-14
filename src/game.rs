@@ -1381,6 +1381,7 @@ pub fn enter_daily(app: &App) {
         let mut s = app.borrow_mut();
         s.review = false;
         s.daily.active = true;
+        s.daily.spelloff = false; // an ordinary Daily run, not an online Spell Off
         s.daily.locale = locale;
         s.daily.date = date;
         s.daily.words = words;
@@ -1413,6 +1414,7 @@ pub fn exit_daily(app: &App) {
     {
         let mut s = app.borrow_mut();
         s.daily.active = false;
+        s.daily.spelloff = false;
         s.word = String::new();
         s.answered = false;
         s.cur_lang = s.lang.clone();
@@ -1420,11 +1422,71 @@ pub fn exit_daily(app: &App) {
     leave_daily_ui(app);
 }
 
+/// Start an online Spell Off run over a server-seeded word list (§online). It
+/// reuses the Daily Challenge run machinery (fixed list, one attempt per word,
+/// cumulative-correct scoring) but is flagged `spelloff` so `finish_daily`
+/// submits the result to the match server instead of the Daily streak. The
+/// caller (online_spelloff.rs) owns the words (derived from the shared seed) and
+/// the match code / timing.
+pub fn start_spelloff_run(app: &App, locale: String, words: Vec<String>) {
+    if words.is_empty() {
+        return;
+    }
+    if app.borrow().review {
+        exit_review(app, None);
+    }
+    if app.borrow().versus.enabled {
+        exit_versus(app);
+    }
+    {
+        let mut s = app.borrow_mut();
+        s.review = false;
+        s.daily.active = true;
+        s.daily.spelloff = true;
+        s.daily.locale = locale;
+        s.daily.date = crate::daily::today();
+        s.daily.words = words;
+        s.daily.idx = 0;
+        s.daily.correct = 0;
+        s.word = String::new();
+        s.answered = false;
+    }
+    stop_timer(true);
+    clear_meaning();
+    dom::set_disabled("langSel", true);
+    dom::set_disabled("levelSel", true);
+    dom::set_disabled("modeSel", true);
+    app.borrow_mut().answer.clear();
+    render_letters(app, false);
+    dom::set_text("hintLine", "");
+    dom::set_text("feedback", "");
+    dom::el("feedback").set_class_name("feedback");
+    dom::set_html("orbGlyph", &crate::i18n::t("daily.tapStart"));
+    dom::remove_class("dailyBar", "btn-hide");
+    render_tries(app);
+    render_daily_bar(app);
+}
+
 fn finish_daily(app: &App) {
-    let (date, correct, total) = {
+    let (date, correct, total, spelloff) = {
         let s = app.borrow();
-        (s.daily.date.clone(), s.daily.correct, s.daily.words.len() as u32)
+        (s.daily.date.clone(), s.daily.correct, s.daily.words.len() as u32, s.daily.spelloff)
     };
+    // Online Spell Off: same fixed-list run, but the result goes to the match
+    // server (and shows the head-to-head outcome) instead of the Daily streak.
+    if spelloff {
+        {
+            let mut s = app.borrow_mut();
+            s.daily.active = false;
+            s.daily.spelloff = false;
+            s.word = String::new();
+            s.answered = false;
+            s.cur_lang = s.lang.clone();
+        }
+        leave_daily_ui(app);
+        crate::online_spelloff::finish_run(app, correct, total);
+        return;
+    }
     let (streak, best) = crate::daily::record_result(&date, correct);
     {
         let mut s = app.borrow_mut();

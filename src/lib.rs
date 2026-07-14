@@ -27,6 +27,7 @@ mod native_audio;
 mod native_lang;
 mod photo_list;
 mod norm;
+mod online_spelloff;
 mod pinyin;
 mod notifications;
 mod notify;
@@ -175,6 +176,8 @@ fn wire(app: &App) {
     // Feature F2 "Say It" — wires nothing unless the flag is on (ships dark).
     say_it::wire(app);
     say_it::reflect_gating(app);
+    // Online Spell Off (async 1v1) — no entry unless flag on + signed in + not kid.
+    online_spelloff::setup(app);
 
     // Notify Me (coming-soon languages): record anonymous interest for the
     // language on the panel, then flip the button to its confirmed state.
