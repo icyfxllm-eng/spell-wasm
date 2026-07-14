@@ -1,0 +1,19 @@
+# Interim Filipino audit host. Run ALONGSIDE the main compose:
+#   docker compose -f docker-compose.yml -f docker-compose.audit.yml up -d spell-audit
+# Serves the prebuilt dist-audit/ on 127.0.0.1:8001 (cloudflared is host-networked
+# and reaches it at localhost:8001, same as prod's :8080). /api/* -> prod `backend`
+# (INTERIM; swap to a sandbox backend per DEPLOY-AUDIT-BUILD.md before Paul does
+# the leaderboard section). Same compose project => same network => backend:8000
+# resolves.
+services:
+  spell-audit:
+    image: caddy:2-alpine
+    restart: unless-stopped
+    depends_on:
+      - backend
+    ports:
+      - "127.0.0.1:8001:8001"
+    volumes:
+      - ./dist-audit:/srv:ro
+      - ./audit/filipino/Caddyfile.audit:/etc/caddy/Caddyfile:ro
+      - ./audit/filipino/robots.audit.txt:/srv/robots.txt:ro

@@ -1,8 +1,13 @@
 # Caddy config for the Filipino AUDIT host (audit.spellgame.net), served on
-# :8081 via the Cloudflare Tunnel (see DEPLOY-AUDIT-BUILD.md). This is NOT the
-# production Caddyfile — it points /api/* at the sandbox backend and adds a
-# noindex header. Never use this for spellgame.net.
-:8081 {
+# :8001 via the Cloudflare Tunnel (see DEPLOY-AUDIT-BUILD.md). This is NOT the
+# production Caddyfile. Never use this for spellgame.net.
+#
+# INTERIM MODE (to start Paul today): /api/* is proxied to the PRODUCTION
+# `backend` container — so audit gameplay/TTS/accounts work immediately, but
+# Climb/leaderboard writes DO touch prod. Before Paul does the leaderboard
+# section, switch the reverse_proxy target to a sandbox `backend-audit:8000`
+# (separate CLIMB_DB_PATH, shared TTS cache) per DEPLOY-AUDIT-BUILD.md.
+:8001 {
 	header {
 		Strict-Transport-Security "max-age=31536000; includeSubDomains"
 		X-Content-Type-Options "nosniff"
@@ -13,9 +18,9 @@
 		X-Robots-Tag "noindex, nofollow"
 	}
 
-	# API goes to the SANDBOX backend (separate Climb DB; shared TTS cache).
+	# INTERIM: prod backend. Swap to `backend-audit:8000` for the sandboxed setup.
 	handle /api/* {
-		reverse_proxy backend-audit:8000
+		reverse_proxy backend:8000
 	}
 
 	handle /robots.txt {
