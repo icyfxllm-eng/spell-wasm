@@ -154,6 +154,15 @@
   .data-chip.on{border-color:var(--teal);color:var(--teal)}
   .data-chip .dc-ico{color:var(--muted);font-weight:700}
   .data-chip .dc-badge{background:var(--panel-2);border:1px solid var(--edge);color:var(--muted);border-radius:999px;min-width:22px;padding:1px 7px;font-size:12px;font-weight:700;text-align:center}
+  .data-chip.btn-hide{display:none}
+  /* F1 photo-to-word-list review chips (only present when the feature flag is on) */
+  .pchips{display:flex;flex-direction:column;gap:6px;max-height:46vh;overflow-y:auto;margin:4px 0 2px}
+  .pchip-row{display:flex;align-items:center;gap:8px}
+  .pchip-row .pchip{flex:1;min-width:0;min-height:40px;background:var(--panel-2);border:1px solid var(--edge);color:var(--ink);border-radius:10px;padding:6px 10px;font-size:15px}
+  .pchip-row.flagged .pchip{border-color:var(--bad,#e0564f);background:rgba(224,86,79,.09)}
+  .pchip-x{flex:none;width:32px;height:32px;border-radius:8px;border:1px solid var(--edge);background:transparent;color:var(--muted);font-size:18px;line-height:1;cursor:pointer}
+  .pchip-flag{flex:none;min-width:64px;font-size:11px;font-weight:600;color:var(--bad,#e0564f);text-align:right}
+  .pchip-row:not(.flagged) .pchip-flag{display:none}
 
   /* Launchers (F4): ways to play — brightest family, filled card, equal width, iconed */
   .modes-row{gap:8px}
@@ -600,6 +609,10 @@
          rows reflow with no gaps, so Little Speller gets the same families. -->
     <div class="home-group data-group" role="group" aria-label="Your words">
       <button class="data-chip" id="importBtn" data-i18n="top.myWords">＋ My words</button>
+      <!-- F1 photo-to-word-list. Hidden by default (btn-hide); Rust reveals it
+           only when the feature flag is on AND the native VisionKit recognizer is
+           supported AND not in Kid Mode (photo_list::reflect_visibility). -->
+      <button class="data-chip btn-hide" id="photoBtn" data-i18n="photo.button">📷 From a photo</button>
       <!-- missesBtn content (icon + label + count badge) is rendered by
            game::refresh_mode_buttons so the live due-count stays authoritative. -->
       <button class="data-chip" id="missesBtn"></button>
@@ -761,6 +774,27 @@
         <button class="ghost" id="cancelImport" data-i18n="import.close" style="margin-left:auto">Close</button>
       </div>
       <div class="demo-note" id="importNote" data-i18n="import.note">Words stay on this device. Fetching a link can be blocked by the site — if it fails, copy the text and paste it above.</div>
+    </div>
+  </div>
+
+  <!-- F1 photo-to-word-list review screen. Recognized words arrive as editable,
+       deletable chips; gate-failures are pre-flagged. Nothing is saved until the
+       parent confirms this reviewed set (routes through the same charset +
+       profanity gate as the typed importer). Only reachable when the feature
+       flag is on; inert otherwise. -->
+  <div class="scrim" id="photoScrim">
+    <div class="modal wide">
+      <h3 data-i18n="photo.title">Snap a word list</h3>
+      <p data-i18n="photo.review">Check these words, fix any misreads, then save.</p>
+      <div class="pchips" id="photoChips"></div>
+      <div class="imp-foot">
+        <label class="imp-lang"><span data-i18n="import.speakIn">Speak in</span> <select id="photoLang" aria-label="Pronunciation language"></select></label>
+      </div>
+      <button class="btn btn-check" id="photoConfirm" data-i18n="photo.save" style="width:100%">Save these words</button>
+      <div class="row" style="margin-top:8px">
+        <button class="ghost" id="photoCancel" data-i18n="import.close" style="margin-left:auto">Close</button>
+      </div>
+      <div class="demo-note" id="photoNote" data-i18n="photo.note">Photos are read on your device and never leave it.</div>
     </div>
   </div>
 
