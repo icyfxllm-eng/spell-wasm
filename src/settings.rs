@@ -191,4 +191,7 @@ pub fn apply_settings(app: &App) {
     drop(s);
     // Kid Mode hides the account/leaderboard entry points entirely.
     crate::climb::reflect_auth();
+    // Kid Mode also hard-disables Say It (COPPA D5); re-hide the launcher on any
+    // Kid-Mode change. No-op when the feature flag is off.
+    crate::say_it::reflect_gating(app);
 }

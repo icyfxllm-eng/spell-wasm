@@ -187,5 +187,22 @@
   "coming.badge": "In arrivo",
   "import.dictSkipped": "Skipped {d} not found in the dictionary.",
   "import.dictAllSkipped": "None of those were found in the dictionary.",
-  "import.langHint": "These look like {lang}."
+  "import.langHint": "These look like {lang}.",
+  "top.sayIt": "Dillo",
+  "sayit.title": "🗣 Dillo",
+  "sayit.blurb": "Guarda la parola e dilla ad alta voce. Controlliamo quello che hai detto proprio qui, sul tuo dispositivo.",
+  "sayit.privacy": "La tua voce non lascia mai questo telefono. Niente viene registrato, salvato o inviato da nessuna parte.",
+  "sayit.permNote": "Il tuo iPhone chiederà di usare il microfono e il riconoscimento vocale.",
+  "sayit.cancel": "Non ora",
+  "sayit.begin": "Continua",
+  "sayit.unavailable": "Dillo non è ancora disponibile per questa lingua su questo dispositivo — serve il riconoscimento vocale sul dispositivo, che mantiene privata la tua voce.",
+  "sayit.needsMic": "Dillo ha bisogno del microfono. Attiva microfono e riconoscimento vocale per Spell nelle Impostazioni, poi torna.",
+  "sayit.close": "Chiudi",
+  "sayit.exit": "Esci",
+  "sayit.next": "Parola successiva",
+  "sayit.tapMic": "Tocca il microfono e di' la parola.",
+  "sayit.listening": "In ascolto…",
+  "sayit.correct": "Giusto!",
+  "sayit.tryAgain": "Quasi — prova la prossima.",
+  "sayit.didntCatch": "Non ho capito — tocca e riprova."
 }

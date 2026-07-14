@@ -10,6 +10,7 @@ mod deck;
 mod dom;
 pub mod editor;
 mod enrich;
+mod flags;
 mod game;
 mod haptics;
 mod hangul;
@@ -28,6 +29,7 @@ mod pinyin;
 mod notifications;
 mod notify;
 mod profanity;
+mod say_it;
 mod selection;
 mod settings;
 mod share;
@@ -165,6 +167,9 @@ fn wire(app: &App) {
     wire_age_gate(app);
     keyboard::setup(app);
     climb::setup(app);
+    // Feature F2 "Say It" — wires nothing unless the flag is on (ships dark).
+    say_it::wire(app);
+    say_it::reflect_gating(app);
 
     // Notify Me (coming-soon languages): record anonymous interest for the
     // language on the panel, then flip the button to its confirmed state.

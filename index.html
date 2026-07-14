@@ -459,6 +459,18 @@
   .modal input:focus{outline:none;border-color:var(--amber)}
   .modal .row{display:flex;gap:10px}
   .demo-note{margin-top:14px;color:var(--muted-2);font-size:10.5px;line-height:1.5}
+  /* Say It (Feature F2) — pronunciation-practice modal. */
+  .modal.sayit .sayit-privacy{color:var(--teal,#46d6b8);font-size:12.5px;margin-bottom:8px}
+  .modal.sayit .sayit-perm{color:var(--muted-2);font-size:11.5px;margin-bottom:18px}
+  .sayit-score{color:var(--muted);font-size:13px;letter-spacing:.04em;margin-bottom:6px}
+  .sayit-word{font-family:var(--display);font-weight:800;font-size:40px;line-height:1.1;word-break:break-word;margin:6px 0 4px;color:var(--ink);transition:color .2s}
+  .sayit-word.correct{color:var(--teal,#46d6b8)}
+  .sayit-word.wrong{color:var(--coral,#ff6b7a)}
+  .sayit-mic{width:84px;height:84px;border-radius:50%;border:none;margin:14px auto 6px;display:grid;place-items:center;font-size:34px;background:var(--panel-2);border:1.5px solid var(--edge);cursor:pointer;transition:transform .12s,box-shadow .2s}
+  .sayit-mic:active{transform:scale(.94)}
+  .sayit-mic.listening{box-shadow:0 0 0 6px rgba(70,214,184,.22);border-color:var(--teal,#46d6b8);animation:sayitPulse 1.1s ease-in-out infinite}
+  @keyframes sayitPulse{0%,100%{box-shadow:0 0 0 5px rgba(70,214,184,.18)}50%{box-shadow:0 0 0 12px rgba(70,214,184,.05)}}
+  .sayit-status{min-height:20px;color:var(--muted);font-size:13.5px;margin:8px 0 16px}
   /* Age gate — sits above every other scrim; must be answered to proceed. */
   .age-scrim{z-index:60}
   .dob-row{display:flex;gap:8px;margin-bottom:8px}
@@ -576,6 +588,10 @@
       <button class="launch" id="vsBtn">⚡ <span data-i18n="top.headToHead">Spell Off</span></button>
       <button class="launch" id="climbBtn" data-i18n="top.theClimb">🏔 The Climb</button>
       <button class="launch" id="dailyBtn">🗓 Daily</button>
+      <!-- Say It (Feature F2): on-device pronunciation practice. Ships DARK —
+           stays btn-hide until the feature flag is on AND the native speech
+           bridge is present AND Kid Mode is off (say_it::reflect_gating). -->
+      <button class="launch btn-hide" id="sayItBtn">🗣 <span data-i18n="top.sayIt">Say It</span></button>
     </div>
     <button class="setup-chip" id="setupChip" aria-haspopup="dialog" aria-label="Round setup">
       <span class="setup-chip-text" id="setupChipText">English · Climb · Untimed</span>
@@ -782,6 +798,50 @@
       <div class="row">
         <button class="btn btn-icon" id="vsQuitCancel" data-i18n="vs.keepPlaying" style="flex:1;border-radius:12px">Keep playing</button>
         <button class="btn btn-check" id="vsQuitConfirm" data-i18n="vs.leave">Leave match</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Say It (Feature F2): on-device pronunciation practice. All state lives in
+       one modal, sub-views toggled by say_it.rs. Present in the DOM but inert and
+       unreachable unless the feature flag is on (ships dark). -->
+  <div class="scrim" id="sayItScrim">
+    <div class="modal sayit">
+      <!-- Pre-prompt: plain-language explanation shown BEFORE any permission
+           prompt, at first use of the mode. -->
+      <div id="sayItPre">
+        <h3 data-i18n="sayit.title">🗣 Say It</h3>
+        <p data-i18n="sayit.blurb">See the word, then say it out loud. We check what you said right here on your device.</p>
+        <p class="sayit-privacy" data-i18n="sayit.privacy">Your voice never leaves this phone. Nothing is recorded, saved, or sent anywhere.</p>
+        <p class="sayit-perm" data-i18n="sayit.permNote">Your iPhone will ask to use the microphone and speech recognition.</p>
+        <div class="row">
+          <button class="btn btn-icon" id="sayItCancel" data-i18n="sayit.cancel" style="flex:1;border-radius:12px">Not now</button>
+          <button class="btn btn-check" id="sayItBegin" data-i18n="sayit.begin">Continue</button>
+        </div>
+      </div>
+      <!-- Play: word shown big; tap mic and say it. -->
+      <div id="sayItPlay" class="btn-hide">
+        <div class="sayit-score" aria-hidden="true">✓ <span id="sayItRight">0</span> · ✗ <span id="sayItWrong">0</span></div>
+        <div class="sayit-word" id="sayItWord">—</div>
+        <button class="sayit-mic" id="sayItMic" aria-label="Say the word"><span aria-hidden="true">🎤</span></button>
+        <div class="sayit-status" id="sayItStatus" aria-live="polite"></div>
+        <div class="row">
+          <button class="ghost" id="sayItExit" data-i18n="sayit.exit">Exit</button>
+          <button class="btn btn-check" id="sayItNext" data-i18n="sayit.next" style="margin-left:auto" disabled>Next word</button>
+        </div>
+      </div>
+      <!-- Unavailable: no on-device recognition for this language/device. NEVER a
+           server fallback — the mode is simply not offered. -->
+      <div id="sayItUnavailable" class="btn-hide">
+        <h3 data-i18n="sayit.title">🗣 Say It</h3>
+        <p data-i18n="sayit.unavailable">Say It isn't available for this language on this device yet — it needs on-device speech recognition, which keeps your voice private.</p>
+        <button class="btn btn-check" id="sayItUnavailableClose" data-i18n="sayit.close" style="width:100%">Close</button>
+      </div>
+      <!-- Needs-mic: permission denied. A calm state, not an error. -->
+      <div id="sayItNeedsMic" class="btn-hide">
+        <h3 data-i18n="sayit.title">🗣 Say It</h3>
+        <p data-i18n="sayit.needsMic">Say It needs the microphone. Turn on Microphone and Speech Recognition for Spell in Settings, then come back.</p>
+        <button class="btn btn-check" id="sayItNeedsMicClose" data-i18n="sayit.close" style="width:100%">Close</button>
       </div>
     </div>
   </div>

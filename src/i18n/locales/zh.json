@@ -187,5 +187,22 @@
   "coming.badge": "即将推出",
   "import.dictSkipped": "Skipped {d} not found in the dictionary.",
   "import.dictAllSkipped": "None of those were found in the dictionary.",
-  "import.langHint": "These look like {lang}."
+  "import.langHint": "These look like {lang}.",
+  "top.sayIt": "说出来",
+  "sayit.title": "🗣 说出来",
+  "sayit.blurb": "看到单词，然后大声说出来。我们就在你的设备上检查你说的内容。",
+  "sayit.privacy": "你的声音永远不会离开这部手机。不会录音、不会保存，也不会发送到任何地方。",
+  "sayit.permNote": "你的 iPhone 会请求使用麦克风和语音识别。",
+  "sayit.cancel": "暂时不要",
+  "sayit.begin": "继续",
+  "sayit.unavailable": "说出来暂时不支持此设备上的这种语言 — 它需要设备端语音识别，从而让你的声音保持私密。",
+  "sayit.needsMic": "说出来需要麦克风。请在“设置”中为 Spell 打开麦克风和语音识别，然后再回来。",
+  "sayit.close": "关闭",
+  "sayit.exit": "退出",
+  "sayit.next": "下一个词",
+  "sayit.tapMic": "点一下麦克风，把词说出来。",
+  "sayit.listening": "正在聆听…",
+  "sayit.correct": "正确！",
+  "sayit.tryAgain": "差一点 — 试试下一个。",
+  "sayit.didntCatch": "没听清 — 点一下再试一次。"
 }

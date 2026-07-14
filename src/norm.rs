@@ -55,6 +55,35 @@ pub fn answer_matches(typed: &str, word: &str, kid: bool) -> bool {
     }
 }
 
+/// Say-It mode match rule (Feature F2, Decision D2): the target word is
+/// considered *said* iff, after NFC + Unicode case folding, it appears as one of
+/// the tokens in the recognizer's transcription. This is an **exact token match
+/// after folding** — deliberately NOT fuzzy, phonetic, or confidence-scored.
+///
+/// Tokenization only splits the transcription on whitespace and trims edge
+/// punctuation the recognizer attaches (leading/trailing `.,!?;:"'…` and quotes),
+/// which is orthographic hygiene, not fuzzing — the *comparison* is still exact.
+/// Accent-strict like normal typed play (`café` ≠ `cafe`); Say-It is never
+/// offered in Kid Mode, so there is no lenient variant.
+pub fn spoken_matches(transcript: &str, word: &str) -> bool {
+    let target = fold_strict(word);
+    if target.is_empty() {
+        return false;
+    }
+    transcript
+        .split_whitespace()
+        .any(|tok| fold_strict(trim_edge_punct(tok)) == target)
+}
+
+/// Strip leading/trailing punctuation a speech recognizer commonly appends to a
+/// word ("elephant." / "¿casa?"), keeping any internal marks (apostrophes,
+/// hyphens) intact so the fold can compare them.
+fn trim_edge_punct(tok: &str) -> &str {
+    tok.trim_matches(|c: char| {
+        !c.is_alphanumeric() && c != '\'' && c != '\u{2019}' && c != '-'
+    })
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -146,5 +175,64 @@ mod tests {
         assert!(answer_matches("Rhythm", "rhythm", false));
         assert!(answer_matches("Rhythm", "rhythm", true));
         assert!(!answer_matches("rythm", "rhythm", false));
+    }
+
+    // ---- Say-It (spoken) match rule: exact token match after NFC + case fold ----
+
+    #[test]
+    fn spoken_word_present_as_a_token_matches() {
+        // The recognizer heard a sentence; the target token is in it.
+        assert!(spoken_matches("the elephant is big", "elephant"));
+        assert!(spoken_matches("elephant", "elephant"));
+    }
+
+    #[test]
+    fn spoken_is_case_insensitive_via_fold() {
+        assert!(spoken_matches("ELEPHANT", "elephant"));
+        assert!(spoken_matches("Elephant", "ELEPHANT"));
+    }
+
+    #[test]
+    fn spoken_trims_recognizer_edge_punctuation() {
+        // SFSpeechRecognizer commonly appends/prepends punctuation.
+        assert!(spoken_matches("Elephant.", "elephant"));
+        assert!(spoken_matches("is it a casa?", "casa"));
+        assert!(spoken_matches("\u{201c}Casa,\u{201d}", "casa"));
+        assert!(spoken_matches("\u{a1}Hola!", "hola"));
+    }
+
+    #[test]
+    fn spoken_is_accent_strict_like_typed_play() {
+        // café != cafe: Say-It uses the strict fold (never offered in Kid Mode).
+        assert!(spoken_matches("un caf\u{e9} por favor", "caf\u{e9}"));
+        assert!(!spoken_matches("un cafe por favor", "caf\u{e9}"));
+    }
+
+    #[test]
+    fn spoken_nfd_transcript_matches_nfc_target() {
+        // Recognizer emits decomposed (n + combining tilde); target stored NFC.
+        let nfd_sentence = "la aran\u{0303}a";
+        assert!(spoken_matches(nfd_sentence, "ara\u{f1}a"));
+    }
+
+    #[test]
+    fn spoken_no_partial_or_substring_match() {
+        // Exact token only — "elephants" is a different token than "elephant".
+        assert!(!spoken_matches("two elephants here", "elephant"));
+        // No substring credit: target inside a bigger token doesn't count.
+        assert!(!spoken_matches("elephantine", "elephant"));
+    }
+
+    #[test]
+    fn spoken_empty_never_matches() {
+        assert!(!spoken_matches("", "elephant"));
+        assert!(!spoken_matches("anything at all", ""));
+        assert!(!spoken_matches("   ", "elephant"));
+    }
+
+    #[test]
+    fn spoken_keeps_internal_apostrophe_and_hyphen() {
+        assert!(spoken_matches("say don't now", "don't"));
+        assert!(spoken_matches("it is mag-aral", "mag-aral"));
     }
 }

@@ -187,5 +187,22 @@
   "coming.badge": "Binnenkort",
   "import.dictSkipped": "Skipped {d} not found in the dictionary.",
   "import.dictAllSkipped": "None of those were found in the dictionary.",
-  "import.langHint": "These look like {lang}."
+  "import.langHint": "These look like {lang}.",
+  "top.sayIt": "Zeg het",
+  "sayit.title": "🗣 Zeg het",
+  "sayit.blurb": "Zie het woord en zeg het hardop. We controleren wat je zei hier op je apparaat.",
+  "sayit.privacy": "Je stem verlaat deze telefoon nooit. Er wordt niets opgenomen, opgeslagen of ergens naartoe gestuurd.",
+  "sayit.permNote": "Je iPhone vraagt toegang tot de microfoon en spraakherkenning.",
+  "sayit.cancel": "Niet nu",
+  "sayit.begin": "Doorgaan",
+  "sayit.unavailable": "Zeg het is nog niet beschikbaar voor deze taal op dit apparaat — het heeft spraakherkenning op het apparaat nodig, die je stem privé houdt.",
+  "sayit.needsMic": "Zeg het heeft de microfoon nodig. Zet Microfoon en Spraakherkenning voor Spell aan in Instellingen en kom terug.",
+  "sayit.close": "Sluiten",
+  "sayit.exit": "Afsluiten",
+  "sayit.next": "Volgend woord",
+  "sayit.tapMic": "Tik op de microfoon en zeg het woord.",
+  "sayit.listening": "Aan het luisteren…",
+  "sayit.correct": "Goed!",
+  "sayit.tryAgain": "Bijna — probeer de volgende.",
+  "sayit.didntCatch": "Niet verstaan — tik en probeer opnieuw."
 }

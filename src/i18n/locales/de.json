@@ -187,5 +187,22 @@
   "coming.badge": "Demnächst",
   "import.dictSkipped": "Skipped {d} not found in the dictionary.",
   "import.dictAllSkipped": "None of those were found in the dictionary.",
-  "import.langHint": "These look like {lang}."
+  "import.langHint": "These look like {lang}.",
+  "top.sayIt": "Sag es",
+  "sayit.title": "🗣 Sag es",
+  "sayit.blurb": "Sieh das Wort und sprich es laut aus. Wir prüfen direkt auf deinem Gerät, was du gesagt hast.",
+  "sayit.privacy": "Deine Stimme verlässt dieses Telefon nie. Nichts wird aufgenommen, gespeichert oder irgendwohin gesendet.",
+  "sayit.permNote": "Dein iPhone fragt nach Zugriff auf Mikrofon und Spracherkennung.",
+  "sayit.cancel": "Jetzt nicht",
+  "sayit.begin": "Weiter",
+  "sayit.unavailable": "Sag es ist für diese Sprache auf diesem Gerät noch nicht verfügbar — es braucht Spracherkennung auf dem Gerät, die deine Stimme privat hält.",
+  "sayit.needsMic": "Sag es braucht das Mikrofon. Aktiviere Mikrofon und Spracherkennung für Spell in den Einstellungen und komm zurück.",
+  "sayit.close": "Schließen",
+  "sayit.exit": "Beenden",
+  "sayit.next": "Nächstes Wort",
+  "sayit.tapMic": "Tippe auf das Mikrofon und sag das Wort.",
+  "sayit.listening": "Höre zu…",
+  "sayit.correct": "Richtig!",
+  "sayit.tryAgain": "Fast — versuch das nächste.",
+  "sayit.didntCatch": "Nicht verstanden — tippe und versuch es nochmal."
 }

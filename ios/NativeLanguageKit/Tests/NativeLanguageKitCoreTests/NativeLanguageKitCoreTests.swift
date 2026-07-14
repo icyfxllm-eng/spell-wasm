@@ -1,5 +1,6 @@
 import XCTest
 import AVFoundation
+import Speech
 @testable import NativeLanguageKitCore
 
 /// These run on the iOS simulator (UITextChecker/AVSpeech/NaturalLanguage are
@@ -126,6 +127,96 @@ final class NativeLanguageKitCoreTests: XCTestCase {
         }
         wait(for: [done], timeout: 15)
         XCTAssertTrue(finished, "speak() should resolve on completion")
+    }
+
+    // MARK: SpeechCapabilities — locale resolution (Feature F2 "Say It")
+
+    func testSpeechLocaleResolvesCanonicalFullLocale() {
+        // en → en-US, es → es-ES (D4) from a recognizer-style supported set.
+        XCTAssertEqual(
+            SpeechCapabilities.resolveLocaleId(lang: "es", from: ["es-MX", "es-ES", "en-US"]),
+            "es-ES")
+        XCTAssertEqual(
+            SpeechCapabilities.resolveLocaleId(lang: "en", from: ["en-GB", "en-US"]),
+            "en-US")
+    }
+
+    func testSpeechLocaleFallsBackToSubtag() {
+        XCTAssertEqual(
+            SpeechCapabilities.resolveLocaleId(lang: "es", from: ["es-MX", "en-US"]),
+            "es-MX")
+    }
+
+    func testSpeechLocaleNilWhenUnsupported() {
+        XCTAssertNil(SpeechCapabilities.resolveLocaleId(lang: "th", from: ["en-US", "es-ES"]))
+    }
+
+    func testSpeechReportUnsupportedLocaleIsUnavailable() {
+        // A language the recognizer offers no locale for → unavailable, and never
+        // "available" without on-device support.
+        let cap = SpeechCapabilities.report(lang: "zz")
+        XCTAssertFalse(cap.available)
+        XCTAssertFalse(cap.supportsOnDevice)
+        XCTAssertEqual(cap.locale, "")
+    }
+
+    func testSpeechAvailableImpliesOnDevice() {
+        // The privacy invariant, whatever this simulator reports: available is
+        // NEVER true unless on-device recognition is supported. (On the simulator
+        // `available` is typically false — that's the safe/fail-closed default.)
+        let ids = SpeechCapabilities.supportedLocaleIds()
+        XCTAssertFalse(ids.isEmpty, "recognizer should advertise some locales")
+        for lang in ["en", "es"] {
+            let cap = SpeechCapabilities.report(lang: lang)
+            if cap.available {
+                XCTAssertTrue(cap.supportsOnDevice,
+                    "\(lang): available must imply on-device support")
+            }
+        }
+    }
+
+    // MARK: SpeechMatcher — exact token match after NFC + case fold (Decision D2)
+
+    func testSpokenTokenPresentMatches() {
+        XCTAssertTrue(SpeechMatcher.matches(transcript: "the elephant is big", target: "elephant"))
+        XCTAssertTrue(SpeechMatcher.matches(transcript: "elephant", target: "elephant"))
+    }
+
+    func testSpokenCaseInsensitive() {
+        XCTAssertTrue(SpeechMatcher.matches(transcript: "ELEPHANT", target: "elephant"))
+    }
+
+    func testSpokenTrimsEdgePunctuation() {
+        XCTAssertTrue(SpeechMatcher.matches(transcript: "Elephant.", target: "elephant"))
+        XCTAssertTrue(SpeechMatcher.matches(transcript: "is it a casa?", target: "casa"))
+        XCTAssertTrue(SpeechMatcher.matches(transcript: "\u{a1}Hola!", target: "hola"))
+    }
+
+    func testSpokenIsAccentStrict() {
+        XCTAssertTrue(SpeechMatcher.matches(transcript: "un caf\u{e9}", target: "caf\u{e9}"))
+        XCTAssertFalse(SpeechMatcher.matches(transcript: "un cafe", target: "caf\u{e9}"))
+    }
+
+    func testSpokenNFDMatchesNFCTarget() {
+        let nfd = "la aran\u{0303}a"           // araña, decomposed
+        XCTAssertTrue(SpeechMatcher.matches(transcript: nfd, target: "ara\u{f1}a"))
+    }
+
+    func testSpokenNoSubstringOrPluralCredit() {
+        XCTAssertFalse(SpeechMatcher.matches(transcript: "two elephants", target: "elephant"))
+        XCTAssertFalse(SpeechMatcher.matches(transcript: "elephantine", target: "elephant"))
+    }
+
+    func testSpokenEmptyNeverMatches() {
+        XCTAssertFalse(SpeechMatcher.matches(transcript: "", target: "elephant"))
+        XCTAssertFalse(SpeechMatcher.matches(transcript: "anything", target: ""))
+    }
+
+    func testSpokenParityWithRustEdgeCases() {
+        // Same cases asserted in Rust `norm::spoken_matches` tests, so the two
+        // implementations can't silently diverge.
+        XCTAssertTrue(SpeechMatcher.matches(transcript: "say don't now", target: "don't"))
+        XCTAssertTrue(SpeechMatcher.matches(transcript: "it is mag-aral", target: "mag-aral"))
     }
 
     // MARK: SpeechRate mapping

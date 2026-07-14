@@ -187,5 +187,22 @@
   "coming.badge": "Kommer snart",
   "import.dictSkipped": "Skipped {d} not found in the dictionary.",
   "import.dictAllSkipped": "None of those were found in the dictionary.",
-  "import.langHint": "These look like {lang}."
+  "import.langHint": "These look like {lang}.",
+  "top.sayIt": "Säg det",
+  "sayit.title": "🗣 Säg det",
+  "sayit.blurb": "Se ordet och säg det högt. Vi kontrollerar vad du sa direkt på din enhet.",
+  "sayit.privacy": "Din röst lämnar aldrig den här telefonen. Ingenting spelas in, sparas eller skickas någonstans.",
+  "sayit.permNote": "Din iPhone frågar om att använda mikrofonen och taligenkänning.",
+  "sayit.cancel": "Inte nu",
+  "sayit.begin": "Fortsätt",
+  "sayit.unavailable": "Säg det är inte tillgängligt för det här språket på den här enheten än — det behöver taligenkänning på enheten, som håller din röst privat.",
+  "sayit.needsMic": "Säg det behöver mikrofonen. Slå på Mikrofon och Taligenkänning för Spell i Inställningar och kom tillbaka.",
+  "sayit.close": "Stäng",
+  "sayit.exit": "Avsluta",
+  "sayit.next": "Nästa ord",
+  "sayit.tapMic": "Tryck på mikrofonen och säg ordet.",
+  "sayit.listening": "Lyssnar…",
+  "sayit.correct": "Rätt!",
+  "sayit.tryAgain": "Nästan — prova nästa.",
+  "sayit.didntCatch": "Uppfattade inte — tryck och försök igen."
 }

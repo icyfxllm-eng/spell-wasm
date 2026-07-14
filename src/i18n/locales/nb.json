@@ -187,5 +187,22 @@
   "coming.badge": "Kommer snart",
   "import.dictSkipped": "Skipped {d} not found in the dictionary.",
   "import.dictAllSkipped": "None of those were found in the dictionary.",
-  "import.langHint": "These look like {lang}."
+  "import.langHint": "These look like {lang}.",
+  "top.sayIt": "Si det",
+  "sayit.title": "🗣 Si det",
+  "sayit.blurb": "Se ordet og si det høyt. Vi sjekker det du sa rett her på enheten din.",
+  "sayit.privacy": "Stemmen din forlater aldri denne telefonen. Ingenting blir tatt opp, lagret eller sendt noe sted.",
+  "sayit.permNote": "iPhone-en din vil be om tilgang til mikrofonen og talegjenkjenning.",
+  "sayit.cancel": "Ikke nå",
+  "sayit.begin": "Fortsett",
+  "sayit.unavailable": "Si det er ikke tilgjengelig for dette språket på denne enheten ennå — det trenger talegjenkjenning på enheten, som holder stemmen din privat.",
+  "sayit.needsMic": "Si det trenger mikrofonen. Slå på Mikrofon og Talegjenkjenning for Spell i Innstillinger, og kom tilbake.",
+  "sayit.close": "Lukk",
+  "sayit.exit": "Avslutt",
+  "sayit.next": "Neste ord",
+  "sayit.tapMic": "Trykk på mikrofonen og si ordet.",
+  "sayit.listening": "Lytter…",
+  "sayit.correct": "Riktig!",
+  "sayit.tryAgain": "Nesten — prøv det neste.",
+  "sayit.didntCatch": "Fikk ikke med meg det — trykk og prøv igjen."
 }
