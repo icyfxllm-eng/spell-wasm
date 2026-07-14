@@ -184,5 +184,8 @@
   "coming.notice": "{lang} ana dili konuşanlar tarafından iyileştiriliyor — yakında geri gelecek.",
   "coming.notify": "Hazır olduğunda bana haber ver",
   "coming.confirmed": "Listedesin ✓",
-  "coming.badge": "Yakında"
+  "coming.badge": "Yakında",
+  "import.dictSkipped": "Skipped {d} not found in the dictionary.",
+  "import.dictAllSkipped": "None of those were found in the dictionary.",
+  "import.langHint": "These look like {lang}."
 }

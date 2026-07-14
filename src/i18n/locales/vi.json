@@ -184,5 +184,8 @@
   "coming.notice": "{lang} đang được người bản ngữ hoàn thiện — sắp trở lại.",
   "coming.notify": "Báo cho tôi khi sẵn sàng",
   "coming.confirmed": "Bạn đã trong danh sách ✓",
-  "coming.badge": "Sắp có"
+  "coming.badge": "Sắp có",
+  "import.dictSkipped": "Skipped {d} not found in the dictionary.",
+  "import.dictAllSkipped": "None of those were found in the dictionary.",
+  "import.langHint": "These look like {lang}."
 }

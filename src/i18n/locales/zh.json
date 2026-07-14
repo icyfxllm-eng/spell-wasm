@@ -184,5 +184,8 @@
   "coming.notice": "{lang}正由母语者润色 — 很快回来。",
   "coming.notify": "准备好后通知我",
   "coming.confirmed": "已加入名单 ✓",
-  "coming.badge": "即将推出"
+  "coming.badge": "即将推出",
+  "import.dictSkipped": "Skipped {d} not found in the dictionary.",
+  "import.dictAllSkipped": "None of those were found in the dictionary.",
+  "import.langHint": "These look like {lang}."
 }

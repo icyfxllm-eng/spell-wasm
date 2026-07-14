@@ -184,5 +184,8 @@
   "coming.notice": "{lang} wordt bijgeschaafd door moedertaalsprekers — binnenkort terug.",
   "coming.notify": "Laat het me weten als het klaar is",
   "coming.confirmed": "Je staat op de lijst ✓",
-  "coming.badge": "Binnenkort"
+  "coming.badge": "Binnenkort",
+  "import.dictSkipped": "Skipped {d} not found in the dictionary.",
+  "import.dictAllSkipped": "None of those were found in the dictionary.",
+  "import.langHint": "These look like {lang}."
 }

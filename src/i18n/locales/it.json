@@ -184,5 +184,8 @@
   "coming.notice": "{lang} è in rifinitura da madrelingua — torna presto.",
   "coming.notify": "Avvisami quando è pronto",
   "coming.confirmed": "Sei in lista ✓",
-  "coming.badge": "In arrivo"
+  "coming.badge": "In arrivo",
+  "import.dictSkipped": "Skipped {d} not found in the dictionary.",
+  "import.dictAllSkipped": "None of those were found in the dictionary.",
+  "import.langHint": "These look like {lang}."
 }

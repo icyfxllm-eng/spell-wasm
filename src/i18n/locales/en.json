@@ -184,5 +184,8 @@
   "coming.notice": "{lang} is being polished by native speakers — coming back soon.",
   "coming.notify": "Notify me when it's ready",
   "coming.confirmed": "You're on the list ✓",
-  "coming.badge": "Coming soon"
+  "coming.badge": "Coming soon",
+  "import.dictSkipped": "Skipped {d} not found in the dictionary.",
+  "import.dictAllSkipped": "None of those were found in the dictionary.",
+  "import.langHint": "These look like {lang}."
 }

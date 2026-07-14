@@ -184,5 +184,8 @@
   "coming.notice": "{lang} lo están puliendo hablantes nativos: vuelve muy pronto.",
   "coming.notify": "Avísame cuando esté listo",
   "coming.confirmed": "Estás en la lista ✓",
-  "coming.badge": "Próximamente"
+  "coming.badge": "Próximamente",
+  "import.dictSkipped": "Se omitieron {d} que no están en el diccionario.",
+  "import.dictAllSkipped": "Ninguna de esas palabras está en el diccionario.",
+  "import.langHint": "Estas parecen estar en {lang}."
 }

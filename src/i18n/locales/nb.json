@@ -184,5 +184,8 @@
   "coming.notice": "{lang} finpusses av morsmålsbrukere — snart tilbake.",
   "coming.notify": "Gi meg beskjed når det er klart",
   "coming.confirmed": "Du er på listen ✓",
-  "coming.badge": "Kommer snart"
+  "coming.badge": "Kommer snart",
+  "import.dictSkipped": "Skipped {d} not found in the dictionary.",
+  "import.dictAllSkipped": "None of those were found in the dictionary.",
+  "import.langHint": "These look like {lang}."
 }

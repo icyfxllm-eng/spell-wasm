@@ -22,6 +22,7 @@ mod kid_filter;
 mod misses;
 mod model;
 mod native_audio;
+mod native_lang;
 mod norm;
 mod pinyin;
 mod notifications;
@@ -634,56 +635,123 @@ fn wire_import(app: &App) {
                 dom::set_text("importNote", &i18n::t("import.needWord"));
                 return;
             }
-            // Screen out profanity before saving (also re-checked on load). This
-            // guards Kid Mode — a custom list can't smuggle in slurs.
-            let (words, blocked) = profanity::filter_allowed(words);
-            if words.is_empty() {
-                dom::set_text("importNote", profanity::rejection_message());
+            let speak_lang = dom::select("importLang").value();
+            let kid = a.borrow().kid;
+            let policy = native_lang::wordcheck_policy(kid);
+            // On web (no native bridge) or with the gate off, save exactly as
+            // before — behavior is byte-identical off iOS.
+            if !native_lang::available() || policy == native_lang::WordCheckPolicy::Off {
+                commit_import(&a, words, speak_lang, None);
                 return;
             }
-            let speak_lang = dom::select("importLang").value();
-            let count = words.len();
-            importer::save_words(&mut a.borrow_mut(), words, speak_lang);
-            achievements::unlock(&mut a.borrow_mut(), "importer");
-            let was_review = a.borrow().review;
-            if was_review {
-                game::exit_review(&a, None);
-            }
-            {
-                let mut s = a.borrow_mut();
-                s.lang = MINE.to_string();
-                s.cur_lang = MINE.to_string();
-            }
-            game::update_voice_note(&a);
-            settings::save_prefs(&a.borrow());
-            game::build_source_options(&a);
-            game::build_level_options(&a);
-            keyboard::rebuild(&a); // match the imported list's "Speak in" language
-            stats::render(&a.borrow());
-            board::render(&a.borrow());
-            game::refresh_mode_buttons(&a);
-            {
-                let mut s = a.borrow_mut();
-                s.word = String::new();
-                s.answered = false;
-            }
-            dom::set_html("orbGlyph", &i18n::t("orb.tap"));
-            a.borrow_mut().answer.clear();
-            game::render_letters(&a, false);
-            game::clear_meaning();
-            // Clean slate: clear the input now it's saved (words persist — save is
-            // additive), so reopening My Words is empty.
-            dom::textarea("importText").set_value("");
-            update_import_count();
-            dom::remove_class("importScrim", "show");
-            let saved_msg = if blocked > 0 {
-                i18n::tp("import.savedSkipped", &[("n", &count.to_string()), ("b", &blocked.to_string())])
-            } else {
-                i18n::tp("import.saved", &[("n", &count.to_string())])
-            };
-            dom::set_text("feedback", &saved_msg);
-            dom::el("feedback").set_class_name("feedback good");
+            // Native: additional on-device gate. Gate order per word is
+            // charset (extract_words) -> NFC (in the checker) -> UITextChecker ->
+            // profanity (inside commit_import, ALWAYS runs). A word iOS has no
+            // dictionary for (supported:false) is never judged here.
+            let a2 = a.clone();
+            wasm_bindgen_futures::spawn_local(async move {
+                let mut kept = Vec::with_capacity(words.len());
+                let mut dropped = 0usize;
+                for w in words {
+                    let v = native_lang::check_word_await(&w, &speak_lang).await;
+                    if v.supported && !v.is_word && policy == native_lang::WordCheckPolicy::Block {
+                        dropped += 1; // Kid-Mode default: block non-words
+                        continue;
+                    }
+                    kept.push(w);
+                }
+                if kept.is_empty() {
+                    dom::set_text("importNote", &i18n::t("import.dictAllSkipped"));
+                    return;
+                }
+                // Feature 5: non-blocking language hint (never blocks the save).
+                let hint = lang_hint(&kept, &speak_lang).await;
+                let mut notes: Vec<String> = Vec::new();
+                if dropped > 0 {
+                    notes.push(i18n::tp("import.dictSkipped", &[("d", &dropped.to_string())]));
+                }
+                if let Some(h) = hint {
+                    notes.push(h);
+                }
+                let extra = if notes.is_empty() { None } else { Some(notes.join(" ")) };
+                commit_import(&a2, kept, speak_lang, extra);
+            });
         });
+    }
+
+    // Nested items (capture nothing; shared by the handlers above/below).
+
+    /// Profanity-screen (ALWAYS), persist, and refresh the UI for an import.
+    /// Shared by the plain (web) path and the native dictionary-gated path;
+    /// `extra_note` is appended to the success message (skip count / lang hint).
+    fn commit_import(a: &App, words: Vec<String>, speak_lang: String, extra_note: Option<String>) {
+    // Screen out profanity before saving (also re-checked on load). This guards
+    // Kid Mode — a custom list can't smuggle in slurs — and runs regardless of
+    // the dictionary verdict (a real word can still be a blocked word).
+    let (words, blocked) = profanity::filter_allowed(words);
+    if words.is_empty() {
+        dom::set_text("importNote", profanity::rejection_message());
+        return;
+    }
+    let count = words.len();
+    importer::save_words(&mut a.borrow_mut(), words, speak_lang);
+    achievements::unlock(&mut a.borrow_mut(), "importer");
+    let was_review = a.borrow().review;
+    if was_review {
+        game::exit_review(a, None);
+    }
+    {
+        let mut s = a.borrow_mut();
+        s.lang = MINE.to_string();
+        s.cur_lang = MINE.to_string();
+    }
+    game::update_voice_note(a);
+    settings::save_prefs(&a.borrow());
+    game::build_source_options(a);
+    game::build_level_options(a);
+    keyboard::rebuild(a); // match the imported list's "Speak in" language
+    stats::render(&a.borrow());
+    board::render(&a.borrow());
+    game::refresh_mode_buttons(a);
+    {
+        let mut s = a.borrow_mut();
+        s.word = String::new();
+        s.answered = false;
+    }
+    dom::set_html("orbGlyph", &i18n::t("orb.tap"));
+    a.borrow_mut().answer.clear();
+    game::render_letters(a, false);
+    game::clear_meaning();
+    // Clean slate: clear the input now it's saved (words persist — save is
+    // additive), so reopening My Words is empty.
+    dom::textarea("importText").set_value("");
+    update_import_count();
+    dom::remove_class("importScrim", "show");
+    let mut saved_msg = if blocked > 0 {
+        i18n::tp("import.savedSkipped", &[("n", &count.to_string()), ("b", &blocked.to_string())])
+    } else {
+        i18n::tp("import.saved", &[("n", &count.to_string())])
+    };
+    if let Some(note) = extra_note {
+        saved_msg.push(' ');
+        saved_msg.push_str(&note);
+    }
+    dom::set_text("feedback", &saved_msg);
+    dom::el("feedback").set_class_name("feedback good");
+}
+
+/// Feature 5: if the saved set reads as a different app language with high
+/// confidence, return a gentle, non-blocking hint. `None` otherwise.
+async fn lang_hint(words: &[String], speak_lang: &str) -> Option<String> {
+    let sample = words.join(" ");
+    let (supported, lang, confidence) = native_lang::detect_language_await(&sample).await;
+    // High bar — single words give NLLanguageRecognizer a weak signal.
+    if !supported || confidence < 0.7 || lang == speak_lang {
+        return None;
+    }
+    // Only hint toward a language the app actually has.
+    let name = consts::BUILTIN_LANGS.iter().find(|(c, _, _)| *c == lang).map(|(_, n, _)| *n)?;
+    Some(i18n::tp("import.langHint", &[("lang", name)]))
     }
 
     {

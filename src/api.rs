@@ -9,10 +9,70 @@ use wasm_bindgen::{JsCast, JsValue};
 use wasm_bindgen_futures::{spawn_local, JsFuture};
 use web_sys::HtmlAudioElement;
 
-use crate::{audio_boost, dom, native_audio, storage};
+use crate::{audio_boost, dom, native_audio, native_lang, storage};
 
 thread_local! {
     static CURRENT: RefCell<Option<(String, String, String, HtmlAudioElement)>> = RefCell::new(None);
+    // The source that produced the last word audio ("server-cache" | "native-tts"
+    // | "none"). Surfaced for QA and the whisper.cpp loopback harness.
+    static LAST_SOURCE: RefCell<&'static str> = const { RefCell::new("") };
+}
+
+/// Which audio source last produced (or failed to produce) word audio.
+pub fn last_audio_source() -> &'static str {
+    LAST_SOURCE.with(|c| *c.borrow())
+}
+fn set_source(s: &'static str) {
+    LAST_SOURCE.with(|c| *c.borrow_mut() = s);
+}
+
+/// The ordered audio sources the router tries. "server-cache" = the pre-rendered
+/// `/api/speak` mp3 (played natively or via `<audio>`); "native-tts" = on-device
+/// AVSpeech (offline). One routing decision, in ONE place (doctrine).
+#[derive(Clone, Copy, PartialEq, Debug)]
+enum Source {
+    ServerCache,
+    NativeTts,
+}
+
+/// Pure config → source-order mapping (unit-tested). DEFAULT is server-primary /
+/// native-fallback (Decision D1) — current behavior preserved, native TTS
+/// rescues offline. Override values: "native-first" | "server-only" |
+/// "native-only".
+fn parse_source_order(cfg: Option<&str>) -> Vec<Source> {
+    match cfg {
+        Some("native-first") => vec![Source::NativeTts, Source::ServerCache],
+        Some("server-only") => vec![Source::ServerCache],
+        Some("native-only") => vec![Source::NativeTts],
+        _ => vec![Source::ServerCache, Source::NativeTts],
+    }
+}
+
+fn source_order() -> Vec<Source> {
+    parse_source_order(storage::get_raw("spell_audio_src").as_deref())
+}
+
+#[cfg(test)]
+mod router_tests {
+    use super::*;
+
+    #[test]
+    fn default_is_server_primary_native_fallback() {
+        // D1 default: try the server clip first, native TTS only as a rescue.
+        assert_eq!(parse_source_order(None), vec![Source::ServerCache, Source::NativeTts]);
+        assert_eq!(parse_source_order(Some("garbage")), vec![Source::ServerCache, Source::NativeTts]);
+    }
+
+    #[test]
+    fn native_first_flips_the_order() {
+        assert_eq!(parse_source_order(Some("native-first")), vec![Source::NativeTts, Source::ServerCache]);
+    }
+
+    #[test]
+    fn single_source_configs() {
+        assert_eq!(parse_source_order(Some("server-only")), vec![Source::ServerCache]);
+        assert_eq!(parse_source_order(Some("native-only")), vec![Source::NativeTts]);
+    }
 }
 
 /// Stop any backend word/sentence audio that's currently playing (used when
@@ -73,6 +133,49 @@ fn speak_url(word: &str, variant: &str, lang: &str) -> String {
 /// natively just fine. `rate` still applies on the browser `<audio>` fallback
 /// (and on the web build, which never takes the native path).
 pub fn play_word(word: &str, variant: &str, rate: f64, lang: &str, on_fail: impl FnOnce() + 'static) {
+    play_chain(
+        source_order(),
+        0,
+        word.to_string(),
+        variant.to_string(),
+        rate,
+        lang.to_string(),
+        Box::new(on_fail),
+    );
+}
+
+/// Try source `order[i]`; each source's failure advances to the next, and the
+/// last source's failure runs the caller's `on_fail`. Wall of the whole router.
+fn play_chain(
+    order: Vec<Source>,
+    i: usize,
+    word: String,
+    variant: String,
+    rate: f64,
+    lang: String,
+    on_fail: Box<dyn FnOnce()>,
+) {
+    let src = match order.get(i) {
+        Some(&s) => s,
+        None => {
+            set_source("none");
+            on_fail();
+            return;
+        }
+    };
+    let (w, v, l) = (word.clone(), variant.clone(), lang.clone());
+    let next: Box<dyn FnOnce()> = Box::new(move || play_chain(order, i + 1, w, v, rate, l, on_fail));
+    match src {
+        Source::ServerCache => play_server_cache(&word, &variant, rate, &lang, next),
+        Source::NativeTts => play_native_tts(&word, &variant, rate, &lang, next),
+    }
+}
+
+/// Source "server-cache": the pre-rendered `/api/speak` clip, played through the
+/// native NativeAudio plugin when present, else the browser `<audio>` element.
+/// Both mechanisms serve the same server-rendered source; `on_fail` advances the
+/// router to the next source.
+fn play_server_cache(word: &str, variant: &str, rate: f64, lang: &str, on_fail: Box<dyn FnOnce()>) {
     if native_audio::available() {
         let asset_id = native_audio::asset_id(word, variant, lang);
         let url = speak_url(word, variant, lang);
@@ -81,16 +184,47 @@ pub fn play_word(word: &str, variant: &str, rate: f64, lang: &str, on_fail: impl
             let variant = variant.to_string();
             let lang = lang.to_string();
             spawn_local(async move {
-                // On reject (download failed, plugin error, …) fall through to
-                // the browser <audio> path, which owns the final on_fail hop.
                 if JsFuture::from(promise).await.is_err() {
+                    // Native download/playback failed → try the <audio> mechanism
+                    // for the same server clip; it owns the hop to `on_fail`.
                     play_word_html(&word, &variant, rate, &lang, on_fail);
+                } else {
+                    set_source("server-cache");
                 }
             });
             return;
         }
     }
     play_word_html(word, variant, rate, lang, on_fail);
+}
+
+/// Source "native-tts": fully on-device AVSpeech synthesis (no network). Picks
+/// the session voice for `lang` (Decision D3), then speaks. The server "slow"
+/// variant has no native pre-render, so slowness is met by a lower rate here.
+fn play_native_tts(word: &str, variant: &str, rate: f64, lang: &str, on_fail: Box<dyn FnOnce()>) {
+    if !native_lang::available() {
+        on_fail();
+        return;
+    }
+    let eff_rate = if variant == "slow" { rate.min(0.7) } else { rate };
+    let word = word.to_string();
+    let lang = lang.to_string();
+    spawn_local(async move {
+        let Some(voice) = native_lang::session_voice(&lang).await else {
+            on_fail();
+            return;
+        };
+        match native_lang::speak(&word, &voice, eff_rate) {
+            Some(promise) => {
+                if JsFuture::from(promise).await.is_ok() {
+                    set_source("native-tts");
+                } else {
+                    on_fail();
+                }
+            }
+            None => on_fail(),
+        }
+    });
 }
 
 fn play_word_html(word: &str, variant: &str, rate: f64, lang: &str, on_fail: impl FnOnce() + 'static) {
@@ -104,6 +238,7 @@ fn play_word_html(word: &str, variant: &str, rate: f64, lang: &str, on_fail: imp
                 let _ = audio.play();
             }
         });
+        set_source("server-cache");
         return;
     }
 
@@ -133,6 +268,7 @@ fn play_word_html(word: &str, variant: &str, rate: f64, lang: &str, on_fail: imp
     err_cb.forget();
 
     let _ = audio.play();
+    set_source("server-cache");
     CURRENT.with(|c| *c.borrow_mut() = Some((word.to_string(), variant.to_string(), lang.to_string(), audio)));
 }
 

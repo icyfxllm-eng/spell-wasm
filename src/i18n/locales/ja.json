@@ -184,5 +184,8 @@
   "coming.notice": "{lang}はネイティブが調整中です — もうすぐ戻ります。",
   "coming.notify": "準備できたら知らせて",
   "coming.confirmed": "リストに登録しました ✓",
-  "coming.badge": "近日公開"
+  "coming.badge": "近日公開",
+  "import.dictSkipped": "Skipped {d} not found in the dictionary.",
+  "import.dictAllSkipped": "None of those were found in the dictionary.",
+  "import.langHint": "These look like {lang}."
 }
