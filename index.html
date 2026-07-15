@@ -958,19 +958,22 @@
   <script src="./audio-native.js"></script>
   <script type="module">
     import init from './pkg/spell_wasm.js?v=DEV';
-    // The compiled app (~1.4MB of WASM) has to finish downloading and
+    // The compiled app (~2.3MB of WASM) has to finish downloading and
     // initializing before the orb does anything. On mobile this has been
     // observed failing mid-download (a flaky connection canceling the
-    // transfer, confirmed server-side). Two defenses against that:
-    // 1. Fetch the raw bytes ourselves and hand init() a plain ArrayBuffer
-    //    instead of letting it use WebAssembly.instantiateStreaming — some
-    //    mobile browsers have had bugs specifically in the streaming-
-    //    compile path; plain fetch+arrayBuffer+instantiate is slower to
-    //    start but much more universally reliable.
+    // transfer, confirmed server-side). Defenses against that:
+    // 1. Streaming compile FIRST (FIX 2): WebAssembly.instantiateStreaming
+    //    compiles while the bytes are still downloading, shaving a few hundred
+    //    ms off cold boot. It needs the server to send Content-Type
+    //    application/wasm (Caddy sets it for /pkg/*.wasm). Some mobile browsers
+    //    have historically had bugs in the streaming-compile path, so on ANY
+    //    failure we fall straight back to the old, universally-reliable path:
+    //    fetch the raw bytes ourselves and hand init() a plain ArrayBuffer.
+    //    Reliability wins — the fallback is the exact code that shipped before.
     // 2. init() only reaches its "already loaded" short-circuit after a
-    //    full success, so a fresh call after a failure safely restarts the
-    //    whole fetch from scratch — retry a few times automatically so a
-    //    transient blip fixes itself without the player noticing.
+    //    full success (streaming failures throw before that), so a fresh call
+    //    after a failure safely restarts from scratch — retry a few times
+    //    automatically so a transient blip fixes itself unnoticed.
     const MAX_ATTEMPTS = 4;
     const WASM_URL = new URL('./pkg/spell_wasm_bg.wasm?v=DEV', import.meta.url);
 
@@ -979,13 +982,30 @@
       if (glyph) glyph.innerHTML = html;
     }
 
+    // One boot attempt: try streaming, else the reliable ArrayBuffer path.
+    // Passing init() a Promise<Response> makes wasm-bindgen use
+    // instantiateStreaming; passing it an ArrayBuffer uses plain instantiate.
+    async function attemptBoot() {
+      if (typeof WebAssembly.instantiateStreaming === 'function') {
+        try {
+          await init({ module_or_path: fetch(WASM_URL) });
+          return;
+        } catch (streamErr) {
+          // Streaming compile failed (mobile browser quirk, bad MIME, etc).
+          // Fall through to the historically-reliable full-buffer path.
+          console.warn('Spell: streaming compile failed, using ArrayBuffer fallback:', streamErr);
+        }
+      }
+      const res = await fetch(WASM_URL);
+      if (!res.ok) throw new Error(`HTTP ${res.status} fetching wasm`);
+      const bytes = await res.arrayBuffer();
+      await init({ module_or_path: bytes });
+    }
+
     async function bootWithRetry() {
       for (let attempt = 1; attempt <= MAX_ATTEMPTS; attempt++) {
         try {
-          const res = await fetch(WASM_URL);
-          if (!res.ok) throw new Error(`HTTP ${res.status} fetching wasm`);
-          const bytes = await res.arrayBuffer();
-          await init({ module_or_path: bytes });
+          await attemptBoot();
           setGlyph('tap to<br/>hear a word');
           return;
         } catch (err) {

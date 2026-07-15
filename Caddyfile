@@ -63,7 +63,15 @@
 	}
 	handle {
 		root * /srv
-		file_server
+		# Serve precompressed .br / .gz siblings when the client accepts them
+		# (FIX 2): the ~2.3MB spell_wasm_bg.wasm ships a brotli-11 .wasm.br and
+		# a .gz built at image time (see Dockerfile). Brotli beats on-the-fly
+		# `encode gzip` on both ratio and CPU. Caddy still sends the correct
+		# Content-Type (application/wasm below) + Content-Encoding, so the
+		# browser transparently decodes and instantiateStreaming still works.
+		file_server {
+			precompressed br gzip
+		}
 		header /pkg/*.wasm Content-Type application/wasm
 		# The service worker script itself must never be cached (by the
 		# browser or, worse, by Cloudflare's edge) — without this, Cloudflare

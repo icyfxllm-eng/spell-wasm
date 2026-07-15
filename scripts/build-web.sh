@@ -32,5 +32,16 @@ cp -r icons "$DIST/icons"
 cp -r fonts "$DIST/fonts"
 cp -r pkg "$DIST/pkg"
 
+# Precompress the ~2.3MB wasm (FIX 2) so Caddy's `precompressed br gzip` can
+# serve it. Best-effort locally: skip a codec that isn't installed (the
+# production build always has both — see Dockerfile). Kept alongside the raw
+# .wasm; instantiateStreaming still works because Content-Encoding is separate
+# from Content-Type (application/wasm).
+WASM="$DIST/pkg/spell_wasm_bg.wasm"
+if [ -f "$WASM" ]; then
+  command -v brotli >/dev/null 2>&1 && brotli -q 11 -f "$WASM" && echo "==> brotli: $WASM.br" || echo "==> (brotli not found — skipping .br)"
+  command -v gzip   >/dev/null 2>&1 && gzip -9 -c "$WASM" > "$WASM.gz" && echo "==> gzip:   $WASM.gz" || echo "==> (gzip not found — skipping .gz)"
+fi
+
 echo "==> dist/ ready:"
 ls -1 "$DIST"
