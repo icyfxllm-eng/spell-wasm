@@ -184,5 +184,15 @@
   "coming.notice": "{lang} is being polished by native speakers — coming back soon.",
   "coming.notify": "Notify me when it's ready",
   "coming.confirmed": "You're on the list ✓",
-  "coming.badge": "Coming soon"
+  "coming.badge": "Coming soon",
+  "settings.extraAttempts": "Extra attempt on misses",
+  "settings.extraAttemptsSmall": "A second try when you miss a word",
+  "attempts.tryAgain": "Not quite — try once more",
+  "shield.promptTitle": "Use a shield?",
+  "shield.promptBody": "Spend one shield to try this word again and keep your run going.",
+  "shield.held": "Shields held",
+  "shield.accept": "Use shield",
+  "shield.decline": "No thanks",
+  "shield.earned": "Shield earned!",
+  "shield.used": "Shield used"
 }

@@ -184,5 +184,15 @@
   "coming.notice": "{lang} đang được người bản ngữ hoàn thiện — sắp trở lại.",
   "coming.notify": "Báo cho tôi khi sẵn sàng",
   "coming.confirmed": "Bạn đã trong danh sách ✓",
-  "coming.badge": "Sắp có"
+  "coming.badge": "Sắp có",
+  "settings.extraAttempts": "Thêm lượt thử khi sai",
+  "settings.extraAttemptsSmall": "Một lần thử nữa khi bạn sai một từ",
+  "attempts.tryAgain": "Gần đúng — thử lại nào",
+  "shield.promptTitle": "Dùng một khiên?",
+  "shield.promptBody": "Dùng một khiên để thử lại từ này và giữ chuỗi của bạn.",
+  "shield.held": "Khiên đang có",
+  "shield.accept": "Dùng khiên",
+  "shield.decline": "Không, cảm ơn",
+  "shield.earned": "Đã nhận khiên!",
+  "shield.used": "Đã dùng khiên"
 }

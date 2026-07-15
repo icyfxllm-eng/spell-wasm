@@ -1,8 +1,10 @@
 mod achievements;
 mod agegate;
 mod api;
+mod attempts;
 mod audio_boost;
 mod board;
+mod flags;
 mod climb;
 mod consts;
 mod daily;
@@ -425,6 +427,24 @@ fn wire_glow_and_settings(app: &App) {
             settings::save_prefs(&a.borrow());
             settings::apply_settings(&a);
         });
+    }
+    {
+        // CC-ATTEMPTS-SHIELDS Feature 1 toggle (only reachable when the row is
+        // shown, i.e. the dark flag is on).
+        let a = app.clone();
+        dom::on::<web_sys::Event, _>("extraAttemptsToggle", "change", move |_| {
+            a.borrow_mut().extra_attempts = dom::input("extraAttemptsToggle").checked();
+            settings::save_prefs(&a.borrow());
+        });
+    }
+    {
+        // CC-ATTEMPTS-SHIELDS Feature 2 "Use a shield?" prompt (player choice).
+        let a = app.clone();
+        dom::on_click("shieldAccept", move || game::shield_accept(&a));
+    }
+    {
+        let a = app.clone();
+        dom::on_click("shieldDecline", move || game::shield_decline(&a));
     }
     {
         let a = app.clone();

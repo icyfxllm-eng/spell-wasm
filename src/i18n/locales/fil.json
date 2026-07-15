@@ -184,5 +184,15 @@
   "coming.notice": "Pinipino ng mga katutubong nagsasalita ang {lang} — babalik na malapit na.",
   "coming.notify": "Ipaalam kapag handa na",
   "coming.confirmed": "Nasa listahan ka na ✓",
-  "coming.badge": "Malapit na"
+  "coming.badge": "Malapit na",
+  "settings.extraAttempts": "Dagdag na subok kapag namali",
+  "settings.extraAttemptsSmall": "Isa pang subok kapag namali ka sa salita",
+  "attempts.tryAgain": "Muntik na — subukan ulit",
+  "shield.promptTitle": "Gamit ng panangga?",
+  "shield.promptBody": "Gumamit ng isang panangga para subukan ulit ang salitang ito at ipagpatuloy ang iyong hanay.",
+  "shield.held": "Mga pananggang hawak",
+  "shield.accept": "Gamitin ang panangga",
+  "shield.decline": "Huwag na",
+  "shield.earned": "Nakakuha ng panangga!",
+  "shield.used": "Nagamit ang panangga"
 }

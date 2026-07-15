@@ -184,5 +184,15 @@
   "coming.notice": "{lang} ana dili konuşanlar tarafından iyileştiriliyor — yakında geri gelecek.",
   "coming.notify": "Hazır olduğunda bana haber ver",
   "coming.confirmed": "Listedesin ✓",
-  "coming.badge": "Yakında"
+  "coming.badge": "Yakında",
+  "settings.extraAttempts": "Yanlışta ekstra deneme",
+  "settings.extraAttemptsSmall": "Bir kelimeyi kaçırdığında ikinci bir deneme",
+  "attempts.tryAgain": "Az kaldı — bir kez daha dene",
+  "shield.promptTitle": "Kalkan kullanılsın mı?",
+  "shield.promptBody": "Bu kelimeyi tekrar denemek ve serini sürdürmek için bir kalkan harca.",
+  "shield.held": "Mevcut kalkanlar",
+  "shield.accept": "Kalkan kullan",
+  "shield.decline": "Hayır, teşekkürler",
+  "shield.earned": "Kalkan kazanıldı!",
+  "shield.used": "Kalkan kullanıldı"
 }

@@ -31,12 +31,20 @@ pub fn due_misses(state: &AppState) -> Vec<usize> {
 }
 
 pub fn add_miss(state: &mut AppState, word: &str, lang: &str, tier: &str) {
+    add_miss_at(state, word, lang, tier, now_ms());
+}
+
+/// In-memory miss recording with an injected timestamp. Split out from `now_ms`
+/// so the spaced-rep data-integrity rules (CC-ATTEMPTS-SHIELDS Feature 1) can be
+/// unit-tested on a non-wasm target, where `js_sys::Date::now()` panics. The
+/// wasm `add_miss` wrapper is byte-for-byte the previous behavior.
+pub fn add_miss_at(state: &mut AppState, word: &str, lang: &str, tier: &str, now: f64) {
     let key = miss_key(word, lang);
     if let Some(e) = state.misses.iter_mut().find(|x| miss_key(&x.word, &x.lang) == key) {
         e.misses += 1;
         e.box_ = 1;
-        e.due = now_ms();
-        e.ts = now_ms();
+        e.due = now;
+        e.ts = now;
     } else {
         state.misses.insert(
             0,
@@ -46,8 +54,8 @@ pub fn add_miss(state: &mut AppState, word: &str, lang: &str, tier: &str) {
                 tier: tier.to_string(),
                 misses: 1,
                 box_: 1,
-                due: now_ms(),
-                ts: now_ms(),
+                due: now,
+                ts: now,
             },
         );
         if state.misses.len() > MISS_CAP {

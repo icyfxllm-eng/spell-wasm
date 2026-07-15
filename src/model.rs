@@ -20,6 +20,10 @@ pub struct Prefs {
     pub remind: bool,
     #[serde(rename = "remindTime", default)]
     pub remind_time: Option<String>,
+    /// CC-ATTEMPTS-SHIELDS Feature 1 — "Extra attempt on misses" (normal mode).
+    /// Single source of truth for the toggle (I1). Absent in old prefs -> OFF.
+    #[serde(rename = "extraAttempts", default)]
+    pub extra_attempts: bool,
 }
 
 #[derive(Serialize, Deserialize, Default, Clone)]
@@ -129,6 +133,13 @@ pub struct AppState {
     /// "HH:MM" 24h. Suppressed while Kid Mode is on.
     pub remind: bool,
     pub remind_time: String,
+    /// CC-ATTEMPTS-SHIELDS Feature 1 toggle (persisted via Prefs). Single-source
+    /// store — no component-local copies.
+    pub extra_attempts: bool,
+    /// CC-ATTEMPTS-SHIELDS run aids (shields + one-retry-per-word). Part of the
+    /// run's game state (I7): session-only, lives beside the score/streak, and
+    /// resets each Climb run. Never persisted.
+    pub aids: crate::attempts::RunAids,
 
     pub custom: CustomSet,
     pub misses: Vec<MissEntry>,
@@ -184,6 +195,8 @@ impl Default for AppState {
             volume: 1.0,
             remind: false,
             remind_time: "17:00".into(),
+            extra_attempts: false,
+            aids: crate::attempts::RunAids::default(),
             custom: CustomSet { words: Vec::new(), speak_lang: "en-US".into(), word_lang: Default::default() },
             misses: Vec::new(),
             achievements: AchState::default(),

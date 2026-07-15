@@ -184,5 +184,15 @@
   "coming.notice": "{lang} está sendo revisado por falantes nativos — volta em breve.",
   "coming.notify": "Avise-me quando estiver pronto",
   "coming.confirmed": "Você está na lista ✓",
-  "coming.badge": "Em breve"
+  "coming.badge": "Em breve",
+  "settings.extraAttempts": "Tentativa extra ao errar",
+  "settings.extraAttemptsSmall": "Uma segunda chance quando você erra uma palavra",
+  "attempts.tryAgain": "Quase — tente mais uma vez",
+  "shield.promptTitle": "Usar um escudo?",
+  "shield.promptBody": "Gaste um escudo para tentar esta palavra de novo e manter sua sequência.",
+  "shield.held": "Escudos disponíveis",
+  "shield.accept": "Usar escudo",
+  "shield.decline": "Não, obrigado",
+  "shield.earned": "Escudo conquistado!",
+  "shield.used": "Escudo usado"
 }

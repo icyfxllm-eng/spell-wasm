@@ -40,13 +40,15 @@ export async function launch() {
 }
 
 /** New page at `lang`, age gate satisfied, TTS stubbed silent, wasm booted. */
-export async function openApp(browser, base, { lang = null, device = 'se' } = {}) {
+export async function openApp(browser, base, { lang = null, device = 'se', attemptsShields = false } = {}) {
   const d = DEVICES[device];
   const ctx = await browser.newContext({ viewport: { width: d.width, height: d.height }, deviceScaleFactor: d.dpr, isMobile: d.mobile });
-  await ctx.addInitScript(([age, l]) => {
+  await ctx.addInitScript(([age, l, flag]) => {
     localStorage.setItem('byear_agegate_v1', age);
     if (l) localStorage.setItem('spellgame.locale', l);
-  }, [AGE, lang]);
+    // CC-ATTEMPTS-SHIELDS dark flag (default OFF). E2E flips it via storage.
+    if (flag) localStorage.setItem('spell_flag_attempts_shields_v1', '1');
+  }, [AGE, lang, attemptsShields]);
   // Stub the backend audio so no real TTS traffic + deterministic timing.
   await ctx.route('**/api/speak**', (r) => r.fulfill({ status: 200, contentType: 'audio/mpeg', body: Buffer.from([]) }));
   const page = await ctx.newPage();

@@ -184,5 +184,15 @@
   "coming.notice": "{lang} wird von Muttersprachlern verfeinert — bald wieder da.",
   "coming.notify": "Benachrichtige mich, wenn es fertig ist",
   "coming.confirmed": "Du bist auf der Liste ✓",
-  "coming.badge": "Demnächst"
+  "coming.badge": "Demnächst",
+  "settings.extraAttempts": "Zusätzlicher Versuch bei Fehlern",
+  "settings.extraAttemptsSmall": "Ein zweiter Versuch, wenn du ein Wort verfehlst",
+  "attempts.tryAgain": "Fast — versuch es noch einmal",
+  "shield.promptTitle": "Schutzschild einsetzen?",
+  "shield.promptBody": "Setze einen Schild ein, um dieses Wort noch einmal zu versuchen und deine Serie fortzusetzen.",
+  "shield.held": "Verfügbare Schilde",
+  "shield.accept": "Schild einsetzen",
+  "shield.decline": "Nein danke",
+  "shield.earned": "Schild verdient!",
+  "shield.used": "Schild eingesetzt"
 }

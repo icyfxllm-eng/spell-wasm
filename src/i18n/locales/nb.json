@@ -184,5 +184,15 @@
   "coming.notice": "{lang} finpusses av morsmålsbrukere — snart tilbake.",
   "coming.notify": "Gi meg beskjed når det er klart",
   "coming.confirmed": "Du er på listen ✓",
-  "coming.badge": "Kommer snart"
+  "coming.badge": "Kommer snart",
+  "settings.extraAttempts": "Ekstra forsøk ved bom",
+  "settings.extraAttemptsSmall": "Et nytt forsøk når du bommer på et ord",
+  "attempts.tryAgain": "Nesten — prøv en gang til",
+  "shield.promptTitle": "Bruke et skjold?",
+  "shield.promptBody": "Bruk et skjold for å prøve ordet på nytt og holde rekken i gang.",
+  "shield.held": "Tilgjengelige skjold",
+  "shield.accept": "Bruk skjold",
+  "shield.decline": "Nei takk",
+  "shield.earned": "Skjold opptjent!",
+  "shield.used": "Skjold brukt"
 }

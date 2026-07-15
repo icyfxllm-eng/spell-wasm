@@ -184,5 +184,15 @@
   "coming.notice": "{lang} กำลังได้รับการขัดเกลาโดยเจ้าของภาษา — จะกลับมาเร็ว ๆ นี้",
   "coming.notify": "แจ้งฉันเมื่อพร้อม",
   "coming.confirmed": "คุณอยู่ในรายชื่อแล้ว ✓",
-  "coming.badge": "เร็ว ๆ นี้"
+  "coming.badge": "เร็ว ๆ นี้",
+  "settings.extraAttempts": "ลองเพิ่มเมื่อตอบผิด",
+  "settings.extraAttemptsSmall": "ลองอีกครั้งเมื่อสะกดผิด",
+  "attempts.tryAgain": "เกือบแล้ว — ลองอีกครั้ง",
+  "shield.promptTitle": "ใช้โล่ไหม?",
+  "shield.promptBody": "ใช้โล่หนึ่งอันเพื่อลองคำนี้อีกครั้งและรักษาสถิติของคุณ",
+  "shield.held": "โล่ที่มี",
+  "shield.accept": "ใช้โล่",
+  "shield.decline": "ไม่ล่ะ",
+  "shield.earned": "ได้รับโล่!",
+  "shield.used": "ใช้โล่แล้ว"
 }

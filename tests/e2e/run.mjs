@@ -16,6 +16,7 @@ import * as gameplay from './specs/gameplay.mjs';
 import * as modes from './specs/modes.mjs';
 import * as menu from './specs/menu.mjs';
 import * as coming from './specs/coming.mjs';
+import * as attemptsShields from './specs/attempts_shields.mjs';
 
 const SPECS = [
   ['keyboard', keyboard],
@@ -23,6 +24,7 @@ const SPECS = [
   ['modes', modes],
   ['menu', menu],
   ['coming', coming],
+  ['attempts-shields', attemptsShields],
 ];
 
 const ROOT = join(fileURLToPath(import.meta.url), '..', '..', '..');

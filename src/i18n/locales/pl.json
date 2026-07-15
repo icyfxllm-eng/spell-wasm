@@ -184,5 +184,15 @@
   "coming.notice": "{lang} jest dopracowywany przez rodzimych użytkowników — wkrótce wróci.",
   "coming.notify": "Powiadom mnie, gdy będzie gotowe",
   "coming.confirmed": "Jesteś na liście ✓",
-  "coming.badge": "Wkrótce"
+  "coming.badge": "Wkrótce",
+  "settings.extraAttempts": "Dodatkowa próba po pomyłce",
+  "settings.extraAttemptsSmall": "Druga próba, gdy pomylisz słowo",
+  "attempts.tryAgain": "Prawie — spróbuj jeszcze raz",
+  "shield.promptTitle": "Użyć tarczy?",
+  "shield.promptBody": "Wykorzystaj tarczę, aby spróbować tego słowa ponownie i utrzymać serię.",
+  "shield.held": "Dostępne tarcze",
+  "shield.accept": "Użyj tarczy",
+  "shield.decline": "Nie, dziękuję",
+  "shield.earned": "Zdobyto tarczę!",
+  "shield.used": "Tarcza użyta"
 }

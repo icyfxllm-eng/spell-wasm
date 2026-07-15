@@ -184,5 +184,15 @@
   "coming.notice": "{lang} est peaufiné par des locuteurs natifs — bientôt de retour.",
   "coming.notify": "Préviens-moi quand c'est prêt",
   "coming.confirmed": "Tu es sur la liste ✓",
-  "coming.badge": "Bientôt"
+  "coming.badge": "Bientôt",
+  "settings.extraAttempts": "Tentative supplémentaire en cas d’erreur",
+  "settings.extraAttemptsSmall": "Un second essai quand vous manquez un mot",
+  "attempts.tryAgain": "Presque — réessayez",
+  "shield.promptTitle": "Utiliser un bouclier ?",
+  "shield.promptBody": "Dépensez un bouclier pour réessayer ce mot et continuer votre série.",
+  "shield.held": "Boucliers disponibles",
+  "shield.accept": "Utiliser le bouclier",
+  "shield.decline": "Non merci",
+  "shield.earned": "Bouclier gagné !",
+  "shield.used": "Bouclier utilisé"
 }

@@ -5,6 +5,7 @@ use wasm_bindgen::JsCast;
 use wasm_bindgen_futures::spawn_local;
 
 use crate::consts::{is_builtin_lang, tier_time, CORRECT_DELAY_MS, EN, ES, LEVEL_OPTS, MAX_TRIES, MINE, PRAISE, REVIEW};
+use crate::flags;
 use crate::model::AppState;
 use crate::versus::Side;
 use crate::{achievements, api, board, dom, misses, selection, speech_out, stats, wordstats, words};
@@ -795,6 +796,9 @@ pub fn next_word(app: &App) {
     }
 
     app.borrow_mut().answered = false;
+    // CC-ATTEMPTS-SHIELDS: a new word refreshes its one-retry budget (I4/PD5).
+    crate::attempts::start_word(&mut app.borrow_mut());
+    update_shield_hud(app);
     dom::remove_class("orbWrap", "good");
     dom::remove_class("orbWrap", "bad");
     dom::set_html("orbGlyph", &crate::i18n::t("orb.listen"));
@@ -930,34 +934,64 @@ fn on_correct(app: &App) {
         let s = app.borrow();
         (s.cur_lang.clone(), s.cur_tier.clone(), s.word.clone())
     };
-    stats::record(&mut app.borrow_mut(), &cur_lang, &cur_tier, true);
-    // Adaptive word stats: solo practice only (Misses/review has its own SR).
-    if !app.borrow().review {
-        wordstats::record(&cur_lang, &word, true);
-        selection::note_outcome(&cur_lang, &word, true);
-    }
-    let cleared = misses::promote_miss(&mut app.borrow_mut(), &word, &cur_lang);
-    refresh_mode_buttons(app);
-    if cleared {
-        achievements::unlock(&mut app.borrow_mut(), "cleared");
-    }
 
-    // Stamp the run's start when a fresh chain begins (for The Climb's timing).
-    if app.borrow().streak == 0 {
-        app.borrow_mut().run_start_ms = now_ms();
+    // CC-ATTEMPTS-SHIELDS PD4/I9: a word rescued by an extra attempt or a shield
+    // is CORRECT-on-retry — the run continues, but this is NOT a "correct" for
+    // scoring. Its first miss was already recorded; it must not re-record, must
+    // not promote the miss out of spaced-rep, must not extend the streak or earn
+    // streak, and (I9) must never be mistaken for an auto-advancing correct.
+    let rescued = flags::attempts_shields() && app.borrow().aids.retry_used;
+    if !rescued {
+        stats::record(&mut app.borrow_mut(), &cur_lang, &cur_tier, true);
+        // Adaptive word stats: solo practice only (Misses/review has its own SR).
+        if !app.borrow().review {
+            wordstats::record(&cur_lang, &word, true);
+            selection::note_outcome(&cur_lang, &word, true);
+        }
+        let cleared = misses::promote_miss(&mut app.borrow_mut(), &word, &cur_lang);
+        refresh_mode_buttons(app);
+        if cleared {
+            achievements::unlock(&mut app.borrow_mut(), "cleared");
+        }
+
+        // Stamp the run's start when a fresh chain begins (for The Climb's timing).
+        if app.borrow().streak == 0 {
+            app.borrow_mut().run_start_ms = now_ms();
+        }
+        let streak = bump_streak(app);
+        note_climb(app, true); // Option A: advance the Climb band on a correct answer
+        // Shields (The Climb): earn one every SHIELD_EARN_STREAK consecutive
+        // genuine corrects, capped. Earning flashes the HUD. (Two statements so
+        // the immutable borrow is released before the mutable earn call —
+        // otherwise RefCell would double-borrow at runtime.)
+        let in_climb = shield_ctx(&app.borrow());
+        let earned = in_climb && crate::attempts::shield_on_correct(&mut app.borrow_mut());
+        dom::set_text("streakNum", &streak.to_string());
+        dom::set_text("bestNum", &app.borrow().best.to_string());
+        dom::add_class("orbWrap", "good");
+        spell_feedback(true);
+        set_streak_tier(streak);
+        dom::set_text("orbGlyph", "\u{2713}");
+        if earned {
+            flash_shield_earned(app);
+        } else {
+            dom::set_text("feedback", &pick_praise(app));
+            dom::el("feedback").set_class_name("feedback good");
+        }
+        update_shield_hud(app);
+        show_meaning(app, word, cur_lang);
+        achievements::check_streak(&mut app.borrow_mut());
+    } else {
+        // Rescued: advance without scoring. The streak stays where the miss left
+        // it (0); the shield/attempt kept the run alive.
+        dom::add_class("orbWrap", "good");
+        spell_feedback(true);
+        dom::set_text("orbGlyph", "\u{2713}");
+        dom::set_text("feedback", &pick_praise(app));
+        dom::el("feedback").set_class_name("feedback good");
+        update_shield_hud(app);
+        show_meaning(app, word, cur_lang);
     }
-    let streak = bump_streak(app);
-    note_climb(app, true); // Option A: advance the Climb band on a correct answer
-    dom::set_text("streakNum", &streak.to_string());
-    dom::set_text("bestNum", &app.borrow().best.to_string());
-    dom::add_class("orbWrap", "good");
-    spell_feedback(true);
-    set_streak_tier(streak);
-    dom::set_text("orbGlyph", "\u{2713}");
-    dom::set_text("feedback", &pick_praise(app));
-    dom::el("feedback").set_class_name("feedback good");
-    show_meaning(app, word, cur_lang);
-    achievements::check_streak(&mut app.borrow_mut());
 
     schedule(app, CORRECT_DELAY_MS, |app| next_word(app));
 }
@@ -1018,20 +1052,29 @@ fn retry_wrong(app: &App, tries_left: u32, verb: &str) {
 
 /// Out of tries (or timed out / gave up): record the miss and reveal the word.
 fn finalize_incorrect(app: &App, glyph: &str, prefix: &str, feedback_class: &str) {
+    finalize_incorrect_ex(app, glyph, prefix, feedback_class, true);
+}
+
+/// As `finalize_incorrect`, but `record` controls whether the learning outcome
+/// (accuracy, Misses/spaced-rep, word stats) is written here. CC-ATTEMPTS-SHIELDS
+/// passes `record = false` when the first submission already recorded the miss —
+/// a retry (extra attempt or shield) changes session flow, not the learning
+/// record, so the outcome must never be double-counted (I2 / A2 / A9).
+fn finalize_incorrect_ex(app: &App, glyph: &str, prefix: &str, feedback_class: &str, record: bool) {
     let (versus_on, cur_lang, cur_tier, word) = {
         let s = app.borrow();
         (s.versus.enabled, s.cur_lang.clone(), s.cur_tier.clone(), s.word.clone())
     };
     // Head-to-head records nothing persistent (accuracy, Misses, leaderboard,
     // word stats) — the match never counts toward solo progress.
-    if !versus_on {
+    if record && !versus_on {
         stats::record(&mut app.borrow_mut(), &cur_lang, &cur_tier, false);
         misses::add_miss(&mut app.borrow_mut(), &word, &cur_lang, &cur_tier);
         refresh_mode_buttons(app);
     }
     // Adaptive word stats: a loss (out of tries / timeout / give-up) is a miss,
     // for solo practice only (not head-to-head, not Misses/review).
-    if !versus_on && !app.borrow().review {
+    if record && !versus_on && !app.borrow().review {
         wordstats::record(&cur_lang, &word, false);
         selection::note_outcome(&cur_lang, &word, false);
     }
@@ -1055,6 +1098,165 @@ fn finalize_incorrect(app: &App, glyph: &str, prefix: &str, feedback_class: &str
     } else {
         end_chain(app);
     }
+}
+
+// ---------- CC-ATTEMPTS-SHIELDS wiring (flag-gated; OFF => zero diff) ----------
+//
+// Both features hook the SINGLE validation path (submit_guess -> on_correct /
+// on_wrong). They read ONLY the validated-correct / validated-incorrect events —
+// never the language, input method, or raw text. Timeouts and give-ups are NOT
+// attempts, so they keep the legacy path untouched.
+
+/// Shields apply in a solo, ranked Climb run (the adaptive `climb` level) while
+/// the dark flag is on. Not in Daily / Versus / Misses-review.
+fn shield_ctx(s: &AppState) -> bool {
+    flags::attempts_shields() && s.level == "climb" && !s.versus.enabled && !s.daily.active && !s.review
+}
+
+/// The "Extra attempt on misses" toggle applies in normal (fixed-level) solo
+/// practice. Kid Mode is deliberately excluded (see report — inherits cleanly,
+/// but is not enabled there pending a product decision).
+fn extra_attempt_ctx(s: &AppState) -> bool {
+    flags::attempts_shields()
+        && s.extra_attempts
+        && s.level != "climb"
+        && !s.versus.enabled
+        && !s.daily.active
+        && !s.review
+        && !s.kid
+}
+
+/// Record the FIRST-submission miss exactly once: accuracy, spaced-rep/Misses,
+/// and adaptive word stats. The retry outcome never re-records (I2 / A2 / A9).
+fn record_first_miss(app: &App) {
+    let (cur_lang, cur_tier, word, review) = {
+        let s = app.borrow();
+        (s.cur_lang.clone(), s.cur_tier.clone(), s.word.clone(), s.review)
+    };
+    stats::record(&mut app.borrow_mut(), &cur_lang, &cur_tier, false);
+    misses::add_miss(&mut app.borrow_mut(), &word, &cur_lang, &cur_tier);
+    refresh_mode_buttons(app);
+    if !review {
+        wordstats::record(&cur_lang, &word, false);
+        selection::note_outcome(&cur_lang, &word, false);
+    }
+}
+
+/// Re-present the SAME word for its one retry: clear the input (never
+/// pre-filled), replay the audio exactly once, re-enable controls, restart the
+/// timer. Shared by the extra-attempt and shield-accept flows.
+fn grant_retry(app: &App, feedback_key: &str) {
+    app.borrow_mut().answered = false;
+    crate::attempts::prepare_retry(&mut app.borrow_mut()); // input starts empty (A5)
+    dom::set_disabled("checkBtn", false);
+    dom::set_disabled("hintBtn", false);
+    dom::set_disabled("giveupBtn", false);
+    let is_en = app.borrow().cur_lang == EN;
+    dom::set_disabled("defBtn", !is_en);
+    dom::set_disabled("sentenceBtn", !is_en);
+    render_letters(app, false);
+    dom::add_class("orbWrap", "bad");
+    spell_feedback(false);
+    set_streak_tier(0);
+    dom::set_text("orbGlyph", "\u{2717}");
+    dom::set_text("feedback", &crate::i18n::t(feedback_key));
+    dom::el("feedback").set_class_name("feedback bad");
+    sync_keyboard(app);
+    schedule(app, 550, |_| {
+        dom::remove_class("orbWrap", "bad");
+        dom::set_html("orbGlyph", &crate::i18n::t("orb.listen"));
+    });
+    speak_current(app); // audio replays automatically, exactly once (A5)
+    let cur_tier = app.borrow().cur_tier.clone();
+    start_timer(app, &cur_tier);
+}
+
+/// Reset the correct-streak to zero because a real miss happened (the run may
+/// still continue via a retry, but the chain does NOT keep growing — PD4).
+fn break_streak(app: &App) {
+    app.borrow_mut().streak = 0;
+    dom::set_text("streakNum", "0");
+    set_streak_tier(0);
+}
+
+/// Feature 1 (normal mode) — a validated-incorrect under the extra-attempts
+/// toggle. First miss: record once + one clean retry. Second miss on the same
+/// word: normal consequence, nothing re-recorded.
+fn on_wrong_extra_attempt(app: &App) {
+    crate::haptics::incorrect(app.borrow().kid);
+    let already = app.borrow().aids.retry_used;
+    if !already {
+        record_first_miss(app);
+        app.borrow_mut().aids.retry_used = true;
+        break_streak(app); // the miss is real; the chain stops growing (PD4)
+        grant_retry(app, "attempts.tryAgain");
+        return;
+    }
+    // Retry was also wrong -> normal miss consequence; miss already recorded.
+    finalize_incorrect_ex(app, "\u{2717}", &crate::i18n::t("fb.itWas"), "feedback bad", false);
+}
+
+/// Feature 2 (The Climb) — a validated-incorrect during a run. Any miss resets
+/// the shield earn streak. If a shield is available and none has been spent on
+/// this word, record the first miss and offer the "Use a shield?" prompt;
+/// otherwise the normal miss consequence applies.
+fn on_wrong_climb(app: &App) {
+    crate::haptics::incorrect(app.borrow().kid);
+    crate::attempts::shield_note_miss(&mut app.borrow_mut()); // earn streak resets (PD2)
+    if crate::attempts::shield_available(&app.borrow()) {
+        record_first_miss(app); // first miss recorded regardless of the choice
+        break_streak(app);
+        show_shield_prompt(app);
+        return;
+    }
+    // No shield to spend (or already used one on this word) -> normal miss.
+    finalize_incorrect(app, "\u{2717}", &crate::i18n::t("fb.itWas"), "feedback bad");
+}
+
+/// Show the localized "Use a shield?" prompt (player choice, not auto-spend).
+fn show_shield_prompt(app: &App) {
+    let n = app.borrow().aids.shields;
+    dom::set_text("shieldPromptCount", &n.to_string());
+    dom::add_class("shieldScrim", "show");
+}
+
+fn hide_shield_prompt() {
+    dom::remove_class("shieldScrim", "show");
+}
+
+/// Player ACCEPTED: consume exactly one shield and retry the same word.
+pub fn shield_accept(app: &App) {
+    hide_shield_prompt();
+    if !crate::attempts::spend_shield(&mut app.borrow_mut()) {
+        return; // defensive: nothing to spend
+    }
+    update_shield_hud(app);
+    grant_retry(app, "shield.used");
+}
+
+/// Player DECLINED: the run's normal miss consequence applies; the shield is
+/// kept. The first miss was already recorded when the prompt appeared.
+pub fn shield_decline(app: &App) {
+    hide_shield_prompt();
+    finalize_incorrect_ex(app, "\u{2717}", &crate::i18n::t("fb.itWas"), "feedback bad", false);
+}
+
+/// Sync the shield-count HUD. Visible only while the flag is on and this is a
+/// Climb run; hidden everywhere else (byte-for-byte zero diff when OFF).
+pub fn update_shield_hud(app: &App) {
+    let (show, n) = {
+        let s = app.borrow();
+        (shield_ctx(&s), s.aids.shields)
+    };
+    dom::set_text("shieldCount", &n.to_string());
+    dom::toggle_class("shieldHud", "btn-hide", !show);
+}
+
+/// Brief localized HUD flash when a shield is earned.
+fn flash_shield_earned(app: &App) {
+    dom::set_text("feedback", &crate::i18n::t("shield.earned"));
+    dom::el("feedback").set_class_name("feedback good");
+    update_shield_hud(app);
 }
 
 /// Korean (Phase 3): on a wrong answer, point the player at the jamo that's off
@@ -1094,6 +1296,16 @@ fn on_wrong(app: &App) {
         daily_answer(app, false);
         return;
     }
+    // CC-ATTEMPTS-SHIELDS (flag-gated): shields in The Climb, or the extra-
+    // attempts toggle in normal mode. Either fully handles the miss and returns.
+    if shield_ctx(&app.borrow()) {
+        on_wrong_climb(app);
+        return;
+    }
+    if extra_attempt_ctx(&app.borrow()) {
+        on_wrong_extra_attempt(app);
+        return;
+    }
     crate::haptics::incorrect(app.borrow().kid);
     let tries_left = use_a_try(app);
     render_tries(app);
@@ -1113,6 +1325,15 @@ fn on_timeout(app: &App) {
     app.borrow_mut().answered = true;
     lock_inputs();
 
+    // CC-ATTEMPTS-SHIELDS: a timeout is NOT a submitted attempt, so it never
+    // earns/spends a shield or grants an extra attempt (the contract: only
+    // validated-correct/incorrect count). When the feature owns this run, a
+    // timeout is simply the miss — no legacy multi-try.
+    if shield_ctx(&app.borrow()) || extra_attempt_ctx(&app.borrow()) {
+        crate::attempts::shield_note_miss(&mut app.borrow_mut());
+        finalize_incorrect(app, "\u{23f1}", &crate::i18n::t("fb.timesUp"), "feedback bad");
+        return;
+    }
     let tries_left = use_a_try(app);
     render_tries(app);
     if tries_left > 0 {
@@ -1166,6 +1387,10 @@ fn reset_chain_soft(app: &App) {
     note_climb(app, false); // Option A: drop the Climb band one step (not to easy)
     app.borrow_mut().streak = 0;
     dom::set_text("streakNum", "0");
+    // CC-ATTEMPTS-SHIELDS: the run just ended — shields are per-run and do NOT
+    // carry into the next one (I7). Reset all run aids.
+    crate::attempts::reset_run(&mut app.borrow_mut());
+    update_shield_hud(app);
     let review = app.borrow().review;
     dom::set_html("orbGlyph", &if review { crate::i18n::t("orb.continue") } else { crate::i18n::t("orb.next") });
 }
@@ -1606,6 +1831,8 @@ pub fn exit_versus(app: &App) {
         s.word = String::new();
         s.answered = false;
     }
+    crate::attempts::reset_run(&mut app.borrow_mut());
+    update_shield_hud(app);
     dom::remove_class("orbWrap", "good");
     dom::remove_class("orbWrap", "bad");
     dom::set_html("orbGlyph", &crate::i18n::t("orb.tap"));
