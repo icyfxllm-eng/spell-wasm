@@ -1,0 +1,133 @@
+{
+  "schema": {
+    "fields": {
+      "feature": "int 1-6",
+      "severity": "critical|violation|warning|info",
+      "class": "str",
+      "file": "str",
+      "key": "str",
+      "detail": "str",
+      "proposed_fix": "str|null"
+    }
+  },
+  "lang": "nb",
+  "findings": [
+    {
+      "feature": 1,
+      "severity": "warning",
+      "class": "english-contamination",
+      "file": "assets/words/nb/hard.txt",
+      "key": "5",
+      "detail": "'dinosaur' also appears in the English word lists — confirm it's a legitimate nb word",
+      "proposed_fix": null
+    },
+    {
+      "feature": 1,
+      "severity": "warning",
+      "class": "english-contamination",
+      "file": "assets/words/nb/expert.txt",
+      "key": "26",
+      "detail": "'restaurant' also appears in the English word lists — confirm it's a legitimate nb word",
+      "proposed_fix": null
+    },
+    {
+      "feature": 2,
+      "severity": "info",
+      "class": "min-pool-undefined",
+      "file": "src/consts.rs",
+      "key": "-",
+      "detail": "No minimum-pool-size constant exists in code; the 'above minimum pool' invariant has no threshold to check against. Daily uses a W×30 horizon (scripts/daily-pool-audit). OPEN QUESTION for Eric: define the min tier pool size.",
+      "proposed_fix": null
+    },
+    {
+      "feature": 3,
+      "severity": "info",
+      "class": "tts-voice",
+      "file": "backend/app.py",
+      "key": "LANG_VOICES",
+      "detail": "nb voice = nb-NO-Wavenet-B (locale nb-NO); configured in 1 place(s)",
+      "proposed_fix": null
+    },
+    {
+      "feature": 3,
+      "severity": "info",
+      "class": "audio-coverage",
+      "file": "-",
+      "key": "-",
+      "detail": "160 unique words emitted to audio-manifest.txt. Cache coverage lives on the server (audio_cache, keyed md5('{lang}:'+word)); not verifiable from the repo and NOT probed (probing /api/speak would bulk-generate). Verify against the cache in a separate approved run.",
+      "proposed_fix": null
+    },
+    {
+      "feature": 4,
+      "severity": "info",
+      "class": "homophones-manual",
+      "file": "assets/words/nb/",
+      "key": "-",
+      "detail": "Automated homophone detection is Spanish-only. Norwegian has real same-sound/different-spelling homophones that a spell-by-ear player could miss, but flagging them needs a native speaker + phonetic transcription. AUDITOR TASK: list any list words whose pronunciation matches another common word, so grading can accept-any (the accept-any mechanism in src/homophones.rs already supports any language via assets/words/nb/homophones.txt).",
+      "proposed_fix": null
+    },
+    {
+      "feature": 5,
+      "severity": "info",
+      "class": "filter-layers",
+      "file": "assets/words/profanity/nb.txt",
+      "key": "-",
+      "detail": "nb seed layer: 38 terms. Curation scan below is language-scoped (nb seed + universal hard slurs). Runtime My Words screening (src/profanity.rs is_blocked) separately uses the 1768-term all-language union — that over-block is intentional for user imports.",
+      "proposed_fix": null
+    },
+    {
+      "feature": 6,
+      "severity": "warning",
+      "class": "untranslated",
+      "file": "src/i18n/locales/nb.json",
+      "key": "top.theClimb",
+      "detail": "value identical to English: '🏔 The Climb'",
+      "proposed_fix": null
+    },
+    {
+      "feature": 6,
+      "severity": "warning",
+      "class": "untranslated",
+      "file": "src/i18n/locales/nb.json",
+      "key": "kb.enter",
+      "detail": "value identical to English: 'Enter'",
+      "proposed_fix": null
+    },
+    {
+      "feature": 6,
+      "severity": "warning",
+      "class": "untranslated",
+      "file": "src/i18n/locales/nb.json",
+      "key": "btn.hint",
+      "detail": "value identical to English: 'Hint'",
+      "proposed_fix": null
+    },
+    {
+      "feature": 6,
+      "severity": "warning",
+      "class": "untranslated",
+      "file": "src/i18n/locales/nb.json",
+      "key": "vs.start",
+      "detail": "value identical to English: 'Start match'",
+      "proposed_fix": null
+    },
+    {
+      "feature": 6,
+      "severity": "warning",
+      "class": "untranslated",
+      "file": "src/i18n/locales/nb.json",
+      "key": "daily.progress",
+      "detail": "value identical to English: '🗓 {i}/{n} · ✓{c}'",
+      "proposed_fix": null
+    },
+    {
+      "feature": 6,
+      "severity": "warning",
+      "class": "untranslated",
+      "file": "src/i18n/locales/nb.json",
+      "key": "daily.bestStreak",
+      "detail": "value identical to English: 'best: {n}'",
+      "proposed_fix": null
+    }
+  ]
+}
