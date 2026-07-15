@@ -68,6 +68,17 @@ fn extra_blocklist() -> &'static HashSet<String> {
     })
 }
 
+/// The same per-language union, but each term run through `normalize_loose`
+/// (leet/symbol fold + separator strip, accents preserved). Checked as a second
+/// pass in `is_blocked` so hyphen/space/leet evasions of a seeded term are caught
+/// generically instead of needing every variant hand-seeded.
+static EXTRA_BLOCKLIST_LOOSE: OnceLock<HashSet<String>> = OnceLock::new();
+fn extra_blocklist_loose() -> &'static HashSet<String> {
+    EXTRA_BLOCKLIST_LOOSE.get_or_init(|| {
+        extra_blocklist().iter().map(|t| normalize_loose(t)).filter(|s| !s.is_empty()).collect()
+    })
+}
+
 /// Roots that never legitimately occur inside a normal English spelling word,
 /// so they're safe to match as a substring (catches "motherfucker",
 /// "bullshit", "shithead", "niggard"-style evasions, etc.).
@@ -110,6 +121,36 @@ fn normalize(word: &str) -> String {
     out
 }
 
+/// Fold leet homoglyphs to letters and strip separators, but — unlike the
+/// English `normalize` — WITHOUT stripping accents or restricting to a–z. This is
+/// what makes it safe for the per-language layer across every script: accented
+/// Latin keeps its accents (so Vietnamese lồn≠lon, the exact disambiguation the
+/// vi seed relies on), and CJK/Thai pass through untouched (the leet fold is a
+/// no-op on them). It only (1) folds digit/symbol leet to letters and (2) drops
+/// hyphens/apostrophes/spaces/punctuation, so "g-a-g-o", "gag0", and "put@"
+/// collapse to the bare term for matching.
+fn normalize_loose(word: &str) -> String {
+    let mut out = String::with_capacity(word.len());
+    for ch in word.nfc() {
+        let c = ch.to_lowercase().next().unwrap_or(ch);
+        let folded = match c {
+            '@' | '4' => 'a',
+            '3' => 'e',
+            '1' | '!' | '|' => 'i',
+            '0' => 'o',
+            '5' | '$' => 's',
+            '7' | '+' => 't',
+            '8' => 'b',
+            '9' => 'g',
+            other => other,
+        };
+        if folded.is_alphabetic() {
+            out.push(folded);
+        }
+    }
+    out
+}
+
 /// True if this custom word should be blocked from "My Words".
 pub fn is_blocked(word: &str) -> bool {
     // English/Latin + leetspeak layer (accent-strip + homoglyph fold to a-z).
@@ -122,11 +163,18 @@ pub fn is_blocked(word: &str) -> bool {
             return true;
         }
     }
-    // Per-language layer: exact whole-word match (NFC + lowercased) against the
-    // union of every language's list — screens non-English and CJK/Thai imports
-    // that the a-z fold above can't see (it strips them to nothing).
+    // Per-language layer, two passes against the union of every language's list
+    // (the a-z fold above can't see non-English/CJK/Thai at all):
+    //  1) exact whole-word match (NFC + lowercased) — the baseline.
     let raw: String = word.trim().nfc().collect::<String>().to_lowercase();
-    !raw.is_empty() && extra_blocklist().contains(&raw)
+    if !raw.is_empty() && extra_blocklist().contains(&raw) {
+        return true;
+    }
+    //  2) loose match — folds digit/symbol leet and strips separators without
+    //     stripping accents, so "g-a-g-o"/"gag0"/"put@" are caught generically
+    //     while accented + non-Latin languages (incl. vi lồn≠lon) stay safe.
+    let loose = normalize_loose(word);
+    !loose.is_empty() && extra_blocklist_loose().contains(&loose)
 }
 
 /// Splits a word list into the allowed words (order preserved) and a count of
@@ -222,5 +270,24 @@ mod tests {
         for w in ["mèo", "bàn", "chó", "đi", "lon", "ngu"] {
             assert!(!is_blocked(w), "clean vi word '{w}' must not be blocked");
         }
+    }
+
+    #[test]
+    fn loose_layer_catches_unseeded_leet_and_spacing() {
+        // Leet/spacing variants NOT explicitly hand-seeded are now caught via the
+        // per-language loose normalize (digit/symbol fold + separator strip).
+        assert!(is_blocked("gag0"), "0->o leet of fil 'gago'");
+        assert!(is_blocked("put@"), "@->a leet of 'puta'");
+        assert!(is_blocked("pu-ta"), "hyphen-spaced 'puta'");
+        assert!(is_blocked("g-a-g-o"), "hyphen-spaced 'gago'");
+        assert!(is_blocked("g4g0"), "mixed-digit 'gago'");
+        // Accent-based disambiguation MUST survive (loose fold does NOT strip
+        // accents): innocent words whose only difference from a seeded term is a
+        // diacritic stay addable.
+        assert!(!is_blocked("lon"), "vi 'can' — seed has lồn, not lon");
+        assert!(!is_blocked("bàn"), "vi 'table'");
+        // English layer unaffected; ordinary words with no leet stay clean.
+        assert!(!is_blocked("class"));
+        assert!(!is_blocked("manzana"));
     }
 }

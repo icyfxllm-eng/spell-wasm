@@ -8,12 +8,12 @@
 #   hayop (animal), itlog (egg), pepe (a common name), pusa (cat), dumi (dirt),
 #   and identity terms (bakla/bading/tomboy) — often neutral, not slurs.
 #
-# NOTE (follow-up, not fixed here per the audit work order): the per-language
-# layer is EXACT-match, so it does NOT leet-fold or de-space like the English
-# layer. Sophisticated evasions (g4g0 with mixed digits, s p a c e d letters)
-# can still slip. The high-value fix is applying src/profanity.rs `normalize`
-# to the per-language union check too — an architecture change, out of scope
-# here. A handful of the most common numeric-leet forms are seeded below.
+# NOTE: the per-language layer now runs a SECOND `normalize_loose` pass
+# (src/profanity.rs) that folds digit/symbol leet and strips hyphen/space
+# separators WITHOUT stripping accents — so "g4g0", "g-a-g-o", "put@" are caught
+# generically. The literal numeric-leet forms seeded below are therefore now
+# redundant belt-and-suspenders (kept, harmless). Diacritic-aware, so non-Latin
+# and accented languages (e.g. Vietnamese lồn≠lon) stay safe from false-blocks.
 
 # --- core profanity / "your mother" family + contractions ---
 puta
