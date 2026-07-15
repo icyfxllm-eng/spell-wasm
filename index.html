@@ -8,6 +8,29 @@
 <meta name="theme-color" content="#1c1830" />
 <link rel="apple-touch-icon" href="./icons/icon-192.png" />
 <link rel="icon" href="./icons/icon-192.png" />
+<script>
+  // i18n boot cloak (FIX 3). The HTML ships English strings; WASM applies the
+  // localized [data-i18n] text AFTER it boots, so a non-English user briefly
+  // sees English flash then reflow ("pop"). If the resolved UI locale is a
+  // non-English one we ship, add `booting` to <html> so the CSS below hides
+  // the translatable chrome (never the orb) until translate_page() removes the
+  // class in one paint. English users match the baked-in strings, so they are
+  // never cloaked — no added blank flash. This mirrors i18n::init's resolution
+  // (persisted choice -> device language), each gated to a shipped locale, and
+  // runs in <head> so the class is set before the first paint. A CSS fallback
+  // (see html.booting rule) reveals after 2.5s if WASM never boots, so the
+  // text can never stay permanently hidden.
+  (function () {
+    var SUPPORTED = {en:1,es:1,fr:1,de:1,pt:1,it:1,nl:1,pl:1,sv:1,nb:1,tr:1,vi:1,ko:1,ja:1,zh:1,th:1,fil:1};
+    var loc = '';
+    try { loc = localStorage.getItem('spellgame.locale') || ''; } catch (e) {}
+    if (!SUPPORTED[loc]) {
+      var dev = ((navigator.language || 'en').split(/[-_]/)[0] || 'en').toLowerCase();
+      loc = SUPPORTED[dev] ? dev : 'en';
+    }
+    if (loc && loc !== 'en') document.documentElement.classList.add('booting');
+  })();
+</script>
 <style>
   /* Self-hosted web fonts (FIX 1). These used to load at runtime from Google
      Fonts (3 cross-origin requests) plus OpenDyslexic from a public CDN. None
@@ -90,6 +113,18 @@
     -webkit-font-smoothing:antialiased;
     transition:background .25s ease;
   }
+  /* i18n boot cloak (FIX 3). Only applied when the head script added `booting`
+     (i.e. a non-English shipped locale). Hides the translatable chrome — the
+     text that translate_page() overwrites — until it runs and removes the
+     class, so the localized strings appear in one paint instead of English-
+     then-reflow. visibility:hidden keeps layout, never touches the orb, and
+     leaves interactivity (the orb boot already gates that) alone. The
+     animation is a pure-CSS safety net: if WASM never boots, each element
+     reveals itself after 2.5s so text is never permanently hidden. */
+  html.booting [data-i18n],
+  html.booting [data-i18n-html],
+  html.booting #brandTag{ visibility:hidden; animation:i18nCloakReveal 0.01s linear 2500ms forwards }
+  @keyframes i18nCloakReveal{ to{ visibility:visible } }
   body.readable{ font-family:'OpenDyslexic','Instrument Sans',system-ui,sans-serif; letter-spacing:.01em; }
   body.readable .ltr{ letter-spacing:.05em; }
   body.readable .foot{ font-size:13px; }
