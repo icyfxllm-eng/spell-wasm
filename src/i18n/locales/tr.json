@@ -204,5 +204,11 @@
   "sayit.listening": "Dinliyor…",
   "sayit.correct": "Doğru!",
   "sayit.tryAgain": "Az kaldı — sonrakini dene.",
-  "sayit.didntCatch": "Anlayamadım — dokun ve tekrar dene."
+  "sayit.didntCatch": "Anlayamadım — dokun ve tekrar dene.",
+  "voiceSpell.mic": "Sesli hecele",
+  "voiceSpell.listening": "Dinliyor… harfleri söyle",
+  "voiceSpell.spellItOut": "Harf harf hecele!",
+  "voiceSpell.didntCatch": "Anlayamadım — tekrar dene.",
+  "voiceSpell.needsMic": "Sesli hecelemek için Ayarlar'da Spell için Mikrofon ve Konuşma Tanıma'yı açın. İstediğiniz zaman yazabilirsiniz.",
+  "voiceSpell.close": "Kapat"
 }

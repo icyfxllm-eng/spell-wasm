@@ -204,5 +204,11 @@
   "sayit.listening": "Höre zu…",
   "sayit.correct": "Richtig!",
   "sayit.tryAgain": "Fast — versuch das nächste.",
-  "sayit.didntCatch": "Nicht verstanden — tippe und versuch es nochmal."
+  "sayit.didntCatch": "Nicht verstanden — tippe und versuch es nochmal.",
+  "voiceSpell.mic": "Laut buchstabieren",
+  "voiceSpell.listening": "Hört zu… sprich die Buchstaben",
+  "voiceSpell.spellItOut": "Buchstabiere Buchstabe für Buchstabe!",
+  "voiceSpell.didntCatch": "Nicht verstanden — versuch es nochmal.",
+  "voiceSpell.needsMic": "Zum lauten Buchstabieren aktiviere Mikrofon und Spracherkennung für Spell in den Einstellungen. Tippen geht immer.",
+  "voiceSpell.close": "Schließen"
 }

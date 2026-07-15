@@ -13,6 +13,7 @@ use std::cell::RefCell;
 use std::collections::HashMap;
 
 use js_sys::{Function, Promise, Reflect};
+use wasm_bindgen::closure::Closure;
 use wasm_bindgen::{JsCast, JsValue};
 use wasm_bindgen_futures::JsFuture;
 
@@ -252,6 +253,79 @@ pub async fn start_listening_await(lang: &str) -> ListenOutcome {
 pub fn stop_listening() {
     if let Some(obj) = bridge() {
         if let Some(f) = method(&obj, "stopListening") {
+            let _ = f.call0(&obj);
+        }
+    }
+}
+
+// ---- Spell It Out Loud: on-device LETTER capture (second recognition profile) ----
+//
+// Same mic, same on-device SFSpeechRecognizer as Say-It — a DIFFERENT profile:
+// `contextualStrings` biased to the language's letter names, and the RAW token
+// stream (partials included) delivered live via callbacks instead of a single
+// final promise. The Swift plugin does ZERO parsing; the Rust `spell_aloud`
+// parser owns all linguistic knowledge.
+
+thread_local! {
+    // Keep the JS-facing closures alive for the duration of a capture session.
+    // Replaced on each start; dropped on stop, ending the subscriptions.
+    static LETTER_CBS: RefCell<Option<[Closure<dyn FnMut(JsValue)>; 3]>> = const { RefCell::new(None) };
+}
+
+/// Start on-device letter capture for `lang`, biasing the recognizer with
+/// `contextual` (the spoken letter-name forms). `on_token` fires for each partial
+/// (the growing raw transcript), `on_final` once at the end, `on_error` with a
+/// documented code. Returns false (and does not call any callback) only when the
+/// bridge/plugin method is entirely absent — caller treats that as unavailable.
+pub fn start_letter_capture(
+    lang: &str,
+    contextual: &[String],
+    mut on_token: impl FnMut(String) + 'static,
+    mut on_final: impl FnMut(String) + 'static,
+    mut on_error: impl FnMut(String) + 'static,
+) -> bool {
+    let Some(obj) = bridge() else { return false };
+    let Some(f) = method(&obj, "startLetterCapture") else { return false };
+
+    let opts = js_sys::Object::new();
+    if Reflect::set(&opts, &JsValue::from_str("lang"), &JsValue::from_str(lang)).is_err() {
+        return false;
+    }
+    let arr = js_sys::Array::new();
+    for s in contextual {
+        arr.push(&JsValue::from_str(s));
+    }
+    let _ = Reflect::set(&opts, &JsValue::from_str("contextualStrings"), &arr);
+
+    let tok_cb = Closure::wrap(Box::new(move |v: JsValue| {
+        on_token(v.as_string().unwrap_or_default());
+    }) as Box<dyn FnMut(JsValue)>);
+    let fin_cb = Closure::wrap(Box::new(move |v: JsValue| {
+        on_final(v.as_string().unwrap_or_default());
+    }) as Box<dyn FnMut(JsValue)>);
+    let err_cb = Closure::wrap(Box::new(move |v: JsValue| {
+        on_error(v.as_string().unwrap_or_else(|| "AUDIO_ERROR".into()));
+    }) as Box<dyn FnMut(JsValue)>);
+
+    // startLetterCapture(opts, onToken, onFinal, onError)
+    let args = js_sys::Array::of4(
+        &opts,
+        tok_cb.as_ref().unchecked_ref(),
+        fin_cb.as_ref().unchecked_ref(),
+        err_cb.as_ref().unchecked_ref(),
+    );
+    if f.apply(&obj, &args).is_err() {
+        return false;
+    }
+    LETTER_CBS.with(|c| *c.borrow_mut() = Some([tok_cb, fin_cb, err_cb]));
+    true
+}
+
+/// Stop any in-flight letter capture (fire-and-forget). The plugin finalizes and
+/// fires `on_final`; the kept-alive closures are released afterwards.
+pub fn stop_letter_capture() {
+    if let Some(obj) = bridge() {
+        if let Some(f) = method(&obj, "stopLetterCapture") {
             let _ = f.call0(&obj);
         }
     }

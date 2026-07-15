@@ -1,0 +1,61 @@
+{
+  "lang": "es",
+  "_doc": "SINGLE SOURCE OF TRUTH for Spanish spoken-letter parsing (27-letter RAE alphabet incl. ñ). Keys are raw recognizer token spellings (lowercased/NFC at match time, accents & ñ PRESERVED so eñe≠ene); values are the exact letters typed. Multigraph names che/elle expand to two letters (ch, ll). No letter-name literal may live outside lexicons/letters/ (Invariant I4).",
+  "letterNames": {
+    "a": "a",
+    "be": "b",
+    "ce": "c",
+    "de": "d",
+    "e": "e",
+    "efe": "f",
+    "ge": "g",
+    "hache": "h",
+    "i": "i",
+    "jota": "j",
+    "ka": "k",
+    "ele": "l",
+    "eme": "m",
+    "ene": "n",
+    "eñe": "ñ",
+    "o": "o",
+    "pe": "p",
+    "cu": "q",
+    "ere": "r",
+    "erre": "r",
+    "ese": "s",
+    "te": "t",
+    "u": "u",
+    "uve": "v",
+    "ve": "v",
+    "equis": "x",
+    "ye": "y",
+    "zeta": "z",
+    "ceta": "z",
+    "che": "ch",
+    "elle": "ll"
+  },
+  "homophones": {
+    "be larga": "b", "be grande": "b", "be alta": "b",
+    "ve corta": "v", "ve chica": "v", "ve baja": "v", "ve pequeña": "v",
+    "i griega": "y",
+    "i latina": "i",
+    "ca": "k",
+    "ku": "q",
+    "ceta": "z",
+    "hache muda": "h"
+  },
+  "multigraph": {
+    "doble ele": "ll",
+    "doble ere": "rr", "doble erre": "rr",
+    "doble ve": "w", "uve doble": "w", "ve doble": "w", "doble u": "w", "doble uve": "w"
+  },
+  "diacritics": {
+    "a con tilde": "á", "a con acento": "á", "a acentuada": "á",
+    "e con tilde": "é", "e con acento": "é", "e acentuada": "é",
+    "i con tilde": "í", "i con acento": "í", "i acentuada": "í",
+    "o con tilde": "ó", "o con acento": "ó", "o acentuada": "ó",
+    "u con tilde": "ú", "u con acento": "ú", "u acentuada": "ú",
+    "u con diéresis": "ü", "u con dieresis": "ü", "u con crema": "ü",
+    "eñe": "ñ", "ene con tilde": "ñ", "ene con virgulilla": "ñ"
+  }
+}

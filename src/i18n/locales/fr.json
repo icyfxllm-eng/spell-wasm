@@ -204,5 +204,11 @@
   "sayit.listening": "J'écoute…",
   "sayit.correct": "Correct !",
   "sayit.tryAgain": "Presque — essaie le suivant.",
-  "sayit.didntCatch": "Je n'ai pas compris — touche et réessaie."
+  "sayit.didntCatch": "Je n'ai pas compris — touche et réessaie.",
+  "voiceSpell.mic": "Épeler à voix haute",
+  "voiceSpell.listening": "Écoute… dis les lettres",
+  "voiceSpell.spellItOut": "Épelle lettre par lettre !",
+  "voiceSpell.didntCatch": "Je n'ai pas compris — réessaie.",
+  "voiceSpell.needsMic": "Pour épeler à voix haute, activez le Micro et la Reconnaissance vocale pour Spell dans Réglages. Vous pouvez toujours taper.",
+  "voiceSpell.close": "Fermer"
 }

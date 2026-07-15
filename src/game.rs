@@ -334,6 +334,18 @@ pub fn apply_vi_tone(app: &App, tone: char) {
     }
 }
 
+/// Replace the answer buffer from an external input method (voice spelling) and
+/// re-render, respecting the same `can_type` gate as the on-screen keyboard. Used
+/// by Spell It Out Loud to append parsed letters / revert on a rejected utterance;
+/// it produces exactly what typing would (Invariant I1) and never auto-submits.
+pub fn set_answer(app: &App, text: &str) {
+    if !can_type(&app.borrow()) {
+        return;
+    }
+    app.borrow_mut().answer = text.to_string();
+    render_letters(app, false);
+}
+
 /// Delete the last character of the answer.
 pub fn backspace(app: &App) {
     if !can_type(&app.borrow()) {

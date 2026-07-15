@@ -93,6 +93,20 @@ pub fn is_builtin_lang(lang: &str) -> bool {
     BUILTIN_LANGS.iter().any(|(code, _, _)| *code == lang)
 }
 
+/// Languages whose letters can be spoken to spell (Feature "Spell It Out Loud").
+/// THE single source of truth for the `voiceSpell` per-language capability: mic
+/// visibility flows from this set, plus the presence of a letter lexicon, plus the
+/// runtime on-device availability check — never from a scattered `lang == "es"`
+/// conditional. Confirmed by Eric: English + Spanish only (the on-device check
+/// auto-hides the mic where es on-device isn't available).
+pub const VOICE_SPELL_LANGS: [&str; 2] = [EN, ES];
+
+/// Whether `lang` exposes the spoken-letter input method (data lookup, not a
+/// per-language conditional).
+pub fn voice_spell(lang: &str) -> bool {
+    VOICE_SPELL_LANGS.contains(&lang)
+}
+
 
 pub const CORRECT_DELAY_MS: i32 = 2200;
 

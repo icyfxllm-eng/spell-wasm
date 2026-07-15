@@ -204,5 +204,11 @@
   "sayit.listening": "聞いています…",
   "sayit.correct": "正解！",
   "sayit.tryAgain": "惜しい — 次にいこう。",
-  "sayit.didntCatch": "聞き取れなかった — タップしてもう一度。"
+  "sayit.didntCatch": "聞き取れなかった — タップしてもう一度。",
+  "voiceSpell.mic": "声に出してつづる",
+  "voiceSpell.listening": "聞いています…文字を言ってね",
+  "voiceSpell.spellItOut": "一文字ずつつづってね！",
+  "voiceSpell.didntCatch": "聞き取れませんでした — もう一度どうぞ。",
+  "voiceSpell.needsMic": "声に出してつづるには、設定で Spell のマイクと音声認識をオンにしてください。いつでも入力もできます。",
+  "voiceSpell.close": "閉じる"
 }

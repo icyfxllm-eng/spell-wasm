@@ -204,5 +204,11 @@
   "sayit.listening": "듣는 중…",
   "sayit.correct": "정답!",
   "sayit.tryAgain": "아쉬워요 — 다음 걸 해봐요.",
-  "sayit.didntCatch": "잘 못 들었어요 — 눌러서 다시 해보세요."
+  "sayit.didntCatch": "잘 못 들었어요 — 눌러서 다시 해보세요.",
+  "voiceSpell.mic": "소리 내어 철자 말하기",
+  "voiceSpell.listening": "듣는 중… 글자를 말하세요",
+  "voiceSpell.spellItOut": "한 글자씩 또박또박 말해 주세요!",
+  "voiceSpell.didntCatch": "잘 못 들었어요 — 다시 해 보세요.",
+  "voiceSpell.needsMic": "소리 내어 철자를 말하려면 설정에서 Spell의 마이크와 음성 인식을 켜세요. 언제든 입력할 수도 있어요.",
+  "voiceSpell.close": "닫기"
 }

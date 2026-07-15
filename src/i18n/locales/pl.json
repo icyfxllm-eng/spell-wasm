@@ -204,5 +204,11 @@
   "sayit.listening": "Słucham…",
   "sayit.correct": "Dobrze!",
   "sayit.tryAgain": "Prawie — spróbuj następnego.",
-  "sayit.didntCatch": "Nie zrozumiałem — dotknij i spróbuj ponownie."
+  "sayit.didntCatch": "Nie zrozumiałem — dotknij i spróbuj ponownie.",
+  "voiceSpell.mic": "Przeliteruj na głos",
+  "voiceSpell.listening": "Słucham… mów litery",
+  "voiceSpell.spellItOut": "Literuj litera po literze!",
+  "voiceSpell.didntCatch": "Nie zrozumiałem — spróbuj ponownie.",
+  "voiceSpell.needsMic": "Aby literować na głos, włącz Mikrofon i Rozpoznawanie mowy dla Spell w Ustawieniach. Zawsze możesz pisać.",
+  "voiceSpell.close": "Zamknij"
 }

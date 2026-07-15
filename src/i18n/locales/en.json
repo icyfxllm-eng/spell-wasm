@@ -204,5 +204,11 @@
   "sayit.listening": "Listening…",
   "sayit.correct": "Correct!",
   "sayit.tryAgain": "Not quite — try the next one.",
-  "sayit.didntCatch": "Didn't catch that — tap and try again."
+  "sayit.didntCatch": "Didn't catch that — tap and try again.",
+  "voiceSpell.mic": "Spell out loud",
+  "voiceSpell.listening": "Listening… say the letters",
+  "voiceSpell.spellItOut": "Spell it letter by letter!",
+  "voiceSpell.didntCatch": "Didn't catch that — try again.",
+  "voiceSpell.needsMic": "To spell out loud, turn on Microphone and Speech Recognition for Spell in Settings. You can always type instead.",
+  "voiceSpell.close": "Close"
 }

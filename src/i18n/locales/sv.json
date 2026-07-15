@@ -204,5 +204,11 @@
   "sayit.listening": "Lyssnar…",
   "sayit.correct": "Rätt!",
   "sayit.tryAgain": "Nästan — prova nästa.",
-  "sayit.didntCatch": "Uppfattade inte — tryck och försök igen."
+  "sayit.didntCatch": "Uppfattade inte — tryck och försök igen.",
+  "voiceSpell.mic": "Stava högt",
+  "voiceSpell.listening": "Lyssnar… säg bokstäverna",
+  "voiceSpell.spellItOut": "Stava bokstav för bokstav!",
+  "voiceSpell.didntCatch": "Uppfattade inte — försök igen.",
+  "voiceSpell.needsMic": "För att stava högt, slå på Mikrofon och Taligenkänning för Spell i Inställningar. Du kan alltid skriva.",
+  "voiceSpell.close": "Stäng"
 }

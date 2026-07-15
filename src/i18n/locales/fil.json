@@ -204,5 +204,11 @@
   "sayit.listening": "Nakikinig…",
   "sayit.correct": "Tama!",
   "sayit.tryAgain": "Muntik na — subukan ang susunod.",
-  "sayit.didntCatch": "Hindi ko naintindihan — i-tap at subukang muli."
+  "sayit.didntCatch": "Hindi ko naintindihan — i-tap at subukang muli.",
+  "voiceSpell.mic": "Baybayin nang malakas",
+  "voiceSpell.listening": "Nakikinig… sabihin ang mga letra",
+  "voiceSpell.spellItOut": "Baybayin ito nang tig-iisang letra!",
+  "voiceSpell.didntCatch": "Hindi ko naunawaan — subukan ulit.",
+  "voiceSpell.needsMic": "Para makapagbaybay nang malakas, i-on ang Mikropono at Speech Recognition para sa Spell sa Settings. Puwede ka pa ring mag-type.",
+  "voiceSpell.close": "Isara"
 }

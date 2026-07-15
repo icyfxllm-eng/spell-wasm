@@ -204,5 +204,11 @@
   "sayit.listening": "กำลังฟัง…",
   "sayit.correct": "ถูกต้อง!",
   "sayit.tryAgain": "เกือบแล้ว — ลองคำถัดไป",
-  "sayit.didntCatch": "ฟังไม่ทัน — แตะแล้วลองอีกครั้ง"
+  "sayit.didntCatch": "ฟังไม่ทัน — แตะแล้วลองอีกครั้ง",
+  "voiceSpell.mic": "สะกดออกเสียง",
+  "voiceSpell.listening": "กำลังฟัง… พูดชื่อตัวอักษร",
+  "voiceSpell.spellItOut": "สะกดทีละตัวอักษรนะ!",
+  "voiceSpell.didntCatch": "ฟังไม่ชัด — ลองอีกครั้ง",
+  "voiceSpell.needsMic": "หากต้องการสะกดออกเสียง ให้เปิดไมโครโฟนและการรู้จำเสียงพูดสำหรับ Spell ในการตั้งค่า คุณพิมพ์ได้เสมอ",
+  "voiceSpell.close": "ปิด"
 }

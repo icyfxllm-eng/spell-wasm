@@ -246,7 +246,16 @@
   .voice-note{min-height:16px;margin-bottom:14px;color:var(--muted-on-bg);font-size:11.5px;text-align:center;max-width:320px}
 
   .field-head{width:100%;display:flex;align-items:center;justify-content:space-between;gap:12px;margin:0 0 8px}
+  .fh-left{display:flex;align-items:center;gap:9px}
   .field-label{font-size:11.5px;text-transform:uppercase;letter-spacing:.18em;color:var(--muted-on-bg)}
+  /* Spell It Out Loud — mic beside the answer field (voice spelling INPUT). */
+  .voice-spell-mic{width:30px;height:30px;border-radius:50%;display:grid;place-items:center;font-size:15px;line-height:1;padding:0;background:var(--panel-2);border:1.5px solid var(--edge);color:inherit;cursor:pointer;transition:transform .12s,box-shadow .2s,border-color .2s}
+  .voice-spell-mic.btn-hide,.voice-spell-perm.btn-hide{display:none}
+  .voice-spell-mic:active{transform:scale(.9)}
+  .voice-spell-mic.listening{border-color:var(--teal,#46d6b8);box-shadow:0 0 0 5px rgba(70,214,184,.22);animation:sayitPulse 1.1s ease-in-out infinite}
+  .voice-spell-status{width:100%;min-height:16px;margin:6px 0 0;font-size:12.5px;color:var(--muted-on-bg);text-align:center}
+  .voice-spell-perm{width:100%;margin:8px 0 0;padding:12px 14px;border:1.5px solid var(--edge);border-radius:12px;background:var(--panel-2);font-size:13px}
+  .voice-spell-perm p{margin:0 0 10px}
   .glow-pick{display:flex;align-items:center;gap:7px}
   .glow-pick .gl{font-size:10px;color:var(--muted-on-bg);text-transform:uppercase;letter-spacing:.12em}
   .swatch,.theme-swatch{width:17px;height:17px;border-radius:50%;border:2px solid transparent;background:var(--s);cursor:pointer;padding:0;box-shadow:0 0 6px var(--s);transition:transform .12s}
@@ -625,7 +634,14 @@
     <div class="voice-note" id="voiceNote"></div>
 
     <div class="field-head">
-      <span class="field-label" data-i18n="label.yourSpelling">your spelling</span>
+      <span class="fh-left">
+        <span class="field-label" data-i18n="label.yourSpelling">your spelling</span>
+        <!-- Spell It Out Loud (voice spelling INPUT). Ships DARK — stays btn-hide
+             until the feature flag is on AND the language's voiceSpell config is
+             true AND the on-device recognizer supports the locale (spell_aloud::
+             reflect). Tapping speaks letter names into the field; never submits. -->
+        <button class="voice-spell-mic btn-hide" id="voiceSpellMic" aria-label="Spell out loud" data-i18n-aria="voiceSpell.mic"><span aria-hidden="true">🎤</span></button>
+      </span>
       <span class="glow-pick" id="glowPick">
         <span class="gl">glow</span>
         <button class="swatch" style="--s:#ffb14d" data-c="#ffb14d" aria-label="Amber glow"></button>
@@ -638,6 +654,15 @@
 
     <div class="spellbox" id="spellbox" role="group" aria-label="Your spelling">
       <div class="letters" id="letters"></div>
+    </div>
+    <!-- Voice-spelling live status ("Listening…", "Spell it letter by letter!",
+         "didn't catch that"). Empty unless a capture is in flight. -->
+    <div class="voice-spell-status" id="voiceSpellStatus" aria-live="polite"></div>
+    <!-- One-time permission explainer if the mic is denied; typed input is never
+         blocked, so this is dismissable and purely informational. -->
+    <div class="voice-spell-perm btn-hide" id="voiceSpellPerm" role="alert">
+      <p data-i18n="voiceSpell.needsMic">To spell out loud, turn on Microphone and Speech Recognition for Spell in Settings. You can always type instead.</p>
+      <button class="btn btn-check" id="voiceSpellPermClose" data-i18n="voiceSpell.close" style="width:100%">Close</button>
     </div>
     <div id="kbAnnounce" class="sr-only" aria-live="polite" aria-atomic="true"></div>
 

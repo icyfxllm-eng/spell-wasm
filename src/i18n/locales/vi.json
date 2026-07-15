@@ -204,5 +204,11 @@
   "sayit.listening": "Đang nghe…",
   "sayit.correct": "Chính xác!",
   "sayit.tryAgain": "Suýt rồi — thử từ tiếp theo.",
-  "sayit.didntCatch": "Chưa nghe rõ — chạm và thử lại."
+  "sayit.didntCatch": "Chưa nghe rõ — chạm và thử lại.",
+  "voiceSpell.mic": "Đánh vần thành tiếng",
+  "voiceSpell.listening": "Đang nghe… đọc các chữ cái",
+  "voiceSpell.spellItOut": "Hãy đánh vần từng chữ cái!",
+  "voiceSpell.didntCatch": "Chưa nghe rõ — thử lại nhé.",
+  "voiceSpell.needsMic": "Để đánh vần thành tiếng, hãy bật Micrô và Nhận dạng giọng nói cho Spell trong Cài đặt. Bạn luôn có thể gõ.",
+  "voiceSpell.close": "Đóng"
 }

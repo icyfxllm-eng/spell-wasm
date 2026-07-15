@@ -204,5 +204,11 @@
   "sayit.listening": "Aan het luisteren…",
   "sayit.correct": "Goed!",
   "sayit.tryAgain": "Bijna — probeer de volgende.",
-  "sayit.didntCatch": "Niet verstaan — tik en probeer opnieuw."
+  "sayit.didntCatch": "Niet verstaan — tik en probeer opnieuw.",
+  "voiceSpell.mic": "Hardop spellen",
+  "voiceSpell.listening": "Aan het luisteren… zeg de letters",
+  "voiceSpell.spellItOut": "Spel het letter voor letter!",
+  "voiceSpell.didntCatch": "Niet verstaan — probeer opnieuw.",
+  "voiceSpell.needsMic": "Om hardop te spellen, zet Microfoon en Spraakherkenning voor Spell aan in Instellingen. Typen kan altijd.",
+  "voiceSpell.close": "Sluiten"
 }

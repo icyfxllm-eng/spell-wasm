@@ -204,5 +204,11 @@
   "sayit.listening": "In ascolto…",
   "sayit.correct": "Giusto!",
   "sayit.tryAgain": "Quasi — prova la prossima.",
-  "sayit.didntCatch": "Non ho capito — tocca e riprova."
+  "sayit.didntCatch": "Non ho capito — tocca e riprova.",
+  "voiceSpell.mic": "Scandisci ad alta voce",
+  "voiceSpell.listening": "In ascolto… di' le lettere",
+  "voiceSpell.spellItOut": "Scandiscilo lettera per lettera!",
+  "voiceSpell.didntCatch": "Non ho capito — riprova.",
+  "voiceSpell.needsMic": "Per scandire ad alta voce, attiva Microfono e Riconoscimento vocale per Spell in Impostazioni. Puoi sempre digitare.",
+  "voiceSpell.close": "Chiudi"
 }

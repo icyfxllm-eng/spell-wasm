@@ -204,5 +204,11 @@
   "sayit.listening": "A ouvir…",
   "sayit.correct": "Certo!",
   "sayit.tryAgain": "Quase — tenta a próxima.",
-  "sayit.didntCatch": "Não percebi — toca e tenta outra vez."
+  "sayit.didntCatch": "Não percebi — toca e tenta outra vez.",
+  "voiceSpell.mic": "Soletrar em voz alta",
+  "voiceSpell.listening": "Ouvindo… diga as letras",
+  "voiceSpell.spellItOut": "Soletre letra por letra!",
+  "voiceSpell.didntCatch": "Não entendi — tente de novo.",
+  "voiceSpell.needsMic": "Para soletrar em voz alta, ative o Microfone e o Reconhecimento de Fala para o Spell nos Ajustes. Você sempre pode digitar.",
+  "voiceSpell.close": "Fechar"
 }

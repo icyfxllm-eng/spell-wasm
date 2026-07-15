@@ -194,4 +194,8 @@ pub fn apply_settings(app: &App) {
     // Kid Mode also hard-disables Say It (COPPA D5); re-hide the launcher on any
     // Kid-Mode change. No-op when the feature flag is off.
     crate::say_it::reflect_gating(app);
+    // Re-evaluate the Spell It Out Loud mic when the study language changes (its
+    // visibility depends on the per-language voiceSpell flag + on-device support).
+    // No-op when the feature flag is off.
+    crate::spell_aloud::reflect(app);
 }

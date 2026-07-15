@@ -31,6 +31,7 @@ mod notify;
 mod profanity;
 mod say_it;
 mod selection;
+mod spell_aloud;
 mod settings;
 mod share;
 mod speech_out;
@@ -170,6 +171,11 @@ fn wire(app: &App) {
     // Feature F2 "Say It" — wires nothing unless the flag is on (ships dark).
     say_it::wire(app);
     say_it::reflect_gating(app);
+    // "Spell It Out Loud" — voice spelling INPUT. Wires nothing unless the flag
+    // is on (ships dark, Invariant I6); the mic is hidden until config voiceSpell
+    // + on-device availability both hold (Invariant I3).
+    spell_aloud::wire(app);
+    spell_aloud::reflect(app);
 
     // Notify Me (coming-soon languages): record anonymous interest for the
     // language on the panel, then flip the button to its confirmed state.

@@ -204,5 +204,11 @@
   "sayit.listening": "Lytter…",
   "sayit.correct": "Riktig!",
   "sayit.tryAgain": "Nesten — prøv det neste.",
-  "sayit.didntCatch": "Fikk ikke med meg det — trykk og prøv igjen."
+  "sayit.didntCatch": "Fikk ikke med meg det — trykk og prøv igjen.",
+  "voiceSpell.mic": "Stav høyt",
+  "voiceSpell.listening": "Lytter… si bokstavene",
+  "voiceSpell.spellItOut": "Stav bokstav for bokstav!",
+  "voiceSpell.didntCatch": "Fikk ikke med meg det — prøv igjen.",
+  "voiceSpell.needsMic": "For å stave høyt, slå på Mikrofon og Talegjenkjenning for Spell i Innstillinger. Du kan alltid skrive.",
+  "voiceSpell.close": "Lukk"
 }
