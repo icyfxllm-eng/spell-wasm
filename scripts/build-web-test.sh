@@ -21,6 +21,7 @@ rm -rf "$DIST"
 mkdir -p "$DIST"
 cp index.html audio-native.js manifest.json sw.js "$DIST/"
 cp -r icons "$DIST/icons"
+cp -r fonts "$DIST/fonts"
 cp -r pkg-test "$DIST/pkg"
 
 echo "==> dist-test/ ready (has __spelltest seam)"

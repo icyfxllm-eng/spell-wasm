@@ -18,6 +18,10 @@ FROM caddy:2-alpine
 COPY Caddyfile /etc/caddy/Caddyfile
 COPY index.html privacy.html audio-native.js manifest.json sw.js /srv/
 COPY icons /srv/icons
+# Self-hosted web fonts (FIX 1): index.html loads ./fonts/*.woff2 locally
+# instead of Google Fonts / jsdelivr, so the site makes zero external font
+# requests and the fonts are offline-cached by the service worker.
+COPY fonts /srv/fonts
 # Android App Links verification file, served at /.well-known/assetlinks.json.
 COPY .well-known /srv/.well-known
 COPY --from=build /out/pkg /srv/pkg

@@ -26,6 +26,10 @@ rm -rf "$DIST"
 mkdir -p "$DIST"
 cp index.html audio-native.js manifest.json sw.js "$DIST/"
 cp -r icons "$DIST/icons"
+# Self-hosted web fonts (FIX 1): index.html references ./fonts/*.woff2 locally
+# instead of Google Fonts / jsdelivr, and sw.js precaches them. Must be copied
+# into dist/ or the app falls back to system fonts offline.
+cp -r fonts "$DIST/fonts"
 cp -r pkg "$DIST/pkg"
 
 echo "==> dist/ ready:"
