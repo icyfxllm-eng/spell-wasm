@@ -67,6 +67,25 @@ pub fn install(app: &App) {
         let cb = Closure::<dyn Fn() -> String>::new(move || "testseam".to_string());
         set(&obj, "build", cb.into_js_value());
     }
+    // Daily Challenge observation (OBSERVE-only, like the rest of the seam): the
+    // 0-based cursor into the fixed set, the running correct count, and whether a
+    // run is active. Lets E2E assert auto-advance/skip advance the index by
+    // exactly one without bypassing validation or typing for the player.
+    {
+        let a = app.clone();
+        let cb = Closure::<dyn Fn() -> f64>::new(move || a.borrow().daily.idx as f64);
+        set(&obj, "dailyIdx", cb.into_js_value());
+    }
+    {
+        let a = app.clone();
+        let cb = Closure::<dyn Fn() -> f64>::new(move || a.borrow().daily.correct as f64);
+        set(&obj, "dailyCorrect", cb.into_js_value());
+    }
+    {
+        let a = app.clone();
+        let cb = Closure::<dyn Fn() -> bool>::new(move || a.borrow().daily.active);
+        set(&obj, "dailyActive", cb.into_js_value());
+    }
 
     let _ = js_sys::Reflect::set(win.as_ref(), &JsValue::from_str("__spelltest"), obj.as_ref());
     web_sys::console::warn_1(&"[testseam] window.__spelltest installed (DEV build only)".into());

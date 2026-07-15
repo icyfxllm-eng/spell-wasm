@@ -332,7 +332,14 @@
   /* Enter grows to fill; Delete sits at the far right (thumb reach, standard
      convention), a touch wider than a letter key. */
   .kb-submit{flex:1 1 auto;background:var(--amber);color:#36210a;border-color:var(--amber);font-weight:700}
-  .kb-back{flex:0 0 auto;width:auto;min-width:64px;font-size:19px;color:var(--muted)}
+  /* Exactly one submit control per answer form: the labelled in-page "Check
+     spelling" button (#checkBtn) is canonical; the on-screen keyboard's Enter was
+     a redundant second submit that read as a duplicate button, so it is hidden.
+     Physical Enter still submits via the shared submit_guess path. With Enter
+     gone the delete key fills the action row, reading as the keyboard's own
+     control rather than a floating button. */
+  .kb-submit.btn-hide{display:none}
+  .kb-back{flex:1 1 auto;width:auto;min-width:64px;font-size:19px;color:var(--muted)}
   .kb-submit:active{filter:brightness(1.06);transform:translateY(1px)}
   /* Vietnamese tone row: applies huyền/sắc/hỏi/ngã/nặng to the last vowel. */
   .kb-tones.btn-hide{display:none}
@@ -717,7 +724,7 @@
       <!-- Vietnamese tone row (built + shown only for vi in keyboard.rs) -->
       <div class="kb-row kb-tones btn-hide" id="kbToneRow"></div>
       <div class="kb-row kb-actions">
-        <button class="kb-submit" id="kbSubmit" data-i18n="kb.enter">Enter</button>
+        <button class="kb-submit btn-hide" id="kbSubmit" data-i18n="kb.enter">Enter</button>
         <button class="kb-back" id="kbBackspace" aria-label="Delete last letter">⌫</button>
       </div>
     </div>

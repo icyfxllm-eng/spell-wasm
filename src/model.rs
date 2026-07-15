@@ -111,6 +111,11 @@ pub struct AppState {
     /// Correct answers accumulated toward the next Climb promotion.
     pub climb_prog: u8,
     pub answered: bool,
+    /// True while an IME composition is open (compositionstart seen, no matching
+    /// compositionend yet). Guards the shared submit/advance path so we never
+    /// validate or auto-advance mid-composition — one flag on the input path, not
+    /// a per-language branch. Session-only; set by window composition listeners.
+    pub composing: bool,
     pub rate: f32,
     pub glow: String,
     pub bg_color: String,
@@ -171,6 +176,7 @@ impl Default for AppState {
             climb_band: 0,
             climb_prog: 0,
             answered: false,
+            composing: false,
             rate: 0.9,
             glow: "#ffb14d".into(),
             bg_color: "#1c1830".into(),

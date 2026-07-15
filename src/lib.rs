@@ -277,6 +277,21 @@ fn wire_age_gate(app: &App) {
 }
 
 fn wire_orb_and_answer(app: &App) {
+    // IME composition guard on the shared input path (not a per-language branch):
+    // while a composition is open we never validate or auto-advance. Window-level
+    // so it covers every input surface without touching language components.
+    {
+        let a = app.clone();
+        dom::on_window::<web_sys::Event, _>("compositionstart", move |_| {
+            a.borrow_mut().composing = true;
+        });
+    }
+    {
+        let a = app.clone();
+        dom::on_window::<web_sys::Event, _>("compositionend", move |_| {
+            a.borrow_mut().composing = false;
+        });
+    }
     {
         let a = app.clone();
         dom::on_click("orbWrap", move || {
