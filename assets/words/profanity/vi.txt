@@ -1,1 +1,62 @@
-# Vietnamese exclusions (accent-lenient, lowercased match). Extend from LDNOOBW vi.
+# Vietnamese profanity block-seed — EXACT whole-word match (NFC, lowercased).
+# Defensive User-Generated-Content filter for "My Words" (Apple Guideline 1.2):
+# it blocks a child from ADDING these; it never appears in any word list or UI.
+#
+# ⚠️ NATIVE REVIEW REQUIRED before launch. Vietnamese is unusually hard to seed
+# safely: profanity typed WITHOUT diacritics collides with common innocent words —
+#   lồn(cunt) → "lon"(can),  đụ(fuck) → "du"(travel),  địt → "dit",
+#   đái(pee) → "dai"(long),  đĩ(whore) vs đi(go) vs đĩa(plate).
+# So this seed lists ONLY unambiguous DIACRITIC forms, unambiguous multi-word
+# curses, and chat abbreviations that are not real words. It deliberately does
+# NOT include bare no-diacritic single forms (they would false-block innocent
+# vocabulary). This errs toward UNDER-blocking single words on purpose; the real
+# fix is the planned diacritic-aware / normalize() per-language layer. Until then
+# the all-language union + English leet layer cover the rest.
+#
+# Deliberately EXCLUDED to avoid false-blocking legitimate words: chó (dog),
+# ngu (stupid — very mild/common), đái (pee), vãi (to sow / Buddhist nun),
+# and every bare no-diacritic form. Ethnic/regional slurs left for the reviewer.
+
+# --- core sexual profanity (fuck / genitalia), diacritic forms ---
+lồn
+cặc
+buồi
+địt
+đụ
+đéo
+đĩ
+cứt
+
+# --- unambiguous multi-word curses (đụ/địt má/mẹ family) ---
+đụ má
+đụ mẹ
+địt mẹ
+địt con mẹ
+đụ má mày
+địt mẹ mày
+đm mày
+
+# --- insult compounds (the bare word alone is innocent; the compound is not) ---
+óc chó
+đồ chó
+thằng chó
+con đĩ
+đồ khốn
+khốn nạn
+khốn kiếp
+mất dạy
+vãi lồn
+vãi cặc
+
+# --- chat / leet abbreviations (not real Vietnamese words; unambiguous) ---
+đm
+đmm
+đcm
+dcm
+đkm
+dkm
+vcl
+clmm
+cmm
+vloz
+vcđ

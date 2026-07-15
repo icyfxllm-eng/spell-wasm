@@ -1,6 +1,6 @@
 # Vietnamese content audit — `vi`  (machine pass, REVIEW-GATED)
 
-Totals: **1 critical · 0 violation · 5 warning · 5 info**
+Totals: **0 critical · 0 violation · 5 warning · 5 info**
 
 ## Feature 1 — Word list integrity
 
@@ -37,13 +37,9 @@ Tier stats (len = characters):
 
 ## Feature 5 — Profanity filter coverage
 
-**CRITICAL (1)**
-
-- `assets/words/profanity/vi.txt:-` [no-seed] no vi profanity seed layer
-
 **INFO (1)**
 
-- `assets/words/profanity/vi.txt:-` [filter-layers] vi seed layer: 0 terms. Curation scan below is language-scoped (vi seed + universal hard slurs). Runtime My Words screening (src/profanity.rs is_blocked) separately uses the 1768-term all-language union — that over-block is intentional for user imports.
+- `assets/words/profanity/vi.txt:-` [filter-layers] vi seed layer: 36 terms. Curation scan below is language-scoped (vi seed + universal hard slurs). Runtime My Words screening (src/profanity.rs is_blocked) separately uses the 1801-term all-language union — that over-block is intentional for user imports.
 
 ## Feature 6 — UI localization completeness
 

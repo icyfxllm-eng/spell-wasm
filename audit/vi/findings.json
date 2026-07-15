@@ -50,20 +50,11 @@
     },
     {
       "feature": 5,
-      "severity": "critical",
-      "class": "no-seed",
-      "file": "assets/words/profanity/vi.txt",
-      "key": "-",
-      "detail": "no vi profanity seed layer",
-      "proposed_fix": null
-    },
-    {
-      "feature": 5,
       "severity": "info",
       "class": "filter-layers",
       "file": "assets/words/profanity/vi.txt",
       "key": "-",
-      "detail": "vi seed layer: 0 terms. Curation scan below is language-scoped (vi seed + universal hard slurs). Runtime My Words screening (src/profanity.rs is_blocked) separately uses the 1768-term all-language union — that over-block is intentional for user imports.",
+      "detail": "vi seed layer: 36 terms. Curation scan below is language-scoped (vi seed + universal hard slurs). Runtime My Words screening (src/profanity.rs is_blocked) separately uses the 1801-term all-language union — that over-block is intentional for user imports.",
       "proposed_fix": null
     },
     {

@@ -209,4 +209,18 @@ mod tests {
             assert!(!is_blocked(w), "clean fil word '{w}' must not be blocked");
         }
     }
+
+    #[test]
+    fn vietnamese_seed_blocks_profanity_but_not_clean_words() {
+        // Conservative diacritic-only vi seed (native review pending): unambiguous
+        // profanity, curse compounds, and chat abbreviations are blocked.
+        for w in ["lồn", "địt", "đụ", "đĩ", "cứt", "đụ mẹ", "óc chó", "đm", "vcl"] {
+            assert!(is_blocked(w), "vi profanity '{w}' should be blocked");
+        }
+        // Legitimate Vietnamese vocabulary — including the innocent words whose
+        // no-diacritic forms we deliberately did NOT seed — must remain addable.
+        for w in ["mèo", "bàn", "chó", "đi", "lon", "ngu"] {
+            assert!(!is_blocked(w), "clean vi word '{w}' must not be blocked");
+        }
+    }
 }
