@@ -838,10 +838,16 @@ fn lock_inputs() {
 }
 
 pub fn submit_guess(app: &App) {
-    let (answered, cur_lang, word, kid) = {
+    let (answered, composing, cur_lang, word, kid) = {
         let s = app.borrow();
-        (s.answered, s.cur_lang.clone(), s.word.clone(), s.kid)
+        (s.answered, s.composing, s.cur_lang.clone(), s.word.clone(), s.kid)
     };
+    // Never validate while an IME composition is open: the typed answer isn't
+    // final until compositionend. Shared guard on the single submission path
+    // (I1), so it holds for every language and every submit affordance.
+    if composing {
+        return;
+    }
     if answered || word.is_empty() {
         return;
     }
@@ -923,6 +929,16 @@ fn on_correct(app: &App) {
     }
     if app.borrow().daily.active {
         daily_answer(app, true);
+        // Daily auto-advances after the success feedback. This lives in the one
+        // language-agnostic validated-correct handler (on_correct) — downstream
+        // of the single NFC-normalised comparison in submit_guess — so it has
+        // ZERO per-language conditionals (I4). Reuses CORRECT_DELAY_MS, the same
+        // beat the solo correct→next path already uses, keeping Daily's rhythm
+        // identical to solo (synced to the success feedback). The orb stays a
+        // live instant-skip (D3); `daily_auto_advance` is guarded so the timer
+        // is a no-op if the player already advanced — at most one advance per
+        // word (I6).
+        schedule(app, CORRECT_DELAY_MS, |app| daily_auto_advance(app));
         return;
     }
     crate::haptics::correct();
@@ -1322,6 +1338,25 @@ fn daily_answer(app: &App, correct: bool) {
     set_streak_tier(app.borrow().daily.correct);
     show_meaning(app, word, cur_lang);
     render_daily_bar(app);
+}
+
+/// Auto-advance after a correct Daily answer, fired CORRECT_DELAY_MS later by
+/// `on_correct`. Guarded so it advances at most once per word (I6): if the
+/// player tapped the orb to skip — which runs `next_word` and clears `answered`
+/// — or left Daily, this timer becomes a no-op. Also holds while an IME
+/// composition is open. On the final word, `next_word` routes to the results
+/// screen, so the last word gets the same delay-then-advance as any other
+/// (final word not special-cased). Backgrounding only delays the timeout; the
+/// guard still guarantees a single advance. The last word (score-recording via
+/// finish_daily) is READ-ONLY here (I5) — this only chooses *when* to advance.
+fn daily_auto_advance(app: &App) {
+    let go = {
+        let s = app.borrow();
+        s.daily.active && s.answered && !s.composing
+    };
+    if go {
+        next_word(app);
+    }
 }
 
 fn render_daily_bar(app: &App) {

@@ -39,9 +39,11 @@ export async function launch() {
   return chromium.launch();
 }
 
-/** New page at `lang`, age gate satisfied, TTS stubbed silent, wasm booted. */
-export async function openApp(browser, base, { lang = null, device = 'se' } = {}) {
-  const d = DEVICES[device];
+/** New page at `lang`, age gate satisfied, TTS stubbed silent, wasm booted.
+ *  `viewport: {width,height}` overrides the named device's dimensions (used by
+ *  the submit-control-per-width sweep); DPR/mobile flags come from `device`. */
+export async function openApp(browser, base, { lang = null, device = 'se', viewport = null } = {}) {
+  const d = viewport ? { ...DEVICES[device], ...viewport } : DEVICES[device];
   const ctx = await browser.newContext({ viewport: { width: d.width, height: d.height }, deviceScaleFactor: d.dpr, isMobile: d.mobile });
   await ctx.addInitScript(([age, l]) => {
     localStorage.setItem('byear_agegate_v1', age);

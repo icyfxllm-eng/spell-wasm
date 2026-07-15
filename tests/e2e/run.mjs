@@ -16,6 +16,7 @@ import * as gameplay from './specs/gameplay.mjs';
 import * as modes from './specs/modes.mjs';
 import * as menu from './specs/menu.mjs';
 import * as coming from './specs/coming.mjs';
+import * as submitAdvance from './specs/submit-advance.mjs';
 
 const SPECS = [
   ['keyboard', keyboard],
@@ -23,6 +24,7 @@ const SPECS = [
   ['modes', modes],
   ['menu', menu],
   ['coming', coming],
+  ['submit-advance', submitAdvance],
 ];
 
 const ROOT = join(fileURLToPath(import.meta.url), '..', '..', '..');
