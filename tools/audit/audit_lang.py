@@ -23,7 +23,9 @@ SEV_ORDER = {"critical": 0, "violation": 1, "warning": 2, "info": 3}
 
 lang = sys.argv[1] if len(sys.argv) > 1 else "es"
 LANG_TITLE_EARLY = {"es": "Spanish", "th": "Thai", "en": "English", "fr": "French", "de": "German",
-                    "zh": "Chinese", "ja": "Japanese", "ko": "Korean", "fil": "Filipino"}.get(lang, lang)
+                    "zh": "Chinese", "ja": "Japanese", "ko": "Korean", "fil": "Filipino",
+                    "pt": "Portuguese", "it": "Italian", "nl": "Dutch", "pl": "Polish",
+                    "sv": "Swedish", "nb": "Norwegian", "tr": "Turkish", "vi": "Vietnamese"}.get(lang, lang)
 OUT = ROOT / "audit" / lang
 OUT.mkdir(parents=True, exist_ok=True)
 findings: list[dict] = []
@@ -61,12 +63,35 @@ def spoken(w):
 # combining code points; Spanish is Latin+accents. Everything below keys off lang
 # so the same script audits either (and the next language) without Spanish
 # assumptions leaking into a non-Latin script.
+# Helper: a Latin word of base a-z plus this language's accented letters,
+# allowing hyphen/space compounds (e.g. "mag-aral", "buenos aires"). Keeps each
+# language's set TIGHT so a stray letter from another script/language is caught
+# as contamination rather than waved through.
+def _latin(extra):
+    cls = "a-z" + extra
+    return rf"[{cls}]+(?:[- ][{cls}]+)*"
 CHARSET = {
     "es": r"[a-záéíóúüñ]+(?:[- ][a-záéíóúüñ]+)*",
     "th": "[฀-๿]+",  # Thai block, no spaces within a word
     # Filipino: Latin a-z + ñ (Spanish loanwords: niño, señora), hyphen for
     # compounds (mag-aral).
     "fil": r"[a-zñ]+(?:[- ][a-zñ]+)*",
+    # European Latin scripts — base a-z plus each language's diacritics.
+    "fr": _latin("àâæçéèêëîïôœùûüÿ"),
+    "de": _latin("äöüß"),
+    "pt": _latin("àáâãçéêíóôõúü"),
+    "it": _latin("àéèìíîòóù"),
+    "nl": _latin("àáäèéëïíîóöúü"),
+    "pl": _latin("ąćęłńóśźż"),
+    "sv": _latin("åäöé"),
+    "nb": _latin("æøåéàóâòô"),
+    "tr": _latin("çğıöşü"),  # ı = U+0131 dotless i
+    # Vietnamese: full precomposed lowercase alphabet (base letters ăâđêôơư +
+    # the five tone marks on every vowel). NFC-stored, so match precomposed.
+    "vi": _latin("àáảãạăằắẳẵặâầấẩẫậèéẻẽẹêềếểễệìíỉĩịòóỏõọôồốổỗộơờớởỡợùúủũụưừứửữựỳýỷỹỵđ"),
+    # CJK: bare glyphs, no inter-glyph separators.
+    "ko": "[가-힣]+",                     # Hangul syllables 가–힣
+    "ja": "[぀-ヿ一-鿿]+",         # hiragana + katakana + CJK unified
 }.get(lang, r"[a-z]+(?:[- ][a-z]+)*")
 # Thai combining marks (above/below vowels, tone marks, signs) — they don't
 # advance the visual cursor, so a grapheme-ish length excludes them.
