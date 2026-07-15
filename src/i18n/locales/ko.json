@@ -244,5 +244,11 @@
   "so.tieMsg": "You both spelled the same number correctly.",
   "so.waitingMsg": "Your result is in. Waiting for your friend to finish…",
   "so.errNetwork": "Couldn't reach the server. Check your connection.",
-  "so.errGeneric": "Something went wrong. Please try again."
+  "so.errGeneric": "Something went wrong. Please try again.",
+  "voiceSpell.mic": "소리 내어 철자 말하기",
+  "voiceSpell.listening": "듣는 중… 글자를 말하세요",
+  "voiceSpell.spellItOut": "한 글자씩 또박또박 말해 주세요!",
+  "voiceSpell.didntCatch": "잘 못 들었어요 — 다시 해 보세요.",
+  "voiceSpell.needsMic": "소리 내어 철자를 말하려면 설정에서 Spell의 마이크와 음성 인식을 켜세요. 언제든 입력할 수도 있어요.",
+  "voiceSpell.close": "닫기"
 }

@@ -18,6 +18,7 @@ import * as menu from './specs/menu.mjs';
 import * as coming from './specs/coming.mjs';
 import * as sayit from './specs/sayit.mjs';
 import * as ghost from './specs/ghost.mjs';
+import * as spellaloud from './specs/spellaloud.mjs';
 
 const SPECS = [
   ['keyboard', keyboard],
@@ -27,6 +28,7 @@ const SPECS = [
   ['coming', coming],
   ['sayit', sayit],
   ['ghost', ghost],
+  ['spellaloud', spellaloud],
 ];
 
 const ROOT = join(fileURLToPath(import.meta.url), '..', '..', '..');

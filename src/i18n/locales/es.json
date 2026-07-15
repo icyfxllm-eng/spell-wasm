@@ -244,5 +244,11 @@
   "so.tieMsg": "Ambos acertasteis el mismo número de palabras.",
   "so.waitingMsg": "Tu resultado está listo. Esperando a que tu amigo termine…",
   "so.errNetwork": "No se pudo conectar con el servidor. Comprueba tu conexión.",
-  "so.errGeneric": "Algo salió mal. Inténtalo de nuevo."
+  "so.errGeneric": "Algo salió mal. Inténtalo de nuevo.",
+  "voiceSpell.mic": "Deletrea en voz alta",
+  "voiceSpell.listening": "Escuchando… di las letras",
+  "voiceSpell.spellItOut": "¡Deletréalo letra por letra!",
+  "voiceSpell.didntCatch": "No te entendí — inténtalo de nuevo.",
+  "voiceSpell.needsMic": "Para deletrear en voz alta, activa el Micrófono y el Reconocimiento de voz para Spell en Ajustes. Siempre puedes escribir.",
+  "voiceSpell.close": "Cerrar"
 }

@@ -244,5 +244,11 @@
   "so.tieMsg": "You both spelled the same number correctly.",
   "so.waitingMsg": "Your result is in. Waiting for your friend to finish…",
   "so.errNetwork": "Couldn't reach the server. Check your connection.",
-  "so.errGeneric": "Something went wrong. Please try again."
+  "so.errGeneric": "Something went wrong. Please try again.",
+  "voiceSpell.mic": "Stav høyt",
+  "voiceSpell.listening": "Lytter… si bokstavene",
+  "voiceSpell.spellItOut": "Stav bokstav for bokstav!",
+  "voiceSpell.didntCatch": "Fikk ikke med meg det — prøv igjen.",
+  "voiceSpell.needsMic": "For å stave høyt, slå på Mikrofon og Talegjenkjenning for Spell i Innstillinger. Du kan alltid skrive.",
+  "voiceSpell.close": "Lukk"
 }

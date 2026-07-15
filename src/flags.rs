@@ -82,6 +82,16 @@ pub fn online_spelloff() -> bool {
     resolve(stored("online_spelloff").as_deref(), false)
 }
 
+/// Feature "Spell It Out Loud" — voice spelling INPUT (a mic beside the answer
+/// field; the player speaks letter names "C… A… T" and the parser produces the
+/// same string a keyboard would). **Default OFF**: the mic never renders and no
+/// capture path is reachable — a true no-op, zero diff (Invariant I6). Enable for
+/// a device QA pass with `localStorage['spell_flag_spell_aloud'] = '1'`. iOS-only
+/// at runtime regardless (it needs the on-device speech bridge).
+pub fn spell_aloud() -> bool {
+    resolve(stored("spell_aloud").as_deref(), false)
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;

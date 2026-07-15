@@ -244,5 +244,11 @@
   "so.tieMsg": "You both spelled the same number correctly.",
   "so.waitingMsg": "Your result is in. Waiting for your friend to finish…",
   "so.errNetwork": "Couldn't reach the server. Check your connection.",
-  "so.errGeneric": "Something went wrong. Please try again."
+  "so.errGeneric": "Something went wrong. Please try again.",
+  "voiceSpell.mic": "Sesli hecele",
+  "voiceSpell.listening": "Dinliyor… harfleri söyle",
+  "voiceSpell.spellItOut": "Harf harf hecele!",
+  "voiceSpell.didntCatch": "Anlayamadım — tekrar dene.",
+  "voiceSpell.needsMic": "Sesli hecelemek için Ayarlar'da Spell için Mikrofon ve Konuşma Tanıma'yı açın. İstediğiniz zaman yazabilirsiniz.",
+  "voiceSpell.close": "Kapat"
 }

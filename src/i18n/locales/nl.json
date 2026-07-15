@@ -244,5 +244,11 @@
   "so.tieMsg": "You both spelled the same number correctly.",
   "so.waitingMsg": "Your result is in. Waiting for your friend to finish…",
   "so.errNetwork": "Couldn't reach the server. Check your connection.",
-  "so.errGeneric": "Something went wrong. Please try again."
+  "so.errGeneric": "Something went wrong. Please try again.",
+  "voiceSpell.mic": "Hardop spellen",
+  "voiceSpell.listening": "Aan het luisteren… zeg de letters",
+  "voiceSpell.spellItOut": "Spel het letter voor letter!",
+  "voiceSpell.didntCatch": "Niet verstaan — probeer opnieuw.",
+  "voiceSpell.needsMic": "Om hardop te spellen, zet Microfoon en Spraakherkenning voor Spell aan in Instellingen. Typen kan altijd.",
+  "voiceSpell.close": "Sluiten"
 }

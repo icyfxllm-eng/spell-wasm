@@ -244,5 +244,11 @@
   "so.tieMsg": "You both spelled the same number correctly.",
   "so.waitingMsg": "Your result is in. Waiting for your friend to finish…",
   "so.errNetwork": "Couldn't reach the server. Check your connection.",
-  "so.errGeneric": "Something went wrong. Please try again."
+  "so.errGeneric": "Something went wrong. Please try again.",
+  "voiceSpell.mic": "朗读拼写",
+  "voiceSpell.listening": "正在聆听…请念出字母",
+  "voiceSpell.spellItOut": "请逐个字母拼读！",
+  "voiceSpell.didntCatch": "没听清 — 再试一次。",
+  "voiceSpell.needsMic": "若要朗读拼写，请在“设置”中为 Spell 开启麦克风和语音识别。你随时可以改用打字。",
+  "voiceSpell.close": "关闭"
 }

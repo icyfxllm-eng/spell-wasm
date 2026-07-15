@@ -26,6 +26,10 @@ public class NativeLanguageKitPlugin: CAPPlugin, CAPBridgedPlugin {
         // Feature F1 "Photo-to-word-list" — on-device VisionKit OCR (see
         // NativeLanguageKitPlugin+PhotoList.swift).
         CAPPluginMethod(name: "recognizeWordList", returnType: CAPPluginReturnPromise),
+        // "Spell It Out Loud" — on-device LETTER capture (second recognition
+        // profile over the SAME mic): raw tokens stream back as plugin events.
+        CAPPluginMethod(name: "startLetterCapture", returnType: CAPPluginReturnPromise),
+        CAPPluginMethod(name: "stopLetterCapture", returnType: CAPPluginReturnPromise),
     ]
 
     private let speaker = Speaker()
@@ -154,6 +158,45 @@ public class NativeLanguageKitPlugin: CAPPlugin, CAPBridgedPlugin {
             call.resolve()
         }
     }
+
+    // MARK: Spell It Out Loud — on-device letter capture.
+
+    /// Start ON-DEVICE letter capture. The recognizer is biased with the
+    /// `contextualStrings` the caller passes (the language's spoken letter names,
+    /// sourced from the Rust lexicon — never hardcoded here) and streams RAW
+    /// transcript tokens (partials included) back as plugin events: `letterToken`
+    /// per partial, `letterFinal` once, `letterError` with a code. The plugin does
+    /// ZERO parsing — the Rust `spell_aloud` parser owns all linguistic knowledge.
+    /// Resolves immediately as an ack; the transcript never leaves the phone.
+    @objc func startLetterCapture(_ call: CAPPluginCall) {
+        let lang = call.getString("lang") ?? ""
+        let contextual = (call.getArray("contextualStrings")?.compactMap { $0 as? String }) ?? []
+        DispatchQueue.main.async {
+            self.listener.startLetters(
+                lang: lang,
+                contextualStrings: contextual,
+                onPartial: { [weak self] text in
+                    self?.notifyListeners("letterToken", data: ["token": text])
+                },
+                onFinal: { [weak self] text in
+                    self?.notifyListeners("letterFinal", data: ["token": text])
+                },
+                onError: { [weak self] err in
+                    self?.notifyListeners("letterError", data: ["code": err.rawValue])
+                }
+            )
+            call.resolve()
+        }
+    }
+
+    /// Stop letter capture and finalize; the recognizer emits its final result,
+    /// which is delivered via the `letterFinal` event.
+    @objc func stopLetterCapture(_ call: CAPPluginCall) {
+        DispatchQueue.main.async {
+            self.listener.stop()
+            call.resolve()
+        }
+    }
 }
 
 /// Live on-device speech capture for Say-It. HARD RULE: on-device only —
@@ -183,10 +226,46 @@ final class SpeechListener {
     private var completion: ((Result<String, ListenError>) -> Void)?
     private var finished = false
     private var best = ""
+    // Letter-capture profile only: live partial-token stream + recognizer biasing.
+    // nil for the Say-It (whole-word) profile, so that path is byte-for-byte as it
+    // was — ONE capture engine, two profiles, never a second microphone.
+    private var partialHandler: ((String) -> Void)?
+    private var contextualStrings: [String] = []
 
     var isListening: Bool { task != nil }
 
     func start(lang: String, completion: @escaping (Result<String, ListenError>) -> Void) {
+        // Say-It (whole-word) profile: no biasing, no partial streaming.
+        begin(lang: lang, contextualStrings: [], onPartial: nil, completion: completion)
+    }
+
+    /// Spell It Out Loud (letter) profile: SAME on-device recognizer, biased with
+    /// `contextualStrings` (the language's letter names) and streaming raw partials
+    /// live via `onPartial`. Reuses the exact engine/session path as Say-It.
+    func startLetters(
+        lang: String,
+        contextualStrings: [String],
+        onPartial: @escaping (String) -> Void,
+        onFinal: @escaping (String) -> Void,
+        onError: @escaping (ListenError) -> Void
+    ) {
+        begin(lang: lang, contextualStrings: contextualStrings, onPartial: onPartial) { result in
+            switch result {
+            case .success(let text): onFinal(text)
+            case .failure(let err): onError(err)
+            }
+        }
+    }
+
+    /// Shared entry for both profiles. The ONLY differences are `contextualStrings`
+    /// (recognizer biasing) and `onPartial` (live token streaming); everything else
+    /// — auth, session, engine, on-device enforcement — is identical.
+    private func begin(
+        lang: String,
+        contextualStrings: [String],
+        onPartial: ((String) -> Void)?,
+        completion: @escaping (Result<String, ListenError>) -> Void
+    ) {
         if isListening { completion(.failure(.busy)); return }
         // Fail closed: only proceed when on-device recognition is truly available.
         let cap = SpeechCapabilities.report(lang: lang)
@@ -195,6 +274,8 @@ final class SpeechListener {
         }
         recognizer = rec
         self.completion = completion
+        self.partialHandler = onPartial
+        self.contextualStrings = contextualStrings
         finished = false
         best = ""
         // OS permission prompts appear HERE, at first use — the web layer shows a
@@ -237,6 +318,11 @@ final class SpeechListener {
         let req = SFSpeechAudioBufferRecognitionRequest()
         req.requiresOnDeviceRecognition = true   // HARD on-device — never the server.
         req.shouldReportPartialResults = true
+        // Letter profile: bias the recognizer toward the language's spoken letter
+        // names (passed from Rust/JS, never hardcoded). Empty for the Say-It profile.
+        if !contextualStrings.isEmpty {
+            req.contextualStrings = contextualStrings
+        }
         request = req
 
         do {
@@ -257,6 +343,9 @@ final class SpeechListener {
             guard let self = self else { return }
             if let result = result {
                 self.best = result.bestTranscription.formattedString
+                // Letter profile streams every partial (the growing transcript) so
+                // the Rust parser can echo "C… CA… CAT" live.
+                self.partialHandler?(self.best)
                 if result.isFinal { self.finish(.success(self.best)) }
             }
             if error != nil {
@@ -273,6 +362,8 @@ final class SpeechListener {
         task?.cancel()
         task = nil
         request = nil
+        partialHandler = nil
+        contextualStrings = []
         // Restore the game's normal .playback session so word audio keeps working.
         try? AVAudioSession.sharedInstance().setCategory(.playback, mode: .default)
         try? AVAudioSession.sharedInstance().setActive(true)

@@ -240,5 +240,62 @@
         return { supported: true, lines: (res && Array.isArray(res.lines)) ? res.lines : [] };
       });
     },
+    // ---- Spell It Out Loud (voice spelling INPUT): letter-capture profile ----
+    //
+    // The SAME on-device recognizer as Say-It, a DIFFERENT profile: the recognizer
+    // is biased with `contextualStrings` (the language's spoken letter names) and
+    // streams RAW transcript tokens (partials included) live via callbacks, so the
+    // Rust letter-parser can echo "C… CA… CAT" as the child speaks. The plugin does
+    // ZERO parsing — it is a dumb mic. On-device only; nothing persisted or sent.
+
+    /**
+     * Start on-device LETTER capture. Subscribes to the plugin's raw-token events
+     * and forwards them to the callbacks, then starts the capture. All plugin
+     * event subscriptions are torn down automatically on the final/error callback.
+     * @param {{ lang:string, contextualStrings?:string[] }} opts
+     * @param {(rawTranscript:string)=>void} onToken partial transcript (streamed)
+     * @param {(rawTranscript:string)=>void} onFinal final transcript, once
+     * @param {(code:string)=>void} onError one of "UNAVAILABLE" | "PERMISSION_DENIED"
+     *   | "BUSY" | "AUDIO_ERROR" | "NO_SPEECH". Off iOS: fires "UNAVAILABLE".
+     * @returns {void}
+     */
+    startLetterCapture: function (opts, onToken, onFinal, onError) {
+      if (!available()) { if (onError) onError('UNAVAILABLE'); return; }
+      var p = plugin();
+      var handles = [];
+      function cleanup() {
+        handles.forEach(function (h) { try { h && h.remove && h.remove(); } catch (e) {} });
+        handles = [];
+      }
+      // addListener resolves to a handle; keep it so we can remove() on teardown.
+      function sub(evt, fn) {
+        var pr = p.addListener(evt, fn);
+        if (pr && typeof pr.then === 'function') {
+          pr.then(function (h) { handles.push(h); });
+        } else {
+          handles.push(pr);
+        }
+      }
+      sub('letterToken', function (d) { if (onToken) onToken((d && d.token) || ''); });
+      sub('letterFinal', function (d) { if (onFinal) onFinal((d && d.token) || ''); cleanup(); });
+      sub('letterError', function (d) { if (onError) onError((d && d.code) || 'AUDIO_ERROR'); cleanup(); });
+      p.startLetterCapture({
+        lang: (opts && opts.lang) || '',
+        contextualStrings: (opts && opts.contextualStrings) || [],
+      }).catch(function (e) {
+        if (onError) onError((e && e.message) || 'AUDIO_ERROR');
+        cleanup();
+      });
+    },
+
+    /**
+     * Stop letter capture; the plugin finalizes and fires the letterFinal event.
+     * No-op off iOS.
+     * @returns {Promise<void>}
+     */
+    stopLetterCapture: function () {
+      if (!available()) return Promise.resolve();
+      return plugin().stopLetterCapture();
+    },
   };
 })();

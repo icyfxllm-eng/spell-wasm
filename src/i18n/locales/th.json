@@ -244,5 +244,11 @@
   "so.tieMsg": "You both spelled the same number correctly.",
   "so.waitingMsg": "Your result is in. Waiting for your friend to finish…",
   "so.errNetwork": "Couldn't reach the server. Check your connection.",
-  "so.errGeneric": "Something went wrong. Please try again."
+  "so.errGeneric": "Something went wrong. Please try again.",
+  "voiceSpell.mic": "สะกดออกเสียง",
+  "voiceSpell.listening": "กำลังฟัง… พูดชื่อตัวอักษร",
+  "voiceSpell.spellItOut": "สะกดทีละตัวอักษรนะ!",
+  "voiceSpell.didntCatch": "ฟังไม่ชัด — ลองอีกครั้ง",
+  "voiceSpell.needsMic": "หากต้องการสะกดออกเสียง ให้เปิดไมโครโฟนและการรู้จำเสียงพูดสำหรับ Spell ในการตั้งค่า คุณพิมพ์ได้เสมอ",
+  "voiceSpell.close": "ปิด"
 }
