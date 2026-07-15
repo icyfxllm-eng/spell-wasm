@@ -257,7 +257,11 @@
   .orb-wrap.timed .timer-badge{opacity:1}
   .timer-badge.low{color:var(--coral);border-color:var(--coral)}
   .ring{position:absolute;inset:0;border-radius:50%;border:1.5px solid var(--amber);opacity:0}
-  .orb-wrap.speaking .ring{animation:emit 1.5s ease-out infinite}
+  /* will-change only while actually emitting (FIX 4): promotes each pulsing
+     ring to its own compositor layer so the transform/opacity animation
+     composites instead of repainting siblings. Scoped to .speaking so idle
+     rings don't hold extra layers. */
+  .orb-wrap.speaking .ring{animation:emit 1.5s ease-out infinite;will-change:transform,opacity}
   .orb-wrap.speaking .ring:nth-child(4){animation-delay:.5s}
   .orb-wrap.speaking .ring:nth-child(5){animation-delay:1s}
   @keyframes emit{0%{transform:scale(.62);opacity:.7}100%{transform:scale(1.18);opacity:0}}
@@ -271,7 +275,14 @@
       0 0 68px 12px color-mix(in srgb, var(--orb-color) 50%, transparent),
       inset 0 -16px 30px color-mix(in srgb, var(--orb-color) 60%, black),
       inset 0 10px 22px color-mix(in srgb, white 34%, transparent);
-    display:grid;place-items:center;position:relative;animation:breathe 4.5s ease-in-out infinite;transition:background .35s ease, box-shadow .35s ease}
+    display:grid;place-items:center;position:relative;animation:breathe 4.5s ease-in-out infinite;transition:background .35s ease, box-shadow .35s ease;
+    /* will-change:transform (FIX 4): the orb runs breathe/pulse (transform)
+       forever AND carries a big 68px-blurred glow. Without a dedicated
+       compositor layer, some mobile browsers repaint that blurred shadow every
+       animation frame — the main cause of the orb-glow stutter on low-end
+       phones. Promoting it rasterizes the glow once and only recomposites the
+       transform. Visuals at rest are unchanged. */
+    will-change:transform}
   /* glassy sheen reflection over the top-left */
   .orb::before{content:"";position:absolute;top:8%;left:15%;width:50%;height:38%;border-radius:50%;background:radial-gradient(circle at 50% 45%, rgba(255,255,255,.72), rgba(255,255,255,0) 68%);filter:blur(1px);pointer-events:none}
   .orb-glyph{position:relative;z-index:1}
@@ -575,6 +586,14 @@
   @media (prefers-reduced-motion: reduce){
     /* D8: motion is garnish — kill shake/pop; color state (success/warn/streak) stays perceivable. */
     .orb,.orb-wrap.speaking .orb,.orb-wrap.speaking .ring,.sfill,.ltr.pop,.caret,.orb-wrap.bad .orb,.spellbox.is-wrong{animation:none!important;transition:none!important}
+    /* FIX 4: also drop the non-essential repaint-y transitions (animated
+       box-shadow / filter) and release the compositor-layer hints, so a
+       reduced-motion user gets zero incidental motion or extra layers. Static
+       color/border state (focus ring, active turn, unlocked badge) still shows
+       — it just snaps instead of easing. The i18n boot cloak (FIX 3) is left
+       ALONE on purpose: its reveal is a functional safety net, not motion. */
+    .orb,.orb-wrap.speaking .ring{will-change:auto!important}
+    .spellbox,.vs-side,.btn,.ach-badge .ic{transition:none!important}
   }
 </style>
 </head>
