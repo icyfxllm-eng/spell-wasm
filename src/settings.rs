@@ -207,4 +207,7 @@ pub fn apply_settings(app: &App) {
     // visibility depends on the per-language voiceSpell flag + on-device support).
     // No-op when the feature flag is off.
     crate::spell_aloud::reflect(app);
+    // Pillar 3: keep the Tools hub rows (switch states, availability hints, and
+    // Kid-Mode visibility) in sync every time Settings is applied/opened.
+    crate::tools_hub::reflect(app);
 }

@@ -449,6 +449,9 @@ pub fn update_setup_chip(app: &App) {
     let level_label = level_label.trim_end_matches(|c: char| c == '\u{2192}' || c.is_whitespace());
     let timing_label = crate::i18n::t(if s.timed { "mode.timed" } else { "mode.untimed" });
     dom::set_text("setupChipText", &format!("{} \u{b7} {} \u{b7} {}", lang_label, level_label, timing_label));
+    // Per-difficulty explanation under the level picker (Pillar 3): a localized
+    // one-liner for whatever level is selected, surfaced right where it's chosen.
+    dom::set_text("levelDesc", &crate::i18n::t(&format!("level.{}.desc", s.level)));
 }
 
 

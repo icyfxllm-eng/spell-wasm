@@ -108,6 +108,23 @@ pub fn attempts_shields() -> bool {
     resolve(stored("attempts_shields").as_deref(), true)
 }
 
+/// Effective value of a tool flag by its storage name (the `<name>` in
+/// `spell_flag_<name>`), honoring each flag's compiled-in default. Used by the
+/// Tools hub to set a row's initial switch state without duplicating defaults.
+pub fn is_on(name: &str) -> bool {
+    match name {
+        "ghost_racing" => ghost_racing(),
+        "syllable_replay" => syllable_replay(),
+        "say_it" => say_it(),
+        "photo_list" => photo_list(),
+        "word_stories" => word_stories(),
+        "online_spelloff" => online_spelloff(),
+        "spell_aloud" => spell_aloud(),
+        "attempts_shields" => attempts_shields(),
+        _ => false,
+    }
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -130,6 +147,19 @@ mod tests {
         assert!(!word_stories(), "F5 ships dark");
         set_test_override(Some("off"));
         assert!(!ghost_racing());
+        set_test_override(None);
+    }
+
+    #[test]
+    fn is_on_honors_each_flag_default() {
+        set_test_override(None);
+        // Same defaults the Tools hub renders each switch from.
+        assert!(is_on("ghost_racing") && is_on("syllable_replay") && is_on("say_it"));
+        assert!(is_on("photo_list") && is_on("spell_aloud") && is_on("attempts_shields"));
+        assert!(!is_on("word_stories") && !is_on("online_spelloff"));
+        assert!(!is_on("unknown_flag"), "unknown names read as off");
+        set_test_override(Some("off"));
+        assert!(!is_on("ghost_racing"));
         set_test_override(None);
     }
 

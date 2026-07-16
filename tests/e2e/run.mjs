@@ -21,6 +21,7 @@ import * as ghost from './specs/ghost.mjs';
 import * as spellaloud from './specs/spellaloud.mjs';
 import * as submitAdvance from './specs/submit-advance.mjs';
 import * as attemptsShields from './specs/attempts_shields.mjs';
+import * as toolsHub from './specs/tools-hub.mjs';
 
 const SPECS = [
   ['keyboard', keyboard],
@@ -33,6 +34,7 @@ const SPECS = [
   ['spellaloud', spellaloud],
   ['submit-advance', submitAdvance],
   ['attempts-shields', attemptsShields],
+  ['tools-hub', toolsHub],
 ];
 
 const ROOT = join(fileURLToPath(import.meta.url), '..', '..', '..');

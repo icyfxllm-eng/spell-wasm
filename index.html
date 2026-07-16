@@ -626,6 +626,17 @@
   .set-row:first-of-type{border-top:none}
   .set-row .lbl2{display:flex;flex-direction:column;font-size:14px;font-weight:600;color:var(--ink)}
   .set-row .lbl2 small{font-weight:400;color:var(--muted-2);font-size:11.5px;margin-top:2px}
+  .set-row.btn-hide{display:none}
+  /* Pillar 3 — Tools & Features hub. */
+  .tools-hub{margin-top:6px}
+  .tools-head{display:flex;flex-direction:column;padding:14px 0 2px;border-top:1px solid rgba(255,255,255,.05)}
+  .tools-title{font-size:13px;font-weight:700;letter-spacing:.02em;text-transform:uppercase;color:var(--ink)}
+  .tools-sub{font-weight:400;color:var(--muted-2);font-size:11.5px;margin-top:3px}
+  .tool-row .tool-name{display:flex;align-items:center;gap:7px}
+  .tool-ico{font-size:15px;flex:0 0 auto}
+  .tool-avail{color:var(--teal)!important;opacity:.85;font-size:11px!important;margin-top:3px!important}
+  .setup-field-desc{display:block;font-size:12px;color:var(--muted-2);margin:-4px 0 10px 34px}
+  body.kid .tools-title{font-size:15px}
   .switch{position:relative;appearance:none;width:44px;height:25px;flex:0 0 auto;background:var(--edge);border-radius:99px;cursor:pointer;transition:background .2s}
   .switch:checked{background:var(--teal)}
   .switch::after{content:"";position:absolute;top:2px;left:2px;width:21px;height:21px;border-radius:50%;background:#fff;transition:transform .2s}
@@ -1162,6 +1173,9 @@
         <select id="langSel" aria-label="Word source"></select></label>
       <label class="setup-field"><span class="setup-field-ico" aria-hidden="true">🎚</span>
         <select id="levelSel" aria-label="Difficulty"></select></label>
+      <!-- Per-difficulty explanation, filled by game::update_setup_chip from
+           level.<v>.desc for whatever level is selected. -->
+      <small class="setup-field-desc" id="levelDesc" aria-live="polite"></small>
       <label class="setup-field"><span class="setup-field-ico" aria-hidden="true">⏱</span>
         <select id="modeSel" aria-label="Timer">
           <option value="off" data-i18n="mode.untimed">Untimed</option>
@@ -1181,6 +1195,25 @@
       <!-- CC-ATTEMPTS-SHIELDS Feature 1 toggle. Row is hidden unless the dark
            feature flag is on (shown from Rust via flags::attempts_shields). -->
       <label class="set-row btn-hide" id="extraAttemptsRow"><span class="lbl2"><span data-i18n="settings.extraAttempts">Extra attempt on misses</span><small data-i18n="settings.extraAttemptsSmall">A second try when you miss a word</small></span><input type="checkbox" class="switch" id="extraAttemptsToggle" /></label>
+
+      <!-- Pillar 3 — the "Tools & Features" hub. One place that lists, explains,
+           and toggles every feature flag, so players stop hunting for hidden
+           contextual buttons. Each row's switch writes the real
+           localStorage['spell_flag_<name>']; Rust (tools_hub.rs) sets the initial
+           switch state, the live availability hint, and Kid-Mode visibility, and
+           re-runs each tool's reflect when its switch flips. -->
+      <div class="tools-hub" id="toolsHub">
+        <div class="tools-head"><span class="tools-title" data-i18n="tools.title">Tools &amp; Features</span><small class="tools-sub" data-i18n="tools.subtitle">Turn features on or off — all in one place.</small></div>
+        <label class="set-row tool-row" id="toolGhostRow"><span class="lbl2"><span class="tool-name"><span class="tool-ico" aria-hidden="true">👻</span> <span data-i18n="tools.ghost.name">Ghost racing</span></span><small data-i18n="tools.ghost.desc">Race against your best Climb run.</small><small class="tool-avail" id="toolGhostHint"></small></span><input type="checkbox" class="switch" id="toolGhostToggle" /></label>
+        <label class="set-row tool-row" id="toolSyllableRow"><span class="lbl2"><span class="tool-name"><span class="tool-ico" aria-hidden="true">🔤</span> <span data-i18n="tools.syllable.name">Syllable replay</span></span><small data-i18n="tools.syllable.desc">Hear a missed word slowly, part by part.</small><small class="tool-avail" id="toolSyllableHint"></small></span><input type="checkbox" class="switch" id="toolSyllableToggle" /></label>
+        <label class="set-row tool-row" id="toolSayItRow"><span class="lbl2"><span class="tool-name"><span class="tool-ico" aria-hidden="true">🗣</span> <span data-i18n="tools.sayit.name">Say It</span></span><small data-i18n="tools.sayit.desc">Practice saying a word out loud.</small><small class="tool-avail" id="toolSayItHint"></small></span><input type="checkbox" class="switch" id="toolSayItToggle" /></label>
+        <label class="set-row tool-row" id="toolPhotoRow"><span class="lbl2"><span class="tool-name"><span class="tool-ico" aria-hidden="true">📷</span> <span data-i18n="tools.photo.name">Photo → word list</span></span><small data-i18n="tools.photo.desc">Scan a printed list with the camera.</small><small class="tool-avail" id="toolPhotoHint"></small></span><input type="checkbox" class="switch" id="toolPhotoToggle" /></label>
+        <label class="set-row tool-row" id="toolSpellAloudRow"><span class="lbl2"><span class="tool-name"><span class="tool-ico" aria-hidden="true">🎤</span> <span data-i18n="tools.spellaloud.name">Spell it out loud</span></span><small data-i18n="tools.spellaloud.desc">Say the letters instead of typing.</small><small class="tool-avail" id="toolSpellAloudHint"></small></span><input type="checkbox" class="switch" id="toolSpellAloudToggle" /></label>
+        <label class="set-row tool-row" id="toolStoriesRow"><span class="lbl2"><span class="tool-name"><span class="tool-ico" aria-hidden="true">📖</span> <span data-i18n="tools.stories.name">Word stories</span></span><small data-i18n="tools.stories.desc">Where a word comes from — its history.</small><small class="tool-avail" id="toolStoriesHint"></small></span><input type="checkbox" class="switch" id="toolStoriesToggle" /></label>
+        <label class="set-row tool-row" id="toolSpelloffRow"><span class="lbl2"><span class="tool-name"><span class="tool-ico" aria-hidden="true">🌍</span> <span data-i18n="tools.spelloff.name">Online Spell-Off</span></span><small data-i18n="tools.spelloff.desc">Challenge a friend, one word at a time.</small><small class="tool-avail" id="toolSpelloffHint"></small></span><input type="checkbox" class="switch" id="toolSpelloffToggle" /></label>
+        <label class="set-row tool-row" id="toolShieldsRow"><span class="lbl2"><span class="tool-name"><span class="tool-ico" aria-hidden="true">🛡</span> <span data-i18n="tools.shields.name">Shields &amp; extra attempts</span></span><small data-i18n="tools.shields.desc">A second try when you miss a word.</small><small class="tool-avail" id="toolShieldsHint"></small></span><input type="checkbox" class="switch" id="toolShieldsToggle" /></label>
+      </div>
+
       <div class="set-row" id="nativeStatusRow"><span class="lbl2"><span>Native status (debug)</span><small id="nativeStatus" style="word-break:break-word;opacity:.75">checking…</small></span></div>
       <label class="set-row"><span class="lbl2"><span data-i18n="settings.remind">Daily reminder</span><small data-i18n="settings.remindSmall">One gentle nudge a day to practice</small></span><input type="checkbox" class="switch" id="remindToggle" /></label>
       <label class="set-row" id="remindTimeRow"><span class="lbl2"><span data-i18n="settings.remindTime">Reminder time</span><small data-i18n="settings.remindTimeSmall">When to send the daily nudge</small></span><input type="time" id="remindTime" value="17:00" aria-label="Daily reminder time" /></label>

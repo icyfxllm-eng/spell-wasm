@@ -42,6 +42,7 @@ mod speech_out;
 mod stats;
 mod storage;
 mod syllable;
+mod tools_hub;
 #[cfg(feature = "testseam")]
 mod testseam;
 mod versus;
@@ -185,6 +186,10 @@ fn wire(app: &App) {
     // + on-device availability both hold (Invariant I3).
     spell_aloud::wire(app);
     spell_aloud::reflect(app);
+    // Pillar 3 — the "Tools & Features" hub in Settings: wire every tool switch,
+    // then reflect current state so the panel is correct before it first opens.
+    tools_hub::wire(app);
+    tools_hub::reflect(app);
 
     // Notify Me (coming-soon languages): record anonymous interest for the
     // language on the panel, then flip the button to its confirmed state.
