@@ -1,0 +1,6 @@
+word1	word2	tier	diff
+sol	stol	easy	ins@2:+t
+elv	ulv	easy	sub@1:e→u
+hus	mus	easy	sub@1:h→m
+brød	rød	medium	del@1:-b
+øre	øye	medium	sub@2:r→y

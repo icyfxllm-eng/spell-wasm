@@ -1,0 +1,6 @@
+word1	word2	tier	diff
+ay	ayı	easy	ins@3:+ı
+hız	kız	easy	sub@1:h→k
+at	ay	easy	sub@2:t→y
+el	ev	easy	sub@2:l→v
+gözlük	sözlük	expert	sub@1:g→s

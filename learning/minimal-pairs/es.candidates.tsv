@@ -1,0 +1,6 @@
+word1	word2	tier	diff
+ojo	rojo	easy	ins@1:+r
+gato	pato	easy	sub@1:g→p
+nido	niño	easy	sub@3:d→ñ
+ojo	oso	easy	sub@2:j→s
+sal	sol	easy	sub@2:a→o
