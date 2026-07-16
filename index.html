@@ -821,6 +821,10 @@
     </div>
 
     <div class="hint-line" id="hintLine" aria-hidden="true"></div>
+    <!-- CC-ATTEMPTS-SHIELDS Feature 2 HUD: current shield count during a Climb
+         run. Language-neutral icon + count; hidden unless the run holds/earns
+         shields. Shown from Rust (game::update_shield_hud). -->
+    <div class="shield-hud btn-hide" id="shieldHud" aria-live="polite"><span class="shield-ic" aria-hidden="true">🛡</span><span id="shieldCount">0</span></div>
     <div class="tries-line" id="triesLine" aria-hidden="true"></div>
     <div class="feedback" id="feedback" aria-live="polite"></div>
     <div class="meaning" id="meaning" aria-live="polite"></div>
@@ -1099,6 +1103,22 @@
     </div>
   </div>
 
+  <!-- CC-ATTEMPTS-SHIELDS Feature 2: "Use a shield?" prompt (player choice, not
+       auto-spend). Copy localized in all 17 locales; icon + count are
+       language-neutral. -->
+  <div class="scrim" id="shieldScrim">
+    <div class="modal">
+      <div class="score-pop" aria-hidden="true">🛡</div>
+      <h3 data-i18n="shield.promptTitle">Use a shield?</h3>
+      <p data-i18n="shield.promptBody">Spend one shield to try this word again and keep your run going.</p>
+      <p class="daily-best"><span data-i18n="shield.held">Shields held</span>: <b id="shieldPromptCount">0</b></p>
+      <div class="row">
+        <button class="btn btn-icon" id="shieldDecline" data-i18n="shield.decline" style="flex:1;border-radius:12px">No thanks</button>
+        <button class="btn btn-check" id="shieldAccept" data-i18n="shield.accept">Use shield</button>
+      </div>
+    </div>
+  </div>
+
   <!-- The Climb: account settings modal -->
   <div class="scrim" id="accountScrim">
     <div class="modal">
@@ -1158,6 +1178,9 @@
       <label class="set-row"><span class="lbl2"><span data-i18n="settings.readable">Readable mode</span><small data-i18n="settings.readableSmall">Larger, spaced, dyslexia-friendly type</small></span><input type="checkbox" class="switch" id="readToggle" /></label>
       <label class="set-row"><span class="lbl2"><span data-i18n="settings.bigText">Big text</span><small data-i18n="settings.bigTextSmall">Enlarge the interface text (about 1.5×)</small></span><input type="checkbox" class="switch" id="bigTextToggle" /></label>
       <label class="set-row"><span class="lbl2"><span data-i18n="settings.slow">Slower voice</span><small data-i18n="settings.slowSmall">Speak each word more slowly</small></span><input type="checkbox" class="switch" id="slowToggle" /></label>
+      <!-- CC-ATTEMPTS-SHIELDS Feature 1 toggle. Row is hidden unless the dark
+           feature flag is on (shown from Rust via flags::attempts_shields). -->
+      <label class="set-row btn-hide" id="extraAttemptsRow"><span class="lbl2"><span data-i18n="settings.extraAttempts">Extra attempt on misses</span><small data-i18n="settings.extraAttemptsSmall">A second try when you miss a word</small></span><input type="checkbox" class="switch" id="extraAttemptsToggle" /></label>
       <label class="set-row"><span class="lbl2"><span data-i18n="settings.remind">Daily reminder</span><small data-i18n="settings.remindSmall">One gentle nudge a day to practice</small></span><input type="checkbox" class="switch" id="remindToggle" /></label>
       <label class="set-row" id="remindTimeRow"><span class="lbl2"><span data-i18n="settings.remindTime">Reminder time</span><small data-i18n="settings.remindTimeSmall">When to send the daily nudge</small></span><input type="time" id="remindTime" value="17:00" aria-label="Daily reminder time" /></label>
       <div class="set-row">

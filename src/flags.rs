@@ -42,6 +42,9 @@ fn stored(_name: &str) -> Option<String> {
 
 /// Test-only: force the next flag read (`Some("on")`/`Some("off")`) or clear
 /// (`None`) so both branches of a flag-gated path are reachable in unit tests.
+/// GLOBAL (one override for all flags) — fine for unit tests, which set it right
+/// before the single flag read they exercise. E2E has no `cfg(test)` seam, so it
+/// flips the real `localStorage['spell_flag_<name>']` instead.
 #[cfg(test)]
 pub fn set_test_override(v: Option<&str>) {
     TEST_OVERRIDE.with(|c| *c.borrow_mut() = v.map(|s| s.to_string()));
@@ -93,6 +96,18 @@ pub fn spell_aloud() -> bool {
     resolve(stored("spell_aloud").as_deref(), true)
 }
 
+/// CC-ATTEMPTS-SHIELDS — the extra-attempts toggle (normal mode) + shields (The
+/// Climb). **Default ON for the build-54 QA pass** (Eric): build-54 retires the
+/// legacy 3-try mechanic, so the base game is now one attempt per word and these
+/// aids ARE the safety net — they must be live for testers to exercise the new
+/// one-shot flow. Storage key `spell_flag_attempts_shields`. Override off with
+/// `localStorage['spell_flag_attempts_shields'] = 'off'`. The extra-attempts
+/// *toggle* still defaults OFF per-player (a separate pref); this flag only
+/// reveals its settings row and enables Climb shields.
+pub fn attempts_shields() -> bool {
+    resolve(stored("attempts_shields").as_deref(), true)
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -115,6 +130,17 @@ mod tests {
         assert!(!word_stories(), "F5 ships dark");
         set_test_override(Some("off"));
         assert!(!ghost_racing());
+        set_test_override(None);
+    }
+
+    #[test]
+    fn attempts_shields_defaults_on_and_override_wins() {
+        set_test_override(None);
+        assert!(attempts_shields(), "attempts_shields defaults ON for the build-54 QA pass");
+        set_test_override(Some("off"));
+        assert!(!attempts_shields());
+        set_test_override(Some("on"));
+        assert!(attempts_shields());
         set_test_override(None);
     }
 }

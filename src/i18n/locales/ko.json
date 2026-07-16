@@ -250,5 +250,15 @@
   "voiceSpell.spellItOut": "한 글자씩 또박또박 말해 주세요!",
   "voiceSpell.didntCatch": "잘 못 들었어요 — 다시 해 보세요.",
   "voiceSpell.needsMic": "소리 내어 철자를 말하려면 설정에서 Spell의 마이크와 음성 인식을 켜세요. 언제든 입력할 수도 있어요.",
-  "voiceSpell.close": "닫기"
+  "voiceSpell.close": "닫기",
+  "settings.extraAttempts": "틀렸을 때 추가 시도",
+  "settings.extraAttemptsSmall": "단어를 틀리면 한 번 더 시도",
+  "attempts.tryAgain": "아쉬워요 — 한 번 더 해보세요",
+  "shield.promptTitle": "방패를 사용할까요?",
+  "shield.promptBody": "방패 하나를 사용해 이 단어를 다시 시도하고 연속 기록을 이어가세요.",
+  "shield.held": "보유한 방패",
+  "shield.accept": "방패 사용",
+  "shield.decline": "괜찮아요",
+  "shield.earned": "방패 획득!",
+  "shield.used": "방패 사용됨"
 }

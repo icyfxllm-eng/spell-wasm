@@ -250,5 +250,15 @@
   "voiceSpell.spellItOut": "Buchstabiere Buchstabe für Buchstabe!",
   "voiceSpell.didntCatch": "Nicht verstanden — versuch es nochmal.",
   "voiceSpell.needsMic": "Zum lauten Buchstabieren aktiviere Mikrofon und Spracherkennung für Spell in den Einstellungen. Tippen geht immer.",
-  "voiceSpell.close": "Schließen"
+  "voiceSpell.close": "Schließen",
+  "settings.extraAttempts": "Zusätzlicher Versuch bei Fehlern",
+  "settings.extraAttemptsSmall": "Ein zweiter Versuch, wenn du ein Wort verfehlst",
+  "attempts.tryAgain": "Fast — versuch es noch einmal",
+  "shield.promptTitle": "Schutzschild einsetzen?",
+  "shield.promptBody": "Setze einen Schild ein, um dieses Wort noch einmal zu versuchen und deine Serie fortzusetzen.",
+  "shield.held": "Verfügbare Schilde",
+  "shield.accept": "Schild einsetzen",
+  "shield.decline": "Nein danke",
+  "shield.earned": "Schild verdient!",
+  "shield.used": "Schild eingesetzt"
 }

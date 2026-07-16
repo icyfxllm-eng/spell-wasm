@@ -20,6 +20,7 @@ pub fn load_prefs(state: &mut AppState) {
     state.volume = audio_boost::clamp_gain(p.volume.unwrap_or(1.0));
     state.remind = p.remind;
     state.remind_time = p.remind_time.filter(|t| !t.is_empty()).unwrap_or_else(|| "17:00".to_string());
+    state.extra_attempts = p.extra_attempts;
 }
 
 pub fn save_prefs(state: &AppState) {
@@ -35,6 +36,7 @@ pub fn save_prefs(state: &AppState) {
         volume: Some(state.volume),
         remind: state.remind,
         remind_time: Some(state.remind_time.clone()),
+        extra_attempts: state.extra_attempts,
     };
     storage::set_json(PREFS_KEY, &p);
 }
@@ -181,6 +183,10 @@ pub fn apply_settings(app: &App) {
     let _ = body.class_list().toggle_with_force("readable", s.readable);
     let _ = body.class_list().toggle_with_force("big-text", s.big_text);
     dom::input("kidToggle").set_checked(s.kid);
+    // CC-ATTEMPTS-SHIELDS Feature 1: reflect the toggle + show its row only when
+    // the dark flag is on (hidden -> byte-for-byte the current settings screen).
+    dom::input("extraAttemptsToggle").set_checked(s.extra_attempts);
+    dom::toggle_class("extraAttemptsRow", "btn-hide", !crate::flags::attempts_shields());
     dom::input("readToggle").set_checked(s.readable);
     dom::input("bigTextToggle").set_checked(s.big_text);
     dom::input("slowToggle").set_checked(s.slow);

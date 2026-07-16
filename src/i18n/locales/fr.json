@@ -250,5 +250,15 @@
   "voiceSpell.spellItOut": "Épelle lettre par lettre !",
   "voiceSpell.didntCatch": "Je n'ai pas compris — réessaie.",
   "voiceSpell.needsMic": "Pour épeler à voix haute, activez le Micro et la Reconnaissance vocale pour Spell dans Réglages. Vous pouvez toujours taper.",
-  "voiceSpell.close": "Fermer"
+  "voiceSpell.close": "Fermer",
+  "settings.extraAttempts": "Tentative supplémentaire en cas d’erreur",
+  "settings.extraAttemptsSmall": "Un second essai quand vous manquez un mot",
+  "attempts.tryAgain": "Presque — réessayez",
+  "shield.promptTitle": "Utiliser un bouclier ?",
+  "shield.promptBody": "Dépensez un bouclier pour réessayer ce mot et continuer votre série.",
+  "shield.held": "Boucliers disponibles",
+  "shield.accept": "Utiliser le bouclier",
+  "shield.decline": "Non merci",
+  "shield.earned": "Bouclier gagné !",
+  "shield.used": "Bouclier utilisé"
 }

@@ -250,5 +250,15 @@
   "voiceSpell.spellItOut": "Spell it letter by letter!",
   "voiceSpell.didntCatch": "Didn't catch that — try again.",
   "voiceSpell.needsMic": "To spell out loud, turn on Microphone and Speech Recognition for Spell in Settings. You can always type instead.",
-  "voiceSpell.close": "Close"
+  "voiceSpell.close": "Close",
+  "settings.extraAttempts": "Extra attempt on misses",
+  "settings.extraAttemptsSmall": "A second try when you miss a word",
+  "attempts.tryAgain": "Not quite — try once more",
+  "shield.promptTitle": "Use a shield?",
+  "shield.promptBody": "Spend one shield to try this word again and keep your run going.",
+  "shield.held": "Shields held",
+  "shield.accept": "Use shield",
+  "shield.decline": "No thanks",
+  "shield.earned": "Shield earned!",
+  "shield.used": "Shield used"
 }

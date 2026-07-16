@@ -110,8 +110,9 @@ pub fn voice_spell(lang: &str) -> bool {
 
 pub const CORRECT_DELAY_MS: i32 = 2200;
 
-/// Attempts allowed per word, across every mode (English, My Words, Misses).
-pub const MAX_TRIES: u32 = 3;
+// build-54: the legacy per-word retry budget (MAX_TRIES = 3) is RETIRED. The
+// base game is one attempt per word; the only retries are shields (The Climb)
+// and the extra-attempts toggle (normal mode), both in crate::attempts.
 
 pub const SR_MAXBOX: u32 = 5;
 // ms intervals per box, index = box number (box 0 unused)

@@ -41,7 +41,10 @@ export async function launch() {
 
 /** New page at `lang`, age gate satisfied, TTS stubbed silent, wasm booted.
  *  `viewport: {width,height}` overrides the named device's dimensions (used by
- *  the submit-control-per-width sweep); DPR/mobile flags come from `device`. */
+ *  the submit-control-per-width sweep); DPR/mobile flags come from `device`.
+ *  Feature flags are set by each spec via its own `ctx.addInitScript`
+ *  (`localStorage['spell_flag_<name>']`), mirroring the FP2 specs (sayit /
+ *  spellaloud / ghost) — the harness stays flag-agnostic. */
 export async function openApp(browser, base, { lang = null, device = 'se', viewport = null } = {}) {
   const d = viewport ? { ...DEVICES[device], ...viewport } : DEVICES[device];
   const ctx = await browser.newContext({ viewport: { width: d.width, height: d.height }, deviceScaleFactor: d.dpr, isMobile: d.mobile });

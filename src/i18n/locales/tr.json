@@ -250,5 +250,15 @@
   "voiceSpell.spellItOut": "Harf harf hecele!",
   "voiceSpell.didntCatch": "Anlayamadım — tekrar dene.",
   "voiceSpell.needsMic": "Sesli hecelemek için Ayarlar'da Spell için Mikrofon ve Konuşma Tanıma'yı açın. İstediğiniz zaman yazabilirsiniz.",
-  "voiceSpell.close": "Kapat"
+  "voiceSpell.close": "Kapat",
+  "settings.extraAttempts": "Yanlışta ekstra deneme",
+  "settings.extraAttemptsSmall": "Bir kelimeyi kaçırdığında ikinci bir deneme",
+  "attempts.tryAgain": "Az kaldı — bir kez daha dene",
+  "shield.promptTitle": "Kalkan kullanılsın mı?",
+  "shield.promptBody": "Bu kelimeyi tekrar denemek ve serini sürdürmek için bir kalkan harca.",
+  "shield.held": "Mevcut kalkanlar",
+  "shield.accept": "Kalkan kullan",
+  "shield.decline": "Hayır, teşekkürler",
+  "shield.earned": "Kalkan kazanıldı!",
+  "shield.used": "Kalkan kullanıldı"
 }

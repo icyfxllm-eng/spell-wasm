@@ -250,5 +250,15 @@
   "voiceSpell.spellItOut": "一文字ずつつづってね！",
   "voiceSpell.didntCatch": "聞き取れませんでした — もう一度どうぞ。",
   "voiceSpell.needsMic": "声に出してつづるには、設定で Spell のマイクと音声認識をオンにしてください。いつでも入力もできます。",
-  "voiceSpell.close": "閉じる"
+  "voiceSpell.close": "閉じる",
+  "settings.extraAttempts": "ミス時に追加の挑戦",
+  "settings.extraAttemptsSmall": "単語を間違えたときにもう一度挑戦",
+  "attempts.tryAgain": "おしい — もう一度挑戦",
+  "shield.promptTitle": "シールドを使いますか？",
+  "shield.promptBody": "シールドを1つ使ってこの単語に再挑戦し、連続記録を続けましょう。",
+  "shield.held": "所持シールド",
+  "shield.accept": "シールドを使う",
+  "shield.decline": "いいえ",
+  "shield.earned": "シールド獲得！",
+  "shield.used": "シールド使用"
 }

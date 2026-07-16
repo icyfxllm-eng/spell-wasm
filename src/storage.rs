@@ -5,8 +5,18 @@ use serde::de::DeserializeOwned;
 use serde::Serialize;
 use web_sys::{Headers, Request, RequestInit, RequestMode, Response};
 
+#[cfg(target_arch = "wasm32")]
 fn storage() -> Option<web_sys::Storage> {
     web_sys::window()?.local_storage().ok()?
+}
+
+// On a non-wasm target (unit tests) there is no window; `web_sys::window()`
+// panics rather than returning None, so localStorage is unavailable. Persistence
+// is a no-op there, which lets storage-touching pure logic (e.g. spaced-rep
+// recording) run under `cargo test --lib`.
+#[cfg(not(target_arch = "wasm32"))]
+fn storage() -> Option<web_sys::Storage> {
+    None
 }
 
 pub fn get_raw(key: &str) -> Option<String> {

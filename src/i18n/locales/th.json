@@ -250,5 +250,15 @@
   "voiceSpell.spellItOut": "สะกดทีละตัวอักษรนะ!",
   "voiceSpell.didntCatch": "ฟังไม่ชัด — ลองอีกครั้ง",
   "voiceSpell.needsMic": "หากต้องการสะกดออกเสียง ให้เปิดไมโครโฟนและการรู้จำเสียงพูดสำหรับ Spell ในการตั้งค่า คุณพิมพ์ได้เสมอ",
-  "voiceSpell.close": "ปิด"
+  "voiceSpell.close": "ปิด",
+  "settings.extraAttempts": "ลองเพิ่มเมื่อตอบผิด",
+  "settings.extraAttemptsSmall": "ลองอีกครั้งเมื่อสะกดผิด",
+  "attempts.tryAgain": "เกือบแล้ว — ลองอีกครั้ง",
+  "shield.promptTitle": "ใช้โล่ไหม?",
+  "shield.promptBody": "ใช้โล่หนึ่งอันเพื่อลองคำนี้อีกครั้งและรักษาสถิติของคุณ",
+  "shield.held": "โล่ที่มี",
+  "shield.accept": "ใช้โล่",
+  "shield.decline": "ไม่ล่ะ",
+  "shield.earned": "ได้รับโล่!",
+  "shield.used": "ใช้โล่แล้ว"
 }

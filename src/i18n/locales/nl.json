@@ -250,5 +250,15 @@
   "voiceSpell.spellItOut": "Spel het letter voor letter!",
   "voiceSpell.didntCatch": "Niet verstaan — probeer opnieuw.",
   "voiceSpell.needsMic": "Om hardop te spellen, zet Microfoon en Spraakherkenning voor Spell aan in Instellingen. Typen kan altijd.",
-  "voiceSpell.close": "Sluiten"
+  "voiceSpell.close": "Sluiten",
+  "settings.extraAttempts": "Extra poging bij fouten",
+  "settings.extraAttemptsSmall": "Een tweede kans als je een woord mist",
+  "attempts.tryAgain": "Bijna — probeer het nog eens",
+  "shield.promptTitle": "Een schild gebruiken?",
+  "shield.promptBody": "Gebruik een schild om dit woord opnieuw te proberen en je reeks voort te zetten.",
+  "shield.held": "Beschikbare schilden",
+  "shield.accept": "Schild gebruiken",
+  "shield.decline": "Nee, bedankt",
+  "shield.earned": "Schild verdiend!",
+  "shield.used": "Schild gebruikt"
 }

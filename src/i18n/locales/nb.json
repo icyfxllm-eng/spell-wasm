@@ -250,5 +250,15 @@
   "voiceSpell.spellItOut": "Stav bokstav for bokstav!",
   "voiceSpell.didntCatch": "Fikk ikke med meg det — prøv igjen.",
   "voiceSpell.needsMic": "For å stave høyt, slå på Mikrofon og Talegjenkjenning for Spell i Innstillinger. Du kan alltid skrive.",
-  "voiceSpell.close": "Lukk"
+  "voiceSpell.close": "Lukk",
+  "settings.extraAttempts": "Ekstra forsøk ved bom",
+  "settings.extraAttemptsSmall": "Et nytt forsøk når du bommer på et ord",
+  "attempts.tryAgain": "Nesten — prøv en gang til",
+  "shield.promptTitle": "Bruke et skjold?",
+  "shield.promptBody": "Bruk et skjold for å prøve ordet på nytt og holde rekken i gang.",
+  "shield.held": "Tilgjengelige skjold",
+  "shield.accept": "Bruk skjold",
+  "shield.decline": "Nei takk",
+  "shield.earned": "Skjold opptjent!",
+  "shield.used": "Skjold brukt"
 }

@@ -250,5 +250,15 @@
   "voiceSpell.spellItOut": "Stava bokstav för bokstav!",
   "voiceSpell.didntCatch": "Uppfattade inte — försök igen.",
   "voiceSpell.needsMic": "För att stava högt, slå på Mikrofon och Taligenkänning för Spell i Inställningar. Du kan alltid skriva.",
-  "voiceSpell.close": "Stäng"
+  "voiceSpell.close": "Stäng",
+  "settings.extraAttempts": "Extra försök vid miss",
+  "settings.extraAttemptsSmall": "Ett andra försök när du missar ett ord",
+  "attempts.tryAgain": "Nästan — försök igen",
+  "shield.promptTitle": "Använda en sköld?",
+  "shield.promptBody": "Använd en sköld för att försöka med ordet igen och behålla din svit.",
+  "shield.held": "Tillgängliga sköldar",
+  "shield.accept": "Använd sköld",
+  "shield.decline": "Nej tack",
+  "shield.earned": "Sköld intjänad!",
+  "shield.used": "Sköld använd"
 }

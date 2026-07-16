@@ -250,5 +250,15 @@
   "voiceSpell.spellItOut": "Scandiscilo lettera per lettera!",
   "voiceSpell.didntCatch": "Non ho capito — riprova.",
   "voiceSpell.needsMic": "Per scandire ad alta voce, attiva Microfono e Riconoscimento vocale per Spell in Impostazioni. Puoi sempre digitare.",
-  "voiceSpell.close": "Chiudi"
+  "voiceSpell.close": "Chiudi",
+  "settings.extraAttempts": "Tentativo extra in caso di errore",
+  "settings.extraAttemptsSmall": "Un secondo tentativo quando sbagli una parola",
+  "attempts.tryAgain": "Quasi — riprova",
+  "shield.promptTitle": "Usare uno scudo?",
+  "shield.promptBody": "Usa uno scudo per riprovare questa parola e continuare la serie.",
+  "shield.held": "Scudi disponibili",
+  "shield.accept": "Usa scudo",
+  "shield.decline": "No, grazie",
+  "shield.earned": "Scudo ottenuto!",
+  "shield.used": "Scudo usato"
 }

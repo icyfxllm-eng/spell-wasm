@@ -12,6 +12,7 @@ stored only when provided and are never returned to clients.
 import os
 import sqlite3
 import threading
+import time
 
 DB_PATH = os.environ.get("CLIMB_DB_PATH", "/data/climb/climb.db")
 
@@ -79,6 +80,23 @@ CREATE TABLE IF NOT EXISTS leaderboard_entries (
   achieved_at REAL NOT NULL,
   run_meta    TEXT,                                -- JSON: word_count, duration_ms, ...
   PRIMARY KEY (user_id, difficulty, locale),
+  FOREIGN KEY(user_id) REFERENCES users(id) ON DELETE CASCADE
+);
+
+-- CC-ATTEMPTS-SHIELDS / PD1 season reset: when shields ship, The Climb's active
+-- leaderboard is reset so every ranked score sits under the shield ruleset. That
+-- reset is an ARCHIVE, never a deletion — prior scores are copied here first.
+-- One row per (player, board, season); `season` distinguishes archived eras.
+CREATE TABLE IF NOT EXISTS leaderboard_archive (
+  user_id     INTEGER NOT NULL,
+  difficulty  TEXT NOT NULL,
+  locale      TEXT NOT NULL DEFAULT 'en',
+  best_chain  INTEGER NOT NULL,
+  achieved_at REAL NOT NULL,
+  run_meta    TEXT,
+  season      INTEGER NOT NULL,
+  archived_at REAL NOT NULL,
+  PRIMARY KEY (user_id, difficulty, locale, season),
   FOREIGN KEY(user_id) REFERENCES users(id) ON DELETE CASCADE
 );
 
@@ -151,6 +169,39 @@ def init() -> None:
     _migrate_leaderboard_locale(c)
     c.executescript(SCHEMA)
     c.commit()
+
+
+def archive_active_season(c=None, now=None) -> int:
+    """PD1 season reset — ARCHIVE, never delete.
+
+    Copies every current `leaderboard_entries` row into `leaderboard_archive`
+    under a fresh season number, then clears the active table so the live
+    leaderboard returns zero entries while all prior scores survive in the
+    archive. A brand-new run posts and ranks normally afterward.
+
+    IDEMPOTENT: with the active table already empty (a second run, or a
+    re-invocation), it copies nothing, allocates no new season, and returns 0 —
+    a safe no-op. Returns the number of rows archived.
+
+    NOT wired into `init()` or any request path: this runs exactly once, by hand,
+    at the v2 (shields) release. Importing/creating the schema never triggers it.
+    """
+    c = c or conn()
+    now = time.time() if now is None else now
+    active = c.execute("SELECT COUNT(*) AS n FROM leaderboard_entries").fetchone()["n"]
+    if active == 0:
+        return 0  # nothing live to archive -> no-op (idempotent)
+    season = (c.execute("SELECT COALESCE(MAX(season), 0) AS s FROM leaderboard_archive").fetchone()["s"]) + 1
+    c.execute(
+        "INSERT INTO leaderboard_archive"
+        "(user_id, difficulty, locale, best_chain, achieved_at, run_meta, season, archived_at) "
+        "SELECT user_id, difficulty, locale, best_chain, achieved_at, run_meta, ?, ? "
+        "FROM leaderboard_entries",
+        (season, now),
+    )
+    c.execute("DELETE FROM leaderboard_entries")
+    c.commit()
+    return active
 
 
 def _migrate_leaderboard_locale(c) -> None:

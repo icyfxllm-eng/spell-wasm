@@ -250,5 +250,15 @@
   "voiceSpell.spellItOut": "¡Deletréalo letra por letra!",
   "voiceSpell.didntCatch": "No te entendí — inténtalo de nuevo.",
   "voiceSpell.needsMic": "Para deletrear en voz alta, activa el Micrófono y el Reconocimiento de voz para Spell en Ajustes. Siempre puedes escribir.",
-  "voiceSpell.close": "Cerrar"
+  "voiceSpell.close": "Cerrar",
+  "settings.extraAttempts": "Intento extra al fallar",
+  "settings.extraAttemptsSmall": "Un segundo intento cuando fallas una palabra",
+  "attempts.tryAgain": "Casi — inténtalo otra vez",
+  "shield.promptTitle": "¿Usar un escudo?",
+  "shield.promptBody": "Usa un escudo para intentar esta palabra de nuevo y seguir tu racha.",
+  "shield.held": "Escudos disponibles",
+  "shield.accept": "Usar escudo",
+  "shield.decline": "No, gracias",
+  "shield.earned": "¡Escudo ganado!",
+  "shield.used": "Escudo usado"
 }

@@ -250,5 +250,15 @@
   "voiceSpell.spellItOut": "Hãy đánh vần từng chữ cái!",
   "voiceSpell.didntCatch": "Chưa nghe rõ — thử lại nhé.",
   "voiceSpell.needsMic": "Để đánh vần thành tiếng, hãy bật Micrô và Nhận dạng giọng nói cho Spell trong Cài đặt. Bạn luôn có thể gõ.",
-  "voiceSpell.close": "Đóng"
+  "voiceSpell.close": "Đóng",
+  "settings.extraAttempts": "Thêm lượt thử khi sai",
+  "settings.extraAttemptsSmall": "Một lần thử nữa khi bạn sai một từ",
+  "attempts.tryAgain": "Gần đúng — thử lại nào",
+  "shield.promptTitle": "Dùng một khiên?",
+  "shield.promptBody": "Dùng một khiên để thử lại từ này và giữ chuỗi của bạn.",
+  "shield.held": "Khiên đang có",
+  "shield.accept": "Dùng khiên",
+  "shield.decline": "Không, cảm ơn",
+  "shield.earned": "Đã nhận khiên!",
+  "shield.used": "Đã dùng khiên"
 }

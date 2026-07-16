@@ -250,5 +250,15 @@
   "voiceSpell.spellItOut": "请逐个字母拼读！",
   "voiceSpell.didntCatch": "没听清 — 再试一次。",
   "voiceSpell.needsMic": "若要朗读拼写，请在“设置”中为 Spell 开启麦克风和语音识别。你随时可以改用打字。",
-  "voiceSpell.close": "关闭"
+  "voiceSpell.close": "关闭",
+  "settings.extraAttempts": "答错时额外尝试",
+  "settings.extraAttemptsSmall": "拼错单词时再试一次",
+  "attempts.tryAgain": "差一点 — 再试一次",
+  "shield.promptTitle": "使用护盾吗？",
+  "shield.promptBody": "使用一个护盾重试这个单词，保持你的连胜。",
+  "shield.held": "拥有的护盾",
+  "shield.accept": "使用护盾",
+  "shield.decline": "不用了",
+  "shield.earned": "获得护盾！",
+  "shield.used": "已使用护盾"
 }
