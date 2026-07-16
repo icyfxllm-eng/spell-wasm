@@ -8,11 +8,59 @@
 <meta name="theme-color" content="#1c1830" />
 <link rel="apple-touch-icon" href="./icons/icon-192.png" />
 <link rel="icon" href="./icons/icon-192.png" />
-<link rel="preconnect" href="https://fonts.googleapis.com" />
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Instrument+Sans:wght@400;500;600&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet" />
+<script>
+  // i18n boot cloak (FIX 3). The HTML ships English strings; WASM applies the
+  // localized [data-i18n] text AFTER it boots, so a non-English user briefly
+  // sees English flash then reflow ("pop"). If the resolved UI locale is a
+  // non-English one we ship, add `booting` to <html> so the CSS below hides
+  // the translatable chrome (never the orb) until translate_page() removes the
+  // class in one paint. English users match the baked-in strings, so they are
+  // never cloaked — no added blank flash. This mirrors i18n::init's resolution
+  // (persisted choice -> device language), each gated to a shipped locale, and
+  // runs in <head> so the class is set before the first paint. A CSS fallback
+  // (see html.booting rule) reveals after 2.5s if WASM never boots, so the
+  // text can never stay permanently hidden.
+  (function () {
+    var SUPPORTED = {en:1,es:1,fr:1,de:1,pt:1,it:1,nl:1,pl:1,sv:1,nb:1,tr:1,vi:1,ko:1,ja:1,zh:1,th:1,fil:1};
+    var loc = '';
+    try { loc = localStorage.getItem('spellgame.locale') || ''; } catch (e) {}
+    if (!SUPPORTED[loc]) {
+      var dev = ((navigator.language || 'en').split(/[-_]/)[0] || 'en').toLowerCase();
+      loc = SUPPORTED[dev] ? dev : 'en';
+    }
+    if (loc && loc !== 'en') document.documentElement.classList.add('booting');
+  })();
+</script>
 <style>
-  @font-face{ font-family:'OpenDyslexic'; src:url('https://cdn.jsdelivr.net/npm/open-dyslexic@1.0.3/woff/OpenDyslexic-Regular.woff') format('woff'); font-display:swap; font-weight:400; }
+  /* Self-hosted web fonts (FIX 1). These used to load at runtime from Google
+     Fonts (3 cross-origin requests) plus OpenDyslexic from a public CDN. None
+     were in the service-worker precache, so every cold load re-hit those hosts
+     and the text reflowed (FOUT) when the webfont swapped in. The woff2/woff
+     files now live in
+     ./fonts/ and are precached by sw.js — zero external font requests.
+     Subsets (latin / latin-ext / vietnamese) mirror exactly what Google
+     served, so latin-ext (pl/tr/…) and vi users lose no glyphs. Bricolage
+     Grotesque and Instrument Sans are variable fonts, so one file per subset
+     covers every weight the UI uses (font-weight ranges below). */
+  /* Bricolage Grotesque — display face (weights 500/700/800). */
+  @font-face{font-family:'Bricolage Grotesque';font-style:normal;font-weight:500 800;font-stretch:100%;font-display:swap;src:url('./fonts/bricolage-latin.woff2') format('woff2');unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD}
+  @font-face{font-family:'Bricolage Grotesque';font-style:normal;font-weight:500 800;font-stretch:100%;font-display:swap;src:url('./fonts/bricolage-latinext.woff2') format('woff2');unicode-range:U+0100-02BA,U+02BD-02C5,U+02C7-02CC,U+02CE-02D7,U+02DD-02FF,U+0304,U+0308,U+0329,U+1D00-1DBF,U+1E00-1E9F,U+1EF2-1EFF,U+2020,U+20A0-20AB,U+20AD-20C0,U+2113,U+2C60-2C7F,U+A720-A7FF}
+  @font-face{font-family:'Bricolage Grotesque';font-style:normal;font-weight:500 800;font-stretch:100%;font-display:swap;src:url('./fonts/bricolage-viet.woff2') format('woff2');unicode-range:U+0102-0103,U+0110-0111,U+0128-0129,U+0168-0169,U+01A0-01A1,U+01AF-01B0,U+0300-0301,U+0303-0304,U+0308-0309,U+0323,U+0329,U+1EA0-1EF9,U+20AB}
+  /* Instrument Sans — body face (weights 400/500/600). */
+  @font-face{font-family:'Instrument Sans';font-style:normal;font-weight:400 600;font-stretch:100%;font-display:swap;src:url('./fonts/instrument-latin.woff2') format('woff2');unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD}
+  @font-face{font-family:'Instrument Sans';font-style:normal;font-weight:400 600;font-stretch:100%;font-display:swap;src:url('./fonts/instrument-latinext.woff2') format('woff2');unicode-range:U+0100-02BA,U+02BD-02C5,U+02C7-02CC,U+02CE-02D7,U+02DD-02FF,U+0304,U+0308,U+0329,U+1D00-1DBF,U+1E00-1E9F,U+1EF2-1EFF,U+2020,U+20A0-20AB,U+20AD-20C0,U+2113,U+2C60-2C7F,U+A720-A7FF}
+  /* Space Mono — mono face (typed letters, scores). Static font: 400 + 700. */
+  @font-face{font-family:'Space Mono';font-style:normal;font-weight:400;font-display:swap;src:url('./fonts/spacemono-400-latin.woff2') format('woff2');unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD}
+  @font-face{font-family:'Space Mono';font-style:normal;font-weight:400;font-display:swap;src:url('./fonts/spacemono-400-latinext.woff2') format('woff2');unicode-range:U+0100-02BA,U+02BD-02C5,U+02C7-02CC,U+02CE-02D7,U+02DD-02FF,U+0304,U+0308,U+0329,U+1D00-1DBF,U+1E00-1E9F,U+1EF2-1EFF,U+2020,U+20A0-20AB,U+20AD-20C0,U+2113,U+2C60-2C7F,U+A720-A7FF}
+  @font-face{font-family:'Space Mono';font-style:normal;font-weight:400;font-display:swap;src:url('./fonts/spacemono-400-viet.woff2') format('woff2');unicode-range:U+0102-0103,U+0110-0111,U+0128-0129,U+0168-0169,U+01A0-01A1,U+01AF-01B0,U+0300-0301,U+0303-0304,U+0308-0309,U+0323,U+0329,U+1EA0-1EF9,U+20AB}
+  @font-face{font-family:'Space Mono';font-style:normal;font-weight:700;font-display:swap;src:url('./fonts/spacemono-700-latin.woff2') format('woff2');unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD}
+  @font-face{font-family:'Space Mono';font-style:normal;font-weight:700;font-display:swap;src:url('./fonts/spacemono-700-latinext.woff2') format('woff2');unicode-range:U+0100-02BA,U+02BD-02C5,U+02C7-02CC,U+02CE-02D7,U+02DD-02FF,U+0304,U+0308,U+0329,U+1D00-1DBF,U+1E00-1E9F,U+1EF2-1EFF,U+2020,U+20A0-20AB,U+20AD-20C0,U+2113,U+2C60-2C7F,U+A720-A7FF}
+  @font-face{font-family:'Space Mono';font-style:normal;font-weight:700;font-display:swap;src:url('./fonts/spacemono-700-viet.woff2') format('woff2');unicode-range:U+0102-0103,U+0110-0111,U+0128-0129,U+0168-0169,U+01A0-01A1,U+01AF-01B0,U+0300-0301,U+0303-0304,U+0308-0309,U+0323,U+0329,U+1EA0-1EF9,U+20AB}
+  /* OpenDyslexic — readable-mode face only (body.readable). Upstream 1.0.3
+     ships woff only (no woff2). font-display:optional (was swap): it never
+     blocks or reflows the default UI — non-readable users never fetch it, and
+     it's precached so readable-mode users get it with no swap flash. */
+  @font-face{font-family:'OpenDyslexic';src:url('./fonts/opendyslexic-regular.woff') format('woff');font-display:optional;font-weight:400}
   :root{
     --bg:#14111f; --bg2:#1c1830; --panel:#221d36; --panel-2:#1b1730;
     --edge:#322a4f; --ink:#efeaf7; --muted:#968cb4; --muted-2:#6f6690;
@@ -65,6 +113,18 @@
     -webkit-font-smoothing:antialiased;
     transition:background .25s ease;
   }
+  /* i18n boot cloak (FIX 3). Only applied when the head script added `booting`
+     (i.e. a non-English shipped locale). Hides the translatable chrome — the
+     text that translate_page() overwrites — until it runs and removes the
+     class, so the localized strings appear in one paint instead of English-
+     then-reflow. visibility:hidden keeps layout, never touches the orb, and
+     leaves interactivity (the orb boot already gates that) alone. The
+     animation is a pure-CSS safety net: if WASM never boots, each element
+     reveals itself after 2.5s so text is never permanently hidden. */
+  html.booting [data-i18n],
+  html.booting [data-i18n-html],
+  html.booting #brandTag{ visibility:hidden; animation:i18nCloakReveal 0.01s linear 2500ms forwards }
+  @keyframes i18nCloakReveal{ to{ visibility:visible } }
   body.readable{ font-family:'OpenDyslexic','Instrument Sans',system-ui,sans-serif; letter-spacing:.01em; }
   body.readable .ltr{ letter-spacing:.05em; }
   body.readable .foot{ font-size:13px; }
@@ -206,7 +266,11 @@
   .orb-wrap.timed .timer-badge{opacity:1}
   .timer-badge.low{color:var(--coral);border-color:var(--coral)}
   .ring{position:absolute;inset:0;border-radius:50%;border:1.5px solid var(--amber);opacity:0}
-  .orb-wrap.speaking .ring{animation:emit 1.5s ease-out infinite}
+  /* will-change only while actually emitting (FIX 4): promotes each pulsing
+     ring to its own compositor layer so the transform/opacity animation
+     composites instead of repainting siblings. Scoped to .speaking so idle
+     rings don't hold extra layers. */
+  .orb-wrap.speaking .ring{animation:emit 1.5s ease-out infinite;will-change:transform,opacity}
   .orb-wrap.speaking .ring:nth-child(4){animation-delay:.5s}
   .orb-wrap.speaking .ring:nth-child(5){animation-delay:1s}
   @keyframes emit{0%{transform:scale(.62);opacity:.7}100%{transform:scale(1.18);opacity:0}}
@@ -220,7 +284,14 @@
       0 0 68px 12px color-mix(in srgb, var(--orb-color) 50%, transparent),
       inset 0 -16px 30px color-mix(in srgb, var(--orb-color) 60%, black),
       inset 0 10px 22px color-mix(in srgb, white 34%, transparent);
-    display:grid;place-items:center;position:relative;animation:breathe 4.5s ease-in-out infinite;transition:background .35s ease, box-shadow .35s ease}
+    display:grid;place-items:center;position:relative;animation:breathe 4.5s ease-in-out infinite;transition:background .35s ease, box-shadow .35s ease;
+    /* will-change:transform (FIX 4): the orb runs breathe/pulse (transform)
+       forever AND carries a big 68px-blurred glow. Without a dedicated
+       compositor layer, some mobile browsers repaint that blurred shadow every
+       animation frame — the main cause of the orb-glow stutter on low-end
+       phones. Promoting it rasterizes the glow once and only recomposites the
+       transform. Visuals at rest are unchanged. */
+    will-change:transform}
   /* glassy sheen reflection over the top-left */
   .orb::before{content:"";position:absolute;top:8%;left:15%;width:50%;height:38%;border-radius:50%;background:radial-gradient(circle at 50% 45%, rgba(255,255,255,.72), rgba(255,255,255,0) 68%);filter:blur(1px);pointer-events:none}
   .orb-glyph{position:relative;z-index:1}
@@ -576,6 +647,14 @@
   @media (prefers-reduced-motion: reduce){
     /* D8: motion is garnish — kill shake/pop; color state (success/warn/streak) stays perceivable. */
     .orb,.orb-wrap.speaking .orb,.orb-wrap.speaking .ring,.sfill,.ltr.pop,.caret,.orb-wrap.bad .orb,.spellbox.is-wrong{animation:none!important;transition:none!important}
+    /* FIX 4: also drop the non-essential repaint-y transitions (animated
+       box-shadow / filter) and release the compositor-layer hints, so a
+       reduced-motion user gets zero incidental motion or extra layers. Static
+       color/border state (focus ring, active turn, unlocked badge) still shows
+       — it just snaps instead of easing. The i18n boot cloak (FIX 3) is left
+       ALONE on purpose: its reveal is a functional safety net, not motion. */
+    .orb,.orb-wrap.speaking .ring{will-change:auto!important}
+    .spellbox,.vs-side,.btn,.ach-badge .ic{transition:none!important}
   }
 </style>
 </head>
@@ -1133,19 +1212,22 @@
   <script src="./native-language-kit.js"></script>
   <script type="module">
     import init from './pkg/spell_wasm.js?v=DEV';
-    // The compiled app (~1.4MB of WASM) has to finish downloading and
+    // The compiled app (~2.3MB of WASM) has to finish downloading and
     // initializing before the orb does anything. On mobile this has been
     // observed failing mid-download (a flaky connection canceling the
-    // transfer, confirmed server-side). Two defenses against that:
-    // 1. Fetch the raw bytes ourselves and hand init() a plain ArrayBuffer
-    //    instead of letting it use WebAssembly.instantiateStreaming — some
-    //    mobile browsers have had bugs specifically in the streaming-
-    //    compile path; plain fetch+arrayBuffer+instantiate is slower to
-    //    start but much more universally reliable.
+    // transfer, confirmed server-side). Defenses against that:
+    // 1. Streaming compile FIRST (FIX 2): WebAssembly.instantiateStreaming
+    //    compiles while the bytes are still downloading, shaving a few hundred
+    //    ms off cold boot. It needs the server to send Content-Type
+    //    application/wasm (Caddy sets it for /pkg/*.wasm). Some mobile browsers
+    //    have historically had bugs in the streaming-compile path, so on ANY
+    //    failure we fall straight back to the old, universally-reliable path:
+    //    fetch the raw bytes ourselves and hand init() a plain ArrayBuffer.
+    //    Reliability wins — the fallback is the exact code that shipped before.
     // 2. init() only reaches its "already loaded" short-circuit after a
-    //    full success, so a fresh call after a failure safely restarts the
-    //    whole fetch from scratch — retry a few times automatically so a
-    //    transient blip fixes itself without the player noticing.
+    //    full success (streaming failures throw before that), so a fresh call
+    //    after a failure safely restarts from scratch — retry a few times
+    //    automatically so a transient blip fixes itself unnoticed.
     const MAX_ATTEMPTS = 4;
     const WASM_URL = new URL('./pkg/spell_wasm_bg.wasm?v=DEV', import.meta.url);
 
@@ -1154,13 +1236,30 @@
       if (glyph) glyph.innerHTML = html;
     }
 
+    // One boot attempt: try streaming, else the reliable ArrayBuffer path.
+    // Passing init() a Promise<Response> makes wasm-bindgen use
+    // instantiateStreaming; passing it an ArrayBuffer uses plain instantiate.
+    async function attemptBoot() {
+      if (typeof WebAssembly.instantiateStreaming === 'function') {
+        try {
+          await init({ module_or_path: fetch(WASM_URL) });
+          return;
+        } catch (streamErr) {
+          // Streaming compile failed (mobile browser quirk, bad MIME, etc).
+          // Fall through to the historically-reliable full-buffer path.
+          console.warn('Spell: streaming compile failed, using ArrayBuffer fallback:', streamErr);
+        }
+      }
+      const res = await fetch(WASM_URL);
+      if (!res.ok) throw new Error(`HTTP ${res.status} fetching wasm`);
+      const bytes = await res.arrayBuffer();
+      await init({ module_or_path: bytes });
+    }
+
     async function bootWithRetry() {
       for (let attempt = 1; attempt <= MAX_ATTEMPTS; attempt++) {
         try {
-          const res = await fetch(WASM_URL);
-          if (!res.ok) throw new Error(`HTTP ${res.status} fetching wasm`);
-          const bytes = await res.arrayBuffer();
-          await init({ module_or_path: bytes });
+          await attemptBoot();
           setGlyph('tap to<br/>hear a word');
           return;
         } catch (err) {

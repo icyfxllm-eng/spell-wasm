@@ -17,7 +17,7 @@
 // deploys). Falling back to cache only when the network request itself
 // fails means an actual offline visit still works, but anyone with a live
 // connection always gets the current deployed version.
-const CACHE_VERSION = "v40";
+const CACHE_VERSION = "v41";
 const CACHE_NAME = `spell-shell-${CACHE_VERSION}`;
 
 const STATIC_ASSETS = [
@@ -30,6 +30,22 @@ const STATIC_ASSETS = [
   "./icons/icon-192.png",
   "./icons/icon-512.png",
   "./icons/icon-512-maskable.png",
+  // Self-hosted web fonts (FIX 1). Precached so a cold/offline load renders in
+  // the real UI fonts with no external request and no FOUT reflow. Bricolage +
+  // Instrument are variable (one file/subset); Space Mono is static (400/700);
+  // OpenDyslexic is the readable-mode face (woff — upstream ships no woff2).
+  "./fonts/bricolage-latin.woff2",
+  "./fonts/bricolage-latinext.woff2",
+  "./fonts/bricolage-viet.woff2",
+  "./fonts/instrument-latin.woff2",
+  "./fonts/instrument-latinext.woff2",
+  "./fonts/spacemono-400-latin.woff2",
+  "./fonts/spacemono-400-latinext.woff2",
+  "./fonts/spacemono-400-viet.woff2",
+  "./fonts/spacemono-700-latin.woff2",
+  "./fonts/spacemono-700-latinext.woff2",
+  "./fonts/spacemono-700-viet.woff2",
+  "./fonts/opendyslexic-regular.woff",
 ];
 
 self.addEventListener("install", (event) => {

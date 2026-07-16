@@ -153,6 +153,12 @@ pub fn translate_page() {
         // data-lang drives the per-language accent tokens (F3); only ja/zh have a
         // theme block, every other language falls through to the default palette.
         let _ = de.set_attribute("data-lang", &current());
+        // Lift the i18n boot cloak (FIX 3): the head script hid the translatable
+        // chrome on <html class="booting"> for non-English locales so the English
+        // static strings never flash before this translation lands. Now that the
+        // page is translated, reveal it in one paint. Idempotent (a no-op on
+        // later language-switch calls and for English, which was never cloaked).
+        let _ = de.class_list().remove_1("booting");
     }
 }
 
