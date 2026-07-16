@@ -1,0 +1,568 @@
+{
+  "schemaVersion": "0.1-draft",
+  "language": "zh",
+  "languageName": "Chinese (pinyin)",
+  "kind": "script-path",
+  "scope": "writing-system-only",
+  "linear": true,
+  "wordSource": "assets/words/zh (audited; referenced by text+tier, never duplicated)",
+  "units": [
+    {
+      "id": "zh-u1-initials",
+      "title": "Initials",
+      "lessons": [
+        {
+          "id": "zh-u1-l1",
+          "title": "Initials",
+          "prerequisites": [],
+          "steps": [
+            {
+              "type": "element",
+              "element": "b",
+              "name": "b",
+              "strings": [
+                "Initial B, an unaspirated 'b'. Pinyin spells Mandarin sounds with Latin letters."
+              ]
+            },
+            {
+              "type": "element",
+              "element": "p",
+              "name": "p",
+              "strings": [
+                "Initial P, aspirated 'p' (a puff of air)."
+              ]
+            },
+            {
+              "type": "element",
+              "element": "m",
+              "name": "m",
+              "strings": [
+                "Initial M."
+              ]
+            },
+            {
+              "type": "element",
+              "element": "f",
+              "name": "f",
+              "strings": [
+                "Initial F."
+              ]
+            },
+            {
+              "type": "element",
+              "element": "d",
+              "name": "d",
+              "strings": [
+                "Initial D, unaspirated."
+              ]
+            },
+            {
+              "type": "element",
+              "element": "t",
+              "name": "t",
+              "strings": [
+                "Initial T, aspirated."
+              ]
+            },
+            {
+              "type": "element",
+              "element": "n",
+              "name": "n",
+              "strings": [
+                "Initial N."
+              ]
+            },
+            {
+              "type": "element",
+              "element": "l",
+              "name": "l",
+              "strings": [
+                "Initial L."
+              ]
+            },
+            {
+              "type": "element",
+              "element": "g",
+              "name": "g",
+              "strings": [
+                "Initial G, unaspirated (a hard g)."
+              ]
+            },
+            {
+              "type": "element",
+              "element": "k",
+              "name": "k",
+              "strings": [
+                "Initial K, aspirated."
+              ]
+            },
+            {
+              "type": "element",
+              "element": "h",
+              "name": "h",
+              "strings": [
+                "Initial H, raspy (like ch in Scottish 'loch')."
+              ]
+            },
+            {
+              "type": "element",
+              "element": "j",
+              "name": "j",
+              "strings": [
+                "Initial J, like 'j' in 'jeep', tongue forward."
+              ]
+            },
+            {
+              "type": "element",
+              "element": "q",
+              "name": "q",
+              "strings": [
+                "Initial Q, like 'ch' in 'cheap', aspirated, tongue forward."
+              ]
+            },
+            {
+              "type": "element",
+              "element": "x",
+              "name": "x",
+              "strings": [
+                "Initial X, like a soft 'sh', tongue forward."
+              ]
+            },
+            {
+              "type": "element",
+              "element": "zh",
+              "name": "zh",
+              "strings": [
+                "Initial ZH, 'j' with the tongue curled back."
+              ]
+            },
+            {
+              "type": "element",
+              "element": "ch",
+              "name": "ch",
+              "strings": [
+                "Initial CH, 'ch' with the tongue curled back, aspirated."
+              ]
+            },
+            {
+              "type": "element",
+              "element": "sh",
+              "name": "sh",
+              "strings": [
+                "Initial SH, 'sh' with the tongue curled back."
+              ]
+            },
+            {
+              "type": "element",
+              "element": "r",
+              "name": "r",
+              "strings": [
+                "Initial R, an 'r' with the tongue curled back."
+              ]
+            },
+            {
+              "type": "element",
+              "element": "z",
+              "name": "z",
+              "strings": [
+                "Initial Z, like 'ds' in 'kids'."
+              ]
+            },
+            {
+              "type": "element",
+              "element": "c",
+              "name": "c",
+              "strings": [
+                "Initial C, like 'ts' in 'cats', aspirated."
+              ]
+            },
+            {
+              "type": "element",
+              "element": "s",
+              "name": "s",
+              "strings": [
+                "Initial S."
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "zh-u2-finals",
+      "title": "Finals",
+      "lessons": [
+        {
+          "id": "zh-u2-l1",
+          "title": "Simple finals",
+          "prerequisites": [
+            "zh-u1-l1"
+          ],
+          "steps": [
+            {
+              "type": "element",
+              "element": "a",
+              "name": "a",
+              "strings": [
+                "Final A, open 'ah'. A final is the vowel part of a syllable."
+              ]
+            },
+            {
+              "type": "element",
+              "element": "o",
+              "name": "o",
+              "strings": [
+                "Final O."
+              ]
+            },
+            {
+              "type": "element",
+              "element": "e",
+              "name": "e",
+              "strings": [
+                "Final E, an unrounded 'uh'."
+              ]
+            },
+            {
+              "type": "element",
+              "element": "i",
+              "name": "i",
+              "strings": [
+                "Final I, 'ee'; after z/c/s and zh/ch/sh/r it becomes a buzz, not 'ee'."
+              ]
+            },
+            {
+              "type": "element",
+              "element": "u",
+              "name": "u",
+              "strings": [
+                "Final U, 'oo'."
+              ]
+            },
+            {
+              "type": "element",
+              "element": "ü",
+              "name": "ü",
+              "strings": [
+                "Final Ü, 'ee' with rounded lips. Written plain 'u' after j, q, x, y."
+              ]
+            }
+          ]
+        },
+        {
+          "id": "zh-u2-l2",
+          "title": "Compound finals",
+          "prerequisites": [
+            "zh-u2-l1"
+          ],
+          "steps": [
+            {
+              "type": "element",
+              "element": "ai",
+              "name": "ai",
+              "strings": [
+                "Final AI, like 'eye'."
+              ]
+            },
+            {
+              "type": "element",
+              "element": "ei",
+              "name": "ei",
+              "strings": [
+                "Final EI, like 'ay'."
+              ]
+            },
+            {
+              "type": "element",
+              "element": "ao",
+              "name": "ao",
+              "strings": [
+                "Final AO, like 'ow'."
+              ]
+            },
+            {
+              "type": "element",
+              "element": "ou",
+              "name": "ou",
+              "strings": [
+                "Final OU, like 'oh'."
+              ]
+            },
+            {
+              "type": "element",
+              "element": "an",
+              "name": "an",
+              "strings": [
+                "Final AN."
+              ]
+            },
+            {
+              "type": "element",
+              "element": "en",
+              "name": "en",
+              "strings": [
+                "Final EN."
+              ]
+            },
+            {
+              "type": "element",
+              "element": "ang",
+              "name": "ang",
+              "strings": [
+                "Final ANG."
+              ]
+            },
+            {
+              "type": "element",
+              "element": "eng",
+              "name": "eng",
+              "strings": [
+                "Final ENG."
+              ]
+            },
+            {
+              "type": "element",
+              "element": "ong",
+              "name": "ong",
+              "strings": [
+                "Final ONG."
+              ]
+            },
+            {
+              "type": "element",
+              "element": "er",
+              "name": "er",
+              "strings": [
+                "Final ER, an 'r'-coloured vowel."
+              ]
+            },
+            {
+              "type": "element",
+              "element": "ia",
+              "name": "ia",
+              "strings": [
+                "Final IA."
+              ]
+            },
+            {
+              "type": "element",
+              "element": "ie",
+              "name": "ie",
+              "strings": [
+                "Final IE, like 'yeh'."
+              ]
+            },
+            {
+              "type": "element",
+              "element": "iao",
+              "name": "iao",
+              "strings": [
+                "Final IAO."
+              ]
+            },
+            {
+              "type": "element",
+              "element": "iu",
+              "name": "iu",
+              "strings": [
+                "Final IU, spelled from i+ou."
+              ]
+            },
+            {
+              "type": "element",
+              "element": "ian",
+              "name": "ian",
+              "strings": [
+                "Final IAN, like 'yen'."
+              ]
+            },
+            {
+              "type": "element",
+              "element": "in",
+              "name": "in",
+              "strings": [
+                "Final IN."
+              ]
+            },
+            {
+              "type": "element",
+              "element": "iang",
+              "name": "iang",
+              "strings": [
+                "Final IANG."
+              ]
+            },
+            {
+              "type": "element",
+              "element": "ing",
+              "name": "ing",
+              "strings": [
+                "Final ING."
+              ]
+            },
+            {
+              "type": "element",
+              "element": "iong",
+              "name": "iong",
+              "strings": [
+                "Final IONG."
+              ]
+            },
+            {
+              "type": "element",
+              "element": "ua",
+              "name": "ua",
+              "strings": [
+                "Final UA."
+              ]
+            },
+            {
+              "type": "element",
+              "element": "uo",
+              "name": "uo",
+              "strings": [
+                "Final UO."
+              ]
+            },
+            {
+              "type": "element",
+              "element": "uai",
+              "name": "uai",
+              "strings": [
+                "Final UAI, like 'why'."
+              ]
+            },
+            {
+              "type": "element",
+              "element": "ui",
+              "name": "ui",
+              "strings": [
+                "Final UI, spelled from u+ei."
+              ]
+            },
+            {
+              "type": "element",
+              "element": "uan",
+              "name": "uan",
+              "strings": [
+                "Final UAN."
+              ]
+            },
+            {
+              "type": "element",
+              "element": "un",
+              "name": "un",
+              "strings": [
+                "Final UN, spelled from u+en."
+              ]
+            },
+            {
+              "type": "element",
+              "element": "uang",
+              "name": "uang",
+              "strings": [
+                "Final UANG."
+              ]
+            },
+            {
+              "type": "element",
+              "element": "ueng",
+              "name": "ueng",
+              "strings": [
+                "Final UENG."
+              ]
+            },
+            {
+              "type": "element",
+              "element": "üe",
+              "name": "üe",
+              "strings": [
+                "Final ÜE."
+              ]
+            },
+            {
+              "type": "element",
+              "element": "üan",
+              "name": "üan",
+              "strings": [
+                "Final ÜAN."
+              ]
+            },
+            {
+              "type": "element",
+              "element": "ün",
+              "name": "ün",
+              "strings": [
+                "Final ÜN."
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "zh-u3-tones",
+      "title": "Tone marking",
+      "lessons": [
+        {
+          "id": "zh-u3-l1",
+          "title": "The four tones plus neutral",
+          "prerequisites": [
+            "zh-u2-l2"
+          ],
+          "steps": [
+            {
+              "type": "element",
+              "element": "ā",
+              "name": "tone 1",
+              "strings": [
+                "Tone 1: a high, level pitch.",
+                "Tones are marked over the main vowel; there are 4 tones plus a neutral one."
+              ]
+            },
+            {
+              "type": "element",
+              "element": "á",
+              "name": "tone 2",
+              "strings": [
+                "Tone 2: a rising pitch."
+              ]
+            },
+            {
+              "type": "element",
+              "element": "ǎ",
+              "name": "tone 3",
+              "strings": [
+                "Tone 3: dips low, then rises."
+              ]
+            },
+            {
+              "type": "element",
+              "element": "à",
+              "name": "tone 4",
+              "strings": [
+                "Tone 4: a sharp falling pitch."
+              ]
+            },
+            {
+              "type": "element",
+              "element": "a",
+              "name": "neutral tone",
+              "strings": [
+                "Neutral tone: light and short, written with no mark."
+              ]
+            },
+            {
+              "type": "element",
+              "element": "◌",
+              "name": "tone placement",
+              "strings": [
+                "Put the mark on a; else o; else e. In 'iu' and 'ui' it goes on the last vowel."
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

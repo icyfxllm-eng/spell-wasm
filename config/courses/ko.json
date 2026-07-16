@@ -1,0 +1,893 @@
+{
+  "schemaVersion": "0.1-draft",
+  "language": "ko",
+  "languageName": "Korean",
+  "kind": "script-path",
+  "scope": "writing-system-only",
+  "linear": true,
+  "wordSource": "assets/words/ko (audited; referenced by text+tier, never duplicated)",
+  "units": [
+    {
+      "id": "ko-u1-cons",
+      "title": "Basic consonants (jamo)",
+      "lessons": [
+        {
+          "id": "ko-u1-l1",
+          "title": "Basic consonants",
+          "prerequisites": [],
+          "steps": [
+            {
+              "type": "element",
+              "element": "ㄱ",
+              "name": "giyeok",
+              "strings": [
+                "Basic consonant, sound g/k. Hangul letters stack into square syllable blocks."
+              ]
+            },
+            {
+              "type": "element",
+              "element": "ㄴ",
+              "name": "nieun",
+              "strings": [
+                "Basic consonant, sound n."
+              ]
+            },
+            {
+              "type": "element",
+              "element": "ㄷ",
+              "name": "digeut",
+              "strings": [
+                "Basic consonant, sound d/t."
+              ]
+            },
+            {
+              "type": "element",
+              "element": "ㄹ",
+              "name": "rieul",
+              "strings": [
+                "Basic consonant, a sound between r and l."
+              ]
+            },
+            {
+              "type": "element",
+              "element": "ㅁ",
+              "name": "mieum",
+              "strings": [
+                "Basic consonant, sound m."
+              ]
+            },
+            {
+              "type": "element",
+              "element": "ㅂ",
+              "name": "bieup",
+              "strings": [
+                "Basic consonant, sound b/p."
+              ]
+            },
+            {
+              "type": "element",
+              "element": "ㅅ",
+              "name": "siot",
+              "strings": [
+                "Basic consonant, sound s."
+              ]
+            },
+            {
+              "type": "element",
+              "element": "ㅇ",
+              "name": "ieung",
+              "strings": [
+                "Silent at the start of a block (a placeholder); sounds 'ng' at the end of a block."
+              ]
+            },
+            {
+              "type": "element",
+              "element": "ㅈ",
+              "name": "jieut",
+              "strings": [
+                "Basic consonant, sound j."
+              ]
+            },
+            {
+              "type": "element",
+              "element": "ㅎ",
+              "name": "hieut",
+              "strings": [
+                "Basic consonant, sound h."
+              ]
+            },
+            {
+              "type": "element",
+              "element": "ㅋ",
+              "name": "kieuk",
+              "strings": [
+                "Aspirated consonant, sound k with a puff of air."
+              ]
+            },
+            {
+              "type": "element",
+              "element": "ㅌ",
+              "name": "tieut",
+              "strings": [
+                "Aspirated consonant, sound t with a puff of air."
+              ]
+            },
+            {
+              "type": "element",
+              "element": "ㅍ",
+              "name": "pieup",
+              "strings": [
+                "Aspirated consonant, sound p with a puff of air."
+              ]
+            },
+            {
+              "type": "element",
+              "element": "ㅊ",
+              "name": "chieut",
+              "strings": [
+                "Aspirated consonant, sound ch with a puff of air."
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ko-u2-vowels",
+      "title": "Basic vowels (jamo)",
+      "lessons": [
+        {
+          "id": "ko-u2-l1",
+          "title": "Basic vowels",
+          "prerequisites": [
+            "ko-u1-l1"
+          ],
+          "steps": [
+            {
+              "type": "element",
+              "element": "ㅏ",
+              "name": "a",
+              "strings": [
+                "Vowel 'a'. Vertical vowels are written to the RIGHT of the first consonant."
+              ]
+            },
+            {
+              "type": "element",
+              "element": "ㅓ",
+              "name": "eo",
+              "strings": [
+                "Vowel 'eo' (like u in 'up'). Written to the right."
+              ]
+            },
+            {
+              "type": "element",
+              "element": "ㅗ",
+              "name": "o",
+              "strings": [
+                "Vowel 'o'. Horizontal vowels are written BELOW the first consonant."
+              ]
+            },
+            {
+              "type": "element",
+              "element": "ㅜ",
+              "name": "u",
+              "strings": [
+                "Vowel 'u'. Written below."
+              ]
+            },
+            {
+              "type": "element",
+              "element": "ㅡ",
+              "name": "eu",
+              "strings": [
+                "Vowel 'eu' (unrounded). Written below."
+              ]
+            },
+            {
+              "type": "element",
+              "element": "ㅣ",
+              "name": "i",
+              "strings": [
+                "Vowel 'i'. Written to the right."
+              ]
+            },
+            {
+              "type": "element",
+              "element": "ㅑ",
+              "name": "ya",
+              "strings": [
+                "Vowel 'ya'. Written to the right."
+              ]
+            },
+            {
+              "type": "element",
+              "element": "ㅕ",
+              "name": "yeo",
+              "strings": [
+                "Vowel 'yeo'. Written to the right."
+              ]
+            },
+            {
+              "type": "element",
+              "element": "ㅛ",
+              "name": "yo",
+              "strings": [
+                "Vowel 'yo'. Written below."
+              ]
+            },
+            {
+              "type": "element",
+              "element": "ㅠ",
+              "name": "yu",
+              "strings": [
+                "Vowel 'yu'. Written below."
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ko-u3-blocks",
+      "title": "Syllable-block composition",
+      "lessons": [
+        {
+          "id": "ko-u3-l1",
+          "title": "Building blocks and the batchim",
+          "prerequisites": [
+            "ko-u2-l1"
+          ],
+          "steps": [
+            {
+              "type": "element",
+              "element": "받침",
+              "name": "batchim (final slot)",
+              "strings": [
+                "A consonant written at the BOTTOM of a block is a 'batchim' - the final sound.",
+                "Read a block top-to-bottom, left-to-right: first consonant, vowel, then batchim."
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ko-u4-tense",
+      "title": "Tense and complex jamo",
+      "lessons": [
+        {
+          "id": "ko-u4-l1",
+          "title": "Tense consonants",
+          "prerequisites": [
+            "ko-u3-l1"
+          ],
+          "steps": [
+            {
+              "type": "element",
+              "element": "ㄲ",
+              "name": "ssang-giyeok",
+              "strings": [
+                "Tense consonant: a tighter, harder ㄱ. Written as two ㄱ side by side."
+              ]
+            },
+            {
+              "type": "element",
+              "element": "ㄸ",
+              "name": "ssang-digeut",
+              "strings": [
+                "Tense consonant: a tighter ㄷ."
+              ]
+            },
+            {
+              "type": "element",
+              "element": "ㅃ",
+              "name": "ssang-bieup",
+              "strings": [
+                "Tense consonant: a tighter ㅂ."
+              ]
+            },
+            {
+              "type": "element",
+              "element": "ㅆ",
+              "name": "ssang-siot",
+              "strings": [
+                "Tense consonant: a tighter ㅅ."
+              ]
+            },
+            {
+              "type": "element",
+              "element": "ㅉ",
+              "name": "ssang-jieut",
+              "strings": [
+                "Tense consonant: a tighter ㅈ."
+              ]
+            }
+          ]
+        },
+        {
+          "id": "ko-u4-l2",
+          "title": "Complex vowels",
+          "prerequisites": [
+            "ko-u4-l1"
+          ],
+          "steps": [
+            {
+              "type": "element",
+              "element": "ㅐ",
+              "name": "ae",
+              "strings": [
+                "Vowel 'ae' (like e in 'bed'). A combination vowel."
+              ]
+            },
+            {
+              "type": "element",
+              "element": "ㅔ",
+              "name": "e",
+              "strings": [
+                "Vowel 'e'. Very close to ㅐ for most speakers."
+              ]
+            },
+            {
+              "type": "element",
+              "element": "ㅚ",
+              "name": "oe",
+              "strings": [
+                "Vowel 'oe' / 'we'. A combination vowel."
+              ]
+            },
+            {
+              "type": "element",
+              "element": "ㅟ",
+              "name": "wi",
+              "strings": [
+                "Vowel 'wi'. A combination vowel."
+              ]
+            },
+            {
+              "type": "element",
+              "element": "ㅘ",
+              "name": "wa",
+              "strings": [
+                "Vowel 'wa'. ㅗ plus ㅏ combined."
+              ]
+            },
+            {
+              "type": "element",
+              "element": "ㅝ",
+              "name": "wo",
+              "strings": [
+                "Vowel 'wo'. ㅜ plus ㅓ combined."
+              ]
+            },
+            {
+              "type": "element",
+              "element": "ㅢ",
+              "name": "ui",
+              "strings": [
+                "Vowel 'ui'. ㅡ plus ㅣ combined."
+              ]
+            },
+            {
+              "type": "element",
+              "element": "ㅒ",
+              "name": "yae",
+              "strings": [
+                "Vowel 'yae'. A combination vowel."
+              ]
+            },
+            {
+              "type": "element",
+              "element": "ㅖ",
+              "name": "ye",
+              "strings": [
+                "Vowel 'ye'. A combination vowel."
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ko-u5-first",
+      "title": "First words",
+      "lessons": [
+        {
+          "id": "ko-u5-l1",
+          "title": "First 20 words",
+          "prerequisites": [
+            "ko-u4-l2"
+          ],
+          "steps": [
+            {
+              "type": "spell",
+              "word": "소",
+              "tier": "easy"
+            },
+            {
+              "type": "spell",
+              "word": "코",
+              "tier": "easy"
+            },
+            {
+              "type": "spell",
+              "word": "비",
+              "tier": "easy"
+            },
+            {
+              "type": "spell",
+              "word": "나무",
+              "tier": "easy"
+            },
+            {
+              "type": "spell",
+              "word": "다리",
+              "tier": "easy"
+            },
+            {
+              "type": "spell",
+              "word": "도시",
+              "tier": "easy"
+            },
+            {
+              "type": "spell",
+              "word": "모자",
+              "tier": "easy"
+            },
+            {
+              "type": "spell",
+              "word": "시계",
+              "tier": "easy"
+            },
+            {
+              "type": "spell",
+              "word": "나라",
+              "tier": "easy"
+            },
+            {
+              "type": "spell",
+              "word": "거리",
+              "tier": "easy"
+            },
+            {
+              "type": "spell",
+              "word": "머리",
+              "tier": "easy"
+            },
+            {
+              "type": "spell",
+              "word": "도마",
+              "tier": "easy"
+            },
+            {
+              "type": "spell",
+              "word": "우유",
+              "tier": "easy"
+            },
+            {
+              "type": "spell",
+              "word": "아기",
+              "tier": "easy"
+            },
+            {
+              "type": "spell",
+              "word": "지도",
+              "tier": "easy"
+            },
+            {
+              "type": "spell",
+              "word": "사과",
+              "tier": "easy"
+            },
+            {
+              "type": "spell",
+              "word": "이마",
+              "tier": "easy"
+            },
+            {
+              "type": "spell",
+              "word": "허리",
+              "tier": "easy"
+            },
+            {
+              "type": "spell",
+              "word": "수저",
+              "tier": "easy"
+            },
+            {
+              "type": "spell",
+              "word": "의자",
+              "tier": "easy"
+            }
+          ]
+        },
+        {
+          "id": "ko-u5-l2",
+          "title": "More easy words",
+          "prerequisites": [
+            "ko-u5-l1"
+          ],
+          "steps": [
+            {
+              "type": "spell",
+              "word": "귀",
+              "tier": "easy"
+            },
+            {
+              "type": "spell",
+              "word": "감",
+              "tier": "easy"
+            },
+            {
+              "type": "spell",
+              "word": "강",
+              "tier": "easy"
+            },
+            {
+              "type": "spell",
+              "word": "국",
+              "tier": "easy"
+            },
+            {
+              "type": "spell",
+              "word": "눈",
+              "tier": "easy"
+            },
+            {
+              "type": "spell",
+              "word": "달",
+              "tier": "easy"
+            },
+            {
+              "type": "spell",
+              "word": "말",
+              "tier": "easy"
+            },
+            {
+              "type": "spell",
+              "word": "목",
+              "tier": "easy"
+            },
+            {
+              "type": "spell",
+              "word": "문",
+              "tier": "easy"
+            },
+            {
+              "type": "spell",
+              "word": "물",
+              "tier": "easy"
+            },
+            {
+              "type": "spell",
+              "word": "밤",
+              "tier": "easy"
+            },
+            {
+              "type": "spell",
+              "word": "밥",
+              "tier": "easy"
+            },
+            {
+              "type": "spell",
+              "word": "방",
+              "tier": "easy"
+            },
+            {
+              "type": "spell",
+              "word": "별",
+              "tier": "easy"
+            },
+            {
+              "type": "spell",
+              "word": "봄",
+              "tier": "easy"
+            },
+            {
+              "type": "spell",
+              "word": "불",
+              "tier": "easy"
+            },
+            {
+              "type": "spell",
+              "word": "등",
+              "tier": "easy"
+            },
+            {
+              "type": "spell",
+              "word": "꿈",
+              "tier": "easy"
+            },
+            {
+              "type": "spell",
+              "word": "낮",
+              "tier": "easy"
+            },
+            {
+              "type": "spell",
+              "word": "벽",
+              "tier": "easy"
+            },
+            {
+              "type": "spell",
+              "word": "볼",
+              "tier": "easy"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ko-u6-progress",
+      "title": "Difficulty progression",
+      "lessons": [
+        {
+          "id": "ko-u6-l1",
+          "title": "Medium words",
+          "prerequisites": [
+            "ko-u5-l2"
+          ],
+          "steps": [
+            {
+              "type": "spell",
+              "word": "산",
+              "tier": "medium"
+            },
+            {
+              "type": "spell",
+              "word": "손",
+              "tier": "medium"
+            },
+            {
+              "type": "spell",
+              "word": "집",
+              "tier": "medium"
+            },
+            {
+              "type": "spell",
+              "word": "칼",
+              "tier": "medium"
+            },
+            {
+              "type": "spell",
+              "word": "컵",
+              "tier": "medium"
+            },
+            {
+              "type": "spell",
+              "word": "콩",
+              "tier": "medium"
+            },
+            {
+              "type": "spell",
+              "word": "힘",
+              "tier": "medium"
+            },
+            {
+              "type": "spell",
+              "word": "개",
+              "tier": "medium"
+            },
+            {
+              "type": "spell",
+              "word": "배",
+              "tier": "medium"
+            },
+            {
+              "type": "spell",
+              "word": "새",
+              "tier": "medium"
+            },
+            {
+              "type": "spell",
+              "word": "해",
+              "tier": "medium"
+            },
+            {
+              "type": "spell",
+              "word": "가방",
+              "tier": "medium"
+            },
+            {
+              "type": "spell",
+              "word": "가족",
+              "tier": "medium"
+            },
+            {
+              "type": "spell",
+              "word": "겨울",
+              "tier": "medium"
+            },
+            {
+              "type": "spell",
+              "word": "교실",
+              "tier": "medium"
+            },
+            {
+              "type": "spell",
+              "word": "구름",
+              "tier": "medium"
+            },
+            {
+              "type": "spell",
+              "word": "날씨",
+              "tier": "medium"
+            },
+            {
+              "type": "spell",
+              "word": "마을",
+              "tier": "medium"
+            },
+            {
+              "type": "spell",
+              "word": "시간",
+              "tier": "medium"
+            },
+            {
+              "type": "spell",
+              "word": "시장",
+              "tier": "medium"
+            }
+          ]
+        },
+        {
+          "id": "ko-u6-l2",
+          "title": "Hard words",
+          "prerequisites": [
+            "ko-u6-l1"
+          ],
+          "steps": [
+            {
+              "type": "spell",
+              "word": "우산",
+              "tier": "hard"
+            },
+            {
+              "type": "spell",
+              "word": "저녁",
+              "tier": "hard"
+            },
+            {
+              "type": "spell",
+              "word": "지붕",
+              "tier": "hard"
+            },
+            {
+              "type": "spell",
+              "word": "하늘",
+              "tier": "hard"
+            },
+            {
+              "type": "spell",
+              "word": "친구",
+              "tier": "hard"
+            },
+            {
+              "type": "spell",
+              "word": "학교",
+              "tier": "hard"
+            },
+            {
+              "type": "spell",
+              "word": "창문",
+              "tier": "hard"
+            },
+            {
+              "type": "spell",
+              "word": "동물",
+              "tier": "hard"
+            },
+            {
+              "type": "spell",
+              "word": "식물",
+              "tier": "hard"
+            },
+            {
+              "type": "spell",
+              "word": "접시",
+              "tier": "hard"
+            },
+            {
+              "type": "spell",
+              "word": "책",
+              "tier": "hard"
+            },
+            {
+              "type": "spell",
+              "word": "펜",
+              "tier": "hard"
+            },
+            {
+              "type": "spell",
+              "word": "자전거",
+              "tier": "hard"
+            },
+            {
+              "type": "spell",
+              "word": "도서관",
+              "tier": "hard"
+            },
+            {
+              "type": "spell",
+              "word": "컴퓨터",
+              "tier": "hard"
+            },
+            {
+              "type": "spell",
+              "word": "전화기",
+              "tier": "hard"
+            }
+          ]
+        },
+        {
+          "id": "ko-u6-l3",
+          "title": "Expert words",
+          "prerequisites": [
+            "ko-u6-l2"
+          ],
+          "steps": [
+            {
+              "type": "spell",
+              "word": "극장",
+              "tier": "expert"
+            },
+            {
+              "type": "spell",
+              "word": "신발",
+              "tier": "expert"
+            },
+            {
+              "type": "spell",
+              "word": "얼굴",
+              "tier": "expert"
+            },
+            {
+              "type": "spell",
+              "word": "음식",
+              "tier": "expert"
+            },
+            {
+              "type": "spell",
+              "word": "점심",
+              "tier": "expert"
+            },
+            {
+              "type": "spell",
+              "word": "은행",
+              "tier": "expert"
+            },
+            {
+              "type": "spell",
+              "word": "공원",
+              "tier": "expert"
+            },
+            {
+              "type": "spell",
+              "word": "병원",
+              "tier": "expert"
+            },
+            {
+              "type": "spell",
+              "word": "학생",
+              "tier": "expert"
+            },
+            {
+              "type": "spell",
+              "word": "박물관",
+              "tier": "expert"
+            },
+            {
+              "type": "spell",
+              "word": "냉장고",
+              "tier": "expert"
+            },
+            {
+              "type": "spell",
+              "word": "선생님",
+              "tier": "expert"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

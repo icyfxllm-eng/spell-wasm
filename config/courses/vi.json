@@ -1,0 +1,998 @@
+{
+  "schemaVersion": "0.1-draft",
+  "language": "vi",
+  "languageName": "Vietnamese",
+  "kind": "script-path",
+  "scope": "writing-system-only",
+  "linear": true,
+  "wordSource": "assets/words/vi (audited; referenced by text+tier, never duplicated)",
+  "units": [
+    {
+      "id": "vi-u1-base",
+      "title": "Base Latin letters",
+      "lessons": [
+        {
+          "id": "vi-u1-l1",
+          "title": "Base vowels",
+          "prerequisites": [],
+          "steps": [
+            {
+              "type": "element",
+              "element": "a",
+              "name": "a",
+              "strings": [
+                "Vowel A. Vietnamese uses the Latin alphabet, read left to right."
+              ]
+            },
+            {
+              "type": "element",
+              "element": "e",
+              "name": "e",
+              "strings": [
+                "Vowel E (open, like e in 'bet')."
+              ]
+            },
+            {
+              "type": "element",
+              "element": "i",
+              "name": "i",
+              "strings": [
+                "Vowel I ('ee')."
+              ]
+            },
+            {
+              "type": "element",
+              "element": "o",
+              "name": "o",
+              "strings": [
+                "Vowel O (open)."
+              ]
+            },
+            {
+              "type": "element",
+              "element": "u",
+              "name": "u",
+              "strings": [
+                "Vowel U ('oo')."
+              ]
+            },
+            {
+              "type": "element",
+              "element": "y",
+              "name": "y",
+              "strings": [
+                "Vowel Y; in Vietnamese Y is used as a vowel."
+              ]
+            }
+          ]
+        },
+        {
+          "id": "vi-u1-l2",
+          "title": "Base consonants",
+          "prerequisites": [
+            "vi-u1-l1"
+          ],
+          "steps": [
+            {
+              "type": "element",
+              "element": "b",
+              "name": "be",
+              "strings": [
+                "Consonant B."
+              ]
+            },
+            {
+              "type": "element",
+              "element": "c",
+              "name": "xe",
+              "strings": [
+                "Consonant C, sound 'k' (never soft)."
+              ]
+            },
+            {
+              "type": "element",
+              "element": "d",
+              "name": "de",
+              "strings": [
+                "Consonant D WITHOUT a stroke; sounds 'z' in the north, 'y' in the south."
+              ]
+            },
+            {
+              "type": "element",
+              "element": "g",
+              "name": "ge",
+              "strings": [
+                "Consonant G (hard g)."
+              ]
+            },
+            {
+              "type": "element",
+              "element": "h",
+              "name": "hat",
+              "strings": [
+                "Consonant H."
+              ]
+            },
+            {
+              "type": "element",
+              "element": "k",
+              "name": "ca",
+              "strings": [
+                "Consonant K, sound 'k'; used before i, e, ê."
+              ]
+            },
+            {
+              "type": "element",
+              "element": "l",
+              "name": "e-lo",
+              "strings": [
+                "Consonant L."
+              ]
+            },
+            {
+              "type": "element",
+              "element": "m",
+              "name": "em-mo",
+              "strings": [
+                "Consonant M."
+              ]
+            },
+            {
+              "type": "element",
+              "element": "n",
+              "name": "en-no",
+              "strings": [
+                "Consonant N."
+              ]
+            },
+            {
+              "type": "element",
+              "element": "p",
+              "name": "pe",
+              "strings": [
+                "Consonant P; appears mostly in the cluster 'ph' or at the end of a word."
+              ]
+            },
+            {
+              "type": "element",
+              "element": "q",
+              "name": "cu",
+              "strings": [
+                "Consonant Q; always written together with u as 'qu'."
+              ]
+            },
+            {
+              "type": "element",
+              "element": "r",
+              "name": "e-ro",
+              "strings": [
+                "Consonant R."
+              ]
+            },
+            {
+              "type": "element",
+              "element": "s",
+              "name": "et-si",
+              "strings": [
+                "Consonant S; a retroflex 'sh' in many regions."
+              ]
+            },
+            {
+              "type": "element",
+              "element": "t",
+              "name": "te",
+              "strings": [
+                "Consonant T (unaspirated)."
+              ]
+            },
+            {
+              "type": "element",
+              "element": "v",
+              "name": "ve",
+              "strings": [
+                "Consonant V."
+              ]
+            },
+            {
+              "type": "element",
+              "element": "x",
+              "name": "ich-xi",
+              "strings": [
+                "Consonant X, sound 's'."
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "vi-u2-special",
+      "title": "Special letters",
+      "lessons": [
+        {
+          "id": "vi-u2-l1",
+          "title": "Đ and the horned/circumflex vowels",
+          "prerequisites": [
+            "vi-u1-l2"
+          ],
+          "steps": [
+            {
+              "type": "element",
+              "element": "đ",
+              "name": "de",
+              "strings": [
+                "Special consonant Đ - D with a stroke, a hard 'd' as in English 'do'.",
+                "These extra letters are separate letters of the alphabet, not accented versions."
+              ]
+            },
+            {
+              "type": "element",
+              "element": "ă",
+              "name": "a-breve",
+              "strings": [
+                "Special vowel Ă - a short 'a'. The breve is part of the letter, not a tone."
+              ]
+            },
+            {
+              "type": "element",
+              "element": "â",
+              "name": "a-circumflex",
+              "strings": [
+                "Special vowel Â - 'uh' (like a in 'about'). The circumflex is part of the letter."
+              ]
+            },
+            {
+              "type": "element",
+              "element": "ê",
+              "name": "e-circumflex",
+              "strings": [
+                "Special vowel Ê - a closed 'e' (like 'ay')."
+              ]
+            },
+            {
+              "type": "element",
+              "element": "ô",
+              "name": "o-circumflex",
+              "strings": [
+                "Special vowel Ô - a closed 'o' (like 'oh')."
+              ]
+            },
+            {
+              "type": "element",
+              "element": "ơ",
+              "name": "o-horn",
+              "strings": [
+                "Special vowel Ơ - 'uh'. The horn is part of the letter."
+              ]
+            },
+            {
+              "type": "element",
+              "element": "ư",
+              "name": "u-horn",
+              "strings": [
+                "Special vowel Ư - 'oo' said with unrounded lips. The horn is part of the letter."
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "vi-u3-digraphs",
+      "title": "Digraphs and trigraphs",
+      "lessons": [
+        {
+          "id": "vi-u3-l1",
+          "title": "Multi-letter units",
+          "prerequisites": [
+            "vi-u2-l1"
+          ],
+          "steps": [
+            {
+              "type": "element",
+              "element": "ch",
+              "name": "ce-hat",
+              "strings": [
+                "Digraph CH, sound 'ch'.",
+                "Vietnamese spells some sounds with two or three letters read as one unit."
+              ]
+            },
+            {
+              "type": "element",
+              "element": "gh",
+              "name": "ge-hat",
+              "strings": [
+                "Digraph GH, sound hard 'g'; used before i, e, ê."
+              ]
+            },
+            {
+              "type": "element",
+              "element": "gi",
+              "name": "ge-i",
+              "strings": [
+                "Digraph GI, sound 'z' (north) or 'y' (south)."
+              ]
+            },
+            {
+              "type": "element",
+              "element": "kh",
+              "name": "ca-hat",
+              "strings": [
+                "Digraph KH, a raspy 'k' sound."
+              ]
+            },
+            {
+              "type": "element",
+              "element": "ng",
+              "name": "en-no ge",
+              "strings": [
+                "Digraph NG, sound 'ng' as in 'sing'."
+              ]
+            },
+            {
+              "type": "element",
+              "element": "ngh",
+              "name": "en-no ge-hat",
+              "strings": [
+                "Trigraph NGH, sound 'ng'; used before i, e, ê."
+              ]
+            },
+            {
+              "type": "element",
+              "element": "nh",
+              "name": "en-no hat",
+              "strings": [
+                "Digraph NH, sound like 'ny'."
+              ]
+            },
+            {
+              "type": "element",
+              "element": "ph",
+              "name": "pe-hat",
+              "strings": [
+                "Digraph PH, sound 'f'."
+              ]
+            },
+            {
+              "type": "element",
+              "element": "th",
+              "name": "te-hat",
+              "strings": [
+                "Digraph TH, an aspirated 't'."
+              ]
+            },
+            {
+              "type": "element",
+              "element": "tr",
+              "name": "te-ro",
+              "strings": [
+                "Digraph TR, a 'ch'-like sound."
+              ]
+            },
+            {
+              "type": "element",
+              "element": "qu",
+              "name": "cu-u",
+              "strings": [
+                "Digraph QU, sound 'kw'."
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "vi-u4-tones",
+      "title": "Tone diacritics",
+      "lessons": [
+        {
+          "id": "vi-u4-l1",
+          "title": "The five tone marks",
+          "prerequisites": [
+            "vi-u3-l1"
+          ],
+          "steps": [
+            {
+              "type": "element",
+              "element": "à",
+              "name": "huyen (grave)",
+              "strings": [
+                "Tone mark: low falling tone. Written above the main vowel.",
+                "A tone mark sits on the vowel and changes only the pitch, not the letter."
+              ]
+            },
+            {
+              "type": "element",
+              "element": "á",
+              "name": "sac (acute)",
+              "strings": [
+                "Tone mark: high rising tone."
+              ]
+            },
+            {
+              "type": "element",
+              "element": "ả",
+              "name": "hoi (hook above)",
+              "strings": [
+                "Tone mark: dipping then rising tone."
+              ]
+            },
+            {
+              "type": "element",
+              "element": "ã",
+              "name": "nga (tilde)",
+              "strings": [
+                "Tone mark: broken, creaky rising tone."
+              ]
+            },
+            {
+              "type": "element",
+              "element": "ạ",
+              "name": "nang (dot below)",
+              "strings": [
+                "Tone mark: heavy low tone. Written BELOW the vowel."
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "vi-u5-first",
+      "title": "First words",
+      "lessons": [
+        {
+          "id": "vi-u5-l1",
+          "title": "First 20 words",
+          "prerequisites": [
+            "vi-u4-l1"
+          ],
+          "steps": [
+            {
+              "type": "spell",
+              "word": "to",
+              "tier": "easy"
+            },
+            {
+              "type": "spell",
+              "word": "xe",
+              "tier": "easy"
+            },
+            {
+              "type": "spell",
+              "word": "cao",
+              "tier": "easy"
+            },
+            {
+              "type": "spell",
+              "word": "cam",
+              "tier": "easy"
+            },
+            {
+              "type": "spell",
+              "word": "cau",
+              "tier": "easy"
+            },
+            {
+              "type": "spell",
+              "word": "dao",
+              "tier": "easy"
+            },
+            {
+              "type": "spell",
+              "word": "rau",
+              "tier": "easy"
+            },
+            {
+              "type": "spell",
+              "word": "sao",
+              "tier": "easy"
+            },
+            {
+              "type": "spell",
+              "word": "tai",
+              "tier": "easy"
+            },
+            {
+              "type": "spell",
+              "word": "tay",
+              "tier": "easy"
+            },
+            {
+              "type": "spell",
+              "word": "mua",
+              "tier": "easy"
+            },
+            {
+              "type": "spell",
+              "word": "hoa",
+              "tier": "easy"
+            },
+            {
+              "type": "spell",
+              "word": "bay",
+              "tier": "easy"
+            },
+            {
+              "type": "spell",
+              "word": "vui",
+              "tier": "easy"
+            },
+            {
+              "type": "spell",
+              "word": "voi",
+              "tier": "easy"
+            },
+            {
+              "type": "spell",
+              "word": "đi",
+              "tier": "easy"
+            },
+            {
+              "type": "spell",
+              "word": "ăn",
+              "tier": "easy"
+            },
+            {
+              "type": "spell",
+              "word": "áo",
+              "tier": "easy"
+            },
+            {
+              "type": "spell",
+              "word": "cá",
+              "tier": "easy"
+            },
+            {
+              "type": "spell",
+              "word": "bò",
+              "tier": "easy"
+            }
+          ]
+        },
+        {
+          "id": "vi-u5-l2",
+          "title": "More easy words",
+          "prerequisites": [
+            "vi-u5-l1"
+          ],
+          "steps": [
+            {
+              "type": "spell",
+              "word": "đen",
+              "tier": "easy"
+            },
+            {
+              "type": "spell",
+              "word": "đá",
+              "tier": "easy"
+            },
+            {
+              "type": "spell",
+              "word": "đỏ",
+              "tier": "easy"
+            },
+            {
+              "type": "spell",
+              "word": "cũ",
+              "tier": "easy"
+            },
+            {
+              "type": "spell",
+              "word": "cỏ",
+              "tier": "easy"
+            },
+            {
+              "type": "spell",
+              "word": "gà",
+              "tier": "easy"
+            },
+            {
+              "type": "spell",
+              "word": "lá",
+              "tier": "easy"
+            },
+            {
+              "type": "spell",
+              "word": "mũ",
+              "tier": "easy"
+            },
+            {
+              "type": "spell",
+              "word": "ví",
+              "tier": "easy"
+            },
+            {
+              "type": "spell",
+              "word": "bàn",
+              "tier": "easy"
+            },
+            {
+              "type": "spell",
+              "word": "bát",
+              "tier": "easy"
+            },
+            {
+              "type": "spell",
+              "word": "búa",
+              "tier": "easy"
+            },
+            {
+              "type": "spell",
+              "word": "bút",
+              "tier": "easy"
+            },
+            {
+              "type": "spell",
+              "word": "cát",
+              "tier": "easy"
+            },
+            {
+              "type": "spell",
+              "word": "cây",
+              "tier": "easy"
+            },
+            {
+              "type": "spell",
+              "word": "cơm",
+              "tier": "easy"
+            },
+            {
+              "type": "spell",
+              "word": "dài",
+              "tier": "easy"
+            },
+            {
+              "type": "spell",
+              "word": "dưa",
+              "tier": "easy"
+            },
+            {
+              "type": "spell",
+              "word": "gạo",
+              "tier": "easy"
+            },
+            {
+              "type": "spell",
+              "word": "hát",
+              "tier": "easy"
+            },
+            {
+              "type": "spell",
+              "word": "học",
+              "tier": "easy"
+            },
+            {
+              "type": "spell",
+              "word": "kéo",
+              "tier": "easy"
+            },
+            {
+              "type": "spell",
+              "word": "làm",
+              "tier": "easy"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "vi-u6-progress",
+      "title": "Difficulty progression",
+      "lessons": [
+        {
+          "id": "vi-u6-l1",
+          "title": "Medium words",
+          "prerequisites": [
+            "vi-u5-l2"
+          ],
+          "steps": [
+            {
+              "type": "spell",
+              "word": "mèo",
+              "tier": "medium"
+            },
+            {
+              "type": "spell",
+              "word": "mít",
+              "tier": "medium"
+            },
+            {
+              "type": "spell",
+              "word": "mũi",
+              "tier": "medium"
+            },
+            {
+              "type": "spell",
+              "word": "mưa",
+              "tier": "medium"
+            },
+            {
+              "type": "spell",
+              "word": "nói",
+              "tier": "medium"
+            },
+            {
+              "type": "spell",
+              "word": "núi",
+              "tier": "medium"
+            },
+            {
+              "type": "spell",
+              "word": "táo",
+              "tier": "medium"
+            },
+            {
+              "type": "spell",
+              "word": "tóc",
+              "tier": "medium"
+            },
+            {
+              "type": "spell",
+              "word": "túi",
+              "tier": "medium"
+            },
+            {
+              "type": "spell",
+              "word": "vịt",
+              "tier": "medium"
+            },
+            {
+              "type": "spell",
+              "word": "đèn",
+              "tier": "medium"
+            },
+            {
+              "type": "spell",
+              "word": "đói",
+              "tier": "medium"
+            },
+            {
+              "type": "spell",
+              "word": "chó",
+              "tier": "medium"
+            },
+            {
+              "type": "spell",
+              "word": "gió",
+              "tier": "medium"
+            },
+            {
+              "type": "spell",
+              "word": "nhà",
+              "tier": "medium"
+            },
+            {
+              "type": "spell",
+              "word": "thỏ",
+              "tier": "medium"
+            },
+            {
+              "type": "spell",
+              "word": "cửa",
+              "tier": "medium"
+            },
+            {
+              "type": "spell",
+              "word": "ghế",
+              "tier": "medium"
+            },
+            {
+              "type": "spell",
+              "word": "gấu",
+              "tier": "medium"
+            },
+            {
+              "type": "spell",
+              "word": "ngô",
+              "tier": "medium"
+            }
+          ]
+        },
+        {
+          "id": "vi-u6-l2",
+          "title": "Hard words",
+          "prerequisites": [
+            "vi-u6-l1"
+          ],
+          "steps": [
+            {
+              "type": "spell",
+              "word": "mắt",
+              "tier": "hard"
+            },
+            {
+              "type": "spell",
+              "word": "mới",
+              "tier": "hard"
+            },
+            {
+              "type": "spell",
+              "word": "nồi",
+              "tier": "hard"
+            },
+            {
+              "type": "spell",
+              "word": "rắn",
+              "tier": "hard"
+            },
+            {
+              "type": "spell",
+              "word": "đất",
+              "tier": "hard"
+            },
+            {
+              "type": "spell",
+              "word": "đầu",
+              "tier": "hard"
+            },
+            {
+              "type": "spell",
+              "word": "bánh",
+              "tier": "hard"
+            },
+            {
+              "type": "spell",
+              "word": "chân",
+              "tier": "hard"
+            },
+            {
+              "type": "spell",
+              "word": "chảo",
+              "tier": "hard"
+            },
+            {
+              "type": "spell",
+              "word": "khăn",
+              "tier": "hard"
+            },
+            {
+              "type": "spell",
+              "word": "lạnh",
+              "tier": "hard"
+            },
+            {
+              "type": "spell",
+              "word": "nóng",
+              "tier": "hard"
+            },
+            {
+              "type": "spell",
+              "word": "răng",
+              "tier": "hard"
+            },
+            {
+              "type": "spell",
+              "word": "sách",
+              "tier": "hard"
+            },
+            {
+              "type": "spell",
+              "word": "sông",
+              "tier": "hard"
+            },
+            {
+              "type": "spell",
+              "word": "vàng",
+              "tier": "hard"
+            },
+            {
+              "type": "spell",
+              "word": "biết",
+              "tier": "hard"
+            },
+            {
+              "type": "spell",
+              "word": "biển",
+              "tier": "hard"
+            },
+            {
+              "type": "spell",
+              "word": "buồn",
+              "tier": "hard"
+            },
+            {
+              "type": "spell",
+              "word": "muối",
+              "tier": "hard"
+            }
+          ]
+        },
+        {
+          "id": "vi-u6-l3",
+          "title": "Expert words",
+          "prerequisites": [
+            "vi-u6-l2"
+          ],
+          "steps": [
+            {
+              "type": "spell",
+              "word": "hồng",
+              "tier": "expert"
+            },
+            {
+              "type": "spell",
+              "word": "ngắn",
+              "tier": "expert"
+            },
+            {
+              "type": "spell",
+              "word": "nắng",
+              "tier": "expert"
+            },
+            {
+              "type": "spell",
+              "word": "phấn",
+              "tier": "expert"
+            },
+            {
+              "type": "spell",
+              "word": "quần",
+              "tier": "expert"
+            },
+            {
+              "type": "spell",
+              "word": "rừng",
+              "tier": "expert"
+            },
+            {
+              "type": "spell",
+              "word": "trời",
+              "tier": "expert"
+            },
+            {
+              "type": "spell",
+              "word": "uống",
+              "tier": "expert"
+            },
+            {
+              "type": "spell",
+              "word": "bướm",
+              "tier": "expert"
+            },
+            {
+              "type": "spell",
+              "word": "cười",
+              "tier": "expert"
+            },
+            {
+              "type": "spell",
+              "word": "nước",
+              "tier": "expert"
+            },
+            {
+              "type": "spell",
+              "word": "vườn",
+              "tier": "expert"
+            },
+            {
+              "type": "spell",
+              "word": "chuối",
+              "tier": "expert"
+            },
+            {
+              "type": "spell",
+              "word": "chuột",
+              "tier": "expert"
+            },
+            {
+              "type": "spell",
+              "word": "trứng",
+              "tier": "expert"
+            },
+            {
+              "type": "spell",
+              "word": "đường",
+              "tier": "expert"
+            },
+            {
+              "type": "spell",
+              "word": "trường",
+              "tier": "expert"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
