@@ -798,8 +798,16 @@ pub fn zh_tier(tier: &str) -> &'static [&'static str] {
 
 /// Word bank for a built-in language + tier (English by default).
 pub fn tier_for(lang: &str, tier: &str) -> &'static [&'static str] {
-    use crate::consts::{DE, ES, FIL, FR, JA, KO, PL, PT, TH, TR, VI, ZH};
+    use crate::consts::{AR, DE, ES, FA, FIL, FR, JA, KO, PL, PT, RU, TH, TR, UR, VI, ZH};
     match lang {
+        // CC-LINEUP-SWAP registered these four; their content is
+        // CC-NEW-LANG-CONTENT's scope and has not landed. They return an EMPTY
+        // bank rather than falling through to `en_tier` below — a registered
+        // language with no content must serve NO words, never English words
+        // wearing its name. Silent English fallback is how you ship "Russian"
+        // that spells "bed"; the keyboard charset test catches it precisely
+        // because this arm is explicit.
+        RU | AR | FA | UR => &[],
         ES => es_tier(tier),
         FR => simple_tier(FR_EASY, FR_MEDIUM, FR_HARD, FR_EXPERT, tier),
         DE => simple_tier(DE_EASY, DE_MEDIUM, DE_HARD, DE_EXPERT, tier),
@@ -813,6 +821,42 @@ pub fn tier_for(lang: &str, tier: &str) -> &'static [&'static str] {
         ZH => zh_tier(tier),
         TH => simple_tier(TH_EASY, TH_MEDIUM, TH_HARD, TH_EXPERT, tier),
         _ => en_tier(tier),
+    }
+}
+
+#[cfg(test)]
+mod content_tests {
+    use crate::consts::{TIER_ORDER, AR, FA, RU, UR};
+
+    /// A language registered WITHOUT content must serve nothing — never English
+    /// words under its own name. `tier_for` ends in `_ => en_tier(tier)`, so any
+    /// new registry entry silently inherits the English bank until someone adds
+    /// an explicit arm; this test is the tripwire for that.
+    #[test]
+    fn registered_but_contentless_languages_serve_no_words() {
+        for lang in [RU, AR, FA, UR] {
+            for tier in TIER_ORDER {
+                let bank = super::tier_for(lang, tier);
+                assert!(
+                    bank.is_empty(),
+                    "{lang}/{tier} must be empty until its content lands, got {} words starting {:?} \
+                     — a fallthrough to en_tier would serve English words as {lang}",
+                    bank.len(),
+                    bank.first(),
+                );
+            }
+        }
+    }
+
+    /// The languages that DO have content still have it (guards against an
+    /// over-broad empty arm swallowing a real bank).
+    #[test]
+    fn content_languages_still_have_banks() {
+        for lang in ["en", "es", "fr", "de", "pt", "pl", "tr", "vi", "ko", "ja", "fil", "zh"] {
+            for tier in TIER_ORDER {
+                assert!(!super::tier_for(lang, tier).is_empty(), "{lang}/{tier} lost its bank");
+            }
+        }
     }
 }
 

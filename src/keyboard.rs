@@ -50,6 +50,19 @@ const TR: Layout = Layout {
     rows: &["qwertyuıopğ", "asdfghjklşi", "zxcvbnmöçü"],
     long_press: &[],
 };
+// Russian: the standard ЙЦУКЕН layout. `ё` is a long-press on `е` rather than a
+// key of its own — on a physical ЙЦУКЕН it lives off in the number row, and
+// giving it a top-level key would push the rows past every other layout's width.
+//
+// This pairs with CC-LINEUP-SWAP D4: canonical word forms store `ё` where
+// dictionaries write it, and typing `е` in a `ё` position is ACCEPTED, so the
+// long-press is an affordance for players who want the dictionary spelling, not
+// a hoop anyone must jump through. The charset gate still needs `ё` reachable —
+// canonical forms contain it — which is exactly what the long-press provides.
+const RU: Layout = Layout {
+    rows: &["йцукенгшщзхъ", "фывапролджэ", "ячсмитьбю"],
+    long_press: &[('е', "ё")],
+};
 // Vietnamese: QWERTY + long-press for the letter-modified vowels (ă â ê ô ơ ư)
 // and đ; the five tones are applied post-fix via a dedicated tone row (see
 // build_keys / crate::viet). Every vowel form is thus reachable in ≤2 taps.
@@ -104,6 +117,7 @@ fn layout_for(locale: &str) -> &'static Layout {
         "pt" => &PT,
         "pl" => &PL,
         "tr" => &TR,
+        "ru" => &RU,
         "vi" => &VI,
         "ko" => &KO,
         "ja" => &JA,
@@ -553,6 +567,7 @@ mod tests {
             ("pt", include_str!("../assets/keyboards/pt.json")),
             ("pl", include_str!("../assets/keyboards/pl.json")),
             ("tr", include_str!("../assets/keyboards/tr.json")),
+            ("ru", include_str!("../assets/keyboards/ru.json")),
             ("vi", include_str!("../assets/keyboards/vi.json")),
             ("ko", include_str!("../assets/keyboards/ko.json")),
             ("ja", include_str!("../assets/keyboards/ja.json")),
