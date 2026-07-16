@@ -1,0 +1,122 @@
+{
+  "$comment": "CC-MODE-HUB F1 — THE mode registry. Single source of truth for what a mode IS, where it appears, and who may see it. The Play hub renders only from this file; deleting an entry removes the mode from every surface with zero code changes (A1.1). DATA, not code: adding a mode is an entry here plus its implementation module, never a new conditional in a surface.",
+
+  "$provenance": "Every field below is transcribed from SHIPPED behaviour, not invented. `status` follows each flag's compiled-in default in src/flags.rs; `kidSafe` mirrors `kid_ok` in tools_hub.rs's TOOLS table; `platforms` follows each flag's documented runtime gate; `nameKey`/`descKey` reuse the existing tools.* catalog entries (F2 forbids new auditable content, and these already exist in all 13 locales).",
+
+  "$deviations": {
+    "tools_hub": "F1/D1 says the settings toggles are DELETED and the registry replaces them. src/tools_hub.rs ('Pillar 3') shipped in build 55 (d9a6583) with its own 4-test E2E spec and is the ONLY way to flip a shipped-dark flag. Deleting it is a reversal of a days-old decision, so it is KEPT pending Eric. Consequence, stated plainly: until he rules, mode metadata lives here and tools_hub still owns its DOM-binding table (flag -> element ids). Those are different concerns, but `status`/`kidSafe` must not drift — whoever retires Pillar 3 should make it read this file.",
+    "entitlementLevel": "The spec models gating as a single CC-ENTITLEMENTS level. That does not cover photo_list, which needs the `photo_ocr` PARENT-PREMIUM boolean rather than a language level. Modelled as an extra `requiresPremium` field rather than mangled into entitlementLevel; flagged for Eric.",
+    "online_spelloff": "Not among the six modes CC-MODE-HUB names, but it is a shipped mode (332 lines, flag OFF pending backend deploy). A registry that omits a shipped mode is not a single source of truth, so it is here as coming_soon.",
+    "attempts_shields": "Deliberately ABSENT. It is a Climb mechanic, not a discoverable mode, and CC-MODE-HUB's constraints say shields belong to CC-CLIMB-SHIELDS. It stays a tools_hub row only."
+  },
+
+  "$fields": {
+    "status": "live = renders as a tappable Play-hub tile. coming_soon = non-tappable teaser. hidden = renders nowhere, for anyone.",
+    "kidSafe": "true = survives the Little Speller hub. Little Speller shows ABSENCE, not locks — the zero-purchase-surface doctrine carried over.",
+    "platforms": "Where the mode can function at runtime. A mode absent on this platform does not tile.",
+    "entitlementLevel": "Minimum per-language AccessLevel (none < preview < full). A mode requiring `full` on a previewed language is ABSENT, not locked (A2.3).",
+    "requiresPremium": "Optional parent-premium entitlement (EntitlementSet boolean) this mode needs, or null. See $deviations.",
+    "languages": "Language codes the mode supports, or null for any. Absent outside them.",
+    "ordering": "Hub tile order = FILE order (D6, RECONSTRUCTED — Eric must confirm). No popularity sort, no per-user reordering in v1."
+  },
+
+  "$decisionsPending": [
+    "D6 (RECONSTRUCTED): tile ordering = registry file order. Implemented as stated; confirm.",
+    "D7 (RECONSTRUCTED): coming_soon tiles carry no notify-me hook in v1. Implemented as stated; confirm.",
+    "D1: whether tools_hub ('Pillar 3', build 55) retires in favour of this registry — see $deviations."
+  ],
+
+  "modes": [
+    {
+      "id": "ghost_racing",
+      "nameKey": "tools.ghost.name",
+      "descKey": "tools.ghost.desc",
+      "icon": "👻",
+      "status": "live",
+      "kidSafe": true,
+      "platforms": ["web", "ios"],
+      "entitlementLevel": "full",
+      "requiresPremium": null,
+      "languages": null,
+      "$note": "entitlementLevel `full` is not a guess: preview_allows() in entitlements.rs denies GameMode::GhostRace to Preview, so a previewed language cannot reach it."
+    },
+    {
+      "id": "syllable_replay",
+      "nameKey": "tools.syllable.name",
+      "descKey": "tools.syllable.desc",
+      "icon": "🔉",
+      "status": "live",
+      "kidSafe": true,
+      "platforms": ["web", "ios"],
+      "entitlementLevel": "preview",
+      "requiresPremium": null,
+      "languages": ["es"],
+      "$note": "es-only: it needs syllabification data, and absence is data-driven (CC-MODE-HUB I4.1)."
+    },
+    {
+      "id": "say_it",
+      "nameKey": "tools.sayit.name",
+      "descKey": "tools.sayit.desc",
+      "icon": "🎤",
+      "status": "live",
+      "kidSafe": false,
+      "platforms": ["ios"],
+      "entitlementLevel": "preview",
+      "requiresPremium": null,
+      "languages": null,
+      "$note": "kidSafe false is a COPPA hard-disable in Kid Mode, not a preference (flags.rs, tools_hub kid_ok=false)."
+    },
+    {
+      "id": "photo_list",
+      "nameKey": "tools.photo.name",
+      "descKey": "tools.photo.desc",
+      "icon": "📷",
+      "status": "live",
+      "kidSafe": false,
+      "platforms": ["ios"],
+      "entitlementLevel": "preview",
+      "requiresPremium": "photo_ocr",
+      "languages": null,
+      "$note": "The mode CC-MODE-HUB calls 'ocrMode'/'Photo/OCR' is `photo_list` in this codebase. Gated by the photo_ocr parent-premium entitlement — see $deviations.entitlementLevel."
+    },
+    {
+      "id": "spell_aloud",
+      "nameKey": "tools.spellaloud.name",
+      "descKey": "tools.spellaloud.desc",
+      "icon": "🗣",
+      "status": "live",
+      "kidSafe": false,
+      "platforms": ["ios"],
+      "entitlementLevel": "preview",
+      "requiresPremium": null,
+      "languages": ["en", "es"],
+      "$note": "F7 says ship coming_soon IF CC-SPELL-ALOUD is unimplemented. It IS implemented (src/spell_aloud.rs, 429 lines, 2 E2E tests), so this is live and routes into that flow — this file adds only the hub entry and forks none of that spec. Languages mirror VOICE_SPELL_LANGS."
+    },
+    {
+      "id": "word_stories",
+      "nameKey": "tools.stories.name",
+      "descKey": "tools.stories.desc",
+      "icon": "📖",
+      "status": "hidden",
+      "kidSafe": false,
+      "platforms": ["web", "ios"],
+      "entitlementLevel": "preview",
+      "requiresPremium": null,
+      "languages": ["en", "es"],
+      "$note": "F8/D5: hidden until spec'd and reviewed — a hard gate. The spec proposal ALREADY EXISTS: docs/word-stories-review.md (37e5a0f), which recommends keeping it hub-hidden pending (1) CC BY-SA attribution via the CC-WORDLIST-SOURCES Tier-B credits surface and (2) a kid-appropriateness spot-check of the en/es strings. Its flag is OFF for the same reason. `hidden` here matches all of that."
+    },
+    {
+      "id": "online_spelloff",
+      "nameKey": "tools.spelloff.name",
+      "descKey": "tools.spelloff.desc",
+      "icon": "⚔️",
+      "status": "coming_soon",
+      "kidSafe": false,
+      "platforms": ["web", "ios"],
+      "entitlementLevel": "full",
+      "requiresPremium": null,
+      "languages": null,
+      "$note": "Flag OFF because /api/match is not deployed yet — 'ships dark until then' IS coming_soon. See $deviations.online_spelloff."
+    }
+  ]
+}

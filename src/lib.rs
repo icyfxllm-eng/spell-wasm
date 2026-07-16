@@ -43,6 +43,7 @@ mod speech_out;
 mod stats;
 mod storage;
 mod syllable;
+mod modes;
 mod tools_hub;
 #[cfg(feature = "testseam")]
 mod testseam;

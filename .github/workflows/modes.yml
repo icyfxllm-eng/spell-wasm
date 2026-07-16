@@ -1,0 +1,48 @@
+# CC-MODE-HUB F1 gates — the mode registry. Runs on every push / PR.
+#
+# I1.2: config/modes.json is validated against its schema and a malformed entry
+# fails the build. The gate also cross-checks the registry against the code it
+# describes, because the failure that matters is drift, not bad JSON:
+#   * every nameKey/descKey already exists in the en locale (F2 forbids new
+#     auditable content — tile strings reuse the shipped tools.* catalog);
+#   * every mode id has a matching flag in src/flags.rs (an entry with no
+#     implementation is a tile leading nowhere).
+#
+# The Rust side (src/modes.rs) owns the visibility rule — hidden/kidSafe/platform/
+# entitlement/language — and its unit tests run in the main suite.
+name: Modes
+
+on:
+  push:
+    branches: ["**"]
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  modes:
+    name: Mode registry gates
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      - name: Mode registry schema + drift check
+        run: node scripts/modes-check.mjs
+
+      - name: Schema gate self-test (malformed fixtures must FAIL)
+        run: node scripts/modes-check.mjs --selftest
+
+      - name: Cache cargo
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.cargo/registry
+            ~/.cargo/git
+            target
+          key: cargo-modes-${{ runner.os }}-${{ hashFiles('Cargo.lock') }}
+
+      - name: Registry loader + visibility rule tests
+        run: cargo test --lib modes
