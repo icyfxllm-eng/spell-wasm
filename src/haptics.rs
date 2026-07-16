@@ -49,6 +49,16 @@ pub fn key_tap() {
     }
 }
 
+/// CC-CLIMB-SHIELDS: the forge MOMENT — a shield just completed. Distinct from
+/// the plain correct tap (a success notification, not a light impact) so the
+/// forge reads as its own event through the tactile channel too, in the same beat
+/// as the HUD animation.
+pub fn forge() {
+    if let Some(h) = plugin() {
+        call(&h, "notification", "type", "SUCCESS");
+    }
+}
+
 /// Marks an incorrect spelling: a double-buzz normally, softened to a single
 /// medium tap in Kid Mode.
 pub fn incorrect(kid: bool) {

@@ -1010,25 +1010,44 @@ fn on_correct(app: &App) {
                 crate::ghost::note_correct(streak, now_ms() - run_start);
             }
         }
-        // Shields (The Climb): earn one every SHIELD_EARN_STREAK consecutive
-        // genuine corrects, capped. Earning flashes the HUD. (Two statements so
-        // the immutable borrow is released before the mutable earn call —
-        // otherwise RefCell would double-borrow at runtime.)
+        // Shields (The Climb): FORGE toward the next shield (CC-CLIMB-SHIELDS —
+        // replaces the old "1 shield per 5 consecutive correct, cap 3"). A PERFECT
+        // word (first attempt, no syllable replay) grants 2 segments instead of 1;
+        // overflow carries; at the cap forging freezes. A completed forge is the
+        // forge MOMENT (animation + sound + its own localized flash). Two
+        // statements so the immutable borrow is released before the mutable forge
+        // call — otherwise RefCell would double-borrow at runtime.
         let in_climb = shield_ctx(&app.borrow());
-        let earned = in_climb && crate::attempts::shield_on_correct(&mut app.borrow_mut());
+        let perfect = in_climb && crate::attempts::is_perfect_word(&app.borrow());
+        let forge = if in_climb {
+            crate::attempts::forge_on_correct(&mut app.borrow_mut(), perfect)
+        } else {
+            crate::attempts::Forge::Progress
+        };
+        let forged = in_climb && forge == crate::attempts::Forge::Forged;
+        // Segments just granted: 2 for a PERFECT word, 1 for an assisted one, 0
+        // while the forge is frozen at the cap. Drives the same-beat gain
+        // emphasis in the HUD — a perfect word reads visibly bigger without any
+        // extra modal.
+        let gain = match forge {
+            _ if !in_climb => 0,
+            crate::attempts::Forge::Frozen => 0,
+            _ if perfect => crate::attempts::FORGE.perfect_segments,
+            _ => 1,
+        };
         dom::set_text("streakNum", &streak.to_string());
         dom::set_text("bestNum", &app.borrow().best.to_string());
         dom::add_class("orbWrap", "good");
         spell_feedback(true);
         set_streak_tier(streak);
         dom::set_text("orbGlyph", "\u{2713}");
-        if earned {
-            flash_shield_earned(app);
+        if forged {
+            flash_shield_forged(app);
         } else {
             dom::set_text("feedback", &pick_praise(app));
             dom::el("feedback").set_class_name("feedback good");
         }
-        update_shield_hud(app);
+        update_shield_hud_ex(app, forged, gain);
         show_meaning(app, word, cur_lang);
         achievements::check_streak(&mut app.borrow_mut());
     } else {
@@ -1160,6 +1179,12 @@ fn wire_syllable_replay(app: &App, sylls: Vec<String>) {
 /// Capability is discovered via `native_lang::available()`; no platform ifs.
 fn play_syllables(app: &App, sylls: &[String]) {
     clear_syllable_highlight();
+    // CC-CLIMB-SHIELDS: syllable replay costs this word its PERFECT bonus (a
+    // perfect word is a first-attempt correct with no syllable replay). It is
+    // never otherwise penalized — an assisted correct still forges 1 segment.
+    // Recorded here, on the single syllable-replay entry point, so it can never
+    // be missed by a caller.
+    crate::attempts::note_syllable_replay(&mut app.borrow_mut());
     let rate = app.borrow().rate as f64;
     if native_lang::available() {
         let owned: Vec<String> = sylls.to_vec();
@@ -1336,20 +1361,31 @@ fn on_wrong_extra_attempt(app: &App) {
     finalize_incorrect_ex(app, "\u{2717}", &crate::i18n::t("fb.itWas"), "feedback bad", false);
 }
 
-/// Feature 2 (The Climb) — a validated-incorrect during a run. Any miss resets
-/// the shield earn streak. If a shield is available and none has been spent on
-/// this word, record the first miss and offer the "Use a shield?" prompt;
-/// otherwise the normal miss consequence applies.
+/// Feature 2 (The Climb) — a validated-incorrect during a run. If a shield is
+/// available and none has been spent on this word, record the first miss and
+/// offer the "Use a shield?" prompt; otherwise the normal miss consequence
+/// applies.
+///
+/// CC-CLIMB-SHIELDS: the forge reset is DELIBERATELY not taken here. At this
+/// point the miss's fate is still undecided — a shield may be about to absorb it,
+/// and an absorbed miss is NOT a miss for forge purposes (segments survive). The
+/// reset is therefore taken only where the miss actually STICKS:
+///   * this function's fall-through (no shield available — an unshielded miss, or
+///     the FAILED second attempt after a shield already rescued this word),
+///   * `shield_decline` (the player chose to eat the miss),
+///   * `on_timeout` (a timeout is always a real, unshieldable miss).
 fn on_wrong_climb(app: &App) {
     crate::haptics::incorrect(app.borrow().kid);
-    crate::attempts::shield_note_miss(&mut app.borrow_mut()); // earn streak resets (PD2)
     if crate::attempts::shield_available(&app.borrow()) {
         record_first_miss(app); // first miss recorded regardless of the choice
         break_streak(app);
         show_shield_prompt(app);
         return;
     }
-    // No shield to spend (or already used one on this word) -> normal miss.
+    // No shield to spend (or one was already spent on this word -> this is the
+    // failed second attempt): the miss is REAL, so forge progress resets to 0.
+    // Already-forged shields are never removed.
+    crate::attempts::forge_reset(&mut app.borrow_mut());
     finalize_incorrect(app, "\u{2717}", &crate::i18n::t("fb.itWas"), "feedback bad");
 }
 
@@ -1364,7 +1400,10 @@ fn hide_shield_prompt() {
     dom::remove_class("shieldScrim", "show");
 }
 
-/// Player ACCEPTED: consume exactly one shield and retry the same word.
+/// Player ACCEPTED: consume exactly one shield and retry the same word. The
+/// shield ABSORBS the miss, so forge progress is deliberately left untouched
+/// (CC-CLIMB-SHIELDS: an absorbed miss isn't a miss for forge purposes). Dropping
+/// below the cap also re-opens forging.
 pub fn shield_accept(app: &App) {
     hide_shield_prompt();
     if !crate::attempts::spend_shield(&mut app.borrow_mut()) {
@@ -1375,28 +1414,89 @@ pub fn shield_accept(app: &App) {
 }
 
 /// Player DECLINED: the run's normal miss consequence applies; the shield is
-/// kept. The first miss was already recorded when the prompt appeared.
+/// kept. The first miss was already recorded when the prompt appeared. The miss
+/// STICKS unshielded, so forge progress resets to 0 (held shields untouched).
 pub fn shield_decline(app: &App) {
     hide_shield_prompt();
+    crate::attempts::forge_reset(&mut app.borrow_mut());
+    update_shield_hud(app);
     finalize_incorrect_ex(app, "\u{2717}", &crate::i18n::t("fb.itWas"), "feedback bad", false);
 }
 
-/// Sync the shield-count HUD. Visible only while the flag is on and this is a
-/// Climb run; hidden everywhere else (byte-for-byte zero diff when OFF).
+/// Sync the shield/forge HUD in its steady state. Visible only while the flag is
+/// on and this is a Climb run; hidden everywhere else (byte-for-byte zero diff
+/// when OFF).
 pub fn update_shield_hud(app: &App) {
-    let (show, n) = {
-        let s = app.borrow();
-        (shield_ctx(&s), s.aids.shields)
-    };
-    dom::set_text("shieldCount", &n.to_string());
-    dom::toggle_class("shieldHud", "btn-hide", !show);
+    update_shield_hud_ex(app, false, 0);
 }
 
-/// Brief localized HUD flash when a shield is earned.
-fn flash_shield_earned(app: &App) {
-    dom::set_text("feedback", &crate::i18n::t("shield.earned"));
+/// Sync the shield/forge HUD (CC-CLIMB-SHIELDS feature 4).
+///
+/// Renders the three parts of the forge:
+///   * HELD shields — the existing filled icons, at most `FORGE.shield_cap` (2).
+///   * The FORGE TRACK — a shield outline that assembles segment-by-segment
+///     (`FORGE.segments_per_shield` pips; the filled ones carry `.on`).
+///   * The localized STATE label — forging / forge-moment / full-frozen.
+///
+/// `moment` marks the beat a shield completed (drives the forge-moment animation
+/// + its own label). `gain` is how many segments this word just granted, exposed
+/// as `data-gain` so a PERFECT word's bigger gain reads in the SAME beat as the
+/// correct feedback (CSS emphasis, no extra modal).
+///
+/// All state lives in `data-*` attributes so the CSS (and the E2E spec) can see
+/// every forge state without scraping localized text.
+pub fn update_shield_hud_ex(app: &App, moment: bool, gain: u8) {
+    let (show, shields, segments, frozen) = {
+        let s = app.borrow();
+        (shield_ctx(&s), s.aids.shields, s.aids.segments, crate::attempts::forge_frozen(&s))
+    };
+    dom::set_text("shieldCount", &shields.to_string());
+    dom::toggle_class("shieldHud", "btn-hide", !show);
+    if !show {
+        return;
+    }
+    // The forge track: one pip per segment, `.on` for the segments already forged.
+    let per = crate::attempts::FORGE.segments_per_shield;
+    let mut pips = String::new();
+    for i in 0..per {
+        pips.push_str(&format!("<i class=\"seg{}\"></i>", if i < segments { " on" } else { "" }));
+    }
+    dom::set_html("shieldForge", &pips);
+
+    // Steady state: `full` once the cap freezes forging, else `forging`. The
+    // forge MOMENT overrides it for one beat.
+    let state = if moment {
+        "forged"
+    } else if frozen {
+        "full"
+    } else {
+        "forging"
+    };
+    let hud = dom::el("shieldHud");
+    let _ = hud.set_attribute("data-forge", state);
+    let _ = hud.set_attribute("data-segments", &segments.to_string());
+    let _ = hud.set_attribute("data-shields", &shields.to_string());
+    let _ = hud.set_attribute("data-gain", &gain.to_string());
+    dom::toggle_class("shieldHud", "forge-moment", moment);
+    dom::set_text(
+        "shieldState",
+        &crate::i18n::t(match state {
+            "forged" => "shield.forged",
+            "full" => "shield.full",
+            _ => "shield.forging",
+        }),
+    );
+}
+
+/// The forge MOMENT: a shield just completed. Distinct localized flash plus the
+/// celebratory haptic pulse; the HUD animation is driven by the `forge-moment`
+/// class + `data-forge="forged"` that `update_shield_hud_ex` stamps in the same
+/// beat.
+fn flash_shield_forged(app: &App) {
+    let _ = app;
+    crate::haptics::forge();
+    dom::set_text("feedback", &crate::i18n::t("shield.forged"));
     dom::el("feedback").set_class_name("feedback good");
-    update_shield_hud(app);
 }
 
 /// Korean (Phase 3): on a wrong answer, point the player at the jamo that's off
@@ -1465,13 +1565,13 @@ fn on_timeout(app: &App) {
     app.borrow_mut().answered = true;
     lock_inputs();
 
-    // A timeout is NOT a submitted attempt, so it never earns/spends a shield or
+    // A timeout is NOT a submitted attempt, so it never forges/spends a shield or
     // grants an extra attempt (the contract: only validated-correct/incorrect
     // count). With the 3-try mechanic retired, a timeout is simply the miss in
-    // every mode. When shields/extra-attempts own the run, it still resets the
-    // shield earn streak (the miss was real).
+    // every mode — and it is never shieldable, so the miss is always REAL and
+    // resets forge progress to 0 (held shields untouched).
     if shield_ctx(&app.borrow()) || extra_attempt_ctx(&app.borrow()) {
-        crate::attempts::shield_note_miss(&mut app.borrow_mut());
+        crate::attempts::forge_reset(&mut app.borrow_mut());
     }
     finalize_incorrect(app, "\u{23f1}", &crate::i18n::t("fb.timesUp"), "feedback bad");
 }
