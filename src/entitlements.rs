@@ -390,7 +390,7 @@ mod tests {
         }
         // known anchors
         assert_eq!(regional_grants_for_country("CH"), vec!["de", "fr", "it"]);
-        assert_eq!(regional_grants_for_country("TH"), vec!["th"]);
+        assert_eq!(regional_grants_for_country("KR"), vec!["ko"]);
         assert!(regional_grants_for_country("ZZ").is_empty());
     }
 }
@@ -411,8 +411,8 @@ mod prop_tests {
         fn union_is_monotonic(
             purchased in any::<bool>(),
             add_purchase in any::<bool>(),
-            grant_idxs in prop::collection::vec(0usize..17, 0..6),
-            extra_idxs in prop::collection::vec(0usize..17, 0..6),
+            grant_idxs in prop::collection::vec(0usize..BUILTIN_LANGS.len(), 0..6),
+            extra_idxs in prop::collection::vec(0usize..BUILTIN_LANGS.len(), 0..6),
         ) {
             let pool = lang_pool();
             let grants: Vec<&str> = grant_idxs.iter().map(|&i| pool[i]).collect();
@@ -442,7 +442,7 @@ mod prop_tests {
     // Audit is always the top element — nothing exceeds it, everything is Full.
     proptest! {
         #[test]
-        fn audit_dominates(purchased in any::<bool>(), grant_idxs in prop::collection::vec(0usize..17, 0..6)) {
+        fn audit_dominates(purchased in any::<bool>(), grant_idxs in prop::collection::vec(0usize..BUILTIN_LANGS.len(), 0..6)) {
             let pool = lang_pool();
             let grants: Vec<&str> = grant_idxs.iter().map(|&i| pool[i]).collect();
             let audit = resolve_entitlements(purchased, &grants, true);

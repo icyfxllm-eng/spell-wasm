@@ -22,9 +22,10 @@ const HERE = dirname(fileURLToPath(import.meta.url));
 const ROOT = join(HERE, '..');
 
 // The 17 shipped SpellGame language codes (must match src/consts.rs BUILTIN_LANGS).
+// Kept in sync with consts.rs BUILTIN_LANGS. Thai + Turkish were cut 2026-07-15.
 const SHIPPED_LANGS = new Set([
   'en', 'es', 'fr', 'de', 'pt', 'it', 'nl', 'pl', 'sv', 'nb',
-  'tr', 'vi', 'ko', 'ja', 'fil', 'zh', 'th',
+  'vi', 'ko', 'ja', 'fil', 'zh',
 ]);
 
 // Full ISO 3166-1 alpha-2 officially-assigned code set.
