@@ -1181,6 +1181,7 @@
       <!-- CC-ATTEMPTS-SHIELDS Feature 1 toggle. Row is hidden unless the dark
            feature flag is on (shown from Rust via flags::attempts_shields). -->
       <label class="set-row btn-hide" id="extraAttemptsRow"><span class="lbl2"><span data-i18n="settings.extraAttempts">Extra attempt on misses</span><small data-i18n="settings.extraAttemptsSmall">A second try when you miss a word</small></span><input type="checkbox" class="switch" id="extraAttemptsToggle" /></label>
+      <div class="set-row" id="nativeStatusRow"><span class="lbl2"><span>Native status (debug)</span><small id="nativeStatus" style="word-break:break-word;opacity:.75">checking…</small></span></div>
       <label class="set-row"><span class="lbl2"><span data-i18n="settings.remind">Daily reminder</span><small data-i18n="settings.remindSmall">One gentle nudge a day to practice</small></span><input type="checkbox" class="switch" id="remindToggle" /></label>
       <label class="set-row" id="remindTimeRow"><span class="lbl2"><span data-i18n="settings.remindTime">Reminder time</span><small data-i18n="settings.remindTimeSmall">When to send the daily nudge</small></span><input type="time" id="remindTime" value="17:00" aria-label="Daily reminder time" /></label>
       <div class="set-row">
@@ -1357,6 +1358,38 @@
       window.visualViewport.addEventListener('scale', function () {
         if (!document.querySelector('input:focus, textarea:focus, select:focus')) reassert();
       });
+    })();
+  </script>
+  <script>
+    // Native-capability diagnostic (build 54): reports what the native bridge
+    // resolves to, so a "tools nowhere to be found" report can be pinpointed to
+    // platform / proxy / capability without a device debugger. Populates the
+    // #nativeStatus line in Settings on open. Purely read-only.
+    (function () {
+      function refresh() {
+        var el = document.getElementById('nativeStatus');
+        if (!el) return;
+        var cap = window.Capacitor, snl = window.SpellNativeLang;
+        var platform = (cap && cap.getPlatform) ? cap.getPlatform() : 'web';
+        var native = !!(cap && cap.isNativePlatform && cap.isNativePlatform());
+        var avail = !!(snl && snl.available && snl.available());
+        el.textContent = 'platform=' + platform + ' native=' + native + ' available=' + avail;
+        if (avail && snl.capabilities) {
+          snl.capabilities('en').then(function (r) {
+            el.textContent += ' | tts=' + !!(r && r.tts && r.tts.available) +
+              ' spell=' + !!(r && r.spellcheck && r.spellcheck.available) +
+              ' langDet=' + !!(r && r.langDetect && r.langDetect.available);
+          }).catch(function (e) { el.textContent += ' | caps-error: ' + e; });
+        } else {
+          el.textContent += avail ? '' : ' (native tools hidden — expected off-device/web)';
+        }
+      }
+      window.__refreshNativeStatus = refresh;
+      document.addEventListener('DOMContentLoaded', function () { setTimeout(refresh, 1200); });
+      // Refresh whenever a settings button is tapped (cheap; ids vary by surface).
+      document.addEventListener('click', function (e) {
+        var t = e.target; if (t && t.closest && t.closest('[id*="etting"], #setBtn, #gearBtn')) setTimeout(refresh, 100);
+      }, true);
     })();
   </script>
 </body>
