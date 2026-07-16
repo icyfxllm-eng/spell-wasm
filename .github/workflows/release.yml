@@ -20,6 +20,12 @@ jobs:
   android:
     name: Android AAB
     runs-on: ubuntu-latest
+    # A release build must NEVER carry the entitlement audit bypass (Feature 9):
+    # AUDIT_MODE=0 means resolve_entitlements() gets audit_override=false, so the
+    # real purchase/region surface applies. scripts/audit-mode-release-check.mjs
+    # asserts this lane never flips it to 1.
+    env:
+      AUDIT_MODE: "0"
     steps:
       - uses: actions/checkout@v4
 
