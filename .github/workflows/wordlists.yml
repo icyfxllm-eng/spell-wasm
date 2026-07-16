@@ -1,0 +1,41 @@
+# CC-WORDLIST-RAFU F3 gates — the trap registry. Runs on every push / PR.
+#
+# Enforces the data/engine split that makes the registry auditor-editable:
+#   * the registry is schema-valid (match kinds, NFC values, alphabet sanity);
+#   * every non-auto class justifies itself with `why` + `workflow`
+#     (RAFU decision 9: never guess silently);
+#   * a `manual` class carries NO live match rule, so it cannot quietly start
+#     auto-tagging;
+#   * the tagger's match kinds hold against positive AND negative fixtures — a
+#     rule that fires on everything is worse than no rule.
+#
+# NOT gated here: per-tier trap QUOTAS. RAFU decision 6 leaves those to Eric via
+# the gap report, and a quota nobody approved is not a gate. When he rules, the
+# quota check belongs in this workflow.
+name: Wordlists
+
+on:
+  push:
+    branches: ["**"]
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  traps:
+    name: Trap registry gates
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      - name: Trap registry schema check
+        run: node scripts/trap-tag.mjs --validate
+
+      - name: Tagger self-test (match kinds, positive + negative fixtures)
+        run: node scripts/trap-tag.mjs --selftest
+
+      - name: Word-list pipeline gates (charset / exclusions / balance / determinism)
+        run: python3 scripts/build-wordlists.py --check

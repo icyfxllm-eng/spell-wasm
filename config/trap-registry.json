@@ -1,0 +1,324 @@
+{
+  "$comment": "CC-WORDLIST-RAFU F3 — the per-language orthographic TRAP REGISTRY. THE single source of truth for what counts as a spelling trap in each language, and how a word gets tagged with one. Consumed by scripts/trap-tag.mjs (tagging + per-tier coverage counts). This file is DATA: auditors correct it without touching the engine, so every rule here is declarative — the tagger implements match kinds, never per-language knowledge. Adding a trap class = an entry here. Taxonomies transcribed from CC-WORDLIST-RAFU F3, extending CC-NEW-LANG-CONTENT D3's tiering.",
+
+  "$tagging": {
+    "auto": "The tagger decides from the word's own codepoints via `match`. Reliable enough to gate on.",
+    "manual": "The tagger CANNOT decide (RAFU decision 9: propose a workflow, never guess). It emits the class as UNTAGGED and lists the word for auditor judgement. `why` records exactly what information is missing. A manual class never auto-satisfies a quota.",
+    "assisted": "`match` narrows the CANDIDATE set cheaply, but membership is a human call. The tagger emits `candidate: true` and the auditor confirms. Counts toward a quota only once confirmed."
+  },
+
+  "$match_kinds": {
+    "contains_any": "word contains at least one of `values` (single codepoints or strings)",
+    "prefix_any": "word starts with one of `values`",
+    "suffix_any": "word ends with one of `values`",
+    "final_char_any": "word's LAST character is one of `values`",
+    "regex": "`pattern` (JS regex, Unicode-aware) matches the word",
+    "none": "no automatic rule — manual classes only"
+  },
+
+  "$quotas": {
+    "$comment": "RAFU flags per-tier trap quotas as ERIC'S decision (F3 + decision 6): proposed in the gap report, not set here. `min_share` is null until he rules. The tagger REPORTS coverage against null as informational and cannot fail a build on it — a quota nobody approved is not a gate.",
+    "status": "UNDECIDED — awaiting Eric (RAFU decision 6)"
+  },
+
+  "languages": {
+    "ru": {
+      "name": "Russian",
+      "variant": "ru-RU",
+      "script": "Cyrillic",
+      "alphabet": "абвгдеёжзийклмнопрстуфхцчшщъыьэюя",
+      "traps": [
+        {
+          "id": "unstressed-vowel-reduction",
+          "name": "Unstressed о/а and е/и reduction",
+          "description": "Unstressed о reduces toward [ɐ] and е/и merge, so вода sounds like [vɐˈda]. The single most common Russian spelling error class.",
+          "tier_hint": "hard",
+          "tagging": "manual",
+          "match": { "kind": "none" },
+          "why": "Requires STRESS POSITION, which a surface-form lexicon does not carry. 'вода' is a trap; 'роза' (stressed о) is not — identical letters, opposite verdicts. Auto-tagging on 'contains о' would tag nearly every Russian word and mean nothing.",
+          "workflow": "Either (a) source a stress-marked lexicon and promote this to auto, or (b) auditor tags during curation. At ~40-50 words/tier this is minutes of work, not a blocker."
+        },
+        {
+          "id": "soft-hard-sign",
+          "name": "ь vs ъ",
+          "description": "Neither sign is audible; the writer must know it is there. мышь, дверь, объект.",
+          "tier_hint": "medium",
+          "tagging": "auto",
+          "match": { "kind": "contains_any", "values": ["ь", "ъ"] }
+        },
+        {
+          "id": "tsya-tsa",
+          "name": "-ться vs -тся",
+          "description": "Homophonous verb endings distinguished only by grammar (infinitive vs 3rd person). учиться / учится.",
+          "tier_hint": "hard",
+          "tagging": "auto",
+          "match": { "kind": "suffix_any", "values": ["ться", "тся"] }
+        },
+        {
+          "id": "yo",
+          "name": "ё",
+          "description": "Canonical forms store ё (CC-LINEUP-SWAP D4); typed е is ACCEPTED and ё is displayed on reveal. Tagged so ё coverage is measurable, since the source's ё fidelity is the open question in docs/russian-source-options.md.",
+          "tier_hint": "any",
+          "tagging": "auto",
+          "match": { "kind": "contains_any", "values": ["ё"] }
+        },
+        {
+          "id": "doubled-consonant",
+          "name": "Doubled consonants",
+          "description": "класс, группа, аллея — the doubling is inaudible in Russian.",
+          "tier_hint": "hard",
+          "tagging": "auto",
+          "match": { "kind": "regex", "pattern": "([бвгджзклмнпрстфхцчшщ])\\1" }
+        },
+        {
+          "id": "final-devoicing",
+          "name": "Voiced/devoiced finals (б/п, д/т, г/к, в/ф, ж/ш, з/с)",
+          "description": "A word-final voiced obstruent devoices: друг → [druk], зуб → [zup]. The ear hears the wrong letter.",
+          "tier_hint": "medium",
+          "tagging": "auto",
+          "match": { "kind": "final_char_any", "values": ["б", "в", "г", "д", "ж", "з"] }
+        },
+        {
+          "id": "hushing-confusion",
+          "name": "ч/щ and ш/ж confusions",
+          "description": "The hushing sibilants are close enough that learners and native writers alike swap them.",
+          "tier_hint": "medium",
+          "tagging": "assisted",
+          "match": { "kind": "contains_any", "values": ["ч", "щ", "ш", "ж"] },
+          "why": "Presence of a hushing letter makes a word a CANDIDATE, but whether it is genuinely confusable depends on the word (щука is not a trap; счастье is). Auto-tagging on presence would over-count heavily.",
+          "workflow": "Auditor confirms candidates during curation."
+        }
+      ]
+    },
+
+    "ar": {
+      "name": "Arabic",
+      "variant": "MSA",
+      "script": "Arabic",
+      "orthography": "unvocalized (CC-LINEUP-SWAP D5)",
+      "traps": [
+        {
+          "id": "hamza-seat",
+          "name": "Hamza seats (أ إ ئ ؤ ء)",
+          "description": "Which seat carries the hamza follows rules keyed to surrounding vowels — the core difficulty engine of Arabic spelling.",
+          "tier_hint": "hard",
+          "tagging": "assisted",
+          "match": { "kind": "contains_any", "values": ["أ", "إ", "ئ", "ؤ", "ء"] },
+          "why": "RAFU decision 9 names this explicitly. Detecting that a word CONTAINS a hamza is trivial; deciding whether its seat is CORRECT requires the vowel context that unvocalized orthography deletes. The tagger must never assert correctness.",
+          "workflow": "Tagger flags hamza-bearing candidates; the native auditor rules on seat correctness. Do not gate a quota on the unconfirmed candidate count."
+        },
+        {
+          "id": "taa-marbuta-vs-haa",
+          "name": "ة vs ه (final)",
+          "description": "Final taa marbuta and haa are near-homophones in pause; the choice is grammatical.",
+          "tier_hint": "medium",
+          "tagging": "auto",
+          "match": { "kind": "final_char_any", "values": ["ة", "ه"] }
+        },
+        {
+          "id": "alif-maqsura-vs-yaa",
+          "name": "ى vs ي (final)",
+          "description": "Final alif maqsura and yaa are visually and phonetically confusable.",
+          "tier_hint": "medium",
+          "tagging": "auto",
+          "match": { "kind": "final_char_any", "values": ["ى", "ي"] }
+        },
+        {
+          "id": "madda",
+          "name": "Madda (آ)",
+          "description": "آ is a LETTER, not a diacritic — it survives the unvocalized standard and RAFU F4's tashkeel rejection.",
+          "tier_hint": "medium",
+          "tagging": "auto",
+          "match": { "kind": "contains_any", "values": ["آ"] }
+        },
+        {
+          "id": "dagger-alif",
+          "name": "Dagger-alif words",
+          "description": "هذا, رحمن, لكن — an alif pronounced but not written in the unvocalized form.",
+          "tier_hint": "expert",
+          "tagging": "manual",
+          "match": { "kind": "none" },
+          "why": "The dagger alif itself (U+0670) is a DIACRITIC, which RAFU F4 rejects from stored forms. So in the unvocalized orthography we ship, these words carry no distinguishing mark at all — هذا is just ه-ذ-ا. Membership is lexical knowledge, not a pattern.",
+          "workflow": "Auditor supplies the lexical set; consider promoting to auto via a data list of known dagger-alif words once the auditor provides one."
+        },
+        {
+          "id": "sun-letter-assimilation",
+          "name": "Sun-letter assimilation",
+          "description": "الشمس is written with ل but pronounced ash-shams — spelling and sound diverge.",
+          "tier_hint": "hard",
+          "tagging": "assisted",
+          "match": { "kind": "regex", "pattern": "^ال[تثدذرزسشصضطظلن]" },
+          "why": "The pattern only fires on words carrying the ال article. Lexicons list lemmas WITHOUT the article, so this will under-match badly on a raw source — an empty count here means the source shape, not an absence of traps.",
+          "workflow": "Auditor decides whether the curated list should carry article-bearing forms at all; if not, retire this class or re-scope it."
+        }
+      ]
+    },
+
+    "fa": {
+      "name": "Persian",
+      "variant": "fa-IR",
+      "script": "Arabic (Persian letters — ی U+06CC, ک U+06A9; never Arabic ي/ك)",
+      "traps": [
+        {
+          "id": "homophone-s",
+          "name": "س / ص / ث",
+          "description": "All three are [s] in Tehrani Persian. Persian's defining spelling challenge: the letter is unrecoverable from the sound.",
+          "tier_hint": "medium",
+          "tagging": "auto",
+          "match": { "kind": "contains_any", "values": ["ص", "ث"] },
+          "note": "Matches the MARKED members (ص/ث) only. Plain س is the unmarked default and would fire on a large share of the lexicon while carrying no difficulty."
+        },
+        {
+          "id": "homophone-z",
+          "name": "ز / ذ / ض / ظ",
+          "description": "All four are [z] in Persian.",
+          "tier_hint": "medium",
+          "tagging": "auto",
+          "match": { "kind": "contains_any", "values": ["ذ", "ض", "ظ"] },
+          "note": "Marked members only; plain ز is the unmarked default."
+        },
+        {
+          "id": "homophone-t",
+          "name": "ت / ط",
+          "description": "Both are [t].",
+          "tier_hint": "medium",
+          "tagging": "auto",
+          "match": { "kind": "contains_any", "values": ["ط"] }
+        },
+        {
+          "id": "homophone-h",
+          "name": "ه / ح",
+          "description": "Both are [h].",
+          "tier_hint": "medium",
+          "tagging": "auto",
+          "match": { "kind": "contains_any", "values": ["ح"] }
+        },
+        {
+          "id": "homophone-gh",
+          "name": "غ / ق",
+          "description": "Merged to a single phoneme in Tehrani pronunciation.",
+          "tier_hint": "hard",
+          "tagging": "auto",
+          "match": { "kind": "contains_any", "values": ["غ", "ق"] }
+        },
+        {
+          "id": "silent-vav",
+          "name": "Silent و (خوا-)",
+          "description": "خواهر, خواب — the و is written and not pronounced.",
+          "tier_hint": "hard",
+          "tagging": "auto",
+          "match": { "kind": "prefix_any", "values": ["خوا"] }
+        },
+        {
+          "id": "zwnj-compound",
+          "name": "ZWNJ compounds",
+          "description": "Words whose correct written form requires U+200C ZERO WIDTH NON-JOINER.",
+          "tier_hint": "hard",
+          "tagging": "auto",
+          "match": { "kind": "contains_any", "values": ["‌"] },
+          "status": "zwnj-pending",
+          "why": "RAFU decision 7: CC-RTL D7's ZWNJ policy is still PROPOSED (store canonical ZWNJ, accept input without it — exactly the ё pattern). Until Eric confirms, these words are HELD in staging under this tag and their count is reported, never merged.",
+          "workflow": "Report the count in the gap report; merge only after the ZWNJ policy is decided."
+        },
+        {
+          "id": "final-heh",
+          "name": "Final ه vs ـه",
+          "description": "Final heh distinctions (silent/vowel-carrying vs consonantal).",
+          "tier_hint": "medium",
+          "tagging": "assisted",
+          "match": { "kind": "final_char_any", "values": ["ه"] },
+          "why": "Final ه is extremely common; whether it is a TRAP depends on its function in that word. Presence alone would over-count.",
+          "workflow": "Auditor confirms."
+        }
+      ]
+    },
+
+    "ur": {
+      "name": "Urdu",
+      "variant": "ur-PK",
+      "script": "Arabic (Urdu letters)",
+      "traps": [
+        {
+          "id": "homophone-s",
+          "name": "س / ص / ث",
+          "description": "The Perso-Arabic homophone classes as they apply to Urdu.",
+          "tier_hint": "hard",
+          "tagging": "auto",
+          "match": { "kind": "contains_any", "values": ["ص", "ث"] }
+        },
+        {
+          "id": "homophone-z",
+          "name": "ز / ذ / ض / ظ",
+          "description": "All [z] in Urdu.",
+          "tier_hint": "hard",
+          "tagging": "auto",
+          "match": { "kind": "contains_any", "values": ["ذ", "ض", "ظ"] }
+        },
+        {
+          "id": "homophone-t",
+          "name": "ت / ط",
+          "description": "Both [t].",
+          "tier_hint": "hard",
+          "tagging": "auto",
+          "match": { "kind": "contains_any", "values": ["ط"] }
+        },
+        {
+          "id": "homophone-h",
+          "name": "ہ / ح",
+          "description": "Both [h].",
+          "tier_hint": "hard",
+          "tagging": "auto",
+          "match": { "kind": "contains_any", "values": ["ح"] }
+        },
+        {
+          "id": "homophone-gh",
+          "name": "غ / ق",
+          "description": "Confusable in Urdu pronunciation.",
+          "tier_hint": "hard",
+          "tagging": "auto",
+          "match": { "kind": "contains_any", "values": ["غ", "ق"] }
+        },
+        {
+          "id": "do-chashmi-he",
+          "name": "ھ (do-chashmi he) vs ہ (gol he)",
+          "description": "do-chashmi he marks aspiration digraphs (بھ, پھ, تھ); gol he is the standalone [h]. Distinct codepoints, easily confused.",
+          "tier_hint": "medium",
+          "tagging": "auto",
+          "match": { "kind": "contains_any", "values": ["ھ"] }
+        },
+        {
+          "id": "nun-ghunna",
+          "name": "ں (nun ghunna)",
+          "description": "Nasalization carried by a dotless nun — distinct from ن.",
+          "tier_hint": "medium",
+          "tagging": "auto",
+          "match": { "kind": "contains_any", "values": ["ں"] }
+        },
+        {
+          "id": "retroflex",
+          "name": "Retroflex ٹ ڈ ڑ",
+          "description": "Retroflex vs dental — the ٹ/ت, ڈ/د, ڑ/ر contrasts.",
+          "tier_hint": "easy",
+          "tagging": "auto",
+          "match": { "kind": "contains_any", "values": ["ٹ", "ڈ", "ڑ"] }
+        },
+        {
+          "id": "bari-ye",
+          "name": "ے (bari ye) vs ی",
+          "description": "Bari ye appears word-finally for certain vowels; choosing between ے and ی is a written-form decision.",
+          "tier_hint": "medium",
+          "tagging": "auto",
+          "match": { "kind": "contains_any", "values": ["ے"] }
+        },
+        {
+          "id": "ain-initial",
+          "name": "ع-initial words",
+          "description": "Initial ain is silent-to-vocalic in Urdu; its presence is unrecoverable from the sound.",
+          "tier_hint": "hard",
+          "tagging": "auto",
+          "match": { "kind": "prefix_any", "values": ["ع"] }
+        }
+      ]
+    }
+  }
+}
