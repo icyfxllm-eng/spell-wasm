@@ -84,12 +84,13 @@ pub fn online_spelloff() -> bool {
 
 /// Feature "Spell It Out Loud" — voice spelling INPUT (a mic beside the answer
 /// field; the player speaks letter names "C… A… T" and the parser produces the
-/// same string a keyboard would). **Default OFF**: the mic never renders and no
-/// capture path is reachable — a true no-op, zero diff (Invariant I6). Enable for
-/// a device QA pass with `localStorage['spell_flag_spell_aloud'] = '1'`. iOS-only
-/// at runtime regardless (it needs the on-device speech bridge).
+/// same string a keyboard would). **Default ON for the v2 TestFlight QA pass**
+/// (Eric, 2026-07-15) so the on-device mic is testable without a localStorage
+/// flag. Still iOS-only at runtime and hidden until the per-language voiceSpell
+/// flag + on-device speech availability both hold, so on the web/Android it stays
+/// a no-op. Override off with `localStorage['spell_flag_spell_aloud'] = '0'`.
 pub fn spell_aloud() -> bool {
-    resolve(stored("spell_aloud").as_deref(), false)
+    resolve(stored("spell_aloud").as_deref(), true)
 }
 
 #[cfg(test)]
