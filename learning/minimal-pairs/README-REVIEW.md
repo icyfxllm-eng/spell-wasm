@@ -32,7 +32,7 @@ both prune it. Expect over-generation (see Korean note below) — that is by des
 
 ---
 
-## ✅ The auditor-checklist line (add to each of the 16 language checklists)
+## ✅ The auditor-checklist line (add to each of the 14 language checklists)
 
 > **Do these auto-generated word pairs sound genuinely confusable to a learner? Flag any nonsensical pairs.**
 
@@ -115,8 +115,6 @@ the actual generated data:
 | pl | 3 | 0 | 0 | 0 | **3** |
 | sv | 7 | 1 | 0 | 0 | **8** |
 | nb | 3 | 2 | 0 | 0 | **5** |
-| tr | 4 | 0 | 0 | 1 | **5** |
-| th | 35 | 13 | 2 | 0 | **50** |
 | fil | 10 | 0 | 1 | 1 | **12** |
 | vi | 32 | 10 | 7 | 7 | **56** |
 | ko | 362 | 118 | 7 | 9 | **496** |
