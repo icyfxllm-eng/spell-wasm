@@ -25,6 +25,7 @@ echo "==> assembling dist/"
 rm -rf "$DIST"
 mkdir -p "$DIST"
 cp index.html audio-native.js manifest.json sw.js "$DIST/"
+cp credits.json "$DIST/"   # word-list attribution surface (generated from sources/registry.json)
 cp -r icons "$DIST/icons"
 cp -r pkg "$DIST/pkg"
 

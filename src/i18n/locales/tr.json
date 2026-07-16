@@ -184,5 +184,7 @@
   "coming.notice": "{lang} ana dili konuşanlar tarafından iyileştiriliyor — yakında geri gelecek.",
   "coming.notify": "Hazır olduğunda bana haber ver",
   "coming.confirmed": "Listedesin ✓",
-  "coming.badge": "Yakında"
+  "coming.badge": "Yakında",
+  "settings.dataSources": "Kelime listesi veri kaynakları",
+  "settings.dataSourcesSmall": "Kelime listelerimizin oluşturulduğu açık dil kaynakları"
 }

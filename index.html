@@ -912,6 +912,12 @@
           <label class="theme-swatch custom" aria-label="Pick a custom orb color"><input type="color" id="orbColorInput" value="#ffb14d" /></label>
         </span>
       </div>
+      <div class="set-row" style="display:block">
+        <span class="lbl2"><span data-i18n="settings.dataSources">Word-list data sources</span><small data-i18n="settings.dataSourcesSmall">Open language resources our word lists are built from</small></span>
+        <!-- Populated at runtime from credits.json (generated from sources/registry.json
+             by scripts/gen-credits.mjs). Adding a registry entry auto-adds attribution. -->
+        <div id="creditsSources" class="credits-list" style="margin-top:10px;display:flex;flex-direction:column;gap:10px"></div>
+      </div>
       <button class="btn btn-check" id="setDone" data-i18n="settings.done" style="width:100%;margin-top:16px">Done</button>
     </div>
   </div>

@@ -148,6 +148,9 @@ pub fn translate_page() {
         let _ = el.set_attribute("aria-label", s);
     });
     update_tagline();
+    // Word-list data-source attributions (generated from the provenance
+    // registry into credits.json; embedded at build time).
+    crate::credits::render();
     if let Some(de) = dom::doc().document_element() {
         let _ = de.set_attribute("lang", &current());
         // data-lang drives the per-language accent tokens (F3); only ja/zh have a

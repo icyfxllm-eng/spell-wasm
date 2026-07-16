@@ -184,5 +184,7 @@
   "coming.notice": "Pinipino ng mga katutubong nagsasalita ang {lang} — babalik na malapit na.",
   "coming.notify": "Ipaalam kapag handa na",
   "coming.confirmed": "Nasa listahan ka na ✓",
-  "coming.badge": "Malapit na"
+  "coming.badge": "Malapit na",
+  "settings.dataSources": "Mga pinagkunan ng datos ng listahan ng salita",
+  "settings.dataSourcesSmall": "Mga bukas na yamang pangwika na batayan ng aming mga listahan"
 }

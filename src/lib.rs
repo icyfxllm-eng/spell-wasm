@@ -5,6 +5,7 @@ mod audio_boost;
 mod board;
 mod climb;
 mod consts;
+mod credits;
 mod daily;
 mod deck;
 mod dom;

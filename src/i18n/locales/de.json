@@ -184,5 +184,7 @@
   "coming.notice": "{lang} wird von Muttersprachlern verfeinert — bald wieder da.",
   "coming.notify": "Benachrichtige mich, wenn es fertig ist",
   "coming.confirmed": "Du bist auf der Liste ✓",
-  "coming.badge": "Demnächst"
+  "coming.badge": "Demnächst",
+  "settings.dataSources": "Datenquellen der Wortlisten",
+  "settings.dataSourcesSmall": "Offene Sprachressourcen, aus denen unsere Wortlisten entstehen"
 }

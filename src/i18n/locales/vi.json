@@ -184,5 +184,7 @@
   "coming.notice": "{lang} đang được người bản ngữ hoàn thiện — sắp trở lại.",
   "coming.notify": "Báo cho tôi khi sẵn sàng",
   "coming.confirmed": "Bạn đã trong danh sách ✓",
-  "coming.badge": "Sắp có"
+  "coming.badge": "Sắp có",
+  "settings.dataSources": "Nguồn dữ liệu danh sách từ",
+  "settings.dataSourcesSmall": "Tài nguyên ngôn ngữ mở dùng để tạo danh sách từ"
 }
