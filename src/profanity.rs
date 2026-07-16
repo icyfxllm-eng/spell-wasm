@@ -290,4 +290,16 @@ mod tests {
         assert!(!is_blocked("class"));
         assert!(!is_blocked("manzana"));
     }
+
+    #[test]
+    fn curated_high_severity_terms_blocked() {
+        // Sample from the curated 16-language high-severity additions, incl. a
+        // multi-word form (caught via the loose separator-stripping pass) and CJK.
+        for w in ["kanker", "pedał", "hora", "ibne", "クソ", "chó đẻ", "figlio di puttana"] {
+            assert!(is_blocked(w), "curated term '{w}' should be blocked");
+        }
+        // Dual-use animal word deliberately kept OFF the seed (it's a curated
+        // Thai spelling word — "buffalo"), so it must stay addable.
+        assert!(!is_blocked("ควาย"), "Thai 'buffalo' must stay addable");
+    }
 }

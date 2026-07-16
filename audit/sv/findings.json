@@ -63,7 +63,7 @@
       "class": "filter-layers",
       "file": "assets/words/profanity/sv.txt",
       "key": "-",
-      "detail": "sv seed layer: 39 terms. Curation scan below is language-scoped (sv seed + universal hard slurs). Runtime My Words screening (src/profanity.rs is_blocked) separately uses the 1768-term all-language union — that over-block is intentional for user imports.",
+      "detail": "sv seed layer: 42 terms. Curation scan below is language-scoped (sv seed + universal hard slurs). Runtime My Words screening (src/profanity.rs is_blocked) separately uses the 1821-term all-language union — that over-block is intentional for user imports.",
       "proposed_fix": null
     },
     {
@@ -82,6 +82,15 @@
       "file": "src/i18n/locales/sv.json",
       "key": "level.expert",
       "detail": "value identical to English: 'Expert'",
+      "proposed_fix": null
+    },
+    {
+      "feature": 6,
+      "severity": "warning",
+      "class": "untranslated",
+      "file": "src/i18n/locales/sv.json",
+      "key": "btn.hearSlowly",
+      "detail": "value identical to English: 'Hear it slowly'",
       "proposed_fix": null
     },
     {
@@ -109,6 +118,222 @@
       "file": "src/i18n/locales/sv.json",
       "key": "daily.progress",
       "detail": "value identical to English: '🗓 {i}/{n} · ✓{c}'",
+      "proposed_fix": null
+    },
+    {
+      "feature": 6,
+      "severity": "warning",
+      "class": "untranslated",
+      "file": "src/i18n/locales/sv.json",
+      "key": "import.dictSkipped",
+      "detail": "value identical to English: 'Skipped {d} not found in the dictionary.'",
+      "proposed_fix": null
+    },
+    {
+      "feature": 6,
+      "severity": "warning",
+      "class": "untranslated",
+      "file": "src/i18n/locales/sv.json",
+      "key": "import.dictAllSkipped",
+      "detail": "value identical to English: 'None of those were found in the dictionary.'",
+      "proposed_fix": null
+    },
+    {
+      "feature": 6,
+      "severity": "warning",
+      "class": "untranslated",
+      "file": "src/i18n/locales/sv.json",
+      "key": "import.langHint",
+      "detail": "value identical to English: 'These look like {lang}.'",
+      "proposed_fix": null
+    },
+    {
+      "feature": 6,
+      "severity": "warning",
+      "class": "untranslated",
+      "file": "src/i18n/locales/sv.json",
+      "key": "so.entry",
+      "detail": "value identical to English: '🌍 Challenge a friend'",
+      "proposed_fix": null
+    },
+    {
+      "feature": 6,
+      "severity": "warning",
+      "class": "untranslated",
+      "file": "src/i18n/locales/sv.json",
+      "key": "so.title",
+      "detail": "value identical to English: 'Challenge a friend'",
+      "proposed_fix": null
+    },
+    {
+      "feature": 6,
+      "severity": "warning",
+      "class": "untranslated",
+      "file": "src/i18n/locales/sv.json",
+      "key": "so.blurb",
+      "detail": "value identical to English: 'Play the same words as a friend, on your own time. Create a match and share the code, or enter a friend's code. Winner has the most correct.'",
+      "proposed_fix": null
+    },
+    {
+      "feature": 6,
+      "severity": "warning",
+      "class": "untranslated",
+      "file": "src/i18n/locales/sv.json",
+      "key": "so.create",
+      "detail": "value identical to English: 'Create a match'",
+      "proposed_fix": null
+    },
+    {
+      "feature": 6,
+      "severity": "warning",
+      "class": "untranslated",
+      "file": "src/i18n/locales/sv.json",
+      "key": "so.creating",
+      "detail": "value identical to English: 'Creating…'",
+      "proposed_fix": null
+    },
+    {
+      "feature": 6,
+      "severity": "warning",
+      "class": "untranslated",
+      "file": "src/i18n/locales/sv.json",
+      "key": "so.shareHint",
+      "detail": "value identical to English: 'Share this code with your friend, then start:'",
+      "proposed_fix": null
+    },
+    {
+      "feature": 6,
+      "severity": "warning",
+      "class": "untranslated",
+      "file": "src/i18n/locales/sv.json",
+      "key": "so.play",
+      "detail": "value identical to English: 'Play your words'",
+      "proposed_fix": null
+    },
+    {
+      "feature": 6,
+      "severity": "warning",
+      "class": "untranslated",
+      "file": "src/i18n/locales/sv.json",
+      "key": "so.codePh",
+      "detail": "value identical to English: 'CODE'",
+      "proposed_fix": null
+    },
+    {
+      "feature": 6,
+      "severity": "warning",
+      "class": "untranslated",
+      "file": "src/i18n/locales/sv.json",
+      "key": "so.join",
+      "detail": "value identical to English: 'Join with a code'",
+      "proposed_fix": null
+    },
+    {
+      "feature": 6,
+      "severity": "warning",
+      "class": "untranslated",
+      "file": "src/i18n/locales/sv.json",
+      "key": "so.close",
+      "detail": "value identical to English: 'Close'",
+      "proposed_fix": null
+    },
+    {
+      "feature": 6,
+      "severity": "warning",
+      "class": "untranslated",
+      "file": "src/i18n/locales/sv.json",
+      "key": "so.refresh",
+      "detail": "value identical to English: 'Check again'",
+      "proposed_fix": null
+    },
+    {
+      "feature": 6,
+      "severity": "warning",
+      "class": "untranslated",
+      "file": "src/i18n/locales/sv.json",
+      "key": "so.doneTitle",
+      "detail": "value identical to English: 'Submitted'",
+      "proposed_fix": null
+    },
+    {
+      "feature": 6,
+      "severity": "warning",
+      "class": "untranslated",
+      "file": "src/i18n/locales/sv.json",
+      "key": "so.wonTitle",
+      "detail": "value identical to English: 'You won!'",
+      "proposed_fix": null
+    },
+    {
+      "feature": 6,
+      "severity": "warning",
+      "class": "untranslated",
+      "file": "src/i18n/locales/sv.json",
+      "key": "so.wonMsg",
+      "detail": "value identical to English: 'You got more words right than your friend. Nice spelling!'",
+      "proposed_fix": null
+    },
+    {
+      "feature": 6,
+      "severity": "warning",
+      "class": "untranslated",
+      "file": "src/i18n/locales/sv.json",
+      "key": "so.lostTitle",
+      "detail": "value identical to English: 'You lost'",
+      "proposed_fix": null
+    },
+    {
+      "feature": 6,
+      "severity": "warning",
+      "class": "untranslated",
+      "file": "src/i18n/locales/sv.json",
+      "key": "so.lostMsg",
+      "detail": "value identical to English: 'Your friend got more words right this time. Rematch?'",
+      "proposed_fix": null
+    },
+    {
+      "feature": 6,
+      "severity": "warning",
+      "class": "untranslated",
+      "file": "src/i18n/locales/sv.json",
+      "key": "so.tieTitle",
+      "detail": "value identical to English: 'It's a tie!'",
+      "proposed_fix": null
+    },
+    {
+      "feature": 6,
+      "severity": "warning",
+      "class": "untranslated",
+      "file": "src/i18n/locales/sv.json",
+      "key": "so.tieMsg",
+      "detail": "value identical to English: 'You both spelled the same number correctly.'",
+      "proposed_fix": null
+    },
+    {
+      "feature": 6,
+      "severity": "warning",
+      "class": "untranslated",
+      "file": "src/i18n/locales/sv.json",
+      "key": "so.waitingMsg",
+      "detail": "value identical to English: 'Your result is in. Waiting for your friend to finish…'",
+      "proposed_fix": null
+    },
+    {
+      "feature": 6,
+      "severity": "warning",
+      "class": "untranslated",
+      "file": "src/i18n/locales/sv.json",
+      "key": "so.errNetwork",
+      "detail": "value identical to English: 'Couldn't reach the server. Check your connection.'",
+      "proposed_fix": null
+    },
+    {
+      "feature": 6,
+      "severity": "warning",
+      "class": "untranslated",
+      "file": "src/i18n/locales/sv.json",
+      "key": "so.errGeneric",
+      "detail": "value identical to English: 'Something went wrong. Please try again.'",
       "proposed_fix": null
     }
   ]

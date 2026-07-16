@@ -157,3 +157,6 @@ vaffanculo
 vangare
 zinne
 zoccola
+
+# --- high-severity terms from curated 16-language review (2026-07) ---
+figlio di puttana

@@ -1,6 +1,6 @@
 # Dutch content audit — `nl`  (machine pass, REVIEW-GATED)
 
-Totals: **0 critical · 0 violation · 11 warning · 5 info**
+Totals: **0 critical · 0 violation · 36 warning · 5 info**
 
 ## Feature 1 — Word list integrity
 
@@ -45,16 +45,41 @@ Tier stats (len = characters):
 
 **INFO (1)**
 
-- `assets/words/profanity/nl.txt:-` [filter-layers] nl seed layer: 165 terms. Curation scan below is language-scoped (nl seed + universal hard slurs). Runtime My Words screening (src/profanity.rs is_blocked) separately uses the 1768-term all-language union — that over-block is intentional for user imports.
+- `assets/words/profanity/nl.txt:-` [filter-layers] nl seed layer: 166 terms. Curation scan below is language-scoped (nl seed + universal hard slurs). Runtime My Words screening (src/profanity.rs is_blocked) separately uses the 1821-term all-language union — that over-block is intentional for user imports.
 
 ## Feature 6 — UI localization completeness
 
-**WARNING (6)**
+**WARNING (31)**
 
 - `src/i18n/locales/nl.json:top.theClimb` [untranslated] value identical to English: '🏔 The Climb'
 - `src/i18n/locales/nl.json:level.expert` [untranslated] value identical to English: 'Expert'
+- `src/i18n/locales/nl.json:btn.hearSlowly` [untranslated] value identical to English: 'Hear it slowly'
 - `src/i18n/locales/nl.json:kb.enter` [untranslated] value identical to English: 'Enter'
 - `src/i18n/locales/nl.json:btn.hint` [untranslated] value identical to English: 'Hint'
 - `src/i18n/locales/nl.json:vs.start` [untranslated] value identical to English: 'Start match'
 - `src/i18n/locales/nl.json:daily.progress` [untranslated] value identical to English: '🗓 {i}/{n} · ✓{c}'
+- `src/i18n/locales/nl.json:import.dictSkipped` [untranslated] value identical to English: 'Skipped {d} not found in the dictionary.'
+- `src/i18n/locales/nl.json:import.dictAllSkipped` [untranslated] value identical to English: 'None of those were found in the dictionary.'
+- `src/i18n/locales/nl.json:import.langHint` [untranslated] value identical to English: 'These look like {lang}.'
+- `src/i18n/locales/nl.json:so.entry` [untranslated] value identical to English: '🌍 Challenge a friend'
+- `src/i18n/locales/nl.json:so.title` [untranslated] value identical to English: 'Challenge a friend'
+- `src/i18n/locales/nl.json:so.blurb` [untranslated] value identical to English: 'Play the same words as a friend, on your own time. Create a match and share the code, or enter a friend's code. Winner has the most correct.'
+- `src/i18n/locales/nl.json:so.create` [untranslated] value identical to English: 'Create a match'
+- `src/i18n/locales/nl.json:so.creating` [untranslated] value identical to English: 'Creating…'
+- `src/i18n/locales/nl.json:so.shareHint` [untranslated] value identical to English: 'Share this code with your friend, then start:'
+- `src/i18n/locales/nl.json:so.play` [untranslated] value identical to English: 'Play your words'
+- `src/i18n/locales/nl.json:so.codePh` [untranslated] value identical to English: 'CODE'
+- `src/i18n/locales/nl.json:so.join` [untranslated] value identical to English: 'Join with a code'
+- `src/i18n/locales/nl.json:so.close` [untranslated] value identical to English: 'Close'
+- `src/i18n/locales/nl.json:so.refresh` [untranslated] value identical to English: 'Check again'
+- `src/i18n/locales/nl.json:so.doneTitle` [untranslated] value identical to English: 'Submitted'
+- `src/i18n/locales/nl.json:so.wonTitle` [untranslated] value identical to English: 'You won!'
+- `src/i18n/locales/nl.json:so.wonMsg` [untranslated] value identical to English: 'You got more words right than your friend. Nice spelling!'
+- `src/i18n/locales/nl.json:so.lostTitle` [untranslated] value identical to English: 'You lost'
+- `src/i18n/locales/nl.json:so.lostMsg` [untranslated] value identical to English: 'Your friend got more words right this time. Rematch?'
+- `src/i18n/locales/nl.json:so.tieTitle` [untranslated] value identical to English: 'It's a tie!'
+- `src/i18n/locales/nl.json:so.tieMsg` [untranslated] value identical to English: 'You both spelled the same number correctly.'
+- `src/i18n/locales/nl.json:so.waitingMsg` [untranslated] value identical to English: 'Your result is in. Waiting for your friend to finish…'
+- `src/i18n/locales/nl.json:so.errNetwork` [untranslated] value identical to English: 'Couldn't reach the server. Check your connection.'
+- `src/i18n/locales/nl.json:so.errGeneric` [untranslated] value identical to English: 'Something went wrong. Please try again.'
 

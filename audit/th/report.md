@@ -1,6 +1,6 @@
 # Thai content audit — `th`  (machine pass, REVIEW-GATED)
 
-Totals: **0 critical · 0 violation · 2 warning · 5 info**
+Totals: **0 critical · 0 violation · 27 warning · 5 info**
 
 ## Feature 1 — Word list integrity
 
@@ -39,12 +39,37 @@ Tier stats (len = base clusters):
 
 **INFO (1)**
 
-- `assets/words/profanity/th.txt:-` [filter-layers] th seed layer: 31 terms. Curation scan below is language-scoped (th seed + universal hard slurs). Runtime My Words screening (src/profanity.rs is_blocked) separately uses the 1689-term all-language union — that over-block is intentional for user imports.
+- `assets/words/profanity/th.txt:-` [filter-layers] th seed layer: 33 terms. Curation scan below is language-scoped (th seed + universal hard slurs). Runtime My Words screening (src/profanity.rs is_blocked) separately uses the 1820-term all-language union — that over-block is intentional for user imports.
 
 ## Feature 6 — UI localization completeness
 
-**WARNING (2)**
+**WARNING (27)**
 
 - `src/i18n/locales/th.json:top.theClimb` [untranslated] value identical to English: '🏔 The Climb'
+- `src/i18n/locales/th.json:btn.hearSlowly` [untranslated] value identical to English: 'Hear it slowly'
 - `src/i18n/locales/th.json:daily.progress` [untranslated] value identical to English: '🗓 {i}/{n} · ✓{c}'
+- `src/i18n/locales/th.json:import.dictSkipped` [untranslated] value identical to English: 'Skipped {d} not found in the dictionary.'
+- `src/i18n/locales/th.json:import.dictAllSkipped` [untranslated] value identical to English: 'None of those were found in the dictionary.'
+- `src/i18n/locales/th.json:import.langHint` [untranslated] value identical to English: 'These look like {lang}.'
+- `src/i18n/locales/th.json:so.entry` [untranslated] value identical to English: '🌍 Challenge a friend'
+- `src/i18n/locales/th.json:so.title` [untranslated] value identical to English: 'Challenge a friend'
+- `src/i18n/locales/th.json:so.blurb` [untranslated] value identical to English: 'Play the same words as a friend, on your own time. Create a match and share the code, or enter a friend's code. Winner has the most correct.'
+- `src/i18n/locales/th.json:so.create` [untranslated] value identical to English: 'Create a match'
+- `src/i18n/locales/th.json:so.creating` [untranslated] value identical to English: 'Creating…'
+- `src/i18n/locales/th.json:so.shareHint` [untranslated] value identical to English: 'Share this code with your friend, then start:'
+- `src/i18n/locales/th.json:so.play` [untranslated] value identical to English: 'Play your words'
+- `src/i18n/locales/th.json:so.codePh` [untranslated] value identical to English: 'CODE'
+- `src/i18n/locales/th.json:so.join` [untranslated] value identical to English: 'Join with a code'
+- `src/i18n/locales/th.json:so.close` [untranslated] value identical to English: 'Close'
+- `src/i18n/locales/th.json:so.refresh` [untranslated] value identical to English: 'Check again'
+- `src/i18n/locales/th.json:so.doneTitle` [untranslated] value identical to English: 'Submitted'
+- `src/i18n/locales/th.json:so.wonTitle` [untranslated] value identical to English: 'You won!'
+- `src/i18n/locales/th.json:so.wonMsg` [untranslated] value identical to English: 'You got more words right than your friend. Nice spelling!'
+- `src/i18n/locales/th.json:so.lostTitle` [untranslated] value identical to English: 'You lost'
+- `src/i18n/locales/th.json:so.lostMsg` [untranslated] value identical to English: 'Your friend got more words right this time. Rematch?'
+- `src/i18n/locales/th.json:so.tieTitle` [untranslated] value identical to English: 'It's a tie!'
+- `src/i18n/locales/th.json:so.tieMsg` [untranslated] value identical to English: 'You both spelled the same number correctly.'
+- `src/i18n/locales/th.json:so.waitingMsg` [untranslated] value identical to English: 'Your result is in. Waiting for your friend to finish…'
+- `src/i18n/locales/th.json:so.errNetwork` [untranslated] value identical to English: 'Couldn't reach the server. Check your connection.'
+- `src/i18n/locales/th.json:so.errGeneric` [untranslated] value identical to English: 'Something went wrong. Please try again.'
 

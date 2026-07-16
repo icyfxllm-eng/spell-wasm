@@ -31,3 +31,11 @@
 เหี้ย
 อมนกเขา
 ไอ้ควาย
+
+# --- high-severity terms from curated 16-language review (2026-07) ---
+# NOTE: ควาย (buffalo) is EXCLUDED — it's a curated Thai spelling word (the
+# animal), so blocking it would false-block "buffalo" in My Words (same principle
+# as Filipino hayop). It stays a legit word; block only via the username path.
+# สัส (a short animal-slur form, not the animal noun สัตว์) is kept.
+กะหรี่
+สัส

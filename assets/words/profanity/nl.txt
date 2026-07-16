@@ -166,3 +166,6 @@ zeiken
 zeiker
 zuigen
 zuiplap
+
+# --- high-severity terms from curated 16-language review (2026-07) ---
+kanker

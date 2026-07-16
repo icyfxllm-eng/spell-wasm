@@ -39,3 +39,6 @@ ståpikk
 ståpikkene
 ståpikker
 svartheiteste
+
+# --- high-severity terms from curated 16-language review (2026-07) ---
+soper

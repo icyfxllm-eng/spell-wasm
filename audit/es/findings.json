@@ -243,7 +243,7 @@
       "class": "filter-layers",
       "file": "assets/words/profanity/es.txt",
       "key": "-",
-      "detail": "es seed layer: 58 terms. Curation scan below is language-scoped (es seed + universal hard slurs). Runtime My Words screening (src/profanity.rs is_blocked) separately uses the 1689-term all-language union — that over-block is intentional for user imports.",
+      "detail": "es seed layer: 59 terms. Curation scan below is language-scoped (es seed + universal hard slurs). Runtime My Words screening (src/profanity.rs is_blocked) separately uses the 1821-term all-language union — that over-block is intentional for user imports.",
       "proposed_fix": null
     },
     {

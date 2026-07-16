@@ -63,7 +63,7 @@ _Note: `accent` twins are bucketed against a web frequency corpus, which contain
 
 **INFO (3)**
 
-- `assets/words/profanity/es.txt:-` [filter-layers] es seed layer: 58 terms. Curation scan below is language-scoped (es seed + universal hard slurs). Runtime My Words screening (src/profanity.rs is_blocked) separately uses the 1689-term all-language union — that over-block is intentional for user imports.
+- `assets/words/profanity/es.txt:-` [filter-layers] es seed layer: 59 terms. Curation scan below is language-scoped (es seed + universal hard slurs). Runtime My Words screening (src/profanity.rs is_blocked) separately uses the 1821-term all-language union — that over-block is intentional for user imports.
 - `assets/words/es/easy.txt:26` [cross-lang-profanity] 'negro' is a valid es word but is on the profanity seed for: ['en', 'fr']. Not flagged for es (kept per decision addendum). Note: it stays blocked in free-text usernames via the global/English path.
 - `assets/words/es/easy.txt:39` [cross-lang-profanity] 'leche' is a valid es word but is on the profanity seed for: ['fil']. Not flagged for es (kept per decision addendum). Note: it stays blocked in free-text usernames via the global/English path.
 

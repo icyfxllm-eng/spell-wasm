@@ -81,3 +81,6 @@ troncher
 turlute
 zigounette
 zizi
+
+# --- high-severity terms from curated 16-language review (2026-07) ---
+fils de pute

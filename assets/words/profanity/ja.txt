@@ -176,3 +176,8 @@ xx
 宦官
 肛門
 膣
+
+# --- high-severity terms from curated 16-language review (2026-07) ---
+クソ
+死ね
+売女
