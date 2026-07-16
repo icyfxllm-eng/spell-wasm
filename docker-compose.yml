@@ -22,6 +22,11 @@ services:
       - audio_cache:/data/audio_cache
       # The Climb accounts/leaderboard SQLite DB (see backend/db.py).
       - climb_data:/data/climb
+      # Country -> free-language map (CC-ENTITLEMENTS). SINGLE SOURCE OF TRUTH,
+      # shared with the Rust core which bundles this same file at build time —
+      # mounted read-only rather than copied so the two can never diverge. A map
+      # edit needs only `docker compose restart backend`, no rebuild.
+      - ./config/country-language-map.json:/app/config/country-language-map.json:ro
 
   cloudflared:
     image: cloudflare/cloudflared:latest
