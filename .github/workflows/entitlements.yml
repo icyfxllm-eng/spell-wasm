@@ -1,0 +1,61 @@
+# CC-ENTITLEMENTS core gates (Phase 1). Runs on every push / PR.
+#
+# Enforces the single-source-of-truth doctrine:
+#   * the country -> language map is valid & sorted (+ a self-test proving the
+#     checker rejects a deliberately-broken fixture);
+#   * `storefront` / `CF-IPCountry` / the product id never leak outside the core;
+#   * no release lane carries the audit bypass (AUDIT_MODE must be 0 on release);
+#   * the pure resolver's Rust unit + property tests pass and the wasm lib builds.
+name: Entitlements
+
+on:
+  push:
+    branches: ["**"]
+  pull_request:
+  workflow_dispatch:
+
+# Release builds must NOT carry the audit bypass (Feature 9). CI is not a release
+# lane, but we pin it here too so nothing downstream inherits a stray value.
+env:
+  AUDIT_MODE: "0"
+
+jobs:
+  entitlements:
+    name: Entitlement core gates
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      - name: Country->language map check (real map)
+        run: node scripts/entitlement-map-check.mjs
+
+      - name: Map check self-test (broken fixture must FAIL)
+        run: node scripts/entitlement-map-check.mjs --selftest
+
+      - name: Core purity grep gate (no storefront/CF-IPCountry/product-id leaks)
+        run: node scripts/entitlement-core-purity-check.mjs
+
+      - name: Audit-bypass release guard (AUDIT_MODE must be 0 on release lanes)
+        run: node scripts/audit-mode-release-check.mjs
+
+      - name: Rust wasm toolchain
+        run: rustup target add wasm32-unknown-unknown
+
+      - name: Cache cargo
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.cargo/registry
+            ~/.cargo/git
+            target
+          key: cargo-entitlements-${{ runner.os }}-${{ hashFiles('Cargo.lock') }}
+
+      - name: Resolver unit + property tests
+        run: cargo test --lib entitlements
+
+      - name: wasm lib builds
+        run: cargo build --lib --target wasm32-unknown-unknown
