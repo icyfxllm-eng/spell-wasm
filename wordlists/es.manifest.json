@@ -1,0 +1,61 @@
+{
+  "counts": {
+    "dropped_by_rule": {
+      "duplicate": 269398,
+      "has_digit": 0,
+      "has_punct_or_space": 6,
+      "not_lowercase": 281,
+      "out_of_charset": 0,
+      "too_long": 51481,
+      "too_short": 119
+    },
+    "kept_out": 909728,
+    "nfc_renormalized": 0,
+    "total_dropped": 321285,
+    "unmunched_in": 1231013
+  },
+  "eligibility_rules": {
+    "alphabet": "abcdefghijklmnopqrstuvwxyzáéíñóúü",
+    "descriptions": {
+      "duplicate": "Identical to an already-emitted word after normalization.",
+      "has_digit": "Contains a decimal digit (0-9).",
+      "has_punct_or_space": "Contains whitespace, hyphen, apostrophe, period, slash or other punctuation.",
+      "nfc_renormalized": "Surface form was not in NFC; re-normalized (kept, logged per D3).",
+      "not_lowercase": "Contains an uppercase letter (proper noun, acronym, or capitalized-only form).",
+      "out_of_charset": "Contains a character outside the language's allowed lowercase alphabet.",
+      "too_long": "More than max_len characters.",
+      "too_short": "Fewer than min_len characters (also removes single letters)."
+    },
+    "max_len": 15,
+    "min_len": 3,
+    "order": [
+      "nfc_renormalized",
+      "has_digit",
+      "has_punct_or_space",
+      "not_lowercase",
+      "out_of_charset",
+      "too_short",
+      "too_long",
+      "duplicate"
+    ]
+  },
+  "generator": "scripts/wordlist.sh + scripts/wordlist_filter.py",
+  "language": "es",
+  "note": "REVIEW-GATED output. Not wired into the shipped app. es rule set is a proposal for Eric (sources/es/FILTER-RULES.md).",
+  "source": {
+    "artifact": "source-code/hispalabras-0.1/hispalabras/es_ANY.dic + es_ANY.aff (packaged Hunspell dictionary)",
+    "commit": "c67eae826908d05a8dfabf3f7a012ce280678208",
+    "license": "GPL-3.0-or-later OR LGPL-3.0-or-later OR MPL-1.1",
+    "name": "Recursos Lingüísticos Abiertos del Español (rla-es)",
+    "tarball_sha256": "3930b1e5d9fdf8ddc19247798a77ae2b9efcfe6848555df80bd13f8c9597211e",
+    "tier": "B",
+    "url": "https://github.com/sbosio/rla-es",
+    "version": "v2.9"
+  },
+  "tools": {
+    "hunspell_version": "@(#) International Ispell Version 3.2.06 (but really Hunspell 1.7.3)",
+    "python": "3.9",
+    "unicodedata_version": "13.0.0",
+    "unmunch": "unmunch (hunspell)"
+  }
+}

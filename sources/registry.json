@@ -1,0 +1,32 @@
+{
+  "$comment": "Word-list provenance registry. SINGLE SOURCE OF TRUTH for the license gate (scripts/license-gate.mjs) and the attribution surface (scripts/gen-credits.mjs -> credits.json). D2: exactly ONE source per language, no merging. A language MUST have a complete entry here AND a complete sources/<lang>/ directory (fetch script + LICENSE + PROVENANCE.md) before any wordlists/<lang>.txt is allowed to exist.",
+  "tiers": {
+    "A": "Ship-free. Permissive / public-domain (MIT, BSD, Apache-2.0, CC0, Unicode). No attribution required to redistribute derived data.",
+    "B": "Attribution + share-alike. Copyleft or CC BY-SA (GPL, LGPL, MPL, CC BY-SA). Must credit the source (credits.json) and preserve the source's terms on the DATA files. NOTE: shipping copyleft-derived data inside a closed binary is a posture decision for Eric, not this pipeline.",
+    "C": "Restricted. Usable only unmodified and/or server-side, or otherwise limited. STOP AND ASK before any use; never ship a modified/derived list."
+  },
+  "allowed_tiers_for_ship": ["A", "B"],
+  "sources": {
+    "es": {
+      "name": "Recursos Lingüísticos Abiertos del Español (rla-es)",
+      "short": "rla-es",
+      "url": "https://github.com/sbosio/rla-es",
+      "license": "GPL-3.0-or-later / LGPL-3.0-or-later / MPL-1.1 (disjunctive tri-license)",
+      "license_spdx": "GPL-3.0-or-later OR LGPL-3.0-or-later OR MPL-1.1",
+      "tier": "B",
+      "version": "v2.9",
+      "commit": "c67eae826908d05a8dfabf3f7a012ce280678208",
+      "artifact": "source-code/hispalabras-0.1/hispalabras/es_ANY.dic + es_ANY.aff (packaged Hunspell dictionary)",
+      "tarball_url": "https://codeload.github.com/sbosio/rla-es/tar.gz/refs/tags/v2.9",
+      "tarball_sha256": "3930b1e5d9fdf8ddc19247798a77ae2b9efcfe6848555df80bd13f8c9597211e",
+      "retrieved": "2026-07-15",
+      "registry_dir": "sources/es",
+      "credits": {
+        "name": "Recursos Lingüísticos Abiertos del Español (rla-es)",
+        "url": "https://github.com/sbosio/rla-es",
+        "license": "GPL-3.0-or-later OR LGPL-3.0-or-later OR MPL-1.1",
+        "attribution": "Spanish word data derived from Recursos Lingüísticos Abiertos del Español (rla-es), © the RLA-ES contributors, tri-licensed GPLv3 / LGPLv3 / MPL-1.1."
+      }
+    }
+  }
+}
