@@ -46,6 +46,40 @@ posture is acceptable. See `assets/words/LICENSES.md`, which already flags that 
 language whose Hunspell license is incompatible with a closed binary may need an
 alternative open lexicon substituted.
 
+## Provenance validation of the shipped curated list (option 1)
+
+Eric chose to **provenance-BACK** the existing curated Spanish list against this
+source rather than replace it. The curated lists (`assets/words/es/*.txt`) are
+**unchanged**; we only add a validation layer that proves each shipped word
+exists in the open-licensed source.
+
+- **Raw surface index** — `sources/es/surface-index.txt` is the full `unmunch`
+  expansion of `es_ANY.{dic,aff}`, NFC-normalized + lowercased + deduped +
+  codepoint-sorted (951,893 unique surface forms). It is emitted **before** the
+  game-eligibility filter (`scripts/surface_index.py`), so a long-but-real
+  headword (e.g. `electrodoméstico`, dropped from the playable list by the
+  ≤15-char rule) still counts as source-backed. Build it with
+  `make surface-index LANG=es` (or it is emitted as a side output of
+  `make wordlist`). It is deterministic: two runs are byte-identical.
+
+- **Validator** — `scripts/provenance-validate.mjs` asserts every word in
+  `assets/words/es/{easy,medium,hard,expert}.txt` (NFC + lowercase; hyphen/space
+  compounds require every token backed) is in the surface index or on the
+  reviewed exceptions allowlist, and writes `wordlists/es.provenance.json`
+  (backed count, %, and any genuine misses). Current result: **202/202 backed —
+  196 (97.03%) directly in rla-es, 6 reviewed exceptions, 0 genuine misses.**
+
+- **Exceptions allowlist** — `sources/es/curated-exceptions.txt` lists the 6
+  standard RAE headwords that rla-es does not generate (`brócoli`, `bilingüe`,
+  `desafortunadamente`, `deshidratación`, `otorrinolaringólogo`, `quirófano`),
+  each with a one-line justification and a `dle.rae.es/<lemma>` reference for a
+  **manual** auditor check (the pipeline never scrapes dle.rae.es). These are the
+  only curated words allowed to ship without direct source backing.
+
+- **Gate** — `scripts/license-gate.mjs` fails the build if any shipped curated
+  word is neither in the raw source index nor on the exceptions allowlist. A
+  missing surface index is a hard error (no silent fallback).
+
 ## Full upstream license texts
 
 - `sources/es/LICENSE` — upstream `LICENSE.md` (tri-license statement, verbatim)

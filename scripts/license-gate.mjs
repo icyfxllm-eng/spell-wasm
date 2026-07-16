@@ -109,6 +109,66 @@ for (const [lang, src] of Object.entries(sources)) {
   }
 }
 
+// --- (d) provenance: every SHIPPED curated word must be source-backed --------
+// For each language with BOTH a registry entry and shipped curated tiers
+// (assets/words/<lang>/{easy,medium,hard,expert}.txt), every curated word must
+// EXIST in the raw source surface index (sources/<lang>/surface-index.txt), OR
+// be a reviewed entry in sources/<lang>/curated-exceptions.txt. Anything else is
+// a build failure. A missing surface index is a HARD ERROR — never assume backed.
+const TIERS = ["easy", "medium", "hard", "expert"];
+const nfcLower = (s) => s.normalize("NFC").toLowerCase();
+const readLines = (p) =>
+  readFileSync(p, "utf8").split("\n").map((l) => l.replace(/\r$/, ""));
+const compoundTokens = (w) =>
+  nfcLower(w).split(/[\s-]+/).map((t) => t.trim()).filter((t) => t.length > 0);
+
+for (const lang of Object.keys(sources)) {
+  const curatedDir = join(ROOT, "assets", "words", lang);
+  const tierPaths = TIERS.map((t) => join(curatedDir, `${t}.txt`));
+  const presentTiers = tierPaths.filter((p) => existsSync(p));
+  if (presentTiers.length === 0) continue; // no shipped curated list for this lang
+
+  const indexPath = join(ROOT, "sources", lang, "surface-index.txt");
+  if (!existsSync(indexPath)) {
+    fail(`provenance: ${lang} ships curated words but ${rel(indexPath)} is missing. ` +
+         `Build it (scripts/surface-index.sh ${lang}); NO silent fallback.`);
+    continue;
+  }
+  const surface = new Set(readLines(indexPath).filter((l) => l !== ""));
+  if (surface.size === 0) {
+    fail(`provenance: ${rel(indexPath)} is empty.`);
+    continue;
+  }
+
+  const exceptions = new Set();
+  const excPath = join(ROOT, "sources", lang, "curated-exceptions.txt");
+  if (existsSync(excPath)) {
+    for (let line of readLines(excPath)) {
+      const h = line.indexOf("#");
+      if (h !== -1) line = line.slice(0, h);
+      line = line.trim();
+      if (line !== "") exceptions.add(nfcLower(line));
+    }
+  }
+
+  const unbacked = [];
+  for (const p of presentTiers) {
+    for (const raw of readLines(p).map((w) => w.trim()).filter(Boolean)) {
+      const toks = compoundTokens(raw);
+      const backed = toks.length > 0 && toks.every((t) => surface.has(t));
+      if (!backed && !exceptions.has(nfcLower(raw))) unbacked.push(nfcLower(raw));
+    }
+  }
+  if (unbacked.length) {
+    fail(`provenance: ${lang} — ${unbacked.length} curated word(s) neither in the raw ` +
+         `source index nor in ${rel(excPath)}: ${unbacked.slice(0, 10).join(", ")}` +
+         `${unbacked.length > 10 ? ", …" : ""}. Add a justified exception or ask Eric.`);
+  } else {
+    notes.push(`provenance ${lang}: all curated words backed ` +
+               `(${surface.size} source forms, ${exceptions.size} reviewed exceptions).`);
+  }
+}
+
 // --- report -----------------------------------------------------------------
 for (const n of notes) console.log(`license-gate: note — ${n}`);
 if (errors.length) {

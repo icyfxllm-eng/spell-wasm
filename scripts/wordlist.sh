@@ -55,9 +55,15 @@ echo "wordlist($LANG_CODE): unmunch" >&2
 RAW="$WORK/raw.txt"
 unmunch "$DIC" "$AFF" > "$RAW"
 
-# --- 3) NFC + dedupe + game-eligibility filter -> outputs + manifest ---------
+# --- 3) NFC + lowercase + dedupe -> raw provenance surface index -------------
+# Emitted from the SAME unmunch expansion, BEFORE the game filter, so the
+# provenance index and the playable list are provably the same source run.
+echo "wordlist($LANG_CODE): surface index" >&2
+python3 "$ROOT/scripts/surface_index.py" "$LANG_CODE" "$RAW"
+
+# --- 4) NFC + dedupe + game-eligibility filter -> outputs + manifest ---------
 echo "wordlist($LANG_CODE): filter" >&2
 python3 "$ROOT/scripts/wordlist_filter.py" "$LANG_CODE" "$RAW" \
   --hunspell "$HUNSPELL_VER" --unmunch-tool "unmunch (hunspell)"
 
-echo "wordlist($LANG_CODE): done -> wordlists/$LANG_CODE.txt (+ manifest)" >&2
+echo "wordlist($LANG_CODE): done -> wordlists/$LANG_CODE.txt (+ manifest, surface-index)" >&2

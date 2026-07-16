@@ -1,0 +1,66 @@
+{
+  "language": "es",
+  "generator": "scripts/provenance-validate.mjs",
+  "note": "Provenance validation of the SHIPPED curated list against the raw open-licensed source surface index. Membership = EXISTENCE in sources/es/surface-index.txt (NFC + lowercased; hyphen/space compounds require every token backed), OR a reviewed entry in sources/es/curated-exceptions.txt. The curated list is UNCHANGED.",
+  "source_index": {
+    "path": "sources/es/surface-index.txt",
+    "surface_forms": 951893
+  },
+  "curated_tiers": [
+    "assets/words/es/easy.txt",
+    "assets/words/es/medium.txt",
+    "assets/words/es/hard.txt",
+    "assets/words/es/expert.txt"
+  ],
+  "counts": {
+    "curated_total": 202,
+    "backed_total": 202,
+    "backed_by_source": 196,
+    "backed_by_exception": 6,
+    "genuine_misses": 0
+  },
+  "percentages": {
+    "backed_total_pct": 100,
+    "backed_by_source_pct": 97.03
+  },
+  "per_tier": {
+    "easy": {
+      "count": 50,
+      "backed": 50,
+      "exception": 0,
+      "misses": []
+    },
+    "medium": {
+      "count": 50,
+      "backed": 50,
+      "exception": 0,
+      "misses": []
+    },
+    "hard": {
+      "count": 50,
+      "backed": 49,
+      "exception": 1,
+      "misses": []
+    },
+    "expert": {
+      "count": 52,
+      "backed": 47,
+      "exception": 5,
+      "misses": []
+    }
+  },
+  "exceptions_allowlist": {
+    "path": "sources/es/curated-exceptions.txt",
+    "size": 6,
+    "used": [
+      "bilingüe",
+      "brócoli",
+      "desafortunadamente",
+      "deshidratación",
+      "otorrinolaringólogo",
+      "quirófano"
+    ],
+    "stale": []
+  },
+  "genuine_misses": []
+}
