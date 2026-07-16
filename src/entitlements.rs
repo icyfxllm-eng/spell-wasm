@@ -27,12 +27,25 @@
 
 use std::collections::BTreeMap;
 
-use crate::consts::{BUILTIN_LANGS, EN};
+use crate::consts::{Edition, BUILTIN_LANGS, EN};
 
 /// The App Store / Play product id for the one-time **Complete** unlock (parent
 /// premium + all languages Full). Defined HERE, in the core, so the literal
 /// lives in exactly ONE place; the purchase adapter imports it. Hard-coding this
 /// string anywhere else trips the CI grep gate.
+///
+/// **Absent from education builds** (CC-EDITIONS D4). D4 asks for zero purchase
+/// surfaces and F3 for "excluded at build time (not stubbed)", so the product id
+/// is not merely unused in an education binary — it is not compiled into it. A
+/// `cfg` rather than a runtime check is the difference between "a school's app
+/// does not show a purchase" and "a school's app does not CONTAIN one", and only
+/// the second survives someone running `strings` on the artifact.
+///
+/// Any future purchase adapter referencing this must itself be
+/// `#[cfg(not(feature = "education"))]` — in education this const does not exist
+/// and the reference will fail to compile. That build error is the feature
+/// working, not a bug to route around.
+#[cfg(not(feature = "education"))]
 pub const COMPLETE_PRODUCT_ID: &str = "net.spellgame.complete";
 
 /// FREE_TIER custom-list cap (Feature 8): free users may keep at most this many
@@ -74,8 +87,13 @@ pub enum GameMode {
 /// [`resolve_entitlements`]. Features read this; they never re-derive access.
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct EntitlementSet {
-    /// Per-language access level. EVERY shipped language is present and always at
-    /// least `Preview` (FREE_TIER floor) — a lookup is total, never missing.
+    /// Per-language access level. EVERY shipped language is present — a lookup is
+    /// total, never missing.
+    ///
+    /// The FREE_TIER floor is `Preview` with ONE exception: a language blocked on
+    /// RTL support resolves to `None` in every edition and for every input
+    /// (CC-LINEUP-SWAP D2). It is not "free at a lower tier", it is unreachable,
+    /// and saying `Preview` would be a lie a caller could act on.
     pub languages: BTreeMap<&'static str, AccessLevel>,
     /// Max number of custom word lists. `Some(n)` = capped at n; `None` =
     /// unlimited (the Complete `custom_lists_unlimited` entitlement).
@@ -118,13 +136,21 @@ pub fn free_tier() -> EntitlementSet {
         let level = if code == EN { AccessLevel::Full } else { AccessLevel::Preview };
         languages.insert(code, level);
     }
-    EntitlementSet {
+    let mut set = EntitlementSet {
         languages,
         custom_lists_cap: Some(FREE_CUSTOM_LISTS_CAP),
         photo_ocr: false,
         multiple_profiles: false,
         progress_reports: false,
-    }
+    };
+    // The baseline must not claim something the resolver will refuse. `free_tier`
+    // is public and documented as THE canonical baseline, so leaving ar/fa/ur at
+    // Preview here would make the constant itself lie about a language nobody can
+    // reach. Clamped at the source; `resolve_for_edition` clamps again at the end
+    // (idempotent) because `raise_to_complete` runs in between and would otherwise
+    // lift these back to Full.
+    clamp_rtl_blocked(&mut set);
+    set
 }
 
 /// **THE resolver.** Union of `FREE_TIER ∪ regional_grants ∪ (COMPLETE if
@@ -149,30 +175,107 @@ pub fn resolve_entitlements(
     regional_grants: &[&str],
     audit_override: bool,
 ) -> EntitlementSet {
-    // Feature 9: audit builds see the maximum, full stop — no purchase surface,
-    // no per-flag branching downstream.
-    if audit_override {
-        return grant_everything();
-    }
+    resolve_for_edition(crate::consts::EDITION, purchased, regional_grants, audit_override)
+}
 
-    let mut set = free_tier();
+/// The resolver with the edition injected (CC-EDITIONS F2).
+///
+/// [`resolve_entitlements`] is this with the build's own [`crate::consts::EDITION`],
+/// which is the only way production ever calls it — the edition is a compile-time
+/// fact (D2), not a caller's choice. The parameter exists so tests can exercise
+/// BOTH editions from one test binary; without it, a property test could only
+/// ever check the edition it happened to be compiled as, which is no check at all.
+pub fn resolve_for_edition(
+    edition: Edition,
+    purchased: bool,
+    regional_grants: &[&str],
+    audit_override: bool,
+) -> EntitlementSet {
+    // D6: the audit bypass does not exist in an education build. Schools get the
+    // real gates, not the reviewer's skeleton key. Applied here rather than at
+    // the call site so no future adapter can hand education an override.
+    let audit_override = audit_override && edition == Edition::Consumer;
 
-    // Regional grants raise the named languages to Full (union via max).
-    for &lang in regional_grants {
-        if let Some(level) = set.languages.get_mut(lang) {
-            *level = (*level).max(AccessLevel::Full);
+    let mut set = if audit_override {
+        // Feature 9: audit builds see the maximum, full stop — no purchase
+        // surface, no per-flag branching downstream.
+        grant_everything()
+    } else {
+        let mut set = free_tier();
+
+        // Regional grants raise the named languages to Full (union via max).
+        for &lang in regional_grants {
+            if let Some(level) = set.languages.get_mut(lang) {
+                *level = (*level).max(AccessLevel::Full);
+            }
+            // A grant for a non-shipped language is silently ignored (defensive;
+            // the map CI check guarantees this never happens for the bundled map).
         }
-        // A grant for a non-shipped language is silently ignored (defensive; the
-        // map CI check guarantees this never happens for the bundled map).
+
+        // COMPLETE purchase: every language to Full + the parent-premium set.
+        // Still a union — `max`/OR — so it can only add.
+        if purchased {
+            raise_to_complete(&mut set);
+        }
+        set
+    };
+
+    // CC-EDITIONS D3: education is ONE MORE GRANT SOURCE into the union, never a
+    // bypass. It raises audit-PASSED languages to Full and turns the
+    // parent-premium set on; it cannot reach a language the audit gate holds
+    // shut, because it goes through `is_active_lang` exactly like every other
+    // surface.
+    if edition == Edition::Education {
+        apply_education_grant(&mut set);
     }
 
-    // COMPLETE purchase: every language to Full + the parent-premium set. Still
-    // a union — `max`/OR — so it can only add.
-    if purchased {
-        raise_to_complete(&mut set);
-    }
+    // CC-LINEUP-SWAP D2, enforced last so nothing above can outrank it: an RTL
+    // language is not merely un-granted, it resolves to `None`. Last means
+    // `grant_everything`, a purchase, a regional grant and the education grant
+    // all lose to it — which is what "cannot be activated by ANY code path
+    // (including AUDIT_MODE)" has to mean if it means anything.
+    clamp_rtl_blocked(&mut set);
 
     set
+}
+
+/// D3 education semantics: every AUDIT-PASSED language to Full, the whole
+/// parent-premium set on.
+///
+/// The audit gate is consulted through [`crate::consts::is_active_lang`], the
+/// same chokepoint every other surface reads, so D3(a) ("editions NEVER bypass
+/// audit gates") and D3(b) (rtlRequired stays blocked) hold by construction
+/// rather than by a second list that could drift out of step.
+///
+/// Worth stating plainly, because it surprises: TODAY this changes no language
+/// level at all. English is the only audit-passed language and FREE_TIER already
+/// gives it Full, so education's language grants are byte-identical to
+/// consumer's. Everything else is ComingSoon — audit-gated-off — and D3(a) says
+/// those stay exactly as in consumer. What education actually buys today is the
+/// parent-premium set and the absence of purchase surfaces. That is not a bug in
+/// this function; it is what "editions never bypass audit gates" MEANS while
+/// only one language has passed audit.
+fn apply_education_grant(set: &mut EntitlementSet) {
+    for (code, level) in set.languages.iter_mut() {
+        if crate::consts::is_active_lang(code) {
+            *level = (*level).max(AccessLevel::Full);
+        }
+        // Audit-gated-off: left exactly as consumer resolved it (D3(a)).
+    }
+    set.custom_lists_cap = None; // unlimited
+    set.photo_ocr = true;
+    set.multiple_profiles = true;
+    set.progress_reports = true;
+}
+
+/// CC-LINEUP-SWAP D2 as a resolver-level clamp: a language blocked on RTL
+/// support resolves to `None` in every edition, for every input.
+fn clamp_rtl_blocked(set: &mut EntitlementSet) {
+    for (code, level) in set.languages.iter_mut() {
+        if crate::consts::rtl_blocked(code) {
+            *level = AccessLevel::None;
+        }
+    }
 }
 
 /// Raise a set to the full COMPLETE entitlement (all langs Full + parent
@@ -266,23 +369,46 @@ pub fn regional_grants_for_country(country: &str) -> Vec<String> {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::consts::BUILTIN_LANGS;
+    use crate::consts::{Edition, BUILTIN_LANGS};
+
+    /// Consumer-edition resolve. These tests pin CONSUMER semantics, so they say
+    /// so explicitly — inheriting the build's edition would make them silently
+    /// assert nothing in an education build.
+    fn resolve_consumer(p: bool, g: &[&str], a: bool) -> EntitlementSet {
+        resolve_for_edition(Edition::Consumer, p, g, a)
+    }
 
     fn all_langs() -> Vec<&'static str> {
         BUILTIN_LANGS.iter().map(|(c, _, _, _)| *c).collect()
     }
 
+    /// Registry languages MINUS the RTL-blocked ones. CC-LINEUP-SWAP D2 puts
+    /// ar/fa/ur at `None` for every input and every edition, so a test asserting
+    /// "Full/Preview for every language" must exclude them or it is asserting the
+    /// opposite of the gate. `rtl_blocked_langs` covers them explicitly instead.
+    fn resolvable_langs() -> Vec<&'static str> {
+        all_langs().into_iter().filter(|l| !crate::consts::rtl_blocked(l)).collect()
+    }
+
+    fn rtl_blocked_langs() -> Vec<&'static str> {
+        all_langs().into_iter().filter(|l| crate::consts::rtl_blocked(l)).collect()
+    }
+
     // ---- Acceptance 1: no purchase + no grants == exactly FREE_TIER ----
     #[test]
     fn no_purchase_no_grants_is_free_tier() {
-        let got = resolve_entitlements(false, &[], false);
+        let got = resolve_consumer(false, &[], false);
         assert_eq!(got, free_tier());
         // English Full, every other language Preview.
         assert_eq!(got.lang_level("en"), AccessLevel::Full);
-        for lang in all_langs() {
+        for lang in resolvable_langs() {
             if lang != "en" {
                 assert_eq!(got.lang_level(lang), AccessLevel::Preview, "{lang} should be Preview");
             }
+        }
+        // D2: the FREE_TIER Preview floor does not reach an RTL-blocked language.
+        for lang in rtl_blocked_langs() {
+            assert_eq!(got.lang_level(lang), AccessLevel::None, "{lang} is RTL-blocked, not Preview");
         }
         assert_eq!(got.custom_lists_cap, Some(FREE_CUSTOM_LISTS_CAP));
         assert!(!got.photo_ocr && !got.multiple_profiles && !got.progress_reports);
@@ -291,7 +417,7 @@ mod tests {
     // ---- Acceptance 2: union holds for every {purchase, grants} combo ----
     #[test]
     fn union_over_all_combinations() {
-        let langs = all_langs();
+        let langs = resolvable_langs();
         for &purchased in &[false, true] {
             // try each single-language grant, plus none, plus a multi grant
             let mut grant_cases: Vec<Vec<&str>> = vec![vec![], vec!["de", "fr", "ru"]];
@@ -299,7 +425,7 @@ mod tests {
                 grant_cases.push(vec![*l]);
             }
             for grants in &grant_cases {
-                let ent = resolve_entitlements(purchased, grants, false);
+                let ent = resolve_consumer(purchased, grants, false);
                 for &lang in &langs {
                     let expected = if purchased || grants.contains(&lang) || lang == "en" {
                         AccessLevel::Full
@@ -323,8 +449,8 @@ mod tests {
     // granted lang + purchase == still Full, no double count
     #[test]
     fn grant_plus_purchase_is_just_full() {
-        let a = resolve_entitlements(true, &["de"], false);
-        let b = resolve_entitlements(true, &[], false);
+        let a = resolve_consumer(true, &["de"], false);
+        let b = resolve_consumer(true, &[], false);
         assert_eq!(a, b, "a regional grant adds nothing on top of a purchase");
         assert_eq!(a.lang_level("de"), AccessLevel::Full);
     }
@@ -332,20 +458,26 @@ mod tests {
     // ---- audit override == ALL ----
     #[test]
     fn audit_override_grants_everything() {
-        let ent = resolve_entitlements(false, &[], true);
-        for lang in all_langs() {
+        let ent = resolve_consumer(false, &[], true);
+        for lang in resolvable_langs() {
             assert_eq!(ent.lang_level(lang), AccessLevel::Full, "{lang} Full under audit");
+        }
+        // CC-LINEUP-SWAP D2: "cannot be activated by ANY code path (including
+        // AUDIT_MODE)". The audit bypass is the strongest input the resolver has,
+        // so this is the assertion that gives the RTL gate teeth.
+        for lang in rtl_blocked_langs() {
+            assert_eq!(ent.lang_level(lang), AccessLevel::None, "{lang} must stay blocked even under AUDIT_MODE");
         }
         assert!(ent.custom_lists_unlimited());
         assert!(ent.photo_ocr && ent.multiple_profiles && ent.progress_reports);
         // audit ignores purchase surface entirely
-        assert_eq!(ent, resolve_entitlements(true, &["de"], true));
+        assert_eq!(ent, resolve_consumer(true, &["de"], true));
     }
 
     #[test]
     fn custom_list_cap_two_free_unlimited_with_complete() {
-        assert_eq!(resolve_entitlements(false, &[], false).custom_lists_cap, Some(2));
-        assert_eq!(resolve_entitlements(true, &[], false).custom_lists_cap, None);
+        assert_eq!(resolve_consumer(false, &[], false).custom_lists_cap, Some(2));
+        assert_eq!(resolve_consumer(true, &[], false).custom_lists_cap, None);
     }
 
     // ---- Preview constants / helpers (Feature 11) ----
@@ -419,7 +551,7 @@ mod tests {
 #[cfg(test)]
 mod prop_tests {
     use super::*;
-    use crate::consts::BUILTIN_LANGS;
+    use crate::consts::{is_active_lang, rtl_blocked, Edition, BUILTIN_LANGS};
     use proptest::prelude::*;
 
     fn lang_pool() -> Vec<&'static str> {
@@ -463,12 +595,136 @@ mod prop_tests {
     // Audit is always the top element — nothing exceeds it, everything is Full.
     proptest! {
         #[test]
+        /// CC-EDITIONS D3(a) — education NEVER exceeds consumer for a language the
+        /// audit gate holds shut, or for an rtlRequired one. This is the property
+        /// that makes "editions never bypass audit gates" a fact rather than a
+        /// promise: whatever the inputs, an unaudited language resolves the same
+        /// in a school's binary as in the App Store's.
+        #[test]
+        fn edu_never_exceeds_consumer_for_gated_langs(
+            purchased in any::<bool>(),
+            audit in any::<bool>(),
+            grant_idxs in prop::collection::vec(0usize..BUILTIN_LANGS.len(), 0..6),
+        ) {
+            let pool = lang_pool();
+            let grants: Vec<&str> = grant_idxs.iter().map(|&i| pool[i]).collect();
+            let con = resolve_for_edition(Edition::Consumer, purchased, &grants, audit);
+            let edu = resolve_for_edition(Edition::Education, purchased, &grants, audit);
+            for &lang in &pool {
+                if !is_active_lang(lang) || rtl_blocked(lang) {
+                    prop_assert!(
+                        edu.lang_level(lang) <= con.lang_level(lang),
+                        "{} is gated but education ({:?}) exceeded consumer ({:?})",
+                        lang, edu.lang_level(lang), con.lang_level(lang),
+                    );
+                }
+            }
+        }
+
+        /// CC-EDITIONS D3(b) — education is FULL for every audit-passed language,
+        /// whatever the purchase/grant/audit inputs.
+        #[test]
+        fn edu_is_full_for_every_audit_passed_lang(
+            purchased in any::<bool>(),
+            grant_idxs in prop::collection::vec(0usize..BUILTIN_LANGS.len(), 0..6),
+        ) {
+            let pool = lang_pool();
+            let grants: Vec<&str> = grant_idxs.iter().map(|&i| pool[i]).collect();
+            let edu = resolve_for_edition(Edition::Education, purchased, &grants, false);
+            for &lang in &pool {
+                if is_active_lang(lang) {
+                    prop_assert_eq!(edu.lang_level(lang), AccessLevel::Full, "{} audit-passed -> Full in education", lang);
+                }
+            }
+            // The parent-premium set is unconditional in education.
+            prop_assert!(edu.photo_ocr && edu.multiple_profiles && edu.progress_reports);
+            prop_assert!(edu.custom_lists_unlimited());
+        }
+
+        /// CC-EDITIONS D3(c) — consumer union semantics are untouched by the
+        /// edition axis existing. The default build must be byte-for-byte what it
+        /// was before this feature landed.
+        ///
+        /// Also the WIRING test: it proves `resolve_entitlements` resolves through
+        /// the build's own EDITION, and that the default build is Consumer. That
+        /// makes it edition-specific by nature, hence the cfg — the education
+        /// build has its own counterpart below.
+        #[cfg(not(feature = "education"))]
+        #[test]
+        fn consumer_semantics_unchanged(
+            purchased in any::<bool>(),
+            audit in any::<bool>(),
+            grant_idxs in prop::collection::vec(0usize..BUILTIN_LANGS.len(), 0..6),
+        ) {
+            let pool = lang_pool();
+            let grants: Vec<&str> = grant_idxs.iter().map(|&i| pool[i]).collect();
+            prop_assert_eq!(
+                resolve_for_edition(Edition::Consumer, purchased, &grants, audit),
+                resolve_entitlements(purchased, &grants, audit),
+                "the default build IS the consumer edition",
+            );
+        }
+
+        /// CC-EDITIONS done-criterion — an rtlRequired language resolves
+        /// IDENTICALLY (blocked) in both editions, for every input.
+        #[test]
+        fn rtl_langs_resolve_identically_blocked_in_both_editions(
+            purchased in any::<bool>(),
+            audit in any::<bool>(),
+            grant_idxs in prop::collection::vec(0usize..BUILTIN_LANGS.len(), 0..6),
+        ) {
+            let pool = lang_pool();
+            let grants: Vec<&str> = grant_idxs.iter().map(|&i| pool[i]).collect();
+            let con = resolve_for_edition(Edition::Consumer, purchased, &grants, audit);
+            let edu = resolve_for_edition(Edition::Education, purchased, &grants, audit);
+            for &lang in pool.iter().filter(|l| rtl_blocked(l)) {
+                prop_assert_eq!(con.lang_level(lang), AccessLevel::None, "{} blocked in consumer", lang);
+                prop_assert_eq!(edu.lang_level(lang), AccessLevel::None, "{} blocked in education", lang);
+            }
+        }
+
+        /// CC-EDITIONS D6 — AUDIT_MODE does not operate in an education build.
+        /// Schools get the real gates, not the reviewer's skeleton key.
+        #[test]
+        fn audit_bypass_is_inert_in_education(
+            purchased in any::<bool>(),
+            grant_idxs in prop::collection::vec(0usize..BUILTIN_LANGS.len(), 0..6),
+        ) {
+            let pool = lang_pool();
+            let grants: Vec<&str> = grant_idxs.iter().map(|&i| pool[i]).collect();
+            prop_assert_eq!(
+                resolve_for_edition(Edition::Education, purchased, &grants, true),
+                resolve_for_edition(Edition::Education, purchased, &grants, false),
+                "audit_override must change nothing in education",
+            );
+        }
+
+        /// The education build's wiring counterpart: `resolve_entitlements` must
+        /// resolve through Edition::Education when compiled with the feature. If
+        /// this ever passed in a consumer build, the feature flag would be inert.
+        #[cfg(feature = "education")]
+        #[test]
+        fn education_build_wires_the_education_edition(
+            purchased in any::<bool>(),
+            audit in any::<bool>(),
+            grant_idxs in prop::collection::vec(0usize..BUILTIN_LANGS.len(), 0..6),
+        ) {
+            let pool = lang_pool();
+            let grants: Vec<&str> = grant_idxs.iter().map(|&i| pool[i]).collect();
+            prop_assert_eq!(
+                resolve_for_edition(Edition::Education, purchased, &grants, audit),
+                resolve_entitlements(purchased, &grants, audit),
+                "an --features education build IS the education edition",
+            );
+        }
+
         fn audit_dominates(purchased in any::<bool>(), grant_idxs in prop::collection::vec(0usize..BUILTIN_LANGS.len(), 0..6)) {
             let pool = lang_pool();
             let grants: Vec<&str> = grant_idxs.iter().map(|&i| pool[i]).collect();
-            let audit = resolve_entitlements(purchased, &grants, true);
+            let audit = resolve_for_edition(Edition::Consumer, purchased, &grants, true);
             for &lang in &pool {
-                prop_assert_eq!(audit.lang_level(lang), AccessLevel::Full);
+                let expected = if crate::consts::rtl_blocked(lang) { AccessLevel::None } else { AccessLevel::Full };
+                prop_assert_eq!(audit.lang_level(lang), expected);
             }
             prop_assert!(audit.custom_lists_unlimited());
         }

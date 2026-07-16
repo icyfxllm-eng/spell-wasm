@@ -16,6 +16,17 @@ crate-type = ["cdylib", "rlib"]
 # prove its absence (scripts/seam-absence-check.mjs).
 testseam = []
 
+# CC-EDITIONS D2 — builds the EDUCATION edition (schools / program buyers)
+# instead of the default consumer app. Build-time by design: a runtime edition
+# toggle would leave the purchase surface compiled INTO a school's binary and
+# merely hide it, which is both a leak risk and an App Review liability.
+#
+# Selects consts::EDITION = Edition::Education, which turns off every derived
+# capability gate (purchases_available, audit_bypass_available,
+# leaderboard_available) and adds the education grant to the resolver.
+# Ships under a separate bundle ID / distribution artifact.
+education = []
+
 [dependencies]
 wasm-bindgen = "0.2"
 wasm-bindgen-futures = "0.4"

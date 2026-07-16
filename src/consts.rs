@@ -62,6 +62,55 @@ pub enum LangStatus {
 }
 use LangStatus::{Active, ComingSoon};
 
+/// Which edition this binary IS (CC-EDITIONS D1): exactly two, forever. A third
+/// requires a new decision from Eric — an instruction file asking for a `gov`
+/// edition contradicts D1 and must be stopped on, not implemented. ("Gov" is the
+/// Education edition plus external paperwork — VPAT, SAM, invoicing — never a
+/// code concept.)
+#[derive(PartialEq, Eq, Clone, Copy, Debug)]
+pub enum Edition {
+    /// The App Store app. Purchases exist.
+    Consumer,
+    /// Schools and program buyers. Zero purchase surfaces (D4).
+    Education,
+}
+
+/// THE edition constant. BUILD-TIME only (D2): selected by the `education` cargo
+/// feature, which also drives a separate bundle ID / distribution artifact.
+///
+/// Deliberately NOT a runtime toggle, server flag, or purchasable state. A
+/// runtime edition switch would mean the education binary still CONTAINS the
+/// purchase surface and merely hides it — a leak risk and an App Review
+/// liability. Compile-time means the code is absent, which is the only claim
+/// worth making to a school district.
+pub const EDITION: Edition = if cfg!(feature = "education") { Edition::Education } else { Edition::Consumer };
+
+/// Derived capability: may this build ever show a purchase surface?
+///
+/// THE thing surfaces read. CC-EDITIONS F1 forbids `if edition == …` scattered
+/// through the UI — surfaces consume derived capabilities, never the raw
+/// constant, so the edition axis stays one decision in one place.
+pub fn purchases_available() -> bool {
+    EDITION == Edition::Consumer
+}
+
+/// Whether the AUDIT_MODE bypass may operate in this build (CC-EDITIONS D6).
+///
+/// False in education: schools get the real gates, not the reviewer bypass.
+/// AUDIT_MODE stays orthogonal to the edition axis — it exists for App Review in
+/// consumer builds — but it must never be reachable in a school's binary.
+pub fn audit_bypass_available() -> bool {
+    EDITION == Edition::Consumer
+}
+
+/// Whether The Climb posts to the global leaderboard (CC-EDITIONS D7).
+///
+/// Education is local/unranked in v1: the simplest COPPA/FERPA-adjacent posture
+/// is for a school device to write nothing to a global board at all.
+pub fn leaderboard_available() -> bool {
+    EDITION == Edition::Consumer
+}
+
 /// Whether the app can render, input, and mirror right-to-left scripts. FALSE
 /// until the CC-RTL initiative ships — it is not drafted, let alone built.
 ///

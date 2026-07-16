@@ -1,0 +1,86 @@
+# CC-EDITIONS gates — the consumer/education axis. Runs on every push / PR.
+#
+# The point of the axis is that ONE codebase produces both editions, so CI builds
+# BOTH on every run (F1): education breakage is caught here, not at school-
+# delivery time.
+#
+# Enforces:
+#   * both editions compile (native + wasm) from one codebase;
+#   * both test suites pass — including the D3 property tests, which exercise both
+#     editions from either build via resolve_for_edition;
+#   * no raw EDITION conditionals leak outside the core (F1: surfaces consume
+#     derived capabilities like purchases_available(), never the constant);
+#   * the education artifact carries no purchase-surface strings (F3/D4).
+#
+# NOT here, and blocked elsewhere:
+#   * the fastlane `education` lane + distinct bundle ID (F1). Touching fastlane
+#     needs Eric's approval under the pipeline freeze, so the education artifact
+#     is currently wasm-only.
+#   * the app-wide zero-purchase-surface Playwright suite against the education
+#     build (F3). There is no purchase surface in EITHER edition yet, so the suite
+#     would assert the absence of something that was never built.
+name: Editions
+
+on:
+  push:
+    branches: ["**"]
+  pull_request:
+  workflow_dispatch:
+
+env:
+  AUDIT_MODE: "0"
+
+jobs:
+  editions:
+    name: Edition axis gates
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      - name: Rust wasm toolchain
+        run: rustup target add wasm32-unknown-unknown
+
+      - name: Cache cargo
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.cargo/registry
+            ~/.cargo/git
+            target
+          key: cargo-editions-${{ runner.os }}-${{ hashFiles('Cargo.lock') }}
+
+      # --- F1: one codebase, both editions -------------------------------------
+      - name: Consumer edition — lib builds
+        run: cargo build --lib --target wasm32-unknown-unknown
+
+      - name: Education edition — lib builds
+        run: cargo build --lib --target wasm32-unknown-unknown --features education
+
+      - name: Consumer edition — tests
+        run: cargo test --lib
+
+      - name: Education edition — tests
+        run: cargo test --lib --features education
+
+      # --- F1: surfaces read derived capabilities, never the raw constant ------
+      # EDITION may appear ONLY in the core: consts.rs defines it and its derived
+      # capabilities; entitlements.rs injects it into the resolver. Anywhere else
+      # is a scattered conditional, which is the pattern the edition axis exists
+      # to avoid.
+      - name: No raw EDITION conditionals outside the core
+        run: |
+          leaks=$(grep -rln 'EDITION' --include='*.rs' src/ | grep -v -E '^src/(consts|entitlements)\.rs$' || true)
+          if [ -n "$leaks" ]; then
+            echo "EDITION referenced outside the core:"; echo "$leaks"
+            echo "Surfaces must use derived capabilities (purchases_available() etc), not the constant."
+            exit 1
+          fi
+          echo "OK — EDITION confined to the core."
+
+      # --- F3/D4: the education artifact contains no purchase surface ----------
+      - name: Purchase-surface scanner self-test (must catch a planted leak)
+        run: node scripts/edu-no-purchase-check.mjs --selftest
