@@ -22,8 +22,8 @@ already-audited words** with them, in a pedagogically sane order.
 
 | File | What it is |
 |------|-----------|
-| `th.json` `ko.json` `vi.json` `zh.json` | DRAFT curricula: units -> lessons -> steps (`element` or `spell`). Strictly linear; each lesson lists prerequisite lesson IDs. Stable/sorted for diff hygiene. |
-| `th-SEQUENCE.md` `ko-SEQUENCE.md` `vi-SEQUENCE.md` `zh-SEQUENCE.md` | One-page human-readable sequence summaries for a native auditor: element order, rationale, first ~20 words, flags. |
+| `ko.json` `vi.json` `zh.json` | DRAFT curricula: units -> lessons -> steps (`element` or `spell`). Strictly linear; each lesson lists prerequisite lesson IDs. Stable/sorted for diff hygiene. |
+| `ko-SEQUENCE.md` `vi-SEQUENCE.md` `zh-SEQUENCE.md` | One-page human-readable sequence summaries for a native auditor: element order, rationale, first ~20 words, flags. |
 | `README-REVIEW.md` | This file - the Fiverr-round handoff + the auditor-checklist line. |
 
 The JSON `schemaVersion` is `0.1-draft`. The formal word-ID wiring is an engine-phase
@@ -36,7 +36,6 @@ instructional strings per language. `spell` steps carry no strings (word referen
 
 | Lang | Instructional strings | Elements | Spell refs | Over 120 chars | Over 2 strings |
 |------|----------------------:|---------:|-----------:|:--------------:|:--------------:|
-| Thai (th)            | **57**  | 51 | 87 | 0 | 0 |
 | Korean (ko)          | **40**  | 39 | 89 | 0 | 0 |
 | Vietnamese (vi)      | **48**  | 45 | 100 | 0 | 0 |
 | Chinese pinyin (zh)  | **64**  | 63 | 0 (see flag) | 0 | 0 |
@@ -48,21 +47,21 @@ to be localized later.
 
 ## DELIVERABLE 1 - the auditor-checklist line (feature 7)
 
-Add this **exact one line to EVERY one of the 16 auditor checklists**:
+Add this **exact one line to EVERY one of the 14 auditor checklists**:
 
 > **Does the difficulty progression make sense as a learning order for a beginner in this script/spelling system? Note anything out of order.**
 
-The 16 audited languages (each has a word list under `assets/words/` and an auditor
+The 14 audited languages (each has a word list under `assets/words/` and an auditor
 checklist / packet):
 
-`de` `en` `es` `fil` `fr` `it` `ja` `ko` `nb` `nl` `pl` `pt` `sv` `th` `tr` `vi`
+`de` `en` `es` `fil` `fr` `it` `ja` `ko` `nb` `nl` `pl` `pt` `sv` `vi`
 
 (15 of these currently have an `audit/<lang>/auditor-packet.md`; `en` is the 16th. The
 line above goes into all 16, regardless of packet state.)
 
 ### The 4 pilot languages get an extra named section
 
-For **Thai, Korean, Vietnamese, and Chinese (pinyin)**, the auditor ALSO receives, as a
+For **Korean, Vietnamese, and Chinese (pinyin)**, the auditor ALSO receives, as a
 **named checklist section in their packet**, that language's:
 
 - one-page sequence summary (`<lang>-SEQUENCE.md`), and
