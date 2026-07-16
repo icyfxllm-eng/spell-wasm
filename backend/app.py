@@ -113,8 +113,11 @@ import entitlements  # noqa: E402
 db.init()
 app.register_blueprint(climb.bp)
 app.register_blueprint(matches.bp)  # async 1v1 "Spell Off" (account-gated)
-# Regional free-language grants from Cloudflare's CF-IPCountry (no accounts, no
-# tracking). Reads the same country-language map the Rust core bundles.
+# Regional free-language grants, derived from the caller's Cloudflare edge
+# country (no accounts, no tracking). The adapter — backend/entitlements.py — is
+# the only place that reads the request header, and it resolves against the same
+# country-language map the Rust core bundles. Ask it; never re-derive a country
+# here (scripts/entitlement-core-purity-check.mjs enforces that).
 app.register_blueprint(entitlements.bp)
 
 # ---------------------------------------------------------------

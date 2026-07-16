@@ -27,6 +27,14 @@ const ALLOWLIST = [
   'src/entitlements_adapter.rs',
   'ios/App/App/StoreKit',        // StoreKit purchase adapter (Swift)
   'backend/entitlements.py',     // Flask region adapter (reads CF-IPCountry + the same map)
+  // An adapter's own tests must speak the platform's language to test it: the
+  // region adapter cannot be tested without sending a CF-IPCountry header, and
+  // the purchase adapter cannot be tested without the product id. Allowlisting
+  // a test does NOT widen where the doctrine allows logic to live — these files
+  // exercise an adapter, they are not a second home for it.
+  'backend/test_entitlements.py',
+  'src/entitlements_adapter_test.rs',
+  'ios/App/AppTests/StoreKit',
 ];
 
 const IGNORE_DIRS = new Set(['node_modules', 'target', 'dist', 'dist-test', 'pkg', 'pkg-test', '.git']);
