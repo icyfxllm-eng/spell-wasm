@@ -11,6 +11,7 @@ mod deck;
 mod dom;
 pub mod editor;
 mod enrich;
+pub mod entitlements;
 mod flags;
 mod game;
 mod ghost;
