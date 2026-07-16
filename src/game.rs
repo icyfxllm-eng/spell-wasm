@@ -961,7 +961,11 @@ fn on_correct(app: &App) {
         // live instant-skip (D3); `daily_auto_advance` is guarded so the timer
         // is a no-op if the player already advanced — at most one advance per
         // word (I6).
-        schedule(app, CORRECT_DELAY_MS, |app| daily_auto_advance(app));
+        // Pin the timer to the word index it was scheduled for: if the player
+        // orb-skips to a later word faster than CORRECT_DELAY_MS, this stale timer
+        // must be a no-op rather than advancing an extra, unscored word.
+        let at_idx = app.borrow().daily.idx;
+        schedule(app, CORRECT_DELAY_MS, move |app| daily_auto_advance(app, at_idx));
         return;
     }
     crate::haptics::correct();
@@ -1585,10 +1589,12 @@ fn daily_answer(app: &App, correct: bool) {
 /// (final word not special-cased). Backgrounding only delays the timeout; the
 /// guard still guarantees a single advance. The last word (score-recording via
 /// finish_daily) is READ-ONLY here (I5) — this only chooses *when* to advance.
-fn daily_auto_advance(app: &App) {
+fn daily_auto_advance(app: &App, at_idx: usize) {
     let go = {
         let s = app.borrow();
-        s.daily.active && s.answered && !s.composing
+        // `daily.idx == at_idx` ensures we only advance the word this timer was
+        // scheduled for — a stale timer from an already-skipped word is dropped.
+        s.daily.active && s.answered && !s.composing && s.daily.idx == at_idx
     };
     if go {
         next_word(app);
