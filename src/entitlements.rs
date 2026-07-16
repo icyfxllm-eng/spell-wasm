@@ -19,7 +19,7 @@
 //! ```ignore
 //! // Purchase adapter (StoreKit) knows `purchased`. Region adapter (Flask/CF)
 //! // turns a country code into grants via `regional_grants_for_country`.
-//! let grants = entitlements::regional_grants_for_country("CH"); // ["de","fr","it"]
+//! let grants = entitlements::regional_grants_for_country("CH"); // ["de","fr"]
 //! let grants: Vec<&str> = grants.iter().map(String::as_str).collect();
 //! let ent = entitlements::resolve_entitlements(purchased, &grants, audit_override);
 //! if ent.lang_level("de") == entitlements::AccessLevel::Full { /* … */ }
@@ -114,7 +114,7 @@ impl EntitlementSet {
 ///   entitlements all OFF.
 pub fn free_tier() -> EntitlementSet {
     let mut languages = BTreeMap::new();
-    for (code, _, _) in BUILTIN_LANGS {
+    for (code, _, _, _) in BUILTIN_LANGS {
         let level = if code == EN { AccessLevel::Full } else { AccessLevel::Preview };
         languages.insert(code, level);
     }
@@ -269,7 +269,7 @@ mod tests {
     use crate::consts::BUILTIN_LANGS;
 
     fn all_langs() -> Vec<&'static str> {
-        BUILTIN_LANGS.iter().map(|(c, _, _)| *c).collect()
+        BUILTIN_LANGS.iter().map(|(c, _, _, _)| *c).collect()
     }
 
     // ---- Acceptance 1: no purchase + no grants == exactly FREE_TIER ----
@@ -294,7 +294,7 @@ mod tests {
         let langs = all_langs();
         for &purchased in &[false, true] {
             // try each single-language grant, plus none, plus a multi grant
-            let mut grant_cases: Vec<Vec<&str>> = vec![vec![], vec!["de", "fr", "it"]];
+            let mut grant_cases: Vec<Vec<&str>> = vec![vec![], vec!["de", "fr", "ru"]];
             for l in &langs {
                 grant_cases.push(vec![*l]);
             }
@@ -389,9 +389,30 @@ mod tests {
             }
         }
         // known anchors
-        assert_eq!(regional_grants_for_country("CH"), vec!["de", "fr", "it"]);
+        assert_eq!(regional_grants_for_country("CH"), vec!["de", "fr"], "it left the lineup");
         assert_eq!(regional_grants_for_country("KR"), vec!["ko"]);
         assert!(regional_grants_for_country("ZZ").is_empty());
+
+        // CC-LINEUP-SWAP D6 anchors.
+        assert_eq!(regional_grants_for_country("RU"), vec!["ru"]);
+        assert_eq!(regional_grants_for_country("KZ"), vec!["ru"], "ru is official in Kazakhstan");
+        assert_eq!(regional_grants_for_country("EG"), vec!["ar"]);
+        assert_eq!(regional_grants_for_country("PK"), vec!["ur"]);
+        assert_eq!(regional_grants_for_country("TR"), vec!["tr"], "tr reinstated per D7");
+        // Iran: granted in the map, but reachable only via the web CF-IPCountry
+        // path — there is no Iranian App Store for the storefront path to see.
+        assert_eq!(regional_grants_for_country("IR"), vec!["fa"]);
+        // D6: India maps to NOTHING (Hindi isn't in the lineup; Urdu would be
+        // wrong for most of its users).
+        assert!(regional_grants_for_country("IN").is_empty(), "D6: India grants nothing");
+        // The cut four have no home country left anywhere in the map.
+        for country in ["IT", "NL", "NO", "SE", "SM"] {
+            assert!(
+                regional_grants_for_country(country).is_empty(),
+                "{country} was a home country for a cut language",
+            );
+        }
+        assert_eq!(regional_grants_for_country("BE"), vec!["fr"], "nl left BE");
     }
 }
 
@@ -402,7 +423,7 @@ mod prop_tests {
     use proptest::prelude::*;
 
     fn lang_pool() -> Vec<&'static str> {
-        BUILTIN_LANGS.iter().map(|(c, _, _)| *c).collect()
+        BUILTIN_LANGS.iter().map(|(c, _, _, _)| *c).collect()
     }
 
     // The core invariant: adding ANY input never removes an entitlement.

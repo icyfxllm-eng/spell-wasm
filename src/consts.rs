@@ -28,11 +28,7 @@ pub const ES: &str = "es";
 pub const FR: &str = "fr";
 pub const DE: &str = "de";
 pub const PT: &str = "pt";
-pub const IT: &str = "it";
-pub const NL: &str = "nl";
 pub const PL: &str = "pl";
-pub const SV: &str = "sv";
-pub const NB: &str = "nb";
 pub const TR: &str = "tr";
 pub const VI: &str = "vi";
 pub const KO: &str = "ko";
@@ -40,6 +36,15 @@ pub const JA: &str = "ja";
 pub const FIL: &str = "fil";
 pub const ZH: &str = "zh";
 pub const TH: &str = "th";
+/// CC-LINEUP-SWAP: Russian (ru-RU). The only new language that can reach the
+/// current audit round — left-to-right, so nothing gates it but its content.
+pub const RU: &str = "ru";
+/// CC-LINEUP-SWAP: Modern Standard Arabic (D3). RTL — see [`RTL_SUPPORTED`].
+pub const AR: &str = "ar";
+/// CC-LINEUP-SWAP: Iranian Persian (fa-IR per D3, not Dari). RTL.
+pub const FA: &str = "fa";
+/// CC-LINEUP-SWAP: Urdu (ur-PK). RTL.
+pub const UR: &str = "ur";
 
 /// Built-in word-source languages: (lang code, display name). Adding a language
 /// here + its word bank in `words.rs` + a voice in the backend's `LANG_VOICES`
@@ -50,45 +55,82 @@ pub const TH: &str = "th";
 /// that lists / starts / routes to a language reads this — no scattered
 /// per-language checks. Deactivated languages keep all their assets + user data;
 /// reactivating is a one-line status flip.
-#[derive(PartialEq, Eq, Clone, Copy)]
+#[derive(PartialEq, Eq, Clone, Copy, Debug)]
 pub enum LangStatus {
     Active,
     ComingSoon,
 }
 use LangStatus::{Active, ComingSoon};
 
-pub const BUILTIN_LANGS: [(&str, &str, LangStatus); 15] = [
-    (EN, "English", Active),
-    (ES, "Espa\u{f1}ol", ComingSoon),
-    (FR, "Fran\u{e7}ais", ComingSoon),
-    (DE, "Deutsch", ComingSoon),
-    (PT, "Portugu\u{ea}s", ComingSoon),
-    (IT, "Italiano", ComingSoon),
-    (NL, "Nederlands", ComingSoon),
-    (PL, "Polski", ComingSoon),
-    (SV, "Svenska", ComingSoon),
-    (NB, "Norsk", ComingSoon),
-    (VI, "Ti\u{1ebf}ng Vi\u{1ec7}t", ComingSoon),
-    (KO, "\u{d55c}\u{ad6d}\u{c5b4}", ComingSoon),
-    (JA, "\u{65e5}\u{672c}\u{8a9e}", ComingSoon),
-    (FIL, "Filipino", ComingSoon),
-    (ZH, "\u{4e2d}\u{6587}", ComingSoon),
+/// Whether the app can render, input, and mirror right-to-left scripts. FALSE
+/// until the CC-RTL initiative ships — it is not drafted, let alone built.
+///
+/// CC-LINEUP-SWAP D2: this is the ONLY switch that can ever un-gate an
+/// `rtl_required` language. It is a `const` (not a runtime toggle) so that
+/// flipping it is a deliberate code change reviewed alongside the RTL work,
+/// never a config accident. See [`rtl_required`] for the gate itself.
+pub const RTL_SUPPORTED: bool = false;
+
+/// Built-in word-source languages: (code, display name, status, rtl_required).
+///
+/// `rtl_required` (CC-LINEUP-SWAP D2) marks a language whose script is
+/// right-to-left. Such a language is registered — the roadmap commitment is
+/// visible — but is HARD-GATED from activation by any code path until
+/// [`RTL_SUPPORTED`] is true. Partial RTL rendering is worse than none, so the
+/// gate is unconditional rather than best-effort. Users never see the reason:
+/// ar/fa/ur show the same "coming soon" tile as any unaudited language.
+pub const BUILTIN_LANGS: [(&str, &str, LangStatus, bool); 16] = [
+    (EN, "English", Active, false),
+    (ES, "Espa\u{f1}ol", ComingSoon, false),
+    (FR, "Fran\u{e7}ais", ComingSoon, false),
+    (DE, "Deutsch", ComingSoon, false),
+    (PT, "Portugu\u{ea}s", ComingSoon, false),
+    (PL, "Polski", ComingSoon, false),
+    (TR, "T\u{fc}rk\u{e7}e", ComingSoon, false),
+    (VI, "Ti\u{1ebf}ng Vi\u{1ec7}t", ComingSoon, false),
+    (KO, "\u{d55c}\u{ad6d}\u{c5b4}", ComingSoon, false),
+    (JA, "\u{65e5}\u{672c}\u{8a9e}", ComingSoon, false),
+    (FIL, "Filipino", ComingSoon, false),
+    (ZH, "\u{4e2d}\u{6587}", ComingSoon, false),
+    (RU, "\u{420}\u{443}\u{441}\u{441}\u{43a}\u{438}\u{439}", ComingSoon, false),
+    (AR, "\u{627}\u{644}\u{639}\u{631}\u{628}\u{64a}\u{629}", ComingSoon, true),
+    (FA, "\u{641}\u{627}\u{631}\u{633}\u{6cc}", ComingSoon, true),
+    (UR, "\u{627}\u{631}\u{62f}\u{648}", ComingSoon, true),
 ];
+
+/// Whether `lang`'s script is right-to-left and therefore blocked until
+/// [`RTL_SUPPORTED`] (CC-LINEUP-SWAP D2). Data lookup, not a per-language
+/// conditional; unknown languages are not RTL.
+pub fn rtl_required(lang: &str) -> bool {
+    BUILTIN_LANGS.iter().find(|(c, _, _, _)| *c == lang).map(|(_, _, _, rtl)| *rtl).unwrap_or(false)
+}
+
+/// CC-LINEUP-SWAP D2 — THE gate. `false` for any RTL language until the RTL
+/// initiative lands. Every path that could activate a language (status checks,
+/// the entitlement resolver — including its audit override) consults this, so
+/// an RTL language can never partially render.
+pub fn rtl_blocked(lang: &str) -> bool {
+    rtl_required(lang) && !RTL_SUPPORTED
+}
 
 /// A language's availability status (ComingSoon for anything not in the registry).
 pub fn lang_status(lang: &str) -> LangStatus {
-    BUILTIN_LANGS.iter().find(|(c, _, _)| *c == lang).map(|(_, _, s)| *s).unwrap_or(ComingSoon)
+    BUILTIN_LANGS.iter().find(|(c, _, _, _)| *c == lang).map(|(_, _, s, _)| *s).unwrap_or(ComingSoon)
 }
 
 /// True only for languages playable right now (passed audit). Gating for study
 /// languages; `uiLang` / interface localization is unaffected.
+///
+/// CC-LINEUP-SWAP D2: an `rtl_required` language is never active, whatever its
+/// registry status says — the gate is applied here, at the single chokepoint
+/// every surface already reads, so no caller can route around it.
 pub fn is_active_lang(lang: &str) -> bool {
-    lang_status(lang) == Active
+    !rtl_blocked(lang) && lang_status(lang) == Active
 }
 
 /// Whether `lang` is a built-in, backend-voiced language (not My Words/Misses).
 pub fn is_builtin_lang(lang: &str) -> bool {
-    BUILTIN_LANGS.iter().any(|(code, _, _)| *code == lang)
+    BUILTIN_LANGS.iter().any(|(code, _, _, _)| *code == lang)
 }
 
 /// Languages whose letters can be spoken to spell (Feature "Spell It Out Loud").
@@ -128,7 +170,6 @@ pub fn def_lang(base: &str) -> Option<&'static str> {
         "es" => Some("es"),
         "fr" => Some("fr"),
         "de" => Some("de"),
-        "it" => Some("it"),
         "pt" => Some("pt-BR"),
         "ru" => Some("ru"),
         "ja" => Some("ja"),
@@ -169,18 +210,61 @@ mod registry_tests {
     use super::*;
     #[test]
     fn only_en_active() {
-        // English is the only Active language. Thai and Turkish were CUT from the
-        // registry (2026-07-15, Eric — didn't fit the game, and it trims the audit
-        // load). Everything else — content ready but held for the English-only App
-        // Store — stays Coming Soon until Eric reactivates it.
+        // English is the only Active language. Everything else — content ready but
+        // held for the English-only App Store — stays Coming Soon until Eric
+        // reactivates it.
         assert!(is_active_lang("en"));
         assert!(!is_active_lang("es"), "es stays gated (English-only App Store launch)");
-        assert!(!BUILTIN_LANGS.iter().any(|(c, _, _)| *c == "th" || *c == "tr"),
-            "Thai and Turkish are cut from the registry");
-        for (code, _, _) in BUILTIN_LANGS {
+        for (code, _, _, _) in BUILTIN_LANGS {
             if code != "en" {
                 assert!(!is_active_lang(code), "{code} should be coming_soon");
             }
         }
+    }
+
+    /// CC-LINEUP-SWAP: the registry snapshot. Pinning the exact lineup means a
+    /// language cannot be added or cut without this test being updated
+    /// deliberately.
+    #[test]
+    fn registry_is_the_swapped_lineup_of_16() {
+        let codes: Vec<&str> = BUILTIN_LANGS.iter().map(|(c, _, _, _)| *c).collect();
+        assert_eq!(codes.len(), 16, "exactly 16 languages after the lineup swap");
+        assert_eq!(
+            codes,
+            vec!["en", "es", "fr", "de", "pt", "pl", "tr", "vi", "ko", "ja", "fil", "zh", "ru", "ar", "fa", "ur"],
+        );
+        // The cut four (CC-LINEUP-SWAP F1) are gone; Thai stays cut (5fc69ff).
+        for gone in ["no", "nb", "sv", "nl", "it", "th"] {
+            assert!(!codes.contains(&gone), "{gone} is cut from the registry");
+        }
+    }
+
+    /// CC-LINEUP-SWAP D2 — exactly ar/fa/ur are RTL, and none of them can be
+    /// activated while RTL is unsupported.
+    #[test]
+    fn rtl_languages_are_registered_but_hard_gated() {
+        let rtl: Vec<&str> = BUILTIN_LANGS.iter().filter(|(_, _, _, r)| *r).map(|(c, _, _, _)| *c).collect();
+        assert_eq!(rtl, vec!["ar", "fa", "ur"], "exactly the three RTL languages carry the flag");
+        assert!(!RTL_SUPPORTED, "RTL is unsupported until the CC-RTL initiative ships");
+        for code in rtl {
+            assert!(rtl_required(code), "{code} is rtl_required");
+            assert!(rtl_blocked(code), "{code} is blocked while RTL is unsupported");
+            assert!(!is_active_lang(code), "{code} must never be active");
+        }
+        // Russian is the new LTR language — it carries no RTL gate at all.
+        assert!(!rtl_required("ru"), "ru is left-to-right");
+        assert!(!rtl_blocked("ru"));
+    }
+
+    /// D2's teeth: flipping an RTL language to `Active` in the registry must STILL
+    /// not activate it. The gate lives in `is_active_lang`, not in the status, so
+    /// a well-meaning status flip cannot ship partial RTL rendering.
+    #[test]
+    fn rtl_gate_survives_an_active_status() {
+        // Simulate the registry saying Active for an RTL language.
+        assert_eq!(lang_status("ar"), ComingSoon, "ar ships as ComingSoon");
+        assert!(rtl_blocked("ar"));
+        // `is_active_lang` ANDs the gate in, so status alone can never win.
+        assert!(!is_active_lang("ar"));
     }
 }

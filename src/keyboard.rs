@@ -42,20 +42,10 @@ const PT: Layout = Layout {
     rows: &["qwertyuiop", "asdfghjklç", "zxcvbnm"],
     long_press: &[('a', "áàâã"), ('e', "éê"), ('i', "í"), ('o', "óôõ"), ('u', "ú")],
 };
-const IT: Layout = Layout {
-    rows: &["qwertyuiop", "asdfghjkl", "zxcvbnm"],
-    long_press: &[('a', "à"), ('e', "èé"), ('i', "ì"), ('o', "ò"), ('u', "ù")],
-};
-const NL: Layout = Layout {
-    rows: &["qwertyuiop", "asdfghjkl", "zxcvbnm"],
-    long_press: &[('e', "éë"), ('i', "ï"), ('o', "ö")],
-};
 const PL: Layout = Layout {
     rows: &["qwertyuiop", "asdfghjkl", "zxcvbnm"],
     long_press: &[('a', "ą"), ('c', "ć"), ('e', "ę"), ('l', "ł"), ('n', "ń"), ('o', "ó"), ('s', "ś"), ('z', "źż")],
 };
-const SV: Layout = Layout { rows: &["qwertyuiopå", "asdfghjklöä", "zxcvbnm"], long_press: &[] };
-const NB: Layout = Layout { rows: &["qwertyuiopå", "asdfghjkløæ", "zxcvbnm"], long_press: &[] };
 const TR: Layout = Layout {
     rows: &["qwertyuıopğ", "asdfghjklşi", "zxcvbnmöçü"],
     long_press: &[],
@@ -112,11 +102,7 @@ fn layout_for(locale: &str) -> &'static Layout {
         "fr" => &FR,
         "de" => &DE,
         "pt" => &PT,
-        "it" => &IT,
-        "nl" => &NL,
         "pl" => &PL,
-        "sv" => &SV,
-        "nb" => &NB,
         "tr" => &TR,
         "vi" => &VI,
         "ko" => &KO,
@@ -565,11 +551,7 @@ mod tests {
             ("fr", include_str!("../assets/keyboards/fr.json")),
             ("de", include_str!("../assets/keyboards/de.json")),
             ("pt", include_str!("../assets/keyboards/pt.json")),
-            ("it", include_str!("../assets/keyboards/it.json")),
-            ("nl", include_str!("../assets/keyboards/nl.json")),
             ("pl", include_str!("../assets/keyboards/pl.json")),
-            ("sv", include_str!("../assets/keyboards/sv.json")),
-            ("nb", include_str!("../assets/keyboards/nb.json")),
             ("tr", include_str!("../assets/keyboards/tr.json")),
             ("vi", include_str!("../assets/keyboards/vi.json")),
             ("ko", include_str!("../assets/keyboards/ko.json")),
@@ -600,7 +582,7 @@ mod tests {
     /// fold the player must reproduce) is reachable on that locale's keyboard.
     #[test]
     fn every_word_char_is_typeable() {
-        for (code, _, _) in crate::consts::BUILTIN_LANGS {
+        for (code, _, _, _) in crate::consts::BUILTIN_LANGS {
             let mut reach = reachable(layout_for(code));
             if code == "vi" {
                 // The tone row makes every tone of every reachable vowel typeable.

@@ -44,19 +44,32 @@ home country is a bug the CI check rejects).
   GA, TG, BJ, MG`. This African list is the most likely place for red pen —
   trim/extend as you see fit.
 - **German (de)** — `DE, AT, LI`, plus multilingual `CH, LU`.
-- **Italian (it)** — `IT, SM` (San Marino), plus multilingual `CH`.
-- **Dutch (nl)** — `NL`, plus multilingual `BE`.
 - **Polish (pl)** — `PL`.
-- **Swedish (sv)** — `SE`. (Swedish is co-official in Finland `FI`; left out of
-  the draft — flag if wanted.)
-- **Norwegian (nb)** — `NO`.
+- **Russian (ru)** — `RU`, plus the post-Soviet states where Russian is an
+  **official** language: `BY` (co-official), `KZ` and `KG` (official alongside the
+  titular language). Tajikistan (`TJ`) recognizes Russian only as a language of
+  interethnic communication, not an official one, so it is **left out** under this
+  map's official-language rule — flag if you want it in. Ukraine (`UA`) is
+  deliberately absent: Russian is not official there.
+- **Arabic (ar)** — the **Arab League** members, where Arabic is official:
+  `AE, BH, DJ, DZ, EG, IQ, JO, KM, KW, LB, LY, MA, MR, OM, PS, QA, SA, SD, SO,
+  SY, TN, YE`. Per this map's multilingual rule, `DJ` (Djibouti) and `KM`
+  (Comoros) also grant `fr`, which is co-official in both — the first time those
+  two countries appear in the map at all. Several of these have no Apple
+  storefront (see the storefront asymmetry note above).
+- **Persian (fa)** — `IR` only. **Web-grant-only by construction** (no Apple
+  storefront). Afghanistan (`AF`) is deliberately **excluded**: its Persian is
+  Dari, and D3 chose Iranian Persian (`fa-IR`) over Dari. Tajik (`TJ`) is a
+  different language in a different script.
+- **Urdu (ur)** — `PK`. **India (`IN`) maps to nothing in this pass** (D6):
+  Hindi is not in the lineup, and defaulting India to Urdu would be wrong for the
+  overwhelming majority of its users.
 - **Turkish (tr)** — `TR`. (Northern Cyprus is unrepresented in ISO 3166-1;
   `CY` was left out.)
 - **Vietnamese (vi)** — `VN`.
 - **Korean (ko)** — `KR`.
 - **Japanese (ja)** — `JP`.
 - **Filipino (fil)** — `PH`. (English is co-official there but is free anyway.)
-- **Thai (th)** — `TH`.
 - **Chinese (zh)** — `TW, HK, MO`, plus multilingual `SG`, plus **`CN`
   (see flag below)**.
 

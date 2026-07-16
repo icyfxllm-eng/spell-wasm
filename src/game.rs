@@ -40,8 +40,7 @@ pub fn mine_lang(state: &AppState) -> Option<&'static str> {
     let code = if state.custom.speak_lang.is_empty() { "en" } else { state.custom.speak_lang.as_str() };
     match code.split(['-', '_']).next().unwrap_or("") {
         "en" => Some("en"), "es" => Some("es"), "fr" => Some("fr"), "de" => Some("de"),
-        "pt" => Some("pt"), "it" => Some("it"), "nl" => Some("nl"), "pl" => Some("pl"),
-        "sv" => Some("sv"), "nb" => Some("nb"), "tr" => Some("tr"), "vi" => Some("vi"),
+        "pt" => Some("pt"), "pl" => Some("pl"), "tr" => Some("tr"), "vi" => Some("vi"),
         "ko" => Some("ko"), "ja" => Some("ja"), "th" => Some("th"), "fil" => Some("fil"),
         "cmn" | "zh" => Some("zh"),
         _ => None,
@@ -69,8 +68,8 @@ pub fn name_for(_state: &AppState, key: &str) -> String {
     }
     crate::consts::BUILTIN_LANGS
         .iter()
-        .find(|(code, _, _)| *code == key)
-        .map(|(_, name, _)| name.to_string())
+        .find(|(code, _, _, _)| *code == key)
+        .map(|(_, name, _, _)| name.to_string())
         .unwrap_or_else(|| "English".to_string())
 }
 
@@ -182,7 +181,7 @@ fn tier_for_streak(streak: u32) -> &'static str {
 /// tapped on this device) and hides the play area via `body.coming-soon`. The
 /// interface language is switched separately by the caller (uiLang untouched).
 pub fn render_coming_soon(lang: &str) {
-    let name = crate::consts::BUILTIN_LANGS.iter().find(|(c, _, _)| *c == lang).map(|(_, n, _)| *n).unwrap_or(lang);
+    let name = crate::consts::BUILTIN_LANGS.iter().find(|(c, _, _, _)| *c == lang).map(|(_, n, _, _)| *n).unwrap_or(lang);
     dom::set_text("comingNotice", &crate::i18n::tp("coming.notice", &[("lang", name)]));
     let done = crate::notify::has(lang);
     dom::set_text("notifyBtn", &crate::i18n::t(if done { "coming.confirmed" } else { "coming.notify" }));
@@ -441,8 +440,8 @@ pub fn update_setup_chip(app: &App) {
     } else {
         crate::consts::BUILTIN_LANGS
             .iter()
-            .find(|(c, _, _)| *c == s.lang)
-            .map(|(_, n, _)| (*n).to_string())
+            .find(|(c, _, _, _)| *c == s.lang)
+            .map(|(_, n, _, _)| (*n).to_string())
             .unwrap_or_else(|| s.lang.clone())
     };
     let level_label = crate::i18n::t(&format!("level.{}", s.level));
@@ -464,7 +463,7 @@ pub fn build_source_options(app: &App) {
     // would also strand UI-language selection, which this feature must leave
     // untouched. Pending the study/UI separation decision. Registry is the source
     // of truth (consts::is_active_lang) once that lands.
-    for (code, name, _status) in crate::consts::BUILTIN_LANGS {
+    for (code, name, _status, _) in crate::consts::BUILTIN_LANGS {
         opts.push_str(&format!("<option value=\"{}\">{}</option>", code, name));
     }
     if !s.custom.words.is_empty() {

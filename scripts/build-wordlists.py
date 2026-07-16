@@ -31,7 +31,13 @@ import unicodedata
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
-LANGS = ["en", "es", "fr", "de", "pt", "it", "nl", "pl", "sv", "nb", "tr", "vi", "ko", "ja", "fil", "th"]
+# CC-LINEUP-SWAP (2026-07-16): it/nl/sv/nb cut — their curated sources are
+# archived under archive/wordlists/<code>/, so the pipeline can no longer build
+# them. "th" stays listed though Thai is cut from the registry (5fc69ff): its
+# sources are still here and dormant, exactly like its locale catalog.
+# ru/ar/fa/ur are NOT here yet — their sources are CC-NEW-LANG-CONTENT's scope,
+# and listing them before the sources land would just fail the build.
+LANGS = ["en", "es", "fr", "de", "pt", "pl", "tr", "vi", "ko", "ja", "fil", "th"]
 TIERS = ["easy", "medium", "hard", "expert"]
 MIN_LEN, MAX_LEN = 2, 16
 BALANCE_TOL = 0.20

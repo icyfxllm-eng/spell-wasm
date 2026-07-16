@@ -39,7 +39,12 @@ fn parse(s: &str) -> HashSet<String> {
 fn lists() -> &'static HashMap<&'static str, HashSet<String>> {
     static L: OnceLock<HashMap<&'static str, HashSet<String>>> = OnceLock::new();
     L.get_or_init(|| {
-        kid_lists!["en", "es", "fr", "de", "pt", "it", "nl", "pl", "sv", "nb", "tr", "vi", "ko", "ja", "zh", "th", "fil"]
+        // CC-LINEUP-SWAP: it/nl/sv/nb cut (lists archived under
+        // `archive/wordlists/kid-exclude/`). ru/ar/fa/ur have no kid-exclusion
+        // list yet — their word lists are CC-NEW-LANG-CONTENT's scope, and a
+        // language with no list simply has an empty set here (the gate still
+        // runs; it just has nothing to drop).
+        kid_lists!["en", "es", "fr", "de", "pt", "pl", "tr", "vi", "ko", "ja", "zh", "th", "fil"]
     })
 }
 

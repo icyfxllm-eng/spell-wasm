@@ -356,7 +356,7 @@ mod tests {
     /// consecutive dailies, and yesterday never bleeds into today.
     #[test]
     fn daily_no_repeat() {
-        let langs = ["en", "es", "fr", "de", "pt", "it", "nl", "pl", "sv", "nb", "tr", "vi", "ko", "ja", "th", "fil", "zh"];
+        let langs = ["en", "es", "fr", "de", "pt", "pl", "tr", "vi", "ko", "ja", "th", "fil", "zh"];
         for &lang in &langs {
             for kid in [false, true] {
                 let arc: &[(&str, usize)] = if kid { &KID_ARC } else { &ARC };

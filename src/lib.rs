@@ -844,7 +844,7 @@ async fn lang_hint(words: &[String], speak_lang: &str) -> Option<String> {
         return None;
     }
     // Only hint toward a language the app actually has.
-    let name = consts::BUILTIN_LANGS.iter().find(|(c, _, _)| *c == lang).map(|(_, n, _)| *n)?;
+    let name = consts::BUILTIN_LANGS.iter().find(|(c, _, _, _)| *c == lang).map(|(_, n, _, _)| *n)?;
     Some(i18n::tp("import.langHint", &[("lang", name)]))
     }
 

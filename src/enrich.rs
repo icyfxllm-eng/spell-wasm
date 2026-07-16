@@ -35,11 +35,7 @@ fn tables() -> &'static HashMap<&'static str, Table> {
         m.insert("fr", parse(include_str!("i18n/enrich/fr.json")));
         m.insert("de", parse(include_str!("i18n/enrich/de.json")));
         m.insert("pt", parse(include_str!("i18n/enrich/pt.json")));
-        m.insert("it", parse(include_str!("i18n/enrich/it.json")));
-        m.insert("nl", parse(include_str!("i18n/enrich/nl.json")));
         m.insert("pl", parse(include_str!("i18n/enrich/pl.json")));
-        m.insert("sv", parse(include_str!("i18n/enrich/sv.json")));
-        m.insert("nb", parse(include_str!("i18n/enrich/nb.json")));
         m.insert("tr", parse(include_str!("i18n/enrich/tr.json")));
         m.insert("vi", parse(include_str!("i18n/enrich/vi.json")));
         m.insert("ko", parse(include_str!("i18n/enrich/ko.json")));
@@ -144,7 +140,7 @@ mod tests {
 
     #[test]
     fn pilots_load_and_are_within_budget() {
-        for lang in ["en","es","fr","de","pt","it","nl","pl","sv","nb","tr","vi","ko","ja","zh","th","fil"] {
+        for lang in ["en","es","fr","de","pt","pl","tr","vi","ko","ja","zh","th","fil"] {
             let t = tables().get(lang).expect("pilot table missing");
             assert!(!t.is_empty(), "{lang} enrichment empty");
             for (word, ins) in t {

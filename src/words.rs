@@ -17,12 +17,17 @@ pub const LANGUAGES: [(&str, LangInfo); 20] = [
     ("es", LangInfo { name: "Espa\u{f1}ol", code: "es-ES" }),
     ("fr", LangInfo { name: "Fran\u{e7}ais", code: "fr-FR" }),
     ("de", LangInfo { name: "Deutsch", code: "de-DE" }),
-    ("it", LangInfo { name: "Italiano", code: "it-IT" }),
     ("pt", LangInfo { name: "Portugu\u{ea}s", code: "pt-BR" }),
-    ("nl", LangInfo { name: "Nederlands", code: "nl-NL" }),
-    ("sv", LangInfo { name: "Svenska", code: "sv-SE" }),
     ("pl", LangInfo { name: "Polski", code: "pl-PL" }),
     ("tr", LangInfo { name: "T\u{fc}rk\u{e7}e", code: "tr-TR" }),
+    // CC-LINEUP-SWAP D3 variants: Russian standard ru-RU; Modern Standard
+    // Arabic; Iranian Persian (fa-IR, not Dari); Urdu ur-PK standard. Audio is
+    // direction-agnostic, so the three RTL languages carry voices here even
+    // though the rtl_required gate keeps them off every playable surface.
+    ("ru", LangInfo { name: "\u{420}\u{443}\u{441}\u{441}\u{43a}\u{438}\u{439}", code: "ru-RU" }),
+    ("ar", LangInfo { name: "\u{627}\u{644}\u{639}\u{631}\u{628}\u{64a}\u{629}", code: "ar-SA" }),
+    ("fa", LangInfo { name: "\u{641}\u{627}\u{631}\u{633}\u{6cc}", code: "fa-IR" }),
+    ("ur", LangInfo { name: "\u{627}\u{631}\u{62f}\u{648}", code: "ur-PK" }),
     // New languages with their own keyboard + backend voice (My Words matches).
     ("vi", LangInfo { name: "Ti\u{1ebf}ng Vi\u{1ec7}t", code: "vi-VN" }),
     ("ko", LangInfo { name: "\u{d55c}\u{ad6d}\u{c5b4}", code: "ko-KR" }),
@@ -34,7 +39,6 @@ pub const LANGUAGES: [(&str, LangInfo); 20] = [
     ("zh", LangInfo { name: "\u{4e2d}\u{6587}", code: "cmn-CN" }),
     ("ro", LangInfo { name: "Rom\u{e2}n\u{103}", code: "ro-RO" }),
     ("id", LangInfo { name: "Indonesia", code: "id-ID" }),
-    ("nb", LangInfo { name: "Norsk", code: "nb-NO" }),
     ("ca", LangInfo { name: "Catal\u{e0}", code: "ca-ES" }),
 ];
 
@@ -794,17 +798,13 @@ pub fn zh_tier(tier: &str) -> &'static [&'static str] {
 
 /// Word bank for a built-in language + tier (English by default).
 pub fn tier_for(lang: &str, tier: &str) -> &'static [&'static str] {
-    use crate::consts::{DE, ES, FIL, FR, IT, JA, KO, NB, NL, PL, PT, SV, TH, TR, VI, ZH};
+    use crate::consts::{DE, ES, FIL, FR, JA, KO, PL, PT, TH, TR, VI, ZH};
     match lang {
         ES => es_tier(tier),
         FR => simple_tier(FR_EASY, FR_MEDIUM, FR_HARD, FR_EXPERT, tier),
         DE => simple_tier(DE_EASY, DE_MEDIUM, DE_HARD, DE_EXPERT, tier),
         PT => simple_tier(PT_EASY, PT_MEDIUM, PT_HARD, PT_EXPERT, tier),
-        IT => simple_tier(IT_EASY, IT_MEDIUM, IT_HARD, IT_EXPERT, tier),
-        NL => simple_tier(NL_EASY, NL_MEDIUM, NL_HARD, NL_EXPERT, tier),
         PL => simple_tier(PL_EASY, PL_MEDIUM, PL_HARD, PL_EXPERT, tier),
-        SV => simple_tier(SV_EASY, SV_MEDIUM, SV_HARD, SV_EXPERT, tier),
-        NB => simple_tier(NB_EASY, NB_MEDIUM, NB_HARD, NB_EXPERT, tier),
         TR => simple_tier(TR_EASY, TR_MEDIUM, TR_HARD, TR_EXPERT, tier),
         VI => simple_tier(VI_EASY, VI_MEDIUM, VI_HARD, VI_EXPERT, tier),
         KO => simple_tier(KO_EASY, KO_MEDIUM, KO_HARD, KO_EXPERT, tier),
@@ -828,7 +828,7 @@ mod tier_dump {
     fn dump() {
         let tiers = ["easy", "medium", "hard", "expert"];
         let mut obj = String::from("{\n");
-        for (li, (lang, _, _)) in BUILTIN_LANGS.iter().enumerate() {
+        for (li, (lang, _, _, _)) in BUILTIN_LANGS.iter().enumerate() {
             obj.push_str(&format!("  \"{lang}\": {{\n"));
             for (ti, tier) in tiers.iter().enumerate() {
                 let words = super::tier_for(lang, tier);

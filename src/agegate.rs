@@ -149,11 +149,7 @@ fn number_words(locale: &str) -> [&'static str; 10] {
         "fr" => ["z\u{e9}ro", "un", "deux", "trois", "quatre", "cinq", "six", "sept", "huit", "neuf"],
         "de" => ["null", "eins", "zwei", "drei", "vier", "f\u{fc}nf", "sechs", "sieben", "acht", "neun"],
         "pt" => ["zero", "um", "dois", "tr\u{ea}s", "quatro", "cinco", "seis", "sete", "oito", "nove"],
-        "it" => ["zero", "uno", "due", "tre", "quattro", "cinque", "sei", "sette", "otto", "nove"],
-        "nl" => ["nul", "een", "twee", "drie", "vier", "vijf", "zes", "zeven", "acht", "negen"],
         "pl" => ["zero", "jeden", "dwa", "trzy", "cztery", "pi\u{119}\u{107}", "sze\u{15b}\u{107}", "siedem", "osiem", "dziewi\u{119}\u{107}"],
-        "sv" => ["noll", "ett", "tv\u{e5}", "tre", "fyra", "fem", "sex", "sju", "\u{e5}tta", "nio"],
-        "nb" => ["null", "en", "to", "tre", "fire", "fem", "seks", "sju", "\u{e5}tte", "ni"],
         "tr" => ["s\u{131}f\u{131}r", "bir", "iki", "\u{fc}\u{e7}", "d\u{f6}rt", "be\u{15f}", "alt\u{131}", "yedi", "sekiz", "dokuz"],
         _ => ["zero", "one", "two", "three", "four", "five", "six", "seven", "eight", "nine"],
     }
