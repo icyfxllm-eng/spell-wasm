@@ -1249,17 +1249,18 @@ fn shield_ctx(s: &AppState) -> bool {
     flags::attempts_shields() && s.level == "climb" && !s.versus.enabled && !s.daily.active && !s.review
 }
 
-/// The "Extra attempt on misses" toggle applies in normal (fixed-level) solo
-/// practice. Kid Mode is deliberately excluded (see report — inherits cleanly,
-/// but is not enabled there pending a product decision).
+/// The "Extra attempt on misses" retry applies in normal (fixed-level) solo
+/// practice. In Kid Mode it is ON BY DEFAULT (Eric, 2026-07-15): little spellers
+/// keep a one-retry safety net without needing the toggle, since retiring the
+/// 3-try mechanic would otherwise make one-shot too harsh for the youngest
+/// users. Normal (non-kid) users still opt in via the toggle.
 fn extra_attempt_ctx(s: &AppState) -> bool {
     flags::attempts_shields()
-        && s.extra_attempts
+        && (s.extra_attempts || s.kid)
         && s.level != "climb"
         && !s.versus.enabled
         && !s.daily.active
         && !s.review
-        && !s.kid
 }
 
 /// Record the FIRST-submission miss exactly once: accuracy, spaced-rep/Misses,
