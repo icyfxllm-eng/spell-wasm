@@ -57,7 +57,7 @@ pub enum LangStatus {
 }
 use LangStatus::{Active, ComingSoon};
 
-pub const BUILTIN_LANGS: [(&str, &str, LangStatus); 17] = [
+pub const BUILTIN_LANGS: [(&str, &str, LangStatus); 15] = [
     (EN, "English", Active),
     (ES, "Espa\u{f1}ol", ComingSoon),
     (FR, "Fran\u{e7}ais", ComingSoon),
@@ -68,13 +68,11 @@ pub const BUILTIN_LANGS: [(&str, &str, LangStatus); 17] = [
     (PL, "Polski", ComingSoon),
     (SV, "Svenska", ComingSoon),
     (NB, "Norsk", ComingSoon),
-    (TR, "T\u{fc}rk\u{e7}e", ComingSoon),
     (VI, "Ti\u{1ebf}ng Vi\u{1ec7}t", ComingSoon),
     (KO, "\u{d55c}\u{ad6d}\u{c5b4}", ComingSoon),
     (JA, "\u{65e5}\u{672c}\u{8a9e}", ComingSoon),
     (FIL, "Filipino", ComingSoon),
     (ZH, "\u{4e2d}\u{6587}", ComingSoon),
-    (TH, "\u{e44}\u{e17}\u{e22}", Active),
 ];
 
 /// A language's availability status (ComingSoon for anything not in the registry).
@@ -170,16 +168,17 @@ mod tests {
 mod registry_tests {
     use super::*;
     #[test]
-    fn only_en_th_active() {
-        // English launched; Thai is being audited/tested next (playable so
-        // TestFlight testers can try it). Everything else — including Spanish,
-        // whose content is ready but held for the English-only App Store — stays
-        // Coming Soon until Eric reactivates it.
+    fn only_en_active() {
+        // English is the only Active language. Thai and Turkish were CUT from the
+        // registry (2026-07-15, Eric — didn't fit the game, and it trims the audit
+        // load). Everything else — content ready but held for the English-only App
+        // Store — stays Coming Soon until Eric reactivates it.
         assert!(is_active_lang("en"));
-        assert!(is_active_lang("th"));
         assert!(!is_active_lang("es"), "es stays gated (English-only App Store launch)");
+        assert!(!BUILTIN_LANGS.iter().any(|(c, _, _)| *c == "th" || *c == "tr"),
+            "Thai and Turkish are cut from the registry");
         for (code, _, _) in BUILTIN_LANGS {
-            if code != "en" && code != "th" {
+            if code != "en" {
                 assert!(!is_active_lang(code), "{code} should be coming_soon");
             }
         }
