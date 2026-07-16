@@ -1,0 +1,51 @@
+# Word-list provenance + license gate (CC-WORDLIST-SOURCES).
+#
+# Fails the build if any generated wordlists/<lang>.txt is not fully backed by a
+# complete provenance registry entry (fetch script + LICENSE + PROVENANCE), if a
+# source's license tier is not shippable, or if credits.json is stale/missing an
+# attribution. Also re-runs the es pipeline to confirm it is deterministic
+# (byte-identical output) when the Hunspell `unmunch` tool is available in CI.
+name: Wordlist license gate
+
+on:
+  pull_request:
+    paths:
+      - "sources/**"
+      - "wordlists/**"
+      - "credits.json"
+      - "scripts/wordlist*.py"
+      - "scripts/wordlist.sh"
+      - "scripts/license-gate.mjs"
+      - "scripts/gen-credits.mjs"
+      - ".github/workflows/wordlist-license-gate.yml"
+  push:
+    branches: ["main"]
+  workflow_dispatch:
+
+jobs:
+  license-gate:
+    name: License gate + credits freshness
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - name: credits.json is regenerated from the registry
+        run: node scripts/gen-credits.mjs --check
+      - name: License gate (provenance + tier + attribution)
+        run: node scripts/license-gate.mjs
+
+  determinism:
+    name: es pipeline is deterministic (unmunch in CI)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Hunspell tools (provides unmunch)
+        run: sudo apt-get update && sudo apt-get install -y hunspell hunspell-tools
+      - name: Rebuild es list from the pinned source
+        run: ./scripts/wordlist.sh es
+      - name: Committed output matches a fresh build (byte-identical)
+        run: |
+          git diff --exit-code -- wordlists/es.txt wordlists/es.manifest.json \
+            || (echo "::error::wordlists/es.txt drifted from a fresh deterministic build" && exit 1)

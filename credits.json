@@ -1,0 +1,13 @@
+{
+  "title": "Word-list data sources",
+  "note": "Spelling word lists in these languages are derived from the open language resources below. Full license texts live in sources/<lang>/.",
+  "sources": [
+    {
+      "lang": "es",
+      "name": "Recursos Lingüísticos Abiertos del Español (rla-es)",
+      "url": "https://github.com/sbosio/rla-es",
+      "license": "GPL-3.0-or-later OR LGPL-3.0-or-later OR MPL-1.1",
+      "attribution": "Spanish word data derived from Recursos Lingüísticos Abiertos del Español (rla-es), © the RLA-ES contributors, tri-licensed GPLv3 / LGPLv3 / MPL-1.1."
+    }
+  ]
+}
