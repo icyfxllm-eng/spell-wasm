@@ -294,5 +294,7 @@
   "level.medium.desc": "Alltagswörter in gleichmäßigem Tempo.",
   "level.hard.desc": "Längere, kniffligere Wörter.",
   "level.expert.desc": "Die schwersten Wörter, weniger Zeit.",
-  "level.climb.desc": "Erklimme die Stufen und stelle einen Rekord auf."
+  "level.climb.desc": "Erklimme die Stufen und stelle einen Rekord auf.",
+  "hint.letterOne": "(1 Buchstabe)",
+  "hint.letters": "({n} Buchstaben)"
 }

@@ -294,5 +294,7 @@
   "level.medium.desc": "Everyday words at a steady pace.",
   "level.hard.desc": "Longer, trickier words.",
   "level.expert.desc": "The toughest words, less time.",
-  "level.climb.desc": "Climb the tiers and set a high score."
+  "level.climb.desc": "Climb the tiers and set a high score.",
+  "hint.letterOne": "(1 letter)",
+  "hint.letters": "({n} letters)"
 }

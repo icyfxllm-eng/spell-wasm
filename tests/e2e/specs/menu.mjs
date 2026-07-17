@@ -167,4 +167,38 @@ export async function run(browser, base, suite) {
       assert(got.text.includes('⁨') && got.text.includes('⁩'), 'the count must be bidi-isolated from the word');
     } finally { await ctx.close(); }
   });
+
+  await suite.test('rtl F4: the hint count is translated, not hardcoded English', async () => {
+    // The bug this closes: the count was a hardcoded "(N letters)" string, shown
+    // in English on every non-English UI. Proven by contradiction — a Spanish UI
+    // must render its own word ("letras") and must NOT contain the English one.
+    //
+    // Setup note: this sets only the UI LOCALE, and deliberately does NOT use
+    // openApp's `lang` (which selects the picker). The picker drives BOTH the UI
+    // and the STUDY language, and every non-English language is ComingSoon, so
+    // picking `es` gates play and no word — hence no hint — ever loads. That also
+    // means this exact state (a non-English UI reaching a hint) is not reachable
+    // in production today; it becomes reachable when a non-English language goes
+    // Active or UI/study are separated. This test proves the WIRING is right for
+    // that day, the same "gated until then" footing as the rest of F4.
+    const ctx = await browser.newContext({ viewport: { width: 375, height: 667 }, deviceScaleFactor: 2, isMobile: true });
+    await ctx.addInitScript(() => {
+      localStorage.setItem('byear_agegate_v1', JSON.stringify({ verdict: 'full', checkedAt: 1700000000 }));
+      localStorage.setItem('spellgame.locale', 'es');
+    });
+    await ctx.route('**/api/speak**', (r) => r.fulfill({ status: 200, contentType: 'audio/mpeg', body: Buffer.from([]) }));
+    const page = await ctx.newPage();
+    try {
+      await page.goto(base, { waitUntil: 'load' });
+      await page.waitForFunction(() => window.__spelltest && window.__spelltest.build() === 'testseam', null, { timeout: 30000 });
+      await page.waitForTimeout(400);
+      await page.click('#orbWrap').catch(() => {});
+      await page.waitForTimeout(400);
+      await page.click('#hintBtn').catch(() => {});
+      await page.waitForTimeout(250);
+      const text = await page.$eval('#hintLine', (e) => e.textContent);
+      assert(/letras\)/.test(text), `Spanish hint should read "letras", got ${JSON.stringify(text)}`);
+      assert(!/letters/.test(text), `Spanish hint still contains the English "letters": ${JSON.stringify(text)}`);
+    } finally { await ctx.close(); }
+  });
 }

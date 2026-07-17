@@ -294,5 +294,7 @@
   "level.medium.desc": "일정한 속도의 일상 단어.",
   "level.hard.desc": "더 길고 까다로운 단어.",
   "level.expert.desc": "가장 어려운 단어, 더 짧은 시간.",
-  "level.climb.desc": "단계를 올라 최고 점수에 도전해요."
+  "level.climb.desc": "단계를 올라 최고 점수에 도전해요.",
+  "hint.letterOne": "(1글자)",
+  "hint.letters": "({n}글자)"
 }

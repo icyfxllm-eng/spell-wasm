@@ -294,5 +294,7 @@
   "level.medium.desc": "Pang-araw-araw na salita sa pantay na bilis.",
   "level.hard.desc": "Mas mahaba at mas mahirap na salita.",
   "level.expert.desc": "Ang pinakamahihirap na salita, mas maikli ang oras.",
-  "level.climb.desc": "Umakyat sa mga antas at magtakda ng rekord."
+  "level.climb.desc": "Umakyat sa mga antas at magtakda ng rekord.",
+  "hint.letterOne": "(1 titik)",
+  "hint.letters": "({n} titik)"
 }

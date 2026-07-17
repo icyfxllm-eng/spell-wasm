@@ -294,5 +294,7 @@
   "level.medium.desc": "Des mots du quotidien à un rythme régulier.",
   "level.hard.desc": "Des mots plus longs et plus difficiles.",
   "level.expert.desc": "Les mots les plus durs, moins de temps.",
-  "level.climb.desc": "Grimpe les paliers et bats ton record."
+  "level.climb.desc": "Grimpe les paliers et bats ton record.",
+  "hint.letterOne": "(1 lettre)",
+  "hint.letters": "({n} lettres)"
 }

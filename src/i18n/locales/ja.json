@@ -294,5 +294,7 @@
   "level.medium.desc": "一定のペースの日常語。",
   "level.hard.desc": "長めで難しい単語。",
   "level.expert.desc": "最難関の単語、時間は短め。",
-  "level.climb.desc": "段階を上ってハイスコアを狙う。"
+  "level.climb.desc": "段階を上ってハイスコアを狙う。",
+  "hint.letterOne": "(1文字)",
+  "hint.letters": "({n}文字)"
 }

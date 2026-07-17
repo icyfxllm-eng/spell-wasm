@@ -1681,18 +1681,22 @@ pub fn show_hint(app: &App) {
     let w = s.word.clone();
     drop(s);
     let (masked, n) = mask_word(&w);
-    // U+2068 FSI / U+2069 PDI isolate the count from the word. The word can be
-    // RTL while "(4 letters)" is Latin, and without an isolate the bidi algorithm
-    // resolves them as ONE run: the parentheses mirror and the count lands on the
-    // wrong side of the word. FSI rather than markup because this is set_text, and
-    // rather than LRI because the isolate should follow the count's own first
-    // strong character once this string is finally translated.
-    //
-    // NOTE: "( letters)" is hardcoded English with no i18n key — every non-English
-    // UI shows it in English today. That is a real bug, but fixing it means new
-    // auditable content in ~10 locales, so it is written up for Eric rather than
-    // invented here. The isolate above is correct either way.
-    dom::set_text("hintLine", &format!("{}   \u{2068}({} letters)\u{2069}", masked, n));
+    // The count is now translated (was hardcoded English, shown in English on
+    // every non-English UI). Singular/plural split so English reads "1 letter",
+    // not "1 letters": the codebase keeps English grammatical for counts even
+    // where it lets other locales use one form (cf. daily.streakDays). n==1 is
+    // only reachable via a one-letter My Words entry — no built-in word is a
+    // single letter — but the old string already mis-rendered it, so this only
+    // improves it.
+    let key = if n == 1 { "hint.letterOne" } else { "hint.letters" };
+    let count = crate::i18n::tp(key, &[("n", &n.to_string())]);
+    // U+2068 FSI / U+2069 PDI isolate the translated count from the word. The word
+    // can be RTL while the count is Latin (or vice-versa), and without an isolate
+    // the bidi algorithm resolves them as ONE run: the parentheses mirror and the
+    // count lands on the wrong side of the word. FSI (not LRI) so the isolate
+    // takes direction from the count string's OWN first strong character, which is
+    // what makes it correct once the count itself is in an RTL script.
+    dom::set_text("hintLine", &format!("{}   \u{2068}{}\u{2069}", masked, count));
 }
 
 // ---------- timer ----------

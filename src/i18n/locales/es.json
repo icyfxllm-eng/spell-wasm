@@ -294,5 +294,7 @@
   "level.medium.desc": "Palabras cotidianas a ritmo constante.",
   "level.hard.desc": "Palabras más largas y difíciles.",
   "level.expert.desc": "Las palabras más difíciles, menos tiempo.",
-  "level.climb.desc": "Sube de nivel y logra tu mejor marca."
+  "level.climb.desc": "Sube de nivel y logra tu mejor marca.",
+  "hint.letterOne": "(1 letra)",
+  "hint.letters": "({n} letras)"
 }

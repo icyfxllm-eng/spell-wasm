@@ -294,5 +294,7 @@
   "level.medium.desc": "Từ hằng ngày với nhịp độ ổn định.",
   "level.hard.desc": "Từ dài hơn, khó hơn.",
   "level.expert.desc": "Những từ khó nhất, ít thời gian hơn.",
-  "level.climb.desc": "Leo qua các bậc và lập kỷ lục."
+  "level.climb.desc": "Leo qua các bậc và lập kỷ lục.",
+  "hint.letterOne": "(1 chữ cái)",
+  "hint.letters": "({n} chữ cái)"
 }

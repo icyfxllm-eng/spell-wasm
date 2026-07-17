@@ -294,5 +294,7 @@
   "level.medium.desc": "Codzienne słowa w równym tempie.",
   "level.hard.desc": "Dłuższe, trudniejsze słowa.",
   "level.expert.desc": "Najtrudniejsze słowa, mniej czasu.",
-  "level.climb.desc": "Wspinaj się przez poziomy i ustanów rekord."
+  "level.climb.desc": "Wspinaj się przez poziomy i ustanów rekord.",
+  "hint.letterOne": "(1 litera)",
+  "hint.letters": "({n} liter)"
 }
