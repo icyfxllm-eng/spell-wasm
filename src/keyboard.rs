@@ -105,6 +105,48 @@ const TH: Layout = Layout {
     long_press: &[],
 };
 
+// --- RTL scripts (CC-RTL F5, charset half only) ------------------------------
+//
+// These three are CHARSET DECLARATIONS, not finished keyboards. They exist so the
+// word-list pipeline's charset gate (build-wordlists.py + every_word_char_is_
+// typeable) has a per-language inventory to validate ar/fa/ur content against —
+// the same thing that unblocks a language for content, as ru already is. The RTL
+// INPUT behaviour (cursor/backspace direction, ZWNJ, hamza sequencing) is the
+// other half of F5 and is deliberately NOT here.
+//
+// They are unreachable at runtime today: ar/fa/ur are rtl_blocked, so play never
+// selects them and this layout never renders. If one ever does render (e.g. a My
+// Words list tagged Arabic), these correct-charset keys still beat the &EN
+// fallback's Latin keys — it would just lack RTL input polish.
+//
+// CODEPOINTS ARE LOAD-BEARING. fold_strict is NFC + lowercase only; it does NOT
+// unify Arabic ي U+064A with Persian/Urdu ی U+06CC, nor ك U+0643 with ک U+06A9.
+// So a Persian bank written in correct Persian orthography needs the Persian
+// codepoints declared here EXACTLY, or the gate rejects valid words. That also
+// makes these AUDITABLE content: the inventory below follows standard national
+// layouts, but a native/expert pass is owed before any ar/fa/ur bank is built —
+// there is no verified_by here and this comment is not one.
+//
+// Diacritics (harakat) are omitted: standard Arabic/Persian/Urdu text is written
+// undiacritized, so a spelling bank carries none.
+const AR: Layout = Layout {
+    rows: &["ضصثقفغعهخحج", "شسيبلاتنمكط", "ذرزوظدء"],
+    long_press: &[('ا', "أإآ"), ('و', "ؤ"), ('ي', "ئى"), ('ت', "ة")],
+};
+// Persian: note ک U+06A9, گ U+06AF, ی U+06CC — the Persian forms, distinct from
+// Arabic ك/ي. Adds پ چ ژ گ over Arabic; Arabic-loan hamza forms on long-press.
+const FA: Layout = Layout {
+    rows: &["ضصثقفغعهخحجچ", "شسیبلاتنمکگ", "ظطزرذدپوژ"],
+    long_press: &[('ا', "آأإء"), ('و', "ؤ"), ('ی', "ئ"), ('ه', "ةۀ")],
+};
+// Urdu: Persian forms plus Urdu-specific gol he ہ U+06C1, do-chashmi he ھ U+06BE
+// (aspirates), bari ye ے U+06D2, retroflex ٹ ڈ ڑ, noon-ghunna ں. The retroflexes
+// and ھ sit on long-press of their base letter (phonetic-keyboard convention).
+const UR: Layout = Layout {
+    rows: &["ضصثقفغعہخحجچ", "شسیبلاتنمکگ", "ظطزرذدپوژء"],
+    long_press: &[('ت', "ٹة"), ('د', "ڈ"), ('ر', "ڑ"), ('ن', "ں"), ('ہ', "ھۃ"), ('ی', "ےئ"), ('ا', "آأإ"), ('و', "ؤ")],
+};
+
 fn layout_for(locale: &str) -> &'static Layout {
     match locale {
         "es" => &ES,
@@ -119,6 +161,13 @@ fn layout_for(locale: &str) -> &'static Layout {
         "fil" => &FIL,
         "zh" => &ZH,
         "th" => &TH,
+        // CC-RTL F5 charset half. Returning the right layout (not the &EN
+        // fallback) keeps the Rust charset gate consistent with the JSON one the
+        // pipeline reads; RTL input behaviour is still unimplemented, but these
+        // are unreachable in play while rtl_blocked.
+        "ar" => &AR,
+        "fa" => &FA,
+        "ur" => &UR,
         _ => &EN,
     }
 }
@@ -568,6 +617,9 @@ mod tests {
             ("fil", include_str!("../assets/keyboards/fil.json")),
             ("zh", include_str!("../assets/keyboards/zh.json")),
             ("th", include_str!("../assets/keyboards/th.json")),
+            ("ar", include_str!("../assets/keyboards/ar.json")),
+            ("fa", include_str!("../assets/keyboards/fa.json")),
+            ("ur", include_str!("../assets/keyboards/ur.json")),
         ];
         for (code, json) in jsons {
             let v: serde_json::Value = serde_json::from_str(json).unwrap();
@@ -585,6 +637,41 @@ mod tests {
                 assert_eq!(got, *acc, "{code} longPress[{base}] differs from JSON");
             }
         }
+    }
+
+    /// CC-RTL F5 charset half: the ar/fa/ur declarations must cover their whole
+    /// alphabet, so a future word bank in correct orthography is fully typeable.
+    ///
+    /// This pins the inventory two ways. The full alphabet must be REACHABLE —
+    /// a dropped letter would silently block every word that uses it. And the
+    /// Persian/Urdu forms that look like Arabic letters but are DISTINCT
+    /// codepoints (ک U+06A9, ی U+06CC, gol-he ہ U+06C1, do-chashmi-he ھ U+06BE,
+    /// bari-ye ے U+06D2) must be present while their Arabic look-alikes are
+    /// ABSENT — because fold_strict does not unify them, so declaring the wrong
+    /// one is the silent-mismatch bug (cf. English-words-as-Russian) that rejects
+    /// otherwise-correct words.
+    #[test]
+    fn rtl_charsets_cover_their_alphabet() {
+        // The full modern alphabet of each language (letters only; harakat and
+        // ligatures excluded by design — see the layout comments).
+        let ar = reachable(&AR);
+        for c in "ابتثجحخدذرزسشصضطظعغفقكلمنهوي".chars() {
+            assert!(ar.contains(&c), "Arabic letter {c:?} (U+{:04X}) not reachable", c as u32);
+        }
+
+        let fa = reachable(&FA);
+        for c in "ابپتثجچحخدذرزژسشصضطظعغفقکگلمنوهی".chars() {
+            assert!(fa.contains(&c), "Persian letter {c:?} (U+{:04X}) not reachable", c as u32);
+        }
+        assert!(fa.contains(&'\u{06A9}') && fa.contains(&'\u{06CC}'), "Persian must use ک U+06A9 and ی U+06CC");
+        assert!(!fa.contains(&'\u{0643}') && !fa.contains(&'\u{064A}'), "Persian must NOT carry Arabic ك U+0643 / ي U+064A");
+
+        let ur = reachable(&UR);
+        for c in "ابپتٹثجچحخدڈذرڑزژسشصضطظعغفقکگلمنںوہھءیے".chars() {
+            assert!(ur.contains(&c), "Urdu letter {c:?} (U+{:04X}) not reachable", c as u32);
+        }
+        assert!(ur.contains(&'\u{06C1}') && ur.contains(&'\u{06BE}') && ur.contains(&'\u{06D2}'), "Urdu must use ہ U+06C1, ھ U+06BE, ے U+06D2");
+        assert!(!ur.contains(&'\u{0647}'), "Urdu must use gol-he ہ U+06C1, not Arabic ه U+0647");
     }
 
     /// §3.4 gate 1: every character in every built-in word (after the strict
