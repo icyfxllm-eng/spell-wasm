@@ -1,0 +1,246 @@
+<!doctype html>
+<meta charset="utf-8" />
+<title>CC-RTL P0.1 — per-letter feedback spike</title>
+<!--
+  THROWAWAY SPIKE — CC-RTL Phase 0 (P0.1). Never merged; see the non-goals.
+
+  The blocker: SpellGame's answer surface (game.rs render_letters) wraps EVERY
+  character in its own <span class="ltr">. Shaping engines join cursive letters
+  within a text run, and separate inline elements break the run — so Arabic
+  shatters into isolated letterforms. Every mechanic that reveals, colours, or
+  animates letters individually has to be rethought.
+
+  Three renderings of the same word, measured against each other:
+    BASELINE  what the app does today (per-letter spans) — the control.
+    A         one text node + correctness markers BENEATH, positioned from
+              Range.getBoundingClientRect() over grapheme-cluster boundaries.
+    B         canvas rendering of the shaped word + per-cluster boxes derived
+              from incremental prefix measurement.
+
+  The objective joining test is WIDTH. Correctly-joined Arabic is NARROWER than
+  the same letters in isolated forms (isolated glyphs are wider and ligatures
+  collapse). So baseline_width > joined_width is joining breaking, measurable
+  without a human eye.
+
+  window.__spike exposes the measurements for the Playwright driver.
+-->
+<style>
+  body { font: 14px -apple-system, system-ui, sans-serif; margin: 24px; background: #14111f; color: #e9e6f5; }
+  h1 { font-size: 15px; font-weight: 600; margin: 0 0 4px; }
+  .sub { color: #9a93b8; margin: 0 0 22px; }
+  .word-row { border: 1px solid #2f2947; border-radius: 12px; padding: 14px 16px; margin-bottom: 14px; background: #1c1830; }
+  .word-label { color: #9a93b8; font-size: 11px; letter-spacing: .04em; text-transform: uppercase; margin-bottom: 10px; }
+  .variants { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 18px; align-items: start; }
+  .variant h3 { font-size: 11px; color: #9a93b8; margin: 0 0 8px; font-weight: 600; }
+  .arabic { font-family: "Geeza Pro", "Baghdad", "Damascus", serif; direction: rtl; unicode-bidi: isolate; }
+
+  /* BASELINE — exactly what game.rs does today. */
+  .baseline { display: inline-block; }
+  .baseline .ltr { display: inline-block; }
+
+  /* A — one text node, markers drawn beneath from measured cluster geometry. */
+  .stage { position: relative; display: inline-block; }
+  .markers { position: absolute; left: 0; top: 0; pointer-events: none; }
+  .marker { position: absolute; height: 4px; border-radius: 2px; }
+  .marker.ok { background: #4fd1a5; }
+  .marker.bad { background: #e0564f; }
+
+  canvas { display: block; }
+  .note { color: #6f6790; font-size: 11px; margin-top: 6px; }
+</style>
+
+<h1>CC-RTL P0.1 — per-letter feedback spike</h1>
+<p class="sub">Throwaway. Baseline = today's per-letter spans. A = text node + measured markers. B = canvas + prefix-measured clusters.</p>
+<div id="out"></div>
+
+<script>
+const WORDS = ['كتاب', 'مدرسة', 'سلام', 'بيت', 'شمس', 'قمر', 'مفتاح', 'نافذة', 'طاولة', 'سيارة'];
+const SIZES = [24, 32, 48, 64];
+const FONT = '"Geeza Pro", "Baghdad", "Damascus", serif';
+
+/** Grapheme clusters — what a "letter" means for feedback purposes. */
+function clusters(word) {
+  if (typeof Intl !== 'undefined' && Intl.Segmenter) {
+    return [...new Intl.Segmenter('ar', { granularity: 'grapheme' }).segment(word)].map((s) => s.segment);
+  }
+  return [...word];
+}
+
+/** Pretend correctness: mark every other cluster wrong, so markers must land per-letter. */
+const verdictFor = (i) => (i % 2 === 0 ? 'ok' : 'bad');
+
+/** BASELINE: the app's current mechanism. */
+function renderBaseline(word, size) {
+  const el = document.createElement('div');
+  el.className = 'arabic baseline';
+  el.style.fontSize = size + 'px';
+  el.style.fontFamily = FONT;
+  for (const c of clusters(word)) {
+    const s = document.createElement('span');
+    s.className = 'ltr';
+    s.textContent = c;
+    el.appendChild(s);
+  }
+  return el;
+}
+
+/**
+ * A: ONE text node (so the shaper sees the whole word and joining is intact by
+ * construction), with markers positioned from the REAL laid-out geometry via
+ * Range.getBoundingClientRect over cluster boundaries.
+ */
+function renderA(word, size) {
+  const stage = document.createElement('div');
+  stage.className = 'stage';
+  const text = document.createElement('div');
+  text.className = 'arabic';
+  text.style.fontSize = size + 'px';
+  text.style.fontFamily = FONT;
+  text.textContent = word;                    // <-- single text node. Nothing split.
+  stage.appendChild(text);
+
+  const markers = document.createElement('div');
+  markers.className = 'markers';
+  stage.appendChild(markers);
+  stage._paint = () => {
+    markers.innerHTML = '';
+    const node = text.firstChild;
+    const host = stage.getBoundingClientRect();
+    const cs = clusters(word);
+    const rects = [];
+    let off = 0;
+    for (let i = 0; i < cs.length; i++) {
+      const r = document.createRange();
+      r.setStart(node, off);
+      r.setEnd(node, off + cs[i].length);
+      const b = r.getBoundingClientRect();   // real shaped position, in context
+      rects.push({ left: b.left - host.left, width: b.width, top: b.bottom - host.top });
+      const m = document.createElement('div');
+      m.className = 'marker ' + verdictFor(i);
+      m.style.left = (b.left - host.left) + 'px';
+      m.style.width = Math.max(b.width - 2, 2) + 'px';
+      m.style.top = (b.bottom - host.top + 3) + 'px';
+      markers.appendChild(m);
+      off += cs[i].length;
+    }
+    stage._rects = rects;
+    stage._textRect = text.getBoundingClientRect();
+  };
+  return stage;
+}
+
+/**
+ * B: canvas. The word is drawn in one fillText call (so the canvas shaper joins
+ * it correctly), but per-cluster boxes must be DERIVED — canvas exposes no
+ * per-glyph geometry. The only lever is measuring prefixes and taking
+ * differences, which is where this approach is expected to hurt: measuring
+ * "كت" shapes the ت as FINAL, while inside "كتاب" it is MEDIAL — a different
+ * glyph with a different advance. The spike measures that error rather than
+ * assuming it.
+ */
+function renderB(word, size) {
+  const wrap = document.createElement('div');
+  const cv = document.createElement('canvas');
+  const dpr = window.devicePixelRatio || 1;
+  const ctx = cv.getContext('2d');
+  ctx.font = `${size}px ${FONT}`;
+  const full = ctx.measureText(word).width;
+  const h = Math.ceil(size * 1.9);
+  cv.width = Math.ceil((full + 8) * dpr);
+  cv.height = Math.ceil(h * dpr);
+  cv.style.width = (full + 8) + 'px';
+  cv.style.height = h + 'px';
+  ctx.scale(dpr, dpr);
+  ctx.font = `${size}px ${FONT}`;
+  ctx.direction = 'rtl';
+  ctx.textAlign = 'right';
+  ctx.fillStyle = '#e9e6f5';
+  ctx.fillText(word, full + 4, size * 1.15);   // one call: shaping is correct
+
+  // Derive cluster boxes from prefix widths (the only option canvas offers).
+  const cs = clusters(word);
+  const boxes = [];
+  let prev = 0;
+  for (let i = 0; i < cs.length; i++) {
+    const prefix = cs.slice(0, i + 1).join('');
+    const w = ctx.measureText(prefix).width;
+    const advance = w - prev;
+    boxes.push({ right: full + 4 - prev, width: advance });
+    prev = w;
+  }
+  // Sum of derived advances vs the true full width == the drift this approach carries.
+  const derivedTotal = prev;
+  ctx.lineWidth = 3;
+  for (let i = 0; i < boxes.length; i++) {
+    ctx.strokeStyle = verdictFor(i) === 'ok' ? '#4fd1a5' : '#e0564f';
+    ctx.beginPath();
+    ctx.moveTo(boxes[i].right - boxes[i].width + 1, size * 1.45);
+    ctx.lineTo(boxes[i].right - 1, size * 1.45);
+    ctx.stroke();
+  }
+  wrap.appendChild(cv);
+  // NOTE: sum(advances) === measureText(word) ALWAYS — the differences telescope.
+  // So that is not a measurement of anything. The real question is whether each
+  // DERIVED advance matches the REAL shaped advance, which only A's Range
+  // geometry can answer. See compareBtoA().
+  wrap._metrics = { full, derivedTotal, boxes, advances: boxes.map((b) => b.width) };
+  return wrap;
+}
+
+// --- build the page + collect measurements ---------------------------------
+const results = [];
+const out = document.getElementById('out');
+for (const word of WORDS) {
+  for (const size of SIZES) {
+    const row = document.createElement('div');
+    row.className = 'word-row';
+    row.innerHTML = `<div class="word-label">${word} · ${size}px</div>`;
+    const grid = document.createElement('div');
+    grid.className = 'variants';
+
+    const mk = (title, node) => {
+      const d = document.createElement('div');
+      d.className = 'variant';
+      d.innerHTML = `<h3>${title}</h3>`;
+      d.appendChild(node);
+      return d;
+    };
+    const base = renderBaseline(word, size);
+    const a = renderA(word, size);
+    const b = renderB(word, size);
+    grid.appendChild(mk('BASELINE (today: per-letter spans)', base));
+    grid.appendChild(mk('A — text node + measured markers', a));
+    grid.appendChild(mk('B — canvas + prefix-measured', b));
+    row.appendChild(grid);
+    out.appendChild(row);
+
+    a._paint();
+    // Ground truth: A measures the REAL laid-out text, so its per-cluster widths
+    // are what the shaper actually produced. B derives its advances from prefix
+    // measurement, which re-shapes each prefix's final letter. Comparing the two
+    // is the only thing that tells us whether B can place a marker correctly.
+    const realAdv = a._rects.map((r) => r.width);
+    const derivedAdv = b._metrics.advances;
+    const perCluster = realAdv.map((rw, i) => Math.abs(rw - (derivedAdv[i] ?? 0)));
+    const maxErr = perCluster.length ? Math.max(...perCluster) : 0;
+    // Joining test: a single text node is the ground truth for shaped width.
+    const joinedW = a._textRect.width;
+    const baseW = base.getBoundingClientRect().width;
+    results.push({
+      word, size,
+      clusters: clusters(word).length,
+      joinedWidth: +joinedW.toFixed(2),
+      baselineWidth: +baseW.toFixed(2),
+      baselineOverhangPx: +(baseW - joinedW).toFixed(2),
+      baselineOverhangPct: +(((baseW - joinedW) / joinedW) * 100).toFixed(1),
+      aMarkerCount: a._rects.length,
+      aMarkersWithinText: a._rects.every((r) => r.width > 0),
+      bMaxClusterErrPx: +maxErr.toFixed(2),
+      bMeanClusterErrPx: +(perCluster.reduce((x, y) => x + y, 0) / (perCluster.length || 1)).toFixed(2),
+      bClusterErrs: perCluster.map((e) => +e.toFixed(2)),
+      bFullWidth: +b._metrics.full.toFixed(2),
+    });
+  }
+}
+window.__spike = { results, words: WORDS, sizes: SIZES };
+</script>

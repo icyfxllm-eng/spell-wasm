@@ -69,3 +69,6 @@ spell-wasm/
 tools/wordpipe/sources/
 tools/wordpipe/out/
 .claude/worktrees/
+
+# CC-RTL Phase 0 spike output (regenerate: node spike/rtl-feedback/measure.mjs)
+spike/rtl-feedback/spike.png
