@@ -1,0 +1,40 @@
+<!doctype html><meta charset="utf-8"><title>CC-RTL D5 — Naskh vs Nastaliq</title>
+<style>
+  @font-face{font-family:'Naskh';src:url('./naskh-arabic.woff2') format('woff2');}
+  @font-face{font-family:'Nastaliq';src:url('./nastaliq-arabic.woff2') format('woff2');}
+  body{background:#14111f;color:#e9e6f5;font:13px system-ui;margin:20px}
+  .row{margin:10px 0;padding:10px;border:1px solid #2f2947;border-radius:8px;background:#1c1830}
+  .w{direction:rtl;unicode-bidi:isolate;font-size:44px;display:inline-block}
+  .naskh{font-family:'Naskh'} .nastaliq{font-family:'Nastaliq'}
+</style>
+<div id="out"></div>
+<script>
+const WORDS = ['کتاب','پانی','دوست','مدرسہ','ٹماٹر'];
+const clusters = (w) => [...new Intl.Segmenter('ur',{granularity:'grapheme'}).segment(w)].map(s=>s.segment);
+const out = document.getElementById('out');
+const results = [];
+for (const font of ['naskh','nastaliq']) {
+  for (const word of WORDS) {
+    const d = document.createElement('div'); d.className='row';
+    const span = document.createElement('span'); span.className='w '+font; span.textContent=word;
+    d.appendChild(span); out.appendChild(d);
+    const box = span.getBoundingClientRect();
+    // Approach A's mechanism: per-cluster rects via Range over the text node.
+    const node = span.firstChild; const cs = clusters(word); const rects=[]; let off=0;
+    for (const c of cs) {
+      const r=document.createRange(); r.setStart(node,off); r.setEnd(node,off+c.length);
+      const b=r.getBoundingClientRect(); rects.push({x:+b.x.toFixed(1),w:+b.width.toFixed(1),top:+b.top.toFixed(1),bottom:+b.bottom.toFixed(1)});
+      off+=c.length;
+    }
+    // Do cluster boxes OVERLAP horizontally? In a cascading script they can.
+    const sorted=[...rects].sort((a,b)=>a.x-b.x);
+    let overlaps=0;
+    for(let i=1;i<sorted.length;i++) if (sorted[i].x < sorted[i-1].x + sorted[i-1].w - 1) overlaps++;
+    // Vertical spread of cluster baselines — flat script ~0, cascading large.
+    const bottoms=rects.map(r=>r.bottom);
+    results.push({font, word, clusters:cs.length, height:+box.height.toFixed(1), width:+box.width.toFixed(1),
+      overlaps, baselineSpread:+(Math.max(...bottoms)-Math.min(...bottoms)).toFixed(1)});
+  }
+}
+window.__fonts = results;
+</script>

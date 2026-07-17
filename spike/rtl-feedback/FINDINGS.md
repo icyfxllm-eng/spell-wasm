@@ -133,3 +133,86 @@ Two things this spike deliberately did **not** settle:
 - **Vocalised text.** All 10 words are unvocalised per CC-LINEUP-SWAP D5. Clusters
   carrying tashkeel would need re-measuring, though `Intl.Segmenter` already
   groups them correctly.
+
+---
+
+# Addendum — CC-RTL D5 fonts: Nastaliq. STOP AND ASK.
+
+**Added 2026-07-17.** D5 says: *"If Nastaliq breaks layout metrics, performance, or
+the D1 feedback mechanism, STOP AND ASK with evidence — do not silently ship Urdu
+in Naskh."* Here is the evidence. It is not conclusive, and that is itself the
+finding.
+
+Reproduce: serve `spike/rtl-feedback/` over HTTP and open `fonts.html`
+(`file://` silently blocks `@font-face` — see the trap below). Screenshot:
+`fonts.png`, Naskh top 5 rows, Nastaliq bottom 5.
+
+## What is measured and solid
+
+| | Noto Naskh Arabic | Noto Nastaliq Urdu |
+|---|---|---|
+| Subset size (Google `/* arabic */` woff2) | **92 KB** | **234 KB** |
+| Rendered height @44px | **75 px** | **110 px** — **+47%** |
+
+Both OFL, which satisfies D6. 234 KB is **3× the largest face we ship today**
+(bricolage-latin, 75 KB) and would be the single heaviest asset in the bundle
+after the wasm. That is D5's "heavier", quantified — significant but survivable.
+
+The +47% height is D5's "taller", and it is a **layout** fact: any row sized for
+Latin or Naskh will be short for Urdu at the same `font-size`.
+
+## What I could NOT measure — and why it matters most
+
+**Nastaliq cascades.** `fonts.png` shows it plainly: مدرسہ and ٹماٹر slope
+diagonally down-left across the word. Naskh sits flat.
+
+I tried to quantify the cascade with per-cluster `Range.getBoundingClientRect()` —
+the exact geometry approach A uses to place markers. It reported **baseline spread
+= 0** and **cluster overlaps = 0** for Nastaliq, identical to Naskh.
+
+**Those numbers are worthless.** A Range rect is the *line box* — advance-width
+wide, line-height tall. It cannot see ink. So it reports a flat, non-overlapping
+row of boxes for a script whose letters visibly are neither. My instrument was
+blind to the exact property I was testing for.
+
+**So the real question is open:** approach A positions a marker under each
+cluster's *advance box*. In Naskh the letter sits in its advance box, so the marker
+lands under the letter. In Nastaliq the letter may sit 40px higher and to the side
+of its advance box — so **the marker would point at empty space, or at the wrong
+letter.** That is worse for Urdu than the per-letter DOM was for Arabic, because it
+would look plausible.
+
+Answering it needs ink-level geometry, not layout geometry: canvas
+`TextMetrics.actualBoundingBox*` per cluster, or rendering to canvas and finding
+the ink. That is a second spike, and it is the thing to do before Urdu is promised
+to anyone.
+
+## Recommendation
+
+1. **Bundle Noto Naskh Arabic (92 KB) for ar + fa.** Flat baseline, approach A's
+   geometry holds, no open question. Low risk.
+2. **Do NOT bundle Nastaliq yet, and do NOT ship Urdu in Naskh.** D5 forbids the
+   second silently, and it is right to: Urdu readers expect Nastaliq, and Naskh
+   Urdu reads as broken to them the way isolated letterforms read as broken to an
+   Arabic reader. Either is a bad answer.
+3. **Spike the cascade first** (ink-level per-cluster geometry, Nastaliq). If
+   markers cannot be placed under cascading letters, Urdu needs a different
+   feedback treatment from ar/fa — which is a product decision, not a font one, and
+   it lands back at P0.3's unify-or-parallel question in a harder form.
+
+**Urdu is the one language in the lineup whose feedback mechanism is still
+unknown.** Arabic and Persian are ready pending the rest of CC-RTL. Urdu is not,
+and the gap is not effort — it is an unanswered question.
+
+## A trap worth recording
+
+My first font measurement reported **identical metrics for both faces, to the
+decimal**. Two typefaces cannot do that. `file://` blocks `@font-face` in Chromium,
+so neither font loaded and both silently fell back to a system face — while
+`document.fonts.status` cheerfully returned `"loaded"`, because it reports the
+*load process* finished, not that the faces are usable. Serving over HTTP and
+asserting `document.fonts.check('44px Nastaliq')` is what caught it.
+
+That is the third measurement in this spike that returned a clean, confident,
+meaningless number — after the tautological B-drift metric and the baseline-spread
+above. All three looked like passes.
