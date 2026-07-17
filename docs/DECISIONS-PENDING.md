@@ -344,31 +344,58 @@ could not see them because every check scanned *files*, and a runtime API call i
 not a file. That is now fixed (`1c310a5`): `displayed_content` is in the registry
 and both entries fail the build.
 
-### The question that decides how bad this is
+### VERIFIED 2026-07-17 — it is Wiktionary, and it says so itself
 
-**Is `dictionaryapi.dev` Wiktionary-derived?** It is widely understood to be. If
-so, the app **already displays CC BY-SA text with no attribution, in every round** —
-which is the *exact* reason Word Stories is held dark:
+I asked the API. This is its own response for `yacht`:
+
+```json
+"license":    {"name": "CC BY-SA 3.0", "url": "https://creativecommons.org/licenses/by-sa/3.0"}
+"sourceUrls": ["https://en.wiktionary.org/wiki/yacht"]
+```
+
+**So the app ships CC BY-SA Wiktionary text to children in every round** — the
+exact thing Word Stories is held dark for:
 
 > *"Wiktionary text is CC BY-SA, so it stays dark until the attribution approach is
 > approved."* — `docs/word-stories-review.md`
 
-That would make the two inconsistent: one feature gated for a risk the app takes
-everywhere else, all day. **Please verify rather than assume** — I recorded it as a
-question, not a finding, because it decides whether this is a new decision or an
-existing gap you have been carrying.
+The two are provably inconsistent. This is **not a new risk; it is an existing gap**,
+and Word Stories has been gated for a licence exposure the app already takes
+everywhere else, all day.
+
+**And the attribution is being thrown away.** `license` and `sourceUrls` sit at the
+top level of every response. `backend/app.py` reaches *past* them into
+`meanings[0].definitions[0]` and keeps only `pos`, `definition`, `example`. The API
+hands us precisely what CC BY-SA requires and the code discards it — which also
+means the fix is small: what you need is already in the payload, and
+`gen-credits.mjs` already knows how to surface a Tier-B credit.
 
 `enrich` is likely easier: each row has a `verified` flag and release builds render
 only `verified: true`. But that is an **accuracy** verdict, not a licence one — "an
 auditor approved this sentence" does not say who owns it. If it is original
 curation, promoting it is one edit, like the word banks.
 
-### A separate fact worth knowing
+### `def_lang()` is not dead code — it is fiction
 
-**There are no non-English definitions at all.** `DICTIONARY_API` hardcodes
-`/api/v2/entries/en/{}`, and `fetch_meaning(word)` takes no language.
-`consts.rs def_lang()` maps 12 languages to dictionaryapi codes — and the backend
-never calls it. Dead code.
+**There are no non-English definitions, and there never could have been.**
+`DICTIONARY_API` hardcodes `/api/v2/entries/en/{}` and `fetch_meaning(word)` takes
+no language, so `consts.rs def_lang()`'s 12-language map is never called. I assumed
+that was merely dead code and that wiring it through was a cheap ~5-line win.
+
+**I tested it. Every language it claims returns 404**, with unambiguous native
+words:
+
+| | | | |
+|---|---|---|---|
+| `en/hello` → **200** | `es/hola` → 404 | `fr/bonjour` → 404 | `de/haus` → 404 |
+| `ru/дом` → 404 | `ja/日本` → 404 | `ko/한국` → 404 | `ar/كتاب` → 404 |
+| `hi/नमस्ते` → 404 | `pt-BR/casa` → 404 | | |
+
+dictionaryapi.dev serves English only. So `def_lang` describes a capability that
+has never existed, and wiring it through — the cheap option I proposed before
+testing it — would have shipped a change that silently produced 404s for every
+non-English word. **Delete it or comment it as unreachable before someone plans
+against it.**
 
 So any plan involving a cross-language definitions audit (CC-DEF-PRECHECK assumes
 one) is planning against content that does not exist. CC-DEF-PRECHECK is blocked on
@@ -380,15 +407,17 @@ rows that do not exist, produced by an authoring workflow that does not exist.
 Every path to non-English definitions runs through the same gate you have not
 opened:
 
-- **Wire `def_lang` through** (~5 lines) → covers 9 of 15, thin coverage, and the
-  licence question stands unanswered.
+- ~~Wire `def_lang` through~~ — **dead on arrival**, see above. 404s all the way.
 - **Extend `lexicon-ingest` to keep per-language glosses** — the pipeline already
   exists and already parses glosses "across every language"; `schema.py` has the
-  field. Covers all 15, offline, no runtime API. **But it is CC BY-SA.**
+  field. Covers all 15, offline, no runtime API. **But it is CC BY-SA** — the same
+  licence the app is already shipping unattributed.
 - **Author them** — ~2,800 rows, native speakers. Owned outright.
 
-The first two need the **copyleft posture** (§4.1). So does Word Stories. So does
-Russian's source (§4.2). So does `es`, which ships GPL-derived data *today*.
+So it is two options, not three. The first needs the **copyleft posture** (§4.1).
+So does Word Stories. So does Russian's source (§4.2). So does `es`, which ships
+GPL-derived data *today* — and so, it turns out, do the definitions already on
+screen.
 
 **One sentence from you unblocks all of it**, or closes the door and forces
 authoring. It is the keystone, and it is why these all feel stuck at once.
