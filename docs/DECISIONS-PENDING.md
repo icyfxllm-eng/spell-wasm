@@ -239,6 +239,88 @@ because English words are typeable on English keys. It would have shipped as
 
 ---
 
+## 8. The audit-model amendment — one decision wearing two hats
+
+**CC-SWAHILI-WORDBANK D3** and **CC-BANK-EXPANSION D2** are the same proposal at
+two scales, and both demand explicit sign-off *separate from approving the file*.
+Neither may be nodded through.
+
+**What they change.** Today's doctrine: *audit verdicts attach to CONTENT in the
+source-of-record* (CC-EDITIONS D5). The amendment: for generated/expanded forms,
+verdicts attach to
+
+  (a) the lemma base,
+  (b) **the mechanism itself** — the generator rule set or affix ruleset version,
+      reviewed as a document with worked examples per rule, and
+  (c) a random sample (500 forms, or 5% — whichever is smaller), uniform across
+      rules and tiers, decoys planted per the standing protocol.
+
+Reject rate >2% fails **that language's entire expanded set** and returns the
+mechanism to revision.
+
+**My read: they are right, and the honesty is the point.** Nobody reviews 30,000
+rows. A doctrine that says they do is theatre, and theatre is worse than a smaller
+claim honestly enforced — it is exactly the gap between prose and machine-checked
+fact that §1 exists to close. Making the *rules* audited content is a real answer:
+a rule is reviewable in a way 30k rows are not, and it is where the errors
+actually live.
+
+**But it is your call, and it is load-bearing**, because it changes what "audited"
+means in a sentence you say to school districts. Two things worth weighing:
+
+- The sample is the only thing standing between a bad rule and 30k bad words. A
+  2% threshold on 500 forms means ~10 bad rows pass unnoticed per language.
+- A generated form can be *well-formed nonsense from a real lemma* — the exact
+  failure no license or license-gate catches, because the provenance is perfect.
+  `swahili_gen`'s "unattested noun class generates nothing" test exists for
+  precisely this.
+
+**Consequence if you reject it:** CC-BANK-EXPANSION says so itself — every
+UNMUNCH/GENERATE language shows BLOCKED and only COLLECT work proceeds. That is a
+coherent outcome, not a disaster.
+
+**Status:** the Swahili generator is drafted flag-off (`3d121cf`,
+`feature/swahili-gen`) as D1 permits. It executes on nothing. Its rules all carry
+`NeedsNativeAudit` and a test forbids any of them claiming otherwise.
+
+---
+
+## 9. CC-BANK-EXPANSION contradicts the file it declares itself subordinate to
+
+It says it is *"Subordinate to CC-WORDLIST-SOURCES (license gate,
+**one-source-of-record**, no-scraping)"*. Then F1 proposes **"source-of-record
+additions (e.g. OpenCorpora for Russian, SCOWL for English)"**.
+
+`sources/registry.json` states the rule verbatim:
+
+> **"D2: exactly ONE source per language, no merging."**
+
+Those cannot both hold. An "addition" to a language's source of record *is* a
+second source, which is *is* merging. This needs resolving before F1's profile
+table is written, because the table is declared the single source of truth for
+what runs — and it would be encoding the conflict.
+
+**It also pre-empts §4.** Classing `ru` as "OpenCorpora-augmented" quietly answers
+the Russian source question (§4.2) — a decision still open, whose right answer I
+argued should be driven by ё fidelity rather than convenience. OpenCorpora is one
+of the three candidates in `docs/russian-source-options.md`; it may well be right.
+But it should be *chosen*, not inherited from an expansion file's example
+parenthetical.
+
+**Two smaller notes for when the table is written:**
+
+- **Wave 1 is `es` + `pl`, and `es` is Tier B (GPL/LGPL/MPL).** Unmunching rla-es
+  produces *more* copyleft-derived data — so Wave 1 runs straight into the
+  unresolved copyleft posture in §4.1. Worth answering that first, or Wave 1
+  produces a bank nobody has decided they can ship.
+- **`zh` is classed COLLECT, and it has no `assets/words/zh/` at all.** Mandarin's
+  banks live in `words.rs` as `pinyin|hanzi` pairs, deliberately outside the
+  pipeline. Any tooling that globs `assets/words/*/` scores it zero — mine did,
+  until I checked. The profile table should say so explicitly or `zh` will look
+  like a gap that needs filling.
+
+---
+
 ## Branch map
 
 | Branch | Tip | What |
