@@ -468,6 +468,37 @@
 
   .feedback{min-height:30px;margin-top:18px;text-align:center;font-size:15px;font-weight:600}
   .feedback .reveal{font-family:var(--mono);color:var(--amber-soft);letter-spacing:.1em;word-break:break-word}
+
+  /* ==== CC-RTL F3 — bidi isolation at every embed point ==================
+     These spans hold a WORD dropped into surrounding chrome: the reveal is
+     "It was: <word>", the meaning card is "<word> — <definition>". Isolation
+     makes each word its own bidi run, so it orders internally and the sentence
+     orders around it.
+
+     HONEST NOTE ON WHAT THIS IS WORTH. I could not construct a case where it
+     changes rendering. Tested in Chromium: LTR container + RTL word + trailing
+     "." / " !" / "(book)."; RTL container + LTR word; a mixed-direction list;
+     and plain <span> vs unicode-bidi:isolate vs dir=auto vs <bdi>. All produced
+     identical geometry — the bidi algorithm already resolves a single embedded
+     word correctly from the paragraph direction.
+
+     Kept anyway, as insurance rather than a fix: F3 mandates it, it costs
+     nothing, it is a no-op for Latin, and the cases where isolation genuinely
+     bites (RTL text ending in digits, nested runs, an RTL *container* — which
+     arrives with F1) are ones I could not build while ar/fa/ur cannot activate.
+     It is NOT a demonstrated bug fix and should not be described as one. */
+  .feedback .reveal,
+  .meaning .m-word,
+  .meaning .m-ex{unicode-bidi:isolate}
+  /* KNOWN GAP, deliberately not fixed here. `.reveal` sets letter-spacing:.1em,
+     which prises cursive joins apart exactly as readable mode would (see
+     .ltr.joined). It needs to become `normal` for cursive scripts — but that
+     needs a selector that knows the STUDY language, and nothing carries it:
+     <html lang> is the UI locale, so :lang(ar) would fire for an Arabic-speaking
+     user studying English, which is precisely wrong. Carrying the study language
+     onto the play surface is CC-RTL F1 (D3: "direction comes from the language
+     registry"), and this hangs off it. Isolation below is independent and lands
+     now; ar/fa/ur cannot activate meanwhile, so the gap is latent. */
   /* F7 syllable replay (feature-flagged; classes appear only when the flag is on) */
   .feedback .reveal.syllabified .syl{transition:color .12s ease,text-shadow .12s ease;opacity:.72}
   .feedback .reveal.syllabified .syl+.syl::before{content:"\00b7";opacity:.5;margin:0 .12em}
