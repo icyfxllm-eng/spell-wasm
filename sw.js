@@ -17,7 +17,12 @@
 // deploys). Falling back to cache only when the network request itself
 // fails means an actual offline visit still works, but anyone with a live
 // connection always gets the current deployed version.
-const CACHE_VERSION = "v42";
+// v43 (2026-07-17): the privacy fix in 3dd633b. `pkg/spell_wasm_bg.wasm` is
+// precached below, so WITHOUT this bump an already-installed service worker keeps
+// serving the OLD binary — the one that fetches api.dictionaryapi.dev straight
+// from the browser for every non-English word. The fix would land on the server
+// and reach nobody, which is precisely the failure the note above records.
+const CACHE_VERSION = "v43";
 const CACHE_NAME = `spell-shell-${CACHE_VERSION}`;
 
 const STATIC_ASSETS = [
