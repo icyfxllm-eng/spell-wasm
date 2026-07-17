@@ -1,0 +1,42 @@
+# CC-RTL F2 gate — physical CSS left/right must not come back.
+#
+# The sweep replaced physical properties (margin-left, text-align:left, right:)
+# with logical ones (margin-inline-start, text-align:start, inset-inline-end).
+# Logical properties follow reading order, so they flip themselves under
+# dir="rtl"; physical ones don't.
+#
+# Why this needs a CI gate rather than a one-off review: in LTR the two spellings
+# render IDENTICALLY. A physical property can be added tomorrow, look perfect in
+# every screenshot and every review, and only reveal itself when RTL_SUPPORTED
+# flips on — by which point it's one of hundreds. The regression is invisible at
+# the moment it's introduced, which is exactly the kind only a machine catches.
+#
+# The checker allowlists genuinely-physical uses (centering, safe-area insets,
+# a specular highlight) individually, each with a reason. See the script.
+name: CSS logical properties
+
+on:
+  push:
+    branches: ["**"]
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  css-logical:
+    name: Physical property gate
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      # A gate that cannot fail reports success forever. This one is asserted to
+      # catch each violation shape it claims to, to allow the documented physical
+      # uses, and not to be a blanket pass — before it is trusted below.
+      - name: Gate self-test (violations must FAIL, allowlist must not over-allow)
+        run: node scripts/css-logical-check.mjs --selftest
+
+      - name: No physical left/right properties
+        run: node scripts/css-logical-check.mjs
