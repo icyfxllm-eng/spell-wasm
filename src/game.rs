@@ -1478,14 +1478,12 @@ pub fn update_shield_hud_ex(app: &App, moment: bool, gain: u8) {
     let _ = hud.set_attribute("data-shields", &shields.to_string());
     let _ = hud.set_attribute("data-gain", &gain.to_string());
     dom::toggle_class("shieldHud", "forge-moment", moment);
-    dom::set_text(
-        "shieldState",
-        &crate::i18n::t(match state {
-            "forged" => "shield.forged",
-            "full" => "shield.full",
-            _ => "shield.forging",
-        }),
-    );
+    // NO text label. The state is carried by `data-forge` (for CSS + the E2E
+    // spec) and shown by the track itself: pips filling = forging, track hidden
+    // behind held shields = full. A label would need `shield.full` +
+    // `shield.forging`, which exist in 0 of 17 locales — and inventing
+    // translations for a shipped catalogue is not a thing to do quietly. If Eric
+    // wants words here, the copy is 2 keys x 17 locales away.
 }
 
 /// The forge MOMENT: a shield just completed. Distinct localized flash plus the
@@ -1495,7 +1493,12 @@ pub fn update_shield_hud_ex(app: &App, moment: bool, gain: u8) {
 fn flash_shield_forged(app: &App) {
     let _ = app;
     crate::haptics::forge();
-    dom::set_text("feedback", &crate::i18n::t("shield.forged"));
+    // shield.earned ("Shield earned!") — the old model's string for precisely
+    // this moment, already translated in all 17 locales. The FORGE renamed the
+    // mechanic, not what the player achieved, so the sentence still tells the
+    // truth. A new `shield.forged` key would say the same thing in English and
+    // nothing at all in the other 16.
+    dom::set_text("feedback", &crate::i18n::t("shield.earned"));
     dom::el("feedback").set_class_name("feedback good");
 }
 

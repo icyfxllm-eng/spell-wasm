@@ -568,6 +568,37 @@
   .board .empty{color:var(--muted-2);font-size:13.5px;padding:8px 0 12px;text-align:center}
 
 
+  /* ==== Shield HUD + forge track (CC-CLIMB-SHIELDS) =======================
+     Held shields, then the forge track: FORGE.segments_per_shield pips, `.on`
+     for each segment earned. A perfect word grants 2 segments, an assisted one
+     grants 1, so the track visibly jumps further on a perfect — data-gain
+     carries how many were just earned and drives that emphasis in the same beat
+     as the correct feedback, with no extra modal.
+     State is data-forge, never words (see the markup comment):
+       forging  the track fills.
+       forged   a shield just completed — the forge MOMENT.
+       full     at the cap; forging is FROZEN until a shield is spent, so the
+                track is HIDDEN rather than sitting stuck at empty, which would
+                read as broken. The held shields are the message. */
+  .shield-hud{display:inline-flex;align-items:center;gap:6px}
+  .shield-forge{display:inline-flex;align-items:center;gap:3px;margin-left:4px}
+  .shield-forge .seg{width:5px;height:5px;border-radius:1px;background:var(--edge);transition:background .18s,transform .18s}
+  .shield-forge .seg.on{background:var(--teal,#4fd1a5)}
+  /* At the cap there is nothing to fill — hide the track instead of freezing it
+     at zero, which would look like a bug rather than a reward. */
+  .shield-hud[data-forge="full"] .shield-forge{display:none}
+  /* The forge moment: the whole HUD pulses once, in the same beat as the
+     haptic + the "Shield earned!" flash. */
+  .shield-hud.forge-moment{animation:forgePulse .42s ease-out}
+  @keyframes forgePulse{0%{transform:scale(1)}38%{transform:scale(1.18)}100%{transform:scale(1)}}
+  /* A perfect word earned 2 segments at once — let the track say so. */
+  .shield-hud[data-gain="2"] .shield-forge .seg.on{transform:scale(1.25)}
+  @media (prefers-reduced-motion:reduce){
+    .shield-hud.forge-moment{animation:none}
+    .shield-forge .seg{transition:none}
+    .shield-hud[data-gain="2"] .shield-forge .seg.on{transform:none}
+  }
+
   .scrim{position:fixed;inset:0;background:rgba(10,8,18,.72);backdrop-filter:blur(4px);display:none;place-items:center;padding:20px;z-index:30;overflow:auto}
   .scrim.show{display:grid}
   .modal{width:100%;max-width:380px;background:var(--panel);border:1px solid var(--edge);border-radius:18px;padding:26px 24px;text-align:center}
@@ -835,7 +866,16 @@
     <!-- CC-ATTEMPTS-SHIELDS Feature 2 HUD: current shield count during a Climb
          run. Language-neutral icon + count; hidden unless the run holds/earns
          shields. Shown from Rust (game::update_shield_hud). -->
-    <div class="shield-hud btn-hide" id="shieldHud" aria-live="polite"><span class="shield-ic" aria-hidden="true">🛡</span><span id="shieldCount">0</span></div>
+    <!-- The Climb's shield HUD. CC-CLIMB-SHIELDS: held shields + the FORGE
+         TRACK — a row of pips that fills as correct answers earn segments, and
+         empties into a new shield when one completes. #shieldForge is written
+         by game::update_shield_hud_ex (one <i class="seg"> per segment, .on for
+         the earned ones); it MUST exist in the markup, because dom::el panics on
+         a missing id and the HUD is written on every correct answer.
+         State lives in data-forge (forging | forged | full) rather than a text
+         label: the track already shows it, and a label would need two i18n keys
+         that exist in none of the 17 locales. -->
+    <div class="shield-hud btn-hide" id="shieldHud" aria-live="polite"><span class="shield-ic" aria-hidden="true">🛡</span><span id="shieldCount">0</span><span class="shield-forge" id="shieldForge" aria-hidden="true"></span></div>
     <div class="tries-line" id="triesLine" aria-hidden="true"></div>
     <div class="feedback" id="feedback" aria-live="polite"></div>
     <div class="meaning" id="meaning" aria-live="polite"></div>
