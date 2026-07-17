@@ -1,5 +1,6 @@
 mod achievements;
 mod agegate;
+mod akshara;
 mod api;
 mod attempts;
 mod audio_boost;
