@@ -119,37 +119,70 @@ pub fn leaderboard_available() -> bool {
 /// never a config accident. See [`rtl_required`] for the gate itself.
 pub const RTL_SUPPORTED: bool = false;
 
-/// Built-in word-source languages: (code, display name, status, rtl_required).
+/// Which way a language's script runs. CC-RTL **D3**: direction comes from the
+/// REGISTRY and nowhere else — "no hardcoded language→direction checks anywhere
+/// else". Every surface that needs to know asks [`direction`].
+#[derive(PartialEq, Eq, Clone, Copy, Debug)]
+pub enum Direction {
+    Ltr,
+    Rtl,
+}
+use Direction::{Ltr, Rtl};
+
+/// Built-in word-source languages: (code, display name, status, direction).
 ///
-/// `rtl_required` (CC-LINEUP-SWAP D2) marks a language whose script is
-/// right-to-left. Such a language is registered — the roadmap commitment is
-/// visible — but is HARD-GATED from activation by any code path until
-/// [`RTL_SUPPORTED`] is true. Partial RTL rendering is worse than none, so the
-/// gate is unconditional rather than best-effort. Users never see the reason:
-/// ar/fa/ur show the same "coming soon" tile as any unaudited language.
-pub const BUILTIN_LANGS: [(&str, &str, LangStatus, bool); 15] = [
-    (EN, "English", Active, false),
-    (ES, "Espa\u{f1}ol", ComingSoon, false),
-    (FR, "Fran\u{e7}ais", ComingSoon, false),
-    (DE, "Deutsch", ComingSoon, false),
-    (PT, "Portugu\u{ea}s", ComingSoon, false),
-    (PL, "Polski", ComingSoon, false),
-    (VI, "Ti\u{1ebf}ng Vi\u{1ec7}t", ComingSoon, false),
-    (KO, "\u{d55c}\u{ad6d}\u{c5b4}", ComingSoon, false),
-    (JA, "\u{65e5}\u{672c}\u{8a9e}", ComingSoon, false),
-    (FIL, "Filipino", ComingSoon, false),
-    (ZH, "\u{4e2d}\u{6587}", ComingSoon, false),
-    (RU, "\u{420}\u{443}\u{441}\u{441}\u{43a}\u{438}\u{439}", ComingSoon, false),
-    (AR, "\u{627}\u{644}\u{639}\u{631}\u{628}\u{64a}\u{629}", ComingSoon, true),
-    (FA, "\u{641}\u{627}\u{631}\u{633}\u{6cc}", ComingSoon, true),
-    (UR, "\u{627}\u{631}\u{62f}\u{648}", ComingSoon, true),
+/// `direction` (CC-RTL D3) is the script's reading direction, and it is the field
+/// three separate questions are answered FROM — deliberately, because they are
+/// not the same question and conflating them is how RTL bugs hide:
+///
+/// * [`rtl_required`] — may this language activate? An `Rtl` language is
+///   HARD-GATED until [`RTL_SUPPORTED`] (CC-LINEUP-SWAP D2). Partial RTL is worse
+///   than none, so the gate is unconditional. Users never see the reason: ar/fa/ur
+///   show the same "coming soon" tile as any unaudited language.
+/// * [`script_joins`] — do its letters JOIN? Not the same as direction: Hebrew is
+///   Rtl and does not join. This decides whether the answer surface may split a
+///   word into per-letter elements.
+/// * [`direction`] — which way does it READ? What the play surface sets `dir` from.
+pub const BUILTIN_LANGS: [(&str, &str, LangStatus, Direction); 15] = [
+    (EN, "English", Active, Ltr),
+    (ES, "Espa\u{f1}ol", ComingSoon, Ltr),
+    (FR, "Fran\u{e7}ais", ComingSoon, Ltr),
+    (DE, "Deutsch", ComingSoon, Ltr),
+    (PT, "Portugu\u{ea}s", ComingSoon, Ltr),
+    (PL, "Polski", ComingSoon, Ltr),
+    (VI, "Ti\u{1ebf}ng Vi\u{1ec7}t", ComingSoon, Ltr),
+    (KO, "\u{d55c}\u{ad6d}\u{c5b4}", ComingSoon, Ltr),
+    (JA, "\u{65e5}\u{672c}\u{8a9e}", ComingSoon, Ltr),
+    (FIL, "Filipino", ComingSoon, Ltr),
+    (ZH, "\u{4e2d}\u{6587}", ComingSoon, Ltr),
+    (RU, "\u{420}\u{443}\u{441}\u{441}\u{43a}\u{438}\u{439}", ComingSoon, Ltr),
+    (AR, "\u{627}\u{644}\u{639}\u{631}\u{628}\u{64a}\u{629}", ComingSoon, Rtl),
+    (FA, "\u{641}\u{627}\u{631}\u{633}\u{6cc}", ComingSoon, Rtl),
+    (UR, "\u{627}\u{631}\u{62f}\u{648}", ComingSoon, Rtl),
 ];
 
+/// THE direction accessor (CC-RTL D3). The play surface sets `dir` from this and
+/// from nothing else. An unknown language reads left-to-right — the safe default,
+/// since a wrong `dir` on Latin is visible immediately while a missing one on
+/// Arabic is not.
+pub fn direction(lang: &str) -> Direction {
+    BUILTIN_LANGS.iter().find(|(c, _, _, _)| *c == lang).map(|(_, _, _, d)| *d).unwrap_or(Ltr)
+}
+
+/// The `dir` attribute value for `lang` — `"rtl"` or `"ltr"`. What surfaces write.
+pub fn dir_attr(lang: &str) -> &'static str {
+    match direction(lang) {
+        Rtl => "rtl",
+        Ltr => "ltr",
+    }
+}
+
 /// Whether `lang`'s script is right-to-left and therefore blocked until
-/// [`RTL_SUPPORTED`] (CC-LINEUP-SWAP D2). Data lookup, not a per-language
-/// conditional; unknown languages are not RTL.
+/// [`RTL_SUPPORTED`] (CC-LINEUP-SWAP D2). Derived from the registry's
+/// `direction`, so the gate and the rendering can never disagree about which
+/// languages are RTL.
 pub fn rtl_required(lang: &str) -> bool {
-    BUILTIN_LANGS.iter().find(|(c, _, _, _)| *c == lang).map(|(_, _, _, rtl)| *rtl).unwrap_or(false)
+    direction(lang) == Rtl
 }
 
 /// CC-LINEUP-SWAP D2 — THE gate. `false` for any RTL language until the RTL
@@ -312,7 +345,7 @@ mod registry_tests {
     /// activated while RTL is unsupported.
     #[test]
     fn rtl_languages_are_registered_but_hard_gated() {
-        let rtl: Vec<&str> = BUILTIN_LANGS.iter().filter(|(_, _, _, r)| *r).map(|(c, _, _, _)| *c).collect();
+        let rtl: Vec<&str> = BUILTIN_LANGS.iter().filter(|(_, _, _, d)| *d == Rtl).map(|(c, _, _, _)| *c).collect();
         assert_eq!(rtl, vec!["ar", "fa", "ur"], "exactly the three RTL languages carry the flag");
         assert!(!RTL_SUPPORTED, "RTL is unsupported until the CC-RTL initiative ships");
         for code in rtl {
@@ -341,6 +374,34 @@ mod registry_tests {
         }
         // Russian is the trap: new, non-Latin, and Cyrillic does NOT join.
         assert!(!script_joins("ru"), "Cyrillic is not cursive");
+    }
+
+    /// CC-RTL F1/D3 — direction lives in the registry, and `dir_attr` is what
+    /// surfaces write. Pinned because the failure mode is silent: a wrong `dir`
+    /// on Latin is visible instantly; a missing one on Arabic is not.
+    #[test]
+    fn direction_comes_from_the_registry() {
+        for lang in ["ar", "fa", "ur"] {
+            assert_eq!(direction(lang), Rtl, "{lang} reads right-to-left");
+            assert_eq!(dir_attr(lang), "rtl");
+        }
+        for lang in ["en", "es", "ru", "ko", "ja", "zh", "vi"] {
+            assert_eq!(direction(lang), Ltr, "{lang} reads left-to-right");
+            assert_eq!(dir_attr(lang), "ltr");
+        }
+        // Unknown reads LTR — the safe default, and the one whose failure is
+        // visible rather than silent.
+        assert_eq!(direction("__mine"), Ltr);
+        assert_eq!(direction("qqq"), Ltr);
+    }
+
+    /// The activation gate and the rendering must never disagree about which
+    /// languages are RTL. `rtl_required` DERIVES from `direction`, so they cannot.
+    #[test]
+    fn the_gate_and_the_direction_field_cannot_diverge() {
+        for (code, _, _, d) in BUILTIN_LANGS {
+            assert_eq!(rtl_required(code), d == Rtl, "{code}: gate disagrees with its own direction");
+        }
     }
 
     /// D2's teeth: flipping an RTL language to `Active` in the registry must STILL

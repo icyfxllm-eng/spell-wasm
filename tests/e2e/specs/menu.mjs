@@ -31,4 +31,34 @@ export async function run(browser, base, suite) {
       } finally { await ctx.close(); }
     });
   }
+
+  // ---- CC-RTL F1: the study language reaches the play surface ----
+
+  await suite.test('rtl F1: play surface carries the WORD\'s language + dir from the registry', async () => {
+    // CC-RTL F1/D3. The play surfaces must carry the language of the word being
+    // SPELLED, with `dir` read from the registry and nowhere else.
+    //
+    // NOTE, because it corrects an assumption worth writing down: in this app the
+    // language picker ALSO switches the UI chrome, so <html lang> and the picker
+    // agree and cannot be used to prove the plumbing. The real divergence is
+    // `cur_lang` — Misses replays each word in ITS OWN language and Daily uses its
+    // own locale, so the word on screen can be a different language from the
+    // picker. That is why reflect_play_direction reads `cur_lang`, not `lang`.
+    const { ctx, page } = await openApp(browser, base, { lang: 'es' });
+    try {
+      await page.click('#orbWrap').catch(() => {});
+      await page.waitForTimeout(400);
+      const got = await page.evaluate(() => {
+        const q = (id) => {
+          const e = document.getElementById(id);
+          return { lang: e.getAttribute('lang'), dir: e.getAttribute('dir') };
+        };
+        return { picker: document.getElementById('langSel').value, letters: q('letters'), feedback: q('feedback'), meaning: q('meaning') };
+      });
+      for (const id of ['letters', 'feedback', 'meaning']) {
+        assert(got[id].lang === got.picker, `#${id} lang=${got[id].lang}, expected the word's language (${got.picker})`);
+        assert(got[id].dir === 'ltr', `#${id} dir=${got[id].dir}, expected ltr for Spanish`);
+      }
+    } finally { await ctx.close(); }
+  });
 }

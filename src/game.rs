@@ -251,6 +251,7 @@ fn note_climb(app: &App, correct: bool) {
 /// P0.3 leaves open to Eric; the split lives behind `script_joins`, so taking that
 /// option later means deleting a branch rather than unpicking one.
 pub fn render_letters(app: &App, animate_all: bool) {
+    reflect_play_direction(app);
     let value = app.borrow().answer.clone();
     if value.is_empty() {
         dom::set_html("letters", &format!("<span class=\"placeholder\">{}</span><span class=\"caret\"></span>", crate::i18n::t("ph.typeHeard")));
@@ -265,6 +266,48 @@ pub fn render_letters(app: &App, animate_all: bool) {
     };
     dom::set_html("letters", &html);
     app.borrow_mut().prev_letter_len = value.chars().count();
+}
+
+/// CC-RTL **F1** — carry the study language's direction onto the play surface.
+///
+/// # Why this exists, and why `<html lang>` could not do it
+/// `<html lang>` is the **UI locale** — the language of the chrome. The study
+/// language is a different thing entirely, and they routinely differ: an Arabic
+/// speaker learning English has `lang="ar"` on the document and is spelling
+/// Latin words. So any rule keyed on `<html lang>` — `:lang(ar)`, `[dir=rtl]`
+/// inherited from the root — fires for exactly the wrong person. Nothing carried
+/// the study language before this, which is why `.reveal`'s `letter-spacing`
+/// could not be fixed for cursive scripts: there was no selector that could tell
+/// "spelling Arabic" from "reading Arabic".
+///
+/// Now the play surfaces carry `lang` + `dir` for the word being spelled, both
+/// straight from the registry (D3: "no hardcoded language→direction checks
+/// anywhere else"). CSS can finally ask.
+fn reflect_play_direction(app: &App) {
+    // `cur_lang`, NOT `lang`. `lang` is the language SELECTED in the picker;
+    // `cur_lang` is the language of the word actually on screen, and they diverge:
+    // Misses replays each word in its own language (game.rs sets
+    // `cur_lang = m.lang`), and Daily uses its own locale. Keying off `lang` would
+    // put the picker's direction on someone else's word — the same class of
+    // mistake as keying off <html lang>, one level down.
+    let (cur, sel) = {
+        let s = app.borrow();
+        (s.cur_lang.clone(), s.lang.clone())
+    };
+    let code = if !cur.is_empty() { cur } else { sel };
+    // My Words / Misses are pseudo-languages; fall back to the imported list's
+    // speak-language where there is one, exactly as the keyboard does.
+    let code = if code == crate::consts::MINE {
+        mine_lang(&app.borrow()).unwrap_or("en").to_string()
+    } else {
+        code
+    };
+    let dir = crate::consts::dir_attr(&code);
+    for id in ["letters", "feedback", "meaning"] {
+        let el = dom::el(id);
+        let _ = el.set_attribute("lang", &code);
+        let _ = el.set_attribute("dir", dir);
+    }
 }
 
 /// Today's markup, unchanged: one element per character so each can `pop`.

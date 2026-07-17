@@ -490,15 +490,18 @@
   .feedback .reveal,
   .meaning .m-word,
   .meaning .m-ex{unicode-bidi:isolate}
-  /* KNOWN GAP, deliberately not fixed here. `.reveal` sets letter-spacing:.1em,
-     which prises cursive joins apart exactly as readable mode would (see
-     .ltr.joined). It needs to become `normal` for cursive scripts — but that
-     needs a selector that knows the STUDY language, and nothing carries it:
-     <html lang> is the UI locale, so :lang(ar) would fire for an Arabic-speaking
-     user studying English, which is precisely wrong. Carrying the study language
-     onto the play surface is CC-RTL F1 (D3: "direction comes from the language
-     registry"), and this hangs off it. Isolation below is independent and lands
-     now; ar/fa/ur cannot activate meanwhile, so the gap is latent. */
+  /* CC-RTL F1 landed the selector this needed. game::reflect_play_direction puts
+     the STUDY language's lang+dir on #letters/#feedback/#meaning, straight from
+     the registry — so `:lang()` here now means "spelling Arabic", not "reading
+     Arabic". That distinction is the whole point: <html lang> is the UI locale,
+     and keying off it would strip tracking for an Arabic speaker studying
+     English while leaving it on for an English speaker studying Arabic — exactly
+     backwards.
+     `.reveal` sets letter-spacing:.1em, which prises cursive joins apart the same
+     way readable mode did (see .ltr.joined). Cursive scripts get `normal`. */
+  .feedback .reveal:lang(ar),
+  .feedback .reveal:lang(fa),
+  .feedback .reveal:lang(ur){letter-spacing:normal}
   /* F7 syllable replay (feature-flagged; classes appear only when the flag is on) */
   .feedback .reveal.syllabified .syl{transition:color .12s ease,text-shadow .12s ease;opacity:.72}
   .feedback .reveal.syllabified .syl+.syl::before{content:"\00b7";opacity:.5;margin:0 .12em}
