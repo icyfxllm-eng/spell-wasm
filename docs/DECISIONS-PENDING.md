@@ -54,7 +54,28 @@ table is not yet a claim that can be made in a proposal."*
 
 ---
 
-## 2. Turkish — this reverses your own call from a day earlier
+## 2. Turkish — ✅ ANSWERED 2026-07-17: cut permanently
+
+> **RESOLVED — no sign-off needed; this section is history.**
+>
+> CC-HINDI-PHASE0 **D1** cuts Turkish permanently (Hindi replaces it), restoring
+> your original call in `5fc69ff` and overriding CC-LINEUP-SWAP D7. Actioned in
+> `433baeb` on `feature/ru-parity`: `tr` is out of the registry (**15** languages),
+> out of the map (Turkey unmapped, like India), and its content is archived under
+> `archive/` beside the cut four.
+>
+> It also vindicates the original diagnosis: CC-LINEUP-SWAP predates the cut and
+> was never rebased onto it.
+>
+> **Two consequences.** `feature/minimal-pair-candidates` deleted Turkish
+> candidates — I flagged that as a risk if Turkish returned; it was **right** all
+> along, and needs no repair. And CC-LINEUP-SWAP's "exactly 16 languages"
+> done-criterion is now **unmeetable**: 16 only ever reconciled *with* Turkish. The
+> registry is 15 and the snapshot test says 15, deliberately.
+>
+> The original analysis follows, for the record.
+
+### (superseded) This reverses your own call from a day earlier
 
 `ed6964f` puts `tr` back into the registry, the country map, and the audit round,
 because **CC-LINEUP-SWAP D7** lists it among the 11 content-ready languages.
