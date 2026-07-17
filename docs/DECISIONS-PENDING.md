@@ -406,11 +406,12 @@ fails.
 backend, ~5 lines, covers 9 of 15" — was worthless twice over: the endpoints do
 not exist, and the client was already calling them.)
 
-### ⚠ A child's browser calls a third party directly, and nobody decided that
+### ⚠ A child's browser called a third party directly — FIXED 3dd633b, but read this
 
-The correction surfaced something that matters more than the licence question.
+**Fixed on `build-54`, and the fix cost nothing** — but you should know it happened,
+because the decision it implies is yours and it outlives the patch.
 
-For **every non-English word**, `fetch_definition` calls
+For **every non-English word**, `fetch_definition` called
 `https://api.dictionaryapi.dev/...` **straight from the browser** — the word, plus
 the child's IP, to a third party, with no backend in between.
 
@@ -433,14 +434,43 @@ English respects that. Nothing else does.
   the device?" would get the wrong answer today.
 - It is unrecorded: no privacy policy line, no CSP entry, no note anywhere.
 
-**It currently fires and 404s, so nothing is returned** — but the request is still
-made, and the word still leaves the device. Fixing the definitions gap by any route
-that keeps client-side third-party calls would make this real rather than
-theoretical.
+It fired and 404'd, so nothing came back — but the request was still made and the
+word still left the device.
 
-**`lexicon-ingest` (§10's second option) removes it entirely** — glosses ship in
-the bundle, no runtime call, no third party. That is a second reason to prefer it,
-independent of coverage.
+**What was done (`3dd633b`):** `def_lang`, the non-English branch, and the local
+`urlencode` that served it are deleted. English still routes through the proxy;
+everything else returns `None`. **User-visible behaviour is identical** — the path
+rendered nothing before (404) and renders nothing now, at zero cost. Verified in
+the artifact: `api.dictionaryapi.dev` no longer appears in the compiled wasm (0
+hits, against a control string returning 1). The call cannot be made because the
+URL is not in the binary.
+
+**Why it is still in this document.** The patch removes the call; it does not
+answer the question the call raised:
+
+1. **Nobody decided this.** A direct browser→third-party request for every
+   non-English word was not a choice anyone recorded — it accreted, and it survived
+   because it lived one branch away from the proxy that exists to prevent exactly
+   it. Worth asking what else did.
+2. **The Education Edition has to answer "what leaves the device?"** and that
+   answer should be written down before a district asks. Today there is no privacy
+   line, no CSP entry, and nothing in `LICENSES.md` about definitions at all.
+3. **It constrains how §10 gets fixed.** Any route to non-English definitions that
+   keeps client-side third-party calls re-creates this, and next time it would
+   *work* — the word would leave the device AND come back with text. That is a
+   second reason to prefer **`lexicon-ingest`**, independent of coverage: glosses
+   ship in the bundle, so there is no runtime call to leak, and `fetch_definition`
+   stays exactly as it is now.
+
+**How it was found, because the method matters more than the bug.** I recorded
+`def_lang` as uncalled twice in this document — "dead code", then "fiction" — and
+both times I had not read its caller. Checking *why* I was wrong is what surfaced
+the direct fetch. That is the third claim in two days that survived until it was
+tested: the RTL spike's first drift metric returned a perfect 0.00 because it was a
+tautology; `--check`'s docstring promised drift protection it structurally cannot
+give; and this. **Eleven instruction files have been written against this codebase
+this week.** The three that were checkable were all wrong in the same direction —
+confidently, and about something nobody had run.
 
 So any plan involving a cross-language definitions audit (CC-DEF-PRECHECK assumes
 one) is planning against content that does not exist. CC-DEF-PRECHECK is blocked on
