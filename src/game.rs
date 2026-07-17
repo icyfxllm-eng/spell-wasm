@@ -512,32 +512,43 @@ pub fn clear_meaning() {
     crate::word_stories::clear();
 }
 
-/// Post-answer reveal only (the round is already over, so there's nothing
-/// left to protect) — English routes through our own backend's cached
-/// `/api/meaning` proxy; other languages (My Words with a non-English
-/// speak_lang) still go straight to dictionaryapi.dev, since our backend
-/// only knows English.
+/// Post-answer reveal only (the round is already over, so there is nothing left
+/// to protect). English routes through our own backend's cached `/api/meaning`
+/// proxy. **Every other language returns `None`** — we have no definition source
+/// for them.
+///
+/// # Why there is no non-English branch any more
+/// There used to be one: it called `consts::def_lang` and fetched
+/// `api.dictionaryapi.dev/entries/<lang>/<word>` **straight from the browser**,
+/// bypassing our proxy. It was deleted 2026-07-17 for two reasons, neither of
+/// which was tidiness.
+///
+/// 1. **It never worked.** dictionaryapi.dev serves English only — `es/hola`,
+///    `fr/bonjour`, `de/haus`, `ru/дом`, `ja/日本`, `ko/한국`, `ar/كتاب`,
+///    `hi/नमस्ते`, `pt-BR/casa` all 404. So it fired a request per non-English
+///    word and rendered nothing, which is exactly what returning `None` does — at
+///    zero cost.
+/// 2. **It sent a child's word and IP to a third party.** That defeats the stated
+///    reason the proxy exists (see `api::fetch_meaning`), and it sits badly beside
+///    the rest of this product: Say-It is on-device only, ghost racing is local,
+///    the Education Edition is local/unranked for COPPA/FERPA reasons. A district
+///    asking "what leaves the device?" deserves an answer that is true.
+///
+/// Restoring non-English definitions means giving them a REAL source — see
+/// `docs/DECISIONS-PENDING.md` §10. The live candidate ships glosses in the
+/// bundle (`tools/lexicon-ingest`), so it needs no runtime call at all and this
+/// function stays as it is.
 async fn fetch_definition(word: String, code: String) -> Option<(String, String, String)> {
     let base = code.split('-').next().unwrap_or(&code).to_string();
-    if base.eq_ignore_ascii_case("en") {
-        let (pos, def, example) = api::fetch_meaning(&word, false).await.ok()?;
-        return if def.is_empty() { None } else { Some((pos, def, example)) };
+    if !base.eq_ignore_ascii_case("en") {
+        return None;
     }
-    let api_lang = crate::consts::def_lang(&base)?;
-    let url = format!("https://api.dictionaryapi.dev/api/v2/entries/{}/{}", api_lang, urlencode(&word));
-    let text = crate::storage::fetch_text(&url).await.ok()?;
-    let json: serde_json::Value = serde_json::from_str(&text).ok()?;
-    let entry = json.as_array()?.first()?;
-    let mean = entry.get("meanings")?.as_array()?.first()?;
-    let pos = mean.get("partOfSpeech").and_then(|v| v.as_str()).unwrap_or("").to_string();
-    let d0 = mean.get("definitions")?.as_array()?.first()?;
-    let def = d0.get("definition")?.as_str()?.to_string();
-    let example = d0.get("example").and_then(|v| v.as_str()).unwrap_or("").to_string();
-    Some((pos, def, example))
-}
-
-fn urlencode(s: &str) -> String {
-    js_sys::encode_uri_component(s).as_string().unwrap_or_else(|| s.to_string())
+    let (pos, def, example) = api::fetch_meaning(&word, false).await.ok()?;
+    if def.is_empty() {
+        None
+    } else {
+        Some((pos, def, example))
+    }
 }
 
 pub fn show_meaning(app: &App, word: String, lang_key: String) {
