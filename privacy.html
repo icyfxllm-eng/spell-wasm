@@ -64,9 +64,12 @@
 
   <h2>What the app sends to our server to play</h2>
   <p>To play a word, the app asks our server (<code>spellgame.net</code>) for that word's pronunciation
-     audio and dictionary definition. Only the dictionary word is sent — never anything about you. Our
-     server generates and caches audio for common words (using Google Cloud Text-to-Speech) so the app
-     loads quickly; this cache is by word, not by user. All traffic uses HTTPS. We keep standard,
+     audio and dictionary definition. Only the dictionary word is sent — never anything about you. The
+     app talks to our server and to nobody else: it makes no requests to any other company, and your
+     browser is never asked to. Our server generates and caches audio for common words (using Google
+     Cloud Text-to-Speech), and looks up definitions from
+     <a href="https://dictionaryapi.dev">dictionaryapi.dev</a> — both by word, never by user, and both
+     cached so the app loads quickly. All traffic uses HTTPS. We keep standard,
      short-lived server logs for security and reliability; they are not used to identify or profile you.</p>
 
   <h2>The Climb — optional accounts &amp; leaderboard</h2>
