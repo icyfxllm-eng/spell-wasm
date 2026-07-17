@@ -260,6 +260,36 @@ for (const lang of shipped) {
   }
 }
 
+
+// --- (f) DISPLAYED CONTENT — text we SHOW that is not a word list -----------
+// The checks above scan FILES. Definitions arrive from a runtime API, so no file
+// scan could ever see them — and they have been rendered to children since before
+// this registry existed, with their licence recorded nowhere. A gate that only
+// looks where it is easy to look is how that survived.
+//
+// Same severity rule as (e), for the same reason: enforcement tightens where the
+// content becomes REACHABLE. Reachable + UNKNOWN => FAIL. Gated behind a flag =>
+// WARN, because nobody can see it yet.
+const displayed = registry.displayed_content || {};
+for (const [id, d] of Object.entries(displayed)) {
+  const say = d.reachable ? fail : warn;
+  const where = d.reachable ? "REACHABLE — shipping to users" : "gated";
+  const use = d.permitted_use;
+
+  if (!VERDICTS.has(use)) {
+    say(`displayed_content "${id}": permitted_use must be one of ${[...VERDICTS].join("|")}, got ${JSON.stringify(use)} (${where}).`);
+    continue;
+  }
+  if (use === "PROHIBITED") {
+    say(`displayed_content "${id}": permitted_use is PROHIBITED but it is still wired up (${where}).`);
+  } else if (use === "UNKNOWN") {
+    say(`displayed_content "${id}" (${d.name ?? "?"}): permitted_use is UNKNOWN — no human has verified the ` +
+        `licence of text this app DISPLAYS (${where}). ${d.path ?? ""}`);
+  } else if (!d.verified_by || String(d.verified_by).trim() === "") {
+    say(`displayed_content "${id}": permitted_use is ${use} but verified_by names nobody (${where}).`);
+  }
+}
+
 // --- report -----------------------------------------------------------------
 for (const n of notes) console.log(`license-gate: note — ${n}`);
 for (const w of warnings) console.log(`license-gate: WARN — ${w}`);

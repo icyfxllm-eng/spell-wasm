@@ -284,5 +284,40 @@
     "PROHIBITED": "Must not back a shipped list.",
     "UNKNOWN": "No human verdict yet. FAILS the gate for any ACTIVE language; warns for one still gated (audit/RTL), mirroring the activation-gate philosophy: enforcement tightens where content becomes reachable."
   },
-  "verification": "verified_by MUST name a person — the addendum is explicit that only a human edit promotes a verdict, and that the generator must never infer a license from a URL, a filename, or a tier. Entries below are PRE-FILLED as UNKNOWN, which is the generator doing its job, not an omission. Eric (or a named auditor) promotes them by editing verified_by + verified_date."
+  "verification": "verified_by MUST name a person — the addendum is explicit that only a human edit promotes a verdict, and that the generator must never infer a license from a URL, a filename, or a tier. Entries below are PRE-FILLED as UNKNOWN, which is the generator doing its job, not an omission. Eric (or a named auditor) promotes them by editing verified_by + verified_date.",
+  "$displayedContentNote": "The `sources` map above covers WORD LISTS, one source per language (D2). It does not cover the other text this app SHOWS a child. That gap was invisible until 2026-07-17: definitions have been fetched from a third-party API and rendered on the meaning card since long before this registry existed, and they appear in no licence record anywhere — not here, not in assets/words/LICENSES.md. The gate could not see them because it only ever scanned files, and a runtime API call is not a file. `displayed_content` below closes that: anything rendered to a user needs a licence verdict, whatever shape it arrives in.",
+  "displayed_content": {
+    "definitions": {
+      "what": "Definition + example sentence on the meaning card, shown after every answered word.",
+      "name": "dictionaryapi.dev",
+      "url": "https://dictionaryapi.dev",
+      "path": "backend/app.py DICTIONARY_API -> /api/meaning -> src/api.rs fetch_meaning -> game::show_meaning",
+      "kind": "runtime_api",
+      "languages": "en ONLY — DICTIONARY_API hardcodes /api/v2/entries/en/{}. consts.rs def_lang() maps 12 languages to dictionaryapi codes and the backend never calls it; that mapping is dead code.",
+      "reachable": true,
+      "license": "UNRECORDED",
+      "license_spdx": null,
+      "tier": null,
+      "permitted_use": "UNKNOWN",
+      "verified_by": null,
+      "verified_date": null,
+      "$note": "SHIPPING NOW, to children, with no recorded licence. dictionaryapi.dev is widely understood to be Wiktionary-derived — if so this is CC BY-SA text displayed with no attribution, which is the EXACT reason Word Stories is held dark (see docs/word-stories-review.md on build-54). That would make the two inconsistent: one feature dark for a licence risk the app already takes in every round. VERIFY the provenance before deciding — it changes whether this is a new decision or an existing gap."
+    },
+    "enrich": {
+      "what": "Per-word 'beauty layer' insight (etymology, character components, tone families) as a second line on the meaning card.",
+      "name": "UNRECORDED — believed original curation",
+      "url": null,
+      "path": "src/i18n/enrich/{lang}.json -> src/enrich.rs -> game::show_meaning",
+      "kind": "shipped_data",
+      "languages": "19 locale files",
+      "reachable": true,
+      "license": "UNRECORDED",
+      "license_spdx": null,
+      "tier": null,
+      "permitted_use": "UNKNOWN",
+      "verified_by": null,
+      "verified_date": null,
+      "$note": "Each row carries a `verified` flag and release builds render only verified:true, so a native auditor has seen the TEXT. That is an accuracy verdict, not a licence one — 'an auditor approved this sentence' does not say who owns it. If it is original curation (as the module reads), Eric can promote it in one edit, exactly like the word banks."
+    }
+  }
 }
