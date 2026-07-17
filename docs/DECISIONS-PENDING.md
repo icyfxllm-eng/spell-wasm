@@ -375,15 +375,21 @@ only `verified: true`. But that is an **accuracy** verdict, not a licence one �
 auditor approved this sentence" does not say who owns it. If it is original
 curation, promoting it is one edit, like the word banks.
 
-### `def_lang()` is not dead code — it is fiction
+### `def_lang()` — I got this wrong twice; here is what it actually is
 
-**There are no non-English definitions, and there never could have been.**
-`DICTIONARY_API` hardcodes `/api/v2/entries/en/{}` and `fetch_meaning(word)` takes
-no language, so `consts.rs def_lang()`'s 12-language map is never called. I assumed
-that was merely dead code and that wiring it through was a cheap ~5-line win.
+**CORRECTION.** I wrote here that `def_lang` was never called ("dead code", then
+"fiction"). **Both were wrong.** It is live: `game.rs:526` calls it, and the split
+is deliberate —
 
-**I tested it. Every language it claims returns 404**, with unambiguous native
-words:
+- **English** → `api::fetch_meaning` → our backend `/api/meaning` (cached, maskable)
+- **Everything else** → `def_lang` builds the URL and **the browser calls
+  dictionaryapi.dev directly**, bypassing the backend entirely.
+
+The code says so: *"still go straight to dictionaryapi.dev, since our backend only
+knows English."* The backend does not call `def_lang` because the **client** does.
+
+**What survives the correction:** those endpoints 404. Every language it claims,
+tested with unambiguous native words:
 
 | | | | |
 |---|---|---|---|
@@ -391,11 +397,50 @@ words:
 | `ru/дом` → 404 | `ja/日本` → 404 | `ko/한국` → 404 | `ar/كتاب` → 404 |
 | `hi/नमस्ते` → 404 | `pt-BR/casa` → 404 | | |
 
-dictionaryapi.dev serves English only. So `def_lang` describes a capability that
-has never existed, and wiring it through — the cheap option I proposed before
-testing it — would have shipped a change that silently produced 404s for every
-non-English word. **Delete it or comment it as unreachable before someone plans
-against it.**
+dictionaryapi.dev serves English only. So the non-English path is **live and
+broken**: every non-English word fires a request that 404s, and the card shows
+nothing. Deleting `def_lang` expands nothing — it removes a path that already
+fails.
+
+(The cheap option I proposed before testing — "wire `def_lang` through the
+backend, ~5 lines, covers 9 of 15" — was worthless twice over: the endpoints do
+not exist, and the client was already calling them.)
+
+### ⚠ A child's browser calls a third party directly, and nobody decided that
+
+The correction surfaced something that matters more than the licence question.
+
+For **every non-English word**, `fetch_definition` calls
+`https://api.dictionaryapi.dev/...` **straight from the browser** — the word, plus
+the child's IP, to a third party, with no backend in between.
+
+That routes around the reason your proxy exists. From `api.rs`:
+
+> *"Routing through our backend — rather than calling dictionaryapi.dev straight
+> from the browser — means the masked hint's network response itself never
+> contains the unmasked word."*
+
+English respects that. Nothing else does.
+
+**Why it matters beyond tidiness:**
+
+- It is a children's product. Kid Mode's whole posture is that a child's data does
+  not leave the device unnecessarily — Say-It is on-device only "no audio
+  off-device, ever", ghost racing is local, and the Education Edition is
+  local/unranked for COPPA/FERPA reasons (CC-EDITIONS D7). A direct
+  browser→third-party call for every word sits oddly beside all of that.
+- It is invisible in the Education Edition's story. A district asking "what leaves
+  the device?" would get the wrong answer today.
+- It is unrecorded: no privacy policy line, no CSP entry, no note anywhere.
+
+**It currently fires and 404s, so nothing is returned** — but the request is still
+made, and the word still leaves the device. Fixing the definitions gap by any route
+that keeps client-side third-party calls would make this real rather than
+theoretical.
+
+**`lexicon-ingest` (§10's second option) removes it entirely** — glosses ship in
+the bundle, no runtime call, no third party. That is a second reason to prefer it,
+independent of coverage.
 
 So any plan involving a cross-language definitions audit (CC-DEF-PRECHECK assumes
 one) is planning against content that does not exist. CC-DEF-PRECHECK is blocked on
