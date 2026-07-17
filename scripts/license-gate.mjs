@@ -123,6 +123,15 @@ const compoundTokens = (w) =>
   nfcLower(w).split(/[\s-]+/).map((t) => t.trim()).filter((t) => t.length > 0);
 
 for (const lang of Object.keys(sources)) {
+  // Provenance-backing only means something for an INGESTED source: it asks
+  // "does every curated word exist in the licensed lexicon we took it from?".
+  // For original curation there IS no external lexicon — we authored the words,
+  // so they ARE the source, and demanding a surface index would be asking the
+  // list to prove it descends from itself. Its licence question is answered by
+  // permitted_use/verified_by in check (e) instead, which is the real question
+  // for owned content.
+  if (sources[lang]?.kind === "original") continue;
+
   const curatedDir = join(ROOT, "assets", "words", lang);
   const tierPaths = TIERS.map((t) => join(curatedDir, `${t}.txt`));
   const presentTiers = tierPaths.filter((p) => existsSync(p));
@@ -169,8 +178,94 @@ for (const lang of Object.keys(sources)) {
   }
 }
 
+
+// --- (e) LICENSE VERDICTS + ORPHAN CONTENT (CC-WORDLIST-SOURCES addendum) ----
+// The addendum's claim, verbatim, is what has to be machine-true: "every word
+// list traces to a documented source whose license permits this use, and the
+// build fails otherwise."
+//
+// Severity mirrors the activation-gate philosophy the addendum asks for —
+// enforcement tightens at the point content becomes REACHABLE:
+//   * a language that is ACTIVE ships to players  -> UNKNOWN/PROHIBITED FAILS.
+//   * a language still gated (audit / RTL / coming soon) -> WARNS. Its content
+//     exists but nobody can reach it, so it must not block the build.
+// Active-ness is read from src/consts.rs BUILTIN_LANGS, which is the single
+// source of truth every other surface reads — not a second list here that could
+// drift out of step with it.
+const warnings = [];
+const warn = (m) => warnings.push(m);
+
+const VERDICTS = new Set(["PERMITTED", "PERMITTED_WITH_ATTRIBUTION", "PROHIBITED", "UNKNOWN"]);
+
+function activeLangs() {
+  const p = join(ROOT, "src", "consts.rs");
+  if (!existsSync(p)) return null;
+  const m = readFileSync(p, "utf8").match(/pub const BUILTIN_LANGS[\s\S]*?\n\];/);
+  if (!m) return null;
+  const out = new Set();
+  for (const line of m[0].split("\n")) {
+    if (!/\bActive\b/.test(line)) continue;
+    const c = line.match(/^\s*\(([A-Z_]+),/);
+    if (c) out.add(c[1].toLowerCase());
+  }
+  return out;
+}
+const active = activeLangs();
+if (active === null) {
+  fail("cannot read BUILTIN_LANGS from src/consts.rs — refusing to guess which languages are active.");
+}
+
+// Orphan check: every language that SHIPS a word bank must be covered.
+const wordsDir = join(ROOT, "assets", "words");
+const shipped = existsSync(wordsDir)
+  ? readdirSync(wordsDir).filter((d) => existsSync(join(wordsDir, d, "easy.txt")))
+  : [];
+
+for (const lang of shipped) {
+  const src = sources[lang];
+  const isActive = active ? active.has(lang) : false;
+  const where = isActive ? "ACTIVE" : "gated";
+  const say = isActive ? fail : warn;
+
+  if (!src) {
+    say(`orphan content: assets/words/${lang}/ ships a word bank but sources/registry.json ` +
+        `has no "${lang}" entry (${where}).`);
+    continue;
+  }
+  const use = src.permitted_use;
+  if (!VERDICTS.has(use)) {
+    say(`registry "${lang}": permitted_use must be one of ${[...VERDICTS].join("|")}, got ` +
+        `${JSON.stringify(use)} (${where}).`);
+    continue;
+  }
+  if (use === "PROHIBITED") {
+    say(`registry "${lang}": permitted_use is PROHIBITED — it may not back a shipped list (${where}).`);
+  } else if (use === "UNKNOWN") {
+    say(`registry "${lang}": permitted_use is UNKNOWN — no human has verified this source (${where}). ` +
+        `Fail-closed is non-negotiable: fix the manifest entry, never the gate.`);
+  } else {
+    // A verdict only counts if a PERSON signed it. The addendum: "verified_by
+    // must name a person"; the generator may pre-fill UNKNOWN, only a human
+    // promotes.
+    if (!src.verified_by || String(src.verified_by).trim() === "") {
+      say(`registry "${lang}": permitted_use is ${use} but verified_by names nobody (${where}). ` +
+          `A verdict without a verifier is not a verdict.`);
+    }
+    if (!src.verified_date) {
+      say(`registry "${lang}": permitted_use is ${use} but verified_date is missing (${where}).`);
+    }
+    if (use === "PERMITTED_WITH_ATTRIBUTION" && !creditedUrls.has(src.url)) {
+      say(`registry "${lang}": PERMITTED_WITH_ATTRIBUTION but credits.json has no entry for ${src.url}.`);
+    }
+  }
+}
+
 // --- report -----------------------------------------------------------------
 for (const n of notes) console.log(`license-gate: note — ${n}`);
+for (const w of warnings) console.log(`license-gate: WARN — ${w}`);
+if (warnings.length) {
+  console.log(`license-gate: ${warnings.length} warning(s) — activation-gated languages, not blocking.`);
+}
 if (errors.length) {
   console.error("\nlicense-gate: FAIL");
   for (const e of errors) console.error("  ✗ " + e);
