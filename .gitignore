@@ -70,5 +70,7 @@ tools/wordpipe/sources/
 tools/wordpipe/out/
 .claude/worktrees/
 
-# CC-RTL Phase 0 spike output (regenerate: node spike/rtl-feedback/measure.mjs)
-spike/rtl-feedback/spike.png
+# NOTE: spike/rtl-feedback/spike.png is deliberately NOT ignored. It is the
+# visual evidence FINDINGS.md rests on — كتاب shattering into ك ت ا ب — and the
+# spike branch is never merged, so it costs mainline nothing. A review artifact
+# a reviewer has to regenerate to see is not a review artifact.
