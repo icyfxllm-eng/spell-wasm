@@ -160,6 +160,24 @@ pub fn rtl_blocked(lang: &str) -> bool {
     rtl_required(lang) && !RTL_SUPPORTED
 }
 
+/// Whether `lang`'s script is CURSIVE — its letters join, so the word must reach
+/// the text shaper as ONE run.
+///
+/// This is what the answer surface needs to know, and it is NOT the same question
+/// as "is it RTL". Splitting a word into per-element letters is harmless for
+/// Latin, Hangul and kana (nothing joins), and destroys Arabic (everything does).
+/// Direction is irrelevant to it: Hebrew is RTL and does not join; if Hebrew ever
+/// enters the lineup this MUST become its own registry field rather than keep
+/// riding on `rtl_required`.
+///
+/// Today it derives from `rtl_required` because every RTL language in the lineup
+/// (ar/fa/ur) is Arabic-script, and Arabic-script joins. That coincidence is
+/// load-bearing, so it is stated here rather than left for someone to discover:
+/// the test `cursive_is_exactly_the_arabic_script_languages` pins it.
+pub fn script_joins(lang: &str) -> bool {
+    rtl_required(lang)
+}
+
 /// A language's availability status (ComingSoon for anything not in the registry).
 pub fn lang_status(lang: &str) -> LangStatus {
     BUILTIN_LANGS.iter().find(|(c, _, _, _)| *c == lang).map(|(_, _, s, _)| *s).unwrap_or(ComingSoon)
@@ -305,6 +323,24 @@ mod registry_tests {
         // Russian is the new LTR language — it carries no RTL gate at all.
         assert!(!rtl_required("ru"), "ru is left-to-right");
         assert!(!rtl_blocked("ru"));
+    }
+
+    /// CC-RTL F4 leans on `script_joins` deriving from `rtl_required`, which is
+    /// only sound while every RTL language in the lineup is Arabic-script. Pin it:
+    /// if someone adds Hebrew (RTL, does NOT join) this test fails, which is the
+    /// moment `script_joins` must become its own registry field instead of riding
+    /// on direction.
+    #[test]
+    fn cursive_is_exactly_the_arabic_script_languages() {
+        let joins: Vec<&str> = BUILTIN_LANGS.iter().map(|(c, _, _, _)| *c).filter(|c| script_joins(c)).collect();
+        assert_eq!(joins, vec!["ar", "fa", "ur"], "only the Arabic-script languages are cursive");
+        // Nothing else may take the joined path — splitting is harmless for them
+        // and the `pop` animation depends on it.
+        for lang in ["en", "es", "fr", "de", "pt", "pl", "tr", "vi", "ko", "ja", "fil", "zh", "ru"] {
+            assert!(!script_joins(lang), "{lang} does not join — it must keep the per-letter path");
+        }
+        // Russian is the trap: new, non-Latin, and Cyrillic does NOT join.
+        assert!(!script_joins("ru"), "Cyrillic is not cursive");
     }
 
     /// D2's teeth: flipping an RTL language to `Active` in the registry must STILL

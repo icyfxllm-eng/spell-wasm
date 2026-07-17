@@ -127,6 +127,17 @@
   @keyframes i18nCloakReveal{ to{ visibility:visible } }
   body.readable{ font-family:'OpenDyslexic','Instrument Sans',system-ui,sans-serif; letter-spacing:.01em; }
   body.readable .ltr{ letter-spacing:.05em; }
+  /* CC-RTL F4 — the cursive answer path (game::render_letters_joined). The whole
+     answer is ONE text node so the shaper joins it; `isolate` stops an RTL answer
+     reordering against the LTR chrome around it.
+     The letter-spacing override is not cosmetic: tracking inserts space BETWEEN
+     characters, which prises cursive joins apart — readable mode would undo the
+     exact thing this path exists to protect. OpenDyslexic also has no Arabic
+     coverage, so the font stack falls through to the system Arabic face either
+     way. Reverting to `normal` here is therefore a fix, not a regression, for the
+     only scripts that reach this branch. */
+  .ltr.joined{ unicode-bidi:isolate; }
+  body.readable .ltr.joined{ letter-spacing:normal; }
   body.readable .foot{ font-size:13px; }
   body.kid .ltr{ font-size:30px; }
   body.kid .orb-glyph{ font-size:18px; }

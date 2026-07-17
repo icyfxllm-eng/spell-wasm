@@ -235,6 +235,21 @@ fn note_climb(app: &App, correct: bool) {
 
 // ---------- rendering ----------
 
+/// Render the in-progress answer.
+///
+/// # Why there are two paths (CC-RTL F4, "parallel" per P0.3)
+/// The per-letter `<span>` in [`render_letters_split`] is what lets each typed
+/// letter `pop`. It is also what shatters a cursive word: shaping engines join
+/// letters within a text RUN, and separate inline elements break the run, so
+/// Arabic renders as isolated letterforms — measured at +26.6% median width, i.e.
+/// `كتاب` becoming `ك ت ا ب` (see `spike/rtl-feedback/FINDINGS.md`).
+///
+/// So a cursive script gets ONE text node and no per-letter animation. Everything
+/// else keeps today's markup **byte-for-byte** — that is the point of the parallel
+/// choice: English, the only Active language, is not touched. Unifying (deleting
+/// the span path entirely and giving every script measured markers) is the option
+/// P0.3 leaves open to Eric; the split lives behind `script_joins`, so taking that
+/// option later means deleting a branch rather than unpicking one.
 pub fn render_letters(app: &App, animate_all: bool) {
     let value = app.borrow().answer.clone();
     if value.is_empty() {
@@ -242,6 +257,20 @@ pub fn render_letters(app: &App, animate_all: bool) {
         app.borrow_mut().prev_letter_len = 0;
         return;
     }
+    let joins = crate::consts::script_joins(&app.borrow().lang);
+    let html = if joins {
+        render_letters_joined(&value)
+    } else {
+        render_letters_split(app, &value, animate_all)
+    };
+    dom::set_html("letters", &html);
+    app.borrow_mut().prev_letter_len = value.chars().count();
+}
+
+/// Today's markup, unchanged: one element per character so each can `pop`.
+/// Correct for every non-joining script — Latin, Cyrillic, Hangul, kana — where
+/// splitting costs nothing because nothing joins.
+fn render_letters_split(app: &App, value: &str, animate_all: bool) -> String {
     let start = if animate_all { 0 } else { app.borrow().prev_letter_len };
     let mut html = String::new();
     for (i, ch) in value.chars().enumerate() {
@@ -253,8 +282,22 @@ pub fn render_letters(app: &App, animate_all: bool) {
         }
     }
     html.push_str("<span class=\"caret\"></span>");
-    dom::set_html("letters", &html);
-    app.borrow_mut().prev_letter_len = value.chars().count();
+    html
+}
+
+/// Cursive scripts: the whole answer in ONE text node, so the shaper sees the
+/// word and joins it. `dir="rtl"` is carried on the run itself and
+/// `unicode-bidi: isolate` (CSS) stops an RTL answer reordering against the LTR
+/// chrome around it.
+///
+/// No per-letter `pop`: you cannot animate a glyph you have not split, and
+/// splitting is precisely the bug. That is a real loss, and it is why this path is
+/// confined to the scripts that need it.
+fn render_letters_joined(value: &str) -> String {
+    format!(
+        "<span class=\"ltr joined\" dir=\"rtl\">{}</span><span class=\"caret\"></span>",
+        dom::escape_html(value),
+    )
 }
 
 // ---------- answer input (no DOM <input>: keeps the iOS keyboard closed) ----------
@@ -2201,6 +2244,30 @@ mod climb_band_tests {
     //! Option A — the solo Climb band promotes after CLIMB_PROMOTE correct
     //! answers and drops exactly ONE tier on a miss (never straight to easy), so
     //! hard languages keep progressing. The streak/chain is not involved here.
+
+    // ---- CC-RTL F4: the two render paths ----
+
+    /// A cursive answer must reach the shaper as ONE run. If this ever splits,
+    /// Arabic shatters into isolated letterforms (+26.6% median width — see
+    /// spike/rtl-feedback/FINDINGS.md). Counting elements is the cheap proxy for
+    /// "did we hand the shaper a single run".
+    #[test]
+    fn joined_path_emits_one_run_not_one_span_per_letter() {
+        let html = super::render_letters_joined("\u{643}\u{62a}\u{627}\u{628}"); // كتاب
+        assert_eq!(html.matches("<span").count(), 2, "one span for the word + one caret; never one per letter: {html}");
+        assert!(html.contains("dir=\"rtl\""), "the run carries its own direction");
+        assert!(html.contains("\u{643}\u{62a}\u{627}\u{628}"), "the word survives intact");
+        assert!(!html.contains("pop"), "no per-letter pop is possible on an unsplit run");
+    }
+
+    /// One text node is not an excuse to stop escaping — the answer is user input.
+    #[test]
+    fn joined_path_still_escapes() {
+        let html = super::render_letters_joined("<img onerror=x>");
+        assert!(!html.contains("<img"), "user input must be escaped: {html}");
+        assert!(html.contains("&lt;img"));
+    }
+
     use super::*;
     use crate::model::AppState;
     use std::cell::RefCell;
