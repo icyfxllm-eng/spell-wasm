@@ -22,8 +22,10 @@ import * as spellaloud from './specs/spellaloud.mjs';
 import * as submitAdvance from './specs/submit-advance.mjs';
 import * as attemptsShields from './specs/attempts_shields.mjs';
 import * as toolsHub from './specs/tools-hub.mjs';
+import * as playHub from './specs/playhub.mjs';
 
 const SPECS = [
+  ['playhub', playHub],
   ['keyboard', keyboard],
   ['gameplay', gameplay],
   ['modes', modes],

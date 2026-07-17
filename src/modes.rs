@@ -107,12 +107,28 @@ pub struct HubCtx {
     /// Parent-premium entitlements the player holds, by `EntitlementSet` field
     /// name (e.g. "photo_ocr").
     pub premium: Vec<String>,
+    /// Mode ids whose runtime flag is ON, collected by the caller from
+    /// `flags::is_on`.
+    ///
+    /// `status` and the flag are DIFFERENT questions and both must pass: the
+    /// registry says what a mode IS (live / coming_soon / hidden), the flag says
+    /// whether it currently RUNS. Conflating them would force word_stories
+    /// (hidden, flag off) and online_spelloff (coming_soon, flag off) to lie
+    /// about one or the other. Passed in rather than read here so [`visible`]
+    /// stays pure and both branches are testable without storage.
+    pub enabled: Vec<String>,
 }
 
 /// Whether `m` may be seen at all in `ctx` — the whole rule, in one place.
 fn permitted(m: &Mode, ctx: &HubCtx) -> bool {
     // Hidden means hidden. Checked first so nothing below can resurrect it.
     if m.status == Status::Hidden {
+        return false;
+    }
+    // The runtime flag is off -> the feature does not run, so it must not tile.
+    // A tile for an inert mode is worse than no tile: it promises a thing that
+    // will not happen.
+    if !ctx.enabled.iter().any(|e| *e == m.id) {
         return false;
     }
     // Little Speller shows only kid-safe modes — ABSENCE, not locks.
@@ -161,7 +177,8 @@ mod tests {
             lang: "en".to_string(),
             level: AccessLevel::Full,
             premium: vec!["photo_ocr".to_string()],
-            }
+            enabled: all().iter().map(|m| m.id.clone()).collect(),
+        }
     }
 
     fn ids(v: &[Mode]) -> Vec<String> {
@@ -186,7 +203,7 @@ mod tests {
         let all = all();
         for kid in [false, true] {
             for native in [false, true] {
-                let c = HubCtx { kid, native, lang: "en".into(), level: AccessLevel::Full, premium: vec!["photo_ocr".into()] };
+                let c = HubCtx { kid, native, lang: "en".into(), level: AccessLevel::Full, premium: vec!["photo_ocr".into()], enabled: ids(&all) };
                 assert!(!ids(&visible(&all, &c)).contains(&"word_stories".to_string()), "word_stories must never tile");
             }
         }
@@ -247,6 +264,26 @@ mod tests {
         let got = visible(&all, &ctx());
         let spelloff = got.iter().find(|m| m.id == "online_spelloff").expect("coming_soon still tiles");
         assert_eq!(spelloff.status, Status::ComingSoon, "it is a teaser, not a live tile");
+    }
+
+    /// A mode whose runtime flag is OFF does not tile, whatever its status says.
+    /// `status` and the flag answer different questions and BOTH must pass.
+    #[test]
+    fn a_flag_off_mode_does_not_tile() {
+        let all = all();
+        let c = HubCtx { enabled: vec![], ..ctx() };
+        assert!(visible(&all, &c).is_empty(), "no flags on -> no tiles");
+        let c = HubCtx { enabled: vec!["ghost_racing".into()], ..ctx() };
+        assert_eq!(ids(&visible(&all, &c)), vec!["ghost_racing"]);
+    }
+
+    /// ...and `hidden` still beats an ON flag. word_stories' flag can be flipped
+    /// on for a tester; the hub must STILL not show it (F8's hard gate).
+    #[test]
+    fn hidden_beats_an_enabled_flag() {
+        let all = all();
+        let c = HubCtx { enabled: vec!["word_stories".into()], ..ctx() };
+        assert!(visible(&all, &c).is_empty(), "flag on but hidden -> still no tile");
     }
 
     /// A1.1 — deleting an entry removes the mode from every surface with zero code

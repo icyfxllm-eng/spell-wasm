@@ -40,6 +40,23 @@ pub fn set_html(id: &str, html: &str) {
     el(id).set_inner_html(html);
 }
 
+/// Programmatically click an element, if it exists.
+///
+/// Lets one surface route to another's EXISTING entry point instead of copying
+/// its handler — the Play hub taps `sayItBtn` rather than reimplementing Say It's
+/// open flow, so there is still exactly one place that knows how a mode starts.
+/// Silently does nothing when the target is absent (unlike [`el`], which panics):
+/// a hub tile may outlive a hidden or unwired button, and a missing destination
+/// should be inert, not fatal.
+pub fn click(id: &str) {
+    if let Some(e) = doc()
+        .get_element_by_id(id)
+        .and_then(|e| e.dyn_into::<web_sys::HtmlElement>().ok())
+    {
+        e.click();
+    }
+}
+
 pub fn add_class(id: &str, class: &str) {
     let _ = el(id).class_list().add_1(class);
 }

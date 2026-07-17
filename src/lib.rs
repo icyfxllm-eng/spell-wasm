@@ -44,6 +44,7 @@ mod stats;
 mod storage;
 mod syllable;
 mod modes;
+mod play_hub;
 mod tools_hub;
 #[cfg(feature = "testseam")]
 mod testseam;
@@ -190,6 +191,7 @@ fn wire(app: &App) {
     spell_aloud::reflect(app);
     // Pillar 3 — the "Tools & Features" hub in Settings: wire every tool switch,
     // then reflect current state so the panel is correct before it first opens.
+    play_hub::wire(app);
     tools_hub::wire(app);
     tools_hub::reflect(app);
 

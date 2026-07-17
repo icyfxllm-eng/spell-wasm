@@ -570,6 +570,28 @@
 
   .scrim{position:fixed;inset:0;background:rgba(10,8,18,.72);backdrop-filter:blur(4px);display:none;place-items:center;padding:20px;z-index:30;overflow:auto}
   .scrim.show{display:grid}
+
+  /* ==== Play hub tiles (CC-MODE-HUB F2) ==================================
+     Tiles only — no hub chrome. Tile kind is expressed by ELEMENT TYPE, not
+     just class: <button> = a real destination, <div> = informational aid or
+     coming_soon teaser. The cursor/hover treatment follows, so a tile that
+     cannot be tapped never invites a tap. */
+  .hub-x{position:absolute;top:10px;right:12px}
+  .mode-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;margin-top:26px}
+  .mode-tile{display:flex;flex-direction:column;align-items:flex-start;gap:4px;text-align:left;background:var(--panel-2);border:1px solid var(--edge);border-radius:14px;padding:14px;color:var(--ink);font-family:inherit;min-height:96px}
+  /* Only a button is interactive. */
+  button.mode-tile{cursor:pointer;transition:border-color .15s,transform .1s}
+  button.mode-tile:hover{border-color:var(--teal)}
+  button.mode-tile:active{transform:scale(.98)}
+  /* An aid has no destination: it reports that the aid is on and where it shows
+     up. Muted, not dimmed — it is available, just not somewhere you go. */
+  .mode-tile.info{cursor:default}
+  /* coming_soon: visibly not-yet, and no notify-me hook (D7). */
+  .mode-tile.teaser{cursor:default;opacity:.55;border-style:dashed}
+  .mt-ico{font-size:22px;line-height:1}
+  .mt-name{font-weight:700;font-size:14px}
+  .mt-desc{color:var(--muted);font-size:12px;line-height:1.35}
+  @media (prefers-reduced-motion:reduce){button.mode-tile{transition:none}button.mode-tile:active{transform:none}}
   .modal{width:100%;max-width:380px;background:var(--panel);border:1px solid var(--edge);border-radius:18px;padding:26px 24px;text-align:center}
   .modal.wide{max-width:460px}
   .modal h3{font-family:var(--display);font-weight:700;font-size:22px;margin-bottom:6px}
@@ -681,6 +703,12 @@
          accountBtn's signed-in state (aria-label + .signed-in) is set in climb.rs. -->
     <div class="meta-corner">
       <button class="meta-icon" id="accountBtn" aria-label="Sign in">👤</button>
+      <!-- Play hub (CC-MODE-HUB F2). Joins the meta-corner family — icon-only by
+           that family's rule, which is also why it needs no new localized label:
+           hub CHROME (title/subtitle) would mean new strings in 12 locales, and
+           the tiles themselves reuse the shipped tools.* catalog. aria-label is a
+           static English literal, matching accountBtn/setBtn above. -->
+      <button class="meta-icon" id="playHubBtn" aria-label="Ways to play">🎮</button>
       <button class="meta-icon" id="setBtn" aria-label="Settings">⚙</button>
     </div>
   </div>
@@ -912,6 +940,23 @@
        parent confirms this reviewed set (routes through the same charset +
        profanity gate as the typed importer). Only reachable when the feature
        flag is on; inert otherwise. -->
+  <!-- Play hub (CC-MODE-HUB F2). Tiles ONLY — no title/subtitle: chrome would
+       need new copy in 12 locales, and F2 forbids new auditable content. Every
+       tile is rendered by play_hub::reflect from config/modes.json; this grid
+       stays empty in the markup so that deleting a registry entry removes the
+       mode with zero code changes (A1.1). Three tile kinds, and the ELEMENT TYPE
+       carries the promise: a .mode-tile <button> routes to a real entry point, a
+       .mode-tile.info <div> is an in-round aid with no destination, a
+       .mode-tile.teaser <div> is coming_soon. A tappable tile that goes nowhere
+       is a lie the markup cannot tell. -->
+  <div class="scrim" id="playHubScrim"></div>
+  <div class="scrim" id="playHub">
+    <div class="modal wide">
+      <button class="ghost hub-x" id="playHubClose" aria-label="Close">✕</button>
+      <div class="mode-grid" id="playHubGrid" role="group" aria-label="Ways to play"></div>
+    </div>
+  </div>
+
   <div class="scrim" id="photoScrim">
     <div class="modal wide">
       <h3 data-i18n="photo.title">Snap a word list</h3>
