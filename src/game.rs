@@ -1,5 +1,6 @@
 use std::cell::RefCell;
 
+use unicode_segmentation::UnicodeSegmentation;
 use wasm_bindgen::closure::Closure;
 use wasm_bindgen::JsCast;
 use wasm_bindgen_futures::spawn_local;
@@ -303,7 +304,16 @@ fn reflect_play_direction(app: &App) {
         code
     };
     let dir = crate::consts::dir_attr(&code);
-    for id in ["letters", "feedback", "meaning"] {
+    // `hintLine` shows the same word masked, so it carries the same direction and
+    // was simply missed by F1's first pass — a word surface with no direction is
+    // the bug F1 exists to prevent, just somewhere less obvious than #letters.
+    //
+    // Say It's word deliberately is NOT here. It looks like it belongs, but this
+    // function keys off `cur_lang` (the word on the PLAY surface) while Say It
+    // picks its own word from `lang` (the picker), and Misses makes those two
+    // diverge. Stamping this direction there would put one word's direction on a
+    // different word — F1's own mistake, one surface over. say_it sets its own.
+    for id in ["letters", "feedback", "meaning", "hintLine"] {
         let el = dom::el(id);
         let _ = el.set_attribute("lang", &code);
         let _ = el.set_attribute("dir", dir);
@@ -1188,10 +1198,23 @@ fn finalize_incorrect_ex(app: &App, glyph: &str, prefix: &str, feedback_class: &
     } else {
         word.clone()
     };
-    // F7 "Syllable replay on misses" (flag-gated, es only): reveal the spelling
-    // split into syllables with a "hear it slowly" control that replays the word
-    // syllable-by-syllable, highlighting each in turn. Flag OFF (default) ⇒ the
-    // classic single-span reveal below, i.e. zero behavioral difference.
+    // F7 "Syllable replay on misses" (es only): reveal the spelling split into
+    // syllables with a "hear it slowly" control that replays the word
+    // syllable-by-syllable, highlighting each in turn.
+    //
+    // This comment used to claim "Flag OFF (default) => zero behavioral
+    // difference". That was false: flags::syllable_replay() is resolve(stored,
+    // TRUE) — it defaults ON. What actually makes this unreachable is the `es`
+    // gate, since Spanish is ComingSoon and cannot be played. Different reason,
+    // same outcome, but "it's behind an off flag" would have been a dangerous
+    // thing to believe while editing it.
+    //
+    // CC-RTL F4: the `.syl` branch below emits one <span> PER SYLLABLE, which is
+    // the same shattering that F4 removed from #letters — a cursive word split
+    // into syllable spans breaks its joins at every boundary. It is safe today
+    // only because `es` is not a cursive script; `syllable_replay_cannot_reach_a_
+    // cursive_script` pins that, and turns extending this to Arabic into a
+    // deliberate act rather than a silent regression.
     let sylls: Vec<String> = if crate::flags::syllable_replay() && cur_lang == ES {
         crate::syllable::syllabify(&word)
     } else {
@@ -1623,6 +1646,33 @@ fn reset_chain_soft(app: &App) {
     dom::set_html("orbGlyph", &if review { crate::i18n::t("orb.continue") } else { crate::i18n::t("orb.next") });
 }
 
+/// The hint's masked word and its letter count. Pure, so it can be tested without
+/// a DOM — the counting rule is the part with the bugs in it.
+///
+/// Counts and masks by GRAPHEME CLUSTER, not by `char`. `chars()` counts Unicode
+/// codepoints, but "how many letters is this word" is a question about what a
+/// reader sees, not about how the text is encoded. The two agree for English and
+/// diverge everywhere else:
+///   * Arabic كِتَاب — each harakat is its own codepoint sitting ON a letter, so
+///     `chars()` over-counts and the mask would emit a bullet for a vowel mark.
+///   * Devanagari क्ष is one akshara built from three codepoints (see the akshara
+///     work on feature/hindi-akshara).
+///   * An imported list can hold decomposed "café" (e + U+0301) or an emoji ZWJ
+///     sequence — the only case LIVE today, since English is the one Active
+///     language and My Words accepts arbitrary text.
+///
+/// For English this is byte-for-byte what it did before: no ASCII letter is ever
+/// more than one cluster.
+fn mask_word(word: &str) -> (String, usize) {
+    let clusters: Vec<&str> = word.graphemes(true).collect();
+    let masked = clusters
+        .iter()
+        .enumerate()
+        .map(|(i, g)| if i == 0 || *g == " " || *g == "'" || *g == "-" { *g } else { "\u{2022}" })
+        .collect();
+    (masked, clusters.len())
+}
+
 pub fn show_hint(app: &App) {
     let s = app.borrow();
     if s.word.is_empty() {
@@ -1630,13 +1680,19 @@ pub fn show_hint(app: &App) {
     }
     let w = s.word.clone();
     drop(s);
-    let n = w.chars().count();
-    let masked: String = w
-        .chars()
-        .enumerate()
-        .map(|(i, c)| if i == 0 || c == ' ' || c == '\'' || c == '-' { c } else { '\u{2022}' })
-        .collect();
-    dom::set_text("hintLine", &format!("{}   ({} letters)", masked, n));
+    let (masked, n) = mask_word(&w);
+    // U+2068 FSI / U+2069 PDI isolate the count from the word. The word can be
+    // RTL while "(4 letters)" is Latin, and without an isolate the bidi algorithm
+    // resolves them as ONE run: the parentheses mirror and the count lands on the
+    // wrong side of the word. FSI rather than markup because this is set_text, and
+    // rather than LRI because the isolate should follow the count's own first
+    // strong character once this string is finally translated.
+    //
+    // NOTE: "( letters)" is hardcoded English with no i18n key — every non-English
+    // UI shows it in English today. That is a real bug, but fixing it means new
+    // auditable content in ~10 locales, so it is written up for Eric rather than
+    // invented here. The isolate above is correct either way.
+    dom::set_text("hintLine", &format!("{}   \u{2068}({} letters)\u{2069}", masked, n));
 }
 
 // ---------- timer ----------
@@ -2309,6 +2365,102 @@ mod climb_band_tests {
         let html = super::render_letters_joined("<img onerror=x>");
         assert!(!html.contains("<img"), "user input must be escaped: {html}");
         assert!(html.contains("&lt;img"));
+    }
+
+    /// The syllabified reveal splits a word into one span PER SYLLABLE — exactly
+    /// the shattering F4 removed from #letters. A cursive word would break its
+    /// joins at every syllable boundary.
+    ///
+    /// It is safe purely because the feature is gated to `es`, and Spanish does
+    /// not join. That is a coincidence of the current gate, not a property of the
+    /// code, so it is pinned here: extending syllable replay to a cursive language
+    /// must fail this test and force the author to reach for the joined path.
+    #[test]
+    fn syllable_replay_cannot_reach_a_cursive_script() {
+        assert!(
+            !crate::consts::script_joins(crate::consts::ES),
+            "syllable replay is gated to `es` and emits per-syllable spans; if Spanish ever \
+             counted as cursive, that reveal would shatter it"
+        );
+        // The guard is only meaningful if a cursive language exists to guard
+        // against — otherwise this passes vacuously forever.
+        assert!(
+            crate::consts::BUILTIN_LANGS.iter().any(|(c, _, _, _)| crate::consts::script_joins(c)),
+            "no cursive language in the registry — this test would pass vacuously"
+        );
+    }
+
+    // ---- CC-RTL F4 remainder: the hint is a word surface too ----
+
+    /// The whole point of the grapheme rewrite: "how many letters" is a question
+    /// about what a READER sees, and `chars()` answers a question about encoding.
+    /// Each case below is one where the two disagree.
+    #[test]
+    fn hint_counts_letters_not_codepoints() {
+        // Decomposed "café" — e + U+0301 is ONE letter wearing an accent.
+        // Reachable TODAY: My Words takes arbitrary imported text.
+        let (_, n) = super::mask_word("cafe\u{301}");
+        assert_eq!(n, 4, "decomposed café is 4 letters, not 5 codepoints");
+
+        // Arabic كِتَاب — the harakat are marks ON letters, not letters.
+        let (_, n) = super::mask_word("\u{643}\u{650}\u{62a}\u{64e}\u{627}\u{628}");
+        assert_eq!(n, 4, "kitāb is 4 letters; its vowel marks are not letters");
+
+        // Devanagari क्ष — one akshara, three codepoints.
+        let (_, n) = super::mask_word("\u{915}\u{94d}\u{937}");
+        assert_eq!(n, 1, "क्ष is one akshara");
+
+        // A ZWJ emoji sequence is one glyph, not five.
+        let (_, n) = super::mask_word("\u{1f468}\u{200d}\u{1f469}\u{200d}\u{1f467}");
+        assert_eq!(n, 1, "a ZWJ family emoji is one cluster");
+    }
+
+    /// The mask must not tear a cluster apart: replacing a base letter but leaving
+    /// its combining mark behind would orphan the mark onto the bullet — the mark
+    /// would render ON the •. This is the same shattering bug as F4's, one surface
+    /// over: it is about clusters rather than joins, but the cause is identical
+    /// (treating a codepoint as if it were a letter).
+    #[test]
+    fn hint_masks_whole_clusters_never_orphaning_a_combining_mark() {
+        let (masked, _) = super::mask_word("cafe\u{301}");
+        assert_eq!(masked, "c\u{2022}\u{2022}\u{2022}", "one bullet per letter, and no stray U+0301");
+        assert!(!masked.contains('\u{301}'), "a combining acute must not survive onto a bullet: {masked:?}");
+
+        // كِتَاب masks to "كِ•••": the FIRST cluster is shown in full and it is
+        // كِ — kaf *wearing* its kasra. That mark surviving is correct; it belongs
+        // to a letter the player is being shown. The bug would be a mark landing
+        // on a BULLET, where its base letter is gone.
+        let (masked, n) = super::mask_word("\u{643}\u{650}\u{62a}\u{64e}\u{627}\u{628}");
+        assert_eq!(n, 4);
+        assert_eq!(masked, "\u{643}\u{650}\u{2022}\u{2022}\u{2022}", "first letter whole (with its kasra), then one bullet per remaining letter");
+        assert!(!masked.contains("\u{2022}\u{64e}"), "the fatha's base was masked, so the fatha must go with it: {masked:?}");
+        // The general rule, script-agnostic: nothing combining may follow a bullet.
+        let orphan = masked
+            .chars()
+            .zip(masked.chars().skip(1))
+            .any(|(a, b)| a == '\u{2022}' && matches!(b, '\u{300}'..='\u{36f}' | '\u{64b}'..='\u{65f}' | '\u{900}'..='\u{903}' | '\u{93a}'..='\u{94f}'));
+        assert!(!orphan, "a combining mark orphaned onto a bullet: {masked:?}");
+    }
+
+    /// English is the only Active language and 100% of today's players: this
+    /// rewrite must be invisible to them.
+    #[test]
+    fn hint_is_unchanged_for_english() {
+        for (word, want, n) in [
+            ("cat", "c\u{2022}\u{2022}", 3),
+            ("ice cream", "i\u{2022}\u{2022} \u{2022}\u{2022}\u{2022}\u{2022}\u{2022}", 9),
+            ("don't", "d\u{2022}\u{2022}'\u{2022}", 5),
+            ("well-known", "w\u{2022}\u{2022}\u{2022}-\u{2022}\u{2022}\u{2022}\u{2022}\u{2022}", 10),
+        ] {
+            let (masked, got) = super::mask_word(word);
+            assert_eq!(masked, want, "{word}");
+            assert_eq!(got, n, "{word}");
+        }
+        // The old chars()-based rule, restated: for ASCII the two must agree
+        // exactly, or this refactor changed what players see.
+        for word in ["cat", "ice cream", "don't", "well-known", "rhythm"] {
+            assert_eq!(super::mask_word(word).1, word.chars().count(), "{word}: grapheme and char counts must agree for ASCII");
+        }
     }
 
     use super::*;

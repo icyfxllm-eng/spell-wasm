@@ -162,11 +162,26 @@ fn render_score() {
 
 /// Pick the next word for the current language and reset the round UI.
 pub fn next_word(app: &App) {
-    let lang = current_lang(app);
-    let word = pick_word(&lang);
+    let requested = current_lang(app);
+    // The language of the word ON SCREEN, which is not necessarily the one asked
+    // for — see resolved_lang. Everything below must describe the word we drew.
+    let lang = resolved_lang(&requested);
+    let word = pick_word(lang);
     WORD.with(|w| *w.borrow_mut() = word.clone());
     crate::dom::set_text("sayItWord", &word);
-    crate::dom::el("sayItWord").set_class_name("sayit-word");
+    let el = crate::dom::el("sayItWord");
+    el.set_class_name("sayit-word");
+    // CC-RTL F1/F4: a word surface carries its own word's language and direction.
+    //
+    // Set here rather than in game::reflect_play_direction because that function
+    // keys off `cur_lang` (the PLAY surface's word) while this mode draws from
+    // `lang` (the picker), and Misses makes those diverge — borrowing it would put
+    // one word's direction on a different word, which is F1's own mistake.
+    //
+    // This is one text node, so a cursive word reaches the shaper whole and joins
+    // (F4) for free — there is nothing per-letter here to shatter.
+    let _ = el.set_attribute("lang", lang);
+    let _ = el.set_attribute("dir", crate::consts::dir_attr(lang));
     set_status("sayit.tapMic", true);
     crate::dom::set_disabled("sayItNext", true);
     crate::dom::remove_class("sayItMic", "listening");
@@ -252,13 +267,32 @@ fn pick_word(lang: &str) -> String {
     raw.split_once('|').map(|(_, spoken)| spoken).unwrap_or(raw).to_string()
 }
 
+/// The language Say-It will ACTUALLY draw a word in, which is not always the one
+/// asked for: anything outside its supported set falls back to English words.
+///
+/// This is exported from the fallback rather than left buried inside the pool
+/// lookup because callers need to know which language the word on screen is
+/// really in. Labelling an English word `lang="ru"` (F1 stamps the language onto
+/// the surface) would be a lie the shaper, the font stack and a screen reader all
+/// act on — and once RTL unblocks it would render "cat" right-to-left in an
+/// Arabic face. That exact fallback, silently mislabelling English words as
+/// another language, is a bug this codebase has already shipped once
+/// (words::tier_for's `_ => en_tier(tier)`).
+fn resolved_lang(lang: &str) -> &str {
+    match lang {
+        // TH is retained here but is unreachable: Thai was cut from the registry
+        // (5fc69ff), so `lang` can never be "th" — the picker only offers
+        // BUILTIN_LANGS. Left as-is rather than cleaned up in an RTL commit;
+        // `say_it_is_never_reachable_for_a_cut_language` pins that it is dead.
+        EN | ES | TH => lang,
+        _ => EN,
+    }
+}
+
 /// The word pool Say-It draws from: easy + medium words of the active language,
 /// so the player says everyday words rather than expert spelling-bee terms.
 fn say_it_pool(lang: &str) -> Vec<&'static str> {
-    let lang = match lang {
-        EN | ES | TH => lang,
-        _ => EN,
-    };
+    let lang = resolved_lang(lang);
     let mut pool: Vec<&'static str> = Vec::new();
     for tier in ["easy", "medium"] {
         pool.extend_from_slice(crate::words::tier_for(lang, tier));
@@ -269,6 +303,58 @@ fn say_it_pool(lang: &str) -> Vec<&'static str> {
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    /// CC-RTL F1/F4. The bug this guards is subtle and this codebase has shipped
+    /// its twin before: Say-It falls back to ENGLISH words for any language it has
+    /// no pool for, so labelling the surface with the REQUESTED language would
+    /// stamp `lang="ru"` on the English word "cat". `lang`/`dir` are consumed by
+    /// the shaper, the font stack and screen readers — all of which would act on
+    /// the lie. Once RTL unblocks, the same fallback would render "cat"
+    /// right-to-left in an Arabic face.
+    #[test]
+    fn resolved_lang_reports_the_language_of_the_word_actually_drawn() {
+        // Supported: asked for and served are the same.
+        assert_eq!(resolved_lang(EN), EN);
+        assert_eq!(resolved_lang(ES), ES);
+        // Unsupported: the pool serves English, so the answer is English — NOT the
+        // language that was asked for.
+        for asked in ["ru", "ar", "fa", "ur", "ja", "ko", "zh", "fil", crate::consts::MINE] {
+            assert_eq!(
+                resolved_lang(asked),
+                EN,
+                "{asked} has no Say-It pool, so the word shown is English and must be labelled English"
+            );
+        }
+    }
+
+    /// The direction on the surface must follow the word that is really there.
+    /// Arabic is the case that matters: `dir_attr("ar")` is "rtl", so if the
+    /// surface were labelled with the REQUESTED language, an English word would be
+    /// laid out right-to-left.
+    #[test]
+    fn an_english_fallback_word_is_never_labelled_rtl() {
+        for asked in ["ar", "fa", "ur"] {
+            assert_eq!(crate::consts::dir_attr(asked), "rtl", "{asked} is RTL — the trap is real");
+            let shown = resolved_lang(asked);
+            assert_eq!(
+                crate::consts::dir_attr(shown),
+                "ltr",
+                "asking for {asked} yields an English word, which must render LTR"
+            );
+        }
+    }
+
+    /// The TH arm of `resolved_lang` is dead: Thai was cut from the registry
+    /// (5fc69ff) so no picker can produce it. Pinned rather than deleted so that
+    /// reinstating Thai is a deliberate act that trips this test, instead of
+    /// quietly reanimating a branch nobody has looked at since the cut.
+    #[test]
+    fn say_it_is_never_reachable_for_a_cut_language() {
+        assert!(
+            !crate::consts::is_builtin_lang(TH),
+            "Thai is back in the registry — say_it's TH arm is live again; re-verify its pool"
+        );
+    }
 
     #[test]
     fn flag_off_means_mode_absent() {

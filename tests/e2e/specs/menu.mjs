@@ -136,4 +136,35 @@ export async function run(browser, base, suite) {
       }
     } finally { await ctx.close(); }
   });
+
+  // ---- CC-RTL F4 remainder: the hint is a word surface too ----
+
+  await suite.test('rtl F4: the hint carries the word\'s direction and counts letters, not codepoints', async () => {
+    // The hint shows the WORD (masked), so F1's rule applies to it exactly as it
+    // applies to #letters — it was simply missed by the first pass. Rust unit
+    // tests cover the counting rule; this proves the attribute actually reaches
+    // the element, which is the half no unit test can see.
+    const { ctx, page } = await openApp(browser, base, { lang: 'en' });
+    try {
+      await page.click('#orbWrap').catch(() => {});
+      await page.waitForTimeout(400);
+      await page.click('#hintBtn').catch(() => {});
+      await page.waitForTimeout(250);
+      const got = await page.evaluate(() => {
+        const e = document.getElementById('hintLine');
+        return { lang: e.getAttribute('lang'), dir: e.getAttribute('dir'), text: e.textContent };
+      });
+      assert(got.dir === 'ltr', `#hintLine dir=${got.dir}, expected ltr for English`);
+      assert(got.lang === 'en', `#hintLine lang=${got.lang}, expected en`);
+      assert(/\(\d+ letters\)/.test(got.text), `hint should state a letter count, got ${JSON.stringify(got.text)}`);
+      // The count must equal the bullets+revealed letters actually shown, not the
+      // codepoints behind them. Strip the isolates and the count clause first.
+      const stated = Number(got.text.match(/\((\d+) letters\)/)[1]);
+      const shown = [...got.text.replace(/[⁨⁩]/g, '').split('   ')[0]];
+      assert(shown.length === stated, `hint shows ${shown.length} glyphs but claims ${stated} letters`);
+      // The isolates must be present: without them an RTL word and this Latin
+      // count resolve as one bidi run and the parentheses mirror.
+      assert(got.text.includes('⁨') && got.text.includes('⁩'), 'the count must be bidi-isolated from the word');
+    } finally { await ctx.close(); }
+  });
 }
