@@ -46,10 +46,6 @@ const PL: Layout = Layout {
     rows: &["qwertyuiop", "asdfghjkl", "zxcvbnm"],
     long_press: &[('a', "ą"), ('c', "ć"), ('e', "ę"), ('l', "ł"), ('n', "ń"), ('o', "ó"), ('s', "ś"), ('z', "źż")],
 };
-const TR: Layout = Layout {
-    rows: &["qwertyuıopğ", "asdfghjklşi", "zxcvbnmöçü"],
-    long_press: &[],
-};
 // Russian: the standard ЙЦУКЕН layout. `ё` is a long-press on `е` rather than a
 // key of its own — on a physical ЙЦУКЕН it lives off in the number row, and
 // giving it a top-level key would push the rows past every other layout's width.
@@ -116,7 +112,6 @@ fn layout_for(locale: &str) -> &'static Layout {
         "de" => &DE,
         "pt" => &PT,
         "pl" => &PL,
-        "tr" => &TR,
         "ru" => &RU,
         "vi" => &VI,
         "ko" => &KO,
@@ -566,7 +561,6 @@ mod tests {
             ("de", include_str!("../assets/keyboards/de.json")),
             ("pt", include_str!("../assets/keyboards/pt.json")),
             ("pl", include_str!("../assets/keyboards/pl.json")),
-            ("tr", include_str!("../assets/keyboards/tr.json")),
             ("ru", include_str!("../assets/keyboards/ru.json")),
             ("vi", include_str!("../assets/keyboards/vi.json")),
             ("ko", include_str!("../assets/keyboards/ko.json")),

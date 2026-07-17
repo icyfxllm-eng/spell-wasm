@@ -40,7 +40,7 @@ pub fn mine_lang(state: &AppState) -> Option<&'static str> {
     let code = if state.custom.speak_lang.is_empty() { "en" } else { state.custom.speak_lang.as_str() };
     match code.split(['-', '_']).next().unwrap_or("") {
         "en" => Some("en"), "es" => Some("es"), "fr" => Some("fr"), "de" => Some("de"),
-        "pt" => Some("pt"), "pl" => Some("pl"), "tr" => Some("tr"), "vi" => Some("vi"),
+        "pt" => Some("pt"), "pl" => Some("pl"), "vi" => Some("vi"),
         "ko" => Some("ko"), "ja" => Some("ja"), "th" => Some("th"), "fil" => Some("fil"),
         "cmn" | "zh" => Some("zh"),
         _ => None,

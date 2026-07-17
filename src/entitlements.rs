@@ -530,15 +530,19 @@ mod tests {
         assert_eq!(regional_grants_for_country("KZ"), vec!["ru"], "ru is official in Kazakhstan");
         assert_eq!(regional_grants_for_country("EG"), vec!["ar"]);
         assert_eq!(regional_grants_for_country("PK"), vec!["ur"]);
-        assert_eq!(regional_grants_for_country("TR"), vec!["tr"], "tr reinstated per D7");
+        // CC-HINDI-PHASE0 D1: Turkish is cut permanently and "Turkey becomes
+        // unmapped, like India". Both countries now grant nothing — TR because
+        // its language left the lineup, IN because Hindi has not entered it.
+        assert!(regional_grants_for_country("TR").is_empty(), "D1: Turkey is unmapped");
         // Iran: granted in the map, but reachable only via the web CF-IPCountry
         // path — there is no Iranian App Store for the storefront path to see.
         assert_eq!(regional_grants_for_country("IR"), vec!["fa"]);
         // D6: India maps to NOTHING (Hindi isn't in the lineup; Urdu would be
-        // wrong for most of its users).
+        // wrong for most of its users). CC-HINDI-PHASE0 D2 names hi-IN as the
+        // future variant, but D8 grants this file zero authority to register it.
         assert!(regional_grants_for_country("IN").is_empty(), "D6: India grants nothing");
-        // The cut four have no home country left anywhere in the map.
-        for country in ["IT", "NL", "NO", "SE", "SM"] {
+        // No cut language has a home country left anywhere in the map.
+        for country in ["IT", "NL", "NO", "SE", "SM", "TR"] {
             assert!(
                 regional_grants_for_country(country).is_empty(),
                 "{country} was a home country for a cut language",

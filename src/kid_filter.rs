@@ -44,7 +44,7 @@ fn lists() -> &'static HashMap<&'static str, HashSet<String>> {
         // list yet — their word lists are CC-NEW-LANG-CONTENT's scope, and a
         // language with no list simply has an empty set here (the gate still
         // runs; it just has nothing to drop).
-        kid_lists!["en", "es", "fr", "de", "pt", "pl", "tr", "vi", "ko", "ja", "zh", "th", "fil"]
+        kid_lists!["en", "es", "fr", "de", "pt", "pl", "vi", "ko", "ja", "zh", "th", "fil"]
     })
 }
 

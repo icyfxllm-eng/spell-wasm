@@ -4,7 +4,7 @@
 // Validates config/country-language-map.json against four rules and FAILS the
 // build (exit 1) on any violation:
 //   1. every KEY is a valid ISO 3166-1 alpha-2 country code;
-//   2. every VALUE code is one of the 16 shipped SpellGame language codes;
+//   2. every VALUE code is one of the 15 shipped SpellGame language codes;
 //   3. every NON-English shipped language appears in >= 1 country (a language
 //      with no home country is a bug);
 //   4. the JSON is sorted by key (deterministic single source of truth).
@@ -21,13 +21,14 @@ import { dirname, join } from 'node:path';
 const HERE = dirname(fileURLToPath(import.meta.url));
 const ROOT = join(HERE, '..');
 
-// The 16 shipped SpellGame language codes (must match src/consts.rs BUILTIN_LANGS).
-// CC-LINEUP-SWAP (2026-07-16): it/nl/sv/nb cut; ru/ar/fa/ur added; tr reinstated
-// per D7. Thai stays cut (5fc69ff). ar/fa/ur are registered and granted here but
+// The 15 shipped SpellGame language codes (must match src/consts.rs BUILTIN_LANGS).
+// CC-LINEUP-SWAP (2026-07-16): it/nl/sv/nb cut; ru/ar/fa/ur added. CC-HINDI-PHASE0
+// D1 (2026-07-17): Turkish cut PERMANENTLY (Hindi replaces it), restoring 5fc69ff
+// after D7 briefly reinstated it. Thai stays cut. TR is now unmapped, like IN. ar/fa/ur are registered and granted here but
 // hard-gated from activation by rtl_required until RTL_SUPPORTED — a regional
 // grant is not an activation, so the map lists them like any other language.
 const SHIPPED_LANGS = new Set([
-  'en', 'es', 'fr', 'de', 'pt', 'pl', 'tr', 'vi', 'ko', 'ja', 'fil', 'zh',
+  'en', 'es', 'fr', 'de', 'pt', 'pl', 'vi', 'ko', 'ja', 'fil', 'zh',
   'ru', 'ar', 'fa', 'ur',
 ]);
 

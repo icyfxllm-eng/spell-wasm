@@ -64,8 +64,6 @@ home country is a bug the CI check rejects).
 - **Urdu (ur)** — `PK`. **India (`IN`) maps to nothing in this pass** (D6):
   Hindi is not in the lineup, and defaulting India to Urdu would be wrong for the
   overwhelming majority of its users.
-- **Turkish (tr)** — `TR`. (Northern Cyprus is unrepresented in ISO 3166-1;
-  `CY` was left out.)
 - **Vietnamese (vi)** — `VN`.
 - **Korean (ko)** — `KR`.
 - **Japanese (ja)** — `JP`.

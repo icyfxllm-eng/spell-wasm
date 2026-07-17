@@ -150,7 +150,6 @@ fn number_words(locale: &str) -> [&'static str; 10] {
         "de" => ["null", "eins", "zwei", "drei", "vier", "f\u{fc}nf", "sechs", "sieben", "acht", "neun"],
         "pt" => ["zero", "um", "dois", "tr\u{ea}s", "quatro", "cinco", "seis", "sete", "oito", "nove"],
         "pl" => ["zero", "jeden", "dwa", "trzy", "cztery", "pi\u{119}\u{107}", "sze\u{15b}\u{107}", "siedem", "osiem", "dziewi\u{119}\u{107}"],
-        "tr" => ["s\u{131}f\u{131}r", "bir", "iki", "\u{fc}\u{e7}", "d\u{f6}rt", "be\u{15f}", "alt\u{131}", "yedi", "sekiz", "dokuz"],
         _ => ["zero", "one", "two", "three", "four", "five", "six", "seven", "eight", "nine"],
     }
 }

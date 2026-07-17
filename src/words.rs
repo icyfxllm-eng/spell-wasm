@@ -12,14 +12,13 @@ pub struct LangInfo {
     pub code: &'static str,
 }
 
-pub const LANGUAGES: [(&str, LangInfo); 20] = [
+pub const LANGUAGES: [(&str, LangInfo); 19] = [
     ("en", LangInfo { name: "English", code: "en-US" }),
     ("es", LangInfo { name: "Espa\u{f1}ol", code: "es-ES" }),
     ("fr", LangInfo { name: "Fran\u{e7}ais", code: "fr-FR" }),
     ("de", LangInfo { name: "Deutsch", code: "de-DE" }),
     ("pt", LangInfo { name: "Portugu\u{ea}s", code: "pt-BR" }),
     ("pl", LangInfo { name: "Polski", code: "pl-PL" }),
-    ("tr", LangInfo { name: "T\u{fc}rk\u{e7}e", code: "tr-TR" }),
     // CC-LINEUP-SWAP D3 variants: Russian standard ru-RU; Modern Standard
     // Arabic; Iranian Persian (fa-IR, not Dari); Urdu ur-PK standard. Audio is
     // direction-agnostic, so the three RTL languages carry voices here even
@@ -798,7 +797,7 @@ pub fn zh_tier(tier: &str) -> &'static [&'static str] {
 
 /// Word bank for a built-in language + tier (English by default).
 pub fn tier_for(lang: &str, tier: &str) -> &'static [&'static str] {
-    use crate::consts::{AR, DE, ES, FA, FIL, FR, JA, KO, PL, PT, RU, TH, TR, UR, VI, ZH};
+    use crate::consts::{AR, DE, ES, FA, FIL, FR, JA, KO, PL, PT, RU, TH, UR, VI, ZH};
     match lang {
         // CC-LINEUP-SWAP registered these four; their content is
         // CC-NEW-LANG-CONTENT's scope and has not landed. They return an EMPTY
@@ -813,7 +812,6 @@ pub fn tier_for(lang: &str, tier: &str) -> &'static [&'static str] {
         DE => simple_tier(DE_EASY, DE_MEDIUM, DE_HARD, DE_EXPERT, tier),
         PT => simple_tier(PT_EASY, PT_MEDIUM, PT_HARD, PT_EXPERT, tier),
         PL => simple_tier(PL_EASY, PL_MEDIUM, PL_HARD, PL_EXPERT, tier),
-        TR => simple_tier(TR_EASY, TR_MEDIUM, TR_HARD, TR_EXPERT, tier),
         VI => simple_tier(VI_EASY, VI_MEDIUM, VI_HARD, VI_EXPERT, tier),
         KO => simple_tier(KO_EASY, KO_MEDIUM, KO_HARD, KO_EXPERT, tier),
         JA => simple_tier(JA_EASY, JA_MEDIUM, JA_HARD, JA_EXPERT, tier),
@@ -852,7 +850,7 @@ mod content_tests {
     /// over-broad empty arm swallowing a real bank).
     #[test]
     fn content_languages_still_have_banks() {
-        for lang in ["en", "es", "fr", "de", "pt", "pl", "tr", "vi", "ko", "ja", "fil", "zh"] {
+        for lang in ["en", "es", "fr", "de", "pt", "pl", "vi", "ko", "ja", "fil", "zh"] {
             for tier in TIER_ORDER {
                 assert!(!super::tier_for(lang, tier).is_empty(), "{lang}/{tier} lost its bank");
             }

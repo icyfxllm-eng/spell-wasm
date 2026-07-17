@@ -29,7 +29,6 @@ pub const FR: &str = "fr";
 pub const DE: &str = "de";
 pub const PT: &str = "pt";
 pub const PL: &str = "pl";
-pub const TR: &str = "tr";
 pub const VI: &str = "vi";
 pub const KO: &str = "ko";
 pub const JA: &str = "ja";
@@ -128,14 +127,13 @@ pub const RTL_SUPPORTED: bool = false;
 /// [`RTL_SUPPORTED`] is true. Partial RTL rendering is worse than none, so the
 /// gate is unconditional rather than best-effort. Users never see the reason:
 /// ar/fa/ur show the same "coming soon" tile as any unaudited language.
-pub const BUILTIN_LANGS: [(&str, &str, LangStatus, bool); 16] = [
+pub const BUILTIN_LANGS: [(&str, &str, LangStatus, bool); 15] = [
     (EN, "English", Active, false),
     (ES, "Espa\u{f1}ol", ComingSoon, false),
     (FR, "Fran\u{e7}ais", ComingSoon, false),
     (DE, "Deutsch", ComingSoon, false),
     (PT, "Portugu\u{ea}s", ComingSoon, false),
     (PL, "Polski", ComingSoon, false),
-    (TR, "T\u{fc}rk\u{e7}e", ComingSoon, false),
     (VI, "Ti\u{1ebf}ng Vi\u{1ec7}t", ComingSoon, false),
     (KO, "\u{d55c}\u{ad6d}\u{c5b4}", ComingSoon, false),
     (JA, "\u{65e5}\u{672c}\u{8a9e}", ComingSoon, false),
@@ -224,7 +222,10 @@ pub fn def_lang(base: &str) -> Option<&'static str> {
         "ja" => Some("ja"),
         "ko" => Some("ko"),
         "ar" => Some("ar"),
-        "tr" => Some("tr"),
+        // No "tr": Turkish is cut (CC-HINDI-PHASE0 D1), same treatment as the
+        // cut four. "hi" stays — dictionaryapi.dev supports it and CC-HINDI-PHASE0
+        // D2 names hi-IN as the coming variant, but D8 grants no authority to
+        // register Hindi, so this arm is simply unreachable until it does.
         "hi" => Some("hi"),
         _ => None,
     }
@@ -275,15 +276,16 @@ mod registry_tests {
     /// language cannot be added or cut without this test being updated
     /// deliberately.
     #[test]
-    fn registry_is_the_swapped_lineup_of_16() {
+    fn registry_is_the_swapped_lineup_of_15() {
         let codes: Vec<&str> = BUILTIN_LANGS.iter().map(|(c, _, _, _)| *c).collect();
-        assert_eq!(codes.len(), 16, "exactly 16 languages after the lineup swap");
+        assert_eq!(codes.len(), 15, "15 languages: the swap's 16 minus Turkish (CC-HINDI-PHASE0 D1)");
         assert_eq!(
             codes,
-            vec!["en", "es", "fr", "de", "pt", "pl", "tr", "vi", "ko", "ja", "fil", "zh", "ru", "ar", "fa", "ur"],
+            vec!["en", "es", "fr", "de", "pt", "pl", "vi", "ko", "ja", "fil", "zh", "ru", "ar", "fa", "ur"],
         );
-        // The cut four (CC-LINEUP-SWAP F1) are gone; Thai stays cut (5fc69ff).
-        for gone in ["no", "nb", "sv", "nl", "it", "th"] {
+        // The cut four (CC-LINEUP-SWAP F1), plus Thai (5fc69ff) and Turkish
+        // (CC-HINDI-PHASE0 D1 — permanently; Hindi replaces it).
+        for gone in ["no", "nb", "sv", "nl", "it", "th", "tr"] {
             assert!(!codes.contains(&gone), "{gone} is cut from the registry");
         }
     }
