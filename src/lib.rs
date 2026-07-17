@@ -41,6 +41,12 @@ mod settings;
 mod share;
 mod speech_out;
 mod stats;
+// CC-SWAHILI-WORDBANK F2 — EXECUTION-BLOCKED (D1). The engine compiles only
+// under `--features swahili_gen`, default OFF, and stays off until the
+// CC-SWAHILI-TRIGGER fires AND Eric approves the file. It has no callers and no
+// content to act on; nothing in a shipped build can reach it.
+#[cfg(feature = "swahili_gen")]
+mod swahili_gen;
 mod storage;
 mod syllable;
 mod tools_hub;

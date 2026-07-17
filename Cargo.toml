@@ -16,6 +16,16 @@ crate-type = ["cdylib", "rlib"]
 # prove its absence (scripts/seam-absence-check.mjs).
 testseam = []
 
+# CC-SWAHILI-WORDBANK F2 — the Swahili morphological generator.
+#
+# DEFAULT OFF, and it stays that way until the CC-SWAHILI-TRIGGER fires AND Eric
+# approves CC-SWAHILI-WORDBANK (D1). Drafting the code is explicitly permitted;
+# merging content is not — so this gates the ENGINE, and there is no Swahili
+# content anywhere in the tree for it to act on.
+#
+#   cargo test --features swahili_gen swahili
+swahili_gen = []
+
 [dependencies]
 wasm-bindgen = "0.2"
 wasm-bindgen-futures = "0.4"
