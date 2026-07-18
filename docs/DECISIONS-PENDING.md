@@ -306,7 +306,7 @@ into `game.rs`. What is left is **decisions, audits, and the final flip.**
 | # | Item | Note |
 |---|---|---|
 | R6 | **Flip `RTL_SUPPORTED` → true** | The last step; makes ar/fa/ur selectable. Only after R4 + R5 (every mode green on real audited content) |
-| R7 | **OFL licence text for the bundled Noto fonts** | Naskh + Nastaliq ship without it — pre-existing gap. Mechanical to fix, needs an owner, must land before R6. See §1's credits infra |
+| R7 | **OFL licence text for the bundled fonts** | ✅ **DONE** (`9b37f7b`, `feature/rtl-feedback`). Every bundled face is now attributed in `NOTICES.md` (from each font's own metadata) with the shared SIL OFL 1.1 in `fonts/OFL.txt`; OpenDyslexic's separate licence noted. No longer a blocker for R6. |
 
 **Engineering-ready, waiting only on the above**
 
@@ -315,8 +315,8 @@ into `game.rs`. What is left is **decisions, audits, and the final flip.**
 - **Productionised cursive feedback** — the colour reveal is in `game.rs`; it
   can't run until R6.
 
-Short version: rendering and feedback are **built**; what remains is **R1–R3
-(decide), R4–R5 (audit), R6 (flip), R7 (licence).**
+Short version: rendering and feedback are **built**, and R7 (licences) is now
+done; what remains is **R1–R3 (decide), R4–R5 (audit), R6 (flip).**
 
 ---
 
