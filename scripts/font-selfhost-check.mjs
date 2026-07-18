@@ -47,6 +47,13 @@ const LAZY = [
          'on first real use. Revisit if the UI itself is ever localised into Arabic — ' +
          'then it becomes an eager UI font and belongs in the precache.',
   },
+  {
+    file: './fonts/nastaliq-urdu.woff2',
+    why: 'Urdu Nastaliq face (~436KB — Nastaliq carries ~1100 contextual glyphs). Same ' +
+         'reasoning as naskh, more so given the size: ur is rtl_blocked, unicode-range ' +
+         'gates the download to Urdu Arabic-script text, and precaching it would push ' +
+         '436KB onto every user for a language none can select. Cached on first real use.',
+  },
 ];
 const isLazy = (ref) => LAZY.find((l) => l.file === ref);
 

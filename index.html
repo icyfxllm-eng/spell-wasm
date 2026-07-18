@@ -68,20 +68,33 @@
      to sw.js's STATIC_ASSETS would charge all of them 92 KB up front for a
      language none of them can reach.
 
-     URDU IS DELIBERATELY ABSENT from the selector below. D5: "do not silently
-     ship Urdu in Naskh" — Urdu readers expect Nastaliq, and Naskh Urdu reads as
-     broken to them the way isolated letterforms read as broken to an Arabic
-     reader. Nastaliq is unresolved: it is 234 KB, +47% taller, and it CASCADES,
-     which may defeat the markers-beneath feedback mechanism entirely. See
-     spike/rtl-feedback/FINDINGS.md — that is a stop-and-ask for Eric, not an
-     omission. */
+     Urdu gets its OWN face — Noto Nastaliq Urdu — below, NOT Naskh. D5's "do not
+     silently ship Urdu in Naskh" holds: Urdu readers expect Nastaliq, and Naskh
+     Urdu reads as broken to them the way isolated letterforms read as broken to
+     an Arabic reader. The earlier worry that Nastaliq "may defeat the feedback
+     mechanism entirely" is RESOLVED: the marker-beneath idea does fail on the
+     cascade, but per-letter feedback by COLOURING does not — colour/background on
+     an inline span leaves the join intact in WebKit. See
+     spike/urdu-nastaliq/FINDINGS.md. So Urdu renders in real Nastaliq and keeps
+     per-letter feedback. */
   @font-face{font-family:'Noto Naskh Arabic';font-style:normal;font-weight:400 700;font-display:swap;src:url('./fonts/naskh-arabic.woff2') format('woff2');unicode-range:U+0600-06FF,U+0750-077F,U+0870-088E,U+0890-0891,U+0897-08E1,U+08E3-08FF,U+200C-200E,U+2010-2011,U+204F,U+2E41,U+FB50-FDFF,U+FE70-FE74,U+FE76-FEFC,U+102E0-102FB,U+10E60-10E7E,U+10EC2-10EC4,U+10EFC-10EFF,U+1EE00-1EE03,U+1EE05-1EE1F,U+1EE21-1EE22,U+1EE24,U+1EE27,U+1EE29-1EE32,U+1EE34-1EE37,U+1EE39,U+1EE3B,U+1EE42,U+1EE47,U+1EE49,U+1EE4B,U+1EE4D-1EE4F,U+1EE51-1EE52,U+1EE54,U+1EE57,U+1EE59,U+1EE5B,U+1EE5D,U+1EE5F,U+1EE61-1EE62,U+1EE64,U+1EE67-1EE6A,U+1EE6C-1EE72,U+1EE74-1EE77,U+1EE79-1EE7C,U+1EE7E,U+1EE80-1EE89,U+1EE8B-1EE9B,U+1EEA1-1EEA3,U+1EEA5-1EEA9,U+1EEAB-1EEBB,U+1EEF0-1EEF1}
+  /* Nastaliq for Urdu (CC-RTL D5, OFL — provenance flagged for Eric). Subset of
+     Noto Nastaliq Urdu (fonts/nastaliq-urdu.woff2, shaping verified against the
+     system font). Same lazy contract as Naskh: NOT precached, unicode-range means
+     it downloads only when an Urdu Arabic-script codepoint actually renders — and
+     ur is rtl_blocked, so today that is never. Larger than Naskh (Nastaliq carries
+     ~1100 contextual glyphs), which is exactly why it must stay lazy. */
+  @font-face{font-family:'Noto Nastaliq Urdu';font-style:normal;font-weight:400;font-display:swap;src:url('./fonts/nastaliq-urdu.woff2') format('woff2');unicode-range:U+0600-06FF,U+0750-077F,U+08A0-08FF,U+200C-200F,U+FB50-FDFF,U+FE70-FEFF}
   /* The play surfaces carry the study language (game::reflect_play_direction), so
-     this fires for "spelling Arabic" and not for "reading Arabic" — the
-     distinction F1 exists to make. */
+     this fires for "spelling Arabic/Urdu" and not for "reading" it — the
+     distinction F1 exists to make. hintLine is included: F4-remainder made it a
+     word surface too. */
   #letters:lang(ar), #letters:lang(fa),
   #feedback:lang(ar), #feedback:lang(fa),
-  #meaning:lang(ar), #meaning:lang(fa){font-family:'Noto Naskh Arabic',serif}
+  #meaning:lang(ar), #meaning:lang(fa),
+  #hintLine:lang(ar), #hintLine:lang(fa){font-family:'Noto Naskh Arabic',serif}
+  #letters:lang(ur), #feedback:lang(ur),
+  #meaning:lang(ur), #hintLine:lang(ur){font-family:'Noto Nastaliq Urdu',serif}
 
   /* OpenDyslexic — readable-mode face only (body.readable). Upstream 1.0.3
      ships woff only (no woff2). font-display:optional (was swap): it never
