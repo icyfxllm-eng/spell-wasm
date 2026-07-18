@@ -261,26 +261,12 @@ pub const PRAISE: [&str; 8] = [
 ];
 
 
-/// Maps a base language code to the dictionaryapi.dev language code it supports.
-pub fn def_lang(base: &str) -> Option<&'static str> {
-    match base {
-        "en" => Some("en"),
-        "es" => Some("es"),
-        "fr" => Some("fr"),
-        "de" => Some("de"),
-        "pt" => Some("pt-BR"),
-        "ru" => Some("ru"),
-        "ja" => Some("ja"),
-        "ko" => Some("ko"),
-        "ar" => Some("ar"),
-        // No "tr": Turkish is cut (CC-HINDI-PHASE0 D1), same treatment as the
-        // cut four. "hi" stays — dictionaryapi.dev supports it and CC-HINDI-PHASE0
-        // D2 names hi-IN as the coming variant, but D8 grants no authority to
-        // register Hindi, so this arm is simply unreachable until it does.
-        "hi" => Some("hi"),
-        _ => None,
-    }
-}
+// `def_lang` (base language -> dictionaryapi.dev code) was deleted 2026-07-17.
+// It mapped languages to endpoints that do not exist: dictionaryapi.dev serves
+// ENGLISH ONLY, and every other language 404s. Its one caller
+// (game::fetch_definition) fetched those URLs directly from the browser,
+// bypassing our proxy and sending a child's word + IP to a third party for
+// nothing. See game::fetch_definition and docs/DECISIONS-PENDING.md §10.
 
 pub struct Achievement {
     pub id: &'static str,
