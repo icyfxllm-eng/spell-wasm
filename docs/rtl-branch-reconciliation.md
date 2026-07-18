@@ -18,30 +18,23 @@ low-risk quantity the moment the freeze lifts. Assessed with `git merge-tree`
   at them) lives on `build-54`. After the merge both paths coexist and the
   references are valid.
 
-## ⚠ Conflict 1 — `src/consts.rs`: keep BOTH changes (one is a security fix)
+## Conflict 1 — `src/consts.rs`: take the RTL registry (privacy trap now GONE)
 
-The two sides edited adjacent lines, which is why git can't auto-merge, but the
-changes are about **different things and both are wanted**:
+**Update (`66ea1f2`): the security trap this section warned about is resolved.**
+build-54's `def_lang` deletion (the privacy fix — the browser called
+`dictionaryapi.dev` directly, sending a child's word + IP to a third party) has
+been ported onto `feature/rtl-feedback`, so **both branches now delete `def_lang`**
+with the same replacement comment. The merge can no longer reintroduce the leak.
 
-- **`build-54` deleted `def_lang`** — a privacy fix (DECISIONS-PENDING §10). That
-  function mapped languages to `dictionaryapi.dev`, which the browser called
-  *directly*, sending a child's word + IP to a third party (the service is
-  English-only, so every non-English call 404'd for nothing).
-- **`feature/rtl-feedback` rewrote `BUILTIN_LANGS`** — the 15-language registry
-  with `Direction`/RTL, right below where `def_lang` was.
+What remains is an ordinary conflict: the two branches carry **different
+`BUILTIN_LANGS`** — build-54's older lineup vs `feature/rtl-feedback`'s 15-language
+registry with `Direction`/RTL. This is not a two-sided change to reconcile; the
+RTL branch's registry is the newer, authoritative one.
 
-**Resolution: take `feature/rtl-feedback`'s registry AND keep `def_lang` DELETED.**
-The two do not actually conflict in meaning; they are just neighbours.
-
-**The trap to avoid:** `feature/rtl-feedback` still HAS `def_lang` (and still calls
-it at `game.rs:660`) — it never got the privacy fix. A careless resolution that
-favours the RTL side wholesale would REINTRODUCE the leak. Do not.
-
-Good news, verified: `src/game.rs` auto-merges to **drop the `def_lang` caller**
-(build-54's deletion there doesn't overlap the RTL edits), so the merged
-`game.rs` has no `def_lang` reference. That means the only hand-work is
-`consts.rs`: delete `def_lang`, keep `BUILTIN_LANGS`. After that the tree compiles
-(no dangling call). Confirm with `grep -rn def_lang src/` returning nothing.
+**Resolution: take `feature/rtl-feedback`'s `consts.rs` for the registry region.**
+`def_lang` is absent on both sides, so it stays gone either way. Confirm with
+`grep -rn def_lang src/` returning only the explanatory comments, never code.
+`src/game.rs` also no longer conflicts on this — both sides dropped the caller.
 
 ## Conflict 2 — `tests/e2e/specs/menu.mjs`: a judgment call, both sides valid
 
