@@ -1,0 +1,94 @@
+<!doctype html>
+<meta charset="utf-8">
+<title>Urdu Nastaliq per-letter COLORING (feedback without geometry)</title>
+<style>
+  .nastaliq, svg text { font-family: "Noto Nastaliq Urdu", serif; font-size: 64px; }
+  body { margin: 40px; }
+  .row { margin: 8px 0; }
+</style>
+
+<!-- The idea: instead of POSITIONING a marker under each letter (which needs
+     per-glyph geometry Nastaliq won't give us), COLOR each letter and let the
+     shaper place the ink. Feedback = green letters right, red letters wrong. The
+     question: does coloring split the shaping run and shatter the join (like the
+     per-letter <span> did in F4), or does it survive? -->
+
+<h3>1. baseline — one text node, no coloring</h3>
+<div class="row"><span id="base" class="nastaliq" dir="rtl">پاکستان</span></div>
+
+<h3>2. HTML per-letter &lt;span&gt; with color (the F4 approach)</h3>
+<div class="row"><span id="htmlspans" class="nastaliq" dir="rtl"></span></div>
+
+<h3>3. SVG per-letter &lt;tspan fill&gt; (one &lt;text&gt;, colored children)</h3>
+<svg id="svg" width="700" height="120"></svg>
+
+<h3>4. span + color + transform (the F4 "pop" — should shatter)</h3>
+<div class="row"><span id="withtransform" class="nastaliq" dir="rtl"></span></div>
+
+<h3>5. span + color + inline-block (box-forming — should shatter)</h3>
+<div class="row"><span id="withinlineblock" class="nastaliq" dir="rtl"></span></div>
+
+<h3>6. span + background-color only (highlight-style feedback)</h3>
+<div class="row"><span id="withbg" class="nastaliq" dir="rtl"></span></div>
+
+<script>
+const WORD = "پاکستان";
+const SVGNS = "http://www.w3.org/2000/svg";
+const COLORS = ["#2e7d32", "#c62828"]; // green=right, red=wrong (alternating to see per-letter)
+
+// 2. HTML spans
+(() => {
+  const host = document.getElementById("htmlspans");
+  [...WORD].forEach((ch, i) => {
+    const s = document.createElement("span");
+    s.textContent = ch;
+    s.style.color = COLORS[i % 2];
+    host.appendChild(s);
+  });
+})();
+
+// 3. SVG tspans in one <text>
+(() => {
+  const svg = document.getElementById("svg");
+  const t = document.createElementNS(SVGNS, "text");
+  t.setAttribute("x", "650"); t.setAttribute("y", "80");
+  t.setAttribute("direction", "rtl"); t.setAttribute("text-anchor", "start");
+  [...WORD].forEach((ch, i) => {
+    const ts = document.createElementNS(SVGNS, "tspan");
+    ts.textContent = ch;
+    ts.setAttribute("fill", COLORS[i % 2]);
+    t.appendChild(ts);
+  });
+  svg.appendChild(t);
+})();
+
+// The mechanism test: is it the SPAN that shatters, or box-forming STYLE on it?
+// color/background stay inline (shaper runs through); transform/inline-block make
+// a box (shaper stops). If so, feedback that only recolours is safe.
+function fill(id, styler) {
+  const host = document.getElementById(id);
+  [...WORD].forEach((ch, i) => {
+    const s = document.createElement("span");
+    s.textContent = ch;
+    styler(s, i);
+    host.appendChild(s);
+  });
+}
+fill("withtransform", (s, i) => { s.style.color = COLORS[i % 2]; s.style.display = "inline-block"; s.style.transform = "translateY(-4px)"; });
+fill("withinlineblock", (s, i) => { s.style.color = COLORS[i % 2]; s.style.display = "inline-block"; });
+fill("withbg", (s, i) => { s.style.backgroundColor = i % 2 ? "#ffcdd2" : "#c8e6c9"; });
+
+window.__probe = function () {
+  const w = (id) => document.getElementById(id).getBoundingClientRect().width;
+  const base = w("base");
+  const svgText = document.querySelector("#svg text").getBoundingClientRect().width;
+  return {
+    baselineWidth: base,
+    htmlSpans: w("htmlspans") / base,
+    svgTspan: svgText / base,
+    withTransform: w("withtransform") / base,
+    withInlineBlock: w("withinlineblock") / base,
+    withBackground: w("withbg") / base,
+  };
+};
+</script>

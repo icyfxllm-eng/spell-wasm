@@ -1,14 +1,63 @@
-# Urdu Nastaliq per-glyph geometry — spike findings
+# Urdu Nastaliq per-letter feedback — spike findings
 
-**Verdict: NEGATIVE. SVG `getExtentOfChar` does not solve Urdu.** The approach I
-flagged as "promising, untested" is now tested, and it does not give per-letter
-positions for Nastaliq in either engine — decisively not in WebKit, which is the
-production engine (iOS WKWebView). Urdu per-letter feedback remains unsolved and
-is genuinely a different problem from ar/fa. The stop-and-ask stands, now with
-evidence for *why*.
+**Bottom line: per-letter Urdu feedback IS achievable — by COLOURING the letters,
+not by positioning markers under them.** Two spikes:
 
-Run it yourself: `node spike/urdu-nastaliq/run.mjs` (needs Playwright chromium +
-webkit). Overlays saved as `boxes-chromium.png` / `boxes-webkit.png`.
+1. **Positioned markers via geometry — NEGATIVE.** SVG `getExtentOfChar` (the
+   "promising, untested" idea) cannot locate Nastaliq glyphs; no browser text API
+   can. So the P0 §5 "markers beneath, positioned from geometry" approach does not
+   extend to Urdu. Detail below.
+2. **Per-letter colouring — POSITIVE, and it's the better answer.** Wrapping each
+   letter in an inline `<span>` that sets only `color`/`background` recolours it in
+   place with the Nastaliq join fully intact, in **both Chromium and WebKit**. This
+   needs no geometry at all. `coloring-webkit.png` shows پاکستان correctly joined
+   and per-letter coloured. This is how Urdu feedback should work.
+
+Run them: `node spike/urdu-nastaliq/run.mjs` (geometry) and
+`node spike/urdu-nastaliq/coloring-run.mjs` (colouring). Needs Playwright chromium
++ webkit. Evidence: `boxes-*.png`, `coloring-*.png`.
+
+---
+
+## Part 2 (the good news): per-letter colouring preserves the join
+
+The feedback question was framed as "position a marker under each letter", which
+needs per-glyph geometry Nastaliq won't give. But feedback doesn't *need* a
+position — it needs to mark which letters are right/wrong. Colouring the letter
+itself does that, and the browser handles the positioning.
+
+Measured on پاکستان (width = join integrity; a shattered word is ~2.2× wider):
+
+| technique | Chromium | WebKit (production) |
+|---|---|---|
+| `<span>` + `color` | preserved (100%) | **preserved (100%)** |
+| `<span>` + `background-color` | preserved (100%) | **preserved (100%)** |
+| `<span>` + `transform` (the F4 "pop") | shattered (224%) | shattered (224%) |
+| `<span>` + `display:inline-block` | shattered (224%) | shattered (224%) |
+| SVG `<tspan fill>` | preserved (100%) | shattered (224%) — unusable |
+
+**This reconciles with F4, and corrects what F4 seemed to say.** F4 concluded
+per-letter `<span>`s shatter cursive words. The real cause is not the span — it is
+a **box-forming style** on it. F4's spans carried the `pop` animation
+(`transform`), which makes each letter a box and stops the shaper. A span with
+*only* `color` or `background` stays inline and the shaper runs straight through.
+
+**Rules for safe per-letter feedback on cursive scripts:**
+- Recolour with `color` or `background-color` only. Both are safe in WebKit.
+- **Never** `transform`, `display:inline-block`, `margin`, or anything that forms
+  a box — those shatter the join (confirmed, both engines).
+- Use **HTML spans**, not SVG `<tspan>` — WebKit shatters tspans.
+- Wrap by **grapheme cluster / akshara**, not code point, so a combining mark
+  stays with its base (the akshara segmenter on `feature/hindi-akshara` already
+  does this). Cost: the `pop` reveal animation is unavailable for cursive — but it
+  was already gone in F4's joined path, and colour is arguably clearer feedback.
+
+This is script-agnostic and needs no geometry, so it is a stronger answer than the
+P0 §5 positioned-marker approach for **every** script, cursive or not.
+
+---
+
+## Part 1 (the negative): positioned markers via geometry
 
 ## The question
 
@@ -70,25 +119,33 @@ all three text-geometry APIs — canvas advances, `Range` rects, `getExtentOfCha
 expose at most horizontal advance and never the glyph's true 2D ink box. This is
 an engine/model limitation, not a bug to work around.
 
-## Options for Eric (Urdu only — ar/fa are unaffected)
+## What "Urdu at its best" actually takes
 
-This does **not** touch Arabic or Persian: they render in Naskh, letters keep a
-horizontal baseline, and the earlier P0 spike covered per-letter feedback there.
-This is specifically Nastaliq/Urdu.
+Colouring (Part 2) removes the reason Urdu looked blocked. The path to great Urdu
+is now ordinary work, no HarfBuzz, no cultural compromise:
 
-- **A — Word-level feedback for Urdu.** Keep per-letter markers for ar/fa; for
-  Urdu, show correctness on the whole word (or per akshara-as-typed, not
-  positioned under the ink). Cheapest, ships, loses per-letter precision only for
-  Urdu. Recommended unless per-letter Urdu feedback is a hard requirement.
-- **B — Render Urdu in Naskh instead of Nastaliq.** Naskh is horizontally
-  separable, so per-letter works, and Noto Naskh Arabic is already bundled. But
-  Urdu readers strongly prefer Nastaliq; Naskh Urdu reads as foreign/wrong to many.
-  This is a product/cultural call, not a technical one.
-- **C — Real glyph geometry via HarfBuzz in wasm.** Shape the text ourselves and
-  read actual glyph positions (x, y, advance) from the shaper. This is the only
-  path that yields true per-glyph 2D boxes and thus real per-letter Nastaliq
-  markers. HarfBuzz compiles to wasm and the app is already wasm — feasible, but a
-  real project (bundle size, wiring the shaper's output to the render), not a tweak.
+1. **Render in Nastaliq — bundle the font.** The app does **not** yet bundle a
+   Nastaliq face (Naskh was bundled for ar/fa only, `d7fcbcf`), so Urdu currently
+   depends on a device font and would fall back to Naskh or tofu where absent. Ship
+   Noto Nastaliq Urdu self-hosted (woff2 subset, `unicode-range`-lazy like the
+   Naskh face) so Urdu always renders in proper Nastaliq. The F4 joined-run path
+   already stops the word shattering. **Biggest single win; buildable now.**
+2. **Per-letter feedback by colouring** (Part 2). Recolour each akshara in place
+   with `color`/`background`; join stays intact in WebKit. No geometry, no Naskh
+   fallback, no HarfBuzz. This is the feedback mechanism for cursive scripts.
+3. **Input + content.** F5 RTL input handling, and a native-audited Urdu word bank
+   (its charset is already declared). Unchanged by this spike.
+
+**Superseded** — the earlier framing had these as the only options; colouring beats
+all three, but they are recorded because they were the pre-colouring analysis:
+- ~~Word-level-only feedback for Urdu~~ — unnecessary; per-letter works via colour.
+- ~~Render Urdu in Naskh~~ — unnecessary; Nastaliq keeps its per-letter feedback.
+- ~~HarfBuzz in wasm~~ — only needed if a future feature genuinely requires a glyph's
+  2D position (a *positioned* overlay, not colour). Feedback does not.
+
+This does not touch ar/fa (Naskh, horizontal baseline), and the colouring approach
+applies to them and to non-cursive scripts too — so it is a candidate to *unify*
+the P0 §5 feedback mechanism rather than keep a positioned-marker path at all.
 
 **Bottom line:** per-letter feedback positioned under Nastaliq ink is not
 achievable with browser text APIs. If the product needs it for Urdu, that means
