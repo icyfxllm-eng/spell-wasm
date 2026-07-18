@@ -1,4 +1,15 @@
-Copyright 2022 The Noto Project Authors (https://github.com/notofonts/devanagari)
+SIL OPEN FONT LICENSE, Version 1.1 — bundled fonts
+
+The following fonts bundled in this app are licensed under the SIL Open
+Font License, Version 1.1. Each font's copyright notice is recorded in
+NOTICES.md ("Fonts"); the license terms they all share follow.
+
+  Noto Sans Devanagari, Noto Naskh Arabic, Noto Nastaliq Urdu,
+  Bricolage Grotesque, Instrument Sans, Space Mono.
+
+(OpenDyslexic is NOT covered here — it has its own licence, see NOTICES.md.)
+
+----------------------------------------------------------------------
 
 This Font Software is licensed under the SIL Open Font License, Version 1.1.
 This license is copied below, and is also available with a FAQ at:
