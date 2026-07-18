@@ -1,0 +1,123 @@
+<!doctype html>
+<meta charset="utf-8">
+<title>Urdu Nastaliq per-glyph geometry spike</title>
+<style>
+  /* Noto Nastaliq Urdu ships on macOS (NotoNastaliq.ttc). Referenced by family so
+     the spike measures REAL Nastaliq, not a Naskh fallback — the whole point.
+     serif fallback would be Naskh-ish; the probe reports which actually rendered. */
+  .nastaliq { font-family: "Noto Nastaliq Urdu", serif; font-size: 64px; }
+  svg text { font-family: "Noto Nastaliq Urdu", serif; font-size: 64px; }
+  #dom span, #dom { font-family: "Noto Nastaliq Urdu", serif; font-size: 64px; }
+  body { margin: 40px; }
+</style>
+
+<!-- SVG path: getExtentOfChar per character index. -->
+<svg id="svg" width="1200" height="700"></svg>
+<!-- DOM path: Range.getBoundingClientRect per character (the approach that gave
+     LINE boxes for cursive, not ink). -->
+<div id="dom"></div>
+
+<script>
+// Words chosen to exercise the Nastaliq cascade — each is a connected run whose
+// letters stagger diagonally down-and-left, which is exactly what advance-width
+// measurement (the failed canvas approach) cannot see.
+const WORDS = [
+  "اردو",             // اردو  (Urdu)  — 4 letters
+  "کتاب",             // کتاب  (book)  — Persian kaf U+06A9
+  "محبت",             // محبت  (love)
+  "پاکستان", // پاکستان (Pakistan)
+  "لھ",                         // لھ  (aspirate: lam + do-chashmi he)
+];
+
+const SVGNS = "http://www.w3.org/2000/svg";
+
+function buildSvg() {
+  const svg = document.getElementById("svg");
+  const out = [];
+  let y = 90;
+  for (const word of WORDS) {
+    const t = document.createElementNS(SVGNS, "text");
+    t.setAttribute("x", "1150");           // right-anchored: RTL
+    t.setAttribute("y", String(y));
+    t.setAttribute("direction", "rtl");
+    t.setAttribute("text-anchor", "start");
+    t.textContent = word;
+    svg.appendChild(t);
+
+    const chars = [...word];
+    const n = t.getNumberOfChars();
+    const perChar = [];
+    for (let i = 0; i < n; i++) {
+      let ext = null, start = null, end = null, rot = null;
+      try { const e = t.getExtentOfChar(i); ext = { x: e.x, y: e.y, w: e.width, h: e.height }; } catch (err) { ext = { error: String(err) }; }
+      try { const s = t.getStartPositionOfChar(i); start = { x: s.x, y: s.y }; } catch (err) {}
+      try { const e = t.getEndPositionOfChar(i); end = { x: e.x, y: e.y }; } catch (err) {}
+      try { rot = t.getRotationOfChar(i); } catch (err) {}
+      perChar.push({ i, ch: chars[i], cp: chars[i] ? "U+" + chars[i].codePointAt(0).toString(16).toUpperCase().padStart(4, "0") : null, ext, start, end, rot });
+    }
+    out.push({ word, numChars: n, jsChars: chars.length, perChar });
+    y += 130;
+  }
+  return out;
+}
+
+function buildDom() {
+  const host = document.getElementById("dom");
+  const out = [];
+  for (const word of WORDS) {
+    const p = document.createElement("div");
+    p.className = "nastaliq";
+    p.setAttribute("dir", "rtl");
+    p.textContent = word;
+    host.appendChild(p);
+    const node = p.firstChild;
+    const chars = [...word];
+    const perChar = [];
+    // Range per code unit — map to code points where possible.
+    let unit = 0;
+    for (let ci = 0; ci < chars.length; ci++) {
+      const len = chars[ci].length; // surrogate-pair aware
+      const r = document.createRange();
+      try {
+        r.setStart(node, unit);
+        r.setEnd(node, unit + len);
+        const b = r.getBoundingClientRect();
+        const host_b = p.getBoundingClientRect();
+        perChar.push({ ci, ch: chars[ci], x: b.x - host_b.x, y: b.y - host_b.y, w: b.width, h: b.height });
+      } catch (err) {
+        perChar.push({ ci, ch: chars[ci], error: String(err) });
+      }
+      unit += len;
+    }
+    out.push({ word, perChar });
+  }
+  return out;
+}
+
+// Which font actually rendered? Measure the same word in the target family vs a
+// forced generic, and read document.fonts. If Nastaliq is absent the browser
+// falls back and every geometry conclusion below is about the WRONG script.
+function fontReport() {
+  const probe = document.createElement("span");
+  probe.style.fontSize = "64px";
+  probe.style.position = "absolute";
+  probe.style.visibility = "hidden";
+  probe.textContent = "اردو";
+  document.body.appendChild(probe);
+  probe.style.fontFamily = '"Noto Nastaliq Urdu"';
+  const wNasta = probe.getBoundingClientRect().width;
+  const hNasta = probe.getBoundingClientRect().height;
+  probe.style.fontFamily = 'monospace';
+  const wMono = probe.getBoundingClientRect().width;
+  probe.remove();
+  return {
+    fontsCheckNastaliq: (document.fonts && document.fonts.check) ? document.fonts.check('64px "Noto Nastaliq Urdu"') : "n/a",
+    nastaliqWidth: wNasta, nastaliqHeight: hNasta, monoWidth: wMono,
+    differsFromMono: Math.abs(wNasta - wMono) > 1,
+  };
+}
+
+window.__probe = function () {
+  return { font: fontReport(), svg: buildSvg(), dom: buildDom() };
+};
+</script>

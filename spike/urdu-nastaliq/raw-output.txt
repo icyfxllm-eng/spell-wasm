@@ -1,0 +1,86 @@
+
+=== chromium ===
+  font: document.fonts.check("Noto Nastaliq Urdu")=true, differsFromMono=true (w=93.3 vs mono 153.6)
+  => Nastaliq actually rendered: YES
+  word "اردو"  chars(js)=4 numChars(svg)=4
+    [0] U+0627  ext x=1128.9 y=-32.0 w=21.1 h=160.0  rot=0
+    [1] U+0631  ext x=1102.9 y=-32.0 w=26.0 h=160.0  rot=0
+    [2] U+062F  ext x=1083.7 y=-32.0 w=19.2 h=160.0  rot=0
+    [3] U+0648  ext x=1056.7 y=-32.0 w=27.0 h=160.0  rot=0
+    cascade: y-stagger=0.0px  distinctX=4/4  h-overlaps=0  allZeroW=false
+  word "کتاب"  chars(js)=4 numChars(svg)=4
+    [0] U+06A9  ext x=1130.7 y=98.0 w=19.3 h=160.0  rot=0
+    [1] U+062A  ext x=1113.6 y=98.0 w=17.1 h=160.0  rot=0
+    [2] U+0627  ext x=1096.7 y=98.0 w=16.9 h=160.0  rot=0
+    [3] U+0628  ext x=1021.5 y=98.0 w=75.2 h=160.0  rot=0
+    cascade: y-stagger=0.0px  distinctX=4/4  h-overlaps=0  allZeroW=false
+  word "محبت"  chars(js)=4 numChars(svg)=4
+    [0] U+0645  ext x=1117.2 y=228.0 w=32.8 h=160.0  rot=0
+    [1] U+062D  ext x=1112.2 y=228.0 w=5.1 h=160.0  rot=0
+    [2] U+0628  ext x=1093.1 y=228.0 w=19.0 h=160.0  rot=0
+    [3] U+062A  ext x=1017.3 y=228.0 w=75.9 h=160.0  rot=0
+    cascade: y-stagger=0.0px  distinctX=4/4  h-overlaps=0  allZeroW=false
+  word "پاکستان"  chars(js)=7 numChars(svg)=7
+    [0] U+067E  ext x=1134.9 y=358.0 w=15.1 h=160.0  rot=0
+    [1] U+0627  ext x=1119.6 y=358.0 w=15.3 h=160.0  rot=0
+    [2] U+06A9  ext x=1100.3 y=358.0 w=19.3 h=160.0  rot=0
+    [3] U+0633  ext x=1063.8 y=358.0 w=36.4 h=160.0  rot=0
+    [4] U+062A  ext x=1046.8 y=358.0 w=17.1 h=160.0  rot=0
+    [5] U+0627  ext x=1029.9 y=358.0 w=16.8 h=160.0  rot=0
+    [6] U+0646  ext x=974.8 y=358.0 w=55.1 h=160.0  rot=0
+    cascade: y-stagger=0.0px  distinctX=7/7  h-overlaps=0  allZeroW=false
+  word "لھ"  chars(js)=2 numChars(svg)=2
+    [0] U+0644  ext x=1133.7 y=488.0 w=16.3 h=160.0  rot=0
+    [1] U+06BE  ext x=1103.9 y=488.0 w=29.8 h=160.0  rot=0
+    cascade: y-stagger=0.0px  distinctX=2/2  h-overlaps=0  allZeroW=false
+  DOM Range (word "اردو"):
+    [0] ا  x=1098.9 y=0.0 w=21.1 h=160.0
+    [1] ر  x=1072.9 y=0.0 w=26.0 h=160.0
+    [2] د  x=1053.7 y=0.0 w=19.2 h=160.0
+    [3] و  x=1026.7 y=0.0 w=27.0 h=160.0
+    Range y-stagger=0.0px (0 => line boxes, cannot see cascade)
+
+=== webkit ===
+  font: document.fonts.check("Noto Nastaliq Urdu")=true, differsFromMono=true (w=93.3 vs mono 153.6)
+  => Nastaliq actually rendered: YES
+  word "اردو"  chars(js)=4 numChars(svg)=4
+    [0] U+0627  ext x=1056.7 y=-31.9 w=21.1 h=160.0  rot=0
+    [1] U+0631  ext x=1077.8 y=-31.9 w=26.0 h=160.0  rot=0
+    [2] U+062F  ext x=1103.8 y=-31.9 w=19.2 h=160.0  rot=0
+    [3] U+0648  ext x=1123.0 y=-31.9 w=27.0 h=160.0  rot=0
+    cascade: y-stagger=0.0px  distinctX=4/4  h-overlaps=0  allZeroW=false
+  word "کتاب"  chars(js)=4 numChars(svg)=4
+    [0] U+06A9  ext x=1021.6 y=98.1 w=74.2 h=160.0  rot=0
+    [1] U+062A  ext x=1095.7 y=98.1 w=75.2 h=160.0  rot=0
+    [2] U+0627  ext x=1116.7 y=98.1 w=21.1 h=160.0  rot=0
+    [3] U+0628  ext x=1074.8 y=98.1 w=75.2 h=160.0  rot=0
+    cascade: y-stagger=0.0px  distinctX=4/4  h-overlaps=3  allZeroW=false
+  word "محبت"  chars(js)=4 numChars(svg)=4
+    [0] U+0645  ext x=1017.3 y=228.1 w=42.2 h=160.0  rot=0
+    [1] U+062D  ext x=1059.5 y=228.1 w=55.7 h=160.0  rot=0
+    [2] U+0628  ext x=1065.3 y=228.1 w=75.2 h=160.0  rot=0
+    [3] U+062A  ext x=1131.0 y=228.1 w=75.2 h=160.0  rot=0
+    cascade: y-stagger=0.0px  distinctX=4/4  h-overlaps=2  allZeroW=false
+  word "پاکستان"  chars(js)=7 numChars(svg)=7
+    [0] U+067E  ext x=974.8 y=358.1 w=75.2 h=160.0  rot=0
+    [1] U+0627  ext x=1050.0 y=358.1 w=21.1 h=160.0  rot=0
+    [2] U+06A9  ext x=1005.2 y=358.1 w=74.2 h=160.0  rot=0
+    [3] U+0633  ext x=1079.4 y=358.1 w=71.2 h=160.0  rot=0
+    [4] U+062A  ext x=1094.0 y=358.1 w=75.2 h=160.0  rot=0
+    [5] U+0627  ext x=1136.9 y=358.1 w=21.1 h=160.0  rot=0
+    [6] U+0646  ext x=1094.9 y=358.1 w=55.1 h=160.0  rot=0
+    cascade: y-stagger=0.0px  distinctX=7/7  h-overlaps=5  allZeroW=false
+  word "لھ"  chars(js)=2 numChars(svg)=2
+    [0] U+0644  ext x=1103.9 y=488.1 w=54.5 h=160.0  rot=0
+    [1] U+06BE  ext x=1158.4 y=488.1 w=41.9 h=160.0  rot=0
+    cascade: y-stagger=0.0px  distinctX=2/2  h-overlaps=0  allZeroW=false
+  DOM Range (word "اردو"):
+    [0] ا  x=1098.0 y=0.0 w=22.0 h=160.0
+    [1] ر  x=1072.0 y=0.0 w=27.0 h=160.0
+    [2] د  x=1053.0 y=0.0 w=20.0 h=160.0
+    [3] و  x=1026.0 y=0.0 w=28.0 h=160.0
+    Range y-stagger=0.0px (0 => line boxes, cannot see cascade)
+
+=== headline ===
+  chromium: Nastaliq rendered=true
+  webkit: Nastaliq rendered=true
