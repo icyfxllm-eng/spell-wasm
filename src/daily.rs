@@ -314,6 +314,9 @@ mod tests {
         assert_eq!(a.len(), 10);
     }
 
+    // Production invariant: audit_preview activates ComingSoon locales (with their
+    // real banks) so they can be reviewed, so es no longer falls back to en there.
+    #[cfg(not(feature = "audit_preview"))]
     #[test]
     fn inactive_locale_falls_back_to_en() {
         // English-only launch: a coming-soon locale (es) is gated by `locale_for`

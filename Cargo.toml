@@ -26,6 +26,13 @@ testseam = []
 # leaderboard_available) and adds the education grant to the resolver.
 # Ships under a separate bundle ID / distribution artifact.
 education = []
+# AUDIT PREVIEW — a build that un-gates the ComingSoon languages (ar/fa/ur/ru) and
+# loads their unverified DRAFT word banks (assets/words-draft/, CC BY-SA, see its
+# README) so native speakers can PLAY and review them. Build-time only, and NEVER
+# production: like `testseam`, its absence is the guarantee — with the feature off,
+# RTL_SUPPORTED stays false, the languages stay gated, and word_data_audit is not
+# compiled in. Produces dist-audit/ via scripts/build-web-audit.sh.
+audit_preview = []
 
 [dependencies]
 wasm-bindgen = "0.2"

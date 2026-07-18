@@ -806,7 +806,7 @@ pub fn tier_for(lang: &str, tier: &str) -> &'static [&'static str] {
         // wearing its name. Silent English fallback is how you ship "Russian"
         // that spells "bed"; the keyboard charset test catches it precisely
         // because this arm is explicit.
-        RU | AR | FA | UR => &[],
+        RU | AR | FA | UR => audit_draft_or_empty(lang, tier),
         ES => es_tier(tier),
         FR => simple_tier(FR_EASY, FR_MEDIUM, FR_HARD, FR_EXPERT, tier),
         DE => simple_tier(DE_EASY, DE_MEDIUM, DE_HARD, DE_EXPERT, tier),
@@ -822,6 +822,20 @@ pub fn tier_for(lang: &str, tier: &str) -> &'static [&'static str] {
     }
 }
 
+/// ru/ar/fa/ur have no verified content. In production they serve NOTHING (an
+/// empty bank, never English words wearing their name — the whole point of the
+/// explicit arm). Under `audit_preview` ONLY, they serve their unverified DRAFT
+/// bank so a native speaker can play and review it. Two cfg'd definitions so the
+/// production binary contains only the empty one.
+#[cfg(feature = "audit_preview")]
+fn audit_draft_or_empty(lang: &str, tier: &str) -> &'static [&'static str] {
+    crate::word_data_audit::tier_for(lang, tier)
+}
+#[cfg(not(feature = "audit_preview"))]
+fn audit_draft_or_empty(_lang: &str, _tier: &str) -> &'static [&'static str] {
+    &[]
+}
+
 #[cfg(test)]
 mod content_tests {
     use crate::consts::{TIER_ORDER, AR, FA, RU, UR};
@@ -830,6 +844,11 @@ mod content_tests {
     /// words under its own name. `tier_for` ends in `_ => en_tier(tier)`, so any
     /// new registry entry silently inherits the English bank until someone adds
     /// an explicit arm; this test is the tripwire for that.
+    ///
+    /// Guarded to the PRODUCTION config: the audit-preview build deliberately fills
+    /// these with draft banks (asserted separately below), so the "serves nothing"
+    /// invariant is exactly a not-audit_preview property.
+    #[cfg(not(feature = "audit_preview"))]
     #[test]
     fn registered_but_contentless_languages_serve_no_words() {
         for lang in [RU, AR, FA, UR] {
@@ -841,6 +860,21 @@ mod content_tests {
                      — a fallthrough to en_tier would serve English words as {lang}",
                     bank.len(),
                     bank.first(),
+                );
+            }
+        }
+    }
+
+    /// The mirror invariant for the audit build: those same languages now serve
+    /// their DRAFT banks (non-empty), so an auditor has words to play.
+    #[cfg(feature = "audit_preview")]
+    #[test]
+    fn audit_preview_serves_draft_banks() {
+        for lang in [RU, AR, FA, UR] {
+            for tier in TIER_ORDER {
+                assert!(
+                    !super::tier_for(lang, tier).is_empty(),
+                    "audit_preview: {lang}/{tier} should serve its draft bank"
                 );
             }
         }

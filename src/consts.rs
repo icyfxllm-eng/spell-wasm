@@ -114,10 +114,15 @@ pub fn leaderboard_available() -> bool {
 /// until the CC-RTL initiative ships — it is not drafted, let alone built.
 ///
 /// CC-LINEUP-SWAP D2: this is the ONLY switch that can ever un-gate an
-/// `rtl_required` language. It is a `const` (not a runtime toggle) so that
-/// flipping it is a deliberate code change reviewed alongside the RTL work,
-/// never a config accident. See [`rtl_required`] for the gate itself.
-pub const RTL_SUPPORTED: bool = false;
+/// `rtl_required` language. It is a compile-time `const` (not a runtime toggle) so
+/// flipping it is a deliberate code change, never a config accident. See
+/// [`rtl_required`] for the gate itself.
+///
+/// FALSE in production. TRUE only in the `audit_preview` build, where native
+/// speakers play the RTL languages to review them — which stays compile-time (D2's
+/// intent): a production build has the feature off, so this is `false` and the
+/// languages are gated, exactly as before.
+pub const RTL_SUPPORTED: bool = cfg!(feature = "audit_preview");
 
 /// Which way a language's script runs. CC-RTL **D3**: direction comes from the
 /// REGISTRY and nowhere else — "no hardcoded language→direction checks anywhere
@@ -223,7 +228,16 @@ pub fn lang_status(lang: &str) -> LangStatus {
 /// registry status says — the gate is applied here, at the single chokepoint
 /// every surface already reads, so no caller can route around it.
 pub fn is_active_lang(lang: &str) -> bool {
-    !rtl_blocked(lang) && lang_status(lang) == Active
+    if rtl_blocked(lang) {
+        return false;
+    }
+    if lang_status(lang) == Active {
+        return true;
+    }
+    // Audit preview only: a registered ComingSoon language is playable, so a native
+    // speaker can review it. Compile-time — the production build (feature off) never
+    // takes this branch, so ComingSoon stays gated exactly as before.
+    cfg!(feature = "audit_preview") && is_builtin_lang(lang)
 }
 
 /// Whether `lang` is a built-in, backend-voiced language (not My Words/Misses).
@@ -295,6 +309,9 @@ mod tests {
 #[cfg(test)]
 mod registry_tests {
     use super::*;
+    // Production invariant: audit_preview deliberately activates ComingSoon
+    // languages so they can be reviewed, so this holds only with the feature off.
+    #[cfg(not(feature = "audit_preview"))]
     #[test]
     fn only_en_active() {
         // English is the only Active language. Everything else — content ready but
@@ -327,8 +344,10 @@ mod registry_tests {
         }
     }
 
-    /// CC-LINEUP-SWAP D2 — exactly ar/fa/ur are RTL, and none of them can be
-    /// activated while RTL is unsupported.
+    /// CC-LINEUP-SWAP D2 — exactly ar/fa/ur are RTL, and (in production) none can be
+    /// activated while RTL is unsupported. The audit-preview build deliberately
+    /// un-gates them; `rtl_gate_matches_the_build_config` below pins that relationship.
+    #[cfg(not(feature = "audit_preview"))]
     #[test]
     fn rtl_languages_are_registered_but_hard_gated() {
         let rtl: Vec<&str> = BUILTIN_LANGS.iter().filter(|(_, _, _, d)| *d == Rtl).map(|(c, _, _, _)| *c).collect();
@@ -342,6 +361,17 @@ mod registry_tests {
         // Russian is the new LTR language — it carries no RTL gate at all.
         assert!(!rtl_required("ru"), "ru is left-to-right");
         assert!(!rtl_blocked("ru"));
+    }
+
+    /// The RTL gate tracks the build config and nothing else — false in production,
+    /// true only under audit_preview. Runs in BOTH configs, so there is always a
+    /// live assertion that the production binary stays gated. D2 is upheld: the
+    /// switch is still compile-time, just now two-valued by feature.
+    #[test]
+    fn rtl_gate_matches_the_build_config() {
+        assert_eq!(RTL_SUPPORTED, cfg!(feature = "audit_preview"));
+        // Under audit preview the RTL languages become playable; otherwise gated.
+        assert_eq!(is_active_lang("ar"), cfg!(feature = "audit_preview"));
     }
 
     /// CC-RTL F4 leans on `script_joins` deriving from `rtl_required`, which is
@@ -392,7 +422,10 @@ mod registry_tests {
 
     /// D2's teeth: flipping an RTL language to `Active` in the registry must STILL
     /// not activate it. The gate lives in `is_active_lang`, not in the status, so
-    /// a well-meaning status flip cannot ship partial RTL rendering.
+    /// a well-meaning status flip cannot ship partial RTL rendering. (Production
+    /// only — audit_preview lifts the gate on purpose, pinned by
+    /// `rtl_gate_matches_the_build_config`.)
+    #[cfg(not(feature = "audit_preview"))]
     #[test]
     fn rtl_gate_survives_an_active_status() {
         // Simulate the registry saying Active for an RTL language.
