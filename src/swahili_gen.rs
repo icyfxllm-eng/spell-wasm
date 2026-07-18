@@ -343,6 +343,60 @@ pub fn segment(form: &str, root: &str) -> Option<Slots> {
     None
 }
 
+/// Render [`RULES`] as the review document a native-speaker auditor red-pens
+/// (CC-SWAHILI-WORDBANK D3(b), the audit-model amendment in DECISIONS-PENDING §8).
+///
+/// D3 already calls the rule set "audited content — an auditor reviews RULES as a
+/// document". But the rules live in Rust source, which a Swahili auditor cannot be
+/// asked to read. This renders them as markdown — each rule's description, its
+/// worked examples (which a companion test proves ARE the generator's real output),
+/// and a blank correction column — so the review can actually happen. The committed
+/// output is `docs/swahili-rules-review.md`, kept in sync by
+/// `review_document_matches_the_rules`.
+///
+/// Deterministic (D8): `RULES` is a fixed-order slice, no clock, no randomness — so
+/// the document is byte-reproducible and a diff means a rule genuinely changed.
+/// Creates NO new content: it only re-presents the worked examples already in the
+/// rules (still every one `NeedsNativeAudit`).
+pub fn audit_review_document() -> String {
+    let mut s = String::new();
+    s.push_str("# Swahili generator — rule review\n\n");
+    s.push_str(&format!(
+        "> GENERATED from `src/swahili_gen.rs` `RULES` (generator `{GENERATOR_VERSION}`). \
+         Do not hand-edit — change the rules and regenerate with\n\
+         > `cargo test --features swahili_gen -- --ignored regenerate_review_document`. \
+         `review_document_matches_the_rules` fails if this drifts.\n\n"
+    ));
+    s.push_str(
+        "**This is a PROPOSAL, not verified Swahili.** An engineer who does not speak \
+         Swahili wrote these rules; CC-SWAHILI-WORDBANK D3 makes them *audited content*, \
+         which means a named native speaker must red-pen each one. A rule becomes \
+         `Verified` only by that reviewed act — never by default — and until every rule a \
+         form depends on is verified, that form cannot ship (D3).\n\n\
+         For each rule below: is the description right, and is every \"generator emits\" \
+         output a real, correct Swahili form? Mark ✗ and give the correction where not.\n\n"
+    );
+    let verified = RULES.iter().filter(|r| r.audit == Audit::Verified).count();
+    s.push_str(&format!(
+        "## Status\n\n{} rules — **{} verified, {} awaiting native audit.**\n\n---\n\n",
+        RULES.len(), verified, RULES.len() - verified
+    ));
+    for r in RULES {
+        let badge = match r.audit {
+            Audit::NeedsNativeAudit => "⚠ needs native audit",
+            Audit::Verified => "✓ verified",
+        };
+        s.push_str(&format!("## {} — {}\n\n{}\n\n", r.id, badge, r.description));
+        s.push_str("| input (slots + gloss) | generator emits | correct? | correction |\n");
+        s.push_str("|---|---|---|---|\n");
+        for (input, output) in r.examples {
+            s.push_str(&format!("| {input} | `{output}` | ☐ | |\n"));
+        }
+        s.push('\n');
+    }
+    s
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -355,6 +409,52 @@ mod tests {
     }
 
     // ---- D3(b): the rules are audited content, so the DOCUMENT has invariants ----
+
+    const REVIEW_DOC: &str = concat!(env!("CARGO_MANIFEST_DIR"), "/docs/swahili-rules-review.md");
+
+    /// The committed review document MUST equal the current rules' rendering, or an
+    /// auditor reviews one thing while the generator emits another — the exact split
+    /// D3 exists to prevent. Read at runtime (not `include_str!`) so regenerating and
+    /// checking need no recompile in between.
+    #[test]
+    fn review_document_matches_the_rules() {
+        let want = audit_review_document();
+        let got = std::fs::read_to_string(REVIEW_DOC).unwrap_or_default();
+        assert_eq!(
+            got, want,
+            "docs/swahili-rules-review.md is stale (or missing). Regenerate:\n  \
+             cargo test --features swahili_gen -- --ignored regenerate_review_document"
+        );
+    }
+
+    /// Blessing step (run manually) — writes the review document from the rules.
+    /// Ignored so a normal run never touches the tree; it is the ONLY sanctioned way
+    /// the doc changes, which is why the sync test above points here.
+    #[test]
+    #[ignore]
+    fn regenerate_review_document() {
+        std::fs::write(REVIEW_DOC, audit_review_document()).expect("write review doc");
+    }
+
+    #[test]
+    fn review_document_covers_every_rule_and_flags_unverified() {
+        let doc = audit_review_document();
+        for r in RULES {
+            assert!(doc.contains(r.id), "review doc omits rule {}", r.id);
+            for (_, output) in r.examples {
+                assert!(doc.contains(output), "review doc omits {}'s output {output:?}", r.id);
+            }
+        }
+        // Every unverified rule must be visibly flagged, so an auditor cannot mistake
+        // a proposal for a checked fact. The badge is "needs native audit" (once per
+        // such rule); the Status line uses "awaiting native audit", so it doesn't
+        // inflate this count.
+        let unverified = RULES.iter().filter(|r| r.audit == Audit::NeedsNativeAudit).count();
+        assert_eq!(
+            doc.matches("needs native audit").count(), unverified,
+            "every unverified rule must carry its badge exactly once"
+        );
+    }
 
     #[test]
     fn rules_carry_three_worked_examples() {
