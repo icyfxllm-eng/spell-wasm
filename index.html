@@ -95,6 +95,17 @@
   #hintLine:lang(ar), #hintLine:lang(fa){font-family:'Noto Naskh Arabic',serif}
   #letters:lang(ur), #feedback:lang(ur),
   #meaning:lang(ur), #hintLine:lang(ur){font-family:'Noto Nastaliq Urdu',serif}
+  /* Devanagari for Hindi (OFL — provenance/licence in fonts/OFL-NotoSansDevanagari.txt).
+     Subset of Noto Sans Devanagari (fonts/devanagari.woff2, all layout features kept
+     so conjuncts/matra reordering shape; verified against the akshara render prototype,
+     spike/hindi-akshara). Same lazy contract as the Arabic faces: NOT precached,
+     unicode-range gates the download to Devanagari text. Hindi is not registered yet
+     (CC-HINDI-PHASE0 registers nothing), so :lang(hi) matches nothing today — this
+     sits ready, exactly like the charset on feature/hindi-akshara. Devanagari is LTR;
+     no dir/RTL involvement. */
+  @font-face{font-family:'Noto Sans Devanagari';font-style:normal;font-weight:400;font-display:swap;src:url('./fonts/devanagari.woff2') format('woff2');unicode-range:U+0900-097F,U+A8E0-A8FF,U+200C-200D,U+0964-0965}
+  #letters:lang(hi), #feedback:lang(hi),
+  #meaning:lang(hi), #hintLine:lang(hi){font-family:'Noto Sans Devanagari',serif}
 
   /* OpenDyslexic — readable-mode face only (body.readable). Upstream 1.0.3
      ships woff only (no woff2). font-display:optional (was swap): it never

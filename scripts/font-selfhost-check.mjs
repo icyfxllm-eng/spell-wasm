@@ -54,6 +54,12 @@ const LAZY = [
          'gates the download to Urdu Arabic-script text, and precaching it would push ' +
          '436KB onto every user for a language none can select. Cached on first real use.',
   },
+  {
+    file: './fonts/devanagari.woff2',
+    why: 'Hindi Devanagari face (~161KB). unicode-range gates it to Devanagari text, and ' +
+         'Hindi is not even registered yet, so no user renders it. Precaching it would ' +
+         'cost every user for a script none of them see. Cached on first real use.',
+  },
 ];
 const isLazy = (ref) => LAZY.find((l) => l.file === ref);
 
