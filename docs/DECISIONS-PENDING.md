@@ -278,6 +278,46 @@ not colour); feedback does not.
 
 </details>
 
+### 5.2 RTL — everything blocked on you, in one place
+
+The whole RTL initiative in one list. The engineering that *can* be done without
+you is done and sits inert behind `RTL_SUPPORTED = false` (still false) — rendering
+(F1–F4), the CSS logical sweep, bidi isolation, both Arabic-script fonts (Naskh +
+Nastaliq), the ar/fa/ur keyboard charsets, and per-akshara colour feedback wired
+into `game.rs`. What is left is **decisions, audits, and the final flip.**
+
+**Decisions only you can make**
+
+| # | Decision | Detail in | Note |
+|---|---|---|---|
+| R1 | **RTL / P0.3 sign-off** — the gate the spec says everything Phase 1+ waits behind | §5 | F1–F4 were built at the operator's direction (D1 overridden); the formal sign-off is still open |
+| R2 | **Unify the feedback mechanism on colouring?** Retire the positioned-marker path §5 proposed, for *every* script incl. English | §5, §5.1 | The colouring spike overturned the original recommendation; this is the live version of R1's open sub-question |
+| R3 | **Keyboard split** — may ar/fa/ur word-bank content start against the charset declarations before F5 RTL-input lands? | `docs/rtl-keyboard-split.md` (on `feature/rtl-feedback`) | Inverts the spec's stated dependency order |
+
+**Audits that need a named person (no `verified_by` I can set)**
+
+| # | Item | Note |
+|---|---|---|
+| R4 | **Charset inventories** (ar/fa/ur) | Built from standard layouts; a wrong codepoint silently mis-gates content, so audit must precede any bank |
+| R5 | **Word banks** (ar/fa/ur, and Russian) | Native audit + `verified_by`, same gate every language has; Russian also needs §3/§4 resolved |
+
+**The final go, and one prerequisite**
+
+| # | Item | Note |
+|---|---|---|
+| R6 | **Flip `RTL_SUPPORTED` → true** | The last step; makes ar/fa/ur selectable. Only after R4 + R5 (every mode green on real audited content) |
+| R7 | **OFL licence text for the bundled Noto fonts** | Naskh + Nastaliq ship without it — pre-existing gap. Mechanical to fix, needs an owner, must land before R6. See §1's credits infra |
+
+**Engineering-ready, waiting only on the above**
+
+- **F5 RTL input handling** (cursor/backspace direction, ZWNJ, hamza) — the one
+  substantial RTL code piece not yet written; gated by R1, scoped by R3.
+- **Productionised cursive feedback** — the colour reveal is in `game.rs`; it
+  can't run until R6.
+
+Short version: rendering and feedback are **built**; what remains is **R1–R3
+(decide), R4–R5 (audit), R6 (flip), R7 (licence).**
+
 ---
 
 ## 6. Smaller sign-offs
