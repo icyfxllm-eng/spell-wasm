@@ -104,6 +104,23 @@ const TH: Layout = Layout {
     rows: &["กขคฆงจชญฑฒ", "ณดตถทธนบปผ", "ฝพฟภมยรลวศ", "ษสหฬอเแโใไ", "ะาำัิีึืุู", "็่้๊๋์"],
     long_press: &[],
 };
+// Devanagari for Hindi (CC-HINDI-PHASE0 groundwork — the input-side companion to
+// akshara.rs; a CHARSET declaration, not a registered language). Covers the full
+// Hindi Devanagari inventory: independent vowels, consonants, matras, virama,
+// nuqta and the anusvara/candrabindu/visarga signs — so every NFC codepoint of a
+// Hindi word is typeable. Aspirates sit on long-press of their unaspirated base
+// (क->ख), the Devanagari-phonetic convention.
+//
+// D4: keys are base codepoints only; the precomposed nuqta letters U+0958–095F
+// (which devanagari-check.mjs rejects) never appear — क़ is typed क + ़ (U+093C).
+// Unregistered like ru.json's era: Hindi is not in BUILTIN_LANGS, so this renders
+// nowhere yet; it exists so the word-list gate has an inventory when content lands.
+// LAYOUT ERGONOMICS (which char on which long-press) want a native/expert pass;
+// the CHARSET (coverage) is asserted complete by rtl-adjacent tests below.
+const HI: Layout = Layout {
+    rows: &["अआइईउऊएऐओऔ", "कगङचजञटडण", "तदनपबमयरलव", "शषसहळ", "ािीुूेैोौ", "ं़्ःँ"],
+    long_press: &[('क', "ख"), ('ग', "घ"), ('च', "छ"), ('ज', "झ"), ('ट', "ठ"), ('ड', "ढ"), ('त', "थ"), ('द', "ध"), ('प', "फ"), ('ब', "भ"), ('इ', "ऋ"), ('ु', "ृ"), ('अ', "ऽ")],
+};
 
 fn layout_for(locale: &str) -> &'static Layout {
     match locale {
@@ -119,6 +136,10 @@ fn layout_for(locale: &str) -> &'static Layout {
         "fil" => &FIL,
         "zh" => &ZH,
         "th" => &TH,
+        // CC-HINDI-PHASE0 groundwork: charset only, unregistered. Renders nowhere
+        // (Hindi is not in BUILTIN_LANGS) — this arm exists so the layout and the
+        // pipeline charset gate agree the day Hindi content lands.
+        "hi" => &HI,
         _ => &EN,
     }
 }
@@ -568,6 +589,7 @@ mod tests {
             ("fil", include_str!("../assets/keyboards/fil.json")),
             ("zh", include_str!("../assets/keyboards/zh.json")),
             ("th", include_str!("../assets/keyboards/th.json")),
+            ("hi", include_str!("../assets/keyboards/hi.json")),
         ];
         for (code, json) in jsons {
             let v: serde_json::Value = serde_json::from_str(json).unwrap();
@@ -583,6 +605,50 @@ mod tests {
             for (base, acc) in layout.long_press {
                 let got = lp[base.to_string()].as_str().unwrap_or("");
                 assert_eq!(got, *acc, "{code} longPress[{base}] differs from JSON");
+            }
+        }
+    }
+
+    /// CC-HINDI-PHASE0 groundwork: the Devanagari charset must cover the whole
+    /// Hindi inventory, so a future Hindi word bank is fully typeable, AND it must
+    /// stay D4-clean (no composition-excluded precomposed nuqta letter).
+    ///
+    /// `every_word_char_is_typeable` above cannot guard this: Hindi is not in
+    /// BUILTIN_LANGS (phase 0 registers nothing), so it is never iterated. This is
+    /// the standalone pin, checked against the akshara segmenter's own F2 word set
+    /// so the two halves of Phase 0 (segment + type) agree on the same words.
+    #[test]
+    fn devanagari_charset_covers_hindi() {
+        let reach = reachable(&HI);
+
+        // The full modern Hindi Devanagari inventory: independent vowels,
+        // consonants, matras, virama, nuqta, and the anusvara/candrabindu/visarga
+        // signs. A missing one silently blocks every word that uses it.
+        let inventory = "\u{905}\u{906}\u{907}\u{908}\u{909}\u{90a}\u{90b}\u{90f}\u{910}\u{913}\u{914}\
+             \u{915}\u{916}\u{917}\u{918}\u{919}\u{91a}\u{91b}\u{91c}\u{91d}\u{91e}\
+             \u{91f}\u{920}\u{921}\u{922}\u{923}\u{924}\u{925}\u{926}\u{927}\u{928}\
+             \u{92a}\u{92b}\u{92c}\u{92d}\u{92e}\u{92f}\u{930}\u{932}\u{933}\u{935}\
+             \u{936}\u{937}\u{938}\u{939}\
+             \u{93e}\u{93f}\u{940}\u{941}\u{942}\u{943}\u{947}\u{948}\u{94b}\u{94c}\
+             \u{901}\u{902}\u{903}\u{93c}\u{94d}\u{93d}";
+        for c in inventory.chars() {
+            assert!(reach.contains(&c), "Devanagari {c:?} (U+{:04X}) not reachable", c as u32);
+        }
+
+        // D4: the precomposed nuqta letters (क़..य़, U+0958–095F) that
+        // devanagari-check.mjs rejects must never be a key — क़ is typed क + ़.
+        for c in &reach {
+            assert!(!(0x0958..=0x095F).contains(&(*c as u32)), "precomposed nuqta {c:?} in the layout — D4 forbids it");
+        }
+
+        // The akshara segmenter's F2 word set must be fully typeable, on the NFC
+        // form the player reproduces — so segment (akshara.rs) and type agree.
+        for word in ["\u{915}\u{94d}\u{937}\u{92e}\u{93e}", // क्षमा
+                     "\u{939}\u{93f}\u{928}\u{94d}\u{926}\u{940}", // हिन्दी
+                     "\u{91c}\u{93c}\u{930}\u{942}\u{930}\u{940}", // ज़रूरी (ज + nuqta)
+                     "\u{915}\u{93f}\u{924}\u{93e}\u{92c}"] { // किताब
+            for c in crate::akshara::canonical(word).chars() {
+                assert!(reach.contains(&c), "F2 word {word:?}: char {c:?} (U+{:04X}) not typeable", c as u32);
             }
         }
     }

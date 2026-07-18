@@ -129,8 +129,11 @@ def build():
                 # Curation filters (drop + warn): non-letters (fr apostrophe/hyphen
                 # forms, §3.3) and the length cap (de/nl/sv compounds, §3.3).
                 # Filipino keeps the hyphen; Thai has combining vowels/tone marks
-                # (U+0E00–0E7F) that aren't Unicode "alphabetic".
-                if not all(c.isalpha() or (code == "fil" and c == "-") or (code == "th" and 0x0E00 <= ord(c) <= 0x0E7F) for c in w):
+                # (U+0E00–0E7F) that aren't Unicode "alphabetic"; Devanagari
+                # (U+0900–097F) has matras, virama and nuqta in the same boat — so a
+                # Hindi word bank isn't dropped before the charset gate sees it.
+                # (Inert until Hindi is registered with content — mirrors `th`.)
+                if not all(c.isalpha() or (code == "fil" and c == "-") or (code == "th" and 0x0E00 <= ord(c) <= 0x0E7F) or (code == "hi" and 0x0900 <= ord(c) <= 0x097F) for c in w):
                     warnings.append(f"{where} — dropped (non-alphabetic)")
                     continue
                 if not (min_len <= len(w) <= MAX_LEN):
