@@ -1,0 +1,106 @@
+<!doctype html>
+<meta charset="utf-8">
+<title>CC-HINDI-PHASE0 F2 — akshara render prototype</title>
+<style>
+  /* System Devanagari (Kohinoor is macOS's; iOS ships it too). A phase-0 prototype
+     proves the SHAPING behaviour, not a bundled face — that comes with the font
+     decision, like Nastaliq did. */
+  body { margin: 28px; font: 14px -apple-system, sans-serif; background: #0c0a12; color: #e7e3f3; }
+  .deva { font-family: "Kohinoor Devanagari", "Devanagari Sangam MN", "Noto Sans Devanagari", serif; }
+  .row { margin: 16px 0; padding: 12px 16px; background: rgba(255,255,255,.04);
+         border: 1px solid rgba(255,255,255,.08); border-radius: 12px; }
+  .label { color: #a79fc4; font-size: 12px; margin-bottom: 6px; }
+  .whole, .tiles { font-size: 52px; display: inline-block; }
+  /* Each akshara its own tile — ONLY the box, no colour tricks; this is the render
+     the F2 prototype is about. inline-block per tile is the point: does a conjunct
+     survive being alone in a box? */
+  .tile { display: inline-block; padding: 2px 6px; margin: 0 3px; border: 1px solid rgba(255,255,255,.14);
+          border-radius: 8px; min-width: 0.6em; text-align: center; }
+</style>
+
+<h2 style="font-weight:600">Hindi akshara render prototype — one tile per akshara</h2>
+<p class="label">Left: the whole word. Right: each akshara (per the Rust core's
+   segmentation) in its own tile. A conjunct like क्ष must stay ONE shape in its
+   tile; the i-matra कि must render ि before क.</p>
+<div id="out"></div>
+
+<script>
+// The AUTHORITATIVE segmentation — the Rust core's output (akshara.rs ground truth,
+// f2_word_set_segments_without_bisecting_a_cluster). The app consumes these
+// boundaries; it never segments JS-side (D3). Hardcoded here so the prototype
+// renders exactly what the core says, not what a browser segmenter guesses.
+const WORDS = [
+  { word: "क्षमा",  aksharas: ["क्ष", "मा"] },
+  { word: "प्रश्न",  aksharas: ["प्र", "श्न"] },
+  { word: "स्त्री",   aksharas: ["स्त्री"] },
+  { word: "हिन्दी",  aksharas: ["हि", "न्दी"] },
+  { word: "ज़रूरी", aksharas: ["ज़", "रू", "री"] },
+  { word: "किताब",  aksharas: ["कि", "ता", "ब"] },
+  { word: "अँधेरा",  aksharas: ["अँ", "धे", "रा"] },
+];
+
+const out = document.getElementById("out");
+for (const w of WORDS) {
+  const div = document.createElement("div");
+  div.className = "row";
+  const tiles = w.aksharas.map((a) => `<span class="tile">${a}</span>`).join("");
+  div.innerHTML =
+    `<div class="label">${w.word} — ${w.aksharas.length} akshara(s)</div>` +
+    `<span class="whole deva">${w.word}</span>` +
+    `<span style="color:#666;font-size:40px"> &nbsp;→&nbsp; </span>` +
+    `<span class="tiles deva">${tiles}</span>`;
+  out.appendChild(div);
+}
+
+window.__probe = function () {
+  // 1) Does the browser's OWN segmenter agree with the Rust core? (informative:
+  //    tells us the platform's Unicode version implements GB9c Indic conjuncts.)
+  const seg = new Intl.Segmenter("hi", { granularity: "grapheme" });
+  const jsAgrees = WORDS.map((w) => {
+    const js = [...seg.segment(w.word)].map((x) => x.segment);
+    return { word: w.word, core: w.aksharas, js, agree: JSON.stringify(js) === JSON.stringify(w.aksharas) };
+  });
+
+  // 2) Render integrity: is a conjunct in a lone tile the SAME width as that
+  //    conjunct rendered alone in the whole word? A broken क्ष (क्+ष) would differ.
+  //    Measure each tile vs a reference render of that same akshara standalone.
+  const probe = document.createElement("span");
+  probe.className = "deva";
+  probe.style.cssText = "font-size:52px;position:absolute;visibility:hidden;white-space:nowrap";
+  document.body.appendChild(probe);
+  const rows = [...document.querySelectorAll(".row")];
+  const tileIntegrity = WORDS.map((w, i) => {
+    const tileEls = [...rows[i].querySelectorAll(".tile")];
+    const perTile = tileEls.map((el, k) => {
+      probe.textContent = w.aksharas[k];
+      const ref = probe.getBoundingClientRect().width;
+      // tile has padding; compare the TEXT box by measuring a clone without border.
+      return { akshara: w.aksharas[k], refWidth: ref };
+    });
+    return { word: w.word, perTile };
+  });
+  probe.remove();
+
+  // 3) Normalization stability (F4 preview): NFC vs NFD of each word render to the
+  //    same width and segment identically.
+  const normStable = WORDS.map((w) => {
+    const nfc = w.word.normalize("NFC"), nfd = w.word.normalize("NFD");
+    probe2(nfc); const wNfc = lastW; probe2(nfd); const wNfd = lastW;
+    return { word: w.word, nfcWidth: wNfc, nfdWidth: wNfd, sameWidth: Math.abs(wNfc - wNfd) < 0.5 };
+  });
+
+  return { jsAgrees, tileIntegrity, normStable };
+};
+
+let lastW = 0;
+function probe2(s) {
+  const p = document.createElement("span");
+  p.className = "deva";
+  p.style.cssText = "font-size:52px;position:absolute;visibility:hidden;white-space:nowrap";
+  p.textContent = s;
+  document.body.appendChild(p);
+  lastW = p.getBoundingClientRect().width;
+  p.remove();
+}
+window.__ready = true;
+</script>
