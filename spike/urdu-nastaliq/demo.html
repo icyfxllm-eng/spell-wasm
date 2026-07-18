@@ -1,0 +1,65 @@
+<!doctype html>
+<meta charset="utf-8">
+<title>Urdu coloring feedback — end-to-end demo</title>
+<style>
+  @font-face {
+    font-family: 'Noto Nastaliq Urdu';
+    src: url('/fonts/nastaliq-urdu.woff2') format('woff2');
+    font-display: swap;
+  }
+  body { margin: 32px; font: 15px -apple-system, sans-serif; background: #0c0a12; color: #e7e3f3; }
+  .case { margin: 22px 0; padding: 16px 20px; background: rgba(255,255,255,.04);
+          border: 1px solid rgba(255,255,255,.08); border-radius: 14px; }
+  .label { color: #a79fc4; font-size: 13px; margin-bottom: 6px; }
+  .typed { color: #cfc8e6; direction: rtl; font-family: 'Noto Nastaliq Urdu', serif; font-size: 40px; }
+  /* The feedback surface: ONE run (join intact), each akshara a plain colour span.
+     This is exactly what the app would emit for a cursive study language. */
+  /* width:fit-content so a width measurement reads the TEXT, not the block's
+     container width (which is identical for every row and hides shattering). */
+  .reveal { direction: rtl; font-family: 'Noto Nastaliq Urdu', serif; font-size: 56px;
+            unicode-bidi: isolate; width: fit-content; }
+  .ok  { color: #6bd18a; }   /* right */
+  .bad { color: #ff6b6b; }   /* wrong */
+</style>
+
+<h2 style="font-weight:600">Urdu spelling feedback — per-letter, in Nastaliq</h2>
+<p class="label">Each row: the word, what the player "typed", and the coloured reveal.
+   Green = letter correct, red = wrong. The reveal is one shaped run — joins intact.</p>
+<div id="out"></div>
+
+<script>
+// Grapheme-cluster segmentation (akshara-level), so a combining mark stays with
+// its base — the app would use the same rule (its akshara segmenter).
+const seg = new Intl.Segmenter('ur', { granularity: 'grapheme' });
+const clusters = (s) => [...seg.segment(s)].map((x) => x.segment);
+
+// The feedback the app computes: compare typed vs correct akshara-by-akshara.
+// Position-wise (a real diff would handle insert/delete; position-wise is enough
+// to show the mechanism and is how per-letter spelling feedback usually reads).
+function renderReveal(correct, typed) {
+  const c = clusters(correct), t = clusters(typed);
+  return c.map((g, i) => {
+    const right = t[i] === g;
+    return `<span class="${right ? 'ok' : 'bad'}">${g}</span>`;
+  }).join('');
+}
+
+const CASES = [
+  { word: 'کتاب',   typed: 'کتاب',   note: 'correct — all green' },
+  { word: 'کتاب',   typed: 'کباب',   note: 'wrong 2nd letter (ت→ب)' },
+  { word: 'پاکستان', typed: 'پاکستان', note: 'correct' },
+  { word: 'محبت',   typed: 'محنت',   note: 'wrong 3rd letter (ب→ن)' },
+  { word: 'اردو',   typed: 'اردی',   note: 'wrong last letter (و→ی)' },
+];
+
+const out = document.getElementById('out');
+for (const c of CASES) {
+  const div = document.createElement('div');
+  div.className = 'case';
+  div.innerHTML = `<div class="label">${c.note}</div>
+    <div class="typed">${c.typed}</div>
+    <div class="reveal">${renderReveal(c.word, c.typed)}</div>`;
+  out.appendChild(div);
+}
+window.__ready = true;
+</script>
