@@ -542,6 +542,13 @@
   .feedback .reveal:lang(ar),
   .feedback .reveal:lang(fa),
   .feedback .reveal:lang(ur){letter-spacing:normal}
+  /* CC-RTL per-akshara colour feedback (cursive scripts). ONLY color — never a
+     box-forming property (transform/inline-block/margin/padding), which would
+     shatter the shaping run; colour keeps the word joined. rv-sp is the passthrough
+     for the space in a multi-word reveal. */
+  .feedback .reveal .rv-ok{color:var(--teal)}
+  .feedback .reveal .rv-bad{color:var(--coral)}
+  .feedback .reveal .rv-sp{color:inherit}
   /* F7 syllable replay (feature-flagged; classes appear only when the flag is on) */
   .feedback .reveal.syllabified .syl{transition:color .12s ease,text-shadow .12s ease;opacity:.72}
   .feedback .reveal.syllabified .syl+.syl::before{content:"\00b7";opacity:.5;margin:0 .12em}

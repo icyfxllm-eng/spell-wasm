@@ -353,6 +353,44 @@ fn render_letters_joined(value: &str) -> String {
     )
 }
 
+/// The reveal (correct word shown after a miss), coloured per akshara to show
+/// which letters the player got right — for CURSIVE scripts, where positioned
+/// feedback markers can't work (Nastaliq cascades; no browser API exposes a
+/// glyph's 2D position — spike/urdu-nastaliq/FINDINGS.md).
+///
+/// The trick is that feedback doesn't need a *position*: colouring the letter in
+/// place marks it, and the browser shapes the ink. Each akshara becomes an inline
+/// span carrying ONLY a colour class — never `transform`/`inline-block`/`margin`,
+/// which form a box and shatter the join (that, not the span itself, is what F4
+/// actually found). So the whole word stays one shaped run and still joins.
+///
+/// Comparison is by grapheme cluster (akshara), position-wise, on the NFC form of
+/// both strings so a decomposed keystroke matches a composed target. Position-wise
+/// (not edit-distance) is the honest v1: a wrong letter early shifts everything
+/// after it to red, which reads as "you diverged here" — acceptable, and a diff
+/// can refine it later. Callers pass this ONLY when the player actually typed
+/// something (empty answer -> plain reveal), so an all-red timeout never shows.
+fn render_reveal_colored(correct: &str, typed: &str) -> String {
+    use unicode_normalization::UnicodeNormalization;
+    let correct_nfc: String = correct.nfc().collect();
+    let typed_clusters: Vec<String> = typed.nfc().collect::<String>().graphemes(true).map(str::to_string).collect();
+    let mut inner = String::new();
+    for (i, g) in correct_nfc.graphemes(true).enumerate() {
+        // A space is chrome, not a letter to grade (e.g. the ZH reveal); pass it
+        // through uncoloured so multi-word reveals keep their gap.
+        if g == " " {
+            inner.push_str("<span class=\"rv-sp\">&nbsp;</span>");
+            continue;
+        }
+        let right = typed_clusters.get(i).map(String::as_str) == Some(g);
+        let class = if right { "rv-ok" } else { "rv-bad" };
+        inner.push_str(&format!("<span class=\"{}\">{}</span>", class, dom::escape_html(g)));
+    }
+    // Same `.reveal` wrapper as the plain path, so font/dir/isolation rules apply
+    // identically; the colour spans inside are inline, so the run still joins.
+    format!("<span class=\"reveal\">{}</span>", inner)
+}
+
 // ---------- answer input (no DOM <input>: keeps the iOS keyboard closed) ----------
 
 /// True while the player may type — there's a live, unanswered word on screen.
@@ -1169,9 +1207,9 @@ fn finalize_incorrect(app: &App, glyph: &str, prefix: &str, feedback_class: &str
 /// a retry (extra attempt or shield) changes session flow, not the learning
 /// record, so the outcome must never be double-counted (I2 / A2 / A9).
 fn finalize_incorrect_ex(app: &App, glyph: &str, prefix: &str, feedback_class: &str, record: bool) {
-    let (versus_on, cur_lang, cur_tier, word) = {
+    let (versus_on, cur_lang, cur_tier, word, typed) = {
         let s = app.borrow();
-        (s.versus.enabled, s.cur_lang.clone(), s.cur_tier.clone(), s.word.clone())
+        (s.versus.enabled, s.cur_lang.clone(), s.cur_tier.clone(), s.word.clone(), s.answer.trim().to_string())
     };
     // Head-to-head records nothing persistent (accuracy, Misses, leaderboard,
     // word stats) — the match never counts toward solo progress.
@@ -1235,6 +1273,13 @@ fn finalize_incorrect_ex(app: &App, glyph: &str, prefix: &str, feedback_class: &
         );
         dom::el("feedback").set_class_name(feedback_class);
         wire_syllable_replay(app, sylls);
+    } else if crate::consts::script_joins(&cur_lang) && !typed.is_empty() {
+        // Cursive study language, and the player actually typed: per-akshara
+        // colour feedback instead of a plain reveal. Positioned markers can't work
+        // on a cascading script, but colouring the letters can (they stay one
+        // shaped run). CC-RTL; reachable only once RTL_SUPPORTED flips.
+        dom::set_html("feedback", &format!("{}{}", prefix, render_reveal_colored(&reveal, &typed)));
+        dom::el("feedback").set_class_name(feedback_class);
     } else {
         dom::set_html("feedback", &format!("{}<span class=\"reveal\">{}</span>", prefix, dom::escape_html(&reveal)));
         dom::el("feedback").set_class_name(feedback_class);
@@ -2369,6 +2414,66 @@ mod climb_band_tests {
         let html = super::render_letters_joined("<img onerror=x>");
         assert!(!html.contains("<img"), "user input must be escaped: {html}");
         assert!(html.contains("&lt;img"));
+    }
+
+    // ---- CC-RTL: per-akshara colour feedback on the reveal (cursive scripts) ----
+
+    /// The load-bearing property: the coloured reveal must carry ONLY colour
+    /// classes, never a box-forming style. A `transform`/`inline-block`/`margin`
+    /// on any letter span would form a box and shatter the join — that (not the
+    /// span) is what F4 actually found. If this test fails, cursive feedback stops
+    /// joining.
+    #[test]
+    fn coloured_reveal_uses_only_colour_never_box_forming_styles() {
+        let html = super::render_reveal_colored("\u{643}\u{62a}\u{627}\u{628}", "\u{643}\u{628}\u{627}\u{628}"); // كتاب vs كباب
+        assert!(html.contains("class=\"reveal\""), "keeps the .reveal wrapper: {html}");
+        for banned in ["transform", "inline-block", "margin", "padding", "style="] {
+            assert!(!html.contains(banned), "reveal must not carry the box-forming property {banned:?}: {html}");
+        }
+        // Colour comes from a class, and the styling (only colour) lives in CSS.
+        assert!(html.contains("rv-ok") || html.contains("rv-bad"), "letters are classed for colour: {html}");
+    }
+
+    /// A correct guess colours every akshara "ok"; a wrong letter is the only "bad".
+    #[test]
+    fn coloured_reveal_marks_right_and_wrong_per_akshara() {
+        let word = "\u{643}\u{62a}\u{627}\u{628}"; // كتاب
+        let all_ok = super::render_reveal_colored(word, word);
+        assert_eq!(all_ok.matches("rv-ok").count(), 4, "all four letters correct: {all_ok}");
+        assert_eq!(all_ok.matches("rv-bad").count(), 0);
+
+        // Typed كباب — 2nd letter ت->ب wrong, the other three right.
+        let one_wrong = super::render_reveal_colored(word, "\u{643}\u{628}\u{627}\u{628}");
+        assert_eq!(one_wrong.matches("rv-bad").count(), 1, "exactly the wrong letter is bad: {one_wrong}");
+        assert_eq!(one_wrong.matches("rv-ok").count(), 3);
+    }
+
+    /// A short attempt leaves the untyped tail marked wrong, not dropped.
+    #[test]
+    fn coloured_reveal_marks_untyped_tail_wrong() {
+        let html = super::render_reveal_colored("\u{627}\u{631}\u{62f}\u{648}", "\u{627}\u{631}"); // اردو typed only ار
+        assert_eq!(html.matches("rv-ok").count(), 2);
+        assert_eq!(html.matches("rv-bad").count(), 2, "the two untyped letters are wrong: {html}");
+    }
+
+    /// Compares by grapheme cluster on NFC form: a decomposed keystroke matches a
+    /// composed target (café: e+combining-acute == é), so it isn't falsely "wrong".
+    #[test]
+    fn coloured_reveal_compares_clusters_nfc() {
+        // One akshara either way; decomposed typed must match composed correct.
+        let html = super::render_reveal_colored("caf\u{e9}", "cafe\u{301}");
+        assert_eq!(html.matches("rv-bad").count(), 0, "NFC-equal café must be all-correct: {html}");
+        assert_eq!(html.matches("rv-ok").count(), 4);
+    }
+
+    /// The reveal is built from `word` (trusted) and `typed` (USER INPUT). Still
+    /// escaped — a single run is no excuse, same as the joined path.
+    #[test]
+    fn coloured_reveal_escapes_user_input() {
+        // A wrong "letter" that is markup: it must be escaped in the output.
+        let html = super::render_reveal_colored("<b>", "<i>");
+        assert!(!html.contains("<b>") && !html.contains("<i>"), "raw markup must not survive: {html}");
+        assert!(html.contains("&lt;"));
     }
 
     /// The syllabified reveal splits a word into one span PER SYLLABLE — exactly
