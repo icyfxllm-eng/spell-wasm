@@ -206,6 +206,57 @@ changes.
 
 Nothing in RTL Phase 1+ starts until you answer.
 
+### 5.1 Urdu is the exception — approach A cannot position markers under Nastaliq
+
+Spike run since the above (`spike/urdu-nastaliq/` on `feature/rtl-feedback`,
+`FINDINGS.md` + `boxes-chromium.png` / `boxes-webkit.png`). **First, the thing
+people assume and get wrong: Urdu RENDERS FINE.** The screenshots show it in
+correct Nastaliq — joins, cascade and all. Nothing here says Urdu can't be
+displayed. What it says is narrower and only about the **§5 feedback marker**.
+
+Approach A places each marker from `Range.getBoundingClientRect()` — i.e. from
+where the browser says each letter sits. That works for Arabic and Persian
+(**Naskh**: letters keep one horizontal baseline). It does **not** work for Urdu
+(**Nastaliq**: letters cascade diagonally down-and-left and overlap). I tested the
+one API that might have rescued it — SVG `getExtentOfChar` — in **both Chromium and
+WebKit** (WebKit because production is iOS WKWebView), against the real Noto
+Nastaliq Urdu font:
+
+- The **vertical cascade is invisible** to both engines: every character's box
+  comes back at the same `y` and the same (line-box) height. The browser measures
+  against the text baseline, not the glyph, so the very thing that makes Nastaliq
+  Nastaliq is not in the data. `Range` behaves identically.
+- The **horizontal boxes are unusable in WebKit** specifically: they overlap and
+  fall out of order (پاکستان: five overlaps), so a letter cannot be mapped to a
+  distinct marker slot. The overlay screenshots show boxes that are tall vertical
+  strips ignoring the diagonal ink.
+- This is a limitation of the browser text model (a horizontal run on one
+  baseline), not a bug — no text-geometry API (canvas, `Range`, `getExtentOfChar`)
+  exposes a glyph's true 2D position.
+
+**So Urdu forces a separate decision from ar/fa, whichever way you answer §5:**
+
+- **A — word-level feedback for Urdu.** Per-letter markers for ar/fa; Urdu shows
+  correctness on the whole word. Ships now, costs per-letter precision for Urdu
+  only. *My recommendation, unless per-letter Urdu feedback is a hard requirement.*
+- **B — render Urdu in Naskh, not Nastaliq.** Makes per-letter work (Naskh is
+  horizontally separable) and the Naskh font is already bundled — but Urdu readers
+  strongly prefer Nastaliq and Naskh Urdu reads as wrong to many. A cultural call,
+  not a technical one.
+- **C — HarfBuzz in wasm.** Shape the text ourselves and read real glyph positions.
+  The only path to true per-letter Nastaliq markers. Feasible (the app is already
+  wasm) but a real project, not a tweak.
+
+Two facts that bound this: the app does **not yet bundle a Nastaliq font** (Naskh
+was bundled for ar/fa only, `d7fcbcf`), so shipping Urdu at all first needs a
+Nastaliq font on the device or in the bundle; and this whole item is moot until
+`RTL_SUPPORTED` flips — Urdu can't be selected today.
+
+**Related and also pending: the keyboard split.** `feature/rtl-feedback` also
+carries `docs/rtl-keyboard-split.md` — a separate one-decision write-up on whether
+ar/fa/ur word-bank content may start against the new charset declarations before
+the RTL input half of F5 lands. Belongs next to this when the branches converge.
+
 ---
 
 ## 6. Smaller sign-offs
