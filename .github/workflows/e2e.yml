@@ -1,0 +1,68 @@
+# End-to-end browser tests. Wires tests/e2e/run.mjs into CI.
+#
+# Why this exists: the E2E suite has been green-or-red on developers' machines
+# only, never in CI. That is exactly how the menu endonym test rotted unnoticed —
+# Thai was cut from the registry, the hardcoded test kept demanding it, and the
+# suite sat red for commits because nothing automated ran it. This closes that
+# gap: the suite (Playwright/Chromium against the real wasm build) now runs on
+# every push and PR, so a spec drifting from the code it polices fails loudly.
+name: E2E
+
+on:
+  push:
+    branches: ["**"]
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  e2e:
+    name: Browser end-to-end suite
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: npm
+
+      # Same wasm toolchain as release.yml; wasm-bindgen CLI pinned to the locked
+      # library version (0.2.126) — a lib/CLI mismatch fails the bindgen step.
+      - name: Rust wasm toolchain
+        run: |
+          rustup target add wasm32-unknown-unknown
+          cargo install wasm-bindgen-cli --version 0.2.126 --locked || true
+
+      - name: Cache cargo
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.cargo/registry
+            ~/.cargo/git
+            target
+          key: cargo-e2e-${{ runner.os }}-${{ hashFiles('Cargo.lock') }}
+
+      - run: npm ci
+
+      # The suite drives Chromium (tests/e2e/harness.mjs). --with-deps pulls the
+      # system libraries headless Chromium needs on the runner.
+      - name: Install Playwright Chromium
+        run: npx playwright install --with-deps chromium
+
+      # Assembles dist-test/ — the wasm built with the __spelltest seam, which the
+      # suite waits on. The harness serves dist-test/, not the repo root.
+      - name: Build test bundle
+        run: bash scripts/build-web-test.sh
+
+      - name: Run E2E suite
+        run: node tests/e2e/run.mjs
+
+      # The suite writes tests/e2e/TEST-REPORT.md; keep it on failure so a red run
+      # is diagnosable without re-running locally.
+      - name: Upload test report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: e2e-report
+          path: tests/e2e/TEST-REPORT.md
+          if-no-files-found: ignore
