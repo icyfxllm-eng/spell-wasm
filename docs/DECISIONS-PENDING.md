@@ -206,56 +206,77 @@ changes.
 
 Nothing in RTL Phase 1+ starts until you answer.
 
-### 5.1 Urdu is the exception — approach A cannot position markers under Nastaliq
+### 5.1 Urdu — SOLVED, no compromise needed (updated with a better answer)
 
-Spike run since the above (`spike/urdu-nastaliq/` on `feature/rtl-feedback`,
-`FINDINGS.md` + `boxes-chromium.png` / `boxes-webkit.png`). **First, the thing
-people assume and get wrong: Urdu RENDERS FINE.** The screenshots show it in
-correct Nastaliq — joins, cascade and all. Nothing here says Urdu can't be
-displayed. What it says is narrower and only about the **§5 feedback marker**.
+*This section first recommended degrading Urdu to word-level feedback, or shipping
+it in Naskh, or building HarfBuzz. All three are now unnecessary. Superseded
+analysis kept at the end.*
 
-Approach A places each marker from `Range.getBoundingClientRect()` — i.e. from
-where the browser says each letter sits. That works for Arabic and Persian
-(**Naskh**: letters keep one horizontal baseline). It does **not** work for Urdu
-(**Nastaliq**: letters cascade diagonally down-and-left and overlap). I tested the
-one API that might have rescued it — SVG `getExtentOfChar` — in **both Chromium and
-WebKit** (WebKit because production is iOS WKWebView), against the real Noto
-Nastaliq Urdu font:
+Spikes on `feature/rtl-feedback` (`spike/urdu-nastaliq/`, screenshots in-repo).
+Two findings and two commits:
 
-- The **vertical cascade is invisible** to both engines: every character's box
-  comes back at the same `y` and the same (line-box) height. The browser measures
-  against the text baseline, not the glyph, so the very thing that makes Nastaliq
-  Nastaliq is not in the data. `Range` behaves identically.
-- The **horizontal boxes are unusable in WebKit** specifically: they overlap and
-  fall out of order (پاکستان: five overlaps), so a letter cannot be mapped to a
-  distinct marker slot. The overlay screenshots show boxes that are tall vertical
-  strips ignoring the diagonal ink.
-- This is a limitation of the browser text model (a horizontal run on one
-  baseline), not a bug — no text-geometry API (canvas, `Range`, `getExtentOfChar`)
-  exposes a glyph's true 2D position.
+**1. Urdu renders in real Nastaliq — DONE (`41a1c6c`).** The app bundled Naskh for
+ar/fa only and left Urdu font-less. Now `fonts/nastaliq-urdu.woff2` (a subset of
+Noto Nastaliq Urdu, OFL, all layout features kept so the cascade shapes) is
+bundled and wired to `:lang(ur)`, lazy like Naskh. Verified the subset renders
+byte-identically to the system font in Chromium and WebKit. Urdu now looks correct.
 
-**So Urdu forces a separate decision from ar/fa, whichever way you answer §5:**
+**2. Per-letter feedback works — by COLOURING, not positioned markers.** The §5
+recommendation (approach A: markers positioned from `Range` geometry) genuinely
+cannot work for Nastaliq — I tested SVG `getExtentOfChar` in both engines and the
+cascade is invisible to the browser text model (details in
+`spike/urdu-nastaliq/FINDINGS.md`). **But feedback doesn't need a position — it
+needs to mark which letters are wrong, and colouring the letter does that while
+the browser handles the ink.** Wrapping each akshara in an inline `<span>` that
+sets only `color`/`background` leaves the Nastaliq join fully intact in WebKit
+(`demo-webkit.png` shows five words with per-letter green/red feedback, joins
+perfect). No geometry, no HarfBuzz, no Naskh.
 
-- **A — word-level feedback for Urdu.** Per-letter markers for ar/fa; Urdu shows
-  correctness on the whole word. Ships now, costs per-letter precision for Urdu
-  only. *My recommendation, unless per-letter Urdu feedback is a hard requirement.*
-- **B — render Urdu in Naskh, not Nastaliq.** Makes per-letter work (Naskh is
-  horizontally separable) and the Naskh font is already bundled — but Urdu readers
-  strongly prefer Nastaliq and Naskh Urdu reads as wrong to many. A cultural call,
-  not a technical one.
-- **C — HarfBuzz in wasm.** Shape the text ourselves and read real glyph positions.
-  The only path to true per-letter Nastaliq markers. Feasible (the app is already
-  wasm) but a real project, not a tweak.
+**This corrects §5 itself.** F4 concluded per-letter `<span>`s shatter cursive
+words; the real culprit is a **box-forming style** on the span (F4's spans carried
+the `pop` animation's `transform`), not the span. `color`/`background` stay inline
+and the shaper runs through — confirmed in both engines. So **colouring is a better
+answer than approach A for *every* script**, cursive or not: it needs no geometry,
+survives WebKit, and unifies the mechanism. The §5 question ("unify all scripts on
+one path?") now has a cleaner candidate than positioned markers — **unify on
+colour.** The cost is the same either way: the per-letter `pop` reveal animation,
+already gone in F4's joined path.
 
-Two facts that bound this: the app does **not yet bundle a Nastaliq font** (Naskh
-was bundled for ar/fa only, `d7fcbcf`), so shipping Urdu at all first needs a
-Nastaliq font on the device or in the bundle; and this whole item is moot until
-`RTL_SUPPORTED` flips — Urdu can't be selected today.
+**What is now true:**
+
+- **Rendering:** done and buildable — Urdu in Nastaliq, shipped behind the gate.
+- **Feedback:** solved in principle (spike + demo); productionising it in
+  `game.rs` (colour spans per akshara on the reveal, wired to the answer diff and
+  the akshara segmenter) is ordinary work, not a research risk.
+- **Still gated:** none of it is reachable until `RTL_SUPPORTED` flips, and Urdu
+  still needs F5 input + a native-audited word bank like ar/fa.
+- **One compliance note:** the bundled Noto faces (Naskh included, now Nastaliq)
+  ship without an accompanying OFL licence text. Pre-existing, now one font wider;
+  add the licence before the flip. See §1's credits infra — fonts likely belong
+  there too.
+
+**The decision this leaves you:** not "how do we make Urdu work" (it works) but
+"**do we unify the whole feedback mechanism on colouring**, retiring the
+positioned-marker path §5 proposed?" The evidence now points that way for all
+scripts, English included — same trade §5 already described (colour under/over the
+word, no `pop`), but simpler and script-agnostic.
 
 **Related and also pending: the keyboard split.** `feature/rtl-feedback` also
 carries `docs/rtl-keyboard-split.md` — a separate one-decision write-up on whether
 ar/fa/ur word-bank content may start against the new charset declarations before
 the RTL input half of F5 lands. Belongs next to this when the branches converge.
+
+<details><summary>Superseded pre-colouring analysis (kept for the record)</summary>
+
+Before the colouring spike, the marker approach's failure on Nastaliq looked like
+it forced a lossy choice, and this section recommended one of: **A** word-level
+feedback for Urdu only; **B** render Urdu in Naskh (a cultural compromise); **C**
+HarfBuzz-in-wasm for true glyph positions. Colouring beats all three — per-letter,
+in Nastaliq, no new engine — so none is needed. C would still be the only route if
+a future feature genuinely needs a glyph's 2D *position* (a positioned overlay,
+not colour); feedback does not.
+
+</details>
 
 ---
 
