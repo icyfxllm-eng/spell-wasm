@@ -1,120 +1,118 @@
-# SpellGame — Build 56 release note
+# SpellGame — Build 56 release note (FULL DELTA)
 
-**Status: AWAITING ERIC'S APPROVAL.** Nothing here is cut or shipped. This is the
-production-safe payload assembled on `feature/rtl-feedback`, ready for a version bump
-and a TestFlight/App Store build once approved.
+**Status: AWAITING ERIC'S APPROVAL.** Nothing here is cut or shipped.
 
-> **Version note.** The build number is NOT taken from the repo — fastlane sets it at
-> cut time to `latest_testflight_build_number + 1` (`fastlane/Fastfile`). TestFlight
-> is at build 55, so this cuts as **build 56** automatically; the committed
-> `CURRENT_PROJECT_VERSION = 47` is stale and ignored, and `MARKETING_VERSION` stays
-> 1.1. No manual bump is needed — but running fastlane / cutting the build is still
-> Eric's call (the freeze).
+> **Version.** The build number is set automatically by fastlane to
+> `latest_testflight_build_number + 1` (`fastlane/Fastfile`). TestFlight is at 55,
+> so this cuts as **56** on its own; the committed `CURRENT_PROJECT_VERSION = 47` is
+> stale/ignored and `MARKETING_VERSION` stays 1.1. Running the cut is still Eric's
+> call (freeze).
 >
-> **Scope caveat — read before approving.** This note describes the *recent* payload
-> on `feature/rtl-feedback`. That branch is **~104 commits ahead of `main`**, so a
-> build cut from it carries substantially more than changes 1–3 below. Whoever cuts
-> build 56 must (a) confirm which branch it is cut from, and (b) reconcile the FULL
-> delta against what build 55 shipped — see "Open question: the 104-commit gap" at
-> the end. The safety guarantees (no RTL, no audit content) hold regardless of branch.
+> **Scope.** This is the FULL delta of `feature/rtl-feedback` over `main` (build 47):
+> ~104 commits, 59 feat/fix. It is a **major release**, not a point update. Builds
+> 48–55 were cut from somewhere other than `main` (which never moved), so **some of
+> this may already be on TestFlight** — whoever cut 48–55 should reconcile what is
+> genuinely new in 56. Everything below is classified by its REAL runtime state
+> (verified against `src/flags.rs`, not commit messages).
 
-## Headline
-An **English-experience + privacy** update, optionally activating up to **ten more
-languages**. No right-to-left languages and no audit content ship in this build —
-that is guaranteed at the byte level, not just by policy.
+> **TestFlight vs App Store flags.** `src/flags.rs` defaults are set for the QA
+> build: `say_it`, `photo_list`, `spell_aloud`, `ghost_racing`, `syllable_replay`,
+> and `attempts_shields` default **ON** so testers exercise them; `word_stories` and
+> `online_spelloff` stay **OFF**. The docstring notes these revert to OFF "per PR"
+> for the App Store. So this list is the **TestFlight** experience; the App Store
+> subset is a later, separate flag decision.
 
-## User-facing changes
+---
 
-1. **Richer English word variety.** The English bank was rebuilt from the Leipzig
-   corpus to 800 words (200 per tier), up from a small curated set. English is the
-   one language players actually draw from today, so this is real added variety in
-   both normal play and the Daily Challenge.
-2. **Privacy: no third-party dictionary calls.** The app no longer calls
-   `dictionaryapi.dev` directly from the browser (the `def_lang` mapping was
-   deleted). This closes an outbound third-party request for every user.
-3. **Correct hint localization.** The hint's "(N letters)" count is now translated
-   instead of hardcoded English — visible to anyone running a non-English interface
-   locale.
+## 1. Core gameplay change (LIVE, flag ON) — the headline
+- **One attempt per word.** The legacy 3-try mechanic is retired; the base game is
+  now one shot per word (CC-ATTEMPTS-SHIELDS, build-54).
+- **New safety net:** an extra-attempts toggle (normal mode) and **shields** in The
+  Climb replace it. `attempts_shields` defaults ON for QA — testers must feel the
+  new one-shot flow. This is the biggest behavioral change in the build.
 
-## Language activation (optional — Eric selects)
-Up to **ten content-ready languages** can be activated in this same build — a pure
-status flip, since each already has an in-binary word bank, keyboard, and backend
-voice:
+## 2. New surfaces (LIVE)
+- **Play mode hub** — a tile-based launcher for the game modes (CC-MODE-HUB;
+  `config/modes.json` is the mode registry). Wired unconditionally.
+- **Tools & Features hub in Settings** — one place to toggle the optional features,
+  with per-level explainers.
+- **Daily Challenge** — a single submit control per viewport + auto-advance (plus a
+  fix for a stale auto-advance timer that could skip a word).
+- **Native-status readout in Settings** — diagnostics for the on-device stack.
 
-> **es, fr, de, pt, pl, vi, ko, ja, fil, zh**
+## 3. iOS-only features — ON for TestFlight QA (no-op on web/Android)
+Backed by the new NativeLanguageKit Capacitor plugin + AVSpeech offline TTS:
+- **Say It** — on-device pronunciation practice (`say_it` ON; hard-off in Kid Mode, COPPA).
+- **Spell It Out Loud** — voice spelling *input*: speak letter names, the parser
+  produces what a keyboard would (`spell_aloud` ON, per Eric 2026-07-15).
+- **Photo-to-word-list** — VisionKit OCR of a handout into a word list (`photo_list`
+  ON; hidden in Kid Mode).
 
-Each is independently selectable, and each requires a native-audit sign-off first
-(that is what `ComingSoon → Active` asserts). The full package — the exact flip, the
-per-language sign-off block, and how to audit any not-yet-reviewed language via the
-audit-preview harness — is in **`docs/ltr-activation-checklist.md`**. Activating none
-of them is a valid choice; the update still ships changes 1–3.
+## 4. The Climb
+- **Ghost racing** — race your best local run (`ghost_racing` ON).
+- **Climb shields** — part of the attempts-shields safety net above.
 
-## Also included (no user-visible effect)
-- **Thai fully removed** from the codebase (it was never offered; this is cleanup).
-- **Grown banks for the coming-soon languages** ride along in the binary, dormant
-  until each is activated.
-- **The RTL engine** (logical-property CSS, cursive feedback, ar/fa/ur keyboards,
-  Nastaliq/Devanagari fonts) is present but gated and inert — fonts are lazy-loaded,
-  so they are never even fetched while the languages are gated.
+## 5. Languages & content (LIVE)
+- **Lineup swap** — cut it/nl/sv/nb; added ru/ar/fa/ur as coming-soon; the menu
+  reflects the new roster (CC-LINEUP-SWAP). *(Turkish was reinstated here, then cut
+  again by CC-HINDI-PHASE0 — net: not in the lineup.)*
+- **Russian Cyrillic keyboard** added; contentless languages **no longer fall
+  through to English** words (an explicit empty bank instead).
+- **English-only launch** — Spanish (and the rest) are Coming Soon; English is the
+  only active study language. **Entitlements/regional grants do NOT override this** —
+  they gate purchase/feature access and still consult `is_active_lang`.
+- **Richer English word bank** — rebuilt from Leipzig to 800 words (200/tier). Other
+  languages' banks were grown too, but ride along dormant until activated.
 
-## Deliberately excluded — the guarantee
-- **ar / fa / ur (RTL)** — a separate, later build. Needs the `RTL_SUPPORTED` flip
-  and native audit. See `docs/rtl-ship-checklist.md`.
-- **ru** — its production bank is empty (content is an audit draft); not activatable
-  yet.
-- **hi (Hindi)** — audit-only (D8); not registered in production at all.
-- **The entire `audit_preview` build** — draft banks, the flag widget, the unlocked
-  preview. `#[cfg]`-compiled out of production; verified absent from the production
-  wasm at the byte level.
+## 6. Privacy, performance, polish (LIVE)
+- **Privacy:** the browser no longer calls `dictionaryapi.dev` directly (`def_lang` deleted).
+- **i18n:** the hint's "(N letters)" count is translated; boot cloaks translatable
+  chrome to kill the English-flash reflow.
+- **Web perf:** brotli-precompressed wasm + streaming compile; self-hosted fonts
+  (no FOUT/external stalls); GPU-composited orb glow (no mobile stutter).
+- **Profanity:** diacritic-safe normalization in the per-language screen.
 
-## Verification & safety
-- `cargo test --lib` green in both configurations. With all ten languages activated
-  (the maximum): production **212 / 0**, audit-preview **207 / 0**.
-- The activation is a ~30-line, 2-file change (statuses + two gating tests). No word
-  a language serves can fall through to English — `tier_for` routes each to its own
-  bank and the keyboard charset test pins typeability.
-- Every activation reverts by flipping one line back to `ComingSoon`, independently,
-  with no user-data impact.
+## 7. Present but DORMANT (flag OFF — ships dark, zero observable effect)
+- **Word stories** (etymology cards) — OFF until the CC BY-SA attribution approach
+  is approved.
+- **Online "Spell Off"** (async 1v1) — OFF until the `/api/match` backend is deployed.
+
+## 8. Present but GATED — not user-reachable in production
+- **The RTL engine** (ar/fa/ur rendering, keyboards, cursive feedback, Naskh/Nastaliq
+  fonts) — gated by `RTL_SUPPORTED`; lazy fonts are never even fetched.
+- **Hindi + the entire audit-preview build** — `#[cfg(audit_preview)]`, compiled out
+  of production; verified byte-absent.
+- **The 10-language activation & RTL ship packages** — `docs/*-checklist.md`;
+  documents only, nothing applied.
+
+## 9. Infrastructure (not directly user-facing)
+- Consumer/education **editions axis** (compile-time; this is the consumer build).
+- **Entitlements** resolver + regional grants (CF-IPCountry) + country→language map.
+- Wordlist **trap registry + tagger** (content-quality tooling); word_data regen.
+- CI/test/build fixes (entitlement purity gate, endonym test, font-lazy gate).
+
+---
+
+## Optional in this same build: activate up to 10 languages
+Independently of the above, the ten content-ready LTR/CJK languages
+(es/fr/de/pt/pl/vi/ko/ja/fil/zh) can be flipped ComingSoon→Active — a verified,
+per-language, reversible status flip. Full package + sign-off:
+**`docs/ltr-activation-checklist.md`**. RTL (ar/fa/ur) is a separate later build:
+**`docs/rtl-ship-checklist.md`**.
+
+## Safety guarantees (hold regardless of the above)
+- **No RTL ships** — `RTL_SUPPORTED` is false in production.
+- **No audit content ships** — `audit_preview` is compiled out; draft banks verified
+  byte-absent from the production wasm.
+- **English-only active** unless Eric applies the activation package.
+- Production `cargo test --lib` green (212/0).
 
 ## Approvals required before cut
-1. **Per-language activation sign-off** — name a native reviewer per activated
-   language (`docs/ltr-activation-checklist.md`).
-2. **Eric authorizes** the version bump and the build cut (the freeze).
-3. **Release considerations** for the activated languages: App Store metadata /
-   screenshots may need to reflect the newly available languages. Backend voices for
-   all ten already exist, so no backend change is required for this set.
-
-## Open question: the 104-commit gap (RESOLVE BEFORE CUTTING)
-`feature/rtl-feedback` is **~104 commits / 59 feat+fix commits ahead of `main`**
-(both at build 47). A build cut from this branch is therefore a **major release**,
-and changes 1–3 above are only its most recent slice. Ahead of `main`, at least:
-
-- **Live / user-visible:** the Play mode hub (CC-MODE-HUB), the consumer/education
-  editions axis (CC-EDITIONS), the lineup swap (cut it/nl/sv/nb; add ru/ar/fa/ur;
-  Russian Cyrillic keyboard), entitlements + regional grants (CC-ENTITLEMENTS), the
-  Settings tools hub, Kid-Mode extra-attempt default, Daily auto-advance + single
-  submit control, and several web perf/boot fixes (brotli wasm, self-hosted fonts,
-  GPU orb, English-flash cloak).
-- **Present but behind OFF flags (ship dormant):** online "Spell Off", spell-aloud
-  voice input, word stories, syllable replay, attempts-shields / Climb shields.
-
-**This means:** the release note above cannot stand as the whole story if 56 is cut
-from this branch. Two honest paths:
-1. **Cut a focused build** from a narrower branch (just changes 1–3 + activation),
-   if a small update is what's intended.
-2. **Do a full-delta release note** for the major release: audit all ~59 commits,
-   classify each as live vs flag-gated, and confirm what already shipped in 48–55.
-   That is a real task, not a paragraph.
-
-Either way, whoever cuts the build confirms the source branch first. The safety
-guarantees (no RTL, no audit content) hold on any of these branches.
-
-## Sign-off
 ```
-Source branch confirmed for the cut:  ____________________
-Full-delta reconciled vs build 55:     ____________________
-User-facing changes 1–3 approved:      ____________________
-Languages activated (list):            ____________________
-Build number assigned:                 ____________________
-Approved to cut & submit (Eric):       ____________________   date: __________
+Source branch confirmed for the cut:        ____________________
+Reconciled vs what builds 48–55 shipped:     ____________________
+QA flag set confirmed (ON: say_it, photo_list, spell_aloud,
+  ghost_racing, syllable_replay, attempts_shields):  ____________________
+Languages activated (none / list):           ____________________
+Approved to cut & submit to TestFlight (Eric): __________  date: ______
 ```
