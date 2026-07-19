@@ -54,5 +54,5 @@ spelling/orthography corrections. That review is what turns a draft into a bank.
 
 ar / fa / ur / ru **and Hindi** (hi). Hindi is registered only in the audit build
 (its keyboard charset, Devanagari font, and draft bank are wired here); production
-registers no Hindi (CC-HINDI-PHASE0 D8). Its hard/expert tiers are thin (17/4) —
-the Hindi subtitle corpus is small and code-mixed; a monolingual source fills them.
+registers no Hindi (CC-HINDI-PHASE0 D8). Its bank is drawn from a monolingual Leipzig news corpus (CC BY), so all four
+tiers are full — the expert tier carries real long words (प्रधानमंत्री, राष्ट्रपति).
