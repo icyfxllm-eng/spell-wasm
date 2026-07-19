@@ -17,7 +17,9 @@
 // deploys). Falling back to cache only when the network request itself
 // fails means an actual offline visit still works, but anyone with a live
 // connection always gets the current deployed version.
-const CACHE_VERSION = "v42";
+// v44: this branch sat at v42 while build 54 shipped v43 — jump past it so clients
+// on 54/55 don't get an older cache version pushed to them (build-56 reconciliation).
+const CACHE_VERSION = "v44";
 const CACHE_NAME = `spell-shell-${CACHE_VERSION}`;
 
 const STATIC_ASSETS = [
