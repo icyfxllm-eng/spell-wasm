@@ -63,10 +63,15 @@ i18n fix** — everything else new is gated or internal.
 - **Decision docs diverged:** build-54 carries `§5.1/§5.2/§10` decision entries not
   on this branch (docs only, no build impact, but the record is split).
 
-## ⚠ Build 55 is unaccounted
-There is no `build-55` branch. Build 55 was cut from somewhere after 54; if it
-advanced past 54, some "new since 54" items above may already be in 55. **Whoever
-cut 55 must confirm its source** so 56's delta is exact.
+## Build 55 — accounted for
+Build 55 = `build-54` + a **privacy-fix hotfix** (Eric confirmed): the dictionaryapi.dev
+removal, a CSP, the SW bump to v43, and the privacy.html truthfulness edit. Every
+part of that hotfix is **already on this branch** — the privacy fix is ported
+(`def_lang` deleted, `66ea1f2`), SW is now v44 (≥ v43), and privacy.html here is
+*ahead* of 54's. The lone exception is the **CSP, which lives in the `Caddyfile`
+(web server), not the iOS bundle** — a web-deploy item, not a TestFlight regression.
+So cutting 56 from this branch regresses nothing in build 55's app, and the "new
+since 54" list above is exactly the delta over 55.
 
 ## Flag state (TestFlight build)
 `say_it, photo_list, spell_aloud, ghost_racing, syllable_replay, attempts_shields`
@@ -87,7 +92,7 @@ applied; production `cargo test --lib` green (212/0).
 ## Approvals / actions before cut
 ```
 Bump sw.js CACHE_VERSION v42 -> v44+:        DONE (94a716d)
-Confirm build 55's source branch:            ____________________
+Confirm build 55's source branch:            DONE (build-54 + privacy hotfix; on-branch)
 Reconcile Caddyfile CSP (web deploy):        ____________________
 Source branch for the cut confirmed:         ____________________
 QA flag set confirmed:                       ____________________
