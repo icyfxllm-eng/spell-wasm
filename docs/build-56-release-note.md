@@ -53,11 +53,10 @@ So the honest one-liner: **build 56's user-visible delta over 55 is the Play mod
 hub, the language-roster swap + Russian keyboard, a bigger English bank, and a hint
 i18n fix** — everything else new is gated or internal.
 
-## ⚠ Regression to fix BEFORE cutting from this branch
-- **Service-worker cache version went backwards.** Build 54 shipped `sw.js` at
-  `v43`; this branch is still at `v42`. Cutting 56 at v42 would push an older cache
-  version to clients that already have v43. **Bump `CACHE_VERSION` to `v44`+ before
-  the cut.**
+## Regression check
+- **Service-worker cache version — FIXED (`94a716d`).** Build 54 shipped `sw.js` at
+  `v43` while this branch sat at `v42`; bumped to **`v44`** so the version only moves
+  forward. (`font-selfhost-check.mjs`'s `≥ v39` gate still passes.)
 - **Web-only (not TestFlight):** build 54's `Caddyfile` added a CSP that isn't on
   this branch. It affects the `spellgame.net` web deploy, not the iOS bundle — but
   reconcile it before the next *web* deploy.
@@ -87,7 +86,7 @@ applied; production `cargo test --lib` green (212/0).
 
 ## Approvals / actions before cut
 ```
-Bump sw.js CACHE_VERSION v42 -> v44+:        ____________________
+Bump sw.js CACHE_VERSION v42 -> v44+:        DONE (94a716d)
 Confirm build 55's source branch:            ____________________
 Reconcile Caddyfile CSP (web deploy):        ____________________
 Source branch for the cut confirmed:         ____________________
