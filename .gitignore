@@ -73,3 +73,4 @@ spell-wasm/
 tools/wordpipe/sources/
 tools/wordpipe/out/
 .claude/worktrees/
+.corpus-cache/

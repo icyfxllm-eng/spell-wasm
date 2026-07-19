@@ -4,6 +4,14 @@ SpellGame's word data is generated (build-time only) from these open datasets.
 Only the emitted, filtered word lists ship in the app; the raw datasets are
 build inputs and are not redistributed.
 
+## Word-bank volume (all languages)
+- **Leipzig Corpora Collection** (wortschatz-leipzig.de) — monolingual,
+  frequency-ranked word lists (Wikipedia editions), **CC BY 4.0**. Used by
+  `scripts/build-bigbank.py` to augment the hand-curated seed words with real,
+  attested vocabulary, tiered by length. Build input only (cached under
+  `.corpus-cache/`, not committed); only the filtered word lists ship. Attribution:
+  © the respective Wikipedia contributors, via Leipzig, CC BY 4.0.
+
 ## Mandarin (zh)
 - **CC-CEDICT** — Chinese-English dictionary (definitions, pinyin).
   © MDBG, licensed **CC BY-SA 4.0**. https://www.mdbg.net/chinese/dictionary?page=cc-cedict

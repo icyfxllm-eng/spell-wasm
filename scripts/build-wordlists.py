@@ -40,7 +40,12 @@ ROOT = Path(__file__).resolve().parent.parent
 LANGS = ["en", "es", "fr", "de", "pt", "pl", "vi", "ko", "ja", "fil", "th"]
 TIERS = ["easy", "medium", "hard", "expert"]
 MIN_LEN, MAX_LEN = 2, 16
-BALANCE_TOL = 0.20
+# Tier size gate: a floor (no language starved of words) and a ceiling (sanity).
+# This replaced a tight "±20% of English" match — for a spelling game more words in
+# one language is variety, not unfairness, so the gate guards against too FEW, not
+# against differing sizes. Lets English + others grow big (build-bigbank.py) while
+# a not-yet-grown language keeps its smaller curated bank above the floor.
+MIN_PER_TIER, MAX_PER_TIER = 30, 800
 
 
 def nfc(s: str) -> str:
@@ -151,14 +156,13 @@ def build():
                 out.append(w)
             banks[(code, tier)] = out
 
-    # Gate 3: tier balance within ±20% of the English tier count.
+    # Gate 3: every language/tier has a healthy number of words — a floor (not
+    # starved) and a ceiling (no runaway). Sizes may differ across languages.
     for tier in TIERS:
-        en = len(banks[("en", tier)])
-        lo, hi = en * (1 - BALANCE_TOL), en * (1 + BALANCE_TOL)
         for code in LANGS:
             n = len(banks[(code, tier)])
-            if not (lo <= n <= hi):
-                problems.append(f"balance: {code}/{tier} has {n} words, outside ±{int(BALANCE_TOL*100)}% of en ({en}) = [{lo:.0f},{hi:.0f}]")
+            if not (MIN_PER_TIER <= n <= MAX_PER_TIER):
+                problems.append(f"size: {code}/{tier} has {n} words, outside [{MIN_PER_TIER},{MAX_PER_TIER}]")
 
     if warnings:
         print(f"build-wordlists: {len(warnings)} word(s) dropped by curation filters:", file=sys.stderr)
