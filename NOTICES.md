@@ -6,10 +6,11 @@ build inputs and are not redistributed.
 
 ## Word-bank volume (all languages)
 - **Leipzig Corpora Collection** (wortschatz-leipzig.de) — monolingual,
-  frequency-ranked word lists (Wikipedia editions), **CC BY 4.0**. Used by
-  `scripts/build-bigbank.py` (and `scripts/build-zh-bank.py` for the Mandarin
-  `cmn_wikipedia_2021_100K` list) to augment the hand-curated seed words with
-  real, attested vocabulary. Build input only (cached under `.corpus-cache/`, not
+  frequency-ranked word lists (Wikipedia/news editions), **CC BY 4.0**. Used by
+  `scripts/build-bigbank.py` (production banks), `scripts/build-zh-bank.py` (the
+  Mandarin `cmn_wikipedia_2021_100K` list), and `scripts/build-draft-banks.py`
+  (the ar/fa/ur/ru/hi audit drafts) to augment or build word banks from real,
+  attested vocabulary. Build input only (cached under `.corpus-cache/`, not
   committed); only the filtered word lists ship. Attribution: © the respective
   Wikipedia contributors, via Leipzig, CC BY 4.0.
 
