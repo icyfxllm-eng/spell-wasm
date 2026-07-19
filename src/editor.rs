@@ -3,8 +3,8 @@
 //! All string editing lives here in the Rust core — the JS layer only reports
 //! tap positions and key events and never slices the word buffer. Editing
 //! operates on **extended grapheme clusters** (UAX #29), never bytes / UTF-16 /
-//! code points, so Vietnamese `ế`, Thai vowel+tone stacks, Korean syllable
-//! blocks, and ZWJ emoji are each one indivisible cell.
+//! code points, so Vietnamese `ế`, Korean syllable blocks, and ZWJ emoji are
+//! each one indivisible cell.
 //!
 //! Normalization policy (INV-8): every inserted string is normalized to **NFC**
 //! at the boundary and then segmented into grapheme clusters. So decomposed

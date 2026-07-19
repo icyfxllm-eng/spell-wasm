@@ -7,9 +7,9 @@ import { openApp, assert, assertEq } from '../harness.mjs';
 // Active study languages only — coming-soon languages are gated from play, so
 // their on-screen keyboard is not UI-reachable. Their layouts remain in the code
 // (preserved for reactivation) and stay covered by the Rust `keyboard::tests`
-// (json_layouts_match_rust) + `hangul`/`jamo` unit tests. Active now: en + th
-// (Thai in TestFlight testing), so we assert the Thai keyboard renders too.
-const LANGS = ['en', 'th'];
+// (json_layouts_match_rust) + `hangul`/`jamo` unit tests. Only English is active
+// now, so it is the only keyboard reachable through the play UI.
+const LANGS = ['en'];
 
 export async function run(browser, base, suite) {
   for (const lang of LANGS) {

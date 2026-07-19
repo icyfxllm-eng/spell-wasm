@@ -35,14 +35,14 @@ pub fn code_for(state: &AppState, key: &str) -> String {
 /// language the app fully supports (its own keyboard + a backend TTS voice) —
 /// e.g. "ko-KR" -> "ko", "cmn-CN" -> "zh". None for browser-synth-only picks
 /// (Romanian/Indonesian/Catalan), which keep the English keyboard + browser
-/// voice. This makes an imported Korean/Japanese/Thai/… list get the matching
+/// voice. This makes an imported Korean/Japanese/… list get the matching
 /// keyboard and native audio, not just English.
 pub fn mine_lang(state: &AppState) -> Option<&'static str> {
     let code = if state.custom.speak_lang.is_empty() { "en" } else { state.custom.speak_lang.as_str() };
     match code.split(['-', '_']).next().unwrap_or("") {
         "en" => Some("en"), "es" => Some("es"), "fr" => Some("fr"), "de" => Some("de"),
         "pt" => Some("pt"), "pl" => Some("pl"), "vi" => Some("vi"),
-        "ko" => Some("ko"), "ja" => Some("ja"), "th" => Some("th"), "fil" => Some("fil"),
+        "ko" => Some("ko"), "ja" => Some("ja"), "fil" => Some("fil"),
         "cmn" | "zh" => Some("zh"),
         _ => None,
     }
@@ -51,7 +51,7 @@ pub fn mine_lang(state: &AppState) -> Option<&'static str> {
 /// My Words can route through the backend's real TTS (reliable, unlike the
 /// browser's built-in voices which may not exist at all on this machine).
 /// The backend accepts any script Python's str.isalpha() allows — including
-/// CJK/Thai/Hangul — so a word is backend-speakable when the "Speak in" language
+/// CJK/Hangul — so a word is backend-speakable when the "Speak in" language
 /// is a supported one (mine_lang) and the word carries no spaces/punctuation
 /// (which the backend rejects).
 fn backend_speakable(state: &AppState, word: &str) -> bool {

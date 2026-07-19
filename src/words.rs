@@ -12,7 +12,7 @@ pub struct LangInfo {
     pub code: &'static str,
 }
 
-pub const LANGUAGES: [(&str, LangInfo); 19] = [
+pub const LANGUAGES: [(&str, LangInfo); 18] = [
     ("en", LangInfo { name: "English", code: "en-US" }),
     ("es", LangInfo { name: "Espa\u{f1}ol", code: "es-ES" }),
     ("fr", LangInfo { name: "Fran\u{e7}ais", code: "fr-FR" }),
@@ -31,7 +31,6 @@ pub const LANGUAGES: [(&str, LangInfo); 19] = [
     ("vi", LangInfo { name: "Ti\u{1ebf}ng Vi\u{1ec7}t", code: "vi-VN" }),
     ("ko", LangInfo { name: "\u{d55c}\u{ad6d}\u{c5b4}", code: "ko-KR" }),
     ("ja", LangInfo { name: "\u{65e5}\u{672c}\u{8a9e}", code: "ja-JP" }),
-    ("th", LangInfo { name: "\u{e44}\u{e17}\u{e22}", code: "th-TH" }),
     ("fil", LangInfo { name: "Filipino", code: "fil-PH" }),
     // Mandarin: native audio for imported hanzi (the pinyin keyboard can't type
     // arbitrary hanzi, so My Words Chinese keeps the English layout).
@@ -797,7 +796,7 @@ pub fn zh_tier(tier: &str) -> &'static [&'static str] {
 
 /// Word bank for a built-in language + tier (English by default).
 pub fn tier_for(lang: &str, tier: &str) -> &'static [&'static str] {
-    use crate::consts::{AR, DE, ES, FA, FIL, FR, HI, JA, KO, PL, PT, RU, TH, UR, VI, ZH};
+    use crate::consts::{AR, DE, ES, FA, FIL, FR, HI, JA, KO, PL, PT, RU, UR, VI, ZH};
     match lang {
         // CC-LINEUP-SWAP registered these four; their content is
         // CC-NEW-LANG-CONTENT's scope and has not landed. They return an EMPTY
@@ -817,7 +816,6 @@ pub fn tier_for(lang: &str, tier: &str) -> &'static [&'static str] {
         JA => simple_tier(JA_EASY, JA_MEDIUM, JA_HARD, JA_EXPERT, tier),
         FIL => simple_tier(FIL_EASY, FIL_MEDIUM, FIL_HARD, FIL_EXPERT, tier),
         ZH => zh_tier(tier),
-        TH => simple_tier(TH_EASY, TH_MEDIUM, TH_HARD, TH_EXPERT, tier),
         _ => en_tier(tier),
     }
 }
@@ -910,7 +908,7 @@ mod tier_dump {
                 let words = super::tier_for(lang, tier);
                 let items: Vec<String> = words
                     .iter()
-                    // raw UTF-8, JSON-escape only " and \ (keep CJK/Thai literal)
+                    // raw UTF-8, JSON-escape only " and \ (keep CJK scripts literal)
                     .map(|w| format!("\"{}\"", w.replace('\\', "\\\\").replace('"', "\\\"")))
                     .collect();
                 let comma = if ti + 1 < tiers.len() { "," } else { "" };

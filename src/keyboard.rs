@@ -95,15 +95,6 @@ const FIL: Layout = Layout { rows: &["qwertyuiop", "asdfghjklñ", "zxcvbnm-"], l
 // ü on long-press v (v→ü is the standard pinyin-input convention, also folded in
 // the normalizer). The typed answer is pinyin; audio + reveal are the hanzi.
 const ZH: Layout = Layout { rows: &["qwertyuiop", "asdfghjkl", "zxcvbnm", "12345"], long_press: &[('v', "ü")] };
-// Thai (Kedmanee-inspired): consonants, then pre-posed vowels, then above/below
-// vowels and tone marks (rendered on a dotted circle via is_combining). No
-// composition engine — keys emit code points, comparison is NFC exact-match, and
-// backspace removes one code point (correct Thai behaviour). Pre-posed vowels
-// (เ แ โ ใ ไ) are typed before the consonant: visual order = storage order.
-const TH: Layout = Layout {
-    rows: &["กขคฆงจชญฑฒ", "ณดตถทธนบปผ", "ฝพฟภมยรลวศ", "ษสหฬอเแโใไ", "ะาำัิีึืุู", "็่้๊๋์"],
-    long_press: &[],
-};
 
 // --- RTL scripts (CC-RTL F5, charset half only) ------------------------------
 //
@@ -178,7 +169,6 @@ fn layout_for(locale: &str) -> &'static Layout {
         "ja" => &JA,
         "fil" => &FIL,
         "zh" => &ZH,
-        "th" => &TH,
         // CC-RTL F5 charset half. Returning the right layout (not the &EN
         // fallback) keeps the Rust charset gate consistent with the JSON one the
         // pipeline reads; RTL input behaviour is still unimplemented, but these
@@ -199,7 +189,7 @@ fn keyboard_locale(app: &App) -> String {
         return s.lang.clone();
     }
     // My Words: match the imported list's "Speak in" language so the right
-    // keyboard shows (Korean Dubeolsik, kana grid, Thai Kedmanee, …). Mandarin
+    // keyboard shows (Korean Dubeolsik, kana grid, …). Mandarin
     // is the exception — its keyboard types pinyin, not the hanzi a user imports,
     // so My Words Chinese stays on the English layout. Unsupported/browser-only
     // picks also fall back to English.
@@ -216,12 +206,10 @@ pub fn active_is_korean(app: &App) -> bool {
     keyboard_locale(app) == "ko"
 }
 
-/// True for characters that are combining marks (Thai vowels/tone marks, etc.),
-/// which need a dotted-circle placeholder to be visible on a keycap.
+/// True for characters that are combining marks, which need a dotted-circle
+/// placeholder to be visible on a keycap.
 fn is_combining(ch: char) -> bool {
-    matches!(ch as u32,
-        0x0E31 | 0x0E34..=0x0E3A | 0x0E47..=0x0E4E | // Thai above/below vowels + tone marks
-        0x0300..=0x036F)                              // generic combining diacriticals
+    matches!(ch as u32, 0x0300..=0x036F) // generic combining diacriticals
 }
 
 pub fn setup(app: &App) {
@@ -249,8 +237,8 @@ fn key_button(ch: char, punct: bool, accents: &str) -> String {
         '-' => "hyphen".to_string(),
         c => c.to_string(),
     };
-    // Thai/other combining marks would render invisibly on a bare keycap, so
-    // show them on a dotted-circle placeholder (◌ + mark), e.g. ◌ิ ◌่.
+    // Combining marks would render invisibly on a bare keycap, so show them on a
+    // dotted-circle placeholder (◌ + mark), e.g. ◌́ ◌̀.
     let face = if is_combining(ch) {
         format!("\u{25cc}{ch}")
     } else if ch.is_alphabetic() {
@@ -635,7 +623,6 @@ mod tests {
             ("ja", include_str!("../assets/keyboards/ja.json")),
             ("fil", include_str!("../assets/keyboards/fil.json")),
             ("zh", include_str!("../assets/keyboards/zh.json")),
-            ("th", include_str!("../assets/keyboards/th.json")),
             ("ar", include_str!("../assets/keyboards/ar.json")),
             ("fa", include_str!("../assets/keyboards/fa.json")),
             ("ur", include_str!("../assets/keyboards/ur.json")),

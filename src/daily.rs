@@ -359,7 +359,7 @@ mod tests {
     /// consecutive dailies, and yesterday never bleeds into today.
     #[test]
     fn daily_no_repeat() {
-        let langs = ["en", "es", "fr", "de", "pt", "pl", "vi", "ko", "ja", "th", "fil", "zh"];
+        let langs = ["en", "es", "fr", "de", "pt", "pl", "vi", "ko", "ja", "fil", "zh"];
         for &lang in &langs {
             for kid in [false, true] {
                 let arc: &[(&str, usize)] = if kid { &KID_ARC } else { &ARC };
@@ -417,7 +417,7 @@ mod tests {
         let five = build_words_from_seed("en", "hard", 777, 5);
         assert!(five.len() <= 5);
         // Determinism holds for every locale (gated ones fall back to English).
-        for lang in ["en", "es", "fr", "de", "th", "ja", "zh"] {
+        for lang in ["en", "es", "fr", "de", "ja", "zh"] {
             let x = build_words_from_seed(lang, "easy", 42, 10);
             let y = build_words_from_seed(lang, "easy", 42, 10);
             assert_eq!(x, y, "{lang}: seed run must be deterministic");
@@ -427,7 +427,7 @@ mod tests {
     /// I2: 400-day run is byte-identical across two independent computations.
     #[test]
     fn daily_deterministic_400_days() {
-        for &lang in &["en", "de", "th", "ja", "zh"] {
+        for &lang in &["en", "de", "ja", "zh"] {
             for day in 0..400i64 {
                 let date = date_for(day);
                 let (_, a) = build_words(lang, &date, false);

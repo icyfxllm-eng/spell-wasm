@@ -25,7 +25,7 @@ use std::cell::{Cell, RefCell};
 
 use wasm_bindgen_futures::spawn_local;
 
-use crate::consts::{EN, ES, TH};
+use crate::consts::{EN, ES};
 use crate::native_lang::{self, ListenOutcome};
 use crate::App;
 
@@ -280,11 +280,7 @@ fn pick_word(lang: &str) -> String {
 /// (words::tier_for's `_ => en_tier(tier)`).
 fn resolved_lang(lang: &str) -> &str {
     match lang {
-        // TH is retained here but is unreachable: Thai was cut from the registry
-        // (5fc69ff), so `lang` can never be "th" — the picker only offers
-        // BUILTIN_LANGS. Left as-is rather than cleaned up in an RTL commit;
-        // `say_it_is_never_reachable_for_a_cut_language` pins that it is dead.
-        EN | ES | TH => lang,
+        EN | ES => lang,
         _ => EN,
     }
 }
@@ -342,18 +338,6 @@ mod tests {
                 "asking for {asked} yields an English word, which must render LTR"
             );
         }
-    }
-
-    /// The TH arm of `resolved_lang` is dead: Thai was cut from the registry
-    /// (5fc69ff) so no picker can produce it. Pinned rather than deleted so that
-    /// reinstating Thai is a deliberate act that trips this test, instead of
-    /// quietly reanimating a branch nobody has looked at since the cut.
-    #[test]
-    fn say_it_is_never_reachable_for_a_cut_language() {
-        assert!(
-            !crate::consts::is_builtin_lang(TH),
-            "Thai is back in the registry — say_it's TH arm is live again; re-verify its pool"
-        );
     }
 
     #[test]

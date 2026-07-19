@@ -6,7 +6,7 @@
 //! policy), asserting the invariants after every operation. Insert inputs are
 //! drawn from a corpus of COMPLETE grapheme clusters — random ASCII plus the
 //! per-language fixtures — so the tests exercise real multi-codepoint clusters
-//! (Vietnamese ế, Korean 학, Thai กำ, ZWJ emoji) rather than orphan combining
+//! (Vietnamese ế, Korean 학, ZWJ emoji) rather than orphan combining
 //! marks, which the frontend never emits.
 
 use proptest::prelude::*;
@@ -57,7 +57,6 @@ const CLUSTERS: &[&str] = &[
     "학", "교", "없", "었", "다", // ko (incl. double-final 없)
     "し", "ん", "か", "漢", "字", // ja (kana + kanji)
     "你", "好", "吗", // zh
-    "โรงเรียน", "น้ำ", "เรียน", // th (whole words — no orphan combining marks)
     "👍", "👨\u{200d}👩\u{200d}👧\u{200d}👦", // emoji + ZWJ family
 ];
 

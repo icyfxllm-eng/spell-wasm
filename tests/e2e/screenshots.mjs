@@ -22,7 +22,7 @@ mkdirSync(OUT, { recursive: true });
 // partial prefs JSON fails to deserialize and silently falls back to kid:false.
 const AGE_FULL = JSON.stringify({ verdict: 'full', checkedAt: 1700000000 });
 const AGE_KID = JSON.stringify({ verdict: 'kid', checkedAt: 1700000000 });
-const LANGS = ['en', 'de', 'th', 'ja'];
+const LANGS = ['en', 'de', 'ja'];
 const MODES = [
   { key: 'std', age: AGE_FULL },
   { key: 'kid', age: AGE_KID },

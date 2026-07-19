@@ -24,7 +24,7 @@ use unicode_normalization::UnicodeNormalization;
 
 /// Per-language profanity lists (LDNOOBW-sourced) for screening user-imported
 /// My Words in every language — the English `BANNED_*` sets above only catch
-/// Latin/leet English, so without this a non-English (or CJK/Thai) import could
+/// Latin/leet English, so without this a non-English (or CJK) import could
 /// smuggle in slurs, which matters most in Kid Mode. Matched as exact whole
 /// words (NFC + lowercased) against the union of all languages, so a term that's
 /// profane in ANY language is blocked regardless of the import's declared voice.
@@ -125,7 +125,7 @@ fn normalize(word: &str) -> String {
 /// English `normalize` — WITHOUT stripping accents or restricting to a–z. This is
 /// what makes it safe for the per-language layer across every script: accented
 /// Latin keeps its accents (so Vietnamese lồn≠lon, the exact disambiguation the
-/// vi seed relies on), and CJK/Thai pass through untouched (the leet fold is a
+/// vi seed relies on), and CJK scripts pass through untouched (the leet fold is a
 /// no-op on them). It only (1) folds digit/symbol leet to letters and (2) drops
 /// hyphens/apostrophes/spaces/punctuation, so "g-a-g-o", "gag0", and "put@"
 /// collapse to the bare term for matching.
@@ -164,7 +164,7 @@ pub fn is_blocked(word: &str) -> bool {
         }
     }
     // Per-language layer, two passes against the union of every language's list
-    // (the a-z fold above can't see non-English/CJK/Thai at all):
+    // (the a-z fold above can't see non-English/CJK scripts at all):
     //  1) exact whole-word match (NFC + lowercased) — the baseline.
     let raw: String = word.trim().nfc().collect::<String>().to_lowercase();
     if !raw.is_empty() && extra_blocklist().contains(&raw) {
@@ -298,8 +298,5 @@ mod tests {
         for w in ["kanker", "pedał", "hora", "ibne", "クソ", "chó đẻ", "figlio di puttana"] {
             assert!(is_blocked(w), "curated term '{w}' should be blocked");
         }
-        // Dual-use animal word deliberately kept OFF the seed (it's a curated
-        // Thai spelling word — "buffalo"), so it must stay addable.
-        assert!(!is_blocked("ควาย"), "Thai 'buffalo' must stay addable");
     }
 }

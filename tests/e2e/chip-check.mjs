@@ -1,4 +1,4 @@
-// Setup-chip one-line spot-check across all 17 locales at the smallest supported
+// Setup-chip one-line spot-check across all 16 locales at the smallest supported
 // width (375px), in the WORST case per locale: native-language word source +
 // Expert difficulty + timed. If the nowrap chip text fits without overflow here,
 // every lighter selection fits too. Reports overflow per locale + saves a tight
@@ -10,7 +10,7 @@ import { startServer, launch } from './harness.mjs';
 const OUT = join('tests/e2e/shots', 'chip');
 mkdirSync(OUT, { recursive: true });
 const AGE = JSON.stringify({ verdict: 'full', checkedAt: 1700000000 });
-const LOCALES = ['en', 'es', 'fr', 'de', 'pt', 'it', 'nl', 'pl', 'sv', 'nb', 'tr', 'vi', 'ko', 'ja', 'fil', 'zh', 'th'];
+const LOCALES = ['en', 'es', 'fr', 'de', 'pt', 'it', 'nl', 'pl', 'sv', 'nb', 'tr', 'vi', 'ko', 'ja', 'fil', 'zh'];
 
 const { server, base } = await startServer(8132);
 const browser = await launch();

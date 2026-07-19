@@ -98,7 +98,7 @@ export async function run(browser, base, suite) {
     } finally { await ctx.close(); }
   });
 
-  for (const [lang, tag] of [['ko', '철자'], ['ja', 'つづ'], ['zh', '拼'], ['th', 'สะกด'], ['fil', 'baybayin']]) {
+  for (const [lang, tag] of [['ko', '철자'], ['ja', 'つづ'], ['zh', '拼'], ['fil', 'baybayin']]) {
     await suite.test(`menu: selecting ${lang} switches UI chrome`, async () => {
       const { ctx, page } = await openApp(browser, base, { lang });
       try {

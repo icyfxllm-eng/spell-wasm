@@ -44,7 +44,7 @@ fn lists() -> &'static HashMap<&'static str, HashSet<String>> {
         // list yet — their word lists are CC-NEW-LANG-CONTENT's scope, and a
         // language with no list simply has an empty set here (the gate still
         // runs; it just has nothing to drop).
-        kid_lists!["en", "es", "fr", "de", "pt", "pl", "vi", "ko", "ja", "zh", "th", "fil"]
+        kid_lists!["en", "es", "fr", "de", "pt", "pl", "vi", "ko", "ja", "zh", "fil"]
     })
 }
 
@@ -96,8 +96,8 @@ mod tests {
 
     #[test]
     fn empty_list_allows_everything() {
-        // th has no entries yet → nothing filtered.
-        assert!(kid_allowed("th", "\u{0e01}\u{0e1a}")); // กบ
+        // A language with no kid list → nothing filtered.
+        assert!(kid_allowed("xx", "hello"));
     }
 
     #[test]

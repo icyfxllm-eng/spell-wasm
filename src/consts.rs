@@ -34,7 +34,6 @@ pub const KO: &str = "ko";
 pub const JA: &str = "ja";
 pub const FIL: &str = "fil";
 pub const ZH: &str = "zh";
-pub const TH: &str = "th";
 /// CC-LINEUP-SWAP: Russian (ru-RU). The only new language that can reach the
 /// current audit round — left-to-right, so nothing gates it but its content.
 pub const RU: &str = "ru";
@@ -316,13 +315,6 @@ pub const ACHIEVEMENTS: [Achievement; 7] = [
     Achievement { id: "cleared", ic: "\u{2728}", nm: "Clean Slate", desc: "Clear all your missed words." },
     Achievement { id: "importer", ic: "\u{1F4E5}", nm: "Own Words", desc: "Import your own word list." },
 ];
-
-#[cfg(test)]
-mod tests {
-    use super::*;
-
-
-}
 
 #[cfg(test)]
 mod registry_tests {

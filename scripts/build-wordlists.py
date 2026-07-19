@@ -33,11 +33,11 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parent.parent
 # CC-LINEUP-SWAP (2026-07-16): it/nl/sv/nb cut — their curated sources are
 # archived under archive/wordlists/<code>/, so the pipeline can no longer build
-# them. "th" stays listed though Thai is cut from the registry (5fc69ff): its
-# sources are still here and dormant, exactly like its locale catalog.
+# them. Thai (th) is fully removed from the program — its sources, locale
+# catalog, and registry entry are all gone, so it is not listed here.
 # ru/ar/fa/ur are NOT here yet — their sources are CC-NEW-LANG-CONTENT's scope,
 # and listing them before the sources land would just fail the build.
-LANGS = ["en", "es", "fr", "de", "pt", "pl", "vi", "ko", "ja", "fil", "th"]
+LANGS = ["en", "es", "fr", "de", "pt", "pl", "vi", "ko", "ja", "fil"]
 TIERS = ["easy", "medium", "hard", "expert"]
 MIN_LEN, MAX_LEN = 2, 16
 # Tier size gate: a floor (no language starved of words) and a ceiling (sanity).
@@ -133,9 +133,8 @@ def build():
                 where = f"{code}/{tier}: {w!r}"
                 # Curation filters (drop + warn): non-letters (fr apostrophe/hyphen
                 # forms, §3.3) and the length cap (de/nl/sv compounds, §3.3).
-                # Filipino keeps the hyphen; Thai has combining vowels/tone marks
-                # (U+0E00–0E7F) that aren't Unicode "alphabetic".
-                if not all(c.isalpha() or (code == "fil" and c == "-") or (code == "th" and 0x0E00 <= ord(c) <= 0x0E7F) for c in w):
+                # Filipino keeps the hyphen.
+                if not all(c.isalpha() or (code == "fil" and c == "-") for c in w):
                     warnings.append(f"{where} — dropped (non-alphabetic)")
                     continue
                 if not (min_len <= len(w) <= MAX_LEN):
