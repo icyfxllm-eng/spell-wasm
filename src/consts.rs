@@ -153,16 +153,16 @@ use Direction::{Ltr, Rtl};
 /// * [`direction`] — which way does it READ? What the play surface sets `dir` from.
 const LANGS_BASE: [(&str, &str, LangStatus, Direction); 15] = [
     (EN, "English", Active, Ltr),
-    (ES, "Espa\u{f1}ol", ComingSoon, Ltr),
-    (FR, "Fran\u{e7}ais", ComingSoon, Ltr),
-    (DE, "Deutsch", ComingSoon, Ltr),
-    (PT, "Portugu\u{ea}s", ComingSoon, Ltr),
-    (PL, "Polski", ComingSoon, Ltr),
-    (VI, "Ti\u{1ebf}ng Vi\u{1ec7}t", ComingSoon, Ltr),
-    (KO, "\u{d55c}\u{ad6d}\u{c5b4}", ComingSoon, Ltr),
-    (JA, "\u{65e5}\u{672c}\u{8a9e}", ComingSoon, Ltr),
-    (FIL, "Filipino", ComingSoon, Ltr),
-    (ZH, "\u{4e2d}\u{6587}", ComingSoon, Ltr),
+    (ES, "Espa\u{f1}ol", Active, Ltr),
+    (FR, "Fran\u{e7}ais", Active, Ltr),
+    (DE, "Deutsch", Active, Ltr),
+    (PT, "Portugu\u{ea}s", Active, Ltr),
+    (PL, "Polski", Active, Ltr),
+    (VI, "Ti\u{1ebf}ng Vi\u{1ec7}t", Active, Ltr),
+    (KO, "\u{d55c}\u{ad6d}\u{c5b4}", Active, Ltr),
+    (JA, "\u{65e5}\u{672c}\u{8a9e}", Active, Ltr),
+    (FIL, "Filipino", Active, Ltr),
+    (ZH, "\u{4e2d}\u{6587}", Active, Ltr),
     (RU, "\u{420}\u{443}\u{441}\u{441}\u{43a}\u{438}\u{439}", ComingSoon, Ltr),
     (AR, "\u{627}\u{644}\u{639}\u{631}\u{628}\u{64a}\u{629}", ComingSoon, Rtl),
     (FA, "\u{641}\u{627}\u{631}\u{633}\u{6cc}", ComingSoon, Rtl),
@@ -323,16 +323,22 @@ mod registry_tests {
     // languages so they can be reviewed, so this holds only with the feature off.
     #[cfg(not(feature = "audit_preview"))]
     #[test]
-    fn only_en_active() {
-        // English is the only Active language. Everything else — content ready but
-        // held for the English-only App Store — stays Coming Soon until Eric
-        // reactivates it.
-        assert!(is_active_lang("en"));
-        assert!(!is_active_lang("es"), "es stays gated (English-only App Store launch)");
-        for (code, _, _, _) in BUILTIN_LANGS {
-            if code != "en" {
-                assert!(!is_active_lang(code), "{code} should be coming_soon");
-            }
+    fn active_languages_are_english_and_the_ten_ltr() {
+        // Build-56 activation: English + the ten content-ready LTR/CJK languages are
+        // Active. ru (empty production bank — content is audit-draft only) and
+        // ar/fa/ur (RTL, gated by RTL_SUPPORTED) stay ComingSoon.
+        let active: Vec<&str> = BUILTIN_LANGS
+            .iter()
+            .filter(|(c, _, _, _)| is_active_lang(c))
+            .map(|(c, _, _, _)| *c)
+            .collect();
+        assert_eq!(
+            active,
+            vec!["en", "es", "fr", "de", "pt", "pl", "vi", "ko", "ja", "fil", "zh"],
+            "en + the ten content-ready languages are active"
+        );
+        for gated in ["ru", "ar", "fa", "ur"] {
+            assert!(!is_active_lang(gated), "{gated} stays ComingSoon");
         }
     }
 
