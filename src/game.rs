@@ -1295,6 +1295,15 @@ fn finalize_incorrect_ex(app: &App, glyph: &str, prefix: &str, feedback_class: &
         dom::set_html("feedback", &format!("{}<span class=\"reveal\">{}</span>", prefix, dom::escape_html(&reveal)));
         dom::el("feedback").set_class_name(feedback_class);
     }
+    // AUDIT-PREVIEW ONLY: expose the just-revealed word + its language on the DOM
+    // so the injected flag widget (scripts/build-web-audit.sh) can record a native
+    // auditor's red-pen cut. cfg-gated — production never carries this attribute.
+    #[cfg(feature = "audit_preview")]
+    {
+        let el = dom::el("feedback");
+        let _ = el.set_attribute("data-audit-word", &reveal);
+        let _ = el.set_attribute("data-audit-lang", &cur_lang);
+    }
     show_meaning(app, word, cur_lang);
     if versus_on {
         versus_end_turn(app);

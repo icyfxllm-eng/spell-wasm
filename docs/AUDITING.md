@@ -40,15 +40,33 @@ help. They are corpus-attested and correctly spelled, but nothing has judged:
 The auditor's output is a red-pen pass: which words to drop, which to keep, any
 spelling/orthography corrections. That review is what turns a draft into a bank.
 
+## Flagging words as you play
+
+The build carries a floating **⚑ Flag word** control (bottom-right). After a word
+is revealed, tap it to mark that word for cutting; **Flags** opens the list, lets
+you remove mistakes, and **Export** downloads `audit-flags.txt`. Send that file
+back. It is machine-usable, not prose:
+
+```sh
+python3 scripts/ingest-audit-flags.py audit-flags.txt   # -> assets/words/exclusions/<lang>.txt
+python3 scripts/build-draft-banks.py                     # drops the flagged words from the drafts
+```
+
+The exclusion list is the SAME one production honours, so a flagged word is gone
+everywhere on the next rebuild — draft and, once promoted, production. The widget
+lives only in this bundle (injected by `build-web-audit.sh`); it reads the word
+from a `data-audit-word` attribute set only under the `audit_preview` feature.
+
 ## What must be true (and is)
 
 - **Nothing here ships.** The production build has `audit_preview` off, so
   `RTL_SUPPORTED` is false, the languages stay gated, and the draft banks are not
   compiled in. Verified at the byte level: the draft words are absent from the
   production wasm.
-- **The draft content is copyleft** (OpenSubtitles / CC BY-SA — see
-  `assets/words-draft/README.md`). Using it in a non-shipping audit build sidesteps
-  the §4 copyleft *shipping* decision; shipping any of it still needs that call.
+- **The draft content is CC BY** (Leipzig Corpora — see
+  `assets/words-draft/README.md`). Attribution-only, no share-alike: promoting a
+  reviewed draft to production needs only the attribution already in `NOTICES.md`,
+  not a §4 copyleft decision. (The earlier OpenSubtitles CC BY-SA drafts did.)
 
 ## Scope
 

@@ -46,6 +46,18 @@ except SystemExit:
 corpus_words = _bb.corpus_words
 reachable_chars = _bb.reachable_chars
 
+# Also reuse the exclusion machinery so a native auditor's flagged words (folded
+# into assets/words/exclusions/<lang>.txt by ingest-audit-flags.py) drop out of the
+# drafts on the next rebuild — the same list production honours.
+_wspec = importlib.util.spec_from_file_location("bw2", os.path.join(ROOT, "scripts", "build-wordlists.py"))
+_bw = importlib.util.module_from_spec(_wspec)
+try:
+    _wspec.loader.exec_module(_bw)
+except SystemExit:
+    pass
+load_exclusions = _bw.load_exclusions
+is_excluded = _bw.is_excluded
+
 # Arabic diacritics an unvocalized keyboard can't type: tatweel (kashida, a pure
 # elongation glyph), the harakat/tanwin/shadda/sukun range, and superscript alef.
 # Stripped so a vocalized corpus spelling collapses to the bare orthography the
@@ -69,11 +81,12 @@ def letters(w):
 
 def build(lang, target):
     reach = reachable_chars(lang)
+    roots, exact = load_exclusions(lang)
     banks = {t: [] for t in TIERS}
     seen = set()
     for w0, _ in corpus_words(SOURCES[lang]):
         w = fold(lang, w0)
-        if not w or w in seen or any(c not in reach for c in w):
+        if not w or w in seen or any(c not in reach for c in w) or is_excluded(w, roots, exact):
             continue
         n = letters(w)
         tier = next((t for t, (lo, hi) in TIER_LEN.items() if lo <= n <= hi), None)
