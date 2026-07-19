@@ -7,10 +7,11 @@ build inputs and are not redistributed.
 ## Word-bank volume (all languages)
 - **Leipzig Corpora Collection** (wortschatz-leipzig.de) — monolingual,
   frequency-ranked word lists (Wikipedia editions), **CC BY 4.0**. Used by
-  `scripts/build-bigbank.py` to augment the hand-curated seed words with real,
-  attested vocabulary, tiered by length. Build input only (cached under
-  `.corpus-cache/`, not committed); only the filtered word lists ship. Attribution:
-  © the respective Wikipedia contributors, via Leipzig, CC BY 4.0.
+  `scripts/build-bigbank.py` (and `scripts/build-zh-bank.py` for the Mandarin
+  `cmn_wikipedia_2021_100K` list) to augment the hand-curated seed words with
+  real, attested vocabulary. Build input only (cached under `.corpus-cache/`, not
+  committed); only the filtered word lists ship. Attribution: © the respective
+  Wikipedia contributors, via Leipzig, CC BY 4.0.
 
 ## Mandarin (zh)
 - **CC-CEDICT** — Chinese-English dictionary (definitions, pinyin).
@@ -19,6 +20,10 @@ build inputs and are not redistributed.
   Used as the educator-graded tier anchor. See the repository for its license.
 - **Unihan Database** — character stroke counts / script metadata.
   © Unicode, Inc., **Unicode License**. https://www.unicode.org/reports/tr38/
+- **pypinyin** (build tool) — generates the tone-number pinyin answer for each
+  corpus hanzi. MIT. Not shipped; only its output (the pinyin string) is.
+- **OpenCC** (build tool) — normalizes corpus hanzi to Simplified before pinyin.
+  Apache-2.0. Not shipped; only the Simplified output is.
 
 Derived works (definitions shown in-app) are shared under CC BY-SA 4.0 where
 CC-CEDICT-derived, per that license's share-alike terms.
