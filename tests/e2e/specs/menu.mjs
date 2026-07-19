@@ -35,8 +35,11 @@ const KNOWN_ENDONYMS = {
 function registryEndonyms() {
   const root = join(dirname(fileURLToPath(import.meta.url)), '..', '..', '..');
   const src = readFileSync(join(root, 'src', 'consts.rs'), 'utf8');
-  const table = (src.match(/pub const BUILTIN_LANGS[^=]*=\s*\[([\s\S]*?)\n\];/) || [])[1];
-  assert(table, 'could not find BUILTIN_LANGS in src/consts.rs — did the registry move?');
+  // The production lineup lives in LANGS_BASE (BUILTIN_LANGS = LANGS_BASE in prod;
+  // the audit build appends Hindi). LANGS_BASE is the array literal to read — it is
+  // exactly what the shipped menu renders.
+  const table = (src.match(/const LANGS_BASE[^=]*=\s*\[([\s\S]*?)\n\];/) || [])[1];
+  assert(table, 'could not find LANGS_BASE in src/consts.rs — did the registry move?');
   const codes = Object.fromEntries(
     [...src.matchAll(/pub const ([A-Z]+): &str = "([a-z-]+)";/g)].map((m) => [m[1], m[2]])
   );

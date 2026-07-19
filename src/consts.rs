@@ -44,6 +44,10 @@ pub const AR: &str = "ar";
 pub const FA: &str = "fa";
 /// CC-LINEUP-SWAP: Urdu (ur-PK). RTL.
 pub const UR: &str = "ur";
+/// CC-HINDI-PHASE0: Hindi (Devanagari, LTR). Registered ONLY in the audit-preview
+/// build — D8 grants no authority to register it in production, so BUILTIN_LANGS
+/// below includes it under `audit_preview` and nowhere else.
+pub const HI: &str = "hi";
 
 /// Built-in word-source languages: (lang code, display name). Adding a language
 /// here + its word bank in `words.rs` + a voice in the backend's `LANG_VOICES`
@@ -148,7 +152,7 @@ use Direction::{Ltr, Rtl};
 ///   Rtl and does not join. This decides whether the answer surface may split a
 ///   word into per-letter elements.
 /// * [`direction`] — which way does it READ? What the play surface sets `dir` from.
-pub const BUILTIN_LANGS: [(&str, &str, LangStatus, Direction); 15] = [
+const LANGS_BASE: [(&str, &str, LangStatus, Direction); 15] = [
     (EN, "English", Active, Ltr),
     (ES, "Espa\u{f1}ol", ComingSoon, Ltr),
     (FR, "Fran\u{e7}ais", ComingSoon, Ltr),
@@ -164,6 +168,20 @@ pub const BUILTIN_LANGS: [(&str, &str, LangStatus, Direction); 15] = [
     (AR, "\u{627}\u{644}\u{639}\u{631}\u{628}\u{64a}\u{629}", ComingSoon, Rtl),
     (FA, "\u{641}\u{627}\u{631}\u{633}\u{6cc}", ComingSoon, Rtl),
     (UR, "\u{627}\u{631}\u{62f}\u{648}", ComingSoon, Rtl),
+];
+
+/// Production registry — the base 15, unchanged.
+#[cfg(not(feature = "audit_preview"))]
+pub const BUILTIN_LANGS: [(&str, &str, LangStatus, Direction); 15] = LANGS_BASE;
+
+/// Audit-preview registry — the base 15 plus Hindi (हिन्दी), so it can be reviewed.
+/// Built by referencing LANGS_BASE, not re-listing it, so the two can't drift.
+#[cfg(feature = "audit_preview")]
+pub const BUILTIN_LANGS: [(&str, &str, LangStatus, Direction); 16] = [
+    LANGS_BASE[0], LANGS_BASE[1], LANGS_BASE[2], LANGS_BASE[3], LANGS_BASE[4],
+    LANGS_BASE[5], LANGS_BASE[6], LANGS_BASE[7], LANGS_BASE[8], LANGS_BASE[9],
+    LANGS_BASE[10], LANGS_BASE[11], LANGS_BASE[12], LANGS_BASE[13], LANGS_BASE[14],
+    (HI, "\u{939}\u{93f}\u{928}\u{94d}\u{926}\u{940}", ComingSoon, Ltr),
 ];
 
 /// THE direction accessor (CC-RTL D3). The play surface sets `dir` from this and
@@ -331,7 +349,9 @@ mod registry_tests {
     /// deliberately.
     #[test]
     fn registry_is_the_swapped_lineup_of_15() {
-        let codes: Vec<&str> = BUILTIN_LANGS.iter().map(|(c, _, _, _)| *c).collect();
+        // The lineup is fixed on LANGS_BASE (15) regardless of build; BUILTIN_LANGS
+        // equals it in production and appends Hindi only under audit_preview.
+        let codes: Vec<&str> = LANGS_BASE.iter().map(|(c, _, _, _)| *c).collect();
         assert_eq!(codes.len(), 15, "15 languages: the swap's 16 minus Turkish (CC-HINDI-PHASE0 D1)");
         assert_eq!(
             codes,
@@ -342,6 +362,12 @@ mod registry_tests {
         for gone in ["no", "nb", "sv", "nl", "it", "th", "tr"] {
             assert!(!codes.contains(&gone), "{gone} is cut from the registry");
         }
+        // Production ships exactly the base; audit-preview adds Hindi as the 16th.
+        assert_eq!(BUILTIN_LANGS.len(), if cfg!(feature = "audit_preview") { 16 } else { 15 });
+        #[cfg(feature = "audit_preview")]
+        assert_eq!(BUILTIN_LANGS[15].0, "hi", "Hindi is the audit-only 16th entry");
+        #[cfg(not(feature = "audit_preview"))]
+        assert!(!BUILTIN_LANGS.iter().any(|(c, _, _, _)| *c == "hi"), "production registers no Hindi (D8)");
     }
 
     /// CC-LINEUP-SWAP D2 — exactly ar/fa/ur are RTL, and (in production) none can be

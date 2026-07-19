@@ -797,7 +797,7 @@ pub fn zh_tier(tier: &str) -> &'static [&'static str] {
 
 /// Word bank for a built-in language + tier (English by default).
 pub fn tier_for(lang: &str, tier: &str) -> &'static [&'static str] {
-    use crate::consts::{AR, DE, ES, FA, FIL, FR, JA, KO, PL, PT, RU, TH, UR, VI, ZH};
+    use crate::consts::{AR, DE, ES, FA, FIL, FR, HI, JA, KO, PL, PT, RU, TH, UR, VI, ZH};
     match lang {
         // CC-LINEUP-SWAP registered these four; their content is
         // CC-NEW-LANG-CONTENT's scope and has not landed. They return an EMPTY
@@ -806,7 +806,7 @@ pub fn tier_for(lang: &str, tier: &str) -> &'static [&'static str] {
         // wearing its name. Silent English fallback is how you ship "Russian"
         // that spells "bed"; the keyboard charset test catches it precisely
         // because this arm is explicit.
-        RU | AR | FA | UR => audit_draft_or_empty(lang, tier),
+        RU | AR | FA | UR | HI => audit_draft_or_empty(lang, tier),
         ES => es_tier(tier),
         FR => simple_tier(FR_EASY, FR_MEDIUM, FR_HARD, FR_EXPERT, tier),
         DE => simple_tier(DE_EASY, DE_MEDIUM, DE_HARD, DE_EXPERT, tier),

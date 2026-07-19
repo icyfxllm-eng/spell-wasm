@@ -503,6 +503,11 @@ mod tests {
     }
 
     // ---- country map sanity (Rust side; the CI script is the real gate) ----
+    // Production only: the regional-grant map is a shipping-entitlements concept.
+    // audit_preview adds review-only languages (Hindi) that have no home country
+    // and take part in no grant, so "every non-en lang has a country" is a
+    // not-audit_preview invariant.
+    #[cfg(not(feature = "audit_preview"))]
     #[test]
     fn country_map_grants_only_shipped_langs_and_covers_non_english() {
         let map = country_language_map();

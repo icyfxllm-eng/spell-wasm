@@ -146,6 +146,24 @@ const UR: Layout = Layout {
     rows: &["ضصثقفغعہخحجچ", "شسیبلاتنمکگ", "ظطزرذدپوژء"],
     long_press: &[('ت', "ٹة"), ('د', "ڈ"), ('ر', "ڑ"), ('ن', "ں"), ('ہ', "ھۃ"), ('ی', "ےئ"), ('ا', "آأإ"), ('و', "ؤ")],
 };
+// Devanagari for Hindi (CC-HINDI-PHASE0 groundwork — the input-side companion to
+// akshara.rs; a CHARSET declaration, not a registered language). Covers the full
+// Hindi Devanagari inventory: independent vowels, consonants, matras, virama,
+// nuqta and the anusvara/candrabindu/visarga signs — so every NFC codepoint of a
+// Hindi word is typeable. Aspirates sit on long-press of their unaspirated base
+// (क->ख), the Devanagari-phonetic convention.
+//
+// D4: keys are base codepoints only; the precomposed nuqta letters U+0958–095F
+// (which devanagari-check.mjs rejects) never appear — क़ is typed क + ़ (U+093C).
+// Unregistered like ru.json's era: Hindi is not in BUILTIN_LANGS, so this renders
+// nowhere yet; it exists so the word-list gate has an inventory when content lands.
+// LAYOUT ERGONOMICS (which char on which long-press) want a native/expert pass;
+// the CHARSET (coverage) is asserted complete by rtl-adjacent tests below.
+const HI: Layout = Layout {
+    rows: &["अआइईउऊएऐओऔ", "कगङचजञटडण", "तदनपबमयरलव", "शषसहळ", "ािीुूेैोौ", "ं़्ःँ"],
+    long_press: &[('क', "ख"), ('ग', "घ"), ('च', "छ"), ('ज', "झ"), ('ट', "ठ"), ('ड', "ढ"), ('त', "थ"), ('द', "ध"), ('प', "फ"), ('ब', "भ"), ('इ', "ऋ"), ('ु', "ृ"), ('अ', "ऽ")],
+};
+
 
 fn layout_for(locale: &str) -> &'static Layout {
     match locale {
@@ -168,6 +186,7 @@ fn layout_for(locale: &str) -> &'static Layout {
         "ar" => &AR,
         "fa" => &FA,
         "ur" => &UR,
+        "hi" => &HI,
         _ => &EN,
     }
 }
@@ -620,6 +639,7 @@ mod tests {
             ("ar", include_str!("../assets/keyboards/ar.json")),
             ("fa", include_str!("../assets/keyboards/fa.json")),
             ("ur", include_str!("../assets/keyboards/ur.json")),
+            ("hi", include_str!("../assets/keyboards/hi.json")),
         ];
         for (code, json) in jsons {
             let v: serde_json::Value = serde_json::from_str(json).unwrap();

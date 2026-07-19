@@ -14,7 +14,7 @@ build is reproducible and offline.
 import os
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 DRAFT = os.path.join(ROOT, "assets", "words-draft")
-LANGS = ["ar", "fa", "ur", "ru"]
+LANGS = ["ar", "fa", "ur", "ru", "hi"]
 TIERS = ["easy", "medium", "hard", "expert"]
 
 def esc(w): return w.replace("\\", "\\\\").replace('"', '\\"')

@@ -52,6 +52,7 @@ spelling/orthography corrections. That review is what turns a draft into a bank.
 
 ## Scope
 
-ar / fa / ur / ru today. **Hindi** needs the `feature/hindi-akshara` work (registry
-entry + akshara module + Devanagari charset) merged onto this branch before the
-audit build can include it.
+ar / fa / ur / ru **and Hindi** (hi). Hindi is registered only in the audit build
+(its keyboard charset, Devanagari font, and draft bank are wired here); production
+registers no Hindi (CC-HINDI-PHASE0 D8). Its hard/expert tiers are thin (17/4) —
+the Hindi subtitle corpus is small and code-mixed; a monolingual source fills them.
