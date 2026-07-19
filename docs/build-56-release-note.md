@@ -4,10 +4,19 @@
 production-safe payload assembled on `feature/rtl-feedback`, ready for a version bump
 and a TestFlight/App Store build once approved.
 
-> **Version note.** The project currently stands at `CURRENT_PROJECT_VERSION = 47`,
-> `MARKETING_VERSION = 1.1`. "Build 56" is the working label; the actual build number
-> is Eric's to set at cut time (the freeze covers version bumps). Eric should also
-> reconcile the user-facing list below against whatever build 47 actually shipped.
+> **Version note.** The build number is NOT taken from the repo — fastlane sets it at
+> cut time to `latest_testflight_build_number + 1` (`fastlane/Fastfile`). TestFlight
+> is at build 55, so this cuts as **build 56** automatically; the committed
+> `CURRENT_PROJECT_VERSION = 47` is stale and ignored, and `MARKETING_VERSION` stays
+> 1.1. No manual bump is needed — but running fastlane / cutting the build is still
+> Eric's call (the freeze).
+>
+> **Scope caveat — read before approving.** This note describes the *recent* payload
+> on `feature/rtl-feedback`. That branch is **~104 commits ahead of `main`**, so a
+> build cut from it carries substantially more than changes 1–3 below. Whoever cuts
+> build 56 must (a) confirm which branch it is cut from, and (b) reconcile the FULL
+> delta against what build 55 shipped — see "Open question: the 104-commit gap" at
+> the end. The safety guarantees (no RTL, no audit content) hold regardless of branch.
 
 ## Headline
 An **English-experience + privacy** update, optionally activating up to **ten more
@@ -75,8 +84,35 @@ of them is a valid choice; the update still ships changes 1–3.
    screenshots may need to reflect the newly available languages. Backend voices for
    all ten already exist, so no backend change is required for this set.
 
+## Open question: the 104-commit gap (RESOLVE BEFORE CUTTING)
+`feature/rtl-feedback` is **~104 commits / 59 feat+fix commits ahead of `main`**
+(both at build 47). A build cut from this branch is therefore a **major release**,
+and changes 1–3 above are only its most recent slice. Ahead of `main`, at least:
+
+- **Live / user-visible:** the Play mode hub (CC-MODE-HUB), the consumer/education
+  editions axis (CC-EDITIONS), the lineup swap (cut it/nl/sv/nb; add ru/ar/fa/ur;
+  Russian Cyrillic keyboard), entitlements + regional grants (CC-ENTITLEMENTS), the
+  Settings tools hub, Kid-Mode extra-attempt default, Daily auto-advance + single
+  submit control, and several web perf/boot fixes (brotli wasm, self-hosted fonts,
+  GPU orb, English-flash cloak).
+- **Present but behind OFF flags (ship dormant):** online "Spell Off", spell-aloud
+  voice input, word stories, syllable replay, attempts-shields / Climb shields.
+
+**This means:** the release note above cannot stand as the whole story if 56 is cut
+from this branch. Two honest paths:
+1. **Cut a focused build** from a narrower branch (just changes 1–3 + activation),
+   if a small update is what's intended.
+2. **Do a full-delta release note** for the major release: audit all ~59 commits,
+   classify each as live vs flag-gated, and confirm what already shipped in 48–55.
+   That is a real task, not a paragraph.
+
+Either way, whoever cuts the build confirms the source branch first. The safety
+guarantees (no RTL, no audit content) hold on any of these branches.
+
 ## Sign-off
 ```
+Source branch confirmed for the cut:  ____________________
+Full-delta reconciled vs build 55:     ____________________
 User-facing changes 1–3 approved:      ____________________
 Languages activated (list):            ____________________
 Build number assigned:                 ____________________
