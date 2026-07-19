@@ -34,7 +34,7 @@ SOURCES = {
     "fr": "fra_wikipedia_2021_100K", "de": "deu_wikipedia_2021_100K",
     "pt": "por_wikipedia_2021_100K", "pl": "pol_wikipedia_2021_100K",
     "vi": "vie_wikipedia_2021_100K", "ko": "kor_wikipedia_2021_100K",
-    "fil": "tgl_wikipedia_2021_100K",
+    "fil": "tgl_wikipedia_2021_100K", "ja": "jpn_wikipedia_2021_100K",
 }
 # Languages we lowercase + apply the case-based proper-noun filter to. German is
 # EXCLUDED: it capitalises every common noun (Haus, Baum), so case can't tell a
