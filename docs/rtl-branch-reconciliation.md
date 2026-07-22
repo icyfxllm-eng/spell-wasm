@@ -13,10 +13,12 @@ low-risk quantity the moment the freeze lifts. Assessed with `git merge-tree`
   `tests/e2e/specs/menu.mjs`. `src/game.rs`, `index.html`, `privacy.html`, etc.
   merge with no conflict.
 - The cross-branch doc references resolve on merge with no work: the RTL docs
-  (`docs/rtl-keyboard-split.md`, `spike/urdu-nastaliq/`) live on
+  (`docs/rtl-keyboard-split.md`, `docs/cursive-per-letter-feedback.md`) live on
   `feature/rtl-feedback`; `docs/DECISIONS-PENDING.md` (with §5/§5.1/§5.2 pointing
   at them) lives on `build-54`. After the merge both paths coexist and the
-  references are valid.
+  references are valid. *(`spike/urdu-nastaliq/` is gone — its reusable half was
+  extracted to `docs/cursive-per-letter-feedback.md`, the rest died with the Urdu
+  cut. If §5.x on `build-54` cites the spike path, repoint it on merge.)*
 
 ## Conflict 1 — `src/consts.rs`: take the RTL registry (privacy trap now GONE)
 

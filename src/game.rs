@@ -243,7 +243,8 @@ fn note_climb(app: &App, correct: bool) {
 /// letter `pop`. It is also what shatters a cursive word: shaping engines join
 /// letters within a text RUN, and separate inline elements break the run, so
 /// Arabic renders as isolated letterforms — measured at +26.6% median width, i.e.
-/// `كتاب` becoming `ك ت ا ب` (see `spike/rtl-feedback/FINDINGS.md`).
+/// `كتاب` becoming `ك ت ا ب` (CC-RTL Phase 0 findings: `spike/rtl-feedback/FINDINGS.md`
+/// on the unmerged branch `spike/rtl-feedback`, commit `52f8a17` — not in this tree).
 ///
 /// So a cursive script gets ONE text node and no per-letter animation. Everything
 /// else keeps today's markup **byte-for-byte** — that is the point of the parallel
@@ -355,8 +356,8 @@ fn render_letters_joined(value: &str) -> String {
 
 /// The reveal (correct word shown after a miss), coloured per akshara to show
 /// which letters the player got right — for CURSIVE scripts, where positioned
-/// feedback markers can't work (Nastaliq cascades; no browser API exposes a
-/// glyph's 2D position — spike/urdu-nastaliq/FINDINGS.md).
+/// feedback markers can't work (no browser text API exposes a glyph's 2D position
+/// in a cursive run — docs/cursive-per-letter-feedback.md).
 ///
 /// The trick is that feedback doesn't need a *position*: colouring the letter in
 /// place marks it, and the browser shapes the ink. Each akshara becomes an inline
@@ -2416,9 +2417,10 @@ mod climb_band_tests {
     // ---- CC-RTL F4: the two render paths ----
 
     /// A cursive answer must reach the shaper as ONE run. If this ever splits,
-    /// Arabic shatters into isolated letterforms (+26.6% median width — see
-    /// spike/rtl-feedback/FINDINGS.md). Counting elements is the cheap proxy for
-    /// "did we hand the shaper a single run".
+    /// Arabic shatters into isolated letterforms (+26.6% median width — CC-RTL
+    /// Phase 0 findings, `spike/rtl-feedback/FINDINGS.md` on the unmerged branch
+    /// `spike/rtl-feedback`, commit `52f8a17`). Counting elements is the cheap
+    /// proxy for "did we hand the shaper a single run".
     #[test]
     fn joined_path_emits_one_run_not_one_span_per_letter() {
         let html = super::render_letters_joined("\u{643}\u{62a}\u{627}\u{628}"); // كتاب

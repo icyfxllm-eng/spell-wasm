@@ -82,7 +82,8 @@ decision.
 ## Optional in this build: activate up to 10 languages
 Independently, es/fr/de/pt/pl/vi/ko/ja/fil/zh can be flipped ComingSoon→Active — a
 verified, reversible, per-language status flip. See `docs/ltr-activation-checklist.md`.
-RTL (ar/fa/ur) is a separate later build (`docs/rtl-ship-checklist.md`).
+RTL is a separate later build, now scoped to Arabic only — Persian and Urdu are cut
+(`docs/CC-MASTER-PARITY.md`, Phase A).
 
 ## Safety guarantees
 No RTL ships (`RTL_SUPPORTED` false); no audit content ships (`audit_preview`

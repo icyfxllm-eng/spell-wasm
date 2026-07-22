@@ -28,9 +28,10 @@ confident in. Nothing else changes: banks, keyboards, and voices are already shi
 
 ## What is NOT in this (and why)
 - **ru** — LTR, but its production bank is empty (content is an audit draft only).
-  It needs the same promote-then-flip as RTL before it can activate.
-- **ar / fa / ur** — RTL: need the `RTL_SUPPORTED` flip + native audit. See
-  `docs/rtl-ship-checklist.md`.
+  It reaches parity on its own track. See `docs/CC-MASTER-PARITY.md`, Track R.
+- **ar** — RTL: needs the `rtlSupported` flip (gated on CC-RTL Phase 0 approval) plus
+  Gig A + Gig B verdicts. See `docs/CC-MASTER-PARITY.md`, Track A.
+- **fa / ur** — cut from the lineup. See `docs/CC-MASTER-PARITY.md`, Phase A.
 - **hi** — audit-only (D8); not registered in production.
 
 ## Prerequisite — the one real gate
