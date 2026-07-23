@@ -314,7 +314,7 @@ mod tests {
         assert_eq!(resolved_lang(ES), ES);
         // Unsupported: the pool serves English, so the answer is English — NOT the
         // language that was asked for.
-        for asked in ["ru", "ar", "fa", "ur", "ja", "ko", "zh", "fil", crate::consts::MINE] {
+        for asked in ["ru", "ar", "ja", "ko", "zh", "fil", crate::consts::MINE] {
             assert_eq!(
                 resolved_lang(asked),
                 EN,
@@ -329,7 +329,7 @@ mod tests {
     /// laid out right-to-left.
     #[test]
     fn an_english_fallback_word_is_never_labelled_rtl() {
-        for asked in ["ar", "fa", "ur"] {
+        for asked in ["ar"] {
             assert_eq!(crate::consts::dir_attr(asked), "rtl", "{asked} is RTL — the trap is real");
             let shown = resolved_lang(asked);
             assert_eq!(

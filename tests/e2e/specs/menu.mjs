@@ -26,7 +26,7 @@ import { dirname, join } from 'node:path';
 const KNOWN_ENDONYMS = {
   en: 'English', es: 'Español', fr: 'Français', de: 'Deutsch', ko: '한국어',
   ja: '日本語', zh: '中文', vi: 'Tiếng Việt', fil: 'Filipino', pt: 'Português',
-  pl: 'Polski', ru: 'Русский', ar: 'العربية', fa: 'فارسی', ur: 'اردو',
+  pl: 'Polski', ru: 'Русский', ar: 'العربية',
 };
 
 // src/consts.rs is the source of truth for the lineup (game::build_source_options

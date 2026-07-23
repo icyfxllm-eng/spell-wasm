@@ -21,15 +21,16 @@ import { dirname, join } from 'node:path';
 const HERE = dirname(fileURLToPath(import.meta.url));
 const ROOT = join(HERE, '..');
 
-// The 15 shipped SpellGame language codes (must match src/consts.rs BUILTIN_LANGS).
+// The 13 shipped SpellGame language codes (must match src/consts.rs BUILTIN_LANGS).
 // CC-LINEUP-SWAP (2026-07-16): it/nl/sv/nb cut; ru/ar/fa/ur added. CC-HINDI-PHASE0
 // D1 (2026-07-17): Turkish cut PERMANENTLY (Hindi replaces it), restoring 5fc69ff
-// after D7 briefly reinstated it. Thai stays cut. TR is now unmapped, like IN. ar/fa/ur are registered and granted here but
-// hard-gated from activation by rtl_required until RTL_SUPPORTED — a regional
-// grant is not an activation, so the map lists them like any other language.
+// after D7 briefly reinstated it. Thai stays cut. CC-MASTER-PARITY Phase A: Persian
+// and Urdu cut (IR and PK now unmapped, like TR/IN). ar is registered and granted
+// here but hard-gated from activation by rtl_required until RTL_SUPPORTED — a
+// regional grant is not an activation, so the map lists it like any other language.
 const SHIPPED_LANGS = new Set([
   'en', 'es', 'fr', 'de', 'pt', 'pl', 'vi', 'ko', 'ja', 'fil', 'zh',
-  'ru', 'ar', 'fa', 'ur',
+  'ru', 'ar',
 ]);
 
 // Full ISO 3166-1 alpha-2 officially-assigned code set.

@@ -1,12 +1,13 @@
 #!/usr/bin/env python3
 """Promote the audited RTL/ru drafts into the PRODUCTION word pipeline.
 
-This is the mechanical half of the CC-RTL ship (docs/rtl-ship-checklist.md). Run it
-AFTER the native audit is complete and its flags are ingested — it copies the
-reviewed draft banks into the production seed dirs and wires the languages into the
-build so `word_data.rs` carries real ar/fa/ur/ru banks. It does NOT flip any gate;
+This is the mechanical half of the RTL/ru ship (docs/CC-MASTER-PARITY.md, Tracks
+R and A). Run it AFTER the native audit is complete and its flags are ingested — it
+copies the reviewed draft banks into the production seed dirs and wires the languages
+into the build so `word_data.rs` carries real ar/ru banks. It does NOT flip any gate;
 un-gating (RTL_SUPPORTED + the ComingSoon→Active statuses) is a deliberate, separate
-code change that a human applies and signs off — see the checklist.
+code change that a human applies and signs off — see the master file's gates.
+(Persian and Urdu were cut — CC-MASTER-PARITY Phase A.)
 
 Idempotent: re-running copies the same files and leaves LANGS unchanged.
 
@@ -18,7 +19,7 @@ Idempotent: re-running copies the same files and leaves LANGS unchanged.
 import os, re, shutil, subprocess, sys
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-LANGS = ["ar", "fa", "ur", "ru"]
+LANGS = ["ar", "ru"]
 
 
 def promote():
@@ -34,7 +35,7 @@ def promote():
             n += sum(1 for ln in open(os.path.join(dst, f"{tier}.txt"), encoding="utf-8") if ln.strip())
         print(f"  {lang}: promoted {n} words -> assets/words/{lang}/")
 
-    # Wire the four into the production pipeline's LANGS (idempotent).
+    # Wire them into the production pipeline's LANGS (idempotent).
     p = os.path.join(ROOT, "scripts", "build-wordlists.py")
     s = open(p, encoding="utf-8").read()
     m = re.search(r"^LANGS = (\[[^\]]*\])", s, re.M)
@@ -45,7 +46,7 @@ def promote():
         open(p, "w", encoding="utf-8").write(s)
         print(f"  build-wordlists LANGS += {add}")
     else:
-        print("  build-wordlists LANGS already includes ar/fa/ur/ru")
+        print("  build-wordlists LANGS already includes ar/ru")
 
     subprocess.run([sys.executable, os.path.join(ROOT, "scripts", "build-wordlists.py")], check=True)
     print("\n  Content promoted. STILL GATED — now apply the flips in")

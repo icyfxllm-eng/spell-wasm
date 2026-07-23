@@ -1,8 +1,9 @@
 #!/usr/bin/env python3
 """Generate assets/words-draft/<lang>/*.txt from Leipzig (CC BY) — AUDIT drafts.
 
-Rebuilds the ar/fa/ur/ru audit drafts from Leipzig Wikipedia corpora (CC BY 4.0),
-REPLACING the earlier OpenSubtitles CC BY-SA drafts. Two wins:
+Rebuilds the ar/ru audit drafts from Leipzig Wikipedia corpora (CC BY 4.0),
+REPLACING the earlier OpenSubtitles CC BY-SA drafts. (Persian and Urdu were cut —
+CC-MASTER-PARITY Phase A.) Two wins:
   * Licence — CC BY is attribution-only, so shipping the reviewed result needs no
     §4 copyleft decision; the share-alike question simply stops applying.
   * Content — Wikipedia is more neutral than subtitles, which carry proper nouns
@@ -31,8 +32,6 @@ TIERS = ["easy", "medium", "hard", "expert"]
 TIER_LEN = {"easy": (2, 4), "medium": (5, 6), "hard": (7, 8), "expert": (9, 14)}
 SOURCES = {
     "ar": "ara_wikipedia_2021_100K",
-    "fa": "pes_wikipedia_2021_100K",   # pes = Iranian Persian (fa-IR per D3), not Dari
-    "ur": "urd_wikipedia_2021_100K",
     "ru": "rus_wikipedia_2021_100K",
 }
 
@@ -68,10 +67,6 @@ STRIP = {0x0640, 0x0670} | set(range(0x064B, 0x0653))
 def fold(lang, w):
     w = unicodedata.normalize("NFC", w)
     w = "".join(c for c in w if ord(c) not in STRIP)
-    if lang in ("fa", "ur"):
-        # The same letter, different codepoints: Persian/Urdu keyboards produce
-        # U+06CC / U+06A9, the corpus often carries the Arabic U+064A / U+0643.
-        w = w.replace("ي", "ی").replace("ك", "ک")
     return unicodedata.normalize("NFC", w)
 
 
@@ -105,7 +100,7 @@ def main():
     target = 200
     if "--target" in sys.argv:
         target = int(sys.argv[sys.argv.index("--target") + 1])
-    print(f"  rebuilding ar/fa/ur/ru drafts from Leipzig (Wikipedia, CC BY), {target}/tier:")
+    print(f"  rebuilding ar/ru drafts from Leipzig (Wikipedia, CC BY), {target}/tier:")
     for lang in SOURCES:
         c = build(lang, target)
         print(f"    {lang}  {c['easy']}/{c['medium']}/{c['hard']}/{c['expert']}")

@@ -383,9 +383,9 @@ mod tests {
     }
 
     /// Registry languages MINUS the RTL-blocked ones. CC-LINEUP-SWAP D2 puts
-    /// ar/fa/ur at `None` for every input and every edition, so a test asserting
-    /// "Full/Preview for every language" must exclude them or it is asserting the
-    /// opposite of the gate. `rtl_blocked_langs` covers them explicitly instead.
+    /// ar at `None` for every input and every edition, so a test asserting
+    /// "Full/Preview for every language" must exclude it or it is asserting the
+    /// opposite of the gate. `rtl_blocked_langs` covers it explicitly instead.
     fn resolvable_langs() -> Vec<&'static str> {
         all_langs().into_iter().filter(|l| !crate::consts::rtl_blocked(l)).collect()
     }
@@ -534,20 +534,20 @@ mod tests {
         assert_eq!(regional_grants_for_country("RU"), vec!["ru"]);
         assert_eq!(regional_grants_for_country("KZ"), vec!["ru"], "ru is official in Kazakhstan");
         assert_eq!(regional_grants_for_country("EG"), vec!["ar"]);
-        assert_eq!(regional_grants_for_country("PK"), vec!["ur"]);
         // CC-HINDI-PHASE0 D1: Turkish is cut permanently and "Turkey becomes
         // unmapped, like India". Both countries now grant nothing — TR because
         // its language left the lineup, IN because Hindi has not entered it.
         assert!(regional_grants_for_country("TR").is_empty(), "D1: Turkey is unmapped");
-        // Iran: granted in the map, but reachable only via the web CF-IPCountry
-        // path — there is no Iranian App Store for the storefront path to see.
-        assert_eq!(regional_grants_for_country("IR"), vec!["fa"]);
+        // CC-MASTER-PARITY Phase A: Persian and Urdu are cut, so their sole home
+        // countries (Iran, Pakistan) are now unmapped like Turkey.
+        assert!(regional_grants_for_country("IR").is_empty(), "Phase A: Iran is unmapped (fa cut)");
+        assert!(regional_grants_for_country("PK").is_empty(), "Phase A: Pakistan is unmapped (ur cut)");
         // D6: India maps to NOTHING (Hindi isn't in the lineup; Urdu would be
         // wrong for most of its users). CC-HINDI-PHASE0 D2 names hi-IN as the
         // future variant, but D8 grants this file zero authority to register it.
         assert!(regional_grants_for_country("IN").is_empty(), "D6: India grants nothing");
         // No cut language has a home country left anywhere in the map.
-        for country in ["IT", "NL", "NO", "SE", "SM", "TR"] {
+        for country in ["IT", "NL", "NO", "SE", "SM", "TR", "IR", "PK"] {
             assert!(
                 regional_grants_for_country(country).is_empty(),
                 "{country} was a home country for a cut language",

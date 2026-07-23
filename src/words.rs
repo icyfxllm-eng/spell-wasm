@@ -12,21 +12,19 @@ pub struct LangInfo {
     pub code: &'static str,
 }
 
-pub const LANGUAGES: [(&str, LangInfo); 18] = [
+pub const LANGUAGES: [(&str, LangInfo); 16] = [
     ("en", LangInfo { name: "English", code: "en-US" }),
     ("es", LangInfo { name: "Espa\u{f1}ol", code: "es-ES" }),
     ("fr", LangInfo { name: "Fran\u{e7}ais", code: "fr-FR" }),
     ("de", LangInfo { name: "Deutsch", code: "de-DE" }),
     ("pt", LangInfo { name: "Portugu\u{ea}s", code: "pt-BR" }),
     ("pl", LangInfo { name: "Polski", code: "pl-PL" }),
-    // CC-LINEUP-SWAP D3 variants: Russian standard ru-RU; Modern Standard
-    // Arabic; Iranian Persian (fa-IR, not Dari); Urdu ur-PK standard. Audio is
-    // direction-agnostic, so the three RTL languages carry voices here even
-    // though the rtl_required gate keeps them off every playable surface.
+    // CC-LINEUP-SWAP D3 variants: Russian standard ru-RU; Modern Standard Arabic.
+    // Audio is direction-agnostic, so Arabic carries a voice here even though the
+    // rtl_required gate keeps it off every playable surface. (Persian and Urdu were
+    // cut — CC-MASTER-PARITY Phase A.)
     ("ru", LangInfo { name: "\u{420}\u{443}\u{441}\u{441}\u{43a}\u{438}\u{439}", code: "ru-RU" }),
     ("ar", LangInfo { name: "\u{627}\u{644}\u{639}\u{631}\u{628}\u{64a}\u{629}", code: "ar-SA" }),
-    ("fa", LangInfo { name: "\u{641}\u{627}\u{631}\u{633}\u{6cc}", code: "fa-IR" }),
-    ("ur", LangInfo { name: "\u{627}\u{631}\u{62f}\u{648}", code: "ur-PK" }),
     // New languages with their own keyboard + backend voice (My Words matches).
     ("vi", LangInfo { name: "Ti\u{1ebf}ng Vi\u{1ec7}t", code: "vi-VN" }),
     ("ko", LangInfo { name: "\u{d55c}\u{ad6d}\u{c5b4}", code: "ko-KR" }),
@@ -1299,16 +1297,15 @@ pub fn zh_tier(tier: &str) -> &'static [&'static str] {
 
 /// Word bank for a built-in language + tier (English by default).
 pub fn tier_for(lang: &str, tier: &str) -> &'static [&'static str] {
-    use crate::consts::{AR, DE, ES, FA, FIL, FR, HI, JA, KO, PL, PT, RU, UR, VI, ZH};
+    use crate::consts::{AR, DE, ES, FIL, FR, HI, JA, KO, PL, PT, RU, VI, ZH};
     match lang {
-        // CC-LINEUP-SWAP registered these four; their content is
-        // CC-NEW-LANG-CONTENT's scope and has not landed. They return an EMPTY
-        // bank rather than falling through to `en_tier` below — a registered
-        // language with no content must serve NO words, never English words
-        // wearing its name. Silent English fallback is how you ship "Russian"
-        // that spells "bed"; the keyboard charset test catches it precisely
-        // because this arm is explicit.
-        RU | AR | FA | UR | HI => audit_draft_or_empty(lang, tier),
+        // CC-LINEUP-SWAP registered these; their content is CC-NEW-LANG-CONTENT's
+        // scope and has not landed. They return an EMPTY bank rather than falling
+        // through to `en_tier` below — a registered language with no content must
+        // serve NO words, never English words wearing its name. Silent English
+        // fallback is how you ship "Russian" that spells "bed"; the keyboard
+        // charset test catches it precisely because this arm is explicit.
+        RU | AR | HI => audit_draft_or_empty(lang, tier),
         ES => es_tier(tier),
         FR => simple_tier(FR_EASY, FR_MEDIUM, FR_HARD, FR_EXPERT, tier),
         DE => simple_tier(DE_EASY, DE_MEDIUM, DE_HARD, DE_EXPERT, tier),
@@ -1323,7 +1320,7 @@ pub fn tier_for(lang: &str, tier: &str) -> &'static [&'static str] {
     }
 }
 
-/// ru/ar/fa/ur have no verified content. In production they serve NOTHING (an
+/// ru/ar have no verified content. In production they serve NOTHING (an
 /// empty bank, never English words wearing their name — the whole point of the
 /// explicit arm). Under `audit_preview` ONLY, they serve their unverified DRAFT
 /// bank so a native speaker can play and review it. Two cfg'd definitions so the
@@ -1339,7 +1336,7 @@ fn audit_draft_or_empty(_lang: &str, _tier: &str) -> &'static [&'static str] {
 
 #[cfg(test)]
 mod content_tests {
-    use crate::consts::{TIER_ORDER, AR, FA, RU, UR};
+    use crate::consts::{TIER_ORDER, AR, RU};
 
     /// A language registered WITHOUT content must serve nothing — never English
     /// words under its own name. `tier_for` ends in `_ => en_tier(tier)`, so any
@@ -1352,7 +1349,7 @@ mod content_tests {
     #[cfg(not(feature = "audit_preview"))]
     #[test]
     fn registered_but_contentless_languages_serve_no_words() {
-        for lang in [RU, AR, FA, UR] {
+        for lang in [RU, AR] {
             for tier in TIER_ORDER {
                 let bank = super::tier_for(lang, tier);
                 assert!(
@@ -1371,7 +1368,7 @@ mod content_tests {
     #[cfg(feature = "audit_preview")]
     #[test]
     fn audit_preview_serves_draft_banks() {
-        for lang in [RU, AR, FA, UR] {
+        for lang in [RU, AR] {
             for tier in TIER_ORDER {
                 assert!(
                     !super::tier_for(lang, tier).is_empty(),

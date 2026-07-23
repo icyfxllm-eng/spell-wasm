@@ -225,21 +225,8 @@ function selftest(reg) {
   check('ar dagger-alif is MANUAL', tagWord('هذا', trapsOf('ar')).manual.includes('dagger-alif'), true);
   check('ar dagger-alif never tagged', has('ar', 'هذا', 'dagger-alif'), false);
 
-  // Persian — marked members only; unmarked default must NOT fire.
-  check('fa ص fires', has('fa', 'صبح', 'homophone-s'), true);
-  check('fa plain س does NOT fire', has('fa', 'سلام', 'homophone-s'), false);
-  check('fa silent vav خواهر', has('fa', 'خواهر', 'silent-vav'), true);
-  check('fa no silent vav in خانه', has('fa', 'خانه', 'silent-vav'), false);
-  check('fa ZWNJ detected', has('fa', 'می‌رود', 'zwnj-compound'), true);
-  check('fa no ZWNJ in ساده', has('fa', 'ساده', 'zwnj-compound'), false);
-
-  // Urdu — distinct codepoints, easily confused with their Arabic lookalikes.
-  check('ur do-chashmi ھ', has('ur', 'بھائی', 'do-chashmi-he'), true);
-  check('ur nun ghunna ں', has('ur', 'ہاں', 'nun-ghunna'), true);
-  check('ur retroflex ٹ', has('ur', 'ٹماٹر', 'retroflex'), true);
-  check('ur bari ye ے', has('ur', 'کیے', 'bari-ye'), true);
-  check('ur ain-initial', has('ur', 'عالم', 'ain-initial'), true);
-  check('ur ain non-initial does not fire', has('ur', 'شمع', 'ain-initial'), false);
+  // (Persian and Urdu selftests removed — both languages cut, CC-MASTER-PARITY
+  // Phase A. Only ru and ar remain in the trap registry.)
 
   // The honesty invariant, asserted structurally rather than trusted.
   for (const [lang, entry] of Object.entries(reg.languages)) {
