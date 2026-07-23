@@ -77,7 +77,7 @@ LANG_VOICES = {
 # AZURE_SPEECH_REGION (see below); if unset, a Swahili request 502s (caught,
 # logged) rather than mispronouncing in English.
 AZURE_VOICES = {
-    "sw": ("sw-KE", "sw-KE-ZuriNeural"),
+    "sw": ("sw-TZ", "sw-TZ-RehemaNeural"),
 }
 DEFAULT_LANG = "en"
 

@@ -122,11 +122,10 @@ pub fn leaderboard_available() -> bool {
 /// [`rtl_required`] for the gate itself.
 ///
 /// FALSE in production. TRUE only in the `audit_preview` build, where native
-/// speakers play the RTL languages to review them — which stays compile-time (D2's
-/// intent): a production build has the feature off, so this is `false` and Arabic
-/// stays gated. The rendering stack (F1–F6) is built and exercised under
-/// audit_preview, but the production flip is held until Arabic RTL rendering is
-/// verified on a real device / by a native speaker (CC-MASTER-PARITY G4 / Gig B).
+/// speakers play the RTL languages to review them. Arabic stays gated (unavailable)
+/// in the shipped/TestFlight build: the rendering stack (F1–F6) is built and
+/// exercised under audit_preview, but the production flip is held until Arabic RTL
+/// rendering is verified on a real device / by a native speaker (G4 / Gig B).
 pub const RTL_SUPPORTED: bool = cfg!(feature = "audit_preview");
 
 /// Which way a language's script runs. CC-RTL **D3**: direction comes from the
@@ -325,11 +324,9 @@ mod registry_tests {
     #[cfg(not(feature = "audit_preview"))]
     #[test]
     fn active_languages_are_english_the_ten_ltr_russian_and_swahili() {
-        // Active: English + the ten content-ready LTR/CJK languages, plus Russian
-        // (Track R) and Swahili (Track S) — both real Leipzig banks, LTR, no
-        // rendering question. Arabic stays ComingSoon: it has a bank but its RTL
-        // rendering is held until verified on a device (G4/Gig B), gated by
-        // RTL_SUPPORTED.
+        // Build-56 TestFlight: English + the ten content-ready LTR/CJK languages,
+        // plus Russian (Track R) and Swahili (Track S). Arabic stays ComingSoon
+        // (RTL held for on-device verification); Hindi stays audit-only (D8).
         let active: Vec<&str> = BUILTIN_LANGS
             .iter()
             .filter(|(c, _, _, _)| is_active_lang(c))
