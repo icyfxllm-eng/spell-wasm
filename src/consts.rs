@@ -40,6 +40,9 @@ pub const RU: &str = "ru";
 /// CC-LINEUP-SWAP: Modern Standard Arabic (D3). RTL — see [`RTL_SUPPORTED`].
 /// The sole RTL language after Persian and Urdu were cut (CC-MASTER-PARITY Phase A).
 pub const AR: &str = "ar";
+/// CC-MASTER-PARITY Track S: Swahili (Kiswahili, sw-TZ). Latin script, LTR —
+/// renders with no special machinery. Real Leipzig CC BY bank.
+pub const SW: &str = "sw";
 /// CC-HINDI-PHASE0: Hindi (Devanagari, LTR). Registered ONLY in the audit-preview
 /// build — D8 grants no authority to register it in production, so BUILTIN_LANGS
 /// below includes it under `audit_preview` and nowhere else.
@@ -120,8 +123,10 @@ pub fn leaderboard_available() -> bool {
 ///
 /// FALSE in production. TRUE only in the `audit_preview` build, where native
 /// speakers play the RTL languages to review them — which stays compile-time (D2's
-/// intent): a production build has the feature off, so this is `false` and the
-/// languages are gated, exactly as before.
+/// intent): a production build has the feature off, so this is `false` and Arabic
+/// stays gated. The rendering stack (F1–F6) is built and exercised under
+/// audit_preview, but the production flip is held until Arabic RTL rendering is
+/// verified on a real device / by a native speaker (CC-MASTER-PARITY G4 / Gig B).
 pub const RTL_SUPPORTED: bool = cfg!(feature = "audit_preview");
 
 /// Which way a language's script runs. CC-RTL **D3**: direction comes from the
@@ -148,7 +153,7 @@ use Direction::{Ltr, Rtl};
 ///   Rtl and does not join. This decides whether the answer surface may split a
 ///   word into per-letter elements.
 /// * [`direction`] — which way does it READ? What the play surface sets `dir` from.
-const LANGS_BASE: [(&str, &str, LangStatus, Direction); 13] = [
+const LANGS_BASE: [(&str, &str, LangStatus, Direction); 14] = [
     (EN, "English", Active, Ltr),
     (ES, "Espa\u{f1}ol", Active, Ltr),
     (FR, "Fran\u{e7}ais", Active, Ltr),
@@ -160,21 +165,22 @@ const LANGS_BASE: [(&str, &str, LangStatus, Direction); 13] = [
     (JA, "\u{65e5}\u{672c}\u{8a9e}", Active, Ltr),
     (FIL, "Filipino", Active, Ltr),
     (ZH, "\u{4e2d}\u{6587}", Active, Ltr),
-    (RU, "\u{420}\u{443}\u{441}\u{441}\u{43a}\u{438}\u{439}", ComingSoon, Ltr),
+    (RU, "\u{420}\u{443}\u{441}\u{441}\u{43a}\u{438}\u{439}", Active, Ltr),
     (AR, "\u{627}\u{644}\u{639}\u{631}\u{628}\u{64a}\u{629}", ComingSoon, Rtl),
+    (SW, "Kiswahili", Active, Ltr),
 ];
 
-/// Production registry — the base 13, unchanged.
+/// Production registry — the base 14, unchanged.
 #[cfg(not(feature = "audit_preview"))]
-pub const BUILTIN_LANGS: [(&str, &str, LangStatus, Direction); 13] = LANGS_BASE;
+pub const BUILTIN_LANGS: [(&str, &str, LangStatus, Direction); 14] = LANGS_BASE;
 
-/// Audit-preview registry — the base 13 plus Hindi (हिन्दी), so it can be reviewed.
+/// Audit-preview registry — the base 14 plus Hindi (हिन्दी), so it can be reviewed.
 /// Built by referencing LANGS_BASE, not re-listing it, so the two can't drift.
 #[cfg(feature = "audit_preview")]
-pub const BUILTIN_LANGS: [(&str, &str, LangStatus, Direction); 14] = [
+pub const BUILTIN_LANGS: [(&str, &str, LangStatus, Direction); 15] = [
     LANGS_BASE[0], LANGS_BASE[1], LANGS_BASE[2], LANGS_BASE[3], LANGS_BASE[4],
     LANGS_BASE[5], LANGS_BASE[6], LANGS_BASE[7], LANGS_BASE[8], LANGS_BASE[9],
-    LANGS_BASE[10], LANGS_BASE[11], LANGS_BASE[12],
+    LANGS_BASE[10], LANGS_BASE[11], LANGS_BASE[12], LANGS_BASE[13],
     (HI, "\u{939}\u{93f}\u{928}\u{94d}\u{926}\u{940}", ComingSoon, Ltr),
 ];
 
@@ -318,10 +324,12 @@ mod registry_tests {
     // languages so they can be reviewed, so this holds only with the feature off.
     #[cfg(not(feature = "audit_preview"))]
     #[test]
-    fn active_languages_are_english_and_the_ten_ltr() {
-        // Build-56 activation: English + the ten content-ready LTR/CJK languages are
-        // Active. ru (empty production bank — content is audit-draft only) and
-        // ar/fa/ur (RTL, gated by RTL_SUPPORTED) stay ComingSoon.
+    fn active_languages_are_english_the_ten_ltr_russian_and_swahili() {
+        // Active: English + the ten content-ready LTR/CJK languages, plus Russian
+        // (Track R) and Swahili (Track S) — both real Leipzig banks, LTR, no
+        // rendering question. Arabic stays ComingSoon: it has a bank but its RTL
+        // rendering is held until verified on a device (G4/Gig B), gated by
+        // RTL_SUPPORTED.
         let active: Vec<&str> = BUILTIN_LANGS
             .iter()
             .filter(|(c, _, _, _)| is_active_lang(c))
@@ -329,11 +337,11 @@ mod registry_tests {
             .collect();
         assert_eq!(
             active,
-            vec!["en", "es", "fr", "de", "pt", "pl", "vi", "ko", "ja", "fil", "zh"],
-            "en + the ten content-ready languages are active"
+            vec!["en", "es", "fr", "de", "pt", "pl", "vi", "ko", "ja", "fil", "zh", "ru", "sw"],
+            "en + the ten content-ready languages + Russian + Swahili are active"
         );
-        for gated in ["ru", "ar"] {
-            assert!(!is_active_lang(gated), "{gated} stays ComingSoon");
+        for gated in ["ar"] {
+            assert!(!is_active_lang(gated), "{gated} stays ComingSoon (RTL held)");
         }
     }
 
@@ -341,14 +349,14 @@ mod registry_tests {
     /// language cannot be added or cut without this test being updated
     /// deliberately.
     #[test]
-    fn registry_is_the_swapped_lineup_of_13() {
-        // The lineup is fixed on LANGS_BASE (13) regardless of build; BUILTIN_LANGS
+    fn registry_is_the_swapped_lineup_of_14() {
+        // The lineup is fixed on LANGS_BASE (14) regardless of build; BUILTIN_LANGS
         // equals it in production and appends Hindi only under audit_preview.
         let codes: Vec<&str> = LANGS_BASE.iter().map(|(c, _, _, _)| *c).collect();
-        assert_eq!(codes.len(), 13, "13 languages: the swap's 15 minus Persian and Urdu (CC-MASTER-PARITY Phase A)");
+        assert_eq!(codes.len(), 14, "14 languages: 13 after the fa/ur cut, plus Swahili (CC-MASTER-PARITY Track S)");
         assert_eq!(
             codes,
-            vec!["en", "es", "fr", "de", "pt", "pl", "vi", "ko", "ja", "fil", "zh", "ru", "ar"],
+            vec!["en", "es", "fr", "de", "pt", "pl", "vi", "ko", "ja", "fil", "zh", "ru", "ar", "sw"],
         );
         // The cut four (CC-LINEUP-SWAP F1), plus Thai (5fc69ff), Turkish
         // (CC-HINDI-PHASE0 D1 — permanently; Hindi replaces it), and Persian/Urdu
@@ -356,10 +364,10 @@ mod registry_tests {
         for gone in ["no", "nb", "sv", "nl", "it", "th", "tr", "fa", "ur"] {
             assert!(!codes.contains(&gone), "{gone} is cut from the registry");
         }
-        // Production ships exactly the base; audit-preview adds Hindi as the 14th.
-        assert_eq!(BUILTIN_LANGS.len(), if cfg!(feature = "audit_preview") { 14 } else { 13 });
+        // Production ships exactly the base; audit-preview adds Hindi as the 15th.
+        assert_eq!(BUILTIN_LANGS.len(), if cfg!(feature = "audit_preview") { 15 } else { 14 });
         #[cfg(feature = "audit_preview")]
-        assert_eq!(BUILTIN_LANGS[13].0, "hi", "Hindi is the audit-only 14th entry");
+        assert_eq!(BUILTIN_LANGS[14].0, "hi", "Hindi is the audit-only 15th entry");
         #[cfg(not(feature = "audit_preview"))]
         assert!(!BUILTIN_LANGS.iter().any(|(c, _, _, _)| *c == "hi"), "production registers no Hindi (D8)");
     }
@@ -372,25 +380,24 @@ mod registry_tests {
     fn rtl_languages_are_registered_but_hard_gated() {
         let rtl: Vec<&str> = BUILTIN_LANGS.iter().filter(|(_, _, _, d)| *d == Rtl).map(|(c, _, _, _)| *c).collect();
         assert_eq!(rtl, vec!["ar"], "exactly the one RTL language carries the flag");
-        assert!(!RTL_SUPPORTED, "RTL is unsupported until the CC-RTL initiative ships");
+        assert!(!RTL_SUPPORTED, "RTL held in production until Arabic rendering is verified");
         for code in rtl {
             assert!(rtl_required(code), "{code} is rtl_required");
             assert!(rtl_blocked(code), "{code} is blocked while RTL is unsupported");
             assert!(!is_active_lang(code), "{code} must never be active");
         }
-        // Russian is the new LTR language — it carries no RTL gate at all.
+        // Russian is an LTR language — it carries no RTL gate at all.
         assert!(!rtl_required("ru"), "ru is left-to-right");
         assert!(!rtl_blocked("ru"));
     }
 
     /// The RTL gate tracks the build config and nothing else — false in production,
     /// true only under audit_preview. Runs in BOTH configs, so there is always a
-    /// live assertion that the production binary stays gated. D2 is upheld: the
-    /// switch is still compile-time, just now two-valued by feature.
+    /// live assertion that the production binary stays gated.
     #[test]
     fn rtl_gate_matches_the_build_config() {
         assert_eq!(RTL_SUPPORTED, cfg!(feature = "audit_preview"));
-        // Under audit preview the RTL languages become playable; otherwise gated.
+        // Under audit preview the RTL language becomes playable; otherwise gated.
         assert_eq!(is_active_lang("ar"), cfg!(feature = "audit_preview"));
     }
 
@@ -405,7 +412,7 @@ mod registry_tests {
         assert_eq!(joins, vec!["ar"], "only the Arabic-script language is cursive");
         // Nothing else may take the joined path — splitting is harmless for them
         // and the `pop` animation depends on it.
-        for lang in ["en", "es", "fr", "de", "pt", "pl", "tr", "vi", "ko", "ja", "fil", "zh", "ru"] {
+        for lang in ["en", "es", "fr", "de", "pt", "pl", "tr", "vi", "ko", "ja", "fil", "zh", "ru", "sw"] {
             assert!(!script_joins(lang), "{lang} does not join — it must keep the per-letter path");
         }
         // Russian is the trap: new, non-Latin, and Cyrillic does NOT join.
@@ -421,7 +428,7 @@ mod registry_tests {
             assert_eq!(direction(lang), Rtl, "{lang} reads right-to-left");
             assert_eq!(dir_attr(lang), "rtl");
         }
-        for lang in ["en", "es", "ru", "ko", "ja", "zh", "vi"] {
+        for lang in ["en", "es", "ru", "ko", "ja", "zh", "vi", "sw"] {
             assert_eq!(direction(lang), Ltr, "{lang} reads left-to-right");
             assert_eq!(dir_attr(lang), "ltr");
         }
@@ -440,15 +447,14 @@ mod registry_tests {
         }
     }
 
-    /// D2's teeth: flipping an RTL language to `Active` in the registry must STILL
-    /// not activate it. The gate lives in `is_active_lang`, not in the status, so
-    /// a well-meaning status flip cannot ship partial RTL rendering. (Production
-    /// only — audit_preview lifts the gate on purpose, pinned by
-    /// `rtl_gate_matches_the_build_config`.)
+    /// D2's teeth: even if an RTL language is flipped to `Active` in the registry,
+    /// it must STILL not activate while RTL is unsupported. The gate lives in
+    /// `is_active_lang`, not in the status, so a well-meaning status flip cannot
+    /// ship unverified RTL rendering. (Production only — audit_preview lifts the
+    /// gate on purpose, pinned by `rtl_gate_matches_the_build_config`.)
     #[cfg(not(feature = "audit_preview"))]
     #[test]
     fn rtl_gate_survives_an_active_status() {
-        // Simulate the registry saying Active for an RTL language.
         assert_eq!(lang_status("ar"), ComingSoon, "ar ships as ComingSoon");
         assert!(rtl_blocked("ar"));
         // `is_active_lang` ANDs the gate in, so status alone can never win.

@@ -37,7 +37,7 @@ ROOT = Path(__file__).resolve().parent.parent
 # catalog, and registry entry are all gone, so it is not listed here.
 # ru/ar/fa/ur are NOT here yet — their sources are CC-NEW-LANG-CONTENT's scope,
 # and listing them before the sources land would just fail the build.
-LANGS = ["en", "es", "fr", "de", "pt", "pl", "vi", "ko", "ja", "fil"]
+LANGS = ["en", "es", "fr", "de", "pt", "pl", "vi", "ko", "ja", "fil", "ru", "sw"]
 TIERS = ["easy", "medium", "hard", "expert"]
 MIN_LEN, MAX_LEN = 2, 16
 # Tier size gate: a floor (no language starved of words) and a ceiling (sanity).

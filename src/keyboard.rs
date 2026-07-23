@@ -29,6 +29,11 @@ struct Layout {
 // Accent popovers per §2.2. The base key is prepended automatically, so these
 // list only the accented alternatives.
 const EN: Layout = Layout { rows: &["qwertyuiop", "asdfghjkl", "zxcvbnm"], long_press: &[] };
+// Swahili (Kiswahili) — Latin, standard QWERTY. Native orthography is the Latin
+// alphabet; digraphs (ch, sh, ng') are typed as sequences, and ng' words carry an
+// apostrophe that the all-alphabetic word gate filters out, so no extra keys are
+// needed. CC-MASTER-PARITY Track S.
+const SW: Layout = Layout { rows: &["qwertyuiop", "asdfghjkl", "zxcvbnm"], long_press: &[] };
 const ES: Layout = Layout {
     rows: &["qwertyuiop", "asdfghjklñ", "zxcvbnm"],
     long_press: &[('a', "á"), ('e', "é"), ('i', "í"), ('o', "ó"), ('u', "úü")],
@@ -152,6 +157,7 @@ fn layout_for(locale: &str) -> &'static Layout {
         "ja" => &JA,
         "fil" => &FIL,
         "zh" => &ZH,
+        "sw" => &SW,
         // CC-RTL F5 charset half. Returning the right layout (not the &EN
         // fallback) keeps the Rust charset gate consistent with the JSON one the
         // pipeline reads; RTL input behaviour is still unimplemented, but these
@@ -604,6 +610,7 @@ mod tests {
             ("ja", include_str!("../assets/keyboards/ja.json")),
             ("fil", include_str!("../assets/keyboards/fil.json")),
             ("zh", include_str!("../assets/keyboards/zh.json")),
+            ("sw", include_str!("../assets/keyboards/sw.json")),
             ("ar", include_str!("../assets/keyboards/ar.json")),
             ("hi", include_str!("../assets/keyboards/hi.json")),
         ];

@@ -30,7 +30,7 @@ const ROOT = join(HERE, '..');
 // regional grant is not an activation, so the map lists it like any other language.
 const SHIPPED_LANGS = new Set([
   'en', 'es', 'fr', 'de', 'pt', 'pl', 'vi', 'ko', 'ja', 'fil', 'zh',
-  'ru', 'ar',
+  'ru', 'ar', 'sw',
 ]);
 
 // Full ISO 3166-1 alpha-2 officially-assigned code set.

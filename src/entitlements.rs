@@ -383,7 +383,8 @@ mod tests {
     }
 
     /// Registry languages MINUS the RTL-blocked ones. CC-LINEUP-SWAP D2 puts
-    /// ar at `None` for every input and every edition, so a test asserting
+    /// ar at `None` for every input and every edition (RTL_SUPPORTED is false in
+    /// production until Arabic rendering is verified), so a test asserting
     /// "Full/Preview for every language" must exclude it or it is asserting the
     /// opposite of the gate. `rtl_blocked_langs` covers it explicitly instead.
     fn resolvable_langs() -> Vec<&'static str> {

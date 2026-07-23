@@ -35,12 +35,17 @@ SOURCES = {
     "pt": "por_wikipedia_2021_100K", "pl": "pol_wikipedia_2021_100K",
     "vi": "vie_wikipedia_2021_100K", "ko": "kor_wikipedia_2021_100K",
     "fil": "tgl_wikipedia_2021_100K", "ja": "jpn_wikipedia_2021_100K",
+    # CC-MASTER-PARITY Tracks R/A/S — Russian, Arabic, Swahili.
+    "ru": "rus_wikipedia_2021_100K", "ar": "ara_wikipedia_2021_100K",
+    "sw": "swa_wikipedia_2021_100K",
 }
 # Languages we lowercase + apply the case-based proper-noun filter to. German is
 # EXCLUDED: it capitalises every common noun (Haus, Baum), so case can't tell a
 # common noun from a proper one, and lowercasing would misspell them. German keeps
 # its corpus case and takes the residual proper nouns (like the caseless scripts).
-CASED = {"en", "es", "fr", "pt", "pl", "vi", "fil"}
+# ru (Cyrillic) and sw (Latin) capitalise proper nouns only, like es/fr, so the
+# case-based proper-noun filter applies. Arabic is caseless — residual PN, like ko/ja.
+CASED = {"en", "es", "fr", "pt", "pl", "vi", "fil", "ru", "sw"}
 PRESERVE_CASE = {"de"}  # keep as-is, no lowercase, no case-based PN filter
 
 # Reuse the production charset gate (identical ko/vi handling).
@@ -130,8 +135,12 @@ def main():
     target = 200
     if "--target" in sys.argv:
         target = int(sys.argv[sys.argv.index("--target") + 1])
+    # Optional positional language filter (e.g. `build-bigbank.py ru ar sw`) so a
+    # new bank can be grown without re-growing — and churning — the existing ones.
+    picked = [a for a in sys.argv[1:] if a in SOURCES]
+    langs = picked if picked else list(SOURCES)
     print(f"  growing to {target}/tier from Leipzig (Wikipedia, CC BY):")
-    for lang in SOURCES:
+    for lang in langs:
         counts, seed = build(lang, target)
         c = counts
         print(f"    {lang:4} {c['easy']}/{c['medium']}/{c['hard']}/{c['expert']}  "

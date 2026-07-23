@@ -12,7 +12,7 @@ pub struct LangInfo {
     pub code: &'static str,
 }
 
-pub const LANGUAGES: [(&str, LangInfo); 16] = [
+pub const LANGUAGES: [(&str, LangInfo); 17] = [
     ("en", LangInfo { name: "English", code: "en-US" }),
     ("es", LangInfo { name: "Espa\u{f1}ol", code: "es-ES" }),
     ("fr", LangInfo { name: "Fran\u{e7}ais", code: "fr-FR" }),
@@ -25,6 +25,9 @@ pub const LANGUAGES: [(&str, LangInfo); 16] = [
     // cut — CC-MASTER-PARITY Phase A.)
     ("ru", LangInfo { name: "\u{420}\u{443}\u{441}\u{441}\u{43a}\u{438}\u{439}", code: "ru-RU" }),
     ("ar", LangInfo { name: "\u{627}\u{644}\u{639}\u{631}\u{628}\u{64a}\u{629}", code: "ar-SA" }),
+    // CC-MASTER-PARITY Track S: Swahili. sw-TZ (Tanzania standard); if the backend
+    // has no sw-TZ neural voice, S1 permits sw-KE — a one-line change here.
+    ("sw", LangInfo { name: "Kiswahili", code: "sw-TZ" }),
     // New languages with their own keyboard + backend voice (My Words matches).
     ("vi", LangInfo { name: "Ti\u{1ebf}ng Vi\u{1ec7}t", code: "vi-VN" }),
     ("ko", LangInfo { name: "\u{d55c}\u{ad6d}\u{c5b4}", code: "ko-KR" }),
@@ -1297,15 +1300,19 @@ pub fn zh_tier(tier: &str) -> &'static [&'static str] {
 
 /// Word bank for a built-in language + tier (English by default).
 pub fn tier_for(lang: &str, tier: &str) -> &'static [&'static str] {
-    use crate::consts::{AR, DE, ES, FIL, FR, HI, JA, KO, PL, PT, RU, VI, ZH};
+    use crate::consts::{AR, DE, ES, FIL, FR, HI, JA, KO, PL, PT, RU, SW, VI, ZH};
     match lang {
-        // CC-LINEUP-SWAP registered these; their content is CC-NEW-LANG-CONTENT's
-        // scope and has not landed. They return an EMPTY bank rather than falling
-        // through to `en_tier` below — a registered language with no content must
-        // serve NO words, never English words wearing its name. Silent English
-        // fallback is how you ship "Russian" that spells "bed"; the keyboard
-        // charset test catches it precisely because this arm is explicit.
-        RU | AR | HI => audit_draft_or_empty(lang, tier),
+        // Russian shipped a real production bank (CC-MASTER-PARITY Track R):
+        // Leipzig CC BY, frequency-ranked, length-tiered, gated by build-wordlists.
+        RU => simple_tier(RU_EASY, RU_MEDIUM, RU_HARD, RU_EXPERT, tier),
+        SW => simple_tier(SW_EASY, SW_MEDIUM, SW_HARD, SW_EXPERT, tier),
+        // AR/HI stay contentless in production. Arabic's bank exists in
+        // assets/words/ar/ (prepared, gated) but does not render in production until
+        // CC-RTL is verified on a device (rtl_blocked); Hindi is audit-only (D8).
+        // They return an EMPTY bank rather than falling through to `en_tier` — a
+        // registered language with no served content must serve NO words, never
+        // English words wearing its name. Under audit_preview they serve drafts.
+        AR | HI => audit_draft_or_empty(lang, tier),
         ES => es_tier(tier),
         FR => simple_tier(FR_EASY, FR_MEDIUM, FR_HARD, FR_EXPERT, tier),
         DE => simple_tier(DE_EASY, DE_MEDIUM, DE_HARD, DE_EXPERT, tier),
@@ -1336,25 +1343,25 @@ fn audit_draft_or_empty(_lang: &str, _tier: &str) -> &'static [&'static str] {
 
 #[cfg(test)]
 mod content_tests {
-    use crate::consts::{TIER_ORDER, AR, RU};
+    use crate::consts::{TIER_ORDER, AR};
 
     /// A language registered WITHOUT content must serve nothing — never English
     /// words under its own name. `tier_for` ends in `_ => en_tier(tier)`, so any
     /// new registry entry silently inherits the English bank until someone adds
     /// an explicit arm; this test is the tripwire for that.
     ///
-    /// Guarded to the PRODUCTION config: the audit-preview build deliberately fills
-    /// these with draft banks (asserted separately below), so the "serves nothing"
-    /// invariant is exactly a not-audit_preview property.
+    /// Russian and Swahili now ship real production banks; Arabic's bank exists but
+    /// is not wired into production (rtl_blocked, held for device verification), so
+    /// Arabic is the remaining registered-but-serves-nothing language in production.
     #[cfg(not(feature = "audit_preview"))]
     #[test]
     fn registered_but_contentless_languages_serve_no_words() {
-        for lang in [RU, AR] {
+        for lang in [AR] {
             for tier in TIER_ORDER {
                 let bank = super::tier_for(lang, tier);
                 assert!(
                     bank.is_empty(),
-                    "{lang}/{tier} must be empty until its content lands, got {} words starting {:?} \
+                    "{lang}/{tier} must be empty until its content ships, got {} words starting {:?} \
                      — a fallthrough to en_tier would serve English words as {lang}",
                     bank.len(),
                     bank.first(),
@@ -1363,12 +1370,12 @@ mod content_tests {
         }
     }
 
-    /// The mirror invariant for the audit build: those same languages now serve
-    /// their DRAFT banks (non-empty), so an auditor has words to play.
+    /// The mirror invariant for the audit build: Arabic serves its DRAFT bank
+    /// (non-empty), so an auditor has words to play.
     #[cfg(feature = "audit_preview")]
     #[test]
     fn audit_preview_serves_draft_banks() {
-        for lang in [RU, AR] {
+        for lang in [AR] {
             for tier in TIER_ORDER {
                 assert!(
                     !super::tier_for(lang, tier).is_empty(),
@@ -1382,7 +1389,7 @@ mod content_tests {
     /// over-broad empty arm swallowing a real bank).
     #[test]
     fn content_languages_still_have_banks() {
-        for lang in ["en", "es", "fr", "de", "pt", "pl", "vi", "ko", "ja", "fil", "zh"] {
+        for lang in ["en", "es", "fr", "de", "pt", "pl", "vi", "ko", "ja", "fil", "zh", "ru", "sw"] {
             for tier in TIER_ORDER {
                 assert!(!super::tier_for(lang, tier).is_empty(), "{lang}/{tier} lost its bank");
             }
