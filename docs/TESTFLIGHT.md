@@ -95,7 +95,28 @@ curl -s "https://spellgame.net/api/speak?lang=sw&word=paka" -o /tmp/paka.mp3 && 
 ```
 (Without it, Swahili words 502 — the app plays no audio for them.)
 
-## 4. Build + ship (every time)
+## 4. Build + ship (every time) — ONE COMMAND
+
+```bash
+bundle exec fastlane ship
+```
+
+That's it. The `ship` lane does everything: builds the WASM + web bundle, syncs it
+into the iOS project, takes the next build number from App Store Connect, mints the
+distribution cert + App Store profile from your API key, signs in a dedicated
+keychain, archives, exports, and uploads to TestFlight.
+
+**Why `ship` and not `beta`:** `beta` signs via `match`, which needs the spell-certs
+git repo + SSH/token + MATCH_PASSWORD. `ship` skips all of that — it signs straight
+from `fastlane/api_key.json`. It also handles two real hazards on this Mac: the login
+keychain's password is out of sync (so we sign in our own keychain), and a duplicate
+cert in the login keychain shadows ours (so we temporarily make ours the only one in
+the search list, and always restore it afterwards).
+
+Prereq: `AZURE_SPEECH_KEY`/`AZURE_SPEECH_REGION` on the **backend** if you want
+Swahili audio — unrelated to the app build.
+
+### Manual equivalent (if you ever need the steps individually)
 
 From the **repo root**:
 

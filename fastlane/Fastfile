@@ -151,4 +151,95 @@ platform :ios do
       build_number: latest_testflight_build_number(initial_build_number: 0) + 1
     )
   end
+
+  # ---------------------------------------------------------------------------
+  # ONE-COMMAND SHIP:  bundle exec fastlane ship
+  #
+  # Does the whole thing: builds the WASM + web bundle, syncs it into the iOS
+  # project, picks the next build number from App Store Connect, signs, and
+  # uploads to TestFlight.
+  #
+  # Why this exists alongside `beta`: `beta` signs via `match`, which needs the
+  # spell-certs git repo + SSH/token + MATCH_PASSWORD. This lane instead mints the
+  # distribution cert and App Store profile straight from the App Store Connect
+  # API key (fastlane/api_key.json) — no certs repo, no SSH, no passphrase.
+  #
+  # It also works around two real hazards found on this Mac:
+  #   1. The login keychain's password is out of sync with the account password, so
+  #      codesign can't be granted access there. We use a DEDICATED keychain whose
+  #      password we control, and set its partition list so signing never prompts.
+  #   2. A copy of the same cert in the login keychain SHADOWS ours and makes
+  #      codesign fail with errSecInternalComponent. So during signing we make our
+  #      keychain the ONLY one in the search list, and always restore it after
+  #      (ensure block) — even if the build fails.
+  #
+  # Override the keychain password with SPELL_KEYCHAIN_PASSWORD if you like.
+  # ---------------------------------------------------------------------------
+  desc "Build web+wasm, sign via API key in a dedicated keychain, upload to TestFlight"
+  lane :ship do
+    api_key = app_store_connect_api_key(
+      api_key_path: File.expand_path("api_key.json", __dir__)
+    )
+    root = File.expand_path("..", __dir__)
+
+    # 1. WASM + web bundle -> dist/ -> synced into the iOS project.
+    sh("cd #{root.shellescape} && npm run sync:ios")
+
+    # 2. Build number from App Store Connect (latest + 1) — never from the repo, so
+    #    a retry can't re-upload an existing number (ITMS-90189).
+    next_build = latest_testflight_build_number(api_key: api_key, initial_build_number: 0) + 1
+    UI.important("Build number -> #{next_build}")
+    increment_build_number(xcodeproj: "ios/App/App.xcodeproj", build_number: next_build)
+
+    # 3. Dedicated signing keychain (created on first run).
+    kc_pw   = ENV["SPELL_KEYCHAIN_PASSWORD"] || "spellbuild-temp-pw"
+    kc_path = File.expand_path("~/Library/Keychains/spellbuild.keychain-db")
+    sh("security create-keychain -p #{kc_pw.shellescape} #{kc_path.shellescape}") unless File.exist?(kc_path)
+    sh("security set-keychain-settings -lut 21600 #{kc_path.shellescape}")
+    sh("security unlock-keychain -p #{kc_pw.shellescape} #{kc_path.shellescape}")
+
+    # Distribution cert + App Store profile straight from the API key.
+    get_certificates(
+      development: false, api_key: api_key,
+      keychain_path: kc_path, keychain_password: kc_pw
+    )
+    get_provisioning_profile(app_identifier: "net.spellgame.app", api_key: api_key)
+
+    # Let codesign use the key without a GUI prompt (needs the keychain password,
+    # which is why the dedicated keychain matters — we know THIS one).
+    sh("security set-key-partition-list -S apple-tool:,apple:,codesign: " \
+       "-s -k #{kc_pw.shellescape} #{kc_path.shellescape} > /dev/null 2>&1 || true")
+
+    # 4. Archive + export with ONLY our keychain searchable (see hazard 2 above).
+    begin
+      sh("security list-keychains -d user -s #{kc_path.shellescape}")
+      gym(
+        project: "ios/App/App.xcodeproj",
+        scheme: "App",
+        configuration: "Release",
+        export_method: "app-store",
+        output_directory: "build",
+        clean: true,
+        xcargs: "CODE_SIGN_STYLE=Manual DEVELOPMENT_TEAM=WCH6H5NAWH " \
+                "CODE_SIGN_IDENTITY='Apple Distribution' " \
+                "PROVISIONING_PROFILE_SPECIFIER='net.spellgame.app AppStore'",
+        export_options: {
+          signingStyle: "manual",
+          teamID: "WCH6H5NAWH",
+          provisioningProfiles: { "net.spellgame.app" => "net.spellgame.app AppStore" }
+        }
+      )
+    ensure
+      # ALWAYS put the login keychain back, even if the build blew up.
+      sh("security list-keychains -d user -s login.keychain-db #{kc_path.shellescape}")
+    end
+
+    # 5. TestFlight.
+    pilot(
+      api_key: api_key,
+      skip_waiting_for_build_processing: true,
+      changelog: "See release notes."
+    )
+    UI.success("Shipped build #{next_build} to TestFlight.")
+  end
 end
