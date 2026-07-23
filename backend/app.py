@@ -40,15 +40,25 @@ LANGUAGE_CODE = "en-US"
 # entry here + its word bank on the client (words.rs) — audio + spelling then
 # work end-to-end. (`en-US-Neural2-D` above stays the default / sentence voice.)
 # Keyed on the 2-letter study-language code the frontend sends. Reconciled with the
-# active lineup (CC-MASTER-PARITY): it/nl/sv/nb/tr/th were cut and removed here.
-# Russian added (ru-RU-Wavenet-D). NOT yet listed, deliberately:
-#   sw (Swahili) — Google TTS offers Swahili only as sw-KE, and only as Chirp 3 HD
-#     voices, which need a different synthesis path than these Wavenet/Neural2
-#     entries; pending confirmation of the exact voice name + Chirp3 support.
-#   ar (Arabic) — gated (RTL_SUPPORTED false); when it ungates, use ("ar-XA", ...)
-#     — Google's Arabic locale is ar-XA (MSA), not ar-SA.
+# active lineup (CC-MASTER-PARITY): it/nl/sv/nb/tr/th were cut and removed here;
+# Russian (ru-RU-Wavenet-D) and Swahili added.
+#
+# Swahili: Google TTS offers Swahili ONLY as sw-KE (no sw-TZ), via Chirp 3 HD
+# voices (added in the 2025-03-06 expansion). Chirp 3 HD uses the SAME synthesis
+# call as the Wavenet/Neural2 voices here — VoiceSelectionParams(language_code,
+# name) + plain-text SynthesisInput + speakingRate pace control — so no code path
+# change was needed, only this entry.
+#   !!! TODO(verify): the exact voice NAME below is a BEST GUESS. Google does not
+#   enumerate Chirp 3 HD voices per locale, and availability is project/region
+#   specific. Confirm against THIS project before relying on it:
+#     curl -s -H "Authorization: Bearer $(gcloud auth print-access-token)" \
+#       "https://texttospeech.googleapis.com/v1/voices?languageCode=sw-KE"
+#   Pick a real `name` from that output; then hear one word synthesize before ship.
+#
+# ar (Arabic) — still gated (RTL_SUPPORTED false); when it ungates, use
+#   ("ar-XA", "ar-XA-Wavenet-...") — Google's Arabic locale is ar-XA (MSA), not ar-SA.
 # An unlisted lang falls back to the English voice (see the DEFAULT_LANG guard), so
-# leaving sw/ar out means they are NOT spoken until their voices are added.
+# a WRONG sw name would 502 (caught, logged) rather than mispronounce — but verify.
 LANG_VOICES = {
     "en": ("en-US", "en-US-Neural2-D"),
     "es": ("es-ES", "es-ES-Neural2-B"),
@@ -57,6 +67,7 @@ LANG_VOICES = {
     "pt": ("pt-BR", "pt-BR-Neural2-B"),
     "pl": ("pl-PL", "pl-PL-Wavenet-B"),
     "ru": ("ru-RU", "ru-RU-Wavenet-D"),
+    "sw": ("sw-KE", "sw-KE-Chirp3-HD-Aoede"),  # TODO(verify): best guess — see note above
     "vi": ("vi-VN", "vi-VN-Wavenet-A"),
     "ko": ("ko-KR", "ko-KR-Wavenet-A"),
     "ja": ("ja-JP", "ja-JP-Wavenet-B"),
