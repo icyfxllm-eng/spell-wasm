@@ -25,9 +25,10 @@ pub const LANGUAGES: [(&str, LangInfo); 17] = [
     // cut — CC-MASTER-PARITY Phase A.)
     ("ru", LangInfo { name: "\u{420}\u{443}\u{441}\u{441}\u{43a}\u{438}\u{439}", code: "ru-RU" }),
     ("ar", LangInfo { name: "\u{627}\u{644}\u{639}\u{631}\u{628}\u{64a}\u{629}", code: "ar-SA" }),
-    // CC-MASTER-PARITY Track S: Swahili. sw-TZ (Tanzania standard); if the backend
-    // has no sw-TZ neural voice, S1 permits sw-KE — a one-line change here.
-    ("sw", LangInfo { name: "Kiswahili", code: "sw-TZ" }),
+    // CC-MASTER-PARITY Track S: Swahili. sw-KE (Kenya) — Google Cloud TTS offers
+    // Swahili ONLY as sw-KE, there is no sw-TZ voice, so S1's fallback is the only
+    // real option. The 2-letter "sw" is what the backend TTS lookup keys on.
+    ("sw", LangInfo { name: "Kiswahili", code: "sw-KE" }),
     // New languages with their own keyboard + backend voice (My Words matches).
     ("vi", LangInfo { name: "Ti\u{1ebf}ng Vi\u{1ec7}t", code: "vi-VN" }),
     ("ko", LangInfo { name: "\u{d55c}\u{ad6d}\u{c5b4}", code: "ko-KR" }),
