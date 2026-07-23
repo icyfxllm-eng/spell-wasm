@@ -679,7 +679,16 @@
      just class: <button> = a real destination, <div> = informational aid or
      coming_soon teaser. The cursor/hover treatment follows, so a tile that
      cannot be tapped never invites a tap. */
+  /* The close ✕ is absolutely positioned, so its modal MUST be a containing
+     block — otherwise it escapes to the page corner and reads as "no way out"
+     (it was landing at the viewport's top-right, far from the dialog). Scoped to
+     #playHub rather than all .modal: other dialogs have absolutely-positioned
+     children (colour swatches, switches) whose containing block must not move. */
+  #playHub .modal{position:relative}
   .hub-x{position:absolute;top:10px;inset-inline-end:12px}
+  /* Empty hub: never render a blank box. Reachable today — e.g. a Preview
+     language on web filters out every mode. */
+  .hub-empty{color:var(--muted-2);font-size:13.5px;text-align:center;padding:18px 6px 6px;line-height:1.5}
   .mode-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;margin-top:26px}
   .mode-tile{display:flex;flex-direction:column;align-items:flex-start;gap:4px;text-align:start;background:var(--panel-2);border:1px solid var(--edge);border-radius:14px;padding:14px;color:var(--ink);font-family:inherit;min-height:96px}
   /* Only a button is interactive. */

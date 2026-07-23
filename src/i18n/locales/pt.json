@@ -290,6 +290,7 @@
   "tools.availHere": "· pronto aqui",
   "tools.availNotHere": "· não neste aparelho",
   "tools.appliesNextRound": "· vale na próxima rodada",
+  "hub.empty": "Ainda não há outras formas de jogar neste idioma.",
   "level.easy.desc": "Palavras curtas e comuns para aquecer.",
   "level.medium.desc": "Palavras do dia a dia em ritmo constante.",
   "level.hard.desc": "Palavras mais longas e difíceis.",

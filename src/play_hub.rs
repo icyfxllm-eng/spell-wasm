@@ -118,7 +118,15 @@ fn tile_html(m: &Mode) -> String {
 pub fn reflect(app: &App) {
     let all = modes::all();
     let shown = modes::visible(&all, &ctx(app));
-    let html: String = shown.iter().map(tile_html).collect();
+    // Never render an empty box. Every mode can legitimately filter out at once —
+    // e.g. a Preview language on web: ghost_racing/online_spelloff need `full`,
+    // syllable_replay is es-only, and say_it/photo_list/spell_aloud are iOS-only.
+    // Without this the hub opened as a blank panel with no explanation.
+    let html: String = if shown.is_empty() {
+        format!("<p class=\"hub-empty\">{}</p>", t("hub.empty"))
+    } else {
+        shown.iter().map(tile_html).collect()
+    };
     dom::set_html("playHubGrid", &html);
 
     // Tapping a tile routes to the mode's OWN entry point rather than

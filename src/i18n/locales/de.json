@@ -290,6 +290,7 @@
   "tools.availHere": "· hier bereit",
   "tools.availNotHere": "· nicht auf diesem Gerät",
   "tools.appliesNextRound": "· gilt ab der nächsten Runde",
+  "hub.empty": "Für diese Sprache gibt es noch keine weiteren Spielarten.",
   "level.easy.desc": "Kurze, häufige Wörter zum Aufwärmen.",
   "level.medium.desc": "Alltagswörter in gleichmäßigem Tempo.",
   "level.hard.desc": "Längere, kniffligere Wörter.",

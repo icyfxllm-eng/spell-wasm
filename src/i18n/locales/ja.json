@@ -290,6 +290,7 @@
   "tools.availHere": "· ここで利用可",
   "tools.availNotHere": "· この端末では不可",
   "tools.appliesNextRound": "· 次のラウンドから適用",
+  "hub.empty": "この言語で利用できる他の遊び方はまだありません。",
   "level.easy.desc": "肩慣らしの短くよくある単語。",
   "level.medium.desc": "一定のペースの日常語。",
   "level.hard.desc": "長めで難しい単語。",
