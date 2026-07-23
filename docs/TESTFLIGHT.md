@@ -10,16 +10,42 @@ so you never bump it by hand.
 
 ---
 
-## 1. One-time toolchain (skip anything already installed)
+## 0. Status on THIS Mac (2026-07-23) — toolchain already installed
+
+The dev toolchain was installed and verified on this machine, so §1 is done here
+(§1 stays as the recipe for a fresh Mac). Verified:
+
+- Rust/cargo 1.97 + `wasm32-unknown-unknown` target · **wasm-bindgen-cli 0.2.126**
+- **`cargo test --lib` = 212 passed / 0 failed** (`--features audit_preview` = 207/0)
+- Node 26 / npm 11 + `npm install` done · **`npm run build` succeeds** (WASM → dist/)
+- Ruby 4.0.6 (Homebrew) + **fastlane 2.237** + **CocoaPods 1.17** (`bundle install` done)
+- **Xcode 26.6 is installed** at `/Applications/Xcode.app`
+
+Two machine-specific setup steps remain (they need your password / a login shell):
 
 ```bash
-xcode-select --install                                   # Xcode command-line tools (also install Xcode from the App Store)
+# a) point the toolchain at the full Xcode (was aimed at Command-Line Tools)
+sudo xcode-select -s /Applications/Xcode.app/Contents/Developer
+# b) make the modern Ruby the default so `bundle exec` doesn't use system 2.6
+#    (add to ~/.zshrc, then open a new terminal)
+export PATH="/opt/homebrew/opt/ruby/bin:/opt/homebrew/lib/ruby/gems/4.0.0/bin:$PATH"
+```
+
+Then skip to §2 (signing) and §4 (build + ship).
+
+## 1. One-time toolchain (fresh Mac only — already done here, see §0)
+
+```bash
+xcode-select --install                                   # Command-Line Tools (also install the full Xcode app from the App Store)
 # Rust + the wasm target
 curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
 rustup target add wasm32-unknown-unknown
 # wasm-bindgen CLI — MUST match the crate version EXACTLY or the build errors out
 cargo install wasm-bindgen-cli --version 0.2.126
-# Node deps (Capacitor CLI + plugins) and Ruby gems (fastlane + cocoapods)
+# Node deps (Capacitor CLI + plugins). Ruby gems (fastlane + cocoapods) need a
+# modern Ruby — the macOS system Ruby (2.6) is too old; install one:
+brew install node ruby
+export PATH="/opt/homebrew/opt/ruby/bin:$PATH"   # use brew Ruby, not system 2.6
 npm install
 bundle install
 # optional: smaller wasm (build-web.sh uses them if present)
@@ -28,7 +54,8 @@ brew install brotli
 
 Gotcha: `wasm-bindgen-cli` **must be 0.2.126** (matches `wasm-bindgen` in
 `Cargo.lock`). A mismatch fails with a "schema version" error. If you later bump
-the crate, reinstall the CLI to match.
+the crate, reinstall the CLI to match. And `bundle install` **must** run under the
+brew Ruby — system Ruby 2.6 fails on modern fastlane/cocoapods.
 
 ## 2. One-time signing (fastlane match + API key)
 
@@ -55,9 +82,9 @@ export APP_STORE_CONNECT_API_KEY_PATH="$PWD/fastlane/api_key.json"
 ## 3. Before every ship — the 3 checks that actually bite
 
 ```bash
-cargo test --lib                          # the whole session's Rust changes are UNCOMPILED — this is the real gate
-cargo test --lib --features audit_preview # the audit-preview registry variant
-npm run words:check                       # word-bank gates (charset/exclusions/size) — should already be green
+cargo test --lib                          # currently 212/0 (verified 2026-07-23); re-run after any code change
+cargo test --lib --features audit_preview # the audit-preview registry variant (207/0)
+npm run words:check                       # word-bank gates (charset/exclusions/size) — green
 ```
 
 Also, for **Swahili audio** to work in the beta, the *backend* (not the app) needs
