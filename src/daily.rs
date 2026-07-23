@@ -319,14 +319,15 @@ mod tests {
     #[cfg(not(feature = "audit_preview"))]
     #[test]
     fn inactive_locale_falls_back_to_en() {
-        // A still-gated locale (ru is ComingSoon) is routed by `locale_for` to the
-        // English pool, so its Daily set matches English. An ACTIVE locale (es, now
-        // reactivated) draws its own pool and must differ.
+        // A still-gated locale (ar is ComingSoon + RTL-gated) is routed by
+        // `locale_for` to the English pool, so its Daily set matches English. An
+        // ACTIVE locale (Russian, now shipped with its own bank) draws its own pool
+        // and must differ. (ru used to be the gated example here; it is active now.)
         let (_, en) = build_words("en", "2026-07-10", false);
+        let (_, ar) = build_words("ar", "2026-07-10", false);
+        assert_eq!(en, ar, "a gated locale should fall back to the English set");
         let (_, ru) = build_words("ru", "2026-07-10", false);
-        assert_eq!(en, ru, "a gated locale should fall back to the English set");
-        let (_, es) = build_words("es", "2026-07-10", false);
-        assert_ne!(en, es, "an active locale draws its own pool");
+        assert_ne!(en, ru, "an active locale draws its own pool");
     }
 
     #[test]
