@@ -1,14 +1,19 @@
 """
-Spell Game Backend — Flask + Google Cloud Text-to-Speech
-Auth: API key (via environment variable GOOGLE_TTS_API_KEY)
+Spell Game Backend — Flask + Google Cloud Text-to-Speech (+ Azure Speech)
 
-Local (PyCharm): set GOOGLE_TTS_API_KEY in your Run Configuration
-Replit: add GOOGLE_TTS_API_KEY in Tools -> Secrets
+Auth:
+  GOOGLE_TTS_API_KEY   — required; Google TTS for most languages.
+  AZURE_SPEECH_KEY     — optional; Azure Speech for AZURE_VOICES langs (Swahili).
+  AZURE_SPEECH_REGION  — optional; the Azure region, e.g. "eastus".
+
+Local (PyCharm): set these in your Run Configuration.
+Replit: add them in Tools -> Secrets.
 """
 
 import os
 import re
 import json
+import html
 import threading
 import hashlib
 import unicodedata
@@ -39,26 +44,16 @@ LANGUAGE_CODE = "en-US"
 # Backend Google-TTS voice per built-in language. To add a language: add an
 # entry here + its word bank on the client (words.rs) — audio + spelling then
 # work end-to-end. (`en-US-Neural2-D` above stays the default / sentence voice.)
-# Keyed on the 2-letter study-language code the frontend sends. Reconciled with the
-# active lineup (CC-MASTER-PARITY): it/nl/sv/nb/tr/th were cut and removed here;
-# Russian (ru-RU-Wavenet-D) and Swahili added.
+# GOOGLE-synthesized languages. Keyed on the 2-letter study-language code the
+# frontend sends. Reconciled with the active lineup (CC-MASTER-PARITY):
+# it/nl/sv/nb/tr/th were cut and removed here; Russian added (ru-RU-Wavenet-D).
 #
-# Swahili: Google TTS offers Swahili ONLY as sw-KE (no sw-TZ), via Chirp 3 HD
-# voices (added in the 2025-03-06 expansion). Chirp 3 HD uses the SAME synthesis
-# call as the Wavenet/Neural2 voices here — VoiceSelectionParams(language_code,
-# name) + plain-text SynthesisInput + speakingRate pace control — so no code path
-# change was needed, only this entry.
-#   !!! TODO(verify): the exact voice NAME below is a BEST GUESS. Google does not
-#   enumerate Chirp 3 HD voices per locale, and availability is project/region
-#   specific. Confirm against THIS project before relying on it:
-#     curl -s -H "Authorization: Bearer $(gcloud auth print-access-token)" \
-#       "https://texttospeech.googleapis.com/v1/voices?languageCode=sw-KE"
-#   Pick a real `name` from that output; then hear one word synthesize before ship.
-#
-# ar (Arabic) — still gated (RTL_SUPPORTED false); when it ungates, use
-#   ("ar-XA", "ar-XA-Wavenet-...") — Google's Arabic locale is ar-XA (MSA), not ar-SA.
-# An unlisted lang falls back to the English voice (see the DEFAULT_LANG guard), so
-# a WRONG sw name would 502 (caught, logged) rather than mispronounce — but verify.
+# Swahili is NOT here — it is synthesized via Azure instead (see AZURE_VOICES
+# below): Azure has named, stable Swahili neural voices, which Google's TTS does
+# not offer as confidently.
+# ar (Arabic) — still gated (RTL_SUPPORTED false); when it ungates, add
+#   ("ar-XA", "ar-XA-Wavenet-...") here — Google's Arabic locale is ar-XA (MSA).
+# A lang in neither map falls back to the English voice (see the DEFAULT_LANG guard).
 LANG_VOICES = {
     "en": ("en-US", "en-US-Neural2-D"),
     "es": ("es-ES", "es-ES-Neural2-B"),
@@ -67,12 +62,22 @@ LANG_VOICES = {
     "pt": ("pt-BR", "pt-BR-Neural2-B"),
     "pl": ("pl-PL", "pl-PL-Wavenet-B"),
     "ru": ("ru-RU", "ru-RU-Wavenet-D"),
-    "sw": ("sw-KE", "sw-KE-Chirp3-HD-Aoede"),  # TODO(verify): best guess — see note above
     "vi": ("vi-VN", "vi-VN-Wavenet-A"),
     "ko": ("ko-KR", "ko-KR-Wavenet-A"),
     "ja": ("ja-JP", "ja-JP-Wavenet-B"),
     "fil": ("fil-PH", "fil-PH-Wavenet-A"),
     "zh": ("cmn-CN", "cmn-CN-Wavenet-A"),
+}
+
+# AZURE-synthesized languages — for locales Google lacks a solid voice for.
+# Azure Speech has named neural Swahili voices for both Kenya and Tanzania:
+#   sw-KE (Kenya):    sw-KE-ZuriNeural (F), sw-KE-RafikiNeural (M)
+#   sw-TZ (Tanzania): sw-TZ-RehemaNeural (F), sw-TZ-DaudiNeural (M)
+# To switch variant/voice, change the entry below. Requires AZURE_SPEECH_KEY +
+# AZURE_SPEECH_REGION (see below); if unset, a Swahili request 502s (caught,
+# logged) rather than mispronouncing in English.
+AZURE_VOICES = {
+    "sw": ("sw-KE", "sw-KE-ZuriNeural"),
 }
 DEFAULT_LANG = "en"
 
@@ -80,6 +85,14 @@ SPEAKING_RATE_NORMAL = 0.85  # slower, clearer enunciation
 SPEAKING_RATE_SLOW = 0.6
 VOLUME_GAIN_DB = 4.0  # louder baseline; stay well under the 16 max to avoid clipping
 MAX_WORD_LENGTH = 45  # longest word in major dictionaries
+
+# Azure Speech (for AZURE_VOICES langs, e.g. Swahili). Optional: only needed if a
+# request for an Azure-routed language comes in — a missing key/region raises at
+# synth time (caught -> 502), it does not block startup like GOOGLE_TTS_API_KEY.
+AZURE_SPEECH_KEY = os.environ.get("AZURE_SPEECH_KEY")
+AZURE_SPEECH_REGION = os.environ.get("AZURE_SPEECH_REGION")  # e.g. "eastus"
+# Google's numeric speaking_rate expressed as Azure SSML prosody rate (relative %).
+AZURE_RATE = {"normal": "-15%", "slow": "-40%"}
 
 # Bumped whenever synthesis settings change, so old cached clips (made with
 # the previous rate/volume/SSML) are simply orphaned rather than reused —
@@ -187,13 +200,56 @@ def _audio_config(speaking_rate: float) -> texttospeech.AudioConfig:
     )
 
 
+def _synthesize_azure(word: str, variant: str, path: str, lang: str) -> None:
+    """Synthesize via Azure Speech REST and store the MP3. Used for AZURE_VOICES
+    languages (Swahili) that Google TTS lacks a solid voice for. Output format and
+    on-disk shape match the Google path exactly (24 kHz mono MP3), so caching,
+    serving, and the volume-boost graph are all identical downstream."""
+    if not (AZURE_SPEECH_KEY and AZURE_SPEECH_REGION):
+        raise RuntimeError(
+            f"Azure Speech not configured — set AZURE_SPEECH_KEY and "
+            f"AZURE_SPEECH_REGION to synthesize '{lang}'."
+        )
+    language_code, voice_name = AZURE_VOICES[lang]
+    rate = AZURE_RATE["slow" if variant == "slow" else "normal"]
+    # word is pre-validated to letters/marks/hyphen/apostrophe, but escape anyway.
+    ssml = (
+        f"<speak version='1.0' xml:lang='{language_code}'>"
+        f"<voice xml:lang='{language_code}' name='{voice_name}'>"
+        f"<prosody rate='{rate}' volume='+{VOLUME_GAIN_DB:.2f}dB'>"
+        f"{html.escape(word, quote=False)}"
+        f"</prosody></voice></speak>"
+    )
+    url = f"https://{AZURE_SPEECH_REGION}.tts.speech.microsoft.com/cognitiveservices/v1"
+    req = urllib.request.Request(
+        url,
+        data=ssml.encode("utf-8"),
+        method="POST",
+        headers={
+            "Ocp-Apim-Subscription-Key": AZURE_SPEECH_KEY,
+            "Content-Type": "application/ssml+xml",
+            "X-Microsoft-OutputFormat": "audio-24khz-48kbitrate-mono-mp3",
+            "User-Agent": "SpellGame",  # Azure rejects requests with no User-Agent
+        },
+    )
+    with urllib.request.urlopen(req, timeout=15) as resp:
+        audio = resp.read()
+    with open(path, "wb") as f:
+        f.write(audio)
+
+
 def synthesize_to_cache(word: str, variant: str, path: str, lang: str = "en") -> None:
-    """Call Google TTS once and store the MP3 permanently.
+    """Synthesize a word once and store the MP3 permanently. Routes to Azure for
+    AZURE_VOICES languages, otherwise Google.
 
     Each variant is spoken once — the player already has a dedicated Repeat
     button for hearing a word again, so a built-in double-speak just means
     two automatic hearings before they've even asked for a repeat.
     """
+    if lang in AZURE_VOICES:
+        _synthesize_azure(word, variant, path, lang)
+        return
+
     synthesis_input = texttospeech.SynthesisInput(text=word)
     rate = SPEAKING_RATE_SLOW if variant == "slow" else SPEAKING_RATE_NORMAL
     language_code, voice_name = LANG_VOICES.get(lang, LANG_VOICES[DEFAULT_LANG])
@@ -281,7 +337,7 @@ def speak():
         return jsonify({"error": "invalid word"}), 400
     variant = "slow" if request.args.get("variant") == "slow" else "normal"
     lang = request.args.get("lang", DEFAULT_LANG)
-    if lang not in LANG_VOICES:
+    if lang not in LANG_VOICES and lang not in AZURE_VOICES:
         lang = DEFAULT_LANG
 
     path = cache_path_for(word, variant, lang)
