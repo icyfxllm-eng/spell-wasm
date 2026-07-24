@@ -175,6 +175,47 @@ def build():
     return banks
 
 
+# ---- CC-SPELL-RACING G-B: content-derived stable word IDs -------------------
+# FNV-1a-64 of NFC(word). Content-derived so a word's ID never changes when other
+# words are added/removed. MUST stay byte-identical to src/wordid.rs (a Rust test
+# pins the per-tier hashes below against a fresh Rust recompute).
+_FNV64_OFF = 0xCBF29CE484222325
+_FNV64_PRIME = 0x100000001B3
+_MASK64 = (1 << 64) - 1
+
+
+def word_id(word: str) -> int:
+    h = _FNV64_OFF
+    for b in unicodedata.normalize("NFC", word).encode("utf-8"):
+        h = ((h ^ b) * _FNV64_PRIME) & _MASK64
+    return h
+
+
+def list_hash(words) -> int:
+    """FNV-1a-64 over each word's 8-byte big-endian ID, in `words` order."""
+    h = _FNV64_OFF
+    for w in words:
+        for b in word_id(w).to_bytes(8, "big"):
+            h = ((h ^ b) * _FNV64_PRIME) & _MASK64
+    return h
+
+
+def check_id_collisions(banks):
+    """No two distinct words in one language may share a 64-bit ID. The
+    determinism the racing ghosts rely on assumes this holds; the gate makes it
+    an invariant rather than a hope. (Never expected at 64-bit.)"""
+    problems = []
+    for code in LANGS:
+        seen = {}
+        for tier in TIERS:
+            for w in banks[(code, tier)]:
+                wid = word_id(w)
+                if wid in seen and seen[wid] != w:
+                    problems.append(f"{code}: word-ID collision 0x{wid:016x} — {seen[wid]!r} vs {w!r}")
+                seen[wid] = w
+    return problems
+
+
 def render(banks) -> str:
     def esc(w):
         return w.replace("\\", "\\\\").replace('"', '\\"')
@@ -195,6 +236,20 @@ def render(banks) -> str:
             joined = ",".join(f'"{esc(w)}"' for w in words)
             lines.append(f"pub const {name}: &[&str] = &[{joined}];")
         lines.append("")
+
+    # CC-SPELL-RACING G-B: golden per-(lang,tier) wordListHash (FNV-1a-64 over the
+    # tier's ordered word IDs, SAME sorted order as the arrays above). src/wordid.rs
+    # recomputes these in Rust and a test asserts equality — the drift guard that
+    # keeps the build (Python) and runtime (Rust) hashes identical, which the ghost
+    # determinism depends on. Empty tiers are omitted.
+    lines.append("/// (lang, tier, wordListHash) — see the note in build-wordlists.py.")
+    lines.append("pub const TIER_HASHES: &[(&str, &str, u64)] = &[")
+    for code in LANGS:
+        for tier in TIERS:
+            words = sorted(banks[(code, tier)])
+            if words:
+                lines.append(f'    ("{code}", "{tier}", 0x{list_hash(words):016X}),')
+    lines.append("];")
     return "\n".join(lines) + "\n"
 
 
@@ -202,6 +257,12 @@ def main():
     check_only = "--check" in sys.argv
     banks = build()
     if banks is None:
+        sys.exit(1)
+    id_problems = check_id_collisions(banks)
+    if id_problems:
+        print("build-wordlists: word-ID collisions (CC-SPELL-RACING G-B):", file=sys.stderr)
+        for p in id_problems:
+            print(f"  {p}", file=sys.stderr)
         sys.exit(1)
     total = sum(len(v) for v in banks.values())
     out = ROOT / "src" / "word_data.rs"
