@@ -191,22 +191,33 @@ passes every acceptance test and Eric approves activation.
 - **Verified:** spell_aloud 29/29 (incl. every-command-parses, greedy es, interleave,
   buffer edits); full lib suite **266/0**; wasm + web build clean.
 
-### Phase 3 — Confusable handling + confidence surfacing
+### Phase 3 — Confusable handling + confidence surfacing  ◑ **CORE LANDED** *(native + chip UI deferred)*
 **Goal:** below-threshold letters offer a two-choice chip instead of guessing.
-- **Native (Swift):** `SpeechListener` reads `bestTranscription.segments[].confidence`
-  and includes it in the `letterToken`/`letterFinal` event payload;
-  `NativeLanguageKitPlugin.startLetterCapture` marshals it; `native_lang.rs` bridge
-  carries it into Rust. (New data, no new method.)
-- **Rust:** `src/spell_aloud.rs` — the English **E-set** (B C D E G P T V Z) and
-  **M/N** are flagged as a confusable class; when a token in that class arrives below
-  the confidence threshold, emit a `Disambiguate{a, b}` outcome → two-choice chip
-  rather than a guess. Accept **`X as in Y`** clarifiers ("B as in ball") — a new
-  lexicon grammar (`clarifiers` phrases) that resolves the chip verbally.
-- **Threshold is a calibration value** (like the racing pace bands): I will ship a
-  PROPOSED default and calibrate against the Phase-5 loopback suite; final value
-  needs sign-off (see Open items).
-- **Covers acceptance:** foundation for #2's "bare `be` → chip" (the es b/v case in
-  Phase 4 rides this).
+- **Rust core (LANDED, tested):**
+  - **Clarifiers** — `lexicons/letters/{en,es}.json` `clarifiers` connectors
+    (en `as in`/`for`/`like`; es `de`/`como en`/`como`). `events()` now confirms a
+    letter and **drops the example word** after a connector, so "b as in **you**" is
+    `[b]`, not `[b, u]`. Fully functional verbal disambiguation.
+  - **Confusable classes** — `confusable` groups in the lexicon (en E-set
+    `[b c d e g p t v z]` + `[m n]`; es `[b v]`). `are_confusable(lang, a, b)` +
+    `decide_letter(lang, letter, confidence, alt) -> Accept | Chip{a,b}`: a confident
+    or non-confusable letter is accepted; a low-confidence confusable letter with a
+    same-class alternative offers a two-choice chip. Target never consulted (G-A).
+  - **`CONFUSABLE_CONFIDENCE = 0.55` is a PROPOSED calibration value** (like the pace
+    bands) — tune against the Phase-5 loopback suite; **needs Eric's sign-off** before
+    the confidence-gated chips go live. *(Open item.)*
+  - Verified: spell_aloud **32/32**; full lib suite **269/0**.
+- **DEFERRED (device-gated, lands with Phase 4):**
+  - **Native (Swift):** `SpeechListener` to include `segments[].confidence` +
+    `alternativeSubstrings` in the `letterFinal` payload; `native_lang.rs` bridge to
+    carry them. **Additive-safe** — today `letterFinal` emits `{token}` and the input
+    method reads only `token`, so adding `{confidence, alt}` won't disturb it. Not
+    done here because it's iOS-only (can't build/test in this environment).
+  - **Chip UI in the mode** — the `#saChip` two-choice surface + tap/verbal
+    resolution. It gets its first **deterministic** trigger in **Phase 4** (an
+    unqualified es "be" is ALWAYS a chip, no confidence needed), so the UI is built
+    and exercised there; the confidence-gated path lights up once the native feed lands.
+- **Covers acceptance:** foundation for #2's "bare `be` → chip" (Phase 4 rides this).
 
 ### Phase 4 — Spanish lexicon completion + b/v rule  *(gated on G-B)*
 **Goal:** full Spanish variant set; the answer-safe ambiguity rule.

@@ -348,6 +348,63 @@ fn accept_into_still_folds_letters_ignoring_commands() {
 }
 
 // ---------------------------------------------------------------------------
+// Phase 3 — clarifiers ("X as in Y") + confusable classes / decide_letter
+// ---------------------------------------------------------------------------
+
+#[test]
+fn clarifier_confirms_a_letter_and_drops_the_example() {
+    // The example word is ignored — even when it is itself a letter homophone.
+    assert_eq!(events(EN, "bee as in ball"), vec![Event::Letter(Slot { letters: "b".into() })]);
+    // "you" is the letter U; without clarifier handling this would wrongly add U.
+    assert_eq!(events(EN, "bee as in you"), vec![Event::Letter(Slot { letters: "b".into() })]);
+    // Spanish connectors "de" / "como en".
+    assert_eq!(events(ES, "be de burro"), vec![Event::Letter(Slot { letters: "b".into() })]);
+    assert_eq!(events(ES, "be como en barco"), vec![Event::Letter(Slot { letters: "b".into() })]);
+    // Two clarified letters in a row keep only the letters.
+    assert_eq!(
+        events(EN, "bee as in ball see as in cat"),
+        vec![Event::Letter(Slot { letters: "b".into() }), Event::Letter(Slot { letters: "c".into() })]
+    );
+    // A bare letter with no connector is unaffected; a trailing connector with no
+    // example is just dropped as noise.
+    assert_eq!(events(EN, "bee"), vec![Event::Letter(Slot { letters: "b".into() })]);
+    assert_eq!(events(EN, "bee as in"), vec![Event::Letter(Slot { letters: "b".into() })]);
+}
+
+#[test]
+fn confusable_classes_are_symmetric_and_scoped() {
+    // English E-set members are mutually confusable...
+    assert!(are_confusable(EN, "b", "d"));
+    assert!(are_confusable(EN, "d", "b"));
+    assert!(are_confusable(EN, "p", "t"));
+    assert!(are_confusable(EN, "m", "n"));
+    // ...but across classes / with a vowel outside them, they are not.
+    assert!(!are_confusable(EN, "b", "m")); // different classes
+    assert!(!are_confusable(EN, "a", "b")); // 'a' is in no class
+    assert!(!are_confusable(EN, "b", "b")); // not itself
+    // Spanish b/v.
+    assert!(are_confusable(ES, "b", "v"));
+    assert!(!are_confusable(ES, "b", "d"));
+}
+
+#[test]
+fn decide_letter_accepts_when_confident_and_chips_only_low_confidence_confusables() {
+    use LetterDecision::*;
+    // Confident → always accept, even a confusable letter with a rival alternative.
+    assert_eq!(decide_letter(EN, "b", 0.9, Some("d")), Accept("b".into()));
+    // Low confidence, confusable letter, same-class alternative → two-choice chip.
+    assert_eq!(decide_letter(EN, "b", 0.3, Some("d")), Chip("b".into(), "d".into()));
+    // Low confidence but the alternative is NOT same-class → take the best guess.
+    assert_eq!(decide_letter(EN, "b", 0.3, Some("m")), Accept("b".into()));
+    // Low confidence, no alternative offered → best guess.
+    assert_eq!(decide_letter(EN, "b", 0.3, None), Accept("b".into()));
+    // Low confidence on a non-confusable letter (a vowel) → accept.
+    assert_eq!(decide_letter(EN, "a", 0.1, Some("e")), Accept("a".into()));
+    // Spanish b/v chip.
+    assert_eq!(decide_letter(ES, "b", 0.4, Some("v")), Chip("b".into(), "v".into()));
+}
+
+// ---------------------------------------------------------------------------
 // Robustness / edge cases
 // ---------------------------------------------------------------------------
 

@@ -59,6 +59,14 @@ struct RawLexicon {
     /// (`delete` / `clear` / `done`). Kept in the SAME single-source file (I4).
     #[serde(default)]
     commands: HashMap<String, String>,
+    /// Acoustically-confusable letter classes (Phase 3): a low-confidence letter in
+    /// a class offers a two-choice chip instead of a guess. Letters, not names.
+    #[serde(default)]
+    confusable: Vec<Vec<String>>,
+    /// Clarifier connectors (Phase 3): after a letter, `<letter> as in <word>`
+    /// confirms the letter and the example word is ignored.
+    #[serde(default)]
+    clarifiers: Vec<String>,
 }
 
 /// A spoken editing / turn command (Phase 2). Distinct from letter input: it acts on
@@ -99,6 +107,10 @@ struct Lexicon {
     table: HashMap<String, String>,
     /// Spoken commands (Phase 2): normalized phrase → `Command`.
     commands: HashMap<String, Command>,
+    /// Confusable letter classes (Phase 3), letters normalized.
+    confusable: Vec<Vec<String>>,
+    /// Clarifier connectors (Phase 3) as normalized word sequences, longest first.
+    clarifiers: Vec<Vec<String>>,
     max_words: usize,
     contextual: Vec<String>,
 }
@@ -156,9 +168,25 @@ fn compile(raw: &RawLexicon) -> Lexicon {
             contextual.push(k.clone());
         }
     }
+    // Confusable classes (Phase 3): normalize each letter for matching.
+    let confusable: Vec<Vec<String>> =
+        raw.confusable.iter().map(|g| g.iter().map(|l| norm_word(l)).collect()).collect();
+    // Clarifier connectors (Phase 3): normalized word sequences, longest first, and
+    // biased on the recognizer.
+    let mut clarifiers: Vec<Vec<String>> = raw
+        .clarifiers
+        .iter()
+        .map(|c| {
+            contextual.push(c.clone());
+            norm_phrase(c).split(' ').map(str::to_string).collect()
+        })
+        .filter(|w: &Vec<String>| !w.is_empty())
+        .collect();
+    clarifiers.sort_by(|a, b| b.len().cmp(&a.len()));
+
     contextual.sort();
     contextual.dedup();
-    Lexicon { table, commands, max_words, contextual }
+    Lexicon { table, commands, confusable, clarifiers, max_words, contextual }
 }
 
 /// Per-language compiled lexicon, built once and leaked for a `'static` ref (one
@@ -345,13 +373,80 @@ pub fn events(lang: &str, transcript: &str) -> Vec<Event> {
         }
         match hit {
             Some((len, ev)) => {
+                let is_letter = matches!(ev, Event::Letter(_));
                 out.push(ev);
                 i += len;
+                // Clarifier (Phase 3): after a LETTER, `as in <word>` confirms it and
+                // the example word is dropped — so "b as in you" is B, not B then U.
+                if is_letter {
+                    i += clarifier_skip(lex, &words[i..]);
+                }
             }
             None => i += 1,
         }
     }
     out
+}
+
+/// If `rest` begins with a clarifier connector followed by at least one example word,
+/// return how many tokens to skip (connector + one example). Else 0.
+fn clarifier_skip(lex: &Lexicon, rest: &[String]) -> usize {
+    for conn in &lex.clarifiers {
+        let clen = conn.len();
+        // need the connector AND at least one example word after it
+        if rest.len() > clen && rest[..clen] == conn[..] {
+            return clen + 1;
+        }
+    }
+    0
+}
+
+/// English letters that rhyme (the "E-set") and m/n are acoustically confusable; a
+/// low-confidence letter in a class is worth confirming rather than guessing (F4).
+///
+/// PROPOSED confidence threshold — below it, a confusable letter offers a two-choice
+/// chip. This is a CALIBRATION value (like the racing pace bands): it ships as a
+/// proposal and is tuned against the Phase-5 loopback suite; the final value needs
+/// Eric's sign-off before the confusable chips go live.
+pub const CONFUSABLE_CONFIDENCE: f32 = 0.55;
+
+fn confusable_group<'a>(lex: &'a Lexicon, letter: &str) -> Option<&'a [String]> {
+    lex.confusable.iter().find(|g| g.iter().any(|l| l == letter)).map(Vec::as_slice)
+}
+
+/// True if `a` and `b` are distinct letters in the same confusable class for `lang`.
+pub fn are_confusable(lang: &str, a: &str, b: &str) -> bool {
+    if a == b {
+        return false;
+    }
+    lexicon(lang)
+        .and_then(|lex| confusable_group(lex, a))
+        .map(|g| g.iter().any(|l| l == b))
+        .unwrap_or(false)
+}
+
+/// What to do with one finalized letter from the recognizer, given how sure it was
+/// (`confidence`, 0..1) and its best `alt`ernative segment reading. A confident or
+/// non-confusable letter is accepted; a low-confidence confusable letter whose
+/// alternative is a same-class letter offers a two-choice **chip** instead of a guess
+/// (F4). The target is never consulted (G-A) — ambiguity resolves via the chip.
+#[derive(Clone, Debug, PartialEq, Eq)]
+pub enum LetterDecision {
+    Accept(String),
+    Chip(String, String),
+}
+
+pub fn decide_letter(lang: &str, letter: &str, confidence: f32, alt: Option<&str>) -> LetterDecision {
+    if confidence >= CONFUSABLE_CONFIDENCE {
+        return LetterDecision::Accept(letter.to_string());
+    }
+    if let Some(alt) = alt {
+        if are_confusable(lang, letter, alt) {
+            return LetterDecision::Chip(letter.to_string(), alt.to_string());
+        }
+    }
+    // Low confidence but no same-class alternative to offer → take the best guess.
+    LetterDecision::Accept(letter.to_string())
 }
 
 /// What the mode should do after applying one utterance's events.

@@ -59,5 +59,12 @@
     "delete": "delete", "backspace": "delete", "undo": "delete", "back": "delete",
     "clear": "clear", "clear all": "clear", "start over": "clear", "erase all": "clear",
     "done": "done", "finished": "done", "finish": "done", "enter": "done"
-  }
+  },
+  "_doc_confusable": "Acoustically confusable letter classes (Phase 3): the rhyming E-set and the m/n pair. A low-confidence letter in a class offers a two-choice chip instead of a guess.",
+  "confusable": [
+    ["b", "c", "d", "e", "g", "p", "t", "v", "z"],
+    ["m", "n"]
+  ],
+  "_doc_clarifiers": "Spoken clarifier connectors (Phase 3): after a letter, '<letter> as in <word>' confirms the letter and the example word is ignored (e.g. 'b as in ball').",
+  "clarifiers": ["as in", "as an", "for", "like"]
 }

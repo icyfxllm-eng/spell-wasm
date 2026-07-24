@@ -62,5 +62,11 @@
     "borrar": "delete", "borra": "delete", "borrar uno": "delete", "atrás": "delete",
     "borrar todo": "clear", "borra todo": "clear", "empezar de nuevo": "clear", "limpiar": "clear",
     "listo": "done", "ya": "done", "terminé": "done", "hecho": "done"
-  }
+  },
+  "_doc_confusable": "Confusable classes (Phase 3). b/v are homophones in Spanish — an UNQUALIFIED 'be' is always ambiguous and resolves via a chip, never auto-guessed (Phase 4, D-B).",
+  "confusable": [
+    ["b", "v"]
+  ],
+  "_doc_clarifiers": "Spoken clarifier connectors (Phase 3): '<letter> de <palabra>' / '<letter> como en <palabra>' confirms the letter; the example word is ignored (e.g. 'be de burro').",
+  "clarifiers": ["de", "como en", "como"]
 }
