@@ -29,7 +29,7 @@ for (const lang of LOCALES) {
   await page.click('#setupChip').catch(() => {});
   await page.selectOption('#langSel', lang).catch(() => {});      // native endonym (often longer than "English")
   await page.selectOption('#levelSel', 'expert').catch(() => {}); // longest difficulty label
-  await page.selectOption('#modeSel', 'on').catch(() => {});      // timed (Quick Bee label)
+  await page.selectOption('#modeSel', 'on').catch(() => {});      // timed (Quick Spell label)
   await page.click('#setupDone').catch(() => {});
   await page.waitForTimeout(200);
   const info = await page.evaluate(() => {
