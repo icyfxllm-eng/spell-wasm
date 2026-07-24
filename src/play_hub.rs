@@ -38,7 +38,9 @@ use crate::App;
 /// is what lets the same file describe a mode for a future surface that has no
 /// such element. `None` = an in-round aid with no destination.
 const LAUNCH: [(&str, Option<&str>); 7] = [
-    ("ghost_racing", None),       // races inside The Climb
+    // Races inside The Climb, but HAS its own screen: it shows the ghost you're
+    // racing (your best run for this language) and starts a Climb run.
+    ("ghost_racing", Some("ghostOpenBtn")),
     ("syllable_replay", None),    // fires on a miss, on the reveal surface
     ("say_it", Some("sayItBtn")), // a real session mode
     ("photo_list", None),         // a camera button on My Words
@@ -185,7 +187,12 @@ mod tests {
     fn only_session_modes_have_a_destination() {
         assert_eq!(launch_for("say_it"), Some("sayItBtn"));
         assert_eq!(launch_for("online_spelloff"), Some("soBtn"));
-        for aid in ["ghost_racing", "syllable_replay", "photo_list", "spell_aloud", "word_stories"] {
+        // Ghost racing got a real destination deliberately: tapping it opens the
+        // ghost screen (ghost::wire_screen), which shows the best run you're
+        // racing for this language and routes into The Climb. It is no longer a
+        // tile that goes nowhere — which is exactly what this test guards.
+        assert_eq!(launch_for("ghost_racing"), Some("ghostOpenBtn"));
+        for aid in ["syllable_replay", "photo_list", "spell_aloud", "word_stories"] {
             assert_eq!(launch_for(aid), None, "{aid} is an in-round aid with no destination");
         }
     }

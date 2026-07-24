@@ -22,7 +22,9 @@ use std::collections::HashMap;
 use serde::{Deserialize, Serialize};
 
 use crate::dom;
+use crate::i18n::{t, tp};
 use crate::storage;
+use crate::App;
 
 const GHOST_KEY: &str = "spell_ghost_v1";
 
@@ -263,6 +265,78 @@ fn update_pace(streak: u32, elapsed_ms: f64) {
     dom::toggle_class("ghostPace", "ahead", delta > 0);
     dom::toggle_class("ghostPace", "behind", delta < 0);
     dom::toggle_class("ghostPace", "btn-hide", false);
+}
+
+// ---------- the Ghost racing screen ----------
+//
+// Ghost racing used to be a non-tappable "aid" tile in the Ways-to-play hub,
+// because it has no session of its own — it races you INSIDE The Climb. It now
+// has a real destination that answers "tap it and what happens?": it shows the
+// ghost you are actually racing (your stored best run for the current study
+// language) and sends you into a Climb run to race it.
+
+/// `mm:ss` for a duration in ms.
+fn fmt_mmss(ms: u32) -> String {
+    let secs = ms / 1000;
+    format!("{}:{:02}", secs / 60, secs % 60)
+}
+
+/// Fill the screen from the stored best run for the CURRENT study language, so
+/// the numbers are the player's own — never placeholder copy. A language with no
+/// recorded run gets the "how to set one" state instead of an empty panel.
+pub fn reflect_screen(app: &App) {
+    let lang = app.borrow().lang.clone();
+    dom::set_text("ghostTitle", &t("tools.ghost.name"));
+    dom::set_text("ghostDesc", &t("tools.ghost.desc"));
+    dom::set_text("ghostStart", &t("ghost.screen.start"));
+    match best_for(&lang) {
+        // `reached() == 0` is a stored-but-empty run (a first-word miss); it is
+        // not something you can race, so it reads as "no ghost yet".
+        Some(run) if run.reached() > 0 => {
+            dom::toggle_class("ghostStat", "is-empty", false);
+            let sub = tp("ghost.screen.best", &[("time", &fmt_mmss(run.time_to_reach()))]);
+            dom::set_html(
+                "ghostStat",
+                &format!(
+                    "<span class=\"gs-big\">{}</span><span class=\"gs-sub\">{}</span>",
+                    run.reached(),
+                    dom::escape_html(&sub)
+                ),
+            );
+        }
+        _ => {
+            dom::toggle_class("ghostStat", "is-empty", true);
+            dom::set_text("ghostStat", &t("ghost.screen.none"));
+        }
+    }
+}
+
+pub fn open_screen(app: &App) {
+    reflect_screen(app);
+    dom::add_class("ghostScreen", "show");
+}
+
+pub fn close_screen() {
+    dom::remove_class("ghostScreen", "show");
+}
+
+/// Wire the screen once at startup. Two ways out (✕ and the backdrop), because a
+/// dialog with one escape hatch is one bug away from being a trap.
+pub fn wire_screen(app: &App) {
+    let a = app.clone();
+    dom::on_click("ghostOpenBtn", move || open_screen(&a));
+    dom::on_click("ghostClose", close_screen);
+    dom::on::<web_sys::Event, _>("ghostScreen", "click", |e| {
+        // Only the backdrop itself — a click inside the dialog must not close it.
+        if dom::is_self_target(&e, "ghostScreen") {
+            close_screen();
+        }
+    });
+    // The screen doesn't reimplement The Climb; it routes to the real entry point.
+    dom::on_click("ghostStart", || {
+        close_screen();
+        dom::click("climbBtn");
+    });
 }
 
 #[cfg(test)]

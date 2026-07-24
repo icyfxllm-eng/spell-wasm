@@ -689,6 +689,12 @@
   /* Empty hub: never render a blank box. Reachable today — e.g. a Preview
      language on web filters out every mode. */
   .hub-empty{color:var(--muted-2);font-size:13.5px;text-align:center;padding:18px 6px 6px;line-height:1.5}
+  /* Ghost racing screen — same containing-block requirement as the hub. */
+  #ghostScreen .modal{position:relative}
+  .ghost-stat{background:var(--panel-2);border:1px solid var(--edge);border-radius:14px;padding:16px 14px;margin:4px 0 18px;line-height:1.5}
+  .ghost-stat .gs-big{font-family:var(--display);font-weight:800;font-size:30px;color:var(--amber);line-height:1.1;display:block;margin-bottom:4px}
+  .ghost-stat .gs-sub{color:var(--muted);font-size:13px}
+  .ghost-stat.is-empty{color:var(--muted-2);font-size:13.5px}
   .mode-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;margin-top:26px}
   .mode-tile{display:flex;flex-direction:column;align-items:flex-start;gap:4px;text-align:start;background:var(--panel-2);border:1px solid var(--edge);border-radius:14px;padding:14px;color:var(--ink);font-family:inherit;min-height:96px}
   /* Only a button is interactive. */
@@ -1072,6 +1078,23 @@
       <div class="mode-grid" id="playHubGrid" role="group" aria-label="Ways to play"></div>
     </div>
   </div>
+
+  <!-- Ghost racing screen (F6). The Ways-to-play tile now HAS a destination: it
+       routes to #ghostOpenBtn (hidden), which opens this. Body is filled by
+       ghost::reflect_screen — it reads the stored best run for the CURRENT study
+       language, so the numbers are real, never placeholder copy. -->
+  <div class="scrim" id="ghostScreen">
+    <div class="modal">
+      <button class="ghost hub-x" id="ghostClose" aria-label="Close">✕</button>
+      <h3><span aria-hidden="true">👻</span> <span id="ghostTitle"></span></h3>
+      <p id="ghostDesc"></p>
+      <div class="ghost-stat" id="ghostStat"></div>
+      <button class="btn btn-check" id="ghostStart" style="width:100%"></button>
+    </div>
+  </div>
+  <!-- Hidden entry point the hub tile clicks (same indirection every other mode
+       uses — the hub routes, it does not reimplement). -->
+  <button id="ghostOpenBtn" class="btn-hide" aria-hidden="true" tabindex="-1"></button>
 
   <div class="scrim" id="photoScrim">
     <div class="modal wide">
