@@ -349,6 +349,21 @@ pub fn interpret(lang: &str, transcript: &str) -> SpellOutcome {
     SpellOutcome::Insert(parsed.letters)
 }
 
+/// D3 (CC-SPELL-ALOUD-INTEGRATION, Feature 4): does this utterance SAY THE TARGET
+/// word — as the whole transcript or as any single whitespace token — NFC +
+/// case-insensitive? If so the WHOLE utterance is discarded (zero letters), even with
+/// letters embedded alongside ("cat see ay tee"). The target is used ONLY to reject
+/// here, NEVER to resolve or disambiguate letters (G-A's anti-leak intent holds for
+/// letter mapping — G-INT-2). Matches a single token, not a joined one, so genuine
+/// single-letter ASR ("c a t") spelling the word is never mistaken for saying it.
+pub fn says_target(transcript: &str, target: &str) -> bool {
+    let t = norm_word(target);
+    if t.is_empty() {
+        return false;
+    }
+    transcript.split_whitespace().map(norm_word).any(|w| w == t)
+}
+
 /// Fold one finalized utterance into a slot `buffer` — the push-and-hold mode's
 /// accumulator (Phase 1). Only a genuine spelling (`Insert`) contributes: its slots
 /// are appended and the newly-added letters returned (for spoken echo). A whole word,
@@ -565,6 +580,9 @@ thread_local! {
     /// The answer text present when capture began — voice spelling APPENDS to it,
     /// and any failure state reverts to it (typed input is never lost).
     static BASE: RefCell<String> = const { RefCell::new(String::new()) };
+    /// The current target word — read ONLY for D3 whole-word rejection (G-INT-2),
+    /// NEVER given to the recognizer or used to resolve letters (G-A).
+    static TARGET: RefCell<String> = const { RefCell::new(String::new()) };
     /// True once the permission explainer has been shown this app-run.
     static EXPLAINED: Cell<bool> = const { Cell::new(false) };
 }
@@ -630,16 +648,17 @@ pub fn mic_tap(app: &App) {
         native_lang::stop_letter_capture();
         return;
     }
-    let (lang, base, can) = {
+    let (lang, target, base, can) = {
         let s = app.borrow();
-        (s.lang.clone(), s.answer.clone(), crate::game::can_type(&s))
+        (s.lang.clone(), s.word.clone(), s.answer.clone(), crate::game::can_type(&s))
     };
     if !can {
         return;
     }
-    // The target word is deliberately NOT read here (answer-leak invariant, G-A):
-    // the matcher rejects whole words by low letter-yield, never by the answer.
+    // The target is read ONLY for D3 whole-word rejection (G-INT-2). It is NOT given
+    // to the recognizer or the letter matcher, and never resolves letters (G-A).
     BASE.with(|b| *b.borrow_mut() = base);
+    TARGET.with(|t| *t.borrow_mut() = target);
     CAPTURING.with(|c| c.set(true));
     crate::dom::add_class("voiceSpellMic", "listening");
     set_status("voiceSpell.listening");
@@ -686,17 +705,24 @@ fn on_final(app: &App, lang: &str, transcript: &str) {
     }
     end_capture_ui();
     let base = BASE.with(|b| b.borrow().clone());
+    let target = TARGET.with(|t| t.borrow().clone());
+    // D3 (Feature 4): the utterance SAYS THE TARGET WORD (whole or embedded) → discard
+    // the ENTIRE utterance, nudge to spell it out. Zero letters, never a miss (a
+    // rejected input, not a scoring event). Only the target rejects (D2).
+    if says_target(transcript, &target) {
+        crate::game::set_answer(app, &base);
+        set_status("voiceSpell.spellItOut");
+        return;
+    }
     match interpret(lang, transcript) {
         SpellOutcome::Insert(letters) => {
             crate::game::set_answer(app, &format!("{}{}", base, letters));
             crate::haptics::key_tap();
             set_status("");
         }
-        SpellOutcome::WholeWord => {
-            crate::game::set_answer(app, &base); // insert nothing; keep typed text
-            set_status("voiceSpell.spellItOut");
-        }
-        SpellOutcome::Nothing => {
+        // A non-target word or babble is an IGNORED token (D2/A5), not a rejection: a
+        // subtle "didn't catch that", buffer untouched — no "spell it out" nudge.
+        SpellOutcome::WholeWord | SpellOutcome::Nothing => {
             crate::game::set_answer(app, &base);
             set_status("voiceSpell.didntCatch");
         }

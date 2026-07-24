@@ -468,6 +468,62 @@ fn input_method_parse_still_auto_resolves_bv() {
 }
 
 // ---------------------------------------------------------------------------
+// D3 whole-word rejection (CC-SPELL-ALOUD-INTEGRATION Feature 4 / A2, A3, A5)
+// ---------------------------------------------------------------------------
+
+/// A6: reserved voice commands (undo/clear/…) must NEVER collide with a letter name
+/// in that language's lexicon — else "delete" could be swallowed as a letter. CI gate.
+#[test]
+fn a6_reserved_commands_never_collide_with_letter_names() {
+    use std::collections::HashSet;
+    for lang in [EN, ES] {
+        let raw: RawLexicon = serde_json::from_str(source(lang).unwrap()).unwrap();
+        assert!(!raw.commands.is_empty(), "{lang}: expected reserved commands");
+        let mut letters: HashSet<String> = HashSet::new();
+        for group in [&raw.letter_names, &raw.homophones, &raw.multigraph, &raw.diacritics] {
+            for k in group.keys() {
+                letters.insert(norm_phrase(k));
+            }
+        }
+        for cmd in raw.commands.keys() {
+            assert!(
+                !letters.contains(&norm_phrase(cmd)),
+                "{lang}: reserved command {cmd:?} collides with a letter name"
+            );
+        }
+        // The spec's two required commands exist (undo-style + clear).
+        let ids: HashSet<&str> = raw.commands.values().map(String::as_str).collect();
+        assert!(ids.contains("delete"), "{lang}: needs an undo/delete command");
+        assert!(ids.contains("clear"), "{lang}: needs a clear command");
+    }
+}
+
+#[test]
+fn d3_says_target_rejects_whole_and_embedded_only() {
+    // A2: saying the word itself.
+    assert!(says_target("cat", "cat"));
+    assert!(says_target("Cat.", "cat")); // case + edge punctuation
+    // A3: the target embedded alongside letters voids the whole utterance.
+    assert!(says_target("cat see ay tee", "cat"));
+    assert!(says_target("see ay tee cat", "cat"));
+    // Genuine spelling is NOT the word — never a false trip.
+    assert!(!says_target("see ay tee", "cat")); // homophone letter names → C A T
+    assert!(!says_target("c a t", "cat")); // single-letter ASR must NOT join to "cat"
+    // A5 / D2: only the TARGET rejects; another word is just an ignored token.
+    assert!(!says_target("dog", "cat"));
+    assert!(!says_target("elephant", "cat"));
+    // Spanish, NFC.
+    assert!(says_target("niño", "niño"));
+    assert!(!says_target("ene i eñe o", "niño"));
+    // D6: if the target IS a letter-homophone word, saying it rejects (Feature 4 wins
+    // over the lexicon mapping) — but the homophone spelling it does not.
+    assert!(says_target("sea", "sea")); // "sea" == target → rejected
+    assert!(!says_target("see", "sea")); // "see" != "sea" → spells C, not rejected
+    // Empty target never rejects.
+    assert!(!says_target("cat", ""));
+}
+
+// ---------------------------------------------------------------------------
 // Robustness / edge cases
 // ---------------------------------------------------------------------------
 

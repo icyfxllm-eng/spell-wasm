@@ -37,10 +37,17 @@ fixtures — **(c) decide the fate of the standalone overlay.**
 
 | Gate | The conflict | Needs from Eric |
 |---|---|---|
-| **G-INT-1 · Architecture: overlay vs. input-method** | This spec wants the mode to be the **standard game flow with voice input** (typed tiles, same submit, "standard-mode input variant"). CC-SPELL-ALOUD Phases 1–6 built a **standalone `#spellAloud` overlay** with its own tiles/buffer/chip/commands. They can't both be "the mode." | **Which is the mode?** (A) The **input method promoted** to the hub — the standalone overlay is retired/removed; the hub tile drops you into normal play with the voice mic on. Matches this spec. **Recommended.** (B) Keep the standalone overlay and wire *it* to the engine/submit — contradicts "tiles exactly like typed input." |
-| **G-INT-2 · D3 (target-based rejection) reverses G-A (answer-leak, your Phase-0 ruling)** | **Feature 4 / D3 (you marked FINAL):** reject an utterance by matching it **against the target word** (ASR or NFC-casefold), including embedded ("cat see ay tee" → discard). This **requires the target in the matcher**. But **G-A (you ruled in Phase 0):** the target is **NEVER** given to the matcher; whole-word rejection is by **letter-yield alone**. I dropped the target from `interpret` per G-A. D3 needs it back. | **Confirm D3 wins** (use the target to *reject* whole-word utterances — but never to *disambiguate* letters, so G-A's anti-leak intent still holds for letter resolution). D3 is the newer, explicit, "FINAL" decision, so it likely governs — but it reverses a prior ruling, so per the spec I stop and ask rather than infer. |
+| **G-INT-1 · Architecture: overlay vs. input-method** | This spec wants the mode to be the **standard game flow with voice input** (typed tiles, same submit, "standard-mode input variant"). CC-SPELL-ALOUD Phases 1–6 built a **standalone `#spellAloud` overlay**. | ✅ **RULED 2026-07-24 — promote the INPUT METHOD.** The hub tile drops into normal play with the voice mic on; the standalone overlay (+ chip/push-to-talk, Phases 1–6) is **retired as superseded**. |
+| **G-INT-2 · D3 (target-based rejection) reverses G-A (answer-leak, Phase-0 ruling)** | **Feature 4 / D3:** reject an utterance by matching it **against the target word**; **G-A (Phase 0):** the target is **NEVER** given to the matcher. | ✅ **RULED 2026-07-24 — D3 wins.** Reintroduce the target ONLY to **reject** whole-word utterances (exact/embedded), never to **disambiguate** letters — so G-A's anti-leak intent still holds for letter resolution. Reverses the Phase-0 drop-the-target change in the input method. |
 
-**Nothing below is built until G-INT-1 and G-INT-2 are ruled.**
+**✅ Both gates ruled — implementation may proceed on this branch (still REVIEW-GATED: no merge/ship without sign-off).**
+
+## Retiring the overlay (per G-INT-1)
+The standalone `#spellAloud` mode surface (`src/spell_aloud/screen.rs`, its DOM in
+`index.html`, the `dev.rs` Spell-Aloud entry) is **superseded**. It ships hidden behind
+the dev door (builds 60–63), so it harms nothing in production; it will be removed as a
+cleanup step on this branch. The **parser core** it exercised (`parse`/`events`/lexicons)
+is kept — the input method uses it.
 
 ---
 
