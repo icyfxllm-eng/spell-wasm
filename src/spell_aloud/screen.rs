@@ -68,13 +68,19 @@ pub fn reflect(app: &App) {
     dom::set_text("saTitle", &crate::i18n::t("tools.spellaloud.name"));
     dom::set_text("saMicLabel", &crate::i18n::t("voiceSpell.mic"));
     let slots = BUFFER.with(|b| b.borrow().clone());
+    render_slots(&slots);
+}
+
+/// Render a slot list into the surface (empty → the hint). Shared by `reflect` and
+/// the live partial preview.
+fn render_slots(slots: &[Slot]) {
     if slots.is_empty() {
         dom::set_html(
             "saSlots",
             &format!("<span class=\"sa-empty\">{}</span>", dom::escape_html(&crate::i18n::t("tools.spellaloud.desc"))),
         );
     } else {
-        dom::set_html("saSlots", &slots_html(&slots));
+        dom::set_html("saSlots", &slots_html(slots));
     }
 }
 
@@ -102,15 +108,11 @@ pub fn wire(app: &App) {
         }
     });
 
-    // Push-and-hold: press starts capture, release (up / leave / cancel) finalizes.
-    let a_press = app.clone();
-    dom::on::<web_sys::Event, _>("saMic", "pointerdown", move |e| {
-        e.prevent_default(); // don't also fire a synthetic mouse/scroll
-        press(&a_press);
-    });
-    for kind in ["pointerup", "pointerleave", "pointercancel"] {
-        dom::on::<web_sys::Event, _>("saMic", kind, |_| release());
-    }
+    // Tap-to-toggle: tap to start listening, tap again (or "done" / silence) to
+    // finish. Simpler + more forgiving than push-and-hold, which made a quick tap
+    // start+stop instantly (= nothing captured).
+    let a_mic = app.clone();
+    dom::on_click("saMic", move || mic_tap(&a_mic));
 
     // Two-choice chip (Phase 4): tapping a letter resolves the disambiguation.
     let a_chip = app.clone();
@@ -128,14 +130,26 @@ fn closest_attr(e: &web_sys::Event, attr: &str) -> Option<String> {
     el.closest(&format!("[{attr}]")).ok()??.get_attribute(attr)
 }
 
-/// Mic pressed — begin letter capture (idempotent while holding).
-fn press(app: &App) {
-    if !super::enabled() || HOLDING.with(Cell::get) {
+/// Mic tapped — start listening, or stop + finalize if already listening.
+fn mic_tap(app: &App) {
+    if !super::enabled() {
+        return;
+    }
+    // Second tap while listening → stop; the plugin fires on_final to commit.
+    if HOLDING.with(Cell::get) {
+        native_lang::stop_letter_capture();
+        stop_listening_ui();
         return;
     }
     let lang = app.borrow().lang.clone();
-    // Same two conditions as the input method: per-language config + on-device bridge.
-    if !crate::consts::voice_spell(&lang) || !native_lang::available() {
+    // Availability, with FEEDBACK (the old code returned silently → "nothing
+    // happened"): the mode is English/Spanish only and needs the on-device recognizer.
+    if !crate::consts::voice_spell(&lang) {
+        set_status("tools.spellaloud.avail"); // "iPhone · English or Spanish"
+        return;
+    }
+    if !native_lang::available() {
+        set_status("voiceSpell.needsMic");
         return;
     }
     HOLDING.with(|h| h.set(true));
@@ -143,28 +157,36 @@ fn press(app: &App) {
     set_status("voiceSpell.listening");
 
     let ctx = contextual_strings(&lang);
+    let a_partial = app.clone();
+    let lang_p = lang.clone();
     let a_fin = app.clone();
     let lang_f = lang.clone();
     let a_err = app.clone();
     let ok = native_lang::start_letter_capture(
         &lang,
         &ctx,
-        |_partial| {}, // Phase 1 commits on release; live partial preview is later polish
+        move |transcript| on_partial(&a_partial, &lang_p, &transcript), // live preview
         move |transcript, confidence, alt| on_final(&a_fin, &lang_f, &transcript, confidence, alt),
         move |code| on_error(&a_err, &code),
     );
     if !ok {
         stop_listening_ui();
-        set_status("voiceSpell.didntCatch");
+        set_status("voiceSpell.needsMic");
     }
 }
 
-/// Mic released — finalize the in-flight capture (the plugin fires `on_final`).
-fn release() {
-    if HOLDING.with(Cell::get) {
-        native_lang::stop_letter_capture();
-        stop_listening_ui();
+/// Live preview while listening: show the committed slots plus the letters heard so
+/// far this utterance (replaced by the committed version on finalize).
+fn on_partial(app: &App, lang: &str, transcript: &str) {
+    let _ = app;
+    if !HOLDING.with(Cell::get) {
+        return;
     }
+    let preview = super::parse(lang, transcript).slots;
+    let committed = BUFFER.with(|b| b.borrow().clone());
+    let mut all = committed;
+    all.extend(preview);
+    render_slots(&all);
 }
 
 /// A capture finalized — apply its letter/command events to the buffer (Phase 2),
