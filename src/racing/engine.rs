@@ -68,6 +68,11 @@ impl Race {
         self.track.len()
     }
 
+    /// The opponent's final finish time in ms (0 if it recorded no laps).
+    pub fn opponent_total_ms(&self) -> u32 {
+        self.opponent_finish_ms.last().copied().unwrap_or(0)
+    }
+
     /// The lap currently being spelled (0-based); equals `laps()` once finished.
     pub fn current_lap(&self) -> usize {
         self.events.len()

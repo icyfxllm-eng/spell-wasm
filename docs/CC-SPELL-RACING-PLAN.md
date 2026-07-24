@@ -122,10 +122,18 @@ Reachable only via the hidden `spellRacingOpen` entry (ghost_racing untouched).
 i18n: 15 keys × 11 locales (acceptance #8; `i18n-check` 317 keys green). Verified
 in-browser: circuits + opponents render from real garage data, times formatted,
 selection/close/empty-state all work. 245/0 (239/0 audit-preview).
+**Done (gameplay hook):** `src/racing/session.rs` bridges the engine to the loop;
+`game::start_race`/`finish_race` ride the Daily fixed-list flow via a `daily.racing`
+flag (3 guarded hooks in game.rs: begin_lap on word-serve, end_lap on answer, finish
+branch). Start on the screen launches a real race; finish records to the garage and
+reopens the screen. **Browser-verified end-to-end:** played about→above→across, laps
+recorded with real timing, ghost saved, screen reopened showing the new Most Recent.
+Normal play unaffected (full suite 249/0, 243/0 audit-preview). D7 proven across every
+language × tier × circuit.
 **Remaining (needs decisions):**
-- **Live-race hook:** wire the engine into the spelling loop (`game.rs`) so Start
-  actually races — Start is currently a placeholder (`racing.soon`).
 - Entitlement gating in the resolver (depth not mode).
+- Photo-finish results screen (F6 polish; finish currently returns to the garage +
+  a win/lose toast). Per-keystroke capture (`keystrokes_ms` empty for now).
 - **Activation (do LAST):** `modes.json` rename `ghost_racing`→`spell_racing` + remove
   the build-55 toggle. Deferred — doing it now removes the shipped Ghost racing before
   its replacement is ready. The mode stays hidden until it passes all acceptance tests

@@ -315,5 +315,7 @@
   "racing.noCircuits": "Kulang pa ang mga salita sa wikang ito para makarera.",
   "racing.start": "Simulan ang karera",
   "racing.best": "Pinakamahusay {time}",
-  "racing.soon": "Malapit nang dumating ang live na karera."
+  "racing.soon": "Malapit nang dumating ang live na karera.",
+  "racing.won": "🏁 Panalo ka!",
+  "racing.lost": "Muntik na — subukan ulit!"
 }

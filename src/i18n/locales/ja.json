@@ -315,5 +315,7 @@
   "racing.noCircuits": "この言語はレースに十分な単語がまだありません。",
   "racing.start": "レース開始",
   "racing.best": "ベスト {time}",
-  "racing.soon": "ライブレースは近日公開。"
+  "racing.soon": "ライブレースは近日公開。",
+  "racing.won": "🏁 勝利！",
+  "racing.lost": "惜しい — もう一度！"
 }

@@ -34,6 +34,12 @@ pub struct DailyState {
     /// but on finish it submits to the match server instead of touching the
     /// Daily streak/history. Default false → ordinary Daily behavior unchanged.
     pub spelloff: bool,
+    /// When true, this fixed-list run is a Spell Racing race (CC-SPELL-RACING): it
+    /// rides the Daily word-flow machinery but records lap timing into the race
+    /// session and, on finish, saves a ghost to the garage instead of touching the
+    /// Daily streak. Default false → ordinary Daily behavior unchanged. (DailyState
+    /// is session-only, not persisted, so no serde attribute is needed.)
+    pub racing: bool,
 }
 
 /// Persisted daily progress.

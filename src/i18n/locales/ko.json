@@ -315,5 +315,7 @@
   "racing.noCircuits": "이 언어는 아직 레이스할 단어가 부족합니다.",
   "racing.start": "레이스 시작",
   "racing.best": "최고 {time}",
-  "racing.soon": "실시간 레이싱이 곧 추가됩니다."
+  "racing.soon": "실시간 레이싱이 곧 추가됩니다.",
+  "racing.won": "🏁 승리!",
+  "racing.lost": "아깝네요 — 다시 도전!"
 }

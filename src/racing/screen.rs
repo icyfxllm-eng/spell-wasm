@@ -158,10 +158,27 @@ pub fn wire(app: &App) {
         }
     });
 
-    // Start (delegated). Live race is the remaining Phase 5 hook into game.rs.
+    // Start (delegated): launch a race against the picked garage ghost on the
+    // selected circuit. Rides game::start_race (Daily-flow bridge).
+    let a3 = app.clone();
     dom::on::<web_sys::Event, _>("srOpponents", "click", move |e| {
-        if closest_attr(&e, "data-op").is_some() {
-            dom::show_toast(&t("racing.soon"));
+        let Some(idx) = closest_attr(&e, "data-op").and_then(|s| s.parse::<usize>().ok()) else {
+            return;
+        };
+        let (lang, level) = {
+            let s = a3.borrow();
+            (s.lang.clone(), s.level.clone())
+        };
+        let tier = current_tier(&level);
+        let Some(circuit) = SELECTED.with(|c| *c.borrow()) else { return };
+        // Reload the same opponent list the row was rendered from (same order).
+        let opponents = garage::load().opponents(&lang, tier, circuit);
+        if let Some((_, ghost)) = opponents.get(idx) {
+            // Only close the screen if the race actually starts (start_race returns
+            // false if a word can't resolve — never substitutes).
+            if crate::game::start_race(&a3, circuit, ghost.clone()) {
+                close();
+            }
         }
     });
 }

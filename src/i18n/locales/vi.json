@@ -315,5 +315,7 @@
   "racing.noCircuits": "Ngôn ngữ này chưa đủ từ để đua.",
   "racing.start": "Bắt đầu đua",
   "racing.best": "Tốt nhất {time}",
-  "racing.soon": "Đua trực tiếp sẽ sớm ra mắt."
+  "racing.soon": "Đua trực tiếp sẽ sớm ra mắt.",
+  "racing.won": "🏁 Bạn đã thắng!",
+  "racing.lost": "Suýt rồi — thử lại nhé!"
 }

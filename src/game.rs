@@ -990,6 +990,10 @@ pub fn next_word(app: &App) {
     speak_current(app);
     let cur_tier = app.borrow().cur_tier.clone();
     start_timer(app, &cur_tier);
+    // CC-SPELL-RACING: a racing word just went live — start its lap clock.
+    if app.borrow().daily.racing {
+        crate::racing::session::begin_lap(now_ms());
+    }
 }
 
 fn lock_inputs() {
@@ -1885,7 +1889,95 @@ pub fn start_spelloff_run(app: &App, locale: String, words: Vec<String>) {
     render_daily_bar(app);
 }
 
+/// Start a Spell Racing race against `opponent` on `circuit` (CC-SPELL-RACING
+/// Phase 5). Rides the Daily fixed-list flow (`daily.racing`), so the shared word
+/// loop serves the words while the race session records lap timing. Returns false if
+/// the opponent's words can't be resolved on the current list (never substitutes).
+pub fn start_race(app: &App, circuit: crate::racing::track::Circuit, opponent: crate::racing::format::RaceGhost) -> bool {
+    let lang = opponent.language.clone();
+    let tier = opponent.tier.clone();
+    let (mut words, mut track_ids, mut finishes) = (Vec::new(), Vec::new(), Vec::new());
+    for ev in &opponent.events {
+        match crate::wordid::resolve(&lang, &tier, ev.word_id) {
+            Some(w) => {
+                words.push(w.to_string());
+                track_ids.push(ev.word_id);
+                finishes.push(ev.finish_ms);
+            }
+            None => return false, // an unresolvable word aborts — never substitute
+        }
+    }
+    if words.is_empty() {
+        return false;
+    }
+    if app.borrow().review {
+        exit_review(app, None);
+    }
+    if app.borrow().versus.enabled {
+        exit_versus(app);
+    }
+    let t0 = now_ms();
+    let identity = crate::racing::format::Identity { avatar_id: 0, color_id: 0 }; // preset customization: later
+    let list_hash = crate::wordid::list_hash(&lang, &tier);
+    crate::racing::session::start(&lang, &tier, circuit, track_ids, finishes, list_hash, identity, t0);
+    {
+        let mut s = app.borrow_mut();
+        s.review = false;
+        s.daily.active = true;
+        s.daily.spelloff = false;
+        s.daily.racing = true;
+        s.daily.locale = lang;
+        s.daily.date = crate::daily::today();
+        s.daily.words = words;
+        s.daily.idx = 0;
+        s.daily.correct = 0;
+        s.word = String::new();
+        s.answered = false;
+        s.run_start_ms = t0;
+    }
+    // Reuse the Daily UI setup (mirrors start_spelloff_run).
+    stop_timer(true);
+    clear_meaning();
+    dom::set_disabled("langSel", true);
+    dom::set_disabled("levelSel", true);
+    dom::set_disabled("modeSel", true);
+    app.borrow_mut().answer.clear();
+    render_letters(app, false);
+    dom::set_text("hintLine", "");
+    dom::set_text("feedback", "");
+    dom::el("feedback").set_class_name("feedback");
+    dom::set_html("orbGlyph", &crate::i18n::t("daily.tapStart"));
+    dom::remove_class("dailyBar", "btn-hide");
+    render_tries(app);
+    render_daily_bar(app);
+    true
+}
+
+/// Finish a Spell Racing race: finalize the ghost into the garage, tear down the
+/// Daily UI, and return to the racing screen (now showing the new result).
+fn finish_race(app: &App) {
+    let outcome = crate::racing::session::finish(); // records the ghost to the garage
+    {
+        let mut s = app.borrow_mut();
+        s.daily.active = false;
+        s.daily.racing = false;
+        s.word = String::new();
+        s.answered = false;
+        s.cur_lang = s.lang.clone();
+    }
+    leave_daily_ui(app);
+    if let Some(o) = outcome {
+        dom::show_toast(&crate::i18n::t(if o.won { "racing.won" } else { "racing.lost" }));
+    }
+    crate::racing::screen::open(app); // reflect: the new ghost is now in the garage
+}
+
 fn finish_daily(app: &App) {
+    // CC-SPELL-RACING: a racing run finishes into the garage, not the Daily streak.
+    if app.borrow().daily.racing {
+        finish_race(app);
+        return;
+    }
     let (date, correct, total, spelloff) = {
         let s = app.borrow();
         (s.daily.date.clone(), s.daily.correct, s.daily.words.len() as u32, s.daily.spelloff)
@@ -1959,6 +2051,10 @@ fn daily_answer(app: &App, correct: bool) {
         dom::set_text("orbGlyph", "\u{2717}");
         dom::set_html("feedback", &format!("{}<span class=\"reveal\">{}</span>", crate::i18n::t("fb.itWas"), dom::escape_html(&word)));
         dom::el("feedback").set_class_name("feedback bad");
+    }
+    // CC-SPELL-RACING: record this lap into the live race (timing + correctness).
+    if app.borrow().daily.racing {
+        crate::racing::session::end_lap(now_ms(), correct);
     }
     // Streak warmth in Daily rides the run's cumulative correct count.
     set_streak_tier(app.borrow().daily.correct);

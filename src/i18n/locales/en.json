@@ -315,5 +315,7 @@
   "racing.noCircuits": "Not enough words in this language to race yet.",
   "racing.start": "Start race",
   "racing.best": "Best {time}",
-  "racing.soon": "Live racing is coming soon."
+  "racing.soon": "Live racing is coming soon.",
+  "racing.won": "🏁 You won!",
+  "racing.lost": "So close — try again!"
 }

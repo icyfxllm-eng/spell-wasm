@@ -210,4 +210,36 @@ mod tests {
         assert_eq!(sector_delta_ms(900, 1000), -100); // faster -> ahead
         assert_eq!(sector_delta_ms(1200, 1000), 200); // slower -> behind
     }
+
+    /// D7 across the whole lineup: for EVERY registered language × tier × available
+    /// circuit, a generated track repeats no word. Belt-and-suspenders over the
+    /// draw-without-replacement guarantee — proves "no repeats in any language".
+    #[test]
+    fn no_track_repeats_a_word_in_any_language() {
+        use crate::consts::{BUILTIN_LANGS, TIER_ORDER};
+        let mut checked = 0;
+        for (lang, _, _, _) in BUILTIN_LANGS {
+            for tier in TIER_ORDER {
+                for circuit in available(lang, tier) {
+                    // a few seeds, so it's not a single-draw fluke
+                    for seed in [1u64, 42, 9999] {
+                        let track = generate(lang, tier, circuit, seed)
+                            .expect("available circuit generates a track");
+                        assert_eq!(track.len(), circuit.laps());
+                        let mut u = track.clone();
+                        u.sort_unstable();
+                        u.dedup();
+                        assert_eq!(
+                            u.len(),
+                            track.len(),
+                            "{lang}/{tier}/{} seed {seed} repeated a word",
+                            circuit.id()
+                        );
+                        checked += 1;
+                    }
+                }
+            }
+        }
+        assert!(checked > 0, "expected to check at least one language");
+    }
 }

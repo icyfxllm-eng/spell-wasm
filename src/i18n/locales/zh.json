@@ -315,5 +315,7 @@
   "racing.noCircuits": "该语言的词汇还不够，无法竞速。",
   "racing.start": "开始竞速",
   "racing.best": "最佳 {time}",
-  "racing.soon": "实时竞速即将推出。"
+  "racing.soon": "实时竞速即将推出。",
+  "racing.won": "🏁 你赢了！",
+  "racing.lost": "就差一点 — 再试一次！"
 }
