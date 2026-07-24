@@ -56,6 +56,7 @@ mod word_data_audit; // unverified draft banks — audit-preview build only
 mod word_stories;
 mod words;
 mod wordid; // CC-SPELL-RACING G-B: stable content-derived word IDs + list hash
+mod racing; // CC-SPELL-RACING: the Spell Racing mode (REVIEW-GATED, phased)
 mod wordstats;
 
 use std::cell::RefCell;

@@ -56,8 +56,13 @@ phases depend only on earlier ones, never the reverse.
 - **Risk:** load-bearing; touches every language's generated data. Ship + soak before
   Phase 1. Does NOT touch gameplay — banks still serve the same words.
 
-### Phase 1 — Ghost format v1 + core record/playback  *(Rust/WASM)*
+### Phase 1 — Ghost format v1 + core record/playback  ✅ **LANDED**
 **Goal:** the versioned, free-text-free ghost data model.
+**Done:** `src/racing/format.rs` — `RaceGhost` v1 (serde), `load`/`encode`, the F1
+compatibility ladder (newer-version → refuse; per-ID resolve; unresolvable → abort,
+never substitute), identity = preset `{avatar_id,color_id}` only. Schema doc
+`docs/ghost-schema-v1.md` (D4). 8 tests incl. #1 byte-stable encode and #4
+no-free-text. Full suite 225/0 (220/0 audit-preview).
 - `src/ghost.rs` (extend) + `src/racing/format.rs` (new): `schemaVersion:i32`, word
   refs by ID, per-word + per-keystroke timestamps, correctness flags, identity =
   `{avatar_id: u8, color_id: u8}` enums only. Reader rejects unknown major version

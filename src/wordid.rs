@@ -17,6 +17,7 @@
 //!
 //! The Spell Racing mode that consumes this is REVIEW-GATED and not built; this is
 //! only Phase 0 (the foundation). Nothing here references Climb/shields (D2).
+#![allow(dead_code)] // foundation API; consumers arrive in later CC-SPELL-RACING phases
 
 use std::cell::RefCell;
 use std::collections::HashMap;
