@@ -712,6 +712,10 @@
   .sa-mic{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;padding:16px;background:var(--amber);color:#231d38;border:none;border-radius:14px;font-weight:700;font-size:16px;font-family:inherit;cursor:pointer;user-select:none;touch-action:none}
   .sa-mic.listening{background:var(--good,#39d98a);box-shadow:0 0 0 4px rgba(57,217,138,.25)}
   .sa-status{margin-top:10px;text-align:center;color:var(--muted);font-size:13px;min-height:18px}
+  .sa-chip{display:flex;flex-wrap:wrap;gap:10px;align-items:center;justify-content:center;margin:6px 0 12px}
+  .sa-chip .sa-chip-q{width:100%;text-align:center;color:var(--muted);font-size:13px;margin-bottom:2px}
+  .sa-chip-btn{min-width:56px;height:52px;font-family:var(--display);font-weight:800;font-size:24px;text-transform:uppercase;background:var(--panel-2);color:var(--ink,inherit);border:2px solid var(--amber);border-radius:12px;cursor:pointer}
+  .sa-chip-btn:active{background:var(--amber);color:#231d38}
   /* Ghost racing screen — same containing-block requirement as the hub. */
   #ghostScreen .modal{position:relative}
   .ghost-stat{background:var(--panel-2);border:1px solid var(--edge);border-radius:14px;padding:16px 14px;margin:4px 0 18px;line-height:1.5}
@@ -1144,6 +1148,7 @@
       <button class="ghost hub-x" id="saClose" aria-label="Close">✕</button>
       <h3><span aria-hidden="true">🗣️</span> <span id="saTitle"></span></h3>
       <div class="sa-slots" id="saSlots"></div>
+      <div class="sa-chip btn-hide" id="saChip"></div>
       <button type="button" class="sa-mic" id="saMic"><span aria-hidden="true">🎤</span> <span id="saMicLabel"></span></button>
       <p class="sa-status" id="saStatus" aria-live="polite"></p>
     </div>

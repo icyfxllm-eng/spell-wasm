@@ -219,14 +219,29 @@ passes every acceptance test and Eric approves activation.
     and exercised there; the confidence-gated path lights up once the native feed lands.
 - **Covers acceptance:** foundation for #2's "bare `be` → chip" (Phase 4 rides this).
 
-### Phase 4 — Spanish lexicon completion + b/v rule  *(gated on G-B)*
-**Goal:** full Spanish variant set; the answer-safe ambiguity rule.
-- `lexicons/letters/es.json`: confirm/complete the variant set (already substantial);
-  add es command + clarifier phrases (Phases 2–3 counterparts).
-- `src/spell_aloud.rs`: **an unqualified "be" is ALWAYS ambiguous → chip** (never
-  auto-resolved — auto-resolving would leak the answer). `eñe` stays first-class.
-  Accents per G-B decision.
-- **Covers acceptance:** #2 (spell "niño" incl. eñe; bare "be" always → chip).
+### Phase 4 — Spanish lexicon completion + b/v rule  ✅ **LANDED** *(G-B ruled)*
+**Goal:** full Spanish variant set; the answer-safe ambiguity rule. *(This phase also
+builds the two-choice chip UI deferred from Phase 3 — the bare-"be" rule is its first
+deterministic trigger.)*
+- `lexicons/letters/es.json`: new `ambiguous` block (`be`/`ve` → `[b, v]`) alongside
+  the qualified variants (`be larga`/`ve corta`/`uve`/`doble ve`…) — all already
+  present. Commands + clarifiers landed in Phases 2–3.
+- `src/spell_aloud.rs`: `events()` gained an `Event::Chip(a,b)`. **An unqualified
+  "be"/"ve" ALWAYS chips `{b,v}`** — never auto-resolved (that would leak the answer).
+  Qualified names (`be larga`→b), `uve`→v, multigraphs (`doble ve`→w), and clarifiers
+  resolve without a chip; **`be de burro`→b / `ve de vaca`→v** via the *example word's*
+  first letter (user speech, not the target — G-A safe). `apply_events` surfaces a
+  pending chip and holds the rest of the utterance. **The input-method `parse` is
+  UNCHANGED** — bare `be`→b/`ve`→v there, so "libro"/"verde" still spell correctly.
+- `src/spell_aloud/screen.rs` + `index.html`: the **`#saChip` two-choice UI** —
+  `show_chip`/`resolve_chip`, delegated tap handler, `voiceSpell.pick` i18n (11 locales,
+  325 keys parity). `eñe` stays first-class precomposed.
+- **Covers acceptance:** #2 — `events("ene i eñe o")`→"niño" (no chip); `events("be")`
+  → `Chip{b,v}` always.
+- **Verified:** spell_aloud **37/37**; full lib suite **274/0**; browser-verified the
+  chip renders (¿Cuál letra? · B / V) and a tap resolves (buffer + re-render).
+- **Note:** the *confidence-gated* chips from Phase 3 (`decide_letter`) light up once
+  the deferred native confidence feed lands; the chip UI itself is now done.
 
 ### Phase 5 — whisper.cpp loopback harness (the CI oracle)  *(es suite gated on G-B)*
 **Goal:** an automated oracle for the audio mode — the spec's "already in your

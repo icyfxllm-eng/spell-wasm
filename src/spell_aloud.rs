@@ -67,6 +67,11 @@ struct RawLexicon {
     /// confirms the letter and the example word is ignored.
     #[serde(default)]
     clarifiers: Vec<String>,
+    /// Deterministically-ambiguous letter names (Phase 4): a bare name the recognizer
+    /// can't disambiguate (es "be"/"ve" → b/v). In the MODE these ALWAYS chip; the
+    /// input-method `parse` keeps its plain mapping. phrase → [choiceA, choiceB].
+    #[serde(default)]
+    ambiguous: HashMap<String, Vec<String>>,
 }
 
 /// A spoken editing / turn command (Phase 2). Distinct from letter input: it acts on
@@ -92,12 +97,16 @@ impl Command {
     }
 }
 
-/// One parsed unit of a spoken utterance in the mode: a letter (fills a slot) or a
-/// command (acts on the buffer). Letters and commands can interleave in one breath.
+/// One parsed unit of a spoken utterance in the mode: a letter (fills a slot), a
+/// command (acts on the buffer), or an ambiguous name that must be disambiguated by a
+/// two-choice chip (Phase 4). Units can interleave in one breath.
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub enum Event {
     Letter(Slot),
     Command(Command),
+    /// A bare b/v-style name the recognizer can't resolve — offer `{a, b}` (never
+    /// auto-picked; auto-resolving would leak the answer).
+    Chip(String, String),
 }
 
 /// A compiled lexicon: the merged phrase→letters table (keys normalized for
@@ -111,6 +120,8 @@ struct Lexicon {
     confusable: Vec<Vec<String>>,
     /// Clarifier connectors (Phase 3) as normalized word sequences, longest first.
     clarifiers: Vec<Vec<String>>,
+    /// Ambiguous names (Phase 4): normalized phrase → (choiceA, choiceB).
+    ambiguous: HashMap<String, (String, String)>,
     max_words: usize,
     contextual: Vec<String>,
 }
@@ -184,9 +195,22 @@ fn compile(raw: &RawLexicon) -> Lexicon {
         .collect();
     clarifiers.sort_by(|a, b| b.len().cmp(&a.len()));
 
+    // Ambiguous names (Phase 4): normalized phrase → (a, b). Only well-formed pairs.
+    let mut ambiguous: HashMap<String, (String, String)> = HashMap::new();
+    for (k, choices) in &raw.ambiguous {
+        let key = norm_phrase(k);
+        if key.is_empty() || choices.len() != 2 {
+            continue;
+        }
+        let a: String = choices[0].nfc().collect();
+        let b: String = choices[1].nfc().collect();
+        max_words = max_words.max(key.split(' ').count());
+        ambiguous.insert(key, (a, b));
+    }
+
     contextual.sort();
     contextual.dedup();
-    Lexicon { table, commands, confusable, clarifiers, max_words, contextual }
+    Lexicon { table, commands, confusable, clarifiers, ambiguous, max_words, contextual }
 }
 
 /// Per-language compiled lexicon, built once and leaked for a `'static` ref (one
@@ -358,28 +382,58 @@ pub fn events(lang: &str, transcript: &str) -> Vec<Event> {
     let mut i = 0usize;
     while i < n {
         let max_len = lex.max_words.min(n - i);
-        let mut hit: Option<(usize, Event)> = None;
+        // Greedy longest match over commands, ambiguous names, then letters.
+        let mut hit: Option<(usize, Match)> = None;
         for len in (1..=max_len).rev() {
             let phrase = words[i..i + len].join(" ");
-            // Commands take priority over a same-length letter match.
             if let Some(cmd) = lex.commands.get(&phrase) {
-                hit = Some((len, Event::Command(*cmd)));
+                hit = Some((len, Match::Command(*cmd)));
+                break;
+            }
+            if let Some((a, b)) = lex.ambiguous.get(&phrase) {
+                hit = Some((len, Match::Ambiguous(a.clone(), b.clone())));
                 break;
             }
             if let Some(v) = lex.table.get(&phrase) {
-                hit = Some((len, Event::Letter(Slot { letters: v.clone() })));
+                hit = Some((len, Match::Letter(v.clone())));
                 break;
             }
         }
         match hit {
-            Some((len, ev)) => {
-                let is_letter = matches!(ev, Event::Letter(_));
-                out.push(ev);
+            Some((len, Match::Command(c))) => {
+                out.push(Event::Command(c));
+                i += len;
+            }
+            Some((len, Match::Letter(v))) => {
+                out.push(Event::Letter(Slot { letters: v }));
                 i += len;
                 // Clarifier (Phase 3): after a LETTER, `as in <word>` confirms it and
                 // the example word is dropped — so "b as in you" is B, not B then U.
-                if is_letter {
-                    i += clarifier_skip(lex, &words[i..]);
+                if let Some((skip, _example)) = clarifier_after(lex, &words[i..]) {
+                    i += skip;
+                }
+            }
+            Some((len, Match::Ambiguous(a, b))) => {
+                i += len;
+                // Phase 4: a bare b/v name ALWAYS chips — UNLESS a clarifier resolves
+                // it by the example word's first letter ("be de burro" → B). The
+                // example is user speech, not the target, so this never leaks (G-A).
+                if let Some((skip, example)) = clarifier_after(lex, &words[i..]) {
+                    let first = example.chars().next();
+                    let resolved = if first == a.chars().next() {
+                        Some(&a)
+                    } else if first == b.chars().next() {
+                        Some(&b)
+                    } else {
+                        None
+                    };
+                    match resolved {
+                        Some(letter) => out.push(Event::Letter(Slot { letters: letter.clone() })),
+                        None => out.push(Event::Chip(a, b)), // clarifier didn't disambiguate
+                    }
+                    i += skip;
+                } else {
+                    out.push(Event::Chip(a, b));
                 }
             }
             None => i += 1,
@@ -388,17 +442,23 @@ pub fn events(lang: &str, transcript: &str) -> Vec<Event> {
     out
 }
 
+/// Internal match kind at one position (kept out of the public `Event`).
+enum Match {
+    Command(Command),
+    Letter(String),
+    Ambiguous(String, String),
+}
+
 /// If `rest` begins with a clarifier connector followed by at least one example word,
-/// return how many tokens to skip (connector + one example). Else 0.
-fn clarifier_skip(lex: &Lexicon, rest: &[String]) -> usize {
+/// return `(tokens_to_skip, example_word)` (skip = connector length + the example).
+fn clarifier_after<'a>(lex: &Lexicon, rest: &'a [String]) -> Option<(usize, &'a str)> {
     for conn in &lex.clarifiers {
         let clen = conn.len();
-        // need the connector AND at least one example word after it
         if rest.len() > clen && rest[..clen] == conn[..] {
-            return clen + 1;
+            return Some((clen + 1, rest[clen].as_str()));
         }
     }
-    0
+    None
 }
 
 /// English letters that rhyme (the "E-set") and m/n are acoustically confusable; a
@@ -456,11 +516,15 @@ pub struct Applied {
     pub echo: String,
     /// `done` was spoken — the mode submits the assembled word.
     pub done: bool,
+    /// A pending two-choice disambiguation (Phase 4): the mode shows a chip and
+    /// waits for the player to pick — nothing after it in the utterance is applied.
+    pub chip: Option<(String, String)>,
 }
 
-/// Apply an event stream to the slot `buffer` (Phase 2, pure + host-tested):
-/// letters push, `Delete` pops, `Clear` empties, `Done` flags submit. `done` does
-/// NOT clear — the caller reads the assembled buffer to submit.
+/// Apply an event stream to the slot `buffer` (pure + host-tested): letters push,
+/// `Delete` pops, `Clear` empties, `Done` flags submit. A `Chip` stops processing and
+/// is returned as a pending disambiguation (letters before it are still applied).
+/// `done` does NOT clear — the caller reads the assembled buffer to submit.
 pub fn apply_events(buffer: &mut Vec<Slot>, evs: &[Event]) -> Applied {
     let mut applied = Applied::default();
     for ev in evs {
@@ -477,6 +541,10 @@ pub fn apply_events(buffer: &mut Vec<Slot>, evs: &[Event]) -> Applied {
             }
             Event::Command(Command::Done) => {
                 applied.done = true;
+            }
+            Event::Chip(a, b) => {
+                applied.chip = Some((a.clone(), b.clone()));
+                break; // wait for the player's pick before applying anything more
             }
         }
     }

@@ -49,6 +49,7 @@ fn assembled(slots: &[Slot]) -> String {
 pub fn open(app: &App) {
     BUFFER.with(|b| b.borrow_mut().clear());
     set_status("");
+    hide_chip();
     reflect(app);
     dom::add_class("spellAloud", "show");
 }
@@ -110,6 +111,21 @@ pub fn wire(app: &App) {
     for kind in ["pointerup", "pointerleave", "pointercancel"] {
         dom::on::<web_sys::Event, _>("saMic", kind, |_| release());
     }
+
+    // Two-choice chip (Phase 4): tapping a letter resolves the disambiguation.
+    let a_chip = app.clone();
+    dom::on::<web_sys::Event, _>("saChip", "click", move |e| {
+        if let Some(letter) = closest_attr(&e, "data-letter") {
+            resolve_chip(&a_chip, &letter);
+        }
+    });
+}
+
+/// The value of `attr` on the clicked element or its nearest ancestor that has it.
+fn closest_attr(e: &web_sys::Event, attr: &str) -> Option<String> {
+    use wasm_bindgen::JsCast;
+    let el = e.target()?.dyn_into::<web_sys::Element>().ok()?;
+    el.closest(&format!("[{attr}]")).ok()??.get_attribute(attr)
 }
 
 /// Mic pressed — begin letter capture (idempotent while holding).
@@ -169,14 +185,56 @@ fn on_final(app: &App, lang: &str, transcript: &str) {
     }
     let applied = BUFFER.with(|b| apply_events(&mut b.borrow_mut(), &evs));
     set_status("");
+    hide_chip(); // new speech supersedes any prior pending chip
     reflect(app);
     if !applied.echo.is_empty() {
         crate::haptics::key_tap();
         echo(app, &applied.echo);
     }
+    // A pending two-choice disambiguation (Phase 4): show the chip, wait for a pick.
+    if let Some((a, b)) = applied.chip {
+        show_chip(&a, &b);
+        return;
+    }
     if applied.done {
         submit(app);
     }
+}
+
+/// Show the two-choice disambiguation chip (Phase 4). The two letters are the ONLY
+/// options — the target is never used to pick (G-A); the player resolves it.
+fn show_chip(a: &str, b: &str) {
+    let btn = |letter: &str| {
+        format!(
+            "<button type=\"button\" class=\"sa-chip-btn\" data-letter=\"{l}\">{u}</button>",
+            l = dom::escape_html(letter),
+            u = dom::escape_html(&letter.to_uppercase()),
+        )
+    };
+    dom::set_html(
+        "saChip",
+        &format!(
+            "<span class=\"sa-chip-q\">{q}</span>{a}{b}",
+            q = dom::escape_html(&crate::i18n::t("voiceSpell.pick")),
+            a = btn(a),
+            b = btn(b),
+        ),
+    );
+    dom::remove_class("saChip", "btn-hide");
+}
+
+fn hide_chip() {
+    dom::add_class("saChip", "btn-hide");
+    dom::set_html("saChip", "");
+}
+
+/// The player picked a letter from the chip — fill the slot, echo, dismiss the chip.
+fn resolve_chip(app: &App, letter: &str) {
+    BUFFER.with(|b| b.borrow_mut().push(Slot { letters: letter.to_string() }));
+    hide_chip();
+    reflect(app);
+    crate::haptics::key_tap();
+    echo(app, letter);
 }
 
 /// `done` was spoken — submit the assembled word. The mode is a voice front-end to

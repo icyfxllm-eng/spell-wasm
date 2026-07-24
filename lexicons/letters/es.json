@@ -67,6 +67,11 @@
   "confusable": [
     ["b", "v"]
   ],
+  "_doc_ambiguous": "Phase 4: bare b/v letter names the recognizer cannot tell apart. In the MODE these ALWAYS chip {b,v} (never auto-resolved — that would leak the answer); qualified forms (be larga / ve corta / uve) and 'be de burro' clarifiers resolve them. The input-method parser keeps be->b / ve->v as before.",
+  "ambiguous": {
+    "be": ["b", "v"],
+    "ve": ["b", "v"]
+  },
   "_doc_clarifiers": "Spoken clarifier connectors (Phase 3): '<letter> de <palabra>' / '<letter> como en <palabra>' confirms the letter; the example word is ignored (e.g. 'be de burro').",
   "clarifiers": ["de", "como en", "como"]
 }

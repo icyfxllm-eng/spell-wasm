@@ -322,5 +322,6 @@
   "racing.pace.silver": "Srebro",
   "racing.pace.gold": "Złoto",
   "racing.pace.platinum": "Platyna",
-  "racing.pace.tag": "Duch tempa"
+  "racing.pace.tag": "Duch tempa",
+  "voiceSpell.pick": "Która litera?"
 }

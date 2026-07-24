@@ -405,6 +405,69 @@ fn decide_letter_accepts_when_confident_and_chips_only_low_confidence_confusable
 }
 
 // ---------------------------------------------------------------------------
+// Phase 4 — Spanish b/v: bare name always chips; qualified/clarified resolves
+// ---------------------------------------------------------------------------
+
+#[test]
+fn bare_be_and_ve_always_chip() {
+    // Acceptance #2: an unqualified b/v name is ALWAYS a chip — never auto-resolved
+    // (auto-resolving would leak the answer). Same {b,v} pair for both.
+    assert_eq!(events(ES, "be"), vec![Event::Chip("b".into(), "v".into())]);
+    assert_eq!(events(ES, "ve"), vec![Event::Chip("b".into(), "v".into())]);
+}
+
+#[test]
+fn qualified_and_clarified_bv_resolve_without_a_chip() {
+    // Qualified names disambiguate to a plain letter.
+    assert_eq!(events(ES, "be larga"), vec![Event::Letter(Slot { letters: "b".into() })]);
+    assert_eq!(events(ES, "ve corta"), vec![Event::Letter(Slot { letters: "v".into() })]);
+    assert_eq!(events(ES, "uve"), vec![Event::Letter(Slot { letters: "v".into() })]);
+    // Multigraph "doble ve"/"uve doble" → w, never a chip.
+    assert_eq!(events(ES, "doble ve"), vec![Event::Letter(Slot { letters: "w".into() })]);
+    // Clarifier resolves by the example word's first letter (user speech, not target).
+    assert_eq!(events(ES, "be de burro"), vec![Event::Letter(Slot { letters: "b".into() })]);
+    assert_eq!(events(ES, "ve de vaca"), vec![Event::Letter(Slot { letters: "v".into() })]);
+    // A clarifier whose example starts with neither b nor v can't disambiguate → chip.
+    assert_eq!(events(ES, "be de casa"), vec![Event::Chip("b".into(), "v".into())]);
+}
+
+#[test]
+fn nino_still_spells_with_first_class_enye() {
+    // Acceptance #2: "niño" spelled n-i-ñ-o, ñ precomposed, no b/v involved.
+    let evs = events(ES, "ene i eñe o");
+    let letters: String = evs
+        .iter()
+        .filter_map(|e| if let Event::Letter(s) = e { Some(s.letters.as_str()) } else { None })
+        .collect();
+    assert_eq!(letters, "niño");
+    assert!(evs.iter().all(|e| matches!(e, Event::Letter(_))), "no chips in niño");
+}
+
+#[test]
+fn apply_events_surfaces_a_chip_and_holds_the_rest() {
+    // "ce be a": push c, then a chip for b/v; the trailing 'a' waits (not applied).
+    let mut buf: Vec<Slot> = Vec::new();
+    let applied = apply_events(&mut buf, &events(ES, "ce be a"));
+    assert_eq!(buf.iter().map(|s| s.letters.as_str()).collect::<String>(), "c");
+    assert_eq!(applied.chip, Some(("b".into(), "v".into())));
+    assert!(!applied.done);
+    // The English path never chips (no ambiguous names there).
+    let mut buf2: Vec<Slot> = Vec::new();
+    let a2 = apply_events(&mut buf2, &events(EN, "bee ee ee"));
+    assert_eq!(a2.chip, None);
+    assert_eq!(buf2.iter().map(|s| s.letters.as_str()).collect::<String>(), "bee");
+}
+
+#[test]
+fn input_method_parse_still_auto_resolves_bv() {
+    // The shipped input method (parse/spell) is UNCHANGED: bare "be"/"ve" still map
+    // to b/v so words like "libro" and "verde" spell correctly there.
+    assert_eq!(parse(ES, "ele i be ere o").letters, "libro");
+    assert_eq!(parse(ES, "be").letters, "b");
+    assert_eq!(parse(ES, "ve").letters, "v");
+}
+
+// ---------------------------------------------------------------------------
 // Robustness / edge cases
 // ---------------------------------------------------------------------------
 
