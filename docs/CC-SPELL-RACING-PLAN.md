@@ -108,8 +108,22 @@ comparable within a circuit; confirm vs strict per-`(lang,tier)`.
 - Champion stays behind a stub until D6 sign-off (a proposal PR with tester data).
 - **Covers acceptance:** #2 (pace-ghost determinism in CI).
 
-### Phase 5 — Spell Racing screen + hub integration (F7)
+### Phase 5 — Spell Racing screen + hub integration (F7)  🚧 **CORE LANDED**
 **Goal:** the mode becomes a place.
+**Done (the race runtime core):** `src/racing/engine.rs` — a pure, DOM-free `Race`
+state machine: given a track (word IDs) + an opponent's per-lap finish times, it
+consumes keystroke/submit events, reports live `Standing` (your lap vs opponent,
+ahead/behind), and on completion yields a recordable `RaceGhost` (never mid-race).
+Opponent-agnostic (garage or pace ghost). 5 tests. 242/0 (236/0 audit-preview).
+**Remaining (UI + activation — needs decisions, see below):**
+- DOM screen (extend the shipped ghost screen): circuit select, opponent picker from
+  the garage, live race surface, photo-finish results.
+- Entitlement gating in the resolver (depth not mode).
+- i18n strings ×15 languages (acceptance #8).
+- **Activation (do LAST):** `modes.json` rename `ghost_racing`→`spell_racing` + remove
+  the build-55 toggle. Deferred deliberately — doing it now removes the shipped
+  Ghost racing before its replacement is ready. The mode stays hidden until it passes
+  all acceptance tests and Eric approves activation.
 - `config/modes.json`: rename `ghost_racing` → `spell_racing`, display "Spell Racing".
   Remove the build-55 settings toggle (`src/flags.rs` entry + the settings row); the
   registry becomes the single source of truth (spec F7).

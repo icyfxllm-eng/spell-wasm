@@ -8,6 +8,7 @@
 //! shield modules. Nothing offline-breaking: no network here.
 #![allow(dead_code)] // foundation API; consumers arrive in later CC-SPELL-RACING phases
 
+pub mod engine;
 pub mod format;
 pub mod garage;
 pub mod track;
