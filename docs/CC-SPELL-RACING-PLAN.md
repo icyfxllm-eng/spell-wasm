@@ -86,8 +86,16 @@ audit-preview).
   it via the registry (never pads). Sector/split timing vs a ghost.
 - **Covers acceptance:** #10 (no dup words; synthetic tiny-bank caps at GP).
 
-### Phase 3 — Ghost garage (F2)
+### Phase 3 — Ghost garage (F2)  ✅ **LANDED**
 **Goal:** Personal Best / Most Recent / First Ever per lang×tier, local-only.
+**Done:** `src/racing/garage.rs` — pure `Garage` (testable) + thin `load`/`save`/
+`record`. First Ever immutable; PB rule = lowest time, tie→higher accuracy
+(deterministic); Most Recent always updates; `opponents()` for the picker. Distinct
+storage key from build-55's `spell_ghost_v1` (no clobber); `#[serde(default)]` +
+Option fields make a First Ever survive later schema additions. 5 tests incl.
+acceptance #9 (First Ever survives a forward schema change). 237/0 (231/0
+audit-preview). **Flagged:** keyed per `(lang,tier,circuit)` — PB total-time is only
+comparable within a circuit; confirm vs strict per-`(lang,tier)`.
 - `src/racing/garage.rs` (new): storage keyed like `spell_ghost_v1`, PB rule (lower
   time; tie → higher accuracy), First-Ever immutable + migration-preserved.
 - **Covers acceptance:** #9 (migration: removes build-55 toggle, preserves First Ever

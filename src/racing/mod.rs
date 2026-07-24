@@ -9,4 +9,5 @@
 #![allow(dead_code)] // foundation API; consumers arrive in later CC-SPELL-RACING phases
 
 pub mod format;
+pub mod garage;
 pub mod track;
