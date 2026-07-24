@@ -147,17 +147,27 @@ passes every acceptance test and Eric approves activation.
   consumed); the invariant "a whole-word utterance can NEVER score as a correct spelling."
 - **Result:** `spell_aloud` 20/20; full lib suite **257/0**; wasm release builds clean.
 
-### Phase 1 — Mode surface: push-and-hold + slots + echo  *(gated on G-C)*
+### Phase 1 — Mode surface: push-and-hold + slots + echo  ✅ **LANDED** *(G-C ruled)*
 **Goal:** the feature becomes a *place* with kid-simple turn-taking.
-- `src/spell_aloud.rs` (replace the input-method UI layer) or a new
-  `src/spell_aloud/screen.rs`: **push-and-hold** mic (press = `start_letter_capture`,
-  release = `stop_letter_capture`) instead of tap-to-toggle; render one slot per
-  accepted letter with optional spoken echo (reuse `native_lang`/`Speaker.speak`);
-  no auto-submit.
-- `index.html`: `#spellAloud` mode surface (slots row, hold-mic, status line).
-- Reuses the existing plugin events and `parse()` unchanged.
-- **Covers acceptance:** the *accept* half of #1 ("c, a, t, done" → CAT accepted),
-  pending the `done` command in Phase 2.
+- New `src/spell_aloud/screen.rs` (the shipped input method in `super` is untouched —
+  G-C keeps both). **Push-and-hold** mic: `pointerdown` = `start_letter_capture`,
+  `pointerup/leave/cancel` = `stop_letter_capture` (finalizes). Each finalized
+  utterance folds into a slot buffer via the pure `super::accept_into` (Phase 0);
+  accepted letters render one slot per letter and are echoed on-device
+  (`native_lang::speak`, space-separated so they read as letters). A whole word /
+  babble nudges; **no submit** (turn completion via `done` is Phase 2). No target is
+  ever read (G-A).
+- `index.html`: `#spellAloud` surface (slots row, hold-mic, status) + hidden
+  `#spellAloudOpen` entry (reachable only there until Phase 7 activation) + `.sa-*` CSS.
+- `src/lib.rs`: `spell_aloud::screen::wire(app)`.
+- Reuses the plugin events, `parse`/`interpret`/`contextual_strings` unchanged, and
+  the existing `voiceSpell.*` / `tools.spellaloud.*` i18n keys (no new-key churn).
+- **Covers acceptance:** the *accept* half of #1 ("c, a, t" fills CAT), pending the
+  `done` command in Phase 2.
+- **Verified:** host tests for `slots_html`/`assembled`/`accept_into` (23/23 spell_aloud,
+  full lib suite **260/0**); wasm builds clean; browser-verified the surface opens and
+  renders (empty state + filled `C A T` slots). Real push-and-hold capture is
+  device-only (iOS native mic) and untestable in-browser.
 
 ### Phase 2 — Spoken commands (delete/borrar, clear, done/listo)
 **Goal:** hands-free editing and turn completion.

@@ -34,6 +34,9 @@ use unicode_normalization::UnicodeNormalization;
 
 use crate::consts::{EN, ES};
 
+/// The push-and-hold MODE surface (CC-SPELL-ALOUD Phase 1), reusing this parser.
+pub mod screen;
+
 // ===========================================================================
 // Pure parser (host-unit-tested — no DOM, no wasm, no audio)
 // ===========================================================================
@@ -242,6 +245,23 @@ pub fn interpret(lang: &str, transcript: &str) -> SpellOutcome {
         return SpellOutcome::WholeWord; // a word or babble, not a spelling
     }
     SpellOutcome::Insert(parsed.letters)
+}
+
+/// Fold one finalized utterance into a slot `buffer` — the push-and-hold mode's
+/// accumulator (Phase 1). Only a genuine spelling (`Insert`) contributes: its slots
+/// are appended and the newly-added letters returned (for spoken echo). A whole word,
+/// babble, or silence adds nothing and returns `""` — the caller nudges. The target
+/// is never consulted (answer-leak invariant, G-A). Pure and host-unit-tested.
+pub fn accept_into(buffer: &mut Vec<Slot>, lang: &str, transcript: &str) -> String {
+    if !matches!(interpret(lang, transcript), SpellOutcome::Insert(_)) {
+        return String::new();
+    }
+    let mut added = String::new();
+    for slot in parse(lang, transcript).slots {
+        added.push_str(&slot.letters);
+        buffer.push(slot);
+    }
+    added
 }
 
 // ===========================================================================

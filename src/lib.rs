@@ -193,6 +193,7 @@ fn wire(app: &App) {
     // + on-device availability both hold (Invariant I3).
     spell_aloud::wire(app);
     spell_aloud::reflect(app);
+    spell_aloud::screen::wire(app); // CC-SPELL-ALOUD Phase 1 mode surface (hidden until activation)
     // Pillar 3 — the "Tools & Features" hub in Settings: wire every tool switch,
     // then reflect current state so the panel is correct before it first opens.
     play_hub::wire(app);

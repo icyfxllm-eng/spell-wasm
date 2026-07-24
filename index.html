@@ -705,6 +705,13 @@
   .sr-opponent .o-best{font-size:11px;color:var(--muted)}
   .sr-start{background:var(--amber);color:#231d38;border:none;border-radius:999px;padding:6px 14px;font-weight:700;font-size:12px;cursor:pointer;font-family:inherit}
   .sr-empty{color:var(--muted-2);font-size:13px;text-align:center;padding:12px 6px;line-height:1.5}
+  /* Spell Aloud mode surface (CC-SPELL-ALOUD Phase 1). */
+  .sa-slots{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;align-items:center;min-height:56px;margin:16px 0}
+  .sa-slot{min-width:40px;height:50px;display:inline-flex;align-items:center;justify-content:center;padding:0 8px;font-family:var(--display);font-weight:800;font-size:26px;text-transform:uppercase;background:var(--panel-2);border:1px solid var(--edge);border-radius:10px}
+  .sa-empty{color:var(--muted-2);font-size:13px;text-align:center;line-height:1.5;padding:8px}
+  .sa-mic{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;padding:16px;background:var(--amber);color:#231d38;border:none;border-radius:14px;font-weight:700;font-size:16px;font-family:inherit;cursor:pointer;user-select:none;touch-action:none}
+  .sa-mic.listening{background:var(--good,#39d98a);box-shadow:0 0 0 4px rgba(57,217,138,.25)}
+  .sa-status{margin-top:10px;text-align:center;color:var(--muted);font-size:13px;min-height:18px}
   /* Ghost racing screen — same containing-block requirement as the hub. */
   #ghostScreen .modal{position:relative}
   .ghost-stat{background:var(--panel-2);border:1px solid var(--edge);border-radius:14px;padding:16px 14px;margin:4px 0 18px;line-height:1.5}
@@ -1127,6 +1134,21 @@
     </div>
   </div>
   <button id="spellRacingOpen" class="btn-hide" aria-hidden="true" tabindex="-1"></button>
+
+  <!-- Spell Aloud MODE surface (CC-SPELL-ALOUD Phase 1). REVIEW-GATED: reachable ONLY
+       via the hidden #spellAloudOpen entry until activation (Phase 7). The shipped
+       voice input method (mic beside the answer field) is untouched (G-C). Populated
+       by spell_aloud::screen from the push-and-hold capture buffer. -->
+  <div class="scrim" id="spellAloud">
+    <div class="modal">
+      <button class="ghost hub-x" id="saClose" aria-label="Close">✕</button>
+      <h3><span aria-hidden="true">🗣️</span> <span id="saTitle"></span></h3>
+      <div class="sa-slots" id="saSlots"></div>
+      <button type="button" class="sa-mic" id="saMic"><span aria-hidden="true">🎤</span> <span id="saMicLabel"></span></button>
+      <p class="sa-status" id="saStatus" aria-live="polite"></p>
+    </div>
+  </div>
+  <button id="spellAloudOpen" class="btn-hide" aria-hidden="true" tabindex="-1"></button>
 
   <div class="scrim" id="photoScrim">
     <div class="modal wide">
