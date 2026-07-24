@@ -716,6 +716,10 @@
   .sa-chip .sa-chip-q{width:100%;text-align:center;color:var(--muted);font-size:13px;margin-bottom:2px}
   .sa-chip-btn{min-width:56px;height:52px;font-family:var(--display);font-weight:800;font-size:24px;text-transform:uppercase;background:var(--panel-2);color:var(--ink,inherit);border:2px solid var(--amber);border-radius:12px;cursor:pointer}
   .sa-chip-btn:active{background:var(--amber);color:#231d38}
+  /* Dev door menu (temporary). */
+  .dev-list{display:flex;flex-direction:column;gap:10px;margin-top:8px}
+  .dev-item{padding:14px;background:var(--panel-2);border:1px solid var(--edge);border-radius:12px;color:inherit;font-weight:700;font-size:15px;font-family:inherit;cursor:pointer;text-align:left}
+  .dev-item:active{border-color:var(--amber)}
   /* Ghost racing screen — same containing-block requirement as the hub. */
   #ghostScreen .modal{position:relative}
   .ghost-stat{background:var(--panel-2);border:1px solid var(--edge);border-radius:14px;padding:16px 14px;margin:4px 0 18px;line-height:1.5}
@@ -1154,6 +1158,20 @@
     </div>
   </div>
   <button id="spellAloudOpen" class="btn-hide" aria-hidden="true" tabindex="-1"></button>
+
+  <!-- Dev door menu (TEMPORARY — removed at activation). Reveal with five quick taps
+       on the SPELL logo; routes to the hidden REVIEW-GATED screens for on-device
+       testing. Wired by src/dev.rs. Not discoverable by normal testers. -->
+  <div class="scrim" id="devMenu">
+    <div class="modal">
+      <button class="ghost hub-x" id="devMenuClose" aria-label="Close">✕</button>
+      <h3><span aria-hidden="true">🛠️</span> Dev preview</h3>
+      <div class="dev-list">
+        <button type="button" class="dev-item" id="devOpenRacing">🏁 Spell Racing</button>
+        <button type="button" class="dev-item" id="devOpenAloud">🗣️ Spell Aloud</button>
+      </div>
+    </div>
+  </div>
 
   <div class="scrim" id="photoScrim">
     <div class="modal wide">

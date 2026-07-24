@@ -23,15 +23,7 @@ use crate::App;
 
 thread_local! {
     static SELECTED: RefCell<Option<Circuit>> = const { RefCell::new(None) };
-    // DEV DOOR (temporary, removed at activation): rapid-tap the brand logo to reach
-    // the still-hidden Spell Racing screen for on-device testing. Invisible to normal
-    // testers — no visible entry, no hub tile. `(consecutive_taps, last_tap_ms)`.
-    static BRAND_TAPS: RefCell<(u32, f64)> = const { RefCell::new((0, 0.0)) };
 }
-
-/// DEV DOOR tuning: taps needed, and the max gap (ms) between them.
-const DEV_TAPS_NEEDED: u32 = 5;
-const DEV_TAP_GAP_MS: f64 = 1200.0;
 
 /// The tier to race for the current app state. The Climb has no fixed tier, so it
 /// defaults to medium; an explicit difficulty level is used as-is.
@@ -187,16 +179,7 @@ pub fn wire(app: &App) {
     dom::on_click("spellRacingOpen", move || open(&a));
     dom::on_click("srClose", close);
 
-    // DEV DOOR (temporary — remove at activation): five quick taps on the SPELL logo
-    // open the hidden screen so Eric can test on-device. `register_brand_tap` returns
-    // true on the fifth in-window tap.
-    let a_dev = app.clone();
-    dom::on_click("brandMark", move || {
-        if register_brand_tap(js_sys::Date::now()) {
-            dom::show_toast(&t("racing.title"));
-            open(&a_dev);
-        }
-    });
+    // The dev door (5-tap logo → dev menu) lives in `crate::dev`; it routes here.
     dom::on::<web_sys::Event, _>("spellRacing", "click", |e| {
         if dom::is_self_target(&e, "spellRacing") {
             close();
@@ -239,23 +222,6 @@ pub fn wire(app: &App) {
     });
 }
 
-/// DEV DOOR: record one brand-logo tap at `now_ms`; return true when this tap is the
-/// `DEV_TAPS_NEEDED`-th within `DEV_TAP_GAP_MS` of each prior one (then reset). A gap
-/// too long restarts the count at 1. Pure over `BRAND_TAPS` so it's unit-testable.
-fn register_brand_tap(now_ms: f64) -> bool {
-    BRAND_TAPS.with(|c| {
-        let (count, last) = *c.borrow();
-        let count = if now_ms - last <= DEV_TAP_GAP_MS { count + 1 } else { 1 };
-        if count >= DEV_TAPS_NEEDED {
-            *c.borrow_mut() = (0, now_ms); // consume; next tap starts fresh
-            true
-        } else {
-            *c.borrow_mut() = (count, now_ms);
-            false
-        }
-    })
-}
-
 /// The value of `attr` on the clicked element or its nearest ancestor that has it.
 fn closest_attr(e: &web_sys::Event, attr: &str) -> Option<String> {
     use wasm_bindgen::JsCast;
@@ -284,26 +250,6 @@ mod tests {
         assert_eq!(fmt_mmss(0), "0:00");
         assert_eq!(fmt_mmss(83_000), "1:23");
         assert_eq!(fmt_mmss(600_000), "10:00");
-    }
-
-    #[test]
-    fn dev_door_opens_only_on_fast_five_taps() {
-        // reset shared state (other tests in this module don't touch it, but be safe)
-        BRAND_TAPS.with(|c| *c.borrow_mut() = (0, 0.0));
-        // four quick taps: not yet
-        for t in [0.0, 200.0, 400.0, 600.0] {
-            assert!(!register_brand_tap(t), "tap at {t} should not open");
-        }
-        // fifth quick tap: opens
-        assert!(register_brand_tap(800.0), "fifth in-window tap opens");
-        // consumed: a lone tap afterward does nothing
-        assert!(!register_brand_tap(900.0));
-
-        // a slow tap sequence never reaches five (each gap too long -> resets to 1)
-        BRAND_TAPS.with(|c| *c.borrow_mut() = (0, 0.0));
-        for t in [0.0, 2000.0, 4000.0, 6000.0, 8000.0] {
-            assert!(!register_brand_tap(t), "slow tap at {t} keeps resetting");
-        }
     }
 
     #[test]

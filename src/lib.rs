@@ -37,6 +37,7 @@ mod profanity;
 mod say_it;
 mod selection;
 pub mod spell_aloud; // pub: the loopback CLI bridge (examples/spell_aloud_parse.rs) links the parser
+mod dev; // TEMP dev door (5-tap logo → hidden racing/aloud screens); remove at activation
 mod settings;
 mod share;
 mod speech_out;
@@ -199,6 +200,7 @@ fn wire(app: &App) {
     play_hub::wire(app);
     ghost::wire_screen(app);
     racing::screen::wire(app); // CC-SPELL-RACING Phase 5 screen (hidden until activation)
+    dev::wire(app); // TEMP dev door: 5-tap logo → menu for the hidden racing/aloud screens
     tools_hub::wire(app);
     tools_hub::reflect(app);
 
