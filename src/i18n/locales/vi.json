@@ -317,5 +317,10 @@
   "racing.best": "Tốt nhất {time}",
   "racing.soon": "Đua trực tiếp sẽ sớm ra mắt.",
   "racing.won": "🏁 Bạn đã thắng!",
-  "racing.lost": "Suýt rồi — thử lại nhé!"
+  "racing.lost": "Suýt rồi — thử lại nhé!",
+  "racing.pace.bronze": "Đồng",
+  "racing.pace.silver": "Bạc",
+  "racing.pace.gold": "Vàng",
+  "racing.pace.platinum": "Bạch kim",
+  "racing.pace.tag": "Bóng ma tốc độ"
 }

@@ -317,5 +317,10 @@
   "racing.best": "Meilleur {time}",
   "racing.soon": "Les courses en direct arrivent bientôt.",
   "racing.won": "🏁 Tu as gagné !",
-  "racing.lost": "De justesse — réessaie !"
+  "racing.lost": "De justesse — réessaie !",
+  "racing.pace.bronze": "Bronze",
+  "racing.pace.silver": "Argent",
+  "racing.pace.gold": "Or",
+  "racing.pace.platinum": "Platine",
+  "racing.pace.tag": "Fantôme de rythme"
 }

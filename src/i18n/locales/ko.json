@@ -317,5 +317,10 @@
   "racing.best": "최고 {time}",
   "racing.soon": "실시간 레이싱이 곧 추가됩니다.",
   "racing.won": "🏁 승리!",
-  "racing.lost": "아깝네요 — 다시 도전!"
+  "racing.lost": "아깝네요 — 다시 도전!",
+  "racing.pace.bronze": "브론즈",
+  "racing.pace.silver": "실버",
+  "racing.pace.gold": "골드",
+  "racing.pace.platinum": "플래티넘",
+  "racing.pace.tag": "페이스 고스트"
 }

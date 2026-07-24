@@ -317,5 +317,10 @@
   "racing.best": "Mejor {time}",
   "racing.soon": "Las carreras en vivo llegarán pronto.",
   "racing.won": "🏁 ¡Ganaste!",
-  "racing.lost": "Por poco, ¡inténtalo de nuevo!"
+  "racing.lost": "Por poco, ¡inténtalo de nuevo!",
+  "racing.pace.bronze": "Bronce",
+  "racing.pace.silver": "Plata",
+  "racing.pace.gold": "Oro",
+  "racing.pace.platinum": "Platino",
+  "racing.pace.tag": "Fantasma guía"
 }

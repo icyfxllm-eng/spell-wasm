@@ -11,6 +11,7 @@
 pub mod engine;
 pub mod format;
 pub mod garage;
+pub mod pace;
 pub mod screen;
 pub mod session;
 pub mod track;

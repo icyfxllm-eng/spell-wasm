@@ -317,5 +317,10 @@
   "racing.best": "Best {time}",
   "racing.soon": "Live racing is coming soon.",
   "racing.won": "🏁 You won!",
-  "racing.lost": "So close — try again!"
+  "racing.lost": "So close — try again!",
+  "racing.pace.bronze": "Bronze",
+  "racing.pace.silver": "Silver",
+  "racing.pace.gold": "Gold",
+  "racing.pace.platinum": "Platinum",
+  "racing.pace.tag": "Pace ghost"
 }

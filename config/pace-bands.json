@@ -1,0 +1,7 @@
+[
+  { "id": "bronze",   "base_ms": 2000, "per_char_ms": 550, "jitter_pct": 22, "avatar_id": 0, "color_id": 0, "gated": false },
+  { "id": "silver",   "base_ms": 1600, "per_char_ms": 460, "jitter_pct": 19, "avatar_id": 1, "color_id": 1, "gated": false },
+  { "id": "gold",     "base_ms": 1300, "per_char_ms": 370, "jitter_pct": 16, "avatar_id": 2, "color_id": 2, "gated": false },
+  { "id": "platinum", "base_ms": 1000, "per_char_ms": 290, "jitter_pct": 13, "avatar_id": 8, "color_id": 3, "gated": false },
+  { "id": "champion", "base_ms": 700,  "per_char_ms": 210, "jitter_pct": 10, "avatar_id": 9, "color_id": 4, "gated": true }
+]

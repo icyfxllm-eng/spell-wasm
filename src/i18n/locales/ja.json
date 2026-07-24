@@ -317,5 +317,10 @@
   "racing.best": "ベスト {time}",
   "racing.soon": "ライブレースは近日公開。",
   "racing.won": "🏁 勝利！",
-  "racing.lost": "惜しい — もう一度！"
+  "racing.lost": "惜しい — もう一度！",
+  "racing.pace.bronze": "ブロンズ",
+  "racing.pace.silver": "シルバー",
+  "racing.pace.gold": "ゴールド",
+  "racing.pace.platinum": "プラチナ",
+  "racing.pace.tag": "ペースゴースト"
 }

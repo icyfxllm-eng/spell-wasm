@@ -317,5 +317,10 @@
   "racing.best": "Pinakamahusay {time}",
   "racing.soon": "Malapit nang dumating ang live na karera.",
   "racing.won": "🏁 Panalo ka!",
-  "racing.lost": "Muntik na — subukan ulit!"
+  "racing.lost": "Muntik na — subukan ulit!",
+  "racing.pace.bronze": "Tanso",
+  "racing.pace.silver": "Pilak",
+  "racing.pace.gold": "Ginto",
+  "racing.pace.platinum": "Platino",
+  "racing.pace.tag": "Pace ghost"
 }

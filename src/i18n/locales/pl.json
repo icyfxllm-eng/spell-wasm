@@ -317,5 +317,10 @@
   "racing.best": "Najlepszy {time}",
   "racing.soon": "Wyścigi na żywo już wkrótce.",
   "racing.won": "🏁 Wygrałeś!",
-  "racing.lost": "Prawie — spróbuj jeszcze raz!"
+  "racing.lost": "Prawie — spróbuj jeszcze raz!",
+  "racing.pace.bronze": "Brąz",
+  "racing.pace.silver": "Srebro",
+  "racing.pace.gold": "Złoto",
+  "racing.pace.platinum": "Platyna",
+  "racing.pace.tag": "Duch tempa"
 }

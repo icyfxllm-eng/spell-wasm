@@ -317,5 +317,10 @@
   "racing.best": "最佳 {time}",
   "racing.soon": "实时竞速即将推出。",
   "racing.won": "🏁 你赢了！",
-  "racing.lost": "就差一点 — 再试一次！"
+  "racing.lost": "就差一点 — 再试一次！",
+  "racing.pace.bronze": "青铜",
+  "racing.pace.silver": "白银",
+  "racing.pace.gold": "黄金",
+  "racing.pace.platinum": "铂金",
+  "racing.pace.tag": "配速幽灵"
 }
