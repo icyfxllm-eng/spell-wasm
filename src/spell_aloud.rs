@@ -721,3 +721,6 @@ fn on_error(app: &App, code: &str) {
 
 #[cfg(test)]
 mod tests;
+
+#[cfg(test)]
+mod loopback;

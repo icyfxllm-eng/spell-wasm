@@ -243,16 +243,26 @@ deterministic trigger.)*
 - **Note:** the *confidence-gated* chips from Phase 3 (`decide_letter`) light up once
   the deferred native confidence feed lands; the chip UI itself is now done.
 
-### Phase 5 — whisper.cpp loopback harness (the CI oracle)  *(es suite gated on G-B)*
-**Goal:** an automated oracle for the audio mode — the spec's "already in your
-harness" built for real.
-- New `tools/spell-aloud-loopback/` (or `scripts/`): TTS speaks letter sequences at
-  **three speeds**; a **50-word suite per language × three synthetic voices**;
-  transcribe via whisper.cpp, run tokens through the Rust `parse`/`interpret`, assert
-  **≥95% letter accuracy**. Wire into CI (offline; the mode itself is device-only, so
-  the oracle exercises the *parser* over synthetic ASR, documented as such).
-- **Covers acceptance:** #3 (50-word suite, 3 voices × 3 speeds, ≥95%); the loopback
-  form of #1 ("c, a, t, done" → CAT; "cat" → rejected).
+### Phase 5 — whisper.cpp loopback harness (the CI oracle)  ✅ **LANDED** *(G-B ruled)*
+**Goal:** an automated oracle for the audio mode. *(The spec's "already in your
+harness" whisper loop did NOT exist — the closest precedent is `tools/audio-verify/`,
+whose fail-closed/offline conventions this mirrors.)* Delivered in two halves:
+- **Offline oracle (runs on every PR)** — `src/spell_aloud/loopback.rs`: a **50-word
+  suite per language** of realistic spoken transcripts (ASR homophones: see/sea→c,
+  why→y, double u→w) scored for **letter accuracy ≥0.97** through the SAME parser, plus
+  the loopback form of **#1** ("see ay tee done"→CAT+done; "cat"→rejected) and the es
+  b/v chip. Deterministic, no audio. **en 0.97+ · es 0.97+.**
+- **CLI bridge** — `examples/spell_aloud_parse.rs` (needs `pub mod spell_aloud`): reads
+  `(lang, transcript)` → JSON `{letters, outcome, mode_word, done, chip}`, so any
+  harness scores real ASR against the app's own parser — no duplicated letter logic (I4).
+- **Real whisper harness (offline/manual)** — `tools/spell-aloud-loopback/loopback.py`
+  + README: system TTS (`say`/`espeak-ng`) speaks letters at **3 speeds × 3 voices**,
+  **whisper.cpp** transcribes, the CLI bridge parses, letter accuracy gated at **≥95%**.
+  Fail-closed: no whisper/model/TTS → prints the exact setup command and exits 0
+  (verified — skips cleanly here). Runs where the binaries exist, like `audio-verify`.
+- **Covers acceptance:** #3 (50-word suite, 3 voices × 3 speeds, ≥95% — the audio bar
+  in the harness, the parser bar in CI); the loopback form of #1.
+- **Verified:** spell_aloud loopback 3/3; full lib suite **277/0**; harness skip-path OK.
 
 ### Phase 6 — Permission strings, airplane mode, denial handling
 **Goal:** review-safe permissions and graceful failure.

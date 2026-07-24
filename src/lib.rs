@@ -36,7 +36,7 @@ mod notify;
 mod profanity;
 mod say_it;
 mod selection;
-mod spell_aloud;
+pub mod spell_aloud; // pub: the loopback CLI bridge (examples/spell_aloud_parse.rs) links the parser
 mod settings;
 mod share;
 mod speech_out;
