@@ -16,7 +16,7 @@ use std::cell::{Cell, RefCell};
 
 use wasm_bindgen_futures::{spawn_local, JsFuture};
 
-use super::{apply_events, contextual_strings, events, Slot};
+use super::{apply_events, contextual_strings, events, Event, Slot};
 use crate::{dom, native_lang, App};
 
 thread_local! {
@@ -150,7 +150,7 @@ fn press(app: &App) {
         &lang,
         &ctx,
         |_partial| {}, // Phase 1 commits on release; live partial preview is later polish
-        move |transcript| on_final(&a_fin, &lang_f, &transcript),
+        move |transcript, confidence, alt| on_final(&a_fin, &lang_f, &transcript, confidence, alt),
         move |code| on_error(&a_err, &code),
     );
     if !ok {
@@ -169,8 +169,9 @@ fn release() {
 
 /// A capture finalized — apply its letter/command events to the buffer (Phase 2),
 /// echo any new letters, and re-render. `done` submits. A whole word / babble /
-/// silence produces no events and nudges instead.
-fn on_final(app: &App, lang: &str, transcript: &str) {
+/// silence produces no events and nudges instead. A single low-confidence confusable
+/// letter offers a two-choice chip (Phase 3) instead of guessing.
+fn on_final(app: &App, lang: &str, transcript: &str, confidence: f32, alt: Option<String>) {
     stop_listening_ui();
     let evs = events(lang, transcript);
     if evs.is_empty() {
@@ -182,6 +183,21 @@ fn on_final(app: &App, lang: &str, transcript: &str) {
             "voiceSpell.didntCatch"
         });
         return;
+    }
+    // Phase 3 confusable chip: only in the single-letter turn (the intended rhythm).
+    // The alternative reading is parsed to a letter and compared by confusable class;
+    // the target is never consulted (G-A) — ambiguity resolves via the chip.
+    if let [Event::Letter(slot)] = evs.as_slice() {
+        let alt_letter = alt.as_deref().map(|a| super::parse(lang, a).letters).filter(|s| !s.is_empty());
+        if let super::LetterDecision::Chip(a, b) =
+            super::decide_letter(lang, &slot.letters, confidence, alt_letter.as_deref())
+        {
+            set_status("");
+            hide_chip();
+            reflect(app);
+            show_chip(&a, &b);
+            return;
+        }
     }
     let applied = BUFFER.with(|b| apply_events(&mut b.borrow_mut(), &evs));
     set_status("");

@@ -254,7 +254,9 @@
      * event subscriptions are torn down automatically on the final/error callback.
      * @param {{ lang:string, contextualStrings?:string[] }} opts
      * @param {(rawTranscript:string)=>void} onToken partial transcript (streamed)
-     * @param {(rawTranscript:string)=>void} onFinal final transcript, once
+     * @param {(final:{token:string,confidence:number,alt:string})=>void} onFinal
+     *   final transcript, once. `confidence` (0..1) + `alt` (top alternative reading)
+     *   drive the mode's confusable chip; the input method ignores them (Phase 3).
      * @param {(code:string)=>void} onError one of "UNAVAILABLE" | "PERMISSION_DENIED"
      *   | "BUSY" | "AUDIO_ERROR" | "NO_SPEECH". Off iOS: fires "UNAVAILABLE".
      * @returns {void}
@@ -277,7 +279,14 @@
         }
       }
       sub('letterToken', function (d) { if (onToken) onToken((d && d.token) || ''); });
-      sub('letterFinal', function (d) { if (onFinal) onFinal((d && d.token) || ''); cleanup(); });
+      sub('letterFinal', function (d) {
+        if (onFinal) onFinal({
+          token: (d && d.token) || '',
+          confidence: (d && typeof d.confidence === 'number') ? d.confidence : 1,
+          alt: (d && d.alt) || '',
+        });
+        cleanup();
+      });
       sub('letterError', function (d) { if (onError) onError((d && d.code) || 'AUDIO_ERROR'); cleanup(); });
       p.startLetterCapture({
         lang: (opts && opts.lang) || '',

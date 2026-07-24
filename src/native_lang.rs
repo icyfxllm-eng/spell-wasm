@@ -494,7 +494,10 @@ pub fn start_letter_capture(
     lang: &str,
     contextual: &[String],
     mut on_token: impl FnMut(String) + 'static,
-    mut on_final: impl FnMut(String) + 'static,
+    // `on_final(transcript, confidence, alternative)` — confidence in 0..1 and the top
+    // alternative reading (None if empty) power the mode's confusable chip (Phase 3);
+    // the input method ignores them.
+    mut on_final: impl FnMut(String, f32, Option<String>) + 'static,
     mut on_error: impl FnMut(String) + 'static,
 ) -> bool {
     let Some(obj) = bridge() else { return false };
@@ -514,7 +517,13 @@ pub fn start_letter_capture(
         on_token(v.as_string().unwrap_or_default());
     }) as Box<dyn FnMut(JsValue)>);
     let fin_cb = Closure::wrap(Box::new(move |v: JsValue| {
-        on_final(v.as_string().unwrap_or_default());
+        // The final event is an object {token, confidence, alt}; older/string payloads
+        // still work (token falls back to the string, confidence to 1.0).
+        let get = |k: &str| Reflect::get(&v, &JsValue::from_str(k)).ok();
+        let token = get("token").and_then(|x| x.as_string()).or_else(|| v.as_string()).unwrap_or_default();
+        let confidence = get("confidence").and_then(|x| x.as_f64()).unwrap_or(1.0) as f32;
+        let alt = get("alt").and_then(|x| x.as_string()).filter(|s| !s.is_empty());
+        on_final(token, confidence, alt);
     }) as Box<dyn FnMut(JsValue)>);
     let err_cb = Closure::wrap(Box::new(move |v: JsValue| {
         on_error(v.as_string().unwrap_or_else(|| "AUDIO_ERROR".into()));

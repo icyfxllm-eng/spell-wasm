@@ -654,8 +654,9 @@ pub fn mic_tap(app: &App) {
         &ctx,
         move |transcript| on_partial(&a_partial, &lang_c, &transcript),
         {
+            // The input method appends to the field; it ignores confidence/alt.
             let lang_f = lang.clone();
-            move |transcript| on_final(&a_final, &lang_f, &transcript)
+            move |transcript, _confidence, _alt| on_final(&a_final, &lang_f, &transcript)
         },
         move |code| on_error(&a_error, &code),
     );

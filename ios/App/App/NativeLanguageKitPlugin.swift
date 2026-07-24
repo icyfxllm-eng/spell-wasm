@@ -178,8 +178,10 @@ public class NativeLanguageKitPlugin: CAPPlugin, CAPBridgedPlugin {
                 onPartial: { [weak self] text in
                     self?.notifyListeners("letterToken", data: ["token": text])
                 },
-                onFinal: { [weak self] text in
-                    self?.notifyListeners("letterFinal", data: ["token": text])
+                onFinal: { [weak self] text, confidence, alt in
+                    // Additive payload (Phase 3): `token` is unchanged for the input
+                    // method; `confidence`/`alt` let the mode offer a confusable chip.
+                    self?.notifyListeners("letterFinal", data: ["token": text, "confidence": confidence, "alt": alt])
                 },
                 onError: { [weak self] err in
                     self?.notifyListeners("letterError", data: ["code": err.rawValue])
@@ -231,6 +233,12 @@ final class SpeechListener {
     // was — ONE capture engine, two profiles, never a second microphone.
     private var partialHandler: ((String) -> Void)?
     private var contextualStrings: [String] = []
+    // Letter-capture confusable surfacing (CC-SPELL-ALOUD Phase 3): the confidence of
+    // the least-sure segment in the final transcription, and that segment's top
+    // alternative reading. The Rust parser turns these into a two-choice chip; here we
+    // only report them (no linguistic judgment on-device — I4).
+    private var lastConfidence: Double = 1.0
+    private var lastAlt: String = ""
 
     var isListening: Bool { task != nil }
 
@@ -246,12 +254,12 @@ final class SpeechListener {
         lang: String,
         contextualStrings: [String],
         onPartial: @escaping (String) -> Void,
-        onFinal: @escaping (String) -> Void,
+        onFinal: @escaping (String, Double, String) -> Void,
         onError: @escaping (ListenError) -> Void
     ) {
-        begin(lang: lang, contextualStrings: contextualStrings, onPartial: onPartial) { result in
+        begin(lang: lang, contextualStrings: contextualStrings, onPartial: onPartial) { [weak self] result in
             switch result {
-            case .success(let text): onFinal(text)
+            case .success(let text): onFinal(text, self?.lastConfidence ?? 1.0, self?.lastAlt ?? "")
             case .failure(let err): onError(err)
             }
         }
@@ -278,6 +286,8 @@ final class SpeechListener {
         self.contextualStrings = contextualStrings
         finished = false
         best = ""
+        lastConfidence = 1.0
+        lastAlt = ""
         // OS permission prompts appear HERE, at first use — the web layer shows a
         // plain-language pre-prompt before this call.
         ensureAuthorized { [weak self] granted in
@@ -346,7 +356,19 @@ final class SpeechListener {
                 // Letter profile streams every partial (the growing transcript) so
                 // the Rust parser can echo "C… CA… CAT" live.
                 self.partialHandler?(self.best)
-                if result.isFinal { self.finish(.success(self.best)) }
+                if result.isFinal {
+                    // Confusable surfacing (Phase 3): the least-confident segment and
+                    // its top alternative — the Rust parser decides whether to chip.
+                    let segs = result.bestTranscription.segments
+                    if let doubtful = segs.min(by: { $0.confidence < $1.confidence }) {
+                        self.lastConfidence = Double(doubtful.confidence)
+                        self.lastAlt = doubtful.alternativeSubstrings.first ?? ""
+                    } else {
+                        self.lastConfidence = 1.0
+                        self.lastAlt = ""
+                    }
+                    self.finish(.success(self.best))
+                }
             }
             if error != nil {
                 self.finish(self.best.isEmpty ? .failure(.noSpeech) : .success(self.best))

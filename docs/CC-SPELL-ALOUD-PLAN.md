@@ -191,7 +191,7 @@ passes every acceptance test and Eric approves activation.
 - **Verified:** spell_aloud 29/29 (incl. every-command-parses, greedy es, interleave,
   buffer edits); full lib suite **266/0**; wasm + web build clean.
 
-### Phase 3 — Confusable handling + confidence surfacing  ◑ **CORE LANDED** *(native + chip UI deferred)*
+### Phase 3 — Confusable handling + confidence surfacing  ✅ **LANDED** *(runtime needs a device mic)*
 **Goal:** below-threshold letters offer a two-choice chip instead of guessing.
 - **Rust core (LANDED, tested):**
   - **Clarifiers** — `lexicons/letters/{en,es}.json` `clarifiers` connectors
@@ -207,17 +207,22 @@ passes every acceptance test and Eric approves activation.
     bands) — tune against the Phase-5 loopback suite; **needs Eric's sign-off** before
     the confidence-gated chips go live. *(Open item.)*
   - Verified: spell_aloud **32/32**; full lib suite **269/0**.
-- **DEFERRED (device-gated, lands with Phase 4):**
-  - **Native (Swift):** `SpeechListener` to include `segments[].confidence` +
-    `alternativeSubstrings` in the `letterFinal` payload; `native_lang.rs` bridge to
-    carry them. **Additive-safe** — today `letterFinal` emits `{token}` and the input
-    method reads only `token`, so adding `{confidence, alt}` won't disturb it. Not
-    done here because it's iOS-only (can't build/test in this environment).
-  - **Chip UI in the mode** — the `#saChip` two-choice surface + tap/verbal
-    resolution. It gets its first **deterministic** trigger in **Phase 4** (an
-    unqualified es "be" is ALWAYS a chip, no confidence needed), so the UI is built
-    and exercised there; the confidence-gated path lights up once the native feed lands.
-- **Covers acceptance:** foundation for #2's "bare `be` → chip" (Phase 4 rides this).
+- **Native confidence feed (LANDED, build-validated):**
+  - **Swift:** `SpeechListener` now captures the least-confident final segment's
+    `confidence` + its top `alternativeSubstrings` reading and reports them; the plugin
+    emits `letterFinal` as `{token, confidence, alt}` (**additive-safe** — the input
+    method reads only `token`). `native-language-kit.js` forwards the object;
+    `native_lang::start_letter_capture`'s `on_final` is now
+    `(transcript, confidence, alt)` and parses it (string payloads still work).
+  - **Rust wiring:** `screen::on_final` — in the single-letter turn, the alternative is
+    parsed to a letter and `decide_letter(lang, letter, confidence, alt)` runs; a
+    low-confidence confusable → `LetterDecision::Chip` → the `#saChip` UI (built in
+    Phase 4). The input method ignores confidence/alt.
+  - **Verified:** `xcodebuild` simulator build SUCCEEDED; full lib suite 277/0; wasm +
+    web build clean. Runtime chip behaviour needs a device mic (real ASR confidence).
+- **Chip UI:** built + browser-verified in **Phase 4** (bare es "be" gives it a
+  deterministic trigger); the confidence-gated path above now feeds the same UI.
+- **Covers acceptance:** foundation for #2's "bare `be` → chip" (Phase 4).
 
 ### Phase 4 — Spanish lexicon completion + b/v rule  ✅ **LANDED** *(G-B ruled)*
 **Goal:** full Spanish variant set; the answer-safe ambiguity rule. *(This phase also
