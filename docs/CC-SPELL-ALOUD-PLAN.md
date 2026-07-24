@@ -169,16 +169,27 @@ passes every acceptance test and Eric approves activation.
   renders (empty state + filled `C A T` slots). Real push-and-hold capture is
   device-only (iOS native mic) and untestable in-browser.
 
-### Phase 2 — Spoken commands (delete/borrar, clear, done/listo)
+### Phase 2 — Spoken commands (delete/borrar, clear, done/listo)  ✅ **LANDED**
 **Goal:** hands-free editing and turn completion.
-- `lexicons/letters/en.json` + `es.json`: new `commands` block
-  (`delete`/`backspace` & `borrar`, `clear`/`start over` & `borrar todo`,
-  `done`/`finished` & `listo`/`ya`) — kept in the **same single-source-of-record
-  file**, never a scattered map.
-- `src/spell_aloud.rs`: parser distinguishes command tokens from letter tokens and
-  emits a `Command` variant; the mode applies it to the slot buffer. `done` triggers
-  the submit the mode was withholding.
-- **Covers acceptance:** completes #1 (the `done` that accepts CAT).
+- `lexicons/letters/en.json` + `es.json`: new `commands` block (en:
+  `delete`/`backspace`/`undo`/`back`, `clear`/`clear all`/`start over`/`erase all`,
+  `done`/`finished`/`finish`/`enter`; es: `borrar`/`borra`/`borrar uno`/`atrás`,
+  `borrar todo`/`empezar de nuevo`/`limpiar`, `listo`/`ya`/`terminé`/`hecho`) — in the
+  **same single-source-of-record file** (I4), never a scattered map.
+- `src/spell_aloud.rs`: a parallel `commands` table + `Command{Delete,Clear,Done}` and
+  `Event{Letter,Command}`. New **`events(lang, transcript)`** does greedy longest match
+  over letters AND commands (commands win ties; "borrar todo" beats "borrar"); letters
+  and commands interleave ("c a t done"). **`apply_events(buffer, evs) -> Applied`**
+  applies them: letters push, Delete pops, Clear empties, Done flags submit. The plain
+  `parse`/`interpret` (input-method path) stay command-free.
+- `src/spell_aloud/screen.rs`: the mode now drives its turn from `events`/`apply_events`;
+  `done` submits the assembled word through the normal answer path (`set_answer` +
+  `submit_guess`) then clears + closes. Whole word / babble → nudge (no events).
+- **Covers acceptance:** completes #1 (`events("see ay tee done")` →
+  `[c,a,t,Done]` → buffer "cat", submit); the *reject* half stays (a whole word
+  yields zero events).
+- **Verified:** spell_aloud 29/29 (incl. every-command-parses, greedy es, interleave,
+  buffer edits); full lib suite **266/0**; wasm + web build clean.
 
 ### Phase 3 — Confusable handling + confidence surfacing
 **Goal:** below-threshold letters offer a two-choice chip instead of guessing.

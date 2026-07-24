@@ -57,5 +57,10 @@
     "u con tilde": "ú", "u con acento": "ú", "u acentuada": "ú",
     "u con diéresis": "ü", "u con dieresis": "ü", "u con crema": "ü",
     "eñe": "ñ", "ene con tilde": "ñ", "ene con virgulilla": "ñ"
+  },
+  "commands": {
+    "borrar": "delete", "borra": "delete", "borrar uno": "delete", "atrás": "delete",
+    "borrar todo": "clear", "borra todo": "clear", "empezar de nuevo": "clear", "limpiar": "clear",
+    "listo": "done", "ya": "done", "terminé": "done", "hecho": "done"
   }
 }

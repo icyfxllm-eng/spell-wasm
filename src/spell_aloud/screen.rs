@@ -16,7 +16,7 @@ use std::cell::{Cell, RefCell};
 
 use wasm_bindgen_futures::{spawn_local, JsFuture};
 
-use super::{accept_into, contextual_strings, interpret, Slot, SpellOutcome};
+use super::{apply_events, contextual_strings, events, Slot};
 use crate::{dom, native_lang, App};
 
 thread_local! {
@@ -151,22 +151,51 @@ fn release() {
     }
 }
 
-/// A capture finalized — fold the accepted letters into the buffer, echo the new
-/// ones, and re-render. A whole word / babble / silence nudges instead.
+/// A capture finalized — apply its letter/command events to the buffer (Phase 2),
+/// echo any new letters, and re-render. `done` submits. A whole word / babble /
+/// silence produces no events and nudges instead.
 fn on_final(app: &App, lang: &str, transcript: &str) {
     stop_listening_ui();
-    let added = BUFFER.with(|b| accept_into(&mut b.borrow_mut(), lang, transcript));
-    if added.is_empty() {
-        set_status(match interpret(lang, transcript) {
-            SpellOutcome::Nothing => "voiceSpell.didntCatch",
-            _ => "voiceSpell.spellItOut",
+    let evs = events(lang, transcript);
+    if evs.is_empty() {
+        // Heard tokens but nothing usable → a whole word/babble: nudge. Truly empty
+        // (no tokens) → "didn't catch that". No target is consulted (G-A).
+        set_status(if transcript.split_whitespace().next().is_some() {
+            "voiceSpell.spellItOut"
+        } else {
+            "voiceSpell.didntCatch"
         });
         return;
     }
+    let applied = BUFFER.with(|b| apply_events(&mut b.borrow_mut(), &evs));
     set_status("");
     reflect(app);
-    crate::haptics::key_tap();
-    echo(app, &added);
+    if !applied.echo.is_empty() {
+        crate::haptics::key_tap();
+        echo(app, &applied.echo);
+    }
+    if applied.done {
+        submit(app);
+    }
+}
+
+/// `done` was spoken — submit the assembled word. The mode is a voice front-end to
+/// the current word, so it reuses the normal answer path + game check, then clears
+/// and closes so the player sees the result. If the game can't accept right now
+/// (no active word), it just finalizes the turn.
+fn submit(app: &App) {
+    let word = BUFFER.with(|b| assembled(&b.borrow()));
+    if word.is_empty() {
+        set_status("voiceSpell.didntCatch");
+        return;
+    }
+    let can = crate::game::can_type(&app.borrow());
+    BUFFER.with(|b| b.borrow_mut().clear());
+    close();
+    if can {
+        crate::game::set_answer(app, &word);
+        crate::game::submit_guess(app);
+    }
 }
 
 /// Capture error — never blocks; surface a gentle status.
@@ -221,16 +250,29 @@ mod tests {
         assert_eq!(assembled(&[]), "");
     }
 
-    /// The buffer accumulator (the Phase-1 core): letters fill slots across presses;
-    /// a whole word contributes nothing (answer-leak-safe, no target).
+    /// The mode's turn loop (Phase 2): letters fill slots across presses, commands
+    /// edit the buffer, `done` flags submit — all answer-leak-safe (no target).
     #[test]
-    fn accept_into_accumulates_across_presses_and_rejects_whole_words() {
+    fn events_drive_the_turn_letters_commands_and_done() {
         let mut buf: Vec<Slot> = Vec::new();
-        assert_eq!(accept_into(&mut buf, "en", "see ay"), "ca");
-        assert_eq!(accept_into(&mut buf, "en", "tee"), "t");
+        // spell across two presses
+        apply_events(&mut buf, &events("en", "see ay"));
+        apply_events(&mut buf, &events("en", "tee"));
         assert_eq!(assembled(&buf), "cat");
-        // a whole word said mid-turn adds nothing and doesn't disturb the buffer
-        assert_eq!(accept_into(&mut buf, "en", "elephant"), "");
+        // "delete" pops the last slot
+        let d = apply_events(&mut buf, &events("en", "delete"));
+        assert!(!d.done && d.echo.is_empty());
+        assert_eq!(assembled(&buf), "ca");
+        // re-add and finish in one breath: "t done"
+        let fin = apply_events(&mut buf, &events("en", "tee done"));
         assert_eq!(assembled(&buf), "cat");
+        assert_eq!(fin.echo, "t");
+        assert!(fin.done, "\"done\" flags submit");
+        // "clear" empties
+        apply_events(&mut buf, &events("en", "clear"));
+        assert!(buf.is_empty());
+        // a whole word produces no events → buffer untouched
+        apply_events(&mut buf, &events("en", "elephant"));
+        assert!(buf.is_empty());
     }
 }

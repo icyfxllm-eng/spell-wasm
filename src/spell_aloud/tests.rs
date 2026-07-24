@@ -264,6 +264,90 @@ fn whole_word_yields_zero_slots_and_spelling_yields_one_per_letter() {
 }
 
 // ---------------------------------------------------------------------------
+// Phase 2 — spoken commands (delete / clear / done) as events
+// ---------------------------------------------------------------------------
+
+#[test]
+fn commands_parse_to_command_events() {
+    use Command::*;
+    assert_eq!(events(EN, "delete"), vec![Event::Command(Delete)]);
+    assert_eq!(events(EN, "clear"), vec![Event::Command(Clear)]);
+    assert_eq!(events(EN, "done"), vec![Event::Command(Done)]);
+    // Spanish variants.
+    assert_eq!(events(ES, "borrar"), vec![Event::Command(Delete)]);
+    assert_eq!(events(ES, "listo"), vec![Event::Command(Done)]);
+    // Greedy: the two-word "borrar todo" (clear) wins over "borrar" (delete).
+    assert_eq!(events(ES, "borrar todo"), vec![Event::Command(Clear)]);
+}
+
+#[test]
+fn letters_and_a_command_interleave_in_one_utterance() {
+    // "c a t done" → three letters then Done, in order.
+    let evs = events(EN, "see ay tee done");
+    assert_eq!(
+        evs,
+        vec![
+            Event::Letter(Slot { letters: "c".into() }),
+            Event::Letter(Slot { letters: "a".into() }),
+            Event::Letter(Slot { letters: "t".into() }),
+            Event::Command(Command::Done),
+        ]
+    );
+}
+
+#[test]
+fn apply_events_edits_the_buffer_and_flags_done() {
+    let mut buf: Vec<Slot> = Vec::new();
+    // letters accumulate; echo is the newly added letters
+    let a = apply_events(&mut buf, &events(EN, "see ay tee"));
+    assert_eq!(a.echo, "cat");
+    assert!(!a.done);
+    assert_eq!(buf.iter().map(|s| s.letters.as_str()).collect::<String>(), "cat");
+    // delete pops one; delete on empty is a harmless no-op
+    apply_events(&mut buf, &events(EN, "delete"));
+    assert_eq!(buf.len(), 2);
+    // clear empties; a further delete does nothing
+    apply_events(&mut buf, &events(EN, "clear"));
+    apply_events(&mut buf, &events(EN, "delete"));
+    assert!(buf.is_empty());
+    // done flags submit without adding letters
+    let d = apply_events(&mut buf, &events(EN, "done"));
+    assert!(d.done && d.echo.is_empty());
+}
+
+#[test]
+fn every_command_entry_parses_to_its_command() {
+    for lang in [EN, ES] {
+        let raw: RawLexicon = serde_json::from_str(source(lang).unwrap()).unwrap();
+        assert!(!raw.commands.is_empty(), "{lang}: commands block should be non-empty");
+        for (phrase, id) in &raw.commands {
+            let want = Command::from_id(id).unwrap_or_else(|| panic!("{lang}: bad command id {id:?}"));
+            assert_eq!(
+                events(lang, phrase),
+                vec![Event::Command(want)],
+                "{lang}: command {phrase:?} must parse to {want:?}"
+            );
+        }
+    }
+}
+
+#[test]
+fn a_whole_word_yields_no_events() {
+    // The reject half of acceptance #1 at the mode level: no letters, no command.
+    assert!(events(EN, "cat").is_empty());
+    assert!(events(EN, "elephant").is_empty());
+    assert!(events(ES, "casa").is_empty());
+}
+
+#[test]
+fn accept_into_still_folds_letters_ignoring_commands() {
+    // The Phase-0/1 letters-only accumulator is unchanged (input-method path).
+    let mut buf: Vec<Slot> = Vec::new();
+    assert_eq!(accept_into(&mut buf, EN, "see ay tee"), "cat");
+    assert_eq!(buf.iter().map(|s| s.letters.as_str()).collect::<String>(), "cat");
+}
+
+// ---------------------------------------------------------------------------
 // Robustness / edge cases
 // ---------------------------------------------------------------------------
 

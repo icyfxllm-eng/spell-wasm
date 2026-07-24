@@ -55,6 +55,41 @@ struct RawLexicon {
     multigraph: HashMap<String, String>,
     #[serde(default)]
     diacritics: HashMap<String, String>,
+    /// Spoken editing/turn commands (Phase 2): phrase → command id
+    /// (`delete` / `clear` / `done`). Kept in the SAME single-source file (I4).
+    #[serde(default)]
+    commands: HashMap<String, String>,
+}
+
+/// A spoken editing / turn command (Phase 2). Distinct from letter input: it acts on
+/// the slot buffer instead of adding to it. Never free text — an enumerated id.
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+pub enum Command {
+    /// Remove the last slot (delete / backspace / borrar).
+    Delete,
+    /// Empty the buffer (clear / start over / borrar todo).
+    Clear,
+    /// Finish the turn — submit the assembled word (done / listo).
+    Done,
+}
+
+impl Command {
+    fn from_id(s: &str) -> Option<Command> {
+        match s {
+            "delete" => Some(Command::Delete),
+            "clear" => Some(Command::Clear),
+            "done" => Some(Command::Done),
+            _ => None,
+        }
+    }
+}
+
+/// One parsed unit of a spoken utterance in the mode: a letter (fills a slot) or a
+/// command (acts on the buffer). Letters and commands can interleave in one breath.
+#[derive(Clone, Debug, PartialEq, Eq)]
+pub enum Event {
+    Letter(Slot),
+    Command(Command),
 }
 
 /// A compiled lexicon: the merged phrase→letters table (keys normalized for
@@ -62,6 +97,8 @@ struct RawLexicon {
 /// forms to bias the recognizer (`contextualStrings`).
 struct Lexicon {
     table: HashMap<String, String>,
+    /// Spoken commands (Phase 2): normalized phrase → `Command`.
+    commands: HashMap<String, Command>,
     max_words: usize,
     contextual: Vec<String>,
 }
@@ -106,9 +143,22 @@ fn compile(raw: &RawLexicon) -> Lexicon {
             contextual.push(k.clone());
         }
     }
+    // Commands (Phase 2): a parallel phrase→Command table, biased like the letters.
+    let mut commands: HashMap<String, Command> = HashMap::new();
+    for (k, id) in &raw.commands {
+        let key = norm_phrase(k);
+        if key.is_empty() {
+            continue;
+        }
+        if let Some(cmd) = Command::from_id(id) {
+            max_words = max_words.max(key.split(' ').count());
+            commands.insert(key, cmd);
+            contextual.push(k.clone());
+        }
+    }
     contextual.sort();
     contextual.dedup();
-    Lexicon { table, max_words, contextual }
+    Lexicon { table, commands, max_words, contextual }
 }
 
 /// Per-language compiled lexicon, built once and leaked for a `'static` ref (one
@@ -262,6 +312,80 @@ pub fn accept_into(buffer: &mut Vec<Slot>, lang: &str, transcript: &str) -> Stri
         buffer.push(slot);
     }
     added
+}
+
+/// Parse a spoken utterance into an ordered stream of letter/command events (Phase 2,
+/// mode-only). Greedy longest-phrase match over BOTH the letter table and the command
+/// table (a command phrase like "borrar todo" wins over "borrar"); unmatched tokens
+/// are skipped. Letters and commands may interleave ("c a t done"). The plain
+/// `parse`/`interpret` used by the input method stay command-free.
+pub fn events(lang: &str, transcript: &str) -> Vec<Event> {
+    let Some(lex) = lexicon(lang) else {
+        return Vec::new();
+    };
+    let words: Vec<String> =
+        transcript.split_whitespace().map(norm_word).filter(|w| !w.is_empty()).collect();
+    let n = words.len();
+    let mut out: Vec<Event> = Vec::new();
+    let mut i = 0usize;
+    while i < n {
+        let max_len = lex.max_words.min(n - i);
+        let mut hit: Option<(usize, Event)> = None;
+        for len in (1..=max_len).rev() {
+            let phrase = words[i..i + len].join(" ");
+            // Commands take priority over a same-length letter match.
+            if let Some(cmd) = lex.commands.get(&phrase) {
+                hit = Some((len, Event::Command(*cmd)));
+                break;
+            }
+            if let Some(v) = lex.table.get(&phrase) {
+                hit = Some((len, Event::Letter(Slot { letters: v.clone() })));
+                break;
+            }
+        }
+        match hit {
+            Some((len, ev)) => {
+                out.push(ev);
+                i += len;
+            }
+            None => i += 1,
+        }
+    }
+    out
+}
+
+/// What the mode should do after applying one utterance's events.
+#[derive(Clone, Debug, Default, PartialEq, Eq)]
+pub struct Applied {
+    /// Letters newly added this utterance (for the spoken echo).
+    pub echo: String,
+    /// `done` was spoken — the mode submits the assembled word.
+    pub done: bool,
+}
+
+/// Apply an event stream to the slot `buffer` (Phase 2, pure + host-tested):
+/// letters push, `Delete` pops, `Clear` empties, `Done` flags submit. `done` does
+/// NOT clear — the caller reads the assembled buffer to submit.
+pub fn apply_events(buffer: &mut Vec<Slot>, evs: &[Event]) -> Applied {
+    let mut applied = Applied::default();
+    for ev in evs {
+        match ev {
+            Event::Letter(s) => {
+                applied.echo.push_str(&s.letters);
+                buffer.push(s.clone());
+            }
+            Event::Command(Command::Delete) => {
+                buffer.pop();
+            }
+            Event::Command(Command::Clear) => {
+                buffer.clear();
+            }
+            Event::Command(Command::Done) => {
+                applied.done = true;
+            }
+        }
+    }
+    applied
 }
 
 // ===========================================================================

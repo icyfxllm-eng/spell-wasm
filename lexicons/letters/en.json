@@ -54,5 +54,10 @@
   "multigraph": {
     "double u": "w", "double-u": "w", "doubleu": "w", "double you": "w"
   },
-  "diacritics": {}
+  "diacritics": {},
+  "commands": {
+    "delete": "delete", "backspace": "delete", "undo": "delete", "back": "delete",
+    "clear": "clear", "clear all": "clear", "start over": "clear", "erase all": "clear",
+    "done": "done", "finished": "done", "finish": "done", "enter": "done"
+  }
 }
