@@ -73,8 +73,14 @@ no-free-text. Full suite 225/0 (220/0 audit-preview).
   no string field beyond enumerated preset IDs — a compile-time/`serde`-reflection
   test that fails if a `String` is added).
 
-### Phase 2 — Circuits + track generation (F6)
+### Phase 2 — Circuits + track generation (F6)  ✅ **LANDED**
 **Goal:** Sprint(10)/Grand Prix(20)/Endurance(40) seeded tracks.
+**Done:** `src/racing/track.rs` — `Circuit` enum, seeded deterministic `generate`
+(splitmix64 + partial Fisher–Yates, self-contained for D2), draw-without-replacement
+so no word repeats (D7), `available`/`circuits_for_size` cap small banks at the
+largest circuit that fits (never pad), plus sector-delta primitives (display Phase 5).
+7 tests incl. acceptance #10 (no dup; small bank caps at Grand Prix). 232/0 (226/0
+audit-preview).
 - `src/racing/track.rs` (new): seeded draw through the standard selection pipeline;
   enforce D7 (no dup in a track); small-bank language caps at Grand Prix and surfaces
   it via the registry (never pads). Sector/split timing vs a ghost.
