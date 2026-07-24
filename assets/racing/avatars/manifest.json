@@ -1,0 +1,139 @@
+{
+  "schemaNote": "CC-SPELL-RACING D5 — preset identity. avatar_id indexes `avatars`; color_id indexes `colors`. No free text.",
+  "families": {
+    "stars": [
+      "star-classic",
+      "star-sparkle",
+      "star-burst",
+      "star-shooting",
+      "star-wink",
+      "star-cool",
+      "star-champ",
+      "star-twinkle"
+    ],
+    "wands": [
+      "wand-star",
+      "wand-sparkle",
+      "wand-crescent",
+      "wand-crystal",
+      "wand-bolt",
+      "wand-heart",
+      "wand-orb",
+      "wand-trail"
+    ]
+  },
+  "avatars": [
+    {
+      "id": 0,
+      "name": "star-classic",
+      "file": "00-star-classic.svg"
+    },
+    {
+      "id": 1,
+      "name": "star-sparkle",
+      "file": "01-star-sparkle.svg"
+    },
+    {
+      "id": 2,
+      "name": "star-burst",
+      "file": "02-star-burst.svg"
+    },
+    {
+      "id": 3,
+      "name": "star-shooting",
+      "file": "03-star-shooting.svg"
+    },
+    {
+      "id": 4,
+      "name": "star-wink",
+      "file": "04-star-wink.svg"
+    },
+    {
+      "id": 5,
+      "name": "star-cool",
+      "file": "05-star-cool.svg"
+    },
+    {
+      "id": 6,
+      "name": "star-champ",
+      "file": "06-star-champ.svg"
+    },
+    {
+      "id": 7,
+      "name": "star-twinkle",
+      "file": "07-star-twinkle.svg"
+    },
+    {
+      "id": 8,
+      "name": "wand-star",
+      "file": "08-wand-star.svg"
+    },
+    {
+      "id": 9,
+      "name": "wand-sparkle",
+      "file": "09-wand-sparkle.svg"
+    },
+    {
+      "id": 10,
+      "name": "wand-crescent",
+      "file": "10-wand-crescent.svg"
+    },
+    {
+      "id": 11,
+      "name": "wand-crystal",
+      "file": "11-wand-crystal.svg"
+    },
+    {
+      "id": 12,
+      "name": "wand-bolt",
+      "file": "12-wand-bolt.svg"
+    },
+    {
+      "id": 13,
+      "name": "wand-heart",
+      "file": "13-wand-heart.svg"
+    },
+    {
+      "id": 14,
+      "name": "wand-orb",
+      "file": "14-wand-orb.svg"
+    },
+    {
+      "id": 15,
+      "name": "wand-trail",
+      "file": "15-wand-trail.svg"
+    }
+  ],
+  "colors": [
+    {
+      "id": 0,
+      "name": "coral",
+      "hex": "#ff6b7a"
+    },
+    {
+      "id": 1,
+      "name": "amber",
+      "hex": "#ffb14d"
+    },
+    {
+      "id": 2,
+      "name": "yellow",
+      "hex": "#ffe14d"
+    },
+    {
+      "id": 3,
+      "name": "teal",
+      "hex": "#46d6b8"
+    },
+    {
+      "id": 4,
+      "name": "blue",
+      "hex": "#7aa2ff"
+    },
+    {
+      "id": 5,
+      "name": "purple",
+      "hex": "#c792ff"
+    }
+  ]
+}
