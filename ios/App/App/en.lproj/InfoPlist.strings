@@ -1,0 +1,7 @@
+/* Permission purpose strings (CC-SPELL-ALOUD Phase 6). English base — mirrors
+   Info.plist; the localized overrides live in <lang>.lproj/InfoPlist.strings.
+   Review-critical (App Store guideline 2.3.6): each says WHAT and reassures on-device. */
+"NSMicrophoneUsageDescription" = "Spell listens so you can say a word out loud. Your voice is checked on this device and never leaves it.";
+"NSSpeechRecognitionUsageDescription" = "Spell recognizes the word you say — entirely on your device. Your voice is never recorded, saved, or sent anywhere.";
+"NSCameraUsageDescription" = "Spell uses the camera so you can photograph a spelling list and turn it into your own words. The photo is read on your device and never leaves it.";
+"NSPhotoLibraryUsageDescription" = "Spell can read a spelling list from a photo you choose. The photo is read on your device and never leaves it.";

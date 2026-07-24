@@ -18,6 +18,7 @@
 		504EC3121FED79650016851F /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 504EC3101FED79650016851F /* LaunchScreen.storyboard */; };
 		50B271D11FEDC1A000F3C39B /* public in Resources */ = {isa = PBXBuildFile; fileRef = 50B271D01FEDC1A000F3C39B /* public */; };
 		CD429B8A6584E795B3BBA233 /* NativeLanguageKitCore in Frameworks */ = {isa = PBXBuildFile; productRef = B2335ADBAD7F5B5D76466705 /* NativeLanguageKitCore */; };
+		FADE0001000000000000EE20 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = FADE0001000000000000EE10 /* InfoPlist.strings */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -33,6 +34,8 @@
 		958DCC722DB07C7200EA8C5F /* debug.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; name = debug.xcconfig; path = ../debug.xcconfig; sourceTree = SOURCE_ROOT; };
 		D50A51C8A62BA80E2F6B0354 /* NativeLanguageKitPlugin+PhotoList.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = "NativeLanguageKitPlugin+PhotoList.swift"; sourceTree = "<group>"; };
 		F60E6967C62728C402EE9227 /* NativeLanguageKitPlugin.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = NativeLanguageKitPlugin.swift; sourceTree = "<group>"; };
+		FADE0001000000000000EE01 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = App/en.lproj/InfoPlist.strings; sourceTree = SOURCE_ROOT; };
+		FADE0001000000000000EE02 /* es */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = es; path = App/es.lproj/InfoPlist.strings; sourceTree = SOURCE_ROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -48,12 +51,21 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		0763D2E73013F7C6003F49A5 /* Recovered References */ = {
+			isa = PBXGroup;
+			children = (
+				FADE0001000000000000EE10 /* InfoPlist.strings */,
+			);
+			name = "Recovered References";
+			sourceTree = "<group>";
+		};
 		504EC2FB1FED79650016851F = {
 			isa = PBXGroup;
 			children = (
 				958DCC722DB07C7200EA8C5F /* debug.xcconfig */,
 				504EC3061FED79650016851F /* App */,
 				504EC3051FED79650016851F /* Products */,
+				0763D2E73013F7C6003F49A5 /* Recovered References */,
 			);
 			sourceTree = "<group>";
 		};
@@ -128,6 +140,7 @@
 			knownRegions = (
 				en,
 				Base,
+				es,
 			);
 			mainGroup = 504EC2FB1FED79650016851F;
 			packageReferences = (
@@ -154,6 +167,7 @@
 				50379B232058CBB4000EE86E /* capacitor.config.json in Resources */,
 				504EC30D1FED79650016851F /* Main.storyboard in Resources */,
 				2FAD9763203C412B000D30F8 /* config.xml in Resources */,
+				FADE0001000000000000EE20 /* InfoPlist.strings in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -187,6 +201,15 @@
 				504EC3111FED79650016851F /* Base */,
 			);
 			name = LaunchScreen.storyboard;
+			sourceTree = "<group>";
+		};
+		FADE0001000000000000EE10 /* InfoPlist.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				FADE0001000000000000EE01 /* en */,
+				FADE0001000000000000EE02 /* es */,
+			);
+			name = InfoPlist.strings;
 			sourceTree = "<group>";
 		};
 /* End PBXVariantGroup section */

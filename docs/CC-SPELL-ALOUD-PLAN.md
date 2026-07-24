@@ -264,16 +264,25 @@ whose fail-closed/offline conventions this mirrors.)* Delivered in two halves:
   in the harness, the parser bar in CI); the loopback form of #1.
 - **Verified:** spell_aloud loopback 3/3; full lib suite **277/0**; harness skip-path OK.
 
-### Phase 6 — Permission strings, airplane mode, denial handling
+### Phase 6 — Permission strings, airplane mode, denial handling  ✅ **LANDED**
 **Goal:** review-safe permissions and graceful failure.
-- `ios/App/App/*.lproj/InfoPlist.strings` (new, per shipped language): localize
-  `NSMicrophoneUsageDescription` + `NSSpeechRecognitionUsageDescription` — today
-  English-only; **review-critical given the 2.3.6 rejection history.**
-- Verify the on-device path works in **airplane mode** (should, by construction —
-  `requiresOnDeviceRecognition = true`); **mic/speech permission denied** →
-  graceful explain-and-exit (reuse the `PERMISSION_DENIED` → explainer path already
-  in `on_error`), **no crash**.
-- **Covers acceptance:** #4 (airplane-mode full round; permission-denied graceful).
+- `ios/App/App/{en,es}.lproj/InfoPlist.strings` (new): localized
+  `NSMicrophoneUsageDescription` + `NSSpeechRecognitionUsageDescription` (+ camera/
+  photo for Photo Import). **Spanish is the one that actually triggers** — Spell Aloud
+  is es/en only, so a Spanish device now sees Spanish permission prompts instead of
+  English (review-critical, guideline 2.3.6). Wired into `App.xcodeproj` as an
+  `InfoPlist.strings` PBXVariantGroup (`SOURCE_ROOT`-anchored so Xcode can't misplace
+  it) + `es` in `knownRegions`. **Build-validated:** `xcodebuild … BUILD SUCCEEDED`;
+  the es strings are present in `App.app/es.lproj/InfoPlist.strings`.
+- **Airplane mode** works by construction — `SpeechListener` sets
+  `requiresOnDeviceRecognition = true` and refuses to start without on-device
+  capability (fail-closed, no server fallback). **Permission denied** → the Rust
+  `on_error` maps `PERMISSION_DENIED`/`UNAVAILABLE` to the gentle explainer and always
+  reverts to typed text — **no crash** (in both the input method and the mode).
+- **Covers acceptance:** #4 (airplane-mode round by construction; permission-denied graceful).
+- **Note:** English is the dev-language fallback (stays in `Info.plist` + `en.lproj`).
+  Other UI locales don't localize these because their Spell-Aloud entry is hidden
+  (mode is en/es); camera/photo strings localize per language when Photo Import ships.
 
 ### Phase 7 — Hub integration, entitlement depth, activation (do LAST)
 **Goal:** the mode becomes discoverable at the approved depth.

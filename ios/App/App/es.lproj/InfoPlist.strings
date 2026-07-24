@@ -1,0 +1,7 @@
+/* Permiso — textos de propósito (CC-SPELL-ALOUD Fase 6). Español: es el idioma que
+   Spell Aloud realmente activa (modo solo en/es). Crítico para la revisión (2.3.6):
+   dice QUÉ hace y tranquiliza indicando que todo ocurre en el dispositivo. */
+"NSMicrophoneUsageDescription" = "Spell escucha para que puedas decir una palabra en voz alta. Tu voz se procesa en este dispositivo y nunca sale de él.";
+"NSSpeechRecognitionUsageDescription" = "Spell reconoce la palabra que dices, totalmente en tu dispositivo. Tu voz nunca se graba, se guarda ni se envía a ningún lugar.";
+"NSCameraUsageDescription" = "Spell usa la cámara para que puedas fotografiar una lista de palabras y convertirla en tus propias palabras. La foto se procesa en tu dispositivo y nunca sale de él.";
+"NSPhotoLibraryUsageDescription" = "Spell puede leer una lista de palabras a partir de una foto que elijas. La foto se procesa en tu dispositivo y nunca sale de él.";
