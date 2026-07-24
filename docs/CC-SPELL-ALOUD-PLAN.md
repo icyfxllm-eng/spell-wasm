@@ -125,20 +125,27 @@ Each phase is independently reviewable and lands green (tests + i18n + build). L
 phases depend only on earlier ones. The mode stays `hidden` in `modes.json` until it
 passes every acceptance test and Eric approves activation.
 
-### Phase 0 — Answer-leak hardening of the parser  *(gated on G-A)*
+### Phase 0 — Answer-leak hardening of the parser  ✅ **LANDED** *(G-A ruled)*
 **Goal:** make the core obey the invariant *the target never reaches the matcher.*
-- `src/spell_aloud.rs`: change `interpret(lang, transcript, target)` →
-  `interpret(lang, transcript)`; drop `similarity(...)`/`levenshtein(...)` and the
-  `WHOLE_WORD_SIM` constant; whole-word rejection becomes yield-ratio-only
-  (`yield_ratio() < WHOLE_WORD_YIELD` ⇒ reject). Introduce the slot model
-  (`Vec<Slot>` where each accepted letter is one slot) as the return shape.
-- `src/spell_aloud/tests.rs`: rewrite the two target-dependent tests; add a
-  **CI invariant test** that `interpret`/`parse` take no target parameter (a
-  compile-time signature guard) and that a whole-word utterance yields zero slots.
+- `src/spell_aloud.rs`: `interpret(lang, transcript, target)` → **`interpret(lang,
+  transcript)`**; removed `similarity(...)`, `levenshtein(...)`, and `WHOLE_WORD_SIM`.
+  Whole-word rejection is now **yield-ratio-only** (`total_words > 0 && yield_ratio()
+  < WHOLE_WORD_YIELD` ⇒ `WholeWord`; `total_words == 0` ⇒ `Nothing`). Added the **slot
+  model**: `pub struct Slot { letters }` + `Parsed.slots: Vec<Slot>`, one entry per
+  matched letter-name token (a multigraph like "elle"→"ll" is one slot). Removed the
+  `TARGET` thread-local and the `s.word` read in `mic_tap` — the answer is no longer
+  even loaded into the module.
+- **Design note (worth Eric knowing):** without the target, "spoke a whole word" and
+  "made babble" are the *same* low-yield signal, so they now share the `WholeWord`
+  nudge; only a truly empty utterance is `Nothing`. This merged the old
+  `noise_yields_nothing` case — the shipped input method's UX is unchanged for the
+  common paths (genuine spelling inserts; whole word nudges).
+- `src/spell_aloud/tests.rs`: rewrote the target-dependent tests; added a
+  compile-time **signature guard** (`let _: fn(&str,&str)->SpellOutcome = interpret;`)
+  and a slot test (whole word → 0 slots; "see ay tee" → `[c,a,t]`; slots concat == letters).
 - **Covers acceptance:** the *reject* half of #1 ("cat" → rejected, attempt not
-  consumed); the invariant "a whole-word utterance can NEVER score as a correct
-  spelling."
-- **Risk:** load-bearing reversal of shipped code — do not start before G-A.
+  consumed); the invariant "a whole-word utterance can NEVER score as a correct spelling."
+- **Result:** `spell_aloud` 20/20; full lib suite **257/0**; wasm release builds clean.
 
 ### Phase 1 — Mode surface: push-and-hold + slots + echo  *(gated on G-C)*
 **Goal:** the feature becomes a *place* with kid-simple turn-taking.

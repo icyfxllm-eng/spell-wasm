@@ -185,7 +185,8 @@ fn every_lexicon_entry_parses_to_its_value() {
 
 #[test]
 fn en_whole_word_said_is_rejected() {
-    // Speaking the word itself (not its letters) must be rejected as a whole word.
+    // Speaking the word itself (not its letters) must be rejected as a whole word —
+    // by LETTER YIELD ALONE (no target is passed; answer-leak invariant, G-A).
     let words = [
         "cat", "dog", "house", "apple", "table", "water", "planet", "friend",
         "school", "green", "small", "brain", "number", "chair", "ocean", "rhythm",
@@ -193,7 +194,7 @@ fn en_whole_word_said_is_rejected() {
     ];
     for w in words {
         assert_eq!(
-            interpret(EN, w, w),
+            interpret(EN, w),
             SpellOutcome::WholeWord,
             "EN whole word {w:?} must be rejected (nudge, insert nothing)"
         );
@@ -205,27 +206,61 @@ fn en_whole_word_said_is_rejected() {
 fn es_whole_word_said_is_rejected() {
     let words = ["casa", "gato", "mesa", "agua", "libro", "verde", "árbol", "corazón"];
     for w in words {
-        assert_eq!(interpret(ES, w, w), SpellOutcome::WholeWord, "ES whole word {w:?}");
+        assert_eq!(interpret(ES, w), SpellOutcome::WholeWord, "ES whole word {w:?}");
     }
 }
 
 #[test]
-fn genuine_spelling_is_never_rejected_even_when_it_resembles_word() {
-    // High yield ⇒ never a whole-word rejection, whatever the similarity.
-    assert_eq!(interpret(EN, "see ay tee", "cat"), SpellOutcome::Insert("cat".into()));
-    assert_eq!(interpret(ES, "ce a ese a", "casa"), SpellOutcome::Insert("casa".into()));
-    // Diacritic spelling of the exact target still inserts, never rejects.
+fn genuine_high_yield_spelling_is_always_inserted() {
+    // High yield ⇒ never a whole-word rejection — and the matcher never saw a target.
+    assert_eq!(interpret(EN, "see ay tee"), SpellOutcome::Insert("cat".into()));
+    assert_eq!(interpret(ES, "ce a ese a"), SpellOutcome::Insert("casa".into()));
+    // Diacritic spelling still inserts, byte-for-byte NFC.
     assert_eq!(
-        interpret(ES, "a con tilde erre be o ele", "árbol"),
+        interpret(ES, "a con tilde erre be o ele"),
         SpellOutcome::Insert("árbol".into())
     );
 }
 
 #[test]
-fn noise_yields_nothing() {
-    // No letters parsed and doesn't resemble the target → Nothing (not WholeWord).
-    assert_eq!(interpret(EN, "um well hmm", "cat"), SpellOutcome::Nothing);
-    assert_eq!(interpret(EN, "", "cat"), SpellOutcome::Nothing);
+fn non_letter_speech_nudges_and_only_silence_is_nothing() {
+    // Without the target, "spoke a word" and "made noise" are the same low-yield
+    // signal: both nudge (insert nothing, never credited).
+    assert_eq!(interpret(EN, "um well hmm"), SpellOutcome::WholeWord);
+    // Only a truly empty utterance is Nothing ("didn't catch that").
+    assert_eq!(interpret(EN, ""), SpellOutcome::Nothing);
+}
+
+// --- Phase 0 answer-leak invariant + slot model -----------------------------
+
+#[test]
+fn interpret_takes_no_target_and_rejects_whole_words_without_it() {
+    // Compile-time signature guard: interpret is (lang, transcript) -> SpellOutcome,
+    // with NO target parameter. If a target is ever re-added, this fails to compile.
+    let _guard: fn(&str, &str) -> SpellOutcome = interpret;
+    // A whole word is rejected with no answer anywhere in sight.
+    assert_eq!(interpret(EN, "elephant"), SpellOutcome::WholeWord);
+    // A genuine spelling of some OTHER word still inserts.
+    assert_eq!(interpret(EN, "see ay tee"), SpellOutcome::Insert("cat".into()));
+}
+
+#[test]
+fn whole_word_yields_zero_slots_and_spelling_yields_one_per_letter() {
+    // A spoken whole word (or babble) parses to zero letter-name slots.
+    assert!(parse(EN, "cat").slots.is_empty());
+    assert!(parse(EN, "um well hmm").slots.is_empty());
+    // Genuine spelling yields one slot per spoken letter, in order.
+    let letters: Vec<String> =
+        parse(EN, "see ay tee").slots.iter().map(|s| s.letters.clone()).collect();
+    assert_eq!(letters, ["c", "a", "t"]);
+    // A multigraph name is a SINGLE slot carrying both letters.
+    let ll = parse(ES, "elle");
+    assert_eq!(ll.slots.len(), 1);
+    assert_eq!(ll.slots[0].letters, "ll");
+    // Slot letters concatenate to the full parsed string (I1).
+    let p = parse(ES, "ene i eñe o");
+    assert_eq!(p.slots.iter().map(|s| s.letters.as_str()).collect::<String>(), p.letters);
+    assert_eq!(p.letters, "niño");
 }
 
 // ---------------------------------------------------------------------------
@@ -256,7 +291,8 @@ fn transcript_edge_punctuation_is_trimmed() {
 fn unsupported_language_parses_to_nothing() {
     assert_eq!(parse("fr", "be a").letters, "");
     assert!(contextual_strings("fr").is_empty());
-    assert_eq!(interpret("fr", "chat", "chat"), SpellOutcome::Nothing);
+    // No lexicon → zero tokens parsed → Nothing (never a crash, never a whole-word).
+    assert_eq!(interpret("fr", "chat"), SpellOutcome::Nothing);
 }
 
 #[test]

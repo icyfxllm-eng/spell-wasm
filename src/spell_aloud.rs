@@ -8,7 +8,10 @@
 //!
 //! CORE PRINCIPLE: this is CONSTRAINED LETTER-SEQUENCE capture, NOT dictation. A
 //! recognizer that hears "cat" and yields "cat" is REJECTED as a whole word (the
-//! player is nudged to spell letter by letter) — see [`interpret`].
+//! player is nudged to spell letter by letter) — see [`interpret`]. That rejection
+//! is by LETTER YIELD ALONE: the target word is never given to the recognizer or the
+//! matcher (answer-leak invariant, gate G-A), so a whole word can never score as a
+//! correct spelling and the answer can never leak through the mic path.
 //!
 //! ALL linguistic knowledge lives in the lexicons (`lexicons/letters/<lang>.json`,
 //! the SINGLE SOURCE OF TRUTH). This module only turns a token stream into a
@@ -120,12 +123,26 @@ fn lexicon(lang: &str) -> Option<&'static Lexicon> {
     Some(leaked)
 }
 
+/// One accepted letter-name in a spoken utterance: the letters a single matched
+/// token (or multi-word phrase) produced, NFC-normalized. Usually one character
+/// ("c"); a multigraph name ("elle"→"ll") or an accented vowel phrase
+/// ("a con tilde"→"á") is still ONE slot. The push-and-hold mode (Phase 1) renders
+/// one slot per accepted letter; a spoken whole word yields zero slots — the
+/// answer-leak-safe unit of "what was accepted", never compared to the target.
+#[derive(Clone, Debug, PartialEq, Eq)]
+pub struct Slot {
+    /// The letters this token produced (NFC).
+    pub letters: String,
+}
+
 /// The result of parsing a spoken utterance into letters.
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub struct Parsed {
     /// The letters the player spelled, NFC-normalized (Invariant I1). Exactly what
     /// a keyboard would have produced.
     pub letters: String,
+    /// One entry per matched letter-name token, in order (the slot model).
+    pub slots: Vec<Slot>,
     /// Word tokens that were consumed by a letter/phrase match.
     pub matched_words: usize,
     /// Total word tokens in the utterance.
@@ -151,12 +168,13 @@ impl Parsed {
 /// a lexicon parse to nothing.
 pub fn parse(lang: &str, transcript: &str) -> Parsed {
     let Some(lex) = lexicon(lang) else {
-        return Parsed { letters: String::new(), matched_words: 0, total_words: 0 };
+        return Parsed { letters: String::new(), slots: Vec::new(), matched_words: 0, total_words: 0 };
     };
     let words: Vec<String> =
         transcript.split_whitespace().map(norm_word).filter(|w| !w.is_empty()).collect();
     let n = words.len();
     let mut out = String::new();
+    let mut slots: Vec<Slot> = Vec::new();
     let mut matched = 0usize;
     let mut i = 0usize;
     while i < n {
@@ -172,6 +190,7 @@ pub fn parse(lang: &str, transcript: &str) -> Parsed {
         match hit {
             Some((len, v)) => {
                 out.push_str(v);
+                slots.push(Slot { letters: v.to_string() }); // lexicon values are already NFC
                 matched += len;
                 i += len;
             }
@@ -179,7 +198,7 @@ pub fn parse(lang: &str, transcript: &str) -> Parsed {
         }
     }
     let letters: String = out.nfc().collect();
-    Parsed { letters, matched_words: matched, total_words: n }
+    Parsed { letters, slots, matched_words: matched, total_words: n }
 }
 
 /// The spoken forms to hand the recognizer as `contextualStrings` for `lang`
@@ -188,69 +207,39 @@ pub fn contextual_strings(lang: &str) -> Vec<String> {
     lexicon(lang).map(|l| l.contextual.clone()).unwrap_or_default()
 }
 
-// ---- whole-word rejection (Feature 7) ----
+// ---- whole-word rejection (Feature 7, answer-leak-safe) ----
 
-/// Below this parsed-letter yield AND at/above [`WHOLE_WORD_SIM`] similarity to the
-/// target, an utterance is treated as the whole word spoken aloud, not a spelling.
+/// Minimum fraction of an utterance that must parse as letter names for it to count
+/// as a spelling. Below this, the player spoke a word (or babble), not a spelling.
 const WHOLE_WORD_YIELD: f64 = 0.5;
-const WHOLE_WORD_SIM: f64 = 0.6;
-
-/// Case/accent-normalized similarity of the utterance to the target word
-/// (1.0 = identical). Whitespace-insensitive via `fold_strict`.
-fn similarity(transcript: &str, target: &str) -> f64 {
-    let a = crate::norm::fold_strict(transcript);
-    let b = crate::norm::fold_strict(target);
-    if a.is_empty() && b.is_empty() {
-        return 1.0;
-    }
-    let a: Vec<char> = a.chars().collect();
-    let b: Vec<char> = b.chars().collect();
-    let max = a.len().max(b.len());
-    if max == 0 {
-        return 0.0;
-    }
-    1.0 - levenshtein(&a, &b) as f64 / max as f64
-}
-
-fn levenshtein(a: &[char], b: &[char]) -> usize {
-    let mut prev: Vec<usize> = (0..=b.len()).collect();
-    let mut cur = vec![0usize; b.len() + 1];
-    for (i, ca) in a.iter().enumerate() {
-        cur[0] = i + 1;
-        for (j, cb) in b.iter().enumerate() {
-            let cost = if ca == cb { 0 } else { 1 };
-            cur[j + 1] = (prev[j + 1] + 1).min(cur[j] + 1).min(prev[j] + cost);
-        }
-        std::mem::swap(&mut prev, &mut cur);
-    }
-    prev[b.len()]
-}
 
 /// What the input method should do with a finalized utterance.
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub enum SpellOutcome {
     /// Append these letters at the cursor (already NFC).
     Insert(String),
-    /// The player said the whole word — nudge "spell it letter by letter", insert
-    /// nothing, count no attempt (Feature 7).
+    /// The player spoke a whole word / non-letters — nudge "spell it letter by
+    /// letter", insert nothing, count no attempt (Feature 7).
     WholeWord,
-    /// Nothing usable was heard — a subtle "didn't catch that", insert nothing.
+    /// Nothing was heard at all — a subtle "didn't catch that", insert nothing.
     Nothing,
 }
 
-/// Decide what a finalized transcript means for `target` in `lang`. Whole-word
-/// rejection requires BOTH a low parsed-letter yield AND a fuzzy match to the
-/// target, so genuine letter-by-letter spelling (high yield) is never rejected
-/// even if it happens to resemble the word.
-pub fn interpret(lang: &str, transcript: &str, target: &str) -> SpellOutcome {
+/// Decide what a finalized transcript means in `lang`. **The target word is
+/// deliberately NOT a parameter** (answer-leak invariant, gate G-A): a whole word
+/// is rejected purely because it yields too few letter names to be a spelling —
+/// never by comparing the utterance to the answer. A spoken whole word yields ~0
+/// letter names and so structurally cannot be credited; genuine letter-by-letter
+/// spelling (high yield) always inserts. Because the target is invisible here,
+/// "spoke a word" and "made noise" are the same low-yield signal — both nudge; only
+/// a truly empty utterance is `Nothing`.
+pub fn interpret(lang: &str, transcript: &str) -> SpellOutcome {
     let parsed = parse(lang, transcript);
-    let looks_like_word =
-        parsed.total_words > 0 && parsed.yield_ratio() < WHOLE_WORD_YIELD && similarity(transcript, target) >= WHOLE_WORD_SIM;
-    if looks_like_word {
-        return SpellOutcome::WholeWord;
+    if parsed.total_words == 0 {
+        return SpellOutcome::Nothing; // silence / nothing heard
     }
-    if parsed.letters.is_empty() {
-        return SpellOutcome::Nothing;
+    if parsed.yield_ratio() < WHOLE_WORD_YIELD {
+        return SpellOutcome::WholeWord; // a word or babble, not a spelling
     }
     SpellOutcome::Insert(parsed.letters)
 }
@@ -269,8 +258,6 @@ thread_local! {
     /// The answer text present when capture began — voice spelling APPENDS to it,
     /// and any failure state reverts to it (typed input is never lost).
     static BASE: RefCell<String> = const { RefCell::new(String::new()) };
-    /// The target word for the in-flight capture (whole-word rejection).
-    static TARGET: RefCell<String> = const { RefCell::new(String::new()) };
     /// True once the permission explainer has been shown this app-run.
     static EXPLAINED: Cell<bool> = const { Cell::new(false) };
 }
@@ -336,15 +323,16 @@ pub fn mic_tap(app: &App) {
         native_lang::stop_letter_capture();
         return;
     }
-    let (lang, target, base, can) = {
+    let (lang, base, can) = {
         let s = app.borrow();
-        (s.lang.clone(), s.word.clone(), s.answer.clone(), crate::game::can_type(&s))
+        (s.lang.clone(), s.answer.clone(), crate::game::can_type(&s))
     };
     if !can {
         return;
     }
+    // The target word is deliberately NOT read here (answer-leak invariant, G-A):
+    // the matcher rejects whole words by low letter-yield, never by the answer.
     BASE.with(|b| *b.borrow_mut() = base);
-    TARGET.with(|t| *t.borrow_mut() = target);
     CAPTURING.with(|c| c.set(true));
     crate::dom::add_class("voiceSpellMic", "listening");
     set_status("voiceSpell.listening");
@@ -390,8 +378,7 @@ fn on_final(app: &App, lang: &str, transcript: &str) {
     }
     end_capture_ui();
     let base = BASE.with(|b| b.borrow().clone());
-    let target = TARGET.with(|t| t.borrow().clone());
-    match interpret(lang, transcript, &target) {
+    match interpret(lang, transcript) {
         SpellOutcome::Insert(letters) => {
             crate::game::set_answer(app, &format!("{}{}", base, letters));
             crate::haptics::key_tap();
