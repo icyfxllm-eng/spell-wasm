@@ -300,5 +300,20 @@
   "level.expert.desc": "Najtrudniejsze słowa, mniej czasu.",
   "level.climb.desc": "Wspinaj się przez poziomy i ustanów rekord.",
   "hint.letterOne": "(1 litera)",
-  "hint.letters": "({n} liter)"
+  "hint.letters": "({n} liter)",
+  "racing.title": "Wyścig Ortograficzny",
+  "racing.chooseCircuit": "Wybierz tor",
+  "racing.circuit.sprint": "Sprint",
+  "racing.circuit.grandPrix": "Grand Prix",
+  "racing.circuit.endurance": "Wytrzymałość",
+  "racing.laps": "{n} słów",
+  "racing.chooseOpponent": "Wybierz swojego ducha",
+  "racing.slot.firstEver": "Pierwszy raz",
+  "racing.slot.personalBest": "Rekord życiowy",
+  "racing.slot.mostRecent": "Najnowszy",
+  "racing.noGhosts": "Brak duchów — ukończ wyścig, aby nagrać jednego.",
+  "racing.noCircuits": "Ten język nie ma jeszcze dość słów do wyścigu.",
+  "racing.start": "Rozpocznij wyścig",
+  "racing.best": "Najlepszy {time}",
+  "racing.soon": "Wyścigi na żywo już wkrótce."
 }

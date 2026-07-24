@@ -300,5 +300,20 @@
   "level.expert.desc": "最難関の単語、時間は短め。",
   "level.climb.desc": "段階を上ってハイスコアを狙う。",
   "hint.letterOne": "(1文字)",
-  "hint.letters": "({n}文字)"
+  "hint.letters": "({n}文字)",
+  "racing.title": "スペルレーシング",
+  "racing.chooseCircuit": "サーキットを選ぶ",
+  "racing.circuit.sprint": "スプリント",
+  "racing.circuit.grandPrix": "グランプリ",
+  "racing.circuit.endurance": "エンデュランス",
+  "racing.laps": "{n}語",
+  "racing.chooseOpponent": "ゴーストを選ぶ",
+  "racing.slot.firstEver": "最初の記録",
+  "racing.slot.personalBest": "自己ベスト",
+  "racing.slot.mostRecent": "最新",
+  "racing.noGhosts": "ゴーストはまだありません — レースを完走すると記録されます。",
+  "racing.noCircuits": "この言語はレースに十分な単語がまだありません。",
+  "racing.start": "レース開始",
+  "racing.best": "ベスト {time}",
+  "racing.soon": "ライブレースは近日公開。"
 }

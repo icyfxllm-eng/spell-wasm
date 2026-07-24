@@ -300,5 +300,20 @@
   "level.expert.desc": "Die schwersten Wörter, weniger Zeit.",
   "level.climb.desc": "Erklimme die Stufen und stelle einen Rekord auf.",
   "hint.letterOne": "(1 Buchstabe)",
-  "hint.letters": "({n} Buchstaben)"
+  "hint.letters": "({n} Buchstaben)",
+  "racing.title": "Buchstabier-Rennen",
+  "racing.chooseCircuit": "Wähle eine Strecke",
+  "racing.circuit.sprint": "Sprint",
+  "racing.circuit.grandPrix": "Grand Prix",
+  "racing.circuit.endurance": "Ausdauer",
+  "racing.laps": "{n} Wörter",
+  "racing.chooseOpponent": "Wähle deinen Geist",
+  "racing.slot.firstEver": "Allererstes",
+  "racing.slot.personalBest": "Bestzeit",
+  "racing.slot.mostRecent": "Neuestes",
+  "racing.noGhosts": "Noch keine Geister — beende ein Rennen, um eines aufzuzeichnen.",
+  "racing.noCircuits": "Diese Sprache hat noch nicht genug Wörter für ein Rennen.",
+  "racing.start": "Rennen starten",
+  "racing.best": "Beste {time}",
+  "racing.soon": "Live-Rennen kommen bald."
 }

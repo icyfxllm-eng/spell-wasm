@@ -300,5 +300,20 @@
   "level.expert.desc": "Ang pinakamahihirap na salita, mas maikli ang oras.",
   "level.climb.desc": "Umakyat sa mga antas at magtakda ng rekord.",
   "hint.letterOne": "(1 titik)",
-  "hint.letters": "({n} titik)"
+  "hint.letters": "({n} titik)",
+  "racing.title": "Spelling Racing",
+  "racing.chooseCircuit": "Pumili ng circuit",
+  "racing.circuit.sprint": "Sprint",
+  "racing.circuit.grandPrix": "Grand Prix",
+  "racing.circuit.endurance": "Endurance",
+  "racing.laps": "{n} salita",
+  "racing.chooseOpponent": "Piliin ang iyong multo",
+  "racing.slot.firstEver": "Kauna-unahan",
+  "racing.slot.personalBest": "Personal na Best",
+  "racing.slot.mostRecent": "Pinakabago",
+  "racing.noGhosts": "Wala pang multo — tapusin ang isang karera para makapag-record.",
+  "racing.noCircuits": "Kulang pa ang mga salita sa wikang ito para makarera.",
+  "racing.start": "Simulan ang karera",
+  "racing.best": "Pinakamahusay {time}",
+  "racing.soon": "Malapit nang dumating ang live na karera."
 }

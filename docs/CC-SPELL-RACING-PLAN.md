@@ -115,15 +115,21 @@ state machine: given a track (word IDs) + an opponent's per-lap finish times, it
 consumes keystroke/submit events, reports live `Standing` (your lap vs opponent,
 ahead/behind), and on completion yields a recordable `RaceGhost` (never mid-race).
 Opponent-agnostic (garage or pace ghost). 5 tests. 242/0 (236/0 audit-preview).
-**Remaining (UI + activation — needs decisions, see below):**
-- DOM screen (extend the shipped ghost screen): circuit select, opponent picker from
-  the garage, live race surface, photo-finish results.
+**Done (screen + i18n):** `src/racing/screen.rs` + `#spellRacing` in index.html — the
+mode's place: circuit select (from `track::available`), opponent picker (from
+`garage`), empty states, all data-driven. Delegated listeners (no stacking).
+Reachable only via the hidden `spellRacingOpen` entry (ghost_racing untouched).
+i18n: 15 keys × 11 locales (acceptance #8; `i18n-check` 317 keys green). Verified
+in-browser: circuits + opponents render from real garage data, times formatted,
+selection/close/empty-state all work. 245/0 (239/0 audit-preview).
+**Remaining (needs decisions):**
+- **Live-race hook:** wire the engine into the spelling loop (`game.rs`) so Start
+  actually races — Start is currently a placeholder (`racing.soon`).
 - Entitlement gating in the resolver (depth not mode).
-- i18n strings ×15 languages (acceptance #8).
 - **Activation (do LAST):** `modes.json` rename `ghost_racing`→`spell_racing` + remove
-  the build-55 toggle. Deferred deliberately — doing it now removes the shipped
-  Ghost racing before its replacement is ready. The mode stays hidden until it passes
-  all acceptance tests and Eric approves activation.
+  the build-55 toggle. Deferred — doing it now removes the shipped Ghost racing before
+  its replacement is ready. The mode stays hidden until it passes all acceptance tests
+  and Eric approves activation.
 - `config/modes.json`: rename `ghost_racing` → `spell_racing`, display "Spell Racing".
   Remove the build-55 settings toggle (`src/flags.rs` entry + the settings row); the
   registry becomes the single source of truth (spec F7).

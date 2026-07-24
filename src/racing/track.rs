@@ -41,6 +41,11 @@ impl Circuit {
             Circuit::Endurance => "endurance",
         }
     }
+
+    /// Parse back from `id()` (e.g. a DOM `data-circuit` attribute).
+    pub fn from_id(s: &str) -> Option<Circuit> {
+        Circuit::ALL.iter().copied().find(|c| c.id() == s)
+    }
 }
 
 // ---- deterministic PRNG (splitmix64) + FNV seed — same primitives as daily.rs ----

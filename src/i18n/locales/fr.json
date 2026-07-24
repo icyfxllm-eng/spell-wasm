@@ -300,5 +300,20 @@
   "level.expert.desc": "Les mots les plus durs, moins de temps.",
   "level.climb.desc": "Grimpe les paliers et bats ton record.",
   "hint.letterOne": "(1 lettre)",
-  "hint.letters": "({n} lettres)"
+  "hint.letters": "({n} lettres)",
+  "racing.title": "Course d'Épellation",
+  "racing.chooseCircuit": "Choisis un circuit",
+  "racing.circuit.sprint": "Sprint",
+  "racing.circuit.grandPrix": "Grand Prix",
+  "racing.circuit.endurance": "Endurance",
+  "racing.laps": "{n} mots",
+  "racing.chooseOpponent": "Choisis ton fantôme",
+  "racing.slot.firstEver": "Toute première",
+  "racing.slot.personalBest": "Record personnel",
+  "racing.slot.mostRecent": "La plus récente",
+  "racing.noGhosts": "Aucun fantôme pour l'instant — termine une course pour en enregistrer un.",
+  "racing.noCircuits": "Pas encore assez de mots dans cette langue pour faire la course.",
+  "racing.start": "Démarrer la course",
+  "racing.best": "Meilleur {time}",
+  "racing.soon": "Les courses en direct arrivent bientôt."
 }

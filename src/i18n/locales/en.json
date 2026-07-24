@@ -300,5 +300,20 @@
   "level.expert.desc": "The toughest words, less time.",
   "level.climb.desc": "Climb the tiers and set a high score.",
   "hint.letterOne": "(1 letter)",
-  "hint.letters": "({n} letters)"
+  "hint.letters": "({n} letters)",
+  "racing.title": "Spell Racing",
+  "racing.chooseCircuit": "Choose a circuit",
+  "racing.circuit.sprint": "Sprint",
+  "racing.circuit.grandPrix": "Grand Prix",
+  "racing.circuit.endurance": "Endurance",
+  "racing.laps": "{n} words",
+  "racing.chooseOpponent": "Choose your ghost",
+  "racing.slot.firstEver": "First Ever",
+  "racing.slot.personalBest": "Personal Best",
+  "racing.slot.mostRecent": "Most Recent",
+  "racing.noGhosts": "No ghosts yet — finish a race to record one.",
+  "racing.noCircuits": "Not enough words in this language to race yet.",
+  "racing.start": "Start race",
+  "racing.best": "Best {time}",
+  "racing.soon": "Live racing is coming soon."
 }

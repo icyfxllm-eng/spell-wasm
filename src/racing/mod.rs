@@ -11,4 +11,5 @@
 pub mod engine;
 pub mod format;
 pub mod garage;
+pub mod screen;
 pub mod track;

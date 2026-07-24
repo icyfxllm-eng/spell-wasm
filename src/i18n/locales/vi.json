@@ -300,5 +300,20 @@
   "level.expert.desc": "Những từ khó nhất, ít thời gian hơn.",
   "level.climb.desc": "Leo qua các bậc và lập kỷ lục.",
   "hint.letterOne": "(1 chữ cái)",
-  "hint.letters": "({n} chữ cái)"
+  "hint.letters": "({n} chữ cái)",
+  "racing.title": "Đua Đánh Vần",
+  "racing.chooseCircuit": "Chọn một chặng đua",
+  "racing.circuit.sprint": "Nước rút",
+  "racing.circuit.grandPrix": "Grand Prix",
+  "racing.circuit.endurance": "Sức bền",
+  "racing.laps": "{n} từ",
+  "racing.chooseOpponent": "Chọn bóng ma của bạn",
+  "racing.slot.firstEver": "Lần đầu tiên",
+  "racing.slot.personalBest": "Kỷ lục cá nhân",
+  "racing.slot.mostRecent": "Gần đây nhất",
+  "racing.noGhosts": "Chưa có bóng ma — hoàn thành một cuộc đua để ghi lại.",
+  "racing.noCircuits": "Ngôn ngữ này chưa đủ từ để đua.",
+  "racing.start": "Bắt đầu đua",
+  "racing.best": "Tốt nhất {time}",
+  "racing.soon": "Đua trực tiếp sẽ sớm ra mắt."
 }

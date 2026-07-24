@@ -300,5 +300,20 @@
   "level.expert.desc": "As palavras mais difíceis, menos tempo.",
   "level.climb.desc": "Suba os níveis e faça um recorde.",
   "hint.letterOne": "(1 letra)",
-  "hint.letters": "({n} letras)"
+  "hint.letters": "({n} letras)",
+  "racing.title": "Corrida de Soletração",
+  "racing.chooseCircuit": "Escolha um circuito",
+  "racing.circuit.sprint": "Sprint",
+  "racing.circuit.grandPrix": "Grande Prêmio",
+  "racing.circuit.endurance": "Resistência",
+  "racing.laps": "{n} palavras",
+  "racing.chooseOpponent": "Escolha seu fantasma",
+  "racing.slot.firstEver": "Primeira vez",
+  "racing.slot.personalBest": "Recorde pessoal",
+  "racing.slot.mostRecent": "Mais recente",
+  "racing.noGhosts": "Ainda sem fantasmas — termine uma corrida para gravar um.",
+  "racing.noCircuits": "Este idioma ainda não tem palavras suficientes para correr.",
+  "racing.start": "Começar corrida",
+  "racing.best": "Melhor {time}",
+  "racing.soon": "As corridas ao vivo chegarão em breve."
 }

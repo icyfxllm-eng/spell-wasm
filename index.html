@@ -689,6 +689,21 @@
   /* Empty hub: never render a blank box. Reachable today — e.g. a Preview
      language on web filters out every mode. */
   .hub-empty{color:var(--muted-2);font-size:13.5px;text-align:center;padding:18px 6px 6px;line-height:1.5}
+  /* Spell Racing screen (CC-SPELL-RACING Phase 5). */
+  #spellRacing .modal{position:relative}
+  .sr-label{font-size:12px;font-weight:700;color:var(--muted);text-align:start;margin:16px 0 8px;letter-spacing:.02em}
+  .sr-circuits{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+  .sr-circuit{background:var(--panel-2);border:1px solid var(--edge);border-radius:12px;padding:12px 6px;text-align:center;cursor:pointer;color:var(--ink);font-family:inherit}
+  .sr-circuit:hover{border-color:var(--teal)}
+  .sr-circuit.selected{border-color:var(--amber);background:color-mix(in srgb,var(--amber) 12%,var(--panel-2))}
+  .sr-circuit .c-name{font-weight:700;font-size:13px}
+  .sr-circuit .c-laps{font-size:11px;color:var(--muted);margin-top:2px}
+  .sr-opponents{display:flex;flex-direction:column;gap:8px}
+  .sr-opponent{display:flex;align-items:center;justify-content:space-between;gap:10px;background:var(--panel-2);border:1px solid var(--edge);border-radius:12px;padding:10px 12px}
+  .sr-opponent .o-name{font-weight:600;font-size:13px}
+  .sr-opponent .o-best{font-size:11px;color:var(--muted)}
+  .sr-start{background:var(--amber);color:#231d38;border:none;border-radius:999px;padding:6px 14px;font-weight:700;font-size:12px;cursor:pointer;font-family:inherit}
+  .sr-empty{color:var(--muted-2);font-size:13px;text-align:center;padding:12px 6px;line-height:1.5}
   /* Ghost racing screen — same containing-block requirement as the hub. */
   #ghostScreen .modal{position:relative}
   .ghost-stat{background:var(--panel-2);border:1px solid var(--edge);border-radius:14px;padding:16px 14px;margin:4px 0 18px;line-height:1.5}
@@ -1095,6 +1110,22 @@
   <!-- Hidden entry point the hub tile clicks (same indirection every other mode
        uses — the hub routes, it does not reimplement). -->
   <button id="ghostOpenBtn" class="btn-hide" aria-hidden="true" tabindex="-1"></button>
+
+  <!-- Spell Racing screen (CC-SPELL-RACING Phase 5). REVIEW-GATED: reachable ONLY
+       via the hidden #spellRacingOpen entry until activation; the shipped
+       ghost_racing mode is untouched. Body is populated by racing::screen from real
+       garage + track data. -->
+  <div class="scrim" id="spellRacing">
+    <div class="modal wide">
+      <button class="ghost hub-x" id="srClose" aria-label="Close">✕</button>
+      <h3><span aria-hidden="true">🏁</span> <span id="srTitle"></span></h3>
+      <p class="sr-label" id="srCircuitLabel"></p>
+      <div class="sr-circuits" id="srCircuits"></div>
+      <p class="sr-label" id="srOpponentLabel"></p>
+      <div class="sr-opponents" id="srOpponents"></div>
+    </div>
+  </div>
+  <button id="spellRacingOpen" class="btn-hide" aria-hidden="true" tabindex="-1"></button>
 
   <div class="scrim" id="photoScrim">
     <div class="modal wide">

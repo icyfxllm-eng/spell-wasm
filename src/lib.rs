@@ -197,6 +197,7 @@ fn wire(app: &App) {
     // then reflect current state so the panel is correct before it first opens.
     play_hub::wire(app);
     ghost::wire_screen(app);
+    racing::screen::wire(app); // CC-SPELL-RACING Phase 5 screen (hidden until activation)
     tools_hub::wire(app);
     tools_hub::reflect(app);
 

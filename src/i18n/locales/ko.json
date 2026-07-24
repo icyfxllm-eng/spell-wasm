@@ -300,5 +300,20 @@
   "level.expert.desc": "가장 어려운 단어, 더 짧은 시간.",
   "level.climb.desc": "단계를 올라 최고 점수에 도전해요.",
   "hint.letterOne": "(1글자)",
-  "hint.letters": "({n}글자)"
+  "hint.letters": "({n}글자)",
+  "racing.title": "스펠링 레이싱",
+  "racing.chooseCircuit": "서킷 선택",
+  "racing.circuit.sprint": "스프린트",
+  "racing.circuit.grandPrix": "그랑프리",
+  "racing.circuit.endurance": "인듀런스",
+  "racing.laps": "{n}단어",
+  "racing.chooseOpponent": "고스트 선택",
+  "racing.slot.firstEver": "첫 기록",
+  "racing.slot.personalBest": "개인 최고",
+  "racing.slot.mostRecent": "최근 기록",
+  "racing.noGhosts": "아직 고스트가 없습니다 — 레이스를 완주하면 기록됩니다.",
+  "racing.noCircuits": "이 언어는 아직 레이스할 단어가 부족합니다.",
+  "racing.start": "레이스 시작",
+  "racing.best": "최고 {time}",
+  "racing.soon": "실시간 레이싱이 곧 추가됩니다."
 }
