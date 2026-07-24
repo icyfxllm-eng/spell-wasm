@@ -1,0 +1,165 @@
+# CC-SPELL-RACING — phased implementation plan
+
+**Status: REVIEW-GATED — PLAN ONLY.** Nothing here enters the submission pipeline.
+This is a proposal for how Spell Racing would be built if approved. Per the spec,
+any decision reversal is STOP-AND-ASK; the three gates below block phase 0.
+
+Companion to the spec (`CC-SPELL-RACING`). File paths are current-tree accurate.
+
+---
+
+## Gate before anything: three decisions that block the start
+
+| Gate | Why it blocks | Needs from Eric |
+|---|---|---|
+| **G-A · Avatars (D5)** | No preset avatar assets exist in the repo. The whole identity model (no free text, COPPA-inert) hangs on them. Spec says: if none fit, **stop and ask** — not add a name field. | Provide art, or approve a proposed preset set (I can mock ~8 avatars + a fixed color palette). |
+| **G-B · Word-ID foundation** | The ghost format references words by `(languageCode, wordListHash, wordID)`, never by string. Today word banks are plain `&[&str]` — **no IDs, no hash**. Every determinism/round-trip test depends on this layer. It is the real first project. | Approve Phase 0 scope + the ID/hash design (below) before it lands as its own reviewed change. |
+| **G-C · Pace bands (D6)** | Champion band params + the calibration method need sign-off before ship. Phases can proceed on Bronze–Platinum; Champion stays stubbed until approved. | Approve/adjust D6 anchors and calibration once Phase 4 has a proposal with real tester data. |
+
+No mode code is written until G-A and G-B are resolved.
+
+## What already exists (leverage, don't rebuild)
+
+- Education build-time exclusion: `#[cfg(not(feature = "education"))]` + `apply_education_grant` (`src/entitlements.rs`).
+- Entitlement resolver, union NONE<PREVIEW<FULL (`src/entitlements.rs`).
+- Share pipeline (`src/share.rs`) — F4 rides this.
+- Daily no-repeat cycle walk (`src/daily.rs`) — D7 extends it to general tracks.
+- Mode hub registry + tile routing (`config/modes.json`, `src/play_hub.rs`, `src/modes.rs`).
+- Ghost recording/replay/pace-marker core (`src/ghost.rs`, ~416 lines) — the seed.
+- The Ghost racing **screen** already shipped (build 57) — it becomes the mode's entry surface, not throwaway.
+
+## What's missing (build)
+
+Stable word IDs, `wordListHash`, ghost schema v1 (versioned), pace-ghost generator,
+circuit/track generator, garage storage + migration, share encode/decode + QR
+(new dep to vet), Spell Racing screen/results, Daily race add-on.
+
+---
+
+## Phases
+
+Each phase is independently reviewable and lands green (tests + i18n + build). Later
+phases depend only on earlier ones, never the reverse.
+
+### Phase 0 — Stable word-ID foundation  *(gated on G-B)*
+**Goal:** words addressable by stable ID + a deterministic per-list hash.
+- `scripts/build-wordlists.py`: assign each word a stable ID (index within its
+  source-of-record tier is NOT stable across edits — use a content-derived ID, e.g.
+  a short hash of the NFC word, collision-checked at build). Emit a `wordListHash`
+  per (lang, tier) = hash of the ordered ID set.
+- `src/word_data.rs` (generated): carry IDs + the hash constant.
+- `src/words.rs`: `resolve(lang, tier, word_id) -> Option<&str>` and `hash(lang,tier)`.
+- **Covers acceptance:** foundation for #1, #2, #3. New unit test: ID round-trips,
+  hash is stable across a no-op rebuild and changes when the list changes.
+- **Risk:** load-bearing; touches every language's generated data. Ship + soak before
+  Phase 1. Does NOT touch gameplay — banks still serve the same words.
+
+### Phase 1 — Ghost format v1 + core record/playback  *(Rust/WASM)*
+**Goal:** the versioned, free-text-free ghost data model.
+- `src/ghost.rs` (extend) + `src/racing/format.rs` (new): `schemaVersion:i32`, word
+  refs by ID, per-word + per-keystroke timestamps, correctness flags, identity =
+  `{avatar_id: u8, color_id: u8}` enums only. Reader rejects unknown major version
+  with the specified message; hash-mismatch falls back to ID resolution, unresolvable
+  → abort with message (never substitute).
+- Schema doc committed: `docs/ghost-schema-v1.md` (D4).
+- **Covers acceptance:** #1 (determinism, Rust core test), #4 (CI check: schema has
+  no string field beyond enumerated preset IDs — a compile-time/`serde`-reflection
+  test that fails if a `String` is added).
+
+### Phase 2 — Circuits + track generation (F6)
+**Goal:** Sprint(10)/Grand Prix(20)/Endurance(40) seeded tracks.
+- `src/racing/track.rs` (new): seeded draw through the standard selection pipeline;
+  enforce D7 (no dup in a track); small-bank language caps at Grand Prix and surfaces
+  it via the registry (never pads). Sector/split timing vs a ghost.
+- **Covers acceptance:** #10 (no dup words; synthetic tiny-bank caps at GP).
+
+### Phase 3 — Ghost garage (F2)
+**Goal:** Personal Best / Most Recent / First Ever per lang×tier, local-only.
+- `src/racing/garage.rs` (new): storage keyed like `spell_ghost_v1`, PB rule (lower
+  time; tie → higher accuracy), First-Ever immutable + migration-preserved.
+- **Covers acceptance:** #9 (migration: removes build-55 toggle, preserves First Ever
+  across an app update).
+
+### Phase 4 — Pace ghosts (F3)  *(Champion gated on G-C)*
+**Goal:** deterministic synthetic opponents, 5 bands.
+- `src/racing/pace.rs` (new) + `config/pace-bands.json` (one entry per band, NOT per
+  language). Seeded generation: same band + same track seed ⇒ byte-identical.
+- Champion stays behind a stub until D6 sign-off (a proposal PR with tester data).
+- **Covers acceptance:** #2 (pace-ghost determinism in CI).
+
+### Phase 5 — Spell Racing screen + hub integration (F7)
+**Goal:** the mode becomes a place.
+- `config/modes.json`: rename `ghost_racing` → `spell_racing`, display "Spell Racing".
+  Remove the build-55 settings toggle (`src/flags.rs` entry + the settings row); the
+  registry becomes the single source of truth (spec F7).
+- Extend the shipped ghost screen into the full mode surface: garage picker, circuit
+  select, opponent select, photo-finish results (doubles as share card).
+- Entitlement gating = **depth, not mode** (PREVIEW: Sprint + Bronze–Gold + garage +
+  Daily Bronze–Gold; FULL: GP/Endurance + Platinum/Champion + sharing + full
+  analytics; Little Speller: Bronze–Silver, no sharing, no purchase surface).
+- All strings via i18n pipeline, 15 languages.
+- **Covers acceptance:** #8 (localization lint).
+
+### Phase 6 — Ghost sharing via codes (F4)
+**Goal:** async head-to-head, zero servers.
+- `src/racing/share_code.rs` (new): compress ghost → link + QR (new QR dep — vet
+  license/size). Import validates schema version / language availability /
+  resolvability, each with a specific error. Rivals garage section, cap 20 (oldest
+  evicted w/ confirm). Rides `src/share.rs` styling.
+- **Build-time excluded from education** (same treatment as StoreKit; CI symbol scan).
+- **Covers acceptance:** #3 (round-trip + error cases, Maestro), #6 (education: no
+  sharing symbols).
+
+### Phase 7 — Daily Challenge race (F5)
+**Goal:** post-completion pace race on the day's list.
+- `src/daily.rs`: **add-only** entry point after normal completion; one race per band
+  per day; standard Daily flow untouched. No global-median assumptions anywhere.
+
+### Cross-cutting (every phase)
+- **#5 Offline:** all racing modules network-free by construction; a CI test runs the
+  full flow with networking disabled.
+- **#7 Isolation:** static check that `src/racing/*` and `src/ghost.rs` never
+  import/reference Climb/shield modules (D2 hard wall) — add to the existing purity-check
+  script pattern.
+
+---
+
+## Acceptance-test → phase map
+
+| # | Test | Lands in |
+|---|---|---|
+| 1 | Ghost determinism | Phase 1 (needs 0) |
+| 2 | Pace-ghost determinism | Phase 4 |
+| 3 | Share round-trip + errors | Phase 6 |
+| 4 | Free-text invariant (CI) | Phase 1 |
+| 5 | Offline full mode | cross-cutting |
+| 6 | Education excludes sharing | Phase 6 |
+| 7 | Isolation from Climb | cross-cutting (static check from Phase 0) |
+| 8 | Localization 15 langs | Phase 5 |
+| 9 | Migration (toggle gone, First Ever survives) | Phase 3 / 5 |
+| 10 | Repeat policy + small-bank cap | Phase 2 |
+
+## Guardrails (from Constraints / D1–D7) — enforced, not aspirational
+
+- **Never touch** The Climb / shields / its scoring (D2) — enforced by test #7.
+- **No server, account, or network** anywhere (offline test #5).
+- **No free-text** field in any racing struct (schema test #4).
+- **No new authored content** — only UI labels through i18n.
+- **Daily flow** untouched beyond the add-on entry point (Phase 7).
+- **Ranking** stays local/unranked v1 (D1); nothing designed assumes a median server.
+
+## Sequencing recommendation
+
+`0 → 1 → 2 → 3 → 5(partial) → 4 → 6 → 7`, with the isolation + offline checks wired
+from Phase 0. Phase 5 can show a playable mode after Phases 1–3 (record, garage,
+circuits, pace) even before sharing (6) and Daily (7). Each phase is a reviewed
+change; **none ships to users until the whole mode passes all 10 acceptance tests and
+Eric approves activation** — consistent with the mode staying `status` off in
+`modes.json` until then.
+
+## Open items still needing your call (beyond the three gates)
+
+- **QR library choice** — adds a dependency; I'll propose one (license + wasm size)
+  in Phase 6 rather than pick silently.
+- **"content-derived word ID" vs an explicit ID column** in the source lists — Phase 0
+  design detail; I'll bring a concrete proposal to G-B.
