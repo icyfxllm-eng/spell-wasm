@@ -187,10 +187,15 @@ platform :ios do
     sh("cd #{root.shellescape} && npm run sync:ios")
 
     # 2. Build number from App Store Connect (latest + 1) — never from the repo, so
-    #    a retry can't re-upload an existing number (ITMS-90189).
+    #    a retry can't re-upload an existing number (ITMS-90189). Edit the project
+    #    file DIRECTLY (like the `beta` lane) rather than increment_build_number:
+    #    the latter runs agvtool, which rewrites Info.plist's CFBundleVersion from
+    #    $(CURRENT_PROJECT_VERSION) to a hardcoded literal and churns that file every
+    #    build. This keeps Info.plist's indirection intact.
     next_build = latest_testflight_build_number(api_key_path: key_path, initial_build_number: 0) + 1
     UI.important("Build number -> #{next_build}")
-    increment_build_number(xcodeproj: "ios/App/App.xcodeproj", build_number: next_build)
+    pbxproj = File.expand_path("../ios/App/App.xcodeproj/project.pbxproj", __dir__)
+    File.write(pbxproj, File.read(pbxproj).gsub(/CURRENT_PROJECT_VERSION = \d+;/, "CURRENT_PROJECT_VERSION = #{next_build};"))
 
     # 3. Dedicated signing keychain (created on first run).
     kc_pw   = ENV["SPELL_KEYCHAIN_PASSWORD"] || "spellbuild-temp-pw"
