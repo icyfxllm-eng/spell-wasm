@@ -391,7 +391,8 @@
   .fh-left{display:flex;align-items:center;gap:9px}
   .field-label{font-size:11.5px;text-transform:uppercase;letter-spacing:.18em;color:var(--muted-on-bg)}
   /* Spell It Out Loud — mic beside the answer field (voice spelling INPUT). */
-  .voice-spell-mic{width:30px;height:30px;border-radius:50%;display:grid;place-items:center;font-size:15px;line-height:1;padding:0;background:var(--panel-2);border:1.5px solid var(--edge);color:inherit;cursor:pointer;transition:transform .12s,box-shadow .2s,border-color .2s;touch-action:none;user-select:none;-webkit-user-select:none}
+  .voice-spell-mic{width:44px;height:44px;margin-left:8px;border-radius:50%;display:grid;place-items:center;font-size:22px;line-height:1;padding:0;background:var(--panel-2);border:1.5px solid var(--edge);color:inherit;cursor:pointer;transition:transform .12s,box-shadow .2s,border-color .2s;touch-action:none;user-select:none;-webkit-user-select:none}
+  body.kid .voice-spell-mic{width:52px;height:52px;font-size:26px}
   .voice-spell-mic.btn-hide,.voice-spell-perm.btn-hide{display:none}
   .voice-spell-mic:active{transform:scale(.9)}
   .voice-spell-mic.listening{border-color:var(--teal,#46d6b8);box-shadow:0 0 0 5px rgba(70,214,184,.22);animation:sayitPulse 1.1s ease-in-out infinite}
