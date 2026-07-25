@@ -311,8 +311,11 @@
       // so an on-device "Listening but nothing captured" report is pinpointable without
       // a debugger. Writes directly to the DOM (no Rust wiring).
       sub('letterDiag', function (d) {
+        if (!(d && d.info)) return;
+        window.__lastLetterDiag = d.info;              // persisted for Settings readout
         var el = document.getElementById('voiceSpellStatus');
-        if (el && d && d.info) el.textContent = 'diag: ' + d.info;
+        if (el) el.textContent = 'diag: ' + d.info;
+        if (window.__refreshNativeStatus) window.__refreshNativeStatus();
       });
       p.startLetterCapture({
         lang: (opts && opts.lang) || '',

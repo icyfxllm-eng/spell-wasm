@@ -1660,6 +1660,8 @@
         } else {
           el.textContent += avail ? '' : ' (native tools hidden — expected off-device/web)';
         }
+        // Persist the last voice-capture diagnostic so it's readable here after a mic try.
+        if (window.__lastLetterDiag) el.textContent += ' | cap: ' + window.__lastLetterDiag;
       }
       window.__refreshNativeStatus = refresh;
       document.addEventListener('DOMContentLoaded', function () { setTimeout(refresh, 1200); });
