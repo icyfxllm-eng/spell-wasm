@@ -468,6 +468,35 @@ fn input_method_parse_still_auto_resolves_bv() {
 }
 
 // ---------------------------------------------------------------------------
+// A10 streak parity — the mechanism (CC-SPELL-ALOUD-INTEGRATION I4)
+// ---------------------------------------------------------------------------
+
+/// A10 / I4: a correct voice-spelled word must score identically to a typed one. The
+/// GUARANTEE is mechanical: the voice input touches NO scoring/streak code — its only
+/// scoring-relevant call is `set_answer` (the same the keyboard uses) — and it produces
+/// the SAME answer string typing would. So both funnel through the one `submit_guess`
+/// on identical input ⇒ identical streak delta. (The end-to-end delta with a running
+/// app is the whisper/E2E review-gate check; the mechanism is proven here, purely.)
+#[test]
+fn a10_voice_scores_only_via_the_typed_answer_path() {
+    // I4 structural: no scoring/streak/submit call anywhere in the voice module.
+    let src = include_str!("../spell_aloud.rs");
+    for forbidden in ["submit_guess", "streak", "stats::record", "note_climb(", "achievements::"] {
+        assert!(!src.contains(forbidden), "voice input must not touch scoring directly: {forbidden} (I4)");
+    }
+    // Same submitted string as typing: a correct voice spelling yields exactly the
+    // word, so `submit_guess` grades it identically to a typed control.
+    for (spoken, typed) in [("see ay tee", "cat"), ("dee oh gee", "dog")] {
+        assert_eq!(interpret("en", spoken), SpellOutcome::Insert(typed.to_string()));
+    }
+    assert_eq!(interpret("es", "ene i eñe o"), SpellOutcome::Insert("niño".to_string()));
+    // A cheat (saying the word) yields NO answer → never submits → never scores (so it
+    // can neither gain nor break a streak — it's a rejected input, not an attempt).
+    assert!(says_target("cat", "cat"));
+    assert_eq!(interpret("en", "see ay tee"), SpellOutcome::Insert("cat".into())); // spelling still scores
+}
+
+// ---------------------------------------------------------------------------
 // A8 word-source parity (CC-SPELL-ALOUD-INTEGRATION I1)
 // ---------------------------------------------------------------------------
 

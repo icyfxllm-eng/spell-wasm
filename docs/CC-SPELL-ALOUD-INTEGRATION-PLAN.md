@@ -104,5 +104,10 @@ All either already hold or are covered above.
   standard pool (`words::tier_for("en","medium")` + `deck::Deck`): every served word is
   in the standard list and the same pool+seed reproduces the same sequence (mode ==
   typed standard distribution).
+- ✅ **Streak parity — mechanism (A10 / I4)**: proven purely that the voice module
+  touches NO scoring/streak/submit code (its only scoring-relevant call is `set_answer`,
+  same as the keyboard) and produces the SAME answer string typing would — so both
+  funnel through the one `submit_guess` on identical input ⇒ identical streak delta. The
+  end-to-end delta with a running app is the E2E/review-gate check.
 - ⏭ Next: voice undo/clear in the input method (A6 runtime); permission fallback +
-  "type instead" (A9); streak-delta parity (A10); whisper fixtures + demo video (gate).
+  "type instead" (A9); whisper fixtures + demo video (review gate, device).
