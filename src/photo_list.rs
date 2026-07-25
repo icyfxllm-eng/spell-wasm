@@ -98,7 +98,9 @@ fn start_capture(app: &App) {
             "en-US".to_string()
         }
     };
-    let promise = match native_lang::recognize_word_list(&lang, "auto") {
+    // Camera-first: photographing the page IS the feature. The native side falls
+    // back to the photo library automatically when no camera exists (simulator).
+    let promise = match native_lang::recognize_word_list(&lang, "camera") {
         Some(p) => p,
         None => return, // recognizer vanished (shouldn't happen; button is gated).
     };

@@ -64,11 +64,22 @@ extension NativeLanguageKitPlugin {
                 return
             }
             let observations = (request.results as? [VNRecognizedTextObservation]) ?? []
-            let lines = observations.compactMap { $0.topCandidates(1).first?.string }
-            self.finish(resolve: lines)
+            let candidates = observations.compactMap { $0.topCandidates(1).first }
+            // Merge on main: UITextChecker (used by the dictionary tiebreaker)
+            // isn't documented thread-safe.
+            DispatchQueue.main.async {
+                let lang = self.recognitionLanguages.first
+                let lines = candidates.map { Self.healSplitWords($0, language: lang) }
+                self.finish(resolve: lines)
+            }
         }
         request.recognitionLevel = .accurate
         request.usesLanguageCorrection = true
+        // Read any script the OS recognizer knows, not just the seeded language —
+        // the seeded recognitionLanguages below remain the tie-break hint.
+        if #available(iOS 16.0, *) {
+            request.automaticallyDetectsLanguage = true
+        }
         if !recognitionLanguages.isEmpty {
             request.recognitionLanguages = recognitionLanguages
         }
@@ -81,6 +92,73 @@ extension NativeLanguageKitPlugin {
                 self?.finish(reject: "Recognition failed")
             }
         }
+    }
+
+    // MARK: - Split-word healing
+
+    /// Handwriting often leaves a small gap INSIDE a word, which the recognizer
+    /// renders as a space — "software" comes back as "soft ware". Vision still
+    /// knows the page geometry, so heal it here: merge two adjacent tokens when
+    /// the pixel gap between them is far smaller than a real word space (measured
+    /// against this line's own average character width), or when the gap is
+    /// moderate but the joined text is a dictionary word (UITextChecker). Works
+    /// in any language Vision reads; geometry needs no dictionary at all.
+    fileprivate static func healSplitWords(_ candidate: VNRecognizedText, language: String?) -> String {
+        let text = candidate.string
+        // Whitespace-separated tokens with their ranges in the line.
+        var tokens: [(text: String, range: Range<String.Index>)] = []
+        var idx = text.startIndex
+        while idx < text.endIndex {
+            if text[idx].isWhitespace { idx = text.index(after: idx); continue }
+            var end = idx
+            while end < text.endIndex, !text[end].isWhitespace { end = text.index(after: end) }
+            tokens.append((String(text[idx..<end]), idx..<end))
+            idx = end
+        }
+        guard tokens.count > 1 else { return text }
+
+        // Normalized bounding box per token; if geometry is unavailable for any
+        // token, return the line untouched rather than guessing.
+        var boxes: [CGRect] = []
+        for t in tokens {
+            guard let obs = (try? candidate.boundingBox(for: t.range)) ?? nil else { return text }
+            boxes.append(obs.boundingBox)
+        }
+        let totalChars = tokens.reduce(0) { $0 + $1.text.count }
+        let totalWidth = boxes.reduce(CGFloat(0)) { $0 + $1.width }
+        guard totalChars > 0, totalWidth > 0 else { return text }
+        let avgChar = totalWidth / CGFloat(totalChars)
+
+        // Left-to-right greedy merge so "so ft ware" can chain into one word.
+        var outTokens: [String] = [tokens[0].text]
+        var prevBox = boxes[0]
+        for i in 1..<tokens.count {
+            let gap = boxes[i].minX - prevBox.maxX
+            let tight = gap <= 0.45 * avgChar
+            let moderate = gap <= 1.1 * avgChar
+            let joined = outTokens[outTokens.count - 1] + tokens[i].text
+            if tight || (moderate && isDictionaryWord(joined, language: language)) {
+                outTokens[outTokens.count - 1] = joined
+                prevBox = prevBox.union(boxes[i])
+            } else {
+                outTokens.append(tokens[i].text)
+                prevBox = boxes[i]
+            }
+        }
+        return outTokens.joined(separator: " ")
+    }
+
+    /// True when the OS spell-checker accepts `w` for the recognition language —
+    /// the tiebreaker that turns a moderate handwriting gap ("soft ware") back
+    /// into the word the writer meant.
+    fileprivate static func isDictionaryWord(_ w: String, language: String?) -> Bool {
+        guard w.count > 2, let language = language, !language.isEmpty else { return false }
+        let checker = UITextChecker()
+        let lang = language.replacingOccurrences(of: "-", with: "_")
+        let range = NSRange(location: 0, length: (w as NSString).length)
+        let miss = checker.rangeOfMisspelledWord(in: w, range: range, startingAt: 0,
+                                                 wrap: false, language: lang)
+        return miss.location == NSNotFound
     }
 
     // MARK: - Completion
