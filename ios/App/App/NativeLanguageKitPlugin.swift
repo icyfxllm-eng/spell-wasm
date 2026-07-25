@@ -185,6 +185,9 @@ public class NativeLanguageKitPlugin: CAPPlugin, CAPBridgedPlugin {
                 },
                 onError: { [weak self] err in
                     self?.notifyListeners("letterError", data: ["code": err.rawValue])
+                },
+                onDiag: { [weak self] info in
+                    self?.notifyListeners("letterDiag", data: ["info": info])
                 }
             )
             call.resolve()
@@ -233,6 +236,12 @@ final class SpeechListener {
     // was — ONE capture engine, two profiles, never a second microphone.
     private var partialHandler: ((String) -> Void)?
     private var contextualStrings: [String] = []
+    // TEMP capture diagnostic (letter profile): counts mic buffers reaching the tap and
+    // reports the input format, so an on-device "Listening but nothing captured" report
+    // can be pinpointed to routing (no buffers) vs recognizer/model (buffers but no
+    // tokens) without a device debugger. Emitted via the `letterDiag` event.
+    private var tapCount = 0
+    private var diagHandler: ((String) -> Void)?
     // Letter-capture confusable surfacing (CC-SPELL-ALOUD Phase 3): the confidence of
     // the least-sure segment in the final transcription, and that segment's top
     // alternative reading. The Rust parser turns these into a two-choice chip; here we
@@ -255,8 +264,10 @@ final class SpeechListener {
         contextualStrings: [String],
         onPartial: @escaping (String) -> Void,
         onFinal: @escaping (String, Double, String) -> Void,
-        onError: @escaping (ListenError) -> Void
+        onError: @escaping (ListenError) -> Void,
+        onDiag: @escaping (String) -> Void
     ) {
+        diagHandler = onDiag
         begin(lang: lang, contextualStrings: contextualStrings, onPartial: onPartial) { [weak self] result in
             switch result {
             case .success(let text): onFinal(text, self?.lastConfidence ?? 1.0, self?.lastAlt ?? "")
@@ -348,15 +359,32 @@ final class SpeechListener {
             try session.setActive(true, options: .notifyOthersOnDeactivation)
         } catch { finish(.failure(.audio)); return }
 
+        // Defensive: clear any stale engine/tap state (e.g. an inputNode format cached
+        // while the session was `.playback`) so the fresh tap gets real mic buffers.
+        tapCount = 0
+        audioEngine.stop()
+        audioEngine.reset()
+
         // Read the input format AFTER the session is record-capable, so it isn't the
         // zero/invalid format a `.playback` session reports (which yields silent taps).
         let input = audioEngine.inputNode
         let format = input.outputFormat(forBus: 0)
         input.installTap(onBus: 0, bufferSize: 1024, format: format) { [weak self] buffer, _ in
+            self?.tapCount += 1
             self?.request?.append(buffer)
         }
         audioEngine.prepare()
         do { try audioEngine.start() } catch { finish(.failure(.audio)); return }
+
+        // TEMP diagnostic: after ~1.2s report the mic format + how many buffers arrived
+        // + whether on-device recognition is supported. buf=0 ⇒ audio isn't routing;
+        // buf>0 but no letters ⇒ recognizer/on-device-model issue.
+        let handler = diagHandler
+        let onDev = recognizer.supportsOnDeviceRecognition
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1.2) { [weak self] in
+            guard let self = self else { return }
+            handler?("sr=\(Int(format.sampleRate)) ch=\(format.channelCount) buf=\(self.tapCount) onDev=\(onDev)")
+        }
 
         task = recognizer.recognitionTask(with: req) { [weak self] result, error in
             guard let self = self else { return }

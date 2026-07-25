@@ -307,6 +307,13 @@
         cleanup();
       });
       sub('letterError', function (d) { if (onError) onError((d && d.code) || 'AUDIO_ERROR'); cleanup(); });
+      // TEMP capture diagnostic: show the mic format + buffer count in the status line
+      // so an on-device "Listening but nothing captured" report is pinpointable without
+      // a debugger. Writes directly to the DOM (no Rust wiring).
+      sub('letterDiag', function (d) {
+        var el = document.getElementById('voiceSpellStatus');
+        if (el && d && d.info) el.textContent = 'diag: ' + d.info;
+      });
       p.startLetterCapture({
         lang: (opts && opts.lang) || '',
         contextualStrings: (opts && opts.contextualStrings) || [],
