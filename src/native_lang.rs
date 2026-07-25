@@ -46,6 +46,20 @@ pub fn available() -> bool {
     .unwrap_or(false)
 }
 
+/// True on a native Capacitor platform (iOS), even if the plugin proxy hasn't resolved.
+/// For PLATFORM gating (whether an iOS-only mode's tile shows at all) — distinct from
+/// [`available`], which also requires the plugin for actual native calls. So a mode
+/// stays reachable on iOS even when the speech plugin is momentarily unresolved; the
+/// feature then surfaces its own availability inside.
+pub fn is_native_platform() -> bool {
+    (|| -> Option<bool> {
+        let obj = bridge()?;
+        let f = method(&obj, "nativePlatform")?;
+        Some(f.call0(&obj).ok()?.as_bool().unwrap_or(false))
+    })()
+    .unwrap_or(false)
+}
+
 /// Offline TTS: speak `text` with `voice_id` at the game `rate`. Returns the JS
 /// promise (resolves on completion, rejects on cancel/failure). `None` when the
 /// bridge isn't callable — caller falls through to the next audio source.

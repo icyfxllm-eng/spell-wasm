@@ -79,7 +79,11 @@ fn ctx(app: &App) -> modes::HubCtx {
     }
     modes::HubCtx {
         kid,
-        native: native_lang::available(),
+        // PLATFORM gate for the hub: is this iOS at all? (not "is the speech plugin
+        // resolved" — that flaky check hid every iOS-only tile when the plugin proxy
+        // was momentarily unavailable, leaving no way to reach the mode). Per-feature
+        // availability is surfaced inside each mode.
+        native: native_lang::is_native_platform(),
         level: ent.lang_level(&lang),
         lang,
         premium,

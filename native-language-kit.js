@@ -72,6 +72,17 @@
     available: available,
 
     /**
+     * True on a native Capacitor platform (iOS), regardless of whether the plugin
+     * proxy has resolved. Used for PLATFORM gating (should this tile show at all) —
+     * distinct from `available()`, which also requires the plugin for runtime use.
+     * @returns {boolean}
+     */
+    nativePlatform: function () {
+      var cap = window.Capacitor;
+      return !!(cap && cap.isNativePlatform && cap.isNativePlatform());
+    },
+
+    /**
      * Query what this platform can do for `lang`, per capability. Call this and
      * branch on the result — never assume a capability exists.
      * @param {string} lang bare app language code, e.g. "en" | "es"
