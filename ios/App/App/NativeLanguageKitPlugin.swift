@@ -339,8 +339,15 @@ final class SpeechListener {
         let req = SFSpeechAudioBufferRecognitionRequest()
         req.requiresOnDeviceRecognition = true   // HARD on-device — never the server.
         req.shouldReportPartialResults = true
-        // Letter profile: bias the recognizer toward the language's spoken letter
-        // names (passed from Rust/JS, never hardcoded). Empty for the Say-It profile.
+        // Tuning for ISOLATED LETTERS (the hard case): dictation hint for continuous
+        // letter-by-letter speech, and no auto-punctuation (it turns "a" into "A." /
+        // splices commas that break single-letter tokens). The letter profile always
+        // biases toward the language's spoken letter names (from Rust/JS, never
+        // hardcoded) — this is what pulls "see/ay/tee" toward C/A/T.
+        req.taskHint = .dictation
+        if #available(iOS 16.0, *) {
+            req.addsPunctuation = false
+        }
         if !contextualStrings.isEmpty {
             req.contextualStrings = contextualStrings
         }
