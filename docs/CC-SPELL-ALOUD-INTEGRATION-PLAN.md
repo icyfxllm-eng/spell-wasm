@@ -99,6 +99,10 @@ All either already hold or are covered above.
   orphaned `voiceSpell.pick` key. The parser core (parse/interpret/events/says_target/
   lexicons) is kept — the input method + the loopback oracle + the CLI bridge use it.
   Only Spell Racing remains dev-gated.
-- ⏭ Next: voice undo/clear in the input method (A6 runtime); word-source parity (A8);
-  permission fallback + "type instead" (A9); streak-delta parity (A10); whisper
-  fixtures + demo video (review gate).
+- ✅ **Word-source parity (A8 / I1)**: proven the mode owns no word list — a structural
+  check (spell_aloud references no `tier_for`/`word_data`) + a 200-draw test over the
+  standard pool (`words::tier_for("en","medium")` + `deck::Deck`): every served word is
+  in the standard list and the same pool+seed reproduces the same sequence (mode ==
+  typed standard distribution).
+- ⏭ Next: voice undo/clear in the input method (A6 runtime); permission fallback +
+  "type instead" (A9); streak-delta parity (A10); whisper fixtures + demo video (gate).

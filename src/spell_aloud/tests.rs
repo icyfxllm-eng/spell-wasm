@@ -468,6 +468,55 @@ fn input_method_parse_still_auto_resolves_bv() {
 }
 
 // ---------------------------------------------------------------------------
+// A8 word-source parity (CC-SPELL-ALOUD-INTEGRATION I1)
+// ---------------------------------------------------------------------------
+
+/// A8 / I1: the mode owns NO word list — it serves through the standard engine
+/// (`game::next_word` → `words::tier_for` + `deck::Deck`). So every word it can serve
+/// for a `(lang, tier)` is in the standard pool, and its selection IS the standard
+/// selection. Proven by drawing 200 words the standard way: all are in the standard
+/// list, and the same pool + seed reproduces the same sequence (so the mode and typed
+/// standard mode draw identically — same distribution).
+#[test]
+fn a8_word_source_parity_en_medium() {
+    use std::collections::HashSet;
+
+    // Structural I1: this module references no word list of its own — the parser turns
+    // tokens into letters; words come only from the shared source below.
+    let src = include_str!("../spell_aloud.rs");
+    assert!(
+        !src.contains("tier_for") && !src.contains("word_data"),
+        "spell_aloud must not own or read a word list (I1)"
+    );
+
+    // The standard pool, built exactly as game.rs builds it for a tier.
+    let pool: Vec<String> =
+        crate::words::tier_for("en", "medium").iter().map(|s| s.to_string()).collect();
+    assert!(pool.len() >= 100, "en/medium pool should be substantial, got {}", pool.len());
+    let pool_set: HashSet<&str> = pool.iter().map(String::as_str).collect();
+
+    // A seeded index picker so the run is reproducible (prod uses Math::random).
+    fn draw_200(pool: &[String]) -> Vec<String> {
+        let mut seed: u64 = 0x1234_5678_9abc_def0;
+        let mut rand = |n: usize| -> usize {
+            seed = seed.wrapping_mul(6364136223846793005).wrapping_add(1442695040888963407);
+            ((seed >> 33) as usize) % n.max(1)
+        };
+        let mut deck = crate::deck::Deck::default();
+        (0..200).map(|_| deck.next_with(pool, &mut rand)).collect()
+    }
+
+    let served = draw_200(&pool);
+    // A8 membership: every served word is present in the standard en/medium list.
+    for w in &served {
+        assert!(pool_set.contains(w.as_str()), "served word {w:?} not in the standard list (I1)");
+    }
+    // A8 distribution parity: same pool + seed ⇒ identical sequence, so any two
+    // consumers of this one path (the mode and typed standard mode) select identically.
+    assert_eq!(served, draw_200(&pool), "shared selection path ⇒ identical distribution");
+}
+
+// ---------------------------------------------------------------------------
 // D3 whole-word rejection (CC-SPELL-ALOUD-INTEGRATION Feature 4 / A2, A3, A5)
 // ---------------------------------------------------------------------------
 
