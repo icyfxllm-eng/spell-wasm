@@ -248,11 +248,33 @@ final class SpeechListener {
     // only report them (no linguistic judgment on-device — I4).
     private var lastConfidence: Double = 1.0
     private var lastAlt: String = ""
+    // VAD auto-segmentation for ONE-PRESS continuous letter capture: while `continuous`,
+    // a short silence AFTER speech ends the current letter (→ self.stop() finalizes it;
+    // the Rust layer commits it and restarts for the next letter). One press, spell
+    // letter by letter with a beat between letters — no per-letter hold.
+    private var continuous = false
+    private var sawSpeech = false
+    private var silenceSecs = 0.0
+    private var segmentSecs = 0.0
+    private let speechRMS: Float = 0.015   // RMS above this = speech (device-tunable)
+    private let silenceCutoff = 0.35       // s of silence after a letter = boundary
+    private let maxSegment = 3.0           // s: force a boundary (safety; never hang)
+
+    /// RMS level of a mic buffer (mono) — the VAD speech/silence signal.
+    private static func rms(_ buffer: AVAudioPCMBuffer) -> Float {
+        guard let ch = buffer.floatChannelData?[0] else { return 0 }
+        let n = Int(buffer.frameLength)
+        if n == 0 { return 0 }
+        var sum: Float = 0
+        for i in 0..<n { let s = ch[i]; sum += s * s }
+        return (sum / Float(n)).squareRoot()
+    }
 
     var isListening: Bool { task != nil }
 
     func start(lang: String, completion: @escaping (Result<String, ListenError>) -> Void) {
-        // Say-It (whole-word) profile: no biasing, no partial streaming.
+        // Say-It (whole-word) profile: no biasing, no partial streaming, no VAD.
+        continuous = false
         begin(lang: lang, contextualStrings: [], onPartial: nil, completion: completion)
     }
 
@@ -268,6 +290,7 @@ final class SpeechListener {
         onDiag: @escaping (String) -> Void
     ) {
         diagHandler = onDiag
+        continuous = true // letters: VAD auto-segments each letter (one-press)
         begin(lang: lang, contextualStrings: contextualStrings, onPartial: onPartial) { [weak self] result in
             switch result {
             case .success(let text): onFinal(text, self?.lastConfidence ?? 1.0, self?.lastAlt ?? "")
@@ -371,14 +394,40 @@ final class SpeechListener {
         tapCount = 0
         audioEngine.stop()
         audioEngine.reset()
+        sawSpeech = false
+        silenceSecs = 0
+        segmentSecs = 0
 
         // Read the input format AFTER the session is record-capable, so it isn't the
         // zero/invalid format a `.playback` session reports (which yields silent taps).
         let input = audioEngine.inputNode
         let format = input.outputFormat(forBus: 0)
+        let sampleRate = format.sampleRate
         input.installTap(onBus: 0, bufferSize: 1024, format: format) { [weak self] buffer, _ in
-            self?.tapCount += 1
-            self?.request?.append(buffer)
+            guard let self = self else { return }
+            self.tapCount += 1
+            self.request?.append(buffer)
+            // VAD (letters only): a short silence after a letter is the boundary — end
+            // this letter's capture, which finalizes it and (via Rust) starts the next.
+            if self.continuous && sampleRate > 0 {
+                let secs = Double(buffer.frameLength) / sampleRate
+                let level = Self.rms(buffer)
+                if level > self.speechRMS {
+                    self.sawSpeech = true
+                    self.silenceSecs = 0
+                } else if self.sawSpeech {
+                    self.silenceSecs += secs
+                }
+                self.segmentSecs += secs
+                let boundary = (self.sawSpeech && self.silenceSecs >= self.silenceCutoff)
+                    || self.segmentSecs >= self.maxSegment
+                if boundary {
+                    self.sawSpeech = false
+                    self.silenceSecs = 0
+                    self.segmentSecs = 0
+                    DispatchQueue.main.async { [weak self] in self?.stop() }
+                }
+            }
         }
         audioEngine.prepare()
         do { try audioEngine.start() } catch { finish(.failure(.audio)); return }

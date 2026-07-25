@@ -593,8 +593,12 @@ use crate::App;
 use wasm_bindgen_futures::spawn_local;
 
 thread_local! {
-    /// True while ONE held capture is in flight (push-and-hold, one letter per hold).
+    /// True while ONE VAD segment (one letter) is in flight with the native recognizer.
     static CAPTURING: Cell<bool> = const { Cell::new(false) };
+    /// True from the FIRST mic tap until the user taps again to stop (or an error). While
+    /// set, each finalized letter auto-restarts capture for the next — one press, spell
+    /// the whole word letter by letter with a beat between letters (native VAD segments).
+    static LISTENING: Cell<bool> = const { Cell::new(false) };
     /// The answer text present when capture began — voice spelling APPENDS to it,
     /// and any failure state reverts to it (typed input is never lost).
     static BASE: RefCell<String> = const { RefCell::new(String::new()) };
@@ -644,19 +648,12 @@ pub fn wire(app: &App) {
     if !enabled() {
         return;
     }
-    // PUSH-AND-HOLD, one letter per hold: press starts capture, release finalizes that
-    // one short utterance (the reliable case for on-device ASR) and commits the letter.
-    // Isolated letters spoken in one continuous tap-to-toggle stream don't finalize
-    // per letter, so only the first was ever captured — a hold gives each letter an
-    // explicit boundary.
-    let a_press = app.clone();
-    crate::dom::on::<web_sys::Event, _>("voiceSpellMic", "pointerdown", move |e| {
-        e.prevent_default();
-        mic_press(&a_press);
-    });
-    for kind in ["pointerup", "pointerleave", "pointercancel"] {
-        crate::dom::on::<web_sys::Event, _>("voiceSpellMic", kind, |_| mic_release());
-    }
+    // ONE-PRESS continuous: tap the mic once, then spell the word letter by letter with
+    // a short beat between letters. Native Voice Activity Detection ends each letter on
+    // the pause after it (finalizing that letter), and capture auto-restarts for the
+    // next — so the whole word is spelled from a single tap. Tap again to stop.
+    let a_tap = app.clone();
+    crate::dom::on_click("voiceSpellMic", move || mic_tap(&a_tap));
     // A9 / Feature 8: "Type instead" — dismiss the permission-denied fallback. Typing
     // is captured by the window keydown, so dismissing lands the player in typed
     // standard mode HOLDING THE SAME WORD (the mode is standard-mode-with-voice; the
@@ -690,13 +687,19 @@ fn set_status(key: &str) {
 
 fn end_capture_ui() {
     CAPTURING.with(|c| c.set(false));
+    LISTENING.with(|l| l.set(false));
     crate::dom::remove_class("voiceSpellMic", "listening");
 }
 
-/// Mic PRESS: start capture for ONE letter (push-and-hold). Appends to the current
-/// answer field. NEVER auto-submits; NEVER clears typed text.
-pub fn mic_press(app: &App) {
-    if !enabled() || CAPTURING.with(Cell::get) {
+/// Mic TAP: toggle one-press continuous capture. First tap starts listening (and the
+/// first letter segment); a second tap while listening stops. NEVER auto-submits;
+/// NEVER clears typed text.
+pub fn mic_tap(app: &App) {
+    if !enabled() {
+        return;
+    }
+    if LISTENING.with(Cell::get) {
+        stop_session();
         return;
     }
     let (target, base, can) = {
@@ -706,16 +709,35 @@ pub fn mic_press(app: &App) {
     if !can {
         return;
     }
-    let lang = app.borrow().lang.clone();
     // The target is read ONLY for D3 whole-word rejection (G-INT-2). It is NOT given
     // to the recognizer or the letter matcher, and never resolves letters (G-A).
     BASE.with(|b| *b.borrow_mut() = base);
     TARGET.with(|t| *t.borrow_mut() = target);
-    SESSION_LETTERS.with(|s| s.borrow_mut().clear());
-    CAPTURING.with(|c| c.set(true));
+    LISTENING.with(|l| l.set(true));
     crate::dom::add_class("voiceSpellMic", "listening");
     set_status("voiceSpell.listening");
+    begin_session(app);
+}
 
+/// User stop: end listening and finalize any in-flight segment. The final segment's
+/// `on_final` sees LISTENING == false and does NOT restart.
+fn stop_session() {
+    LISTENING.with(|l| l.set(false));
+    if CAPTURING.with(Cell::get) {
+        native_lang::stop_letter_capture();
+    } else {
+        end_capture_ui();
+        set_status("");
+    }
+}
+
+/// Start ONE native capture segment (one letter). Called by the first tap and, while
+/// LISTENING, re-called from `on_final` to capture the next letter. BASE/TARGET are set
+/// by `mic_tap` and persist across segments; only SESSION_LETTERS resets per segment.
+fn begin_session(app: &App) {
+    SESSION_LETTERS.with(|s| s.borrow_mut().clear());
+    CAPTURING.with(|c| c.set(true));
+    let lang = app.borrow().lang.clone();
     let ctx = contextual_strings(&lang);
     let lang_c = lang.clone();
     let a_partial = app.clone();
@@ -739,15 +761,6 @@ pub fn mic_press(app: &App) {
     }
 }
 
-/// Mic RELEASE: finalize the held capture — the recognizer emits its result for this
-/// one short letter utterance, committed via `on_final`. A fresh press captures the
-/// next letter.
-pub fn mic_release() {
-    if CAPTURING.with(Cell::get) {
-        native_lang::stop_letter_capture();
-    }
-}
-
 /// Live echo: preview `base + accumulated letters`. MONOTONIC — the shown letters only
 /// grow; a partial that the recognizer later revises to FEWER letters does not shrink
 /// them, so a spelled letter never appears then vanishes as the hypothesis jitters.
@@ -767,56 +780,69 @@ fn on_partial(app: &App, lang: &str, transcript: &str) {
     crate::game::set_answer(app, &format!("{}{}", base, shown));
 }
 
-/// Finalize: commit letters, or revert to the typed base and nudge (whole word) /
-/// hint (nothing). Never counts an attempt; never submits.
+/// Finalize ONE VAD segment (one letter): commit it and, while still listening,
+/// auto-restart for the next letter. Never counts an attempt; never submits.
 fn on_final(app: &App, lang: &str, transcript: &str) {
     if !CAPTURING.with(Cell::get) {
         return;
     }
-    end_capture_ui(); // this held capture ended; a fresh press captures the next letter
+    CAPTURING.with(|c| c.set(false)); // this segment ended
+    let still = LISTENING.with(Cell::get);
     let base = BASE.with(|b| b.borrow().clone());
     let target = TARGET.with(|t| t.borrow().clone());
-    // Everything accumulated (monotonically) during this hold — the letters already
-    // shown on the line. Committing THIS (not a re-parse of the final transcript, which
-    // the recognizer may have shrunk) is what makes spelled letters stick.
+    // Letters accumulated (monotonically) during this segment — the ones already shown.
+    // Committing THIS (not a re-parse of the final transcript, which the recognizer may
+    // have shrunk) is what makes spelled letters stick.
     let accumulated = SESSION_LETTERS.with(|s| s.borrow().clone());
     SESSION_LETTERS.with(|s| s.borrow_mut().clear());
     // D3 (Feature 4): the utterance SAYS THE TARGET WORD (whole or embedded) → discard
-    // the ENTIRE utterance, nudge to spell it out. Zero letters, never a miss (a
-    // rejected input, not a scoring event). Only the target rejects (D2).
+    // it, nudge to spell it out. Zero letters, never a miss. BASE is unchanged. (D2)
     if says_target(transcript, &target) {
         crate::game::set_answer(app, &base);
         set_status("voiceSpell.spellItOut");
-        return;
-    }
-    // A6 / D7: a voice edit command acts on the answer field like backspace / start
-    // over (never `done` — submission is the on-screen control). Never a miss.
-    if let Some(cmd) = edit_command(lang, transcript) {
+    } else if let Some(cmd) = edit_command(lang, transcript) {
+        // A6 / D7: a voice edit command acts on the answer field like backspace / start
+        // over (never `done` — submission is the on-screen control). Never a miss.
         let edited = match cmd {
             Command::Delete => drop_last_grapheme(&base),
             Command::Clear => String::new(),
             Command::Done => base.clone(), // ignored: submit is the on-screen control
         };
+        BASE.with(|b| *b.borrow_mut() = edited.clone());
         crate::game::set_answer(app, &edited);
         crate::haptics::key_tap();
-        set_status("");
-        return;
+        set_status(if still { "voiceSpell.listening" } else { "" });
+    } else {
+        // Commit the accumulated letters (or the final parse if it's somehow longer).
+        let final_letters = parse(lang, transcript).letters;
+        let committed = if final_letters.chars().count() > accumulated.chars().count() {
+            final_letters
+        } else {
+            accumulated
+        };
+        if committed.is_empty() {
+            // An empty segment — a false VAD boundary (a pause with no clear letter) is
+            // routine in one-press mode. Keep the field and keep listening silently.
+            crate::game::set_answer(app, &base);
+            set_status(if still {
+                "voiceSpell.listening"
+            } else {
+                "voiceSpell.didntCatch"
+            });
+        } else {
+            let updated = format!("{}{}", base, committed);
+            // Persist across segments so the next letter appends after this one.
+            BASE.with(|b| *b.borrow_mut() = updated.clone());
+            crate::game::set_answer(app, &updated);
+            crate::haptics::key_tap();
+            set_status(if still { "voiceSpell.listening" } else { "" });
+        }
     }
-    // Commit the accumulated letters (or the final parse if it's somehow longer).
-    let final_letters = parse(lang, transcript).letters;
-    let committed = if final_letters.chars().count() > accumulated.chars().count() {
-        final_letters
+    // Continue the one-press stream, or land the UI if the user has stopped.
+    if still {
+        begin_session(app);
     } else {
-        accumulated
-    };
-    if committed.is_empty() {
-        // Nothing usable heard (a non-target word or babble → D2/A5 ignored token).
-        crate::game::set_answer(app, &base);
-        set_status("voiceSpell.didntCatch");
-    } else {
-        crate::game::set_answer(app, &format!("{}{}", base, committed));
-        crate::haptics::key_tap();
-        set_status("");
+        end_capture_ui();
     }
 }
 
