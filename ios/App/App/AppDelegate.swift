@@ -53,3 +53,14 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     }
 
 }
+
+/// The app's Capacitor bridge view controller. Registers plugins that live in the APP
+/// target (not an SPM package), which Capacitor's package scan does NOT auto-discover —
+/// without this, `NativeLanguageKit` has a JS proxy but no native handler, so every
+/// native call (mic/speech, TTS, photo) silently no-ops and no permission prompt ever
+/// appears. Wired as the root VC in Main.storyboard (customClass = MainViewController).
+class MainViewController: CAPBridgeViewController {
+    override open func capacitorDidLoad() {
+        bridge?.registerPluginInstance(NativeLanguageKitPlugin())
+    }
+}
