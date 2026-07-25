@@ -1645,6 +1645,12 @@
         var native = !!(cap && cap.isNativePlatform && cap.isNativePlatform());
         var avail = !!(snl && snl.available && snl.available());
         el.textContent = 'platform=' + platform + ' native=' + native + ' available=' + avail;
+        if (!avail && cap) {
+          // Pinpoint which plugin-resolution path fails (registerPlugin vs Plugins.NLK).
+          el.textContent += ' | registerPlugin=' + (typeof cap.registerPlugin) +
+            ' Plugins=' + !!cap.Plugins +
+            ' NLK=' + !!(cap.Plugins && cap.Plugins.NativeLanguageKit);
+        }
         if (avail && snl.capabilities) {
           snl.capabilities('en').then(function (r) {
             el.textContent += ' | tts=' + !!(r && r.tts && r.tts.available) +

@@ -34,10 +34,18 @@
   function plugin() {
     var cap = window.Capacitor;
     if (!cap) return undefined;
-    if (!_proxy && typeof cap.registerPlugin === 'function') {
-      _proxy = cap.registerPlugin('NativeLanguageKit');
+    if (!_proxy) {
+      // Prefer an already-auto-registered native plugin (CAPBridgedPlugin populates
+      // Capacitor.Plugins.<jsName>); else create the proxy ourselves. Either path
+      // routes calls to the native class by name. try/catch so a throwing
+      // registerPlugin can't leave us permanently unavailable.
+      if (cap.Plugins && cap.Plugins.NativeLanguageKit) {
+        _proxy = cap.Plugins.NativeLanguageKit;
+      } else if (typeof cap.registerPlugin === 'function') {
+        try { _proxy = cap.registerPlugin('NativeLanguageKit'); } catch (e) { _proxy = undefined; }
+      }
     }
-    return _proxy || (cap.Plugins && cap.Plugins.NativeLanguageKit);
+    return _proxy;
   }
 
   /**
