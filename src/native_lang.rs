@@ -508,10 +508,12 @@ pub fn start_letter_capture(
     lang: &str,
     contextual: &[String],
     mut on_token: impl FnMut(String) + 'static,
-    // `on_final(transcript, confidence, alternative)` — confidence in 0..1 and the top
-    // alternative reading (None if empty) power the mode's confusable chip (Phase 3);
-    // the input method ignores them.
-    mut on_final: impl FnMut(String, f32, Option<String>) + 'static,
+    // `on_final(transcript, confidence, alternative, is_end)` — confidence in 0..1 and
+    // the top alternative reading (None if empty) power the mode's confusable chip
+    // (Phase 3); the input method ignores them. ONE-PRESS: fires per VAD letter segment
+    // with `is_end == false` (session still listening) and once more with
+    // `is_end == true` when the whole capture session ends.
+    mut on_final: impl FnMut(String, f32, Option<String>, bool) + 'static,
     mut on_error: impl FnMut(String) + 'static,
 ) -> bool {
     let Some(obj) = bridge() else { return false };
@@ -537,7 +539,9 @@ pub fn start_letter_capture(
         let token = get("token").and_then(|x| x.as_string()).or_else(|| v.as_string()).unwrap_or_default();
         let confidence = get("confidence").and_then(|x| x.as_f64()).unwrap_or(1.0) as f32;
         let alt = get("alt").and_then(|x| x.as_string()).filter(|s| !s.is_empty());
-        on_final(token, confidence, alt);
+        // Missing `end` (older payloads) means the session is over — fail safe to end.
+        let is_end = get("end").and_then(|x| x.as_bool()).unwrap_or(true);
+        on_final(token, confidence, alt, is_end);
     }) as Box<dyn FnMut(JsValue)>);
     let err_cb = Closure::wrap(Box::new(move |v: JsValue| {
         on_error(v.as_string().unwrap_or_else(|| "AUDIO_ERROR".into()));

@@ -178,10 +178,16 @@ public class NativeLanguageKitPlugin: CAPPlugin, CAPBridgedPlugin {
                 onPartial: { [weak self] text in
                     self?.notifyListeners("letterToken", data: ["token": text])
                 },
+                onSegment: { [weak self] text, confidence, alt in
+                    // ONE-PRESS mid-stream letter: `end:false` — the session keeps
+                    // listening for the next letter; the web layer keeps its listeners.
+                    self?.notifyListeners("letterFinal", data: ["token": text, "confidence": confidence, "alt": alt, "end": false])
+                },
                 onFinal: { [weak self] text, confidence, alt in
                     // Additive payload (Phase 3): `token` is unchanged for the input
                     // method; `confidence`/`alt` let the mode offer a confusable chip.
-                    self?.notifyListeners("letterFinal", data: ["token": text, "confidence": confidence, "alt": alt])
+                    // `end:true`: the whole capture session is over (user stop).
+                    self?.notifyListeners("letterFinal", data: ["token": text, "confidence": confidence, "alt": alt, "end": true])
                 },
                 onError: { [weak self] err in
                     self?.notifyListeners("letterError", data: ["code": err.rawValue])
@@ -249,10 +255,21 @@ final class SpeechListener {
     private var lastConfidence: Double = 1.0
     private var lastAlt: String = ""
     // VAD auto-segmentation for ONE-PRESS continuous letter capture: while `continuous`,
-    // a short silence AFTER speech ends the current letter (→ self.stop() finalizes it;
-    // the Rust layer commits it and restarts for the next letter). One press, spell
-    // letter by letter with a beat between letters — no per-letter hold.
+    // a short silence AFTER speech ends the current letter — the request is endAudio'd,
+    // the task finalizes THAT letter (emitted mid-stream via `segmentHandler`), and a
+    // fresh request/task starts on the SAME running engine + audio session. One press,
+    // spell letter by letter with a beat between letters; teardown only on user stop.
     private var continuous = false
+    // Mid-stream per-letter emission (letters profile only); the pending `completion`
+    // still fires exactly once, at the true end of the whole session.
+    private var segmentHandler: ((String, Double, String) -> Void)?
+    // Set by user stop: the NEXT finalization ends the session instead of cycling.
+    private var stopping = false
+    // Monotonic recognition-cycle id: callbacks from a superseded cycle's task are
+    // ignored (a finalized/hung task can still call back after its replacement starts).
+    private var cycleGen = 0
+    // Highest RMS seen this session — reported in the diag line for VAD tuning.
+    private var peakRMS: Float = 0
     private var sawSpeech = false
     private var silenceSecs = 0.0
     private var segmentSecs = 0.0
@@ -275,22 +292,27 @@ final class SpeechListener {
     func start(lang: String, completion: @escaping (Result<String, ListenError>) -> Void) {
         // Say-It (whole-word) profile: no biasing, no partial streaming, no VAD.
         continuous = false
+        segmentHandler = nil
         begin(lang: lang, contextualStrings: [], onPartial: nil, completion: completion)
     }
 
     /// Spell It Out Loud (letter) profile: SAME on-device recognizer, biased with
     /// `contextualStrings` (the language's letter names) and streaming raw partials
-    /// live via `onPartial`. Reuses the exact engine/session path as Say-It.
+    /// live via `onPartial`. ONE-PRESS: VAD auto-segments each letter, emitting it
+    /// mid-stream via `onSegment` while the session keeps listening for the next;
+    /// `onFinal` fires once, with the last segment, when the user stops.
     func startLetters(
         lang: String,
         contextualStrings: [String],
         onPartial: @escaping (String) -> Void,
+        onSegment: @escaping (String, Double, String) -> Void,
         onFinal: @escaping (String, Double, String) -> Void,
         onError: @escaping (ListenError) -> Void,
         onDiag: @escaping (String) -> Void
     ) {
         diagHandler = onDiag
         continuous = true // letters: VAD auto-segments each letter (one-press)
+        segmentHandler = onSegment
         begin(lang: lang, contextualStrings: contextualStrings, onPartial: onPartial) { [weak self] result in
             switch result {
             case .success(let text): onFinal(text, self?.lastConfidence ?? 1.0, self?.lastAlt ?? "")
@@ -319,6 +341,7 @@ final class SpeechListener {
         self.partialHandler = onPartial
         self.contextualStrings = contextualStrings
         finished = false
+        stopping = false
         best = ""
         lastConfidence = 1.0
         lastAlt = ""
@@ -332,9 +355,12 @@ final class SpeechListener {
     }
 
     /// Stop capture; the recognition task then emits its final result and resolves
-    /// the pending `start` completion.
+    /// the pending `start` completion. In continuous (letter) mode this is the USER
+    /// stop — `stopping` makes the next finalization end the session instead of
+    /// cycling to another segment.
     func stop() {
         guard isListening else { return }
+        stopping = true
         request?.endAudio()
         if audioEngine.isRunning {
             audioEngine.stop()
@@ -359,22 +385,6 @@ final class SpeechListener {
 
     private func beginCapture() {
         guard let recognizer = recognizer else { finish(.failure(.unavailable)); return }
-        let req = SFSpeechAudioBufferRecognitionRequest()
-        req.requiresOnDeviceRecognition = true   // HARD on-device — never the server.
-        req.shouldReportPartialResults = true
-        // Tuning for ISOLATED LETTERS (the hard case): dictation hint for continuous
-        // letter-by-letter speech, and no auto-punctuation (it turns "a" into "A." /
-        // splices commas that break single-letter tokens). The letter profile always
-        // biases toward the language's spoken letter names (from Rust/JS, never
-        // hardcoded) — this is what pulls "see/ay/tee" toward C/A/T.
-        req.taskHint = .dictation
-        if #available(iOS 16.0, *) {
-            req.addsPunctuation = false
-        }
-        if !contextualStrings.isEmpty {
-            req.contextualStrings = contextualStrings
-        }
-        request = req
 
         do {
             let session = AVAudioSession.sharedInstance()
@@ -397,6 +407,7 @@ final class SpeechListener {
         sawSpeech = false
         silenceSecs = 0
         segmentSecs = 0
+        peakRMS = 0
 
         // Read the input format AFTER the session is record-capable, so it isn't the
         // zero/invalid format a `.playback` session reports (which yields silent taps).
@@ -408,10 +419,12 @@ final class SpeechListener {
             self.tapCount += 1
             self.request?.append(buffer)
             // VAD (letters only): a short silence after a letter is the boundary — end
-            // this letter's capture, which finalizes it and (via Rust) starts the next.
+            // this letter's recognition cycle (finalizing it); the session, engine, and
+            // tap stay live, and a fresh cycle picks up the next letter.
             if self.continuous && sampleRate > 0 {
                 let secs = Double(buffer.frameLength) / sampleRate
                 let level = Self.rms(buffer)
+                self.peakRMS = max(self.peakRMS, level)
                 if level > self.speechRMS {
                     self.sawSpeech = true
                     self.silenceSecs = 0
@@ -425,7 +438,7 @@ final class SpeechListener {
                     self.sawSpeech = false
                     self.silenceSecs = 0
                     self.segmentSecs = 0
-                    DispatchQueue.main.async { [weak self] in self?.stop() }
+                    DispatchQueue.main.async { [weak self] in self?.segmentBoundary() }
                 }
             }
         }
@@ -439,11 +452,40 @@ final class SpeechListener {
         let onDev = recognizer.supportsOnDeviceRecognition
         DispatchQueue.main.asyncAfter(deadline: .now() + 1.2) { [weak self] in
             guard let self = self else { return }
-            handler?("sr=\(Int(format.sampleRate)) ch=\(format.channelCount) buf=\(self.tapCount) onDev=\(onDev)")
+            handler?("sr=\(Int(format.sampleRate)) ch=\(format.channelCount) buf=\(self.tapCount) "
+                + "onDev=\(onDev) peak=\(String(format: "%.3f", self.peakRMS))")
         }
 
+        startRecognitionCycle()
+    }
+
+    /// One recognition cycle = one letter in continuous (one-press) mode, or the whole
+    /// utterance for Say-It / user-stop. Builds a fresh request + task on the ALREADY
+    /// RUNNING engine/session — cycling requests is what finalizes each letter fast
+    /// without the per-letter session teardown that made one-press unreliable.
+    private func startRecognitionCycle() {
+        guard let recognizer = recognizer, !finished else { return }
+        cycleGen += 1
+        let gen = cycleGen
+        let req = SFSpeechAudioBufferRecognitionRequest()
+        req.requiresOnDeviceRecognition = true   // HARD on-device — never the server.
+        req.shouldReportPartialResults = true
+        // Tuning for ISOLATED LETTERS (the hard case): dictation hint for continuous
+        // letter-by-letter speech, and no auto-punctuation (it turns "a" into "A." /
+        // splices commas that break single-letter tokens). The letter profile always
+        // biases toward the language's spoken letter names (from Rust/JS, never
+        // hardcoded) — this is what pulls "see/ay/tee" toward C/A/T.
+        req.taskHint = .dictation
+        if #available(iOS 16.0, *) {
+            req.addsPunctuation = false
+        }
+        if !contextualStrings.isEmpty {
+            req.contextualStrings = contextualStrings
+        }
+        request = req
+        best = ""
         task = recognizer.recognitionTask(with: req) { [weak self] result, error in
-            guard let self = self else { return }
+            guard let self = self, gen == self.cycleGen, !self.finished else { return }
             if let result = result {
                 self.best = result.bestTranscription.formattedString
                 // Letter profile streams every partial (the growing transcript) so
@@ -460,12 +502,45 @@ final class SpeechListener {
                         self.lastConfidence = 1.0
                         self.lastAlt = ""
                     }
-                    self.finish(.success(self.best))
+                    self.cycleEnded(.success(self.best))
+                    return
                 }
             }
             if error != nil {
-                self.finish(self.best.isEmpty ? .failure(.noSpeech) : .success(self.best))
+                self.cycleEnded(self.best.isEmpty ? .failure(.noSpeech) : .success(self.best))
             }
+        }
+    }
+
+    /// VAD detected the pause after a letter: finalize JUST this cycle. The engine,
+    /// tap, and audio session stay live for the next letter.
+    private func segmentBoundary() {
+        guard continuous, !stopping, !finished, task != nil else { return }
+        let gen = cycleGen
+        request?.endAudio()
+        // Safety net: if this cycle's task never delivers a final, force the next
+        // cycle anyway so one flaky finalize can't stall the one-press stream.
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) { [weak self] in
+            guard let self = self, gen == self.cycleGen,
+                  !self.finished, self.continuous, !self.stopping else { return }
+            self.cycleEnded(self.best.isEmpty ? .failure(.noSpeech) : .success(self.best))
+        }
+    }
+
+    /// A cycle finished (letter finalized, error, or safety net). Mid-stream in
+    /// one-press mode: emit the letter and start the next cycle — errors (e.g. a
+    /// no-speech segment from a false VAD boundary) do NOT end the session. On user
+    /// stop or Say-It: end the whole session via `finish`.
+    private func cycleEnded(_ result: Result<String, ListenError>) {
+        if continuous && !stopping && audioEngine.isRunning {
+            cycleGen += 1        // invalidate late callbacks from this cycle's task
+            task?.cancel()       // harmless if already complete; kills a hung task
+            if case .success(let text) = result, !text.isEmpty {
+                segmentHandler?(text, lastConfidence, lastAlt)
+            }
+            startRecognitionCycle()
+        } else {
+            finish(result)
         }
     }
 
@@ -478,6 +553,9 @@ final class SpeechListener {
         task = nil
         request = nil
         partialHandler = nil
+        segmentHandler = nil
+        continuous = false
+        stopping = false
         contextualStrings = []
         // Restore the game's normal .playback session so word audio keeps working.
         try? AVAudioSession.sharedInstance().setCategory(.playback, mode: .default)

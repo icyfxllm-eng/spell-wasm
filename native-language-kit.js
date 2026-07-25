@@ -273,7 +273,8 @@
      * event subscriptions are torn down automatically on the final/error callback.
      * @param {{ lang:string, contextualStrings?:string[] }} opts
      * @param {(rawTranscript:string)=>void} onToken partial transcript (streamed)
-     * @param {(final:{token:string,confidence:number,alt:string})=>void} onFinal
+     * @param {(final:{token:string,confidence:number,alt:string,end:boolean})=>void} onFinal
+     *        fires per VAD letter segment (`end:false`) and once at session end (`end:true`)
      *   final transcript, once. `confidence` (0..1) + `alt` (top alternative reading)
      *   drive the mode's confusable chip; the input method ignores them (Phase 3).
      * @param {(code:string)=>void} onError one of "UNAVAILABLE" | "PERMISSION_DENIED"
@@ -299,12 +300,17 @@
       }
       sub('letterToken', function (d) { if (onToken) onToken((d && d.token) || ''); });
       sub('letterFinal', function (d) {
+        // ONE-PRESS: `end:false` is a mid-stream letter (VAD segment) — the native
+        // session keeps listening, so keep the listeners. `end:true` (or a payload
+        // without `end`, for safety) is the true end of the capture session.
+        var end = !(d && d.end === false);
         if (onFinal) onFinal({
           token: (d && d.token) || '',
           confidence: (d && typeof d.confidence === 'number') ? d.confidence : 1,
           alt: (d && d.alt) || '',
+          end: end,
         });
-        cleanup();
+        if (end) cleanup();
       });
       sub('letterError', function (d) { if (onError) onError((d && d.code) || 'AUDIO_ERROR'); cleanup(); });
       // TEMP capture diagnostic: show the mic format + buffer count in the status line

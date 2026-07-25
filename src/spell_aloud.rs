@@ -731,9 +731,10 @@ fn stop_session() {
     }
 }
 
-/// Start ONE native capture segment (one letter). Called by the first tap and, while
-/// LISTENING, re-called from `on_final` to capture the next letter. BASE/TARGET are set
-/// by `mic_tap` and persist across segments; only SESSION_LETTERS resets per segment.
+/// Start the ONE native capture session for the whole word. Native VAD segments it
+/// per letter, delivering each via `on_final(is_end == false)` while it keeps
+/// listening; `is_end == true` arrives when the user stops. BASE/TARGET are set by
+/// `mic_tap` and persist across segments; SESSION_LETTERS resets per segment.
 fn begin_session(app: &App) {
     SESSION_LETTERS.with(|s| s.borrow_mut().clear());
     CAPTURING.with(|c| c.set(true));
@@ -750,7 +751,9 @@ fn begin_session(app: &App) {
         {
             // The input method appends to the field; it ignores confidence/alt.
             let lang_f = lang.clone();
-            move |transcript, _confidence, _alt| on_final(&a_final, &lang_f, &transcript)
+            move |transcript, _confidence, _alt, is_end| {
+                on_final(&a_final, &lang_f, &transcript, is_end)
+            }
         },
         move |code| on_error(&a_error, &code),
     );
@@ -780,14 +783,15 @@ fn on_partial(app: &App, lang: &str, transcript: &str) {
     crate::game::set_answer(app, &format!("{}{}", base, shown));
 }
 
-/// Finalize ONE VAD segment (one letter): commit it and, while still listening,
-/// auto-restart for the next letter. Never counts an attempt; never submits.
-fn on_final(app: &App, lang: &str, transcript: &str) {
+/// One VAD segment (one letter) finalized: commit it. The NATIVE session keeps
+/// listening between segments (`is_end == false`) — nothing to restart here; the
+/// session lands when `is_end` arrives (user stop, or an old-payload single-shot).
+/// Never counts an attempt; never submits.
+fn on_final(app: &App, lang: &str, transcript: &str, is_end: bool) {
     if !CAPTURING.with(Cell::get) {
         return;
     }
-    CAPTURING.with(|c| c.set(false)); // this segment ended
-    let still = LISTENING.with(Cell::get);
+    let still = !is_end && LISTENING.with(Cell::get);
     let base = BASE.with(|b| b.borrow().clone());
     let target = TARGET.with(|t| t.borrow().clone());
     // Letters accumulated (monotonically) during this segment — the ones already shown.
@@ -838,10 +842,9 @@ fn on_final(app: &App, lang: &str, transcript: &str) {
             set_status(if still { "voiceSpell.listening" } else { "" });
         }
     }
-    // Continue the one-press stream, or land the UI if the user has stopped.
-    if still {
-        begin_session(app);
-    } else {
+    // Mid-stream (`still`): the native session is already listening for the next
+    // letter — nothing to do. Session over: land the UI.
+    if !still {
         end_capture_ui();
     }
 }
