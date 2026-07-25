@@ -89,8 +89,8 @@
       "platforms": ["ios"],
       "entitlementLevel": "preview",
       "requiresPremium": null,
-      "languages": ["en", "es"],
-      "$note": "F7 says ship coming_soon IF CC-SPELL-ALOUD is unimplemented. It IS implemented (src/spell_aloud.rs, 429 lines, 2 E2E tests), so this is live and routes into that flow — this file adds only the hub entry and forks none of that spec. Languages mirror VOICE_SPELL_LANGS."
+      "languages": null,
+      "$note": "CC-SPELL-ALOUD-INTEGRATION Feature 6: shown on ALL platforms(ios) languages; per-language availability is the language registry's voiceSpell gate (consts::voice_spell / VOICE_SPELL_LANGS = en,es), rendered live vs a 'coming soon' unavailable tile by play_hub. languages:null (not [en,es]) so an unsupported language shows the unavailable tile rather than being filtered out (A7)."
     },
     {
       "id": "word_stories",

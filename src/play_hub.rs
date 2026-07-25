@@ -44,7 +44,7 @@ const LAUNCH: [(&str, Option<&str>); 7] = [
     ("syllable_replay", None),    // fires on a miss, on the reveal surface
     ("say_it", Some("sayItBtn")), // a real session mode
     ("photo_list", None),         // a camera button on My Words
-    ("spell_aloud", None),        // a mic beside the answer field
+    ("spell_aloud", Some("spellAloudEnter")), // promoted to a real mode (G-INT-1): enters play with the voice mic
     ("word_stories", None),       // after-answer flourish; hidden anyway
     ("online_spelloff", Some("soBtn")),
 ];
@@ -91,15 +91,35 @@ fn ctx(app: &App) -> modes::HubCtx {
     }
 }
 
-fn tile_html(m: &Mode) -> String {
+/// A mode's availability for the CURRENT language. `spell_aloud` is voice-spell-gated:
+/// live only where the language registry's `voice_spell` flag holds (en/es); elsewhere
+/// it renders as an "unavailable / coming soon" tile — shown, not hidden (A7).
+fn unavailable_reason(m: &Mode, lang: &str) -> Option<&'static str> {
+    if m.id == "spell_aloud" && !crate::consts::voice_spell(lang) {
+        Some("tools.spellaloud.avail") // "iPhone · English or Spanish"
+    } else {
+        None
+    }
+}
+
+fn tile_html(m: &Mode, lang: &str) -> String {
     let name = t(&m.name_key);
-    let desc = t(&m.desc_key);
     let ico = &m.icon;
+    // An unavailable (language-gated) mode shows a one-line reason instead of the desc.
+    let desc = match unavailable_reason(m, lang) {
+        Some(reason_key) => t(reason_key),
+        None => t(&m.desc_key),
+    };
     let body = format!(
         "<span class=\"mt-ico\" aria-hidden=\"true\">{ico}</span>\
          <span class=\"mt-name\">{name}</span>\
          <small class=\"mt-desc\">{desc}</small>"
     );
+    // Voice-spell unavailable for this language → a non-interactive teaser, never the
+    // dead-end screen and never a live button (A7).
+    if unavailable_reason(m, lang).is_some() {
+        return format!("<div class=\"mode-tile teaser\" data-mode=\"{}\">{body}</div>", m.id);
+    }
     match (m.status, launch_for(&m.id)) {
         // A teaser is never interactive, and carries no notify-me hook (D7).
         (Status::ComingSoon, _) => format!("<div class=\"mode-tile teaser\" data-mode=\"{}\">{body}</div>", m.id),
@@ -124,10 +144,11 @@ pub fn reflect(app: &App) {
     // e.g. a Preview language on web: ghost_racing/online_spelloff need `full`,
     // syllable_replay is es-only, and say_it/photo_list/spell_aloud are iOS-only.
     // Without this the hub opened as a blank panel with no explanation.
+    let lang = app.borrow().lang.clone();
     let html: String = if shown.is_empty() {
         format!("<p class=\"hub-empty\">{}</p>", t("hub.empty"))
     } else {
-        shown.iter().map(tile_html).collect()
+        shown.iter().map(|m| tile_html(m, &lang)).collect()
     };
     dom::set_html("playHubGrid", &html);
 
@@ -135,6 +156,10 @@ pub fn reflect(app: &App) {
     // reimplementing it — the hub is discovery, not a second copy of each mode.
     for m in &shown {
         if m.status != Status::Live {
+            continue;
+        }
+        // A language-unavailable mode is a teaser, not a live button — don't wire it.
+        if unavailable_reason(m, &lang).is_some() {
             continue;
         }
         if let Some(target) = launch_for(&m.id) {
@@ -146,7 +171,6 @@ pub fn reflect(app: &App) {
             });
         }
     }
-    let _ = app;
 }
 
 pub fn open(app: &App) {
@@ -192,8 +216,38 @@ mod tests {
         // racing for this language and routes into The Climb. It is no longer a
         // tile that goes nowhere — which is exactly what this test guards.
         assert_eq!(launch_for("ghost_racing"), Some("ghostOpenBtn"));
-        for aid in ["syllable_replay", "photo_list", "spell_aloud", "word_stories"] {
+        // Spell Aloud is now a real mode (CC-SPELL-ALOUD-INTEGRATION G-INT-1): tapping
+        // it enters play with the voice mic. It is no longer an in-round aid.
+        assert_eq!(launch_for("spell_aloud"), Some("spellAloudEnter"));
+        for aid in ["syllable_replay", "photo_list", "word_stories"] {
             assert_eq!(launch_for(aid), None, "{aid} is an in-round aid with no destination");
+        }
+    }
+
+    fn spell_aloud_mode() -> Mode {
+        modes::all().into_iter().find(|m| m.id == "spell_aloud").expect("spell_aloud in registry")
+    }
+
+    /// A7: on a voice-spell language the tile is a live button; on an unsupported
+    /// language it is shown as a non-interactive "unavailable" teaser (never hidden,
+    /// never the dead-end screen), with the availability reason.
+    #[test]
+    fn a7_spell_aloud_tile_is_live_on_en_es_and_unavailable_elsewhere() {
+        let m = spell_aloud_mode();
+        // en / es → a live button that routes into the mode.
+        for lang in ["en", "es"] {
+            assert!(unavailable_reason(&m, lang).is_none(), "{lang} supports voice spell");
+            let html = tile_html(&m, lang);
+            assert!(html.contains("id=\"modeTile_spell_aloud\""), "{lang}: live button");
+            assert!(!html.contains("teaser"), "{lang}: not a teaser");
+        }
+        // fr (and any non-en/es) → an unavailable teaser with the reason, not a button.
+        for lang in ["fr", "de", "ja"] {
+            assert!(unavailable_reason(&m, lang).is_some(), "{lang} does not support voice spell");
+            let html = tile_html(&m, lang);
+            assert!(html.contains("teaser"), "{lang}: teaser");
+            assert!(!html.contains("modeTile_spell_aloud"), "{lang}: not a live button (unreachable)");
+            assert!(html.contains(&t("tools.spellaloud.avail")), "{lang}: shows the reason");
         }
     }
 }

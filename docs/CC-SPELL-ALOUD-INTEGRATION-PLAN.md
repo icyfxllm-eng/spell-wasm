@@ -79,3 +79,19 @@ A1/A4 letter→buffer→correct · A2/A3 D3 rejection (G-INT-2) · A5 D2 ignore 
 I1 no own word list · I2 target utterance = 0 letters · I3 registry is the only gate ·
 I4 scoring untouched (standard submit only) · I5 NFC before lookup · I6 on-device only.
 All either already hold or are covered above.
+
+## Progress on this branch
+- ✅ **D3 whole-word rejection + A6 command CI gate** (`8818bcc`): `says_target` wired
+  into the input method (`on_final`); only the target nudges, other words are ignored
+  tokens; reserved commands can't collide with letters. Maps A2, A3, A5, A6.
+- ✅ **Hub routing + unavailable tile (A7)**: `spell_aloud` promoted from an in-round
+  aid to a real mode — `LAUNCH → spellAloudEnter`, which ensures a round is active
+  (`next_word`/`speak_current`, mirroring the orb) so the player hears a word to spell,
+  voice mic shown, scoring via the standard path (I4). `modes.json languages:null` +
+  `play_hub::unavailable_reason` render the tile **live on en/es** and a
+  **non-interactive "coming soon" teaser** (with the reason) elsewhere — shown, never
+  hidden, never a dead-end. Maps A7. full lib suite 280/0; entitlement + web build green.
+- ⏭ Next: retire the standalone overlay (G-INT-1); voice undo/clear in the input method
+  (A6 runtime); word-source parity (A8); permission fallback + "type instead" (A9);
+  streak-delta parity (A10); whisper fixtures + demo video (review gate). D5 kidSafe
+  (mode available in Kid Mode) is currently `kidSafe:false` — **flag: reconcile with D5.**

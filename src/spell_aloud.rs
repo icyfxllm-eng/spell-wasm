@@ -626,6 +626,23 @@ pub fn wire(app: &App) {
     crate::dom::on_click("voiceSpellPermClose", || {
         crate::dom::add_class("voiceSpellPerm", "btn-hide");
     });
+
+    // Play-hub entry (CC-SPELL-ALOUD-INTEGRATION Feature 1): the hub routes here. Enter
+    // the mode by ensuring a round is active — serve a word if there's none/answered,
+    // else replay it — so the player hears what to spell. The voice mic is already
+    // shown for voice-spell languages. Mirrors the orb; scoring stays the typed path.
+    let a_enter = app.clone();
+    crate::dom::on_click("spellAloudEnter", move || {
+        let (answered, active) = {
+            let s = a_enter.borrow();
+            (s.answered, crate::game::has_active_word(&s))
+        };
+        if !active || answered {
+            crate::game::next_word(&a_enter);
+        } else {
+            crate::game::speak_current(&a_enter);
+        }
+    });
 }
 
 fn set_status(key: &str) {
