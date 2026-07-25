@@ -270,12 +270,21 @@ final class SpeechListener {
     private var cycleGen = 0
     // Highest RMS seen this session — reported in the diag line for VAD tuning.
     private var peakRMS: Float = 0
+    // THE anti-letter-loss gap fix: finalizing a segment takes the recognizer up to
+    // ~a second, and a letter spoken in that window would otherwise be appended to the
+    // already-ended request and silently DROPPED (the "said s right after the pause,
+    // s never landed" bug). While `finalizing`, mic buffers are stashed here and
+    // replayed into the next cycle's request the moment it exists.
+    private var finalizing = false
+    private var pendingBuffers: [AVAudioPCMBuffer] = []
+    private let pendingLock = NSLock()
     private var sawSpeech = false
     private var silenceSecs = 0.0
     private var segmentSecs = 0.0
-    private let speechRMS: Float = 0.015   // RMS above this = speech (device-tunable)
+    private let speechRMS: Float = 0.010   // RMS above this = speech (device-tunable;
+                                           // low enough to catch soft sibilants: "ess")
     private let silenceCutoff = 0.35       // s of silence after a letter = boundary
-    private let maxSegment = 3.0           // s: force a boundary (safety; never hang)
+    private let maxSegment = 2.5           // s: force a boundary (safety; never hang)
 
     /// RMS level of a mic buffer (mono) — the VAD speech/silence signal.
     private static func rms(_ buffer: AVAudioPCMBuffer) -> Float {
@@ -330,7 +339,11 @@ final class SpeechListener {
         onPartial: ((String) -> Void)?,
         completion: @escaping (Result<String, ListenError>) -> Void
     ) {
-        if isListening { completion(.failure(.busy)); return }
+        // Rapid re-tap: an old session still winding down would have answered BUSY,
+        // making the mic feel dead until its teardown finished. The new capture wins
+        // instead — the old session is dropped outright (its letters were already
+        // delivered per segment).
+        if isListening { supersede() }
         // Fail closed: only proceed when on-device recognition is truly available.
         let cap = SpeechCapabilities.report(lang: lang)
         guard cap.available, let rec = SFSpeechRecognizer(locale: Locale(identifier: cap.locale)) else {
@@ -367,11 +380,31 @@ final class SpeechListener {
             audioEngine.inputNode.removeTap(onBus: 0)
         }
         // Safety net: if the task doesn't finalize promptly, resolve with what we
-        // have so the UI never hangs.
+        // have so the UI never hangs. Guarded by cycleGen so a session superseded by
+        // a rapid re-tap can't have its stale net finish the NEW session.
+        let gen = cycleGen
         DispatchQueue.main.asyncAfter(deadline: .now() + 2) { [weak self] in
-            guard let self = self, !self.finished else { return }
+            guard let self = self, gen == self.cycleGen, !self.finished else { return }
             self.finish(self.best.isEmpty ? .failure(.noSpeech) : .success(self.best))
         }
+    }
+
+    /// Drop a live session so a new one can start immediately (rapid re-tap). The old
+    /// task is cancelled, its pending completion discarded WITHOUT firing (no stale
+    /// end event leaking into the new session), and the engine freed. Bumping
+    /// `cycleGen` invalidates the old session's callbacks and safety nets.
+    private func supersede() {
+        cycleGen += 1
+        task?.cancel()
+        task = nil
+        request = nil
+        completion = nil
+        audioEngine.inputNode.removeTap(onBus: 0)
+        if audioEngine.isRunning { audioEngine.stop() }
+        pendingLock.lock()
+        finalizing = false
+        pendingBuffers.removeAll()
+        pendingLock.unlock()
     }
 
     private func ensureAuthorized(_ done: @escaping (Bool) -> Void) {
@@ -417,7 +450,16 @@ final class SpeechListener {
         input.installTap(onBus: 0, bufferSize: 1024, format: format) { [weak self] buffer, _ in
             guard let self = self else { return }
             self.tapCount += 1
-            self.request?.append(buffer)
+            if self.finalizing {
+                // A segment is finalizing: the current request is closed, the next one
+                // doesn't exist yet. Stash so a letter spoken NOW isn't dropped.
+                self.pendingLock.lock()
+                self.pendingBuffers.append(buffer)
+                if self.pendingBuffers.count > 256 { self.pendingBuffers.removeFirst() }
+                self.pendingLock.unlock()
+            } else {
+                self.request?.append(buffer)
+            }
             // VAD (letters only): a short silence after a letter is the boundary — end
             // this letter's recognition cycle (finalizing it); the session, engine, and
             // tap stay live, and a fresh cycle picks up the next letter.
@@ -432,13 +474,18 @@ final class SpeechListener {
                     self.silenceSecs += secs
                 }
                 self.segmentSecs += secs
-                let boundary = (self.sawSpeech && self.silenceSecs >= self.silenceCutoff)
-                    || self.segmentSecs >= self.maxSegment
-                if boundary {
-                    self.sawSpeech = false
-                    self.silenceSecs = 0
-                    self.segmentSecs = 0
-                    DispatchQueue.main.async { [weak self] in self?.segmentBoundary() }
+                // While finalizing, DON'T fire (there's no live request to end) and
+                // DON'T reset the counters — if a whole letter lands in the gap, its
+                // boundary fires on the first buffer after the next cycle starts.
+                if !self.finalizing {
+                    let boundary = (self.sawSpeech && self.silenceSecs >= self.silenceCutoff)
+                        || self.segmentSecs >= self.maxSegment
+                    if boundary {
+                        self.sawSpeech = false
+                        self.silenceSecs = 0
+                        self.segmentSecs = 0
+                        DispatchQueue.main.async { [weak self] in self?.segmentBoundary() }
+                    }
                 }
             }
         }
@@ -484,6 +531,14 @@ final class SpeechListener {
         }
         request = req
         best = ""
+        // Replay audio captured while the PREVIOUS segment was finalizing — a letter
+        // spoken during that gap reaches this cycle instead of being dropped.
+        pendingLock.lock()
+        let replay = pendingBuffers
+        pendingBuffers.removeAll()
+        finalizing = false
+        pendingLock.unlock()
+        for b in replay { req.append(b) }
         task = recognizer.recognitionTask(with: req) { [weak self] result, error in
             guard let self = self, gen == self.cycleGen, !self.finished else { return }
             if let result = result {
@@ -517,6 +572,11 @@ final class SpeechListener {
     private func segmentBoundary() {
         guard continuous, !stopping, !finished, task != nil else { return }
         let gen = cycleGen
+        // From here until the next cycle's request exists, the tap stashes buffers
+        // (see installTap) so speech during finalization is replayed, not lost.
+        pendingLock.lock()
+        finalizing = true
+        pendingLock.unlock()
         request?.endAudio()
         // Safety net: if this cycle's task never delivers a final, force the next
         // cycle anyway so one flaky finalize can't stall the one-press stream.
@@ -535,8 +595,15 @@ final class SpeechListener {
         if continuous && !stopping && audioEngine.isRunning {
             cycleGen += 1        // invalidate late callbacks from this cycle's task
             task?.cancel()       // harmless if already complete; kills a hung task
-            if case .success(let text) = result, !text.isEmpty {
+            switch result {
+            case .success(let text) where !text.isEmpty:
                 segmentHandler?(text, lastConfidence, lastAlt)
+                diagHandler?("seg='\(text)' peak=\(String(format: "%.3f", peakRMS))")
+            case .success:
+                diagHandler?("seg=(empty) peak=\(String(format: "%.3f", peakRMS))")
+            case .failure(let err):
+                // e.g. a no-speech segment from a false VAD boundary — keep listening.
+                diagHandler?("seg-err=\(err.rawValue) peak=\(String(format: "%.3f", peakRMS))")
             }
             startRecognitionCycle()
         } else {
@@ -556,6 +623,10 @@ final class SpeechListener {
         segmentHandler = nil
         continuous = false
         stopping = false
+        pendingLock.lock()
+        finalizing = false
+        pendingBuffers.removeAll()
+        pendingLock.unlock()
         contextualStrings = []
         // Restore the game's normal .playback session so word audio keeps working.
         try? AVAudioSession.sharedInstance().setCategory(.playback, mode: .default)

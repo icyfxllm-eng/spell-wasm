@@ -24,6 +24,9 @@
   'use strict';
 
   var _proxy;
+  // Cleanup for the CURRENT letter-capture's event listeners — module-scoped so a new
+  // capture can drop a superseded capture's still-live listeners (rapid re-tap).
+  var letterCleanup = null;
   /**
    * The native plugin proxy. This plugin ships as native-only Swift with NO npm
    * JS package, so `Capacitor.Plugins.NativeLanguageKit` is never auto-populated
@@ -284,11 +287,17 @@
     startLetterCapture: function (opts, onToken, onFinal, onError) {
       if (!available()) { if (onError) onError('UNAVAILABLE'); return; }
       var p = plugin();
+      // Rapid re-tap: a previous capture's listeners may still be live (its end event
+      // never arrives once the native side supersedes it). Plugin events broadcast to
+      // every subscriber, so two live sets would double-deliver — drop the old one.
+      if (letterCleanup) { try { letterCleanup(); } catch (e) {} }
       var handles = [];
       function cleanup() {
         handles.forEach(function (h) { try { h && h.remove && h.remove(); } catch (e) {} });
         handles = [];
+        if (letterCleanup === cleanup) letterCleanup = null;
       }
+      letterCleanup = cleanup;
       // addListener resolves to a handle; keep it so we can remove() on teardown.
       function sub(evt, fn) {
         var pr = p.addListener(evt, fn);
