@@ -224,6 +224,7 @@
   "photo.empty": "No words found — try a clearer photo.",
   "photo.remove": "Remove word",
   "photo.note": "Photos are read on your device and never leave it.",
+  "photo.replace": "Replace my current words",
   "photo.flag.blocked": "not allowed",
   "photo.flag.charset": "can't read",
   "so.entry": "🌍 Challenge a friend",

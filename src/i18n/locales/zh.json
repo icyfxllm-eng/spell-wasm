@@ -224,6 +224,7 @@
   "photo.empty": "未找到单词——请换一张更清晰的照片。",
   "photo.remove": "移除单词",
   "photo.note": "照片只在你的设备上识别，绝不外传。",
+  "photo.replace": "替换我当前的单词",
   "photo.flag.blocked": "不允许",
   "photo.flag.charset": "无法识别",
   "so.entry": "🌍 Challenge a friend",

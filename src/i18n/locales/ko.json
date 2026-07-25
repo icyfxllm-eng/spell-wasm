@@ -224,6 +224,7 @@
   "photo.empty": "단어를 찾지 못했어요. 더 선명한 사진으로 시도해 보세요.",
   "photo.remove": "단어 삭제",
   "photo.note": "사진은 기기에서만 읽히며 절대 외부로 전송되지 않습니다.",
+  "photo.replace": "현재 단어 목록 바꾸기",
   "photo.flag.blocked": "허용 안 됨",
   "photo.flag.charset": "읽을 수 없음",
   "so.entry": "🌍 Challenge a friend",

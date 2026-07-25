@@ -230,6 +230,17 @@ fn confirm(app: &App) {
     }
     let speak_lang = dom::select("photoLang").value();
     let count = words.len();
+    // "Replace my current words" (default ON): a fresh page replaces the last
+    // batch — otherwise every photo session ADDS to "My Words" (the shared save
+    // path is additive) and last week's list keeps cycling into play forever.
+    let replace = dom::doc()
+        .get_element_by_id("photoReplace")
+        .and_then(|e| e.dyn_into::<web_sys::HtmlInputElement>().ok())
+        .map(|c| c.checked())
+        .unwrap_or(false);
+    if replace {
+        crate::importer::clear_words(&mut app.borrow_mut());
+    }
     crate::apply_saved_words(app, words, speak_lang);
     close();
     let msg = if blocked > 0 {
