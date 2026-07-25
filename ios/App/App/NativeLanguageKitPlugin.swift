@@ -40,6 +40,9 @@ public class NativeLanguageKitPlugin: CAPPlugin, CAPBridgedPlugin {
     // can reach it. Holds the in-flight JS call while the picker + Vision run.
     var pendingCall: CAPPluginCall?
     var recognitionLanguages: [String] = ["en-US"]
+    // Vision language correction for the photo path (Phase 2): ON for languages
+    // Vision models natively; OFF for the English-recognizer fallback languages.
+    var recognitionCorrection = true
 
     @objc func capabilities(_ call: CAPPluginCall) {
         let report = Capabilities.report(lang: call.getString("lang") ?? "")

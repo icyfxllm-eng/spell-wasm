@@ -98,9 +98,19 @@ fn start_capture(app: &App) {
             "en-US".to_string()
         }
     };
-    // Camera-first: photographing the page IS the feature. The native side falls
-    // back to the photo library automatically when no camera exists (simulator).
-    let promise = match native_lang::recognize_word_list(&lang, "camera") {
+    // Registry-driven recognizer profile (Phase 2, one accessor — consts::ocr_support):
+    // Native → the language's own model, correction ON. EnglishFallback (fil/sw)
+    // → the ENGLISH recognizer with correction OFF, so Vision can't "fix" a
+    // Filipino word into a lookalike English one; the word banks validate (G-C).
+    let primary = lang.split(['-', '_']).next().unwrap_or("en").to_lowercase();
+    let (rec_lang, correction) = match crate::consts::ocr_support(&primary) {
+        crate::consts::OcrSupport::EnglishFallback => ("en-US".to_string(), false),
+        _ => (lang.clone(), true),
+    };
+    // Camera-first: photographing the page IS the feature (VisionKit document
+    // scanner, multi-page). The native side falls back to the plain camera, then
+    // the photo library, when scanner/camera don't exist (simulator).
+    let promise = match native_lang::recognize_word_list(&rec_lang, "camera", correction) {
         Some(p) => p,
         None => return, // recognizer vanished (shouldn't happen; button is gated).
     };
@@ -123,11 +133,22 @@ fn start_capture(app: &App) {
     });
 }
 
-/// Read `{ supported, lines }` off the resolved JS value, parse candidates, and
-/// open the review screen.
+/// Read `{ supported, lines }` off the resolved JS value, run the core
+/// extract→classify pipeline for the STUDY language, and open the review screen.
 fn on_recognized(app: &App, val: &wasm_bindgen::JsValue) {
     let lines = read_lines(val);
-    let candidates = native_lang::parse_candidates(&lines);
+    // Classification language = the current study language (single source of
+    // truth), NEVER a recognizer guess. "mine" (My Words) classifies under the
+    // saved speak-lang's primary subtag instead — the list being extended.
+    let study = {
+        let s = app.borrow();
+        if s.lang == crate::consts::MINE {
+            s.custom.speak_lang.split(['-', '_']).next().unwrap_or("en").to_lowercase()
+        } else {
+            s.lang.clone()
+        }
+    };
+    let candidates = crate::photo_import::extract_classified(&study, &lines);
     if candidates.is_empty() {
         dom::set_text("feedback", &i18n::t("photo.empty"));
         dom::el("feedback").set_class_name("feedback");
@@ -140,9 +161,10 @@ fn on_recognized(app: &App, val: &wasm_bindgen::JsValue) {
     dom::add_class("photoScrim", "show");
 }
 
-/// Extract the `lines: string[]` field from the recognizer result. Anything
-/// missing/mistyped yields an empty list (treated as "no words found").
-fn read_lines(val: &wasm_bindgen::JsValue) -> Vec<String> {
+/// Extract the `lines: {text, confidence}[]` field from the recognizer result
+/// (legacy plain-string entries read as confidence 1). Anything missing or
+/// mistyped yields an empty list (treated as "no words found").
+fn read_lines(val: &wasm_bindgen::JsValue) -> Vec<(String, f32)> {
     let mut out = Vec::new();
     let lines = match js_sys::Reflect::get(val, &wasm_bindgen::JsValue::from_str("lines")) {
         Ok(l) => l,
@@ -150,29 +172,50 @@ fn read_lines(val: &wasm_bindgen::JsValue) -> Vec<String> {
     };
     if let Ok(arr) = lines.dyn_into::<js_sys::Array>() {
         for i in 0..arr.length() {
-            if let Some(s) = arr.get(i).as_string() {
-                out.push(s);
+            let item = arr.get(i);
+            if let Some(s) = item.as_string() {
+                out.push((s, 1.0));
+            } else {
+                let text = js_sys::Reflect::get(&item, &wasm_bindgen::JsValue::from_str("text"))
+                    .ok()
+                    .and_then(|t| t.as_string());
+                if let Some(text) = text {
+                    let confidence = js_sys::Reflect::get(&item, &wasm_bindgen::JsValue::from_str("confidence"))
+                        .ok()
+                        .and_then(|c| c.as_f64())
+                        .unwrap_or(1.0) as f32;
+                    out.push((text, confidence));
+                }
             }
         }
     }
     out
 }
 
-fn render_chips(candidates: &[String]) {
+fn render_chips(candidates: &[crate::photo_import::Candidate]) {
+    use crate::photo_import::WordClass;
     let remove_label = i18n::t("photo.remove");
     let mut html = String::new();
-    for word in candidates {
+    for cand in candidates {
+        let word = &cand.word;
         let reason = native_lang::gate_reason(word);
         let flagged = if reason.is_some() { " flagged" } else { "" };
+        // Low-confidence chips render PRE-SHOWN, dimmed and editable — never
+        // silently absent (spec: nothing is dropped for low confidence).
+        let lowconf = if cand.confidence_low { " lowconf" } else { "" };
+        // Out-of-bank (custom) chips carry a class hook for the Phase 3 styling.
+        let custom = if cand.class == WordClass::Custom { " custom" } else { "" };
         let reason_label = reason.map(|r| i18n::t(r.i18n_key())).unwrap_or_default();
         html.push_str(&format!(
-            "<div class=\"pchip-row{flagged}\">\
+            "<div class=\"pchip-row{flagged}{lowconf}{custom}\">\
                <input class=\"pchip\" type=\"text\" value=\"{val}\" \
                  autocomplete=\"off\" autocorrect=\"off\" autocapitalize=\"off\" spellcheck=\"false\" />\
                <button type=\"button\" class=\"pchip-x\" aria-label=\"{aria}\">\u{00d7}</button>\
                <span class=\"pchip-flag\">{reason}</span>\
              </div>",
             flagged = flagged,
+            lowconf = lowconf,
+            custom = custom,
             val = dom::escape_html(word),
             aria = dom::escape_html(&remove_label),
             reason = dom::escape_html(&reason_label),

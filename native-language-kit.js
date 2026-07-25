@@ -247,9 +247,13 @@
      * Capture a photo and recognize a word list entirely on-device (Feature F1).
      * The image goes straight from the native picker to Vision — never uploaded,
      * cached, or exposed to JS as bytes; only recognized text lines return.
-     * @param {{ lang?: string, source?: ("camera"|"library"|"auto") }} [opts]
-     * @returns {Promise<{ supported: boolean, lines: string[] }>} on non-iOS
-     *   resolves { supported:false, lines:[] }.
+     * @param {{ lang?: string, source?: ("camera"|"library"|"auto"), correction?: boolean }} [opts]
+     *   `correction` (default true) drives Vision language correction — the core
+     *   passes false for English-fallback languages (registry `ocr_support`).
+     * @returns {Promise<{ supported: boolean, lines: {text:string,confidence:number}[] }>}
+     *   on non-iOS resolves { supported:false, lines:[] }. Per-line `confidence`
+     *   is Vision's 0..1 line confidence (Phase 2); legacy string lines from an
+     *   older native build normalize to confidence 1.
      */
     recognizeWordList: function (opts) {
       var P = plugin();
@@ -257,9 +261,18 @@
       var args = {
         lang: (opts && opts.lang) || 'en-US',
         source: (opts && opts.source) || 'auto',
+        correction: !(opts && opts.correction === false),
       };
       return P.recognizeWordList(args).then(function (res) {
-        return { supported: true, lines: (res && Array.isArray(res.lines)) ? res.lines : [] };
+        var raw = (res && Array.isArray(res.lines)) ? res.lines : [];
+        var lines = raw.map(function (l) {
+          if (typeof l === 'string') return { text: l, confidence: 1 };
+          return {
+            text: (l && l.text) || '',
+            confidence: (l && typeof l.confidence === 'number') ? l.confidence : 1,
+          };
+        });
+        return { supported: true, lines: lines };
       });
     },
     // ---- Spell It Out Loud (voice spelling INPUT): letter-capture profile ----

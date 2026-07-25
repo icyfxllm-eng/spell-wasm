@@ -48,6 +48,33 @@ pub struct Candidate {
     pub confidence_low: bool,
 }
 
+/// PROVISIONAL low-confidence threshold (Vision line confidence 0..1) — chips
+/// at or below render dimmed-but-editable, never dropped. To be CALIBRATED
+/// against the Phase 7 handwriting fixtures and signed off by Eric (plan: the
+/// number is brought to him, not buried); until then it errs low so few chips
+/// dim. Vision's .accurate path reports ~1.0 for clean print and commonly
+/// 0.3–0.5 for shaky handwriting.
+pub const LOW_CONFIDENCE: f32 = 0.4;
+
+/// Phase 2 entry: recognized `(line, confidence)` pairs → parsed, deduped,
+/// classified candidates. Each token inherits its LINE's Vision confidence
+/// (Vision reports per line, not per word); dedupe is case-insensitive across
+/// the whole page set, first occurrence wins (keeping its confidence bit).
+pub fn extract_classified(lang: &str, lines: &[(String, f32)]) -> Vec<Candidate> {
+    use std::collections::HashSet;
+    let mut seen: HashSet<String> = HashSet::new();
+    let mut tokens: Vec<(String, bool)> = Vec::new();
+    for (line, confidence) in lines {
+        let low = *confidence <= LOW_CONFIDENCE;
+        for word in crate::native_lang::parse_candidates(&[line.clone()]) {
+            if seen.insert(word.to_lowercase()) {
+                tokens.push((word, low));
+            }
+        }
+    }
+    classify(lang, &tokens)
+}
+
 /// Classify parsed tokens for the study language `lang`. `tokens` pairs each
 /// word with its low-confidence bit (false when the bridge has no confidence
 /// data — today's payload — so behavior is unchanged until Phase 2 plumbs it).
@@ -165,6 +192,24 @@ mod tests {
         assert_eq!(out.len(), 1);
         assert!(out[0].confidence_low);
         assert_eq!(out[0].class, WordClass::InDictionary);
+    }
+
+    /// Phase 2: line confidence maps onto every token from that line; dedupe
+    /// spans lines (first occurrence wins) and junk lines contribute nothing.
+    #[test]
+    fn extract_classified_maps_line_confidence_and_dedupes() {
+        let lines = vec![
+            ("1. horse  mouse".to_string(), 0.95_f32),
+            ("tree".to_string(), 0.2),
+            ("HORSE".to_string(), 0.2),  // dup of line-1 horse — dropped
+            ("###".to_string(), 0.9),    // junk line — no tokens
+        ];
+        let out = extract_classified("en", &lines);
+        let words: Vec<&str> = out.iter().map(|c| c.word.as_str()).collect();
+        assert_eq!(words, vec!["horse", "mouse", "tree"]);
+        assert!(!out[0].confidence_low && !out[1].confidence_low, "clean line is not low");
+        assert!(out[2].confidence_low, "0.2 line is below LOW_CONFIDENCE");
+        assert!(out.iter().all(|c| c.class == WordClass::InDictionary));
     }
 
     /// Mandarin "pinyin|hanzi" entries match from either side of the bar.

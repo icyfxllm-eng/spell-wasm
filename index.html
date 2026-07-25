@@ -282,6 +282,10 @@
   .pchip-row{display:flex;align-items:center;gap:8px}
   .pchip-row .pchip{flex:1;min-width:0;min-height:40px;background:var(--panel-2);border:1px solid var(--edge);color:var(--ink);border-radius:10px;padding:6px 10px;font-size:15px}
   .pchip-row.flagged .pchip{border-color:var(--bad,#e0564f);background:rgba(224,86,79,.09)}
+  /* Low-confidence OCR chips: pre-shown dimmed + editable, never dropped. */
+  .pchip-row.lowconf .pchip{opacity:.55;border-style:dashed}
+  /* Out-of-bank (custom) words: subtle accent so parents can spot them. */
+  .pchip-row.custom .pchip{border-color:var(--accent,#7aa2ff)}
   .pchip-x{flex:none;width:32px;height:32px;border-radius:8px;border:1px solid var(--edge);background:transparent;color:var(--muted);font-size:18px;line-height:1;cursor:pointer}
   .pchip-flag{flex:none;min-width:64px;font-size:11px;font-weight:600;color:var(--bad,#e0564f);text-align:end}
   .pchip-row:not(.flagged) .pchip-flag{display:none}

@@ -3,6 +3,7 @@ import Capacitor
 import UIKit
 import PhotosUI
 import Vision
+import VisionKit
 
 // Feature F1 "Photo-to-word-list" — on-device VisionKit OCR, kept as an
 // extension so the core plugin file stays focused on the language capabilities.
@@ -19,6 +20,11 @@ extension NativeLanguageKitPlugin {
         }
         let lang = call.getString("lang") ?? "en-US"
         recognitionLanguages = [lang]
+        // Phase 2 / registry-driven (consts::ocr_support in the core decides):
+        // Native language -> correction ON; EnglishFallback -> the caller passes
+        // the English recognizer + correction OFF so Vision can't "correct" a
+        // Filipino/Swahili word into a lookalike English one.
+        recognitionCorrection = call.getBool("correction") ?? true
         let source = call.getString("source") ?? "auto"
         pendingCall = call
         DispatchQueue.main.async { [weak self] in
@@ -33,9 +39,15 @@ extension NativeLanguageKitPlugin {
             finish(reject: "No view controller to present from")
             return
         }
-        // Camera only when explicitly asked and actually available (never on the
-        // simulator); everything else uses the photo library (PHPicker).
-        if source == "camera", UIImagePickerController.isSourceTypeAvailable(.camera) {
+        // Camera-first = the VisionKit DOCUMENT SCANNER (edge detection, deskew,
+        // multi-page) — the spec's primary capture path. Plain camera only as a
+        // fallback on hardware without scanner support; the photo library
+        // (PHPicker) everywhere else (including the simulator).
+        if source == "camera", VNDocumentCameraViewController.isSupported {
+            let scanner = VNDocumentCameraViewController()
+            scanner.delegate = self
+            vc.present(scanner, animated: true)
+        } else if source == "camera", UIImagePickerController.isSourceTypeAvailable(.camera) {
             let picker = UIImagePickerController()
             picker.sourceType = .camera
             picker.delegate = self
@@ -53,43 +65,55 @@ extension NativeLanguageKitPlugin {
     // MARK: - Recognition (on-device Vision; no network)
 
     fileprivate func recognize(_ image: UIImage) {
-        guard let cgImage = image.cgImage else {
+        recognize(pages: [image])
+    }
+
+    /// Recognize one or more page images (the document scanner returns a page
+    /// per scan) and aggregate every line IN PAGE ORDER, each with Vision's
+    /// line confidence, before resolving once.
+    fileprivate func recognize(pages: [UIImage]) {
+        guard !pages.isEmpty else {
             finish(reject: "Could not read the photo")
             return
         }
-        let request = VNRecognizeTextRequest { [weak self] request, error in
+        DispatchQueue.global(qos: .userInitiated).async { [weak self] in
             guard let self = self else { return }
-            if let error = error {
-                self.finish(reject: "Recognition failed: \(error.localizedDescription)")
-                return
+            var collected: [(VNRecognizedText, Float)] = []
+            for image in pages {
+                guard let cgImage = image.cgImage else { continue }
+                let request = VNRecognizeTextRequest()
+                request.recognitionLevel = .accurate
+                request.usesLanguageCorrection = self.recognitionCorrection
+                // Read any script the OS recognizer knows — but ONLY when
+                // correction is on (a Native language). The EnglishFallback
+                // profile wants the raw English model, no detour.
+                if #available(iOS 16.0, *) {
+                    request.automaticallyDetectsLanguage = self.recognitionCorrection
+                }
+                if !self.recognitionLanguages.isEmpty {
+                    request.recognitionLanguages = self.recognitionLanguages
+                }
+                let orientation = Self.cgOrientation(from: image.imageOrientation)
+                let handler = VNImageRequestHandler(cgImage: cgImage, orientation: orientation, options: [:])
+                do {
+                    try handler.perform([request])
+                } catch {
+                    self.finish(reject: "Recognition failed")
+                    return
+                }
+                let observations = (request.results as? [VNRecognizedTextObservation]) ?? []
+                for obs in observations {
+                    if let cand = obs.topCandidates(1).first {
+                        collected.append((cand, cand.confidence))
+                    }
+                }
             }
-            let observations = (request.results as? [VNRecognizedTextObservation]) ?? []
-            let candidates = observations.compactMap { $0.topCandidates(1).first }
-            // Merge on main: UITextChecker (used by the dictionary tiebreaker)
-            // isn't documented thread-safe.
+            // Merge on main: UITextChecker (the dictionary tiebreaker inside
+            // healSplitWords) isn't documented thread-safe.
             DispatchQueue.main.async {
                 let lang = self.recognitionLanguages.first
-                let lines = candidates.map { Self.healSplitWords($0, language: lang) }
+                let lines = collected.map { (text: Self.healSplitWords($0.0, language: lang), confidence: $0.1) }
                 self.finish(resolve: lines)
-            }
-        }
-        request.recognitionLevel = .accurate
-        request.usesLanguageCorrection = true
-        // Read any script the OS recognizer knows, not just the seeded language —
-        // the seeded recognitionLanguages below remain the tie-break hint.
-        if #available(iOS 16.0, *) {
-            request.automaticallyDetectsLanguage = true
-        }
-        if !recognitionLanguages.isEmpty {
-            request.recognitionLanguages = recognitionLanguages
-        }
-        DispatchQueue.global(qos: .userInitiated).async { [weak self] in
-            let orientation = Self.cgOrientation(from: image.imageOrientation)
-            let handler = VNImageRequestHandler(cgImage: cgImage, orientation: orientation, options: [:])
-            do {
-                try handler.perform([request])
-            } catch {
-                self?.finish(reject: "Recognition failed")
             }
         }
     }
@@ -163,10 +187,13 @@ extension NativeLanguageKitPlugin {
 
     // MARK: - Completion
 
-    fileprivate func finish(resolve lines: [String]) {
+    fileprivate func finish(resolve lines: [(text: String, confidence: Float)]) {
         DispatchQueue.main.async { [weak self] in
             guard let self = self, let call = self.pendingCall else { return }
-            call.resolve(["supported": true, "lines": lines])
+            // Per-line confidence rides along (Phase 2) — the core decides what
+            // counts as "low", the plugin just reports Vision's number.
+            let payload = lines.map { ["text": $0.text, "confidence": $0.confidence] as [String: Any] }
+            call.resolve(["supported": true, "lines": payload])
             self.pendingCall = nil
         }
     }
@@ -191,6 +218,31 @@ extension NativeLanguageKitPlugin {
         case .rightMirrored: return .rightMirrored
         @unknown default: return .up
         }
+    }
+}
+
+// MARK: - VNDocumentCameraViewControllerDelegate (document scanner, multi-page)
+
+extension NativeLanguageKitPlugin: VNDocumentCameraViewControllerDelegate {
+    public func documentCameraViewController(_ controller: VNDocumentCameraViewController,
+                                             didFinishWith scan: VNDocumentCameraScan) {
+        controller.dismiss(animated: true)
+        var pages: [UIImage] = []
+        for i in 0..<scan.pageCount {
+            pages.append(scan.imageOfPage(at: i))
+        }
+        recognize(pages: pages)
+    }
+
+    public func documentCameraViewControllerDidCancel(_ controller: VNDocumentCameraViewController) {
+        controller.dismiss(animated: true)
+        finish(reject: "cancelled")
+    }
+
+    public func documentCameraViewController(_ controller: VNDocumentCameraViewController,
+                                             didFailWithError error: Error) {
+        controller.dismiss(animated: true)
+        finish(reject: "Scan failed: \(error.localizedDescription)")
     }
 }
 

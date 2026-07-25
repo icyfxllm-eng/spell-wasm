@@ -307,12 +307,15 @@ pub fn supported() -> bool {
 /// `{ supported: bool, lines: string[] }`. `source` is "camera" or "library";
 /// `lang` seeds Vision's `recognitionLanguages`. `None` means the bridge isn't
 /// callable at all (fall back / hide the feature).
-pub fn recognize_word_list(lang: &str, source: &str) -> Option<Promise> {
+pub fn recognize_word_list(lang: &str, source: &str, correction: bool) -> Option<Promise> {
     let obj = bridge()?;
     let f = method(&obj, "recognizeWordList")?;
     let arg = js_sys::Object::new();
     let _ = Reflect::set(&arg, &JsValue::from_str("lang"), &JsValue::from_str(lang));
     let _ = Reflect::set(&arg, &JsValue::from_str("source"), &JsValue::from_str(source));
+    // Registry-driven (consts::ocr_support): Native → correction ON;
+    // EnglishFallback → OFF, so Vision can't "correct" fil/sw into English.
+    let _ = Reflect::set(&arg, &JsValue::from_str("correction"), &JsValue::from_bool(correction));
     let r = f.call1(&obj, &arg).ok()?;
     r.dyn_into::<Promise>().ok()
 }
