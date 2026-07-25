@@ -34,9 +34,6 @@ use unicode_normalization::UnicodeNormalization;
 
 use crate::consts::{EN, ES};
 
-/// The push-and-hold MODE surface (CC-SPELL-ALOUD Phase 1), reusing this parser.
-pub mod screen;
-
 // ===========================================================================
 // Pure parser (host-unit-tested — no DOM, no wasm, no audio)
 // ===========================================================================

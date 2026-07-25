@@ -1,7 +1,7 @@
 //! Dev door (TEMPORARY — removed at activation of these modes).
 //!
 //! Five quick taps on the SPELL logo open a tiny menu to the still-hidden,
-//! REVIEW-GATED screens (Spell Racing, Spell Aloud) so Eric can test them on-device.
+//! REVIEW-GATED screen (Spell Racing) so Eric can test it on-device.
 //! Invisible to normal testers: no visible entry, no hub tile, and it takes a
 //! deliberate five-tap burst on one element to reveal.
 //!
@@ -61,11 +61,8 @@ pub fn wire(app: &App) {
         close_menu();
         crate::racing::screen::open(&a_race);
     });
-    let a_aloud = app.clone();
-    dom::on_click("devOpenAloud", move || {
-        close_menu();
-        crate::spell_aloud::screen::open(&a_aloud);
-    });
+    // Spell Aloud is no longer a dev-door overlay: it's a real Play-hub mode
+    // (CC-SPELL-ALOUD-INTEGRATION G-INT-1). Only Spell Racing remains dev-gated.
 
     // Tapping the scrim backdrop closes the menu.
     dom::on::<web_sys::Event, _>("devMenu", "click", |e| {

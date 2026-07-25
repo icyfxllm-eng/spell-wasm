@@ -214,8 +214,9 @@ mod tests {
         let all = all();
         let c = HubCtx { kid: true, ..ctx() };
         let got = ids(&visible(&all, &c));
-        // Exactly the two friendly play aids; say_it is a COPPA hard-disable.
-        assert_eq!(got, vec!["ghost_racing"], "en: only ghost_racing (syllable_replay is es-only)");
+        // ghost_racing + spell_aloud (kid-available per D5); say_it is a COPPA
+        // hard-disable; syllable_replay is es-only. Registry order.
+        assert_eq!(got, vec!["ghost_racing", "spell_aloud"], "en Kid: ghost_racing + spell_aloud");
         assert!(!got.contains(&"say_it".to_string()), "say_it is never kid-visible (COPPA)");
         assert!(!got.contains(&"photo_list".to_string()));
     }
@@ -224,7 +225,8 @@ mod tests {
     fn little_speller_in_spanish_also_sees_syllable_replay() {
         let all = all();
         let c = HubCtx { kid: true, lang: "es".into(), ..ctx() };
-        assert_eq!(ids(&visible(&all, &c)), vec!["ghost_racing", "syllable_replay"]);
+        // + spell_aloud (kid-available per D5, es supports voice spell). Registry order.
+        assert_eq!(ids(&visible(&all, &c)), vec!["ghost_racing", "syllable_replay", "spell_aloud"]);
     }
 
     #[test]

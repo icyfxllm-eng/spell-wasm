@@ -91,7 +91,14 @@ All either already hold or are covered above.
   `play_hub::unavailable_reason` render the tile **live on en/es** and a
   **non-interactive "coming soon" teaser** (with the reason) elsewhere — shown, never
   hidden, never a dead-end. Maps A7. full lib suite 280/0; entitlement + web build green.
-- ⏭ Next: retire the standalone overlay (G-INT-1); voice undo/clear in the input method
-  (A6 runtime); word-source parity (A8); permission fallback + "type instead" (A9);
-  streak-delta parity (A10); whisper fixtures + demo video (review gate). D5 kidSafe
-  (mode available in Kid Mode) is currently `kidSafe:false` — **flag: reconcile with D5.**
+- ✅ **D5 Kid Mode**: `spell_aloud` `kidSafe:true` — available in Kid Mode (word
+  filtering is automatic via the standard source, I1). Kid-Mode tests updated.
+  *(Follow-up: the rejection copy could use the Kid-register string set — polish.)*
+- ✅ **Overlay retired (G-INT-1)**: removed `src/spell_aloud/screen.rs`, the `#spellAloud`
+  overlay + `#spellAloudOpen` + `.sa-*` CSS, the dev-menu Spell-Aloud entry, and the
+  orphaned `voiceSpell.pick` key. The parser core (parse/interpret/events/says_target/
+  lexicons) is kept — the input method + the loopback oracle + the CLI bridge use it.
+  Only Spell Racing remains dev-gated.
+- ⏭ Next: voice undo/clear in the input method (A6 runtime); word-source parity (A8);
+  permission fallback + "type instead" (A9); streak-delta parity (A10); whisper
+  fixtures + demo video (review gate).

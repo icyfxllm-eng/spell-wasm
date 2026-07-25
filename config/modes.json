@@ -85,7 +85,7 @@
       "descKey": "tools.spellaloud.desc",
       "icon": "🗣",
       "status": "live",
-      "kidSafe": false,
+      "kidSafe": true,
       "platforms": ["ios"],
       "entitlementLevel": "preview",
       "requiresPremium": null,
