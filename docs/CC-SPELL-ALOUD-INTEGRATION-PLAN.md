@@ -109,5 +109,10 @@ All either already hold or are covered above.
   same as the keyboard) and produces the SAME answer string typing would — so both
   funnel through the one `submit_guess` on identical input ⇒ identical streak delta. The
   end-to-end delta with a running app is the E2E/review-gate check.
-- ⏭ Next: voice undo/clear in the input method (A6 runtime); permission fallback +
-  "type instead" (A9); whisper fixtures + demo video (review gate, device).
+- ✅ **Voice undo/clear (A6 runtime / D7)**: `edit_command()` detects a sole undo
+  (delete/backspace/borrar) or clear (clear/start over/borrar todo) — never `done`
+  (submission is the on-screen control) — and the input method applies it to the answer
+  field: undo = `drop_last_grapheme` (one backspace, grapheme-aware for ñ/á), clear =
+  empty. Never a miss. Pure helpers host-tested.
+- ⏭ Next: permission fallback + live "type instead" (A9); whisper A1/A4 fixtures + demo
+  video (review gate — needs a device).

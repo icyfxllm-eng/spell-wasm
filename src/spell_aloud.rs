@@ -361,6 +361,27 @@ pub fn says_target(transcript: &str, target: &str) -> bool {
     transcript.split_whitespace().map(norm_word).any(|w| w == t)
 }
 
+/// A6 / D7: if this utterance is a sole editing command — **undo** (delete) or
+/// **clear** — return it, for the input method to apply to the answer field. Letters,
+/// the target word, and `done` (submission is the on-screen control, not a voice
+/// command) all return `None`. Pure + host-tested.
+pub fn edit_command(lang: &str, transcript: &str) -> Option<Command> {
+    match events(lang, transcript).as_slice() {
+        [Event::Command(c @ (Command::Delete | Command::Clear))] => Some(*c),
+        _ => None,
+    }
+}
+
+/// Remove the last grapheme — one "backspace" — so the voice **undo** command behaves
+/// exactly like the on-screen backspace / typed delete (D7). Grapheme-aware so an
+/// accented letter (á) or ñ is removed as one unit. Pure + host-tested.
+pub fn drop_last_grapheme(s: &str) -> String {
+    use unicode_segmentation::UnicodeSegmentation;
+    let mut g: Vec<&str> = s.graphemes(true).collect();
+    g.pop();
+    g.concat()
+}
+
 /// Fold one finalized utterance into a slot `buffer` — the push-and-hold mode's
 /// accumulator (Phase 1). Only a genuine spelling (`Insert`) contributes: its slots
 /// are appended and the newly-added letters returned (for spoken echo). A whole word,
@@ -726,6 +747,19 @@ fn on_final(app: &App, lang: &str, transcript: &str) {
     if says_target(transcript, &target) {
         crate::game::set_answer(app, &base);
         set_status("voiceSpell.spellItOut");
+        return;
+    }
+    // A6 / D7: a voice edit command acts on the answer field like backspace / start
+    // over (never `done` — submission is the on-screen control). Never a miss.
+    if let Some(cmd) = edit_command(lang, transcript) {
+        let edited = match cmd {
+            Command::Delete => drop_last_grapheme(&base),
+            Command::Clear => String::new(),
+            Command::Done => base.clone(), // ignored: submit is the on-screen control
+        };
+        crate::game::set_answer(app, &edited);
+        crate::haptics::key_tap();
+        set_status("");
         return;
     }
     match interpret(lang, transcript) {

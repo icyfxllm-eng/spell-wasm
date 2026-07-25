@@ -468,6 +468,37 @@ fn input_method_parse_still_auto_resolves_bv() {
 }
 
 // ---------------------------------------------------------------------------
+// A6 runtime — voice undo/clear edit commands (D7)
+// ---------------------------------------------------------------------------
+
+#[test]
+fn a6_edit_command_detects_undo_and_clear_only() {
+    use Command::*;
+    // Undo (delete/backspace/undo/back) and clear (clear/start over/…).
+    assert_eq!(edit_command(EN, "delete"), Some(Delete));
+    assert_eq!(edit_command(EN, "undo"), Some(Delete));
+    assert_eq!(edit_command(EN, "clear"), Some(Clear));
+    assert_eq!(edit_command(EN, "start over"), Some(Clear));
+    assert_eq!(edit_command(ES, "borrar"), Some(Delete));
+    assert_eq!(edit_command(ES, "borrar todo"), Some(Clear)); // greedy over "borrar"
+    // NOT edit commands: `done` (submission is the on-screen control), letters, target.
+    assert_eq!(edit_command(EN, "done"), None);
+    assert_eq!(edit_command(ES, "listo"), None);
+    assert_eq!(edit_command(EN, "see ay tee"), None);
+    assert_eq!(edit_command(EN, "delete see"), None); // a command mixed with a letter is not "sole"
+}
+
+#[test]
+fn a6_undo_drops_one_grapheme_like_backspace() {
+    assert_eq!(drop_last_grapheme("cat"), "ca");
+    assert_eq!(drop_last_grapheme("niño"), "niñ"); // ñ removed as one unit
+    assert_eq!(drop_last_grapheme("árbol"), "árbo");
+    assert_eq!(drop_last_grapheme("á"), ""); // accented letter is one grapheme
+    assert_eq!(drop_last_grapheme(""), ""); // empty stays empty (no panic)
+    assert_eq!(drop_last_grapheme("a"), "");
+}
+
+// ---------------------------------------------------------------------------
 // A10 streak parity — the mechanism (CC-SPELL-ALOUD-INTEGRATION I4)
 // ---------------------------------------------------------------------------
 
