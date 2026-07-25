@@ -238,6 +238,38 @@ pub fn lang_status(lang: &str) -> LangStatus {
     BUILTIN_LANGS.iter().find(|(c, _, _, _)| *c == lang).map(|(_, _, s, _)| *s).unwrap_or(ComingSoon)
 }
 
+/// CC-PHOTO-IMPORT Phase 0 — can Vision's on-device text recognizer read this
+/// language's script?
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum OcrSupport {
+    /// Vision recognizes the language directly (its own recognition model).
+    Native,
+    /// Latin-script language Vision has no model for: run the ENGLISH recognizer
+    /// with language correction OFF and let the word banks validate (G-C).
+    EnglishFallback,
+    /// No sound recognition path — the photo feature is HIDDEN for this language.
+    Unsupported,
+}
+
+/// THE Vision support matrix (invariant: one registry accessor, never a
+/// scattered `lang == …` check — the `ocr_support` mirror of `direction`).
+///
+/// Values are MEASURED, never guessed (gate G-B): `VNRecognizeTextRequest
+/// .supportedRecognitionLanguages()` on iOS 26.5 via
+/// `VisionLanguageMatrixTests.testDumpVisionLanguageMatrix` (2026-07-25).
+/// Measured list: en fr it de es pt zh(-Hans/Hant) yue ko ja ru uk th vi ar ars
+/// tr id cs da nl no nn nb ms pl ro sv → 12 of our 14 are Native; fil and sw
+/// (Latin script, no model) fall back to the English recognizer; nothing is
+/// Unsupported. Re-run the measurement test when the iOS floor moves and update
+/// here — the snapshot test below pins today's values.
+pub fn ocr_support(lang: &str) -> OcrSupport {
+    match lang {
+        EN | ES | FR | DE | PT | PL | VI | KO | JA | ZH | RU | AR => OcrSupport::Native,
+        FIL | SW => OcrSupport::EnglishFallback,
+        _ => OcrSupport::Unsupported, // unknown/unregistered: fail closed, hide.
+    }
+}
+
 /// True only for languages playable right now (passed audit). Gating for study
 /// languages; `uiLang` / interface localization is unaffected.
 ///
@@ -367,6 +399,28 @@ mod registry_tests {
         assert_eq!(BUILTIN_LANGS[14].0, "hi", "Hindi is the audit-only 15th entry");
         #[cfg(not(feature = "audit_preview"))]
         assert!(!BUILTIN_LANGS.iter().any(|(c, _, _, _)| *c == "hi"), "production registers no Hindi (D8)");
+    }
+
+    /// CC-PHOTO-IMPORT Phase 0 — the OCR-support snapshot, pinned to the G-B
+    /// measurement (iOS 26.5, VisionLanguageMatrixTests, 2026-07-25). A registry
+    /// change or a re-measurement must update this test DELIBERATELY.
+    #[test]
+    fn ocr_support_matches_the_measured_vision_matrix() {
+        use OcrSupport::*;
+        let expected = [
+            ("en", Native), ("es", Native), ("fr", Native), ("de", Native),
+            ("pt", Native), ("pl", Native), ("vi", Native), ("ko", Native),
+            ("ja", Native), ("fil", EnglishFallback), ("zh", Native),
+            ("ru", Native), ("ar", Native), ("sw", EnglishFallback),
+        ];
+        for (code, want) in expected {
+            assert_eq!(ocr_support(code), want, "{code} OCR class drifted from the G-B measurement");
+        }
+        // Every registered language has an explicit class; unknowns fail closed.
+        for (code, _, _, _) in LANGS_BASE.iter() {
+            assert!(expected.iter().any(|(c, _)| c == code), "{code} missing from the OCR matrix");
+        }
+        assert_eq!(ocr_support("xx"), Unsupported, "unregistered languages hide the feature");
     }
 
     /// CC-LINEUP-SWAP D2 — exactly ar is RTL, and (in production) it cannot be

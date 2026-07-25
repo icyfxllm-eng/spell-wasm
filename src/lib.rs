@@ -27,6 +27,7 @@ mod misses;
 mod model;
 mod native_audio;
 mod native_lang;
+mod photo_import;
 mod photo_list;
 mod norm;
 mod online_spelloff;
