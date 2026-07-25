@@ -102,6 +102,47 @@ fn es_loopback_suite_is_50_words_and_high_accuracy() {
 
 /// Acceptance #1 in loopback form: "c, a, t, done" accepts CAT; "cat" is rejected and
 /// consumes nothing; and the es b/v ambiguity always chips (never auto-picked).
+/// A1 (en): serve "cat"; the separate utterances "see","ay","tee" build C,A,T, and
+/// submitting the assembled word scores correct. Parser layer: each utterance inserts
+/// exactly its letter (as the input method appends), the sequence assembles to the
+/// target, and neither a letter nor the whole spelling false-rejects; the cheat "cat"
+/// contributes nothing (A2 companion). End-to-end scoring is guaranteed by A10.
+#[test]
+fn a1_cat_en_letter_by_letter() {
+    let target = "cat";
+    let mut buf = String::new();
+    for u in ["see", "ay", "tee"] {
+        match interpret("en", u) {
+            SpellOutcome::Insert(l) => buf.push_str(&l),
+            other => panic!("utterance {u:?} should insert a letter, got {other:?}"),
+        }
+        assert!(!says_target(u, target), "letter {u:?} must not be a whole-word reject");
+    }
+    assert_eq!(buf, target, "C,A,T assembles to the target → submit grades correct");
+    assert!(!says_target("see ay tee", target));
+    assert_eq!(interpret("en", "see ay tee"), SpellOutcome::Insert("cat".into()));
+    assert!(says_target("cat", target), "the cheat (saying the word) is rejected");
+}
+
+/// A4 (es): serve "niño"; utterances "ene","i","eñe","o" build n,i,ñ,o, NFC-exact
+/// (ñ precomposed U+00F1); submit scores correct. The cheat "niño" contributes nothing.
+#[test]
+fn a4_nino_es_letter_by_letter_nfc() {
+    let target = "niño";
+    let mut buf = String::new();
+    for u in ["ene", "i", "eñe", "o"] {
+        match interpret("es", u) {
+            SpellOutcome::Insert(l) => buf.push_str(&l),
+            other => panic!("utterance {u:?} should insert a letter, got {other:?}"),
+        }
+        assert!(!says_target(u, target));
+    }
+    assert_eq!(buf, target);
+    assert_eq!(buf.as_bytes(), "ni\u{f1}o".as_bytes(), "ñ is precomposed NFC (U+00F1)");
+    assert!(!says_target("ene i eñe o", target));
+    assert!(says_target("niño", target), "the cheat is rejected");
+}
+
 #[test]
 fn loopback_accepts_spelling_rejects_whole_word_and_chips_bv() {
     // accept: letters + done → the word, submit flagged

@@ -42,6 +42,7 @@ SUITE = {
         ("hache o ele a", "hola"), ("uve i de a", "vida"), ("te a zeta a", "taza"),
         ("ene u be e", "nube"), ("uve a ce a", "vaca"), ("ge o eme a", "goma"),
         ("ce i eme a", "cima"), ("ese e de e", "sede"), ("ele u ene a", "luna"),
+        ("ene i eñe o", "niño"),  # A4: ñ (eñe) NFC-exact
     ],
 }
 

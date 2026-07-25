@@ -121,7 +121,12 @@ All either already hold or are covered above.
   lands in typed standard mode HOLDING THE SAME WORD (the word is untouched). on_error
   always reverts to the typed base (never blocks typing). Browser-verified: label +
   fallback copy render, click dismisses.
-- ⏭ Remaining (device review gate): whisper A1/A4 end-to-end fixtures + the demo video
-  (en+es: one clean spell, one undo, one whole-word rejection). The A1/A4 **parser**
-  fixtures can be added to the loopback harness here; the on-device capture + demo need
-  a build/device.
+- ✅ **A1/A4 fixtures**: offline oracle tests (`a1_cat_en_letter_by_letter`,
+  `a4_nino_es_letter_by_letter_nfc`) — each separate utterance inserts exactly its
+  letter, the sequence assembles to the target (niño NFC-exact, ñ = U+00F1), the cheat
+  is rejected; end-to-end scoring follows from A10. Added "niño" to the whisper harness
+  es suite.
+- **Acceptance A1–A10: all offline-provable tests GREEN.** The only remaining item is
+  the **demo video** (en+es: clean spell, undo, whole-word rejection) — inherently a
+  device capture for the PR review gate. All D1–D7 honored; all invariants I1–I6 hold.
+  full lib suite 284/0.
