@@ -601,6 +601,11 @@ thread_local! {
     /// The current target word — read ONLY for D3 whole-word rejection (G-INT-2),
     /// NEVER given to the recognizer or used to resolve letters (G-A).
     static TARGET: RefCell<String> = const { RefCell::new(String::new()) };
+    /// Letters accumulated this capture session. MONOTONIC: a partial that retracts
+    /// (the recognizer revises to fewer letters) never shrinks it, so a spelled letter
+    /// that flickers in the recognizer's partials still sticks on the answer line
+    /// instead of appearing then vanishing.
+    static SESSION_LETTERS: RefCell<String> = const { RefCell::new(String::new()) };
     /// True once the permission explainer has been shown this app-run.
     static EXPLAINED: Cell<bool> = const { Cell::new(false) };
 }
@@ -698,6 +703,7 @@ pub fn mic_tap(app: &App) {
     // to the recognizer or the letter matcher, and never resolves letters (G-A).
     BASE.with(|b| *b.borrow_mut() = base);
     TARGET.with(|t| *t.borrow_mut() = target);
+    SESSION_LETTERS.with(|s| s.borrow_mut().clear()); // fresh session accumulator
     CAPTURING.with(|c| c.set(true));
     crate::dom::add_class("voiceSpellMic", "listening");
     set_status("voiceSpell.listening");
@@ -725,15 +731,23 @@ pub fn mic_tap(app: &App) {
     }
 }
 
-/// Live echo: re-parse the growing transcript and preview `base + letters` in the
-/// field. Idempotent — re-parsing the full transcript each partial is stable.
+/// Live echo: preview `base + accumulated letters`. MONOTONIC — the shown letters only
+/// grow; a partial that the recognizer later revises to FEWER letters does not shrink
+/// them, so a spelled letter never appears then vanishes as the hypothesis jitters.
 fn on_partial(app: &App, lang: &str, transcript: &str) {
     if !CAPTURING.with(Cell::get) {
         return;
     }
-    let parsed = parse(lang, transcript);
+    let parsed = parse(lang, transcript).letters;
     let base = BASE.with(|b| b.borrow().clone());
-    crate::game::set_answer(app, &format!("{}{}", base, parsed.letters));
+    let shown = SESSION_LETTERS.with(|s| {
+        let mut cur = s.borrow_mut();
+        if parsed.chars().count() > cur.chars().count() {
+            *cur = parsed; // grow only
+        }
+        cur.clone()
+    });
+    crate::game::set_answer(app, &format!("{}{}", base, shown));
 }
 
 /// Finalize: commit letters, or revert to the typed base and nudge (whole word) /
@@ -745,6 +759,11 @@ fn on_final(app: &App, lang: &str, transcript: &str) {
     end_capture_ui();
     let base = BASE.with(|b| b.borrow().clone());
     let target = TARGET.with(|t| t.borrow().clone());
+    // Everything accumulated (monotonically) during this session — the letters already
+    // shown on the line. Committing THIS (not a re-parse of the final transcript, which
+    // the recognizer may have shrunk) is what makes spelled letters stick.
+    let accumulated = SESSION_LETTERS.with(|s| s.borrow().clone());
+    SESSION_LETTERS.with(|s| s.borrow_mut().clear());
     // D3 (Feature 4): the utterance SAYS THE TARGET WORD (whole or embedded) → discard
     // the ENTIRE utterance, nudge to spell it out. Zero letters, never a miss (a
     // rejected input, not a scoring event). Only the target rejects (D2).
@@ -766,18 +785,21 @@ fn on_final(app: &App, lang: &str, transcript: &str) {
         set_status("");
         return;
     }
-    match interpret(lang, transcript) {
-        SpellOutcome::Insert(letters) => {
-            crate::game::set_answer(app, &format!("{}{}", base, letters));
-            crate::haptics::key_tap();
-            set_status("");
-        }
-        // A non-target word or babble is an IGNORED token (D2/A5), not a rejection: a
-        // subtle "didn't catch that", buffer untouched — no "spell it out" nudge.
-        SpellOutcome::WholeWord | SpellOutcome::Nothing => {
-            crate::game::set_answer(app, &base);
-            set_status("voiceSpell.didntCatch");
-        }
+    // Commit the accumulated letters (or the final parse if it's somehow longer).
+    let final_letters = parse(lang, transcript).letters;
+    let committed = if final_letters.chars().count() > accumulated.chars().count() {
+        final_letters
+    } else {
+        accumulated
+    };
+    if committed.is_empty() {
+        // Nothing usable heard (a non-target word or babble → D2/A5 ignored token).
+        crate::game::set_answer(app, &base);
+        set_status("voiceSpell.didntCatch");
+    } else {
+        crate::game::set_answer(app, &format!("{}{}", base, committed));
+        crate::haptics::key_tap();
+        set_status("");
     }
 }
 
