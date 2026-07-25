@@ -719,6 +719,21 @@ pub fn mic_tap(app: &App) {
     begin_session(app);
 }
 
+/// A new word was served: the live capture session, its append-base, and its target
+/// all belong to the OLD word. Stop any capture and reset, so the new word starts
+/// with a clean answer line — a trailing final from the old session is ignored
+/// (CAPTURING is already false) instead of resurrecting the last word's letters.
+pub fn on_new_word() {
+    if CAPTURING.with(Cell::get) || LISTENING.with(Cell::get) {
+        native_lang::stop_letter_capture();
+    }
+    end_capture_ui();
+    BASE.with(|b| b.borrow_mut().clear());
+    TARGET.with(|t| t.borrow_mut().clear());
+    SESSION_LETTERS.with(|s| s.borrow_mut().clear());
+    set_status("");
+}
+
 /// User stop: end listening and finalize any in-flight segment. The final segment's
 /// `on_final` sees LISTENING == false and does NOT restart.
 fn stop_session() {

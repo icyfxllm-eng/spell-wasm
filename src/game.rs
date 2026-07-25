@@ -963,6 +963,10 @@ pub fn next_word(app: &App) {
     dom::remove_class("orbWrap", "good");
     dom::remove_class("orbWrap", "bad");
     dom::set_html("orbGlyph", &crate::i18n::t("orb.listen"));
+    // Voice spelling: any live capture session, its append-base, and its target
+    // belong to the OLD word — stop and reset so the new word starts with a clean
+    // answer line instead of the last word's letters (CC-SPELL-ALOUD).
+    crate::spell_aloud::on_new_word();
     app.borrow_mut().answer.clear();
     render_letters(app, false);
     dom::set_disabled("checkBtn", false);
