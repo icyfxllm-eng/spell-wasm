@@ -593,12 +593,7 @@ use crate::App;
 use wasm_bindgen_futures::spawn_local;
 
 thread_local! {
-    /// User intent to keep spelling: set on the first mic tap, cleared when they tap to
-    /// stop. Spans MANY recognizer sessions — SFSpeech finalizes each letter on the
-    /// pause between letters, so we auto-restart capture while this is true (continuous
-    /// letter-by-letter) instead of ending after one letter.
-    static LISTENING: Cell<bool> = const { Cell::new(false) };
-    /// True while ONE recognizer session is in flight.
+    /// True while ONE held capture is in flight (push-and-hold, one letter per hold).
     static CAPTURING: Cell<bool> = const { Cell::new(false) };
     /// The answer text present when capture began — voice spelling APPENDS to it,
     /// and any failure state reverts to it (typed input is never lost).
@@ -649,8 +644,19 @@ pub fn wire(app: &App) {
     if !enabled() {
         return;
     }
-    let a = app.clone();
-    crate::dom::on_click("voiceSpellMic", move || mic_tap(&a));
+    // PUSH-AND-HOLD, one letter per hold: press starts capture, release finalizes that
+    // one short utterance (the reliable case for on-device ASR) and commits the letter.
+    // Isolated letters spoken in one continuous tap-to-toggle stream don't finalize
+    // per letter, so only the first was ever captured — a hold gives each letter an
+    // explicit boundary.
+    let a_press = app.clone();
+    crate::dom::on::<web_sys::Event, _>("voiceSpellMic", "pointerdown", move |e| {
+        e.prevent_default();
+        mic_press(&a_press);
+    });
+    for kind in ["pointerup", "pointerleave", "pointercancel"] {
+        crate::dom::on::<web_sys::Event, _>("voiceSpellMic", kind, |_| mic_release());
+    }
     // A9 / Feature 8: "Type instead" — dismiss the permission-denied fallback. Typing
     // is captured by the window keydown, so dismissing lands the player in typed
     // standard mode HOLDING THE SAME WORD (the mode is standard-mode-with-voice; the
@@ -687,16 +693,10 @@ fn end_capture_ui() {
     crate::dom::remove_class("voiceSpellMic", "listening");
 }
 
-/// Mic tap: start letter capture, or stop/finalize if already capturing (a second
-/// tap or ~2s of silence ends it). NEVER auto-submits; NEVER clears typed text.
-pub fn mic_tap(app: &App) {
-    if !enabled() {
-        return;
-    }
-    // Tap while listening = stop (the player is done spelling this word).
-    if LISTENING.with(Cell::get) {
-        LISTENING.with(|l| l.set(false));
-        native_lang::stop_letter_capture();
+/// Mic PRESS: start capture for ONE letter (push-and-hold). Appends to the current
+/// answer field. NEVER auto-submits; NEVER clears typed text.
+pub fn mic_press(app: &App) {
+    if !enabled() || CAPTURING.with(Cell::get) {
         return;
     }
     let (target, base, can) = {
@@ -706,22 +706,11 @@ pub fn mic_tap(app: &App) {
     if !can {
         return;
     }
+    let lang = app.borrow().lang.clone();
     // The target is read ONLY for D3 whole-word rejection (G-INT-2). It is NOT given
     // to the recognizer or the letter matcher, and never resolves letters (G-A).
     BASE.with(|b| *b.borrow_mut() = base);
     TARGET.with(|t| *t.borrow_mut() = target);
-    LISTENING.with(|l| l.set(true));
-    begin_session(app);
-}
-
-/// Start ONE recognizer session, appending to `BASE`. Auto-restarted after each letter
-/// (see `maybe_continue`) while `LISTENING`, so a pause between letters — which makes
-/// SFSpeech finalize — doesn't end the whole turn.
-fn begin_session(app: &App) {
-    if !LISTENING.with(Cell::get) {
-        return;
-    }
-    let lang = app.borrow().lang.clone();
     SESSION_LETTERS.with(|s| s.borrow_mut().clear());
     CAPTURING.with(|c| c.set(true));
     crate::dom::add_class("voiceSpellMic", "listening");
@@ -745,22 +734,18 @@ fn begin_session(app: &App) {
     );
     if !ok {
         // Bridge missing/uncallable — treat as unavailable, revert cleanly.
-        LISTENING.with(|l| l.set(false));
         end_capture_ui();
         crate::dom::add_class("voiceSpellMic", "btn-hide");
     }
 }
 
-/// After a letter finalizes, keep listening for the next one (BASE becomes the current
-/// field) unless the player tapped stop — turning single-shot capture into continuous
-/// letter-by-letter spelling.
-fn maybe_continue(app: &App) {
-    if !LISTENING.with(Cell::get) {
-        end_capture_ui();
-        return;
+/// Mic RELEASE: finalize the held capture — the recognizer emits its result for this
+/// one short letter utterance, committed via `on_final`. A fresh press captures the
+/// next letter.
+pub fn mic_release() {
+    if CAPTURING.with(Cell::get) {
+        native_lang::stop_letter_capture();
     }
-    BASE.with(|b| *b.borrow_mut() = app.borrow().answer.clone());
-    begin_session(app);
 }
 
 /// Live echo: preview `base + accumulated letters`. MONOTONIC — the shown letters only
@@ -788,10 +773,10 @@ fn on_final(app: &App, lang: &str, transcript: &str) {
     if !CAPTURING.with(Cell::get) {
         return;
     }
-    CAPTURING.with(|c| c.set(false)); // THIS recognizer session ended (may auto-restart)
+    end_capture_ui(); // this held capture ended; a fresh press captures the next letter
     let base = BASE.with(|b| b.borrow().clone());
     let target = TARGET.with(|t| t.borrow().clone());
-    // Everything accumulated (monotonically) during this session — the letters already
+    // Everything accumulated (monotonically) during this hold — the letters already
     // shown on the line. Committing THIS (not a re-parse of the final transcript, which
     // the recognizer may have shrunk) is what makes spelled letters stick.
     let accumulated = SESSION_LETTERS.with(|s| s.borrow().clone());
@@ -802,7 +787,6 @@ fn on_final(app: &App, lang: &str, transcript: &str) {
     if says_target(transcript, &target) {
         crate::game::set_answer(app, &base);
         set_status("voiceSpell.spellItOut");
-        maybe_continue(app);
         return;
     }
     // A6 / D7: a voice edit command acts on the answer field like backspace / start
@@ -816,7 +800,6 @@ fn on_final(app: &App, lang: &str, transcript: &str) {
         crate::game::set_answer(app, &edited);
         crate::haptics::key_tap();
         set_status("");
-        maybe_continue(app);
         return;
     }
     // Commit the accumulated letters (or the final parse if it's somehow longer).
@@ -835,12 +818,10 @@ fn on_final(app: &App, lang: &str, transcript: &str) {
         crate::haptics::key_tap();
         set_status("");
     }
-    maybe_continue(app); // keep listening for the next letter unless the player stopped
 }
 
 /// Capture error: never blocks typed input — always revert to the typed base.
 fn on_error(app: &App, code: &str) {
-    LISTENING.with(|l| l.set(false)); // stop the continuous loop on any error
     end_capture_ui();
     let base = BASE.with(|b| b.borrow().clone());
     crate::game::set_answer(app, &base);
