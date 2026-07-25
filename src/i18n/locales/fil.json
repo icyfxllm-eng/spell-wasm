@@ -322,5 +322,6 @@
   "racing.pace.silver": "Pilak",
   "racing.pace.gold": "Ginto",
   "racing.pace.platinum": "Platino",
-  "racing.pace.tag": "Pace ghost"
+  "racing.pace.tag": "Pace ghost",
+  "voiceSpell.typeInstead": "I-type na lang"
 }

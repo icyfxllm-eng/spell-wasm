@@ -468,6 +468,22 @@ fn input_method_parse_still_auto_resolves_bv() {
 }
 
 // ---------------------------------------------------------------------------
+// A9 — permission fallback copy + "type instead" (Feature 8)
+// ---------------------------------------------------------------------------
+
+#[test]
+fn a9_permission_fallback_and_type_instead_copy_exist() {
+    use crate::i18n::t;
+    // The denied-permission fallback copy exists and still offers typing as the escape.
+    let needs = t("voiceSpell.needsMic");
+    assert!(needs != "voiceSpell.needsMic" && !needs.is_empty(), "fallback copy present");
+    assert!(needs.to_lowercase().contains("type"), "fallback offers typing");
+    // The "type instead" button label exists (live button, not a dead sentence).
+    let ti = t("voiceSpell.typeInstead");
+    assert!(ti != "voiceSpell.typeInstead" && !ti.is_empty(), "type-instead label present");
+}
+
+// ---------------------------------------------------------------------------
 // A6 runtime — voice undo/clear edit commands (D7)
 // ---------------------------------------------------------------------------
 

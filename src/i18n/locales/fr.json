@@ -322,5 +322,6 @@
   "racing.pace.silver": "Argent",
   "racing.pace.gold": "Or",
   "racing.pace.platinum": "Platine",
-  "racing.pace.tag": "Fantôme de rythme"
+  "racing.pace.tag": "Fantôme de rythme",
+  "voiceSpell.typeInstead": "Écrire à la place"
 }

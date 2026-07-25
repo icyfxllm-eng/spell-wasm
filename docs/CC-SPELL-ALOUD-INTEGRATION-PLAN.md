@@ -114,5 +114,14 @@ All either already hold or are covered above.
   (submission is the on-screen control) — and the input method applies it to the answer
   field: undo = `drop_last_grapheme` (one backspace, grapheme-aware for ñ/á), clear =
   empty. Never a miss. Pure helpers host-tested.
-- ⏭ Next: permission fallback + live "type instead" (A9); whisper A1/A4 fixtures + demo
-  video (review gate — needs a device).
+- ✅ **Permission fallback + "type instead" (A9 / Feature 8)**: the denied-permission
+  explainer (`voiceSpell.needsMic`) is the fallback state (on_error PERMISSION_DENIED,
+  once per run); its button is now a live **"Type instead"** (`voiceSpell.typeInstead`)
+  that dismisses the explainer — typing is captured by the window keydown, so the player
+  lands in typed standard mode HOLDING THE SAME WORD (the word is untouched). on_error
+  always reverts to the typed base (never blocks typing). Browser-verified: label +
+  fallback copy render, click dismisses.
+- ⏭ Remaining (device review gate): whisper A1/A4 end-to-end fixtures + the demo video
+  (en+es: one clean spell, one undo, one whole-word rejection). The A1/A4 **parser**
+  fixtures can be added to the loopback harness here; the on-device capture + demo need
+  a build/device.

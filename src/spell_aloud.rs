@@ -641,6 +641,10 @@ pub fn wire(app: &App) {
     }
     let a = app.clone();
     crate::dom::on_click("voiceSpellMic", move || mic_tap(&a));
+    // A9 / Feature 8: "Type instead" — dismiss the permission-denied fallback. Typing
+    // is captured by the window keydown, so dismissing lands the player in typed
+    // standard mode HOLDING THE SAME WORD (the mode is standard-mode-with-voice; the
+    // word is untouched). Not a dead sentence.
     crate::dom::on_click("voiceSpellPermClose", || {
         crate::dom::add_class("voiceSpellPerm", "btn-hide");
     });
