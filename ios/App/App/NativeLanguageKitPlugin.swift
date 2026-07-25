@@ -337,10 +337,19 @@ final class SpeechListener {
 
         do {
             let session = AVAudioSession.sharedInstance()
-            try session.setCategory(.playAndRecord, mode: .measurement, options: [.duckOthers, .defaultToSpeaker])
+            // The app sets `.playback` (output-only) active at launch for word audio.
+            // Switching category on an already-active session doesn't reliably route
+            // the mic input, so deactivate first, then reconfigure for record + speaker
+            // and reactivate — otherwise the tap sees no audio ("Listening", nothing
+            // captured). `.allowBluetooth` picks up headset mics too.
+            try? session.setActive(false, options: .notifyOthersOnDeactivation)
+            try session.setCategory(.playAndRecord, mode: .measurement,
+                                    options: [.duckOthers, .defaultToSpeaker, .allowBluetooth])
             try session.setActive(true, options: .notifyOthersOnDeactivation)
         } catch { finish(.failure(.audio)); return }
 
+        // Read the input format AFTER the session is record-capable, so it isn't the
+        // zero/invalid format a `.playback` session reports (which yields silent taps).
         let input = audioEngine.inputNode
         let format = input.outputFormat(forBus: 0)
         input.installTap(onBus: 0, bufferSize: 1024, format: format) { [weak self] buffer, _ in
