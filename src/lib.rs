@@ -681,12 +681,23 @@ fn update_import_count() {
     dom::set_text("importCount", &format!("{} word{}", n, if n == 1 { "" } else { "s" }));
 }
 
+thread_local! {
+    /// The batch id of the most recent import this session — what the one-tap
+    /// "Undo import" button undoes (CC-PHOTO-IMPORT Phase 4). Session-scoped on
+    /// purpose: the affordance is for "oops, wrong page", not list management.
+    static LAST_IMPORT_BATCH: std::cell::Cell<Option<u64>> = const { std::cell::Cell::new(None) };
+}
+
 /// Persist a screened batch of "My Words" and refresh every surface that
 /// reflects the active list. Shared by the typed importer and the photo
 /// importer (`photo_list::confirm`) — the caller has already run the words
 /// through the charset + profanity gate and owns the "saved" message.
-pub(crate) fn apply_saved_words(app: &App, words: Vec<String>, speak_lang: String) {
-    importer::save_words(&mut app.borrow_mut(), words, speak_lang);
+/// `custom_marks` are the words the review classified out-of-dictionary
+/// (empty from the typed path).
+pub(crate) fn apply_saved_words(app: &App, words: Vec<String>, speak_lang: String, custom_marks: &[String]) {
+    let batch = importer::save_words(&mut app.borrow_mut(), words, speak_lang, custom_marks);
+    LAST_IMPORT_BATCH.with(|b| b.set(Some(batch)));
+    dom::remove_class("undoImportBtn", "btn-hide");
     achievements::unlock(&mut app.borrow_mut(), "importer");
     let was_review = app.borrow().review;
     if was_review {
@@ -800,7 +811,9 @@ fn wire_import(app: &App) {
         return;
     }
     let count = words.len();
-    importer::save_words(&mut a.borrow_mut(), words, speak_lang);
+    let batch = importer::save_words(&mut a.borrow_mut(), words, speak_lang, &[]);
+    LAST_IMPORT_BATCH.with(|b| b.set(Some(batch)));
+    dom::remove_class("undoImportBtn", "btn-hide");
     achievements::unlock(&mut a.borrow_mut(), "importer");
     let was_review = a.borrow().review;
     if was_review {
@@ -879,6 +892,54 @@ async fn lang_hint(words: &[String], speak_lang: &str) -> Option<String> {
             game::build_level_options(&a);
             stats::render(&a.borrow());
             dom::set_text("importNote", &i18n::t("import.cleared"));
+        });
+    }
+    // One-tap "Undo import" (CC-PHOTO-IMPORT Phase 4): removes exactly the
+    // words the LAST import batch introduced — words an earlier save already
+    // owned are untouched. Session-scoped; the button hides after use.
+    {
+        let a = app.clone();
+        dom::on_click("undoImportBtn", move || {
+            dom::add_class("undoImportBtn", "btn-hide");
+            let Some(batch) = LAST_IMPORT_BATCH.with(|b| b.take()) else {
+                return;
+            };
+            let removed = importer::undo_batch(&mut a.borrow_mut(), batch);
+            if removed == 0 {
+                return;
+            }
+            // Undo emptied My Words while it's the active source → fall back to
+            // English (mirrors "Clear my words").
+            let empty_mine = {
+                let s = a.borrow();
+                s.lang == MINE && s.custom.words.is_empty()
+            };
+            if empty_mine {
+                {
+                    let mut s = a.borrow_mut();
+                    s.lang = EN.to_string();
+                    s.cur_lang = EN.to_string();
+                }
+                game::update_voice_note(&a);
+                settings::save_prefs(&a.borrow());
+            }
+            game::build_source_options(&a);
+            game::build_level_options(&a);
+            keyboard::rebuild(&a);
+            stats::render(&a.borrow());
+            game::refresh_mode_buttons(&a);
+            // The word in play may be one of the undone ones — reset the round.
+            {
+                let mut s = a.borrow_mut();
+                s.word = String::new();
+                s.answered = false;
+                s.answer.clear();
+            }
+            dom::set_html("orbGlyph", &i18n::t("orb.tap"));
+            game::render_letters(&a, false);
+            game::clear_meaning();
+            dom::set_text("feedback", &i18n::t("import.undone"));
+            dom::el("feedback").set_class_name("feedback");
         });
     }
     dom::on_click("cancelImport", || dom::remove_class("importScrim", "show"));

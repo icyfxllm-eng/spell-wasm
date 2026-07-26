@@ -163,6 +163,8 @@
   "parent.tryAgain": "不太对 — 再试一次。",
   "import.needWord": "请至少添加一个单词才能保存。",
   "import.cleared": "你的单词已清除。",
+  "import.undo": "撤销导入",
+  "import.undone": "已撤销导入。",
   "speech.noVoice": "此浏览器无法朗读 — 请试试 Chrome 或 Edge。",
   "meaning.noDef": "没有找到这个单词的释义。",
   "meaning.noExample": "没有找到这个单词的例句。",

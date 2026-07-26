@@ -163,6 +163,8 @@
   "parent.tryAgain": "Chưa đúng — thử lại.",
   "import.needWord": "Thêm ít nhất một từ để lưu.",
   "import.cleared": "Các từ của bạn đã được xóa.",
+  "import.undo": "Hoàn tác nhập",
+  "import.undone": "Đã hoàn tác nhập.",
   "speech.noVoice": "Trình duyệt này không nói được — hãy thử Chrome hoặc Edge.",
   "meaning.noDef": "Không tìm thấy định nghĩa cho từ này.",
   "meaning.noExample": "Không tìm thấy câu ví dụ cho từ này.",

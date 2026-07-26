@@ -163,6 +163,8 @@
   "parent.tryAgain": "Nie do końca — spróbuj ponownie.",
   "import.needWord": "Dodaj co najmniej jedno słowo, aby zapisać.",
   "import.cleared": "Twoje słowa zostały usunięte.",
+  "import.undo": "Cofnij import",
+  "import.undone": "Import cofnięty.",
   "speech.noVoice": "Ta przeglądarka nie potrafi mówić — spróbuj Chrome lub Edge.",
   "meaning.noDef": "Nie znaleziono definicji tego słowa.",
   "meaning.noExample": "Nie znaleziono przykładowego zdania dla tego słowa.",

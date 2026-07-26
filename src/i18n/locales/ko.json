@@ -163,6 +163,8 @@
   "parent.tryAgain": "조금 아쉬워요 — 다시 시도해 주세요.",
   "import.needWord": "저장하려면 단어를 최소 하나 추가하세요.",
   "import.cleared": "단어를 모두 지웠어요.",
+  "import.undo": "가져오기 취소",
+  "import.undone": "가져오기를 취소했습니다.",
   "speech.noVoice": "이 브라우저는 음성을 낼 수 없어요 — Chrome이나 Edge를 사용해 보세요.",
   "meaning.noDef": "이 단어의 뜻을 찾지 못했어요.",
   "meaning.noExample": "이 단어의 예문을 찾지 못했어요.",

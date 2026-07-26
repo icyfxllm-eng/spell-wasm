@@ -163,6 +163,8 @@
   "parent.tryAgain": "Hindi pa — subukan ulit.",
   "import.needWord": "Magdagdag ng kahit isang salita para makapag-save.",
   "import.cleared": "Na-clear ang mga salita mo.",
+  "import.undo": "I-undo ang import",
+  "import.undone": "Na-undo ang import.",
   "speech.noVoice": "Hindi makapagsalita ang browser na ito — subukan ang Chrome o Edge.",
   "meaning.noDef": "Walang depinisyong nakita para sa salitang ito.",
   "meaning.noExample": "Walang halimbawang pangungusap na nakita para sa salitang ito.",

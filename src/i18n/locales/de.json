@@ -163,6 +163,8 @@
   "parent.tryAgain": "Nicht ganz — versuch es nochmal.",
   "import.needWord": "Füge mindestens ein Wort zum Speichern hinzu.",
   "import.cleared": "Deine Wörter wurden gelöscht.",
+  "import.undo": "Import rückgängig machen",
+  "import.undone": "Import rückgängig gemacht.",
   "speech.noVoice": "Dieser Browser kann nicht sprechen — versuch Chrome oder Edge.",
   "meaning.noDef": "Keine Definition für dieses Wort gefunden.",
   "meaning.noExample": "Kein Beispielsatz für dieses Wort gefunden.",

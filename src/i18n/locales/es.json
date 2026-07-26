@@ -163,6 +163,8 @@
   "parent.tryAgain": "Casi — inténtalo de nuevo.",
   "import.needWord": "Añade al menos una palabra para guardar.",
   "import.cleared": "Se borraron tus palabras.",
+  "import.undo": "Deshacer importación",
+  "import.undone": "Importación deshecha.",
   "speech.noVoice": "Este navegador no puede hablar — prueba Chrome o Edge.",
   "meaning.noDef": "No se encontró una definición para esta palabra.",
   "meaning.noExample": "No se encontró una frase de ejemplo para esta palabra.",

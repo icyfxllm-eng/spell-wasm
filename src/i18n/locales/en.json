@@ -163,6 +163,8 @@
   "parent.tryAgain": "Not quite — try again.",
   "import.needWord": "Add at least one word to save.",
   "import.cleared": "Your words were cleared.",
+  "import.undo": "Undo import",
+  "import.undone": "Import undone.",
   "speech.noVoice": "This browser can't speak — try Chrome or Edge.",
   "meaning.noDef": "No definition found for this word.",
   "meaning.noExample": "No example sentence found for this word.",

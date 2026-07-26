@@ -354,6 +354,15 @@ fn confirm(app: &App) {
     }
     let speak_lang = dom::select("photoLang").value();
     let count = words.len();
+    // Custom-word marking (Phase 4): the words leaving this sheet classified
+    // OUT-OF-DICTIONARY for the sheet's study language — persisted so later
+    // surfaces (device-voice audio, promote-only recheck) know which are custom.
+    let study = STUDY_LANG.with(|l| l.borrow().clone());
+    let custom_marks: Vec<String> = words
+        .iter()
+        .filter(|w| crate::photo_import::classify_word(&study, w) == crate::photo_import::WordClass::Custom)
+        .cloned()
+        .collect();
     // "Replace my current words" (default ON): a fresh page replaces the last
     // batch — otherwise every photo session ADDS to "My Words" (the shared save
     // path is additive) and last week's list keeps cycling into play forever.
@@ -365,7 +374,7 @@ fn confirm(app: &App) {
     if replace {
         crate::importer::clear_words(&mut app.borrow_mut());
     }
-    crate::apply_saved_words(app, words, speak_lang);
+    crate::apply_saved_words(app, words, speak_lang, &custom_marks);
     close();
     let msg = if blocked > 0 {
         i18n::tp("import.savedSkipped", &[("n", &count.to_string()), ("b", &blocked.to_string())])

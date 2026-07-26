@@ -47,6 +47,21 @@ pub struct CustomSet {
     /// and all its call sites stay unchanged.
     #[serde(default, rename = "wordLang")]
     pub word_lang: std::collections::HashMap<String, String>,
+    /// CC-PHOTO-IMPORT Phase 4 — the import batch that INTRODUCED each word
+    /// (word text -> batch id). Only words a batch added NEW are recorded, so
+    /// undoing a batch removes exactly what it brought in and never a word an
+    /// earlier save already owned. Side map: `words` call sites stay unchanged;
+    /// pre-existing saves simply have no entry (not undoable — safe default).
+    #[serde(default, rename = "wordBatch")]
+    pub word_batch: std::collections::HashMap<String, u64>,
+    /// The next batch id to assign (monotonic per profile).
+    #[serde(default, rename = "nextBatch")]
+    pub next_batch: u64,
+    /// Words imported as OUT-OF-DICTIONARY for their study language (the photo
+    /// review's "new word" class) — the custom-word marking. Spoken with the
+    /// on-device voice (G-A) and eligible for later promote-only reclassification.
+    #[serde(default, rename = "customMarks")]
+    pub custom_marks: std::collections::HashSet<String>,
 }
 
 #[derive(Serialize, Deserialize, Default, Clone)]
@@ -201,7 +216,14 @@ impl Default for AppState {
             remind_time: "17:00".into(),
             extra_attempts: false,
             aids: crate::attempts::RunAids::default(),
-            custom: CustomSet { words: Vec::new(), speak_lang: "en-US".into(), word_lang: Default::default() },
+            custom: CustomSet {
+                words: Vec::new(),
+                speak_lang: "en-US".into(),
+                word_lang: Default::default(),
+                word_batch: Default::default(),
+                next_batch: 0,
+                custom_marks: Default::default(),
+            },
             misses: Vec::new(),
             achievements: AchState::default(),
             stats: Stats::default(),

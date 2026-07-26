@@ -163,6 +163,8 @@
   "parent.tryAgain": "Pas tout à fait — réessaie.",
   "import.needWord": "Ajoute au moins un mot pour enregistrer.",
   "import.cleared": "Tes mots ont été effacés.",
+  "import.undo": "Annuler l’import",
+  "import.undone": "Import annulé.",
   "speech.noVoice": "Ce navigateur ne peut pas parler — essaie Chrome ou Edge.",
   "meaning.noDef": "Aucune définition trouvée pour ce mot.",
   "meaning.noExample": "Aucune phrase d'exemple trouvée pour ce mot.",

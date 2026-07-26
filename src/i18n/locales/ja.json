@@ -163,6 +163,8 @@
   "parent.tryAgain": "ちがいます — もう一度どうぞ。",
   "import.needWord": "保存するには単語を1つ以上追加してください。",
   "import.cleared": "あなたの単語を消去しました。",
+  "import.undo": "インポートを元に戻す",
+  "import.undone": "インポートを元に戻しました。",
   "speech.noVoice": "このブラウザは音声を出せません — Chrome か Edge を試してね。",
   "meaning.noDef": "この単語の定義が見つかりませんでした。",
   "meaning.noExample": "この単語の例文が見つかりませんでした。",
