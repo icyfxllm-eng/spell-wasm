@@ -62,6 +62,18 @@ pub fn wire(app: &App) {
         crate::racing::screen::open(&a_race);
     });
 
+    // Arabic shortcut: jump straight into the freshly ungated language without
+    // scrolling the picker. Sets langSel and fires its own change event, so the
+    // ONE existing language-switch handler does all the work (RTL dir, keyboard,
+    // prefs, round reset) — no duplicated switching logic here.
+    dom::on_click("devOpenArabic", || {
+        close_menu();
+        dom::select("langSel").set_value("ar");
+        if let Ok(ev) = web_sys::Event::new("change") {
+            let _ = dom::el("langSel").dispatch_event(&ev);
+        }
+    });
+
     // "Test entitlements": resolve the audit maximum (Complete) on this device
     // so premium-gated surfaces (photo camera, its hub tile) stay testable
     // before the purchase adapters exist. Storage-backed; read by
