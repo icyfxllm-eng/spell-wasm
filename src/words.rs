@@ -12,7 +12,7 @@ pub struct LangInfo {
     pub code: &'static str,
 }
 
-pub const LANGUAGES: [(&str, LangInfo); 17] = [
+pub const LANGUAGES: [(&str, LangInfo); 18] = [
     ("en", LangInfo { name: "English", code: "en-US" }),
     ("es", LangInfo { name: "Espa\u{f1}ol", code: "es-ES" }),
     ("fr", LangInfo { name: "Fran\u{e7}ais", code: "fr-FR" }),
@@ -30,6 +30,8 @@ pub const LANGUAGES: [(&str, LangInfo); 17] = [
     // This code is the on-device speechSynthesis hint; the backend TTS lookup keys
     // on the 2-letter "sw" and routes it to Azure.
     ("sw", LangInfo { name: "Kiswahili", code: "sw-TZ" }),
+    // Hindi (Devanagari) — promoted to production 2026-07-25 (Eric's ruling).
+    ("hi", LangInfo { name: "\u{939}\u{93f}\u{928}\u{94d}\u{926}\u{940}", code: "hi-IN" }),
     // New languages with their own keyboard + backend voice (My Words matches).
     ("vi", LangInfo { name: "Ti\u{1ebf}ng Vi\u{1ec7}t", code: "vi-VN" }),
     ("ko", LangInfo { name: "\u{d55c}\u{ad6d}\u{c5b4}", code: "ko-KR" }),
@@ -1308,14 +1310,12 @@ pub fn tier_for(lang: &str, tier: &str) -> &'static [&'static str] {
         // Leipzig CC BY, frequency-ranked, length-tiered, gated by build-wordlists.
         RU => simple_tier(RU_EASY, RU_MEDIUM, RU_HARD, RU_EXPERT, tier),
         SW => simple_tier(SW_EASY, SW_MEDIUM, SW_HARD, SW_EXPERT, tier),
-        // Arabic UNGATED (Eric's ruling, 2026-07-25): serves its production bank
-        // (assets/words/ar/ via build-wordlists, keyboard-reachability gated) —
-        // RTL_SUPPORTED flipped in the same change. HI stays audit-only (D8) and
-        // returns an EMPTY bank in production rather than falling through to
-        // `en_tier` — a registered language with no served content must serve NO
-        // words, never English words wearing its name.
+        // Arabic UNGATED and Hindi PROMOTED (Eric's rulings, 2026-07-25): both
+        // serve production banks (assets/words/{ar,hi}/ via build-wordlists,
+        // keyboard-reachability gated). No registered language is contentless
+        // anymore — the serves-its-OWN-bank test below is the fallthrough tripwire.
         AR => simple_tier(AR_EASY, AR_MEDIUM, AR_HARD, AR_EXPERT, tier),
-        HI => audit_draft_or_empty(lang, tier),
+        HI => simple_tier(HI_EASY, HI_MEDIUM, HI_HARD, HI_EXPERT, tier),
         ES => es_tier(tier),
         FR => simple_tier(FR_EASY, FR_MEDIUM, FR_HARD, FR_EXPERT, tier),
         DE => simple_tier(DE_EASY, DE_MEDIUM, DE_HARD, DE_EXPERT, tier),
@@ -1330,74 +1330,29 @@ pub fn tier_for(lang: &str, tier: &str) -> &'static [&'static str] {
     }
 }
 
-/// ru/ar have no verified content. In production they serve NOTHING (an
-/// empty bank, never English words wearing their name — the whole point of the
-/// explicit arm). Under `audit_preview` ONLY, they serve their unverified DRAFT
-/// bank so a native speaker can play and review it. Two cfg'd definitions so the
-/// production binary contains only the empty one.
-#[cfg(feature = "audit_preview")]
-fn audit_draft_or_empty(lang: &str, tier: &str) -> &'static [&'static str] {
-    crate::word_data_audit::tier_for(lang, tier)
-}
-#[cfg(not(feature = "audit_preview"))]
-fn audit_draft_or_empty(_lang: &str, _tier: &str) -> &'static [&'static str] {
-    &[]
-}
-
 #[cfg(test)]
 mod content_tests {
-    use crate::consts::{TIER_ORDER, HI};
+    use crate::consts::{BUILTIN_LANGS, TIER_ORDER};
 
-    /// A language registered WITHOUT content must serve nothing — never English
-    /// words under its own name. `tier_for` ends in `_ => en_tier(tier)`, so any
-    /// new registry entry silently inherits the English bank until someone adds
-    /// an explicit arm; this test is the tripwire for that.
-    ///
-    /// Russian and Swahili now ship real production banks; Arabic's bank exists but
-    /// is not wired into production (rtl_blocked, held for device verification), so
-    /// Arabic is the remaining registered-but-serves-nothing language in production.
-    #[cfg(not(feature = "audit_preview"))]
+    /// THE fallthrough tripwire, structural since Hindi's 2026-07-25 promotion
+    /// left no contentless registered language: every registered language must
+    /// serve its OWN non-empty bank — never the English bank wearing its name.
+    /// `tier_for` ends in `_ => en_tier(tier)`, so a new registry entry without
+    /// an explicit arm silently inherits English words; the pointer inequality
+    /// below catches exactly that.
     #[test]
-    fn registered_but_contentless_languages_serve_no_words() {
-        // ar left this list on its 2026-07-25 ungate (real bank via
-        // build-wordlists); HI remains audit-only/contentless in production.
-        for lang in [HI] {
+    fn every_registered_language_serves_its_own_bank() {
+        for (code, _, _, _) in BUILTIN_LANGS.iter() {
             for tier in TIER_ORDER {
-                let bank = super::tier_for(lang, tier);
-                assert!(
-                    bank.is_empty(),
-                    "{lang}/{tier} must be empty until its content ships, got {} words starting {:?} \
-                     — a fallthrough to en_tier would serve English words as {lang}",
-                    bank.len(),
-                    bank.first(),
-                );
-            }
-        }
-    }
-
-    /// The mirror invariant for the audit build: Hindi serves its DRAFT bank
-    /// (non-empty), so an auditor has words to play. (Arabic graduated to a
-    /// production bank on its 2026-07-25 ungate.)
-    #[cfg(feature = "audit_preview")]
-    #[test]
-    fn audit_preview_serves_draft_banks() {
-        for lang in [HI] {
-            for tier in TIER_ORDER {
-                assert!(
-                    !super::tier_for(lang, tier).is_empty(),
-                    "audit_preview: {lang}/{tier} should serve its draft bank"
-                );
-            }
-        }
-    }
-
-    /// The languages that DO have content still have it (guards against an
-    /// over-broad empty arm swallowing a real bank).
-    #[test]
-    fn content_languages_still_have_banks() {
-        for lang in ["en", "es", "fr", "de", "pt", "pl", "vi", "ko", "ja", "fil", "zh", "ru", "ar", "sw"] {
-            for tier in TIER_ORDER {
-                assert!(!super::tier_for(lang, tier).is_empty(), "{lang}/{tier} lost its bank");
+                let bank = super::tier_for(code, tier);
+                assert!(!bank.is_empty(), "{code}/{tier} lost its bank");
+                if *code != "en" {
+                    assert_ne!(
+                        bank.as_ptr(),
+                        super::en_tier(tier).as_ptr(),
+                        "{code}/{tier} fell through to the ENGLISH bank — add its arm"
+                    );
+                }
             }
         }
     }

@@ -543,10 +543,10 @@ mod tests {
         // countries (Iran, Pakistan) are now unmapped like Turkey.
         assert!(regional_grants_for_country("IR").is_empty(), "Phase A: Iran is unmapped (fa cut)");
         assert!(regional_grants_for_country("PK").is_empty(), "Phase A: Pakistan is unmapped (ur cut)");
-        // D6: India maps to NOTHING (Hindi isn't in the lineup; Urdu would be
-        // wrong for most of its users). CC-HINDI-PHASE0 D2 names hi-IN as the
-        // future variant, but D8 grants this file zero authority to register it.
-        assert!(regional_grants_for_country("IN").is_empty(), "D6: India grants nothing");
+        // Hindi entered the lineup 2026-07-25 (Eric's ruling; supersedes the
+        // old D6 "India grants nothing"): India and Fiji now grant hi.
+        assert_eq!(regional_grants_for_country("IN"), vec!["hi"], "India grants Hindi");
+        assert_eq!(regional_grants_for_country("FJ"), vec!["hi"], "Fiji grants Hindi");
         // No cut language has a home country left anywhere in the map.
         for country in ["IT", "NL", "NO", "SE", "SM", "TR", "IR", "PK"] {
             assert!(

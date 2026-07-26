@@ -325,16 +325,18 @@ mod tests {
     #[cfg(not(feature = "audit_preview"))]
     #[test]
     fn inactive_locale_falls_back_to_en() {
-        // A still-gated locale is routed by `locale_for` to the English pool, so
-        // its Daily set matches English; hi is the remaining gated example (ar
-        // ungated 2026-07-25 and draws its own pool now, like Russian before it).
+        // A non-active locale is routed by `locale_for` to the English pool, so
+        // its Daily set matches English; with every registered language active
+        // (hi promoted 2026-07-25), the example is a CUT code (tr).
         let (_, en) = build_words("en", "2026-07-10", false);
-        let (_, hi) = build_words("hi", "2026-07-10", false);
-        assert_eq!(en, hi, "a gated locale should fall back to the English set");
+        let (_, tr) = build_words("tr", "2026-07-10", false);
+        assert_eq!(en, tr, "a non-active locale should fall back to the English set");
         let (_, ru) = build_words("ru", "2026-07-10", false);
         assert_ne!(en, ru, "an active locale draws its own pool");
         let (_, ar) = build_words("ar", "2026-07-10", false);
         assert_ne!(en, ar, "Arabic is active and draws its own pool");
+        let (_, hi) = build_words("hi", "2026-07-10", false);
+        assert_ne!(en, hi, "Hindi is active and draws its own pool");
     }
 
     #[test]

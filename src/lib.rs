@@ -53,8 +53,6 @@ mod testseam;
 mod versus;
 mod viet;
 mod word_data;
-#[cfg(feature = "audit_preview")]
-mod word_data_audit; // unverified draft banks — audit-preview build only
 mod word_stories;
 mod words;
 mod wordid; // CC-SPELL-RACING G-B: stable content-derived word IDs + list hash

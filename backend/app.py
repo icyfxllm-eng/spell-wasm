@@ -68,6 +68,8 @@ LANG_VOICES = {
     "fil": ("fil-PH", "fil-PH-Wavenet-A"),
     "zh": ("cmn-CN", "cmn-CN-Wavenet-A"),
     "ar": ("ar-XA", "ar-XA-Wavenet-B"),
+    # hi (Hindi) — promoted 2026-07-25 (Eric's ruling); Google hi-IN neural voice.
+    "hi": ("hi-IN", "hi-IN-Neural2-A"),
 }
 
 # AZURE-synthesized languages — for locales Google lacks a solid voice for.

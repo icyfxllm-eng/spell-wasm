@@ -43,9 +43,9 @@ pub const AR: &str = "ar";
 /// CC-MASTER-PARITY Track S: Swahili (Kiswahili, sw-TZ). Latin script, LTR —
 /// renders with no special machinery. Real Leipzig CC BY bank.
 pub const SW: &str = "sw";
-/// CC-HINDI-PHASE0: Hindi (Devanagari, LTR). Registered ONLY in the audit-preview
-/// build — D8 grants no authority to register it in production, so BUILTIN_LANGS
-/// below includes it under `audit_preview` and nowhere else.
+/// Hindi (Devanagari, LTR). Was audit-preview-only under CC-HINDI-PHASE0 D8;
+/// PROMOTED to the production registry as the 15th language by Eric's ruling
+/// (2026-07-25) with a full Leipzig-Wikipedia bank (build-hi-bank.py).
 pub const HI: &str = "hi";
 
 /// Built-in word-source languages: (lang code, display name). Adding a language
@@ -151,7 +151,7 @@ use Direction::{Ltr, Rtl};
 ///   Rtl and does not join. This decides whether the answer surface may split a
 ///   word into per-letter elements.
 /// * [`direction`] — which way does it READ? What the play surface sets `dir` from.
-const LANGS_BASE: [(&str, &str, LangStatus, Direction); 14] = [
+const LANGS_BASE: [(&str, &str, LangStatus, Direction); 15] = [
     (EN, "English", Active, Ltr),
     (ES, "Espa\u{f1}ol", Active, Ltr),
     (FR, "Fran\u{e7}ais", Active, Ltr),
@@ -166,21 +166,12 @@ const LANGS_BASE: [(&str, &str, LangStatus, Direction); 14] = [
     (RU, "\u{420}\u{443}\u{441}\u{441}\u{43a}\u{438}\u{439}", Active, Ltr),
     (AR, "\u{627}\u{644}\u{639}\u{631}\u{628}\u{64a}\u{629}", Active, Rtl),
     (SW, "Kiswahili", Active, Ltr),
+    (HI, "\u{939}\u{93f}\u{928}\u{94d}\u{926}\u{940}", Active, Ltr),
 ];
 
-/// Production registry — the base 14, unchanged.
-#[cfg(not(feature = "audit_preview"))]
-pub const BUILTIN_LANGS: [(&str, &str, LangStatus, Direction); 14] = LANGS_BASE;
-
-/// Audit-preview registry — the base 14 plus Hindi (हिन्दी), so it can be reviewed.
-/// Built by referencing LANGS_BASE, not re-listing it, so the two can't drift.
-#[cfg(feature = "audit_preview")]
-pub const BUILTIN_LANGS: [(&str, &str, LangStatus, Direction); 15] = [
-    LANGS_BASE[0], LANGS_BASE[1], LANGS_BASE[2], LANGS_BASE[3], LANGS_BASE[4],
-    LANGS_BASE[5], LANGS_BASE[6], LANGS_BASE[7], LANGS_BASE[8], LANGS_BASE[9],
-    LANGS_BASE[10], LANGS_BASE[11], LANGS_BASE[12], LANGS_BASE[13],
-    (HI, "\u{939}\u{93f}\u{928}\u{94d}\u{926}\u{940}", ComingSoon, Ltr),
-];
+/// THE registry — identical in every build config since Hindi's promotion
+/// (2026-07-25) removed the last audit-only registry difference.
+pub const BUILTIN_LANGS: [(&str, &str, LangStatus, Direction); 15] = LANGS_BASE;
 
 /// THE direction accessor (CC-RTL D3). The play surface sets `dir` from this and
 /// from nothing else. An unknown language reads left-to-right — the safe default,
@@ -265,6 +256,9 @@ pub fn ocr_support(lang: &str) -> OcrSupport {
     match lang {
         EN | ES | FR | DE | PT | PL | VI | KO | JA | ZH | RU | AR => OcrSupport::Native,
         FIL | SW => OcrSupport::EnglishFallback,
+        // hi: Devanagari — absent from Vision's measured list, and the English
+        // recognizer can't read the script, so the photo feature hides.
+        HI => OcrSupport::Unsupported,
         _ => OcrSupport::Unsupported, // unknown/unregistered: fail closed, hide.
     }
 }
@@ -365,8 +359,8 @@ mod registry_tests {
             .collect();
         assert_eq!(
             active,
-            vec!["en", "es", "fr", "de", "pt", "pl", "vi", "ko", "ja", "fil", "zh", "ru", "ar", "sw"],
-            "en + the ten content-ready languages + Russian + Arabic + Swahili are active"
+            vec!["en", "es", "fr", "de", "pt", "pl", "vi", "ko", "ja", "fil", "zh", "ru", "ar", "sw", "hi"],
+            "en + the ten content-ready languages + Russian + Arabic + Swahili + Hindi are active"
         );
     }
 
@@ -375,13 +369,13 @@ mod registry_tests {
     /// deliberately.
     #[test]
     fn registry_is_the_swapped_lineup_of_14() {
-        // The lineup is fixed on LANGS_BASE (14) regardless of build; BUILTIN_LANGS
-        // equals it in production and appends Hindi only under audit_preview.
+        // 15 since Hindi's promotion (2026-07-25): the swapped 14 plus hi. The
+        // registry is now IDENTICAL in every build config.
         let codes: Vec<&str> = LANGS_BASE.iter().map(|(c, _, _, _)| *c).collect();
-        assert_eq!(codes.len(), 14, "14 languages: 13 after the fa/ur cut, plus Swahili (CC-MASTER-PARITY Track S)");
+        assert_eq!(codes.len(), 15, "the swapped 14 plus Hindi (promoted 2026-07-25)");
         assert_eq!(
             codes,
-            vec!["en", "es", "fr", "de", "pt", "pl", "vi", "ko", "ja", "fil", "zh", "ru", "ar", "sw"],
+            vec!["en", "es", "fr", "de", "pt", "pl", "vi", "ko", "ja", "fil", "zh", "ru", "ar", "sw", "hi"],
         );
         // The cut four (CC-LINEUP-SWAP F1), plus Thai (5fc69ff), Turkish
         // (CC-HINDI-PHASE0 D1 — permanently; Hindi replaces it), and Persian/Urdu
@@ -389,12 +383,9 @@ mod registry_tests {
         for gone in ["no", "nb", "sv", "nl", "it", "th", "tr", "fa", "ur"] {
             assert!(!codes.contains(&gone), "{gone} is cut from the registry");
         }
-        // Production ships exactly the base; audit-preview adds Hindi as the 15th.
-        assert_eq!(BUILTIN_LANGS.len(), if cfg!(feature = "audit_preview") { 15 } else { 14 });
-        #[cfg(feature = "audit_preview")]
-        assert_eq!(BUILTIN_LANGS[14].0, "hi", "Hindi is the audit-only 15th entry");
-        #[cfg(not(feature = "audit_preview"))]
-        assert!(!BUILTIN_LANGS.iter().any(|(c, _, _, _)| *c == "hi"), "production registers no Hindi (D8)");
+        // One registry, every build config (the audit-only Hindi split is gone).
+        assert_eq!(BUILTIN_LANGS.len(), 15);
+        assert_eq!(BUILTIN_LANGS[14].0, "hi", "Hindi is the 15th entry everywhere");
     }
 
     /// CC-PHOTO-IMPORT Phase 0 — the OCR-support snapshot, pinned to the G-B
@@ -408,6 +399,7 @@ mod registry_tests {
             ("pt", Native), ("pl", Native), ("vi", Native), ("ko", Native),
             ("ja", Native), ("fil", EnglishFallback), ("zh", Native),
             ("ru", Native), ("ar", Native), ("sw", EnglishFallback),
+            ("hi", Unsupported), // Devanagari: no Vision model (G-B measurement)
         ];
         for (code, want) in expected {
             assert_eq!(ocr_support(code), want, "{code} OCR class drifted from the G-B measurement");

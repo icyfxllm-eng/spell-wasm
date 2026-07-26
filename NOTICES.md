@@ -8,9 +8,10 @@ build inputs and are not redistributed.
 - **Leipzig Corpora Collection** (wortschatz-leipzig.de) — monolingual,
   frequency-ranked word lists (Wikipedia/news editions), **CC BY 4.0**. Used by
   `scripts/build-bigbank.py` (production banks), `scripts/build-zh-bank.py` (the
-  Mandarin `cmn_wikipedia_2021_100K` list), and `scripts/build-draft-banks.py`
-  (the ar/fa/ur/ru/hi audit drafts) to augment or build word banks from real,
-  attested vocabulary. Build input only (cached under `.corpus-cache/`, not
+  Mandarin `cmn_wikipedia_2021_100K` list), `scripts/build-hi-bank.py` (the
+  Hindi production bank, `hin_wikipedia_2021_100K`), and
+  `scripts/build-draft-banks.py` (the ar/fa/ur/ru audit drafts) to augment or
+  build word banks from real, attested vocabulary. Build input only (cached under `.corpus-cache/`, not
   committed); only the filtered word lists ship. Attribution: © the respective
   Wikipedia contributors, via Leipzig, CC BY 4.0.
 

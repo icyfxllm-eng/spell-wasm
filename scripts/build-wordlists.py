@@ -39,7 +39,7 @@ ROOT = Path(__file__).resolve().parent.parent
 # ar joined on Eric's ungate ruling (2026-07-25): sources assets/words/ar/,
 # keyboard ar.json, RTL_SUPPORTED flipped in the same change.
 # and listing them before the sources land would just fail the build.
-LANGS = ["en", "es", "fr", "de", "pt", "pl", "vi", "ko", "ja", "fil", "ru", "sw", "ar"]
+LANGS = ["en", "es", "fr", "de", "pt", "pl", "vi", "ko", "ja", "fil", "ru", "sw", "ar", "hi"]
 TIERS = ["easy", "medium", "hard", "expert"]
 MIN_LEN, MAX_LEN = 2, 16
 # Tier size gate: a floor (no language starved of words) and a ceiling (sanity).
@@ -135,8 +135,11 @@ def build():
                 where = f"{code}/{tier}: {w!r}"
                 # Curation filters (drop + warn): non-letters (fr apostrophe/hyphen
                 # forms, §3.3) and the length cap (de/nl/sv compounds, §3.3).
-                # Filipino keeps the hyphen.
-                if not all(c.isalpha() or (code == "fil" and c == "-") for c in w):
+                # Filipino keeps the hyphen. Combining marks (Mn/Mc) are letters
+                # in spirit — Devanagari matras (hi) fail isalpha() but are part
+                # of the word's spelling; the keyboard charset gate still applies.
+                import unicodedata as _ud
+                if not all(c.isalpha() or _ud.category(c) in ("Mn", "Mc") or (code == "fil" and c == "-") for c in w):
                     warnings.append(f"{where} — dropped (non-alphabetic)")
                     continue
                 if not (min_len <= len(w) <= MAX_LEN):
