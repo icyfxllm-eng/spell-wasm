@@ -842,6 +842,22 @@ fn speak_word(app: &App, variant: &str, rate: f32) {
         api::play_word(&word, variant, rate as f64, &lang, || {});
         return;
     }
+    if s.cur_lang == MINE && s.custom.custom_marks.contains(&s.word) {
+        // CC-PHOTO-IMPORT Phase 5 (gate G-A): an OUT-OF-DICTIONARY import is
+        // spoken on-device only — native AVSpeech first, the browser voice as
+        // fallback. Its text NEVER reaches /api/speak or any network call
+        // (COPPA zero-egress posture; the review sheet disclosed this voice).
+        let code = code_for(&s, MINE); // per-word "Speak in", then set default
+        let primary = code.split(['-', '_']).next().unwrap_or("en").to_string();
+        drop(s);
+        let browser_rate = if variant == "slow" { 0.55 } else { rate };
+        let fb_word = word.clone();
+        let fb_code = code.clone();
+        api::play_device_tts(&word, variant, rate as f64, &primary, move || {
+            speech_out::speak(&fb_word, browser_rate, &fb_code)
+        });
+        return;
+    }
     if s.cur_lang == MINE && backend_speakable(&s, &word) {
         // My Words with a supported "Speak in" language: use that language's
         // native backend voice (ko-KR, ja-JP, …), falling back to the browser's

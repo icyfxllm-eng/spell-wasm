@@ -198,6 +198,15 @@ fn play_server_cache(word: &str, variant: &str, rate: f64, lang: &str, on_fail: 
     play_word_html(word, variant, rate, lang, on_fail);
 }
 
+/// CC-PHOTO-IMPORT Phase 5 (gate G-A): speak a word ON-DEVICE ONLY — native
+/// AVSpeech, no network, the word text never leaves the phone. The public
+/// entry for custom-marked (out-of-dictionary) imports; `on_fail` runs when
+/// no native voice exists (off-iOS, or no voice for `lang`) so the caller can
+/// fall back to the browser voice — which is also on-device.
+pub fn play_device_tts(word: &str, variant: &str, rate: f64, lang: &str, on_fail: impl FnOnce() + 'static) {
+    play_native_tts(word, variant, rate, lang, Box::new(on_fail));
+}
+
 /// Source "native-tts": fully on-device AVSpeech synthesis (no network). Picks
 /// the session voice for `lang` (Decision D3), then speaks. The server "slow"
 /// variant has no native pre-render, so slowness is met by a lower rate here.
