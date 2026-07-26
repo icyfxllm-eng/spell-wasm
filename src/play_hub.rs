@@ -53,17 +53,27 @@ fn launch_for(id: &str) -> Option<&'static str> {
     LAUNCH.iter().find(|(k, _)| *k == id).and_then(|(_, v)| *v)
 }
 
+/// The app's LIVE entitlement resolution — the ONE impure call every surface
+/// shares (hub tiles, the photo camera button), so no two surfaces can disagree
+/// about what's owned. The purchase / region adapters are later phases
+/// (CC-ENTITLEMENTS), so today this resolves FREE_TIER — unless the dev-door
+/// "test entitlements" grant is on, which resolves the audit maximum so gated
+/// features stay testable on the floor device (the override is consumer-build
+/// only and invisible to normal users, like the rest of the dev door).
+pub fn live_entitlements() -> entitlements::EntitlementSet {
+    let dev = crate::storage::get_raw("spell_dev_entitlements").as_deref() == Some("on");
+    entitlements::resolve_entitlements(false, &[], dev)
+}
+
 /// Gather the live context the pure rule needs. The only impure part of the hub.
 fn ctx(app: &App) -> modes::HubCtx {
     let (kid, lang) = {
         let s = app.borrow();
         (s.kid, s.lang.clone())
     };
-    // The purchase / region adapters are later phases (CC-ENTITLEMENTS), so today
-    // this resolves FREE_TIER: not purchased, no regional grants, no audit
-    // override. When those adapters land they feed the same call — the hub does
+    // When the purchase adapters land they feed the same call — the hub does
     // not re-derive entitlement, it asks.
-    let ent = entitlements::resolve_entitlements(false, &[], false);
+    let ent = live_entitlements();
     let mut premium = Vec::new();
     if ent.photo_ocr {
         premium.push("photo_ocr".to_string());

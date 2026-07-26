@@ -202,7 +202,7 @@ pub fn apply_settings(app: &App) {
     crate::say_it::reflect_gating(app);
     // ...and the photo-list camera affordance (a parent-only list surface,
     // hidden in Kid Mode). No-op when the feature flag is off.
-    crate::photo_list::reflect_visibility();
+    crate::photo_list::reflect_visibility(app);
     // Re-evaluate the Spell It Out Loud mic when the study language changes (its
     // visibility depends on the per-language voiceSpell flag + on-device support).
     // No-op when the feature flag is off.

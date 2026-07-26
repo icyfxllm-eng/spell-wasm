@@ -61,6 +61,21 @@ pub fn wire(app: &App) {
         close_menu();
         crate::racing::screen::open(&a_race);
     });
+
+    // "Test entitlements": resolve the audit maximum (Complete) on this device
+    // so premium-gated surfaces (photo camera, its hub tile) stay testable
+    // before the purchase adapters exist. Storage-backed; read by
+    // `play_hub::live_entitlements`. Consumer-build only by the resolver's own
+    // rule (education ignores audit overrides).
+    dom::input("devEntitlements")
+        .set_checked(crate::storage::get_raw("spell_dev_entitlements").as_deref() == Some("on"));
+    let a_ent = app.clone();
+    dom::on::<web_sys::Event, _>("devEntitlements", "change", move |_| {
+        let on = dom::input("devEntitlements").checked();
+        crate::storage::set_raw("spell_dev_entitlements", if on { "on" } else { "off" });
+        // Re-reflect the surfaces that consult entitlements live.
+        crate::photo_list::reflect_visibility(&a_ent);
+    });
     // Spell Aloud is no longer a dev-door overlay: it's a real Play-hub mode
     // (CC-SPELL-ALOUD-INTEGRATION G-INT-1). Only Spell Racing remains dev-gated.
 

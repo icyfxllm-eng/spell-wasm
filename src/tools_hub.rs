@@ -114,7 +114,7 @@ pub fn wire(app: &App) {
 fn apply_reflect(app: &App, flag: &str) {
     match flag {
         "say_it" => crate::say_it::reflect_gating(app),
-        "photo_list" => crate::photo_list::reflect_visibility(),
+        "photo_list" => crate::photo_list::reflect_visibility(app),
         "spell_aloud" => crate::spell_aloud::reflect(app),
         "online_spelloff" => crate::online_spelloff::reflect_gate(),
         // attempts_shields reveals/hides its own settings row + enables Climb

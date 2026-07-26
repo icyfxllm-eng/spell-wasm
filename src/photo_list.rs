@@ -25,16 +25,42 @@ thread_local! {
     static STUDY_LANG: std::cell::RefCell<String> = std::cell::RefCell::new(String::from("en"));
 }
 
-/// Show the camera button only when the feature is on, the native recognizer is
-/// present, and we're not in Kid Mode. Called on init and whenever Kid Mode
-/// toggles (`settings::apply_settings`). A no-op that leaves the button hidden
-/// when the flag is off — preserving "flag OFF = zero diff".
-pub fn reflect_visibility() {
+/// The ONE visibility rule for the camera button (pure — unit-tested below).
+/// Phase 6: recognizer present AND not Kid Mode (Spell Jr stays camera-ABSENT
+/// per the mode-hub absence-not-locks doctrine; the plan's parental-gate open
+/// item resolves as "Kid-absent" until parent-managed child profiles exist)
+/// AND the photo_ocr parent-premium is owned (a free account sees NO camera)
+/// AND the study language has a sound recognition path (registry `ocr_support`).
+fn button_allowed(recognizer: bool, kid: bool, photo_ocr: bool, ocr: crate::consts::OcrSupport) -> bool {
+    recognizer && !kid && photo_ocr && ocr != crate::consts::OcrSupport::Unsupported
+}
+
+/// Show the camera button only when `button_allowed` says so. Called on init,
+/// whenever Kid Mode toggles (`settings::apply_settings`), and on tools-hub
+/// flag flips. A no-op that leaves the button hidden when the flag is off —
+/// preserving "flag OFF = zero diff".
+pub fn reflect_visibility(app: &App) {
     if !flags::photo_list() {
         return; // button keeps its default `btn-hide`; nothing to show.
     }
     let kid = dom::doc().body().map(|b| b.class_list().contains("kid")).unwrap_or(false);
-    let show = native_lang::supported() && !kid;
+    // OCR support is judged for the language the import would classify under —
+    // the study language, or the saved speak-lang's primary subtag for My Words
+    // (the same rule `on_recognized` uses).
+    let study = {
+        let s = app.borrow();
+        if s.lang == crate::consts::MINE {
+            s.custom.speak_lang.split(['-', '_']).next().unwrap_or("en").to_lowercase()
+        } else {
+            s.lang.clone()
+        }
+    };
+    let show = button_allowed(
+        native_lang::supported(),
+        kid,
+        crate::play_hub::live_entitlements().photo_ocr,
+        crate::consts::ocr_support(&study),
+    );
     dom::toggle_class("photoBtn", "btn-hide", !show);
 }
 
@@ -96,7 +122,7 @@ pub fn wire(app: &App) {
         reflag(&input);
     });
 
-    reflect_visibility();
+    reflect_visibility(app);
 }
 
 fn start_capture(app: &App) {
@@ -405,4 +431,23 @@ fn build_lang_options(app: &App) {
         "en-US".to_string()
     };
     dom::select("photoLang").set_value(&value);
+}
+
+#[cfg(test)]
+mod gating_tests {
+    use super::button_allowed;
+    use crate::consts::OcrSupport::{EnglishFallback, Native, Unsupported};
+
+    /// Phase 6 / acceptance #6: the camera is ABSENT (not locked) for a free
+    /// account, in Spell Jr, without a recognizer, or for a language with no
+    /// sound OCR path — and shown only when every condition holds.
+    #[test]
+    fn camera_button_rule() {
+        assert!(button_allowed(true, false, true, Native));
+        assert!(button_allowed(true, false, true, EnglishFallback), "fallback langs keep the camera");
+        assert!(!button_allowed(true, false, false, Native), "free account: no camera");
+        assert!(!button_allowed(true, true, true, Native), "Spell Jr: camera absent");
+        assert!(!button_allowed(false, false, true, Native), "no recognizer: no camera");
+        assert!(!button_allowed(true, false, true, Unsupported), "unsupported language: hidden");
+    }
 }
