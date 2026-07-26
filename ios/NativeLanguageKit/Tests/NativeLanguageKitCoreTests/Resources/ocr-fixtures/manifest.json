@@ -1,0 +1,1406 @@
+[
+  {
+    "file" : "de-print-helvetica.png",
+    "handwriting" : false,
+    "lang" : "de",
+    "style" : "print-helvetica",
+    "words" : [
+      "Auge",
+      "Auto",
+      "Baum",
+      "Berg",
+      "Blume",
+      "Brot",
+      "Buch",
+      "Bär",
+      "Dorf",
+      "Ente"
+    ]
+  },
+  {
+    "file" : "de-print-times.png",
+    "handwriting" : false,
+    "lang" : "de",
+    "style" : "print-times",
+    "words" : [
+      "Auge",
+      "Auto",
+      "Baum",
+      "Berg",
+      "Blume",
+      "Brot",
+      "Buch",
+      "Bär",
+      "Dorf",
+      "Ente"
+    ]
+  },
+  {
+    "file" : "de-print-menlo.png",
+    "handwriting" : false,
+    "lang" : "de",
+    "style" : "print-menlo",
+    "words" : [
+      "Auge",
+      "Auto",
+      "Baum",
+      "Berg",
+      "Blume",
+      "Brot",
+      "Buch",
+      "Bär",
+      "Dorf",
+      "Ente"
+    ]
+  },
+  {
+    "file" : "de-hand-noteworthy.png",
+    "handwriting" : true,
+    "lang" : "de",
+    "style" : "hand-noteworthy",
+    "words" : [
+      "Auge",
+      "Auto",
+      "Baum",
+      "Berg",
+      "Blume",
+      "Brot",
+      "Buch",
+      "Bär",
+      "Dorf",
+      "Ente"
+    ]
+  },
+  {
+    "file" : "de-hand-markerfelt.png",
+    "handwriting" : true,
+    "lang" : "de",
+    "style" : "hand-markerfelt",
+    "words" : [
+      "Auge",
+      "Auto",
+      "Baum",
+      "Berg",
+      "Blume",
+      "Brot",
+      "Buch",
+      "Bär",
+      "Dorf",
+      "Ente"
+    ]
+  },
+  {
+    "file" : "de-hand-bradley.png",
+    "handwriting" : true,
+    "lang" : "de",
+    "style" : "hand-bradley",
+    "words" : [
+      "Auge",
+      "Auto",
+      "Baum",
+      "Berg",
+      "Blume",
+      "Brot",
+      "Buch",
+      "Bär",
+      "Dorf",
+      "Ente"
+    ]
+  },
+  {
+    "file" : "en-print-helvetica.png",
+    "handwriting" : false,
+    "lang" : "en",
+    "style" : "print-helvetica",
+    "words" : [
+      "able",
+      "age",
+      "air",
+      "all",
+      "also",
+      "and",
+      "any",
+      "are",
+      "area",
+      "back"
+    ]
+  },
+  {
+    "file" : "en-print-times.png",
+    "handwriting" : false,
+    "lang" : "en",
+    "style" : "print-times",
+    "words" : [
+      "able",
+      "age",
+      "air",
+      "all",
+      "also",
+      "and",
+      "any",
+      "are",
+      "area",
+      "back"
+    ]
+  },
+  {
+    "file" : "en-print-menlo.png",
+    "handwriting" : false,
+    "lang" : "en",
+    "style" : "print-menlo",
+    "words" : [
+      "able",
+      "age",
+      "air",
+      "all",
+      "also",
+      "and",
+      "any",
+      "are",
+      "area",
+      "back"
+    ]
+  },
+  {
+    "file" : "en-hand-noteworthy.png",
+    "handwriting" : true,
+    "lang" : "en",
+    "style" : "hand-noteworthy",
+    "words" : [
+      "able",
+      "age",
+      "air",
+      "all",
+      "also",
+      "and",
+      "any",
+      "are",
+      "area",
+      "back"
+    ]
+  },
+  {
+    "file" : "en-hand-markerfelt.png",
+    "handwriting" : true,
+    "lang" : "en",
+    "style" : "hand-markerfelt",
+    "words" : [
+      "able",
+      "age",
+      "air",
+      "all",
+      "also",
+      "and",
+      "any",
+      "are",
+      "area",
+      "back"
+    ]
+  },
+  {
+    "file" : "en-hand-bradley.png",
+    "handwriting" : true,
+    "lang" : "en",
+    "style" : "hand-bradley",
+    "words" : [
+      "able",
+      "age",
+      "air",
+      "all",
+      "also",
+      "and",
+      "any",
+      "are",
+      "area",
+      "back"
+    ]
+  },
+  {
+    "file" : "es-print-helvetica.png",
+    "handwriting" : false,
+    "lang" : "es",
+    "style" : "print-helvetica",
+    "words" : [
+      "agua",
+      "aire",
+      "algo",
+      "allí",
+      "alta",
+      "alto",
+      "amor",
+      "ante",
+      "arte",
+      "así"
+    ]
+  },
+  {
+    "file" : "es-print-times.png",
+    "handwriting" : false,
+    "lang" : "es",
+    "style" : "print-times",
+    "words" : [
+      "agua",
+      "aire",
+      "algo",
+      "allí",
+      "alta",
+      "alto",
+      "amor",
+      "ante",
+      "arte",
+      "así"
+    ]
+  },
+  {
+    "file" : "es-print-menlo.png",
+    "handwriting" : false,
+    "lang" : "es",
+    "style" : "print-menlo",
+    "words" : [
+      "agua",
+      "aire",
+      "algo",
+      "allí",
+      "alta",
+      "alto",
+      "amor",
+      "ante",
+      "arte",
+      "así"
+    ]
+  },
+  {
+    "file" : "es-hand-noteworthy.png",
+    "handwriting" : true,
+    "lang" : "es",
+    "style" : "hand-noteworthy",
+    "words" : [
+      "agua",
+      "aire",
+      "algo",
+      "allí",
+      "alta",
+      "alto",
+      "amor",
+      "ante",
+      "arte",
+      "así"
+    ]
+  },
+  {
+    "file" : "es-hand-markerfelt.png",
+    "handwriting" : true,
+    "lang" : "es",
+    "style" : "hand-markerfelt",
+    "words" : [
+      "agua",
+      "aire",
+      "algo",
+      "allí",
+      "alta",
+      "alto",
+      "amor",
+      "ante",
+      "arte",
+      "así"
+    ]
+  },
+  {
+    "file" : "es-hand-bradley.png",
+    "handwriting" : true,
+    "lang" : "es",
+    "style" : "hand-bradley",
+    "words" : [
+      "agua",
+      "aire",
+      "algo",
+      "allí",
+      "alta",
+      "alto",
+      "amor",
+      "ante",
+      "arte",
+      "así"
+    ]
+  },
+  {
+    "file" : "fil-print-helvetica.png",
+    "handwriting" : false,
+    "lang" : "fil",
+    "style" : "print-helvetica",
+    "words" : [
+      "agad",
+      "ahas",
+      "akda",
+      "ako",
+      "alam",
+      "ama",
+      "anak",
+      "and",
+      "ang",
+      "anim"
+    ]
+  },
+  {
+    "file" : "fil-print-times.png",
+    "handwriting" : false,
+    "lang" : "fil",
+    "style" : "print-times",
+    "words" : [
+      "agad",
+      "ahas",
+      "akda",
+      "ako",
+      "alam",
+      "ama",
+      "anak",
+      "and",
+      "ang",
+      "anim"
+    ]
+  },
+  {
+    "file" : "fil-print-menlo.png",
+    "handwriting" : false,
+    "lang" : "fil",
+    "style" : "print-menlo",
+    "words" : [
+      "agad",
+      "ahas",
+      "akda",
+      "ako",
+      "alam",
+      "ama",
+      "anak",
+      "and",
+      "ang",
+      "anim"
+    ]
+  },
+  {
+    "file" : "fil-hand-noteworthy.png",
+    "handwriting" : true,
+    "lang" : "fil",
+    "style" : "hand-noteworthy",
+    "words" : [
+      "agad",
+      "ahas",
+      "akda",
+      "ako",
+      "alam",
+      "ama",
+      "anak",
+      "and",
+      "ang",
+      "anim"
+    ]
+  },
+  {
+    "file" : "fil-hand-markerfelt.png",
+    "handwriting" : true,
+    "lang" : "fil",
+    "style" : "hand-markerfelt",
+    "words" : [
+      "agad",
+      "ahas",
+      "akda",
+      "ako",
+      "alam",
+      "ama",
+      "anak",
+      "and",
+      "ang",
+      "anim"
+    ]
+  },
+  {
+    "file" : "fil-hand-bradley.png",
+    "handwriting" : true,
+    "lang" : "fil",
+    "style" : "hand-bradley",
+    "words" : [
+      "agad",
+      "ahas",
+      "akda",
+      "ako",
+      "alam",
+      "ama",
+      "anak",
+      "and",
+      "ang",
+      "anim"
+    ]
+  },
+  {
+    "file" : "fr-print-helvetica.png",
+    "handwriting" : false,
+    "lang" : "fr",
+    "style" : "print-helvetica",
+    "words" : [
+      "afin",
+      "ami",
+      "ans",
+      "arbre",
+      "aux",
+      "avec",
+      "base",
+      "bien",
+      "blanc",
+      "bleu"
+    ]
+  },
+  {
+    "file" : "fr-print-times.png",
+    "handwriting" : false,
+    "lang" : "fr",
+    "style" : "print-times",
+    "words" : [
+      "afin",
+      "ami",
+      "ans",
+      "arbre",
+      "aux",
+      "avec",
+      "base",
+      "bien",
+      "blanc",
+      "bleu"
+    ]
+  },
+  {
+    "file" : "fr-print-menlo.png",
+    "handwriting" : false,
+    "lang" : "fr",
+    "style" : "print-menlo",
+    "words" : [
+      "afin",
+      "ami",
+      "ans",
+      "arbre",
+      "aux",
+      "avec",
+      "base",
+      "bien",
+      "blanc",
+      "bleu"
+    ]
+  },
+  {
+    "file" : "fr-hand-noteworthy.png",
+    "handwriting" : true,
+    "lang" : "fr",
+    "style" : "hand-noteworthy",
+    "words" : [
+      "afin",
+      "ami",
+      "ans",
+      "arbre",
+      "aux",
+      "avec",
+      "base",
+      "bien",
+      "blanc",
+      "bleu"
+    ]
+  },
+  {
+    "file" : "fr-hand-markerfelt.png",
+    "handwriting" : true,
+    "lang" : "fr",
+    "style" : "hand-markerfelt",
+    "words" : [
+      "afin",
+      "ami",
+      "ans",
+      "arbre",
+      "aux",
+      "avec",
+      "base",
+      "bien",
+      "blanc",
+      "bleu"
+    ]
+  },
+  {
+    "file" : "fr-hand-bradley.png",
+    "handwriting" : true,
+    "lang" : "fr",
+    "style" : "hand-bradley",
+    "words" : [
+      "afin",
+      "ami",
+      "ans",
+      "arbre",
+      "aux",
+      "avec",
+      "base",
+      "bien",
+      "blanc",
+      "bleu"
+    ]
+  },
+  {
+    "file" : "ja-print-helvetica.png",
+    "handwriting" : false,
+    "lang" : "ja",
+    "style" : "print-helvetica",
+    "words" : [
+      "あお",
+      "あか",
+      "あき",
+      "あさ",
+      "あし",
+      "あっ",
+      "あまり",
+      "あめ",
+      "あり",
+      "ある"
+    ]
+  },
+  {
+    "file" : "ja-print-times.png",
+    "handwriting" : false,
+    "lang" : "ja",
+    "style" : "print-times",
+    "words" : [
+      "あお",
+      "あか",
+      "あき",
+      "あさ",
+      "あし",
+      "あっ",
+      "あまり",
+      "あめ",
+      "あり",
+      "ある"
+    ]
+  },
+  {
+    "file" : "ja-print-menlo.png",
+    "handwriting" : false,
+    "lang" : "ja",
+    "style" : "print-menlo",
+    "words" : [
+      "あお",
+      "あか",
+      "あき",
+      "あさ",
+      "あし",
+      "あっ",
+      "あまり",
+      "あめ",
+      "あり",
+      "ある"
+    ]
+  },
+  {
+    "file" : "ja-hand-noteworthy.png",
+    "handwriting" : true,
+    "lang" : "ja",
+    "style" : "hand-noteworthy",
+    "words" : [
+      "あお",
+      "あか",
+      "あき",
+      "あさ",
+      "あし",
+      "あっ",
+      "あまり",
+      "あめ",
+      "あり",
+      "ある"
+    ]
+  },
+  {
+    "file" : "ja-hand-markerfelt.png",
+    "handwriting" : true,
+    "lang" : "ja",
+    "style" : "hand-markerfelt",
+    "words" : [
+      "あお",
+      "あか",
+      "あき",
+      "あさ",
+      "あし",
+      "あっ",
+      "あまり",
+      "あめ",
+      "あり",
+      "ある"
+    ]
+  },
+  {
+    "file" : "ja-hand-bradley.png",
+    "handwriting" : true,
+    "lang" : "ja",
+    "style" : "hand-bradley",
+    "words" : [
+      "あお",
+      "あか",
+      "あき",
+      "あさ",
+      "あし",
+      "あっ",
+      "あまり",
+      "あめ",
+      "あり",
+      "ある"
+    ]
+  },
+  {
+    "file" : "ko-print-helvetica.png",
+    "handwriting" : false,
+    "lang" : "ko",
+    "style" : "print-helvetica",
+    "words" : [
+      "가운데",
+      "가장",
+      "가지",
+      "가지고",
+      "가진",
+      "각각",
+      "감",
+      "강",
+      "같다",
+      "같은"
+    ]
+  },
+  {
+    "file" : "ko-print-times.png",
+    "handwriting" : false,
+    "lang" : "ko",
+    "style" : "print-times",
+    "words" : [
+      "가운데",
+      "가장",
+      "가지",
+      "가지고",
+      "가진",
+      "각각",
+      "감",
+      "강",
+      "같다",
+      "같은"
+    ]
+  },
+  {
+    "file" : "ko-print-menlo.png",
+    "handwriting" : false,
+    "lang" : "ko",
+    "style" : "print-menlo",
+    "words" : [
+      "가운데",
+      "가장",
+      "가지",
+      "가지고",
+      "가진",
+      "각각",
+      "감",
+      "강",
+      "같다",
+      "같은"
+    ]
+  },
+  {
+    "file" : "ko-hand-noteworthy.png",
+    "handwriting" : true,
+    "lang" : "ko",
+    "style" : "hand-noteworthy",
+    "words" : [
+      "가운데",
+      "가장",
+      "가지",
+      "가지고",
+      "가진",
+      "각각",
+      "감",
+      "강",
+      "같다",
+      "같은"
+    ]
+  },
+  {
+    "file" : "ko-hand-markerfelt.png",
+    "handwriting" : true,
+    "lang" : "ko",
+    "style" : "hand-markerfelt",
+    "words" : [
+      "가운데",
+      "가장",
+      "가지",
+      "가지고",
+      "가진",
+      "각각",
+      "감",
+      "강",
+      "같다",
+      "같은"
+    ]
+  },
+  {
+    "file" : "ko-hand-bradley.png",
+    "handwriting" : true,
+    "lang" : "ko",
+    "style" : "hand-bradley",
+    "words" : [
+      "가운데",
+      "가장",
+      "가지",
+      "가지고",
+      "가진",
+      "각각",
+      "감",
+      "강",
+      "같다",
+      "같은"
+    ]
+  },
+  {
+    "file" : "pl-print-helvetica.png",
+    "handwriting" : false,
+    "lang" : "pl",
+    "style" : "print-helvetica",
+    "words" : [
+      "aby",
+      "albo",
+      "ale",
+      "ani",
+      "banan",
+      "bez",
+      "brak",
+      "brat",
+      "byli",
+      "być"
+    ]
+  },
+  {
+    "file" : "pl-print-times.png",
+    "handwriting" : false,
+    "lang" : "pl",
+    "style" : "print-times",
+    "words" : [
+      "aby",
+      "albo",
+      "ale",
+      "ani",
+      "banan",
+      "bez",
+      "brak",
+      "brat",
+      "byli",
+      "być"
+    ]
+  },
+  {
+    "file" : "pl-print-menlo.png",
+    "handwriting" : false,
+    "lang" : "pl",
+    "style" : "print-menlo",
+    "words" : [
+      "aby",
+      "albo",
+      "ale",
+      "ani",
+      "banan",
+      "bez",
+      "brak",
+      "brat",
+      "byli",
+      "być"
+    ]
+  },
+  {
+    "file" : "pl-hand-noteworthy.png",
+    "handwriting" : true,
+    "lang" : "pl",
+    "style" : "hand-noteworthy",
+    "words" : [
+      "aby",
+      "albo",
+      "ale",
+      "ani",
+      "banan",
+      "bez",
+      "brak",
+      "brat",
+      "byli",
+      "być"
+    ]
+  },
+  {
+    "file" : "pl-hand-markerfelt.png",
+    "handwriting" : true,
+    "lang" : "pl",
+    "style" : "hand-markerfelt",
+    "words" : [
+      "aby",
+      "albo",
+      "ale",
+      "ani",
+      "banan",
+      "bez",
+      "brak",
+      "brat",
+      "byli",
+      "być"
+    ]
+  },
+  {
+    "file" : "pl-hand-bradley.png",
+    "handwriting" : true,
+    "lang" : "pl",
+    "style" : "hand-bradley",
+    "words" : [
+      "aby",
+      "albo",
+      "ale",
+      "ani",
+      "banan",
+      "bez",
+      "brak",
+      "brat",
+      "byli",
+      "być"
+    ]
+  },
+  {
+    "file" : "pt-print-helvetica.png",
+    "handwriting" : false,
+    "lang" : "pt",
+    "style" : "print-helvetica",
+    "words" : [
+      "algo",
+      "alta",
+      "alto",
+      "além",
+      "amor",
+      "and",
+      "ano",
+      "anos",
+      "aos",
+      "após"
+    ]
+  },
+  {
+    "file" : "pt-print-times.png",
+    "handwriting" : false,
+    "lang" : "pt",
+    "style" : "print-times",
+    "words" : [
+      "algo",
+      "alta",
+      "alto",
+      "além",
+      "amor",
+      "and",
+      "ano",
+      "anos",
+      "aos",
+      "após"
+    ]
+  },
+  {
+    "file" : "pt-print-menlo.png",
+    "handwriting" : false,
+    "lang" : "pt",
+    "style" : "print-menlo",
+    "words" : [
+      "algo",
+      "alta",
+      "alto",
+      "além",
+      "amor",
+      "and",
+      "ano",
+      "anos",
+      "aos",
+      "após"
+    ]
+  },
+  {
+    "file" : "pt-hand-noteworthy.png",
+    "handwriting" : true,
+    "lang" : "pt",
+    "style" : "hand-noteworthy",
+    "words" : [
+      "algo",
+      "alta",
+      "alto",
+      "além",
+      "amor",
+      "and",
+      "ano",
+      "anos",
+      "aos",
+      "após"
+    ]
+  },
+  {
+    "file" : "pt-hand-markerfelt.png",
+    "handwriting" : true,
+    "lang" : "pt",
+    "style" : "hand-markerfelt",
+    "words" : [
+      "algo",
+      "alta",
+      "alto",
+      "além",
+      "amor",
+      "and",
+      "ano",
+      "anos",
+      "aos",
+      "após"
+    ]
+  },
+  {
+    "file" : "pt-hand-bradley.png",
+    "handwriting" : true,
+    "lang" : "pt",
+    "style" : "hand-bradley",
+    "words" : [
+      "algo",
+      "alta",
+      "alto",
+      "além",
+      "amor",
+      "and",
+      "ano",
+      "anos",
+      "aos",
+      "após"
+    ]
+  },
+  {
+    "file" : "ru-print-helvetica.png",
+    "handwriting" : false,
+    "lang" : "ru",
+    "style" : "print-helvetica",
+    "words" : [
+      "абу",
+      "акт",
+      "англ",
+      "атак",
+      "баз",
+      "база",
+      "базе",
+      "базу",
+      "базы",
+      "баку"
+    ]
+  },
+  {
+    "file" : "ru-print-times.png",
+    "handwriting" : false,
+    "lang" : "ru",
+    "style" : "print-times",
+    "words" : [
+      "абу",
+      "акт",
+      "англ",
+      "атак",
+      "баз",
+      "база",
+      "базе",
+      "базу",
+      "базы",
+      "баку"
+    ]
+  },
+  {
+    "file" : "ru-print-menlo.png",
+    "handwriting" : false,
+    "lang" : "ru",
+    "style" : "print-menlo",
+    "words" : [
+      "абу",
+      "акт",
+      "англ",
+      "атак",
+      "баз",
+      "база",
+      "базе",
+      "базу",
+      "базы",
+      "баку"
+    ]
+  },
+  {
+    "file" : "ru-hand-noteworthy.png",
+    "handwriting" : true,
+    "lang" : "ru",
+    "style" : "hand-noteworthy",
+    "words" : [
+      "абу",
+      "акт",
+      "англ",
+      "атак",
+      "баз",
+      "база",
+      "базе",
+      "базу",
+      "базы",
+      "баку"
+    ]
+  },
+  {
+    "file" : "ru-hand-markerfelt.png",
+    "handwriting" : true,
+    "lang" : "ru",
+    "style" : "hand-markerfelt",
+    "words" : [
+      "абу",
+      "акт",
+      "англ",
+      "атак",
+      "баз",
+      "база",
+      "базе",
+      "базу",
+      "базы",
+      "баку"
+    ]
+  },
+  {
+    "file" : "ru-hand-bradley.png",
+    "handwriting" : true,
+    "lang" : "ru",
+    "style" : "hand-bradley",
+    "words" : [
+      "абу",
+      "акт",
+      "англ",
+      "атак",
+      "баз",
+      "база",
+      "базе",
+      "базу",
+      "базы",
+      "баку"
+    ]
+  },
+  {
+    "file" : "sw-print-helvetica.png",
+    "handwriting" : false,
+    "lang" : "sw",
+    "style" : "print-helvetica",
+    "words" : [
+      "ada",
+      "adui",
+      "afya",
+      "aga",
+      "age",
+      "aibu",
+      "aina",
+      "air",
+      "ajue",
+      "ala"
+    ]
+  },
+  {
+    "file" : "sw-print-times.png",
+    "handwriting" : false,
+    "lang" : "sw",
+    "style" : "print-times",
+    "words" : [
+      "ada",
+      "adui",
+      "afya",
+      "aga",
+      "age",
+      "aibu",
+      "aina",
+      "air",
+      "ajue",
+      "ala"
+    ]
+  },
+  {
+    "file" : "sw-print-menlo.png",
+    "handwriting" : false,
+    "lang" : "sw",
+    "style" : "print-menlo",
+    "words" : [
+      "ada",
+      "adui",
+      "afya",
+      "aga",
+      "age",
+      "aibu",
+      "aina",
+      "air",
+      "ajue",
+      "ala"
+    ]
+  },
+  {
+    "file" : "sw-hand-noteworthy.png",
+    "handwriting" : true,
+    "lang" : "sw",
+    "style" : "hand-noteworthy",
+    "words" : [
+      "ada",
+      "adui",
+      "afya",
+      "aga",
+      "age",
+      "aibu",
+      "aina",
+      "air",
+      "ajue",
+      "ala"
+    ]
+  },
+  {
+    "file" : "sw-hand-markerfelt.png",
+    "handwriting" : true,
+    "lang" : "sw",
+    "style" : "hand-markerfelt",
+    "words" : [
+      "ada",
+      "adui",
+      "afya",
+      "aga",
+      "age",
+      "aibu",
+      "aina",
+      "air",
+      "ajue",
+      "ala"
+    ]
+  },
+  {
+    "file" : "sw-hand-bradley.png",
+    "handwriting" : true,
+    "lang" : "sw",
+    "style" : "hand-bradley",
+    "words" : [
+      "ada",
+      "adui",
+      "afya",
+      "aga",
+      "age",
+      "aibu",
+      "aina",
+      "air",
+      "ajue",
+      "ala"
+    ]
+  },
+  {
+    "file" : "vi-print-helvetica.png",
+    "handwriting" : false,
+    "lang" : "vi",
+    "style" : "print-helvetica",
+    "words" : [
+      "anh",
+      "bay",
+      "bàn",
+      "bán",
+      "bát",
+      "bên",
+      "búa",
+      "bút",
+      "bơi",
+      "bản"
+    ]
+  },
+  {
+    "file" : "vi-print-times.png",
+    "handwriting" : false,
+    "lang" : "vi",
+    "style" : "print-times",
+    "words" : [
+      "anh",
+      "bay",
+      "bàn",
+      "bán",
+      "bát",
+      "bên",
+      "búa",
+      "bút",
+      "bơi",
+      "bản"
+    ]
+  },
+  {
+    "file" : "vi-print-menlo.png",
+    "handwriting" : false,
+    "lang" : "vi",
+    "style" : "print-menlo",
+    "words" : [
+      "anh",
+      "bay",
+      "bàn",
+      "bán",
+      "bát",
+      "bên",
+      "búa",
+      "bút",
+      "bơi",
+      "bản"
+    ]
+  },
+  {
+    "file" : "vi-hand-noteworthy.png",
+    "handwriting" : true,
+    "lang" : "vi",
+    "style" : "hand-noteworthy",
+    "words" : [
+      "anh",
+      "bay",
+      "bàn",
+      "bán",
+      "bát",
+      "bên",
+      "búa",
+      "bút",
+      "bơi",
+      "bản"
+    ]
+  },
+  {
+    "file" : "vi-hand-markerfelt.png",
+    "handwriting" : true,
+    "lang" : "vi",
+    "style" : "hand-markerfelt",
+    "words" : [
+      "anh",
+      "bay",
+      "bàn",
+      "bán",
+      "bát",
+      "bên",
+      "búa",
+      "bút",
+      "bơi",
+      "bản"
+    ]
+  },
+  {
+    "file" : "vi-hand-bradley.png",
+    "handwriting" : true,
+    "lang" : "vi",
+    "style" : "hand-bradley",
+    "words" : [
+      "anh",
+      "bay",
+      "bàn",
+      "bán",
+      "bát",
+      "bên",
+      "búa",
+      "bút",
+      "bơi",
+      "bản"
+    ]
+  },
+  {
+    "file" : "zh-print-helvetica.png",
+    "handwriting" : false,
+    "lang" : "zh",
+    "style" : "print-helvetica",
+    "words" : [
+      "我们",
+      "没有",
+      "他们",
+      "什么",
+      "现在",
+      "知道",
+      "时候",
+      "工作",
+      "你们",
+      "时间"
+    ]
+  },
+  {
+    "file" : "zh-print-times.png",
+    "handwriting" : false,
+    "lang" : "zh",
+    "style" : "print-times",
+    "words" : [
+      "我们",
+      "没有",
+      "他们",
+      "什么",
+      "现在",
+      "知道",
+      "时候",
+      "工作",
+      "你们",
+      "时间"
+    ]
+  },
+  {
+    "file" : "zh-print-menlo.png",
+    "handwriting" : false,
+    "lang" : "zh",
+    "style" : "print-menlo",
+    "words" : [
+      "我们",
+      "没有",
+      "他们",
+      "什么",
+      "现在",
+      "知道",
+      "时候",
+      "工作",
+      "你们",
+      "时间"
+    ]
+  },
+  {
+    "file" : "zh-hand-noteworthy.png",
+    "handwriting" : true,
+    "lang" : "zh",
+    "style" : "hand-noteworthy",
+    "words" : [
+      "我们",
+      "没有",
+      "他们",
+      "什么",
+      "现在",
+      "知道",
+      "时候",
+      "工作",
+      "你们",
+      "时间"
+    ]
+  },
+  {
+    "file" : "zh-hand-markerfelt.png",
+    "handwriting" : true,
+    "lang" : "zh",
+    "style" : "hand-markerfelt",
+    "words" : [
+      "我们",
+      "没有",
+      "他们",
+      "什么",
+      "现在",
+      "知道",
+      "时候",
+      "工作",
+      "你们",
+      "时间"
+    ]
+  },
+  {
+    "file" : "zh-hand-bradley.png",
+    "handwriting" : true,
+    "lang" : "zh",
+    "style" : "hand-bradley",
+    "words" : [
+      "我们",
+      "没有",
+      "他们",
+      "什么",
+      "现在",
+      "知道",
+      "时候",
+      "工作",
+      "你们",
+      "时间"
+    ]
+  }
+]

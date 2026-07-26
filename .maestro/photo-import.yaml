@@ -1,0 +1,36 @@
+# CC-PHOTO-IMPORT Phase 7 — acceptance #7: capture → review → import → the word
+# is playable in My Words.
+#
+# Prereqs (the flow can't create these itself):
+#   1. A booted simulator with the app installed (net.spellgame.app).
+#   2. A fixture pushed into the photo library:
+#        xcrun simctl addmedia booted \
+#          ios/NativeLanguageKit/Tests/NativeLanguageKitCoreTests/Resources/ocr-fixtures/en-print-helvetica.png
+#   3. Dev entitlements ON (5 taps on the SPELL logo → "Test entitlements"),
+#      since the camera is premium-gated (Phase 6).
+#
+# On the simulator the capture path falls back to the PHOTO LIBRARY picker
+# (no camera/document-scanner hardware), which is exactly what lets this flow
+# run headless: it picks the injected fixture instead of scanning paper.
+#
+# Run:  maestro test .maestro/photo-import.yaml
+appId: net.spellgame.app
+---
+- launchApp
+# Open My Words and start the photo flow.
+- tapOn: "＋ My words"
+- tapOn: "📷 From a photo"
+# PHPicker (library fallback): choose the injected fixture (most recent photo).
+- tapOn:
+    point: "50%,30%"   # first grid cell in the picker
+# Review sheet: the fixture's first word became a chip; save the batch.
+- assertVisible: "Snap a word list"
+- assertVisible: "able"            # en-print-helvetica fixture, word 1
+- tapOn: "Save these words"
+# Import landed: the undo affordance appears and My Words is the active source.
+- assertVisible: "Undo import"
+# The imported word is playable: serve a word from My Words.
+- tapOn:
+    id: "orb"
+# A round is active with the imported list (answer entry visible).
+- assertVisible: "your spelling"

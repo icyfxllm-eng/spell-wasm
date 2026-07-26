@@ -29,16 +29,31 @@ public enum WordListRecognizer {
     /// - Returns: the top candidate string for each recognized line, top to
     ///   bottom.
     public static func recognizeLines(in cgImage: CGImage, languages: [String] = []) throws -> [String] {
+        try recognizeLinesDetailed(in: cgImage, languages: languages).map { $0.text }
+    }
+
+    /// `recognizeLines` plus Vision's per-line confidence, with the correction
+    /// profile the registry drives in production (CC-PHOTO-IMPORT Phase 2):
+    /// `correction: false` is the EnglishFallback profile — the English
+    /// recognizer must NOT "correct" a Filipino/Swahili word into a lookalike
+    /// English one; the word banks validate instead (G-C).
+    public static func recognizeLinesDetailed(
+        in cgImage: CGImage,
+        languages: [String] = [],
+        correction: Bool = true
+    ) throws -> [(text: String, confidence: Float)] {
         let request = VNRecognizeTextRequest()
         request.recognitionLevel = .accurate
-        request.usesLanguageCorrection = true
+        request.usesLanguageCorrection = correction
         if !languages.isEmpty {
             request.recognitionLanguages = languages
         }
         let handler = VNImageRequestHandler(cgImage: cgImage, options: [:])
         try handler.perform([request])
         let observations = request.results ?? []
-        return observations.compactMap { $0.topCandidates(1).first?.string }
+        return observations.compactMap { obs in
+            obs.topCandidates(1).first.map { ($0.string, $0.confidence) }
+        }
     }
 
     /// Shape-only cleanup mirroring the Rust parser: split lines on whitespace,
