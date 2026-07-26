@@ -35,6 +35,11 @@ fn tables() -> &'static HashMap<&'static str, Table> {
         m.insert("ja", parse(include_str!("i18n/locales/ja.json")));
         m.insert("zh", parse(include_str!("i18n/locales/zh.json")));
         m.insert("fil", parse(include_str!("i18n/locales/fil.json")));
+        // Study-language parity (2026-07-25): menus follow the language for the
+        // freshly activated Arabic + Hindi too. Machine-drafted pending native
+        // review, like their word banks.
+        m.insert("ar", parse(include_str!("i18n/locales/ar.json")));
+        m.insert("hi", parse(include_str!("i18n/locales/hi.json")));
         m
     })
 }
