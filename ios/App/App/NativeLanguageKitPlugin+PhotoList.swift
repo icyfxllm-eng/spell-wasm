@@ -4,6 +4,7 @@ import UIKit
 import PhotosUI
 import Vision
 import VisionKit
+import NativeLanguageKitCore
 
 // Feature F1 "Photo-to-word-list" — on-device VisionKit OCR, kept as an
 // extension so the core plugin file stays focused on the language capabilities.
@@ -91,7 +92,16 @@ extension NativeLanguageKitPlugin {
                     request.automaticallyDetectsLanguage = self.recognitionCorrection
                 }
                 if !self.recognitionLanguages.isEmpty {
-                    request.recognitionLanguages = self.recognitionLanguages
+                    var langs = self.recognitionLanguages
+                    // Chinese pages come in TWO scripts: seed both so a
+                    // Traditional workbook is read as written (its text is
+                    // normalized to Simplified after recognition, below).
+                    if langs.contains(where: { ChineseScript.isChineseTag($0) }) {
+                        for extra in ["zh-Hans", "zh-Hant"] where !langs.contains(extra) {
+                            langs.append(extra)
+                        }
+                    }
+                    request.recognitionLanguages = langs
                 }
                 let orientation = Self.cgOrientation(from: image.imageOrientation)
                 let handler = VNImageRequestHandler(cgImage: cgImage, orientation: orientation, options: [:])
@@ -112,7 +122,16 @@ extension NativeLanguageKitPlugin {
             // healSplitWords) isn't documented thread-safe.
             DispatchQueue.main.async {
                 let lang = self.recognitionLanguages.first
-                let lines = collected.map { (text: Self.healSplitWords($0.0, language: lang), confidence: $0.1) }
+                let chinese = lang.map { ChineseScript.isChineseTag($0) } ?? false
+                let lines = collected.map { (cand, conf) -> (text: String, confidence: Float) in
+                    var text = Self.healSplitWords(cand, language: lang)
+                    if chinese {
+                        // Normalize script ON-DEVICE so a Traditional page
+                        // practices against the app's Simplified banks.
+                        text = ChineseScript.toSimplified(text)
+                    }
+                    return (text, conf)
+                }
                 self.finish(resolve: lines)
             }
         }

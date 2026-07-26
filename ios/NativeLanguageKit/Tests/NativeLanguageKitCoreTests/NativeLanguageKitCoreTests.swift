@@ -308,3 +308,27 @@ final class NativeLanguageKitCoreTests: XCTestCase {
         XCTAssertLessThanOrEqual(SpeechRate.avRate(fromGameRate: 9.0), AVSpeechUtteranceMaximumSpeechRate)
     }
 }
+
+// MARK: - ChineseScript (CC-PHOTO-IMPORT: Traditional pages practice as Simplified)
+
+final class ChineseScriptTests: XCTestCase {
+
+    /// Hant→Hans on classic unambiguous mappings; Simplified and non-Chinese
+    /// text pass through untouched.
+    func testTraditionalConvertsToSimplified() {
+        XCTAssertEqual(ChineseScript.toSimplified("學習"), "学习")
+        XCTAssertEqual(ChineseScript.toSimplified("軟體"), "软体")
+        XCTAssertEqual(ChineseScript.toSimplified("我們沒有"), "我们没有")
+        XCTAssertEqual(ChineseScript.toSimplified("我们"), "我们", "already Simplified: unchanged")
+        XCTAssertEqual(ChineseScript.toSimplified("hello 123"), "hello 123", "non-Chinese: unchanged")
+    }
+
+    func testChineseTagDetection() {
+        for tag in ["zh-Hans", "zh-Hant", "zh-CN", "cmn-CN", "yue-Hant"] {
+            XCTAssertTrue(ChineseScript.isChineseTag(tag), tag)
+        }
+        for tag in ["en-US", "ja-JP", "ko-KR"] {
+            XCTAssertFalse(ChineseScript.isChineseTag(tag), tag)
+        }
+    }
+}
