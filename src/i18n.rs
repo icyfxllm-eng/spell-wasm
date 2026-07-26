@@ -40,6 +40,8 @@ fn tables() -> &'static HashMap<&'static str, Table> {
         // review, like their word banks.
         m.insert("ar", parse(include_str!("i18n/locales/ar.json")));
         m.insert("hi", parse(include_str!("i18n/locales/hi.json")));
+        m.insert("ru", parse(include_str!("i18n/locales/ru.json")));
+        m.insert("sw", parse(include_str!("i18n/locales/sw.json")));
         m
     })
 }
