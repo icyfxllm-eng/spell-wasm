@@ -3,7 +3,6 @@ import Capacitor
 import UIKit
 import PhotosUI
 import Vision
-import VisionKit
 import NativeLanguageKitCore
 
 // Feature F1 "Photo-to-word-list" — on-device VisionKit OCR, kept as an
@@ -40,15 +39,13 @@ extension NativeLanguageKitPlugin {
             finish(reject: "No view controller to present from")
             return
         }
-        // Camera-first = the VisionKit DOCUMENT SCANNER (edge detection, deskew,
-        // multi-page) — the spec's primary capture path. Plain camera only as a
-        // fallback on hardware without scanner support; the photo library
-        // (PHPicker) everywhere else (including the simulator).
-        if source == "camera", VNDocumentCameraViewController.isSupported {
-            let scanner = VNDocumentCameraViewController()
-            scanner.delegate = self
-            vc.present(scanner, animated: true)
-        } else if source == "camera", UIImagePickerController.isSourceTypeAvailable(.camera) {
+        // Camera-first = the PLAIN camera. The VisionKit document scanner was
+        // tried here (build 83) and REVERTED on device feedback: its capture
+        // filter darkens pages in normal room light and its auto-capture hunts
+        // focus ("super blurry", "pages are dark") with no API to tune either.
+        // The plain camera + Vision recognition measured 0.9+ precision on the
+        // same pages. Photo library (PHPicker) everywhere else (simulator).
+        if source == "camera", UIImagePickerController.isSourceTypeAvailable(.camera) {
             let picker = UIImagePickerController()
             picker.sourceType = .camera
             picker.delegate = self
@@ -237,31 +234,6 @@ extension NativeLanguageKitPlugin {
         case .rightMirrored: return .rightMirrored
         @unknown default: return .up
         }
-    }
-}
-
-// MARK: - VNDocumentCameraViewControllerDelegate (document scanner, multi-page)
-
-extension NativeLanguageKitPlugin: VNDocumentCameraViewControllerDelegate {
-    public func documentCameraViewController(_ controller: VNDocumentCameraViewController,
-                                             didFinishWith scan: VNDocumentCameraScan) {
-        controller.dismiss(animated: true)
-        var pages: [UIImage] = []
-        for i in 0..<scan.pageCount {
-            pages.append(scan.imageOfPage(at: i))
-        }
-        recognize(pages: pages)
-    }
-
-    public func documentCameraViewControllerDidCancel(_ controller: VNDocumentCameraViewController) {
-        controller.dismiss(animated: true)
-        finish(reject: "cancelled")
-    }
-
-    public func documentCameraViewController(_ controller: VNDocumentCameraViewController,
-                                             didFailWithError error: Error) {
-        controller.dismiss(animated: true)
-        finish(reject: "Scan failed: \(error.localizedDescription)")
     }
 }
 
