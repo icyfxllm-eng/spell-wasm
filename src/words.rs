@@ -1308,13 +1308,14 @@ pub fn tier_for(lang: &str, tier: &str) -> &'static [&'static str] {
         // Leipzig CC BY, frequency-ranked, length-tiered, gated by build-wordlists.
         RU => simple_tier(RU_EASY, RU_MEDIUM, RU_HARD, RU_EXPERT, tier),
         SW => simple_tier(SW_EASY, SW_MEDIUM, SW_HARD, SW_EXPERT, tier),
-        // AR/HI stay contentless in production. Arabic's bank exists in
-        // assets/words/ar/ (prepared, gated) but does not render in production until
-        // CC-RTL is verified on a device (rtl_blocked); Hindi is audit-only (D8).
-        // They return an EMPTY bank rather than falling through to `en_tier` — a
-        // registered language with no served content must serve NO words, never
-        // English words wearing its name. Under audit_preview they serve drafts.
-        AR | HI => audit_draft_or_empty(lang, tier),
+        // Arabic UNGATED (Eric's ruling, 2026-07-25): serves its production bank
+        // (assets/words/ar/ via build-wordlists, keyboard-reachability gated) —
+        // RTL_SUPPORTED flipped in the same change. HI stays audit-only (D8) and
+        // returns an EMPTY bank in production rather than falling through to
+        // `en_tier` — a registered language with no served content must serve NO
+        // words, never English words wearing its name.
+        AR => simple_tier(AR_EASY, AR_MEDIUM, AR_HARD, AR_EXPERT, tier),
+        HI => audit_draft_or_empty(lang, tier),
         ES => es_tier(tier),
         FR => simple_tier(FR_EASY, FR_MEDIUM, FR_HARD, FR_EXPERT, tier),
         DE => simple_tier(DE_EASY, DE_MEDIUM, DE_HARD, DE_EXPERT, tier),
@@ -1345,7 +1346,7 @@ fn audit_draft_or_empty(_lang: &str, _tier: &str) -> &'static [&'static str] {
 
 #[cfg(test)]
 mod content_tests {
-    use crate::consts::{TIER_ORDER, AR};
+    use crate::consts::{TIER_ORDER, HI};
 
     /// A language registered WITHOUT content must serve nothing — never English
     /// words under its own name. `tier_for` ends in `_ => en_tier(tier)`, so any
@@ -1358,7 +1359,9 @@ mod content_tests {
     #[cfg(not(feature = "audit_preview"))]
     #[test]
     fn registered_but_contentless_languages_serve_no_words() {
-        for lang in [AR] {
+        // ar left this list on its 2026-07-25 ungate (real bank via
+        // build-wordlists); HI remains audit-only/contentless in production.
+        for lang in [HI] {
             for tier in TIER_ORDER {
                 let bank = super::tier_for(lang, tier);
                 assert!(
@@ -1372,12 +1375,13 @@ mod content_tests {
         }
     }
 
-    /// The mirror invariant for the audit build: Arabic serves its DRAFT bank
-    /// (non-empty), so an auditor has words to play.
+    /// The mirror invariant for the audit build: Hindi serves its DRAFT bank
+    /// (non-empty), so an auditor has words to play. (Arabic graduated to a
+    /// production bank on its 2026-07-25 ungate.)
     #[cfg(feature = "audit_preview")]
     #[test]
     fn audit_preview_serves_draft_banks() {
-        for lang in [AR] {
+        for lang in [HI] {
             for tier in TIER_ORDER {
                 assert!(
                     !super::tier_for(lang, tier).is_empty(),
@@ -1391,7 +1395,7 @@ mod content_tests {
     /// over-broad empty arm swallowing a real bank).
     #[test]
     fn content_languages_still_have_banks() {
-        for lang in ["en", "es", "fr", "de", "pt", "pl", "vi", "ko", "ja", "fil", "zh", "ru", "sw"] {
+        for lang in ["en", "es", "fr", "de", "pt", "pl", "vi", "ko", "ja", "fil", "zh", "ru", "ar", "sw"] {
             for tier in TIER_ORDER {
                 assert!(!super::tier_for(lang, tier).is_empty(), "{lang}/{tier} lost its bank");
             }

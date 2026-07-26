@@ -113,20 +113,19 @@ pub fn leaderboard_available() -> bool {
     EDITION == Edition::Consumer
 }
 
-/// Whether the app can render, input, and mirror right-to-left scripts. FALSE
-/// until the CC-RTL initiative ships — it is not drafted, let alone built.
+/// Whether the app can render, input, and mirror right-to-left scripts.
 ///
 /// CC-LINEUP-SWAP D2: this is the ONLY switch that can ever un-gate an
 /// `rtl_required` language. It is a compile-time `const` (not a runtime toggle) so
 /// flipping it is a deliberate code change, never a config accident. See
 /// [`rtl_required`] for the gate itself.
 ///
-/// FALSE in production. TRUE only in the `audit_preview` build, where native
-/// speakers play the RTL languages to review them. Arabic stays gated (unavailable)
-/// in the shipped/TestFlight build: the rendering stack (F1–F6) is built and
-/// exercised under audit_preview, but the production flip is held until Arabic RTL
-/// rendering is verified on a real device / by a native speaker (G4 / Gig B).
-pub const RTL_SUPPORTED: bool = cfg!(feature = "audit_preview");
+/// TRUE — Arabic UNGATED by Eric's ruling (2026-07-25) after on-device review
+/// of the RTL rendering ("the arabic looks fine"). The rendering stack (F1–F6)
+/// was built and exercised under audit_preview; the production flip is this
+/// line. Native-speaker content audit (G4 / Gig B) remains an open follow-up —
+/// tracked in docs/CC-MASTER-PARITY.md Track A, not a render gate anymore.
+pub const RTL_SUPPORTED: bool = true;
 
 /// Which way a language's script runs. CC-RTL **D3**: direction comes from the
 /// REGISTRY and nowhere else — "no hardcoded language→direction checks anywhere
@@ -165,7 +164,7 @@ const LANGS_BASE: [(&str, &str, LangStatus, Direction); 14] = [
     (FIL, "Filipino", Active, Ltr),
     (ZH, "\u{4e2d}\u{6587}", Active, Ltr),
     (RU, "\u{420}\u{443}\u{441}\u{441}\u{43a}\u{438}\u{439}", Active, Ltr),
-    (AR, "\u{627}\u{644}\u{639}\u{631}\u{628}\u{64a}\u{629}", ComingSoon, Rtl),
+    (AR, "\u{627}\u{644}\u{639}\u{631}\u{628}\u{64a}\u{629}", Active, Rtl),
     (SW, "Kiswahili", Active, Ltr),
 ];
 
@@ -356,9 +355,9 @@ mod registry_tests {
     #[cfg(not(feature = "audit_preview"))]
     #[test]
     fn active_languages_are_english_the_ten_ltr_russian_and_swahili() {
-        // Build-56 TestFlight: English + the ten content-ready LTR/CJK languages,
-        // plus Russian (Track R) and Swahili (Track S). Arabic stays ComingSoon
-        // (RTL held for on-device verification); Hindi stays audit-only (D8).
+        // English + the ten content-ready LTR/CJK languages, Russian (Track R),
+        // Swahili (Track S), and Arabic (UNGATED 2026-07-25 — RTL verified on
+        // device by Eric; bank via build-wordlists). Hindi stays audit-only (D8).
         let active: Vec<&str> = BUILTIN_LANGS
             .iter()
             .filter(|(c, _, _, _)| is_active_lang(c))
@@ -366,12 +365,9 @@ mod registry_tests {
             .collect();
         assert_eq!(
             active,
-            vec!["en", "es", "fr", "de", "pt", "pl", "vi", "ko", "ja", "fil", "zh", "ru", "sw"],
-            "en + the ten content-ready languages + Russian + Swahili are active"
+            vec!["en", "es", "fr", "de", "pt", "pl", "vi", "ko", "ja", "fil", "zh", "ru", "ar", "sw"],
+            "en + the ten content-ready languages + Russian + Arabic + Swahili are active"
         );
-        for gated in ["ar"] {
-            assert!(!is_active_lang(gated), "{gated} stays ComingSoon (RTL held)");
-        }
     }
 
     /// CC-LINEUP-SWAP: the registry snapshot. Pinning the exact lineup means a
@@ -431,25 +427,23 @@ mod registry_tests {
     fn rtl_languages_are_registered_but_hard_gated() {
         let rtl: Vec<&str> = BUILTIN_LANGS.iter().filter(|(_, _, _, d)| *d == Rtl).map(|(c, _, _, _)| *c).collect();
         assert_eq!(rtl, vec!["ar"], "exactly the one RTL language carries the flag");
-        assert!(!RTL_SUPPORTED, "RTL held in production until Arabic rendering is verified");
+        assert!(RTL_SUPPORTED, "RTL support ON (Arabic ungated 2026-07-25)");
         for code in rtl {
-            assert!(rtl_required(code), "{code} is rtl_required");
-            assert!(rtl_blocked(code), "{code} is blocked while RTL is unsupported");
-            assert!(!is_active_lang(code), "{code} must never be active");
+            assert!(rtl_required(code), "{code} is rtl_required (drives dir/joins)");
+            assert!(!rtl_blocked(code), "{code} is no longer blocked — RTL is supported");
+            assert!(is_active_lang(code), "{code} is active (ungated)");
         }
         // Russian is an LTR language — it carries no RTL gate at all.
         assert!(!rtl_required("ru"), "ru is left-to-right");
         assert!(!rtl_blocked("ru"));
     }
 
-    /// The RTL gate tracks the build config and nothing else — false in production,
-    /// true only under audit_preview. Runs in BOTH configs, so there is always a
-    /// live assertion that the production binary stays gated.
+    /// The RTL gate is permanently ON since the 2026-07-25 ungate — in BOTH build
+    /// configs. This test is the deliberate-change tripwire for ever re-gating.
     #[test]
     fn rtl_gate_matches_the_build_config() {
-        assert_eq!(RTL_SUPPORTED, cfg!(feature = "audit_preview"));
-        // Under audit preview the RTL language becomes playable; otherwise gated.
-        assert_eq!(is_active_lang("ar"), cfg!(feature = "audit_preview"));
+        assert!(RTL_SUPPORTED, "Arabic ungated in every build config");
+        assert!(is_active_lang("ar"));
     }
 
     /// CC-RTL F4 leans on `script_joins` deriving from `rtl_required`, which is
@@ -506,9 +500,12 @@ mod registry_tests {
     #[cfg(not(feature = "audit_preview"))]
     #[test]
     fn rtl_gate_survives_an_active_status() {
-        assert_eq!(lang_status("ar"), ComingSoon, "ar ships as ComingSoon");
-        assert!(rtl_blocked("ar"));
-        // `is_active_lang` ANDs the gate in, so status alone can never win.
-        assert!(!is_active_lang("ar"));
+        // Post-ungate shape: ar is Active AND unblocked. The gate MACHINERY
+        // stays: if RTL_SUPPORTED ever flips back, `is_active_lang` must AND the
+        // block back in regardless of status — pinned via the resolver clamp
+        // (`clamp_rtl_blocked`) and `rtl_blocked` deriving from the const.
+        assert_eq!(lang_status("ar"), Active, "ar ships Active (ungated)");
+        assert!(!rtl_blocked("ar"));
+        assert!(is_active_lang("ar"));
     }
 }

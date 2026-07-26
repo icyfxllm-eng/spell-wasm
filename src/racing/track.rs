@@ -199,10 +199,13 @@ mod tests {
     #[cfg(not(feature = "audit_preview"))]
     #[test]
     fn gated_language_with_no_production_bank_offers_no_circuits() {
-        // ar is registered but rtl-gated: tier_for is empty, so generate returns None
-        // (circuit unavailable) — never a padded or silently-English track.
-        assert_eq!(available("ar", "easy"), Vec::<Circuit>::new());
-        assert!(generate("ar", "easy", Circuit::Sprint, 1).is_none());
+        // hi is registered (audit builds) but contentless in production: tier_for
+        // is empty, so generate returns None (circuit unavailable) — never a
+        // padded or silently-English track. (ar was the example until its
+        // 2026-07-25 ungate; it has a real bank and real circuits now.)
+        assert_eq!(available("hi", "easy"), Vec::<Circuit>::new());
+        assert!(generate("hi", "easy", Circuit::Sprint, 1).is_none());
+        assert!(!available("ar", "easy").is_empty(), "ar is ungated with a real bank");
     }
 
     #[test]

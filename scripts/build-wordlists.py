@@ -35,9 +35,11 @@ ROOT = Path(__file__).resolve().parent.parent
 # archived under archive/wordlists/<code>/, so the pipeline can no longer build
 # them. Thai (th) is fully removed from the program — its sources, locale
 # catalog, and registry entry are all gone, so it is not listed here.
-# ru/ar/fa/ur are NOT here yet — their sources are CC-NEW-LANG-CONTENT's scope,
+# fa/ur are NOT here — cut from the lineup (CC-MASTER-PARITY Phase A).
+# ar joined on Eric's ungate ruling (2026-07-25): sources assets/words/ar/,
+# keyboard ar.json, RTL_SUPPORTED flipped in the same change.
 # and listing them before the sources land would just fail the build.
-LANGS = ["en", "es", "fr", "de", "pt", "pl", "vi", "ko", "ja", "fil", "ru", "sw"]
+LANGS = ["en", "es", "fr", "de", "pt", "pl", "vi", "ko", "ja", "fil", "ru", "sw", "ar"]
 TIERS = ["easy", "medium", "hard", "expert"]
 MIN_LEN, MAX_LEN = 2, 16
 # Tier size gate: a floor (no language starved of words) and a ceiling (sanity).

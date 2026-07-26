@@ -51,8 +51,8 @@ LANGUAGE_CODE = "en-US"
 # Swahili is NOT here — it is synthesized via Azure instead (see AZURE_VOICES
 # below): Azure has named, stable Swahili neural voices, which Google's TTS does
 # not offer as confidently.
-# ar (Arabic) — still gated (RTL_SUPPORTED false); when it ungates, add
-#   ("ar-XA", "ar-XA-Wavenet-...") here — Google's Arabic locale is ar-XA (MSA).
+# ar (Arabic) — UNGATED (2026-07-25): Google's Arabic locale is ar-XA (MSA);
+#   Wavenet-B is the male MSA voice with the clearest isolated-word enunciation.
 # A lang in neither map falls back to the English voice (see the DEFAULT_LANG guard).
 LANG_VOICES = {
     "en": ("en-US", "en-US-Neural2-D"),
@@ -67,6 +67,7 @@ LANG_VOICES = {
     "ja": ("ja-JP", "ja-JP-Wavenet-B"),
     "fil": ("fil-PH", "fil-PH-Wavenet-A"),
     "zh": ("cmn-CN", "cmn-CN-Wavenet-A"),
+    "ar": ("ar-XA", "ar-XA-Wavenet-B"),
 }
 
 # AZURE-synthesized languages — for locales Google lacks a solid voice for.
