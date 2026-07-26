@@ -286,6 +286,9 @@
   .pchip-row.lowconf .pchip{opacity:.55;border-style:dashed}
   /* Out-of-bank (custom) words: subtle accent so parents can spot them. */
   .pchip-row.custom .pchip{border-color:var(--accent,#7aa2ff)}
+  /* Per-chip include toggle (Phase 3): opt a word out without deleting it. */
+  .pchip-on{width:22px;height:22px;flex:none;accent-color:var(--accent,#7aa2ff)}
+  .pchip-row:has(.pchip-on:not(:checked)) .pchip{opacity:.4;text-decoration:line-through}
   .pchip-x{flex:none;width:32px;height:32px;border-radius:8px;border:1px solid var(--edge);background:transparent;color:var(--muted);font-size:18px;line-height:1;cursor:pointer}
   .pchip-flag{flex:none;min-width:64px;font-size:11px;font-weight:600;color:var(--bad,#e0564f);text-align:end}
   .pchip-row:not(.flagged) .pchip-flag{display:none}
@@ -1172,6 +1175,7 @@
         <button class="ghost" id="photoCancel" data-i18n="import.close" style="margin-inline-start:auto">Close</button>
       </div>
       <div class="demo-note" id="photoNote" data-i18n="photo.note">Photos are read on your device and never leave it.</div>
+      <div class="demo-note" id="photoVoiceNote"></div>
     </div>
   </div>
 

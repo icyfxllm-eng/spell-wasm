@@ -89,6 +89,12 @@ pub fn classify(lang: &str, tokens: &[(String, bool)]) -> Vec<Candidate> {
         .collect()
 }
 
+/// Classify a single word — the review sheet's LIVE re-classify on edit
+/// (Phase 3): fixing a misread updates the chip's class before save.
+pub fn classify_word(lang: &str, word: &str) -> WordClass {
+    classify_one(lang, word)
+}
+
 fn classify_one(lang: &str, word: &str) -> WordClass {
     if crate::native_lang::gate_reason(word).is_some() {
         return WordClass::Filtered;

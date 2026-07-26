@@ -18,6 +18,13 @@ use wasm_bindgen_futures::{spawn_local, JsFuture};
 
 use crate::{dom, flags, i18n, native_lang, App};
 
+thread_local! {
+    /// The study language the CURRENT review sheet classified under — set by
+    /// `on_recognized`, read by `reflag` so a live edit re-classifies against
+    /// the same banks the original classification used (Phase 3).
+    static STUDY_LANG: std::cell::RefCell<String> = std::cell::RefCell::new(String::from("en"));
+}
+
 /// Show the camera button only when the feature is on, the native recognizer is
 /// present, and we're not in Kid Mode. Called on init and whenever Kid Mode
 /// toggles (`settings::apply_settings`). A no-op that leaves the button hidden
@@ -81,6 +88,11 @@ pub fn wire(app: &App) {
             Some(i) => i,
             None => return,
         };
+        // Only the TEXT chip re-classifies; the include checkbox also fires
+        // `input` and must not be read as a word.
+        if !input.class_list().contains("pchip") {
+            return;
+        }
         reflag(&input);
     });
 
@@ -149,6 +161,7 @@ fn on_recognized(app: &App, val: &wasm_bindgen::JsValue) {
         }
     };
     let candidates = crate::photo_import::extract_classified(&study, &lines);
+    STUDY_LANG.with(|l| *l.borrow_mut() = study);
     if candidates.is_empty() {
         dom::set_text("feedback", &i18n::t("photo.empty"));
         dom::el("feedback").set_class_name("feedback");
@@ -156,6 +169,12 @@ fn on_recognized(app: &App, val: &wasm_bindgen::JsValue) {
     }
     build_lang_options(app);
     render_chips(&candidates);
+    // G-A disclosure: out-of-dictionary words are spoken with the DEVICE voice
+    // (on-device AVSpeech — nothing leaves the phone). Shown only when the
+    // sheet actually contains one.
+    let any_custom = candidates.iter().any(|c| c.class == crate::photo_import::WordClass::Custom);
+    let voice_note = if any_custom { i18n::t("photo.voiceNote") } else { String::new() };
+    dom::set_text("photoVoiceNote", &voice_note);
     dom::set_text("photoNote", &i18n::t("photo.note"));
     dom::set_text("feedback", "");
     dom::add_class("photoScrim", "show");
@@ -192,9 +211,27 @@ fn read_lines(val: &wasm_bindgen::JsValue) -> Vec<(String, f32)> {
     out
 }
 
+/// The one status label a chip shows, by priority: a gate flag ("not allowed" /
+/// "can't read") beats the low-confidence hint beats the class label.
+fn chip_status(class: crate::photo_import::WordClass, low: bool, reason: Option<native_lang::GateFail>) -> String {
+    use crate::photo_import::WordClass;
+    if let Some(r) = reason {
+        return i18n::t(r.i18n_key());
+    }
+    if low {
+        return i18n::t("photo.lowconf");
+    }
+    match class {
+        WordClass::Custom => i18n::t("photo.class.custom"),
+        WordClass::InDictionary => i18n::t("photo.class.known"),
+        WordClass::Filtered => String::new(), // unreachable: Filtered always has a reason
+    }
+}
+
 fn render_chips(candidates: &[crate::photo_import::Candidate]) {
     use crate::photo_import::WordClass;
     let remove_label = i18n::t("photo.remove");
+    let include_label = i18n::t("photo.include");
     let mut html = String::new();
     for cand in candidates {
         let word = &cand.word;
@@ -203,50 +240,94 @@ fn render_chips(candidates: &[crate::photo_import::Candidate]) {
         // Low-confidence chips render PRE-SHOWN, dimmed and editable — never
         // silently absent (spec: nothing is dropped for low confidence).
         let lowconf = if cand.confidence_low { " lowconf" } else { "" };
-        // Out-of-bank (custom) chips carry a class hook for the Phase 3 styling.
         let custom = if cand.class == WordClass::Custom { " custom" } else { "" };
-        let reason_label = reason.map(|r| i18n::t(r.i18n_key())).unwrap_or_default();
+        // Per-chip include toggle: flagged chips start OFF (they can't save
+        // anyway until edited clean); everything else starts ON.
+        let checked = if reason.is_none() { " checked" } else { "" };
+        let status = chip_status(cand.class, cand.confidence_low, reason);
         html.push_str(&format!(
             "<div class=\"pchip-row{flagged}{lowconf}{custom}\">\
+               <input class=\"pchip-on\" type=\"checkbox\"{checked} aria-label=\"{inc}\" />\
                <input class=\"pchip\" type=\"text\" value=\"{val}\" \
                  autocomplete=\"off\" autocorrect=\"off\" autocapitalize=\"off\" spellcheck=\"false\" />\
                <button type=\"button\" class=\"pchip-x\" aria-label=\"{aria}\">\u{00d7}</button>\
-               <span class=\"pchip-flag\">{reason}</span>\
+               <span class=\"pchip-flag\">{status}</span>\
              </div>",
             flagged = flagged,
             lowconf = lowconf,
             custom = custom,
+            checked = checked,
+            inc = dom::escape_html(&include_label),
             val = dom::escape_html(word),
             aria = dom::escape_html(&remove_label),
-            reason = dom::escape_html(&reason_label),
+            status = dom::escape_html(&status),
         ));
     }
     dom::set_html("photoChips", &html);
 }
 
-/// Recompute one chip's flag after an edit.
+/// Live re-classify one chip after an edit (Phase 3): the gate flag AND the
+/// dictionary class update as the parent types, so a fixed misread clears its
+/// flag (and re-labels "in dictionary") before they even hit save.
 fn reflag(input: &web_sys::HtmlInputElement) {
     let row = match input.closest(".pchip-row") {
         Ok(Some(r)) => r,
         _ => return,
     };
-    let reason = native_lang::gate_reason(input.value().trim());
+    let word = input.value();
+    let word = word.trim();
+    let reason = native_lang::gate_reason(word);
+    let study = STUDY_LANG.with(|l| l.borrow().clone());
+    let class = crate::photo_import::classify_word(&study, word);
     let _ = row.class_list().toggle_with_force("flagged", reason.is_some());
+    let _ = row
+        .class_list()
+        .toggle_with_force("custom", class == crate::photo_import::WordClass::Custom);
+    // A human just read and edited this chip — low-confidence no longer applies.
+    let _ = row.class_list().remove_1("lowconf");
     if let Some(flag) = row.query_selector(".pchip-flag").ok().flatten() {
-        let label = reason.map(|r| i18n::t(r.i18n_key())).unwrap_or_default();
-        flag.set_text_content(Some(&label));
+        flag.set_text_content(Some(&chip_status(class, false, reason)));
+    }
+    // Editing into a blocked word un-includes the chip; editing clean re-includes
+    // it (the natural intent after fixing a misread).
+    if let Some(on) = row
+        .query_selector(".pchip-on")
+        .ok()
+        .flatten()
+        .and_then(|e| e.dyn_into::<web_sys::HtmlInputElement>().ok())
+    {
+        on.set_checked(reason.is_none());
     }
 }
 
-/// Collect the current (edited, non-deleted) chip words in order.
+/// Collect the current chip words in order — edited, non-deleted, AND with
+/// their include toggle ON (Phase 3: per-chip opt-out without deleting).
 fn collect_words() -> Vec<String> {
     let mut out = Vec::new();
-    let list = match dom::el("photoChips").query_selector_all(".pchip") {
+    let list = match dom::el("photoChips").query_selector_all(".pchip-row") {
         Ok(l) => l,
         Err(_) => return out,
     };
     for i in 0..list.length() {
-        if let Some(input) = list.get(i).and_then(|n| n.dyn_into::<web_sys::HtmlInputElement>().ok()) {
+        let Some(row) = list.get(i).and_then(|n| n.dyn_into::<web_sys::Element>().ok()) else {
+            continue;
+        };
+        let included = row
+            .query_selector(".pchip-on")
+            .ok()
+            .flatten()
+            .and_then(|e| e.dyn_into::<web_sys::HtmlInputElement>().ok())
+            .map(|c| c.checked())
+            .unwrap_or(true);
+        if !included {
+            continue;
+        }
+        if let Some(input) = row
+            .query_selector(".pchip")
+            .ok()
+            .flatten()
+            .and_then(|e| e.dyn_into::<web_sys::HtmlInputElement>().ok())
+        {
             let v = input.value();
             let t = v.trim();
             if !t.is_empty() {
