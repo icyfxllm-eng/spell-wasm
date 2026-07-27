@@ -5,6 +5,9 @@ Only the emitted, filtered word lists ship in the app; the raw datasets are
 build inputs and are not redistributed.
 
 ## Word-bank volume (all languages)
+- **Wiktionary** (en.wiktionary.org) — non-English word definitions and example
+  sentences, fetched at runtime by the backend's `/api/meaning` proxy and cached.
+  Text © Wiktionary contributors, **CC BY-SA 4.0**; served with attribution.
 - **Leipzig Corpora Collection** (wortschatz-leipzig.de) — monolingual,
   frequency-ranked word lists (Wikipedia/news editions), **CC BY 4.0**. Used by
   `scripts/build-bigbank.py` (production banks), `scripts/build-zh-bank.py` (the

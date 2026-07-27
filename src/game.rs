@@ -668,16 +668,18 @@ pub fn clear_meaning() {
 ///    the Education Edition is local/unranked for COPPA/FERPA reasons. A district
 ///    asking "what leaves the device?" deserves an answer that is true.
 ///
-/// Restoring non-English definitions means giving them a REAL source — see
-/// `docs/DECISIONS-PENDING.md` §10. The live candidate ships glosses in the
-/// bundle (`tools/lexicon-ingest`), so it needs no runtime call at all and this
-/// function stays as it is.
+/// Non-English definitions RESTORED 2026-07-27 (Eric's "build the definitions")
+/// with a REAL source this time: our own backend proxies en.wiktionary (English
+/// glosses, CC BY-SA, attribution in NOTICES) for every supported language —
+/// same privacy shape as English, the child's word+IP reaches only OUR server.
+/// `api::meaning_supported` is the single gate; zh stays None (the wiktionary
+/// endpoint omits Chinese sections — a missing card beats a wrong one).
 async fn fetch_definition(word: String, code: String) -> Option<(String, String, String)> {
-    let base = code.split('-').next().unwrap_or(&code).to_string();
-    if !base.eq_ignore_ascii_case("en") {
+    let base = code.split('-').next().unwrap_or(&code).to_lowercase();
+    if !api::meaning_supported(&base) {
         return None;
     }
-    let (pos, def, example) = api::fetch_meaning(&word, false).await.ok()?;
+    let (pos, def, example) = api::fetch_meaning(&word, false, &base).await.ok()?;
     if def.is_empty() {
         None
     } else {
@@ -766,11 +768,12 @@ pub fn show_definition_hint(app: &App) {
         let s = app.borrow();
         (s.word.clone(), s.cur_lang.clone())
     };
-    if word.is_empty() || cur_lang != EN {
+    if word.is_empty() || !api::meaning_supported(&cur_lang) {
         return;
     }
+    let lang_base = cur_lang;
     spawn_local(async move {
-        let (pos, definition) = match api::fetch_meaning(&word, true).await {
+        let (pos, definition) = match api::fetch_meaning(&word, true, &lang_base).await {
             Ok((pos, definition, _)) if !definition.is_empty() => (pos, definition),
             _ => {
                 dom::set_html("meaning", &format!("<span class=\"m-pos\">{}</span>", crate::i18n::t("meaning.noDef")));
@@ -795,12 +798,13 @@ pub fn show_sentence_hint(app: &App) {
         let s = app.borrow();
         (s.word.clone(), s.cur_lang.clone())
     };
-    if word.is_empty() || cur_lang != EN {
+    if word.is_empty() || !api::meaning_supported(&cur_lang) {
         return;
     }
-    api::play_sentence_audio(&word);
+    let lang_base = cur_lang;
+    api::play_sentence_audio(&word, &lang_base);
     spawn_local(async move {
-        let example = match api::fetch_meaning(&word, true).await {
+        let example = match api::fetch_meaning(&word, true, &lang_base).await {
             Ok((_, _, example)) if !example.is_empty() => example,
             _ => {
                 dom::set_html("meaning", &format!("<span class=\"m-pos\">{}</span>", crate::i18n::t("meaning.noExample")));
@@ -990,14 +994,14 @@ pub fn next_word(app: &App) {
     dom::set_disabled("giveupBtn", false);
     dom::set_disabled("replayBtn", false);
     dom::set_disabled("slowBtn", false);
-    // Definition/Sentence hints route through our backend's English-only
-    // masking proxy — hide them for other languages rather than offering a
-    // button that will just fail.
-    let is_en = app.borrow().cur_lang == EN;
-    dom::toggle_class("defBtn", "btn-hide", !is_en);
-    dom::toggle_class("sentenceBtn", "btn-hide", !is_en);
-    dom::set_disabled("defBtn", !is_en);
-    dom::set_disabled("sentenceBtn", !is_en);
+    // Definition/Sentence hints route through our backend's masking proxy —
+    // English via dictionaryapi.dev, other languages via en.wiktionary
+    // (api::meaning_supported is the gate; zh has no source, so no button).
+    let has_defs = api::meaning_supported(&app.borrow().cur_lang);
+    dom::toggle_class("defBtn", "btn-hide", !has_defs);
+    dom::toggle_class("sentenceBtn", "btn-hide", !has_defs);
+    dom::set_disabled("defBtn", !has_defs);
+    dom::set_disabled("sentenceBtn", !has_defs);
     dom::set_text("hintLine", "");
     render_tries(app);
     dom::el("feedback").set_class_name("feedback");
@@ -1489,9 +1493,9 @@ fn grant_retry(app: &App, feedback_key: &str) {
     dom::set_disabled("checkBtn", false);
     dom::set_disabled("hintBtn", false);
     dom::set_disabled("giveupBtn", false);
-    let is_en = app.borrow().cur_lang == EN;
-    dom::set_disabled("defBtn", !is_en);
-    dom::set_disabled("sentenceBtn", !is_en);
+    let has_defs = api::meaning_supported(&app.borrow().cur_lang);
+    dom::set_disabled("defBtn", !has_defs);
+    dom::set_disabled("sentenceBtn", !has_defs);
     render_letters(app, false);
     dom::add_class("orbWrap", "bad");
     spell_feedback(false);

@@ -322,8 +322,26 @@ pub async fn check_answer(word: &str, answer: &str) -> Result<bool, JsValue> {
 /// Routing through our backend — rather than calling dictionaryapi.dev
 /// straight from the browser — means the masked hint's network response
 /// itself never contains the unmasked word.
-pub async fn fetch_meaning(word: &str, mask: bool) -> Result<(String, String, String), JsValue> {
-    let url = format!("{}/api/meaning?word={}&mask={}", api_base(), urlencode(word), if mask { "1" } else { "0" });
+/// Study languages with a real definition source: English via dictionaryapi.dev,
+/// the rest via en.wiktionary (both proxied by OUR backend — the word never goes
+/// third-party from the device). zh is absent: the wiktionary endpoint omits
+/// Chinese sections (verified 2026-07-27), so it gets no button, not a wrong one.
+pub fn meaning_supported(lang: &str) -> bool {
+    let base = lang.split(['-', '_']).next().unwrap_or(lang);
+    matches!(
+        base,
+        "en" | "es" | "fr" | "de" | "pt" | "pl" | "vi" | "ko" | "ja" | "ru" | "ar" | "hi" | "sw" | "fil"
+    )
+}
+
+pub async fn fetch_meaning(word: &str, mask: bool, lang: &str) -> Result<(String, String, String), JsValue> {
+    let url = format!(
+        "{}/api/meaning?word={}&mask={}&lang={}",
+        api_base(),
+        urlencode(word),
+        if mask { "1" } else { "0" },
+        urlencode(lang)
+    );
     let text = storage::fetch_text(&url).await?;
     let json: serde_json::Value = serde_json::from_str(&text).map_err(|e| JsValue::from_str(&e.to_string()))?;
     let get = |k: &str| json.get(k).and_then(|v| v.as_str()).unwrap_or("").to_string();
@@ -333,8 +351,8 @@ pub async fn fetch_meaning(word: &str, mask: bool) -> Result<(String, String, St
 /// Plays the word's real (unmasked) example sentence via
 /// `/api/sentence-audio` — audio doesn't reveal spelling the way on-screen
 /// text would, so unlike the displayed sentence this is never masked.
-pub fn play_sentence_audio(word: &str) {
-    let url = format!("{}/api/sentence-audio?word={}", api_base(), urlencode(word));
+pub fn play_sentence_audio(word: &str, lang: &str) {
+    let url = format!("{}/api/sentence-audio?word={}&lang={}", api_base(), urlencode(word), urlencode(lang));
     let Ok(audio) = HtmlAudioElement::new_with_src(&url) else { return };
     audio.set_cross_origin(Some("anonymous"));
     audio_boost::wire(&audio);

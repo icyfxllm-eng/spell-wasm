@@ -279,9 +279,97 @@ def mask_word(text: str, word: str) -> str:
     return pattern.sub("_____", text)
 
 
-def meaning_cache_path(word: str) -> str:
-    digest = hashlib.md5(word.encode()).hexdigest()
+def meaning_cache_path(word: str, lang: str = "en") -> str:
+    # `lang` in the key so es "casa" and pt "casa" don't share an entry; the
+    # bare-word key keeps every existing English cache file valid.
+    key = word if lang == "en" else f"{lang}:{word}"
+    digest = hashlib.md5(key.encode()).hexdigest()
     return os.path.join(CACHE_DIR, f"meaning_v1_{digest}.json")
+
+
+# Non-English definitions (2026-07-27, Eric's "build the definitions"):
+# en.wiktionary's REST definition endpoint, PROXIED here — the same privacy
+# posture as English (a child's word+IP only ever reaches our own server;
+# our server talks to Wiktionary). Section keys are Wiktionary language codes;
+# fil maps to tl (Tagalog). zh is ABSENT: the endpoint omits Chinese sections
+# (verified 2026-07-27), so Chinese keeps no definition rather than a wrong one.
+# Content is CC BY-SA — attribution in NOTICES.md and the app's meaning card.
+MEANING_LANGS = {
+    "es": "es", "fr": "fr", "de": "de", "pt": "pt", "pl": "pl", "vi": "vi",
+    "ko": "ko", "ja": "ja", "ru": "ru", "ar": "ar", "hi": "hi", "sw": "sw",
+    "fil": "tl",
+}
+WIKTIONARY_DEF = "https://en.wiktionary.org/api/rest_v1/page/definition/{}"
+_TAG_RE = re.compile(r"<[^>]+>")
+
+
+def _strip_html(text: str) -> str:
+    import html as _html
+    return _html.unescape(_TAG_RE.sub("", text or "")).strip()
+
+
+def fetch_meaning_wiktionary(word: str, lang: str):
+    """{pos, definition, example} for a non-English word from en.wiktionary's
+    definition endpoint (English glosses — short and kid-friendly). Permanently
+    cached unmasked, like the English path. None when the word has no section
+    for `lang` or the lookup fails."""
+    path = meaning_cache_path(word, lang)
+    if os.path.exists(path):
+        with open(path, "r", encoding="utf-8") as f:
+            return json.load(f)
+
+    section = MEANING_LANGS[lang]
+    url = WIKTIONARY_DEF.format(urllib.parse.quote(word, safe=""))
+    req = urllib.request.Request(url, headers={"User-Agent": "SpellGame/1.0 (spellgame.net)"})
+    result = None
+    # Grammar cross-references ("verbal noun of X", "plural of X") aren't kid
+    # definitions — skip them and take the first CONTENT sense; fall back to the
+    # first form-of only when nothing else exists.
+    form_of = re.compile(
+        r"^(verbal noun|plural|inflection|alternative (?:form|spelling)|romanization|"
+        r"feminine|masculine|diminutive|misspelling|obsolete (?:form|spelling)) of\b",
+        re.IGNORECASE,
+    )
+    fallback = None
+    try:
+        with urllib.request.urlopen(req, timeout=6) as resp:
+            data = json.loads(resp.read().decode("utf-8"))
+        for entry in data.get(section, []):
+            for d in entry.get("definitions", []):
+                definition = _strip_html(d.get("definition", ""))
+                if not definition:
+                    continue
+                if form_of.match(definition):
+                    if fallback is None:
+                        fallback = {
+                            "pos": (entry.get("partOfSpeech") or "").lower(),
+                            "definition": definition,
+                            "example": "",
+                        }
+                    continue
+                examples = d.get("parsedExamples") or []
+                example = _strip_html(examples[0].get("example", "")) if examples else ""
+                if not example:
+                    raw = d.get("examples") or []
+                    example = _strip_html(raw[0]) if raw else ""
+                result = {
+                    "pos": (entry.get("partOfSpeech") or "").lower(),
+                    "definition": definition,
+                    "example": example,
+                }
+                break
+            if result:
+                break
+    except Exception as e:
+        app.logger.info(f"wiktionary lookup failed for '{lang}:{word}': {e}")
+        return None
+    if result is None:
+        result = fallback
+
+    if result:
+        with open(path, "w", encoding="utf-8") as f:
+            json.dump(result, f, ensure_ascii=False)
+    return result
 
 
 def fetch_meaning(word: str):
@@ -386,7 +474,13 @@ def meaning():
     if word is None:
         return jsonify({"error": "invalid word"}), 400
 
-    data = fetch_meaning(word)
+    lang = (request.args.get("lang") or "en").split("-")[0].lower()
+    if lang == "en":
+        data = fetch_meaning(word)
+    elif lang in MEANING_LANGS:
+        data = fetch_meaning_wiktionary(word, lang)
+    else:
+        data = None
     if data is None:
         return jsonify({"error": "not found"}), 404
 
@@ -410,17 +504,27 @@ def sentence_audio():
     if word is None:
         return jsonify({"error": "invalid word"}), 400
 
-    data = fetch_meaning(word)
+    lang = (request.args.get("lang") or "en").split("-")[0].lower()
+    if lang == "en":
+        data = fetch_meaning(word)
+    elif lang in MEANING_LANGS:
+        data = fetch_meaning_wiktionary(word, lang)
+    else:
+        data = None
     example = data.get("example") if data else ""
     if not example:
         return jsonify({"error": "no example sentence"}), 404
 
-    path = cache_path_for(word, "sentence")
+    # The example's own language's Google voice (Swahili is Azure-only for
+    # words; its rare wiktionary examples fall back to the English voice
+    # rather than growing an Azure sentence path here).
+    v_lang, v_name = LANG_VOICES.get(lang, (LANGUAGE_CODE, VOICE_NAME))
+    path = cache_path_for(word, "sentence", lang)
     if not os.path.exists(path):
         try:
             response = tts_client.synthesize_speech(
                 input=texttospeech.SynthesisInput(text=example),
-                voice=texttospeech.VoiceSelectionParams(language_code=LANGUAGE_CODE, name=VOICE_NAME),
+                voice=texttospeech.VoiceSelectionParams(language_code=v_lang, name=v_name),
                 audio_config=_audio_config(SPEAKING_RATE_NORMAL),
             )
             with open(path, "wb") as f:
