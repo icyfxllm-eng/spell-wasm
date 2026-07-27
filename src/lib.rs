@@ -8,6 +8,7 @@ mod climb;
 mod consts;
 mod daily;
 mod deck;
+mod defmatch; // CC-DEF-MATCH P1 core engine (REVIEW-GATED; hub wiring is P2)
 mod dom;
 pub mod editor;
 mod enrich;
