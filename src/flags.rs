@@ -111,6 +111,13 @@ pub fn attempts_shields() -> bool {
 /// Effective value of a tool flag by its storage name (the `<name>` in
 /// `spell_flag_<name>`), honoring each flag's compiled-in default. Used by the
 /// Tools hub to set a row's initial switch state without duplicating defaults.
+/// CC-DEF-MATCH — Definition Match (REVIEW-GATED). Default ON: the registry
+/// entry is coming_soon (teaser only) until P3 lands the playable loop, so the
+/// flag currently just lets the teaser tile render.
+pub fn def_match() -> bool {
+    resolve(stored("def_match").as_deref(), true)
+}
+
 pub fn is_on(name: &str) -> bool {
     match name {
         "ghost_racing" => ghost_racing(),
@@ -121,6 +128,7 @@ pub fn is_on(name: &str) -> bool {
         "online_spelloff" => online_spelloff(),
         "spell_aloud" => spell_aloud(),
         "attempts_shields" => attempts_shields(),
+        "def_match" => def_match(),
         _ => false,
     }
 }

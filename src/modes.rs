@@ -188,11 +188,11 @@ mod tests {
     #[test]
     fn registry_parses_and_holds_the_shipped_modes() {
         let all = all();
-        assert_eq!(all.len(), 7, "7 modes registered");
+        assert_eq!(all.len(), 8, "8 modes registered");
         // File order IS tile order (D6).
         assert_eq!(
             ids(&all),
-            vec!["ghost_racing", "syllable_replay", "say_it", "photo_list", "spell_aloud", "word_stories", "online_spelloff"],
+            vec!["ghost_racing", "syllable_replay", "say_it", "photo_list", "spell_aloud", "word_stories", "online_spelloff", "def_match"],
         );
     }
 
@@ -216,7 +216,11 @@ mod tests {
         let got = ids(&visible(&all, &c));
         // ghost_racing + spell_aloud (kid-available per D5); say_it is a COPPA
         // hard-disable; syllable_replay is es-only. Registry order.
-        assert_eq!(got, vec!["ghost_racing", "spell_aloud"], "en Kid: ghost_racing + spell_aloud");
+        assert_eq!(
+            got,
+            vec!["ghost_racing", "spell_aloud", "def_match"],
+            "en Kid: ghost_racing + spell_aloud + the def_match teaser (kidSafe, coming_soon)"
+        );
         assert!(!got.contains(&"say_it".to_string()), "say_it is never kid-visible (COPPA)");
         assert!(!got.contains(&"photo_list".to_string()));
     }
@@ -226,7 +230,7 @@ mod tests {
         let all = all();
         let c = HubCtx { kid: true, lang: "es".into(), ..ctx() };
         // + spell_aloud (kid-available per D5, es supports voice spell). Registry order.
-        assert_eq!(ids(&visible(&all, &c)), vec!["ghost_racing", "syllable_replay", "spell_aloud"]);
+        assert_eq!(ids(&visible(&all, &c)), vec!["ghost_racing", "syllable_replay", "spell_aloud", "def_match"]);
     }
 
     #[test]

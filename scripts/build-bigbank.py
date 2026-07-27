@@ -37,7 +37,7 @@ SOURCES = {
     "fil": "tgl_wikipedia_2021_100K", "ja": "jpn_wikipedia_2021_100K",
     # CC-MASTER-PARITY Tracks R/A/S — Russian, Arabic, Swahili.
     "ru": "rus_wikipedia_2021_100K", "ar": "ara_wikipedia_2021_100K",
-    "sw": "swa_wikipedia_2021_100K",
+    "sw": "swa_wikipedia_2021_100K", "hi": "hin_wikipedia_2021_100K",
 }
 # Languages we lowercase + apply the case-based proper-noun filter to. German is
 # EXCLUDED: it capitalises every common noun (Haus, Baum), so case can't tell a
@@ -45,7 +45,7 @@ SOURCES = {
 # its corpus case and takes the residual proper nouns (like the caseless scripts).
 # ru (Cyrillic) and sw (Latin) capitalise proper nouns only, like es/fr, so the
 # case-based proper-noun filter applies. Arabic is caseless — residual PN, like ko/ja.
-CASED = {"en", "es", "fr", "pt", "pl", "vi", "fil", "ru", "sw"}
+CASED = {"en", "es", "fr", "pt", "pl", "vi", "fil", "ru", "sw"}  # hi: Devanagari, caseless — residual-PN path like ar/ko/ja
 PRESERVE_CASE = {"de"}  # keep as-is, no lowercase, no case-based PN filter
 
 # Reuse the production charset gate (identical ko/vi handling).

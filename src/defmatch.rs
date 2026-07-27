@@ -98,6 +98,17 @@ fn shuffled(n: usize, state: &mut u64) -> Vec<u8> {
     v
 }
 
+/// P2 entitlement depth: PREVIEW reaches tier 1 (easy) only; FULL reaches all
+/// tiers (acceptance #9). Enforced here in core — the hub asks, it never decides.
+pub fn allowed_tiers(level: crate::entitlements::AccessLevel) -> &'static [&'static str] {
+    use crate::entitlements::AccessLevel;
+    match level {
+        AccessLevel::Full => &["easy", "medium", "hard", "expert"],
+        AccessLevel::Preview => &["easy"],
+        AccessLevel::None => &[],
+    }
+}
+
 /// The Kid Mode tier ceiling (Invariant 6): hard/expert requests clamp to
 /// medium IN CORE — the UI can ask, the engine refuses.
 pub fn effective_tier<'a>(tier: &'a str, kid: bool) -> &'a str {
@@ -383,6 +394,16 @@ mod tests {
                 assert!(matches!(row.tier.as_str(), "easy" | "medium"), "above-medium row {w} in a Kid round");
             }
         }
+    }
+
+    /// Acceptance #9 (core rule): PREVIEW reaches tier 1 only; FULL reaches
+    /// all tiers; None reaches none.
+    #[test]
+    fn entitlement_tier_depth() {
+        use crate::entitlements::AccessLevel;
+        assert_eq!(allowed_tiers(AccessLevel::Preview), &["easy"]);
+        assert_eq!(allowed_tiers(AccessLevel::Full), &["easy", "medium", "hard", "expert"]);
+        assert!(allowed_tiers(AccessLevel::None).is_empty());
     }
 
     /// D1: rows failing prompt-grade are absent from the pool (the word stays

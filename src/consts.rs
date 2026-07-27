@@ -223,6 +223,18 @@ pub fn script_joins(lang: &str) -> bool {
     rtl_required(lang)
 }
 
+/// CC-DEF-MATCH per-language activation (Invariant 7/8: THE registry flag, no
+/// other per-language logic anywhere). True only when the language's definition
+/// pool meets the D3 floor (40 prompt-grade rows) in at least one tier under
+/// Eric's 2026-07-27 interim-content ruling (mechanical prescreen stands in for
+/// the still-open Gig A audit; the formal native review remains a follow-up).
+/// Values are pinned from `scripts/build-def-pools.py` summaries — re-run it
+/// and update here (snapshot test pins the current truth). All-false except zh
+/// until the first full pool build lands.
+pub fn def_match(lang: &str) -> bool {
+    matches!(lang, ZH)
+}
+
 /// A language's availability status (ComingSoon for anything not in the registry).
 pub fn lang_status(lang: &str) -> LangStatus {
     BUILTIN_LANGS.iter().find(|(c, _, _, _)| *c == lang).map(|(_, _, s, _)| *s).unwrap_or(ComingSoon)
@@ -409,6 +421,21 @@ mod registry_tests {
             assert!(expected.iter().any(|(c, _)| c == code), "{code} missing from the OCR matrix");
         }
         assert_eq!(ocr_support("xx"), Unsupported, "unregistered languages hide the feature");
+    }
+
+    /// CC-DEF-MATCH: the per-language activation snapshot. zh activates first
+    /// (its CC-CEDICT pool clears the D3 floor in all four tiers); everything
+    /// else stays false until its wiktionary pool build lands and this pin is
+    /// updated DELIBERATELY alongside it.
+    #[test]
+    fn def_match_activation_snapshot() {
+        assert!(def_match("zh"), "zh pool clears the D3 floor (CEDICT, all tiers)");
+        for (code, _, _, _) in LANGS_BASE.iter() {
+            if *code != "zh" {
+                assert!(!def_match(code), "{code} must stay false until its pool build is pinned");
+            }
+        }
+        assert!(!def_match("xx"), "unregistered languages never activate");
     }
 
     /// CC-LINEUP-SWAP D2 — exactly ar is RTL, and (in production) it cannot be
