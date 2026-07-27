@@ -511,6 +511,34 @@ def meaning():
     return jsonify({"pos": pos, "definition": definition, "example": example})
 
 
+DEF_POOLS_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), "def_pools")
+
+
+@app.route("/api/defpool")
+def defpool():
+    """CC-DEF-MATCH round data: the prescreened definition pool + exclusion
+    sets for one (lang, tier), built by scripts/build-def-pools.py. The Rust
+    core consumes this verbatim and does ALL selection — this route never
+    chooses content. Rows carry prompt_grade/kid_register flags; the core
+    filters (D1/Invariant 6)."""
+    lang = (request.args.get("lang") or "").split("-")[0].lower()
+    tier = request.args.get("tier") or ""
+    if tier not in ("easy", "medium", "hard", "expert"):
+        return jsonify({"error": "bad tier"}), 400
+    path = os.path.join(DEF_POOLS_DIR, f"{lang}.json")
+    if not os.path.isfile(path):
+        return jsonify({"error": "no pool"}), 404
+    with open(path, encoding="utf-8") as f:
+        data = json.load(f)
+    rows = data.get("tiers", {}).get(tier, [])
+    # Trim exclusions to the words actually present in this tier's rows.
+    words = {r["word"] for r in rows}
+    excl = {w: [x for x in xs if x in words] for w, xs in data.get("exclusions", {}).items() if w in words}
+    resp = jsonify({"lang": lang, "tier": tier, "rows": rows, "exclusions": excl})
+    resp.headers["Cache-Control"] = "public, max-age=3600"
+    return resp
+
+
 @app.route("/api/sentence-audio")
 def sentence_audio():
     """Speaks the word's real (unmasked) example sentence — hearing a word
