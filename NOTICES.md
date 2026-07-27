@@ -8,6 +8,9 @@ build inputs and are not redistributed.
 - **Wiktionary** (en.wiktionary.org) — non-English word definitions and example
   sentences, fetched at runtime by the backend's `/api/meaning` proxy and cached.
   Text © Wiktionary contributors, **CC BY-SA 4.0**; served with attribution.
+- **CC-CEDICT** (mdbg.net) — Chinese-English glosses for the zh word bank,
+  extracted by scripts/build-zh-glosses.py into backend/zh_glosses.json and
+  served by /api/meaning. © CC-CEDICT contributors, **CC BY-SA 4.0**.
 - **Leipzig Corpora Collection** (wortschatz-leipzig.de) — monolingual,
   frequency-ranked word lists (Wikipedia/news editions), **CC BY 4.0**. Used by
   `scripts/build-bigbank.py` (production banks), `scripts/build-zh-bank.py` (the

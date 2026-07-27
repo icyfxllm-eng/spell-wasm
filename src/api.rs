@@ -331,7 +331,16 @@ pub fn meaning_supported(lang: &str) -> bool {
     matches!(
         base,
         "en" | "es" | "fr" | "de" | "pt" | "pl" | "vi" | "ko" | "ja" | "ru" | "ar" | "hi" | "sw" | "fil"
+            | "zh" | "cmn" // bundled CC-CEDICT glosses (backend/zh_glosses.json)
     )
+}
+
+/// Example sentences exist for every meaning-supported language EXCEPT Chinese
+/// (CC-CEDICT is glosses-only) — the Sentence hint hides rather than always
+/// answering "no example found".
+pub fn sentence_supported(lang: &str) -> bool {
+    let base = lang.split(['-', '_']).next().unwrap_or(lang);
+    meaning_supported(lang) && !matches!(base, "zh" | "cmn")
 }
 
 pub async fn fetch_meaning(word: &str, mask: bool, lang: &str) -> Result<(String, String, String), JsValue> {

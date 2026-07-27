@@ -300,6 +300,23 @@ MEANING_LANGS = {
     "fil": "tl",
 }
 WIKTIONARY_DEF = "https://en.wiktionary.org/api/rest_v1/page/definition/{}"
+
+# Chinese: Wiktionary's endpoint omits zh sections, so glosses come from a
+# BUNDLED CC-CEDICT extract (backend/zh_glosses.json, built by
+# scripts/build-zh-glosses.py; CC BY-SA, attribution in NOTICES.md). Keyed by
+# the simplified hanzi — the client sends the hanzi, not the typed pinyin.
+try:
+    with open(os.path.join(os.path.dirname(os.path.abspath(__file__)), "zh_glosses.json"), encoding="utf-8") as _f:
+        ZH_GLOSSES = json.load(_f)
+except OSError:
+    ZH_GLOSSES = {}
+
+
+def fetch_meaning_zh(word: str):
+    g = ZH_GLOSSES.get(word)
+    if not g:
+        return None
+    return {"pos": "", "definition": g["definition"], "example": ""}
 _TAG_RE = re.compile(r"<[^>]+>")
 
 
@@ -477,6 +494,8 @@ def meaning():
     lang = (request.args.get("lang") or "en").split("-")[0].lower()
     if lang == "en":
         data = fetch_meaning(word)
+    elif lang in ("zh", "cmn"):
+        data = fetch_meaning_zh(word)
     elif lang in MEANING_LANGS:
         data = fetch_meaning_wiktionary(word, lang)
     else:

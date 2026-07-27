@@ -724,9 +724,15 @@ pub fn show_meaning(app: &App, word: String, lang_key: String) {
         dom::set_html("meaning", &format!("<span class=\"m-word\">{}</span>{}", dom::escape_html(&word), ins));
         dom::add_class("meaning", "show");
     }
+    // Chinese: the gloss table is keyed by the HANZI (what the page/audio show),
+    // not the typed pinyin.
+    let lookup = {
+        let s = app.borrow();
+        if s.cur_lang == crate::consts::ZH { s.spoken.clone() } else { word.clone() }
+    };
     let app = app.clone();
     spawn_local(async move {
-        let Some((pos, def, example)) = fetch_definition(word.clone(), code).await else { return };
+        let Some((pos, def, example)) = fetch_definition(lookup, code).await else { return };
         let current = MEANING_SEQ.with(|c| *c.borrow());
         if current != my_seq {
             return;
@@ -766,7 +772,8 @@ pub fn show_meaning(app: &App, word: String, lang_key: String) {
 pub fn show_definition_hint(app: &App) {
     let (word, cur_lang) = {
         let s = app.borrow();
-        (s.word.clone(), s.cur_lang.clone())
+        let w = if s.cur_lang == crate::consts::ZH { s.spoken.clone() } else { s.word.clone() };
+        (w, s.cur_lang.clone())
     };
     if word.is_empty() || !api::meaning_supported(&cur_lang) {
         return;
@@ -798,7 +805,7 @@ pub fn show_sentence_hint(app: &App) {
         let s = app.borrow();
         (s.word.clone(), s.cur_lang.clone())
     };
-    if word.is_empty() || !api::meaning_supported(&cur_lang) {
+    if word.is_empty() || !api::sentence_supported(&cur_lang) {
         return;
     }
     let lang_base = cur_lang;
@@ -997,11 +1004,14 @@ pub fn next_word(app: &App) {
     // Definition/Sentence hints route through our backend's masking proxy —
     // English via dictionaryapi.dev, other languages via en.wiktionary
     // (api::meaning_supported is the gate; zh has no source, so no button).
-    let has_defs = api::meaning_supported(&app.borrow().cur_lang);
+    let (has_defs, has_sentence) = {
+        let l = app.borrow().cur_lang.clone();
+        (api::meaning_supported(&l), api::sentence_supported(&l))
+    };
     dom::toggle_class("defBtn", "btn-hide", !has_defs);
-    dom::toggle_class("sentenceBtn", "btn-hide", !has_defs);
+    dom::toggle_class("sentenceBtn", "btn-hide", !has_sentence);
     dom::set_disabled("defBtn", !has_defs);
-    dom::set_disabled("sentenceBtn", !has_defs);
+    dom::set_disabled("sentenceBtn", !has_sentence);
     dom::set_text("hintLine", "");
     render_tries(app);
     dom::el("feedback").set_class_name("feedback");
@@ -1493,9 +1503,9 @@ fn grant_retry(app: &App, feedback_key: &str) {
     dom::set_disabled("checkBtn", false);
     dom::set_disabled("hintBtn", false);
     dom::set_disabled("giveupBtn", false);
-    let has_defs = api::meaning_supported(&app.borrow().cur_lang);
-    dom::set_disabled("defBtn", !has_defs);
-    dom::set_disabled("sentenceBtn", !has_defs);
+    let l = app.borrow().cur_lang.clone();
+    dom::set_disabled("defBtn", !api::meaning_supported(&l));
+    dom::set_disabled("sentenceBtn", !api::sentence_supported(&l));
     render_letters(app, false);
     dom::add_class("orbWrap", "bad");
     spell_feedback(false);
