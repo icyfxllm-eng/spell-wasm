@@ -72,11 +72,32 @@ pub fn wire(app: &App) {
         return;
     }
 
-    // Capture -> recognize -> review.
+    // Capture -> recognize -> review. The camera button opens a SOURCE CHOOSER
+    // (Eric's request): take a photo with the camera, or pick an existing one
+    // from the photo library — both feed the same recognition pipeline.
+    dom::on_click("photoBtn", || {
+        dom::add_class("photoSrcScrim", "show");
+    });
     {
         let a = app.clone();
-        dom::on_click("photoBtn", move || start_capture(&a));
+        dom::on_click("photoSrcCamera", move || {
+            dom::remove_class("photoSrcScrim", "show");
+            start_capture(&a, "camera");
+        });
     }
+    {
+        let a = app.clone();
+        dom::on_click("photoSrcLibrary", move || {
+            dom::remove_class("photoSrcScrim", "show");
+            start_capture(&a, "library");
+        });
+    }
+    dom::on_click("photoSrcCancel", || dom::remove_class("photoSrcScrim", "show"));
+    dom::on::<web_sys::Event, _>("photoSrcScrim", "click", |e| {
+        if dom::is_self_target(&e, "photoSrcScrim") {
+            dom::remove_class("photoSrcScrim", "show");
+        }
+    });
 
     // Confirm the reviewed set (routes through the standard save gate).
     {
@@ -125,7 +146,7 @@ pub fn wire(app: &App) {
     reflect_visibility(app);
 }
 
-fn start_capture(app: &App) {
+fn start_capture(app: &App, source: &str) {
     // Recognition language seeds Vision's recognitionLanguages; reuse the saved
     // "Speak in" language, defaulting to en-US.
     let lang = {
@@ -145,10 +166,10 @@ fn start_capture(app: &App) {
         crate::consts::OcrSupport::EnglishFallback => ("en-US".to_string(), false),
         _ => (lang.clone(), true),
     };
-    // Camera-first: photographing the page IS the feature (VisionKit document
-    // scanner, multi-page). The native side falls back to the plain camera, then
-    // the photo library, when scanner/camera don't exist (simulator).
-    let promise = match native_lang::recognize_word_list(&rec_lang, "camera", correction) {
+    // `source` comes from the chooser: "camera" opens the camera (native falls
+    // back to the library when no camera exists, e.g. simulator); "library"
+    // opens the photo picker directly.
+    let promise = match native_lang::recognize_word_list(&rec_lang, source, correction) {
         Some(p) => p,
         None => return, // recognizer vanished (shouldn't happen; button is gated).
     };

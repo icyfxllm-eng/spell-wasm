@@ -170,22 +170,50 @@ extension NativeLanguageKitPlugin {
         let avgChar = totalWidth / CGFloat(totalChars)
 
         // Left-to-right greedy merge so "so ft ware" can chain into one word.
+        //
+        // OVER-MERGE GUARD (device report: five words written close together
+        // imported as ONE entry): a tight gap alone no longer merges when BOTH
+        // sides are real dictionary words — "cat dog" stays two words no matter
+        // how cramped the handwriting, while "soft ware" (join is a word) and
+        // "sof tware" (a side is a non-word fragment) still heal. For languages
+        // the OS spell-checker can't judge, geometry stands alone but with a
+        // much stricter gap so cramped neighbours don't fuse.
+        let hasDict = hasDictionary(language)
         var outTokens: [String] = [tokens[0].text]
         var prevBox = boxes[0]
         for i in 1..<tokens.count {
             let gap = boxes[i].minX - prevBox.maxX
-            let tight = gap <= 0.45 * avgChar
             let moderate = gap <= 1.1 * avgChar
-            let joined = outTokens[outTokens.count - 1] + tokens[i].text
-            if tight || (moderate && isDictionaryWord(joined, language: language)) {
+            let left = outTokens[outTokens.count - 1]
+            let right = tokens[i].text
+            let joined = left + right
+            let merge: Bool
+            if hasDict {
+                let tight = gap <= 0.45 * avgChar
+                let bothReal = isDictionaryWord(left, language: language)
+                    && isDictionaryWord(right, language: language)
+                merge = (moderate && isDictionaryWord(joined, language: language))
+                    || (tight && !bothReal)
+            } else {
+                merge = gap <= 0.25 * avgChar
+            }
+            if merge {
                 outTokens[outTokens.count - 1] = joined
                 prevBox = prevBox.union(boxes[i])
             } else {
-                outTokens.append(tokens[i].text)
+                outTokens.append(right)
                 prevBox = boxes[i]
             }
         }
         return outTokens.joined(separator: " ")
+    }
+
+    /// Does UITextChecker have a dictionary for this language at all? Decides
+    /// whether dictionary evidence can veto geometry merges.
+    fileprivate static func hasDictionary(_ language: String?) -> Bool {
+        guard let language = language, !language.isEmpty else { return false }
+        let primary = language.split(separator: "-").first.map(String.init)?.lowercased() ?? language
+        return UITextChecker.availableLanguages.contains { $0.lowercased().hasPrefix(primary) }
     }
 
     /// True when the OS spell-checker accepts `w` for the recognition language —
