@@ -229,11 +229,13 @@ pub fn script_joins(lang: &str) -> bool {
 /// Eric's 2026-07-27 interim-content ruling (mechanical prescreen stands in for
 /// the still-open Gig A audit; the formal native review remains a follow-up).
 /// Values are pinned from `scripts/build-def-pools.py` summaries — re-run it
-/// and update here (snapshot test pins the current truth). Pinned 2026-07-27:
-/// zh (CEDICT, 277-284/tier), en (542-579/tier), es (553-659/tier) — every
-/// tier clears the floor. Remaining languages flip as their fetches finish.
+/// and update here (snapshot test pins the current truth). Pinned 2026-07-27
+/// (partial activation pass; all rebuilt under the tightened FORM_OF filter):
+/// zh 277-284, en 450-554, es 541-651, fr 517-556, de 333-494, pt 477-625,
+/// pl 305-537 per tier — every tier clears the 40 floor. vi/ko/ja/ru/ar/hi/sw/
+/// fil flip when their fetches land (scheduled finishing pass).
 pub fn def_match(lang: &str) -> bool {
-    matches!(lang, ZH | EN | ES)
+    matches!(lang, ZH | EN | ES | FR | DE | PT | PL)
 }
 
 /// A language's availability status (ComingSoon for anything not in the registry).
@@ -436,11 +438,11 @@ mod registry_tests {
     /// updated DELIBERATELY alongside it.
     #[test]
     fn def_match_activation_snapshot() {
-        for on in ["zh", "en", "es"] {
+        for on in ["zh", "en", "es", "fr", "de", "pt", "pl"] {
             assert!(def_match(on), "{on} pool clears the D3 floor in every tier (pinned 2026-07-27)");
         }
         for (code, _, _, _) in LANGS_BASE.iter() {
-            if !matches!(*code, "zh" | "en" | "es") {
+            if !matches!(*code, "zh" | "en" | "es" | "fr" | "de" | "pt" | "pl") {
                 assert!(!def_match(code), "{code} must stay false until its pool build is pinned");
             }
         }
