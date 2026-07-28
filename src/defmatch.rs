@@ -98,6 +98,22 @@ fn shuffled(n: usize, state: &mut u64) -> Vec<u8> {
     v
 }
 
+/// P4 (D9): the Climb-variant forging adapter — Definition Match becomes
+/// another legal way to forge shields by calling the EXACT functions core
+/// spelling calls, in the same order, with no new rules: a first-tap catch is
+/// a validated correct (`attempts::shield_on_correct`), any miss (wrong tap or
+/// timeout) resets the earn streak (`attempts::shield_note_miss`). Casual mode
+/// never calls this (streaks are score-only there).
+/// Returns whether a shield was just earned.
+pub fn climb_outcome(state: &mut crate::model::AppState, caught_first_tap: bool) -> bool {
+    if caught_first_tap {
+        crate::attempts::shield_on_correct(state)
+    } else {
+        crate::attempts::shield_note_miss(state);
+        false
+    }
+}
+
 /// P2 entitlement depth: PREVIEW reaches tier 1 (easy) only; FULL reaches all
 /// tiers (acceptance #9). Enforced here in core — the hub asks, it never decides.
 pub fn allowed_tiers(level: crate::entitlements::AccessLevel) -> &'static [&'static str] {
@@ -392,6 +408,38 @@ mod tests {
                 let row = by_word[w.as_str()];
                 assert!(row.kid_register, "non-Kid-register row {w} in a Kid round");
                 assert!(matches!(row.tier.as_str(), "easy" | "medium"), "above-medium row {w} in a Kid round");
+            }
+        }
+    }
+
+    /// Acceptance #7: shield parity. The SAME outcome sequence driven through
+    /// the Definition Match adapter and through the exact calls core spelling
+    /// makes (game.rs) must leave identical shield accounting at EVERY step —
+    /// one ruleset, no drift possible.
+    #[test]
+    fn shield_parity_with_core_spelling() {
+        use crate::model::AppState;
+        let sequences: &[&[bool]] = &[
+            &[true, true, true, true, true, true, true],
+            &[true, true, false, true, true, true, false],
+            &[false, false, true, true, true, true, true, true, true, true],
+            &[true; 25],
+        ];
+        for seq in sequences {
+            let mut via_defmatch = AppState::default();
+            let mut via_spelling = AppState::default();
+            for &correct in *seq {
+                let a = climb_outcome(&mut via_defmatch, correct);
+                // What game.rs does on the same outcome (1201 / 1557).
+                let b = if correct {
+                    crate::attempts::shield_on_correct(&mut via_spelling)
+                } else {
+                    crate::attempts::shield_note_miss(&mut via_spelling);
+                    false
+                };
+                assert_eq!(a, b, "earn event diverged mid-sequence");
+                assert_eq!(via_defmatch.aids.shields, via_spelling.aids.shields);
+                assert_eq!(via_defmatch.aids.earn_streak, via_spelling.aids.earn_streak);
             }
         }
     }

@@ -54,6 +54,9 @@ thread_local! {
     static PHASE: Cell<u8> = const { Cell::new(2) };
     static ESCAPED: Cell<u32> = const { Cell::new(0) };
     static OPEN: Cell<bool> = const { Cell::new(false) };
+    /// P4 (D9): entered from a Climb level selection — catches forge shields
+    /// through the shared adapter; casual sessions never touch shield state.
+    static CLIMB: Cell<bool> = const { Cell::new(false) };
 }
 
 pub fn wire(app: &App) {
@@ -94,8 +97,13 @@ pub fn open(app: &App) {
     if !crate::consts::def_match(&lang) {
         return; // tile renders unavailable; belt-and-suspenders.
     }
-    // "climb" isn't a defmatch tier (the Climb variant is P4): play medium.
-    if tier == "climb" {
+    // Climb variant (P4/D9): the level picker's "climb" plays medium-tier
+    // rounds that FORGE SHIELDS via the shared adapter — same earn streak,
+    // same cap, same reset rules as core spelling. Unranked (D4): no
+    // leaderboard posting, no climb-band movement.
+    let climb = tier == "climb";
+    CLIMB.with(|c| c.set(climb));
+    if climb {
         tier = "medium".to_string();
     }
     // Entitlement depth (acceptance #9): clamp to the deepest allowed tier.
@@ -316,12 +324,16 @@ fn tap(app: &App, idx: usize) {
         if late {
             dom::set_text("dmStatus", &i18n::t("defmatch.caught"));
         }
-        let streak = STREAK.with(|c| {
-            c.set(c.get() + 1);
-            c.get()
-        });
-        let _ = streak;
+        STREAK.with(|c| c.set(c.get() + 1));
         render_streak();
+        // P4: forging — a first-tap catch is a validated correct.
+        if CLIMB.with(Cell::get) {
+            let earned = defmatch::climb_outcome(&mut app.borrow_mut(), true);
+            crate::game::update_shield_hud(app);
+            if earned {
+                dom::set_text("dmStatus", &i18n::t("shield.earned"));
+            }
+        }
         after(650, {
             let app = app.clone();
             move || {
@@ -430,11 +442,16 @@ fn on_escape(app: &App) {
     });
 }
 
-/// Every miss (wrong tap or timeout) enters spaced repetition, as v1.
+/// Every miss (wrong tap or timeout) enters spaced repetition, as v1 — and in
+/// the Climb variant it resets the shield earn streak (PD2, shared adapter).
 fn record_miss(app: &App) {
     let word = TARGET.with(|t| t.borrow().clone());
     let (lang, tier) = (app.borrow().lang.clone(), TIER.with(|t| t.borrow().clone()));
     misses::add_miss(&mut app.borrow_mut(), &word, &lang, &tier);
+    if CLIMB.with(Cell::get) {
+        let _ = defmatch::climb_outcome(&mut app.borrow_mut(), false);
+        crate::game::update_shield_hud(app);
+    }
 }
 
 fn advance(app: &App) {
