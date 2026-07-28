@@ -223,7 +223,20 @@ pub fn open(app: &App) {
 
     let app = app.clone();
     spawn_local(async move {
-        if ensure_pool(&lang, &tier).await {
+        // D3 floor per (language, tier): if the chosen tier's pool is under
+        // 40 prompt-grade rows (ja hard/expert, ar expert today), step DOWN to
+        // the language's deepest tier that clears it rather than erroring.
+        let ladder = ["expert", "hard", "medium", "easy"];
+        let start = ladder.iter().position(|t| *t == tier.as_str()).unwrap_or(3);
+        let mut ok = false;
+        for t in &ladder[start..] {
+            if ensure_pool(&lang, t).await {
+                TIER.with(|x| *x.borrow_mut() = t.to_string());
+                ok = true;
+                break;
+            }
+        }
+        if ok {
             dom::set_text("dmStatus", "");
             next_round(&app);
         } else {
