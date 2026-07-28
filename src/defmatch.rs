@@ -105,6 +105,34 @@ fn shuffled(n: usize, state: &mut u64) -> Vec<u8> {
     v
 }
 
+/// CC-DEFMATCH-POLISH D3 — card speed as a DURATION multiplier on travel time.
+/// Player-facing steps map to speed 0.6x / 1.0x / 1.4x, i.e. duration x1.67 /
+/// x1.0 / x0.71 (PROPOSED values, flagged for review). Comfort control only:
+/// round generation takes no speed input, so results are identical across
+/// settings by construction (I3). Kid Mode defaults to Relaxed when unset;
+/// iOS Reduce Motion forces Relaxed as the floor (I4).
+pub fn speed_duration_mult(setting: Option<&str>, kid: bool, reduce_motion: bool) -> f32 {
+    let chosen: f32 = match setting {
+        Some("relaxed") => 1.67,
+        Some("swift") => 0.71,
+        Some("standard") => 1.0,
+        // Unset: Kid Mode starts Relaxed; everyone else Standard.
+        None => {
+            if kid {
+                1.67
+            } else {
+                1.0
+            }
+        }
+        _ => 1.0,
+    };
+    if reduce_motion {
+        chosen.max(1.67)
+    } else {
+        chosen
+    }
+}
+
 /// P4 (D9): the Climb-variant forging adapter — Definition Match becomes
 /// another legal way to forge shields by calling the EXACT functions core
 /// spelling calls, in the same order, with no new rules: a first-tap catch is
@@ -449,6 +477,26 @@ mod tests {
                 assert!(matches!(row.tier.as_str(), "easy" | "medium"), "above-medium row {w} in a Kid round");
             }
         }
+    }
+
+    /// D3 (POLISH): speed maps duration only; Kid unset = Relaxed; Reduce
+    /// Motion floors everything at Relaxed; and a seeded round is byte-
+    /// identical regardless of setting (generation takes no speed input).
+    #[test]
+    fn speed_is_comfort_only() {
+        assert_eq!(speed_duration_mult(Some("relaxed"), false, false), 1.67);
+        assert_eq!(speed_duration_mult(Some("standard"), false, false), 1.0);
+        assert_eq!(speed_duration_mult(Some("swift"), false, false), 0.71);
+        assert_eq!(speed_duration_mult(None, true, false), 1.67, "Kid fresh profile starts Relaxed");
+        assert_eq!(speed_duration_mult(None, false, false), 1.0);
+        assert_eq!(speed_duration_mult(Some("swift"), false, true), 1.67, "Reduce Motion floors at Relaxed");
+        // I3: identical seeded rounds across settings — generation has no
+        // speed parameter, byte-identity is structural; pin it anyway.
+        let rows = fixture_rows();
+        let ex = ExclusionSets::default();
+        let a = generate(&rows, &ex, "medium", "medium_w3", 5, false).unwrap();
+        let b = generate(&rows, &ex, "medium", "medium_w3", 5, false).unwrap();
+        assert_eq!(a, b);
     }
 
     /// D8: a reverse round floats WORDS, prompts the target's definition,

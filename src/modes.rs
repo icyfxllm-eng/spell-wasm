@@ -34,6 +34,10 @@ pub enum Status {
     Hidden,
 }
 
+fn default_exit_style() -> String {
+    "instant".to_string()
+}
+
 /// One registry entry. Mirrors `config/modes.json`; see that file for what each
 /// field means and why it holds the value it does.
 #[derive(Deserialize, Debug, Clone)]
@@ -52,6 +56,11 @@ pub struct Mode {
     pub entitlement_level: Level,
     #[serde(rename = "requiresPremium")]
     pub requires_premium: Option<String>,
+    /// CC-DEFMATCH-POLISH D2: how the mode's exit control behaves — "instant"
+    /// leaves immediately; "confirm" (scored runs that forfeit) shows the
+    /// two-button keep/leave dialog. Registry-driven, reviewable as a table.
+    #[serde(rename = "exitStyle", default = "default_exit_style")]
+    pub exit_style: String,
     pub languages: Option<Vec<String>>,
 }
 
@@ -194,6 +203,17 @@ mod tests {
             ids(&all),
             vec!["practice", "ghost_racing", "syllable_replay", "say_it", "photo_list", "spell_aloud", "word_stories", "online_spelloff", "def_match"],
         );
+    }
+
+    /// CC-DEFMATCH-POLISH D2 — the exit-classification table, pinned for
+    /// review: only scored-forfeit modes confirm; everything else exits
+    /// instantly (ambiguity defaulted to instant per the spec).
+    #[test]
+    fn exit_classification_table() {
+        for m in all() {
+            let want = if m.id == "ghost_racing" { "confirm" } else { "instant" };
+            assert_eq!(m.exit_style, want, "{}: exit style drifted", m.id);
+        }
     }
 
     #[test]

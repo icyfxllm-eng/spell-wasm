@@ -31,11 +31,55 @@ fn timing(tier: &str, kid: bool) -> (u32, u32) {
         "hard" => (650, 6200),
         _ => (520, 4600),
     };
-    if kid {
+    let (stagger, dwell) = if kid {
         (stagger + 200, dwell + 1500)
     } else {
         (stagger, dwell)
-    }
+    };
+    // POLISH D3: the player's card-speed choice scales TRAVEL DURATION only —
+    // never scoring, tiers, or selection. Kid unset = Relaxed; Reduce Motion
+    // floors at Relaxed.
+    let mult = defmatch::speed_duration_mult(speed_setting().as_deref(), kid, reduce_motion());
+    (stagger, (dwell as f32 * mult) as u32)
+}
+
+const SPEED_KEY: &str = "spell_dm_speed";
+
+fn speed_setting() -> Option<String> {
+    crate::storage::get_raw(SPEED_KEY)
+}
+
+fn reduce_motion() -> bool {
+    web_sys::window()
+        .and_then(|w| w.match_media("(prefers-reduced-motion: reduce)").ok().flatten())
+        .map(|m| m.matches())
+        .unwrap_or(false)
+}
+
+/// Cycle Relaxed -> Standard -> Swift, persist, reflect the icon, and flash
+/// the localized name. Takes effect on the next round's cards.
+fn cycle_speed(kid: bool) {
+    let cur = speed_setting();
+    let effective = cur.as_deref().unwrap_or(if kid { "relaxed" } else { "standard" });
+    let next = match effective {
+        "relaxed" => "standard",
+        "standard" => "swift",
+        _ => "relaxed",
+    };
+    crate::storage::set_raw(SPEED_KEY, next);
+    reflect_speed(kid);
+    dom::set_text("dmStatus", &i18n::t(&format!("defmatch.speed.{next}")));
+}
+
+fn reflect_speed(kid: bool) {
+    let effective = speed_setting().unwrap_or_else(|| (if kid { "relaxed" } else { "standard" }).to_string());
+    let shown = if reduce_motion() { "relaxed" } else { effective.as_str() };
+    let icon = match shown {
+        "relaxed" => "🐢",
+        "swift" => "🐇",
+        _ => "▶️",
+    };
+    dom::set_text("dmSpeed", icon);
 }
 
 thread_local! {
@@ -74,6 +118,9 @@ pub fn wire(app: &App) {
     // Orb replay (Feature 1): tap anytime to hear the word again.
     let a = app.clone();
     dom::on_click("dmOrb", move || speak_target(&a));
+    // POLISH D3: the card-speed toggle (comfort control, next round onward).
+    let a = app.clone();
+    dom::on_click("dmSpeed", move || cycle_speed(a.borrow().kid));
     // Reveal-beat skip (D7) — tapping anywhere on the field during the beat.
     // Guarded by the reveal's start time: the SAME tap that caused the reveal
     // bubbles here too, and must not skip what it just started.
@@ -169,6 +216,7 @@ pub fn open(app: &App) {
     SESSION_SEED.with(|c| c.set(js_sys::Date::now() as u64));
     OPEN.with(|c| c.set(true));
     render_streak();
+    reflect_speed(kid);
     dom::add_class("defMatch", "show");
     dom::set_html("dmField", "");
     dom::set_text("dmStatus", &i18n::t("climb.loading"));

@@ -323,6 +323,14 @@
   .dm-card.word .dm-def{font-size:20px;font-weight:700}
   body.kid .dm-card.word .dm-def{font-size:24px}
   .dm-card.word .dm-owner{font-size:11px;font-weight:400}
+  /* CC-DEFMATCH-POLISH D1/D2 — shared full-screen mode chrome: content NEVER
+     under the status bar / Dynamic Island (safe-area insets, not pixel nudges);
+     the exit control is 44x44, top-left, in-flow. */
+  .dm-screen,.pr-screen{padding-top:calc(env(safe-area-inset-top,0px) + 8px);
+    padding-bottom:calc(env(safe-area-inset-bottom,0px) + 8px)}
+  .mode-exit{position:static;width:44px;height:44px;min-width:44px;font-size:20px;
+    border:1px solid var(--edge);border-radius:12px;background:var(--panel-2);
+    display:flex;align-items:center;justify-content:center;flex:none}
   .pr-screen{position:fixed;inset:0;background:var(--bg,#0e1420);z-index:59;display:none;flex-direction:column;padding:10px 14px;gap:10px}
   .pr-screen.show{display:flex}
   .pr-top{display:flex;align-items:center;gap:10px}
@@ -1232,7 +1240,7 @@
   <!-- CC-PRACTICE: the front porch — guided first 20 + 5 difficult words. -->
   <div class="pr-screen" id="practiceScreen">
     <div class="pr-top">
-      <button class="ghost hub-x" id="prExit" aria-label="Exit">✕</button>
+      <button class="ghost mode-exit" id="prExit" aria-label="Exit">✕</button>
       <div class="pr-path" id="prPath"></div>
       <button class="ghost" id="prRestart" data-i18n="practice.restart">↺</button>
     </div>
@@ -1264,9 +1272,10 @@
        lanes; the orb speaks the word and replays on tap. No visible timer (D2). -->
   <div class="dm-screen" id="defMatch">
     <div class="dm-top">
-      <button class="ghost hub-x" id="dmExit" aria-label="Exit">✕</button>
+      <button class="ghost mode-exit" id="dmExit" aria-label="Exit">✕</button>
       <button type="button" class="dm-orb" id="dmOrb" aria-label="Replay word">🔊</button>
       <span class="dm-streak" id="dmStreak" aria-live="polite"></span>
+      <button type="button" class="ghost mode-exit" id="dmSpeed" aria-label="Card speed" style="margin-inline-start:auto">🐢</button>
     </div>
     <div class="dm-status" id="dmStatus" aria-live="polite"></div>
     <!-- D8 Reverse Rounds: the definition to match; hidden on forward rounds. -->

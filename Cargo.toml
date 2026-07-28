@@ -55,7 +55,7 @@ features = [
   "Window", "Navigator", "Document", "Element", "HtmlElement", "Node", "NodeList", "DomTokenList",
   "HtmlInputElement", "HtmlSelectElement", "HtmlTextAreaElement", "HtmlButtonElement",
   "HtmlCanvasElement", "CanvasRenderingContext2d", "HtmlMediaElement", "HtmlAudioElement",
-  "AnimationEvent",
+  "AnimationEvent", "MediaQueryList",
   "Event", "EventTarget", "MouseEvent", "PointerEvent", "KeyboardEvent", "InputEvent",
   "Storage",
   "Request", "RequestInit", "RequestMode", "Response", "Headers",
