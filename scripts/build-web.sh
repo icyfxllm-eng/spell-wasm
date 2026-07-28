@@ -43,5 +43,17 @@ if [ -f "$WASM" ]; then
   command -v gzip   >/dev/null 2>&1 && gzip -9 -c "$WASM" > "$WASM.gz" && echo "==> gzip:   $WASM.gz" || echo "==> (gzip not found — skipping .gz)"
 fi
 
+# Cache-bust (2026-07-27): stamp ?v=DEV → the wasm content hash in the DIST
+# copies of index.html and sw.js, and key the SW cache on the same hash. The
+# source keeps the literal DEV. Without this, Cloudflare's 4h edge cache can
+# pair a new .wasm with an old JS glue after a deploy (LinkError: import
+# requires a callable) — seen live on spellgame.net.
+if [ -f "$WASM" ]; then
+  STAMP=$(shasum -a 256 "$WASM" | cut -c1-12)
+  sed -i '' "s/v=DEV/v=$STAMP/g" "$DIST/index.html" "$DIST/sw.js"
+  sed -i '' "s/^const CACHE_VERSION = .*/const CACHE_VERSION = \"$STAMP\";/" "$DIST/sw.js"
+  echo "==> cache stamp: $STAMP"
+fi
+
 echo "==> dist/ ready:"
 ls -1 "$DIST"

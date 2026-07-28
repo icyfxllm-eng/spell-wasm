@@ -364,5 +364,10 @@
   "racing.pace.gold": "Золото",
   "racing.pace.platinum": "Платина",
   "racing.pace.tag": "Призрак темпа",
-  "voiceSpell.typeInstead": "Лучше напечатаю"
+  "voiceSpell.typeInstead": "Лучше напечатаю",
+  "practice.hint": "Подсказка",
+  "practice.choice": "Какое дальше?",
+  "practice.micro.silent": "Нажми на букву, которую не слышно.",
+  "practice.micro.hear": "Какое ты слышишь?",
+  "practice.micro.stack": "Нажми на две буквы, которые соединяются."
 }

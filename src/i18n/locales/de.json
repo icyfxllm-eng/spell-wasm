@@ -364,5 +364,10 @@
   "racing.pace.gold": "Gold",
   "racing.pace.platinum": "Platin",
   "racing.pace.tag": "Tempo-Geist",
-  "voiceSpell.typeInstead": "Stattdessen tippen"
+  "voiceSpell.typeInstead": "Stattdessen tippen",
+  "practice.hint": "Tipp",
+  "practice.choice": "Welches als Nächstes?",
+  "practice.micro.silent": "Tippe auf den stummen Buchstaben.",
+  "practice.micro.hear": "Welches hörst du?",
+  "practice.micro.stack": "Tippe auf die zwei Buchstaben, die sich verbinden."
 }

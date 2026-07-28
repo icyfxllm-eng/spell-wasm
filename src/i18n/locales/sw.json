@@ -364,5 +364,10 @@
   "racing.pace.gold": "Dhahabu",
   "racing.pace.platinum": "Platinamu",
   "racing.pace.tag": "Mzuka wa mwendo",
-  "voiceSpell.typeInstead": "Andika badala yake"
+  "voiceSpell.typeInstead": "Andika badala yake",
+  "practice.hint": "Dokezo",
+  "practice.choice": "Lipi linalofuata?",
+  "practice.micro.silent": "Gusa herufi isiyosikika.",
+  "practice.micro.hear": "Umesikia lipi?",
+  "practice.micro.stack": "Gusa herufi mbili zinazoungana."
 }

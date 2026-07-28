@@ -364,5 +364,10 @@
   "racing.pace.gold": "Or",
   "racing.pace.platinum": "Platine",
   "racing.pace.tag": "Fantôme de rythme",
-  "voiceSpell.typeInstead": "Écrire à la place"
+  "voiceSpell.typeInstead": "Écrire à la place",
+  "practice.hint": "Indice",
+  "practice.choice": "Lequel ensuite ?",
+  "practice.micro.silent": "Touche la lettre qu'on n'entend pas.",
+  "practice.micro.hear": "Lequel entends-tu ?",
+  "practice.micro.stack": "Touche les deux lettres qui s'assemblent."
 }

@@ -364,5 +364,10 @@
   "racing.pace.gold": "Oro",
   "racing.pace.platinum": "Platino",
   "racing.pace.tag": "Fantasma guía",
-  "voiceSpell.typeInstead": "Escribir en su lugar"
+  "voiceSpell.typeInstead": "Escribir en su lugar",
+  "practice.hint": "Pista",
+  "practice.choice": "¿Cuál sigue?",
+  "practice.micro.silent": "Toca la letra que no se oye.",
+  "practice.micro.hear": "¿Cuál escuchas?",
+  "practice.micro.stack": "Toca las dos letras que se juntan."
 }

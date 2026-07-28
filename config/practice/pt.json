@@ -1,6 +1,6 @@
 {
   "lang": "pt",
-  "$draft": "Agent-drafted per D4 (2026-07-27) — words from the language's own bank, intro strings pending the standing audit round.",
+  "$draft": "Agent-drafted per D10 v2 (2026-07-27) — words from the language's own bank; intros, coach lines, template prompts and emoji pending the standing audit round.",
   "words": [
     "cão",
     "mão",
@@ -34,27 +34,115 @@
     {
       "id": "nasais",
       "firstWord": 0,
-      "intro": "O til (~) deixa a vogal nasal: ã e õ saem pelo nariz."
+      "intro": "O til (~) deixa a vogal nasal: ã e õ saem pelo nariz.",
+      "decoys": [
+        "ã",
+        "õ"
+      ]
     },
     {
       "id": "acentos",
       "firstWord": 4,
-      "intro": "O acento marca a sílaba forte: á é í ó ú."
+      "intro": "O acento marca a sílaba forte: á é í ó ú.",
+      "decoys": [
+        "á",
+        "é"
+      ]
     },
     {
       "id": "cedilha",
       "firstWord": 8,
-      "intro": "O ç soa como s antes de a, o, u."
+      "intro": "O ç soa como s antes de a, o, u.",
+      "decoys": [
+        "c",
+        "s"
+      ]
     },
     {
       "id": "lh-nh",
       "firstWord": 12,
-      "intro": "lh e nh são sons próprios do português — duas letras, um som."
+      "intro": "lh e nh são sons próprios do português — duas letras, um som.",
+      "decoys": [
+        "y",
+        "w"
+      ]
     },
     {
       "id": "s-z",
       "firstWord": 16,
-      "intro": "Entre vogais, o s soa como z."
+      "intro": "Entre vogais, o s soa como z.",
+      "decoys": [
+        "s",
+        "z"
+      ],
+      "template": {
+        "id": "HEAR_PICK",
+        "params": {
+          "foil": "lus"
+        }
+      }
     }
-  ]
+  ],
+  "choiceBeats": [
+    {
+      "at": 4,
+      "alt": "já",
+      "emoji": [
+        "🐢",
+        "🐇"
+      ]
+    },
+    {
+      "at": 8,
+      "alt": "aço",
+      "emoji": [
+        "🌊",
+        "🔦"
+      ]
+    },
+    {
+      "at": 12,
+      "alt": "ilha",
+      "emoji": [
+        "🍀",
+        "🌙"
+      ]
+    },
+    {
+      "at": 16,
+      "alt": "casa",
+      "emoji": [
+        "🌟",
+        "🎈"
+      ]
+    }
+  ],
+  "coach": {
+    "wordDone": [
+      "Você montou sozinho!",
+      "Exatamente!",
+      "Viu? Você consegue.",
+      "Mais uma — com calma.",
+      "Você ouviu e escreveu."
+    ],
+    "wordSetup": [
+      "Vem a próxima — escute bem.",
+      "Esta tem uma letra escondida. Pronto?",
+      "Vá com calma nesta.",
+      "Primeiro escute, depois monte."
+    ],
+    "phase": [
+      "Novo passo: a palavra aparece e se esconde.",
+      "Passo grande — só de ouvido!",
+      "Aqui está o teclado de verdade — como no jogo."
+    ],
+    "reveal": [
+      "Aí está — essa é a parte difícil.",
+      "Tudo bem — agora você sabe o segredo."
+    ],
+    "ceremony": [
+      "Vinte palavras! Suas primeiras vinte.",
+      "Pronto para as difíceis? Mais cinco!"
+    ]
+  }
 }

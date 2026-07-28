@@ -1,6 +1,6 @@
 {
   "lang": "sw",
-  "$draft": "Agent-drafted per D4 (2026-07-27) — words from the language's own bank, intro strings pending the standing audit round.",
+  "$draft": "Agent-drafted per D10 v2 (2026-07-27) — words from the language's own bank; intros, coach lines, template prompts and emoji pending the standing audit round.",
   "words": [
     "nguo",
     "anga",
@@ -34,7 +34,17 @@
     {
       "id": "ng-apostrophe",
       "firstWord": 0,
-      "intro": "ng' (yenye alama) na ng ni sauti mbili tofauti."
+      "intro": "ng' (yenye alama) na ng ni sauti mbili tofauti.",
+      "decoys": [
+        "g",
+        "j"
+      ],
+      "template": {
+        "id": "HEAR_PICK",
+        "params": {
+          "foil": "ng'uo"
+        }
+      }
     },
     {
       "id": "m-n-prefix",
@@ -44,7 +54,11 @@
     {
       "id": "double-vowel",
       "firstWord": 8,
-      "intro": "Vokali mbili hurefusha sauti: saa, juu."
+      "intro": "Vokali mbili hurefusha sauti: saa, juu.",
+      "decoys": [
+        "a",
+        "u"
+      ]
     },
     {
       "id": "dh-th",
@@ -54,7 +68,73 @@
     {
       "id": "l-r",
       "firstWord": 16,
-      "intro": "l na r zinakaribiana kwa sauti — kumbuka tahajia."
+      "intro": "l na r zinakaribiana kwa sauti — kumbuka tahajia.",
+      "decoys": [
+        "l",
+        "r"
+      ]
     }
-  ]
+  ],
+  "choiceBeats": [
+    {
+      "at": 4,
+      "alt": "nchi",
+      "emoji": [
+        "🐢",
+        "🐇"
+      ]
+    },
+    {
+      "at": 8,
+      "alt": "kuu",
+      "emoji": [
+        "🌊",
+        "🔦"
+      ]
+    },
+    {
+      "at": 12,
+      "alt": "shah",
+      "emoji": [
+        "🍀",
+        "🌙"
+      ]
+    },
+    {
+      "at": 16,
+      "alt": "vile",
+      "emoji": [
+        "🌟",
+        "🎈"
+      ]
+    }
+  ],
+  "coach": {
+    "wordDone": [
+      "Umeliunda mwenyewe!",
+      "Sawa kabisa.",
+      "Umeona? Unaweza.",
+      "Jingine limekamilika — taratibu.",
+      "Ulisikia na ukaandika!"
+    ],
+    "wordSetup": [
+      "Neno linalofuata — sikiliza vizuri.",
+      "Hili lina herufi ya ujanja. Uko tayari?",
+      "Chukua muda wako.",
+      "Sikiliza kwanza, kisha unda."
+    ],
+    "phase": [
+      "Hatua mpya: neno litajitokeza kisha kujificha.",
+      "Hatua kubwa — masikio tu!",
+      "Hii ndiyo kibodi halisi — kama mchezo mkubwa."
+    ],
+    "reveal": [
+      "Hapo ndipo — hiyo ndiyo sehemu ngumu.",
+      "Usijali — sasa unajua siri yake."
+    ],
+    "ceremony": [
+      "Maneno ishirini! Ya kwanza kabisa.",
+      "Tayari kwa magumu? Matano zaidi!"
+    ]
+  }
 }

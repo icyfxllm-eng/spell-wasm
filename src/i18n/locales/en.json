@@ -364,5 +364,10 @@
   "racing.pace.gold": "Gold",
   "racing.pace.platinum": "Platinum",
   "racing.pace.tag": "Pace ghost",
-  "voiceSpell.typeInstead": "Type instead"
+  "voiceSpell.typeInstead": "Type instead",
+  "practice.hint": "Hint",
+  "practice.choice": "Which one next?",
+  "practice.micro.silent": "Tap the letter you can't hear.",
+  "practice.micro.hear": "Which one do you hear?",
+  "practice.micro.stack": "Tap the two letters that stack together."
 }

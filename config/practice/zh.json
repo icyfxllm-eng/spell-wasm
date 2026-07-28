@@ -1,6 +1,6 @@
 {
   "lang": "zh",
-  "$draft": "Agent-drafted per D4 (2026-07-27) — words from the language's own bank, intro strings pending the standing audit round.",
+  "$draft": "Agent-drafted per D10 v2 (2026-07-27) — words from the language's own bank; intros, coach lines, template prompts and emoji pending the standing audit round.",
   "words": [
     "wo3men5|我们",
     "mei2you3|没有",
@@ -39,22 +39,102 @@
     {
       "id": "zh-z",
       "firstWord": 4,
-      "intro": "zh ch sh 是卷舌音，z c s 不卷舌 — 拼写不同。"
+      "intro": "zh ch sh 是卷舌音，z c s 不卷舌 — 拼写不同。",
+      "decoys": [
+        "z",
+        "c"
+      ]
     },
     {
       "id": "n-ng",
       "firstWord": 8,
-      "intro": "韵尾 n 和 ng 很容易混 — 听清楚结尾。"
+      "intro": "韵尾 n 和 ng 很容易混 — 听清楚结尾。",
+      "decoys": [
+        "n",
+        "g"
+      ],
+      "template": {
+        "id": "HEAR_PICK",
+        "params": {
+          "foil": "ngi3men5|你们"
+        }
+      }
     },
     {
       "id": "u-v",
       "firstWord": 12,
-      "intro": "ü 在拼音输入里写作 v。"
+      "intro": "ü 在拼音输入里写作 v。",
+      "decoys": [
+        "u",
+        "v"
+      ]
     },
     {
       "id": "qingsheng",
       "firstWord": 16,
       "intro": "轻声用 5 表示 — 又轻又短。"
     }
-  ]
+  ],
+  "choiceBeats": [
+    {
+      "at": 4,
+      "alt": "zhe4xie1|这些",
+      "emoji": [
+        "🐢",
+        "🐇"
+      ]
+    },
+    {
+      "at": 8,
+      "alt": "jin1tian1|今天",
+      "emoji": [
+        "🌊",
+        "🔦"
+      ]
+    },
+    {
+      "at": 12,
+      "alt": "zui4hou4|最后",
+      "emoji": [
+        "🍀",
+        "🌙"
+      ]
+    },
+    {
+      "at": 16,
+      "alt": "bie2ren5|别人",
+      "emoji": [
+        "🌟",
+        "🎈"
+      ]
+    }
+  ],
+  "coach": {
+    "wordDone": [
+      "你自己拼出来了！",
+      "完全正确。",
+      "看到了吧？你可以的。",
+      "又完成一个 — 稳稳的。",
+      "听到了，也拼对了！"
+    ],
+    "wordSetup": [
+      "下一个词来了 — 仔细听。",
+      "这个词里有个调皮的地方,准备好了吗?",
+      "慢慢来,不着急。",
+      "先听,再拼。"
+    ],
+    "phase": [
+      "新步骤:词语先出现,再藏起来。",
+      "大步骤 — 只用耳朵!",
+      "真正的键盘来了 — 和大游戏一样。"
+    ],
+    "reveal": [
+      "就是这里 — 这就是陷阱。",
+      "没关系 — 现在你知道它的秘密了。"
+    ],
+    "ceremony": [
+      "二十个词!你的第一批二十个。",
+      "准备好挑战难词了吗?再来五个!"
+    ]
+  }
 }

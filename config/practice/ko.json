@@ -1,6 +1,6 @@
 {
   "lang": "ko",
-  "$draft": "Agent-drafted per D4 (2026-07-27) — words from the language's own bank, intro strings pending the standing audit round.",
+  "$draft": "Agent-drafted per D10 v2 (2026-07-27) — words from the language's own bank; intros, coach lines, template prompts and emoji pending the standing audit round.",
   "words": [
     "귀",
     "비",
@@ -54,7 +54,75 @@
     {
       "id": "ieung",
       "firstWord": 16,
-      "intro": "첫 ㅇ은 소리가 없어요 — 자리만 지켜요."
+      "intro": "첫 ㅇ은 소리가 없어요 — 자리만 지켜요.",
+      "template": {
+        "id": "TAP_SILENT_UNIT",
+        "params": {
+          "unit": "ㅇ"
+        }
+      }
     }
-  ]
+  ],
+  "choiceBeats": [
+    {
+      "at": 4,
+      "alt": "지도",
+      "emoji": [
+        "🐢",
+        "🐇"
+      ]
+    },
+    {
+      "at": 8,
+      "alt": "허리",
+      "emoji": [
+        "🌊",
+        "🔦"
+      ]
+    },
+    {
+      "at": 12,
+      "alt": "감",
+      "emoji": [
+        "🍀",
+        "🌙"
+      ]
+    },
+    {
+      "at": 16,
+      "alt": "강",
+      "emoji": [
+        "🌟",
+        "🎈"
+      ]
+    }
+  ],
+  "coach": {
+    "wordDone": [
+      "혼자서 만들었어요!",
+      "정확해요.",
+      "봤죠? 할 수 있어요.",
+      "하나 더 완성 — 차근차근.",
+      "듣고 그대로 썼어요!"
+    ],
+    "wordSetup": [
+      "다음 단어예요 — 잘 들어 보세요.",
+      "이 단어엔 까다로운 글자가 있어요. 준비됐나요?",
+      "천천히 해도 괜찮아요.",
+      "먼저 듣고, 그다음에 만들어요."
+    ],
+    "phase": [
+      "새 단계: 단어가 잠깐 보였다 숨어요.",
+      "큰 단계 — 이제 귀로만!",
+      "진짜 키보드예요 — 본 게임처럼."
+    ],
+    "reveal": [
+      "여기예요 — 이게 함정이에요.",
+      "괜찮아요 — 이제 비밀을 알았어요."
+    ],
+    "ceremony": [
+      "스무 단어! 첫 스무 단어예요.",
+      "어려운 단어에 도전할까요? 다섯 개 더!"
+    ]
+  }
 }

@@ -364,5 +364,10 @@
   "racing.pace.gold": "ゴールド",
   "racing.pace.platinum": "プラチナ",
   "racing.pace.tag": "ペースゴースト",
-  "voiceSpell.typeInstead": "代わりに入力"
+  "voiceSpell.typeInstead": "代わりに入力",
+  "practice.hint": "ヒント",
+  "practice.choice": "つぎはどっち？",
+  "practice.micro.silent": "聞こえない字をタップしてね。",
+  "practice.micro.hear": "どっちが聞こえた？",
+  "practice.micro.stack": "くっつく二つの字をタップしてね。"
 }

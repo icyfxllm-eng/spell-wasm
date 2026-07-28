@@ -364,5 +364,10 @@
   "racing.pace.gold": "Ouro",
   "racing.pace.platinum": "Platina",
   "racing.pace.tag": "Fantasma de ritmo",
-  "voiceSpell.typeInstead": "Digitar em vez disso"
+  "voiceSpell.typeInstead": "Digitar em vez disso",
+  "practice.hint": "Dica",
+  "practice.choice": "Qual vem agora?",
+  "practice.micro.silent": "Toque na letra que não se ouve.",
+  "practice.micro.hear": "Qual você ouve?",
+  "practice.micro.stack": "Toque nas duas letras que se juntam."
 }

@@ -1,6 +1,6 @@
 {
   "lang": "fr",
-  "$draft": "Agent-drafted per D4 (2026-07-27) — words from the language's own bank, intro strings pending the standing audit round.",
+  "$draft": "Agent-drafted per D10 v2 (2026-07-27) — words from the language's own bank; intros, coach lines, template prompts and emoji pending the standing audit round.",
   "words": [
     "chat",
     "nuit",
@@ -34,27 +34,115 @@
     {
       "id": "finales-muettes",
       "firstWord": 0,
-      "intro": "Beaucoup de lettres finales sont muettes : on les écrit sans les dire."
+      "intro": "Beaucoup de lettres finales sont muettes : on les écrit sans les dire.",
+      "decoys": [
+        "d",
+        "x"
+      ],
+      "template": {
+        "id": "TAP_SILENT_UNIT",
+        "params": {
+          "unit": "t"
+        }
+      }
     },
     {
       "id": "accents",
       "firstWord": 4,
-      "intro": "Les accents changent le son : é è ê — écoute bien."
+      "intro": "Les accents changent le son : é è ê — écoute bien.",
+      "decoys": [
+        "é",
+        "è"
+      ]
     },
     {
       "id": "eau-au-o",
       "firstWord": 8,
-      "intro": "Le son o peut s'écrire o, au ou eau."
+      "intro": "Le son o peut s'écrire o, au ou eau.",
+      "decoys": [
+        "ô",
+        "w"
+      ]
     },
     {
       "id": "doubles",
       "firstWord": 12,
-      "intro": "Certaines consonnes se doublent — la prononciation ne le dit pas toujours."
+      "intro": "Certaines consonnes se doublent — la prononciation ne le dit pas toujours.",
+      "decoys": [
+        "m",
+        "p"
+      ]
     },
     {
       "id": "ou-u",
       "firstWord": 16,
-      "intro": "u et ou sont deux sons différents en français."
+      "intro": "u et ou sont deux sons différents en français.",
+      "decoys": [
+        "w",
+        "y"
+      ]
     }
-  ]
+  ],
+  "choiceBeats": [
+    {
+      "at": 4,
+      "alt": "même",
+      "emoji": [
+        "🐢",
+        "🐇"
+      ]
+    },
+    {
+      "at": 8,
+      "alt": "aux",
+      "emoji": [
+        "🌊",
+        "🔦"
+      ]
+    },
+    {
+      "at": 12,
+      "alt": "iii",
+      "emoji": [
+        "🍀",
+        "🌙"
+      ]
+    },
+    {
+      "at": 16,
+      "alt": "rouge",
+      "emoji": [
+        "🌟",
+        "🎈"
+      ]
+    }
+  ],
+  "coach": {
+    "wordDone": [
+      "Tu l'as construit tout seul !",
+      "Exactement !",
+      "Tu vois ? Tu y arrives.",
+      "Encore un — tranquillement.",
+      "Tu l'as entendu, tu l'as écrit."
+    ],
+    "wordSetup": [
+      "Voici le prochain — écoute bien.",
+      "Celui-ci a une lettre cachée. Prêt ?",
+      "Prends ton temps.",
+      "Écoute d'abord, puis construis."
+    ],
+    "phase": [
+      "Nouvelle étape : le mot se montre puis se cache.",
+      "Grande étape — que les oreilles !",
+      "Voici le vrai clavier — comme dans le grand jeu."
+    ],
+    "reveal": [
+      "Le voilà — c'est le piège.",
+      "Pas grave — tu connais son secret."
+    ],
+    "ceremony": [
+      "Vingt mots ! Tes vingt premiers.",
+      "Prêt pour les difficiles ? Cinq de plus !"
+    ]
+  }
 }

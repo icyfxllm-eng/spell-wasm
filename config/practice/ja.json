@@ -1,6 +1,6 @@
 {
   "lang": "ja",
-  "$draft": "Agent-drafted per D4 (2026-07-27) — words from the language's own bank, intro strings pending the standing audit round.",
+  "$draft": "Agent-drafted per D10 v2 (2026-07-27) — words from the language's own bank; intros, coach lines, template prompts and emoji pending the standing audit round.",
   "words": [
     "なっ",
     "あっ",
@@ -34,7 +34,11 @@
     {
       "id": "chiisai-tsu",
       "firstWord": 0,
-      "intro": "小さい「っ」は音をつまらせます。"
+      "intro": "小さい「っ」は音をつまらせます。",
+      "decoys": [
+        "つ",
+        "っ"
+      ]
     },
     {
       "id": "chouon",
@@ -49,12 +53,88 @@
     {
       "id": "youon",
       "firstWord": 12,
-      "intro": "小さい「ゃゅょ」は前の字とくっつきます。"
+      "intro": "小さい「ゃゅょ」は前の字とくっつきます。",
+      "decoys": [
+        "や",
+        "ゆ"
+      ]
     },
     {
       "id": "ha-wa",
       "firstWord": 16,
-      "intro": "「は」と「わ」— 音が同じでも字がちがうことがあります。"
+      "intro": "「は」と「わ」— 音が同じでも字がちがうことがあります。",
+      "decoys": [
+        "は",
+        "わ"
+      ],
+      "template": {
+        "id": "HEAR_PICK",
+        "params": {
+          "foil": "かは"
+        }
+      }
     }
-  ]
+  ],
+  "choiceBeats": [
+    {
+      "at": 4,
+      "alt": "かお",
+      "emoji": [
+        "🐢",
+        "🐇"
+      ]
+    },
+    {
+      "at": 8,
+      "alt": "できる",
+      "emoji": [
+        "🌊",
+        "🔦"
+      ]
+    },
+    {
+      "at": 12,
+      "alt": "ちょう",
+      "emoji": [
+        "🍀",
+        "🌙"
+      ]
+    },
+    {
+      "at": 16,
+      "alt": "はじめ",
+      "emoji": [
+        "🌟",
+        "🎈"
+      ]
+    }
+  ],
+  "coach": {
+    "wordDone": [
+      "じぶんで作れたね！",
+      "そのとおり！",
+      "ほらね、できるよ。",
+      "もうひとつクリア — ゆっくりでいいよ。",
+      "聞いて、書けたね！"
+    ],
+    "wordSetup": [
+      "つぎの言葉だよ — よく聞いてね。",
+      "この言葉にはいじわるな字があるよ。準備はいい？",
+      "ゆっくりでいいよ。",
+      "まず聞いて、それから作ろう。"
+    ],
+    "phase": [
+      "新しいステップ：言葉がちょっと見えて、隠れるよ。",
+      "大きな一歩 — 耳だけで！",
+      "本物のキーボードだよ — 本番と同じ。"
+    ],
+    "reveal": [
+      "ここだよ — ここがひっかけ。",
+      "だいじょうぶ — もう秘密を知ってるね。"
+    ],
+    "ceremony": [
+      "20個できた！はじめての20個だよ。",
+      "難しいのに挑戦する？あと5個！"
+    ]
+  }
 }

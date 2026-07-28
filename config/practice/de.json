@@ -1,6 +1,6 @@
 {
   "lang": "de",
-  "$draft": "Agent-drafted per D4 (2026-07-27) — words from the language's own bank, intro strings pending the standing audit round.",
+  "$draft": "Agent-drafted per D10 v2 (2026-07-27) — words from the language's own bank; intros, coach lines, template prompts and emoji pending the standing audit round.",
   "words": [
     "Bär",
     "Fuß",
@@ -34,27 +34,109 @@
     {
       "id": "grossschreibung",
       "firstWord": 0,
-      "intro": "Alle Nomen beginnen groß — immer!"
+      "intro": "Alle Nomen beginnen groß — immer!",
+      "decoys": [
+        "x",
+        "y"
+      ]
     },
     {
       "id": "ie-ei",
       "firstWord": 4,
-      "intro": "ie klingt wie ein langes i, ei klingt wie ai."
+      "intro": "ie klingt wie ein langes i, ei klingt wie ai.",
+      "decoys": [
+        "j",
+        "y"
+      ]
     },
     {
       "id": "umlaute",
       "firstWord": 8,
-      "intro": "Die Punkte zählen: a und ä sind verschiedene Laute."
+      "intro": "Die Punkte zählen: a und ä sind verschiedene Laute.",
+      "decoys": [
+        "ä",
+        "ö"
+      ]
     },
     {
       "id": "sch-ch",
       "firstWord": 12,
-      "intro": "sch und ch sind feste Teams aus mehreren Buchstaben."
+      "intro": "sch und ch sind feste Teams aus mehreren Buchstaben.",
+      "decoys": [
+        "z",
+        "k"
+      ]
     },
     {
       "id": "doppel",
       "firstWord": 16,
-      "intro": "Nach kurzem Vokal wird der Konsonant oft verdoppelt."
+      "intro": "Nach kurzem Vokal wird der Konsonant oft verdoppelt.",
+      "decoys": [
+        "p",
+        "b"
+      ]
     }
-  ]
+  ],
+  "choiceBeats": [
+    {
+      "at": 4,
+      "alt": "sie",
+      "emoji": [
+        "🐢",
+        "🐇"
+      ]
+    },
+    {
+      "at": 8,
+      "alt": "hält",
+      "emoji": [
+        "🌊",
+        "🔦"
+      ]
+    },
+    {
+      "at": 12,
+      "alt": "noch",
+      "emoji": [
+        "🍀",
+        "🌙"
+      ]
+    },
+    {
+      "at": 16,
+      "alt": "soll",
+      "emoji": [
+        "🌟",
+        "🎈"
+      ]
+    }
+  ],
+  "coach": {
+    "wordDone": [
+      "Das hast du selbst gebaut!",
+      "Genau richtig.",
+      "Siehst du? Du kannst das.",
+      "Noch eins geschafft — schön ruhig.",
+      "Gehört und geschrieben!"
+    ],
+    "wordSetup": [
+      "Das nächste kommt — hör gut zu.",
+      "Hier versteckt sich ein Buchstabe. Bereit?",
+      "Lass dir Zeit.",
+      "Erst hören, dann bauen."
+    ],
+    "phase": [
+      "Neuer Schritt: das Wort zeigt sich kurz.",
+      "Großer Schritt — nur die Ohren!",
+      "Hier ist die echte Tastatur — wie im großen Spiel."
+    ],
+    "reveal": [
+      "Da ist sie — die knifflige Stelle.",
+      "Kein Problem — jetzt kennst du das Geheimnis."
+    ],
+    "ceremony": [
+      "Zwanzig Wörter! Deine ersten zwanzig.",
+      "Bereit für die schweren? Noch fünf!"
+    ]
+  }
 }

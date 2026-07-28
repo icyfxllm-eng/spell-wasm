@@ -340,7 +340,24 @@
   .pr-dot.now{opacity:1;color:var(--accent,#7aa2ff);transform:scale(1.3)}
   .pr-hint{text-align:center;min-height:20px;font-size:14px;opacity:.85}
   .pr-word{text-align:center;font-size:34px;font-weight:800;min-height:46px;letter-spacing:.06em}
-  .pr-slots{text-align:center;font-size:26px;letter-spacing:.35em;min-height:36px}
+  .pr-slots{text-align:center;font-size:26px;min-height:40px;display:flex;justify-content:center;gap:6px;flex-wrap:wrap}
+  .pr-slot{display:inline-block;min-width:1em;border-bottom:2px solid rgba(255,255,255,.35);line-height:1.25;font-weight:800}
+  .pr-slot.ghost{opacity:.28}
+  .pr-slot.fill{opacity:1;border-bottom-color:#67d98b}
+  .pr-slot.echo{color:var(--accent,#7aa2ff);transform:scale(1.25);transition:transform .12s}
+  .pr-built{text-align:center;font-size:30px;font-weight:800;min-height:0}
+  .pr-coach{text-align:center;font-size:14px;min-height:20px;opacity:.9;font-style:italic}
+  .pr-tray{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;padding:4px 0;min-height:0}
+  .pr-tile{font-size:24px;font-weight:800;padding:12px 16px;border-radius:14px;border:1px solid rgba(255,255,255,.2);background:rgba(255,255,255,.08);color:inherit;min-width:52px}
+  .pr-tile:active{transform:scale(.94)}
+  .pr-tile.used{opacity:.2;pointer-events:none}
+  .pr-tile.wiggle{animation:prWiggle .35s}
+  .pr-tile.hintlit{border-color:var(--accent,#7aa2ff);box-shadow:0 0 10px var(--accent,#7aa2ff)}
+  .pr-micro-opts{display:flex;flex-wrap:wrap;gap:10px;justify-content:center}
+  .pr-micro-opts .pr-tile.good{border-color:#67d98b;box-shadow:0 0 10px #67d98b}
+  .pr-row{display:flex;gap:8px;justify-content:center}
+  .pr-input{transition:opacity .6s}
+  @keyframes prWiggle{0%,100%{transform:translateX(0)}25%{transform:translateX(-5px)}75%{transform:translateX(5px)}}
   .pr-slots.pulse{animation:prPulse .4s}
   @keyframes prPulse{25%{transform:translateX(-6px);color:var(--accent,#7aa2ff)}75%{transform:translateX(6px)}}
   .pr-input{font-size:22px;padding:10px;border-radius:12px;border:1px solid var(--edge);background:var(--panel-2);color:var(--ink);text-align:center}
@@ -1218,6 +1235,9 @@
        a word to spell, with the voice mic (voiceSpellMic) shown in normal play. -->
   <button id="spellAloudEnter" class="btn-hide" aria-hidden="true" tabindex="-1"></button>
   <button id="defMatchOpen" class="btn-hide" aria-hidden="true" tabindex="-1"></button>
+  <!-- CC-PRACTICE: the hub tile's launch target (was missing — the tile was a
+       silent dead end on builds 96–98). -->
+  <button id="practiceOpen" class="btn-hide" aria-hidden="true" tabindex="-1"></button>
 
   <!-- Dev door menu (TEMPORARY — removed at activation). Reveal with five quick taps
        on the SPELL logo; routes to the hidden REVIEW-GATED screens for on-device
@@ -1245,10 +1265,28 @@
       <button class="ghost" id="prRestart" data-i18n="practice.restart">↺</button>
     </div>
     <div class="pr-hint" id="prPhaseHint"></div>
+    <div class="pr-coach" id="prCoach"></div>
     <div class="pr-word" id="prWord"></div>
     <div class="pr-slots" id="prSlots"></div>
-    <input class="pr-input" id="prInput" type="text" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" />
-    <button class="btn btn-check pr-replay" id="prReplay" data-i18n="practice.replay">🔊 Hear it again</button>
+    <div class="pr-built" id="prBuilt"></div>
+    <div class="pr-tray" id="prTray"></div>
+    <input class="pr-input btn-hide" id="prInput" type="text" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" />
+    <div class="pr-row">
+      <button class="btn btn-check pr-replay" id="prReplay" data-i18n="practice.replay">🔊 Hear it again</button>
+      <button class="btn btn-check pr-hintbtn" id="prHintBtn">💡 <span data-i18n="practice.hint">Hint</span></button>
+    </div>
+    <!-- D8 choice beat: a two-word pick from the same trap class. -->
+    <div class="pr-card" id="prChoice"><div class="modal" style="text-align:center">
+      <p data-i18n="practice.choice">Which one next?</p>
+      <button class="btn btn-check pr-choice-opt" id="prChoiceA" style="width:100%;margin-bottom:8px"></button>
+      <button class="btn btn-check pr-choice-opt" id="prChoiceB" style="width:100%"></button>
+    </div></div>
+    <!-- D5 micro-interaction card (TAP_SILENT_UNIT / HEAR_PICK / TAP_STACK). -->
+    <div class="pr-card" id="prMicro"><div class="modal" style="text-align:center">
+      <p id="prMicroPrompt"></p>
+      <div class="pr-micro-opts" id="prMicroOpts"></div>
+      <button class="btn btn-check btn-hide" id="prMicroPlay" style="width:100%;margin-top:8px">🔊</button>
+    </div></div>
     <div class="pr-card" id="prIntro"><div class="modal">
       <p id="prIntroText"></p>
       <button class="btn btn-check" id="prIntroOk" data-i18n="practice.gotIt" style="width:100%">Got it</button>

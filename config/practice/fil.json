@@ -1,6 +1,6 @@
 {
   "lang": "fil",
-  "$draft": "Agent-drafted per D4 (2026-07-27) — words from the language's own bank, intro strings pending the standing audit round.",
+  "$draft": "Agent-drafted per D10 v2 (2026-07-27) — words from the language's own bank; intros, coach lines, template prompts and emoji pending the standing audit round.",
   "words": [
     "ng",
     "ang",
@@ -34,17 +34,35 @@
     {
       "id": "ng-digraph",
       "firstWord": 0,
-      "intro": "Ang ng ay isang tunog — dalawang letra, isang bigkas."
+      "intro": "Ang ng ay isang tunog — dalawang letra, isang bigkas.",
+      "decoys": [
+        "m",
+        "n"
+      ]
     },
     {
       "id": "o-u",
       "firstWord": 4,
-      "intro": "Nagpapalitan minsan ang o at u — tandaan ang baybay ng bawat salita."
+      "intro": "Nagpapalitan minsan ang o at u — tandaan ang baybay ng bawat salita.",
+      "decoys": [
+        "o",
+        "u"
+      ]
     },
     {
       "id": "d-r",
       "firstWord": 8,
-      "intro": "Nag-iiba minsan ang d at r sa gitna ng salita."
+      "intro": "Nag-iiba minsan ang d at r sa gitna ng salita.",
+      "decoys": [
+        "d",
+        "r"
+      ],
+      "template": {
+        "id": "HEAR_PICK",
+        "params": {
+          "foil": "adaw"
+        }
+      }
     },
     {
       "id": "iw-ay",
@@ -56,5 +74,67 @@
       "firstWord": 16,
       "intro": "May mga bagong kumpol-katinig: ts, dy, sy."
     }
-  ]
+  ],
+  "choiceBeats": [
+    {
+      "at": 4,
+      "alt": "asul",
+      "emoji": [
+        "🐢",
+        "🐇"
+      ]
+    },
+    {
+      "at": 8,
+      "alt": "okra",
+      "emoji": [
+        "🌊",
+        "🔦"
+      ]
+    },
+    {
+      "at": 12,
+      "alt": "ay",
+      "emoji": [
+        "🍀",
+        "🌙"
+      ]
+    },
+    {
+      "at": 16,
+      "alt": "tsaa",
+      "emoji": [
+        "🌟",
+        "🎈"
+      ]
+    }
+  ],
+  "coach": {
+    "wordDone": [
+      "Ikaw mismo ang bumuo!",
+      "Tamang-tama.",
+      "Kita mo? Kaya mo.",
+      "Isa na naman — dahan-dahan lang.",
+      "Narinig mo at naisulat mo!"
+    ],
+    "wordSetup": [
+      "Heto ang susunod — makinig mabuti.",
+      "May pasaway na letra rito. Handa ka na?",
+      "Dahan-dahan lang dito.",
+      "Makinig muna, saka buuin."
+    ],
+    "phase": [
+      "Bagong hakbang: sisilip ang salita, tapos magtatago.",
+      "Malaking hakbang — tenga lang!",
+      "Heto ang totoong keyboard — gaya ng malaking laro."
+    ],
+    "reveal": [
+      "Ayan — iyan ang patibong.",
+      "Ayos lang — alam mo na ang sikreto."
+    ],
+    "ceremony": [
+      "Dalawampung salita! Ang una mong dalawampu.",
+      "Handa sa mahihirap? Lima pa!"
+    ]
+  }
 }

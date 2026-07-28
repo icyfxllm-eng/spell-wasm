@@ -364,5 +364,10 @@
   "racing.pace.gold": "Złoto",
   "racing.pace.platinum": "Platyna",
   "racing.pace.tag": "Duch tempa",
-  "voiceSpell.typeInstead": "Wpisz zamiast tego"
+  "voiceSpell.typeInstead": "Wpisz zamiast tego",
+  "practice.hint": "Podpowiedź",
+  "practice.choice": "Które teraz?",
+  "practice.micro.silent": "Dotknij literę, której nie słychać.",
+  "practice.micro.hear": "Które słyszysz?",
+  "practice.micro.stack": "Dotknij dwie litery, które się łączą."
 }

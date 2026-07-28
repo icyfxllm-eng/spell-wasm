@@ -1,6 +1,6 @@
 {
   "lang": "vi",
-  "$draft": "Agent-drafted per D4 (2026-07-27) — words from the language's own bank, intro strings pending the standing audit round.",
+  "$draft": "Agent-drafted per D10 v2 (2026-07-27) — words from the language's own bank; intros, coach lines, template prompts and emoji pending the standing audit round.",
   "words": [
     "bò",
     "cá",
@@ -39,22 +39,102 @@
     {
       "id": "d-gi-r",
       "firstWord": 4,
-      "intro": "d, gi và r có thể nghe giống nhau — chú ý chữ đầu."
+      "intro": "d, gi và r có thể nghe giống nhau — chú ý chữ đầu.",
+      "decoys": [
+        "d",
+        "r"
+      ]
     },
     {
       "id": "ch-tr",
       "firstWord": 8,
-      "intro": "ch và tr dễ lẫn — mỗi từ dùng một cách viết."
+      "intro": "ch và tr dễ lẫn — mỗi từ dùng một cách viết.",
+      "decoys": [
+        "c",
+        "t"
+      ],
+      "template": {
+        "id": "HEAR_PICK",
+        "params": {
+          "foil": "tro"
+        }
+      }
     },
     {
       "id": "s-x",
       "firstWord": 12,
-      "intro": "s và x nghe gần giống nhau — ghi nhớ từng từ."
+      "intro": "s và x nghe gần giống nhau — ghi nhớ từng từ.",
+      "decoys": [
+        "s",
+        "x"
+      ]
     },
     {
       "id": "n-ng",
       "firstWord": 16,
       "intro": "Âm cuối n, ng, nh khác nhau — nghe đuôi từ."
     }
-  ]
+  ],
+  "choiceBeats": [
+    {
+      "at": 4,
+      "alt": "rằng",
+      "emoji": [
+        "🐢",
+        "🐇"
+      ]
+    },
+    {
+      "at": 8,
+      "alt": "chưa",
+      "emoji": [
+        "🌊",
+        "🔦"
+      ]
+    },
+    {
+      "at": 12,
+      "alt": "số",
+      "emoji": [
+        "🍀",
+        "🌙"
+      ]
+    },
+    {
+      "at": 16,
+      "alt": "ông",
+      "emoji": [
+        "🌟",
+        "🎈"
+      ]
+    }
+  ],
+  "coach": {
+    "wordDone": [
+      "Bạn tự ghép được rồi!",
+      "Chính xác!",
+      "Thấy chưa? Bạn làm được.",
+      "Xong thêm một từ — từ từ thôi.",
+      "Nghe và viết đúng rồi!"
+    ],
+    "wordSetup": [
+      "Từ tiếp theo — nghe kỹ nhé.",
+      "Từ này có chữ khó đấy. Sẵn sàng chưa?",
+      "Cứ từ từ với từ này.",
+      "Nghe trước, ghép sau."
+    ],
+    "phase": [
+      "Bước mới: từ hiện ra rồi ẩn đi.",
+      "Bước lớn — chỉ nghe thôi!",
+      "Đây là bàn phím thật — như trò chơi chính."
+    ],
+    "reveal": [
+      "Đây rồi — chỗ khó là đây.",
+      "Không sao — giờ bạn biết bí mật rồi."
+    ],
+    "ceremony": [
+      "Hai mươi từ! Hai mươi từ đầu tiên.",
+      "Sẵn sàng cho từ khó? Thêm năm từ!"
+    ]
+  }
 }

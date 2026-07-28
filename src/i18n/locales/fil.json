@@ -364,5 +364,10 @@
   "racing.pace.gold": "Ginto",
   "racing.pace.platinum": "Platino",
   "racing.pace.tag": "Pace ghost",
-  "voiceSpell.typeInstead": "I-type na lang"
+  "voiceSpell.typeInstead": "I-type na lang",
+  "practice.hint": "Pahiwatig",
+  "practice.choice": "Alin ang susunod?",
+  "practice.micro.silent": "Pindutin ang letrang hindi maririnig.",
+  "practice.micro.hear": "Alin ang narinig mo?",
+  "practice.micro.stack": "Pindutin ang dalawang letrang nagsasama."
 }

@@ -364,5 +364,10 @@
   "racing.pace.gold": "Vàng",
   "racing.pace.platinum": "Bạch kim",
   "racing.pace.tag": "Bóng ma tốc độ",
-  "voiceSpell.typeInstead": "Gõ thay thế"
+  "voiceSpell.typeInstead": "Gõ thay thế",
+  "practice.hint": "Gợi ý",
+  "practice.choice": "Từ nào tiếp theo?",
+  "practice.micro.silent": "Chạm vào chữ không phát âm.",
+  "practice.micro.hear": "Bạn nghe từ nào?",
+  "practice.micro.stack": "Chạm vào hai chữ ghép lại với nhau."
 }

@@ -1,6 +1,6 @@
 {
   "lang": "en",
-  "$draft": "Agent-drafted per D4 (2026-07-27) — words from the language's own bank, intro strings pending the standing audit round.",
+  "$draft": "Agent-drafted per D10 v2 (2026-07-27) — words from the language's own bank; intros, coach lines, template prompts and emoji pending the standing audit round.",
   "words": [
     "horse",
     "kite",
@@ -34,27 +34,121 @@
     {
       "id": "silent-e",
       "firstWord": 0,
-      "intro": "A silent e at the end often makes the vowel before it say its name."
+      "intro": "A silent e at the end often makes the vowel before it say its name.",
+      "decoys": [
+        "a",
+        "u"
+      ],
+      "template": {
+        "id": "TAP_SILENT_UNIT",
+        "params": {
+          "unit": "e"
+        }
+      }
     },
     {
       "id": "double-consonant",
       "firstWord": 4,
-      "intro": "Some words double a consonant — listen for the short vowel before it."
+      "intro": "Some words double a consonant — listen for the short vowel before it.",
+      "decoys": [
+        "s",
+        "t"
+      ]
     },
     {
       "id": "ie-ei",
       "firstWord": 8,
-      "intro": "i before e except after c — usually!"
+      "intro": "i before e except after c — usually!",
+      "decoys": [
+        "a",
+        "y"
+      ],
+      "template": {
+        "id": "HEAR_PICK",
+        "params": {
+          "foil": "deid"
+        }
+      }
     },
     {
       "id": "hard-c-k",
       "firstWord": 12,
-      "intro": "The k sound can be written c, k, or ck."
+      "intro": "The k sound can be written c, k, or ck.",
+      "decoys": [
+        "q",
+        "x"
+      ]
     },
     {
       "id": "wh-th-sh",
       "firstWord": 16,
-      "intro": "Two letters, one sound: sh, ch, th, wh stick together."
+      "intro": "Two letters, one sound: sh, ch, th, wh stick together.",
+      "decoys": [
+        "f",
+        "v"
+      ]
     }
-  ]
+  ],
+  "choiceBeats": [
+    {
+      "at": 4,
+      "alt": "moon",
+      "emoji": [
+        "🌳",
+        "🐇"
+      ]
+    },
+    {
+      "at": 8,
+      "alt": "diet",
+      "emoji": [
+        "🥀",
+        "🔦"
+      ]
+    },
+    {
+      "at": 12,
+      "alt": "desk",
+      "emoji": [
+        "🐱",
+        "🌙"
+      ]
+    },
+    {
+      "at": 16,
+      "alt": "with",
+      "emoji": [
+        "🐟",
+        "🎈"
+      ]
+    }
+  ],
+  "coach": {
+    "wordDone": [
+      "You built that one yourself!",
+      "That's exactly right.",
+      "See? You've got this.",
+      "Another one done — nice and steady.",
+      "You heard it and you spelled it."
+    ],
+    "wordSetup": [
+      "Here comes the next one — listen close.",
+      "This one has a sneaky letter. Ready?",
+      "Take your time with this one.",
+      "Listen first, then build it."
+    ],
+    "phase": [
+      "New step: the word peeks out, then hides.",
+      "Big step — ears only now. You're ready.",
+      "Here's the real keyboard — just like the big game."
+    ],
+    "reveal": [
+      "There it is — that's the tricky part.",
+      "No worries — now you know its secret."
+    ],
+    "ceremony": [
+      "Twenty words! Your first twenty — forever.",
+      "Ready for the hard ones? Five more!"
+    ]
+  }
 }

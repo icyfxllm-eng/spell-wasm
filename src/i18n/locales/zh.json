@@ -364,5 +364,10 @@
   "racing.pace.gold": "黄金",
   "racing.pace.platinum": "铂金",
   "racing.pace.tag": "配速幽灵",
-  "voiceSpell.typeInstead": "改为输入"
+  "voiceSpell.typeInstead": "改为输入",
+  "practice.hint": "提示",
+  "practice.choice": "下一个选哪个？",
+  "practice.micro.silent": "点一点听不到的字母。",
+  "practice.micro.hear": "你听到的是哪个？",
+  "practice.micro.stack": "点一点叠在一起的两个字母。"
 }

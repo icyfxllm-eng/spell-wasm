@@ -364,5 +364,10 @@
   "racing.pace.gold": "स्वर्ण",
   "racing.pace.platinum": "प्लैटिनम",
   "racing.pace.tag": "रफ़्तार भूत",
-  "voiceSpell.typeInstead": "लिखो"
+  "voiceSpell.typeInstead": "लिखो",
+  "practice.hint": "संकेत",
+  "practice.choice": "अगला कौन-सा?",
+  "practice.micro.silent": "उस अक्षर को छुओ जो सुनाई नहीं देता।",
+  "practice.micro.hear": "तुमने कौन-सा सुना?",
+  "practice.micro.stack": "उन दो अक्षरों को छुओ जो जुड़ते हैं।"
 }

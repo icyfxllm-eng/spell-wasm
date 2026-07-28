@@ -364,5 +364,10 @@
   "racing.pace.gold": "골드",
   "racing.pace.platinum": "플래티넘",
   "racing.pace.tag": "페이스 고스트",
-  "voiceSpell.typeInstead": "대신 입력하기"
+  "voiceSpell.typeInstead": "대신 입력하기",
+  "practice.hint": "힌트",
+  "practice.choice": "다음은 어떤 걸까요?",
+  "practice.micro.silent": "소리 나지 않는 글자를 눌러 보세요.",
+  "practice.micro.hear": "어떤 소리가 들리나요?",
+  "practice.micro.stack": "겹치는 두 자음을 눌러 보세요."
 }

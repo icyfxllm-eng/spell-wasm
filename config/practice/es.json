@@ -1,6 +1,6 @@
 {
   "lang": "es",
-  "$draft": "Agent-drafted per D4 (2026-07-27) — words from the language's own bank, intro strings pending the standing audit round.",
+  "$draft": "Agent-drafted per D10 v2 (2026-07-27) — words from the language's own bank; intros, coach lines, template prompts and emoji pending the standing audit round.",
   "words": [
     "libro",
     "boca",
@@ -34,27 +34,121 @@
     {
       "id": "b-v",
       "firstWord": 0,
-      "intro": "b y v suenan igual — hay que memorizar cuál lleva cada palabra."
+      "intro": "b y v suenan igual — hay que memorizar cuál lleva cada palabra.",
+      "decoys": [
+        "b",
+        "v"
+      ],
+      "template": {
+        "id": "HEAR_PICK",
+        "params": {
+          "foil": "livro"
+        }
+      }
     },
     {
       "id": "h-muda",
       "firstWord": 4,
-      "intro": "La h no suena: se escribe pero no se pronuncia."
+      "intro": "La h no suena: se escribe pero no se pronuncia.",
+      "decoys": [
+        "j",
+        "g"
+      ],
+      "template": {
+        "id": "TAP_SILENT_UNIT",
+        "params": {
+          "unit": "h"
+        }
+      }
     },
     {
       "id": "ll-y",
       "firstWord": 8,
-      "intro": "ll e y pueden sonar igual — fíjate cuál usa la palabra."
+      "intro": "ll e y pueden sonar igual — fíjate cuál usa la palabra.",
+      "decoys": [
+        "i",
+        "j"
+      ]
     },
     {
       "id": "tildes",
       "firstWord": 12,
-      "intro": "La tilde marca la sílaba fuerte: á é í ó ú."
+      "intro": "La tilde marca la sílaba fuerte: á é í ó ú.",
+      "decoys": [
+        "a",
+        "e"
+      ]
     },
     {
       "id": "c-s-z",
       "firstWord": 16,
-      "intro": "c (ante e/i), s y z pueden sonar parecido según la región."
+      "intro": "c (ante e/i), s y z pueden sonar parecido según la región.",
+      "decoys": [
+        "k",
+        "q"
+      ]
     }
-  ]
+  ],
+  "choiceBeats": [
+    {
+      "at": 4,
+      "alt": "han",
+      "emoji": [
+        "🐢",
+        "🐇"
+      ]
+    },
+    {
+      "at": 8,
+      "alt": "ella",
+      "emoji": [
+        "🌊",
+        "🔦"
+      ]
+    },
+    {
+      "at": 12,
+      "alt": "él",
+      "emoji": [
+        "🍀",
+        "🌙"
+      ]
+    },
+    {
+      "at": 16,
+      "alt": "dos",
+      "emoji": [
+        "🌟",
+        "🎈"
+      ]
+    }
+  ],
+  "coach": {
+    "wordDone": [
+      "¡Lo armaste tú solo!",
+      "Exactamente así.",
+      "¿Ves? Puedes hacerlo.",
+      "Otra más — paso a paso.",
+      "La oíste y la escribiste."
+    ],
+    "wordSetup": [
+      "Viene la siguiente — escucha bien.",
+      "Esta tiene una letra traviesa. ¿Listo?",
+      "Tómate tu tiempo con esta.",
+      "Primero escucha, luego construye."
+    ],
+    "phase": [
+      "Nuevo paso: la palabra se asoma y se esconde.",
+      "Gran paso — solo con el oído. Ya puedes.",
+      "Aquí está el teclado de verdad — como en el juego."
+    ],
+    "reveal": [
+      "Ahí está — esa es la parte difícil.",
+      "Tranquilo — ya conoces su secreto."
+    ],
+    "ceremony": [
+      "¡Veinte palabras! Tus primeras veinte.",
+      "¿Listo para las difíciles? ¡Cinco más!"
+    ]
+  }
 }
