@@ -243,6 +243,15 @@ pub fn def_match(lang: &str) -> bool {
 /// 2026-07-27) under the standing interim-content posture — drafted curricula
 /// + intro strings ship now, native review remains the follow-up (same as the
 /// banks, UI locales, and definition pools). Snapshot-tested.
+/// Mic-everywhere server rung: languages the backend can recognize via
+/// Google STT when the DEVICE has no on-device model (today that means
+/// sw/fil in practice; the gate covers the lineup so a device without a
+/// download path still gets the disclosed option). NEVER offered in Kid
+/// Mode or education builds, and never without the internet-consent card.
+pub fn server_stt(lang: &str) -> bool {
+    is_builtin_lang(lang)
+}
+
 pub fn practice(lang: &str) -> bool {
     is_builtin_lang(lang)
 }
@@ -443,6 +452,17 @@ mod registry_tests {
 
     /// CC-PRACTICE D7: open to every registered language (Eric's ruling,
     /// 2026-07-27); unregistered codes never render it.
+    /// Mic-everywhere: the server STT rung covers every registered language
+    /// (it only ever ACTIVATES when the device has no on-device model, after
+    /// consent, outside Kid Mode / education — enforced in spell_aloud).
+    #[test]
+    fn server_stt_covers_the_lineup() {
+        for (code, _, _, _) in BUILTIN_LANGS.iter() {
+            assert!(server_stt(code), "{code}");
+        }
+        assert!(!server_stt("xx"));
+    }
+
     #[test]
     fn practice_open_to_all_registered_languages() {
         for (code, _, _, _) in LANGS_BASE.iter() {

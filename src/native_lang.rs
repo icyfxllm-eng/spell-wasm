@@ -545,6 +545,10 @@ thread_local! {
 pub fn start_letter_capture(
     lang: &str,
     contextual: &[String],
+    // Server STT rung (mic-everywhere): Some(url) routes capture through the
+    // Spell backend for languages with NO on-device model — only ever passed
+    // after the explicit internet-consent card, and never in Kid Mode.
+    server_url: Option<&str>,
     mut on_token: impl FnMut(String) + 'static,
     // `on_final(transcript, confidence, alternative, is_end)` — confidence in 0..1 and
     // the top alternative reading (None if empty) power the mode's confusable chip
@@ -566,6 +570,9 @@ pub fn start_letter_capture(
         arr.push(&JsValue::from_str(s));
     }
     let _ = Reflect::set(&opts, &JsValue::from_str("contextualStrings"), &arr);
+    if let Some(url) = server_url {
+        let _ = Reflect::set(&opts, &JsValue::from_str("serverUrl"), &JsValue::from_str(url));
+    }
 
     let tok_cb = Closure::wrap(Box::new(move |v: JsValue| {
         on_token(v.as_string().unwrap_or_default());

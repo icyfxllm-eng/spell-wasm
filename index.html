@@ -501,7 +501,8 @@
   .voice-spell-mic.btn-hide,.voice-spell-perm.btn-hide{display:none}
   /* Mic-everywhere: a downloadable-state mic wears a small ⬇ badge — the first
      tap fetches the on-device voice pack, then the badge drops. */
-  .voice-spell-mic.dl{position:relative}
+  .voice-spell-mic.dl,.voice-spell-mic.net{position:relative}
+  .voice-spell-mic.net::after{content:"🌐";position:absolute;right:-4px;bottom:-4px;font-size:11px;line-height:1}
   .voice-spell-mic.dl::after{content:"⬇";position:absolute;right:-4px;bottom:-4px;font-size:12px;line-height:1;background:var(--accent,#7aa2ff);color:#fff;border-radius:50%;width:16px;height:16px;display:flex;align-items:center;justify-content:center}
   .voice-spell-mic:active{transform:scale(.9)}
   .voice-spell-mic.listening{border-color:var(--teal,#46d6b8);box-shadow:0 0 0 5px rgba(70,214,184,.22);animation:sayitPulse 1.1s ease-in-out infinite}
@@ -1078,6 +1079,14 @@
     <div class="voice-spell-status" id="voiceSpellStatus" aria-live="polite"></div>
     <!-- One-time permission explainer if the mic is denied; typed input is never
          blocked, so this is dismissable and purely informational. -->
+    <!-- Mic-everywhere server rung: the explicit internet-consent card. Shown
+         once, only for languages with NO on-device speech model, never in Kid
+         Mode / education builds. -->
+    <div class="voice-spell-perm btn-hide" id="voiceSpellNet" role="alertdialog">
+      <p data-i18n="voiceSpell.netAsk">This language needs the internet for voice. Your audio goes to the Spell server only to be recognized, then it's gone — never stored.</p>
+      <button class="btn btn-check" id="voiceSpellNetOk" data-i18n="voiceSpell.netOk" style="width:100%;margin-bottom:6px">Use the internet</button>
+      <button class="btn" id="voiceSpellNetNo" data-i18n="voiceSpell.netNo" style="width:100%">No thanks</button>
+    </div>
     <div class="voice-spell-perm btn-hide" id="voiceSpellPerm" role="alert">
       <p data-i18n="voiceSpell.needsMic">To spell out loud, turn on Microphone and Speech Recognition for Spell in Settings. You can always type instead.</p>
       <button class="btn btn-check" id="voiceSpellPermClose" data-i18n="voiceSpell.typeInstead" style="width:100%">Type instead</button>

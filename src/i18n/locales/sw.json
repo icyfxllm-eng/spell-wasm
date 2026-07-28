@@ -372,5 +372,9 @@
   "practice.micro.stack": "Gusa herufi mbili zinazoungana.",
   "voiceSpell.dlPrep": "Inapakua kifurushi cha sauti…",
   "voiceSpell.dlReady": "Tayari! Gusa maikrofoni",
-  "voiceSpell.dlFail": "Upakuaji umeshindikana — gusa kujaribu tena"
+  "voiceSpell.dlFail": "Upakuaji umeshindikana — gusa kujaribu tena",
+  "voiceSpell.netAsk": "Lugha hii inahitaji intaneti kwa sauti. Sauti yako huenda kwenye seva ya Spell kutambuliwa tu, kisha hufutwa — haihifadhiwi kamwe.",
+  "voiceSpell.netOk": "Tumia intaneti",
+  "voiceSpell.netNo": "Hapana asante",
+  "voiceSpell.netErr": "Hakuna muunganisho — jaribu tena"
 }

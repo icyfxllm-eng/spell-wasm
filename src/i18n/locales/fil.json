@@ -372,5 +372,9 @@
   "practice.micro.stack": "Pindutin ang dalawang letrang nagsasama.",
   "voiceSpell.dlPrep": "Kinukuha ang voice pack…",
   "voiceSpell.dlReady": "Handa na! Pindutin ang mikropono",
-  "voiceSpell.dlFail": "Nabigo ang download — pindutin para subukang muli"
+  "voiceSpell.dlFail": "Nabigo ang download — pindutin para subukang muli",
+  "voiceSpell.netAsk": "Kailangan ng internet ang boses para sa wikang ito. Ipinapadala ang audio mo sa Spell server para makilala lang, tapos nawawala — hindi kailanman iniimbak.",
+  "voiceSpell.netOk": "Gamitin ang internet",
+  "voiceSpell.netNo": "Huwag na lang",
+  "voiceSpell.netErr": "Walang koneksyon — subukan muli"
 }

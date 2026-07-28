@@ -372,5 +372,9 @@
   "practice.micro.stack": "Toca las dos letras que se juntan.",
   "voiceSpell.dlPrep": "Descargando el paquete de voz…",
   "voiceSpell.dlReady": "¡Listo! Toca el micrófono",
-  "voiceSpell.dlFail": "Falló la descarga — toca para reintentar"
+  "voiceSpell.dlFail": "Falló la descarga — toca para reintentar",
+  "voiceSpell.netAsk": "Este idioma necesita internet para la voz. Tu audio va al servidor de Spell solo para reconocerse y luego desaparece — nunca se guarda.",
+  "voiceSpell.netOk": "Usar internet",
+  "voiceSpell.netNo": "No, gracias",
+  "voiceSpell.netErr": "Sin conexión — inténtalo de nuevo"
 }

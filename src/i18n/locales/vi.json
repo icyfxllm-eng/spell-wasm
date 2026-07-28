@@ -372,5 +372,9 @@
   "practice.micro.stack": "Chạm vào hai chữ ghép lại với nhau.",
   "voiceSpell.dlPrep": "Đang tải gói giọng nói…",
   "voiceSpell.dlReady": "Xong! Chạm vào micrô",
-  "voiceSpell.dlFail": "Tải thất bại — chạm để thử lại"
+  "voiceSpell.dlFail": "Tải thất bại — chạm để thử lại",
+  "voiceSpell.netAsk": "Ngôn ngữ này cần internet cho giọng nói. Âm thanh chỉ được gửi đến máy chủ Spell để nhận dạng rồi xóa — không bao giờ lưu.",
+  "voiceSpell.netOk": "Dùng internet",
+  "voiceSpell.netNo": "Không, cảm ơn",
+  "voiceSpell.netErr": "Mất kết nối — thử lại"
 }

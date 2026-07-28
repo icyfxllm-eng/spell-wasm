@@ -372,5 +372,9 @@
   "practice.micro.stack": "Tap the two letters that stack together.",
   "voiceSpell.dlPrep": "Getting the voice pack…",
   "voiceSpell.dlReady": "Voice pack ready — tap the mic!",
-  "voiceSpell.dlFail": "Download failed — tap to retry"
+  "voiceSpell.dlFail": "Download failed — tap to retry",
+  "voiceSpell.netAsk": "This language needs the internet for voice. Your audio goes to the Spell server only to be recognized, then it's gone — never stored.",
+  "voiceSpell.netOk": "Use the internet",
+  "voiceSpell.netNo": "No thanks",
+  "voiceSpell.netErr": "No connection — try again"
 }

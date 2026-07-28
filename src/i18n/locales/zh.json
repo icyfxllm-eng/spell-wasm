@@ -372,5 +372,9 @@
   "practice.micro.stack": "点一点叠在一起的两个字母。",
   "voiceSpell.dlPrep": "正在下载语音包…",
   "voiceSpell.dlReady": "准备好了！点一下麦克风",
-  "voiceSpell.dlFail": "下载失败 — 点击重试"
+  "voiceSpell.dlFail": "下载失败 — 点击重试",
+  "voiceSpell.netAsk": "这个语言的语音需要联网。你的音频只会发送到 Spell 服务器进行识别，之后立即删除 — 绝不保存。",
+  "voiceSpell.netOk": "使用网络",
+  "voiceSpell.netNo": "不用了",
+  "voiceSpell.netErr": "没有网络 — 请重试"
 }

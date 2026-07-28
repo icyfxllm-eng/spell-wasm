@@ -386,6 +386,9 @@
       p.startLetterCapture({
         lang: (opts && opts.lang) || '',
         contextualStrings: (opts && opts.contextualStrings) || [],
+        // Server STT rung (mic-everywhere): present ONLY after the explicit
+        // internet-consent card, for languages with no on-device model.
+        serverUrl: (opts && opts.serverUrl) || '',
       }).catch(function (e) {
         if (onError) onError((e && e.message) || 'AUDIO_ERROR');
         cleanup();

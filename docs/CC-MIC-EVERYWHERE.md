@@ -52,15 +52,32 @@ The privacy doctrine is untouched at every rung: `available` is never true
 without on-device support, downloads fetch Apple's LOCAL model assets, and
 nothing ever falls back to a server.
 
+## Server rung (added 2026-07-28 — Eric: "make the mic usable with ALL languages")
+
+For languages with NO on-device path (sw, fil in practice), a fourth rung:
+`spell_aloud` shows the mic with a 🌐 badge; the FIRST tap opens an explicit
+consent card ("your audio goes to the Spell server only to be recognized,
+then it's gone — never stored"); OK persists (`spell_stt_ok`) and capture
+runs through `SpeechListener`'s server engine — same tap + VAD one-press,
+segments converted to 16k mono LINEAR16 and POSTed to `/api/stt` (backend →
+Google Cloud Speech-to-Text with letter-name `speechContexts` biasing).
+
+Hard exclusions, enforced in `reflect`: never Kid Mode, never education
+builds, never without consent, and never when ANY on-device rung exists.
+The backend recognizes and discards — nothing written, nothing logged.
+
+**BLOCKED ON ERIC**: the Google API key rejects Speech-to-Text
+("Requests to this API speech.googleapis.com … are blocked"). In Google
+Cloud console: enable **Cloud Speech-to-Text API** for the project AND, if
+the key has API restrictions, add Speech-to-Text to its allowed list. The
+endpoint is deployed and tested end-to-end up to that 403.
+
 ## Honest limits (flag for Eric)
 
-- Which locales the two new engines serve is a RUNTIME answer per device/OS.
-  Expect major coverage (es/fr/de/pt/ja/ko/zh/ar/hi/ru/pl/vi are dictation
-  locales); **sw and fil may remain honestly unavailable** if iOS offers no
-  on-device model — the mode's availability line explains, and no server
-  fallback exists by design. If Eric wants those two anyway, the only path is
-  opt-in server STT (our backend + Google Cloud) with disclosure and a hard
-  Kid-Mode exclusion — HIS call, not implemented.
+- Which locales the on-device engines serve is a RUNTIME answer per
+  device/OS. Whatever falls through lands on the consented server rung, so
+  every language now has A path (Kid Mode stays on-device-only: a Kid-Mode
+  child on sw/fil simply has no mic — by design).
 - `AssetInventory` has a per-app reserved-locale budget (small, ~3): heavy
   language-switchers may hit DOWNLOAD_FAILED until an older pack is released.
   Not handled in v1 — retry after switching stays possible; ledgered.

@@ -372,5 +372,9 @@
   "practice.micro.stack": "اضغط على الحرفين المتّصلين.",
   "voiceSpell.dlPrep": "جارٍ تنزيل حزمة الصوت…",
   "voiceSpell.dlReady": "جاهز! اضغط على الميكروفون",
-  "voiceSpell.dlFail": "فشل التنزيل — اضغط لإعادة المحاولة"
+  "voiceSpell.dlFail": "فشل التنزيل — اضغط لإعادة المحاولة",
+  "voiceSpell.netAsk": "تحتاج هذه اللغة إلى الإنترنت للصوت. يُرسَل صوتك إلى خادم Spell للتعرّف عليه فقط ثم يُحذف — لا يُخزَّن أبدًا.",
+  "voiceSpell.netOk": "استخدام الإنترنت",
+  "voiceSpell.netNo": "لا، شكرًا",
+  "voiceSpell.netErr": "لا يوجد اتصال — حاول مرة أخرى"
 }

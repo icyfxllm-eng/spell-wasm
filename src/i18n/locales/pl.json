@@ -372,5 +372,9 @@
   "practice.micro.stack": "Dotknij dwie litery, które się łączą.",
   "voiceSpell.dlPrep": "Pobieranie pakietu głosowego…",
   "voiceSpell.dlReady": "Gotowe! Dotknij mikrofonu",
-  "voiceSpell.dlFail": "Pobieranie nie powiodło się — dotknij, by ponowić"
+  "voiceSpell.dlFail": "Pobieranie nie powiodło się — dotknij, by ponowić",
+  "voiceSpell.netAsk": "Ten język potrzebuje internetu do głosu. Twoje audio trafia na serwer Spell tylko do rozpoznania, potem znika — nigdy nie jest zapisywane.",
+  "voiceSpell.netOk": "Użyj internetu",
+  "voiceSpell.netNo": "Nie, dziękuję",
+  "voiceSpell.netErr": "Brak połączenia — spróbuj ponownie"
 }

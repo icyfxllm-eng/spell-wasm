@@ -17,6 +17,7 @@ import html
 import threading
 import hashlib
 import unicodedata
+import urllib.error
 import urllib.parse
 import urllib.request
 from flask import Flask, request, jsonify, send_file
@@ -600,6 +601,68 @@ def _load_notify() -> dict:
             return json.load(f)
     except (OSError, ValueError):
         return {}
+
+
+# ---- Server speech-to-text (mic-everywhere, Eric 2026-07-28) -------------
+# ONLY for languages with no on-device iOS model (today: sw, fil — the map
+# below still covers all 15 defensively). The client shows an explicit
+# internet-consent card first and NEVER offers this in Kid Mode. Audio is
+# recognized and discarded — nothing is written to disk or logged.
+STT_LANGS = {
+    "en": "en-US", "es": "es-ES", "fr": "fr-FR", "de": "de-DE",
+    "pt": "pt-BR", "pl": "pl-PL", "ru": "ru-RU", "vi": "vi-VN",
+    "ko": "ko-KR", "ja": "ja-JP", "fil": "fil-PH", "zh": "cmn-Hans-CN",
+    "ar": "ar-SA", "hi": "hi-IN", "sw": "sw-KE",
+}
+STT_MAX_AUDIO_B64 = 1_400_000  # ~1MB PCM ≈ 30s @16k mono — letters are ~2s
+
+
+@app.route("/api/stt", methods=["POST"])
+def stt():
+    j = request.get_json(force=True, silent=True) or {}
+    lang = j.get("lang", "")
+    code = STT_LANGS.get(lang)
+    audio_b64 = j.get("audio", "")
+    sample_rate = int(j.get("sampleRate", 16000))
+    phrases = [p for p in (j.get("phrases") or []) if isinstance(p, str)][:100]
+    if not code or not audio_b64:
+        return jsonify({"error": "bad request"}), 400
+    if len(audio_b64) > STT_MAX_AUDIO_B64:
+        return jsonify({"error": "audio too long"}), 413
+    body = {
+        "config": {
+            "encoding": "LINEAR16",
+            "sampleRateHertz": sample_rate,
+            "languageCode": code,
+            "maxAlternatives": 2,
+            "profanityFilter": True,
+        },
+        "audio": {"content": audio_b64},
+    }
+    if phrases:
+        body["config"]["speechContexts"] = [{"phrases": phrases, "boost": 10}]
+    req = urllib.request.Request(
+        "https://speech.googleapis.com/v1/speech:recognize?key=" + API_KEY,
+        data=json.dumps(body).encode("utf-8"),
+        headers={"Content-Type": "application/json"},
+    )
+    try:
+        with urllib.request.urlopen(req, timeout=12) as resp:
+            data = json.loads(resp.read().decode("utf-8"))
+    except urllib.error.HTTPError as e:
+        detail = e.read().decode("utf-8", "replace")[:200]
+        return jsonify({"error": "stt upstream", "detail": detail}), 502
+    except Exception:
+        return jsonify({"error": "stt unreachable"}), 502
+    results = data.get("results") or []
+    if not results:
+        return jsonify({"transcript": "", "confidence": 0.0, "alt": ""})
+    alts = results[0].get("alternatives") or [{}]
+    return jsonify({
+        "transcript": alts[0].get("transcript", ""),
+        "confidence": float(alts[0].get("confidence", 0.0)),
+        "alt": (alts[1].get("transcript", "") if len(alts) > 1 else ""),
+    })
 
 
 @app.route("/api/notify", methods=["POST"])

@@ -372,5 +372,9 @@
   "practice.micro.stack": "くっつく二つの字をタップしてね。",
   "voiceSpell.dlPrep": "音声パックをダウンロード中…",
   "voiceSpell.dlReady": "準備完了！マイクをタップしてね",
-  "voiceSpell.dlFail": "ダウンロード失敗 — タップして再試行"
+  "voiceSpell.dlFail": "ダウンロード失敗 — タップして再試行",
+  "voiceSpell.netAsk": "この言語の音声認識にはインターネットが必要です。音声は認識のためだけにSpellサーバーへ送られ、その後消えます — 保存されません。",
+  "voiceSpell.netOk": "インターネットを使う",
+  "voiceSpell.netNo": "やめておく",
+  "voiceSpell.netErr": "接続なし — もう一度試してね"
 }

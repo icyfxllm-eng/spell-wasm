@@ -223,10 +223,12 @@ public class NativeLanguageKitPlugin: CAPPlugin, CAPBridgedPlugin {
     @objc func startLetterCapture(_ call: CAPPluginCall) {
         let lang = call.getString("lang") ?? ""
         let contextual = (call.getArray("contextualStrings")?.compactMap { $0 as? String }) ?? []
+        let serverUrl = call.getString("serverUrl") ?? ""
         DispatchQueue.main.async {
             self.listener.startLetters(
                 lang: lang,
                 contextualStrings: contextual,
+                serverUrl: serverUrl,
                 onPartial: { [weak self] text in
                     self?.notifyListeners("letterToken", data: ["token": text])
                 },
@@ -280,6 +282,7 @@ final class SpeechListener {
         case busy = "BUSY"
         case audio = "AUDIO_ERROR"
         case noSpeech = "NO_SPEECH"
+        case network = "NETWORK"
     }
 
     private let audioEngine = AVAudioEngine()
@@ -290,6 +293,17 @@ final class SpeechListener {
     private var engineKind = "legacy"
     // iOS-26 session state, stored type-erased so the class still compiles at
     // the iOS 15 deployment target (only touched inside #available blocks).
+    // Server STT rung (mic-everywhere): capture VAD-segmented PCM and POST each
+    // segment to the Spell backend. ONLY entered when the web layer passes
+    // serverUrl — which it does exclusively after the explicit consent card,
+    // for languages with no on-device model, never in Kid Mode.
+    private var serverUrl = ""
+    private var serverLang = ""
+    private var serverSeg = Data()
+    private var serverConverter: AVAudioConverter?
+    private static let serverFormat = AVAudioFormat(commonFormat: .pcmFormatInt16,
+                                                    sampleRate: 16000, channels: 1,
+                                                    interleaved: true)!
     private var anyAnalyzer: Any?
     private var anyAnalyzerCont: Any?
     private var anyResultsTask: Any?
@@ -362,7 +376,7 @@ final class SpeechListener {
         return (sum / Float(n)).squareRoot()
     }
 
-    var isListening: Bool { task != nil || anyResultsTask != nil }
+    var isListening: Bool { task != nil || anyResultsTask != nil || engineKind == "server" }
 
     func start(lang: String, completion: @escaping (Result<String, ListenError>) -> Void) {
         // Say-It (whole-word) profile: no biasing, no partial streaming, no VAD.
@@ -379,6 +393,7 @@ final class SpeechListener {
     func startLetters(
         lang: String,
         contextualStrings: [String],
+        serverUrl: String = "",
         onPartial: @escaping (String) -> Void,
         onSegment: @escaping (String, Double, String) -> Void,
         onFinal: @escaping (String, Double, String) -> Void,
@@ -388,6 +403,8 @@ final class SpeechListener {
         diagHandler = onDiag
         continuous = true // letters: VAD auto-segments each letter (one-press)
         segmentHandler = onSegment
+        self.serverUrl = serverUrl
+        self.serverLang = lang
         begin(lang: lang, contextualStrings: contextualStrings, onPartial: onPartial) { [weak self] result in
             switch result {
             case .success(let text): onFinal(text, self?.lastConfidence ?? 1.0, self?.lastAlt ?? "")
@@ -422,6 +439,19 @@ final class SpeechListener {
         // Fail closed: only proceed when ON-DEVICE recognition is truly available
         // for the locale — via the full engine ladder (legacy recognizer, or an
         // iOS-26 transcriber whose assets are installed). Never a server.
+        if !serverUrl.isEmpty {
+            // Server rung: mic permission only (no speech-recognizer auth — no
+            // recognizer runs on-device; the consented backend does the work).
+            engineKind = "server"
+            AVAudioSession.sharedInstance().requestRecordPermission { [weak self] granted in
+                DispatchQueue.main.async {
+                    guard let self = self else { return }
+                    guard granted else { self.finish(.failure(.permissionDenied)); return }
+                    self.beginServerCapture()
+                }
+            }
+            return
+        }
         Task { [weak self] in
             let cap = await SpeechCapabilities.fullReport(lang: lang)
             DispatchQueue.main.async {
@@ -457,6 +487,10 @@ final class SpeechListener {
     /// stop — `stopping` makes the next finalization end the session instead of
     /// cycling to another segment.
     func stop() {
+        if engineKind == "server" {
+            serverStop()
+            return
+        }
         if engineKind != "legacy" {
             analyzerStop()
             return
@@ -540,7 +574,9 @@ final class SpeechListener {
         input.installTap(onBus: 0, bufferSize: 1024, format: format) { [weak self] buffer, _ in
             guard let self = self else { return }
             self.tapCount += 1
-            if self.engineKind != "legacy" {
+            if self.engineKind == "server" {
+                self.appendServerPCM(buffer)
+            } else if self.engineKind != "legacy" {
                 // Analyzer path: the input stream stays open across per-letter
                 // finalization, so buffers always flow — no stash needed.
                 self.yieldToAnalyzer(buffer)
@@ -664,6 +700,10 @@ final class SpeechListener {
     /// VAD detected the pause after a letter: finalize JUST this cycle. The engine,
     /// tap, and audio session stay live for the next letter.
     private func segmentBoundary() {
+        if engineKind == "server" {
+            serverBoundary(isEnd: false)
+            return
+        }
         if engineKind != "legacy" {
             analyzerBoundary()
             return
@@ -939,6 +979,170 @@ final class SpeechListener {
         }
     }
 
+    // MARK: server STT engine (mic-everywhere, consented internet rung).
+
+    private func beginServerCapture() {
+        do {
+            let session = AVAudioSession.sharedInstance()
+            try? session.setActive(false, options: .notifyOthersOnDeactivation)
+            try session.setCategory(.playAndRecord, mode: .measurement,
+                                    options: [.duckOthers, .defaultToSpeaker, .allowBluetooth])
+            try session.setActive(true, options: .notifyOthersOnDeactivation)
+        } catch { finish(.failure(.audio)); return }
+
+        tapCount = 0
+        audioEngine.stop()
+        audioEngine.reset()
+        sawSpeech = false
+        silenceSecs = 0
+        segmentSecs = 0
+        peakRMS = 0
+        serverSeg = Data()
+
+        let input = audioEngine.inputNode
+        let format = input.outputFormat(forBus: 0)
+        serverConverter = AVAudioConverter(from: format, to: Self.serverFormat)
+        let sampleRate = format.sampleRate
+        input.installTap(onBus: 0, bufferSize: 1024, format: format) { [weak self] buffer, _ in
+            guard let self = self else { return }
+            self.tapCount += 1
+            self.appendServerPCM(buffer)
+            if self.continuous && sampleRate > 0 {
+                let secs = Double(buffer.frameLength) / sampleRate
+                let level = Self.rms(buffer)
+                self.peakRMS = max(self.peakRMS, level)
+                if level > self.speechRMS {
+                    self.sawSpeech = true
+                    self.silenceSecs = 0
+                } else if self.sawSpeech {
+                    self.silenceSecs += secs
+                }
+                self.segmentSecs += secs
+                let boundary = (self.sawSpeech && self.silenceSecs >= self.silenceCutoff)
+                    || self.segmentSecs >= self.maxSegment
+                if boundary {
+                    self.sawSpeech = false
+                    self.silenceSecs = 0
+                    self.segmentSecs = 0
+                    DispatchQueue.main.async { [weak self] in self?.segmentBoundary() }
+                }
+            }
+        }
+        audioEngine.prepare()
+        do { try audioEngine.start() } catch { finish(.failure(.audio)); return }
+
+        let handler = diagHandler
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1.2) { [weak self] in
+            guard let self = self else { return }
+            handler?("engine=server sr=\(Int(format.sampleRate)) buf=\(self.tapCount) "
+                + "peak=\(String(format: "%.3f", self.peakRMS))")
+        }
+    }
+
+    /// Convert one mic buffer to 16k mono Int16 and append to the segment.
+    private func appendServerPCM(_ buffer: AVAudioPCMBuffer) {
+        guard let conv = serverConverter else { return }
+        let ratio = Self.serverFormat.sampleRate / buffer.format.sampleRate
+        let cap = AVAudioFrameCount(Double(buffer.frameLength) * ratio) + 64
+        guard let out = AVAudioPCMBuffer(pcmFormat: Self.serverFormat, frameCapacity: cap) else { return }
+        var err: NSError?
+        var fed = false
+        conv.convert(to: out, error: &err) { _, status in
+            if fed { status.pointee = .noDataNow; return nil }
+            fed = true
+            status.pointee = .haveData
+            return buffer
+        }
+        guard err == nil, out.frameLength > 0, let ch = out.int16ChannelData?[0] else { return }
+        pendingLock.lock()
+        serverSeg.append(Data(bytes: ch, count: Int(out.frameLength) * 2))
+        // Hard cap ~30s of audio (matches the backend's request cap).
+        if serverSeg.count > 960_000 { serverSeg.removeFirst(serverSeg.count - 960_000) }
+        pendingLock.unlock()
+    }
+
+    /// VAD boundary on the server rung: snapshot the segment PCM, reset, POST.
+    /// Capture keeps running while the request is in flight.
+    private func serverBoundary(isEnd: Bool) {
+        guard engineKind == "server", !finished else { return }
+        if !isEnd { guard continuous, !stopping else { return } }
+        pendingLock.lock()
+        let seg = serverSeg
+        serverSeg = Data()
+        pendingLock.unlock()
+        // Skip near-empty segments (a false VAD boundary): < 0.25s of audio.
+        if seg.count < 8_000 {
+            if isEnd { finish(best.isEmpty ? .failure(.noSpeech) : .success(best)) }
+            return
+        }
+        guard let url = URL(string: serverUrl) else {
+            if isEnd { finish(.failure(.network)) }
+            return
+        }
+        var req = URLRequest(url: url, timeoutInterval: 12)
+        req.httpMethod = "POST"
+        req.setValue("application/json", forHTTPHeaderField: "Content-Type")
+        let body: [String: Any] = [
+            "lang": serverLang,
+            "sampleRate": 16000,
+            "audio": seg.base64EncodedString(),
+            "phrases": Array(contextualStrings.prefix(100)),
+        ]
+        req.httpBody = try? JSONSerialization.data(withJSONObject: body)
+        let gen = cycleGen
+        URLSession.shared.dataTask(with: req) { [weak self] data, resp, error in
+            DispatchQueue.main.async {
+                guard let self = self, gen == self.cycleGen, !self.finished else { return }
+                var transcript = ""
+                var confidence = 1.0
+                var alt = ""
+                if error == nil, let data = data,
+                   (resp as? HTTPURLResponse)?.statusCode == 200,
+                   let j = try? JSONSerialization.jsonObject(with: data) as? [String: Any] {
+                    transcript = (j["transcript"] as? String) ?? ""
+                    confidence = (j["confidence"] as? Double) ?? 1.0
+                    alt = (j["alt"] as? String) ?? ""
+                } else if !isEnd {
+                    // Mid-stream network failure: end the session honestly —
+                    // web shows the no-connection status and the player retaps.
+                    // (Leaving the mic hot behind a dead UI is the worse bug.)
+                    self.finish(.failure(.network))
+                    return
+                }
+                if isEnd {
+                    self.finish(transcript.isEmpty
+                        ? (error == nil ? .failure(.noSpeech) : .failure(.network))
+                        : .success(transcript))
+                    return
+                }
+                if !transcript.isEmpty {
+                    self.lastConfidence = confidence
+                    self.lastAlt = alt
+                    self.best = transcript
+                    self.segmentHandler?(transcript, confidence, alt)
+                    self.diagHandler?("seg='\(transcript)' engine=server")
+                }
+            }
+        }.resume()
+    }
+
+    /// User stop on the server rung: flush the tail segment as the final.
+    private func serverStop() {
+        guard engineKind == "server", !finished else { return }
+        stopping = true
+        if audioEngine.isRunning {
+            audioEngine.stop()
+            audioEngine.inputNode.removeTap(onBus: 0)
+        }
+        serverBoundary(isEnd: true)
+        // Net: if the final POST never answers, resolve with what we have.
+        let gen = cycleGen
+        DispatchQueue.main.asyncAfter(deadline: .now() + 6) { [weak self] in
+            guard let self = self, gen == self.cycleGen, !self.finished else { return }
+            self.finish(self.best.isEmpty ? .failure(.noSpeech) : .success(self.best))
+        }
+    }
+
     /// Tear down any live analyzer session (supersede / finish).
     private func teardownAnalyzer() {
         guard anyAnalyzer != nil || anyResultsTask != nil || anyAnalyzerCont != nil else { return }
@@ -955,6 +1159,9 @@ final class SpeechListener {
         analyzerConverter = nil
         analyzerFormat = nil
         analyzerSeg = ""
+        serverSeg = Data()
+        serverConverter = nil
+        serverUrl = ""
         engineKind = "legacy"
     }
 

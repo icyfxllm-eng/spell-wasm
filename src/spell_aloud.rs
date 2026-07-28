@@ -663,11 +663,25 @@ pub fn reflect(app: &App) {
     // download badge and the first tap fetches the on-device voice pack;
     // "unavailable" → hidden (no on-device path exists — never a server).
     crate::dom::add_class("voiceSpellMic", "btn-hide");
+    let kid = app.borrow().kid;
     spawn_local(async move {
         let cap = native_lang::speech_capabilities(&lang).await;
-        CAP_STATE.with(|c| *c.borrow_mut() = cap.state.clone());
-        crate::dom::toggle_class("voiceSpellMic", "btn-hide", cap.state == "unavailable");
-        crate::dom::toggle_class("voiceSpellMic", "dl", cap.state == "downloadable");
+        // Server rung (mic-everywhere): a language with NO on-device path may
+        // still get the mic through the backend — explicit consent card, a 🌐
+        // badge, and HARD exclusions: never Kid Mode, never education builds.
+        let state = if cap.state == "unavailable"
+            && crate::consts::server_stt(&lang)
+            && !kid
+            && !cfg!(feature = "education")
+        {
+            "server".to_string()
+        } else {
+            cap.state
+        };
+        CAP_STATE.with(|c| *c.borrow_mut() = state.clone());
+        crate::dom::toggle_class("voiceSpellMic", "btn-hide", state == "unavailable");
+        crate::dom::toggle_class("voiceSpellMic", "dl", state == "downloadable");
+        crate::dom::toggle_class("voiceSpellMic", "net", state == "server");
     });
 }
 
@@ -688,6 +702,17 @@ pub fn wire(app: &App) {
     // word is untouched). Not a dead sentence.
     crate::dom::on_click("voiceSpellPermClose", || {
         crate::dom::add_class("voiceSpellPerm", "btn-hide");
+    });
+    // Server-rung consent card (mic-everywhere): OK persists and starts the
+    // session; "No thanks" closes and nothing changes.
+    let a_net = app.clone();
+    crate::dom::on_click("voiceSpellNetOk", move || {
+        crate::storage::set_raw("spell_stt_ok", "1");
+        crate::dom::add_class("voiceSpellNet", "btn-hide");
+        mic_tap(&a_net);
+    });
+    crate::dom::on_click("voiceSpellNetNo", || {
+        crate::dom::add_class("voiceSpellNet", "btn-hide");
     });
 
     // Play-hub entry (CC-SPELL-ALOUD-INTEGRATION Feature 1): the hub routes here. Enter
@@ -774,6 +799,14 @@ pub fn mic_tap(app: &App) {
         download_pack_then_reflect(app);
         return;
     }
+    if CAP_STATE.with(|c| c.borrow().clone()) == "server"
+        && crate::storage::get_raw("spell_stt_ok").as_deref() != Some("1")
+    {
+        // First use of the internet rung: the consent card, never a silent
+        // fallback. OK persists the choice; dismiss just closes.
+        crate::dom::remove_class("voiceSpellNet", "btn-hide");
+        return;
+    }
     if LISTENING.with(Cell::get) {
         stop_session();
         return;
@@ -835,9 +868,15 @@ fn begin_session(app: &App) {
     let a_partial = app.clone();
     let a_final = app.clone();
     let a_error = app.clone();
+    let server_url = if CAP_STATE.with(|c| c.borrow().clone()) == "server" {
+        Some(format!("{}/api/stt", crate::api::api_base()))
+    } else {
+        None
+    };
     let ok = native_lang::start_letter_capture(
         &lang,
         &ctx,
+        server_url.as_deref(),
         move |transcript| on_partial(&a_partial, &lang_c, &transcript),
         {
             // The input method appends to the field; it ignores confidence/alt.
@@ -953,6 +992,8 @@ fn on_error(app: &App, code: &str) {
             }
         }
         "UNAVAILABLE" => crate::dom::add_class("voiceSpellMic", "btn-hide"),
+        // Server rung only: the backend was unreachable — keep the mic, say so.
+        "NETWORK" => set_status("voiceSpell.netErr"),
         _ => set_status("voiceSpell.didntCatch"),
     }
 }
