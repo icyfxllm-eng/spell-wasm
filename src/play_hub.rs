@@ -252,16 +252,19 @@ mod tests {
     /// never the dead-end screen), with the availability reason.
     #[test]
     fn a7_spell_aloud_tile_is_live_on_en_es_and_unavailable_elsewhere() {
+        // Mic-everywhere (2026-07-27): every registered language has a lexicon
+        // now, so the tile is a live button for ALL of them — the remaining
+        // per-device gate (on-device speech availability) is reflected inside
+        // the mode, not at the tile.
         let m = spell_aloud_mode();
-        // en / es → a live button that routes into the mode.
-        for lang in ["en", "es"] {
+        for lang in ["en", "es", "fr", "de", "ja", "ar", "hi", "zh"] {
             assert!(unavailable_reason(&m, lang).is_none(), "{lang} supports voice spell");
             let html = tile_html(&m, lang);
             assert!(html.contains("id=\"modeTile_spell_aloud\""), "{lang}: live button");
             assert!(!html.contains("teaser"), "{lang}: not a teaser");
         }
-        // fr (and any non-en/es) → an unavailable teaser with the reason, not a button.
-        for lang in ["fr", "de", "ja"] {
+        // An UNREGISTERED code still teases (defensive; not player-reachable).
+        for lang in ["xx"] {
             assert!(unavailable_reason(&m, lang).is_some(), "{lang} does not support voice spell");
             let html = tile_html(&m, lang);
             assert!(html.contains("teaser"), "{lang}: teaser");

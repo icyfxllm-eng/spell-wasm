@@ -57,6 +57,11 @@ thread_local! {
     /// P4 (D9): entered from a Climb level selection — catches forge shields
     /// through the shared adapter; casual sessions never touch shield state.
     static CLIMB: Cell<bool> = const { Cell::new(false) };
+    // P5 run-recap accounting.
+    static CAUGHT: Cell<u32> = const { Cell::new(0) };
+    static BEST_STREAK: Cell<u32> = const { Cell::new(0) };
+    static LATE_CATCHES: Cell<u32> = const { Cell::new(0) };
+    static MISSED: RefCell<Vec<(String, String)>> = const { RefCell::new(Vec::new()) };
 }
 
 pub fn wire(app: &App) {
@@ -64,6 +69,8 @@ pub fn wire(app: &App) {
     dom::on_click("defMatchOpen", move || open(&a));
     let a = app.clone();
     dom::on_click("dmExit", move || close(&a));
+    let a = app.clone();
+    dom::on_click("dmRecapClose", move || close(&a));
     // Orb replay (Feature 1): tap anytime to hear the word again.
     let a = app.clone();
     dom::on_click("dmOrb", move || speak_target(&a));
@@ -80,11 +87,44 @@ pub fn wire(app: &App) {
 }
 
 fn close(app: &App) {
+    // P5 (Feature 7): a played session exits through the run recap; the recap's
+    // own Close finishes the teardown. An unplayed session exits directly.
+    let played = CAUGHT.with(Cell::get) + MISSED.with(|m| m.borrow().len() as u32) > 0;
+    let recap_open = dom::el("dmRecap").class_list().contains("show");
+    if played && !recap_open {
+        show_recap();
+        return;
+    }
+    dom::remove_class("dmRecap", "show");
     OPEN.with(|c| c.set(false));
     PHASE.with(|c| c.set(2));
     dom::remove_class("defMatch", "show");
     api::stop();
-    let _ = app; // symmetry with open(); nothing app-side to restore yet (P4 recap).
+    let _ = app;
+}
+
+/// Feature 7: end a session with something to act on. Missed words render with
+/// their correct definitions (audited rows) — and they are ALREADY queued in
+/// spaced repetition (every miss records immediately), so the strip is a
+/// preview of the review pile, not a chore button.
+fn show_recap() {
+    dom::set_text("dmRecapCaught", &CAUGHT.with(Cell::get).to_string());
+    dom::set_text("dmRecapBest", &BEST_STREAK.with(Cell::get).to_string());
+    dom::set_text("dmRecapLate", &LATE_CATCHES.with(Cell::get).to_string());
+    let missed = MISSED.with(|m| m.borrow().clone());
+    let strip: String = missed
+        .iter()
+        .map(|(w, d)| {
+            format!(
+                "<div class=\"dm-missrow\"><b>{}</b><span>{}</span></div>",
+                dom::escape_html(w),
+                dom::escape_html(d)
+            )
+        })
+        .collect();
+    dom::set_html("dmRecapMissed", &strip);
+    dom::toggle_class("dmRecapMissedWrap", "btn-hide", missed.is_empty());
+    dom::add_class("dmRecap", "show");
 }
 
 /// Enter the mode: resolve tier (entitlement depth + Kid clamp), fetch the
@@ -121,6 +161,11 @@ pub fn open(app: &App) {
     USED.with(|u| u.borrow_mut().clear());
     STREAK.with(|c| c.set(0));
     ROUND_NO.with(|c| c.set(0));
+    CAUGHT.with(|c| c.set(0));
+    BEST_STREAK.with(|c| c.set(0));
+    LATE_CATCHES.with(|c| c.set(0));
+    MISSED.with(|m| m.borrow_mut().clear());
+    dom::remove_class("dmRecap", "show");
     SESSION_SEED.with(|c| c.set(js_sys::Date::now() as u64));
     OPEN.with(|c| c.set(true));
     render_streak();
@@ -325,6 +370,15 @@ fn tap(app: &App, idx: usize) {
             dom::set_text("dmStatus", &i18n::t("defmatch.caught"));
         }
         STREAK.with(|c| c.set(c.get() + 1));
+        CAUGHT.with(|c| c.set(c.get() + 1));
+        if late {
+            LATE_CATCHES.with(|c| c.set(c.get() + 1));
+        }
+        BEST_STREAK.with(|c| {
+            if STREAK.with(Cell::get) > c.get() {
+                c.set(STREAK.with(Cell::get));
+            }
+        });
         render_streak();
         // P4: forging — a first-tap catch is a validated correct.
         if CLIMB.with(Cell::get) {
@@ -448,6 +502,10 @@ fn record_miss(app: &App) {
     let word = TARGET.with(|t| t.borrow().clone());
     let (lang, tier) = (app.borrow().lang.clone(), TIER.with(|t| t.borrow().clone()));
     misses::add_miss(&mut app.borrow_mut(), &word, &lang, &tier);
+    // P5 recap strip: the missed word with its CORRECT definition.
+    if let Some(round) = ROUND.with(|r| r.borrow().clone()) {
+        MISSED.with(|m| m.borrow_mut().push((word.clone(), round.cards[round.correct].clone())));
+    }
     if CLIMB.with(Cell::get) {
         let _ = defmatch::climb_outcome(&mut app.borrow_mut(), false);
         crate::game::update_shield_hud(app);

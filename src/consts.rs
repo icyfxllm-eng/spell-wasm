@@ -306,7 +306,13 @@ pub fn is_builtin_lang(lang: &str) -> bool {
 /// runtime on-device availability check — never from a scattered `lang == "es"`
 /// conditional. Confirmed by Eric: English + Spanish only (the on-device check
 /// auto-hides the mic where es on-device isn't available).
-pub const VOICE_SPELL_LANGS: [&str; 2] = [EN, ES];
+/// Mic-everywhere (Eric's ruling, 2026-07-27): every registered language has a
+/// letter lexicon (machine-drafted for the new 13, pending native review), so
+/// the config gate opens for all. The mic still only RENDERS where the device
+/// has on-device speech recognition for the language (the capabilities gate in
+/// spell_aloud::reflect is unchanged).
+pub const VOICE_SPELL_LANGS: [&str; 15] =
+    [EN, ES, FR, DE, PT, PL, VI, KO, JA, FIL, ZH, RU, AR, SW, HI];
 
 /// Whether `lang` exposes the spoken-letter input method (data lookup, not a
 /// per-language conditional).

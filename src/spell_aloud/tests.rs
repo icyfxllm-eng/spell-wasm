@@ -674,10 +674,12 @@ fn transcript_edge_punctuation_is_trimmed() {
 
 #[test]
 fn unsupported_language_parses_to_nothing() {
-    assert_eq!(parse("fr", "be a").letters, "");
-    assert!(contextual_strings("fr").is_empty());
-    // No lexicon → zero tokens parsed → Nothing (never a crash, never a whole-word).
-    assert_eq!(interpret("fr", "chat"), SpellOutcome::Nothing);
+    // Mic-everywhere: fr has a lexicon now — the no-lexicon path is pinned by
+    // an UNREGISTERED code instead. (fr sanity ride-along: bé → b.)
+    assert_eq!(parse("xx", "be a").letters, "");
+    assert!(contextual_strings("xx").is_empty());
+    assert_eq!(interpret("xx", "chat"), SpellOutcome::Nothing);
+    assert_eq!(parse("fr", "bé a").letters, "ba");
 }
 
 #[test]

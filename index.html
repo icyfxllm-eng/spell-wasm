@@ -317,6 +317,16 @@
   .dm-card.returned{animation:none;bottom:auto;top:35%;transition:top .5s ease-out}
   .dm-owner{font-size:12px;opacity:.85;font-weight:700}
   body.kid .dm-card{font-size:17px;min-height:88px}
+  .dm-recap{position:absolute;inset:0;display:none;align-items:center;justify-content:center;background:rgba(0,0,0,.55)}
+  .dm-recap.show{display:flex}
+  .dm-stats{display:flex;gap:14px;justify-content:center;margin:12px 0}
+  .dm-stat{display:flex;flex-direction:column;align-items:center;min-width:80px}
+  .dm-stat b{font-size:28px}
+  .dm-stat span{font-size:12px;opacity:.8;text-align:center}
+  .dm-missed{max-height:180px;overflow-y:auto;margin-bottom:10px}
+  .dm-missrow{display:flex;gap:8px;padding:4px 0;border-bottom:1px solid var(--edge);font-size:14px}
+  .dm-missrow b{flex:none}
+  .dm-missrow span{opacity:.85}
   /* Per-chip include toggle (Phase 3): opt a word out without deleting it. */
   .pchip-on{width:22px;height:22px;flex:none;accent-color:var(--accent,#7aa2ff)}
   .pchip-row:has(.pchip-on:not(:checked)) .pchip{opacity:.4;text-decoration:line-through}
@@ -1206,6 +1216,22 @@
     </div>
     <div class="dm-status" id="dmStatus" aria-live="polite"></div>
     <div class="dm-field" id="dmField"></div>
+    <!-- P5 run recap (Feature 7): reuses the result-card visual system. -->
+    <div class="dm-recap" id="dmRecap">
+      <div class="modal">
+        <h3 data-i18n="defmatch.recapTitle">Run recap</h3>
+        <div class="dm-stats">
+          <div class="dm-stat"><b id="dmRecapCaught">0</b><span data-i18n="defmatch.recapCaught">words caught</span></div>
+          <div class="dm-stat"><b id="dmRecapBest">0</b><span data-i18n="defmatch.recapBest">best streak</span></div>
+          <div class="dm-stat"><b id="dmRecapLate">0</b><span data-i18n="defmatch.recapLate">last-second catches</span></div>
+        </div>
+        <div id="dmRecapMissedWrap">
+          <p class="demo-note" data-i18n="defmatch.recapMissed">Missed words — already queued for review:</p>
+          <div class="dm-missed" id="dmRecapMissed"></div>
+        </div>
+        <button class="btn btn-check" id="dmRecapClose" data-i18n="import.close" style="width:100%">Close</button>
+      </div>
+    </div>
   </div>
 
   <div class="scrim" id="photoSrcScrim">

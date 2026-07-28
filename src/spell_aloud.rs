@@ -32,7 +32,7 @@ use std::sync::OnceLock;
 
 use unicode_normalization::UnicodeNormalization;
 
-use crate::consts::{EN, ES};
+use crate::consts::{AR, DE, EN, ES, FIL, FR, HI, JA, KO, PL, PT, RU, SW, VI, ZH};
 
 // ===========================================================================
 // Pure parser (host-unit-tested — no DOM, no wasm, no audio)
@@ -129,6 +129,22 @@ fn source(lang: &str) -> Option<&'static str> {
     match lang {
         EN => Some(include_str!("../lexicons/letters/en.json")),
         ES => Some(include_str!("../lexicons/letters/es.json")),
+        // Mic-everywhere (Eric, 2026-07-27): machine-drafted lexicons pending
+        // native review. The capabilities gate still decides where the mic
+        // actually appears (on-device speech per language per device).
+        FR => Some(include_str!("../lexicons/letters/fr.json")),
+        DE => Some(include_str!("../lexicons/letters/de.json")),
+        PT => Some(include_str!("../lexicons/letters/pt.json")),
+        PL => Some(include_str!("../lexicons/letters/pl.json")),
+        VI => Some(include_str!("../lexicons/letters/vi.json")),
+        RU => Some(include_str!("../lexicons/letters/ru.json")),
+        AR => Some(include_str!("../lexicons/letters/ar.json")),
+        HI => Some(include_str!("../lexicons/letters/hi.json")),
+        KO => Some(include_str!("../lexicons/letters/ko.json")),
+        JA => Some(include_str!("../lexicons/letters/ja.json")),
+        ZH => Some(include_str!("../lexicons/letters/zh.json")),
+        SW => Some(include_str!("../lexicons/letters/sw.json")),
+        FIL => Some(include_str!("../lexicons/letters/fil.json")),
         _ => None,
     }
 }
