@@ -289,7 +289,8 @@
   /* CC-DEF-MATCH: full-screen field, floating definition cards. */
   .dm-screen{position:fixed;inset:0;background:var(--bg,#0e1420);z-index:60;display:none;flex-direction:column}
   .dm-screen.show{display:flex}
-  .dm-top{display:flex;align-items:center;gap:12px;padding:10px 14px}
+  /* Same exit-outranks-overlays rule as .pr-top (the recap is inset:0). */
+  .dm-top{display:flex;align-items:center;gap:12px;padding:10px 14px;position:relative;z-index:6}
   .dm-orb{font-size:28px;width:56px;height:56px;border-radius:50%;border:2px solid var(--edge);background:var(--panel-2);transition:box-shadow .3s}
   .dm-orb.pulse{animation:dmPulse .5s}
   .dm-orb.good{box-shadow:0 0 18px 4px rgba(80,220,120,.7)}
@@ -337,7 +338,11 @@
   #practiceOpen,#spellAloudEnter,#defMatchOpen{display:none}
   .pr-screen{position:fixed;inset:0;background:var(--bg,#0e1420);z-index:59;display:none;flex-direction:column;padding:10px 14px;gap:10px}
   .pr-screen.show{display:flex}
-  .pr-top{display:flex;align-items:center;gap:10px}
+  /* The exit must OUTRANK the card backdrops (.pr-card inset:0) — with a card
+     up (intro/choice/micro — word 1 opens straight into one), the top bar was
+     underneath and Practice had no reachable way out. */
+  .pr-top{display:flex;align-items:center;gap:10px;position:relative;z-index:6}
+  .pr-card{z-index:5}
   .pr-path{flex:1;display:flex;flex-wrap:wrap;gap:3px;justify-content:center}
   .pr-dot{font-size:11px;opacity:.35}
   .pr-dot.done{opacity:1;color:#67d98b}
