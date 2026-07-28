@@ -239,12 +239,12 @@ pub fn def_match(lang: &str) -> bool {
 }
 
 /// CC-PRACTICE D7 — per-language availability (registry-derived, no other
-/// path). English renders pre-audit per the spec's explicit exemption; every
-/// other language has a drafted curriculum in-repo but stays gated until Eric
-/// rules on the interim-content posture for Practice strings (asked at the
-/// engine/UI checkpoint). Snapshot-tested.
+/// path). OPEN TO ALL 15 by Eric's ruling ("open practice to all languages",
+/// 2026-07-27) under the standing interim-content posture — drafted curricula
+/// + intro strings ship now, native review remains the follow-up (same as the
+/// banks, UI locales, and definition pools). Snapshot-tested.
 pub fn practice(lang: &str) -> bool {
-    matches!(lang, EN)
+    is_builtin_lang(lang)
 }
 
 /// A language's availability status (ComingSoon for anything not in the registry).
@@ -439,6 +439,16 @@ mod registry_tests {
             assert!(expected.iter().any(|(c, _)| c == code), "{code} missing from the OCR matrix");
         }
         assert_eq!(ocr_support("xx"), Unsupported, "unregistered languages hide the feature");
+    }
+
+    /// CC-PRACTICE D7: open to every registered language (Eric's ruling,
+    /// 2026-07-27); unregistered codes never render it.
+    #[test]
+    fn practice_open_to_all_registered_languages() {
+        for (code, _, _, _) in LANGS_BASE.iter() {
+            assert!(practice(code), "{code} practice must be open");
+        }
+        assert!(!practice("xx"));
     }
 
     /// CC-DEF-MATCH: the per-language activation snapshot. zh activates first
