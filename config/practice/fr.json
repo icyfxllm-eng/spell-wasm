@@ -1,0 +1,60 @@
+{
+  "lang": "fr",
+  "$draft": "Agent-drafted per D4 (2026-07-27) — words from the language's own bank, intro strings pending the standing audit round.",
+  "words": [
+    "chat",
+    "nuit",
+    "pied",
+    "nez",
+    "clé",
+    "café",
+    "thé",
+    "été",
+    "eau",
+    "chaud",
+    "jaune",
+    "au",
+    "pomme",
+    "elle",
+    "créé",
+    "ii",
+    "jour",
+    "lune",
+    "feu",
+    "bleu"
+  ],
+  "difficult": [
+    "souris",
+    "fenêtre",
+    "bateau",
+    "poisson",
+    "cuisine"
+  ],
+  "traps": [
+    {
+      "id": "finales-muettes",
+      "firstWord": 0,
+      "intro": "Beaucoup de lettres finales sont muettes : on les écrit sans les dire."
+    },
+    {
+      "id": "accents",
+      "firstWord": 4,
+      "intro": "Les accents changent le son : é è ê — écoute bien."
+    },
+    {
+      "id": "eau-au-o",
+      "firstWord": 8,
+      "intro": "Le son o peut s'écrire o, au ou eau."
+    },
+    {
+      "id": "doubles",
+      "firstWord": 12,
+      "intro": "Certaines consonnes se doublent — la prononciation ne le dit pas toujours."
+    },
+    {
+      "id": "ou-u",
+      "firstWord": 16,
+      "intro": "u et ou sont deux sons différents en français."
+    }
+  ]
+}

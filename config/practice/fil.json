@@ -1,0 +1,60 @@
+{
+  "lang": "fil",
+  "$draft": "Agent-drafted per D4 (2026-07-27) — words from the language's own bank, intro strings pending the standing audit round.",
+  "words": [
+    "ng",
+    "ang",
+    "kung",
+    "nang",
+    "aso",
+    "tao",
+    "ulo",
+    "usa",
+    "araw",
+    "dyip",
+    "guro",
+    "isda",
+    "apoy",
+    "tawa",
+    "baboy",
+    "bahay",
+    "isyu",
+    "arts",
+    "sya",
+    "lady"
+  ],
+  "difficult": [
+    "ilong",
+    "buhok",
+    "dagat",
+    "dilaw",
+    "kotse"
+  ],
+  "traps": [
+    {
+      "id": "ng-digraph",
+      "firstWord": 0,
+      "intro": "Ang ng ay isang tunog — dalawang letra, isang bigkas."
+    },
+    {
+      "id": "o-u",
+      "firstWord": 4,
+      "intro": "Nagpapalitan minsan ang o at u — tandaan ang baybay ng bawat salita."
+    },
+    {
+      "id": "d-r",
+      "firstWord": 8,
+      "intro": "Nag-iiba minsan ang d at r sa gitna ng salita."
+    },
+    {
+      "id": "iw-ay",
+      "firstWord": 12,
+      "intro": "Mag-ingat sa mga kambal-patinig: ay, aw, iw, oy."
+    },
+    {
+      "id": "mga-clusters",
+      "firstWord": 16,
+      "intro": "May mga bagong kumpol-katinig: ts, dy, sy."
+    }
+  ]
+}

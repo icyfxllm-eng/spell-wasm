@@ -1,0 +1,60 @@
+{
+  "lang": "pl",
+  "$draft": "Agent-drafted per D4 (2026-07-27) — words from the language's own bank, intro strings pending the standing audit round.",
+  "words": [
+    "że",
+    "przy",
+    "też",
+    "już",
+    "sól",
+    "ucho",
+    "nauka",
+    "uwaga",
+    "ich",
+    "nich",
+    "tych",
+    "the",
+    "dąb",
+    "się",
+    "są",
+    "ją",
+    "koń",
+    "nie",
+    "być",
+    "nim"
+  ],
+  "difficult": [
+    "drzwi",
+    "góra",
+    "chleb",
+    "mąka",
+    "ciasto"
+  ],
+  "traps": [
+    {
+      "id": "rz-z",
+      "firstWord": 0,
+      "intro": "rz i ż brzmią tak samo — trzeba zapamiętać pisownię."
+    },
+    {
+      "id": "o-u",
+      "firstWord": 4,
+      "intro": "ó i u brzmią identycznie — to pułapka ortograficzna nr 1."
+    },
+    {
+      "id": "ch-h",
+      "firstWord": 8,
+      "intro": "ch i h brzmią tak samo — pisownia z historii słowa."
+    },
+    {
+      "id": "nosowe",
+      "firstWord": 12,
+      "intro": "ą i ę to samogłoski nosowe — charakterystyczne dla polskiego."
+    },
+    {
+      "id": "miekkie",
+      "firstWord": 16,
+      "intro": "Miękkie ś ć ź ń można też zapisać jako si ci zi ni."
+    }
+  ]
+}

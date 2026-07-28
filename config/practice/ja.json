@@ -1,0 +1,60 @@
+{
+  "lang": "ja",
+  "$draft": "Agent-drafted per D4 (2026-07-27) — words from the language's own bank, intro strings pending the standing audit round.",
+  "words": [
+    "なっ",
+    "あっ",
+    "によって",
+    "なかっ",
+    "あお",
+    "うし",
+    "うま",
+    "うみ",
+    "など",
+    "まで",
+    "ください",
+    "だっ",
+    "ちゃん",
+    "じゃ",
+    "しょ",
+    "でしょ",
+    "かわ",
+    "または",
+    "あるいは",
+    "いわ"
+  ],
+  "difficult": [
+    "にわたって",
+    "おふろ",
+    "かぜ",
+    "おしゃべり",
+    "にわ"
+  ],
+  "traps": [
+    {
+      "id": "chiisai-tsu",
+      "firstWord": 0,
+      "intro": "小さい「っ」は音をつまらせます。"
+    },
+    {
+      "id": "chouon",
+      "firstWord": 4,
+      "intro": "のばす音に注意 — 「おう」「ー」で長くなります。"
+    },
+    {
+      "id": "dakuten",
+      "firstWord": 8,
+      "intro": "てんてん（゛）で音がにごります。"
+    },
+    {
+      "id": "youon",
+      "firstWord": 12,
+      "intro": "小さい「ゃゅょ」は前の字とくっつきます。"
+    },
+    {
+      "id": "ha-wa",
+      "firstWord": 16,
+      "intro": "「は」と「わ」— 音が同じでも字がちがうことがあります。"
+    }
+  ]
+}

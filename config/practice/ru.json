@@ -1,0 +1,60 @@
+{
+  "lang": "ru",
+  "$draft": "Agent-drafted per D4 (2026-07-27) — words from the language's own bank, intro strings pending the standing audit round.",
+  "words": [
+    "на",
+    "года",
+    "году",
+    "по",
+    "быть",
+    "есть",
+    "лишь",
+    "день",
+    "не",
+    "его",
+    "же",
+    "её",
+    "ее",
+    "мм",
+    "тонн",
+    "хх",
+    "что",
+    "ещё",
+    "уже",
+    "чем"
+  ],
+  "difficult": [
+    "также",
+    "только",
+    "время",
+    "более",
+    "чтобы"
+  ],
+  "traps": [
+    {
+      "id": "unstressed-vowel-reduction",
+      "firstWord": 0,
+      "intro": "Безударные о и а звучат одинаково — проверяй написание."
+    },
+    {
+      "id": "soft-hard-sign",
+      "firstWord": 4,
+      "intro": "ь смягчает согласный, ъ разделяет — сами они не звучат."
+    },
+    {
+      "id": "yo",
+      "firstWord": 8,
+      "intro": "ё часто пишут как е — но это разные буквы."
+    },
+    {
+      "id": "doubled-consonant",
+      "firstWord": 12,
+      "intro": "Двойные согласные слышно не всегда — запоминай их."
+    },
+    {
+      "id": "hushing-confusion",
+      "firstWord": 16,
+      "intro": "После ж и ш пиши и — жи-ши пиши с буквой и."
+    }
+  ]
+}

@@ -1,0 +1,60 @@
+{
+  "lang": "en",
+  "$draft": "Agent-drafted per D4 (2026-07-27) — words from the language's own bank, intro strings pending the standing audit round.",
+  "words": [
+    "horse",
+    "kite",
+    "mouse",
+    "nose",
+    "tree",
+    "book",
+    "door",
+    "hill",
+    "died",
+    "view",
+    "die",
+    "lies",
+    "cat",
+    "cup",
+    "milk",
+    "corn",
+    "fish",
+    "ship",
+    "the",
+    "that"
+  ],
+  "difficult": [
+    "bicycle",
+    "balloon",
+    "their",
+    "kitchen",
+    "brother"
+  ],
+  "traps": [
+    {
+      "id": "silent-e",
+      "firstWord": 0,
+      "intro": "A silent e at the end often makes the vowel before it say its name."
+    },
+    {
+      "id": "double-consonant",
+      "firstWord": 4,
+      "intro": "Some words double a consonant — listen for the short vowel before it."
+    },
+    {
+      "id": "ie-ei",
+      "firstWord": 8,
+      "intro": "i before e except after c — usually!"
+    },
+    {
+      "id": "hard-c-k",
+      "firstWord": 12,
+      "intro": "The k sound can be written c, k, or ck."
+    },
+    {
+      "id": "wh-th-sh",
+      "firstWord": 16,
+      "intro": "Two letters, one sound: sh, ch, th, wh stick together."
+    }
+  ]
+}

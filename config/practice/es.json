@@ -1,0 +1,60 @@
+{
+  "lang": "es",
+  "$draft": "Agent-drafted per D4 (2026-07-27) — words from the language's own bank, intro strings pending the standing audit round.",
+  "words": [
+    "libro",
+    "boca",
+    "verde",
+    "nube",
+    "hoja",
+    "leche",
+    "huevo",
+    "ha",
+    "silla",
+    "lluvia",
+    "ya",
+    "muy",
+    "árbol",
+    "león",
+    "más",
+    "está",
+    "sol",
+    "casa",
+    "luz",
+    "azul"
+  ],
+  "difficult": [
+    "ventana",
+    "hormiga",
+    "botella",
+    "jardín",
+    "cocina"
+  ],
+  "traps": [
+    {
+      "id": "b-v",
+      "firstWord": 0,
+      "intro": "b y v suenan igual — hay que memorizar cuál lleva cada palabra."
+    },
+    {
+      "id": "h-muda",
+      "firstWord": 4,
+      "intro": "La h no suena: se escribe pero no se pronuncia."
+    },
+    {
+      "id": "ll-y",
+      "firstWord": 8,
+      "intro": "ll e y pueden sonar igual — fíjate cuál usa la palabra."
+    },
+    {
+      "id": "tildes",
+      "firstWord": 12,
+      "intro": "La tilde marca la sílaba fuerte: á é í ó ú."
+    },
+    {
+      "id": "c-s-z",
+      "firstWord": 16,
+      "intro": "c (ante e/i), s y z pueden sonar parecido según la región."
+    }
+  ]
+}

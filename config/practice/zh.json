@@ -1,0 +1,60 @@
+{
+  "lang": "zh",
+  "$draft": "Agent-drafted per D4 (2026-07-27) — words from the language's own bank, intro strings pending the standing audit round.",
+  "words": [
+    "wo3men5|我们",
+    "mei2you3|没有",
+    "ta1men5|他们",
+    "shen2me5|什么",
+    "xian4zai4|现在",
+    "zhi1dao4|知道",
+    "shi2hou5|时候",
+    "gong1zuo4|工作",
+    "ni3men5|你们",
+    "shi2jian1|时间",
+    "zen3me5|怎么",
+    "xi3huan5|喜欢",
+    "hai2you3|还有",
+    "jue2de5|觉得",
+    "gao4su4|告诉",
+    "chu1lai2|出来",
+    "hai2shi5|还是",
+    "qi3lai5|起来",
+    "hai2zi5|孩子",
+    "peng2you5|朋友"
+  ],
+  "difficult": [
+    "zi4ji3|自己",
+    "zhe4yang4|这样",
+    "yi3jing1|已经",
+    "ru2guo3|如果",
+    "na4me5|那么"
+  ],
+  "traps": [
+    {
+      "id": "shengdiao",
+      "firstWord": 0,
+      "intro": "声调数字要记牢 — 1 2 3 4 5 声调不同意思不同。"
+    },
+    {
+      "id": "zh-z",
+      "firstWord": 4,
+      "intro": "zh ch sh 是卷舌音，z c s 不卷舌 — 拼写不同。"
+    },
+    {
+      "id": "n-ng",
+      "firstWord": 8,
+      "intro": "韵尾 n 和 ng 很容易混 — 听清楚结尾。"
+    },
+    {
+      "id": "u-v",
+      "firstWord": 12,
+      "intro": "ü 在拼音输入里写作 v。"
+    },
+    {
+      "id": "qingsheng",
+      "firstWord": 16,
+      "intro": "轻声用 5 表示 — 又轻又短。"
+    }
+  ]
+}

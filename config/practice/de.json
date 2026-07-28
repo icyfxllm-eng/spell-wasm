@@ -1,0 +1,60 @@
+{
+  "lang": "de",
+  "$draft": "Agent-drafted per D4 (2026-07-27) — words from the language's own bank, intro strings pending the standing audit round.",
+  "words": [
+    "Bär",
+    "Fuß",
+    "Tür",
+    "Käse",
+    "Ei",
+    "die",
+    "eine",
+    "ein",
+    "für",
+    "über",
+    "fünf",
+    "wäre",
+    "Buch",
+    "sich",
+    "auch",
+    "nach",
+    "dass",
+    "kann",
+    "dann",
+    "alle"
+  ],
+  "difficult": [
+    "Küche",
+    "klein",
+    "grün",
+    "Milch",
+    "Fluss"
+  ],
+  "traps": [
+    {
+      "id": "grossschreibung",
+      "firstWord": 0,
+      "intro": "Alle Nomen beginnen groß — immer!"
+    },
+    {
+      "id": "ie-ei",
+      "firstWord": 4,
+      "intro": "ie klingt wie ein langes i, ei klingt wie ai."
+    },
+    {
+      "id": "umlaute",
+      "firstWord": 8,
+      "intro": "Die Punkte zählen: a und ä sind verschiedene Laute."
+    },
+    {
+      "id": "sch-ch",
+      "firstWord": 12,
+      "intro": "sch und ch sind feste Teams aus mehreren Buchstaben."
+    },
+    {
+      "id": "doppel",
+      "firstWord": 16,
+      "intro": "Nach kurzem Vokal wird der Konsonant oft verdoppelt."
+    }
+  ]
+}

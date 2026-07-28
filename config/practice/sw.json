@@ -1,0 +1,60 @@
+{
+  "lang": "sw",
+  "$draft": "Agent-drafted per D4 (2026-07-27) — words from the language's own bank, intro strings pending the standing audit round.",
+  "words": [
+    "nguo",
+    "anga",
+    "unga",
+    "ing",
+    "na",
+    "ni",
+    "mara",
+    "moja",
+    "hii",
+    "juu",
+    "huu",
+    "mkuu",
+    "the",
+    "high",
+    "show",
+    "with",
+    "la",
+    "kila",
+    "ili",
+    "hali"
+  ],
+  "difficult": [
+    "nyingi",
+    "mwaka",
+    "baada",
+    "lugha",
+    "lakini"
+  ],
+  "traps": [
+    {
+      "id": "ng-apostrophe",
+      "firstWord": 0,
+      "intro": "ng' (yenye alama) na ng ni sauti mbili tofauti."
+    },
+    {
+      "id": "m-n-prefix",
+      "firstWord": 4,
+      "intro": "Viambishi m- na n- huanza maneno mengi — sikiliza mwanzo."
+    },
+    {
+      "id": "double-vowel",
+      "firstWord": 8,
+      "intro": "Vokali mbili hurefusha sauti: saa, juu."
+    },
+    {
+      "id": "dh-th",
+      "firstWord": 12,
+      "intro": "dh, th, gh, sh ni sauti moja kwa herufi mbili."
+    },
+    {
+      "id": "l-r",
+      "firstWord": 16,
+      "intro": "l na r zinakaribiana kwa sauti — kumbuka tahajia."
+    }
+  ]
+}

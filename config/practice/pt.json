@@ -1,0 +1,60 @@
+{
+  "lang": "pt",
+  "$draft": "Agent-drafted per D4 (2026-07-27) — words from the language's own bank, intro strings pending the standing audit round.",
+  "words": [
+    "cão",
+    "mão",
+    "pão",
+    "nuvem",
+    "pé",
+    "céu",
+    "até",
+    "está",
+    "ação",
+    "peça",
+    "raça",
+    "caça",
+    "olho",
+    "folha",
+    "ninho",
+    "lhe",
+    "luz",
+    "sal",
+    "sol",
+    "azul"
+  ],
+  "difficult": [
+    "limão",
+    "três",
+    "março",
+    "abelha",
+    "camisa"
+  ],
+  "traps": [
+    {
+      "id": "nasais",
+      "firstWord": 0,
+      "intro": "O til (~) deixa a vogal nasal: ã e õ saem pelo nariz."
+    },
+    {
+      "id": "acentos",
+      "firstWord": 4,
+      "intro": "O acento marca a sílaba forte: á é í ó ú."
+    },
+    {
+      "id": "cedilha",
+      "firstWord": 8,
+      "intro": "O ç soa como s antes de a, o, u."
+    },
+    {
+      "id": "lh-nh",
+      "firstWord": 12,
+      "intro": "lh e nh são sons próprios do português — duas letras, um som."
+    },
+    {
+      "id": "s-z",
+      "firstWord": 16,
+      "intro": "Entre vogais, o s soa como z."
+    }
+  ]
+}

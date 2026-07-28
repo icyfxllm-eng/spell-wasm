@@ -1,0 +1,60 @@
+{
+  "lang": "ko",
+  "$draft": "Agent-drafted per D4 (2026-07-27) — words from the language's own bank, intro strings pending the standing audit round.",
+  "words": [
+    "귀",
+    "비",
+    "소",
+    "코",
+    "거리",
+    "나라",
+    "나무",
+    "다리",
+    "도마",
+    "도시",
+    "머리",
+    "모자",
+    "사과",
+    "수저",
+    "시계",
+    "아기",
+    "아빠",
+    "우유",
+    "의자",
+    "이마"
+  ],
+  "difficult": [
+    "산",
+    "상",
+    "손",
+    "쌀",
+    "옷"
+  ],
+  "traps": [
+    {
+      "id": "batchim",
+      "firstWord": 0,
+      "intro": "받침(끝소리)이 철자를 결정해요 — 끝을 잘 들어 보세요."
+    },
+    {
+      "id": "ae-e",
+      "firstWord": 4,
+      "intro": "ㅐ와 ㅔ는 소리가 거의 같아요 — 단어마다 외워야 해요."
+    },
+    {
+      "id": "ssang",
+      "firstWord": 8,
+      "intro": "된소리 ㄲ ㄸ ㅃ ㅆ ㅉ는 더 세게 나는 소리예요."
+    },
+    {
+      "id": "yeorin",
+      "firstWord": 12,
+      "intro": "ㅕ ㅛ ㅠ 같은 이중 모음을 주의하세요."
+    },
+    {
+      "id": "ieung",
+      "firstWord": 16,
+      "intro": "첫 ㅇ은 소리가 없어요 — 자리만 지켜요."
+    }
+  ]
+}
