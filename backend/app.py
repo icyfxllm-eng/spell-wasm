@@ -216,11 +216,14 @@ def _synthesize_azure(word: str, variant: str, path: str, lang: str) -> None:
         )
     language_code, voice_name = AZURE_VOICES[lang]
     rate = AZURE_RATE["slow" if variant == "slow" else "normal"]
+    # Azure's prosody volume REJECTS dB values (HTTP 400 — bisected 2026-07-28);
+    # it accepts percentages, so convert the shared gain: +4dB ≈ +59%.
+    volume_pct = round((10 ** (VOLUME_GAIN_DB / 20) - 1) * 100)
     # word is pre-validated to letters/marks/hyphen/apostrophe, but escape anyway.
     ssml = (
         f"<speak version='1.0' xml:lang='{language_code}'>"
         f"<voice xml:lang='{language_code}' name='{voice_name}'>"
-        f"<prosody rate='{rate}' volume='+{VOLUME_GAIN_DB:.2f}dB'>"
+        f"<prosody rate='{rate}' volume='+{volume_pct}%'>"
         f"{html.escape(word, quote=False)}"
         f"</prosody></voice></speak>"
     )
