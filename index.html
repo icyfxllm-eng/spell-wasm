@@ -317,6 +317,12 @@
   .dm-card.returned{animation:none;bottom:auto;top:35%;transition:top .5s ease-out}
   .dm-owner{font-size:12px;opacity:.85;font-weight:700}
   body.kid .dm-card{font-size:17px;min-height:88px}
+  .dm-prompt{margin:4px 14px;padding:10px 12px;border:1px solid var(--accent,#7aa2ff);border-radius:12px;
+    background:var(--panel-2);font-size:15px;line-height:1.3;text-align:center;font-weight:600}
+  .dm-prompt.btn-hide{display:none}
+  .dm-card.word .dm-def{font-size:20px;font-weight:700}
+  body.kid .dm-card.word .dm-def{font-size:24px}
+  .dm-card.word .dm-owner{font-size:11px;font-weight:400}
   .dm-recap{position:absolute;inset:0;display:none;align-items:center;justify-content:center;background:rgba(0,0,0,.55)}
   .dm-recap.show{display:flex}
   .dm-stats{display:flex;gap:14px;justify-content:center;margin:12px 0}
@@ -1215,6 +1221,8 @@
       <span class="dm-streak" id="dmStreak" aria-live="polite"></span>
     </div>
     <div class="dm-status" id="dmStatus" aria-live="polite"></div>
+    <!-- D8 Reverse Rounds: the definition to match; hidden on forward rounds. -->
+    <div class="dm-prompt btn-hide" id="dmPrompt"></div>
     <div class="dm-field" id="dmField"></div>
     <!-- P5 run recap (Feature 7): reuses the result-card visual system. -->
     <div class="dm-recap" id="dmRecap">

@@ -24,8 +24,10 @@ the implementation ledger; the original spec follows verbatim below it.
 - **Distractor craft metadata:** topic/root fields exist in the engine and
   drive selection when populated; current pools carry none, so craft degrades
   to uniform seeded selection until richer artifacts arrive.
-- **D8 Reverse Rounds:** not designed-in as a config stub; effectively "shipped
-  disabled" by absence. Promote or cut at Eric's call.
+- **D8 Reverse Rounds:** PROMOTED by Eric (2026-07-27) and BUILT: every 4th
+  round flips — definition prompt, word cards, no word audio (it would answer
+  the prompt), reveal shows the tapped word's own definition.
+  defmatch::REVERSE_EVERY = 4 (0 = the disabled stub).
 - **Pending from Definition of Done:** Playwright miss-path e2e + instrumented
   latency eval (CI items; local Playwright browsers unavailable). The loop is
   class-toggle-only, keeping the 200ms budget by construction, unmeasured.

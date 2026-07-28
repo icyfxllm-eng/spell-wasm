@@ -267,7 +267,13 @@ fn next_round(app: &App) {
         let mut st = SESSION_SEED.with(Cell::get) ^ ROUND_NO.with(Cell::get).wrapping_mul(0x9E37);
         let target = pick_from[(splitmix(&mut st) % pick_from.len() as u64) as usize];
         let seed = splitmix(&mut st);
-        defmatch::generate(rows, excl, &tier, &target.word, seed, kid)
+        // D8 cadence: every REVERSE_EVERY-th round flips the format.
+        let n = ROUND_NO.with(Cell::get) + 1;
+        if defmatch::REVERSE_EVERY > 0 && n % defmatch::REVERSE_EVERY == 0 {
+            defmatch::generate_reverse(rows, excl, &tier, &target.word, seed, kid)
+        } else {
+            defmatch::generate(rows, excl, &tier, &target.word, seed, kid)
+        }
     });
     let Some(round) = round else {
         dom::set_text("dmStatus", &i18n::t("so.errGeneric"));
@@ -284,12 +290,20 @@ fn next_round(app: &App) {
     ESCAPED.with(|c| c.set(0));
     ROUND_T0.with(|c| c.set(js_sys::Date::now()));
     render_round(app, &round, &tier, kid);
-    speak_target(app);
+    // D8: NEVER speak the word in a reverse round — hearing it would answer
+    // the prompt. The definition is read silently from the prompt bar.
+    if !round.reverse {
+        speak_target(app);
+    }
 }
 
 /// Feature 1: the orb speaks the word (cached server clip, same path as core
 /// play; native/browser fallbacks included).
 fn speak_target(app: &App) {
+    // Reverse rounds stay silent (the orb replay is a no-op there too).
+    if ROUND.with(|r| r.borrow().as_ref().map(|x| x.reverse).unwrap_or(false)) {
+        return;
+    }
     let lang = app.borrow().lang.clone();
     let word = TARGET.with(|t| t.borrow().clone());
     if word.is_empty() {
@@ -308,6 +322,9 @@ fn render_round(app: &App, round: &Round, tier: &str, kid: bool) {
     let (stagger, dwell) = timing(tier, kid);
     let n = round.cards.len();
     let sway = matches!(tier, "easy" | "medium");
+    // D8 prompt bar: the definition to match (empty + hidden on forward rounds).
+    dom::set_text("dmPrompt", &round.prompt);
+    dom::toggle_class("dmPrompt", "btn-hide", !round.reverse);
     let mut html = String::new();
     for i in 0..n {
         let lane = round.lanes[i] as usize;
@@ -315,12 +332,14 @@ fn render_round(app: &App, round: &Round, tier: &str, kid: bool) {
         let delay = spawn_pos as u32 * stagger;
         let left = (lane as f32) * (100.0 / n as f32);
         let width = 100.0 / n as f32;
+        let word_card = if round.reverse { " word" } else { "" };
         html.push_str(&format!(
-            "<button type=\"button\" class=\"dm-card{sway}\" id=\"dmCard{i}\" data-card=\"{i}\" \
+            "<button type=\"button\" class=\"dm-card{sway}{word_card}\" id=\"dmCard{i}\" data-card=\"{i}\" \
                style=\"left:{left:.2}%;width:{width:.2}%;animation-duration:{dwell}ms;animation-delay:{delay}ms\">\
                <span class=\"dm-def\">{def}</span><span class=\"dm-owner\" id=\"dmOwner{i}\"></span>\
              </button>",
             sway = if sway { " sway" } else { "" },
+            word_card = word_card,
             def = dom::escape_html(&round.cards[i]),
         ));
     }
@@ -406,10 +425,24 @@ fn tap(app: &App, idx: usize) {
         if !kid {
             dom::add_class(&format!("dmCard{idx}"), "wrong");
         }
-        // Show which word the tapped distractor actually defines (both strings
-        // audited-pool rows — Invariant 1), and glow the correct card gold
+        // Show which word the tapped distractor actually defines — or, in a
+        // reverse round, the tapped WORD's own definition (both directions are
+        // audited-pool strings — Invariant 1). Correct card glows gold
         // (kid: the same calm highlight, no red anywhere).
-        dom::set_text(&format!("dmOwner{idx}"), &round.words[idx]);
+        let owner = if round.reverse {
+            let lang = app.borrow().lang.clone();
+            let tier = TIER.with(|t| t.borrow().clone());
+            POOLS.with(|p| {
+                p.borrow()
+                    .get(&(lang, tier))
+                    .and_then(|(rows, _)| rows.iter().find(|r| r.word == round.words[idx]))
+                    .map(|r| r.definition.clone())
+                    .unwrap_or_default()
+            })
+        } else {
+            round.words[idx].clone()
+        };
+        dom::set_text(&format!("dmOwner{idx}"), &owner);
         dom::add_class(&format!("dmCard{}", round.correct), if kid { "reveal-calm" } else { "reveal-gold" });
         dom::add_class(&format!("dmCard{}", round.correct), "paused");
         dom::add_class(&format!("dmCard{idx}"), "paused");

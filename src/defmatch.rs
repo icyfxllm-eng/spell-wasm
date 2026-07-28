@@ -56,6 +56,13 @@ impl ExclusionSets {
 /// A fully-resolved round: what the frontend renders, nothing more to decide.
 #[derive(Debug, Clone, PartialEq)]
 pub struct Round {
+    /// D8 Reverse Round (Eric promoted 2026-07-27): the DEFINITION is the
+    /// prompt and the cards are WORDS. `prompt` carries the target's
+    /// definition; `cards` are words; `words` still names each card's word
+    /// (identical to `cards` here), so target identity reads the same way in
+    /// both formats. Forward rounds: false + empty prompt.
+    pub reverse: bool,
+    pub prompt: String,
     /// Card definition strings, in card-index order (3 in Kid Mode — D6, else 4).
     pub cards: Vec<String>,
     /// Which card index is the target word's definition.
@@ -250,7 +257,39 @@ pub fn generate(
     let lanes = shuffled(n_cards, &mut state);
     let spawn_order = shuffled(n_cards, &mut state);
 
-    Some(Round { cards, correct, words, lanes, spawn_order, seed })
+    Some(Round { reverse: false, prompt: String::new(), cards, correct, words, lanes, spawn_order, seed })
+}
+
+/// D8: every `REVERSE_EVERY`-th round flips the format (0 would be the
+/// shipped-disabled stub; Eric promoted it, so it ships ON at 4).
+pub const REVERSE_EVERY: u64 = 4;
+
+/// Build a REVERSE round: same pool, same exclusions, same craft ranking,
+/// same three independent shuffles — the cards are the WORDS and the prompt
+/// is the target's definition. Zero new content rows (D8's whole point).
+pub fn generate_reverse(
+    rows: &[DefRow],
+    exclusions: &ExclusionSets,
+    tier: &str,
+    word: &str,
+    seed: u64,
+    kid: bool,
+) -> Option<Round> {
+    let base = generate(rows, exclusions, tier, word, seed, kid)?;
+    let pool = eligible(rows, tier, kid);
+    let target = pool.iter().find(|r| r.word == word)?;
+    Some(Round {
+        reverse: true,
+        prompt: target.definition.clone(),
+        // The floating cards are the words themselves; `words` stays the
+        // per-card word (== cards) so callers read target identity uniformly.
+        cards: base.words.clone(),
+        words: base.words.clone(),
+        correct: base.correct,
+        lanes: base.lanes,
+        spawn_order: base.spawn_order,
+        seed,
+    })
 }
 
 fn fnv(s: &str) -> u64 {
@@ -410,6 +449,31 @@ mod tests {
                 assert!(matches!(row.tier.as_str(), "easy" | "medium"), "above-medium row {w} in a Kid round");
             }
         }
+    }
+
+    /// D8: a reverse round floats WORDS, prompts the target's definition,
+    /// shares the forward round's determinism and tell-freedom (same shuffles),
+    /// and every card resolves to an audited row.
+    #[test]
+    fn reverse_rounds_flip_the_format() {
+        let rows = fixture_rows();
+        let ex = fixture_exclusions();
+        let by_word: HashMap<&str, &DefRow> = rows.iter().map(|r| (r.word.as_str(), r)).collect();
+        let r1 = generate_reverse(&rows, &ex, "hard", "hard_w3", 9, false).unwrap();
+        let r2 = generate_reverse(&rows, &ex, "hard", "hard_w3", 9, false).unwrap();
+        assert_eq!(r1, r2, "reverse rounds are deterministic too");
+        assert!(r1.reverse);
+        assert_eq!(r1.prompt, by_word["hard_w3"].definition, "prompt is the target definition");
+        assert_eq!(r1.cards, r1.words, "cards ARE the words");
+        assert_eq!(r1.words[r1.correct], "hard_w3");
+        for w in &r1.words {
+            let row = by_word[w.as_str()];
+            assert!(row.prompt_grade && row.audit_pass, "reverse card {w} must be audited");
+        }
+        // Same tell-freedom machinery: correct index varies with the seed.
+        let seen: std::collections::HashSet<usize> =
+            (0..40u64).map(|s| generate_reverse(&rows, &ex, "hard", "hard_w3", s, false).unwrap().correct).collect();
+        assert!(seen.len() > 1, "correct card position must vary across seeds");
     }
 
     /// Acceptance #7: shield parity. The SAME outcome sequence driven through
