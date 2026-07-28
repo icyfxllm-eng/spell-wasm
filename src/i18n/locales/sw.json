@@ -369,5 +369,8 @@
   "practice.choice": "Lipi linalofuata?",
   "practice.micro.silent": "Gusa herufi isiyosikika.",
   "practice.micro.hear": "Umesikia lipi?",
-  "practice.micro.stack": "Gusa herufi mbili zinazoungana."
+  "practice.micro.stack": "Gusa herufi mbili zinazoungana.",
+  "voiceSpell.dlPrep": "Inapakua kifurushi cha sauti…",
+  "voiceSpell.dlReady": "Tayari! Gusa maikrofoni",
+  "voiceSpell.dlFail": "Upakuaji umeshindikana — gusa kujaribu tena"
 }

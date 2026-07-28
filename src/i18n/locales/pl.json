@@ -369,5 +369,8 @@
   "practice.choice": "Które teraz?",
   "practice.micro.silent": "Dotknij literę, której nie słychać.",
   "practice.micro.hear": "Które słyszysz?",
-  "practice.micro.stack": "Dotknij dwie litery, które się łączą."
+  "practice.micro.stack": "Dotknij dwie litery, które się łączą.",
+  "voiceSpell.dlPrep": "Pobieranie pakietu głosowego…",
+  "voiceSpell.dlReady": "Gotowe! Dotknij mikrofonu",
+  "voiceSpell.dlFail": "Pobieranie nie powiodło się — dotknij, by ponowić"
 }

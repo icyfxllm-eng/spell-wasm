@@ -369,5 +369,8 @@
   "practice.choice": "Какое дальше?",
   "practice.micro.silent": "Нажми на букву, которую не слышно.",
   "practice.micro.hear": "Какое ты слышишь?",
-  "practice.micro.stack": "Нажми на две буквы, которые соединяются."
+  "practice.micro.stack": "Нажми на две буквы, которые соединяются.",
+  "voiceSpell.dlPrep": "Загрузка голосового пакета…",
+  "voiceSpell.dlReady": "Готово! Нажми на микрофон",
+  "voiceSpell.dlFail": "Ошибка загрузки — нажми, чтобы повторить"
 }

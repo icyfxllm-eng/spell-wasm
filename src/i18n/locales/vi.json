@@ -369,5 +369,8 @@
   "practice.choice": "Từ nào tiếp theo?",
   "practice.micro.silent": "Chạm vào chữ không phát âm.",
   "practice.micro.hear": "Bạn nghe từ nào?",
-  "practice.micro.stack": "Chạm vào hai chữ ghép lại với nhau."
+  "practice.micro.stack": "Chạm vào hai chữ ghép lại với nhau.",
+  "voiceSpell.dlPrep": "Đang tải gói giọng nói…",
+  "voiceSpell.dlReady": "Xong! Chạm vào micrô",
+  "voiceSpell.dlFail": "Tải thất bại — chạm để thử lại"
 }

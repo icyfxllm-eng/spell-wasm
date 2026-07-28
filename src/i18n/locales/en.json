@@ -369,5 +369,8 @@
   "practice.choice": "Which one next?",
   "practice.micro.silent": "Tap the letter you can't hear.",
   "practice.micro.hear": "Which one do you hear?",
-  "practice.micro.stack": "Tap the two letters that stack together."
+  "practice.micro.stack": "Tap the two letters that stack together.",
+  "voiceSpell.dlPrep": "Getting the voice pack…",
+  "voiceSpell.dlReady": "Voice pack ready — tap the mic!",
+  "voiceSpell.dlFail": "Download failed — tap to retry"
 }

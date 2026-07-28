@@ -494,6 +494,10 @@
   .voice-spell-mic{width:44px;height:44px;margin-left:8px;border-radius:50%;display:grid;place-items:center;font-size:22px;line-height:1;padding:0;background:var(--panel-2);border:1.5px solid var(--edge);color:inherit;cursor:pointer;transition:transform .12s,box-shadow .2s,border-color .2s;touch-action:none;user-select:none;-webkit-user-select:none}
   body.kid .voice-spell-mic{width:52px;height:52px;font-size:26px}
   .voice-spell-mic.btn-hide,.voice-spell-perm.btn-hide{display:none}
+  /* Mic-everywhere: a downloadable-state mic wears a small ⬇ badge — the first
+     tap fetches the on-device voice pack, then the badge drops. */
+  .voice-spell-mic.dl{position:relative}
+  .voice-spell-mic.dl::after{content:"⬇";position:absolute;right:-4px;bottom:-4px;font-size:12px;line-height:1;background:var(--accent,#7aa2ff);color:#fff;border-radius:50%;width:16px;height:16px;display:flex;align-items:center;justify-content:center}
   .voice-spell-mic:active{transform:scale(.9)}
   .voice-spell-mic.listening{border-color:var(--teal,#46d6b8);box-shadow:0 0 0 5px rgba(70,214,184,.22);animation:sayitPulse 1.1s ease-in-out infinite}
   .voice-spell-status{width:100%;min-height:16px;margin:6px 0 0;font-size:12.5px;color:var(--muted-on-bg);text-align:center}

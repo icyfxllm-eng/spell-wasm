@@ -369,5 +369,8 @@
   "practice.choice": "Alin ang susunod?",
   "practice.micro.silent": "Pindutin ang letrang hindi maririnig.",
   "practice.micro.hear": "Alin ang narinig mo?",
-  "practice.micro.stack": "Pindutin ang dalawang letrang nagsasama."
+  "practice.micro.stack": "Pindutin ang dalawang letrang nagsasama.",
+  "voiceSpell.dlPrep": "Kinukuha ang voice pack…",
+  "voiceSpell.dlReady": "Handa na! Pindutin ang mikropono",
+  "voiceSpell.dlFail": "Nabigo ang download — pindutin para subukang muli"
 }

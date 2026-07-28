@@ -219,6 +219,10 @@ pub async fn detect_language_await(text: &str) -> (bool, String, f64) {
 pub struct SpeechCapability {
     pub available: bool,
     pub supports_on_device: bool,
+    /// Mic-everywhere ladder: "installed" (capture can start now),
+    /// "downloadable" (an on-device model exists; `download_speech_assets`
+    /// fetches it), or "unavailable". Always on-device — never a server cue.
+    pub state: String,
 }
 
 fn speech_capabilities_promise(lang: &str) -> Option<Promise> {
@@ -229,14 +233,45 @@ fn speech_capabilities_promise(lang: &str) -> Option<Promise> {
 /// bridge is absent (web/PWA) or the call fails — so off-iOS the mode is uniformly
 /// treated as UNAVAILABLE, never as a cue to try anything server-based.
 pub async fn speech_capabilities(lang: &str) -> SpeechCapability {
-    let fallback = SpeechCapability { available: false, supports_on_device: false };
+    let fallback = SpeechCapability {
+        available: false,
+        supports_on_device: false,
+        state: "unavailable".into(),
+    };
     let Some(promise) = speech_capabilities_promise(lang) else { return fallback };
     let Ok(v) = JsFuture::from(promise).await else { return fallback };
     let available = get(&v, "available").and_then(|x| x.as_bool()).unwrap_or(false);
     let supports_on_device = get(&v, "supportsOnDevice").and_then(|x| x.as_bool()).unwrap_or(false);
+    let state = get(&v, "state")
+        .and_then(|x| x.as_string())
+        .unwrap_or_else(|| if available { "installed".into() } else { "unavailable".into() });
     // Defensive: never report available without on-device support, even if a
     // future bridge regressed the invariant.
-    SpeechCapability { available: available && supports_on_device, supports_on_device }
+    SpeechCapability { available: available && supports_on_device, supports_on_device, state }
+}
+
+/// Download the ON-DEVICE speech model for `lang` (iOS 26+). `on_progress`
+/// receives fractions 0..=1. Resolves true when installed; false on failure
+/// or when no downloadable on-device model exists. Privacy doctrine intact:
+/// this fetches Apple's LOCAL model assets — recognition never leaves the
+/// phone, and this is never a cue for server recognition.
+pub async fn download_speech_assets(lang: &str, on_progress: impl Fn(f64) + 'static) -> bool {
+    let Some(obj) = bridge() else { return false };
+    let Some(f) = method(&obj, "downloadSpeechAssets") else { return false };
+    let cb = wasm_bindgen::closure::Closure::<dyn Fn(JsValue)>::new(move |v: JsValue| {
+        on_progress(v.as_f64().unwrap_or(0.0).clamp(0.0, 1.0));
+    });
+    let Ok(promise) = f
+        .call2(&obj, &JsValue::from_str(lang), cb.as_ref().unchecked_ref())
+        .and_then(|v| v.dyn_into::<Promise>().map(JsValue::from).map_err(JsValue::from))
+    else {
+        drop(cb);
+        return false;
+    };
+    let promise: Promise = promise.unchecked_into();
+    let ok = JsFuture::from(promise).await.is_ok();
+    drop(cb);
+    ok
 }
 
 /// Kick off on-device listening for `lang`. Returns the JS promise resolving to

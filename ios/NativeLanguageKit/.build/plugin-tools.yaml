@@ -1,0 +1,603 @@
+client:
+  name: basic
+  file-system: device-agnostic
+tools: {}
+targets:
+  "NativeLanguageKitCore-arm64-apple-macosx-debug.module": ["<NativeLanguageKitCore-arm64-apple-macosx-debug.module>"]
+  "NativeLanguageKitCorePackageTests-arm64-apple-macosx-debug.module": ["<NativeLanguageKitCorePackageTests-arm64-apple-macosx-debug.module>"]
+  "NativeLanguageKitCorePackageTests-arm64-apple-macosx-debug.test": ["<NativeLanguageKitCorePackageTests-arm64-apple-macosx-debug.test>"]
+  "NativeLanguageKitCoreTests-arm64-apple-macosx-debug.module": ["<NativeLanguageKitCoreTests-arm64-apple-macosx-debug.module>"]
+  "PackageStructure": ["<PackageStructure>"]
+  "main": ["<NativeLanguageKitCore-arm64-apple-macosx-debug.module>"]
+  "test": ["<NativeLanguageKitCore-arm64-apple-macosx-debug.module>","<NativeLanguageKitCorePackageTests-arm64-apple-macosx-debug.test>","<NativeLanguageKitCoreTests-arm64-apple-macosx-debug.module>"]
+default: "main"
+nodes:
+  "/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/Sources/NativeLanguageKitCore/":
+    is-directory-structure: true
+    content-exclusion-patterns: [".git",".build"]
+  "/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/Tests/NativeLanguageKitCoreTests/":
+    is-directory-structure: true
+    content-exclusion-patterns: [".git",".build"]
+commands:
+  "/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/.build/arm64-apple-macosx/debug/NativeLanguageKitCore.build/sources":
+    tool: write-auxiliary-file
+    inputs: ["<sources-file-list>","/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/Sources/NativeLanguageKitCore/Capabilities.swift","/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/Sources/NativeLanguageKitCore/ChineseScript.swift","/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/Sources/NativeLanguageKitCore/LanguageDetector.swift","/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/Sources/NativeLanguageKitCore/LocaleResolver.swift","/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/Sources/NativeLanguageKitCore/Models.swift","/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/Sources/NativeLanguageKitCore/Speaker.swift","/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/Sources/NativeLanguageKitCore/SpeechCapabilities.swift","/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/Sources/NativeLanguageKitCore/SpeechMatcher.swift","/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/Sources/NativeLanguageKitCore/SpeechRate.swift","/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/Sources/NativeLanguageKitCore/SyllableSpeaker.swift","/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/Sources/NativeLanguageKitCore/SyllableSpeech.swift","/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/Sources/NativeLanguageKitCore/VoiceCatalog.swift","/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/Sources/NativeLanguageKitCore/WordChecker.swift","/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/Sources/NativeLanguageKitCore/WordListRecognizer.swift"]
+    outputs: ["/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/.build/arm64-apple-macosx/debug/NativeLanguageKitCore.build/sources"]
+    description: "Write auxiliary file /Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/.build/arm64-apple-macosx/debug/NativeLanguageKitCore.build/sources"
+
+  "/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/.build/arm64-apple-macosx/debug/NativeLanguageKitCorePackageTests.build/sources":
+    tool: write-auxiliary-file
+    inputs: ["<sources-file-list>","/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/.build/arm64-apple-macosx/debug/NativeLanguageKitCorePackageTests.derived/runner.swift"]
+    outputs: ["/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/.build/arm64-apple-macosx/debug/NativeLanguageKitCorePackageTests.build/sources"]
+    description: "Write auxiliary file /Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/.build/arm64-apple-macosx/debug/NativeLanguageKitCorePackageTests.build/sources"
+
+  "/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/.build/arm64-apple-macosx/debug/NativeLanguageKitCorePackageTests.derived/runner.swift":
+    tool: test-entry-point-tool
+    inputs: []
+    outputs: ["/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/.build/arm64-apple-macosx/debug/NativeLanguageKitCorePackageTests.derived/runner.swift"]
+
+  "/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/.build/arm64-apple-macosx/debug/NativeLanguageKitCorePackageTests.product/Objects.LinkFileList":
+    tool: write-auxiliary-file
+    inputs: ["<link-file-list>","/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/.build/arm64-apple-macosx/debug/NativeLanguageKitCore.build/Capabilities.swift.o","/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/.build/arm64-apple-macosx/debug/NativeLanguageKitCore.build/ChineseScript.swift.o","/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/.build/arm64-apple-macosx/debug/NativeLanguageKitCore.build/LanguageDetector.swift.o","/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/.build/arm64-apple-macosx/debug/NativeLanguageKitCore.build/LocaleResolver.swift.o","/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/.build/arm64-apple-macosx/debug/NativeLanguageKitCore.build/Models.swift.o","/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/.build/arm64-apple-macosx/debug/NativeLanguageKitCore.build/Speaker.swift.o","/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/.build/arm64-apple-macosx/debug/NativeLanguageKitCore.build/SpeechCapabilities.swift.o","/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/.build/arm64-apple-macosx/debug/NativeLanguageKitCore.build/SpeechMatcher.swift.o","/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/.build/arm64-apple-macosx/debug/NativeLanguageKitCore.build/SpeechRate.swift.o","/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/.build/arm64-apple-macosx/debug/NativeLanguageKitCore.build/SyllableSpeaker.swift.o","/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/.build/arm64-apple-macosx/debug/NativeLanguageKitCore.build/SyllableSpeech.swift.o","/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/.build/arm64-apple-macosx/debug/NativeLanguageKitCore.build/VoiceCatalog.swift.o","/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/.build/arm64-apple-macosx/debug/NativeLanguageKitCore.build/WordChecker.swift.o","/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/.build/arm64-apple-macosx/debug/NativeLanguageKitCore.build/WordListRecognizer.swift.o","/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/.build/arm64-apple-macosx/debug/NativeLanguageKitCorePackageTests.build/runner.swift.o","/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/.build/arm64-apple-macosx/debug/NativeLanguageKitCoreTests.build/NativeLanguageKitCoreTests.swift.o","/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/.build/arm64-apple-macosx/debug/NativeLanguageKitCoreTests.build/OcrEvalTests.swift.o","/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/.build/arm64-apple-macosx/debug/NativeLanguageKitCoreTests.build/VisionLanguageMatrixTests.swift.o","/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/.build/arm64-apple-macosx/debug/NativeLanguageKitCoreTests.build/WordListRecognizerTests.swift.o","/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/.build/arm64-apple-macosx/debug/NativeLanguageKitCoreTests.build/resource_bundle_accessor.swift.o"]
+    outputs: ["/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/.build/arm64-apple-macosx/debug/NativeLanguageKitCorePackageTests.product/Objects.LinkFileList"]
+    description: "Write auxiliary file /Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/.build/arm64-apple-macosx/debug/NativeLanguageKitCorePackageTests.product/Objects.LinkFileList"
+
+  "/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/.build/arm64-apple-macosx/debug/NativeLanguageKitCoreTests.build/sources":
+    tool: write-auxiliary-file
+    inputs: ["<sources-file-list>","/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/Tests/NativeLanguageKitCoreTests/NativeLanguageKitCoreTests.swift","/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/Tests/NativeLanguageKitCoreTests/OcrEvalTests.swift","/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/Tests/NativeLanguageKitCoreTests/VisionLanguageMatrixTests.swift","/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/Tests/NativeLanguageKitCoreTests/WordListRecognizerTests.swift","/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/.build/arm64-apple-macosx/debug/NativeLanguageKitCoreTests.build/DerivedSources/resource_bundle_accessor.swift"]
+    outputs: ["/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/.build/arm64-apple-macosx/debug/NativeLanguageKitCoreTests.build/sources"]
+    description: "Write auxiliary file /Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/.build/arm64-apple-macosx/debug/NativeLanguageKitCoreTests.build/sources"
+
+  "/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/.build/arm64-apple-macosx/debug/NativeLanguageKitCore_NativeLanguageKitCoreTests.bundle/de-hand-bradley.png":
+    tool: copy-tool
+    inputs: ["/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/Tests/NativeLanguageKitCoreTests/Resources/ocr-fixtures/de-hand-bradley.png"]
+    outputs: ["/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/.build/arm64-apple-macosx/debug/NativeLanguageKitCore_NativeLanguageKitCoreTests.bundle/de-hand-bradley.png"]
+    description: "Copying /Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/Tests/NativeLanguageKitCoreTests/Resources/ocr-fixtures/de-hand-bradley.png"
+
+  "/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/.build/arm64-apple-macosx/debug/NativeLanguageKitCore_NativeLanguageKitCoreTests.bundle/de-hand-markerfelt.png":
+    tool: copy-tool
+    inputs: ["/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/Tests/NativeLanguageKitCoreTests/Resources/ocr-fixtures/de-hand-markerfelt.png"]
+    outputs: ["/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/.build/arm64-apple-macosx/debug/NativeLanguageKitCore_NativeLanguageKitCoreTests.bundle/de-hand-markerfelt.png"]
+    description: "Copying /Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/Tests/NativeLanguageKitCoreTests/Resources/ocr-fixtures/de-hand-markerfelt.png"
+
+  "/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/.build/arm64-apple-macosx/debug/NativeLanguageKitCore_NativeLanguageKitCoreTests.bundle/de-hand-noteworthy.png":
+    tool: copy-tool
+    inputs: ["/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/Tests/NativeLanguageKitCoreTests/Resources/ocr-fixtures/de-hand-noteworthy.png"]
+    outputs: ["/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/.build/arm64-apple-macosx/debug/NativeLanguageKitCore_NativeLanguageKitCoreTests.bundle/de-hand-noteworthy.png"]
+    description: "Copying /Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/Tests/NativeLanguageKitCoreTests/Resources/ocr-fixtures/de-hand-noteworthy.png"
+
+  "/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/.build/arm64-apple-macosx/debug/NativeLanguageKitCore_NativeLanguageKitCoreTests.bundle/de-print-helvetica.png":
+    tool: copy-tool
+    inputs: ["/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/Tests/NativeLanguageKitCoreTests/Resources/ocr-fixtures/de-print-helvetica.png"]
+    outputs: ["/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/.build/arm64-apple-macosx/debug/NativeLanguageKitCore_NativeLanguageKitCoreTests.bundle/de-print-helvetica.png"]
+    description: "Copying /Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/Tests/NativeLanguageKitCoreTests/Resources/ocr-fixtures/de-print-helvetica.png"
+
+  "/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/.build/arm64-apple-macosx/debug/NativeLanguageKitCore_NativeLanguageKitCoreTests.bundle/de-print-menlo.png":
+    tool: copy-tool
+    inputs: ["/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/Tests/NativeLanguageKitCoreTests/Resources/ocr-fixtures/de-print-menlo.png"]
+    outputs: ["/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/.build/arm64-apple-macosx/debug/NativeLanguageKitCore_NativeLanguageKitCoreTests.bundle/de-print-menlo.png"]
+    description: "Copying /Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/Tests/NativeLanguageKitCoreTests/Resources/ocr-fixtures/de-print-menlo.png"
+
+  "/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/.build/arm64-apple-macosx/debug/NativeLanguageKitCore_NativeLanguageKitCoreTests.bundle/de-print-times.png":
+    tool: copy-tool
+    inputs: ["/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/Tests/NativeLanguageKitCoreTests/Resources/ocr-fixtures/de-print-times.png"]
+    outputs: ["/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/.build/arm64-apple-macosx/debug/NativeLanguageKitCore_NativeLanguageKitCoreTests.bundle/de-print-times.png"]
+    description: "Copying /Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/Tests/NativeLanguageKitCoreTests/Resources/ocr-fixtures/de-print-times.png"
+
+  "/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/.build/arm64-apple-macosx/debug/NativeLanguageKitCore_NativeLanguageKitCoreTests.bundle/en-hand-bradley.png":
+    tool: copy-tool
+    inputs: ["/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/Tests/NativeLanguageKitCoreTests/Resources/ocr-fixtures/en-hand-bradley.png"]
+    outputs: ["/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/.build/arm64-apple-macosx/debug/NativeLanguageKitCore_NativeLanguageKitCoreTests.bundle/en-hand-bradley.png"]
+    description: "Copying /Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/Tests/NativeLanguageKitCoreTests/Resources/ocr-fixtures/en-hand-bradley.png"
+
+  "/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/.build/arm64-apple-macosx/debug/NativeLanguageKitCore_NativeLanguageKitCoreTests.bundle/en-hand-markerfelt.png":
+    tool: copy-tool
+    inputs: ["/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/Tests/NativeLanguageKitCoreTests/Resources/ocr-fixtures/en-hand-markerfelt.png"]
+    outputs: ["/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/.build/arm64-apple-macosx/debug/NativeLanguageKitCore_NativeLanguageKitCoreTests.bundle/en-hand-markerfelt.png"]
+    description: "Copying /Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/Tests/NativeLanguageKitCoreTests/Resources/ocr-fixtures/en-hand-markerfelt.png"
+
+  "/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/.build/arm64-apple-macosx/debug/NativeLanguageKitCore_NativeLanguageKitCoreTests.bundle/en-hand-noteworthy.png":
+    tool: copy-tool
+    inputs: ["/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/Tests/NativeLanguageKitCoreTests/Resources/ocr-fixtures/en-hand-noteworthy.png"]
+    outputs: ["/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/.build/arm64-apple-macosx/debug/NativeLanguageKitCore_NativeLanguageKitCoreTests.bundle/en-hand-noteworthy.png"]
+    description: "Copying /Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/Tests/NativeLanguageKitCoreTests/Resources/ocr-fixtures/en-hand-noteworthy.png"
+
+  "/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/.build/arm64-apple-macosx/debug/NativeLanguageKitCore_NativeLanguageKitCoreTests.bundle/en-print-helvetica.png":
+    tool: copy-tool
+    inputs: ["/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/Tests/NativeLanguageKitCoreTests/Resources/ocr-fixtures/en-print-helvetica.png"]
+    outputs: ["/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/.build/arm64-apple-macosx/debug/NativeLanguageKitCore_NativeLanguageKitCoreTests.bundle/en-print-helvetica.png"]
+    description: "Copying /Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/Tests/NativeLanguageKitCoreTests/Resources/ocr-fixtures/en-print-helvetica.png"
+
+  "/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/.build/arm64-apple-macosx/debug/NativeLanguageKitCore_NativeLanguageKitCoreTests.bundle/en-print-menlo.png":
+    tool: copy-tool
+    inputs: ["/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/Tests/NativeLanguageKitCoreTests/Resources/ocr-fixtures/en-print-menlo.png"]
+    outputs: ["/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/.build/arm64-apple-macosx/debug/NativeLanguageKitCore_NativeLanguageKitCoreTests.bundle/en-print-menlo.png"]
+    description: "Copying /Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/Tests/NativeLanguageKitCoreTests/Resources/ocr-fixtures/en-print-menlo.png"
+
+  "/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/.build/arm64-apple-macosx/debug/NativeLanguageKitCore_NativeLanguageKitCoreTests.bundle/en-print-times.png":
+    tool: copy-tool
+    inputs: ["/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/Tests/NativeLanguageKitCoreTests/Resources/ocr-fixtures/en-print-times.png"]
+    outputs: ["/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/.build/arm64-apple-macosx/debug/NativeLanguageKitCore_NativeLanguageKitCoreTests.bundle/en-print-times.png"]
+    description: "Copying /Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/Tests/NativeLanguageKitCoreTests/Resources/ocr-fixtures/en-print-times.png"
+
+  "/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/.build/arm64-apple-macosx/debug/NativeLanguageKitCore_NativeLanguageKitCoreTests.bundle/es-hand-bradley.png":
+    tool: copy-tool
+    inputs: ["/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/Tests/NativeLanguageKitCoreTests/Resources/ocr-fixtures/es-hand-bradley.png"]
+    outputs: ["/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/.build/arm64-apple-macosx/debug/NativeLanguageKitCore_NativeLanguageKitCoreTests.bundle/es-hand-bradley.png"]
+    description: "Copying /Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/Tests/NativeLanguageKitCoreTests/Resources/ocr-fixtures/es-hand-bradley.png"
+
+  "/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/.build/arm64-apple-macosx/debug/NativeLanguageKitCore_NativeLanguageKitCoreTests.bundle/es-hand-markerfelt.png":
+    tool: copy-tool
+    inputs: ["/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/Tests/NativeLanguageKitCoreTests/Resources/ocr-fixtures/es-hand-markerfelt.png"]
+    outputs: ["/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/.build/arm64-apple-macosx/debug/NativeLanguageKitCore_NativeLanguageKitCoreTests.bundle/es-hand-markerfelt.png"]
+    description: "Copying /Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/Tests/NativeLanguageKitCoreTests/Resources/ocr-fixtures/es-hand-markerfelt.png"
+
+  "/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/.build/arm64-apple-macosx/debug/NativeLanguageKitCore_NativeLanguageKitCoreTests.bundle/es-hand-noteworthy.png":
+    tool: copy-tool
+    inputs: ["/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/Tests/NativeLanguageKitCoreTests/Resources/ocr-fixtures/es-hand-noteworthy.png"]
+    outputs: ["/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/.build/arm64-apple-macosx/debug/NativeLanguageKitCore_NativeLanguageKitCoreTests.bundle/es-hand-noteworthy.png"]
+    description: "Copying /Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/Tests/NativeLanguageKitCoreTests/Resources/ocr-fixtures/es-hand-noteworthy.png"
+
+  "/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/.build/arm64-apple-macosx/debug/NativeLanguageKitCore_NativeLanguageKitCoreTests.bundle/es-print-helvetica.png":
+    tool: copy-tool
+    inputs: ["/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/Tests/NativeLanguageKitCoreTests/Resources/ocr-fixtures/es-print-helvetica.png"]
+    outputs: ["/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/.build/arm64-apple-macosx/debug/NativeLanguageKitCore_NativeLanguageKitCoreTests.bundle/es-print-helvetica.png"]
+    description: "Copying /Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/Tests/NativeLanguageKitCoreTests/Resources/ocr-fixtures/es-print-helvetica.png"
+
+  "/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/.build/arm64-apple-macosx/debug/NativeLanguageKitCore_NativeLanguageKitCoreTests.bundle/es-print-menlo.png":
+    tool: copy-tool
+    inputs: ["/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/Tests/NativeLanguageKitCoreTests/Resources/ocr-fixtures/es-print-menlo.png"]
+    outputs: ["/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/.build/arm64-apple-macosx/debug/NativeLanguageKitCore_NativeLanguageKitCoreTests.bundle/es-print-menlo.png"]
+    description: "Copying /Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/Tests/NativeLanguageKitCoreTests/Resources/ocr-fixtures/es-print-menlo.png"
+
+  "/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/.build/arm64-apple-macosx/debug/NativeLanguageKitCore_NativeLanguageKitCoreTests.bundle/es-print-times.png":
+    tool: copy-tool
+    inputs: ["/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/Tests/NativeLanguageKitCoreTests/Resources/ocr-fixtures/es-print-times.png"]
+    outputs: ["/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/.build/arm64-apple-macosx/debug/NativeLanguageKitCore_NativeLanguageKitCoreTests.bundle/es-print-times.png"]
+    description: "Copying /Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/Tests/NativeLanguageKitCoreTests/Resources/ocr-fixtures/es-print-times.png"
+
+  "/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/.build/arm64-apple-macosx/debug/NativeLanguageKitCore_NativeLanguageKitCoreTests.bundle/fil-hand-bradley.png":
+    tool: copy-tool
+    inputs: ["/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/Tests/NativeLanguageKitCoreTests/Resources/ocr-fixtures/fil-hand-bradley.png"]
+    outputs: ["/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/.build/arm64-apple-macosx/debug/NativeLanguageKitCore_NativeLanguageKitCoreTests.bundle/fil-hand-bradley.png"]
+    description: "Copying /Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/Tests/NativeLanguageKitCoreTests/Resources/ocr-fixtures/fil-hand-bradley.png"
+
+  "/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/.build/arm64-apple-macosx/debug/NativeLanguageKitCore_NativeLanguageKitCoreTests.bundle/fil-hand-markerfelt.png":
+    tool: copy-tool
+    inputs: ["/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/Tests/NativeLanguageKitCoreTests/Resources/ocr-fixtures/fil-hand-markerfelt.png"]
+    outputs: ["/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/.build/arm64-apple-macosx/debug/NativeLanguageKitCore_NativeLanguageKitCoreTests.bundle/fil-hand-markerfelt.png"]
+    description: "Copying /Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/Tests/NativeLanguageKitCoreTests/Resources/ocr-fixtures/fil-hand-markerfelt.png"
+
+  "/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/.build/arm64-apple-macosx/debug/NativeLanguageKitCore_NativeLanguageKitCoreTests.bundle/fil-hand-noteworthy.png":
+    tool: copy-tool
+    inputs: ["/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/Tests/NativeLanguageKitCoreTests/Resources/ocr-fixtures/fil-hand-noteworthy.png"]
+    outputs: ["/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/.build/arm64-apple-macosx/debug/NativeLanguageKitCore_NativeLanguageKitCoreTests.bundle/fil-hand-noteworthy.png"]
+    description: "Copying /Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/Tests/NativeLanguageKitCoreTests/Resources/ocr-fixtures/fil-hand-noteworthy.png"
+
+  "/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/.build/arm64-apple-macosx/debug/NativeLanguageKitCore_NativeLanguageKitCoreTests.bundle/fil-print-helvetica.png":
+    tool: copy-tool
+    inputs: ["/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/Tests/NativeLanguageKitCoreTests/Resources/ocr-fixtures/fil-print-helvetica.png"]
+    outputs: ["/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/.build/arm64-apple-macosx/debug/NativeLanguageKitCore_NativeLanguageKitCoreTests.bundle/fil-print-helvetica.png"]
+    description: "Copying /Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/Tests/NativeLanguageKitCoreTests/Resources/ocr-fixtures/fil-print-helvetica.png"
+
+  "/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/.build/arm64-apple-macosx/debug/NativeLanguageKitCore_NativeLanguageKitCoreTests.bundle/fil-print-menlo.png":
+    tool: copy-tool
+    inputs: ["/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/Tests/NativeLanguageKitCoreTests/Resources/ocr-fixtures/fil-print-menlo.png"]
+    outputs: ["/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/.build/arm64-apple-macosx/debug/NativeLanguageKitCore_NativeLanguageKitCoreTests.bundle/fil-print-menlo.png"]
+    description: "Copying /Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/Tests/NativeLanguageKitCoreTests/Resources/ocr-fixtures/fil-print-menlo.png"
+
+  "/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/.build/arm64-apple-macosx/debug/NativeLanguageKitCore_NativeLanguageKitCoreTests.bundle/fil-print-times.png":
+    tool: copy-tool
+    inputs: ["/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/Tests/NativeLanguageKitCoreTests/Resources/ocr-fixtures/fil-print-times.png"]
+    outputs: ["/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/.build/arm64-apple-macosx/debug/NativeLanguageKitCore_NativeLanguageKitCoreTests.bundle/fil-print-times.png"]
+    description: "Copying /Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/Tests/NativeLanguageKitCoreTests/Resources/ocr-fixtures/fil-print-times.png"
+
+  "/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/.build/arm64-apple-macosx/debug/NativeLanguageKitCore_NativeLanguageKitCoreTests.bundle/fr-hand-bradley.png":
+    tool: copy-tool
+    inputs: ["/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/Tests/NativeLanguageKitCoreTests/Resources/ocr-fixtures/fr-hand-bradley.png"]
+    outputs: ["/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/.build/arm64-apple-macosx/debug/NativeLanguageKitCore_NativeLanguageKitCoreTests.bundle/fr-hand-bradley.png"]
+    description: "Copying /Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/Tests/NativeLanguageKitCoreTests/Resources/ocr-fixtures/fr-hand-bradley.png"
+
+  "/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/.build/arm64-apple-macosx/debug/NativeLanguageKitCore_NativeLanguageKitCoreTests.bundle/fr-hand-markerfelt.png":
+    tool: copy-tool
+    inputs: ["/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/Tests/NativeLanguageKitCoreTests/Resources/ocr-fixtures/fr-hand-markerfelt.png"]
+    outputs: ["/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/.build/arm64-apple-macosx/debug/NativeLanguageKitCore_NativeLanguageKitCoreTests.bundle/fr-hand-markerfelt.png"]
+    description: "Copying /Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/Tests/NativeLanguageKitCoreTests/Resources/ocr-fixtures/fr-hand-markerfelt.png"
+
+  "/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/.build/arm64-apple-macosx/debug/NativeLanguageKitCore_NativeLanguageKitCoreTests.bundle/fr-hand-noteworthy.png":
+    tool: copy-tool
+    inputs: ["/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/Tests/NativeLanguageKitCoreTests/Resources/ocr-fixtures/fr-hand-noteworthy.png"]
+    outputs: ["/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/.build/arm64-apple-macosx/debug/NativeLanguageKitCore_NativeLanguageKitCoreTests.bundle/fr-hand-noteworthy.png"]
+    description: "Copying /Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/Tests/NativeLanguageKitCoreTests/Resources/ocr-fixtures/fr-hand-noteworthy.png"
+
+  "/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/.build/arm64-apple-macosx/debug/NativeLanguageKitCore_NativeLanguageKitCoreTests.bundle/fr-print-helvetica.png":
+    tool: copy-tool
+    inputs: ["/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/Tests/NativeLanguageKitCoreTests/Resources/ocr-fixtures/fr-print-helvetica.png"]
+    outputs: ["/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/.build/arm64-apple-macosx/debug/NativeLanguageKitCore_NativeLanguageKitCoreTests.bundle/fr-print-helvetica.png"]
+    description: "Copying /Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/Tests/NativeLanguageKitCoreTests/Resources/ocr-fixtures/fr-print-helvetica.png"
+
+  "/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/.build/arm64-apple-macosx/debug/NativeLanguageKitCore_NativeLanguageKitCoreTests.bundle/fr-print-menlo.png":
+    tool: copy-tool
+    inputs: ["/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/Tests/NativeLanguageKitCoreTests/Resources/ocr-fixtures/fr-print-menlo.png"]
+    outputs: ["/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/.build/arm64-apple-macosx/debug/NativeLanguageKitCore_NativeLanguageKitCoreTests.bundle/fr-print-menlo.png"]
+    description: "Copying /Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/Tests/NativeLanguageKitCoreTests/Resources/ocr-fixtures/fr-print-menlo.png"
+
+  "/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/.build/arm64-apple-macosx/debug/NativeLanguageKitCore_NativeLanguageKitCoreTests.bundle/fr-print-times.png":
+    tool: copy-tool
+    inputs: ["/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/Tests/NativeLanguageKitCoreTests/Resources/ocr-fixtures/fr-print-times.png"]
+    outputs: ["/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/.build/arm64-apple-macosx/debug/NativeLanguageKitCore_NativeLanguageKitCoreTests.bundle/fr-print-times.png"]
+    description: "Copying /Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/Tests/NativeLanguageKitCoreTests/Resources/ocr-fixtures/fr-print-times.png"
+
+  "/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/.build/arm64-apple-macosx/debug/NativeLanguageKitCore_NativeLanguageKitCoreTests.bundle/ja-hand-bradley.png":
+    tool: copy-tool
+    inputs: ["/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/Tests/NativeLanguageKitCoreTests/Resources/ocr-fixtures/ja-hand-bradley.png"]
+    outputs: ["/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/.build/arm64-apple-macosx/debug/NativeLanguageKitCore_NativeLanguageKitCoreTests.bundle/ja-hand-bradley.png"]
+    description: "Copying /Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/Tests/NativeLanguageKitCoreTests/Resources/ocr-fixtures/ja-hand-bradley.png"
+
+  "/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/.build/arm64-apple-macosx/debug/NativeLanguageKitCore_NativeLanguageKitCoreTests.bundle/ja-hand-markerfelt.png":
+    tool: copy-tool
+    inputs: ["/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/Tests/NativeLanguageKitCoreTests/Resources/ocr-fixtures/ja-hand-markerfelt.png"]
+    outputs: ["/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/.build/arm64-apple-macosx/debug/NativeLanguageKitCore_NativeLanguageKitCoreTests.bundle/ja-hand-markerfelt.png"]
+    description: "Copying /Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/Tests/NativeLanguageKitCoreTests/Resources/ocr-fixtures/ja-hand-markerfelt.png"
+
+  "/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/.build/arm64-apple-macosx/debug/NativeLanguageKitCore_NativeLanguageKitCoreTests.bundle/ja-hand-noteworthy.png":
+    tool: copy-tool
+    inputs: ["/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/Tests/NativeLanguageKitCoreTests/Resources/ocr-fixtures/ja-hand-noteworthy.png"]
+    outputs: ["/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/.build/arm64-apple-macosx/debug/NativeLanguageKitCore_NativeLanguageKitCoreTests.bundle/ja-hand-noteworthy.png"]
+    description: "Copying /Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/Tests/NativeLanguageKitCoreTests/Resources/ocr-fixtures/ja-hand-noteworthy.png"
+
+  "/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/.build/arm64-apple-macosx/debug/NativeLanguageKitCore_NativeLanguageKitCoreTests.bundle/ja-print-helvetica.png":
+    tool: copy-tool
+    inputs: ["/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/Tests/NativeLanguageKitCoreTests/Resources/ocr-fixtures/ja-print-helvetica.png"]
+    outputs: ["/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/.build/arm64-apple-macosx/debug/NativeLanguageKitCore_NativeLanguageKitCoreTests.bundle/ja-print-helvetica.png"]
+    description: "Copying /Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/Tests/NativeLanguageKitCoreTests/Resources/ocr-fixtures/ja-print-helvetica.png"
+
+  "/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/.build/arm64-apple-macosx/debug/NativeLanguageKitCore_NativeLanguageKitCoreTests.bundle/ja-print-menlo.png":
+    tool: copy-tool
+    inputs: ["/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/Tests/NativeLanguageKitCoreTests/Resources/ocr-fixtures/ja-print-menlo.png"]
+    outputs: ["/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/.build/arm64-apple-macosx/debug/NativeLanguageKitCore_NativeLanguageKitCoreTests.bundle/ja-print-menlo.png"]
+    description: "Copying /Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/Tests/NativeLanguageKitCoreTests/Resources/ocr-fixtures/ja-print-menlo.png"
+
+  "/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/.build/arm64-apple-macosx/debug/NativeLanguageKitCore_NativeLanguageKitCoreTests.bundle/ja-print-times.png":
+    tool: copy-tool
+    inputs: ["/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/Tests/NativeLanguageKitCoreTests/Resources/ocr-fixtures/ja-print-times.png"]
+    outputs: ["/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/.build/arm64-apple-macosx/debug/NativeLanguageKitCore_NativeLanguageKitCoreTests.bundle/ja-print-times.png"]
+    description: "Copying /Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/Tests/NativeLanguageKitCoreTests/Resources/ocr-fixtures/ja-print-times.png"
+
+  "/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/.build/arm64-apple-macosx/debug/NativeLanguageKitCore_NativeLanguageKitCoreTests.bundle/ko-hand-bradley.png":
+    tool: copy-tool
+    inputs: ["/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/Tests/NativeLanguageKitCoreTests/Resources/ocr-fixtures/ko-hand-bradley.png"]
+    outputs: ["/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/.build/arm64-apple-macosx/debug/NativeLanguageKitCore_NativeLanguageKitCoreTests.bundle/ko-hand-bradley.png"]
+    description: "Copying /Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/Tests/NativeLanguageKitCoreTests/Resources/ocr-fixtures/ko-hand-bradley.png"
+
+  "/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/.build/arm64-apple-macosx/debug/NativeLanguageKitCore_NativeLanguageKitCoreTests.bundle/ko-hand-markerfelt.png":
+    tool: copy-tool
+    inputs: ["/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/Tests/NativeLanguageKitCoreTests/Resources/ocr-fixtures/ko-hand-markerfelt.png"]
+    outputs: ["/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/.build/arm64-apple-macosx/debug/NativeLanguageKitCore_NativeLanguageKitCoreTests.bundle/ko-hand-markerfelt.png"]
+    description: "Copying /Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/Tests/NativeLanguageKitCoreTests/Resources/ocr-fixtures/ko-hand-markerfelt.png"
+
+  "/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/.build/arm64-apple-macosx/debug/NativeLanguageKitCore_NativeLanguageKitCoreTests.bundle/ko-hand-noteworthy.png":
+    tool: copy-tool
+    inputs: ["/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/Tests/NativeLanguageKitCoreTests/Resources/ocr-fixtures/ko-hand-noteworthy.png"]
+    outputs: ["/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/.build/arm64-apple-macosx/debug/NativeLanguageKitCore_NativeLanguageKitCoreTests.bundle/ko-hand-noteworthy.png"]
+    description: "Copying /Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/Tests/NativeLanguageKitCoreTests/Resources/ocr-fixtures/ko-hand-noteworthy.png"
+
+  "/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/.build/arm64-apple-macosx/debug/NativeLanguageKitCore_NativeLanguageKitCoreTests.bundle/ko-print-helvetica.png":
+    tool: copy-tool
+    inputs: ["/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/Tests/NativeLanguageKitCoreTests/Resources/ocr-fixtures/ko-print-helvetica.png"]
+    outputs: ["/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/.build/arm64-apple-macosx/debug/NativeLanguageKitCore_NativeLanguageKitCoreTests.bundle/ko-print-helvetica.png"]
+    description: "Copying /Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/Tests/NativeLanguageKitCoreTests/Resources/ocr-fixtures/ko-print-helvetica.png"
+
+  "/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/.build/arm64-apple-macosx/debug/NativeLanguageKitCore_NativeLanguageKitCoreTests.bundle/ko-print-menlo.png":
+    tool: copy-tool
+    inputs: ["/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/Tests/NativeLanguageKitCoreTests/Resources/ocr-fixtures/ko-print-menlo.png"]
+    outputs: ["/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/.build/arm64-apple-macosx/debug/NativeLanguageKitCore_NativeLanguageKitCoreTests.bundle/ko-print-menlo.png"]
+    description: "Copying /Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/Tests/NativeLanguageKitCoreTests/Resources/ocr-fixtures/ko-print-menlo.png"
+
+  "/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/.build/arm64-apple-macosx/debug/NativeLanguageKitCore_NativeLanguageKitCoreTests.bundle/ko-print-times.png":
+    tool: copy-tool
+    inputs: ["/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/Tests/NativeLanguageKitCoreTests/Resources/ocr-fixtures/ko-print-times.png"]
+    outputs: ["/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/.build/arm64-apple-macosx/debug/NativeLanguageKitCore_NativeLanguageKitCoreTests.bundle/ko-print-times.png"]
+    description: "Copying /Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/Tests/NativeLanguageKitCoreTests/Resources/ocr-fixtures/ko-print-times.png"
+
+  "/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/.build/arm64-apple-macosx/debug/NativeLanguageKitCore_NativeLanguageKitCoreTests.bundle/manifest.json":
+    tool: copy-tool
+    inputs: ["/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/Tests/NativeLanguageKitCoreTests/Resources/ocr-fixtures/manifest.json"]
+    outputs: ["/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/.build/arm64-apple-macosx/debug/NativeLanguageKitCore_NativeLanguageKitCoreTests.bundle/manifest.json"]
+    description: "Copying /Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/Tests/NativeLanguageKitCoreTests/Resources/ocr-fixtures/manifest.json"
+
+  "/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/.build/arm64-apple-macosx/debug/NativeLanguageKitCore_NativeLanguageKitCoreTests.bundle/ocr-baseline.json":
+    tool: copy-tool
+    inputs: ["/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/Tests/NativeLanguageKitCoreTests/Resources/ocr-fixtures/ocr-baseline.json"]
+    outputs: ["/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/.build/arm64-apple-macosx/debug/NativeLanguageKitCore_NativeLanguageKitCoreTests.bundle/ocr-baseline.json"]
+    description: "Copying /Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/Tests/NativeLanguageKitCoreTests/Resources/ocr-fixtures/ocr-baseline.json"
+
+  "/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/.build/arm64-apple-macosx/debug/NativeLanguageKitCore_NativeLanguageKitCoreTests.bundle/pl-hand-bradley.png":
+    tool: copy-tool
+    inputs: ["/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/Tests/NativeLanguageKitCoreTests/Resources/ocr-fixtures/pl-hand-bradley.png"]
+    outputs: ["/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/.build/arm64-apple-macosx/debug/NativeLanguageKitCore_NativeLanguageKitCoreTests.bundle/pl-hand-bradley.png"]
+    description: "Copying /Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/Tests/NativeLanguageKitCoreTests/Resources/ocr-fixtures/pl-hand-bradley.png"
+
+  "/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/.build/arm64-apple-macosx/debug/NativeLanguageKitCore_NativeLanguageKitCoreTests.bundle/pl-hand-markerfelt.png":
+    tool: copy-tool
+    inputs: ["/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/Tests/NativeLanguageKitCoreTests/Resources/ocr-fixtures/pl-hand-markerfelt.png"]
+    outputs: ["/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/.build/arm64-apple-macosx/debug/NativeLanguageKitCore_NativeLanguageKitCoreTests.bundle/pl-hand-markerfelt.png"]
+    description: "Copying /Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/Tests/NativeLanguageKitCoreTests/Resources/ocr-fixtures/pl-hand-markerfelt.png"
+
+  "/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/.build/arm64-apple-macosx/debug/NativeLanguageKitCore_NativeLanguageKitCoreTests.bundle/pl-hand-noteworthy.png":
+    tool: copy-tool
+    inputs: ["/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/Tests/NativeLanguageKitCoreTests/Resources/ocr-fixtures/pl-hand-noteworthy.png"]
+    outputs: ["/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/.build/arm64-apple-macosx/debug/NativeLanguageKitCore_NativeLanguageKitCoreTests.bundle/pl-hand-noteworthy.png"]
+    description: "Copying /Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/Tests/NativeLanguageKitCoreTests/Resources/ocr-fixtures/pl-hand-noteworthy.png"
+
+  "/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/.build/arm64-apple-macosx/debug/NativeLanguageKitCore_NativeLanguageKitCoreTests.bundle/pl-print-helvetica.png":
+    tool: copy-tool
+    inputs: ["/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/Tests/NativeLanguageKitCoreTests/Resources/ocr-fixtures/pl-print-helvetica.png"]
+    outputs: ["/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/.build/arm64-apple-macosx/debug/NativeLanguageKitCore_NativeLanguageKitCoreTests.bundle/pl-print-helvetica.png"]
+    description: "Copying /Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/Tests/NativeLanguageKitCoreTests/Resources/ocr-fixtures/pl-print-helvetica.png"
+
+  "/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/.build/arm64-apple-macosx/debug/NativeLanguageKitCore_NativeLanguageKitCoreTests.bundle/pl-print-menlo.png":
+    tool: copy-tool
+    inputs: ["/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/Tests/NativeLanguageKitCoreTests/Resources/ocr-fixtures/pl-print-menlo.png"]
+    outputs: ["/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/.build/arm64-apple-macosx/debug/NativeLanguageKitCore_NativeLanguageKitCoreTests.bundle/pl-print-menlo.png"]
+    description: "Copying /Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/Tests/NativeLanguageKitCoreTests/Resources/ocr-fixtures/pl-print-menlo.png"
+
+  "/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/.build/arm64-apple-macosx/debug/NativeLanguageKitCore_NativeLanguageKitCoreTests.bundle/pl-print-times.png":
+    tool: copy-tool
+    inputs: ["/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/Tests/NativeLanguageKitCoreTests/Resources/ocr-fixtures/pl-print-times.png"]
+    outputs: ["/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/.build/arm64-apple-macosx/debug/NativeLanguageKitCore_NativeLanguageKitCoreTests.bundle/pl-print-times.png"]
+    description: "Copying /Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/Tests/NativeLanguageKitCoreTests/Resources/ocr-fixtures/pl-print-times.png"
+
+  "/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/.build/arm64-apple-macosx/debug/NativeLanguageKitCore_NativeLanguageKitCoreTests.bundle/printed-words.png":
+    tool: copy-tool
+    inputs: ["/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/Tests/NativeLanguageKitCoreTests/Resources/printed-words.png"]
+    outputs: ["/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/.build/arm64-apple-macosx/debug/NativeLanguageKitCore_NativeLanguageKitCoreTests.bundle/printed-words.png"]
+    description: "Copying /Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/Tests/NativeLanguageKitCoreTests/Resources/printed-words.png"
+
+  "/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/.build/arm64-apple-macosx/debug/NativeLanguageKitCore_NativeLanguageKitCoreTests.bundle/pt-hand-bradley.png":
+    tool: copy-tool
+    inputs: ["/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/Tests/NativeLanguageKitCoreTests/Resources/ocr-fixtures/pt-hand-bradley.png"]
+    outputs: ["/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/.build/arm64-apple-macosx/debug/NativeLanguageKitCore_NativeLanguageKitCoreTests.bundle/pt-hand-bradley.png"]
+    description: "Copying /Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/Tests/NativeLanguageKitCoreTests/Resources/ocr-fixtures/pt-hand-bradley.png"
+
+  "/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/.build/arm64-apple-macosx/debug/NativeLanguageKitCore_NativeLanguageKitCoreTests.bundle/pt-hand-markerfelt.png":
+    tool: copy-tool
+    inputs: ["/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/Tests/NativeLanguageKitCoreTests/Resources/ocr-fixtures/pt-hand-markerfelt.png"]
+    outputs: ["/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/.build/arm64-apple-macosx/debug/NativeLanguageKitCore_NativeLanguageKitCoreTests.bundle/pt-hand-markerfelt.png"]
+    description: "Copying /Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/Tests/NativeLanguageKitCoreTests/Resources/ocr-fixtures/pt-hand-markerfelt.png"
+
+  "/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/.build/arm64-apple-macosx/debug/NativeLanguageKitCore_NativeLanguageKitCoreTests.bundle/pt-hand-noteworthy.png":
+    tool: copy-tool
+    inputs: ["/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/Tests/NativeLanguageKitCoreTests/Resources/ocr-fixtures/pt-hand-noteworthy.png"]
+    outputs: ["/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/.build/arm64-apple-macosx/debug/NativeLanguageKitCore_NativeLanguageKitCoreTests.bundle/pt-hand-noteworthy.png"]
+    description: "Copying /Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/Tests/NativeLanguageKitCoreTests/Resources/ocr-fixtures/pt-hand-noteworthy.png"
+
+  "/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/.build/arm64-apple-macosx/debug/NativeLanguageKitCore_NativeLanguageKitCoreTests.bundle/pt-print-helvetica.png":
+    tool: copy-tool
+    inputs: ["/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/Tests/NativeLanguageKitCoreTests/Resources/ocr-fixtures/pt-print-helvetica.png"]
+    outputs: ["/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/.build/arm64-apple-macosx/debug/NativeLanguageKitCore_NativeLanguageKitCoreTests.bundle/pt-print-helvetica.png"]
+    description: "Copying /Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/Tests/NativeLanguageKitCoreTests/Resources/ocr-fixtures/pt-print-helvetica.png"
+
+  "/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/.build/arm64-apple-macosx/debug/NativeLanguageKitCore_NativeLanguageKitCoreTests.bundle/pt-print-menlo.png":
+    tool: copy-tool
+    inputs: ["/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/Tests/NativeLanguageKitCoreTests/Resources/ocr-fixtures/pt-print-menlo.png"]
+    outputs: ["/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/.build/arm64-apple-macosx/debug/NativeLanguageKitCore_NativeLanguageKitCoreTests.bundle/pt-print-menlo.png"]
+    description: "Copying /Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/Tests/NativeLanguageKitCoreTests/Resources/ocr-fixtures/pt-print-menlo.png"
+
+  "/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/.build/arm64-apple-macosx/debug/NativeLanguageKitCore_NativeLanguageKitCoreTests.bundle/pt-print-times.png":
+    tool: copy-tool
+    inputs: ["/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/Tests/NativeLanguageKitCoreTests/Resources/ocr-fixtures/pt-print-times.png"]
+    outputs: ["/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/.build/arm64-apple-macosx/debug/NativeLanguageKitCore_NativeLanguageKitCoreTests.bundle/pt-print-times.png"]
+    description: "Copying /Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/Tests/NativeLanguageKitCoreTests/Resources/ocr-fixtures/pt-print-times.png"
+
+  "/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/.build/arm64-apple-macosx/debug/NativeLanguageKitCore_NativeLanguageKitCoreTests.bundle/ru-hand-bradley.png":
+    tool: copy-tool
+    inputs: ["/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/Tests/NativeLanguageKitCoreTests/Resources/ocr-fixtures/ru-hand-bradley.png"]
+    outputs: ["/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/.build/arm64-apple-macosx/debug/NativeLanguageKitCore_NativeLanguageKitCoreTests.bundle/ru-hand-bradley.png"]
+    description: "Copying /Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/Tests/NativeLanguageKitCoreTests/Resources/ocr-fixtures/ru-hand-bradley.png"
+
+  "/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/.build/arm64-apple-macosx/debug/NativeLanguageKitCore_NativeLanguageKitCoreTests.bundle/ru-hand-markerfelt.png":
+    tool: copy-tool
+    inputs: ["/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/Tests/NativeLanguageKitCoreTests/Resources/ocr-fixtures/ru-hand-markerfelt.png"]
+    outputs: ["/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/.build/arm64-apple-macosx/debug/NativeLanguageKitCore_NativeLanguageKitCoreTests.bundle/ru-hand-markerfelt.png"]
+    description: "Copying /Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/Tests/NativeLanguageKitCoreTests/Resources/ocr-fixtures/ru-hand-markerfelt.png"
+
+  "/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/.build/arm64-apple-macosx/debug/NativeLanguageKitCore_NativeLanguageKitCoreTests.bundle/ru-hand-noteworthy.png":
+    tool: copy-tool
+    inputs: ["/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/Tests/NativeLanguageKitCoreTests/Resources/ocr-fixtures/ru-hand-noteworthy.png"]
+    outputs: ["/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/.build/arm64-apple-macosx/debug/NativeLanguageKitCore_NativeLanguageKitCoreTests.bundle/ru-hand-noteworthy.png"]
+    description: "Copying /Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/Tests/NativeLanguageKitCoreTests/Resources/ocr-fixtures/ru-hand-noteworthy.png"
+
+  "/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/.build/arm64-apple-macosx/debug/NativeLanguageKitCore_NativeLanguageKitCoreTests.bundle/ru-print-helvetica.png":
+    tool: copy-tool
+    inputs: ["/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/Tests/NativeLanguageKitCoreTests/Resources/ocr-fixtures/ru-print-helvetica.png"]
+    outputs: ["/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/.build/arm64-apple-macosx/debug/NativeLanguageKitCore_NativeLanguageKitCoreTests.bundle/ru-print-helvetica.png"]
+    description: "Copying /Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/Tests/NativeLanguageKitCoreTests/Resources/ocr-fixtures/ru-print-helvetica.png"
+
+  "/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/.build/arm64-apple-macosx/debug/NativeLanguageKitCore_NativeLanguageKitCoreTests.bundle/ru-print-menlo.png":
+    tool: copy-tool
+    inputs: ["/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/Tests/NativeLanguageKitCoreTests/Resources/ocr-fixtures/ru-print-menlo.png"]
+    outputs: ["/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/.build/arm64-apple-macosx/debug/NativeLanguageKitCore_NativeLanguageKitCoreTests.bundle/ru-print-menlo.png"]
+    description: "Copying /Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/Tests/NativeLanguageKitCoreTests/Resources/ocr-fixtures/ru-print-menlo.png"
+
+  "/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/.build/arm64-apple-macosx/debug/NativeLanguageKitCore_NativeLanguageKitCoreTests.bundle/ru-print-times.png":
+    tool: copy-tool
+    inputs: ["/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/Tests/NativeLanguageKitCoreTests/Resources/ocr-fixtures/ru-print-times.png"]
+    outputs: ["/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/.build/arm64-apple-macosx/debug/NativeLanguageKitCore_NativeLanguageKitCoreTests.bundle/ru-print-times.png"]
+    description: "Copying /Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/Tests/NativeLanguageKitCoreTests/Resources/ocr-fixtures/ru-print-times.png"
+
+  "/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/.build/arm64-apple-macosx/debug/NativeLanguageKitCore_NativeLanguageKitCoreTests.bundle/sw-hand-bradley.png":
+    tool: copy-tool
+    inputs: ["/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/Tests/NativeLanguageKitCoreTests/Resources/ocr-fixtures/sw-hand-bradley.png"]
+    outputs: ["/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/.build/arm64-apple-macosx/debug/NativeLanguageKitCore_NativeLanguageKitCoreTests.bundle/sw-hand-bradley.png"]
+    description: "Copying /Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/Tests/NativeLanguageKitCoreTests/Resources/ocr-fixtures/sw-hand-bradley.png"
+
+  "/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/.build/arm64-apple-macosx/debug/NativeLanguageKitCore_NativeLanguageKitCoreTests.bundle/sw-hand-markerfelt.png":
+    tool: copy-tool
+    inputs: ["/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/Tests/NativeLanguageKitCoreTests/Resources/ocr-fixtures/sw-hand-markerfelt.png"]
+    outputs: ["/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/.build/arm64-apple-macosx/debug/NativeLanguageKitCore_NativeLanguageKitCoreTests.bundle/sw-hand-markerfelt.png"]
+    description: "Copying /Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/Tests/NativeLanguageKitCoreTests/Resources/ocr-fixtures/sw-hand-markerfelt.png"
+
+  "/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/.build/arm64-apple-macosx/debug/NativeLanguageKitCore_NativeLanguageKitCoreTests.bundle/sw-hand-noteworthy.png":
+    tool: copy-tool
+    inputs: ["/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/Tests/NativeLanguageKitCoreTests/Resources/ocr-fixtures/sw-hand-noteworthy.png"]
+    outputs: ["/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/.build/arm64-apple-macosx/debug/NativeLanguageKitCore_NativeLanguageKitCoreTests.bundle/sw-hand-noteworthy.png"]
+    description: "Copying /Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/Tests/NativeLanguageKitCoreTests/Resources/ocr-fixtures/sw-hand-noteworthy.png"
+
+  "/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/.build/arm64-apple-macosx/debug/NativeLanguageKitCore_NativeLanguageKitCoreTests.bundle/sw-print-helvetica.png":
+    tool: copy-tool
+    inputs: ["/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/Tests/NativeLanguageKitCoreTests/Resources/ocr-fixtures/sw-print-helvetica.png"]
+    outputs: ["/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/.build/arm64-apple-macosx/debug/NativeLanguageKitCore_NativeLanguageKitCoreTests.bundle/sw-print-helvetica.png"]
+    description: "Copying /Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/Tests/NativeLanguageKitCoreTests/Resources/ocr-fixtures/sw-print-helvetica.png"
+
+  "/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/.build/arm64-apple-macosx/debug/NativeLanguageKitCore_NativeLanguageKitCoreTests.bundle/sw-print-menlo.png":
+    tool: copy-tool
+    inputs: ["/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/Tests/NativeLanguageKitCoreTests/Resources/ocr-fixtures/sw-print-menlo.png"]
+    outputs: ["/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/.build/arm64-apple-macosx/debug/NativeLanguageKitCore_NativeLanguageKitCoreTests.bundle/sw-print-menlo.png"]
+    description: "Copying /Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/Tests/NativeLanguageKitCoreTests/Resources/ocr-fixtures/sw-print-menlo.png"
+
+  "/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/.build/arm64-apple-macosx/debug/NativeLanguageKitCore_NativeLanguageKitCoreTests.bundle/sw-print-times.png":
+    tool: copy-tool
+    inputs: ["/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/Tests/NativeLanguageKitCoreTests/Resources/ocr-fixtures/sw-print-times.png"]
+    outputs: ["/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/.build/arm64-apple-macosx/debug/NativeLanguageKitCore_NativeLanguageKitCoreTests.bundle/sw-print-times.png"]
+    description: "Copying /Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/Tests/NativeLanguageKitCoreTests/Resources/ocr-fixtures/sw-print-times.png"
+
+  "/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/.build/arm64-apple-macosx/debug/NativeLanguageKitCore_NativeLanguageKitCoreTests.bundle/vi-hand-bradley.png":
+    tool: copy-tool
+    inputs: ["/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/Tests/NativeLanguageKitCoreTests/Resources/ocr-fixtures/vi-hand-bradley.png"]
+    outputs: ["/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/.build/arm64-apple-macosx/debug/NativeLanguageKitCore_NativeLanguageKitCoreTests.bundle/vi-hand-bradley.png"]
+    description: "Copying /Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/Tests/NativeLanguageKitCoreTests/Resources/ocr-fixtures/vi-hand-bradley.png"
+
+  "/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/.build/arm64-apple-macosx/debug/NativeLanguageKitCore_NativeLanguageKitCoreTests.bundle/vi-hand-markerfelt.png":
+    tool: copy-tool
+    inputs: ["/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/Tests/NativeLanguageKitCoreTests/Resources/ocr-fixtures/vi-hand-markerfelt.png"]
+    outputs: ["/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/.build/arm64-apple-macosx/debug/NativeLanguageKitCore_NativeLanguageKitCoreTests.bundle/vi-hand-markerfelt.png"]
+    description: "Copying /Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/Tests/NativeLanguageKitCoreTests/Resources/ocr-fixtures/vi-hand-markerfelt.png"
+
+  "/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/.build/arm64-apple-macosx/debug/NativeLanguageKitCore_NativeLanguageKitCoreTests.bundle/vi-hand-noteworthy.png":
+    tool: copy-tool
+    inputs: ["/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/Tests/NativeLanguageKitCoreTests/Resources/ocr-fixtures/vi-hand-noteworthy.png"]
+    outputs: ["/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/.build/arm64-apple-macosx/debug/NativeLanguageKitCore_NativeLanguageKitCoreTests.bundle/vi-hand-noteworthy.png"]
+    description: "Copying /Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/Tests/NativeLanguageKitCoreTests/Resources/ocr-fixtures/vi-hand-noteworthy.png"
+
+  "/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/.build/arm64-apple-macosx/debug/NativeLanguageKitCore_NativeLanguageKitCoreTests.bundle/vi-print-helvetica.png":
+    tool: copy-tool
+    inputs: ["/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/Tests/NativeLanguageKitCoreTests/Resources/ocr-fixtures/vi-print-helvetica.png"]
+    outputs: ["/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/.build/arm64-apple-macosx/debug/NativeLanguageKitCore_NativeLanguageKitCoreTests.bundle/vi-print-helvetica.png"]
+    description: "Copying /Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/Tests/NativeLanguageKitCoreTests/Resources/ocr-fixtures/vi-print-helvetica.png"
+
+  "/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/.build/arm64-apple-macosx/debug/NativeLanguageKitCore_NativeLanguageKitCoreTests.bundle/vi-print-menlo.png":
+    tool: copy-tool
+    inputs: ["/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/Tests/NativeLanguageKitCoreTests/Resources/ocr-fixtures/vi-print-menlo.png"]
+    outputs: ["/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/.build/arm64-apple-macosx/debug/NativeLanguageKitCore_NativeLanguageKitCoreTests.bundle/vi-print-menlo.png"]
+    description: "Copying /Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/Tests/NativeLanguageKitCoreTests/Resources/ocr-fixtures/vi-print-menlo.png"
+
+  "/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/.build/arm64-apple-macosx/debug/NativeLanguageKitCore_NativeLanguageKitCoreTests.bundle/vi-print-times.png":
+    tool: copy-tool
+    inputs: ["/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/Tests/NativeLanguageKitCoreTests/Resources/ocr-fixtures/vi-print-times.png"]
+    outputs: ["/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/.build/arm64-apple-macosx/debug/NativeLanguageKitCore_NativeLanguageKitCoreTests.bundle/vi-print-times.png"]
+    description: "Copying /Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/Tests/NativeLanguageKitCoreTests/Resources/ocr-fixtures/vi-print-times.png"
+
+  "/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/.build/arm64-apple-macosx/debug/NativeLanguageKitCore_NativeLanguageKitCoreTests.bundle/zh-hand-bradley.png":
+    tool: copy-tool
+    inputs: ["/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/Tests/NativeLanguageKitCoreTests/Resources/ocr-fixtures/zh-hand-bradley.png"]
+    outputs: ["/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/.build/arm64-apple-macosx/debug/NativeLanguageKitCore_NativeLanguageKitCoreTests.bundle/zh-hand-bradley.png"]
+    description: "Copying /Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/Tests/NativeLanguageKitCoreTests/Resources/ocr-fixtures/zh-hand-bradley.png"
+
+  "/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/.build/arm64-apple-macosx/debug/NativeLanguageKitCore_NativeLanguageKitCoreTests.bundle/zh-hand-markerfelt.png":
+    tool: copy-tool
+    inputs: ["/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/Tests/NativeLanguageKitCoreTests/Resources/ocr-fixtures/zh-hand-markerfelt.png"]
+    outputs: ["/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/.build/arm64-apple-macosx/debug/NativeLanguageKitCore_NativeLanguageKitCoreTests.bundle/zh-hand-markerfelt.png"]
+    description: "Copying /Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/Tests/NativeLanguageKitCoreTests/Resources/ocr-fixtures/zh-hand-markerfelt.png"
+
+  "/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/.build/arm64-apple-macosx/debug/NativeLanguageKitCore_NativeLanguageKitCoreTests.bundle/zh-hand-noteworthy.png":
+    tool: copy-tool
+    inputs: ["/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/Tests/NativeLanguageKitCoreTests/Resources/ocr-fixtures/zh-hand-noteworthy.png"]
+    outputs: ["/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/.build/arm64-apple-macosx/debug/NativeLanguageKitCore_NativeLanguageKitCoreTests.bundle/zh-hand-noteworthy.png"]
+    description: "Copying /Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/Tests/NativeLanguageKitCoreTests/Resources/ocr-fixtures/zh-hand-noteworthy.png"
+
+  "/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/.build/arm64-apple-macosx/debug/NativeLanguageKitCore_NativeLanguageKitCoreTests.bundle/zh-print-helvetica.png":
+    tool: copy-tool
+    inputs: ["/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/Tests/NativeLanguageKitCoreTests/Resources/ocr-fixtures/zh-print-helvetica.png"]
+    outputs: ["/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/.build/arm64-apple-macosx/debug/NativeLanguageKitCore_NativeLanguageKitCoreTests.bundle/zh-print-helvetica.png"]
+    description: "Copying /Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/Tests/NativeLanguageKitCoreTests/Resources/ocr-fixtures/zh-print-helvetica.png"
+
+  "/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/.build/arm64-apple-macosx/debug/NativeLanguageKitCore_NativeLanguageKitCoreTests.bundle/zh-print-menlo.png":
+    tool: copy-tool
+    inputs: ["/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/Tests/NativeLanguageKitCoreTests/Resources/ocr-fixtures/zh-print-menlo.png"]
+    outputs: ["/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/.build/arm64-apple-macosx/debug/NativeLanguageKitCore_NativeLanguageKitCoreTests.bundle/zh-print-menlo.png"]
+    description: "Copying /Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/Tests/NativeLanguageKitCoreTests/Resources/ocr-fixtures/zh-print-menlo.png"
+
+  "/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/.build/arm64-apple-macosx/debug/NativeLanguageKitCore_NativeLanguageKitCoreTests.bundle/zh-print-times.png":
+    tool: copy-tool
+    inputs: ["/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/Tests/NativeLanguageKitCoreTests/Resources/ocr-fixtures/zh-print-times.png"]
+    outputs: ["/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/.build/arm64-apple-macosx/debug/NativeLanguageKitCore_NativeLanguageKitCoreTests.bundle/zh-print-times.png"]
+    description: "Copying /Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/Tests/NativeLanguageKitCoreTests/Resources/ocr-fixtures/zh-print-times.png"
+
+  "/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/.build/arm64-apple-macosx/debug/swift-version--58304C5D6DBC2206.txt":
+    tool: write-auxiliary-file
+    inputs: ["<swift-get-version>","/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/swiftc"]
+    outputs: ["/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/.build/arm64-apple-macosx/debug/swift-version--58304C5D6DBC2206.txt"]
+    always-out-of-date: "true"
+    description: "Write auxiliary file /Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/.build/arm64-apple-macosx/debug/swift-version--58304C5D6DBC2206.txt"
+
+  "<NativeLanguageKitCore-arm64-apple-macosx-debug.module>":
+    tool: phony
+    inputs: ["/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/.build/arm64-apple-macosx/debug/NativeLanguageKitCore.build/Capabilities.swift.o","/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/.build/arm64-apple-macosx/debug/NativeLanguageKitCore.build/ChineseScript.swift.o","/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/.build/arm64-apple-macosx/debug/NativeLanguageKitCore.build/LanguageDetector.swift.o","/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/.build/arm64-apple-macosx/debug/NativeLanguageKitCore.build/LocaleResolver.swift.o","/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/.build/arm64-apple-macosx/debug/NativeLanguageKitCore.build/Models.swift.o","/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/.build/arm64-apple-macosx/debug/NativeLanguageKitCore.build/Speaker.swift.o","/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/.build/arm64-apple-macosx/debug/NativeLanguageKitCore.build/SpeechCapabilities.swift.o","/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/.build/arm64-apple-macosx/debug/NativeLanguageKitCore.build/SpeechMatcher.swift.o","/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/.build/arm64-apple-macosx/debug/NativeLanguageKitCore.build/SpeechRate.swift.o","/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/.build/arm64-apple-macosx/debug/NativeLanguageKitCore.build/SyllableSpeaker.swift.o","/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/.build/arm64-apple-macosx/debug/NativeLanguageKitCore.build/SyllableSpeech.swift.o","/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/.build/arm64-apple-macosx/debug/NativeLanguageKitCore.build/VoiceCatalog.swift.o","/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/.build/arm64-apple-macosx/debug/NativeLanguageKitCore.build/WordChecker.swift.o","/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/.build/arm64-apple-macosx/debug/NativeLanguageKitCore.build/WordListRecognizer.swift.o","/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/.build/arm64-apple-macosx/debug/Modules/NativeLanguageKitCore.swiftmodule"]
+    outputs: ["<NativeLanguageKitCore-arm64-apple-macosx-debug.module>"]
+
+  "<NativeLanguageKitCorePackageTests-arm64-apple-macosx-debug.module>":
+    tool: phony
+    inputs: ["/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/.build/arm64-apple-macosx/debug/NativeLanguageKitCorePackageTests.build/runner.swift.o","/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/.build/arm64-apple-macosx/debug/Modules/NativeLanguageKitCorePackageTests.swiftmodule"]
+    outputs: ["<NativeLanguageKitCorePackageTests-arm64-apple-macosx-debug.module>"]
+
+  "<NativeLanguageKitCorePackageTests-arm64-apple-macosx-debug.test>":
+    tool: phony
+    inputs: ["/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/.build/arm64-apple-macosx/debug/NativeLanguageKitCorePackageTests.xctest/Contents/MacOS/NativeLanguageKitCorePackageTests"]
+    outputs: ["<NativeLanguageKitCorePackageTests-arm64-apple-macosx-debug.test>"]
+
+  "<NativeLanguageKitCoreTests-arm64-apple-macosx-debug.module>":
+    tool: phony
+    inputs: ["/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/.build/arm64-apple-macosx/debug/NativeLanguageKitCoreTests.build/NativeLanguageKitCoreTests.swift.o","/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/.build/arm64-apple-macosx/debug/NativeLanguageKitCoreTests.build/OcrEvalTests.swift.o","/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/.build/arm64-apple-macosx/debug/NativeLanguageKitCoreTests.build/VisionLanguageMatrixTests.swift.o","/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/.build/arm64-apple-macosx/debug/NativeLanguageKitCoreTests.build/WordListRecognizerTests.swift.o","/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/.build/arm64-apple-macosx/debug/NativeLanguageKitCoreTests.build/resource_bundle_accessor.swift.o","/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/.build/arm64-apple-macosx/debug/Modules/NativeLanguageKitCoreTests.swiftmodule"]
+    outputs: ["<NativeLanguageKitCoreTests-arm64-apple-macosx-debug.module>"]
+
+  "C.NativeLanguageKitCore-arm64-apple-macosx-debug.module":
+    tool: shell
+    inputs: ["/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/Sources/NativeLanguageKitCore/Capabilities.swift","/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/Sources/NativeLanguageKitCore/ChineseScript.swift","/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/Sources/NativeLanguageKitCore/LanguageDetector.swift","/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/Sources/NativeLanguageKitCore/LocaleResolver.swift","/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/Sources/NativeLanguageKitCore/Models.swift","/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/Sources/NativeLanguageKitCore/Speaker.swift","/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/Sources/NativeLanguageKitCore/SpeechCapabilities.swift","/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/Sources/NativeLanguageKitCore/SpeechMatcher.swift","/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/Sources/NativeLanguageKitCore/SpeechRate.swift","/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/Sources/NativeLanguageKitCore/SyllableSpeaker.swift","/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/Sources/NativeLanguageKitCore/SyllableSpeech.swift","/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/Sources/NativeLanguageKitCore/VoiceCatalog.swift","/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/Sources/NativeLanguageKitCore/WordChecker.swift","/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/Sources/NativeLanguageKitCore/WordListRecognizer.swift","/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/.build/arm64-apple-macosx/debug/swift-version--58304C5D6DBC2206.txt","/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/.build/arm64-apple-macosx/debug/NativeLanguageKitCore.build/sources"]
+    outputs: ["/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/.build/arm64-apple-macosx/debug/NativeLanguageKitCore.build/Capabilities.swift.o","/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/.build/arm64-apple-macosx/debug/NativeLanguageKitCore.build/ChineseScript.swift.o","/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/.build/arm64-apple-macosx/debug/NativeLanguageKitCore.build/LanguageDetector.swift.o","/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/.build/arm64-apple-macosx/debug/NativeLanguageKitCore.build/LocaleResolver.swift.o","/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/.build/arm64-apple-macosx/debug/NativeLanguageKitCore.build/Models.swift.o","/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/.build/arm64-apple-macosx/debug/NativeLanguageKitCore.build/Speaker.swift.o","/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/.build/arm64-apple-macosx/debug/NativeLanguageKitCore.build/SpeechCapabilities.swift.o","/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/.build/arm64-apple-macosx/debug/NativeLanguageKitCore.build/SpeechMatcher.swift.o","/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/.build/arm64-apple-macosx/debug/NativeLanguageKitCore.build/SpeechRate.swift.o","/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/.build/arm64-apple-macosx/debug/NativeLanguageKitCore.build/SyllableSpeaker.swift.o","/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/.build/arm64-apple-macosx/debug/NativeLanguageKitCore.build/SyllableSpeech.swift.o","/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/.build/arm64-apple-macosx/debug/NativeLanguageKitCore.build/VoiceCatalog.swift.o","/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/.build/arm64-apple-macosx/debug/NativeLanguageKitCore.build/WordChecker.swift.o","/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/.build/arm64-apple-macosx/debug/NativeLanguageKitCore.build/WordListRecognizer.swift.o","/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/.build/arm64-apple-macosx/debug/Modules/NativeLanguageKitCore.swiftmodule"]
+    description: "Compiling Swift Module 'NativeLanguageKitCore' (14 sources)"
+    args: ["/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/swiftc","-module-name","NativeLanguageKitCore","-emit-dependencies","-emit-module","-emit-module-path","/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/.build/arm64-apple-macosx/debug/Modules/NativeLanguageKitCore.swiftmodule","-output-file-map","/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/.build/arm64-apple-macosx/debug/NativeLanguageKitCore.build/output-file-map.json","-parse-as-library","-incremental","-c","@/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/.build/arm64-apple-macosx/debug/NativeLanguageKitCore.build/sources","-I","/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/.build/arm64-apple-macosx/debug/Modules","-target","arm64-apple-macosx10.13","-incremental","-enable-batch-mode","-serialize-diagnostics","-index-store-path","/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/.build/arm64-apple-macosx/debug/index/store","-Onone","-enable-testing","-j10","-DSWIFT_PACKAGE","-DDEBUG","-DSWIFT_MODULE_RESOURCE_BUNDLE_UNAVAILABLE","-module-cache-path","/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/.build/arm64-apple-macosx/debug/ModuleCache","-parseable-output","-parse-as-library","-emit-objc-header","-emit-objc-header-path","/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/.build/arm64-apple-macosx/debug/NativeLanguageKitCore.build/include/NativeLanguageKitCore-Swift.h","-swift-version","5","-plugin-path","/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/host/plugins/testing","-sdk","/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator26.5.sdk","-F","/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/Frameworks","-I","/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/usr/lib","-L","/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/usr/lib","-g","-target","arm64-apple-ios15.0-simulator","-Xcc","-isysroot","-Xcc","/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator26.5.sdk","-Xcc","-F","-Xcc","/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/Frameworks","-Xcc","-fPIC","-Xcc","-g","-package-name","nativelanguagekit"]
+
+  "C.NativeLanguageKitCorePackageTests-arm64-apple-macosx-debug.module":
+    tool: shell
+    inputs: ["/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/.build/arm64-apple-macosx/debug/NativeLanguageKitCorePackageTests.derived/runner.swift","/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/.build/arm64-apple-macosx/debug/swift-version--58304C5D6DBC2206.txt","/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/.build/arm64-apple-macosx/debug/Modules/NativeLanguageKitCoreTests.swiftmodule","/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/.build/arm64-apple-macosx/debug/NativeLanguageKitCorePackageTests.build/sources"]
+    outputs: ["/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/.build/arm64-apple-macosx/debug/NativeLanguageKitCorePackageTests.build/runner.swift.o","/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/.build/arm64-apple-macosx/debug/Modules/NativeLanguageKitCorePackageTests.swiftmodule"]
+    description: "Compiling Swift Module 'NativeLanguageKitCorePackageTests' (1 sources)"
+    args: ["/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/swiftc","-module-name","NativeLanguageKitCorePackageTests","-emit-dependencies","-emit-module","-emit-module-path","/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/.build/arm64-apple-macosx/debug/Modules/NativeLanguageKitCorePackageTests.swiftmodule","-output-file-map","/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/.build/arm64-apple-macosx/debug/NativeLanguageKitCorePackageTests.build/output-file-map.json","-parse-as-library","-incremental","-c","@/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/.build/arm64-apple-macosx/debug/NativeLanguageKitCorePackageTests.build/sources","-I","/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/.build/arm64-apple-macosx/debug/Modules","-target","arm64-apple-macosx10.13","-incremental","-enable-batch-mode","-serialize-diagnostics","-index-store-path","/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/.build/arm64-apple-macosx/debug/index/store","-Onone","-enable-testing","-Xfrontend","-enable-cross-import-overlays","-j10","-DSWIFT_PACKAGE","-DDEBUG","-DSWIFT_MODULE_RESOURCE_BUNDLE_UNAVAILABLE","-module-cache-path","/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/.build/arm64-apple-macosx/debug/ModuleCache","-parseable-output","-parse-as-library","-emit-objc-header","-emit-objc-header-path","/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/.build/arm64-apple-macosx/debug/NativeLanguageKitCorePackageTests.build/include/NativeLanguageKitCorePackageTests-Swift.h","-plugin-path","/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/host/plugins/testing","-sdk","/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator26.5.sdk","-F","/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/Frameworks","-I","/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/usr/lib","-L","/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/usr/lib","-g","-target","arm64-apple-ios15.0-simulator","-Xcc","-isysroot","-Xcc","/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator26.5.sdk","-Xcc","-F","-Xcc","/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/Frameworks","-Xcc","-fPIC","-Xcc","-g","-package-name","nativelanguagekit"]
+
+  "C.NativeLanguageKitCorePackageTests-arm64-apple-macosx-debug.test":
+    tool: shell
+    inputs: ["/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/.build/arm64-apple-macosx/debug/NativeLanguageKitCore.build/Capabilities.swift.o","/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/.build/arm64-apple-macosx/debug/NativeLanguageKitCore.build/ChineseScript.swift.o","/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/.build/arm64-apple-macosx/debug/NativeLanguageKitCore.build/LanguageDetector.swift.o","/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/.build/arm64-apple-macosx/debug/NativeLanguageKitCore.build/LocaleResolver.swift.o","/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/.build/arm64-apple-macosx/debug/NativeLanguageKitCore.build/Models.swift.o","/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/.build/arm64-apple-macosx/debug/NativeLanguageKitCore.build/Speaker.swift.o","/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/.build/arm64-apple-macosx/debug/NativeLanguageKitCore.build/SpeechCapabilities.swift.o","/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/.build/arm64-apple-macosx/debug/NativeLanguageKitCore.build/SpeechMatcher.swift.o","/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/.build/arm64-apple-macosx/debug/NativeLanguageKitCore.build/SpeechRate.swift.o","/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/.build/arm64-apple-macosx/debug/NativeLanguageKitCore.build/SyllableSpeaker.swift.o","/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/.build/arm64-apple-macosx/debug/NativeLanguageKitCore.build/SyllableSpeech.swift.o","/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/.build/arm64-apple-macosx/debug/NativeLanguageKitCore.build/VoiceCatalog.swift.o","/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/.build/arm64-apple-macosx/debug/NativeLanguageKitCore.build/WordChecker.swift.o","/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/.build/arm64-apple-macosx/debug/NativeLanguageKitCore.build/WordListRecognizer.swift.o","/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/.build/arm64-apple-macosx/debug/NativeLanguageKitCorePackageTests.build/runner.swift.o","/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/.build/arm64-apple-macosx/debug/NativeLanguageKitCoreTests.build/NativeLanguageKitCoreTests.swift.o","/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/.build/arm64-apple-macosx/debug/NativeLanguageKitCoreTests.build/OcrEvalTests.swift.o","/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/.build/arm64-apple-macosx/debug/NativeLanguageKitCoreTests.build/VisionLanguageMatrixTests.swift.o","/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/.build/arm64-apple-macosx/debug/NativeLanguageKitCoreTests.build/WordListRecognizerTests.swift.o","/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/.build/arm64-apple-macosx/debug/NativeLanguageKitCoreTests.build/resource_bundle_accessor.swift.o","/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/.build/arm64-apple-macosx/debug/NativeLanguageKitCorePackageTests.product/Objects.LinkFileList"]
+    outputs: ["/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/.build/arm64-apple-macosx/debug/NativeLanguageKitCorePackageTests.xctest/Contents/MacOS/NativeLanguageKitCorePackageTests"]
+    description: "Linking ./.build/arm64-apple-macosx/debug/NativeLanguageKitCorePackageTests.xctest/Contents/MacOS/NativeLanguageKitCorePackageTests"
+    args: ["/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/swiftc","-L","/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/.build/arm64-apple-macosx/debug","-o","/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/.build/arm64-apple-macosx/debug/NativeLanguageKitCorePackageTests.xctest/Contents/MacOS/NativeLanguageKitCorePackageTests","-module-name","NativeLanguageKitCorePackageTests","-Xlinker","-no_warn_duplicate_libraries","-Xlinker","-bundle","-Xlinker","-rpath","-Xlinker","@loader_path/../../../","@/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/.build/arm64-apple-macosx/debug/NativeLanguageKitCorePackageTests.product/Objects.LinkFileList","-Xlinker","-rpath","-Xlinker","/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift-6.2/macosx","-target","arm64-apple-macosx14.0","-Xlinker","-add_ast_path","-Xlinker","/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/.build/arm64-apple-macosx/debug/Modules/NativeLanguageKitCore.swiftmodule","-Xlinker","-add_ast_path","-Xlinker","/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/.build/arm64-apple-macosx/debug/Modules/NativeLanguageKitCorePackageTests.swiftmodule","-Xlinker","-add_ast_path","-Xlinker","/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/.build/arm64-apple-macosx/debug/Modules/NativeLanguageKitCoreTests.swiftmodule","-plugin-path","/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/host/plugins/testing","-sdk","/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator26.5.sdk","-F","/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/Frameworks","-I","/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/usr/lib","-L","/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/usr/lib","-g","-target","arm64-apple-ios15.0-simulator"]
+
+  "C.NativeLanguageKitCoreTests-arm64-apple-macosx-debug.module":
+    tool: shell
+    inputs: ["/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/Tests/NativeLanguageKitCoreTests/NativeLanguageKitCoreTests.swift","/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/Tests/NativeLanguageKitCoreTests/OcrEvalTests.swift","/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/Tests/NativeLanguageKitCoreTests/VisionLanguageMatrixTests.swift","/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/Tests/NativeLanguageKitCoreTests/WordListRecognizerTests.swift","/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/.build/arm64-apple-macosx/debug/NativeLanguageKitCoreTests.build/DerivedSources/resource_bundle_accessor.swift","/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/.build/arm64-apple-macosx/debug/swift-version--58304C5D6DBC2206.txt","<NativeLanguageKitCoreTests-arm64-apple-macosx-debug.module-resources>","/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/.build/arm64-apple-macosx/debug/Modules/NativeLanguageKitCore.swiftmodule","/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/.build/arm64-apple-macosx/debug/NativeLanguageKitCoreTests.build/sources"]
+    outputs: ["/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/.build/arm64-apple-macosx/debug/NativeLanguageKitCoreTests.build/NativeLanguageKitCoreTests.swift.o","/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/.build/arm64-apple-macosx/debug/NativeLanguageKitCoreTests.build/OcrEvalTests.swift.o","/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/.build/arm64-apple-macosx/debug/NativeLanguageKitCoreTests.build/VisionLanguageMatrixTests.swift.o","/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/.build/arm64-apple-macosx/debug/NativeLanguageKitCoreTests.build/WordListRecognizerTests.swift.o","/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/.build/arm64-apple-macosx/debug/NativeLanguageKitCoreTests.build/resource_bundle_accessor.swift.o","/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/.build/arm64-apple-macosx/debug/Modules/NativeLanguageKitCoreTests.swiftmodule"]
+    description: "Compiling Swift Module 'NativeLanguageKitCoreTests' (5 sources)"
+    args: ["/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/swiftc","-module-name","NativeLanguageKitCoreTests","-emit-dependencies","-emit-module","-emit-module-path","/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/.build/arm64-apple-macosx/debug/Modules/NativeLanguageKitCoreTests.swiftmodule","-output-file-map","/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/.build/arm64-apple-macosx/debug/NativeLanguageKitCoreTests.build/output-file-map.json","-parse-as-library","-incremental","-c","@/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/.build/arm64-apple-macosx/debug/NativeLanguageKitCoreTests.build/sources","-I","/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/.build/arm64-apple-macosx/debug/Modules","-target","arm64-apple-macosx14.0","-incremental","-enable-batch-mode","-serialize-diagnostics","-index-store-path","/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/.build/arm64-apple-macosx/debug/index/store","-Onone","-enable-testing","-Xfrontend","-enable-cross-import-overlays","-j10","-DSWIFT_PACKAGE","-DDEBUG","-DSWIFT_MODULE_RESOURCE_BUNDLE_AVAILABLE","-module-cache-path","/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/.build/arm64-apple-macosx/debug/ModuleCache","-parseable-output","-parse-as-library","-swift-version","5","-plugin-path","/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/host/plugins/testing","-sdk","/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator26.5.sdk","-F","/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/Frameworks","-I","/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/usr/lib","-L","/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/usr/lib","-g","-target","arm64-apple-ios15.0-simulator","-Xcc","-isysroot","-Xcc","/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator26.5.sdk","-Xcc","-F","-Xcc","/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/Frameworks","-Xcc","-fPIC","-Xcc","-g","-package-name","nativelanguagekit"]
+
+  "NativeLanguageKitCoreTests-arm64-apple-macosx-debug.module-resources":
+    tool: phony
+    inputs: ["/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/.build/arm64-apple-macosx/debug/NativeLanguageKitCore_NativeLanguageKitCoreTests.bundle/de-hand-bradley.png","/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/.build/arm64-apple-macosx/debug/NativeLanguageKitCore_NativeLanguageKitCoreTests.bundle/de-hand-markerfelt.png","/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/.build/arm64-apple-macosx/debug/NativeLanguageKitCore_NativeLanguageKitCoreTests.bundle/de-hand-noteworthy.png","/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/.build/arm64-apple-macosx/debug/NativeLanguageKitCore_NativeLanguageKitCoreTests.bundle/de-print-helvetica.png","/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/.build/arm64-apple-macosx/debug/NativeLanguageKitCore_NativeLanguageKitCoreTests.bundle/de-print-menlo.png","/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/.build/arm64-apple-macosx/debug/NativeLanguageKitCore_NativeLanguageKitCoreTests.bundle/de-print-times.png","/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/.build/arm64-apple-macosx/debug/NativeLanguageKitCore_NativeLanguageKitCoreTests.bundle/en-hand-bradley.png","/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/.build/arm64-apple-macosx/debug/NativeLanguageKitCore_NativeLanguageKitCoreTests.bundle/en-hand-markerfelt.png","/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/.build/arm64-apple-macosx/debug/NativeLanguageKitCore_NativeLanguageKitCoreTests.bundle/en-hand-noteworthy.png","/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/.build/arm64-apple-macosx/debug/NativeLanguageKitCore_NativeLanguageKitCoreTests.bundle/en-print-helvetica.png","/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/.build/arm64-apple-macosx/debug/NativeLanguageKitCore_NativeLanguageKitCoreTests.bundle/en-print-menlo.png","/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/.build/arm64-apple-macosx/debug/NativeLanguageKitCore_NativeLanguageKitCoreTests.bundle/en-print-times.png","/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/.build/arm64-apple-macosx/debug/NativeLanguageKitCore_NativeLanguageKitCoreTests.bundle/es-hand-bradley.png","/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/.build/arm64-apple-macosx/debug/NativeLanguageKitCore_NativeLanguageKitCoreTests.bundle/es-hand-markerfelt.png","/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/.build/arm64-apple-macosx/debug/NativeLanguageKitCore_NativeLanguageKitCoreTests.bundle/es-hand-noteworthy.png","/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/.build/arm64-apple-macosx/debug/NativeLanguageKitCore_NativeLanguageKitCoreTests.bundle/es-print-helvetica.png","/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/.build/arm64-apple-macosx/debug/NativeLanguageKitCore_NativeLanguageKitCoreTests.bundle/es-print-menlo.png","/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/.build/arm64-apple-macosx/debug/NativeLanguageKitCore_NativeLanguageKitCoreTests.bundle/es-print-times.png","/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/.build/arm64-apple-macosx/debug/NativeLanguageKitCore_NativeLanguageKitCoreTests.bundle/fil-hand-bradley.png","/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/.build/arm64-apple-macosx/debug/NativeLanguageKitCore_NativeLanguageKitCoreTests.bundle/fil-hand-markerfelt.png","/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/.build/arm64-apple-macosx/debug/NativeLanguageKitCore_NativeLanguageKitCoreTests.bundle/fil-hand-noteworthy.png","/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/.build/arm64-apple-macosx/debug/NativeLanguageKitCore_NativeLanguageKitCoreTests.bundle/fil-print-helvetica.png","/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/.build/arm64-apple-macosx/debug/NativeLanguageKitCore_NativeLanguageKitCoreTests.bundle/fil-print-menlo.png","/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/.build/arm64-apple-macosx/debug/NativeLanguageKitCore_NativeLanguageKitCoreTests.bundle/fil-print-times.png","/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/.build/arm64-apple-macosx/debug/NativeLanguageKitCore_NativeLanguageKitCoreTests.bundle/fr-hand-bradley.png","/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/.build/arm64-apple-macosx/debug/NativeLanguageKitCore_NativeLanguageKitCoreTests.bundle/fr-hand-markerfelt.png","/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/.build/arm64-apple-macosx/debug/NativeLanguageKitCore_NativeLanguageKitCoreTests.bundle/fr-hand-noteworthy.png","/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/.build/arm64-apple-macosx/debug/NativeLanguageKitCore_NativeLanguageKitCoreTests.bundle/fr-print-helvetica.png","/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/.build/arm64-apple-macosx/debug/NativeLanguageKitCore_NativeLanguageKitCoreTests.bundle/fr-print-menlo.png","/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/.build/arm64-apple-macosx/debug/NativeLanguageKitCore_NativeLanguageKitCoreTests.bundle/fr-print-times.png","/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/.build/arm64-apple-macosx/debug/NativeLanguageKitCore_NativeLanguageKitCoreTests.bundle/ja-hand-bradley.png","/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/.build/arm64-apple-macosx/debug/NativeLanguageKitCore_NativeLanguageKitCoreTests.bundle/ja-hand-markerfelt.png","/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/.build/arm64-apple-macosx/debug/NativeLanguageKitCore_NativeLanguageKitCoreTests.bundle/ja-hand-noteworthy.png","/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/.build/arm64-apple-macosx/debug/NativeLanguageKitCore_NativeLanguageKitCoreTests.bundle/ja-print-helvetica.png","/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/.build/arm64-apple-macosx/debug/NativeLanguageKitCore_NativeLanguageKitCoreTests.bundle/ja-print-menlo.png","/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/.build/arm64-apple-macosx/debug/NativeLanguageKitCore_NativeLanguageKitCoreTests.bundle/ja-print-times.png","/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/.build/arm64-apple-macosx/debug/NativeLanguageKitCore_NativeLanguageKitCoreTests.bundle/ko-hand-bradley.png","/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/.build/arm64-apple-macosx/debug/NativeLanguageKitCore_NativeLanguageKitCoreTests.bundle/ko-hand-markerfelt.png","/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/.build/arm64-apple-macosx/debug/NativeLanguageKitCore_NativeLanguageKitCoreTests.bundle/ko-hand-noteworthy.png","/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/.build/arm64-apple-macosx/debug/NativeLanguageKitCore_NativeLanguageKitCoreTests.bundle/ko-print-helvetica.png","/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/.build/arm64-apple-macosx/debug/NativeLanguageKitCore_NativeLanguageKitCoreTests.bundle/ko-print-menlo.png","/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/.build/arm64-apple-macosx/debug/NativeLanguageKitCore_NativeLanguageKitCoreTests.bundle/ko-print-times.png","/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/.build/arm64-apple-macosx/debug/NativeLanguageKitCore_NativeLanguageKitCoreTests.bundle/manifest.json","/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/.build/arm64-apple-macosx/debug/NativeLanguageKitCore_NativeLanguageKitCoreTests.bundle/ocr-baseline.json","/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/.build/arm64-apple-macosx/debug/NativeLanguageKitCore_NativeLanguageKitCoreTests.bundle/pl-hand-bradley.png","/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/.build/arm64-apple-macosx/debug/NativeLanguageKitCore_NativeLanguageKitCoreTests.bundle/pl-hand-markerfelt.png","/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/.build/arm64-apple-macosx/debug/NativeLanguageKitCore_NativeLanguageKitCoreTests.bundle/pl-hand-noteworthy.png","/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/.build/arm64-apple-macosx/debug/NativeLanguageKitCore_NativeLanguageKitCoreTests.bundle/pl-print-helvetica.png","/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/.build/arm64-apple-macosx/debug/NativeLanguageKitCore_NativeLanguageKitCoreTests.bundle/pl-print-menlo.png","/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/.build/arm64-apple-macosx/debug/NativeLanguageKitCore_NativeLanguageKitCoreTests.bundle/pl-print-times.png","/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/.build/arm64-apple-macosx/debug/NativeLanguageKitCore_NativeLanguageKitCoreTests.bundle/pt-hand-bradley.png","/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/.build/arm64-apple-macosx/debug/NativeLanguageKitCore_NativeLanguageKitCoreTests.bundle/pt-hand-markerfelt.png","/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/.build/arm64-apple-macosx/debug/NativeLanguageKitCore_NativeLanguageKitCoreTests.bundle/pt-hand-noteworthy.png","/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/.build/arm64-apple-macosx/debug/NativeLanguageKitCore_NativeLanguageKitCoreTests.bundle/pt-print-helvetica.png","/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/.build/arm64-apple-macosx/debug/NativeLanguageKitCore_NativeLanguageKitCoreTests.bundle/pt-print-menlo.png","/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/.build/arm64-apple-macosx/debug/NativeLanguageKitCore_NativeLanguageKitCoreTests.bundle/pt-print-times.png","/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/.build/arm64-apple-macosx/debug/NativeLanguageKitCore_NativeLanguageKitCoreTests.bundle/ru-hand-bradley.png","/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/.build/arm64-apple-macosx/debug/NativeLanguageKitCore_NativeLanguageKitCoreTests.bundle/ru-hand-markerfelt.png","/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/.build/arm64-apple-macosx/debug/NativeLanguageKitCore_NativeLanguageKitCoreTests.bundle/ru-hand-noteworthy.png","/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/.build/arm64-apple-macosx/debug/NativeLanguageKitCore_NativeLanguageKitCoreTests.bundle/ru-print-helvetica.png","/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/.build/arm64-apple-macosx/debug/NativeLanguageKitCore_NativeLanguageKitCoreTests.bundle/ru-print-menlo.png","/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/.build/arm64-apple-macosx/debug/NativeLanguageKitCore_NativeLanguageKitCoreTests.bundle/ru-print-times.png","/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/.build/arm64-apple-macosx/debug/NativeLanguageKitCore_NativeLanguageKitCoreTests.bundle/sw-hand-bradley.png","/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/.build/arm64-apple-macosx/debug/NativeLanguageKitCore_NativeLanguageKitCoreTests.bundle/sw-hand-markerfelt.png","/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/.build/arm64-apple-macosx/debug/NativeLanguageKitCore_NativeLanguageKitCoreTests.bundle/sw-hand-noteworthy.png","/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/.build/arm64-apple-macosx/debug/NativeLanguageKitCore_NativeLanguageKitCoreTests.bundle/sw-print-helvetica.png","/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/.build/arm64-apple-macosx/debug/NativeLanguageKitCore_NativeLanguageKitCoreTests.bundle/sw-print-menlo.png","/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/.build/arm64-apple-macosx/debug/NativeLanguageKitCore_NativeLanguageKitCoreTests.bundle/sw-print-times.png","/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/.build/arm64-apple-macosx/debug/NativeLanguageKitCore_NativeLanguageKitCoreTests.bundle/vi-hand-bradley.png","/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/.build/arm64-apple-macosx/debug/NativeLanguageKitCore_NativeLanguageKitCoreTests.bundle/vi-hand-markerfelt.png","/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/.build/arm64-apple-macosx/debug/NativeLanguageKitCore_NativeLanguageKitCoreTests.bundle/vi-hand-noteworthy.png","/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/.build/arm64-apple-macosx/debug/NativeLanguageKitCore_NativeLanguageKitCoreTests.bundle/vi-print-helvetica.png","/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/.build/arm64-apple-macosx/debug/NativeLanguageKitCore_NativeLanguageKitCoreTests.bundle/vi-print-menlo.png","/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/.build/arm64-apple-macosx/debug/NativeLanguageKitCore_NativeLanguageKitCoreTests.bundle/vi-print-times.png","/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/.build/arm64-apple-macosx/debug/NativeLanguageKitCore_NativeLanguageKitCoreTests.bundle/zh-hand-bradley.png","/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/.build/arm64-apple-macosx/debug/NativeLanguageKitCore_NativeLanguageKitCoreTests.bundle/zh-hand-markerfelt.png","/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/.build/arm64-apple-macosx/debug/NativeLanguageKitCore_NativeLanguageKitCoreTests.bundle/zh-hand-noteworthy.png","/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/.build/arm64-apple-macosx/debug/NativeLanguageKitCore_NativeLanguageKitCoreTests.bundle/zh-print-helvetica.png","/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/.build/arm64-apple-macosx/debug/NativeLanguageKitCore_NativeLanguageKitCoreTests.bundle/zh-print-menlo.png","/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/.build/arm64-apple-macosx/debug/NativeLanguageKitCore_NativeLanguageKitCoreTests.bundle/zh-print-times.png","/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/.build/arm64-apple-macosx/debug/NativeLanguageKitCore_NativeLanguageKitCoreTests.bundle/printed-words.png"]
+    outputs: ["<NativeLanguageKitCoreTests-arm64-apple-macosx-debug.module-resources>"]
+
+  "PackageStructure":
+    tool: package-structure-tool
+    inputs: ["/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/Sources/NativeLanguageKitCore/","/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/Tests/NativeLanguageKitCoreTests/","/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/Package.swift","/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/Package.resolved"]
+    outputs: ["<PackageStructure>"]
+    description: "Planning build"
+    allow-missing-inputs: true
+

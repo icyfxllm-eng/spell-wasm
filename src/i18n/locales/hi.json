@@ -369,5 +369,8 @@
   "practice.choice": "अगला कौन-सा?",
   "practice.micro.silent": "उस अक्षर को छुओ जो सुनाई नहीं देता।",
   "practice.micro.hear": "तुमने कौन-सा सुना?",
-  "practice.micro.stack": "उन दो अक्षरों को छुओ जो जुड़ते हैं।"
+  "practice.micro.stack": "उन दो अक्षरों को छुओ जो जुड़ते हैं।",
+  "voiceSpell.dlPrep": "वॉइस पैक डाउनलोड हो रहा है…",
+  "voiceSpell.dlReady": "तैयार! माइक को छुओ",
+  "voiceSpell.dlFail": "डाउनलोड विफल — फिर से कोशिश के लिए छुओ"
 }

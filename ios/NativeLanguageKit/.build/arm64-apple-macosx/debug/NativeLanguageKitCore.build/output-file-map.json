@@ -1,0 +1,103 @@
+{
+  "": {
+    "swift-dependencies": "/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/.build/arm64-apple-macosx/debug/NativeLanguageKitCore.build/primary.swiftdeps"
+  },
+  "/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/Sources/NativeLanguageKitCore/Capabilities.swift": {
+    "dependencies": "/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/.build/arm64-apple-macosx/debug/NativeLanguageKitCore.build/Capabilities.d",
+    "object": "/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/.build/arm64-apple-macosx/debug/NativeLanguageKitCore.build/Capabilities.swift.o",
+    "swiftmodule": "/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/.build/arm64-apple-macosx/debug/NativeLanguageKitCore.build/Capabilities~partial.swiftmodule",
+    "swift-dependencies": "/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/.build/arm64-apple-macosx/debug/NativeLanguageKitCore.build/Capabilities.swiftdeps",
+    "diagnostics": "/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/.build/arm64-apple-macosx/debug/NativeLanguageKitCore.build/Capabilities.dia"
+  },
+  "/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/Sources/NativeLanguageKitCore/ChineseScript.swift": {
+    "dependencies": "/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/.build/arm64-apple-macosx/debug/NativeLanguageKitCore.build/ChineseScript.d",
+    "object": "/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/.build/arm64-apple-macosx/debug/NativeLanguageKitCore.build/ChineseScript.swift.o",
+    "swiftmodule": "/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/.build/arm64-apple-macosx/debug/NativeLanguageKitCore.build/ChineseScript~partial.swiftmodule",
+    "swift-dependencies": "/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/.build/arm64-apple-macosx/debug/NativeLanguageKitCore.build/ChineseScript.swiftdeps",
+    "diagnostics": "/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/.build/arm64-apple-macosx/debug/NativeLanguageKitCore.build/ChineseScript.dia"
+  },
+  "/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/Sources/NativeLanguageKitCore/LanguageDetector.swift": {
+    "dependencies": "/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/.build/arm64-apple-macosx/debug/NativeLanguageKitCore.build/LanguageDetector.d",
+    "object": "/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/.build/arm64-apple-macosx/debug/NativeLanguageKitCore.build/LanguageDetector.swift.o",
+    "swiftmodule": "/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/.build/arm64-apple-macosx/debug/NativeLanguageKitCore.build/LanguageDetector~partial.swiftmodule",
+    "swift-dependencies": "/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/.build/arm64-apple-macosx/debug/NativeLanguageKitCore.build/LanguageDetector.swiftdeps",
+    "diagnostics": "/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/.build/arm64-apple-macosx/debug/NativeLanguageKitCore.build/LanguageDetector.dia"
+  },
+  "/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/Sources/NativeLanguageKitCore/LocaleResolver.swift": {
+    "dependencies": "/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/.build/arm64-apple-macosx/debug/NativeLanguageKitCore.build/LocaleResolver.d",
+    "object": "/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/.build/arm64-apple-macosx/debug/NativeLanguageKitCore.build/LocaleResolver.swift.o",
+    "swiftmodule": "/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/.build/arm64-apple-macosx/debug/NativeLanguageKitCore.build/LocaleResolver~partial.swiftmodule",
+    "swift-dependencies": "/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/.build/arm64-apple-macosx/debug/NativeLanguageKitCore.build/LocaleResolver.swiftdeps",
+    "diagnostics": "/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/.build/arm64-apple-macosx/debug/NativeLanguageKitCore.build/LocaleResolver.dia"
+  },
+  "/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/Sources/NativeLanguageKitCore/Models.swift": {
+    "dependencies": "/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/.build/arm64-apple-macosx/debug/NativeLanguageKitCore.build/Models.d",
+    "object": "/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/.build/arm64-apple-macosx/debug/NativeLanguageKitCore.build/Models.swift.o",
+    "swiftmodule": "/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/.build/arm64-apple-macosx/debug/NativeLanguageKitCore.build/Models~partial.swiftmodule",
+    "swift-dependencies": "/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/.build/arm64-apple-macosx/debug/NativeLanguageKitCore.build/Models.swiftdeps",
+    "diagnostics": "/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/.build/arm64-apple-macosx/debug/NativeLanguageKitCore.build/Models.dia"
+  },
+  "/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/Sources/NativeLanguageKitCore/Speaker.swift": {
+    "dependencies": "/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/.build/arm64-apple-macosx/debug/NativeLanguageKitCore.build/Speaker.d",
+    "object": "/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/.build/arm64-apple-macosx/debug/NativeLanguageKitCore.build/Speaker.swift.o",
+    "swiftmodule": "/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/.build/arm64-apple-macosx/debug/NativeLanguageKitCore.build/Speaker~partial.swiftmodule",
+    "swift-dependencies": "/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/.build/arm64-apple-macosx/debug/NativeLanguageKitCore.build/Speaker.swiftdeps",
+    "diagnostics": "/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/.build/arm64-apple-macosx/debug/NativeLanguageKitCore.build/Speaker.dia"
+  },
+  "/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/Sources/NativeLanguageKitCore/SpeechCapabilities.swift": {
+    "dependencies": "/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/.build/arm64-apple-macosx/debug/NativeLanguageKitCore.build/SpeechCapabilities.d",
+    "object": "/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/.build/arm64-apple-macosx/debug/NativeLanguageKitCore.build/SpeechCapabilities.swift.o",
+    "swiftmodule": "/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/.build/arm64-apple-macosx/debug/NativeLanguageKitCore.build/SpeechCapabilities~partial.swiftmodule",
+    "swift-dependencies": "/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/.build/arm64-apple-macosx/debug/NativeLanguageKitCore.build/SpeechCapabilities.swiftdeps",
+    "diagnostics": "/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/.build/arm64-apple-macosx/debug/NativeLanguageKitCore.build/SpeechCapabilities.dia"
+  },
+  "/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/Sources/NativeLanguageKitCore/SpeechMatcher.swift": {
+    "dependencies": "/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/.build/arm64-apple-macosx/debug/NativeLanguageKitCore.build/SpeechMatcher.d",
+    "object": "/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/.build/arm64-apple-macosx/debug/NativeLanguageKitCore.build/SpeechMatcher.swift.o",
+    "swiftmodule": "/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/.build/arm64-apple-macosx/debug/NativeLanguageKitCore.build/SpeechMatcher~partial.swiftmodule",
+    "swift-dependencies": "/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/.build/arm64-apple-macosx/debug/NativeLanguageKitCore.build/SpeechMatcher.swiftdeps",
+    "diagnostics": "/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/.build/arm64-apple-macosx/debug/NativeLanguageKitCore.build/SpeechMatcher.dia"
+  },
+  "/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/Sources/NativeLanguageKitCore/SpeechRate.swift": {
+    "dependencies": "/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/.build/arm64-apple-macosx/debug/NativeLanguageKitCore.build/SpeechRate.d",
+    "object": "/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/.build/arm64-apple-macosx/debug/NativeLanguageKitCore.build/SpeechRate.swift.o",
+    "swiftmodule": "/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/.build/arm64-apple-macosx/debug/NativeLanguageKitCore.build/SpeechRate~partial.swiftmodule",
+    "swift-dependencies": "/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/.build/arm64-apple-macosx/debug/NativeLanguageKitCore.build/SpeechRate.swiftdeps",
+    "diagnostics": "/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/.build/arm64-apple-macosx/debug/NativeLanguageKitCore.build/SpeechRate.dia"
+  },
+  "/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/Sources/NativeLanguageKitCore/SyllableSpeaker.swift": {
+    "dependencies": "/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/.build/arm64-apple-macosx/debug/NativeLanguageKitCore.build/SyllableSpeaker.d",
+    "object": "/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/.build/arm64-apple-macosx/debug/NativeLanguageKitCore.build/SyllableSpeaker.swift.o",
+    "swiftmodule": "/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/.build/arm64-apple-macosx/debug/NativeLanguageKitCore.build/SyllableSpeaker~partial.swiftmodule",
+    "swift-dependencies": "/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/.build/arm64-apple-macosx/debug/NativeLanguageKitCore.build/SyllableSpeaker.swiftdeps",
+    "diagnostics": "/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/.build/arm64-apple-macosx/debug/NativeLanguageKitCore.build/SyllableSpeaker.dia"
+  },
+  "/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/Sources/NativeLanguageKitCore/SyllableSpeech.swift": {
+    "dependencies": "/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/.build/arm64-apple-macosx/debug/NativeLanguageKitCore.build/SyllableSpeech.d",
+    "object": "/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/.build/arm64-apple-macosx/debug/NativeLanguageKitCore.build/SyllableSpeech.swift.o",
+    "swiftmodule": "/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/.build/arm64-apple-macosx/debug/NativeLanguageKitCore.build/SyllableSpeech~partial.swiftmodule",
+    "swift-dependencies": "/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/.build/arm64-apple-macosx/debug/NativeLanguageKitCore.build/SyllableSpeech.swiftdeps",
+    "diagnostics": "/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/.build/arm64-apple-macosx/debug/NativeLanguageKitCore.build/SyllableSpeech.dia"
+  },
+  "/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/Sources/NativeLanguageKitCore/VoiceCatalog.swift": {
+    "dependencies": "/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/.build/arm64-apple-macosx/debug/NativeLanguageKitCore.build/VoiceCatalog.d",
+    "object": "/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/.build/arm64-apple-macosx/debug/NativeLanguageKitCore.build/VoiceCatalog.swift.o",
+    "swiftmodule": "/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/.build/arm64-apple-macosx/debug/NativeLanguageKitCore.build/VoiceCatalog~partial.swiftmodule",
+    "swift-dependencies": "/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/.build/arm64-apple-macosx/debug/NativeLanguageKitCore.build/VoiceCatalog.swiftdeps",
+    "diagnostics": "/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/.build/arm64-apple-macosx/debug/NativeLanguageKitCore.build/VoiceCatalog.dia"
+  },
+  "/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/Sources/NativeLanguageKitCore/WordChecker.swift": {
+    "dependencies": "/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/.build/arm64-apple-macosx/debug/NativeLanguageKitCore.build/WordChecker.d",
+    "object": "/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/.build/arm64-apple-macosx/debug/NativeLanguageKitCore.build/WordChecker.swift.o",
+    "swiftmodule": "/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/.build/arm64-apple-macosx/debug/NativeLanguageKitCore.build/WordChecker~partial.swiftmodule",
+    "swift-dependencies": "/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/.build/arm64-apple-macosx/debug/NativeLanguageKitCore.build/WordChecker.swiftdeps",
+    "diagnostics": "/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/.build/arm64-apple-macosx/debug/NativeLanguageKitCore.build/WordChecker.dia"
+  },
+  "/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/Sources/NativeLanguageKitCore/WordListRecognizer.swift": {
+    "dependencies": "/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/.build/arm64-apple-macosx/debug/NativeLanguageKitCore.build/WordListRecognizer.d",
+    "object": "/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/.build/arm64-apple-macosx/debug/NativeLanguageKitCore.build/WordListRecognizer.swift.o",
+    "swiftmodule": "/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/.build/arm64-apple-macosx/debug/NativeLanguageKitCore.build/WordListRecognizer~partial.swiftmodule",
+    "swift-dependencies": "/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/.build/arm64-apple-macosx/debug/NativeLanguageKitCore.build/WordListRecognizer.swiftdeps",
+    "diagnostics": "/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/.build/arm64-apple-macosx/debug/NativeLanguageKitCore.build/WordListRecognizer.dia"
+  }
+}

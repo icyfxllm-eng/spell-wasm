@@ -369,5 +369,8 @@
   "practice.choice": "Qual vem agora?",
   "practice.micro.silent": "Toque na letra que não se ouve.",
   "practice.micro.hear": "Qual você ouve?",
-  "practice.micro.stack": "Toque nas duas letras que se juntam."
+  "practice.micro.stack": "Toque nas duas letras que se juntam.",
+  "voiceSpell.dlPrep": "Baixando o pacote de voz…",
+  "voiceSpell.dlReady": "Pronto! Toque no microfone",
+  "voiceSpell.dlFail": "Falha no download — toque para tentar de novo"
 }

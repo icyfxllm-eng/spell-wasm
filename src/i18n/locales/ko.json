@@ -369,5 +369,8 @@
   "practice.choice": "다음은 어떤 걸까요?",
   "practice.micro.silent": "소리 나지 않는 글자를 눌러 보세요.",
   "practice.micro.hear": "어떤 소리가 들리나요?",
-  "practice.micro.stack": "겹치는 두 자음을 눌러 보세요."
+  "practice.micro.stack": "겹치는 두 자음을 눌러 보세요.",
+  "voiceSpell.dlPrep": "음성 팩 받는 중…",
+  "voiceSpell.dlReady": "준비 완료! 마이크를 눌러 보세요",
+  "voiceSpell.dlFail": "다운로드 실패 — 다시 시도하려면 누르세요"
 }

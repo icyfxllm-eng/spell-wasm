@@ -30,6 +30,10 @@ public class NativeLanguageKitPlugin: CAPPlugin, CAPBridgedPlugin {
         // profile over the SAME mic): raw tokens stream back as plugin events.
         CAPPluginMethod(name: "startLetterCapture", returnType: CAPPluginReturnPromise),
         CAPPluginMethod(name: "stopLetterCapture", returnType: CAPPluginReturnPromise),
+        // Mic-everywhere: download the ON-DEVICE speech model for a locale
+        // (iOS 26+ Speech framework assets). Progress streams via the
+        // `speechAssetProgress` event; recognition never leaves the phone.
+        CAPPluginMethod(name: "downloadSpeechAssets", returnType: CAPPluginReturnPromise),
     ]
 
     private let speaker = Speaker()
@@ -129,8 +133,53 @@ public class NativeLanguageKitPlugin: CAPPlugin, CAPBridgedPlugin {
     /// web layer treats `available:false` as "mode UNAVAILABLE", never as a cue to
     /// use server recognition.
     @objc func speechCapabilities(_ call: CAPPluginCall) {
-        let cap = SpeechCapabilities.report(lang: call.getString("lang") ?? "")
-        call.resolve(cap.asDictionary())
+        let lang = call.getString("lang") ?? ""
+        Task {
+            let cap = await SpeechCapabilities.fullReport(lang: lang)
+            call.resolve(cap.asDictionary())
+        }
+    }
+
+    /// Download the on-device speech model assets for `lang` (iOS 26+). The
+    /// child-privacy doctrine is untouched: assets make ON-DEVICE recognition
+    /// possible; nothing about this enables any server path. Progress is
+    /// streamed as `speechAssetProgress {fraction}`; resolves `{installed}`.
+    @objc func downloadSpeechAssets(_ call: CAPPluginCall) {
+        let lang = call.getString("lang") ?? ""
+        guard #available(iOS 26.0, *) else {
+            call.reject("UNAVAILABLE", "UNAVAILABLE"); return
+        }
+        Task {
+            let cap = await SpeechCapabilities.fullReport(lang: lang)
+            guard !cap.locale.isEmpty, cap.state == "downloadable" || cap.state == "installed" else {
+                call.reject("UNAVAILABLE", "UNAVAILABLE"); return
+            }
+            if cap.state == "installed" {
+                call.resolve(["installed": true]); return
+            }
+            let locale = Locale(identifier: cap.locale)
+            let module: any SpeechModule = cap.engine == "dictation"
+                ? DictationTranscriber(locale: locale, preset: .shortDictation)
+                : SpeechTranscriber(locale: locale, preset: .progressiveTranscription)
+            do {
+                if let req = try await AssetInventory.assetInstallationRequest(supporting: [module]) {
+                    let progress = req.progress
+                    let poll = Task { [weak self] in
+                        while !Task.isCancelled {
+                            self?.notifyListeners("speechAssetProgress",
+                                                  data: ["fraction": progress.fractionCompleted])
+                            try? await Task.sleep(nanoseconds: 250_000_000)
+                        }
+                    }
+                    defer { poll.cancel() }
+                    try await req.downloadAndInstall()
+                }
+                self.notifyListeners("speechAssetProgress", data: ["fraction": 1.0])
+                call.resolve(["installed": true])
+            } catch {
+                call.reject("DOWNLOAD_FAILED", "DOWNLOAD_FAILED")
+            }
+        }
     }
 
     /// Start ON-DEVICE listening (requiresOnDeviceRecognition = true). Resolves
@@ -234,6 +283,20 @@ final class SpeechListener {
     }
 
     private let audioEngine = AVAudioEngine()
+    // Mic-everywhere engine selection: "legacy" = SFSpeechRecognizer (exactly
+    // the shipped path), "analyzer"/"dictation" = the iOS 26 Speech framework
+    // (SpeechTranscriber / DictationTranscriber) whose on-device models are
+    // downloadable per locale. All engines are 100% on-device.
+    private var engineKind = "legacy"
+    // iOS-26 session state, stored type-erased so the class still compiles at
+    // the iOS 15 deployment target (only touched inside #available blocks).
+    private var anyAnalyzer: Any?
+    private var anyAnalyzerCont: Any?
+    private var anyResultsTask: Any?
+    private var analyzerConverter: AVAudioConverter?
+    private var analyzerFormat: AVAudioFormat?
+    /// Finalized text accumulated since the last VAD boundary (analyzer path).
+    private var analyzerSeg = ""
     private var request: SFSpeechAudioBufferRecognitionRequest?
     private var task: SFSpeechRecognitionTask?
     private var recognizer: SFSpeechRecognizer?
@@ -299,7 +362,7 @@ final class SpeechListener {
         return (sum / Float(n)).squareRoot()
     }
 
-    var isListening: Bool { task != nil }
+    var isListening: Bool { task != nil || anyResultsTask != nil }
 
     func start(lang: String, completion: @escaping (Result<String, ListenError>) -> Void) {
         // Say-It (whole-word) profile: no biasing, no partial streaming, no VAD.
@@ -347,26 +410,45 @@ final class SpeechListener {
         // instead — the old session is dropped outright (its letters were already
         // delivered per segment).
         if isListening { supersede() }
-        // Fail closed: only proceed when on-device recognition is truly available.
-        let cap = SpeechCapabilities.report(lang: lang)
-        guard cap.available, let rec = SFSpeechRecognizer(locale: Locale(identifier: cap.locale)) else {
-            completion(.failure(.unavailable)); return
-        }
-        recognizer = rec
         self.completion = completion
         self.partialHandler = onPartial
         self.contextualStrings = contextualStrings
         finished = false
         stopping = false
         best = ""
+        analyzerSeg = ""
         lastConfidence = 1.0
         lastAlt = ""
-        // OS permission prompts appear HERE, at first use — the web layer shows a
-        // plain-language pre-prompt before this call.
-        ensureAuthorized { [weak self] granted in
-            guard let self = self else { return }
-            guard granted else { self.finish(.failure(.permissionDenied)); return }
-            self.beginCapture()
+        // Fail closed: only proceed when ON-DEVICE recognition is truly available
+        // for the locale — via the full engine ladder (legacy recognizer, or an
+        // iOS-26 transcriber whose assets are installed). Never a server.
+        Task { [weak self] in
+            let cap = await SpeechCapabilities.fullReport(lang: lang)
+            DispatchQueue.main.async {
+                guard let self = self else { return }
+                guard cap.available, cap.state == "installed" else {
+                    self.finish(.failure(.unavailable)); return
+                }
+                if cap.engine == "legacy" {
+                    guard let rec = SFSpeechRecognizer(locale: Locale(identifier: cap.locale)) else {
+                        self.finish(.failure(.unavailable)); return
+                    }
+                    self.recognizer = rec
+                }
+                self.engineKind = cap.engine
+                // OS permission prompts appear HERE, at first use — the web layer
+                // shows a plain-language pre-prompt before this call.
+                self.ensureAuthorized { granted in
+                    guard granted else { self.finish(.failure(.permissionDenied)); return }
+                    if cap.engine == "legacy" {
+                        self.beginCapture()
+                    } else if #available(iOS 26.0, *) {
+                        self.beginAnalyzerCapture(localeId: cap.locale, engine: cap.engine)
+                    } else {
+                        self.finish(.failure(.unavailable))
+                    }
+                }
+            }
         }
     }
 
@@ -375,6 +457,10 @@ final class SpeechListener {
     /// stop — `stopping` makes the next finalization end the session instead of
     /// cycling to another segment.
     func stop() {
+        if engineKind != "legacy" {
+            analyzerStop()
+            return
+        }
         guard isListening else { return }
         stopping = true
         request?.endAudio()
@@ -402,6 +488,7 @@ final class SpeechListener {
         task = nil
         request = nil
         completion = nil
+        teardownAnalyzer()
         audioEngine.inputNode.removeTap(onBus: 0)
         if audioEngine.isRunning { audioEngine.stop() }
         pendingLock.lock()
@@ -453,7 +540,11 @@ final class SpeechListener {
         input.installTap(onBus: 0, bufferSize: 1024, format: format) { [weak self] buffer, _ in
             guard let self = self else { return }
             self.tapCount += 1
-            if self.finalizing {
+            if self.engineKind != "legacy" {
+                // Analyzer path: the input stream stays open across per-letter
+                // finalization, so buffers always flow — no stash needed.
+                self.yieldToAnalyzer(buffer)
+            } else if self.finalizing {
                 // A segment is finalizing: the current request is closed, the next one
                 // doesn't exist yet. Stash so a letter spoken NOW isn't dropped.
                 self.pendingLock.lock()
@@ -573,6 +664,10 @@ final class SpeechListener {
     /// VAD detected the pause after a letter: finalize JUST this cycle. The engine,
     /// tap, and audio session stay live for the next letter.
     private func segmentBoundary() {
+        if engineKind != "legacy" {
+            analyzerBoundary()
+            return
+        }
         guard continuous, !stopping, !finished, task != nil else { return }
         let gen = cycleGen
         // From here until the next cycle's request exists, the tap stashes buffers
@@ -614,6 +709,264 @@ final class SpeechListener {
         }
     }
 
+    // MARK: iOS 26 analyzer engine (SpeechTranscriber / DictationTranscriber).
+    //
+    // Same one-press shape as the legacy path: the SAME tap + VAD decide letter
+    // boundaries; the difference is that per-letter finalization happens with
+    // `analyzer.finalize(through: nil)` on ONE continuous session (the input
+    // stream never closes mid-word), so there is no finalize-gap buffer stash.
+    // On-device only — these engines run downloaded local models.
+
+    /// Convert a mic-format buffer and feed it to the live analyzer stream.
+    private func yieldToAnalyzer(_ buffer: AVAudioPCMBuffer) {
+        guard #available(iOS 26.0, *) else { return }
+        guard let cont = anyAnalyzerCont as? AsyncStream<AnalyzerInput>.Continuation else { return }
+        var out = buffer
+        if let conv = analyzerConverter, let fmt = analyzerFormat, fmt != buffer.format {
+            let ratio = fmt.sampleRate / buffer.format.sampleRate
+            let cap = AVAudioFrameCount(Double(buffer.frameLength) * ratio) + 64
+            guard let converted = AVAudioPCMBuffer(pcmFormat: fmt, frameCapacity: cap) else { return }
+            var err: NSError?
+            var fed = false
+            conv.convert(to: converted, error: &err) { _, status in
+                if fed { status.pointee = .noDataNow; return nil }
+                fed = true
+                status.pointee = .haveData
+                return buffer
+            }
+            if err != nil { return }
+            out = converted
+        }
+        cont.yield(AnalyzerInput(buffer: out))
+    }
+
+    @available(iOS 26.0, *)
+    private func beginAnalyzerCapture(localeId: String, engine: String) {
+        do {
+            let session = AVAudioSession.sharedInstance()
+            try? session.setActive(false, options: .notifyOthersOnDeactivation)
+            try session.setCategory(.playAndRecord, mode: .measurement,
+                                    options: [.duckOthers, .defaultToSpeaker, .allowBluetooth])
+            try session.setActive(true, options: .notifyOthersOnDeactivation)
+        } catch { finish(.failure(.audio)); return }
+
+        tapCount = 0
+        audioEngine.stop()
+        audioEngine.reset()
+        sawSpeech = false
+        silenceSecs = 0
+        segmentSecs = 0
+        peakRMS = 0
+        analyzerSeg = ""
+
+        let gen = cycleGen
+        Task { [weak self] in
+            // Build the module + analyzer off the main thread, then install the
+            // tap and start the engine back on main (AVAudioEngine affinity).
+            let locale = Locale(identifier: localeId)
+            let (stream, cont) = AsyncStream<AnalyzerInput>.makeStream()
+            if engine == "dictation" {
+                let module = DictationTranscriber(locale: locale, preset: .shortDictation)
+                let fmt = await SpeechAnalyzer.bestAvailableAudioFormat(compatibleWith: [module])
+                let analyzer = SpeechAnalyzer(modules: [module])
+                do { try await analyzer.start(inputSequence: stream) }
+                catch { DispatchQueue.main.async { self?.finish(.failure(.unavailable)) }; return }
+                let results = Task { [weak self] in
+                    do {
+                        for try await r in module.results {
+                            let text = String(r.text.characters)
+                            DispatchQueue.main.async { self?.analyzerResult(text: text, isFinal: r.isFinal) }
+                        }
+                    } catch {}
+                    DispatchQueue.main.async { self?.analyzerStreamEnded() }
+                }
+                DispatchQueue.main.async { self?.armAnalyzer(gen: gen, analyzer: analyzer, cont: cont, results: results, fmt: fmt) }
+            } else {
+                let module = SpeechTranscriber(locale: locale, preset: .progressiveTranscription)
+                let fmt = await SpeechAnalyzer.bestAvailableAudioFormat(compatibleWith: [module])
+                let analyzer = SpeechAnalyzer(modules: [module])
+                do { try await analyzer.start(inputSequence: stream) }
+                catch { DispatchQueue.main.async { self?.finish(.failure(.unavailable)) }; return }
+                let results = Task { [weak self] in
+                    do {
+                        for try await r in module.results {
+                            let text = String(r.text.characters)
+                            DispatchQueue.main.async { self?.analyzerResult(text: text, isFinal: r.isFinal) }
+                        }
+                    } catch {}
+                    DispatchQueue.main.async { self?.analyzerStreamEnded() }
+                }
+                DispatchQueue.main.async { self?.armAnalyzer(gen: gen, analyzer: analyzer, cont: cont, results: results, fmt: fmt) }
+            }
+        }
+    }
+
+    /// Main-thread arm step: store the session, install the SAME VAD tap the
+    /// legacy path uses, and start the audio engine.
+    @available(iOS 26.0, *)
+    private func armAnalyzer(gen: Int, analyzer: SpeechAnalyzer,
+                             cont: AsyncStream<AnalyzerInput>.Continuation,
+                             results: Task<Void, Never>, fmt: AVAudioFormat?) {
+        guard gen == cycleGen, !finished else {
+            cont.finish(); results.cancel()
+            Task { await analyzer.cancelAndFinishNow() }
+            return
+        }
+        anyAnalyzer = analyzer
+        anyAnalyzerCont = cont
+        anyResultsTask = results
+        analyzerFormat = fmt
+
+        let input = audioEngine.inputNode
+        let format = input.outputFormat(forBus: 0)
+        if let fmt = fmt, fmt != format {
+            analyzerConverter = AVAudioConverter(from: format, to: fmt)
+        } else {
+            analyzerConverter = nil
+        }
+        let sampleRate = format.sampleRate
+        input.installTap(onBus: 0, bufferSize: 1024, format: format) { [weak self] buffer, _ in
+            guard let self = self else { return }
+            self.tapCount += 1
+            self.yieldToAnalyzer(buffer)
+            if self.continuous && sampleRate > 0 {
+                let secs = Double(buffer.frameLength) / sampleRate
+                let level = Self.rms(buffer)
+                self.peakRMS = max(self.peakRMS, level)
+                if level > self.speechRMS {
+                    self.sawSpeech = true
+                    self.silenceSecs = 0
+                } else if self.sawSpeech {
+                    self.silenceSecs += secs
+                }
+                self.segmentSecs += secs
+                if !self.finalizing {
+                    let boundary = (self.sawSpeech && self.silenceSecs >= self.silenceCutoff)
+                        || self.segmentSecs >= self.maxSegment
+                    if boundary {
+                        self.sawSpeech = false
+                        self.silenceSecs = 0
+                        self.segmentSecs = 0
+                        DispatchQueue.main.async { [weak self] in self?.segmentBoundary() }
+                    }
+                }
+            }
+        }
+        audioEngine.prepare()
+        do { try audioEngine.start() } catch { finish(.failure(.audio)); return }
+
+        let handler = diagHandler
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1.2) { [weak self] in
+            guard let self = self else { return }
+            handler?("engine=\(self.engineKind) sr=\(Int(format.sampleRate)) buf=\(self.tapCount) "
+                + "peak=\(String(format: "%.3f", self.peakRMS))")
+        }
+    }
+
+    /// A result arrived from the analyzer: volatile results stream as partials;
+    /// finalized text accumulates into the current letter segment.
+    private func analyzerResult(text: String, isFinal: Bool) {
+        guard !finished else { return }
+        if isFinal {
+            analyzerSeg += text
+            best = analyzerSeg
+            partialHandler?(best)
+        } else {
+            partialHandler?(analyzerSeg + text)
+        }
+    }
+
+    /// VAD boundary on the analyzer path: finalize the running session THROUGH
+    /// NOW (the session and input stream stay live), then emit the finalized
+    /// text as this letter's segment and reset for the next.
+    private func analyzerBoundary() {
+        guard continuous, !stopping, !finished, anyResultsTask != nil, !finalizing else { return }
+        guard #available(iOS 26.0, *), let analyzer = anyAnalyzer as? SpeechAnalyzer else { return }
+        finalizing = true
+        let gen = cycleGen
+        Task { [weak self] in
+            try? await analyzer.finalize(through: nil)
+            DispatchQueue.main.async {
+                guard let self = self, gen == self.cycleGen, !self.finished else { return }
+                self.finalizing = false
+                let text = self.analyzerSeg
+                self.analyzerSeg = ""
+                self.best = ""
+                if self.continuous && !self.stopping {
+                    if !text.isEmpty {
+                        self.segmentHandler?(text, 1.0, "")
+                        self.diagHandler?("seg='\(text)' engine=\(self.engineKind)")
+                    } else {
+                        self.diagHandler?("seg=(empty) engine=\(self.engineKind)")
+                    }
+                } else {
+                    self.finish(text.isEmpty ? .failure(.noSpeech) : .success(text))
+                }
+            }
+        }
+        // Safety net: a finalize that never returns must not stall the stream.
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) { [weak self] in
+            guard let self = self, gen == self.cycleGen, self.finalizing, !self.finished else { return }
+            self.finalizing = false
+        }
+    }
+
+    /// User stop on the analyzer path: close the input stream and finalize the
+    /// whole session; the results stream then ends and finishes the capture.
+    private func analyzerStop() {
+        guard anyResultsTask != nil else { return }
+        stopping = true
+        if audioEngine.isRunning {
+            audioEngine.stop()
+            audioEngine.inputNode.removeTap(onBus: 0)
+        }
+        guard #available(iOS 26.0, *), let analyzer = anyAnalyzer as? SpeechAnalyzer else {
+            finish(best.isEmpty ? .failure(.noSpeech) : .success(best)); return
+        }
+        (anyAnalyzerCont as? AsyncStream<AnalyzerInput>.Continuation)?.finish()
+        let gen = cycleGen
+        Task { [weak self] in
+            try? await analyzer.finalizeAndFinishThroughEndOfInput()
+            DispatchQueue.main.async {
+                guard let self = self, gen == self.cycleGen, !self.finished else { return }
+                let text = self.analyzerSeg
+                self.finish(text.isEmpty ? .failure(.noSpeech) : .success(text))
+            }
+        }
+        DispatchQueue.main.asyncAfter(deadline: .now() + 2) { [weak self] in
+            guard let self = self, gen == self.cycleGen, !self.finished else { return }
+            self.finish(self.analyzerSeg.isEmpty ? .failure(.noSpeech) : .success(self.analyzerSeg))
+        }
+    }
+
+    /// Tear down any live analyzer session (supersede / finish).
+    private func teardownAnalyzer() {
+        guard anyAnalyzer != nil || anyResultsTask != nil || anyAnalyzerCont != nil else { return }
+        if #available(iOS 26.0, *) {
+            (anyAnalyzerCont as? AsyncStream<AnalyzerInput>.Continuation)?.finish()
+            (anyResultsTask as? Task<Void, Never>)?.cancel()
+            if let analyzer = anyAnalyzer as? SpeechAnalyzer {
+                Task { await analyzer.cancelAndFinishNow() }
+            }
+        }
+        anyAnalyzer = nil
+        anyAnalyzerCont = nil
+        anyResultsTask = nil
+        analyzerConverter = nil
+        analyzerFormat = nil
+        analyzerSeg = ""
+        engineKind = "legacy"
+    }
+
+    /// The analyzer results stream ended (session finished or cancelled).
+    private func analyzerStreamEnded() {
+        guard anyResultsTask != nil, !finished else { return }
+        if stopping {
+            let text = analyzerSeg
+            finish(text.isEmpty ? .failure(.noSpeech) : .success(text))
+        }
+    }
+
     private func finish(_ result: Result<String, ListenError>) {
         if finished { return }
         finished = true
@@ -622,6 +975,7 @@ final class SpeechListener {
         task?.cancel()
         task = nil
         request = nil
+        teardownAnalyzer()
         partialHandler = nil
         segmentHandler = nil
         continuous = false

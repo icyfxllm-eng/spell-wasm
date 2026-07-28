@@ -1,0 +1,3 @@
+module NativeLanguageKitCore {
+    header "/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/NativeLanguageKit/.build/arm64-apple-macosx/debug/NativeLanguageKitCore.build/include/NativeLanguageKitCore-Swift.h"
+}

@@ -369,5 +369,8 @@
   "practice.choice": "Welches als Nächstes?",
   "practice.micro.silent": "Tippe auf den stummen Buchstaben.",
   "practice.micro.hear": "Welches hörst du?",
-  "practice.micro.stack": "Tippe auf die zwei Buchstaben, die sich verbinden."
+  "practice.micro.stack": "Tippe auf die zwei Buchstaben, die sich verbinden.",
+  "voiceSpell.dlPrep": "Sprachpaket wird geladen…",
+  "voiceSpell.dlReady": "Fertig! Tippe aufs Mikrofon",
+  "voiceSpell.dlFail": "Download fehlgeschlagen — zum Wiederholen tippen"
 }

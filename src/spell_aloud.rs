@@ -629,6 +629,12 @@ thread_local! {
     static SESSION_LETTERS: RefCell<String> = const { RefCell::new(String::new()) };
     /// True once the permission explainer has been shown this app-run.
     static EXPLAINED: Cell<bool> = const { Cell::new(false) };
+    /// Mic-everywhere: the capability state reflect() last saw for the current
+    /// language — "installed" | "downloadable" | "unavailable". Decides whether
+    /// a mic tap starts capture or first fetches the on-device voice pack.
+    static CAP_STATE: RefCell<String> = const { RefCell::new(String::new()) };
+    /// A voice-pack download is in flight (taps are ignored until it settles).
+    static DOWNLOADING: Cell<bool> = const { Cell::new(false) };
 }
 
 /// The master gate: the whole feature is dark unless the flag is on (Invariant I6).
@@ -652,11 +658,16 @@ pub fn reflect(app: &App) {
         return;
     }
     // Second condition: on-device availability for this locale (async). Until it
-    // resolves the mic stays hidden — never a broken button.
+    // resolves the mic stays hidden — never a broken button. Mic-everywhere
+    // ladder: "installed" → live mic; "downloadable" → the mic shows with a
+    // download badge and the first tap fetches the on-device voice pack;
+    // "unavailable" → hidden (no on-device path exists — never a server).
     crate::dom::add_class("voiceSpellMic", "btn-hide");
     spawn_local(async move {
         let cap = native_lang::speech_capabilities(&lang).await;
-        crate::dom::toggle_class("voiceSpellMic", "btn-hide", !cap.available);
+        CAP_STATE.with(|c| *c.borrow_mut() = cap.state.clone());
+        crate::dom::toggle_class("voiceSpellMic", "btn-hide", cap.state == "unavailable");
+        crate::dom::toggle_class("voiceSpellMic", "dl", cap.state == "downloadable");
     });
 }
 
@@ -708,6 +719,36 @@ pub fn wire(app: &App) {
     });
 }
 
+/// Mic-everywhere: first tap on a downloadable-state mic fetches the ON-DEVICE
+/// voice pack (iOS 26 Speech assets — recognition still never leaves the
+/// phone), streaming progress into the status line, then flips the mic live.
+/// Failure resets to the downloadable state so the tap can retry.
+fn download_pack_then_reflect(app: &App) {
+    DOWNLOADING.with(|d| d.set(true));
+    crate::dom::add_class("voiceSpellMic", "listening"); // pulse = something's happening
+    set_status("voiceSpell.dlPrep");
+    let lang = app.borrow().lang.clone();
+    let a = app.clone();
+    spawn_local(async move {
+        let ok = native_lang::download_speech_assets(&lang, move |fraction| {
+            let pct = (fraction * 100.0).round() as u32;
+            let text = format!("{} {pct}%", crate::i18n::t("voiceSpell.dlPrep"));
+            crate::dom::set_text("voiceSpellStatus", &text);
+        })
+        .await;
+        DOWNLOADING.with(|d| d.set(false));
+        crate::dom::remove_class("voiceSpellMic", "listening");
+        if ok {
+            CAP_STATE.with(|c| *c.borrow_mut() = "installed".into());
+            crate::dom::remove_class("voiceSpellMic", "dl");
+            set_status("voiceSpell.dlReady");
+        } else {
+            set_status("voiceSpell.dlFail");
+        }
+        reflect(&a);
+    });
+}
+
 fn set_status(key: &str) {
     let text = if key.is_empty() { String::new() } else { crate::i18n::t(key) };
     crate::dom::set_text("voiceSpellStatus", &text);
@@ -724,6 +765,13 @@ fn end_capture_ui() {
 /// NEVER clears typed text.
 pub fn mic_tap(app: &App) {
     if !enabled() {
+        return;
+    }
+    if DOWNLOADING.with(Cell::get) {
+        return; // voice pack still fetching — the status line is the feedback
+    }
+    if CAP_STATE.with(|c| c.borrow().clone()) == "downloadable" {
+        download_pack_then_reflect(app);
         return;
     }
     if LISTENING.with(Cell::get) {

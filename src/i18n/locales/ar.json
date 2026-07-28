@@ -369,5 +369,8 @@
   "practice.choice": "أيّهما التالي؟",
   "practice.micro.silent": "اضغط على الحرف الذي لا يُسمَع.",
   "practice.micro.hear": "أيّهما تسمع؟",
-  "practice.micro.stack": "اضغط على الحرفين المتّصلين."
+  "practice.micro.stack": "اضغط على الحرفين المتّصلين.",
+  "voiceSpell.dlPrep": "جارٍ تنزيل حزمة الصوت…",
+  "voiceSpell.dlReady": "جاهز! اضغط على الميكروفون",
+  "voiceSpell.dlFail": "فشل التنزيل — اضغط لإعادة المحاولة"
 }

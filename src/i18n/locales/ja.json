@@ -369,5 +369,8 @@
   "practice.choice": "つぎはどっち？",
   "practice.micro.silent": "聞こえない字をタップしてね。",
   "practice.micro.hear": "どっちが聞こえた？",
-  "practice.micro.stack": "くっつく二つの字をタップしてね。"
+  "practice.micro.stack": "くっつく二つの字をタップしてね。",
+  "voiceSpell.dlPrep": "音声パックをダウンロード中…",
+  "voiceSpell.dlReady": "準備完了！マイクをタップしてね",
+  "voiceSpell.dlFail": "ダウンロード失敗 — タップして再試行"
 }

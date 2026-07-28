@@ -369,5 +369,8 @@
   "practice.choice": "下一个选哪个？",
   "practice.micro.silent": "点一点听不到的字母。",
   "practice.micro.hear": "你听到的是哪个？",
-  "practice.micro.stack": "点一点叠在一起的两个字母。"
+  "practice.micro.stack": "点一点叠在一起的两个字母。",
+  "voiceSpell.dlPrep": "正在下载语音包…",
+  "voiceSpell.dlReady": "准备好了！点一下麦克风",
+  "voiceSpell.dlFail": "下载失败 — 点击重试"
 }

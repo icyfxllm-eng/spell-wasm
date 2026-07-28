@@ -199,9 +199,47 @@
      * @returns {Promise<SpeechCapability>} all-false off iOS; never rejects.
      */
     speechCapabilities: function (lang) {
-      var off = { available: false, supportsOnDevice: false, locale: '' };
+      var off = { available: false, supportsOnDevice: false, locale: '', state: 'unavailable', engine: '' };
       if (!available()) return Promise.resolve(off);
-      return plugin().speechCapabilities({ lang: lang }).catch(function () { return off; });
+      return plugin().speechCapabilities({ lang: lang }).then(function (cap) {
+        // Older plugin builds omit state/engine — derive from `available`.
+        if (cap && cap.state == null) cap.state = cap.available ? 'installed' : 'unavailable';
+        return cap || off;
+      }).catch(function () { return off; });
+    },
+
+    /**
+     * Download the ON-DEVICE speech model for a language (iOS 26+). Progress
+     * streams to `onProgress(fraction 0..1)`. Resolves when installed; rejects
+     * with "UNAVAILABLE" (no downloadable on-device model) or "DOWNLOAD_FAILED".
+     * Recognition remains 100% on-device — this only fetches Apple's local
+     * model assets, exactly like enabling a dictation keyboard would.
+     * @param {string} lang bare app language code, e.g. "ar"
+     * @param {function(number)=} onProgress
+     * @returns {Promise<{installed:boolean}>}
+     */
+    downloadSpeechAssets: function (lang, onProgress) {
+      if (!available()) return Promise.reject(new Error('UNAVAILABLE'));
+      var p = plugin();
+      var handle = null;
+      var cleanup = function () {
+        if (handle && typeof handle.remove === 'function') handle.remove();
+        handle = null;
+      };
+      try {
+        var pr = p.addListener('speechAssetProgress', function (d) {
+          if (onProgress) onProgress((d && typeof d.fraction === 'number') ? d.fraction : 0);
+        });
+        if (pr && typeof pr.then === 'function') pr.then(function (h) { handle = h; });
+        else handle = pr;
+      } catch (e) { /* progress is best-effort */ }
+      return p.downloadSpeechAssets({ lang: lang }).then(function (r) {
+        cleanup();
+        return r || { installed: true };
+      }).catch(function (err) {
+        cleanup();
+        throw err;
+      });
     },
 
     /**
