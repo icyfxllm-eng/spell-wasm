@@ -301,6 +301,7 @@
   "tools.defmatch.name": "いみマッチ",
   "tools.defmatch.desc": "ただよう意味をキャッチしよう。",
   "tools.defmatch.avail": "全プラットフォーム · 近日公開",
+  "defmatch.caught": "キャッチ！",
   "tools.shields.name": "シールドと追加チャンス",
   "tools.shields.desc": "単語を間違えたときのもう一度のチャンス。",
   "tools.shields.avail": "クライムと通常ラウンド",

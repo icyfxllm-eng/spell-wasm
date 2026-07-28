@@ -286,6 +286,37 @@
   .pchip-row.lowconf .pchip{opacity:.55;border-style:dashed}
   /* Out-of-bank (custom) words: subtle accent so parents can spot them. */
   .pchip-row.custom .pchip{border-color:var(--accent,#7aa2ff)}
+  /* CC-DEF-MATCH: full-screen field, floating definition cards. */
+  .dm-screen{position:fixed;inset:0;background:var(--bg,#0e1420);z-index:60;display:none;flex-direction:column}
+  .dm-screen.show{display:flex}
+  .dm-top{display:flex;align-items:center;gap:12px;padding:10px 14px}
+  .dm-orb{font-size:28px;width:56px;height:56px;border-radius:50%;border:2px solid var(--edge);background:var(--panel-2);transition:box-shadow .3s}
+  .dm-orb.pulse{animation:dmPulse .5s}
+  .dm-orb.good{box-shadow:0 0 18px 4px rgba(80,220,120,.7)}
+  .dm-orb.heat3{box-shadow:0 0 10px 2px rgba(255,170,60,.5)}
+  .dm-orb.heat5{box-shadow:0 0 16px 4px rgba(255,140,40,.65)}
+  .dm-orb.heat10{box-shadow:0 0 24px 7px rgba(255,90,40,.8)}
+  @keyframes dmPulse{50%{transform:scale(1.15)}}
+  .dm-streak{font-size:20px;font-weight:700;min-width:64px}
+  .dm-status{text-align:center;min-height:22px;font-weight:600}
+  .dm-field{position:relative;flex:1;overflow:hidden}
+  .dm-card{position:absolute;bottom:-30%;padding:10px 8px;border:1px solid var(--edge);border-radius:12px;
+    background:var(--panel-2);color:var(--ink);font-size:14px;line-height:1.25;text-align:center;
+    animation-name:dmFloat;animation-timing-function:linear;animation-fill-mode:forwards;
+    display:flex;flex-direction:column;gap:4px;justify-content:center;min-height:72px}
+  @keyframes dmFloat{from{transform:translateY(0)}to{transform:translateY(-130vh)}}
+  .dm-card.sway .dm-def{animation:dmSway 2.6s ease-in-out infinite alternate}
+  @keyframes dmSway{from{transform:translateX(-6px)}to{transform:translateX(6px)}}
+  .dm-card.paused{animation-play-state:paused}
+  .dm-card.caught{animation-play-state:paused;transition:transform .18s ease-in,opacity .18s;
+    transform:scale(.2) translateY(-40vh);opacity:0;background:rgba(80,220,120,.35)}
+  .dm-card.dissolve{animation-play-state:paused;transition:opacity .25s;opacity:0}
+  .dm-card.wrong{background:rgba(224,86,79,.3);border-color:var(--bad,#e0564f)}
+  .dm-card.reveal-gold{background:rgba(255,200,60,.28);border-color:#e9b23c;box-shadow:0 0 14px rgba(233,178,60,.6)}
+  .dm-card.reveal-calm{background:rgba(120,180,255,.22);border-color:var(--accent,#7aa2ff)}
+  .dm-card.returned{animation:none;bottom:auto;top:35%;transition:top .5s ease-out}
+  .dm-owner{font-size:12px;opacity:.85;font-weight:700}
+  body.kid .dm-card{font-size:17px;min-height:88px}
   /* Per-chip include toggle (Phase 3): opt a word out without deleting it. */
   .pchip-on{width:22px;height:22px;flex:none;accent-color:var(--accent,#7aa2ff)}
   .pchip-row:has(.pchip-on:not(:checked)) .pchip{opacity:.4;text-decoration:line-through}
@@ -1145,6 +1176,7 @@
        G-INT-1): the hub routes here; it ensures a round is active so the player hears
        a word to spell, with the voice mic (voiceSpellMic) shown in normal play. -->
   <button id="spellAloudEnter" class="btn-hide" aria-hidden="true" tabindex="-1"></button>
+  <button id="defMatchOpen" class="btn-hide" aria-hidden="true" tabindex="-1"></button>
 
   <!-- Dev door menu (TEMPORARY — removed at activation). Reveal with five quick taps
        on the SPELL logo; routes to the hidden REVIEW-GATED screens for on-device
@@ -1162,6 +1194,18 @@
         </label>
       </div>
     </div>
+  </div>
+
+  <!-- CC-DEF-MATCH P3: the Definition Match screen. Cards float bottom→top in
+       lanes; the orb speaks the word and replays on tap. No visible timer (D2). -->
+  <div class="dm-screen" id="defMatch">
+    <div class="dm-top">
+      <button class="ghost hub-x" id="dmExit" aria-label="Exit">✕</button>
+      <button type="button" class="dm-orb" id="dmOrb" aria-label="Replay word">🔊</button>
+      <span class="dm-streak" id="dmStreak" aria-live="polite"></span>
+    </div>
+    <div class="dm-status" id="dmStatus" aria-live="polite"></div>
+    <div class="dm-field" id="dmField"></div>
   </div>
 
   <div class="scrim" id="photoSrcScrim">

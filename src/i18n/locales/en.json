@@ -301,6 +301,7 @@
   "tools.defmatch.name": "Definition Match",
   "tools.defmatch.desc": "Catch the meaning as it floats by.",
   "tools.defmatch.avail": "All platforms · coming soon",
+  "defmatch.caught": "Caught it!",
   "tools.shields.name": "Shields & extra attempts",
   "tools.shields.desc": "A second try when you miss a word.",
   "tools.shields.avail": "The Climb and normal rounds",

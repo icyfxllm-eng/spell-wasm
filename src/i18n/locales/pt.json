@@ -301,6 +301,7 @@
   "tools.defmatch.name": "Combine Definições",
   "tools.defmatch.desc": "Capture o significado enquanto flutua.",
   "tools.defmatch.avail": "Todas as plataformas · em breve",
+  "defmatch.caught": "Pegou!",
   "tools.shields.name": "Escudos e tentativas extras",
   "tools.shields.desc": "Uma segunda tentativa quando você erra.",
   "tools.shields.avail": "A Subida e rodadas normais",

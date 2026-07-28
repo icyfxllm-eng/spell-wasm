@@ -301,6 +301,7 @@
   "tools.defmatch.name": "طابق المعنى",
   "tools.defmatch.desc": "التقط المعنى قبل أن يطفو بعيدًا.",
   "tools.defmatch.avail": "كل الأجهزة · قريبًا",
+  "defmatch.caught": "أمسكتها!",
   "tools.shields.name": "الدروع والمحاولات الإضافية",
   "tools.shields.desc": "فرصة ثانية عندما تخطئ كلمة.",
   "tools.shields.avail": "التسلُّق والجولات العادية",

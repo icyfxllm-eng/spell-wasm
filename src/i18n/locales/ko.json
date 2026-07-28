@@ -301,6 +301,7 @@
   "tools.defmatch.name": "뜻 맞추기",
   "tools.defmatch.desc": "떠오르는 뜻을 잡아 보세요.",
   "tools.defmatch.avail": "모든 기기 · 곧 출시",
+  "defmatch.caught": "잡았다!",
   "tools.shields.name": "방패와 추가 기회",
   "tools.shields.desc": "단어를 틀리면 한 번 더 기회를 줘요.",
   "tools.shields.avail": "오르기와 일반 라운드",

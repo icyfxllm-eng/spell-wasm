@@ -36,11 +36,18 @@ SECTION = {
     "vi": "vi", "ko": "ko", "ja": "ja", "ru": "ru", "ar": "ar", "hi": "hi",
     "sw": "sw", "fil": "tl",
 }
+# Grammar cross-references are not definitions. Matches compound leads too
+# ("simple past AND past participle of…" — caught live 2026-07-27).
 FORM_OF = re.compile(
-    r"^(verbal noun|plural|inflection|alternative (?:form|spelling)|romanization|"
-    r"feminine|masculine|diminutive|misspelling|obsolete (?:form|spelling)|"
-    r"(?:simple )?past(?: tense)?|past participle|present participle|"
-    r"third-person singular|genitive|nominative|accusative|dative) of\b",
+    r"^(?:(?:simple |archaic |dated |obsolete |informal |nonstandard )*"
+    r"(?:verbal noun|plural|singular|inflection|alternative(?: form| spelling)?|"
+    r"romanization|feminine|masculine|neuter|diminutive|augmentative|misspelling|"
+    r"past(?: tense)?|past participle|present(?: tense| participle)?|gerund|"
+    r"third-person singular|first-person singular|second-person singular|"
+    r"genitive|nominative|accusative|dative|comparative|superlative|"
+    r"agent noun|attributive form|clipping|contraction|abbreviation|initialism|"
+    r"acronym|synonym|apocopic form|pronunciation spelling)"
+    r"(?:\s*(?:,|and|or)\s*)?)+ of\b",
     re.IGNORECASE,
 )
 TAG = re.compile(r"<[^>]+>")
@@ -167,6 +174,8 @@ def build_lang(lang):
             if not r or not r.get("found") or r.get("form_of"):
                 continue
             d = unicodedata.normalize("NFC", r["definition"])
+            if FORM_OF.match(d):
+                continue  # cached under the old, looser regex — drop now
             if blocked(d):
                 continue
             wl = w.lower()

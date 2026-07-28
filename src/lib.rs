@@ -8,7 +8,8 @@ mod climb;
 mod consts;
 mod daily;
 mod deck;
-mod defmatch; // CC-DEF-MATCH P1 core engine (REVIEW-GATED; hub wiring is P2)
+mod defmatch; // CC-DEF-MATCH core engine (REVIEW-GATED)
+mod defmatch_screen; // CC-DEF-MATCH P3 frontend loop
 mod dom;
 pub mod editor;
 mod enrich;
@@ -199,6 +200,7 @@ fn wire(app: &App) {
     play_hub::wire(app);
     ghost::wire_screen(app);
     racing::screen::wire(app); // CC-SPELL-RACING Phase 5 screen (hidden until activation)
+    defmatch_screen::wire(app); // CC-DEF-MATCH P3 loop (live tile where consts::def_match holds)
     dev::wire(app); // TEMP dev door: 5-tap logo → menu for the hidden racing/aloud screens
     tools_hub::wire(app);
     tools_hub::reflect(app);

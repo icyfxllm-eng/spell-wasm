@@ -301,6 +301,7 @@
   "tools.defmatch.name": "Ghép Định Nghĩa",
   "tools.defmatch.desc": "Bắt lấy ý nghĩa khi nó trôi qua.",
   "tools.defmatch.avail": "Mọi nền tảng · sắp ra mắt",
+  "defmatch.caught": "Bắt được rồi!",
   "tools.shields.name": "Khiên và lượt thử thêm",
   "tools.shields.desc": "Một cơ hội nữa khi bạn sai một từ.",
   "tools.shields.avail": "Leo dốc và vòng thường",

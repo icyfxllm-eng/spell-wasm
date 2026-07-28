@@ -301,6 +301,7 @@
   "tools.defmatch.name": "Поймай значение",
   "tools.defmatch.desc": "Поймай смысл, пока он не уплыл.",
   "tools.defmatch.avail": "Все платформы · скоро",
+  "defmatch.caught": "Поймал!",
   "tools.shields.name": "Щиты и доп. попытки",
   "tools.shields.desc": "Вторая попытка при ошибке.",
   "tools.shields.avail": "Восхождение и обычные раунды",

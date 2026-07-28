@@ -301,6 +301,7 @@
   "tools.defmatch.name": "Défi Définitions",
   "tools.defmatch.desc": "Attrape le sens avant qu'il s'envole.",
   "tools.defmatch.avail": "Toutes plateformes · bientôt",
+  "defmatch.caught": "Attrapée !",
   "tools.shields.name": "Boucliers et essais bonus",
   "tools.shields.desc": "Un second essai quand tu rates un mot.",
   "tools.shields.avail": "L'Ascension et les parties normales",

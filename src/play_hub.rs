@@ -47,7 +47,7 @@ const LAUNCH: [(&str, Option<&str>); 8] = [
     ("spell_aloud", Some("spellAloudEnter")), // promoted to a real mode (G-INT-1): enters play with the voice mic
     ("word_stories", None),       // after-answer flourish; hidden anyway
     ("online_spelloff", Some("soBtn")),
-    ("def_match", None),          // CC-DEF-MATCH: coming_soon teaser until P3
+    ("def_match", Some("defMatchOpen")), // CC-DEF-MATCH P3: the floating-cards loop
 ];
 
 fn launch_for(id: &str) -> Option<&'static str> {
@@ -112,6 +112,10 @@ fn ctx(app: &App) -> modes::HubCtx {
 fn unavailable_reason(m: &Mode, lang: &str) -> Option<&'static str> {
     if m.id == "spell_aloud" && !crate::consts::voice_spell(lang) {
         Some("tools.spellaloud.avail") // "iPhone · English or Spanish"
+    } else if m.id == "def_match" && !crate::consts::def_match(lang) {
+        // Pool not landed/pinned for this language yet (Invariant 8) — a
+        // non-tappable teaser, never a dead button.
+        Some("tools.defmatch.avail")
     } else {
         None
     }

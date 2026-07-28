@@ -141,7 +141,7 @@
       "nameKey": "tools.defmatch.name",
       "descKey": "tools.defmatch.desc",
       "icon": "🎴",
-      "status": "coming_soon",
+      "status": "live",
       "kidSafe": true,
       "platforms": [
         "ios",
@@ -150,7 +150,7 @@
       "entitlementLevel": "preview",
       "requiresPremium": null,
       "languages": null,
-      "$note": "CC-DEF-MATCH: per-language activation lives in consts::def_match (pool floor D3 + interim-content ruling); PREVIEW depth = easy tier only, enforced in the defmatch core (allowed_tiers)."
+      "$note": "CC-DEF-MATCH: P3 loop live. Per-language activation = consts::def_match (D3 pool floor + interim-content ruling); inactive languages render the unavailable teaser. PREVIEW depth = easy tier only (defmatch::allowed_tiers)."
     }
   ]
 }
