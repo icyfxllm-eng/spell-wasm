@@ -331,6 +331,10 @@
   .mode-exit{position:static;width:44px;height:44px;min-width:44px;font-size:20px;
     border:1px solid var(--edge);border-radius:12px;background:var(--panel-2);
     display:flex;align-items:center;justify-content:center;flex:none}
+  /* btn-hide is per-surface in this stylesheet; the practice screen scopes
+     one rule for all its toggled children (keyboard, micro replay). */
+  .pr-screen .btn-hide{display:none}
+  #practiceOpen,#spellAloudEnter,#defMatchOpen{display:none}
   .pr-screen{position:fixed;inset:0;background:var(--bg,#0e1420);z-index:59;display:none;flex-direction:column;padding:10px 14px;gap:10px}
   .pr-screen.show{display:flex}
   .pr-top{display:flex;align-items:center;gap:10px}
