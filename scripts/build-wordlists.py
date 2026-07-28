@@ -47,7 +47,7 @@ MIN_LEN, MAX_LEN = 2, 16
 # one language is variety, not unfairness, so the gate guards against too FEW, not
 # against differing sizes. Lets English + others grow big (build-bigbank.py) while
 # a not-yet-grown language keeps its smaller curated bank above the floor.
-MIN_PER_TIER, MAX_PER_TIER = 30, 800
+MIN_PER_TIER, MAX_PER_TIER = 30, 840  # 800 + basic-noun growth (2026-07-28)
 
 
 def nfc(s: str) -> str:

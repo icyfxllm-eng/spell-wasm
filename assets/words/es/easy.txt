@@ -798,3 +798,5 @@ are
 baby
 bono
 gema
+hierba
+nieve

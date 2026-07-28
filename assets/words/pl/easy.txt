@@ -798,3 +798,17 @@ ben
 hala
 ibn
 land
+deszcz
+dym
+gwiazda
+kapelusz
+księżyc
+liść
+morze
+niebo
+piłka
+skrzydło
+słońce
+trawa
+usta
+śnieg
