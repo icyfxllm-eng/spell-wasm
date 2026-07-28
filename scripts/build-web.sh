@@ -49,7 +49,7 @@ fi
 # pair a new .wasm with an old JS glue after a deploy (LinkError: import
 # requires a callable) — seen live on spellgame.net.
 if [ -f "$WASM" ]; then
-  STAMP=$(shasum -a 256 "$WASM" | cut -c1-12)
+  STAMP=$(cat "$WASM" "$DIST/index.html" "$DIST/sw.js" | shasum -a 256 | cut -c1-12)
   sed -i '' "s/v=DEV/v=$STAMP/g" "$DIST/index.html" "$DIST/sw.js"
   sed -i '' "s/^const CACHE_VERSION = .*/const CACHE_VERSION = \"$STAMP\";/" "$DIST/sw.js"
   echo "==> cache stamp: $STAMP"
