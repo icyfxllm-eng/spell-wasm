@@ -77,7 +77,7 @@ pub enum GameMode {
     Daily,
     /// The Climb.
     Climb,
-    /// Ghost racing (race your best run).
+    /// Spell Racing (race your best run).
     GhostRace,
     /// Little Speller (young-learner mode).
     LittleSpeller,

@@ -677,7 +677,7 @@
   .chain .lbl{margin-top:5px;color:var(--muted-on-bg);font-size:11px;text-transform:uppercase;letter-spacing:.16em}
   .chain .divider{width:1px;height:42px;background:var(--edge)}
 
-  /* Ghost racing pace marker (F6). Augments the chain bar; a subtle pill that
+  /* Spell Racing pace marker (F6). Augments the chain bar; a subtle pill that
      appears only during a Climb run when a stored best exists. */
   .ghost-pace{width:fit-content;max-width:92%;margin:-2px auto 10px;padding:5px 13px;border-radius:999px;
     background:var(--panel);border:1px solid var(--edge);color:var(--muted-on-bg);
@@ -789,7 +789,7 @@
   .dev-list{display:flex;flex-direction:column;gap:10px;margin-top:8px}
   .dev-item{padding:14px;background:var(--panel-2);border:1px solid var(--edge);border-radius:12px;color:inherit;font-weight:700;font-size:15px;font-family:inherit;cursor:pointer;text-align:left}
   .dev-item:active{border-color:var(--amber)}
-  /* Ghost racing screen — same containing-block requirement as the hub. */
+  /* Spell Racing screen — same containing-block requirement as the hub. */
   #ghostScreen .modal{position:relative}
   .ghost-stat{background:var(--panel-2);border:1px solid var(--edge);border-radius:14px;padding:16px 14px;margin:4px 0 18px;line-height:1.5}
   .ghost-stat .gs-big{font-family:var(--display);font-weight:800;font-size:30px;color:var(--amber);line-height:1.1;display:block;margin-bottom:4px}
@@ -984,7 +984,7 @@
       <!-- Say It (Feature F2): on-device pronunciation practice. Ships DARK —
            stays btn-hide until the feature flag is on AND the native speech
            bridge is present AND Kid Mode is off (say_it::reflect_gating). -->
-      <button class="launch btn-hide" id="sayItBtn">🗣 <span data-i18n="top.sayIt">Say It</span></button>
+      <button class="launch btn-hide" id="sayItBtn">🎤 <span data-i18n="top.spellIt">Spell It</span></button>
       <!-- Online Spell Off (async 1v1). Hidden by default (btn-hide): shown by
            online_spelloff::reflect_gate only when the feature flag is ON, the
            player is signed in, and it isn't Kid Mode (COPPA — accounts only). -->
@@ -1098,7 +1098,7 @@
     <div class="divider"></div>
     <div class="stat"><div class="num" id="bestNum">0</div><div class="lbl" data-i18n="chain.best">your best</div></div>
   </div>
-  <!-- Ghost racing pace marker (F6): shown only during a Climb run when a stored
+  <!-- Spell Racing pace marker (F6): shown only during a Climb run when a stored
        best run exists for the language. Augments the chain bar without obscuring
        it; stays hidden otherwise (and entirely when the feature flag is off). -->
   <div class="ghost-pace btn-hide" id="ghostPace" aria-live="polite"></div>
@@ -1180,7 +1180,7 @@
     </div>
   </div>
 
-  <!-- Ghost racing screen (F6). The Ways-to-play tile now HAS a destination: it
+  <!-- Spell Racing screen (F6). The Ways-to-play tile now HAS a destination: it
        routes to #ghostOpenBtn (hidden), which opens this. Body is filled by
        ghost::reflect_screen — it reads the stored best run for the CURRENT study
        language, so the numbers are real, never placeholder copy. -->
@@ -1607,9 +1607,9 @@
            re-runs each tool's reflect when its switch flips. -->
       <div class="tools-hub" id="toolsHub">
         <div class="tools-head"><span class="tools-title" data-i18n="tools.title">Tools &amp; Features</span><small class="tools-sub" data-i18n="tools.subtitle">Turn features on or off — all in one place.</small></div>
-        <label class="set-row tool-row" id="toolGhostRow"><span class="lbl2"><span class="tool-name"><span class="tool-ico" aria-hidden="true">👻</span> <span data-i18n="tools.ghost.name">Ghost racing</span></span><small data-i18n="tools.ghost.desc">Race against your best Climb run.</small><small class="tool-avail" id="toolGhostHint"></small></span><input type="checkbox" class="switch" id="toolGhostToggle" /></label>
+        <label class="set-row tool-row" id="toolGhostRow"><span class="lbl2"><span class="tool-name"><span class="tool-ico" aria-hidden="true">👻</span> <span data-i18n="tools.racing.name">Spell Racing</span></span><small data-i18n="tools.racing.desc">Race against your best Climb run.</small><small class="tool-avail" id="toolGhostHint"></small></span><input type="checkbox" class="switch" id="toolGhostToggle" /></label>
         <label class="set-row tool-row" id="toolSyllableRow"><span class="lbl2"><span class="tool-name"><span class="tool-ico" aria-hidden="true">🔤</span> <span data-i18n="tools.syllable.name">Syllable replay</span></span><small data-i18n="tools.syllable.desc">Hear a missed word slowly, part by part.</small><small class="tool-avail" id="toolSyllableHint"></small></span><input type="checkbox" class="switch" id="toolSyllableToggle" /></label>
-        <label class="set-row tool-row" id="toolSayItRow"><span class="lbl2"><span class="tool-name"><span class="tool-ico" aria-hidden="true">🗣</span> <span data-i18n="tools.sayit.name">Say It</span></span><small data-i18n="tools.sayit.desc">Practice saying a word out loud.</small><small class="tool-avail" id="toolSayItHint"></small></span><input type="checkbox" class="switch" id="toolSayItToggle" /></label>
+        <label class="set-row tool-row btn-hide" id="toolSayItRow"><span class="lbl2"><span class="tool-name"><span class="tool-ico" aria-hidden="true">🗣</span> <span data-i18n="tools.sayit.name">Say It</span></span><small data-i18n="tools.sayit.desc">Practice saying a word out loud.</small><small class="tool-avail" id="toolSayItHint"></small></span><input type="checkbox" class="switch" id="toolSayItToggle" /></label>
         <label class="set-row tool-row" id="toolPhotoRow"><span class="lbl2"><span class="tool-name"><span class="tool-ico" aria-hidden="true">📷</span> <span data-i18n="tools.photo.name">Photo → word list</span></span><small data-i18n="tools.photo.desc">Scan a printed list with the camera.</small><small class="tool-avail" id="toolPhotoHint"></small></span><input type="checkbox" class="switch" id="toolPhotoToggle" /></label>
         <label class="set-row tool-row" id="toolSpellAloudRow"><span class="lbl2"><span class="tool-name"><span class="tool-ico" aria-hidden="true">🎤</span> <span data-i18n="tools.spellaloud.name">Spell it out loud</span></span><small data-i18n="tools.spellaloud.desc">Say the letters instead of typing.</small><small class="tool-avail" id="toolSpellAloudHint"></small></span><input type="checkbox" class="switch" id="toolSpellAloudToggle" /></label>
         <label class="set-row tool-row" id="toolStoriesRow"><span class="lbl2"><span class="tool-name"><span class="tool-ico" aria-hidden="true">📖</span> <span data-i18n="tools.stories.name">Word stories</span></span><small data-i18n="tools.stories.desc">Where a word comes from — its history.</small><small class="tool-avail" id="toolStoriesHint"></small></span><input type="checkbox" class="switch" id="toolStoriesToggle" /></label>

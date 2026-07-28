@@ -1179,7 +1179,7 @@ fn on_correct(app: &App) {
         }
         let streak = bump_streak(app);
         note_climb(app, true); // Option A: advance the Climb band on a correct answer
-        // Ghost racing (F6): in a solo Climb run, log this correct answer's elapsed
+        // Spell Racing (F6): in a solo Climb run, log this correct answer's elapsed
         // time and refresh the live pace marker. Flag-gated inside crate::ghost.
         {
             let (climb_run, run_start, lang) = {
@@ -1717,7 +1717,7 @@ fn end_chain(app: &App) {
         let duration = (now_ms() - run_start).max(0.0);
         crate::climb::submit_run(&level, reached, duration);
     }
-    // Ghost racing (F6): a solo Climb run just ended. Record the terminating
+    // Spell Racing (F6): a solo Climb run just ended. Record the terminating
     // miss, then keep the run if it's a new best; celebrate beating a prior
     // ghost. Local-only; independent of The Climb leaderboard above.
     if level == "climb" && !review {

@@ -41,8 +41,8 @@
     },
     {
       "id": "ghost_racing",
-      "nameKey": "tools.ghost.name",
-      "descKey": "tools.ghost.desc",
+      "nameKey": "tools.racing.name",
+      "descKey": "tools.racing.desc",
       "icon": "👻",
       "status": "live",
       "kidSafe": true,
@@ -53,7 +53,7 @@
       "entitlementLevel": "full",
       "requiresPremium": null,
       "languages": null,
-      "$note": "entitlementLevel `full` is not a guess: preview_allows() in entitlements.rs denies GameMode::GhostRace to Preview, so a previewed language cannot reach it.",
+      "$note": "CC-HUB-CLEANUP D4: user-facing name is Spell Racing (tools.racing.name); internal id stays ghost_racing per CC-SPELL-RACING.",
       "exitStyle": "confirm"
     },
     {
@@ -61,7 +61,7 @@
       "nameKey": "tools.syllable.name",
       "descKey": "tools.syllable.desc",
       "icon": "🔉",
-      "status": "live",
+      "status": "hidden",
       "kidSafe": true,
       "platforms": [
         "web",
@@ -80,7 +80,7 @@
       "nameKey": "tools.sayit.name",
       "descKey": "tools.sayit.desc",
       "icon": "🎤",
-      "status": "live",
+      "status": "hidden",
       "kidSafe": false,
       "platforms": [
         "ios"
@@ -88,7 +88,7 @@
       "entitlementLevel": "preview",
       "requiresPremium": null,
       "languages": null,
-      "$note": "kidSafe false is a COPPA hard-disable in Kid Mode, not a preference (flags.rs, tools_hub kid_ok=false).",
+      "$note": "CC-HUB-CLEANUP D3: DORMANT, not deleted — zero entry points (home tile rerouted to Spell It, hub hidden, tools row hidden). Code/assets retained; may return renamed.",
       "exitStyle": "instant"
     },
     {
@@ -96,7 +96,7 @@
       "nameKey": "tools.photo.name",
       "descKey": "tools.photo.desc",
       "icon": "📷",
-      "status": "live",
+      "status": "hidden",
       "kidSafe": false,
       "platforms": [
         "ios"
@@ -112,7 +112,7 @@
       "nameKey": "tools.spellaloud.name",
       "descKey": "tools.spellaloud.desc",
       "icon": "🗣",
-      "status": "live",
+      "status": "hidden",
       "kidSafe": true,
       "platforms": [
         "ios"
@@ -148,7 +148,7 @@
       "nameKey": "tools.spelloff.name",
       "descKey": "tools.spelloff.desc",
       "icon": "⚔️",
-      "status": "coming_soon",
+      "status": "hidden",
       "kidSafe": false,
       "platforms": [
         "web",

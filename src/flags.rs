@@ -50,7 +50,7 @@ pub fn set_test_override(v: Option<&str>) {
     TEST_OVERRIDE.with(|c| *c.borrow_mut() = v.map(|s| s.to_string()));
 }
 
-/// F6 "Ghost racing in The Climb" — race your best local run. Cross-platform.
+/// F6 "Spell Racing in The Climb" (formerly Ghost racing) — race your best local run. Cross-platform.
 pub fn ghost_racing() -> bool {
     resolve(stored("ghost_racing").as_deref(), true)
 }

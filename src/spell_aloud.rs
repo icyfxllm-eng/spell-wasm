@@ -606,6 +606,7 @@ pub fn apply_events(buffer: &mut Vec<Slot>, evs: &[Event]) -> Applied {
 
 use crate::native_lang;
 use crate::App;
+use wasm_bindgen::JsCast;
 use wasm_bindgen_futures::spawn_local;
 
 thread_local! {
@@ -682,6 +683,17 @@ pub fn wire(app: &App) {
     // the mode by ensuring a round is active — serve a word if there's none/answered,
     // else replay it — so the player hears what to spell. The voice mic is already
     // shown for voice-spell languages. Mirrors the orb; scoring stays the typed path.
+    // CC-HUB-CLEANUP D1: the home quick tile (sayItBtn, renamed Spell It) is
+    // the mode's single front door — same behavior as the hub entry. Routes to
+    // the CC-SPELLIT-GUIDE guide screen once that spec lands; direct entry
+    // until then (deviation flagged in the review notes).
+    let a_tile = app.clone();
+    crate::dom::on_click("sayItBtn", move || {
+        if let Ok(el) = crate::dom::el("spellAloudEnter").dyn_into::<web_sys::HtmlElement>() {
+            el.click();
+        }
+        let _ = &a_tile;
+    });
     let a_enter = app.clone();
     crate::dom::on_click("spellAloudEnter", move || {
         let (answered, active) = {

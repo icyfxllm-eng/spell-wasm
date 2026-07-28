@@ -1,4 +1,4 @@
-//! F6 — Ghost racing in The Climb (FP2, behind `flags::ghost_racing`, default ON).
+//! F6 — Spell Racing in The Climb (formerly Ghost racing; renamed CC-HUB-CLEANUP D4) (FP2, behind `flags::ghost_racing`, default ON).
 //!
 //! Single-player, LOCAL-ONLY. During a solo Climb run we record, per answered
 //! word, the elapsed ms since the run started and whether it was correct. When a
@@ -267,9 +267,9 @@ fn update_pace(streak: u32, elapsed_ms: f64) {
     dom::toggle_class("ghostPace", "btn-hide", false);
 }
 
-// ---------- the Ghost racing screen ----------
+// ---------- the Spell Racing screen ----------
 //
-// Ghost racing used to be a non-tappable "aid" tile in the Ways-to-play hub,
+// Spell Racing used to be a non-tappable "aid" tile in the Ways-to-play hub,
 // because it has no session of its own — it races you INSIDE The Climb. It now
 // has a real destination that answers "tap it and what happens?": it shows the
 // ghost you are actually racing (your stored best run for the current study
@@ -286,8 +286,8 @@ fn fmt_mmss(ms: u32) -> String {
 /// recorded run gets the "how to set one" state instead of an empty panel.
 pub fn reflect_screen(app: &App) {
     let lang = app.borrow().lang.clone();
-    dom::set_text("ghostTitle", &t("tools.ghost.name"));
-    dom::set_text("ghostDesc", &t("tools.ghost.desc"));
+    dom::set_text("ghostTitle", &t("tools.racing.name"));
+    dom::set_text("ghostDesc", &t("tools.racing.desc"));
     dom::set_text("ghostStart", &t("ghost.screen.start"));
     match best_for(&lang) {
         // `reached() == 0` is a stored-but-empty run (a first-word miss); it is

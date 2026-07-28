@@ -234,23 +234,24 @@ mod tests {
         let all = all();
         let c = HubCtx { kid: true, ..ctx() };
         let got = ids(&visible(&all, &c));
-        // ghost_racing + spell_aloud (kid-available per D5); say_it is a COPPA
-        // hard-disable; syllable_replay is es-only. Registry order.
+        // CC-HUB-CLEANUP D5: the menu is exactly Practice / Spell Racing /
+        // Definition Match — spell_aloud is the home tile now, not a hub tile.
         assert_eq!(
             got,
-            vec!["practice", "ghost_racing", "spell_aloud", "def_match"],
-            "en Kid: practice first, then ghost_racing + spell_aloud + def_match"
+            vec!["practice", "ghost_racing", "def_match"],
+            "en Kid: practice first, then ghost_racing + def_match"
         );
         assert!(!got.contains(&"say_it".to_string()), "say_it is never kid-visible (COPPA)");
         assert!(!got.contains(&"photo_list".to_string()));
     }
 
     #[test]
-    fn little_speller_in_spanish_also_sees_syllable_replay() {
+    fn little_speller_in_spanish_sees_the_same_pruned_menu() {
         let all = all();
         let c = HubCtx { kid: true, lang: "es".into(), ..ctx() };
-        // + spell_aloud (kid-available per D5, es supports voice spell). Registry order.
-        assert_eq!(ids(&visible(&all, &c)), vec!["practice", "ghost_racing", "syllable_replay", "spell_aloud", "def_match"]);
+        // CC-HUB-CLEANUP D2/D5: syllable_replay left the hub too (still wired
+        // from its own home surfaces); the pruned menu holds even on es.
+        assert_eq!(ids(&visible(&all, &c)), vec!["practice", "ghost_racing", "def_match"]);
     }
 
     #[test]
@@ -271,25 +272,31 @@ mod tests {
         let c = HubCtx { level: AccessLevel::Preview, ..ctx() };
         let got = ids(&visible(&all, &c));
         assert!(!got.contains(&"ghost_racing".to_string()), "absent on a previewed language — NOT locked");
-        // ...and a preview-level mode survives.
+        // ...and a preview-level mode survives (practice is free at PREVIEW).
         let c2 = HubCtx { level: AccessLevel::Preview, lang: "es".into(), ..ctx() };
-        assert!(ids(&visible(&all, &c2)).contains(&"syllable_replay".to_string()));
+        assert!(ids(&visible(&all, &c2)).contains(&"practice".to_string()));
     }
 
     #[test]
     fn premium_gated_mode_is_absent_without_the_entitlement() {
         let all = all();
+        // CC-HUB-CLEANUP D2: photo_list is hidden from the hub (Photo lives on
+        // the home word-source row); hidden must beat the entitlement too.
         let c = HubCtx { premium: vec![], ..ctx() };
         assert!(!ids(&visible(&all, &c)).contains(&"photo_list".to_string()), "photo_list needs photo_ocr");
-        assert!(ids(&visible(&all, &ctx())).contains(&"photo_list".to_string()), "...and appears with it");
+        assert!(!ids(&visible(&all, &ctx())).contains(&"photo_list".to_string()), "...and stays hidden even with it (D2)");
     }
 
     #[test]
     fn coming_soon_is_visible_but_the_caller_must_not_tap_it() {
         let all = all();
+        // CC-HUB-CLEANUP D5 retired the hub teaser (Spell-Off keeps its own
+        // home entry, soBtn). The registry entry survives as hidden with its
+        // teaser semantics intact for whenever the hub wants it back.
         let got = visible(&all, &ctx());
-        let spelloff = got.iter().find(|m| m.id == "online_spelloff").expect("coming_soon still tiles");
-        assert_eq!(spelloff.status, Status::ComingSoon, "it is a teaser, not a live tile");
+        assert!(got.iter().all(|m| m.id != "online_spelloff"), "teaser no longer tiles (D5)");
+        let reg = all.iter().find(|m| m.id == "online_spelloff").expect("still registered");
+        assert_eq!(reg.status, Status::Hidden, "dormant, not deleted");
     }
 
     /// A mode whose runtime flag is OFF does not tile, whatever its status says.
@@ -322,7 +329,7 @@ mod tests {
     }
 
     /// Every copy key must resolve. A tile rendering a raw key like
-    /// "tools.ghost.name" is the i18n bug class that shipped in the forge HUD.
+    /// "tools.racing.name" is the i18n bug class that shipped in the forge HUD.
     #[test]
     fn every_mode_copy_key_resolves() {
         for m in all() {

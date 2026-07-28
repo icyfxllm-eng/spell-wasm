@@ -7,7 +7,7 @@
 //!
 //!   * **launcher** — the mode has a real entry point (Say It's `sayItBtn`,
 //!     Spell-Off's `soBtn`). Renders as a `<button>` that clicks it.
-//!   * **info** — the mode is an in-round AID with no destination. Ghost racing
+//!   * **info** — the mode is an in-round AID with no destination. Spell Racing
 //!     happens inside The Climb; syllable replay fires when you miss a word;
 //!     word stories are an after-answer flourish (its own review doc says
 //!     "not a session mode"). Renders as a non-interactive card that tells the
@@ -234,7 +234,7 @@ mod tests {
     fn only_session_modes_have_a_destination() {
         assert_eq!(launch_for("say_it"), Some("sayItBtn"));
         assert_eq!(launch_for("online_spelloff"), Some("soBtn"));
-        // Ghost racing got a real destination deliberately: tapping it opens the
+        // Spell Racing got a real destination deliberately: tapping it opens the
         // ghost screen (ghost::wire_screen), which shows the best run you're
         // racing for this language and routes into The Climb. It is no longer a
         // tile that goes nowhere — which is exactly what this test guards.
@@ -251,29 +251,19 @@ mod tests {
         modes::all().into_iter().find(|m| m.id == "spell_aloud").expect("spell_aloud in registry")
     }
 
-    /// A7: on a voice-spell language the tile is a live button; on an unsupported
-    /// language it is shown as a non-interactive "unavailable" teaser (never hidden,
-    /// never the dead-end screen), with the availability reason.
+    /// A7 (rewritten for CC-HUB-CLEANUP): Spell It left the game menu — its
+    /// front door is the home tile (sayItBtn, D1) — so its hub tile renders as
+    /// NOTHING for every language. The per-language availability logic stays
+    /// intact behind it (mic-everywhere: all registered languages supported).
     #[test]
-    fn a7_spell_aloud_tile_is_live_on_en_es_and_unavailable_elsewhere() {
-        // Mic-everywhere (2026-07-27): every registered language has a lexicon
-        // now, so the tile is a live button for ALL of them — the remaining
-        // per-device gate (on-device speech availability) is reflected inside
-        // the mode, not at the tile.
+    fn a7_spell_aloud_tile_is_hidden_from_the_hub_for_everyone() {
         let m = spell_aloud_mode();
         for lang in ["en", "es", "fr", "de", "ja", "ar", "hi", "zh"] {
             assert!(unavailable_reason(&m, lang).is_none(), "{lang} supports voice spell");
-            let html = tile_html(&m, lang);
-            assert!(html.contains("id=\"modeTile_spell_aloud\""), "{lang}: live button");
-            assert!(!html.contains("teaser"), "{lang}: not a teaser");
+            assert!(tile_html(&m, lang).is_empty(), "{lang}: no hub tile (home-tile front door)");
         }
-        // An UNREGISTERED code still teases (defensive; not player-reachable).
-        for lang in ["xx"] {
-            assert!(unavailable_reason(&m, lang).is_some(), "{lang} does not support voice spell");
-            let html = tile_html(&m, lang);
-            assert!(html.contains("teaser"), "{lang}: teaser");
-            assert!(!html.contains("modeTile_spell_aloud"), "{lang}: not a live button (unreachable)");
-            assert!(html.contains(&t("tools.spellaloud.avail")), "{lang}: shows the reason");
-        }
+        // An unregistered code still reports unavailable (defensive), and still
+        // renders no hub tile either way.
+        assert!(unavailable_reason(&m, "xx").is_some(), "xx does not support voice spell");
     }
 }

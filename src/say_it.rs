@@ -73,8 +73,11 @@ thread_local! {
 /// AND the native bridge is present (so on the web / non-iOS the button stays
 /// hidden even with the flag flipped). Safe to call on every settings change.
 pub fn reflect_gating(app: &App) {
-    let kid = app.borrow().kid;
-    let offered = is_offered(crate::flags::say_it(), kid) && native_lang::available();
+    // CC-HUB-CLEANUP D1: the tile it used to govern is Spell It's front door
+    // now — visible where the voice-spelling input can exist (flag + native
+    // bridge). Kid Mode keeps it (spell_aloud is kidSafe).
+    let _ = app;
+    let offered = crate::flags::spell_aloud() && native_lang::available();
     crate::dom::toggle_class("sayItBtn", "btn-hide", !offered);
 }
 
@@ -84,8 +87,8 @@ pub fn wire(app: &App) {
     if !crate::flags::say_it() {
         return;
     }
-    let a = app.clone();
-    crate::dom::on_click("sayItBtn", move || open(&a));
+    // CC-HUB-CLEANUP D1/D3: the home tile is Spell It's front door now — the
+    // pronunciation mode is DORMANT (no entry points; code retained).
     let a = app.clone();
     crate::dom::on_click("sayItBegin", move || begin(&a));
     crate::dom::on_click("sayItCancel", || close());

@@ -46,7 +46,7 @@ struct Tool {
 }
 
 const TOOLS: [Tool; 8] = [
-    Tool { flag: "ghost_racing", toggle: "toolGhostToggle", hint: "toolGhostHint", row: "toolGhostRow", avail_key: "tools.ghost.avail", avail: Avail::Universal, next_round: true, kid_ok: true },
+    Tool { flag: "ghost_racing", toggle: "toolGhostToggle", hint: "toolGhostHint", row: "toolGhostRow", avail_key: "tools.racing.avail", avail: Avail::Universal, next_round: true, kid_ok: true },
     Tool { flag: "syllable_replay", toggle: "toolSyllableToggle", hint: "toolSyllableHint", row: "toolSyllableRow", avail_key: "tools.syllable.avail", avail: Avail::Universal, next_round: true, kid_ok: true },
     Tool { flag: "say_it", toggle: "toolSayItToggle", hint: "toolSayItHint", row: "toolSayItRow", avail_key: "tools.sayit.avail", avail: Avail::Native, next_round: false, kid_ok: false },
     Tool { flag: "photo_list", toggle: "toolPhotoToggle", hint: "toolPhotoHint", row: "toolPhotoRow", avail_key: "tools.photo.avail", avail: Avail::Native, next_round: false, kid_ok: false },
