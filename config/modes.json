@@ -23,6 +23,22 @@
   ],
   "modes": [
     {
+      "id": "practice",
+      "nameKey": "tools.practice.name",
+      "descKey": "tools.practice.desc",
+      "icon": "🌱",
+      "status": "live",
+      "kidSafe": true,
+      "platforms": [
+        "ios",
+        "web"
+      ],
+      "entitlementLevel": "preview",
+      "requiresPremium": null,
+      "languages": null,
+      "$note": "CC-PRACTICE: first among modes (D9). Per-language availability = consts::practice (D7: en pre-audit exempt; others await the interim-content ruling)."
+    },
+    {
       "id": "ghost_racing",
       "nameKey": "tools.ghost.name",
       "descKey": "tools.ghost.desc",

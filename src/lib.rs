@@ -9,6 +9,8 @@ mod consts;
 mod daily;
 mod deck;
 mod defmatch; // CC-DEF-MATCH core engine (REVIEW-GATED)
+mod practice; // CC-PRACTICE core (curriculum/phases/progress)
+mod practice_screen; // CC-PRACTICE screen (the front porch)
 mod defmatch_screen; // CC-DEF-MATCH P3 frontend loop
 mod dom;
 pub mod editor;
@@ -201,6 +203,7 @@ fn wire(app: &App) {
     ghost::wire_screen(app);
     racing::screen::wire(app); // CC-SPELL-RACING Phase 5 screen (hidden until activation)
     defmatch_screen::wire(app); // CC-DEF-MATCH P3 loop (live tile where consts::def_match holds)
+    practice_screen::wire(app); // CC-PRACTICE (visible where consts::practice holds — en first)
     dev::wire(app); // TEMP dev door: 5-tap logo → menu for the hidden racing/aloud screens
     tools_hub::wire(app);
     tools_hub::reflect(app);

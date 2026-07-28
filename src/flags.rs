@@ -118,6 +118,12 @@ pub fn def_match() -> bool {
     resolve(stored("def_match").as_deref(), true)
 }
 
+/// CC-PRACTICE — the guided first-contact mode. Default ON (failure-proof,
+/// writes nothing outside its own record); per-language gate is consts::practice.
+pub fn practice() -> bool {
+    resolve(stored("practice").as_deref(), true)
+}
+
 pub fn is_on(name: &str) -> bool {
     match name {
         "ghost_racing" => ghost_racing(),
@@ -129,6 +135,7 @@ pub fn is_on(name: &str) -> bool {
         "spell_aloud" => spell_aloud(),
         "attempts_shields" => attempts_shields(),
         "def_match" => def_match(),
+        "practice" => practice(),
         _ => false,
     }
 }

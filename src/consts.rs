@@ -238,6 +238,15 @@ pub fn def_match(lang: &str) -> bool {
     matches!(lang, ZH | EN | ES | FR | DE | PT | PL)
 }
 
+/// CC-PRACTICE D7 — per-language availability (registry-derived, no other
+/// path). English renders pre-audit per the spec's explicit exemption; every
+/// other language has a drafted curriculum in-repo but stays gated until Eric
+/// rules on the interim-content posture for Practice strings (asked at the
+/// engine/UI checkpoint). Snapshot-tested.
+pub fn practice(lang: &str) -> bool {
+    matches!(lang, EN)
+}
+
 /// A language's availability status (ComingSoon for anything not in the registry).
 pub fn lang_status(lang: &str) -> LangStatus {
     BUILTIN_LANGS.iter().find(|(c, _, _, _)| *c == lang).map(|(_, _, s, _)| *s).unwrap_or(ComingSoon)

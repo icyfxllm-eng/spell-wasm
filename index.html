@@ -323,6 +323,23 @@
   .dm-card.word .dm-def{font-size:20px;font-weight:700}
   body.kid .dm-card.word .dm-def{font-size:24px}
   .dm-card.word .dm-owner{font-size:11px;font-weight:400}
+  .pr-screen{position:fixed;inset:0;background:var(--bg,#0e1420);z-index:59;display:none;flex-direction:column;padding:10px 14px;gap:10px}
+  .pr-screen.show{display:flex}
+  .pr-top{display:flex;align-items:center;gap:10px}
+  .pr-path{flex:1;display:flex;flex-wrap:wrap;gap:3px;justify-content:center}
+  .pr-dot{font-size:11px;opacity:.35}
+  .pr-dot.done{opacity:1;color:#67d98b}
+  .pr-dot.now{opacity:1;color:var(--accent,#7aa2ff);transform:scale(1.3)}
+  .pr-hint{text-align:center;min-height:20px;font-size:14px;opacity:.85}
+  .pr-word{text-align:center;font-size:34px;font-weight:800;min-height:46px;letter-spacing:.06em}
+  .pr-slots{text-align:center;font-size:26px;letter-spacing:.35em;min-height:36px}
+  .pr-slots.pulse{animation:prPulse .4s}
+  @keyframes prPulse{25%{transform:translateX(-6px);color:var(--accent,#7aa2ff)}75%{transform:translateX(6px)}}
+  .pr-input{font-size:22px;padding:10px;border-radius:12px;border:1px solid var(--edge);background:var(--panel-2);color:var(--ink);text-align:center}
+  .pr-replay{width:100%}
+  .pr-card{position:absolute;inset:0;display:none;align-items:center;justify-content:center;background:rgba(0,0,0,.55)}
+  .pr-card.show{display:flex}
+  body.kid .pr-word{font-size:42px}
   .dm-recap{position:absolute;inset:0;display:none;align-items:center;justify-content:center;background:rgba(0,0,0,.55)}
   .dm-recap.show{display:flex}
   .dm-stats{display:flex;gap:14px;justify-content:center;margin:12px 0}
@@ -1210,6 +1227,37 @@
         </label>
       </div>
     </div>
+  </div>
+
+  <!-- CC-PRACTICE: the front porch — guided first 20 + 5 difficult words. -->
+  <div class="pr-screen" id="practiceScreen">
+    <div class="pr-top">
+      <button class="ghost hub-x" id="prExit" aria-label="Exit">✕</button>
+      <div class="pr-path" id="prPath"></div>
+      <button class="ghost" id="prRestart" data-i18n="practice.restart">↺</button>
+    </div>
+    <div class="pr-hint" id="prPhaseHint"></div>
+    <div class="pr-word" id="prWord"></div>
+    <div class="pr-slots" id="prSlots"></div>
+    <input class="pr-input" id="prInput" type="text" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" />
+    <button class="btn btn-check pr-replay" id="prReplay" data-i18n="practice.replay">🔊 Hear it again</button>
+    <div class="pr-card" id="prIntro"><div class="modal">
+      <p id="prIntroText"></p>
+      <button class="btn btn-check" id="prIntroOk" data-i18n="practice.gotIt" style="width:100%">Got it</button>
+    </div></div>
+    <div class="pr-card" id="prCeremony"><div class="modal" style="text-align:center">
+      <h3 data-i18n="practice.ceremonyTitle">🎉 First 20 done!</h3>
+      <p data-i18n="practice.ceremonyBody">You just spelled your first 20 words. Ready for 5 tricky ones?</p>
+      <button class="btn btn-check" id="prShare" data-i18n="share.button" style="width:100%;margin-bottom:8px">Share</button>
+      <button class="btn btn-check" id="prCeremonyGo" data-i18n="practice.ceremonyGo" style="width:100%">Take the victory lap</button>
+    </div></div>
+    <div class="pr-card" id="prNext"><div class="modal" style="text-align:center">
+      <h3 data-i18n="practice.nextTitle">⭐ You did it!</h3>
+      <p data-i18n="practice.nextBody">What's next?</p>
+      <button class="btn btn-check" id="prNextReplay" data-i18n="practice.nextReplay" style="width:100%;margin-bottom:8px">Replay the tricky five</button>
+      <button class="btn btn-check" id="prNextDaily" data-i18n="daily.title" style="width:100%;margin-bottom:8px">Daily</button>
+      <button class="btn btn-check" id="prNextStandard" data-i18n="practice.nextStandard" style="width:100%">Regular spelling</button>
+    </div></div>
   </div>
 
   <!-- CC-DEF-MATCH P3: the Definition Match screen. Cards float bottom→top in

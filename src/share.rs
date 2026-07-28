@@ -106,6 +106,18 @@ pub fn share_daily(correct: u32, total: u32, streak: u32) {
 /// Open the native share sheet with the player's current chain result.
 /// Prefers a rendered result-card image (native app); falls back to a
 /// text + link share. Best-effort — does nothing if no share sheet exists.
+/// CC-PRACTICE D8: the "First 20 in {language}" completion card, through the
+/// same share path as every other card. No PII beyond existing cards.
+pub fn share_practice(lang: &str) {
+    let name = crate::consts::BUILTIN_LANGS
+        .iter()
+        .find(|(c, _, _, _)| *c == lang)
+        .map(|(_, n, _, _)| *n)
+        .unwrap_or(lang);
+    let text = crate::i18n::tp("practice.shareText", &[("lang", name)]);
+    share_text(&text);
+}
+
 pub fn share_result(streak: u32, best: u32) {
     let text = build_message(streak, best);
 

@@ -37,7 +37,8 @@ use crate::App;
 /// how this particular frontend reaches it. Keeping DOM ids out of the registry
 /// is what lets the same file describe a mode for a future surface that has no
 /// such element. `None` = an in-round aid with no destination.
-const LAUNCH: [(&str, Option<&str>); 8] = [
+const LAUNCH: [(&str, Option<&str>); 9] = [
+    ("practice", Some("practiceOpen")), // CC-PRACTICE: the front porch, first (D9)
     // Races inside The Climb, but HAS its own screen: it shows the ghost you're
     // racing (your best run for this language) and starts a Climb run.
     ("ghost_racing", Some("ghostOpenBtn")),
@@ -112,6 +113,9 @@ fn ctx(app: &App) -> modes::HubCtx {
 fn unavailable_reason(m: &Mode, lang: &str) -> Option<&'static str> {
     if m.id == "spell_aloud" && !crate::consts::voice_spell(lang) {
         Some("tools.spellaloud.avail") // "iPhone · English or Spanish"
+    } else if m.id == "practice" && !crate::consts::practice(lang) {
+        // D7: curriculum drafted but not yet cleared for this language.
+        Some("tools.practice.avail")
     } else if m.id == "def_match" && !crate::consts::def_match(lang) {
         // Pool not landed/pinned for this language yet (Invariant 8) — a
         // non-tappable teaser, never a dead button.
