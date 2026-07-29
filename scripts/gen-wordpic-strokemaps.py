@@ -105,8 +105,7 @@ P.append(pic("fish", "easy", "animals", "🐟", True, [
     flow(arc(120, 256, 256, 382, 380, 256), 2, B_EASY, 1, "outline", 2),
     flow(line(380, 256, 462, 196), 3, B_EASY, 2, "line"),
     flow(line(380, 256, 462, 316), 4, B_EASY, 2, "line"),
-    flow(arc(210, 250, 250, 300, 300, 262), 5, B_EASY, 2, "arc"),          # fin
-    stack(120, 130, 24, 4, 6),                                             # bubbles
+    stack(120, 130, 24, 4, 5),                                             # bubbles
 ]))
 
 # 4) HOUSE (easy): roof, walls, base, door.

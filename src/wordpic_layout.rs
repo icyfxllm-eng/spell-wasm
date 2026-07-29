@@ -369,11 +369,13 @@ pub fn solve(slot: &Slot, lang: &str, units: u32) -> Option<Placement> {
         // Words whose solved size escapes the band are rejected (next
         // candidate) — a stack can never overflow its column (the smiley's
         // eyes reaching its mouth taught us this).
+        // Stacks clamp to the ABSOLUTE floor, not the band minimum: dense
+        // scripts (zh pinyin runs 8-10 units) must still solve a column.
         let size = height / units.max(1) as f32;
-        if size < lo - 0.01 || size > hi + 0.01 {
+        if size < FLOOR - 0.01 || size > hi + 0.01 {
             return None;
         }
-        let size = size.clamp(lo, hi);
+        let size = size.clamp(FLOOR, hi);
         let samples: Vec<(f32, f32)> =
             (0..units.max(1)).map(|k| (x, y + k as f32 * size)).collect();
         return Some(Placement {

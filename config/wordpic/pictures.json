@@ -199,22 +199,11 @@
      "arch": "line"
     },
     {
-     "mode": "flow",
-     "d": "M210 250 Q250 300 300 262",
-     "order": 5,
-     "budget": [
-      2,
-      9
-     ],
-     "band": 2,
-     "arch": "arc"
-    },
-    {
      "mode": "stack",
      "x": 120,
      "y": 130,
      "size": 24,
-     "order": 6,
+     "order": 5,
      "budget": [
       2,
       9
