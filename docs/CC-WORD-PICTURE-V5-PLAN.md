@@ -46,3 +46,28 @@ eyes, "Terrific Excellent cool" arcing as the mouth. The words ARE the art.
 - Native-speaker audit rides the standing round for the new i18n strings.
 - I5 golden render fixtures: approximated by the WebKit spike + live web
   verification until a render harness exists.
+
+## v6 layout engine — burn-down state (2026-07-28, mid-flight)
+
+Engine landed (src/wordpic_layout.rs): flatten M/L/Q/A → L5 normalize → L4
+corner split → pool-median auto-segmentation → L1 solver (fill-the-line,
+band-clamped; stacks fill-the-column) → junction-aware distance collisions →
+L9 sweep test (10 × 15 × 5 seeds) + fish golden + star-pentagon + mona
+band/density pins. Sweep burned 12,771 → 2,749 failures.
+
+Remaining, by design intent (the sweep is DOING ITS JOB — it is rejecting
+v5-era stroke maps whose art-strokes don't leave text clearance):
+- overlap class (cat 987 worst; all pictures some): strokes drawn as ART
+  lines sit closer than ~0.8×(sizeA+sizeB); fix = RE-AUTHOR manifests with
+  clearance-aware geometry (L3: structural overlap must fail content build —
+  it now does). Cat needs the full redo (Eric: "crammed").
+- unfilled class (mona/eiffel 75 each, dragon 70…): short strokes whose
+  budget can't host any pool word; fix = lengthen/merge or per-language
+  budget overrides (I1 suggestions).
+- mona 146 slots vs 150 target: add 2 paths or one more seg pair.
+
+NEXT (in order): re-author manifests against the sweep → screen switches to
+wordpic_layout (textLength justification, solved sizes, docked indicator
+L6, expert pan/zoom L7) → L10 review artifact set for Eric → NO TestFlight
+until his sign-off. CC-PHOTO-PICTURE v2 filed design-ahead, blocked on
+P1/P2 (docs/CC-PHOTO-PICTURE-V2-PLAN.md).

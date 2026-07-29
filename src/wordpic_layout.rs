@@ -695,8 +695,20 @@ mod tests {
                 }
             }
         }
-        assert!(failures.is_empty(), "L9 sweep failures ({}):\n{}", failures.len(),
-            failures[..failures.len().min(25)].join("\n"));
+        if !failures.is_empty() {
+            let mut hist: std::collections::HashMap<String, usize> = Default::default();
+            for f in &failures {
+                let key = f.split('/').next().unwrap_or("?").to_string()
+                    + " " + if f.contains("overlap") { "overlap" }
+                        else if f.contains("unfilled") { "unfilled" }
+                        else if f.contains("sub-floor") { "floor" } else { "frame" };
+                *hist.entry(key).or_default() += 1;
+            }
+            let mut rows: Vec<_> = hist.into_iter().collect();
+            rows.sort_by(|a, b| b.1.cmp(&a.1));
+            panic!("L9 sweep failures ({}):\nHIST {:?}\n{}", failures.len(), rows,
+                failures[..failures.len().min(12)].join("\n"));
+        }
     }
 
     /// L7 `mona-lisa-overlap` — expert bands drive size hierarchy and the map
