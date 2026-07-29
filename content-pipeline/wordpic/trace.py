@@ -25,7 +25,7 @@ def main():
     ap.add_argument("--bands", type=int, default=4)
     ap.add_argument("--out", default="draft.py")
     ap.add_argument("--min-run", type=int, default=46, help="min stroke px (v6 solver floor)")
-    ap.add_argument("--row-step", type=int, default=18, help="scanline spacing at darkest band")
+    ap.add_argument("--row-step", type=int, default=30, help="scanline spacing at darkest band")
     args = ap.parse_args()
     try:
         from PIL import Image
@@ -45,21 +45,21 @@ def main():
         return levels - min(levels - 1, v * levels // 256)
 
     lines = []
-    for band in range(1, levels + 1):
-        # Darker bands scan more densely (D7: density is the shading).
-        step = max(8, int(args.row_step * (1.6 - band / levels)))
-        for y in range(0, h, step):
-            run = None
-            for x in range(w):
-                b = band_of(px[x, y])
-                inside = b == band
-                if inside and run is None:
-                    run = x
-                if (not inside or x == w - 1) and run is not None:
-                    length = x - run
-                    if length >= args.min_run:
-                        lines.append((band, run + ox, y + oy, x + ox, y + oy))
-                    run = None
+    # One pass of text-legal rows (>=26px apart, the v6 collision law); each
+    # row splits into tonal RUNS — every run becomes a stroke carrying its
+    # band (band -> size/weight is the shading, D7).
+    step = max(26, args.row_step)
+    for y in range(0, h, step):
+        run_start = 0
+        run_band = band_of(px[0, y])
+        for x in range(1, w):
+            b = band_of(px[x, y])
+            if b != run_band or x == w - 1:
+                length = x - run_start
+                if length >= args.min_run:
+                    lines.append((run_band, run_start + ox, y + oy, x + ox, y + oy))
+                run_start = x
+                run_band = b
     with open(args.out, "w") as f:
         f.write("# D10 draft — curate before committing; the L9 sweep is the law.\n")
         f.write(f"# source: {args.image}  bands: {levels}  lines: {len(lines)}\n")

@@ -2,7 +2,7 @@
   "name": "spell",
   "version": "1.0.0",
   "private": true,
-  "description": "Spell — hear it, spell it. Capacitor native wrapper around the Rust/WASM PWA.",
+  "description": "Spell \u2014 hear it, spell it. Capacitor native wrapper around the Rust/WASM PWA.",
   "scripts": {
     "i18n:check": "node scripts/i18n-check.mjs",
     "viewport:check": "node scripts/viewport-check.mjs",
@@ -17,7 +17,7 @@
     "entitlements:purity": "node scripts/entitlement-core-purity-check.mjs",
     "entitlements:audit-mode": "node scripts/audit-mode-release-check.mjs",
     "entitlements:check": "npm run entitlements:map && npm run entitlements:map:selftest && npm run entitlements:purity && npm run entitlements:audit-mode",
-    "build": "node scripts/i18n-check.mjs && node scripts/viewport-check.mjs && python3 scripts/build-wordlists.py --check && bash scripts/build-web.sh && node scripts/seam-absence-check.mjs dist",
+    "build": "node scripts/i18n-check.mjs && node scripts/viewport-check.mjs && python3 scripts/build-wordlists.py --check && bash scripts/build-web.sh && node scripts/seam-absence-check.mjs dist && node scripts/wordpic-check.mjs",
     "sync": "npm run build && cap sync",
     "android": "npm run sync && cap run android",
     "release:android": "npm run sync && cd android && ./gradlew :app:bundleRelease",
