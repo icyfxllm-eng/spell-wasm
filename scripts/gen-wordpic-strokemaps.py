@@ -12,7 +12,7 @@ Fill order is choreography (D6): outline → masses → details → focal LAST.
 Picture #1 is Eric's notebook smiley (fidelity bar): stacked-word eyes,
 arced-word mouth — the mouth is the finale.
 
-Output: config/wordpic/pictures.json (+ ghost-render SVGs for review via
+Output: config/wordpic/pictures.json (+ outline-render SVGs for review via
 --renders, written to the scratchpad only — review artifacts, not assets).
 Expert stroke map (Mona Lisa) is hand-traced against
 content-pipeline/wordpic/ref/mona-lisa.jpg (PD; never ships — I4 scan).
@@ -54,11 +54,11 @@ _CUR_TIER = ["easy"]  # set per tier section below (data-gen convenience)
 
 
 def stack(x, y, size, units, order, band=2):
-    """A vertical letter stack at (x,y); `units` sizes the ghost, the BUDGET
+    """A vertical letter stack at (x,y); `units` sizes the column, the BUDGET
     is tier-wide (D15a) — the renderer scales glyphs to the region."""
     return {"mode": "stack", "x": x, "y": y, "size": size,
             "order": order, "budget": list(STACK_BUDGET[_CUR_TIER[0]]),
-            "band": band, "arch": "stack", "ghost": units}
+            "band": band, "arch": "stack", "column": units}
 
 
 def tuft(x, y, h):
@@ -609,7 +609,7 @@ def main():
         orders = [q["order"] for q in p["paths"]]
         assert orders == list(range(1, n + 1)), f"{p['id']}: fill order not 1..{n}: {orders}"
     manifest = {
-        "$doc": "CC-WORD-PICTURE v5 starter pack — calligram stroke maps. Words typeset along paths; ghost guides from word 1; focal stroke last (D6).",
+        "$doc": "CC-WORD-PICTURE v5 starter pack — calligram stroke maps. Words typeset along paths; outline guides from word 1; focal stroke last (D6).",
         "pack": "starter",
         "flowMs": 1000,
         "minFont": 12,

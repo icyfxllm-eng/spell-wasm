@@ -331,7 +331,7 @@ fn render_canvas(p: &wordpic::Picture, lang: &str, words: &[String]) {
             match (&sl.poly, &sl.stack) {
                 (Some(_), _) => {
                     svg.push_str(&format!(
-                        "<use href=\"#wps{si}\" class=\"wp-ghost{}\"/>",
+                        "<use href=\"#wps{si}\" class=\"wp-outline{}\"/>",
                         if is_next { " next" } else { "" }
                     ));
                 }
@@ -339,7 +339,7 @@ fn render_canvas(p: &wordpic::Picture, lang: &str, words: &[String]) {
                     let n = (height / cell).round() as i32;
                     for k in 0..n {
                         svg.push_str(&format!(
-                            "<rect class=\"wp-ghost{}\" x=\"{:.0}\" y=\"{:.0}\" width=\"{:.0}\" height=\"{:.0}\" rx=\"5\"/>",
+                            "<rect class=\"wp-outline{}\" x=\"{:.0}\" y=\"{:.0}\" width=\"{:.0}\" height=\"{:.0}\" rx=\"5\"/>",
                             if is_next { " next" } else { "" },
                             x - cell * 0.42,
                             y + k as f32 * cell - cell * 0.72,

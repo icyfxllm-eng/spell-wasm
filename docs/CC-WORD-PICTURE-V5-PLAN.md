@@ -28,7 +28,7 @@ eyes, "Terrific Excellent cool" arcing as the mouth. The words ARE the art.
 
 - P0 ✅ v3 surfaces cleared; PD ref relocated; this ledger.
 - P1 stroke-map manifests + generator (10 starter pictures; smiley = #1,
-  fidelity bar: recognizably the notebook sketch) + ghost renders.
+  fidelity bar: recognizably the notebook sketch) + outline renders.
 - P2 engine refit (budget-filtered seeded feed, ≥3-candidate I1, D14
   recency bias, recorded words + "Spell it again" replays) + test suite.
 - P3 calligram screen (textPath/stack/angled/per-unit placement, flow-in,
@@ -78,5 +78,5 @@ Second pack authored + sweep green (20 pics x 15 langs x 5 seeds, zero
 failures): dog/butterfly/snail/duck (easy), owl/turtle/elephant (medium),
 horse/peacock (hard), rhino = Durer 1515 expert headline (PD ref in
 content-pipeline, never ships). Expert path band relaxed 50-90 -> 38-200
-(v7 mona flagship needs 150-200). Review artifact (L10 + v7 ghost-ID gate)
+(v7 mona flagship needs 150-200). Review artifact (L10 + v7 outline-ID gate)
 sent; NO ship until Eric approves. v7 spec filed: CC-WORD-PICTURE-V7-PLAN.

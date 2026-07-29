@@ -12,7 +12,7 @@ Usage:
 
 Output: a Python fragment of flow(...) calls in the gen-wordpic-strokemaps
 vocabulary (paths carry band + tier budgets), plus a .svg preview of the
-traced lines over nothing (ghost preview). Curate: delete/merge/move lines,
+traced lines over nothing (outline preview). Curate: delete/merge/move lines,
 then paste into the generator and run the L9 sweep — the sweep is the law.
 """
 import argparse

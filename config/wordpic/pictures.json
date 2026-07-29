@@ -1,5 +1,5 @@
 {
- "$doc": "CC-WORD-PICTURE v5 starter pack — calligram stroke maps. Words typeset along paths; ghost guides from word 1; focal stroke last (D6).",
+ "$doc": "CC-WORD-PICTURE v5 starter pack — calligram stroke maps. Words typeset along paths; outline guides from word 1; focal stroke last (D6).",
  "pack": "starter",
  "flowMs": 1000,
  "minFont": 12,
@@ -55,7 +55,7 @@
      ],
      "band": 2,
      "arch": "stack",
-     "ghost": 4,
+     "column": 4,
      "feature": "left eye"
     },
     {
@@ -70,7 +70,7 @@
      ],
      "band": 2,
      "arch": "stack",
-     "ghost": 4,
+     "column": 4,
      "feature": "right eye"
     },
     {
@@ -120,7 +120,7 @@
      ],
      "band": 2,
      "arch": "stack",
-     "ghost": 4,
+     "column": 4,
      "feature": "top-left sparkle"
     },
     {
@@ -135,7 +135,7 @@
      ],
      "band": 2,
      "arch": "stack",
-     "ghost": 4,
+     "column": 4,
      "feature": "top-right sparkle"
     },
     {
@@ -256,7 +256,7 @@
      ],
      "band": 2,
      "arch": "stack",
-     "ghost": 4,
+     "column": 4,
      "feature": "left window"
     },
     {
@@ -271,7 +271,7 @@
      ],
      "band": 2,
      "arch": "stack",
-     "ghost": 4,
+     "column": 4,
      "feature": "right window"
     },
     {
@@ -512,7 +512,7 @@
      ],
      "band": 2,
      "arch": "stack",
-     "ghost": 6,
+     "column": 6,
      "feature": "left fuselage"
     },
     {
@@ -527,7 +527,7 @@
      ],
      "band": 2,
      "arch": "stack",
-     "ghost": 6,
+     "column": 6,
      "feature": "right fuselage"
     },
     {

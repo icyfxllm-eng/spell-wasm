@@ -337,7 +337,7 @@ pub fn slots_for_lang(p: &Picture, lang: &str) -> Vec<Slot> {
         if q.mode == "stack" {
             let (x, y) = tx(q.x, q.y);
             let cell = q.size * s;
-            let height = cell * q.ghost.max(3) as f32;
+            let height = cell * q.column.max(3) as f32;
             slots.push(Slot {
                 path_idx: i,
                 poly: None,
@@ -724,7 +724,7 @@ mod tests {
     use super::*;
     use crate::wordpic;
 
-    /// L10 render emitter: ghost + solver-filled SVGs for every picture,
+    /// L10 render emitter: outline + solver-filled SVGs for every picture,
     /// straight from the engine (the review artifact generator).
     #[test]
     #[ignore]
@@ -786,7 +786,7 @@ mod tests {
                     }
                 }
                 svg.push_str("</svg>");
-                let name = format!("{dir}/{}-{}.svg", p.id, if filled { "filled" } else { "ghost" });
+                let name = format!("{dir}/{}-{}.svg", p.id, if filled { "filled" } else { "outline" });
                 std::fs::write(&name, svg).unwrap();
             }
             println!("{}: {} slots, {} filled", p.id, slots.len(), words.len());

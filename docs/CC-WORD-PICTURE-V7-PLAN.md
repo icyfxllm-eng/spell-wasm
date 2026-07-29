@@ -32,8 +32,8 @@ background); dragon fails entirely.
    logged); still empty → manifest invalid for that language, stop and ask
    (D4). CI reports per lang × tier word counts at lengths 2–5. Fixture:
    `snowman-eye-length` (15 langs × 5 seeds).
-4. **Recognizability gate + dragon re-author.** Ghost-outline gate: Eric
-   must name the subject from ghost strokes alone BEFORE word-layout work.
+4. **Recognizability gate + dragon re-author.** outline outline gate: Eric
+   must name the subject from outline strokes alone BEFORE word-layout work.
    Dragon → serpentine East-Asian silhouette (D5; head-portrait fallback;
    both fail → stop and ask). Classifier top-5 check = advisory only.
 5. **Mona fidelity pass.** v5 posterize-then-trace on the PD scan; dense
@@ -65,10 +65,61 @@ No runtime art generation. No new speech pipeline.
 ## Done means
 All 7 new fixtures + 4 v6 fixtures pass; device-metric sweep zero
 violations incl. unlabeled strokes + dot budgets; root-cause writeup in PR;
-Eric IDs all 10 starters from ghosts; input-discipline sweep passes;
+Eric IDs all 10 starters from outline s; input-discipline sweep passes;
 re-review renders delivered BEFORE any round-3 build (blocking gate).
 
 ## Burn-down state (2026-07-29)
 Not started — queued behind Animals pack review. Note: Animals pack was
 authored under v6 law; its strokes will need `feature` labels + scale
 classes when F2/F3 land (lint will catch).
+
+
+## v7 amendment (Eric, 2026-07-30) — operative additions
+
+TERMINOLOGY (D11, binding): strokes rendered without words = "outline
+render"; sign-off = "Eric's outline review". The prior term is RETIRED —
+banned from code, identifiers, comments, PR text, and messages (renamed on
+contact 2026-07-30: manifest field -> `column`, CSS -> `.wp-outline`,
+render files -> `-outline.svg`).
+
+F8 — photo-traced outlines (exactness by measurement):
+- Every representational picture's outline traced from a licensed
+  reference (provenance CI gate; references never ship). Geometric
+  subjects (star) exempt.
+- Offline tracer with a runtime-portable PURE core (image in -> outline
+  paths + scale classes + fidelity metrics out; zero tool/filesystem deps;
+  isolated-compile CI target). Player photo upload stays in
+  CC-PHOTO-PICTURE, execution-blocked (D12).
+- Fidelity gates (D10, Eric confirms numbers after first contour
+  overlays): max path deviation <= 1.5% of canvas width (7.7px @ 512);
+  traced silhouette covers >= 95% of reference perimeter. Recorded in the
+  manifest; missing reference/license/deviation = build failure. No
+  freehand-only outline ships for a representational subject.
+- Re-trace this round: dragon (D5 serpentine), fish (validation-only —
+  body frozen), snowman, tower, mona (feeds F5), and every animal that
+  failed outline review.
+
+ROUND-1 ANIMALS VERDICT (2026-07-30): NONE of the 10 hand-authored
+animals passed Eric's outline review. All ten go through the F8 trace
+pipeline with references before re-review. The pack's sweep-green
+geometry work stands as engine validation only.
+
+Done-means additions: tracer fixture (deviation + coverage on a stored
+reference); contour overlay in every re-review packet; zero occurrences
+of the retired term scoped to the feature; `dragon-outline-id`,
+`fish-stray-blob`, `tower-extra-regions`, `monalisa-background`,
+`snowman-eye-length`, `star-side-rails` fixtures.
+
+## v7 burn-down (2026-07-30)
+- F1 COMPLETE: textLength span forcing; runtime legality ladder
+  (measure -> re-solve cap 5 -> shorter-word substitution); TWO root
+  causes fixed (device metrics spill; feed identity bug that misfired
+  same-path/seam exemptions + deleted the accept-a-collider branch).
+  star-overlap-r2 + star-25-seeds fixtures green.
+- F2 COMPLETE: required `feature` labels on all paths (gen + mjs lint,
+  banned labels rejected); D2 fish blob deleted; D3 tower sides deleted.
+  D6 mona background rides the F5 rebuild.
+- NEXT: F8 tracer core (pure module + fixture) -> references (Eric
+  approving downloads) -> re-trace all animals + dragon/snowman/tower/
+  mona -> outline review -> F3 dot budgets -> F6 chrome -> F7 input
+  discipline -> full re-review packet -> build 106.

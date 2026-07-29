@@ -13,7 +13,7 @@ the mask → detail-map banding → v6 legalization as a HARD gate → preview/
 accept → "My Pictures" (separate class from curated; D1 amendment scoped).
 Lifelike core: LR1 palette sampling, LR2 flow-field stroke direction, LR3
 luminance→weight/opacity; polish: LR4 protected highlights, LR5 two-scale
-layers, LR6 edge emphasis; LR7 legalization supremacy; LR8 Ghost underlay
+layers, LR6 edge emphasis; LR7 legalization supremacy; LR8 outline underlay
 toggle. Privacy: 100% on-device, photo never retained, total deletion,
 share opt-in only, never in Kid Mode; parent-gated creation, Complete
 flagship. The husky test (D9 a–e) is Phase B's acceptance centerpiece.

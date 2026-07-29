@@ -1,6 +1,6 @@
 //! CC-WORD-PICTURE v5 core — calligrams: the words you spell become the picture.
 //!
-//! REVIEW-GATED. A picture is a manifest of WORD-PATHS (D1): ghost guides
+//! REVIEW-GATED. A picture is a manifest of WORD-PATHS (D1): outline guides
 //! visible from word 1; each correctly spelled word is typeset along the next
 //! path (flow/textPath, vertical stacks, per-unit CJK placement — and, per
 //! Eric's D4 ruling, chord-angled straight words for complex-shaping scripts
@@ -51,9 +51,9 @@ pub struct WordPath {
     #[serde(default)]
     pub segs: Option<u32>,
     /// Stacks: intended letter count — v6 fixes the COLUMN height at
-    /// ghost × size and solves glyph size per word (fill-the-column).
+    /// column × size and solves glyph size per word (fill-the-column).
     #[serde(default)]
-    pub ghost: u32,
+    pub column: u32,
 }
 
 impl WordPath {
