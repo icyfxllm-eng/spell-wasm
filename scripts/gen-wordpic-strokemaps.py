@@ -61,12 +61,17 @@ def stack(x, y, size, units, order, band=2):
             "band": band, "arch": "stack", "ghost": units}
 
 
-def pic(pid, tier, subject, icon, kid, paths, wash=False, prov=None, free_hint=None):
+def tuft(x, y, h):
+    """Small grass tuft: a shallow ~55px arc, the minimum fillable stroke."""
+    return arc(x - 28, y, x, y - h, x + 28, y)
+
+
+def pic(pid, tier, subject, icon, kid, paths, wash=False, prov=None, free_hint=None, pack="starter"):
     ordered = sorted(paths, key=lambda p: p["order"])
     for k, q in enumerate(ordered):
         q["order"] = k + 1  # normalize: authoring gaps are fine, output is 1..n
     d = {"id": pid, "tier": tier, "subject": subject, "icon": icon, "kid": kid,
-         "wash": wash, "paths": ordered}
+         "wash": wash, "pack": pack, "paths": ordered}
     if prov:
         d["provenance"] = prov
     return d
@@ -320,7 +325,222 @@ P.append(pic("mona", "expert", "masterpieces", "🖼️", False, _m,
                  "pdBasis": "Public domain: painting c. 1503–1506, artist died 1519; stroke map hand-traced at content time over the PD reference (reference image not shipped)",
                  "retrieved": "2026-07-28"}))
 
-BANDS = {"easy": (3, 8), "medium": (10, 20), "hard": (25, 45), "expert": (50, 90)}
+
+# ============================ ANIMALS PACK (D13) ============================
+# 4 easy / 3 medium / 2 hard / 1 expert. Every picture its own subject tag
+# (D11). Clearance vocabulary: strokes connect only at shared endpoints
+# (seam <8px) or stay >0.38x(sizes) apart; tips may approach bodies to
+# 0.2x(sizes). The sweep is the law.
+
+_CUR_TIER[0] = "easy"
+P.append(pic("dog", "easy", "dog", "🐶", True, [
+    flow(arc(166, 210, 256, 118, 346, 210), 1, B_EASY, 2, "outline"),
+    flow(arc(166, 210, 256, 290, 346, 210), 2, B_EASY, 2, "outline"),
+    flow(arc(150, 108, 106, 168, 136, 238), 3, B_EASY, 2, "arc"),
+    flow(arc(362, 108, 406, 168, 376, 238), 4, B_EASY, 2, "arc"),
+    flow(arc(236, 196, 256, 210, 276, 196), 5, B_EASY, 3, "arc"),
+    flow(arc(238, 306, 256, 322, 274, 306), 6, B_EASY, 3, "arc"),
+    flow(line(180, 420, 332, 420), 7, B_EASY, 2, "line"),
+], pack="animals"))
+
+P.append(pic("butterfly", "easy", "butterfly", "🦋", True, [
+    flow(line(256, 160, 256, 300), 1, B_EASY, 2, "line"),
+    flow(arc(226, 170, 130, 100, 110, 220), 2, B_EASY, 2, "arc"),
+    flow(arc(110, 240, 130, 360, 226, 300), 3, B_EASY, 2, "arc"),
+    flow(arc(286, 170, 382, 100, 402, 220), 4, B_EASY, 2, "arc"),
+    flow(arc(402, 240, 382, 360, 286, 300), 5, B_EASY, 2, "arc"),
+    flow(line(244, 140, 208, 74), 6, B_EASY, 3, "line"),
+    flow(line(268, 140, 304, 74), 7, B_EASY, 3, "line"),
+], pack="animals"))
+
+P.append(pic("snail", "easy", "snail", "🐌", True, [
+    flow("M220 260 A80 80 0 1 1 300 340", 1, B_EASY, 2, "spiral"),
+    flow("M258 260 A42 42 0 1 1 300 302", 2, B_EASY, 2, "spiral"),
+    flow(arc(110, 352, 250, 372, 408, 352), 3, B_EASY, 2, "line"),
+    flow(arc(112, 340, 96, 300, 122, 268), 4, B_EASY, 2, "arc"),
+    flow(line(118, 262, 90, 208), 5, B_EASY, 2, "line"),
+    flow(line(134, 262, 152, 206), 6, B_EASY, 2, "line"),
+], pack="animals"))
+
+P.append(pic("duck", "easy", "duck", "🦆", True, [
+    flow("M138 200 A46 46 0 0 1 230 200", 1, B_EASY, 2, "arc"),
+    flow(line(134, 210, 82, 226), 2, B_EASY, 2, "line"),
+    flow(arc(200, 244, 300, 208, 384, 262), 3, B_EASY, 2, "arc"),
+    flow(arc(184, 264, 280, 344, 380, 274), 4, B_EASY, 2, "arc"),
+    flow(line(60, 384, 200, 384), 5, B_EASY, 3, "line"),
+    flow(line(300, 384, 440, 384), 6, B_EASY, 3, "line"),
+], pack="animals"))
+
+_CUR_TIER[0] = "medium"
+P.append(pic("owl", "medium", "owl", "🦉", True, [
+    flow(arc(256, 110, 144, 140, 154, 300), 1, B_MED, 2, "outline"),
+    flow(arc(256, 110, 368, 140, 358, 300), 2, B_MED, 2, "outline"),
+    flow(arc(154, 300, 256, 400, 358, 300), 3, B_MED, 2, "arc"),
+    flow(line(192, 96, 172, 46), 4, B_MED, 3, "line"),
+    flow(line(320, 96, 340, 46), 5, B_MED, 3, "line"),
+    flow("M206 204 A20 20 0 0 1 246 204", 6, B_MED, 3, "arc"),
+    flow("M206 204 A20 20 0 1 0 246 204", 7, B_MED, 3, "arc"),
+    flow("M266 204 A20 20 0 0 1 306 204", 8, B_MED, 3, "arc"),
+    flow("M266 204 A20 20 0 1 0 306 204", 9, B_MED, 3, "arc"),
+    flow(arc(210, 294, 256, 314, 302, 294), 10, B_MED, 3, "arc"),
+    flow(line(150, 430, 362, 430), 11, B_MED, 2, "line"),
+    flow(arc(60, 84, 96, 56, 132, 84), 12, B_MED, 4, "arc"),
+], pack="animals"))
+
+P.append(pic("turtle", "medium", "turtle", "🐢", True, [
+    flow(arc(140, 300, 256, 160, 372, 300), 1, B_MED, 2, "outline"),
+    flow(arc(140, 300, 256, 330, 372, 300), 2, B_MED, 2, "arc"),
+    flow(arc(372, 300, 412, 286, 426, 252), 3, B_MED, 2, "arc"),
+    flow(arc(400, 246, 428, 218, 456, 246), 4, B_MED, 3, "arc"),
+    flow(line(140, 300, 118, 356), 5, B_MED, 3, "line"),
+    flow(line(372, 300, 394, 356), 6, B_MED, 3, "line"),
+    flow(line(140, 300, 96, 326), 7, B_MED, 3, "line"),
+    flow(tuft(80, 400, 18), 8, B_MED, 4, "wave"),
+    flow(tuft(430, 400, 16), 9, B_MED, 4, "wave"),
+    flow(arc(60, 80, 100, 52, 140, 80), 10, B_MED, 4, "arc"),
+    flow(arc(330, 70, 376, 46, 422, 72), 11, B_MED, 4, "arc"),
+], pack="animals"))
+
+P.append(pic("elephant", "medium", "elephant", "🐘", True, [
+    flow(arc(120, 220, 260, 150, 390, 230), 1, B_MED, 2, "outline"),
+    flow(arc(390, 230, 432, 242, 434, 282), 2, B_MED, 2, "arc"),
+    flow(arc(434, 282, 456, 360, 416, 430), 3, B_MED, 2, "wave"),
+    flow(arc(302, 238, 272, 276, 302, 314), 4, B_MED, 3, "arc"),
+    flow(arc(140, 430, 260, 448, 380, 430), 5, B_MED, 2, "arc"),
+    flow(line(176, 330, 184, 406), 6, B_MED, 2, "line"),
+    flow(line(350, 332, 358, 404), 7, B_MED, 2, "line"),
+    flow(arc(388, 312, 414, 330, 398, 364), 8, B_MED, 3, "arc"),
+    flow(arc(120, 226, 92, 280, 110, 330), 9, B_MED, 3, "wave"),
+    flow(tuft(70, 442, 18), 10, B_MED, 4, "wave"),
+    flow(line(120, 70, 220, 58), 11, B_MED, 4, "line"),
+    flow(arc(330, 70, 376, 46, 422, 72), 12, B_MED, 4, "arc"),
+], pack="animals"))
+
+_CUR_TIER[0] = "hard"
+_h = []
+_oh = [0]
+def hn():
+    _oh[0] += 1
+    return _oh[0]
+_h.append(flow(arc(150, 240, 250, 206, 330, 240), hn(), B_HARD, 2, "outline"))
+_h.append(flow(arc(330, 240, 370, 200, 380, 150), hn(), B_HARD, 2, "arc"))
+_h.append(flow(arc(380, 150, 420, 138, 448, 172), hn(), B_HARD, 2, "arc"))
+_h.append(flow(arc(448, 172, 458, 202, 422, 214), hn(), B_HARD, 3, "arc"))
+_h.append(flow(arc(376, 148, 350, 106, 368, 72), hn(), B_HARD, 4, "arc"))
+_h.append(flow(arc(344, 144, 320, 172, 336, 212), hn(), B_HARD, 3, "wave"))
+_h.append(flow(arc(320, 330, 344, 290, 334, 244), hn(), B_HARD, 3, "arc"))
+_h.append(flow(arc(160, 330, 250, 348, 320, 330), hn(), B_HARD, 2, "arc"))
+_h.append(flow(line(170, 364, 166, 436), hn(), B_HARD, 3, "line"))
+_h.append(flow(line(206, 364, 202, 436), hn(), B_HARD, 3, "line"))
+_h.append(flow(line(266, 364, 262, 436), hn(), B_HARD, 3, "line"))
+_h.append(flow(line(298, 364, 294, 436), hn(), B_HARD, 3, "line"))
+_h.append(flow(arc(146, 244, 116, 300, 130, 360), hn(), B_HARD, 3, "wave"))
+_h.append(flow(arc(118, 252, 88, 306, 102, 366), hn(), B_HARD, 3, "wave"))
+_h.append(flow(line(60, 452, 220, 452), hn(), B_HARD, 2, "line"))
+_h.append(flow(line(292, 452, 452, 452), hn(), B_HARD, 2, "line"))
+_h.append(flow(line(388, 84, 476, 84), hn(), B_HARD, 3, "line"))
+_h.append(flow(line(392, 110, 476, 110), hn(), B_HARD, 3, "line"))
+_h.append(flow(arc(60, 84, 108, 56, 156, 84), hn(), B_HARD, 4, "arc"))
+_h.append(flow(arc(200, 60, 240, 38, 280, 62), hn(), B_HARD, 4, "arc"))
+_h.append(flow(arc(64, 124, 100, 110, 136, 124), hn(), B_HARD, 4, "arc"))
+_h.append(flow(arc(170, 104, 198, 86, 226, 104), hn(), B_HARD, 4, "arc"))
+_h.append(flow(arc(280, 94, 308, 76, 336, 94), hn(), B_HARD, 4, "arc"))
+_h.append(flow(line(64, 400, 130, 392), hn(), B_HARD, 4, "line"))
+_h.append(flow(line(380, 392, 446, 400), hn(), B_HARD, 4, "line"))
+P.append(pic("horse", "hard", "horse", "🐴", True, _h, pack="animals"))
+
+_p2 = []
+_op = [0]
+def pn():
+    _op[0] += 1
+    return _op[0]
+import math as _mth
+for k in range(9):
+    a = _mth.pi * (0.16 + 0.68 * k / 8.0)
+    _p2.append(flow(line(256 - int(86 * _mth.cos(a)), 330 - int(86 * _mth.sin(a)),
+                         256 - int(196 * _mth.cos(a)), 330 - int(196 * _mth.sin(a))), pn(), B_HARD, 3, "radial"))
+for k in range(4):
+    a0 = _mth.pi * (0.16 + 0.68 * (2 * k) / 8.0)
+    a1 = _mth.pi * (0.16 + 0.68 * (2 * k + 2) / 8.0)
+    am = (a0 + a1) / 2
+    _p2.append(flow(arc(256 - int(212 * _mth.cos(a0)), 330 - int(212 * _mth.sin(a0)),
+                        256 - int(232 * _mth.cos(am)), 330 - int(232 * _mth.sin(am)),
+                        256 - int(212 * _mth.cos(a1)), 330 - int(212 * _mth.sin(a1))), pn(), B_HARD, 3, "arc"))
+_p2.append(flow(arc(127, 107, 189, 78, 256, 72), pn(), B_HARD, 4, "arc"))
+_p2.append(flow(arc(256, 72, 323, 78, 385, 107), pn(), B_HARD, 4, "arc"))
+_p2.append(flow(arc(226, 330, 256, 312, 286, 330), pn(), B_HARD, 3, "arc"))
+_p2.append(flow(arc(226, 336, 236, 400, 256, 428), pn(), B_HARD, 2, "arc"))
+_p2.append(flow(arc(256, 428, 276, 400, 286, 336), pn(), B_HARD, 2, "arc"))
+_p2.append(flow("M236 300 A20 20 0 0 1 276 300", pn(), B_HARD, 3, "arc"))
+_p2.append(flow(arc(40, 190, 74, 148, 116, 114), pn(), B_HARD, 4, "arc"))
+_p2.append(flow(arc(396, 114, 438, 148, 472, 190), pn(), B_HARD, 4, "arc"))
+_p2.append(flow(line(150, 448, 362, 448), pn(), B_HARD, 2, "line"))
+_p2.append(flow(line(70, 478, 200, 474), pn(), B_HARD, 4, "line"))
+_p2.append(flow(line(312, 474, 442, 478), pn(), B_HARD, 4, "line"))
+_p2.append(flow(arc(96, 388, 140, 366, 182, 392), pn(), B_HARD, 4, "arc"))
+_p2.append(flow(arc(330, 392, 372, 366, 416, 388), pn(), B_HARD, 4, "arc"))
+P.append(pic("peacock", "hard", "peacock", "🦚", True, _p2, pack="animals"))
+
+# EXPERT — Dürer's Rhinoceros (1515), hand-traced over the PD reference
+# (content-pipeline/wordpic/ref/durer-rhinoceros.jpg — never ships). Armor
+# plates carry the composition as parallel rivet-arc families; the HORN is
+# the final word.
+_CUR_TIER[0] = "expert"
+_r = []
+_orh = [0]
+def rn():
+    _orh[0] += 1
+    return _orh[0]
+_r.append(flow(line(60, 40, 250, 34), rn(), B_EXP, 2, "line"))
+_r.append(flow(line(266, 34, 452, 40), rn(), B_EXP, 2, "line"))
+_r.append(flow(line(60, 68, 200, 64), rn(), B_EXP, 2, "line"))
+_r.append(flow(line(312, 64, 452, 68), rn(), B_EXP, 2, "line"))
+_r.append(flow(arc(120, 180, 250, 128, 400, 168), rn(), B_EXP, 2, "outline"))
+_r.append(flow(arc(400, 168, 452, 198, 440, 268), rn(), B_EXP, 2, "arc"))
+_r.append(flow(arc(440, 268, 466, 340, 446, 428), rn(), B_EXP, 3, "wave"))
+_r.append(flow(arc(150, 330, 270, 350, 392, 330), rn(), B_EXP, 2, "arc"))
+_r.append(flow(line(162, 358, 168, 444), rn(), B_EXP, 3, "line"))
+_r.append(flow(line(208, 364, 214, 446), rn(), B_EXP, 3, "line"))
+_r.append(flow(line(330, 366, 336, 446), rn(), B_EXP, 3, "line"))
+_r.append(flow(line(374, 360, 380, 444), rn(), B_EXP, 3, "line"))
+_r.append(flow(arc(120, 180, 74, 224, 94, 290), rn(), B_EXP, 3, "arc"))
+_r.append(flow(arc(94, 292, 130, 314, 170, 320), rn(), B_EXP, 3, "arc"))
+_r.append(flow(line(90, 344, 164, 366), rn(), B_EXP, 4, "line"))
+_r.append(flow(line(156, 146, 114, 82), rn(), B_EXP, 3, "line"))
+_r.append(flow(line(240, 114, 282, 48), rn(), B_EXP, 3, "line"))
+_r.append(flow("M110 212 Q146 224 140 254 Q136 278 150 288", rn(), B_EXP, 3, "arc"))
+_r.append(flow(arc(168, 196, 206, 242, 178, 306), rn(), B_EXP, 2, "arc"))
+_r.append(flow(arc(196, 202, 232, 244, 206, 304), rn(), B_EXP, 3, "arc"))
+_r.append(flow(arc(224, 208, 258, 246, 234, 302), rn(), B_EXP, 3, "arc"))
+_r.append(flow(arc(288, 160, 300, 234, 286, 322), rn(), B_EXP, 2, "arc"))
+_r.append(flow(arc(316, 162, 328, 234, 314, 320), rn(), B_EXP, 3, "arc"))
+_r.append(flow(arc(352, 170, 372, 234, 356, 320), rn(), B_EXP, 2, "arc"))
+_r.append(flow(arc(380, 176, 398, 238, 384, 316), rn(), B_EXP, 3, "arc"))
+_r.append(flow(arc(404, 182, 424, 238, 410, 314), rn(), B_EXP, 3, "arc"))
+_r.append(flow(arc(406, 328, 434, 352, 418, 398), rn(), B_EXP, 4, "arc"))
+_r.append(flow(line(232, 374, 312, 376), rn(), B_EXP, 4, "line"))
+_r.append(flow(line(232, 404, 312, 407), rn(), B_EXP, 4, "line"))
+_r.append(flow(line(244, 434, 322, 437), rn(), B_EXP, 4, "line"))
+_r.append(flow(line(60, 470, 240, 470), rn(), B_EXP, 2, "line"))
+_r.append(flow(line(276, 470, 452, 470), rn(), B_EXP, 2, "line"))
+_r.append(flow(arc(48, 118, 82, 100, 118, 118), rn(), B_EXP, 4, "arc"))
+_r.append(flow(arc(48, 144, 82, 128, 118, 144), rn(), B_EXP, 4, "arc"))
+_r.append(flow(arc(378, 118, 414, 100, 450, 118), rn(), B_EXP, 4, "arc"))
+_r.append(flow(arc(380, 144, 416, 130, 452, 144), rn(), B_EXP, 4, "arc"))
+_r.append(flow(arc(154, 114, 190, 90, 226, 114), rn(), B_EXP, 4, "arc"))
+_r.append(flow(arc(306, 114, 342, 90, 378, 114), rn(), B_EXP, 4, "arc"))
+_r.append(flow(arc(92, 292, 62, 322, 44, 368), rn(), B_EXP, 2, "arc"))
+P.append(pic("rhino", "expert", "rhinoceros", "🦏", False, _r,
+             prov={
+                 "title": "The Rhinoceros",
+                 "artist": "Albrecht Dürer (1471–1528)",
+                 "source": "Wikimedia Commons",
+                 "sourceUrl": "https://commons.wikimedia.org/wiki/Special:FilePath/D%C3%BCrer's%20Rhinoceros,%201515.jpg",
+                 "pdBasis": "Public domain: woodcut 1515, artist died 1528; stroke map hand-traced at content time over the PD reference (reference image not shipped)",
+                 "retrieved": "2026-07-29"},
+             pack="animals"))
+
+BANDS = {"easy": (3, 8), "medium": (10, 20), "hard": (25, 45), "expert": (38, 200)}
 
 
 def main():

@@ -17,6 +17,7 @@
    "icon": "🙂",
    "kid": true,
    "wash": false,
+   "pack": "starter",
    "paths": [
     {
      "mode": "flow",
@@ -88,6 +89,7 @@
    "icon": "🌟",
    "kid": true,
    "wash": false,
+   "pack": "starter",
    "paths": [
     {
      "mode": "flow",
@@ -148,6 +150,7 @@
    "icon": "🐟",
    "kid": true,
    "wash": false,
+   "pack": "starter",
    "paths": [
     {
      "mode": "flow",
@@ -246,6 +249,7 @@
    "icon": "🏠",
    "kid": true,
    "wash": false,
+   "pack": "starter",
    "paths": [
     {
      "mode": "flow",
@@ -350,6 +354,7 @@
    "icon": "🐱",
    "kid": true,
    "wash": false,
+   "pack": "starter",
    "paths": [
     {
      "mode": "flow",
@@ -503,6 +508,7 @@
    "icon": "🚀",
    "kid": true,
    "wash": false,
+   "pack": "starter",
    "paths": [
     {
      "mode": "stack",
@@ -673,6 +679,7 @@
    "icon": "⛄",
    "kid": true,
    "wash": false,
+   "pack": "starter",
    "paths": [
     {
      "mode": "flow",
@@ -859,6 +866,7 @@
    "icon": "🐲",
    "kid": true,
    "wash": false,
+   "pack": "starter",
    "paths": [
     {
      "mode": "flow",
@@ -1144,6 +1152,7 @@
    "icon": "🗼",
    "kid": false,
    "wash": false,
+   "pack": "starter",
    "paths": [
     {
      "mode": "flow",
@@ -1429,6 +1438,7 @@
    "icon": "🖼️",
    "kid": false,
    "wash": false,
+   "pack": "starter",
    "paths": [
     {
      "mode": "flow",
@@ -1988,6 +1998,1785 @@
     "sourceUrl": "https://commons.wikimedia.org/wiki/Special:FilePath/Mona_Lisa,_by_Leonardo_da_Vinci,_from_C2RMF_retouched.jpg",
     "pdBasis": "Public domain: painting c. 1503–1506, artist died 1519; stroke map hand-traced at content time over the PD reference (reference image not shipped)",
     "retrieved": "2026-07-28"
+   }
+  },
+  {
+   "id": "dog",
+   "tier": "easy",
+   "subject": "dog",
+   "icon": "🐶",
+   "kid": true,
+   "wash": false,
+   "pack": "animals",
+   "paths": [
+    {
+     "mode": "flow",
+     "d": "M166 210 Q256 118 346 210",
+     "order": 1,
+     "budget": [
+      2,
+      10
+     ],
+     "band": 2,
+     "arch": "outline"
+    },
+    {
+     "mode": "flow",
+     "d": "M166 210 Q256 290 346 210",
+     "order": 2,
+     "budget": [
+      2,
+      10
+     ],
+     "band": 2,
+     "arch": "outline"
+    },
+    {
+     "mode": "flow",
+     "d": "M150 108 Q106 168 136 238",
+     "order": 3,
+     "budget": [
+      2,
+      10
+     ],
+     "band": 2,
+     "arch": "arc"
+    },
+    {
+     "mode": "flow",
+     "d": "M362 108 Q406 168 376 238",
+     "order": 4,
+     "budget": [
+      2,
+      10
+     ],
+     "band": 2,
+     "arch": "arc"
+    },
+    {
+     "mode": "flow",
+     "d": "M236 196 Q256 210 276 196",
+     "order": 5,
+     "budget": [
+      2,
+      10
+     ],
+     "band": 3,
+     "arch": "arc"
+    },
+    {
+     "mode": "flow",
+     "d": "M238 306 Q256 322 274 306",
+     "order": 6,
+     "budget": [
+      2,
+      10
+     ],
+     "band": 3,
+     "arch": "arc"
+    },
+    {
+     "mode": "flow",
+     "d": "M180 420 L332 420",
+     "order": 7,
+     "budget": [
+      2,
+      10
+     ],
+     "band": 2,
+     "arch": "line"
+    }
+   ]
+  },
+  {
+   "id": "butterfly",
+   "tier": "easy",
+   "subject": "butterfly",
+   "icon": "🦋",
+   "kid": true,
+   "wash": false,
+   "pack": "animals",
+   "paths": [
+    {
+     "mode": "flow",
+     "d": "M256 160 L256 300",
+     "order": 1,
+     "budget": [
+      2,
+      10
+     ],
+     "band": 2,
+     "arch": "line"
+    },
+    {
+     "mode": "flow",
+     "d": "M226 170 Q130 100 110 220",
+     "order": 2,
+     "budget": [
+      2,
+      10
+     ],
+     "band": 2,
+     "arch": "arc"
+    },
+    {
+     "mode": "flow",
+     "d": "M110 240 Q130 360 226 300",
+     "order": 3,
+     "budget": [
+      2,
+      10
+     ],
+     "band": 2,
+     "arch": "arc"
+    },
+    {
+     "mode": "flow",
+     "d": "M286 170 Q382 100 402 220",
+     "order": 4,
+     "budget": [
+      2,
+      10
+     ],
+     "band": 2,
+     "arch": "arc"
+    },
+    {
+     "mode": "flow",
+     "d": "M402 240 Q382 360 286 300",
+     "order": 5,
+     "budget": [
+      2,
+      10
+     ],
+     "band": 2,
+     "arch": "arc"
+    },
+    {
+     "mode": "flow",
+     "d": "M244 140 L208 74",
+     "order": 6,
+     "budget": [
+      2,
+      10
+     ],
+     "band": 3,
+     "arch": "line"
+    },
+    {
+     "mode": "flow",
+     "d": "M268 140 L304 74",
+     "order": 7,
+     "budget": [
+      2,
+      10
+     ],
+     "band": 3,
+     "arch": "line"
+    }
+   ]
+  },
+  {
+   "id": "snail",
+   "tier": "easy",
+   "subject": "snail",
+   "icon": "🐌",
+   "kid": true,
+   "wash": false,
+   "pack": "animals",
+   "paths": [
+    {
+     "mode": "flow",
+     "d": "M220 260 A80 80 0 1 1 300 340",
+     "order": 1,
+     "budget": [
+      2,
+      10
+     ],
+     "band": 2,
+     "arch": "spiral"
+    },
+    {
+     "mode": "flow",
+     "d": "M258 260 A42 42 0 1 1 300 302",
+     "order": 2,
+     "budget": [
+      2,
+      10
+     ],
+     "band": 2,
+     "arch": "spiral"
+    },
+    {
+     "mode": "flow",
+     "d": "M110 352 Q250 372 408 352",
+     "order": 3,
+     "budget": [
+      2,
+      10
+     ],
+     "band": 2,
+     "arch": "line"
+    },
+    {
+     "mode": "flow",
+     "d": "M112 340 Q96 300 122 268",
+     "order": 4,
+     "budget": [
+      2,
+      10
+     ],
+     "band": 2,
+     "arch": "arc"
+    },
+    {
+     "mode": "flow",
+     "d": "M118 262 L90 208",
+     "order": 5,
+     "budget": [
+      2,
+      10
+     ],
+     "band": 2,
+     "arch": "line"
+    },
+    {
+     "mode": "flow",
+     "d": "M134 262 L152 206",
+     "order": 6,
+     "budget": [
+      2,
+      10
+     ],
+     "band": 2,
+     "arch": "line"
+    }
+   ]
+  },
+  {
+   "id": "duck",
+   "tier": "easy",
+   "subject": "duck",
+   "icon": "🦆",
+   "kid": true,
+   "wash": false,
+   "pack": "animals",
+   "paths": [
+    {
+     "mode": "flow",
+     "d": "M138 200 A46 46 0 0 1 230 200",
+     "order": 1,
+     "budget": [
+      2,
+      10
+     ],
+     "band": 2,
+     "arch": "arc"
+    },
+    {
+     "mode": "flow",
+     "d": "M134 210 L82 226",
+     "order": 2,
+     "budget": [
+      2,
+      10
+     ],
+     "band": 2,
+     "arch": "line"
+    },
+    {
+     "mode": "flow",
+     "d": "M200 244 Q300 208 384 262",
+     "order": 3,
+     "budget": [
+      2,
+      10
+     ],
+     "band": 2,
+     "arch": "arc"
+    },
+    {
+     "mode": "flow",
+     "d": "M184 264 Q280 344 380 274",
+     "order": 4,
+     "budget": [
+      2,
+      10
+     ],
+     "band": 2,
+     "arch": "arc"
+    },
+    {
+     "mode": "flow",
+     "d": "M60 384 L200 384",
+     "order": 5,
+     "budget": [
+      2,
+      10
+     ],
+     "band": 3,
+     "arch": "line"
+    },
+    {
+     "mode": "flow",
+     "d": "M300 384 L440 384",
+     "order": 6,
+     "budget": [
+      2,
+      10
+     ],
+     "band": 3,
+     "arch": "line"
+    }
+   ]
+  },
+  {
+   "id": "owl",
+   "tier": "medium",
+   "subject": "owl",
+   "icon": "🦉",
+   "kid": true,
+   "wash": false,
+   "pack": "animals",
+   "paths": [
+    {
+     "mode": "flow",
+     "d": "M256 110 Q144 140 154 300",
+     "order": 1,
+     "budget": [
+      3,
+      14
+     ],
+     "band": 2,
+     "arch": "outline"
+    },
+    {
+     "mode": "flow",
+     "d": "M256 110 Q368 140 358 300",
+     "order": 2,
+     "budget": [
+      3,
+      14
+     ],
+     "band": 2,
+     "arch": "outline"
+    },
+    {
+     "mode": "flow",
+     "d": "M154 300 Q256 400 358 300",
+     "order": 3,
+     "budget": [
+      3,
+      14
+     ],
+     "band": 2,
+     "arch": "arc"
+    },
+    {
+     "mode": "flow",
+     "d": "M192 96 L172 46",
+     "order": 4,
+     "budget": [
+      3,
+      14
+     ],
+     "band": 3,
+     "arch": "line"
+    },
+    {
+     "mode": "flow",
+     "d": "M320 96 L340 46",
+     "order": 5,
+     "budget": [
+      3,
+      14
+     ],
+     "band": 3,
+     "arch": "line"
+    },
+    {
+     "mode": "flow",
+     "d": "M206 204 A20 20 0 0 1 246 204",
+     "order": 6,
+     "budget": [
+      3,
+      14
+     ],
+     "band": 3,
+     "arch": "arc"
+    },
+    {
+     "mode": "flow",
+     "d": "M206 204 A20 20 0 1 0 246 204",
+     "order": 7,
+     "budget": [
+      3,
+      14
+     ],
+     "band": 3,
+     "arch": "arc"
+    },
+    {
+     "mode": "flow",
+     "d": "M266 204 A20 20 0 0 1 306 204",
+     "order": 8,
+     "budget": [
+      3,
+      14
+     ],
+     "band": 3,
+     "arch": "arc"
+    },
+    {
+     "mode": "flow",
+     "d": "M266 204 A20 20 0 1 0 306 204",
+     "order": 9,
+     "budget": [
+      3,
+      14
+     ],
+     "band": 3,
+     "arch": "arc"
+    },
+    {
+     "mode": "flow",
+     "d": "M210 294 Q256 314 302 294",
+     "order": 10,
+     "budget": [
+      3,
+      14
+     ],
+     "band": 3,
+     "arch": "arc"
+    },
+    {
+     "mode": "flow",
+     "d": "M150 430 L362 430",
+     "order": 11,
+     "budget": [
+      3,
+      14
+     ],
+     "band": 2,
+     "arch": "line"
+    },
+    {
+     "mode": "flow",
+     "d": "M60 84 Q96 56 132 84",
+     "order": 12,
+     "budget": [
+      3,
+      14
+     ],
+     "band": 4,
+     "arch": "arc"
+    }
+   ]
+  },
+  {
+   "id": "turtle",
+   "tier": "medium",
+   "subject": "turtle",
+   "icon": "🐢",
+   "kid": true,
+   "wash": false,
+   "pack": "animals",
+   "paths": [
+    {
+     "mode": "flow",
+     "d": "M140 300 Q256 160 372 300",
+     "order": 1,
+     "budget": [
+      3,
+      14
+     ],
+     "band": 2,
+     "arch": "outline"
+    },
+    {
+     "mode": "flow",
+     "d": "M140 300 Q256 330 372 300",
+     "order": 2,
+     "budget": [
+      3,
+      14
+     ],
+     "band": 2,
+     "arch": "arc"
+    },
+    {
+     "mode": "flow",
+     "d": "M372 300 Q412 286 426 252",
+     "order": 3,
+     "budget": [
+      3,
+      14
+     ],
+     "band": 2,
+     "arch": "arc"
+    },
+    {
+     "mode": "flow",
+     "d": "M400 246 Q428 218 456 246",
+     "order": 4,
+     "budget": [
+      3,
+      14
+     ],
+     "band": 3,
+     "arch": "arc"
+    },
+    {
+     "mode": "flow",
+     "d": "M140 300 L118 356",
+     "order": 5,
+     "budget": [
+      3,
+      14
+     ],
+     "band": 3,
+     "arch": "line"
+    },
+    {
+     "mode": "flow",
+     "d": "M372 300 L394 356",
+     "order": 6,
+     "budget": [
+      3,
+      14
+     ],
+     "band": 3,
+     "arch": "line"
+    },
+    {
+     "mode": "flow",
+     "d": "M140 300 L96 326",
+     "order": 7,
+     "budget": [
+      3,
+      14
+     ],
+     "band": 3,
+     "arch": "line"
+    },
+    {
+     "mode": "flow",
+     "d": "M52 400 Q80 382 108 400",
+     "order": 8,
+     "budget": [
+      3,
+      14
+     ],
+     "band": 4,
+     "arch": "wave"
+    },
+    {
+     "mode": "flow",
+     "d": "M402 400 Q430 384 458 400",
+     "order": 9,
+     "budget": [
+      3,
+      14
+     ],
+     "band": 4,
+     "arch": "wave"
+    },
+    {
+     "mode": "flow",
+     "d": "M60 80 Q100 52 140 80",
+     "order": 10,
+     "budget": [
+      3,
+      14
+     ],
+     "band": 4,
+     "arch": "arc"
+    },
+    {
+     "mode": "flow",
+     "d": "M330 70 Q376 46 422 72",
+     "order": 11,
+     "budget": [
+      3,
+      14
+     ],
+     "band": 4,
+     "arch": "arc"
+    }
+   ]
+  },
+  {
+   "id": "elephant",
+   "tier": "medium",
+   "subject": "elephant",
+   "icon": "🐘",
+   "kid": true,
+   "wash": false,
+   "pack": "animals",
+   "paths": [
+    {
+     "mode": "flow",
+     "d": "M120 220 Q260 150 390 230",
+     "order": 1,
+     "budget": [
+      3,
+      14
+     ],
+     "band": 2,
+     "arch": "outline"
+    },
+    {
+     "mode": "flow",
+     "d": "M390 230 Q432 242 434 282",
+     "order": 2,
+     "budget": [
+      3,
+      14
+     ],
+     "band": 2,
+     "arch": "arc"
+    },
+    {
+     "mode": "flow",
+     "d": "M434 282 Q456 360 416 430",
+     "order": 3,
+     "budget": [
+      3,
+      14
+     ],
+     "band": 2,
+     "arch": "wave"
+    },
+    {
+     "mode": "flow",
+     "d": "M302 238 Q272 276 302 314",
+     "order": 4,
+     "budget": [
+      3,
+      14
+     ],
+     "band": 3,
+     "arch": "arc"
+    },
+    {
+     "mode": "flow",
+     "d": "M140 430 Q260 448 380 430",
+     "order": 5,
+     "budget": [
+      3,
+      14
+     ],
+     "band": 2,
+     "arch": "arc"
+    },
+    {
+     "mode": "flow",
+     "d": "M176 330 L184 406",
+     "order": 6,
+     "budget": [
+      3,
+      14
+     ],
+     "band": 2,
+     "arch": "line"
+    },
+    {
+     "mode": "flow",
+     "d": "M350 332 L358 404",
+     "order": 7,
+     "budget": [
+      3,
+      14
+     ],
+     "band": 2,
+     "arch": "line"
+    },
+    {
+     "mode": "flow",
+     "d": "M388 312 Q414 330 398 364",
+     "order": 8,
+     "budget": [
+      3,
+      14
+     ],
+     "band": 3,
+     "arch": "arc"
+    },
+    {
+     "mode": "flow",
+     "d": "M120 226 Q92 280 110 330",
+     "order": 9,
+     "budget": [
+      3,
+      14
+     ],
+     "band": 3,
+     "arch": "wave"
+    },
+    {
+     "mode": "flow",
+     "d": "M42 442 Q70 424 98 442",
+     "order": 10,
+     "budget": [
+      3,
+      14
+     ],
+     "band": 4,
+     "arch": "wave"
+    },
+    {
+     "mode": "flow",
+     "d": "M120 70 L220 58",
+     "order": 11,
+     "budget": [
+      3,
+      14
+     ],
+     "band": 4,
+     "arch": "line"
+    },
+    {
+     "mode": "flow",
+     "d": "M330 70 Q376 46 422 72",
+     "order": 12,
+     "budget": [
+      3,
+      14
+     ],
+     "band": 4,
+     "arch": "arc"
+    }
+   ]
+  },
+  {
+   "id": "horse",
+   "tier": "hard",
+   "subject": "horse",
+   "icon": "🐴",
+   "kid": true,
+   "wash": false,
+   "pack": "animals",
+   "paths": [
+    {
+     "mode": "flow",
+     "d": "M150 240 Q250 206 330 240",
+     "order": 1,
+     "budget": [
+      3,
+      14
+     ],
+     "band": 2,
+     "arch": "outline"
+    },
+    {
+     "mode": "flow",
+     "d": "M330 240 Q370 200 380 150",
+     "order": 2,
+     "budget": [
+      3,
+      14
+     ],
+     "band": 2,
+     "arch": "arc"
+    },
+    {
+     "mode": "flow",
+     "d": "M380 150 Q420 138 448 172",
+     "order": 3,
+     "budget": [
+      3,
+      14
+     ],
+     "band": 2,
+     "arch": "arc"
+    },
+    {
+     "mode": "flow",
+     "d": "M448 172 Q458 202 422 214",
+     "order": 4,
+     "budget": [
+      3,
+      14
+     ],
+     "band": 3,
+     "arch": "arc"
+    },
+    {
+     "mode": "flow",
+     "d": "M376 148 Q350 106 368 72",
+     "order": 5,
+     "budget": [
+      3,
+      14
+     ],
+     "band": 4,
+     "arch": "arc"
+    },
+    {
+     "mode": "flow",
+     "d": "M344 144 Q320 172 336 212",
+     "order": 6,
+     "budget": [
+      3,
+      14
+     ],
+     "band": 3,
+     "arch": "wave"
+    },
+    {
+     "mode": "flow",
+     "d": "M320 330 Q344 290 334 244",
+     "order": 7,
+     "budget": [
+      3,
+      14
+     ],
+     "band": 3,
+     "arch": "arc"
+    },
+    {
+     "mode": "flow",
+     "d": "M160 330 Q250 348 320 330",
+     "order": 8,
+     "budget": [
+      3,
+      14
+     ],
+     "band": 2,
+     "arch": "arc"
+    },
+    {
+     "mode": "flow",
+     "d": "M170 364 L166 436",
+     "order": 9,
+     "budget": [
+      3,
+      14
+     ],
+     "band": 3,
+     "arch": "line"
+    },
+    {
+     "mode": "flow",
+     "d": "M206 364 L202 436",
+     "order": 10,
+     "budget": [
+      3,
+      14
+     ],
+     "band": 3,
+     "arch": "line"
+    },
+    {
+     "mode": "flow",
+     "d": "M266 364 L262 436",
+     "order": 11,
+     "budget": [
+      3,
+      14
+     ],
+     "band": 3,
+     "arch": "line"
+    },
+    {
+     "mode": "flow",
+     "d": "M298 364 L294 436",
+     "order": 12,
+     "budget": [
+      3,
+      14
+     ],
+     "band": 3,
+     "arch": "line"
+    },
+    {
+     "mode": "flow",
+     "d": "M146 244 Q116 300 130 360",
+     "order": 13,
+     "budget": [
+      3,
+      14
+     ],
+     "band": 3,
+     "arch": "wave"
+    },
+    {
+     "mode": "flow",
+     "d": "M118 252 Q88 306 102 366",
+     "order": 14,
+     "budget": [
+      3,
+      14
+     ],
+     "band": 3,
+     "arch": "wave"
+    },
+    {
+     "mode": "flow",
+     "d": "M60 452 L220 452",
+     "order": 15,
+     "budget": [
+      3,
+      14
+     ],
+     "band": 2,
+     "arch": "line"
+    },
+    {
+     "mode": "flow",
+     "d": "M292 452 L452 452",
+     "order": 16,
+     "budget": [
+      3,
+      14
+     ],
+     "band": 2,
+     "arch": "line"
+    },
+    {
+     "mode": "flow",
+     "d": "M388 84 L476 84",
+     "order": 17,
+     "budget": [
+      3,
+      14
+     ],
+     "band": 3,
+     "arch": "line"
+    },
+    {
+     "mode": "flow",
+     "d": "M392 110 L476 110",
+     "order": 18,
+     "budget": [
+      3,
+      14
+     ],
+     "band": 3,
+     "arch": "line"
+    },
+    {
+     "mode": "flow",
+     "d": "M60 84 Q108 56 156 84",
+     "order": 19,
+     "budget": [
+      3,
+      14
+     ],
+     "band": 4,
+     "arch": "arc"
+    },
+    {
+     "mode": "flow",
+     "d": "M200 60 Q240 38 280 62",
+     "order": 20,
+     "budget": [
+      3,
+      14
+     ],
+     "band": 4,
+     "arch": "arc"
+    },
+    {
+     "mode": "flow",
+     "d": "M64 124 Q100 110 136 124",
+     "order": 21,
+     "budget": [
+      3,
+      14
+     ],
+     "band": 4,
+     "arch": "arc"
+    },
+    {
+     "mode": "flow",
+     "d": "M170 104 Q198 86 226 104",
+     "order": 22,
+     "budget": [
+      3,
+      14
+     ],
+     "band": 4,
+     "arch": "arc"
+    },
+    {
+     "mode": "flow",
+     "d": "M280 94 Q308 76 336 94",
+     "order": 23,
+     "budget": [
+      3,
+      14
+     ],
+     "band": 4,
+     "arch": "arc"
+    },
+    {
+     "mode": "flow",
+     "d": "M64 400 L130 392",
+     "order": 24,
+     "budget": [
+      3,
+      14
+     ],
+     "band": 4,
+     "arch": "line"
+    },
+    {
+     "mode": "flow",
+     "d": "M380 392 L446 400",
+     "order": 25,
+     "budget": [
+      3,
+      14
+     ],
+     "band": 4,
+     "arch": "line"
+    }
+   ]
+  },
+  {
+   "id": "peacock",
+   "tier": "hard",
+   "subject": "peacock",
+   "icon": "🦚",
+   "kid": true,
+   "wash": false,
+   "pack": "animals",
+   "paths": [
+    {
+     "mode": "flow",
+     "d": "M181 289 L85 236",
+     "order": 1,
+     "budget": [
+      3,
+      14
+     ],
+     "band": 3,
+     "arch": "radial"
+    },
+    {
+     "mode": "flow",
+     "d": "M195 271 L116 194",
+     "order": 2,
+     "budget": [
+      3,
+      14
+     ],
+     "band": 3,
+     "arch": "radial"
+    },
+    {
+     "mode": "flow",
+     "d": "M213 256 L157 162",
+     "order": 3,
+     "budget": [
+      3,
+      14
+     ],
+     "band": 3,
+     "arch": "radial"
+    },
+    {
+     "mode": "flow",
+     "d": "M234 248 L205 141",
+     "order": 4,
+     "budget": [
+      3,
+      14
+     ],
+     "band": 3,
+     "arch": "radial"
+    },
+    {
+     "mode": "flow",
+     "d": "M256 244 L256 134",
+     "order": 5,
+     "budget": [
+      3,
+      14
+     ],
+     "band": 3,
+     "arch": "radial"
+    },
+    {
+     "mode": "flow",
+     "d": "M278 248 L307 141",
+     "order": 6,
+     "budget": [
+      3,
+      14
+     ],
+     "band": 3,
+     "arch": "radial"
+    },
+    {
+     "mode": "flow",
+     "d": "M299 256 L355 162",
+     "order": 7,
+     "budget": [
+      3,
+      14
+     ],
+     "band": 3,
+     "arch": "radial"
+    },
+    {
+     "mode": "flow",
+     "d": "M317 271 L396 194",
+     "order": 8,
+     "budget": [
+      3,
+      14
+     ],
+     "band": 3,
+     "arch": "radial"
+    },
+    {
+     "mode": "flow",
+     "d": "M331 289 L427 236",
+     "order": 9,
+     "budget": [
+      3,
+      14
+     ],
+     "band": 3,
+     "arch": "radial"
+    },
+    {
+     "mode": "flow",
+     "d": "M71 228 Q90 169 149 148",
+     "order": 10,
+     "budget": [
+      3,
+      14
+     ],
+     "band": 3,
+     "arch": "arc"
+    },
+    {
+     "mode": "flow",
+     "d": "M149 148 Q195 107 256 118",
+     "order": 11,
+     "budget": [
+      3,
+      14
+     ],
+     "band": 3,
+     "arch": "arc"
+    },
+    {
+     "mode": "flow",
+     "d": "M256 118 Q317 107 363 148",
+     "order": 12,
+     "budget": [
+      3,
+      14
+     ],
+     "band": 3,
+     "arch": "arc"
+    },
+    {
+     "mode": "flow",
+     "d": "M363 148 Q422 169 441 228",
+     "order": 13,
+     "budget": [
+      3,
+      14
+     ],
+     "band": 3,
+     "arch": "arc"
+    },
+    {
+     "mode": "flow",
+     "d": "M127 107 Q189 78 256 72",
+     "order": 14,
+     "budget": [
+      3,
+      14
+     ],
+     "band": 4,
+     "arch": "arc"
+    },
+    {
+     "mode": "flow",
+     "d": "M256 72 Q323 78 385 107",
+     "order": 15,
+     "budget": [
+      3,
+      14
+     ],
+     "band": 4,
+     "arch": "arc"
+    },
+    {
+     "mode": "flow",
+     "d": "M226 330 Q256 312 286 330",
+     "order": 16,
+     "budget": [
+      3,
+      14
+     ],
+     "band": 3,
+     "arch": "arc"
+    },
+    {
+     "mode": "flow",
+     "d": "M226 336 Q236 400 256 428",
+     "order": 17,
+     "budget": [
+      3,
+      14
+     ],
+     "band": 2,
+     "arch": "arc"
+    },
+    {
+     "mode": "flow",
+     "d": "M256 428 Q276 400 286 336",
+     "order": 18,
+     "budget": [
+      3,
+      14
+     ],
+     "band": 2,
+     "arch": "arc"
+    },
+    {
+     "mode": "flow",
+     "d": "M236 300 A20 20 0 0 1 276 300",
+     "order": 19,
+     "budget": [
+      3,
+      14
+     ],
+     "band": 3,
+     "arch": "arc"
+    },
+    {
+     "mode": "flow",
+     "d": "M40 190 Q74 148 116 114",
+     "order": 20,
+     "budget": [
+      3,
+      14
+     ],
+     "band": 4,
+     "arch": "arc"
+    },
+    {
+     "mode": "flow",
+     "d": "M396 114 Q438 148 472 190",
+     "order": 21,
+     "budget": [
+      3,
+      14
+     ],
+     "band": 4,
+     "arch": "arc"
+    },
+    {
+     "mode": "flow",
+     "d": "M150 448 L362 448",
+     "order": 22,
+     "budget": [
+      3,
+      14
+     ],
+     "band": 2,
+     "arch": "line"
+    },
+    {
+     "mode": "flow",
+     "d": "M70 478 L200 474",
+     "order": 23,
+     "budget": [
+      3,
+      14
+     ],
+     "band": 4,
+     "arch": "line"
+    },
+    {
+     "mode": "flow",
+     "d": "M312 474 L442 478",
+     "order": 24,
+     "budget": [
+      3,
+      14
+     ],
+     "band": 4,
+     "arch": "line"
+    },
+    {
+     "mode": "flow",
+     "d": "M96 388 Q140 366 182 392",
+     "order": 25,
+     "budget": [
+      3,
+      14
+     ],
+     "band": 4,
+     "arch": "arc"
+    },
+    {
+     "mode": "flow",
+     "d": "M330 392 Q372 366 416 388",
+     "order": 26,
+     "budget": [
+      3,
+      14
+     ],
+     "band": 4,
+     "arch": "arc"
+    }
+   ]
+  },
+  {
+   "id": "rhino",
+   "tier": "expert",
+   "subject": "rhinoceros",
+   "icon": "🦏",
+   "kid": false,
+   "wash": false,
+   "pack": "animals",
+   "paths": [
+    {
+     "mode": "flow",
+     "d": "M60 40 L250 34",
+     "order": 1,
+     "budget": [
+      3,
+      20
+     ],
+     "band": 2,
+     "arch": "line"
+    },
+    {
+     "mode": "flow",
+     "d": "M266 34 L452 40",
+     "order": 2,
+     "budget": [
+      3,
+      20
+     ],
+     "band": 2,
+     "arch": "line"
+    },
+    {
+     "mode": "flow",
+     "d": "M60 68 L200 64",
+     "order": 3,
+     "budget": [
+      3,
+      20
+     ],
+     "band": 2,
+     "arch": "line"
+    },
+    {
+     "mode": "flow",
+     "d": "M312 64 L452 68",
+     "order": 4,
+     "budget": [
+      3,
+      20
+     ],
+     "band": 2,
+     "arch": "line"
+    },
+    {
+     "mode": "flow",
+     "d": "M120 180 Q250 128 400 168",
+     "order": 5,
+     "budget": [
+      3,
+      20
+     ],
+     "band": 2,
+     "arch": "outline"
+    },
+    {
+     "mode": "flow",
+     "d": "M400 168 Q452 198 440 268",
+     "order": 6,
+     "budget": [
+      3,
+      20
+     ],
+     "band": 2,
+     "arch": "arc"
+    },
+    {
+     "mode": "flow",
+     "d": "M440 268 Q466 340 446 428",
+     "order": 7,
+     "budget": [
+      3,
+      20
+     ],
+     "band": 3,
+     "arch": "wave"
+    },
+    {
+     "mode": "flow",
+     "d": "M150 330 Q270 350 392 330",
+     "order": 8,
+     "budget": [
+      3,
+      20
+     ],
+     "band": 2,
+     "arch": "arc"
+    },
+    {
+     "mode": "flow",
+     "d": "M162 358 L168 444",
+     "order": 9,
+     "budget": [
+      3,
+      20
+     ],
+     "band": 3,
+     "arch": "line"
+    },
+    {
+     "mode": "flow",
+     "d": "M208 364 L214 446",
+     "order": 10,
+     "budget": [
+      3,
+      20
+     ],
+     "band": 3,
+     "arch": "line"
+    },
+    {
+     "mode": "flow",
+     "d": "M330 366 L336 446",
+     "order": 11,
+     "budget": [
+      3,
+      20
+     ],
+     "band": 3,
+     "arch": "line"
+    },
+    {
+     "mode": "flow",
+     "d": "M374 360 L380 444",
+     "order": 12,
+     "budget": [
+      3,
+      20
+     ],
+     "band": 3,
+     "arch": "line"
+    },
+    {
+     "mode": "flow",
+     "d": "M120 180 Q74 224 94 290",
+     "order": 13,
+     "budget": [
+      3,
+      20
+     ],
+     "band": 3,
+     "arch": "arc"
+    },
+    {
+     "mode": "flow",
+     "d": "M94 292 Q130 314 170 320",
+     "order": 14,
+     "budget": [
+      3,
+      20
+     ],
+     "band": 3,
+     "arch": "arc"
+    },
+    {
+     "mode": "flow",
+     "d": "M90 344 L164 366",
+     "order": 15,
+     "budget": [
+      3,
+      20
+     ],
+     "band": 4,
+     "arch": "line"
+    },
+    {
+     "mode": "flow",
+     "d": "M156 146 L114 82",
+     "order": 16,
+     "budget": [
+      3,
+      20
+     ],
+     "band": 3,
+     "arch": "line"
+    },
+    {
+     "mode": "flow",
+     "d": "M240 114 L282 48",
+     "order": 17,
+     "budget": [
+      3,
+      20
+     ],
+     "band": 3,
+     "arch": "line"
+    },
+    {
+     "mode": "flow",
+     "d": "M110 212 Q146 224 140 254 Q136 278 150 288",
+     "order": 18,
+     "budget": [
+      3,
+      20
+     ],
+     "band": 3,
+     "arch": "arc"
+    },
+    {
+     "mode": "flow",
+     "d": "M168 196 Q206 242 178 306",
+     "order": 19,
+     "budget": [
+      3,
+      20
+     ],
+     "band": 2,
+     "arch": "arc"
+    },
+    {
+     "mode": "flow",
+     "d": "M196 202 Q232 244 206 304",
+     "order": 20,
+     "budget": [
+      3,
+      20
+     ],
+     "band": 3,
+     "arch": "arc"
+    },
+    {
+     "mode": "flow",
+     "d": "M224 208 Q258 246 234 302",
+     "order": 21,
+     "budget": [
+      3,
+      20
+     ],
+     "band": 3,
+     "arch": "arc"
+    },
+    {
+     "mode": "flow",
+     "d": "M288 160 Q300 234 286 322",
+     "order": 22,
+     "budget": [
+      3,
+      20
+     ],
+     "band": 2,
+     "arch": "arc"
+    },
+    {
+     "mode": "flow",
+     "d": "M316 162 Q328 234 314 320",
+     "order": 23,
+     "budget": [
+      3,
+      20
+     ],
+     "band": 3,
+     "arch": "arc"
+    },
+    {
+     "mode": "flow",
+     "d": "M352 170 Q372 234 356 320",
+     "order": 24,
+     "budget": [
+      3,
+      20
+     ],
+     "band": 2,
+     "arch": "arc"
+    },
+    {
+     "mode": "flow",
+     "d": "M380 176 Q398 238 384 316",
+     "order": 25,
+     "budget": [
+      3,
+      20
+     ],
+     "band": 3,
+     "arch": "arc"
+    },
+    {
+     "mode": "flow",
+     "d": "M404 182 Q424 238 410 314",
+     "order": 26,
+     "budget": [
+      3,
+      20
+     ],
+     "band": 3,
+     "arch": "arc"
+    },
+    {
+     "mode": "flow",
+     "d": "M406 328 Q434 352 418 398",
+     "order": 27,
+     "budget": [
+      3,
+      20
+     ],
+     "band": 4,
+     "arch": "arc"
+    },
+    {
+     "mode": "flow",
+     "d": "M232 374 L312 376",
+     "order": 28,
+     "budget": [
+      3,
+      20
+     ],
+     "band": 4,
+     "arch": "line"
+    },
+    {
+     "mode": "flow",
+     "d": "M232 404 L312 407",
+     "order": 29,
+     "budget": [
+      3,
+      20
+     ],
+     "band": 4,
+     "arch": "line"
+    },
+    {
+     "mode": "flow",
+     "d": "M244 434 L322 437",
+     "order": 30,
+     "budget": [
+      3,
+      20
+     ],
+     "band": 4,
+     "arch": "line"
+    },
+    {
+     "mode": "flow",
+     "d": "M60 470 L240 470",
+     "order": 31,
+     "budget": [
+      3,
+      20
+     ],
+     "band": 2,
+     "arch": "line"
+    },
+    {
+     "mode": "flow",
+     "d": "M276 470 L452 470",
+     "order": 32,
+     "budget": [
+      3,
+      20
+     ],
+     "band": 2,
+     "arch": "line"
+    },
+    {
+     "mode": "flow",
+     "d": "M48 118 Q82 100 118 118",
+     "order": 33,
+     "budget": [
+      3,
+      20
+     ],
+     "band": 4,
+     "arch": "arc"
+    },
+    {
+     "mode": "flow",
+     "d": "M48 144 Q82 128 118 144",
+     "order": 34,
+     "budget": [
+      3,
+      20
+     ],
+     "band": 4,
+     "arch": "arc"
+    },
+    {
+     "mode": "flow",
+     "d": "M378 118 Q414 100 450 118",
+     "order": 35,
+     "budget": [
+      3,
+      20
+     ],
+     "band": 4,
+     "arch": "arc"
+    },
+    {
+     "mode": "flow",
+     "d": "M380 144 Q416 130 452 144",
+     "order": 36,
+     "budget": [
+      3,
+      20
+     ],
+     "band": 4,
+     "arch": "arc"
+    },
+    {
+     "mode": "flow",
+     "d": "M154 114 Q190 90 226 114",
+     "order": 37,
+     "budget": [
+      3,
+      20
+     ],
+     "band": 4,
+     "arch": "arc"
+    },
+    {
+     "mode": "flow",
+     "d": "M306 114 Q342 90 378 114",
+     "order": 38,
+     "budget": [
+      3,
+      20
+     ],
+     "band": 4,
+     "arch": "arc"
+    },
+    {
+     "mode": "flow",
+     "d": "M92 292 Q62 322 44 368",
+     "order": 39,
+     "budget": [
+      3,
+      20
+     ],
+     "band": 2,
+     "arch": "arc"
+    }
+   ],
+   "provenance": {
+    "title": "The Rhinoceros",
+    "artist": "Albrecht Dürer (1471–1528)",
+    "source": "Wikimedia Commons",
+    "sourceUrl": "https://commons.wikimedia.org/wiki/Special:FilePath/D%C3%BCrer's%20Rhinoceros,%201515.jpg",
+    "pdBasis": "Public domain: woodcut 1515, artist died 1528; stroke map hand-traced at content time over the PD reference (reference image not shipped)",
+    "retrieved": "2026-07-29"
    }
   }
  ]

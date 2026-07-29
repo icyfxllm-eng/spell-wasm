@@ -1,0 +1,16 @@
+# D10 draft — curate before committing; the L9 sweep is the law.
+# source: ref/durer-rhinoceros.jpg  bands: 4  lines: 14
+_m.append(flow(line(26, 74, 485, 74), mn(), B_EXP, 1, "line"))
+_m.append(flow(line(31, 128, 131, 128), mn(), B_EXP, 1, "line"))
+_m.append(flow(line(165, 128, 270, 128), mn(), B_EXP, 1, "line"))
+_m.append(flow(line(281, 128, 481, 128), mn(), B_EXP, 1, "line"))
+_m.append(flow(line(339, 155, 400, 155), mn(), B_EXP, 1, "line"))
+_m.append(flow(line(416, 155, 481, 155), mn(), B_EXP, 1, "line"))
+_m.append(flow(line(430, 182, 480, 182), mn(), B_EXP, 1, "line"))
+_m.append(flow(line(158, 344, 249, 344), mn(), B_EXP, 1, "line"))
+_m.append(flow(line(325, 344, 403, 344), mn(), B_EXP, 1, "line"))
+_m.append(flow(line(355, 371, 443, 371), mn(), B_EXP, 1, "line"))
+_m.append(flow(line(347, 398, 482, 398), mn(), B_EXP, 1, "line"))
+_m.append(flow(line(118, 425, 194, 425), mn(), B_EXP, 1, "line"))
+_m.append(flow(line(350, 425, 420, 425), mn(), B_EXP, 1, "line"))
+_m.append(flow(line(434, 425, 485, 425), mn(), B_EXP, 1, "line"))

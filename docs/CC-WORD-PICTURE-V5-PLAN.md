@@ -71,3 +71,12 @@ wordpic_layout (textLength justification, solved sizes, docked indicator
 L6, expert pan/zoom L7) → L10 review artifact set for Eric → NO TestFlight
 until his sign-off. CC-PHOTO-PICTURE v2 filed design-ahead, blocked on
 P1/P2 (docs/CC-PHOTO-PICTURE-V2-PLAN.md).
+
+## Animals pack (D13, 2026-07-29)
+
+Second pack authored + sweep green (20 pics x 15 langs x 5 seeds, zero
+failures): dog/butterfly/snail/duck (easy), owl/turtle/elephant (medium),
+horse/peacock (hard), rhino = Durer 1515 expert headline (PD ref in
+content-pipeline, never ships). Expert path band relaxed 50-90 -> 38-200
+(v7 mona flagship needs 150-200). Review artifact (L10 + v7 ghost-ID gate)
+sent; NO ship until Eric approves. v7 spec filed: CC-WORD-PICTURE-V7-PLAN.

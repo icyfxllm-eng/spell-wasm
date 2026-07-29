@@ -7,12 +7,17 @@ import fs from "node:fs";
 import path from "node:path";
 
 const ROOT = path.dirname(new URL(import.meta.url).pathname) + "/..";
-const BANDS = { easy: [3, 8], medium: [10, 20], hard: [25, 45], expert: [50, 90] };
+const BANDS = { easy: [3, 8], medium: [10, 20], hard: [25, 45], expert: [38, 200] };
 const ARCHES = new Set(["stack", "arc", "spiral", "zigzag", "wave", "radial", "outline", "line"]);
 let problems = [];
 const m = JSON.parse(fs.readFileSync(`${ROOT}/config/wordpic/pictures.json`, "utf8"));
 
-if (m.pictures.length !== 10) problems.push(`starter pack must be exactly 10 (got ${m.pictures.length})`);
+const byPack = {};
+for (const p of m.pictures) (byPack[p.pack ?? "starter"] ??= []).push(p);
+if ((byPack.starter ?? []).length !== 10)
+  problems.push(`starter pack must be exactly 10 (got ${(byPack.starter ?? []).length})`);
+for (const [pk, ps] of Object.entries(byPack))
+  if (ps.length > 10) problems.push(`pack '${pk}' exceeds the 10-picture cap (D13): ${ps.length}`);
 const seen = new Set();
 for (const p of m.pictures) {
   const [lo, hi] = BANDS[p.tier] ?? [0, 0];

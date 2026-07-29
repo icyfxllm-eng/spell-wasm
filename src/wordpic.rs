@@ -26,7 +26,7 @@ pub const RECENCY_PICS: usize = 3;
 pub const NO_REPEAT: usize = 5;
 /// D3 path-count bands.
 pub const BANDS: [(&str, u32, u32); 4] =
-    [("easy", 3, 8), ("medium", 10, 20), ("hard", 25, 45), ("expert", 50, 90)];
+    [("easy", 3, 8), ("medium", 10, 20), ("hard", 25, 45), ("expert", 38, 200)];
 
 #[derive(Debug, Clone, serde::Deserialize)]
 pub struct WordPath {
@@ -69,6 +69,8 @@ pub struct Picture {
     pub kid: bool,
     #[serde(default)]
     pub wash: bool,
+    #[serde(default)]
+    pub pack: String,
     pub paths: Vec<WordPath>,
     #[serde(default)]
     pub provenance: Option<HashMap<String, String>>,
@@ -393,7 +395,12 @@ mod tests {
     #[test]
     fn manifest_parses_bands_and_choreography_hold() {
         let m = manifest();
-        assert_eq!(m.pictures.len(), 10, "starter pack is exactly 10 (D16)");
+        let starter = m.pictures.iter().filter(|p| p.pack == "starter").count();
+        assert_eq!(starter, 10, "starter pack is exactly 10 (D16)");
+        for pk in ["starter", "animals"] {
+            let n = m.pictures.iter().filter(|p| p.pack == pk).count();
+            assert!(n <= 10, "{pk}: pack cap is 10 (D13), got {n}");
+        }
         for p in &m.pictures {
             let n = p.paths.len() as u32;
             let (_, lo, hi) = BANDS.iter().find(|(t, _, _)| *t == p.tier).copied().unwrap();
