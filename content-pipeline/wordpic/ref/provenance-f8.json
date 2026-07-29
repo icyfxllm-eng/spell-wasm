@@ -1,0 +1,106 @@
+[
+ {
+  "subject": "dog",
+  "title": "File:Dog Silhouette 01.svg",
+  "license": "Public domain",
+  "sourceUrl": "https://commons.wikimedia.org/wiki/File:Dog_Silhouette_01.svg",
+  "file": "ref/dog.png",
+  "bytes": 27180
+ },
+ {
+  "subject": "butterfly",
+  "title": "File:Butterfly Pinhead icon.svg",
+  "license": "CC0",
+  "sourceUrl": "https://commons.wikimedia.org/wiki/File:Butterfly_Pinhead_icon.svg",
+  "file": "ref/butterfly.png",
+  "bytes": 22647
+ },
+ {
+  "subject": "snail",
+  "title": "File:Machovka snail & The Blue Marble.svg",
+  "license": "CC0",
+  "sourceUrl": "https://commons.wikimedia.org/wiki/File:Machovka_snail_%26_The_Blue_Marble.svg",
+  "file": "ref/snail.png",
+  "bytes": 552933
+ },
+ {
+  "subject": "duck",
+  "title": "File:Duck Silhouette (NIH BioArt 135 - 629482).svg",
+  "license": "Public domain",
+  "sourceUrl": "https://commons.wikimedia.org/wiki/File:Duck_Silhouette_(NIH_BioArt_135_-_629482).svg",
+  "file": "ref/duck.png",
+  "bytes": 20951
+ },
+ {
+  "subject": "owl",
+  "title": "File:Hibou Grand-duc - Eagle Owl.svg",
+  "license": "CC0",
+  "sourceUrl": "https://commons.wikimedia.org/wiki/File:Hibou_Grand-duc_-_Eagle_Owl.svg",
+  "file": "ref/owl.png",
+  "bytes": 645531
+ },
+ {
+  "subject": "turtle",
+  "title": "File:Turtle.svg",
+  "license": "Public domain",
+  "sourceUrl": "https://commons.wikimedia.org/wiki/File:Turtle.svg",
+  "file": "ref/turtle.png",
+  "bytes": 11169
+ },
+ {
+  "subject": "elephant",
+  "title": "File:Elephant Vector.svg",
+  "license": "CC0",
+  "sourceUrl": "https://commons.wikimedia.org/wiki/File:Elephant_Vector.svg",
+  "file": "ref/elephant.png",
+  "bytes": 18816
+ },
+ {
+  "subject": "horse",
+  "title": "File:Horse (NIH BioArt 600).png",
+  "license": "Public domain",
+  "sourceUrl": "https://commons.wikimedia.org/wiki/File:Horse_(NIH_BioArt_600).png",
+  "file": "ref/horse.png",
+  "bytes": 279870
+ },
+ {
+  "subject": "peacock",
+  "title": "File:Koson - peacock.jpg",
+  "license": "Public domain",
+  "sourceUrl": "https://commons.wikimedia.org/wiki/File:Koson_-_peacock.jpg",
+  "file": "ref/peacock.jpg",
+  "bytes": 24902
+ },
+ {
+  "subject": "fish",
+  "title": "File:Salmo salar silhouette transparent.png",
+  "license": "CC0",
+  "sourceUrl": "https://commons.wikimedia.org/wiki/File:Salmo_salar_silhouette_transparent.png",
+  "file": "ref/fish.png",
+  "bytes": 10703
+ },
+ {
+  "subject": "snowman",
+  "title": "File:Snowman - The Noun Project.svg",
+  "license": "CC0",
+  "sourceUrl": "https://commons.wikimedia.org/wiki/File:Snowman_-_The_Noun_Project.svg",
+  "file": "ref/snowman.png",
+  "bytes": 23443
+ },
+ {
+  "subject": "eiffel",
+  "title": "File:Eiffel Tower Silhouette.svg",
+  "license": "CC0",
+  "sourceUrl": "https://commons.wikimedia.org/wiki/File:Eiffel_Tower_Silhouette.svg",
+  "file": "ref/eiffel.png",
+  "bytes": 30478
+ },
+ {
+  "subject": "dragon",
+  "title": "File:Chen Rong - Nine Dragons.jpg",
+  "license": "Public domain",
+  "sourceUrl": "https://commons.wikimedia.org/wiki/File:Chen_Rong_-_Nine_Dragons.jpg",
+  "file": "ref/dragon.jpg",
+  "bytes": 192686
+ }
+]
