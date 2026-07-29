@@ -376,5 +376,20 @@
   "voiceSpell.netAsk": "この言語の音声認識にはインターネットが必要です。音声は認識のためだけにSpellサーバーへ送られ、その後消えます — 保存されません。",
   "voiceSpell.netOk": "インターネットを使う",
   "voiceSpell.netNo": "やめておく",
-  "voiceSpell.netErr": "接続なし — もう一度試してね"
+  "voiceSpell.netErr": "接続なし — もう一度試してね",
+  "tools.wordpic.name": "ことばの絵",
+  "tools.wordpic.desc": "つづった言葉が絵になる。",
+  "wordpic.surprise": "🎲 おまかせ",
+  "wordpic.restartAsk": "この絵を最初からやり直す？言葉は消えるよ。",
+  "wordpic.restartYes": "やり直す",
+  "wordpic.done": "完成！",
+  "wordpic.doneTitle": "🖼️ きみの絵！",
+  "wordpic.doneBody": "言葉でつくりあげたね — {n}語。",
+  "wordpic.again": "もう一度つづる",
+  "wordpic.backToBook": "えほん",
+  "wordpic.milestone": "いい感じ —",
+  "wordpic.how1": "どの絵も言葉でできているよ。聞こえた言葉をつづると、次の線に描かれるんだ。",
+  "wordpic.how2": "うすい線が作るものを教えてくれる。スマイル：目はたての言葉、口はカーブの言葉。",
+  "wordpic.how3": "大きな絵はたくさんの言葉がいるよ — いつでも休んでね、絵は待ってる。最後の言葉がいちばんいいよ。",
+  "wordpic.shareText": "{pic} {lang}で絵をまるごとつづったよ — {n}語！"
 }

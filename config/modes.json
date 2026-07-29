@@ -176,6 +176,23 @@
       "languages": null,
       "$note": "CC-DEF-MATCH: P3 loop live. Per-language activation = consts::def_match (D3 pool floor + interim-content ruling); inactive languages render the unavailable teaser. PREVIEW depth = easy tier only (defmatch::allowed_tiers).",
       "exitStyle": "instant"
+    },
+    {
+      "id": "word_picture",
+      "nameKey": "tools.wordpic.name",
+      "descKey": "tools.wordpic.desc",
+      "icon": "🖼️",
+      "status": "live",
+      "kidSafe": true,
+      "platforms": [
+        "ios",
+        "web"
+      ],
+      "entitlementLevel": "preview",
+      "requiresPremium": null,
+      "languages": null,
+      "$note": "CC-WORD-PICTURE v5: calligram mode — words typeset along guide strokes. Menu grows to 4 (CC-HUB-CLEANUP D5 reconciliation: Word Picture registered second, per that spec's own note). PREVIEW = free trio from pictures.json; Kid Mode = computed eligibility (tier<=medium + kid-filtered feed).",
+      "exitStyle": "instant"
     }
   ]
 }

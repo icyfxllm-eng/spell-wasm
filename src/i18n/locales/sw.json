@@ -376,5 +376,20 @@
   "voiceSpell.netAsk": "Lugha hii inahitaji intaneti kwa sauti. Sauti yako huenda kwenye seva ya Spell kutambuliwa tu, kisha hufutwa — haihifadhiwi kamwe.",
   "voiceSpell.netOk": "Tumia intaneti",
   "voiceSpell.netNo": "Hapana asante",
-  "voiceSpell.netErr": "Hakuna muunganisho — jaribu tena"
+  "voiceSpell.netErr": "Hakuna muunganisho — jaribu tena",
+  "tools.wordpic.name": "Picha ya Maneno",
+  "tools.wordpic.desc": "Endeleza maneno — yanakuwa picha.",
+  "wordpic.surprise": "🎲 Nishangaze",
+  "wordpic.restartAsk": "Anza picha hii upya? Maneno yake yatafutwa.",
+  "wordpic.restartYes": "Anza upya",
+  "wordpic.done": "Imekamilika!",
+  "wordpic.doneTitle": "🖼️ Picha yako!",
+  "wordpic.doneBody": "Umeiendeleza yote — maneno {n}.",
+  "wordpic.again": "Endeleza tena",
+  "wordpic.backToBook": "Albamu",
+  "wordpic.milestone": "Inapendeza —",
+  "wordpic.how1": "Kila picha imetengenezwa kwa maneno. Endeleza neno unalosikia nalo litachorwa kwenye mstari unaofuata.",
+  "wordpic.how2": "Mistari hafifu inaonyesha unachotengeneza. Uso wa tabasamu: macho ni maneno wima, tabasamu ni maneno kwenye upinde.",
+  "wordpic.how3": "Picha kubwa zinahitaji maneno mengi — ondoka wakati wowote, picha itasubiri. Neno la mwisho ndilo bora zaidi.",
+  "wordpic.shareText": "{pic} Nimeendeleza picha nzima kwa {lang} — maneno {n}!"
 }

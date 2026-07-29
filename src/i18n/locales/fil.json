@@ -376,5 +376,20 @@
   "voiceSpell.netAsk": "Kailangan ng internet ang boses para sa wikang ito. Ipinapadala ang audio mo sa Spell server para makilala lang, tapos nawawala — hindi kailanman iniimbak.",
   "voiceSpell.netOk": "Gamitin ang internet",
   "voiceSpell.netNo": "Huwag na lang",
-  "voiceSpell.netErr": "Walang koneksyon — subukan muli"
+  "voiceSpell.netErr": "Walang koneksyon — subukan muli",
+  "tools.wordpic.name": "Larawang Salita",
+  "tools.wordpic.desc": "Baybayin ang mga salita — magiging larawan sila.",
+  "wordpic.surprise": "🎲 Sorpresahin mo ako",
+  "wordpic.restartAsk": "Ulitin ang larawang ito? Mabubura ang mga salita nito.",
+  "wordpic.restartYes": "Ulitin",
+  "wordpic.done": "Tapos!",
+  "wordpic.doneTitle": "🖼️ Ang larawan mo!",
+  "wordpic.doneBody": "Binaybay mo ito nang buo — {n} salita.",
+  "wordpic.again": "Baybayin muli",
+  "wordpic.backToBook": "Album",
+  "wordpic.milestone": "Gumaganda —",
+  "wordpic.how1": "Bawat larawan ay gawa sa mga salita. Baybayin ang narinig at iguguhit ito sa susunod na guhit.",
+  "wordpic.how2": "Ipinapakita ng malabong guhit ang ginagawa mo. Sa smiley: ang mga mata ay salitang nakatayo, ang ngiti ay salitang nakakurba.",
+  "wordpic.how3": "Malalaking larawan ay maraming salita — umalis anumang oras, maghihintay ang larawan. Ang huling salita ang pinakamaganda.",
+  "wordpic.shareText": "{pic} Binaybay ko ang buong larawan sa {lang} — {n} salita!"
 }

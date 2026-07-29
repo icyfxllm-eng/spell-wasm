@@ -108,6 +108,21 @@ pub fn share_daily(correct: u32, total: u32, streak: u32) {
 /// text + link share. Best-effort — does nothing if no share sheet exists.
 /// CC-PRACTICE D8: the "First 20 in {language}" completion card, through the
 /// same share path as every other card. No PII beyond existing cards.
+/// CC-WORD-PICTURE share card: "{Picture} — spelled in {language}, {N} words".
+pub fn share_wordpic(lang: &str, pic: &str, n: u32) {
+    let name = crate::consts::BUILTIN_LANGS
+        .iter()
+        .find(|(c, _, _, _)| *c == lang)
+        .map(|(_, n, _, _)| *n)
+        .unwrap_or(lang);
+    let icon = crate::wordpic::picture(pic).map(|p| p.icon.as_str()).unwrap_or("🖼️");
+    let text = crate::i18n::tp(
+        "wordpic.shareText",
+        &[("pic", icon), ("lang", name), ("n", &n.to_string())],
+    );
+    share_text(&text);
+}
+
 pub fn share_practice(lang: &str) {
     let name = crate::consts::BUILTIN_LANGS
         .iter()

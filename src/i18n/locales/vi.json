@@ -376,5 +376,20 @@
   "voiceSpell.netAsk": "Ngôn ngữ này cần internet cho giọng nói. Âm thanh chỉ được gửi đến máy chủ Spell để nhận dạng rồi xóa — không bao giờ lưu.",
   "voiceSpell.netOk": "Dùng internet",
   "voiceSpell.netNo": "Không, cảm ơn",
-  "voiceSpell.netErr": "Mất kết nối — thử lại"
+  "voiceSpell.netErr": "Mất kết nối — thử lại",
+  "tools.wordpic.name": "Bức Tranh Chữ",
+  "tools.wordpic.desc": "Đánh vần từ — chúng trở thành bức tranh.",
+  "wordpic.surprise": "🎲 Bất ngờ nhé",
+  "wordpic.restartAsk": "Bắt đầu lại bức tranh này? Các từ sẽ bị xóa.",
+  "wordpic.restartYes": "Bắt đầu lại",
+  "wordpic.done": "Xong!",
+  "wordpic.doneTitle": "🖼️ Bức tranh của bạn!",
+  "wordpic.doneBody": "Bạn đã đánh vần nên nó — {n} từ.",
+  "wordpic.again": "Đánh vần lại",
+  "wordpic.backToBook": "Bộ sưu tập",
+  "wordpic.milestone": "Đẹp dần rồi —",
+  "wordpic.how1": "Mỗi bức tranh làm từ các từ. Đánh vần từ bạn nghe và nó tự vẽ lên nét tiếp theo.",
+  "wordpic.how2": "Những đường mờ cho thấy bạn đang tạo gì. Mặt cười: mắt là từ xếp dọc, miệng là từ theo đường cong.",
+  "wordpic.how3": "Tranh lớn cần nhiều từ — nghỉ lúc nào cũng được, tranh vẫn chờ. Từ cuối cùng là từ hay nhất.",
+  "wordpic.shareText": "{pic} Mình đã đánh vần cả một bức tranh bằng {lang} — {n} từ!"
 }

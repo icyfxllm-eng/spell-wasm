@@ -376,5 +376,20 @@
   "voiceSpell.netAsk": "Ten język potrzebuje internetu do głosu. Twoje audio trafia na serwer Spell tylko do rozpoznania, potem znika — nigdy nie jest zapisywane.",
   "voiceSpell.netOk": "Użyj internetu",
   "voiceSpell.netNo": "Nie, dziękuję",
-  "voiceSpell.netErr": "Brak połączenia — spróbuj ponownie"
+  "voiceSpell.netErr": "Brak połączenia — spróbuj ponownie",
+  "tools.wordpic.name": "Obraz ze Słów",
+  "tools.wordpic.desc": "Literuj słowa — staną się obrazem.",
+  "wordpic.surprise": "🎲 Zaskocz mnie",
+  "wordpic.restartAsk": "Zacząć ten obraz od nowa? Jego słowa zostaną usunięte.",
+  "wordpic.restartYes": "Od nowa",
+  "wordpic.done": "Gotowe!",
+  "wordpic.doneTitle": "🖼️ Twój obraz!",
+  "wordpic.doneBody": "Wyliterowałeś go w całości — {n} słów.",
+  "wordpic.again": "Literuj jeszcze raz",
+  "wordpic.backToBook": "Album",
+  "wordpic.milestone": "Dobrze idzie —",
+  "wordpic.how1": "Każdy obraz składa się ze słów. Przeliteruj usłyszane słowo, a narysuje się na kolejnej kresce.",
+  "wordpic.how2": "Blade linie pokazują, co tworzysz. Spójrz na uśmiech: oczy to słowa w pionie, usta to słowa w łuku.",
+  "wordpic.how3": "Duże obrazy wymagają wielu słów — wyjdź kiedy chcesz, obraz poczeka. Ostatnie słowo jest najlepsze.",
+  "wordpic.shareText": "{pic} Wyliterowałem cały obraz po {lang} — {n} słów!"
 }

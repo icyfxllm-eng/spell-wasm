@@ -37,7 +37,7 @@ use crate::App;
 /// how this particular frontend reaches it. Keeping DOM ids out of the registry
 /// is what lets the same file describe a mode for a future surface that has no
 /// such element. `None` = an in-round aid with no destination.
-const LAUNCH: [(&str, Option<&str>); 9] = [
+const LAUNCH: [(&str, Option<&str>); 10] = [
     ("practice", Some("practiceOpen")), // CC-PRACTICE: the front porch, first (D9)
     // Races inside The Climb, but HAS its own screen: it shows the ghost you're
     // racing (your best run for this language) and starts a Climb run.
@@ -49,6 +49,7 @@ const LAUNCH: [(&str, Option<&str>); 9] = [
     ("word_stories", None),       // after-answer flourish; hidden anyway
     ("online_spelloff", Some("soBtn")),
     ("def_match", Some("defMatchOpen")), // CC-DEF-MATCH P3: the floating-cards loop
+    ("word_picture", Some("wordPicOpen")), // CC-WORD-PICTURE v5: calligram picker
 ];
 
 fn launch_for(id: &str) -> Option<&'static str> {

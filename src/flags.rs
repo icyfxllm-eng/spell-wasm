@@ -118,6 +118,13 @@ pub fn def_match() -> bool {
     resolve(stored("def_match").as_deref(), true)
 }
 
+/// CC-WORD-PICTURE v5 — calligram mode (REVIEW-GATED). Default ON: the
+/// registry gates audiences (PREVIEW free trio, Kid computed eligibility);
+/// the flag is the standard runtime kill-switch.
+pub fn word_picture() -> bool {
+    resolve(stored("word_picture").as_deref(), true)
+}
+
 /// CC-PRACTICE — the guided first-contact mode. Default ON (failure-proof,
 /// writes nothing outside its own record); per-language gate is consts::practice.
 pub fn practice() -> bool {
@@ -136,6 +143,7 @@ pub fn is_on(name: &str) -> bool {
         "attempts_shields" => attempts_shields(),
         "def_match" => def_match(),
         "practice" => practice(),
+        "word_picture" => word_picture(),
         _ => false,
     }
 }

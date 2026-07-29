@@ -376,5 +376,20 @@
   "voiceSpell.netAsk": "这个语言的语音需要联网。你的音频只会发送到 Spell 服务器进行识别，之后立即删除 — 绝不保存。",
   "voiceSpell.netOk": "使用网络",
   "voiceSpell.netNo": "不用了",
-  "voiceSpell.netErr": "没有网络 — 请重试"
+  "voiceSpell.netErr": "没有网络 — 请重试",
+  "tools.wordpic.name": "单词画",
+  "tools.wordpic.desc": "拼出单词,它们就变成画。",
+  "wordpic.surprise": "🎲 给我惊喜",
+  "wordpic.restartAsk": "重新开始这幅画吗?它的单词会被清空。",
+  "wordpic.restartYes": "重新开始",
+  "wordpic.done": "完成!",
+  "wordpic.doneTitle": "🖼️ 你的画!",
+  "wordpic.doneBody": "你用单词拼成了它 — {n} 个单词。",
+  "wordpic.again": "再拼一次",
+  "wordpic.backToBook": "画册",
+  "wordpic.milestone": "越来越好看 —",
+  "wordpic.how1": "每幅画都由单词组成。拼出你听到的单词,它就画在下一笔上。",
+  "wordpic.how2": "淡淡的线条是你要画的样子。笑脸:眼睛是竖排的单词,嘴巴是弯弯的单词。",
+  "wordpic.how3": "大画需要很多单词 — 随时休息,画会等你。最后一个单词最珍贵。",
+  "wordpic.shareText": "{pic} 我用{lang}拼出了一整幅画 — {n} 个单词!"
 }

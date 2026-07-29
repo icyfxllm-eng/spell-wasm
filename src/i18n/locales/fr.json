@@ -376,5 +376,20 @@
   "voiceSpell.netAsk": "Cette langue a besoin d'internet pour la voix. Ton audio va au serveur de Spell uniquement pour être reconnu, puis disparaît — jamais conservé.",
   "voiceSpell.netOk": "Utiliser internet",
   "voiceSpell.netNo": "Non merci",
-  "voiceSpell.netErr": "Pas de connexion — réessaie"
+  "voiceSpell.netErr": "Pas de connexion — réessaie",
+  "tools.wordpic.name": "Image de Mots",
+  "tools.wordpic.desc": "Épelle des mots : ils deviennent l'image.",
+  "wordpic.surprise": "🎲 Surprends-moi",
+  "wordpic.restartAsk": "Recommencer cette image ? Ses mots seront effacés.",
+  "wordpic.restartYes": "Recommencer",
+  "wordpic.done": "Fini !",
+  "wordpic.doneTitle": "🖼️ Ton image !",
+  "wordpic.doneBody": "Tu l'as épelée en entier — {n} mots.",
+  "wordpic.again": "Épelle-la encore",
+  "wordpic.backToBook": "Album",
+  "wordpic.milestone": "Ça prend forme —",
+  "wordpic.how1": "Chaque image est faite de mots. Épelle le mot entendu et il se dessine sur le trait suivant.",
+  "wordpic.how2": "Les lignes pâles montrent ce que tu crées. Regarde le sourire : les yeux sont des mots debout, la bouche des mots en courbe.",
+  "wordpic.how3": "Les grandes images demandent beaucoup de mots — pars quand tu veux, ton image t'attend. Le dernier mot est le meilleur.",
+  "wordpic.shareText": "{pic} J'ai épelé toute une image en {lang} — {n} mots !"
 }

@@ -376,5 +376,20 @@
   "voiceSpell.netAsk": "Este idioma necesita internet para la voz. Tu audio va al servidor de Spell solo para reconocerse y luego desaparece — nunca se guarda.",
   "voiceSpell.netOk": "Usar internet",
   "voiceSpell.netNo": "No, gracias",
-  "voiceSpell.netErr": "Sin conexión — inténtalo de nuevo"
+  "voiceSpell.netErr": "Sin conexión — inténtalo de nuevo",
+  "tools.wordpic.name": "Cuadro de Palabras",
+  "tools.wordpic.desc": "Deletrea palabras: se convierten en el cuadro.",
+  "wordpic.surprise": "🎲 Sorpréndeme",
+  "wordpic.restartAsk": "¿Empezar este cuadro de nuevo? Sus palabras se borran.",
+  "wordpic.restartYes": "Empezar de nuevo",
+  "wordpic.done": "¡Listo!",
+  "wordpic.doneTitle": "🖼️ ¡Tu cuadro!",
+  "wordpic.doneBody": "Lo deletreaste entero — {n} palabras.",
+  "wordpic.again": "Deletréalo otra vez",
+  "wordpic.backToBook": "Álbum",
+  "wordpic.milestone": "Va quedando bien —",
+  "wordpic.how1": "Cada cuadro está hecho de palabras. Deletrea la palabra que oyes y se dibuja en el siguiente trazo.",
+  "wordpic.how2": "Las líneas tenues muestran lo que estás creando. Mira la carita: los ojos son palabras de pie, la sonrisa es palabras en curva.",
+  "wordpic.how3": "Los cuadros grandes llevan muchas palabras — sal cuando quieras, tu cuadro te espera. La última palabra es la mejor.",
+  "wordpic.shareText": "{pic} ¡Deletreé un cuadro entero en {lang} — {n} palabras!"
 }

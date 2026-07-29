@@ -78,7 +78,7 @@ P.append(pic("smiley", "easy", "faces", "🙂", True, [
     flow("M96 256 A160 160 0 1 0 416 256", 2, B_EASY, 1, "outline", 2),   # bottom of face (2 words)
     stack(196, 160, 28, 5, 3),                                            # left eye — "S M I L E"
     stack(316, 160, 28, 5, 4),                                            # right eye — "H A P P Y"
-    flow(arc(160, 320, 256, 420, 352, 320), 5, B_EASY, 1, "arc", 3),     # THE MOUTH — finale, 3 words
+    flow(arc(168, 302, 256, 386, 344, 302), 5, B_EASY, 1, "arc", 2),     # THE MOUTH — finale
 ]))
 
 # 2) STAR (easy): 5 edges of a pentagram outline + a sparkle stack.

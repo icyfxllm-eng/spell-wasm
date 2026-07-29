@@ -376,5 +376,20 @@
   "voiceSpell.netAsk": "This language needs the internet for voice. Your audio goes to the Spell server only to be recognized, then it's gone — never stored.",
   "voiceSpell.netOk": "Use the internet",
   "voiceSpell.netNo": "No thanks",
-  "voiceSpell.netErr": "No connection — try again"
+  "voiceSpell.netErr": "No connection — try again",
+  "tools.wordpic.name": "Word Picture",
+  "tools.wordpic.desc": "Spell words — they become the picture.",
+  "wordpic.surprise": "🎲 Surprise me",
+  "wordpic.restartAsk": "Start this picture over? Its words are cleared.",
+  "wordpic.restartYes": "Start over",
+  "wordpic.done": "Done!",
+  "wordpic.doneTitle": "🖼️ Your picture!",
+  "wordpic.doneBody": "You spelled it into being — {n} words.",
+  "wordpic.again": "Spell it again",
+  "wordpic.backToBook": "Picture book",
+  "wordpic.milestone": "Looking good —",
+  "wordpic.how1": "Every picture is made of words. Spell the word you hear and it draws itself onto the next stroke.",
+  "wordpic.how2": "The faint lines show what you're making. Watch the smiley: the eyes are words standing tall, the smile is words in a curve.",
+  "wordpic.how3": "Big pictures take many words — leave anytime, your picture waits. The last word is always the best one.",
+  "wordpic.shareText": "{pic} I spelled a whole picture in {lang} — {n} words!"
 }

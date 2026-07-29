@@ -10,7 +10,8 @@ mod daily;
 mod deck;
 mod defmatch; // CC-DEF-MATCH core engine (REVIEW-GATED)
 mod practice; // CC-PRACTICE core (curriculum/phases/progress)
-mod wordpic; // CC-WORD-PICTURE v3 core (fill-canvas pictures)
+mod wordpic; // CC-WORD-PICTURE v5 core (calligrams)
+mod wordpic_screen; // CC-WORD-PICTURE v5 screen
 mod practice_screen; // CC-PRACTICE screen (the front porch)
 mod defmatch_screen; // CC-DEF-MATCH P3 frontend loop
 mod dom;
@@ -205,6 +206,7 @@ fn wire(app: &App) {
     racing::screen::wire(app); // CC-SPELL-RACING Phase 5 screen (hidden until activation)
     defmatch_screen::wire(app); // CC-DEF-MATCH P3 loop (live tile where consts::def_match holds)
     practice_screen::wire(app); // CC-PRACTICE (visible where consts::practice holds — en first)
+    wordpic_screen::wire(app); // CC-WORD-PICTURE v5 (calligram picker + canvas)
     dev::wire(app); // TEMP dev door: 5-tap logo → menu for the hidden racing/aloud screens
     tools_hub::wire(app);
     tools_hub::reflect(app);
