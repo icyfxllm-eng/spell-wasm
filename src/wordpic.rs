@@ -1,68 +1,83 @@
-//! CC-WORD-PICTURE v3 core — fill-canvas pictures (spell words, fill pieces).
+//! CC-WORD-PICTURE v5 core — calligrams: the words you spell become the picture.
 //!
-//! REVIEW-GATED. A picture is a FILL TEMPLATE: the full ghost outline shows
-//! from word 1; each correct word fills the next piece (D1). Words come from
-//! the SAME tier's normal pool, seeded, no repeats within a picture (D3) —
-//! there is NO word→piece meaning relationship (the v2 mapping architecture
-//! is removed scope). Art is 100% language-neutral.
+//! REVIEW-GATED. A picture is a manifest of WORD-PATHS (D1): ghost guides
+//! visible from word 1; each correctly spelled word is typeset along the next
+//! path (flow/textPath, vertical stacks, per-unit CJK placement — and, per
+//! Eric's D4 ruling, chord-angled straight words for complex-shaping scripts
+//! on curves). Words come seeded from the language's OWN tier pool filtered
+//! to each path's typing-unit budget (D2) — no semantic mapping (v2 banned),
+//! no fill-mask reveal (v3 banned). The words ARE the artwork.
 //!
-//! Grow-only (D5): nothing here can unfill a piece — the progress record
-//! only ever increases until completion or an explicit restart. Mode-local
-//! writes only (I7): the ONLY persistence is `spell_wordpic` state.
+//! Grow-only (D5): a placed word is never removed mid-run; the ONLY
+//! persistence is the `spell_wordpic` state (I8 mode-local writes).
 
 use std::collections::HashMap;
 use std::sync::OnceLock;
 
 use unicode_normalization::UnicodeNormalization;
 
-/// D6: per-piece fill animation, ms (Reduce Motion: instant).
-pub const FILL_MS: u32 = 1000;
-/// D7: "Surprise me" no-repeat window (last N starts; capped at library-1).
+/// D6: per-word flow-in, ms (Reduce Motion: instant).
+pub const FLOW_MS: u32 = 1000;
+/// D8: absolute legibility floor for rendered words, px at reference viewport.
+pub const MIN_FONT: f32 = 12.0;
+/// D14: deprioritize words placed in the player's last N completed pictures.
+pub const RECENCY_PICS: usize = 3;
+/// D7: "Surprise me" no-repeat window (last N starts, capped at library-1).
 pub const NO_REPEAT: usize = 5;
-/// D3 tier bands (piece counts) — also enforced by wordpic-check.mjs.
+/// D3 path-count bands.
 pub const BANDS: [(&str, u32, u32); 4] =
-    [("easy", 6, 10), ("medium", 15, 25), ("hard", 30, 50), ("expert", 60, 100)];
+    [("easy", 3, 8), ("medium", 10, 20), ("hard", 25, 45), ("expert", 50, 90)];
 
 #[derive(Debug, Clone, serde::Deserialize)]
-pub struct RasterGrid {
-    pub cols: u32,
-    pub rows: u32,
+pub struct WordPath {
+    pub mode: String, // "flow" | "stack"
+    #[serde(default)]
+    pub d: Option<String>,
+    #[serde(default)]
+    pub x: f32,
+    #[serde(default)]
+    pub y: f32,
+    #[serde(default)]
+    pub size: f32,
+    pub order: u32,
+    /// Typing-unit budget [min, max] the feed filters to (D2).
+    pub budget: (u32, u32),
+    pub band: u8,
+    pub arch: String,
+    /// Long flow paths host `segs` one-word segments instead of stretching.
+    #[serde(default)]
+    pub segs: Option<u32>,
 }
 
-#[derive(Debug, Clone, serde::Deserialize)]
-pub struct Raster {
-    pub img: String,
-    pub w: u32,
-    pub h: u32,
-    pub grid: RasterGrid,
-    /// Fill order over cell indices (row-major r*cols+c) — face last (D6).
-    pub order: Vec<u32>,
-}
-
-#[derive(Debug, Clone, serde::Deserialize)]
-pub struct Variant {
-    pub id: String,
-    pub palette: HashMap<String, String>,
+impl WordPath {
+    pub fn slots(&self) -> u32 {
+        self.segs.unwrap_or(1).max(1)
+    }
 }
 
 #[derive(Debug, Clone, serde::Deserialize)]
 pub struct Picture {
     pub id: String,
     pub tier: String,
-    pub class: String,
+    pub subject: String,
     pub icon: String,
     #[serde(default)]
     pub kid: bool,
     #[serde(default)]
-    pub raster: Option<Raster>,
+    pub wash: bool,
+    pub paths: Vec<WordPath>,
     #[serde(default)]
-    pub variants: Vec<Variant>,
+    pub provenance: Option<HashMap<String, String>>,
 }
 
 #[derive(Debug, Clone, serde::Deserialize)]
 pub struct Manifest {
-    #[serde(rename = "fillMs")]
-    pub fill_ms: u32,
+    #[serde(rename = "flowMs")]
+    pub flow_ms: u32,
+    #[serde(rename = "minFont")]
+    pub min_font: f32,
+    #[serde(rename = "recencyBias")]
+    pub recency_bias: u32,
     pub free: Vec<String>,
     pub pictures: Vec<Picture>,
 }
@@ -79,34 +94,20 @@ pub fn picture(id: &str) -> Option<&'static Picture> {
     manifest().pictures.iter().find(|p| p.id == id)
 }
 
-/// The vector picture SVG markup — the ONLY place asset files are named.
-pub fn svg(id: &str) -> Option<&'static str> {
-    Some(match id {
-        "cat" => include_str!("../assets/scenes/starter/cat.svg"),
-        "star" => include_str!("../assets/scenes/starter/star.svg"),
-        "fish" => include_str!("../assets/scenes/starter/fish.svg"),
-        "house" => include_str!("../assets/scenes/starter/house.svg"),
-        "rocket" => include_str!("../assets/scenes/starter/rocket.svg"),
-        "dragon" => include_str!("../assets/scenes/starter/dragon.svg"),
-        "snowman" => include_str!("../assets/scenes/starter/snowman.svg"),
-        "eiffel" => include_str!("../assets/scenes/starter/eiffel.svg"),
-        "pyramids" => include_str!("../assets/scenes/starter/pyramids.svg"),
-        _ => return None,
-    })
+/// Total word slots (paths expanded by their segments) — the campaign length.
+pub fn slots(p: &Picture) -> u32 {
+    p.paths.iter().map(|q| q.slots()).sum()
 }
 
-/// Piece count: vector = data-piece group count (parsed from the SVG's own
-/// data-pieces stamp); raster = grid size.
-pub fn pieces(p: &Picture) -> u32 {
-    if let Some(r) = &p.raster {
-        return r.grid.cols * r.grid.rows;
+/// The slot list in fill order: (path index, budget) per hosted word.
+pub fn slot_budgets(p: &Picture) -> Vec<(usize, (u32, u32))> {
+    let mut out = Vec::new();
+    for (i, q) in p.paths.iter().enumerate() {
+        for _ in 0..q.slots() {
+            out.push((i, q.budget));
+        }
     }
-    svg(&p.id)
-        .and_then(|s| {
-            let k = s.find("data-pieces=\"")? + 13;
-            s[k..].split('"').next()?.parse().ok()
-        })
-        .unwrap_or(0)
+    out
 }
 
 // ---- deterministic PRNG (splitmix64 — the crate convention) ----
@@ -119,49 +120,96 @@ fn splitmix64(state: &mut u64) -> u64 {
     z ^ (z >> 31)
 }
 
-/// D3 — the word feed: `pieces` words drawn seeded from the picture's tier
-/// pool in `lang`, without replacement (I3: identical sequence across
-/// platforms for the same (picture, language, seed)). NFC-normalized.
-pub fn word_feed(pic: &Picture, lang: &str, seed: u64) -> Vec<String> {
-    let pool = crate::words::tier_for(lang, &pic.tier);
-    let need = pieces(pic) as usize;
-    let mut idx: Vec<usize> = (0..pool.len()).collect();
-    let mut st = seed ^ 0x57505F5631; // "WP_V1" — feed-domain salt
-    let mut out = Vec::with_capacity(need);
-    while !idx.is_empty() && out.len() < need {
-        let k = (splitmix64(&mut st) % idx.len() as u64) as usize;
-        let w = pool[idx.swap_remove(k)];
-        // zh entries are "pinyin|hanzi" — the typed word is the pinyin side.
-        let typed = w.split('|').next().unwrap_or(w);
-        out.push(typed.nfc().collect::<String>());
+/// Typing-unit length (registry units, not bytes): jamo for ko, NFC chars
+/// elsewhere — the same unit the rest of the game types in.
+pub fn unit_len(lang: &str, word: &str) -> u32 {
+    crate::practice::units(lang, word).len() as u32
+}
+
+/// The typed form of a pool entry (zh stores "pinyin|hanzi").
+fn typed(w: &str) -> String {
+    w.split('|').next().unwrap_or(w).nfc().collect()
+}
+
+/// D2 + D14 — the word feed: one word per slot, seeded, budget-filtered, no
+/// repeats within the picture, recent-picture words deprioritized (they stay
+/// LEGAL — pools are finite — but only fill a slot when nothing fresh fits).
+/// Deterministic for (picture, lang, seed, recent) — `recent` is part of the
+/// persisted state so resume replays identically (I3).
+pub fn word_feed(p: &Picture, lang: &str, seed: u64, recent: &[String]) -> Vec<String> {
+    let pool = crate::words::tier_for(lang, &p.tier);
+    let mut st = seed ^ 0x57505F5635; // "WP_V5" feed-domain salt
+    let mut used: Vec<String> = Vec::new();
+    let mut out = Vec::new();
+    for (_, (lo, hi)) in slot_budgets(p) {
+        let fits = |w: &&str| {
+            let t = typed(w);
+            let n = unit_len(lang, &t);
+            n >= lo && n <= hi && !used.contains(&t)
+        };
+        let fresh: Vec<&str> = pool
+            .iter()
+            .filter(|w| fits(w) && !recent.contains(&typed(w)))
+            .copied()
+            .collect();
+        let candidates: Vec<&str> = if fresh.is_empty() {
+            pool.iter().filter(|w| fits(w)).copied().collect()
+        } else {
+            fresh
+        };
+        if candidates.is_empty() {
+            // I1 shortfall — the checker hides this (picture, lang) pair; the
+            // runtime guard just stops short (screen never opens such pairs).
+            break;
+        }
+        let k = (splitmix64(&mut st) % candidates.len() as u64) as usize;
+        let w = typed(candidates[k]);
+        used.push(w.clone());
+        out.push(w);
     }
     out
 }
 
-/// I1 — completability: the tier pool must hold ≥ 2× the piece count.
-pub fn completable(pic: &Picture, lang: &str) -> bool {
-    crate::words::tier_for(lang, &pic.tier).len() as u32 >= pieces(pic) * 2
+/// I1 — every slot's budget matches ≥3 candidates in the language's pool.
+pub fn playable(p: &Picture, lang: &str) -> bool {
+    let pool = crate::words::tier_for(lang, &p.tier);
+    slot_budgets(p).iter().all(|(_, (lo, hi))| {
+        pool.iter()
+            .filter(|w| {
+                let n = unit_len(lang, &typed(w));
+                n >= *lo && n <= *hi
+            })
+            .take(3)
+            .count()
+            >= 3
+    })
 }
 
-/// D8 — kid eligibility: tier ≤ medium, manifest kid flag, and every word of
-/// the language's deterministic feed passes the kid filter.
-pub fn kid_ok(pic: &Picture, lang: &str, seed: u64) -> bool {
-    if !pic.kid || !(pic.tier == "easy" || pic.tier == "medium") {
+/// D16 kid eligibility: tier ≤ medium, manifest flag, and the language's
+/// deterministic feed passes the kid filter end-to-end.
+pub fn kid_ok(p: &Picture, lang: &str, seed: u64) -> bool {
+    if !p.kid || !(p.tier == "easy" || p.tier == "medium") {
         return false;
     }
-    word_feed(pic, lang, seed).iter().all(|w| crate::kid_filter::kid_allowed(lang, w))
+    word_feed(p, lang, seed, &[]).iter().all(|w| crate::kid_filter::kid_allowed(lang, w))
 }
 
-// ---- persistence (I7: the ONE mode-local record) ----
+// ---- persistence (I8: the ONE mode-local record) ----
 
 #[derive(Debug, Clone, serde::Serialize, serde::Deserialize)]
 pub struct Run {
     pub pic: String,
     pub lang: String,
     pub seed: u64,
-    /// Filled pieces (grow-only; never decremented — D5/I2).
-    pub filled: u32,
+    /// Words placed so far, in path order (grow-only; gallery replay data).
+    #[serde(default)]
+    pub words: Vec<String>,
     pub done: bool,
+    /// Latest "Spell it again" replay (canonical first completion kept above).
+    #[serde(default)]
+    pub replay: Vec<String>,
+    #[serde(default)]
+    pub replay_seed: u64,
     /// Monotonic play counter at last touch (picker LRU without wall clocks).
     pub touched: u64,
 }
@@ -169,15 +217,19 @@ pub struct Run {
 #[derive(Debug, Clone, Default, serde::Serialize, serde::Deserialize)]
 pub struct State {
     pub runs: Vec<Run>,
-    /// Monotonic counter incremented per open/fill (ordering source).
     pub plays: u64,
-    /// Shuffle-bag remainder + last-N started ids (D7).
     #[serde(default)]
     pub bag: Vec<String>,
     #[serde(default)]
     pub recent: Vec<String>,
+    /// D14: words placed in the last RECENCY_PICS completed pictures, per
+    /// language (flattened, most recent last).
+    #[serde(default)]
+    pub recent_words: HashMap<String, Vec<String>>,
     #[serde(default)]
     pub rng: u64,
+    #[serde(default)]
+    pub how_shown: bool,
 }
 
 const KEY: &str = "spell_wordpic";
@@ -195,15 +247,10 @@ impl State {
         self.runs.iter().find(|r| r.pic == pic && r.lang == lang)
     }
 
-    /// Start-or-resume: creates the run (with a fresh seed from the state
-    /// rng) on first open; always bumps the LRU counter.
     pub fn open(&mut self, pic: &str, lang: &str) -> Run {
         self.plays += 1;
         let plays = self.plays;
         if self.rng == 0 {
-            // First-ever open seeds the state rng from the storage-free
-            // fallback: the counter itself (deterministic enough — the seed
-            // only decorrelates word draws between runs, I3 holds per run).
             self.rng = 0x5EED_BA5E;
         }
         let seed = splitmix64(&mut self.rng);
@@ -211,60 +258,97 @@ impl State {
             r.touched = plays;
             return r.clone();
         }
-        let run = Run { pic: pic.into(), lang: lang.into(), seed, filled: 0, done: false, touched: plays };
+        let run = Run {
+            pic: pic.into(),
+            lang: lang.into(),
+            seed,
+            words: Vec::new(),
+            done: false,
+            replay: Vec::new(),
+            replay_seed: 0,
+            touched: plays,
+        };
         self.runs.push(run.clone());
         run
     }
 
-    /// Grow-only fill (D5): only ever increments, saturating at the piece
-    /// count; marks done at 100%.
-    pub fn fill(&mut self, pic: &str, lang: &str, total: u32) -> u32 {
+    /// Grow-only placement (D5): records the word, marks done at the last
+    /// slot, and feeds D14's recency list on completion.
+    pub fn place(&mut self, pic: &str, lang: &str, word: &str, total: u32) -> u32 {
         self.plays += 1;
         let plays = self.plays;
+        let mut completed: Option<Vec<String>> = None;
+        let mut placed = 0;
         if let Some(r) = self.runs.iter_mut().find(|r| r.pic == pic && r.lang == lang) {
-            if r.filled < total {
-                r.filled += 1;
+            if (r.words.len() as u32) < total {
+                r.words.push(word.to_string());
             }
-            r.done = r.filled >= total;
+            placed = r.words.len() as u32;
+            if placed >= total && !r.done {
+                r.done = true;
+                completed = Some(r.words.clone());
+            }
             r.touched = plays;
-            return r.filled;
         }
-        0
+        if let Some(words) = completed {
+            let per_pic = words.len();
+            let list = self.recent_words.entry(lang.to_string()).or_default();
+            list.extend(words);
+            let cap = per_pic.max(8) * RECENCY_PICS;
+            if list.len() > cap {
+                let drop = list.len() - cap;
+                list.drain(0..drop);
+            }
+        }
+        placed
     }
 
-    /// D4 restart: discards THAT picture's progress only (fresh seed on next
-    /// open); everything else untouched.
+    /// D15c "Spell it again": fresh seed over the same paths; the canonical
+    /// first completion stays, the latest replay is stored alongside.
+    pub fn start_replay(&mut self, pic: &str, lang: &str) -> u64 {
+        self.plays += 1;
+        if self.rng == 0 {
+            self.rng = 0x5EED_BA5E;
+        }
+        let seed = splitmix64(&mut self.rng);
+        let plays = self.plays;
+        if let Some(r) = self.runs.iter_mut().find(|r| r.pic == pic && r.lang == lang) {
+            r.replay_seed = seed;
+            r.replay = Vec::new();
+            r.touched = plays;
+        }
+        seed
+    }
+
     pub fn restart(&mut self, pic: &str, lang: &str) {
         self.runs.retain(|r| !(r.pic == pic && r.lang == lang));
     }
 }
 
-/// D7 picker ordering: in-progress first (most-recent first), then unstarted
+/// D7 picker ordering: in-progress first (most-recent), then unstarted
 /// (easiest tier first), then completed (least-recently-touched first).
 pub fn picker_order(state: &State, lang: &str) -> Vec<&'static Picture> {
     let tier_rank = |t: &str| BANDS.iter().position(|(b, _, _)| *b == t).unwrap_or(9);
     let mut pics: Vec<&'static Picture> = manifest().pictures.iter().collect();
-    pics.sort_by_key(|p| {
-        match state.run(&p.id, lang) {
-            Some(r) if !r.done && r.filled > 0 => (0u8, u64::MAX - r.touched, 0),
-            Some(r) if r.done => (2, r.touched, 0),
-            _ => (1, tier_rank(&p.tier) as u64, 0),
-        }
+    pics.sort_by_key(|p| match state.run(&p.id, lang) {
+        Some(r) if !r.done && !r.words.is_empty() => (0u8, u64::MAX - r.touched),
+        Some(r) if r.done => (2, r.touched),
+        _ => (1, tier_rank(&p.tier) as u64),
     });
     pics
 }
 
-/// D7 "Surprise me": seeded draw-without-replacement over startable pictures;
-/// the bag reshuffles excluding the last N started (N = 5, capped library-1).
-/// I5: no picture twice within any N-start window.
+/// D7 "Surprise me": seeded draw-without-replacement; no picture twice within
+/// the last-N window (N = 5 capped at library-1). I7 property-tested.
 pub fn surprise(state: &mut State, startable: &[String]) -> Option<String> {
     if startable.is_empty() {
         return None;
     }
     let n = NO_REPEAT.min(startable.len().saturating_sub(1));
     loop {
-        // Drop bag entries that are no longer startable or violate the window.
-        state.bag.retain(|id| startable.contains(id) && !state.recent.iter().rev().take(n).any(|r| r == id));
+        state
+            .bag
+            .retain(|id| startable.contains(id) && !state.recent.iter().rev().take(n).any(|r| r == id));
         if let Some(id) = state.bag.pop() {
             state.recent.push(id.clone());
             if state.recent.len() > 16 {
@@ -272,14 +356,12 @@ pub fn surprise(state: &mut State, startable: &[String]) -> Option<String> {
             }
             return Some(id);
         }
-        // Refill: shuffle all startable minus the window.
         let mut fill: Vec<String> = startable
             .iter()
             .filter(|id| !state.recent.iter().rev().take(n).any(|r| &r == id))
             .cloned()
             .collect();
         if fill.is_empty() {
-            // Degenerate (library ≤ window): allow everything but the last.
             fill = startable
                 .iter()
                 .filter(|id| state.recent.last() != Some(*id))
@@ -305,93 +387,119 @@ mod tests {
     use super::*;
 
     #[test]
-    fn manifest_parses_and_bands_hold() {
+    fn manifest_parses_bands_and_choreography_hold() {
         let m = manifest();
-        assert_eq!(m.pictures.len(), 10, "starter pack is exactly 10 (D7)");
+        assert_eq!(m.pictures.len(), 10, "starter pack is exactly 10 (D16)");
         for p in &m.pictures {
-            let n = pieces(p);
+            let n = p.paths.len() as u32;
             let (_, lo, hi) = BANDS.iter().find(|(t, _, _)| *t == p.tier).copied().unwrap();
-            assert!(n >= lo && n <= hi, "{}: {} pieces outside {} band", p.id, n, p.tier);
-            if p.class == "raster" {
-                let r = p.raster.as_ref().expect("raster block");
-                assert_eq!(r.order.len() as u32, r.grid.cols * r.grid.rows, "{}: full order", p.id);
-                let mut o = r.order.clone();
-                o.sort_unstable();
-                o.dedup();
-                assert_eq!(o.len() as u32, r.grid.cols * r.grid.rows, "{}: order is a permutation", p.id);
-            } else {
-                assert!(svg(&p.id).is_some(), "{}: svg asset", p.id);
+            assert!(n >= lo && n <= hi, "{}: {} paths outside {} band", p.id, n, p.tier);
+            let orders: Vec<u32> = p.paths.iter().map(|q| q.order).collect();
+            let mut sorted = orders.clone();
+            sorted.sort_unstable();
+            assert_eq!(orders, sorted, "{}: paths in fill order", p.id);
+            for q in &p.paths {
+                assert!(q.budget.0 >= 2 && q.budget.1 >= q.budget.0, "{}: sane budget", p.id);
+                match q.mode.as_str() {
+                    "flow" => assert!(q.d.is_some(), "{}: flow path has geometry", p.id),
+                    "stack" => assert!(q.size > 0.0, "{}: stack has size", p.id),
+                    other => panic!("{}: unknown mode {other}", p.id),
+                }
+            }
+            if p.tier == "expert" {
+                assert!(p.provenance.is_some(), "{}: expert carries provenance (I4)", p.id);
             }
         }
-        assert_eq!(m.free.len(), 3, "free preview trio (D8)");
-        assert!(m.free.iter().any(|f| picture(f).map(|p| p.tier == "medium").unwrap_or(false)),
-            "free trio includes one medium (D8)");
+        assert_eq!(m.free.len(), 3, "free trio (D16)");
+        assert!(
+            m.free.iter().any(|f| picture(f).map(|p| p.tier == "medium").unwrap_or(false)),
+            "free trio includes one medium"
+        );
+        for a in &m.pictures {
+            for b in &m.pictures {
+                assert!(
+                    a.id == b.id || !(a.tier == b.tier && a.subject == b.subject),
+                    "{}/{}: same subject at same tier (D11)",
+                    a.id,
+                    b.id
+                );
+            }
+        }
     }
 
-    /// I1 — completable in every language: tier pool ≥ 2× pieces.
+    /// I1 — every (picture, language): every slot budget matches ≥3 words.
     #[test]
-    fn completable_everywhere() {
+    fn playable_everywhere() {
         for (code, _, _, _) in crate::consts::BUILTIN_LANGS.iter() {
             for p in &manifest().pictures {
-                assert!(completable(p, code), "{}/{}: pool too small", p.id, code);
+                assert!(playable(p, code), "{}/{}: a slot budget lacks 3 candidates", p.id, code);
             }
         }
     }
 
-    /// I3 golden — identical feed for (picture, language, seed); no repeats.
+    /// I3 golden — deterministic feed, full length, budget-true, no repeats;
+    /// D14 bias steers clear of recent words when alternatives exist.
     #[test]
-    fn feed_deterministic_no_repeats() {
-        let p = picture("cat").unwrap();
-        let a = word_feed(p, "en", 42);
-        let b = word_feed(p, "en", 42);
-        assert_eq!(a, b, "same seed, same feed");
-        assert_eq!(a.len() as u32, pieces(p));
+    fn feed_deterministic_budgeted_no_repeats() {
+        let p = picture("smiley").unwrap();
+        let a = word_feed(p, "en", 42, &[]);
+        assert_eq!(a, word_feed(p, "en", 42, &[]), "same seed, same feed");
+        assert_eq!(a.len() as u32, slots(p), "every slot filled");
         let mut d = a.clone();
         d.sort();
         d.dedup();
         assert_eq!(d.len(), a.len(), "no repeats within a picture");
-        assert_ne!(word_feed(p, "en", 43), a, "different seed, different feed");
-        // Pin one golden value: any drift here is a cross-platform break (I3).
+        for (w, (_, (lo, hi))) in a.iter().zip(slot_budgets(p)) {
+            let n = unit_len("en", w);
+            assert!(n >= lo && n <= hi, "{w}: {n} outside [{lo},{hi}]");
+        }
+        let biased = word_feed(p, "en", 42, &a);
+        assert!(biased.iter().all(|w| !a.contains(w)), "recency bias avoids recent words");
         let mona = picture("mona").unwrap();
-        let f = word_feed(mona, "en", 7);
-        assert_eq!(f.len(), 80);
-        assert_eq!(f[0], word_feed(mona, "en", 7)[0]);
+        assert_eq!(word_feed(mona, "en", 7, &[]).len() as u32, slots(mona));
     }
 
-    /// I3 resume round-trip: state serde preserves the exact run.
+    /// I3 — resume round-trips exact state; replay disjoint when pool allows.
     #[test]
-    fn resume_round_trips() {
+    fn resume_and_replay_round_trip() {
         let mut s = State::default();
         let run = s.open("mona", "en");
-        for _ in 0..34 {
-            s.fill("mona", "en", 80);
+        let mona = picture("mona").unwrap();
+        let feed = word_feed(mona, "en", run.seed, &[]);
+        for w in feed.iter().take(12) {
+            s.place("mona", "en", w, slots(mona));
         }
-        let json = serde_json::to_string(&s).unwrap();
-        let back: State = serde_json::from_str(&json).unwrap();
+        let back: State = serde_json::from_str(&serde_json::to_string(&s).unwrap()).unwrap();
         let r = back.run("mona", "en").unwrap();
-        assert_eq!(r.filled, 34);
-        assert_eq!(r.seed, run.seed, "seed survives — word queue resumes identically");
-        assert!(!r.done);
+        assert_eq!(r.words.len(), 12);
+        assert_eq!(r.seed, run.seed);
+        assert_eq!(r.words, feed[..12].to_vec(), "resume continues the exact queue");
+        let p = picture("smiley").unwrap();
+        let first = word_feed(p, "en", 1, &[]);
+        let again = word_feed(p, "en", 2, &first);
+        let overlap = again.iter().filter(|w| first.contains(w)).count();
+        assert_eq!(overlap, 0, "fresh-words replay disjoint when the pool permits (D15c)");
     }
 
-    /// I2 grow-only: fill saturates, restart is the only reset and scoped.
+    /// I2 grow-only + scoped restart; completion feeds the D14 list.
     #[test]
     fn grow_only_and_scoped_restart() {
         let mut s = State::default();
-        s.open("cat", "en");
+        s.open("smiley", "en");
         s.open("star", "en");
-        for _ in 0..99 {
-            s.fill("cat", "en", 8);
+        let total = slots(picture("smiley").unwrap());
+        for i in 0..99 {
+            s.place("smiley", "en", &format!("w{i}"), total);
         }
-        assert_eq!(s.run("cat", "en").unwrap().filled, 8, "saturates at total");
-        assert!(s.run("cat", "en").unwrap().done);
-        s.restart("cat", "en");
-        assert!(s.run("cat", "en").is_none());
-        assert!(s.run("star", "en").is_some(), "restart touches ONE picture only");
+        assert_eq!(s.run("smiley", "en").unwrap().words.len() as u32, total, "saturates");
+        assert!(s.run("smiley", "en").unwrap().done);
+        assert!(!s.recent_words.get("en").unwrap().is_empty(), "completion feeds D14");
+        s.restart("smiley", "en");
+        assert!(s.run("smiley", "en").is_none());
+        assert!(s.run("star", "en").is_some(), "restart is scoped to one picture");
     }
 
-    /// I5 property — 10k surprise draws across library sizes 2..=12: never
-    /// the same picture twice within the no-repeat window.
+    /// I7 property — 10k surprise draws, libraries 2..=12, zero window hits.
     #[test]
     fn surprise_no_repeat_window_property() {
         for lib in 2..=12usize {
@@ -399,25 +507,22 @@ mod tests {
             let mut s = State::default();
             let n = NO_REPEAT.min(lib - 1);
             let mut history: Vec<String> = Vec::new();
-            for draw in 0..10_000 / lib {
-                let got = surprise(&mut s, &ids).unwrap_or_else(|| panic!("draw {draw} lib {lib}"));
-                let window = history.iter().rev().take(n);
+            for _ in 0..10_000 / lib {
+                let got = surprise(&mut s, &ids).unwrap();
                 assert!(
-                    !window.clone().any(|h| *h == got),
-                    "lib {lib}: {got} repeated within {n}-window {:?}",
-                    window.collect::<Vec<_>>()
+                    !history.iter().rev().take(n).any(|h| *h == got),
+                    "lib {lib}: {got} inside the {n}-window"
                 );
                 history.push(got);
             }
         }
     }
 
-    /// D8 kid gating: hard/expert never kid; easy/medium follow flag + filter.
+    /// D16 kid gating.
     #[test]
     fn kid_gating() {
-        let mona = picture("mona").unwrap();
-        assert!(!kid_ok(mona, "en", 1), "expert never kid-eligible");
-        let cat = picture("cat").unwrap();
-        assert!(kid_ok(cat, "en", 1), "easy cat with clean feed is kid-ok");
+        assert!(!kid_ok(picture("mona").unwrap(), "en", 1), "expert never kid");
+        assert!(!kid_ok(picture("eiffel").unwrap(), "en", 1), "hard never kid");
+        assert!(kid_ok(picture("smiley").unwrap(), "en", 1), "easy smiley kid-ok");
     }
 }

@@ -24,7 +24,7 @@
      "order": 1,
      "budget": [
       2,
-      8
+      9
      ],
      "band": 1,
      "arch": "outline",
@@ -36,7 +36,7 @@
      "order": 2,
      "budget": [
       2,
-      8
+      9
      ],
      "band": 1,
      "arch": "outline",
@@ -49,11 +49,12 @@
      "size": 28,
      "order": 3,
      "budget": [
-      3,
-      7
+      2,
+      9
      ],
      "band": 2,
-     "arch": "stack"
+     "arch": "stack",
+     "ghost": 5
     },
     {
      "mode": "stack",
@@ -62,19 +63,20 @@
      "size": 28,
      "order": 4,
      "budget": [
-      3,
-      7
+      2,
+      9
      ],
      "band": 2,
-     "arch": "stack"
+     "arch": "stack",
+     "ghost": 5
     },
     {
      "mode": "flow",
      "d": "M160 320 Q256 420 352 320",
      "order": 5,
      "budget": [
-      4,
-      10
+      2,
+      9
      ],
      "band": 1,
      "arch": "arc",
@@ -96,7 +98,7 @@
      "order": 1,
      "budget": [
       2,
-      8
+      9
      ],
      "band": 1,
      "arch": "line"
@@ -107,7 +109,7 @@
      "order": 2,
      "budget": [
       2,
-      8
+      9
      ],
      "band": 1,
      "arch": "line"
@@ -118,7 +120,7 @@
      "order": 3,
      "budget": [
       2,
-      8
+      9
      ],
      "band": 1,
      "arch": "line"
@@ -129,7 +131,7 @@
      "order": 4,
      "budget": [
       2,
-      8
+      9
      ],
      "band": 1,
      "arch": "line"
@@ -140,7 +142,7 @@
      "order": 5,
      "budget": [
       2,
-      8
+      9
      ],
      "band": 1,
      "arch": "line"
@@ -153,10 +155,11 @@
      "order": 6,
      "budget": [
       2,
-      6
+      9
      ],
      "band": 2,
-     "arch": "stack"
+     "arch": "stack",
+     "ghost": 4
     }
    ]
   },
@@ -174,7 +177,7 @@
      "order": 1,
      "budget": [
       2,
-      8
+      9
      ],
      "band": 1,
      "arch": "outline",
@@ -186,7 +189,7 @@
      "order": 2,
      "budget": [
       2,
-      8
+      9
      ],
      "band": 1,
      "arch": "outline",
@@ -198,7 +201,7 @@
      "order": 3,
      "budget": [
       2,
-      8
+      9
      ],
      "band": 2,
      "arch": "line"
@@ -209,7 +212,7 @@
      "order": 4,
      "budget": [
       2,
-      8
+      9
      ],
      "band": 2,
      "arch": "line"
@@ -219,8 +222,8 @@
      "d": "M210 250 Q250 300 300 262",
      "order": 5,
      "budget": [
-      3,
-      8
+      2,
+      9
      ],
      "band": 2,
      "arch": "arc"
@@ -233,10 +236,11 @@
      "order": 6,
      "budget": [
       2,
-      6
+      9
      ],
      "band": 2,
-     "arch": "stack"
+     "arch": "stack",
+     "ghost": 4
     }
    ]
   },
@@ -254,7 +258,7 @@
      "order": 1,
      "budget": [
       2,
-      8
+      9
      ],
      "band": 1,
      "arch": "line"
@@ -265,7 +269,7 @@
      "order": 2,
      "budget": [
       2,
-      8
+      9
      ],
      "band": 1,
      "arch": "line"
@@ -278,10 +282,11 @@
      "order": 3,
      "budget": [
       2,
-      6
+      9
      ],
      "band": 2,
-     "arch": "stack"
+     "arch": "stack",
+     "ghost": 4
     },
     {
      "mode": "stack",
@@ -291,18 +296,19 @@
      "order": 4,
      "budget": [
       2,
-      6
+      9
      ],
      "band": 2,
-     "arch": "stack"
+     "arch": "stack",
+     "ghost": 4
     },
     {
      "mode": "flow",
      "d": "M120 400 L392 400",
      "order": 5,
      "budget": [
-      4,
-      10
+      2,
+      9
      ],
      "band": 1,
      "arch": "line",
@@ -313,8 +319,8 @@
      "d": "M226 400 Q256 330 286 400",
      "order": 6,
      "budget": [
-      3,
-      8
+      2,
+      9
      ],
      "band": 3,
      "arch": "arc"
@@ -335,7 +341,7 @@
      "order": 1,
      "budget": [
       3,
-      9
+      12
      ],
      "band": 1,
      "arch": "outline",
@@ -347,7 +353,7 @@
      "order": 2,
      "budget": [
       3,
-      9
+      12
      ],
      "band": 1,
      "arch": "outline",
@@ -358,8 +364,8 @@
      "d": "M170 190 L196 120",
      "order": 3,
      "budget": [
-      3,
-      7
+      2,
+      9
      ],
      "band": 2,
      "arch": "line"
@@ -369,8 +375,8 @@
      "d": "M196 120 L226 180",
      "order": 4,
      "budget": [
-      3,
-      7
+      2,
+      9
      ],
      "band": 2,
      "arch": "line"
@@ -380,8 +386,8 @@
      "d": "M286 180 L316 120",
      "order": 5,
      "budget": [
-      3,
-      7
+      2,
+      9
      ],
      "band": 2,
      "arch": "line"
@@ -391,8 +397,8 @@
      "d": "M316 120 L342 190",
      "order": 6,
      "budget": [
-      3,
-      7
+      2,
+      9
      ],
      "band": 2,
      "arch": "line"
@@ -403,7 +409,7 @@
      "order": 7,
      "budget": [
       3,
-      9
+      12
      ],
      "band": 2,
      "arch": "arc"
@@ -414,7 +420,7 @@
      "order": 8,
      "budget": [
       3,
-      9
+      12
      ],
      "band": 2,
      "arch": "arc"
@@ -424,8 +430,8 @@
      "d": "M220 470 L292 470",
      "order": 9,
      "budget": [
-      3,
-      8
+      2,
+      9
      ],
      "band": 2,
      "arch": "line"
@@ -436,7 +442,7 @@
      "order": 10,
      "budget": [
       3,
-      9
+      12
      ],
      "band": 2,
      "arch": "wave"
@@ -446,8 +452,8 @@
      "d": "M130 262 L196 268",
      "order": 11,
      "budget": [
-      3,
-      6
+      2,
+      9
      ],
      "band": 3,
      "arch": "line"
@@ -457,8 +463,8 @@
      "d": "M316 268 L382 262",
      "order": 12,
      "budget": [
-      3,
-      6
+      2,
+      9
      ],
      "band": 3,
      "arch": "line"
@@ -470,11 +476,12 @@
      "size": 22,
      "order": 13,
      "budget": [
-      2,
-      5
+      3,
+      12
      ],
      "band": 2,
-     "arch": "stack"
+     "arch": "stack",
+     "ghost": 3
     },
     {
      "mode": "stack",
@@ -483,18 +490,19 @@
      "size": 22,
      "order": 14,
      "budget": [
-      2,
-      5
+      3,
+      12
      ],
      "band": 2,
-     "arch": "stack"
+     "arch": "stack",
+     "ghost": 3
     },
     {
      "mode": "flow",
      "d": "M226 292 Q256 322 286 292",
      "order": 15,
      "budget": [
-      4,
+      2,
       9
      ],
      "band": 3,
@@ -517,11 +525,12 @@
      "size": 28,
      "order": 1,
      "budget": [
-      4,
-      8
+      3,
+      12
      ],
      "band": 2,
-     "arch": "stack"
+     "arch": "stack",
+     "ghost": 6
     },
     {
      "mode": "stack",
@@ -530,11 +539,12 @@
      "size": 28,
      "order": 2,
      "budget": [
-      4,
-      8
+      3,
+      12
      ],
      "band": 2,
-     "arch": "stack"
+     "arch": "stack",
+     "ghost": 6
     },
     {
      "mode": "flow",
@@ -542,7 +552,7 @@
      "order": 3,
      "budget": [
       3,
-      9
+      12
      ],
      "band": 1,
      "arch": "arc"
@@ -552,8 +562,8 @@
      "d": "M226 340 L170 420",
      "order": 4,
      "budget": [
-      3,
-      7
+      2,
+      9
      ],
      "band": 2,
      "arch": "line"
@@ -563,8 +573,8 @@
      "d": "M170 420 L226 400",
      "order": 5,
      "budget": [
-      3,
-      7
+      2,
+      9
      ],
      "band": 2,
      "arch": "line"
@@ -574,8 +584,8 @@
      "d": "M292 340 L342 420",
      "order": 6,
      "budget": [
-      3,
-      7
+      2,
+      9
      ],
      "band": 2,
      "arch": "line"
@@ -585,8 +595,8 @@
      "d": "M342 420 L292 400",
      "order": 7,
      "budget": [
-      3,
-      7
+      2,
+      9
      ],
      "band": 2,
      "arch": "line"
@@ -596,8 +606,8 @@
      "d": "M226 262 Q256 232 292 262",
      "order": 8,
      "budget": [
-      3,
-      7
+      2,
+      9
      ],
      "band": 3,
      "arch": "arc"
@@ -607,8 +617,8 @@
      "d": "M226 262 Q256 292 292 262",
      "order": 9,
      "budget": [
-      3,
-      7
+      2,
+      9
      ],
      "band": 3,
      "arch": "arc"
@@ -618,8 +628,8 @@
      "d": "M120 60 L180 110",
      "order": 10,
      "budget": [
-      3,
-      6
+      2,
+      9
      ],
      "band": 3,
      "arch": "line"
@@ -629,8 +639,8 @@
      "d": "M392 90 L442 130",
      "order": 11,
      "budget": [
-      3,
-      6
+      2,
+      9
      ],
      "band": 3,
      "arch": "line"
@@ -640,7 +650,7 @@
      "d": "M226 420 Q256 500 292 420",
      "order": 12,
      "budget": [
-      4,
+      2,
       9
      ],
      "band": 2,
@@ -653,11 +663,12 @@
      "size": 24,
      "order": 13,
      "budget": [
-      2,
-      6
+      3,
+      12
      ],
      "band": 2,
-     "arch": "stack"
+     "arch": "stack",
+     "ghost": 4
     }
    ]
   },
@@ -675,7 +686,7 @@
      "order": 1,
      "budget": [
       3,
-      9
+      12
      ],
      "band": 1,
      "arch": "outline",
@@ -687,7 +698,7 @@
      "order": 2,
      "budget": [
       3,
-      9
+      12
      ],
      "band": 1,
      "arch": "outline",
@@ -699,7 +710,7 @@
      "order": 3,
      "budget": [
       3,
-      9
+      12
      ],
      "band": 1,
      "arch": "arc"
@@ -710,7 +721,7 @@
      "order": 4,
      "budget": [
       3,
-      9
+      12
      ],
      "band": 1,
      "arch": "arc"
@@ -720,8 +731,8 @@
      "d": "M196 150 L316 150",
      "order": 5,
      "budget": [
-      3,
-      8
+      2,
+      9
      ],
      "band": 2,
      "arch": "line"
@@ -733,11 +744,12 @@
      "size": 22,
      "order": 6,
      "budget": [
-      2,
-      5
+      3,
+      12
      ],
      "band": 2,
-     "arch": "stack"
+     "arch": "stack",
+     "ghost": 3
     },
     {
      "mode": "stack",
@@ -746,19 +758,20 @@
      "size": 22,
      "order": 7,
      "budget": [
-      2,
-      5
+      3,
+      12
      ],
      "band": 2,
-     "arch": "stack"
+     "arch": "stack",
+     "ghost": 3
     },
     {
      "mode": "flow",
      "d": "M170 330 L96 280",
      "order": 8,
      "budget": [
-      3,
-      7
+      2,
+      9
      ],
      "band": 2,
      "arch": "line"
@@ -768,8 +781,8 @@
      "d": "M342 330 L416 280",
      "order": 9,
      "budget": [
-      3,
-      7
+      2,
+      9
      ],
      "band": 2,
      "arch": "line"
@@ -781,11 +794,12 @@
      "size": 22,
      "order": 10,
      "budget": [
-      2,
-      6
+      3,
+      12
      ],
      "band": 2,
-     "arch": "stack"
+     "arch": "stack",
+     "ghost": 4
     },
     {
      "mode": "stack",
@@ -794,11 +808,12 @@
      "size": 18,
      "order": 11,
      "budget": [
-      2,
-      4
+      3,
+      12
      ],
      "band": 2,
-     "arch": "stack"
+     "arch": "stack",
+     "ghost": 2
     },
     {
      "mode": "stack",
@@ -807,18 +822,19 @@
      "size": 18,
      "order": 12,
      "budget": [
-      2,
-      4
+      3,
+      12
      ],
      "band": 2,
-     "arch": "stack"
+     "arch": "stack",
+     "ghost": 2
     },
     {
      "mode": "flow",
      "d": "M230 246 Q256 268 282 246",
      "order": 13,
      "budget": [
-      4,
+      2,
       9
      ],
      "band": 3,
@@ -840,7 +856,7 @@
      "order": 1,
      "budget": [
       3,
-      10
+      12
      ],
      "band": 1,
      "arch": "outline"
@@ -851,7 +867,7 @@
      "order": 2,
      "budget": [
       3,
-      10
+      12
      ],
      "band": 1,
      "arch": "outline",
@@ -863,7 +879,7 @@
      "order": 3,
      "budget": [
       3,
-      10
+      12
      ],
      "band": 1,
      "arch": "outline"
@@ -874,7 +890,7 @@
      "order": 4,
      "budget": [
       3,
-      10
+      12
      ],
      "band": 1,
      "arch": "arc"
@@ -885,7 +901,7 @@
      "order": 5,
      "budget": [
       3,
-      10
+      12
      ],
      "band": 1,
      "arch": "outline",
@@ -896,8 +912,8 @@
      "d": "M170 400 Q130 390 120 350",
      "order": 6,
      "budget": [
-      3,
-      7
+      2,
+      9
      ],
      "band": 1,
      "arch": "arc"
@@ -908,7 +924,7 @@
      "order": 7,
      "budget": [
       3,
-      10
+      12
      ],
      "band": 2,
      "arch": "wave"
@@ -918,8 +934,8 @@
      "d": "M50 270 Q45 220 80 210",
      "order": 8,
      "budget": [
-      3,
-      7
+      2,
+      9
      ],
      "band": 2,
      "arch": "wave"
@@ -929,8 +945,8 @@
      "d": "M60 235 L30 210",
      "order": 9,
      "budget": [
-      3,
-      6
+      2,
+      9
      ],
      "band": 2,
      "arch": "line"
@@ -940,8 +956,8 @@
      "d": "M30 210 L62 196",
      "order": 10,
      "budget": [
-      3,
-      6
+      2,
+      9
      ],
      "band": 2,
      "arch": "line"
@@ -951,8 +967,8 @@
      "d": "M210 236 L200 120",
      "order": 11,
      "budget": [
-      3,
-      8
+      2,
+      9
      ],
      "band": 2,
      "arch": "radial"
@@ -962,8 +978,8 @@
      "d": "M236 228 L234 126",
      "order": 12,
      "budget": [
-      3,
-      8
+      2,
+      9
      ],
      "band": 2,
      "arch": "radial"
@@ -973,8 +989,8 @@
      "d": "M262 236 L268 132",
      "order": 13,
      "budget": [
-      3,
-      8
+      2,
+      9
      ],
      "band": 2,
      "arch": "radial"
@@ -984,8 +1000,8 @@
      "d": "M288 228 L302 138",
      "order": 14,
      "budget": [
-      3,
-      8
+      2,
+      9
      ],
      "band": 2,
      "arch": "radial"
@@ -995,8 +1011,8 @@
      "d": "M314 236 L336 144",
      "order": 15,
      "budget": [
-      3,
-      8
+      2,
+      9
      ],
      "band": 2,
      "arch": "radial"
@@ -1007,7 +1023,7 @@
      "order": 16,
      "budget": [
       3,
-      10
+      12
      ],
      "band": 2,
      "arch": "arc",
@@ -1019,7 +1035,7 @@
      "order": 17,
      "budget": [
       2,
-      6
+      9
      ],
      "band": 3,
      "arch": "zigzag"
@@ -1030,7 +1046,7 @@
      "order": 18,
      "budget": [
       2,
-      6
+      9
      ],
      "band": 3,
      "arch": "zigzag"
@@ -1041,7 +1057,7 @@
      "order": 19,
      "budget": [
       2,
-      6
+      9
      ],
      "band": 3,
      "arch": "zigzag"
@@ -1052,7 +1068,7 @@
      "order": 20,
      "budget": [
       2,
-      6
+      9
      ],
      "band": 3,
      "arch": "zigzag"
@@ -1064,19 +1080,20 @@
      "size": 20,
      "order": 21,
      "budget": [
-      2,
-      5
+      3,
+      12
      ],
      "band": 3,
-     "arch": "stack"
+     "arch": "stack",
+     "ghost": 3
     },
     {
      "mode": "flow",
      "d": "M452 320 L500 300",
      "order": 22,
      "budget": [
-      3,
-      7
+      2,
+      9
      ],
      "band": 3,
      "arch": "line"
@@ -1086,8 +1103,8 @@
      "d": "M452 334 L504 334",
      "order": 23,
      "budget": [
-      3,
-      7
+      2,
+      9
      ],
      "band": 3,
      "arch": "line"
@@ -1097,8 +1114,8 @@
      "d": "M452 348 L500 366",
      "order": 24,
      "budget": [
-      3,
-      7
+      2,
+      9
      ],
      "band": 3,
      "arch": "line"
@@ -1109,7 +1126,7 @@
      "order": 25,
      "budget": [
       3,
-      10
+      12
      ],
      "band": 3,
      "arch": "arc"
@@ -1119,8 +1136,8 @@
      "d": "M360 300 Q396 316 372 336",
      "order": 26,
      "budget": [
-      4,
-      8
+      2,
+      9
      ],
      "band": 4,
      "arch": "arc"
@@ -1141,7 +1158,7 @@
      "order": 1,
      "budget": [
       3,
-      10
+      12
      ],
      "band": 1,
      "arch": "outline"
@@ -1152,7 +1169,7 @@
      "order": 2,
      "budget": [
       3,
-      10
+      12
      ],
      "band": 1,
      "arch": "outline"
@@ -1163,7 +1180,7 @@
      "order": 3,
      "budget": [
       3,
-      10
+      12
      ],
      "band": 1,
      "arch": "arc",
@@ -1175,7 +1192,7 @@
      "order": 4,
      "budget": [
       3,
-      10
+      12
      ],
      "band": 1,
      "arch": "line",
@@ -1186,8 +1203,8 @@
      "d": "M204 292 L232 200",
      "order": 5,
      "budget": [
-      3,
-      8
+      2,
+      9
      ],
      "band": 2,
      "arch": "line"
@@ -1197,8 +1214,8 @@
      "d": "M308 292 L280 200",
      "order": 6,
      "budget": [
-      3,
-      8
+      2,
+      9
      ],
      "band": 2,
      "arch": "line"
@@ -1209,7 +1226,7 @@
      "order": 7,
      "budget": [
       2,
-      6
+      9
      ],
      "band": 3,
      "arch": "zigzag"
@@ -1220,7 +1237,7 @@
      "order": 8,
      "budget": [
       2,
-      6
+      9
      ],
      "band": 3,
      "arch": "zigzag"
@@ -1231,7 +1248,7 @@
      "order": 9,
      "budget": [
       2,
-      6
+      9
      ],
      "band": 3,
      "arch": "zigzag"
@@ -1242,7 +1259,7 @@
      "order": 10,
      "budget": [
       2,
-      6
+      9
      ],
      "band": 3,
      "arch": "zigzag"
@@ -1253,7 +1270,7 @@
      "order": 11,
      "budget": [
       2,
-      6
+      9
      ],
      "band": 3,
      "arch": "zigzag"
@@ -1264,7 +1281,7 @@
      "order": 12,
      "budget": [
       2,
-      6
+      9
      ],
      "band": 3,
      "arch": "zigzag"
@@ -1274,8 +1291,8 @@
      "d": "M222 200 L290 200",
      "order": 13,
      "budget": [
-      3,
-      8
+      2,
+      9
      ],
      "band": 2,
      "arch": "line"
@@ -1285,8 +1302,8 @@
      "d": "M236 200 L248 120",
      "order": 14,
      "budget": [
-      3,
-      7
+      2,
+      9
      ],
      "band": 2,
      "arch": "line"
@@ -1296,8 +1313,8 @@
      "d": "M276 200 L264 120",
      "order": 15,
      "budget": [
-      3,
-      7
+      2,
+      9
      ],
      "band": 2,
      "arch": "line"
@@ -1308,7 +1325,7 @@
      "order": 16,
      "budget": [
       2,
-      5
+      9
      ],
      "band": 3,
      "arch": "zigzag"
@@ -1319,7 +1336,7 @@
      "order": 17,
      "budget": [
       2,
-      5
+      9
      ],
      "band": 3,
      "arch": "zigzag"
@@ -1330,7 +1347,7 @@
      "order": 18,
      "budget": [
       2,
-      5
+      9
      ],
      "band": 3,
      "arch": "zigzag"
@@ -1341,7 +1358,7 @@
      "order": 19,
      "budget": [
       2,
-      5
+      9
      ],
      "band": 3,
      "arch": "zigzag"
@@ -1352,7 +1369,7 @@
      "order": 20,
      "budget": [
       2,
-      6
+      9
      ],
      "band": 2,
      "arch": "line"
@@ -1364,19 +1381,20 @@
      "size": 20,
      "order": 21,
      "budget": [
-      2,
-      5
+      3,
+      12
      ],
      "band": 2,
-     "arch": "stack"
+     "arch": "stack",
+     "ghost": 3
     },
     {
      "mode": "flow",
      "d": "M80 430 L200 430",
      "order": 22,
      "budget": [
-      3,
-      8
+      2,
+      9
      ],
      "band": 3,
      "arch": "line"
@@ -1386,8 +1404,8 @@
      "d": "M100 426 L230 426",
      "order": 23,
      "budget": [
-      3,
-      8
+      2,
+      9
      ],
      "band": 3,
      "arch": "line"
@@ -1397,8 +1415,8 @@
      "d": "M120 422 L260 422",
      "order": 24,
      "budget": [
-      3,
-      8
+      2,
+      9
      ],
      "band": 3,
      "arch": "line"
@@ -1408,7 +1426,7 @@
      "d": "M60 120 Q110 80 160 120",
      "order": 25,
      "budget": [
-      4,
+      2,
       9
      ],
      "band": 3,
@@ -1419,7 +1437,7 @@
      "d": "M360 90 Q410 55 460 90",
      "order": 26,
      "budget": [
-      4,
+      2,
       9
      ],
      "band": 3,
@@ -1430,8 +1448,8 @@
      "d": "M410 400 L470 400",
      "order": 27,
      "budget": [
-      3,
-      7
+      2,
+      9
      ],
      "band": 3,
      "arch": "line"
@@ -1441,8 +1459,8 @@
      "d": "M50 400 L110 400",
      "order": 28,
      "budget": [
-      3,
-      7
+      2,
+      9
      ],
      "band": 3,
      "arch": "line"
@@ -1452,8 +1470,8 @@
      "d": "M230 110 Q256 92 282 110",
      "order": 29,
      "budget": [
-      3,
-      7
+      2,
+      9
      ],
      "band": 3,
      "arch": "arc"
@@ -1465,11 +1483,12 @@
      "size": 18,
      "order": 30,
      "budget": [
-      2,
-      4
+      3,
+      12
      ],
      "band": 4,
-     "arch": "stack"
+     "arch": "stack",
+     "ghost": 2
     }
    ]
   },
@@ -1487,7 +1506,7 @@
      "order": 1,
      "budget": [
       3,
-      12
+      14
      ],
      "band": 1,
      "arch": "line"
@@ -1498,7 +1517,7 @@
      "order": 2,
      "budget": [
       3,
-      12
+      14
      ],
      "band": 1,
      "arch": "line"
@@ -1509,7 +1528,7 @@
      "order": 3,
      "budget": [
       3,
-      12
+      14
      ],
      "band": 1,
      "arch": "wave"
@@ -1520,7 +1539,7 @@
      "order": 4,
      "budget": [
       3,
-      12
+      14
      ],
      "band": 1,
      "arch": "wave"
@@ -1531,7 +1550,7 @@
      "order": 5,
      "budget": [
       3,
-      12
+      14
      ],
      "band": 1,
      "arch": "wave"
@@ -1542,7 +1561,7 @@
      "order": 6,
      "budget": [
       3,
-      12
+      14
      ],
      "band": 1,
      "arch": "wave"
@@ -1553,7 +1572,7 @@
      "order": 7,
      "budget": [
       3,
-      12
+      14
      ],
      "band": 1,
      "arch": "line"
@@ -1564,7 +1583,7 @@
      "order": 8,
      "budget": [
       3,
-      12
+      14
      ],
      "band": 1,
      "arch": "line"
@@ -1575,7 +1594,7 @@
      "order": 9,
      "budget": [
       3,
-      12
+      14
      ],
      "band": 1,
      "arch": "line",
@@ -1587,7 +1606,7 @@
      "order": 10,
      "budget": [
       3,
-      12
+      14
      ],
      "band": 1,
      "arch": "line",
@@ -1599,7 +1618,7 @@
      "order": 11,
      "budget": [
       3,
-      12
+      14
      ],
      "band": 2,
      "arch": "arc"
@@ -1610,7 +1629,7 @@
      "order": 12,
      "budget": [
       3,
-      12
+      14
      ],
      "band": 2,
      "arch": "wave"
@@ -1621,7 +1640,7 @@
      "order": 13,
      "budget": [
       3,
-      12
+      14
      ],
      "band": 2,
      "arch": "wave"
@@ -1632,7 +1651,7 @@
      "order": 14,
      "budget": [
       3,
-      12
+      14
      ],
      "band": 2,
      "arch": "wave"
@@ -1643,7 +1662,7 @@
      "order": 15,
      "budget": [
       3,
-      12
+      14
      ],
      "band": 2,
      "arch": "wave"
@@ -1654,7 +1673,7 @@
      "order": 16,
      "budget": [
       3,
-      12
+      14
      ],
      "band": 2,
      "arch": "wave"
@@ -1665,7 +1684,7 @@
      "order": 17,
      "budget": [
       3,
-      12
+      14
      ],
      "band": 2,
      "arch": "wave"
@@ -1676,7 +1695,7 @@
      "order": 18,
      "budget": [
       3,
-      12
+      14
      ],
      "band": 2,
      "arch": "arc"
@@ -1687,7 +1706,7 @@
      "order": 19,
      "budget": [
       3,
-      12
+      14
      ],
      "band": 2,
      "arch": "arc"
@@ -1698,7 +1717,7 @@
      "order": 20,
      "budget": [
       3,
-      12
+      14
      ],
      "band": 2,
      "arch": "arc"
@@ -1709,7 +1728,7 @@
      "order": 21,
      "budget": [
       3,
-      12
+      14
      ],
      "band": 2,
      "arch": "arc"
@@ -1720,7 +1739,7 @@
      "order": 22,
      "budget": [
       3,
-      12
+      14
      ],
      "band": 2,
      "arch": "arc"
@@ -1730,8 +1749,8 @@
      "d": "M206 130 Q198 200 216 268",
      "order": 23,
      "budget": [
-      3,
-      8
+      2,
+      9
      ],
      "band": 3,
      "arch": "outline"
@@ -1741,8 +1760,8 @@
      "d": "M306 130 Q314 200 296 268",
      "order": 24,
      "budget": [
-      3,
-      8
+      2,
+      9
      ],
      "band": 3,
      "arch": "outline"
@@ -1752,8 +1771,8 @@
      "d": "M216 268 Q256 306 296 268",
      "order": 25,
      "budget": [
-      3,
-      8
+      2,
+      9
      ],
      "band": 3,
      "arch": "arc"
@@ -1763,8 +1782,8 @@
      "d": "M238 320 L274 320",
      "order": 26,
      "budget": [
-      3,
-      8
+      2,
+      9
      ],
      "band": 3,
      "arch": "line"
@@ -1775,7 +1794,7 @@
      "order": 27,
      "budget": [
       2,
-      6
+      9
      ],
      "band": 3,
      "arch": "line"
@@ -1786,7 +1805,7 @@
      "order": 28,
      "budget": [
       2,
-      6
+      9
      ],
      "band": 3,
      "arch": "line"
@@ -1796,8 +1815,8 @@
      "d": "M222 176 Q238 168 252 176",
      "order": 29,
      "budget": [
-      3,
-      6
+      2,
+      9
      ],
      "band": 3,
      "arch": "arc"
@@ -1807,8 +1826,8 @@
      "d": "M260 176 Q274 168 290 176",
      "order": 30,
      "budget": [
-      3,
-      6
+      2,
+      9
      ],
      "band": 3,
      "arch": "arc"
@@ -1820,11 +1839,12 @@
      "size": 12,
      "order": 31,
      "budget": [
-      2,
-      4
+      3,
+      14
      ],
      "band": 3,
-     "arch": "stack"
+     "arch": "stack",
+     "ghost": 2
     },
     {
      "mode": "stack",
@@ -1833,11 +1853,12 @@
      "size": 12,
      "order": 32,
      "budget": [
-      2,
-      4
+      3,
+      14
      ],
      "band": 3,
-     "arch": "stack"
+     "arch": "stack",
+     "ghost": 2
     },
     {
      "mode": "flow",
@@ -1845,7 +1866,7 @@
      "order": 33,
      "budget": [
       2,
-      5
+      9
      ],
      "band": 3,
      "arch": "line"
@@ -1856,7 +1877,7 @@
      "order": 34,
      "budget": [
       2,
-      5
+      9
      ],
      "band": 3,
      "arch": "arc"
@@ -1867,7 +1888,7 @@
      "order": 35,
      "budget": [
       3,
-      12
+      14
      ],
      "band": 2,
      "arch": "arc"
@@ -1878,7 +1899,7 @@
      "order": 36,
      "budget": [
       3,
-      12
+      14
      ],
      "band": 2,
      "arch": "arc"
@@ -1889,7 +1910,7 @@
      "order": 37,
      "budget": [
       3,
-      12
+      14
      ],
      "band": 2,
      "arch": "wave"
@@ -1900,7 +1921,7 @@
      "order": 38,
      "budget": [
       3,
-      12
+      14
      ],
      "band": 2,
      "arch": "wave"
@@ -1911,7 +1932,7 @@
      "order": 39,
      "budget": [
       3,
-      12
+      14
      ],
      "band": 2,
      "arch": "wave"
@@ -1922,7 +1943,7 @@
      "order": 40,
      "budget": [
       3,
-      12
+      14
      ],
      "band": 2,
      "arch": "wave"
@@ -1933,7 +1954,7 @@
      "order": 41,
      "budget": [
       3,
-      12
+      14
      ],
      "band": 2,
      "arch": "wave"
@@ -1944,7 +1965,7 @@
      "order": 42,
      "budget": [
       3,
-      12
+      14
      ],
      "band": 2,
      "arch": "wave"
@@ -1955,7 +1976,7 @@
      "order": 43,
      "budget": [
       3,
-      12
+      14
      ],
      "band": 2,
      "arch": "wave"
@@ -1966,7 +1987,7 @@
      "order": 44,
      "budget": [
       3,
-      12
+      14
      ],
      "band": 2,
      "arch": "wave"
@@ -1977,7 +1998,7 @@
      "order": 45,
      "budget": [
       3,
-      12
+      14
      ],
      "band": 2,
      "arch": "wave"
@@ -1988,7 +2009,7 @@
      "order": 46,
      "budget": [
       3,
-      12
+      14
      ],
      "band": 2,
      "arch": "wave"
@@ -1998,8 +2019,8 @@
      "d": "M230 330 Q256 344 282 330",
      "order": 47,
      "budget": [
-      3,
-      8
+      2,
+      9
      ],
      "band": 2,
      "arch": "arc"
@@ -2009,7 +2030,7 @@
      "d": "M210 350 Q256 372 302 350",
      "order": 48,
      "budget": [
-      3,
+      2,
       9
      ],
      "band": 2,
@@ -2021,7 +2042,7 @@
      "order": 49,
      "budget": [
       3,
-      12
+      14
      ],
      "band": 3,
      "arch": "arc"
@@ -2032,7 +2053,7 @@
      "order": 50,
      "budget": [
       3,
-      12
+      14
      ],
      "band": 3,
      "arch": "arc"
@@ -2043,7 +2064,7 @@
      "order": 51,
      "budget": [
       2,
-      5
+      9
      ],
      "band": 3,
      "arch": "line"
@@ -2054,7 +2075,7 @@
      "order": 52,
      "budget": [
       2,
-      5
+      9
      ],
      "band": 3,
      "arch": "line"
@@ -2065,7 +2086,7 @@
      "order": 53,
      "budget": [
       2,
-      5
+      9
      ],
      "band": 3,
      "arch": "line"
@@ -2076,7 +2097,7 @@
      "order": 54,
      "budget": [
       2,
-      5
+      9
      ],
      "band": 3,
      "arch": "line"
@@ -2086,8 +2107,8 @@
      "d": "M236 246 Q256 252 276 246",
      "order": 55,
      "budget": [
-      3,
-      7
+      2,
+      9
      ],
      "band": 4,
      "arch": "arc"
@@ -2097,7 +2118,7 @@
      "d": "M234 256 Q256 270 278 256",
      "order": 56,
      "budget": [
-      4,
+      2,
       9
      ],
      "band": 4,
