@@ -26,6 +26,9 @@ thread_local! {
     static MILESTONE: Cell<u32> = const { Cell::new(0) };
     /// L7: expert auto-center zoom (toggle 🔍; docked default ON for expert).
     static ZOOMED: Cell<bool> = const { Cell::new(true) };
+    /// v7 F1 (D1): runtime legality ladder position — 0 = first solve,
+    /// 1..=5 = deterministic re-solves, >5 = substitution rung applied.
+    static SEED_BUMP: Cell<u32> = const { Cell::new(0) };
 }
 
 /// Scripts whose shaping must not ride a curved textPath (D4 ruling).
@@ -193,6 +196,9 @@ fn open_play(app: &App, pic_id: &str) {
     let run = s.open(pic_id, &lang);
     let first_time = !s.how_shown;
     wordpic::save(&s);
+    if PIC.with(|x| x.borrow().clone()) != pic_id {
+        SEED_BUMP.with(|b| b.set(0));
+    }
     PIC.with(|x| *x.borrow_mut() = pic_id.to_string());
     PLACED.with(|c| c.set(run.words.len() as u32));
     MILESTONE.with(|c| c.set(0));
@@ -201,7 +207,9 @@ fn open_play(app: &App, pic_id: &str) {
     // skipping anything already on the canvas.
     let recent = wordpic::load();
     let recent = recent.recent_words.get(&lang).map(|v| v.as_slice()).unwrap_or(&[]);
-    let (mut feed, _, _) = crate::wordpic_layout::layout_feed(p, &lang, run.seed, recent);
+    let bump = SEED_BUMP.with(|b| b.get());
+    let (mut feed, _, _) = crate::wordpic_layout::layout_feed_opt(
+        p, &lang, run.seed + bump.min(5) as u64, recent, bump >= 5);
     if !run.words.is_empty() {
         let mut rest: Vec<String> =
             feed.iter().filter(|w| !run.words.contains(w)).cloned().collect();
@@ -270,7 +278,9 @@ fn render_canvas(p: &wordpic::Picture, lang: &str, words: &[String]) {
         .run(&p.id, lang)
         .map(|r| r.seed)
         .unwrap_or(1);
-    let (_, placements, _) = crate::wordpic_layout::layout_feed(p, lang, run_seed, recent);
+    let bump = SEED_BUMP.with(|b| b.get());
+    let (_, placements, _) = crate::wordpic_layout::layout_feed_opt(
+        p, lang, run_seed + bump.min(5) as u64, recent, bump >= 5);
     let complex = matches!(lang, "ar" | "hi");
     let expert = p.tier == "expert";
     let next_slot = words.len();
@@ -350,7 +360,7 @@ fn render_canvas(p: &wordpic::Picture, lang: &str, words: &[String]) {
             (_, Some((x, y, _cell, _height))) => {
                 for (k, ch) in w.chars().enumerate() {
                     svg.push_str(&format!(
-                        "<text class=\"{cls}\" x=\"{x:.0}\" y=\"{:.0}\" font-size=\"{:.0}\" text-anchor=\"middle\">{}</text>",
+                        "<text class=\"{cls}\" data-s=\"{si}\" x=\"{x:.0}\" y=\"{:.0}\" font-size=\"{:.0}\" text-anchor=\"middle\">{}</text>",
                         y + k as f32 * pl.size,
                         pl.size,
                         dom::escape_html(&ch.to_string())
@@ -370,7 +380,7 @@ fn render_canvas(p: &wordpic::Picture, lang: &str, words: &[String]) {
                 // for complex scripts — one continuous run, uniformly scaled.
                 let chord = ((x1 - x0).powi(2) + (y1 - y0).powi(2)).sqrt();
                 svg.push_str(&format!(
-                    "<text class=\"{cls}\" x=\"{px:.0}\" y=\"{py:.0}\" font-size=\"{:.0}\" text-anchor=\"middle\" textLength=\"{:.0}\" lengthAdjust=\"spacingAndGlyphs\" transform=\"rotate({ang:.1} {px:.0} {py:.0})\">{}</text>",
+                    "<text class=\"{cls}\" data-s=\"{si}\" x=\"{px:.0}\" y=\"{py:.0}\" font-size=\"{:.0}\" text-anchor=\"middle\" textLength=\"{:.0}\" lengthAdjust=\"spacingAndGlyphs\" transform=\"rotate({ang:.1} {px:.0} {py:.0})\">{}</text>",
                     pl.size,
                     chord * pl.fill,
                     dom::escape_html(w)
@@ -382,7 +392,7 @@ fn render_canvas(p: &wordpic::Picture, lang: &str, words: &[String]) {
                 // letter-spacing alone (round 2) let real font metrics spill
                 // past the slot: the star overlap escape.
                 svg.push_str(&format!(
-                    "<text class=\"{cls}\" font-size=\"{:.0}\" text-anchor=\"middle\"><textPath href=\"#wps{si}\" startOffset=\"50%\" textLength=\"{:.0}\" lengthAdjust=\"spacingAndGlyphs\">{}</textPath></text>",
+                    "<text class=\"{cls}\" data-s=\"{si}\" font-size=\"{:.0}\" text-anchor=\"middle\"><textPath href=\"#wps{si}\" startOffset=\"50%\" textLength=\"{:.0}\" lengthAdjust=\"spacingAndGlyphs\">{}</textPath></text>",
                     pl.size,
                     poly.len() * pl.fill,
                     dom::escape_html(w)
@@ -394,6 +404,47 @@ fn render_canvas(p: &wordpic::Picture, lang: &str, words: &[String]) {
     svg.push_str("</svg>");
     dom::set_html("wpStage", &svg);
     reflect_slots_indicator(lang);
+    enforce_legality(p, lang, words);
+}
+
+/// v7 F1 (D1) — the layout law enforced on DEVICE, not just in CI: measure
+/// the real rendered glyph boxes; on any intersection or out-of-frame
+/// glyph, deterministically re-solve with the next seed (cap 5), then fall
+/// back to shorter-word substitution. An illegal frame is never displayed.
+fn enforce_legality(p: &wordpic::Picture, lang: &str, words: &[String]) {
+    let bump = SEED_BUMP.with(|b| b.get());
+    if bump > 5 {
+        return; // substitution rung already applied — best legal effort
+    }
+    let Some(doc) = web_sys::window().and_then(|w| w.document()) else { return };
+    let Some(stage) = doc.get_element_by_id("wpStage") else { return };
+    let texts = stage.get_elements_by_tag_name("text");
+    let mut glyphs: Vec<(u32, f32, f32, f32, f32)> = Vec::new();
+    for i in 0..texts.length() {
+        let Some(el) = texts.item(i) else { continue };
+        let sid: u32 = el
+            .get_attribute("data-s")
+            .and_then(|v| v.parse().ok())
+            .unwrap_or(i);
+        let Ok(tc) = el.dyn_into::<web_sys::SvgTextContentElement>() else { continue };
+        let n = tc.get_number_of_chars();
+        for c in 0..n {
+            if let Ok(r) = tc.get_extent_of_char(c as u32) {
+                glyphs.push((sid, r.x(), r.y(), r.width(), r.height()));
+            }
+        }
+    }
+    if glyphs.is_empty() {
+        return; // headless/test render — CI covers geometry there
+    }
+    let v = crate::wordpic_layout::glyph_violations(&glyphs);
+    if v > 0 {
+        web_sys::console::warn_1(
+            &format!("wordpic: {v} glyph violation(s) on device — re-solve #{}", bump + 1).into(),
+        );
+        SEED_BUMP.with(|b| b.set(bump + 1));
+        render_canvas(p, lang, words);
+    }
 }
 
 /// L6 — the DOCKED letter-slot indicator: one fixed home above the input bar

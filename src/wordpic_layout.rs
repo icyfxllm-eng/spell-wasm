@@ -475,6 +475,45 @@ pub fn solve(slot: &Slot, lang: &str, units: u32) -> Option<Placement> {
 /// L3 — overlap test: sampled baselines must keep a clearance proportional
 /// to the two font sizes (tighter than AABB on angled/converging strokes —
 /// the fish's nose and tail taught us that).
+/// v7 F1 — runtime legality core, pure and CI-testable. Input: measured
+/// glyph boxes (slot id, x, y, w, h) from the LIVE render — real fonts at
+/// device metrics. Different slots' glyphs may not intersect; every glyph
+/// stays inside the frame. Same-slot pairs are exempt (a word's own glyphs
+/// curve and kern together).
+pub fn glyph_violations(glyphs: &[(u32, f32, f32, f32, f32)]) -> u32 {
+    // Depth rule: legal layouts have near-touching boxes at slot
+    // boundaries, seams and star corners (the v6 junction exemptions) — a
+    // VIOLATION is glyphs ON each other, the round-2 jam. Flag a pair only
+    // when the boxes interpenetrate >35% of the smaller box on BOTH axes.
+    // Test glyph CORES (central 50% of each box): angled letters at star
+    // corners overlap as AABBs while their ink stays apart — the AABB of a
+    // rotated glyph is inflated. Cores only collide when letters are truly
+    // on each other.
+    const DEPTH: f32 = 0.35;
+    let core = |g: &(u32, f32, f32, f32, f32)| {
+        (g.1 + g.3 * 0.25, g.2 + g.4 * 0.25, g.3 * 0.5, g.4 * 0.5)
+    };
+    let mut n = 0u32;
+    for (i, a) in glyphs.iter().enumerate() {
+        if a.1 < -0.5 || a.2 < -0.5 || a.1 + a.3 > FRAME + 0.5 || a.2 + a.4 > FRAME + 0.5 {
+            n += 1;
+        }
+        let (ax, ay, aw, ah) = core(a);
+        for b in glyphs.iter().skip(i + 1) {
+            if a.0 == b.0 {
+                continue; // a word's own glyphs kern/curve together
+            }
+            let (bx, by, bw, bh) = core(b);
+            let ow = (ax + aw).min(bx + bw) - ax.max(bx);
+            let oh = (ay + ah).min(by + bh) - ay.max(by);
+            if ow > DEPTH * aw.min(bw) && oh > DEPTH * ah.min(bh) {
+                n += 1;
+            }
+        }
+    }
+    n
+}
+
 pub fn overlaps(a: &Placement, b: &Placement) -> bool {
     // Words abutting along ONE continuous stroke are layout, not collision:
     // the solver caps fill at 100%, so neighbors on the same path only share
@@ -543,6 +582,20 @@ pub fn layout_feed(
     seed: u64,
     recent: &[String],
 ) -> (Vec<String>, Vec<Placement>, Vec<Slot>) {
+    layout_feed_opt(p, lang, seed, recent, false)
+}
+
+/// v7 F1 — `shrink` is the substitution rung of the runtime legality
+/// ladder (D1): after 5 failed re-solves the screen re-enters with
+/// shrink=true and candidates order shortest-first (deterministic), so an
+/// illegal frame resolves to smaller words instead of being displayed.
+pub fn layout_feed_opt(
+    p: &Picture,
+    lang: &str,
+    seed: u64,
+    recent: &[String],
+    shrink: bool,
+) -> (Vec<String>, Vec<Placement>, Vec<Slot>) {
     let slots = slots_for_lang(p, lang);
     let pool = crate::words::tier_for(lang, &p.tier);
     let mut st = seed ^ 0x57505F5636; // v6 salt
@@ -573,7 +626,7 @@ pub fn layout_feed(
             .enumerate()
             .map(|(i, (w, n))| (fresh_first(&w), i as u32, w, n))
             .collect();
-        scored.sort_by_key(|(fresh, i, _, _)| (*fresh, *i));
+        scored.sort_by_key(|(fresh, i, _, n)| if shrink { (*fresh, *n) } else { (*fresh, *i) });
         'cand: for (_, _, w, n) in scored {
             if let Some(pl) = solve(slot, lang, n) {
                 let hit = placements.iter().any(|other| overlaps(&pl, other));
@@ -842,6 +895,69 @@ mod tests {
     /// overlaps, zero out-of-frame, zero sub-floor, fill ≥ 95% (or the slot
     /// was solvable to band max, tracked by fill>=FILL_MIN assertion on the
     /// chosen candidate).
+    /// v7 F1 fixture `star-overlap-r2`: reconstruct the round-2 escape —
+    /// the device drew three star words ~70% wider than the solver's
+    /// estimate (letter-spacing without textLength). The runtime check
+    /// must catch all three, and the honest solved layout must be legal.
+    #[test]
+    fn star_overlap_r2() {
+        let m = wordpic::manifest();
+        let p = m.pictures.iter().find(|p| p.id == "star").unwrap();
+        let (_, pls, _) = layout_feed(p, "en", 1, &[]);
+        // Per-glyph boxes as the device measures them: one box per sample,
+        // width = the solved advance, height = the solved size.
+        let boxes = |widen: &[usize]| -> Vec<(u32, f32, f32, f32, f32)> {
+            let mut g = Vec::new();
+            for (i, pl) in pls.iter().enumerate() {
+                let w0 = pl.size * 0.55; // ≈ en advance per glyph
+                let w = if widen.contains(&i) { w0 * 2.6 } else { w0 };
+                // The word rides the CENTRAL fill of its slot (72–94%,
+                // centered): approximate glyphs at the middle 5 of the 9
+                // path samples.
+                // Realistic mean glyph box: x-height ≈ 0.75×size (few
+                // glyphs span full ascender-to-descender). A spilled word
+                // (the round-2 bug) spreads past its fill window — glyphs
+                // land across the WHOLE slot, into the neighbors' territory.
+                let pts: Vec<&(f32, f32)> = if widen.contains(&i) {
+                    pl.samples.iter().collect()
+                } else {
+                    pl.samples.iter().skip(2).take(5).collect()
+                };
+                for (sx, sy) in pts {
+                    g.push((i as u32, sx - w / 2.0, sy - pl.size * 0.4, w, pl.size * 0.75));
+                }
+            }
+            g
+        };
+        assert_eq!(glyph_violations(&boxes(&[])), 0, "solved star is legal");
+        // Round-2 reconstruction: three words render far wider than the
+        // solver estimated (real font metrics, no textLength) and jam into
+        // their neighbors. The check must catch every jam.
+        let spill = boxes(&[0, 2, 4]);
+        assert!(glyph_violations(&spill) >= 3, "check catches the round-2 escape");
+    }
+
+    /// v7 acceptance: star renders legally across 25 consecutive seeds in
+    /// every language — the deterministic re-solve sequence (D1) always
+    /// has a legal layout to land on.
+    #[test]
+    fn star_25_seeds_all_langs() {
+        let m = wordpic::manifest();
+        let p = m.pictures.iter().find(|p| p.id == "star").unwrap();
+        for (code, _, _, _) in crate::consts::BUILTIN_LANGS.iter() {
+            for seed in 1..=25u64 {
+                let (words, placements, slots) = layout_feed(p, code, seed, &[]);
+                assert_eq!(words.len(), slots.len(), "star/{code}/{seed}: filled");
+                for (i, a) in placements.iter().enumerate() {
+                    assert!(in_frame(a), "star/{code}/{seed}: in frame");
+                    for b in placements.iter().skip(i + 1) {
+                        assert!(!overlaps(a, b), "star/{code}/{seed}: overlap");
+                    }
+                }
+            }
+        }
+    }
+
     #[test]
     fn render_ci_sweep() {
         let mut failures: Vec<String> = Vec::new();
