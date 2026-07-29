@@ -76,29 +76,28 @@ _CUR_TIER[0] = "easy"
 P.append(pic("smiley", "easy", "faces", "🙂", True, [
     flow("M96 256 A160 160 0 0 1 416 256", 1, B_EASY, 1, "outline", 2),   # top of face (2 words)
     flow("M96 256 A160 160 0 1 0 416 256", 2, B_EASY, 1, "outline", 2),   # bottom of face (2 words)
-    stack(196, 160, 28, 5, 3),                                            # left eye — "S M I L E"
-    stack(316, 160, 28, 5, 4),                                            # right eye — "H A P P Y"
-    flow(arc(168, 302, 256, 386, 344, 302), 5, B_EASY, 1, "arc", 2),     # THE MOUTH — finale
+    stack(196, 176, 26, 5, 3),                                            # left eye — "S M I L E"
+    stack(316, 176, 26, 5, 4),                                            # right eye — "H A P P Y"
+    flow(arc(168, 318, 256, 402, 344, 318), 5, B_EASY, 1, "arc", 2),     # THE MOUTH — finale
 ]))
 
-# 2) STAR (easy): 5 edges of a pentagram outline + a sparkle stack.
-def star_pts(cx, cy, r):
+# 2) STAR (easy, v6): the outer 10-edge outline as ONE path — the corner
+# split (L4) yields ten crisp straight slots; a word per edge.
+def star_outline(cx, cy, r):
     pts = []
-    for i in range(5):
-        a = -math.pi / 2 + i * 2 * math.pi / 5
-        pts.append((cx + r * math.cos(a), cy + r * math.sin(a)))
-    return pts
+    for i in range(10):
+        rr = r if i % 2 == 0 else r * 0.45
+        a = -math.pi / 2 + i * math.pi / 5
+        pts.append((round(cx + rr * math.cos(a)), round(cy + rr * math.sin(a))))
+    pts.append(pts[0])
+    return "M" + " L".join(f"{x} {y}" for x, y in pts)
 
-_sp = star_pts(256, 236, 170)
-_order = [0, 2, 4, 1, 3, 0]
-star_paths = []
-for k in range(5):
-    a = _sp[_order[k]]
-    b = _sp[_order[k + 1]]
-    star_paths.append(flow(line(round(a[0]), round(a[1]), round(b[0]), round(b[1])),
-                           k + 1, B_EASY, 1, "line"))
-star_paths.append(stack(440, 90, 26, 4, 6))
-P.append(pic("star", "easy", "nature", "🌟", True, star_paths))
+P.append(pic("star", "easy", "nature", "🌟", True, [
+    flow(star_outline(256, 246, 180), 1, B_EASY, 1, "outline"),
+    stack(70, 100, 26, 4, 2),
+    stack(442, 120, 24, 3, 3),
+    flow(line(150, 470, 362, 470), 4, B_EASY, 2, "line"),
+]))
 
 # 3) FISH (easy): body arcs, tail, fin, bubbles stack.
 P.append(pic("fish", "easy", "animals", "🐟", True, [
@@ -249,60 +248,60 @@ def nx():
     o += 1
     return o
 # Band 1 (background, large/light): horizon + landscape, 10 paths.
-_ml.append(flow(line(30, 150, 180, 146), nx(), B_EXP, 1, "line"))
-_ml.append(flow(line(332, 146, 482, 150), nx(), B_EXP, 1, "line"))
-_ml.append(flow(arc(30, 190, 110, 170, 180, 186), nx(), B_EXP, 1, "wave"))
-_ml.append(flow(arc(332, 186, 410, 168, 482, 190), nx(), B_EXP, 1, "wave"))
-_ml.append(flow(arc(30, 230, 100, 210, 170, 226), nx(), B_EXP, 1, "wave"))
-_ml.append(flow(arc(342, 226, 412, 208, 482, 230), nx(), B_EXP, 1, "wave"))
-_ml.append(flow(line(30, 270, 160, 268), nx(), B_EXP, 1, "line"))
-_ml.append(flow(line(352, 268, 482, 270), nx(), B_EXP, 1, "line"))
+_ml.append(flow(line(30, 150, 180, 146), nx(), B_EXP, 1, "line", 3))
+_ml.append(flow(line(332, 146, 482, 150), nx(), B_EXP, 1, "line", 3))
+_ml.append(flow(arc(30, 190, 110, 170, 180, 186), nx(), B_EXP, 1, "wave", 3))
+_ml.append(flow(arc(332, 186, 410, 168, 482, 190), nx(), B_EXP, 1, "wave", 3))
+_ml.append(flow(arc(30, 230, 100, 210, 170, 226), nx(), B_EXP, 1, "wave", 3))
+_ml.append(flow(arc(342, 226, 412, 208, 482, 230), nx(), B_EXP, 1, "wave", 3))
+_ml.append(flow(line(30, 270, 160, 268), nx(), B_EXP, 1, "line", 3))
+_ml.append(flow(line(352, 268, 482, 270), nx(), B_EXP, 1, "line", 3))
 _ml.append(flow(arc(30, 110, 256, 90, 482, 110), nx(), B_EXP, 1, "line", 3))
 _ml.append(flow(arc(30, 60, 256, 40, 482, 60), nx(), B_EXP, 1, "line", 3))
 # Band 2 (veil + hair falls, dark/bold): 12 paths.
-_ml.append(flow(arc(196, 96, 256, 66, 316, 96), nx(), B_EXP, 2, "arc"))          # veil crown
-_ml.append(flow(arc(186, 130, 178, 200, 186, 270), nx(), B_EXP, 2, "wave"))      # hair L1
-_ml.append(flow(arc(200, 140, 194, 210, 202, 280), nx(), B_EXP, 2, "wave"))      # hair L2
-_ml.append(flow(arc(214, 150, 210, 216, 218, 286), nx(), B_EXP, 2, "wave"))      # hair L3
-_ml.append(flow(arc(326, 130, 334, 200, 326, 270), nx(), B_EXP, 2, "wave"))      # hair R1
-_ml.append(flow(arc(312, 140, 318, 210, 310, 280), nx(), B_EXP, 2, "wave"))      # hair R2
-_ml.append(flow(arc(298, 150, 302, 216, 294, 286), nx(), B_EXP, 2, "wave"))      # hair R3
-_ml.append(flow(arc(186, 96, 176, 160, 186, 224), nx(), B_EXP, 2, "arc"))        # veil L
-_ml.append(flow(arc(326, 96, 336, 160, 326, 224), nx(), B_EXP, 2, "arc"))        # veil R
-_ml.append(flow(arc(196, 84, 256, 58, 316, 84), nx(), B_EXP, 2, "arc"))
-_ml.append(flow(arc(206, 108, 256, 92, 306, 108), nx(), B_EXP, 2, "arc"))        # hairline
-_ml.append(flow(arc(226, 300, 256, 316, 286, 300), nx(), B_EXP, 2, "arc"))       # chin
+_ml.append(flow(arc(196, 96, 256, 66, 316, 96), nx(), B_EXP, 2, "arc", 3))          # veil crown
+_ml.append(flow(arc(186, 130, 178, 200, 186, 270), nx(), B_EXP, 2, "wave", 3))      # hair L1
+_ml.append(flow(arc(200, 140, 194, 210, 202, 280), nx(), B_EXP, 2, "wave", 3))      # hair L2
+_ml.append(flow(arc(214, 150, 210, 216, 218, 286), nx(), B_EXP, 2, "wave", 3))      # hair L3
+_ml.append(flow(arc(326, 130, 334, 200, 326, 270), nx(), B_EXP, 2, "wave", 3))      # hair R1
+_ml.append(flow(arc(312, 140, 318, 210, 310, 280), nx(), B_EXP, 2, "wave", 3))      # hair R2
+_ml.append(flow(arc(298, 150, 302, 216, 294, 286), nx(), B_EXP, 2, "wave", 3))      # hair R3
+_ml.append(flow(arc(186, 96, 176, 160, 186, 224), nx(), B_EXP, 2, "arc", 3))        # veil L
+_ml.append(flow(arc(326, 96, 336, 160, 326, 224), nx(), B_EXP, 2, "arc", 3))        # veil R
+_ml.append(flow(arc(196, 84, 256, 58, 316, 84), nx(), B_EXP, 2, "arc", 3))
+_ml.append(flow(arc(206, 108, 256, 92, 306, 108), nx(), B_EXP, 2, "arc", 3))        # hairline
+_ml.append(flow(arc(226, 300, 256, 316, 286, 300), nx(), B_EXP, 2, "arc", 3))       # chin
 # Band 3 (face + neck, smallest): 12 paths (features late).
-_ml.append(flow(arc(206, 130, 198, 200, 216, 268), nx(), B_EASY, 3, "outline"))  # face L
-_ml.append(flow(arc(306, 130, 314, 200, 296, 268), nx(), B_EASY, 3, "outline"))  # face R
-_ml.append(flow(arc(216, 268, 256, 306, 296, 268), nx(), B_EASY, 3, "arc"))      # jaw
-_ml.append(flow(line(238, 320, 274, 320), nx(), B_EASY, 3, "line"))              # neck base
-_ml.append(flow(line(232, 296, 232, 336), nx(), B_EASY, 3, "line"))              # neck L
-_ml.append(flow(line(280, 296, 280, 336), nx(), B_EASY, 3, "line"))              # neck R
-_ml.append(flow(arc(222, 176, 238, 168, 252, 176), nx(), B_EASY, 3, "arc"))      # brow L
-_ml.append(flow(arc(260, 176, 274, 168, 290, 176), nx(), B_EASY, 3, "arc"))      # brow R
+_ml.append(flow(arc(206, 130, 198, 200, 216, 268), nx(), B_EASY, 3, "outline", 2))  # face L
+_ml.append(flow(arc(306, 130, 314, 200, 296, 268), nx(), B_EASY, 3, "outline", 2))  # face R
+_ml.append(flow(arc(216, 268, 256, 306, 296, 268), nx(), B_EASY, 3, "arc", 2))      # jaw
+_ml.append(flow(line(238, 320, 274, 320), nx(), B_EASY, 3, "line", 2))              # neck base
+_ml.append(flow(line(232, 296, 232, 336), nx(), B_EASY, 3, "line", 2))              # neck L
+_ml.append(flow(line(280, 296, 280, 336), nx(), B_EASY, 3, "line", 2))              # neck R
+_ml.append(flow(arc(222, 176, 238, 168, 252, 176), nx(), B_EASY, 3, "arc", 2))      # brow L
+_ml.append(flow(arc(260, 176, 274, 168, 290, 176), nx(), B_EASY, 3, "arc", 2))      # brow R
 _ml.append(stack(238, 192, 12, 2, nx(), 3))                                      # eye L
 _ml.append(stack(274, 192, 12, 2, nx(), 3))                                      # eye R
-_ml.append(flow(line(256, 200, 256, 236), nx(), B_EASY, 3, "line"))              # nose
-_ml.append(flow(arc(244, 224, 256, 230, 268, 224), nx(), B_EASY, 3, "arc"))      # nostril line
+_ml.append(flow(line(256, 200, 256, 236), nx(), B_EASY, 3, "line", 2))              # nose
+_ml.append(flow(arc(244, 224, 256, 230, 268, 224), nx(), B_EASY, 3, "arc", 2))      # nostril line
 # Band 2/3 (dress + shoulders): 14 paths.
-_ml.append(flow(arc(186, 300, 150, 340, 140, 400), nx(), B_EXP, 2, "arc"))       # shoulder L
-_ml.append(flow(arc(326, 300, 362, 340, 372, 400), nx(), B_EXP, 2, "arc"))       # shoulder R
+_ml.append(flow(arc(186, 300, 150, 340, 140, 400), nx(), B_EXP, 2, "arc", 3))       # shoulder L
+_ml.append(flow(arc(326, 300, 362, 340, 372, 400), nx(), B_EXP, 2, "arc", 3))       # shoulder R
 for k in range(5):                                                                # drapery falls L
     x = 156 + k * 14
-    _ml.append(flow(arc(x, 340, x - 6, 400, x + 4, 468), nx(), B_EXP, 2, "wave"))
+    _ml.append(flow(arc(x, 340, x - 6, 400, x + 4, 468), nx(), B_EXP, 2, "wave", 3))
 for k in range(5):                                                                # drapery falls R
     x = 300 + k * 14
-    _ml.append(flow(arc(x, 340, x + 6, 400, x - 4, 468), nx(), B_EXP, 2, "wave"))
-_ml.append(flow(arc(230, 330, 256, 344, 282, 330), nx(), B_EASY, 2, "arc"))      # neckline
-_ml.append(flow(arc(210, 350, 256, 372, 302, 350), nx(), B_EASY, 2, "arc"))      # bodice
+    _ml.append(flow(arc(x, 340, x + 6, 400, x - 4, 468), nx(), B_EXP, 2, "wave", 3))
+_ml.append(flow(arc(230, 330, 256, 344, 282, 330), nx(), B_EASY, 2, "arc", 3))      # neckline
+_ml.append(flow(arc(210, 350, 256, 372, 302, 350), nx(), B_EASY, 2, "arc", 3))      # bodice
 # Band 4 (hands, then THE SMILE last): 8 paths.
-_ml.append(flow(arc(190, 470, 240, 450, 290, 470), nx(), B_EXP, 3, "arc"))       # forearm
-_ml.append(flow(arc(250, 470, 300, 456, 344, 476), nx(), B_EXP, 3, "arc"))       # hand over hand
+_ml.append(flow(arc(190, 470, 240, 450, 290, 470), nx(), B_EXP, 3, "arc", 2))       # forearm
+_ml.append(flow(arc(250, 470, 300, 456, 344, 476), nx(), B_EXP, 3, "arc", 2))       # hand over hand
 for k in range(4):                                                                # fingers
-    _ml.append(flow(line(296 + k * 12, 470 + (k % 2) * 4, 330 + k * 10, 486), nx(), B_EASY, 3, "line"))
-_ml.append(flow(arc(236, 246, 256, 252, 276, 246), nx(), B_EASY, 4, "arc"))      # upper lip shadow
-_ml.append(flow(arc(234, 256, 256, 270, 278, 256), nx(), B_EASY, 4, "arc"))      # THE SMILE — final word
+    _ml.append(flow(line(296 + k * 12, 470 + (k % 2) * 4, 330 + k * 10, 486), nx(), B_EASY, 3, "line", 2))
+_ml.append(flow(arc(236, 246, 256, 252, 276, 246), nx(), B_EASY, 4, "arc", 2))      # upper lip shadow
+_ml.append(flow(arc(234, 256, 256, 270, 278, 256), nx(), B_EASY, 4, "arc", 2))      # THE SMILE — final word
 P.append(pic("mona", "expert", "masterpieces", "🖼️", False, _ml,
              prov={
                  "title": "Mona Lisa",

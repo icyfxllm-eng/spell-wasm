@@ -47,6 +47,10 @@ pub struct WordPath {
     /// Long flow paths host `segs` one-word segments instead of stretching.
     #[serde(default)]
     pub segs: Option<u32>,
+    /// Stacks: intended letter count — v6 fixes the COLUMN height at
+    /// ghost × size and solves glyph size per word (fill-the-column).
+    #[serde(default)]
+    pub ghost: u32,
 }
 
 impl WordPath {

@@ -10,7 +10,8 @@ mod daily;
 mod deck;
 mod defmatch; // CC-DEF-MATCH core engine (REVIEW-GATED)
 mod practice; // CC-PRACTICE core (curriculum/phases/progress)
-mod wordpic; // CC-WORD-PICTURE v5 core (calligrams)
+mod wordpic; // CC-WORD-PICTURE core (calligrams)
+mod wordpic_layout; // CC-WORD-PICTURE v6 layout engine (L1-L5)
 mod wordpic_screen; // CC-WORD-PICTURE v5 screen
 mod practice_screen; // CC-PRACTICE screen (the front porch)
 mod defmatch_screen; // CC-DEF-MATCH P3 frontend loop
