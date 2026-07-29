@@ -388,6 +388,9 @@
   @keyframes wpIn{from{opacity:0;letter-spacing:.5em}to{opacity:1}}
   @media (prefers-reduced-motion: reduce){.wp-word.new{animation:none}.wp-ghost.next{animation:none}}
   .wp-status{text-align:center;min-height:20px;font-size:14px;opacity:.9}
+  .wp-slots{text-align:center;min-height:18px;font-size:16px;letter-spacing:.35em;color:var(--accent,#7aa2ff)}
+  .wp-slots span{opacity:.4}
+  .wp-slots .on{opacity:1}
   .wp-row{display:flex;gap:8px;align-items:stretch}
   .wp-input{flex:1;font-size:22px;text-align:center;padding:10px;border-radius:12px;border:1px solid rgba(255,255,255,.25);background:rgba(255,255,255,.06);color:inherit}
   .wp-replay{width:64px;flex:none;font-size:22px}
@@ -1372,9 +1375,11 @@
       <button class="ghost mode-exit" id="wpExit" aria-label="Exit">✕</button>
       <div class="wp-title" id="wpPlayTitle"></div>
       <div class="wp-count" id="wpCount"></div>
+      <button class="ghost btn-hide" id="wpZoom" aria-label="Zoom">🔍</button>
       <button class="ghost" id="wpRestart">↺</button>
     </div>
     <div class="wp-stage" id="wpStage"></div>
+    <div class="wp-slots" id="wpSlots"></div>
     <div class="wp-status" id="wpStatus"></div>
     <div class="wp-row">
       <input class="wp-input" id="wpInput" type="text" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" />

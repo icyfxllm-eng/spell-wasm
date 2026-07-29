@@ -24,6 +24,8 @@ thread_local! {
     static CARD_UP: Cell<bool> = const { Cell::new(false) };
     static HOW_STEP: Cell<u8> = const { Cell::new(0) };
     static MILESTONE: Cell<u32> = const { Cell::new(0) };
+    /// L7: expert auto-center zoom (toggle 🔍; docked default ON for expert).
+    static ZOOMED: Cell<bool> = const { Cell::new(true) };
 }
 
 /// Scripts whose shaping must not ride a curved textPath (D4 ruling).
@@ -105,6 +107,16 @@ pub fn wire(app: &App) {
     });
     let a = app.clone();
     dom::on::<web_sys::Event, _>("wpInput", "input", move |_| on_typed(&a));
+    let a = app.clone();
+    dom::on_click("wpZoom", move || {
+        ZOOMED.with(|z| z.set(!z.get()));
+        let (pic, lang) = (PIC.with(|x| x.borrow().clone()), LANG.with(|l| l.borrow().clone()));
+        if let Some(p) = wordpic::picture(&pic) {
+            let words = wordpic::load().run(&pic, &lang).map(|r| r.words.clone()).unwrap_or_default();
+            render_canvas(p, &lang, &words);
+        }
+        let _ = &a;
+    });
 }
 
 fn startable_ids(app: &App, state: &wordpic::State, lang: &str) -> Vec<String> {
@@ -121,6 +133,9 @@ fn allowed(app: &App, p: &wordpic::Picture, lang: &str) -> bool {
     if !wordpic::playable(p, lang) {
         return false;
     }
+    if crate::wordpic_layout::READINESS_EXCEPTIONS.contains(&(p.id.as_str(), lang)) {
+        return false; // I1 readiness-listed pair — hidden, never jumbled
+    }
     let kid = app.borrow().kid;
     if kid && !wordpic::kid_ok(p, lang, 1) {
         return false;
@@ -136,7 +151,7 @@ pub fn open_picker(app: &App) {
     let state = wordpic::load();
     let mut html = String::new();
     for p in wordpic::picker_order(&state, &lang) {
-        let total = wordpic::slots(p);
+        let total = crate::wordpic_layout::slots_for_lang(p, &lang).len() as u32;
         let (cls, prog) = match state.run(&p.id, &lang) {
             Some(r) if r.done => ("wp-tile done", i18n::t("wordpic.done")),
             Some(r) if !r.words.is_empty() => ("wp-tile", format!("{}/{}", r.words.len(), total)),
@@ -181,14 +196,23 @@ fn open_play(app: &App, pic_id: &str) {
     PIC.with(|x| *x.borrow_mut() = pic_id.to_string());
     PLACED.with(|c| c.set(run.words.len() as u32));
     MILESTONE.with(|c| c.set(0));
-    let feed = wordpic::word_feed(
-        p,
-        &lang,
-        run.seed,
-        wordpic::load().recent_words.get(&lang).map(|v| v.as_slice()).unwrap_or(&[]),
-    );
+    // v6: the layout engine solves words AND placements together. Placed
+    // words (run.words) stay canonical; the solver's feed supplies the rest,
+    // skipping anything already on the canvas.
+    let recent = wordpic::load();
+    let recent = recent.recent_words.get(&lang).map(|v| v.as_slice()).unwrap_or(&[]);
+    let (mut feed, _, _) = crate::wordpic_layout::layout_feed(p, &lang, run.seed, recent);
+    if !run.words.is_empty() {
+        let mut rest: Vec<String> =
+            feed.iter().filter(|w| !run.words.contains(w)).cloned().collect();
+        feed = run.words.clone();
+        feed.append(&mut rest);
+        feed.truncate(crate::wordpic_layout::slots_for_lang(p, &lang).len());
+    }
     FEED.with(|f| *f.borrow_mut() = feed);
     dom::set_text("wpPlayTitle", &format!("{} {}", p.icon, i18n::t("tools.wordpic.name")));
+    crate::dom::toggle_class("wpZoom", "btn-hide", p.tier != "expert");
+    ZOOMED.with(|z| z.set(true));
     render_canvas(p, &lang, &run.words);
     reflect_count(p);
     OPEN.with(|c| c.set(true));
@@ -236,131 +260,154 @@ fn close_play(app: &App) {
     open_picker(app);
 }
 
-/// Chord endpoints of an SVG path `d` (first and last coordinate pairs).
-fn chord(d: &str) -> ((f32, f32), (f32, f32)) {
-    let nums: Vec<f32> = d
-        .split(|c: char| !(c.is_ascii_digit() || c == '.' || c == '-'))
-        .filter(|s| !s.is_empty())
-        .filter_map(|s| s.parse().ok())
-        .collect();
-    if nums.len() < 4 {
-        return ((0.0, 0.0), (0.0, 0.0));
-    }
-    ((nums[0], nums[1]), (nums[nums.len() - 2], nums[nums.len() - 1]))
-}
-
-/// Build the SVG canvas: ghost guides for every path, placed words rendered,
-/// the NEXT path highlighted.
+/// Build the SVG canvas from the SOLVER's placements (v6 L2 path-lock: the
+/// renderer accepts no free positions — only slots and placements).
 fn render_canvas(p: &wordpic::Picture, lang: &str, words: &[String]) {
-    let budgets = wordpic::slot_budgets(p);
-    let mut svg = String::from(
-        "<svg viewBox=\"0 0 512 512\" xmlns=\"http://www.w3.org/2000/svg\">",
+    let slots = crate::wordpic_layout::slots_for_lang(p, lang);
+    let recent = wordpic::load();
+    let recent = recent.recent_words.get(lang).map(|v| v.as_slice()).unwrap_or(&[]);
+    let run_seed = wordpic::load()
+        .run(&p.id, lang)
+        .map(|r| r.seed)
+        .unwrap_or(1);
+    let (_, placements, _) = crate::wordpic_layout::layout_feed(p, lang, run_seed, recent);
+    let complex = matches!(lang, "ar" | "hi");
+    let expert = p.tier == "expert";
+    let next_slot = words.len();
+    // L7: expert auto-centers the active path; others show the full frame.
+    let viewbox = if expert && next_slot < slots.len() {
+        let focus = placements
+            .iter()
+            .find(|pl| pl.slot == next_slot)
+            .map(|pl| pl.bounds);
+        match focus {
+            Some((x0, y0, x1, y1)) if ZOOMED.with(Cell::get) => {
+                let cx = (x0 + x1) / 2.0;
+                let cy = (y0 + y1) / 2.0;
+                let w = ((x1 - x0).max(y1 - y0) * 3.2).clamp(160.0, 512.0);
+                format!(
+                    "{:.0} {:.0} {:.0} {:.0}",
+                    (cx - w / 2.0).clamp(0.0, 512.0 - w),
+                    (cy - w / 2.0).clamp(0.0, 512.0 - w),
+                    w,
+                    w
+                )
+            }
+            _ => "0 0 512 512".to_string(),
+        }
+    } else {
+        "0 0 512 512".to_string()
+    };
+    let mut svg = format!(
+        "<svg viewBox=\"{viewbox}\" xmlns=\"http://www.w3.org/2000/svg\">"
     );
-    // Defs: flow geometry (referenced by textPath).
     svg.push_str("<defs>");
-    for (i, q) in p.paths.iter().enumerate() {
-        if let Some(d) = &q.d {
-            svg.push_str(&format!("<path id=\"wpp{i}\" d=\"{}\"/>", d));
+    for (si, sl) in slots.iter().enumerate() {
+        if let Some(poly) = &sl.poly {
+            let d: String = poly
+                .pts
+                .iter()
+                .enumerate()
+                .map(|(k, (x, y))| format!("{}{x:.1} {y:.1} ", if k == 0 { "M" } else { "L" }))
+                .collect();
+            svg.push_str(&format!("<path id=\"wps{si}\" d=\"{d}\"/>"));
         }
     }
     svg.push_str("</defs>");
-    let next_slot = words.len();
-    // Ghost guides (skip paths whose every slot is already worded).
-    let mut slot_cursor = 0usize;
-    for (i, q) in p.paths.iter().enumerate() {
-        let nslots = q.slots() as usize;
-        let done_here = words.len() >= slot_cursor + nslots;
-        let is_next = (slot_cursor..slot_cursor + nslots).contains(&next_slot);
-        if !done_here {
-            match q.mode.as_str() {
-                "stack" => {
-                    let n = q.budget.1.min(6);
-                    for k in 0..n {
-                        svg.push_str(&format!(
-                            "<rect class=\"wp-ghost{}\" x=\"{}\" y=\"{}\" width=\"{}\" height=\"{}\" rx=\"5\"/>",
-                            if is_next { " next" } else { "" },
-                            q.x - q.size * 0.42,
-                            q.y + k as f32 * q.size - q.size * 0.72,
-                            q.size * 0.84,
-                            q.size * 0.84
-                        ));
-                    }
-                }
-                _ => {
+    for (si, sl) in slots.iter().enumerate() {
+        let placed = si < words.len();
+        let is_next = si == next_slot;
+        if !placed {
+            match (&sl.poly, &sl.stack) {
+                (Some(_), _) => {
                     svg.push_str(&format!(
-                        "<use href=\"#wpp{i}\" class=\"wp-ghost{}\"/>",
+                        "<use href=\"#wps{si}\" class=\"wp-ghost{}\"/>",
                         if is_next { " next" } else { "" }
                     ));
                 }
-            }
-        }
-        slot_cursor += nslots;
-    }
-    // Placed words.
-    let mut slot_cursor = 0usize;
-    for (i, q) in p.paths.iter().enumerate() {
-        let nslots = q.slots() as usize;
-        for k in 0..nslots {
-            let idx = slot_cursor + k;
-            if idx >= words.len() {
-                break;
-            }
-            let w = &words[idx];
-            let newest = idx + 1 == words.len();
-            let cls = if newest { "wp-word new" } else { "wp-word" };
-            match q.mode.as_str() {
-                "stack" => {
-                    let units: Vec<char> = w.chars().collect();
-                    let size = q.size.min(q.size * 6.0 / units.len().max(1) as f32).max(wordpic::MIN_FONT);
-                    for (u, ch) in units.iter().enumerate() {
+                (_, Some((x, y, cell, height))) => {
+                    let n = (height / cell).round() as i32;
+                    for k in 0..n {
                         svg.push_str(&format!(
-                            "<text class=\"{cls}\" x=\"{}\" y=\"{}\" font-size=\"{size}\" text-anchor=\"middle\">{}</text>",
-                            q.x,
-                            q.y + u as f32 * size,
-                            dom::escape_html(&ch.to_string())
+                            "<rect class=\"wp-ghost{}\" x=\"{:.0}\" y=\"{:.0}\" width=\"{:.0}\" height=\"{:.0}\" rx=\"5\"/>",
+                            if is_next { " next" } else { "" },
+                            x - cell * 0.42,
+                            y + k as f32 * cell - cell * 0.72,
+                            cell * 0.84,
+                            cell * 0.84
                         ));
                     }
                 }
-                _ if complex_script(lang) => {
-                    // D4 ruling: straight word rotated to the chord angle.
-                    let ((x0, y0), (x1, y1)) = chord(q.d.as_deref().unwrap_or(""));
-                    let (cx, cy) = ((x0 + x1) / 2.0, (y0 + y1) / 2.0);
-                    let ang = (y1 - y0).atan2(x1 - x0).to_degrees();
-                    let seg_len = ((x1 - x0).hypot(y1 - y0)) / nslots as f32;
-                    let off = (k as f32 + 0.5) / nslots as f32;
-                    let (px, py) = (x0 + (x1 - x0) * off, y0 + (y1 - y0) * off);
-                    let size = (seg_len / w.chars().count().max(1) as f32 * 1.5).clamp(16.0, 44.0);
-                    let _ = (cx, cy);
+                _ => {}
+            }
+            continue;
+        }
+        let w = &words[si];
+        let newest = si + 1 == words.len();
+        let cls = if newest { "wp-word new" } else { "wp-word" };
+        let Some(pl) = placements.iter().find(|pl| pl.slot == si) else { continue };
+        match (&sl.poly, &sl.stack) {
+            (_, Some((x, y, _cell, _height))) => {
+                for (k, ch) in w.chars().enumerate() {
                     svg.push_str(&format!(
-                        "<text class=\"{cls}\" x=\"{px}\" y=\"{py}\" font-size=\"{size}\" text-anchor=\"middle\" transform=\"rotate({ang:.1} {px} {py})\">{}</text>",
-                        dom::escape_html(w)
-                    ));
-                }
-                _ => {
-                    // Curved paths run ~1.5x their chord; center each segment's
-                    // word at its midpoint (anchor middle) so arcs read as arcs.
-                    let ((x0, y0), (x1, y1)) = chord(q.d.as_deref().unwrap_or(""));
-                    let curvy = q.d.as_deref().map(|d| d.contains('Q') || d.contains('A')).unwrap_or(false);
-                    let approx_len =
-                        (x1 - x0).hypot(y1 - y0).max(40.0) * if curvy { 1.55 } else { 1.0 };
-                    let seg = approx_len / nslots as f32;
-                    let size = (seg / w.chars().count().max(1) as f32 * 1.5).clamp(16.0, 44.0);
-                    let mid = ((k as f32 * 2.0 + 1.0) / (nslots as f32 * 2.0)) * 100.0;
-                    svg.push_str(&format!(
-                        "<text class=\"{cls}\" font-size=\"{size}\" text-anchor=\"middle\"><textPath href=\"#wpp{i}\" startOffset=\"{mid:.0}%\">{}</textPath></text>",
-                        dom::escape_html(w)
+                        "<text class=\"{cls}\" x=\"{x:.0}\" y=\"{:.0}\" font-size=\"{:.0}\" text-anchor=\"middle\">{}</text>",
+                        y + k as f32 * pl.size,
+                        pl.size,
+                        dom::escape_html(&ch.to_string())
                     ));
                 }
             }
+            (Some(poly), _) if complex => {
+                // D4 ruling: straight word rotated to the chord angle.
+                let (x0, y0) = poly.pts[0];
+                let (x1, y1) = *poly.pts.last().unwrap_or(&(x0, y0));
+                let (px, py) = ((x0 + x1) / 2.0, (y0 + y1) / 2.0);
+                let ang = (y1 - y0).atan2(x1 - x0).to_degrees();
+                svg.push_str(&format!(
+                    "<text class=\"{cls}\" x=\"{px:.0}\" y=\"{py:.0}\" font-size=\"{:.0}\" text-anchor=\"middle\" transform=\"rotate({ang:.1} {px:.0} {py:.0})\">{}</text>",
+                    pl.size,
+                    dom::escape_html(w)
+                ));
+            }
+            (Some(_), _) => {
+                svg.push_str(&format!(
+                    "<text class=\"{cls}\" font-size=\"{:.0}\" letter-spacing=\"{:.1}\" text-anchor=\"middle\"><textPath href=\"#wps{si}\" startOffset=\"50%\">{}</textPath></text>",
+                    pl.size,
+                    pl.spacing,
+                    dom::escape_html(w)
+                ));
+            }
+            _ => {}
         }
-        slot_cursor += nslots;
     }
     svg.push_str("</svg>");
     dom::set_html("wpStage", &svg);
+    reflect_slots_indicator(lang);
+}
+
+/// L6 — the DOCKED letter-slot indicator: one fixed home above the input bar
+/// (chosen once; it cannot wander). One dash per unit of the current word.
+fn reflect_slots_indicator(lang: &str) {
+    let Some(w) = current_word() else {
+        dom::set_html("wpSlots", "");
+        return;
+    };
+    let typed = dom::el("wpInput")
+        .dyn_into::<web_sys::HtmlInputElement>()
+        .map(|i| i.value())
+        .unwrap_or_default();
+    let (ok, _) = crate::practice::check_prefix(lang, &w, &typed);
+    let units = crate::practice::units(lang, &w).len();
+    let mut html = String::new();
+    for k in 0..units {
+        html.push_str(if k < ok { "<span class=\"on\">●</span>" } else { "<span>–</span>" });
+    }
+    dom::set_html("wpSlots", &html);
 }
 
 fn reflect_count(p: &wordpic::Picture) {
-    let total = wordpic::slots(p);
+    let lang = LANG.with(|l| l.borrow().clone());
+    let total = crate::wordpic_layout::slots_for_lang(p, &lang).len() as u32;
     dom::set_text("wpCount", &format!("{}/{}", PLACED.with(Cell::get), total));
 }
 
@@ -400,6 +447,8 @@ fn on_typed(app: &App) {
     if complete {
         inp.set_value("");
         place(app, &target);
+    } else {
+        reflect_slots_indicator(&lang);
     }
 }
 
@@ -407,7 +456,7 @@ fn place(app: &App, word: &str) {
     let lang = LANG.with(|l| l.borrow().clone());
     let pic = PIC.with(|p| p.borrow().clone());
     let Some(p) = wordpic::picture(&pic) else { return };
-    let total = wordpic::slots(p);
+    let total = crate::wordpic_layout::slots_for_lang(p, &lang).len() as u32;
     let mut s = wordpic::load();
     let placed = s.place(&pic, &lang, word, total);
     wordpic::save(&s);
