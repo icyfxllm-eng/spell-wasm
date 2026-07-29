@@ -20,33 +20,31 @@
    "paths": [
     {
      "mode": "flow",
-     "d": "M96 256 A160 160 0 0 1 416 256",
+     "d": "M76 256 A180 180 0 0 1 436 256",
      "order": 1,
      "budget": [
       2,
       9
      ],
      "band": 1,
-     "arch": "outline",
-     "segs": 2
+     "arch": "outline"
     },
     {
      "mode": "flow",
-     "d": "M96 256 A160 160 0 1 0 416 256",
+     "d": "M76 256 A180 180 0 1 0 436 256",
      "order": 2,
      "budget": [
       2,
       9
      ],
      "band": 1,
-     "arch": "outline",
-     "segs": 2
+     "arch": "outline"
     },
     {
      "mode": "stack",
      "x": 196,
-     "y": 176,
-     "size": 26,
+     "y": 170,
+     "size": 24,
      "order": 3,
      "budget": [
       2,
@@ -54,13 +52,13 @@
      ],
      "band": 2,
      "arch": "stack",
-     "ghost": 5
+     "ghost": 4
     },
     {
      "mode": "stack",
      "x": 316,
-     "y": 176,
-     "size": 26,
+     "y": 170,
+     "size": 24,
      "order": 4,
      "budget": [
       2,
@@ -68,19 +66,18 @@
      ],
      "band": 2,
      "arch": "stack",
-     "ghost": 5
+     "ghost": 4
     },
     {
      "mode": "flow",
-     "d": "M168 318 Q256 402 344 318",
+     "d": "M168 330 Q256 412 344 330",
      "order": 5,
      "budget": [
       2,
       9
      ],
      "band": 1,
-     "arch": "arc",
-     "segs": 2
+     "arch": "arc"
     }
    ]
   },
@@ -94,7 +91,7 @@
    "paths": [
     {
      "mode": "flow",
-     "d": "M256 66 L304 180 L427 190 L333 271 L362 392 L256 327 L150 392 L179 271 L85 190 L208 180 L256 66",
+     "d": "M256 70 L304 184 L427 194 L333 275 L362 396 L256 331 L150 396 L179 275 L85 194 L208 184 L256 70",
      "order": 1,
      "budget": [
       2,
@@ -105,9 +102,9 @@
     },
     {
      "mode": "stack",
-     "x": 70,
-     "y": 100,
-     "size": 26,
+     "x": 56,
+     "y": 64,
+     "size": 24,
      "order": 2,
      "budget": [
       2,
@@ -115,13 +112,13 @@
      ],
      "band": 2,
      "arch": "stack",
-     "ghost": 4
+     "ghost": 3
     },
     {
      "mode": "stack",
-     "x": 442,
-     "y": 120,
-     "size": 24,
+     "x": 456,
+     "y": 80,
+     "size": 22,
      "order": 3,
      "budget": [
       2,
@@ -133,7 +130,7 @@
     },
     {
      "mode": "flow",
-     "d": "M150 470 L362 470",
+     "d": "M150 486 L362 486",
      "order": 4,
      "budget": [
       2,
@@ -154,31 +151,29 @@
    "paths": [
     {
      "mode": "flow",
-     "d": "M120 256 Q256 130 380 256",
+     "d": "M40 132 L224 132",
      "order": 1,
      "budget": [
       2,
       9
      ],
-     "band": 1,
-     "arch": "outline",
-     "segs": 2
+     "band": 2,
+     "arch": "line"
     },
     {
      "mode": "flow",
-     "d": "M120 256 Q256 382 380 256",
+     "d": "M288 132 L472 132",
      "order": 2,
      "budget": [
       2,
       9
      ],
-     "band": 1,
-     "arch": "outline",
-     "segs": 2
+     "band": 2,
+     "arch": "line"
     },
     {
      "mode": "flow",
-     "d": "M380 256 L462 196",
+     "d": "M200 100 L312 100",
      "order": 3,
      "budget": [
       2,
@@ -188,9 +183,45 @@
      "arch": "line"
     },
     {
-     "mode": "flow",
-     "d": "M380 256 L462 316",
+     "mode": "stack",
+     "x": 256,
+     "y": 44,
+     "size": 18,
      "order": 4,
+     "budget": [
+      2,
+      9
+     ],
+     "band": 2,
+     "arch": "stack",
+     "ghost": 3
+    },
+    {
+     "mode": "flow",
+     "d": "M120 300 Q256 176 392 300",
+     "order": 5,
+     "budget": [
+      2,
+      9
+     ],
+     "band": 1,
+     "arch": "outline"
+    },
+    {
+     "mode": "flow",
+     "d": "M120 300 Q256 424 392 300",
+     "order": 6,
+     "budget": [
+      2,
+      9
+     ],
+     "band": 1,
+     "arch": "outline"
+    },
+    {
+     "mode": "flow",
+     "d": "M404 291 L474 238",
+     "order": 7,
      "budget": [
       2,
       9
@@ -199,18 +230,15 @@
      "arch": "line"
     },
     {
-     "mode": "stack",
-     "x": 120,
-     "y": 130,
-     "size": 24,
-     "order": 5,
+     "mode": "flow",
+     "d": "M404 309 L474 362",
+     "order": 8,
      "budget": [
       2,
       9
      ],
      "band": 2,
-     "arch": "stack",
-     "ghost": 4
+     "arch": "line"
     }
    ]
   },
@@ -224,7 +252,7 @@
    "paths": [
     {
      "mode": "flow",
-     "d": "M120 250 L256 130",
+     "d": "M120 252 L256 120",
      "order": 1,
      "budget": [
       2,
@@ -235,7 +263,7 @@
     },
     {
      "mode": "flow",
-     "d": "M256 130 L392 250",
+     "d": "M256 120 L392 252",
      "order": 2,
      "budget": [
       2,
@@ -246,9 +274,9 @@
     },
     {
      "mode": "stack",
-     "x": 140,
-     "y": 270,
-     "size": 30,
+     "x": 150,
+     "y": 300,
+     "size": 26,
      "order": 3,
      "budget": [
       2,
@@ -256,13 +284,13 @@
      ],
      "band": 2,
      "arch": "stack",
-     "ghost": 4
+     "ghost": 3
     },
     {
      "mode": "stack",
-     "x": 372,
-     "y": 270,
-     "size": 30,
+     "x": 362,
+     "y": 300,
+     "size": 26,
      "order": 4,
      "budget": [
       2,
@@ -270,29 +298,39 @@
      ],
      "band": 2,
      "arch": "stack",
-     "ghost": 4
+     "ghost": 3
     },
     {
      "mode": "flow",
-     "d": "M120 400 L392 400",
+     "d": "M120 434 L392 434",
      "order": 5,
      "budget": [
       2,
       9
      ],
      "band": 1,
-     "arch": "line",
-     "segs": 2
+     "arch": "line"
     },
     {
      "mode": "flow",
-     "d": "M226 400 Q256 330 286 400",
+     "d": "M230 418 Q256 358 282 418",
      "order": 6,
      "budget": [
       2,
       9
      ],
      "band": 3,
+     "arch": "arc"
+    },
+    {
+     "mode": "flow",
+     "d": "M52 96 Q92 56 132 96",
+     "order": 7,
+     "budget": [
+      2,
+      9
+     ],
+     "band": 2,
      "arch": "arc"
     }
    ]
@@ -307,176 +345,146 @@
    "paths": [
     {
      "mode": "flow",
-     "d": "M150 240 A106 106 0 0 1 362 240",
+     "d": "M161 200 A95 95 0 0 1 351 200",
      "order": 1,
      "budget": [
       3,
       12
      ],
      "band": 1,
-     "arch": "outline",
-     "segs": 2
+     "arch": "outline"
     },
     {
      "mode": "flow",
-     "d": "M150 240 A106 106 0 1 0 362 240",
+     "d": "M161 200 A95 95 0 1 0 351 200",
      "order": 2,
      "budget": [
       3,
       12
      ],
      "band": 1,
-     "arch": "outline",
-     "segs": 2
+     "arch": "outline"
     },
     {
      "mode": "flow",
-     "d": "M170 190 L196 120",
+     "d": "M191 133 L151 48",
      "order": 3,
      "budget": [
-      2,
-      9
+      3,
+      12
      ],
      "band": 2,
      "arch": "line"
     },
     {
      "mode": "flow",
-     "d": "M196 120 L226 180",
+     "d": "M321 133 L361 48",
      "order": 4,
      "budget": [
-      2,
-      9
+      3,
+      12
      ],
      "band": 2,
      "arch": "line"
     },
     {
      "mode": "flow",
-     "d": "M286 180 L316 120",
+     "d": "M196 182 Q222 168 248 182",
      "order": 5,
      "budget": [
-      2,
-      9
+      3,
+      12
      ],
-     "band": 2,
-     "arch": "line"
+     "band": 3,
+     "arch": "arc"
     },
     {
      "mode": "flow",
-     "d": "M316 120 L342 190",
+     "d": "M264 182 Q290 168 316 182",
      "order": 6,
      "budget": [
-      2,
-      9
+      3,
+      12
      ],
-     "band": 2,
-     "arch": "line"
+     "band": 3,
+     "arch": "arc"
     },
     {
      "mode": "flow",
-     "d": "M160 360 Q130 430 220 470",
+     "d": "M228 252 Q256 276 284 252",
      "order": 7,
      "budget": [
       3,
       12
      ],
-     "band": 2,
+     "band": 3,
      "arch": "arc"
     },
     {
      "mode": "flow",
-     "d": "M352 360 Q382 430 292 470",
+     "d": "M58 204 L128 214",
      "order": 8,
      "budget": [
       3,
       12
      ],
-     "band": 2,
-     "arch": "arc"
-    },
-    {
-     "mode": "flow",
-     "d": "M220 470 L292 470",
-     "order": 9,
-     "budget": [
-      2,
-      9
-     ],
-     "band": 2,
+     "band": 3,
      "arch": "line"
     },
     {
      "mode": "flow",
-     "d": "M352 430 Q452 420 442 330",
+     "d": "M384 214 L454 204",
+     "order": 9,
+     "budget": [
+      3,
+      12
+     ],
+     "band": 3,
+     "arch": "line"
+    },
+    {
+     "mode": "flow",
+     "d": "M200 288 Q140 360 166 446",
      "order": 10,
      "budget": [
       3,
       12
      ],
      "band": 2,
-     "arch": "wave"
+     "arch": "arc"
     },
     {
      "mode": "flow",
-     "d": "M130 262 L196 268",
+     "d": "M312 288 Q372 360 346 446",
      "order": 11,
      "budget": [
-      2,
-      9
+      3,
+      12
      ],
-     "band": 3,
-     "arch": "line"
+     "band": 2,
+     "arch": "arc"
     },
     {
      "mode": "flow",
-     "d": "M316 268 L382 262",
+     "d": "M166 446 Q256 470 346 446",
      "order": 12,
      "budget": [
-      2,
-      9
+      3,
+      12
      ],
-     "band": 3,
-     "arch": "line"
+     "band": 2,
+     "arch": "arc"
     },
     {
-     "mode": "stack",
-     "x": 226,
-     "y": 232,
-     "size": 22,
+     "mode": "flow",
+     "d": "M346 446 Q460 430 448 330",
      "order": 13,
      "budget": [
       3,
       12
      ],
      "band": 2,
-     "arch": "stack",
-     "ghost": 3
-    },
-    {
-     "mode": "stack",
-     "x": 296,
-     "y": 232,
-     "size": 22,
-     "order": 14,
-     "budget": [
-      3,
-      12
-     ],
-     "band": 2,
-     "arch": "stack",
-     "ghost": 3
-    },
-    {
-     "mode": "flow",
-     "d": "M226 292 Q256 322 286 292",
-     "order": 15,
-     "budget": [
-      2,
-      9
-     ],
-     "band": 3,
-     "arch": "arc"
+     "arch": "wave"
     }
    ]
   },
@@ -491,8 +499,8 @@
     {
      "mode": "stack",
      "x": 226,
-     "y": 180,
-     "size": 28,
+     "y": 170,
+     "size": 24,
      "order": 1,
      "budget": [
       3,
@@ -505,8 +513,8 @@
     {
      "mode": "stack",
      "x": 292,
-     "y": 180,
-     "size": 28,
+     "y": 170,
+     "size": 24,
      "order": 2,
      "budget": [
       3,
@@ -518,7 +526,7 @@
     },
     {
      "mode": "flow",
-     "d": "M226 170 Q256 60 292 170",
+     "d": "M226 160 Q256 66 292 160",
      "order": 3,
      "budget": [
       3,
@@ -529,116 +537,135 @@
     },
     {
      "mode": "flow",
-     "d": "M226 340 L170 420",
+     "d": "M218 322 L156 424",
      "order": 4,
      "budget": [
-      2,
-      9
+      3,
+      12
      ],
      "band": 2,
      "arch": "line"
     },
     {
      "mode": "flow",
-     "d": "M170 420 L226 400",
+     "d": "M156 424 L212 408",
      "order": 5,
      "budget": [
-      2,
-      9
+      3,
+      12
      ],
      "band": 2,
      "arch": "line"
     },
     {
      "mode": "flow",
-     "d": "M292 340 L342 420",
+     "d": "M300 322 L364 424",
      "order": 6,
      "budget": [
-      2,
-      9
+      3,
+      12
      ],
      "band": 2,
      "arch": "line"
     },
     {
      "mode": "flow",
-     "d": "M342 420 L292 400",
+     "d": "M364 424 L308 408",
      "order": 7,
      "budget": [
-      2,
-      9
+      3,
+      12
      ],
      "band": 2,
      "arch": "line"
     },
     {
      "mode": "flow",
-     "d": "M226 262 Q256 232 292 262",
+     "d": "M240 338 L278 338",
      "order": 8,
      "budget": [
-      2,
-      9
+      3,
+      12
      ],
      "band": 3,
-     "arch": "arc"
+     "arch": "line"
     },
     {
      "mode": "flow",
-     "d": "M226 262 Q256 292 292 262",
+     "d": "M240 364 L278 364",
      "order": 9,
      "budget": [
-      2,
-      9
+      3,
+      12
      ],
      "band": 3,
-     "arch": "arc"
+     "arch": "line"
     },
     {
      "mode": "flow",
-     "d": "M120 60 L180 110",
+     "d": "M226 436 Q256 498 292 436",
      "order": 10,
      "budget": [
-      2,
-      9
-     ],
-     "band": 3,
-     "arch": "line"
-    },
-    {
-     "mode": "flow",
-     "d": "M392 90 L442 130",
-     "order": 11,
-     "budget": [
-      2,
-      9
-     ],
-     "band": 3,
-     "arch": "line"
-    },
-    {
-     "mode": "flow",
-     "d": "M226 420 Q256 500 292 420",
-     "order": 12,
-     "budget": [
-      2,
-      9
+      3,
+      12
      ],
      "band": 2,
      "arch": "arc"
     },
     {
-     "mode": "stack",
-     "x": 256,
-     "y": 430,
-     "size": 24,
+     "mode": "flow",
+     "d": "M212 432 L186 484",
+     "order": 11,
+     "budget": [
+      3,
+      12
+     ],
+     "band": 3,
+     "arch": "line"
+    },
+    {
+     "mode": "flow",
+     "d": "M306 432 L332 484",
+     "order": 12,
+     "budget": [
+      3,
+      12
+     ],
+     "band": 3,
+     "arch": "line"
+    },
+    {
+     "mode": "flow",
+     "d": "M52 116 Q84 84 116 116",
      "order": 13,
      "budget": [
       3,
       12
      ],
      "band": 2,
-     "arch": "stack",
-     "ghost": 4
+     "arch": "arc"
+    },
+    {
+     "mode": "flow",
+     "d": "M392 76 L446 112",
+     "order": 14,
+     "budget": [
+      3,
+      12
+     ],
+     "band": 3,
+     "arch": "line"
+    },
+    {
+     "mode": "flow",
+     "d": "M120 60 L172 92",
+     "order": 15,
+     "budget": [
+      3,
+      12
+     ],
+     "band": 3,
+     "arch": "line"
     }
    ]
   },
@@ -652,31 +679,29 @@
    "paths": [
     {
      "mode": "flow",
-     "d": "M170 360 A86 86 0 0 1 342 360",
+     "d": "M176 360 A80 80 0 0 1 336 360",
      "order": 1,
      "budget": [
       3,
       12
      ],
      "band": 1,
-     "arch": "outline",
-     "segs": 2
+     "arch": "outline"
     },
     {
      "mode": "flow",
-     "d": "M170 360 A86 86 0 1 0 342 360",
+     "d": "M176 360 A80 80 0 1 0 336 360",
      "order": 2,
      "budget": [
       3,
       12
      ],
      "band": 1,
-     "arch": "outline",
-     "segs": 2
+     "arch": "outline"
     },
     {
      "mode": "flow",
-     "d": "M204 220 A52 52 0 0 1 308 220",
+     "d": "M201 205 A55 55 0 0 1 311 205",
      "order": 3,
      "budget": [
       3,
@@ -687,7 +712,7 @@
     },
     {
      "mode": "flow",
-     "d": "M204 220 A52 52 0 1 0 308 220",
+     "d": "M201 205 A55 55 0 1 0 311 205",
      "order": 4,
      "budget": [
       3,
@@ -698,117 +723,135 @@
     },
     {
      "mode": "flow",
-     "d": "M196 150 L316 150",
+     "d": "M204 128 L308 128",
      "order": 5,
      "budget": [
-      2,
-      9
+      3,
+      12
      ],
      "band": 2,
      "arch": "line"
     },
     {
-     "mode": "stack",
-     "x": 238,
-     "y": 90,
-     "size": 22,
+     "mode": "flow",
+     "d": "M222 62 L290 62",
      "order": 6,
      "budget": [
       3,
       12
      ],
      "band": 2,
-     "arch": "stack",
-     "ghost": 3
+     "arch": "line"
     },
     {
-     "mode": "stack",
-     "x": 278,
-     "y": 90,
-     "size": 22,
+     "mode": "flow",
+     "d": "M216 190 Q234 180 252 190",
      "order": 7,
      "budget": [
       3,
       12
      ],
-     "band": 2,
-     "arch": "stack",
-     "ghost": 3
+     "band": 3,
+     "arch": "arc"
     },
     {
      "mode": "flow",
-     "d": "M170 330 L96 280",
+     "d": "M260 190 Q278 180 296 190",
      "order": 8,
      "budget": [
-      2,
-      9
+      3,
+      12
      ],
-     "band": 2,
-     "arch": "line"
+     "band": 3,
+     "arch": "arc"
     },
     {
      "mode": "flow",
-     "d": "M342 330 L416 280",
+     "d": "M230 232 Q256 244 282 232",
      "order": 9,
      "budget": [
-      2,
-      9
+      3,
+      12
      ],
-     "band": 2,
-     "arch": "line"
+     "band": 3,
+     "arch": "arc"
     },
     {
-     "mode": "stack",
-     "x": 256,
-     "y": 320,
-     "size": 22,
+     "mode": "flow",
+     "d": "M256 300 L256 388",
      "order": 10,
      "budget": [
       3,
       12
      ],
-     "band": 2,
-     "arch": "stack",
-     "ghost": 4
+     "band": 3,
+     "arch": "line"
     },
     {
-     "mode": "stack",
-     "x": 232,
-     "y": 196,
-     "size": 18,
+     "mode": "flow",
+     "d": "M176 330 L92 288",
      "order": 11,
      "budget": [
       3,
       12
      ],
      "band": 2,
-     "arch": "stack",
-     "ghost": 2
+     "arch": "line"
     },
     {
-     "mode": "stack",
-     "x": 282,
-     "y": 196,
-     "size": 18,
+     "mode": "flow",
+     "d": "M336 330 L420 288",
      "order": 12,
      "budget": [
       3,
       12
      ],
      "band": 2,
-     "arch": "stack",
-     "ghost": 2
+     "arch": "line"
     },
     {
      "mode": "flow",
-     "d": "M230 246 Q256 268 282 246",
+     "d": "M60 474 Q256 458 452 474",
      "order": 13,
      "budget": [
-      2,
-      9
+      3,
+      12
+     ],
+     "band": 2,
+     "arch": "line"
+    },
+    {
+     "mode": "flow",
+     "d": "M72 84 q12 -12 24 0 q12 -12 24 0",
+     "order": 14,
+     "budget": [
+      3,
+      12
      ],
      "band": 3,
-     "arch": "arc"
+     "arch": "wave"
+    },
+    {
+     "mode": "flow",
+     "d": "M398 110 q11 -11 22 0 q11 -11 22 0",
+     "order": 15,
+     "budget": [
+      3,
+      12
+     ],
+     "band": 3,
+     "arch": "wave"
+    },
+    {
+     "mode": "flow",
+     "d": "M222 95 L290 95",
+     "order": 16,
+     "budget": [
+      3,
+      12
+     ],
+     "band": 3,
+     "arch": "line"
     }
    ]
   },
@@ -822,7 +865,7 @@
    "paths": [
     {
      "mode": "flow",
-     "d": "M120 350 Q100 250 190 240",
+     "d": "M150 380 Q120 300 180 272",
      "order": 1,
      "budget": [
       3,
@@ -833,19 +876,18 @@
     },
     {
      "mode": "flow",
-     "d": "M190 240 Q300 170 380 250",
+     "d": "M180 272 Q240 210 320 224",
      "order": 2,
      "budget": [
       3,
       12
      ],
      "band": 1,
-     "arch": "outline",
-     "segs": 2
+     "arch": "outline"
     },
     {
      "mode": "flow",
-     "d": "M380 250 Q460 260 440 310",
+     "d": "M320 224 Q392 232 408 280",
      "order": 3,
      "budget": [
       3,
@@ -856,7 +898,7 @@
     },
     {
      "mode": "flow",
-     "d": "M440 310 Q420 350 360 350",
+     "d": "M408 280 Q400 330 350 342",
      "order": 4,
      "budget": [
       3,
@@ -867,233 +909,195 @@
     },
     {
      "mode": "flow",
-     "d": "M360 350 Q300 420 170 400",
+     "d": "M160 388 Q256 400 344 352",
      "order": 5,
      "budget": [
       3,
       12
      ],
-     "band": 1,
-     "arch": "outline",
-     "segs": 2
-    },
-    {
-     "mode": "flow",
-     "d": "M170 400 Q130 390 120 350",
-     "order": 6,
-     "budget": [
-      2,
-      9
-     ],
-     "band": 1,
+     "band": 2,
      "arch": "arc"
     },
     {
      "mode": "flow",
-     "d": "M120 350 Q60 330 50 270",
+     "d": "M252 218 L212 120",
+     "order": 6,
+     "budget": [
+      3,
+      12
+     ],
+     "band": 2,
+     "arch": "radial"
+    },
+    {
+     "mode": "flow",
+     "d": "M270 216 L262 108",
      "order": 7,
      "budget": [
       3,
       12
      ],
      "band": 2,
-     "arch": "wave"
+     "arch": "radial"
     },
     {
      "mode": "flow",
-     "d": "M50 270 Q45 220 80 210",
+     "d": "M288 218 L314 118",
      "order": 8,
-     "budget": [
-      2,
-      9
-     ],
-     "band": 2,
-     "arch": "wave"
-    },
-    {
-     "mode": "flow",
-     "d": "M60 235 L30 210",
-     "order": 9,
-     "budget": [
-      2,
-      9
-     ],
-     "band": 2,
-     "arch": "line"
-    },
-    {
-     "mode": "flow",
-     "d": "M30 210 L62 196",
-     "order": 10,
-     "budget": [
-      2,
-      9
-     ],
-     "band": 2,
-     "arch": "line"
-    },
-    {
-     "mode": "flow",
-     "d": "M210 236 L200 120",
-     "order": 11,
-     "budget": [
-      2,
-      9
-     ],
-     "band": 2,
-     "arch": "radial"
-    },
-    {
-     "mode": "flow",
-     "d": "M236 228 L234 126",
-     "order": 12,
-     "budget": [
-      2,
-      9
-     ],
-     "band": 2,
-     "arch": "radial"
-    },
-    {
-     "mode": "flow",
-     "d": "M262 236 L268 132",
-     "order": 13,
-     "budget": [
-      2,
-      9
-     ],
-     "band": 2,
-     "arch": "radial"
-    },
-    {
-     "mode": "flow",
-     "d": "M288 228 L302 138",
-     "order": 14,
-     "budget": [
-      2,
-      9
-     ],
-     "band": 2,
-     "arch": "radial"
-    },
-    {
-     "mode": "flow",
-     "d": "M314 236 L336 144",
-     "order": 15,
-     "budget": [
-      2,
-      9
-     ],
-     "band": 2,
-     "arch": "radial"
-    },
-    {
-     "mode": "flow",
-     "d": "M200 120 Q300 90 370 150",
-     "order": 16,
      "budget": [
       3,
       12
      ],
      "band": 2,
-     "arch": "arc",
-     "segs": 2
+     "arch": "radial"
     },
     {
      "mode": "flow",
-     "d": "M210 212 L228 184",
+     "d": "M212 120 Q262 84 314 118",
+     "order": 9,
+     "budget": [
+      3,
+      12
+     ],
+     "band": 2,
+     "arch": "arc"
+    },
+    {
+     "mode": "flow",
+     "d": "M150 380 Q66 336 78 238",
+     "order": 10,
+     "budget": [
+      3,
+      12
+     ],
+     "band": 2,
+     "arch": "wave"
+    },
+    {
+     "mode": "flow",
+     "d": "M78 238 L40 192",
+     "order": 11,
+     "budget": [
+      3,
+      12
+     ],
+     "band": 2,
+     "arch": "line"
+    },
+    {
+     "mode": "flow",
+     "d": "M40 192 L104 178",
+     "order": 12,
+     "budget": [
+      3,
+      12
+     ],
+     "band": 2,
+     "arch": "line"
+    },
+    {
+     "mode": "flow",
+     "d": "M352 268 Q382 252 412 268",
+     "order": 13,
+     "budget": [
+      3,
+      12
+     ],
+     "band": 3,
+     "arch": "arc"
+    },
+    {
+     "mode": "flow",
+     "d": "M420 306 L480 288",
+     "order": 14,
+     "budget": [
+      3,
+      12
+     ],
+     "band": 3,
+     "arch": "line"
+    },
+    {
+     "mode": "flow",
+     "d": "M424 322 L492 322",
+     "order": 15,
+     "budget": [
+      3,
+      12
+     ],
+     "band": 3,
+     "arch": "line"
+    },
+    {
+     "mode": "flow",
+     "d": "M420 338 L480 356",
+     "order": 16,
+     "budget": [
+      3,
+      12
+     ],
+     "band": 3,
+     "arch": "line"
+    },
+    {
+     "mode": "flow",
+     "d": "M20 448 L64 376",
      "order": 17,
      "budget": [
-      2,
-      9
+      3,
+      12
      ],
-     "band": 3,
-     "arch": "zigzag"
+     "band": 2,
+     "arch": "line"
     },
     {
      "mode": "flow",
-     "d": "M250 206 L268 184",
+     "d": "M64 376 L108 448",
      "order": 18,
      "budget": [
-      2,
-      9
+      3,
+      12
      ],
-     "band": 3,
-     "arch": "zigzag"
+     "band": 2,
+     "arch": "line"
     },
     {
      "mode": "flow",
-     "d": "M290 212 L308 184",
+     "d": "M140 452 Q300 440 482 452",
      "order": 19,
      "budget": [
-      2,
-      9
+      3,
+      12
      ],
-     "band": 3,
-     "arch": "zigzag"
+     "band": 2,
+     "arch": "line"
     },
     {
      "mode": "flow",
-     "d": "M330 206 L348 184",
+     "d": "M320 396 L470 396",
      "order": 20,
      "budget": [
-      2,
-      9
+      3,
+      12
      ],
      "band": 3,
-     "arch": "zigzag"
+     "arch": "line"
     },
     {
-     "mode": "stack",
-     "x": 408,
-     "y": 282,
-     "size": 20,
+     "mode": "flow",
+     "d": "M150 64 Q196 40 242 64",
      "order": 21,
      "budget": [
       3,
       12
      ],
      "band": 3,
-     "arch": "stack",
-     "ghost": 3
+     "arch": "arc"
     },
     {
      "mode": "flow",
-     "d": "M452 320 L500 300",
+     "d": "M330 80 Q366 60 402 82",
      "order": 22,
-     "budget": [
-      2,
-      9
-     ],
-     "band": 3,
-     "arch": "line"
-    },
-    {
-     "mode": "flow",
-     "d": "M452 334 L504 334",
-     "order": 23,
-     "budget": [
-      2,
-      9
-     ],
-     "band": 3,
-     "arch": "line"
-    },
-    {
-     "mode": "flow",
-     "d": "M452 348 L500 366",
-     "order": 24,
-     "budget": [
-      2,
-      9
-     ],
-     "band": 3,
-     "arch": "line"
-    },
-    {
-     "mode": "flow",
-     "d": "M180 430 Q256 460 330 430",
-     "order": 25,
      "budget": [
       3,
       12
@@ -1103,14 +1107,36 @@
     },
     {
      "mode": "flow",
-     "d": "M360 300 Q396 316 372 336",
-     "order": 26,
+     "d": "M360 40 L420 66",
+     "order": 23,
      "budget": [
-      2,
-      9
+      3,
+      12
      ],
-     "band": 4,
+     "band": 3,
+     "arch": "line"
+    },
+    {
+     "mode": "flow",
+     "d": "M330 190 Q358 176 386 204",
+     "order": 24,
+     "budget": [
+      3,
+      12
+     ],
+     "band": 3,
      "arch": "arc"
+    },
+    {
+     "mode": "flow",
+     "d": "M126 128 L186 96",
+     "order": 25,
+     "budget": [
+      3,
+      12
+     ],
+     "band": 3,
+     "arch": "line"
     }
    ]
   },
@@ -1146,319 +1172,256 @@
     },
     {
      "mode": "flow",
-     "d": "M178 400 Q256 320 334 400",
+     "d": "M178 400 Q256 330 334 400",
      "order": 3,
      "budget": [
       3,
       12
      ],
      "band": 1,
-     "arch": "arc",
-     "segs": 2
+     "arch": "arc"
     },
     {
      "mode": "flow",
-     "d": "M186 292 L326 292",
+     "d": "M186 284 L326 284",
      "order": 4,
      "budget": [
       3,
       12
      ],
      "band": 1,
-     "arch": "line",
-     "segs": 2
+     "arch": "line"
     },
     {
      "mode": "flow",
-     "d": "M204 292 L232 200",
+     "d": "M212 284 L236 196",
      "order": 5,
      "budget": [
-      2,
-      9
+      3,
+      12
      ],
      "band": 2,
      "arch": "line"
     },
     {
      "mode": "flow",
-     "d": "M308 292 L280 200",
+     "d": "M300 284 L276 196",
      "order": 6,
      "budget": [
-      2,
-      9
+      3,
+      12
      ],
      "band": 2,
      "arch": "line"
     },
     {
      "mode": "flow",
-     "d": "M212 280 L300 254",
+     "d": "M216 256 L296 256",
      "order": 7,
      "budget": [
-      2,
-      9
+      3,
+      12
      ],
      "band": 3,
-     "arch": "zigzag"
+     "arch": "line"
     },
     {
      "mode": "flow",
-     "d": "M298 267 L214 241",
+     "d": "M222 226 L290 226",
      "order": 8,
      "budget": [
-      2,
-      9
+      3,
+      12
      ],
      "band": 3,
-     "arch": "zigzag"
+     "arch": "line"
     },
     {
      "mode": "flow",
-     "d": "M216 254 L296 228",
+     "d": "M228 192 L284 192",
      "order": 9,
      "budget": [
-      2,
-      9
+      3,
+      12
      ],
-     "band": 3,
-     "arch": "zigzag"
+     "band": 2,
+     "arch": "line"
     },
     {
      "mode": "flow",
-     "d": "M294 241 L218 215",
+     "d": "M238 188 L252 112",
      "order": 10,
      "budget": [
-      2,
-      9
+      3,
+      12
      ],
-     "band": 3,
-     "arch": "zigzag"
+     "band": 2,
+     "arch": "line"
     },
     {
      "mode": "flow",
-     "d": "M220 228 L292 202",
+     "d": "M274 188 L260 112",
      "order": 11,
      "budget": [
-      2,
-      9
+      3,
+      12
      ],
-     "band": 3,
-     "arch": "zigzag"
+     "band": 2,
+     "arch": "line"
     },
     {
      "mode": "flow",
-     "d": "M290 215 L222 189",
+     "d": "M154 44 L256 96",
      "order": 12,
      "budget": [
-      2,
-      9
+      3,
+      12
      ],
      "band": 3,
-     "arch": "zigzag"
+     "arch": "line"
     },
     {
      "mode": "flow",
-     "d": "M222 200 L290 200",
+     "d": "M256 96 L358 44",
      "order": 13,
      "budget": [
-      2,
-      9
+      3,
+      12
      ],
-     "band": 2,
+     "band": 3,
      "arch": "line"
     },
     {
      "mode": "flow",
-     "d": "M236 200 L248 120",
+     "d": "M236 74 Q256 58 276 74",
      "order": 14,
      "budget": [
-      2,
-      9
+      3,
+      12
      ],
      "band": 2,
-     "arch": "line"
+     "arch": "arc"
     },
     {
      "mode": "flow",
-     "d": "M276 200 L264 120",
+     "d": "M60 430 L200 430",
      "order": 15,
      "budget": [
-      2,
-      9
+      3,
+      12
      ],
      "band": 2,
      "arch": "line"
     },
     {
      "mode": "flow",
-     "d": "M240 190 L272 173",
+     "d": "M312 430 L452 430",
      "order": 16,
      "budget": [
-      2,
-      9
-     ],
-     "band": 3,
-     "arch": "zigzag"
-    },
-    {
-     "mode": "flow",
-     "d": "M271 173 L241 156",
-     "order": 17,
-     "budget": [
-      2,
-      9
-     ],
-     "band": 3,
-     "arch": "zigzag"
-    },
-    {
-     "mode": "flow",
-     "d": "M242 156 L270 139",
-     "order": 18,
-     "budget": [
-      2,
-      9
-     ],
-     "band": 3,
-     "arch": "zigzag"
-    },
-    {
-     "mode": "flow",
-     "d": "M269 139 L243 122",
-     "order": 19,
-     "budget": [
-      2,
-      9
-     ],
-     "band": 3,
-     "arch": "zigzag"
-    },
-    {
-     "mode": "flow",
-     "d": "M246 120 L266 120",
-     "order": 20,
-     "budget": [
-      2,
-      9
+      3,
+      12
      ],
      "band": 2,
      "arch": "line"
     },
     {
-     "mode": "stack",
-     "x": 256,
-     "y": 68,
-     "size": 20,
+     "mode": "flow",
+     "d": "M50 120 Q100 84 150 120",
+     "order": 17,
+     "budget": [
+      3,
+      12
+     ],
+     "band": 3,
+     "arch": "arc"
+    },
+    {
+     "mode": "flow",
+     "d": "M360 96 Q410 60 460 96",
+     "order": 18,
+     "budget": [
+      3,
+      12
+     ],
+     "band": 3,
+     "arch": "arc"
+    },
+    {
+     "mode": "flow",
+     "d": "M49 400 L84 316 L119 400",
+     "order": 19,
+     "budget": [
+      3,
+      12
+     ],
+     "band": 2,
+     "arch": "outline"
+    },
+    {
+     "mode": "flow",
+     "d": "M399 400 L430 324 L461 400",
+     "order": 20,
+     "budget": [
+      3,
+      12
+     ],
+     "band": 2,
+     "arch": "outline"
+    },
+    {
+     "mode": "flow",
+     "d": "M156 150 q12 -12 24 0 q12 -12 24 0",
      "order": 21,
      "budget": [
       3,
       12
      ],
-     "band": 2,
-     "arch": "stack",
-     "ghost": 3
+     "band": 3,
+     "arch": "wave"
     },
     {
      "mode": "flow",
-     "d": "M80 430 L200 430",
+     "d": "M310 130 q10 -10 20 0 q10 -10 20 0",
      "order": 22,
-     "budget": [
-      2,
-      9
-     ],
-     "band": 3,
-     "arch": "line"
-    },
-    {
-     "mode": "flow",
-     "d": "M100 426 L230 426",
-     "order": 23,
-     "budget": [
-      2,
-      9
-     ],
-     "band": 3,
-     "arch": "line"
-    },
-    {
-     "mode": "flow",
-     "d": "M120 422 L260 422",
-     "order": 24,
-     "budget": [
-      2,
-      9
-     ],
-     "band": 3,
-     "arch": "line"
-    },
-    {
-     "mode": "flow",
-     "d": "M60 120 Q110 80 160 120",
-     "order": 25,
-     "budget": [
-      2,
-      9
-     ],
-     "band": 3,
-     "arch": "arc"
-    },
-    {
-     "mode": "flow",
-     "d": "M360 90 Q410 55 460 90",
-     "order": 26,
-     "budget": [
-      2,
-      9
-     ],
-     "band": 3,
-     "arch": "arc"
-    },
-    {
-     "mode": "flow",
-     "d": "M410 400 L470 400",
-     "order": 27,
-     "budget": [
-      2,
-      9
-     ],
-     "band": 3,
-     "arch": "line"
-    },
-    {
-     "mode": "flow",
-     "d": "M50 400 L110 400",
-     "order": 28,
-     "budget": [
-      2,
-      9
-     ],
-     "band": 3,
-     "arch": "line"
-    },
-    {
-     "mode": "flow",
-     "d": "M230 110 Q256 92 282 110",
-     "order": 29,
-     "budget": [
-      2,
-      9
-     ],
-     "band": 3,
-     "arch": "arc"
-    },
-    {
-     "mode": "stack",
-     "x": 256,
-     "y": 34,
-     "size": 18,
-     "order": 30,
      "budget": [
       3,
       12
      ],
-     "band": 4,
-     "arch": "stack",
-     "ghost": 2
+     "band": 3,
+     "arch": "wave"
+    },
+    {
+     "mode": "flow",
+     "d": "M96 56 Q120 36 144 56",
+     "order": 23,
+     "budget": [
+      3,
+      12
+     ],
+     "band": 3,
+     "arch": "arc"
+    },
+    {
+     "mode": "flow",
+     "d": "M64 462 L194 462",
+     "order": 24,
+     "budget": [
+      3,
+      12
+     ],
+     "band": 3,
+     "arch": "line"
+    },
+    {
+     "mode": "flow",
+     "d": "M318 462 L448 462",
+     "order": 25,
+     "budget": [
+      3,
+      12
+     ],
+     "band": 3,
+     "arch": "line"
     }
    ]
   },
@@ -1472,679 +1435,564 @@
    "paths": [
     {
      "mode": "flow",
-     "d": "M30 150 L180 146",
+     "d": "M30 30 Q256 14 482 30",
      "order": 1,
      "budget": [
       3,
       14
      ],
      "band": 1,
-     "arch": "line",
-     "segs": 3
+     "arch": "line"
     },
     {
      "mode": "flow",
-     "d": "M332 146 L482 150",
+     "d": "M30 60 L170 56",
      "order": 2,
      "budget": [
       3,
       14
      ],
      "band": 1,
-     "arch": "line",
-     "segs": 3
+     "arch": "line"
     },
     {
      "mode": "flow",
-     "d": "M30 190 Q110 170 180 186",
+     "d": "M342 56 L482 60",
      "order": 3,
      "budget": [
       3,
       14
      ],
      "band": 1,
-     "arch": "wave",
-     "segs": 3
+     "arch": "line"
     },
     {
      "mode": "flow",
-     "d": "M332 186 Q410 168 482 190",
+     "d": "M30 104 L170 100",
      "order": 4,
      "budget": [
       3,
       14
      ],
      "band": 1,
-     "arch": "wave",
-     "segs": 3
+     "arch": "line"
     },
     {
      "mode": "flow",
-     "d": "M30 230 Q100 210 170 226",
+     "d": "M342 100 L482 104",
      "order": 5,
      "budget": [
       3,
       14
      ],
      "band": 1,
-     "arch": "wave",
-     "segs": 3
+     "arch": "line"
     },
     {
      "mode": "flow",
-     "d": "M342 226 Q412 208 482 230",
+     "d": "M30 148 L170 144",
      "order": 6,
      "budget": [
       3,
       14
      ],
      "band": 1,
-     "arch": "wave",
-     "segs": 3
+     "arch": "line"
     },
     {
      "mode": "flow",
-     "d": "M30 270 L160 268",
+     "d": "M342 144 L482 148",
      "order": 7,
      "budget": [
       3,
       14
      ],
      "band": 1,
-     "arch": "line",
-     "segs": 3
+     "arch": "line"
     },
     {
      "mode": "flow",
-     "d": "M352 268 L482 270",
+     "d": "M30 192 L170 188",
      "order": 8,
      "budget": [
       3,
       14
      ],
      "band": 1,
-     "arch": "line",
-     "segs": 3
+     "arch": "line"
     },
     {
      "mode": "flow",
-     "d": "M30 110 Q256 90 482 110",
+     "d": "M342 188 L482 192",
      "order": 9,
      "budget": [
       3,
       14
      ],
      "band": 1,
-     "arch": "line",
-     "segs": 3
+     "arch": "line"
     },
     {
      "mode": "flow",
-     "d": "M30 60 Q256 40 482 60",
+     "d": "M30 236 L170 232",
      "order": 10,
      "budget": [
       3,
       14
      ],
      "band": 1,
-     "arch": "line",
-     "segs": 3
+     "arch": "line"
     },
     {
      "mode": "flow",
-     "d": "M196 96 Q256 66 316 96",
+     "d": "M342 232 L482 236",
      "order": 11,
      "budget": [
       3,
       14
      ],
-     "band": 2,
-     "arch": "arc",
-     "segs": 3
+     "band": 1,
+     "arch": "line"
     },
     {
      "mode": "flow",
-     "d": "M186 130 Q178 200 186 270",
+     "d": "M30 280 L170 276",
      "order": 12,
      "budget": [
       3,
       14
      ],
-     "band": 2,
-     "arch": "wave",
-     "segs": 3
+     "band": 1,
+     "arch": "line"
     },
     {
      "mode": "flow",
-     "d": "M200 140 Q194 210 202 280",
+     "d": "M342 276 L482 280",
      "order": 13,
      "budget": [
       3,
       14
      ],
-     "band": 2,
-     "arch": "wave",
-     "segs": 3
+     "band": 1,
+     "arch": "line"
     },
     {
      "mode": "flow",
-     "d": "M214 150 Q210 216 218 286",
+     "d": "M186 96 Q176 190 190 284",
      "order": 14,
      "budget": [
       3,
       14
      ],
      "band": 2,
-     "arch": "wave",
-     "segs": 3
+     "arch": "wave"
     },
     {
      "mode": "flow",
-     "d": "M326 130 Q334 200 326 270",
+     "d": "M157 104 Q147 190 161 278",
      "order": 15,
      "budget": [
       3,
       14
      ],
      "band": 2,
-     "arch": "wave",
-     "segs": 3
+     "arch": "wave"
     },
     {
      "mode": "flow",
-     "d": "M312 140 Q318 210 310 280",
+     "d": "M128 112 Q118 190 132 272",
      "order": 16,
      "budget": [
       3,
       14
      ],
      "band": 2,
-     "arch": "wave",
-     "segs": 3
+     "arch": "wave"
     },
     {
      "mode": "flow",
-     "d": "M298 150 Q302 216 294 286",
+     "d": "M326 96 Q336 190 322 284",
      "order": 17,
      "budget": [
       3,
       14
      ],
      "band": 2,
-     "arch": "wave",
-     "segs": 3
+     "arch": "wave"
     },
     {
      "mode": "flow",
-     "d": "M186 96 Q176 160 186 224",
+     "d": "M355 104 Q365 190 351 278",
      "order": 18,
      "budget": [
       3,
       14
      ],
      "band": 2,
-     "arch": "arc",
-     "segs": 3
+     "arch": "wave"
     },
     {
      "mode": "flow",
-     "d": "M326 96 Q336 160 326 224",
+     "d": "M384 112 Q394 190 380 272",
      "order": 19,
      "budget": [
       3,
       14
      ],
      "band": 2,
-     "arch": "arc",
-     "segs": 3
+     "arch": "wave"
     },
     {
      "mode": "flow",
-     "d": "M196 84 Q256 58 316 84",
+     "d": "M196 84 Q256 56 316 84",
      "order": 20,
      "budget": [
       3,
       14
      ],
      "band": 2,
-     "arch": "arc",
-     "segs": 3
+     "arch": "arc"
     },
     {
      "mode": "flow",
-     "d": "M206 108 Q256 92 306 108",
+     "d": "M208 128 Q200 200 216 264",
      "order": 21,
      "budget": [
       3,
       14
      ],
-     "band": 2,
-     "arch": "arc",
-     "segs": 3
+     "band": 3,
+     "arch": "outline"
     },
     {
      "mode": "flow",
-     "d": "M226 300 Q256 316 286 300",
+     "d": "M304 128 Q312 200 296 264",
      "order": 22,
      "budget": [
       3,
       14
      ],
-     "band": 2,
-     "arch": "arc",
-     "segs": 3
+     "band": 3,
+     "arch": "outline"
     },
     {
      "mode": "flow",
-     "d": "M206 130 Q198 200 216 268",
+     "d": "M216 264 Q256 300 296 264",
      "order": 23,
      "budget": [
-      2,
-      9
+      3,
+      14
      ],
      "band": 3,
-     "arch": "outline",
-     "segs": 2
+     "arch": "arc"
     },
     {
      "mode": "flow",
-     "d": "M306 130 Q314 200 296 268",
+     "d": "M222 156 Q256 142 290 156",
      "order": 24,
      "budget": [
-      2,
-      9
+      3,
+      14
      ],
      "band": 3,
-     "arch": "outline",
-     "segs": 2
+     "arch": "arc"
     },
     {
      "mode": "flow",
-     "d": "M216 268 Q256 306 296 268",
+     "d": "M256 172 L256 232",
      "order": 25,
      "budget": [
-      2,
-      9
+      3,
+      14
      ],
      "band": 3,
-     "arch": "arc",
-     "segs": 2
+     "arch": "line"
     },
     {
      "mode": "flow",
-     "d": "M238 320 L274 320",
+     "d": "M224 292 L224 356",
      "order": 26,
      "budget": [
-      2,
-      9
+      3,
+      14
      ],
      "band": 3,
-     "arch": "line",
-     "segs": 2
+     "arch": "line"
     },
     {
      "mode": "flow",
-     "d": "M232 296 L232 336",
+     "d": "M288 292 L288 356",
      "order": 27,
      "budget": [
-      2,
-      9
+      3,
+      14
      ],
      "band": 3,
-     "arch": "line",
-     "segs": 2
+     "arch": "line"
     },
     {
      "mode": "flow",
-     "d": "M280 296 L280 336",
+     "d": "M186 310 Q140 348 130 408",
      "order": 28,
      "budget": [
-      2,
-      9
+      3,
+      14
      ],
-     "band": 3,
-     "arch": "line",
-     "segs": 2
+     "band": 2,
+     "arch": "arc"
     },
     {
      "mode": "flow",
-     "d": "M222 176 Q238 168 252 176",
+     "d": "M326 310 Q372 348 382 408",
      "order": 29,
      "budget": [
-      2,
-      9
+      3,
+      14
      ],
-     "band": 3,
-     "arch": "arc",
-     "segs": 2
+     "band": 2,
+     "arch": "arc"
     },
     {
      "mode": "flow",
-     "d": "M260 176 Q274 168 290 176",
+     "d": "M234 352 Q256 366 278 352",
      "order": 30,
      "budget": [
-      2,
-      9
+      3,
+      14
      ],
-     "band": 3,
-     "arch": "arc",
-     "segs": 2
+     "band": 2,
+     "arch": "arc"
     },
     {
-     "mode": "stack",
-     "x": 238,
-     "y": 192,
-     "size": 12,
+     "mode": "flow",
+     "d": "M204 384 Q256 408 308 384",
      "order": 31,
      "budget": [
       3,
       14
      ],
-     "band": 3,
-     "arch": "stack",
-     "ghost": 2
+     "band": 2,
+     "arch": "arc"
     },
     {
-     "mode": "stack",
-     "x": 274,
-     "y": 192,
-     "size": 12,
+     "mode": "flow",
+     "d": "M190 424 Q256 452 322 424",
      "order": 32,
      "budget": [
       3,
       14
      ],
-     "band": 3,
-     "arch": "stack",
-     "ghost": 2
+     "band": 2,
+     "arch": "arc"
     },
     {
      "mode": "flow",
-     "d": "M256 200 L256 236",
+     "d": "M150 452 Q145 472 148 492",
      "order": 33,
      "budget": [
-      2,
-      9
+      3,
+      14
      ],
-     "band": 3,
-     "arch": "line",
-     "segs": 2
+     "band": 2,
+     "arch": "wave"
     },
     {
      "mode": "flow",
-     "d": "M244 224 Q256 230 268 224",
+     "d": "M174 452 Q169 472 172 492",
      "order": 34,
      "budget": [
-      2,
-      9
+      3,
+      14
      ],
-     "band": 3,
-     "arch": "arc",
-     "segs": 2
+     "band": 2,
+     "arch": "wave"
     },
     {
      "mode": "flow",
-     "d": "M186 300 Q150 340 140 400",
+     "d": "M198 452 Q193 472 196 492",
      "order": 35,
      "budget": [
       3,
       14
      ],
      "band": 2,
-     "arch": "arc",
-     "segs": 3
+     "arch": "wave"
     },
     {
      "mode": "flow",
-     "d": "M326 300 Q362 340 372 400",
+     "d": "M222 452 Q217 472 220 492",
      "order": 36,
      "budget": [
       3,
       14
      ],
      "band": 2,
-     "arch": "arc",
-     "segs": 3
+     "arch": "wave"
     },
     {
      "mode": "flow",
-     "d": "M156 340 Q150 400 160 468",
+     "d": "M246 452 Q241 472 244 492",
      "order": 37,
      "budget": [
       3,
       14
      ],
      "band": 2,
-     "arch": "wave",
-     "segs": 3
+     "arch": "wave"
     },
     {
      "mode": "flow",
-     "d": "M170 340 Q164 400 174 468",
+     "d": "M270 452 Q275 472 272 492",
      "order": 38,
      "budget": [
       3,
       14
      ],
      "band": 2,
-     "arch": "wave",
-     "segs": 3
+     "arch": "wave"
     },
     {
      "mode": "flow",
-     "d": "M184 340 Q178 400 188 468",
+     "d": "M294 452 Q299 472 296 492",
      "order": 39,
      "budget": [
       3,
       14
      ],
      "band": 2,
-     "arch": "wave",
-     "segs": 3
+     "arch": "wave"
     },
     {
      "mode": "flow",
-     "d": "M198 340 Q192 400 202 468",
+     "d": "M318 452 Q323 472 320 492",
      "order": 40,
      "budget": [
       3,
       14
      ],
      "band": 2,
-     "arch": "wave",
-     "segs": 3
+     "arch": "wave"
     },
     {
      "mode": "flow",
-     "d": "M212 340 Q206 400 216 468",
+     "d": "M342 452 Q347 472 344 492",
      "order": 41,
      "budget": [
       3,
       14
      ],
      "band": 2,
-     "arch": "wave",
-     "segs": 3
+     "arch": "wave"
     },
     {
      "mode": "flow",
-     "d": "M300 340 Q306 400 296 468",
+     "d": "M366 452 Q371 472 368 492",
      "order": 42,
      "budget": [
       3,
       14
      ],
      "band": 2,
-     "arch": "wave",
-     "segs": 3
+     "arch": "wave"
     },
     {
      "mode": "flow",
-     "d": "M314 340 Q320 400 310 468",
+     "d": "M150 424 Q200 448 248 456",
      "order": 43,
      "budget": [
       3,
       14
      ],
-     "band": 2,
-     "arch": "wave",
-     "segs": 3
+     "band": 3,
+     "arch": "arc"
     },
     {
      "mode": "flow",
-     "d": "M328 340 Q334 400 324 468",
+     "d": "M248 456 Q292 464 330 452",
      "order": 44,
      "budget": [
       3,
       14
      ],
-     "band": 2,
-     "arch": "wave",
-     "segs": 3
+     "band": 3,
+     "arch": "arc"
     },
     {
      "mode": "flow",
-     "d": "M342 340 Q348 400 338 468",
+     "d": "M30 330 L130 324",
      "order": 45,
      "budget": [
       3,
       14
      ],
-     "band": 2,
-     "arch": "wave",
-     "segs": 3
+     "band": 1,
+     "arch": "line"
     },
     {
      "mode": "flow",
-     "d": "M356 340 Q362 400 352 468",
+     "d": "M382 324 L482 330",
      "order": 46,
      "budget": [
       3,
       14
      ],
-     "band": 2,
-     "arch": "wave",
-     "segs": 3
+     "band": 1,
+     "arch": "line"
     },
     {
      "mode": "flow",
-     "d": "M230 330 Q256 344 282 330",
+     "d": "M30 374 L118 370",
      "order": 47,
      "budget": [
-      2,
-      9
+      3,
+      14
      ],
-     "band": 2,
-     "arch": "arc",
-     "segs": 3
+     "band": 1,
+     "arch": "line"
     },
     {
      "mode": "flow",
-     "d": "M210 350 Q256 372 302 350",
+     "d": "M394 370 L482 374",
      "order": 48,
      "budget": [
-      2,
-      9
+      3,
+      14
      ],
-     "band": 2,
-     "arch": "arc",
-     "segs": 3
+     "band": 1,
+     "arch": "line"
     },
     {
      "mode": "flow",
-     "d": "M190 470 Q240 450 290 470",
+     "d": "M196 74 Q256 44 316 74",
      "order": 49,
      "budget": [
       3,
       14
      ],
-     "band": 3,
-     "arch": "arc",
-     "segs": 2
+     "band": 2,
+     "arch": "arc"
     },
     {
      "mode": "flow",
-     "d": "M250 470 Q300 456 344 476",
+     "d": "M226 288 Q256 302 286 288",
      "order": 50,
      "budget": [
       3,
       14
      ],
      "band": 3,
-     "arch": "arc",
-     "segs": 2
+     "arch": "arc"
     },
     {
      "mode": "flow",
-     "d": "M296 470 L330 486",
+     "d": "M230 250 Q256 266 282 250",
      "order": 51,
      "budget": [
-      2,
-      9
-     ],
-     "band": 3,
-     "arch": "line",
-     "segs": 2
-    },
-    {
-     "mode": "flow",
-     "d": "M308 474 L340 486",
-     "order": 52,
-     "budget": [
-      2,
-      9
-     ],
-     "band": 3,
-     "arch": "line",
-     "segs": 2
-    },
-    {
-     "mode": "flow",
-     "d": "M320 470 L350 486",
-     "order": 53,
-     "budget": [
-      2,
-      9
-     ],
-     "band": 3,
-     "arch": "line",
-     "segs": 2
-    },
-    {
-     "mode": "flow",
-     "d": "M332 474 L360 486",
-     "order": 54,
-     "budget": [
-      2,
-      9
-     ],
-     "band": 3,
-     "arch": "line",
-     "segs": 2
-    },
-    {
-     "mode": "flow",
-     "d": "M236 246 Q256 252 276 246",
-     "order": 55,
-     "budget": [
-      2,
-      9
+      3,
+      14
      ],
      "band": 4,
-     "arch": "arc",
-     "segs": 2
-    },
-    {
-     "mode": "flow",
-     "d": "M234 256 Q256 270 278 256",
-     "order": 56,
-     "budget": [
-      2,
-      9
-     ],
-     "band": 4,
-     "arch": "arc",
-     "segs": 2
+     "arch": "arc"
     }
    ],
    "provenance": {

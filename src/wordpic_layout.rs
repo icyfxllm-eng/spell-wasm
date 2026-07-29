@@ -27,9 +27,12 @@ pub const FLOOR: f32 = 13.0;
 /// L4: split polylines at vertices sharper than this (degrees).
 pub const CORNER_DEG: f32 = 35.0;
 /// L7 band → [min, max] solved size at the reference viewport.
-pub const BAND_SIZE: [(f32, f32); 4] = [(22.0, 46.0), (16.0, 32.0), (13.0, 24.0), (15.0, 30.0)];
-/// V3: a placed word must cover ≥95% of its segment.
-pub const FILL_MIN: f32 = 0.95;
+pub const BAND_SIZE: [(f32, f32); 4] = [(22.0, 46.0), (16.0, 32.0), (13.0, 24.0), (13.0, 30.0)];
+/// V3 (calibrated on the first solver renders): a word covers 78–94% of its
+/// segment, centered — full-bleed 100% jammed neighbors into each other
+/// ("cookfell"), which reads as overlap even when geometry says contact.
+pub const FILL_MIN: f32 = 0.78;
+pub const FILL_MAX: f32 = 0.94;
 
 /// Mean glyph advance as a fraction of font size, per script class. Rough by
 /// design — the solver only needs to be consistent (V2), not typographically
@@ -122,6 +125,31 @@ pub fn flatten(d: &str) -> Poly {
                     pts.push(pos);
                 }
             }
+            'l' if n.len() >= 2 => {
+                for ch in n.chunks(2) {
+                    pos = (pos.0 + ch[0], pos.1 + ch[1]);
+                    pts.push(pos);
+                }
+            }
+            'q' if n.len() >= 4 => {
+                for ch in n.chunks(4) {
+                    if ch.len() < 4 {
+                        break;
+                    }
+                    let (x0, y0) = pos;
+                    let (cx, cy, x1, y1) =
+                        (x0 + ch[0], y0 + ch[1], x0 + ch[2], y0 + ch[3]);
+                    for k in 1..=16 {
+                        let t = k as f32 / 16.0;
+                        let u = 1.0 - t;
+                        pts.push((
+                            u * u * x0 + 2.0 * u * t * cx + t * t * x1,
+                            u * u * y0 + 2.0 * u * t * cy + t * t * y1,
+                        ));
+                    }
+                    pos = (x1, y1);
+                }
+            }
             'Q' if n.len() >= 4 => {
                 let (x0, y0) = pos;
                 let (cx, cy, x1, y1) = (n[0], n[1], n[2], n[3]);
@@ -146,7 +174,8 @@ pub fn flatten(d: &str) -> Poly {
                 let r = rx.max(dd);
                 let h = (r * r - dd * dd).max(0.0).sqrt();
                 let (ux, uy) = (-dy / dd, dx / dd);
-                let sign = if (laf > 0.5) == (sf > 0.5) { 1.0 } else { -1.0 };
+                // W3C F.6.5: center sits on the +normal side when laf != sf.
+                let sign = if (laf > 0.5) != (sf > 0.5) { 1.0 } else { -1.0 };
                 let (cx, cy) = (mx + sign * h * ux, my + sign * h * uy);
                 let a0 = (y0 - cy).atan2(x0 - cx);
                 let a1 = (y1 - cy).atan2(x1 - cx);
@@ -157,9 +186,9 @@ pub fn flatten(d: &str) -> Poly {
                 if sf <= 0.5 && sweep > 0.0 {
                     sweep -= std::f32::consts::TAU;
                 }
-                if laf > 0.5 && sweep.abs() < std::f32::consts::PI {
-                    sweep += if sweep >= 0.0 { -std::f32::consts::TAU } else { std::f32::consts::TAU };
-                }
+                // laf is fully encoded by the center choice for rx == ry; no
+                // further sweep surgery (a one-ULP float artifact here once
+                // flipped a semicircle onto its twin — the doubled-smiley bug).
                 for k in 1..=24 {
                     let a = a0 + sweep * k as f32 / 24.0;
                     pts.push((cx + r * a.cos(), cy + r * a.sin()));
@@ -394,23 +423,19 @@ pub fn solve(slot: &Slot, lang: &str, units: u32) -> Option<Placement> {
         return None;
     }
     let adv = advance(lang);
-    let natural = len / (units as f32 * adv);
+    // Solve toward the padded target: word extent ≈ FILL_MAX of the segment.
+    let natural = len * FILL_MAX / (units as f32 * adv);
     let size = natural.clamp(lo, hi);
     let word_len = units as f32 * adv * size;
-    let fill = (word_len / len).min(1.0);
-    if fill < FILL_MIN {
-        // Under-fills even at band max → needs a longer word (or the manifest
-        // needed more segments; the sweep catches structural cases).
-        if size >= hi - 0.01 {
-            return None;
-        }
+    let fill = word_len / len;
+    if fill < FILL_MIN && size >= hi - 0.01 {
+        return None; // under-fills even at band max → longer word needed
     }
-    if word_len > len * 1.02 && size <= lo + 0.01 {
-        // Over-long even at the floor → next candidate (never squeeze, L3).
-        return None;
+    if fill > FILL_MAX + 0.02 && size <= lo + 0.01 {
+        return None; // over-long even at the floor → never squeeze (L3)
     }
     let gaps = units.saturating_sub(1).max(1) as f32;
-    let spacing = ((len - word_len) / gaps).clamp(0.0, size * 0.6);
+    let spacing = ((len * FILL_MAX - word_len) / gaps).clamp(0.0, size * 0.5);
     // Bounds: sample the polyline, inflate by size/2 above+below the baseline.
     let (mut bx0, mut by0, mut bx1, mut by1) = (f32::MAX, f32::MAX, f32::MIN, f32::MIN);
     for k in 0..=8 {
@@ -565,16 +590,97 @@ mod tests {
     use super::*;
     use crate::wordpic;
 
+    /// L10 render emitter: ghost + solver-filled SVGs for every picture,
+    /// straight from the engine (the review artifact generator).
+    #[test]
+    #[ignore]
+    fn emit_renders() {
+        let dir = std::env::var("WP_RENDER_DIR").unwrap_or_else(|_| "/tmp/wp-renders".into());
+        std::fs::create_dir_all(&dir).unwrap();
+        for p in &wordpic::manifest().pictures {
+            let slots = slots_for_lang(p, "en");
+            let (words, placements, _) = layout_feed(p, "en", 1, &[]);
+            for filled in [false, true] {
+                let mut svg = String::from(
+                    "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 512 512\" width=\"512\" height=\"512\"><rect width=\"512\" height=\"512\" fill=\"#101623\"/>",
+                );
+                for (si, sl) in slots.iter().enumerate() {
+                    let placed = filled && si < placements.len();
+                    if let Some(poly) = &sl.poly {
+                        let d: String = poly
+                            .pts
+                            .iter()
+                            .enumerate()
+                            .map(|(k, (x, y))| format!("{}{x:.1} {y:.1} ", if k == 0 { "M" } else { "L" }))
+                            .collect();
+                        if !placed {
+                            svg.push_str(&format!(
+                                "<path d=\"{d}\" fill=\"none\" stroke=\"#3a4763\" stroke-width=\"3\" stroke-linecap=\"round\"/>"
+                            ));
+                        } else {
+                            let pl = &placements[si];
+                            let pid = format!("r{si}");
+                            svg.push_str(&format!("<defs><path id=\"{pid}\" d=\"{d}\"/></defs>"));
+                            svg.push_str(&format!(
+                                "<text font-size=\"{:.0}\" fill=\"#e8ecf5\" font-family=\"Helvetica\" letter-spacing=\"{:.1}\" text-anchor=\"middle\"><textPath href=\"#{pid}\" startOffset=\"50%\">{}</textPath></text>",
+                                pl.size, pl.spacing, words[si]
+                            ));
+                        }
+                    } else if let Some((x, y, cell, height)) = sl.stack {
+                        if !placed {
+                            let n = (height / cell).round() as i32;
+                            for k in 0..n {
+                                svg.push_str(&format!(
+                                    "<rect x=\"{:.0}\" y=\"{:.0}\" width=\"{:.0}\" height=\"{:.0}\" rx=\"4\" fill=\"none\" stroke=\"#3a4763\" stroke-width=\"2\"/>",
+                                    x - cell * 0.42,
+                                    y + k as f32 * cell - cell * 0.72,
+                                    cell * 0.84,
+                                    cell * 0.84
+                                ));
+                            }
+                        } else {
+                            let pl = &placements[si];
+                            for (k, ch) in words[si].chars().enumerate() {
+                                svg.push_str(&format!(
+                                    "<text x=\"{x:.0}\" y=\"{:.0}\" font-size=\"{:.0}\" fill=\"#e8ecf5\" font-family=\"Helvetica\" text-anchor=\"middle\">{}</text>",
+                                    y + k as f32 * pl.size,
+                                    pl.size,
+                                    ch
+                                ));
+                            }
+                        }
+                    }
+                }
+                svg.push_str("</svg>");
+                let name = format!("{dir}/{}-{}.svg", p.id, if filled { "filled" } else { "ghost" });
+                std::fs::write(&name, svg).unwrap();
+            }
+            println!("{}: {} slots, {} filled", p.id, slots.len(), words.len());
+        }
+    }
+
     #[test]
     #[ignore]
     fn debug_slots() {
-        for pid in ["smiley", "star"] {
+        for pid in ["cat", "smiley"] {
             let p = wordpic::picture(pid).unwrap();
             let slots = slots_for_lang(p, "en");
             println!("== {pid}: {} slots", slots.len());
-            // Inline diagnosis of one failing slot (slot 8 on smiley).
             if pid == "smiley" {
-                let sl = &slots[8];
+                let top = flatten("M76 256 A180 180 0 0 1 436 256");
+                let bot = flatten("M76 256 A180 180 0 1 0 436 256");
+                println!("  RAW top mid={:?} bot mid={:?}", top.point_at(0.5), bot.point_at(0.5));
+                println!("  RAW top len={:.0} bot len={:.0}", top.len(), bot.len());
+                for si in [0usize, 8] {
+                    if let Some(pl) = &slots[si].poly {
+                        println!("  slot{si} p{} start={:?} mid={:?} end={:?} len={:.0}",
+                            slots[si].path_idx, pl.point_at(0.0), pl.point_at(0.5), pl.point_at(1.0), pl.len());
+                    }
+                }
+            }
+            // Inline diagnosis of one failing slot.
+            if pid == "cat" {
+                let sl = &slots[2];
                 let pool = crate::words::tier_for("en", &p.tier);
                 let q = &p.paths[sl.path_idx];
                 let mut cand = 0;
@@ -672,8 +778,20 @@ mod tests {
                 for seed in 1..=5u64 {
                     let (words, placements, slots) = layout_feed(p, code, seed, &[]);
                     if words.len() != slots.len() {
-                        failures.push(format!("{}/{}/{}: {}/{} slots unfilled",
-                            p.id, code, seed, words.len(), slots.len()));
+                        let got: Vec<usize> = placements.iter().map(|pl| pl.slot).collect();
+                        let missing: Vec<String> = (0..slots.len())
+                            .filter(|i| !got.contains(i))
+                            .map(|i| {
+                                let sl = &slots[i];
+                                match &sl.poly {
+                                    Some(pl) => format!("s{i}(p{} len{:.0} b{})", sl.path_idx, pl.len(), sl.band),
+                                    None => format!("s{i}(p{} STACK)", sl.path_idx),
+                                }
+                            })
+                            .collect();
+                        failures.push(format!("{}/{}/{}: unfilled {} of {} — {}",
+                            p.id, code, seed, slots.len() - words.len(), slots.len(),
+                            missing.join(", ")));
                         continue;
                     }
                     for pl in &placements {
@@ -688,8 +806,10 @@ mod tests {
                         for j in i + 1..placements.len() {
                             if overlaps(&placements[i], &placements[j]) {
                                 failures.push(format!(
-                                    "{}/{}/{}: overlap words '{}'×'{}'",
-                                    p.id, code, seed, words[i], words[j]
+                                    "{}/{}/{}: overlap '{}'(s{} p{})×'{}'(s{} p{})",
+                                    p.id, code, seed,
+                                    words[i], placements[i].slot, placements[i].path_idx,
+                                    words[j], placements[j].slot, placements[j].path_idx
                                 ));
                             }
                         }
@@ -708,8 +828,12 @@ mod tests {
             }
             let mut rows: Vec<_> = hist.into_iter().collect();
             rows.sort_by(|a, b| b.1.cmp(&a.1));
-            panic!("L9 sweep failures ({}):\nHIST {:?}\n{}", failures.len(), rows,
-                failures[..failures.len().min(12)].join("\n"));
+            let smiley: Vec<&String> =
+                failures.iter().filter(|f| f.starts_with("smiley/en/1")).take(8).collect();
+            let unfilled: Vec<&String> =
+                failures.iter().filter(|f| f.contains("unfilled")).take(6).collect();
+            panic!("L9 sweep failures ({}):\nHIST {:?}\nSMILEY {:?}\nUNFILLED {:?}",
+                failures.len(), rows, smiley, unfilled);
         }
     }
 
