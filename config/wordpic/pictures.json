@@ -28,7 +28,8 @@
       10
      ],
      "band": 1,
-     "arch": "outline"
+     "arch": "outline",
+     "feature": "head"
     },
     {
      "mode": "flow",
@@ -39,7 +40,8 @@
       10
      ],
      "band": 1,
-     "arch": "outline"
+     "arch": "outline",
+     "feature": "head"
     },
     {
      "mode": "stack",
@@ -53,7 +55,8 @@
      ],
      "band": 2,
      "arch": "stack",
-     "ghost": 4
+     "ghost": 4,
+     "feature": "left eye"
     },
     {
      "mode": "stack",
@@ -67,7 +70,8 @@
      ],
      "band": 2,
      "arch": "stack",
-     "ghost": 4
+     "ghost": 4,
+     "feature": "right eye"
     },
     {
      "mode": "flow",
@@ -78,7 +82,8 @@
       10
      ],
      "band": 1,
-     "arch": "arc"
+     "arch": "arc",
+     "feature": "smile"
     }
    ]
   },
@@ -100,7 +105,8 @@
       10
      ],
      "band": 1,
-     "arch": "outline"
+     "arch": "outline",
+     "feature": "star outline"
     },
     {
      "mode": "stack",
@@ -114,7 +120,8 @@
      ],
      "band": 2,
      "arch": "stack",
-     "ghost": 4
+     "ghost": 4,
+     "feature": "top-left sparkle"
     },
     {
      "mode": "stack",
@@ -128,7 +135,8 @@
      ],
      "band": 2,
      "arch": "stack",
-     "ghost": 4
+     "ghost": 4,
+     "feature": "top-right sparkle"
     },
     {
      "mode": "flow",
@@ -139,7 +147,8 @@
       10
      ],
      "band": 2,
-     "arch": "line"
+     "arch": "line",
+     "feature": "ground"
     }
    ]
   },
@@ -154,91 +163,51 @@
    "paths": [
     {
      "mode": "flow",
-     "d": "M40 132 L224 132",
+     "d": "M146 282 Q256 176 392 300",
      "order": 1,
      "budget": [
       2,
       10
      ],
-     "band": 2,
-     "arch": "line"
+     "band": 1,
+     "arch": "outline",
+     "feature": "back"
     },
     {
      "mode": "flow",
-     "d": "M288 132 L472 132",
+     "d": "M146 318 Q256 424 392 300",
      "order": 2,
      "budget": [
       2,
       10
      ],
-     "band": 2,
-     "arch": "line"
+     "band": 1,
+     "arch": "outline",
+     "feature": "belly"
     },
     {
      "mode": "flow",
-     "d": "M200 100 L312 100",
+     "d": "M404 291 L474 238",
      "order": 3,
      "budget": [
       2,
       10
      ],
      "band": 2,
-     "arch": "line"
+     "arch": "line",
+     "feature": "upper tail fin"
     },
     {
      "mode": "flow",
-     "d": "M256 32 L256 84",
+     "d": "M404 309 L474 362",
      "order": 4,
      "budget": [
       2,
       10
      ],
-     "band": 3,
-     "arch": "line"
-    },
-    {
-     "mode": "flow",
-     "d": "M146 282 Q256 176 392 300",
-     "order": 5,
-     "budget": [
-      2,
-      10
-     ],
-     "band": 1,
-     "arch": "outline"
-    },
-    {
-     "mode": "flow",
-     "d": "M146 318 Q256 424 392 300",
-     "order": 6,
-     "budget": [
-      2,
-      10
-     ],
-     "band": 1,
-     "arch": "outline"
-    },
-    {
-     "mode": "flow",
-     "d": "M404 291 L474 238",
-     "order": 7,
-     "budget": [
-      2,
-      10
-     ],
      "band": 2,
-     "arch": "line"
-    },
-    {
-     "mode": "flow",
-     "d": "M404 309 L474 362",
-     "order": 8,
-     "budget": [
-      2,
-      10
-     ],
-     "band": 2,
-     "arch": "line"
+     "arch": "line",
+     "feature": "lower tail fin"
     }
    ]
   },
@@ -260,7 +229,8 @@
       10
      ],
      "band": 1,
-     "arch": "line"
+     "arch": "line",
+     "feature": "left roof slope"
     },
     {
      "mode": "flow",
@@ -271,7 +241,8 @@
       10
      ],
      "band": 1,
-     "arch": "line"
+     "arch": "line",
+     "feature": "right roof slope"
     },
     {
      "mode": "stack",
@@ -285,7 +256,8 @@
      ],
      "band": 2,
      "arch": "stack",
-     "ghost": 4
+     "ghost": 4,
+     "feature": "left window"
     },
     {
      "mode": "stack",
@@ -299,7 +271,8 @@
      ],
      "band": 2,
      "arch": "stack",
-     "ghost": 4
+     "ghost": 4,
+     "feature": "right window"
     },
     {
      "mode": "flow",
@@ -310,7 +283,8 @@
       10
      ],
      "band": 1,
-     "arch": "line"
+     "arch": "line",
+     "feature": "left base wall"
     },
     {
      "mode": "flow",
@@ -321,7 +295,8 @@
       10
      ],
      "band": 1,
-     "arch": "line"
+     "arch": "line",
+     "feature": "right base wall"
     },
     {
      "mode": "flow",
@@ -332,7 +307,8 @@
       10
      ],
      "band": 3,
-     "arch": "arc"
+     "arch": "arc",
+     "feature": "door"
     },
     {
      "mode": "flow",
@@ -343,7 +319,8 @@
       10
      ],
      "band": 2,
-     "arch": "arc"
+     "arch": "arc",
+     "feature": "sun"
     }
    ]
   },
@@ -365,7 +342,8 @@
       14
      ],
      "band": 1,
-     "arch": "outline"
+     "arch": "outline",
+     "feature": "head"
     },
     {
      "mode": "flow",
@@ -376,7 +354,8 @@
       14
      ],
      "band": 1,
-     "arch": "outline"
+     "arch": "outline",
+     "feature": "chin"
     },
     {
      "mode": "flow",
@@ -387,7 +366,8 @@
       14
      ],
      "band": 2,
-     "arch": "line"
+     "arch": "line",
+     "feature": "left ear"
     },
     {
      "mode": "flow",
@@ -398,7 +378,8 @@
       14
      ],
      "band": 2,
-     "arch": "line"
+     "arch": "line",
+     "feature": "right ear"
     },
     {
      "mode": "flow",
@@ -409,7 +390,8 @@
       14
      ],
      "band": 3,
-     "arch": "arc"
+     "arch": "arc",
+     "feature": "left eye"
     },
     {
      "mode": "flow",
@@ -420,7 +402,8 @@
       14
      ],
      "band": 3,
-     "arch": "arc"
+     "arch": "arc",
+     "feature": "right eye"
     },
     {
      "mode": "flow",
@@ -431,7 +414,8 @@
       14
      ],
      "band": 3,
-     "arch": "arc"
+     "arch": "arc",
+     "feature": "smile"
     },
     {
      "mode": "flow",
@@ -442,7 +426,8 @@
       14
      ],
      "band": 3,
-     "arch": "line"
+     "arch": "line",
+     "feature": "left whiskers"
     },
     {
      "mode": "flow",
@@ -453,7 +438,8 @@
       14
      ],
      "band": 3,
-     "arch": "line"
+     "arch": "line",
+     "feature": "right whiskers"
     },
     {
      "mode": "flow",
@@ -464,7 +450,8 @@
       14
      ],
      "band": 2,
-     "arch": "arc"
+     "arch": "arc",
+     "feature": "left flank"
     },
     {
      "mode": "flow",
@@ -475,7 +462,8 @@
       14
      ],
      "band": 2,
-     "arch": "arc"
+     "arch": "arc",
+     "feature": "right flank"
     },
     {
      "mode": "flow",
@@ -486,7 +474,8 @@
       14
      ],
      "band": 2,
-     "arch": "arc"
+     "arch": "arc",
+     "feature": "haunch"
     },
     {
      "mode": "flow",
@@ -497,7 +486,8 @@
       14
      ],
      "band": 2,
-     "arch": "wave"
+     "arch": "wave",
+     "feature": "tail"
     }
    ]
   },
@@ -522,7 +512,8 @@
      ],
      "band": 2,
      "arch": "stack",
-     "ghost": 6
+     "ghost": 6,
+     "feature": "left fuselage"
     },
     {
      "mode": "stack",
@@ -536,7 +527,8 @@
      ],
      "band": 2,
      "arch": "stack",
-     "ghost": 6
+     "ghost": 6,
+     "feature": "right fuselage"
     },
     {
      "mode": "flow",
@@ -547,7 +539,8 @@
       14
      ],
      "band": 1,
-     "arch": "arc"
+     "arch": "arc",
+     "feature": "nose cone"
     },
     {
      "mode": "flow",
@@ -558,7 +551,8 @@
       14
      ],
      "band": 2,
-     "arch": "line"
+     "arch": "line",
+     "feature": "left fin edge"
     },
     {
      "mode": "flow",
@@ -569,7 +563,8 @@
       14
      ],
      "band": 2,
-     "arch": "line"
+     "arch": "line",
+     "feature": "left fin base"
     },
     {
      "mode": "flow",
@@ -580,7 +575,8 @@
       14
      ],
      "band": 2,
-     "arch": "line"
+     "arch": "line",
+     "feature": "right fin edge"
     },
     {
      "mode": "flow",
@@ -591,7 +587,8 @@
       14
      ],
      "band": 2,
-     "arch": "line"
+     "arch": "line",
+     "feature": "right fin base"
     },
     {
      "mode": "flow",
@@ -602,7 +599,8 @@
       14
      ],
      "band": 3,
-     "arch": "line"
+     "arch": "line",
+     "feature": "engine nozzle"
     },
     {
      "mode": "flow",
@@ -613,7 +611,8 @@
       14
      ],
      "band": 2,
-     "arch": "arc"
+     "arch": "arc",
+     "feature": "flame plume"
     },
     {
      "mode": "flow",
@@ -624,7 +623,8 @@
       14
      ],
      "band": 3,
-     "arch": "line"
+     "arch": "line",
+     "feature": "left flame jet"
     },
     {
      "mode": "flow",
@@ -635,7 +635,8 @@
       14
      ],
      "band": 3,
-     "arch": "line"
+     "arch": "line",
+     "feature": "right flame jet"
     },
     {
      "mode": "flow",
@@ -646,7 +647,8 @@
       14
      ],
      "band": 2,
-     "arch": "arc"
+     "arch": "arc",
+     "feature": "cloud"
     },
     {
      "mode": "flow",
@@ -657,7 +659,8 @@
       14
      ],
      "band": 3,
-     "arch": "line"
+     "arch": "line",
+     "feature": "star streak"
     },
     {
      "mode": "flow",
@@ -668,7 +671,8 @@
       14
      ],
      "band": 3,
-     "arch": "line"
+     "arch": "line",
+     "feature": "star streak"
     }
    ]
   },
@@ -690,7 +694,8 @@
       14
      ],
      "band": 1,
-     "arch": "outline"
+     "arch": "outline",
+     "feature": "body"
     },
     {
      "mode": "flow",
@@ -701,7 +706,8 @@
       14
      ],
      "band": 1,
-     "arch": "arc"
+     "arch": "arc",
+     "feature": "head"
     },
     {
      "mode": "flow",
@@ -712,7 +718,8 @@
       14
      ],
      "band": 1,
-     "arch": "arc"
+     "arch": "arc",
+     "feature": "head"
     },
     {
      "mode": "flow",
@@ -723,7 +730,8 @@
       14
      ],
      "band": 2,
-     "arch": "arc"
+     "arch": "arc",
+     "feature": "left shoulder"
     },
     {
      "mode": "flow",
@@ -734,7 +742,8 @@
       14
      ],
      "band": 2,
-     "arch": "line"
+     "arch": "line",
+     "feature": "right shoulder"
     },
     {
      "mode": "flow",
@@ -745,7 +754,8 @@
       14
      ],
      "band": 2,
-     "arch": "line"
+     "arch": "line",
+     "feature": "hat brim"
     },
     {
      "mode": "flow",
@@ -756,7 +766,8 @@
       14
      ],
      "band": 3,
-     "arch": "arc"
+     "arch": "arc",
+     "feature": "hat top"
     },
     {
      "mode": "flow",
@@ -767,7 +778,8 @@
       14
      ],
      "band": 3,
-     "arch": "arc"
+     "arch": "arc",
+     "feature": "hat band"
     },
     {
      "mode": "flow",
@@ -778,7 +790,8 @@
       14
      ],
      "band": 3,
-     "arch": "line"
+     "arch": "line",
+     "feature": "brow"
     },
     {
      "mode": "flow",
@@ -789,7 +802,8 @@
       14
      ],
      "band": 2,
-     "arch": "line"
+     "arch": "line",
+     "feature": "smile"
     },
     {
      "mode": "flow",
@@ -800,7 +814,8 @@
       14
      ],
      "band": 2,
-     "arch": "line"
+     "arch": "line",
+     "feature": "buttons"
     },
     {
      "mode": "flow",
@@ -811,7 +826,8 @@
       14
      ],
      "band": 2,
-     "arch": "line"
+     "arch": "line",
+     "feature": "left arm"
     },
     {
      "mode": "flow",
@@ -822,7 +838,8 @@
       14
      ],
      "band": 3,
-     "arch": "arc"
+     "arch": "arc",
+     "feature": "right arm"
     },
     {
      "mode": "flow",
@@ -833,7 +850,8 @@
       14
      ],
      "band": 3,
-     "arch": "arc"
+     "arch": "arc",
+     "feature": "snow bank"
     },
     {
      "mode": "flow",
@@ -844,7 +862,8 @@
       14
      ],
      "band": 3,
-     "arch": "line"
+     "arch": "line",
+     "feature": "left drift"
     },
     {
      "mode": "flow",
@@ -855,7 +874,8 @@
       14
      ],
      "band": 2,
-     "arch": "arc"
+     "arch": "arc",
+     "feature": "right drift"
     }
    ]
   },
@@ -877,7 +897,8 @@
       14
      ],
      "band": 1,
-     "arch": "outline"
+     "arch": "outline",
+     "feature": "chest"
     },
     {
      "mode": "flow",
@@ -888,7 +909,8 @@
       14
      ],
      "band": 1,
-     "arch": "outline"
+     "arch": "outline",
+     "feature": "back"
     },
     {
      "mode": "flow",
@@ -899,7 +921,8 @@
       14
      ],
      "band": 1,
-     "arch": "outline"
+     "arch": "outline",
+     "feature": "head"
     },
     {
      "mode": "flow",
@@ -910,7 +933,8 @@
       14
      ],
      "band": 2,
-     "arch": "arc"
+     "arch": "arc",
+     "feature": "jaw"
     },
     {
      "mode": "flow",
@@ -921,7 +945,8 @@
       14
      ],
      "band": 2,
-     "arch": "arc"
+     "arch": "arc",
+     "feature": "belly"
     },
     {
      "mode": "flow",
@@ -932,7 +957,8 @@
       14
      ],
      "band": 2,
-     "arch": "radial"
+     "arch": "radial",
+     "feature": "crest spike"
     },
     {
      "mode": "flow",
@@ -943,7 +969,8 @@
       14
      ],
      "band": 2,
-     "arch": "radial"
+     "arch": "radial",
+     "feature": "crest spike"
     },
     {
      "mode": "flow",
@@ -954,7 +981,8 @@
       14
      ],
      "band": 2,
-     "arch": "radial"
+     "arch": "radial",
+     "feature": "crest spike"
     },
     {
      "mode": "flow",
@@ -965,7 +993,8 @@
       14
      ],
      "band": 2,
-     "arch": "arc"
+     "arch": "arc",
+     "feature": "crest ridge"
     },
     {
      "mode": "flow",
@@ -976,7 +1005,8 @@
       14
      ],
      "band": 2,
-     "arch": "wave"
+     "arch": "wave",
+     "feature": "tail"
     },
     {
      "mode": "flow",
@@ -987,7 +1017,8 @@
       14
      ],
      "band": 2,
-     "arch": "line"
+     "arch": "line",
+     "feature": "tail barb"
     },
     {
      "mode": "flow",
@@ -998,7 +1029,8 @@
       14
      ],
      "band": 2,
-     "arch": "line"
+     "arch": "line",
+     "feature": "tail barb"
     },
     {
      "mode": "flow",
@@ -1009,7 +1041,8 @@
       14
      ],
      "band": 3,
-     "arch": "arc"
+     "arch": "arc",
+     "feature": "snout"
     },
     {
      "mode": "flow",
@@ -1020,7 +1053,8 @@
       14
      ],
      "band": 3,
-     "arch": "line"
+     "arch": "line",
+     "feature": "fire breath"
     },
     {
      "mode": "flow",
@@ -1031,7 +1065,8 @@
       14
      ],
      "band": 3,
-     "arch": "line"
+     "arch": "line",
+     "feature": "fire breath"
     },
     {
      "mode": "flow",
@@ -1042,7 +1077,8 @@
       14
      ],
      "band": 3,
-     "arch": "line"
+     "arch": "line",
+     "feature": "fire breath"
     },
     {
      "mode": "flow",
@@ -1053,7 +1089,8 @@
       14
      ],
      "band": 2,
-     "arch": "line"
+     "arch": "line",
+     "feature": "mountain slope"
     },
     {
      "mode": "flow",
@@ -1064,7 +1101,8 @@
       14
      ],
      "band": 2,
-     "arch": "line"
+     "arch": "line",
+     "feature": "mountain slope"
     },
     {
      "mode": "flow",
@@ -1075,7 +1113,8 @@
       14
      ],
      "band": 2,
-     "arch": "line"
+     "arch": "line",
+     "feature": "ground"
     },
     {
      "mode": "flow",
@@ -1086,7 +1125,8 @@
       14
      ],
      "band": 3,
-     "arch": "line"
+     "arch": "line",
+     "feature": "river"
     },
     {
      "mode": "flow",
@@ -1097,7 +1137,8 @@
       14
      ],
      "band": 3,
-     "arch": "arc"
+     "arch": "arc",
+     "feature": "cloud"
     },
     {
      "mode": "flow",
@@ -1108,7 +1149,8 @@
       14
      ],
      "band": 3,
-     "arch": "arc"
+     "arch": "arc",
+     "feature": "cloud"
     },
     {
      "mode": "flow",
@@ -1119,7 +1161,8 @@
       14
      ],
      "band": 3,
-     "arch": "line"
+     "arch": "line",
+     "feature": "star streak"
     },
     {
      "mode": "flow",
@@ -1130,7 +1173,8 @@
       14
      ],
      "band": 3,
-     "arch": "arc"
+     "arch": "arc",
+     "feature": "wing"
     },
     {
      "mode": "flow",
@@ -1141,7 +1185,8 @@
       14
      ],
      "band": 3,
-     "arch": "line"
+     "arch": "line",
+     "feature": "bird"
     }
    ]
   },
@@ -1163,7 +1208,8 @@
       14
      ],
      "band": 1,
-     "arch": "outline"
+     "arch": "outline",
+     "feature": "left leg"
     },
     {
      "mode": "flow",
@@ -1174,7 +1220,8 @@
       14
      ],
      "band": 1,
-     "arch": "outline"
+     "arch": "outline",
+     "feature": "right leg"
     },
     {
      "mode": "flow",
@@ -1185,7 +1232,8 @@
       14
      ],
      "band": 1,
-     "arch": "arc"
+     "arch": "arc",
+     "feature": "base arch"
     },
     {
      "mode": "flow",
@@ -1196,7 +1244,8 @@
       14
      ],
      "band": 1,
-     "arch": "line"
+     "arch": "line",
+     "feature": "first platform"
     },
     {
      "mode": "flow",
@@ -1207,7 +1256,8 @@
       14
      ],
      "band": 2,
-     "arch": "line"
+     "arch": "line",
+     "feature": "left pillar"
     },
     {
      "mode": "flow",
@@ -1218,7 +1268,8 @@
       14
      ],
      "band": 2,
-     "arch": "line"
+     "arch": "line",
+     "feature": "right pillar"
     },
     {
      "mode": "flow",
@@ -1229,7 +1280,8 @@
       14
      ],
      "band": 3,
-     "arch": "arc"
+     "arch": "arc",
+     "feature": "arch crown"
     },
     {
      "mode": "flow",
@@ -1240,7 +1292,8 @@
       14
      ],
      "band": 2,
-     "arch": "line"
+     "arch": "line",
+     "feature": "second platform"
     },
     {
      "mode": "flow",
@@ -1251,7 +1304,8 @@
       14
      ],
      "band": 2,
-     "arch": "line"
+     "arch": "line",
+     "feature": "spire"
     },
     {
      "mode": "flow",
@@ -1262,7 +1316,8 @@
       14
      ],
      "band": 3,
-     "arch": "line"
+     "arch": "line",
+     "feature": "spire edge"
     },
     {
      "mode": "flow",
@@ -1273,7 +1328,8 @@
       14
      ],
      "band": 3,
-     "arch": "line"
+     "arch": "line",
+     "feature": "spire edge"
     },
     {
      "mode": "flow",
@@ -1284,7 +1340,8 @@
       14
      ],
      "band": 2,
-     "arch": "arc"
+     "arch": "arc",
+     "feature": "beacon"
     },
     {
      "mode": "flow",
@@ -1295,7 +1352,8 @@
       14
      ],
      "band": 2,
-     "arch": "line"
+     "arch": "line",
+     "feature": "left ground"
     },
     {
      "mode": "flow",
@@ -1306,7 +1364,8 @@
       14
      ],
      "band": 2,
-     "arch": "line"
+     "arch": "line",
+     "feature": "right ground"
     },
     {
      "mode": "flow",
@@ -1317,7 +1376,8 @@
       14
      ],
      "band": 3,
-     "arch": "arc"
+     "arch": "arc",
+     "feature": "cloud"
     },
     {
      "mode": "flow",
@@ -1328,106 +1388,68 @@
       14
      ],
      "band": 3,
-     "arch": "arc"
+     "arch": "arc",
+     "feature": "cloud"
     },
     {
      "mode": "flow",
-     "d": "M33 400 L84 276 L135 400",
+     "d": "M86 54 Q120 28 154 54",
      "order": 17,
      "budget": [
       3,
       14
      ],
-     "band": 2,
-     "arch": "outline"
+     "band": 3,
+     "arch": "arc",
+     "feature": "cloud"
     },
     {
      "mode": "flow",
-     "d": "M382 400 L430 284 L478 400",
+     "d": "M44 462 L214 462",
      "order": 18,
      "budget": [
       3,
       14
      ],
-     "band": 2,
-     "arch": "outline"
+     "band": 3,
+     "arch": "line",
+     "feature": "left lawn"
     },
     {
      "mode": "flow",
-     "d": "M24 206 Q80 184 136 206",
+     "d": "M44 486 L214 486",
      "order": 19,
      "budget": [
       3,
       14
      ],
      "band": 3,
-     "arch": "arc"
+     "arch": "line",
+     "feature": "left lawn"
     },
     {
      "mode": "flow",
-     "d": "M376 206 Q432 184 488 206",
+     "d": "M298 486 L468 486",
      "order": 20,
      "budget": [
       3,
       14
      ],
      "band": 3,
-     "arch": "arc"
+     "arch": "line",
+     "feature": "right lawn"
     },
     {
      "mode": "flow",
-     "d": "M86 54 Q120 28 154 54",
+     "d": "M298 462 L468 462",
      "order": 21,
      "budget": [
       3,
       14
      ],
      "band": 3,
-     "arch": "arc"
-    },
-    {
-     "mode": "flow",
-     "d": "M44 462 L214 462",
-     "order": 22,
-     "budget": [
-      3,
-      14
-     ],
-     "band": 3,
-     "arch": "line"
-    },
-    {
-     "mode": "flow",
-     "d": "M44 486 L214 486",
-     "order": 23,
-     "budget": [
-      3,
-      14
-     ],
-     "band": 3,
-     "arch": "line"
-    },
-    {
-     "mode": "flow",
-     "d": "M298 486 L468 486",
-     "order": 24,
-     "budget": [
-      3,
-      14
-     ],
-     "band": 3,
-     "arch": "line"
-    },
-    {
-     "mode": "flow",
-     "d": "M298 462 L468 462",
-     "order": 25,
-     "budget": [
-      3,
-      14
-     ],
-     "band": 3,
-     "arch": "line"
+     "arch": "line",
+     "feature": "right lawn"
     }
    ]
   },
@@ -1449,7 +1471,8 @@
       20
      ],
      "band": 1,
-     "arch": "line"
+     "arch": "line",
+     "feature": "picture frame"
     },
     {
      "mode": "flow",
@@ -1460,7 +1483,8 @@
       20
      ],
      "band": 3,
-     "arch": "line"
+     "arch": "line",
+     "feature": "loggia colonnade"
     },
     {
      "mode": "flow",
@@ -1471,7 +1495,8 @@
       20
      ],
      "band": 3,
-     "arch": "line"
+     "arch": "line",
+     "feature": "loggia colonnade"
     },
     {
      "mode": "flow",
@@ -1482,7 +1507,8 @@
       20
      ],
      "band": 3,
-     "arch": "line"
+     "arch": "line",
+     "feature": "loggia colonnade"
     },
     {
      "mode": "flow",
@@ -1493,7 +1519,8 @@
       20
      ],
      "band": 3,
-     "arch": "line"
+     "arch": "line",
+     "feature": "loggia colonnade"
     },
     {
      "mode": "flow",
@@ -1504,7 +1531,8 @@
       20
      ],
      "band": 3,
-     "arch": "line"
+     "arch": "line",
+     "feature": "loggia colonnade"
     },
     {
      "mode": "flow",
@@ -1515,7 +1543,8 @@
       20
      ],
      "band": 3,
-     "arch": "line"
+     "arch": "line",
+     "feature": "loggia colonnade"
     },
     {
      "mode": "flow",
@@ -1526,7 +1555,8 @@
       20
      ],
      "band": 3,
-     "arch": "line"
+     "arch": "line",
+     "feature": "loggia colonnade"
     },
     {
      "mode": "flow",
@@ -1537,7 +1567,8 @@
       20
      ],
      "band": 3,
-     "arch": "line"
+     "arch": "line",
+     "feature": "loggia colonnade"
     },
     {
      "mode": "flow",
@@ -1548,7 +1579,8 @@
       20
      ],
      "band": 3,
-     "arch": "line"
+     "arch": "line",
+     "feature": "loggia colonnade"
     },
     {
      "mode": "flow",
@@ -1559,7 +1591,8 @@
       20
      ],
      "band": 3,
-     "arch": "line"
+     "arch": "line",
+     "feature": "loggia colonnade"
     },
     {
      "mode": "flow",
@@ -1570,7 +1603,8 @@
       20
      ],
      "band": 3,
-     "arch": "line"
+     "arch": "line",
+     "feature": "loggia colonnade"
     },
     {
      "mode": "flow",
@@ -1581,7 +1615,8 @@
       20
      ],
      "band": 3,
-     "arch": "line"
+     "arch": "line",
+     "feature": "loggia colonnade"
     },
     {
      "mode": "flow",
@@ -1592,7 +1627,8 @@
       20
      ],
      "band": 2,
-     "arch": "wave"
+     "arch": "wave",
+     "feature": "hair cascade"
     },
     {
      "mode": "flow",
@@ -1603,7 +1639,8 @@
       20
      ],
      "band": 2,
-     "arch": "wave"
+     "arch": "wave",
+     "feature": "hair cascade"
     },
     {
      "mode": "flow",
@@ -1614,7 +1651,8 @@
       20
      ],
      "band": 2,
-     "arch": "wave"
+     "arch": "wave",
+     "feature": "hair cascade"
     },
     {
      "mode": "flow",
@@ -1625,7 +1663,8 @@
       20
      ],
      "band": 2,
-     "arch": "wave"
+     "arch": "wave",
+     "feature": "hair cascade"
     },
     {
      "mode": "flow",
@@ -1636,7 +1675,8 @@
       20
      ],
      "band": 2,
-     "arch": "wave"
+     "arch": "wave",
+     "feature": "hair cascade"
     },
     {
      "mode": "flow",
@@ -1647,7 +1687,8 @@
       20
      ],
      "band": 2,
-     "arch": "wave"
+     "arch": "wave",
+     "feature": "hair cascade"
     },
     {
      "mode": "flow",
@@ -1658,7 +1699,8 @@
       20
      ],
      "band": 3,
-     "arch": "arc"
+     "arch": "arc",
+     "feature": "crown of head"
     },
     {
      "mode": "flow",
@@ -1669,7 +1711,8 @@
       20
      ],
      "band": 3,
-     "arch": "outline"
+     "arch": "outline",
+     "feature": "left cheek"
     },
     {
      "mode": "flow",
@@ -1680,7 +1723,8 @@
       20
      ],
      "band": 3,
-     "arch": "outline"
+     "arch": "outline",
+     "feature": "right cheek"
     },
     {
      "mode": "flow",
@@ -1691,7 +1735,8 @@
       20
      ],
      "band": 3,
-     "arch": "arc"
+     "arch": "arc",
+     "feature": "jaw"
     },
     {
      "mode": "flow",
@@ -1702,7 +1747,8 @@
       20
      ],
      "band": 3,
-     "arch": "arc"
+     "arch": "arc",
+     "feature": "brow line"
     },
     {
      "mode": "flow",
@@ -1713,7 +1759,8 @@
       20
      ],
      "band": 3,
-     "arch": "line"
+     "arch": "line",
+     "feature": "nose"
     },
     {
      "mode": "flow",
@@ -1724,7 +1771,8 @@
       20
      ],
      "band": 3,
-     "arch": "line"
+     "arch": "line",
+     "feature": "left neck"
     },
     {
      "mode": "flow",
@@ -1735,7 +1783,8 @@
       20
      ],
      "band": 3,
-     "arch": "line"
+     "arch": "line",
+     "feature": "right neck"
     },
     {
      "mode": "flow",
@@ -1746,7 +1795,8 @@
       20
      ],
      "band": 2,
-     "arch": "arc"
+     "arch": "arc",
+     "feature": "left shoulder"
     },
     {
      "mode": "flow",
@@ -1757,7 +1807,8 @@
       20
      ],
      "band": 2,
-     "arch": "arc"
+     "arch": "arc",
+     "feature": "right shoulder"
     },
     {
      "mode": "flow",
@@ -1768,7 +1819,8 @@
       20
      ],
      "band": 2,
-     "arch": "arc"
+     "arch": "arc",
+     "feature": "bodice fold"
     },
     {
      "mode": "flow",
@@ -1779,7 +1831,8 @@
       20
      ],
      "band": 2,
-     "arch": "arc"
+     "arch": "arc",
+     "feature": "bodice fold"
     },
     {
      "mode": "flow",
@@ -1790,7 +1843,8 @@
       20
      ],
      "band": 2,
-     "arch": "arc"
+     "arch": "arc",
+     "feature": "bodice fold"
     },
     {
      "mode": "flow",
@@ -1801,7 +1855,8 @@
       20
      ],
      "band": 3,
-     "arch": "wave"
+     "arch": "wave",
+     "feature": "sleeve fold"
     },
     {
      "mode": "flow",
@@ -1812,7 +1867,8 @@
       20
      ],
      "band": 3,
-     "arch": "wave"
+     "arch": "wave",
+     "feature": "sleeve fold"
     },
     {
      "mode": "flow",
@@ -1823,7 +1879,8 @@
       20
      ],
      "band": 3,
-     "arch": "wave"
+     "arch": "wave",
+     "feature": "sleeve fold"
     },
     {
      "mode": "flow",
@@ -1834,7 +1891,8 @@
       20
      ],
      "band": 3,
-     "arch": "wave"
+     "arch": "wave",
+     "feature": "sleeve fold"
     },
     {
      "mode": "flow",
@@ -1845,7 +1903,8 @@
       20
      ],
      "band": 3,
-     "arch": "wave"
+     "arch": "wave",
+     "feature": "sleeve fold"
     },
     {
      "mode": "flow",
@@ -1856,7 +1915,8 @@
       20
      ],
      "band": 3,
-     "arch": "wave"
+     "arch": "wave",
+     "feature": "sleeve fold"
     },
     {
      "mode": "flow",
@@ -1867,7 +1927,8 @@
       20
      ],
      "band": 3,
-     "arch": "arc"
+     "arch": "arc",
+     "feature": "left hand"
     },
     {
      "mode": "flow",
@@ -1878,7 +1939,8 @@
       20
      ],
      "band": 3,
-     "arch": "arc"
+     "arch": "arc",
+     "feature": "right hand"
     },
     {
      "mode": "flow",
@@ -1889,7 +1951,8 @@
       20
      ],
      "band": 3,
-     "arch": "line"
+     "arch": "line",
+     "feature": "parapet rail"
     },
     {
      "mode": "flow",
@@ -1900,7 +1963,8 @@
       20
      ],
      "band": 3,
-     "arch": "line"
+     "arch": "line",
+     "feature": "parapet rail"
     },
     {
      "mode": "flow",
@@ -1911,7 +1975,8 @@
       20
      ],
      "band": 3,
-     "arch": "line"
+     "arch": "line",
+     "feature": "parapet rail"
     },
     {
      "mode": "flow",
@@ -1922,7 +1987,8 @@
       20
      ],
      "band": 3,
-     "arch": "line"
+     "arch": "line",
+     "feature": "parapet rail"
     },
     {
      "mode": "flow",
@@ -1933,7 +1999,8 @@
       20
      ],
      "band": 3,
-     "arch": "line"
+     "arch": "line",
+     "feature": "drapery"
     },
     {
      "mode": "flow",
@@ -1944,7 +2011,8 @@
       20
      ],
      "band": 3,
-     "arch": "line"
+     "arch": "line",
+     "feature": "parapet rail"
     },
     {
      "mode": "flow",
@@ -1955,7 +2023,8 @@
       20
      ],
      "band": 3,
-     "arch": "line"
+     "arch": "line",
+     "feature": "parapet rail"
     },
     {
      "mode": "flow",
@@ -1966,7 +2035,8 @@
       20
      ],
      "band": 3,
-     "arch": "line"
+     "arch": "line",
+     "feature": "parapet rail"
     },
     {
      "mode": "flow",
@@ -1977,7 +2047,8 @@
       20
      ],
      "band": 3,
-     "arch": "line"
+     "arch": "line",
+     "feature": "parapet rail"
     },
     {
      "mode": "flow",
@@ -1988,7 +2059,8 @@
       20
      ],
      "band": 4,
-     "arch": "arc"
+     "arch": "arc",
+     "feature": "smile"
     }
    ],
    "provenance": {
@@ -2018,7 +2090,8 @@
       10
      ],
      "band": 2,
-     "arch": "outline"
+     "arch": "outline",
+     "feature": "crown"
     },
     {
      "mode": "flow",
@@ -2029,7 +2102,8 @@
       10
      ],
      "band": 2,
-     "arch": "outline"
+     "arch": "outline",
+     "feature": "jaw"
     },
     {
      "mode": "flow",
@@ -2040,7 +2114,8 @@
       10
      ],
      "band": 2,
-     "arch": "arc"
+     "arch": "arc",
+     "feature": "left ear"
     },
     {
      "mode": "flow",
@@ -2051,7 +2126,8 @@
       10
      ],
      "band": 2,
-     "arch": "arc"
+     "arch": "arc",
+     "feature": "right ear"
     },
     {
      "mode": "flow",
@@ -2062,7 +2138,8 @@
       10
      ],
      "band": 3,
-     "arch": "arc"
+     "arch": "arc",
+     "feature": "nose"
     },
     {
      "mode": "flow",
@@ -2073,7 +2150,8 @@
       10
      ],
      "band": 3,
-     "arch": "arc"
+     "arch": "arc",
+     "feature": "tongue"
     },
     {
      "mode": "flow",
@@ -2084,7 +2162,8 @@
       10
      ],
      "band": 2,
-     "arch": "line"
+     "arch": "line",
+     "feature": "bone"
     }
    ]
   },
@@ -2106,7 +2185,8 @@
       10
      ],
      "band": 2,
-     "arch": "line"
+     "arch": "line",
+     "feature": "body"
     },
     {
      "mode": "flow",
@@ -2117,7 +2197,8 @@
       10
      ],
      "band": 2,
-     "arch": "arc"
+     "arch": "arc",
+     "feature": "upper left wing"
     },
     {
      "mode": "flow",
@@ -2128,7 +2209,8 @@
       10
      ],
      "band": 2,
-     "arch": "arc"
+     "arch": "arc",
+     "feature": "lower left wing"
     },
     {
      "mode": "flow",
@@ -2139,7 +2221,8 @@
       10
      ],
      "band": 2,
-     "arch": "arc"
+     "arch": "arc",
+     "feature": "upper right wing"
     },
     {
      "mode": "flow",
@@ -2150,7 +2233,8 @@
       10
      ],
      "band": 2,
-     "arch": "arc"
+     "arch": "arc",
+     "feature": "lower right wing"
     },
     {
      "mode": "flow",
@@ -2161,7 +2245,8 @@
       10
      ],
      "band": 3,
-     "arch": "line"
+     "arch": "line",
+     "feature": "left antenna"
     },
     {
      "mode": "flow",
@@ -2172,7 +2257,8 @@
       10
      ],
      "band": 3,
-     "arch": "line"
+     "arch": "line",
+     "feature": "right antenna"
     }
    ]
   },
@@ -2194,7 +2280,8 @@
       10
      ],
      "band": 2,
-     "arch": "spiral"
+     "arch": "spiral",
+     "feature": "shell whorl"
     },
     {
      "mode": "flow",
@@ -2205,7 +2292,8 @@
       10
      ],
      "band": 2,
-     "arch": "spiral"
+     "arch": "spiral",
+     "feature": "inner whorl"
     },
     {
      "mode": "flow",
@@ -2216,7 +2304,8 @@
       10
      ],
      "band": 2,
-     "arch": "line"
+     "arch": "line",
+     "feature": "foot"
     },
     {
      "mode": "flow",
@@ -2227,7 +2316,8 @@
       10
      ],
      "band": 2,
-     "arch": "arc"
+     "arch": "arc",
+     "feature": "neck"
     },
     {
      "mode": "flow",
@@ -2238,7 +2328,8 @@
       10
      ],
      "band": 2,
-     "arch": "line"
+     "arch": "line",
+     "feature": "left eye stalk"
     },
     {
      "mode": "flow",
@@ -2249,7 +2340,8 @@
       10
      ],
      "band": 2,
-     "arch": "line"
+     "arch": "line",
+     "feature": "right eye stalk"
     }
    ]
   },
@@ -2271,7 +2363,8 @@
       10
      ],
      "band": 2,
-     "arch": "arc"
+     "arch": "arc",
+     "feature": "head"
     },
     {
      "mode": "flow",
@@ -2282,7 +2375,8 @@
       10
      ],
      "band": 2,
-     "arch": "line"
+     "arch": "line",
+     "feature": "beak"
     },
     {
      "mode": "flow",
@@ -2293,7 +2387,8 @@
       10
      ],
      "band": 2,
-     "arch": "arc"
+     "arch": "arc",
+     "feature": "back"
     },
     {
      "mode": "flow",
@@ -2304,7 +2399,8 @@
       10
      ],
      "band": 2,
-     "arch": "arc"
+     "arch": "arc",
+     "feature": "breast"
     },
     {
      "mode": "flow",
@@ -2315,7 +2411,8 @@
       10
      ],
      "band": 3,
-     "arch": "line"
+     "arch": "line",
+     "feature": "waterline"
     },
     {
      "mode": "flow",
@@ -2326,7 +2423,8 @@
       10
      ],
      "band": 3,
-     "arch": "line"
+     "arch": "line",
+     "feature": "waterline"
     }
    ]
   },
@@ -2348,7 +2446,8 @@
       14
      ],
      "band": 2,
-     "arch": "outline"
+     "arch": "outline",
+     "feature": "left body side"
     },
     {
      "mode": "flow",
@@ -2359,7 +2458,8 @@
       14
      ],
      "band": 2,
-     "arch": "outline"
+     "arch": "outline",
+     "feature": "right body side"
     },
     {
      "mode": "flow",
@@ -2370,7 +2470,8 @@
       14
      ],
      "band": 2,
-     "arch": "arc"
+     "arch": "arc",
+     "feature": "belly"
     },
     {
      "mode": "flow",
@@ -2381,7 +2482,8 @@
       14
      ],
      "band": 3,
-     "arch": "line"
+     "arch": "line",
+     "feature": "left ear tuft"
     },
     {
      "mode": "flow",
@@ -2392,7 +2494,8 @@
       14
      ],
      "band": 3,
-     "arch": "line"
+     "arch": "line",
+     "feature": "right ear tuft"
     },
     {
      "mode": "flow",
@@ -2403,7 +2506,8 @@
       14
      ],
      "band": 3,
-     "arch": "arc"
+     "arch": "arc",
+     "feature": "left eye ring"
     },
     {
      "mode": "flow",
@@ -2414,7 +2518,8 @@
       14
      ],
      "band": 3,
-     "arch": "arc"
+     "arch": "arc",
+     "feature": "left eye ring"
     },
     {
      "mode": "flow",
@@ -2425,7 +2530,8 @@
       14
      ],
      "band": 3,
-     "arch": "arc"
+     "arch": "arc",
+     "feature": "right eye ring"
     },
     {
      "mode": "flow",
@@ -2436,7 +2542,8 @@
       14
      ],
      "band": 3,
-     "arch": "arc"
+     "arch": "arc",
+     "feature": "right eye ring"
     },
     {
      "mode": "flow",
@@ -2447,7 +2554,8 @@
       14
      ],
      "band": 3,
-     "arch": "arc"
+     "arch": "arc",
+     "feature": "chest band"
     },
     {
      "mode": "flow",
@@ -2458,7 +2566,8 @@
       14
      ],
      "band": 2,
-     "arch": "line"
+     "arch": "line",
+     "feature": "branch"
     },
     {
      "mode": "flow",
@@ -2469,7 +2578,8 @@
       14
      ],
      "band": 4,
-     "arch": "arc"
+     "arch": "arc",
+     "feature": "moon"
     }
    ]
   },
@@ -2491,7 +2601,8 @@
       14
      ],
      "band": 2,
-     "arch": "outline"
+     "arch": "outline",
+     "feature": "shell dome"
     },
     {
      "mode": "flow",
@@ -2502,7 +2613,8 @@
       14
      ],
      "band": 2,
-     "arch": "arc"
+     "arch": "arc",
+     "feature": "shell base"
     },
     {
      "mode": "flow",
@@ -2513,7 +2625,8 @@
       14
      ],
      "band": 2,
-     "arch": "arc"
+     "arch": "arc",
+     "feature": "neck"
     },
     {
      "mode": "flow",
@@ -2524,7 +2637,8 @@
       14
      ],
      "band": 3,
-     "arch": "arc"
+     "arch": "arc",
+     "feature": "head"
     },
     {
      "mode": "flow",
@@ -2535,7 +2649,8 @@
       14
      ],
      "band": 3,
-     "arch": "line"
+     "arch": "line",
+     "feature": "front leg"
     },
     {
      "mode": "flow",
@@ -2546,7 +2661,8 @@
       14
      ],
      "band": 3,
-     "arch": "line"
+     "arch": "line",
+     "feature": "hind leg"
     },
     {
      "mode": "flow",
@@ -2557,7 +2673,8 @@
       14
      ],
      "band": 3,
-     "arch": "line"
+     "arch": "line",
+     "feature": "tail"
     },
     {
      "mode": "flow",
@@ -2568,7 +2685,8 @@
       14
      ],
      "band": 4,
-     "arch": "wave"
+     "arch": "wave",
+     "feature": "grass tuft"
     },
     {
      "mode": "flow",
@@ -2579,7 +2697,8 @@
       14
      ],
      "band": 4,
-     "arch": "wave"
+     "arch": "wave",
+     "feature": "grass tuft"
     },
     {
      "mode": "flow",
@@ -2590,7 +2709,8 @@
       14
      ],
      "band": 4,
-     "arch": "arc"
+     "arch": "arc",
+     "feature": "sun"
     },
     {
      "mode": "flow",
@@ -2601,7 +2721,8 @@
       14
      ],
      "band": 4,
-     "arch": "arc"
+     "arch": "arc",
+     "feature": "cloud"
     }
    ]
   },
@@ -2623,7 +2744,8 @@
       14
      ],
      "band": 2,
-     "arch": "outline"
+     "arch": "outline",
+     "feature": "back"
     },
     {
      "mode": "flow",
@@ -2634,7 +2756,8 @@
       14
      ],
      "band": 2,
-     "arch": "arc"
+     "arch": "arc",
+     "feature": "forehead"
     },
     {
      "mode": "flow",
@@ -2645,7 +2768,8 @@
       14
      ],
      "band": 2,
-     "arch": "wave"
+     "arch": "wave",
+     "feature": "trunk"
     },
     {
      "mode": "flow",
@@ -2656,7 +2780,8 @@
       14
      ],
      "band": 3,
-     "arch": "arc"
+     "arch": "arc",
+     "feature": "ear"
     },
     {
      "mode": "flow",
@@ -2667,7 +2792,8 @@
       14
      ],
      "band": 2,
-     "arch": "arc"
+     "arch": "arc",
+     "feature": "belly"
     },
     {
      "mode": "flow",
@@ -2678,7 +2804,8 @@
       14
      ],
      "band": 2,
-     "arch": "line"
+     "arch": "line",
+     "feature": "front leg"
     },
     {
      "mode": "flow",
@@ -2689,7 +2816,8 @@
       14
      ],
      "band": 2,
-     "arch": "line"
+     "arch": "line",
+     "feature": "hind leg"
     },
     {
      "mode": "flow",
@@ -2700,7 +2828,8 @@
       14
      ],
      "band": 3,
-     "arch": "arc"
+     "arch": "arc",
+     "feature": "tusk"
     },
     {
      "mode": "flow",
@@ -2711,7 +2840,8 @@
       14
      ],
      "band": 3,
-     "arch": "wave"
+     "arch": "wave",
+     "feature": "tail"
     },
     {
      "mode": "flow",
@@ -2722,7 +2852,8 @@
       14
      ],
      "band": 4,
-     "arch": "wave"
+     "arch": "wave",
+     "feature": "grass tuft"
     },
     {
      "mode": "flow",
@@ -2733,7 +2864,8 @@
       14
      ],
      "band": 4,
-     "arch": "line"
+     "arch": "line",
+     "feature": "horizon"
     },
     {
      "mode": "flow",
@@ -2744,7 +2876,8 @@
       14
      ],
      "band": 4,
-     "arch": "arc"
+     "arch": "arc",
+     "feature": "cloud"
     }
    ]
   },
@@ -2766,7 +2899,8 @@
       14
      ],
      "band": 2,
-     "arch": "outline"
+     "arch": "outline",
+     "feature": "back"
     },
     {
      "mode": "flow",
@@ -2777,7 +2911,8 @@
       14
      ],
      "band": 2,
-     "arch": "arc"
+     "arch": "arc",
+     "feature": "neck"
     },
     {
      "mode": "flow",
@@ -2788,7 +2923,8 @@
       14
      ],
      "band": 2,
-     "arch": "arc"
+     "arch": "arc",
+     "feature": "head"
     },
     {
      "mode": "flow",
@@ -2799,7 +2935,8 @@
       14
      ],
      "band": 3,
-     "arch": "arc"
+     "arch": "arc",
+     "feature": "muzzle"
     },
     {
      "mode": "flow",
@@ -2810,7 +2947,8 @@
       14
      ],
      "band": 4,
-     "arch": "arc"
+     "arch": "arc",
+     "feature": "ear"
     },
     {
      "mode": "flow",
@@ -2821,7 +2959,8 @@
       14
      ],
      "band": 3,
-     "arch": "wave"
+     "arch": "wave",
+     "feature": "mane"
     },
     {
      "mode": "flow",
@@ -2832,7 +2971,8 @@
       14
      ],
      "band": 3,
-     "arch": "arc"
+     "arch": "arc",
+     "feature": "chest"
     },
     {
      "mode": "flow",
@@ -2843,7 +2983,8 @@
       14
      ],
      "band": 2,
-     "arch": "arc"
+     "arch": "arc",
+     "feature": "belly"
     },
     {
      "mode": "flow",
@@ -2854,7 +2995,8 @@
       14
      ],
      "band": 3,
-     "arch": "line"
+     "arch": "line",
+     "feature": "hind leg"
     },
     {
      "mode": "flow",
@@ -2865,7 +3007,8 @@
       14
      ],
      "band": 3,
-     "arch": "line"
+     "arch": "line",
+     "feature": "hind leg"
     },
     {
      "mode": "flow",
@@ -2876,7 +3019,8 @@
       14
      ],
      "band": 3,
-     "arch": "line"
+     "arch": "line",
+     "feature": "front leg"
     },
     {
      "mode": "flow",
@@ -2887,7 +3031,8 @@
       14
      ],
      "band": 3,
-     "arch": "line"
+     "arch": "line",
+     "feature": "front leg"
     },
     {
      "mode": "flow",
@@ -2898,7 +3043,8 @@
       14
      ],
      "band": 3,
-     "arch": "wave"
+     "arch": "wave",
+     "feature": "tail"
     },
     {
      "mode": "flow",
@@ -2909,7 +3055,8 @@
       14
      ],
      "band": 3,
-     "arch": "wave"
+     "arch": "wave",
+     "feature": "tail strand"
     },
     {
      "mode": "flow",
@@ -2920,7 +3067,8 @@
       14
      ],
      "band": 2,
-     "arch": "line"
+     "arch": "line",
+     "feature": "ground"
     },
     {
      "mode": "flow",
@@ -2931,7 +3079,8 @@
       14
      ],
      "band": 2,
-     "arch": "line"
+     "arch": "line",
+     "feature": "ground"
     },
     {
      "mode": "flow",
@@ -2942,7 +3091,8 @@
       14
      ],
      "band": 3,
-     "arch": "line"
+     "arch": "line",
+     "feature": "fence rail"
     },
     {
      "mode": "flow",
@@ -2953,7 +3103,8 @@
       14
      ],
      "band": 3,
-     "arch": "line"
+     "arch": "line",
+     "feature": "fence rail"
     },
     {
      "mode": "flow",
@@ -2964,7 +3115,8 @@
       14
      ],
      "band": 4,
-     "arch": "arc"
+     "arch": "arc",
+     "feature": "sun"
     },
     {
      "mode": "flow",
@@ -2975,7 +3127,8 @@
       14
      ],
      "band": 4,
-     "arch": "arc"
+     "arch": "arc",
+     "feature": "cloud"
     },
     {
      "mode": "flow",
@@ -2986,7 +3139,8 @@
       14
      ],
      "band": 4,
-     "arch": "arc"
+     "arch": "arc",
+     "feature": "cloud"
     },
     {
      "mode": "flow",
@@ -2997,7 +3151,8 @@
       14
      ],
      "band": 4,
-     "arch": "arc"
+     "arch": "arc",
+     "feature": "bird"
     },
     {
      "mode": "flow",
@@ -3008,7 +3163,8 @@
       14
      ],
      "band": 4,
-     "arch": "arc"
+     "arch": "arc",
+     "feature": "bird"
     },
     {
      "mode": "flow",
@@ -3019,7 +3175,8 @@
       14
      ],
      "band": 4,
-     "arch": "line"
+     "arch": "line",
+     "feature": "grass"
     },
     {
      "mode": "flow",
@@ -3030,7 +3187,8 @@
       14
      ],
      "band": 4,
-     "arch": "line"
+     "arch": "line",
+     "feature": "grass"
     }
    ]
   },
@@ -3052,7 +3210,8 @@
       14
      ],
      "band": 3,
-     "arch": "radial"
+     "arch": "radial",
+     "feature": "tail feather"
     },
     {
      "mode": "flow",
@@ -3063,7 +3222,8 @@
       14
      ],
      "band": 3,
-     "arch": "radial"
+     "arch": "radial",
+     "feature": "tail feather"
     },
     {
      "mode": "flow",
@@ -3074,7 +3234,8 @@
       14
      ],
      "band": 3,
-     "arch": "radial"
+     "arch": "radial",
+     "feature": "tail feather"
     },
     {
      "mode": "flow",
@@ -3085,7 +3246,8 @@
       14
      ],
      "band": 3,
-     "arch": "radial"
+     "arch": "radial",
+     "feature": "tail feather"
     },
     {
      "mode": "flow",
@@ -3096,7 +3258,8 @@
       14
      ],
      "band": 3,
-     "arch": "radial"
+     "arch": "radial",
+     "feature": "tail feather"
     },
     {
      "mode": "flow",
@@ -3107,7 +3270,8 @@
       14
      ],
      "band": 3,
-     "arch": "radial"
+     "arch": "radial",
+     "feature": "tail feather"
     },
     {
      "mode": "flow",
@@ -3118,7 +3282,8 @@
       14
      ],
      "band": 3,
-     "arch": "radial"
+     "arch": "radial",
+     "feature": "tail feather"
     },
     {
      "mode": "flow",
@@ -3129,7 +3294,8 @@
       14
      ],
      "band": 3,
-     "arch": "radial"
+     "arch": "radial",
+     "feature": "tail feather"
     },
     {
      "mode": "flow",
@@ -3140,7 +3306,8 @@
       14
      ],
      "band": 3,
-     "arch": "radial"
+     "arch": "radial",
+     "feature": "tail feather"
     },
     {
      "mode": "flow",
@@ -3151,7 +3318,8 @@
       14
      ],
      "band": 3,
-     "arch": "arc"
+     "arch": "arc",
+     "feature": "feather eyespot"
     },
     {
      "mode": "flow",
@@ -3162,7 +3330,8 @@
       14
      ],
      "band": 3,
-     "arch": "arc"
+     "arch": "arc",
+     "feature": "feather eyespot"
     },
     {
      "mode": "flow",
@@ -3173,7 +3342,8 @@
       14
      ],
      "band": 3,
-     "arch": "arc"
+     "arch": "arc",
+     "feature": "feather eyespot"
     },
     {
      "mode": "flow",
@@ -3184,7 +3354,8 @@
       14
      ],
      "band": 3,
-     "arch": "arc"
+     "arch": "arc",
+     "feature": "feather eyespot"
     },
     {
      "mode": "flow",
@@ -3195,7 +3366,8 @@
       14
      ],
      "band": 4,
-     "arch": "arc"
+     "arch": "arc",
+     "feature": "outer plume arc"
     },
     {
      "mode": "flow",
@@ -3206,7 +3378,8 @@
       14
      ],
      "band": 4,
-     "arch": "arc"
+     "arch": "arc",
+     "feature": "outer plume arc"
     },
     {
      "mode": "flow",
@@ -3217,7 +3390,8 @@
       14
      ],
      "band": 3,
-     "arch": "arc"
+     "arch": "arc",
+     "feature": "shoulders"
     },
     {
      "mode": "flow",
@@ -3228,7 +3402,8 @@
       14
      ],
      "band": 2,
-     "arch": "arc"
+     "arch": "arc",
+     "feature": "left body side"
     },
     {
      "mode": "flow",
@@ -3239,7 +3414,8 @@
       14
      ],
      "band": 2,
-     "arch": "arc"
+     "arch": "arc",
+     "feature": "right body side"
     },
     {
      "mode": "flow",
@@ -3250,7 +3426,8 @@
       14
      ],
      "band": 3,
-     "arch": "arc"
+     "arch": "arc",
+     "feature": "head"
     },
     {
      "mode": "flow",
@@ -3261,7 +3438,8 @@
       14
      ],
      "band": 4,
-     "arch": "arc"
+     "arch": "arc",
+     "feature": "outer plume arc"
     },
     {
      "mode": "flow",
@@ -3272,7 +3450,8 @@
       14
      ],
      "band": 4,
-     "arch": "arc"
+     "arch": "arc",
+     "feature": "outer plume arc"
     },
     {
      "mode": "flow",
@@ -3283,7 +3462,8 @@
       14
      ],
      "band": 2,
-     "arch": "line"
+     "arch": "line",
+     "feature": "ground"
     },
     {
      "mode": "flow",
@@ -3294,7 +3474,8 @@
       14
      ],
      "band": 4,
-     "arch": "line"
+     "arch": "line",
+     "feature": "path"
     },
     {
      "mode": "flow",
@@ -3305,7 +3486,8 @@
       14
      ],
      "band": 4,
-     "arch": "line"
+     "arch": "line",
+     "feature": "path"
     },
     {
      "mode": "flow",
@@ -3316,7 +3498,8 @@
       14
      ],
      "band": 4,
-     "arch": "arc"
+     "arch": "arc",
+     "feature": "wing plume"
     },
     {
      "mode": "flow",
@@ -3327,7 +3510,8 @@
       14
      ],
      "band": 4,
-     "arch": "arc"
+     "arch": "arc",
+     "feature": "wing plume"
     }
    ]
   },
@@ -3349,7 +3533,8 @@
       20
      ],
      "band": 2,
-     "arch": "line"
+     "arch": "line",
+     "feature": "woodcut caption"
     },
     {
      "mode": "flow",
@@ -3360,7 +3545,8 @@
       20
      ],
      "band": 2,
-     "arch": "line"
+     "arch": "line",
+     "feature": "woodcut caption"
     },
     {
      "mode": "flow",
@@ -3371,7 +3557,8 @@
       20
      ],
      "band": 2,
-     "arch": "line"
+     "arch": "line",
+     "feature": "woodcut caption"
     },
     {
      "mode": "flow",
@@ -3382,7 +3569,8 @@
       20
      ],
      "band": 2,
-     "arch": "line"
+     "arch": "line",
+     "feature": "woodcut caption"
     },
     {
      "mode": "flow",
@@ -3393,7 +3581,8 @@
       20
      ],
      "band": 2,
-     "arch": "outline"
+     "arch": "outline",
+     "feature": "back"
     },
     {
      "mode": "flow",
@@ -3404,7 +3593,8 @@
       20
      ],
      "band": 2,
-     "arch": "arc"
+     "arch": "arc",
+     "feature": "rump"
     },
     {
      "mode": "flow",
@@ -3415,7 +3605,8 @@
       20
      ],
      "band": 3,
-     "arch": "wave"
+     "arch": "wave",
+     "feature": "tail"
     },
     {
      "mode": "flow",
@@ -3426,7 +3617,8 @@
       20
      ],
      "band": 2,
-     "arch": "arc"
+     "arch": "arc",
+     "feature": "belly"
     },
     {
      "mode": "flow",
@@ -3437,7 +3629,8 @@
       20
      ],
      "band": 3,
-     "arch": "line"
+     "arch": "line",
+     "feature": "front leg"
     },
     {
      "mode": "flow",
@@ -3448,7 +3641,8 @@
       20
      ],
      "band": 3,
-     "arch": "line"
+     "arch": "line",
+     "feature": "front leg"
     },
     {
      "mode": "flow",
@@ -3459,7 +3653,8 @@
       20
      ],
      "band": 3,
-     "arch": "line"
+     "arch": "line",
+     "feature": "hind leg"
     },
     {
      "mode": "flow",
@@ -3470,7 +3665,8 @@
       20
      ],
      "band": 3,
-     "arch": "line"
+     "arch": "line",
+     "feature": "hind leg"
     },
     {
      "mode": "flow",
@@ -3481,7 +3677,8 @@
       20
      ],
      "band": 3,
-     "arch": "arc"
+     "arch": "arc",
+     "feature": "forehead"
     },
     {
      "mode": "flow",
@@ -3492,7 +3689,8 @@
       20
      ],
      "band": 3,
-     "arch": "arc"
+     "arch": "arc",
+     "feature": "jaw"
     },
     {
      "mode": "flow",
@@ -3503,7 +3701,8 @@
       20
      ],
      "band": 4,
-     "arch": "line"
+     "arch": "line",
+     "feature": "mouth"
     },
     {
      "mode": "flow",
@@ -3514,7 +3713,8 @@
       20
      ],
      "band": 3,
-     "arch": "line"
+     "arch": "line",
+     "feature": "ear"
     },
     {
      "mode": "flow",
@@ -3525,7 +3725,8 @@
       20
      ],
      "band": 3,
-     "arch": "line"
+     "arch": "line",
+     "feature": "dorsal hornlet"
     },
     {
      "mode": "flow",
@@ -3536,7 +3737,8 @@
       20
      ],
      "band": 3,
-     "arch": "arc"
+     "arch": "arc",
+     "feature": "gorget fold"
     },
     {
      "mode": "flow",
@@ -3547,7 +3749,8 @@
       20
      ],
      "band": 2,
-     "arch": "arc"
+     "arch": "arc",
+     "feature": "shoulder plate"
     },
     {
      "mode": "flow",
@@ -3558,7 +3761,8 @@
       20
      ],
      "band": 3,
-     "arch": "arc"
+     "arch": "arc",
+     "feature": "shoulder rivets"
     },
     {
      "mode": "flow",
@@ -3569,7 +3773,8 @@
       20
      ],
      "band": 3,
-     "arch": "arc"
+     "arch": "arc",
+     "feature": "shoulder rivets"
     },
     {
      "mode": "flow",
@@ -3580,7 +3785,8 @@
       20
      ],
      "band": 2,
-     "arch": "arc"
+     "arch": "arc",
+     "feature": "body plate"
     },
     {
      "mode": "flow",
@@ -3591,7 +3797,8 @@
       20
      ],
      "band": 3,
-     "arch": "arc"
+     "arch": "arc",
+     "feature": "body rivets"
     },
     {
      "mode": "flow",
@@ -3602,7 +3809,8 @@
       20
      ],
      "band": 2,
-     "arch": "arc"
+     "arch": "arc",
+     "feature": "haunch plate"
     },
     {
      "mode": "flow",
@@ -3613,7 +3821,8 @@
       20
      ],
      "band": 3,
-     "arch": "arc"
+     "arch": "arc",
+     "feature": "haunch rivets"
     },
     {
      "mode": "flow",
@@ -3624,7 +3833,8 @@
       20
      ],
      "band": 3,
-     "arch": "arc"
+     "arch": "arc",
+     "feature": "haunch rivets"
     },
     {
      "mode": "flow",
@@ -3635,7 +3845,8 @@
       20
      ],
      "band": 4,
-     "arch": "arc"
+     "arch": "arc",
+     "feature": "haunch fold"
     },
     {
      "mode": "flow",
@@ -3646,7 +3857,8 @@
       20
      ],
      "band": 4,
-     "arch": "line"
+     "arch": "line",
+     "feature": "belly scales"
     },
     {
      "mode": "flow",
@@ -3657,7 +3869,8 @@
       20
      ],
      "band": 4,
-     "arch": "line"
+     "arch": "line",
+     "feature": "belly scales"
     },
     {
      "mode": "flow",
@@ -3668,7 +3881,8 @@
       20
      ],
      "band": 4,
-     "arch": "line"
+     "arch": "line",
+     "feature": "belly scales"
     },
     {
      "mode": "flow",
@@ -3679,7 +3893,8 @@
       20
      ],
      "band": 2,
-     "arch": "line"
+     "arch": "line",
+     "feature": "ground"
     },
     {
      "mode": "flow",
@@ -3690,7 +3905,8 @@
       20
      ],
      "band": 2,
-     "arch": "line"
+     "arch": "line",
+     "feature": "ground"
     },
     {
      "mode": "flow",
@@ -3701,7 +3917,8 @@
       20
      ],
      "band": 4,
-     "arch": "arc"
+     "arch": "arc",
+     "feature": "cloud"
     },
     {
      "mode": "flow",
@@ -3712,7 +3929,8 @@
       20
      ],
      "band": 4,
-     "arch": "arc"
+     "arch": "arc",
+     "feature": "cloud"
     },
     {
      "mode": "flow",
@@ -3723,7 +3941,8 @@
       20
      ],
      "band": 4,
-     "arch": "arc"
+     "arch": "arc",
+     "feature": "cloud"
     },
     {
      "mode": "flow",
@@ -3734,7 +3953,8 @@
       20
      ],
      "band": 4,
-     "arch": "arc"
+     "arch": "arc",
+     "feature": "cloud"
     },
     {
      "mode": "flow",
@@ -3745,7 +3965,8 @@
       20
      ],
      "band": 4,
-     "arch": "arc"
+     "arch": "arc",
+     "feature": "bird"
     },
     {
      "mode": "flow",
@@ -3756,7 +3977,8 @@
       20
      ],
      "band": 4,
-     "arch": "arc"
+     "arch": "arc",
+     "feature": "bird"
     },
     {
      "mode": "flow",
@@ -3767,7 +3989,8 @@
       20
      ],
      "band": 2,
-     "arch": "arc"
+     "arch": "arc",
+     "feature": "horn"
     }
    ],
    "provenance": {

@@ -7,7 +7,7 @@ import fs from "node:fs";
 import path from "node:path";
 
 const ROOT = path.dirname(new URL(import.meta.url).pathname) + "/..";
-const BANDS = { easy: [3, 8], medium: [10, 20], hard: [25, 45], expert: [38, 200] };
+const BANDS = { easy: [3, 8], medium: [10, 20], hard: [20, 45], expert: [38, 200] };
 const ARCHES = new Set(["stack", "arc", "spiral", "zigzag", "wave", "radial", "outline", "line"]);
 let problems = [];
 const m = JSON.parse(fs.readFileSync(`${ROOT}/config/wordpic/pictures.json`, "utf8"));
@@ -26,7 +26,12 @@ for (const p of m.pictures) {
   const key = `${p.tier}:${p.subject}`;
   if (seen.has(key)) problems.push(`${p.id}: duplicate subject '${p.subject}' at tier ${p.tier} (D11)`);
   seen.add(key);
+  const BANNED_FEAT = new Set(["decorative", "filler", "background texture"]);
   for (const q of p.paths) {
+    if (!q.feature || !q.feature.trim())
+      problems.push(`${p.id}: unlabeled stroke (v7 F2 — name the feature or delete it)`);
+    else if (BANNED_FEAT.has(q.feature.toLowerCase()))
+      problems.push(`${p.id}: banned feature label '${q.feature}' (v7 F2)`);
     if (!ARCHES.has(q.arch)) problems.push(`${p.id}: unknown archetype '${q.arch}'`);
     if (!(q.band >= 1 && q.band <= 4)) problems.push(`${p.id}: band out of range`);
     if (!(q.budget[0] >= 2 && q.budget[1] >= q.budget[0])) problems.push(`${p.id}: bad budget`);

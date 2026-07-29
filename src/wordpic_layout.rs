@@ -628,7 +628,14 @@ pub fn layout_feed_opt(
             .collect();
         scored.sort_by_key(|(fresh, i, _, n)| if shrink { (*fresh, *n) } else { (*fresh, *i) });
         'cand: for (_, _, w, n) in scored {
-            if let Some(pl) = solve(slot, lang, n) {
+            if let Some(mut pl) = solve(slot, lang, n) {
+                // v7 F1 root-cause #2: identity BEFORE the hit check. A
+                // candidate used to carry placeholder slot/path_idx 0, so
+                // the same-path and seam exemptions misfired against any
+                // path-0 placement — the feed produced layouts the sweep's
+                // own law flags (fish tail: p0×p1 share an endpoint).
+                pl.slot = si;
+                pl.path_idx = slot.path_idx;
                 let hit = placements.iter().any(|other| overlaps(&pl, other));
                 if !hit && in_frame(&pl) {
                     best = Some((w, pl));
@@ -659,9 +666,11 @@ pub fn layout_feed_opt(
                         break 'cand;
                     }
                 }
-                if best.is_none() {
-                    best = Some((w.clone(), pl));
-                }
+                // v7 F1: NEVER accept an illegal placement. An unfilled
+                // slot is honest (CI flags it; the runtime ladder re-solves
+                // it); a colliding word is the round-2 star escape by
+                // construction. This branch used to take the first solvable
+                // collider as "best effort" — that was the leak.
             }
         }
         if let Some((w, mut pl)) = best {

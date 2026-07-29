@@ -26,7 +26,7 @@ pub const RECENCY_PICS: usize = 3;
 pub const NO_REPEAT: usize = 5;
 /// D3 path-count bands.
 pub const BANDS: [(&str, u32, u32); 4] =
-    [("easy", 3, 8), ("medium", 10, 20), ("hard", 25, 45), ("expert", 38, 200)];
+    [("easy", 3, 8), ("medium", 10, 20), ("hard", 20, 45), ("expert", 38, 200)];
 
 #[derive(Debug, Clone, serde::Deserialize)]
 pub struct WordPath {
@@ -44,6 +44,9 @@ pub struct WordPath {
     pub budget: (u32, u32),
     pub band: u8,
     pub arch: String,
+    /// v7 F2 — the nameable feature this stroke draws (lint-enforced).
+    #[serde(default)]
+    pub feature: String,
     /// Long flow paths host `segs` one-word segments instead of stretching.
     #[serde(default)]
     pub segs: Option<u32>,

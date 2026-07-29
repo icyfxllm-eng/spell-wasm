@@ -66,10 +66,76 @@ def tuft(x, y, h):
     return arc(x - 28, y, x, y - h, x + 28, y)
 
 
+# v7 F2 — stroke attribution: every path names the feature it draws. A
+# stroke nobody can name is noise (round-2 lesson: fish blob, tower sides).
+BANNED_FEATURES = {"decorative", "filler", "background texture"}
+FEATURES = {
+    "smiley": ["head", "head", "left eye", "right eye", "smile"],
+    "star": ["star outline", "top-left sparkle", "top-right sparkle", "ground"],
+    "fish": ["back", "belly", "upper tail fin", "lower tail fin"],
+    "house": ["left roof slope", "right roof slope", "left window", "right window",
+              "left base wall", "right base wall", "door", "sun"],
+    "cat": ["head", "chin", "left ear", "right ear", "left eye", "right eye", "smile",
+            "left whiskers", "right whiskers", "left flank", "right flank", "haunch", "tail"],
+    "rocket": ["left fuselage", "right fuselage", "nose cone", "left fin edge", "left fin base",
+               "right fin edge", "right fin base", "engine nozzle", "flame plume",
+               "left flame jet", "right flame jet", "cloud", "star streak", "star streak"],
+    "snowman": ["body", "head", "head", "left shoulder", "right shoulder", "hat brim",
+                "hat top", "hat band", "brow", "smile", "buttons", "left arm", "right arm",
+                "snow bank", "left drift", "right drift"],
+    "dragon": ["chest", "back", "head", "jaw", "belly", "crest spike", "crest spike",
+               "crest spike", "crest ridge", "tail", "tail barb", "tail barb", "snout",
+               "fire breath", "fire breath", "fire breath", "mountain slope", "mountain slope",
+               "ground", "river", "cloud", "cloud", "star streak", "wing", "bird"],
+    "eiffel": ["left leg", "right leg", "base arch", "first platform", "left pillar",
+               "right pillar", "arch crown", "second platform", "spire", "spire edge",
+               "spire edge", "beacon", "left ground", "right ground", "cloud", "cloud",
+               "cloud", "left lawn", "left lawn", "right lawn", "right lawn"],
+    "mona": ["picture frame"] + ["loggia colonnade"] * 12
+            + ["hair cascade"] * 6 + ["crown of head", "left cheek", "right cheek", "jaw",
+               "brow line", "nose", "left neck", "right neck", "left shoulder",
+               "right shoulder", "bodice fold", "bodice fold", "bodice fold"]
+            + ["sleeve fold"] * 6 + ["left hand", "right hand"]
+            + ["parapet rail"] * 4 + ["drapery"] + ["parapet rail"] * 4 + ["smile"],
+    "dog": ["crown", "jaw", "left ear", "right ear", "nose", "tongue", "bone"],
+    "butterfly": ["body", "upper left wing", "lower left wing", "upper right wing",
+                  "lower right wing", "left antenna", "right antenna"],
+    "snail": ["shell whorl", "inner whorl", "foot", "neck", "left eye stalk", "right eye stalk"],
+    "duck": ["head", "beak", "back", "breast", "waterline", "waterline"],
+    "owl": ["left body side", "right body side", "belly", "left ear tuft", "right ear tuft",
+            "left eye ring", "left eye ring", "right eye ring", "right eye ring",
+            "chest band", "branch", "moon"],
+    "turtle": ["shell dome", "shell base", "neck", "head", "front leg", "hind leg", "tail",
+               "grass tuft", "grass tuft", "sun", "cloud"],
+    "elephant": ["back", "forehead", "trunk", "ear", "belly", "front leg", "hind leg",
+                 "tusk", "tail", "grass tuft", "horizon", "cloud"],
+    "horse": ["back", "neck", "head", "muzzle", "ear", "mane", "chest", "belly",
+              "hind leg", "hind leg", "front leg", "front leg", "tail", "tail strand",
+              "ground", "ground", "fence rail", "fence rail", "sun", "cloud", "cloud",
+              "bird", "bird", "grass", "grass"],
+    "peacock": ["tail feather"] * 9 + ["feather eyespot"] * 4 + ["outer plume arc"] * 2
+               + ["shoulders", "left body side", "right body side", "head",
+                  "outer plume arc", "outer plume arc", "ground",
+                  "path", "path", "wing plume", "wing plume"],
+    "rhino": ["woodcut caption"] * 4 + ["back", "rump", "tail", "belly",
+              "front leg", "front leg", "hind leg", "hind leg", "forehead", "jaw", "mouth",
+              "ear", "dorsal hornlet", "gorget fold", "shoulder plate", "shoulder rivets",
+              "shoulder rivets", "body plate", "body rivets", "haunch plate",
+              "haunch rivets", "haunch rivets", "haunch fold", "belly scales",
+              "belly scales", "belly scales", "ground", "ground", "cloud", "cloud",
+              "cloud", "cloud", "bird", "bird", "horn"],
+}
+
+
 def pic(pid, tier, subject, icon, kid, paths, wash=False, prov=None, free_hint=None, pack="starter"):
     ordered = sorted(paths, key=lambda p: p["order"])
     for k, q in enumerate(ordered):
         q["order"] = k + 1  # normalize: authoring gaps are fine, output is 1..n
+    feats = FEATURES[pid]
+    assert len(feats) == len(paths), f"{pid}: {len(paths)} paths but {len(feats)} feature labels"
+    for q, f in zip(ordered, feats):
+        assert f and f.lower() not in BANNED_FEATURES, f"{pid}: banned/empty feature {f!r}"
+        q["feature"] = f
     d = {"id": pid, "tier": tier, "subject": subject, "icon": icon, "kid": kid,
          "wash": wash, "pack": pack, "paths": ordered}
     if prov:
@@ -124,10 +190,6 @@ P.append(pic("star", "easy", "nature", "🌟", True, [
 # 3) FISH — Eric's golden. Body + tail unchanged in spirit; the interior fin
 # (text can't host there) is gone; boat slimmed to hull + mast stack.
 P.append(pic("fish", "easy", "animals", "🐟", True, [
-    flow(line(40, 132, 224, 132), 1, B_EASY, 2, "line"),
-    flow(line(288, 132, 472, 132), 2, B_EASY, 2, "line"),
-    flow(line(200, 100, 312, 100), 3, B_EASY, 2, "line"),
-    flow(line(256, 32, 256, 84), 4, B_EASY, 3, "line"),
     flow(arc(146, 282, 256, 176, 392, 300), 5, B_EASY, 1, "outline"),
     flow(arc(146, 318, 256, 424, 392, 300), 6, B_EASY, 1, "outline"),
     flow(line(404, 291, 474, 238), 7, B_EASY, 2, "line"),
@@ -258,10 +320,6 @@ _e.append(flow(line(60, 430, 200, 430), en(), B_HARD, 2, "line"))
 _e.append(flow(line(312, 430, 452, 430), en(), B_HARD, 2, "line"))
 _e.append(flow(arc(50, 120, 100, 84, 150, 120), en(), B_HARD, 3, "arc"))
 _e.append(flow(arc(360, 96, 410, 60, 460, 96), en(), B_HARD, 3, "arc"))
-_e.append(flow(pine(84, 400, 124), en(), B_HARD, 2, "outline"))
-_e.append(flow(pine(430, 400, 116), en(), B_HARD, 2, "outline"))
-_e.append(flow(arc(24, 206, 80, 184, 136, 206), en(), B_HARD, 3, "arc"))
-_e.append(flow(arc(376, 206, 432, 184, 488, 206), en(), B_HARD, 3, "arc"))
 _e.append(flow(arc(86, 54, 120, 28, 154, 54), en(), B_HARD, 3, "arc"))
 _e.append(flow(line(44, 462, 214, 462), en(), B_HARD, 3, "line"))
 _e.append(flow(line(44, 486, 214, 486), en(), B_HARD, 3, "line"))
@@ -540,7 +598,7 @@ P.append(pic("rhino", "expert", "rhinoceros", "🦏", False, _r,
                  "retrieved": "2026-07-29"},
              pack="animals"))
 
-BANDS = {"easy": (3, 8), "medium": (10, 20), "hard": (25, 45), "expert": (38, 200)}
+BANDS = {"easy": (3, 8), "medium": (10, 20), "hard": (20, 45), "expert": (38, 200)}
 
 
 def main():
