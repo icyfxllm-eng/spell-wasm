@@ -363,17 +363,28 @@ fn render_canvas(p: &wordpic::Picture, lang: &str, words: &[String]) {
                 let (x1, y1) = *poly.pts.last().unwrap_or(&(x0, y0));
                 let (px, py) = ((x0 + x1) / 2.0, (y0 + y1) / 2.0);
                 let ang = (y1 - y0).atan2(x1 - x0).to_degrees();
+                // v7 F1: force the solved span onto the device. The solver's
+                // legality proof assumed this width; without textLength the
+                // real font's natural advance can spill past the slot (the
+                // round-2 star escape). spacingAndGlyphs keeps joins intact
+                // for complex scripts — one continuous run, uniformly scaled.
+                let chord = ((x1 - x0).powi(2) + (y1 - y0).powi(2)).sqrt();
                 svg.push_str(&format!(
-                    "<text class=\"{cls}\" x=\"{px:.0}\" y=\"{py:.0}\" font-size=\"{:.0}\" text-anchor=\"middle\" transform=\"rotate({ang:.1} {px:.0} {py:.0})\">{}</text>",
+                    "<text class=\"{cls}\" x=\"{px:.0}\" y=\"{py:.0}\" font-size=\"{:.0}\" text-anchor=\"middle\" textLength=\"{:.0}\" lengthAdjust=\"spacingAndGlyphs\" transform=\"rotate({ang:.1} {px:.0} {py:.0})\">{}</text>",
                     pl.size,
+                    chord * pl.fill,
                     dom::escape_html(w)
                 ));
             }
-            (Some(_), _) => {
+            (Some(poly), _) => {
+                // v7 F1: textLength forces the device to the solved span —
+                // the geometry CI proved legal is the geometry that renders.
+                // letter-spacing alone (round 2) let real font metrics spill
+                // past the slot: the star overlap escape.
                 svg.push_str(&format!(
-                    "<text class=\"{cls}\" font-size=\"{:.0}\" letter-spacing=\"{:.1}\" text-anchor=\"middle\"><textPath href=\"#wps{si}\" startOffset=\"50%\">{}</textPath></text>",
+                    "<text class=\"{cls}\" font-size=\"{:.0}\" text-anchor=\"middle\"><textPath href=\"#wps{si}\" startOffset=\"50%\" textLength=\"{:.0}\" lengthAdjust=\"spacingAndGlyphs\">{}</textPath></text>",
                     pl.size,
-                    pl.spacing,
+                    poly.len() * pl.fill,
                     dom::escape_html(w)
                 ));
             }
