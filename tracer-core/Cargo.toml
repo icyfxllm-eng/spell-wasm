@@ -1,0 +1,11 @@
+[package]
+name = "tracer-core"
+version = "0.1.0"
+edition = "2021"
+
+# v7 F8 (D12): the runtime-portable trace core. ZERO dependencies — this
+# crate must compile in isolation (CI: `cargo check -p tracer-core`) so
+# CC-PHOTO-PICTURE can mount the identical module on-device when its
+# blockers clear. No filesystem, no image codecs, no tool imports: the
+# caller hands in grayscale bytes.
+[dependencies]
