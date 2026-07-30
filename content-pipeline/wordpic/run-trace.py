@@ -44,7 +44,7 @@ def canvas_gray(path, gamma=1.0, channel=None, invert=False):
     return canvas
 
 metrics = []
-GAMMA = {"mona": 1.45}
+GAMMA = {"mona": 1.35}
 CHANNEL = {}
 INVERT = set()
 
@@ -74,20 +74,31 @@ for sub, (fname, budget) in SUBJECTS.items():
         # lasso (Eric's rough loop / the future finger-circle) seeds the
         # subject mask. Low-contrast subjects are lasso-first by default.
         pts = json.load(open(lasso_file))
-        arg = ";".join(f"{x},{y}" for x, y in pts)
-        r = run([str(BIN), budget, arg])
+        arg = "lasso=" + ";".join(f"{x},{y}" for x, y in pts)
+        extra = [arg]
+        if sub == "peacock":
+            # Eric: "just its black body and its feathers" — v7.4 parts +
+            # green scribbles forcing the dark body column into the mask.
+            fan = "part=fan:" + ";".join(f"{x},{y}" for x, y in
+                [[51,31],[461,31],[461,300],[308,268],[214,268],[51,300]])
+            body = "part=body:" + ";".join(f"{x},{y}" for x, y in
+                [[214,268],[302,268],[308,446],[208,446]])
+            greens = "keep=" + ";".join(f"{x},{y}" for x, y in
+                [[250,290],[252,320],[254,350],[256,380],[258,410]])
+            extra += [fan, body, greens]
+        r = run([str(BIN), budget] + extra)
         r["seeded"] = True
     if sub == "mona":
-        # v7.1: figure mask (background interiors filtered per D6) + ONE
-        # frame path (the only legal non-mask contour class).
+        # v7.4 frame + v7.3 author marks: lasso around the FIGURE, green
+        # scribbles down her center, red on the background bands — her
+        # body outlines inside the rectangle.
+        r = run([str(BIN), budget, "frame=143,40,372,484"])
         keep = []
         for p in r["paths"]:
             ys = [y for _, y in p["points"]]
-            if p["silhouette"] or (min(ys) > 215):
+            if p["silhouette"] or p.get("part") == "frame" or (min(ys) > 215):
                 keep.append(p)
         r["paths"] = keep
-        r["paths"].append({"points": [[143, 40], [372, 40], [372, 484], [143, 484], [143, 40]],
-                           "band": 2, "scale": "long", "silhouette": False, "frame": True})
     if sub == "snail":
         # Eric's round-2 direction: outline only — outer shell + body (the
         # eyes and smile get authored as labeled features in curation).

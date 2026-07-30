@@ -7,14 +7,34 @@ fn main() {
         Some("expert") => tracer_core::Budget::EXPERT,
         _ => tracer_core::Budget::STANDARD,
     };
-    let lasso: Option<Vec<(f32, f32)>> = std::env::args().nth(2).map(|arg| {
+    // args: budget [lasso=x,y;x,y...] [frame=x0,y0,x1,y1] [part=name:x,y;x,y...]*
+    let mut cons = tracer_core::Constraints::default();
+    let parse_poly = |arg: &str| -> Vec<(f32, f32)> {
         arg.split(';')
             .filter_map(|p| {
                 let mut it = p.split(',');
                 Some((it.next()?.parse().ok()?, it.next()?.parse().ok()?))
             })
             .collect()
-    });
+    };
+    for arg in std::env::args().skip(2) {
+        if let Some(v) = arg.strip_prefix("frame=") {
+            let n: Vec<f32> = v.split(',').filter_map(|x| x.parse().ok()).collect();
+            if n.len() == 4 {
+                cons.frame = Some((n[0], n[1], n[2], n[3]));
+            }
+        } else if let Some(v) = arg.strip_prefix("part=") {
+            if let Some((name, poly)) = v.split_once(':') {
+                cons.parts.push((name.to_string(), parse_poly(poly)));
+            }
+        } else if let Some(v) = arg.strip_prefix("lasso=") {
+            cons.lasso = Some(parse_poly(v));
+        } else if let Some(v) = arg.strip_prefix("keep=") {
+            cons.keep = parse_poly(v);
+        } else if let Some(v) = arg.strip_prefix("exclude=") {
+            cons.exclude = parse_poly(v);
+        }
+    }
     let mut buf = Vec::new();
     std::io::stdin().read_to_end(&mut buf).expect("stdin");
     let s = &buf;
@@ -35,14 +55,14 @@ fn main() {
     i += 1;
     let (w, h) = (nums[0], nums[1]);
     let gray = &s[i..i + w * h];
-    let r = tracer_core::trace_seeded(gray, w, h, budget, lasso.as_deref());
+    let r = tracer_core::trace_constrained(gray, w, h, budget, &cons);
     let mut out = String::from("{");
     out += &format!("\"deviation\":{:.5},\"coverage\":{:.4},\"threshold\":{},\"smooth_viol\":{},\"w\":{w},\"h\":{h},\"paths\":[",
         r.deviation_frac, r.coverage_frac, r.threshold, r.smoothness_violations);
     for (k, p) in r.paths.iter().enumerate() {
         if k > 0 { out += ","; }
-        out += &format!("{{\"band\":{},\"scale\":\"{}\",\"silhouette\":{},\"points\":[",
-            p.band, p.scale_class, p.silhouette);
+        out += &format!("{{\"band\":{},\"scale\":\"{}\",\"silhouette\":{},\"part\":\"{}\",\"points\":[",
+            p.band, p.scale_class, p.silhouette, p.part);
         for (j, (x, y)) in p.points.iter().enumerate() {
             if j > 0 { out += ","; }
             out += &format!("[{x:.1},{y:.1}]");
