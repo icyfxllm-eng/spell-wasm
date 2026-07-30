@@ -19,7 +19,7 @@ CANVAS = 512
 FLOOR = 13.0
 MIN_WORD_CHARS = 3
 CORNER_DEG = 35.0
-SEG_MAX = 100.0   # a segment longer than this gets an interior mark
+SEG_MAX = 100000.0  # v8.1: pack per path; corner marks only   # a segment longer than this gets an interior mark
 
 SUBJ = {  # subject -> (ref, mode, tier)
  "dog": ("dog.png", "ink", "easy"), "butterfly": ("butterfly.png", "ink", "easy"),
@@ -257,15 +257,15 @@ for sub, (ref, mode, tier) in SUBJ.items():
             new_entries.append(e)
             continue
         pts = e["points"]
-        tight = [any(sd3(pt, u, v) < FLOOR for q in others for u, v in zip(q, q[1:])) for pt in pts]
+        tight = [any(sd3(pt, u, v) < FLOOR * 1.15 for q in others for u, v in zip(q, q[1:])) for pt in pts]
         # smooth runs: a run flips only if >= 3 consecutive agree
         runs = []
         cur = tight[0]; start = 0
         k = 0
         while k < len(pts):
             if tight[k] != cur:
-                nxt = tight[k:k+3]
-                if len(nxt) == 3 and all(v == tight[k] for v in nxt):
+                nxt = tight[k:k+2]
+                if len(nxt) == 2 and all(v == tight[k] for v in nxt):
                     runs.append((start, k, cur)); start = k; cur = tight[k]
             k += 1
         runs.append((start, len(pts), cur))

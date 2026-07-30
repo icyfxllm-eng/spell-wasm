@@ -91,49 +91,6 @@ pub fn sub_polyline(points: &[(f32, f32)], cum: &[f32], t0: f32, t1: f32) -> Vec
     out
 }
 
-/// Glyph anchor boxes along a baseline for collision testing (word choice
-/// and size are the ONLY remedies — geometry never moves).
-fn glyph_boxes(pl: &Placement) -> Vec<(f32, f32, f32)> {
-    // (x, y, half) sampled per glyph center along the baseline
-    let cum = arc_cum(&pl.baseline);
-    let total = *cum.last().unwrap_or(&0.0);
-    let n = ((total / pl.advance_px).round() as usize).max(1);
-    (0..n)
-        .map(|k| {
-            let want = (k as f32 + 0.5) * pl.advance_px;
-            let mut pt = *pl.baseline.last().unwrap();
-            for i in 1..pl.baseline.len() {
-                if cum[i] >= want {
-                    let seg = cum[i] - cum[i - 1];
-                    let f = if seg > 0.0 { (want - cum[i - 1]) / seg } else { 0.0 };
-                    pt = (
-                        pl.baseline[i - 1].0 + (pl.baseline[i].0 - pl.baseline[i - 1].0) * f,
-                        pl.baseline[i - 1].1 + (pl.baseline[i].1 - pl.baseline[i - 1].1) * f,
-                    );
-                    break;
-                }
-            }
-            (pt.0, pt.1, pl.glyph_size * 0.55)
-        })
-        .collect()
-}
-
-fn collide(a: &Placement, b: &Placement) -> bool {
-    if a.path_idx == b.path_idx {
-        return false; // same pinned path: neighbors abut by construction
-    }
-    let (ba, bb) = (glyph_boxes(a), glyph_boxes(b));
-    for &(ax, ay, ah) in &ba {
-        for &(bx, by, bh) in &bb {
-            let need = (ah + bh) * 0.8;
-            if (ax - bx).hypot(ay - by) < need {
-                return true;
-            }
-        }
-    }
-    false
-}
-
 fn splitmix(state: &mut u64) -> u64 {
     *state = state.wrapping_add(0x9E3779B97F4A7C15);
     let mut z = *state;
@@ -142,40 +99,173 @@ fn splitmix(state: &mut u64) -> u64 {
     z ^ (z >> 31)
 }
 
-/// F2 fit for one word on one segment. Returns glyph size + advance, or
-/// None (INVALID — caller redraws). Never squeezes, never overflows.
-fn fit(word_chars: usize, seg_len: f32, p: &Params) -> Option<(f32, f32)> {
-    if word_chars == 0 {
-        return None;
-    }
-    let n = word_chars as f32;
-    // size such that the word's natural extent fills the segment
-    let natural_size = seg_len / (n * p.advance_frac);
-    let size = natural_size.clamp(p.floor, p.band_max);
-    let natural_ext = n * p.advance_frac * size;
-    if natural_ext > seg_len + 0.5 {
-        return None; // would overflow past the endpoint at floor — INVALID
-    }
-    // justify: spacing stretches glyph advance to fill exactly
-    let advance_px = seg_len / n;
-    if advance_px > p.advance_frac * size * p.max_justify {
-        return None; // sparser than the D4 cap — split/redraw instead
-    }
-    Some((size, advance_px))
+/// v8.1 F2 — the size-descent report when a subject cannot be planned.
+#[derive(Debug)]
+pub enum PlanError {
+    /// (path a, path b, interior distance): corridors intersect at floor.
+    CorridorConflict(usize, usize, f32),
+    /// (path, cap at floor): starved below MIN_WORD_CHARS at floor.
+    Starved(usize, f32),
+    /// (path, budget left): pool exhausted mid-pack — BLOCKED, never sparse.
+    PoolExhausted(usize, f32),
 }
 
-/// Typeset a subject: one word per pre-marked segment of every
-/// typesettable path. Deterministic in (seed). F3 ladder inside;
-/// re-seeding is the caller's loop (cap 3 per spec).
-pub fn typeset(
+pub struct CapacityParams {
+    pub floor: f32,
+    pub band_max: f32,
+    /// Measured mean advance in em (tools/measure_advance.py) or the
+    /// script-class value for non-Latin.
+    pub avg_advance: f32,
+    pub min_word_chars: f32,
+    pub gap_chars: f32,
+    pub line_height_ratio: f32,
+    pub step: f32,
+}
+
+/// Interior point set (junction zones excluded — connected strokes touch
+/// at junctions by structure).
+fn interior(points: &[(f32, f32)]) -> Vec<(f32, f32)> {
+    const J: f32 = 18.0;
+    let e0 = points[0];
+    let e1 = *points.last().unwrap();
+    points
+        .iter()
+        .copied()
+        .filter(|pt| {
+            (pt.0 - e0.0).hypot(pt.1 - e0.1) > J && (pt.0 - e1.0).hypot(pt.1 - e1.1) > J
+        })
+        .collect()
+}
+
+fn seg_dist(p: (f32, f32), a: (f32, f32), b: (f32, f32)) -> f32 {
+    let (vx, vy) = (b.0 - a.0, b.1 - a.1);
+    let l2 = vx * vx + vy * vy;
+    if l2 == 0.0 {
+        return (p.0 - a.0).hypot(p.1 - a.1);
+    }
+    let t = (((p.0 - a.0) * vx + (p.1 - a.1) * vy) / l2).clamp(0.0, 1.0);
+    (p.0 - (a.0 + t * vx)).hypot(p.1 - (a.1 + t * vy))
+}
+
+/// Measurement-only densify (baselines are never derived from this).
+fn densify(points: &[(f32, f32)], step: f32) -> Vec<(f32, f32)> {
+    let mut out = Vec::new();
+    for w in points.windows(2) {
+        let d = (w[1].0 - w[0].0).hypot(w[1].1 - w[0].1);
+        let n = (d / step).ceil().max(1.0) as usize;
+        for k in 0..n {
+            let t = k as f32 / n as f32;
+            out.push((w[0].0 + (w[1].0 - w[0].0) * t, w[0].1 + (w[1].1 - w[0].1) * t));
+        }
+    }
+    out.push(*points.last().unwrap());
+    out
+}
+
+fn pairwise_interior_dist(paths: &[ScanPath]) -> Vec<(usize, usize, f32)> {
+    let word: Vec<usize> = paths
+        .iter()
+        .enumerate()
+        .filter(|(_, p)| !p.sub_floor && !p.decorative_thin)
+        .map(|(i, _)| i)
+        .collect();
+    let mut out = Vec::new();
+    for a in 0..word.len() {
+        for b in a + 1..word.len() {
+            let (i, j) = (word[a], word[b]);
+            let di = densify(&paths[i].points, 6.0);
+            let dj = densify(&paths[j].points, 6.0);
+            let pi = interior(&di);
+            let pj = interior(&dj);
+            if pi.len() < 2 || pj.len() < 2 {
+                continue;
+            }
+            let mut m = f32::MAX;
+            for pt in pi.iter().step_by(3) {
+                for w in pj.windows(2) {
+                    m = m.min(seg_dist(*pt, w[0], w[1]));
+                }
+            }
+            out.push((i, j, m));
+        }
+    }
+    out
+}
+
+/// v8.1 F2 — global size by descent: one size per picture (I9).
+pub fn size_by_descent(
     paths: &[ScanPath],
-    pool: &[(String, usize)], // (word, char_count)
+    p: &CapacityParams,
+) -> Result<f32, PlanError> {
+    let dists = pairwise_interior_dist(paths);
+    let mut s = p.band_max;
+    while s >= p.floor - 0.01 {
+        let mut ok = true;
+        let mut err: Option<PlanError> = None;
+        for &(i, j, d) in &dists {
+            if d < s * p.line_height_ratio {
+                ok = false;
+                err = Some(PlanError::CorridorConflict(i, j, d));
+                break;
+            }
+        }
+        if ok {
+            for (i, path) in paths.iter().enumerate() {
+                if path.sub_floor || path.decorative_thin {
+                    continue;
+                }
+                let arc = arc_cum(&path.points).last().copied().unwrap_or(0.0);
+                let cap = arc / (s * p.avg_advance);
+                if cap < p.min_word_chars {
+                    ok = false;
+                    err = Some(PlanError::Starved(i, cap));
+                    break;
+                }
+            }
+        }
+        if ok {
+            return Ok(s);
+        }
+        s -= p.step;
+        let _ = err;
+    }
+    // report the blocker measured at floor
+    let s = p.floor;
+    for &(i, j, d) in &dists {
+        if d < s * p.line_height_ratio {
+            return Err(PlanError::CorridorConflict(i, j, d));
+        }
+    }
+    for (i, path) in paths.iter().enumerate() {
+        if path.sub_floor || path.decorative_thin {
+            continue;
+        }
+        let arc = arc_cum(&path.points).last().copied().unwrap_or(0.0);
+        let cap = arc / (s * p.avg_advance);
+        if cap < p.min_word_chars {
+            return Err(PlanError::Starved(i, cap));
+        }
+    }
+    Err(PlanError::Starved(usize::MAX, 0.0))
+}
+
+/// v8.1 F3 — greedy pack to capacity. Word count is the OUTPUT (I7).
+/// Packing is per pre-marked segment (words never cross a corner mark);
+/// intervals are sequential so same-path overlap cannot exist (F4). The
+/// only exits are PACKED or an error (I8) — a word is never dropped.
+pub fn plan_capacity(
+    paths: &[ScanPath],
+    pool: &[(String, usize)],
     seed: u64,
-    p: &Params,
-) -> Result<Vec<Placement>, TypesetError> {
-    let mut st = seed ^ 0x5343414e; // "SCAN"
-    let mut placements: Vec<Placement> = Vec::new();
+    p: &CapacityParams,
+) -> Result<(f32, Vec<Placement>), PlanError> {
+    let size = size_by_descent(paths, p)?;
+    let mut st = seed ^ 0x43415041; // "CAPA"
     let mut used: Vec<usize> = Vec::new();
+    let mut placements = Vec::new();
+    // longest-first ordering; seeded rotation only among equal lengths
+    let mut by_len: Vec<usize> = (0..pool.len()).collect();
+    by_len.sort_by_key(|&i| std::cmp::Reverse(pool[i].1));
     for (pi, path) in paths.iter().enumerate() {
         if path.sub_floor || path.decorative_thin {
             continue;
@@ -190,202 +280,175 @@ pub fn typeset(
         for w2 in bounds.windows(2) {
             let (t0, t1) = (w2[0], w2[1]);
             let seg_len = (t1 - t0) * total;
-            if seg_len < p.floor * 2.0 {
-                continue; // sub-floor sliver between marks: D-A territory
+            let mut budget = seg_len / (size * p.avg_advance);
+            if budget < p.min_word_chars {
+                continue; // sub-min sliver between corner marks (D-A)
             }
-            let rot = (splitmix(&mut st) % pool.len().max(1) as u64) as usize;
-            let mut placed = false;
-            let mut last_err = TypesetError::NoLegalWord(pi);
-            for k in 0..pool.len() {
-                let idx = (rot + k) % pool.len();
-                if used.contains(&idx) {
-                    continue;
-                }
-                let (word, chars) = &pool[idx];
-                let Some((size, adv)) = fit(*chars, seg_len, p) else { continue };
-                let mut pl = Placement {
-                    path_idx: pi,
-                    t0,
-                    t1,
-                    word: word.clone(),
-                    glyph_size: size,
-                    advance_px: adv,
-                    baseline: sub_polyline(&path.points, &cum, t0, t1),
-                };
-                // F3: shrink the colliding word(S) toward floor — the new
-                // word first, then the placed neighbor (word size is a
-                // legal remedy on both sides; geometry never is).
-                let mut ok = !placements.iter().any(|o| collide(&pl, o));
-                if !ok && size > p.floor {
-                    pl.glyph_size = p.floor;
-                    if pl.advance_px <= p.advance_frac * p.floor * p.max_justify {
-                        ok = !placements.iter().any(|o| collide(&pl, o));
-                    }
-                    if !ok {
-                        pl.glyph_size = size;
-                    }
-                }
-                if !ok {
-                    let colliders: Vec<usize> = placements
-                        .iter()
-                        .enumerate()
-                        .filter(|(_, o)| collide(&pl, o))
-                        .map(|(k, _)| k)
-                        .collect();
-                    let shrinkable = colliders.iter().all(|&k| {
-                        let o = &placements[k];
-                        o.glyph_size > p.floor
-                            && o.advance_px <= p.advance_frac * p.floor * p.max_justify
-                    });
-                    // F3 step 2 — REDRAW a colliding neighbor: swap its
-                    // word for a longer one (smaller justified advance),
-                    // which legalizes shrinking it to floor. Word choice
-                    // is a legal remedy on both sides; geometry never is.
-                    if !shrinkable && colliders.len() == 1 {
-                        let k = colliders[0];
-                        let o_seg = {
-                            let o = &placements[k];
-                            let cum = arc_cum(&o.baseline);
-                            *cum.last().unwrap_or(&0.0)
-                        };
-                        let need_chars =
-                            (o_seg / (p.advance_frac * p.floor * p.max_justify)).ceil() as usize;
-                        let saved_word = placements[k].word.clone();
-                        let saved_size = placements[k].glyph_size;
-                        let saved_adv = placements[k].advance_px;
-                        let mut swapped = false;
-                        for (wi, (w2, c2)) in pool.iter().enumerate() {
-                            if used.contains(&wi) || *c2 < need_chars {
-                                continue;
-                            }
-                            if let Some((s2, a2)) = fit(*c2, o_seg, p) {
-                                placements[k].word = w2.clone();
-                                placements[k].glyph_size = s2.min(p.floor.max(s2)).min(s2);
-                                placements[k].glyph_size = p.floor.max(p.floor); // floor it
-                                placements[k].glyph_size = p.floor;
-                                placements[k].advance_px = a2;
-                                if a2 <= p.advance_frac * p.floor * p.max_justify {
-                                    used.push(wi);
-                                    swapped = true;
-                                    break;
-                                } else {
-                                    placements[k].word = saved_word.clone();
-                                    placements[k].glyph_size = saved_size;
-                                    placements[k].advance_px = saved_adv;
-                                }
-                            }
-                        }
-                        if swapped {
-                            pl.glyph_size = p.floor;
-                            if pl.advance_px <= p.advance_frac * p.floor * p.max_justify
-                                && !placements.iter().any(|o| collide(&pl, o))
-                            {
-                                ok = true;
-                            } else {
-                                pl.glyph_size = size;
-                            }
-                        }
-                    }
-                    if !ok && shrinkable && !colliders.is_empty() {
-                        let saved: Vec<(usize, f32)> =
-                            colliders.iter().map(|&k| (k, placements[k].glyph_size)).collect();
-                        for &k in &colliders {
-                            placements[k].glyph_size = p.floor;
-                        }
-                        pl.glyph_size = p.floor;
-                        if pl.advance_px <= p.advance_frac * p.floor * p.max_justify
-                            && !placements.iter().any(|o| collide(&pl, o))
-                        {
-                            ok = true;
-                        } else {
-                            for (k, v) in saved {
-                                placements[k].glyph_size = v;
-                            }
-                            pl.glyph_size = size;
-                        }
-                    }
-                }
-                if ok {
-                    used.push(idx);
-                    placements.push(pl);
-                    placed = true;
+            let mut words: Vec<usize> = Vec::new();
+            let mut packed_chars = 0.0f32;
+            loop {
+                let need = p.min_word_chars + if words.is_empty() { 0.0 } else { p.gap_chars };
+                if budget < need {
                     break;
-                } else if let Some(o) = placements.iter().find(|o| collide(&pl, o)) {
-                    last_err = TypesetError::Untypesettable(pi, o.path_idx);
                 }
+                let limit = budget - if words.is_empty() { 0.0 } else { p.gap_chars };
+                // longest word with len <= limit; seeded rotation on ties
+                let mut best_len = 0usize;
+                for &wi in &by_len {
+                    if used.contains(&wi) {
+                        continue;
+                    }
+                    if (pool[wi].1 as f32) <= limit {
+                        best_len = pool[wi].1;
+                        break;
+                    }
+                }
+                if best_len == 0 {
+                    return Err(PlanError::PoolExhausted(pi, budget));
+                }
+                let ties: Vec<usize> = by_len
+                    .iter()
+                    .copied()
+                    .filter(|&wi| !used.contains(&wi) && pool[wi].1 == best_len)
+                    .collect();
+                let pick = ties[(splitmix(&mut st) % ties.len() as u64) as usize];
+                used.push(pick);
+                if !words.is_empty() {
+                    budget -= p.gap_chars;
+                }
+                budget -= pool[pick].1 as f32;
+                packed_chars += pool[pick].1 as f32;
+                words.push(pick);
             }
-            if !placed {
-                return Err(last_err);
+            if words.is_empty() {
+                continue;
+            }
+            // F3.3: remainder becomes justified spacing across the run —
+            // the run spans the FULL segment; glyphs never scale.
+            let n_gaps = (words.len() - 1) as f32;
+            let slack = seg_len - packed_chars * size * p.avg_advance;
+            let gap_px = if n_gaps > 0.0 {
+                (slack / n_gaps).max(0.0)
+            } else {
+                0.0
+            };
+            let mut cursor = t0 * total;
+            for (k, &wi) in words.iter().enumerate() {
+                let chars = pool[wi].1 as f32;
+                let mut ext = chars * size * p.avg_advance;
+                if n_gaps == 0.0 {
+                    ext = seg_len; // single word justifies across the segment
+                }
+                let a = cursor / total;
+                let b = ((cursor + ext) / total).min(t1);
+                placements.push(Placement {
+                    path_idx: pi,
+                    t0: a,
+                    t1: b,
+                    word: pool[wi].0.clone(),
+                    glyph_size: size,
+                    advance_px: ext / chars,
+                    baseline: sub_polyline(&path.points, &cum, a, b),
+                });
+                cursor += ext;
+                if (k as f32) < n_gaps {
+                    cursor += gap_px;
+                }
             }
         }
     }
-    Ok(placements)
+    Ok((size, placements))
 }
 
 #[cfg(test)]
 mod tests {
     use super::*;
 
-    fn straight(len: f32) -> ScanPath {
+    fn straight(len: f32, y: f32) -> ScanPath {
         ScanPath {
-            points: vec![(0.0, 0.0), (len / 2.0, 0.0), (len, 0.0)],
+            points: vec![(0.0, y), (len / 2.0, y), (len, y)],
             segments: vec![],
             sub_floor: false,
             decorative_thin: false,
         }
     }
 
-    #[test]
-    fn baseline_is_the_path_verbatim() {
-        let p = ScanPath {
-            points: vec![(0.0, 0.0), (37.5, 12.2), (81.0, 9.9), (140.0, 44.0)],
-            segments: vec![],
-            sub_floor: false,
-            decorative_thin: false,
-        };
-        let pool = vec![("hello".to_string(), 5)];
-        let params = Params { floor: 13.0, band_max: 40.0, advance_frac: 0.54, max_justify: 2.0 };
-        let out = typeset(&[p.clone()], &pool, 1, &params).unwrap();
-        assert_eq!(out.len(), 1);
-        // every interior point of the baseline is literally a scan point
-        for pt in &out[0].baseline[1..out[0].baseline.len() - 1] {
-            assert!(p.points.contains(pt), "baseline resampled the scan: {pt:?}");
+    fn params() -> CapacityParams {
+        CapacityParams {
+            floor: 13.0,
+            band_max: 40.0,
+            avg_advance: 0.5257,
+            min_word_chars: 3.0,
+            gap_chars: 1.0,
+            line_height_ratio: 1.0,
+            step: 0.5,
         }
-        // residual 0 by construction: endpoints lie on scan segments
-        let cum = arc_cum(&p.points);
-        let total = *cum.last().unwrap();
-        assert!((arc_cum(&out[0].baseline).last().unwrap() - total).abs() < 0.01);
+    }
+
+    fn pool() -> Vec<(String, usize)> {
+        (0..200)
+            .map(|k| {
+                let n = 3 + (k % 9);
+                (format!("{}{}", "abcdefghijkl".chars().take(n).collect::<String>(), k), n + k.to_string().len())
+            })
+            .map(|(w, _)| {
+                let n = w.chars().count();
+                (w, n)
+            })
+            .collect()
     }
 
     #[test]
-    fn fit_never_squeezes_or_overflows() {
-        let params = Params { floor: 13.0, band_max: 40.0, advance_frac: 0.54, max_justify: 2.0 };
-        // 10 chars on a 50px segment: needs 70px at floor -> INVALID
-        assert!(fit(10, 50.0, &params).is_none());
-        // 3 chars on 50px: size = 50/(3*0.54)=30.8, fits exactly
-        let (size, adv) = fit(3, 50.0, &params).unwrap();
-        assert!((size - 30.86).abs() < 0.1);
-        assert!((adv * 3.0 - 50.0).abs() < 0.01, "justified to fill exactly");
-        // sparse: 2 chars on 200px at band max 40 -> advance 100 > 2x cap
-        assert!(fit(2, 200.0, &params).is_none(), "D4 cap routes to split");
+    fn capacity_is_arc_over_size_advance() {
+        // 400px path at size 20: cap = 400/(20*0.5257) = 38.04 chars
+        let p = params();
+        let cap = 400.0 / (20.0 * p.avg_advance);
+        assert!((cap - 38.04).abs() < 0.1);
     }
 
     #[test]
-    fn collision_resolves_in_words_never_geometry() {
-        // two parallel strokes 12px apart: floor glyphs (13px) must collide
-        let a = straight(120.0);
-        let mut b = straight(120.0);
-        for pt in b.points.iter_mut() {
-            pt.1 = 12.0;
+    fn emergent_counts_and_baselines_verbatim() {
+        let p = params();
+        let paths = [straight(600.0, 0.0), straight(200.0, 100.0)];
+        let (size, pls) = plan_capacity(&paths, &pool(), 1, &p).unwrap();
+        assert!(size >= p.floor && size <= p.band_max);
+        let long: usize = pls.iter().filter(|x| x.path_idx == 0).count();
+        let short: usize = pls.iter().filter(|x| x.path_idx == 1).count();
+        assert!(long > short, "capacity scales with arc: {long} vs {short}");
+        for pl in &pls {
+            let src = &paths[pl.path_idx].points;
+            for pt in &pl.baseline[1..pl.baseline.len().saturating_sub(1)] {
+                let on = src.windows(2).any(|w| seg_dist(*pt, w[0], w[1]) < 0.01);
+                assert!(on, "baseline off scan");
+            }
         }
-        let pool: Vec<(String, usize)> =
-            (0..8).map(|k| (format!("w{k}wordy"), 7)).collect();
-        let params = Params { floor: 13.0, band_max: 24.0, advance_frac: 0.54, max_justify: 2.0 };
-        let before = [a.clone(), b.clone()];
-        let r = typeset(&before, &pool, 1, &params);
-        assert!(matches!(r, Err(TypesetError::Untypesettable(_, _))));
-        // geometry unchanged by the attempt (I2: read-only)
-        assert_eq!(before[0].points, a.points);
-        assert_eq!(before[1].points, b.points);
+    }
+
+    #[test]
+    fn corridor_conflict_descends_then_blocks() {
+        let p = params();
+        // two parallel paths 18px apart: descent must land size <= 18
+        let paths = [straight(400.0, 0.0), straight(400.0, 18.0)];
+        let s = size_by_descent(&paths, &p).unwrap();
+        assert!(s <= 18.0 && s >= p.floor);
+        // 9px apart: below floor corridor -> BLOCKED loudly
+        let tight = [straight(400.0, 0.0), straight(400.0, 9.0)];
+        assert!(matches!(
+            size_by_descent(&tight, &p),
+            Err(PlanError::CorridorConflict(_, _, _))
+        ));
+    }
+
+    #[test]
+    fn packer_exits_are_packed_or_blocked() {
+        let p = params();
+        let paths = [straight(2000.0, 0.0)];
+        // starved pool: 3 tiny words for a 2000px path -> PoolExhausted
+        let tiny: Vec<(String, usize)> =
+            vec![("abc".into(), 3), ("def".into(), 3), ("ghi".into(), 3)];
+        assert!(matches!(
+            plan_capacity(&paths, &tiny, 1, &p),
+            Err(PlanError::PoolExhausted(_, _))
+        ));
     }
 }

@@ -42,4 +42,27 @@ if "--no-nudge-fields" in sys.argv or len(sys.argv) == 1:
         print("I3 FAIL:", hits); ok = False
     else:
         print("I3 zero nudge fields: OK")
+# v8.1 I7-I10
+import re as _re
+if "--no-wordcount-params" in sys.argv or len(sys.argv) == 1:
+    hits = []
+    for f in [ROOT/"scanlock/src/lib.rs", ROOT/"scanlock/src/bin/scanlock-render.rs"]:
+        for bad in ["word_count", "num_words", "max_words", "wordcount"]:
+            if bad in f.read_text().lower():
+                hits.append((f.name, bad))
+    print("I7 no word-count params: " + ("OK" if not hits else f"FAIL {hits}")); ok &= not hits
+if "--packer-exits" in sys.argv or len(sys.argv) == 1:
+    src = (ROOT/"scanlock/src/lib.rs").read_text()
+    # the packer's only non-Ok exit is PlanError; no silent 'continue' after a draw
+    has_err = "PoolExhausted" in src and "plan_capacity" in src
+    dead = "fn typeset(" in src or "fn collide(" in src
+    print("I8 packer exits PACKED|BLOCKED, collision loop deleted: " + ("OK" if has_err and not dead else "FAIL")); ok &= has_err and not dead
+if "--single-size" in sys.argv or len(sys.argv) == 1:
+    src = (ROOT/"scanlock/src/lib.rs").read_text()
+    print("I9 one glyph size per picture (size_by_descent single s): " + ("OK" if "size_by_descent" in src else "FAIL"))
+if "--coverage-gate-unremovable" in sys.argv or len(sys.argv) == 1:
+    src = (ROOT/"scanlock/src/bin/scanlock-render.rs").read_text()
+    gated = "render_blocked" in src and "env" not in src.split("render_blocked")[0][-500:]
+    flagless = "disable" not in src.lower() and "skip_gate" not in src.lower()
+    print("I10 coverage gate unremovable: " + ("OK" if gated and flagless else "FAIL")); ok &= gated and flagless
 sys.exit(0 if ok else 1)

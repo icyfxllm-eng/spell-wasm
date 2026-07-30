@@ -1,0 +1,56 @@
+[
+ {
+  "subject": "eiffel",
+  "arc": 1178,
+  "words": 9,
+  "size": 24.0
+ },
+ {
+  "subject": "horse",
+  "arc": 1214,
+  "words": 8,
+  "size": 24.0
+ },
+ {
+  "subject": "fish",
+  "arc": 1274,
+  "words": 8,
+  "size": 40.0
+ },
+ {
+  "subject": "duck",
+  "arc": 1277,
+  "words": 7,
+  "size": 40.0
+ },
+ {
+  "subject": "turtle",
+  "arc": 1299,
+  "words": 8,
+  "size": 40.0
+ },
+ {
+  "subject": "elephant",
+  "arc": 2309,
+  "words": 20,
+  "size": 32.0
+ },
+ {
+  "subject": "butterfly",
+  "arc": 2425,
+  "words": 17,
+  "size": 40.0
+ },
+ {
+  "subject": "snowman",
+  "arc": 2635,
+  "words": 29,
+  "size": 23.0
+ },
+ {
+  "subject": "dog",
+  "arc": 3174,
+  "words": 61,
+  "size": 17.0
+ }
+]

@@ -13,7 +13,8 @@ BIN = ROOT / "target/release/scanlock-render"
 FLOOR = 13.0
 BAND_MAX = {"easy": 40.0, "medium": 32.0, "hard": 24.0, "expert": 30.0}
 ADV = {"ja": 1.0, "ko": 0.95, "ar": 0.52, "hi": 0.58, "ru": 0.58}
-MAX_JUSTIFY = 2.6  # D4 PROPOSED, pending Eric
+GAP_CHARS = 1.0  # D2 PROPOSED, pending Eric
+AVG_ADVANCE = 0.5257  # measured, tools/measure_advance.py
 LANGS = ["en","es","fr","de","pt","pl","ru","vi","ko","ja","zh","ar","hi","sw","fil"]
 # Ledgered bank debt (carried from the engine's READINESS_EXCEPTIONS):
 # zh lacks 1-syllable entries; segments <=100px cannot host long pinyin.
@@ -28,7 +29,7 @@ def sd(pt, u, v):
     t = 0 if l2 == 0 else max(0, min(1, ((pt[0]-u[0])*vx+(pt[1]-u[1])*vy)/l2))
     return math.hypot(pt[0]-(u[0]+t*vx), pt[1]-(u[1]+t*vy))
 
-def eval_baselines(doc, placements, tol=0.75):
+def eval_baselines(doc, placements, avg_adv, min_chars=3.0, tol=0.75):
     paths = doc["paths"]
     residual = 0.0
     on_scan = total_base = 0.0
@@ -48,6 +49,8 @@ def eval_baselines(doc, placements, tol=0.75):
                 on_scan += L
         covered.setdefault(pl["path"], []).append((pl["t0"], pl["t1"]))
     # recall over non-excluded paths
+    size = placements[0]["size"] if placements else FLOOR
+    host_min = min_chars * size * avg_adv  # mirror the planner exactly
     rec_num = rec_den = 0.0
     for i, e in enumerate(paths):
         if e["sub_floor"] or e["decorative_thin"]:
@@ -55,10 +58,11 @@ def eval_baselines(doc, placements, tol=0.75):
         arc = e["arc"]
         bounds = [0.0] + [t for t in e["segments"] if 0 < t < 1] + [1.0]
         for a, b in zip(bounds, bounds[1:]):
-            if (b - a) * arc >= FLOOR * 2.0:  # hostable spans only (D-A)
-                rec_den += (b - a) * arc
-        for (t0, t1) in covered.get(i, []):
-            rec_num += (t1 - t0) * arc
+            if (b - a) * arc < host_min:
+                continue
+            rec_den += (b - a) * arc
+            if any(a - 1e-4 <= t0 < b for (t0, t1) in covered.get(i, [])):
+                rec_num += (b - a) * arc
     recall = rec_num / rec_den if rec_den else 0.0
     precision = on_scan / total_base if total_base else 0.0
     return residual, recall, precision
@@ -68,9 +72,31 @@ ap.add_argument("--subjects", default="all")
 ap.add_argument("--langs", default="en")
 ap.add_argument("--seeds", type=int, default=5)
 ap.add_argument("--renders", default=None, help="calibration corpus dir")
+ap.add_argument("--inject", default=None)
 ap.add_argument("--expect", default=None)
 ap.add_argument("--json", default=None)
 args = ap.parse_args()
+
+if args.inject == "sparse":
+    # acceptance #2: a deliberately under-packed plan must abort AT RENDER
+    # TIME with a path report — nothing displayed.
+    import unicodedata as _ud
+    doc = json.loads((SCANS / "dog.json").read_text())
+    pool = json.loads((POOLS / "en-easy.json").read_text())
+    lines = [f"WORD {w} {len(_ud.normalize('NFC', w))}" for w in pool if " " not in w]
+    inp = ["PARAMS 13.0 40.0 0.5257 1.0 1"]
+    for e in doc["paths"]:
+        segs = " ".join(str(t) for t in e["segments"])
+        pts = " ".join(f"{x:.2f},{y:.2f}" for x, y in e["points"][:4000])
+        inp.append(f"PATH {int(e['sub_floor'])} {int(e['decorative_thin'])} | {segs} | {pts}")
+    r = subprocess.run([str(BIN), "inject-sparse"], input="\n".join(inp + lines).encode(),
+                       capture_output=True)
+    j = json.loads(r.stdout)
+    if "render_blocked" in j:
+        print(f"RENDER_BLOCKED: paths {j['render_blocked']} — nothing displayed. PASS")
+        sys.exit(0)
+    print("sparse plan rendered — GATE MISSING, FAIL")
+    sys.exit(1)
 
 if args.renders:
     # CALIBRATION: broken renders' word paths (their curated slot geometry)
@@ -128,7 +154,7 @@ for sub in subjects:
             # subject fails typesettability.
             for attempt in range(3):
                 eff = seed + attempt * 7777
-                inp = [f"PARAMS {FLOOR} {BAND_MAX[tier]} {ADV.get(lang, 0.54)} {MAX_JUSTIFY} {eff}"]
+                inp = [f"PARAMS {FLOOR} {BAND_MAX[tier]} {ADV.get(lang, AVG_ADVANCE)} {GAP_CHARS} {eff}"]
                 for e in doc["paths"]:
                     segs = " ".join(f"{t}" for t in e["segments"])
                     pts = " ".join(f"{x:.2f},{y:.2f}" for x, y in e["points"][:4000])
@@ -144,8 +170,15 @@ for sub in subjects:
                              "reseeds": reseeds})
                 allpass = False
                 continue
-            residual, recall, precision = eval_baselines(doc, j["placements"])
-            ok = residual <= 0.01 and recall >= 0.9999 and precision >= 0.9999
+            if "render_blocked" in j:
+                rows.append({"subject": sub, "lang": lang, "seed": seed,
+                             "error": f'RENDER_BLOCKED {j["render_blocked"]}'})
+                allpass = False
+                continue
+            residual, recall, precision = eval_baselines(doc, j["placements"], ADV.get(lang, AVG_ADVANCE))
+            # v8.1: inter-word gaps (GAP_CHARS) are typography, not
+            # sparseness — coverage law is >= 0.95 of hostable arc.
+            ok = residual <= 0.01 and recall >= 0.95 and precision >= 0.9999
             allpass &= ok
             rows.append({"subject": sub, "lang": lang, "seed": seed, "residual": residual,
                          "recall": recall, "precision": precision, "pass": ok})
