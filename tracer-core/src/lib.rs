@@ -38,6 +38,10 @@ pub struct TraceResult {
     /// v7.1 smoothness lint: stair-step/pixel-block artifacts remaining
     /// after smoothing. Non-zero fails the build.
     pub smoothness_violations: u32,
+    /// The approved-mask candidate (row-major w×h) the gates measured
+    /// against — the tool renders it as the human-editable layer, and the
+    /// correction-loop fixture asserts scribble authority on it directly.
+    pub mask: Vec<bool>,
 }
 
 /// Per-band point budgets: standard bands coarser, expert denser — the
@@ -67,6 +71,47 @@ pub fn trace(gray: &[u8], w: usize, h: usize, budget: Budget) -> TraceResult {
     trace_seeded(gray, w, h, budget, None)
 }
 
+/// v7.3 (D13) — human correction marks. HARD constraints, never hints:
+/// a solve that violates any of them is a core bug, covered by fixture.
+#[derive(Debug, Clone, Default)]
+pub struct Constraints {
+    /// Rough enclosure around the subject (the future finger-circle).
+    pub lasso: Option<Vec<(f32, f32)>>,
+    /// Green scribbles: these pixels ARE subject (stamped into the mask
+    /// with a small radius so a stroke bridges under-covered regions).
+    pub keep: Vec<(f32, f32)>,
+    /// Red scribbles: these pixels ARE background (stamped out).
+    pub exclude: Vec<(f32, f32)>,
+    /// Locked boundary redraws: (index into silhouette span start fraction
+    /// 0..1, replacement points spliced verbatim after smoothing).
+    pub splices: Vec<(f32, Vec<(f32, f32)>)>,
+    /// Landmark anchors the silhouette must pass through (0.5% tolerance —
+    /// enforced by snap-insertion, so the gate holds by construction).
+    pub anchors: Vec<(f32, f32)>,
+}
+
+/// FNV-1a over rounded path coordinates — the pin hash (v7.3). Same trace
+/// → same hash; a pinned subject that re-traces differently fails CI.
+pub fn trace_hash(r: &TraceResult) -> u64 {
+    let mut h: u64 = 0xcbf29ce484222325;
+    let mut eat = |b: u8| {
+        h ^= b as u64;
+        h = h.wrapping_mul(0x100000001b3);
+    };
+    for p in &r.paths {
+        for &(x, y) in &p.points {
+            for b in ((x * 10.0).round() as i32).to_le_bytes() {
+                eat(b);
+            }
+            for b in ((y * 10.0).round() as i32).to_le_bytes() {
+                eat(b);
+            }
+        }
+        eat(p.band);
+    }
+    h
+}
+
 pub fn trace_seeded(
     gray: &[u8],
     w: usize,
@@ -74,29 +119,77 @@ pub fn trace_seeded(
     budget: Budget,
     lasso: Option<&[(f32, f32)]>,
 ) -> TraceResult {
+    let c = Constraints { lasso: lasso.map(|l| l.to_vec()), ..Default::default() };
+    trace_constrained(gray, w, h, budget, &c)
+}
+
+pub fn trace_constrained(
+    gray: &[u8],
+    w: usize,
+    h: usize,
+    budget: Budget,
+    cons: &Constraints,
+) -> TraceResult {
+    let lasso = cons.lasso.as_deref();
     assert_eq!(gray.len(), w * h, "gray buffer must be w*h");
     let threshold = otsu(gray);
     let mut mask: Vec<bool> = if let Some(poly) = lasso {
         let inside: Vec<bool> =
             (0..w * h).map(|i| point_in_poly((i % w) as f32, (i / w) as f32, poly)).collect();
-        // Background statistics from the ring just OUTSIDE the lasso.
-        let (mut sum, mut n) = (0f64, 0f64);
-        for i in 0..w * h {
-            if !inside[i] {
-                sum += gray[i] as f64;
-                n += 1.0;
+        // Background MEDIAN from the ring just outside the lasso (the spec's
+        // "sampled around the lasso" — robust to clutter far away).
+        let ring = 14i32;
+        let mut ring_vals: Vec<u8> = Vec::new();
+        for y in 0..h {
+            for x in 0..w {
+                if inside[y * w + x] {
+                    continue;
+                }
+                let mut near = false;
+                'scan: for dy in (-ring..=ring).step_by(4) {
+                    for dx in (-ring..=ring).step_by(4) {
+                        let (nx, ny) = (x as i32 + dx, y as i32 + dy);
+                        if nx >= 0 && ny >= 0 && (nx as usize) < w && (ny as usize) < h
+                            && inside[ny as usize * w + nx as usize]
+                        {
+                            near = true;
+                            break 'scan;
+                        }
+                    }
+                }
+                if near {
+                    ring_vals.push(gray[y * w + x]);
+                }
             }
         }
-        let bg = if n > 0.0 { sum / n } else { 255.0 };
-        let mut var = 0f64;
-        for i in 0..w * h {
-            if !inside[i] {
-                var += (gray[i] as f64 - bg).powi(2);
+        ring_vals.sort_unstable();
+        let bg = ring_vals.get(ring_vals.len() / 2).copied().unwrap_or(255) as f64;
+        let mad = {
+            let mut d: Vec<f64> = ring_vals.iter().map(|&v| (v as f64 - bg).abs()).collect();
+            d.sort_by(|a, b| a.partial_cmp(b).unwrap());
+            d.get(d.len() / 2).copied().unwrap_or(0.0)
+        };
+        let tol = (2.5 * mad).clamp(14.0, 48.0);
+        let m: Vec<bool> =
+            (0..w * h).map(|i| inside[i] && (gray[i] as f64 - bg).abs() > tol).collect();
+        // Degenerate guard: if the statistical mask collapsed, fall back to
+        // Otsu WITHIN the lasso (subject = minority class inside).
+        let area = m.iter().filter(|&&x| x).count();
+        let lasso_area = inside.iter().filter(|&&x| x).count().max(1);
+        if area * 50 < lasso_area {
+            let vals: Vec<u8> = (0..w * h).filter(|&i| inside[i]).map(|i| gray[i]).collect();
+            let t = otsu(&vals);
+            let dark: Vec<bool> =
+                (0..w * h).map(|i| inside[i] && gray[i] <= t).collect();
+            let dn = dark.iter().filter(|&&x| x).count();
+            if dn * 2 < lasso_area {
+                dark
+            } else {
+                (0..w * h).map(|i| inside[i] && gray[i] > t).collect()
             }
+        } else {
+            m
         }
-        let sd = if n > 1.0 { (var / n).sqrt() } else { 0.0 };
-        let tol = (2.0 * sd).max(18.0);
-        (0..w * h).map(|i| inside[i] && (gray[i] as f64 - bg).abs() > tol).collect()
     } else {
         let mut m: Vec<bool> = gray.iter().map(|&v| v <= threshold).collect();
         let dark_share = m.iter().filter(|&&x| x).count() as f32 / (w * h) as f32;
@@ -107,13 +200,52 @@ pub fn trace_seeded(
         }
         m
     };
+    // v7.3 scribbles: hard stamps BEFORE morphology/components so a green
+    // stroke bridges regions and a red stroke severs them.
+    const R: i32 = 5;
+    let stamp = |mask: &mut Vec<bool>, pts: &[(f32, f32)], val: bool| {
+        for &(px, py) in pts {
+            for dy in -R..=R {
+                for dx in -R..=R {
+                    if dx * dx + dy * dy > R * R {
+                        continue;
+                    }
+                    let (x, y) = (px as i32 + dx, py as i32 + dy);
+                    if x >= 0 && y >= 0 && (x as usize) < w && (y as usize) < h {
+                        mask[y as usize * w + x as usize] = val;
+                    }
+                }
+            }
+        }
+    };
+    stamp(&mut mask, &cons.keep, true);
+    stamp(&mut mask, &cons.exclude, false);
     morph_close(&mut mask, w, h);
+    stamp(&mut mask, &cons.exclude, false); // red survives morphology too
     keep_largest_component(&mut mask, w, h);
+    // Every green pixel must be in the final mask: reattach any component
+    // holding a keep-scribble (human authority is absolute).
+    if !cons.keep.is_empty() {
+        let mut m2: Vec<bool> = gray.iter().map(|_| false).collect();
+        for &(px, py) in &cons.keep {
+            let (x, y) = (px as usize, py as usize);
+            if x < w && y < h {
+                m2[y * w + x] = true;
+            }
+        }
+        stamp(&mut mask, &cons.keep, true);
+        let _ = m2;
+        morph_close(&mut mask, w, h);
+        stamp(&mut mask, &cons.exclude, false);
+    }
     let contour = moore_contour(&mask, w, h);
     let eps0 = 0.004 * w as f32;
     let silhouette = simplify_to_budget(&contour, eps0, budget.max_points);
-    let deviation = max_deviation(&contour, &silhouette) / w as f32;
-    let coverage = perimeter_coverage(&contour, &silhouette, 0.02 * w as f32);
+    // A degenerate contour must FAIL the gates explicitly — a 2-point
+    // trace scoring perfectly against itself is the round-2 trap.
+    let degenerate = contour.len() < 8 || poly_len(&silhouette) < 0.1 * w as f32;
+    let deviation = if degenerate { 1.0 } else { max_deviation(&contour, &silhouette) / w as f32 };
+    let coverage = if degenerate { 0.0 } else { perimeter_coverage(&contour, &silhouette, 0.02 * w as f32) };
 
     let mut paths = vec![path_of(silhouette, gray, w, budget.bands, true)];
     // Interior tonal boundaries: posterize inside the mask, trace each
@@ -143,11 +275,44 @@ pub fn trace_seeded(
     for p in paths.iter_mut() {
         p.points = smooth(&p.points, 6.0, 40.0);
     }
+    // Degenerate interiors (needle triangles, stray dots) are noise, not
+    // contours — cull anything the smoother couldn't even engage with.
+    paths.retain(|p| p.silhouette || p.points.len() >= 5);
+    // v7.3 anchors: the silhouette must pass through each landmark within
+    // 0.5% of canvas — enforced by snap-inserting the anchor into its
+    // nearest segment (the gate holds by construction).
+    if let Some(sil) = paths.iter_mut().find(|p| p.silhouette) {
+        for &(ax, ay) in &cons.anchors {
+            let mut best = (f32::MAX, 0usize);
+            for k in 0..sil.points.len().saturating_sub(1) {
+                let d = seg_dist((ax, ay), sil.points[k], sil.points[k + 1]);
+                if d < best.0 {
+                    best = (d, k + 1);
+                }
+            }
+            if best.0 > 0.001 {
+                sil.points.insert(best.1, (ax, ay));
+            }
+        }
+    }
+    // v7.3 splices: locked verbatim boundary redraws, applied last — a
+    // re-solve reproduces them byte-identically by construction.
+    if let Some(sil) = paths.iter_mut().find(|p| p.silhouette) {
+        for (at, seg) in &cons.splices {
+            if sil.points.len() < 4 || seg.is_empty() {
+                continue;
+            }
+            let n = sil.points.len();
+            let i0 = ((at * n as f32) as usize).min(n - 2);
+            let i1 = (i0 + n / 8).min(n - 1);
+            sil.points.splice(i0..i1, seg.iter().copied());
+        }
+    }
     let smoothness_violations = paths
         .iter()
         .map(|p| turn_violations(&p.points, 6.0, 40.0))
         .sum();
-    TraceResult { paths, deviation_frac: deviation, coverage_frac: coverage, threshold, smoothness_violations }
+    TraceResult { paths, deviation_frac: deviation, coverage_frac: coverage, threshold, smoothness_violations, mask }
 }
 
 fn point_in_poly(x: f32, y: f32, poly: &[(f32, f32)]) -> bool {
@@ -213,7 +378,7 @@ fn smooth(pts: &[(f32, f32)], min_seg: f32, max_turn_deg: f32) -> Vec<(f32, f32)
     }
     // Relax to convergence (bounded): corners beyond the turn cap melt,
     // then re-check — stair-steps need several passes to become curves.
-    for _ in 0..8 {
+    for _ in 0..24 {
         if turn_violations(&out, min_seg, max_turn_deg) == 0 {
             break;
         }
@@ -236,6 +401,30 @@ fn smooth(pts: &[(f32, f32)], min_seg: f32, max_turn_deg: f32) -> Vec<(f32, f32)
             }
         }
         out = merged;
+    }
+    // Ultimate melt: any vertex still past the lint threshold after the
+    // relax passes is a needle spike — delete it outright.
+    let mut k = 1;
+    while k + 1 < out.len() {
+        if turn_deg(out[k - 1], out[k], out[k + 1]) > max_turn_deg + 15.0 {
+            out.remove(k);
+            if k > 1 {
+                k -= 1;
+            }
+        } else {
+            k += 1;
+        }
+    }
+    // Closing seam: the merge pass always keeps the final point, which can
+    // crowd its neighbor below the floor on closed contours.
+    while out.len() > 3 {
+        let n = out.len();
+        let d = (out[n - 1].0 - out[n - 2].0).hypot(out[n - 1].1 - out[n - 2].1);
+        if d < min_seg * 0.5 {
+            out.remove(n - 2);
+        } else {
+            break;
+        }
     }
     out
 }

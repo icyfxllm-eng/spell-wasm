@@ -149,3 +149,15 @@ of the retired term scoped to the feature; `dragon-outline-id`,
   confined to the bird); monalisa-target-annotation (Eric's blue-line
   annotation stored as the acceptance exemplar — awaiting the actual
   annotation file; descriptor stored meanwhile).
+
+## v7.3 amendment (Eric, 2026-07-30) — correction loop + pinning (D13)
+
+Human marks are HARD constraints, never hints: green scribble = subject
+(every scribbled pixel in the mask), red scribble = background, boundary
+redraw splices verbatim and LOCKS (re-solves may not move it), landmark
+anchors get 0.5%-canvas deviation tolerance. Iterations versioned;
+Eric's acceptance hash-pins the golden trace — CI fails if a shipped
+manifest's trace hash differs from its pin; changing one requires an
+explicit unpin (reviewable event). Primitives live in the tool UI; the
+portable core consumes them as constraint inputs (player flow may later
+expose a subset). Fixture `correction-loop` covers all four authorities.

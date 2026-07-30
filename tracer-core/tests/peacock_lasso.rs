@@ -38,7 +38,7 @@ fn peacock_lasso() {
     assert!(!unseeded_pass, "unseeded auto-trace must FAIL on the low-contrast reference (routing event)");
 
     let poly = lasso(w, h);
-    let seeded = tracer_core::trace_seeded(&gray, w, h, tracer_core::Budget::STANDARD, Some(&poly));
+    let seeded = tracer_core::trace_seeded(&gray, w, h, tracer_core::Budget::EXPERT, Some(&poly));
     assert!(seeded.deviation_frac <= 0.015, "seeded deviation {} > 1.5%", seeded.deviation_frac);
     assert!(seeded.coverage_frac >= 0.95, "seeded coverage {} < 95%", seeded.coverage_frac);
     assert_eq!(seeded.smoothness_violations, 0, "stair-step lint");
