@@ -216,3 +216,16 @@ for clip-art the drawn black line IS the ground truth.
   + hands/arms; blue = hair + face contour. Digitized to
   ref/mona-exemplar.json (Eric's images of 2026-07-31); his re-grade
   stays the final gate — metric PASS is necessary, never sufficient.
+
+## v7.5.1 (Eric, 2026-07-31) — Mona: arms, shoulders, face lock
+
+Executed: container shape + chest U-blob + hand octagon DELETED (not
+redrawn). Figure silhouette articulates veil -> neck -> sloping
+shoulders -> ballooned sleeves -> elbows -> forearms crossing to the
+wrists. sleeve_left / sleeve_right / forearm crossing / cuffs are named
+parts; fingers are engraving ink connecting to the forearms (10
+strokes). Eight face landmarks (eye corners, nose base, mouth corners,
+chin) anchored to authored engraving coordinates, 0.5% tolerance,
+asserted at assembly — drift is a hard failure. Required features
+extended per spec. The caution held: the silhouette was recalibrated to
+her true body, never widened to swallow the arms.
