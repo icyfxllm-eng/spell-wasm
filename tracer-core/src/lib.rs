@@ -50,8 +50,8 @@ pub struct Budget {
 }
 
 impl Budget {
-    pub const STANDARD: Budget = Budget { max_points: 24, max_interior: 10, bands: 3 };
-    pub const EXPERT: Budget = Budget { max_points: 48, max_interior: 60, bands: 4 };
+    pub const STANDARD: Budget = Budget { max_points: 64, max_interior: 10, bands: 3 };
+    pub const EXPERT: Budget = Budget { max_points: 128, max_interior: 60, bands: 4 };
 }
 
 /// Trace `gray` (row-major, w×h, 0=black) into outline paths.
