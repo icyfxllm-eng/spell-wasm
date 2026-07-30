@@ -7,7 +7,7 @@ import fs from "node:fs";
 import path from "node:path";
 
 const ROOT = path.dirname(new URL(import.meta.url).pathname) + "/..";
-const BANDS = { easy: [3, 8], medium: [10, 20], hard: [20, 45], expert: [38, 200] };
+const BANDS = { easy: [1, 8], medium: [1, 20], hard: [1, 45], expert: [1, 200] };
 const ARCHES = new Set(["stack", "arc", "spiral", "zigzag", "wave", "radial", "outline", "line"]);
 let problems = [];
 const m = JSON.parse(fs.readFileSync(`${ROOT}/config/wordpic/pictures.json`, "utf8"));

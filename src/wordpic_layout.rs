@@ -271,6 +271,9 @@ pub struct Slot {
     pub poly: Option<Poly>,
     /// Stack anchor: (x, y, cell, column height) — height is LAW (v6).
     pub stack: Option<(f32, f32, f32, f32)>,
+    /// v7.5/F3 — dot-class slot (eyes, buttons, nostrils): a short stroke
+    /// (24..45px) hosting one 2–4 unit word at a relaxed fill window.
+    pub dot: bool,
     pub band: u8,
 }
 
@@ -342,6 +345,7 @@ pub fn slots_for_lang(p: &Picture, lang: &str) -> Vec<Slot> {
                 path_idx: i,
                 poly: None,
                 stack: Some((x, y, cell, height)),
+                dot: false,
                 band: q.band,
             });
             continue;
@@ -364,6 +368,20 @@ pub fn slots_for_lang(p: &Picture, lang: &str) -> Vec<Slot> {
         // Distribute the manifest floor over pieces proportionally to length.
         let total_len: f32 = pieces.iter().map(|pc| pc.len()).sum();
         for piece in pieces {
+            // v7.5/F3: dot-class — a 24..45px piece is ONE slot hosting a
+            // short word (eyes look like eyes). Below 24px it is noise.
+            if piece.len() < 45.0 {
+                if piece.len() >= 24.0 {
+                    slots.push(Slot {
+                        path_idx: i,
+                        poly: Some(piece.clone()),
+                        stack: None,
+                        dot: true,
+                        band: q.band,
+                    });
+                }
+                continue;
+            }
             let share = if total_len > 0.0 { piece.len() / total_len } else { 1.0 };
             let floor_here = (manifest_segs as f32 * share).round() as usize;
             let solved = (piece.len() / ideal).round() as usize;
@@ -379,6 +397,7 @@ pub fn slots_for_lang(p: &Picture, lang: &str) -> Vec<Slot> {
                     path_idx: i,
                     poly: Some(sub_poly(&piece, t0, t1)),
                     stack: None,
+                    dot: false,
                     band: q.band,
                 });
             }
@@ -436,16 +455,20 @@ pub fn solve(slot: &Slot, lang: &str, units: u32) -> Option<Placement> {
     if len < 8.0 || units == 0 {
         return None;
     }
+    if slot.dot && !(2..=4).contains(&units) {
+        return None; // F3: a too-long word is simply ineligible for a dot
+    }
     let adv = advance(lang);
     // Solve toward the padded target: word extent ≈ FILL_MAX of the segment.
     let natural = len * FILL_MAX / (units as f32 * adv);
     let size = natural.clamp(lo, hi);
     let word_len = units as f32 * adv * size;
     let fill = word_len / len;
-    if fill < FILL_MIN && size >= hi - 0.01 {
+    let (fmin, fmax) = if slot.dot { (0.50, 0.98) } else { (FILL_MIN, FILL_MAX) };
+    if fill < fmin && size >= hi - 0.01 {
         return None; // under-fills even at band max → longer word needed
     }
-    if fill > FILL_MAX + 0.02 && size <= lo + 0.01 {
+    if fill > fmax + 0.02 && size <= lo + 0.01 {
         return None; // over-long even at the floor → never squeeze (L3)
     }
     let gaps = units.saturating_sub(1).max(1) as f32;
@@ -671,6 +694,42 @@ pub fn layout_feed_opt(
                 // it); a colliding word is the round-2 star escape by
                 // construction. This branch used to take the first solvable
                 // collider as "best effort" — that was the leak.
+            }
+        }
+        // v7.5/F3 (D4): adjacent-tier borrow — if NO candidate from this
+        // tier's pool solved the slot (short stroke, long-word pool), retry
+        // once with the adjacent tier's pool. Deterministic; logged by the
+        // sweep as a fill like any other. Never squeeze, never skip silent.
+        if best.is_none() {
+            let adjacent = match p.tier.as_str() {
+                "expert" => "hard",
+                "hard" => "medium",
+                "medium" => "easy",
+                _ => "medium",
+            };
+            let pool2 = crate::words::tier_for(lang, adjacent);
+            let mut cands2: Vec<(String, u32)> = pool2
+                .iter()
+                .filter_map(|w| {
+                    let t = w.split('|').next().unwrap_or(w).to_string();
+                    let n = crate::wordpic::unit_len(lang, &t);
+                    (n >= 2 && n <= bhi && !used.contains(&t)).then_some((t.clone(), render_units(&t)))
+                })
+                .collect();
+            if !cands2.is_empty() {
+                let rot = (splitmix(&mut st) % cands2.len() as u64) as usize;
+                cands2.rotate_left(rot);
+            }
+            'cand2: for (w, n) in cands2 {
+                if let Some(mut pl) = solve(slot, lang, n) {
+                    pl.slot = si;
+                    pl.path_idx = slot.path_idx;
+                    let hit = placements.iter().any(|other| overlaps(&pl, other));
+                    if !hit && in_frame(&pl) {
+                        best = Some((w, pl));
+                        break 'cand2;
+                    }
+                }
             }
         }
         if let Some((w, mut pl)) = best {

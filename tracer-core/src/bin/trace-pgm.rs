@@ -55,11 +55,12 @@ fn main() {
     i += 1;
     let (w, h) = (nums[0], nums[1]);
     let gray = &s[i..i + w * h];
-    if std::env::args().nth(1).as_deref() == Some("ink") {
+    let mode = std::env::args().nth(1).unwrap_or_default();
+    if mode == "ink" || mode == "ink-boundary" {
         // v7.5 F2: the trace IS the ink — skeleton centerline paths.
         let diag = ((w * w + h * h) as f32).sqrt();
         let (thin_stroke, _, _) = tracer_core::ink::is_ink_art(gray, w, h);
-        let skel = if thin_stroke {
+        let skel = if thin_stroke && mode != "ink-boundary" {
             tracer_core::ink::ink_skeleton(gray, w, h)
         } else {
             tracer_core::ink::ink_boundary(gray, w, h)

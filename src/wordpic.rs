@@ -26,7 +26,7 @@ pub const RECENCY_PICS: usize = 3;
 pub const NO_REPEAT: usize = 5;
 /// D3 path-count bands.
 pub const BANDS: [(&str, u32, u32); 4] =
-    [("easy", 3, 8), ("medium", 10, 20), ("hard", 20, 45), ("expert", 38, 200)];
+    [("easy", 1, 8), ("medium", 1, 20), ("hard", 1, 45), ("expert", 1, 200)];
 
 #[derive(Debug, Clone, serde::Deserialize)]
 pub struct WordPath {
