@@ -324,6 +324,17 @@ fn render_canvas(p: &wordpic::Picture, lang: &str, words: &[String]) {
         }
     }
     svg.push_str("</defs>");
+    // v7.5 Option 2: the guide layer — Eric's graded ink, always visible,
+    // never a word host. Same normalized space as the slots.
+    for g in crate::wordpic_layout::guide_polys(p) {
+        let d: String = g
+            .pts
+            .iter()
+            .enumerate()
+            .map(|(k, (x, y))| format!("{}{x:.1} {y:.1} ", if k == 0 { "M" } else { "L" }))
+            .collect();
+        svg.push_str(&format!("<path class=\"wp-guide\" d=\"{d}\"/>"));
+    }
     for (si, sl) in slots.iter().enumerate() {
         let placed = si < words.len();
         let is_next = si == next_slot;

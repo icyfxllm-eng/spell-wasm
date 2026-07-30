@@ -70,6 +70,10 @@ import json as _json
 _CUR = _json.load(open(os.path.join(os.path.dirname(__file__), "..",
     "content-pipeline", "wordpic", "curated-traces-v75.json")))
 
+def _curated_guide(sub):
+    g = _CUR[sub].get("guide", [])
+    return ["M" + " L".join(f"{x:.1f} {y:.1f}" for x, y in path) for path in g]
+
 def _curated_paths(sub, budget):
     out = []
     for i, q in enumerate(_CUR[sub]["paths"]):
@@ -147,7 +151,7 @@ FEATURES = {
 }
 
 
-def pic(pid, tier, subject, icon, kid, paths, wash=False, prov=None, free_hint=None, pack="starter"):
+def pic(pid, tier, subject, icon, kid, paths, wash=False, prov=None, free_hint=None, pack="starter", guide=None):
     ordered = sorted(paths, key=lambda p: p["order"])
     for k, q in enumerate(ordered):
         q["order"] = k + 1  # normalize: authoring gaps are fine, output is 1..n
@@ -157,7 +161,8 @@ def pic(pid, tier, subject, icon, kid, paths, wash=False, prov=None, free_hint=N
         assert f and f.lower() not in BANNED_FEATURES, f"{pid}: banned/empty feature {f!r}"
         q["feature"] = f
     d = {"id": pid, "tier": tier, "subject": subject, "icon": icon, "kid": kid,
-         "wash": wash, "pack": pack, "paths": ordered}
+         "wash": wash, "pack": pack, "paths": ordered,
+         "guide": guide if guide is not None else _curated_guide(pid) if pid in _CUR else []}
     if prov:
         d["provenance"] = prov
     return d

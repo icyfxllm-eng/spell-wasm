@@ -128,7 +128,21 @@ def boundary_paths(ref_file):
     pgm = b"P5 %d %d 255\n" % c.size + c.tobytes()
     r = json.loads(subprocess.run([str(TP), "ink-boundary"], input=pgm, capture_output=True).stdout)
     return r["paths"]
+def skeleton_paths(ref_file):
+    im = Image.open(REF / ref_file).convert("RGBA")
+    bg = Image.new("RGBA", im.size, (255,255,255,255)); bg.alpha_composite(im)
+    im = ImageOps.autocontrast(bg.convert("L"), cutoff=1)
+    im.thumbnail((468, 468), Image.LANCZOS)
+    c = Image.new("L", (512, 512), 255)
+    c.paste(im, ((512-im.width)//2, (512-im.height)//2))
+    pgm = b"P5 %d %d 255\n" % c.size + c.tobytes()
+    r = json.loads(subprocess.run([str(TP), "ink-skeleton"], input=pgm, capture_output=True).stdout)
+    return r["paths"]
+
 ALT_SOURCE = {"owl": lambda: boundary_paths("owl.png"), "dragon": lambda: boundary_paths("dragon.jpg")}
+REFFILE = {"dog":"dog.png","butterfly":"butterfly.png","duck":"duck.png","owl":"owl.png",
+           "turtle":"turtle.png","elephant":"elephant.png","horse":"horse.png",
+           "snowman":"snowman.png","eiffel":"eiffel.png","dragon":"dragon.jpg","peacock":"peacock.jpg"}
 curated = {}
 for sub, (tier, (lo, hi), minlen, labels) in PLAN.items():
     src = json.loads((INK / f"{sub}-outline.svg").read_text().split('<rect')[1] and "null") if False else None
@@ -165,33 +179,75 @@ for sub, (tier, (lo, hi), minlen, labels) in PLAN.items():
     paths = [p for p in paths if len(p) >= 2 and plen(p) >= 26]
     paths = clearance_prune(paths)
     paths.sort(key=plen, reverse=True)
+    # OPTION 2 (Eric): the boundary trace is the GUIDE (visible art);
+    # the WORD PATHS are the skeleton limbs — the geometry class the
+    # engine was built for.
+    guide = [[[round(x,1), round(y,1)] for x, y in dp(g, 2.2)] for g in paths]
+    # Word-source per subject: leggy shapes ride their SKELETON limbs;
+    # convex shapes (circles, wings, towers) ride their benign boundary.
+    if sub in ("dog", "horse", "elephant", "duck", "butterfly"):
+        wp = [tame(rescale(w)) for w in skeleton_paths(REFFILE[sub])]
+    else:
+        wp = paths
+    if sub == "peacock":
+        pruned2 = []
+        for w in wp:
+            segs, cur = [], []
+            for pt in w:
+                if any(path_min_dist([pt], k) < 26 for k in pruned2):
+                    if len(cur) >= 2 and plen(cur) >= 50: segs.append(cur)
+                    cur = []
+                else:
+                    cur.append(pt)
+            if len(cur) >= 2 and plen(cur) >= 50: segs.append(cur)
+            pruned2 += segs
+        wp = pruned2
+    wp = [w for w in wp if len(w) >= 2 and plen(w) >= 50]
+    wp = clearance_prune(wp)
+    wp.sort(key=plen, reverse=True)
+    wp = wp[:hi]
     entry = []
-    for i, p in enumerate(paths):
-        band = 1 if i == 0 else (2 if plen(p) > 180 else 3)
+    for i, p in enumerate(wp):
+        band = 2 if (i == 0 or plen(p) > 180) else 3
+        if sub == "peacock":
+            band = 3
         entry.append({"feature": labels[i] if i < len(labels) else labels[-1],
                       "band": band, "points": [[round(x,1), round(y,1)] for x, y in p]})
-    curated[sub] = {"tier": tier, "paths": entry}
+    curated[sub] = {"tier": tier, "paths": entry, "guide": guide}
     print(f"{sub:10} {tier:6} paths={len(entry):3} lens={[int(plen([(x,y) for x,y in q['points']])) for q in entry[:6]]}...")
 # mona: from the passed v7.5.1 named build — silhouette split into segments
 named = json.load(open(INK / "mona8-named.json"))["paths"]
+mona_guide = [[[round(256 + (x - 256) * 0.88, 1), round(y, 1)] for x, y in p] if name != "frame" else p
+              for name, p in named.items()]
 mp = []
 sil = named.pop("figure silhouette")
+sil = [(256 + (x - 256) * 0.88, y) for x, y in sil]
 m2 = len(sil) // 2
 segs = [sil[:m2+1], sil[m2:]]
 for k, s in enumerate(segs):
     if plen(s) >= 55:
         mp.append({"feature": "figure silhouette", "band": 2, "points": [[round(x,1),round(y,1)] for x,y in resample(s)]})
 order_last = named.pop("smile")
+fingers_kept = 0
 for name, p in named.items():
+    if name in ("hair and face contour", "left eye", "right eye", "nose", "chin",
+                "left brow", "right brow", "forearm_right", "cuff_left", "cuff_right", "forearm crossing"):
+        continue  # guide-layer art: real faces are tighter than words are tall
+    if name.startswith("fingers"):
+        continue  # guide-layer only: the forearm crossing hosts the words
     if plen(p) < 28: continue
     band = 1 if name == "frame" else (2 if plen(p) > 150 else 3)
     if name.startswith("fingers") and plen(p) < 40: continue
-    mp.append({"feature": "wrists/cuffs" if name.startswith("cuff") else ("hands" if name.startswith("fingers") else name), "band": band, "points": [[round(x,1),round(y,1)] for x,y in resample(dp(p, 3.0))]})
+    if name == "forearm crossing":
+        p = [pt for pt in p if pt[0] <= 268]
+    px = p if name == "frame" else [(256 + (x - 256) * 0.88, y) for x, y in p]
+    band = 1 if name == "frame" else (2 if plen(px) > 150 else 3)
+    mp.append({"feature": "wrists/cuffs" if name.startswith("cuff") else ("hands" if name.startswith("fingers") else name), "band": band, "points": [[round(x,1),round(y,1)] for x,y in resample(dp(px, 3.0))]})
 # expert floor: split longest paths until the band floor holds
 _keep_pts = clearance_prune([q["points"] for q in mp])
 mp = [q for q in mp if q["points"] in _keep_pts]
 mp.append({"feature": "smile", "band": 4, "points": [[round(x,1),round(y,1)] for x,y in order_last]})
-curated["mona"] = {"tier": "expert", "paths": mp}
+curated["mona"] = {"tier": "expert", "paths": mp, "guide": mona_guide}
 print(f"mona       expert paths={len(mp)}")
 json.dump(curated, open(OUT, "w"))
 print("->", OUT)

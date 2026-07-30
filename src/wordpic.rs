@@ -74,6 +74,11 @@ pub struct Picture {
     pub wash: bool,
     #[serde(default)]
     pub pack: String,
+    /// v7.5 Option 2 (Eric): always-visible guide art — the traced ink he
+    /// graded. Renders as outline strokes; never hosts words, never
+    /// collides, never counts as a word path.
+    #[serde(default)]
+    pub guide: Vec<String>,
     pub paths: Vec<WordPath>,
     #[serde(default)]
     pub provenance: Option<HashMap<String, String>>,
@@ -480,14 +485,17 @@ mod tests {
         let run = s.open("mona", "en");
         let mona = picture("mona").unwrap();
         let feed = word_feed(mona, "en", run.seed, &[]);
-        for w in feed.iter().take(12) {
+        // v7.5 Option 2: fine art rides the guide layer; the word feed is
+        // the hostable-stroke set (smaller than the old dense map).
+        let take = feed.len().min(12).max(4);
+        for w in feed.iter().take(take) {
             s.place("mona", "en", w, slots(mona));
         }
         let back: State = serde_json::from_str(&serde_json::to_string(&s).unwrap()).unwrap();
         let r = back.run("mona", "en").unwrap();
-        assert_eq!(r.words.len(), 12);
+        assert_eq!(r.words.len(), take);
         assert_eq!(r.seed, run.seed);
-        assert_eq!(r.words, feed[..12].to_vec(), "resume continues the exact queue");
+        assert_eq!(r.words, feed[..take].to_vec(), "resume continues the exact queue");
         let p = picture("smiley").unwrap();
         let first = word_feed(p, "en", 1, &[]);
         let again = word_feed(p, "en", 2, &first);
