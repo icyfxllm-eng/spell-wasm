@@ -1,0 +1,15 @@
+dog        class=photo recall=0.200 precision=0.152 comps=1 unmatched=1 -> FAIL
+butterfly  class=photo recall=0.097 precision=0.065 comps=1 unmatched=1 -> FAIL
+duck       class=photo recall=0.249 precision=0.147 comps=1 unmatched=1 -> FAIL
+owl        class=ink   recall=0.197 precision=0.535 comps=6 unmatched=5 -> FAIL
+turtle     class=photo recall=0.073 precision=0.042 comps=1 unmatched=1 -> FAIL
+elephant   class=photo recall=0.197 precision=0.366 comps=2 unmatched=2 -> FAIL
+horse      class=photo recall=0.426 precision=0.481 comps=4 unmatched=3 -> FAIL
+fish       class=photo recall=0.223 precision=0.169 comps=1 unmatched=1 -> FAIL
+snowman    class=photo recall=0.177 precision=0.147 comps=2 unmatched=2 -> FAIL
+eiffel     class=photo recall=0.275 precision=0.218 comps=1 unmatched=1 -> FAIL
+mona       class=photo recall=0.294 precision=0.609 comps=4 unmatched=4 -> FAIL
+peacock    class=photo recall=0.219 precision=0.945 comps=28 unmatched=28 -> FAIL
+dragon     class=photo recall=0.073 precision=0.998 comps=7 unmatched=7 -> FAIL
+
+calibration gate: 13/13 FAIL — HOLDS (matches the notebook)

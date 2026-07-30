@@ -11,6 +11,8 @@
 //! tool-side imports. The offline authoring tool and, later, the
 //! on-device photo flow both call exactly this module.
 
+pub mod ink;
+
 /// One traced path in canvas coordinates (the caller's pixel space).
 #[derive(Debug, Clone)]
 pub struct TracedPath {
