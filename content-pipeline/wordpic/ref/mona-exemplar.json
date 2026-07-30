@@ -1,0 +1,21 @@
+{
+ "exemplar": "monalisa-target-annotation",
+ "status": "AWAITING ERIC'S BLUE-LINE FILE \u2014 this descriptor is the interim standard",
+ "required_path_set": [
+  "frame",
+  "silhouette",
+  "hair part and fall",
+  "face oval",
+  "eyes",
+  "nose",
+  "mouth",
+  "neckline",
+  "arms",
+  "hands"
+ ],
+ "forbidden": [
+  "background texture",
+  "landscape",
+  "sky"
+ ]
+}

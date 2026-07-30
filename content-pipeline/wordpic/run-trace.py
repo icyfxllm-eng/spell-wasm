@@ -15,7 +15,7 @@ SUBJECTS = {  # subject -> (file, budget)
     "snail": ("snail.png", "standard"), "duck": ("duck.png", "standard"),
     "owl": ("owl.png", "standard"), "turtle": ("turtle.png", "standard"),
     "elephant": ("elephant.png", "standard"), "horse": ("horse.png", "expert"),
-    "peacock": ("peacock.jpg", "standard"), "fish": ("fish.png", "standard"),
+    "peacock": ("peacock.jpg", "expert"), "fish": ("fish.png", "standard"),
     "snowman": ("snowman.png", "standard"), "eiffel": ("eiffel.png", "standard"),
     "dragon": ("dragon.jpg", "expert"), "mona": ("mona-lisa.jpg", "expert"),
 }
@@ -44,7 +44,7 @@ def canvas_gray(path, gamma=1.0, channel=None, invert=False):
     return canvas
 
 metrics = []
-GAMMA = {"peacock": 0.55, "mona": 1.45}
+GAMMA = {"mona": 1.45}
 CHANNEL = {}
 INVERT = set()
 
@@ -64,14 +64,30 @@ def dragon_gray():
 for sub, (fname, budget) in SUBJECTS.items():
     g = dragon_gray() if sub == "dragon" else canvas_gray(REF / fname, GAMMA.get(sub, 1.0), CHANNEL.get(sub), sub in INVERT)
     pgm = b"P5 %d %d 255\n" % g.size + g.tobytes()
-    r = json.loads(subprocess.run([str(BIN), budget], input=pgm, capture_output=True).stdout)
+    def run(args):
+        return json.loads(subprocess.run(args, input=pgm, capture_output=True).stdout)
+    r = run([str(BIN), budget])
+    lasso_file = REF / f"{sub}-lasso.json"
+    unseeded_fail = not (r["deviation"] <= 0.015 and r["coverage"] >= 0.95 and r.get("smooth_viol", 0) == 0)
+    if lasso_file.exists() and (unseeded_fail or sub == "peacock"):
+        # v7.2 routing: a failed unseeded trace is never an output — the
+        # lasso (Eric's rough loop / the future finger-circle) seeds the
+        # subject mask. Low-contrast subjects are lasso-first by default.
+        pts = json.load(open(lasso_file))
+        arg = ";".join(f"{x},{y}" for x, y in pts)
+        r = run([str(BIN), budget, arg])
+        r["seeded"] = True
     if sub == "mona":
+        # v7.1: figure mask (background interiors filtered per D6) + ONE
+        # frame path (the only legal non-mask contour class).
         keep = []
         for p in r["paths"]:
             ys = [y for _, y in p["points"]]
             if p["silhouette"] or (min(ys) > 215):
                 keep.append(p)
         r["paths"] = keep
+        r["paths"].append({"points": [[143, 40], [372, 40], [372, 484], [143, 484], [143, 40]],
+                           "band": 2, "scale": "long", "silhouette": False, "frame": True})
     if sub == "snail":
         # Eric's round-2 direction: outline only — outer shell + body (the
         # eyes and smile get authored as labeled features in curation).

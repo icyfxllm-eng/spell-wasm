@@ -123,3 +123,29 @@ of the retired term scoped to the feature; `dragon-outline-id`,
   approving downloads) -> re-trace all animals + dragon/snowman/tower/
   mona -> outline review -> F3 dot budgets -> F6 chrome -> F7 input
   discipline -> full re-review packet -> build 106.
+
+## v7.1 / v7.2 amendments (Eric, 2026-07-30) — F8 corrected
+
+- MASK FIRST: segment subject as a binary mask (not a luminance
+  threshold); mask is human-editable and approved before tracing; gates
+  measure against the APPROVED MASK (deviation vs a luminance isocontour
+  is meaningless — the first run scored perfectly against the wrong
+  target). Manifest records reference, license, mask hash, deviation.
+- LASSO SEEDING (v7.2, from the peacock failure): the core accepts an
+  optional region prompt — a rough hand-drawn enclosure; outside = hard
+  background, subject found within. Lasso-first is the DEFAULT for
+  low-contrast subjects. A failed unseeded auto-trace is a ROUTING event
+  (to the lasso step), never an output. The lasso lives in the core's
+  interface — it is the future player finger-circle gesture.
+- Contour classes (only legal sources): silhouette (mask boundary),
+  interior identity lines (inside mask only, ranked, budget-capped),
+  one frame rectangle where the subject is a framed work.
+- Smoothness lint: min segment length + max per-vertex turn angle;
+  stair-step artifacts fail the build; values in the manifest schema.
+- Mask containment invariant: any path in the background region is
+  illegal by construction (frame path excepted).
+- New fixtures: peacock-lasso (unseeded MUST fail on the stored
+  reference, tool routes to lasso, seeded trace passes with the mask
+  confined to the bird); monalisa-target-annotation (Eric's blue-line
+  annotation stored as the acceptance exemplar — awaiting the actual
+  annotation file; descriptor stored meanwhile).

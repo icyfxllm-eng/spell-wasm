@@ -35,6 +35,9 @@ pub struct TraceResult {
     pub coverage_frac: f32,
     /// Otsu threshold chosen (diagnostic).
     pub threshold: u8,
+    /// v7.1 smoothness lint: stair-step/pixel-block artifacts remaining
+    /// after smoothing. Non-zero fails the build.
+    pub smoothness_violations: u32,
 }
 
 /// Per-band point budgets: standard bands coarser, expert denser — the
@@ -51,22 +54,60 @@ pub struct Budget {
 
 impl Budget {
     pub const STANDARD: Budget = Budget { max_points: 64, max_interior: 10, bands: 3 };
-    pub const EXPERT: Budget = Budget { max_points: 128, max_interior: 60, bands: 4 };
+    pub const EXPERT: Budget = Budget { max_points: 200, max_interior: 60, bands: 4 };
 }
 
 /// Trace `gray` (row-major, w×h, 0=black) into outline paths.
-/// The subject is taken as the darker Otsu class unless it covers >70% of
-/// the frame (then the classes swap — dark backgrounds happen).
+/// Unseeded: the subject is the darker Otsu class (swapped when it covers
+/// >70% of the frame). Seeded (v7.2): `lasso` is a rough enclosure around
+/// the subject — the player's future finger-circle. Everything outside is
+/// HARD background; the subject is whatever differs from the background
+/// statistics sampled around the lasso, found within it.
 pub fn trace(gray: &[u8], w: usize, h: usize, budget: Budget) -> TraceResult {
+    trace_seeded(gray, w, h, budget, None)
+}
+
+pub fn trace_seeded(
+    gray: &[u8],
+    w: usize,
+    h: usize,
+    budget: Budget,
+    lasso: Option<&[(f32, f32)]>,
+) -> TraceResult {
     assert_eq!(gray.len(), w * h, "gray buffer must be w*h");
     let threshold = otsu(gray);
-    let mut mask: Vec<bool> = gray.iter().map(|&v| v <= threshold).collect();
-    let dark_share = mask.iter().filter(|&&m| m).count() as f32 / (w * h) as f32;
-    if dark_share > 0.70 {
-        for m in mask.iter_mut() {
-            *m = !*m;
+    let mut mask: Vec<bool> = if let Some(poly) = lasso {
+        let inside: Vec<bool> =
+            (0..w * h).map(|i| point_in_poly((i % w) as f32, (i / w) as f32, poly)).collect();
+        // Background statistics from the ring just OUTSIDE the lasso.
+        let (mut sum, mut n) = (0f64, 0f64);
+        for i in 0..w * h {
+            if !inside[i] {
+                sum += gray[i] as f64;
+                n += 1.0;
+            }
         }
-    }
+        let bg = if n > 0.0 { sum / n } else { 255.0 };
+        let mut var = 0f64;
+        for i in 0..w * h {
+            if !inside[i] {
+                var += (gray[i] as f64 - bg).powi(2);
+            }
+        }
+        let sd = if n > 1.0 { (var / n).sqrt() } else { 0.0 };
+        let tol = (2.0 * sd).max(18.0);
+        (0..w * h).map(|i| inside[i] && (gray[i] as f64 - bg).abs() > tol).collect()
+    } else {
+        let mut m: Vec<bool> = gray.iter().map(|&v| v <= threshold).collect();
+        let dark_share = m.iter().filter(|&&x| x).count() as f32 / (w * h) as f32;
+        if dark_share > 0.70 {
+            for b in m.iter_mut() {
+                *b = !*b;
+            }
+        }
+        m
+    };
+    morph_close(&mut mask, w, h);
     keep_largest_component(&mut mask, w, h);
     let contour = moore_contour(&mask, w, h);
     let eps0 = 0.004 * w as f32;
@@ -98,7 +139,128 @@ pub fn trace(gray: &[u8], w: usize, h: usize, budget: Budget) -> TraceResult {
             paths.push(path_of(p, gray, w, budget.bands, false));
         }
     }
-    TraceResult { paths, deviation_frac: deviation, coverage_frac: coverage, threshold }
+    // v7.1 smoothness lint: enforce min segment length + max turn angle.
+    for p in paths.iter_mut() {
+        p.points = smooth(&p.points, 6.0, 40.0);
+    }
+    let smoothness_violations = paths
+        .iter()
+        .map(|p| turn_violations(&p.points, 6.0, 40.0))
+        .sum();
+    TraceResult { paths, deviation_frac: deviation, coverage_frac: coverage, threshold, smoothness_violations }
+}
+
+fn point_in_poly(x: f32, y: f32, poly: &[(f32, f32)]) -> bool {
+    let mut inside = false;
+    let n = poly.len();
+    let mut j = n - 1;
+    for i in 0..n {
+        let (xi, yi) = poly[i];
+        let (xj, yj) = poly[j];
+        if ((yi > y) != (yj > y)) && (x < (xj - xi) * (y - yi) / (yj - yi) + xi) {
+            inside = !inside;
+        }
+        j = i;
+    }
+    inside
+}
+
+/// 3×3 close (dilate then erode) — solidifies speckle before component
+/// analysis so texture inside the subject doesn't shatter the mask.
+fn morph_close(mask: &mut Vec<bool>, w: usize, h: usize) {
+    let pass = |src: &[bool], grow: bool| -> Vec<bool> {
+        let mut out = vec![false; src.len()];
+        for y in 0..h {
+            for x in 0..w {
+                let mut any = false;
+                let mut all = true;
+                for dy in -1i32..=1 {
+                    for dx in -1i32..=1 {
+                        let (nx, ny) = (x as i32 + dx, y as i32 + dy);
+                        let v = nx >= 0
+                            && ny >= 0
+                            && (nx as usize) < w
+                            && (ny as usize) < h
+                            && src[ny as usize * w + nx as usize];
+                        any |= v;
+                        all &= v;
+                    }
+                }
+                out[y * w + x] = if grow { any } else { all };
+            }
+        }
+        out
+    };
+    let d = pass(mask, true);
+    *mask = pass(&d, false);
+}
+
+/// Drop vertices closer than `min_seg`; relax vertices whose turn exceeds
+/// `max_turn_deg` (one corner-cutting pass) — stair-steps become curves.
+fn smooth(pts: &[(f32, f32)], min_seg: f32, max_turn_deg: f32) -> Vec<(f32, f32)> {
+    if pts.len() < 4 {
+        return pts.to_vec();
+    }
+    let mut out: Vec<(f32, f32)> = vec![pts[0]];
+    for &p in &pts[1..] {
+        let l = *out.last().unwrap();
+        if (p.0 - l.0).hypot(p.1 - l.1) >= min_seg {
+            out.push(p);
+        }
+    }
+    if out.len() < 4 {
+        return out;
+    }
+    // Relax to convergence (bounded): corners beyond the turn cap melt,
+    // then re-check — stair-steps need several passes to become curves.
+    for _ in 0..8 {
+        if turn_violations(&out, min_seg, max_turn_deg) == 0 {
+            break;
+        }
+        let mut relaxed: Vec<(f32, f32)> = vec![out[0]];
+        for k in 1..out.len() - 1 {
+            let (a, b, c) = (out[k - 1], out[k], out[k + 1]);
+            if turn_deg(a, b, c) > max_turn_deg * 0.8 {
+                relaxed.push(((a.0 + 2.0 * b.0 + c.0) / 4.0, (a.1 + 2.0 * b.1 + c.1) / 4.0));
+            } else {
+                relaxed.push(b);
+            }
+        }
+        relaxed.push(*out.last().unwrap());
+        // Merge any segments the relax pass shortened below the floor.
+        let mut merged: Vec<(f32, f32)> = vec![relaxed[0]];
+        for &p in &relaxed[1..] {
+            let l = *merged.last().unwrap();
+            if (p.0 - l.0).hypot(p.1 - l.1) >= min_seg * 0.5 {
+                merged.push(p);
+            }
+        }
+        out = merged;
+    }
+    out
+}
+
+fn turn_deg(a: (f32, f32), b: (f32, f32), c: (f32, f32)) -> f32 {
+    let (v1x, v1y) = (b.0 - a.0, b.1 - a.1);
+    let (v2x, v2y) = (c.0 - b.0, c.1 - b.1);
+    let dot = v1x * v2x + v1y * v2y;
+    let m = (v1x.hypot(v1y) * v2x.hypot(v2y)).max(1e-6);
+    (dot / m).clamp(-1.0, 1.0).acos().to_degrees()
+}
+
+fn turn_violations(pts: &[(f32, f32)], min_seg: f32, max_turn_deg: f32) -> u32 {
+    let mut n = 0;
+    for k in 1..pts.len().saturating_sub(1) {
+        if turn_deg(pts[k - 1], pts[k], pts[k + 1]) > max_turn_deg + 15.0 {
+            n += 1;
+        }
+    }
+    for s in pts.windows(2) {
+        if (s[1].0 - s[0].0).hypot(s[1].1 - s[0].1) < min_seg * 0.5 {
+            n += 1;
+        }
+    }
+    n
 }
 
 fn path_of(points: Vec<(f32, f32)>, gray: &[u8], w: usize, bands: u8, silhouette: bool) -> TracedPath {

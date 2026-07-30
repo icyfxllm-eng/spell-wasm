@@ -7,6 +7,14 @@ fn main() {
         Some("expert") => tracer_core::Budget::EXPERT,
         _ => tracer_core::Budget::STANDARD,
     };
+    let lasso: Option<Vec<(f32, f32)>> = std::env::args().nth(2).map(|arg| {
+        arg.split(';')
+            .filter_map(|p| {
+                let mut it = p.split(',');
+                Some((it.next()?.parse().ok()?, it.next()?.parse().ok()?))
+            })
+            .collect()
+    });
     let mut buf = Vec::new();
     std::io::stdin().read_to_end(&mut buf).expect("stdin");
     let s = &buf;
@@ -27,10 +35,10 @@ fn main() {
     i += 1;
     let (w, h) = (nums[0], nums[1]);
     let gray = &s[i..i + w * h];
-    let r = tracer_core::trace(gray, w, h, budget);
+    let r = tracer_core::trace_seeded(gray, w, h, budget, lasso.as_deref());
     let mut out = String::from("{");
-    out += &format!("\"deviation\":{:.5},\"coverage\":{:.4},\"threshold\":{},\"w\":{w},\"h\":{h},\"paths\":[",
-        r.deviation_frac, r.coverage_frac, r.threshold);
+    out += &format!("\"deviation\":{:.5},\"coverage\":{:.4},\"threshold\":{},\"smooth_viol\":{},\"w\":{w},\"h\":{h},\"paths\":[",
+        r.deviation_frac, r.coverage_frac, r.threshold, r.smoothness_violations);
     for (k, p) in r.paths.iter().enumerate() {
         if k > 0 { out += ","; }
         out += &format!("{{\"band\":{},\"scale\":\"{}\",\"silhouette\":{},\"points\":[",
