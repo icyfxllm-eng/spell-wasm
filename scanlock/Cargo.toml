@@ -1,0 +1,11 @@
+[package]
+name = "scanlock"
+version = "0.1.0"
+edition = "2021"
+
+# CC-WORDPICTURE-SCANLOCK v8 — the scan is the only geometry. Pure crate,
+# zero dependencies: the typesetter chooses the word and the size, never
+# the geometry. Layout access to paths is read-only by construction (I2):
+# this crate's API takes &[ScanPath] and returns placements whose
+# baselines ARE sub-ranges of the input polylines.
+[dependencies]

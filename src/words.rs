@@ -1425,3 +1425,36 @@ mod tier_dump {
         eprintln!("wrote tools/tierhealth/tiers_dump.json");
     }
 }
+
+#[cfg(test)]
+mod pool_dump {
+    /// v8 tooling: dump tier pools for the offline scanlock tools
+    /// (`WP_POOL_DIR=... cargo test dump_pools -- --ignored`).
+    #[test]
+    #[ignore]
+    fn dump_pools() {
+        let Ok(dir) = std::env::var("WP_POOL_DIR") else { return };
+        std::fs::create_dir_all(&dir).unwrap();
+        for (code, _, _, _) in crate::consts::BUILTIN_LANGS.iter() {
+            for tier in ["easy", "medium", "hard", "expert"] {
+                let pool = super::tier_for(code, tier);
+                let mut out = String::from("[");
+                for (i, w) in pool.iter().enumerate() {
+                    if i > 0 {
+                        out.push(',');
+                    }
+                    out.push('"');
+                    for c in w.chars() {
+                        if c == '"' || c == '\\' {
+                            out.push('\\');
+                        }
+                        out.push(c);
+                    }
+                    out.push('"');
+                }
+                out.push(']');
+                std::fs::write(format!("{dir}/{code}-{tier}.json"), out).unwrap();
+            }
+        }
+    }
+}
