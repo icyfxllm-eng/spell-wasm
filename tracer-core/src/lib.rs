@@ -22,6 +22,10 @@ pub struct TracedPath {
     /// True for the silhouette contour (identity carrier), false for
     /// interior tonal-boundary strokes.
     pub silhouette: bool,
+    /// v7.4 containment tree: "frame" (root), a named part ("body",
+    /// "fan"), or "" for the whole-subject silhouette when no parts are
+    /// declared. Interior features carry their parent part's name.
+    pub part: String,
 }
 
 #[derive(Debug, Clone)]
@@ -88,6 +92,12 @@ pub struct Constraints {
     /// Landmark anchors the silhouette must pass through (0.5% tolerance —
     /// enforced by snap-insertion, so the gate holds by construction).
     pub anchors: Vec<(f32, f32)>,
+    /// v7.4: frame rectangle (x0, y0, x1, y1) — the tree's root. The mask
+    /// is HARD-CLIPPED to the frame interior before any tracing.
+    pub frame: Option<(f32, f32, f32, f32)>,
+    /// v7.4 part decomposition: (name, enclosing polygon). Each part gets
+    /// its own closed silhouette; interior features confine to their part.
+    pub parts: Vec<(String, Vec<(f32, f32)>)>,
 }
 
 /// FNV-1a over rounded path coordinates — the pin hash (v7.3). Same trace
@@ -220,6 +230,18 @@ pub fn trace_constrained(
     };
     stamp(&mut mask, &cons.keep, true);
     stamp(&mut mask, &cons.exclude, false);
+    // v7.4: the frame is the tree's root — the mask is clipped to its
+    // interior BEFORE tracing, never cleaned up after.
+    if let Some((fx0, fy0, fx1, fy1)) = cons.frame {
+        for y in 0..h {
+            for x in 0..w {
+                let inside = (x as f32) > fx0 && (x as f32) < fx1 && (y as f32) > fy0 && (y as f32) < fy1;
+                if !inside {
+                    mask[y * w + x] = false;
+                }
+            }
+        }
+    }
     morph_close(&mut mask, w, h);
     stamp(&mut mask, &cons.exclude, false); // red survives morphology too
     keep_largest_component(&mut mask, w, h);
@@ -247,7 +269,31 @@ pub fn trace_constrained(
     let deviation = if degenerate { 1.0 } else { max_deviation(&contour, &silhouette) / w as f32 };
     let coverage = if degenerate { 0.0 } else { perimeter_coverage(&contour, &silhouette, 0.02 * w as f32) };
 
-    let mut paths = vec![path_of(silhouette, gray, w, budget.bands, true)];
+    let mut paths: Vec<TracedPath> = Vec::new();
+    if let Some((fx0, fy0, fx1, fy1)) = cons.frame {
+        paths.push(path_of_part(
+            vec![(fx0, fy0), (fx1, fy0), (fx1, fy1), (fx0, fy1), (fx0, fy0)],
+            gray, w, budget.bands, false, "frame".into(),
+        ));
+    }
+    if cons.parts.is_empty() {
+        paths.push(path_of(silhouette, gray, w, budget.bands, true));
+    } else {
+        // v7.4 part decomposition: each part is mask ∧ its polygon, with
+        // its own closed silhouette; a multi-part subject rendered as one
+        // blob is a review failure by definition.
+        for (name, poly) in &cons.parts {
+            let mut pm: Vec<bool> = (0..w * h)
+                .map(|i| mask[i] && point_in_poly((i % w) as f32, (i / w) as f32, poly))
+                .collect();
+            keep_largest_component(&mut pm, w, h);
+            let pc = moore_contour(&pm, w, h);
+            if pc.len() >= 8 {
+                let ps = simplify_to_budget(&pc, eps0, budget.max_points);
+                paths.push(path_of_part(ps, gray, w, budget.bands, true, name.clone()));
+            }
+        }
+    }
     // Interior tonal boundaries: posterize inside the mask, trace each
     // darker-than-band region's boundary, keep the longest few.
     let mut interior: Vec<Vec<(f32, f32)>> = Vec::new();
@@ -268,20 +314,46 @@ pub fn trace_constrained(
     interior.truncate(budget.max_interior);
     for p in interior {
         if poly_len(&p) > 0.06 * w as f32 {
-            paths.push(path_of(p, gray, w, budget.bands, false));
+            // v7.4: an interior feature belongs to the part containing it.
+            let part = if cons.parts.is_empty() {
+                String::new()
+            } else {
+                let (cx, cy) = p.iter().fold((0.0, 0.0), |a, q| (a.0 + q.0, a.1 + q.1));
+                let n = p.len().max(1) as f32;
+                let (cx, cy) = (cx / n, cy / n);
+                match cons.parts.iter().find(|(_, poly)| point_in_poly(cx, cy, poly)) {
+                    Some((name, _)) => name.clone(),
+                    None => continue, // outside every part — illegal source
+                }
+            };
+            let clipped: Vec<(f32, f32)> = if let Some((name, poly)) =
+                cons.parts.iter().find(|(n2, _)| *n2 == part)
+            {
+                let _ = name;
+                p.iter().copied().filter(|&(x, y)| point_in_poly(x, y, poly)).collect()
+            } else {
+                p
+            };
+            if clipped.len() >= 5 {
+                paths.push(path_of_part(clipped, gray, w, budget.bands, false, part));
+            }
         }
     }
     // v7.1 smoothness lint: enforce min segment length + max turn angle.
+    // The frame is AUTHORED geometry (the tree's root) — its square
+    // corners are the point; it is exempt from smoothing and lint.
     for p in paths.iter_mut() {
-        p.points = smooth(&p.points, 6.0, 40.0);
+        if p.part != "frame" {
+            p.points = smooth(&p.points, 6.0, 40.0);
+        }
     }
     // Degenerate interiors (needle triangles, stray dots) are noise, not
     // contours — cull anything the smoother couldn't even engage with.
-    paths.retain(|p| p.silhouette || p.points.len() >= 5);
+    paths.retain(|p| p.silhouette || p.part == "frame" || p.points.len() >= 5);
     // v7.3 anchors: the silhouette must pass through each landmark within
     // 0.5% of canvas — enforced by snap-inserting the anchor into its
     // nearest segment (the gate holds by construction).
-    if let Some(sil) = paths.iter_mut().find(|p| p.silhouette) {
+    if let Some(sil) = paths.iter_mut().find(|p| p.silhouette && p.part != "frame") {
         for &(ax, ay) in &cons.anchors {
             let mut best = (f32::MAX, 0usize);
             for k in 0..sil.points.len().saturating_sub(1) {
@@ -310,6 +382,7 @@ pub fn trace_constrained(
     }
     let smoothness_violations = paths
         .iter()
+        .filter(|p| p.part != "frame")
         .map(|p| turn_violations(&p.points, 6.0, 40.0))
         .sum();
     TraceResult { paths, deviation_frac: deviation, coverage_frac: coverage, threshold, smoothness_violations, mask }
@@ -453,6 +526,17 @@ fn turn_violations(pts: &[(f32, f32)], min_seg: f32, max_turn_deg: f32) -> u32 {
 }
 
 fn path_of(points: Vec<(f32, f32)>, gray: &[u8], w: usize, bands: u8, silhouette: bool) -> TracedPath {
+    path_of_part(points, gray, w, bands, silhouette, String::new())
+}
+
+fn path_of_part(
+    points: Vec<(f32, f32)>,
+    gray: &[u8],
+    w: usize,
+    bands: u8,
+    silhouette: bool,
+    part: String,
+) -> TracedPath {
     let len = poly_len(&points);
     let frac = len / w as f32;
     let scale_class = if frac < 0.09 {
@@ -477,7 +561,7 @@ fn path_of(points: Vec<(f32, f32)>, gray: &[u8], w: usize, bands: u8, silhouette
     }
     let mean = if n > 0 { (sum / n) as u8 } else { 128 };
     let band = (bands as u32 - (mean as u32 * bands as u32 / 256).min(bands as u32 - 1)) as u8;
-    TracedPath { points, band, scale_class, silhouette }
+    TracedPath { points, band, scale_class, silhouette, part }
 }
 
 fn otsu(gray: &[u8]) -> u8 {

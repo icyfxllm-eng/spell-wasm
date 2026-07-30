@@ -161,3 +161,20 @@ manifest's trace hash differs from its pin; changing one requires an
 explicit unpin (reviewable event). Primitives live in the tool UI; the
 portable core consumes them as constraint inputs (player flow may later
 expose a subset). Fixture `correction-loop` covers all four authorities.
+
+## v7.4 amendment (Eric, 2026-07-31) — structured contours: the trace is a TREE
+
+- Part decomposition: named parts with their own closed silhouettes
+  (peacock -> body + fan), defined by author part-divider strokes or
+  per-part lassos (same D13 hard-constraint authority). One blob for a
+  visibly multi-part subject = review failure by definition.
+- Containment hierarchy: frame ⊃ figure/parts ⊃ interior features; every
+  child inside its parent; frame-clip the mask BEFORE tracing (kills the
+  Mona balloon-past-rectangle bug structurally, not as cleanup).
+- Required-features list per subject in the manifest (Mona: face set +
+  hands; peacock: rays + crest) — a missing required feature fails lint.
+- New fixtures: peacock-parts (two labeled closed silhouettes partition
+  the mask; rays confined to fan, crest to body; zero boundary
+  crossings) and monalisa-containment (mask clipped pre-trace; required
+  features present; the v7.3 balloon case reproduces as a FAILURE on the
+  unclipped path).

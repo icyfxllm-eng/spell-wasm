@@ -38,6 +38,14 @@ for (const p of m.pictures) {
     if (q.mode === "flow" && !q.d) problems.push(`${p.id}: flow path missing geometry`);
     if (q.mode === "stack" && !(q.size > 0)) problems.push(`${p.id}: stack missing size`);
   }
+  // v7.4 required-features: subjects may declare interior features their
+  // trace MUST contain — missing one fails lint, not review.
+  if (p.requiredFeatures) {
+    const have = new Set(p.paths.map((q) => (q.feature || "").toLowerCase()));
+    for (const rf of p.requiredFeatures)
+      if (!have.has(rf.toLowerCase()))
+        problems.push(`${p.id}: required feature '${rf}' missing from trace (v7.4)`);
+  }
   if (p.tier === "expert") {
     const pr = p.provenance ?? {};
     for (const k of ["title", "artist", "source", "sourceUrl", "pdBasis", "retrieved"])
