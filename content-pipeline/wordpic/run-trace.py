@@ -128,6 +128,8 @@ for sub, (fname, budget) in SUBJECTS.items():
     metrics.append({"subject": sub, "budget": budget, "paths": len(r["paths"]),
                     "deviation": r["deviation"], "coverage": r["coverage"],
                     "dev_ok": r["deviation"] <= 0.015, "cov_ok": r["coverage"] >= 0.95})
-    print(f'{sub:10} paths {len(r["paths"]):3}  dev {r["deviation"]*100:5.2f}%  cov {r["coverage"]*100:5.1f}%  '
-          f'{"PASS" if r["deviation"] <= 0.015 and r["coverage"] >= 0.95 else "FAIL"}')
+    # D5 (v7.5): legacy deviation/coverage are DIAGNOSTICS — the tool may
+    # not print a verdict word from them. Verdicts return only when the
+    # F6 calibration gate holds for the new ink/annotation metrics.
+    print(f'{sub:10} paths {len(r["paths"]):3}  dev {r["deviation"]*100:5.2f}%  cov {r["coverage"]*100:5.1f}%  (diagnostic only)')
 json.dump(metrics, open(OUT / "metrics.json", "w"), indent=1)

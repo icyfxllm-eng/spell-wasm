@@ -1,0 +1,71 @@
+{
+ "exemplar": "peacock-blue-loop",
+ "source": "Eric's blue loop, received 2026-07-31: body + fan, excluding top foliage",
+ "blue_loop": [
+  [
+   60,
+   120
+  ],
+  [
+   150,
+   60
+  ],
+  [
+   290,
+   44
+  ],
+  [
+   400,
+   80
+  ],
+  [
+   440,
+   160
+  ],
+  [
+   444,
+   260
+  ],
+  [
+   400,
+   330
+  ],
+  [
+   330,
+   300
+  ],
+  [
+   300,
+   340
+  ],
+  [
+   276,
+   420
+  ],
+  [
+   230,
+   430
+  ],
+  [
+   210,
+   340
+  ],
+  [
+   150,
+   320
+  ],
+  [
+   80,
+   260
+  ],
+  [
+   52,
+   180
+  ],
+  [
+   60,
+   120
+  ]
+ ],
+ "note": "yellow = tool's prior trace, shown for contrast; the loop is the seed"
+}

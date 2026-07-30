@@ -178,3 +178,41 @@ expose a subset). Fixture `correction-loop` covers all four authorities.
   crossings) and monalisa-containment (mask clipped pre-trace; required
   features present; the v7.3 balloon case reproduces as a FAILURE on the
   unclipped path).
+
+## CC-TRACER-V7.5 — INK LOCK (Eric, 2026-07-31)
+
+ALL 13 batch subjects FAIL Eric's hand grading while the tool printed
+PASS/100% — two defects: (1) the eval was SELF-GRADING (truth derived
+from the pipeline's own mask; a metric that cannot disagree with the
+pipeline is not a metric); (2) ink art was treated like photographs —
+for clip-art the drawn black line IS the ground truth.
+
+- F1 class detection: ink-art vs photo, printed per subject, author
+  override, misroutes report-visible.
+- F2 ink pipeline: adaptive ink threshold -> morphological skeleton ->
+  junction-preserving centerline vector paths (D3: words ride the
+  centerline; stop-and-ask before mixing conventions). Containment tree
+  unchanged; interior ink is interior-feature ink, traced not skipped.
+- F3 structural completeness: every ink component with skeleton length
+  >= L_min (D2: 2% bbox diagonal) must have a matching path; residual
+  ink renders red in the report and fails lint; sub-L_min ink listed,
+  never silently dropped.
+- F4 eval rewrite: ink_recall / path_precision / component_coverage
+  against the reference's ink skeleton (photo branch: against Eric's
+  hash-pinned red/blue annotation). D4 gates: recall >= 0.97, precision
+  >= 0.97, coverage = 100%. Legacy coverage/deviation = diagnostics
+  only; the tool may never print PASS from them (D5: badge suppressed
+  until calibration holds).
+- F5 required-features extended (horse: 4 legs+tail+mane+head; owl:
+  face disc+wings+beak+talons+branch; fish: silhouette+tail fin+dorsal
+  fin+eye; elephant: trunk+ears+4 legs+tail; snowman: hat+eyes+buttons+
+  arms+3 circles; duck: bill+wing+feet; rest to the same standard).
+- F6 calibration gate: the 13 FAILing renders are FROZEN as the
+  calibration corpus (do not delete/regenerate); tune tau_path (D1: 1%
+  bbox diag) / L_min / gates until ALL 13 grade FAIL to match the
+  notebook; only then may the eval grade new renders. If calibration
+  can't also pass a hand-verified correct trace: stop and ask.
+- F7 Mona annotation pinned: red = outer frame + full figure silhouette
+  + hands/arms; blue = hair + face contour. Digitized to
+  ref/mona-exemplar.json (Eric's images of 2026-07-31); his re-grade
+  stays the final gate — metric PASS is necessary, never sufficient.

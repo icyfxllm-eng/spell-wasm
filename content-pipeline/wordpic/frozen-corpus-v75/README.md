@@ -1,0 +1,1 @@
+FROZEN CALIBRATION CORPUS — CC-TRACER-V7.5 F6. All 13 subjects graded FAIL by Eric (2026-07-31) while legacy metrics printed PASS. Do not delete or regenerate; the new eval must grade every render here FAIL before it may grade anything new.

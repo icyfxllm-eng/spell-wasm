@@ -1,0 +1,128 @@
+[
+ {
+  "subject": "dog",
+  "budget": "standard",
+  "paths": 3,
+  "deviation": 0.01344,
+  "coverage": 1.0,
+  "dev_ok": true,
+  "cov_ok": true
+ },
+ {
+  "subject": "butterfly",
+  "budget": "standard",
+  "paths": 3,
+  "deviation": 0.00869,
+  "coverage": 1.0,
+  "dev_ok": true,
+  "cov_ok": true
+ },
+ {
+  "subject": "snail",
+  "budget": "standard",
+  "paths": 1,
+  "deviation": 0.00195,
+  "coverage": 1.0,
+  "dev_ok": true,
+  "cov_ok": true
+ },
+ {
+  "subject": "duck",
+  "budget": "standard",
+  "paths": 3,
+  "deviation": 0.00377,
+  "coverage": 1.0,
+  "dev_ok": true,
+  "cov_ok": true
+ },
+ {
+  "subject": "owl",
+  "budget": "standard",
+  "paths": 3,
+  "deviation": 0.00839,
+  "coverage": 1.0,
+  "dev_ok": true,
+  "cov_ok": true
+ },
+ {
+  "subject": "turtle",
+  "budget": "standard",
+  "paths": 3,
+  "deviation": 0.00361,
+  "coverage": 1.0,
+  "dev_ok": true,
+  "cov_ok": true
+ },
+ {
+  "subject": "elephant",
+  "budget": "standard",
+  "paths": 3,
+  "deviation": 0.006,
+  "coverage": 1.0,
+  "dev_ok": true,
+  "cov_ok": true
+ },
+ {
+  "subject": "horse",
+  "budget": "expert",
+  "paths": 4,
+  "deviation": 0.00591,
+  "coverage": 1.0,
+  "dev_ok": true,
+  "cov_ok": true
+ },
+ {
+  "subject": "peacock",
+  "budget": "expert",
+  "paths": 4,
+  "deviation": 0.00873,
+  "coverage": 1.0,
+  "dev_ok": true,
+  "cov_ok": true
+ },
+ {
+  "subject": "fish",
+  "budget": "standard",
+  "paths": 3,
+  "deviation": 0.00393,
+  "coverage": 1.0,
+  "dev_ok": true,
+  "cov_ok": true
+ },
+ {
+  "subject": "snowman",
+  "budget": "standard",
+  "paths": 3,
+  "deviation": 0.00565,
+  "coverage": 1.0,
+  "dev_ok": true,
+  "cov_ok": true
+ },
+ {
+  "subject": "eiffel",
+  "budget": "standard",
+  "paths": 3,
+  "deviation": 0.00397,
+  "coverage": 1.0,
+  "dev_ok": true,
+  "cov_ok": true
+ },
+ {
+  "subject": "dragon",
+  "budget": "expert",
+  "paths": 3,
+  "deviation": 0.00396,
+  "coverage": 1.0,
+  "dev_ok": true,
+  "cov_ok": true
+ },
+ {
+  "subject": "mona",
+  "budget": "expert",
+  "paths": 2,
+  "deviation": 0.00397,
+  "coverage": 1.0,
+  "dev_ok": true,
+  "cov_ok": true
+ }
+]
