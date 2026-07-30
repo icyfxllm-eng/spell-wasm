@@ -29,6 +29,10 @@ def canvas_gray(path, gamma=1.0, channel=None, invert=False):
     if invert:
         from PIL import ImageOps as _io
         im = _io.invert(im)
+    corner = im.getpixel((2, 2))
+    if 60 < corner < 235:
+        lo, hi = corner - 18, corner + 18
+        im = im.point(lambda v: 255 if lo <= v <= hi else v)
     im = ImageOps.autocontrast(im, cutoff=1)
     if gamma != 1.0:
         lut = [min(255, int(255 * (v / 255) ** gamma)) for v in range(256)]
@@ -40,7 +44,7 @@ def canvas_gray(path, gamma=1.0, channel=None, invert=False):
     return canvas
 
 metrics = []
-GAMMA = {"peacock": 0.55}
+GAMMA = {"peacock": 0.55, "mona": 1.45}
 CHANNEL = {}
 INVERT = set()
 
@@ -49,7 +53,8 @@ def dragon_gray():
     R - (G+B)/2 is high on the ground, low/negative on the dragon."""
     im = Image.open(REF / "dragon.jpg").convert("RGB")
     r, g, b = [list(ch.getdata()) for ch in im.split()]
-    px = [max(0, min(255, 255 - (rv - (gv + bv) // 2))) for rv, gv, bv in zip(r, g, b)]
+    px = [255 if (rv - (gv + bv) // 2) > 40 or (rv + gv + bv) // 3 > 195 else 40
+          for rv, gv, bv in zip(r, g, b)]
     out = Image.new("L", im.size)
     out.putdata(px)
     out.thumbnail((CANVAS - 44, CANVAS - 44), Image.LANCZOS)
@@ -60,6 +65,17 @@ for sub, (fname, budget) in SUBJECTS.items():
     g = dragon_gray() if sub == "dragon" else canvas_gray(REF / fname, GAMMA.get(sub, 1.0), CHANNEL.get(sub), sub in INVERT)
     pgm = b"P5 %d %d 255\n" % g.size + g.tobytes()
     r = json.loads(subprocess.run([str(BIN), budget], input=pgm, capture_output=True).stdout)
+    if sub == "mona":
+        keep = []
+        for p in r["paths"]:
+            ys = [y for _, y in p["points"]]
+            if p["silhouette"] or (min(ys) > 215):
+                keep.append(p)
+        r["paths"] = keep
+    if sub == "snail":
+        # Eric's round-2 direction: outline only — outer shell + body (the
+        # eyes and smile get authored as labeled features in curation).
+        r["paths"] = [p for p in r["paths"] if p["silhouette"]]
     # outline SVG
     def pts(p):
         return "M" + " L".join(f"{x:.0f} {y:.0f}" for x, y in p["points"])

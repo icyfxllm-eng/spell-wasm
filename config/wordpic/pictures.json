@@ -2285,20 +2285,8 @@
     },
     {
      "mode": "flow",
-     "d": "M258 260 A42 42 0 1 1 300 302",
-     "order": 2,
-     "budget": [
-      2,
-      10
-     ],
-     "band": 2,
-     "arch": "spiral",
-     "feature": "inner whorl"
-    },
-    {
-     "mode": "flow",
      "d": "M110 352 Q250 372 408 352",
-     "order": 3,
+     "order": 2,
      "budget": [
       2,
       10
@@ -2310,7 +2298,7 @@
     {
      "mode": "flow",
      "d": "M112 340 Q96 300 122 268",
-     "order": 4,
+     "order": 3,
      "budget": [
       2,
       10
@@ -2322,7 +2310,7 @@
     {
      "mode": "flow",
      "d": "M118 262 L90 208",
-     "order": 5,
+     "order": 4,
      "budget": [
       2,
       10
@@ -2334,7 +2322,7 @@
     {
      "mode": "flow",
      "d": "M134 262 L152 206",
-     "order": 6,
+     "order": 5,
      "budget": [
       2,
       10
@@ -2342,6 +2330,42 @@
      "band": 2,
      "arch": "line",
      "feature": "right eye stalk"
+    },
+    {
+     "mode": "flow",
+     "d": "M76 200 Q92 184 108 200",
+     "order": 6,
+     "budget": [
+      2,
+      10
+     ],
+     "band": 4,
+     "arch": "arc",
+     "feature": "left eye"
+    },
+    {
+     "mode": "flow",
+     "d": "M136 198 Q152 182 168 198",
+     "order": 7,
+     "budget": [
+      2,
+      10
+     ],
+     "band": 4,
+     "arch": "arc",
+     "feature": "right eye"
+    },
+    {
+     "mode": "flow",
+     "d": "M122 298 Q144 312 138 338",
+     "order": 8,
+     "budget": [
+      2,
+      10
+     ],
+     "band": 4,
+     "arch": "arc",
+     "feature": "smile"
     }
    ]
   },

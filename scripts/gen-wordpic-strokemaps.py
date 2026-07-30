@@ -100,7 +100,8 @@ FEATURES = {
     "dog": ["crown", "jaw", "left ear", "right ear", "nose", "tongue", "bone"],
     "butterfly": ["body", "upper left wing", "lower left wing", "upper right wing",
                   "lower right wing", "left antenna", "right antenna"],
-    "snail": ["shell whorl", "inner whorl", "foot", "neck", "left eye stalk", "right eye stalk"],
+    "snail": ["shell whorl", "foot", "neck", "left eye stalk", "right eye stalk",
+              "left eye", "right eye", "smile"],
     "duck": ["head", "beak", "back", "breast", "waterline", "waterline"],
     "owl": ["left body side", "right body side", "belly", "left ear tuft", "right ear tuft",
             "left eye ring", "left eye ring", "right eye ring", "right eye ring",
@@ -411,13 +412,16 @@ P.append(pic("butterfly", "easy", "butterfly", "🦋", True, [
     flow(line(268, 140, 304, 74), 7, B_EASY, 3, "line"),
 ], pack="animals"))
 
+# Round-2 direction (Eric): outline only — outer shell, body, eyes, smile.
 P.append(pic("snail", "easy", "snail", "🐌", True, [
     flow("M220 260 A80 80 0 1 1 300 340", 1, B_EASY, 2, "spiral"),
-    flow("M258 260 A42 42 0 1 1 300 302", 2, B_EASY, 2, "spiral"),
-    flow(arc(110, 352, 250, 372, 408, 352), 3, B_EASY, 2, "line"),
-    flow(arc(112, 340, 96, 300, 122, 268), 4, B_EASY, 2, "arc"),
-    flow(line(118, 262, 90, 208), 5, B_EASY, 2, "line"),
-    flow(line(134, 262, 152, 206), 6, B_EASY, 2, "line"),
+    flow(arc(110, 352, 250, 372, 408, 352), 2, B_EASY, 2, "line"),
+    flow(arc(112, 340, 96, 300, 122, 268), 3, B_EASY, 2, "arc"),
+    flow(line(118, 262, 90, 208), 4, B_EASY, 2, "line"),
+    flow(line(134, 262, 152, 206), 5, B_EASY, 2, "line"),
+    flow(arc(76, 200, 92, 184, 108, 200), 6, B_EASY, 4, "arc"),
+    flow(arc(136, 198, 152, 182, 168, 198), 7, B_EASY, 4, "arc"),
+    flow(arc(122, 298, 144, 312, 138, 338), 8, B_EASY, 4, "arc"),
 ], pack="animals"))
 
 P.append(pic("duck", "easy", "duck", "🦆", True, [
