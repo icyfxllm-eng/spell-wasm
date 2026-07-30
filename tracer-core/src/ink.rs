@@ -113,6 +113,41 @@ pub fn ink_skeleton(gray: &[u8], w: usize, h: usize) -> Vec<bool> {
     img
 }
 
+/// v7.5: for FILLED silhouettes the drawn black outline is the shape's
+/// BOUNDARY — the medial axis of a filled dog is a stick figure, but
+/// Eric's criterion is "the black outline, every limb". Truth and trace
+/// are therefore class-dependent: thin-stroke ink → centerline skeleton;
+/// filled ink → boundary pixels (ink with a non-ink 4-neighbour).
+pub fn ink_boundary(gray: &[u8], w: usize, h: usize) -> Vec<bool> {
+    let t = {
+        let mut hist = [0u32; 256];
+        for &v in gray { hist[v as usize] += 1; }
+        let total: f64 = (w * h) as f64;
+        let sum_all: f64 = hist.iter().enumerate().map(|(i, &c)| i as f64 * c as f64).sum();
+        let (mut sum_b, mut w_b, mut best, mut best_t) = (0f64, 0f64, 0f64, 127u8);
+        for tt in 0..256 {
+            w_b += hist[tt] as f64;
+            if w_b == 0.0 { continue; }
+            let w_f = total - w_b;
+            if w_f == 0.0 { break; }
+            sum_b += tt as f64 * hist[tt] as f64;
+            let (m_b, m_f) = (sum_b / w_b, (sum_all - sum_b) / w_f);
+            let between = w_b * w_f * (m_b - m_f) * (m_b - m_f);
+            if between > best { best = between; best_t = tt as u8; }
+        }
+        best_t.min(160)
+    };
+    let ink: Vec<bool> = gray.iter().map(|&v| v <= t).collect();
+    (0..w * h)
+        .map(|i| {
+            if !ink[i] { return false; }
+            let (x, y) = (i % w, i / w);
+            x == 0 || y == 0 || x == w - 1 || y == h - 1
+                || !ink[i - 1] || !ink[i + 1] || !ink[i - w] || !ink[i + w]
+        })
+        .collect()
+}
+
 /// Connected skeleton components (8-connected), each a pixel list.
 pub fn skeleton_components(skel: &[bool], w: usize, h: usize) -> Vec<Vec<(f32, f32)>> {
     let mut seen = vec![false; w * h];
@@ -135,6 +170,116 @@ pub fn skeleton_components(skel: &[bool], w: usize, h: usize) -> Vec<Vec<(f32, f
             }
         }
         out.push(comp);
+    }
+    out
+}
+
+/// F2 — vectorize the skeleton into junction-preserving centerline
+/// paths: spur-prune, then walk degree-2 chains between endpoints and
+/// junctions (a leg meeting the body stays connected at the junction
+/// pixel); isolated loops walk their cycle. Simplified with eps kept
+/// inside the D1 tolerance so the path IS the ink.
+pub fn vectorize_skeleton(skel: &[bool], w: usize, h: usize, eps: f32) -> Vec<Vec<(f32, f32)>> {
+    let mut sk = skel.to_vec();
+    let nbrs = |sk: &[bool], i: usize| -> Vec<usize> {
+        let (x, y) = (i % w, i / w);
+        let mut out = Vec::new();
+        for dy in -1i32..=1 {
+            for dx in -1i32..=1 {
+                if dx == 0 && dy == 0 { continue; }
+                let (nx, ny) = (x as i32 + dx, y as i32 + dy);
+                if nx >= 0 && ny >= 0 && (nx as usize) < w && (ny as usize) < h {
+                    let j = ny as usize * w + nx as usize;
+                    if sk[j] { out.push(j); }
+                }
+            }
+        }
+        out
+    };
+    // Spur pruning: erode endpoint chains shorter than 5px (thinning noise).
+    for _ in 0..5 {
+        let ends: Vec<usize> =
+            (0..w * h).filter(|&i| sk[i] && nbrs(&sk, i).len() == 1).collect();
+        let mut removed = false;
+        for e in ends {
+            // measure the chain from this endpoint
+            let (mut chain, mut cur, mut prev) = (vec![e], e, usize::MAX);
+            loop {
+                let n: Vec<usize> = nbrs(&sk, cur).into_iter().filter(|&j| j != prev).collect();
+                if n.len() != 1 || chain.len() > 3 { break; }
+                prev = cur;
+                cur = n[0];
+                chain.push(cur);
+            }
+            if chain.len() <= 2 && nbrs(&sk, *chain.last().unwrap()).len() > 2 {
+                for &i in &chain[..chain.len() - 1] { sk[i] = false; }
+                removed = true;
+            }
+        }
+        if !removed { break; }
+    }
+    let deg = |sk: &[bool], i: usize| nbrs(sk, i).len();
+    let mut visited = vec![false; w * h]; // edge-visited marker per pixel
+    let mut paths: Vec<Vec<(f32, f32)>> = Vec::new();
+    let pt = |i: usize| ((i % w) as f32, (i / w) as f32);
+    // Walk chains starting at every endpoint or junction.
+    let starts: Vec<usize> =
+        (0..w * h).filter(|&i| sk[i] && deg(&sk, i) != 2).collect();
+    for &s0 in &starts {
+        for n0 in nbrs(&sk, s0) {
+            if visited[n0] && deg(&sk, n0) == 2 { continue; }
+            let mut chain = vec![pt(s0)];
+            let (mut prev, mut cur) = (s0, n0);
+            loop {
+                chain.push(pt(cur));
+                if deg(&sk, cur) != 2 { break; }
+                visited[cur] = true;
+                let next: Vec<usize> =
+                    nbrs(&sk, cur).into_iter().filter(|&j| j != prev).collect();
+                if next.is_empty() { break; }
+                prev = cur;
+                cur = next[0];
+            }
+            if chain.len() >= 2 {
+                paths.push(chain);
+            }
+        }
+    }
+    // Isolated cycles: all remaining unvisited degree-2 pixels.
+    for i in 0..w * h {
+        if !sk[i] || visited[i] || deg(&sk, i) != 2 { continue; }
+        let mut chain = vec![pt(i)];
+        visited[i] = true;
+        let (mut prev, mut cur) = (i, nbrs(&sk, i)[0]);
+        while cur != i {
+            chain.push(pt(cur));
+            visited[cur] = true;
+            let next: Vec<usize> = nbrs(&sk, cur).into_iter().filter(|&j| j != prev).collect();
+            if next.is_empty() { break; }
+            prev = cur;
+            cur = next[0];
+        }
+        chain.push(pt(i));
+        if chain.len() >= 6 { paths.push(chain); }
+    }
+    // Simplify inside the D1 budget; dedupe reverse-direction duplicates.
+    let mut out: Vec<Vec<(f32, f32)>> = Vec::new();
+    for p in paths {
+        let sp = crate::simplify_public(&p, eps);
+        if sp.len() < 2 { continue; }
+        let key = |v: &Vec<(f32, f32)>| {
+            let a = v[0];
+            let b = *v.last().unwrap();
+            let mid = v[v.len() / 2];
+            ((a.0 + b.0 + mid.0) as i32, (a.1 + b.1 + mid.1) as i32, v.len())
+        };
+        if !out.iter().any(|q| key(q) == key(&sp) || {
+            let mut r = sp.clone();
+            r.reverse();
+            key(q) == key(&r)
+        }) {
+            out.push(sp);
+        }
     }
     out
 }
@@ -256,6 +401,21 @@ mod tests {
         assert!(e.ink_recall >= 0.97, "recall {}", e.ink_recall);
         assert!(e.path_precision >= 0.97, "precision {}", e.path_precision);
         assert!(e.component_coverage, "coverage");
+    }
+
+    /// F2: vectorized skeleton paths EARN all three gates on the stick
+    /// horse — the trace IS the ink.
+    #[test]
+    fn vectorization_earns_the_gates() {
+        let (g, _) = stick_horse(200, 150);
+        let skel = ink_skeleton(&g, 200, 150);
+        let paths = vectorize_skeleton(&skel, 200, 150, 1.2);
+        let comps = skeleton_components(&skel, 200, 150);
+        let e = ink_eval(&comps, &paths, 2.5, 5);
+        assert!(e.ink_recall >= 0.97, "recall {}", e.ink_recall);
+        assert!(e.path_precision >= 0.97, "precision {}", e.path_precision);
+        assert!(e.component_coverage, "coverage");
+        assert!(paths.len() >= 5, "junction-preserving: limbs are separate paths, got {}", paths.len());
     }
 
     /// Done-when #2: deleting the tail path flips component_coverage FAIL.

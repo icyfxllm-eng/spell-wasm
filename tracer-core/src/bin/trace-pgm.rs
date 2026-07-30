@@ -55,6 +55,30 @@ fn main() {
     i += 1;
     let (w, h) = (nums[0], nums[1]);
     let gray = &s[i..i + w * h];
+    if std::env::args().nth(1).as_deref() == Some("ink") {
+        // v7.5 F2: the trace IS the ink — skeleton centerline paths.
+        let diag = ((w * w + h * h) as f32).sqrt();
+        let (thin_stroke, _, _) = tracer_core::ink::is_ink_art(gray, w, h);
+        let skel = if thin_stroke {
+            tracer_core::ink::ink_skeleton(gray, w, h)
+        } else {
+            tracer_core::ink::ink_boundary(gray, w, h)
+        };
+        let paths = tracer_core::ink::vectorize_skeleton(&skel, w, h, 0.006 * diag);
+        let mut out = String::from("{\"paths\":[");
+        for (k, p) in paths.iter().enumerate() {
+            if k > 0 { out += ","; }
+            out += "[";
+            for (j, (x, y)) in p.iter().enumerate() {
+                if j > 0 { out += ","; }
+                out += &format!("[{x:.1},{y:.1}]");
+            }
+            out += "]";
+        }
+        out += "]}";
+        println!("{out}");
+        return;
+    }
     let r = tracer_core::trace_constrained(gray, w, h, budget, &cons);
     let mut out = String::from("{");
     out += &format!("\"deviation\":{:.5},\"coverage\":{:.4},\"threshold\":{},\"smooth_viol\":{},\"w\":{w},\"h\":{h},\"paths\":[",

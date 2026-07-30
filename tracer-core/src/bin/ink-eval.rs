@@ -22,9 +22,37 @@ fn main() {
     let diag = ((w * w + h * h) as f32).sqrt();
     let tau = 0.01 * diag; // D1
     let l_min = (0.02 * diag) as usize; // D2
-    let skel = tracer_core::ink::ink_skeleton(gray, w, h);
+    let skel = if is_ink {
+        tracer_core::ink::ink_skeleton(gray, w, h)
+    } else {
+        tracer_core::ink::ink_boundary(gray, w, h)
+    };
     let comps = tracer_core::ink::skeleton_components(&skel, w, h);
     let e = tracer_core::ink::ink_eval(&comps, &paths, tau, l_min);
+    if let Some(residual_file) = std::env::args().nth(2) {
+        let near = |px: f32, py: f32| -> bool {
+            paths.iter().any(|p| p.windows(2).any(|s2| {
+                let (a, b) = (s2[0], s2[1]);
+                let (vx, vy) = (b.0 - a.0, b.1 - a.1);
+                let l2 = vx * vx + vy * vy;
+                let t = if l2 == 0.0 { 0.0 } else { (((px - a.0) * vx + (py - a.1) * vy) / l2).clamp(0.0, 1.0) };
+                (px - (a.0 + t * vx)).hypot(py - (a.1 + t * vy)) <= tau
+            }))
+        };
+        let mut res = String::from("[");
+        let mut first = true;
+        for c in &comps {
+            for &(x, y) in c {
+                if !near(x, y) {
+                    if !first { res += ","; }
+                    res += &format!("[{x:.0},{y:.0}]");
+                    first = false;
+                }
+            }
+        }
+        res += "]";
+        let _ = std::fs::write(residual_file, res);
+    }
     let unmatched = e.components.iter().filter(|(_, m)| !m).count();
     println!(
         "{{\"class\":\"{}\",\"bimodality\":{bim:.3},\"thin_ratio\":{thin:.3},\"ink_recall\":{:.4},\"path_precision\":{:.4},\"components\":{},\"unmatched\":{unmatched},\"component_coverage\":{}}}",

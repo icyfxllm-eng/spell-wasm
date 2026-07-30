@@ -679,6 +679,11 @@ fn simplify_to_budget(pts: &[(f32, f32)], mut eps: f32, budget: usize) -> Vec<(f
     douglas_peucker(pts, eps)
 }
 
+/// Public simplify for the ink branch (D1 budget).
+pub fn simplify_public(pts: &[(f32, f32)], eps: f32) -> Vec<(f32, f32)> {
+    douglas_peucker(pts, eps)
+}
+
 fn douglas_peucker(pts: &[(f32, f32)], eps: f32) -> Vec<(f32, f32)> {
     if pts.len() < 3 {
         return pts.to_vec();
