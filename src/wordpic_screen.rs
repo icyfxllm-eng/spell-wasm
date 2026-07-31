@@ -245,6 +245,8 @@ fn open_play(app: &App, pic_id: &str) {
         feed.truncate(subject_total(p, &lang) as usize);
     }
     FEED.with(|f| *f.borrow_mut() = feed);
+    crate::spell_aloud::on_new_word();
+    reflect_voice(app);
     dom::set_text("wpPlayTitle", &format!("{} {}", p.icon, i18n::t("tools.wordpic.name")));
     crate::dom::toggle_class("wpZoom", "btn-hide", p.tier != "expert");
     ZOOMED.with(|z| z.set(true));
@@ -292,6 +294,8 @@ fn close_play(app: &App) {
     }
     CARD_UP.with(|c| c.set(false));
     api::stop();
+    crate::spell_aloud::set_surface(crate::spell_aloud::Surface::Game);
+    crate::spell_aloud::on_new_word();
     open_picker(app);
 }
 
@@ -578,6 +582,48 @@ fn render_scanlock(plan: &crate::spellpic::Plan, lang: &str, words: &[String]) {
     reflect_slots_indicator(lang);
 }
 
+// ---- v7 F7 / D9: the Spell It mic, serving Spell Picture ----
+
+/// State the CC-SPELL-ALOUD capture component reads: (target word,
+/// current buffer, input live). Same component as the base game — this
+/// is only the surface adapter, not a second implementation.
+pub fn voice_state() -> (String, String, bool) {
+    let target = current_word().unwrap_or_default();
+    let buf = dom::el("wpInput")
+        .dyn_into::<web_sys::HtmlInputElement>()
+        .map(|i| i.value())
+        .unwrap_or_default();
+    let live = OPEN.with(Cell::get) && !CARD_UP.with(Cell::get) && !target.is_empty();
+    (target, buf, live)
+}
+
+/// Letters the component assembled, written back to the field. Spoken
+/// letters are keystroke-equivalent provenance (D8 rejects spoken WHOLE
+/// WORDS, which the component itself refuses first — D3-strict).
+pub fn voice_set(text: &str) {
+    let Ok(inp) = dom::el("wpInput").dyn_into::<web_sys::HtmlInputElement>() else { return };
+    crate::input_provenance::reset("wpInput");
+    for _ in 0..text.chars().count() {
+        crate::input_provenance::note_insert("wpInput", "insertText", 1);
+    }
+    inp.set_value(text);
+    let lang = LANG.with(|l| l.borrow().clone());
+    reflect_slots_indicator(&lang);
+}
+
+/// D9: the mic appears in Spell Picture only where `voiceSpell` is on
+/// (en/es v1) and the component itself is available — never a dead
+/// button. Moves the shared mic control into the play row.
+fn reflect_voice(app: &App) {
+    let lang = LANG.with(|l| l.borrow().clone());
+    if !crate::consts::voice_spell(&lang) {
+        dom::add_class("voiceSpellMic", "btn-hide");
+        return;
+    }
+    crate::spell_aloud::set_surface(crate::spell_aloud::Surface::SpellPicture);
+    crate::spell_aloud::reflect(app);
+}
+
 /// L6 — the DOCKED letter-slot indicator: one fixed home above the input bar
 /// (chosen once; it cannot wander). One dash per unit of the current word.
 fn reflect_slots_indicator(lang: &str) {
@@ -657,6 +703,7 @@ fn on_typed(app: &App) {
 }
 
 fn place(app: &App, word: &str) {
+    crate::spell_aloud::on_new_word();
     let lang = LANG.with(|l| l.borrow().clone());
     let pic = PIC.with(|p| p.borrow().clone());
     let Some(p) = wordpic::picture(&pic) else { return };

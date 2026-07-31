@@ -788,6 +788,51 @@ fn end_capture_ui() {
 /// Mic TAP: toggle one-press continuous capture. First tap starts listening (and the
 /// first letter segment); a second tap while listening stops. NEVER auto-submits;
 /// NEVER clears typed text.
+/// v7 F7 / D9 — which surface the capture component is serving. The
+/// component is NOT reimplemented per mode: it reads the target and the
+/// append-base from the active surface and writes letters back to it.
+/// D3-strict whole-word rejection is untouched and applies to both.
+#[derive(Clone, Copy, PartialEq)]
+pub enum Surface {
+    Game,
+    SpellPicture,
+}
+
+thread_local! {
+    static SURFACE: Cell<u8> = const { Cell::new(0) };
+}
+
+pub fn set_surface(s: Surface) {
+    SURFACE.with(|c| c.set(match s {
+        Surface::Game => 0,
+        Surface::SpellPicture => 1,
+    }));
+}
+
+pub fn surface() -> Surface {
+    if SURFACE.with(Cell::get) == 1 { Surface::SpellPicture } else { Surface::Game }
+}
+
+/// Target word, current buffer, and whether input is live — from
+/// whichever surface is active.
+fn surface_state(app: &App) -> (String, String, bool) {
+    match surface() {
+        Surface::Game => {
+            let s = app.borrow();
+            (s.word.clone(), s.answer.clone(), crate::game::can_type(&s))
+        }
+        Surface::SpellPicture => crate::wordpic_screen::voice_state(),
+    }
+}
+
+/// Write the assembled letters back to the active surface.
+fn surface_set(app: &App, text: &str) {
+    match surface() {
+        Surface::Game => surface_set(app, text),
+        Surface::SpellPicture => crate::wordpic_screen::voice_set(text),
+    }
+}
+
 pub fn mic_tap(app: &App) {
     if !enabled() {
         return;
@@ -811,10 +856,7 @@ pub fn mic_tap(app: &App) {
         stop_session();
         return;
     }
-    let (target, base, can) = {
-        let s = app.borrow();
-        (s.word.clone(), s.answer.clone(), crate::game::can_type(&s))
-    };
+    let (target, base, can) = surface_state(app);
     if !can {
         return;
     }
@@ -910,7 +952,7 @@ fn on_partial(app: &App, lang: &str, transcript: &str) {
         }
         cur.clone()
     });
-    crate::game::set_answer(app, &format!("{}{}", base, shown));
+    surface_set(app, &format!("{}{}", base, shown));
 }
 
 /// One VAD segment (one letter) finalized: commit it. The NATIVE session keeps
@@ -932,7 +974,7 @@ fn on_final(app: &App, lang: &str, transcript: &str, is_end: bool) {
     // D3 (Feature 4): the utterance SAYS THE TARGET WORD (whole or embedded) → discard
     // it, nudge to spell it out. Zero letters, never a miss. BASE is unchanged. (D2)
     if says_target(transcript, &target) {
-        crate::game::set_answer(app, &base);
+        surface_set(app, &base);
         set_status("voiceSpell.spellItOut");
     } else if let Some(cmd) = edit_command(lang, transcript) {
         // A6 / D7: a voice edit command acts on the answer field like backspace / start
@@ -943,7 +985,7 @@ fn on_final(app: &App, lang: &str, transcript: &str, is_end: bool) {
             Command::Done => base.clone(), // ignored: submit is the on-screen control
         };
         BASE.with(|b| *b.borrow_mut() = edited.clone());
-        crate::game::set_answer(app, &edited);
+        surface_set(app, &edited);
         crate::haptics::key_tap();
         set_status(if still { "voiceSpell.listening" } else { "" });
     } else {
@@ -957,7 +999,7 @@ fn on_final(app: &App, lang: &str, transcript: &str, is_end: bool) {
         if committed.is_empty() {
             // An empty segment — a false VAD boundary (a pause with no clear letter) is
             // routine in one-press mode. Keep the field and keep listening silently.
-            crate::game::set_answer(app, &base);
+            surface_set(app, &base);
             set_status(if still {
                 "voiceSpell.listening"
             } else {
@@ -967,7 +1009,7 @@ fn on_final(app: &App, lang: &str, transcript: &str, is_end: bool) {
             let updated = format!("{}{}", base, committed);
             // Persist across segments so the next letter appends after this one.
             BASE.with(|b| *b.borrow_mut() = updated.clone());
-            crate::game::set_answer(app, &updated);
+            surface_set(app, &updated);
             crate::haptics::key_tap();
             set_status(if still { "voiceSpell.listening" } else { "" });
         }
@@ -983,7 +1025,7 @@ fn on_final(app: &App, lang: &str, transcript: &str, is_end: bool) {
 fn on_error(app: &App, code: &str) {
     end_capture_ui();
     let base = BASE.with(|b| b.borrow().clone());
-    crate::game::set_answer(app, &base);
+    surface_set(app, &base);
     match code {
         "PERMISSION_DENIED" => {
             if !EXPLAINED.with(Cell::get) {

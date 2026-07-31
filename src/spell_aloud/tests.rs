@@ -691,3 +691,41 @@ fn contextual_strings_expose_the_spoken_forms() {
     assert!(es.contains(&"a con tilde".to_string()));
     assert!(es.contains(&"eñe".to_string()));
 }
+
+
+// ---- v7 F7 / D9: the mic in Spell Picture is THIS component ----
+
+#[test]
+fn spell_picture_uses_the_same_capture_component() {
+    use super::{set_surface, surface, Surface};
+    set_surface(Surface::SpellPicture);
+    assert!(matches!(surface(), Surface::SpellPicture));
+    // D3-strict rejection is the component's, not a per-mode copy: a
+    // spoken WHOLE WORD is refused no matter which surface is active.
+    for w in ["window", "flower", "elephant"] {
+        assert_eq!(
+            super::interpret(crate::consts::EN, w),
+            super::SpellOutcome::WholeWord,
+            "whole word {w:?} must be refused in Spell Picture too"
+        );
+    }
+    // and letter-by-letter is still accepted
+    assert!(!matches!(
+        super::interpret(crate::consts::EN, "double you"),
+        super::SpellOutcome::WholeWord
+    ));
+    set_surface(Surface::Game);
+}
+
+#[test]
+fn d9_mic_gate_is_the_registry_not_a_per_mode_rule() {
+    // D9: Spell Picture inherits the voiceSpell registry — it does not
+    // keep its own list. The registry has grown past the spec's en/es v1
+    // to all 15 built-ins, and the mic follows it wherever it goes.
+    for l in crate::consts::VOICE_SPELL_LANGS {
+        assert!(crate::consts::voice_spell(l), "{l} is registered");
+    }
+    // A language absent from the registry gets no mic — never a dead
+    // button. (The on-device capability ladder in reflect() gates further.)
+    assert!(!crate::consts::voice_spell("xx"), "unregistered language shows no mic");
+}
