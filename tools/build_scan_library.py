@@ -248,20 +248,15 @@ def author_dragon(im):
 
 
 def author_rhino(im):
-    """Durer's Rhinoceros (1515), VECTOR line art. The original woodcut is
-    unusable here: its hatching is so dense that any threshold fills the
-    whole plate (verified — it yields a black rectangle). This is the same
-    artwork drawn as lines, so horn, ear, plates and legs survive."""
-    rgb = im.convert("RGB")
-    W, H = rgb.size
-    g = ImageOps.autocontrast(rgb.convert("L"), cutoff=2).load()
-    mask = [[g[x, y] < 150 for x in range(W)] for y in range(H)]
-    mask = _close(mask, W, H, 2)
-    mask = _largest_component(mask, W, H)
-    # NO hole fill: the eye and the gaps between the legs ARE holes, and
-    # filling them is exactly what erased them (Eric's note). The stipple
-    # specks are dropped downstream by the arc floor, not by filling.
-    return _paint(mask, None, W, H)
+    """Duerer's Rhinoceros was the right animal and the wrong reference.
+    Even redrawn as vector lines its plate ornament is dense enough that
+    every threshold floods: the legs merged with the ground shadow and the
+    eye disappeared, which is exactly what Eric saw. The reference is now
+    a drawn silhouette (tools/draw_ref.py) with real air between the legs
+    and the eye as a hole, so both survive by construction rather than by
+    tuning. Recipe is therefore the plain one -- solid subject, holes kept.
+    """
+    return author_pictogram(im)
 
 
 def author_pictogram(im):
@@ -316,7 +311,9 @@ AUTHOR = {"horse": author_pictogram, "owl": author_owl, "peacock": author_peacoc
           "dragon": author_dragon, "rhino": author_rhino,
           "cat": author_pictogram,
           # interior detail finer than a word is tall -> fill it
-          "snail": author_solid_pictogram, "rocket": author_solid_pictogram}
+          "snail": author_solid_pictogram,
+          # not solid_pictogram: that fills holes, and the window is a hole
+          "rocket": author_pictogram}
 
 
 def rings(path, subject=None):

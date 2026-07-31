@@ -7,7 +7,9 @@ POOLS = ROOT / "content-pipeline/wordpic/pools"
 BIN = ROOT / "target/release/scanlock-render"
 OUT = pathlib.Path(sys.argv[1]); OUT.mkdir(parents=True, exist_ok=True)
 BAND_MAX = {"easy": 40.0, "medium": 32.0, "hard": 24.0, "expert": 30.0}
+ONLY = set(sys.argv[2:])  # optional subject filter, for quick re-checks
 for f in sorted(SCANS.glob("*.json")):
+    if ONLY and f.stem not in ONLY: continue
     sub = f.stem
     doc = json.loads(f.read_text())
     tier = doc["tier"]
