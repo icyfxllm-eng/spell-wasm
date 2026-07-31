@@ -1,0 +1,12 @@
+{
+  "": {
+    "swift-dependencies": "/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/ScanStack/.build/arm64-apple-macosx/debug/TonalKitTests.build/primary.swiftdeps"
+  },
+  "/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/ScanStack/Tests/TonalKitTests/TonalKitTests.swift": {
+    "dependencies": "/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/ScanStack/.build/arm64-apple-macosx/debug/TonalKitTests.build/TonalKitTests.d",
+    "object": "/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/ScanStack/.build/arm64-apple-macosx/debug/TonalKitTests.build/TonalKitTests.swift.o",
+    "swiftmodule": "/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/ScanStack/.build/arm64-apple-macosx/debug/TonalKitTests.build/TonalKitTests~partial.swiftmodule",
+    "swift-dependencies": "/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/ScanStack/.build/arm64-apple-macosx/debug/TonalKitTests.build/TonalKitTests.swiftdeps",
+    "diagnostics": "/Users/eric/Desktop/xcode-backup/repos/spell-wasm/ios/ScanStack/.build/arm64-apple-macosx/debug/TonalKitTests.build/TonalKitTests.dia"
+  }
+}

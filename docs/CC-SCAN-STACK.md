@@ -47,3 +47,41 @@ exceeded it were exactly the ones carrying features Eric asked to SEE
 (rhino legs and eye 0.236, smiley eyes 0.167, snowman face 0.131). It is
 now 0.25, set from the inventory as v8.2 D4 instructed. Expect the same
 to be true of per-face floors: measure before hard-coding.
+
+
+## Phase T0 progress (2026-07-31)
+
+STARTED on Eric's "start when ready". Built the piece that needs NONE of
+the pending sign-offs, so no decision gets pre-empted by code:
+
+- `ios/ScanStack/` Swift package, macOS/iOS, offline-tool only. No
+  app-target wiring exists (P1+P2 unchanged).
+- **TonalKit (module 2)** written and green — 7 tests:
+  * posterize by EQUAL-POPULATION quantiles, not equal luminance. A
+    clustered photo (most portraits) otherwise collapses into two used
+    bands and eight empty ones; a test asserts every band carries pixels
+    and that a darker pixel can never land in a lighter band.
+  * Sobel -> structure tensor -> principal direction flow field, with a
+    test that vertical stripes yield flow along the stripes. This is what
+    makes fur read as fur rather than hatching.
+  * seeded median-cut palette, ordered dark->light, plus the contrast
+    floor (drops swatches the page would swallow, never returns empty).
+  * determinism assertions on all three (D5).
+- vImage/Accelerate and the Metal path (module 5) can replace these
+  loops later WITHOUT changing results; these fixtures are what will
+  hold that promise.
+
+BLOCKED ON ERIC, and deliberately unwritten:
+- module 1 VisionKit — needs **D2** (iOS 17 feature gate).
+- module 3 TypeKit — needs **D3** (which variable font ships).
+- module 4 per-face floors — needs **D4** (path minimum, size cutoff).
+
+ARCHITECTURE QUESTION FOR ERIC: the spec says "swift test green ... in
+the authoring-tool target", but this project's authoring tool is Python
++ Rust (tools/, tracer-core/), not Swift. Vision/vImage/Core Text are
+Apple-only, so the stack must live in Swift regardless. Options: (a) the
+Swift package becomes a second authoring tool used for photo subjects
+while the Python tracer keeps the clip-art ones; (b) the Python tracer
+is retired and everything moves to Swift; (c) the Swift package exposes
+a CLI the Python driver shells out to. Recommend (c): one implementation
+of the math, the existing pipeline and its gates keep working.
