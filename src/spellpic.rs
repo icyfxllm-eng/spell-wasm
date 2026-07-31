@@ -217,6 +217,27 @@ mod tests {
 
     /// Determinism: same (subject, lang, seed) → same plan, so a resumed
     /// campaign redraws identically (I3 carried).
+    /// Eric: no repeated words inside a picture. The packer never reuses
+    /// a pool INDEX, so duplicates can only arrive from the pool itself
+    /// (the tier list plus the borrowed easy list). Checked across every
+    /// shipped subject and every language.
+    #[test]
+    fn no_repeated_words_within_a_picture() {
+        for name in bundle().subjects.keys() {
+            for (lang, _, _, _) in crate::consts::BUILTIN_LANGS.iter() {
+                let Some(p) = plan(name, lang, 3) else { continue };
+                let mut seen: Vec<&String> = Vec::new();
+                for w in &p.words {
+                    assert!(
+                        !seen.contains(&w),
+                        "{name}/{lang}: word {w:?} appears twice in one picture"
+                    );
+                    seen.push(w);
+                }
+            }
+        }
+    }
+
     #[test]
     fn plans_are_deterministic() {
         let a = plan("snowman", "en", 7).unwrap();

@@ -1054,6 +1054,25 @@ mod tests {
     /// overlaps, zero out-of-frame, zero sub-floor, fill ≥ 95% (or the slot
     /// was solvable to band max, tracked by fill>=FILL_MIN assertion on the
     /// chosen candidate).
+    /// Eric: no repeated words inside a picture — also for the legacy
+    /// (non-scan) subjects that still plan through this engine.
+    #[test]
+    fn no_repeated_words_legacy_engine() {
+        for p in &wordpic::manifest().pictures {
+            for (code, _, _, _) in crate::consts::BUILTIN_LANGS.iter() {
+                if READINESS_EXCEPTIONS.contains(&(p.id.as_str(), code)) {
+                    continue;
+                }
+                let (words, _, _) = layout_feed(p, code, 5, &[]);
+                let mut seen: Vec<&String> = Vec::new();
+                for w in &words {
+                    assert!(!seen.contains(&w), "{}/{}: {w:?} twice in one picture", p.id, code);
+                    seen.push(w);
+                }
+            }
+        }
+    }
+
     /// v8 F6 `star-side-rails`: the two vertical letter-stacks that read
     /// as dashed UI rails and the stray ground line are gone from the
     /// star, and no picture stroke in ANY subject is a free-floating
