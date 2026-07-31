@@ -1137,7 +1137,7 @@
     <!-- Custom on-screen keyboard. The answer is never a real <input>, so the
          iOS system keyboard — with its dictation key and autocorrect — can't
          open during a round. Letter keys are built + wired in keyboard.rs. -->
-    <div class="game-kb locked" id="gameKeyboard" role="group" aria-label="On-screen keyboard">
+    <div id="kbHome"><div class="game-kb locked" id="gameKeyboard" role="group" aria-label="On-screen keyboard">
       <!-- Letter rows are generated per language (3 for QWERTY, 5 for the kana
            grid) into this container by keyboard.rs. -->
       <div id="kbLetters"></div>
@@ -1147,7 +1147,7 @@
         <button class="kb-submit btn-hide" id="kbSubmit" data-i18n="kb.enter">Enter</button>
         <button class="kb-back" id="kbBackspace" aria-label="Delete last letter">⌫</button>
       </div>
-    </div>
+    </div></div>
 
     <div class="action-row">
       <button class="btn btn-check" id="checkBtn" data-i18n="btn.check" disabled>Check spelling</button>
@@ -1395,6 +1395,9 @@
       <input class="wp-input" id="wpInput" type="text" inputmode="none" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" />
       <button class="btn btn-check wp-replay" id="wpReplay" aria-label="Replay">🔊</button>
     </div>
+    <!-- F7: the app's own per-language keyboard is lent here while the
+         picture is open, so no system keyboard (and no dictation key) -->
+    <div id="wpKbSlot"></div>
     <div class="wp-card" id="wpHow"><div class="modal">
       <p id="wpHowText"></p>
       <button class="btn btn-check" id="wpHowNext" data-i18n="practice.gotIt" style="width:100%">Got it</button>

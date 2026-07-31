@@ -408,7 +408,14 @@ pub fn sync_keyboard(app: &App) {
         // Apostrophe/hyphen keys are for English imports (contractions, hyphens);
         // My Words in another language uses that language's own keyboard instead.
         let punct = s.lang == MINE && matches!(mine_lang(&s), None | Some("en") | Some("zh"));
-        (can_type(&s), punct)
+        // F7: while Spell Picture holds the keyboard, ITS state decides
+        // whether keys are live — the base game has no active word then,
+        // and locking on that would leave the picture unplayable.
+        let live = match crate::spell_aloud::surface() {
+            crate::spell_aloud::Surface::SpellPicture => crate::wordpic_screen::voice_state().2,
+            crate::spell_aloud::Surface::Game => can_type(&s),
+        };
+        (live, punct)
     };
     dom::toggle_class("gameKeyboard", "locked", !enabled);
     dom::toggle_class("gameKeyboard", "show-punct", punct);
@@ -422,6 +429,12 @@ pub fn sync_keyboard(app: &App) {
 /// single submit path tell typing from dictation (F7/D8) without
 /// rejecting legitimate play.
 pub fn type_char(app: &App, ch: char) {
+    // F7: Spell Picture borrows this same keyboard (per-language layouts,
+    // Korean composition, Vietnamese tones) instead of a system field.
+    if matches!(crate::spell_aloud::surface(), crate::spell_aloud::Surface::SpellPicture) {
+        crate::wordpic_screen::kb_type(ch);
+        return;
+    }
     crate::input_provenance::note_insert("answerField", "insertText", 1);
     if !can_type(&app.borrow()) {
         return;
@@ -445,6 +458,10 @@ pub fn emit_key(app: &App, ch: char) {
 /// Korean: feed one jamo through the Hangul composition automaton and replace
 /// the answer with the recomposed buffer.
 pub fn type_jamo(app: &App, jamo: char) {
+    if matches!(crate::spell_aloud::surface(), crate::spell_aloud::Surface::SpellPicture) {
+        crate::wordpic_screen::kb_jamo(jamo);
+        return;
+    }
     if !can_type(&app.borrow()) {
         return;
     }
@@ -488,6 +505,10 @@ pub fn set_answer(app: &App, text: &str) {
 
 /// Delete the last character of the answer.
 pub fn backspace(app: &App) {
+    if matches!(crate::spell_aloud::surface(), crate::spell_aloud::Surface::SpellPicture) {
+        crate::wordpic_screen::kb_backspace();
+        return;
+    }
     if !can_type(&app.borrow()) {
         return;
     }

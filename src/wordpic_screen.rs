@@ -66,9 +66,11 @@ pub fn wire(app: &App) {
         CARD_UP.with(|c| c.set(false));
         open_play(&a, &pic);
     });
-    dom::on_click("wpConfirmNo", || {
+    let a2 = app.clone();
+    dom::on_click("wpConfirmNo", move || {
         dom::remove_class("wpConfirm", "show");
         CARD_UP.with(|c| c.set(false));
+        crate::keyboard::rebuild(&a2);
     });
     let a = app.clone();
     dom::on_click("wpHowNext", move || how_next(&a));
@@ -246,6 +248,8 @@ fn open_play(app: &App, pic_id: &str) {
     }
     FEED.with(|f| *f.borrow_mut() = feed);
     crate::spell_aloud::on_new_word();
+    crate::spell_aloud::set_surface(crate::spell_aloud::Surface::SpellPicture);
+    borrow_keyboard(true);
     reflect_voice(app);
     dom::set_text("wpPlayTitle", &format!("{} {}", p.icon, i18n::t("tools.wordpic.name")));
     crate::dom::toggle_class("wpZoom", "btn-hide", p.tier != "expert");
@@ -253,6 +257,10 @@ fn open_play(app: &App, pic_id: &str) {
     render_canvas(p, &lang, &run.words);
     reflect_count(p);
     OPEN.with(|c| c.set(true));
+    // The keyboard syncs against the ACTIVE surface, so it must be told
+    // after the picture is open — otherwise it locks itself on a closed
+    // screen and the mode has no keys at all.
+    crate::keyboard::rebuild(app);
     dom::remove_class("wpPicker", "show");
     dom::add_class("wpPlay", "show");
     if let Ok(inp) = dom::el("wpInput").dyn_into::<web_sys::HtmlInputElement>() {
@@ -270,6 +278,8 @@ fn open_play(app: &App, pic_id: &str) {
 }
 
 fn how_next(app: &App) {
+    // the card gated input; once it closes the shared keyboard goes live
+    let _ = app;
     let step = HOW_STEP.with(Cell::get);
     if step < 3 {
         dom::set_text("wpHowText", &i18n::t(&format!("wordpic.how{}", step + 1)));
@@ -279,6 +289,7 @@ fn how_next(app: &App) {
     } else {
         dom::remove_class("wpHow", "show");
         CARD_UP.with(|c| c.set(false));
+        crate::keyboard::rebuild(app); // card gated the keys; they go live now
         let mut s = wordpic::load();
         s.how_shown = true;
         wordpic::save(&s);
@@ -294,8 +305,10 @@ fn close_play(app: &App) {
     }
     CARD_UP.with(|c| c.set(false));
     api::stop();
+    borrow_keyboard(false);
     crate::spell_aloud::set_surface(crate::spell_aloud::Surface::Game);
     crate::spell_aloud::on_new_word();
+    crate::keyboard::rebuild(app);
     open_picker(app);
 }
 
@@ -580,6 +593,66 @@ fn render_scanlock(plan: &crate::spellpic::Plan, lang: &str, words: &[String]) {
     svg.push_str("</svg>");
     dom::set_html("wpStage", &svg);
     reflect_slots_indicator(lang);
+}
+
+// ---- v7 F7: Spell Picture uses the APP's per-language keyboard ----
+// The base game has no DOM input precisely so the iOS keyboard (and its
+// dictation key) cannot open. Spell Picture now borrows that same
+// keyboard — Korean jamo composition, Vietnamese tones, pinyin — instead
+// of a system field, which is what "per-language keyboards everywhere"
+// actually requires.
+
+fn wp_input() -> Option<web_sys::HtmlInputElement> {
+    dom::el("wpInput").dyn_into::<web_sys::HtmlInputElement>().ok()
+}
+
+/// A key tap from the shared keyboard, routed here while the picture is
+/// open. Korean composition is handled by the keyboard layer above us.
+pub fn kb_type(ch: char) {
+    let Some(inp) = wp_input() else { return };
+    let mut v = inp.value();
+    v.push(ch);
+    crate::input_provenance::note_insert("wpInput", "insertText", 1);
+    inp.set_value(&v);
+    dom::el("wpInput").dispatch_event(&web_sys::Event::new("input").unwrap()).ok();
+}
+
+/// Korean: the same Hangul composition automaton the base game uses,
+/// applied to the picture's buffer (ko types jamo, renders blocks).
+pub fn kb_jamo(jamo: char) {
+    let Some(inp) = wp_input() else { return };
+    let composed = crate::hangul::feed(&inp.value(), jamo);
+    crate::input_provenance::note_insert("wpInput", "insertText", 1);
+    inp.set_value(&composed);
+    dom::el("wpInput").dispatch_event(&web_sys::Event::new("input").unwrap()).ok();
+}
+
+pub fn kb_backspace() {
+    let Some(inp) = wp_input() else { return };
+    let mut v = inp.value();
+    v.pop();
+    inp.set_value(&v);
+    dom::el("wpInput").dispatch_event(&web_sys::Event::new("input").unwrap()).ok();
+}
+
+/// Lend the shared keyboard to the picture screen (and give it back).
+fn borrow_keyboard(take: bool) {
+    let Some(doc) = web_sys::window().and_then(|w| w.document()) else { return };
+    let (Some(kb), Some(home)) = (
+        doc.get_element_by_id("gameKeyboard"),
+        doc.get_element_by_id("kbHome"),
+    ) else {
+        return;
+    };
+    if take {
+        if let Some(row) = doc.get_element_by_id("wpKbSlot") {
+            let _ = row.append_child(&kb);
+            let _ = kb.class_list().remove_1("locked");
+        }
+    } else {
+        let _ = home.append_child(&kb);
+        let _ = kb.class_list().add_1("locked");
+    }
 }
 
 // ---- v7 F7 / D9: the Spell It mic, serving Spell Picture ----
