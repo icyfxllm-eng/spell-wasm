@@ -153,24 +153,37 @@ use Direction::{Ltr, Rtl};
 /// * [`direction`] — which way does it READ? What the play surface sets `dir` from.
 const LANGS_BASE: [(&str, &str, LangStatus, Direction); 15] = [
     (EN, "English", Active, Ltr),
-    (ES, "Espa\u{f1}ol", Active, Ltr),
-    (FR, "Fran\u{e7}ais", Active, Ltr),
-    (DE, "Deutsch", Active, Ltr),
-    (PT, "Portugu\u{ea}s", Active, Ltr),
-    (PL, "Polski", Active, Ltr),
-    (VI, "Ti\u{1ebf}ng Vi\u{1ec7}t", Active, Ltr),
-    (KO, "\u{d55c}\u{ad6d}\u{c5b4}", Active, Ltr),
-    (JA, "\u{65e5}\u{672c}\u{8a9e}", Active, Ltr),
-    (FIL, "Filipino", Active, Ltr),
-    (ZH, "\u{4e2d}\u{6587}", Active, Ltr),
-    (RU, "\u{420}\u{443}\u{441}\u{441}\u{43a}\u{438}\u{439}", Active, Ltr),
-    (AR, "\u{627}\u{644}\u{639}\u{631}\u{628}\u{64a}\u{629}", Active, Rtl),
-    (SW, "Kiswahili", Active, Ltr),
-    (HI, "\u{939}\u{93f}\u{928}\u{94d}\u{926}\u{940}", Active, Ltr),
+    (ES, "Espa\u{f1}ol", ComingSoon, Ltr),
+    (FR, "Fran\u{e7}ais", ComingSoon, Ltr),
+    (DE, "Deutsch", ComingSoon, Ltr),
+    (PT, "Portugu\u{ea}s", ComingSoon, Ltr),
+    (PL, "Polski", ComingSoon, Ltr),
+    (VI, "Ti\u{1ebf}ng Vi\u{1ec7}t", ComingSoon, Ltr),
+    (KO, "\u{d55c}\u{ad6d}\u{c5b4}", ComingSoon, Ltr),
+    (JA, "\u{65e5}\u{672c}\u{8a9e}", ComingSoon, Ltr),
+    (FIL, "Filipino", ComingSoon, Ltr),
+    (ZH, "\u{4e2d}\u{6587}", ComingSoon, Ltr),
+    (RU, "\u{420}\u{443}\u{441}\u{441}\u{43a}\u{438}\u{439}", ComingSoon, Ltr),
+    (AR, "\u{627}\u{644}\u{639}\u{631}\u{628}\u{64a}\u{629}", ComingSoon, Rtl),
+    (SW, "Kiswahili", ComingSoon, Ltr),
+    (HI, "\u{939}\u{93f}\u{928}\u{94d}\u{926}\u{940}", ComingSoon, Ltr),
 ];
 
-/// THE registry — identical in every build config since Hindi's promotion
-/// (2026-07-25) removed the last audit-only registry difference.
+/// THE registry.
+///
+/// English is the only Active language. The other fourteen are ComingSoon
+/// and stay that way until each has a NAMED native-audit sign-off, which is
+/// the discipline commit 3381daf set out on 2026-07-19 and which was then
+/// lost: that commit flipped ten languages to Active, said in its own body
+/// "STAGED FOR REVIEW, NOT SHIPPED ... activate the subset Eric confirms by
+/// reverting the ones he isn't ready for", and was merged without anyone
+/// doing the reverting. ru/sw/ar/hi were then promoted on top of it, so all
+/// fifteen shipped unaudited -- in the app as well as on the web.
+///
+/// The e2e `coming` specs had been failing on exactly this since the 19th.
+/// Nobody saw them because Playwright's browser was never installed, so the
+/// suite died at launch. Re-promote one line at a time, per audit.
+/// (Eric, 2026-07-31.)
 pub const BUILTIN_LANGS: [(&str, &str, LangStatus, Direction); 15] = LANGS_BASE;
 
 /// THE direction accessor (CC-RTL D3). The play surface sets `dir` from this and
@@ -387,20 +400,19 @@ mod registry_tests {
     // languages so they can be reviewed, so this holds only with the feature off.
     #[cfg(not(feature = "audit_preview"))]
     #[test]
-    fn active_languages_are_english_the_ten_ltr_russian_and_swahili() {
-        // English + the ten content-ready LTR/CJK languages, Russian (Track R),
-        // Swahili (Track S), and Arabic (UNGATED 2026-07-25 — RTL verified on
-        // device by Eric; bank via build-wordlists). Hindi stays audit-only (D8).
+    fn english_is_the_only_active_language() {
+        // Eric, 2026-07-31. The other fourteen ship as ComingSoon until each
+        // has a NAMED native-audit sign-off. This list grows one line at a
+        // time, per audit -- it is not a formality to bulk-edit when a test
+        // goes red. If you are here because you flipped a language and this
+        // failed, the question to answer is "whose sign-off?", not "how do I
+        // update the vec?".
         let active: Vec<&str> = BUILTIN_LANGS
             .iter()
             .filter(|(c, _, _, _)| is_active_lang(c))
             .map(|(c, _, _, _)| *c)
             .collect();
-        assert_eq!(
-            active,
-            vec!["en", "es", "fr", "de", "pt", "pl", "vi", "ko", "ja", "fil", "zh", "ru", "ar", "sw", "hi"],
-            "en + the ten content-ready languages + Russian + Arabic + Swahili + Hindi are active"
-        );
+        assert_eq!(active, vec!["en"], "only audited languages are Active");
     }
 
     /// CC-LINEUP-SWAP: the registry snapshot. Pinning the exact lineup means a
@@ -497,7 +509,11 @@ mod registry_tests {
         for code in rtl {
             assert!(rtl_required(code), "{code} is rtl_required (drives dir/joins)");
             assert!(!rtl_blocked(code), "{code} is no longer blocked — RTL is supported");
-            assert!(is_active_lang(code), "{code} is active (ungated)");
+            // Arabic's RENDERING is ungated (Eric verified on device
+            // 2026-07-25); its CONTENT is not audited, so it sits ComingSoon
+            // like every other unaudited language. Two separate gates, and
+            // this is the one that proves they stayed separate.
+            assert!(!is_active_lang(code), "{code} awaits a content audit");
         }
         // Russian is an LTR language — it carries no RTL gate at all.
         assert!(!rtl_required("ru"), "ru is left-to-right");
@@ -508,8 +524,10 @@ mod registry_tests {
     /// configs. This test is the deliberate-change tripwire for ever re-gating.
     #[test]
     fn rtl_gate_matches_the_build_config() {
-        assert!(RTL_SUPPORTED, "Arabic ungated in every build config");
-        assert!(is_active_lang("ar"));
+        assert!(RTL_SUPPORTED, "Arabic RENDERING ungated in every build config");
+        // Deliberately not asserting is_active_lang here: render support and
+        // content audit are different questions and this test owns the first.
+        assert!(!rtl_blocked("ar"), "the render gate is open");
     }
 
     /// CC-RTL F4 leans on `script_joins` deriving from `rtl_required`, which is
@@ -566,12 +584,21 @@ mod registry_tests {
     #[cfg(not(feature = "audit_preview"))]
     #[test]
     fn rtl_gate_survives_an_active_status() {
-        // Post-ungate shape: ar is Active AND unblocked. The gate MACHINERY
-        // stays: if RTL_SUPPORTED ever flips back, `is_active_lang` must AND the
-        // block back in regardless of status — pinned via the resolver clamp
-        // (`clamp_rtl_blocked`) and `rtl_blocked` deriving from the const.
-        assert_eq!(lang_status("ar"), Active, "ar ships Active (ungated)");
-        assert!(!rtl_blocked("ar"));
-        assert!(is_active_lang("ar"));
+        // The teeth are the IMPLICATION, not any one language's status: a
+        // blocked language must never be active, whatever the registry says.
+        // Asserting it across the whole lineup keeps the tripwire alive in
+        // every future configuration -- including the one where someone
+        // promotes an RTL language back to Active while RTL_SUPPORTED is off.
+        for (code, _, _, _) in BUILTIN_LANGS {
+            assert!(
+                !(rtl_blocked(code) && is_active_lang(code)),
+                "{code} is rtl_blocked yet active — the status flip beat the gate"
+            );
+        }
+        // And the block derives from the const AND the direction, never from a
+        // hand-maintained list that could drift from either.
+        for (code, _, _, d) in BUILTIN_LANGS {
+            assert_eq!(rtl_blocked(code), d == Rtl && !RTL_SUPPORTED, "{code}: block is not derived");
+        }
     }
 }

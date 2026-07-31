@@ -325,18 +325,17 @@ mod tests {
     #[cfg(not(feature = "audit_preview"))]
     #[test]
     fn inactive_locale_falls_back_to_en() {
-        // A non-active locale is routed by `locale_for` to the English pool, so
-        // its Daily set matches English; with every registered language active
-        // (hi promoted 2026-07-25), the example is a CUT code (tr).
+        // `locale_for` routes any non-active locale to the English pool. Since
+        // Eric's 2026-07-31 ruling that is every language but English, plus cut
+        // codes like `tr` -- so a ComingSoon language's Daily serves English
+        // words rather than unaudited ones, which is the safe direction.
         let (_, en) = build_words("en", "2026-07-10", false);
-        let (_, tr) = build_words("tr", "2026-07-10", false);
-        assert_eq!(en, tr, "a non-active locale should fall back to the English set");
-        let (_, ru) = build_words("ru", "2026-07-10", false);
-        assert_ne!(en, ru, "an active locale draws its own pool");
-        let (_, ar) = build_words("ar", "2026-07-10", false);
-        assert_ne!(en, ar, "Arabic is active and draws its own pool");
-        let (_, hi) = build_words("hi", "2026-07-10", false);
-        assert_ne!(en, hi, "Hindi is active and draws its own pool");
+        for code in ["tr", "ru", "ar", "hi", "es", "fil"] {
+            let (_, other) = build_words(code, "2026-07-10", false);
+            assert_eq!(en, other, "{code} is not active and must fall back to English");
+        }
+        // The fallback must not be vacuous -- English still draws a real set.
+        assert!(!en.is_empty(), "the English pool is empty; the assertions above prove nothing");
     }
 
     #[test]
