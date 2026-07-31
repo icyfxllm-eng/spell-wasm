@@ -99,3 +99,17 @@ final class TonalKitTests: XCTestCase {
         XCTAssertEqual(allInvisible.count, 1, "never return an empty palette")
     }
 }
+
+// MARK: - Module 5: CPU/GPU equivalence harness
+
+final class AccelerationTests: XCTestCase {
+    func testEveryBackendAgrees() {
+        var px = [UInt8](repeating: 0, count: 64 * 48)
+        for y in 0..<48 {
+            for x in 0..<64 { px[y * 64 + x] = UInt8((x * 4 + y * 2) % 256) }
+        }
+        let g = Gray(width: 64, height: 48, px: px)
+        XCTAssertNil(Backends.firstDisagreement(on: g),
+                     "Metal is a perf path, never a correctness dependency")
+    }
+}

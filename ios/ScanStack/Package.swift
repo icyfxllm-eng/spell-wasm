@@ -8,10 +8,20 @@ import PackageDescription
 // written while those sign-offs are pending.
 let package = Package(
     name: "ScanStack",
-    platforms: [.macOS(.v13), .iOS(.v16)],
-    products: [.library(name: "TonalKit", targets: ["TonalKit"])],
+    // D2 (Eric approved): instance masks need iOS 17 / macOS 14. The
+    // FEATURE is gated at that floor; the app minimum is untouched.
+    platforms: [.macOS(.v14), .iOS(.v17)],
+    products: [
+        .library(name: "TonalKit", targets: ["TonalKit"]),
+        .library(name: "VisionKitScan", targets: ["VisionKitScan"]),
+        .library(name: "TypeKitScan", targets: ["TypeKitScan"]),
+    ],
     targets: [
         .target(name: "TonalKit"),
+        .target(name: "VisionKitScan"),
+        .target(name: "TypeKitScan"),
         .testTarget(name: "TonalKitTests", dependencies: ["TonalKit"]),
+        .testTarget(name: "VisionKitScanTests", dependencies: ["VisionKitScan"]),
+        .testTarget(name: "TypeKitScanTests", dependencies: ["TypeKitScan"]),
     ]
 )

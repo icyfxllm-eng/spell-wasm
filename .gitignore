@@ -85,3 +85,6 @@ tools/wordpipe/out/
 # fastlane signing artifacts (get_certificates drops these in the repo root)
 *.cer
 *.certSigningRequest
+
+# Swift package build artifacts (ios/ScanStack)
+.build/
