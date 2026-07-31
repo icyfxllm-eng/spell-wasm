@@ -19,7 +19,21 @@ CANVAS = 512
 FLOOR = 13.0
 MIN_WORD_CHARS = 3
 CORNER_DEG = 35.0
+SMALL_FEATURE_MAX = 130.0
 SEG_MAX = 100000.0  # v8.1: pack per path; corner marks only   # a segment longer than this gets an interior mark
+
+# Eric's per-path sign-off (D4): features that MUST be present, named.
+# Position is (x, y) in canvas coords with a tolerance, so the gate binds
+# to the feature, not to a path index that could renumber.
+REQUIRED_MICRO = {
+    # Verified against the recovered closed features (build output):
+    # eyes at (233,137)/(267,138), nose wedge at (258,160), buttons below.
+    "snowman": [
+        {"name": "left eye", "near": [233, 137], "tol": 20},
+        {"name": "right eye", "near": [267, 138], "tol": 20},
+        {"name": "nose", "near": [258, 160], "tol": 24},
+    ],
+}
 
 SUBJ = {  # subject -> (ref, mode, tier)
  "dog": ("dog.png", "ink", "easy"), "butterfly": ("butterfly.png", "ink", "easy"),
@@ -180,6 +194,16 @@ def path_min_clearance(p, others):
 for sub, (ref, mode, tier) in SUBJ.items():
     paths = rings(REF / ref)
     paths.sort(key=plen, reverse=True)
+    # v8.2.1 small-feature pass: a SHORT CLOSED contour is a solid source
+    # feature (snowman eyes, nose; animal eyes). It is preserved intact —
+    # exempt from decorative dedup, from the tight-run split, and from
+    # sub-floor merging — and carries micro_feature so the renderer draws
+    # it filled and the gate can require it.
+    def is_small_closed(p):
+        return (math.hypot(p[0][0]-p[-1][0], p[0][1]-p[-1][1]) < 3.0
+                and plen(p) < SMALL_FEATURE_MAX)
+    small_feats = [p for p in paths if is_small_closed(p)]
+    paths = [p for p in paths if not is_small_closed(p)]
     entries = []
     lens = [plen(p) for p in paths]
     for i, p in enumerate(paths):
@@ -317,6 +341,17 @@ for sub, (ref, mode, tier) in SUBJ.items():
         pts = e["points"][::2]
         tight = sum(1 for pt in pts if any(sd2(pt, u, v) < FLOOR for q in others for u, v in zip(q, q[1:])))
         e["tight_frac"] = round(tight / max(1, len(pts)), 3)
-    doc = {"subject": sub, "tier": tier, "pin_hash": fnv(paths), "canvas": CANVAS, "paths": entries}
+    for p in small_feats:
+        entries.append({
+            "points": p, "arc": round(plen(p), 2), "tier": tier,
+            "sub_floor": False, "merged_into": None, "decorative_thin": False,
+            "micro_feature": True, "segments": [], "worst_turn_deg": 0.0,
+            "min_clearance": 999.0, "tight_frac": 0.0,
+        })
+    # v8.2.1 (2): required micro features — named, signed off in the scan
+    # file. The render gate refuses to display a subject missing any.
+    req = REQUIRED_MICRO.get(sub)
+    doc = {"subject": sub, "tier": tier, "pin_hash": fnv(paths), "canvas": CANVAS,
+           "required_micro": req or [], "paths": entries}
     (OUT / f"{sub}.json").write_text(json.dumps(doc))
     print(f'{sub:10} paths={len(entries):5} sub_floor={sum(e["sub_floor"] for e in entries):4} hash={doc["pin_hash"]:#x}')

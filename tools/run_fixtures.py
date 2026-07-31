@@ -11,7 +11,7 @@ def plan(sub, band):
     for e in doc["paths"]:
         segs = " ".join(str(t) for t in e["segments"])
         pts = " ".join(f"{x:.2f},{y:.2f}" for x, y in e["points"][:4000])
-        inp.append(f"PATH {int(e['sub_floor'])} {int(e['decorative_thin'])} | {segs} | {pts}")
+        inp.append(f"PATH {int(e['sub_floor'])} {int(e['decorative_thin'])} {int(e.get('micro_feature', False))} | {segs} | {pts}")
     return json.loads(subprocess.run([str(ROOT/"target/release/scanlock-render")],
                       input="\n".join(inp+lines).encode(), capture_output=True).stdout)
 
@@ -23,7 +23,7 @@ def dog_plan():
     for e in doc["paths"]:
         segs = " ".join(str(t) for t in e["segments"])
         pts = " ".join(f"{x:.2f},{y:.2f}" for x, y in e["points"][:4000])
-        inp.append(f"PATH {int(e['sub_floor'])} {int(e['decorative_thin'])} | {segs} | {pts}")
+        inp.append(f"PATH {int(e['sub_floor'])} {int(e['decorative_thin'])} {int(e.get('micro_feature', False))} | {segs} | {pts}")
     return json.loads(subprocess.run([str(ROOT/"target/release/scanlock-render")],
                        input="\n".join(inp+lines).encode(), capture_output=True).stdout)
 ok = True

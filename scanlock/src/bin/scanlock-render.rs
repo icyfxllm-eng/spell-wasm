@@ -53,6 +53,7 @@ fn main() {
                     segments,
                     sub_floor: flags[0] == "1",
                     decorative_thin: flags[1] == "1",
+                    micro: flags.len() > 2 && flags[2] == "1",
                 });
             }
             Some("WORD") => {

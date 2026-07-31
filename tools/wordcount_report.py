@@ -20,7 +20,7 @@ for f in sorted(SCANS.glob("*.json")):
     for e in doc["paths"]:
         segs = " ".join(str(t) for t in e["segments"])
         pts = " ".join(f"{x:.2f},{y:.2f}" for x, y in e["points"][:4000])
-        inp.append(f"PATH {int(e['sub_floor'])} {int(e['decorative_thin'])} | {segs} | {pts}")
+        inp.append(f"PATH {int(e['sub_floor'])} {int(e['decorative_thin'])} {int(e.get('micro_feature', False))} | {segs} | {pts}")
     j = json.loads(subprocess.run([str(BIN)], input="\n".join(inp+lines).encode(), capture_output=True).stdout)
     n = len(j.get("placements", []))
     out.append({"subject": sub, "arc": round(arc_total), "words": n,

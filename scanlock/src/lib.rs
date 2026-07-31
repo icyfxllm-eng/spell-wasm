@@ -17,6 +17,10 @@ pub struct ScanPath {
     pub segments: Vec<f32>,
     pub sub_floor: bool,
     pub decorative_thin: bool,
+    /// v8.2.1 — a solid source feature (eyes, nose, buttons): never hosts
+    /// words, always renders as a pinned stroke, excluded from corridor
+    /// and junction tests. Its presence can be REQUIRED by the scan file.
+    pub micro: bool,
 }
 
 #[derive(Debug, Clone)]
@@ -213,7 +217,7 @@ pub fn junctions(paths: &[ScanPath], radius: f32) -> Vec<Vec<f32>> {
     let word: Vec<usize> = paths
         .iter()
         .enumerate()
-        .filter(|(_, p)| !p.sub_floor && !p.decorative_thin)
+        .filter(|(_, p)| !p.sub_floor && !p.decorative_thin && !p.micro)
         .map(|(i, _)| i)
         .collect();
     for &i in &word {
@@ -357,7 +361,7 @@ fn pairwise_interior_dist(paths: &[ScanPath]) -> Vec<(usize, usize, f32)> {
     let word: Vec<usize> = paths
         .iter()
         .enumerate()
-        .filter(|(_, p)| !p.sub_floor && !p.decorative_thin)
+        .filter(|(_, p)| !p.sub_floor && !p.decorative_thin && !p.micro)
         .map(|(i, _)| i)
         .collect();
     let mut out = Vec::new();
@@ -426,7 +430,7 @@ pub fn size_by_descent(
     let juncs = junctions(paths, p.junction_radius.max(p.band_max * p.line_height_ratio));
     // v8.2 F3.1 curvature cap: s <= r_min x ratio over non-micro paths.
     let mut cap_by_curve = p.band_max;
-    for q in paths.iter().filter(|q| !q.sub_floor && !q.decorative_thin) {
+    for q in paths.iter().filter(|q| !q.sub_floor && !q.decorative_thin && !q.micro) {
         let r = min_turn_radius(&q.points);
         if r.is_finite() {
             cap_by_curve = cap_by_curve.min(r * p.curve_size_ratio);
@@ -450,7 +454,7 @@ pub fn size_by_descent(
             // every non-micro path must reach MIN_WORDS_PER_PATH words.
             let mut micro_arc = 0.0f32;
             for (i, path) in paths.iter().enumerate() {
-                if path.sub_floor || path.decorative_thin {
+                if path.sub_floor || path.decorative_thin || path.micro {
                     continue;
                 }
                 let arc = arc_cum(&path.points).last().copied().unwrap_or(0.0);
@@ -495,7 +499,7 @@ pub fn size_by_descent(
     }
     let mut micro_arc = 0.0f32;
     for (i, path) in paths.iter().enumerate() {
-        if path.sub_floor || path.decorative_thin {
+        if path.sub_floor || path.decorative_thin || path.micro {
             continue;
         }
         let arc = arc_cum(&path.points).last().copied().unwrap_or(0.0);
@@ -659,6 +663,10 @@ fn plan_at_inner(
     let mut by_len: Vec<usize> = (0..pool.len()).collect();
     by_len.sort_by_key(|&i| std::cmp::Reverse(pool[i].1));
     for (pi, path) in paths.iter().enumerate() {
+        if path.micro {
+            micro.push(MicroStroke { path_idx: pi, points: path.points.clone() });
+            continue;
+        }
         if path.sub_floor || path.decorative_thin {
             continue;
         }
@@ -841,6 +849,7 @@ mod tests {
             segments: vec![],
             sub_floor: false,
             decorative_thin: false,
+            micro: false,
         }
     }
 
@@ -873,6 +882,7 @@ mod tests {
             segments: vec![],
             sub_floor: false,
             decorative_thin: false,
+            micro: false,
         };
         let paths = [horiz, arm];
         let j = junctions(&paths, p.junction_radius);

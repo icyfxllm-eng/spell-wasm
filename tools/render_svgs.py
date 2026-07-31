@@ -17,13 +17,15 @@ for f in sorted(SCANS.glob("*.json")):
     for e in doc["paths"]:
         segs = " ".join(str(t) for t in e["segments"])
         pts = " ".join(f"{x:.2f},{y:.2f}" for x, y in e["points"][:4000])
-        inp.append(f"PATH {int(e['sub_floor'])} {int(e['decorative_thin'])} | {segs} | {pts}")
+        inp.append(f"PATH {int(e['sub_floor'])} {int(e['decorative_thin'])} {int(e.get('micro_feature', False))} | {segs} | {pts}")
     r = subprocess.run([str(BIN)], input="\n".join(inp+lines).encode(), capture_output=True)
     j = json.loads(r.stdout)
     if "error" in j:
         print(sub, "BLOCKED/ERR", j["error"]); continue
     if "render_blocked" in j:
         print(sub, "RENDER_BLOCKED", j["render_blocked"]); continue
+    if not j.get("placements"):
+        print(sub, "RENDER_BLOCKED: zero words planned"); continue
     svg = ['<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512"><rect width="512" height="512" fill="#101623"/>']
     # v8.2 F5 as written: ink that words CANNOT host renders as the plain
     # pinned stroke — micro paths (snowman eyes/nose), sub-floor and
@@ -77,6 +79,26 @@ for f in sorted(SCANS.glob("*.json")):
         seg_len = sum(math.hypot(b[0]-a[0], b[1]-a[1]) for a, b in zip(pl["baseline"], pl["baseline"][1:]))
         svg.append(f'<text font-size="{pl["size"]:.1f}" fill="#e8ecf5" font-family="Helvetica">'
                    f'<textPath href="#{sub}-b{k}" textLength="{seg_len:.1f}" lengthAdjust="spacing">{pl["word"]}</textPath></text>')
+    # v8.2.1 (2) — required-micro gate: every named feature in the scan
+    # file must be present in the drawn output or nothing displays.
+    req = doc.get("required_micro", [])
+    if req:
+        import math as _mm
+        drawn = []
+        for pi, e in enumerate(doc["paths"]):
+            if not e.get("micro_feature"):
+                continue
+            if any(pl["path"] == pi for pl in j["placements"]):
+                continue  # hosted by words, not drawn as a feature
+            cx = sum(x for x, _ in e["points"]) / len(e["points"])
+            cy = sum(y for _, y in e["points"]) / len(e["points"])
+            drawn.append((cx, cy))
+        missing = [r["name"] for r in req
+                   if not any(_mm.hypot(cx - r["near"][0], cy - r["near"][1]) <= r["tol"]
+                              for cx, cy in drawn)]
+        if missing:
+            print(f"{sub} RENDER_BLOCKED: required micro features missing: {missing}")
+            continue
     svg.append("</svg>")
     (OUT/f"{sub}-scanlock.svg").write_text("".join(svg))
     print(sub, "ok", len(j["placements"]), "words")
