@@ -598,8 +598,20 @@
      stretching their keys to fill the row (the old flex:1 1 0 caused a 7-key row
      to have wider keys than a 10-key row). Big Text / Kid raise --kb-key-max so
      uniformity is preserved automatically. */
+  /* #kbHome and #wpKbSlot are the two places the keyboard can live (it is lent
+     between them, see borrow_keyboard in wordpic_screen.rs). BOTH must be full
+     width. #stage is a column flex with align-items:center, so a wrapper with
+     no width shrink-wraps to its content — and .game-kb{width:100%} then
+     resolves against the shrunken wrapper instead of the stage, collapsing
+     every key. That is exactly what shipped in 106. */
+  #kbHome,#wpKbSlot{width:100%}
   .game-kb{width:100%;margin-top:14px;display:flex;flex-direction:column;gap:7px;user-select:none;
     --kb-cols:10; --kb-gap:6px; --kb-key-max:46px;
+    /* Capped, deliberately NOT floored. A CSS floor would clamp a collapsed
+       key back up to the legibility minimum and overflow the row instead --
+       which would hide the collapse from the very hit-area test that catches
+       it. The floor is enforced in tests/e2e/specs/keyboard.mjs, which checks
+       key width AND that the row still fits its container. */
     --kb-key:min(var(--kb-key-max), calc((100% - (var(--kb-cols) - 1) * var(--kb-gap)) / var(--kb-cols)));
     padding-left:env(safe-area-inset-left, 0px);padding-right:env(safe-area-inset-right, 0px);
     padding-bottom:env(safe-area-inset-bottom, 0px)}

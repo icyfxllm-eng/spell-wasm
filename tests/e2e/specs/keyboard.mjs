@@ -39,6 +39,50 @@ export async function run(browser, base, suite) {
     } finally { await ctx.close(); }
   });
 
+  // Pinned keyboard metrics at every phone class. Build 106 shipped a
+  // keyboard whose keys were 13.8px wide instead of 28.5px: #stage is a
+  // column flex with align-items:center, and the #kbHome wrapper added by the
+  // F7 keyboard-borrow work had no width, so it shrink-wrapped its content
+  // and .game-kb{width:100%} resolved against the shrunken wrapper. Nothing
+  // was persisted -- it was in the build, which is why relaunching never
+  // helped. These assertions pin the geometry so no future wrapper, layout or
+  // language can quietly collapse it again.
+  const CLASSES = [[320, 568], [375, 667], [390, 844], [428, 926]];
+  for (const [width, height] of CLASSES) {
+    await suite.test(`keyboard[en]: metrics hold at ${width}x${height}`, async () => {
+      const { ctx, page } = await openApp(browser, base, { lang: 'en', viewport: { width, height } });
+      try {
+        const m = await page.evaluate(() => {
+          const kb = document.getElementById('gameKeyboard');
+          const home = kb.parentElement;
+          const keys = [...document.querySelectorAll('#kbLetters .kb-key')]
+            .filter((e) => e.offsetParent !== null)
+            .map((e) => e.getBoundingClientRect().width);
+          const rows = [...document.querySelectorAll('#kbLetters .kb-row')]
+            .map((r) => ({ scroll: r.scrollWidth, client: r.clientWidth }));
+          return {
+            kbW: kb.getBoundingClientRect().width,
+            homeW: home.getBoundingClientRect().width,
+            stageW: document.getElementById('stage').getBoundingClientRect().width,
+            minKey: Math.min(...keys), maxKey: Math.max(...keys), n: keys.length,
+            overflowing: rows.filter((r) => r.scroll > r.client + 1).length,
+          };
+        });
+        assert(m.n > 0, 'no visible keys');
+        // The wrapper must not shrink-wrap: keyboard fills the stage.
+        assertEq(Math.round(m.homeW), Math.round(m.stageW), 'keyboard wrapper is not stage-width');
+        assertEq(Math.round(m.kbW), Math.round(m.homeW), 'keyboard does not fill its wrapper');
+        // Legibility floor lives here, not in CSS -- a CSS floor would clamp a
+        // collapsed key back up and overflow the row, hiding the collapse.
+        assert(m.minKey >= 20, `smallest key ${m.minKey.toFixed(1)}px is below the 20px floor`);
+        assert(m.maxKey <= 46.5, `largest key ${m.maxKey.toFixed(1)}px exceeds the 46px cap`);
+        // Uniformity: one --kb-key for every letter, whatever the row length.
+        assert(m.maxKey - m.minKey < 0.5, `keys are not uniform (${m.minKey} vs ${m.maxKey})`);
+        assertEq(m.overflowing, 0, 'a key row overflows its container');
+      } finally { await ctx.close(); }
+    });
+  }
+
   // Korean Hangul composition (ㅎㅏㄴ→한) and Japanese kana + dakuten long-press
   // were UI-driven here, but ko/ja are now coming-soon (gated from play), so their
   // keyboards aren't reachable via the UI. That behavior is preserved and covered
