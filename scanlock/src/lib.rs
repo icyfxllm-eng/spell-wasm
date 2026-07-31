@@ -397,9 +397,32 @@ pub fn usable_arc(path: &ScanPath, juncs: &[f32], size: f32, ratio: f32) -> f32 
         return 0.0;
     }
     let k = size * ratio;
+    // Keep-outs MERGE: on a serpentine path whose coils pass near
+    // themselves, junctions cluster and their reservations overlap.
+    // Summing them independently over-counts until nothing is left
+    // (the dragon's MicroBudget 1.0) — union the intervals instead.
+    let mut iv: Vec<(f32, f32)> = juncs
+        .iter()
+        .map(|&t| {
+            let c = t * total;
+            ((c - k).max(0.0), (c + k).min(total))
+        })
+        .collect();
+    iv.sort_by(|a, b| a.0.partial_cmp(&b.0).unwrap());
     let mut reserved = 0.0f32;
-    for &t in juncs {
-        reserved += if t <= 0.001 || t >= 0.999 { k } else { 2.0 * k };
+    let mut cur: Option<(f32, f32)> = None;
+    for (a, b) in iv {
+        match cur {
+            Some((s0, e0)) if a <= e0 => cur = Some((s0, e0.max(b))),
+            Some((s0, e0)) => {
+                reserved += e0 - s0;
+                cur = Some((a, b));
+            }
+            None => cur = Some((a, b)),
+        }
+    }
+    if let Some((s0, e0)) = cur {
+        reserved += e0 - s0;
     }
     (total - reserved).max(0.0)
 }

@@ -41,7 +41,7 @@ SUBJ = {  # subject -> (ref, mode, tier)
  "owl": ("owl.png", "ink-boundary", "medium"), "elephant": ("elephant.png", "ink", "medium"),
  "snowman": ("snowman.png", "ink", "medium"), "horse": ("horse.png", "ink", "hard"),
  "fish": ("fish.png", "ink", "easy"), "eiffel": ("eiffel.png", "ink", "hard"),
- "dragon": ("dragon.jpg", "ink", "hard"), "peacock": ("peacock.png", "ink", "hard"),
+ "dragon": ("dragon.png", "ink", "hard"), "peacock": ("peacock.png", "ink", "hard"),
 }
 
 # ---- per-subject AUTHORING recipes (content work, not renderer tuning:
@@ -230,6 +230,22 @@ def author_owl(im):
     return _paint(mask, eyes, W, H)
 
 
+def author_dragon(im):
+    """v8.2.1 dragon re-author (Eric supplied a target look): the Hokusai
+    panel was tonal and untraceable. This is clean clipart — solidify the
+    creature so scale texture stops fragmenting, keep the silhouette
+    (serpentine body, horned head, clawed feet, flame fins)."""
+    rgb = im.convert("RGB")
+    W, H = rgb.size
+    px = rgb.load()
+    mask = [[not (px[x, y][0] > 236 and px[x, y][1] > 236 and px[x, y][2] > 236)
+             for x in range(W)] for y in range(H)]
+    mask = _close(mask, W, H, 3)
+    mask = _largest_component(mask, W, H)
+    mask = _fill_holes(mask, W, H)
+    return _paint(mask, None, W, H)
+
+
 def author_peacock(im):
     """v8.2.1 peacock re-author (Eric: the photo's translucent fan was
     untraceable; swapped to the PD road-sign pictogram). The bird is the
@@ -249,7 +265,8 @@ def author_peacock(im):
     bird = _close(bird, W, H, 2)
     return _paint(bird, None, W, H)
 
-AUTHOR = {"horse": author_horse, "owl": author_owl, "peacock": author_peacock}
+AUTHOR = {"horse": author_horse, "owl": author_owl, "peacock": author_peacock,
+          "dragon": author_dragon}
 
 
 def rings(path, subject=None):
@@ -287,6 +304,7 @@ def rings(path, subject=None):
         if between > best: best, t_best = between, t
     T = min(t_best, 160)
     ink = [[px[x, y] <= T for x in range(W)] for y in range(H)]
+    ink_pixels = sum(1 for y in range(H) for x in range(W) if ink[y][x])
     bnd = set()
     for y in range(H):
         for x in range(W):
@@ -308,6 +326,41 @@ def rings(path, subject=None):
                     if n in bnd and n not in seen:
                         seen.add(n); stack.append(n)
         comps.append(comp)
+    def moore(comp_set, start):
+        """Textbook Moore-neighbour contour trace on the INK mask (not the
+        boundary set): follows connectivity, so tight coils can't make the
+        walk jump the gap and strand — that is how a 3000px dragon became
+        a 250px stub. Start is the topmost-leftmost ink pixel; the initial
+        backtrack is its west neighbour, known background."""
+        N8 = [(-1, -1), (0, -1), (1, -1), (1, 0), (1, 1), (0, 1), (-1, 1), (-1, 0)]
+        def isink(p):
+            return 0 <= p[0] < W and 0 <= p[1] < H and ink[p[1]][p[0]]
+        b = start
+        prev = (start[0] - 1, start[1])
+        ring = [b]
+        first_step = None
+        for _ in range(8 * len(comp_set) + 64):
+            d0 = N8.index((prev[0] - b[0], prev[1] - b[1])) if (prev[0]-b[0], prev[1]-b[1]) in N8 else 7
+            nxt = None
+            for k in range(1, 9):
+                d = (d0 + k) % 8
+                cand = (b[0] + N8[d][0], b[1] + N8[d][1])
+                if isink(cand):
+                    nxt = cand
+                    prev = (b[0] + N8[(d - 1) % 8][0], b[1] + N8[(d - 1) % 8][1])
+                    break
+            if nxt is None:
+                break
+            b = nxt
+            ring.append(b)
+            if first_step is None:
+                first_step = b
+            elif b == start and ring[-2] == prev_start_guard if False else False:
+                pass
+            if len(ring) > 3 and b == start:
+                break
+        return ring
+
     ordered = []
     for comp in comps:
         if len(comp) < 8: continue
@@ -320,9 +373,36 @@ def rings(path, subject=None):
             if d2 > 36:  # ring walk jumped — separate strand
                 break
             ring.append(nxt); rem.discard(nxt); cur = nxt
+        # repair: a greedy walk that covered far less than the component
+        # terminated early — redo it with the connectivity-following trace
+        if len(ring) < 0.6 * len(comp):
+            # start at the topmost-leftmost pixel of this component
+            start = min(comp, key=lambda p: (p[1], p[0]))
+            ring = moore(set(comp), start)
         if len(ring) >= 8:
             ring.append(ring[0])  # close the loop
-            ordered.append([(float(x), float(y)) for x, y in ring[::2]])
+            pts = [(float(x), float(y)) for x, y in ring[::2]]
+            # Contour smoothing: pixel staircases make EVERY step a 45-deg
+            # turn, so corner marks explode (the dragon: 517 marks on
+            # 5139px, chopping it into unhostable stubs). Chaikin twice
+            # rounds the staircase; true limb corners survive.
+            for _ in range(2):
+                if len(pts) < 4:
+                    break
+                sm = [pts[0]]
+                for a, b in zip(pts, pts[1:]):
+                    sm.append((0.75*a[0]+0.25*b[0], 0.75*a[1]+0.25*b[1]))
+                    sm.append((0.25*a[0]+0.75*b[0], 0.25*a[1]+0.75*b[1]))
+                sm.append(pts[-1])
+                pts = sm
+            # decimate back to ~2px spacing so the point count stays sane
+            out2 = [pts[0]]
+            for p in pts[1:]:
+                if math.hypot(p[0]-out2[-1][0], p[1]-out2[-1][1]) >= 2.0:
+                    out2.append(p)
+            if math.hypot(out2[-1][0]-out2[0][0], out2[-1][1]-out2[0][1]) < 2.0:
+                out2[-1] = out2[0]
+            ordered.append(out2)
     return ordered
 
 def pgm(path):
@@ -360,9 +440,35 @@ def seg_marks(p):
     for a, b in zip(p, p[1:]):
         cums.append(cums[-1] + math.hypot(b[0]-a[0], b[1]-a[1]))
     marks = set()
-    for i in range(1, len(p)-1):
-        if turn(p[i-1], p[i], p[i+1]) > CORNER_DEG:
-            marks.add(round(cums[i]/total, 4))
+    # A corner is a turn sustained across a WINDOW (~9px either side), not
+    # a single-vertex wiggle: residual contour noise otherwise fires marks
+    # every few px and chops the path into unhostable stubs.
+    WIN = 9.0
+    def idx_back(i):
+        j = i
+        while j > 0 and cums[i] - cums[j] < WIN:
+            j -= 1
+        return j
+    def idx_fwd(i):
+        j = i
+        n = len(p) - 1
+        while j < n and cums[j] - cums[i] < WIN:
+            j += 1
+        return j
+    for i in range(1, len(p) - 1):
+        a, b = idx_back(i), idx_fwd(i)
+        if a == i or b == i:
+            continue
+        if turn(p[a], p[i], p[b]) > CORNER_DEG:
+            marks.add(round(cums[i] / total, 4))
+    # collapse mark clusters: keep one mark per corner
+    if marks:
+        keep, last = [], -1.0
+        for t in sorted(marks):
+            if last < 0 or (t - last) * total > 18.0:
+                keep.append(t)
+                last = t
+        marks = set(keep)
     bounds = sorted({0.0, 1.0} | marks)
     final = set(marks)
     for a, b in zip(bounds, bounds[1:]):

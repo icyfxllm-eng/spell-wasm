@@ -98,12 +98,12 @@
  },
  {
   "subject": "dragon",
-  "title": "File:Hokusai Dragon.jpg",
-  "license": "Public domain",
-  "sourceUrl": "https://commons.wikimedia.org/wiki/File:Hokusai_Dragon.jpg",
-  "file": "ref/dragon.jpg",
-  "bytes": 561704,
-  "note": "Katsushika Hokusai, festival-float ceiling dragon (Obuse) \u2014 D5 serpentine; center crop excluding wave border"
+  "title": "File:Dragon from Chinese Dragon Banner Red Version.svg",
+  "license": "CC0",
+  "sourceUrl": "https://commons.wikimedia.org/wiki/File:Dragon_from_Chinese_Dragon_Banner_Red_Version.svg",
+  "file": "ref/dragon.png",
+  "bytes": 349136,
+  "note": "Eric 2026-08-01: asked for a clean Chinese-dragon clipart like his reference image. Hokusai panel was tonal (untraceable, like the Mona photo); this is line-art clean."
  },
  {
   "subject": "mona",
