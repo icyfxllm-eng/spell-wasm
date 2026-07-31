@@ -28,6 +28,10 @@ for f in sorted(SCANS.glob("*.json")):
         print(sub, "RENDER_BLOCKED", j["render_blocked"]); continue
     if not j.get("placements"):
         print(sub, "RENDER_BLOCKED: zero words planned"); continue
+    # Also dump the PLAN, not just the picture. tools/glyph_overlap_check.py
+    # reads *.json from the render dir; emitting only *.svg meant the OBB gate
+    # globbed an empty set and reported a vacuous "0/0 FAIL" pass.
+    (OUT / f"{sub}.json").write_text(json.dumps(j))
     svg = ['<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512"><rect width="512" height="512" fill="#101623"/>']
     # v8.2 F5 as written: ink that words CANNOT host renders as the plain
     # pinned stroke — micro paths (snowman eyes/nose), sub-floor and
