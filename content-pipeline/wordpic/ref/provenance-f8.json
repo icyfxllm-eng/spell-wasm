@@ -137,20 +137,44 @@
  },
  {
   "subject": "rocket",
-  "title": "File:Rocket (8041) - The Noun Project.svg",
-  "license": "CC0",
-  "sourceUrl": "https://commons.wikimedia.org/wiki/File:Rocket_(8041)_-_The_Noun_Project.svg",
-  "file": "ref/rocket.png",
+  "title": "SpellGame original \u2014 drawn rocket silhouette",
+  "license": "Original artwork (SpellGame)",
+  "sourceUrl": "",
+  "file": "tools/draw_ref.py::rocket",
   "bytes": 12142,
-  "note": "Eric 2026-07-31: remaining-8 scanlock pass; CC0 pictogram"
+  "note": "Eric 2026-07-31: replaced the CC0 pictogram, which was split by a white seam so largest-component kept one half. Hand-authored."
  },
  {
   "subject": "rhino",
-  "title": "File:Duerer Rhino.svg",
-  "license": "Public domain",
-  "sourceUrl": "https://commons.wikimedia.org/wiki/File:Duerer_Rhino.svg",
-  "file": "ref/rhino.png",
+  "title": "SpellGame original \u2014 drawn rhino silhouette",
+  "license": "Original artwork (SpellGame)",
+  "sourceUrl": "",
+  "file": "tools/draw_ref.py::rhino",
   "bytes": 432779,
-  "note": "Durer's Rhinoceros (1515) as VECTOR line art. The original woodcut's hatching is so dense that solidifying it yields a black plate; this is the same artwork in a form the ink branch can trace. Expert headline preserved."
+  "note": "Eric 2026-07-31: replaced the Duerer plate, whose hatching floods every threshold (legs merged into the ground shadow, eye lost). Hand-authored coordinate list, not traced from any source image."
+ },
+ {
+  "subject": "house",
+  "title": "SpellGame original \u2014 house (geometric scan)",
+  "license": "Original artwork (SpellGame)",
+  "sourceUrl": "",
+  "file": "content-pipeline/wordpic/geometric-scans.json",
+  "note": "Hand-authored geometry, never traced from a reference image."
+ },
+ {
+  "subject": "smiley",
+  "title": "SpellGame original \u2014 smiley (geometric scan)",
+  "license": "Original artwork (SpellGame)",
+  "sourceUrl": "",
+  "file": "content-pipeline/wordpic/geometric-scans.json",
+  "note": "Hand-authored geometry, never traced from a reference image."
+ },
+ {
+  "subject": "star",
+  "title": "SpellGame original \u2014 star (geometric scan)",
+  "license": "Original artwork (SpellGame)",
+  "sourceUrl": "",
+  "file": "content-pipeline/wordpic/geometric-scans.json",
+  "note": "Hand-authored geometry, never traced from a reference image."
  }
 ]
