@@ -5,7 +5,7 @@ ROOT = pathlib.Path(__file__).resolve().parents[1]
 SCANS = ROOT / "content-pipeline/wordpic/scans"
 POOLS = ROOT / "content-pipeline/wordpic/pools"
 BIN = ROOT / "target/release/scanlock-render"
-BAND_MAX = {"easy": 40.0, "medium": 32.0, "hard": 24.0}
+BAND_MAX = {"easy": 40.0, "medium": 32.0, "hard": 24.0, "expert": 30.0}
 gate = json.loads((ROOT / "out/gate.json").read_text())
 out = []
 for f in sorted(SCANS.glob("*.json")):

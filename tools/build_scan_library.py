@@ -48,6 +48,11 @@ SUBJ = {  # subject -> (ref, mode, tier)
  "snowman": ("snowman.png", "ink", "medium"), "horse": ("horse.png", "ink", "hard"),
  "fish": ("fish.png", "ink", "easy"), "eiffel": ("eiffel.png", "ink", "hard"),
  "dragon": ("dragon.png", "ink", "hard"), "peacock": ("peacock.png", "ink", "hard"),
+ # v8.3 — the remaining eight (Eric). Geometric subjects (smiley, star,
+ # house) are trace-EXEMPT per v7 F8 and carry authored scans; Mona rides
+ # her v7.5.1 engraving build; these four come from references.
+ "cat": ("cat.png", "ink", "medium"), "rocket": ("rocket.png", "ink", "medium"),
+ "snail": ("snail.png", "ink", "easy"), "rhino": ("rhino.png", "ink", "expert"),
 }
 
 # ---- per-subject AUTHORING recipes (content work, not renderer tuning:
@@ -242,6 +247,34 @@ def author_dragon(im):
     return _paint(mask, None, W, H)
 
 
+def author_rhino(im):
+    """Durer's Rhinoceros (1515), VECTOR line art. The original woodcut is
+    unusable here: its hatching is so dense that any threshold fills the
+    whole plate (verified — it yields a black rectangle). This is the same
+    artwork drawn as lines, so horn, ear, plates and legs survive."""
+    rgb = im.convert("RGB")
+    W, H = rgb.size
+    g = ImageOps.autocontrast(rgb.convert("L"), cutoff=2).load()
+    mask = [[g[x, y] < 150 for x in range(W)] for y in range(H)]
+    mask = _close(mask, W, H, 3)
+    mask = _largest_component(mask, W, H)
+    mask = _fill_holes(mask, W, H)
+    return _paint(mask, None, W, H)
+
+
+def author_pictogram(im):
+    """Clean CC0 pictograms (cat, rocket, snail): the subject is already a
+    solid shape — take it as-is, keeping interior holes (the rocket's
+    window, the snail's shell spiral) as their own contours."""
+    rgb = im.convert("RGB")
+    W, H = rgb.size
+    px = rgb.load()
+    mask = [[not (px[x, y][0] > 205 and px[x, y][1] > 205 and px[x, y][2] > 205)
+             for x in range(W)] for y in range(H)]
+    mask = _close(mask, W, H, 2)
+    return _paint(mask, None, W, H)
+
+
 def author_peacock(im):
     """v8.2.1 peacock re-author (Eric: the photo's translucent fan was
     untraceable; swapped to the PD road-sign pictogram). The bird is the
@@ -261,8 +294,27 @@ def author_peacock(im):
     bird = _close(bird, W, H, 2)
     return _paint(bird, None, W, H)
 
+def author_solid_pictogram(im):
+    """Pictograms whose INTERIOR detail is finer than a word is tall (the
+    snail's spiral whorls, the rocket's stripes): fill the interior so the
+    subject reads as its outer form. Eric's snail direction — outer shell,
+    body, eyes, smile — is exactly this shape."""
+    rgb = im.convert("RGB")
+    W, H = rgb.size
+    px = rgb.load()
+    mask = [[not (px[x, y][0] > 205 and px[x, y][1] > 205 and px[x, y][2] > 205)
+             for x in range(W)] for y in range(H)]
+    mask = _close(mask, W, H, 3)
+    mask = _largest_component(mask, W, H)
+    mask = _fill_holes(mask, W, H)
+    return _paint(mask, None, W, H)
+
+
 AUTHOR = {"horse": author_horse, "owl": author_owl, "peacock": author_peacock,
-          "dragon": author_dragon}
+          "dragon": author_dragon, "rhino": author_rhino,
+          "cat": author_pictogram,
+          # interior detail finer than a word is tall -> fill it
+          "snail": author_solid_pictogram, "rocket": author_solid_pictogram}
 
 
 def rings(path, subject=None):
@@ -673,3 +725,67 @@ for sub, (ref, mode, tier) in SUBJ.items():
            "required_micro": req or [], "paths": entries}
     (OUT / f"{sub}.json").write_text(json.dumps(doc))
     print(f'{sub:10} paths={len(entries):5} sub_floor={sum(e["sub_floor"] for e in entries):4} hash={doc["pin_hash"]:#x}')
+
+
+# ---- authored scans: geometric subjects (F8-exempt) + Mona's passed build ----
+GEO = json.loads((pathlib.Path(__file__).parent.parent /
+                  "content-pipeline/wordpic/geometric-scans.json").read_text())
+for sub, spec in GEO.items():
+    entries = []
+    for pts, flags in spec["paths"]:
+        entries.append({
+            "points": pts, "arc": round(plen(pts), 2), "tier": spec["tier"],
+            "sub_floor": bool(flags & 1), "merged_into": None,
+            "decorative_thin": bool(flags & 2), "micro_feature": bool(flags & 4),
+            "segments": seg_marks(pts), "worst_turn_deg": 0.0,
+            "min_clearance": 999.0, "tight_frac": 0.0,
+        })
+    doc = {"subject": sub, "tier": spec["tier"], "pin_hash": fnv([e["points"] for e in entries]),
+           "canvas": CANVAS, "required_micro": [], "paths": entries}
+    (OUT / f"{sub}.json").write_text(json.dumps(doc))
+    print(f'{sub:10} paths={len(entries):5} (authored geometry, F8-exempt)')
+
+# Mona: the build Eric passed in v7.5.1 (frame + figure + face + hands).
+mona = json.loads((pathlib.Path(__file__).parent.parent /
+                   "content-pipeline/wordpic/mona-engraving-draft.json").read_text())
+entries = []
+for name, pts in mona["paths"].items():
+    pts = [[float(x), float(y)] for x, y in pts]
+    if plen(pts) < 26:
+        continue
+    closed = math.hypot(pts[0][0]-pts[-1][0], pts[0][1]-pts[-1][1]) < 3.0
+    small = plen(pts) < SMALL_FEATURE_MAX and closed
+    # her brows, eyes and nose are short OPEN strokes: features drawn as
+    # pinned ink, never word paths (D-A) — words there would be squeezed.
+    short_open = (not closed) and plen(pts) < FLOOR * MIN_WORD_CHARS
+    entries.append({
+        "points": pts, "arc": round(plen(pts), 2), "tier": "expert",
+        "sub_floor": short_open, "merged_into": None, "decorative_thin": False,
+        "micro_feature": small, "segments": seg_marks(pts), "worst_turn_deg": 0.0,
+        "min_clearance": 999.0, "tight_frac": 0.0, "feature": name,
+    })
+# Authored scans get the same clearance law as traced ones: where two
+# word paths run closer than a glyph is tall, the SHORTER one becomes
+# pinned ink (her hairline hugs the veil edge by construction).
+def _mind(a, b):
+    def sd(pt, u, v):
+        vx, vy = v[0]-u[0], v[1]-u[1]; l2 = vx*vx+vy*vy
+        t = 0 if l2 == 0 else max(0, min(1, ((pt[0]-u[0])*vx+(pt[1]-u[1])*vy)/l2))
+        return math.hypot(pt[0]-(u[0]+t*vx), pt[1]-(u[1]+t*vy))
+    return min((sd(pt, u, v) for pt in a[::2] for u, v in zip(b, b[1:])), default=999.0)
+
+order = sorted(range(len(entries)), key=lambda i: -entries[i]["arc"])
+for k, i in enumerate(order):
+    if entries[i]["sub_floor"] or entries[i]["decorative_thin"] or entries[i].get("micro_feature"):
+        continue
+    for j in order[:k]:
+        if entries[j]["decorative_thin"] or entries[j]["sub_floor"] or entries[j].get("micro_feature"):
+            continue
+        if _mind(entries[i]["points"], entries[j]["points"]) < FLOOR:
+            entries[i]["decorative_thin"] = True
+            break
+
+doc = {"subject": "mona", "tier": "expert", "pin_hash": fnv([e["points"] for e in entries]),
+       "canvas": CANVAS, "required_micro": [], "paths": entries}
+(OUT / "mona.json").write_text(json.dumps(doc))
+print(f'{"mona":10} paths={len(entries):5} (Eric-passed v7.5.1 engraving build)')

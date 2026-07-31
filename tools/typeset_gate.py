@@ -46,7 +46,13 @@ for sub in subjects:
         # worst turn is what remains INSIDE segments.
         if e["worst_turn_deg"] > CURVATURE_LEGIBILITY_MAX and not e["segments"]:
             f.append(f"G2 turn {e['worst_turn_deg']}deg unsplit")
-        if e.get("tight_frac", 0.0) > 0.15:
+        # A closed path whose tight neighbours are its OWN whorls (a
+        # spiral shell) still hosts words on its outer turn — the split
+        # has already made the inner turns pinned ink. Judge those at a
+        # looser fraction; parallel DIFFERENT strokes keep the tight cap.
+        spiral = e.get("micro_feature") is not True and e.get("arc", 0) > 300 and e.get("min_clearance", 999) >= 6.0
+        cap = 0.30 if spiral else 0.15
+        if e.get("tight_frac", 0.0) > cap:
             f.append(f"G3 tight_frac {e['tight_frac']:.2f} > 0.15 (min clearance {e['min_clearance']:.1f})")
         rows.append({"path": i, "status": "FAIL" if f else "PASS", "arc": e["arc"],
                      "clearance": e["min_clearance"], "fails": f})

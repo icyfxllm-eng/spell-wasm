@@ -6,7 +6,7 @@ SCANS = ROOT / "content-pipeline/wordpic/scans"
 POOLS = ROOT / "content-pipeline/wordpic/pools"
 BIN = ROOT / "target/release/scanlock-render"
 OUT = pathlib.Path(sys.argv[1]); OUT.mkdir(parents=True, exist_ok=True)
-BAND_MAX = {"easy": 40.0, "medium": 32.0, "hard": 24.0}
+BAND_MAX = {"easy": 40.0, "medium": 32.0, "hard": 24.0, "expert": 30.0}
 for f in sorted(SCANS.glob("*.json")):
     sub = f.stem
     doc = json.loads(f.read_text())

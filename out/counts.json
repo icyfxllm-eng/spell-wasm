@@ -1,74 +1,122 @@
 [
  {
-  "subject": "eiffel",
-  "arc": 1178,
-  "words": 14,
+  "subject": "rocket",
+  "arc": 761,
+  "words": 11,
   "size": 13.0
  },
  {
   "subject": "fish",
-  "arc": 1274,
-  "words": 28,
-  "size": 13.0
- },
- {
-  "subject": "duck",
-  "arc": 1277,
+  "arc": 1249,
   "words": 26,
   "size": 13.0
  },
  {
-  "subject": "turtle",
-  "arc": 1299,
-  "words": 29,
+  "subject": "duck",
+  "arc": 1253,
+  "words": 23,
   "size": 13.0
  },
  {
-  "subject": "owl",
-  "arc": 1586,
+  "subject": "star",
+  "arc": 1278,
+  "words": 10,
+  "size": 40.0
+ },
+ {
+  "subject": "turtle",
+  "arc": 1284,
+  "words": 30,
+  "size": 13.0
+ },
+ {
+  "subject": "rhino",
+  "arc": 1301,
+  "words": 14,
+  "size": 13.0
+ },
+ {
+  "subject": "eiffel",
+  "arc": 1326,
   "words": 19,
   "size": 13.0
  },
  {
+  "subject": "smiley",
+  "arc": 1659,
+  "words": 10,
+  "size": 40.0
+ },
+ {
+  "subject": "snail",
+  "arc": 1746,
+  "words": 36,
+  "size": 13.0
+ },
+ {
+  "subject": "house",
+  "arc": 1829,
+  "words": 19,
+  "size": 27.68
+ },
+ {
+  "subject": "cat",
+  "arc": 1869,
+  "words": 25,
+  "size": 13.0
+ },
+ {
+  "subject": "owl",
+  "arc": 2214,
+  "words": 34,
+  "size": 13.0
+ },
+ {
   "subject": "elephant",
-  "arc": 2366,
-  "words": 22,
+  "arc": 2301,
+  "words": 24,
   "size": 13.0
  },
  {
   "subject": "butterfly",
-  "arc": 2425,
-  "words": 60,
+  "arc": 2397,
+  "words": 58,
+  "size": 13.0
+ },
+ {
+  "subject": "mona",
+  "arc": 2570,
+  "words": 29,
   "size": 13.0
  },
  {
   "subject": "horse",
-  "arc": 2727,
-  "words": 37,
+  "arc": 2666,
+  "words": 39,
   "size": 13.0
  },
  {
   "subject": "snowman",
-  "arc": 2945,
-  "words": 45,
-  "size": 13.0
- },
- {
-  "subject": "dog",
-  "arc": 3174,
-  "words": 80,
-  "size": 13.0
- },
- {
-  "subject": "peacock",
-  "arc": 3215,
+  "arc": 2909,
   "words": 43,
   "size": 13.0
  },
  {
+  "subject": "dog",
+  "arc": 3137,
+  "words": 81,
+  "size": 13.0
+ },
+ {
+  "subject": "peacock",
+  "arc": 3169,
+  "words": 41,
+  "size": 13.0
+ },
+ {
   "subject": "dragon",
-  "arc": 10401,
-  "words": 0,
-  "size": null
+  "arc": 4841,
+  "words": 64,
+  "size": 13.0
  }
 ]

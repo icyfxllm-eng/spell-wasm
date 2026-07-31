@@ -17,11 +17,12 @@
  },
  {
   "subject": "snail",
-  "title": "File:Machovka snail & The Blue Marble.svg",
+  "title": "File:Snail (761489) - The Noun Project.svg",
   "license": "CC0",
-  "sourceUrl": "https://commons.wikimedia.org/wiki/File:Machovka_snail_%26_The_Blue_Marble.svg",
+  "sourceUrl": "https://commons.wikimedia.org/wiki/File:Snail_(761489)_-_The_Noun_Project.svg",
   "file": "ref/snail.png",
-  "bytes": 552933
+  "bytes": 24582,
+  "note": "Eric 2026-07-31: remaining-8 scanlock pass; CC0 pictogram"
  },
  {
   "subject": "duck",
@@ -123,5 +124,32 @@
   "file": "ref/mona-engraving.jpg",
   "bytes": 280515,
   "note": "Luigi Calamatta's engraving of the Mona Lisa \u2014 ink-branch tracing source (Eric-approved 2026-07-31); painting photo retained for side-by-side; red/blue annotation is the review standard"
+ },
+ {
+  "subject": "cat",
+  "title": "File:Cat (49952) - The Noun Project.svg",
+  "license": "CC0",
+  "sourceUrl": "https://commons.wikimedia.org/wiki/File:Cat_(49952)_-_The_Noun_Project.svg",
+  "file": "ref/cat.png",
+  "bytes": 18096,
+  "note": "Eric 2026-07-31: remaining-8 scanlock pass; CC0 pictogram"
+ },
+ {
+  "subject": "rocket",
+  "title": "File:Rocket (8041) - The Noun Project.svg",
+  "license": "CC0",
+  "sourceUrl": "https://commons.wikimedia.org/wiki/File:Rocket_(8041)_-_The_Noun_Project.svg",
+  "file": "ref/rocket.png",
+  "bytes": 12142,
+  "note": "Eric 2026-07-31: remaining-8 scanlock pass; CC0 pictogram"
+ },
+ {
+  "subject": "rhino",
+  "title": "File:Duerer Rhino.svg",
+  "license": "Public domain",
+  "sourceUrl": "https://commons.wikimedia.org/wiki/File:Duerer_Rhino.svg",
+  "file": "ref/rhino.png",
+  "bytes": 432779,
+  "note": "Durer's Rhinoceros (1515) as VECTOR line art. The original woodcut's hatching is so dense that solidifying it yields a black plate; this is the same artwork in a form the ink branch can trace. Expert headline preserved."
  }
 ]
