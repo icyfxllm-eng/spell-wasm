@@ -44,14 +44,104 @@ SUBJ = {  # subject -> (ref, mode, tier)
  "dragon": ("dragon.jpg", "ink", "hard"), "peacock": ("peacock.jpg", "ink", "hard"),
 }
 
-def rings(path):
+# ---- per-subject AUTHORING recipes (content work, not renderer tuning:
+# the renderer stays picture-agnostic; this is how a scan is authored) ----
+def author_horse(im):
+    """v8.2.1 horse re-author (Eric): the block was MicroBudget 0.234 —
+    grass tufts and mane/tail wisps fragment into arcs too small to host
+    words. Recipe: drop the grass by colour, then close the subject mask
+    so mane and tail spikes merge into solid mass. Interior identity
+    lines (leg separations, mane edge, jaw, eye) survive untouched."""
+    rgb = im.convert("RGB")
+    W, H = rgb.size
+    px = rgb.load()
+    # 1. subject = not near-white, not green-dominant (grass)
+    mask = [[False]*W for _ in range(H)]
+    for y in range(H):
+        for x in range(W):
+            r, g, b = px[x, y]
+            if r > 235 and g > 235 and b > 235:
+                continue
+            if g > r + 12 and g > b + 12:      # grass green
+                continue
+            mask[y][x] = True
+    # 2. keep the largest component (drops isolated grass blades)
+    seen = [[False]*W for _ in range(H)]
+    best, bestsz = None, 0
+    for y0 in range(H):
+        for x0 in range(W):
+            if not mask[y0][x0] or seen[y0][x0]:
+                continue
+            comp, stack = [], [(x0, y0)]
+            seen[y0][x0] = True
+            while stack:
+                x, y = stack.pop()
+                comp.append((x, y))
+                for dx, dy in ((1,0),(-1,0),(0,1),(0,-1)):
+                    nx, ny = x+dx, y+dy
+                    if 0 <= nx < W and 0 <= ny < H and mask[ny][nx] and not seen[ny][nx]:
+                        seen[ny][nx] = True
+                        stack.append((nx, ny))
+            if len(comp) > bestsz:
+                best, bestsz = comp, len(comp)
+    keep = [[False]*W for _ in range(H)]
+    for x, y in best:
+        keep[y][x] = True
+    # 3. morphological CLOSE (r=5): mane/tail spikes merge into mass
+    R = 5
+    dil = [[False]*W for _ in range(H)]
+    for y in range(H):
+        for x in range(W):
+            if not keep[y][x]:
+                continue
+            for dy in range(-R, R+1):
+                for dx in range(-R, R+1):
+                    if dx*dx + dy*dy > R*R:
+                        continue
+                    nx, ny = x+dx, y+dy
+                    if 0 <= nx < W and 0 <= ny < H:
+                        dil[ny][nx] = True
+    closed = [[False]*W for _ in range(H)]
+    for y in range(H):
+        for x in range(W):
+            if not dil[y][x]:
+                continue
+            ok = True
+            for dy in range(-R, R+1):
+                for dx in range(-R, R+1):
+                    if dx*dx + dy*dy > R*R:
+                        continue
+                    nx, ny = x+dx, y+dy
+                    if not (0 <= nx < W and 0 <= ny < H and dil[ny][nx]):
+                        ok = False
+                        break
+                if not ok:
+                    break
+            closed[y][x] = ok
+    # 4. paint: subject ink dark, filled gaps dark, everything else white
+    out = Image.new("L", (W, H), 255)
+    o = out.load()
+    g = ImageOps.autocontrast(rgb.convert("L"), cutoff=1).load()
+    for y in range(H):
+        for x in range(W):
+            if closed[y][x] or keep[y][x]:
+                o[x, y] = min(g[x, y], 90) if keep[y][x] else 40
+    return out
+
+AUTHOR = {"horse": author_horse}
+
+
+def rings(path, subject=None):
     """Ring-based scan source for boundary art: threshold -> boundary
     pixels -> connected components -> ordered rings (greedy walk). The
     outer ring is the word path; interior rings are the strokes' far
     sides / hole contours."""
-    im = Image.open(path).convert("RGBA")
-    bg = Image.new("RGBA", im.size, (255, 255, 255, 255)); bg.alpha_composite(im)
-    im = ImageOps.autocontrast(bg.convert("L"), cutoff=1)
+    im0 = Image.open(path).convert("RGBA")
+    bg = Image.new("RGBA", im0.size, (255, 255, 255, 255)); bg.alpha_composite(im0)
+    if subject in AUTHOR:
+        im = AUTHOR[subject](bg)
+    else:
+        im = ImageOps.autocontrast(bg.convert("L"), cutoff=1)
     im.thumbnail((CANVAS - 44, CANVAS - 44), Image.LANCZOS)
     c = Image.new("L", (CANVAS, CANVAS), 255)
     c.paste(im, ((CANVAS - im.width) // 2, (CANVAS - im.height) // 2))
@@ -192,7 +282,7 @@ def path_min_clearance(p, others):
     return m
 
 for sub, (ref, mode, tier) in SUBJ.items():
-    paths = rings(REF / ref)
+    paths = rings(REF / ref, sub)
     paths.sort(key=plen, reverse=True)
     # v8.2.1 small-feature pass: a SHORT CLOSED contour is a solid source
     # feature (snowman eyes, nose; animal eyes). It is preserved intact —
