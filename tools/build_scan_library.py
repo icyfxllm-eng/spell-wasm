@@ -41,7 +41,7 @@ SUBJ = {  # subject -> (ref, mode, tier)
  "owl": ("owl.png", "ink-boundary", "medium"), "elephant": ("elephant.png", "ink", "medium"),
  "snowman": ("snowman.png", "ink", "medium"), "horse": ("horse.png", "ink", "hard"),
  "fish": ("fish.png", "ink", "easy"), "eiffel": ("eiffel.png", "ink", "hard"),
- "dragon": ("dragon.jpg", "ink", "hard"), "peacock": ("peacock.jpg", "ink", "hard"),
+ "dragon": ("dragon.jpg", "ink", "hard"), "peacock": ("peacock.png", "ink", "hard"),
 }
 
 # ---- per-subject AUTHORING recipes (content work, not renderer tuning:
@@ -128,7 +128,128 @@ def author_horse(im):
                 o[x, y] = min(g[x, y], 90) if keep[y][x] else 40
     return out
 
-AUTHOR = {"horse": author_horse}
+
+# ---- shared authoring primitives ----
+def _largest_component(mask, W, H):
+    seen = [[False]*W for _ in range(H)]
+    best, bestsz = [], 0
+    for y0 in range(H):
+        for x0 in range(W):
+            if not mask[y0][x0] or seen[y0][x0]:
+                continue
+            comp, stack = [], [(x0, y0)]
+            seen[y0][x0] = True
+            while stack:
+                x, y = stack.pop()
+                comp.append((x, y))
+                for dx, dy in ((1,0),(-1,0),(0,1),(0,-1)):
+                    nx, ny = x+dx, y+dy
+                    if 0 <= nx < W and 0 <= ny < H and mask[ny][nx] and not seen[ny][nx]:
+                        seen[ny][nx] = True
+                        stack.append((nx, ny))
+            if len(comp) > bestsz:
+                best, bestsz = comp, len(comp)
+    out = [[False]*W for _ in range(H)]
+    for x, y in best:
+        out[y][x] = True
+    return out
+
+def _close(mask, W, H, R):
+    dil = [[False]*W for _ in range(H)]
+    off = [(dx, dy) for dy in range(-R, R+1) for dx in range(-R, R+1) if dx*dx+dy*dy <= R*R]
+    for y in range(H):
+        for x in range(W):
+            if mask[y][x]:
+                for dx, dy in off:
+                    nx, ny = x+dx, y+dy
+                    if 0 <= nx < W and 0 <= ny < H:
+                        dil[ny][nx] = True
+    out = [[False]*W for _ in range(H)]
+    for y in range(H):
+        for x in range(W):
+            if not dil[y][x]:
+                continue
+            ok = True
+            for dx, dy in off:
+                nx, ny = x+dx, y+dy
+                if not (0 <= nx < W and 0 <= ny < H and dil[ny][nx]):
+                    ok = False
+                    break
+            out[y][x] = ok
+    return out
+
+def _fill_holes(mask, W, H):
+    """Flood the outside; anything unreached and unmasked is an interior
+    hole (feather gaps, texture) — filled, so texture stops fragmenting."""
+    outside = [[False]*W for _ in range(H)]
+    stack = [(x, 0) for x in range(W)] + [(x, H-1) for x in range(W)] + \
+            [(0, y) for y in range(H)] + [(W-1, y) for y in range(H)]
+    stack = [(x, y) for x, y in stack if not mask[y][x]]
+    for x, y in stack:
+        outside[y][x] = True
+    while stack:
+        x, y = stack.pop()
+        for dx, dy in ((1,0),(-1,0),(0,1),(0,-1)):
+            nx, ny = x+dx, y+dy
+            if 0 <= nx < W and 0 <= ny < H and not mask[ny][nx] and not outside[ny][nx]:
+                outside[ny][nx] = True
+                stack.append((nx, ny))
+    return [[mask[y][x] or not outside[y][x] for x in range(W)] for y in range(H)]
+
+def _paint(mask, holes, W, H):
+    im = Image.new("L", (W, H), 255)
+    p = im.load()
+    for y in range(H):
+        for x in range(W):
+            if mask[y][x] and not (holes and holes[y][x]):
+                p[x, y] = 20
+    return im
+
+
+def author_owl(im):
+    """v8.2.1 owl re-author (Eric): block was CorridorConflict 9.7px —
+    dense feather stippling traced as hundreds of fragments running
+    closer than a glyph height. Recipe: solidify the bird+branch into one
+    silhouette (texture holes filled, gaps closed), then punch the two
+    YELLOW eyes back as holes so they trace as closed micro features."""
+    rgb = im.convert("RGB")
+    W, H = rgb.size
+    px = rgb.load()
+    mask = [[not (px[x, y][0] > 238 and px[x, y][1] > 238 and px[x, y][2] > 238)
+             for x in range(W)] for y in range(H)]
+    mask = _largest_component(mask, W, H)
+    mask = _close(mask, W, H, 3)
+    mask = _fill_holes(mask, W, H)
+    eyes = [[False]*W for _ in range(H)]
+    for y in range(H):
+        for x in range(W):
+            r, g, b = px[x, y]
+            if r > 175 and g > 140 and b < 110 and mask[y][x]:
+                eyes[y][x] = True
+    eyes = _close(eyes, W, H, 2)
+    return _paint(mask, eyes, W, H)
+
+
+def author_peacock(im):
+    """v8.2.1 peacock re-author (Eric: the photo's translucent fan was
+    untraceable; swapped to the PD road-sign pictogram). The bird is the
+    LIGHT shape inside a dark rounded square: take the light pixels
+    within the sign, drop the plate, and every part — fan eyespots, body,
+    crest — arrives as a clean closed contour."""
+    rgb = im.convert("RGB")
+    W, H = rgb.size
+    px = rgb.load()
+    g = ImageOps.autocontrast(rgb.convert("L"), cutoff=1).load()
+    # the plate is the dark rounded square; the bird is light inside it
+    plate = [[not (px[x, y][0] > 238 and px[x, y][1] > 238 and px[x, y][2] > 238)
+              for x in range(W)] for y in range(H)]
+    plate = _largest_component(plate, W, H)
+    plate = _fill_holes(plate, W, H)
+    bird = [[plate[y][x] and g[x, y] > 150 for x in range(W)] for y in range(H)]
+    bird = _close(bird, W, H, 2)
+    return _paint(bird, None, W, H)
+
+AUTHOR = {"horse": author_horse, "owl": author_owl, "peacock": author_peacock}
 
 
 def rings(path, subject=None):

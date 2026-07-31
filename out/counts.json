@@ -6,12 +6,6 @@
   "size": 13.0
  },
  {
-  "subject": "horse",
-  "arc": 1214,
-  "words": 0,
-  "size": null
- },
- {
   "subject": "fish",
   "arc": 1274,
   "words": 28,
@@ -30,8 +24,14 @@
   "size": 13.0
  },
  {
+  "subject": "owl",
+  "arc": 1586,
+  "words": 19,
+  "size": 13.0
+ },
+ {
   "subject": "elephant",
-  "arc": 2309,
+  "arc": 2366,
   "words": 22,
   "size": 13.0
  },
@@ -42,15 +42,33 @@
   "size": 13.0
  },
  {
+  "subject": "horse",
+  "arc": 2727,
+  "words": 37,
+  "size": 13.0
+ },
+ {
   "subject": "snowman",
-  "arc": 2635,
-  "words": 48,
+  "arc": 2945,
+  "words": 45,
   "size": 13.0
  },
  {
   "subject": "dog",
   "arc": 3174,
-  "words": 82,
+  "words": 80,
   "size": 13.0
+ },
+ {
+  "subject": "peacock",
+  "arc": 3215,
+  "words": 43,
+  "size": 13.0
+ },
+ {
+  "subject": "dragon",
+  "arc": 10401,
+  "words": 0,
+  "size": null
  }
 ]
