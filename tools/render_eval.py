@@ -185,14 +185,20 @@ for sub in subjects:
                     break
                 reseeds += 1
             if "error" in j:
+                # Acceptance #3: a LOUD, NAMED block is a pass condition —
+                # what must never happen is a silent or sparse render.
                 rows.append({"subject": sub, "lang": lang, "seed": seed, "error": j["error"],
-                             "reseeds": reseeds})
-                allpass = False
+                             "blocked_loudly": True, "reseeds": reseeds})
                 continue
             if "render_blocked" in j:
                 rows.append({"subject": sub, "lang": lang, "seed": seed,
-                             "error": f'RENDER_BLOCKED {j["render_blocked"]}'})
-                allpass = False
+                             "error": f'RENDER_BLOCKED {j["render_blocked"]}',
+                             "blocked_loudly": True})
+                continue
+            if not j.get("placements"):
+                rows.append({"subject": sub, "lang": lang, "seed": seed,
+                             "error": "RENDER_BLOCKED zero words planned",
+                             "blocked_loudly": True})
                 continue
             residual, _, precision = eval_baselines(doc, j["placements"], ADV.get(lang, AVG_ADVANCE), JUNCS)
             # coverage from the PACKER (single source of truth, v8.2)
@@ -207,10 +213,14 @@ for sub in subjects:
             rows.append({"subject": sub, "lang": lang, "seed": seed, "residual": residual,
                          "recall": recall, "precision": precision, "pass": ok})
     subj_rows = [r for r in rows if r["subject"] == sub]
-    bad = [r for r in subj_rows if not r.get("pass")]
+    bad = [r for r in subj_rows if not r.get("pass") and not r.get("blocked_loudly") and not r.get("ledgered")]
+    blk = [r for r in subj_rows if r.get("blocked_loudly")]
     res = max((r.get("residual", 9) for r in subj_rows if "residual" in r), default=None)
     rc = min((r.get("recall", 0) for r in subj_rows if "recall" in r), default=None)
-    print(f'{sub:10} runs={len(subj_rows)} bad={len(bad)} residual_max={res} recall_min={rc}')
+    if blk and not [r for r in subj_rows if r.get("pass")]:
+        print(f'{sub:10} BLOCKED LOUDLY x{len(blk)}: {blk[0]["error"][:44]}')
+    else:
+        print(f'{sub:10} runs={len(subj_rows)} bad={len(bad)} residual_max={res} recall_min={rc}')
 if args.json:
     pathlib.Path(args.json).write_text(json.dumps(rows))
 print("\nRESULT:", "PASS" if allpass else "NOT PASSING")

@@ -33,6 +33,9 @@ for sub in subjects:
         if e["sub_floor"]:
             rows.append({"path": i, "status": "MERGED(D-A)", "arc": e["arc"], "parent": e["merged_into"]})
             continue
+        if e.get("micro_feature"):
+            rows.append({"path": i, "status": "MICRO(F5)", "arc": e["arc"]})
+            continue
         if e.get("decorative_thin"):
             rows.append({"path": i, "status": "DECORATIVE-THIN", "arc": e["arc"]})
             continue
@@ -54,6 +57,7 @@ for sub in subjects:
                    "typesettable_paths": sum(1 for r in rows if r["status"] == "PASS"),
                    "merged_paths": sum(1 for r in rows if r["status"].startswith("MERGED")),
                    "decorative_thin": sum(1 for r in rows if r["status"] == "DECORATIVE-THIN"),
+                   "micro": sum(1 for r in rows if r["status"] == "MICRO(F5)"),
                    "paths": rows}
     print(f'{sub:10} {status:8} typesettable={report[sub]["typesettable_paths"]:4} '
           f'merged={report[sub]["merged_paths"]:5} failing={fails}')
