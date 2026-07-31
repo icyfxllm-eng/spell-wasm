@@ -17,7 +17,7 @@
     "entitlements:purity": "node scripts/entitlement-core-purity-check.mjs",
     "entitlements:audit-mode": "node scripts/audit-mode-release-check.mjs",
     "entitlements:check": "npm run entitlements:map && npm run entitlements:map:selftest && npm run entitlements:purity && npm run entitlements:audit-mode",
-    "build": "node scripts/i18n-check.mjs && node scripts/viewport-check.mjs && python3 scripts/build-wordlists.py --check && bash scripts/build-web.sh && node scripts/seam-absence-check.mjs dist && node scripts/wordpic-check.mjs && cargo check -p tracer-core -q",
+    "build": "node scripts/i18n-check.mjs && node scripts/viewport-check.mjs && python3 scripts/build-wordlists.py --check && bash scripts/build-web.sh && node scripts/seam-absence-check.mjs dist && node scripts/wordpic-check.mjs && node scripts/chrome-separation-check.mjs && cargo check -p tracer-core -q",
     "sync": "npm run build && cap sync",
     "android": "npm run sync && cap run android",
     "release:android": "npm run sync && cd android && ./gradlew :app:bundleRelease",

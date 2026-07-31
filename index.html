@@ -113,6 +113,9 @@
      it's precached so readable-mode users get it with no swap flash. */
   @font-face{font-family:'OpenDyslexic';src:url('./fonts/opendyslexic-regular.woff') format('woff');font-display:optional;font-weight:400}
   :root{
+    /* v8 F6: reserved INTERFACE accent — letter slots, counts, status.
+       Picture strokes may never use it (scripts/chrome-separation-check). */
+    --ui-chrome:#7aa2ff;
     --bg:#14111f; --bg2:#1c1830; --panel:#221d36; --panel-2:#1b1730;
     --edge:#322a4f; --ink:#efeaf7; --muted:#968cb4; --muted-2:#6f6690;
     /* Text that sits directly on --bg-color (not inside a --panel/--panel-2
@@ -383,14 +386,19 @@
   .wp-guide{stroke:rgba(232,236,245,.30);stroke-width:2;fill:none;stroke-linecap:round;stroke-linejoin:round}
   .wp-feature{fill:rgba(232,236,245,.95);stroke:rgba(232,236,245,.95);stroke-width:1.5;stroke-linejoin:round}
   .wp-outline{stroke:rgba(255,255,255,.22);stroke-width:3;fill:none;stroke-linecap:round}
-  .wp-outline.next{stroke:var(--accent,#7aa2ff);stroke-dasharray:6 8;animation:wpPulse 1.4s infinite}
+  /* the next stroke is signalled by BRIGHTNESS and dash, never by the
+     reserved chrome accent (F6) */
+  .wp-outline.next{stroke:rgba(255,255,255,.92);stroke-dasharray:6 8;animation:wpPulse 1.4s infinite}
   @keyframes wpPulse{50%{stroke-opacity:.45}}
   .wp-word{fill:var(--wp-ink,#e8ecf5);font-weight:700;font-family:inherit}
   .wp-word.new{animation:wpIn 1s ease}
   @keyframes wpIn{from{opacity:0;letter-spacing:.5em}to{opacity:1}}
   @media (prefers-reduced-motion: reduce){.wp-word.new{animation:none}.wp-outline.next{animation:none}}
   .wp-status{text-align:center;min-height:20px;font-size:14px;opacity:.9}
-  .wp-slots{text-align:center;min-height:18px;font-size:16px;letter-spacing:.35em;color:var(--accent,#7aa2ff)}
+  /* v8 F6 reserved chrome: the accent belongs to the INTERFACE only —
+     letter slots, counts, status. No picture stroke may use it, so a
+     glance always separates interface from artwork. */
+  .wp-slots{text-align:center;min-height:18px;font-size:16px;letter-spacing:.35em;color:var(--ui-chrome,#7aa2ff)}
   .wp-slots span{opacity:.4}
   .wp-slots .on{opacity:1}
   .wp-row{display:flex;gap:8px;align-items:stretch}

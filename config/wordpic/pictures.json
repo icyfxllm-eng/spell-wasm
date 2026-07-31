@@ -108,48 +108,6 @@
      "band": 1,
      "arch": "outline",
      "feature": "star outline"
-    },
-    {
-     "mode": "stack",
-     "x": 56,
-     "y": 56,
-     "size": 26,
-     "order": 2,
-     "budget": [
-      2,
-      10
-     ],
-     "band": 2,
-     "arch": "stack",
-     "column": 4,
-     "feature": "top-left sparkle"
-    },
-    {
-     "mode": "stack",
-     "x": 456,
-     "y": 72,
-     "size": 26,
-     "order": 3,
-     "budget": [
-      2,
-      10
-     ],
-     "band": 2,
-     "arch": "stack",
-     "column": 4,
-     "feature": "top-right sparkle"
-    },
-    {
-     "mode": "flow",
-     "d": "M150 486 L362 486",
-     "order": 4,
-     "budget": [
-      2,
-      10
-     ],
-     "band": 2,
-     "arch": "line",
-     "feature": "ground"
     }
    ],
    "guide": []

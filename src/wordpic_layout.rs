@@ -1054,6 +1054,26 @@ mod tests {
     /// overlaps, zero out-of-frame, zero sub-floor, fill ≥ 95% (or the slot
     /// was solvable to band max, tracked by fill>=FILL_MIN assertion on the
     /// chosen candidate).
+    /// v8 F6 `star-side-rails`: the two vertical letter-stacks that read
+    /// as dashed UI rails and the stray ground line are gone from the
+    /// star, and no picture stroke in ANY subject is a free-floating
+    /// stack that could be mistaken for interface.
+    #[test]
+    fn star_side_rails() {
+        let star = wordpic::picture("star").unwrap();
+        assert_eq!(star.paths.len(), 1, "a star is a star: outline only");
+        assert_eq!(star.paths[0].mode, "flow");
+        for p in &wordpic::manifest().pictures {
+            for q in &p.paths {
+                assert!(
+                    q.mode != "stack" || !q.feature.to_lowercase().contains("sparkle"),
+                    "{}: free-floating decorative stack reads as UI chrome",
+                    p.id
+                );
+            }
+        }
+    }
+
     /// v7 F1 fixture `star-overlap-r2`: reconstruct the round-2 escape —
     /// the device drew three star words ~70% wider than the solver's
     /// estimate (letter-spacing without textLength). The runtime check
@@ -1092,7 +1112,11 @@ mod tests {
         // Round-2 reconstruction: three words render far wider than the
         // solver estimated (real font metrics, no textLength) and jam into
         // their neighbors. The check must catch every jam.
-        let spill = boxes(&[0, 2, 4]);
+        // Widen every third word, whatever the star's path count is (F6
+        // deleted its rails, so fixed indices would be brittle).
+        let widen: Vec<usize> = (0..pls.len()).step_by(3).take(3).collect();
+        assert!(widen.len() >= 3, "star hosts enough words to reconstruct the escape");
+        let spill = boxes(&widen);
         assert!(glyph_violations(&spill) >= 3, "check catches the round-2 escape");
     }
 

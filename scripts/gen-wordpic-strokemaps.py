@@ -94,7 +94,7 @@ def tuft(x, y, h):
 BANNED_FEATURES = {"decorative", "filler", "background texture"}
 FEATURES = {
     "smiley": ["head", "head", "left eye", "right eye", "smile"],
-    "star": ["star outline", "top-left sparkle", "top-right sparkle", "ground"],
+    "star": ["star outline"],
     "fish": ["back", "belly", "upper tail fin", "lower tail fin"],
     "house": ["left roof slope", "right roof slope", "left window", "right window",
               "left base wall", "right base wall", "door", "sun"],
@@ -205,11 +205,12 @@ def star_outline(cx, cy, r):
 
 
 # 2) STAR — outer 10-edge outline (L4 corner split → crisp points).
+# v8 F6 (Eric could not identify these on device): the two vertical
+# letter-stacks flanking the star read as dashed UI rails and the ground
+# line as a stray rule. A star is a star — deleted, per D7 and the same
+# reasoning that removed the fish blob (D2) and tower sides (D3).
 P.append(pic("star", "easy", "nature", "🌟", True, [
     flow(star_outline(256, 250, 180), 1, B_EASY, 1, "outline"),
-    stack(56, 56, 26, 4, 2),
-    stack(456, 72, 26, 4, 3),
-    flow(line(150, 486, 362, 486), 4, B_EASY, 2, "line"),
 ]))
 
 # 3) FISH — Eric's golden. Body + tail unchanged in spirit; the interior fin
