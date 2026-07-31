@@ -391,5 +391,8 @@
   "wordpic.how1": "Mỗi bức tranh làm từ các từ. Đánh vần từ bạn nghe và nó tự vẽ lên nét tiếp theo.",
   "wordpic.how2": "Những đường mờ cho thấy bạn đang tạo gì. Mặt cười: mắt là từ xếp dọc, miệng là từ theo đường cong.",
   "wordpic.how3": "Tranh lớn cần nhiều từ — nghỉ lúc nào cũng được, tranh vẫn chờ. Từ cuối cùng là từ hay nhất.",
-  "wordpic.shareText": "{pic} Mình đã đánh vần cả một bức tranh bằng {lang} — {n} từ!"
+  "wordpic.shareText": "{pic} Mình đã đánh vần cả một bức tranh bằng {lang} — {n} từ!",
+  "finale.exportFailed": "Không lưu được bức tranh. Hãy thử lại.",
+  "finale.exportFontFailed": "Không lưu được bức tranh — phông chữ của nó chưa tải xong. Hãy thử lại sau giây lát.",
+  "finale.exportNoPlan": "Chưa có bức tranh hoàn thành nào để lưu."
 }

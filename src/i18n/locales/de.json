@@ -391,5 +391,8 @@
   "wordpic.how1": "Jedes Bild besteht aus Wörtern. Buchstabiere das gehörte Wort und es zeichnet sich auf den nächsten Strich.",
   "wordpic.how2": "Die blassen Linien zeigen, was du erschaffst. Beim Smiley: Die Augen sind stehende Wörter, das Lächeln Wörter im Bogen.",
   "wordpic.how3": "Große Bilder brauchen viele Wörter — geh jederzeit, dein Bild wartet. Das letzte Wort ist das beste.",
-  "wordpic.shareText": "{pic} Ich habe ein ganzes Bild auf {lang} buchstabiert — {n} Wörter!"
+  "wordpic.shareText": "{pic} Ich habe ein ganzes Bild auf {lang} buchstabiert — {n} Wörter!",
+  "finale.exportFailed": "Das Bild konnte nicht gespeichert werden. Versuch es noch einmal.",
+  "finale.exportFontFailed": "Das Bild konnte nicht gespeichert werden – seine Schrift wurde nicht geladen. Versuch es gleich noch einmal.",
+  "finale.exportNoPlan": "Es gibt noch kein fertiges Bild zum Speichern."
 }

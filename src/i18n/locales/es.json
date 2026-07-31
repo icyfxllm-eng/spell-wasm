@@ -391,5 +391,8 @@
   "wordpic.how1": "Cada cuadro está hecho de palabras. Deletrea la palabra que oyes y se dibuja en el siguiente trazo.",
   "wordpic.how2": "Las líneas tenues muestran lo que estás creando. Mira la carita: los ojos son palabras de pie, la sonrisa es palabras en curva.",
   "wordpic.how3": "Los cuadros grandes llevan muchas palabras — sal cuando quieras, tu cuadro te espera. La última palabra es la mejor.",
-  "wordpic.shareText": "{pic} ¡Deletreé un cuadro entero en {lang} — {n} palabras!"
+  "wordpic.shareText": "{pic} ¡Deletreé un cuadro entero en {lang} — {n} palabras!",
+  "finale.exportFailed": "No se pudo guardar la imagen. Inténtalo de nuevo.",
+  "finale.exportFontFailed": "No se pudo guardar la imagen: no se cargó su tipografía. Inténtalo en un momento.",
+  "finale.exportNoPlan": "Todavía no hay una imagen terminada para guardar."
 }

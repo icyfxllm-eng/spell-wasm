@@ -391,5 +391,8 @@
   "wordpic.how1": "Kila picha imetengenezwa kwa maneno. Endeleza neno unalosikia nalo litachorwa kwenye mstari unaofuata.",
   "wordpic.how2": "Mistari hafifu inaonyesha unachotengeneza. Uso wa tabasamu: macho ni maneno wima, tabasamu ni maneno kwenye upinde.",
   "wordpic.how3": "Picha kubwa zinahitaji maneno mengi — ondoka wakati wowote, picha itasubiri. Neno la mwisho ndilo bora zaidi.",
-  "wordpic.shareText": "{pic} Nimeendeleza picha nzima kwa {lang} — maneno {n}!"
+  "wordpic.shareText": "{pic} Nimeendeleza picha nzima kwa {lang} — maneno {n}!",
+  "finale.exportFailed": "Imeshindwa kuhifadhi picha. Jaribu tena.",
+  "finale.exportFontFailed": "Imeshindwa kuhifadhi picha — herufi zake hazikupakia. Jaribu tena baada ya muda mfupi.",
+  "finale.exportNoPlan": "Bado hakuna picha iliyokamilika ya kuhifadhi."
 }

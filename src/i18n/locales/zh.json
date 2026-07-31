@@ -391,5 +391,8 @@
   "wordpic.how1": "每幅画都由单词组成。拼出你听到的单词,它就画在下一笔上。",
   "wordpic.how2": "淡淡的线条是你要画的样子。笑脸:眼睛是竖排的单词,嘴巴是弯弯的单词。",
   "wordpic.how3": "大画需要很多单词 — 随时休息,画会等你。最后一个单词最珍贵。",
-  "wordpic.shareText": "{pic} 我用{lang}拼出了一整幅画 — {n} 个单词!"
+  "wordpic.shareText": "{pic} 我用{lang}拼出了一整幅画 — {n} 个单词!",
+  "finale.exportFailed": "无法保存这幅图。请再试一次。",
+  "finale.exportFontFailed": "无法保存这幅图——它的字体没有加载。请稍后再试。",
+  "finale.exportNoPlan": "还没有完成的图可以保存。"
 }

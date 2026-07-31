@@ -391,5 +391,8 @@
   "wordpic.how1": "Chaque image est faite de mots. Épelle le mot entendu et il se dessine sur le trait suivant.",
   "wordpic.how2": "Les lignes pâles montrent ce que tu crées. Regarde le sourire : les yeux sont des mots debout, la bouche des mots en courbe.",
   "wordpic.how3": "Les grandes images demandent beaucoup de mots — pars quand tu veux, ton image t'attend. Le dernier mot est le meilleur.",
-  "wordpic.shareText": "{pic} J'ai épelé toute une image en {lang} — {n} mots !"
+  "wordpic.shareText": "{pic} J'ai épelé toute une image en {lang} — {n} mots !",
+  "finale.exportFailed": "Impossible d'enregistrer l'image. Réessaie.",
+  "finale.exportFontFailed": "Impossible d'enregistrer l'image : sa police n'a pas été chargée. Réessaie dans un instant.",
+  "finale.exportNoPlan": "Il n'y a pas encore d'image terminée à enregistrer."
 }

@@ -391,5 +391,8 @@
   "wordpic.how1": "Bawat larawan ay gawa sa mga salita. Baybayin ang narinig at iguguhit ito sa susunod na guhit.",
   "wordpic.how2": "Ipinapakita ng malabong guhit ang ginagawa mo. Sa smiley: ang mga mata ay salitang nakatayo, ang ngiti ay salitang nakakurba.",
   "wordpic.how3": "Malalaking larawan ay maraming salita — umalis anumang oras, maghihintay ang larawan. Ang huling salita ang pinakamaganda.",
-  "wordpic.shareText": "{pic} Binaybay ko ang buong larawan sa {lang} — {n} salita!"
+  "wordpic.shareText": "{pic} Binaybay ko ang buong larawan sa {lang} — {n} salita!",
+  "finale.exportFailed": "Hindi na-save ang larawan. Subukan ulit.",
+  "finale.exportFontFailed": "Hindi na-save ang larawan — hindi na-load ang letra nito. Subukan ulit maya-maya.",
+  "finale.exportNoPlan": "Wala pang tapos na larawan na puwedeng i-save."
 }

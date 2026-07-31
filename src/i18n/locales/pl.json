@@ -391,5 +391,8 @@
   "wordpic.how1": "Każdy obraz składa się ze słów. Przeliteruj usłyszane słowo, a narysuje się na kolejnej kresce.",
   "wordpic.how2": "Blade linie pokazują, co tworzysz. Spójrz na uśmiech: oczy to słowa w pionie, usta to słowa w łuku.",
   "wordpic.how3": "Duże obrazy wymagają wielu słów — wyjdź kiedy chcesz, obraz poczeka. Ostatnie słowo jest najlepsze.",
-  "wordpic.shareText": "{pic} Wyliterowałem cały obraz po {lang} — {n} słów!"
+  "wordpic.shareText": "{pic} Wyliterowałem cały obraz po {lang} — {n} słów!",
+  "finale.exportFailed": "Nie udało się zapisać obrazka. Spróbuj ponownie.",
+  "finale.exportFontFailed": "Nie udało się zapisać obrazka — nie wczytał się jego krój pisma. Spróbuj za chwilę.",
+  "finale.exportNoPlan": "Nie ma jeszcze ukończonego obrazka do zapisania."
 }

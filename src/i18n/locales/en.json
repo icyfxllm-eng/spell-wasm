@@ -391,5 +391,8 @@
   "wordpic.how1": "Every picture is made of words. Spell the word you hear and it draws itself onto the next stroke.",
   "wordpic.how2": "The faint lines show what you're making. Watch the smiley: the eyes are words standing tall, the smile is words in a curve.",
   "wordpic.how3": "Big pictures take many words — leave anytime, your picture waits. The last word is always the best one.",
-  "wordpic.shareText": "{pic} I spelled a whole picture in {lang} — {n} words!"
+  "wordpic.shareText": "{pic} I spelled a whole picture in {lang} — {n} words!",
+  "finale.exportFailed": "Couldn't save the picture. Try again.",
+  "finale.exportFontFailed": "Couldn't save the picture — its lettering didn't load. Try again in a moment.",
+  "finale.exportNoPlan": "There's no finished picture to save yet."
 }
