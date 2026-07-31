@@ -394,5 +394,9 @@
   "wordpic.shareText": "{pic} ¡Deletreé un cuadro entero en {lang} — {n} palabras!",
   "finale.exportFailed": "No se pudo guardar la imagen. Inténtalo de nuevo.",
   "finale.exportFontFailed": "No se pudo guardar la imagen: no se cargó su tipografía. Inténtalo en un momento.",
-  "finale.exportNoPlan": "Todavía no hay una imagen terminada para guardar."
+  "finale.exportNoPlan": "Todavía no hay una imagen terminada para guardar.",
+  "finale.continue": "Continuar",
+  "finale.save": "Guardar",
+  "finale.share": "Compartir",
+  "finale.replay": "Verlo otra vez"
 }

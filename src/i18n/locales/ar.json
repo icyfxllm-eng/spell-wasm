@@ -394,5 +394,9 @@
   "wordpic.shareText": "{pic} تهجّيت لوحة كاملة بالـ{lang} — {n} كلمة!",
   "finale.exportFailed": "تعذّر حفظ الصورة. حاول مرة أخرى.",
   "finale.exportFontFailed": "تعذّر حفظ الصورة — لم يُحمّل خطّها. حاول بعد لحظة.",
-  "finale.exportNoPlan": "لا توجد صورة مكتملة لحفظها بعد."
+  "finale.exportNoPlan": "لا توجد صورة مكتملة لحفظها بعد.",
+  "finale.continue": "متابعة",
+  "finale.save": "حفظ",
+  "finale.share": "مشاركة",
+  "finale.replay": "شاهدها مرة أخرى"
 }

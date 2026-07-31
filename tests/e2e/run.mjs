@@ -12,6 +12,7 @@ import { fileURLToPath } from 'node:url';
 import { startServer, launch, Suite } from './harness.mjs';
 
 import * as keyboard from './specs/keyboard.mjs';
+import * as finale from './specs/finale.mjs';
 import * as gameplay from './specs/gameplay.mjs';
 import * as modes from './specs/modes.mjs';
 import * as menu from './specs/menu.mjs';
@@ -37,6 +38,7 @@ const SPECS = [
   ['submit-advance', submitAdvance],
   ['attempts-shields', attemptsShields],
   ['tools-hub', toolsHub],
+  ['finale', finale],
 ];
 
 const ROOT = join(fileURLToPath(import.meta.url), '..', '..', '..');

@@ -394,5 +394,9 @@
   "wordpic.shareText": "{pic} Binaybay ko ang buong larawan sa {lang} — {n} salita!",
   "finale.exportFailed": "Hindi na-save ang larawan. Subukan ulit.",
   "finale.exportFontFailed": "Hindi na-save ang larawan — hindi na-load ang letra nito. Subukan ulit maya-maya.",
-  "finale.exportNoPlan": "Wala pang tapos na larawan na puwedeng i-save."
+  "finale.exportNoPlan": "Wala pang tapos na larawan na puwedeng i-save.",
+  "finale.continue": "Magpatuloy",
+  "finale.save": "I-save",
+  "finale.share": "I-share",
+  "finale.replay": "Panoorin ulit"
 }

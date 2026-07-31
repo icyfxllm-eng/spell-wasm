@@ -92,23 +92,31 @@ pub fn wire(app: &App) {
         crate::share::share_wordpic(&lang, &pic, n);
         let _ = &a;
     });
+    // CC-FINALE: Continue is the one advancing affordance, and it is always
+    // one tap away. Nothing else leaves the rest state on its own.
     let a = app.clone();
-    dom::on_click("wpAgain", move || {
-        // D15c: fresh seed over the same paths — a new artwork.
-        let (pic, lang) = (PIC.with(|p| p.borrow().clone()), LANG.with(|l| l.borrow().clone()));
-        let mut s = wordpic::load();
-        s.restart(&pic, &lang);
-        let _ = s.open(&pic, &lang);
-        wordpic::save(&s);
-        dom::remove_class("wpDone", "show");
-        CARD_UP.with(|c| c.set(false));
-        open_play(&a, &pic);
-    });
-    let a = app.clone();
-    dom::on_click("wpDoneClose", move || {
-        dom::remove_class("wpDone", "show");
+    dom::on_click("wpContinue", move || {
+        dom::remove_class("wpReveal", "show");
+        dom::remove_class("wpReveal", "rest");
         CARD_UP.with(|c| c.set(false));
         close_play(&a);
+    });
+    // "It cost seconds to make; let them watch it again."
+    dom::on_click("wpReplayBuild", || {
+        let pic = PIC.with(|p| p.borrow().clone());
+        start_build(&pic);
+    });
+    // A tap anywhere on the reveal skips the build. Registered on the stage
+    // and the backdrop, NOT on the action row -- otherwise the first tap on
+    // Continue would be eaten by the skip.
+    dom::on::<web_sys::Event, _>("wpRevealStage", "click", |_| skip_build());
+    dom::on::<web_sys::Event, _>("wpReveal", "click", |e| {
+        if let Some(t) = e.target().and_then(|t| t.dyn_into::<web_sys::Element>().ok()) {
+            if t.closest(".wp-reveal-acts").ok().flatten().is_some() {
+                return;
+            }
+        }
+        skip_build();
     });
     let a = app.clone();
     dom::on::<web_sys::Event, _>("wpInput", "input", move |_| on_typed(&a));
@@ -783,6 +791,14 @@ fn current_word() -> Option<String> {
     FEED.with(|f| f.borrow().get(PLACED.with(Cell::get) as usize).cloned())
 }
 
+/// Observation-only, for the E2E seam: the word the picture is waiting on.
+/// Same contract as the rest of the seam -- it reads, it never types, and it
+/// never bypasses the answer check.
+#[cfg(feature = "testseam")]
+pub fn seam_current_word() -> String {
+    current_word().unwrap_or_default()
+}
+
 fn replay(app: &App) {
     let lang = LANG.with(|l| l.borrow().clone());
     let Some(w) = current_word() else { return };
@@ -864,16 +880,85 @@ fn place(app: &App, word: &str) {
     }
 }
 
+/// CC-FINALE D1 (Eric, 2026-07-31): the build runs 3s for a starter piece
+/// up to 6s for a masterpiece. Scaled to the piece, not to the word count --
+/// a 60-word picture builds faster per word, but the moment is the same
+/// length, because the moment is the point.
+fn build_ms(tier: &str) -> u32 {
+    match tier {
+        "easy" => 3000,
+        "medium" => 4000,
+        "hard" => 5000,
+        // expert, and masterpiece once CC-PICTURE-BANK adds the tier
+        _ => 6000,
+    }
+}
+
+/// CC-FINALE feature 1. The last correct word does not roll into the next
+/// picture: the HUD goes, the piece rebuilds itself in spelling order, and
+/// then it rests for as long as the player wants.
 fn show_done(app: &App) {
+    let lang = LANG.with(|l| l.borrow().clone());
     let pic = PIC.with(|p| p.borrow().clone());
     let n = PLACED.with(Cell::get);
-    dom::set_text(
-        "wpDoneBody",
-        &i18n::tp("wordpic.doneBody", &[("n", &n.to_string())]),
-    );
-    dom::add_class("wpDone", "show");
+    dom::set_text("wpRevealNote", &i18n::tp("wordpic.doneBody", &[("n", &n.to_string())]));
+    // Same geometry the player has been watching fill in, now on its own.
+    let st = wordpic::load();
+    let run = st.run(&pic, &lang);
+    let words = run.map(|r| r.words.clone()).unwrap_or_default();
+    let seed = st.run(&pic, &lang).map(|r| r.seed).unwrap_or(1);
+    // Same seed, same plan, same geometry the player watched fill in.
+    match crate::spellpic::plan(&pic, &lang, seed) {
+        Some(plan) => dom::set_html("wpRevealStage", &scanlock_svg(&plan, &lang, &words, RenderMode::Play)),
+        // I10: nothing legal to draw means draw nothing, even here.
+        None => dom::set_html("wpRevealStage", ""),
+    }
+    dom::add_class("wpReveal", "show");
     CARD_UP.with(|c| c.set(true));
-    let _ = (app, pic);
+    start_build(&pic);
+    let _ = app;
+}
+
+/// Stagger the words across the build window. Done in code rather than CSS
+/// because the step depends on how many words this particular piece has.
+fn start_build(pic: &str) {
+    let tier = wordpic::picture(pic).map(|p| p.tier.clone()).unwrap_or_default();
+    dom::remove_class("wpReveal", "rest");
+    let Ok(list) = dom::doc().query_selector_all("#wpRevealStage .wp-word") else { return };
+    let total = list.length();
+    if total == 0 {
+        dom::add_class("wpReveal", "rest");
+        return;
+    }
+    let window = build_ms(&tier);
+    for i in 0..total {
+        let Some(node) = list.get(i) else { continue };
+        // Element, NOT HtmlElement: these are SVG <text> nodes, and casting
+        // them to HtmlElement quietly yields None -- which skipped every word
+        // and left the build un-staggered with no error anywhere.
+        let Some(el) = node.dyn_ref::<web_sys::Element>() else { continue };
+        let d = window * i / total;
+        let _ = el.set_attribute("style", &format!("animation-delay:{d}ms"));
+    }
+    // The pinned ink and micro features are the picture's own lines, not
+    // words -- they lead so the words land onto something.
+    if let Ok(ink) = dom::doc().query_selector_all("#wpRevealStage .wp-pinned, #wpRevealStage .wp-feature") {
+        for i in 0..ink.length() {
+            let Some(node) = ink.get(i) else { continue };
+            if let Some(el) = node.dyn_ref::<web_sys::Element>() {
+                let _ = el.set_attribute("style", "animation-delay:0ms");
+            }
+        }
+    }
+    // Settle into rest when the last word has landed, so the animation is
+    // not left running under a state that claims to be still.
+    after((window + 500) as i32, || dom::add_class("wpReveal", "rest"));
+}
+
+/// Skip: a tap anywhere during the build jumps straight to the rest state.
+/// Never the reverse -- rest does not decay back into anything.
+fn skip_build() {
+    dom::add_class("wpReveal", "rest");
 }
 
 fn after(ms: i32, f: impl FnOnce() + 'static) {

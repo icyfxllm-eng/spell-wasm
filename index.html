@@ -395,6 +395,33 @@
   .wp-word.new{animation:wpIn 1s ease}
   @keyframes wpIn{from{opacity:0;letter-spacing:.5em}to{opacity:1}}
   @media (prefers-reduced-motion: reduce){.wp-word.new{animation:none}.wp-outline.next{animation:none}}
+
+  /* CC-FINALE feature 1 — the reveal moment (D1: 3s starter to 6s
+     masterpiece, always skippable). The build is a fade-in per word in
+     SPELLING order, driven by a per-word animation-delay set in
+     wordpic_screen.rs, so the picture assembles the way it was made. */
+  .wp-reveal{position:absolute;inset:0;z-index:8;display:none;flex-direction:column;
+    align-items:center;justify-content:center;gap:16px;padding:18px;
+    background:radial-gradient(circle at 50% 40%, rgba(255,177,77,.10), transparent 62%), var(--bg,#0e1420)}
+  .wp-reveal.show{display:flex}
+  .wp-reveal-stage{width:100%;flex:1;min-height:0;display:flex;align-items:center;justify-content:center}
+  .wp-reveal-stage svg{width:100%;height:100%;max-height:66vh}
+  .wp-reveal .wp-word,.wp-reveal .wp-pinned,.wp-reveal .wp-feature{opacity:0;animation:wpBuild .5s ease forwards}
+  /* Rest state: everything settled, nothing animating, nothing counting down. */
+  .wp-reveal.rest .wp-word,.wp-reveal.rest .wp-pinned,.wp-reveal.rest .wp-feature{opacity:1;animation:none}
+  @keyframes wpBuild{from{opacity:0}to{opacity:1}}
+  .wp-reveal-note{margin:0;min-height:1.2em;color:var(--muted);font-size:14px;text-align:center}
+  .wp-reveal-acts{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;width:100%;max-width:440px}
+  /* 44px: these are the only controls on the screen and they are what the
+     player reaches for after finishing a picture. .ghost defaults to 28px,
+     which the reveal spec's own device sweep caught. */
+  .wp-reveal-acts .btn,.wp-reveal-acts .ghost{flex:1 1 auto;min-width:92px;min-height:44px}
+  /* D4: Kid Mode celebrates and saves, but does not share. */
+  body.kid #wpShare{display:none}
+  /* Someone who asked for less motion still gets the piece, just not the build. */
+  @media (prefers-reduced-motion: reduce){
+    .wp-reveal .wp-word,.wp-reveal .wp-pinned,.wp-reveal .wp-feature{opacity:1;animation:none}
+  }
   .wp-status{text-align:center;min-height:20px;font-size:14px;opacity:.9}
   /* v8 F6 reserved chrome: the accent belongs to the INTERFACE only —
      letter slots, counts, status. No picture stroke may use it, so a
@@ -1420,13 +1447,22 @@
       <button class="btn btn-check" id="wpConfirmYes" data-i18n="wordpic.restartYes" style="width:100%;margin-bottom:8px">Start over</button>
       <button class="btn" id="wpConfirmNo" data-i18n="voiceSpell.netNo" style="width:100%">No thanks</button>
     </div></div>
-    <div class="wp-card" id="wpDone"><div class="modal" style="text-align:center">
-      <h3 data-i18n="wordpic.doneTitle">🖼️ Your picture!</h3>
-      <p id="wpDoneBody"></p>
-      <button class="btn btn-check" id="wpShare" data-i18n="share.button" style="width:100%;margin-bottom:8px">Share</button>
-      <button class="btn btn-check" id="wpAgain" data-i18n="wordpic.again" style="width:100%;margin-bottom:8px">Spell it again</button>
-      <button class="btn" id="wpDoneClose" data-i18n="wordpic.backToBook" style="width:100%">Picture book</button>
-    </div></div>
+    <!-- CC-FINALE feature 1: the reveal. Replaces the old completion card.
+         The HUD fades, the piece rebuilds itself in spelling order, and then
+         it RESTS — indefinitely. No countdown, no auto-advance: the player
+         just made this and gets to look at it for as long as they like. A
+         tap anywhere during the build skips to the rest state. -->
+    <div class="wp-reveal" id="wpReveal" role="dialog" aria-modal="true" aria-labelledby="wpRevealTitle">
+      <h2 class="sr-only" id="wpRevealTitle" data-i18n="wordpic.doneTitle">🖼️ Your picture!</h2>
+      <div class="wp-reveal-stage" id="wpRevealStage"></div>
+      <p class="wp-reveal-note" id="wpRevealNote" role="status"></p>
+      <div class="wp-reveal-acts">
+        <button class="btn btn-check" id="wpContinue" data-i18n="finale.continue">Continue</button>
+        <button class="ghost" id="wpSave" data-i18n="finale.save">Save</button>
+        <button class="ghost" id="wpShare" data-i18n="finale.share">Share</button>
+        <button class="ghost" id="wpReplayBuild" data-i18n="finale.replay">Watch it again</button>
+      </div>
+    </div>
   </div>
 
   <!-- CC-DEF-MATCH P3: the Definition Match screen. Cards float bottom→top in

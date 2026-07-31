@@ -394,5 +394,9 @@
   "wordpic.shareText": "{pic} 我用{lang}拼出了一整幅画 — {n} 个单词!",
   "finale.exportFailed": "无法保存这幅图。请再试一次。",
   "finale.exportFontFailed": "无法保存这幅图——它的字体没有加载。请稍后再试。",
-  "finale.exportNoPlan": "还没有完成的图可以保存。"
+  "finale.exportNoPlan": "还没有完成的图可以保存。",
+  "finale.continue": "继续",
+  "finale.save": "保存",
+  "finale.share": "分享",
+  "finale.replay": "再看一次"
 }

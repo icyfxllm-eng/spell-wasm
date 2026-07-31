@@ -394,5 +394,9 @@
   "wordpic.shareText": "{pic} {lang}で絵をまるごとつづったよ — {n}語！",
   "finale.exportFailed": "絵を保存できませんでした。もう一度お試しください。",
   "finale.exportFontFailed": "絵を保存できませんでした。文字のフォントを読み込めません。少し待ってからお試しください。",
-  "finale.exportNoPlan": "保存できる完成した絵がまだありません。"
+  "finale.exportNoPlan": "保存できる完成した絵がまだありません。",
+  "finale.continue": "つづける",
+  "finale.save": "保存",
+  "finale.share": "シェア",
+  "finale.replay": "もう一度見る"
 }

@@ -394,5 +394,9 @@
   "wordpic.shareText": "{pic} I spelled a whole picture in {lang} — {n} words!",
   "finale.exportFailed": "Couldn't save the picture. Try again.",
   "finale.exportFontFailed": "Couldn't save the picture — its lettering didn't load. Try again in a moment.",
-  "finale.exportNoPlan": "There's no finished picture to save yet."
+  "finale.exportNoPlan": "There's no finished picture to save yet.",
+  "finale.continue": "Continue",
+  "finale.save": "Save",
+  "finale.share": "Share",
+  "finale.replay": "Watch it again"
 }

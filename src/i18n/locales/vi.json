@@ -394,5 +394,9 @@
   "wordpic.shareText": "{pic} Mình đã đánh vần cả một bức tranh bằng {lang} — {n} từ!",
   "finale.exportFailed": "Không lưu được bức tranh. Hãy thử lại.",
   "finale.exportFontFailed": "Không lưu được bức tranh — phông chữ của nó chưa tải xong. Hãy thử lại sau giây lát.",
-  "finale.exportNoPlan": "Chưa có bức tranh hoàn thành nào để lưu."
+  "finale.exportNoPlan": "Chưa có bức tranh hoàn thành nào để lưu.",
+  "finale.continue": "Tiếp tục",
+  "finale.save": "Lưu",
+  "finale.share": "Chia sẻ",
+  "finale.replay": "Xem lại"
 }

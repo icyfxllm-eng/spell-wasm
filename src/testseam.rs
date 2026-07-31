@@ -8,6 +8,7 @@
 //!   __spelltest.currentLang()      -> the active word language
 //!   __spelltest.pool(lang, tier)   -> the full word bank for (lang, tier), JSON
 //!   __spelltest.build()            -> "testseam" marker string
+//!   __spelltest.picWord()          -> the word Spell Picture is waiting on
 //!
 //! Per the harness contract, seams OBSERVE and never bypass filtering or
 //! validation. There is deliberately no hook that types for the player, sets an
@@ -33,6 +34,13 @@ pub fn install(app: &App) {
         let a = app.clone();
         let cb = Closure::<dyn Fn() -> String>::new(move || a.borrow().word.clone());
         set(&obj, "currentWord", cb.into_js_value());
+    }
+    {
+        // Spell Picture keeps its own feed, so the base game's currentWord is
+        // not the picture's. CC-FINALE Done #2 needs a picture played to
+        // completion to reach the reveal at all.
+        let cb = Closure::<dyn Fn() -> String>::new(crate::wordpic_screen::seam_current_word);
+        set(&obj, "picWord", cb.into_js_value());
     }
     {
         let a = app.clone();

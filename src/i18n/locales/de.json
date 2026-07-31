@@ -394,5 +394,9 @@
   "wordpic.shareText": "{pic} Ich habe ein ganzes Bild auf {lang} buchstabiert — {n} Wörter!",
   "finale.exportFailed": "Das Bild konnte nicht gespeichert werden. Versuch es noch einmal.",
   "finale.exportFontFailed": "Das Bild konnte nicht gespeichert werden – seine Schrift wurde nicht geladen. Versuch es gleich noch einmal.",
-  "finale.exportNoPlan": "Es gibt noch kein fertiges Bild zum Speichern."
+  "finale.exportNoPlan": "Es gibt noch kein fertiges Bild zum Speichern.",
+  "finale.continue": "Weiter",
+  "finale.save": "Speichern",
+  "finale.share": "Teilen",
+  "finale.replay": "Nochmal ansehen"
 }

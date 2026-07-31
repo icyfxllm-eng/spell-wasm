@@ -394,5 +394,9 @@
   "wordpic.shareText": "{pic} {lang}로 그림 하나를 통째로 썼어요 — 단어 {n}개!",
   "finale.exportFailed": "그림을 저장하지 못했어요. 다시 시도해 주세요.",
   "finale.exportFontFailed": "그림을 저장하지 못했어요 — 글꼴을 불러오지 못했어요. 잠시 후 다시 시도해 주세요.",
-  "finale.exportNoPlan": "아직 저장할 완성된 그림이 없어요."
+  "finale.exportNoPlan": "아직 저장할 완성된 그림이 없어요.",
+  "finale.continue": "계속하기",
+  "finale.save": "저장",
+  "finale.share": "공유",
+  "finale.replay": "다시 보기"
 }

@@ -394,5 +394,9 @@
   "wordpic.shareText": "{pic} Soletrei um quadro inteiro em {lang} — {n} palavras!",
   "finale.exportFailed": "Não foi possível salvar a imagem. Tente de novo.",
   "finale.exportFontFailed": "Não foi possível salvar a imagem — a fonte dela não carregou. Tente daqui a pouco.",
-  "finale.exportNoPlan": "Ainda não há uma imagem pronta para salvar."
+  "finale.exportNoPlan": "Ainda não há uma imagem pronta para salvar.",
+  "finale.continue": "Continuar",
+  "finale.save": "Salvar",
+  "finale.share": "Compartilhar",
+  "finale.replay": "Ver de novo"
 }

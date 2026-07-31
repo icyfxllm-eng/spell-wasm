@@ -394,5 +394,9 @@
   "wordpic.shareText": "{pic} J'ai épelé toute une image en {lang} — {n} mots !",
   "finale.exportFailed": "Impossible d'enregistrer l'image. Réessaie.",
   "finale.exportFontFailed": "Impossible d'enregistrer l'image : sa police n'a pas été chargée. Réessaie dans un instant.",
-  "finale.exportNoPlan": "Il n'y a pas encore d'image terminée à enregistrer."
+  "finale.exportNoPlan": "Il n'y a pas encore d'image terminée à enregistrer.",
+  "finale.continue": "Continuer",
+  "finale.save": "Enregistrer",
+  "finale.share": "Partager",
+  "finale.replay": "Revoir"
 }

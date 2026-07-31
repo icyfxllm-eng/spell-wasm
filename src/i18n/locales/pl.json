@@ -394,5 +394,9 @@
   "wordpic.shareText": "{pic} Wyliterowałem cały obraz po {lang} — {n} słów!",
   "finale.exportFailed": "Nie udało się zapisać obrazka. Spróbuj ponownie.",
   "finale.exportFontFailed": "Nie udało się zapisać obrazka — nie wczytał się jego krój pisma. Spróbuj za chwilę.",
-  "finale.exportNoPlan": "Nie ma jeszcze ukończonego obrazka do zapisania."
+  "finale.exportNoPlan": "Nie ma jeszcze ukończonego obrazka do zapisania.",
+  "finale.continue": "Dalej",
+  "finale.save": "Zapisz",
+  "finale.share": "Udostępnij",
+  "finale.replay": "Obejrzyj jeszcze raz"
 }

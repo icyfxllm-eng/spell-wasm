@@ -394,5 +394,9 @@
   "wordpic.shareText": "{pic} Nimeendeleza picha nzima kwa {lang} — maneno {n}!",
   "finale.exportFailed": "Imeshindwa kuhifadhi picha. Jaribu tena.",
   "finale.exportFontFailed": "Imeshindwa kuhifadhi picha — herufi zake hazikupakia. Jaribu tena baada ya muda mfupi.",
-  "finale.exportNoPlan": "Bado hakuna picha iliyokamilika ya kuhifadhi."
+  "finale.exportNoPlan": "Bado hakuna picha iliyokamilika ya kuhifadhi.",
+  "finale.continue": "Endelea",
+  "finale.save": "Hifadhi",
+  "finale.share": "Shiriki",
+  "finale.replay": "Itazame tena"
 }
