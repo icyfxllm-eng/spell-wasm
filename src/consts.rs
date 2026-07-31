@@ -153,37 +153,38 @@ use Direction::{Ltr, Rtl};
 /// * [`direction`] — which way does it READ? What the play surface sets `dir` from.
 const LANGS_BASE: [(&str, &str, LangStatus, Direction); 15] = [
     (EN, "English", Active, Ltr),
-    (ES, "Espa\u{f1}ol", ComingSoon, Ltr),
-    (FR, "Fran\u{e7}ais", ComingSoon, Ltr),
-    (DE, "Deutsch", ComingSoon, Ltr),
-    (PT, "Portugu\u{ea}s", ComingSoon, Ltr),
-    (PL, "Polski", ComingSoon, Ltr),
-    (VI, "Ti\u{1ebf}ng Vi\u{1ec7}t", ComingSoon, Ltr),
-    (KO, "\u{d55c}\u{ad6d}\u{c5b4}", ComingSoon, Ltr),
-    (JA, "\u{65e5}\u{672c}\u{8a9e}", ComingSoon, Ltr),
-    (FIL, "Filipino", ComingSoon, Ltr),
-    (ZH, "\u{4e2d}\u{6587}", ComingSoon, Ltr),
-    (RU, "\u{420}\u{443}\u{441}\u{441}\u{43a}\u{438}\u{439}", ComingSoon, Ltr),
-    (AR, "\u{627}\u{644}\u{639}\u{631}\u{628}\u{64a}\u{629}", ComingSoon, Rtl),
-    (SW, "Kiswahili", ComingSoon, Ltr),
-    (HI, "\u{939}\u{93f}\u{928}\u{94d}\u{926}\u{940}", ComingSoon, Ltr),
+    (ES, "Espa\u{f1}ol", Active, Ltr),
+    (FR, "Fran\u{e7}ais", Active, Ltr),
+    (DE, "Deutsch", Active, Ltr),
+    (PT, "Portugu\u{ea}s", Active, Ltr),
+    (PL, "Polski", Active, Ltr),
+    (VI, "Ti\u{1ebf}ng Vi\u{1ec7}t", Active, Ltr),
+    (KO, "\u{d55c}\u{ad6d}\u{c5b4}", Active, Ltr),
+    (JA, "\u{65e5}\u{672c}\u{8a9e}", Active, Ltr),
+    (FIL, "Filipino", Active, Ltr),
+    (ZH, "\u{4e2d}\u{6587}", Active, Ltr),
+    (RU, "\u{420}\u{443}\u{441}\u{441}\u{43a}\u{438}\u{439}", Active, Ltr),
+    (AR, "\u{627}\u{644}\u{639}\u{631}\u{628}\u{64a}\u{629}", Active, Rtl),
+    (SW, "Kiswahili", Active, Ltr),
+    (HI, "\u{939}\u{93f}\u{928}\u{94d}\u{926}\u{940}", Active, Ltr),
 ];
 
-/// THE registry.
+/// THE registry. All fifteen are Active: the APP ships every language.
 ///
-/// English is the only Active language. The other fourteen are ComingSoon
-/// and stay that way until each has a NAMED native-audit sign-off, which is
-/// the discipline commit 3381daf set out on 2026-07-19 and which was then
-/// lost: that commit flipped ten languages to Active, said in its own body
+/// The web is a different question and it is answered in exactly one place,
+/// [`is_active_lang`], via the `web` cargo feature -- not by a second
+/// registry and not by scattered `if (isWeb)` checks. Eric, 2026-07-31:
+/// "For testflight all languages unlocked the site english only."
+///
+/// Worth knowing when re-reading this table: commit 3381daf (2026-07-19)
+/// flipped ten languages to Active with "[AWAITING ERIC]" in its title and
 /// "STAGED FOR REVIEW, NOT SHIPPED ... activate the subset Eric confirms by
-/// reverting the ones he isn't ready for", and was merged without anyone
-/// doing the reverting. ru/sw/ar/hi were then promoted on top of it, so all
-/// fifteen shipped unaudited -- in the app as well as on the web.
-///
-/// The e2e `coming` specs had been failing on exactly this since the 19th.
-/// Nobody saw them because Playwright's browser was never installed, so the
-/// suite died at launch. Re-promote one line at a time, per audit.
-/// (Eric, 2026-07-31.)
+/// reverting the ones he isn't ready for" in its body. Nobody reverted
+/// anything, so the unaudited fifteen shipped by default rather than by
+/// decision. They are Active now BY decision -- TestFlight is internal
+/// testing and Eric wants testers on every language -- but the native-audit
+/// sign-offs those languages still lack are tracked in CC-LEARNING-ENGINE D2
+/// and are not satisfied by this line.
 pub const BUILTIN_LANGS: [(&str, &str, LangStatus, Direction); 15] = LANGS_BASE;
 
 /// THE direction accessor (CC-RTL D3). The play surface sets `dir` from this and
@@ -319,6 +320,13 @@ pub fn is_active_lang(lang: &str) -> bool {
     if rtl_blocked(lang) {
         return false;
     }
+    // THE web/app language split, and the only place it is expressed. The
+    // site ships English; the app ships the registry. Compile-time, so the
+    // web bundle cannot be talked into another language by a flag, and there
+    // is no `if (isWeb)` anywhere else to drift out of sync with this one.
+    if cfg!(feature = "web") && lang != EN {
+        return false;
+    }
     if lang_status(lang) == Active {
         return true;
     }
@@ -399,20 +407,36 @@ mod registry_tests {
     // Production invariant: audit_preview deliberately activates ComingSoon
     // languages so they can be reviewed, so this holds only with the feature off.
     #[cfg(not(feature = "audit_preview"))]
+    #[cfg(not(feature = "web"))]
     #[test]
-    fn english_is_the_only_active_language() {
-        // Eric, 2026-07-31. The other fourteen ship as ComingSoon until each
-        // has a NAMED native-audit sign-off. This list grows one line at a
-        // time, per audit -- it is not a formality to bulk-edit when a test
-        // goes red. If you are here because you flipped a language and this
-        // failed, the question to answer is "whose sign-off?", not "how do I
-        // update the vec?".
+    fn every_registered_language_is_active_in_the_app() {
+        // The app ships every language (Eric, 2026-07-31). The web does not,
+        // and that is asserted separately below under the `web` feature --
+        // deliberately two tests, because one test that changes its
+        // expectation based on cfg proves whichever config you happened to run.
         let active: Vec<&str> = BUILTIN_LANGS
             .iter()
             .filter(|(c, _, _, _)| is_active_lang(c))
             .map(|(c, _, _, _)| *c)
             .collect();
-        assert_eq!(active, vec!["en"], "only audited languages are Active");
+        assert_eq!(active.len(), BUILTIN_LANGS.len(), "the app gates no language");
+        assert!(active.contains(&"en"));
+    }
+
+    /// The site is English-only. Runs under `cargo test --features web`.
+    #[cfg(feature = "web")]
+    #[test]
+    fn the_web_build_is_english_only() {
+        let active: Vec<&str> = BUILTIN_LANGS
+            .iter()
+            .filter(|(c, _, _, _)| is_active_lang(c))
+            .map(|(c, _, _, _)| *c)
+            .collect();
+        assert_eq!(active, vec!["en"], "spellgame.net ships English and nothing else");
+        // ...and the OTHER fourteen are still registered, so they render as
+        // coming-soon tiles rather than vanishing. The site should say the
+        // languages exist; it just does not play them.
+        assert_eq!(BUILTIN_LANGS.len(), 15, "the registry itself is unchanged on web");
     }
 
     /// CC-LINEUP-SWAP: the registry snapshot. Pinning the exact lineup means a
@@ -509,11 +533,13 @@ mod registry_tests {
         for code in rtl {
             assert!(rtl_required(code), "{code} is rtl_required (drives dir/joins)");
             assert!(!rtl_blocked(code), "{code} is no longer blocked — RTL is supported");
-            // Arabic's RENDERING is ungated (Eric verified on device
-            // 2026-07-25); its CONTENT is not audited, so it sits ComingSoon
-            // like every other unaudited language. Two separate gates, and
-            // this is the one that proves they stayed separate.
-            assert!(!is_active_lang(code), "{code} awaits a content audit");
+            // Two separate gates, and this test owns the render one. Arabic
+            // is active in the app (Eric verified the rendering on device
+            // 2026-07-25 and ships every language to TestFlight) and inactive
+            // on web like everything but English -- so assert the gate this
+            // test is about, and let the platform tests own the other.
+            assert_eq!(is_active_lang(code), !cfg!(feature = "web"),
+                       "{code}: render gate open, platform decides the rest");
         }
         // Russian is an LTR language — it carries no RTL gate at all.
         assert!(!rtl_required("ru"), "ru is left-to-right");

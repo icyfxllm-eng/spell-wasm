@@ -9,7 +9,10 @@ COPY src ./src
 # (e.g. the Kid Mode friendly-words filter), so assets/ must be in the build
 # context too — otherwise the WASM build fails with "couldn't read ... .txt".
 COPY assets ./assets
-RUN cargo build --release --target wasm32-unknown-unknown \
+# --features web: spellgame.net is the free ENGLISH experience; every
+# language lives in the app (Eric, 2026-07-31). Compile-time, so the
+# deployed site cannot be flagged into another language at runtime.
+RUN cargo build --release --target wasm32-unknown-unknown --features web \
     && wasm-bindgen target/wasm32-unknown-unknown/release/spell_wasm.wasm \
        --out-dir /out/pkg --target web --no-typescript
 

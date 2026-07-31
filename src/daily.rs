@@ -325,17 +325,27 @@ mod tests {
     #[cfg(not(feature = "audit_preview"))]
     #[test]
     fn inactive_locale_falls_back_to_en() {
-        // `locale_for` routes any non-active locale to the English pool. Since
-        // Eric's 2026-07-31 ruling that is every language but English, plus cut
-        // codes like `tr` -- so a ComingSoon language's Daily serves English
-        // words rather than unaudited ones, which is the safe direction.
+        // `locale_for` routes any non-active locale to the English pool. Which
+        // locales those are is now PLATFORM-dependent: the app ships all
+        // fifteen, the web ships English (Eric, 2026-07-31). So the test asks
+        // the registry instead of hardcoding a list -- otherwise it passes in
+        // one build config and fails in the other for no real reason.
         let (_, en) = build_words("en", "2026-07-10", false);
-        for code in ["tr", "ru", "ar", "hi", "es", "fil"] {
-            let (_, other) = build_words(code, "2026-07-10", false);
-            assert_eq!(en, other, "{code} is not active and must fall back to English");
+        assert!(!en.is_empty(), "the English pool is empty; nothing below proves anything");
+        // `tr` is a CUT code: never in the registry, inactive in every config.
+        let (_, tr) = build_words("tr", "2026-07-10", false);
+        assert_eq!(en, tr, "a cut locale must fall back to the English set");
+        for (code, _, _, _) in crate::consts::BUILTIN_LANGS {
+            if code == "en" {
+                continue;
+            }
+            let (_, got) = build_words(code, "2026-07-10", false);
+            if crate::consts::is_active_lang(code) {
+                assert_ne!(en, got, "{code} is active and must draw its own pool");
+            } else {
+                assert_eq!(en, got, "{code} is not active and must fall back to English");
+            }
         }
-        // The fallback must not be vacuous -- English still draws a real set.
-        assert!(!en.is_empty(), "the English pool is empty; the assertions above prove nothing");
     }
 
     #[test]

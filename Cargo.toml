@@ -34,6 +34,10 @@ education = []
 # RTL_SUPPORTED stays false, the languages stay gated, and word_data_audit is not
 # compiled in. Produces dist-audit/ via scripts/build-web-audit.sh.
 audit_preview = []
+# The spellgame.net build. English only (Eric, 2026-07-31): the site is the
+# free English experience, the app is where every language lives. Off by
+# default so `npm run build` still produces the APP artifact.
+web = []
 
 [dependencies]
 scanlock = { path = "scanlock" }

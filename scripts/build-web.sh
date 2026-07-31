@@ -14,8 +14,17 @@ cd "$(dirname "$0")/.."
 ROOT="$(pwd)"
 DIST="$ROOT/dist"
 
-echo "==> cargo build (release, wasm32-unknown-unknown)"
-cargo build --release --target wasm32-unknown-unknown
+# SPELL_WEB=1 reproduces the DEPLOYED SITE build (English only). Unset, this
+# produces the APP artifact that `cap sync ios` ships, with every language.
+# Keep in step with the Dockerfile, which is the source of truth for the site.
+FEATURES=""
+if [ "${SPELL_WEB:-0}" = "1" ]; then
+  FEATURES="--features web"
+  echo "==> SITE build: English only (--features web)"
+fi
+echo "==> cargo build (release, wasm32-unknown-unknown) $FEATURES"
+# shellcheck disable=SC2086
+cargo build --release --target wasm32-unknown-unknown $FEATURES
 
 echo "==> wasm-bindgen -> pkg/"
 wasm-bindgen target/wasm32-unknown-unknown/release/spell_wasm.wasm \
