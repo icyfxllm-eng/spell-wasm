@@ -108,6 +108,188 @@ pub enum PlanError {
     Starved(usize, f32),
     /// (path, budget left): pool exhausted mid-pack — BLOCKED, never sparse.
     PoolExhausted(usize, f32),
+    /// v8.2 F4: decorative arc fraction over budget (fraction, cap).
+    DecorativeBudget(f32, f32),
+    /// v8.2 F5: micro arc fraction over budget (fraction, cap).
+    MicroBudget(f32, f32),
+    /// v8.2 F3: no size satisfies the density floor (path, words at floor).
+    DensityFloor(usize, usize),
+    /// v8.2 F2/I12: rendered glyphs of different words intersect.
+    GlyphOverlap(usize, usize),
+}
+
+/// v8.2 F2/I12 — oriented glyph boxes for the render-time overlap gate.
+#[derive(Debug, Clone)]
+pub struct GlyphObb {
+    pub cx: f32,
+    pub cy: f32,
+    pub half_w: f32,
+    pub half_h: f32,
+    pub cos: f32,
+    pub sin: f32,
+}
+
+pub fn placement_obbs(pl: &Placement) -> Vec<GlyphObb> {
+    let cum = arc_cum(&pl.baseline);
+    let total = *cum.last().unwrap_or(&0.0);
+    if total <= 0.0 {
+        return Vec::new();
+    }
+    let n = ((total / pl.advance_px).round() as usize).max(1);
+    let point_and_tangent = |want: f32| -> ((f32, f32), (f32, f32)) {
+        for i in 1..pl.baseline.len() {
+            if cum[i] >= want {
+                let seg = cum[i] - cum[i - 1];
+                let f = if seg > 0.0 { (want - cum[i - 1]) / seg } else { 0.0 };
+                let a = pl.baseline[i - 1];
+                let b = pl.baseline[i];
+                let d = ((b.0 - a.0), (b.1 - a.1));
+                let m = (d.0 * d.0 + d.1 * d.1).sqrt().max(1e-6);
+                return (
+                    (a.0 + (b.0 - a.0) * f, a.1 + (b.1 - a.1) * f),
+                    (d.0 / m, d.1 / m),
+                );
+            }
+        }
+        let a = pl.baseline[pl.baseline.len() - 2];
+        let b = *pl.baseline.last().unwrap();
+        let d = ((b.0 - a.0), (b.1 - a.1));
+        let m = (d.0 * d.0 + d.1 * d.1).sqrt().max(1e-6);
+        (b, (d.0 / m, d.1 / m))
+    };
+    (0..n)
+        .map(|k| {
+            let want = (k as f32 + 0.5) * (total / n as f32);
+            let ((cx, cy), (tx, ty)) = point_and_tangent(want);
+            GlyphObb {
+                cx,
+                cy,
+                half_w: (total / n as f32) * 0.5 * 0.92,
+                half_h: pl.glyph_size * 0.5,
+                cos: tx,
+                sin: ty,
+            }
+        })
+        .collect()
+}
+
+fn obb_corners(o: &GlyphObb) -> [(f32, f32); 4] {
+    let ux = (o.cos * o.half_w, o.sin * o.half_w);
+    let vy = (-o.sin * o.half_h, o.cos * o.half_h);
+    [
+        (o.cx + ux.0 + vy.0, o.cy + ux.1 + vy.1),
+        (o.cx + ux.0 - vy.0, o.cy + ux.1 - vy.1),
+        (o.cx - ux.0 - vy.0, o.cy - ux.1 - vy.1),
+        (o.cx - ux.0 + vy.0, o.cy - ux.1 + vy.1),
+    ]
+}
+
+/// SAT intersection for two oriented boxes.
+pub fn obb_intersect(a: &GlyphObb, b: &GlyphObb) -> bool {
+    let ca = obb_corners(a);
+    let cb = obb_corners(b);
+    let axes = [
+        (a.cos, a.sin),
+        (-a.sin, a.cos),
+        (b.cos, b.sin),
+        (-b.sin, b.cos),
+    ];
+    for (ax, ay) in axes {
+        let pa: Vec<f32> = ca.iter().map(|(x, y)| x * ax + y * ay).collect();
+        let pb: Vec<f32> = cb.iter().map(|(x, y)| x * ax + y * ay).collect();
+        let (amin, amax) = (pa.iter().cloned().fold(f32::MAX, f32::min), pa.iter().cloned().fold(f32::MIN, f32::max));
+        let (bmin, bmax) = (pb.iter().cloned().fold(f32::MAX, f32::min), pb.iter().cloned().fold(f32::MIN, f32::max));
+        if amax < bmin || bmax < amin {
+            return false;
+        }
+    }
+    true
+}
+
+/// v8.2 F1 — junctions: arc positions (t) on each path where another
+/// path's endpoint or interior converges within `radius`.
+pub fn junctions(paths: &[ScanPath], radius: f32) -> Vec<Vec<f32>> {
+    let mut out: Vec<Vec<f32>> = vec![Vec::new(); paths.len()];
+    let word: Vec<usize> = paths
+        .iter()
+        .enumerate()
+        .filter(|(_, p)| !p.sub_floor && !p.decorative_thin)
+        .map(|(i, _)| i)
+        .collect();
+    for &i in &word {
+        let cum = arc_cum(&paths[i].points);
+        let total = *cum.last().unwrap_or(&0.0);
+        if total <= 0.0 {
+            continue;
+        }
+        for &j in &word {
+            if i == j {
+                continue;
+            }
+            // other path's ENDPOINTS against this path's arc
+            for ep in [paths[j].points[0], *paths[j].points.last().unwrap()] {
+                for (k, pt) in paths[i].points.iter().enumerate() {
+                    if (pt.0 - ep.0).hypot(pt.1 - ep.1) <= radius {
+                        out[i].push(cum[k] / total);
+                        break;
+                    }
+                }
+            }
+        }
+        // own endpoints against other paths' interiors (arm ends)
+        for (t_end, ep) in [(0.0f32, paths[i].points[0]), (1.0, *paths[i].points.last().unwrap())] {
+            for &j in &word {
+                if i == j {
+                    continue;
+                }
+                let hit = paths[j]
+                    .points
+                    .iter()
+                    .any(|pt| (pt.0 - ep.0).hypot(pt.1 - ep.1) <= radius);
+                if hit {
+                    out[i].push(t_end);
+                }
+            }
+        }
+        // v8.2 F1 (self-junctions): a single closed ring pinches near
+        // ITSELF at wing joins, heads and feet — arc-distant but
+        // space-near. Those convergences are exactly Eric's red circles.
+        let pts = &paths[i].points;
+        let n = pts.len();
+        let stride = ((n / 600).max(1)) as usize; // subsample for O(n^2) scan
+        let idx: Vec<usize> = (0..n).step_by(stride).collect();
+        for (ai, &a) in idx.iter().enumerate() {
+            for &b in idx.iter().skip(ai + 1) {
+                let arc_gap = (cum[b] - cum[a]).min(total - (cum[b] - cum[a]));
+                if arc_gap < radius * 4.0 {
+                    continue; // neighbors along the path, not a pinch
+                }
+                if (pts[a].0 - pts[b].0).hypot(pts[a].1 - pts[b].1) <= radius {
+                    out[i].push(cum[a] / total);
+                    out[i].push(cum[b] / total);
+                }
+            }
+        }
+        out[i].sort_by(|a, b| a.partial_cmp(b).unwrap());
+        out[i].dedup_by(|a, b| (*a - *b).abs() < 0.01);
+    }
+    out
+}
+
+/// Discrete minimum turn radius over a path (circumradius of triples).
+pub fn min_turn_radius(points: &[(f32, f32)]) -> f32 {
+    let mut r_min = f32::MAX;
+    for w in points.windows(3) {
+        let (a, b, c) = (w[0], w[1], w[2]);
+        let ab = (b.0 - a.0).hypot(b.1 - a.1);
+        let bc = (c.0 - b.0).hypot(c.1 - b.1);
+        let ca = (a.0 - c.0).hypot(a.1 - c.1);
+        let s2 = ((a.0 - c.0) * (b.1 - a.1) - (a.0 - b.0) * (c.1 - a.1)).abs();
+        if s2 > 1e-3 {
+            r_min = r_min.min(ab * bc * ca / (2.0 * s2));
+        }
+    }
+    r_min
 }
 
 pub struct CapacityParams {
@@ -120,6 +302,15 @@ pub struct CapacityParams {
     pub gap_chars: f32,
     pub line_height_ratio: f32,
     pub step: f32,
+    /// v8.2 F1
+    pub junction_radius: f32,
+    pub keepout_arc_ratio: f32,
+    /// v8.2 F3
+    pub curve_size_ratio: f32,
+    pub min_words_per_path: f32,
+    /// v8.2 F4/F5 budgets
+    pub decorative_max_fraction: f32,
+    pub micro_max_fraction: f32,
 }
 
 /// Interior point set (junction zones excluded — connected strokes touch
@@ -193,12 +384,55 @@ fn pairwise_interior_dist(paths: &[ScanPath]) -> Vec<(usize, usize, f32)> {
 }
 
 /// v8.1 F2 — global size by descent: one size per picture (I9).
+/// Usable arc after v8.2 F1 keep-outs: each junction on a path reserves
+/// KEEPOUT_ARC = ratio x size of arc (half either side of an interior
+/// junction; inward-only at an endpoint junction).
+pub fn usable_arc(path: &ScanPath, juncs: &[f32], size: f32, ratio: f32) -> f32 {
+    let total = arc_cum(&path.points).last().copied().unwrap_or(0.0);
+    if total <= 0.0 {
+        return 0.0;
+    }
+    let k = size * ratio;
+    let mut reserved = 0.0f32;
+    for &t in juncs {
+        reserved += if t <= 0.001 || t >= 0.999 { k } else { 2.0 * k };
+    }
+    (total - reserved).max(0.0)
+}
+
 pub fn size_by_descent(
     paths: &[ScanPath],
     p: &CapacityParams,
 ) -> Result<f32, PlanError> {
+    // v8.2 F4/F5/I13 — budgets are enforced at scan load, before packing.
+    let tot_arc: f32 = paths
+        .iter()
+        .map(|q| arc_cum(&q.points).last().copied().unwrap_or(0.0))
+        .sum();
+    if tot_arc > 0.0 {
+        let deco: f32 = paths
+            .iter()
+            .filter(|q| q.decorative_thin)
+            .map(|q| arc_cum(&q.points).last().copied().unwrap_or(0.0))
+            .sum();
+        let frac = deco / tot_arc;
+        if frac > p.decorative_max_fraction {
+            return Err(PlanError::DecorativeBudget(frac, p.decorative_max_fraction));
+        }
+    }
     let dists = pairwise_interior_dist(paths);
-    let mut s = p.band_max;
+    // A convergence closer than one glyph height IS a junction for
+    // typesetting purposes — radius scales with the candidate size.
+    let juncs = junctions(paths, p.junction_radius.max(p.band_max * p.line_height_ratio));
+    // v8.2 F3.1 curvature cap: s <= r_min x ratio over non-micro paths.
+    let mut cap_by_curve = p.band_max;
+    for q in paths.iter().filter(|q| !q.sub_floor && !q.decorative_thin) {
+        let r = min_turn_radius(&q.points);
+        if r.is_finite() {
+            cap_by_curve = cap_by_curve.min(r * p.curve_size_ratio);
+        }
+    }
+    let mut s = p.band_max.min(cap_by_curve.max(p.floor));
     while s >= p.floor - 0.01 {
         let mut ok = true;
         let mut err: Option<PlanError> = None;
@@ -210,17 +444,40 @@ pub fn size_by_descent(
             }
         }
         if ok {
+            // v8.2 F3.2 density floor + F1 keep-outs + F5 micro classing:
+            // a path too small to host MIN_WORD_CHARS at this size is
+            // MICRO (renders as stroke) — it does not starve the descent;
+            // every non-micro path must reach MIN_WORDS_PER_PATH words.
+            let mut micro_arc = 0.0f32;
             for (i, path) in paths.iter().enumerate() {
                 if path.sub_floor || path.decorative_thin {
                     continue;
                 }
                 let arc = arc_cum(&path.points).last().copied().unwrap_or(0.0);
-                let cap = arc / (s * p.avg_advance);
+                let usable = usable_arc(path, &juncs[i], s, p.keepout_arc_ratio);
+                let cap = usable / (s * p.avg_advance);
                 if cap < p.min_word_chars {
+                    micro_arc += arc;
+                    continue;
+                }
+                // The density floor forbids STARVING a path that could be
+                // dense; it does not outlaw inherently small paths. A path
+                // that cannot reach MIN_WORDS_PER_PATH even at floor is a
+                // single-word path (subject-agnostic; no per-picture knob).
+                let words = (cap / (p.min_word_chars + p.gap_chars)).floor();
+                let usable_floor = usable_arc(path, &juncs[i], p.floor, p.keepout_arc_ratio);
+                let words_at_floor = ((usable_floor / (p.floor * p.avg_advance))
+                    / (p.min_word_chars + p.gap_chars))
+                    .floor();
+                if words_at_floor >= p.min_words_per_path && words < p.min_words_per_path {
                     ok = false;
-                    err = Some(PlanError::Starved(i, cap));
+                    err = Some(PlanError::DensityFloor(i, words as usize));
                     break;
                 }
+            }
+            if ok && tot_arc > 0.0 && micro_arc / tot_arc > p.micro_max_fraction {
+                ok = false;
+                err = Some(PlanError::MicroBudget(micro_arc / tot_arc, p.micro_max_fraction));
             }
         }
         if ok {
@@ -236,15 +493,28 @@ pub fn size_by_descent(
             return Err(PlanError::CorridorConflict(i, j, d));
         }
     }
+    let mut micro_arc = 0.0f32;
     for (i, path) in paths.iter().enumerate() {
         if path.sub_floor || path.decorative_thin {
             continue;
         }
         let arc = arc_cum(&path.points).last().copied().unwrap_or(0.0);
-        let cap = arc / (s * p.avg_advance);
+        let usable = usable_arc(path, &juncs[i], s, p.keepout_arc_ratio);
+        let cap = usable / (s * p.avg_advance);
         if cap < p.min_word_chars {
-            return Err(PlanError::Starved(i, cap));
+            micro_arc += arc;
+            continue;
         }
+        let words = (cap / (p.min_word_chars + p.gap_chars)).floor();
+        let usable_floor = usable_arc(path, &juncs[i], p.floor, p.keepout_arc_ratio);
+        let words_at_floor =
+            ((usable_floor / (p.floor * p.avg_advance)) / (p.min_word_chars + p.gap_chars)).floor();
+        if words_at_floor >= p.min_words_per_path && words < p.min_words_per_path {
+            return Err(PlanError::DensityFloor(i, words as usize));
+        }
+    }
+    if tot_arc > 0.0 && micro_arc / tot_arc > p.micro_max_fraction {
+        return Err(PlanError::MicroBudget(micro_arc / tot_arc, p.micro_max_fraction));
     }
     Err(PlanError::Starved(usize::MAX, 0.0))
 }
@@ -253,13 +523,135 @@ pub fn size_by_descent(
 /// Packing is per pre-marked segment (words never cross a corner mark);
 /// intervals are sequential so same-path overlap cannot exist (F4). The
 /// only exits are PACKED or an error (I8) — a word is never dropped.
+/// v8.2 F5 — a path rendered as its plain pinned stroke (identity-
+/// critical micro features: snowman eyes). Never squeezed, never dropped.
+#[derive(Debug, Clone)]
+pub struct MicroStroke {
+    pub path_idx: usize,
+    pub points: Vec<(f32, f32)>,
+}
+
+/// v8.2 — descent VERIFIES by planning: a candidate size is accepted
+/// only if it packs with zero rendered-glyph overlaps. Self-pinching
+/// rings cannot be predicted by corridor distance alone, so the honest
+/// constraint is the render gate itself, applied during descent (I14:
+/// still one global size, still no per-picture knobs).
+/// Per-path coverage as the PACKER measured it — the gate consumes these
+/// numbers rather than recomputing runs, so gate and packer cannot
+/// disagree (the v8.1 duck bug).
+#[derive(Debug, Clone)]
+pub struct Coverage {
+    pub path_idx: usize,
+    pub hostable: f32,
+    pub covered: f32,
+}
+
+pub type Plan = (f32, Vec<Placement>, Vec<MicroStroke>, Vec<Coverage>);
+
 pub fn plan_capacity(
     paths: &[ScanPath],
     pool: &[(String, usize)],
     seed: u64,
     p: &CapacityParams,
-) -> Result<(f32, Vec<Placement>), PlanError> {
-    let size = size_by_descent(paths, p)?;
+) -> Result<Plan, PlanError> {
+    let start = size_by_descent(paths, p)?;
+    let mut s = start;
+    let mut last: PlanError = PlanError::Starved(usize::MAX, 0.0);
+    while s >= p.floor - 0.01 {
+        // re-validate structural constraints at this size, then pack
+        let mut p2 = CapacityParams { band_max: s, ..*p };
+        p2.band_max = s;
+        match size_by_descent(paths, &p2) {
+            Ok(sz) => {
+                // F1 keep-out learning: an overlap the detector missed IS
+                // a junction. Reserve arc at the offending midpoints and
+                // re-plan at the SAME size (bounded); geometry untouched.
+                let mut extra: Vec<Vec<f32>> = vec![Vec::new(); paths.len()];
+                let mut resolved = None;
+                for _ in 0..8 {
+                    match plan_at(paths, pool, seed, p, sz, &extra) {
+                        Ok(r) => {
+                            resolved = Some(r);
+                            break;
+                        }
+                        Err(PlanError::GlyphOverlap(a, b)) => {
+                            // learn keep-outs from the colliding runs
+                            let plan = plan_at_unchecked(paths, pool, seed, p, sz, &extra);
+                            if let Some(pls) = plan {
+                                for &k in &[a, b] {
+                                    if let Some(pl) = pls.get(k) {
+                                        let mid = (pl.t0 + pl.t1) * 0.5;
+                                        extra[pl.path_idx].push(mid);
+                                    }
+                                }
+                            } else {
+                                break;
+                            }
+                        }
+                        Err(e) => {
+                            last = e;
+                            break;
+                        }
+                    }
+                }
+                if let Some(r) = resolved {
+                    return Ok(r);
+                }
+            }
+            Err(e @ (PlanError::DecorativeBudget(_, _) | PlanError::MicroBudget(_, _))) => {
+                return Err(e)
+            }
+            Err(e) => last = e,
+        }
+        s -= p.step;
+    }
+    Err(last)
+}
+
+/// The same pack without the overlap gate — used only to identify which
+/// runs collided so keep-outs can be learned.
+fn plan_at_unchecked(
+    paths: &[ScanPath],
+    pool: &[(String, usize)],
+    seed: u64,
+    p: &CapacityParams,
+    size: f32,
+    extra: &[Vec<f32>],
+) -> Option<Vec<Placement>> {
+    plan_at_inner(paths, pool, seed, p, size, extra, true).ok().map(|r| r.1)
+}
+
+fn plan_at(
+    paths: &[ScanPath],
+    pool: &[(String, usize)],
+    seed: u64,
+    p: &CapacityParams,
+    size: f32,
+    extra: &[Vec<f32>],
+) -> Result<Plan, PlanError> {
+    // I12: the public path ALWAYS runs the gate.
+    plan_at_inner(paths, pool, seed, p, size, extra, false)
+}
+
+fn plan_at_inner(
+    paths: &[ScanPath],
+    pool: &[(String, usize)],
+    seed: u64,
+    p: &CapacityParams,
+    size: f32,
+    extra: &[Vec<f32>],
+    skip_gate: bool,
+) -> Result<Plan, PlanError> {
+    let mut juncs = junctions(paths, p.junction_radius.max(size * p.line_height_ratio));
+    for (i, ex) in extra.iter().enumerate() {
+        if i < juncs.len() {
+            juncs[i].extend(ex.iter().copied());
+            juncs[i].sort_by(|a, b| a.partial_cmp(b).unwrap());
+            juncs[i].dedup_by(|a, b| (*a - *b).abs() < 0.005);
+        }
+    }
+    let mut micro: Vec<MicroStroke> = Vec::new();
+    let mut coverage: Vec<Coverage> = Vec::new();
     let mut st = seed ^ 0x43415041; // "CAPA"
     let mut used: Vec<usize> = Vec::new();
     let mut placements = Vec::new();
@@ -272,18 +664,51 @@ pub fn plan_capacity(
         }
         let cum = arc_cum(&path.points);
         let total = *cum.last().unwrap_or(&0.0);
+        // v8.2 F5: micro classing at the chosen size.
+        let usable = usable_arc(path, &juncs[pi], size, p.keepout_arc_ratio);
+        if usable / (size * p.avg_advance) < p.min_word_chars {
+            micro.push(MicroStroke { path_idx: pi, points: path.points.clone() });
+            continue;
+        }
+        // v8.2 F1: junction keep-outs become hard bounds; the packer sees
+        // only the clear interior runs between them (I11 by construction).
+        let k_frac = (size * p.keepout_arc_ratio) / total.max(1e-6);
+        let mut blocked: Vec<(f32, f32)> = juncs[pi]
+            .iter()
+            .map(|&t| ((t - k_frac).max(0.0), (t + k_frac).min(1.0)))
+            .collect();
+        blocked.sort_by(|a, b| a.0.partial_cmp(&b.0).unwrap());
         let mut bounds = vec![0.0f32];
         bounds.extend(path.segments.iter().copied().filter(|t| *t > 0.0 && *t < 1.0));
         bounds.push(1.0);
         bounds.sort_by(|a, b| a.partial_cmp(b).unwrap());
         bounds.dedup();
+        // subtract keep-outs from the segment list
+        let mut runs: Vec<(f32, f32)> = Vec::new();
         for w2 in bounds.windows(2) {
+            let (mut a, b) = (w2[0], w2[1]);
+            for &(k0, k1) in &blocked {
+                if k1 <= a || k0 >= b {
+                    continue;
+                }
+                if k0 > a {
+                    runs.push((a, k0.min(b)));
+                }
+                a = k1.max(a);
+            }
+            if a < b {
+                runs.push((a, b));
+            }
+        }
+        let mut cov = Coverage { path_idx: pi, hostable: 0.0, covered: 0.0 };
+        for w2 in runs.iter().map(|&(a, b)| [a, b]) {
             let (t0, t1) = (w2[0], w2[1]);
             let seg_len = (t1 - t0) * total;
             let mut budget = seg_len / (size * p.avg_advance);
             if budget < p.min_word_chars {
-                continue; // sub-min sliver between corner marks (D-A)
+                continue; // sub-min sliver — not hostable, not counted
             }
+            cov.hostable += seg_len;
             let mut words: Vec<usize> = Vec::new();
             let mut packed_chars = 0.0f32;
             loop {
@@ -323,6 +748,7 @@ pub fn plan_capacity(
             if words.is_empty() {
                 continue;
             }
+            cov.covered += seg_len;
             // F3.3: remainder becomes justified spacing across the run —
             // the run spans the FULL segment; glyphs never scale.
             let n_gaps = (words.len() - 1) as f32;
@@ -356,8 +782,53 @@ pub fn plan_capacity(
                 }
             }
         }
+        coverage.push(cov);
     }
-    Ok((size, placements))
+    // v8.2 F2 / I12 — the rendered-glyph overlap gate: OBBs of glyphs
+    // from DIFFERENT words may never intersect. Runs on placement output,
+    // on every path, offline and on device. No off switch.
+    if skip_gate {
+        return Ok((size, placements, micro, coverage));
+    }
+    let obbs: Vec<(usize, Vec<GlyphObb>)> =
+        placements.iter().enumerate().map(|(i, pl)| (i, placement_obbs(pl))).collect();
+    for a in 0..obbs.len() {
+        for b in a + 1..obbs.len() {
+            if placements[a].path_idx == placements[b].path_idx {
+                // Exempt ONLY arc-adjacent runs. Arc-distant runs on a
+                // self-pinching ring collide in SPACE — the red-circle
+                // class; they must be checked. On a CLOSED ring the seam
+                // (t~1 meeting t~0) is adjacency too (carried v6 law).
+                let closed = {
+                    let pts = &paths[placements[a].path_idx].points;
+                    let f = pts[0];
+                    let l = *pts.last().unwrap();
+                    (f.0 - l.0).hypot(f.1 - l.1) < 2.0
+                };
+                // adjacency measured in ABSOLUTE arc (a gap is px, not a
+                // fraction — on short paths a fraction test misreads
+                // consecutive words as distant).
+                let arc = arc_cum(&paths[placements[a].path_idx].points)
+                    .last()
+                    .copied()
+                    .unwrap_or(1.0);
+                let tol = (p.gap_chars + 0.75) * placements[a].glyph_size * p.avg_advance
+                    + p.keepout_arc_ratio * 2.0 * placements[a].glyph_size;
+                let adj = ((placements[a].t1 - placements[b].t0).abs() * arc) < tol
+                    || ((placements[b].t1 - placements[a].t0).abs() * arc) < tol
+                    || (closed
+                        && (((1.0 - placements[a].t1) + placements[b].t0) * arc < tol
+                            || ((1.0 - placements[b].t1) + placements[a].t0) * arc < tol));
+                if adj {
+                    continue;
+                }
+            }
+            if obbs[a].1.iter().any(|x| obbs[b].1.iter().any(|y| obb_intersect(x, y))) {
+                return Err(PlanError::GlyphOverlap(a, b));
+            }
+        }
+    }
+    Ok((size, placements, micro, coverage))
 }
 
 #[cfg(test)]
@@ -382,7 +853,63 @@ mod tests {
             gap_chars: 1.0,
             line_height_ratio: 1.0,
             step: 0.5,
+            junction_radius: 10.0,
+            keepout_arc_ratio: 0.75,
+            curve_size_ratio: 0.9,
+            min_words_per_path: 2.0,
+            decorative_max_fraction: 0.20,
+            micro_max_fraction: 0.10,
         }
+    }
+
+    /// v8.2 F1/I11: no glyph enters a keep-out around a junction.
+    #[test]
+    fn keepouts_are_respected() {
+        let p = params();
+        // T-junction: vertical arm's endpoint meets the horizontal interior
+        let horiz = straight(600.0, 0.0);
+        let arm = ScanPath {
+            points: vec![(300.0, 2.0), (300.0, 150.0), (300.0, 300.0)],
+            segments: vec![],
+            sub_floor: false,
+            decorative_thin: false,
+        };
+        let paths = [horiz, arm];
+        let j = junctions(&paths, p.junction_radius);
+        assert!(!j[0].is_empty() && !j[1].is_empty(), "junction detected both arms");
+        let (size, pls, _micro, _cov) = plan_capacity(&paths, &pool(), 1, &p).unwrap();
+        let k = size * p.keepout_arc_ratio;
+        for pl in &pls {
+            let arc: f32 = 600.0;
+            for &t in &j[pl.path_idx] {
+                let (a, b) = (t * arc - k, t * arc + k);
+                let (w0, w1) = (pl.t0 * arc, pl.t1 * arc);
+                assert!(w1 <= a + 0.5 || w0 >= b - 0.5, "glyph run entered a keep-out");
+            }
+        }
+    }
+
+    /// v8.2 F2/I12: the OBB gate refuses overlapping renders.
+    #[test]
+    fn obb_gate_catches_crossing_words() {
+        let a = GlyphObb { cx: 100.0, cy: 100.0, half_w: 10.0, half_h: 8.0, cos: 1.0, sin: 0.0 };
+        let b = GlyphObb { cx: 104.0, cy: 102.0, half_w: 10.0, half_h: 8.0, cos: 0.0, sin: 1.0 };
+        assert!(obb_intersect(&a, &b));
+        let far = GlyphObb { cx: 300.0, cy: 300.0, half_w: 10.0, half_h: 8.0, cos: 1.0, sin: 0.0 };
+        assert!(!obb_intersect(&a, &far));
+    }
+
+    /// v8.2 F4/I13: decorative arc over budget blocks before packing.
+    #[test]
+    fn decorative_budget_blocks() {
+        let p = params();
+        let mut deco = straight(900.0, 60.0);
+        deco.decorative_thin = true;
+        let paths = [straight(300.0, 0.0), deco];
+        assert!(matches!(
+            plan_capacity(&paths, &pool(), 1, &p),
+            Err(PlanError::DecorativeBudget(_, _))
+        ));
     }
 
     fn pool() -> Vec<(String, usize)> {
@@ -410,7 +937,7 @@ mod tests {
     fn emergent_counts_and_baselines_verbatim() {
         let p = params();
         let paths = [straight(600.0, 0.0), straight(200.0, 100.0)];
-        let (size, pls) = plan_capacity(&paths, &pool(), 1, &p).unwrap();
+        let (size, pls, _micro, _cov) = plan_capacity(&paths, &pool(), 1, &p).unwrap();
         assert!(size >= p.floor && size <= p.band_max);
         let long: usize = pls.iter().filter(|x| x.path_idx == 0).count();
         let short: usize = pls.iter().filter(|x| x.path_idx == 1).count();

@@ -18,6 +18,12 @@ fn main() {
         gap_chars: 1.0,
         line_height_ratio: 1.0,
         step: 0.5,
+        junction_radius: 10.0,
+        keepout_arc_ratio: 0.75,
+        curve_size_ratio: 0.9,
+        min_words_per_path: 2.0,
+        decorative_max_fraction: 0.20,
+        micro_max_fraction: 0.10,
     };
     let mut seed = 1u64;
     for line in buf.lines() {
@@ -59,51 +65,23 @@ fn main() {
     }
     let inject_sparse = std::env::args().any(|a| a == "inject-sparse");
     match scanlock::plan_capacity(&paths, &pool, seed, &params) {
-        Ok((size, mut pls)) => {
+        Ok((size, mut pls, micro, coverage)) => {
             if inject_sparse && !pls.is_empty() {
                 pls.pop(); // simulate a renderer bug dropping a word
             }
             // v8.1 F5 / I10 — the coverage gate lives IN the render path
             // and has no off switch: every non-decorative path must be
             // >= 95% arc-covered by glyph runs or nothing displays.
+            // v8.2 F5/I10 — the coverage gate consumes the PACKER's own
+            // hostable/covered numbers (one source of truth). Micro paths
+            // count as covered by F5.
             let mut uncovered: Vec<(usize, f32)> = Vec::new();
-            for (pi, path) in paths.iter().enumerate() {
-                if path.sub_floor || path.decorative_thin {
+            for c in &coverage {
+                if micro.iter().any(|m| m.path_idx == c.path_idx) {
                     continue;
                 }
-                let mut cum = 0.0f32;
-                let mut arc = 0.0f32;
-                for w in path.points.windows(2) {
-                    arc += (w[1].0 - w[0].0).hypot(w[1].1 - w[0].1);
-                }
-                // hostable arc: segments >= min_word_chars capacity at size
-                let mut bounds = vec![0.0f32];
-                bounds.extend(path.segments.iter().copied().filter(|t| *t > 0.0 && *t < 1.0));
-                bounds.push(1.0);
-                let mut hostable = 0.0f32;
-                for w in bounds.windows(2) {
-                    let seg = (w[1] - w[0]) * arc;
-                    if seg / (size * params.avg_advance) >= params.min_word_chars {
-                        hostable += seg;
-                    }
-                }
-                // A packed SEGMENT is fully covered: its words + justified
-                // spacing span it by construction (F3.3). Coverage counts
-                // hostable segments that received words.
-                for w in bounds.windows(2) {
-                    let seg = (w[1] - w[0]) * arc;
-                    if seg / (size * params.avg_advance) < params.min_word_chars {
-                        continue;
-                    }
-                    let mid_has_word = pls.iter().any(|pl| {
-                        pl.path_idx == pi && pl.t0 >= w[0] - 0.0001 && pl.t0 < w[1]
-                    });
-                    if mid_has_word {
-                        cum += seg;
-                    }
-                }
-                if hostable > 0.0 && cum / hostable < 0.95 {
-                    uncovered.push((pi, cum / hostable));
+                if c.hostable > 0.0 && c.covered / c.hostable < 0.95 {
+                    uncovered.push((c.path_idx, c.covered / c.hostable));
                 }
             }
             if !uncovered.is_empty() {
@@ -120,6 +98,7 @@ fn main() {
             }
             let _ = size;
             let pls = pls;
+            let micro = micro;
             let mut out = String::from("{\"placements\":[");
             for (k, pl) in pls.iter().enumerate() {
                 if k > 0 {
@@ -137,7 +116,29 @@ fn main() {
                 }
                 out += "]}";
             }
-            out += "]}";
+            out += "],\"micro\":[";
+            for (k, m) in micro.iter().enumerate() {
+                if k > 0 {
+                    out.push(',');
+                }
+                out += &format!("{{\"path\":{},\"points\":[", m.path_idx);
+                for (j, (x, y)) in m.points.iter().enumerate() {
+                    if j > 0 {
+                        out.push(',');
+                    }
+                    out += &format!("[{x:.2},{y:.2}]");
+                }
+                out += "]}";
+            }
+            out += "],\"coverage\":[";
+            for (k, c) in coverage.iter().enumerate() {
+                if k > 0 {
+                    out.push(',');
+                }
+                out += &format!("{{\"path\":{},\"hostable\":{:.2},\"covered\":{:.2}}}",
+                    c.path_idx, c.hostable, c.covered);
+            }
+            out += &format!("],\"size\":{size:.2}}}");
             println!("{out}");
         }
         Err(e) => {

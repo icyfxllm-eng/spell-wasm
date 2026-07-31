@@ -29,7 +29,22 @@ def sd(pt, u, v):
     t = 0 if l2 == 0 else max(0, min(1, ((pt[0]-u[0])*vx+(pt[1]-u[1])*vy)/l2))
     return math.hypot(pt[0]-(u[0]+t*vx), pt[1]-(u[1]+t*vy))
 
-def eval_baselines(doc, placements, avg_adv, min_chars=3.0, tol=0.75):
+def keepout_runs(e, size, avg_adv, junc, keep_ratio=0.75):
+    arc = e["arc"] or 1.0
+    k = (size * keep_ratio) / arc
+    blocked = sorted(((max(0.0, t - k), min(1.0, t + k)) for t in junc))
+    segb = [0.0] + [t for t in e["segments"] if 0 < t < 1] + [1.0]
+    runs = []
+    for a, b in zip(segb, segb[1:]):
+        cur = a
+        for k0, k1 in blocked:
+            if k1 <= cur or k0 >= b: continue
+            if k0 > cur: runs.append((cur, min(k0, b)))
+            cur = max(cur, k1)
+        if cur < b: runs.append((cur, b))
+    return runs
+
+def eval_baselines(doc, placements, avg_adv, juncs=None, min_chars=3.0, tol=0.75):
     paths = doc["paths"]
     residual = 0.0
     on_scan = total_base = 0.0
@@ -56,8 +71,8 @@ def eval_baselines(doc, placements, avg_adv, min_chars=3.0, tol=0.75):
         if e["sub_floor"] or e["decorative_thin"]:
             continue
         arc = e["arc"]
-        bounds = [0.0] + [t for t in e["segments"] if 0 < t < 1] + [1.0]
-        for a, b in zip(bounds, bounds[1:]):
+        junc = (juncs or {}).get(i, [])
+        for a, b in keepout_runs(e, size, avg_adv, junc):
             if (b - a) * arc < host_min:
                 continue
             rec_den += (b - a) * arc
@@ -140,6 +155,10 @@ for sub in subjects:
         continue
     doc = json.loads((SCANS / f"{sub}.json").read_text())
     tier = doc["tier"]
+    jrep = json.loads((ROOT/"out/junctions.json").read_text()).get(sub, [])
+    # junction report indexes only word paths; remap to doc indices
+    wordidx = [i for i, e in enumerate(doc["paths"]) if not e["sub_floor"] and not e["decorative_thin"]]
+    JUNCS = {wordidx[r["path"]]: r["junctions"] for r in jrep if r["path"] < len(wordidx)}
     for lang in langs:
         pool = json.loads((POOLS / f"{lang}-{tier}.json").read_text())
         pool += json.loads((POOLS / f"{lang}-easy.json").read_text())  # D4 borrow carried
@@ -175,7 +194,12 @@ for sub in subjects:
                              "error": f'RENDER_BLOCKED {j["render_blocked"]}'})
                 allpass = False
                 continue
-            residual, recall, precision = eval_baselines(doc, j["placements"], ADV.get(lang, AVG_ADVANCE))
+            residual, _, precision = eval_baselines(doc, j["placements"], ADV.get(lang, AVG_ADVANCE), JUNCS)
+            # coverage from the PACKER (single source of truth, v8.2)
+            cov = j.get("coverage", [])
+            h = sum(c["hostable"] for c in cov)
+            cvd = sum(c["covered"] for c in cov)
+            recall = (cvd / h) if h > 0 else 1.0
             # v8.1: inter-word gaps (GAP_CHARS) are typography, not
             # sparseness — coverage law is >= 0.95 of hostable arc.
             ok = residual <= 0.01 and recall >= 0.95 and precision >= 0.9999
