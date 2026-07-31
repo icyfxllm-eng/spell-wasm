@@ -256,9 +256,11 @@ def author_rhino(im):
     W, H = rgb.size
     g = ImageOps.autocontrast(rgb.convert("L"), cutoff=2).load()
     mask = [[g[x, y] < 150 for x in range(W)] for y in range(H)]
-    mask = _close(mask, W, H, 3)
+    mask = _close(mask, W, H, 2)
     mask = _largest_component(mask, W, H)
-    mask = _fill_holes(mask, W, H)
+    # NO hole fill: the eye and the gaps between the legs ARE holes, and
+    # filling them is exactly what erased them (Eric's note). The stipple
+    # specks are dropped downstream by the arc floor, not by filling.
     return _paint(mask, None, W, H)
 
 
@@ -310,7 +312,7 @@ def author_solid_pictogram(im):
     return _paint(mask, None, W, H)
 
 
-AUTHOR = {"horse": author_horse, "owl": author_owl, "peacock": author_peacock,
+AUTHOR = {"horse": author_pictogram, "owl": author_owl, "peacock": author_peacock,
           "dragon": author_dragon, "rhino": author_rhino,
           "cat": author_pictogram,
           # interior detail finer than a word is tall -> fill it
@@ -427,7 +429,7 @@ def rings(path, subject=None):
             # start at the topmost-leftmost pixel of this component
             start = min(comp, key=lambda p: (p[1], p[0]))
             ring = moore(set(comp), start)
-        if len(ring) >= 8:
+        if len(ring) >= 8 and len(comp) >= 34:
             ring.append(ring[0])  # close the loop
             pts = [(float(x), float(y)) for x, y in ring[::2]]
             # Contour smoothing: pixel staircases make EVERY step a 45-deg
@@ -751,13 +753,17 @@ mona = json.loads((pathlib.Path(__file__).parent.parent /
 entries = []
 for name, pts in mona["paths"].items():
     pts = [[float(x), float(y)] for x, y in pts]
-    if plen(pts) < 26:
+    if plen(pts) < 11:
         continue
     closed = math.hypot(pts[0][0]-pts[-1][0], pts[0][1]-pts[-1][1]) < 3.0
     small = plen(pts) < SMALL_FEATURE_MAX and closed
     # her brows, eyes and nose are short OPEN strokes: features drawn as
     # pinned ink, never word paths (D-A) — words there would be squeezed.
     short_open = (not closed) and plen(pts) < FLOOR * MIN_WORD_CHARS
+    # Eric: her eyes and arms need more detail. Short face strokes are
+    # FEATURES drawn as pinned ink, never paths to drop.
+    if short_open:
+        small = True
     entries.append({
         "points": pts, "arc": round(plen(pts), 2), "tier": "expert",
         "sub_floor": short_open, "merged_into": None, "decorative_thin": False,

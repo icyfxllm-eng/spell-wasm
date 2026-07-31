@@ -88,7 +88,12 @@ pub fn params(tier: &str, lang: &str) -> CapacityParams {
         curve_size_ratio: 0.9,
         min_words_per_path: 2.0,
         decorative_max_fraction: 0.20,
-        micro_max_fraction: 0.10,
+        // D4 answered by measurement, not proposal: across the shipped
+        // 20-subject inventory the subjects that exceed 0.10 are exactly
+        // the ones carrying the features Eric asked to SEE (rhino legs
+        // and eye 0.236, smiley eyes 0.167, snowman face 0.131). The cap
+        // still catches genuinely fragmented scans.
+        micro_max_fraction: 0.25,
     }
 }
 
@@ -129,6 +134,10 @@ pub struct Plan {
     pub size: f32,
     pub placements: Vec<Placement>,
     pub micro: Vec<MicroStroke>,
+    /// F5 — scan the words cannot host: drawn as the plain pinned stroke
+    /// so the picture is whole (elephant backsides, Mona's eyes, the
+    /// rhino's legs), never silently dropped.
+    pub pinned: Vec<MicroStroke>,
     pub words: Vec<String>,
 }
 
@@ -142,7 +151,7 @@ pub fn plan(subject: &str, lang: &str, seed: u64) -> Option<Plan> {
         return None;
     }
     let p = params(&s.tier, lang);
-    let (size, placements, micro, coverage) =
+    let (size, placements, micro, pinned, coverage) =
         scanlock::plan_capacity(&paths, &pool(lang, &s.tier), seed, &p).ok()?;
     if placements.is_empty() {
         return None; // a plan with zero words is not a picture
@@ -169,7 +178,7 @@ pub fn plan(subject: &str, lang: &str, seed: u64) -> Option<Plan> {
         }
     }
     let words = placements.iter().map(|pl| pl.word.clone()).collect();
-    Some(Plan { size, placements, micro, words })
+    Some(Plan { size, placements, micro, pinned, words })
 }
 
 /// Arc length of a polyline (shared by the renderer for textLength).

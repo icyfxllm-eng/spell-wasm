@@ -23,7 +23,7 @@ fn main() {
         curve_size_ratio: 0.9,
         min_words_per_path: 2.0,
         decorative_max_fraction: 0.20,
-        micro_max_fraction: 0.10,
+        micro_max_fraction: 0.25,  // D4 measured across the 20-subject inventory
     };
     let mut seed = 1u64;
     for line in buf.lines() {
@@ -66,7 +66,7 @@ fn main() {
     }
     let inject_sparse = std::env::args().any(|a| a == "inject-sparse");
     match scanlock::plan_capacity(&paths, &pool, seed, &params) {
-        Ok((size, mut pls, micro, coverage)) => {
+        Ok((size, mut pls, micro, pinned, coverage)) => {
             if inject_sparse && !pls.is_empty() {
                 pls.pop(); // simulate a renderer bug dropping a word
             }

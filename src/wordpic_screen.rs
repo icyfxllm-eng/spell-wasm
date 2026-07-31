@@ -553,6 +553,19 @@ fn render_scanlock(plan: &crate::spellpic::Plan, lang: &str, words: &[String]) {
         let next = if i == placed { " next" } else { "" };
         svg.push_str(&format!("<path class=\"wp-outline{next}\" d=\"{d}\"/>"));
     }
+    // F5 pinned ink: scan the words cannot host is still the picture.
+    for m in &plan.pinned {
+        if m.points.len() < 2 {
+            continue;
+        }
+        let d: String = m
+            .points
+            .iter()
+            .enumerate()
+            .map(|(k, (x, y))| format!("{}{x:.1} {y:.1} ", if k == 0 { "M" } else { "L" }))
+            .collect();
+        svg.push_str(&format!("<path class=\"wp-pinned\" d=\"{d}\"/>"));
+    }
     // micro features: always present, filled (D-C)
     for m in &plan.micro {
         if m.points.len() < 3 {

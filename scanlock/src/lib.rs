@@ -573,7 +573,10 @@ pub struct Coverage {
     pub covered: f32,
 }
 
-pub type Plan = (f32, Vec<Placement>, Vec<MicroStroke>, Vec<Coverage>);
+/// (size, placements, micro features, PINNED ink, coverage). Pinned ink
+/// is scan the words cannot host — F5 says it renders as the plain
+/// stroke, so the planner hands it out rather than dropping it.
+pub type Plan = (f32, Vec<Placement>, Vec<MicroStroke>, Vec<MicroStroke>, Vec<Coverage>);
 
 pub fn plan_capacity(
     paths: &[ScanPath],
@@ -678,6 +681,7 @@ fn plan_at_inner(
         }
     }
     let mut micro: Vec<MicroStroke> = Vec::new();
+    let mut pinned: Vec<MicroStroke> = Vec::new();
     let mut coverage: Vec<Coverage> = Vec::new();
     let mut st = seed ^ 0x43415041; // "CAPA"
     let mut used: Vec<usize> = Vec::new();
@@ -691,6 +695,9 @@ fn plan_at_inner(
             continue;
         }
         if path.sub_floor || path.decorative_thin {
+            // F5: ink words cannot host still belongs to the picture —
+            // it renders as the pinned stroke, never silently dropped.
+            pinned.push(MicroStroke { path_idx: pi, points: path.points.clone() });
             continue;
         }
         let cum = arc_cum(&path.points);
@@ -819,7 +826,7 @@ fn plan_at_inner(
     // from DIFFERENT words may never intersect. Runs on placement output,
     // on every path, offline and on device. No off switch.
     if skip_gate {
-        return Ok((size, placements, micro, coverage));
+        return Ok((size, placements, micro, pinned, coverage));
     }
     let obbs: Vec<(usize, Vec<GlyphObb>)> =
         placements.iter().enumerate().map(|(i, pl)| (i, placement_obbs(pl))).collect();
@@ -859,7 +866,7 @@ fn plan_at_inner(
             }
         }
     }
-    Ok((size, placements, micro, coverage))
+    Ok((size, placements, micro, pinned, coverage))
 }
 
 #[cfg(test)]

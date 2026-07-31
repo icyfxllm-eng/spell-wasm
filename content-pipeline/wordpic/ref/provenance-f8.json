@@ -59,11 +59,12 @@
  },
  {
   "subject": "horse",
-  "title": "File:Horse (NIH BioArt 600).png",
-  "license": "Public domain",
-  "sourceUrl": "https://commons.wikimedia.org/wiki/File:Horse_(NIH_BioArt_600).png",
+  "title": "File:Horse (49794) - The Noun Project.svg",
+  "license": "CC0",
+  "sourceUrl": "https://commons.wikimedia.org/wiki/File:Horse_(49794)_-_The_Noun_Project.svg",
   "file": "ref/horse.png",
-  "bytes": 279870
+  "bytes": 20451,
+  "note": "Eric 2026-07-31: asked for a horse with its head upright. Trotting CC0 pictogram \u2014 head high, four legs clear, mane and tail."
  },
  {
   "subject": "peacock",
