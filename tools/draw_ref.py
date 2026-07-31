@@ -90,11 +90,15 @@ def rhino():
 
 
 def horse():
-    """Standing, head up (Eric: 'a pic of a horse where its head is
-    upright'). The old reference was a galloping horse with its neck
-    stretched flat out in front -- the picture read fine, it just wasn't
-    the pose he asked for. Standing also buys clearance: a gallop throws
-    the legs together, and legs that cross cannot both hold a word."""
+    """NOT the shipped horse. Kept for the record and for reuse.
+
+    Eric asked for an upright head, so this standing pose was drawn to
+    replace the galloping reference. Seeing the two side by side he chose
+    the gallop -- "the galloping horse is ship worthy" -- so the shipped
+    reference is the original galloping pictogram and this function is
+    deliberately absent from the emit list below. Do not wire it back in
+    without asking; the pose is a judgement call and it has been made.
+    """
     W, H = 880, 820
     im, d = _canvas(W, H)
 
@@ -179,7 +183,8 @@ def rocket():
 
 
 if __name__ == "__main__":
-    for name, fn in (("rhino", rhino), ("rocket", rocket), ("horse", horse)):
+    # horse() is intentionally not here -- see its docstring.
+    for name, fn in (("rhino", rhino), ("rocket", rocket)):
         p = REF / f"{name}.png"
         fn().save(p)
         print("wrote", p)
