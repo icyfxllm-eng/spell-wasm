@@ -1,0 +1,66 @@
+[
+ {
+  "lang": "ko",
+  "keyCount": 28,
+  "sameKeys": true,
+  "sameTones": true,
+  "lentTo": "wpKbSlot",
+  "sample": [
+   "ㅂ",
+   "ㅈ",
+   "ㄷ",
+   "ㄱ",
+   "ㅅ",
+   "ㅛ"
+  ],
+  "note": "Dubeolsik jamo; hangul composition routed to the picture"
+ },
+ {
+  "lang": "vi",
+  "keyCount": 28,
+  "sameKeys": true,
+  "sameTones": true,
+  "lentTo": "wpKbSlot",
+  "sample": [
+   "Q",
+   "W",
+   "E",
+   "R",
+   "T",
+   "Y"
+  ],
+  "note": "5 tone marks present in both surfaces"
+ },
+ {
+  "lang": "zh",
+  "keyCount": 33,
+  "sameKeys": true,
+  "sameTones": true,
+  "lentTo": "wpKbSlot",
+  "sample": [
+   "Q",
+   "W",
+   "E",
+   "R",
+   "T",
+   "Y"
+  ],
+  "note": "pinyin layout incl. tone digits"
+ },
+ {
+  "lang": "ru",
+  "keyCount": 34,
+  "sameKeys": true,
+  "sameTones": true,
+  "lentTo": "wpKbSlot",
+  "sample": [
+   "Й",
+   "Ц",
+   "У",
+   "К",
+   "Е",
+   "Н"
+  ],
+  "note": "typed 'сэр' through the shared keyboard and it placed"
+ }
+]
