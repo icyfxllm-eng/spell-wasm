@@ -377,7 +377,7 @@
   "voiceSpell.netOk": "インターネットを使う",
   "voiceSpell.netNo": "やめておく",
   "voiceSpell.netErr": "接続なし — もう一度試してね",
-  "tools.wordpic.name": "ことばの絵",
+  "tools.wordpic.name": "つづりの絵",
   "tools.wordpic.desc": "つづった言葉が絵になる。",
   "wordpic.surprise": "🎲 おまかせ",
   "wordpic.restartAsk": "この絵を最初からやり直す？言葉は消えるよ。",

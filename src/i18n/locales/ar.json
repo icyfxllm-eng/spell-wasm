@@ -377,7 +377,7 @@
   "voiceSpell.netOk": "استخدام الإنترنت",
   "voiceSpell.netNo": "لا، شكرًا",
   "voiceSpell.netErr": "لا يوجد اتصال — حاول مرة أخرى",
-  "tools.wordpic.name": "لوحة الكلمات",
+  "tools.wordpic.name": "لوحة التهجئة",
   "tools.wordpic.desc": "تهجّ الكلمات — فتصبح هي اللوحة.",
   "wordpic.surprise": "🎲 فاجئني",
   "wordpic.restartAsk": "إعادة هذه اللوحة من البداية؟ ستُمحى كلماتها.",

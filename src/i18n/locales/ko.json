@@ -377,7 +377,7 @@
   "voiceSpell.netOk": "인터넷 사용",
   "voiceSpell.netNo": "괜찮아요",
   "voiceSpell.netErr": "연결 없음 — 다시 시도하세요",
-  "tools.wordpic.name": "단어 그림",
+  "tools.wordpic.name": "철자 그림",
   "tools.wordpic.desc": "단어를 쓰면 그림이 돼요.",
   "wordpic.surprise": "🎲 놀라게 해줘",
   "wordpic.restartAsk": "이 그림을 처음부터 다시 할까요? 단어가 지워져요.",
