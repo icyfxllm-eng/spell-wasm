@@ -122,6 +122,18 @@ pub fn wire(app: &App) {
     });
 }
 
+/// Campaign length: scan-locked subjects count their planned words;
+/// legacy subjects count solver slots.
+fn subject_total(p: &wordpic::Picture, lang: &str) -> u32 {
+    if crate::spellpic::has(&p.id) {
+        let seed = wordpic::load().run(&p.id, lang).map(|r| r.seed).unwrap_or(1);
+        return crate::spellpic::plan(&p.id, lang, seed)
+            .map(|pl| pl.words.len() as u32)
+            .unwrap_or(0);
+    }
+    crate::wordpic_layout::slots_for_lang(p, lang).len() as u32
+}
+
 fn startable_ids(app: &App, state: &wordpic::State, lang: &str) -> Vec<String> {
     wordpic::picker_order(state, lang)
         .into_iter()
@@ -139,6 +151,9 @@ fn allowed(app: &App, p: &wordpic::Picture, lang: &str) -> bool {
     if crate::wordpic_layout::READINESS_EXCEPTIONS.contains(&(p.id.as_str(), lang)) {
         return false; // I1 readiness-listed pair — hidden, never jumbled
     }
+    if crate::spellpic::has(&p.id) && subject_total(p, lang) == 0 {
+        return false; // v8.2: no legal plan for this language — not offered
+    }
     let kid = app.borrow().kid;
     if kid && !wordpic::kid_ok(p, lang, 1) {
         return false;
@@ -154,7 +169,7 @@ pub fn open_picker(app: &App) {
     let state = wordpic::load();
     let mut html = String::new();
     for p in wordpic::picker_order(&state, &lang) {
-        let total = crate::wordpic_layout::slots_for_lang(p, &lang).len() as u32;
+        let total = subject_total(p, &lang);
         let (cls, prog) = match state.run(&p.id, &lang) {
             Some(r) if r.done => ("wp-tile done", i18n::t("wordpic.done")),
             Some(r) if !r.words.is_empty() => ("wp-tile", format!("{}/{}", r.words.len(), total)),
@@ -208,14 +223,20 @@ fn open_play(app: &App, pic_id: &str) {
     let recent = wordpic::load();
     let recent = recent.recent_words.get(&lang).map(|v| v.as_slice()).unwrap_or(&[]);
     let bump = SEED_BUMP.with(|b| b.get());
-    let (mut feed, _, _) = crate::wordpic_layout::layout_feed_opt(
-        p, &lang, run.seed + bump.min(5) as u64, recent, bump >= 5);
+    // v8.2: for scan-locked subjects the FEED is the plan's word order —
+    // the word you spell is the word that lands on the next baseline.
+    let mut feed = if crate::spellpic::has(pic_id) {
+        crate::spellpic::plan(pic_id, &lang, run.seed).map(|pl| pl.words).unwrap_or_default()
+    } else {
+        crate::wordpic_layout::layout_feed_opt(
+            p, &lang, run.seed + bump.min(5) as u64, recent, bump >= 5).0
+    };
     if !run.words.is_empty() {
         let mut rest: Vec<String> =
             feed.iter().filter(|w| !run.words.contains(w)).cloned().collect();
         feed = run.words.clone();
         feed.append(&mut rest);
-        feed.truncate(crate::wordpic_layout::slots_for_lang(p, &lang).len());
+        feed.truncate(subject_total(p, &lang) as usize);
     }
     FEED.with(|f| *f.borrow_mut() = feed);
     dom::set_text("wpPlayTitle", &format!("{} {}", p.icon, i18n::t("tools.wordpic.name")));
@@ -271,6 +292,26 @@ fn close_play(app: &App) {
 /// Build the SVG canvas from the SOLVER's placements (v6 L2 path-lock: the
 /// renderer accepts no free positions — only slots and placements).
 fn render_canvas(p: &wordpic::Picture, lang: &str, words: &[String]) {
+    // v8.2 SCANLOCK: when the subject ships a pinned scan, the device
+    // plans through the SAME pure crate against the SAME data as CI, so
+    // the layout proven legal offline is the layout drawn here. A
+    // subject whose plan is illegal displays NOTHING (F5/I10).
+    if crate::spellpic::has(&p.id) {
+        let seed = wordpic::load().run(&p.id, lang).map(|r| r.seed).unwrap_or(1);
+        match crate::spellpic::plan(&p.id, lang, seed) {
+            Some(plan) => {
+                render_scanlock(&plan, lang, words);
+                return;
+            }
+            None => {
+                dom::set_html("wpStage", "");
+                web_sys::console::warn_1(
+                    &format!("spellpic: {} blocked — no legal plan, nothing displayed", p.id).into(),
+                );
+                return;
+            }
+        }
+    }
     let slots = crate::wordpic_layout::slots_for_lang(p, lang);
     let recent = wordpic::load();
     let recent = recent.recent_words.get(lang).map(|v| v.as_slice()).unwrap_or(&[]);
@@ -458,6 +499,79 @@ fn enforce_legality(p: &wordpic::Picture, lang: &str, words: &[String]) {
     }
 }
 
+/// v8.2 — draw a scan-locked plan: spelled words ride their pinned
+/// baselines; everything not yet spelled shows as the pinned stroke, so
+/// the picture starts as its own outline and fills in as you spell.
+/// Micro features (eyes, pupils) are always drawn, filled.
+fn render_scanlock(plan: &crate::spellpic::Plan, lang: &str, words: &[String]) {
+    let complex = complex_script(lang);
+    let placed = words.len().min(plan.placements.len());
+    let mut svg = String::from("<svg viewBox=\"0 0 512 512\" xmlns=\"http://www.w3.org/2000/svg\">");
+    // defs: one path per placement baseline
+    svg.push_str("<defs>");
+    for (i, pl) in plan.placements.iter().enumerate() {
+        let d: String = pl
+            .baseline
+            .iter()
+            .enumerate()
+            .map(|(k, (x, y))| format!("{}{x:.1} {y:.1} ", if k == 0 { "M" } else { "L" }))
+            .collect();
+        svg.push_str(&format!("<path id=\"sl{i}\" d=\"{d}\"/>"));
+    }
+    svg.push_str("</defs>");
+    // unspelled placements draw as the pinned stroke (F5)
+    for (i, pl) in plan.placements.iter().enumerate().skip(placed) {
+        let d: String = pl
+            .baseline
+            .iter()
+            .enumerate()
+            .map(|(k, (x, y))| format!("{}{x:.1} {y:.1} ", if k == 0 { "M" } else { "L" }))
+            .collect();
+        let next = if i == placed { " next" } else { "" };
+        svg.push_str(&format!("<path class=\"wp-outline{next}\" d=\"{d}\"/>"));
+    }
+    // micro features: always present, filled (D-C)
+    for m in &plan.micro {
+        if m.points.len() < 3 {
+            continue;
+        }
+        let d: String = m
+            .points
+            .iter()
+            .enumerate()
+            .map(|(k, (x, y))| format!("{}{x:.1} {y:.1} ", if k == 0 { "M" } else { "L" }))
+            .collect();
+        svg.push_str(&format!("<path class=\"wp-feature\" d=\"{d}Z\"/>"));
+    }
+    // spelled words on their baselines, justified to the exact span
+    for (i, pl) in plan.placements.iter().take(placed).enumerate() {
+        let len = crate::spellpic::poly_len(&pl.baseline);
+        let cls = if i + 1 == placed { "wp-word new" } else { "wp-word" };
+        if complex {
+            // D4 ruling: complex-shaping scripts render straight at the
+            // chord angle rather than along the curve.
+            let (x0, y0) = pl.baseline[0];
+            let (x1, y1) = *pl.baseline.last().unwrap();
+            let (cx, cy) = ((x0 + x1) / 2.0, (y0 + y1) / 2.0);
+            let ang = (y1 - y0).atan2(x1 - x0).to_degrees();
+            svg.push_str(&format!(
+                "<text class=\"{cls}\" x=\"{cx:.0}\" y=\"{cy:.0}\" font-size=\"{:.0}\" text-anchor=\"middle\" textLength=\"{len:.0}\" lengthAdjust=\"spacingAndGlyphs\" transform=\"rotate({ang:.1} {cx:.0} {cy:.0})\">{}</text>",
+                pl.glyph_size,
+                dom::escape_html(&pl.word)
+            ));
+        } else {
+            svg.push_str(&format!(
+                "<text class=\"{cls}\" font-size=\"{:.0}\"><textPath href=\"#sl{i}\" textLength=\"{len:.0}\" lengthAdjust=\"spacing\">{}</textPath></text>",
+                pl.glyph_size,
+                dom::escape_html(&pl.word)
+            ));
+        }
+    }
+    svg.push_str("</svg>");
+    dom::set_html("wpStage", &svg);
+    reflect_slots_indicator(lang);
+}
+
 /// L6 — the DOCKED letter-slot indicator: one fixed home above the input bar
 /// (chosen once; it cannot wander). One dash per unit of the current word.
 fn reflect_slots_indicator(lang: &str) {
@@ -480,7 +594,7 @@ fn reflect_slots_indicator(lang: &str) {
 
 fn reflect_count(p: &wordpic::Picture) {
     let lang = LANG.with(|l| l.borrow().clone());
-    let total = crate::wordpic_layout::slots_for_lang(p, &lang).len() as u32;
+    let total = subject_total(p, &lang);
     dom::set_text("wpCount", &format!("{}/{}", PLACED.with(Cell::get), total));
 }
 
@@ -529,7 +643,7 @@ fn place(app: &App, word: &str) {
     let lang = LANG.with(|l| l.borrow().clone());
     let pic = PIC.with(|p| p.borrow().clone());
     let Some(p) = wordpic::picture(&pic) else { return };
-    let total = crate::wordpic_layout::slots_for_lang(p, &lang).len() as u32;
+    let total = subject_total(p, &lang);
     let mut s = wordpic::load();
     let placed = s.place(&pic, &lang, word, total);
     wordpic::save(&s);

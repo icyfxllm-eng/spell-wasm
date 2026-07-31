@@ -408,6 +408,7 @@ dependencies = [
  "js-sys",
  "proptest",
  "regex",
+ "scanlock",
  "serde",
  "serde_json",
  "unicode-normalization",

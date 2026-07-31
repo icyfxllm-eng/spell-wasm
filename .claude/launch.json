@@ -4,7 +4,13 @@
     {
       "name": "dist",
       "runtimeExecutable": "python3",
-      "runtimeArgs": ["-m", "http.server", "8123", "--directory", "dist"],
+      "runtimeArgs": [
+        "-m",
+        "http.server",
+        "8123",
+        "--directory",
+        "/Users/eric/Desktop/xcode-backup/repos/spell-wasm/dist"
+      ],
       "port": 8123
     }
   ]
