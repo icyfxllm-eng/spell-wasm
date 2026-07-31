@@ -11,6 +11,7 @@ mod deck;
 mod defmatch; // CC-DEF-MATCH core engine (REVIEW-GATED)
 mod practice; // CC-PRACTICE core (curriculum/phases/progress)
 mod wordpic; // CC-WORD-PICTURE core (calligrams)
+mod input_provenance;
 mod spellpic;
 mod wordpic_layout; // CC-WORD-PICTURE v6 layout engine (L1-L5)
 mod wordpic_screen; // CC-WORD-PICTURE v5 screen

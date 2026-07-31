@@ -159,3 +159,29 @@ pub fn show_toast(msg: &str) {
     TOAST_TIMEOUT.with(|cell| cell.set(Some(handle)));
     closure.forget();
 }
+
+/// v7 F7 — beforeinput listener carrying (inputType, data length) so the
+/// submit path can tell typing from dictation (input provenance, D8).
+pub fn on_before_input<F: Fn(String, u32) + 'static>(id: &str, f: F) {
+    use wasm_bindgen::JsCast;
+    let Some(el) = web_sys::window()
+        .and_then(|w| w.document())
+        .and_then(|d| d.get_element_by_id(id))
+    else {
+        return;
+    };
+    let cb = wasm_bindgen::closure::Closure::<dyn FnMut(web_sys::Event)>::new(
+        move |e: web_sys::Event| {
+            let (ty, len) = match e.dyn_ref::<web_sys::InputEvent>() {
+                Some(ie) => (
+                    ie.input_type(),
+                    ie.data().map(|d| d.chars().count() as u32).unwrap_or(0),
+                ),
+                None => ("insertText".to_string(), 1),
+            };
+            f(ty, len);
+        },
+    );
+    let _ = el.add_event_listener_with_callback("beforeinput", cb.as_ref().unchecked_ref());
+    cb.forget();
+}

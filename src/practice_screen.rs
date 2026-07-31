@@ -133,6 +133,9 @@ pub fn wire(app: &App) {
     // Phase-3 typing surface: per-keystroke feedback, ko-IME-safe.
     let a = app.clone();
     dom::on::<web_sys::Event, _>("prInput", "input", move |_| on_typed(&a));
+    dom::on_before_input("prInput", |ty, len| {
+        crate::input_provenance::note_insert("prInput", &ty, len)
+    });
 }
 
 pub fn open(app: &App) {

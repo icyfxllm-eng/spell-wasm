@@ -417,7 +417,12 @@ pub fn sync_keyboard(app: &App) {
 
 /// Append one typed character (on-screen key or physical keydown). Single char
 /// only — multi-char inserts (dictation/paste) can't reach this path.
+/// Every character the base game accepts arrives HERE, from its own
+/// on-screen keyboard or a physical key. Recording it is what lets the
+/// single submit path tell typing from dictation (F7/D8) without
+/// rejecting legitimate play.
 pub fn type_char(app: &App, ch: char) {
+    crate::input_provenance::note_insert("answerField", "insertText", 1);
     if !can_type(&app.borrow()) {
         return;
     }
@@ -995,6 +1000,7 @@ pub fn next_word(app: &App) {
     // answer line instead of the last word's letters (CC-SPELL-ALOUD).
     crate::spell_aloud::on_new_word();
     app.borrow_mut().answer.clear();
+    crate::input_provenance::reset("answerField");
     render_letters(app, false);
     dom::set_disabled("checkBtn", false);
     dom::set_disabled("hintBtn", false);
@@ -1056,6 +1062,15 @@ pub fn submit_guess(app: &App) {
     }
     let typed = app.borrow().answer.trim().to_string();
     if typed.is_empty() {
+        return;
+    }
+    // CC-WORDPICTURE v7 F7 / D8 — enforced ONCE, here, for every mode:
+    // a spoken whole word is never accepted as a spelling answer. The
+    // base game builds `answer` from its own on-screen keyboard (no DOM
+    // input, so no system mic), and any surface that feeds this path
+    // through a DOM field is provenance-checked.
+    if crate::input_provenance::is_dictated("answerField", typed.chars().count() as u32) {
+        crate::input_provenance::reset("answerField");
         return;
     }
     app.borrow_mut().answered = true;
@@ -1853,6 +1868,7 @@ pub fn enter_daily(app: &App) {
     dom::set_disabled("levelSel", true);
     dom::set_disabled("modeSel", true);
     app.borrow_mut().answer.clear();
+    crate::input_provenance::reset("answerField");
     render_letters(app, false);
     dom::set_text("hintLine", "");
     dom::set_text("feedback", "");
@@ -1913,6 +1929,7 @@ pub fn start_spelloff_run(app: &App, locale: String, words: Vec<String>) {
     dom::set_disabled("levelSel", true);
     dom::set_disabled("modeSel", true);
     app.borrow_mut().answer.clear();
+    crate::input_provenance::reset("answerField");
     render_letters(app, false);
     dom::set_text("hintLine", "");
     dom::set_text("feedback", "");
@@ -1976,6 +1993,7 @@ pub fn start_race(app: &App, circuit: crate::racing::track::Circuit, opponent: c
     dom::set_disabled("levelSel", true);
     dom::set_disabled("modeSel", true);
     app.borrow_mut().answer.clear();
+    crate::input_provenance::reset("answerField");
     render_letters(app, false);
     dom::set_text("hintLine", "");
     dom::set_text("feedback", "");
@@ -2053,6 +2071,7 @@ fn leave_daily_ui(app: &App) {
     dom::add_class("dailyBar", "btn-hide");
     dom::set_html("orbGlyph", &crate::i18n::t("orb.tap"));
     app.borrow_mut().answer.clear();
+    crate::input_provenance::reset("answerField");
     render_letters(app, false);
     dom::set_text("feedback", "");
     dom::el("feedback").set_class_name("feedback");
@@ -2284,6 +2303,7 @@ pub fn enter_review(app: &App) {
     }
     dom::set_html("orbGlyph", &crate::i18n::t("orb.practiceMisses"));
     app.borrow_mut().answer.clear();
+    crate::input_provenance::reset("answerField");
     render_letters(app, false);
     dom::set_text("hintLine", "");
     render_tries(app);
@@ -2306,6 +2326,7 @@ pub fn exit_review(app: &App, msg: Option<&str>) {
     }
     dom::set_html("orbGlyph", &crate::i18n::t("orb.tap"));
     app.borrow_mut().answer.clear();
+    crate::input_provenance::reset("answerField");
     render_letters(app, false);
     dom::set_text("hintLine", "");
     render_tries(app);
@@ -2406,6 +2427,7 @@ pub fn exit_versus(app: &App) {
     dom::remove_class("orbWrap", "bad");
     dom::set_html("orbGlyph", &crate::i18n::t("orb.tap"));
     app.borrow_mut().answer.clear();
+    crate::input_provenance::reset("answerField");
     render_letters(app, false);
     dom::set_text("hintLine", "");
     render_tries(app);
@@ -2442,6 +2464,7 @@ fn begin_versus_turn(app: &App) {
     let name = app.borrow().versus.active_player().name.clone();
     dom::set_html("orbGlyph", &format!("{}<br/>tap for a word", dom::escape_html(&name)));
     app.borrow_mut().answer.clear();
+    crate::input_provenance::reset("answerField");
     render_letters(app, false);
     sync_keyboard(app);
     dom::set_text("hintLine", "");

@@ -110,6 +110,12 @@ pub fn wire(app: &App) {
     });
     let a = app.clone();
     dom::on::<web_sys::Event, _>("wpInput", "input", move |_| on_typed(&a));
+    // v7 F7 / D8: record how each character arrived. Dictated chunks are
+    // refused at the submit path below — a spoken whole word is never a
+    // spelling answer, in any mode.
+    dom::on_before_input("wpInput", |ty, len| {
+        crate::input_provenance::note_insert("wpInput", &ty, len)
+    });
     let a = app.clone();
     dom::on_click("wpZoom", move || {
         ZOOMED.with(|z| z.set(!z.get()));
@@ -632,6 +638,17 @@ fn on_typed(app: &App) {
         return;
     }
     if complete {
+        // D8 gate: a value that could not have been typed is refused, and
+        // the field is cleared — the word is not placed and not scored.
+        if crate::input_provenance::is_dictated("wpInput", value.chars().count() as u32) {
+            inp.set_value("");
+            crate::input_provenance::reset("wpInput");
+            dom::add_class("wpStatus", "pulse");
+            after(400, || dom::remove_class("wpStatus", "pulse"));
+            replay(app);
+            return;
+        }
+        crate::input_provenance::reset("wpInput");
         inp.set_value("");
         place(app, &target);
     } else {
