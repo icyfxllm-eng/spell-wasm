@@ -78,9 +78,9 @@ Eric-approved*.
 | # | Decision | Status |
 | --- | --- | --- |
 | D9 | Depth boundary | **DECIDED**: depth influences z-order and stroke weight/opacity only. Any path where depth reaches glyph size, band assignment, layout-law parameters or word selection is a **build-failing violation** (property-tested like LEARNING-ENGINE D7). |
-| D10 | Depth golden tolerance | **PROPOSED**: mean absolute error ≤ 0.05 (normalised depth) vs stored goldens per platform, and per-part z-**order** must match goldens exactly — ordering is what players see. **Needs Eric's sign-off.** |
+| D10 | Depth golden tolerance | **DECIDED (Eric, 2026-07-31)**: mean absolute error ≤ 0.05 (normalised depth) vs stored goldens per platform, and per-part z-**order** must match goldens exactly — ordering is what players see. |
 | D11 | Learned suggester escalation | **DECIDED**: classical pipeline first. A learned model is added only if the classical path fails the module-12 eval on the fixture set, and then must be on-device, bundled and version-pinned (D8), behind the identical suggestion interface. Escalation is its own recorded decision, never a silent swap. |
-| D12 | Priority | **PROPOSED**: module 12 executes first within Phase T0 — it unblocks the horse/peacock/dragon re-author queue and paces CC-PICTURE-BANK wave 1; module 11 follows. **Needs Eric's sign-off.** |
+| D12 | Priority | **DECIDED (Eric, 2026-07-31)**: module 12 executes first within Phase T0; module 11 follows. Note the rationale has shifted -- the horse/peacock/dragon queue was cleared by hand on 2026-07-31, so module 12's justification is now PICTURE-BANK wave 1's ~23 new pictures, which D1 signed off the same day. That makes the sequencing more load-bearing, not less. |
 
 ## Constraints and non-goals
 

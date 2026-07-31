@@ -75,12 +75,12 @@ including Kid Mode variants, route through the audit gate.
 
 | # | Decision | Status |
 | --- | --- | --- |
-| D1 | Reveal animation length | **PROPOSED**: build-replay scaled to piece size, 3s (starter) to 6s (masterpiece), always skippable. **Needs Eric's sign-off.** |
-| D2 | Wordmark on share card | **PROPOSED**: small "SpellGame" text wordmark, corner placement, on share cards only — never on the saved keepsake (their art, not an ad). **Needs Eric's sign-off.** |
-| D3 | Export resolution | **PROPOSED**: keepsake at 3× piece canvas, capped near 4096px longest side; share card at 2048px longest side. **Needs Eric's sign-off.** |
-| D4 | Kid Mode share | **PROPOSED**: hidden in Kid Mode, Save allowed. Eric decides in review; either answer is one flag. |
+| D1 | Reveal animation length | **DECIDED (Eric, 2026-07-31)**: build-replay scaled to piece size, 3s (starter) to 6s (masterpiece), always skippable. Timing is taste and Done #7 still defers to Eric's eye on device -- this signs off the range, not the final feel. |
+| D2 | Wordmark on share card | **DECIDED (Eric, 2026-07-31)**: small "SpellGame" text wordmark, corner placement, on share cards only — never on the saved keepsake (their art, not an ad). |
+| D3 | Export resolution | **DECIDED (Eric, 2026-07-31)**: keepsake at 3× piece canvas, capped near 4096px longest side; share card at 2048px longest side. |
+| D4 | Kid Mode share | **DECIDED (Eric, 2026-07-31)**: hidden in Kid Mode, Save allowed — consistent with the standing no-Kid-Mode-share-cards posture. |
 | D5 | Gallery storage form | **DECIDED**: piece data + seed, re-render on view. The deterministic renderer makes this exact — the same piece every time — keeps storage tiny, and lets old trophies inherit every future renderer improvement. |
-| D6 | Sound | **PROPOSED**: one soft completion chime, respecting existing sound settings; no fanfare loop. **Needs Eric's sign-off.** |
+| D6 | Sound | **DECIDED (Eric, 2026-07-31)**: one soft completion chime, respecting existing sound settings; no fanfare loop. |
 
 ## Constraints and non-goals
 

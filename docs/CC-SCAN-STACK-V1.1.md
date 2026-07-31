@@ -87,7 +87,7 @@ IoU against its **own** goldens. Cross-platform byte comparison is explicitly
 
 | # | Decision | Status |
 | --- | --- | --- |
-| D6 | TonalKit language | **PROPOSED**: Rust via kornia-rs per section A, contingent on spike #9. Needs Eric's sign-off to run the spike; the spike result then decides adoption mechanically. |
+| D6 | TonalKit language | **DECIDED (Eric, 2026-07-31)**: run the kornia-rs qualification spike (#9). Adoption is NOT decided here -- the spike result decides it mechanically. PASS adopts section A; FAIL leaves the vImage plan standing and strikes the section. |
 | D7 | Android status | **DECIDED**: design-ahead only. Section C confers no execution authority. Any executor finding themselves writing Android code under this file must stop. |
 | D8 | Crate pinning | **DECIDED**: kornia-rs — and every model file in any future section-C build — is version-pinned. Upgrades require re-running the full determinism eval and are their own reviewed change, never a drive-by bump. |
 

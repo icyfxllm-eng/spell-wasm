@@ -79,7 +79,7 @@ paths, no unassigned words.
 
 | # | Decision | Status |
 | --- | --- | --- |
-| D1 | Wave-1 scope | **PROPOSED, needs Eric's sign-off**: starter + intermediate complete (18 pictures), 3 advanced (wolf, koi, dragon), 1 expert (constellation map — cheapest to trace), 1 masterpiece (Great Wave), Tagalog culture pack first for Paul's audit. Rest lands in waves 2+. |
+| D1 | Wave-1 scope | **DECIDED (Eric, 2026-07-31)**, as proposed: starter + intermediate complete (18 pictures), 3 advanced (wolf, koi, dragon), 1 expert (constellation map — cheapest to trace), 1 masterpiece (Great Wave), Tagalog culture pack first for Paul's audit. Rest lands in waves 2+. Expert and masterpiece ship flag-gated per D3, since pan/zoom does not exist. |
 | D2 | Hazard taxonomy ownership | **DECIDED**: hazard weights live in each language's word-bank config next to the existing banks. English taxonomy drafted first as the template; non-English taxonomies flagged for native-speaker audit (Tagalog → Paul) before ship. |
 | D3 | Pan/zoom dependency | **DECIDED**: expert + masterpiece require the pan/zoom canvas. If it is not built, wave 1 ships those manifests and traces but gates them off with the existing feature-flag pattern. If pan/zoom is found **partially** built, stop and ask rather than finishing it under this file. |
 | D4 | Multi-session persistence | **DECIDED**: layer/stroke completion saves per picture per language profile, survives restart, and is included in the existing progress-reset flow. |
