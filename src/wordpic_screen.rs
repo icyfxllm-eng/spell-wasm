@@ -527,9 +527,53 @@ fn enforce_legality(p: &wordpic::Picture, lang: &str, words: &[String]) {
 /// the picture starts as its own outline and fills in as you spell.
 /// Micro features (eyes, pupils) are always drawn, filled.
 fn render_scanlock(plan: &crate::spellpic::Plan, lang: &str, words: &[String]) {
+    let svg = scanlock_svg(plan, lang, words, RenderMode::Play);
+    dom::set_html("wpStage", &svg);
+    reflect_slots_indicator(lang);
+}
+
+/// Where the SVG is going. The GEOMETRY is identical in both modes -- that
+/// is the whole point, and it is what makes CC-FINALE Done #1 ("export
+/// matches the in-play final frame exactly") true by construction rather
+/// than by a diff that someone has to keep passing.
+///
+/// Play draws into #wpStage and leans on the page's stylesheet and fonts.
+/// Export has to survive being rasterized through an <img>, which loads no
+/// stylesheet and -- critically -- no webfonts, so it carries its own.
+#[derive(Clone, Copy, PartialEq, Eq, Debug)]
+pub enum RenderMode<'a> {
+    Play,
+    /// Self-contained: inline styles, own background, and the font embedded
+    /// as a data URI. The app's faces are ALREADY split by unicode-range --
+    /// instrument-latin.woff2 is 30KB -- so the right pre-subsetted file is
+    /// simply picked by language; no runtime subsetter is needed.
+    Export { font_data_uri: &'a str },
+}
+
+/// The one place picture geometry is turned into SVG.
+pub fn scanlock_svg(
+    plan: &crate::spellpic::Plan,
+    lang: &str,
+    words: &[String],
+    mode: RenderMode,
+) -> String {
     let complex = complex_script(lang);
     let placed = words.len().min(plan.placements.len());
     let mut svg = String::from("<svg viewBox=\"0 0 512 512\" xmlns=\"http://www.w3.org/2000/svg\">");
+    if let RenderMode::Export { font_data_uri } = mode {
+        // Rasterizing an SVG through an <img> loads no stylesheet and no
+        // webfont, so everything the picture needs travels with it. Values
+        // are copied from index.html; wordpic-export-parity.mjs fails the
+        // build if the two ever drift.
+        svg.push_str(&format!(
+            "<style>@font-face{{font-family:'SpellExport';src:url({font_data_uri});}}\
+             .wp-pinned{{stroke:rgba(232,236,245,.92);stroke-width:1.8;fill:none;stroke-linecap:round;stroke-linejoin:round}}\
+             .wp-feature{{fill:rgba(232,236,245,.95);stroke:rgba(232,236,245,.95);stroke-width:1.5;stroke-linejoin:round}}\
+             .wp-outline{{stroke:rgba(255,255,255,.22);stroke-width:3;fill:none;stroke-linecap:round}}\
+             .wp-word{{fill:#e8ecf5;font-weight:700;font-family:'SpellExport',system-ui,sans-serif}}</style>\
+             <rect width=\"512\" height=\"512\" fill=\"#0e1420\"/>"
+        ));
+    }
     // defs: one path per placement baseline
     svg.push_str("<defs>");
     for (i, pl) in plan.placements.iter().enumerate() {
@@ -550,7 +594,7 @@ fn render_scanlock(plan: &crate::spellpic::Plan, lang: &str, words: &[String]) {
             .enumerate()
             .map(|(k, (x, y))| format!("{}{x:.1} {y:.1} ", if k == 0 { "M" } else { "L" }))
             .collect();
-        let next = if i == placed { " next" } else { "" };
+        let next = if i == placed && mode == RenderMode::Play { " next" } else { "" };
         svg.push_str(&format!("<path class=\"wp-outline{next}\" d=\"{d}\"/>"));
     }
     // F5 pinned ink: scan the words cannot host is still the picture.
@@ -582,7 +626,7 @@ fn render_scanlock(plan: &crate::spellpic::Plan, lang: &str, words: &[String]) {
     // spelled words on their baselines, justified to the exact span
     for (i, pl) in plan.placements.iter().take(placed).enumerate() {
         let len = crate::spellpic::poly_len(&pl.baseline);
-        let cls = if i + 1 == placed { "wp-word new" } else { "wp-word" };
+        let cls = if i + 1 == placed && mode == RenderMode::Play { "wp-word new" } else { "wp-word" };
         if complex {
             // D4 ruling: complex-shaping scripts render straight at the
             // chord angle rather than along the curve.
@@ -604,8 +648,7 @@ fn render_scanlock(plan: &crate::spellpic::Plan, lang: &str, words: &[String]) {
         }
     }
     svg.push_str("</svg>");
-    dom::set_html("wpStage", &svg);
-    reflect_slots_indicator(lang);
+    svg
 }
 
 // ---- v7 F7: Spell Picture uses the APP's per-language keyboard ----
@@ -837,5 +880,101 @@ fn after(ms: i32, f: impl FnOnce() + 'static) {
     let cb = Closure::once_into_js(f);
     if let Some(win) = web_sys::window() {
         let _ = win.set_timeout_with_callback_and_timeout_and_arguments_0(cb.unchecked_ref(), ms);
+    }
+}
+
+#[cfg(test)]
+mod export_tests {
+    use super::*;
+    use crate::spellpic::Plan;
+    use scanlock::{MicroStroke, Placement};
+
+    fn plan() -> Plan {
+        Plan {
+            placements: vec![
+                Placement {
+                    path_idx: 0,
+                    t0: 0.0,
+                    t1: 0.4,
+                    word: "turtle".into(),
+                    glyph_size: 13.0,
+                    advance_px: 7.0,
+                    baseline: vec![(10.0, 20.0), (90.0, 24.0), (170.0, 40.0)],
+                },
+                Placement {
+                    path_idx: 0,
+                    t0: 0.4,
+                    t1: 0.7,
+                    word: "shell".into(),
+                    glyph_size: 13.0,
+                    advance_px: 7.0,
+                    baseline: vec![(170.0, 40.0), (240.0, 80.0)],
+                },
+            ],
+            micro: vec![MicroStroke { path_idx: 1, points: vec![(5.0, 5.0), (9.0, 5.0), (9.0, 9.0)] }],
+            pinned: vec![MicroStroke { path_idx: 2, points: vec![(300.0, 300.0), (340.0, 318.0)] }],
+            words: vec![],
+            size: 13.0,
+        }
+    }
+
+    /// Strip what is legitimately mode-specific -- the export's own styles
+    /// and background -- and what is left must be identical. This is
+    /// CC-FINALE Done #1 held as an invariant instead of a pixel diff that
+    /// has to be re-run and re-approved.
+    fn geometry_only(svg: &str) -> String {
+        let mut out = svg.to_string();
+        if let (Some(a), Some(b)) = (out.find("<style>"), out.find("</style>")) {
+            out.replace_range(a..b + "</style>".len(), "");
+        }
+        // `new` is the 1s entry animation on the word just spelled. By the
+        // time the frame is FINAL it has settled to plain `wp-word`, so the
+        // settled play frame and the export agree -- which is what Done #1
+        // actually claims. Normalising it here keeps that honest rather than
+        // letting the test pass on a technicality.
+        out.replace("<rect width=\"512\" height=\"512\" fill=\"#0e1420\"/>", "")
+            .replace("wp-word new", "wp-word")
+    }
+
+    #[test]
+    fn export_geometry_matches_the_finished_play_frame() {
+        let p = plan();
+        let words: Vec<String> = p.placements.iter().map(|x| x.word.clone()).collect();
+        let play = scanlock_svg(&p, "en", &words, RenderMode::Play);
+        let exp = scanlock_svg(&p, "en", &words, RenderMode::Export { font_data_uri: "data:x" });
+        assert_eq!(
+            geometry_only(&play),
+            geometry_only(&exp),
+            "export drifted from the in-play frame -- same solver output must render the same"
+        );
+    }
+
+    #[test]
+    fn export_carries_its_own_styles_and_font() {
+        let p = plan();
+        let words: Vec<String> = p.placements.iter().map(|x| x.word.clone()).collect();
+        let exp = scanlock_svg(&p, "en", &words, RenderMode::Export { font_data_uri: "data:font/woff2;base64,AAAA" });
+        // An <img>-rasterized SVG loads no stylesheet and no webfont.
+        assert!(exp.contains("@font-face"), "no embedded face: text would fall back and letterforms shift");
+        assert!(exp.contains("data:font/woff2;base64,AAAA"));
+        assert!(exp.contains(".wp-word{fill:#e8ecf5"), "word fill would be transparent off-page");
+        assert!(exp.contains("fill=\"#0e1420\""), "no background: PNG would export transparent");
+        assert!(!scanlock_svg(&p, "en", &words, RenderMode::Play).contains("@font-face"),
+                "the play frame must keep using the page's own font, not a duplicate");
+    }
+
+    /// A finished piece has no "next stroke" marker and no entry animation:
+    /// those are live-play state, and baking them into a keepsake would
+    /// freeze a pulsing dashed stroke into the artwork.
+    #[test]
+    fn export_drops_live_play_affordances() {
+        let p = plan();
+        let half: Vec<String> = vec!["turtle".into()];
+        let play = scanlock_svg(&p, "en", &half, RenderMode::Play);
+        let exp = scanlock_svg(&p, "en", &half, RenderMode::Export { font_data_uri: "d" });
+        assert!(play.contains("wp-outline next"), "play should mark the next stroke");
+        assert!(!exp.contains("next"), "export must not bake in the next-stroke marker");
+        assert!(play.contains("wp-word new"), "play should animate the word just spelled");
+        assert!(!exp.contains("wp-word new"), "export must not bake in the entry animation");
     }
 }
