@@ -25,6 +25,12 @@ SEG_MAX = 100000.0  # v8.1: pack per path; corner marks only   # a segment longe
 # Eric's per-path sign-off (D4): features that MUST be present, named.
 # Position is (x, y) in canvas coords with a tolerance, so the gate binds
 # to the feature, not to a path index that could renumber.
+# Eric's authoring exclusions: features that trace cleanly but read as
+# blobs in the render and are better dropped (his call, per subject).
+DROP_FEATURES = {
+    "owl": [{"near": [214, 383], "tol": 26}, {"near": [296, 383], "tol": 26}],
+}
+
 REQUIRED_MICRO = {
     # Verified against the recovered closed features (build output):
     # eyes at (233,137)/(267,138), nose wedge at (258,160), buttons below.
@@ -648,7 +654,12 @@ for sub, (ref, mode, tier) in SUBJ.items():
         pts = e["points"][::2]
         tight = sum(1 for pt in pts if any(sd2(pt, u, v) < FLOOR for q in others for u, v in zip(q, q[1:])))
         e["tight_frac"] = round(tight / max(1, len(pts)), 3)
+    drops = DROP_FEATURES.get(sub, [])
     for p in small_feats:
+        cx = sum(x for x, _ in p) / len(p)
+        cy = sum(y for _, y in p) / len(p)
+        if any(math.hypot(cx - d["near"][0], cy - d["near"][1]) <= d["tol"] for d in drops):
+            continue
         entries.append({
             "points": p, "arc": round(plen(p), 2), "tier": tier,
             "sub_floor": False, "merged_into": None, "decorative_thin": False,
