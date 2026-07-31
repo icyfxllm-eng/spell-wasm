@@ -38,7 +38,7 @@ REQUIRED_MICRO = {
 SUBJ = {  # subject -> (ref, mode, tier)
  "dog": ("dog.png", "ink", "easy"), "butterfly": ("butterfly.png", "ink", "easy"),
  "duck": ("duck.png", "ink", "easy"), "turtle": ("turtle.png", "ink", "easy"),
- "owl": ("owl.png", "ink-boundary", "medium"), "elephant": ("elephant.png", "ink", "medium"),
+ "owl": ("owl.png", "ink", "medium"), "elephant": ("elephant.png", "ink", "medium"),
  "snowman": ("snowman.png", "ink", "medium"), "horse": ("horse.png", "ink", "hard"),
  "fish": ("fish.png", "ink", "easy"), "eiffel": ("eiffel.png", "ink", "hard"),
  "dragon": ("dragon.png", "ink", "hard"), "peacock": ("peacock.png", "ink", "hard"),
@@ -207,88 +207,17 @@ def _paint(mask, holes, W, H):
 
 
 def author_owl(im):
-    """v8.2.1 owl re-author (Eric: wings, beak, talons must read).
-
-    Solidifying alone gave one blank silhouette. The illustration's
-    STRUCTURAL outlines — wing edge, beak, talon toes, branch — are long
-    dark strokes; the feather stippling is short marks. Keep the long
-    ones, cut the silhouette along them, and the bird partitions into
-    body / wings / talons, each its own closed contour that hosts words.
-    The yellow eyes stay punched as closed features."""
+    """v8.2.1 owl re-author (Eric: 'easier owl picture'). The detailed
+    eagle-owl drowned in feather stippling; this pictogram is already
+    clean, so the recipe is minimal: solid subject, and the white eyes
+    and beak stay as holes so each traces as its own closed feature."""
     rgb = im.convert("RGB")
     W, H = rgb.size
     px = rgb.load()
-    gl = ImageOps.autocontrast(rgb.convert("L"), cutoff=1).load()
-    mask = [[not (px[x, y][0] > 238 and px[x, y][1] > 238 and px[x, y][2] > 238)
+    mask = [[not (px[x, y][0] > 200 and px[x, y][1] > 200 and px[x, y][2] > 200)
              for x in range(W)] for y in range(H)]
-    mask = _largest_component(mask, W, H)
-    mask = _close(mask, W, H, 3)
-    mask = _fill_holes(mask, W, H)
-    # structural ink: dark, and part of a LONG component (stippling is short)
-    dark = [[mask[y][x] and gl[x, y] < 95 for x in range(W)] for y in range(H)]
-    seen = [[False]*W for _ in range(H)]
-    diag = math.hypot(W, H)
-    keep = [[False]*W for _ in range(H)]
-    for y0 in range(H):
-        for x0 in range(W):
-            if not dark[y0][x0] or seen[y0][x0]:
-                continue
-            comp, stack = [], [(x0, y0)]
-            seen[y0][x0] = True
-            while stack:
-                x, y = stack.pop()
-                comp.append((x, y))
-                for dy in (-1, 0, 1):
-                    for dx in (-1, 0, 1):
-                        nx, ny = x+dx, y+dy
-                        if 0 <= nx < W and 0 <= ny < H and dark[ny][nx] and not seen[ny][nx]:
-                            seen[ny][nx] = True
-                            stack.append((nx, ny))
-            xs = [p[0] for p in comp]; ys = [p[1] for p in comp]
-            span = math.hypot(max(xs)-min(xs), max(ys)-min(ys))
-            if span > 0.09 * diag:           # structural, not stippling
-                for x, y in comp:
-                    keep[y][x] = True
-    # Widen the structural strokes into clear slits, and keep only those
-    # that stay INTERIOR (a slit touching the outline merges with it and
-    # is lost). Each surviving slit traces as its own closed contour —
-    # the wing edge, the talon toes, the beak.
-    R = 4
-    off = [(dx, dy) for dy in range(-R, R+1) for dx in range(-R, R+1) if dx*dx+dy*dy <= R*R]
-    cuts = [[False]*W for _ in range(H)]
-    for y in range(H):
-        for x in range(W):
-            if keep[y][x]:
-                for dx, dy in off:
-                    nx, ny = x+dx, y+dy
-                    if 0 <= nx < W and 0 <= ny < H:
-                        cuts[ny][nx] = True
-    # erode the silhouette by R+2 — anything outside that is "near the
-    # edge", so slits there would merge with the outline
-    inner = [[False]*W for _ in range(H)]
-    E = R + 3
-    eoff = [(dx, dy) for dy in range(-E, E+1) for dx in range(-E, E+1) if dx*dx+dy*dy <= E*E]
-    for y in range(H):
-        for x in range(W):
-            if not mask[y][x]:
-                continue
-            ok = True
-            for dx, dy in eoff:
-                nx, ny = x+dx, y+dy
-                if not (0 <= nx < W and 0 <= ny < H and mask[ny][nx]):
-                    ok = False
-                    break
-            inner[y][x] = ok
-    cuts = [[cuts[y][x] and inner[y][x] for x in range(W)] for y in range(H)]
-    eyes = [[False]*W for _ in range(H)]
-    for y in range(H):
-        for x in range(W):
-            r, g, b = px[x, y]
-            if r > 175 and g > 140 and b < 110 and mask[y][x]:
-                eyes[y][x] = True
-    eyes = _close(eyes, W, H, 2)
-    holes = [[cuts[y][x] or eyes[y][x] for x in range(W)] for y in range(H)]
-    return _paint(mask, holes, W, H)
+    mask = _close(mask, W, H, 2)
+    return _paint(mask, None, W, H)
 
 
 def author_dragon(im):
