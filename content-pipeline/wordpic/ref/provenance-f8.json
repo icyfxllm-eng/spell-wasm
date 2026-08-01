@@ -304,5 +304,21 @@
   "sourceUrl": "",
   "file": "tools/draw_wave2.py",
   "note": "Drawn coordinate list; candidates approved by Eric 2026-08-01."
+ },
+ {
+  "subject": "wolf",
+  "title": "File:Wolf.svg (howling wolf silhouette)",
+  "license": "CC0 1.0",
+  "sourceUrl": "https://commons.wikimedia.org/wiki/File:Wolf.svg",
+  "file": "ref/wolf.png",
+  "note": "Eric approved sourcing 2026-08-01. Composed over a drawn perch with an aligned 36px seam (tools/prep_sourced.py) so wolf and rock trace as two contours -- paws flush over the rock line reads as standing-on, not fused."
+ },
+ {
+  "subject": "koi",
+  "title": "Koi-Fish (OpenClipart via FreeSVG)",
+  "license": "Public domain",
+  "sourceUrl": "https://freesvg.org/koi-fish",
+  "file": "ref/koi.png",
+  "note": "Eric approved sourcing 2026-08-01. Silhouette extracted from the coloured top view (opaque-and-not-tan mask, components >800px, morphological close to fuse hairline fin gaps), placed twice rotated 180 for the circling pair (tools/prep_sourced.py). Two copies of PD art composed is PD."
  }
 ]
