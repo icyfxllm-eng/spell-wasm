@@ -97,7 +97,9 @@ fishB = solid.rotate(180)
 CW = int(pw * 1.62)
 pair = Image.new("L", (CW, CW), 255)
 ax, ay = 30, int(CW * 0.06)
-bx, by = CW - pw - 30, CW - ph - int(CW * 0.06)
+# Eric: the right fish's tail clipped the frame -- pulled 65px left, and
+# the corridor between the fish is re-checked by the suggester after.
+bx, by = CW - pw - 95, CW - ph - int(CW * 0.06)
 pair.paste(fishA, (ax, ay), Image.eval(fishA, lambda v: 255 - v))
 pair.paste(fishB, (bx, by), Image.eval(fishB, lambda v: 255 - v))
 pair.save(REF / "koi.png")
