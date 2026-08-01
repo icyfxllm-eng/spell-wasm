@@ -53,18 +53,15 @@ def pretzel():
 
 def crane():
     """Origami crane: every edge is a fold, so the silhouette is all
-    angles. The wing-fold and neck-fold seams are 40px white creases (the
-    kite's spar lesson — a crease narrower than the corridor floor puts
-    both its sides inside one corridor)."""
+    angles — ONE unbroken outline (the field rule; the first cut tried
+    40px fold seams and they severed the bird into floating pieces).
+    Folds live in the angles, not in creases."""
     im, d = canvas(860, 700)
     d.polygon([(180, 470), (420, 350), (640, 470), (400, 580)], fill=BLACK)  # body
-    d.polygon([(180, 470), (110, 240), (150, 215), (255, 415)], fill=BLACK)  # neck
-    d.polygon([(110, 240), (60, 205), (128, 202)], fill=BLACK)               # head + beak
-    d.polygon([(330, 385), (430, 120), (530, 385)], fill=BLACK)              # standing wing
-    d.polygon([(640, 470), (800, 380), (700, 520)], fill=BLACK)              # tail spike
-    # fold seams: wing/body and neck/body, 40px
-    d.line([(320, 400), (545, 400)], fill=WHITE, width=40)
-    d.line([(215, 455), (250, 385)], fill=WHITE, width=40)
+    d.polygon([(180, 470), (110, 240), (150, 215), (275, 400)], fill=BLACK)  # neck
+    d.polygon([(112, 250), (60, 205), (130, 200), (150, 215)], fill=BLACK)   # head + beak
+    d.polygon([(340, 380), (430, 120), (520, 380), (430, 425)], fill=BLACK)  # standing wing
+    d.polygon([(600, 445), (800, 380), (660, 525)], fill=BLACK)              # tail spike
     return im
 
 
@@ -78,12 +75,14 @@ def dallah():
     d.polygon([(240, 700), (480, 700), (510, 800), (210, 800)], fill=BLACK)  # flared base
     d.polygon([(280, 380), (440, 380), (400, 300), (320, 300)], fill=BLACK)  # shoulder
     d.polygon([(300, 300), (420, 300), (390, 240), (330, 240)], fill=BLACK)  # lid
-    d.polygon([(340, 240), (380, 240), (362, 175)], fill=BLACK)              # lid peak
-    # crescent finial (moonstar construction, culture-true)
-    circle(d, 360, 130, 42, BLACK)
-    circle(d, 378, 118, 36, WHITE)
-    # spout: sweeping S from the shoulder, 46px wide
-    d.line([(290, 340), (200, 260), (150, 170)], fill=BLACK, width=46, joint="curve")
+    d.polygon([(340, 240), (380, 240), (362, 168)], fill=BLACK)              # lid peak
+    # crescent finial ATTACHED by its stem — a floating crescent flagged
+    # against the lid peak; attached, finial and pot are one contour
+    d.line([(362, 172), (360, 130)], fill=BLACK, width=18)
+    circle(d, 360, 110, 42, BLACK)
+    circle(d, 378, 98, 36, WHITE)
+    # spout: rooted DEEP in the shoulder (hinge overlap >= 20px), 46px wide
+    d.line([(330, 370), (200, 260), (150, 170)], fill=BLACK, width=46, joint="curve")
     d.polygon([(120, 130), (185, 165), (150, 205)], fill=BLACK)              # spout mouth
     # handle: outer arm with the HOLE
     d.ellipse([430, 380, 610, 620], fill=BLACK)
