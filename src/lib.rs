@@ -12,6 +12,7 @@ mod defmatch; // CC-DEF-MATCH core engine (REVIEW-GATED)
 mod practice; // CC-PRACTICE core (curriculum/phases/progress)
 mod wordpic; // CC-WORD-PICTURE core (calligrams)
 mod input_provenance;
+mod surface_hooks; // CC-PICTURE-PLATFORM I3: inverts the surface dependency
 mod spellpic;
 mod spellpic_export; // CC-FINALE feature 2 (clean export renderer)
 mod wordpic_layout; // CC-WORD-PICTURE v6 layout engine (L1-L5)
@@ -211,6 +212,7 @@ fn wire(app: &App) {
     defmatch_screen::wire(app); // CC-DEF-MATCH P3 loop (live tile where consts::def_match holds)
     practice_screen::wire(app); // CC-PRACTICE (visible where consts::practice holds — en first)
     wordpic_screen::wire(app); // CC-WORD-PICTURE v5 (calligram picker + canvas)
+    wordpic_screen::install_surface_hooks(); // I3: the picture registers itself
     dev::wire(app); // TEMP dev door: 5-tap logo → menu for the hidden racing/aloud screens
     tools_hub::wire(app);
     tools_hub::reflect(app);

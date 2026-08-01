@@ -821,7 +821,10 @@ fn surface_state(app: &App) -> (String, String, bool) {
             let s = app.borrow();
             (s.word.clone(), s.answer.clone(), crate::game::can_type(&s))
         }
-        Surface::SpellPicture => crate::wordpic_screen::voice_state(),
+        Surface::SpellPicture => crate::surface_hooks::get()
+            .voice_state
+            .map(|f| f())
+            .unwrap_or_default(),
     }
 }
 
@@ -829,7 +832,11 @@ fn surface_state(app: &App) -> (String, String, bool) {
 fn surface_set(app: &App, text: &str) {
     match surface() {
         Surface::Game => surface_set(app, text),
-        Surface::SpellPicture => crate::wordpic_screen::voice_set(text),
+        Surface::SpellPicture => {
+            if let Some(f) = crate::surface_hooks::get().voice_set {
+                f(text);
+            }
+        }
     }
 }
 

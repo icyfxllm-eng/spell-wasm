@@ -412,7 +412,10 @@ pub fn sync_keyboard(app: &App) {
         // whether keys are live — the base game has no active word then,
         // and locking on that would leave the picture unplayable.
         let live = match crate::spell_aloud::surface() {
-            crate::spell_aloud::Surface::SpellPicture => crate::wordpic_screen::voice_state().2,
+            crate::spell_aloud::Surface::SpellPicture => crate::surface_hooks::get()
+                .voice_state
+                .map(|f| f().2)
+                .unwrap_or(false),
             crate::spell_aloud::Surface::Game => can_type(&s),
         };
         (live, punct)
@@ -431,9 +434,13 @@ pub fn sync_keyboard(app: &App) {
 pub fn type_char(app: &App, ch: char) {
     // F7: Spell Picture borrows this same keyboard (per-language layouts,
     // Korean composition, Vietnamese tones) instead of a system field.
-    if matches!(crate::spell_aloud::surface(), crate::spell_aloud::Surface::SpellPicture) {
-        crate::wordpic_screen::kb_type(ch);
-        return;
+    // I3: the borrowed surface registers itself; shared code does not know
+    // which mode it is talking to, only that one is installed.
+    if let Some(f) = crate::surface_hooks::get().type_char {
+        if crate::spell_aloud::surface() != crate::spell_aloud::Surface::Game {
+            f(ch);
+            return;
+        }
     }
     crate::input_provenance::note_insert("answerField", "insertText", 1);
     if !can_type(&app.borrow()) {
@@ -458,9 +465,11 @@ pub fn emit_key(app: &App, ch: char) {
 /// Korean: feed one jamo through the Hangul composition automaton and replace
 /// the answer with the recomposed buffer.
 pub fn type_jamo(app: &App, jamo: char) {
-    if matches!(crate::spell_aloud::surface(), crate::spell_aloud::Surface::SpellPicture) {
-        crate::wordpic_screen::kb_jamo(jamo);
-        return;
+    if let Some(f) = crate::surface_hooks::get().type_jamo {
+        if crate::spell_aloud::surface() != crate::spell_aloud::Surface::Game {
+            f(jamo);
+            return;
+        }
     }
     if !can_type(&app.borrow()) {
         return;
@@ -505,9 +514,11 @@ pub fn set_answer(app: &App, text: &str) {
 
 /// Delete the last character of the answer.
 pub fn backspace(app: &App) {
-    if matches!(crate::spell_aloud::surface(), crate::spell_aloud::Surface::SpellPicture) {
-        crate::wordpic_screen::kb_backspace();
-        return;
+    if let Some(f) = crate::surface_hooks::get().backspace {
+        if crate::spell_aloud::surface() != crate::spell_aloud::Surface::Game {
+            f();
+            return;
+        }
     }
     if !can_type(&app.borrow()) {
         return;

@@ -89,7 +89,7 @@ pub fn wire(app: &App) {
         let lang = LANG.with(|l| l.borrow().clone());
         let pic = PIC.with(|p| p.borrow().clone());
         let n = PLACED.with(Cell::get);
-        crate::share::share_wordpic(&lang, &pic, n);
+        share_wordpic(&lang, &pic, n);
         let _ = &a;
     });
     // CC-FINALE: Continue is the one advancing affordance, and it is always
@@ -672,6 +672,33 @@ fn wp_input() -> Option<web_sys::HtmlInputElement> {
 
 /// A key tap from the shared keyboard, routed here while the picture is
 /// open. Korean composition is handled by the keyboard layer above us.
+/// The picture's own share text. It lived in share.rs, which made a shared
+/// module import the picture subtree -- the exact direction I3 forbids. The
+/// generic share_text() stays shared; knowing what a picture is does not.
+pub fn share_wordpic(lang: &str, pic: &str, n: u32) {
+    let name = crate::consts::BUILTIN_LANGS
+        .iter()
+        .find(|(c, _, _, _)| *c == lang)
+        .map(|(_, n, _, _)| *n)
+        .unwrap_or(lang);
+    let icon = wordpic::picture(pic).map(|p| p.icon.as_str()).unwrap_or("\u{1f5bc}\u{fe0f}");
+    let text = i18n::tp("wordpic.shareText", &[("pic", icon), ("lang", name), ("n", &n.to_string())]);
+    crate::share::share_text(&text);
+}
+
+/// I3: register with shared code rather than being reached into. Called
+/// once from wire(); with the picture compiled out this never runs and every
+/// hook stays None, so the base game takes the path it always took.
+pub fn install_surface_hooks() {
+    crate::surface_hooks::install(crate::surface_hooks::Hooks {
+        type_char: Some(kb_type),
+        type_jamo: Some(kb_jamo),
+        backspace: Some(kb_backspace),
+        voice_state: Some(voice_state),
+        voice_set: Some(voice_set),
+    });
+}
+
 pub fn kb_type(ch: char) {
     let Some(inp) = wp_input() else { return };
     let mut v = inp.value();
