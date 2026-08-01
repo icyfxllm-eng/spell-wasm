@@ -34,7 +34,10 @@ const add = (label, re) => patterns.push({ label, re });
 // Code symbols and CSS hooks unique to the mode.
 for (const sym of ["wp-outline", "wp-pinned", "wp-feature", "wp-word", "wp-reveal",
                    "wp-stage", "wp-screen", "scanlock", "sub_floor", "decorative_thin",
-                   "micro_feature", "wordpic", "spellpic", "wpRevealStage", "wpKbSlot"]) {
+                   "micro_feature", "wordpic", "spellpic", "wpRevealStage", "wpKbSlot",
+                   // camelCase ids dodge the lowercase "wordpic" pattern — the
+                   // launcher button did exactly that and survived one deploy.
+                   "wordPicOpen", "wpGallery", "wpReveal"]) {
   add(`symbol ${sym}`, new RegExp(sym.replace(/[-]/g, "\\-"), "g"));
 }
 // Asset + manifest paths.

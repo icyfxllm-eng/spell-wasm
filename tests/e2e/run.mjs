@@ -14,6 +14,7 @@ import { startServer, launch, Suite } from './harness.mjs';
 import * as keyboard from './specs/keyboard.mjs';
 import * as finale from './specs/finale.mjs';
 import * as platform from './specs/platform.mjs';
+import * as pictureWall from './specs/picture-wall.mjs';
 import * as gameplay from './specs/gameplay.mjs';
 import * as modes from './specs/modes.mjs';
 import * as menu from './specs/menu.mjs';
@@ -41,6 +42,7 @@ const SPECS = [
   ['tools-hub', toolsHub],
   ['finale', finale],
   ['platform', platform],
+  ['picture-wall', pictureWall],
 ];
 
 const ROOT = join(fileURLToPath(import.meta.url), '..', '..', '..');
@@ -49,7 +51,7 @@ const ROOT = join(fileURLToPath(import.meta.url), '..', '..', '..');
 // ships every language (Eric, 2026-07-31), so "Spanish is coming-soon gated"
 // is true of one build and false of the other. Running these against the app
 // build asserted nothing and sat red; they run under SPELL_WEB=1 instead.
-const WEB_ONLY_SPECS = new Set(['coming']);
+const WEB_ONLY_SPECS = new Set(['coming', 'picture-wall']);
 // Specs that must run in BOTH configurations -- a platform claim checked on
 // one side only is half a check.
 const BOTH_SPECS = new Set(['platform']);

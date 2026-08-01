@@ -118,9 +118,12 @@ pub fn def_match() -> bool {
     resolve(stored("def_match").as_deref(), true)
 }
 
-/// CC-WORD-PICTURE v5 — calligram mode (REVIEW-GATED). Default ON: the
-/// registry gates audiences (PREVIEW free trio, Kid computed eligibility);
-/// the flag is the standard runtime kill-switch.
+/// CC-WORD-PICTURE v5 — calligram mode. Default ON: the registry gates
+/// audiences (PREVIEW free trio, Kid computed eligibility); the flag is the
+/// standard runtime kill-switch. Compiled out with the mode on the site
+/// build (I1): a kill-switch for an absent mode is a string leak and
+/// nothing else.
+#[cfg(not(feature = "web"))]
 pub fn word_picture() -> bool {
     resolve(stored("word_picture").as_deref(), true)
 }
@@ -143,6 +146,7 @@ pub fn is_on(name: &str) -> bool {
         "attempts_shields" => attempts_shields(),
         "def_match" => def_match(),
         "practice" => practice(),
+        #[cfg(not(feature = "web"))]
         "word_picture" => word_picture(),
         _ => false,
     }

@@ -369,72 +369,7 @@
   .pr-micro-opts .pr-tile.good{border-color:#67d98b;box-shadow:0 0 10px #67d98b}
   .pr-row{display:flex;gap:8px;justify-content:center}
   .pr-input{transition:opacity .6s}
-  /* CC-WORD-PICTURE v5 */
-  .wp-screen{position:fixed;inset:0;background:var(--bg,#0e1420);z-index:59;display:none;flex-direction:column;padding:calc(env(safe-area-inset-top,0px) + 8px) 14px 10px;gap:10px}
-  .wp-screen.show{display:flex}
-  .wp-top{display:flex;align-items:center;gap:10px;position:relative;z-index:6}
-  .wp-title{flex:1;font-weight:800;text-align:center}
-  .wp-count{font-size:13px;opacity:.85}
-  .wp-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;overflow-y:auto;padding-bottom:16px}
-  .wp-tile{display:flex;flex-direction:column;align-items:center;gap:4px;padding:14px 8px;border-radius:14px;border:1px solid rgba(255,255,255,.16);background:rgba(255,255,255,.05);color:inherit}
-  .wp-tile .ico{font-size:34px}
-  .wp-tile .prog{font-size:12px;opacity:.85}
-  .wp-tile.locked{opacity:.4}
-  .wp-tile.done .ico::after{content:" ✓"}
-  .wp-stage{flex:1;min-height:0;display:flex;align-items:center;justify-content:center}
-  .wp-stage svg{width:100%;height:100%;max-height:64vh}
-  .wp-guide{stroke:rgba(232,236,245,.30);stroke-width:2;fill:none;stroke-linecap:round;stroke-linejoin:round}
-  .wp-pinned{stroke:rgba(232,236,245,.92);stroke-width:1.8;fill:none;stroke-linecap:round;stroke-linejoin:round}
-  .wp-feature{fill:rgba(232,236,245,.95);stroke:rgba(232,236,245,.95);stroke-width:1.5;stroke-linejoin:round}
-  .wp-outline{stroke:rgba(255,255,255,.22);stroke-width:3;fill:none;stroke-linecap:round}
-  /* the next stroke is signalled by BRIGHTNESS and dash, never by the
-     reserved chrome accent (F6) */
-  .wp-outline.next{stroke:rgba(255,255,255,.92);stroke-dasharray:6 8;animation:wpPulse 1.4s infinite}
-  @keyframes wpPulse{50%{stroke-opacity:.45}}
-  .wp-word{fill:var(--wp-ink,#e8ecf5);font-weight:700;font-family:inherit}
-  .wp-word.new{animation:wpIn 1s ease}
-  @keyframes wpIn{from{opacity:0;letter-spacing:.5em}to{opacity:1}}
-  @media (prefers-reduced-motion: reduce){.wp-word.new{animation:none}.wp-outline.next{animation:none}}
-
-  /* CC-FINALE feature 1 — the reveal moment (D1: 3s starter to 6s
-     masterpiece, always skippable). The build is a fade-in per word in
-     SPELLING order, driven by a per-word animation-delay set in
-     wordpic_screen.rs, so the picture assembles the way it was made. */
-  .wp-reveal{position:absolute;inset:0;z-index:8;display:none;flex-direction:column;
-    align-items:center;justify-content:center;gap:16px;padding:18px;
-    background:radial-gradient(circle at 50% 40%, rgba(255,177,77,.10), transparent 62%), var(--bg,#0e1420)}
-  .wp-reveal.show{display:flex}
-  .wp-reveal-stage{width:100%;flex:1;min-height:0;display:flex;align-items:center;justify-content:center}
-  .wp-reveal-stage svg{width:100%;height:100%;max-height:66vh}
-  .wp-reveal .wp-word,.wp-reveal .wp-pinned,.wp-reveal .wp-feature{opacity:0;animation:wpBuild .5s ease forwards}
-  /* Rest state: everything settled, nothing animating, nothing counting down. */
-  .wp-reveal.rest .wp-word,.wp-reveal.rest .wp-pinned,.wp-reveal.rest .wp-feature{opacity:1;animation:none}
-  @keyframes wpBuild{from{opacity:0}to{opacity:1}}
-  .wp-reveal-note{margin:0;min-height:1.2em;color:var(--muted);font-size:14px;text-align:center}
-  .wp-reveal-acts{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;width:100%;max-width:440px}
-  /* 44px: these are the only controls on the screen and they are what the
-     player reaches for after finishing a picture. .ghost defaults to 28px,
-     which the reveal spec's own device sweep caught. */
-  .wp-reveal-acts .btn,.wp-reveal-acts .ghost{flex:1 1 auto;min-width:92px;min-height:44px}
-  /* D4: Kid Mode celebrates and saves, but does not share. */
-  body.kid #wpShare{display:none}
-  /* Someone who asked for less motion still gets the piece, just not the build. */
-  @media (prefers-reduced-motion: reduce){
-    .wp-reveal .wp-word,.wp-reveal .wp-pinned,.wp-reveal .wp-feature{opacity:1;animation:none}
-  }
-  .wp-status{text-align:center;min-height:20px;font-size:14px;opacity:.9}
-  /* v8 F6 reserved chrome: the accent belongs to the INTERFACE only —
-     letter slots, counts, status. No picture stroke may use it, so a
-     glance always separates interface from artwork. */
-  .wp-slots{text-align:center;min-height:18px;font-size:16px;letter-spacing:.35em;color:var(--ui-chrome,#7aa2ff)}
-  .wp-slots span{opacity:.4}
-  .wp-slots .on{opacity:1}
-  .wp-row{display:flex;gap:8px;align-items:stretch}
-  .wp-input{flex:1;font-size:22px;text-align:center;padding:10px;border-radius:12px;border:1px solid rgba(255,255,255,.25);background:rgba(255,255,255,.06);color:inherit}
-  .wp-replay{width:64px;flex:none;font-size:22px}
-  .wp-card{position:absolute;inset:0;display:none;align-items:center;justify-content:center;background:rgba(0,0,0,.55);z-index:5}
-  .wp-card.show{display:flex}
-  .wp-screen .btn-hide{display:none}
+  
   @keyframes prWiggle{0%,100%{transform:translateX(0)}25%{transform:translateX(-5px)}75%{transform:translateX(5px)}}
   .pr-slots.pulse{animation:prPulse .4s}
   @keyframes prPulse{25%{transform:translateX(-6px);color:var(--accent,#7aa2ff)}75%{transform:translateX(6px)}}
@@ -625,13 +560,13 @@
      stretching their keys to fill the row (the old flex:1 1 0 caused a 7-key row
      to have wider keys than a 10-key row). Big Text / Kid raise --kb-key-max so
      uniformity is preserved automatically. */
-  /* #kbHome and #wpKbSlot are the two places the keyboard can live (it is lent
-     between them, see borrow_keyboard in wordpic_screen.rs). BOTH must be full
-     width. #stage is a column flex with align-items:center, so a wrapper with
-     no width shrink-wraps to its content — and .game-kb{width:100%} then
-     resolves against the shrunken wrapper instead of the stage, collapsing
-     every key. That is exactly what shipped in 106. */
-  #kbHome,#wpKbSlot{width:100%}
+  /* The keyboard's home must be full width. #stage is a column flex with
+     align-items:center, so a wrapper with no width shrink-wraps to its
+     content — and .game-kb{width:100%} then resolves against the shrunken
+     wrapper instead of the stage, collapsing every key. That is exactly what
+     shipped in 106. (The picture lends the keyboard a second home; that rule
+     lives inside the SPELL-PICTURE block so the site build never names it.) */
+  #kbHome{width:100%}
   .game-kb{width:100%;margin-top:14px;display:flex;flex-direction:column;gap:7px;user-select:none;
     --kb-cols:10; --kb-gap:6px; --kb-key-max:46px;
     /* Capped, deliberately NOT floored. A CSS floor would clamp a collapsed
@@ -1341,7 +1276,7 @@
   <!-- CC-PRACTICE: the hub tile's launch target (was missing — the tile was a
        silent dead end on builds 96–98). -->
   <button id="practiceOpen" class="btn-hide" aria-hidden="true" tabindex="-1"></button>
-  <button id="wordPicOpen" class="btn-hide" aria-hidden="true" tabindex="-1"></button>
+
 
   <!-- Dev door menu (TEMPORARY — removed at activation). Reveal with five quick taps
        on the SPELL logo; routes to the hidden REVIEW-GATED screens for on-device
@@ -1412,58 +1347,7 @@
 
   <!-- CC-WORD-PICTURE v5: picker + calligram canvas. Words typeset along
        ghost guide strokes — the words ARE the picture. -->
-  <div class="wp-screen" id="wpPicker">
-    <div class="wp-top">
-      <button class="ghost mode-exit" id="wpPickerExit" aria-label="Exit">✕</button>
-      <div class="wp-title" data-i18n="tools.wordpic.name">Spell Picture</div>
-      <button class="btn btn-check" id="wpSurprise" data-i18n="wordpic.surprise">🎲</button>
-    </div>
-    <div class="wp-grid" id="wpGrid"></div>
-  </div>
-  <div class="wp-screen" id="wpPlay">
-    <div class="wp-top">
-      <button class="ghost mode-exit" id="wpExit" aria-label="Exit">✕</button>
-      <div class="wp-title" id="wpPlayTitle"></div>
-      <div class="wp-count" id="wpCount"></div>
-      <button class="ghost btn-hide" id="wpZoom" aria-label="Zoom">🔍</button>
-      <button class="ghost" id="wpRestart">↺</button>
-    </div>
-    <div class="wp-stage" id="wpStage"></div>
-    <div class="wp-slots" id="wpSlots"></div>
-    <div class="wp-status" id="wpStatus"></div>
-    <div class="wp-row">
-      <input class="wp-input" id="wpInput" type="text" inputmode="none" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" />
-      <button class="btn btn-check wp-replay" id="wpReplay" aria-label="Replay">🔊</button>
-    </div>
-    <!-- F7: the app's own per-language keyboard is lent here while the
-         picture is open, so no system keyboard (and no dictation key) -->
-    <div id="wpKbSlot"></div>
-    <div class="wp-card" id="wpHow"><div class="modal">
-      <p id="wpHowText"></p>
-      <button class="btn btn-check" id="wpHowNext" data-i18n="practice.gotIt" style="width:100%">Got it</button>
-    </div></div>
-    <div class="wp-card" id="wpConfirm"><div class="modal" style="text-align:center">
-      <p data-i18n="wordpic.restartAsk">Start this picture over? Its words are cleared.</p>
-      <button class="btn btn-check" id="wpConfirmYes" data-i18n="wordpic.restartYes" style="width:100%;margin-bottom:8px">Start over</button>
-      <button class="btn" id="wpConfirmNo" data-i18n="voiceSpell.netNo" style="width:100%">No thanks</button>
-    </div></div>
-    <!-- CC-FINALE feature 1: the reveal. Replaces the old completion card.
-         The HUD fades, the piece rebuilds itself in spelling order, and then
-         it RESTS — indefinitely. No countdown, no auto-advance: the player
-         just made this and gets to look at it for as long as they like. A
-         tap anywhere during the build skips to the rest state. -->
-    <div class="wp-reveal" id="wpReveal" role="dialog" aria-modal="true" aria-labelledby="wpRevealTitle">
-      <h2 class="sr-only" id="wpRevealTitle" data-i18n="wordpic.doneTitle">🖼️ Your picture!</h2>
-      <div class="wp-reveal-stage" id="wpRevealStage"></div>
-      <p class="wp-reveal-note" id="wpRevealNote" role="status"></p>
-      <div class="wp-reveal-acts">
-        <button class="btn btn-check" id="wpContinue" data-i18n="finale.continue">Continue</button>
-        <button class="ghost" id="wpSave" data-i18n="finale.save">Save</button>
-        <button class="ghost" id="wpShare" data-i18n="finale.share">Share</button>
-        <button class="ghost" id="wpReplayBuild" data-i18n="finale.replay">Watch it again</button>
-      </div>
-    </div>
-  </div>
+
 
   <!-- CC-DEF-MATCH P3: the Definition Match screen. Cards float bottom→top in
        lanes; the orb speaks the word and replays on tap. No visible timer (D2). -->

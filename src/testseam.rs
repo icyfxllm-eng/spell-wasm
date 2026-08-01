@@ -35,10 +35,13 @@ pub fn install(app: &App) {
         let cb = Closure::<dyn Fn() -> String>::new(move || a.borrow().word.clone());
         set(&obj, "currentWord", cb.into_js_value());
     }
+    // Spell Picture keeps its own feed, so the base game's currentWord is
+    // not the picture's. CC-FINALE Done #2 needs a picture played to
+    // completion to reach the reveal at all. Absent on the site build with
+    // the mode itself -- the wall spec asserts the mode is gone, and a seam
+    // that named it would itself be a leak.
+    #[cfg(not(feature = "web"))]
     {
-        // Spell Picture keeps its own feed, so the base game's currentWord is
-        // not the picture's. CC-FINALE Done #2 needs a picture played to
-        // completion to reach the reveal at all.
         let cb = Closure::<dyn Fn() -> String>::new(crate::wordpic_screen::seam_current_word);
         set(&obj, "picWord", cb.into_js_value());
     }

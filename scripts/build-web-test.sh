@@ -29,7 +29,23 @@ wasm-bindgen target/wasm32-unknown-unknown/release/spell_wasm.wasm \
 echo "==> assembling dist-test/"
 rm -rf "$DIST"
 mkdir -p "$DIST"
-cp index.html audio-native.js native-language-kit.js manifest.json sw.js "$DIST/"
+# Same sentinel strip as build-web.sh: the wall spec tests the RENDERED site,
+# so the test artifact must be cut the same way the deployed one is.
+if [ "${SPELL_WEB:-0}" = "1" ]; then
+  python3 - "$DIST" <<'STRIP'
+import pathlib, sys
+src = pathlib.Path("index.html").read_text()
+for pair in (("<!-- SPELL-PICTURE:BEGIN", "<!-- SPELL-PICTURE:END -->"),
+             ("/* SPELL-PICTURE:BEGIN", "/* SPELL-PICTURE:END */")):
+    while pair[0] in src:
+        a = src.index(pair[0]); b = src.index(pair[1], a) + len(pair[1])
+        src = src[:a] + src[b:]
+pathlib.Path(sys.argv[1], "index.html").write_text(src)
+STRIP
+else
+  cp index.html "$DIST/"
+fi
+cp audio-native.js native-language-kit.js manifest.json sw.js "$DIST/"
 cp -r icons "$DIST/icons"
 cp -r fonts "$DIST/fonts"
 cp -r pkg-test "$DIST/pkg"
