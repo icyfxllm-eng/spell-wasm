@@ -160,6 +160,49 @@ pub async fn fetch_face_css() -> Result<String, ExportError> {
     Ok(face_css(&out))
 }
 
+/// What the share card prints under the piece. Everything here is data the
+/// app already owns -- no new strings pass the audit gate because none are
+/// composed: the icon is the picture's, the endonym is the registry's, the
+/// wordmark is the brand, the attribution is provenance.
+pub struct CardMeta<'a> {
+    pub icon: &'a str,
+    pub lang_endonym: &'a str,
+    /// "after Leonardo da Vinci" for PD-Art; empty otherwise.
+    pub attribution: &'a str,
+    /// 1..=4 dots (easy..expert) -- a tier MARK, not copy to translate.
+    pub tier_dots: u8,
+}
+
+/// CC-FINALE feature 2, the share card: the piece plus a tasteful frame.
+/// D2: the wordmark lives HERE and only here -- the keepsake is their art,
+/// not an ad, and a test pins that difference. The card is taller than the
+/// piece (512x600): art untouched on top, one quiet caption band below.
+pub fn card_svg(piece_svg: &str, meta: &CardMeta) -> String {
+    // The piece arrives as a complete <svg>; embed it verbatim via nesting,
+    // which preserves its geometry byte-for-byte (and the parity test's
+    // guarantees with it).
+    let inner = piece_svg;
+    let dots: String = (0..4)
+        .map(|i| {
+            let fill = if i < meta.tier_dots { "#ffb14d" } else { "#3a4258" };
+            format!("<circle cx=\"{}\" cy=\"557\" r=\"5\" fill=\"{fill}\"/>", 258 + i as i32 * 18)
+        })
+        .collect();
+    let attribution = if meta.attribution.is_empty() {
+        String::new()
+    } else {
+        format!(
+            "<text x=\"256\" y=\"592\" text-anchor=\"middle\" font-size=\"12\" fill=\"#95a0bb\" font-style=\"italic\">{}</text>",
+            crate::dom::escape_html(meta.attribution)
+        )
+    };
+    format!(
+        "<svg viewBox=\"0 0 512 600\" xmlns=\"http://www.w3.org/2000/svg\">         <rect width=\"512\" height=\"600\" fill=\"#0e1420\"/>         <svg x=\"0\" y=\"0\" width=\"512\" height=\"512\" viewBox=\"0 0 512 512\">{inner}</svg>         <rect x=\"0\" y=\"512\" width=\"512\" height=\"88\" fill=\"#121a2b\"/>         <text x=\"22\" y=\"563\" font-size=\"30\">{icon}</text>         {dots}         <text x=\"490\" y=\"560\" text-anchor=\"end\" font-size=\"15\" fill=\"#eef1f8\" font-weight=\"600\">SpellGame</text>         <text x=\"70\" y=\"560\" font-size=\"14\" fill=\"#95a0bb\">{lang}</text>         {attribution}         </svg>",
+        icon = crate::dom::escape_html(meta.icon),
+        lang = crate::dom::escape_html(meta.lang_endonym),
+    )
+}
+
 /// The export SVG for a finished piece: same geometry as the final play
 /// frame, carrying its own styles, background and face.
 pub fn export_svg(
@@ -186,6 +229,11 @@ pub fn export_svg(
 /// the embedded font non-negotiable: that context loads no stylesheet and no
 /// webfont, so anything not carried inside the markup falls back silently.
 pub async fn rasterize(svg: &str, px: u32) -> Result<String, ExportError> {
+    rasterize_wh(svg, px, px).await
+}
+
+/// Non-square rasterize for the share card.
+pub async fn rasterize_wh(svg: &str, w_px: u32, h_px: u32) -> Result<String, ExportError> {
     let doc = web_sys::window().and_then(|w| w.document()).ok_or(ExportError::RasterFailed)?;
     let img: web_sys::HtmlImageElement = doc
         .create_element("img")
@@ -214,15 +262,15 @@ pub async fn rasterize(svg: &str, px: u32) -> Result<String, ExportError> {
         .map_err(|_| ExportError::RasterFailed)?
         .dyn_into()
         .map_err(|_| ExportError::RasterFailed)?;
-    canvas.set_width(px);
-    canvas.set_height(px);
+    canvas.set_width(w_px);
+    canvas.set_height(h_px);
     let ctx: web_sys::CanvasRenderingContext2d = canvas
         .get_context("2d")
         .map_err(|_| ExportError::RasterFailed)?
         .ok_or(ExportError::RasterFailed)?
         .dyn_into()
         .map_err(|_| ExportError::RasterFailed)?;
-    ctx.draw_image_with_html_image_element_and_dw_and_dh(&img, 0.0, 0.0, px as f64, px as f64)
+    ctx.draw_image_with_html_image_element_and_dw_and_dh(&img, 0.0, 0.0, w_px as f64, h_px as f64)
         .map_err(|_| ExportError::RasterFailed)?;
     canvas.to_data_url_with_type("image/png").map_err(|_| ExportError::RasterFailed)
 }
@@ -234,13 +282,22 @@ pub async fn export_png(
     lang: &str,
     words: &[String],
     product: Product,
+    meta: Option<CardMeta<'_>>,
 ) -> Result<String, ExportError> {
     if plan.placements.is_empty() {
         return Err(ExportError::NoPlan);
     }
     let face = fetch_face_css().await?;
-    let svg = export_svg(plan, lang, words, &face);
-    rasterize(&svg, product.pixels(512)).await
+    let piece = export_svg(plan, lang, words, &face);
+    match (product, meta) {
+        (Product::ShareCard, Some(m)) => {
+            // Card is 512x600: rasterize at the card's aspect so nothing
+            // squashes; D3's 2048 applies to the longest side.
+            let svg = card_svg(&piece, &m);
+            rasterize_wh(&svg, 2048 * 512 / 600, 2048).await
+        }
+        _ => rasterize(&piece, product.pixels(512)).await,
+    }
 }
 
 /// CC-FINALE feature 3 — hand the keepsake to Photos.
@@ -320,6 +377,33 @@ mod tests {
         let css = face_css(&FACES.iter().map(|(_, r)| ("AAAA".to_string(), *r)).collect::<Vec<_>>());
         assert_eq!(css.matches("@font-face").count(), FACES.len());
         assert_eq!(css.matches("unicode-range:").count(), FACES.len());
+    }
+
+    #[test]
+    fn the_wordmark_lives_on_the_card_and_never_the_keepsake() {
+        // D2 verbatim: "on share cards only -- never on the saved keepsake
+        // (their art, not an ad)". The keepsake path IS export_svg, which
+        // this asserts stays brand-free.
+        let piece = "<svg viewBox=\"0 0 512 512\"><path d=\"M1 1\"/></svg>";
+        let meta = CardMeta { icon: "🐺", lang_endonym: "Español", attribution: "", tier_dots: 3 };
+        let card = card_svg(piece, &meta);
+        assert!(card.contains("SpellGame"), "the card carries the wordmark");
+        assert!(!piece.contains("SpellGame"), "the keepsake never does");
+        // The piece is embedded VERBATIM: geometry untouched by framing.
+        assert!(card.contains(piece), "framing must not touch the art");
+        assert!(card.contains("Español"), "language endonym on the card");
+        assert_eq!(card.matches("#ffb14d").count(), 3, "three tier dots lit for hard");
+    }
+
+    #[test]
+    fn masterpiece_cards_carry_the_attribution_and_others_do_not() {
+        let piece = "<svg viewBox=\"0 0 512 512\"></svg>";
+        let with = card_svg(piece, &CardMeta { icon: "🖼", lang_endonym: "English",
+            attribution: "after Leonardo da Vinci", tier_dots: 4 });
+        assert!(with.contains("after Leonardo da Vinci"), "honest and classy");
+        let without = card_svg(piece, &CardMeta { icon: "⭐", lang_endonym: "English",
+            attribution: "", tier_dots: 1 });
+        assert!(!without.contains("font-style=\"italic\""), "no empty attribution row");
     }
 
     #[test]

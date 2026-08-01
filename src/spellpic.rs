@@ -31,6 +31,10 @@ pub struct RawReq {
 #[derive(serde::Deserialize)]
 pub struct RawSubject {
     pub tier: String,
+    /// Masterpiece attribution for the share card ("after Hokusai"); empty
+    /// for everything that is not PD-Art.
+    #[serde(default)]
+    pub attr: String,
     #[serde(default)]
     pub req: Vec<RawReq>,
     pub paths: Vec<RawPath>,
@@ -51,6 +55,11 @@ pub fn bundle() -> &'static ScanBundle {
 
 pub fn has(subject: &str) -> bool {
     bundle().subjects.contains_key(subject)
+}
+
+/// Attribution line for the share card; empty when there is none.
+pub fn attribution(subject: &str) -> &'static str {
+    bundle().subjects.get(subject).map(|s| s.attr.as_str()).unwrap_or("")
 }
 
 fn band_max(tier: &str) -> f32 {

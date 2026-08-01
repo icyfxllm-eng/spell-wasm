@@ -47,7 +47,13 @@ pub fn wire(app: &App) {
     let a = app.clone();
     dom::on_click("wpExit", move || close_play(&a));
     let a = app.clone();
-    dom::on_click("wpReplay", move || replay(&a));
+    dom::on_click("wpReplay", move || {
+        // Hidden at expert, but the handler guards too: a gate that only
+        // exists in CSS is a gate that a stale class list can open.
+        if audio_gate(&current_tier()).0 {
+            replay(&a);
+        }
+    });
     let a = app.clone();
     dom::on_click("wpRestart", move || {
         if !CARD_UP.with(Cell::get) {
@@ -313,6 +319,8 @@ fn open_play(app: &App, pic_id: &str) {
     crate::keyboard::rebuild(app);
     dom::remove_class("wpPicker", "show");
     dom::add_class("wpPlay", "show");
+    // Feature 5: the Replay button HIDES at expert -- the word plays once.
+    dom::toggle_class("wpReplay", "btn-hide", !audio_gate(&current_tier()).0);
     if let Ok(inp) = dom::el("wpInput").dyn_into::<web_sys::HtmlInputElement>() {
         inp.set_value("");
         let _ = inp.focus();
@@ -791,10 +799,31 @@ fn export_and(product: crate::spellpic_export::Product, then: fn(String, String)
         note(ex::ExportError::NoPlan.i18n_key());
         return;
     };
-    let title = wordpic::picture(&pic).map(|p| p.icon.clone()).unwrap_or_default();
+    let (icon, tier) = wordpic::picture(&pic)
+        .map(|p| (p.icon.clone(), p.tier.clone()))
+        .unwrap_or_default();
+    let endonym = crate::consts::BUILTIN_LANGS
+        .iter()
+        .find(|(c, _, _, _)| *c == lang)
+        .map(|(_, n, _, _)| n.to_string())
+        .unwrap_or_default();
+    let attribution = crate::spellpic::attribution(&pic).to_string();
     wasm_bindgen_futures::spawn_local(async move {
-        match ex::export_png(&plan, &lang, &words, product).await {
-            Ok(data_url) => then(data_url, title),
+        let meta = ex::CardMeta {
+            icon: &icon,
+            lang_endonym: &endonym,
+            attribution: &attribution,
+            tier_dots: match tier.as_str() {
+                "easy" => 1,
+                "medium" => 2,
+                "hard" => 3,
+                _ => 4,
+            },
+        };
+        // The keepsake carries NO meta by design (D2: their art, not an ad).
+        let m = if product == ex::Product::ShareCard { Some(meta) } else { None };
+        match ex::export_png(&plan, &lang, &words, product, m).await {
+            Ok(data_url) => then(data_url, String::new()),
             Err(e) => note(e.i18n_key()),
         }
     });
@@ -969,13 +998,35 @@ pub fn seam_current_word() -> String {
     current_word().unwrap_or_default()
 }
 
+/// CC-PICTURE-BANK feature 5 — audio modifiers as tier gates. Listening
+/// skill climbs with spelling skill: starter/intermediate keep Replay and
+/// the slow voice; advanced loses Slow; expert (and masterpiece when the
+/// tier arrives) hears the word ONCE with the Replay button hidden -- hide,
+/// never disable, per the file.
+pub fn audio_gate(tier: &str) -> (bool, bool) {
+    // (replay_allowed, slow_allowed)
+    match tier {
+        "easy" | "medium" => (true, true),
+        "hard" => (true, false),
+        _ => (false, false),
+    }
+}
+
+fn current_tier() -> String {
+    let pic = PIC.with(|p| p.borrow().clone());
+    wordpic::picture(&pic).map(|p| p.tier.clone()).unwrap_or_default()
+}
+
 fn replay(app: &App) {
     let lang = LANG.with(|l| l.borrow().clone());
     let Some(w) = current_word() else { return };
     let code = format!("{}-{}", lang, lang.to_uppercase());
     let _ = app;
-    api::play_word(&w.clone(), "slow", 1.0, &lang, move || {
-        crate::speech_out::speak(&w, 0.55, &code)
+    let (_, slow) = audio_gate(&current_tier());
+    let variant = if slow { "slow" } else { "normal" };
+    let rate = if slow { 0.55 } else { 0.9 };
+    api::play_word(&w.clone(), variant, 1.0, &lang, move || {
+        crate::speech_out::speak(&w, rate, &code)
     });
 }
 
@@ -1135,6 +1186,23 @@ fn after(ms: i32, f: impl FnOnce() + 'static) {
     let cb = Closure::once_into_js(f);
     if let Some(win) = web_sys::window() {
         let _ = win.set_timeout_with_callback_and_timeout_and_arguments_0(cb.unchecked_ref(), ms);
+    }
+}
+
+#[cfg(test)]
+mod audio_gate_tests {
+    use super::audio_gate;
+
+    /// CC-PICTURE-BANK feature 5, as a table. If a tier is ever added
+    /// (masterpiece), the wildcard already treats it as the strictest gate,
+    /// which is the safe direction for a tier ABOVE expert.
+    #[test]
+    fn the_ladder_of_listening() {
+        assert_eq!(audio_gate("easy"), (true, true), "starter keeps Replay + Slow");
+        assert_eq!(audio_gate("medium"), (true, true), "intermediate too");
+        assert_eq!(audio_gate("hard"), (true, false), "advanced loses Slow");
+        assert_eq!(audio_gate("expert"), (false, false), "expert hears it once");
+        assert_eq!(audio_gate("masterpiece"), (false, false), "future tiers inherit the strictest");
     }
 }
 

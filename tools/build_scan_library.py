@@ -585,6 +585,8 @@ def path_min_clearance(p, others):
 # half of the contract and the tool refuses to proceed without it.
 SUGGESTIONS = ROOT / "content-pipeline/wordpic/suggestions"
 SUGGESTED_SUBJECTS = set()
+PROVENANCE = {r["subject"]: r for r in json.loads(
+    (ROOT / "content-pipeline/wordpic/ref/provenance-f8.json").read_text())}
 def _pending_suggestions(sub):
     f = SUGGESTIONS / f"{sub}.json"
     if not f.exists():
@@ -785,7 +787,10 @@ for sub, (ref, mode, tier) in SUBJ.items():
            "required_micro": req or [], "paths": entries,
            # Module 12 provenance, stamped as a fact about THIS artifact at
            # the moment it was built -- never re-derived later by guessing.
-           "authoring": "suggested-then-approved" if sub in SUGGESTED_SUBJECTS else "hand-traced"}
+           "authoring": "suggested-then-approved" if sub in SUGGESTED_SUBJECTS else "hand-traced",
+           # Masterpiece attribution rides the scan into the app bundle so the
+           # share card can print it (CC-FINALE feature 2: honest and classy).
+           "attribution": PROVENANCE.get(sub, {}).get("attribution", "")}
     (OUT / f"{sub}.json").write_text(json.dumps(doc))
     print(f'{sub:10} paths={len(entries):5} sub_floor={sum(e["sub_floor"] for e in entries):4} hash={doc["pin_hash"]:#x}')
 
@@ -804,7 +809,9 @@ for sub, spec in GEO.items():
             "min_clearance": 999.0, "tight_frac": 0.0,
         })
     doc = {"subject": sub, "tier": spec["tier"], "pin_hash": fnv([e["points"] for e in entries]),
-           "canvas": CANVAS, "required_micro": [], "paths": entries}
+           "canvas": CANVAS, "required_micro": [], "paths": entries,
+           "authoring": "hand-traced",
+           "attribution": PROVENANCE.get(sub, {}).get("attribution", "")}
     (OUT / f"{sub}.json").write_text(json.dumps(doc))
     print(f'{sub:10} paths={len(entries):5} (authored geometry, F8-exempt)')
 
@@ -853,6 +860,8 @@ for k, i in enumerate(order):
             break
 
 doc = {"subject": "mona", "tier": "expert", "pin_hash": fnv([e["points"] for e in entries]),
-       "canvas": CANVAS, "required_micro": [], "paths": entries}
+       "canvas": CANVAS, "required_micro": [], "paths": entries,
+       "authoring": "hand-traced",
+       "attribution": PROVENANCE.get("mona", {}).get("attribution", "")}
 (OUT / "mona.json").write_text(json.dumps(doc))
 print(f'{"mona":10} paths={len(entries):5} (Eric-passed v7.5.1 engraving build)')

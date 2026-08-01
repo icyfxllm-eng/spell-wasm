@@ -27,6 +27,7 @@ for f in sorted(SCANS.glob("*.json")):
         })
     subjects[d["subject"]] = {
         "tier": d["tier"],
+        "attr": d.get("attribution", ""),
         "req": d.get("required_micro", []),
         "paths": paths,
     }

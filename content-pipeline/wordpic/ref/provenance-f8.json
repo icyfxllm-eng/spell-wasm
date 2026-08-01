@@ -115,7 +115,8 @@
   "sourceUrl": "https://commons.wikimedia.org/wiki/File:Mona_Lisa,_by_Leonardo_da_Vinci,_from_C2RMF_retouched.jpg",
   "file": "ref/mona-engraving.jpg",
   "bytes": 980329,
-  "note": "ink-branch tracing source (Eric-approved 2026-07-31); painting photo retained for side-by-side; red/blue annotation is the review standard"
+  "note": "ink-branch tracing source (Eric-approved 2026-07-31); painting photo retained for side-by-side; red/blue annotation is the review standard",
+  "attribution": "after Leonardo da Vinci"
  },
  {
   "subject": "mona-engraving",
