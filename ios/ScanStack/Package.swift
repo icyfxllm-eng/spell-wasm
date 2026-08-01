@@ -12,15 +12,12 @@ let package = Package(
     // FEATURE is gated at that floor; the app minimum is untouched.
     platforms: [.macOS(.v14), .iOS(.v17)],
     products: [
-        .library(name: "TonalKit", targets: ["TonalKit"]),
         .library(name: "VisionKitScan", targets: ["VisionKitScan"]),
         .library(name: "TypeKitScan", targets: ["TypeKitScan"]),
     ],
     targets: [
-        .target(name: "TonalKit"),
         .target(name: "VisionKitScan"),
         .target(name: "TypeKitScan"),
-        .testTarget(name: "TonalKitTests", dependencies: ["TonalKit"]),
         .testTarget(name: "VisionKitScanTests", dependencies: ["VisionKitScan"]),
         .testTarget(name: "TypeKitScanTests", dependencies: ["TypeKitScan"]),
     ]

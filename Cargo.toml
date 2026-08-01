@@ -1,5 +1,5 @@
 [workspace]
-members = [".", "tracer-core", "scanlock"]
+members = [".", "tracer-core", "scanlock", "tonal"]
 
 [package]
 name = "spell_wasm"

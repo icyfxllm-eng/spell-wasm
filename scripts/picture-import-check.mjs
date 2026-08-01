@@ -39,4 +39,17 @@ if (offenders.length) {
     "\nrather than shared code reaching into the picture.");
   process.exit(1);
 }
-console.log(`picture-import: OK — no shared module imports the picture subtree (I3)`);
+// CC-SCAN-STACK boundary, same spirit as I3 and v1.2 Done #3: the tonal
+// crate (kornia, the suggester) is TOOL-SIDE. The day spell_wasm links it,
+// scan-stack machinery rides into the app bundle past every gate that
+// polices source text — so ask the dependency graph itself.
+import { execSync } from "node:child_process";
+const tree = execSync("cargo tree -p spell_wasm --edges normal", { encoding: "utf8" });
+for (const banned of ["kornia", "tonal"]) {
+  if (tree.split("\n").some((l) => l.includes(banned))) {
+    console.error(`picture-import: spell_wasm depends on ${banned} — scan-stack is tool-side only`);
+    process.exit(1);
+  }
+}
+
+console.log(`picture-import: OK — no shared module imports the picture subtree (I3), app links no tool crate`);

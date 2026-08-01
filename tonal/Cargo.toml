@@ -1,0 +1,21 @@
+# CC-SCAN-STACK v1.1 section A — TonalKit in Rust. Adopted by spike #9
+# (2026-08-01, full determinism matrix green; see docs/CC-SCAN-STACK-V1.1.md).
+#
+# TOOL-SIDE ONLY. spell_wasm must never depend on this crate: app
+# integration of the scan stack is EXECUTION-BLOCKED on P1+P2, and
+# scripts/picture-import-check.mjs + the wall scan police the app bundle.
+[package]
+name = "tonal"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+# The D8 pins, same versions spike #9 qualified. Standard ops only; every
+# algorithm that IS the determinism guarantee is hand-written below.
+kornia-imgproc = "=0.1.15-rc.4"
+kornia-image = "=0.1.15-rc.4"
+png = "=0.17.16"
+
+[[bin]]
+name = "suggest"
+path = "src/bin/suggest.rs"
