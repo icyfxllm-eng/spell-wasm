@@ -2690,6 +2690,38 @@
     }
    ],
    "guide": []
+  },
+  {
+   "id": "starrynight",
+   "tier": "expert",
+   "subject": "starrynight",
+   "icon": "🌌",
+   "kid": false,
+   "wash": false,
+   "pack": "wave3",
+   "provenance": {
+    "title": "The Starry Night",
+    "artist": "Vincent van Gogh (1853–1890)",
+    "source": "Wikimedia Commons (Google Art Project scan)",
+    "sourceUrl": "https://commons.wikimedia.org/wiki/File:Van_Gogh_-_Starry_Night_-_Google_Art_Project.jpg",
+    "pdBasis": "Public domain: painted 1889, artist died 1890; skeleton composed at content time over the PD reference (reference image not shipped)",
+    "retrieved": "2026-08-01"
+   },
+   "paths": [
+    {
+     "mode": "flow",
+     "d": "M256.0 60.0 L395.0 117.0 L452.0 256.0 L395.0 395.0 L256.0 452.0 L117.0 395.0 L60.0 256.0 L117.0 117.0",
+     "order": 1,
+     "budget": [
+      2,
+      10
+     ],
+     "band": 1,
+     "arch": "line",
+     "feature": "skeleton"
+    }
+   ],
+   "guide": []
   }
  ]
 }
