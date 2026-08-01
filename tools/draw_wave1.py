@@ -46,11 +46,19 @@ def balloon():
 
 def mug():
     """The handle is a HOLE — the single feature that makes a mug a mug and
-    not a bucket. Steam stays off: thin curls die at starter widths."""
-    im, d = canvas(760, 640)
-    d.rounded_rectangle([120, 120, 480, 540], radius=42, fill=BLACK)  # body
-    d.ellipse([470, 190, 690, 430], fill=BLACK)                       # handle outer
-    d.ellipse([520, 240, 640, 380], fill=WHITE)                       # handle hole
+    not a bucket. Eric (2026-08-01): lower the cup, steam off the top. The
+    first cut skipped steam as "thin curls die at starter widths" — the fix
+    is not to skip steam but to draw it THICK: 20px wisps hold their own
+    contours and clear the corridor floor."""
+    im, d = canvas(760, 900)
+    d.rounded_rectangle([120, 420, 480, 830], radius=42, fill=BLACK)  # body, lowered
+    d.ellipse([470, 480, 690, 720], fill=BLACK)                       # handle outer
+    d.ellipse([520, 530, 640, 670], fill=WHITE)                       # handle hole
+    # Three steam wisps: fat S-curves, gapped 30px above the rim so each
+    # traces as its own clear candidate.
+    for x0, amp, h0 in [(190, 30, 0), (295, 36, -40), (400, 30, 0)]:
+        pts = [(x0, 390 + h0), (x0 - amp, 320 + h0), (x0 + amp, 220 + h0), (x0, 130 + h0)]
+        d.line(pts, fill=BLACK, width=20, joint="curve")
     return im
 
 

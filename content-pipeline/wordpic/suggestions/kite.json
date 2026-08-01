@@ -3,10 +3,171 @@
  "seed": 1,
  "clearance_floor": 14,
  "candidates": [
-  {"id": 0, "status": "pending", "arc": 466.9, "clearance": 16.6, "flagged": false, "points": [[22.0,170.0],[153.4,170.0],[153.4,312.5],[22.6,170.6]]},
-  {"id": 1, "status": "pending", "arc": 465.1, "clearance": 16.6, "flagged": false, "points": [[170.0,170.0],[300.8,170.0],[170.0,311.9],[170.0,170.6]]},
-  {"id": 2, "status": "pending", "arc": 447.9, "clearance": 16.6, "flagged": false, "points": [[153.4,22.0],[153.4,153.4],[22.0,153.4],[152.8,22.6]]},
-  {"id": 3, "status": "pending", "arc": 446.0, "clearance": 16.6, "flagged": false, "points": [[170.0,22.6],[300.8,153.4],[170.0,153.4],[170.0,23.2]]},
-  {"id": 4, "status": "pending", "arc": 420.4, "clearance": 21.0, "flagged": false, "points": [[155.3,333.4],[163.3,338.3],[130.7,389.3],[181.7,432.3],[180.5,436.6],[183.5,439.6],[140.5,490.0],[133.8,483.9],[173.1,437.2],[122.7,394.8],[124.6,389.9],[120.9,387.4],[154.7,334.0]]}
+  {
+   "id": 0,
+   "status": "approved",
+   "arc": 466.9,
+   "clearance": 16.6,
+   "flagged": false,
+   "points": [
+    [
+     22.0,
+     170.0
+    ],
+    [
+     153.4,
+     170.0
+    ],
+    [
+     153.4,
+     312.5
+    ],
+    [
+     22.6,
+     170.6
+    ]
+   ],
+   "reviewed_by": "Eric, 2026-08-01 (\"all approved except the cup\")"
+  },
+  {
+   "id": 1,
+   "status": "approved",
+   "arc": 465.1,
+   "clearance": 16.6,
+   "flagged": false,
+   "points": [
+    [
+     170.0,
+     170.0
+    ],
+    [
+     300.8,
+     170.0
+    ],
+    [
+     170.0,
+     311.9
+    ],
+    [
+     170.0,
+     170.6
+    ]
+   ],
+   "reviewed_by": "Eric, 2026-08-01 (\"all approved except the cup\")"
+  },
+  {
+   "id": 2,
+   "status": "approved",
+   "arc": 447.9,
+   "clearance": 16.6,
+   "flagged": false,
+   "points": [
+    [
+     153.4,
+     22.0
+    ],
+    [
+     153.4,
+     153.4
+    ],
+    [
+     22.0,
+     153.4
+    ],
+    [
+     152.8,
+     22.6
+    ]
+   ],
+   "reviewed_by": "Eric, 2026-08-01 (\"all approved except the cup\")"
+  },
+  {
+   "id": 3,
+   "status": "approved",
+   "arc": 446.0,
+   "clearance": 16.6,
+   "flagged": false,
+   "points": [
+    [
+     170.0,
+     22.6
+    ],
+    [
+     300.8,
+     153.4
+    ],
+    [
+     170.0,
+     153.4
+    ],
+    [
+     170.0,
+     23.2
+    ]
+   ],
+   "reviewed_by": "Eric, 2026-08-01 (\"all approved except the cup\")"
+  },
+  {
+   "id": 4,
+   "status": "approved",
+   "arc": 420.4,
+   "clearance": 21.0,
+   "flagged": false,
+   "points": [
+    [
+     155.3,
+     333.4
+    ],
+    [
+     163.3,
+     338.3
+    ],
+    [
+     130.7,
+     389.3
+    ],
+    [
+     181.7,
+     432.3
+    ],
+    [
+     180.5,
+     436.6
+    ],
+    [
+     183.5,
+     439.6
+    ],
+    [
+     140.5,
+     490.0
+    ],
+    [
+     133.8,
+     483.9
+    ],
+    [
+     173.1,
+     437.2
+    ],
+    [
+     122.7,
+     394.8
+    ],
+    [
+     124.6,
+     389.9
+    ],
+    [
+     120.9,
+     387.4
+    ],
+    [
+     154.7,
+     334.0
+    ]
+   ],
+   "reviewed_by": "Eric, 2026-08-01 (\"all approved except the cup\")"
+  }
  ]
 }
