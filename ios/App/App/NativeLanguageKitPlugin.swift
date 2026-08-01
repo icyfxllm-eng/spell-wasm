@@ -14,6 +14,11 @@ public class NativeLanguageKitPlugin: CAPPlugin, CAPBridgedPlugin {
     public let jsName = "NativeLanguageKit"
     public let pluginMethods: [CAPPluginMethod] = [
         CAPPluginMethod(name: "capabilities", returnType: CAPPluginReturnPromise),
+        // CC-FINALE feature 3 (add-only Photos). Declaring the method is not
+        // optional bookkeeping: without this row the bridge has no route for
+        // it, the JS call rejects, and Save fails in a way that looks exactly
+        // like "no plugin installed".
+        CAPPluginMethod(name: "savePicture", returnType: CAPPluginReturnPromise),
         CAPPluginMethod(name: "speak", returnType: CAPPluginReturnPromise),
         CAPPluginMethod(name: "speakSyllables", returnType: CAPPluginReturnPromise),
         CAPPluginMethod(name: "stop", returnType: CAPPluginReturnPromise),

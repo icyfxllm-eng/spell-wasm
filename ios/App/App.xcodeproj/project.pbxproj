@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		2FAD9763203C412B000D30F8 /* config.xml in Resources */ = {isa = PBXBuildFile; fileRef = 2FAD9762203C412B000D30F8 /* config.xml */; };
 		39B22D60CA7B1F84A7ACDB33 /* NativeLanguageKitPlugin+PhotoList.swift in Sources */ = {isa = PBXBuildFile; fileRef = D50A51C8A62BA80E2F6B0354 /* NativeLanguageKitPlugin+PhotoList.swift */; };
+		A1F00E5C0B7D42C19E33AA01 /* NativeLanguageKitPlugin+SavePicture.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1F00E5C0B7D42C19E33AA02 /* NativeLanguageKitPlugin+SavePicture.swift */; };
 		414409BD1838B357D31D9C1A /* NativeLanguageKitPlugin.swift in Sources */ = {isa = PBXBuildFile; fileRef = F60E6967C62728C402EE9227 /* NativeLanguageKitPlugin.swift */; };
 		4D22ABE92AF431CB00220026 /* CapApp-SPM in Frameworks */ = {isa = PBXBuildFile; productRef = 4D22ABE82AF431CB00220026 /* CapApp-SPM */; };
 		50379B232058CBB4000EE86E /* capacitor.config.json in Resources */ = {isa = PBXBuildFile; fileRef = 50379B222058CBB4000EE86E /* capacitor.config.json */; };
@@ -33,6 +34,7 @@
 		50B271D01FEDC1A000F3C39B /* public */ = {isa = PBXFileReference; lastKnownFileType = folder; path = public; sourceTree = "<group>"; };
 		958DCC722DB07C7200EA8C5F /* debug.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; name = debug.xcconfig; path = ../debug.xcconfig; sourceTree = SOURCE_ROOT; };
 		D50A51C8A62BA80E2F6B0354 /* NativeLanguageKitPlugin+PhotoList.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = "NativeLanguageKitPlugin+PhotoList.swift"; sourceTree = "<group>"; };
+		A1F00E5C0B7D42C19E33AA02 /* NativeLanguageKitPlugin+SavePicture.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = "NativeLanguageKitPlugin+SavePicture.swift"; sourceTree = "<group>"; };
 		F60E6967C62728C402EE9227 /* NativeLanguageKitPlugin.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = NativeLanguageKitPlugin.swift; sourceTree = "<group>"; };
 		FADE0001000000000000EE01 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = App/en.lproj/InfoPlist.strings; sourceTree = SOURCE_ROOT; };
 		FADE0001000000000000EE02 /* es */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = es; path = App/es.lproj/InfoPlist.strings; sourceTree = SOURCE_ROOT; };
@@ -90,6 +92,7 @@
 				50B271D01FEDC1A000F3C39B /* public */,
 				F60E6967C62728C402EE9227 /* NativeLanguageKitPlugin.swift */,
 				D50A51C8A62BA80E2F6B0354 /* NativeLanguageKitPlugin+PhotoList.swift */,
+				A1F00E5C0B7D42C19E33AA02 /* NativeLanguageKitPlugin+SavePicture.swift */,
 			);
 			path = App;
 			sourceTree = "<group>";
@@ -181,6 +184,7 @@
 				504EC3081FED79650016851F /* AppDelegate.swift in Sources */,
 				414409BD1838B357D31D9C1A /* NativeLanguageKitPlugin.swift in Sources */,
 				39B22D60CA7B1F84A7ACDB33 /* NativeLanguageKitPlugin+PhotoList.swift in Sources */,
+				A1F00E5C0B7D42C19E33AA01 /* NativeLanguageKitPlugin+SavePicture.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
