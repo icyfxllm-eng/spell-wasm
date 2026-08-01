@@ -762,6 +762,11 @@ fn open_gallery_piece(app: &App, pic: &str) {
         "wpRevealNote",
         &i18n::tp("wordpic.doneBody", &[("n", &run.words.len().to_string())]),
     );
+    // The reveal is markup INSIDE #wpPlay. Opened from the picker, its
+    // parent screen is display:none and the reveal would "show" invisibly --
+    // the gallery spec caught exactly that. The reveal covers the screen
+    // (inset:0), so the play HUD beneath never paints.
+    dom::add_class("wpPlay", "show");
     dom::add_class("wpReveal", "show");
     dom::add_class("wpReveal", "rest");
     CARD_UP.with(|c| c.set(true));

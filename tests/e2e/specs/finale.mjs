@@ -13,8 +13,9 @@ import { openApp, assert, assertEq } from '../harness.mjs';
 
 const CLASSES = [[320, 568], [375, 667], [390, 844], [428, 926]];
 
-/** Play `pic` to completion through the UI. Returns the word count. */
-async function completePicture(page, pic) {
+/** Play `pic` to completion through the UI. Returns the word count.
+ *  Exported: the gallery spec builds its trophies the same honest way. */
+export async function completePicture(page, pic) {
   await page.evaluate(() => document.getElementById('wordPicOpen').click());
   await page.waitForSelector('#wpPicker.show', { timeout: 5000 });
   await page.click(`[data-pic="${pic}"]`);

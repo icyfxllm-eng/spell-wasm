@@ -15,6 +15,7 @@ import * as keyboard from './specs/keyboard.mjs';
 import * as finale from './specs/finale.mjs';
 import * as platform from './specs/platform.mjs';
 import * as pictureWall from './specs/picture-wall.mjs';
+import * as gallery from './specs/gallery.mjs';
 import * as gameplay from './specs/gameplay.mjs';
 import * as modes from './specs/modes.mjs';
 import * as menu from './specs/menu.mjs';
@@ -43,6 +44,7 @@ const SPECS = [
   ['finale', finale],
   ['platform', platform],
   ['picture-wall', pictureWall],
+  ['gallery', gallery],
 ];
 
 const ROOT = join(fileURLToPath(import.meta.url), '..', '..', '..');
