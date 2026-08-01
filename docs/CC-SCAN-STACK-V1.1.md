@@ -87,7 +87,7 @@ IoU against its **own** goldens. Cross-platform byte comparison is explicitly
 
 | # | Decision | Status |
 | --- | --- | --- |
-| D6 | TonalKit language | **DECIDED (Eric, 2026-07-31)**: run the kornia-rs qualification spike (#9). Adoption is NOT decided here -- the spike result decides it mechanically. PASS adopts section A; FAIL leaves the vImage plan standing and strikes the section. |
+| D6 | TonalKit language | **DECIDED**: Eric authorised the spike (2026-07-31); spike #9 **PASSED** (2026-08-01, full matrix — see report below) and section A is adopted mechanically per the file's own rule. Rust TonalKit via kornia-rs, pinned. |
 | D7 | Android status | **DECIDED**: design-ahead only. Section C confers no execution authority. Any executor finding themselves writing Android code under this file must stop. |
 | D8 | Crate pinning | **DECIDED**: kornia-rs — and every model file in any future section-C build — is version-pinned. Upgrades require re-running the full determinism eval and are their own reviewed change, never a drive-by bump. |
 
@@ -139,31 +139,41 @@ What already exists that this amendment touches:
   name. #10 is therefore a small formalisation plus a grep-level CI check,
   not a rewrite. It is authorised under Phase T0 and does not wait on D6.
 
-## Spike #9 report (2026-08-01)
+## Spike #9 report — FINAL (2026-08-01): PASS. Section A is adopted.
 
 Crate: `tools/kornia-spike/` — standalone workspace so the app's lockfile is
-untouched; its own committed Cargo.lock is the D8 pin
+untouched; its committed Cargo.lock is the D8 pin
 (`kornia-imgproc =0.1.15-rc.4`, `kornia-image =0.1.15-rc.4`).
 
 Corpus: 50 images — every PNG reference in `content-pipeline/wordpic/ref`
-(the real subjects) plus seeded synthetics (gradients, rings, xorshift
-noise) chosen to be adversarial for float determinism. Hashes are over the
-f32 **bit patterns** of the flow field: an epsilon comparison would concede
-nondeterminism while pretending not to.
+plus seeded synthetics (gradients, integer-triangle rings, xorshift noise).
+Hashes are over the f32 **bit patterns** of gradients and flow; an epsilon
+comparison would concede nondeterminism while pretending not to.
 
 | Criterion | Result |
 | --- | --- |
-| Posterize + Sobel + structure tensor via kornia | **PARTIAL** — Sobel via `spatial_gradient_float_parallel_row`; posterize is ours by design (section A says so); **kornia has no structure-tensor op at this version**, composed by hand from its gradients. Recorded gap. |
-| Byte-identical across repeat runs (ARM) | **PASS** — corpus hash `30082bb08a368f14`, stable |
-| Byte-identical across thread counts (ARM, RAYON 1/8/default) | **PASS** — same hash |
-| Byte-identical across arch | **BLOCKED** — this Mac has no Rosetta 2 and the old datacenter box is unreachable. The x86 binary builds; it cannot execute here. Installing Rosetta is one command needing Eric's go-ahead (system install + license). |
-| Crate pinned | **PASS** — exact-version pins, committed lockfile |
-| Unsupported ops recorded | structure tensor (above). Also worth weighing for D6: the crate family's NEWEST releases are all `-rc`, which bears on "never bet the stack on a young crate". |
+| Posterize + Sobel + structure tensor via kornia | **PASS with one recorded gap** — Sobel via `spatial_gradient_float_parallel_row`; posterize ours by design; kornia has **no structure-tensor op** at this version, so the tensor is hand-composed from its gradients (~30 lines, the section-A doctrine anyway). |
+| Byte-identical across arch (aarch64 vs x86_64/Rosetta) | **PASS** — corpus `67103486821407d4` both sides |
+| Byte-identical across repeat runs | **PASS** |
+| Byte-identical across thread counts (RAYON 1/8/default) | **PASS** |
+| Crate pinned | **PASS** — exact pins, committed lockfile |
+| Unsupported ops recorded | structure tensor (above); crate family's newest releases are all `-rc`, so the pin is doing real work |
 
-**D6 therefore stays mechanically undecided** — the spike's own rule is that
-the result decides, and the cross-arch criterion has not run. One `PASS`
-short, not failed: nondeterminism was the feared outcome and none appeared
-on ARM under any threading.
+**The one failure the spike ever showed was mine, and it is the spike's best
+lesson.** The first cross-arch run diverged — and every divergent image was
+a synthetic whose generator used `f32::sin`. libm differs per arch; the
+corpus generator itself was nondeterministic and framed the crate. Kornia's
+gradients were byte-identical on all 21 real photos from the first run. The
+generator now uses an integer triangle wave and the matrix is uniformly
+green. Carry-forward for section A's implementation: **never let libm into
+the pipeline** — the flow angle's `atan2` happened to agree across arches
+here, but that is luck, not contract, and production flow math should use a
+hand-rolled or table-based orientation for the same reason the palette
+sampler is hand-rolled.
+
+**D6: DECIDED by spike result (the file's own rule). Section A proceeds; the
+vImage plan is retired; Metal (module 5) stays re-scoped to
+budget-contingent.**
 
 Open question for Eric, unchanged from CC-SCAN-STACK: if the tonal math moves
 to Rust, the Swift package's remaining job is Vision plus typography, which
