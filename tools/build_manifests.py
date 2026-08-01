@@ -131,12 +131,11 @@ def layer_split(paths: list[dict]) -> list[list[int]]:
 
 
 def authoring_note(sub: str) -> str:
-    f = ROOT / "content-pipeline/wordpic/suggestions" / f"{sub}.json"
-    if not f.exists():
-        return "hand-traced"
-    doc = json.loads(f.read_text())
-    ok = sum(1 for c in doc.get("candidates", []) if c.get("status") == "approved")
-    return f"suggested-then-approved ({ok} candidates)" if ok else "hand-traced"
+    """Read the stamp the scan build wrote. Re-deriving from the sidecar
+    would claim suggested provenance for scans that were actually built by
+    the tracer before the approval landed -- a false history."""
+    scan = json.loads((SCANS / f"{sub}.json").read_text())
+    return scan.get("authoring", "hand-traced")
 
 
 def main() -> int:

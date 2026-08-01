@@ -560,12 +560,26 @@ def path_min_clearance(p, others):
 # candidate still pending, its scan does not build -- approval is the human
 # half of the contract and the tool refuses to proceed without it.
 SUGGESTIONS = ROOT / "content-pipeline/wordpic/suggestions"
+SUGGESTED_SUBJECTS = set()
 def _pending_suggestions(sub):
     f = SUGGESTIONS / f"{sub}.json"
     if not f.exists():
         return 0
     doc = json.loads(f.read_text())
     return sum(1 for c in doc.get("candidates", []) if c.get("status") == "pending")
+
+def _approved_candidates(sub):
+    """Module 12 consumption: once every candidate is reviewed and at least
+    one is approved, the APPROVED polylines become the subject's paths --
+    "accepted paths become ordinary v7.x traced paths, indistinguishable
+    downstream". The suggester emits in the same 512-canvas frame this
+    pipeline scales into, so they slot in where rings() output would."""
+    f = SUGGESTIONS / f"{sub}.json"
+    if not f.exists():
+        return None
+    doc = json.loads(f.read_text())
+    ok = [c for c in doc.get("candidates", []) if c.get("status") == "approved"]
+    return [[(float(x), float(y)) for x, y in c["points"]] for c in ok] or None
 
 for sub, (ref, mode, tier) in SUBJ.items():
     npend = _pending_suggestions(sub)
@@ -574,7 +588,12 @@ for sub, (ref, mode, tier) in SUBJ.items():
             f"{sub}: {npend} suggestion candidate(s) still pending review — "
             f"approve or reject them in content-pipeline/wordpic/suggestions/{sub}.json "
             f"before this subject can build (module 12 export-block)")
-    paths = rings(REF / ref, sub)
+    suggested = _approved_candidates(sub)
+    if suggested is not None:
+        paths = suggested
+        SUGGESTED_SUBJECTS.add(sub)
+    else:
+        paths = rings(REF / ref, sub)
     paths.sort(key=plen, reverse=True)
     # v8.2.1 small-feature pass: a SHORT CLOSED contour is a solid source
     # feature (snowman eyes, nose; animal eyes). It is preserved intact —
@@ -739,7 +758,10 @@ for sub, (ref, mode, tier) in SUBJ.items():
     # file. The render gate refuses to display a subject missing any.
     req = REQUIRED_MICRO.get(sub)
     doc = {"subject": sub, "tier": tier, "pin_hash": fnv(paths), "canvas": CANVAS,
-           "required_micro": req or [], "paths": entries}
+           "required_micro": req or [], "paths": entries,
+           # Module 12 provenance, stamped as a fact about THIS artifact at
+           # the moment it was built -- never re-derived later by guessing.
+           "authoring": "suggested-then-approved" if sub in SUGGESTED_SUBJECTS else "hand-traced"}
     (OUT / f"{sub}.json").write_text(json.dumps(doc))
     print(f'{sub:10} paths={len(entries):5} sub_floor={sum(e["sub_floor"] for e in entries):4} hash={doc["pin_hash"]:#x}')
 
