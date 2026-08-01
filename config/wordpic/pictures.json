@@ -2354,6 +2354,54 @@
     }
    ],
    "guide": []
+  },
+  {
+   "id": "kite",
+   "tier": "easy",
+   "subject": "kite",
+   "icon": "🪁",
+   "kid": true,
+   "wash": false,
+   "pack": "wave1",
+   "paths": [
+    {
+     "mode": "flow",
+     "d": "M22 162 L103 81 L188 32 L269 112 L308 203 L262 307 L215 411 L158 473 L103 374 L59 268 L22 162",
+     "order": 1,
+     "budget": [
+      2,
+      10
+     ],
+     "band": 1,
+     "arch": "outline",
+     "feature": "kite outline"
+    }
+   ],
+   "guide": []
+  },
+  {
+   "id": "ladybug",
+   "tier": "easy",
+   "subject": "ladybug",
+   "icon": "🐞",
+   "kid": true,
+   "wash": false,
+   "pack": "wave1",
+   "paths": [
+    {
+     "mode": "flow",
+     "d": "M22 308 L66 180 L159 78 L275 32 L372 130 L451 242 L441 376 L341 469 L206 487 L82 429 L22 308",
+     "order": 1,
+     "budget": [
+      2,
+      10
+     ],
+     "band": 1,
+     "arch": "outline",
+     "feature": "ladybug outline"
+    }
+   ],
+   "guide": []
   }
  ]
 }

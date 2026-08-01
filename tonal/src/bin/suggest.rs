@@ -35,6 +35,12 @@ const MARGIN: f32 = 22.0;
 /// historically refused the picture; the sheet shows these red.
 const CLEARANCE_FLOOR: f32 = 14.0;
 const MIN_ARC_PX: f32 = 40.0;
+/// Matches build_scan_library's SMALL_FEATURE_MAX: a short CLOSED contour
+/// becomes a micro feature downstream — drawn filled, never hosting a word,
+/// EXEMPT from corridor keep-outs (the snowman's eyes, the cactus's
+/// thorns). Flagging those for tight clearance would be a false alarm
+/// about a law that does not apply to them.
+const MICRO_ARC_MAX: f32 = 130.0;
 const DP_EPSILON: f32 = 1.6;
 
 fn main() {
@@ -84,6 +90,7 @@ fn main() {
                 prominence: arc * (0.25 + strength),
                 clearance: f32::MAX,
                 flagged: false,
+                micro: false,
             }
         })
         .filter(|c| c.arc >= MIN_ARC_PX)
@@ -101,15 +108,27 @@ fn main() {
     // Pairwise corridor clearance — the pre-score that keeps the solver's
     // refusals off Eric's review sheet.
     for i in 0..cands.len() {
+        cands[i].micro = cands[i].arc < MICRO_ARC_MAX && is_closed(&cands[i].points);
+    }
+    for i in 0..cands.len() {
         let mut min_d = f32::MAX;
+        let mut min_word = f32::MAX;
         for j in 0..cands.len() {
             if i == j {
                 continue;
             }
-            min_d = min_d.min(poly_distance(&cands[i].points, &cands[j].points));
+            let d = poly_distance(&cands[i].points, &cands[j].points);
+            min_d = min_d.min(d);
+            if !cands[j].micro {
+                min_word = min_word.min(d);
+            }
         }
         cands[i].clearance = min_d;
-        cands[i].flagged = min_d < CLEARANCE_FLOOR;
+        // Corridors exist between WORD-HOSTING strokes. Micro features are
+        // exempt downstream on both sides of the pair: a thorn near the
+        // trunk is the design, not a refusal -- so neither the thorn nor
+        // the trunk flags for it. False alarms are how flags die.
+        cands[i].flagged = min_word < CLEARANCE_FLOOR && !cands[i].micro;
     }
 
     let out = Path::new(&args[2]);
@@ -124,10 +143,11 @@ fn main() {
         let pts: Vec<String> = c.points.iter().map(|(x, y)| format!("[{x:.1},{y:.1}]")).collect();
         let _ = writeln!(
             json,
-            "  {{\"id\": {k}, \"status\": \"pending\", \"arc\": {:.1}, \"clearance\": {:.1}, \"flagged\": {}, \"points\": [{}]}}{}",
+            "  {{\"id\": {k}, \"status\": \"pending\", \"arc\": {:.1}, \"clearance\": {:.1}, \"flagged\": {}, \"micro\": {}, \"points\": [{}]}}{}",
             c.arc,
             if c.clearance == f32::MAX { 9999.0 } else { c.clearance },
             c.flagged,
+            c.micro,
             pts.join(","),
             if k + 1 < cands.len() { "," } else { "" }
         );
@@ -148,7 +168,7 @@ fn main() {
             .enumerate()
             .map(|(i, (x, y))| format!("{}{x:.1} {y:.1} ", if i == 0 { "M" } else { "L" }))
             .collect();
-        let color = if c.flagged { "#ff5d5d" } else { "#7ee08c" };
+        let color = if c.flagged { "#ff5d5d" } else if c.micro { "#ffb14d" } else { "#7ee08c" };
         let _ = write!(
             svg,
             "<path d=\"{d}\" fill=\"none\" stroke=\"{color}\" stroke-width=\"1.6\"/>\
@@ -173,6 +193,11 @@ struct Candidate {
     prominence: f32,
     clearance: f32,
     flagged: bool,
+    micro: bool,
+}
+
+fn is_closed(p: &[(f32, f32)]) -> bool {
+    p.len() > 2 && dist(p[0], *p.last().unwrap()) < 3.0
 }
 
 fn load_png_gray(path: &Path) -> Gray {

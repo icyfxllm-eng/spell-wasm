@@ -58,11 +58,11 @@ SUBJ = {  # subject -> (ref, mode, tier)
  "mug": ("mug.png", "ink", "easy"),
  # kite + ladybug: revised after solver gates (decorative budget,
  # starvation); parked pending Eric's re-review of the new geometry.
- # "kite": ("kite.png", "ink", "easy"),
+ "kite": ("kite.png", "ink", "easy"),
  "mushroom": ("mushroom.png", "ink", "easy"),
  "sailboat": ("sailboat.png", "ink", "easy"),
  "cactus": ("cactus.png", "ink", "easy"),
- # "ladybug": ("ladybug.png", "ink", "easy"),
+ "ladybug": ("ladybug.png", "ink", "easy"),
  "moonstar": ("moonstar.png", "ink", "easy"), "rhino": ("rhino.png", "ink", "expert"),
 }
 

@@ -70,8 +70,11 @@ def kite():
     # Spars at 26px: the first cut used 13px and every candidate came back
     # flagged -- a crease narrower than the corridor floor puts its own two
     # sides inside one corridor, the same lesson the rhino's armour taught.
-    d.line([(320, 60), (320, 560)], fill=WHITE, width=26)             # spar
-    d.line([(80, 300), (560, 300)], fill=WHITE, width=26)             # spar
+    # 34px: at 26 the QUADRANTS deduped as decorative across the spar
+    # (scaled gap ~14.5px < the 16px dedup tolerance) and the kite blew the
+    # 20% decorative-arc budget a second time. Same design, wider crease.
+    d.line([(320, 60), (320, 560)], fill=WHITE, width=34)             # spar
+    d.line([(80, 300), (560, 300)], fill=WHITE, width=34)             # spar
     # The tail starts 24px BELOW the tip: attached, the lower quadrants and
     # the tail pinch to zero clearance at the join and all three flag red.
     # A small visual gap reads fine and every contour clears the floor.
@@ -107,15 +110,29 @@ def sailboat():
 
 
 def cactus():
-    """Saguaro in a pot: trunk, two arms, the pot separated by a white gap
-    so it traces as its own contour."""
-    im, d = canvas(680, 860)
-    d.rounded_rectangle([280, 120, 400, 620], radius=60, fill=BLACK)   # trunk
+    """Saguaro joined to its pot (Eric 2026-08-01: "connect the bottom of
+    the cactus to the pot"), with six detached thorn triangles. Thorns are
+    sized into the micro band (closed, arc < 130 on the 512 canvas): drawn
+    always, filled, and NEVER hosting a word -- the snowman's-eyes machinery,
+    which is exactly what "non word thorns" asks for."""
+    im, d = canvas(680, 900)
+    d.rounded_rectangle([280, 120, 400, 720], radius=60, fill=BLACK)   # trunk, into the pot
     d.rounded_rectangle([120, 250, 220, 450], radius=50, fill=BLACK)   # left arm rise
     d.rounded_rectangle([120, 380, 300, 470], radius=45, fill=BLACK)   # left arm join
     d.rounded_rectangle([460, 180, 560, 400], radius=50, fill=BLACK)   # right arm rise
     d.rounded_rectangle([380, 320, 560, 410], radius=45, fill=BLACK)   # right arm join
-    d.polygon([(200, 660), (480, 660), (450, 820), (230, 820)], fill=BLACK)  # pot
+    d.polygon([(200, 700), (480, 700), (450, 860), (230, 860)], fill=BLACK)  # pot
+    # Thorns: ~45px sides -> arc ≈ 80 on the 512 canvas, inside the micro
+    # band; 10px off the silhouette so each stays its own contour.
+    for tip, base1, base2 in [
+        ((252, 200), (270, 168), (270, 232)),   # trunk left
+        ((428, 288), (410, 256), (410, 320)),   # trunk right (clear of the arm join)
+        ((252, 520), (270, 488), (270, 552)),   # trunk left low
+        ((92, 300),  (110, 268), (110, 332)),   # left arm outer
+        ((588, 240), (570, 208), (570, 272)),   # right arm outer
+        ((428, 610), (410, 578), (410, 642)),   # trunk right low
+    ]:
+        d.polygon([tip, base1, base2], fill=BLACK)
     return im
 
 
