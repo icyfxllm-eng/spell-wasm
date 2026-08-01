@@ -272,6 +272,23 @@ fn trace_all_boundaries(mask: &[bool], w: usize, h: usize) -> Vec<Vec<(usize, us
                 }
             }
             if chain.len() >= 8 {
+                // Moore tracing legitimately SKIPS concave corner pixels;
+                // left unvisited, a skipped pixel seeds a second, 1-2px
+                // offset retrace of the same boundary (the trex rib slots
+                // each traced twice, 5px apart). Marking the chain's whole
+                // 8-neighbourhood visited kills the ghost without touching
+                // genuinely distinct boundaries, which cannot legally run
+                // 1px apart anyway.
+                for &(px, py) in &chain {
+                    for oy in -1isize..=1 {
+                        for ox in -1isize..=1 {
+                            let (nx, ny) = (px as isize + ox, py as isize + oy);
+                            if nx >= 0 && ny >= 0 && (nx as usize) < w && (ny as usize) < h {
+                                visited[ny as usize * w + nx as usize] = true;
+                            }
+                        }
+                    }
+                }
                 out.push(chain);
             }
         }

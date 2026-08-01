@@ -3,10 +3,240 @@
  "seed": 1,
  "clearance_floor": 14,
  "candidates": [
-  {"id": 0, "status": "pending", "arc": 791.1, "clearance": 24.7, "flagged": false, "micro": false, "points": [[85.6,316.6],[210.4,316.6],[220.0,423.4],[250.0,424.0],[274.0,490.0],[22.0,490.0],[46.0,424.0],[76.0,423.4],[85.6,317.2]]},
-  {"id": 1, "status": "pending", "arc": 392.4, "clearance": 24.6, "flagged": false, "micro": false, "points": [[95.2,208.6],[200.8,208.6],[208.0,292.0],[88.0,292.0],[95.2,209.2]]},
-  {"id": 2, "status": "pending", "arc": 376.9, "clearance": 20.4, "flagged": false, "micro": false, "points": [[106.0,88.0],[190.0,88.0],[198.4,184.0],[97.6,184.0],[106.0,88.6]]},
-  {"id": 3, "status": "pending", "arc": 333.7, "clearance": 25.0, "flagged": false, "micro": false, "points": [[91.6,22.0],[204.4,22.0],[212.2,27.4],[214.0,31.6],[214.0,58.0],[212.2,62.2],[204.4,67.6],[91.6,67.6],[86.2,64.6],[82.0,58.0],[82.0,31.6],[84.4,26.8],[91.0,22.6]]},
-  {"id": 4, "status": "pending", "arc": 126.7, "clearance": 6.6, "flagged": false, "micro": true, "points": [[143.8,29.8],[133.0,32.8],[125.2,39.4],[123.4,43.6],[125.2,51.4],[133.0,58.0],[143.8,61.0],[155.8,60.4],[166.0,56.2],[172.6,47.2],[170.8,39.4],[160.0,31.6],[144.4,29.8]]}
+  {
+   "id": 0,
+   "status": "approved",
+   "arc": 791.1,
+   "clearance": 24.7,
+   "flagged": false,
+   "micro": false,
+   "points": [
+    [
+     85.6,
+     316.6
+    ],
+    [
+     210.4,
+     316.6
+    ],
+    [
+     220.0,
+     423.4
+    ],
+    [
+     250.0,
+     424.0
+    ],
+    [
+     274.0,
+     490.0
+    ],
+    [
+     22.0,
+     490.0
+    ],
+    [
+     46.0,
+     424.0
+    ],
+    [
+     76.0,
+     423.4
+    ],
+    [
+     85.6,
+     317.2
+    ]
+   ],
+   "reviewed_by": "Eric, 2026-08-01 (\"rooster, seahorse, and trex fail better pictures if possible all pass\")"
+  },
+  {
+   "id": 1,
+   "status": "approved",
+   "arc": 392.4,
+   "clearance": 24.6,
+   "flagged": false,
+   "micro": false,
+   "points": [
+    [
+     95.2,
+     208.6
+    ],
+    [
+     200.8,
+     208.6
+    ],
+    [
+     208.0,
+     292.0
+    ],
+    [
+     88.0,
+     292.0
+    ],
+    [
+     95.2,
+     209.2
+    ]
+   ],
+   "reviewed_by": "Eric, 2026-08-01 (\"rooster, seahorse, and trex fail better pictures if possible all pass\")"
+  },
+  {
+   "id": 2,
+   "status": "approved",
+   "arc": 376.9,
+   "clearance": 20.4,
+   "flagged": false,
+   "micro": false,
+   "points": [
+    [
+     106.0,
+     88.0
+    ],
+    [
+     190.0,
+     88.0
+    ],
+    [
+     198.4,
+     184.0
+    ],
+    [
+     97.6,
+     184.0
+    ],
+    [
+     106.0,
+     88.6
+    ]
+   ],
+   "reviewed_by": "Eric, 2026-08-01 (\"rooster, seahorse, and trex fail better pictures if possible all pass\")"
+  },
+  {
+   "id": 3,
+   "status": "approved",
+   "arc": 333.7,
+   "clearance": 25.0,
+   "flagged": false,
+   "micro": false,
+   "points": [
+    [
+     91.6,
+     22.0
+    ],
+    [
+     204.4,
+     22.0
+    ],
+    [
+     212.2,
+     27.4
+    ],
+    [
+     214.0,
+     31.6
+    ],
+    [
+     214.0,
+     58.0
+    ],
+    [
+     212.2,
+     62.2
+    ],
+    [
+     204.4,
+     67.6
+    ],
+    [
+     91.6,
+     67.6
+    ],
+    [
+     86.2,
+     64.6
+    ],
+    [
+     82.0,
+     58.0
+    ],
+    [
+     82.0,
+     31.6
+    ],
+    [
+     84.4,
+     26.8
+    ],
+    [
+     91.0,
+     22.6
+    ]
+   ],
+   "reviewed_by": "Eric, 2026-08-01 (\"rooster, seahorse, and trex fail better pictures if possible all pass\")"
+  },
+  {
+   "id": 4,
+   "status": "approved",
+   "arc": 126.7,
+   "clearance": 6.6,
+   "flagged": false,
+   "micro": true,
+   "points": [
+    [
+     143.8,
+     29.8
+    ],
+    [
+     133.0,
+     32.8
+    ],
+    [
+     125.2,
+     39.4
+    ],
+    [
+     123.4,
+     43.6
+    ],
+    [
+     125.2,
+     51.4
+    ],
+    [
+     133.0,
+     58.0
+    ],
+    [
+     143.8,
+     61.0
+    ],
+    [
+     155.8,
+     60.4
+    ],
+    [
+     166.0,
+     56.2
+    ],
+    [
+     172.6,
+     47.2
+    ],
+    [
+     170.8,
+     39.4
+    ],
+    [
+     160.0,
+     31.6
+    ],
+    [
+     144.4,
+     29.8
+    ]
+   ],
+   "reviewed_by": "Eric, 2026-08-01 (\"rooster, seahorse, and trex fail better pictures if possible all pass\")"
+  }
  ]
 }

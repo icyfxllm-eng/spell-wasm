@@ -34,9 +34,57 @@ def circle(d, cx, cy, r, fill):
     d.ellipse([cx - r, cy - r, cx + r, cy + r], fill=fill)
 
 
+def capsule(d, x0, y0, x1, y1, fill):
+    """Rounded slot from primitives. PIL's rounded_rectangle left a 1px seam
+    of the UNDERLYING colour down the middle of every trex rib slot (found
+    by dumping raw pixels: '......#......'), which split each slot into two
+    slivers and doubled every boundary. Two circles and a rectangle cannot
+    have a seam."""
+    r = (x1 - x0) // 2
+    circle(d, (x0 + x1) // 2, y0 + r, r, fill)
+    circle(d, (x0 + x1) // 2, y1 - r, r, fill)
+    d.rectangle([x0, y0 + r, x1, y1 - r], fill=fill)
+
+
 def poly_ring(d, cx, cy, r_out, r_in, fill=BLACK):
     circle(d, cx, cy, r_out, fill)
     circle(d, cx, cy, r_in, WHITE)
+
+
+def smooth_poly(d, keys, fill=BLACK, samples=14):
+    """Closed Catmull-Rom through the key points -> one organic polygon.
+    Eric failed the rooster/seahorse/trex drawn from stacked ellipses --
+    blobs read as blobs. A spline through hand-placed keys is still a
+    literal coordinate list, just one with a spine."""
+    n = len(keys)
+    pts = []
+    for i in range(n):
+        p0, p1, p2, p3 = keys[(i - 1) % n], keys[i], keys[(i + 1) % n], keys[(i + 2) % n]
+        for k in range(samples):
+            t = k / samples
+            t2, t3 = t * t, t * t * t
+            x = 0.5 * ((2 * p1[0]) + (-p0[0] + p2[0]) * t + (2 * p0[0] - 5 * p1[0] + 4 * p2[0] - p3[0]) * t2 + (-p0[0] + 3 * p1[0] - 3 * p2[0] + p3[0]) * t3)
+            y = 0.5 * ((2 * p1[1]) + (-p0[1] + p2[1]) * t + (2 * p0[1] - 5 * p1[1] + 4 * p2[1] - p3[1]) * t2 + (-p0[1] + 3 * p1[1] - 3 * p2[1] + p3[1]) * t3)
+            pts.append((x, y))
+    d.polygon(pts, fill=fill)
+
+
+def tapered_stroke(d, keys, w0, w1, fill=BLACK, samples=60):
+    """Circles along a Catmull-Rom path, radius easing w0->w1: a tapering
+    organic limb or tail, impossible with fixed-width line()."""
+    n = len(keys)
+    for i in range(n - 1):
+        p0 = keys[max(i - 1, 0)]
+        p1, p2 = keys[i], keys[i + 1]
+        p3 = keys[min(i + 2, n - 1)]
+        for k in range(samples // (n - 1) + 1):
+            t = k / (samples // (n - 1) + 1)
+            t2, t3 = t * t, t * t * t
+            x = 0.5 * ((2 * p1[0]) + (-p0[0] + p2[0]) * t + (2 * p0[0] - 5 * p1[0] + 4 * p2[0] - p3[0]) * t2 + (-p0[0] + 3 * p1[0] - 3 * p2[0] + p3[0]) * t3)
+            y = 0.5 * ((2 * p1[1]) + (-p0[1] + p2[1]) * t + (2 * p0[1] - 5 * p1[1] + 4 * p2[1] - p3[1]) * t2 + (-p0[1] + 3 * p1[1] - 3 * p2[1] + p3[1]) * t3)
+            g = (i + t) / (n - 1)
+            r = w0 + (w1 - w0) * g
+            circle(d, x, y, r, fill)
 
 
 def bicycle():
@@ -139,69 +187,105 @@ def violin():
 
 
 def rooster():
-    """Body, tail sweep, comb and wattle as detached micro bits, beak,
-    an eye hole, and two thick legs."""
-    im, d = canvas(880, 900)
-    d.ellipse([200, 300, 640, 700], fill=BLACK)                    # body
-    d.ellipse([460, 180, 660, 420], fill=BLACK)                    # head+neck blend
-    # tail: three sweeping fat arcs
-    d.line([(240, 460), (110, 300), (150, 170)], fill=BLACK, width=44, joint="curve")
-    d.line([(250, 520), (90, 430), (60, 300)], fill=BLACK, width=40, joint="curve")
-    d.polygon([(640, 300), (730, 330), (640, 360)], fill=BLACK)    # beak
-    circle(d, 590, 280, 30, WHITE)                                 # eye hole
-    circle(d, 590, 280, 13, BLACK)                                 # pupil (micro)
-    # comb: detached bumps above the head (micro band)
-    for cx in (520, 566, 612):
-        circle(d, cx, 132, 26, BLACK)
-    circle(d, 648, 460, 30, BLACK)                                 # wattle (micro)
-    d.line([(380, 690), (380, 820)], fill=BLACK, width=30)         # legs
-    d.line([(470, 690), (470, 820)], fill=BLACK, width=30)
-    d.line([(340, 830), (420, 830)], fill=BLACK, width=24)         # feet
-    d.line([(430, 830), (510, 830)], fill=BLACK, width=24)
+    """v2 (Eric failed v1 -- stacked ellipses read as a blob). Side profile
+    with a spined outline: upright chest, saddle dipping to a big three-
+    feather tail sweep, head with ATTACHED comb, hanging wattle, one eye
+    hole, two strong legs."""
+    im, d = canvas(900, 940)
+    smooth_poly(d, [
+        (560, 240),            # crown behind comb
+        (620, 300), (640, 360),        # nape
+        (600, 430), (560, 500),        # back slopes down-left? no: chest right
+        (610, 590), (560, 700),        # breast
+        (430, 760), (330, 740),        # belly
+        (250, 660), (230, 560),        # stern
+        (300, 480), (280, 400),        # saddle dip to tail root
+        (360, 330), (470, 250),        # neck front
+    ])
+    # tail: three tapered feathers sweeping up-left from the stern
+    tapered_stroke(d, [(300, 520), (170, 420), (90, 250)], 26, 9)
+    tapered_stroke(d, [(300, 560), (130, 520), (50, 400)], 24, 8)
+    tapered_stroke(d, [(310, 600), (150, 620), (60, 560)], 22, 8)
+    # comb: three bumps ATTACHED to the crown
+    for cx, cy in [(520, 205), (565, 185), (610, 205)]:
+        circle(d, cx, cy, 34, BLACK)
+    d.polygon([(640, 330), (740, 360), (640, 392)], fill=BLACK)   # beak
+    tapered_stroke(d, [(640, 400), (630, 470)], 24, 12)           # wattle
+    circle(d, 590, 310, 30, WHITE)                                # eye hole
+    circle(d, 590, 310, 13, BLACK)                                # pupil (micro)
+    # legs: thick, with feet
+    d.line([(430, 750), (430, 860)], fill=BLACK, width=32)
+    d.line([(340, 745), (340, 860)], fill=BLACK, width=32)
+    d.line([(390, 868), (480, 868)], fill=BLACK, width=26)
+    d.line([(295, 868), (385, 868)], fill=BLACK, width=26)
     return im
 
 
 def seahorse():
-    """Curled S body, long snout, a crown, belly ridges as wide white
-    notches, an eye hole, curled tail."""
-    im, d = canvas(640, 920)
-    d.ellipse([200, 200, 460, 560], fill=BLACK)                    # torso
-    d.ellipse([230, 440, 470, 760], fill=BLACK)                    # lower curl
-    d.ellipse([320, 560, 560, 800], fill=WHITE)                    # carve the curl
-    d.ellipse([280, 640, 440, 820], fill=BLACK)                    # tail mass
-    d.ellipse([250, 700, 380, 830], fill=WHITE)                    # carve tail spiral
-    circle(d, 380, 740, 52, BLACK)                                 # tail tip curl
-    d.rounded_rectangle([160, 220, 330, 290], radius=34, fill=BLACK)  # snout
-    d.polygon([(360, 130), (410, 210), (310, 210)], fill=BLACK)    # crown fin
-    circle(d, 330, 300, 30, WHITE)                                 # eye
-    circle(d, 330, 300, 13, BLACK)                                 # pupil (micro)
-    d.line([(470, 330), (510, 430)], fill=BLACK, width=36)         # dorsal fin
+    """v2 (Eric failed the carved-ellipse v1). One tapered spine: head at a
+    right angle, chest out, S through the belly, spiral tail -- drawn as a
+    single tapering stroke so the body flows instead of lumping. Snout,
+    coronet, dorsal fin, eye."""
+    im, d = canvas(680, 960)
+    tapered_stroke(d, [
+        (390, 190),                    # crown
+        (450, 250), (440, 340),        # head to nape
+        (350, 420), (300, 520),        # chest curve
+        (320, 640), (400, 720),        # belly swing
+        (430, 800), (380, 860),        # tail drop
+        (300, 870), (260, 820),        # spiral out
+        (290, 770), (340, 790),        # spiral in
+    ], 58, 8, samples=160)
+    tapered_stroke(d, [(400, 210), (300, 230), (210, 250)], 26, 10)  # snout
+    d.polygon([(360, 130), (420, 60), (440, 160)], fill=BLACK)       # coronet
+    tapered_stroke(d, [(470, 380), (560, 430), (520, 540), (450, 560)], 16, 12)  # dorsal fin
+    circle(d, 395, 265, 28, WHITE)                                   # eye
+    circle(d, 395, 265, 12, BLACK)                                   # pupil (micro)
     return im
 
 
 def trex_skeleton():
-    """A museum-mount silhouette as ONE connected mass -- skull, spine,
-    torso, tail and legs all joined, so no bone-to-bone corridor exists to
-    flag. Detail lives in the holes: eye socket, jaw gap, three rib slots.
-    The famous tiny arm is a detached micro bit."""
-    im, d = canvas(1000, 760)
-    d.polygon([(660, 160), (940, 200), (950, 270), (830, 290), (660, 280)], fill=BLACK)
-    # Jaw HINGED to the skull at the back (overlapping 900..940), gap open
-    # at the front only: a floating jaw 5px under the skull flagged both.
-    d.polygon([(700, 292), (940, 260), (940, 300), (890, 360), (720, 340)], fill=BLACK)
-    d.polygon([(705, 288), (880, 296), (707, 308)], fill=WHITE)              # jaw gap (front)
-    circle(d, 800, 225, 26, WHITE)                                # eye socket hole
-    d.line([(660, 236), (540, 296), (460, 316)], fill=BLACK, width=56, joint="curve")
-    d.ellipse([260, 300, 560, 540], fill=BLACK)                   # torso over hips
-    # Rib slots start BELOW the neck band: cutting into it made knife-edge
-    # geometry where slot wall met outer boundary at ~zero distance.
-    for x in (350, 420, 490):                                     # rib slots (holes)
-        d.rounded_rectangle([x, 386, x + 34, 496], radius=16, fill=WHITE)
-    d.line([(290, 430), (150, 470), (40, 430)], fill=BLACK, width=52, joint="curve")  # tail
-    d.line([(430, 500), (475, 625), (445, 715)], fill=BLACK, width=46, joint="curve")
-    d.line([(420, 715), (540, 715)], fill=BLACK, width=28)
-    d.line([(340, 500), (320, 630), (355, 710)], fill=BLACK, width=42, joint="curve")
-    d.line([(600, 330), (645, 372)], fill=BLACK, width=24)        # tiny arm (micro)
+    """v2 (Eric failed the lumpy v1). A proper museum mount: horizontal
+    posture, huge skull with hinged jaw, arched spine over a deep ribcage,
+    z-bent hind legs, long tapering tail. One connected mass; detail in
+    the holes (eye socket, jaw gap, four rib slots); the tiny arm micro."""
+    im, d = canvas(1060, 720)
+    # skull: deep box with a brow step, hinged jaw below
+    smooth_poly(d, [
+        (760, 130), (870, 120), (960, 150), (1000, 210),
+        (985, 265), (900, 285), (790, 275), (740, 220),
+    ], samples=10)
+    d.polygon([(985, 262), (1000, 300), (900, 345), (790, 330), (770, 285), (900, 292)], fill=BLACK)  # jaw, hinged right
+    d.polygon([(778, 288), (940, 296), (782, 312)], fill=WHITE)     # jaw gap
+    circle(d, 880, 200, 30, WHITE)                                  # eye socket
+    circle(d, 795, 185, 22, WHITE)                                  # antorbital hole
+    # neck arching down to the spine
+    tapered_stroke(d, [(760, 180), (660, 230), (580, 290)], 34, 26)
+    # spine arc over the hips
+    tapered_stroke(d, [(580, 290), (460, 310), (330, 330)], 26, 22)
+    # ribcage: deep ellipse hanging from the spine
+    # Deep cage: at 520 the ellipse curved up to within 2px of the slot
+    # bottoms at the outer slots -- another knife edge, this time from
+    # geometry curving INTO the straight slots. 60px of floor under every
+    # slot now.
+    d.ellipse([380, 280, 660, 560], fill=BLACK)
+    # Slots start below the spine stroke (the v1 knife-edge, relearned at a
+    # different y) and the gaps widened past the corridor floor at this
+    # canvas's scale (0.477: 30px ref was a 14.3px corridor -- a coin flip).
+    for x in (425, 497, 569):                                       # rib slots
+        capsule(d, x, 356, x + 28, 470, WHITE)
+    # hip mass, big enough to swallow the leg junctions -- the v2 hip left
+    # an enclosed white pocket between hip, leg and ribcage, which traced as
+    # an accidental word-hosting hole.
+    circle(d, 335, 375, 85, BLACK)
+    d.polygon([(265, 310), (430, 335), (430, 515), (280, 510)], fill=BLACK)  # weld hip to cage: no pocket
+    tapered_stroke(d, [(330, 380), (390, 480), (330, 570), (380, 660)], 34, 18)
+    d.line([(350, 668), (470, 668)], fill=BLACK, width=26)          # foot
+    tapered_stroke(d, [(300, 390), (260, 500), (300, 600)], 26, 14) # far leg
+    # tail: long taper out the back
+    tapered_stroke(d, [(300, 330), (170, 340), (60, 300), (20, 250)], 26, 6)
+    # the famous tiny arm (detached, micro)
+    d.line([(610, 350), (655, 390)], fill=BLACK, width=22)
     return im
 
 
