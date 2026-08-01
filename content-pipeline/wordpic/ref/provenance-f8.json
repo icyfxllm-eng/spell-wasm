@@ -387,5 +387,45 @@
     "sourceUrl": "",
     "file": "ref/panda.png",
     "bytes": 5389
+  },
+  {
+    "subject": "calavera",
+    "title": "SpellGame original — calavera sugar skull (culture 2, es)",
+    "license": "Original artwork (SpellGame)",
+    "sourceUrl": "",
+    "file": "tools/draw_wave7.py",
+    "note": "Drawn coordinate list; candidates approved by Eric 2026-08-01."
+  },
+  {
+    "subject": "tajmahal",
+    "title": "SpellGame original — Taj Mahal (culture 2, hi)",
+    "license": "Original artwork (SpellGame)",
+    "sourceUrl": "",
+    "file": "tools/draw_wave7.py",
+    "note": "Drawn coordinate list; candidates approved by Eric 2026-08-01."
+  },
+  {
+    "subject": "stork",
+    "title": "SpellGame original — white stork on nest (culture 2, pl)",
+    "license": "Original artwork (SpellGame)",
+    "sourceUrl": "",
+    "file": "tools/draw_wave7.py",
+    "note": "Drawn coordinate list; candidates approved by Eric 2026-08-01."
+  },
+  {
+    "subject": "caravel",
+    "title": "SpellGame original — caravel (culture 2, pt)",
+    "license": "Original artwork (SpellGame)",
+    "sourceUrl": "",
+    "file": "tools/draw_wave7.py",
+    "note": "Drawn coordinate list; candidates approved by Eric 2026-08-01."
+  },
+  {
+    "subject": "bigben",
+    "title": "SpellGame original — Big Ben (culture 2, en)",
+    "license": "Original artwork (SpellGame)",
+    "sourceUrl": "",
+    "file": "tools/draw_wave7.py",
+    "note": "Drawn coordinate list; candidates approved by Eric 2026-08-01."
   }
 ]

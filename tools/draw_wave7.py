@@ -143,21 +143,24 @@ def bigben():
     """Elizabeth Tower: shaft, the wider clock stage with the face as a
     white hole, then the tiered spire. Window slits ride the shaft as
     micro holes."""
-    im, d = canvas(620, 1000)
-    d.rectangle([220, 380, 400, 880], fill=BLACK)                      # shaft
-    d.rectangle([190, 260, 430, 400], fill=BLACK)                      # clock stage
-    circle(d, 310, 330, 58, WHITE)                                     # the face
-    d.polygon([(310, 330), (310, 288)], fill=BLACK)
-    d.line([(310, 330), (310, 292)], fill=BLACK, width=10)             # hour hand
-    d.line([(310, 330), (340, 318)], fill=BLACK, width=8)              # minute hand
-    d.rectangle([200, 220, 420, 268], fill=BLACK)                      # cornice
-    d.polygon([(200, 220), (420, 220), (390, 150), (230, 150)], fill=BLACK)  # roof base
-    d.polygon([(230, 155), (390, 155), (310, 40)], fill=BLACK)         # spire
-    d.rectangle([300, 14, 320, 46], fill=BLACK)                        # finial
-    d.rectangle([180, 880, 440, 950], fill=BLACK)                      # base
+    # Square canvas, tower on the centreline (Eric: "center big ben on
+    # the screen") — a tall narrow canvas mapped the tower to the left
+    # of the 512 frame.
+    im, d = canvas(1000, 1000)
+    X = 500 - 310  # shift the original geometry onto the centreline
+    d.rectangle([220 + X, 380, 400 + X, 880], fill=BLACK)              # shaft
+    d.rectangle([190 + X, 260, 430 + X, 400], fill=BLACK)              # clock stage
+    circle(d, 310 + X, 330, 58, WHITE)                                 # the face
+    d.line([(310 + X, 330), (310 + X, 292)], fill=BLACK, width=10)     # hour hand
+    d.line([(310 + X, 330), (340 + X, 318)], fill=BLACK, width=8)      # minute hand
+    d.rectangle([200 + X, 220, 420 + X, 268], fill=BLACK)              # cornice
+    d.polygon([(200 + X, 220), (420 + X, 220), (390 + X, 150), (230 + X, 150)], fill=BLACK)
+    d.polygon([(230 + X, 155), (390 + X, 155), (310 + X, 40)], fill=BLACK)   # spire
+    d.rectangle([300 + X, 14, 320 + X, 46], fill=BLACK)                # finial
+    d.rectangle([180 + X, 880, 440 + X, 950], fill=BLACK)              # base
     # window slits down the shaft (micro holes)
     for y in (460, 580, 700):
-        d.rectangle([290, y, 330, y + 56], fill=WHITE)
+        d.rectangle([290 + X, y, 330 + X, y + 56], fill=WHITE)
     return im
 
 
