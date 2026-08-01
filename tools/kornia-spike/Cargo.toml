@@ -1,0 +1,22 @@
+# CC-SCAN-STACK v1.1 #9 — the kornia-rs qualification spike.
+#
+# Standalone workspace ON PURPOSE: the spike must not touch the app's
+# dependency graph or lockfile. Its own Cargo.lock is the pin D8 asks for,
+# and it is committed.
+[package]
+name = "kornia-spike"
+version = "0.1.0"
+edition = "2021"
+
+[workspace]
+
+[dependencies]
+# Pinned exactly (D8). Note the version: the crate family's newest releases
+# are all -rc, which is spike-relevant data about maturity by itself.
+kornia-imgproc = "=0.1.15-rc.4"
+kornia-image = "=0.1.15-rc.4"
+png = "=0.17.16"
+
+[profile.release]
+# Determinism first: no fast-math, no autovectorised reassociation surprises.
+opt-level = 2

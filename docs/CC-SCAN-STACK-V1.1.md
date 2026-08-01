@@ -139,6 +139,32 @@ What already exists that this amendment touches:
   name. #10 is therefore a small formalisation plus a grep-level CI check,
   not a rewrite. It is authorised under Phase T0 and does not wait on D6.
 
+## Spike #9 report (2026-08-01)
+
+Crate: `tools/kornia-spike/` — standalone workspace so the app's lockfile is
+untouched; its own committed Cargo.lock is the D8 pin
+(`kornia-imgproc =0.1.15-rc.4`, `kornia-image =0.1.15-rc.4`).
+
+Corpus: 50 images — every PNG reference in `content-pipeline/wordpic/ref`
+(the real subjects) plus seeded synthetics (gradients, rings, xorshift
+noise) chosen to be adversarial for float determinism. Hashes are over the
+f32 **bit patterns** of the flow field: an epsilon comparison would concede
+nondeterminism while pretending not to.
+
+| Criterion | Result |
+| --- | --- |
+| Posterize + Sobel + structure tensor via kornia | **PARTIAL** — Sobel via `spatial_gradient_float_parallel_row`; posterize is ours by design (section A says so); **kornia has no structure-tensor op at this version**, composed by hand from its gradients. Recorded gap. |
+| Byte-identical across repeat runs (ARM) | **PASS** — corpus hash `30082bb08a368f14`, stable |
+| Byte-identical across thread counts (ARM, RAYON 1/8/default) | **PASS** — same hash |
+| Byte-identical across arch | **BLOCKED** — this Mac has no Rosetta 2 and the old datacenter box is unreachable. The x86 binary builds; it cannot execute here. Installing Rosetta is one command needing Eric's go-ahead (system install + license). |
+| Crate pinned | **PASS** — exact-version pins, committed lockfile |
+| Unsupported ops recorded | structure tensor (above). Also worth weighing for D6: the crate family's NEWEST releases are all `-rc`, which bears on "never bet the stack on a young crate". |
+
+**D6 therefore stays mechanically undecided** — the spike's own rule is that
+the result decides, and the cross-arch criterion has not run. One `PASS`
+short, not failed: nondeterminism was the feared outcome and none appeared
+on ARM under any threading.
+
 Open question for Eric, unchanged from CC-SCAN-STACK: if the tonal math moves
 to Rust, the Swift package's remaining job is Vision plus typography, which
 strengthens the case for the recommended architecture — a Swift CLI the
