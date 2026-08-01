@@ -22,39 +22,55 @@ REF = pathlib.Path(__file__).resolve().parents[1] / "content-pipeline/wordpic/re
 
 
 def wolf():
-    """v5. What each round taught: v3's THICK tail stroke read fine (the
-    thorns were the thin spikes); v4's long muzzle was right but its
-    in-outline tail loop smoothed to a nub. So: v4 head + neck + back on
-    one spline, tail as one thick overlapping stroke, no spikes anywhere.
-    Sharp ear via a plain polygon on top (splines round ears off)."""
-    im, d = canvas(900, 960)
+    """v6, to Eric's reference pose: STANDING on a ridge, head thrown all
+    the way back, muzzle near vertical, ears flat to the neck, chest ruff
+    breaking into fur, bushy tail hanging down-back. All four legs in the
+    outline with V-notches between; the ridge is its own bar below.
+    (Drawn from the pose, never traced -- the reference stays out of the
+    pipeline.)"""
+    im, d = canvas(1040, 900)
     smooth_poly(d, [
-        (230, 80),                        # nose high
-        (298, 108), (368, 168),           # long muzzle
-        (398, 218), (430, 252),           # stop, skull
-        (462, 320), (505, 430),           # nape, shoulders
-        (548, 560), (578, 690),           # sloping back
-        (598, 800), (565, 890),           # haunch
-        (470, 925), (310, 925),           # ground
-        (295, 780), (305, 620),           # foreleg column
-        (268, 500), (278, 395),           # chest
-        (242, 300), (220, 205),           # throat
-        (206, 132),                       # underjaw
-    ], samples=12)
-    d.polygon([(408, 232), (466, 196), (452, 282)], fill=BLACK)  # ear, SHARP
-    # Jaw wedge sized into the micro band: 6 units bigger it was a
-    # word-hosting contour 5px off the outer boundary and flagged both.
-    d.polygon([(233, 96), (302, 138), (238, 162)], fill=WHITE)   # open jaw
-    tapered_stroke(d, [(560, 850), (668, 892), (760, 862), (792, 775)], 48, 13)  # tail
-    circle(d, 362, 200, 21, WHITE)                                # eye
+        (355, 55),                        # nose, thrown back
+        (405, 75), (420, 140),            # muzzle top edge (near vertical)
+        (438, 190),                       # stop
+        (472, 210), (505, 200),           # ear flat back
+        (505, 245),                       # ear rear edge
+        (540, 300), (600, 345),           # thick neck into withers
+        (700, 360), (790, 365),           # level back
+        (830, 400),                       # rump
+        (850, 480), (830, 560),           # near hind leg back edge
+        (845, 650),                       # hock down
+        (800, 655), (795, 560),           # hind paw and front edge
+        (770, 480),                       # up to belly...
+        (735, 560), (740, 650),           # far hind leg
+        (695, 652), (690, 540),           # its paw, up
+        (660, 460),                       # belly line
+        (560, 470),                       # belly forward
+        (545, 560), (548, 655),           # far foreleg
+        (505, 655), (505, 545),           # paw, up
+        (488, 470),                       # chest bottom
+        (452, 560), (455, 660),           # near foreleg
+        (410, 660), (412, 540),           # paw, up
+        (395, 440),                       # chest rising
+        (350, 400), (368, 330),           # ruff break (jagged chest)
+        (320, 290), (345, 225),           # second ruff break
+        (318, 160), (335, 95),            # throat, taut, up to the jaw
+    ], samples=10)
+    # bushy tail: thick stroke off the rump, hanging down-back
+    tapered_stroke(d, [(838, 415), (930, 480), (975, 580), (958, 665)], 50, 15)
+    # open jaw wedge (micro band)
+    d.polygon([(357, 68), (410, 108), (362, 128)], fill=WHITE)
+    # the ridge underfoot: a separate bar with a broken edge
+    d.polygon([(360, 700), (960, 700), (985, 760), (420, 770), (335, 735)], fill=BLACK)
     return im
 
 
 def koi():
-    """v5. The in-outline fan smoothed to a bowling pin; the detached fan
-    left a gap. Answer from the wolf: body spline + fan as its own SOLID
-    poly whose root plunges 70px INTO the body, so the join cannot gap and
-    the fan corners stay sharp (drawn plain, not splined)."""
+    """v9. "Just the outline" meant no INTERIOR detail (the reference's
+    scales and ornament), not finless fish -- misread, corrected. So:
+    outline silhouettes WITH their fins. The v5 body spline (the one that
+    read as a fish), a sharp buried-root fan tail, and one flowing
+    pectoral per fish. No scales, no eyes, no interior anything."""
     im, d = canvas(1060, 940)
 
     def fish(cx, cy, f):
@@ -80,12 +96,16 @@ def koi():
             (cx - f * 75, cy + f * 400),
             (cx - f * 10, cy + f * 170),
         ], fill=BLACK)
-        circle(d, cx + f * 35, cy - f * 262, 25, WHITE)
+        d.polygon([
+            (cx + f * 160, cy - f * 175),
+            (cx + f * 250, cy - f * 205),
+            (cx + f * 285, cy - f * 160),
+            (cx + f * 235, cy - f * 120),
+            (cx + f * 178, cy - f * 128),
+        ], fill=BLACK)
 
-    # ±225: at ±195 the inner curves sat 11.8px apart -- the water between
-    # the fish is the composition AND the corridor.
-    fish(520 - 225, 470, 1)
-    fish(520 + 225, 470, -1)
+    fish(530 - 225, 470, 1)
+    fish(530 + 225, 470, -1)
     return im
 
 
