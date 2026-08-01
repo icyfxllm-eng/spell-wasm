@@ -176,5 +176,69 @@
   "sourceUrl": "",
   "file": "content-pipeline/wordpic/geometric-scans.json",
   "note": "Hand-authored geometry, never traced from a reference image."
+ },
+ {
+  "subject": "balloon",
+  "title": "SpellGame original \u2014 balloon (wave 1 batch 1)",
+  "license": "Original artwork (SpellGame)",
+  "sourceUrl": "",
+  "file": "tools/draw_wave1.py",
+  "note": "Drawn coordinate list; candidates approved by Eric 2026-08-01."
+ },
+ {
+  "subject": "mug",
+  "title": "SpellGame original \u2014 mug (wave 1 batch 1)",
+  "license": "Original artwork (SpellGame)",
+  "sourceUrl": "",
+  "file": "tools/draw_wave1.py",
+  "note": "Drawn coordinate list; candidates approved by Eric 2026-08-01."
+ },
+ {
+  "subject": "kite",
+  "title": "SpellGame original \u2014 kite (wave 1 batch 1)",
+  "license": "Original artwork (SpellGame)",
+  "sourceUrl": "",
+  "file": "tools/draw_wave1.py",
+  "note": "Drawn coordinate list; candidates approved by Eric 2026-08-01."
+ },
+ {
+  "subject": "mushroom",
+  "title": "SpellGame original \u2014 mushroom (wave 1 batch 1)",
+  "license": "Original artwork (SpellGame)",
+  "sourceUrl": "",
+  "file": "tools/draw_wave1.py",
+  "note": "Drawn coordinate list; candidates approved by Eric 2026-08-01."
+ },
+ {
+  "subject": "sailboat",
+  "title": "SpellGame original \u2014 sailboat (wave 1 batch 1)",
+  "license": "Original artwork (SpellGame)",
+  "sourceUrl": "",
+  "file": "tools/draw_wave1.py",
+  "note": "Drawn coordinate list; candidates approved by Eric 2026-08-01."
+ },
+ {
+  "subject": "cactus",
+  "title": "SpellGame original \u2014 cactus (wave 1 batch 1)",
+  "license": "Original artwork (SpellGame)",
+  "sourceUrl": "",
+  "file": "tools/draw_wave1.py",
+  "note": "Drawn coordinate list; candidates approved by Eric 2026-08-01."
+ },
+ {
+  "subject": "ladybug",
+  "title": "SpellGame original \u2014 ladybug (wave 1 batch 1)",
+  "license": "Original artwork (SpellGame)",
+  "sourceUrl": "",
+  "file": "tools/draw_wave1.py",
+  "note": "Drawn coordinate list; candidates approved by Eric 2026-08-01."
+ },
+ {
+  "subject": "moonstar",
+  "title": "SpellGame original \u2014 moonstar (wave 1 batch 1)",
+  "license": "Original artwork (SpellGame)",
+  "sourceUrl": "",
+  "file": "tools/draw_wave1.py",
+  "note": "Drawn coordinate list; candidates approved by Eric 2026-08-01."
  }
 ]

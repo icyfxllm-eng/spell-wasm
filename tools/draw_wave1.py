@@ -75,8 +75,11 @@ def kite():
     # The tail starts 24px BELOW the tip: attached, the lower quadrants and
     # the tail pinch to zero clearance at the join and all three flag red.
     # A small visual gap reads fine and every contour clears the floor.
-    d.line([(316, 584), (260, 672), (350, 748), (280, 830)], fill=BLACK, width=16)
-    for cx, cy in [(263, 674), (348, 749), (283, 828)]:
+    # Tail as a 32px ribbon: at 16px the far side deduped as decorative and
+    # the kite blew the 20% decorative-arc budget (solver law, not corridor).
+    # Thick enough, BOTH sides host words and nothing is decoration.
+    d.line([(316, 584), (262, 680), (330, 780)], fill=BLACK, width=32)
+    for cx, cy in [(265, 682), (328, 778)]:
         d.polygon([(cx - 34, cy - 12), (cx + 34, cy + 12), (cx, cy)], fill=BLACK)
         d.polygon([(cx - 34, cy + 12), (cx + 34, cy - 12), (cx, cy)], fill=BLACK)
     return im
@@ -122,13 +125,14 @@ def ladybug():
     im, d = canvas(760, 700)
     d.ellipse([120, 160, 640, 620], fill=BLACK)                        # dome
     circle(d, 380, 150, 85, BLACK)                                     # head
-    d.line([(300, 90), (340, 130)], fill=BLACK, width=9)               # antennae
-    d.line([(460, 90), (420, 130)], fill=BLACK, width=9)
-    d.line([(380, 235), (380, 620)], fill=WHITE, width=12)             # wing seam
-    circle(d, 270, 320, 38, WHITE)
-    circle(d, 490, 320, 38, WHITE)
-    circle(d, 240, 480, 32, WHITE)
-    circle(d, 520, 480, 32, WHITE)
+    # Seam widened 12->26px and spots enlarged: at 12px the facing dome
+    # edges sat inside one keep-out and a path starved (hosted zero words).
+    # Antennae dropped -- too small to host, pure starvation risk.
+    d.line([(380, 245), (380, 620)], fill=WHITE, width=26)             # wing seam
+    circle(d, 265, 330, 46, WHITE)
+    circle(d, 495, 330, 46, WHITE)
+    circle(d, 235, 490, 40, WHITE)
+    circle(d, 525, 490, 40, WHITE)
     return im
 
 

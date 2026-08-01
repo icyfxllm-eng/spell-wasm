@@ -1,0 +1,360 @@
+{
+ "id": "mug",
+ "tier": "easy",
+ "source": {
+  "title": "SpellGame original \u2014 mug (wave 1 batch 1)",
+  "license": "Original artwork (SpellGame)",
+  "url": "",
+  "attribution": ""
+ },
+ "parts": {
+  "root": [
+   0,
+   1,
+   2,
+   3,
+   4
+  ]
+ },
+ "layers": [
+  {
+   "name": "outline",
+   "path_ids": [
+    0
+   ],
+   "per_language": {
+    "ar": {
+     "words": 1,
+     "band": 0,
+     "band_size": 60
+    },
+    "de": {
+     "words": 1,
+     "band": 0,
+     "band_size": 91
+    },
+    "en": {
+     "words": 1,
+     "band": 0,
+     "band_size": 53
+    },
+    "es": {
+     "words": 1,
+     "band": 0,
+     "band_size": 191
+    },
+    "fil": {
+     "words": 1,
+     "band": 0,
+     "band_size": 75
+    },
+    "fr": {
+     "words": 1,
+     "band": 0,
+     "band_size": 139
+    },
+    "hi": {
+     "words": 1,
+     "band": 0,
+     "band_size": 57
+    },
+    "ja": {
+     "words": 1,
+     "band": 0,
+     "band_size": 377
+    },
+    "ko": {
+     "words": 1,
+     "band": 0,
+     "band_size": 32
+    },
+    "pl": {
+     "words": 1,
+     "band": 0,
+     "band_size": 210
+    },
+    "pt": {
+     "words": 1,
+     "band": 0,
+     "band_size": 220
+    },
+    "ru": {
+     "words": 1,
+     "band": 0,
+     "band_size": 49
+    },
+    "sw": {
+     "words": 1,
+     "band": 0,
+     "band_size": 65
+    },
+    "vi": {
+     "words": 1,
+     "band": 0,
+     "band_size": 94
+    },
+    "zh": {
+     "words": 1,
+     "band": 0,
+     "band_size": 95
+    }
+   }
+  },
+  {
+   "name": "features",
+   "path_ids": [
+    1
+   ],
+   "per_language": {
+    "ar": {
+     "words": 1,
+     "band": 1,
+     "band_size": 311
+    },
+    "de": {
+     "words": 1,
+     "band": 1,
+     "band_size": 539
+    },
+    "en": {
+     "words": 1,
+     "band": 1,
+     "band_size": 697
+    },
+    "es": {
+     "words": 1,
+     "band": 1,
+     "band_size": 416
+    },
+    "fil": {
+     "words": 1,
+     "band": 1,
+     "band_size": 677
+    },
+    "fr": {
+     "words": 1,
+     "band": 1,
+     "band_size": 333
+    },
+    "hi": {
+     "words": 1,
+     "band": 1,
+     "band_size": 491
+    },
+    "ja": {
+     "words": 1,
+     "band": 1,
+     "band_size": 339
+    },
+    "ko": {
+     "words": 1,
+     "band": 1,
+     "band_size": 405
+    },
+    "pl": {
+     "words": 1,
+     "band": 1,
+     "band_size": 529
+    },
+    "pt": {
+     "words": 1,
+     "band": 1,
+     "band_size": 552
+    },
+    "ru": {
+     "words": 1,
+     "band": 1,
+     "band_size": 190
+    },
+    "sw": {
+     "words": 1,
+     "band": 1,
+     "band_size": 162
+    },
+    "vi": {
+     "words": 1,
+     "band": 1,
+     "band_size": 379
+    },
+    "zh": {
+     "words": 1,
+     "band": 1,
+     "band_size": 163
+    }
+   }
+  },
+  {
+   "name": "texture",
+   "path_ids": [
+    2,
+    3
+   ],
+   "per_language": {
+    "ar": {
+     "words": 2,
+     "band": 2,
+     "band_size": 452
+    },
+    "de": {
+     "words": 2,
+     "band": 2,
+     "band_size": 172
+    },
+    "en": {
+     "words": 2,
+     "band": 2,
+     "band_size": 11
+    },
+    "es": {
+     "words": 2,
+     "band": 2,
+     "band_size": 171
+    },
+    "fil": {
+     "words": 2,
+     "band": 2,
+     "band_size": 10
+    },
+    "fr": {
+     "words": 2,
+     "band": 2,
+     "band_size": 271
+    },
+    "hi": {
+     "words": 2,
+     "band": 2,
+     "band_size": 203
+    },
+    "ja": {
+     "words": 2,
+     "band": 2,
+     "band_size": 82
+    },
+    "ko": {
+     "words": 2,
+     "band": 2,
+     "band_size": 288
+    },
+    "pl": {
+     "words": 2,
+     "band": 2,
+     "band_size": 69
+    },
+    "pt": {
+     "words": 2,
+     "band": 2,
+     "band_size": 24
+    },
+    "ru": {
+     "words": 2,
+     "band": 2,
+     "band_size": 567
+    },
+    "sw": {
+     "words": 2,
+     "band": 2,
+     "band_size": 574
+    },
+    "vi": {
+     "words": 2,
+     "band": 2,
+     "band_size": 284
+    },
+    "zh": {
+     "words": 2,
+     "band": 2,
+     "band_size": 63
+    }
+   }
+  },
+  {
+   "name": "shading",
+   "path_ids": [
+    4
+   ],
+   "per_language": {
+    "ar": {
+     "words": 1,
+     "band": 3,
+     "band_size": 2
+    },
+    "de": {
+     "words": 1,
+     "band": 3,
+     "band_size": 11
+    },
+    "en": {
+     "words": 1,
+     "band": 3,
+     "band_size": 45
+    },
+    "es": {
+     "words": 1,
+     "band": 3,
+     "band_size": 24
+    },
+    "fil": {
+     "words": 1,
+     "band": 3,
+     "band_size": 38
+    },
+    "fr": {
+     "words": 1,
+     "band": 3,
+     "band_size": 66
+    },
+    "hi": {
+     "words": 1,
+     "band": 3,
+     "band_size": 78
+    },
+    "ja": {
+     "words": 1,
+     "band": 3,
+     "band_size": 10
+    },
+    "ko": {
+     "words": 1,
+     "band": 3,
+     "band_size": 87
+    },
+    "pl": {
+     "words": 1,
+     "band": 3,
+     "band_size": 6
+    },
+    "pt": {
+     "words": 1,
+     "band": 3,
+     "band_size": 10
+    },
+    "ru": {
+     "words": 1,
+     "band": 3,
+     "band_size": 14
+    },
+    "sw": {
+     "words": 1,
+     "band": 3,
+     "band_size": 3
+    },
+    "vi": {
+     "words": 1,
+     "band": 3,
+     "band_size": 44
+    },
+    "zh": {
+     "words": 1,
+     "band": 3,
+     "band_size": 13
+    }
+   }
+  }
+ ],
+ "audio_gate": "starter",
+ "completion": {
+  "all_layers": true
+ },
+ "authoring": "suggested-then-approved",
+ "pin_hash": 3132791461188756067
+}

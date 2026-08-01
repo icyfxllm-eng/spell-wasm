@@ -2210,6 +2210,150 @@
     "pdBasis": "Public domain: woodcut 1515, artist died 1528; stroke map hand-traced at content time over the PD reference (reference image not shipped)",
     "retrieved": "2026-07-29"
    }
+  },
+  {
+   "id": "balloon",
+   "tier": "easy",
+   "subject": "balloon",
+   "icon": "🎈",
+   "kid": true,
+   "wash": false,
+   "pack": "wave1",
+   "paths": [
+    {
+     "mode": "flow",
+     "d": "M22 160 L53 59 L148 26 L219 102 L216 208 L188 312 L160 416 L126 466 L89 364 L52 263 L22 160",
+     "order": 1,
+     "budget": [
+      2,
+      10
+     ],
+     "band": 1,
+     "arch": "outline",
+     "feature": "balloon outline"
+    }
+   ],
+   "guide": []
+  },
+  {
+   "id": "mug",
+   "tier": "easy",
+   "subject": "mug",
+   "icon": "☕",
+   "kid": true,
+   "wash": false,
+   "pack": "wave1",
+   "paths": [
+    {
+     "mode": "flow",
+     "d": "M22 255 L47 121 L121 28 L229 87 L303 202 L375 316 L322 427 L205 489 L70 489 L22 390 L22 255",
+     "order": 1,
+     "budget": [
+      2,
+      10
+     ],
+     "band": 1,
+     "arch": "outline",
+     "feature": "mug outline"
+    }
+   ],
+   "guide": []
+  },
+  {
+   "id": "mushroom",
+   "tier": "easy",
+   "subject": "mushroom",
+   "icon": "🍄",
+   "kid": true,
+   "wash": false,
+   "pack": "wave1",
+   "paths": [
+    {
+     "mode": "flow",
+     "d": "M22 217 L77 93 L198 28 L336 34 L451 110 L476 236 L393 348 L310 461 L189 441 L105 329 L22 217",
+     "order": 1,
+     "budget": [
+      2,
+      10
+     ],
+     "band": 1,
+     "arch": "outline",
+     "feature": "mushroom outline"
+    }
+   ],
+   "guide": []
+  },
+  {
+   "id": "sailboat",
+   "tier": "easy",
+   "subject": "sailboat",
+   "icon": "⛵",
+   "kid": true,
+   "wash": false,
+   "pack": "wave1",
+   "paths": [
+    {
+     "mode": "flow",
+     "d": "M22 390 L98 266 L173 143 L249 24 L329 145 L409 266 L488 387 L402 490 L258 490 L113 490 L22 390",
+     "order": 1,
+     "budget": [
+      2,
+      10
+     ],
+     "band": 1,
+     "arch": "outline",
+     "feature": "sailboat outline"
+    }
+   ],
+   "guide": []
+  },
+  {
+   "id": "cactus",
+   "tier": "easy",
+   "subject": "cactus",
+   "icon": "🌵",
+   "kid": true,
+   "wash": false,
+   "pack": "wave1",
+   "paths": [
+    {
+     "mode": "flow",
+     "d": "M22 230 L43 110 L143 31 L264 53 L316 150 L295 275 L265 399 L208 490 L91 476 L57 353 L22 230",
+     "order": 1,
+     "budget": [
+      2,
+      10
+     ],
+     "band": 1,
+     "arch": "outline",
+     "feature": "cactus outline"
+    }
+   ],
+   "guide": []
+  },
+  {
+   "id": "moonstar",
+   "tier": "easy",
+   "subject": "moonstar",
+   "icon": "🌙",
+   "kid": true,
+   "wash": false,
+   "pack": "wave1",
+   "paths": [
+    {
+     "mode": "flow",
+     "d": "M22 214 L61 91 L171 25 L303 22 L431 32 L472 131 L395 235 L308 334 L193 382 L76 330 L22 214",
+     "order": 1,
+     "budget": [
+      2,
+      10
+     ],
+     "band": 1,
+     "arch": "outline",
+     "feature": "moonstar outline"
+    }
+   ],
+   "guide": []
   }
  ]
 }

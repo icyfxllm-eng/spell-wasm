@@ -52,7 +52,18 @@ SUBJ = {  # subject -> (ref, mode, tier)
  # house) are trace-EXEMPT per v7 F8 and carry authored scans; Mona rides
  # her v7.5.1 engraving build; these four come from references.
  "cat": ("cat.png", "ink", "medium"), "rocket": ("rocket.png", "ink", "medium"),
- "snail": ("snail.png", "ink", "easy"), "rhino": ("rhino.png", "ink", "expert"),
+ "snail": ("snail.png", "ink", "easy"),
+ # Wave 1 batch 1 (Eric approved 2026-08-01): suggested-then-approved.
+ "balloon": ("balloon.png", "ink", "easy"),
+ "mug": ("mug.png", "ink", "easy"),
+ # kite + ladybug: revised after solver gates (decorative budget,
+ # starvation); parked pending Eric's re-review of the new geometry.
+ # "kite": ("kite.png", "ink", "easy"),
+ "mushroom": ("mushroom.png", "ink", "easy"),
+ "sailboat": ("sailboat.png", "ink", "easy"),
+ "cactus": ("cactus.png", "ink", "easy"),
+ # "ladybug": ("ladybug.png", "ink", "easy"),
+ "moonstar": ("moonstar.png", "ink", "easy"), "rhino": ("rhino.png", "ink", "expert"),
 }
 
 # ---- per-subject AUTHORING recipes (content work, not renderer tuning:
