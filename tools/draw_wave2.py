@@ -239,53 +239,63 @@ def seahorse():
     tapered_stroke(d, [(400, 210), (300, 230), (210, 250)], 26, 10)  # snout
     d.polygon([(360, 130), (420, 60), (440, 160)], fill=BLACK)       # coronet
     tapered_stroke(d, [(470, 380), (560, 430), (520, 540), (450, 560)], 16, 12)  # dorsal fin
-    circle(d, 395, 265, 28, WHITE)                                   # eye
-    circle(d, 395, 265, 12, BLACK)                                   # pupil (micro)
+    # Eric, two notes in sequence: first "the eye where a seahorse would
+    # actually have an eye", then "no eye for the seahorse" -- the placement
+    # never looked right, so the eye is gone. The silhouette carries it.
     return im
 
 
 def trex_skeleton():
-    """v2 (Eric failed the lumpy v1). A proper museum mount: horizontal
-    posture, huge skull with hinged jaw, arched spine over a deep ribcage,
-    z-bent hind legs, long tapering tail. One connected mass; detail in
-    the holes (eye socket, jaw gap, four rib slots); the tiny arm micro."""
-    im, d = canvas(1060, 720)
-    # skull: deep box with a brow step, hinged jaw below
-    smooth_poly(d, [
-        (760, 130), (870, 120), (960, 150), (1000, 210),
-        (985, 265), (900, 285), (790, 275), (740, 220),
-    ], samples=10)
-    d.polygon([(985, 262), (1000, 300), (900, 345), (790, 330), (770, 285), (900, 292)], fill=BLACK)  # jaw, hinged right
-    d.polygon([(778, 288), (940, 296), (782, 312)], fill=WHITE)     # jaw gap
-    circle(d, 880, 200, 30, WHITE)                                  # eye socket
-    circle(d, 795, 185, 22, WHITE)                                  # antorbital hole
-    # neck arching down to the spine
-    tapered_stroke(d, [(760, 180), (660, 230), (580, 290)], 34, 26)
-    # spine arc over the hips
-    tapered_stroke(d, [(580, 290), (460, 310), (330, 330)], 26, 22)
-    # ribcage: deep ellipse hanging from the spine
-    # Deep cage: at 520 the ellipse curved up to within 2px of the slot
-    # bottoms at the outer slots -- another knife edge, this time from
-    # geometry curving INTO the straight slots. 60px of floor under every
-    # slot now.
-    d.ellipse([380, 280, 660, 560], fill=BLACK)
-    # Slots start below the spine stroke (the v1 knife-edge, relearned at a
-    # different y) and the gaps widened past the corridor floor at this
-    # canvas's scale (0.477: 30px ref was a 14.3px corridor -- a coin flip).
-    for x in (425, 497, 569):                                       # rib slots
-        capsule(d, x, 356, x + 28, 470, WHITE)
-    # hip mass, big enough to swallow the leg junctions -- the v2 hip left
-    # an enclosed white pocket between hip, leg and ribcage, which traced as
-    # an accidental word-hosting hole.
-    circle(d, 335, 375, 85, BLACK)
-    d.polygon([(265, 310), (430, 335), (430, 515), (280, 510)], fill=BLACK)  # weld hip to cage: no pocket
-    tapered_stroke(d, [(330, 380), (390, 480), (330, 570), (380, 660)], 34, 18)
-    d.line([(350, 668), (470, 668)], fill=BLACK, width=26)          # foot
-    tapered_stroke(d, [(300, 390), (260, 500), (300, 600)], 26, 14) # far leg
-    # tail: long taper out the back
-    tapered_stroke(d, [(300, 330), (170, 340), (60, 300), (20, 250)], 26, 6)
-    # the famous tiny arm (detached, micro)
-    d.line([(610, 350), (655, 390)], fill=BLACK, width=22)
+    """v3 (Eric: "no cartoonish trex"). Anatomical museum-mount profile:
+    deep angular skull with the real fenestrae (eye socket, antorbital,
+    lateral temporal), S-curved neck, near-horizontal spine, deep D-shaped
+    ribcage tapering rearward, the tall theropod pelvis blade, a hind leg
+    with distinct femur/tibia/metatarsus segments, and a LONG straight
+    counterbalance tail -- almost half the animal. Angular polygons, not
+    rounded blobs: cartoon lives in the curves."""
+    im, d = canvas(1160, 700)
+    # --- skull: deep, boxy, truncated snout, angular ---
+    d.polygon([(880, 100), (1050, 108), (1130, 150), (1155, 205), (1150, 232),
+               (1080, 250), (930, 245), (860, 200), (855, 130)], fill=BLACK)
+    # jaw: deep and straight, hinged at the back, narrow gape at the front
+    # hinge OVERLAPS the skull by 20px at the back -- a 6px kiss left the
+    # jaw a floating contour 3px away, flagging both, third time this class
+    # of join has bitten
+    d.polygon([(1090, 225), (1148, 296), (1010, 330), (890, 310),
+               (868, 262), (900, 250), (1060, 240)], fill=BLACK)
+    d.polygon([(880, 254), (1115, 258), (884, 268)], fill=WHITE)   # gape
+    circle(d, 1005, 175, 30, WHITE)                                # eye socket (orbit)
+    d.polygon([(920, 150), (960, 140), (955, 205), (915, 210)], fill=WHITE)  # antorbital fenestra
+    circle(d, 895, 165, 20, WHITE)                                 # lateral temporal
+    # --- neck: S-curve, thick at the shoulders ---
+    tapered_stroke(d, [(870, 160), (790, 180), (740, 250), (700, 300)], 26, 40)
+    # --- spine: near-horizontal, slight arch over the hips ---
+    tapered_stroke(d, [(700, 295), (560, 285), (430, 290), (330, 300)], 30, 24)
+    # --- ribcage: deep D, deepest behind the shoulder, tapering rearward ---
+    # cage top raised into the spine stroke: the scalloped underside of a
+    # tapered stroke against a straight edge traps white slivers that trace
+    # as stray micro dashes INSIDE the body
+    d.polygon([(700, 282), (690, 420), (650, 500), (580, 540),
+               (500, 545), (445, 505), (420, 430), (420, 298)], fill=BLACK)
+    for x, y1 in [(485, 505), (545, 512), (605, 490)]:             # rib slots
+        capsule(d, x, 360, x + 26, y1 - 28, WHITE)
+    # --- pelvis: the tall theropod blade over the hip ---
+    d.polygon([(310, 250), (420, 265), (430, 360), (395, 420),
+               (330, 430), (290, 380), (285, 300)], fill=BLACK)
+    d.polygon([(390, 425), (440, 500), (410, 510), (370, 440)], fill=BLACK)  # pubis, down-forward
+    # --- hind leg: femur / tibia / metatarsus, knee forward ankle back ---
+    tapered_stroke(d, [(360, 380), (430, 470)], 30, 24)            # femur
+    tapered_stroke(d, [(430, 470), (370, 570)], 24, 18)            # tibia
+    tapered_stroke(d, [(370, 570), (395, 645)], 18, 14)            # metatarsus
+    d.polygon([(345, 640), (470, 648), (455, 672), (350, 668)], fill=BLACK)  # toes
+    # far leg, half-tone silhouette behind
+    tapered_stroke(d, [(320, 400), (300, 500), (330, 590)], 22, 12)
+    # --- tail: LONG, straight, tapering to a point at the far left ---
+    tapered_stroke(d, [(320, 310), (200, 330), (90, 335), (22, 330)], 30, 3, samples=90)
+    # --- the arms, famously tiny: hanging DOWN from the chest, forward of
+    # the cage (floating above the ribs they read as a stray dash) ---
+    d.line([(722, 345), (712, 408)], fill=BLACK, width=18)
+    d.line([(752, 340), (746, 396)], fill=BLACK, width=15)
     return im
 
 
