@@ -2642,6 +2642,54 @@
     }
    ],
    "guide": []
+  },
+  {
+   "id": "octopus",
+   "tier": "hard",
+   "subject": "octopus",
+   "icon": "🐙",
+   "kid": true,
+   "wash": false,
+   "pack": "wave3",
+   "paths": [
+    {
+     "mode": "flow",
+     "d": "M22 223 L133 110 L271 22 L402 113 L475 238 L361 358 L224 429 L75 378 L22 223",
+     "order": 1,
+     "budget": [
+      2,
+      10
+     ],
+     "band": 1,
+     "arch": "outline",
+     "feature": "octopus outline"
+    }
+   ],
+   "guide": []
+  },
+  {
+   "id": "oak",
+   "tier": "hard",
+   "subject": "oak",
+   "icon": "🌳",
+   "kid": true,
+   "wash": false,
+   "pack": "wave3",
+   "paths": [
+    {
+     "mode": "flow",
+     "d": "M22 170 L142 53 L309 26 L457 105 L490 261 L387 377 L219 390 L67 324 L22 170",
+     "order": 1,
+     "budget": [
+      2,
+      10
+     ],
+     "band": 1,
+     "arch": "outline",
+     "feature": "oak outline"
+    }
+   ],
+   "guide": []
   }
  ]
 }
