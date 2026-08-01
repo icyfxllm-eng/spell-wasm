@@ -440,6 +440,9 @@
   .wp-card{position:absolute;inset:0;display:none;align-items:center;justify-content:center;background:rgba(0,0,0,.55);z-index:5}
   .wp-card.show{display:flex}
   .wp-screen .btn-hide{display:none}
+  /* the borrowed home, picture-side (see #kbHome above) */
+  #wpKbSlot{width:100%}
+  /* SPELL-PICTURE:END */
   @keyframes prWiggle{0%,100%{transform:translateX(0)}25%{transform:translateX(-5px)}75%{transform:translateX(5px)}}
   .pr-slots.pulse{animation:prPulse .4s}
   @keyframes prPulse{25%{transform:translateX(-6px);color:var(--accent,#7aa2ff)}75%{transform:translateX(6px)}}
@@ -630,13 +633,13 @@
      stretching their keys to fill the row (the old flex:1 1 0 caused a 7-key row
      to have wider keys than a 10-key row). Big Text / Kid raise --kb-key-max so
      uniformity is preserved automatically. */
-  /* #kbHome and #wpKbSlot are the two places the keyboard can live (it is lent
-     between them, see borrow_keyboard in wordpic_screen.rs). BOTH must be full
-     width. #stage is a column flex with align-items:center, so a wrapper with
-     no width shrink-wraps to its content — and .game-kb{width:100%} then
-     resolves against the shrunken wrapper instead of the stage, collapsing
-     every key. That is exactly what shipped in 106. */
-  #kbHome,#wpKbSlot{width:100%}
+  /* The keyboard's home must be full width. #stage is a column flex with
+     align-items:center, so a wrapper with no width shrink-wraps to its
+     content — and .game-kb{width:100%} then resolves against the shrunken
+     wrapper instead of the stage, collapsing every key. That is exactly what
+     shipped in 106. (The picture lends the keyboard a second home; that rule
+     lives inside the SPELL-PICTURE block so the site build never names it.) */
+  #kbHome{width:100%}
   .game-kb{width:100%;margin-top:14px;display:flex;flex-direction:column;gap:7px;user-select:none;
     --kb-cols:10; --kb-gap:6px; --kb-key-max:46px;
     /* Capped, deliberately NOT floored. A CSS floor would clamp a collapsed
@@ -694,7 +697,6 @@
   body.big-text .kb-key,body.big-text .kb-back,body.big-text .kb-submit{min-height:56px;font-size:21px}
   body.readable .kb-key,body.readable .kb-back{border-color:var(--muted);border-width:2px;color:var(--ink)}
 
-  /* SPELL-PICTURE:END */
   .action-row{width:100%;display:flex;gap:10px;margin-top:12px}
   .btn{flex:1;border:none;border-radius:12px;padding:14px;font-family:var(--body);font-size:15px;font-weight:600;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;gap:8px;transition:filter .15s,transform .1s,opacity .15s}
   .btn:active{transform:translateY(1px)}

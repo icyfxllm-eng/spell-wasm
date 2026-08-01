@@ -90,6 +90,29 @@ for (const f of files(DIST)) {
   }
 }
 
+// The other half of the wall, and the half I learned the hard way. The strip
+// is a TEXT CUT between sentinels: get a boundary wrong and it silently takes
+// the shared UI with it. My first sentinel spanned 320 lines and deleted
+// .stage, .orb-wrap, .timer-ring, the keyboard and the voice dialogs -- the
+// scan passed (no picture traces, correctly) and the deployed site was
+// unusable. "No picture" and "still a working site" are two claims and this
+// file must make both.
+const CORE = [
+  ".kb-key{", ".orb-wrap{", ".stage{", ".launch{", ".setup-chip{",
+  ".action-row{", ".timer-ring{", "id=\"langSel\"", "id=\"orbWrap\"", "id=\"gameKeyboard\"",
+];
+const html = join(DIST, "index.html");
+if (existsSync(html)) {
+  const body = readFileSync(html, "utf8");
+  const missing = CORE.filter((c) => !body.includes(c));
+  if (missing.length) {
+    console.error(`web-picture-wall-scan: the strip removed core UI, not just the picture:\n` +
+      missing.map((m) => "  missing " + m).join("\n") +
+      `\n\nCheck the SPELL-PICTURE sentinel boundaries in index.html.`);
+    process.exit(1);
+  }
+}
+
 if (hits.length) {
   console.error(`web-picture-wall-scan: I1 VIOLATED — ${hits.length} hit(s) in ${DIST}\n`);
   for (const h of hits.slice(0, 40)) console.error("  " + h);
