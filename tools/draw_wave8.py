@@ -119,13 +119,16 @@ def cuckoo():
     d.line([(380, 470), (380, 415)], fill=BLACK, width=12)             # hour hand
     d.line([(380, 470), (425, 452)], fill=BLACK, width=9)              # minute hand
     d.rectangle([345, 240, 415, 320], fill=WHITE)                      # cuckoo door
-    # chains with pinecone weights and the pendulum
-    d.line([(280, 620), (280, 800)], fill=BLACK, width=16)
-    d.line([(480, 620), (480, 740)], fill=BLACK, width=16)
-    d.line([(380, 620), (380, 850)], fill=BLACK, width=16)
-    d.ellipse([250, 790, 310, 900], fill=BLACK)                        # pinecone
-    d.ellipse([450, 730, 510, 840], fill=BLACK)                        # pinecone
-    circle(d, 380, 890, 52, BLACK)                                     # pendulum bob
+    # straps with pinecone weights and the pendulum. The first cut used
+    # 16px chains: sub-floor decorative strokes that failed the plan's
+    # coverage gate (cuckoo could not plan legally in English). Straps at
+    # 34px are honest corridor citizens.
+    d.line([(270, 620), (270, 760)], fill=BLACK, width=34)
+    d.line([(490, 620), (490, 710)], fill=BLACK, width=34)
+    d.line([(380, 620), (380, 810)], fill=BLACK, width=34)
+    d.ellipse([236, 750, 304, 866], fill=BLACK)                        # pinecone
+    d.ellipse([456, 700, 524, 816], fill=BLACK)                        # pinecone
+    circle(d, 380, 856, 54, BLACK)                                     # pendulum bob
     return im
 
 

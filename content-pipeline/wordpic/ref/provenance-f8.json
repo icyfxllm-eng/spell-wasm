@@ -427,5 +427,37 @@
     "sourceUrl": "",
     "file": "tools/draw_wave7.py",
     "note": "Drawn coordinate list; candidates approved by Eric 2026-08-01."
+  },
+  {
+    "subject": "turtleship",
+    "title": "SpellGame original — geobukseon turtle ship (culture 3, ko)",
+    "license": "Original artwork (SpellGame)",
+    "sourceUrl": "",
+    "file": "tools/draw_wave8.py",
+    "note": "Drawn coordinate list; candidates approved by Eric 2026-08-01."
+  },
+  {
+    "subject": "baobab",
+    "title": "SpellGame original — baobab (culture 3, sw)",
+    "license": "Original artwork (SpellGame)",
+    "sourceUrl": "",
+    "file": "tools/draw_wave8.py",
+    "note": "Drawn coordinate list; candidates approved by Eric 2026-08-01."
+  },
+  {
+    "subject": "nonla",
+    "title": "SpellGame original — non la + ao dai (culture 3, vi)",
+    "license": "Original artwork (SpellGame)",
+    "sourceUrl": "",
+    "file": "tools/draw_wave8.py",
+    "note": "Drawn coordinate list; candidates approved by Eric 2026-08-01."
+  },
+  {
+    "subject": "cuckoo",
+    "title": "SpellGame original — cuckoo clock (culture 3, de)",
+    "license": "Original artwork (SpellGame)",
+    "sourceUrl": "",
+    "file": "tools/draw_wave8.py",
+    "note": "Drawn coordinate list; candidates approved by Eric 2026-08-01."
   }
 ]
