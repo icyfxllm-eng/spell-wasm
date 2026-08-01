@@ -73,7 +73,10 @@ SUBJ = {  # subject -> (ref, mode, tier)
  "violin": ("violin.png", "ink", "medium"),
  "hummingbird": ("hummingbird.png", "ink", "medium"),
  "rooster": ("rooster.png", "ink", "medium"),
- "seahorse": ("seahorse.png", "ink", "medium"), "rhino": ("rhino.png", "ink", "expert"),
+ "seahorse": ("seahorse.png", "ink", "medium"),
+ # Wave 1 batch 3 (advanced): sourced PD art, Eric-approved.
+ "wolf": ("wolf.png", "ink", "hard"),
+ "koi": ("koi.png", "ink", "hard"), "rhino": ("rhino.png", "ink", "expert"),
 }
 
 # ---- per-subject AUTHORING recipes (content work, not renderer tuning:

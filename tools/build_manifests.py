@@ -109,7 +109,7 @@ def bands_for(lang: str, tier: str) -> list[list[str]]:
     return out
 
 
-def layer_split(paths: list[dict]) -> list[list[int]]:
+def layer_split(paths: list[dict], max_strata: int | None = None) -> list[list[int]]:
     """Group path indices into prominence strata, longest arcs first.
 
     Micro features (eyes, pupils) are always the last declared layer: they are
@@ -124,6 +124,8 @@ def layer_split(paths: list[dict]) -> list[list[int]]:
     # Strata by arc length, but never more strata than paths -- a one-path
     # picture declares one layer, not four empty ones.
     want = min(len(LAYERS) - (1 if micro else 0), len(rest))
+    if max_strata is not None:
+        want = min(want, max_strata)
     per = len(rest) / want
     groups = [rest[round(k * per):round((k + 1) * per)] for k in range(want)]
     groups = [g for g in groups if g]
@@ -147,7 +149,33 @@ def main() -> int:
         sub = f.stem
         doc = json.loads(f.read_text())
         tier = doc["tier"]
-        groups = layer_split(doc["paths"])
+        # The deepest ladder every shipped language can FILL. The wolf's
+        # jagged chest split into word-hosting slivers and its 4-layer
+        # ladder demanded 3 words from bands that hold 2 in ar/sw -- a thin
+        # pool is a fact about the language, so the ladder bends to it
+        # rather than the manifest shipping a demand nobody can meet.
+        # manifest_check still verifies independently; this is the
+        # generator refusing to emit known-impossible ladders, not the
+        # checker trusting the generator.
+        groups = []
+        for strata in (3, 2, 1):
+            trial = layer_split(doc["paths"], max_strata=strata)
+            if not trial:
+                break
+            ok = True
+            for k, path_ids in enumerate(trial):
+                band = min(k, 3)
+                for lang in langs:
+                    if len(bands_for(lang, tier)[band]) < len(path_ids):
+                        ok = False
+                        break
+                if not ok:
+                    break
+            if ok:
+                groups = trial
+                break
+        if not groups:
+            groups = layer_split(doc["paths"], max_strata=1)
         if not groups:
             print(f"{sub:10} SKIP (no paths)")
             continue

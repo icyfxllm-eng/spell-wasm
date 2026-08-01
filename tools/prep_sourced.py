@@ -14,7 +14,7 @@ koi:  FreeSVG/OpenClipart Koi-Fish, public domain -- a coloured top view.
 import pathlib
 import sys
 
-from PIL import Image
+from PIL import Image, ImageDraw
 
 S = pathlib.Path(sys.argv[1])
 REF = pathlib.Path(__file__).resolve().parents[1] / "content-pipeline/wordpic/ref"
@@ -90,6 +90,14 @@ for y in range(ph):
 # fish is ONE silhouette with its fins in the outline -- the dragon recipe.
 from PIL import ImageFilter
 solid = solid.filter(ImageFilter.MinFilter(13)).filter(ImageFilter.MaxFilter(13))
+
+# Eric (2026-08-01, arrow on the sheet): the tail's curl-back hook reads
+# as a beak on the rotated fish -- both pass with it removed. Cut on the
+# stroke's own angle just past the bend; the close below rounds the stump.
+dcut = ImageDraw.Draw(solid)
+dcut.polygon([(0, 448), (232, 478), (232, 600), (0, 600)], fill=255)
+
+solid.save(S / "koi-single-debug.png")
 
 # compose the circling pair: two copies rotated 180, offset diagonally
 fishA = solid

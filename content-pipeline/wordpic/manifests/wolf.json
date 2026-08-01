@@ -1,276 +1,290 @@
 {
- "id": "mushroom",
- "tier": "easy",
+ "id": "wolf",
+ "tier": "hard",
  "source": {
-  "title": "SpellGame original \u2014 mushroom (wave 1 batch 1)",
-  "license": "Original artwork (SpellGame)",
-  "url": "",
+  "title": "File:Wolf.svg (howling wolf silhouette)",
+  "license": "CC0 1.0",
+  "url": "https://commons.wikimedia.org/wiki/File:Wolf.svg",
   "attribution": ""
  },
  "parts": {
   "root": [
+   9,
+   8,
    0,
-   1,
+   4,
    2,
-   3
+   6,
+   5,
+   7,
+   3,
+   1,
+   10
   ]
  },
  "layers": [
   {
    "name": "outline",
    "path_ids": [
-    0
+    9,
+    8,
+    0,
+    4,
+    2
    ],
    "per_language": {
     "ar": {
-     "words": 1,
+     "words": 5,
      "band": 0,
      "band_size": 60
     },
     "de": {
-     "words": 1,
+     "words": 5,
      "band": 0,
-     "band_size": 91
+     "band_size": 630
     },
     "en": {
-     "words": 1,
+     "words": 5,
      "band": 0,
-     "band_size": 53
+     "band_size": 761
     },
     "es": {
-     "words": 1,
+     "words": 5,
      "band": 0,
-     "band_size": 191
+     "band_size": 560
     },
     "fil": {
-     "words": 1,
+     "words": 5,
      "band": 0,
-     "band_size": 75
+     "band_size": 241
     },
     "fr": {
-     "words": 1,
+     "words": 5,
      "band": 0,
-     "band_size": 139
+     "band_size": 363
     },
     "hi": {
-     "words": 1,
+     "words": 5,
      "band": 0,
-     "band_size": 57
+     "band_size": 548
     },
     "ja": {
-     "words": 1,
+     "words": 5,
      "band": 0,
-     "band_size": 377
+     "band_size": 594
     },
     "ko": {
-     "words": 1,
+     "words": 5,
      "band": 0,
-     "band_size": 32
+     "band_size": 442
     },
     "pl": {
-     "words": 1,
+     "words": 5,
      "band": 0,
-     "band_size": 210
+     "band_size": 452
     },
     "pt": {
-     "words": 1,
+     "words": 5,
      "band": 0,
-     "band_size": 220
+     "band_size": 719
     },
     "ru": {
-     "words": 1,
+     "words": 5,
      "band": 0,
      "band_size": 49
     },
     "sw": {
-     "words": 1,
+     "words": 5,
      "band": 0,
      "band_size": 65
     },
     "vi": {
-     "words": 1,
+     "words": 5,
      "band": 0,
-     "band_size": 94
+     "band_size": 392
     },
     "zh": {
-     "words": 1,
+     "words": 5,
      "band": 0,
-     "band_size": 95
+     "band_size": 185
     }
    }
   },
   {
    "name": "features",
    "path_ids": [
-    1,
-    2
+    6,
+    5,
+    7,
+    3,
+    1
    ],
    "per_language": {
     "ar": {
-     "words": 2,
+     "words": 5,
      "band": 1,
-     "band_size": 311
+     "band_size": 763
     },
     "de": {
-     "words": 2,
+     "words": 5,
      "band": 1,
-     "band_size": 539
+     "band_size": 459
     },
     "en": {
-     "words": 2,
+     "words": 5,
      "band": 1,
-     "band_size": 697
+     "band_size": 693
     },
     "es": {
-     "words": 2,
+     "words": 5,
      "band": 1,
-     "band_size": 416
+     "band_size": 452
     },
     "fil": {
-     "words": 2,
+     "words": 5,
      "band": 1,
-     "band_size": 677
+     "band_size": 576
     },
     "fr": {
-     "words": 2,
+     "words": 5,
      "band": 1,
-     "band_size": 333
+     "band_size": 640
     },
     "hi": {
-     "words": 2,
+     "words": 5,
      "band": 1,
-     "band_size": 491
+     "band_size": 385
     },
     "ja": {
-     "words": 2,
+     "words": 5,
      "band": 1,
-     "band_size": 339
+     "band_size": 246
     },
     "ko": {
-     "words": 2,
+     "words": 5,
      "band": 1,
-     "band_size": 405
+     "band_size": 326
     },
     "pl": {
-     "words": 2,
+     "words": 5,
      "band": 1,
-     "band_size": 529
+     "band_size": 581
     },
     "pt": {
-     "words": 2,
+     "words": 5,
      "band": 1,
-     "band_size": 552
+     "band_size": 698
     },
     "ru": {
-     "words": 2,
+     "words": 5,
      "band": 1,
-     "band_size": 190
+     "band_size": 757
     },
     "sw": {
-     "words": 2,
+     "words": 5,
      "band": 1,
-     "band_size": 162
+     "band_size": 736
     },
     "vi": {
-     "words": 2,
+     "words": 5,
      "band": 1,
-     "band_size": 379
+     "band_size": 404
     },
     "zh": {
-     "words": 2,
+     "words": 5,
      "band": 1,
-     "band_size": 163
+     "band_size": 313
     }
    }
   },
   {
    "name": "texture",
    "path_ids": [
-    3
+    10
    ],
    "per_language": {
     "ar": {
      "words": 1,
      "band": 2,
-     "band_size": 452
+     "band_size": 2
     },
     "de": {
      "words": 1,
      "band": 2,
-     "band_size": 172
+     "band_size": 505
     },
     "en": {
      "words": 1,
      "band": 2,
-     "band_size": 11
+     "band_size": 145
     },
     "es": {
      "words": 1,
      "band": 2,
-     "band_size": 171
+     "band_size": 527
     },
     "fil": {
      "words": 1,
      "band": 2,
-     "band_size": 10
+     "band_size": 632
     },
     "fr": {
      "words": 1,
      "band": 2,
-     "band_size": 271
+     "band_size": 487
     },
     "hi": {
      "words": 1,
      "band": 2,
-     "band_size": 203
+     "band_size": 593
     },
     "ja": {
      "words": 1,
      "band": 2,
-     "band_size": 82
+     "band_size": 55
     },
     "ko": {
      "words": 1,
      "band": 2,
-     "band_size": 288
+     "band_size": 88
     },
     "pl": {
      "words": 1,
      "band": 2,
-     "band_size": 69
+     "band_size": 474
     },
     "pt": {
      "words": 1,
      "band": 2,
-     "band_size": 24
+     "band_size": 130
     },
     "ru": {
      "words": 1,
      "band": 2,
-     "band_size": 567
+     "band_size": 14
     },
     "sw": {
      "words": 1,
      "band": 2,
-     "band_size": 574
+     "band_size": 2
     },
     "vi": {
      "words": 1,
      "band": 2,
-     "band_size": 284
+     "band_size": 638
     },
     "zh": {
      "words": 1,
      "band": 2,
-     "band_size": 63
+     "band_size": 117
     }
    }
   }
  ],
- "audio_gate": "starter",
+ "audio_gate": "advanced",
  "completion": {
   "all_layers": true
  },
  "authoring": "suggested-then-approved",
- "pin_hash": 16954615643177505171
+ "pin_hash": 12797230527797499628
 }

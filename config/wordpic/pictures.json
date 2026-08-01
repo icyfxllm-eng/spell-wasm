@@ -2594,6 +2594,54 @@
     }
    ],
    "guide": []
+  },
+  {
+   "id": "wolf",
+   "tier": "hard",
+   "subject": "wolf",
+   "icon": "🐺",
+   "kid": true,
+   "wash": false,
+   "pack": "wave2",
+   "paths": [
+    {
+     "mode": "flow",
+     "d": "M22 467 L66 278 L214 157 L373 45 L440 165 L460 358 L403 483 L209 487 L22 467",
+     "order": 1,
+     "budget": [
+      2,
+      10
+     ],
+     "band": 1,
+     "arch": "outline",
+     "feature": "wolf outline"
+    }
+   ],
+   "guide": []
+  },
+  {
+   "id": "koi",
+   "tier": "hard",
+   "subject": "koi",
+   "icon": "🐟",
+   "kid": true,
+   "wash": false,
+   "pack": "wave2",
+   "paths": [
+    {
+     "mode": "flow",
+     "d": "M22 266 L133 145 L250 29 L372 123 L490 238 L380 359 L263 475 L140 381 L22 266",
+     "order": 1,
+     "budget": [
+      2,
+      10
+     ],
+     "band": 1,
+     "arch": "outline",
+     "feature": "koi outline"
+    }
+   ],
+   "guide": []
   }
  ]
 }
