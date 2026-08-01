@@ -214,6 +214,12 @@ pub fn wire(app: &App) {
     dom::on_click("playHubScrim", close);
 }
 
+// The site build deletes app-only modes from the registry (D1: absent, not
+// filtered), so these assertions about registry CONTENTS are app-config
+// truths. The web config gets its own assertion below rather than a version
+// of these that changes its expectations based on cfg -- a test that moves
+// its own goalposts proves whichever config you happened to run.
+#[cfg(not(feature = "web"))]
 #[cfg(test)]
 mod tests {
     use super::*;

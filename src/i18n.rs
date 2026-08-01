@@ -24,24 +24,24 @@ fn tables() -> &'static HashMap<&'static str, Table> {
     static T: OnceLock<HashMap<&'static str, Table>> = OnceLock::new();
     T.get_or_init(|| {
         let mut m: HashMap<&'static str, Table> = HashMap::new();
-        m.insert("en", parse(include_str!("i18n/locales/en.json")));
-        m.insert("es", parse(include_str!("i18n/locales/es.json")));
-        m.insert("fr", parse(include_str!("i18n/locales/fr.json")));
-        m.insert("de", parse(include_str!("i18n/locales/de.json")));
-        m.insert("pt", parse(include_str!("i18n/locales/pt.json")));
-        m.insert("pl", parse(include_str!("i18n/locales/pl.json")));
-        m.insert("vi", parse(include_str!("i18n/locales/vi.json")));
-        m.insert("ko", parse(include_str!("i18n/locales/ko.json")));
-        m.insert("ja", parse(include_str!("i18n/locales/ja.json")));
-        m.insert("zh", parse(include_str!("i18n/locales/zh.json")));
-        m.insert("fil", parse(include_str!("i18n/locales/fil.json")));
+        m.insert("en", parse(include_str!(concat!(env!("OUT_DIR"), "/locales/en.json"))));
+        m.insert("es", parse(include_str!(concat!(env!("OUT_DIR"), "/locales/es.json"))));
+        m.insert("fr", parse(include_str!(concat!(env!("OUT_DIR"), "/locales/fr.json"))));
+        m.insert("de", parse(include_str!(concat!(env!("OUT_DIR"), "/locales/de.json"))));
+        m.insert("pt", parse(include_str!(concat!(env!("OUT_DIR"), "/locales/pt.json"))));
+        m.insert("pl", parse(include_str!(concat!(env!("OUT_DIR"), "/locales/pl.json"))));
+        m.insert("vi", parse(include_str!(concat!(env!("OUT_DIR"), "/locales/vi.json"))));
+        m.insert("ko", parse(include_str!(concat!(env!("OUT_DIR"), "/locales/ko.json"))));
+        m.insert("ja", parse(include_str!(concat!(env!("OUT_DIR"), "/locales/ja.json"))));
+        m.insert("zh", parse(include_str!(concat!(env!("OUT_DIR"), "/locales/zh.json"))));
+        m.insert("fil", parse(include_str!(concat!(env!("OUT_DIR"), "/locales/fil.json"))));
         // Study-language parity (2026-07-25): menus follow the language for the
         // freshly activated Arabic + Hindi too. Machine-drafted pending native
         // review, like their word banks.
-        m.insert("ar", parse(include_str!("i18n/locales/ar.json")));
-        m.insert("hi", parse(include_str!("i18n/locales/hi.json")));
-        m.insert("ru", parse(include_str!("i18n/locales/ru.json")));
-        m.insert("sw", parse(include_str!("i18n/locales/sw.json")));
+        m.insert("ar", parse(include_str!(concat!(env!("OUT_DIR"), "/locales/ar.json"))));
+        m.insert("hi", parse(include_str!(concat!(env!("OUT_DIR"), "/locales/hi.json"))));
+        m.insert("ru", parse(include_str!(concat!(env!("OUT_DIR"), "/locales/ru.json"))));
+        m.insert("sw", parse(include_str!(concat!(env!("OUT_DIR"), "/locales/sw.json"))));
         m
     })
 }

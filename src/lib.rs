@@ -10,12 +10,17 @@ mod daily;
 mod deck;
 mod defmatch; // CC-DEF-MATCH core engine (REVIEW-GATED)
 mod practice; // CC-PRACTICE core (curriculum/phases/progress)
+#[cfg(not(feature = "web"))]
 mod wordpic; // CC-WORD-PICTURE core (calligrams)
 mod input_provenance;
 mod surface_hooks; // CC-PICTURE-PLATFORM I3: inverts the surface dependency
+#[cfg(not(feature = "web"))]
 mod spellpic;
+#[cfg(not(feature = "web"))]
 mod spellpic_export; // CC-FINALE feature 2 (clean export renderer)
+#[cfg(not(feature = "web"))]
 mod wordpic_layout; // CC-WORD-PICTURE v6 layout engine (L1-L5)
+#[cfg(not(feature = "web"))]
 mod wordpic_screen; // CC-WORD-PICTURE v5 screen
 mod practice_screen; // CC-PRACTICE screen (the front porch)
 mod defmatch_screen; // CC-DEF-MATCH P3 frontend loop
@@ -211,8 +216,22 @@ fn wire(app: &App) {
     racing::screen::wire(app); // CC-SPELL-RACING Phase 5 screen (hidden until activation)
     defmatch_screen::wire(app); // CC-DEF-MATCH P3 loop (live tile where consts::def_match holds)
     practice_screen::wire(app); // CC-PRACTICE (visible where consts::practice holds — en first)
-    wordpic_screen::wire(app); // CC-WORD-PICTURE v5 (calligram picker + canvas)
-    wordpic_screen::install_surface_hooks(); // I3: the picture registers itself
+    // CC-PICTURE-PLATFORM D1: compile-out, not runtime-hide. The site build
+    // (`--features web`) contains no picture machinery at all -- and because
+    // the mode registers itself through surface_hooks (I3), its absence needs
+    // no compensating branch anywhere else.
+    //
+    // Deliberately keyed on `not(feature = "web")` rather than a separate
+    // `picture` feature as the file's letter suggests. Two flags can
+    // contradict each other -- someone passes `--features web` without
+    // disabling `picture` and the site ships the mode -- and I1 is exactly
+    // the thing that must not depend on remembering a second switch. One
+    // axis, plus scripts/web-picture-wall-scan.mjs as the actual guarantee.
+    #[cfg(not(feature = "web"))]
+    {
+        wordpic_screen::wire(app); // CC-WORD-PICTURE v5 (calligram picker + canvas)
+        wordpic_screen::install_surface_hooks(); // I3: the picture registers itself
+    }
     dev::wire(app); // TEMP dev door: 5-tap logo → menu for the hidden racing/aloud screens
     tools_hub::wire(app);
     tools_hub::reflect(app);

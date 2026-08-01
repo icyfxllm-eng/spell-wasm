@@ -33,7 +33,26 @@ wasm-bindgen target/wasm32-unknown-unknown/release/spell_wasm.wasm \
 echo "==> assembling dist/"
 rm -rf "$DIST"
 mkdir -p "$DIST"
-cp index.html audio-native.js native-language-kit.js manifest.json sw.js "$DIST/"
+# I1: the site carries no picture markup or styles. Cut between the
+# SPELL-PICTURE sentinels rather than pattern-matching selectors -- the
+# regions are explicit in the source and web-picture-wall-scan.mjs proves
+# the cut actually happened.
+if [ "${SPELL_WEB:-0}" = "1" ]; then
+  python3 - <<'STRIP'
+import pathlib, re
+src = pathlib.Path("index.html").read_text()
+for pair in (("<!-- SPELL-PICTURE:BEGIN", "<!-- SPELL-PICTURE:END -->"),
+             ("/* SPELL-PICTURE:BEGIN", "/* SPELL-PICTURE:END */")):
+    while pair[0] in src:
+        a = src.index(pair[0]); b = src.index(pair[1], a) + len(pair[1])
+        src = src[:a] + src[b:]
+pathlib.Path("dist/index.html").write_text(src)
+print(f"==> stripped Spell Picture from dist/index.html")
+STRIP
+else
+  cp index.html "$DIST/"
+fi
+cp audio-native.js native-language-kit.js manifest.json sw.js "$DIST/"
 cp -r icons "$DIST/icons"
 # Self-hosted web fonts (FIX 1): index.html references ./fonts/*.woff2 locally
 # instead of Google Fonts / jsdelivr, and sw.js precaches them. Must be copied

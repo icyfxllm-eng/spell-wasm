@@ -185,9 +185,7 @@
       "status": "live",
       "kidSafe": true,
       "platforms": [
-        "ios",
-        "web"
-      ],
+        "ios"],
       "entitlementLevel": "preview",
       "requiresPremium": null,
       "languages": null,

@@ -90,7 +90,7 @@ struct Registry {
     modes: Vec<Mode>,
 }
 
-const MODES_JSON: &str = include_str!("../config/modes.json");
+const MODES_JSON: &str = include_str!(concat!(env!("OUT_DIR"), "/modes.json"));
 
 /// The bundled registry, in FILE ORDER — which is hub tile order (D6,
 /// RECONSTRUCTED, pending Eric). Panics only if the bundled JSON is malformed,
@@ -175,6 +175,12 @@ pub fn visible(modes: &[Mode], ctx: &HubCtx) -> Vec<Mode> {
     modes.iter().filter(|m| permitted(m, ctx)).cloned().collect()
 }
 
+// The site build deletes app-only modes from the registry (D1: absent, not
+// filtered), so these assertions about registry CONTENTS are app-config
+// truths. The web config gets its own assertion below rather than a version
+// of these that changes its expectations based on cfg -- a test that moves
+// its own goalposts proves whichever config you happened to run.
+#[cfg(not(feature = "web"))]
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -336,6 +342,33 @@ mod tests {
             for key in [&m.name_key, &m.desc_key] {
                 assert_ne!(crate::i18n::t(key), *key, "{} renders the raw key {key}", m.id);
             }
+        }
+    }
+}
+
+/// CC-PICTURE-PLATFORM D1/I1 in the web build: an app-only mode is not hidden,
+/// not flag-gated, not filtered at render time -- it is not in the registry
+/// this binary was compiled with.
+#[cfg(all(test, feature = "web"))]
+mod web_wall_tests {
+    use super::*;
+
+    #[test]
+    fn app_only_modes_are_absent_from_the_site_registry() {
+        let ids: Vec<String> = all().iter().map(|m| m.id.clone()).collect();
+        for app_only in ["word_picture", "say_it", "photo_list", "spell_aloud"] {
+            assert!(!ids.contains(&app_only.to_string()),
+                    "{app_only} is still in the site registry — hiding is not removing");
+        }
+        assert!(ids.contains(&"practice".to_string()), "the site kept its own modes");
+        assert!(!ids.is_empty(), "the strip took everything — that is not the wall working");
+    }
+
+    #[test]
+    fn the_site_registry_still_parses_and_every_survivor_declares_web() {
+        for m in all() {
+            assert!(m.platforms.iter().any(|p| p == "web"),
+                    "{} survived the strip without declaring web", m.id);
         }
     }
 }

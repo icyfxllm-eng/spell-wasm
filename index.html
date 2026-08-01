@@ -369,6 +369,7 @@
   .pr-micro-opts .pr-tile.good{border-color:#67d98b;box-shadow:0 0 10px #67d98b}
   .pr-row{display:flex;gap:8px;justify-content:center}
   .pr-input{transition:opacity .6s}
+  /* SPELL-PICTURE:BEGIN — stripped from the site build (I1) */
   /* CC-WORD-PICTURE v5 */
   .wp-screen{position:fixed;inset:0;background:var(--bg,#0e1420);z-index:59;display:none;flex-direction:column;padding:calc(env(safe-area-inset-top,0px) + 8px) 14px 10px;gap:10px}
   .wp-screen.show{display:flex}
@@ -689,6 +690,7 @@
   body.big-text .kb-key,body.big-text .kb-back,body.big-text .kb-submit{min-height:56px;font-size:21px}
   body.readable .kb-key,body.readable .kb-back{border-color:var(--muted);border-width:2px;color:var(--ink)}
 
+  /* SPELL-PICTURE:END */
   .action-row{width:100%;display:flex;gap:10px;margin-top:12px}
   .btn{flex:1;border:none;border-radius:12px;padding:14px;font-family:var(--body);font-size:15px;font-weight:600;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;gap:8px;transition:filter .15s,transform .1s,opacity .15s}
   .btn:active{transform:translateY(1px)}
@@ -1412,6 +1414,7 @@
 
   <!-- CC-WORD-PICTURE v5: picker + calligram canvas. Words typeset along
        ghost guide strokes — the words ARE the picture. -->
+<!-- SPELL-PICTURE:BEGIN — stripped from the site build (CC-PICTURE-PLATFORM I1) -->
   <div class="wp-screen" id="wpPicker">
     <div class="wp-top">
       <button class="ghost mode-exit" id="wpPickerExit" aria-label="Exit">✕</button>
@@ -1464,6 +1467,8 @@
       </div>
     </div>
   </div>
+
+<!-- SPELL-PICTURE:END -->
 
   <!-- CC-DEF-MATCH P3: the Definition Match screen. Cards float bottom→top in
        lanes; the orb speaks the word and replays on tap. No visible timer (D2). -->

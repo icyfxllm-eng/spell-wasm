@@ -1,7 +1,11 @@
 # CC-PICTURE-PLATFORM — Spell Picture Is App-Only. It Never Ships to spellgame.net.
 
-**Status: REVIEW-GATED.** Execute nothing beyond drafting until Eric approves
-this file. Reads with: CC-WORD-PICTURE v6/v8.x (layout engine),
+**Status: EXECUTABLE** (Eric, 2026-07-31 — "the pic platform is not review
+gated"; the file shipped saying REVIEW-GATED, which is why the first pass was
+draft-only). D4 is **dead scope** (Eric, same day): it describes a shared
+link/QR to a keepsake, and CC-FINALE feature 4 forbids exactly that — "no URLs
+with identifiers… the image is the whole payload." There is no link to open and
+no landing page to build. Reads with: CC-WORD-PICTURE v6/v8.x (layout engine),
 CC-PHOTO-PICTURE (inherits this wall), CC-ENTITLEMENTS (web grants),
 CC-MODE-HUB (registry).
 
@@ -88,8 +92,8 @@ and ask**.
 | D1 | Compile-out over runtime-hide | **DECIDED**. Non-negotiable. |
 | D2 | Registry `platforms` is the single availability source | **DECIDED**. Per-call-site platform checks are banned. |
 | D3 | Denylist for the symbol scan is generated, not hand-written | **DECIDED**. |
-| D4 | Web behaviour for a shared link/QR referencing a Spell Picture keepsake | **PROPOSED — Eric signs off**: a plain landing page, "Spell Picture lives in the SpellGame app", plus an App Store link. No preview render (would require shipping the renderer). |
-| D5 | Audit builds (AUDIT_MODE, Paul's web audit subdomain) also exclude Spell Picture | **PROPOSED — Eric signs off**. Web auditors cannot audit an app-only mode, and a web audit build containing Spell Picture would violate I1. |
+| D4 | Web behaviour for a shared link/QR referencing a Spell Picture keepsake | **DEAD SCOPE (Eric, 2026-07-31)**. CC-FINALE feature 4 makes the share payload an image and nothing else, so no such link exists. Revisit only if the share form ever changes. |
+| D5 | Audit builds (AUDIT_MODE, Paul's web audit subdomain) also exclude Spell Picture | **ADOPTED**: the file offers no alternative, and a web audit build containing Spell Picture would violate I1 outright. Web auditors cannot audit an app-only mode. |
 
 ## Invariants (permanent, build-failing)
 
@@ -132,7 +136,7 @@ above, **stop and ask — do not weaken the test**.
 
 ## Status against this file (2026-07-31)
 
-Nothing executed; D4 and D5 unsigned. Five things that bear on the plan as
+Five things that bear on the plan as
 written, the first two of which need a decision before code.
 
 **The intent paragraph is now out of date, and I have not silently reconciled
