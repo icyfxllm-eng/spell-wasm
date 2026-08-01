@@ -398,5 +398,9 @@
   "finale.continue": "Magpatuloy",
   "finale.save": "I-save",
   "finale.share": "I-share",
-  "finale.replay": "Panoorin ulit"
+  "finale.replay": "Panoorin ulit",
+  "finale.saved": "Na-save sa iyong mga larawan.",
+  "finale.saveFailed": "Hindi na-save sa mga larawan. Subukan ulit.",
+  "finale.saveUnavailable": "Kailangan ng app para mag-save sa mga larawan.",
+  "finale.gallery": "Gallery"
 }

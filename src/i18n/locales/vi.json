@@ -398,5 +398,9 @@
   "finale.continue": "Tiếp tục",
   "finale.save": "Lưu",
   "finale.share": "Chia sẻ",
-  "finale.replay": "Xem lại"
+  "finale.replay": "Xem lại",
+  "finale.saved": "Đã lưu vào ảnh của bạn.",
+  "finale.saveFailed": "Không lưu được vào ảnh. Hãy thử lại.",
+  "finale.saveUnavailable": "Lưu vào ảnh cần dùng ứng dụng.",
+  "finale.gallery": "Bộ sưu tập"
 }

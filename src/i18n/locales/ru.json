@@ -398,5 +398,9 @@
   "finale.continue": "Дальше",
   "finale.save": "Сохранить",
   "finale.share": "Поделиться",
-  "finale.replay": "Посмотреть ещё раз"
+  "finale.replay": "Посмотреть ещё раз",
+  "finale.saved": "Сохранено в твоих фото.",
+  "finale.saveFailed": "Не удалось сохранить в фото. Попробуй ещё раз.",
+  "finale.saveUnavailable": "Для сохранения в фото нужно приложение.",
+  "finale.gallery": "Галерея"
 }

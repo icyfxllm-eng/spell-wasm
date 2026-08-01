@@ -398,5 +398,9 @@
   "finale.continue": "继续",
   "finale.save": "保存",
   "finale.share": "分享",
-  "finale.replay": "再看一次"
+  "finale.replay": "再看一次",
+  "finale.saved": "已保存到你的照片。",
+  "finale.saveFailed": "无法保存到照片。请再试一次。",
+  "finale.saveUnavailable": "保存到照片需要使用应用。",
+  "finale.gallery": "图库"
 }

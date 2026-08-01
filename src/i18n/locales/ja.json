@@ -398,5 +398,9 @@
   "finale.continue": "つづける",
   "finale.save": "保存",
   "finale.share": "シェア",
-  "finale.replay": "もう一度見る"
+  "finale.replay": "もう一度見る",
+  "finale.saved": "写真に保存しました。",
+  "finale.saveFailed": "写真に保存できませんでした。もう一度お試しください。",
+  "finale.saveUnavailable": "写真への保存にはアプリが必要です。",
+  "finale.gallery": "ギャラリー"
 }

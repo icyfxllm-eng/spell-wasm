@@ -398,5 +398,9 @@
   "finale.continue": "Dalej",
   "finale.save": "Zapisz",
   "finale.share": "Udostępnij",
-  "finale.replay": "Obejrzyj jeszcze raz"
+  "finale.replay": "Obejrzyj jeszcze raz",
+  "finale.saved": "Zapisano w Twoich zdjęciach.",
+  "finale.saveFailed": "Nie udało się zapisać w zdjęciach. Spróbuj ponownie.",
+  "finale.saveUnavailable": "Zapisywanie w zdjęciach wymaga aplikacji.",
+  "finale.gallery": "Galeria"
 }

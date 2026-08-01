@@ -398,5 +398,9 @@
   "finale.continue": "Endelea",
   "finale.save": "Hifadhi",
   "finale.share": "Shiriki",
-  "finale.replay": "Itazame tena"
+  "finale.replay": "Itazame tena",
+  "finale.saved": "Imehifadhiwa kwenye picha zako.",
+  "finale.saveFailed": "Imeshindwa kuhifadhi kwenye picha. Jaribu tena.",
+  "finale.saveUnavailable": "Kuhifadhi kwenye picha kunahitaji programu.",
+  "finale.gallery": "Matunzio"
 }

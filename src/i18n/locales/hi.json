@@ -398,5 +398,9 @@
   "finale.continue": "आगे बढ़ें",
   "finale.save": "सहेजें",
   "finale.share": "साझा करें",
-  "finale.replay": "फिर से देखें"
+  "finale.replay": "फिर से देखें",
+  "finale.saved": "आपकी तस्वीरों में सहेजा गया।",
+  "finale.saveFailed": "तस्वीरों में सहेजा नहीं जा सका। फिर से कोशिश करें।",
+  "finale.saveUnavailable": "तस्वीरों में सहेजने के लिए ऐप चाहिए।",
+  "finale.gallery": "गैलरी"
 }

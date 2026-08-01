@@ -398,5 +398,9 @@
   "finale.continue": "متابعة",
   "finale.save": "حفظ",
   "finale.share": "مشاركة",
-  "finale.replay": "شاهدها مرة أخرى"
+  "finale.replay": "شاهدها مرة أخرى",
+  "finale.saved": "حُفظت في صورك.",
+  "finale.saveFailed": "تعذّر الحفظ في الصور. حاول مرة أخرى.",
+  "finale.saveUnavailable": "الحفظ في الصور يتطلب التطبيق.",
+  "finale.gallery": "المعرض"
 }

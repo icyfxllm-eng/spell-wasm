@@ -82,6 +82,11 @@ pub enum ExportError {
     NoPlan,
     /// The browser could not rasterise. Nothing partial is handed back.
     RasterFailed,
+    /// No camera roll to save to -- a browser, or the site build. Share still
+    /// works; the two are deliberately independent.
+    NoPhotosAccess,
+    /// Photos refused, or the write failed.
+    SaveFailed,
 }
 
 impl ExportError {
@@ -91,6 +96,8 @@ impl ExportError {
             ExportError::FontUnavailable => "finale.exportFontFailed",
             ExportError::NoPlan => "finale.exportNoPlan",
             ExportError::RasterFailed => "finale.exportFailed",
+            ExportError::NoPhotosAccess => "finale.saveUnavailable",
+            ExportError::SaveFailed => "finale.saveFailed",
         }
     }
 }
@@ -169,6 +176,114 @@ pub fn export_svg(
     )
 }
 
+/// Rasterise a finished piece to a PNG data URL at `px` square.
+///
+/// Re-rendered from the piece's own data at export resolution -- never a
+/// screen capture, which feature 2 forbids and which would cap quality at
+/// whatever device happened to be in the player's hand.
+///
+/// The SVG travels as a data URI into an <img>, which is the step that makes
+/// the embedded font non-negotiable: that context loads no stylesheet and no
+/// webfont, so anything not carried inside the markup falls back silently.
+pub async fn rasterize(svg: &str, px: u32) -> Result<String, ExportError> {
+    let doc = web_sys::window().and_then(|w| w.document()).ok_or(ExportError::RasterFailed)?;
+    let img: web_sys::HtmlImageElement = doc
+        .create_element("img")
+        .map_err(|_| ExportError::RasterFailed)?
+        .dyn_into()
+        .map_err(|_| ExportError::RasterFailed)?;
+
+    // percent-encode rather than base64: the SVG is text, and keeping it
+    // readable in a data URI makes an export bug inspectable in devtools.
+    let mut enc = String::with_capacity(svg.len() * 2);
+    for b in svg.bytes() {
+        match b {
+            b'A'..=b'Z' | b'a'..=b'z' | b'0'..=b'9' | b'-' | b'_' | b'.' | b'~' | b' ' | b'=' | b':'
+            | b'/' | b',' | b'(' | b')' | b';' | b'{' | b'}' | b'\'' => enc.push(b as char),
+            _ => enc.push_str(&format!("%{b:02X}")),
+        }
+    }
+    img.set_src(&format!("data:image/svg+xml;charset=utf-8,{enc}"));
+
+    // decode() resolves when the image is actually ready to draw. Waiting on
+    // onload alone can hand back a blank canvas on WebKit.
+    JsFuture::from(img.decode()).await.map_err(|_| ExportError::RasterFailed)?;
+
+    let canvas: web_sys::HtmlCanvasElement = doc
+        .create_element("canvas")
+        .map_err(|_| ExportError::RasterFailed)?
+        .dyn_into()
+        .map_err(|_| ExportError::RasterFailed)?;
+    canvas.set_width(px);
+    canvas.set_height(px);
+    let ctx: web_sys::CanvasRenderingContext2d = canvas
+        .get_context("2d")
+        .map_err(|_| ExportError::RasterFailed)?
+        .ok_or(ExportError::RasterFailed)?
+        .dyn_into()
+        .map_err(|_| ExportError::RasterFailed)?;
+    ctx.draw_image_with_html_image_element_and_dw_and_dh(&img, 0.0, 0.0, px as f64, px as f64)
+        .map_err(|_| ExportError::RasterFailed)?;
+    canvas.to_data_url_with_type("image/png").map_err(|_| ExportError::RasterFailed)
+}
+
+/// The whole export path for a finished piece: fetch the face, render,
+/// rasterise. Any failure is a refusal -- never a wrong-font keepsake.
+pub async fn export_png(
+    plan: &crate::spellpic::Plan,
+    lang: &str,
+    words: &[String],
+    product: Product,
+) -> Result<String, ExportError> {
+    if plan.placements.is_empty() {
+        return Err(ExportError::NoPlan);
+    }
+    let face = fetch_face_css().await?;
+    let svg = export_svg(plan, lang, words, &face);
+    rasterize(&svg, product.pixels(512)).await
+}
+
+/// CC-FINALE feature 3 — hand the keepsake to Photos.
+///
+/// Add-only: the native side asks for `.addOnly` authorization and can never
+/// enumerate the library. Permission denied is a refusal with an audited
+/// string, and Share keeps working either way -- sharing needs no Photos
+/// access at all, which is exactly why the spec keeps them independent.
+///
+/// With no native plugin (the web build, or a browser) there is no camera
+/// roll to save to, so say so rather than pretending.
+pub fn save_to_photos(data_url: &str) -> Result<(), ExportError> {
+    use wasm_bindgen::JsValue;
+    let Some(b64) = data_url.split(',').nth(1) else {
+        return Err(ExportError::RasterFailed);
+    };
+    let Some(plugin) = crate::share::cap_plugin("NativeLanguageKit") else {
+        return Err(ExportError::NoPhotosAccess);
+    };
+    let opts = js_sys::Object::new();
+    let _ = js_sys::Reflect::set(&opts, &JsValue::from_str("data"), &JsValue::from_str(b64));
+    let f = js_sys::Reflect::get(&plugin, &JsValue::from_str("savePicture"))
+        .ok()
+        .and_then(|f| f.dyn_into::<js_sys::Function>().ok())
+        .ok_or(ExportError::NoPhotosAccess)?;
+    let promise = f
+        .call1(&plugin, &opts)
+        .ok()
+        .and_then(|p| p.dyn_into::<js_sys::Promise>().ok())
+        .ok_or(ExportError::SaveFailed)?;
+    wasm_bindgen_futures::spawn_local(async move {
+        let key = match JsFuture::from(promise).await {
+            Ok(_) => "finale.saved",
+            // Every rejection reads the same to the player: it did not save.
+            // Distinguishing "denied" from "failed" in copy would be guessing
+            // at the native reason string.
+            Err(_) => ExportError::SaveFailed.i18n_key(),
+        };
+        crate::dom::set_text("wpRevealNote", &crate::i18n::t(key));
+    });
+    Ok(())
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -218,7 +333,8 @@ mod tests {
 
     #[test]
     fn every_failure_is_a_refusal_with_an_audited_string() {
-        for e in [ExportError::FontUnavailable, ExportError::NoPlan, ExportError::RasterFailed] {
+        for e in [ExportError::FontUnavailable, ExportError::NoPlan, ExportError::RasterFailed,
+                  ExportError::NoPhotosAccess, ExportError::SaveFailed] {
             assert!(e.i18n_key().starts_with("finale."), "{e:?} has no audited string");
         }
     }

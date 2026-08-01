@@ -398,5 +398,9 @@
   "finale.continue": "Weiter",
   "finale.save": "Speichern",
   "finale.share": "Teilen",
-  "finale.replay": "Nochmal ansehen"
+  "finale.replay": "Nochmal ansehen",
+  "finale.saved": "In deinen Fotos gespeichert.",
+  "finale.saveFailed": "Speichern in Fotos fehlgeschlagen. Versuch es noch einmal.",
+  "finale.saveUnavailable": "Zum Speichern in Fotos brauchst du die App.",
+  "finale.gallery": "Galerie"
 }

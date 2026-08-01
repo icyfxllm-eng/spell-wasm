@@ -32,6 +32,8 @@
 	<string>Spell recognizes the word you say — entirely on your device. Your voice is never recorded, saved, or sent anywhere.</string>
 	<key>NSCameraUsageDescription</key>
 	<string>Spell uses the camera so you can photograph a spelling list and turn it into your own words. The photo is read on your device and never leaves it.</string>
+	<key>NSPhotoLibraryAddUsageDescription</key>
+	<string>Spell saves the picture you spelled to your photos. It never reads your library.</string>
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>Spell can read a spelling list from a photo you choose. The photo is read on your device and never leaves it.</string>
 	<key>UILaunchStoryboardName</key>

@@ -401,6 +401,10 @@
      masterpiece, always skippable). The build is a fade-in per word in
      SPELLING order, driven by a per-word animation-delay set in
      wordpic_screen.rs, so the picture assembles the way it was made. */
+  .wp-gallery{display:flex;gap:8px;overflow-x:auto;padding:2px 0 6px}
+  .wp-gallery button{flex:0 0 auto;width:76px;height:76px;border-radius:12px;border:1px solid var(--edge);
+    background:var(--panel);cursor:pointer;padding:4px;line-height:0}
+  .wp-gallery svg{width:100%;height:100%}
   .wp-reveal{position:absolute;inset:0;z-index:8;display:none;flex-direction:column;
     align-items:center;justify-content:center;gap:16px;padding:18px;
     background:radial-gradient(circle at 50% 40%, rgba(255,177,77,.10), transparent 62%), var(--bg,#0e1420)}
@@ -1419,8 +1423,17 @@
     <div class="wp-top">
       <button class="ghost mode-exit" id="wpPickerExit" aria-label="Exit">✕</button>
       <div class="wp-title" data-i18n="tools.wordpic.name">Spell Picture</div>
+      <button class="ghost" id="wpGalleryBtn" data-i18n="finale.gallery">Gallery</button>
       <button class="btn btn-check" id="wpSurprise" data-i18n="wordpic.surprise">🎲</button>
     </div>
+    <!-- CC-FINALE feature 5: finished pieces are trophies. Stored as piece
+         data + seed and RE-RENDERED on view (D5), never as bitmaps -- so old
+         trophies inherit every future renderer improvement. -->
+    <div class="wp-gallery btn-hide" id="wpGallery"></div>
+    <!-- CC-FINALE feature 5: finished pieces are trophies. Stored as piece
+         data + seed and RE-RENDERED on view (D5), never as bitmaps -- so old
+         trophies inherit every future renderer improvement. -->
+    <div class="wp-gallery btn-hide" id="wpGallery"></div>
     <div class="wp-grid" id="wpGrid"></div>
   </div>
   <div class="wp-screen" id="wpPlay">

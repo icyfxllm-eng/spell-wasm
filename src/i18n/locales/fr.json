@@ -398,5 +398,9 @@
   "finale.continue": "Continuer",
   "finale.save": "Enregistrer",
   "finale.share": "Partager",
-  "finale.replay": "Revoir"
+  "finale.replay": "Revoir",
+  "finale.saved": "Enregistrée dans tes photos.",
+  "finale.saveFailed": "Impossible d'enregistrer dans les photos. Réessaie.",
+  "finale.saveUnavailable": "L'enregistrement dans les photos nécessite l'app.",
+  "finale.gallery": "Galerie"
 }

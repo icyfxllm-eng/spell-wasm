@@ -74,6 +74,20 @@ pub fn wire(app: &App) {
     });
     let a = app.clone();
     dom::on_click("wpHowNext", move || how_next(&a));
+    // Gallery: tapping a trophy opens it fullscreen, at rest.
+    let a = app.clone();
+    dom::on::<web_sys::Event, _>("wpGallery", "click", move |e| {
+        let Some(t) = e.target().and_then(|t| t.dyn_into::<web_sys::Element>().ok()) else { return };
+        if let Some(el) = t.closest("[data-gallery]").ok().flatten() {
+            if let Some(id) = el.get_attribute("data-gallery") {
+                open_gallery_piece(&a, &id);
+            }
+        }
+    });
+    dom::on_click("wpGalleryBtn", || {
+        dom::toggle_class("wpGallery", "btn-hide",
+            !dom::el("wpGallery").class_list().contains("btn-hide"));
+    });
     let a = app.clone();
     dom::on_click("wpSurprise", move || {
         let lang = a.borrow().lang.clone();
@@ -102,6 +116,33 @@ pub fn wire(app: &App) {
         close_play(&a);
     });
     // "It cost seconds to make; let them watch it again."
+    // Share: the card image IS the payload -- no link, no identifier, no
+    // tracking (feature 4). Falls back to text only if the device has no
+    // file-share path at all.
+    dom::on_click("wpShare", || {
+        export_and(crate::spellpic_export::Product::ShareCard, |data_url, _| {
+            let lang = LANG.with(|l| l.borrow().clone());
+            let pic = PIC.with(|p| p.borrow().clone());
+            let n = PLACED.with(Cell::get);
+            let text = share_text_for(&lang, &pic, n);
+            match (crate::share::cap_plugin("Filesystem"), crate::share::cap_share()) {
+                (Some(fs), Some(sh)) => match data_url.split(',').nth(1) {
+                    Some(b64) => crate::share::share_image(fs, sh, text, b64.to_string()),
+                    None => share_wordpic(&lang, &pic, n),
+                },
+                _ => share_wordpic(&lang, &pic, n),
+            }
+        });
+    });
+    // Save: the keepsake, full resolution, no wordmark (D2 -- their art,
+    // not an ad).
+    dom::on_click("wpSave", || {
+        export_and(crate::spellpic_export::Product::Keepsake, |data_url, _| {
+            if let Err(e) = crate::spellpic_export::save_to_photos(&data_url) {
+                note(e.i18n_key());
+            }
+        });
+    });
     dom::on_click("wpReplayBuild", || {
         let pic = PIC.with(|p| p.borrow().clone());
         start_build(&pic);
@@ -203,6 +244,7 @@ pub fn open_picker(app: &App) {
         ));
     }
     dom::set_html("wpGrid", &html);
+    render_gallery(&state, &lang);
     // Delegate tile taps once per open (idempotent listener via fresh nodes).
     let a = app.clone();
     dom::on::<web_sys::MouseEvent, _>("wpGrid", "click", move |e| {
@@ -672,9 +714,105 @@ fn wp_input() -> Option<web_sys::HtmlInputElement> {
 
 /// A key tap from the shared keyboard, routed here while the picture is
 /// open. Korean composition is handled by the keyboard layer above us.
+/// CC-FINALE feature 5 — the trophy shelf.
+///
+/// D5: what is stored is the piece data plus its seed; the thumbnail is
+/// RE-RENDERED here, never a cached bitmap. That keeps storage in kilobytes
+/// and lets a finished piece inherit every later renderer improvement --
+/// and it is only exact because the renderer is deterministic, which makes
+/// D5 a standing constraint on the renderer, not just a storage choice.
+fn render_gallery(state: &wordpic::State, lang: &str) {
+    let mut html = String::new();
+    let mut n = 0;
+    for p in wordpic::picker_order(state, lang) {
+        let Some(run) = state.run(&p.id, lang) else { continue };
+        if !run.done {
+            continue;
+        }
+        let Some(plan) = crate::spellpic::plan(&p.id, lang, run.seed) else { continue };
+        let svg = scanlock_svg(&plan, lang, &run.words, RenderMode::Play);
+        html.push_str(&format!(
+            "<button type=\"button\" data-gallery=\"{}\" aria-label=\"{}\">{svg}</button>",
+            p.id, dom::escape_html(&p.id)
+        ));
+        n += 1;
+    }
+    dom::set_html("wpGallery", &html);
+    dom::toggle_class("wpGallery", "btn-hide", n == 0);
+}
+
+/// Open a finished piece fullscreen, at rest. Same treatment as the reveal --
+/// including Save and Share -- but no build animation: the player has
+/// already watched this one being made.
+fn open_gallery_piece(app: &App, pic: &str) {
+    let lang = LANG.with(|l| l.borrow().clone());
+    let _ = app;
+    let st = wordpic::load();
+    let Some(run) = st.run(pic, &lang).cloned() else { return };
+    PIC.with(|p| *p.borrow_mut() = pic.to_string());
+    PLACED.with(|c| c.set(run.words.len() as u32));
+    match crate::spellpic::plan(pic, &lang, run.seed) {
+        Some(plan) => dom::set_html(
+            "wpRevealStage",
+            &scanlock_svg(&plan, &lang, &run.words, RenderMode::Play),
+        ),
+        None => return,
+    }
+    dom::set_text(
+        "wpRevealNote",
+        &i18n::tp("wordpic.doneBody", &[("n", &run.words.len().to_string())]),
+    );
+    dom::add_class("wpReveal", "show");
+    dom::add_class("wpReveal", "rest");
+    CARD_UP.with(|c| c.set(true));
+}
+
+/// CC-FINALE features 3+4. Export the finished piece and hand it to the
+/// share sheet (ShareCard) or save it (Keepsake).
+///
+/// Both go through the ONE export renderer, so what leaves the device is
+/// re-rendered from the piece's data at export resolution -- never the
+/// screen. Every failure surfaces an audited string rather than a
+/// degraded image: an export that silently fell back to the wrong font
+/// would not be noticed until it was already in someone's camera roll.
+fn export_and(product: crate::spellpic_export::Product, then: fn(String, String)) {
+    use crate::spellpic_export as ex;
+    let lang = LANG.with(|l| l.borrow().clone());
+    let pic = PIC.with(|p| p.borrow().clone());
+    let st = wordpic::load();
+    let words = st.run(&pic, &lang).map(|r| r.words.clone()).unwrap_or_default();
+    let seed = st.run(&pic, &lang).map(|r| r.seed).unwrap_or(1);
+    let Some(plan) = crate::spellpic::plan(&pic, &lang, seed) else {
+        note(ex::ExportError::NoPlan.i18n_key());
+        return;
+    };
+    let title = wordpic::picture(&pic).map(|p| p.icon.clone()).unwrap_or_default();
+    wasm_bindgen_futures::spawn_local(async move {
+        match ex::export_png(&plan, &lang, &words, product).await {
+            Ok(data_url) => then(data_url, title),
+            Err(e) => note(e.i18n_key()),
+        }
+    });
+}
+
+/// Say what happened, in the player's language, through the audit gate.
+fn note(key: &str) {
+    dom::set_text("wpRevealNote", &i18n::t(key));
+}
+
 /// The picture's own share text. It lived in share.rs, which made a shared
 /// module import the picture subtree -- the exact direction I3 forbids. The
 /// generic share_text() stays shared; knowing what a picture is does not.
+fn share_text_for(lang: &str, pic: &str, n: u32) -> String {
+    let name = crate::consts::BUILTIN_LANGS
+        .iter()
+        .find(|(c, _, _, _)| *c == lang)
+        .map(|(_, n, _, _)| *n)
+        .unwrap_or(lang);
+    let icon = wordpic::picture(pic).map(|p| p.icon.as_str()).unwrap_or("\u{1f5bc}\u{fe0f}");
+    i18n::tp("wordpic.shareText", &[("pic", icon), ("lang", name), ("n", &n.to_string())])
+}
+
 pub fn share_wordpic(lang: &str, pic: &str, n: u32) {
     let name = crate::consts::BUILTIN_LANGS
         .iter()

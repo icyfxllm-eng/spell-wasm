@@ -398,5 +398,9 @@
   "finale.continue": "Continuar",
   "finale.save": "Salvar",
   "finale.share": "Compartilhar",
-  "finale.replay": "Ver de novo"
+  "finale.replay": "Ver de novo",
+  "finale.saved": "Salva nas suas fotos.",
+  "finale.saveFailed": "Não foi possível salvar nas fotos. Tente de novo.",
+  "finale.saveUnavailable": "Salvar nas fotos exige o app.",
+  "finale.gallery": "Galeria"
 }

@@ -27,14 +27,14 @@ fn get(obj: &JsValue, key: &str) -> Option<JsValue> {
 }
 
 /// A native Capacitor plugin proxy by name, if present.
-fn cap_plugin(name: &str) -> Option<JsValue> {
+pub(crate) fn cap_plugin(name: &str) -> Option<JsValue> {
     let win = web_sys::window()?;
     let cap = get(&win, "Capacitor")?;
     let plugins = get(&cap, "Plugins")?;
     get(&plugins, name)
 }
 
-fn cap_share() -> Option<JsValue> {
+pub(crate) fn cap_share() -> Option<JsValue> {
     cap_plugin("Share")
 }
 
@@ -141,7 +141,7 @@ pub fn share_result(streak: u32, best: u32) {
 /// Write the PNG (base64) to the app cache, then open the share sheet with the
 /// image file attached. Runs async; on any failure it falls back to a text
 /// share so the button always does something.
-fn share_image(fs: JsValue, share: JsValue, text: String, b64: String) {
+pub(crate) fn share_image(fs: JsValue, share: JsValue, text: String, b64: String) {
     let write = Object::new();
     let _ = Reflect::set(&write, &JsValue::from_str("path"), &JsValue::from_str("share/spell-chain.png"));
     let _ = Reflect::set(&write, &JsValue::from_str("data"), &JsValue::from_str(&b64));
