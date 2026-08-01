@@ -11,7 +11,11 @@ import { fileURLToPath } from 'node:url';
 import { chromium } from 'playwright';
 
 const ROOT = join(fileURLToPath(import.meta.url), '..', '..', '..');
-const DIST = join(ROOT, 'dist-test');
+// Which build this pass is exercising. The app config ships every language;
+// the site config ships English. Specs that assert platform behaviour must
+// run against the matching build or they assert nothing.
+const DIST = join(ROOT, process.env.SPELL_WEB === '1' ? 'dist-test-web' : 'dist-test');
+export const IS_WEB_BUILD = process.env.SPELL_WEB === '1';
 const AGE = JSON.stringify({ verdict: 'full', checkedAt: 1700000000 });
 const MIME = { '.html': 'text/html', '.js': 'text/javascript', '.wasm': 'application/wasm', '.json': 'application/json', '.png': 'image/png', '.mjs': 'text/javascript' };
 

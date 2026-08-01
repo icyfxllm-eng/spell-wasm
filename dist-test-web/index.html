@@ -1,0 +1,2037 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover" />
+<title>Spell — a spelling game you play with your ears</title>
+<link rel="manifest" href="./manifest.json" />
+<meta name="theme-color" content="#1c1830" />
+<link rel="apple-touch-icon" href="./icons/icon-192.png" />
+<link rel="icon" href="./icons/icon-192.png" />
+<script>
+  // i18n boot cloak (FIX 3). The HTML ships English strings; WASM applies the
+  // localized [data-i18n] text AFTER it boots, so a non-English user briefly
+  // sees English flash then reflow ("pop"). If the resolved UI locale is a
+  // non-English one we ship, add `booting` to <html> so the CSS below hides
+  // the translatable chrome (never the orb) until translate_page() removes the
+  // class in one paint. English users match the baked-in strings, so they are
+  // never cloaked — no added blank flash. This mirrors i18n::init's resolution
+  // (persisted choice -> device language), each gated to a shipped locale, and
+  // runs in <head> so the class is set before the first paint. A CSS fallback
+  // (see html.booting rule) reveals after 2.5s if WASM never boots, so the
+  // text can never stay permanently hidden.
+  (function () {
+    var SUPPORTED = {en:1,es:1,fr:1,de:1,pt:1,it:1,nl:1,pl:1,sv:1,nb:1,tr:1,vi:1,ko:1,ja:1,zh:1,th:1,fil:1};
+    var loc = '';
+    try { loc = localStorage.getItem('spellgame.locale') || ''; } catch (e) {}
+    if (!SUPPORTED[loc]) {
+      var dev = ((navigator.language || 'en').split(/[-_]/)[0] || 'en').toLowerCase();
+      loc = SUPPORTED[dev] ? dev : 'en';
+    }
+    if (loc && loc !== 'en') document.documentElement.classList.add('booting');
+  })();
+</script>
+<style>
+  /* Self-hosted web fonts (FIX 1). These used to load at runtime from Google
+     Fonts (3 cross-origin requests) plus OpenDyslexic from a public CDN. None
+     were in the service-worker precache, so every cold load re-hit those hosts
+     and the text reflowed (FOUT) when the webfont swapped in. The woff2/woff
+     files now live in
+     ./fonts/ and are precached by sw.js — zero external font requests.
+     Subsets (latin / latin-ext / vietnamese) mirror exactly what Google
+     served, so latin-ext (pl/tr/…) and vi users lose no glyphs. Bricolage
+     Grotesque and Instrument Sans are variable fonts, so one file per subset
+     covers every weight the UI uses (font-weight ranges below). */
+  /* Bricolage Grotesque — display face (weights 500/700/800). */
+  @font-face{font-family:'Bricolage Grotesque';font-style:normal;font-weight:500 800;font-stretch:100%;font-display:swap;src:url('./fonts/bricolage-latin.woff2') format('woff2');unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD}
+  @font-face{font-family:'Bricolage Grotesque';font-style:normal;font-weight:500 800;font-stretch:100%;font-display:swap;src:url('./fonts/bricolage-latinext.woff2') format('woff2');unicode-range:U+0100-02BA,U+02BD-02C5,U+02C7-02CC,U+02CE-02D7,U+02DD-02FF,U+0304,U+0308,U+0329,U+1D00-1DBF,U+1E00-1E9F,U+1EF2-1EFF,U+2020,U+20A0-20AB,U+20AD-20C0,U+2113,U+2C60-2C7F,U+A720-A7FF}
+  @font-face{font-family:'Bricolage Grotesque';font-style:normal;font-weight:500 800;font-stretch:100%;font-display:swap;src:url('./fonts/bricolage-viet.woff2') format('woff2');unicode-range:U+0102-0103,U+0110-0111,U+0128-0129,U+0168-0169,U+01A0-01A1,U+01AF-01B0,U+0300-0301,U+0303-0304,U+0308-0309,U+0323,U+0329,U+1EA0-1EF9,U+20AB}
+  /* Instrument Sans — body face (weights 400/500/600). */
+  @font-face{font-family:'Instrument Sans';font-style:normal;font-weight:400 600;font-stretch:100%;font-display:swap;src:url('./fonts/instrument-latin.woff2') format('woff2');unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD}
+  @font-face{font-family:'Instrument Sans';font-style:normal;font-weight:400 600;font-stretch:100%;font-display:swap;src:url('./fonts/instrument-latinext.woff2') format('woff2');unicode-range:U+0100-02BA,U+02BD-02C5,U+02C7-02CC,U+02CE-02D7,U+02DD-02FF,U+0304,U+0308,U+0329,U+1D00-1DBF,U+1E00-1E9F,U+1EF2-1EFF,U+2020,U+20A0-20AB,U+20AD-20C0,U+2113,U+2C60-2C7F,U+A720-A7FF}
+  /* Space Mono — mono face (typed letters, scores). Static font: 400 + 700. */
+  @font-face{font-family:'Space Mono';font-style:normal;font-weight:400;font-display:swap;src:url('./fonts/spacemono-400-latin.woff2') format('woff2');unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD}
+  @font-face{font-family:'Space Mono';font-style:normal;font-weight:400;font-display:swap;src:url('./fonts/spacemono-400-latinext.woff2') format('woff2');unicode-range:U+0100-02BA,U+02BD-02C5,U+02C7-02CC,U+02CE-02D7,U+02DD-02FF,U+0304,U+0308,U+0329,U+1D00-1DBF,U+1E00-1E9F,U+1EF2-1EFF,U+2020,U+20A0-20AB,U+20AD-20C0,U+2113,U+2C60-2C7F,U+A720-A7FF}
+  @font-face{font-family:'Space Mono';font-style:normal;font-weight:400;font-display:swap;src:url('./fonts/spacemono-400-viet.woff2') format('woff2');unicode-range:U+0102-0103,U+0110-0111,U+0128-0129,U+0168-0169,U+01A0-01A1,U+01AF-01B0,U+0300-0301,U+0303-0304,U+0308-0309,U+0323,U+0329,U+1EA0-1EF9,U+20AB}
+  @font-face{font-family:'Space Mono';font-style:normal;font-weight:700;font-display:swap;src:url('./fonts/spacemono-700-latin.woff2') format('woff2');unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD}
+  @font-face{font-family:'Space Mono';font-style:normal;font-weight:700;font-display:swap;src:url('./fonts/spacemono-700-latinext.woff2') format('woff2');unicode-range:U+0100-02BA,U+02BD-02C5,U+02C7-02CC,U+02CE-02D7,U+02DD-02FF,U+0304,U+0308,U+0329,U+1D00-1DBF,U+1E00-1E9F,U+1EF2-1EFF,U+2020,U+20A0-20AB,U+20AD-20C0,U+2113,U+2C60-2C7F,U+A720-A7FF}
+  @font-face{font-family:'Space Mono';font-style:normal;font-weight:700;font-display:swap;src:url('./fonts/spacemono-700-viet.woff2') format('woff2');unicode-range:U+0102-0103,U+0110-0111,U+0128-0129,U+0168-0169,U+01A0-01A1,U+01AF-01B0,U+0300-0301,U+0303-0304,U+0308-0309,U+0323,U+0329,U+1EA0-1EF9,U+20AB}
+  /* Noto Naskh Arabic — the study-language face for Arabic and Persian
+     (CC-RTL D5, OFL per D6). Applied via :lang() on the play surfaces, which
+     carry the STUDY language since F1 — so it dresses the word being SPELLED,
+     never the chrome.
+
+     NOT precached, unlike every other face here, and that is deliberate:
+     `unicode-range` means the browser fetches these 92 KB only if it actually
+     has to render an Arabic-script codepoint. ar/fa cannot activate yet
+     (RTL_SUPPORTED is false), so today every user pays ZERO for this. Adding it
+     to sw.js's STATIC_ASSETS would charge all of them 92 KB up front for a
+     language none of them can reach.
+
+     Urdu gets its OWN face — Noto Nastaliq Urdu — below, NOT Naskh. D5's "do not
+     silently ship Urdu in Naskh" holds: Urdu readers expect Nastaliq, and Naskh
+     Urdu reads as broken to them the way isolated letterforms read as broken to
+     an Arabic reader. The earlier worry that Nastaliq "may defeat the feedback
+     mechanism entirely" is RESOLVED: the marker-beneath idea does fail on the
+     cascade, but per-letter feedback by COLOURING does not — colour/background on
+     an inline span leaves the join intact in WebKit. See
+     spike/urdu-nastaliq/FINDINGS.md. So Urdu renders in real Nastaliq and keeps
+     per-letter feedback. */
+  @font-face{font-family:'Noto Naskh Arabic';font-style:normal;font-weight:400 700;font-display:swap;src:url('./fonts/naskh-arabic.woff2') format('woff2');unicode-range:U+0600-06FF,U+0750-077F,U+0870-088E,U+0890-0891,U+0897-08E1,U+08E3-08FF,U+200C-200E,U+2010-2011,U+204F,U+2E41,U+FB50-FDFF,U+FE70-FE74,U+FE76-FEFC,U+102E0-102FB,U+10E60-10E7E,U+10EC2-10EC4,U+10EFC-10EFF,U+1EE00-1EE03,U+1EE05-1EE1F,U+1EE21-1EE22,U+1EE24,U+1EE27,U+1EE29-1EE32,U+1EE34-1EE37,U+1EE39,U+1EE3B,U+1EE42,U+1EE47,U+1EE49,U+1EE4B,U+1EE4D-1EE4F,U+1EE51-1EE52,U+1EE54,U+1EE57,U+1EE59,U+1EE5B,U+1EE5D,U+1EE5F,U+1EE61-1EE62,U+1EE64,U+1EE67-1EE6A,U+1EE6C-1EE72,U+1EE74-1EE77,U+1EE79-1EE7C,U+1EE7E,U+1EE80-1EE89,U+1EE8B-1EE9B,U+1EEA1-1EEA3,U+1EEA5-1EEA9,U+1EEAB-1EEBB,U+1EEF0-1EEF1}
+  /* Nastaliq for Urdu (CC-RTL D5, OFL — provenance flagged for Eric). Subset of
+     Noto Nastaliq Urdu (fonts/nastaliq-urdu.woff2, shaping verified against the
+     system font). Same lazy contract as Naskh: NOT precached, unicode-range means
+     it downloads only when an Urdu Arabic-script codepoint actually renders — and
+     ur is rtl_blocked, so today that is never. Larger than Naskh (Nastaliq carries
+     ~1100 contextual glyphs), which is exactly why it must stay lazy. */
+  @font-face{font-family:'Noto Nastaliq Urdu';font-style:normal;font-weight:400;font-display:swap;src:url('./fonts/nastaliq-urdu.woff2') format('woff2');unicode-range:U+0600-06FF,U+0750-077F,U+08A0-08FF,U+200C-200F,U+FB50-FDFF,U+FE70-FEFF}
+  /* The play surfaces carry the study language (game::reflect_play_direction), so
+     this fires for "spelling Arabic/Urdu" and not for "reading" it — the
+     distinction F1 exists to make. hintLine is included: F4-remainder made it a
+     word surface too. */
+  #letters:lang(ar), #letters:lang(fa),
+  #feedback:lang(ar), #feedback:lang(fa),
+  #meaning:lang(ar), #meaning:lang(fa),
+  #hintLine:lang(ar), #hintLine:lang(fa){font-family:'Noto Naskh Arabic',serif}
+  #letters:lang(ur), #feedback:lang(ur),
+  #meaning:lang(ur), #hintLine:lang(ur){font-family:'Noto Nastaliq Urdu',serif}
+  /* Devanagari for Hindi (OFL — licence in fonts/OFL.txt, attribution in NOTICES.md).
+     Subset of Noto Sans Devanagari (fonts/devanagari.woff2, all layout features kept
+     so conjuncts/matra reordering shape; verified against the akshara render prototype,
+     spike/hindi-akshara). Same lazy contract as the Arabic faces: NOT precached,
+     unicode-range gates the download to Devanagari text. Hindi is not registered yet
+     (CC-HINDI-PHASE0 registers nothing), so :lang(hi) matches nothing today — this
+     sits ready, exactly like the charset on feature/hindi-akshara. Devanagari is LTR;
+     no dir/RTL involvement. */
+  @font-face{font-family:'Noto Sans Devanagari';font-style:normal;font-weight:400;font-display:swap;src:url('./fonts/devanagari.woff2') format('woff2');unicode-range:U+0900-097F,U+A8E0-A8FF,U+200C-200D,U+0964-0965}
+  #letters:lang(hi), #feedback:lang(hi),
+  #meaning:lang(hi), #hintLine:lang(hi){font-family:'Noto Sans Devanagari',serif}
+
+  /* OpenDyslexic — readable-mode face only (body.readable). Upstream 1.0.3
+     ships woff only (no woff2). font-display:optional (was swap): it never
+     blocks or reflows the default UI — non-readable users never fetch it, and
+     it's precached so readable-mode users get it with no swap flash. */
+  @font-face{font-family:'OpenDyslexic';src:url('./fonts/opendyslexic-regular.woff') format('woff');font-display:optional;font-weight:400}
+  :root{
+    /* v8 F6: reserved INTERFACE accent — letter slots, counts, status.
+       Picture strokes may never use it (scripts/chrome-separation-check). */
+    --ui-chrome:#7aa2ff;
+    --bg:#14111f; --bg2:#1c1830; --panel:#221d36; --panel-2:#1b1730;
+    --edge:#322a4f; --ink:#efeaf7; --muted:#968cb4; --muted-2:#6f6690;
+    /* Text that sits directly on --bg-color (not inside a --panel/--panel-2
+       card) — --ink-on-bg is recomputed by set_bg_color() (actual WCAG
+       contrast ratio against the chosen background, not just a brightness
+       guess), so a light custom background doesn't wash out its own text.
+       --muted-on-bg derives from it via color-mix, so it stays legible
+       relative to whichever ink was picked instead of a second fixed guess.
+       Panel-hosted text keeps using the static --ink/--muted above, since
+       panels don't change color with the background picker. */
+    --ink-on-bg:#efeaf7;
+    --muted-on-bg:color-mix(in srgb, var(--ink-on-bg) 62%, var(--bg-color));
+    --amber:#ffb14d; --amber-soft:#ffd9a0; --teal:#46d6b8; --coral:#ff6b7a;
+    --glow:#ffb14d;
+    --bg-color:#1c1830;
+    --orb-color:#ffb14d;
+    /* Feedback + streak state tokens. GLOBAL — identical across every language
+       and in Kid + non-Kid mode (kids learn one signal). success=green family,
+       warn=WARM AMBER (never red / screen-flash, D3). */
+    --success:#46d6b8; --success-glow:rgba(70,214,184,.55);
+    --warn:#ff9e57; --warn-glow:rgba(255,158,87,.5);
+    /* Streak warmth: --glow nudges warmer in pre-designed steps (D5); accent only. */
+    --glow-streak-1:#ffb14d; --glow-streak-2:#ff9a3f; --glow-streak-3:#ff8330;
+    --orb-text:#3a230a;
+    --display:'Bricolage Grotesque',sans-serif;
+    --body:'Instrument Sans',system-ui,sans-serif;
+    --mono:'Space Mono',ui-monospace,monospace;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  /* iOS WKWebView auto-zooms when a focused field's font-size is < 16px and
+     often fails to zoom back out. Enforce a 16px floor on every focusable field
+     so it never triggers (component rules may set a LARGER size). The CI lint in
+     scripts/viewport-check.mjs exists because of a real bug — do not delete it. */
+  input, textarea, select, [contenteditable]{font-size:max(16px, 1em)}
+  /* Every tappable control opts out of double-tap-to-zoom + the 300ms tap delay. */
+  button, .kb-key, .pill, .ghost, .btn, select, input[type=range], input[type=color]{touch-action:manipulation}
+  /* No horizontal scroll on any screen: page width == viewport width. Real
+     causes are fixed at the source below; overflow-x:clip is only a safety net. */
+  html,body{height:100%;max-width:100%;overflow-x:clip}
+  img,svg,canvas{max-width:100%}
+  body{
+    font-family:var(--body); color:var(--ink-on-bg);
+    background:radial-gradient(1200px 700px at 50% -10%, color-mix(in srgb, var(--bg-color) 55%, white 20%) 0%, transparent 60%), linear-gradient(180deg, var(--bg-color) 0%, color-mix(in srgb, var(--bg-color) 78%, black) 70%);
+    min-height:100vh; display:flex; flex-direction:column; align-items:center;
+    /* Respect the iPhone safe area (viewport-fit=cover): keep the SPELL header
+       clear of the status bar / Dynamic Island and the footer clear of the
+       home indicator. env() is 0 on desktop, so the layout is unchanged there. */
+    padding:calc(env(safe-area-inset-top, 0px) + 24px) 18px calc(env(safe-area-inset-bottom, 0px) + 56px);
+    -webkit-font-smoothing:antialiased;
+    transition:background .25s ease;
+  }
+  /* i18n boot cloak (FIX 3). Only applied when the head script added `booting`
+     (i.e. a non-English shipped locale). Hides the translatable chrome — the
+     text that translate_page() overwrites — until it runs and removes the
+     class, so the localized strings appear in one paint instead of English-
+     then-reflow. visibility:hidden keeps layout, never touches the orb, and
+     leaves interactivity (the orb boot already gates that) alone. The
+     animation is a pure-CSS safety net: if WASM never boots, each element
+     reveals itself after 2.5s so text is never permanently hidden. */
+  html.booting [data-i18n],
+  html.booting [data-i18n-html],
+  html.booting #brandTag{ visibility:hidden; animation:i18nCloakReveal 0.01s linear 2500ms forwards }
+  @keyframes i18nCloakReveal{ to{ visibility:visible } }
+  body.readable{ font-family:'OpenDyslexic','Instrument Sans',system-ui,sans-serif; letter-spacing:.01em; }
+  body.readable .ltr{ letter-spacing:.05em; }
+  /* CC-RTL F4 — the cursive answer path (game::render_letters_joined). The whole
+     answer is ONE text node so the shaper joins it; `isolate` stops an RTL answer
+     reordering against the LTR chrome around it.
+     The letter-spacing override is not cosmetic: tracking inserts space BETWEEN
+     characters, which prises cursive joins apart — readable mode would undo the
+     exact thing this path exists to protect. OpenDyslexic also has no Arabic
+     coverage, so the font stack falls through to the system Arabic face either
+     way. Reverting to `normal` here is therefore a fix, not a regression, for the
+     only scripts that reach this branch. */
+  .ltr.joined{ unicode-bidi:isolate; }
+  body.readable .ltr.joined{ letter-spacing:normal; }
+  body.readable .foot{ font-size:13px; }
+  body.kid .ltr{ font-size:30px; }
+  body.kid .orb-glyph{ font-size:18px; }
+  body.kid .foot{ display:none; }
+  /* Kid-mode "just for fun" is set as localized text via i18n (brand.tagFun),
+     not a hardcoded CSS ::after — see i18n::update_tagline. */
+
+  /* Big text — enlarges the interface/reading text to ~1.5x its normal size
+     from one grouped class, rather than per-element inline hacks. Explicit
+     target px (not em/%) so every element scales ~1.5x of its OWN size and
+     nested text doesn't compound. Deliberately leaves the spellbox letters,
+     orb glyph and canvas alone (the typed-answer overlay must stay pixel-
+     aligned with its hidden input, and the orb/canvas are already large);
+     everything here is a reflowing text block, so growing it doesn't break
+     layout. Extend this list to cover any new interface text. */
+  body.big-text .brand .tag{ font-size:19px; }
+  body.big-text .glow-pick .gl,
+  body.big-text .chain .lbl,
+  body.big-text .card h2 .scope,
+  body.big-text .board .meta,
+  body.big-text .demo-note{ font-size:16px; }
+  body.big-text .voice-note,
+  body.big-text .field-label,
+  body.big-text .set-row .lbl2 small,
+  body.big-text .foot{ font-size:17px; }
+  body.big-text .snum,
+  body.big-text .stats-foot .total,
+  body.big-text .imp-lang,
+  body.big-text .imp-count{ font-size:18px; }
+  body.big-text .pill,
+  body.big-text select,
+  body.big-text .srow,
+  body.big-text .ghost{ font-size:19px; }
+  body.big-text .meaning,
+  body.big-text .stats-empty,
+  body.big-text .modal p{ font-size:20px; }
+  body.big-text .board li{ font-size:21px; }
+  body.big-text .feedback,
+  body.big-text .btn{ font-size:22px; }
+  body.big-text .set-row .lbl2{ font-size:21px; }
+  body.big-text .hint-line{ font-size:27px; }
+  body.big-text .card h2{ font-size:24px; }
+  body.big-text .modal h3{ font-size:33px; }
+
+  .topbar{width:100%;max-width:600px;display:flex;align-items:flex-start;justify-content:space-between;gap:14px;margin-bottom:12px;flex-wrap:wrap}
+  .brand .mark{font-family:var(--display);font-weight:800;font-size:30px;letter-spacing:-0.5px;line-height:1}
+  .brand .mark b{color:var(--amber)}
+  .brand .tag{margin-top:6px;color:var(--muted-on-bg);font-size:12.5px;letter-spacing:.04em}
+  .controls{display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end}
+  select{appearance:none;background:var(--panel);color:var(--ink);border:1px solid var(--edge);border-radius:10px;padding:8px 28px 8px 11px;font-family:var(--body);font-size:16px;font-weight:500;cursor:pointer;
+    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%23968cb4' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+    background-repeat:no-repeat;background-position:right 10px center}
+  select:focus-visible{outline:2px solid var(--amber);outline-offset:2px}
+  select:disabled{opacity:.45;cursor:default}
+  .pill{background:var(--panel);border:1px solid var(--edge);color:var(--ink);border-radius:999px;padding:9px 16px;font-size:13px;font-weight:600;cursor:pointer;display:inline-flex;align-items:center;gap:7px;transition:border-color .15s,background .15s,transform .1s}
+  .pill:hover{border-color:var(--amber)}
+  .pill:active{transform:translateY(1px)}
+  .pill:disabled{opacity:.45;cursor:default}
+  .pill.on{border-color:var(--teal);color:var(--teal)}
+  .pill.access{border-color:var(--amber);color:var(--amber-soft)}
+  .pill.access.owned{border-color:var(--teal);color:var(--teal)}
+
+  /* ==== Home functional groups (CC-HOME-REGROUP) ==========================
+     visual class = functional class. Exactly three families on the home body
+     (data chips · launchers · config chip) + meta icons in the header corner.
+     No family borrows another's treatment (the screen's invariant). Breakpoint
+     behaviour lives only in the media queries below — no per-component forks. */
+
+  /* Meta corner (F2): icon-only, ≥44pt, top-right, persistent across breakpoints */
+  .meta-corner{display:flex;gap:10px;flex:0 0 auto}
+  .meta-icon{width:44px;height:44px;border-radius:50%;background:var(--panel);border:1px solid var(--edge);color:var(--muted);font-size:19px;line-height:1;display:grid;place-items:center;cursor:pointer;padding:0;transition:border-color .15s,color .15s,transform .1s}
+  .meta-icon:hover{border-color:var(--amber);color:var(--ink)}
+  .meta-icon:active{transform:translateY(1px)}
+  .meta-icon.signed-in{border-color:var(--teal);color:var(--teal)}
+  .meta-icon.btn-hide{display:none}
+
+  /* Group rows inside the centered stage, one per functional class */
+  .home-group{width:100%;max-width:600px;display:flex;gap:8px;margin-bottom:10px}
+
+  /* Data chips (F5): word inventory — outlined, muted, badge-capable. Not a launcher. */
+  .data-chip{flex:1;min-height:48px;background:transparent;border:1px solid var(--edge);color:var(--ink);border-radius:12px;padding:8px 14px;font-size:14px;font-weight:600;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;gap:8px;transition:border-color .15s,background .15s,transform .1s}
+  .data-chip:hover{border-color:var(--amber)}
+  .data-chip:active{transform:translateY(1px)}
+  .data-chip:disabled{opacity:.45;cursor:default}
+  .data-chip.on{border-color:var(--teal);color:var(--teal)}
+  .data-chip .dc-ico{color:var(--muted);font-weight:700}
+  .data-chip .dc-badge{background:var(--panel-2);border:1px solid var(--edge);color:var(--muted);border-radius:999px;min-width:22px;padding:1px 7px;font-size:12px;font-weight:700;text-align:center}
+  .data-chip.btn-hide{display:none}
+  /* F1 photo-to-word-list review chips (only present when the feature flag is on) */
+  .pchips{display:flex;flex-direction:column;gap:6px;max-height:46vh;overflow-y:auto;margin:4px 0 2px}
+  .pchip-row{display:flex;align-items:center;gap:8px}
+  .pchip-row .pchip{flex:1;min-width:0;min-height:40px;background:var(--panel-2);border:1px solid var(--edge);color:var(--ink);border-radius:10px;padding:6px 10px;font-size:15px}
+  .pchip-row.flagged .pchip{border-color:var(--bad,#e0564f);background:rgba(224,86,79,.09)}
+  /* Low-confidence OCR chips: pre-shown dimmed + editable, never dropped. */
+  .pchip-row.lowconf .pchip{opacity:.55;border-style:dashed}
+  /* Out-of-bank (custom) words: subtle accent so parents can spot them. */
+  .pchip-row.custom .pchip{border-color:var(--accent,#7aa2ff)}
+  /* CC-DEF-MATCH: full-screen field, floating definition cards. */
+  .dm-screen{position:fixed;inset:0;background:var(--bg,#0e1420);z-index:60;display:none;flex-direction:column}
+  .dm-screen.show{display:flex}
+  /* Same exit-outranks-overlays rule as .pr-top (the recap is inset:0). */
+  .dm-top{display:flex;align-items:center;gap:12px;padding:10px 14px;position:relative;z-index:6}
+  .dm-orb{font-size:28px;width:56px;height:56px;border-radius:50%;border:2px solid var(--edge);background:var(--panel-2);transition:box-shadow .3s}
+  .dm-orb.pulse{animation:dmPulse .5s}
+  .dm-orb.good{box-shadow:0 0 18px 4px rgba(80,220,120,.7)}
+  .dm-orb.heat3{box-shadow:0 0 10px 2px rgba(255,170,60,.5)}
+  .dm-orb.heat5{box-shadow:0 0 16px 4px rgba(255,140,40,.65)}
+  .dm-orb.heat10{box-shadow:0 0 24px 7px rgba(255,90,40,.8)}
+  @keyframes dmPulse{50%{transform:scale(1.15)}}
+  .dm-streak{font-size:20px;font-weight:700;min-width:64px}
+  .dm-status{text-align:center;min-height:22px;font-weight:600}
+  .dm-field{position:relative;flex:1;overflow:hidden}
+  .dm-card{position:absolute;bottom:-30%;padding:10px 8px;border:1px solid var(--edge);border-radius:12px;
+    background:var(--panel-2);color:var(--ink);font-size:14px;line-height:1.25;text-align:center;
+    animation-name:dmFloat;animation-timing-function:linear;animation-fill-mode:forwards;
+    display:flex;flex-direction:column;gap:4px;justify-content:center;min-height:72px}
+  @keyframes dmFloat{from{transform:translateY(0)}to{transform:translateY(-130vh)}}
+  .dm-card.sway .dm-def{animation:dmSway 2.6s ease-in-out infinite alternate}
+  @keyframes dmSway{from{transform:translateX(-6px)}to{transform:translateX(6px)}}
+  .dm-card.paused{animation-play-state:paused}
+  .dm-card.caught{animation-play-state:paused;transition:transform .18s ease-in,opacity .18s;
+    transform:scale(.2) translateY(-40vh);opacity:0;background:rgba(80,220,120,.35)}
+  .dm-card.dissolve{animation-play-state:paused;transition:opacity .25s;opacity:0}
+  .dm-card.wrong{background:rgba(224,86,79,.3);border-color:var(--bad,#e0564f)}
+  .dm-card.reveal-gold{background:rgba(255,200,60,.28);border-color:#e9b23c;box-shadow:0 0 14px rgba(233,178,60,.6)}
+  .dm-card.reveal-calm{background:rgba(120,180,255,.22);border-color:var(--accent,#7aa2ff)}
+  .dm-card.returned{animation:none;bottom:auto;top:35%;transition:top .5s ease-out}
+  .dm-owner{font-size:12px;opacity:.85;font-weight:700}
+  body.kid .dm-card{font-size:17px;min-height:88px}
+  .dm-prompt{margin:4px 14px;padding:10px 12px;border:1px solid var(--accent,#7aa2ff);border-radius:12px;
+    background:var(--panel-2);font-size:15px;line-height:1.3;text-align:center;font-weight:600}
+  .dm-prompt.btn-hide{display:none}
+  .dm-card.word .dm-def{font-size:20px;font-weight:700}
+  body.kid .dm-card.word .dm-def{font-size:24px}
+  .dm-card.word .dm-owner{font-size:11px;font-weight:400}
+  /* CC-DEFMATCH-POLISH D1/D2 — shared full-screen mode chrome: content NEVER
+     under the status bar / Dynamic Island (safe-area insets, not pixel nudges);
+     the exit control is 44x44, top-left, in-flow. */
+  .dm-screen,.pr-screen{padding-top:calc(env(safe-area-inset-top,0px) + 8px);
+    padding-bottom:calc(env(safe-area-inset-bottom,0px) + 8px)}
+  .mode-exit{position:static;width:44px;height:44px;min-width:44px;font-size:20px;
+    border:1px solid var(--edge);border-radius:12px;background:var(--panel-2);
+    display:flex;align-items:center;justify-content:center;flex:none}
+  /* btn-hide is per-surface in this stylesheet; the practice screen scopes
+     one rule for all its toggled children (keyboard, micro replay). */
+  .pr-screen .btn-hide{display:none}
+  #practiceOpen,#spellAloudEnter,#defMatchOpen{display:none}
+  .pr-screen{position:fixed;inset:0;background:var(--bg,#0e1420);z-index:59;display:none;flex-direction:column;padding:10px 14px;gap:10px}
+  .pr-screen.show{display:flex}
+  /* The exit must OUTRANK the card backdrops (.pr-card inset:0) — with a card
+     up (intro/choice/micro — word 1 opens straight into one), the top bar was
+     underneath and Practice had no reachable way out. */
+  .pr-top{display:flex;align-items:center;gap:10px;position:relative;z-index:6}
+  .pr-card{z-index:5}
+  .pr-path{flex:1;display:flex;flex-wrap:wrap;gap:3px;justify-content:center}
+  .pr-dot{font-size:11px;opacity:.35}
+  .pr-dot.done{opacity:1;color:#67d98b}
+  .pr-dot.now{opacity:1;color:var(--accent,#7aa2ff);transform:scale(1.3)}
+  .pr-hint{text-align:center;min-height:20px;font-size:14px;opacity:.85}
+  .pr-word{text-align:center;font-size:34px;font-weight:800;min-height:46px;letter-spacing:.06em}
+  .pr-slots{text-align:center;font-size:26px;min-height:40px;display:flex;justify-content:center;gap:6px;flex-wrap:wrap}
+  .pr-slot{display:inline-block;min-width:1em;border-bottom:2px solid rgba(255,255,255,.35);line-height:1.25;font-weight:800}
+  .pr-slot.ghost{opacity:.28}
+  .pr-slot.fill{opacity:1;border-bottom-color:#67d98b}
+  .pr-slot.echo{color:var(--accent,#7aa2ff);transform:scale(1.25);transition:transform .12s}
+  .pr-built{text-align:center;font-size:30px;font-weight:800;min-height:0}
+  .pr-coach{text-align:center;font-size:14px;min-height:20px;opacity:.9;font-style:italic}
+  .pr-tray{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;padding:4px 0;min-height:0}
+  .pr-tile{font-size:24px;font-weight:800;padding:12px 16px;border-radius:14px;border:1px solid rgba(255,255,255,.2);background:rgba(255,255,255,.08);color:inherit;min-width:52px}
+  .pr-tile:active{transform:scale(.94)}
+  .pr-tile.used{opacity:.2;pointer-events:none}
+  .pr-tile.wiggle{animation:prWiggle .35s}
+  .pr-tile.hintlit{border-color:var(--accent,#7aa2ff);box-shadow:0 0 10px var(--accent,#7aa2ff)}
+  .pr-micro-opts{display:flex;flex-wrap:wrap;gap:10px;justify-content:center}
+  .pr-micro-opts .pr-tile.good{border-color:#67d98b;box-shadow:0 0 10px #67d98b}
+  .pr-row{display:flex;gap:8px;justify-content:center}
+  .pr-input{transition:opacity .6s}
+  /* CC-WORD-PICTURE v5 */
+  .wp-screen{position:fixed;inset:0;background:var(--bg,#0e1420);z-index:59;display:none;flex-direction:column;padding:calc(env(safe-area-inset-top,0px) + 8px) 14px 10px;gap:10px}
+  .wp-screen.show{display:flex}
+  .wp-top{display:flex;align-items:center;gap:10px;position:relative;z-index:6}
+  .wp-title{flex:1;font-weight:800;text-align:center}
+  .wp-count{font-size:13px;opacity:.85}
+  .wp-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;overflow-y:auto;padding-bottom:16px}
+  .wp-tile{display:flex;flex-direction:column;align-items:center;gap:4px;padding:14px 8px;border-radius:14px;border:1px solid rgba(255,255,255,.16);background:rgba(255,255,255,.05);color:inherit}
+  .wp-tile .ico{font-size:34px}
+  .wp-tile .prog{font-size:12px;opacity:.85}
+  .wp-tile.locked{opacity:.4}
+  .wp-tile.done .ico::after{content:" ✓"}
+  .wp-stage{flex:1;min-height:0;display:flex;align-items:center;justify-content:center}
+  .wp-stage svg{width:100%;height:100%;max-height:64vh}
+  .wp-guide{stroke:rgba(232,236,245,.30);stroke-width:2;fill:none;stroke-linecap:round;stroke-linejoin:round}
+  .wp-pinned{stroke:rgba(232,236,245,.92);stroke-width:1.8;fill:none;stroke-linecap:round;stroke-linejoin:round}
+  .wp-feature{fill:rgba(232,236,245,.95);stroke:rgba(232,236,245,.95);stroke-width:1.5;stroke-linejoin:round}
+  .wp-outline{stroke:rgba(255,255,255,.22);stroke-width:3;fill:none;stroke-linecap:round}
+  /* the next stroke is signalled by BRIGHTNESS and dash, never by the
+     reserved chrome accent (F6) */
+  .wp-outline.next{stroke:rgba(255,255,255,.92);stroke-dasharray:6 8;animation:wpPulse 1.4s infinite}
+  @keyframes wpPulse{50%{stroke-opacity:.45}}
+  .wp-word{fill:var(--wp-ink,#e8ecf5);font-weight:700;font-family:inherit}
+  .wp-word.new{animation:wpIn 1s ease}
+  @keyframes wpIn{from{opacity:0;letter-spacing:.5em}to{opacity:1}}
+  @media (prefers-reduced-motion: reduce){.wp-word.new{animation:none}.wp-outline.next{animation:none}}
+
+  /* CC-FINALE feature 1 — the reveal moment (D1: 3s starter to 6s
+     masterpiece, always skippable). The build is a fade-in per word in
+     SPELLING order, driven by a per-word animation-delay set in
+     wordpic_screen.rs, so the picture assembles the way it was made. */
+  .wp-reveal{position:absolute;inset:0;z-index:8;display:none;flex-direction:column;
+    align-items:center;justify-content:center;gap:16px;padding:18px;
+    background:radial-gradient(circle at 50% 40%, rgba(255,177,77,.10), transparent 62%), var(--bg,#0e1420)}
+  .wp-reveal.show{display:flex}
+  .wp-reveal-stage{width:100%;flex:1;min-height:0;display:flex;align-items:center;justify-content:center}
+  .wp-reveal-stage svg{width:100%;height:100%;max-height:66vh}
+  .wp-reveal .wp-word,.wp-reveal .wp-pinned,.wp-reveal .wp-feature{opacity:0;animation:wpBuild .5s ease forwards}
+  /* Rest state: everything settled, nothing animating, nothing counting down. */
+  .wp-reveal.rest .wp-word,.wp-reveal.rest .wp-pinned,.wp-reveal.rest .wp-feature{opacity:1;animation:none}
+  @keyframes wpBuild{from{opacity:0}to{opacity:1}}
+  .wp-reveal-note{margin:0;min-height:1.2em;color:var(--muted);font-size:14px;text-align:center}
+  .wp-reveal-acts{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;width:100%;max-width:440px}
+  /* 44px: these are the only controls on the screen and they are what the
+     player reaches for after finishing a picture. .ghost defaults to 28px,
+     which the reveal spec's own device sweep caught. */
+  .wp-reveal-acts .btn,.wp-reveal-acts .ghost{flex:1 1 auto;min-width:92px;min-height:44px}
+  /* D4: Kid Mode celebrates and saves, but does not share. */
+  body.kid #wpShare{display:none}
+  /* Someone who asked for less motion still gets the piece, just not the build. */
+  @media (prefers-reduced-motion: reduce){
+    .wp-reveal .wp-word,.wp-reveal .wp-pinned,.wp-reveal .wp-feature{opacity:1;animation:none}
+  }
+  .wp-status{text-align:center;min-height:20px;font-size:14px;opacity:.9}
+  /* v8 F6 reserved chrome: the accent belongs to the INTERFACE only —
+     letter slots, counts, status. No picture stroke may use it, so a
+     glance always separates interface from artwork. */
+  .wp-slots{text-align:center;min-height:18px;font-size:16px;letter-spacing:.35em;color:var(--ui-chrome,#7aa2ff)}
+  .wp-slots span{opacity:.4}
+  .wp-slots .on{opacity:1}
+  .wp-row{display:flex;gap:8px;align-items:stretch}
+  .wp-input{flex:1;font-size:22px;text-align:center;padding:10px;border-radius:12px;border:1px solid rgba(255,255,255,.25);background:rgba(255,255,255,.06);color:inherit}
+  .wp-replay{width:64px;flex:none;font-size:22px}
+  .wp-card{position:absolute;inset:0;display:none;align-items:center;justify-content:center;background:rgba(0,0,0,.55);z-index:5}
+  .wp-card.show{display:flex}
+  .wp-screen .btn-hide{display:none}
+  @keyframes prWiggle{0%,100%{transform:translateX(0)}25%{transform:translateX(-5px)}75%{transform:translateX(5px)}}
+  .pr-slots.pulse{animation:prPulse .4s}
+  @keyframes prPulse{25%{transform:translateX(-6px);color:var(--accent,#7aa2ff)}75%{transform:translateX(6px)}}
+  .pr-input{font-size:22px;padding:10px;border-radius:12px;border:1px solid var(--edge);background:var(--panel-2);color:var(--ink);text-align:center}
+  .pr-replay{width:100%}
+  .pr-card{position:absolute;inset:0;display:none;align-items:center;justify-content:center;background:rgba(0,0,0,.55)}
+  .pr-card.show{display:flex}
+  body.kid .pr-word{font-size:42px}
+  .dm-recap{position:absolute;inset:0;display:none;align-items:center;justify-content:center;background:rgba(0,0,0,.55)}
+  .dm-recap.show{display:flex}
+  .dm-stats{display:flex;gap:14px;justify-content:center;margin:12px 0}
+  .dm-stat{display:flex;flex-direction:column;align-items:center;min-width:80px}
+  .dm-stat b{font-size:28px}
+  .dm-stat span{font-size:12px;opacity:.8;text-align:center}
+  .dm-missed{max-height:180px;overflow-y:auto;margin-bottom:10px}
+  .dm-missrow{display:flex;gap:8px;padding:4px 0;border-bottom:1px solid var(--edge);font-size:14px}
+  .dm-missrow b{flex:none}
+  .dm-missrow span{opacity:.85}
+  /* Per-chip include toggle (Phase 3): opt a word out without deleting it. */
+  .pchip-on{width:22px;height:22px;flex:none;accent-color:var(--accent,#7aa2ff)}
+  .pchip-row:has(.pchip-on:not(:checked)) .pchip{opacity:.4;text-decoration:line-through}
+  .pchip-x{flex:none;width:32px;height:32px;border-radius:8px;border:1px solid var(--edge);background:transparent;color:var(--muted);font-size:18px;line-height:1;cursor:pointer}
+  .pchip-flag{flex:none;min-width:64px;font-size:11px;font-weight:600;color:var(--bad,#e0564f);text-align:end}
+  .pchip-row:not(.flagged) .pchip-flag{display:none}
+
+  /* Launchers (F4): ways to play — brightest family, filled card, equal width, iconed */
+  .modes-row{gap:8px}
+  .launch{flex:1;min-height:62px;background:var(--panel-2);border:1px solid var(--edge);color:var(--ink);border-radius:14px;padding:10px 8px;font-size:14px;font-weight:700;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;gap:7px;text-align:center;line-height:1.15;box-shadow:inset 0 1px 0 rgba(255,255,255,.03);transition:border-color .15s,background .15s,transform .1s}
+  .launch:hover{border-color:var(--amber);background:color-mix(in srgb, var(--panel-2) 82%, var(--amber))}
+  .launch:active{transform:translateY(1px)}
+  .launch.on{border-color:var(--amber);color:var(--amber-soft)}
+  .launch.done{color:var(--muted)}
+  .launch.btn-hide{display:none}
+
+  /* Setup chip (F3): config family — muted, chevroned, full width, directly above
+     the play button. It configures; it must not read as a launcher. */
+  .setup-chip{width:100%;max-width:600px;min-height:44px;background:var(--panel);border:1px solid var(--edge);border-radius:12px;padding:9px 16px;margin:2px 0 8px;font-size:13px;font-weight:600;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:10px;transition:border-color .15s,transform .1s}
+  .setup-chip:hover{border-color:var(--amber)}
+  .setup-chip:active{transform:translateY(1px)}
+  .setup-chip-text{color:var(--ink);white-space:nowrap}
+  .setup-chip-chev{color:var(--muted);font-size:14px;flex:0 0 auto}
+
+  /* Setup sheet fields (icon + native picker; no text labels → no new i18n keys) */
+  .setup-card .setup-field{display:flex;align-items:center;gap:10px;margin:12px 0}
+  .setup-field-ico{font-size:18px;flex:0 0 auto;width:24px;text-align:center}
+  .setup-field select{flex:1;width:100%}
+
+  /* Little Speller (F7): same families + order, larger kid targets preserved */
+  body.kid .launch{min-height:74px;font-size:16px}
+  body.kid .data-chip{min-height:58px;font-size:16px}
+  body.kid .setup-chip{min-height:52px;font-size:14.5px}
+  body.kid .meta-icon{width:52px;height:52px;font-size:22px}
+  body.big-text .launch,body.big-text .data-chip{font-size:16px}
+  body.big-text .setup-chip-text{font-size:14px}
+
+  .stage{width:100%;max-width:600px;display:flex;flex-direction:column;align-items:center}
+
+  .orb-wrap{position:relative;width:230px;height:230px;display:grid;place-items:center;margin:18px 0 8px;cursor:pointer;user-select:none}
+  .timer-ring{position:absolute;inset:0;width:100%;height:100%;transform:rotate(-90deg);pointer-events:none;opacity:0;transition:opacity .3s ease}
+  .orb-wrap.timed .timer-ring{opacity:1}
+  .t-track{fill:none;stroke:rgba(255,255,255,.07);stroke-width:3}
+  .t-prog{fill:none;stroke:var(--amber);stroke-width:3;stroke-linecap:round;transition:stroke .25s ease}
+  .t-prog.low{stroke:var(--coral)}
+  .timer-badge{position:absolute;top:-4px;left:50%;transform:translateX(-50%);font-family:var(--mono);font-size:12px;color:var(--muted);background:var(--panel);border:1px solid var(--edge);padding:2px 9px;border-radius:999px;opacity:0;transition:opacity .3s ease}
+  .orb-wrap.timed .timer-badge{opacity:1}
+  .timer-badge.low{color:var(--coral);border-color:var(--coral)}
+  .ring{position:absolute;inset:0;border-radius:50%;border:1.5px solid var(--amber);opacity:0}
+  /* will-change only while actually emitting (FIX 4): promotes each pulsing
+     ring to its own compositor layer so the transform/opacity animation
+     composites instead of repainting siblings. Scoped to .speaking so idle
+     rings don't hold extra layers. */
+  .orb-wrap.speaking .ring{animation:emit 1.5s ease-out infinite;will-change:transform,opacity}
+  .orb-wrap.speaking .ring:nth-child(4){animation-delay:.5s}
+  .orb-wrap.speaking .ring:nth-child(5){animation-delay:1s}
+  @keyframes emit{0%{transform:scale(.62);opacity:.7}100%{transform:scale(1.18);opacity:0}}
+  .orb{width:150px;height:150px;border-radius:50%;
+    /* Brighter, glossier gem: a hot white specular near the top-left, a vivid
+       saturated body, a rich rim, plus a glassy top light and depth shadow —
+       all derived from --orb-color, so every orb color stays luminous. */
+    background:radial-gradient(circle at 35% 28%, color-mix(in srgb, var(--orb-color) 20%, white) 0%, color-mix(in srgb, var(--orb-color) 82%, white) 24%, var(--orb-color) 58%, color-mix(in srgb, var(--orb-color) 78%, black) 100%);
+    box-shadow:0 0 0 1px color-mix(in srgb, var(--orb-color) 40%, white 60%),
+      0 0 22px 1px color-mix(in srgb, var(--orb-color) 78%, transparent),
+      0 0 68px 12px color-mix(in srgb, var(--orb-color) 50%, transparent),
+      inset 0 -16px 30px color-mix(in srgb, var(--orb-color) 60%, black),
+      inset 0 10px 22px color-mix(in srgb, white 34%, transparent);
+    display:grid;place-items:center;position:relative;animation:breathe 4.5s ease-in-out infinite;transition:background .35s ease, box-shadow .35s ease;
+    /* will-change:transform (FIX 4): the orb runs breathe/pulse (transform)
+       forever AND carries a big 68px-blurred glow. Without a dedicated
+       compositor layer, some mobile browsers repaint that blurred shadow every
+       animation frame — the main cause of the orb-glow stutter on low-end
+       phones. Promoting it rasterizes the glow once and only recomposites the
+       transform. Visuals at rest are unchanged. */
+    will-change:transform}
+  /* glassy sheen reflection over the top-left */
+  .orb::before{content:"";position:absolute;top:8%;left:15%;width:50%;height:38%;border-radius:50%;background:radial-gradient(circle at 50% 45%, rgba(255,255,255,.72), rgba(255,255,255,0) 68%);filter:blur(1px);pointer-events:none}
+  .orb-glyph{position:relative;z-index:1}
+
+  /* Coming-soon panel: replaces the play area when a not-yet-active study
+     language is selected (language-availability registry). The interface still
+     switches to that language; only playing is gated. */
+  .coming-panel{display:none;flex-direction:column;align-items:center;gap:16px;max-width:340px;margin:44px 0;text-align:center}
+  body.coming-soon .coming-panel{display:flex}
+  /* Coming-soon gates PLAY in BOTH modes (Little Speller + Standard): hide the
+     play area AND the mode launchers so no round can start in a gated language.
+     The picker (setup chip) + header stay so the player can switch back. */
+  body.coming-soon .orb-wrap,body.coming-soon .replay-row,body.coming-soon .voice-note,
+  body.coming-soon #gameKeyboard,body.coming-soon #spellbox,body.coming-soon .field-head,
+  body.coming-soon .modes-row,body.coming-soon .action-row,body.coming-soon .minor-row,
+  body.coming-soon .tries-line{display:none!important}
+  .coming-badge{font-size:11.5px;text-transform:uppercase;letter-spacing:.16em;color:var(--amber-soft);border:1px solid var(--amber);border-radius:999px;padding:5px 15px}
+  .coming-notice{color:var(--ink);font-size:16px;line-height:1.5;margin:0}
+  .coming-notify{min-width:230px}
+  .coming-notify.confirmed{background:var(--teal);color:#062b23;border-color:var(--teal);cursor:default}
+  @keyframes breathe{0%,100%{transform:scale(.98)}50%{transform:scale(1.02)}}
+  .orb-wrap.speaking .orb{animation:pulse .55s ease-in-out infinite}
+  @keyframes pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.06)}}
+  .orb-glyph{font-family:var(--display);font-weight:700;font-size:15px;color:var(--orb-text);letter-spacing:.06em;text-align:center;padding:0 14px;line-height:1.25}
+  .orb-wrap.good .orb{background:radial-gradient(circle at 38% 32%, #c8fff0 0%, var(--teal) 42%, #1e8f79 100%);box-shadow:0 0 0 1px rgba(180,255,235,.4), 0 0 48px 6px rgba(70,214,184,.5);animation:none}
+  .orb-wrap.good .orb-glyph{color:#073a30}
+  .orb-wrap.bad .orb{background:radial-gradient(circle at 38% 32%, #ffd2d8 0%, var(--coral) 42%, #b53a48 100%);box-shadow:0 0 0 1px rgba(255,200,205,.4), 0 0 40px 4px rgba(255,107,122,.45);animation:shake .4s ease}
+  .orb-wrap.bad .orb-glyph{color:#4a0e16}
+  @keyframes shake{0%,100%{transform:translateX(0)}20%{transform:translateX(-8px)}40%{transform:translateX(7px)}60%{transform:translateX(-5px)}80%{transform:translateX(3px)}}
+
+  .replay-row{display:flex;gap:10px;margin-bottom:8px}
+  .voice-note{min-height:16px;margin-bottom:14px;color:var(--muted-on-bg);font-size:11.5px;text-align:center;max-width:320px}
+
+  .field-head{width:100%;display:flex;align-items:center;justify-content:space-between;gap:12px;margin:0 0 8px}
+  .fh-left{display:flex;align-items:center;gap:9px}
+  .field-label{font-size:11.5px;text-transform:uppercase;letter-spacing:.18em;color:var(--muted-on-bg)}
+  /* Spell It Out Loud — mic beside the answer field (voice spelling INPUT). */
+  .voice-spell-mic{width:44px;height:44px;margin-left:8px;border-radius:50%;display:grid;place-items:center;font-size:22px;line-height:1;padding:0;background:var(--panel-2);border:1.5px solid var(--edge);color:inherit;cursor:pointer;transition:transform .12s,box-shadow .2s,border-color .2s;touch-action:none;user-select:none;-webkit-user-select:none}
+  body.kid .voice-spell-mic{width:52px;height:52px;font-size:26px}
+  .voice-spell-mic.btn-hide,.voice-spell-perm.btn-hide{display:none}
+  /* Mic-everywhere: a downloadable-state mic wears a small ⬇ badge — the first
+     tap fetches the on-device voice pack, then the badge drops. */
+  .voice-spell-mic.dl,.voice-spell-mic.net{position:relative}
+  .voice-spell-mic.net::after{content:"🌐";position:absolute;right:-4px;bottom:-4px;font-size:11px;line-height:1}
+  .voice-spell-mic.dl::after{content:"⬇";position:absolute;right:-4px;bottom:-4px;font-size:12px;line-height:1;background:var(--accent,#7aa2ff);color:#fff;border-radius:50%;width:16px;height:16px;display:flex;align-items:center;justify-content:center}
+  .voice-spell-mic:active{transform:scale(.9)}
+  .voice-spell-mic.listening{border-color:var(--teal,#46d6b8);box-shadow:0 0 0 5px rgba(70,214,184,.22);animation:sayitPulse 1.1s ease-in-out infinite}
+  .voice-spell-status{width:100%;min-height:16px;margin:6px 0 0;font-size:12.5px;color:var(--muted-on-bg);text-align:center}
+  .voice-spell-perm{width:100%;margin:8px 0 0;padding:12px 14px;border:1.5px solid var(--edge);border-radius:12px;background:var(--panel-2);font-size:13px}
+  .voice-spell-perm p{margin:0 0 10px}
+  .glow-pick{display:flex;align-items:center;gap:7px}
+  .glow-pick .gl{font-size:10px;color:var(--muted-on-bg);text-transform:uppercase;letter-spacing:.12em}
+  .swatch,.theme-swatch{width:17px;height:17px;border-radius:50%;border:2px solid transparent;background:var(--s);cursor:pointer;padding:0;box-shadow:0 0 6px var(--s);transition:transform .12s}
+  .swatch:hover,.theme-swatch:hover{transform:scale(1.12)}
+  .swatch.active,.theme-swatch.active{border-color:var(--ink)}
+  .swatch.custom,.theme-swatch.custom{background:conic-gradient(#ff6b7a,#ffb14d,#ffe14d,#46d6b8,#7aa2ff,#c792ff,#ff6b7a);position:relative;overflow:hidden;box-shadow:none}
+  .swatch.custom input,.theme-swatch.custom input{position:absolute;inset:-6px;opacity:0;cursor:pointer}
+  .theme-pick{display:flex;align-items:center;gap:7px;flex-wrap:wrap}
+
+  .spellbox{position:relative;width:100%;background:var(--panel-2);border:1.5px solid var(--edge);border-radius:14px;transition:border-color .3s ease,box-shadow .3s ease}
+  .spellbox.focus{border-color:var(--amber);box-shadow:0 0 0 4px rgba(255,177,77,.12)}
+  /* F1 answer feedback (global, identical every language + Kid Mode). Input is
+     preserved so the player can fix, not retype. Classes cleared on animationend. */
+  .spellbox.is-correct{border-color:var(--success);box-shadow:0 0 0 4px var(--success-glow);animation:fbHold .5s ease}
+  .spellbox.is-wrong{border-color:var(--warn);box-shadow:0 0 0 4px var(--warn-glow);animation:wrongFb .4s ease}
+  /* Both animations exist so the state class is removed on animationend (no
+     timeouts racing). Correct holds ≤500ms; wrong shakes ≤160ms (≤6px, warm,
+     never a screen flash — D3) then holds the glow to 400ms. */
+  @keyframes fbHold{0%,100%{opacity:1}}
+  @keyframes wrongFb{0%,40%,100%{transform:translateX(0)}10%{transform:translateX(-6px)}20%{transform:translateX(5px)}30%{transform:translateX(-3px)}}
+  /* F2 streak warmth: consecutive-correct tier warms --glow only, never text/ink (D5). */
+  .stage[data-streak-tier="1"]{--glow:var(--glow-streak-1)}
+  .stage[data-streak-tier="2"]{--glow:var(--glow-streak-2)}
+  .stage[data-streak-tier="3"]{--glow:var(--glow-streak-3)}
+  /* F3 per-language accents — REVIEW-GATED palette (ja: sakura, zh: red-gold).
+     Only accent/glow tokens; success/warn stay GLOBAL (I5). Other 15 langs = default. */
+  :root[data-lang="ja"]{--glow:#ff8fab;--amber:#ff8fab;--amber-soft:#ffc2d1;--glow-streak-1:#ff8fab;--glow-streak-2:#ff6f91;--glow-streak-3:#ff4f77}
+  :root[data-lang="zh"]{--glow:#e6b422;--amber:#e63946;--amber-soft:#f4c95d;--glow-streak-1:#e6b422;--glow-streak-2:#e0952a;--glow-streak-3:#d67d2e}
+  .letters{position:relative;z-index:1;min-height:62px;display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:.02em;padding:18px;pointer-events:none}
+  .ltr{font-family:var(--mono);font-size:24px;font-weight:700;color:var(--glow);text-shadow:0 0 7px var(--glow),0 0 16px var(--glow);line-height:1}
+  .ltr.space{width:.45em;text-shadow:none}
+  .ltr.pop{animation:pop .28s ease}
+  @keyframes pop{0%{transform:scale(.4);opacity:0}60%{transform:scale(1.18)}100%{transform:scale(1);opacity:1}}
+  .placeholder{font-family:var(--mono);color:var(--muted-2);font-weight:400;font-size:16px;letter-spacing:.04em}
+  .caret{display:inline-block;width:2px;height:26px;background:var(--glow);margin-inline-start:3px;border-radius:1px;opacity:0;box-shadow:0 0 6px var(--glow)}
+  .spellbox.focus .caret{opacity:1;animation:blink 1.05s step-end infinite}
+  @keyframes blink{50%{opacity:0}}
+  /* Visually-hidden live region (announces typed letters to screen readers). */
+  .sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;border:0}
+
+  /* Custom on-screen keyboard — the answer input (no real <input>). */
+  /* Every letter key is the SAME size: a single --kb-key width derived from the
+     column count (--kb-cols, set per layout in keyboard.rs — 10 for QWERTY, 11
+     for QWERTZ/Swedish). Rows with fewer keys stay centered instead of
+     stretching their keys to fill the row (the old flex:1 1 0 caused a 7-key row
+     to have wider keys than a 10-key row). Big Text / Kid raise --kb-key-max so
+     uniformity is preserved automatically. */
+  /* #kbHome and #wpKbSlot are the two places the keyboard can live (it is lent
+     between them, see borrow_keyboard in wordpic_screen.rs). BOTH must be full
+     width. #stage is a column flex with align-items:center, so a wrapper with
+     no width shrink-wraps to its content — and .game-kb{width:100%} then
+     resolves against the shrunken wrapper instead of the stage, collapsing
+     every key. That is exactly what shipped in 106. */
+  #kbHome,#wpKbSlot{width:100%}
+  .game-kb{width:100%;margin-top:14px;display:flex;flex-direction:column;gap:7px;user-select:none;
+    --kb-cols:10; --kb-gap:6px; --kb-key-max:46px;
+    /* Capped, deliberately NOT floored. A CSS floor would clamp a collapsed
+       key back up to the legibility minimum and overflow the row instead --
+       which would hide the collapse from the very hit-area test that catches
+       it. The floor is enforced in tests/e2e/specs/keyboard.mjs, which checks
+       key width AND that the row still fits its container. */
+    --kb-key:min(var(--kb-key-max), calc((100% - (var(--kb-cols) - 1) * var(--kb-gap)) / var(--kb-cols)));
+    padding-left:env(safe-area-inset-left, 0px);padding-right:env(safe-area-inset-right, 0px);
+    padding-bottom:env(safe-area-inset-bottom, 0px)}
+  .game-kb.locked{opacity:.5;pointer-events:none}
+  #kbLetters{display:flex;flex-direction:column;gap:7px}
+  .kb-row{display:flex;justify-content:center;gap:var(--kb-gap)}
+  .kb-key,.kb-back,.kb-submit{min-height:46px;border:1px solid var(--edge);
+    background:var(--panel);color:var(--ink);border-radius:9px;font-family:var(--body);font-size:17px;font-weight:600;
+    cursor:pointer;display:inline-flex;align-items:center;justify-content:center;transition:background .08s,transform .06s,border-color .08s;
+    -webkit-tap-highlight-color:transparent;touch-action:manipulation}
+  .kb-key{flex:0 0 auto;width:var(--kb-key)}
+  .kb-key:active,.kb-back:active{background:var(--amber);color:#36210a;border-color:var(--amber);transform:translateY(1px)}
+  .kb-key.kb-punct{display:none}
+  .game-kb.show-punct .kb-key.kb-punct{display:inline-flex}
+  .kb-actions{gap:8px;margin-top:2px}
+  /* Enter grows to fill; Delete sits at the far right (thumb reach, standard
+     convention), a touch wider than a letter key. */
+  .kb-submit{flex:1 1 auto;background:var(--amber);color:#36210a;border-color:var(--amber);font-weight:700}
+  /* Exactly one submit control per answer form: the labelled in-page "Check
+     spelling" button (#checkBtn) is canonical; the on-screen keyboard's Enter was
+     a redundant second submit that read as a duplicate button, so it is hidden.
+     Physical Enter still submits via the shared submit_guess path. With Enter
+     gone the delete key fills the action row, reading as the keyboard's own
+     control rather than a floating button. */
+  .kb-submit.btn-hide{display:none}
+  .kb-back{flex:1 1 auto;width:auto;min-width:64px;font-size:19px;color:var(--muted)}
+  .kb-submit:active{filter:brightness(1.06);transform:translateY(1px)}
+  /* Vietnamese tone row: applies huyền/sắc/hỏi/ngã/nặng to the last vowel. */
+  .kb-tones.btn-hide{display:none}
+  .kb-tone{font-size:23px;color:var(--amber-soft)}
+  /* Long-press accent keys: a dot hint, and a popover of alternatives that
+     opens above the key after a 350ms hold (built in keyboard.rs). The popover
+     is pointer-events:none so the finger stays "down" on the key and window
+     pointermove/up drive drag-to-select + commit. */
+  .kb-key{position:relative}
+  .kb-key.has-acc::after{content:"";position:absolute;top:4px;inset-inline-end:5px;width:4px;height:4px;border-radius:50%;
+    background:var(--muted);opacity:.55}
+  .kb-popover{position:fixed;transform:translate(-50%,-100%);display:none;gap:5px;padding:6px;border-radius:12px;
+    background:var(--panel);border:1px solid var(--edge);box-shadow:0 12px 32px rgba(0,0,0,.5);z-index:60;pointer-events:none}
+  .kb-popover.show{display:flex}
+  .kb-popover .kb-acc{min-width:42px;min-height:50px;border:1px solid var(--edge);border-radius:9px;background:var(--panel);
+    color:var(--ink);font-family:var(--body);font-size:20px;font-weight:600;display:inline-flex;align-items:center;justify-content:center}
+  .kb-popover .kb-acc.sel{background:var(--amber);color:#36210a;border-color:var(--amber)}
+  /* Accessibility: Big text / Kid mode → larger keys (raise the shared width cap
+     + height/font so every key scales together); Readable → high contrast. */
+  body.kid .game-kb,body.big-text .game-kb{--kb-key-max:56px}
+  body.kid .kb-key,body.kid .kb-back,body.kid .kb-submit,
+  body.big-text .kb-key,body.big-text .kb-back,body.big-text .kb-submit{min-height:56px;font-size:21px}
+  body.readable .kb-key,body.readable .kb-back{border-color:var(--muted);border-width:2px;color:var(--ink)}
+
+  .action-row{width:100%;display:flex;gap:10px;margin-top:12px}
+  .btn{flex:1;border:none;border-radius:12px;padding:14px;font-family:var(--body);font-size:15px;font-weight:600;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;gap:8px;transition:filter .15s,transform .1s,opacity .15s}
+  .btn:active{transform:translateY(1px)}
+  .btn-check{background:var(--amber);color:#36210a}
+  .btn-check:hover{filter:brightness(1.06)}
+  .btn-icon{flex:0 0 auto;background:var(--panel);color:var(--ink);border:1px solid var(--edge);font-size:17px}
+  .btn-icon:hover{border-color:var(--amber)}
+  .btn-icon.on{border-color:var(--amber);color:var(--amber-soft)}
+  .btn-icon[hidden]{display:none}
+
+
+  .btn-mini{background:var(--amber);color:#36210a;border:none;border-radius:10px;padding:9px 14px;font-family:var(--body);font-weight:600;font-size:13px;cursor:pointer}
+  .btn-mini:disabled{opacity:.5;cursor:default}
+
+  .minor-row{width:100%;display:flex;justify-content:space-between;align-items:center;gap:6px;flex-wrap:wrap;margin-top:14px}
+  .ghost{background:none;border:none;color:var(--muted-on-bg);font-family:var(--body);font-size:13px;font-weight:600;cursor:pointer;padding:6px 4px}
+  .ghost:hover{color:var(--ink-on-bg)}
+  .ghost.btn-hide{display:none}
+  .ghost.danger:hover{color:var(--coral)}
+
+  .feedback{min-height:30px;margin-top:18px;text-align:center;font-size:15px;font-weight:600}
+  .feedback .reveal{font-family:var(--mono);color:var(--amber-soft);letter-spacing:.1em;word-break:break-word}
+
+  /* ==== CC-RTL F3 — bidi isolation at every embed point ==================
+     These spans hold a WORD dropped into surrounding chrome: the reveal is
+     "It was: <word>", the meaning card is "<word> — <definition>". Isolation
+     makes each word its own bidi run, so it orders internally and the sentence
+     orders around it.
+
+     HONEST NOTE ON WHAT THIS IS WORTH. I could not construct a case where it
+     changes rendering. Tested in Chromium: LTR container + RTL word + trailing
+     "." / " !" / "(book)."; RTL container + LTR word; a mixed-direction list;
+     and plain <span> vs unicode-bidi:isolate vs dir=auto vs <bdi>. All produced
+     identical geometry — the bidi algorithm already resolves a single embedded
+     word correctly from the paragraph direction.
+
+     Kept anyway, as insurance rather than a fix: F3 mandates it, it costs
+     nothing, it is a no-op for Latin, and the cases where isolation genuinely
+     bites (RTL text ending in digits, nested runs, an RTL *container* — which
+     arrives with F1) are ones I could not build while ar/fa/ur cannot activate.
+     It is NOT a demonstrated bug fix and should not be described as one. */
+  .feedback .reveal,
+  .meaning .m-word,
+  .meaning .m-ex{unicode-bidi:isolate}
+  /* CC-RTL F1 landed the selector this needed. game::reflect_play_direction puts
+     the STUDY language's lang+dir on #letters/#feedback/#meaning, straight from
+     the registry — so `:lang()` here now means "spelling Arabic", not "reading
+     Arabic". That distinction is the whole point: <html lang> is the UI locale,
+     and keying off it would strip tracking for an Arabic speaker studying
+     English while leaving it on for an English speaker studying Arabic — exactly
+     backwards.
+     `.reveal` sets letter-spacing:.1em, which prises cursive joins apart the same
+     way readable mode did (see .ltr.joined). Cursive scripts get `normal`. */
+  .feedback .reveal:lang(ar),
+  .feedback .reveal:lang(fa),
+  .feedback .reveal:lang(ur){letter-spacing:normal}
+  /* CC-RTL per-akshara colour feedback (cursive scripts). ONLY color — never a
+     box-forming property (transform/inline-block/margin/padding), which would
+     shatter the shaping run; colour keeps the word joined. rv-sp is the passthrough
+     for the space in a multi-word reveal. */
+  .feedback .reveal .rv-ok{color:var(--teal)}
+  .feedback .reveal .rv-bad{color:var(--coral)}
+  .feedback .reveal .rv-sp{color:inherit}
+  /* F7 syllable replay (feature-flagged; classes appear only when the flag is on) */
+  .feedback .reveal.syllabified .syl{transition:color .12s ease,text-shadow .12s ease;opacity:.72}
+  .feedback .reveal.syllabified .syl+.syl::before{content:"\00b7";opacity:.5;margin:0 .12em}
+  .feedback .reveal.syllabified .syl.syl-on{opacity:1;color:var(--amber);text-shadow:0 0 10px var(--amber-soft)}
+  .feedback .syl-slow{margin-inline-start:.5em;font-size:13px;font-weight:600;color:var(--amber-soft);background:transparent;border:1px solid var(--amber-soft);border-radius:999px;padding:2px 10px;cursor:pointer;vertical-align:middle}
+  .feedback .syl-slow:hover{color:var(--amber);border-color:var(--amber)}
+  .feedback.good{color:var(--teal)}
+  .feedback.bad{color:var(--coral)}
+  .hint-line{text-align:center;margin-top:6px;font-family:var(--mono);font-size:18px;letter-spacing:.28em;color:var(--muted-on-bg);min-height:22px;word-break:break-word}
+  .tries-line{text-align:center;margin-top:6px;font-size:11px;letter-spacing:.3em;min-height:14px}
+  .tries-line .try-dot{color:var(--amber-soft)}
+  .tries-line .try-dot.used{color:var(--edge)}
+
+  .meaning{width:100%;margin-top:12px;text-align:center;color:var(--muted);font-size:13.5px;line-height:1.55;min-height:0;overflow-wrap:anywhere}
+  .meaning.show{padding:12px 16px;background:var(--panel-2);border:1px solid var(--edge);border-radius:12px}
+  .meaning .m-word{color:var(--ink);font-weight:700}
+  .meaning .m-pos{color:var(--muted-2);font-style:italic;font-size:12px;margin-inline-start:4px}
+  .meaning .m-ex{display:block;margin-top:8px;color:var(--muted-2);font-style:italic}
+  .m-insight{display:block;margin-top:5px;font-size:13px;color:var(--muted);opacity:.85;line-height:1.35}
+  .meaning .m-spk{background:none;border:1px solid var(--edge);color:var(--muted);border-radius:999px;padding:3px 9px;font-size:11px;cursor:pointer;margin-inline-start:8px;font-style:normal;vertical-align:middle}
+  .meaning .m-spk:hover{border-color:var(--amber);color:var(--ink)}
+
+  /* Word Stories (F5) — dismissible "did you know?" etymology card. */
+  .didYouKnow{width:100%;margin-top:10px;position:relative;display:none;text-align:start}
+  .didYouKnow.show{display:block;padding:11px 34px 11px 14px;background:var(--panel-2);border:1px solid var(--edge);border-inline-start:3px solid var(--amber);border-radius:12px}
+  .didYouKnow .dyk-head{color:var(--amber);font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.12em;margin-bottom:3px}
+  .didYouKnow .dyk-body{color:var(--ink);font-size:13.5px;line-height:1.45;overflow-wrap:anywhere}
+  .didYouKnow .dyk-x{position:absolute;top:6px;inset-inline-end:8px;background:none;border:none;color:var(--muted);font-size:18px;line-height:1;cursor:pointer;padding:2px 4px}
+  .didYouKnow .dyk-x:hover{color:var(--ink)}
+
+  .chain{width:100%;max-width:600px;margin:30px 0 10px;display:flex;align-items:center;justify-content:center;gap:22px}
+  .chain .stat{text-align:center}
+  .chain .num{font-family:var(--display);font-weight:800;font-size:40px;line-height:1}
+  .chain .num.live{color:var(--amber)}
+  .chain .lbl{margin-top:5px;color:var(--muted-on-bg);font-size:11px;text-transform:uppercase;letter-spacing:.16em}
+  .chain .divider{width:1px;height:42px;background:var(--edge)}
+
+  /* Spell Racing pace marker (F6). Augments the chain bar; a subtle pill that
+     appears only during a Climb run when a stored best exists. */
+  .ghost-pace{width:fit-content;max-width:92%;margin:-2px auto 10px;padding:5px 13px;border-radius:999px;
+    background:var(--panel);border:1px solid var(--edge);color:var(--muted-on-bg);
+    font-size:12px;font-weight:700;letter-spacing:.02em;text-align:center;
+    transition:color .15s,border-color .15s,background .15s}
+  .ghost-pace.btn-hide{display:none}
+  .ghost-pace.ahead{color:var(--good,#46d6b8);border-color:color-mix(in srgb,var(--good,#46d6b8) 55%,transparent)}
+  .ghost-pace.behind{color:var(--bad,#ff6b7a);border-color:color-mix(in srgb,var(--bad,#ff6b7a) 55%,transparent)}
+
+  /* head-to-head scoreboard */
+  .vs-bar{width:100%;max-width:600px;margin:0 0 14px;display:flex;align-items:stretch;gap:10px}
+  .vs-bar.btn-hide{display:none}
+  .daily-bar{width:100%;max-width:600px;margin:0 auto 10px;text-align:center;font-family:var(--display);
+    font-weight:700;font-size:15px;letter-spacing:.02em;color:var(--amber-soft);
+    background:var(--panel);border:1px solid var(--edge);border-radius:12px;padding:9px 14px}
+  .daily-bar.btn-hide{display:none}
+  .daily-bar.finale{border-color:var(--amber);color:var(--amber-soft);box-shadow:0 0 14px -4px var(--amber)}
+  .daily-finale{margin-inline-start:8px;font-weight:800}
+  #dailyBtn.on{border-color:var(--amber);color:var(--amber-soft)}
+  #dailyBtn.done{color:var(--muted)}
+  .daily-best{color:var(--muted);font-size:13px;margin-top:-4px}
+  .daily-proverb{margin-top:12px;font-style:italic;color:var(--amber-soft);font-size:15px;line-height:1.4}
+  .daily-proverb .dp-tr{display:block;font-style:normal;color:var(--muted);font-size:13px;margin-top:3px}
+  .vs-side{flex:1;min-width:0;background:var(--panel);border:1.5px solid var(--edge);border-radius:14px;padding:11px 12px;text-align:center;transition:border-color .2s,box-shadow .2s}
+  .vs-side.active{border-color:var(--amber);box-shadow:0 0 0 3px rgba(255,177,77,.14)}
+  .vs-name{font-size:12px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .vs-side.active .vs-name{color:var(--amber-soft)}
+  .vs-cur{font-family:var(--display);font-weight:800;font-size:34px;line-height:1.15;color:var(--ink)}
+  .vs-side.active .vs-cur{color:var(--amber)}
+  .vs-best{font-size:11px;color:var(--muted-2)}
+  .vs-best b{color:var(--amber-soft);font-family:var(--mono)}
+  .vs-mid{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;flex:0 0 auto}
+  .vs-vs{font-family:var(--display);font-weight:700;color:var(--muted-2);font-size:14px}
+  /* 44x44 minimum touch target for the always-visible in-match exit. */
+  #vsExit{min-width:44px;min-height:44px;padding:6px 10px;font-size:13px;font-weight:600;
+    border:1px solid var(--edge);border-radius:10px;color:var(--muted)}
+  #vsExit:hover{border-color:var(--coral);color:var(--coral)}
+  /* Focus the screen during a match: hide single-player chrome. */
+  body.versus .chain,body.versus .card,body.versus #shareBtn,body.versus .foot{display:none}
+
+  .card{width:100%;max-width:600px;margin-top:22px;background:var(--panel);border:1px solid var(--edge);border-radius:16px;padding:18px 20px}
+  .card h2{font-family:var(--display);font-weight:700;font-size:16px;display:flex;align-items:center;justify-content:space-between;gap:10px}
+  .card h2 .scope{font-family:var(--body);font-size:11px;font-weight:500;color:var(--muted-2);letter-spacing:.04em}
+  .srow{display:grid;grid-template-columns:74px 1fr auto;align-items:center;gap:12px;padding:9px 0;border-top:1px solid rgba(255,255,255,.04);font-size:13px}
+  .srow:first-of-type{border-top:none}
+  .stier{color:var(--muted);font-weight:600;text-transform:capitalize}
+  .sbar{height:7px;border-radius:99px;background:rgba(255,255,255,.06);overflow:hidden}
+  .sfill{height:100%;border-radius:99px;background:linear-gradient(90deg,#c97a23,var(--amber));transition:width .5s ease}
+  .snum{font-family:var(--mono);color:var(--muted-2);font-size:12px;white-space:nowrap}
+  .snum b{color:var(--amber-soft)}
+  .stats-empty{color:var(--muted-2);font-size:13.5px;padding:8px 0 4px}
+  .stats-foot{display:flex;justify-content:space-between;align-items:center;margin-top:10px;padding-top:10px;border-top:1px solid rgba(255,255,255,.04)}
+  .stats-foot .total{font-size:12px;color:var(--muted-2)}
+
+  .ach-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(84px,1fr));gap:10px;margin-top:14px}
+  .ach-badge{display:flex;flex-direction:column;align-items:center;text-align:center;gap:6px;padding:11px 6px;border-radius:12px;background:var(--panel-2);border:1px solid var(--edge)}
+  .ach-badge .ic{font-size:23px;filter:grayscale(1);opacity:.38;transition:filter .2s,opacity .2s}
+  .ach-badge.got{border-color:rgba(70,214,184,.4)}
+  .ach-badge.got .ic{filter:none;opacity:1}
+  .ach-badge .nm{font-size:10px;color:var(--muted-2);line-height:1.2}
+  .ach-badge.got .nm{color:var(--ink)}
+
+  .board ol{list-style:none;margin:14px 0 4px}
+  .board li{display:grid;grid-template-columns:24px 1fr auto auto;align-items:center;gap:12px;padding:9px 0;border-top:1px solid rgba(255,255,255,.04);font-size:14px}
+  .board li:first-child{border-top:none}
+  .board .rank{font-family:var(--mono);color:var(--muted-2);font-size:13px}
+  .board li.top .rank{color:var(--amber)}
+  .board .who{font-weight:600;letter-spacing:.02em;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;min-width:0}
+  .board .meta{color:var(--muted-2);font-size:11px;text-transform:uppercase;letter-spacing:.06em;white-space:nowrap}
+  .board .score{font-family:var(--mono);font-weight:700;color:var(--amber-soft);font-size:15px}
+  .board .empty{color:var(--muted-2);font-size:13.5px;padding:8px 0 12px;text-align:center}
+
+
+  .scrim{position:fixed;inset:0;background:rgba(10,8,18,.72);backdrop-filter:blur(4px);display:none;place-items:center;padding:20px;z-index:30;overflow:auto}
+  .scrim.show{display:grid}
+
+  /* ==== Play hub tiles (CC-MODE-HUB F2) ==================================
+     Tiles only — no hub chrome. Tile kind is expressed by ELEMENT TYPE, not
+     just class: <button> = a real destination, <div> = informational aid or
+     coming_soon teaser. The cursor/hover treatment follows, so a tile that
+     cannot be tapped never invites a tap. */
+  /* The close ✕ is absolutely positioned, so its modal MUST be a containing
+     block — otherwise it escapes to the page corner and reads as "no way out"
+     (it was landing at the viewport's top-right, far from the dialog). Scoped to
+     #playHub rather than all .modal: other dialogs have absolutely-positioned
+     children (colour swatches, switches) whose containing block must not move. */
+  #playHub .modal{position:relative}
+  .hub-x{position:absolute;top:10px;inset-inline-end:12px}
+  /* Empty hub: never render a blank box. Reachable today — e.g. a Preview
+     language on web filters out every mode. */
+  .hub-empty{color:var(--muted-2);font-size:13.5px;text-align:center;padding:18px 6px 6px;line-height:1.5}
+  /* Spell Racing screen (CC-SPELL-RACING Phase 5). */
+  #spellRacing .modal{position:relative}
+  .sr-label{font-size:12px;font-weight:700;color:var(--muted);text-align:start;margin:16px 0 8px;letter-spacing:.02em}
+  .sr-circuits{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+  .sr-circuit{background:var(--panel-2);border:1px solid var(--edge);border-radius:12px;padding:12px 6px;text-align:center;cursor:pointer;color:var(--ink);font-family:inherit}
+  .sr-circuit:hover{border-color:var(--teal)}
+  .sr-circuit.selected{border-color:var(--amber);background:color-mix(in srgb,var(--amber) 12%,var(--panel-2))}
+  .sr-circuit .c-name{font-weight:700;font-size:13px}
+  .sr-circuit .c-laps{font-size:11px;color:var(--muted);margin-top:2px}
+  .sr-opponents{display:flex;flex-direction:column;gap:8px}
+  .sr-opponent{display:flex;align-items:center;justify-content:space-between;gap:10px;background:var(--panel-2);border:1px solid var(--edge);border-radius:12px;padding:10px 12px}
+  .sr-opponent .o-name{font-weight:600;font-size:13px}
+  .sr-opponent .o-tag{display:inline-block;margin:2px 0;font-size:9.5px;letter-spacing:.06em;text-transform:uppercase;color:var(--amber);opacity:.85}
+  .sr-opponent .o-best{font-size:11px;color:var(--muted)}
+  .sr-start{background:var(--amber);color:#231d38;border:none;border-radius:999px;padding:6px 14px;font-weight:700;font-size:12px;cursor:pointer;font-family:inherit}
+  .sr-empty{color:var(--muted-2);font-size:13px;text-align:center;padding:12px 6px;line-height:1.5}
+  /* Dev door menu (temporary). */
+  .dev-list{display:flex;flex-direction:column;gap:10px;margin-top:8px}
+  .dev-item{padding:14px;background:var(--panel-2);border:1px solid var(--edge);border-radius:12px;color:inherit;font-weight:700;font-size:15px;font-family:inherit;cursor:pointer;text-align:left}
+  .dev-item:active{border-color:var(--amber)}
+  /* Spell Racing screen — same containing-block requirement as the hub. */
+  #ghostScreen .modal{position:relative}
+  .ghost-stat{background:var(--panel-2);border:1px solid var(--edge);border-radius:14px;padding:16px 14px;margin:4px 0 18px;line-height:1.5}
+  .ghost-stat .gs-big{font-family:var(--display);font-weight:800;font-size:30px;color:var(--amber);line-height:1.1;display:block;margin-bottom:4px}
+  .ghost-stat .gs-sub{color:var(--muted);font-size:13px}
+  .ghost-stat.is-empty{color:var(--muted-2);font-size:13.5px}
+  .mode-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;margin-top:26px}
+  .mode-tile{display:flex;flex-direction:column;align-items:flex-start;gap:4px;text-align:start;background:var(--panel-2);border:1px solid var(--edge);border-radius:14px;padding:14px;color:var(--ink);font-family:inherit;min-height:96px}
+  /* Only a button is interactive. */
+  button.mode-tile{cursor:pointer;transition:border-color .15s,transform .1s}
+  button.mode-tile:hover{border-color:var(--teal)}
+  button.mode-tile:active{transform:scale(.98)}
+  /* An aid has no destination: it reports that the aid is on and where it shows
+     up. Muted, not dimmed — it is available, just not somewhere you go. */
+  .mode-tile.info{cursor:default}
+  /* coming_soon: visibly not-yet, and no notify-me hook (D7). */
+  .mode-tile.teaser{cursor:default;opacity:.55;border-style:dashed}
+  .mt-ico{font-size:22px;line-height:1}
+  .mt-name{font-weight:700;font-size:14px}
+  .mt-desc{color:var(--muted);font-size:12px;line-height:1.35}
+  @media (prefers-reduced-motion:reduce){button.mode-tile{transition:none}button.mode-tile:active{transform:none}}
+  .modal{width:100%;max-width:380px;background:var(--panel);border:1px solid var(--edge);border-radius:18px;padding:26px 24px;text-align:center}
+  .modal.wide{max-width:460px}
+  .modal h3{font-family:var(--display);font-weight:700;font-size:22px;margin-bottom:6px}
+  .modal p{color:var(--muted);font-size:13.5px;margin-bottom:18px;line-height:1.5}
+  .modal .score-pop{color:var(--amber);font-family:var(--display);font-weight:800;font-size:46px;line-height:1;margin:4px 0 14px}
+  .modal input[type=text]{width:100%;background:var(--panel-2);border:1.5px solid var(--edge);border-radius:12px;padding:13px;color:var(--ink);font-family:var(--mono);font-size:16px;text-align:center;letter-spacing:.08em;text-transform:uppercase;margin-bottom:14px}
+  .modal input:focus{outline:none;border-color:var(--amber)}
+  .modal .row{display:flex;gap:10px}
+  .demo-note{margin-top:14px;color:var(--muted-2);font-size:10.5px;line-height:1.5}
+  /* Say It (Feature F2) — pronunciation-practice modal. */
+  .modal.sayit .sayit-privacy{color:var(--teal,#46d6b8);font-size:12.5px;margin-bottom:8px}
+  .modal.sayit .sayit-perm{color:var(--muted-2);font-size:11.5px;margin-bottom:18px}
+  .sayit-score{color:var(--muted);font-size:13px;letter-spacing:.04em;margin-bottom:6px}
+  .sayit-word{font-family:var(--display);font-weight:800;font-size:40px;line-height:1.1;word-break:break-word;margin:6px 0 4px;color:var(--ink);transition:color .2s}
+  .sayit-word.correct{color:var(--teal,#46d6b8)}
+  .sayit-word.wrong{color:var(--coral,#ff6b7a)}
+  .sayit-mic{width:84px;height:84px;border-radius:50%;border:none;margin:14px auto 6px;display:grid;place-items:center;font-size:34px;background:var(--panel-2);border:1.5px solid var(--edge);cursor:pointer;transition:transform .12s,box-shadow .2s}
+  .sayit-mic:active{transform:scale(.94)}
+  .sayit-mic.listening{box-shadow:0 0 0 6px rgba(70,214,184,.22);border-color:var(--teal,#46d6b8);animation:sayitPulse 1.1s ease-in-out infinite}
+  @keyframes sayitPulse{0%,100%{box-shadow:0 0 0 5px rgba(70,214,184,.18)}50%{box-shadow:0 0 0 12px rgba(70,214,184,.05)}}
+  .sayit-status{min-height:20px;color:var(--muted);font-size:13.5px;margin:8px 0 16px}
+  /* Age gate — sits above every other scrim; must be answered to proceed. */
+  .age-scrim{z-index:60}
+  .dob-row{display:flex;gap:8px;margin-bottom:8px}
+  .dob-row select{flex:1;min-width:0;text-align:center}
+  .dob-err{min-height:18px;margin-bottom:10px;color:var(--coral);font-size:12.5px;font-weight:600}
+  /* The Climb — accounts + leaderboard */
+  .modal input[type=email],.modal input[type=password]{width:100%;background:var(--panel-2);border:1.5px solid var(--edge);border-radius:12px;padding:13px;color:var(--ink);font-family:var(--body);font-size:16px;margin-bottom:10px}
+  .modal input[type=email]:focus,.modal input[type=password]:focus{outline:none;border-color:var(--amber)}
+  .auth-login{display:none}
+  #authScrim.login-mode .auth-signup{display:none}
+  #authScrim.login-mode .auth-login{display:block}
+  .climb-tabs{display:flex;gap:6px;justify-content:center;margin-bottom:12px;flex-wrap:wrap}
+  .climb-tab{font-size:12px;padding:7px 12px}
+  .climb-tab.on{border-color:var(--amber);color:var(--amber-soft)}
+  .climb-list{text-align:start;max-height:52vh;overflow-y:auto;overflow-x:hidden}
+  .climb-row{display:grid;grid-template-columns:34px 1fr auto 26px;align-items:center;gap:10px;padding:8px 4px;border-top:1px solid rgba(255,255,255,.05);font-size:14px}
+  .climb-row:first-child{border-top:none}
+  .climb-row.me{background:rgba(255,177,77,.1);border-radius:8px}
+  .c-rank{font-family:var(--mono);color:var(--muted-2);font-size:13px}
+  .c-name{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;min-width:0;font-weight:600}
+  .c-chain{font-family:var(--mono);color:var(--amber-soft);font-weight:700}
+  .c-report{background:none;border:none;color:var(--muted-2);cursor:pointer;font-size:13px;padding:2px}
+  .c-report:hover{color:var(--coral)}
+  .climb-sep{text-align:center;color:var(--muted-2);padding:2px}
+  .climb-empty,.climb-loading{color:var(--muted-2);text-align:center;padding:16px;font-size:13.5px}
+  .modal textarea{width:100%;min-height:112px;resize:vertical;background:var(--panel-2);border:1.5px solid var(--edge);border-radius:12px;padding:12px;color:var(--ink);font-family:var(--body);font-size:16px;line-height:1.5;margin-bottom:10px}
+  .modal textarea:focus{outline:none;border-color:var(--amber)}
+  .imp-foot{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:14px}
+  .imp-lang{font-size:12px;color:var(--muted);display:flex;align-items:center;gap:8px}
+  .imp-lang select{padding:7px 26px 7px 10px;font-size:16px}
+  .imp-count{font-family:var(--mono);font-size:12px;color:var(--amber-soft)}
+  .set-row{display:flex;align-items:center;justify-content:space-between;gap:14px;text-align:start;padding:13px 0;border-top:1px solid rgba(255,255,255,.05)}
+  .set-row:first-of-type{border-top:none}
+  .set-row .lbl2{display:flex;flex-direction:column;font-size:14px;font-weight:600;color:var(--ink)}
+  .set-row .lbl2 small{font-weight:400;color:var(--muted-2);font-size:11.5px;margin-top:2px}
+  .set-row.btn-hide{display:none}
+  /* Pillar 3 — Tools & Features hub. */
+  .tools-hub{margin-top:6px}
+  .tools-head{display:flex;flex-direction:column;padding:14px 0 2px;border-top:1px solid rgba(255,255,255,.05)}
+  .tools-title{font-size:13px;font-weight:700;letter-spacing:.02em;text-transform:uppercase;color:var(--ink)}
+  .tools-sub{font-weight:400;color:var(--muted-2);font-size:11.5px;margin-top:3px}
+  .tool-row .tool-name{display:flex;align-items:center;gap:7px}
+  .tool-ico{font-size:15px;flex:0 0 auto}
+  .tool-avail{color:var(--teal)!important;opacity:.85;font-size:11px!important;margin-top:3px!important}
+  .setup-field-desc{display:block;font-size:12px;color:var(--muted-2);margin:-4px 0 10px 34px}
+  body.kid .tools-title{font-size:15px}
+  .switch{position:relative;appearance:none;width:44px;height:25px;flex:0 0 auto;background:var(--edge);border-radius:99px;cursor:pointer;transition:background .2s}
+  .switch:checked{background:var(--teal)}
+  .switch::after{content:"";position:absolute;top:2px;inset-inline-start:2px;width:21px;height:21px;border-radius:50%;background:#fff;transition:transform .2s}
+  .switch:checked::after{transform:translateX(19px)}
+  /* CSS has no logical translate. `inset-inline-start` above flips the knob's
+     resting edge in RTL, so the travel must flip too — otherwise the knob slides
+     out of its own track. Both or neither. */
+  [dir="rtl"] .switch:checked::after{transform:translateX(-19px)}
+
+  .foot{max-width:600px;margin-top:34px;text-align:center;color:var(--muted-on-bg);font-size:11.5px;line-height:1.6}
+  .foot b{color:var(--ink-on-bg)}
+
+  #toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%) translateY(20px);background:var(--panel);border:1px solid var(--teal);color:var(--ink);padding:11px 18px;border-radius:12px;font-size:13px;font-weight:600;opacity:0;pointer-events:none;transition:opacity .25s,transform .25s;z-index:40;box-shadow:0 8px 30px rgba(0,0,0,.45)}
+  #toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+  #toast .ti{margin-inline-end:8px}
+
+  @media (max-width:480px){
+    .brand .mark{font-size:24px}
+    .orb-wrap{width:200px;height:200px}
+    .orb{width:128px;height:128px}
+    .chain .num{font-size:34px}
+  }
+  @media (prefers-reduced-motion: reduce){
+    /* D8: motion is garnish — kill shake/pop; color state (success/warn/streak) stays perceivable. */
+    .orb,.orb-wrap.speaking .orb,.orb-wrap.speaking .ring,.sfill,.ltr.pop,.caret,.orb-wrap.bad .orb,.spellbox.is-wrong{animation:none!important;transition:none!important}
+    /* FIX 4: also drop the non-essential repaint-y transitions (animated
+       box-shadow / filter) and release the compositor-layer hints, so a
+       reduced-motion user gets zero incidental motion or extra layers. Static
+       color/border state (focus ring, active turn, unlocked badge) still shows
+       — it just snaps instead of easing. The i18n boot cloak (FIX 3) is left
+       ALONE on purpose: its reveal is a functional safety net, not motion. */
+    .orb,.orb-wrap.speaking .ring{will-change:auto!important}
+    .spellbox,.vs-side,.btn,.ach-badge .ic{transition:none!important}
+  }
+</style>
+</head>
+<body>
+
+  <div class="topbar">
+    <div class="brand">
+      <div class="mark" id="brandMark">SPELL</div>
+      <div class="tag" id="brandTag">hear it · spell it · keep the chain</div>
+    </div>
+    <!-- Meta corner: account + settings as icon-only affordances (Feature 2).
+         The only "meta" family; never borrows config/launcher/data treatments.
+         accountBtn's signed-in state (aria-label + .signed-in) is set in climb.rs. -->
+    <div class="meta-corner">
+      <button class="meta-icon" id="accountBtn" aria-label="Sign in">👤</button>
+      <!-- Play hub (CC-MODE-HUB F2). Joins the meta-corner family — icon-only by
+           that family's rule, which is also why it needs no new localized label:
+           hub CHROME (title/subtitle) would mean new strings in 12 locales, and
+           the tiles themselves reuse the shipped tools.* catalog. aria-label is a
+           static English literal, matching accountBtn/setBtn above. -->
+      <button class="meta-icon" id="playHubBtn" aria-label="Ways to play">🎮</button>
+      <button class="meta-icon" id="setBtn" aria-label="Settings">⚙</button>
+    </div>
+  </div>
+  <!-- head-to-head scoreboard (hidden outside a match) -->
+  <div class="vs-bar btn-hide" id="vsBar" aria-live="polite">
+    <div class="vs-side" id="vsP1">
+      <div class="vs-name" id="vsP1Name">Player 1</div>
+      <div class="vs-cur" id="vsP1Cur">0</div>
+      <div class="vs-best">best <b id="vsP1Best">0</b></div>
+    </div>
+    <div class="vs-mid">
+      <span class="vs-vs">vs</span>
+      <button class="ghost" id="vsExit" data-i18n-aria="vs.title" aria-label="Exit Spell Off">✕ Exit</button>
+    </div>
+    <div class="vs-side" id="vsP2">
+      <div class="vs-name" id="vsP2Name">Player 2</div>
+      <div class="vs-cur" id="vsP2Cur">0</div>
+      <div class="vs-best">best <b id="vsP2Best">0</b></div>
+    </div>
+  </div>
+
+  <!-- Daily Challenge progress banner (hidden outside a daily run) -->
+  <div class="daily-bar btn-hide" id="dailyBar" aria-live="polite"></div>
+
+  <main class="stage" id="stage">
+    <!-- Home control groups, ordered header → my-data → modes → setup → play
+         (Feature 6). Three visual families, one per functional class:
+           .data-chip  = your words (badge-capable)   — My data cluster (F5)
+           .launch     = ways to play (bright/iconed)  — Modes row (F4)
+           .setup-chip = config (muted, chevroned)     — Setup strip (F3)
+         Kid Mode hides climbBtn + accountBtn via btn-hide (climb.rs); the flex
+         rows reflow with no gaps, so Little Speller gets the same families. -->
+    <div class="home-group data-group" role="group" aria-label="Your words">
+      <button class="data-chip" id="importBtn" data-i18n="top.myWords">＋ My words</button>
+      <!-- F1 photo-to-word-list. Hidden by default (btn-hide); Rust reveals it
+           only when the feature flag is on AND the native VisionKit recognizer is
+           supported AND not in Kid Mode (photo_list::reflect_visibility). -->
+      <button class="data-chip btn-hide" id="photoBtn" data-i18n="photo.button">📷 From a photo</button>
+      <!-- missesBtn content (icon + label + count badge) is rendered by
+           game::refresh_mode_buttons so the live due-count stays authoritative. -->
+      <button class="data-chip" id="missesBtn"></button>
+    </div>
+    <div class="home-group modes-row" role="group" aria-label="Ways to play">
+      <!-- Launchers keep their existing label sources: vsBtn's icon is static
+           (the shared mode-name string stays icon-free for prose reuse); climbBtn
+           uses top.theClimb (emoji in string); dailyBtn text is set by
+           game::refresh_daily_btn. All three render as icon + label cards. -->
+      <button class="launch" id="vsBtn">⚡ <span data-i18n="top.headToHead">Spell Off</span></button>
+      <button class="launch" id="climbBtn" data-i18n="top.theClimb">🏔 The Climb</button>
+      <button class="launch" id="dailyBtn">🗓 Daily</button>
+      <!-- Say It (Feature F2): on-device pronunciation practice. Ships DARK —
+           stays btn-hide until the feature flag is on AND the native speech
+           bridge is present AND Kid Mode is off (say_it::reflect_gating). -->
+      <button class="launch btn-hide" id="sayItBtn">🎤 <span data-i18n="top.spellIt">Spell It</span></button>
+      <!-- Online Spell Off (async 1v1). Hidden by default (btn-hide): shown by
+           online_spelloff::reflect_gate only when the feature flag is ON, the
+           player is signed in, and it isn't Kid Mode (COPPA — accounts only). -->
+      <button class="launch btn-hide" id="soBtn" data-i18n="so.entry">🌍 Challenge a friend</button>
+    </div>
+    <button class="setup-chip" id="setupChip" aria-haspopup="dialog" aria-label="Round setup">
+      <span class="setup-chip-text" id="setupChipText">English · Climb · Untimed</span>
+      <span class="setup-chip-chev" aria-hidden="true">⚙</span>
+    </button>
+
+    <!-- Coming-soon panel: shown (via body.coming-soon) when the selected study
+         language isn't active yet. The interface still switches to that language
+         (uiLang untouched); the play area shows this instead of a round. Its text
+         is filled by game::render_coming_soon. -->
+    <div class="coming-panel" id="comingPanel" aria-live="polite">
+      <div class="coming-badge" data-i18n="coming.badge">Coming soon</div>
+      <p class="coming-notice" id="comingNotice"></p>
+      <button class="btn btn-check coming-notify" id="notifyBtn"></button>
+    </div>
+
+    <div class="orb-wrap" id="orbWrap" role="button" tabindex="0" aria-label="Play the word">
+      <svg class="timer-ring" id="timerRing" viewBox="0 0 230 230" aria-hidden="true">
+        <circle class="t-track" cx="115" cy="115" r="108"></circle>
+        <circle class="t-prog" id="tProg" cx="115" cy="115" r="108"></circle>
+      </svg>
+      <div class="timer-badge" id="timerBadge"></div>
+      <span class="ring"></span><span class="ring"></span><span class="ring"></span>
+      <div class="orb"><div class="orb-glyph" id="orbGlyph">loading…</div></div>
+    </div>
+
+    <div class="replay-row">
+      <button class="pill" id="replayBtn" disabled><svg width="14" height="14" viewBox="0 0 16 16" fill="none"><path d="M4 3l9 5-9 5V3z" fill="currentColor"/></svg><span data-i18n="btn.replay">Replay</span></button>
+      <button class="pill" id="slowBtn" disabled><svg width="15" height="15" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="6.2" stroke="currentColor" stroke-width="1.4"/><path d="M8 4.6V8l2.4 1.6" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg><span data-i18n="btn.slow">Slow</span></button>
+    </div>
+    <div class="voice-note" id="voiceNote"></div>
+
+    <div class="field-head">
+      <span class="fh-left">
+        <span class="field-label" data-i18n="label.yourSpelling">your spelling</span>
+        <!-- Spell It Out Loud (voice spelling INPUT). Ships DARK — stays btn-hide
+             until the feature flag is on AND the language's voiceSpell config is
+             true AND the on-device recognizer supports the locale (spell_aloud::
+             reflect). Tapping speaks letter names into the field; never submits. -->
+        <button class="voice-spell-mic btn-hide" id="voiceSpellMic" aria-label="Spell out loud" data-i18n-aria="voiceSpell.mic"><span aria-hidden="true">🎤</span></button>
+      </span>
+      <span class="glow-pick" id="glowPick">
+        <span class="gl">glow</span>
+        <button class="swatch" style="--s:#ffb14d" data-c="#ffb14d" aria-label="Amber glow"></button>
+        <button class="swatch" style="--s:#46d6b8" data-c="#46d6b8" aria-label="Teal glow"></button>
+        <button class="swatch" style="--s:#ff6b7a" data-c="#ff6b7a" aria-label="Coral glow"></button>
+        <button class="swatch" style="--s:#7aa2ff" data-c="#7aa2ff" aria-label="Blue glow"></button>
+        <label class="swatch custom" aria-label="Pick a custom glow color"><input type="color" id="glowColor" value="#ffb14d" /></label>
+      </span>
+    </div>
+
+    <div class="spellbox" id="spellbox" role="group" aria-label="Your spelling">
+      <div class="letters" id="letters"></div>
+    </div>
+    <!-- Voice-spelling live status ("Listening…", "Spell it letter by letter!",
+         "didn't catch that"). Empty unless a capture is in flight. -->
+    <div class="voice-spell-status" id="voiceSpellStatus" aria-live="polite"></div>
+    <!-- One-time permission explainer if the mic is denied; typed input is never
+         blocked, so this is dismissable and purely informational. -->
+    <!-- Mic-everywhere server rung: the explicit internet-consent card. Shown
+         once, only for languages with NO on-device speech model, never in Kid
+         Mode / education builds. -->
+    <div class="voice-spell-perm btn-hide" id="voiceSpellNet" role="alertdialog">
+      <p data-i18n="voiceSpell.netAsk">This language needs the internet for voice. Your audio goes to the Spell server only to be recognized, then it's gone — never stored.</p>
+      <button class="btn btn-check" id="voiceSpellNetOk" data-i18n="voiceSpell.netOk" style="width:100%;margin-bottom:6px">Use the internet</button>
+      <button class="btn" id="voiceSpellNetNo" data-i18n="voiceSpell.netNo" style="width:100%">No thanks</button>
+    </div>
+    <div class="voice-spell-perm btn-hide" id="voiceSpellPerm" role="alert">
+      <p data-i18n="voiceSpell.needsMic">To spell out loud, turn on Microphone and Speech Recognition for Spell in Settings. You can always type instead.</p>
+      <button class="btn btn-check" id="voiceSpellPermClose" data-i18n="voiceSpell.typeInstead" style="width:100%">Type instead</button>
+    </div>
+    <div id="kbAnnounce" class="sr-only" aria-live="polite" aria-atomic="true"></div>
+
+    <!-- Custom on-screen keyboard. The answer is never a real <input>, so the
+         iOS system keyboard — with its dictation key and autocorrect — can't
+         open during a round. Letter keys are built + wired in keyboard.rs. -->
+    <div id="kbHome"><div class="game-kb locked" id="gameKeyboard" role="group" aria-label="On-screen keyboard">
+      <!-- Letter rows are generated per language (3 for QWERTY, 5 for the kana
+           grid) into this container by keyboard.rs. -->
+      <div id="kbLetters"></div>
+      <!-- Vietnamese tone row (built + shown only for vi in keyboard.rs) -->
+      <div class="kb-row kb-tones btn-hide" id="kbToneRow"></div>
+      <div class="kb-row kb-actions">
+        <button class="kb-submit btn-hide" id="kbSubmit" data-i18n="kb.enter">Enter</button>
+        <button class="kb-back" id="kbBackspace" aria-label="Delete last letter">⌫</button>
+      </div>
+    </div></div>
+
+    <div class="action-row">
+      <button class="btn btn-check" id="checkBtn" data-i18n="btn.check" disabled>Check spelling</button>
+    </div>
+
+
+    <div class="minor-row">
+      <button class="ghost" id="hintBtn" data-i18n="btn.hint" disabled>Hint</button>
+      <button class="ghost" id="defBtn" data-i18n="btn.definition" disabled title="Shows a masked definition — helps tell apart tricky homonyms">📖 Definition</button>
+      <button class="ghost" id="sentenceBtn" data-i18n="btn.sentence" disabled title="Hear (and see a masked version of) the word used in a sentence">💬 Sentence</button>
+      <button class="ghost danger" id="giveupBtn" data-i18n="btn.giveUp" disabled>Give up</button>
+    </div>
+
+    <div class="hint-line" id="hintLine" aria-hidden="true"></div>
+    <!-- CC-ATTEMPTS-SHIELDS Feature 2 HUD: current shield count during a Climb
+         run. Language-neutral icon + count; hidden unless the run holds/earns
+         shields. Shown from Rust (game::update_shield_hud). -->
+    <div class="shield-hud btn-hide" id="shieldHud" aria-live="polite"><span class="shield-ic" aria-hidden="true">🛡</span><span id="shieldCount">0</span></div>
+    <div class="tries-line" id="triesLine" aria-hidden="true"></div>
+    <div class="feedback" id="feedback" aria-live="polite"></div>
+    <button class="ghost btn-hide" id="undoImportBtn" data-i18n="import.undo" style="margin:4px auto 0">Undo import</button>
+    <div class="meaning" id="meaning" aria-live="polite"></div>
+    <div class="didYouKnow" id="didYouKnow" aria-live="polite"></div>
+  </main>
+
+  <div class="chain">
+    <div class="stat"><div class="num live" id="streakNum">0</div><div class="lbl" data-i18n="chain.current">current chain</div></div>
+    <div class="divider"></div>
+    <div class="stat"><div class="num" id="bestNum">0</div><div class="lbl" data-i18n="chain.best">your best</div></div>
+  </div>
+  <!-- Spell Racing pace marker (F6): shown only during a Climb run when a stored
+       best run exists for the language. Augments the chain bar without obscuring
+       it; stays hidden otherwise (and entirely when the feature flag is off). -->
+  <div class="ghost-pace btn-hide" id="ghostPace" aria-live="polite"></div>
+  <button class="pill btn-hide" id="shareBtn" data-i18n-aria="share.button" aria-label="Share your chain" style="margin:0 auto 6px;display:block">↗ <span data-i18n="share.button">Share your chain</span></button>
+
+  <section class="card stats">
+    <h2><span data-i18n="card.accuracy">Your accuracy</span> <span class="scope" id="statsLang"></span></h2>
+    <div id="statsBody"><div class="stats-empty">Spell a few words to start tracking your accuracy by difficulty.</div></div>
+    <div class="stats-foot"><span class="total" id="statsTotal"></span><button class="ghost danger" id="resetStats" data-i18n="card.resetLang">reset this language</button></div>
+  </section>
+
+  <section class="card ach">
+    <h2><span data-i18n="card.achievements">Achievements</span> <span class="scope" id="achCount"></span></h2>
+    <div class="ach-grid" id="achGrid"></div>
+  </section>
+
+  <section class="card board">
+    <h2><span data-i18n="card.longestChains">Longest chains</span> <span class="scope" id="boardScope">this device only</span></h2>
+    <ol id="boardList"><li class="empty">No chains yet — be the first to start one.</li></ol>
+  </section>
+
+  <div class="foot" data-i18n-html="help.howItWorks">
+    <b>How it works:</b> press the orb to hear a word, then type or speak its spelling — a meaning appears after each answer, and misses return over days under <b>↻ Misses</b>.
+    Everything is free. English words are read aloud by your word server; import your own under <b>＋ My words</b> to practice anything, spoken with your browser's voices — smoothest in Chrome or Edge on a computer. Progress is saved in this browser only.
+  </div>
+
+  <!-- name modal -->
+  <div class="scrim" id="scrim">
+    <div class="modal">
+      <h3 id="modalTitle">Chain broken!</h3>
+      <div class="score-pop" id="modalScore">0</div>
+      <p id="modalMsg">Words spelled in a row. Add your name to the board.</p>
+      <input id="nameInput" type="text" maxlength="14" placeholder="your name" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" />
+      <div class="row">
+        <button class="btn btn-icon" id="skipSave" style="flex:1;border-radius:12px">Skip</button>
+        <button class="btn btn-check" id="saveScore">Save to board</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- import modal -->
+  <div class="scrim" id="importScrim">
+    <div class="modal wide">
+      <h3 data-i18n="import.title">Bring your own words</h3>
+      <p data-i18n="import.blurb">Practice the exact words you keep getting wrong — paste text or type a list.</p>
+      <textarea id="importText" placeholder="Paste any text or a list of words here…" data-i18n-ph="ph.importText" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"></textarea>
+      <div class="imp-foot">
+        <label class="imp-lang"><span data-i18n="import.speakIn">Speak in</span> <select id="importLang" aria-label="Pronunciation language"></select></label>
+        <span class="imp-count" id="importCount">0 words</span>
+      </div>
+      <button class="btn btn-check" id="saveWords" data-i18n="import.save" style="width:100%">Save my words</button>
+      <div class="row" style="margin-top:8px">
+        <button class="ghost danger" id="clearWords" data-i18n="import.clear">Clear my words</button>
+        <button class="ghost" id="cancelImport" data-i18n="import.close" style="margin-inline-start:auto">Close</button>
+      </div>
+      <div class="demo-note" id="importNote" data-i18n="import.note">Words stay on this device. Fetching a link can be blocked by the site — if it fails, copy the text and paste it above.</div>
+    </div>
+  </div>
+
+  <!-- F1 photo-to-word-list review screen. Recognized words arrive as editable,
+       deletable chips; gate-failures are pre-flagged. Nothing is saved until the
+       parent confirms this reviewed set (routes through the same charset +
+       profanity gate as the typed importer). Only reachable when the feature
+       flag is on; inert otherwise. -->
+  <!-- Play hub (CC-MODE-HUB F2). Tiles ONLY — no title/subtitle: chrome would
+       need new copy in 12 locales, and F2 forbids new auditable content. Every
+       tile is rendered by play_hub::reflect from config/modes.json; this grid
+       stays empty in the markup so that deleting a registry entry removes the
+       mode with zero code changes (A1.1). Three tile kinds, and the ELEMENT TYPE
+       carries the promise: a .mode-tile <button> routes to a real entry point, a
+       .mode-tile.info <div> is an in-round aid with no destination, a
+       .mode-tile.teaser <div> is coming_soon. A tappable tile that goes nowhere
+       is a lie the markup cannot tell. -->
+  <div class="scrim" id="playHubScrim"></div>
+  <div class="scrim" id="playHub">
+    <div class="modal wide">
+      <button class="ghost hub-x" id="playHubClose" aria-label="Close">✕</button>
+      <div class="mode-grid" id="playHubGrid" role="group" aria-label="Ways to play"></div>
+    </div>
+  </div>
+
+  <!-- Spell Racing screen (F6). The Ways-to-play tile now HAS a destination: it
+       routes to #ghostOpenBtn (hidden), which opens this. Body is filled by
+       ghost::reflect_screen — it reads the stored best run for the CURRENT study
+       language, so the numbers are real, never placeholder copy. -->
+  <div class="scrim" id="ghostScreen">
+    <div class="modal">
+      <button class="ghost hub-x" id="ghostClose" aria-label="Close">✕</button>
+      <h3><span aria-hidden="true">👻</span> <span id="ghostTitle"></span></h3>
+      <p id="ghostDesc"></p>
+      <div class="ghost-stat" id="ghostStat"></div>
+      <button class="btn btn-check" id="ghostStart" style="width:100%"></button>
+    </div>
+  </div>
+  <!-- Hidden entry point the hub tile clicks (same indirection every other mode
+       uses — the hub routes, it does not reimplement). -->
+  <button id="ghostOpenBtn" class="btn-hide" aria-hidden="true" tabindex="-1"></button>
+
+  <!-- Spell Racing screen (CC-SPELL-RACING Phase 5). REVIEW-GATED: reachable ONLY
+       via the hidden #spellRacingOpen entry until activation; the shipped
+       ghost_racing mode is untouched. Body is populated by racing::screen from real
+       garage + track data. -->
+  <div class="scrim" id="spellRacing">
+    <div class="modal wide">
+      <button class="ghost hub-x" id="srClose" aria-label="Close">✕</button>
+      <h3><span aria-hidden="true">🏁</span> <span id="srTitle"></span></h3>
+      <p class="sr-label" id="srCircuitLabel"></p>
+      <div class="sr-circuits" id="srCircuits"></div>
+      <p class="sr-label" id="srOpponentLabel"></p>
+      <div class="sr-opponents" id="srOpponents"></div>
+    </div>
+  </div>
+  <button id="spellRacingOpen" class="btn-hide" aria-hidden="true" tabindex="-1"></button>
+
+  <!-- Play-hub entry for the promoted Spell Aloud mode (CC-SPELL-ALOUD-INTEGRATION,
+       G-INT-1): the hub routes here; it ensures a round is active so the player hears
+       a word to spell, with the voice mic (voiceSpellMic) shown in normal play. -->
+  <button id="spellAloudEnter" class="btn-hide" aria-hidden="true" tabindex="-1"></button>
+  <button id="defMatchOpen" class="btn-hide" aria-hidden="true" tabindex="-1"></button>
+  <!-- CC-PRACTICE: the hub tile's launch target (was missing — the tile was a
+       silent dead end on builds 96–98). -->
+  <button id="practiceOpen" class="btn-hide" aria-hidden="true" tabindex="-1"></button>
+  <button id="wordPicOpen" class="btn-hide" aria-hidden="true" tabindex="-1"></button>
+
+  <!-- Dev door menu (TEMPORARY — removed at activation). Reveal with five quick taps
+       on the SPELL logo; routes to the hidden REVIEW-GATED screens for on-device
+       testing. Wired by src/dev.rs. Not discoverable by normal testers. -->
+  <div class="scrim" id="devMenu">
+    <div class="modal">
+      <button class="ghost hub-x" id="devMenuClose" aria-label="Close">✕</button>
+      <h3><span aria-hidden="true">🛠️</span> Dev preview</h3>
+      <div class="dev-list">
+        <button type="button" class="dev-item" id="devOpenRacing">🏁 Spell Racing</button>
+        <button type="button" class="dev-item" id="devOpenArabic">ع Arabic (العربية)</button>
+        <label class="dev-item" style="display:flex;align-items:center;gap:8px">
+          <input type="checkbox" id="devEntitlements" style="width:20px;height:20px" />
+          🎟️ Test entitlements (Complete)
+        </label>
+      </div>
+    </div>
+  </div>
+
+  <!-- CC-PRACTICE: the front porch — guided first 20 + 5 difficult words. -->
+  <div class="pr-screen" id="practiceScreen">
+    <div class="pr-top">
+      <button class="ghost mode-exit" id="prExit" aria-label="Exit">✕</button>
+      <div class="pr-path" id="prPath"></div>
+      <button class="ghost" id="prRestart" data-i18n="practice.restart">↺</button>
+    </div>
+    <div class="pr-hint" id="prPhaseHint"></div>
+    <div class="pr-coach" id="prCoach"></div>
+    <div class="pr-word" id="prWord"></div>
+    <div class="pr-slots" id="prSlots"></div>
+    <div class="pr-built" id="prBuilt"></div>
+    <div class="pr-tray" id="prTray"></div>
+    <input class="pr-input btn-hide" id="prInput" type="text" inputmode="none" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" />
+    <div class="pr-row">
+      <button class="btn btn-check pr-replay" id="prReplay" data-i18n="practice.replay">🔊 Hear it again</button>
+      <button class="btn btn-check pr-hintbtn" id="prHintBtn">💡 <span data-i18n="practice.hint">Hint</span></button>
+    </div>
+    <!-- D8 choice beat: a two-word pick from the same trap class. -->
+    <div class="pr-card" id="prChoice"><div class="modal" style="text-align:center">
+      <p data-i18n="practice.choice">Which one next?</p>
+      <button class="btn btn-check pr-choice-opt" id="prChoiceA" style="width:100%;margin-bottom:8px"></button>
+      <button class="btn btn-check pr-choice-opt" id="prChoiceB" style="width:100%"></button>
+    </div></div>
+    <!-- D5 micro-interaction card (TAP_SILENT_UNIT / HEAR_PICK / TAP_STACK). -->
+    <div class="pr-card" id="prMicro"><div class="modal" style="text-align:center">
+      <p id="prMicroPrompt"></p>
+      <div class="pr-micro-opts" id="prMicroOpts"></div>
+      <button class="btn btn-check btn-hide" id="prMicroPlay" style="width:100%;margin-top:8px">🔊</button>
+    </div></div>
+    <div class="pr-card" id="prIntro"><div class="modal">
+      <p id="prIntroText"></p>
+      <button class="btn btn-check" id="prIntroOk" data-i18n="practice.gotIt" style="width:100%">Got it</button>
+    </div></div>
+    <div class="pr-card" id="prCeremony"><div class="modal" style="text-align:center">
+      <h3 data-i18n="practice.ceremonyTitle">🎉 First 20 done!</h3>
+      <p data-i18n="practice.ceremonyBody">You just spelled your first 20 words. Ready for 5 tricky ones?</p>
+      <button class="btn btn-check" id="prShare" data-i18n="share.button" style="width:100%;margin-bottom:8px">Share</button>
+      <button class="btn btn-check" id="prCeremonyGo" data-i18n="practice.ceremonyGo" style="width:100%">Take the victory lap</button>
+    </div></div>
+    <div class="pr-card" id="prNext"><div class="modal" style="text-align:center">
+      <h3 data-i18n="practice.nextTitle">⭐ You did it!</h3>
+      <p data-i18n="practice.nextBody">What's next?</p>
+      <button class="btn btn-check" id="prNextReplay" data-i18n="practice.nextReplay" style="width:100%;margin-bottom:8px">Replay the tricky five</button>
+      <button class="btn btn-check" id="prNextDaily" data-i18n="daily.title" style="width:100%;margin-bottom:8px">Daily</button>
+      <button class="btn btn-check" id="prNextStandard" data-i18n="practice.nextStandard" style="width:100%">Regular spelling</button>
+    </div></div>
+  </div>
+
+  <!-- CC-WORD-PICTURE v5: picker + calligram canvas. Words typeset along
+       ghost guide strokes — the words ARE the picture. -->
+  <div class="wp-screen" id="wpPicker">
+    <div class="wp-top">
+      <button class="ghost mode-exit" id="wpPickerExit" aria-label="Exit">✕</button>
+      <div class="wp-title" data-i18n="tools.wordpic.name">Spell Picture</div>
+      <button class="btn btn-check" id="wpSurprise" data-i18n="wordpic.surprise">🎲</button>
+    </div>
+    <div class="wp-grid" id="wpGrid"></div>
+  </div>
+  <div class="wp-screen" id="wpPlay">
+    <div class="wp-top">
+      <button class="ghost mode-exit" id="wpExit" aria-label="Exit">✕</button>
+      <div class="wp-title" id="wpPlayTitle"></div>
+      <div class="wp-count" id="wpCount"></div>
+      <button class="ghost btn-hide" id="wpZoom" aria-label="Zoom">🔍</button>
+      <button class="ghost" id="wpRestart">↺</button>
+    </div>
+    <div class="wp-stage" id="wpStage"></div>
+    <div class="wp-slots" id="wpSlots"></div>
+    <div class="wp-status" id="wpStatus"></div>
+    <div class="wp-row">
+      <input class="wp-input" id="wpInput" type="text" inputmode="none" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" />
+      <button class="btn btn-check wp-replay" id="wpReplay" aria-label="Replay">🔊</button>
+    </div>
+    <!-- F7: the app's own per-language keyboard is lent here while the
+         picture is open, so no system keyboard (and no dictation key) -->
+    <div id="wpKbSlot"></div>
+    <div class="wp-card" id="wpHow"><div class="modal">
+      <p id="wpHowText"></p>
+      <button class="btn btn-check" id="wpHowNext" data-i18n="practice.gotIt" style="width:100%">Got it</button>
+    </div></div>
+    <div class="wp-card" id="wpConfirm"><div class="modal" style="text-align:center">
+      <p data-i18n="wordpic.restartAsk">Start this picture over? Its words are cleared.</p>
+      <button class="btn btn-check" id="wpConfirmYes" data-i18n="wordpic.restartYes" style="width:100%;margin-bottom:8px">Start over</button>
+      <button class="btn" id="wpConfirmNo" data-i18n="voiceSpell.netNo" style="width:100%">No thanks</button>
+    </div></div>
+    <!-- CC-FINALE feature 1: the reveal. Replaces the old completion card.
+         The HUD fades, the piece rebuilds itself in spelling order, and then
+         it RESTS — indefinitely. No countdown, no auto-advance: the player
+         just made this and gets to look at it for as long as they like. A
+         tap anywhere during the build skips to the rest state. -->
+    <div class="wp-reveal" id="wpReveal" role="dialog" aria-modal="true" aria-labelledby="wpRevealTitle">
+      <h2 class="sr-only" id="wpRevealTitle" data-i18n="wordpic.doneTitle">🖼️ Your picture!</h2>
+      <div class="wp-reveal-stage" id="wpRevealStage"></div>
+      <p class="wp-reveal-note" id="wpRevealNote" role="status"></p>
+      <div class="wp-reveal-acts">
+        <button class="btn btn-check" id="wpContinue" data-i18n="finale.continue">Continue</button>
+        <button class="ghost" id="wpSave" data-i18n="finale.save">Save</button>
+        <button class="ghost" id="wpShare" data-i18n="finale.share">Share</button>
+        <button class="ghost" id="wpReplayBuild" data-i18n="finale.replay">Watch it again</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- CC-DEF-MATCH P3: the Definition Match screen. Cards float bottom→top in
+       lanes; the orb speaks the word and replays on tap. No visible timer (D2). -->
+  <div class="dm-screen" id="defMatch">
+    <div class="dm-top">
+      <button class="ghost mode-exit" id="dmExit" aria-label="Exit">✕</button>
+      <button type="button" class="dm-orb" id="dmOrb" aria-label="Replay word">🔊</button>
+      <span class="dm-streak" id="dmStreak" aria-live="polite"></span>
+      <button type="button" class="ghost mode-exit" id="dmSpeed" aria-label="Card speed" style="margin-inline-start:auto">🐢</button>
+    </div>
+    <div class="dm-status" id="dmStatus" aria-live="polite"></div>
+    <!-- D8 Reverse Rounds: the definition to match; hidden on forward rounds. -->
+    <div class="dm-prompt btn-hide" id="dmPrompt"></div>
+    <div class="dm-field" id="dmField"></div>
+    <!-- P5 run recap (Feature 7): reuses the result-card visual system. -->
+    <div class="dm-recap" id="dmRecap">
+      <div class="modal">
+        <h3 data-i18n="defmatch.recapTitle">Run recap</h3>
+        <div class="dm-stats">
+          <div class="dm-stat"><b id="dmRecapCaught">0</b><span data-i18n="defmatch.recapCaught">words caught</span></div>
+          <div class="dm-stat"><b id="dmRecapBest">0</b><span data-i18n="defmatch.recapBest">best streak</span></div>
+          <div class="dm-stat"><b id="dmRecapLate">0</b><span data-i18n="defmatch.recapLate">last-second catches</span></div>
+        </div>
+        <div id="dmRecapMissedWrap">
+          <p class="demo-note" data-i18n="defmatch.recapMissed">Missed words — already queued for review:</p>
+          <div class="dm-missed" id="dmRecapMissed"></div>
+        </div>
+        <button class="btn btn-check" id="dmRecapClose" data-i18n="import.close" style="width:100%">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="scrim" id="photoSrcScrim">
+    <div class="modal">
+      <h3 data-i18n="photo.srcTitle">Add words from…</h3>
+      <button class="btn btn-check" id="photoSrcCamera" data-i18n="photo.takePhoto" style="width:100%;margin-bottom:8px">📸 Take a photo</button>
+      <button class="btn btn-check" id="photoSrcLibrary" data-i18n="photo.fromLibrary" style="width:100%">🖼 Choose from Photos</button>
+      <div class="row" style="margin-top:8px">
+        <button class="ghost" id="photoSrcCancel" data-i18n="import.close" style="margin-inline-start:auto">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="scrim" id="photoScrim">
+    <div class="modal wide">
+      <h3 data-i18n="photo.title">Snap a word list</h3>
+      <p data-i18n="photo.review">Check these words, fix any misreads, then save.</p>
+      <div class="pchips" id="photoChips"></div>
+      <div class="imp-foot">
+        <label class="imp-lang"><span data-i18n="import.speakIn">Speak in</span> <select id="photoLang" aria-label="Pronunciation language"></select></label>
+      </div>
+      <label class="imp-lang" style="display:flex;align-items:center;gap:8px;margin-top:8px">
+        <input type="checkbox" id="photoReplace" checked />
+        <span data-i18n="photo.replace">Replace my current words</span>
+      </label>
+      <button class="btn btn-check" id="photoConfirm" data-i18n="photo.save" style="width:100%">Save these words</button>
+      <div class="row" style="margin-top:8px">
+        <button class="ghost" id="photoCancel" data-i18n="import.close" style="margin-inline-start:auto">Close</button>
+      </div>
+      <div class="demo-note" id="photoNote" data-i18n="photo.note">Photos are read on your device and never leave it.</div>
+      <div class="demo-note" id="photoVoiceNote"></div>
+    </div>
+  </div>
+
+  <!-- age gate: first-launch date-of-birth prompt (only the verdict is stored) -->
+  <div class="scrim age-scrim" id="ageScrim">
+    <div class="modal">
+      <h3 data-i18n="age.title">When's your birthday?</h3>
+      <p data-i18n="age.blurb">We ask so we can show the right experience.</p>
+      <div class="dob-row">
+        <select id="ageMonth" aria-label="Birth month"></select>
+        <select id="ageDay" aria-label="Birth day"></select>
+        <select id="ageYear" aria-label="Birth year"></select>
+      </div>
+      <div class="dob-err" id="ageErr"></div>
+      <button class="btn btn-check" id="ageSubmit" data-i18n="age.continue" style="width:100%">Continue</button>
+    </div>
+  </div>
+
+  <!-- parent gate: worded-math challenge to change a kid-locked verdict -->
+  <div class="scrim age-scrim" id="parentScrim">
+    <div class="modal">
+      <h3 data-i18n="parent.title">Ask a grown-up</h3>
+      <p id="parentQ">Solve to continue.</p>
+      <input id="parentAnswer" type="tel" inputmode="numeric" maxlength="3" placeholder="answer" data-i18n-ph="ph.parentAnswer" autocomplete="off" autocorrect="off" autocapitalize="none" spellcheck="false" />
+      <div class="dob-err" id="parentErr"></div>
+      <div class="row">
+        <button class="btn btn-icon" id="parentCancel" data-i18n="parent.cancel" style="flex:1;border-radius:12px">Cancel</button>
+        <button class="btn btn-check" id="parentSubmit" data-i18n="parent.check">Check</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- head-to-head setup modal -->
+  <div class="scrim" id="vsSetupScrim">
+    <div class="modal">
+      <h3 data-i18n="vs.title">Spell Off</h3>
+      <p data-i18n="vs.blurb">Two players, one device. Take turns spelling — a miss ends your turn. The longest chain wins.</p>
+      <input id="vsName1" type="text" maxlength="14" placeholder="Player 1" data-i18n-ph="ph.vsName1" autocomplete="off" autocorrect="off" autocapitalize="none" spellcheck="false" />
+      <input id="vsName2" type="text" maxlength="14" placeholder="Player 2" data-i18n-ph="ph.vsName2" autocomplete="off" autocorrect="off" autocapitalize="none" spellcheck="false" />
+      <div class="row">
+        <button class="btn btn-icon" id="vsCancel" data-i18n="vs.cancel" style="flex:1;border-radius:12px">Cancel</button>
+        <button class="btn btn-check" id="vsStart" data-i18n="vs.start">Start match</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- head-to-head result modal -->
+  <div class="scrim" id="vsResultScrim">
+    <div class="modal">
+      <h3 id="vsResultTitle">Winner</h3>
+      <p id="vsResultMsg"></p>
+      <div class="row">
+        <button class="btn btn-icon" id="vsResultClose" data-i18n="vs.close" style="flex:1;border-radius:12px">Back to solo</button>
+        <button class="btn btn-check" id="vsRematch" data-i18n="vs.rematch">Rematch</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- head-to-head "leave mid-match" confirm -->
+  <div class="scrim" id="vsQuitScrim">
+    <div class="modal">
+      <h3 data-i18n="vs.leaveTitle">Leave the match?</h3>
+      <p data-i18n="vs.leaveBlurb">The Spell Off match will end and you'll return to the solo game. The current chains won't be saved.</p>
+      <div class="row">
+        <button class="btn btn-icon" id="vsQuitCancel" data-i18n="vs.keepPlaying" style="flex:1;border-radius:12px">Keep playing</button>
+        <button class="btn btn-check" id="vsQuitConfirm" data-i18n="vs.leave">Leave match</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Say It (Feature F2): on-device pronunciation practice. All state lives in
+       one modal, sub-views toggled by say_it.rs. Present in the DOM but inert and
+       unreachable unless the feature flag is on (ships dark). -->
+  <div class="scrim" id="sayItScrim">
+    <div class="modal sayit">
+      <!-- Pre-prompt: plain-language explanation shown BEFORE any permission
+           prompt, at first use of the mode. -->
+      <div id="sayItPre">
+        <h3 data-i18n="sayit.title">🗣 Say It</h3>
+        <p data-i18n="sayit.blurb">See the word, then say it out loud. We check what you said right here on your device.</p>
+        <p class="sayit-privacy" data-i18n="sayit.privacy">Your voice never leaves this phone. Nothing is recorded, saved, or sent anywhere.</p>
+        <p class="sayit-perm" data-i18n="sayit.permNote">Your iPhone will ask to use the microphone and speech recognition.</p>
+        <div class="row">
+          <button class="btn btn-icon" id="sayItCancel" data-i18n="sayit.cancel" style="flex:1;border-radius:12px">Not now</button>
+          <button class="btn btn-check" id="sayItBegin" data-i18n="sayit.begin">Continue</button>
+        </div>
+      </div>
+      <!-- Play: word shown big; tap mic and say it. -->
+      <div id="sayItPlay" class="btn-hide">
+        <div class="sayit-score" aria-hidden="true">✓ <span id="sayItRight">0</span> · ✗ <span id="sayItWrong">0</span></div>
+        <div class="sayit-word" id="sayItWord">—</div>
+        <button class="sayit-mic" id="sayItMic" aria-label="Say the word"><span aria-hidden="true">🎤</span></button>
+        <div class="sayit-status" id="sayItStatus" aria-live="polite"></div>
+        <div class="row">
+          <button class="ghost" id="sayItExit" data-i18n="sayit.exit">Exit</button>
+          <button class="btn btn-check" id="sayItNext" data-i18n="sayit.next" style="margin-inline-start:auto" disabled>Next word</button>
+        </div>
+      </div>
+      <!-- Unavailable: no on-device recognition for this language/device. NEVER a
+           server fallback — the mode is simply not offered. -->
+      <div id="sayItUnavailable" class="btn-hide">
+        <h3 data-i18n="sayit.title">🗣 Say It</h3>
+        <p data-i18n="sayit.unavailable">Say It isn't available for this language on this device yet — it needs on-device speech recognition, which keeps your voice private.</p>
+        <button class="btn btn-check" id="sayItUnavailableClose" data-i18n="sayit.close" style="width:100%">Close</button>
+      </div>
+      <!-- Needs-mic: permission denied. A calm state, not an error. -->
+      <div id="sayItNeedsMic" class="btn-hide">
+        <h3 data-i18n="sayit.title">🗣 Say It</h3>
+        <p data-i18n="sayit.needsMic">Say It needs the microphone. Turn on Microphone and Speech Recognition for Spell in Settings, then come back.</p>
+        <button class="btn btn-check" id="sayItNeedsMicClose" data-i18n="sayit.close" style="width:100%">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Online Spell Off: create / join modal (async 1v1 via a shared seed).
+       Account-gated + friend-code only (no anonymous play, no strangers, no
+       chat) — see online_spelloff.rs. -->
+  <div class="scrim" id="soScrim">
+    <div class="modal">
+      <h3 data-i18n="so.title">Challenge a friend</h3>
+      <p data-i18n="so.blurb">Play the same words as a friend, on your own time. Create a match and share the code, or enter a friend's code. Winner has the most correct.</p>
+      <button class="btn btn-check" id="soCreateBtn" data-i18n="so.create" style="width:100%">Create a match</button>
+      <!-- Revealed after a match is created: the code to share + a Play button. -->
+      <div class="so-code-box btn-hide" id="soCodeBox">
+        <p data-i18n="so.shareHint">Share this code with your friend, then start:</p>
+        <div class="so-code" id="soCode">--------</div>
+        <button class="btn btn-check" id="soPlay" data-i18n="so.play" style="width:100%">Play your words</button>
+      </div>
+      <div class="so-divider" data-i18n="so.or">or</div>
+      <input id="soJoinCode" type="text" maxlength="8" placeholder="CODE" data-i18n-ph="so.codePh" autocomplete="off" autocorrect="off" autocapitalize="characters" spellcheck="false" />
+      <button class="btn btn-check" id="soJoinBtn" data-i18n="so.join" style="width:100%">Join with a code</button>
+      <p class="err" id="soErr" aria-live="polite"></p>
+      <div class="row">
+        <button class="btn btn-icon" id="soClose" data-i18n="so.close" style="flex:1;border-radius:12px">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Online Spell Off: result / outcome view -->
+  <div class="scrim" id="soResultScrim">
+    <div class="modal">
+      <h3 id="soResultTitle" data-i18n="so.doneTitle">Submitted</h3>
+      <p id="soResultMsg"></p>
+      <div class="row">
+        <button class="btn btn-icon" id="soResultClose" data-i18n="so.close" style="flex:1;border-radius:12px">Close</button>
+        <button class="btn btn-check" id="soResultRefresh" data-i18n="so.refresh">Check again</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- The Climb: auth (signup/login) modal -->
+  <div class="scrim" id="authScrim">
+    <div class="modal">
+      <div class="auth-signup">
+        <h3 data-i18n="auth.createTitle">Create your account</h3>
+        <p data-i18n="auth.createBlurb">Post your best chains to The Climb. Your email is used only to verify your account and reset your password — never shown to anyone.</p>
+        <input id="authUsername" type="text" maxlength="16" placeholder="username" data-i18n-ph="ph.username" autocomplete="off" autocorrect="off" autocapitalize="none" spellcheck="false" />
+        <input id="authEmail" type="email" placeholder="email" data-i18n-ph="ph.email" autocomplete="off" autocorrect="off" autocapitalize="none" spellcheck="false" />
+        <input id="authPassword" type="password" placeholder="password (8+ characters)" data-i18n-ph="ph.password8" autocomplete="off" />
+        <button class="btn btn-check" id="authSignupBtn" data-i18n="auth.create" style="width:100%">Create account</button>
+        <button class="ghost" id="authToLogin" data-i18n="auth.haveAccount" style="margin-top:8px">Have an account? Log in</button>
+      </div>
+      <div class="auth-login">
+        <h3 data-i18n="auth.welcomeBack">Welcome back</h3>
+        <input id="authIdentifier" type="text" placeholder="username or email" data-i18n-ph="ph.usernameOrEmail" autocomplete="off" autocorrect="off" autocapitalize="none" spellcheck="false" />
+        <input id="authLoginPassword" type="password" placeholder="password" data-i18n-ph="ph.password" autocomplete="off" />
+        <button class="btn btn-check" id="authLoginBtn" data-i18n="auth.login" style="width:100%">Log in</button>
+        <button class="ghost" id="authToSignup" data-i18n="auth.newHere" style="margin-top:8px">New here? Sign up</button>
+      </div>
+      <div class="dob-err" id="authErr"></div>
+      <button class="ghost" id="authClose" data-i18n="auth.close" style="width:100%">Close</button>
+    </div>
+  </div>
+
+  <!-- Daily Challenge result -->
+  <div class="scrim" id="dailyResScrim">
+    <div class="modal">
+      <h3 data-i18n="daily.resultTitle">Daily Challenge</h3>
+      <div class="score-pop" id="dailyResScore">0/0</div>
+      <p id="dailyResStreak"></p>
+      <p class="daily-best" id="dailyResBest"></p>
+      <p class="daily-proverb" id="dailyResProverb"></p>
+      <div class="row">
+        <button class="btn btn-icon" id="dailyShare" data-i18n="daily.share" style="flex:1;border-radius:12px">Share</button>
+        <button class="btn btn-check" id="dailyResClose" data-i18n="daily.close">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- CC-ATTEMPTS-SHIELDS Feature 2: "Use a shield?" prompt (player choice, not
+       auto-spend). Copy localized in all 17 locales; icon + count are
+       language-neutral. -->
+  <div class="scrim" id="shieldScrim">
+    <div class="modal">
+      <div class="score-pop" aria-hidden="true">🛡</div>
+      <h3 data-i18n="shield.promptTitle">Use a shield?</h3>
+      <p data-i18n="shield.promptBody">Spend one shield to try this word again and keep your run going.</p>
+      <p class="daily-best"><span data-i18n="shield.held">Shields held</span>: <b id="shieldPromptCount">0</b></p>
+      <div class="row">
+        <button class="btn btn-icon" id="shieldDecline" data-i18n="shield.decline" style="flex:1;border-radius:12px">No thanks</button>
+        <button class="btn btn-check" id="shieldAccept" data-i18n="shield.accept">Use shield</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- The Climb: account settings modal -->
+  <div class="scrim" id="accountScrim">
+    <div class="modal">
+      <h3 data-i18n="acct.title">Your account</h3>
+      <p><span data-i18n="acct.signedInAs">Signed in as</span> <b id="acctUsername"></b></p>
+      <input id="acctNewUsername" type="text" maxlength="16" placeholder="new username" data-i18n-ph="ph.newUsername" autocomplete="off" autocorrect="off" autocapitalize="none" spellcheck="false" />
+      <button class="btn btn-icon" id="acctChangeName" data-i18n="acct.changeName" style="width:100%;border-radius:12px">Update username</button>
+      <div class="dob-err" id="acctErr"></div>
+      <div class="set-row"><span class="lbl2"><span data-i18n="acct.deleteLabel">Delete account</span><small data-i18n="acct.deleteSmall">Removes your account and all Climb entries. This can't be undone.</small></span></div>
+      <input id="acctDeletePassword" type="password" placeholder="password to confirm" data-i18n-ph="ph.passwordConfirm" autocomplete="off" />
+      <button class="ghost danger" id="acctDelete" data-i18n="acct.deleteBtn" style="width:100%">Delete my account</button>
+      <div class="row" style="margin-top:12px">
+        <button class="ghost" id="acctLogout" data-i18n="acct.logout">Log out</button>
+        <button class="ghost" id="acctClose" data-i18n="acct.close" style="margin-inline-start:auto">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- The Climb: leaderboard modal -->
+  <div class="scrim" id="climbScrim">
+    <div class="modal wide">
+      <h3>🏔 The Climb</h3>
+      <div class="climb-tabs">
+        <button class="pill climb-tab on" id="climbTab-medium">Medium</button>
+        <button class="pill climb-tab" id="climbTab-hard">Hard</button>
+        <button class="pill climb-tab" id="climbTab-expert">Expert</button>
+      </div>
+      <div class="climb-list" id="climbList"></div>
+      <button class="ghost" id="climbClose" style="width:100%;margin-top:10px">Close</button>
+    </div>
+  </div>
+
+  <!-- settings modal -->
+  <!-- Setup sheet (Feature 3, option a): the three round-parameter pickers live
+       here, opened by #setupChip. Icon-prefixed rows (no text labels) so no new
+       i18n keys are needed; the pickers keep their IDs/options/handlers, so this
+       is a pure relocation — behaviour is unchanged. -->
+  <div class="scrim" id="setupScrim">
+    <div class="modal setup-card">
+      <label class="setup-field"><span class="setup-field-ico" aria-hidden="true">🌐</span>
+        <select id="langSel" aria-label="Word source"></select></label>
+      <label class="setup-field"><span class="setup-field-ico" aria-hidden="true">🎚</span>
+        <select id="levelSel" aria-label="Difficulty"></select></label>
+      <!-- Per-difficulty explanation, filled by game::update_setup_chip from
+           level.<v>.desc for whatever level is selected. -->
+      <small class="setup-field-desc" id="levelDesc" aria-live="polite"></small>
+      <label class="setup-field"><span class="setup-field-ico" aria-hidden="true">⏱</span>
+        <select id="modeSel" aria-label="Timer">
+          <option value="off" data-i18n="mode.untimed">Untimed</option>
+          <option value="on" data-i18n="mode.timed">Quick Spell</option>
+        </select></label>
+      <button class="btn btn-check" id="setupDone" data-i18n="settings.done" style="width:100%;margin-top:16px">Done</button>
+    </div>
+  </div>
+
+  <div class="scrim" id="setScrim">
+    <div class="modal">
+      <h3 data-i18n="settings.title">Settings</h3>
+      <label class="set-row"><span class="lbl2"><span data-i18n="settings.kid">Spell Jr</span><small data-i18n="settings.kidSmall">Bigger text, friendly words, no prices</small></span><input type="checkbox" class="switch" id="kidToggle" /></label>
+      <label class="set-row"><span class="lbl2"><span data-i18n="settings.readable">Readable mode</span><small data-i18n="settings.readableSmall">Larger, spaced, dyslexia-friendly type</small></span><input type="checkbox" class="switch" id="readToggle" /></label>
+      <label class="set-row"><span class="lbl2"><span data-i18n="settings.bigText">Big text</span><small data-i18n="settings.bigTextSmall">Enlarge the interface text (about 1.5×)</small></span><input type="checkbox" class="switch" id="bigTextToggle" /></label>
+      <label class="set-row"><span class="lbl2"><span data-i18n="settings.slow">Slower voice</span><small data-i18n="settings.slowSmall">Speak each word more slowly</small></span><input type="checkbox" class="switch" id="slowToggle" /></label>
+      <!-- CC-ATTEMPTS-SHIELDS Feature 1 toggle. Row is hidden unless the dark
+           feature flag is on (shown from Rust via flags::attempts_shields). -->
+      <label class="set-row btn-hide" id="extraAttemptsRow"><span class="lbl2"><span data-i18n="settings.extraAttempts">Extra attempt on misses</span><small data-i18n="settings.extraAttemptsSmall">A second try when you miss a word</small></span><input type="checkbox" class="switch" id="extraAttemptsToggle" /></label>
+
+      <!-- Pillar 3 — the "Tools & Features" hub. One place that lists, explains,
+           and toggles every feature flag, so players stop hunting for hidden
+           contextual buttons. Each row's switch writes the real
+           localStorage['spell_flag_<name>']; Rust (tools_hub.rs) sets the initial
+           switch state, the live availability hint, and Kid-Mode visibility, and
+           re-runs each tool's reflect when its switch flips. -->
+      <div class="tools-hub" id="toolsHub">
+        <div class="tools-head"><span class="tools-title" data-i18n="tools.title">Tools &amp; Features</span><small class="tools-sub" data-i18n="tools.subtitle">Turn features on or off — all in one place.</small></div>
+        <label class="set-row tool-row" id="toolGhostRow"><span class="lbl2"><span class="tool-name"><span class="tool-ico" aria-hidden="true">👻</span> <span data-i18n="tools.racing.name">Spell Racing</span></span><small data-i18n="tools.racing.desc">Race against your best Climb run.</small><small class="tool-avail" id="toolGhostHint"></small></span><input type="checkbox" class="switch" id="toolGhostToggle" /></label>
+        <label class="set-row tool-row" id="toolSyllableRow"><span class="lbl2"><span class="tool-name"><span class="tool-ico" aria-hidden="true">🔤</span> <span data-i18n="tools.syllable.name">Syllable replay</span></span><small data-i18n="tools.syllable.desc">Hear a missed word slowly, part by part.</small><small class="tool-avail" id="toolSyllableHint"></small></span><input type="checkbox" class="switch" id="toolSyllableToggle" /></label>
+        <label class="set-row tool-row btn-hide" id="toolSayItRow"><span class="lbl2"><span class="tool-name"><span class="tool-ico" aria-hidden="true">🗣</span> <span data-i18n="tools.sayit.name">Say It</span></span><small data-i18n="tools.sayit.desc">Practice saying a word out loud.</small><small class="tool-avail" id="toolSayItHint"></small></span><input type="checkbox" class="switch" id="toolSayItToggle" /></label>
+        <label class="set-row tool-row" id="toolPhotoRow"><span class="lbl2"><span class="tool-name"><span class="tool-ico" aria-hidden="true">📷</span> <span data-i18n="tools.photo.name">Photo → word list</span></span><small data-i18n="tools.photo.desc">Scan a printed list with the camera.</small><small class="tool-avail" id="toolPhotoHint"></small></span><input type="checkbox" class="switch" id="toolPhotoToggle" /></label>
+        <label class="set-row tool-row" id="toolSpellAloudRow"><span class="lbl2"><span class="tool-name"><span class="tool-ico" aria-hidden="true">🎤</span> <span data-i18n="tools.spellaloud.name">Spell it out loud</span></span><small data-i18n="tools.spellaloud.desc">Say the letters instead of typing.</small><small class="tool-avail" id="toolSpellAloudHint"></small></span><input type="checkbox" class="switch" id="toolSpellAloudToggle" /></label>
+        <label class="set-row tool-row" id="toolStoriesRow"><span class="lbl2"><span class="tool-name"><span class="tool-ico" aria-hidden="true">📖</span> <span data-i18n="tools.stories.name">Word stories</span></span><small data-i18n="tools.stories.desc">Where a word comes from — its history.</small><small class="tool-avail" id="toolStoriesHint"></small></span><input type="checkbox" class="switch" id="toolStoriesToggle" /></label>
+        <label class="set-row tool-row" id="toolSpelloffRow"><span class="lbl2"><span class="tool-name"><span class="tool-ico" aria-hidden="true">🌍</span> <span data-i18n="tools.spelloff.name">Online Spell-Off</span></span><small data-i18n="tools.spelloff.desc">Challenge a friend, one word at a time.</small><small class="tool-avail" id="toolSpelloffHint"></small></span><input type="checkbox" class="switch" id="toolSpelloffToggle" /></label>
+        <label class="set-row tool-row" id="toolShieldsRow"><span class="lbl2"><span class="tool-name"><span class="tool-ico" aria-hidden="true">🛡</span> <span data-i18n="tools.shields.name">Shields &amp; extra attempts</span></span><small data-i18n="tools.shields.desc">A second try when you miss a word.</small><small class="tool-avail" id="toolShieldsHint"></small></span><input type="checkbox" class="switch" id="toolShieldsToggle" /></label>
+      </div>
+
+      <div class="set-row" id="nativeStatusRow"><span class="lbl2"><span>Native status (debug)</span><small id="nativeStatus" style="word-break:break-word;opacity:.75">checking…</small></span></div>
+      <label class="set-row"><span class="lbl2"><span data-i18n="settings.remind">Daily reminder</span><small data-i18n="settings.remindSmall">One gentle nudge a day to practice</small></span><input type="checkbox" class="switch" id="remindToggle" /></label>
+      <label class="set-row" id="remindTimeRow"><span class="lbl2"><span data-i18n="settings.remindTime">Reminder time</span><small data-i18n="settings.remindTimeSmall">When to send the daily nudge</small></span><input type="time" id="remindTime" value="17:00" aria-label="Daily reminder time" /></label>
+      <div class="set-row">
+        <span class="lbl2"><span data-i18n="settings.volume">Volume boost</span><small data-i18n="settings.volumeSmall">Louder than 100% for quiet speakers</small></span>
+        <input type="range" id="volumeSlider" min="0.5" max="2" step="0.1" value="1" aria-label="Volume boost" />
+      </div>
+      <div class="set-row">
+        <span class="lbl2"><span data-i18n="settings.background">Background</span><small data-i18n="settings.backgroundSmall">Page background color</small></span>
+        <span class="theme-pick" id="bgPick">
+          <button class="theme-swatch" style="--s:#1c1830" data-c="#1c1830" aria-label="Violet background"></button>
+          <button class="theme-swatch" style="--s:#151d2e" data-c="#151d2e" aria-label="Navy background"></button>
+          <button class="theme-swatch" style="--s:#132018" data-c="#132018" aria-label="Forest background"></button>
+          <button class="theme-swatch" style="--s:#241318" data-c="#241318" aria-label="Maroon background"></button>
+          <button class="theme-swatch" style="--s:#181818" data-c="#181818" aria-label="Charcoal background"></button>
+          <label class="theme-swatch custom" aria-label="Pick a custom background color"><input type="color" id="bgColorInput" value="#1c1830" /></label>
+        </span>
+      </div>
+      <div class="set-row">
+        <span class="lbl2"><span data-i18n="settings.orb">Orb color</span><small data-i18n="settings.orbSmall">Color of the spelling orb</small></span>
+        <span class="theme-pick" id="orbPick">
+          <button class="theme-swatch" style="--s:#ffb14d" data-c="#ffb14d" aria-label="Amber orb"></button>
+          <button class="theme-swatch" style="--s:#46d6b8" data-c="#46d6b8" aria-label="Teal orb"></button>
+          <button class="theme-swatch" style="--s:#ff6b7a" data-c="#ff6b7a" aria-label="Coral orb"></button>
+          <button class="theme-swatch" style="--s:#7aa2ff" data-c="#7aa2ff" aria-label="Blue orb"></button>
+          <button class="theme-swatch" style="--s:#b18cff" data-c="#b18cff" aria-label="Violet orb"></button>
+          <label class="theme-swatch custom" aria-label="Pick a custom orb color"><input type="color" id="orbColorInput" value="#ffb14d" /></label>
+        </span>
+      </div>
+      <button class="btn btn-check" id="setDone" data-i18n="settings.done" style="width:100%;margin-top:16px">Done</button>
+    </div>
+  </div>
+
+  <div id="toast"></div>
+
+  <script>
+    // ↓ Word-server backend URL. Change ONLY this line when you deploy.
+    // The Caddyfile in this repo reverse-proxies /api/* on the same domain
+    // to the backend container, so in production this should just be the
+    // site's own origin. For local development, point it at wherever
+    // `backend/app.py` is running instead (e.g. http://127.0.0.1:5000).
+    // No rebuild needed; this is read at runtime by the compiled app.
+    window.SPELL_API_BASE = "https://spellgame.net";
+  </script>
+  <!-- Native-audio bridge (Capacitor build only; a no-op stub on the web).
+       Classic script so window.SpellAudio is defined before the WASM module
+       runs. -->
+  <script src="./audio-native.js"></script>
+  <!-- Native language capabilities bridge (offline TTS / word-check / language
+       detection). Loads on every platform; window.SpellNativeLang.available() is
+       false off iOS, so this is a no-op stub on the web. Classic script so the
+       interface exists before the WASM module runs. -->
+  <script src="./native-language-kit.js"></script>
+  <script type="module">
+    import init from './pkg/spell_wasm.js?v=DEV';
+    // The compiled app (~2.3MB of WASM) has to finish downloading and
+    // initializing before the orb does anything. On mobile this has been
+    // observed failing mid-download (a flaky connection canceling the
+    // transfer, confirmed server-side). Defenses against that:
+    // 1. Streaming compile FIRST (FIX 2): WebAssembly.instantiateStreaming
+    //    compiles while the bytes are still downloading, shaving a few hundred
+    //    ms off cold boot. It needs the server to send Content-Type
+    //    application/wasm (Caddy sets it for /pkg/*.wasm). Some mobile browsers
+    //    have historically had bugs in the streaming-compile path, so on ANY
+    //    failure we fall straight back to the old, universally-reliable path:
+    //    fetch the raw bytes ourselves and hand init() a plain ArrayBuffer.
+    //    Reliability wins — the fallback is the exact code that shipped before.
+    // 2. init() only reaches its "already loaded" short-circuit after a
+    //    full success (streaming failures throw before that), so a fresh call
+    //    after a failure safely restarts from scratch — retry a few times
+    //    automatically so a transient blip fixes itself unnoticed.
+    const MAX_ATTEMPTS = 4;
+    const WASM_URL = new URL('./pkg/spell_wasm_bg.wasm?v=DEV', import.meta.url);
+
+    function setGlyph(html) {
+      const glyph = document.getElementById('orbGlyph');
+      if (glyph) glyph.innerHTML = html;
+    }
+
+    // One boot attempt: try streaming, else the reliable ArrayBuffer path.
+    // Passing init() a Promise<Response> makes wasm-bindgen use
+    // instantiateStreaming; passing it an ArrayBuffer uses plain instantiate.
+    async function attemptBoot() {
+      if (typeof WebAssembly.instantiateStreaming === 'function') {
+        try {
+          await init({ module_or_path: fetch(WASM_URL) });
+          return;
+        } catch (streamErr) {
+          // Streaming compile failed (mobile browser quirk, bad MIME, etc).
+          // Fall through to the historically-reliable full-buffer path.
+          console.warn('Spell: streaming compile failed, using ArrayBuffer fallback:', streamErr);
+        }
+      }
+      const res = await fetch(WASM_URL);
+      if (!res.ok) throw new Error(`HTTP ${res.status} fetching wasm`);
+      const bytes = await res.arrayBuffer();
+      await init({ module_or_path: bytes });
+    }
+
+    async function bootWithRetry() {
+      for (let attempt = 1; attempt <= MAX_ATTEMPTS; attempt++) {
+        try {
+          await attemptBoot();
+          setGlyph('tap to<br/>hear a word');
+          return;
+        } catch (err) {
+          console.error(`Spell failed to load (attempt ${attempt}/${MAX_ATTEMPTS}):`, err);
+          if (attempt < MAX_ATTEMPTS) {
+            setGlyph(`loading… (retry ${attempt}/${MAX_ATTEMPTS - 1})`);
+            await new Promise((r) => setTimeout(r, 900 * attempt));
+          }
+        }
+      }
+      setGlyph('couldn’t load —<br/>tap to retry');
+      document.getElementById('orbWrap')?.addEventListener(
+        'click',
+        () => location.reload(),
+        { once: true }
+      );
+    }
+    bootWithRetry();
+  </script>
+  <script>
+    // Only the plain web/PWA build runs the service worker. Inside a native
+    // wrapper (Capacitor iOS, or Tauri desktop) the shell is already served
+    // locally from the bundle — a second SW cache layer there causes stale-build
+    // bugs (and breaks App Store review). Keep this the single source of truth
+    // for "am I wrapped?"; Tauri/desktop reuses it too.
+    window.isWrappedPlatform = function () {
+      return !!(window.Capacitor && window.Capacitor.isNativePlatform && window.Capacitor.isNativePlatform())
+        || !!window.__TAURI__ || !!window.__TAURI_INTERNALS__;
+    };
+    if ('serviceWorker' in navigator && !window.isWrappedPlatform()) {
+      // If a controller already exists, a later controllerchange means a NEW
+      // service worker (a deploy) took over — reload once so the page runs the
+      // fresh assets instead of a stale cached mix (a recurring cause of the
+      // app loading but audio/logic being stale). Guarded by hadController so
+      // the first-ever install (no prior controller) never triggers a reload.
+      const hadController = !!navigator.serviceWorker.controller;
+      let reloaded = false;
+      navigator.serviceWorker.addEventListener('controllerchange', () => {
+        if (!hadController || reloaded) return;
+        reloaded = true;
+        window.location.reload();
+      });
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('./sw.js').then((reg) => reg.update());
+      });
+    }
+  </script>
+  <script>
+    // iOS zoom recovery net (defense in depth behind the CSS/viewport fixes).
+    // If iOS still zooms a focused field and fails to restore scale, re-assert
+    // the viewport meta on blur / viewport-scale change to nudge it back to 1.
+    // iOS WKWebView only; logs when it fires so we can tell if Fixes 1-3 missed.
+    (function () {
+      var isIOS = /iP(hone|ad|od)/.test(navigator.platform) ||
+        (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1) ||
+        (window.Capacitor && window.Capacitor.getPlatform && window.Capacitor.getPlatform() === 'ios');
+      if (!isIOS || !window.visualViewport) return;
+      var vp = document.querySelector('meta[name="viewport"]');
+      if (!vp) return;
+      var content = vp.getAttribute('content');
+      function reassert() {
+        if (window.visualViewport.scale <= 1.01) return;
+        console.warn('[zoom-guard] scale ' + window.visualViewport.scale.toFixed(2) + ' — re-asserting viewport');
+        vp.setAttribute('content', content + ', maximum-scale=1');
+        // toggle back so a future intentional change (none here) isn't blocked
+        requestAnimationFrame(function () { vp.setAttribute('content', content); });
+      }
+      document.addEventListener('focusout', function () {
+        // let the keyboard dismiss first, then check
+        setTimeout(reassert, 300);
+      }, true);
+      window.visualViewport.addEventListener('scale', function () {
+        if (!document.querySelector('input:focus, textarea:focus, select:focus')) reassert();
+      });
+    })();
+  </script>
+  <script>
+    // Native-capability diagnostic (build 54): reports what the native bridge
+    // resolves to, so a "tools nowhere to be found" report can be pinpointed to
+    // platform / proxy / capability without a device debugger. Populates the
+    // #nativeStatus line in Settings on open. Purely read-only.
+    (function () {
+      function refresh() {
+        var el = document.getElementById('nativeStatus');
+        if (!el) return;
+        var cap = window.Capacitor, snl = window.SpellNativeLang;
+        var platform = (cap && cap.getPlatform) ? cap.getPlatform() : 'web';
+        var native = !!(cap && cap.isNativePlatform && cap.isNativePlatform());
+        var avail = !!(snl && snl.available && snl.available());
+        el.textContent = 'platform=' + platform + ' native=' + native + ' available=' + avail;
+        if (!avail && cap) {
+          // Pinpoint which plugin-resolution path fails (registerPlugin vs Plugins.NLK).
+          el.textContent += ' | registerPlugin=' + (typeof cap.registerPlugin) +
+            ' Plugins=' + !!cap.Plugins +
+            ' NLK=' + !!(cap.Plugins && cap.Plugins.NativeLanguageKit);
+        }
+        if (avail && snl.capabilities) {
+          snl.capabilities('en').then(function (r) {
+            el.textContent += ' | tts=' + !!(r && r.tts && r.tts.available) +
+              ' spell=' + !!(r && r.spellcheck && r.spellcheck.available) +
+              ' langDet=' + !!(r && r.langDetect && r.langDetect.available);
+          }).catch(function (e) { el.textContent += ' | caps-error: ' + e; });
+        } else {
+          el.textContent += avail ? '' : ' (native tools hidden — expected off-device/web)';
+        }
+        // Persist the last voice-capture diagnostic so it's readable here after a mic try.
+        if (window.__lastLetterDiag) el.textContent += ' | cap: ' + window.__lastLetterDiag;
+      }
+      window.__refreshNativeStatus = refresh;
+      document.addEventListener('DOMContentLoaded', function () { setTimeout(refresh, 1200); });
+      // Refresh whenever a settings button is tapped (cheap; ids vary by surface).
+      document.addEventListener('click', function (e) {
+        var t = e.target; if (t && t.closest && t.closest('[id*="etting"], #setBtn, #gearBtn')) setTimeout(refresh, 100);
+      }, true);
+    })();
+  </script>
+</body>
+</html>

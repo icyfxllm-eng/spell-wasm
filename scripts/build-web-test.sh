@@ -7,10 +7,20 @@ set -euo pipefail
 
 cd "$(dirname "$0")/.."
 ROOT="$(pwd)"
-DIST="$ROOT/dist-test"
+# SPELL_WEB=1 builds the SITE configuration (English only) into its own dir,
+# so the platform-specific specs run against the platform they describe
+# instead of asserting web behaviour against an app build.
+if [ "${SPELL_WEB:-0}" = "1" ]; then
+  DIST="$ROOT/dist-test-web"
+  EXTRA="--features web"
+else
+  DIST="$ROOT/dist-test"
+  EXTRA=""
+fi
 
-echo "==> cargo build (release, wasm32, --features testseam)"
-cargo build --release --target wasm32-unknown-unknown --features testseam
+echo "==> cargo build (release, wasm32, --features testseam $EXTRA)"
+# shellcheck disable=SC2086
+cargo build --release --target wasm32-unknown-unknown --features testseam $EXTRA
 
 echo "==> wasm-bindgen -> pkg-test/"
 wasm-bindgen target/wasm32-unknown-unknown/release/spell_wasm.wasm \

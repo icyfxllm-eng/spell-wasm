@@ -13,6 +13,7 @@ import { startServer, launch, Suite } from './harness.mjs';
 
 import * as keyboard from './specs/keyboard.mjs';
 import * as finale from './specs/finale.mjs';
+import * as platform from './specs/platform.mjs';
 import * as gameplay from './specs/gameplay.mjs';
 import * as modes from './specs/modes.mjs';
 import * as menu from './specs/menu.mjs';
@@ -39,15 +40,32 @@ const SPECS = [
   ['attempts-shields', attemptsShields],
   ['tools-hub', toolsHub],
   ['finale', finale],
+  ['platform', platform],
 ];
 
 const ROOT = join(fileURLToPath(import.meta.url), '..', '..', '..');
+
+// Specs that assert PLATFORM behaviour. The site is English-only and the app
+// ships every language (Eric, 2026-07-31), so "Spanish is coming-soon gated"
+// is true of one build and false of the other. Running these against the app
+// build asserted nothing and sat red; they run under SPELL_WEB=1 instead.
+const WEB_ONLY_SPECS = new Set(['coming']);
+// Specs that must run in BOTH configurations -- a platform claim checked on
+// one side only is half a check.
+const BOTH_SPECS = new Set(['platform']);
+const IS_WEB = process.env.SPELL_WEB === '1';
 
 const { server, base } = await startServer();
 const browser = await launch();
 const suites = [];
 try {
   for (const [name, mod] of SPECS) {
+    if (!BOTH_SPECS.has(name) && WEB_ONLY_SPECS.has(name) !== IS_WEB) {
+      // Announced, never silent. A spec that vanishes without a word is how
+      // the twelve-day language regression stayed invisible.
+      process.stdout.write(`\n▶ ${name} — skipped (runs in the ${WEB_ONLY_SPECS.has(name) ? 'site' : 'app'} build)\n`);
+      continue;
+    }
     const suite = new Suite(name);
     process.stdout.write(`\n▶ ${name}\n`);
     await mod.run(browser, base, suite);

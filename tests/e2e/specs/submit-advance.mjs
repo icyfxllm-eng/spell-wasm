@@ -11,7 +11,7 @@
 // Types via real key clicks on the anti-dictation on-screen keyboard (the thing
 // under test), reads expected words + daily cursor from the OBSERVE-only
 // __spelltest seam, and never bypasses validation.
-import { openApp, assert, assertEq } from '../harness.mjs';
+import { openApp, assert, assertEq, IS_WEB_BUILD } from '../harness.mjs';
 
 // Mirrors src/consts.rs `CORRECT_DELAY_MS` — the delay Daily reuses for its
 // auto-advance (same beat solo already uses). Kept in sync by hand; a drift
@@ -245,17 +245,24 @@ export async function run(browser, base, suite) {
   });
 
   await suite.test('A9: language matrix — es is coming-soon-gated; en async path proves agnosticism', async () => {
-    // Spanish (and every composition-input language) is coming-soon-gated in this
-    // build (D1), so no round can start in the UI. Language-agnosticism is proven
-    // two ways: (1) en Daily grades via the ASYNC /api/check path, es/others via
-    // the SYNC norm path, yet both funnel into the one on_correct daily hook that
-    // schedules the advance (verified below for en); (2) the I4 grep audit shows
-    // ZERO per-language conditionals in the advance path.
+    // Half one is a PLATFORM claim and it now cuts both ways: Spanish is
+    // coming-soon-gated on the site and playable in the app (Eric,
+    // 2026-07-31). Asserting the build's own truth makes this stronger than
+    // the old hardcoded "gated" -- it pins the split from the UI in whichever
+    // config is running, instead of being right in one and red in the other.
+    //
+    // Half two is config-independent: en Daily grades via the ASYNC /api/check
+    // path and es/others via the SYNC norm path, yet both funnel into the one
+    // on_correct daily hook that schedules the advance (verified below for
+    // en); and the I4 grep audit shows ZERO per-language conditionals in the
+    // advance path.
     {
       const { ctx, page } = await openApp(browser, base, { lang: 'es' });
       try {
         const gated = await page.evaluate(() => document.body.classList.contains('coming-soon'));
-        assert(gated, 'Spanish expected coming-soon-gated (cannot start a round in-UI)');
+        assertEq(gated, IS_WEB_BUILD,
+          IS_WEB_BUILD ? 'Spanish must be gated on the site build'
+                       : 'Spanish must be playable in the app build');
       } finally { await ctx.close(); }
     }
     {

@@ -1,0 +1,408 @@
+// NativeLanguageKit — the SINGLE web-layer interface to the iOS native language
+// capabilities (offline TTS, on-device word validation, language detection).
+//
+// This is the anti-silent-fallback boundary: it loads on EVERY platform and
+// exposes `window.SpellNativeLang`. On iOS (Capacitor + the NativeLanguageKit
+// plugin present) it routes to native; on web/PWA/Tauri/Android every capability
+// resolves to an explicit `available:false` from this same interface — no shims,
+// no platform conditionals leaking into game logic. The Rust core reflects on
+// `window.SpellNativeLang` exactly like it does `window.SpellAudio`.
+//
+// Loaded via a classic <script> in index.html BEFORE the WASM module, and copied
+// into dist/ by scripts/build-web.sh. There is no TypeScript build in this repo,
+// so this JS file with full JSDoc IS the interface contract.
+//
+// @typedef {{ id:string, name:string, quality:('default'|'enhanced'|'premium') }} VoiceInfo
+// @typedef {{ tts:{available:boolean, voices:VoiceInfo[]},
+//             spellcheck:{available:boolean},
+//             langDetect:{available:boolean} }} CapabilityReport
+// @typedef {{ supported:boolean, isWord:boolean }} WordCheckResult
+// @typedef {{ supported:boolean, lang:string, confidence:number }} LanguageGuess
+// @typedef {{ available:boolean, supportsOnDevice:boolean, locale:string }} SpeechCapability
+// @typedef {{ transcription:string }} SpeechResult
+(function () {
+  'use strict';
+
+  var _proxy;
+  // Cleanup for the CURRENT letter-capture's event listeners — module-scoped so a new
+  // capture can drop a superseded capture's still-live listeners (rapid re-tap).
+  var letterCleanup = null;
+  /**
+   * The native plugin proxy. This plugin ships as native-only Swift with NO npm
+   * JS package, so `Capacitor.Plugins.NativeLanguageKit` is never auto-populated
+   * — we must create the proxy ourselves via `Capacitor.registerPlugin` (the
+   * documented Capacitor way for a custom plugin). Cached after first call.
+   * @returns {any} the proxy, or undefined when Capacitor isn't present (web).
+   */
+  function plugin() {
+    var cap = window.Capacitor;
+    if (!cap) return undefined;
+    if (!_proxy) {
+      // Prefer an already-auto-registered native plugin (CAPBridgedPlugin populates
+      // Capacitor.Plugins.<jsName>); else create the proxy ourselves. Either path
+      // routes calls to the native class by name. try/catch so a throwing
+      // registerPlugin can't leave us permanently unavailable.
+      if (cap.Plugins && cap.Plugins.NativeLanguageKit) {
+        _proxy = cap.Plugins.NativeLanguageKit;
+      } else if (typeof cap.registerPlugin === 'function') {
+        try { _proxy = cap.registerPlugin('NativeLanguageKit'); } catch (e) { _proxy = undefined; }
+      }
+    }
+    return _proxy;
+  }
+
+  /**
+   * Is the native capability layer usable right now?
+   * True only on a Capacitor native platform with the plugin registered.
+   * @returns {boolean}
+   */
+  function available() {
+    var cap = window.Capacitor;
+    return !!(cap && cap.isNativePlatform && cap.isNativePlatform() && plugin());
+  }
+
+  /** The all-false report handed back on every non-iOS platform. */
+  function unavailableReport() {
+    return {
+      tts: { available: false, voices: [] },
+      spellcheck: { available: false },
+      langDetect: { available: false },
+    };
+  }
+
+  window.SpellNativeLang = {
+    /** @returns {boolean} */
+    available: available,
+
+    /**
+     * True on a native Capacitor platform (iOS), regardless of whether the plugin
+     * proxy has resolved. Used for PLATFORM gating (should this tile show at all) —
+     * distinct from `available()`, which also requires the plugin for runtime use.
+     * @returns {boolean}
+     */
+    nativePlatform: function () {
+      var cap = window.Capacitor;
+      return !!(cap && cap.isNativePlatform && cap.isNativePlatform());
+    },
+
+    /**
+     * Query what this platform can do for `lang`, per capability. Call this and
+     * branch on the result — never assume a capability exists.
+     * @param {string} lang bare app language code, e.g. "en" | "es"
+     * @returns {Promise<CapabilityReport>} all-false off iOS; never rejects.
+     */
+    capabilities: function (lang) {
+      if (!available()) return Promise.resolve(unavailableReport());
+      return plugin().capabilities({ lang: lang }).catch(unavailableReport);
+    },
+
+    /**
+     * Speak `text` offline via AVSpeech. `voiceId` is REQUIRED — the caller
+     * selects it from capabilities().tts.voices; the plugin never picks a voice.
+     * A new speak cancels the previous utterance.
+     * @param {string} text
+     * @param {string} voiceId AVSpeech voice identifier from the catalog
+     * @param {number} [rate] game rate (0.9 normal, 0.7 slow); defaults to normal
+     * @returns {Promise<void>} resolves on natural completion; REJECTS with code
+     *   "SPEAK_INCOMPLETE" if cancelled/superseded or the voice is unknown, and
+     *   "BAD_ARGS" if text/voiceId missing. Off iOS: rejects "UNAVAILABLE".
+     */
+    speak: function (text, voiceId, rate) {
+      if (!available()) return Promise.reject(new Error('UNAVAILABLE'));
+      return plugin().speak({ text: text, voiceId: voiceId, rate: rate });
+    },
+
+    /**
+     * Speak `syllables` (in order) as ONE offline utterance, reporting each
+     * syllable boundary as AVSpeech reaches it so the caller can highlight the
+     * revealed spelling in sync (Feature F7). `onIndex(i)` fires with the
+     * 0-based syllable index each time a new syllable begins; the plugin emits
+     * these via the `syllableBoundary` event, wired to a per-call listener that
+     * is torn down when the promise settles. `voiceId` is REQUIRED (from
+     * capabilities().tts.voices) — the plugin never picks a voice.
+     * @param {string[]} syllables ordered syllable tokens, e.g. ["ca","sa"]
+     * @param {string} voiceId AVSpeech voice identifier from the catalog
+     * @param {number} [rate] game rate (0.9 normal, 0.7 slow); defaults to normal
+     * @param {(index:number)=>void} [onIndex] per-syllable highlight callback
+     * @returns {Promise<void>} resolves on natural completion; REJECTS with
+     *   "SPEAK_INCOMPLETE" if cancelled/superseded or the voice is unknown, and
+     *   "BAD_ARGS" if syllables/voiceId missing. Off iOS: rejects "UNAVAILABLE".
+     */
+    speakSyllables: function (syllables, voiceId, rate, onIndex) {
+      if (!available()) return Promise.reject(new Error('UNAVAILABLE'));
+      var p = plugin();
+      // addListener may return a handle or a Promise<handle> depending on the
+      // Capacitor version — normalize both so cleanup always works.
+      var listening = (typeof onIndex === 'function')
+        ? p.addListener('syllableBoundary', function (ev) {
+            onIndex(ev && typeof ev.index === 'number' ? ev.index : 0);
+          })
+        : null;
+      function cleanup() {
+        if (!listening) return;
+        if (typeof listening.then === 'function') {
+          listening.then(function (h) { if (h && h.remove) h.remove(); });
+        } else if (listening.remove) {
+          listening.remove();
+        }
+      }
+      return p.speakSyllables({ syllables: syllables, voiceId: voiceId, rate: rate })
+        .then(function (r) { cleanup(); return r; },
+              function (e) { cleanup(); throw e; });
+    },
+
+    /**
+     * Stop any in-flight utterance. No-op (resolves) off iOS.
+     * @returns {Promise<void>}
+     */
+    stop: function () {
+      if (!available()) return Promise.resolve();
+      return plugin().stop();
+    },
+
+    /**
+     * On-device real-word check via UITextChecker. An ADDITIONAL gate — charset
+     * and profanity still run around it. `supported:false` means iOS has no
+     * dictionary for `lang`; the caller then skips this gate (no silent verdict).
+     * @param {string} word
+     * @param {string} lang
+     * @returns {Promise<WordCheckResult>} {supported:false,isWord:false} off iOS.
+     */
+    checkWord: function (word, lang) {
+      if (!available()) return Promise.resolve({ supported: false, isWord: false });
+      return plugin().checkWord({ word: word, lang: lang })
+        .catch(function () { return { supported: false, isWord: false }; });
+    },
+
+    /**
+     * Detect the language of `text` (NLLanguageRecognizer). Single words give a
+     * weak signal — the caller uses a high confidence bar and only ever shows a
+     * non-blocking hint. Never blocks entry.
+     * @param {string} text
+     * @returns {Promise<LanguageGuess>} {supported:false,lang:'',confidence:0} off iOS.
+     */
+    detectLanguage: function (text) {
+      if (!available()) return Promise.resolve({ supported: false, lang: '', confidence: 0 });
+      return plugin().detectLanguage({ text: text })
+        .catch(function () { return { supported: false, lang: '', confidence: 0 }; });
+    },
+
+    // ---- Say It (Feature F2): ON-DEVICE speech recognition ONLY ----
+
+    /**
+     * Can `lang` be recognized entirely ON-DEVICE on this platform? The privacy
+     * contract lives in the shape: `available` is NEVER true unless on-device
+     * recognition is supported. Treat `available:false` as "the Say-It mode is
+     * UNAVAILABLE for this language" — it must NEVER be read as permission to use
+     * server-based recognition (a child's voice never leaves the phone).
+     * @param {string} lang bare app language code, e.g. "en"
+     * @returns {Promise<SpeechCapability>} all-false off iOS; never rejects.
+     */
+    speechCapabilities: function (lang) {
+      var off = { available: false, supportsOnDevice: false, locale: '', state: 'unavailable', engine: '' };
+      if (!available()) return Promise.resolve(off);
+      return plugin().speechCapabilities({ lang: lang }).then(function (cap) {
+        // Older plugin builds omit state/engine — derive from `available`.
+        if (cap && cap.state == null) cap.state = cap.available ? 'installed' : 'unavailable';
+        return cap || off;
+      }).catch(function () { return off; });
+    },
+
+    /**
+     * Download the ON-DEVICE speech model for a language (iOS 26+). Progress
+     * streams to `onProgress(fraction 0..1)`. Resolves when installed; rejects
+     * with "UNAVAILABLE" (no downloadable on-device model) or "DOWNLOAD_FAILED".
+     * Recognition remains 100% on-device — this only fetches Apple's local
+     * model assets, exactly like enabling a dictation keyboard would.
+     * @param {string} lang bare app language code, e.g. "ar"
+     * @param {function(number)=} onProgress
+     * @returns {Promise<{installed:boolean}>}
+     */
+    downloadSpeechAssets: function (lang, onProgress) {
+      if (!available()) return Promise.reject(new Error('UNAVAILABLE'));
+      var p = plugin();
+      var handle = null;
+      var cleanup = function () {
+        if (handle && typeof handle.remove === 'function') handle.remove();
+        handle = null;
+      };
+      try {
+        var pr = p.addListener('speechAssetProgress', function (d) {
+          if (onProgress) onProgress((d && typeof d.fraction === 'number') ? d.fraction : 0);
+        });
+        if (pr && typeof pr.then === 'function') pr.then(function (h) { handle = h; });
+        else handle = pr;
+      } catch (e) { /* progress is best-effort */ }
+      return p.downloadSpeechAssets({ lang: lang }).then(function (r) {
+        cleanup();
+        return r || { installed: true };
+      }).catch(function (err) {
+        cleanup();
+        throw err;
+      });
+    },
+
+    /**
+     * Start listening and return the ON-DEVICE transcription. On iOS this sets
+     * SFSpeechRecognizer `requiresOnDeviceRecognition = true`; the mic audio is
+     * streamed only to the on-device recognizer and never persisted or uploaded.
+     * The OS mic + speech permission prompts appear on the FIRST call (the caller
+     * shows a plain-language pre-prompt first).
+     * @param {{ lang:string }} opts
+     * @returns {Promise<SpeechResult>} resolves `{ transcription }`. REJECTS with
+     *   an Error whose message is one of: "UNAVAILABLE" (no on-device path — do
+     *   NOT fall back to a server), "PERMISSION_DENIED" (→ needs-mic state),
+     *   "BUSY", "AUDIO_ERROR", "NO_SPEECH". Off iOS: rejects "UNAVAILABLE".
+     */
+    startListening: function (opts) {
+      if (!available()) return Promise.reject(new Error('UNAVAILABLE'));
+      return plugin().startListening({ lang: (opts && opts.lang) || '' });
+    },
+
+    /**
+     * Stop listening; the in-flight startListening resolves with whatever
+     * on-device transcription was captured. No-op (resolves) off iOS.
+     * @returns {Promise<void>}
+     */
+    stopListening: function () {
+      if (!available()) return Promise.resolve();
+      return plugin().stopListening();
+    },
+
+    /**
+     * True only where the on-device VisionKit text recognizer is available
+     * (iOS + the NativeLanguageKit plugin). The photo-list camera affordance is
+     * shown off this capability check (Feature F1). @returns {boolean}
+     */
+    supported: function () {
+      // Gate on native platform, not just proxy presence — registerPlugin returns
+      // a (non-null) proxy even in a Capacitor web context, so the camera button
+      // must not appear off a real device.
+      return available();
+    },
+
+    /**
+     * Capture a photo and recognize a word list entirely on-device (Feature F1).
+     * The image goes straight from the native picker to Vision — never uploaded,
+     * cached, or exposed to JS as bytes; only recognized text lines return.
+     * @param {{ lang?: string, source?: ("camera"|"library"|"auto"), correction?: boolean }} [opts]
+     *   `correction` (default true) drives Vision language correction — the core
+     *   passes false for English-fallback languages (registry `ocr_support`).
+     * @returns {Promise<{ supported: boolean, lines: {text:string,confidence:number}[] }>}
+     *   on non-iOS resolves { supported:false, lines:[] }. Per-line `confidence`
+     *   is Vision's 0..1 line confidence (Phase 2); legacy string lines from an
+     *   older native build normalize to confidence 1.
+     */
+    recognizeWordList: function (opts) {
+      var P = plugin();
+      if (!P) return Promise.resolve({ supported: false, lines: [] });
+      var args = {
+        lang: (opts && opts.lang) || 'en-US',
+        source: (opts && opts.source) || 'auto',
+        correction: !(opts && opts.correction === false),
+      };
+      return P.recognizeWordList(args).then(function (res) {
+        var raw = (res && Array.isArray(res.lines)) ? res.lines : [];
+        var lines = raw.map(function (l) {
+          if (typeof l === 'string') return { text: l, confidence: 1 };
+          return {
+            text: (l && l.text) || '',
+            confidence: (l && typeof l.confidence === 'number') ? l.confidence : 1,
+          };
+        });
+        return { supported: true, lines: lines };
+      });
+    },
+    // ---- Spell It Out Loud (voice spelling INPUT): letter-capture profile ----
+    //
+    // The SAME on-device recognizer as Say-It, a DIFFERENT profile: the recognizer
+    // is biased with `contextualStrings` (the language's spoken letter names) and
+    // streams RAW transcript tokens (partials included) live via callbacks, so the
+    // Rust letter-parser can echo "C… CA… CAT" as the child speaks. The plugin does
+    // ZERO parsing — it is a dumb mic. On-device only; nothing persisted or sent.
+
+    /**
+     * Start on-device LETTER capture. Subscribes to the plugin's raw-token events
+     * and forwards them to the callbacks, then starts the capture. All plugin
+     * event subscriptions are torn down automatically on the final/error callback.
+     * @param {{ lang:string, contextualStrings?:string[] }} opts
+     * @param {(rawTranscript:string)=>void} onToken partial transcript (streamed)
+     * @param {(final:{token:string,confidence:number,alt:string,end:boolean})=>void} onFinal
+     *        fires per VAD letter segment (`end:false`) and once at session end (`end:true`)
+     *   final transcript, once. `confidence` (0..1) + `alt` (top alternative reading)
+     *   drive the mode's confusable chip; the input method ignores them (Phase 3).
+     * @param {(code:string)=>void} onError one of "UNAVAILABLE" | "PERMISSION_DENIED"
+     *   | "BUSY" | "AUDIO_ERROR" | "NO_SPEECH". Off iOS: fires "UNAVAILABLE".
+     * @returns {void}
+     */
+    startLetterCapture: function (opts, onToken, onFinal, onError) {
+      if (!available()) { if (onError) onError('UNAVAILABLE'); return; }
+      var p = plugin();
+      // Rapid re-tap: a previous capture's listeners may still be live (its end event
+      // never arrives once the native side supersedes it). Plugin events broadcast to
+      // every subscriber, so two live sets would double-deliver — drop the old one.
+      if (letterCleanup) { try { letterCleanup(); } catch (e) {} }
+      var handles = [];
+      function cleanup() {
+        handles.forEach(function (h) { try { h && h.remove && h.remove(); } catch (e) {} });
+        handles = [];
+        if (letterCleanup === cleanup) letterCleanup = null;
+      }
+      letterCleanup = cleanup;
+      // addListener resolves to a handle; keep it so we can remove() on teardown.
+      function sub(evt, fn) {
+        var pr = p.addListener(evt, fn);
+        if (pr && typeof pr.then === 'function') {
+          pr.then(function (h) { handles.push(h); });
+        } else {
+          handles.push(pr);
+        }
+      }
+      sub('letterToken', function (d) { if (onToken) onToken((d && d.token) || ''); });
+      sub('letterFinal', function (d) {
+        // ONE-PRESS: `end:false` is a mid-stream letter (VAD segment) — the native
+        // session keeps listening, so keep the listeners. `end:true` (or a payload
+        // without `end`, for safety) is the true end of the capture session.
+        var end = !(d && d.end === false);
+        if (onFinal) onFinal({
+          token: (d && d.token) || '',
+          confidence: (d && typeof d.confidence === 'number') ? d.confidence : 1,
+          alt: (d && d.alt) || '',
+          end: end,
+        });
+        if (end) cleanup();
+      });
+      sub('letterError', function (d) { if (onError) onError((d && d.code) || 'AUDIO_ERROR'); cleanup(); });
+      // TEMP capture diagnostic: show the mic format + buffer count in the status line
+      // so an on-device "Listening but nothing captured" report is pinpointable without
+      // a debugger. Writes directly to the DOM (no Rust wiring).
+      sub('letterDiag', function (d) {
+        if (!(d && d.info)) return;
+        window.__lastLetterDiag = d.info;              // persisted for Settings readout
+        var el = document.getElementById('voiceSpellStatus');
+        if (el) el.textContent = 'diag: ' + d.info;
+        if (window.__refreshNativeStatus) window.__refreshNativeStatus();
+      });
+      p.startLetterCapture({
+        lang: (opts && opts.lang) || '',
+        contextualStrings: (opts && opts.contextualStrings) || [],
+        // Server STT rung (mic-everywhere): present ONLY after the explicit
+        // internet-consent card, for languages with no on-device model.
+        serverUrl: (opts && opts.serverUrl) || '',
+      }).catch(function (e) {
+        if (onError) onError((e && e.message) || 'AUDIO_ERROR');
+        cleanup();
+      });
+    },
+
+    /**
+     * Stop letter capture; the plugin finalizes and fires the letterFinal event.
+     * No-op off iOS.
+     * @returns {Promise<void>}
+     */
+    stopLetterCapture: function () {
+      if (!available()) return Promise.resolve();
+      return plugin().stopLetterCapture();
+    },
+  };
+})();
