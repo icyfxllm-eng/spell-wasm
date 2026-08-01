@@ -1,0 +1,106 @@
+{
+ "id": "basil",
+ "tier": "hard",
+ "source": {
+  "title": "SpellGame original \u2014 Saint Basil's skyline (culture five, ru)",
+  "license": "Original artwork (SpellGame)",
+  "url": "",
+  "attribution": ""
+ },
+ "parts": {
+  "root": [
+   0
+  ]
+ },
+ "layers": [
+  {
+   "name": "outline",
+   "path_ids": [
+    0
+   ],
+   "per_language": {
+    "ar": {
+     "words": 1,
+     "band": 0,
+     "band_size": 60
+    },
+    "de": {
+     "words": 1,
+     "band": 0,
+     "band_size": 630
+    },
+    "en": {
+     "words": 1,
+     "band": 0,
+     "band_size": 761
+    },
+    "es": {
+     "words": 1,
+     "band": 0,
+     "band_size": 560
+    },
+    "fil": {
+     "words": 1,
+     "band": 0,
+     "band_size": 241
+    },
+    "fr": {
+     "words": 1,
+     "band": 0,
+     "band_size": 363
+    },
+    "hi": {
+     "words": 1,
+     "band": 0,
+     "band_size": 548
+    },
+    "ja": {
+     "words": 1,
+     "band": 0,
+     "band_size": 594
+    },
+    "ko": {
+     "words": 1,
+     "band": 0,
+     "band_size": 442
+    },
+    "pl": {
+     "words": 1,
+     "band": 0,
+     "band_size": 452
+    },
+    "pt": {
+     "words": 1,
+     "band": 0,
+     "band_size": 719
+    },
+    "ru": {
+     "words": 1,
+     "band": 0,
+     "band_size": 49
+    },
+    "sw": {
+     "words": 1,
+     "band": 0,
+     "band_size": 65
+    },
+    "vi": {
+     "words": 1,
+     "band": 0,
+     "band_size": 392
+    },
+    "zh": {
+     "words": 1,
+     "band": 0,
+     "band_size": 185
+    }
+   }
+  }
+ ],
+ "audio_gate": "advanced",
+ "completion": {
+  "all_layers": true
+ },
+ "authoring": "suggested-then-approved",
+ "pin_hash": 12728753720498633408
+}

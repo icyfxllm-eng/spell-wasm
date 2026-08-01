@@ -2722,6 +2722,102 @@
     }
    ],
    "guide": []
+  },
+  {
+   "id": "crane",
+   "tier": "medium",
+   "subject": "crane",
+   "icon": "🦢",
+   "kid": true,
+   "wash": false,
+   "pack": "culture",
+   "paths": [
+    {
+     "mode": "flow",
+     "d": "M256.0 60.0 L395.0 117.0 L452.0 256.0 L395.0 395.0 L256.0 452.0 L117.0 395.0 L60.0 256.0 L117.0 117.0",
+     "order": 1,
+     "budget": [
+      2,
+      10
+     ],
+     "band": 1,
+     "arch": "line",
+     "feature": "skeleton"
+    }
+   ],
+   "guide": []
+  },
+  {
+   "id": "dallah",
+   "tier": "medium",
+   "subject": "dallah",
+   "icon": "🫖",
+   "kid": true,
+   "wash": false,
+   "pack": "culture",
+   "paths": [
+    {
+     "mode": "flow",
+     "d": "M256.0 60.0 L395.0 117.0 L452.0 256.0 L395.0 395.0 L256.0 452.0 L117.0 395.0 L60.0 256.0 L117.0 117.0",
+     "order": 1,
+     "budget": [
+      2,
+      10
+     ],
+     "band": 1,
+     "arch": "line",
+     "feature": "skeleton"
+    }
+   ],
+   "guide": []
+  },
+  {
+   "id": "basil",
+   "tier": "hard",
+   "subject": "basil",
+   "icon": "⛪",
+   "kid": false,
+   "wash": false,
+   "pack": "culture",
+   "paths": [
+    {
+     "mode": "flow",
+     "d": "M256.0 60.0 L395.0 117.0 L452.0 256.0 L395.0 395.0 L256.0 452.0 L117.0 395.0 L60.0 256.0 L117.0 117.0",
+     "order": 1,
+     "budget": [
+      2,
+      10
+     ],
+     "band": 1,
+     "arch": "line",
+     "feature": "skeleton"
+    }
+   ],
+   "guide": []
+  },
+  {
+   "id": "panda",
+   "tier": "easy",
+   "subject": "panda",
+   "icon": "🐼",
+   "kid": true,
+   "wash": false,
+   "pack": "culture",
+   "paths": [
+    {
+     "mode": "flow",
+     "d": "M256.0 60.0 L395.0 117.0 L452.0 256.0 L395.0 395.0 L256.0 452.0 L117.0 395.0 L60.0 256.0 L117.0 117.0",
+     "order": 1,
+     "budget": [
+      2,
+      10
+     ],
+     "band": 1,
+     "arch": "line",
+     "feature": "skeleton"
+    }
+   ],
+   "guide": []
   }
  ]
 }

@@ -355,5 +355,37 @@
     "file": "ref/starrynight.png",
     "bytes": 9968,
     "attribution": "after Vincent van Gogh"
+  },
+  {
+    "subject": "crane",
+    "title": "SpellGame original — origami crane (culture five, ja)",
+    "license": "Original artwork (SpellGame)",
+    "sourceUrl": "",
+    "file": "ref/crane.png",
+    "bytes": 4945
+  },
+  {
+    "subject": "dallah",
+    "title": "SpellGame original — dallah coffee pot (culture five, ar)",
+    "license": "Original artwork (SpellGame)",
+    "sourceUrl": "",
+    "file": "ref/dallah.png",
+    "bytes": 5240
+  },
+  {
+    "subject": "basil",
+    "title": "SpellGame original — Saint Basil's skyline (culture five, ru)",
+    "license": "Original artwork (SpellGame)",
+    "sourceUrl": "",
+    "file": "ref/basil.png",
+    "bytes": 4046
+  },
+  {
+    "subject": "panda",
+    "title": "SpellGame original — panda (culture five, zh)",
+    "license": "Original artwork (SpellGame)",
+    "sourceUrl": "",
+    "file": "ref/panda.png",
+    "bytes": 5389
   }
 ]
