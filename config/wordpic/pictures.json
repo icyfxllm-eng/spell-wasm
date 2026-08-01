@@ -2402,6 +2402,198 @@
     }
    ],
    "guide": []
+  },
+  {
+   "id": "bicycle",
+   "tier": "medium",
+   "subject": "bicycle",
+   "icon": "🚲",
+   "kid": true,
+   "wash": false,
+   "pack": "wave2",
+   "paths": [
+    {
+     "mode": "flow",
+     "d": "M22 192 L94 101 L196 41 L315 23 L412 82 L486 176 L443 280 L325 292 L204 291 L84 285 L22 192",
+     "order": 1,
+     "budget": [
+      2,
+      10
+     ],
+     "band": 1,
+     "arch": "outline",
+     "feature": "bicycle outline"
+    }
+   ],
+   "guide": []
+  },
+  {
+   "id": "windmill",
+   "tier": "medium",
+   "subject": "windmill",
+   "icon": "🌀",
+   "kid": true,
+   "wash": false,
+   "pack": "wave2",
+   "paths": [
+    {
+     "mode": "flow",
+     "d": "M22 248 L33 117 L84 23 L215 29 L292 95 L281 226 L257 354 L227 482 L103 490 L59 373 L22 248",
+     "order": 1,
+     "budget": [
+      2,
+      10
+     ],
+     "band": 1,
+     "arch": "outline",
+     "feature": "windmill outline"
+    }
+   ],
+   "guide": []
+  },
+  {
+   "id": "hotair",
+   "tier": "medium",
+   "subject": "hotair",
+   "icon": "🧺",
+   "kid": true,
+   "wash": false,
+   "pack": "wave2",
+   "paths": [
+    {
+     "mode": "flow",
+     "d": "M22 194 L56 80 L157 22 L265 66 L310 175 L282 291 L240 404 L176 490 L99 422 L57 309 L22 194",
+     "order": 1,
+     "budget": [
+      2,
+      10
+     ],
+     "band": 1,
+     "arch": "outline",
+     "feature": "hotair outline"
+    }
+   ],
+   "guide": []
+  },
+  {
+   "id": "lighthouse",
+   "tier": "medium",
+   "subject": "lighthouse",
+   "icon": "🗼",
+   "kid": true,
+   "wash": false,
+   "pack": "wave2",
+   "paths": [
+    {
+     "mode": "flow",
+     "d": "M22 490 L39 359 L56 229 L73 98 L142 22 L221 87 L238 217 L255 348 L273 479 L154 490 L22 490",
+     "order": 1,
+     "budget": [
+      2,
+      10
+     ],
+     "band": 1,
+     "arch": "outline",
+     "feature": "lighthouse outline"
+    }
+   ],
+   "guide": []
+  },
+  {
+   "id": "violin",
+   "tier": "medium",
+   "subject": "violin",
+   "icon": "🎻",
+   "kid": true,
+   "wash": false,
+   "pack": "wave2",
+   "paths": [
+    {
+     "mode": "flow",
+     "d": "M22 383 L42 230 L82 82 L151 87 L191 236 L209 388 L113 490 L22 383",
+     "order": 1,
+     "budget": [
+      2,
+      10
+     ],
+     "band": 1,
+     "arch": "outline",
+     "feature": "violin outline"
+    }
+   ],
+   "guide": []
+  },
+  {
+   "id": "hummingbird",
+   "tier": "medium",
+   "subject": "hummingbird",
+   "icon": "🐦",
+   "kid": true,
+   "wash": false,
+   "pack": "wave2",
+   "paths": [
+    {
+     "mode": "flow",
+     "d": "M22 364 L47 227 L71 89 L157 33 L285 88 L413 142 L483 237 L440 366 L301 368 L161 366 L22 364",
+     "order": 1,
+     "budget": [
+      2,
+      10
+     ],
+     "band": 1,
+     "arch": "outline",
+     "feature": "hummingbird outline"
+    }
+   ],
+   "guide": []
+  },
+  {
+   "id": "rooster",
+   "tier": "medium",
+   "subject": "rooster",
+   "icon": "🐓",
+   "kid": true,
+   "wash": false,
+   "pack": "wave2",
+   "paths": [
+    {
+     "mode": "flow",
+     "d": "M22 184 L88 74 L230 46 L372 27 L458 138 L413 267 L348 397 L261 490 L142 436 L54 320 L22 184",
+     "order": 1,
+     "budget": [
+      2,
+      10
+     ],
+     "band": 1,
+     "arch": "outline",
+     "feature": "rooster outline"
+    }
+   ],
+   "guide": []
+  },
+  {
+   "id": "seahorse",
+   "tier": "medium",
+   "subject": "seahorse",
+   "icon": "🐠",
+   "kid": true,
+   "wash": false,
+   "pack": "wave2",
+   "paths": [
+    {
+     "mode": "flow",
+     "d": "M22 126 L105 55 L170 74 L211 175 L219 279 L185 383 L136 478 L47 454 L39 345 L30 236 L22 126",
+     "order": 1,
+     "budget": [
+      2,
+      10
+     ],
+     "band": 1,
+     "arch": "outline",
+     "feature": "seahorse outline"
+    }
+   ],
+   "guide": []
   }
  ]
 }

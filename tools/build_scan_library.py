@@ -63,7 +63,17 @@ SUBJ = {  # subject -> (ref, mode, tier)
  "sailboat": ("sailboat.png", "ink", "easy"),
  "cactus": ("cactus.png", "ink", "easy"),
  "ladybug": ("ladybug.png", "ink", "easy"),
- "moonstar": ("moonstar.png", "ink", "easy"), "rhino": ("rhino.png", "ink", "expert"),
+ "moonstar": ("moonstar.png", "ink", "easy"),
+ # Wave 1 batch 2 (Eric: "cut the trex and send the rest"): the
+ # intermediate eight, suggested-then-approved. Trex cut.
+ "bicycle": ("bicycle.png", "ink", "medium"),
+ "windmill": ("windmill.png", "ink", "medium"),
+ "hotair": ("hotair.png", "ink", "medium"),
+ "lighthouse": ("lighthouse.png", "ink", "medium"),
+ "violin": ("violin.png", "ink", "medium"),
+ "hummingbird": ("hummingbird.png", "ink", "medium"),
+ "rooster": ("rooster.png", "ink", "medium"),
+ "seahorse": ("seahorse.png", "ink", "medium"), "rhino": ("rhino.png", "ink", "expert"),
 }
 
 # ---- per-subject AUTHORING recipes (content work, not renderer tuning:

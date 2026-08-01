@@ -240,5 +240,69 @@
   "sourceUrl": "",
   "file": "tools/draw_wave1.py",
   "note": "Drawn coordinate list; candidates approved by Eric 2026-08-01."
+ },
+ {
+  "subject": "bicycle",
+  "title": "SpellGame original \u2014 bicycle (wave 1 batch 2)",
+  "license": "Original artwork (SpellGame)",
+  "sourceUrl": "",
+  "file": "tools/draw_wave2.py",
+  "note": "Drawn coordinate list; candidates approved by Eric 2026-08-01."
+ },
+ {
+  "subject": "windmill",
+  "title": "SpellGame original \u2014 windmill (wave 1 batch 2)",
+  "license": "Original artwork (SpellGame)",
+  "sourceUrl": "",
+  "file": "tools/draw_wave2.py",
+  "note": "Drawn coordinate list; candidates approved by Eric 2026-08-01."
+ },
+ {
+  "subject": "hotair",
+  "title": "SpellGame original \u2014 hotair (wave 1 batch 2)",
+  "license": "Original artwork (SpellGame)",
+  "sourceUrl": "",
+  "file": "tools/draw_wave2.py",
+  "note": "Drawn coordinate list; candidates approved by Eric 2026-08-01."
+ },
+ {
+  "subject": "lighthouse",
+  "title": "SpellGame original \u2014 lighthouse (wave 1 batch 2)",
+  "license": "Original artwork (SpellGame)",
+  "sourceUrl": "",
+  "file": "tools/draw_wave2.py",
+  "note": "Drawn coordinate list; candidates approved by Eric 2026-08-01."
+ },
+ {
+  "subject": "violin",
+  "title": "SpellGame original \u2014 violin (wave 1 batch 2)",
+  "license": "Original artwork (SpellGame)",
+  "sourceUrl": "",
+  "file": "tools/draw_wave2.py",
+  "note": "Drawn coordinate list; candidates approved by Eric 2026-08-01."
+ },
+ {
+  "subject": "hummingbird",
+  "title": "SpellGame original \u2014 hummingbird (wave 1 batch 2)",
+  "license": "Original artwork (SpellGame)",
+  "sourceUrl": "",
+  "file": "tools/draw_wave2.py",
+  "note": "Drawn coordinate list; candidates approved by Eric 2026-08-01."
+ },
+ {
+  "subject": "rooster",
+  "title": "SpellGame original \u2014 rooster (wave 1 batch 2)",
+  "license": "Original artwork (SpellGame)",
+  "sourceUrl": "",
+  "file": "tools/draw_wave2.py",
+  "note": "Drawn coordinate list; candidates approved by Eric 2026-08-01."
+ },
+ {
+  "subject": "seahorse",
+  "title": "SpellGame original \u2014 seahorse (wave 1 batch 2)",
+  "license": "Original artwork (SpellGame)",
+  "sourceUrl": "",
+  "file": "tools/draw_wave2.py",
+  "note": "Drawn coordinate list; candidates approved by Eric 2026-08-01."
  }
 ]
