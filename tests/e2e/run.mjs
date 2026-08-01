@@ -27,6 +27,8 @@ import * as submitAdvance from './specs/submit-advance.mjs';
 import * as attemptsShields from './specs/attempts_shields.mjs';
 import * as toolsHub from './specs/tools-hub.mjs';
 import * as playHub from './specs/playhub.mjs';
+import * as economics from './specs/economics.mjs';
+import * as finalePixels from './specs/finale-pixels.mjs';
 
 const SPECS = [
   ['playhub', playHub],
@@ -42,6 +44,8 @@ const SPECS = [
   ['attempts-shields', attemptsShields],
   ['tools-hub', toolsHub],
   ['finale', finale],
+  ['economics', economics],
+  ['finale-pixels', finalePixels],
   ['platform', platform],
   ['picture-wall', pictureWall],
   ['gallery', gallery],

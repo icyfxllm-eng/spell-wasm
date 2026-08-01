@@ -1128,6 +1128,9 @@ pub fn submit_guess(app: &App) {
         crate::norm::answer_matches(&typed, &word, kid)
             || crate::homophones::accepts(&cur_lang, &word, &typed)
     };
+    // CC-LEARNING-ENGINE: the validated verdict, recorded at the single
+    // submission path — typed channel, so skills update.
+    crate::learner::note_attempt(&cur_lang, &word, correct, crate::learner::Channel::Typed);
     if correct {
         on_correct(app);
     } else {
@@ -1143,6 +1146,9 @@ async fn backend_verify(app: App, word: String, typed: String, kid: bool) {
         Ok(c) => c,
         Err(_) => crate::norm::answer_matches(&typed, &word, kid),
     };
+    // The English backend-verified path is the same submission, one
+    // network hop later — recorded with the same channel.
+    crate::learner::note_attempt(crate::consts::EN, &word, correct, crate::learner::Channel::Typed);
     if correct {
         on_correct(&app);
     } else {

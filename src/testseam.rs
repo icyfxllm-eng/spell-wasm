@@ -45,6 +45,21 @@ pub fn install(app: &App) {
         let cb = Closure::<dyn Fn() -> String>::new(crate::wordpic_screen::seam_current_word);
         set(&obj, "picWord", cb.into_js_value());
     }
+    // The export renderer's 1× SVG for the open picture (a Promise —
+    // fonts are fetched). OBSERVE-only: renders the same bytes the Save
+    // path would rasterize, saves nothing, touches no state.
+    #[cfg(not(feature = "web"))]
+    {
+        let cb = Closure::<dyn Fn() -> js_sys::Promise>::new(|| {
+            wasm_bindgen_futures::future_to_promise(async {
+                crate::wordpic_screen::seam_export_svg()
+                    .await
+                    .map(JsValue::from)
+                    .map_err(|e| JsValue::from_str(&e))
+            })
+        });
+        set(&obj, "picExportSvg", cb.into_js_value());
+    }
     {
         let a = app.clone();
         let cb = Closure::<dyn Fn() -> String>::new(move || {

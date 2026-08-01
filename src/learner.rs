@@ -312,6 +312,71 @@ pub fn det_pow(x: f64, y: f64) -> f64 {
     det_exp(y * det_ln(x))
 }
 
+// ------------------------------------------------- the gameplay bridge
+
+/// CC-LEARNING-ENGINE D2 — the ENGLISH hazard taxonomy is the shipped
+/// template, a literal port of `tools/difficulty-score/extractors.py::en`
+/// pinned by the fixture parity test below (3206 pool words, byte-for-tag).
+/// Every other language returns an EMPTY vector on purpose: its attempts
+/// still log (L1's raw material) but update no skill until a named native
+/// speaker signs off its taxonomy. Not naming them now is the decision.
+pub fn hazards(lang: &str, word: &str) -> Vec<String> {
+    if lang != "en" {
+        return Vec::new();
+    }
+    const SILENT: [&str; 9] = ["kn", "mb", "gh", "wr", "mn", "bt", "gn", "pn", "ps"];
+    const LOAN: [&str; 6] = ["eau", "ough", " psy", "eur", "oir", "aut"];
+    const AMBIG: [&str; 9] =
+        ["able", "ible", "ance", "ence", "ant", "ent", "tion", "sion", "cian"];
+    let w = word.to_lowercase();
+    let mut f = Vec::new();
+    if SILENT.iter().any(|s| w.contains(s)) {
+        f.push("silent_letters".to_string());
+    }
+    // Python checks `not in "aeiou"` — a hyphen or apostrophe counts as a
+    // consonant there, so it does here too. Parity beats prettiness.
+    let ch: Vec<char> = w.chars().collect();
+    if ch.windows(2).any(|p| p[0] == p[1] && !"aeiou".contains(p[0])) {
+        f.push("doubled_consonant".to_string());
+    }
+    if AMBIG.iter().any(|s| w.ends_with(s) || w.contains(s)) {
+        f.push("unstressed_vowel_ambiguity".to_string());
+    }
+    if LOAN.iter().any(|l| w.contains(l)) {
+        f.push("loanword_spelling".to_string());
+    }
+    f
+}
+
+/// Day index for FSRS scheduling: whole days since the Unix epoch, UTC.
+/// Only deltas matter to the scheduler, so the base is arbitrary — what
+/// matters is that it's monotonic and survives reinstalls identically.
+fn today_day() -> u32 {
+    (js_sys::Date::now() / 86_400_000.0) as u32
+}
+
+const STORE_PREFIX: &str = "spell_learner_";
+
+/// The one gameplay door: load-or-new, record, save. Every submit path
+/// calls this and nothing else — the speech exclusion lives inside
+/// `record()`, not in callers remembering to skip it. Storage failures
+/// degrade to a fresh profile rather than a crash: the learner is an
+/// observer of the game, never a gate on it.
+pub fn note_attempt(lang: &str, word: &str, correct: bool, channel: Channel) {
+    let key = format!("{STORE_PREFIX}{lang}");
+    let mut st = crate::storage::get_raw(&key)
+        .and_then(|j| load_state(&j).ok())
+        .unwrap_or_else(|| LearnerState::new(lang));
+    st.record(Attempt {
+        day: today_day(),
+        word: word.to_string(),
+        skills: hazards(lang, word),
+        correct,
+        channel,
+    });
+    crate::storage::set_json(&key, &st);
+}
+
 // ----------------------------------------------------------------- tests
 
 #[cfg(test)]
@@ -518,5 +583,64 @@ mod tests {
         });
         let json = serde_json::to_string(&st).unwrap();
         assert_eq!(load_state(&json).unwrap(), st);
+    }
+}
+
+#[cfg(test)]
+mod bridge_tests {
+    use super::*;
+
+    /// D2 parity: the Rust port answers exactly what the Python extractor
+    /// answered for every English pool word — the fixture is generated
+    /// from `extractors.py::en` itself, so drift in either port fails here.
+    #[test]
+    fn english_hazards_match_the_python_extractor() {
+        let fx: std::collections::BTreeMap<String, Vec<String>> =
+            serde_json::from_str(include_str!("../config/learner/en-hazards-fixture.json"))
+                .unwrap();
+        assert!(fx.len() > 3000, "fixture covers the full pool");
+        let mut tagged = 0;
+        for (word, want) in &fx {
+            assert_eq!(&hazards("en", word), want, "{word}");
+            tagged += usize::from(!want.is_empty());
+        }
+        assert!(tagged > 800, "the taxonomy actually fires: {tagged}");
+    }
+
+    /// D2's gate: unaudited languages log with an empty vector — even on
+    /// words that would trip every English rule.
+    #[test]
+    fn unaudited_languages_carry_no_hazard_vector() {
+        for lang in ["fr", "de", "es", "ko", "sw"] {
+            assert!(hazards(lang, "knobble-attention").is_empty(), "{lang}");
+        }
+    }
+
+    /// The bridge composed end-to-end (minus storage, which is DOM):
+    /// typed attempts with real hazard vectors accumulate mastery; a
+    /// speech attempt on the same words logs but moves no skill.
+    #[test]
+    fn typed_accumulates_speech_only_logs() {
+        let mut st = LearnerState::new("en");
+        for (w, ok) in [("wrong", true), ("attention", true), ("wrong", false)] {
+            st.record(Attempt {
+                day: 1,
+                word: w.into(),
+                skills: hazards("en", w),
+                correct: ok,
+                channel: Channel::Typed,
+            });
+        }
+        assert!(!st.skills.is_empty(), "typed attempts grew skills");
+        let before = st.skills.clone();
+        st.record(Attempt {
+            day: 2,
+            word: "wrong".into(),
+            skills: hazards("en", "wrong"),
+            correct: false,
+            channel: Channel::Speech,
+        });
+        assert_eq!(st.skills, before, "speech never moves a spelling skill");
+        assert_eq!(st.log.len(), 4, "but it IS logged");
     }
 }

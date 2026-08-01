@@ -1,0 +1,5047 @@
+{
+"ab": [],
+"abandoned": [],
+"abc": [],
+"aberration": [
+"doubled_consonant",
+"unstressed_vowel_ambiguity"
+],
+"abilities": [],
+"ability": [],
+"able": [
+"unstressed_vowel_ambiguity"
+],
+"about": [],
+"above": [],
+"absence": [
+"unstressed_vowel_ambiguity"
+],
+"absolute": [],
+"ac": [],
+"academic": [],
+"academy": [],
+"accept": [
+"doubled_consonant"
+],
+"acceptable": [
+"doubled_consonant",
+"unstressed_vowel_ambiguity"
+],
+"acceptance": [
+"doubled_consonant",
+"unstressed_vowel_ambiguity"
+],
+"accepted": [
+"doubled_consonant"
+],
+"access": [
+"doubled_consonant"
+],
+"accommodate": [
+"doubled_consonant"
+],
+"accompanied": [
+"doubled_consonant"
+],
+"accomplished": [
+"doubled_consonant"
+],
+"according": [
+"doubled_consonant"
+],
+"account": [
+"doubled_consonant"
+],
+"accounts": [
+"doubled_consonant"
+],
+"accuracy": [
+"doubled_consonant"
+],
+"accurate": [
+"doubled_consonant"
+],
+"accused": [
+"doubled_consonant"
+],
+"achieve": [],
+"achieved": [],
+"acid": [],
+"acquaintance": [
+"unstressed_vowel_ambiguity"
+],
+"acquire": [],
+"acquired": [],
+"across": [
+"doubled_consonant"
+],
+"act": [],
+"acting": [],
+"action": [
+"unstressed_vowel_ambiguity"
+],
+"actions": [
+"unstressed_vowel_ambiguity"
+],
+"active": [],
+"activities": [],
+"activity": [],
+"acts": [],
+"actual": [],
+"actually": [
+"doubled_consonant"
+],
+"ad": [],
+"adapted": [],
+"add": [
+"doubled_consonant"
+],
+"added": [
+"doubled_consonant"
+],
+"adding": [
+"doubled_consonant"
+],
+"addition": [
+"doubled_consonant",
+"unstressed_vowel_ambiguity"
+],
+"additional": [
+"doubled_consonant",
+"unstressed_vowel_ambiguity"
+],
+"additionally": [
+"doubled_consonant",
+"unstressed_vowel_ambiguity"
+],
+"address": [
+"doubled_consonant"
+],
+"addressed": [
+"doubled_consonant"
+],
+"addresses": [
+"doubled_consonant"
+],
+"adds": [
+"doubled_consonant"
+],
+"administration": [
+"unstressed_vowel_ambiguity"
+],
+"administrative": [],
+"adopted": [],
+"adult": [],
+"advance": [
+"unstressed_vowel_ambiguity"
+],
+"advanced": [
+"unstressed_vowel_ambiguity"
+],
+"advantage": [
+"unstressed_vowel_ambiguity"
+],
+"advantages": [
+"unstressed_vowel_ambiguity"
+],
+"adventure": [
+"unstressed_vowel_ambiguity"
+],
+"advertising": [],
+"affairs": [
+"doubled_consonant"
+],
+"affect": [
+"doubled_consonant"
+],
+"affected": [
+"doubled_consonant"
+],
+"after": [],
+"afternoon": [],
+"afterwards": [],
+"again": [],
+"against": [],
+"age": [],
+"aged": [],
+"agents": [
+"unstressed_vowel_ambiguity"
+],
+"ages": [],
+"ago": [],
+"agreed": [],
+"agreement": [
+"unstressed_vowel_ambiguity"
+],
+"agreements": [
+"unstressed_vowel_ambiguity"
+],
+"agricultural": [],
+"agriculture": [],
+"aid": [],
+"aim": [],
+"aims": [],
+"air": [],
+"aircraft": [],
+"airport": [],
+"al": [],
+"album": [],
+"alcohol": [],
+"algorithm": [],
+"algorithms": [],
+"all": [
+"doubled_consonant"
+],
+"allow": [
+"doubled_consonant"
+],
+"allowed": [
+"doubled_consonant"
+],
+"allowing": [
+"doubled_consonant"
+],
+"allows": [
+"doubled_consonant"
+],
+"almost": [],
+"alone": [],
+"along": [],
+"alongside": [],
+"already": [],
+"also": [],
+"alternate": [],
+"alternative": [],
+"although": [
+"silent_letters",
+"loanword_spelling"
+],
+"always": [],
+"am": [],
+"amanuensis": [],
+"among": [],
+"amount": [],
+"amounts": [],
+"an": [],
+"anachronism": [],
+"analysis": [],
+"ancient": [
+"unstressed_vowel_ambiguity"
+],
+"and": [],
+"angle": [],
+"animal": [],
+"animals": [],
+"anniversary": [
+"doubled_consonant"
+],
+"announced": [
+"doubled_consonant"
+],
+"annual": [
+"doubled_consonant"
+],
+"annually": [
+"doubled_consonant"
+],
+"another": [],
+"answer": [],
+"any": [],
+"anyone": [],
+"anything": [],
+"apart": [],
+"apotheosis": [],
+"apparent": [
+"doubled_consonant",
+"unstressed_vowel_ambiguity"
+],
+"apparently": [
+"doubled_consonant",
+"unstressed_vowel_ambiguity"
+],
+"appeal": [
+"doubled_consonant"
+],
+"appear": [
+"doubled_consonant"
+],
+"appearance": [
+"doubled_consonant",
+"unstressed_vowel_ambiguity"
+],
+"appearances": [
+"doubled_consonant",
+"unstressed_vowel_ambiguity"
+],
+"appeared": [
+"doubled_consonant"
+],
+"appearing": [
+"doubled_consonant"
+],
+"appears": [
+"doubled_consonant"
+],
+"application": [
+"doubled_consonant",
+"unstressed_vowel_ambiguity"
+],
+"applications": [
+"doubled_consonant",
+"unstressed_vowel_ambiguity"
+],
+"applied": [
+"doubled_consonant"
+],
+"applies": [
+"doubled_consonant"
+],
+"apply": [
+"doubled_consonant"
+],
+"appointed": [
+"doubled_consonant"
+],
+"appointment": [
+"doubled_consonant",
+"unstressed_vowel_ambiguity"
+],
+"approach": [
+"doubled_consonant"
+],
+"approaches": [
+"doubled_consonant"
+],
+"appropriate": [
+"doubled_consonant"
+],
+"approval": [
+"doubled_consonant"
+],
+"approved": [
+"doubled_consonant"
+],
+"approximately": [
+"doubled_consonant"
+],
+"arc": [],
+"archipelago": [],
+"architectural": [],
+"architecture": [],
+"arctic": [],
+"are": [],
+"area": [],
+"areas": [],
+"argued": [],
+"argument": [
+"unstressed_vowel_ambiguity"
+],
+"arguments": [
+"unstressed_vowel_ambiguity"
+],
+"arm": [],
+"armed": [],
+"arms": [],
+"army": [],
+"around": [],
+"arranged": [
+"doubled_consonant"
+],
+"arrangement": [
+"doubled_consonant",
+"unstressed_vowel_ambiguity"
+],
+"arrested": [
+"doubled_consonant"
+],
+"arrived": [
+"doubled_consonant"
+],
+"art": [],
+"article": [],
+"articles": [],
+"artificial": [],
+"artillery": [
+"doubled_consonant"
+],
+"artist": [],
+"artists": [],
+"arts": [],
+"as": [],
+"ask": [],
+"asked": [],
+"asks": [],
+"aspects": [],
+"assembly": [
+"silent_letters",
+"doubled_consonant"
+],
+"assigned": [
+"silent_letters",
+"doubled_consonant"
+],
+"assistance": [
+"doubled_consonant",
+"unstressed_vowel_ambiguity"
+],
+"associated": [
+"doubled_consonant"
+],
+"association": [
+"doubled_consonant",
+"unstressed_vowel_ambiguity"
+],
+"assumed": [
+"doubled_consonant"
+],
+"at": [],
+"atmosphere": [],
+"atom": [],
+"atoms": [],
+"attached": [
+"doubled_consonant"
+],
+"attack": [
+"doubled_consonant"
+],
+"attacked": [
+"doubled_consonant"
+],
+"attacks": [
+"doubled_consonant"
+],
+"attempt": [
+"doubled_consonant"
+],
+"attempted": [
+"doubled_consonant"
+],
+"attempting": [
+"doubled_consonant"
+],
+"attempts": [
+"doubled_consonant"
+],
+"attended": [
+"doubled_consonant"
+],
+"attention": [
+"doubled_consonant",
+"unstressed_vowel_ambiguity"
+],
+"attracted": [
+"doubled_consonant"
+],
+"attributed": [
+"doubled_consonant"
+],
+"audience": [
+"unstressed_vowel_ambiguity"
+],
+"audiences": [
+"unstressed_vowel_ambiguity"
+],
+"audio": [],
+"author": [
+"loanword_spelling"
+],
+"authorities": [
+"loanword_spelling"
+],
+"authority": [
+"loanword_spelling"
+],
+"authors": [
+"loanword_spelling"
+],
+"automatically": [
+"doubled_consonant",
+"loanword_spelling"
+],
+"availability": [],
+"available": [
+"unstressed_vowel_ambiguity"
+],
+"average": [],
+"avoid": [],
+"award": [],
+"awarded": [],
+"away": [],
+"awkward": [],
+"axis": [],
+"baby": [],
+"back": [],
+"background": [],
+"bacteria": [],
+"bad": [],
+"balance": [
+"unstressed_vowel_ambiguity"
+],
+"ball": [
+"doubled_consonant"
+],
+"balloon": [
+"doubled_consonant"
+],
+"ban": [],
+"band": [],
+"bands": [],
+"bank": [],
+"bar": [],
+"bars": [],
+"base": [],
+"based": [],
+"basic": [],
+"basis": [],
+"bass": [
+"doubled_consonant"
+],
+"battle": [
+"doubled_consonant"
+],
+"bay": [],
+"bc": [],
+"be": [],
+"beam": [],
+"bear": [],
+"beat": [],
+"beautiful": [
+"loanword_spelling"
+],
+"became": [],
+"because": [],
+"become": [],
+"becomes": [],
+"becoming": [],
+"bed": [],
+"been": [],
+"beer": [],
+"before": [],
+"began": [],
+"begin": [],
+"beginning": [
+"doubled_consonant"
+],
+"begins": [],
+"begun": [],
+"behavior": [],
+"behaviour": [],
+"behind": [],
+"being": [],
+"belief": [],
+"beliefs": [],
+"believe": [],
+"believed": [],
+"bell": [
+"doubled_consonant"
+],
+"below": [],
+"belt": [],
+"ben": [],
+"benefit": [],
+"benefits": [],
+"best": [],
+"bet": [],
+"beta": [],
+"better": [
+"doubled_consonant"
+],
+"between": [],
+"beyond": [],
+"bias": [],
+"bicycle": [],
+"bid": [],
+"big": [],
+"bill": [
+"doubled_consonant"
+],
+"billion": [
+"doubled_consonant"
+],
+"bind": [],
+"biological": [],
+"bird": [],
+"birds": [],
+"birth": [],
+"bit": [],
+"bits": [],
+"black": [],
+"block": [],
+"blood": [],
+"blow": [],
+"blue": [],
+"board": [],
+"boat": [],
+"boats": [],
+"bob": [],
+"bodies": [],
+"body": [],
+"bomb": [
+"silent_letters"
+],
+"bond": [],
+"bone": [],
+"book": [],
+"books": [],
+"boom": [],
+"border": [],
+"born": [],
+"both": [],
+"bottom": [
+"doubled_consonant"
+],
+"bound": [],
+"boundaries": [],
+"boundary": [],
+"bourgeoisie": [],
+"bow": [],
+"bowl": [],
+"box": [],
+"boy": [],
+"boys": [],
+"brain": [],
+"branch": [],
+"break": [],
+"bridge": [],
+"brief": [],
+"bring": [],
+"bringing": [],
+"broad": [],
+"broadcast": [],
+"broke": [],
+"broken": [],
+"brother": [],
+"brothers": [],
+"brought": [
+"silent_letters",
+"loanword_spelling"
+],
+"brouhaha": [],
+"budget": [],
+"build": [],
+"building": [],
+"buildings": [],
+"built": [],
+"bulk": [],
+"bureaucracy": [
+"loanword_spelling"
+],
+"burn": [],
+"bus": [],
+"bush": [],
+"business": [
+"doubled_consonant"
+],
+"businesses": [
+"doubled_consonant"
+],
+"but": [],
+"buy": [],
+"by": [],
+"cable": [
+"unstressed_vowel_ambiguity"
+],
+"cacophony": [],
+"calculated": [],
+"calendar": [],
+"call": [
+"doubled_consonant"
+],
+"called": [
+"doubled_consonant"
+],
+"calling": [
+"doubled_consonant"
+],
+"calls": [
+"doubled_consonant"
+],
+"came": [],
+"camera": [],
+"camp": [],
+"campaign": [
+"silent_letters"
+],
+"campaigns": [
+"silent_letters"
+],
+"campus": [],
+"can": [],
+"cancer": [
+"unstressed_vowel_ambiguity"
+],
+"candidate": [],
+"candidates": [],
+"cannot": [
+"doubled_consonant"
+],
+"capabilities": [],
+"capability": [],
+"capable": [
+"unstressed_vowel_ambiguity"
+],
+"capacity": [],
+"cape": [],
+"capital": [],
+"capture": [],
+"captured": [],
+"car": [],
+"carbon": [],
+"card": [],
+"cards": [],
+"care": [],
+"career": [],
+"carried": [
+"doubled_consonant"
+],
+"carry": [
+"doubled_consonant"
+],
+"carrying": [
+"doubled_consonant"
+],
+"cars": [],
+"case": [],
+"cases": [],
+"cash": [],
+"cast": [],
+"casualties": [],
+"cat": [],
+"catastrophe": [],
+"categories": [],
+"category": [],
+"catholic": [],
+"cause": [],
+"caused": [],
+"causes": [],
+"causing": [],
+"celebrated": [],
+"cell": [
+"doubled_consonant"
+],
+"cells": [
+"doubled_consonant"
+],
+"cemetery": [],
+"center": [
+"unstressed_vowel_ambiguity"
+],
+"central": [
+"unstressed_vowel_ambiguity"
+],
+"centre": [
+"unstressed_vowel_ambiguity"
+],
+"centuries": [
+"unstressed_vowel_ambiguity"
+],
+"century": [
+"unstressed_vowel_ambiguity"
+],
+"ceremony": [],
+"certain": [],
+"certainly": [],
+"cf": [],
+"chain": [],
+"challenge": [
+"doubled_consonant"
+],
+"challenges": [
+"doubled_consonant"
+],
+"chance": [
+"unstressed_vowel_ambiguity"
+],
+"change": [],
+"changed": [],
+"changes": [],
+"changing": [],
+"channel": [
+"doubled_consonant"
+],
+"channels": [
+"doubled_consonant"
+],
+"chapter": [],
+"character": [],
+"characteristic": [],
+"characteristics": [],
+"characterized": [],
+"characters": [],
+"charge": [],
+"charged": [],
+"charges": [],
+"chemical": [],
+"chemicals": [],
+"chiaroscuro": [],
+"chief": [],
+"child": [],
+"childhood": [],
+"children": [],
+"china": [],
+"chip": [],
+"chocolate": [],
+"choice": [],
+"choose": [],
+"chose": [],
+"chosen": [],
+"chrysanthemum": [
+"unstressed_vowel_ambiguity"
+],
+"church": [],
+"churches": [],
+"circle": [],
+"circuit": [],
+"circuits": [],
+"circumlocution": [
+"unstressed_vowel_ambiguity"
+],
+"circumstances": [
+"unstressed_vowel_ambiguity"
+],
+"citation": [
+"unstressed_vowel_ambiguity"
+],
+"cities": [],
+"citizens": [],
+"city": [],
+"civil": [],
+"civilians": [],
+"claim": [],
+"claimed": [],
+"claims": [],
+"class": [
+"doubled_consonant"
+],
+"classes": [
+"doubled_consonant"
+],
+"classic": [
+"doubled_consonant"
+],
+"classical": [
+"doubled_consonant"
+],
+"classification": [
+"doubled_consonant",
+"unstressed_vowel_ambiguity"
+],
+"classified": [
+"doubled_consonant"
+],
+"clay": [],
+"clear": [],
+"clearly": [],
+"climate": [],
+"close": [],
+"closed": [],
+"closely": [],
+"cloud": [],
+"club": [],
+"clubs": [],
+"cm": [],
+"coal": [],
+"coalition": [
+"unstressed_vowel_ambiguity"
+],
+"coast": [],
+"coat": [],
+"code": [],
+"coil": [],
+"coin": [],
+"cold": [],
+"collected": [
+"doubled_consonant"
+],
+"collection": [
+"doubled_consonant",
+"unstressed_vowel_ambiguity"
+],
+"collections": [
+"doubled_consonant",
+"unstressed_vowel_ambiguity"
+],
+"college": [
+"doubled_consonant"
+],
+"colonel": [],
+"color": [],
+"colors": [],
+"columns": [
+"silent_letters"
+],
+"combat": [
+"silent_letters"
+],
+"combination": [
+"silent_letters",
+"unstressed_vowel_ambiguity"
+],
+"combinations": [
+"silent_letters",
+"unstressed_vowel_ambiguity"
+],
+"combined": [
+"silent_letters"
+],
+"come": [],
+"comes": [],
+"coming": [],
+"command": [
+"doubled_consonant"
+],
+"commanded": [
+"doubled_consonant"
+],
+"commercial": [
+"doubled_consonant"
+],
+"commercially": [
+"doubled_consonant"
+],
+"commission": [
+"doubled_consonant",
+"unstressed_vowel_ambiguity"
+],
+"commissioned": [
+"doubled_consonant",
+"unstressed_vowel_ambiguity"
+],
+"committed": [
+"doubled_consonant"
+],
+"committee": [
+"doubled_consonant"
+],
+"common": [
+"doubled_consonant"
+],
+"commonly": [
+"doubled_consonant"
+],
+"communicate": [
+"doubled_consonant"
+],
+"communication": [
+"doubled_consonant",
+"unstressed_vowel_ambiguity"
+],
+"communications": [
+"doubled_consonant",
+"unstressed_vowel_ambiguity"
+],
+"communities": [
+"doubled_consonant"
+],
+"community": [
+"doubled_consonant"
+],
+"compact": [],
+"companies": [],
+"company": [],
+"compared": [],
+"comparison": [],
+"compatible": [
+"unstressed_vowel_ambiguity"
+],
+"competing": [],
+"competition": [
+"unstressed_vowel_ambiguity"
+],
+"competitive": [],
+"complete": [],
+"completed": [],
+"completely": [],
+"completion": [
+"unstressed_vowel_ambiguity"
+],
+"complex": [],
+"complexity": [],
+"complicated": [],
+"component": [
+"unstressed_vowel_ambiguity"
+],
+"components": [
+"unstressed_vowel_ambiguity"
+],
+"composed": [],
+"composition": [
+"unstressed_vowel_ambiguity"
+],
+"compounds": [],
+"computer": [],
+"computers": [],
+"computing": [],
+"conceived": [],
+"concentrated": [
+"unstressed_vowel_ambiguity"
+],
+"concentration": [
+"unstressed_vowel_ambiguity"
+],
+"concept": [],
+"concepts": [],
+"concern": [],
+"concerned": [],
+"concerning": [],
+"concerns": [],
+"concert": [],
+"concluded": [],
+"conclusion": [
+"unstressed_vowel_ambiguity"
+],
+"concrete": [],
+"condition": [
+"unstressed_vowel_ambiguity"
+],
+"conditions": [
+"unstressed_vowel_ambiguity"
+],
+"conduct": [],
+"conducted": [],
+"conference": [
+"unstressed_vowel_ambiguity"
+],
+"configuration": [
+"unstressed_vowel_ambiguity"
+],
+"confirmed": [],
+"conflict": [],
+"confusion": [
+"unstressed_vowel_ambiguity"
+],
+"congress": [
+"doubled_consonant"
+],
+"connected": [
+"doubled_consonant"
+],
+"connection": [
+"doubled_consonant",
+"unstressed_vowel_ambiguity"
+],
+"connections": [
+"doubled_consonant",
+"unstressed_vowel_ambiguity"
+],
+"connoisseur": [
+"doubled_consonant",
+"loanword_spelling"
+],
+"conscience": [
+"unstressed_vowel_ambiguity"
+],
+"conscientious": [
+"unstressed_vowel_ambiguity"
+],
+"consecutive": [],
+"consequence": [
+"unstressed_vowel_ambiguity"
+],
+"consequences": [
+"unstressed_vowel_ambiguity"
+],
+"conservative": [],
+"consider": [],
+"considerable": [
+"unstressed_vowel_ambiguity"
+],
+"considerably": [],
+"consideration": [
+"unstressed_vowel_ambiguity"
+],
+"considered": [],
+"considering": [],
+"consisted": [],
+"consistent": [
+"unstressed_vowel_ambiguity"
+],
+"consisting": [],
+"consists": [],
+"constant": [
+"unstressed_vowel_ambiguity"
+],
+"constantly": [
+"unstressed_vowel_ambiguity"
+],
+"constitution": [
+"unstressed_vowel_ambiguity"
+],
+"constitutional": [
+"unstressed_vowel_ambiguity"
+],
+"constructed": [],
+"construction": [
+"unstressed_vowel_ambiguity"
+],
+"consumption": [
+"unstressed_vowel_ambiguity"
+],
+"contact": [],
+"contain": [],
+"contained": [],
+"containing": [],
+"contains": [],
+"contemporary": [],
+"content": [
+"unstressed_vowel_ambiguity"
+],
+"context": [],
+"continue": [],
+"continued": [],
+"continues": [],
+"continuing": [],
+"continuous": [],
+"continuously": [],
+"contract": [],
+"contrast": [],
+"contribute": [],
+"contributed": [],
+"contribution": [
+"unstressed_vowel_ambiguity"
+],
+"contributions": [
+"unstressed_vowel_ambiguity"
+],
+"control": [],
+"controlled": [
+"doubled_consonant"
+],
+"controls": [],
+"controversial": [],
+"controversy": [],
+"convention": [
+"unstressed_vowel_ambiguity"
+],
+"conventional": [
+"unstressed_vowel_ambiguity"
+],
+"conversion": [
+"unstressed_vowel_ambiguity"
+],
+"convert": [],
+"converted": [],
+"convinced": [],
+"cook": [],
+"cool": [],
+"cooperation": [
+"unstressed_vowel_ambiguity"
+],
+"copies": [],
+"copy": [],
+"core": [],
+"corn": [],
+"corporate": [],
+"corporation": [
+"unstressed_vowel_ambiguity"
+],
+"corps": [
+"silent_letters"
+],
+"correct": [
+"doubled_consonant"
+],
+"correspondence": [
+"doubled_consonant",
+"unstressed_vowel_ambiguity"
+],
+"corresponding": [
+"doubled_consonant"
+],
+"corruption": [
+"doubled_consonant",
+"unstressed_vowel_ambiguity"
+],
+"cost": [],
+"costs": [],
+"could": [],
+"council": [],
+"countries": [],
+"country": [],
+"county": [],
+"coup": [],
+"couple": [],
+"course": [],
+"court": [],
+"courts": [],
+"cover": [],
+"covered": [],
+"covering": [],
+"create": [],
+"created": [],
+"creates": [],
+"creating": [],
+"creation": [
+"unstressed_vowel_ambiguity"
+],
+"creative": [],
+"credit": [],
+"crew": [],
+"crime": [],
+"criminal": [],
+"crisis": [],
+"critical": [],
+"criticism": [],
+"criticized": [],
+"critics": [],
+"crop": [],
+"cross": [
+"doubled_consonant"
+],
+"cult": [],
+"cultural": [],
+"culture": [],
+"cultures": [],
+"cup": [],
+"current": [
+"doubled_consonant",
+"unstressed_vowel_ambiguity"
+],
+"currently": [
+"doubled_consonant",
+"unstressed_vowel_ambiguity"
+],
+"customers": [],
+"cut": [],
+"cuts": [],
+"cycle": [],
+"daily": [],
+"damage": [],
+"damaged": [],
+"dance": [
+"unstressed_vowel_ambiguity"
+],
+"dangerous": [],
+"dark": [],
+"data": [],
+"database": [],
+"date": [],
+"dates": [],
+"daughter": [
+"silent_letters"
+],
+"day": [],
+"days": [],
+"dc": [],
+"de": [],
+"dead": [],
+"deal": [],
+"death": [],
+"deaths": [],
+"debate": [],
+"debt": [
+"silent_letters"
+],
+"decade": [],
+"decades": [],
+"decided": [],
+"decision": [
+"unstressed_vowel_ambiguity"
+],
+"decisions": [
+"unstressed_vowel_ambiguity"
+],
+"deck": [],
+"declared": [],
+"decline": [],
+"declined": [],
+"decrease": [],
+"decreased": [],
+"dedicated": [],
+"deep": [],
+"defeat": [],
+"defeated": [],
+"defense": [],
+"defensive": [],
+"define": [],
+"defined": [],
+"definite": [],
+"definitely": [],
+"definition": [
+"unstressed_vowel_ambiguity"
+],
+"definitions": [
+"unstressed_vowel_ambiguity"
+],
+"degree": [],
+"degrees": [],
+"del": [],
+"delivered": [],
+"delivery": [],
+"demand": [],
+"demanded": [],
+"demands": [],
+"democracy": [],
+"democratic": [],
+"democrats": [],
+"demonstrated": [],
+"density": [],
+"department": [
+"unstressed_vowel_ambiguity"
+],
+"departure": [],
+"dependent": [
+"unstressed_vowel_ambiguity"
+],
+"depending": [],
+"depends": [],
+"depicted": [],
+"depression": [
+"doubled_consonant",
+"unstressed_vowel_ambiguity"
+],
+"depth": [],
+"der": [],
+"derived": [],
+"des": [],
+"describe": [],
+"described": [],
+"describes": [],
+"describing": [],
+"description": [
+"unstressed_vowel_ambiguity"
+],
+"design": [
+"silent_letters"
+],
+"designated": [
+"silent_letters"
+],
+"designed": [
+"silent_letters"
+],
+"designs": [
+"silent_letters"
+],
+"desire": [],
+"desired": [],
+"desk": [],
+"despite": [],
+"destination": [
+"unstressed_vowel_ambiguity"
+],
+"destroy": [],
+"destroyed": [],
+"destruction": [
+"unstressed_vowel_ambiguity"
+],
+"detailed": [],
+"details": [],
+"determine": [],
+"determined": [],
+"develop": [],
+"developed": [],
+"developers": [],
+"developing": [],
+"development": [
+"unstressed_vowel_ambiguity"
+],
+"developments": [
+"unstressed_vowel_ambiguity"
+],
+"device": [],
+"devices": [],
+"di": [],
+"diameter": [],
+"diamond": [],
+"did": [],
+"die": [],
+"died": [],
+"dies": [],
+"diet": [],
+"difference": [
+"doubled_consonant",
+"unstressed_vowel_ambiguity"
+],
+"differences": [
+"doubled_consonant",
+"unstressed_vowel_ambiguity"
+],
+"different": [
+"doubled_consonant",
+"unstressed_vowel_ambiguity"
+],
+"difficult": [
+"doubled_consonant"
+],
+"difficulties": [
+"doubled_consonant"
+],
+"difficulty": [
+"doubled_consonant"
+],
+"digital": [],
+"dilemma": [
+"doubled_consonant"
+],
+"dimensions": [
+"unstressed_vowel_ambiguity"
+],
+"dinosaur": [],
+"diplomatic": [],
+"direct": [],
+"directed": [],
+"direction": [
+"unstressed_vowel_ambiguity"
+],
+"directions": [
+"unstressed_vowel_ambiguity"
+],
+"directly": [],
+"director": [],
+"disc": [],
+"discipline": [],
+"discovered": [],
+"discovery": [],
+"discussed": [
+"doubled_consonant"
+],
+"discussion": [
+"doubled_consonant",
+"unstressed_vowel_ambiguity"
+],
+"disease": [],
+"dish": [],
+"disk": [],
+"dismissed": [
+"doubled_consonant"
+],
+"display": [],
+"displayed": [],
+"dispute": [],
+"distance": [
+"unstressed_vowel_ambiguity"
+],
+"distances": [
+"unstressed_vowel_ambiguity"
+],
+"distinct": [],
+"distinction": [
+"unstressed_vowel_ambiguity"
+],
+"distinctive": [],
+"distinguish": [],
+"distinguished": [],
+"distributed": [],
+"distribution": [
+"unstressed_vowel_ambiguity"
+],
+"district": [],
+"districts": [],
+"diverse": [],
+"divided": [],
+"division": [
+"unstressed_vowel_ambiguity"
+],
+"divisions": [
+"unstressed_vowel_ambiguity"
+],
+"do": [],
+"doctrine": [],
+"document": [
+"unstressed_vowel_ambiguity"
+],
+"documentary": [
+"unstressed_vowel_ambiguity"
+],
+"documents": [
+"unstressed_vowel_ambiguity"
+],
+"does": [],
+"dog": [],
+"dogs": [],
+"doing": [],
+"dollars": [
+"doubled_consonant"
+],
+"domain": [],
+"domestic": [],
+"dominant": [
+"unstressed_vowel_ambiguity"
+],
+"dominated": [],
+"don": [],
+"done": [],
+"door": [],
+"dose": [],
+"dot": [],
+"double": [],
+"down": [],
+"downtown": [],
+"drag": [],
+"draw": [],
+"drawing": [],
+"drawn": [],
+"drew": [],
+"drinking": [],
+"drive": [],
+"driving": [],
+"drop": [],
+"dropped": [
+"doubled_consonant"
+],
+"drug": [],
+"drum": [],
+"dry": [],
+"du": [],
+"dual": [],
+"duck": [],
+"due": [],
+"duke": [],
+"during": [],
+"dust": [],
+"duties": [],
+"duty": [],
+"each": [],
+"ear": [],
+"earl": [],
+"earlier": [],
+"earliest": [],
+"early": [],
+"earth": [],
+"ease": [],
+"easier": [],
+"easily": [],
+"east": [],
+"eastern": [],
+"easy": [],
+"eat": [],
+"ebullient": [
+"doubled_consonant",
+"unstressed_vowel_ambiguity"
+],
+"ecclesiastical": [
+"doubled_consonant"
+],
+"economic": [],
+"economics": [],
+"economy": [],
+"edge": [],
+"edition": [
+"unstressed_vowel_ambiguity"
+],
+"education": [
+"unstressed_vowel_ambiguity"
+],
+"educational": [
+"unstressed_vowel_ambiguity"
+],
+"effect": [
+"doubled_consonant"
+],
+"effective": [
+"doubled_consonant"
+],
+"effectively": [
+"doubled_consonant"
+],
+"effectiveness": [
+"doubled_consonant"
+],
+"effects": [
+"doubled_consonant"
+],
+"efficiency": [
+"doubled_consonant"
+],
+"efficient": [
+"doubled_consonant",
+"unstressed_vowel_ambiguity"
+],
+"effort": [
+"doubled_consonant"
+],
+"efforts": [
+"doubled_consonant"
+],
+"egg": [
+"doubled_consonant"
+],
+"eggs": [
+"doubled_consonant"
+],
+"eight": [
+"silent_letters"
+],
+"either": [],
+"el": [],
+"elaborate": [],
+"elected": [],
+"election": [
+"unstressed_vowel_ambiguity"
+],
+"elections": [
+"unstressed_vowel_ambiguity"
+],
+"electric": [],
+"electrical": [],
+"electricity": [],
+"electromagnetic": [
+"silent_letters"
+],
+"electron": [],
+"electronic": [],
+"electrons": [],
+"element": [
+"unstressed_vowel_ambiguity"
+],
+"elements": [
+"unstressed_vowel_ambiguity"
+],
+"elephant": [
+"unstressed_vowel_ambiguity"
+],
+"else": [],
+"elsewhere": [],
+"embarrass": [
+"silent_letters",
+"doubled_consonant"
+],
+"emergency": [],
+"emperor": [],
+"empire": [],
+"employed": [],
+"employees": [],
+"employment": [
+"unstressed_vowel_ambiguity"
+],
+"empty": [],
+"en": [],
+"encouraged": [],
+"end": [],
+"ended": [],
+"ending": [],
+"ends": [],
+"enemies": [],
+"enemy": [],
+"energy": [],
+"engaged": [],
+"engine": [],
+"engineering": [],
+"engines": [],
+"enjoyed": [],
+"enough": [
+"silent_letters",
+"loanword_spelling"
+],
+"ensure": [],
+"enter": [
+"unstressed_vowel_ambiguity"
+],
+"entered": [
+"unstressed_vowel_ambiguity"
+],
+"entering": [
+"unstressed_vowel_ambiguity"
+],
+"entertainment": [
+"unstressed_vowel_ambiguity"
+],
+"entire": [
+"unstressed_vowel_ambiguity"
+],
+"entirely": [
+"unstressed_vowel_ambiguity"
+],
+"entitled": [
+"unstressed_vowel_ambiguity"
+],
+"entrepreneur": [
+"unstressed_vowel_ambiguity",
+"loanword_spelling"
+],
+"entry": [
+"unstressed_vowel_ambiguity"
+],
+"envelope": [],
+"environment": [
+"unstressed_vowel_ambiguity"
+],
+"environmental": [
+"unstressed_vowel_ambiguity"
+],
+"environments": [
+"unstressed_vowel_ambiguity"
+],
+"ephemeral": [],
+"episode": [],
+"episodes": [],
+"epitome": [],
+"equal": [],
+"equally": [
+"doubled_consonant"
+],
+"equation": [
+"unstressed_vowel_ambiguity"
+],
+"equations": [
+"unstressed_vowel_ambiguity"
+],
+"equilibrium": [],
+"equipment": [
+"unstressed_vowel_ambiguity"
+],
+"equipped": [
+"doubled_consonant"
+],
+"equivalent": [
+"unstressed_vowel_ambiguity"
+],
+"era": [],
+"error": [
+"doubled_consonant"
+],
+"escape": [],
+"esoteric": [],
+"especially": [
+"doubled_consonant"
+],
+"essential": [
+"doubled_consonant",
+"unstressed_vowel_ambiguity"
+],
+"essentially": [
+"doubled_consonant",
+"unstressed_vowel_ambiguity"
+],
+"establish": [],
+"established": [],
+"establishment": [
+"unstressed_vowel_ambiguity"
+],
+"estimated": [],
+"et": [],
+"ethnic": [],
+"eu": [],
+"eve": [],
+"even": [],
+"event": [
+"unstressed_vowel_ambiguity"
+],
+"events": [
+"unstressed_vowel_ambiguity"
+],
+"eventually": [
+"doubled_consonant",
+"unstressed_vowel_ambiguity"
+],
+"ever": [],
+"every": [],
+"everything": [],
+"evidence": [
+"unstressed_vowel_ambiguity"
+],
+"evil": [],
+"evolution": [
+"unstressed_vowel_ambiguity"
+],
+"evolved": [],
+"exact": [],
+"exactly": [],
+"exaggerate": [
+"doubled_consonant"
+],
+"example": [],
+"examples": [],
+"except": [],
+"exception": [
+"unstressed_vowel_ambiguity"
+],
+"exchange": [],
+"exclusive": [],
+"exclusively": [],
+"executed": [],
+"execution": [
+"unstressed_vowel_ambiguity"
+],
+"executive": [],
+"exercise": [],
+"exist": [],
+"existed": [],
+"existence": [
+"unstressed_vowel_ambiguity"
+],
+"existing": [],
+"exists": [],
+"expanded": [],
+"expanding": [],
+"expansion": [
+"unstressed_vowel_ambiguity"
+],
+"expected": [],
+"expedition": [
+"unstressed_vowel_ambiguity"
+],
+"expensive": [],
+"experience": [
+"unstressed_vowel_ambiguity"
+],
+"experienced": [
+"unstressed_vowel_ambiguity"
+],
+"experiences": [
+"unstressed_vowel_ambiguity"
+],
+"experiment": [
+"unstressed_vowel_ambiguity"
+],
+"experimental": [
+"unstressed_vowel_ambiguity"
+],
+"experiments": [
+"unstressed_vowel_ambiguity"
+],
+"explain": [],
+"explained": [],
+"explanation": [
+"unstressed_vowel_ambiguity"
+],
+"explicitly": [],
+"exports": [],
+"exposed": [],
+"exposure": [],
+"express": [
+"doubled_consonant"
+],
+"expressed": [
+"doubled_consonant"
+],
+"expression": [
+"doubled_consonant",
+"unstressed_vowel_ambiguity"
+],
+"expressions": [
+"doubled_consonant",
+"unstressed_vowel_ambiguity"
+],
+"extend": [],
+"extended": [],
+"extending": [],
+"extension": [
+"unstressed_vowel_ambiguity"
+],
+"extensive": [],
+"extensively": [],
+"extent": [
+"unstressed_vowel_ambiguity"
+],
+"external": [],
+"extra": [],
+"extreme": [],
+"extremely": [],
+"eye": [],
+"eyes": [],
+"face": [],
+"facilities": [],
+"fact": [],
+"factor": [],
+"factors": [],
+"fail": [],
+"failed": [],
+"failure": [],
+"fair": [],
+"faith": [],
+"fall": [
+"doubled_consonant"
+],
+"false": [],
+"fame": [],
+"families": [],
+"family": [],
+"famous": [],
+"fan": [],
+"fans": [],
+"far": [],
+"farm": [],
+"farmers": [],
+"fashion": [],
+"fast": [],
+"faster": [],
+"fat": [],
+"fate": [],
+"father": [],
+"favor": [],
+"favorite": [],
+"fear": [],
+"feature": [],
+"featured": [],
+"features": [],
+"featuring": [],
+"fed": [],
+"federal": [],
+"fee": [],
+"feed": [],
+"feel": [],
+"fees": [],
+"feet": [],
+"fell": [
+"doubled_consonant"
+],
+"felt": [],
+"female": [],
+"females": [],
+"festival": [],
+"few": [],
+"fiction": [
+"unstressed_vowel_ambiguity"
+],
+"field": [],
+"fields": [],
+"fight": [
+"silent_letters"
+],
+"fighting": [
+"silent_letters"
+],
+"figure": [],
+"figures": [],
+"file": [],
+"fill": [
+"doubled_consonant"
+],
+"filled": [
+"doubled_consonant"
+],
+"film": [],
+"films": [],
+"final": [],
+"finally": [
+"doubled_consonant"
+],
+"financial": [],
+"find": [],
+"finding": [],
+"finds": [],
+"fine": [],
+"finished": [],
+"finite": [],
+"fire": [],
+"fired": [],
+"firm": [],
+"first": [],
+"fish": [],
+"fishing": [],
+"fit": [],
+"five": [],
+"fixed": [],
+"flag": [],
+"flat": [],
+"fled": [],
+"flee": [],
+"fleet": [],
+"flew": [],
+"flight": [
+"silent_letters"
+],
+"floor": [],
+"flow": [],
+"flower": [],
+"fluid": [],
+"fluorescent": [
+"unstressed_vowel_ambiguity"
+],
+"fly": [],
+"fm": [],
+"focus": [],
+"focused": [],
+"folk": [],
+"follow": [
+"doubled_consonant"
+],
+"followed": [
+"doubled_consonant"
+],
+"followers": [
+"doubled_consonant"
+],
+"following": [
+"doubled_consonant"
+],
+"follows": [
+"doubled_consonant"
+],
+"food": [],
+"foot": [],
+"football": [
+"doubled_consonant"
+],
+"for": [],
+"force": [],
+"forced": [],
+"forces": [],
+"foreign": [
+"silent_letters"
+],
+"form": [],
+"formal": [],
+"formally": [
+"doubled_consonant"
+],
+"format": [],
+"formation": [
+"unstressed_vowel_ambiguity"
+],
+"formed": [],
+"former": [],
+"formerly": [],
+"forming": [],
+"forms": [],
+"formula": [],
+"fort": [],
+"forward": [],
+"found": [],
+"foundation": [
+"unstressed_vowel_ambiguity"
+],
+"founded": [],
+"four": [],
+"fourth": [],
+"fox": [],
+"fragments": [
+"unstressed_vowel_ambiguity"
+],
+"frame": [],
+"free": [],
+"freedom": [],
+"french": [],
+"frequencies": [],
+"frequency": [],
+"frequent": [
+"unstressed_vowel_ambiguity"
+],
+"frequently": [
+"unstressed_vowel_ambiguity"
+],
+"friend": [],
+"friends": [],
+"friendship": [],
+"frog": [],
+"from": [],
+"front": [],
+"fuchsia": [],
+"fuel": [],
+"fulfill": [
+"doubled_consonant"
+],
+"full": [
+"doubled_consonant"
+],
+"fully": [
+"doubled_consonant"
+],
+"fun": [],
+"function": [
+"unstressed_vowel_ambiguity"
+],
+"functional": [
+"unstressed_vowel_ambiguity"
+],
+"functions": [
+"unstressed_vowel_ambiguity"
+],
+"fund": [],
+"fundamental": [
+"unstressed_vowel_ambiguity"
+],
+"funding": [],
+"funds": [],
+"furniture": [],
+"further": [],
+"furthermore": [],
+"future": [],
+"gain": [],
+"gained": [],
+"game": [],
+"games": [],
+"gap": [],
+"gas": [],
+"gate": [],
+"gauge": [],
+"gave": [],
+"gay": [],
+"gear": [],
+"gender": [],
+"gene": [],
+"general": [],
+"generally": [
+"doubled_consonant"
+],
+"generate": [],
+"generated": [],
+"generation": [
+"unstressed_vowel_ambiguity"
+],
+"generations": [
+"unstressed_vowel_ambiguity"
+],
+"genetic": [],
+"genre": [],
+"get": [],
+"gets": [],
+"getting": [
+"doubled_consonant"
+],
+"gift": [],
+"girl": [],
+"give": [],
+"given": [],
+"gives": [],
+"giving": [],
+"glass": [
+"doubled_consonant"
+],
+"global": [],
+"go": [],
+"goal": [],
+"goals": [],
+"god": [],
+"gods": [],
+"goes": [],
+"going": [],
+"gold": [],
+"golf": [],
+"gone": [],
+"good": [],
+"goods": [],
+"got": [],
+"government": [
+"unstressed_vowel_ambiguity"
+],
+"governments": [
+"unstressed_vowel_ambiguity"
+],
+"gradually": [
+"doubled_consonant"
+],
+"grand": [],
+"granted": [
+"unstressed_vowel_ambiguity"
+],
+"graphics": [],
+"grass": [
+"doubled_consonant"
+],
+"gray": [],
+"great": [],
+"greater": [],
+"greatest": [],
+"greatly": [],
+"green": [],
+"gregarious": [],
+"grew": [],
+"grey": [],
+"grid": [],
+"grocery": [],
+"ground": [],
+"grounds": [],
+"group": [],
+"groups": [
+"silent_letters"
+],
+"grow": [],
+"growing": [],
+"grown": [],
+"growth": [],
+"guarantee": [
+"unstressed_vowel_ambiguity"
+],
+"guitar": [],
+"gulf": [],
+"gun": [],
+"guns": [],
+"had": [],
+"hair": [],
+"half": [],
+"hall": [
+"doubled_consonant"
+],
+"hamburger": [
+"silent_letters"
+],
+"hand": [],
+"hands": [],
+"happened": [
+"doubled_consonant"
+],
+"harass": [
+"doubled_consonant"
+],
+"hard": [],
+"hardware": [],
+"harm": [],
+"has": [],
+"hat": [],
+"have": [],
+"having": [],
+"he": [],
+"head": [],
+"headquarters": [],
+"health": [],
+"hear": [],
+"heard": [],
+"hearing": [],
+"heart": [],
+"heat": [],
+"heavily": [],
+"heavy": [],
+"height": [
+"silent_letters"
+],
+"heir": [],
+"held": [],
+"help": [],
+"helped": [],
+"her": [],
+"here": [],
+"herself": [],
+"hide": [],
+"hierarchy": [],
+"high": [
+"silent_letters"
+],
+"higher": [
+"silent_letters"
+],
+"highest": [
+"silent_letters"
+],
+"highly": [
+"silent_letters"
+],
+"hill": [
+"doubled_consonant"
+],
+"him": [],
+"himself": [],
+"hip": [],
+"his": [],
+"historian": [],
+"historians": [],
+"historic": [],
+"historical": [],
+"historically": [
+"doubled_consonant"
+],
+"history": [],
+"hit": [],
+"hits": [],
+"hold": [],
+"holding": [],
+"holds": [],
+"hole": [],
+"holiday": [],
+"holy": [],
+"home": [],
+"hop": [],
+"hope": [],
+"horizontal": [],
+"horn": [],
+"horse": [],
+"horses": [],
+"hospital": [],
+"host": [],
+"hot": [],
+"hour": [],
+"hours": [],
+"house": [],
+"household": [],
+"houses": [],
+"housing": [],
+"how": [],
+"however": [],
+"huge": [],
+"hull": [
+"doubled_consonant"
+],
+"human": [],
+"humans": [],
+"humorous": [],
+"hundred": [],
+"hundreds": [],
+"hunt": [],
+"hunting": [],
+"husband": [],
+"hydrogen": [],
+"hyperbole": [],
+"hypothesis": [],
+"ibn": [],
+"ice": [],
+"idea": [],
+"ideal": [],
+"ideas": [],
+"identical": [
+"unstressed_vowel_ambiguity"
+],
+"identification": [
+"unstressed_vowel_ambiguity"
+],
+"identified": [
+"unstressed_vowel_ambiguity"
+],
+"identify": [
+"unstressed_vowel_ambiguity"
+],
+"identity": [
+"unstressed_vowel_ambiguity"
+],
+"idiosyncrasy": [],
+"if": [],
+"ii": [],
+"iii": [],
+"ill": [
+"doubled_consonant"
+],
+"illegal": [
+"doubled_consonant"
+],
+"illness": [
+"doubled_consonant"
+],
+"image": [],
+"images": [],
+"immediate": [
+"doubled_consonant"
+],
+"immediately": [
+"doubled_consonant"
+],
+"immigrants": [
+"doubled_consonant",
+"unstressed_vowel_ambiguity"
+],
+"impact": [],
+"implement": [
+"unstressed_vowel_ambiguity"
+],
+"implementation": [
+"unstressed_vowel_ambiguity"
+],
+"implemented": [
+"unstressed_vowel_ambiguity"
+],
+"importance": [
+"unstressed_vowel_ambiguity"
+],
+"important": [
+"unstressed_vowel_ambiguity"
+],
+"impossible": [
+"doubled_consonant",
+"unstressed_vowel_ambiguity"
+],
+"improve": [],
+"improved": [],
+"improvement": [
+"unstressed_vowel_ambiguity"
+],
+"improvements": [
+"unstressed_vowel_ambiguity"
+],
+"in": [],
+"inch": [],
+"inchoate": [],
+"incident": [
+"unstressed_vowel_ambiguity"
+],
+"include": [],
+"included": [],
+"includes": [],
+"including": [],
+"income": [],
+"incorporated": [],
+"increase": [],
+"increased": [],
+"increases": [],
+"increasing": [],
+"increasingly": [],
+"independence": [
+"unstressed_vowel_ambiguity"
+],
+"independent": [
+"unstressed_vowel_ambiguity"
+],
+"independently": [
+"unstressed_vowel_ambiguity"
+],
+"india": [],
+"indicate": [],
+"indicated": [],
+"indicates": [],
+"indicating": [],
+"indigenous": [],
+"individual": [],
+"individuals": [],
+"industrial": [],
+"industries": [],
+"industry": [],
+"infantry": [
+"unstressed_vowel_ambiguity"
+],
+"infection": [
+"unstressed_vowel_ambiguity"
+],
+"inflation": [
+"unstressed_vowel_ambiguity"
+],
+"influence": [
+"unstressed_vowel_ambiguity"
+],
+"influenced": [
+"unstressed_vowel_ambiguity"
+],
+"influences": [
+"unstressed_vowel_ambiguity"
+],
+"influential": [
+"unstressed_vowel_ambiguity"
+],
+"information": [
+"unstressed_vowel_ambiguity"
+],
+"infrastructure": [],
+"inherited": [],
+"initial": [],
+"initially": [
+"doubled_consonant"
+],
+"initiated": [],
+"ink": [],
+"inner": [
+"doubled_consonant"
+],
+"input": [],
+"inside": [],
+"insouciant": [
+"unstressed_vowel_ambiguity"
+],
+"inspired": [],
+"installed": [
+"doubled_consonant"
+],
+"instance": [
+"unstressed_vowel_ambiguity"
+],
+"instances": [
+"unstressed_vowel_ambiguity"
+],
+"instead": [],
+"institute": [],
+"institutions": [
+"unstressed_vowel_ambiguity"
+],
+"instruction": [
+"unstressed_vowel_ambiguity"
+],
+"instructions": [
+"unstressed_vowel_ambiguity"
+],
+"instrument": [
+"unstressed_vowel_ambiguity"
+],
+"instrumental": [
+"unstressed_vowel_ambiguity"
+],
+"instruments": [
+"unstressed_vowel_ambiguity"
+],
+"insurance": [
+"unstressed_vowel_ambiguity"
+],
+"integrated": [],
+"integration": [
+"unstressed_vowel_ambiguity"
+],
+"intellectual": [
+"doubled_consonant"
+],
+"intelligence": [
+"doubled_consonant",
+"unstressed_vowel_ambiguity"
+],
+"intended": [],
+"intention": [
+"unstressed_vowel_ambiguity"
+],
+"interaction": [
+"unstressed_vowel_ambiguity"
+],
+"interactions": [
+"unstressed_vowel_ambiguity"
+],
+"interest": [],
+"interested": [],
+"interests": [],
+"interface": [],
+"interference": [
+"unstressed_vowel_ambiguity"
+],
+"interior": [],
+"internal": [],
+"international": [
+"unstressed_vowel_ambiguity"
+],
+"internet": [],
+"interpretation": [
+"unstressed_vowel_ambiguity"
+],
+"interpreted": [],
+"intervals": [],
+"interview": [],
+"into": [],
+"introduce": [],
+"introduced": [],
+"introduction": [
+"unstressed_vowel_ambiguity"
+],
+"invasion": [
+"unstressed_vowel_ambiguity"
+],
+"invented": [
+"unstressed_vowel_ambiguity"
+],
+"invention": [
+"unstressed_vowel_ambiguity"
+],
+"investigation": [
+"unstressed_vowel_ambiguity"
+],
+"investment": [
+"unstressed_vowel_ambiguity"
+],
+"invited": [],
+"involve": [],
+"involved": [],
+"involvement": [
+"unstressed_vowel_ambiguity"
+],
+"involves": [],
+"involving": [],
+"ion": [],
+"ions": [],
+"iron": [],
+"irresistible": [
+"doubled_consonant",
+"unstressed_vowel_ambiguity"
+],
+"is": [],
+"island": [],
+"islands": [],
+"issue": [
+"doubled_consonant"
+],
+"issued": [
+"doubled_consonant"
+],
+"issues": [
+"doubled_consonant"
+],
+"isthmus": [],
+"it": [],
+"item": [],
+"items": [],
+"its": [],
+"itself": [],
+"iv": [],
+"ix": [],
+"jack": [],
+"java": [],
+"jazz": [
+"doubled_consonant"
+],
+"jet": [],
+"jewelry": [],
+"job": [],
+"jobs": [],
+"join": [],
+"joined": [],
+"joint": [],
+"journal": [],
+"journey": [],
+"judgment": [
+"unstressed_vowel_ambiguity"
+],
+"jump": [],
+"jurisdiction": [
+"unstressed_vowel_ambiguity"
+],
+"jury": [],
+"just": [],
+"juxtaposition": [
+"unstressed_vowel_ambiguity"
+],
+"kaleidoscope": [],
+"keep": [],
+"keeping": [],
+"kept": [],
+"key": [],
+"keyboard": [],
+"keys": [],
+"kg": [],
+"khan": [],
+"kill": [
+"doubled_consonant"
+],
+"killed": [
+"doubled_consonant"
+],
+"killing": [
+"doubled_consonant"
+],
+"kind": [],
+"king": [],
+"kingdom": [],
+"kitchen": [],
+"kite": [],
+"km": [],
+"knew": [
+"silent_letters"
+],
+"know": [
+"silent_letters"
+],
+"knowledge": [
+"silent_letters"
+],
+"known": [
+"silent_letters"
+],
+"kowtow": [],
+"la": [],
+"labor": [],
+"labyrinth": [],
+"lack": [],
+"lady": [],
+"laid": [],
+"lake": [],
+"lamp": [],
+"land": [],
+"landing": [],
+"language": [],
+"languages": [],
+"large": [],
+"largely": [],
+"larger": [],
+"largest": [],
+"last": [],
+"late": [],
+"later": [],
+"latter": [
+"doubled_consonant"
+],
+"launch": [],
+"launched": [],
+"law": [],
+"laws": [],
+"lay": [],
+"layer": [],
+"le": [],
+"lead": [],
+"leader": [],
+"leaders": [],
+"leadership": [],
+"leading": [],
+"leads": [],
+"leaf": [],
+"league": [],
+"learned": [],
+"learning": [],
+"least": [],
+"leave": [],
+"leaves": [],
+"leaving": [],
+"led": [],
+"lee": [],
+"left": [],
+"leg": [],
+"legal": [],
+"legislation": [
+"unstressed_vowel_ambiguity"
+],
+"legislature": [],
+"legs": [],
+"leisure": [],
+"length": [],
+"lens": [],
+"leo": [],
+"less": [
+"doubled_consonant"
+],
+"let": [],
+"letter": [
+"doubled_consonant"
+],
+"letters": [
+"doubled_consonant"
+],
+"level": [],
+"levels": [],
+"liaison": [],
+"library": [],
+"license": [],
+"lie": [],
+"lies": [],
+"lieutenant": [
+"unstressed_vowel_ambiguity"
+],
+"life": [],
+"lifetime": [],
+"lift": [],
+"light": [
+"silent_letters"
+],
+"like": [],
+"likely": [],
+"limit": [],
+"limitations": [
+"unstressed_vowel_ambiguity"
+],
+"limited": [],
+"limits": [],
+"line": [],
+"linear": [],
+"lines": [],
+"link": [],
+"linked": [],
+"links": [],
+"lion": [],
+"liquid": [],
+"list": [],
+"listed": [],
+"lit": [],
+"literally": [
+"doubled_consonant"
+],
+"literary": [],
+"literature": [],
+"little": [
+"doubled_consonant"
+],
+"live": [],
+"lived": [],
+"lives": [],
+"living": [],
+"load": [],
+"loan": [],
+"local": [],
+"located": [],
+"location": [
+"unstressed_vowel_ambiguity"
+],
+"locations": [
+"unstressed_vowel_ambiguity"
+],
+"log": [],
+"logic": [],
+"logo": [],
+"long": [],
+"longer": [],
+"look": [],
+"looking": [],
+"loop": [],
+"lord": [],
+"los": [],
+"lose": [],
+"losing": [],
+"loss": [
+"doubled_consonant"
+],
+"losses": [
+"doubled_consonant"
+],
+"lost": [],
+"lot": [],
+"love": [],
+"low": [],
+"lower": [],
+"lowest": [],
+"mac": [],
+"machiavellian": [
+"doubled_consonant"
+],
+"machine": [],
+"machines": [],
+"made": [],
+"magazine": [],
+"magnetic": [
+"silent_letters"
+],
+"magnitude": [
+"silent_letters"
+],
+"mail": [],
+"main": [],
+"mainly": [],
+"mainstream": [],
+"maintain": [],
+"maintained": [],
+"maintaining": [],
+"maintains": [],
+"maintenance": [
+"unstressed_vowel_ambiguity"
+],
+"major": [],
+"majority": [],
+"make": [],
+"makes": [],
+"making": [],
+"male": [],
+"males": [],
+"man": [],
+"managed": [],
+"management": [
+"unstressed_vowel_ambiguity"
+],
+"manager": [],
+"maneuver": [],
+"manner": [
+"doubled_consonant"
+],
+"manufacture": [],
+"manufactured": [],
+"manufacturers": [],
+"manufacturing": [],
+"manuscript": [],
+"many": [],
+"map": [],
+"maps": [
+"silent_letters"
+],
+"march": [],
+"mark": [],
+"marked": [],
+"market": [],
+"marketing": [],
+"markets": [],
+"marriage": [
+"doubled_consonant"
+],
+"married": [
+"doubled_consonant"
+],
+"mass": [
+"doubled_consonant"
+],
+"massive": [
+"doubled_consonant"
+],
+"match": [],
+"material": [],
+"materials": [],
+"mathematical": [],
+"mathematics": [],
+"matter": [
+"doubled_consonant"
+],
+"matters": [
+"doubled_consonant"
+],
+"max": [],
+"maximum": [],
+"may": [],
+"me": [],
+"meal": [],
+"mean": [],
+"meaning": [],
+"means": [],
+"meant": [
+"unstressed_vowel_ambiguity"
+],
+"meanwhile": [],
+"measure": [],
+"measured": [],
+"measurement": [
+"unstressed_vowel_ambiguity"
+],
+"measurements": [
+"unstressed_vowel_ambiguity"
+],
+"measures": [],
+"meat": [],
+"mechanical": [],
+"mechanics": [],
+"mechanism": [],
+"mechanisms": [],
+"media": [],
+"median": [],
+"medical": [],
+"medicine": [],
+"medium": [],
+"meet": [],
+"meeting": [],
+"meetings": [],
+"member": [
+"silent_letters"
+],
+"members": [
+"silent_letters"
+],
+"membership": [
+"silent_letters"
+],
+"memory": [],
+"men": [],
+"mental": [
+"unstressed_vowel_ambiguity"
+],
+"mentioned": [
+"unstressed_vowel_ambiguity"
+],
+"mere": [],
+"merely": [],
+"message": [
+"doubled_consonant"
+],
+"messages": [
+"doubled_consonant"
+],
+"met": [],
+"metal": [],
+"method": [],
+"methods": [],
+"middle": [
+"doubled_consonant"
+],
+"might": [
+"silent_letters"
+],
+"mild": [],
+"mile": [],
+"military": [],
+"milk": [],
+"millennium": [
+"doubled_consonant"
+],
+"million": [
+"doubled_consonant"
+],
+"millions": [
+"doubled_consonant"
+],
+"mind": [],
+"mine": [],
+"minimum": [],
+"minister": [],
+"ministers": [],
+"minor": [],
+"minutes": [],
+"mischievous": [],
+"missile": [
+"doubled_consonant"
+],
+"missiles": [
+"doubled_consonant"
+],
+"mission": [
+"doubled_consonant",
+"unstressed_vowel_ambiguity"
+],
+"missions": [
+"doubled_consonant",
+"unstressed_vowel_ambiguity"
+],
+"mix": [],
+"mixed": [],
+"mixture": [],
+"mm": [
+"doubled_consonant"
+],
+"mnemonic": [
+"silent_letters"
+],
+"mobile": [],
+"mode": [],
+"model": [],
+"models": [],
+"modern": [],
+"modified": [],
+"molecular": [],
+"molecules": [],
+"moment": [
+"unstressed_vowel_ambiguity"
+],
+"money": [],
+"monster": [],
+"month": [],
+"months": [],
+"moon": [],
+"moral": [],
+"more": [],
+"moreover": [],
+"morning": [],
+"most": [],
+"mostly": [],
+"mother": [],
+"motion": [
+"unstressed_vowel_ambiguity"
+],
+"mountain": [],
+"mountains": [],
+"mounted": [],
+"mouse": [],
+"mouth": [],
+"move": [],
+"moved": [],
+"movement": [
+"unstressed_vowel_ambiguity"
+],
+"movements": [
+"unstressed_vowel_ambiguity"
+],
+"moves": [],
+"movie": [],
+"moving": [],
+"much": [],
+"multiple": [],
+"museum": [],
+"mushroom": [],
+"music": [],
+"musical": [],
+"musicians": [
+"unstressed_vowel_ambiguity"
+],
+"must": [],
+"my": [],
+"myth": [],
+"name": [],
+"named": [],
+"names": [],
+"narrow": [
+"doubled_consonant"
+],
+"nation": [
+"unstressed_vowel_ambiguity"
+],
+"national": [
+"unstressed_vowel_ambiguity"
+],
+"nations": [
+"unstressed_vowel_ambiguity"
+],
+"native": [],
+"natural": [],
+"naturally": [
+"doubled_consonant"
+],
+"nature": [],
+"navy": [],
+"near": [],
+"nearby": [],
+"nearly": [],
+"necessarily": [
+"doubled_consonant"
+],
+"necessary": [
+"doubled_consonant"
+],
+"neck": [],
+"need": [],
+"needed": [],
+"needs": [],
+"negative": [],
+"negotiations": [
+"unstressed_vowel_ambiguity"
+],
+"neighbor": [
+"silent_letters"
+],
+"neighborhood": [
+"silent_letters"
+],
+"neither": [],
+"nest": [],
+"net": [],
+"network": [],
+"networks": [],
+"never": [],
+"nevertheless": [
+"doubled_consonant"
+],
+"new": [],
+"newly": [],
+"news": [],
+"newspaper": [],
+"newspapers": [],
+"next": [],
+"night": [
+"silent_letters"
+],
+"nine": [],
+"no": [],
+"node": [],
+"noise": [],
+"nominated": [],
+"nomination": [
+"unstressed_vowel_ambiguity"
+],
+"none": [],
+"nor": [],
+"normal": [],
+"normally": [
+"doubled_consonant"
+],
+"north": [],
+"northern": [],
+"nose": [],
+"not": [],
+"notable": [
+"unstressed_vowel_ambiguity"
+],
+"notably": [],
+"note": [],
+"notebook": [],
+"noted": [],
+"notes": [],
+"nothing": [],
+"notion": [
+"unstressed_vowel_ambiguity"
+],
+"noun": [],
+"novel": [],
+"now": [],
+"nuclear": [],
+"number": [
+"silent_letters"
+],
+"numbers": [
+"silent_letters"
+],
+"numerous": [],
+"oath": [],
+"obfuscate": [],
+"object": [],
+"objective": [],
+"objects": [],
+"observation": [
+"unstressed_vowel_ambiguity"
+],
+"observations": [
+"unstressed_vowel_ambiguity"
+],
+"observed": [],
+"obtain": [
+"silent_letters"
+],
+"obtained": [
+"silent_letters"
+],
+"occasionally": [
+"doubled_consonant",
+"unstressed_vowel_ambiguity"
+],
+"occasions": [
+"doubled_consonant",
+"unstressed_vowel_ambiguity"
+],
+"occupied": [
+"doubled_consonant"
+],
+"occur": [
+"doubled_consonant"
+],
+"occurred": [
+"doubled_consonant"
+],
+"occurrence": [
+"doubled_consonant",
+"unstressed_vowel_ambiguity"
+],
+"occurs": [
+"doubled_consonant"
+],
+"odd": [
+"doubled_consonant"
+],
+"odds": [
+"doubled_consonant"
+],
+"of": [],
+"off": [
+"doubled_consonant"
+],
+"offensive": [
+"doubled_consonant"
+],
+"offer": [
+"doubled_consonant"
+],
+"offered": [
+"doubled_consonant"
+],
+"offering": [
+"doubled_consonant"
+],
+"offers": [
+"doubled_consonant"
+],
+"office": [
+"doubled_consonant"
+],
+"officer": [
+"doubled_consonant"
+],
+"officers": [
+"doubled_consonant"
+],
+"offices": [
+"doubled_consonant"
+],
+"official": [
+"doubled_consonant"
+],
+"officially": [
+"doubled_consonant"
+],
+"officials": [
+"doubled_consonant"
+],
+"often": [],
+"oil": [],
+"old": [],
+"older": [],
+"oldest": [],
+"on": [],
+"once": [],
+"one": [],
+"ones": [],
+"online": [],
+"only": [],
+"onomatopoeia": [],
+"onto": [],
+"open": [],
+"opened": [],
+"opening": [],
+"opera": [],
+"operate": [],
+"operated": [],
+"operating": [],
+"operation": [
+"unstressed_vowel_ambiguity"
+],
+"operational": [
+"unstressed_vowel_ambiguity"
+],
+"operations": [
+"unstressed_vowel_ambiguity"
+],
+"operators": [],
+"opinion": [],
+"opponents": [
+"doubled_consonant",
+"unstressed_vowel_ambiguity"
+],
+"opportunities": [
+"doubled_consonant"
+],
+"opportunity": [
+"doubled_consonant"
+],
+"opposed": [
+"doubled_consonant"
+],
+"opposite": [
+"doubled_consonant"
+],
+"opposition": [
+"doubled_consonant",
+"unstressed_vowel_ambiguity"
+],
+"option": [
+"unstressed_vowel_ambiguity"
+],
+"or": [],
+"oral": [],
+"orchestra": [],
+"order": [],
+"ordered": [],
+"orders": [],
+"ordinary": [],
+"organic": [],
+"organisms": [],
+"organization": [
+"unstressed_vowel_ambiguity"
+],
+"organizations": [
+"unstressed_vowel_ambiguity"
+],
+"organized": [],
+"origin": [],
+"original": [],
+"originally": [
+"doubled_consonant"
+],
+"originated": [],
+"orthodox": [],
+"os": [],
+"other": [],
+"others": [],
+"otherwise": [],
+"our": [],
+"out": [],
+"outer": [],
+"output": [],
+"outside": [],
+"over": [],
+"overall": [
+"doubled_consonant"
+],
+"own": [],
+"owned": [],
+"ownership": [],
+"oxidation": [
+"unstressed_vowel_ambiguity"
+],
+"oxygen": [],
+"pace": [],
+"page": [],
+"pages": [],
+"paid": [],
+"pain": [],
+"painting": [],
+"paintings": [],
+"pair": [],
+"pancake": [],
+"paper": [],
+"papers": [],
+"paradigm": [],
+"parallel": [
+"doubled_consonant"
+],
+"parents": [
+"unstressed_vowel_ambiguity"
+],
+"paris": [],
+"park": [],
+"parliament": [
+"unstressed_vowel_ambiguity"
+],
+"part": [],
+"partial": [],
+"partially": [
+"doubled_consonant"
+],
+"participants": [
+"unstressed_vowel_ambiguity"
+],
+"participate": [],
+"participation": [
+"unstressed_vowel_ambiguity"
+],
+"particle": [],
+"particles": [],
+"particular": [],
+"particularly": [],
+"parties": [],
+"partly": [],
+"parts": [],
+"party": [],
+"pass": [
+"doubled_consonant"
+],
+"passage": [
+"doubled_consonant"
+],
+"passed": [
+"doubled_consonant"
+],
+"passenger": [
+"doubled_consonant"
+],
+"passengers": [
+"doubled_consonant"
+],
+"passes": [
+"doubled_consonant"
+],
+"passing": [
+"doubled_consonant"
+],
+"past": [],
+"path": [],
+"patient": [
+"unstressed_vowel_ambiguity"
+],
+"patients": [
+"unstressed_vowel_ambiguity"
+],
+"pattern": [
+"doubled_consonant"
+],
+"patterns": [
+"doubled_consonant"
+],
+"pay": [],
+"pc": [],
+"peace": [],
+"peak": [],
+"people": [],
+"per": [],
+"perceived": [],
+"percent": [
+"unstressed_vowel_ambiguity"
+],
+"percentage": [
+"unstressed_vowel_ambiguity"
+],
+"perfect": [],
+"perform": [],
+"performance": [
+"unstressed_vowel_ambiguity"
+],
+"performances": [
+"unstressed_vowel_ambiguity"
+],
+"performed": [],
+"performing": [],
+"perhaps": [
+"silent_letters"
+],
+"period": [],
+"periods": [],
+"permanent": [
+"unstressed_vowel_ambiguity"
+],
+"permission": [
+"doubled_consonant",
+"unstressed_vowel_ambiguity"
+],
+"permitted": [
+"doubled_consonant"
+],
+"person": [],
+"personal": [],
+"personality": [],
+"personnel": [
+"doubled_consonant"
+],
+"persons": [],
+"perspective": [],
+"perspicacious": [],
+"ph": [],
+"phase": [],
+"phenomena": [],
+"phenomenon": [],
+"philosophical": [],
+"philosophy": [],
+"physical": [],
+"physics": [],
+"pick": [],
+"picture": [],
+"piece": [],
+"pieces": [],
+"pig": [],
+"pilot": [],
+"pipe": [],
+"place": [],
+"placed": [],
+"places": [],
+"plan": [],
+"plane": [],
+"planned": [
+"doubled_consonant"
+],
+"planning": [
+"doubled_consonant"
+],
+"plans": [],
+"plant": [
+"unstressed_vowel_ambiguity"
+],
+"plants": [
+"unstressed_vowel_ambiguity"
+],
+"plastic": [],
+"plate": [],
+"platform": [],
+"play": [],
+"played": [],
+"player": [],
+"players": [],
+"playing": [],
+"plays": [],
+"plot": [],
+"plus": [],
+"pneumonia": [
+"silent_letters"
+],
+"poem": [],
+"poet": [],
+"poetry": [],
+"point": [],
+"points": [],
+"pole": [],
+"police": [],
+"policies": [],
+"policy": [],
+"political": [],
+"politics": [],
+"pool": [],
+"poor": [],
+"pop": [],
+"pope": [],
+"popular": [],
+"popularity": [],
+"population": [
+"unstressed_vowel_ambiguity"
+],
+"populations": [
+"unstressed_vowel_ambiguity"
+],
+"port": [],
+"portion": [
+"unstressed_vowel_ambiguity"
+],
+"portrayed": [],
+"position": [
+"unstressed_vowel_ambiguity"
+],
+"positions": [
+"unstressed_vowel_ambiguity"
+],
+"positive": [],
+"possession": [
+"doubled_consonant",
+"unstressed_vowel_ambiguity"
+],
+"possibility": [
+"doubled_consonant"
+],
+"possible": [
+"doubled_consonant",
+"unstressed_vowel_ambiguity"
+],
+"possibly": [
+"doubled_consonant"
+],
+"post": [],
+"pot": [],
+"potential": [
+"unstressed_vowel_ambiguity"
+],
+"potentially": [
+"doubled_consonant",
+"unstressed_vowel_ambiguity"
+],
+"poverty": [],
+"power": [],
+"powerful": [],
+"powers": [],
+"pp": [
+"doubled_consonant"
+],
+"practical": [],
+"practice": [],
+"practices": [],
+"precision": [
+"unstressed_vowel_ambiguity"
+],
+"preferred": [
+"doubled_consonant"
+],
+"preparation": [
+"unstressed_vowel_ambiguity"
+],
+"prepared": [],
+"presence": [
+"unstressed_vowel_ambiguity"
+],
+"present": [
+"unstressed_vowel_ambiguity"
+],
+"presentation": [
+"unstressed_vowel_ambiguity"
+],
+"presented": [
+"unstressed_vowel_ambiguity"
+],
+"preserved": [],
+"president": [
+"unstressed_vowel_ambiguity"
+],
+"presidential": [
+"unstressed_vowel_ambiguity"
+],
+"press": [
+"doubled_consonant"
+],
+"pressure": [
+"doubled_consonant"
+],
+"prestidigitation": [
+"unstressed_vowel_ambiguity"
+],
+"prevent": [
+"unstressed_vowel_ambiguity"
+],
+"prevented": [
+"unstressed_vowel_ambiguity"
+],
+"previous": [],
+"previously": [],
+"prey": [],
+"price": [],
+"prices": [],
+"primarily": [],
+"primary": [],
+"prime": [],
+"primitive": [],
+"prince": [],
+"principal": [],
+"principle": [],
+"principles": [],
+"print": [],
+"printed": [],
+"printing": [],
+"prior": [],
+"prison": [],
+"prisoners": [],
+"private": [],
+"privilege": [],
+"probability": [],
+"probably": [],
+"problem": [],
+"problems": [],
+"procedure": [],
+"procedures": [],
+"process": [
+"doubled_consonant"
+],
+"processes": [
+"doubled_consonant"
+],
+"processing": [
+"doubled_consonant"
+],
+"processor": [
+"doubled_consonant"
+],
+"produce": [],
+"produced": [],
+"producer": [],
+"producers": [],
+"produces": [],
+"producing": [],
+"product": [],
+"production": [
+"unstressed_vowel_ambiguity"
+],
+"products": [],
+"professional": [
+"doubled_consonant",
+"unstressed_vowel_ambiguity"
+],
+"program": [],
+"programming": [
+"doubled_consonant"
+],
+"programs": [],
+"progress": [
+"doubled_consonant"
+],
+"project": [],
+"projects": [],
+"prominent": [
+"unstressed_vowel_ambiguity"
+],
+"promote": [],
+"proof": [],
+"proper": [],
+"properties": [],
+"property": [],
+"proportion": [
+"unstressed_vowel_ambiguity"
+],
+"proposal": [],
+"proposed": [],
+"protagonist": [],
+"protect": [],
+"protected": [],
+"protection": [
+"unstressed_vowel_ambiguity"
+],
+"protein": [],
+"proteins": [],
+"protocol": [],
+"proved": [],
+"provide": [],
+"provided": [],
+"provides": [],
+"providing": [],
+"psychological": [
+"silent_letters"
+],
+"psychology": [
+"silent_letters"
+],
+"public": [],
+"publication": [
+"unstressed_vowel_ambiguity"
+],
+"publications": [
+"unstressed_vowel_ambiguity"
+],
+"published": [],
+"publishing": [],
+"pull": [
+"doubled_consonant"
+],
+"pump": [],
+"pumpkin": [],
+"punishment": [
+"unstressed_vowel_ambiguity"
+],
+"punk": [],
+"purchase": [],
+"purchased": [],
+"pure": [],
+"purpose": [],
+"purposes": [],
+"push": [],
+"put": [],
+"quality": [],
+"quantities": [
+"unstressed_vowel_ambiguity"
+],
+"quantity": [
+"unstressed_vowel_ambiguity"
+],
+"quantum": [
+"unstressed_vowel_ambiguity"
+],
+"quarter": [],
+"queen": [],
+"question": [
+"unstressed_vowel_ambiguity"
+],
+"questionnaire": [
+"doubled_consonant",
+"unstressed_vowel_ambiguity"
+],
+"questions": [
+"unstressed_vowel_ambiguity"
+],
+"quickly": [],
+"quinoa": [],
+"quintessential": [
+"doubled_consonant",
+"unstressed_vowel_ambiguity"
+],
+"quite": [],
+"race": [],
+"radiation": [
+"unstressed_vowel_ambiguity"
+],
+"radical": [],
+"radio": [],
+"rail": [],
+"railway": [],
+"rain": [],
+"rainbow": [],
+"raised": [],
+"ram": [],
+"ran": [],
+"random": [],
+"range": [],
+"rank": [],
+"rapid": [],
+"rapidly": [],
+"rare": [],
+"rarely": [],
+"rate": [],
+"rates": [],
+"rather": [],
+"ratio": [],
+"raw": [],
+"rays": [],
+"reach": [],
+"reached": [],
+"reaching": [],
+"reaction": [
+"unstressed_vowel_ambiguity"
+],
+"reactions": [
+"unstressed_vowel_ambiguity"
+],
+"read": [],
+"reading": [],
+"real": [],
+"reality": [],
+"really": [
+"doubled_consonant"
+],
+"rear": [],
+"reason": [],
+"reasons": [],
+"receive": [],
+"received": [],
+"receiving": [],
+"recent": [
+"unstressed_vowel_ambiguity"
+],
+"recently": [
+"unstressed_vowel_ambiguity"
+],
+"recognition": [
+"silent_letters",
+"unstressed_vowel_ambiguity"
+],
+"recognize": [
+"silent_letters"
+],
+"recognized": [
+"silent_letters"
+],
+"recommended": [
+"doubled_consonant"
+],
+"record": [],
+"recorded": [],
+"recording": [],
+"recordings": [],
+"records": [],
+"recovery": [],
+"red": [],
+"reduce": [],
+"reduced": [],
+"reducing": [],
+"reduction": [
+"unstressed_vowel_ambiguity"
+],
+"refer": [],
+"reference": [
+"unstressed_vowel_ambiguity"
+],
+"references": [
+"unstressed_vowel_ambiguity"
+],
+"referred": [
+"doubled_consonant"
+],
+"referring": [
+"doubled_consonant"
+],
+"refers": [],
+"reflect": [],
+"reflected": [],
+"reforms": [],
+"refused": [],
+"regarded": [],
+"regarding": [],
+"regardless": [
+"doubled_consonant"
+],
+"region": [],
+"regional": [],
+"regions": [],
+"regular": [],
+"regularly": [],
+"regulations": [
+"unstressed_vowel_ambiguity"
+],
+"rejected": [],
+"related": [],
+"relation": [
+"unstressed_vowel_ambiguity"
+],
+"relations": [
+"unstressed_vowel_ambiguity"
+],
+"relationship": [
+"unstressed_vowel_ambiguity"
+],
+"relationships": [
+"silent_letters",
+"unstressed_vowel_ambiguity"
+],
+"relative": [],
+"relatively": [],
+"release": [],
+"released": [],
+"religion": [],
+"religious": [],
+"rely": [],
+"remain": [],
+"remainder": [],
+"remained": [],
+"remaining": [],
+"remains": [],
+"remove": [],
+"removed": [],
+"rendezvous": [],
+"repeated": [],
+"repeatedly": [],
+"replace": [],
+"replaced": [],
+"replacement": [
+"unstressed_vowel_ambiguity"
+],
+"report": [],
+"reported": [],
+"reportedly": [],
+"reports": [],
+"represent": [
+"unstressed_vowel_ambiguity"
+],
+"representation": [
+"unstressed_vowel_ambiguity"
+],
+"representative": [
+"unstressed_vowel_ambiguity"
+],
+"representatives": [
+"unstressed_vowel_ambiguity"
+],
+"represented": [
+"unstressed_vowel_ambiguity"
+],
+"representing": [
+"unstressed_vowel_ambiguity"
+],
+"represents": [
+"unstressed_vowel_ambiguity"
+],
+"republic": [],
+"republican": [],
+"reputation": [
+"unstressed_vowel_ambiguity"
+],
+"request": [],
+"requested": [],
+"require": [],
+"required": [],
+"requirement": [
+"unstressed_vowel_ambiguity"
+],
+"requirements": [
+"unstressed_vowel_ambiguity"
+],
+"requires": [],
+"requiring": [],
+"research": [],
+"researchers": [],
+"residential": [
+"unstressed_vowel_ambiguity"
+],
+"residents": [
+"unstressed_vowel_ambiguity"
+],
+"resistance": [
+"unstressed_vowel_ambiguity"
+],
+"resolution": [
+"unstressed_vowel_ambiguity"
+],
+"resources": [],
+"respect": [],
+"respectively": [],
+"responded": [],
+"response": [],
+"responsibility": [],
+"responsible": [
+"unstressed_vowel_ambiguity"
+],
+"rest": [],
+"restaurant": [
+"unstressed_vowel_ambiguity"
+],
+"restaurants": [
+"unstressed_vowel_ambiguity"
+],
+"restricted": [],
+"restrictions": [
+"unstressed_vowel_ambiguity"
+],
+"result": [],
+"resulted": [],
+"resulting": [],
+"results": [],
+"retained": [],
+"retired": [],
+"retirement": [
+"unstressed_vowel_ambiguity"
+],
+"retrieved": [],
+"return": [],
+"returned": [],
+"returning": [],
+"revealed": [],
+"revenue": [],
+"reverse": [],
+"review": [],
+"revolution": [
+"unstressed_vowel_ambiguity"
+],
+"rhythm": [],
+"rice": [],
+"rich": [],
+"ride": [],
+"right": [
+"silent_letters"
+],
+"rights": [
+"silent_letters"
+],
+"ring": [],
+"rise": [],
+"risk": [],
+"river": [],
+"road": [],
+"roads": [],
+"rock": [],
+"role": [],
+"roles": [],
+"roll": [
+"doubled_consonant"
+],
+"roman": [],
+"roof": [],
+"room": [],
+"root": [],
+"roots": [],
+"rose": [],
+"rotation": [
+"unstressed_vowel_ambiguity"
+],
+"roughly": [
+"silent_letters",
+"loanword_spelling"
+],
+"round": [],
+"route": [],
+"routes": [],
+"row": [],
+"rows": [],
+"royal": [],
+"rule": [],
+"rules": [],
+"run": [],
+"running": [
+"doubled_consonant"
+],
+"runs": [],
+"rural": [],
+"sacrilegious": [],
+"safe": [],
+"safety": [],
+"said": [],
+"sail": [],
+"saint": [],
+"sake": [],
+"sale": [],
+"sales": [],
+"salt": [],
+"same": [],
+"sample": [],
+"sand": [],
+"sandwich": [],
+"satellite": [
+"doubled_consonant"
+],
+"sausage": [],
+"save": [],
+"saw": [],
+"say": [],
+"saying": [],
+"says": [],
+"scale": [],
+"scene": [],
+"scenes": [],
+"schadenfreude": [],
+"scheduled": [],
+"scheme": [],
+"scholars": [],
+"school": [],
+"schools": [],
+"science": [
+"unstressed_vowel_ambiguity"
+],
+"scientific": [
+"unstressed_vowel_ambiguity"
+],
+"scientists": [
+"unstressed_vowel_ambiguity"
+],
+"score": [],
+"screen": [],
+"script": [],
+"sculpture": [],
+"sea": [],
+"seal": [],
+"search": [],
+"season": [],
+"seasons": [],
+"seat": [],
+"seats": [],
+"second": [],
+"secondary": [],
+"seconds": [],
+"secret": [],
+"section": [
+"unstressed_vowel_ambiguity"
+],
+"sections": [
+"unstressed_vowel_ambiguity"
+],
+"sector": [],
+"secure": [],
+"security": [],
+"see": [],
+"seealso": [],
+"seed": [],
+"seek": [],
+"seeking": [],
+"seem": [],
+"seemed": [],
+"seems": [],
+"seen": [],
+"sees": [],
+"selected": [],
+"selection": [
+"unstressed_vowel_ambiguity"
+],
+"self": [],
+"sell": [
+"doubled_consonant"
+],
+"senate": [],
+"send": [],
+"senior": [],
+"sense": [],
+"sensitive": [],
+"sent": [
+"unstressed_vowel_ambiguity"
+],
+"sentence": [
+"unstressed_vowel_ambiguity"
+],
+"separate": [],
+"separated": [],
+"separation": [
+"unstressed_vowel_ambiguity"
+],
+"sequence": [
+"unstressed_vowel_ambiguity"
+],
+"sequences": [
+"unstressed_vowel_ambiguity"
+],
+"series": [],
+"serious": [],
+"serve": [],
+"served": [],
+"serves": [],
+"service": [],
+"services": [],
+"serving": [],
+"set": [],
+"sets": [],
+"setting": [
+"doubled_consonant"
+],
+"settled": [
+"doubled_consonant"
+],
+"settlement": [
+"doubled_consonant",
+"unstressed_vowel_ambiguity"
+],
+"seven": [],
+"several": [],
+"severe": [],
+"sex": [],
+"sexual": [],
+"sfn": [],
+"shape": [],
+"share": [],
+"shared": [],
+"she": [],
+"shift": [],
+"ship": [],
+"ships": [
+"silent_letters"
+],
+"shop": [],
+"short": [],
+"shorter": [],
+"shortly": [],
+"shot": [],
+"should": [],
+"show": [],
+"showed": [],
+"showing": [],
+"shown": [],
+"shows": [],
+"shut": [],
+"si": [],
+"side": [],
+"sides": [],
+"sign": [
+"silent_letters"
+],
+"signal": [
+"silent_letters"
+],
+"signals": [
+"silent_letters"
+],
+"signed": [
+"silent_letters"
+],
+"significance": [
+"silent_letters",
+"unstressed_vowel_ambiguity"
+],
+"significant": [
+"silent_letters",
+"unstressed_vowel_ambiguity"
+],
+"significantly": [
+"silent_letters",
+"unstressed_vowel_ambiguity"
+],
+"silhouette": [
+"doubled_consonant"
+],
+"silver": [],
+"similar": [],
+"similarly": [],
+"simple": [],
+"simply": [],
+"simultaneously": [],
+"sin": [],
+"since": [],
+"sing": [],
+"single": [],
+"sir": [],
+"sister": [],
+"sit": [],
+"site": [],
+"sites": [],
+"situation": [
+"unstressed_vowel_ambiguity"
+],
+"situations": [
+"unstressed_vowel_ambiguity"
+],
+"six": [],
+"size": [],
+"ski": [],
+"skills": [
+"doubled_consonant"
+],
+"skin": [],
+"sky": [],
+"slavery": [],
+"slaves": [],
+"slightly": [
+"silent_letters"
+],
+"slot": [],
+"slow": [],
+"small": [
+"doubled_consonant"
+],
+"smaller": [
+"doubled_consonant"
+],
+"smoke": [],
+"sneakers": [],
+"snow": [],
+"so": [],
+"social": [],
+"societies": [],
+"society": [],
+"sock": [],
+"soft": [],
+"software": [],
+"soil": [],
+"solar": [],
+"sold": [],
+"soldiers": [],
+"sole": [],
+"solid": [],
+"soliloquy": [],
+"solo": [],
+"solution": [
+"unstressed_vowel_ambiguity"
+],
+"solutions": [
+"unstressed_vowel_ambiguity"
+],
+"some": [],
+"someone": [],
+"something": [],
+"sometimes": [],
+"somewhat": [],
+"son": [],
+"song": [],
+"songs": [],
+"sons": [],
+"soon": [],
+"sort": [],
+"sought": [
+"silent_letters",
+"loanword_spelling"
+],
+"soul": [],
+"sound": [],
+"source": [],
+"sources": [],
+"south": [],
+"southern": [],
+"soviet": [],
+"space": [],
+"spacecraft": [],
+"span": [],
+"speak": [],
+"speakers": [],
+"speaking": [],
+"special": [],
+"specialized": [],
+"species": [],
+"specific": [],
+"specifically": [
+"doubled_consonant"
+],
+"specified": [],
+"spectrum": [],
+"speech": [],
+"speed": [],
+"spent": [
+"unstressed_vowel_ambiguity"
+],
+"spin": [],
+"spirit": [],
+"spiritual": [],
+"split": [],
+"spoken": [],
+"sport": [],
+"sports": [],
+"spot": [],
+"spread": [],
+"spring": [],
+"square": [],
+"ss": [
+"doubled_consonant"
+],
+"stability": [],
+"stable": [
+"unstressed_vowel_ambiguity"
+],
+"stadium": [],
+"staff": [
+"doubled_consonant"
+],
+"stage": [],
+"stages": [],
+"stand": [],
+"standard": [],
+"standards": [],
+"standing": [],
+"star": [],
+"stars": [],
+"start": [],
+"started": [],
+"starting": [],
+"state": [],
+"stated": [],
+"statement": [
+"unstressed_vowel_ambiguity"
+],
+"statements": [
+"unstressed_vowel_ambiguity"
+],
+"states": [],
+"station": [
+"unstressed_vowel_ambiguity"
+],
+"stations": [
+"unstressed_vowel_ambiguity"
+],
+"statistical": [],
+"statistics": [],
+"status": [],
+"stay": [],
+"steel": [],
+"stem": [],
+"step": [],
+"steps": [
+"silent_letters"
+],
+"still": [
+"doubled_consonant"
+],
+"stock": [],
+"stone": [],
+"stop": [],
+"stopped": [
+"doubled_consonant"
+],
+"storage": [],
+"store": [],
+"stored": [],
+"stories": [],
+"story": [],
+"straight": [
+"silent_letters"
+],
+"strategic": [],
+"strategy": [],
+"street": [],
+"strength": [],
+"strict": [],
+"strike": [],
+"string": [],
+"strings": [],
+"strong": [],
+"strongly": [],
+"structural": [],
+"structure": [],
+"structures": [],
+"student": [
+"unstressed_vowel_ambiguity"
+],
+"students": [
+"unstressed_vowel_ambiguity"
+],
+"studied": [],
+"studies": [],
+"studio": [],
+"study": [],
+"style": [],
+"styles": [],
+"subject": [],
+"subjects": [],
+"submitted": [
+"doubled_consonant"
+],
+"subsequent": [
+"unstressed_vowel_ambiguity"
+],
+"subsequently": [
+"unstressed_vowel_ambiguity"
+],
+"substance": [
+"unstressed_vowel_ambiguity"
+],
+"substances": [
+"unstressed_vowel_ambiguity"
+],
+"substantial": [
+"unstressed_vowel_ambiguity"
+],
+"succeeded": [
+"doubled_consonant"
+],
+"success": [
+"doubled_consonant"
+],
+"successful": [
+"doubled_consonant"
+],
+"successfully": [
+"doubled_consonant"
+],
+"succession": [
+"doubled_consonant",
+"unstressed_vowel_ambiguity"
+],
+"succinct": [
+"doubled_consonant"
+],
+"such": [],
+"suffered": [
+"doubled_consonant"
+],
+"suffering": [
+"doubled_consonant"
+],
+"sufficient": [
+"doubled_consonant",
+"unstressed_vowel_ambiguity"
+],
+"sufficiently": [
+"doubled_consonant",
+"unstressed_vowel_ambiguity"
+],
+"sugar": [],
+"suggest": [
+"doubled_consonant"
+],
+"suggested": [
+"doubled_consonant"
+],
+"suggests": [
+"doubled_consonant"
+],
+"suit": [],
+"suitable": [
+"unstressed_vowel_ambiguity"
+],
+"suitcase": [],
+"sum": [],
+"summer": [
+"doubled_consonant"
+],
+"sun": [],
+"super": [],
+"superior": [],
+"supplies": [
+"doubled_consonant"
+],
+"supply": [
+"doubled_consonant"
+],
+"support": [
+"doubled_consonant"
+],
+"supported": [
+"doubled_consonant"
+],
+"supporters": [
+"doubled_consonant"
+],
+"supporting": [
+"doubled_consonant"
+],
+"supports": [
+"doubled_consonant"
+],
+"supreme": [],
+"sure": [],
+"surface": [],
+"surfaces": [],
+"surrounded": [
+"doubled_consonant"
+],
+"surrounding": [
+"doubled_consonant"
+],
+"surveillance": [
+"doubled_consonant",
+"unstressed_vowel_ambiguity"
+],
+"survive": [],
+"survived": [],
+"surviving": [],
+"suspended": [],
+"swim": [],
+"symbol": [
+"silent_letters"
+],
+"symbols": [
+"silent_letters"
+],
+"symptoms": [],
+"system": [],
+"systems": [],
+"table": [
+"unstressed_vowel_ambiguity"
+],
+"tail": [],
+"take": [],
+"taken": [],
+"takes": [],
+"taking": [],
+"tale": [],
+"talk": [],
+"tall": [
+"doubled_consonant"
+],
+"tank": [],
+"tape": [],
+"target": [],
+"targets": [],
+"task": [],
+"tasks": [],
+"taught": [
+"silent_letters"
+],
+"tax": [],
+"taxes": [],
+"tea": [],
+"teacher": [],
+"teaching": [],
+"team": [],
+"teams": [],
+"technical": [],
+"technique": [],
+"techniques": [],
+"technologies": [],
+"technology": [],
+"telephone": [],
+"television": [
+"unstressed_vowel_ambiguity"
+],
+"tell": [
+"doubled_consonant"
+],
+"tells": [
+"doubled_consonant"
+],
+"temperature": [],
+"temperatures": [],
+"temporary": [],
+"ten": [],
+"tend": [],
+"tent": [
+"unstressed_vowel_ambiguity"
+],
+"term": [],
+"terms": [],
+"territories": [
+"doubled_consonant"
+],
+"territory": [
+"doubled_consonant"
+],
+"test": [],
+"testing": [],
+"tests": [],
+"text": [],
+"texts": [],
+"than": [],
+"that": [],
+"the": [],
+"theatre": [],
+"their": [],
+"them": [],
+"theme": [],
+"themes": [],
+"themselves": [],
+"then": [],
+"theorem": [],
+"theoretical": [],
+"theories": [],
+"theory": [],
+"there": [],
+"thereby": [],
+"therefore": [],
+"thermal": [],
+"these": [],
+"they": [],
+"thin": [],
+"thing": [],
+"things": [],
+"think": [],
+"thinking": [],
+"third": [],
+"this": [],
+"those": [],
+"though": [
+"silent_letters",
+"loanword_spelling"
+],
+"thought": [
+"silent_letters",
+"loanword_spelling"
+],
+"thousand": [],
+"thousands": [],
+"threat": [],
+"threatened": [],
+"three": [],
+"through": [
+"silent_letters",
+"loanword_spelling"
+],
+"throughout": [
+"silent_letters",
+"loanword_spelling"
+],
+"thus": [],
+"tie": [],
+"tied": [],
+"ties": [],
+"time": [],
+"times": [],
+"tiny": [],
+"tip": [],
+"title": [],
+"titles": [],
+"to": [],
+"today": [],
+"together": [],
+"told": [],
+"tom": [],
+"tone": [],
+"tons": [],
+"too": [],
+"took": [],
+"tool": [],
+"tools": [],
+"top": [],
+"total": [],
+"tour": [],
+"toward": [],
+"towards": [],
+"town": [],
+"towns": [],
+"track": [],
+"tracks": [],
+"trade": [],
+"trading": [],
+"tradition": [
+"unstressed_vowel_ambiguity"
+],
+"traditional": [
+"unstressed_vowel_ambiguity"
+],
+"traditionally": [
+"doubled_consonant",
+"unstressed_vowel_ambiguity"
+],
+"traditions": [
+"unstressed_vowel_ambiguity"
+],
+"traffic": [
+"doubled_consonant"
+],
+"train": [],
+"training": [],
+"transfer": [],
+"transferred": [
+"doubled_consonant"
+],
+"transformation": [
+"unstressed_vowel_ambiguity"
+],
+"transition": [
+"unstressed_vowel_ambiguity"
+],
+"translated": [],
+"translation": [
+"unstressed_vowel_ambiguity"
+],
+"transmission": [
+"doubled_consonant",
+"unstressed_vowel_ambiguity"
+],
+"transport": [],
+"transportation": [
+"unstressed_vowel_ambiguity"
+],
+"travel": [],
+"traveling": [],
+"travelled": [
+"doubled_consonant"
+],
+"treasure": [],
+"treated": [],
+"treatment": [
+"unstressed_vowel_ambiguity"
+],
+"treaty": [],
+"tree": [],
+"trees": [],
+"trek": [],
+"trial": [],
+"tried": [],
+"trip": [],
+"troops": [
+"silent_letters"
+],
+"true": [],
+"truth": [],
+"try": [],
+"trying": [],
+"tube": [],
+"turn": [],
+"turned": [],
+"turning": [],
+"twelve": [],
+"twice": [],
+"two": [],
+"type": [],
+"types": [],
+"typical": [],
+"typically": [
+"doubled_consonant"
+],
+"ultimately": [],
+"umbrella": [
+"silent_letters",
+"doubled_consonant"
+],
+"un": [],
+"unable": [
+"unstressed_vowel_ambiguity"
+],
+"under": [],
+"underground": [],
+"underlying": [],
+"understand": [],
+"understanding": [],
+"understood": [],
+"unemployment": [
+"unstressed_vowel_ambiguity"
+],
+"uniform": [],
+"union": [],
+"unique": [],
+"unit": [],
+"united": [],
+"units": [],
+"universal": [],
+"universe": [],
+"universities": [],
+"university": [],
+"unknown": [
+"silent_letters"
+],
+"unless": [
+"doubled_consonant"
+],
+"unlike": [],
+"until": [],
+"unusual": [],
+"up": [],
+"upon": [],
+"upper": [
+"doubled_consonant"
+],
+"urban": [],
+"urbe": [],
+"us": [],
+"usage": [],
+"use": [],
+"used": [],
+"useful": [],
+"user": [],
+"users": [],
+"uses": [],
+"using": [],
+"usual": [],
+"usually": [
+"doubled_consonant"
+],
+"vacuum": [],
+"valley": [
+"doubled_consonant"
+],
+"value": [],
+"values": [],
+"van": [],
+"variable": [
+"unstressed_vowel_ambiguity"
+],
+"variables": [
+"unstressed_vowel_ambiguity"
+],
+"variation": [
+"unstressed_vowel_ambiguity"
+],
+"variations": [
+"unstressed_vowel_ambiguity"
+],
+"varied": [],
+"varies": [],
+"varieties": [],
+"variety": [],
+"various": [],
+"vary": [],
+"vast": [],
+"vector": [],
+"vehicle": [],
+"vehicles": [],
+"velocity": [],
+"verb": [],
+"version": [
+"unstressed_vowel_ambiguity"
+],
+"versions": [
+"unstressed_vowel_ambiguity"
+],
+"vertical": [],
+"very": [],
+"vessels": [
+"doubled_consonant"
+],
+"vi": [],
+"via": [],
+"vice": [],
+"victims": [],
+"victory": [],
+"video": [],
+"view": [],
+"viewed": [],
+"views": [],
+"vii": [],
+"viii": [],
+"village": [
+"doubled_consonant"
+],
+"villages": [
+"doubled_consonant"
+],
+"violence": [
+"unstressed_vowel_ambiguity"
+],
+"virtually": [
+"doubled_consonant"
+],
+"visible": [
+"unstressed_vowel_ambiguity"
+],
+"vision": [
+"unstressed_vowel_ambiguity"
+],
+"visit": [],
+"visited": [],
+"visitors": [],
+"visual": [],
+"voice": [],
+"voltage": [],
+"volume": [],
+"volumes": [],
+"von": [],
+"vote": [],
+"votes": [],
+"vulnerable": [
+"unstressed_vowel_ambiguity"
+],
+"wage": [],
+"wait": [],
+"wake": [],
+"walk": [],
+"wall": [
+"doubled_consonant"
+],
+"walls": [
+"doubled_consonant"
+],
+"want": [
+"unstressed_vowel_ambiguity"
+],
+"wanted": [
+"unstressed_vowel_ambiguity"
+],
+"war": [],
+"warm": [],
+"warning": [],
+"wars": [],
+"was": [],
+"water": [],
+"wave": [],
+"wavelength": [],
+"waves": [],
+"way": [],
+"ways": [],
+"we": [],
+"weak": [],
+"weapon": [],
+"weapons": [],
+"wear": [],
+"weather": [],
+"web": [],
+"week": [],
+"weeks": [],
+"weight": [
+"silent_letters"
+],
+"well": [
+"doubled_consonant"
+],
+"went": [
+"unstressed_vowel_ambiguity"
+],
+"were": [],
+"west": [],
+"western": [],
+"wet": [],
+"what": [],
+"when": [],
+"where": [],
+"whereas": [],
+"whether": [],
+"which": [],
+"while": [],
+"white": [],
+"who": [],
+"whole": [],
+"whom": [],
+"whose": [],
+"why": [],
+"wide": [],
+"widely": [],
+"widespread": [],
+"wife": [],
+"wild": [],
+"will": [
+"doubled_consonant"
+],
+"win": [],
+"wind": [],
+"window": [],
+"windows": [],
+"wine": [],
+"wing": [],
+"winning": [
+"doubled_consonant"
+],
+"wins": [],
+"winter": [],
+"wire": [],
+"wish": [],
+"with": [],
+"within": [],
+"without": [],
+"wolf": [],
+"woman": [],
+"women": [],
+"won": [],
+"wood": [],
+"word": [],
+"words": [],
+"wore": [],
+"work": [],
+"worked": [],
+"workers": [],
+"working": [],
+"works": [],
+"world": [],
+"worldwide": [],
+"worm": [],
+"worn": [],
+"would": [],
+"write": [
+"silent_letters"
+],
+"writer": [
+"silent_letters"
+],
+"writers": [
+"silent_letters"
+],
+"writes": [
+"silent_letters"
+],
+"writing": [
+"silent_letters"
+],
+"writings": [
+"silent_letters"
+],
+"written": [
+"silent_letters",
+"doubled_consonant"
+],
+"wrote": [
+"silent_letters"
+],
+"yacht": [],
+"yards": [],
+"year": [],
+"years": [],
+"yellow": [
+"doubled_consonant"
+],
+"yet": [],
+"you": [],
+"young": [],
+"younger": [],
+"your": [],
+"zephyr": [],
+"zero": [],
+"zone": [],
+"zoo": []
+}

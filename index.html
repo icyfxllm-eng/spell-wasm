@@ -391,6 +391,11 @@
   /* the next stroke is signalled by BRIGHTNESS and dash, never by the
      reserved chrome accent (F6) */
   .wp-outline.next{stroke:rgba(255,255,255,.92);stroke-dasharray:6 8;animation:wpPulse 1.4s infinite}
+  /* CC-PICTURE-BANK F6 — error economics, advanced and expert only. Both
+     classes only ever land on .next (the stroke being earned), so no
+     other correct stroke can be touched by construction. */
+  .wp-outline.next.miss-dim{stroke:rgba(255,255,255,.30)}
+  .wp-outline.next.miss-charged{stroke:rgba(255,138,101,.75)}
   @keyframes wpPulse{50%{stroke-opacity:.45}}
   .wp-word{fill:var(--wp-ink,#e8ecf5);font-weight:700;font-family:inherit}
   .wp-word.new{animation:wpIn 1s ease}

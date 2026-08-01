@@ -214,6 +214,10 @@ pub fn mic_tap(app: &App) {
         match outcome {
             ListenOutcome::Heard(transcript) => {
                 let correct = crate::norm::spoken_matches(&transcript, &word);
+                // CC-LEARNING-ENGINE feature 4: the speech channel is
+                // LOGGED for L1's diagnosis but updates no spelling skill
+                // — record() itself enforces that, not this caller.
+                crate::learner::note_attempt(&lang, &word, correct, crate::learner::Channel::Speech);
                 TALLY.with(|t| t.borrow_mut().record(correct));
                 render_score();
                 if correct {

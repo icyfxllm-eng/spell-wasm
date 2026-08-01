@@ -28,6 +28,15 @@ pub struct RawReq {
     pub tol: f32,
 }
 
+/// CC-PICTURE-BANK F3 — one rung of the subject's layer ladder, copied
+/// verbatim from its manifest at bundle time: a name ("outline", "features",
+/// "texture", "shading") and the bundle path indices it owns.
+#[derive(serde::Deserialize)]
+pub struct RawLayer {
+    pub n: String,
+    pub p: Vec<usize>,
+}
+
 #[derive(serde::Deserialize)]
 pub struct RawSubject {
     pub tier: String,
@@ -37,6 +46,8 @@ pub struct RawSubject {
     pub attr: String,
     #[serde(default)]
     pub req: Vec<RawReq>,
+    #[serde(default)]
+    pub layers: Vec<RawLayer>,
     pub paths: Vec<RawPath>,
 }
 
@@ -148,6 +159,24 @@ pub struct Plan {
     /// rhino's legs), never silently dropped.
     pub pinned: Vec<MicroStroke>,
     pub words: Vec<String>,
+    /// F3 — the word ladder: (layer name, words in that layer), in climb
+    /// order, empty rungs already collapsed. Sums to `words.len()`.
+    pub ladder: Vec<(String, u32)>,
+}
+
+/// F3 — ladder progress from placed-word count alone: (rungs complete,
+/// name of the rung currently being climbed). Pure arithmetic over the
+/// plan, so "persists across sessions" is inherited from the grow-only
+/// `run.words` rather than being a second record that could disagree.
+pub fn ladder_progress(ladder: &[(String, u32)], placed: u32) -> (usize, Option<&str>) {
+    let mut left = placed;
+    for (i, (name, n)) in ladder.iter().enumerate() {
+        if left < *n {
+            return (i, Some(name.as_str()));
+        }
+        left -= n;
+    }
+    (ladder.len(), None)
 }
 
 /// The device plan. Returns None when the subject cannot be typeset
@@ -186,8 +215,29 @@ pub fn plan(subject: &str, lang: &str, seed: u64) -> Option<Plan> {
             return None;
         }
     }
+    // F3: the ladder orders the campaign — every outline word before any
+    // features word before any texture word. The sort is stable, so within
+    // a rung the packer's own path order is preserved, and it happens
+    // AFTER every legality gate: the ladder reorders a proven plan, it
+    // never changes what was proven.
+    let rank = |idx: usize| {
+        s.layers.iter().position(|l| l.p.contains(&idx)).unwrap_or(s.layers.len())
+    };
+    let mut placements = placements;
+    placements.sort_by_key(|pl| rank(pl.path_idx));
+    let mut ladder: Vec<(String, u32)> = Vec::new();
+    for pl in &placements {
+        let r = rank(pl.path_idx);
+        // A subject bundled without layers (never true today) climbs one
+        // anonymous rung — the flat feed it always had.
+        let name = s.layers.get(r).map(|l| l.n.as_str()).unwrap_or("outline");
+        match ladder.last_mut() {
+            Some((n, c)) if n == name => *c += 1,
+            _ => ladder.push((name.to_string(), 1)),
+        }
+    }
     let words = placements.iter().map(|pl| pl.word.clone()).collect();
-    Some(Plan { size, placements, micro, pinned, words })
+    Some(Plan { size, placements, micro, pinned, words, ladder })
 }
 
 /// Arc length of a polyline (shared by the renderer for textLength).
@@ -262,6 +312,86 @@ mod tests {
         let b = plan("snowman", "en", 7).unwrap();
         assert_eq!(a.words, b.words);
         assert_eq!(a.size, b.size);
+    }
+
+    /// CC-PICTURE-BANK F3 — the ladder holds everywhere: every subject's
+    /// bundled layers cover its paths exactly once, every plan's
+    /// placements climb rungs monotonically (all outline before any
+    /// features), and the ladder accounts for every word. The climb must
+    /// also actually EXIST: a bank where nearly every picture collapsed
+    /// to one rung would satisfy the other assertions and still not be a
+    /// ladder.
+    #[test]
+    fn ladder_is_law() {
+        let b = bundle();
+        let mut multi = 0;
+        for (name, s) in b.subjects.iter() {
+            let mut covered: Vec<usize> = s.layers.iter().flat_map(|l| l.p.clone()).collect();
+            covered.sort_unstable();
+            assert_eq!(
+                covered,
+                (0..s.paths.len()).collect::<Vec<_>>(),
+                "{name}: layers must cover every path exactly once"
+            );
+            let Some(p) = plan(name, "en", 1) else { continue };
+            let rank = |idx: usize| s.layers.iter().position(|l| l.p.contains(&idx)).unwrap();
+            let ranks: Vec<usize> = p.placements.iter().map(|pl| rank(pl.path_idx)).collect();
+            assert!(ranks.windows(2).all(|w| w[0] <= w[1]), "{name}: placements out of climb order");
+            assert_eq!(
+                p.ladder.iter().map(|(_, n)| n).sum::<u32>(),
+                p.words.len() as u32,
+                "{name}: ladder must account for every word"
+            );
+            if p.ladder.len() > 1 {
+                multi += 1;
+            }
+        }
+        assert!(multi >= 10, "the climb exists: got {multi} multi-rung plans");
+    }
+
+    /// D4 / Done #6, shaped as the spec asks: finish rung 1, kill the app
+    /// (serialize), relaunch (deserialize), and the ladder says rung 1 is
+    /// intact and rung 2 unlocked — because progress is derived from the
+    /// grow-only run words, the same seed replays the same plan, and
+    /// there is no second record to disagree with the first.
+    #[test]
+    fn layer_survives_the_kill() {
+        let sub = bundle()
+            .subjects
+            .iter()
+            .find_map(|(n, s)| {
+                (s.layers.len() > 1 && plan(n, "en", 0).map_or(false, |p| p.ladder.len() > 1))
+                    .then(|| n.clone())
+            })
+            .expect("a multi-rung subject exists");
+        let mut st = crate::wordpic::State::default();
+        let run = st.open(&sub, "en");
+        let p = plan(&sub, "en", run.seed).unwrap();
+        let first_rung = p.ladder[0].1;
+        let total = p.words.len() as u32;
+        for w in p.words.iter().take(first_rung as usize) {
+            st.place(&sub, "en", w, total);
+        }
+        // The kill and the relaunch.
+        let json = serde_json::to_string(&st).unwrap();
+        let back: crate::wordpic::State = serde_json::from_str(&json).unwrap();
+        let r = back.run(&sub, "en").unwrap();
+        let replanned = plan(&sub, "en", r.seed).unwrap();
+        assert_eq!(replanned.words, p.words, "same seed, same plan after relaunch");
+        let (done, current) = ladder_progress(&replanned.ladder, r.words.len() as u32);
+        assert_eq!(done, 1, "rung 1 intact");
+        assert_eq!(current, Some(replanned.ladder[1].0.as_str()), "rung 2 unlocked");
+    }
+
+    /// `ladder_progress` edge table: empty ladder, rung boundaries, done.
+    #[test]
+    fn ladder_progress_arithmetic() {
+        let ladder = vec![("outline".to_string(), 3), ("features".to_string(), 2)];
+        assert_eq!(ladder_progress(&ladder, 0), (0, Some("outline")));
+        assert_eq!(ladder_progress(&ladder, 2), (0, Some("outline")));
+        assert_eq!(ladder_progress(&ladder, 3), (1, Some("features")));
+        assert_eq!(ladder_progress(&ladder, 5), (2, None));
+        assert_eq!(ladder_progress(&[], 0), (0, None));
     }
 }
 

@@ -19,6 +19,9 @@ thread_local! {
     static LANG: RefCell<String> = const { RefCell::new(String::new()) };
     static PIC: RefCell<String> = const { RefCell::new(String::new()) };
     static FEED: RefCell<Vec<String>> = const { RefCell::new(Vec::new()) };
+    /// F3 — the open picture's layer ladder, (rung name, word count) in
+    /// climb order; empty for non-scan pictures.
+    static LADDER: RefCell<Vec<(String, u32)>> = const { RefCell::new(Vec::new()) };
     static PLACED: Cell<u32> = const { Cell::new(0) };
     static OPEN: Cell<bool> = const { Cell::new(false) };
     static CARD_UP: Cell<bool> = const { Cell::new(false) };
@@ -290,8 +293,13 @@ fn open_play(app: &App, pic_id: &str) {
     // v8.2: for scan-locked subjects the FEED is the plan's word order —
     // the word you spell is the word that lands on the next baseline.
     let mut feed = if crate::spellpic::has(pic_id) {
-        crate::spellpic::plan(pic_id, &lang, run.seed).map(|pl| pl.words).unwrap_or_default()
+        let pl = crate::spellpic::plan(pic_id, &lang, run.seed);
+        LADDER.with(|l| {
+            *l.borrow_mut() = pl.as_ref().map(|p| p.ladder.clone()).unwrap_or_default()
+        });
+        pl.map(|pl| pl.words).unwrap_or_default()
     } else {
+        LADDER.with(|l| l.borrow_mut().clear());
         crate::wordpic_layout::layout_feed_opt(
             p, &lang, run.seed + bump.min(5) as u64, recent, bump >= 5).0
     };
@@ -1040,15 +1048,47 @@ fn on_typed(app: &App) {
     let value = inp.value();
     let (ok, complete) = crate::practice::check_prefix(&lang, &target, &value);
     if !crate::practice::prefix_viable(&lang, &target, &value) && !complete {
-        // D5: pulse + replay + hold; the canvas is untouched (grow-only).
-        let good: String = target.chars().take(ok).collect();
-        inp.set_value(&good);
+        // CC-PICTURE-BANK F6 — error economics. The canvas is untouched at
+        // every tier (grow-only; no mechanic ever deletes a different
+        // correct stroke — both miss classes land only on `.next`).
+        //
+        // CC-LEARNING-ENGINE: a FRESH miss — exactly one wrong unit past
+        // the good prefix — records as a failed typed attempt. The guard
+        // keeps an expert's standing garbage from recording once per
+        // keystroke: only the transition counts, not the aftermath.
+        if value.chars().count() == ok + 1 {
+            crate::learner::note_attempt(&lang, &target, false, crate::learner::Channel::Typed);
+        }
+        let tier = current_tier();
+        let (repair, dims, charges) = miss_economics(&tier);
+        if dims {
+            next_stroke_class("miss-dim", true);
+        }
+        if charges {
+            next_stroke_class("miss-charged", true);
+        }
+        if repair {
+            // The bottom tiers' repair loop: the game erases the damage.
+            let good: String = target.chars().take(ok).collect();
+            inp.set_value(&good);
+        }
+        // At expert the wrong letters STAY — erase-to-recover means the
+        // player backspaces them out; the viable-again branch below lifts
+        // the charge the moment they have.
         dom::add_class("wpStatus", "pulse");
         after(400, || dom::remove_class("wpStatus", "pulse"));
         haptics::key_tap();
-        replay(app);
+        // A miss never replays the word at tiers where Replay is gated
+        // away (feature 5: at expert the word plays once, full stop).
+        if audio_gate(&tier).0 {
+            replay(app);
+        }
         return;
     }
+    // Erase-to-recover: the prefix is viable again, so the charge lifts.
+    // The advanced dim stays until the word actually lands ("until
+    // corrected") — the placement redraw clears it.
+    next_stroke_class("miss-charged", false);
     if complete {
         // D8 gate: a value that could not have been typed is refused, and
         // the field is cleared — the word is not placed and not scored.
@@ -1068,6 +1108,27 @@ fn on_typed(app: &App) {
     }
 }
 
+/// CC-PICTURE-BANK feature 6 as a table — (auto_repair, miss_dims,
+/// miss_charges) per tier. Pressure without punishment at the bottom,
+/// stakes at the top; the wildcard treats any future tier (masterpiece)
+/// as the strictest, the same safe direction the audio gate takes.
+fn miss_economics(tier: &str) -> (bool, bool, bool) {
+    match tier {
+        "easy" | "medium" => (true, false, false),
+        "hard" => (true, true, false),
+        _ => (false, false, true),
+    }
+}
+
+/// Toggles a miss class on the stroke being earned. Selector-pinned to
+/// `.next`: the one stroke the current word is earning, never any other.
+fn next_stroke_class(cls: &str, on: bool) {
+    if let Ok(Some(el)) = dom::doc().query_selector("#wpStage .wp-outline.next") {
+        let list = el.class_list();
+        let _ = if on { list.add_1(cls) } else { list.remove_1(cls) };
+    }
+}
+
 fn place(app: &App, word: &str) {
     crate::spell_aloud::on_new_word();
     let lang = LANG.with(|l| l.borrow().clone());
@@ -1078,6 +1139,8 @@ fn place(app: &App, word: &str) {
     let placed = s.place(&pic, &lang, word, total);
     wordpic::save(&s);
     PLACED.with(|c| c.set(placed));
+    // CC-LEARNING-ENGINE: a landed word is a validated typed success.
+    crate::learner::note_attempt(&lang, word, true, crate::learner::Channel::Typed);
     haptics::key_tap();
     let words = s.run(&pic, &lang).map(|r| r.words.clone()).unwrap_or_default();
     render_canvas(p, &lang, &words);
@@ -1093,7 +1156,29 @@ fn place(app: &App, word: &str) {
             break;
         }
     }
+    // CC-PICTURE-BANK F3: crossing a rung is the moment worth naming — the
+    // status line takes the rung over the percentage when both land on the
+    // same word. The final rung's completion IS the picture's completion,
+    // and the reveal already owns that moment, so no flash there.
+    if placed < total && placed >= 1 {
+        let ladder = LADDER.with(|l| l.borrow().clone());
+        let before = crate::spellpic::ladder_progress(&ladder, placed - 1).0;
+        let (now, current) = crate::spellpic::ladder_progress(&ladder, placed);
+        if now > before {
+            if let Some(name) = current {
+                dom::set_text(
+                    "wpStatus",
+                    &i18n::tp("wordpic.layerUp", &[("name", &layer_label(name))]),
+                );
+                after(1800, || dom::set_text("wpStatus", ""));
+            }
+        }
+    }
     if placed >= total {
+        // CC-FINALE D6: the chime marks the moment itself — this branch and
+        // only this branch. Re-entering a finished run or replaying the
+        // build from the gallery shows the same reveal but stays silent.
+        crate::audio_boost::chime();
         show_done(app);
     } else {
         let a = app.clone();
@@ -1138,6 +1223,37 @@ fn show_done(app: &App) {
     CARD_UP.with(|c| c.set(true));
     start_build(&pic);
     let _ = app;
+}
+
+/// Test seam (OBSERVE-only, `--features testseam` builds): the export
+/// renderer's 1× piece SVG for the currently open picture, through the
+/// REAL export path — plan from the run's own seed, fonts fetched with
+/// fetch-and-refuse, mode Export. Done #1's pixel diff compares this
+/// against the reveal frame the player is looking at.
+#[cfg(feature = "testseam")]
+pub async fn seam_export_svg() -> Result<String, String> {
+    let lang = LANG.with(|l| l.borrow().clone());
+    let pic = PIC.with(|p| p.borrow().clone());
+    let st = wordpic::load();
+    let run = st.run(&pic, &lang).ok_or("no run open")?;
+    let plan = crate::spellpic::plan(&pic, &lang, run.seed).ok_or("no legal plan")?;
+    let css = crate::spellpic_export::fetch_face_css()
+        .await
+        .map_err(|e| e.i18n_key().to_string())?;
+    Ok(crate::spellpic_export::export_svg(&plan, &lang, &run.words, &css))
+}
+
+/// F3 — a rung's player-facing name. The four manifest rungs are i18n
+/// keys; anything unrecognized (there is nothing unrecognized today)
+/// shows its raw name rather than a warning-spewing missing key.
+fn layer_label(raw: &str) -> String {
+    match raw {
+        "outline" => i18n::t("wordpic.layerOutline"),
+        "features" => i18n::t("wordpic.layerFeatures"),
+        "texture" => i18n::t("wordpic.layerTexture"),
+        "shading" => i18n::t("wordpic.layerShading"),
+        other => other.to_string(),
+    }
 }
 
 /// Stagger the words across the build window. Done in code rather than CSS
@@ -1204,6 +1320,24 @@ mod audio_gate_tests {
         assert_eq!(audio_gate("expert"), (false, false), "expert hears it once");
         assert_eq!(audio_gate("masterpiece"), (false, false), "future tiers inherit the strictest");
     }
+
+    /// CC-PICTURE-BANK feature 6, as a table. Exactly one economy applies
+    /// per tier, the bottom auto-repairs with zero stroke cost, and only
+    /// expert-and-up ever withholds the repair (erase-to-recover).
+    #[test]
+    fn the_ladder_of_stakes() {
+        use super::miss_economics;
+        assert_eq!(miss_economics("easy"), (true, false, false), "starter: unlimited free retries");
+        assert_eq!(miss_economics("medium"), (true, false, false), "intermediate too");
+        assert_eq!(miss_economics("hard"), (true, true, false), "advanced: repaired, but the stroke dims");
+        assert_eq!(miss_economics("expert"), (false, false, true), "expert: charged, erase to recover");
+        assert_eq!(miss_economics("masterpiece"), (false, false, true), "future tiers inherit the stakes");
+        for t in ["easy", "medium", "hard", "expert", "masterpiece"] {
+            let (repair, dims, charges) = miss_economics(t);
+            assert!(!(dims && charges), "{t}: a miss is dimmed or charged, never both");
+            assert!(repair != charges, "{t}: withholding the repair is what a charge means");
+        }
+    }
 }
 
 #[cfg(test)]
@@ -1237,6 +1371,7 @@ mod export_tests {
             micro: vec![MicroStroke { path_idx: 1, points: vec![(5.0, 5.0), (9.0, 5.0), (9.0, 9.0)] }],
             pinned: vec![MicroStroke { path_idx: 2, points: vec![(300.0, 300.0), (340.0, 318.0)] }],
             words: vec![],
+            ladder: vec![],
             size: 13.0,
         }
     }
