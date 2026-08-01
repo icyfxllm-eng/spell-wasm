@@ -130,6 +130,15 @@ def layer_split(paths: list[dict]) -> list[list[int]]:
     return groups + ([micro] if micro else [])
 
 
+def authoring_note(sub: str) -> str:
+    f = ROOT / "content-pipeline/wordpic/suggestions" / f"{sub}.json"
+    if not f.exists():
+        return "hand-traced"
+    doc = json.loads(f.read_text())
+    ok = sum(1 for c in doc.get("candidates", []) if c.get("status") == "approved")
+    return f"suggested-then-approved ({ok} candidates)" if ok else "hand-traced"
+
+
 def main() -> int:
     prov = {r["subject"]: r for r in json.loads(PROV.read_text())}
     langs = sorted({p.stem.split("-")[0] for p in POOLS.glob("*.json")})
@@ -179,6 +188,9 @@ def main() -> int:
             "layers": layers,
             "audio_gate": AUDIO_GATE.get(tier, "expert"),
             "completion": {"all_layers": True},
+            # Module 12 provenance: invisible to players, invaluable for
+            # tracing quality drift back to how a path was born.
+            "authoring": authoring_note(sub),
             "pin_hash": doc.get("pin_hash", ""),
         }
         (OUT / f"{sub}.json").write_text(json.dumps(manifest, indent=1) + "\n")

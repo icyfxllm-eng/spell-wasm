@@ -555,7 +555,25 @@ def path_min_clearance(p, others):
                 if d < m: m = d
     return m
 
+# CC-SCAN-STACK v1.2 module 12, the export-block: an unreviewed suggestion
+# cannot be exported. If a subject has a suggestions sidecar with ANY
+# candidate still pending, its scan does not build -- approval is the human
+# half of the contract and the tool refuses to proceed without it.
+SUGGESTIONS = ROOT / "content-pipeline/wordpic/suggestions"
+def _pending_suggestions(sub):
+    f = SUGGESTIONS / f"{sub}.json"
+    if not f.exists():
+        return 0
+    doc = json.loads(f.read_text())
+    return sum(1 for c in doc.get("candidates", []) if c.get("status") == "pending")
+
 for sub, (ref, mode, tier) in SUBJ.items():
+    npend = _pending_suggestions(sub)
+    if npend:
+        raise SystemExit(
+            f"{sub}: {npend} suggestion candidate(s) still pending review — "
+            f"approve or reject them in content-pipeline/wordpic/suggestions/{sub}.json "
+            f"before this subject can build (module 12 export-block)")
     paths = rings(REF / ref, sub)
     paths.sort(key=plen, reverse=True)
     # v8.2.1 small-feature pass: a SHORT CLOSED contour is a solid source
