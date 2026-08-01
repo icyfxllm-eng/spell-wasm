@@ -47,9 +47,9 @@ def turtleship():
     d.rectangle([120, 300, 230, 380], fill=BLACK)
     circle(d, 110, 320, 62, BLACK)
     d.polygon([(64, 296), (14, 258), (70, 344)], fill=BLACK)           # open jaw
-    circle(d, 96, 302, 14, WHITE)                                      # eye (micro)
+    circle(d, 106, 314, 17, WHITE)   # eye (micro) — centred deep so it clears the head outline
     # stern tail fin
-    d.polygon([(840, 420), (950, 360), (920, 500), (840, 500)], fill=BLACK)
+    d.polygon([(800, 430), (950, 360), (920, 500), (800, 500)], fill=BLACK)  # rooted into the hull
     # waterline
     d.line([(120, 640), (900, 640)], fill=BLACK, width=36)
     return im
