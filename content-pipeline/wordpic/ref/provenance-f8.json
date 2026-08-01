@@ -321,5 +321,21 @@
   "sourceUrl": "https://freesvg.org/koi-fish",
   "file": "ref/koi.png",
   "note": "Eric approved sourcing 2026-08-01. Silhouette extracted from the coloured top view (opaque-and-not-tan mask, components >800px, morphological close to fuse hairline fin gaps), placed twice rotated 180 for the circling pair (tools/prep_sourced.py). Two copies of PD art composed is PD."
+ },
+ {
+  "subject": "octopus",
+  "title": "Kid-Octopi-Redrawn (OpenClipart via FreeSVG)",
+  "license": "Public domain",
+  "sourceUrl": "https://freesvg.org/octopus-silhouette",
+  "file": "ref/octopus.png",
+  "note": "Eric's standing wikimedia-sourcing run 2026-08-01. Used near-as-is; light close only so the eye and smile holes survive."
+ },
+ {
+  "subject": "oak",
+  "title": "Tree78 (OpenClipart via FreeSVG)",
+  "license": "Public domain",
+  "sourceUrl": "https://freesvg.org/black-and-white-tree",
+  "file": "ref/oak.png",
+  "note": "Same run. Etching solidified in tools/prep_sourced.py --wave4: heavy close, largest component, hole fill, LANCZOS round-trip to re-round the staircased crown."
  }
 ]

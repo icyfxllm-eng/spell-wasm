@@ -112,3 +112,84 @@ pair.paste(fishA, (ax, ay), Image.eval(fishA, lambda v: 255 - v))
 pair.paste(fishB, (bx, by), Image.eval(fishB, lambda v: 255 - v))
 pair.save(REF / "koi.png")
 print("koi.png", pair.size)
+
+
+# ---- wave 4: octopus + oak (Eric's "more pics from wikimedia" run) --------
+def prep_octopus():
+    """FreeSVG/OpenClipart Kid-Octopi (PD): already a clean solid silhouette
+    with eye and smile holes. Light close only -- a heavy one would seal the
+    smile, and the face IS the picture."""
+    im = Image.open(S / "octopus-pd.png").convert("RGBA")
+    bg = Image.new("RGBA", im.size, (255, 255, 255, 255))
+    bg.alpha_composite(im)
+    g = bg.convert("L")
+    from PIL import ImageFilter
+    g = g.point(lambda v: 0 if v < 128 else 255)
+    g = g.filter(ImageFilter.MinFilter(5)).filter(ImageFilter.MaxFilter(5))
+    g.save(REF / "octopus.png")
+    print("octopus.png", g.size)
+
+
+def prep_oak():
+    """FreeSVG/OpenClipart Tree78 (PD): an etching -- dense foliage stipple,
+    the Duerer failure mode. Solidified: heavy close merges the crown into
+    one mass, largest component + hole fill, ground scribble dropped with
+    the small components."""
+    im = Image.open(S / "oak-pd.png").convert("RGBA")
+    bg = Image.new("RGBA", im.size, (255, 255, 255, 255))
+    bg.alpha_composite(im)
+    g = bg.convert("L").point(lambda v: 0 if v < 150 else 255)
+    from PIL import ImageFilter
+    g = g.filter(ImageFilter.MinFilter(19)).filter(ImageFilter.MaxFilter(15))
+    pw, ph = g.size
+    px = g.load()
+    mask = [[px[x, y] < 128 for x in range(pw)] for y in range(ph)]
+    seen = [[False] * pw for _ in range(ph)]
+    best = []
+    for sy in range(ph):
+        for sx in range(pw):
+            if mask[sy][sx] and not seen[sy][sx]:
+                stack = [(sx, sy)]; comp = []
+                seen[sy][sx] = True
+                while stack:
+                    x, y = stack.pop(); comp.append((x, y))
+                    for nx, ny in ((x+1,y),(x-1,y),(x,y+1),(x,y-1)):
+                        if 0 <= nx < pw and 0 <= ny < ph and mask[ny][nx] and not seen[ny][nx]:
+                            seen[ny][nx] = True; stack.append((nx, ny))
+                if len(comp) > len(best):
+                    best = comp
+    solid = Image.new("L", (pw, ph), 255)
+    sp = solid.load()
+    for x, y in best:
+        sp[x, y] = 0
+    # fill holes (border flood)
+    reach = [[False] * pw for _ in range(ph)]
+    stack = []
+    for x in range(pw):
+        for y in (0, ph - 1):
+            if sp[x, y] == 255 and not reach[y][x]:
+                reach[y][x] = True; stack.append((x, y))
+    for y in range(ph):
+        for x in (0, pw - 1):
+            if sp[x, y] == 255 and not reach[y][x]:
+                reach[y][x] = True; stack.append((x, y))
+    while stack:
+        x, y = stack.pop()
+        for nx, ny in ((x+1,y),(x-1,y),(x,y+1),(x,y-1)):
+            if 0 <= nx < pw and 0 <= ny < ph and not reach[ny][nx] and sp[nx, ny] == 255:
+                reach[ny][nx] = True; stack.append((nx, ny))
+    for y in range(ph):
+        for x in range(pw):
+            if sp[x, y] == 255 and not reach[y][x]:
+                sp[x, y] = 0
+    # The square close kernel staircases the crown; a down-up LANCZOS
+    # round-trip re-rounds it organically before the final threshold.
+    small = solid.resize((pw // 4, ph // 4), Image.LANCZOS)
+    solid = small.resize((pw, ph), Image.LANCZOS).point(lambda v: 0 if v < 128 else 255)
+    solid.save(REF / "oak.png")
+    print("oak.png", solid.size)
+
+
+if "--wave4" in sys.argv:
+    prep_octopus()
+    prep_oak()
