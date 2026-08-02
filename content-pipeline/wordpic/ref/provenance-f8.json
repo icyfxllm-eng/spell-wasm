@@ -581,5 +581,61 @@
     "sourceUrl": "",
     "file": "tools/draw_wave11.py",
     "note": "Drawn coordinate list; candidates approved by Eric 2026-08-01."
+  },
+  {
+    "subject": "arcdetriomphe",
+    "title": "SpellGame original — Arc de Triomphe (culture 5, fr)",
+    "license": "Original artwork (SpellGame)",
+    "sourceUrl": "",
+    "file": "tools/draw_wave13.py",
+    "note": "Drawn coordinate list; candidates approved by Eric 2026-08-01."
+  },
+  {
+    "subject": "rickshaw",
+    "title": "SpellGame original — auto-rickshaw (culture 5, hi)",
+    "license": "Original artwork (SpellGame)",
+    "sourceUrl": "",
+    "file": "tools/draw_wave13.py",
+    "note": "Drawn coordinate list; candidates approved by Eric 2026-08-01."
+  },
+  {
+    "subject": "dhow",
+    "title": "SpellGame original — dhow (culture 5, sw)",
+    "license": "Original artwork (SpellGame)",
+    "sourceUrl": "",
+    "file": "tools/draw_wave13.py",
+    "note": "Drawn coordinate list; candidates approved by Eric 2026-08-01."
+  },
+  {
+    "subject": "galo",
+    "title": "SpellGame original — Barcelos rooster (culture 5, pt)",
+    "license": "Original artwork (SpellGame)",
+    "sourceUrl": "",
+    "file": "tools/draw_wave13.py",
+    "note": "Drawn coordinate list; candidates approved by Eric 2026-08-01."
+  },
+  {
+    "subject": "pyramids",
+    "title": "SpellGame original — pyramids of Giza (culture 5, ar)",
+    "license": "Original artwork (SpellGame)",
+    "sourceUrl": "",
+    "file": "tools/draw_wave13.py",
+    "note": "Drawn coordinate list; candidates approved by Eric 2026-08-01."
+  },
+  {
+    "subject": "eyeofhorus",
+    "title": "SpellGame original — Eye of Horus after the ancient wedjat (wave 12)",
+    "license": "Original artwork (SpellGame)",
+    "sourceUrl": "",
+    "file": "tools/draw_wave12.py",
+    "note": "Drawn coordinate list; candidates approved by Eric 2026-08-01."
+  },
+  {
+    "subject": "ankh",
+    "title": "SpellGame original — ankh after the ancient symbol (wave 12)",
+    "license": "Original artwork (SpellGame)",
+    "sourceUrl": "",
+    "file": "tools/draw_wave12.py",
+    "note": "Drawn coordinate list; candidates approved by Eric 2026-08-01."
   }
 ]
