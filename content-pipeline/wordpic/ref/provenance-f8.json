@@ -1,937 +1,961 @@
 [
-  {
-    "subject": "dog",
-    "title": "File:Dog Silhouette 01.svg",
-    "license": "Public domain",
-    "sourceUrl": "https://commons.wikimedia.org/wiki/File:Dog_Silhouette_01.svg",
-    "file": "ref/dog.png",
-    "bytes": 27180
-  },
-  {
-    "subject": "butterfly",
-    "title": "File:Butterfly Pinhead icon.svg",
-    "license": "CC0",
-    "sourceUrl": "https://commons.wikimedia.org/wiki/File:Butterfly_Pinhead_icon.svg",
-    "file": "ref/butterfly.png",
-    "bytes": 22647
-  },
-  {
-    "subject": "snail",
-    "title": "File:Snail (761489) - The Noun Project.svg",
-    "license": "CC0",
-    "sourceUrl": "https://commons.wikimedia.org/wiki/File:Snail_(761489)_-_The_Noun_Project.svg",
-    "file": "ref/snail.png",
-    "bytes": 24582,
-    "note": "Eric 2026-07-31: remaining-8 scanlock pass; CC0 pictogram"
-  },
-  {
-    "subject": "duck",
-    "title": "File:Duck Silhouette (NIH BioArt 135 - 629482).svg",
-    "license": "Public domain",
-    "sourceUrl": "https://commons.wikimedia.org/wiki/File:Duck_Silhouette_(NIH_BioArt_135_-_629482).svg",
-    "file": "ref/duck.png",
-    "bytes": 20951
-  },
-  {
-    "subject": "owl",
-    "title": "File:Owl (13455) - The Noun Project.svg",
-    "license": "CC0",
-    "sourceUrl": "https://commons.wikimedia.org/wiki/File:Owl_(13455)_-_The_Noun_Project.svg",
-    "file": "ref/owl.png",
-    "bytes": 41299,
-    "note": "Eric 2026-08-01: 'easier owl picture'. The detailed eagle-owl illustration drowned in feather stippling; this pictogram carries ear tufts, two eyes, beak, spread wings and talons cleanly."
-  },
-  {
-    "subject": "turtle",
-    "title": "File:Turtle.svg",
-    "license": "Public domain",
-    "sourceUrl": "https://commons.wikimedia.org/wiki/File:Turtle.svg",
-    "file": "ref/turtle.png",
-    "bytes": 11169
-  },
-  {
-    "subject": "elephant",
-    "title": "File:Elephant Vector.svg",
-    "license": "CC0",
-    "sourceUrl": "https://commons.wikimedia.org/wiki/File:Elephant_Vector.svg",
-    "file": "ref/elephant.png",
-    "bytes": 18816
-  },
-  {
-    "subject": "horse",
-    "title": "File:Horse (49794) - The Noun Project.svg",
-    "license": "CC0",
-    "sourceUrl": "https://commons.wikimedia.org/wiki/File:Horse_(49794)_-_The_Noun_Project.svg",
-    "file": "ref/horse.png",
-    "bytes": 20451,
-    "note": "Eric 2026-07-31: asked for a horse with its head upright. Trotting CC0 pictogram — head high, four legs clear, mane and tail."
-  },
-  {
-    "subject": "peacock",
-    "title": "File:Taiwan road sign d0 peacock.svg",
-    "license": "Public domain",
-    "sourceUrl": "https://commons.wikimedia.org/wiki/File:Taiwan_road_sign_d0_peacock.svg",
-    "file": "ref/peacock.png",
-    "bytes": 58574,
-    "note": "Eric 2026-08-01: the displaying-peacock PHOTO was untraceable (translucent fan). Swapped to this pictogram — clean fan eyespots, body, crest, eye."
-  },
-  {
-    "subject": "fish",
-    "title": "File:Salmo salar silhouette transparent.png",
-    "license": "CC0",
-    "sourceUrl": "https://commons.wikimedia.org/wiki/File:Salmo_salar_silhouette_transparent.png",
-    "file": "ref/fish.png",
-    "bytes": 10703
-  },
-  {
-    "subject": "snowman",
-    "title": "File:Snowman - The Noun Project.svg",
-    "license": "CC0",
-    "sourceUrl": "https://commons.wikimedia.org/wiki/File:Snowman_-_The_Noun_Project.svg",
-    "file": "ref/snowman.png",
-    "bytes": 23443
-  },
-  {
-    "subject": "eiffel",
-    "title": "File:Eiffel Tower Silhouette.svg",
-    "license": "CC0",
-    "sourceUrl": "https://commons.wikimedia.org/wiki/File:Eiffel_Tower_Silhouette.svg",
-    "file": "ref/eiffel.png",
-    "bytes": 30478
-  },
-  {
-    "subject": "dragon",
-    "title": "File:Dragon from Chinese Dragon Banner Red Version.svg",
-    "license": "CC0",
-    "sourceUrl": "https://commons.wikimedia.org/wiki/File:Dragon_from_Chinese_Dragon_Banner_Red_Version.svg",
-    "file": "ref/dragon.png",
-    "bytes": 349136,
-    "note": "Eric 2026-08-01: asked for a clean Chinese-dragon clipart like his reference image. Hokusai panel was tonal (untraceable, like the Mona photo); this is line-art clean."
-  },
-  {
-    "subject": "mona",
-    "title": "File:Mona Lisa, by Leonardo da Vinci, from C2RMF retouched.jpg",
-    "license": "Public domain",
-    "sourceUrl": "https://commons.wikimedia.org/wiki/File:Mona_Lisa,_by_Leonardo_da_Vinci,_from_C2RMF_retouched.jpg",
-    "file": "ref/mona-engraving.jpg",
-    "bytes": 980329,
-    "note": "ink-branch tracing source (Eric-approved 2026-07-31); painting photo retained for side-by-side; red/blue annotation is the review standard",
-    "attribution": "after Leonardo da Vinci"
-  },
-  {
-    "subject": "mona-engraving",
-    "title": "File:Joconde de Calamatta.jpg",
-    "license": "Public domain",
-    "sourceUrl": "https://commons.wikimedia.org/wiki/File:Joconde_de_Calamatta.jpg",
-    "file": "ref/mona-engraving.jpg",
-    "bytes": 280515,
-    "note": "Luigi Calamatta's engraving of the Mona Lisa — ink-branch tracing source (Eric-approved 2026-07-31); painting photo retained for side-by-side; red/blue annotation is the review standard"
-  },
-  {
-    "subject": "cat",
-    "title": "File:Cat (49952) - The Noun Project.svg",
-    "license": "CC0",
-    "sourceUrl": "https://commons.wikimedia.org/wiki/File:Cat_(49952)_-_The_Noun_Project.svg",
-    "file": "ref/cat.png",
-    "bytes": 18096,
-    "note": "Eric 2026-07-31: remaining-8 scanlock pass; CC0 pictogram"
-  },
-  {
-    "subject": "rocket",
-    "title": "SpellGame original — drawn rocket silhouette",
-    "license": "Original artwork (SpellGame)",
-    "sourceUrl": "",
-    "file": "tools/draw_ref.py::rocket",
-    "bytes": 12142,
-    "note": "Eric 2026-07-31: replaced the CC0 pictogram, which was split by a white seam so largest-component kept one half. Hand-authored."
-  },
-  {
-    "subject": "rhino",
-    "title": "SpellGame original — drawn rhino silhouette",
-    "license": "Original artwork (SpellGame)",
-    "sourceUrl": "",
-    "file": "tools/draw_ref.py::rhino",
-    "bytes": 432779,
-    "note": "Eric 2026-07-31: replaced the Duerer plate, whose hatching floods every threshold (legs merged into the ground shadow, eye lost). Hand-authored coordinate list, not traced from any source image."
-  },
-  {
-    "subject": "house",
-    "title": "SpellGame original — house (geometric scan)",
-    "license": "Original artwork (SpellGame)",
-    "sourceUrl": "",
-    "file": "content-pipeline/wordpic/geometric-scans.json",
-    "note": "Hand-authored geometry, never traced from a reference image."
-  },
-  {
-    "subject": "smiley",
-    "title": "SpellGame original — smiley (geometric scan)",
-    "license": "Original artwork (SpellGame)",
-    "sourceUrl": "",
-    "file": "content-pipeline/wordpic/geometric-scans.json",
-    "note": "Hand-authored geometry, never traced from a reference image."
-  },
-  {
-    "subject": "star",
-    "title": "SpellGame original — star (geometric scan)",
-    "license": "Original artwork (SpellGame)",
-    "sourceUrl": "",
-    "file": "content-pipeline/wordpic/geometric-scans.json",
-    "note": "Hand-authored geometry, never traced from a reference image."
-  },
-  {
-    "subject": "balloon",
-    "title": "SpellGame original — balloon (wave 1 batch 1)",
-    "license": "Original artwork (SpellGame)",
-    "sourceUrl": "",
-    "file": "tools/draw_wave1.py",
-    "note": "Drawn coordinate list; candidates approved by Eric 2026-08-01."
-  },
-  {
-    "subject": "mug",
-    "title": "SpellGame original — mug (wave 1 batch 1)",
-    "license": "Original artwork (SpellGame)",
-    "sourceUrl": "",
-    "file": "tools/draw_wave1.py",
-    "note": "Drawn coordinate list; candidates approved by Eric 2026-08-01."
-  },
-  {
-    "subject": "kite",
-    "title": "SpellGame original — kite (wave 1 batch 1)",
-    "license": "Original artwork (SpellGame)",
-    "sourceUrl": "",
-    "file": "tools/draw_wave1.py",
-    "note": "Drawn coordinate list; candidates approved by Eric 2026-08-01."
-  },
-  {
-    "subject": "mushroom",
-    "title": "SpellGame original — mushroom (wave 1 batch 1)",
-    "license": "Original artwork (SpellGame)",
-    "sourceUrl": "",
-    "file": "tools/draw_wave1.py",
-    "note": "Drawn coordinate list; candidates approved by Eric 2026-08-01."
-  },
-  {
-    "subject": "sailboat",
-    "title": "SpellGame original — sailboat (wave 1 batch 1)",
-    "license": "Original artwork (SpellGame)",
-    "sourceUrl": "",
-    "file": "tools/draw_wave1.py",
-    "note": "Drawn coordinate list; candidates approved by Eric 2026-08-01."
-  },
-  {
-    "subject": "cactus",
-    "title": "SpellGame original — cactus (wave 1 batch 1)",
-    "license": "Original artwork (SpellGame)",
-    "sourceUrl": "",
-    "file": "tools/draw_wave1.py",
-    "note": "Drawn coordinate list; candidates approved by Eric 2026-08-01."
-  },
-  {
-    "subject": "ladybug",
-    "title": "SpellGame original — ladybug (wave 1 batch 1)",
-    "license": "Original artwork (SpellGame)",
-    "sourceUrl": "",
-    "file": "tools/draw_wave1.py",
-    "note": "Drawn coordinate list; candidates approved by Eric 2026-08-01."
-  },
-  {
-    "subject": "moonstar",
-    "title": "SpellGame original — moonstar (wave 1 batch 1)",
-    "license": "Original artwork (SpellGame)",
-    "sourceUrl": "",
-    "file": "tools/draw_wave1.py",
-    "note": "Drawn coordinate list; candidates approved by Eric 2026-08-01."
-  },
-  {
-    "subject": "bicycle",
-    "title": "SpellGame original — bicycle (wave 1 batch 2)",
-    "license": "Original artwork (SpellGame)",
-    "sourceUrl": "",
-    "file": "tools/draw_wave2.py",
-    "note": "Drawn coordinate list; candidates approved by Eric 2026-08-01."
-  },
-  {
-    "subject": "windmill",
-    "title": "SpellGame original — windmill (wave 1 batch 2)",
-    "license": "Original artwork (SpellGame)",
-    "sourceUrl": "",
-    "file": "tools/draw_wave2.py",
-    "note": "Drawn coordinate list; candidates approved by Eric 2026-08-01."
-  },
-  {
-    "subject": "hotair",
-    "title": "SpellGame original — hotair (wave 1 batch 2)",
-    "license": "Original artwork (SpellGame)",
-    "sourceUrl": "",
-    "file": "tools/draw_wave2.py",
-    "note": "Drawn coordinate list; candidates approved by Eric 2026-08-01."
-  },
-  {
-    "subject": "lighthouse",
-    "title": "SpellGame original — lighthouse (wave 1 batch 2)",
-    "license": "Original artwork (SpellGame)",
-    "sourceUrl": "",
-    "file": "tools/draw_wave2.py",
-    "note": "Drawn coordinate list; candidates approved by Eric 2026-08-01."
-  },
-  {
-    "subject": "violin",
-    "title": "SpellGame original — violin (wave 1 batch 2)",
-    "license": "Original artwork (SpellGame)",
-    "sourceUrl": "",
-    "file": "tools/draw_wave2.py",
-    "note": "Drawn coordinate list; candidates approved by Eric 2026-08-01."
-  },
-  {
-    "subject": "hummingbird",
-    "title": "SpellGame original — hummingbird (wave 1 batch 2)",
-    "license": "Original artwork (SpellGame)",
-    "sourceUrl": "",
-    "file": "tools/draw_wave2.py",
-    "note": "Drawn coordinate list; candidates approved by Eric 2026-08-01."
-  },
-  {
-    "subject": "rooster",
-    "title": "SpellGame original — rooster (wave 1 batch 2)",
-    "license": "Original artwork (SpellGame)",
-    "sourceUrl": "",
-    "file": "tools/draw_wave2.py",
-    "note": "Drawn coordinate list; candidates approved by Eric 2026-08-01."
-  },
-  {
-    "subject": "seahorse",
-    "title": "SpellGame original — seahorse (wave 1 batch 2)",
-    "license": "Original artwork (SpellGame)",
-    "sourceUrl": "",
-    "file": "tools/draw_wave2.py",
-    "note": "Drawn coordinate list; candidates approved by Eric 2026-08-01."
-  },
-  {
-    "subject": "wolf",
-    "title": "File:Wolf.svg (howling wolf silhouette)",
-    "license": "CC0 1.0",
-    "sourceUrl": "https://commons.wikimedia.org/wiki/File:Wolf.svg",
-    "file": "ref/wolf.png",
-    "note": "Eric approved sourcing 2026-08-01. Composed over a drawn perch with an aligned 36px seam (tools/prep_sourced.py) so wolf and rock trace as two contours -- paws flush over the rock line reads as standing-on, not fused."
-  },
-  {
-    "subject": "koi",
-    "title": "Koi-Fish (OpenClipart via FreeSVG)",
-    "license": "Public domain",
-    "sourceUrl": "https://freesvg.org/koi-fish",
-    "file": "ref/koi.png",
-    "note": "Eric approved sourcing 2026-08-01. Silhouette extracted from the coloured top view (opaque-and-not-tan mask, components >800px, morphological close to fuse hairline fin gaps), placed twice rotated 180 for the circling pair (tools/prep_sourced.py). Two copies of PD art composed is PD."
-  },
-  {
-    "subject": "octopus",
-    "title": "Kid-Octopi-Redrawn (OpenClipart via FreeSVG)",
-    "license": "Public domain",
-    "sourceUrl": "https://freesvg.org/octopus-silhouette",
-    "file": "ref/octopus.png",
-    "note": "Eric's standing wikimedia-sourcing run 2026-08-01. Used near-as-is; light close only so the eye and smile holes survive."
-  },
-  {
-    "subject": "oak",
-    "title": "Tree78 (OpenClipart via FreeSVG)",
-    "license": "Public domain",
-    "sourceUrl": "https://freesvg.org/black-and-white-tree",
-    "file": "ref/oak.png",
-    "note": "Same run. Etching solidified in tools/prep_sourced.py --wave4: heavy close, largest component, hole fill, LANCZOS round-trip to re-round the staircased crown."
-  },
-  {
-    "subject": "greatwave",
-    "title": "Under the Wave off Kanagawa (The Great Wave), Katsushika Hokusai, ca. 1830-32 (Met JP1847 scan)",
-    "license": "Public domain (PD-Art)",
-    "sourceUrl": "https://commons.wikimedia.org/wiki/File:Tsunami_by_hokusai_19th_century.jpg",
-    "file": "ref/greatwave.png",
-    "bytes": 17987,
-    "attribution": "after Hokusai"
-  },
-  {
-    "subject": "starrynight",
-    "title": "The Starry Night, Vincent van Gogh, 1889 (Google Art Project scan)",
-    "license": "Public domain (PD-Art)",
-    "sourceUrl": "https://commons.wikimedia.org/wiki/File:Van_Gogh_-_Starry_Night_-_Google_Art_Project.jpg",
-    "file": "ref/starrynight.png",
-    "bytes": 9968,
-    "attribution": "after Vincent van Gogh"
-  },
-  {
-    "subject": "crane",
-    "title": "SpellGame original — origami crane (culture five, ja)",
-    "license": "Original artwork (SpellGame)",
-    "sourceUrl": "",
-    "file": "ref/crane.png",
-    "bytes": 4945
-  },
-  {
-    "subject": "dallah",
-    "title": "SpellGame original — dallah coffee pot (culture five, ar)",
-    "license": "Original artwork (SpellGame)",
-    "sourceUrl": "",
-    "file": "ref/dallah.png",
-    "bytes": 5240
-  },
-  {
-    "subject": "basil",
-    "title": "SpellGame original — Saint Basil's skyline (culture five, ru)",
-    "license": "Original artwork (SpellGame)",
-    "sourceUrl": "",
-    "file": "ref/basil.png",
-    "bytes": 4046
-  },
-  {
-    "subject": "panda",
-    "title": "SpellGame original — panda (culture five, zh)",
-    "license": "Original artwork (SpellGame)",
-    "sourceUrl": "",
-    "file": "ref/panda.png",
-    "bytes": 5389
-  },
-  {
-    "subject": "calavera",
-    "title": "SpellGame original — calavera sugar skull (culture 2, es)",
-    "license": "Original artwork (SpellGame)",
-    "sourceUrl": "",
-    "file": "tools/draw_wave7.py",
-    "note": "Drawn coordinate list; candidates approved by Eric 2026-08-01."
-  },
-  {
-    "subject": "tajmahal",
-    "title": "SpellGame original — Taj Mahal (culture 2, hi)",
-    "license": "Original artwork (SpellGame)",
-    "sourceUrl": "",
-    "file": "tools/draw_wave7.py",
-    "note": "Drawn coordinate list; candidates approved by Eric 2026-08-01."
-  },
-  {
-    "subject": "stork",
-    "title": "SpellGame original — white stork on nest (culture 2, pl)",
-    "license": "Original artwork (SpellGame)",
-    "sourceUrl": "",
-    "file": "tools/draw_wave7.py",
-    "note": "Drawn coordinate list; candidates approved by Eric 2026-08-01."
-  },
-  {
-    "subject": "caravel",
-    "title": "SpellGame original — caravel (culture 2, pt)",
-    "license": "Original artwork (SpellGame)",
-    "sourceUrl": "",
-    "file": "tools/draw_wave7.py",
-    "note": "Drawn coordinate list; candidates approved by Eric 2026-08-01."
-  },
-  {
-    "subject": "bigben",
-    "title": "SpellGame original — Big Ben (culture 2, en)",
-    "license": "Original artwork (SpellGame)",
-    "sourceUrl": "",
-    "file": "tools/draw_wave7.py",
-    "note": "Drawn coordinate list; candidates approved by Eric 2026-08-01."
-  },
-  {
-    "subject": "turtleship",
-    "title": "SpellGame original — geobukseon turtle ship (culture 3, ko)",
-    "license": "Original artwork (SpellGame)",
-    "sourceUrl": "",
-    "file": "tools/draw_wave8.py",
-    "note": "Drawn coordinate list; candidates approved by Eric 2026-08-01."
-  },
-  {
-    "subject": "baobab",
-    "title": "SpellGame original — baobab (culture 3, sw)",
-    "license": "Original artwork (SpellGame)",
-    "sourceUrl": "",
-    "file": "tools/draw_wave8.py",
-    "note": "Drawn coordinate list; candidates approved by Eric 2026-08-01."
-  },
-  {
-    "subject": "nonla",
-    "title": "SpellGame original — non la + ao dai (culture 3, vi)",
-    "license": "Original artwork (SpellGame)",
-    "sourceUrl": "",
-    "file": "tools/draw_wave8.py",
-    "note": "Drawn coordinate list; candidates approved by Eric 2026-08-01."
-  },
-  {
-    "subject": "cuckoo",
-    "title": "SpellGame original — cuckoo clock (culture 3, de)",
-    "license": "Original artwork (SpellGame)",
-    "sourceUrl": "",
-    "file": "tools/draw_wave8.py",
-    "note": "Drawn coordinate list; candidates approved by Eric 2026-08-01."
-  },
-  {
-    "subject": "torii",
-    "title": "SpellGame original — torii gate (culture 4, ja)",
-    "license": "Original artwork (SpellGame)",
-    "sourceUrl": "",
-    "file": "tools/draw_wave9.py",
-    "note": "Drawn coordinate list; candidates approved by Eric 2026-08-01."
-  },
-  {
-    "subject": "hanbok",
-    "title": "SpellGame original — hanbok (culture 4, ko)",
-    "license": "Original artwork (SpellGame)",
-    "sourceUrl": "",
-    "file": "tools/draw_wave9.py",
-    "note": "Drawn coordinate list; candidates approved by Eric 2026-08-01."
-  },
-  {
-    "subject": "matryoshka",
-    "title": "SpellGame original — matryoshka (culture 4, ru)",
-    "license": "Original artwork (SpellGame)",
-    "sourceUrl": "",
-    "file": "tools/draw_wave9.py",
-    "note": "Drawn coordinate list; candidates approved by Eric 2026-08-01."
-  },
-  {
-    "subject": "greatwall",
-    "title": "SpellGame original — Great Wall (culture 4, zh)",
-    "license": "Original artwork (SpellGame)",
-    "sourceUrl": "",
-    "file": "tools/draw_wave9.py",
-    "note": "Drawn coordinate list; candidates approved by Eric 2026-08-01."
-  },
-  {
-    "subject": "oud",
-    "title": "SpellGame original — oud (culture 4, ar)",
-    "license": "Original artwork (SpellGame)",
-    "sourceUrl": "",
-    "file": "tools/draw_wave9.py",
-    "note": "Drawn coordinate list; candidates approved by Eric 2026-08-01."
-  },
-  {
-    "subject": "redfuji",
-    "title": "South Wind, Clear Sky (Red Fuji), Katsushika Hokusai, ca. 1830-32",
-    "license": "Public domain (PD-Art)",
-    "sourceUrl": "https://commons.wikimedia.org/wiki/File:Red_Fuji_southern_wind_clear_morning.jpg",
-    "file": "ref/redfuji.png",
-    "bytes": 10239,
-    "attribution": "after Hokusai"
-  },
-  {
-    "subject": "scream",
-    "title": "The Scream, Edvard Munch, 1893 (National Gallery of Norway)",
-    "license": "Public domain (PD-Art)",
-    "sourceUrl": "https://commons.wikimedia.org/wiki/File:The_Scream.jpg",
-    "file": "ref/scream.png",
-    "bytes": 11679,
-    "attribution": "after Edvard Munch"
-  },
-  {
-    "subject": "fuji",
-    "title": "SpellGame original — Mt. Fuji (ja, the spec's torii partner)",
-    "license": "Original artwork (SpellGame)",
-    "sourceUrl": "",
-    "file": "tools/draw_wave10.py",
-    "note": "Drawn coordinate list."
-  },
-  {
-    "subject": "orion",
-    "title": "SpellGame original — Orion constellation map (PICTURE-BANK Done #6's subject)",
-    "license": "Original artwork (SpellGame)",
-    "sourceUrl": "",
-    "file": "tools/draw_wave10.py",
-    "note": "Drawn coordinate list."
-  },
-  {
-    "subject": "papelpicado",
-    "title": "SpellGame original — papel picado banner (es)",
-    "license": "Original artwork (SpellGame)",
-    "sourceUrl": "",
-    "file": "tools/draw_wave10.py",
-    "note": "Drawn coordinate list."
-  },
-  {
-    "subject": "anubis",
-    "title": "SpellGame original — seated Anubis after Egyptian tomb painting (ancient motif)",
-    "license": "Original artwork (SpellGame)",
-    "sourceUrl": "",
-    "file": "tools/draw_wave11.py",
-    "note": "Drawn coordinate list; candidates approved by Eric 2026-08-01."
-  },
-  {
-    "subject": "athenaowl",
-    "title": "SpellGame original — owl of Athena after the tetradrachm motif (ancient)",
-    "license": "Original artwork (SpellGame)",
-    "sourceUrl": "",
-    "file": "tools/draw_wave11.py",
-    "note": "Drawn coordinate list; candidates approved by Eric 2026-08-01."
-  },
-  {
-    "subject": "bamboo",
-    "title": "SpellGame original — ink bamboo after the Chinese literati manner",
-    "license": "Original artwork (SpellGame)",
-    "sourceUrl": "",
-    "file": "tools/draw_wave11.py",
-    "note": "Drawn coordinate list; candidates approved by Eric 2026-08-01."
-  },
-  {
-    "subject": "girih",
-    "title": "SpellGame original — eight-point girih star after Islamic tilework",
-    "license": "Original artwork (SpellGame)",
-    "sourceUrl": "",
-    "file": "tools/draw_wave11.py",
-    "note": "Drawn coordinate list; candidates approved by Eric 2026-08-01."
-  },
-  {
-    "subject": "gyenyame",
-    "title": "SpellGame original — Gye Nyame after the Adinkra symbol (traditional)",
-    "license": "Original artwork (SpellGame)",
-    "sourceUrl": "",
-    "file": "tools/draw_wave11.py",
-    "note": "Drawn coordinate list; candidates approved by Eric 2026-08-01."
-  },
-  {
-    "subject": "arcdetriomphe",
-    "title": "SpellGame original — Arc de Triomphe (culture 5, fr)",
-    "license": "Original artwork (SpellGame)",
-    "sourceUrl": "",
-    "file": "tools/draw_wave13.py",
-    "note": "Drawn coordinate list; candidates approved by Eric 2026-08-01."
-  },
-  {
-    "subject": "rickshaw",
-    "title": "SpellGame original — auto-rickshaw (culture 5, hi)",
-    "license": "Original artwork (SpellGame)",
-    "sourceUrl": "",
-    "file": "tools/draw_wave13.py",
-    "note": "Drawn coordinate list; candidates approved by Eric 2026-08-01."
-  },
-  {
-    "subject": "dhow",
-    "title": "SpellGame original — dhow (culture 5, sw)",
-    "license": "Original artwork (SpellGame)",
-    "sourceUrl": "",
-    "file": "tools/draw_wave13.py",
-    "note": "Drawn coordinate list; candidates approved by Eric 2026-08-01."
-  },
-  {
-    "subject": "galo",
-    "title": "SpellGame original — Barcelos rooster (culture 5, pt)",
-    "license": "Original artwork (SpellGame)",
-    "sourceUrl": "",
-    "file": "tools/draw_wave13.py",
-    "note": "Drawn coordinate list; candidates approved by Eric 2026-08-01."
-  },
-  {
-    "subject": "pyramids",
-    "title": "SpellGame original — pyramids of Giza (culture 5, ar)",
-    "license": "Original artwork (SpellGame)",
-    "sourceUrl": "",
-    "file": "tools/draw_wave13.py",
-    "note": "Drawn coordinate list; candidates approved by Eric 2026-08-01."
-  },
-  {
-    "subject": "eyeofhorus",
-    "title": "SpellGame original — Eye of Horus after the ancient wedjat (wave 12)",
-    "license": "Original artwork (SpellGame)",
-    "sourceUrl": "",
-    "file": "tools/draw_wave12.py",
-    "note": "Drawn coordinate list; candidates approved by Eric 2026-08-01."
-  },
-  {
-    "subject": "ankh",
-    "title": "SpellGame original — ankh after the ancient symbol (wave 12)",
-    "license": "Original artwork (SpellGame)",
-    "sourceUrl": "",
-    "file": "tools/draw_wave12.py",
-    "note": "Drawn coordinate list; candidates approved by Eric 2026-08-01."
-  },
-  {
-    "subject": "waweldragon",
-    "title": "SpellGame original — Wawel dragon, drawn original (culture 6, pl)",
-    "license": "Original artwork (SpellGame)",
-    "sourceUrl": "",
-    "file": "tools/draw_wave14.py",
-    "note": "Drawn coordinate list; candidates approved by Eric 2026-08-01."
-  },
-  {
-    "subject": "doubledecker",
-    "title": "SpellGame original — double-decker bus (culture 6, en)",
-    "license": "Original artwork (SpellGame)",
-    "sourceUrl": "",
-    "file": "tools/draw_wave14.py",
-    "note": "Drawn coordinate list; candidates approved by Eric 2026-08-01."
-  },
-  {
-    "subject": "halongbay",
-    "title": "SpellGame original — Ha Long Bay (culture 6, vi)",
-    "license": "Original artwork (SpellGame)",
-    "sourceUrl": "",
-    "file": "tools/draw_wave14.py",
-    "note": "Drawn coordinate list; candidates approved by Eric 2026-08-01."
-  },
-  {
-    "subject": "carabao",
-    "title": "SpellGame original — carabao (culture 6, fil — release held for Paul)",
-    "license": "Original artwork (SpellGame)",
-    "sourceUrl": "",
-    "file": "tools/draw_wave14.py",
-    "note": "Drawn coordinate list; candidates approved by Eric 2026-08-01."
-  },
-  {
-    "subject": "fleurdelis",
-    "title": "SpellGame original — fleur-de-lis (culture 6, fr)",
-    "license": "Original artwork (SpellGame)",
-    "sourceUrl": "",
-    "file": "tools/draw_wave14.py",
-    "note": "Drawn coordinate list; candidates approved by Eric 2026-08-01."
-  },
-  {
-    "subject": "jeepney",
-    "title": "SpellGame original — jeepney (culture 7, fil — release held for Paul)",
-    "license": "Original artwork (SpellGame)",
-    "sourceUrl": "",
-    "file": "tools/draw_wave15.py",
-    "note": "Drawn coordinate list; candidates approved by Eric 2026-08-02."
-  },
-  {
-    "subject": "manekineko",
-    "title": "SpellGame original — maneki-neko (culture 7, ja)",
-    "license": "Original artwork (SpellGame)",
-    "sourceUrl": "",
-    "file": "tools/draw_wave15.py",
-    "note": "Drawn coordinate list; candidates approved by Eric 2026-08-02."
-  },
-  {
-    "subject": "acacia",
-    "title": "SpellGame original — flat-top acacia (culture 7, sw)",
-    "license": "Original artwork (SpellGame)",
-    "sourceUrl": "",
-    "file": "tools/draw_wave15.py",
-    "note": "Drawn coordinate list; candidates approved by Eric 2026-08-02."
-  },
-  {
-    "subject": "samovar",
-    "title": "SpellGame original — samovar (culture 7, ru)",
-    "license": "Original artwork (SpellGame)",
-    "sourceUrl": "",
-    "file": "tools/draw_wave15.py",
-    "note": "Drawn coordinate list; candidates approved by Eric 2026-08-02."
-  },
-  {
-    "subject": "lantern",
-    "title": "SpellGame original — red lantern (culture 7, zh)",
-    "license": "Original artwork (SpellGame)",
-    "sourceUrl": "",
-    "file": "tools/draw_wave15.py",
-    "note": "Drawn coordinate list; candidates approved by Eric 2026-08-02."
-  },
-  {
-    "subject": "sitar",
-    "title": "SpellGame original — sitar (culture 8, hi)",
-    "license": "Original artwork (SpellGame)",
-    "sourceUrl": "",
-    "file": "tools/draw_wave16.py",
-    "note": "Drawn coordinate list; candidates approved by Eric 2026-08-02."
-  },
-  {
-    "subject": "brandenburg",
-    "title": "SpellGame original — Brandenburg Gate (culture 8, de)",
-    "license": "Original artwork (SpellGame)",
-    "sourceUrl": "",
-    "file": "tools/draw_wave16.py",
-    "note": "Drawn coordinate list; candidates approved by Eric 2026-08-02."
-  },
-  {
-    "subject": "colosseum",
-    "title": "SpellGame original — Colosseum (culture 8, worldart)",
-    "license": "Original artwork (SpellGame)",
-    "sourceUrl": "",
-    "file": "tools/draw_wave16.py",
-    "note": "Drawn coordinate list; candidates approved by Eric 2026-08-02."
-  },
-  {
-    "subject": "fan",
-    "title": "SpellGame original — flamenco fan (culture 9, es)",
-    "license": "Original artwork (SpellGame)",
-    "sourceUrl": "",
-    "file": "tools/draw_wave17.py",
-    "note": "Drawn coordinate list; candidates approved by Eric 2026-08-02."
-  },
-  {
-    "subject": "stonehenge",
-    "title": "SpellGame original — Stonehenge (culture 9, en)",
-    "license": "Original artwork (SpellGame)",
-    "sourceUrl": "",
-    "file": "tools/draw_wave17.py",
-    "note": "Drawn coordinate list; candidates approved by Eric 2026-08-02."
-  },
-  {
-    "subject": "pagoda",
-    "title": "SpellGame original — pagoda (culture 10, zh)",
-    "license": "Original artwork (SpellGame)",
-    "sourceUrl": "",
-    "file": "tools/draw_wave18.py",
-    "note": "Drawn coordinate list; candidates approved by Eric 2026-08-02."
-  },
-  {
-    "subject": "daruma",
-    "title": "SpellGame original — daruma (culture 10, ja)",
-    "license": "Original artwork (SpellGame)",
-    "sourceUrl": "",
-    "file": "tools/draw_wave18.py",
-    "note": "Drawn coordinate list; candidates approved by Eric 2026-08-02."
-  },
-  {
-    "subject": "balalaika",
-    "title": "SpellGame original — balalaika (culture 10, ru)",
-    "license": "Original artwork (SpellGame)",
-    "sourceUrl": "",
-    "file": "tools/draw_wave18.py",
-    "note": "Drawn coordinate list; candidates approved by Eric 2026-08-02."
-  },
-  {
-    "subject": "sombrero",
-    "title": "SpellGame original — sombrero (culture 10, es)",
-    "license": "Original artwork (SpellGame)",
-    "sourceUrl": "",
-    "file": "tools/draw_wave18.py",
-    "note": "Drawn coordinate list; candidates approved by Eric 2026-08-02."
-  },
-  {
-    "subject": "djembe",
-    "title": "SpellGame original — djembe (culture 10, sw)",
-    "license": "Original artwork (SpellGame)",
-    "sourceUrl": "",
-    "file": "tools/draw_wave18.py",
-    "note": "Drawn coordinate list; candidates approved by Eric 2026-08-02."
-  },
-  {
-    "subject": "angkorwat",
-    "title": "SpellGame original — Angkor Wat (culture 11, worldart)",
-    "license": "Original artwork (SpellGame)",
-    "sourceUrl": "",
-    "file": "tools/draw_wave19.py",
-    "note": "Drawn coordinate list; candidates approved by Eric 2026-08-02."
-  },
-  {
-    "subject": "accordion",
-    "title": "SpellGame original — accordion (culture 11, fr)",
-    "license": "Original artwork (SpellGame)",
-    "sourceUrl": "",
-    "file": "tools/draw_wave19.py",
-    "note": "Drawn coordinate list; candidates approved by Eric 2026-08-02."
-  },
-  {
-    "subject": "quetzal",
-    "title": "SpellGame original — quetzal (culture 11, es)",
-    "license": "Original artwork (SpellGame)",
-    "sourceUrl": "",
-    "file": "tools/draw_wave19.py",
-    "note": "Drawn coordinate list; candidates approved by Eric 2026-08-02."
-  },
-  {
-    "subject": "grandpiano",
-    "title": "SpellGame original — grand piano (culture 11, pl)",
-    "license": "Original artwork (SpellGame)",
-    "sourceUrl": "",
-    "file": "tools/draw_wave19.py",
-    "note": "Drawn coordinate list; candidates approved by Eric 2026-08-02."
-  },
-  {
-    "subject": "chichenitza",
-    "title": "SpellGame original — Chichen Itza (culture 12, worldart)",
-    "license": "Original artwork (SpellGame)",
-    "sourceUrl": "",
-    "file": "tools/draw_wave20.py",
-    "note": "Drawn coordinate list; candidates approved by Eric 2026-08-02."
-  },
-  {
-    "subject": "montsaintmichel",
-    "title": "SpellGame original — Mont Saint-Michel (culture 12, fr)",
-    "license": "Original artwork (SpellGame)",
-    "sourceUrl": "",
-    "file": "tools/draw_wave20.py",
-    "note": "Drawn coordinate list; candidates approved by Eric 2026-08-02."
-  },
-  {
-    "subject": "maasaishield",
-    "title": "SpellGame original — Maasai shield (culture 12, sw)",
-    "license": "Original artwork (SpellGame)",
-    "sourceUrl": "",
-    "file": "tools/draw_wave20.py",
-    "note": "Drawn coordinate list; candidates approved by Eric 2026-08-02."
-  },
-  {
-    "subject": "janggu",
-    "title": "SpellGame original — janggu (culture 12, ko)",
-    "license": "Original artwork (SpellGame)",
-    "sourceUrl": "",
-    "file": "tools/draw_wave20.py",
-    "note": "Drawn coordinate list; candidates approved by Eric 2026-08-02."
-  },
-  {
-    "subject": "koinobori",
-    "title": "SpellGame original — koinobori (batch 13, ja)",
-    "license": "Original artwork (SpellGame)",
-    "sourceUrl": "",
-    "file": "tools/draw_wave21.py",
-    "note": "Drawn coordinate list; candidates approved by Eric 2026-08-02."
-  },
-  {
-    "subject": "nazcabird",
-    "title": "SpellGame original — after the Nazca hummingbird geoglyph (ancient)",
-    "license": "Original artwork (SpellGame)",
-    "sourceUrl": "",
-    "file": "tools/draw_wave21.py",
-    "note": "Drawn coordinate list; candidates approved by Eric 2026-08-02."
-  },
-  {
-    "subject": "terracotta",
-    "title": "SpellGame original — terracotta warrior (batch 13, zh)",
-    "license": "Original artwork (SpellGame)",
-    "sourceUrl": "",
-    "file": "tools/draw_wave21.py",
-    "note": "Drawn coordinate list; candidates approved by Eric 2026-08-02."
-  },
-  {
-    "subject": "hamsa",
-    "title": "SpellGame original — hamsa (batch 13, ar)",
-    "license": "Original artwork (SpellGame)",
-    "sourceUrl": "",
-    "file": "tools/draw_wave21.py",
-    "note": "Drawn coordinate list; candidates approved by Eric 2026-08-02."
-  },
-  {
-    "subject": "pinata",
-    "title": "SpellGame original — pinata (batch 13, es)",
-    "license": "Original artwork (SpellGame)",
-    "sourceUrl": "",
-    "file": "tools/draw_wave21.py",
-    "note": "Drawn coordinate list; candidates approved by Eric 2026-08-02."
-  },
-  {
-    "subject": "bagpipes",
-    "title": "SpellGame original — bagpipes (batch 13, en)",
-    "license": "Original artwork (SpellGame)",
-    "sourceUrl": "",
-    "file": "tools/draw_wave21.py",
-    "note": "Drawn coordinate list; candidates approved by Eric 2026-08-02."
-  },
-  {
-    "subject": "triskele",
-    "title": "SpellGame original — triskele after the ancient motif",
-    "license": "Original artwork (SpellGame)",
-    "sourceUrl": "",
-    "file": "tools/draw_wave21.py",
-    "note": "Drawn coordinate list; candidates approved by Eric 2026-08-02."
-  },
-  {
-    "subject": "mancala",
-    "title": "SpellGame original — mancala board (batch 13, sw)",
-    "license": "Original artwork (SpellGame)",
-    "sourceUrl": "",
-    "file": "tools/draw_wave21.py",
-    "note": "Drawn coordinate list; candidates approved by Eric 2026-08-02."
-  },
-  {
-    "subject": "compassrose",
-    "title": "SpellGame original — compass rose (batch 14, worldart)",
-    "license": "Original artwork (SpellGame)",
-    "sourceUrl": "",
-    "file": "tools/draw_wave22.py",
-    "note": "Drawn coordinate list; candidates approved by Eric 2026-08-02."
-  }
+ {
+  "subject": "dog",
+  "title": "File:Dog Silhouette 01.svg",
+  "license": "Public domain",
+  "sourceUrl": "https://commons.wikimedia.org/wiki/File:Dog_Silhouette_01.svg",
+  "file": "ref/dog.png",
+  "bytes": 27180
+ },
+ {
+  "subject": "butterfly",
+  "title": "File:Butterfly Pinhead icon.svg",
+  "license": "CC0",
+  "sourceUrl": "https://commons.wikimedia.org/wiki/File:Butterfly_Pinhead_icon.svg",
+  "file": "ref/butterfly.png",
+  "bytes": 22647
+ },
+ {
+  "subject": "snail",
+  "title": "File:Snail (761489) - The Noun Project.svg",
+  "license": "CC0",
+  "sourceUrl": "https://commons.wikimedia.org/wiki/File:Snail_(761489)_-_The_Noun_Project.svg",
+  "file": "ref/snail.png",
+  "bytes": 24582,
+  "note": "Eric 2026-07-31: remaining-8 scanlock pass; CC0 pictogram"
+ },
+ {
+  "subject": "duck",
+  "title": "File:Duck Silhouette (NIH BioArt 135 - 629482).svg",
+  "license": "Public domain",
+  "sourceUrl": "https://commons.wikimedia.org/wiki/File:Duck_Silhouette_(NIH_BioArt_135_-_629482).svg",
+  "file": "ref/duck.png",
+  "bytes": 20951
+ },
+ {
+  "subject": "owl",
+  "title": "File:Owl (13455) - The Noun Project.svg",
+  "license": "CC0",
+  "sourceUrl": "https://commons.wikimedia.org/wiki/File:Owl_(13455)_-_The_Noun_Project.svg",
+  "file": "ref/owl.png",
+  "bytes": 41299,
+  "note": "Eric 2026-08-01: 'easier owl picture'. The detailed eagle-owl illustration drowned in feather stippling; this pictogram carries ear tufts, two eyes, beak, spread wings and talons cleanly."
+ },
+ {
+  "subject": "turtle",
+  "title": "File:Turtle.svg",
+  "license": "Public domain",
+  "sourceUrl": "https://commons.wikimedia.org/wiki/File:Turtle.svg",
+  "file": "ref/turtle.png",
+  "bytes": 11169
+ },
+ {
+  "subject": "elephant",
+  "title": "File:Elephant Vector.svg",
+  "license": "CC0",
+  "sourceUrl": "https://commons.wikimedia.org/wiki/File:Elephant_Vector.svg",
+  "file": "ref/elephant.png",
+  "bytes": 18816
+ },
+ {
+  "subject": "horse",
+  "title": "File:Horse (49794) - The Noun Project.svg",
+  "license": "CC0",
+  "sourceUrl": "https://commons.wikimedia.org/wiki/File:Horse_(49794)_-_The_Noun_Project.svg",
+  "file": "ref/horse.png",
+  "bytes": 20451,
+  "note": "Eric 2026-07-31: asked for a horse with its head upright. Trotting CC0 pictogram — head high, four legs clear, mane and tail."
+ },
+ {
+  "subject": "peacock",
+  "title": "File:Taiwan road sign d0 peacock.svg",
+  "license": "Public domain",
+  "sourceUrl": "https://commons.wikimedia.org/wiki/File:Taiwan_road_sign_d0_peacock.svg",
+  "file": "ref/peacock.png",
+  "bytes": 58574,
+  "note": "Eric 2026-08-01: the displaying-peacock PHOTO was untraceable (translucent fan). Swapped to this pictogram — clean fan eyespots, body, crest, eye."
+ },
+ {
+  "subject": "fish",
+  "title": "File:Salmo salar silhouette transparent.png",
+  "license": "CC0",
+  "sourceUrl": "https://commons.wikimedia.org/wiki/File:Salmo_salar_silhouette_transparent.png",
+  "file": "ref/fish.png",
+  "bytes": 10703
+ },
+ {
+  "subject": "snowman",
+  "title": "File:Snowman - The Noun Project.svg",
+  "license": "CC0",
+  "sourceUrl": "https://commons.wikimedia.org/wiki/File:Snowman_-_The_Noun_Project.svg",
+  "file": "ref/snowman.png",
+  "bytes": 23443
+ },
+ {
+  "subject": "eiffel",
+  "title": "File:Eiffel Tower Silhouette.svg",
+  "license": "CC0",
+  "sourceUrl": "https://commons.wikimedia.org/wiki/File:Eiffel_Tower_Silhouette.svg",
+  "file": "ref/eiffel.png",
+  "bytes": 30478
+ },
+ {
+  "subject": "dragon",
+  "title": "File:Dragon from Chinese Dragon Banner Red Version.svg",
+  "license": "CC0",
+  "sourceUrl": "https://commons.wikimedia.org/wiki/File:Dragon_from_Chinese_Dragon_Banner_Red_Version.svg",
+  "file": "ref/dragon.png",
+  "bytes": 349136,
+  "note": "Eric 2026-08-01: asked for a clean Chinese-dragon clipart like his reference image. Hokusai panel was tonal (untraceable, like the Mona photo); this is line-art clean."
+ },
+ {
+  "subject": "mona",
+  "title": "File:Mona Lisa, by Leonardo da Vinci, from C2RMF retouched.jpg",
+  "license": "Public domain",
+  "sourceUrl": "https://commons.wikimedia.org/wiki/File:Mona_Lisa,_by_Leonardo_da_Vinci,_from_C2RMF_retouched.jpg",
+  "file": "ref/mona-engraving.jpg",
+  "bytes": 980329,
+  "note": "ink-branch tracing source (Eric-approved 2026-07-31); painting photo retained for side-by-side; red/blue annotation is the review standard",
+  "attribution": "after Leonardo da Vinci"
+ },
+ {
+  "subject": "mona-engraving",
+  "title": "File:Joconde de Calamatta.jpg",
+  "license": "Public domain",
+  "sourceUrl": "https://commons.wikimedia.org/wiki/File:Joconde_de_Calamatta.jpg",
+  "file": "ref/mona-engraving.jpg",
+  "bytes": 280515,
+  "note": "Luigi Calamatta's engraving of the Mona Lisa — ink-branch tracing source (Eric-approved 2026-07-31); painting photo retained for side-by-side; red/blue annotation is the review standard"
+ },
+ {
+  "subject": "cat",
+  "title": "File:Cat (49952) - The Noun Project.svg",
+  "license": "CC0",
+  "sourceUrl": "https://commons.wikimedia.org/wiki/File:Cat_(49952)_-_The_Noun_Project.svg",
+  "file": "ref/cat.png",
+  "bytes": 18096,
+  "note": "Eric 2026-07-31: remaining-8 scanlock pass; CC0 pictogram"
+ },
+ {
+  "subject": "rocket",
+  "title": "SpellGame original — drawn rocket silhouette",
+  "license": "Original artwork (SpellGame)",
+  "sourceUrl": "",
+  "file": "tools/draw_ref.py::rocket",
+  "bytes": 12142,
+  "note": "Eric 2026-07-31: replaced the CC0 pictogram, which was split by a white seam so largest-component kept one half. Hand-authored."
+ },
+ {
+  "subject": "rhino",
+  "title": "SpellGame original — drawn rhino silhouette",
+  "license": "Original artwork (SpellGame)",
+  "sourceUrl": "",
+  "file": "tools/draw_ref.py::rhino",
+  "bytes": 432779,
+  "note": "Eric 2026-07-31: replaced the Duerer plate, whose hatching floods every threshold (legs merged into the ground shadow, eye lost). Hand-authored coordinate list, not traced from any source image."
+ },
+ {
+  "subject": "house",
+  "title": "SpellGame original — house (geometric scan)",
+  "license": "Original artwork (SpellGame)",
+  "sourceUrl": "",
+  "file": "content-pipeline/wordpic/geometric-scans.json",
+  "note": "Hand-authored geometry, never traced from a reference image."
+ },
+ {
+  "subject": "smiley",
+  "title": "SpellGame original — smiley (geometric scan)",
+  "license": "Original artwork (SpellGame)",
+  "sourceUrl": "",
+  "file": "content-pipeline/wordpic/geometric-scans.json",
+  "note": "Hand-authored geometry, never traced from a reference image."
+ },
+ {
+  "subject": "star",
+  "title": "SpellGame original — star (geometric scan)",
+  "license": "Original artwork (SpellGame)",
+  "sourceUrl": "",
+  "file": "content-pipeline/wordpic/geometric-scans.json",
+  "note": "Hand-authored geometry, never traced from a reference image."
+ },
+ {
+  "subject": "balloon",
+  "title": "SpellGame original — balloon (wave 1 batch 1)",
+  "license": "Original artwork (SpellGame)",
+  "sourceUrl": "",
+  "file": "tools/draw_wave1.py",
+  "note": "Drawn coordinate list; candidates approved by Eric 2026-08-01."
+ },
+ {
+  "subject": "mug",
+  "title": "SpellGame original — mug (wave 1 batch 1)",
+  "license": "Original artwork (SpellGame)",
+  "sourceUrl": "",
+  "file": "tools/draw_wave1.py",
+  "note": "Drawn coordinate list; candidates approved by Eric 2026-08-01."
+ },
+ {
+  "subject": "kite",
+  "title": "SpellGame original — kite (wave 1 batch 1)",
+  "license": "Original artwork (SpellGame)",
+  "sourceUrl": "",
+  "file": "tools/draw_wave1.py",
+  "note": "Drawn coordinate list; candidates approved by Eric 2026-08-01."
+ },
+ {
+  "subject": "mushroom",
+  "title": "SpellGame original — mushroom (wave 1 batch 1)",
+  "license": "Original artwork (SpellGame)",
+  "sourceUrl": "",
+  "file": "tools/draw_wave1.py",
+  "note": "Drawn coordinate list; candidates approved by Eric 2026-08-01."
+ },
+ {
+  "subject": "sailboat",
+  "title": "SpellGame original — sailboat (wave 1 batch 1)",
+  "license": "Original artwork (SpellGame)",
+  "sourceUrl": "",
+  "file": "tools/draw_wave1.py",
+  "note": "Drawn coordinate list; candidates approved by Eric 2026-08-01."
+ },
+ {
+  "subject": "cactus",
+  "title": "SpellGame original — cactus (wave 1 batch 1)",
+  "license": "Original artwork (SpellGame)",
+  "sourceUrl": "",
+  "file": "tools/draw_wave1.py",
+  "note": "Drawn coordinate list; candidates approved by Eric 2026-08-01."
+ },
+ {
+  "subject": "ladybug",
+  "title": "SpellGame original — ladybug (wave 1 batch 1)",
+  "license": "Original artwork (SpellGame)",
+  "sourceUrl": "",
+  "file": "tools/draw_wave1.py",
+  "note": "Drawn coordinate list; candidates approved by Eric 2026-08-01."
+ },
+ {
+  "subject": "moonstar",
+  "title": "SpellGame original — moonstar (wave 1 batch 1)",
+  "license": "Original artwork (SpellGame)",
+  "sourceUrl": "",
+  "file": "tools/draw_wave1.py",
+  "note": "Drawn coordinate list; candidates approved by Eric 2026-08-01."
+ },
+ {
+  "subject": "bicycle",
+  "title": "SpellGame original — bicycle (wave 1 batch 2)",
+  "license": "Original artwork (SpellGame)",
+  "sourceUrl": "",
+  "file": "tools/draw_wave2.py",
+  "note": "Drawn coordinate list; candidates approved by Eric 2026-08-01."
+ },
+ {
+  "subject": "windmill",
+  "title": "SpellGame original — windmill (wave 1 batch 2)",
+  "license": "Original artwork (SpellGame)",
+  "sourceUrl": "",
+  "file": "tools/draw_wave2.py",
+  "note": "Drawn coordinate list; candidates approved by Eric 2026-08-01."
+ },
+ {
+  "subject": "hotair",
+  "title": "SpellGame original — hotair (wave 1 batch 2)",
+  "license": "Original artwork (SpellGame)",
+  "sourceUrl": "",
+  "file": "tools/draw_wave2.py",
+  "note": "Drawn coordinate list; candidates approved by Eric 2026-08-01."
+ },
+ {
+  "subject": "lighthouse",
+  "title": "SpellGame original — lighthouse (wave 1 batch 2)",
+  "license": "Original artwork (SpellGame)",
+  "sourceUrl": "",
+  "file": "tools/draw_wave2.py",
+  "note": "Drawn coordinate list; candidates approved by Eric 2026-08-01."
+ },
+ {
+  "subject": "violin",
+  "title": "SpellGame original — violin (wave 1 batch 2)",
+  "license": "Original artwork (SpellGame)",
+  "sourceUrl": "",
+  "file": "tools/draw_wave2.py",
+  "note": "Drawn coordinate list; candidates approved by Eric 2026-08-01."
+ },
+ {
+  "subject": "hummingbird",
+  "title": "SpellGame original — hummingbird (wave 1 batch 2)",
+  "license": "Original artwork (SpellGame)",
+  "sourceUrl": "",
+  "file": "tools/draw_wave2.py",
+  "note": "Drawn coordinate list; candidates approved by Eric 2026-08-01."
+ },
+ {
+  "subject": "rooster",
+  "title": "SpellGame original — rooster (wave 1 batch 2)",
+  "license": "Original artwork (SpellGame)",
+  "sourceUrl": "",
+  "file": "tools/draw_wave2.py",
+  "note": "Drawn coordinate list; candidates approved by Eric 2026-08-01."
+ },
+ {
+  "subject": "seahorse",
+  "title": "SpellGame original — seahorse (wave 1 batch 2)",
+  "license": "Original artwork (SpellGame)",
+  "sourceUrl": "",
+  "file": "tools/draw_wave2.py",
+  "note": "Drawn coordinate list; candidates approved by Eric 2026-08-01."
+ },
+ {
+  "subject": "wolf",
+  "title": "File:Wolf.svg (howling wolf silhouette)",
+  "license": "CC0 1.0",
+  "sourceUrl": "https://commons.wikimedia.org/wiki/File:Wolf.svg",
+  "file": "ref/wolf.png",
+  "note": "Eric approved sourcing 2026-08-01. Composed over a drawn perch with an aligned 36px seam (tools/prep_sourced.py) so wolf and rock trace as two contours -- paws flush over the rock line reads as standing-on, not fused."
+ },
+ {
+  "subject": "koi",
+  "title": "Koi-Fish (OpenClipart via FreeSVG)",
+  "license": "Public domain",
+  "sourceUrl": "https://freesvg.org/koi-fish",
+  "file": "ref/koi.png",
+  "note": "Eric approved sourcing 2026-08-01. Silhouette extracted from the coloured top view (opaque-and-not-tan mask, components >800px, morphological close to fuse hairline fin gaps), placed twice rotated 180 for the circling pair (tools/prep_sourced.py). Two copies of PD art composed is PD."
+ },
+ {
+  "subject": "octopus",
+  "title": "Kid-Octopi-Redrawn (OpenClipart via FreeSVG)",
+  "license": "Public domain",
+  "sourceUrl": "https://freesvg.org/octopus-silhouette",
+  "file": "ref/octopus.png",
+  "note": "Eric's standing wikimedia-sourcing run 2026-08-01. Used near-as-is; light close only so the eye and smile holes survive."
+ },
+ {
+  "subject": "oak",
+  "title": "Tree78 (OpenClipart via FreeSVG)",
+  "license": "Public domain",
+  "sourceUrl": "https://freesvg.org/black-and-white-tree",
+  "file": "ref/oak.png",
+  "note": "Same run. Etching solidified in tools/prep_sourced.py --wave4: heavy close, largest component, hole fill, LANCZOS round-trip to re-round the staircased crown."
+ },
+ {
+  "subject": "greatwave",
+  "title": "Under the Wave off Kanagawa (The Great Wave), Katsushika Hokusai, ca. 1830-32 (Met JP1847 scan)",
+  "license": "Public domain (PD-Art)",
+  "sourceUrl": "https://commons.wikimedia.org/wiki/File:Tsunami_by_hokusai_19th_century.jpg",
+  "file": "ref/greatwave.png",
+  "bytes": 17987,
+  "attribution": "after Hokusai"
+ },
+ {
+  "subject": "starrynight",
+  "title": "The Starry Night, Vincent van Gogh, 1889 (Google Art Project scan)",
+  "license": "Public domain (PD-Art)",
+  "sourceUrl": "https://commons.wikimedia.org/wiki/File:Van_Gogh_-_Starry_Night_-_Google_Art_Project.jpg",
+  "file": "ref/starrynight.png",
+  "bytes": 9968,
+  "attribution": "after Vincent van Gogh"
+ },
+ {
+  "subject": "crane",
+  "title": "SpellGame original — origami crane (culture five, ja)",
+  "license": "Original artwork (SpellGame)",
+  "sourceUrl": "",
+  "file": "ref/crane.png",
+  "bytes": 4945
+ },
+ {
+  "subject": "dallah",
+  "title": "SpellGame original — dallah coffee pot (culture five, ar)",
+  "license": "Original artwork (SpellGame)",
+  "sourceUrl": "",
+  "file": "ref/dallah.png",
+  "bytes": 5240
+ },
+ {
+  "subject": "basil",
+  "title": "SpellGame original — Saint Basil's skyline (culture five, ru)",
+  "license": "Original artwork (SpellGame)",
+  "sourceUrl": "",
+  "file": "ref/basil.png",
+  "bytes": 4046
+ },
+ {
+  "subject": "panda",
+  "title": "SpellGame original — panda (culture five, zh)",
+  "license": "Original artwork (SpellGame)",
+  "sourceUrl": "",
+  "file": "ref/panda.png",
+  "bytes": 5389
+ },
+ {
+  "subject": "calavera",
+  "title": "SpellGame original — calavera sugar skull (culture 2, es)",
+  "license": "Original artwork (SpellGame)",
+  "sourceUrl": "",
+  "file": "tools/draw_wave7.py",
+  "note": "Drawn coordinate list; candidates approved by Eric 2026-08-01."
+ },
+ {
+  "subject": "tajmahal",
+  "title": "SpellGame original — Taj Mahal (culture 2, hi)",
+  "license": "Original artwork (SpellGame)",
+  "sourceUrl": "",
+  "file": "tools/draw_wave7.py",
+  "note": "Drawn coordinate list; candidates approved by Eric 2026-08-01."
+ },
+ {
+  "subject": "stork",
+  "title": "SpellGame original — white stork on nest (culture 2, pl)",
+  "license": "Original artwork (SpellGame)",
+  "sourceUrl": "",
+  "file": "tools/draw_wave7.py",
+  "note": "Drawn coordinate list; candidates approved by Eric 2026-08-01."
+ },
+ {
+  "subject": "caravel",
+  "title": "SpellGame original — caravel (culture 2, pt)",
+  "license": "Original artwork (SpellGame)",
+  "sourceUrl": "",
+  "file": "tools/draw_wave7.py",
+  "note": "Drawn coordinate list; candidates approved by Eric 2026-08-01."
+ },
+ {
+  "subject": "bigben",
+  "title": "SpellGame original — Big Ben (culture 2, en)",
+  "license": "Original artwork (SpellGame)",
+  "sourceUrl": "",
+  "file": "tools/draw_wave7.py",
+  "note": "Drawn coordinate list; candidates approved by Eric 2026-08-01."
+ },
+ {
+  "subject": "turtleship",
+  "title": "SpellGame original — geobukseon turtle ship (culture 3, ko)",
+  "license": "Original artwork (SpellGame)",
+  "sourceUrl": "",
+  "file": "tools/draw_wave8.py",
+  "note": "Drawn coordinate list; candidates approved by Eric 2026-08-01."
+ },
+ {
+  "subject": "baobab",
+  "title": "SpellGame original — baobab (culture 3, sw)",
+  "license": "Original artwork (SpellGame)",
+  "sourceUrl": "",
+  "file": "tools/draw_wave8.py",
+  "note": "Drawn coordinate list; candidates approved by Eric 2026-08-01."
+ },
+ {
+  "subject": "nonla",
+  "title": "SpellGame original — non la + ao dai (culture 3, vi)",
+  "license": "Original artwork (SpellGame)",
+  "sourceUrl": "",
+  "file": "tools/draw_wave8.py",
+  "note": "Drawn coordinate list; candidates approved by Eric 2026-08-01."
+ },
+ {
+  "subject": "cuckoo",
+  "title": "SpellGame original — cuckoo clock (culture 3, de)",
+  "license": "Original artwork (SpellGame)",
+  "sourceUrl": "",
+  "file": "tools/draw_wave8.py",
+  "note": "Drawn coordinate list; candidates approved by Eric 2026-08-01."
+ },
+ {
+  "subject": "torii",
+  "title": "SpellGame original — torii gate (culture 4, ja)",
+  "license": "Original artwork (SpellGame)",
+  "sourceUrl": "",
+  "file": "tools/draw_wave9.py",
+  "note": "Drawn coordinate list; candidates approved by Eric 2026-08-01."
+ },
+ {
+  "subject": "hanbok",
+  "title": "SpellGame original — hanbok (culture 4, ko)",
+  "license": "Original artwork (SpellGame)",
+  "sourceUrl": "",
+  "file": "tools/draw_wave9.py",
+  "note": "Drawn coordinate list; candidates approved by Eric 2026-08-01."
+ },
+ {
+  "subject": "matryoshka",
+  "title": "SpellGame original — matryoshka (culture 4, ru)",
+  "license": "Original artwork (SpellGame)",
+  "sourceUrl": "",
+  "file": "tools/draw_wave9.py",
+  "note": "Drawn coordinate list; candidates approved by Eric 2026-08-01."
+ },
+ {
+  "subject": "greatwall",
+  "title": "SpellGame original — Great Wall (culture 4, zh)",
+  "license": "Original artwork (SpellGame)",
+  "sourceUrl": "",
+  "file": "tools/draw_wave9.py",
+  "note": "Drawn coordinate list; candidates approved by Eric 2026-08-01."
+ },
+ {
+  "subject": "oud",
+  "title": "SpellGame original — oud (culture 4, ar)",
+  "license": "Original artwork (SpellGame)",
+  "sourceUrl": "",
+  "file": "tools/draw_wave9.py",
+  "note": "Drawn coordinate list; candidates approved by Eric 2026-08-01."
+ },
+ {
+  "subject": "redfuji",
+  "title": "South Wind, Clear Sky (Red Fuji), Katsushika Hokusai, ca. 1830-32",
+  "license": "Public domain (PD-Art)",
+  "sourceUrl": "https://commons.wikimedia.org/wiki/File:Red_Fuji_southern_wind_clear_morning.jpg",
+  "file": "ref/redfuji.png",
+  "bytes": 10239,
+  "attribution": "after Hokusai"
+ },
+ {
+  "subject": "scream",
+  "title": "The Scream, Edvard Munch, 1893 (National Gallery of Norway)",
+  "license": "Public domain (PD-Art)",
+  "sourceUrl": "https://commons.wikimedia.org/wiki/File:The_Scream.jpg",
+  "file": "ref/scream.png",
+  "bytes": 11679,
+  "attribution": "after Edvard Munch"
+ },
+ {
+  "subject": "fuji",
+  "title": "SpellGame original — Mt. Fuji (ja, the spec's torii partner)",
+  "license": "Original artwork (SpellGame)",
+  "sourceUrl": "",
+  "file": "tools/draw_wave10.py",
+  "note": "Drawn coordinate list."
+ },
+ {
+  "subject": "orion",
+  "title": "SpellGame original — Orion constellation map (PICTURE-BANK Done #6's subject)",
+  "license": "Original artwork (SpellGame)",
+  "sourceUrl": "",
+  "file": "tools/draw_wave10.py",
+  "note": "Drawn coordinate list."
+ },
+ {
+  "subject": "papelpicado",
+  "title": "SpellGame original — papel picado banner (es)",
+  "license": "Original artwork (SpellGame)",
+  "sourceUrl": "",
+  "file": "tools/draw_wave10.py",
+  "note": "Drawn coordinate list."
+ },
+ {
+  "subject": "anubis",
+  "title": "SpellGame original — seated Anubis after Egyptian tomb painting (ancient motif)",
+  "license": "Original artwork (SpellGame)",
+  "sourceUrl": "",
+  "file": "tools/draw_wave11.py",
+  "note": "Drawn coordinate list; candidates approved by Eric 2026-08-01."
+ },
+ {
+  "subject": "athenaowl",
+  "title": "SpellGame original — owl of Athena after the tetradrachm motif (ancient)",
+  "license": "Original artwork (SpellGame)",
+  "sourceUrl": "",
+  "file": "tools/draw_wave11.py",
+  "note": "Drawn coordinate list; candidates approved by Eric 2026-08-01."
+ },
+ {
+  "subject": "bamboo",
+  "title": "SpellGame original — ink bamboo after the Chinese literati manner",
+  "license": "Original artwork (SpellGame)",
+  "sourceUrl": "",
+  "file": "tools/draw_wave11.py",
+  "note": "Drawn coordinate list; candidates approved by Eric 2026-08-01."
+ },
+ {
+  "subject": "girih",
+  "title": "SpellGame original — eight-point girih star after Islamic tilework",
+  "license": "Original artwork (SpellGame)",
+  "sourceUrl": "",
+  "file": "tools/draw_wave11.py",
+  "note": "Drawn coordinate list; candidates approved by Eric 2026-08-01."
+ },
+ {
+  "subject": "gyenyame",
+  "title": "SpellGame original — Gye Nyame after the Adinkra symbol (traditional)",
+  "license": "Original artwork (SpellGame)",
+  "sourceUrl": "",
+  "file": "tools/draw_wave11.py",
+  "note": "Drawn coordinate list; candidates approved by Eric 2026-08-01."
+ },
+ {
+  "subject": "arcdetriomphe",
+  "title": "SpellGame original — Arc de Triomphe (culture 5, fr)",
+  "license": "Original artwork (SpellGame)",
+  "sourceUrl": "",
+  "file": "tools/draw_wave13.py",
+  "note": "Drawn coordinate list; candidates approved by Eric 2026-08-01."
+ },
+ {
+  "subject": "rickshaw",
+  "title": "SpellGame original — auto-rickshaw (culture 5, hi)",
+  "license": "Original artwork (SpellGame)",
+  "sourceUrl": "",
+  "file": "tools/draw_wave13.py",
+  "note": "Drawn coordinate list; candidates approved by Eric 2026-08-01."
+ },
+ {
+  "subject": "dhow",
+  "title": "SpellGame original — dhow (culture 5, sw)",
+  "license": "Original artwork (SpellGame)",
+  "sourceUrl": "",
+  "file": "tools/draw_wave13.py",
+  "note": "Drawn coordinate list; candidates approved by Eric 2026-08-01."
+ },
+ {
+  "subject": "galo",
+  "title": "SpellGame original — Barcelos rooster (culture 5, pt)",
+  "license": "Original artwork (SpellGame)",
+  "sourceUrl": "",
+  "file": "tools/draw_wave13.py",
+  "note": "Drawn coordinate list; candidates approved by Eric 2026-08-01."
+ },
+ {
+  "subject": "pyramids",
+  "title": "SpellGame original — pyramids of Giza (culture 5, ar)",
+  "license": "Original artwork (SpellGame)",
+  "sourceUrl": "",
+  "file": "tools/draw_wave13.py",
+  "note": "Drawn coordinate list; candidates approved by Eric 2026-08-01."
+ },
+ {
+  "subject": "eyeofhorus",
+  "title": "SpellGame original — Eye of Horus after the ancient wedjat (wave 12)",
+  "license": "Original artwork (SpellGame)",
+  "sourceUrl": "",
+  "file": "tools/draw_wave12.py",
+  "note": "Drawn coordinate list; candidates approved by Eric 2026-08-01."
+ },
+ {
+  "subject": "ankh",
+  "title": "SpellGame original — ankh after the ancient symbol (wave 12)",
+  "license": "Original artwork (SpellGame)",
+  "sourceUrl": "",
+  "file": "tools/draw_wave12.py",
+  "note": "Drawn coordinate list; candidates approved by Eric 2026-08-01."
+ },
+ {
+  "subject": "waweldragon",
+  "title": "SpellGame original — Wawel dragon, drawn original (culture 6, pl)",
+  "license": "Original artwork (SpellGame)",
+  "sourceUrl": "",
+  "file": "tools/draw_wave14.py",
+  "note": "Drawn coordinate list; candidates approved by Eric 2026-08-01."
+ },
+ {
+  "subject": "doubledecker",
+  "title": "SpellGame original — double-decker bus (culture 6, en)",
+  "license": "Original artwork (SpellGame)",
+  "sourceUrl": "",
+  "file": "tools/draw_wave14.py",
+  "note": "Drawn coordinate list; candidates approved by Eric 2026-08-01."
+ },
+ {
+  "subject": "halongbay",
+  "title": "SpellGame original — Ha Long Bay (culture 6, vi)",
+  "license": "Original artwork (SpellGame)",
+  "sourceUrl": "",
+  "file": "tools/draw_wave14.py",
+  "note": "Drawn coordinate list; candidates approved by Eric 2026-08-01."
+ },
+ {
+  "subject": "carabao",
+  "title": "SpellGame original — carabao (culture 6, fil — release held for Paul)",
+  "license": "Original artwork (SpellGame)",
+  "sourceUrl": "",
+  "file": "tools/draw_wave14.py",
+  "note": "Drawn coordinate list; candidates approved by Eric 2026-08-01."
+ },
+ {
+  "subject": "fleurdelis",
+  "title": "SpellGame original — fleur-de-lis (culture 6, fr)",
+  "license": "Original artwork (SpellGame)",
+  "sourceUrl": "",
+  "file": "tools/draw_wave14.py",
+  "note": "Drawn coordinate list; candidates approved by Eric 2026-08-01."
+ },
+ {
+  "subject": "jeepney",
+  "title": "SpellGame original — jeepney (culture 7, fil — release held for Paul)",
+  "license": "Original artwork (SpellGame)",
+  "sourceUrl": "",
+  "file": "tools/draw_wave15.py",
+  "note": "Drawn coordinate list; candidates approved by Eric 2026-08-02."
+ },
+ {
+  "subject": "manekineko",
+  "title": "SpellGame original — maneki-neko (culture 7, ja)",
+  "license": "Original artwork (SpellGame)",
+  "sourceUrl": "",
+  "file": "tools/draw_wave15.py",
+  "note": "Drawn coordinate list; candidates approved by Eric 2026-08-02."
+ },
+ {
+  "subject": "acacia",
+  "title": "SpellGame original — flat-top acacia (culture 7, sw)",
+  "license": "Original artwork (SpellGame)",
+  "sourceUrl": "",
+  "file": "tools/draw_wave15.py",
+  "note": "Drawn coordinate list; candidates approved by Eric 2026-08-02."
+ },
+ {
+  "subject": "samovar",
+  "title": "SpellGame original — samovar (culture 7, ru)",
+  "license": "Original artwork (SpellGame)",
+  "sourceUrl": "",
+  "file": "tools/draw_wave15.py",
+  "note": "Drawn coordinate list; candidates approved by Eric 2026-08-02."
+ },
+ {
+  "subject": "lantern",
+  "title": "SpellGame original — red lantern (culture 7, zh)",
+  "license": "Original artwork (SpellGame)",
+  "sourceUrl": "",
+  "file": "tools/draw_wave15.py",
+  "note": "Drawn coordinate list; candidates approved by Eric 2026-08-02."
+ },
+ {
+  "subject": "sitar",
+  "title": "SpellGame original — sitar (culture 8, hi)",
+  "license": "Original artwork (SpellGame)",
+  "sourceUrl": "",
+  "file": "tools/draw_wave16.py",
+  "note": "Drawn coordinate list; candidates approved by Eric 2026-08-02."
+ },
+ {
+  "subject": "brandenburg",
+  "title": "SpellGame original — Brandenburg Gate (culture 8, de)",
+  "license": "Original artwork (SpellGame)",
+  "sourceUrl": "",
+  "file": "tools/draw_wave16.py",
+  "note": "Drawn coordinate list; candidates approved by Eric 2026-08-02."
+ },
+ {
+  "subject": "colosseum",
+  "title": "SpellGame original — Colosseum (culture 8, worldart)",
+  "license": "Original artwork (SpellGame)",
+  "sourceUrl": "",
+  "file": "tools/draw_wave16.py",
+  "note": "Drawn coordinate list; candidates approved by Eric 2026-08-02."
+ },
+ {
+  "subject": "fan",
+  "title": "SpellGame original — flamenco fan (culture 9, es)",
+  "license": "Original artwork (SpellGame)",
+  "sourceUrl": "",
+  "file": "tools/draw_wave17.py",
+  "note": "Drawn coordinate list; candidates approved by Eric 2026-08-02."
+ },
+ {
+  "subject": "stonehenge",
+  "title": "SpellGame original — Stonehenge (culture 9, en)",
+  "license": "Original artwork (SpellGame)",
+  "sourceUrl": "",
+  "file": "tools/draw_wave17.py",
+  "note": "Drawn coordinate list; candidates approved by Eric 2026-08-02."
+ },
+ {
+  "subject": "pagoda",
+  "title": "SpellGame original — pagoda (culture 10, zh)",
+  "license": "Original artwork (SpellGame)",
+  "sourceUrl": "",
+  "file": "tools/draw_wave18.py",
+  "note": "Drawn coordinate list; candidates approved by Eric 2026-08-02."
+ },
+ {
+  "subject": "daruma",
+  "title": "SpellGame original — daruma (culture 10, ja)",
+  "license": "Original artwork (SpellGame)",
+  "sourceUrl": "",
+  "file": "tools/draw_wave18.py",
+  "note": "Drawn coordinate list; candidates approved by Eric 2026-08-02."
+ },
+ {
+  "subject": "balalaika",
+  "title": "SpellGame original — balalaika (culture 10, ru)",
+  "license": "Original artwork (SpellGame)",
+  "sourceUrl": "",
+  "file": "tools/draw_wave18.py",
+  "note": "Drawn coordinate list; candidates approved by Eric 2026-08-02."
+ },
+ {
+  "subject": "sombrero",
+  "title": "SpellGame original — sombrero (culture 10, es)",
+  "license": "Original artwork (SpellGame)",
+  "sourceUrl": "",
+  "file": "tools/draw_wave18.py",
+  "note": "Drawn coordinate list; candidates approved by Eric 2026-08-02."
+ },
+ {
+  "subject": "djembe",
+  "title": "SpellGame original — djembe (culture 10, sw)",
+  "license": "Original artwork (SpellGame)",
+  "sourceUrl": "",
+  "file": "tools/draw_wave18.py",
+  "note": "Drawn coordinate list; candidates approved by Eric 2026-08-02."
+ },
+ {
+  "subject": "angkorwat",
+  "title": "SpellGame original — Angkor Wat (culture 11, worldart)",
+  "license": "Original artwork (SpellGame)",
+  "sourceUrl": "",
+  "file": "tools/draw_wave19.py",
+  "note": "Drawn coordinate list; candidates approved by Eric 2026-08-02."
+ },
+ {
+  "subject": "accordion",
+  "title": "SpellGame original — accordion (culture 11, fr)",
+  "license": "Original artwork (SpellGame)",
+  "sourceUrl": "",
+  "file": "tools/draw_wave19.py",
+  "note": "Drawn coordinate list; candidates approved by Eric 2026-08-02."
+ },
+ {
+  "subject": "quetzal",
+  "title": "SpellGame original — quetzal (culture 11, es)",
+  "license": "Original artwork (SpellGame)",
+  "sourceUrl": "",
+  "file": "tools/draw_wave19.py",
+  "note": "Drawn coordinate list; candidates approved by Eric 2026-08-02."
+ },
+ {
+  "subject": "grandpiano",
+  "title": "SpellGame original — grand piano (culture 11, pl)",
+  "license": "Original artwork (SpellGame)",
+  "sourceUrl": "",
+  "file": "tools/draw_wave19.py",
+  "note": "Drawn coordinate list; candidates approved by Eric 2026-08-02."
+ },
+ {
+  "subject": "chichenitza",
+  "title": "SpellGame original — Chichen Itza (culture 12, worldart)",
+  "license": "Original artwork (SpellGame)",
+  "sourceUrl": "",
+  "file": "tools/draw_wave20.py",
+  "note": "Drawn coordinate list; candidates approved by Eric 2026-08-02."
+ },
+ {
+  "subject": "montsaintmichel",
+  "title": "SpellGame original — Mont Saint-Michel (culture 12, fr)",
+  "license": "Original artwork (SpellGame)",
+  "sourceUrl": "",
+  "file": "tools/draw_wave20.py",
+  "note": "Drawn coordinate list; candidates approved by Eric 2026-08-02."
+ },
+ {
+  "subject": "maasaishield",
+  "title": "SpellGame original — Maasai shield (culture 12, sw)",
+  "license": "Original artwork (SpellGame)",
+  "sourceUrl": "",
+  "file": "tools/draw_wave20.py",
+  "note": "Drawn coordinate list; candidates approved by Eric 2026-08-02."
+ },
+ {
+  "subject": "janggu",
+  "title": "SpellGame original — janggu (culture 12, ko)",
+  "license": "Original artwork (SpellGame)",
+  "sourceUrl": "",
+  "file": "tools/draw_wave20.py",
+  "note": "Drawn coordinate list; candidates approved by Eric 2026-08-02."
+ },
+ {
+  "subject": "koinobori",
+  "title": "SpellGame original — koinobori (batch 13, ja)",
+  "license": "Original artwork (SpellGame)",
+  "sourceUrl": "",
+  "file": "tools/draw_wave21.py",
+  "note": "Drawn coordinate list; candidates approved by Eric 2026-08-02."
+ },
+ {
+  "subject": "nazcabird",
+  "title": "SpellGame original — after the Nazca hummingbird geoglyph (ancient)",
+  "license": "Original artwork (SpellGame)",
+  "sourceUrl": "",
+  "file": "tools/draw_wave21.py",
+  "note": "Drawn coordinate list; candidates approved by Eric 2026-08-02."
+ },
+ {
+  "subject": "terracotta",
+  "title": "SpellGame original — terracotta warrior (batch 13, zh)",
+  "license": "Original artwork (SpellGame)",
+  "sourceUrl": "",
+  "file": "tools/draw_wave21.py",
+  "note": "Drawn coordinate list; candidates approved by Eric 2026-08-02."
+ },
+ {
+  "subject": "hamsa",
+  "title": "SpellGame original — hamsa (batch 13, ar)",
+  "license": "Original artwork (SpellGame)",
+  "sourceUrl": "",
+  "file": "tools/draw_wave21.py",
+  "note": "Drawn coordinate list; candidates approved by Eric 2026-08-02."
+ },
+ {
+  "subject": "pinata",
+  "title": "SpellGame original — pinata (batch 13, es)",
+  "license": "Original artwork (SpellGame)",
+  "sourceUrl": "",
+  "file": "tools/draw_wave21.py",
+  "note": "Drawn coordinate list; candidates approved by Eric 2026-08-02."
+ },
+ {
+  "subject": "bagpipes",
+  "title": "SpellGame original — bagpipes (batch 13, en)",
+  "license": "Original artwork (SpellGame)",
+  "sourceUrl": "",
+  "file": "tools/draw_wave21.py",
+  "note": "Drawn coordinate list; candidates approved by Eric 2026-08-02."
+ },
+ {
+  "subject": "triskele",
+  "title": "SpellGame original — triskele after the ancient motif",
+  "license": "Original artwork (SpellGame)",
+  "sourceUrl": "",
+  "file": "tools/draw_wave21.py",
+  "note": "Drawn coordinate list; candidates approved by Eric 2026-08-02."
+ },
+ {
+  "subject": "mancala",
+  "title": "SpellGame original — mancala board (batch 13, sw)",
+  "license": "Original artwork (SpellGame)",
+  "sourceUrl": "",
+  "file": "tools/draw_wave21.py",
+  "note": "Drawn coordinate list; candidates approved by Eric 2026-08-02."
+ },
+ {
+  "subject": "compassrose",
+  "title": "SpellGame original — compass rose (batch 14, worldart)",
+  "license": "Original artwork (SpellGame)",
+  "sourceUrl": "",
+  "file": "tools/draw_wave22.py",
+  "note": "Drawn coordinate list; candidates approved by Eric 2026-08-02."
+ },
+ {
+  "subject": "gramophone",
+  "title": "SpellGame original — gramophone with horn",
+  "license": "Original artwork (SpellGame)",
+  "sourceUrl": "",
+  "file": "tools/draw_wave23.py",
+  "note": "Drawn coordinate list; candidates approved by Eric 2026-08-02."
+ },
+ {
+  "subject": "scarab",
+  "title": "SpellGame original — Egyptian scarab",
+  "license": "Original artwork (SpellGame)",
+  "sourceUrl": "",
+  "file": "tools/draw_wave23.py",
+  "note": "Drawn coordinate list; candidates approved by Eric 2026-08-02."
+ },
+ {
+  "subject": "kitsune",
+  "title": "SpellGame original — kitsune fox mask",
+  "license": "Original artwork (SpellGame)",
+  "sourceUrl": "",
+  "file": "tools/draw_wave23.py",
+  "note": "Drawn coordinate list; candidates approved by Eric 2026-08-02."
+ }
 ]
