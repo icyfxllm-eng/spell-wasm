@@ -957,5 +957,21 @@
   "sourceUrl": "",
   "file": "tools/draw_wave23.py",
   "note": "Drawn coordinate list; candidates approved by Eric 2026-08-02."
+ },
+ {
+  "subject": "tulip",
+  "title": "SpellGame original — tulip",
+  "license": "Original artwork (SpellGame)",
+  "sourceUrl": "",
+  "file": "tools/draw_wave24.py",
+  "note": "Drawn coordinate list; candidates approved by Eric 2026-08-02."
+ },
+ {
+  "subject": "hourglass",
+  "title": "SpellGame original — hourglass",
+  "license": "Original artwork (SpellGame)",
+  "sourceUrl": "",
+  "file": "tools/draw_wave24.py",
+  "note": "Drawn coordinate list; candidates approved by Eric 2026-08-02."
  }
 ]

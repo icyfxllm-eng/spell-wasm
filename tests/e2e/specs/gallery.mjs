@@ -23,8 +23,9 @@ export async function run(browser, base, suite) {
   await suite.test('gallery: trophies appear per completion, in-progress stays off the shelf', async () => {
     const { ctx, page } = await openApp(browser, base, { lang: 'en', device: 'large' });
     try {
-      // Two tiers: star (easy), eiffel (hard). Long pieces are the finale
-      // spec's problem; two suffice to prove per-completion accrual.
+      // Three tiers: star (easy) and snowman (medium) completed, eiffel
+      // (hard) started and abandoned — accrual, breadth, and the D4
+      // boundary in one pass.
       await completePicture(page, 'star');
       await page.waitForSelector('#wpReveal.show', { timeout: 8000 });
       await page.click('#wpRevealStage');
@@ -36,6 +37,17 @@ export async function run(browser, base, suite) {
       await backToPicker(page);
       let shelf = await page.$$eval('#wpGallery [data-gallery]', (els) => els.map((e) => e.getAttribute('data-gallery')));
       assertEq(JSON.stringify(shelf), JSON.stringify(['star']), 'one finished piece → one trophy');
+
+      // Done #5's letter: THREE pieces across tiers on the shelf. The
+      // second is a medium piece completed whole; eiffel below stays the
+      // deliberately-abandoned third tier (its absence is the assertion).
+      await completePicture(page, 'snowman');
+      await page.waitForSelector('#wpReveal.show', { timeout: 8000 });
+      await page.click('#wpRevealStage');
+      await backToPicker(page);
+      shelf = await page.$$eval('#wpGallery [data-gallery]', (els) => els.map((e) => e.getAttribute('data-gallery')));
+      assertEq(shelf.length, 2, `two finished pieces → two trophies (saw ${shelf})`);
+      assert(shelf.includes('star') && shelf.includes('snowman'), `both tiers shelved (saw ${shelf})`);
 
       // Start a second picture and leave it mid-flight: it must NOT shelve.
       await page.click('[data-pic="eiffel"]');
