@@ -29,36 +29,61 @@ def circle(d, cx, cy, r, fill):
 
 
 def waweldragon():
-    """Krakow's dragon in clean profile: arched neck, horned head with
-    open jaw, four back spikes, a folded wing as a hole, tail with its
-    spade — standing on the rock across an aligned gap."""
-    im, d = canvas(1060, 900)
-    # body: long horizontal mass
-    d.ellipse([260, 380, 820, 640], fill=BLACK)
-    # neck arching up-left, rooted deep
-    d.polygon([(300, 520), (250, 300), (330, 240), (420, 300), (400, 460)], fill=BLACK)
-    # head: skull + horn + open jaw, welded to the neck top
-    d.polygon([(230, 310), (370, 240), (360, 160), (240, 180), (180, 250)], fill=BLACK)
-    d.polygon([(250, 180), (200, 90), (300, 160)], fill=BLACK)          # horn
-    d.polygon([(190, 230), (60, 220), (180, 280)], fill=BLACK)          # upper snout
-    d.polygon([(225, 280), (80, 340), (228, 328)], fill=BLACK)          # lower jaw, rooted in the skull
-    # eye (micro hole)
-    d.ellipse([268, 226, 304, 254], fill=WHITE)
-    # four back spikes rooted 30px into the body
-    for k in range(4):
-        cx = 430 + k * 100
-        cy = 402 - int(24 * (1 if k in (1, 2) else 0.4))
-        d.polygon([(cx - 22, cy + 30), (cx + 22, cy + 30), (cx, cy - 58)], fill=BLACK)
-    # folded wing: a hole in the body's shoulder
-    d.polygon([(430, 470), (560, 430), (640, 470), (540, 540)], fill=WHITE)
-    # legs to the rock line
-    d.rectangle([380, 600, 450, 700], fill=BLACK)
-    d.rectangle([640, 600, 710, 700], fill=BLACK)
-    # tail sweeping right, spade welded
-    d.line([(800, 500), (930, 540), (990, 460)], fill=BLACK, width=46)
-    d.polygon([(970, 420), (1040, 450), (985, 505)], fill=BLACK)
-    # the rock, aligned 40px below the paws
-    d.polygon([(300, 740), (800, 740), (880, 870), (230, 870)], fill=BLACK)
+    """Krakow's dragon, take two — Eric: "more realistic if possible".
+    (The 1972 Chromy statue is still-copyrighted sculpture, so this is a
+    drawn original.) One smooth Catmull-Rom body — sinuous neck, deep
+    chest, coiling tail — with a membraned wing (white spoke seams, the
+    kite-spar width), ridge scales rooted like the turtle ship's spikes,
+    and a crisp angular head welded on: realism lives in the curves,
+    identity in the head and wing."""
+    im, d = canvas(1120, 920)
+
+    def smooth_closed(knots, per=10):
+        def cr(p0, p1, p2, p3, t):
+            t2, t3 = t * t, t * t * t
+            return (0.5 * ((2 * p1[0]) + (-p0[0] + p2[0]) * t + (2 * p0[0] - 5 * p1[0] + 4 * p2[0] - p3[0]) * t2 + (-p0[0] + 3 * p1[0] - 3 * p2[0] + p3[0]) * t3),
+                    0.5 * ((2 * p1[1]) + (-p0[1] + p2[1]) * t + (2 * p0[1] - 5 * p1[1] + 4 * p2[1] - p3[1]) * t2 + (-p0[1] + 3 * p1[1] - 3 * p2[1] + p3[1]) * t3))
+        pts, n = [], len(knots)
+        for i in range(n):
+            for k in range(per):
+                pts.append(cr(knots[(i - 1) % n], knots[i], knots[(i + 1) % n], knots[(i + 2) % n], k / per))
+        return pts
+
+    # the beast: one flowing outline, clockwise from the chest
+    body = [
+        (350, 700), (300, 620), (285, 520), (300, 430), (280, 360),   # chest up the throat
+        (255, 300), (270, 250),                                        # throat to jaw hinge
+        (330, 230), (390, 260),                                        # skull back
+        (420, 330), (470, 390), (560, 420), (660, 420), (760, 450),    # nape and back
+        (850, 480), (950, 520), (1030, 560), (1060, 600),              # tail tapering out
+        (1000, 620), (900, 610), (820, 620),                           # under the tail
+        (760, 640), (700, 680), (660, 740),                            # haunch
+        (560, 760), (470, 750), (420, 720),                            # belly
+    ]
+    d.polygon(smooth_closed(body), fill=BLACK)
+    # crisp head: brow, snout, open jaw with its fang notch
+    d.polygon([(255, 295), (170, 235), (70, 235), (160, 295), (255, 340)], fill=BLACK)   # upper jaw, fuller
+    d.polygon([(310, 335), (110, 380), (200, 395), (315, 390)], fill=BLACK)              # lower jaw, 40px into the throat
+    d.polygon([(300, 245), (280, 160), (345, 225)], fill=BLACK)                          # horn
+    d.polygon([(360, 240), (370, 150), (415, 245)], fill=BLACK)                          # horn
+    d.ellipse([292, 268, 330, 298], fill=WHITE)                                          # eye
+    # the wing: ONE falcate bat-wing polygon — the outline itself does
+    # the realism (spokes and carved scallops kept severing the membrane
+    # into flagged strips; the cusps are in the polygon now)
+    d.polygon([(520, 460), (470, 300), (500, 150), (640, 80),
+               (760, 150), (700, 230), (850, 250), (790, 330),
+               (900, 370), (800, 430), (660, 470)], fill=BLACK)
+    # ridge scales rooted on the spine, standing proud
+    for (cx, cy) in [(460, 380), (560, 405), (660, 408), (770, 445), (865, 500)]:
+        d.polygon([(cx - 20, cy + 34), (cx + 20, cy + 34), (cx, cy - 46)], fill=BLACK)
+    # legs with three-toed feet
+    for x in (430, 640):
+        d.rectangle([x, 700, x + 64, 800], fill=BLACK)
+        d.polygon([(x - 14, 800), (x + 78, 800), (x + 88, 836), (x - 26, 836)], fill=BLACK)
+    # tail spade
+    d.polygon([(1040, 560), (1110, 545), (1100, 640), (1045, 615)], fill=BLACK)
+    # the rock, aligned gap below the feet
+    d.polygon([(340, 872), (820, 872), (900, 910), (260, 910)], fill=BLACK)
     return im
 
 
