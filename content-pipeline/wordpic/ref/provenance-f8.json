@@ -973,5 +973,45 @@
   "sourceUrl": "",
   "file": "tools/draw_wave24.py",
   "note": "Drawn coordinate list; candidates approved by Eric 2026-08-02."
+ },
+ {
+  "subject": "dartboard",
+  "title": "SpellGame original — dartboard",
+  "license": "Original artwork (SpellGame)",
+  "sourceUrl": "",
+  "file": "tools/draw_wave25.py",
+  "note": "Drawn coordinate list; candidates approved by Eric 2026-08-02."
+ },
+ {
+  "subject": "penguin",
+  "title": "SpellGame original — penguin",
+  "license": "Original artwork (SpellGame)",
+  "sourceUrl": "",
+  "file": "tools/draw_wave25.py",
+  "note": "Drawn coordinate list; candidates approved by Eric 2026-08-02."
+ },
+ {
+  "subject": "anchor",
+  "title": "SpellGame original — anchor",
+  "license": "Original artwork (SpellGame)",
+  "sourceUrl": "",
+  "file": "tools/draw_wave25.py",
+  "note": "Drawn coordinate list; candidates approved by Eric 2026-08-02."
+ },
+ {
+  "subject": "stoplight",
+  "title": "SpellGame original — stoplight",
+  "license": "Original artwork (SpellGame)",
+  "sourceUrl": "",
+  "file": "tools/draw_wave25.py",
+  "note": "Drawn coordinate list; candidates approved by Eric 2026-08-02."
+ },
+ {
+  "subject": "snowflake",
+  "title": "SpellGame original — snowflake",
+  "license": "Original artwork (SpellGame)",
+  "sourceUrl": "",
+  "file": "tools/draw_wave25.py",
+  "note": "Drawn coordinate list; candidates approved by Eric 2026-08-02."
  }
 ]
