@@ -134,6 +134,14 @@ pub fn practice() -> bool {
     resolve(stored("practice").as_deref(), true)
 }
 
+/// CC-LEARNING-ENGINE L1 — Learner Model word selection (reorders the next
+/// few deck draws toward due/uncertain skills). **Default OFF**: ships dark
+/// until the policy has a QA pass; OFF is a true no-op — the deck draws in
+/// its shuffled order exactly as before, zero observable diff.
+pub fn learner_select() -> bool {
+    resolve(stored("learner_select").as_deref(), false)
+}
+
 pub fn is_on(name: &str) -> bool {
     match name {
         "ghost_racing" => ghost_racing(),
@@ -146,6 +154,7 @@ pub fn is_on(name: &str) -> bool {
         "attempts_shields" => attempts_shields(),
         "def_match" => def_match(),
         "practice" => practice(),
+        "learner_select" => learner_select(),
         #[cfg(not(feature = "web"))]
         "word_picture" => word_picture(),
         _ => false,

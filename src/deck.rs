@@ -82,6 +82,53 @@ impl Deck {
         self.queue.last().cloned()
     }
 
+    /// L1 hook (CC-LEARNING-ENGINE): let the Learner Model reorder the next
+    /// few draws WITHOUT changing what they are. The chooser sees the tail
+    /// `window` in draw order — already filtered to exclude anything in
+    /// `recent`, so the deck's no-repeat invariant holds no matter what the
+    /// chooser returns — and the pick is swapped into the very next slot.
+    /// Deck membership is untouched: same words, same pass, different order.
+    /// The governing law lives here structurally: the chooser is handed a
+    /// slice of THIS deck's tail and can only return an index into it.
+    pub fn promote(&mut self, pool: &[String], window: usize, chooser: &mut dyn FnMut(&[String]) -> Option<usize>) {
+        self.promote_with(pool, window, chooser, &mut |n| rand_index(n))
+    }
+
+    pub fn promote_with(
+        &mut self,
+        pool: &[String],
+        window: usize,
+        chooser: &mut dyn FnMut(&[String]) -> Option<usize>,
+        rand: &mut dyn FnMut(usize) -> usize,
+    ) {
+        if pool.is_empty() {
+            return;
+        }
+        // Mirror next_with's rebuild trigger so a promote at the top of a
+        // fresh pass (or after a pool edit) still has a deck to reorder.
+        if self.queue.is_empty() || self.pool_len != pool.len() {
+            self.rebuild(pool, rand);
+        }
+        let n = self.queue.len();
+        let recent: std::collections::HashSet<&String> = self.recent.iter().collect();
+        // Window slots in draw order (tail first), minus recent words.
+        let cand: Vec<usize> = (0..window.min(n))
+            .map(|k| n - 1 - k)
+            .filter(|&i| !recent.contains(&self.queue[i]))
+            .collect();
+        if cand.len() < 2 {
+            return; // nothing to reorder
+        }
+        let words: Vec<String> = cand.iter().map(|&i| self.queue[i].clone()).collect();
+        if let Some(pick) = chooser(&words) {
+            if pick < cand.len() {
+                // The displaced tail word is itself non-recent (rebuild's
+                // boundary guard), so pushing it deeper is always safe.
+                self.queue.swap(cand[pick], n - 1);
+            }
+        }
+    }
+
     fn rebuild(&mut self, pool: &[String], rand: &mut dyn FnMut(usize) -> usize) {
         let mut deck = shuffled(pool, rand);
         let n = deck.len();
@@ -151,6 +198,78 @@ mod tests {
                 b += pool_size;
             }
         }
+    }
+
+    /// L1 promote: the chosen word is drawn next, deck membership is
+    /// preserved exactly (same pass, reordered), and the pass still has no
+    /// repeats.
+    #[test]
+    fn promote_reorders_without_changing_membership() {
+        let pool: Vec<String> = (0..12).map(|i| format!("w{i}")).collect();
+        let mut deck = Deck::default();
+        let mut rand = seeded();
+        // Prime the deck, then promote the DEEPEST word in the window.
+        deck.next_with(&pool, &mut rand);
+        let mut promised = String::new();
+        deck.promote_with(&pool, 8, &mut |win| {
+            promised = win.last().unwrap().clone();
+            Some(win.len() - 1)
+        }, &mut rand);
+        assert_eq!(deck.next_with(&pool, &mut rand), promised, "the promoted word is the very next draw");
+        // Drain the pass: promote reordered, never duplicated or dropped.
+        let mut seen: HashSet<String> = HashSet::from([promised]);
+        for _ in 0..10 {
+            assert!(seen.insert(deck.next_with(&pool, &mut rand)), "repeat within the pass after promote");
+        }
+        assert_eq!(seen.len(), 11, "the primed word plus these 11 cover the pool exactly");
+    }
+
+    /// L1 promote: words in `recent` are invisible to the chooser and can
+    /// never be promoted into the next slot — the no-repeat invariant is
+    /// structural, not policy.
+    #[test]
+    fn promote_never_offers_recent_words() {
+        let pool: Vec<String> = (0..8).map(|i| format!("w{i}")).collect();
+        let mut deck = Deck::default();
+        let mut rand = seeded();
+        let mut played: Vec<String> = (0..3).map(|_| deck.next_with(&pool, &mut rand)).collect();
+        played.sort();
+        deck.promote_with(&pool, 8, &mut |win| {
+            for w in win {
+                assert!(!played.contains(w), "recent '{w}' offered to the chooser");
+            }
+            Some(0)
+        }, &mut rand);
+    }
+
+    /// L1 promote on a FRESH deck (top of a pass) rebuilds first, so the
+    /// policy applies from the very first draw.
+    #[test]
+    fn promote_works_on_fresh_deck() {
+        let pool: Vec<String> = (0..6).map(|i| format!("w{i}")).collect();
+        let mut deck = Deck::default();
+        let mut rand = seeded();
+        let mut target = String::new();
+        deck.promote_with(&pool, 6, &mut |win| {
+            target = win[win.len() / 2].clone();
+            Some(win.len() / 2)
+        }, &mut rand);
+        assert_eq!(deck.next_with(&pool, &mut rand), target);
+    }
+
+    /// A chooser that declines (None) or returns garbage leaves the deck
+    /// exactly as it was.
+    #[test]
+    fn promote_declined_is_a_noop() {
+        let pool: Vec<String> = (0..10).map(|i| format!("w{i}")).collect();
+        let mut deck = Deck::default();
+        let mut rand = seeded();
+        deck.next_with(&pool, &mut rand);
+        let before = deck.peek();
+        deck.promote_with(&pool, 8, &mut |_| None, &mut rand);
+        assert_eq!(deck.peek(), before, "None must not reorder");
+        deck.promote_with(&pool, 8, &mut |win| Some(win.len() + 99), &mut rand);
+        assert_eq!(deck.peek(), before, "out-of-range pick must not reorder");
     }
 
     /// I4-adjacent: a mid-run pool change rebuilds cleanly (no crash/empty draw).

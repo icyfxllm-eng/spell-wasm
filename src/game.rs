@@ -989,6 +989,21 @@ pub fn next_word(app: &App) {
                 // pool is exhausted, and the deck survives app restarts (I3/I4).
                 // Missed-word resurfacing is handled separately by Misses review
                 // (spaced repetition), which the deck deliberately doesn't touch.
+                // L1 (flag-gated, default OFF): before the draw, let the
+                // Learner Model promote the most valuable word from the next
+                // few — due skills first, then uncertain ones. It reorders
+                // WITHIN the deck's tail window only (D7: selection within
+                // the band); the deck itself filters out recent words, so
+                // the no-repeat invariant is untouched. OFF = this whole
+                // block is skipped and the draw is byte-identical to today.
+                if crate::flags::learner_select() {
+                    let st = crate::learner::load_for(&s.cur_lang);
+                    let day = crate::learner::current_day();
+                    let lang = s.cur_lang.clone();
+                    s.decks.entry(key.clone()).or_default().promote(&pool, 8, &mut |win| {
+                        crate::learner::select_within(&st, win, &lang, day, &[], day as u64)
+                    });
+                }
                 let w = s.decks.entry(key.clone()).or_default().next(&pool);
                 s.word = w;
                 // Warm the browser's audio cache for whatever this same
