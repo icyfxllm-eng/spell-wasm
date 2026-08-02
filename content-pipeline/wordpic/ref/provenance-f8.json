@@ -637,5 +637,45 @@
     "sourceUrl": "",
     "file": "tools/draw_wave12.py",
     "note": "Drawn coordinate list; candidates approved by Eric 2026-08-01."
+  },
+  {
+    "subject": "waweldragon",
+    "title": "SpellGame original — Wawel dragon, drawn original (culture 6, pl)",
+    "license": "Original artwork (SpellGame)",
+    "sourceUrl": "",
+    "file": "tools/draw_wave14.py",
+    "note": "Drawn coordinate list; candidates approved by Eric 2026-08-01."
+  },
+  {
+    "subject": "doubledecker",
+    "title": "SpellGame original — double-decker bus (culture 6, en)",
+    "license": "Original artwork (SpellGame)",
+    "sourceUrl": "",
+    "file": "tools/draw_wave14.py",
+    "note": "Drawn coordinate list; candidates approved by Eric 2026-08-01."
+  },
+  {
+    "subject": "halongbay",
+    "title": "SpellGame original — Ha Long Bay (culture 6, vi)",
+    "license": "Original artwork (SpellGame)",
+    "sourceUrl": "",
+    "file": "tools/draw_wave14.py",
+    "note": "Drawn coordinate list; candidates approved by Eric 2026-08-01."
+  },
+  {
+    "subject": "carabao",
+    "title": "SpellGame original — carabao (culture 6, fil — release held for Paul)",
+    "license": "Original artwork (SpellGame)",
+    "sourceUrl": "",
+    "file": "tools/draw_wave14.py",
+    "note": "Drawn coordinate list; candidates approved by Eric 2026-08-01."
+  },
+  {
+    "subject": "fleurdelis",
+    "title": "SpellGame original — fleur-de-lis (culture 6, fr)",
+    "license": "Original artwork (SpellGame)",
+    "sourceUrl": "",
+    "file": "tools/draw_wave14.py",
+    "note": "Drawn coordinate list; candidates approved by Eric 2026-08-01."
   }
 ]
