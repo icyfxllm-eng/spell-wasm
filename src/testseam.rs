@@ -46,6 +46,15 @@ pub fn install(app: &App) {
         set(&obj, "picWord", cb.into_js_value());
         let cb = Closure::<dyn Fn() -> String>::new(crate::wordpic_screen::seam_ladder);
         set(&obj, "picLadder", cb.into_js_value());
+        let cb = Closure::<dyn Fn(String) -> js_sys::Promise>::new(|product: String| {
+            wasm_bindgen_futures::future_to_promise(async move {
+                crate::wordpic_screen::seam_export_png(product)
+                    .await
+                    .map(JsValue::from)
+                    .map_err(|e| JsValue::from_str(&e))
+            })
+        });
+        set(&obj, "picExportPng", cb.into_js_value());
     }
     // The export renderer's 1× SVG for the open picture (a Promise —
     // fonts are fetched). OBSERVE-only: renders the same bytes the Save

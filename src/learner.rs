@@ -806,4 +806,17 @@ mod l1_tests {
         assert_eq!(select_within(&st, &solo, "en", 20, &recent, 1), Some(0),
                    "a recent word is still legal when it is all there is");
     }
+
+    /// Done #3's fallback clause: a brand-new learner (empty state) still
+    /// gets a valid, deterministic selection — the coverage bonus carries
+    /// the policy until BKT has data. The flag-off path is not tested here
+    /// because it never reaches this code at all (the game.rs gate).
+    #[test]
+    fn empty_state_still_selects_and_is_deterministic() {
+        let st = LearnerState::new("en");
+        let band = vec!["knee".to_string(), "grass".to_string(), "shop".to_string()];
+        let pick = select_within(&st, &band, "en", 0, &[], 7);
+        assert!(matches!(pick, Some(i) if i < band.len()), "empty state must still select");
+        assert_eq!(pick, select_within(&st, &band, "en", 0, &[], 7), "and deterministically");
+    }
 }

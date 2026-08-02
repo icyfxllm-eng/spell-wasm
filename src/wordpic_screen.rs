@@ -1415,6 +1415,44 @@ pub async fn seam_export_svg() -> Result<String, String> {
     Ok(crate::spellpic_export::export_svg(&plan, &lang, &run.words, &css))
 }
 
+
+/// Test seam (OBSERVE-only): the REAL export bytes — a PNG data URL through
+/// the same plan → svg → rasterize path Save and Share use, keepsake or
+/// card. Done #4's metadata audit walks the chunks of what this returns.
+#[cfg(feature = "testseam")]
+pub async fn seam_export_png(product: String) -> Result<String, String> {
+    use crate::spellpic_export as ex;
+    let lang = LANG.with(|l| l.borrow().clone());
+    let pic = PIC.with(|p| p.borrow().clone());
+    let st = wordpic::load();
+    let run = st.run(&pic, &lang).ok_or("no run open")?;
+    let plan = crate::spellpic::plan(&pic, &lang, run.seed).ok_or("no legal plan")?;
+    let (icon, tier) = wordpic::picture(&pic)
+        .map(|p| (p.icon.clone(), p.tier.clone()))
+        .unwrap_or_default();
+    let endonym = crate::consts::BUILTIN_LANGS
+        .iter()
+        .find(|(c, _, _, _)| *c == lang)
+        .map(|(_, n, _, _)| n.to_string())
+        .unwrap_or_default();
+    let attribution = crate::spellpic::attribution(&pic).to_string();
+    let prod = if product == "card" { ex::Product::ShareCard } else { ex::Product::Keepsake };
+    let meta = ex::CardMeta {
+        icon: &icon,
+        lang_endonym: &endonym,
+        attribution: &attribution,
+        tier_dots: match tier.as_str() {
+            "easy" => 1,
+            "medium" => 2,
+            "hard" => 3,
+            _ => 4,
+        },
+    };
+    // The keepsake carries NO meta by design (D2: their art, not an ad).
+    let m = if prod == ex::Product::ShareCard { Some(meta) } else { None };
+    ex::export_png(&plan, &lang, &run.words, prod, m).await.map_err(|e| e.i18n_key().to_string())
+}
+
 /// F3 — a rung's player-facing name. The four manifest rungs are i18n
 /// keys; anything unrecognized (there is nothing unrecognized today)
 /// shows its raw name rather than a warning-spewing missing key.

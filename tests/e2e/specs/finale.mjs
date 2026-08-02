@@ -93,6 +93,31 @@ export async function run(browser, base, suite) {
     });
   }
 
+
+  await suite.test('finale: rest holds a full minute — no timer may advance it', async () => {
+    const { ctx, page } = await openApp(browser, base, { lang: 'en', device: 'se' });
+    try {
+      // Fake timers from BEFORE the reveal exists, so any auto-advance
+      // timer the reveal might set is born under our control — then jump
+      // 65 virtual seconds and prove nothing moved. The existing 3s check
+      // above guards real time; this one guards the spec's ">= 60s" bar
+      // without making the battery a minute slower.
+      await page.clock.install();
+      await completePicture(page, 'star');
+      await page.waitForSelector('#wpReveal.show', { timeout: 8000 });
+      await page.click('#wpRevealStage');
+      await page.waitForTimeout(120);
+      assert(await page.$('#wpReveal.show.rest'), 'not at rest before the jump');
+      await page.clock.fastForward('01:05');
+      await page.waitForTimeout(200);
+      assert(await page.$('#wpReveal.show.rest'), 'rest did not survive 65 virtual seconds');
+      assert(await page.$('#wpPlay.show'), 'something advanced past the picture');
+      await page.click('#wpContinue');
+      await page.waitForTimeout(400);
+      assert(!(await page.$('#wpReveal.show')), 'Continue still advances after the jump');
+    } finally { await ctx.close(); }
+  });
+
   await suite.test('finale: the build replays on request', async () => {
     const { ctx, page } = await openApp(browser, base, { lang: 'en', device: 'se' });
     try {

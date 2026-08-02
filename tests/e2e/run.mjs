@@ -31,6 +31,7 @@ import * as economics from './specs/economics.mjs';
 import * as finalePixels from './specs/finale-pixels.mjs';
 import * as audioGate from './specs/audio-gate.mjs';
 import * as finaleRelaunch from './specs/finale-relaunch.mjs';
+import * as metadataAudit from './specs/metadata-audit.mjs';
 
 const SPECS = [
   ['playhub', playHub],
@@ -49,6 +50,7 @@ const SPECS = [
   ['economics', economics],
   ['audio-gate', audioGate],
   ['finale-relaunch', finaleRelaunch],
+  ['metadata-audit', metadataAudit],
   ['finale-pixels', finalePixels],
   ['platform', platform],
   ['picture-wall', pictureWall],
