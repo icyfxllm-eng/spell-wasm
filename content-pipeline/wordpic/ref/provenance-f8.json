@@ -861,5 +861,77 @@
     "sourceUrl": "",
     "file": "tools/draw_wave20.py",
     "note": "Drawn coordinate list; candidates approved by Eric 2026-08-02."
+  },
+  {
+    "subject": "koinobori",
+    "title": "SpellGame original — koinobori (batch 13, ja)",
+    "license": "Original artwork (SpellGame)",
+    "sourceUrl": "",
+    "file": "tools/draw_wave21.py",
+    "note": "Drawn coordinate list; candidates approved by Eric 2026-08-02."
+  },
+  {
+    "subject": "nazcabird",
+    "title": "SpellGame original — after the Nazca hummingbird geoglyph (ancient)",
+    "license": "Original artwork (SpellGame)",
+    "sourceUrl": "",
+    "file": "tools/draw_wave21.py",
+    "note": "Drawn coordinate list; candidates approved by Eric 2026-08-02."
+  },
+  {
+    "subject": "terracotta",
+    "title": "SpellGame original — terracotta warrior (batch 13, zh)",
+    "license": "Original artwork (SpellGame)",
+    "sourceUrl": "",
+    "file": "tools/draw_wave21.py",
+    "note": "Drawn coordinate list; candidates approved by Eric 2026-08-02."
+  },
+  {
+    "subject": "hamsa",
+    "title": "SpellGame original — hamsa (batch 13, ar)",
+    "license": "Original artwork (SpellGame)",
+    "sourceUrl": "",
+    "file": "tools/draw_wave21.py",
+    "note": "Drawn coordinate list; candidates approved by Eric 2026-08-02."
+  },
+  {
+    "subject": "pinata",
+    "title": "SpellGame original — pinata (batch 13, es)",
+    "license": "Original artwork (SpellGame)",
+    "sourceUrl": "",
+    "file": "tools/draw_wave21.py",
+    "note": "Drawn coordinate list; candidates approved by Eric 2026-08-02."
+  },
+  {
+    "subject": "bagpipes",
+    "title": "SpellGame original — bagpipes (batch 13, en)",
+    "license": "Original artwork (SpellGame)",
+    "sourceUrl": "",
+    "file": "tools/draw_wave21.py",
+    "note": "Drawn coordinate list; candidates approved by Eric 2026-08-02."
+  },
+  {
+    "subject": "triskele",
+    "title": "SpellGame original — triskele after the ancient motif",
+    "license": "Original artwork (SpellGame)",
+    "sourceUrl": "",
+    "file": "tools/draw_wave21.py",
+    "note": "Drawn coordinate list; candidates approved by Eric 2026-08-02."
+  },
+  {
+    "subject": "mancala",
+    "title": "SpellGame original — mancala board (batch 13, sw)",
+    "license": "Original artwork (SpellGame)",
+    "sourceUrl": "",
+    "file": "tools/draw_wave21.py",
+    "note": "Drawn coordinate list; candidates approved by Eric 2026-08-02."
+  },
+  {
+    "subject": "compassrose",
+    "title": "SpellGame original — compass rose (batch 14, worldart)",
+    "license": "Original artwork (SpellGame)",
+    "sourceUrl": "",
+    "file": "tools/draw_wave22.py",
+    "note": "Drawn coordinate list; candidates approved by Eric 2026-08-02."
   }
 ]

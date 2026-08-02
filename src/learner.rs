@@ -377,6 +377,86 @@ pub fn note_attempt(lang: &str, word: &str, correct: bool, channel: Channel) {
     crate::storage::set_json(&key, &st);
 }
 
+
+// -------------------------------------------------- L1: selection policy
+
+/// L1 (CC-LEARNING-ENGINE feature 2) — rank a band's words and pick the
+/// most valuable next exercise. THE GOVERNING LAW, held by construction:
+/// this function receives the band as a slice and returns an INDEX into
+/// it — it cannot reach outside the band, touch layout, tiers, layers,
+/// scoring or audio. The D7 property test below hammers that claim ten
+/// thousand times anyway, because "by construction" has been wrong in
+/// this codebase before.
+///
+/// Score per word = due-ness + uncertainty + coverage − recency:
+///   due-ness    — days overdue summed over the word's tracked skills
+///                 (a lapsed skill is the most valuable thing to show)
+///   uncertainty — 4·m·(1−m) per skill: maximal where BKT knows least
+///   coverage    — a small bonus per untracked skill (exploration)
+///   recency     — words in `recent` sink to the bottom but stay legal
+/// Ties break by a deterministic per-word hash so the same inputs pick
+/// the same word on every device (the Done #1c doctrine).
+pub fn select_within(
+    state: &LearnerState,
+    band: &[String],
+    lang: &str,
+    day: u32,
+    recent: &[String],
+    salt: u64,
+) -> Option<usize> {
+    if band.is_empty() {
+        return None;
+    }
+    let mut best: Option<(f64, u64, usize)> = None;
+    for (i, word) in band.iter().enumerate() {
+        let skills = hazards(lang, word);
+        let mut due = 0.0;
+        let mut uncertainty = 0.0;
+        let mut coverage = 0.0;
+        for id in &skills {
+            match state.skills.iter().find(|s| s.id == *id) {
+                Some(s) => {
+                    if s.fsrs.reps > 0 && day > s.fsrs.due_day {
+                        due += (day - s.fsrs.due_day) as f64;
+                    }
+                    uncertainty += 4.0 * s.mastery * (1.0 - s.mastery);
+                }
+                None => coverage += 0.5,
+            }
+        }
+        let recency = if recent.contains(word) { 100.0 } else { 0.0 };
+        let score = due + uncertainty + coverage - recency;
+        // deterministic tiebreak: FNV over the word, salted
+        let mut h: u64 = 0xcbf29ce484222325 ^ salt;
+        for b in word.as_bytes() {
+            h ^= *b as u64;
+            h = h.wrapping_mul(0x100000001b3);
+        }
+        let better = match &best {
+            None => true,
+            Some((bs, bh, _)) => score > *bs || (score == *bs && h > *bh),
+        };
+        if better {
+            best = Some((score, h, i));
+        }
+    }
+    best.map(|(_, _, i)| i)
+}
+
+/// Load-or-new for a language — the same door `note_attempt` uses,
+/// exposed so the selection hook reads the identical state.
+pub fn load_for(lang: &str) -> LearnerState {
+    let key = format!("{STORE_PREFIX}{lang}");
+    crate::storage::get_raw(&key)
+        .and_then(|j| load_state(&j).ok())
+        .unwrap_or_else(|| LearnerState::new(lang))
+}
+
+/// Public wrapper for the day index (the hook needs the same epoch).
+pub fn current_day() -> u32 {
+    today_day()
+}
+
 // ----------------------------------------------------------------- tests
 
 #[cfg(test)]
@@ -642,5 +722,88 @@ mod bridge_tests {
         });
         assert_eq!(st.skills, before, "speech never moves a spelling skill");
         assert_eq!(st.log.len(), 4, "but it IS logged");
+    }
+}
+
+#[cfg(test)]
+mod l1_tests {
+    use super::*;
+
+    fn state_with(skills: &[(&str, f64, u32, u32)]) -> LearnerState {
+        let mut st = LearnerState::new("en");
+        for (id, mastery, due_day, reps) in skills {
+            st.skills.push(SkillState {
+                id: id.to_string(),
+                mastery: *mastery,
+                fsrs: FsrsState { stability: 1.0, difficulty: 5.0, due_day: *due_day, reps: *reps, lapses: 0 },
+            });
+        }
+        st
+    }
+
+    /// D7, hammered: ten thousand selections across varying bands,
+    /// states and days — the pick is ALWAYS an index into the band, the
+    /// same inputs always pick the same word, and empty bands say None.
+    #[test]
+    fn d7_selection_never_leaves_the_band_10k() {
+        let vocab = ["wrong", "attention", "shop", "wet", "kitten", "knee", "lamb",
+                     "night", "receive", "puzzle", "grass", "station", "bubble", "science"];
+        let mut rng: u64 = 0x5EED_D7;
+        let mut hits = 0u32;
+        for trial in 0..10_000u64 {
+            rng = rng.wrapping_mul(6364136223846793005).wrapping_add(1442695040888963407);
+            let n = (rng >> 33) as usize % (vocab.len() + 1); // 0..=14 words
+            let band: Vec<String> = (0..n).map(|k| vocab[(trial as usize + k * 3) % vocab.len()].to_string()).collect();
+            let st = state_with(&[
+                ("silent_letters", (trial % 100) as f64 / 100.0, (trial % 40) as u32, (trial % 3) as u32),
+                ("doubled_consonant", 0.5, 10, 1),
+            ]);
+            let recent: Vec<String> = band.iter().take((trial % 3) as usize).cloned().collect();
+            let day = (trial % 60) as u32;
+            match select_within(&st, &band, "en", day, &recent, trial) {
+                None => assert!(band.is_empty(), "None only for empty bands"),
+                Some(i) => {
+                    assert!(i < band.len(), "index {i} outside band of {}", band.len());
+                    assert_eq!(select_within(&st, &band, "en", day, &recent, trial), Some(i),
+                               "same inputs must pick the same word");
+                    hits += 1;
+                }
+            }
+        }
+        assert!(hits > 9_000, "the policy actually selected: {hits}");
+    }
+
+    /// An overdue skill outranks a mastered fresh one.
+    #[test]
+    fn due_ness_outranks_mastery() {
+        // "knee" exercises silent_letters (overdue); "grass" exercises
+        // doubled_consonant (mastered, not due).
+        let st = state_with(&[("silent_letters", 0.9, 5, 3), ("doubled_consonant", 0.97, 100, 3)]);
+        let band = vec!["grass".to_string(), "knee".to_string()];
+        let i = select_within(&st, &band, "en", 30, &[], 1).unwrap();
+        assert_eq!(band[i], "knee", "the lapsed skill's word wins");
+    }
+
+    /// Uncertainty drives when nothing is due: mastery 0.5 beats 0.97.
+    #[test]
+    fn uncertainty_outranks_certainty() {
+        let st = state_with(&[("silent_letters", 0.5, 100, 2), ("doubled_consonant", 0.97, 100, 2)]);
+        let band = vec!["grass".to_string(), "knee".to_string()];
+        let i = select_within(&st, &band, "en", 10, &[], 1).unwrap();
+        assert_eq!(band[i], "knee", "the least-known skill's word wins");
+    }
+
+    /// Recent words sink but stay legal: chosen only when they are the
+    /// entire band.
+    #[test]
+    fn recency_sinks_but_never_bans() {
+        let st = state_with(&[("silent_letters", 0.5, 0, 1)]);
+        let band = vec!["knee".to_string(), "lamb".to_string()];
+        let recent = vec!["knee".to_string()];
+        let i = select_within(&st, &band, "en", 20, &recent, 1).unwrap();
+        assert_eq!(band[i], "lamb", "recent word sinks");
+        let solo = vec!["knee".to_string()];
+        assert_eq!(select_within(&st, &solo, "en", 20, &recent, 1), Some(0),
+                   "a recent word is still legal when it is all there is");
     }
 }

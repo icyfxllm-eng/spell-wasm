@@ -95,16 +95,23 @@ def hamsa():
     # palm
     d.ellipse([cx - 210, 420, cx + 210, 860], fill=BLACK)
     # three fingers, gaps 40px
-    for k, (dx, h) in enumerate([(-120, 320), (0, 380), (120, 320)]):
-        d.rounded_rectangle([cx + dx - 52, 460 - h, cx + dx + 52, 520], radius=52, fill=BLACK)
+    # slimmer fingers, wider spread — 16px clefts choked the outline's
+    # own coverage and the solver refused the hand (the eye took the
+    # blame through two innocent resizes)
+    for k, (dx, h) in enumerate([(-142, 310), (0, 375), (142, 310)]):
+        d.rounded_rectangle([cx + dx - 42, 460 - h, cx + dx + 42, 520], radius=42, fill=BLACK)
     # two thumbs sweeping out
     for sgn in (-1, 1):
         d.ellipse([cx + sgn * 160 - 60, 430, cx + sgn * 160 + 220 * sgn - 60 * -1 if False else cx + sgn * 300 - 60, 640], fill=BLACK) if False else None
         d.polygon([(cx + sgn * 140, 560), (cx + sgn * 330, 380), (cx + sgn * 360, 440),
                    (cx + sgn * 200, 640)], fill=BLACK)   # rooted in the palm
     # the eye: ring + micro pupil
-    circle(d, cx, 640, 90, WHITE)
-    circle(d, cx, 640, 34, BLACK)
+    # the eye enlarged: at r90 its ring could not host two words and
+    # the solver refused the whole hand
+    # micro pair: hostable-ring sizes kept failing the two-word floor,
+    # so the eye is exempt machinery now — drawn always, hosting never
+    circle(d, cx, 645, 46, WHITE)
+    circle(d, cx, 645, 16, BLACK)
     # fringe drop at the wrist
     d.polygon([(cx - 120, 860), (cx + 120, 860), (cx + 60, 990), (cx - 60, 990)], fill=BLACK)
     return im

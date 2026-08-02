@@ -4146,6 +4146,222 @@
     }
    ],
    "guide": []
+  },
+  {
+   "id": "koinobori",
+   "tier": "medium",
+   "subject": "koinobori",
+   "icon": "🎏",
+   "kid": true,
+   "wash": false,
+   "pack": "culture7",
+   "paths": [
+    {
+     "mode": "flow",
+     "d": "M256.0 60.0 L395.0 117.0 L452.0 256.0 L395.0 395.0 L256.0 452.0 L117.0 395.0 L60.0 256.0 L117.0 117.0",
+     "order": 1,
+     "budget": [
+      2,
+      10
+     ],
+     "band": 1,
+     "arch": "line",
+     "feature": "skeleton"
+    }
+   ],
+   "guide": []
+  },
+  {
+   "id": "nazcabird",
+   "tier": "hard",
+   "subject": "nazcabird",
+   "icon": "🕊️",
+   "kid": false,
+   "wash": false,
+   "pack": "worldart",
+   "paths": [
+    {
+     "mode": "flow",
+     "d": "M256.0 60.0 L395.0 117.0 L452.0 256.0 L395.0 395.0 L256.0 452.0 L117.0 395.0 L60.0 256.0 L117.0 117.0",
+     "order": 1,
+     "budget": [
+      2,
+      10
+     ],
+     "band": 1,
+     "arch": "line",
+     "feature": "skeleton"
+    }
+   ],
+   "guide": []
+  },
+  {
+   "id": "terracotta",
+   "tier": "medium",
+   "subject": "terracotta",
+   "icon": "🏺",
+   "kid": true,
+   "wash": false,
+   "pack": "culture7",
+   "paths": [
+    {
+     "mode": "flow",
+     "d": "M256.0 60.0 L395.0 117.0 L452.0 256.0 L395.0 395.0 L256.0 452.0 L117.0 395.0 L60.0 256.0 L117.0 117.0",
+     "order": 1,
+     "budget": [
+      2,
+      10
+     ],
+     "band": 1,
+     "arch": "line",
+     "feature": "skeleton"
+    }
+   ],
+   "guide": []
+  },
+  {
+   "id": "hamsa",
+   "tier": "medium",
+   "subject": "hamsa",
+   "icon": "🪬",
+   "kid": true,
+   "wash": false,
+   "pack": "culture7",
+   "paths": [
+    {
+     "mode": "flow",
+     "d": "M256.0 60.0 L395.0 117.0 L452.0 256.0 L395.0 395.0 L256.0 452.0 L117.0 395.0 L60.0 256.0 L117.0 117.0",
+     "order": 1,
+     "budget": [
+      2,
+      10
+     ],
+     "band": 1,
+     "arch": "line",
+     "feature": "skeleton"
+    }
+   ],
+   "guide": []
+  },
+  {
+   "id": "pinata",
+   "tier": "easy",
+   "subject": "pinata",
+   "icon": "🪅",
+   "kid": true,
+   "wash": false,
+   "pack": "culture7",
+   "paths": [
+    {
+     "mode": "flow",
+     "d": "M256.0 60.0 L395.0 117.0 L452.0 256.0 L395.0 395.0 L256.0 452.0 L117.0 395.0 L60.0 256.0 L117.0 117.0",
+     "order": 1,
+     "budget": [
+      2,
+      10
+     ],
+     "band": 1,
+     "arch": "line",
+     "feature": "skeleton"
+    }
+   ],
+   "guide": []
+  },
+  {
+   "id": "bagpipes",
+   "tier": "medium",
+   "subject": "bagpipes",
+   "icon": "🎶",
+   "kid": true,
+   "wash": false,
+   "pack": "culture7",
+   "paths": [
+    {
+     "mode": "flow",
+     "d": "M256.0 60.0 L395.0 117.0 L452.0 256.0 L395.0 395.0 L256.0 452.0 L117.0 395.0 L60.0 256.0 L117.0 117.0",
+     "order": 1,
+     "budget": [
+      2,
+      10
+     ],
+     "band": 1,
+     "arch": "line",
+     "feature": "skeleton"
+    }
+   ],
+   "guide": []
+  },
+  {
+   "id": "triskele",
+   "tier": "easy",
+   "subject": "triskele",
+   "icon": "🌀",
+   "kid": true,
+   "wash": false,
+   "pack": "worldart",
+   "paths": [
+    {
+     "mode": "flow",
+     "d": "M256.0 60.0 L395.0 117.0 L452.0 256.0 L395.0 395.0 L256.0 452.0 L117.0 395.0 L60.0 256.0 L117.0 117.0",
+     "order": 1,
+     "budget": [
+      2,
+      10
+     ],
+     "band": 1,
+     "arch": "line",
+     "feature": "skeleton"
+    }
+   ],
+   "guide": []
+  },
+  {
+   "id": "mancala",
+   "tier": "medium",
+   "subject": "mancala",
+   "icon": "🕳️",
+   "kid": true,
+   "wash": false,
+   "pack": "culture7",
+   "paths": [
+    {
+     "mode": "flow",
+     "d": "M256.0 60.0 L395.0 117.0 L452.0 256.0 L395.0 395.0 L256.0 452.0 L117.0 395.0 L60.0 256.0 L117.0 117.0",
+     "order": 1,
+     "budget": [
+      2,
+      10
+     ],
+     "band": 1,
+     "arch": "line",
+     "feature": "skeleton"
+    }
+   ],
+   "guide": []
+  },
+  {
+   "id": "compassrose",
+   "tier": "medium",
+   "subject": "compassrose",
+   "icon": "🧭",
+   "kid": true,
+   "wash": false,
+   "pack": "worldart",
+   "paths": [
+    {
+     "mode": "flow",
+     "d": "M256.0 60.0 L395.0 117.0 L452.0 256.0 L395.0 395.0 L256.0 452.0 L117.0 395.0 L60.0 256.0 L117.0 117.0",
+     "order": 1,
+     "budget": [
+      2,
+      10
+     ],
+     "band": 1,
+     "arch": "line",
+     "feature": "skeleton"
+    }
+   ],
+   "guide": []
   }
  ]
 }
