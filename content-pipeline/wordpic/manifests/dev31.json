@@ -1,0 +1,106 @@
+{
+ "id": "dev31",
+ "tier": "medium",
+ "source": {
+  "title": "Glyph \u0928 (dev)",
+  "license": "Noto Sans Devanagari glyph - SIL Open Font License 1.1 (free)",
+  "url": "https://github.com/google/fonts/tree/main/ofl/notosansdevanagari",
+  "attribution": ""
+ },
+ "parts": {
+  "root": [
+   0
+  ]
+ },
+ "layers": [
+  {
+   "name": "outline",
+   "path_ids": [
+    0
+   ],
+   "per_language": {
+    "ar": {
+     "words": 1,
+     "band": 0,
+     "band_size": 60
+    },
+    "de": {
+     "words": 1,
+     "band": 0,
+     "band_size": 271
+    },
+    "en": {
+     "words": 1,
+     "band": 0,
+     "band_size": 233
+    },
+    "es": {
+     "words": 1,
+     "band": 0,
+     "band_size": 191
+    },
+    "fil": {
+     "words": 1,
+     "band": 0,
+     "band_size": 241
+    },
+    "fr": {
+     "words": 1,
+     "band": 0,
+     "band_size": 139
+    },
+    "hi": {
+     "words": 1,
+     "band": 0,
+     "band_size": 252
+    },
+    "ja": {
+     "words": 1,
+     "band": 0,
+     "band_size": 412
+    },
+    "ko": {
+     "words": 1,
+     "band": 0,
+     "band_size": 47
+    },
+    "pl": {
+     "words": 1,
+     "band": 0,
+     "band_size": 453
+    },
+    "pt": {
+     "words": 1,
+     "band": 0,
+     "band_size": 674
+    },
+    "ru": {
+     "words": 1,
+     "band": 0,
+     "band_size": 49
+    },
+    "sw": {
+     "words": 1,
+     "band": 0,
+     "band_size": 65
+    },
+    "vi": {
+     "words": 1,
+     "band": 0,
+     "band_size": 409
+    },
+    "zh": {
+     "words": 1,
+     "band": 0,
+     "band_size": 167
+    }
+   }
+  }
+ ],
+ "audio_gate": "intermediate",
+ "completion": {
+  "all_layers": true
+ },
+ "authoring": "suggested-then-approved",
+ "pin_hash": 2831375279766987743
+}

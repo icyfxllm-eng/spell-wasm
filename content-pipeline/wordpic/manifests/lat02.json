@@ -1,0 +1,274 @@
+{
+ "id": "lat02",
+ "tier": "easy",
+ "source": {
+  "title": "Glyph B (lat)",
+  "license": "DejaVu Sans 2.37 glyph - Bitstream Vera Fonts license (free)",
+  "url": "https://github.com/dejavu-fonts/dejavu-fonts",
+  "attribution": ""
+ },
+ "parts": {
+  "root": [
+   0,
+   1,
+   2
+  ]
+ },
+ "layers": [
+  {
+   "name": "outline",
+   "path_ids": [
+    0
+   ],
+   "per_language": {
+    "ar": {
+     "words": 1,
+     "band": 0,
+     "band_size": 60
+    },
+    "de": {
+     "words": 1,
+     "band": 0,
+     "band_size": 91
+    },
+    "en": {
+     "words": 1,
+     "band": 0,
+     "band_size": 53
+    },
+    "es": {
+     "words": 1,
+     "band": 0,
+     "band_size": 191
+    },
+    "fil": {
+     "words": 1,
+     "band": 0,
+     "band_size": 75
+    },
+    "fr": {
+     "words": 1,
+     "band": 0,
+     "band_size": 139
+    },
+    "hi": {
+     "words": 1,
+     "band": 0,
+     "band_size": 57
+    },
+    "ja": {
+     "words": 1,
+     "band": 0,
+     "band_size": 377
+    },
+    "ko": {
+     "words": 1,
+     "band": 0,
+     "band_size": 32
+    },
+    "pl": {
+     "words": 1,
+     "band": 0,
+     "band_size": 210
+    },
+    "pt": {
+     "words": 1,
+     "band": 0,
+     "band_size": 220
+    },
+    "ru": {
+     "words": 1,
+     "band": 0,
+     "band_size": 49
+    },
+    "sw": {
+     "words": 1,
+     "band": 0,
+     "band_size": 65
+    },
+    "vi": {
+     "words": 1,
+     "band": 0,
+     "band_size": 94
+    },
+    "zh": {
+     "words": 1,
+     "band": 0,
+     "band_size": 95
+    }
+   }
+  },
+  {
+   "name": "features",
+   "path_ids": [
+    1
+   ],
+   "per_language": {
+    "ar": {
+     "words": 1,
+     "band": 1,
+     "band_size": 311
+    },
+    "de": {
+     "words": 1,
+     "band": 1,
+     "band_size": 539
+    },
+    "en": {
+     "words": 1,
+     "band": 1,
+     "band_size": 697
+    },
+    "es": {
+     "words": 1,
+     "band": 1,
+     "band_size": 416
+    },
+    "fil": {
+     "words": 1,
+     "band": 1,
+     "band_size": 677
+    },
+    "fr": {
+     "words": 1,
+     "band": 1,
+     "band_size": 333
+    },
+    "hi": {
+     "words": 1,
+     "band": 1,
+     "band_size": 491
+    },
+    "ja": {
+     "words": 1,
+     "band": 1,
+     "band_size": 339
+    },
+    "ko": {
+     "words": 1,
+     "band": 1,
+     "band_size": 405
+    },
+    "pl": {
+     "words": 1,
+     "band": 1,
+     "band_size": 529
+    },
+    "pt": {
+     "words": 1,
+     "band": 1,
+     "band_size": 552
+    },
+    "ru": {
+     "words": 1,
+     "band": 1,
+     "band_size": 190
+    },
+    "sw": {
+     "words": 1,
+     "band": 1,
+     "band_size": 162
+    },
+    "vi": {
+     "words": 1,
+     "band": 1,
+     "band_size": 379
+    },
+    "zh": {
+     "words": 1,
+     "band": 1,
+     "band_size": 163
+    }
+   }
+  },
+  {
+   "name": "texture",
+   "path_ids": [
+    2
+   ],
+   "per_language": {
+    "ar": {
+     "words": 1,
+     "band": 2,
+     "band_size": 452
+    },
+    "de": {
+     "words": 1,
+     "band": 2,
+     "band_size": 172
+    },
+    "en": {
+     "words": 1,
+     "band": 2,
+     "band_size": 11
+    },
+    "es": {
+     "words": 1,
+     "band": 2,
+     "band_size": 171
+    },
+    "fil": {
+     "words": 1,
+     "band": 2,
+     "band_size": 10
+    },
+    "fr": {
+     "words": 1,
+     "band": 2,
+     "band_size": 271
+    },
+    "hi": {
+     "words": 1,
+     "band": 2,
+     "band_size": 203
+    },
+    "ja": {
+     "words": 1,
+     "band": 2,
+     "band_size": 82
+    },
+    "ko": {
+     "words": 1,
+     "band": 2,
+     "band_size": 288
+    },
+    "pl": {
+     "words": 1,
+     "band": 2,
+     "band_size": 69
+    },
+    "pt": {
+     "words": 1,
+     "band": 2,
+     "band_size": 24
+    },
+    "ru": {
+     "words": 1,
+     "band": 2,
+     "band_size": 567
+    },
+    "sw": {
+     "words": 1,
+     "band": 2,
+     "band_size": 574
+    },
+    "vi": {
+     "words": 1,
+     "band": 2,
+     "band_size": 284
+    },
+    "zh": {
+     "words": 1,
+     "band": 2,
+     "band_size": 63
+    }
+   }
+  }
+ ],
+ "audio_gate": "starter",
+ "completion": {
+  "all_layers": true
+ },
+ "authoring": "suggested-then-approved",
+ "pin_hash": 10411398429074370627
+}

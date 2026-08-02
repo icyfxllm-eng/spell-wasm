@@ -1,0 +1,274 @@
+{
+ "id": "arb26",
+ "tier": "medium",
+ "source": {
+  "title": "Glyph \u0647 (arb)",
+  "license": "Noto Sans Arabic glyph - SIL Open Font License 1.1 (free)",
+  "url": "https://github.com/google/fonts/tree/main/ofl/notosansarabic",
+  "attribution": ""
+ },
+ "parts": {
+  "root": [
+   0,
+   1,
+   2
+  ]
+ },
+ "layers": [
+  {
+   "name": "outline",
+   "path_ids": [
+    0
+   ],
+   "per_language": {
+    "ar": {
+     "words": 1,
+     "band": 0,
+     "band_size": 60
+    },
+    "de": {
+     "words": 1,
+     "band": 0,
+     "band_size": 271
+    },
+    "en": {
+     "words": 1,
+     "band": 0,
+     "band_size": 233
+    },
+    "es": {
+     "words": 1,
+     "band": 0,
+     "band_size": 191
+    },
+    "fil": {
+     "words": 1,
+     "band": 0,
+     "band_size": 241
+    },
+    "fr": {
+     "words": 1,
+     "band": 0,
+     "band_size": 139
+    },
+    "hi": {
+     "words": 1,
+     "band": 0,
+     "band_size": 252
+    },
+    "ja": {
+     "words": 1,
+     "band": 0,
+     "band_size": 412
+    },
+    "ko": {
+     "words": 1,
+     "band": 0,
+     "band_size": 47
+    },
+    "pl": {
+     "words": 1,
+     "band": 0,
+     "band_size": 453
+    },
+    "pt": {
+     "words": 1,
+     "band": 0,
+     "band_size": 674
+    },
+    "ru": {
+     "words": 1,
+     "band": 0,
+     "band_size": 49
+    },
+    "sw": {
+     "words": 1,
+     "band": 0,
+     "band_size": 65
+    },
+    "vi": {
+     "words": 1,
+     "band": 0,
+     "band_size": 409
+    },
+    "zh": {
+     "words": 1,
+     "band": 0,
+     "band_size": 167
+    }
+   }
+  },
+  {
+   "name": "features",
+   "path_ids": [
+    1
+   ],
+   "per_language": {
+    "ar": {
+     "words": 1,
+     "band": 1,
+     "band_size": 311
+    },
+    "de": {
+     "words": 1,
+     "band": 1,
+     "band_size": 1095
+    },
+    "en": {
+     "words": 1,
+     "band": 1,
+     "band_size": 1192
+    },
+    "es": {
+     "words": 1,
+     "band": 1,
+     "band_size": 1052
+    },
+    "fil": {
+     "words": 1,
+     "band": 1,
+     "band_size": 868
+    },
+    "fr": {
+     "words": 1,
+     "band": 1,
+     "band_size": 865
+    },
+    "hi": {
+     "words": 1,
+     "band": 1,
+     "band_size": 925
+    },
+    "ja": {
+     "words": 1,
+     "band": 1,
+     "band_size": 591
+    },
+    "ko": {
+     "words": 1,
+     "band": 1,
+     "band_size": 431
+    },
+    "pl": {
+     "words": 1,
+     "band": 1,
+     "band_size": 707
+    },
+    "pt": {
+     "words": 1,
+     "band": 1,
+     "band_size": 780
+    },
+    "ru": {
+     "words": 1,
+     "band": 1,
+     "band_size": 190
+    },
+    "sw": {
+     "words": 1,
+     "band": 1,
+     "band_size": 736
+    },
+    "vi": {
+     "words": 1,
+     "band": 1,
+     "band_size": 739
+    },
+    "zh": {
+     "words": 1,
+     "band": 1,
+     "band_size": 315
+    }
+   }
+  },
+  {
+   "name": "texture",
+   "path_ids": [
+    2
+   ],
+   "per_language": {
+    "ar": {
+     "words": 1,
+     "band": 2,
+     "band_size": 452
+    },
+    "de": {
+     "words": 1,
+     "band": 2,
+     "band_size": 226
+    },
+    "en": {
+     "words": 1,
+     "band": 2,
+     "band_size": 171
+    },
+    "es": {
+     "words": 1,
+     "band": 2,
+     "band_size": 338
+    },
+    "fil": {
+     "words": 1,
+     "band": 2,
+     "band_size": 388
+    },
+    "fr": {
+     "words": 1,
+     "band": 2,
+     "band_size": 501
+    },
+    "hi": {
+     "words": 1,
+     "band": 2,
+     "band_size": 385
+    },
+    "ja": {
+     "words": 1,
+     "band": 2,
+     "band_size": 211
+    },
+    "ko": {
+     "words": 1,
+     "band": 2,
+     "band_size": 367
+    },
+    "pl": {
+     "words": 1,
+     "band": 2,
+     "band_size": 427
+    },
+    "pt": {
+     "words": 1,
+     "band": 2,
+     "band_size": 122
+    },
+    "ru": {
+     "words": 1,
+     "band": 2,
+     "band_size": 567
+    },
+    "sw": {
+     "words": 1,
+     "band": 2,
+     "band_size": 356
+    },
+    "vi": {
+     "words": 1,
+     "band": 2,
+     "band_size": 436
+    },
+    "zh": {
+     "words": 1,
+     "band": 2,
+     "band_size": 126
+    }
+   }
+  }
+ ],
+ "audio_gate": "intermediate",
+ "completion": {
+  "all_layers": true
+ },
+ "authoring": "suggested-then-approved",
+ "pin_hash": 16864185667585184561
+}

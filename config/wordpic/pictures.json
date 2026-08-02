@@ -4921,6 +4921,5342 @@
     }
    ],
    "guide": []
+  },
+  {
+   "id": "spiderweb",
+   "tier": "expert",
+   "subject": "spiderweb",
+   "icon": "🕸️",
+   "kid": false,
+   "wash": false,
+   "pack": "culture8",
+   "paths": [
+    {
+     "mode": "flow",
+     "d": "M256.0 60.0 L395.0 117.0 L452.0 256.0 L395.0 395.0 L256.0 452.0 L117.0 395.0 L60.0 256.0 L117.0 117.0",
+     "order": 1,
+     "budget": [
+      2,
+      10
+     ],
+     "band": 1,
+     "arch": "line",
+     "feature": "skeleton"
+    }
+   ],
+   "guide": [],
+   "provenance": {
+    "title": "Spider Web",
+    "artist": "SpellGame (original artwork)",
+    "source": "SpellGame original — drawn coordinate list, in-repo",
+    "sourceUrl": "repo:tools/draw_wave28.py",
+    "pdBasis": "Original artwork (SpellGame) — no external reference used; drawn as a coordinate list at content time",
+    "retrieved": "2026-08-02"
+   }
+  },
+  {
+   "id": "zero",
+   "tier": "easy",
+   "subject": "zero",
+   "icon": "0",
+   "kid": true,
+   "wash": false,
+   "pack": "numbers",
+   "paths": [
+    {
+     "mode": "flow",
+     "d": "M256.0 60.0 L395.0 117.0 L452.0 256.0 L395.0 395.0 L256.0 452.0 L117.0 395.0 L60.0 256.0 L117.0 117.0",
+     "order": 1,
+     "budget": [
+      2,
+      10
+     ],
+     "band": 1,
+     "arch": "line",
+     "feature": "skeleton"
+    }
+   ],
+   "guide": []
+  },
+  {
+   "id": "one",
+   "tier": "easy",
+   "subject": "one",
+   "icon": "1",
+   "kid": true,
+   "wash": false,
+   "pack": "numbers",
+   "paths": [
+    {
+     "mode": "flow",
+     "d": "M256.0 60.0 L395.0 117.0 L452.0 256.0 L395.0 395.0 L256.0 452.0 L117.0 395.0 L60.0 256.0 L117.0 117.0",
+     "order": 1,
+     "budget": [
+      2,
+      10
+     ],
+     "band": 1,
+     "arch": "line",
+     "feature": "skeleton"
+    }
+   ],
+   "guide": []
+  },
+  {
+   "id": "two",
+   "tier": "easy",
+   "subject": "two",
+   "icon": "2",
+   "kid": true,
+   "wash": false,
+   "pack": "numbers",
+   "paths": [
+    {
+     "mode": "flow",
+     "d": "M256.0 60.0 L395.0 117.0 L452.0 256.0 L395.0 395.0 L256.0 452.0 L117.0 395.0 L60.0 256.0 L117.0 117.0",
+     "order": 1,
+     "budget": [
+      2,
+      10
+     ],
+     "band": 1,
+     "arch": "line",
+     "feature": "skeleton"
+    }
+   ],
+   "guide": []
+  },
+  {
+   "id": "three",
+   "tier": "easy",
+   "subject": "three",
+   "icon": "3",
+   "kid": true,
+   "wash": false,
+   "pack": "numbers",
+   "paths": [
+    {
+     "mode": "flow",
+     "d": "M256.0 60.0 L395.0 117.0 L452.0 256.0 L395.0 395.0 L256.0 452.0 L117.0 395.0 L60.0 256.0 L117.0 117.0",
+     "order": 1,
+     "budget": [
+      2,
+      10
+     ],
+     "band": 1,
+     "arch": "line",
+     "feature": "skeleton"
+    }
+   ],
+   "guide": []
+  },
+  {
+   "id": "four",
+   "tier": "easy",
+   "subject": "four",
+   "icon": "4",
+   "kid": true,
+   "wash": false,
+   "pack": "numbers",
+   "paths": [
+    {
+     "mode": "flow",
+     "d": "M256.0 60.0 L395.0 117.0 L452.0 256.0 L395.0 395.0 L256.0 452.0 L117.0 395.0 L60.0 256.0 L117.0 117.0",
+     "order": 1,
+     "budget": [
+      2,
+      10
+     ],
+     "band": 1,
+     "arch": "line",
+     "feature": "skeleton"
+    }
+   ],
+   "guide": []
+  },
+  {
+   "id": "five",
+   "tier": "easy",
+   "subject": "five",
+   "icon": "5",
+   "kid": true,
+   "wash": false,
+   "pack": "numbers",
+   "paths": [
+    {
+     "mode": "flow",
+     "d": "M256.0 60.0 L395.0 117.0 L452.0 256.0 L395.0 395.0 L256.0 452.0 L117.0 395.0 L60.0 256.0 L117.0 117.0",
+     "order": 1,
+     "budget": [
+      2,
+      10
+     ],
+     "band": 1,
+     "arch": "line",
+     "feature": "skeleton"
+    }
+   ],
+   "guide": []
+  },
+  {
+   "id": "six",
+   "tier": "easy",
+   "subject": "six",
+   "icon": "6",
+   "kid": true,
+   "wash": false,
+   "pack": "numbers",
+   "paths": [
+    {
+     "mode": "flow",
+     "d": "M256.0 60.0 L395.0 117.0 L452.0 256.0 L395.0 395.0 L256.0 452.0 L117.0 395.0 L60.0 256.0 L117.0 117.0",
+     "order": 1,
+     "budget": [
+      2,
+      10
+     ],
+     "band": 1,
+     "arch": "line",
+     "feature": "skeleton"
+    }
+   ],
+   "guide": []
+  },
+  {
+   "id": "seven",
+   "tier": "easy",
+   "subject": "seven",
+   "icon": "7",
+   "kid": true,
+   "wash": false,
+   "pack": "numbers",
+   "paths": [
+    {
+     "mode": "flow",
+     "d": "M256.0 60.0 L395.0 117.0 L452.0 256.0 L395.0 395.0 L256.0 452.0 L117.0 395.0 L60.0 256.0 L117.0 117.0",
+     "order": 1,
+     "budget": [
+      2,
+      10
+     ],
+     "band": 1,
+     "arch": "line",
+     "feature": "skeleton"
+    }
+   ],
+   "guide": []
+  },
+  {
+   "id": "eight",
+   "tier": "easy",
+   "subject": "eight",
+   "icon": "8",
+   "kid": true,
+   "wash": false,
+   "pack": "numbers",
+   "paths": [
+    {
+     "mode": "flow",
+     "d": "M256.0 60.0 L395.0 117.0 L452.0 256.0 L395.0 395.0 L256.0 452.0 L117.0 395.0 L60.0 256.0 L117.0 117.0",
+     "order": 1,
+     "budget": [
+      2,
+      10
+     ],
+     "band": 1,
+     "arch": "line",
+     "feature": "skeleton"
+    }
+   ],
+   "guide": []
+  },
+  {
+   "id": "nine",
+   "tier": "easy",
+   "subject": "nine",
+   "icon": "9",
+   "kid": true,
+   "wash": false,
+   "pack": "numbers",
+   "paths": [
+    {
+     "mode": "flow",
+     "d": "M256.0 60.0 L395.0 117.0 L452.0 256.0 L395.0 395.0 L256.0 452.0 L117.0 395.0 L60.0 256.0 L117.0 117.0",
+     "order": 1,
+     "budget": [
+      2,
+      10
+     ],
+     "band": 1,
+     "arch": "line",
+     "feature": "skeleton"
+    }
+   ],
+   "guide": []
+  },
+  {
+   "id": "lat01",
+   "tier": "easy",
+   "subject": "lat01",
+   "icon": "A",
+   "kid": true,
+   "wash": false,
+   "pack": "alphaLat1",
+   "paths": [
+    {
+     "mode": "flow",
+     "d": "M256.0 60.0 L395.0 117.0 L452.0 256.0 L395.0 395.0 L256.0 452.0 L117.0 395.0 L60.0 256.0 L117.0 117.0",
+     "order": 1,
+     "budget": [
+      2,
+      10
+     ],
+     "band": 1,
+     "arch": "line",
+     "feature": "skeleton"
+    }
+   ],
+   "guide": []
+  },
+  {
+   "id": "lat02",
+   "tier": "easy",
+   "subject": "lat02",
+   "icon": "B",
+   "kid": true,
+   "wash": false,
+   "pack": "alphaLat1",
+   "paths": [
+    {
+     "mode": "flow",
+     "d": "M256.0 60.0 L395.0 117.0 L452.0 256.0 L395.0 395.0 L256.0 452.0 L117.0 395.0 L60.0 256.0 L117.0 117.0",
+     "order": 1,
+     "budget": [
+      2,
+      10
+     ],
+     "band": 1,
+     "arch": "line",
+     "feature": "skeleton"
+    }
+   ],
+   "guide": []
+  },
+  {
+   "id": "lat03",
+   "tier": "easy",
+   "subject": "lat03",
+   "icon": "C",
+   "kid": true,
+   "wash": false,
+   "pack": "alphaLat1",
+   "paths": [
+    {
+     "mode": "flow",
+     "d": "M256.0 60.0 L395.0 117.0 L452.0 256.0 L395.0 395.0 L256.0 452.0 L117.0 395.0 L60.0 256.0 L117.0 117.0",
+     "order": 1,
+     "budget": [
+      2,
+      10
+     ],
+     "band": 1,
+     "arch": "line",
+     "feature": "skeleton"
+    }
+   ],
+   "guide": []
+  },
+  {
+   "id": "lat04",
+   "tier": "easy",
+   "subject": "lat04",
+   "icon": "D",
+   "kid": true,
+   "wash": false,
+   "pack": "alphaLat1",
+   "paths": [
+    {
+     "mode": "flow",
+     "d": "M256.0 60.0 L395.0 117.0 L452.0 256.0 L395.0 395.0 L256.0 452.0 L117.0 395.0 L60.0 256.0 L117.0 117.0",
+     "order": 1,
+     "budget": [
+      2,
+      10
+     ],
+     "band": 1,
+     "arch": "line",
+     "feature": "skeleton"
+    }
+   ],
+   "guide": []
+  },
+  {
+   "id": "lat05",
+   "tier": "easy",
+   "subject": "lat05",
+   "icon": "E",
+   "kid": true,
+   "wash": false,
+   "pack": "alphaLat1",
+   "paths": [
+    {
+     "mode": "flow",
+     "d": "M256.0 60.0 L395.0 117.0 L452.0 256.0 L395.0 395.0 L256.0 452.0 L117.0 395.0 L60.0 256.0 L117.0 117.0",
+     "order": 1,
+     "budget": [
+      2,
+      10
+     ],
+     "band": 1,
+     "arch": "line",
+     "feature": "skeleton"
+    }
+   ],
+   "guide": []
+  },
+  {
+   "id": "lat06",
+   "tier": "easy",
+   "subject": "lat06",
+   "icon": "F",
+   "kid": true,
+   "wash": false,
+   "pack": "alphaLat1",
+   "paths": [
+    {
+     "mode": "flow",
+     "d": "M256.0 60.0 L395.0 117.0 L452.0 256.0 L395.0 395.0 L256.0 452.0 L117.0 395.0 L60.0 256.0 L117.0 117.0",
+     "order": 1,
+     "budget": [
+      2,
+      10
+     ],
+     "band": 1,
+     "arch": "line",
+     "feature": "skeleton"
+    }
+   ],
+   "guide": []
+  },
+  {
+   "id": "lat07",
+   "tier": "easy",
+   "subject": "lat07",
+   "icon": "G",
+   "kid": true,
+   "wash": false,
+   "pack": "alphaLat1",
+   "paths": [
+    {
+     "mode": "flow",
+     "d": "M256.0 60.0 L395.0 117.0 L452.0 256.0 L395.0 395.0 L256.0 452.0 L117.0 395.0 L60.0 256.0 L117.0 117.0",
+     "order": 1,
+     "budget": [
+      2,
+      10
+     ],
+     "band": 1,
+     "arch": "line",
+     "feature": "skeleton"
+    }
+   ],
+   "guide": []
+  },
+  {
+   "id": "lat08",
+   "tier": "easy",
+   "subject": "lat08",
+   "icon": "H",
+   "kid": true,
+   "wash": false,
+   "pack": "alphaLat1",
+   "paths": [
+    {
+     "mode": "flow",
+     "d": "M256.0 60.0 L395.0 117.0 L452.0 256.0 L395.0 395.0 L256.0 452.0 L117.0 395.0 L60.0 256.0 L117.0 117.0",
+     "order": 1,
+     "budget": [
+      2,
+      10
+     ],
+     "band": 1,
+     "arch": "line",
+     "feature": "skeleton"
+    }
+   ],
+   "guide": []
+  },
+  {
+   "id": "lat09",
+   "tier": "easy",
+   "subject": "lat09",
+   "icon": "I",
+   "kid": true,
+   "wash": false,
+   "pack": "alphaLat1",
+   "paths": [
+    {
+     "mode": "flow",
+     "d": "M256.0 60.0 L395.0 117.0 L452.0 256.0 L395.0 395.0 L256.0 452.0 L117.0 395.0 L60.0 256.0 L117.0 117.0",
+     "order": 1,
+     "budget": [
+      2,
+      10
+     ],
+     "band": 1,
+     "arch": "line",
+     "feature": "skeleton"
+    }
+   ],
+   "guide": []
+  },
+  {
+   "id": "lat10",
+   "tier": "easy",
+   "subject": "lat10",
+   "icon": "J",
+   "kid": true,
+   "wash": false,
+   "pack": "alphaLat1",
+   "paths": [
+    {
+     "mode": "flow",
+     "d": "M256.0 60.0 L395.0 117.0 L452.0 256.0 L395.0 395.0 L256.0 452.0 L117.0 395.0 L60.0 256.0 L117.0 117.0",
+     "order": 1,
+     "budget": [
+      2,
+      10
+     ],
+     "band": 1,
+     "arch": "line",
+     "feature": "skeleton"
+    }
+   ],
+   "guide": []
+  },
+  {
+   "id": "lat11",
+   "tier": "easy",
+   "subject": "lat11",
+   "icon": "K",
+   "kid": true,
+   "wash": false,
+   "pack": "alphaLat2",
+   "paths": [
+    {
+     "mode": "flow",
+     "d": "M256.0 60.0 L395.0 117.0 L452.0 256.0 L395.0 395.0 L256.0 452.0 L117.0 395.0 L60.0 256.0 L117.0 117.0",
+     "order": 1,
+     "budget": [
+      2,
+      10
+     ],
+     "band": 1,
+     "arch": "line",
+     "feature": "skeleton"
+    }
+   ],
+   "guide": []
+  },
+  {
+   "id": "lat12",
+   "tier": "easy",
+   "subject": "lat12",
+   "icon": "L",
+   "kid": true,
+   "wash": false,
+   "pack": "alphaLat2",
+   "paths": [
+    {
+     "mode": "flow",
+     "d": "M256.0 60.0 L395.0 117.0 L452.0 256.0 L395.0 395.0 L256.0 452.0 L117.0 395.0 L60.0 256.0 L117.0 117.0",
+     "order": 1,
+     "budget": [
+      2,
+      10
+     ],
+     "band": 1,
+     "arch": "line",
+     "feature": "skeleton"
+    }
+   ],
+   "guide": []
+  },
+  {
+   "id": "lat13",
+   "tier": "easy",
+   "subject": "lat13",
+   "icon": "M",
+   "kid": true,
+   "wash": false,
+   "pack": "alphaLat2",
+   "paths": [
+    {
+     "mode": "flow",
+     "d": "M256.0 60.0 L395.0 117.0 L452.0 256.0 L395.0 395.0 L256.0 452.0 L117.0 395.0 L60.0 256.0 L117.0 117.0",
+     "order": 1,
+     "budget": [
+      2,
+      10
+     ],
+     "band": 1,
+     "arch": "line",
+     "feature": "skeleton"
+    }
+   ],
+   "guide": []
+  },
+  {
+   "id": "lat14",
+   "tier": "easy",
+   "subject": "lat14",
+   "icon": "N",
+   "kid": true,
+   "wash": false,
+   "pack": "alphaLat2",
+   "paths": [
+    {
+     "mode": "flow",
+     "d": "M256.0 60.0 L395.0 117.0 L452.0 256.0 L395.0 395.0 L256.0 452.0 L117.0 395.0 L60.0 256.0 L117.0 117.0",
+     "order": 1,
+     "budget": [
+      2,
+      10
+     ],
+     "band": 1,
+     "arch": "line",
+     "feature": "skeleton"
+    }
+   ],
+   "guide": []
+  },
+  {
+   "id": "lat15",
+   "tier": "easy",
+   "subject": "lat15",
+   "icon": "O",
+   "kid": true,
+   "wash": false,
+   "pack": "alphaLat2",
+   "paths": [
+    {
+     "mode": "flow",
+     "d": "M256.0 60.0 L395.0 117.0 L452.0 256.0 L395.0 395.0 L256.0 452.0 L117.0 395.0 L60.0 256.0 L117.0 117.0",
+     "order": 1,
+     "budget": [
+      2,
+      10
+     ],
+     "band": 1,
+     "arch": "line",
+     "feature": "skeleton"
+    }
+   ],
+   "guide": []
+  },
+  {
+   "id": "lat16",
+   "tier": "easy",
+   "subject": "lat16",
+   "icon": "P",
+   "kid": true,
+   "wash": false,
+   "pack": "alphaLat2",
+   "paths": [
+    {
+     "mode": "flow",
+     "d": "M256.0 60.0 L395.0 117.0 L452.0 256.0 L395.0 395.0 L256.0 452.0 L117.0 395.0 L60.0 256.0 L117.0 117.0",
+     "order": 1,
+     "budget": [
+      2,
+      10
+     ],
+     "band": 1,
+     "arch": "line",
+     "feature": "skeleton"
+    }
+   ],
+   "guide": []
+  },
+  {
+   "id": "lat17",
+   "tier": "easy",
+   "subject": "lat17",
+   "icon": "Q",
+   "kid": true,
+   "wash": false,
+   "pack": "alphaLat2",
+   "paths": [
+    {
+     "mode": "flow",
+     "d": "M256.0 60.0 L395.0 117.0 L452.0 256.0 L395.0 395.0 L256.0 452.0 L117.0 395.0 L60.0 256.0 L117.0 117.0",
+     "order": 1,
+     "budget": [
+      2,
+      10
+     ],
+     "band": 1,
+     "arch": "line",
+     "feature": "skeleton"
+    }
+   ],
+   "guide": []
+  },
+  {
+   "id": "lat18",
+   "tier": "easy",
+   "subject": "lat18",
+   "icon": "R",
+   "kid": true,
+   "wash": false,
+   "pack": "alphaLat2",
+   "paths": [
+    {
+     "mode": "flow",
+     "d": "M256.0 60.0 L395.0 117.0 L452.0 256.0 L395.0 395.0 L256.0 452.0 L117.0 395.0 L60.0 256.0 L117.0 117.0",
+     "order": 1,
+     "budget": [
+      2,
+      10
+     ],
+     "band": 1,
+     "arch": "line",
+     "feature": "skeleton"
+    }
+   ],
+   "guide": []
+  },
+  {
+   "id": "lat19",
+   "tier": "easy",
+   "subject": "lat19",
+   "icon": "S",
+   "kid": true,
+   "wash": false,
+   "pack": "alphaLat2",
+   "paths": [
+    {
+     "mode": "flow",
+     "d": "M256.0 60.0 L395.0 117.0 L452.0 256.0 L395.0 395.0 L256.0 452.0 L117.0 395.0 L60.0 256.0 L117.0 117.0",
+     "order": 1,
+     "budget": [
+      2,
+      10
+     ],
+     "band": 1,
+     "arch": "line",
+     "feature": "skeleton"
+    }
+   ],
+   "guide": []
+  },
+  {
+   "id": "lat20",
+   "tier": "easy",
+   "subject": "lat20",
+   "icon": "T",
+   "kid": true,
+   "wash": false,
+   "pack": "alphaLat2",
+   "paths": [
+    {
+     "mode": "flow",
+     "d": "M256.0 60.0 L395.0 117.0 L452.0 256.0 L395.0 395.0 L256.0 452.0 L117.0 395.0 L60.0 256.0 L117.0 117.0",
+     "order": 1,
+     "budget": [
+      2,
+      10
+     ],
+     "band": 1,
+     "arch": "line",
+     "feature": "skeleton"
+    }
+   ],
+   "guide": []
+  },
+  {
+   "id": "lat21",
+   "tier": "easy",
+   "subject": "lat21",
+   "icon": "U",
+   "kid": true,
+   "wash": false,
+   "pack": "alphaLat3",
+   "paths": [
+    {
+     "mode": "flow",
+     "d": "M256.0 60.0 L395.0 117.0 L452.0 256.0 L395.0 395.0 L256.0 452.0 L117.0 395.0 L60.0 256.0 L117.0 117.0",
+     "order": 1,
+     "budget": [
+      2,
+      10
+     ],
+     "band": 1,
+     "arch": "line",
+     "feature": "skeleton"
+    }
+   ],
+   "guide": []
+  },
+  {
+   "id": "lat22",
+   "tier": "easy",
+   "subject": "lat22",
+   "icon": "V",
+   "kid": true,
+   "wash": false,
+   "pack": "alphaLat3",
+   "paths": [
+    {
+     "mode": "flow",
+     "d": "M256.0 60.0 L395.0 117.0 L452.0 256.0 L395.0 395.0 L256.0 452.0 L117.0 395.0 L60.0 256.0 L117.0 117.0",
+     "order": 1,
+     "budget": [
+      2,
+      10
+     ],
+     "band": 1,
+     "arch": "line",
+     "feature": "skeleton"
+    }
+   ],
+   "guide": []
+  },
+  {
+   "id": "lat23",
+   "tier": "easy",
+   "subject": "lat23",
+   "icon": "W",
+   "kid": true,
+   "wash": false,
+   "pack": "alphaLat3",
+   "paths": [
+    {
+     "mode": "flow",
+     "d": "M256.0 60.0 L395.0 117.0 L452.0 256.0 L395.0 395.0 L256.0 452.0 L117.0 395.0 L60.0 256.0 L117.0 117.0",
+     "order": 1,
+     "budget": [
+      2,
+      10
+     ],
+     "band": 1,
+     "arch": "line",
+     "feature": "skeleton"
+    }
+   ],
+   "guide": []
+  },
+  {
+   "id": "lat24",
+   "tier": "easy",
+   "subject": "lat24",
+   "icon": "X",
+   "kid": true,
+   "wash": false,
+   "pack": "alphaLat3",
+   "paths": [
+    {
+     "mode": "flow",
+     "d": "M256.0 60.0 L395.0 117.0 L452.0 256.0 L395.0 395.0 L256.0 452.0 L117.0 395.0 L60.0 256.0 L117.0 117.0",
+     "order": 1,
+     "budget": [
+      2,
+      10
+     ],
+     "band": 1,
+     "arch": "line",
+     "feature": "skeleton"
+    }
+   ],
+   "guide": []
+  },
+  {
+   "id": "lat25",
+   "tier": "easy",
+   "subject": "lat25",
+   "icon": "Y",
+   "kid": true,
+   "wash": false,
+   "pack": "alphaLat3",
+   "paths": [
+    {
+     "mode": "flow",
+     "d": "M256.0 60.0 L395.0 117.0 L452.0 256.0 L395.0 395.0 L256.0 452.0 L117.0 395.0 L60.0 256.0 L117.0 117.0",
+     "order": 1,
+     "budget": [
+      2,
+      10
+     ],
+     "band": 1,
+     "arch": "line",
+     "feature": "skeleton"
+    }
+   ],
+   "guide": []
+  },
+  {
+   "id": "lat26",
+   "tier": "easy",
+   "subject": "lat26",
+   "icon": "Z",
+   "kid": true,
+   "wash": false,
+   "pack": "alphaLat3",
+   "paths": [
+    {
+     "mode": "flow",
+     "d": "M256.0 60.0 L395.0 117.0 L452.0 256.0 L395.0 395.0 L256.0 452.0 L117.0 395.0 L60.0 256.0 L117.0 117.0",
+     "order": 1,
+     "budget": [
+      2,
+      10
+     ],
+     "band": 1,
+     "arch": "line",
+     "feature": "skeleton"
+    }
+   ],
+   "guide": []
+  },
+  {
+   "id": "cyr01",
+   "tier": "medium",
+   "subject": "cyr01",
+   "icon": "Ё",
+   "kid": true,
+   "wash": false,
+   "pack": "alphaCyr1",
+   "paths": [
+    {
+     "mode": "flow",
+     "d": "M256.0 60.0 L395.0 117.0 L452.0 256.0 L395.0 395.0 L256.0 452.0 L117.0 395.0 L60.0 256.0 L117.0 117.0",
+     "order": 1,
+     "budget": [
+      2,
+      10
+     ],
+     "band": 1,
+     "arch": "line",
+     "feature": "skeleton"
+    }
+   ],
+   "guide": []
+  },
+  {
+   "id": "cyr02",
+   "tier": "medium",
+   "subject": "cyr02",
+   "icon": "А",
+   "kid": true,
+   "wash": false,
+   "pack": "alphaCyr1",
+   "paths": [
+    {
+     "mode": "flow",
+     "d": "M256.0 60.0 L395.0 117.0 L452.0 256.0 L395.0 395.0 L256.0 452.0 L117.0 395.0 L60.0 256.0 L117.0 117.0",
+     "order": 1,
+     "budget": [
+      2,
+      10
+     ],
+     "band": 1,
+     "arch": "line",
+     "feature": "skeleton"
+    }
+   ],
+   "guide": []
+  },
+  {
+   "id": "cyr03",
+   "tier": "medium",
+   "subject": "cyr03",
+   "icon": "Б",
+   "kid": true,
+   "wash": false,
+   "pack": "alphaCyr1",
+   "paths": [
+    {
+     "mode": "flow",
+     "d": "M256.0 60.0 L395.0 117.0 L452.0 256.0 L395.0 395.0 L256.0 452.0 L117.0 395.0 L60.0 256.0 L117.0 117.0",
+     "order": 1,
+     "budget": [
+      2,
+      10
+     ],
+     "band": 1,
+     "arch": "line",
+     "feature": "skeleton"
+    }
+   ],
+   "guide": []
+  },
+  {
+   "id": "cyr04",
+   "tier": "medium",
+   "subject": "cyr04",
+   "icon": "В",
+   "kid": true,
+   "wash": false,
+   "pack": "alphaCyr1",
+   "paths": [
+    {
+     "mode": "flow",
+     "d": "M256.0 60.0 L395.0 117.0 L452.0 256.0 L395.0 395.0 L256.0 452.0 L117.0 395.0 L60.0 256.0 L117.0 117.0",
+     "order": 1,
+     "budget": [
+      2,
+      10
+     ],
+     "band": 1,
+     "arch": "line",
+     "feature": "skeleton"
+    }
+   ],
+   "guide": []
+  },
+  {
+   "id": "cyr05",
+   "tier": "medium",
+   "subject": "cyr05",
+   "icon": "Г",
+   "kid": true,
+   "wash": false,
+   "pack": "alphaCyr1",
+   "paths": [
+    {
+     "mode": "flow",
+     "d": "M256.0 60.0 L395.0 117.0 L452.0 256.0 L395.0 395.0 L256.0 452.0 L117.0 395.0 L60.0 256.0 L117.0 117.0",
+     "order": 1,
+     "budget": [
+      2,
+      10
+     ],
+     "band": 1,
+     "arch": "line",
+     "feature": "skeleton"
+    }
+   ],
+   "guide": []
+  },
+  {
+   "id": "cyr06",
+   "tier": "medium",
+   "subject": "cyr06",
+   "icon": "Д",
+   "kid": true,
+   "wash": false,
+   "pack": "alphaCyr1",
+   "paths": [
+    {
+     "mode": "flow",
+     "d": "M256.0 60.0 L395.0 117.0 L452.0 256.0 L395.0 395.0 L256.0 452.0 L117.0 395.0 L60.0 256.0 L117.0 117.0",
+     "order": 1,
+     "budget": [
+      2,
+      10
+     ],
+     "band": 1,
+     "arch": "line",
+     "feature": "skeleton"
+    }
+   ],
+   "guide": []
+  },
+  {
+   "id": "cyr07",
+   "tier": "medium",
+   "subject": "cyr07",
+   "icon": "Е",
+   "kid": true,
+   "wash": false,
+   "pack": "alphaCyr1",
+   "paths": [
+    {
+     "mode": "flow",
+     "d": "M256.0 60.0 L395.0 117.0 L452.0 256.0 L395.0 395.0 L256.0 452.0 L117.0 395.0 L60.0 256.0 L117.0 117.0",
+     "order": 1,
+     "budget": [
+      2,
+      10
+     ],
+     "band": 1,
+     "arch": "line",
+     "feature": "skeleton"
+    }
+   ],
+   "guide": []
+  },
+  {
+   "id": "cyr08",
+   "tier": "medium",
+   "subject": "cyr08",
+   "icon": "Ж",
+   "kid": true,
+   "wash": false,
+   "pack": "alphaCyr1",
+   "paths": [
+    {
+     "mode": "flow",
+     "d": "M256.0 60.0 L395.0 117.0 L452.0 256.0 L395.0 395.0 L256.0 452.0 L117.0 395.0 L60.0 256.0 L117.0 117.0",
+     "order": 1,
+     "budget": [
+      2,
+      10
+     ],
+     "band": 1,
+     "arch": "line",
+     "feature": "skeleton"
+    }
+   ],
+   "guide": []
+  },
+  {
+   "id": "cyr09",
+   "tier": "medium",
+   "subject": "cyr09",
+   "icon": "З",
+   "kid": true,
+   "wash": false,
+   "pack": "alphaCyr1",
+   "paths": [
+    {
+     "mode": "flow",
+     "d": "M256.0 60.0 L395.0 117.0 L452.0 256.0 L395.0 395.0 L256.0 452.0 L117.0 395.0 L60.0 256.0 L117.0 117.0",
+     "order": 1,
+     "budget": [
+      2,
+      10
+     ],
+     "band": 1,
+     "arch": "line",
+     "feature": "skeleton"
+    }
+   ],
+   "guide": []
+  },
+  {
+   "id": "cyr10",
+   "tier": "medium",
+   "subject": "cyr10",
+   "icon": "И",
+   "kid": true,
+   "wash": false,
+   "pack": "alphaCyr1",
+   "paths": [
+    {
+     "mode": "flow",
+     "d": "M256.0 60.0 L395.0 117.0 L452.0 256.0 L395.0 395.0 L256.0 452.0 L117.0 395.0 L60.0 256.0 L117.0 117.0",
+     "order": 1,
+     "budget": [
+      2,
+      10
+     ],
+     "band": 1,
+     "arch": "line",
+     "feature": "skeleton"
+    }
+   ],
+   "guide": []
+  },
+  {
+   "id": "cyr11",
+   "tier": "medium",
+   "subject": "cyr11",
+   "icon": "Й",
+   "kid": true,
+   "wash": false,
+   "pack": "alphaCyr2",
+   "paths": [
+    {
+     "mode": "flow",
+     "d": "M256.0 60.0 L395.0 117.0 L452.0 256.0 L395.0 395.0 L256.0 452.0 L117.0 395.0 L60.0 256.0 L117.0 117.0",
+     "order": 1,
+     "budget": [
+      2,
+      10
+     ],
+     "band": 1,
+     "arch": "line",
+     "feature": "skeleton"
+    }
+   ],
+   "guide": []
+  },
+  {
+   "id": "cyr12",
+   "tier": "medium",
+   "subject": "cyr12",
+   "icon": "К",
+   "kid": true,
+   "wash": false,
+   "pack": "alphaCyr2",
+   "paths": [
+    {
+     "mode": "flow",
+     "d": "M256.0 60.0 L395.0 117.0 L452.0 256.0 L395.0 395.0 L256.0 452.0 L117.0 395.0 L60.0 256.0 L117.0 117.0",
+     "order": 1,
+     "budget": [
+      2,
+      10
+     ],
+     "band": 1,
+     "arch": "line",
+     "feature": "skeleton"
+    }
+   ],
+   "guide": []
+  },
+  {
+   "id": "cyr13",
+   "tier": "medium",
+   "subject": "cyr13",
+   "icon": "Л",
+   "kid": true,
+   "wash": false,
+   "pack": "alphaCyr2",
+   "paths": [
+    {
+     "mode": "flow",
+     "d": "M256.0 60.0 L395.0 117.0 L452.0 256.0 L395.0 395.0 L256.0 452.0 L117.0 395.0 L60.0 256.0 L117.0 117.0",
+     "order": 1,
+     "budget": [
+      2,
+      10
+     ],
+     "band": 1,
+     "arch": "line",
+     "feature": "skeleton"
+    }
+   ],
+   "guide": []
+  },
+  {
+   "id": "cyr14",
+   "tier": "medium",
+   "subject": "cyr14",
+   "icon": "М",
+   "kid": true,
+   "wash": false,
+   "pack": "alphaCyr2",
+   "paths": [
+    {
+     "mode": "flow",
+     "d": "M256.0 60.0 L395.0 117.0 L452.0 256.0 L395.0 395.0 L256.0 452.0 L117.0 395.0 L60.0 256.0 L117.0 117.0",
+     "order": 1,
+     "budget": [
+      2,
+      10
+     ],
+     "band": 1,
+     "arch": "line",
+     "feature": "skeleton"
+    }
+   ],
+   "guide": []
+  },
+  {
+   "id": "cyr15",
+   "tier": "medium",
+   "subject": "cyr15",
+   "icon": "Н",
+   "kid": true,
+   "wash": false,
+   "pack": "alphaCyr2",
+   "paths": [
+    {
+     "mode": "flow",
+     "d": "M256.0 60.0 L395.0 117.0 L452.0 256.0 L395.0 395.0 L256.0 452.0 L117.0 395.0 L60.0 256.0 L117.0 117.0",
+     "order": 1,
+     "budget": [
+      2,
+      10
+     ],
+     "band": 1,
+     "arch": "line",
+     "feature": "skeleton"
+    }
+   ],
+   "guide": []
+  },
+  {
+   "id": "cyr16",
+   "tier": "medium",
+   "subject": "cyr16",
+   "icon": "О",
+   "kid": true,
+   "wash": false,
+   "pack": "alphaCyr2",
+   "paths": [
+    {
+     "mode": "flow",
+     "d": "M256.0 60.0 L395.0 117.0 L452.0 256.0 L395.0 395.0 L256.0 452.0 L117.0 395.0 L60.0 256.0 L117.0 117.0",
+     "order": 1,
+     "budget": [
+      2,
+      10
+     ],
+     "band": 1,
+     "arch": "line",
+     "feature": "skeleton"
+    }
+   ],
+   "guide": []
+  },
+  {
+   "id": "cyr17",
+   "tier": "medium",
+   "subject": "cyr17",
+   "icon": "П",
+   "kid": true,
+   "wash": false,
+   "pack": "alphaCyr2",
+   "paths": [
+    {
+     "mode": "flow",
+     "d": "M256.0 60.0 L395.0 117.0 L452.0 256.0 L395.0 395.0 L256.0 452.0 L117.0 395.0 L60.0 256.0 L117.0 117.0",
+     "order": 1,
+     "budget": [
+      2,
+      10
+     ],
+     "band": 1,
+     "arch": "line",
+     "feature": "skeleton"
+    }
+   ],
+   "guide": []
+  },
+  {
+   "id": "cyr18",
+   "tier": "medium",
+   "subject": "cyr18",
+   "icon": "Р",
+   "kid": true,
+   "wash": false,
+   "pack": "alphaCyr2",
+   "paths": [
+    {
+     "mode": "flow",
+     "d": "M256.0 60.0 L395.0 117.0 L452.0 256.0 L395.0 395.0 L256.0 452.0 L117.0 395.0 L60.0 256.0 L117.0 117.0",
+     "order": 1,
+     "budget": [
+      2,
+      10
+     ],
+     "band": 1,
+     "arch": "line",
+     "feature": "skeleton"
+    }
+   ],
+   "guide": []
+  },
+  {
+   "id": "cyr19",
+   "tier": "medium",
+   "subject": "cyr19",
+   "icon": "С",
+   "kid": true,
+   "wash": false,
+   "pack": "alphaCyr2",
+   "paths": [
+    {
+     "mode": "flow",
+     "d": "M256.0 60.0 L395.0 117.0 L452.0 256.0 L395.0 395.0 L256.0 452.0 L117.0 395.0 L60.0 256.0 L117.0 117.0",
+     "order": 1,
+     "budget": [
+      2,
+      10
+     ],
+     "band": 1,
+     "arch": "line",
+     "feature": "skeleton"
+    }
+   ],
+   "guide": []
+  },
+  {
+   "id": "cyr20",
+   "tier": "medium",
+   "subject": "cyr20",
+   "icon": "Т",
+   "kid": true,
+   "wash": false,
+   "pack": "alphaCyr2",
+   "paths": [
+    {
+     "mode": "flow",
+     "d": "M256.0 60.0 L395.0 117.0 L452.0 256.0 L395.0 395.0 L256.0 452.0 L117.0 395.0 L60.0 256.0 L117.0 117.0",
+     "order": 1,
+     "budget": [
+      2,
+      10
+     ],
+     "band": 1,
+     "arch": "line",
+     "feature": "skeleton"
+    }
+   ],
+   "guide": []
+  },
+  {
+   "id": "cyr21",
+   "tier": "medium",
+   "subject": "cyr21",
+   "icon": "У",
+   "kid": true,
+   "wash": false,
+   "pack": "alphaCyr3",
+   "paths": [
+    {
+     "mode": "flow",
+     "d": "M256.0 60.0 L395.0 117.0 L452.0 256.0 L395.0 395.0 L256.0 452.0 L117.0 395.0 L60.0 256.0 L117.0 117.0",
+     "order": 1,
+     "budget": [
+      2,
+      10
+     ],
+     "band": 1,
+     "arch": "line",
+     "feature": "skeleton"
+    }
+   ],
+   "guide": []
+  },
+  {
+   "id": "cyr22",
+   "tier": "medium",
+   "subject": "cyr22",
+   "icon": "Ф",
+   "kid": true,
+   "wash": false,
+   "pack": "alphaCyr3",
+   "paths": [
+    {
+     "mode": "flow",
+     "d": "M256.0 60.0 L395.0 117.0 L452.0 256.0 L395.0 395.0 L256.0 452.0 L117.0 395.0 L60.0 256.0 L117.0 117.0",
+     "order": 1,
+     "budget": [
+      2,
+      10
+     ],
+     "band": 1,
+     "arch": "line",
+     "feature": "skeleton"
+    }
+   ],
+   "guide": []
+  },
+  {
+   "id": "cyr23",
+   "tier": "medium",
+   "subject": "cyr23",
+   "icon": "Х",
+   "kid": true,
+   "wash": false,
+   "pack": "alphaCyr3",
+   "paths": [
+    {
+     "mode": "flow",
+     "d": "M256.0 60.0 L395.0 117.0 L452.0 256.0 L395.0 395.0 L256.0 452.0 L117.0 395.0 L60.0 256.0 L117.0 117.0",
+     "order": 1,
+     "budget": [
+      2,
+      10
+     ],
+     "band": 1,
+     "arch": "line",
+     "feature": "skeleton"
+    }
+   ],
+   "guide": []
+  },
+  {
+   "id": "cyr24",
+   "tier": "medium",
+   "subject": "cyr24",
+   "icon": "Ц",
+   "kid": true,
+   "wash": false,
+   "pack": "alphaCyr3",
+   "paths": [
+    {
+     "mode": "flow",
+     "d": "M256.0 60.0 L395.0 117.0 L452.0 256.0 L395.0 395.0 L256.0 452.0 L117.0 395.0 L60.0 256.0 L117.0 117.0",
+     "order": 1,
+     "budget": [
+      2,
+      10
+     ],
+     "band": 1,
+     "arch": "line",
+     "feature": "skeleton"
+    }
+   ],
+   "guide": []
+  },
+  {
+   "id": "cyr25",
+   "tier": "medium",
+   "subject": "cyr25",
+   "icon": "Ч",
+   "kid": true,
+   "wash": false,
+   "pack": "alphaCyr3",
+   "paths": [
+    {
+     "mode": "flow",
+     "d": "M256.0 60.0 L395.0 117.0 L452.0 256.0 L395.0 395.0 L256.0 452.0 L117.0 395.0 L60.0 256.0 L117.0 117.0",
+     "order": 1,
+     "budget": [
+      2,
+      10
+     ],
+     "band": 1,
+     "arch": "line",
+     "feature": "skeleton"
+    }
+   ],
+   "guide": []
+  },
+  {
+   "id": "cyr26",
+   "tier": "medium",
+   "subject": "cyr26",
+   "icon": "Ш",
+   "kid": true,
+   "wash": false,
+   "pack": "alphaCyr3",
+   "paths": [
+    {
+     "mode": "flow",
+     "d": "M256.0 60.0 L395.0 117.0 L452.0 256.0 L395.0 395.0 L256.0 452.0 L117.0 395.0 L60.0 256.0 L117.0 117.0",
+     "order": 1,
+     "budget": [
+      2,
+      10
+     ],
+     "band": 1,
+     "arch": "line",
+     "feature": "skeleton"
+    }
+   ],
+   "guide": []
+  },
+  {
+   "id": "cyr27",
+   "tier": "medium",
+   "subject": "cyr27",
+   "icon": "Щ",
+   "kid": true,
+   "wash": false,
+   "pack": "alphaCyr3",
+   "paths": [
+    {
+     "mode": "flow",
+     "d": "M256.0 60.0 L395.0 117.0 L452.0 256.0 L395.0 395.0 L256.0 452.0 L117.0 395.0 L60.0 256.0 L117.0 117.0",
+     "order": 1,
+     "budget": [
+      2,
+      10
+     ],
+     "band": 1,
+     "arch": "line",
+     "feature": "skeleton"
+    }
+   ],
+   "guide": []
+  },
+  {
+   "id": "cyr28",
+   "tier": "medium",
+   "subject": "cyr28",
+   "icon": "Ъ",
+   "kid": true,
+   "wash": false,
+   "pack": "alphaCyr3",
+   "paths": [
+    {
+     "mode": "flow",
+     "d": "M256.0 60.0 L395.0 117.0 L452.0 256.0 L395.0 395.0 L256.0 452.0 L117.0 395.0 L60.0 256.0 L117.0 117.0",
+     "order": 1,
+     "budget": [
+      2,
+      10
+     ],
+     "band": 1,
+     "arch": "line",
+     "feature": "skeleton"
+    }
+   ],
+   "guide": []
+  },
+  {
+   "id": "cyr29",
+   "tier": "medium",
+   "subject": "cyr29",
+   "icon": "Ы",
+   "kid": true,
+   "wash": false,
+   "pack": "alphaCyr3",
+   "paths": [
+    {
+     "mode": "flow",
+     "d": "M256.0 60.0 L395.0 117.0 L452.0 256.0 L395.0 395.0 L256.0 452.0 L117.0 395.0 L60.0 256.0 L117.0 117.0",
+     "order": 1,
+     "budget": [
+      2,
+      10
+     ],
+     "band": 1,
+     "arch": "line",
+     "feature": "skeleton"
+    }
+   ],
+   "guide": []
+  },
+  {
+   "id": "cyr30",
+   "tier": "medium",
+   "subject": "cyr30",
+   "icon": "Ь",
+   "kid": true,
+   "wash": false,
+   "pack": "alphaCyr3",
+   "paths": [
+    {
+     "mode": "flow",
+     "d": "M256.0 60.0 L395.0 117.0 L452.0 256.0 L395.0 395.0 L256.0 452.0 L117.0 395.0 L60.0 256.0 L117.0 117.0",
+     "order": 1,
+     "budget": [
+      2,
+      10
+     ],
+     "band": 1,
+     "arch": "line",
+     "feature": "skeleton"
+    }
+   ],
+   "guide": []
+  },
+  {
+   "id": "cyr31",
+   "tier": "medium",
+   "subject": "cyr31",
+   "icon": "Э",
+   "kid": true,
+   "wash": false,
+   "pack": "alphaCyr4",
+   "paths": [
+    {
+     "mode": "flow",
+     "d": "M256.0 60.0 L395.0 117.0 L452.0 256.0 L395.0 395.0 L256.0 452.0 L117.0 395.0 L60.0 256.0 L117.0 117.0",
+     "order": 1,
+     "budget": [
+      2,
+      10
+     ],
+     "band": 1,
+     "arch": "line",
+     "feature": "skeleton"
+    }
+   ],
+   "guide": []
+  },
+  {
+   "id": "cyr32",
+   "tier": "medium",
+   "subject": "cyr32",
+   "icon": "Ю",
+   "kid": true,
+   "wash": false,
+   "pack": "alphaCyr4",
+   "paths": [
+    {
+     "mode": "flow",
+     "d": "M256.0 60.0 L395.0 117.0 L452.0 256.0 L395.0 395.0 L256.0 452.0 L117.0 395.0 L60.0 256.0 L117.0 117.0",
+     "order": 1,
+     "budget": [
+      2,
+      10
+     ],
+     "band": 1,
+     "arch": "line",
+     "feature": "skeleton"
+    }
+   ],
+   "guide": []
+  },
+  {
+   "id": "cyr33",
+   "tier": "medium",
+   "subject": "cyr33",
+   "icon": "Я",
+   "kid": true,
+   "wash": false,
+   "pack": "alphaCyr4",
+   "paths": [
+    {
+     "mode": "flow",
+     "d": "M256.0 60.0 L395.0 117.0 L452.0 256.0 L395.0 395.0 L256.0 452.0 L117.0 395.0 L60.0 256.0 L117.0 117.0",
+     "order": 1,
+     "budget": [
+      2,
+      10
+     ],
+     "band": 1,
+     "arch": "line",
+     "feature": "skeleton"
+    }
+   ],
+   "guide": []
+  },
+  {
+   "id": "arb01",
+   "tier": "medium",
+   "subject": "arb01",
+   "icon": "ا",
+   "kid": true,
+   "wash": false,
+   "pack": "alphaArb1",
+   "paths": [
+    {
+     "mode": "flow",
+     "d": "M256.0 60.0 L395.0 117.0 L452.0 256.0 L395.0 395.0 L256.0 452.0 L117.0 395.0 L60.0 256.0 L117.0 117.0",
+     "order": 1,
+     "budget": [
+      2,
+      10
+     ],
+     "band": 1,
+     "arch": "line",
+     "feature": "skeleton"
+    }
+   ],
+   "guide": []
+  },
+  {
+   "id": "arb02",
+   "tier": "medium",
+   "subject": "arb02",
+   "icon": "ب",
+   "kid": true,
+   "wash": false,
+   "pack": "alphaArb1",
+   "paths": [
+    {
+     "mode": "flow",
+     "d": "M256.0 60.0 L395.0 117.0 L452.0 256.0 L395.0 395.0 L256.0 452.0 L117.0 395.0 L60.0 256.0 L117.0 117.0",
+     "order": 1,
+     "budget": [
+      2,
+      10
+     ],
+     "band": 1,
+     "arch": "line",
+     "feature": "skeleton"
+    }
+   ],
+   "guide": []
+  },
+  {
+   "id": "arb03",
+   "tier": "medium",
+   "subject": "arb03",
+   "icon": "ت",
+   "kid": true,
+   "wash": false,
+   "pack": "alphaArb1",
+   "paths": [
+    {
+     "mode": "flow",
+     "d": "M256.0 60.0 L395.0 117.0 L452.0 256.0 L395.0 395.0 L256.0 452.0 L117.0 395.0 L60.0 256.0 L117.0 117.0",
+     "order": 1,
+     "budget": [
+      2,
+      10
+     ],
+     "band": 1,
+     "arch": "line",
+     "feature": "skeleton"
+    }
+   ],
+   "guide": []
+  },
+  {
+   "id": "arb04",
+   "tier": "medium",
+   "subject": "arb04",
+   "icon": "ث",
+   "kid": true,
+   "wash": false,
+   "pack": "alphaArb1",
+   "paths": [
+    {
+     "mode": "flow",
+     "d": "M256.0 60.0 L395.0 117.0 L452.0 256.0 L395.0 395.0 L256.0 452.0 L117.0 395.0 L60.0 256.0 L117.0 117.0",
+     "order": 1,
+     "budget": [
+      2,
+      10
+     ],
+     "band": 1,
+     "arch": "line",
+     "feature": "skeleton"
+    }
+   ],
+   "guide": []
+  },
+  {
+   "id": "arb05",
+   "tier": "medium",
+   "subject": "arb05",
+   "icon": "ج",
+   "kid": true,
+   "wash": false,
+   "pack": "alphaArb1",
+   "paths": [
+    {
+     "mode": "flow",
+     "d": "M256.0 60.0 L395.0 117.0 L452.0 256.0 L395.0 395.0 L256.0 452.0 L117.0 395.0 L60.0 256.0 L117.0 117.0",
+     "order": 1,
+     "budget": [
+      2,
+      10
+     ],
+     "band": 1,
+     "arch": "line",
+     "feature": "skeleton"
+    }
+   ],
+   "guide": []
+  },
+  {
+   "id": "arb06",
+   "tier": "medium",
+   "subject": "arb06",
+   "icon": "ح",
+   "kid": true,
+   "wash": false,
+   "pack": "alphaArb1",
+   "paths": [
+    {
+     "mode": "flow",
+     "d": "M256.0 60.0 L395.0 117.0 L452.0 256.0 L395.0 395.0 L256.0 452.0 L117.0 395.0 L60.0 256.0 L117.0 117.0",
+     "order": 1,
+     "budget": [
+      2,
+      10
+     ],
+     "band": 1,
+     "arch": "line",
+     "feature": "skeleton"
+    }
+   ],
+   "guide": []
+  },
+  {
+   "id": "arb07",
+   "tier": "medium",
+   "subject": "arb07",
+   "icon": "خ",
+   "kid": true,
+   "wash": false,
+   "pack": "alphaArb1",
+   "paths": [
+    {
+     "mode": "flow",
+     "d": "M256.0 60.0 L395.0 117.0 L452.0 256.0 L395.0 395.0 L256.0 452.0 L117.0 395.0 L60.0 256.0 L117.0 117.0",
+     "order": 1,
+     "budget": [
+      2,
+      10
+     ],
+     "band": 1,
+     "arch": "line",
+     "feature": "skeleton"
+    }
+   ],
+   "guide": []
+  },
+  {
+   "id": "arb08",
+   "tier": "medium",
+   "subject": "arb08",
+   "icon": "د",
+   "kid": true,
+   "wash": false,
+   "pack": "alphaArb1",
+   "paths": [
+    {
+     "mode": "flow",
+     "d": "M256.0 60.0 L395.0 117.0 L452.0 256.0 L395.0 395.0 L256.0 452.0 L117.0 395.0 L60.0 256.0 L117.0 117.0",
+     "order": 1,
+     "budget": [
+      2,
+      10
+     ],
+     "band": 1,
+     "arch": "line",
+     "feature": "skeleton"
+    }
+   ],
+   "guide": []
+  },
+  {
+   "id": "arb09",
+   "tier": "medium",
+   "subject": "arb09",
+   "icon": "ذ",
+   "kid": true,
+   "wash": false,
+   "pack": "alphaArb1",
+   "paths": [
+    {
+     "mode": "flow",
+     "d": "M256.0 60.0 L395.0 117.0 L452.0 256.0 L395.0 395.0 L256.0 452.0 L117.0 395.0 L60.0 256.0 L117.0 117.0",
+     "order": 1,
+     "budget": [
+      2,
+      10
+     ],
+     "band": 1,
+     "arch": "line",
+     "feature": "skeleton"
+    }
+   ],
+   "guide": []
+  },
+  {
+   "id": "arb10",
+   "tier": "medium",
+   "subject": "arb10",
+   "icon": "ر",
+   "kid": true,
+   "wash": false,
+   "pack": "alphaArb1",
+   "paths": [
+    {
+     "mode": "flow",
+     "d": "M256.0 60.0 L395.0 117.0 L452.0 256.0 L395.0 395.0 L256.0 452.0 L117.0 395.0 L60.0 256.0 L117.0 117.0",
+     "order": 1,
+     "budget": [
+      2,
+      10
+     ],
+     "band": 1,
+     "arch": "line",
+     "feature": "skeleton"
+    }
+   ],
+   "guide": []
+  },
+  {
+   "id": "arb11",
+   "tier": "medium",
+   "subject": "arb11",
+   "icon": "ز",
+   "kid": true,
+   "wash": false,
+   "pack": "alphaArb2",
+   "paths": [
+    {
+     "mode": "flow",
+     "d": "M256.0 60.0 L395.0 117.0 L452.0 256.0 L395.0 395.0 L256.0 452.0 L117.0 395.0 L60.0 256.0 L117.0 117.0",
+     "order": 1,
+     "budget": [
+      2,
+      10
+     ],
+     "band": 1,
+     "arch": "line",
+     "feature": "skeleton"
+    }
+   ],
+   "guide": []
+  },
+  {
+   "id": "arb12",
+   "tier": "medium",
+   "subject": "arb12",
+   "icon": "س",
+   "kid": true,
+   "wash": false,
+   "pack": "alphaArb2",
+   "paths": [
+    {
+     "mode": "flow",
+     "d": "M256.0 60.0 L395.0 117.0 L452.0 256.0 L395.0 395.0 L256.0 452.0 L117.0 395.0 L60.0 256.0 L117.0 117.0",
+     "order": 1,
+     "budget": [
+      2,
+      10
+     ],
+     "band": 1,
+     "arch": "line",
+     "feature": "skeleton"
+    }
+   ],
+   "guide": []
+  },
+  {
+   "id": "arb13",
+   "tier": "medium",
+   "subject": "arb13",
+   "icon": "ش",
+   "kid": true,
+   "wash": false,
+   "pack": "alphaArb2",
+   "paths": [
+    {
+     "mode": "flow",
+     "d": "M256.0 60.0 L395.0 117.0 L452.0 256.0 L395.0 395.0 L256.0 452.0 L117.0 395.0 L60.0 256.0 L117.0 117.0",
+     "order": 1,
+     "budget": [
+      2,
+      10
+     ],
+     "band": 1,
+     "arch": "line",
+     "feature": "skeleton"
+    }
+   ],
+   "guide": []
+  },
+  {
+   "id": "arb14",
+   "tier": "medium",
+   "subject": "arb14",
+   "icon": "ص",
+   "kid": true,
+   "wash": false,
+   "pack": "alphaArb2",
+   "paths": [
+    {
+     "mode": "flow",
+     "d": "M256.0 60.0 L395.0 117.0 L452.0 256.0 L395.0 395.0 L256.0 452.0 L117.0 395.0 L60.0 256.0 L117.0 117.0",
+     "order": 1,
+     "budget": [
+      2,
+      10
+     ],
+     "band": 1,
+     "arch": "line",
+     "feature": "skeleton"
+    }
+   ],
+   "guide": []
+  },
+  {
+   "id": "arb15",
+   "tier": "medium",
+   "subject": "arb15",
+   "icon": "ض",
+   "kid": true,
+   "wash": false,
+   "pack": "alphaArb2",
+   "paths": [
+    {
+     "mode": "flow",
+     "d": "M256.0 60.0 L395.0 117.0 L452.0 256.0 L395.0 395.0 L256.0 452.0 L117.0 395.0 L60.0 256.0 L117.0 117.0",
+     "order": 1,
+     "budget": [
+      2,
+      10
+     ],
+     "band": 1,
+     "arch": "line",
+     "feature": "skeleton"
+    }
+   ],
+   "guide": []
+  },
+  {
+   "id": "arb16",
+   "tier": "medium",
+   "subject": "arb16",
+   "icon": "ط",
+   "kid": true,
+   "wash": false,
+   "pack": "alphaArb2",
+   "paths": [
+    {
+     "mode": "flow",
+     "d": "M256.0 60.0 L395.0 117.0 L452.0 256.0 L395.0 395.0 L256.0 452.0 L117.0 395.0 L60.0 256.0 L117.0 117.0",
+     "order": 1,
+     "budget": [
+      2,
+      10
+     ],
+     "band": 1,
+     "arch": "line",
+     "feature": "skeleton"
+    }
+   ],
+   "guide": []
+  },
+  {
+   "id": "arb17",
+   "tier": "medium",
+   "subject": "arb17",
+   "icon": "ظ",
+   "kid": true,
+   "wash": false,
+   "pack": "alphaArb2",
+   "paths": [
+    {
+     "mode": "flow",
+     "d": "M256.0 60.0 L395.0 117.0 L452.0 256.0 L395.0 395.0 L256.0 452.0 L117.0 395.0 L60.0 256.0 L117.0 117.0",
+     "order": 1,
+     "budget": [
+      2,
+      10
+     ],
+     "band": 1,
+     "arch": "line",
+     "feature": "skeleton"
+    }
+   ],
+   "guide": []
+  },
+  {
+   "id": "arb18",
+   "tier": "medium",
+   "subject": "arb18",
+   "icon": "ع",
+   "kid": true,
+   "wash": false,
+   "pack": "alphaArb2",
+   "paths": [
+    {
+     "mode": "flow",
+     "d": "M256.0 60.0 L395.0 117.0 L452.0 256.0 L395.0 395.0 L256.0 452.0 L117.0 395.0 L60.0 256.0 L117.0 117.0",
+     "order": 1,
+     "budget": [
+      2,
+      10
+     ],
+     "band": 1,
+     "arch": "line",
+     "feature": "skeleton"
+    }
+   ],
+   "guide": []
+  },
+  {
+   "id": "arb19",
+   "tier": "medium",
+   "subject": "arb19",
+   "icon": "غ",
+   "kid": true,
+   "wash": false,
+   "pack": "alphaArb2",
+   "paths": [
+    {
+     "mode": "flow",
+     "d": "M256.0 60.0 L395.0 117.0 L452.0 256.0 L395.0 395.0 L256.0 452.0 L117.0 395.0 L60.0 256.0 L117.0 117.0",
+     "order": 1,
+     "budget": [
+      2,
+      10
+     ],
+     "band": 1,
+     "arch": "line",
+     "feature": "skeleton"
+    }
+   ],
+   "guide": []
+  },
+  {
+   "id": "arb20",
+   "tier": "medium",
+   "subject": "arb20",
+   "icon": "ف",
+   "kid": true,
+   "wash": false,
+   "pack": "alphaArb2",
+   "paths": [
+    {
+     "mode": "flow",
+     "d": "M256.0 60.0 L395.0 117.0 L452.0 256.0 L395.0 395.0 L256.0 452.0 L117.0 395.0 L60.0 256.0 L117.0 117.0",
+     "order": 1,
+     "budget": [
+      2,
+      10
+     ],
+     "band": 1,
+     "arch": "line",
+     "feature": "skeleton"
+    }
+   ],
+   "guide": []
+  },
+  {
+   "id": "arb21",
+   "tier": "medium",
+   "subject": "arb21",
+   "icon": "ق",
+   "kid": true,
+   "wash": false,
+   "pack": "alphaArb3",
+   "paths": [
+    {
+     "mode": "flow",
+     "d": "M256.0 60.0 L395.0 117.0 L452.0 256.0 L395.0 395.0 L256.0 452.0 L117.0 395.0 L60.0 256.0 L117.0 117.0",
+     "order": 1,
+     "budget": [
+      2,
+      10
+     ],
+     "band": 1,
+     "arch": "line",
+     "feature": "skeleton"
+    }
+   ],
+   "guide": []
+  },
+  {
+   "id": "arb22",
+   "tier": "medium",
+   "subject": "arb22",
+   "icon": "ك",
+   "kid": true,
+   "wash": false,
+   "pack": "alphaArb3",
+   "paths": [
+    {
+     "mode": "flow",
+     "d": "M256.0 60.0 L395.0 117.0 L452.0 256.0 L395.0 395.0 L256.0 452.0 L117.0 395.0 L60.0 256.0 L117.0 117.0",
+     "order": 1,
+     "budget": [
+      2,
+      10
+     ],
+     "band": 1,
+     "arch": "line",
+     "feature": "skeleton"
+    }
+   ],
+   "guide": []
+  },
+  {
+   "id": "arb23",
+   "tier": "medium",
+   "subject": "arb23",
+   "icon": "ل",
+   "kid": true,
+   "wash": false,
+   "pack": "alphaArb3",
+   "paths": [
+    {
+     "mode": "flow",
+     "d": "M256.0 60.0 L395.0 117.0 L452.0 256.0 L395.0 395.0 L256.0 452.0 L117.0 395.0 L60.0 256.0 L117.0 117.0",
+     "order": 1,
+     "budget": [
+      2,
+      10
+     ],
+     "band": 1,
+     "arch": "line",
+     "feature": "skeleton"
+    }
+   ],
+   "guide": []
+  },
+  {
+   "id": "arb24",
+   "tier": "medium",
+   "subject": "arb24",
+   "icon": "م",
+   "kid": true,
+   "wash": false,
+   "pack": "alphaArb3",
+   "paths": [
+    {
+     "mode": "flow",
+     "d": "M256.0 60.0 L395.0 117.0 L452.0 256.0 L395.0 395.0 L256.0 452.0 L117.0 395.0 L60.0 256.0 L117.0 117.0",
+     "order": 1,
+     "budget": [
+      2,
+      10
+     ],
+     "band": 1,
+     "arch": "line",
+     "feature": "skeleton"
+    }
+   ],
+   "guide": []
+  },
+  {
+   "id": "arb25",
+   "tier": "medium",
+   "subject": "arb25",
+   "icon": "ن",
+   "kid": true,
+   "wash": false,
+   "pack": "alphaArb3",
+   "paths": [
+    {
+     "mode": "flow",
+     "d": "M256.0 60.0 L395.0 117.0 L452.0 256.0 L395.0 395.0 L256.0 452.0 L117.0 395.0 L60.0 256.0 L117.0 117.0",
+     "order": 1,
+     "budget": [
+      2,
+      10
+     ],
+     "band": 1,
+     "arch": "line",
+     "feature": "skeleton"
+    }
+   ],
+   "guide": []
+  },
+  {
+   "id": "arb26",
+   "tier": "medium",
+   "subject": "arb26",
+   "icon": "ه",
+   "kid": true,
+   "wash": false,
+   "pack": "alphaArb3",
+   "paths": [
+    {
+     "mode": "flow",
+     "d": "M256.0 60.0 L395.0 117.0 L452.0 256.0 L395.0 395.0 L256.0 452.0 L117.0 395.0 L60.0 256.0 L117.0 117.0",
+     "order": 1,
+     "budget": [
+      2,
+      10
+     ],
+     "band": 1,
+     "arch": "line",
+     "feature": "skeleton"
+    }
+   ],
+   "guide": []
+  },
+  {
+   "id": "arb27",
+   "tier": "medium",
+   "subject": "arb27",
+   "icon": "و",
+   "kid": true,
+   "wash": false,
+   "pack": "alphaArb3",
+   "paths": [
+    {
+     "mode": "flow",
+     "d": "M256.0 60.0 L395.0 117.0 L452.0 256.0 L395.0 395.0 L256.0 452.0 L117.0 395.0 L60.0 256.0 L117.0 117.0",
+     "order": 1,
+     "budget": [
+      2,
+      10
+     ],
+     "band": 1,
+     "arch": "line",
+     "feature": "skeleton"
+    }
+   ],
+   "guide": []
+  },
+  {
+   "id": "arb28",
+   "tier": "medium",
+   "subject": "arb28",
+   "icon": "ي",
+   "kid": true,
+   "wash": false,
+   "pack": "alphaArb3",
+   "paths": [
+    {
+     "mode": "flow",
+     "d": "M256.0 60.0 L395.0 117.0 L452.0 256.0 L395.0 395.0 L256.0 452.0 L117.0 395.0 L60.0 256.0 L117.0 117.0",
+     "order": 1,
+     "budget": [
+      2,
+      10
+     ],
+     "band": 1,
+     "arch": "line",
+     "feature": "skeleton"
+    }
+   ],
+   "guide": []
+  },
+  {
+   "id": "dev01",
+   "tier": "medium",
+   "subject": "dev01",
+   "icon": "अ",
+   "kid": true,
+   "wash": false,
+   "pack": "alphaDev1",
+   "paths": [
+    {
+     "mode": "flow",
+     "d": "M256.0 60.0 L395.0 117.0 L452.0 256.0 L395.0 395.0 L256.0 452.0 L117.0 395.0 L60.0 256.0 L117.0 117.0",
+     "order": 1,
+     "budget": [
+      2,
+      10
+     ],
+     "band": 1,
+     "arch": "line",
+     "feature": "skeleton"
+    }
+   ],
+   "guide": []
+  },
+  {
+   "id": "dev02",
+   "tier": "medium",
+   "subject": "dev02",
+   "icon": "आ",
+   "kid": true,
+   "wash": false,
+   "pack": "alphaDev1",
+   "paths": [
+    {
+     "mode": "flow",
+     "d": "M256.0 60.0 L395.0 117.0 L452.0 256.0 L395.0 395.0 L256.0 452.0 L117.0 395.0 L60.0 256.0 L117.0 117.0",
+     "order": 1,
+     "budget": [
+      2,
+      10
+     ],
+     "band": 1,
+     "arch": "line",
+     "feature": "skeleton"
+    }
+   ],
+   "guide": []
+  },
+  {
+   "id": "dev03",
+   "tier": "medium",
+   "subject": "dev03",
+   "icon": "इ",
+   "kid": true,
+   "wash": false,
+   "pack": "alphaDev1",
+   "paths": [
+    {
+     "mode": "flow",
+     "d": "M256.0 60.0 L395.0 117.0 L452.0 256.0 L395.0 395.0 L256.0 452.0 L117.0 395.0 L60.0 256.0 L117.0 117.0",
+     "order": 1,
+     "budget": [
+      2,
+      10
+     ],
+     "band": 1,
+     "arch": "line",
+     "feature": "skeleton"
+    }
+   ],
+   "guide": []
+  },
+  {
+   "id": "dev04",
+   "tier": "medium",
+   "subject": "dev04",
+   "icon": "ई",
+   "kid": true,
+   "wash": false,
+   "pack": "alphaDev1",
+   "paths": [
+    {
+     "mode": "flow",
+     "d": "M256.0 60.0 L395.0 117.0 L452.0 256.0 L395.0 395.0 L256.0 452.0 L117.0 395.0 L60.0 256.0 L117.0 117.0",
+     "order": 1,
+     "budget": [
+      2,
+      10
+     ],
+     "band": 1,
+     "arch": "line",
+     "feature": "skeleton"
+    }
+   ],
+   "guide": []
+  },
+  {
+   "id": "dev05",
+   "tier": "medium",
+   "subject": "dev05",
+   "icon": "उ",
+   "kid": true,
+   "wash": false,
+   "pack": "alphaDev1",
+   "paths": [
+    {
+     "mode": "flow",
+     "d": "M256.0 60.0 L395.0 117.0 L452.0 256.0 L395.0 395.0 L256.0 452.0 L117.0 395.0 L60.0 256.0 L117.0 117.0",
+     "order": 1,
+     "budget": [
+      2,
+      10
+     ],
+     "band": 1,
+     "arch": "line",
+     "feature": "skeleton"
+    }
+   ],
+   "guide": []
+  },
+  {
+   "id": "dev06",
+   "tier": "medium",
+   "subject": "dev06",
+   "icon": "ऊ",
+   "kid": true,
+   "wash": false,
+   "pack": "alphaDev1",
+   "paths": [
+    {
+     "mode": "flow",
+     "d": "M256.0 60.0 L395.0 117.0 L452.0 256.0 L395.0 395.0 L256.0 452.0 L117.0 395.0 L60.0 256.0 L117.0 117.0",
+     "order": 1,
+     "budget": [
+      2,
+      10
+     ],
+     "band": 1,
+     "arch": "line",
+     "feature": "skeleton"
+    }
+   ],
+   "guide": []
+  },
+  {
+   "id": "dev07",
+   "tier": "medium",
+   "subject": "dev07",
+   "icon": "ऋ",
+   "kid": true,
+   "wash": false,
+   "pack": "alphaDev1",
+   "paths": [
+    {
+     "mode": "flow",
+     "d": "M256.0 60.0 L395.0 117.0 L452.0 256.0 L395.0 395.0 L256.0 452.0 L117.0 395.0 L60.0 256.0 L117.0 117.0",
+     "order": 1,
+     "budget": [
+      2,
+      10
+     ],
+     "band": 1,
+     "arch": "line",
+     "feature": "skeleton"
+    }
+   ],
+   "guide": []
+  },
+  {
+   "id": "dev08",
+   "tier": "medium",
+   "subject": "dev08",
+   "icon": "ए",
+   "kid": true,
+   "wash": false,
+   "pack": "alphaDev1",
+   "paths": [
+    {
+     "mode": "flow",
+     "d": "M256.0 60.0 L395.0 117.0 L452.0 256.0 L395.0 395.0 L256.0 452.0 L117.0 395.0 L60.0 256.0 L117.0 117.0",
+     "order": 1,
+     "budget": [
+      2,
+      10
+     ],
+     "band": 1,
+     "arch": "line",
+     "feature": "skeleton"
+    }
+   ],
+   "guide": []
+  },
+  {
+   "id": "dev09",
+   "tier": "medium",
+   "subject": "dev09",
+   "icon": "ऐ",
+   "kid": true,
+   "wash": false,
+   "pack": "alphaDev1",
+   "paths": [
+    {
+     "mode": "flow",
+     "d": "M256.0 60.0 L395.0 117.0 L452.0 256.0 L395.0 395.0 L256.0 452.0 L117.0 395.0 L60.0 256.0 L117.0 117.0",
+     "order": 1,
+     "budget": [
+      2,
+      10
+     ],
+     "band": 1,
+     "arch": "line",
+     "feature": "skeleton"
+    }
+   ],
+   "guide": []
+  },
+  {
+   "id": "dev10",
+   "tier": "medium",
+   "subject": "dev10",
+   "icon": "ओ",
+   "kid": true,
+   "wash": false,
+   "pack": "alphaDev1",
+   "paths": [
+    {
+     "mode": "flow",
+     "d": "M256.0 60.0 L395.0 117.0 L452.0 256.0 L395.0 395.0 L256.0 452.0 L117.0 395.0 L60.0 256.0 L117.0 117.0",
+     "order": 1,
+     "budget": [
+      2,
+      10
+     ],
+     "band": 1,
+     "arch": "line",
+     "feature": "skeleton"
+    }
+   ],
+   "guide": []
+  },
+  {
+   "id": "dev11",
+   "tier": "medium",
+   "subject": "dev11",
+   "icon": "औ",
+   "kid": true,
+   "wash": false,
+   "pack": "alphaDev2",
+   "paths": [
+    {
+     "mode": "flow",
+     "d": "M256.0 60.0 L395.0 117.0 L452.0 256.0 L395.0 395.0 L256.0 452.0 L117.0 395.0 L60.0 256.0 L117.0 117.0",
+     "order": 1,
+     "budget": [
+      2,
+      10
+     ],
+     "band": 1,
+     "arch": "line",
+     "feature": "skeleton"
+    }
+   ],
+   "guide": []
+  },
+  {
+   "id": "dev12",
+   "tier": "medium",
+   "subject": "dev12",
+   "icon": "क",
+   "kid": true,
+   "wash": false,
+   "pack": "alphaDev2",
+   "paths": [
+    {
+     "mode": "flow",
+     "d": "M256.0 60.0 L395.0 117.0 L452.0 256.0 L395.0 395.0 L256.0 452.0 L117.0 395.0 L60.0 256.0 L117.0 117.0",
+     "order": 1,
+     "budget": [
+      2,
+      10
+     ],
+     "band": 1,
+     "arch": "line",
+     "feature": "skeleton"
+    }
+   ],
+   "guide": []
+  },
+  {
+   "id": "dev13",
+   "tier": "medium",
+   "subject": "dev13",
+   "icon": "ख",
+   "kid": true,
+   "wash": false,
+   "pack": "alphaDev2",
+   "paths": [
+    {
+     "mode": "flow",
+     "d": "M256.0 60.0 L395.0 117.0 L452.0 256.0 L395.0 395.0 L256.0 452.0 L117.0 395.0 L60.0 256.0 L117.0 117.0",
+     "order": 1,
+     "budget": [
+      2,
+      10
+     ],
+     "band": 1,
+     "arch": "line",
+     "feature": "skeleton"
+    }
+   ],
+   "guide": []
+  },
+  {
+   "id": "dev14",
+   "tier": "medium",
+   "subject": "dev14",
+   "icon": "ग",
+   "kid": true,
+   "wash": false,
+   "pack": "alphaDev2",
+   "paths": [
+    {
+     "mode": "flow",
+     "d": "M256.0 60.0 L395.0 117.0 L452.0 256.0 L395.0 395.0 L256.0 452.0 L117.0 395.0 L60.0 256.0 L117.0 117.0",
+     "order": 1,
+     "budget": [
+      2,
+      10
+     ],
+     "band": 1,
+     "arch": "line",
+     "feature": "skeleton"
+    }
+   ],
+   "guide": []
+  },
+  {
+   "id": "dev15",
+   "tier": "medium",
+   "subject": "dev15",
+   "icon": "घ",
+   "kid": true,
+   "wash": false,
+   "pack": "alphaDev2",
+   "paths": [
+    {
+     "mode": "flow",
+     "d": "M256.0 60.0 L395.0 117.0 L452.0 256.0 L395.0 395.0 L256.0 452.0 L117.0 395.0 L60.0 256.0 L117.0 117.0",
+     "order": 1,
+     "budget": [
+      2,
+      10
+     ],
+     "band": 1,
+     "arch": "line",
+     "feature": "skeleton"
+    }
+   ],
+   "guide": []
+  },
+  {
+   "id": "dev16",
+   "tier": "medium",
+   "subject": "dev16",
+   "icon": "ङ",
+   "kid": true,
+   "wash": false,
+   "pack": "alphaDev2",
+   "paths": [
+    {
+     "mode": "flow",
+     "d": "M256.0 60.0 L395.0 117.0 L452.0 256.0 L395.0 395.0 L256.0 452.0 L117.0 395.0 L60.0 256.0 L117.0 117.0",
+     "order": 1,
+     "budget": [
+      2,
+      10
+     ],
+     "band": 1,
+     "arch": "line",
+     "feature": "skeleton"
+    }
+   ],
+   "guide": []
+  },
+  {
+   "id": "dev17",
+   "tier": "medium",
+   "subject": "dev17",
+   "icon": "च",
+   "kid": true,
+   "wash": false,
+   "pack": "alphaDev2",
+   "paths": [
+    {
+     "mode": "flow",
+     "d": "M256.0 60.0 L395.0 117.0 L452.0 256.0 L395.0 395.0 L256.0 452.0 L117.0 395.0 L60.0 256.0 L117.0 117.0",
+     "order": 1,
+     "budget": [
+      2,
+      10
+     ],
+     "band": 1,
+     "arch": "line",
+     "feature": "skeleton"
+    }
+   ],
+   "guide": []
+  },
+  {
+   "id": "dev18",
+   "tier": "medium",
+   "subject": "dev18",
+   "icon": "छ",
+   "kid": true,
+   "wash": false,
+   "pack": "alphaDev2",
+   "paths": [
+    {
+     "mode": "flow",
+     "d": "M256.0 60.0 L395.0 117.0 L452.0 256.0 L395.0 395.0 L256.0 452.0 L117.0 395.0 L60.0 256.0 L117.0 117.0",
+     "order": 1,
+     "budget": [
+      2,
+      10
+     ],
+     "band": 1,
+     "arch": "line",
+     "feature": "skeleton"
+    }
+   ],
+   "guide": []
+  },
+  {
+   "id": "dev19",
+   "tier": "medium",
+   "subject": "dev19",
+   "icon": "ज",
+   "kid": true,
+   "wash": false,
+   "pack": "alphaDev2",
+   "paths": [
+    {
+     "mode": "flow",
+     "d": "M256.0 60.0 L395.0 117.0 L452.0 256.0 L395.0 395.0 L256.0 452.0 L117.0 395.0 L60.0 256.0 L117.0 117.0",
+     "order": 1,
+     "budget": [
+      2,
+      10
+     ],
+     "band": 1,
+     "arch": "line",
+     "feature": "skeleton"
+    }
+   ],
+   "guide": []
+  },
+  {
+   "id": "dev20",
+   "tier": "medium",
+   "subject": "dev20",
+   "icon": "झ",
+   "kid": true,
+   "wash": false,
+   "pack": "alphaDev2",
+   "paths": [
+    {
+     "mode": "flow",
+     "d": "M256.0 60.0 L395.0 117.0 L452.0 256.0 L395.0 395.0 L256.0 452.0 L117.0 395.0 L60.0 256.0 L117.0 117.0",
+     "order": 1,
+     "budget": [
+      2,
+      10
+     ],
+     "band": 1,
+     "arch": "line",
+     "feature": "skeleton"
+    }
+   ],
+   "guide": []
+  },
+  {
+   "id": "dev21",
+   "tier": "medium",
+   "subject": "dev21",
+   "icon": "ञ",
+   "kid": true,
+   "wash": false,
+   "pack": "alphaDev3",
+   "paths": [
+    {
+     "mode": "flow",
+     "d": "M256.0 60.0 L395.0 117.0 L452.0 256.0 L395.0 395.0 L256.0 452.0 L117.0 395.0 L60.0 256.0 L117.0 117.0",
+     "order": 1,
+     "budget": [
+      2,
+      10
+     ],
+     "band": 1,
+     "arch": "line",
+     "feature": "skeleton"
+    }
+   ],
+   "guide": []
+  },
+  {
+   "id": "dev22",
+   "tier": "medium",
+   "subject": "dev22",
+   "icon": "ट",
+   "kid": true,
+   "wash": false,
+   "pack": "alphaDev3",
+   "paths": [
+    {
+     "mode": "flow",
+     "d": "M256.0 60.0 L395.0 117.0 L452.0 256.0 L395.0 395.0 L256.0 452.0 L117.0 395.0 L60.0 256.0 L117.0 117.0",
+     "order": 1,
+     "budget": [
+      2,
+      10
+     ],
+     "band": 1,
+     "arch": "line",
+     "feature": "skeleton"
+    }
+   ],
+   "guide": []
+  },
+  {
+   "id": "dev23",
+   "tier": "medium",
+   "subject": "dev23",
+   "icon": "ठ",
+   "kid": true,
+   "wash": false,
+   "pack": "alphaDev3",
+   "paths": [
+    {
+     "mode": "flow",
+     "d": "M256.0 60.0 L395.0 117.0 L452.0 256.0 L395.0 395.0 L256.0 452.0 L117.0 395.0 L60.0 256.0 L117.0 117.0",
+     "order": 1,
+     "budget": [
+      2,
+      10
+     ],
+     "band": 1,
+     "arch": "line",
+     "feature": "skeleton"
+    }
+   ],
+   "guide": []
+  },
+  {
+   "id": "dev24",
+   "tier": "medium",
+   "subject": "dev24",
+   "icon": "ड",
+   "kid": true,
+   "wash": false,
+   "pack": "alphaDev3",
+   "paths": [
+    {
+     "mode": "flow",
+     "d": "M256.0 60.0 L395.0 117.0 L452.0 256.0 L395.0 395.0 L256.0 452.0 L117.0 395.0 L60.0 256.0 L117.0 117.0",
+     "order": 1,
+     "budget": [
+      2,
+      10
+     ],
+     "band": 1,
+     "arch": "line",
+     "feature": "skeleton"
+    }
+   ],
+   "guide": []
+  },
+  {
+   "id": "dev25",
+   "tier": "medium",
+   "subject": "dev25",
+   "icon": "ढ",
+   "kid": true,
+   "wash": false,
+   "pack": "alphaDev3",
+   "paths": [
+    {
+     "mode": "flow",
+     "d": "M256.0 60.0 L395.0 117.0 L452.0 256.0 L395.0 395.0 L256.0 452.0 L117.0 395.0 L60.0 256.0 L117.0 117.0",
+     "order": 1,
+     "budget": [
+      2,
+      10
+     ],
+     "band": 1,
+     "arch": "line",
+     "feature": "skeleton"
+    }
+   ],
+   "guide": []
+  },
+  {
+   "id": "dev26",
+   "tier": "medium",
+   "subject": "dev26",
+   "icon": "ण",
+   "kid": true,
+   "wash": false,
+   "pack": "alphaDev3",
+   "paths": [
+    {
+     "mode": "flow",
+     "d": "M256.0 60.0 L395.0 117.0 L452.0 256.0 L395.0 395.0 L256.0 452.0 L117.0 395.0 L60.0 256.0 L117.0 117.0",
+     "order": 1,
+     "budget": [
+      2,
+      10
+     ],
+     "band": 1,
+     "arch": "line",
+     "feature": "skeleton"
+    }
+   ],
+   "guide": []
+  },
+  {
+   "id": "dev27",
+   "tier": "medium",
+   "subject": "dev27",
+   "icon": "त",
+   "kid": true,
+   "wash": false,
+   "pack": "alphaDev3",
+   "paths": [
+    {
+     "mode": "flow",
+     "d": "M256.0 60.0 L395.0 117.0 L452.0 256.0 L395.0 395.0 L256.0 452.0 L117.0 395.0 L60.0 256.0 L117.0 117.0",
+     "order": 1,
+     "budget": [
+      2,
+      10
+     ],
+     "band": 1,
+     "arch": "line",
+     "feature": "skeleton"
+    }
+   ],
+   "guide": []
+  },
+  {
+   "id": "dev28",
+   "tier": "medium",
+   "subject": "dev28",
+   "icon": "थ",
+   "kid": true,
+   "wash": false,
+   "pack": "alphaDev3",
+   "paths": [
+    {
+     "mode": "flow",
+     "d": "M256.0 60.0 L395.0 117.0 L452.0 256.0 L395.0 395.0 L256.0 452.0 L117.0 395.0 L60.0 256.0 L117.0 117.0",
+     "order": 1,
+     "budget": [
+      2,
+      10
+     ],
+     "band": 1,
+     "arch": "line",
+     "feature": "skeleton"
+    }
+   ],
+   "guide": []
+  },
+  {
+   "id": "dev29",
+   "tier": "medium",
+   "subject": "dev29",
+   "icon": "द",
+   "kid": true,
+   "wash": false,
+   "pack": "alphaDev3",
+   "paths": [
+    {
+     "mode": "flow",
+     "d": "M256.0 60.0 L395.0 117.0 L452.0 256.0 L395.0 395.0 L256.0 452.0 L117.0 395.0 L60.0 256.0 L117.0 117.0",
+     "order": 1,
+     "budget": [
+      2,
+      10
+     ],
+     "band": 1,
+     "arch": "line",
+     "feature": "skeleton"
+    }
+   ],
+   "guide": []
+  },
+  {
+   "id": "dev30",
+   "tier": "medium",
+   "subject": "dev30",
+   "icon": "ध",
+   "kid": true,
+   "wash": false,
+   "pack": "alphaDev3",
+   "paths": [
+    {
+     "mode": "flow",
+     "d": "M256.0 60.0 L395.0 117.0 L452.0 256.0 L395.0 395.0 L256.0 452.0 L117.0 395.0 L60.0 256.0 L117.0 117.0",
+     "order": 1,
+     "budget": [
+      2,
+      10
+     ],
+     "band": 1,
+     "arch": "line",
+     "feature": "skeleton"
+    }
+   ],
+   "guide": []
+  },
+  {
+   "id": "dev31",
+   "tier": "medium",
+   "subject": "dev31",
+   "icon": "न",
+   "kid": true,
+   "wash": false,
+   "pack": "alphaDev4",
+   "paths": [
+    {
+     "mode": "flow",
+     "d": "M256.0 60.0 L395.0 117.0 L452.0 256.0 L395.0 395.0 L256.0 452.0 L117.0 395.0 L60.0 256.0 L117.0 117.0",
+     "order": 1,
+     "budget": [
+      2,
+      10
+     ],
+     "band": 1,
+     "arch": "line",
+     "feature": "skeleton"
+    }
+   ],
+   "guide": []
+  },
+  {
+   "id": "dev32",
+   "tier": "medium",
+   "subject": "dev32",
+   "icon": "प",
+   "kid": true,
+   "wash": false,
+   "pack": "alphaDev4",
+   "paths": [
+    {
+     "mode": "flow",
+     "d": "M256.0 60.0 L395.0 117.0 L452.0 256.0 L395.0 395.0 L256.0 452.0 L117.0 395.0 L60.0 256.0 L117.0 117.0",
+     "order": 1,
+     "budget": [
+      2,
+      10
+     ],
+     "band": 1,
+     "arch": "line",
+     "feature": "skeleton"
+    }
+   ],
+   "guide": []
+  },
+  {
+   "id": "dev33",
+   "tier": "medium",
+   "subject": "dev33",
+   "icon": "फ",
+   "kid": true,
+   "wash": false,
+   "pack": "alphaDev4",
+   "paths": [
+    {
+     "mode": "flow",
+     "d": "M256.0 60.0 L395.0 117.0 L452.0 256.0 L395.0 395.0 L256.0 452.0 L117.0 395.0 L60.0 256.0 L117.0 117.0",
+     "order": 1,
+     "budget": [
+      2,
+      10
+     ],
+     "band": 1,
+     "arch": "line",
+     "feature": "skeleton"
+    }
+   ],
+   "guide": []
+  },
+  {
+   "id": "dev34",
+   "tier": "medium",
+   "subject": "dev34",
+   "icon": "ब",
+   "kid": true,
+   "wash": false,
+   "pack": "alphaDev4",
+   "paths": [
+    {
+     "mode": "flow",
+     "d": "M256.0 60.0 L395.0 117.0 L452.0 256.0 L395.0 395.0 L256.0 452.0 L117.0 395.0 L60.0 256.0 L117.0 117.0",
+     "order": 1,
+     "budget": [
+      2,
+      10
+     ],
+     "band": 1,
+     "arch": "line",
+     "feature": "skeleton"
+    }
+   ],
+   "guide": []
+  },
+  {
+   "id": "dev35",
+   "tier": "medium",
+   "subject": "dev35",
+   "icon": "भ",
+   "kid": true,
+   "wash": false,
+   "pack": "alphaDev4",
+   "paths": [
+    {
+     "mode": "flow",
+     "d": "M256.0 60.0 L395.0 117.0 L452.0 256.0 L395.0 395.0 L256.0 452.0 L117.0 395.0 L60.0 256.0 L117.0 117.0",
+     "order": 1,
+     "budget": [
+      2,
+      10
+     ],
+     "band": 1,
+     "arch": "line",
+     "feature": "skeleton"
+    }
+   ],
+   "guide": []
+  },
+  {
+   "id": "dev36",
+   "tier": "medium",
+   "subject": "dev36",
+   "icon": "म",
+   "kid": true,
+   "wash": false,
+   "pack": "alphaDev4",
+   "paths": [
+    {
+     "mode": "flow",
+     "d": "M256.0 60.0 L395.0 117.0 L452.0 256.0 L395.0 395.0 L256.0 452.0 L117.0 395.0 L60.0 256.0 L117.0 117.0",
+     "order": 1,
+     "budget": [
+      2,
+      10
+     ],
+     "band": 1,
+     "arch": "line",
+     "feature": "skeleton"
+    }
+   ],
+   "guide": []
+  },
+  {
+   "id": "dev37",
+   "tier": "medium",
+   "subject": "dev37",
+   "icon": "य",
+   "kid": true,
+   "wash": false,
+   "pack": "alphaDev4",
+   "paths": [
+    {
+     "mode": "flow",
+     "d": "M256.0 60.0 L395.0 117.0 L452.0 256.0 L395.0 395.0 L256.0 452.0 L117.0 395.0 L60.0 256.0 L117.0 117.0",
+     "order": 1,
+     "budget": [
+      2,
+      10
+     ],
+     "band": 1,
+     "arch": "line",
+     "feature": "skeleton"
+    }
+   ],
+   "guide": []
+  },
+  {
+   "id": "dev38",
+   "tier": "medium",
+   "subject": "dev38",
+   "icon": "र",
+   "kid": true,
+   "wash": false,
+   "pack": "alphaDev4",
+   "paths": [
+    {
+     "mode": "flow",
+     "d": "M256.0 60.0 L395.0 117.0 L452.0 256.0 L395.0 395.0 L256.0 452.0 L117.0 395.0 L60.0 256.0 L117.0 117.0",
+     "order": 1,
+     "budget": [
+      2,
+      10
+     ],
+     "band": 1,
+     "arch": "line",
+     "feature": "skeleton"
+    }
+   ],
+   "guide": []
+  },
+  {
+   "id": "dev39",
+   "tier": "medium",
+   "subject": "dev39",
+   "icon": "ल",
+   "kid": true,
+   "wash": false,
+   "pack": "alphaDev4",
+   "paths": [
+    {
+     "mode": "flow",
+     "d": "M256.0 60.0 L395.0 117.0 L452.0 256.0 L395.0 395.0 L256.0 452.0 L117.0 395.0 L60.0 256.0 L117.0 117.0",
+     "order": 1,
+     "budget": [
+      2,
+      10
+     ],
+     "band": 1,
+     "arch": "line",
+     "feature": "skeleton"
+    }
+   ],
+   "guide": []
+  },
+  {
+   "id": "dev40",
+   "tier": "medium",
+   "subject": "dev40",
+   "icon": "व",
+   "kid": true,
+   "wash": false,
+   "pack": "alphaDev4",
+   "paths": [
+    {
+     "mode": "flow",
+     "d": "M256.0 60.0 L395.0 117.0 L452.0 256.0 L395.0 395.0 L256.0 452.0 L117.0 395.0 L60.0 256.0 L117.0 117.0",
+     "order": 1,
+     "budget": [
+      2,
+      10
+     ],
+     "band": 1,
+     "arch": "line",
+     "feature": "skeleton"
+    }
+   ],
+   "guide": []
+  },
+  {
+   "id": "dev41",
+   "tier": "medium",
+   "subject": "dev41",
+   "icon": "श",
+   "kid": true,
+   "wash": false,
+   "pack": "alphaDev5",
+   "paths": [
+    {
+     "mode": "flow",
+     "d": "M256.0 60.0 L395.0 117.0 L452.0 256.0 L395.0 395.0 L256.0 452.0 L117.0 395.0 L60.0 256.0 L117.0 117.0",
+     "order": 1,
+     "budget": [
+      2,
+      10
+     ],
+     "band": 1,
+     "arch": "line",
+     "feature": "skeleton"
+    }
+   ],
+   "guide": []
+  },
+  {
+   "id": "dev42",
+   "tier": "medium",
+   "subject": "dev42",
+   "icon": "ष",
+   "kid": true,
+   "wash": false,
+   "pack": "alphaDev5",
+   "paths": [
+    {
+     "mode": "flow",
+     "d": "M256.0 60.0 L395.0 117.0 L452.0 256.0 L395.0 395.0 L256.0 452.0 L117.0 395.0 L60.0 256.0 L117.0 117.0",
+     "order": 1,
+     "budget": [
+      2,
+      10
+     ],
+     "band": 1,
+     "arch": "line",
+     "feature": "skeleton"
+    }
+   ],
+   "guide": []
+  },
+  {
+   "id": "dev43",
+   "tier": "medium",
+   "subject": "dev43",
+   "icon": "स",
+   "kid": true,
+   "wash": false,
+   "pack": "alphaDev5",
+   "paths": [
+    {
+     "mode": "flow",
+     "d": "M256.0 60.0 L395.0 117.0 L452.0 256.0 L395.0 395.0 L256.0 452.0 L117.0 395.0 L60.0 256.0 L117.0 117.0",
+     "order": 1,
+     "budget": [
+      2,
+      10
+     ],
+     "band": 1,
+     "arch": "line",
+     "feature": "skeleton"
+    }
+   ],
+   "guide": []
+  },
+  {
+   "id": "dev44",
+   "tier": "medium",
+   "subject": "dev44",
+   "icon": "ह",
+   "kid": true,
+   "wash": false,
+   "pack": "alphaDev5",
+   "paths": [
+    {
+     "mode": "flow",
+     "d": "M256.0 60.0 L395.0 117.0 L452.0 256.0 L395.0 395.0 L256.0 452.0 L117.0 395.0 L60.0 256.0 L117.0 117.0",
+     "order": 1,
+     "budget": [
+      2,
+      10
+     ],
+     "band": 1,
+     "arch": "line",
+     "feature": "skeleton"
+    }
+   ],
+   "guide": []
+  },
+  {
+   "id": "kor01",
+   "tier": "medium",
+   "subject": "kor01",
+   "icon": "ㄱ",
+   "kid": true,
+   "wash": false,
+   "pack": "alphaKor1",
+   "paths": [
+    {
+     "mode": "flow",
+     "d": "M256.0 60.0 L395.0 117.0 L452.0 256.0 L395.0 395.0 L256.0 452.0 L117.0 395.0 L60.0 256.0 L117.0 117.0",
+     "order": 1,
+     "budget": [
+      2,
+      10
+     ],
+     "band": 1,
+     "arch": "line",
+     "feature": "skeleton"
+    }
+   ],
+   "guide": []
+  },
+  {
+   "id": "kor02",
+   "tier": "medium",
+   "subject": "kor02",
+   "icon": "ㄴ",
+   "kid": true,
+   "wash": false,
+   "pack": "alphaKor1",
+   "paths": [
+    {
+     "mode": "flow",
+     "d": "M256.0 60.0 L395.0 117.0 L452.0 256.0 L395.0 395.0 L256.0 452.0 L117.0 395.0 L60.0 256.0 L117.0 117.0",
+     "order": 1,
+     "budget": [
+      2,
+      10
+     ],
+     "band": 1,
+     "arch": "line",
+     "feature": "skeleton"
+    }
+   ],
+   "guide": []
+  },
+  {
+   "id": "kor03",
+   "tier": "medium",
+   "subject": "kor03",
+   "icon": "ㄷ",
+   "kid": true,
+   "wash": false,
+   "pack": "alphaKor1",
+   "paths": [
+    {
+     "mode": "flow",
+     "d": "M256.0 60.0 L395.0 117.0 L452.0 256.0 L395.0 395.0 L256.0 452.0 L117.0 395.0 L60.0 256.0 L117.0 117.0",
+     "order": 1,
+     "budget": [
+      2,
+      10
+     ],
+     "band": 1,
+     "arch": "line",
+     "feature": "skeleton"
+    }
+   ],
+   "guide": []
+  },
+  {
+   "id": "kor04",
+   "tier": "medium",
+   "subject": "kor04",
+   "icon": "ㄹ",
+   "kid": true,
+   "wash": false,
+   "pack": "alphaKor1",
+   "paths": [
+    {
+     "mode": "flow",
+     "d": "M256.0 60.0 L395.0 117.0 L452.0 256.0 L395.0 395.0 L256.0 452.0 L117.0 395.0 L60.0 256.0 L117.0 117.0",
+     "order": 1,
+     "budget": [
+      2,
+      10
+     ],
+     "band": 1,
+     "arch": "line",
+     "feature": "skeleton"
+    }
+   ],
+   "guide": []
+  },
+  {
+   "id": "kor05",
+   "tier": "medium",
+   "subject": "kor05",
+   "icon": "ㅁ",
+   "kid": true,
+   "wash": false,
+   "pack": "alphaKor1",
+   "paths": [
+    {
+     "mode": "flow",
+     "d": "M256.0 60.0 L395.0 117.0 L452.0 256.0 L395.0 395.0 L256.0 452.0 L117.0 395.0 L60.0 256.0 L117.0 117.0",
+     "order": 1,
+     "budget": [
+      2,
+      10
+     ],
+     "band": 1,
+     "arch": "line",
+     "feature": "skeleton"
+    }
+   ],
+   "guide": []
+  },
+  {
+   "id": "kor06",
+   "tier": "medium",
+   "subject": "kor06",
+   "icon": "ㅂ",
+   "kid": true,
+   "wash": false,
+   "pack": "alphaKor1",
+   "paths": [
+    {
+     "mode": "flow",
+     "d": "M256.0 60.0 L395.0 117.0 L452.0 256.0 L395.0 395.0 L256.0 452.0 L117.0 395.0 L60.0 256.0 L117.0 117.0",
+     "order": 1,
+     "budget": [
+      2,
+      10
+     ],
+     "band": 1,
+     "arch": "line",
+     "feature": "skeleton"
+    }
+   ],
+   "guide": []
+  },
+  {
+   "id": "kor07",
+   "tier": "medium",
+   "subject": "kor07",
+   "icon": "ㅅ",
+   "kid": true,
+   "wash": false,
+   "pack": "alphaKor1",
+   "paths": [
+    {
+     "mode": "flow",
+     "d": "M256.0 60.0 L395.0 117.0 L452.0 256.0 L395.0 395.0 L256.0 452.0 L117.0 395.0 L60.0 256.0 L117.0 117.0",
+     "order": 1,
+     "budget": [
+      2,
+      10
+     ],
+     "band": 1,
+     "arch": "line",
+     "feature": "skeleton"
+    }
+   ],
+   "guide": []
+  },
+  {
+   "id": "kor08",
+   "tier": "medium",
+   "subject": "kor08",
+   "icon": "ㅇ",
+   "kid": true,
+   "wash": false,
+   "pack": "alphaKor1",
+   "paths": [
+    {
+     "mode": "flow",
+     "d": "M256.0 60.0 L395.0 117.0 L452.0 256.0 L395.0 395.0 L256.0 452.0 L117.0 395.0 L60.0 256.0 L117.0 117.0",
+     "order": 1,
+     "budget": [
+      2,
+      10
+     ],
+     "band": 1,
+     "arch": "line",
+     "feature": "skeleton"
+    }
+   ],
+   "guide": []
+  },
+  {
+   "id": "kor09",
+   "tier": "medium",
+   "subject": "kor09",
+   "icon": "ㅈ",
+   "kid": true,
+   "wash": false,
+   "pack": "alphaKor1",
+   "paths": [
+    {
+     "mode": "flow",
+     "d": "M256.0 60.0 L395.0 117.0 L452.0 256.0 L395.0 395.0 L256.0 452.0 L117.0 395.0 L60.0 256.0 L117.0 117.0",
+     "order": 1,
+     "budget": [
+      2,
+      10
+     ],
+     "band": 1,
+     "arch": "line",
+     "feature": "skeleton"
+    }
+   ],
+   "guide": []
+  },
+  {
+   "id": "kor10",
+   "tier": "medium",
+   "subject": "kor10",
+   "icon": "ㅊ",
+   "kid": true,
+   "wash": false,
+   "pack": "alphaKor1",
+   "paths": [
+    {
+     "mode": "flow",
+     "d": "M256.0 60.0 L395.0 117.0 L452.0 256.0 L395.0 395.0 L256.0 452.0 L117.0 395.0 L60.0 256.0 L117.0 117.0",
+     "order": 1,
+     "budget": [
+      2,
+      10
+     ],
+     "band": 1,
+     "arch": "line",
+     "feature": "skeleton"
+    }
+   ],
+   "guide": []
+  },
+  {
+   "id": "kor11",
+   "tier": "medium",
+   "subject": "kor11",
+   "icon": "ㅋ",
+   "kid": true,
+   "wash": false,
+   "pack": "alphaKor2",
+   "paths": [
+    {
+     "mode": "flow",
+     "d": "M256.0 60.0 L395.0 117.0 L452.0 256.0 L395.0 395.0 L256.0 452.0 L117.0 395.0 L60.0 256.0 L117.0 117.0",
+     "order": 1,
+     "budget": [
+      2,
+      10
+     ],
+     "band": 1,
+     "arch": "line",
+     "feature": "skeleton"
+    }
+   ],
+   "guide": []
+  },
+  {
+   "id": "kor12",
+   "tier": "medium",
+   "subject": "kor12",
+   "icon": "ㅌ",
+   "kid": true,
+   "wash": false,
+   "pack": "alphaKor2",
+   "paths": [
+    {
+     "mode": "flow",
+     "d": "M256.0 60.0 L395.0 117.0 L452.0 256.0 L395.0 395.0 L256.0 452.0 L117.0 395.0 L60.0 256.0 L117.0 117.0",
+     "order": 1,
+     "budget": [
+      2,
+      10
+     ],
+     "band": 1,
+     "arch": "line",
+     "feature": "skeleton"
+    }
+   ],
+   "guide": []
+  },
+  {
+   "id": "kor13",
+   "tier": "medium",
+   "subject": "kor13",
+   "icon": "ㅍ",
+   "kid": true,
+   "wash": false,
+   "pack": "alphaKor2",
+   "paths": [
+    {
+     "mode": "flow",
+     "d": "M256.0 60.0 L395.0 117.0 L452.0 256.0 L395.0 395.0 L256.0 452.0 L117.0 395.0 L60.0 256.0 L117.0 117.0",
+     "order": 1,
+     "budget": [
+      2,
+      10
+     ],
+     "band": 1,
+     "arch": "line",
+     "feature": "skeleton"
+    }
+   ],
+   "guide": []
+  },
+  {
+   "id": "kor14",
+   "tier": "medium",
+   "subject": "kor14",
+   "icon": "ㅎ",
+   "kid": true,
+   "wash": false,
+   "pack": "alphaKor2",
+   "paths": [
+    {
+     "mode": "flow",
+     "d": "M256.0 60.0 L395.0 117.0 L452.0 256.0 L395.0 395.0 L256.0 452.0 L117.0 395.0 L60.0 256.0 L117.0 117.0",
+     "order": 1,
+     "budget": [
+      2,
+      10
+     ],
+     "band": 1,
+     "arch": "line",
+     "feature": "skeleton"
+    }
+   ],
+   "guide": []
+  },
+  {
+   "id": "kor15",
+   "tier": "medium",
+   "subject": "kor15",
+   "icon": "ㅏ",
+   "kid": true,
+   "wash": false,
+   "pack": "alphaKor2",
+   "paths": [
+    {
+     "mode": "flow",
+     "d": "M256.0 60.0 L395.0 117.0 L452.0 256.0 L395.0 395.0 L256.0 452.0 L117.0 395.0 L60.0 256.0 L117.0 117.0",
+     "order": 1,
+     "budget": [
+      2,
+      10
+     ],
+     "band": 1,
+     "arch": "line",
+     "feature": "skeleton"
+    }
+   ],
+   "guide": []
+  },
+  {
+   "id": "kor16",
+   "tier": "medium",
+   "subject": "kor16",
+   "icon": "ㅑ",
+   "kid": true,
+   "wash": false,
+   "pack": "alphaKor2",
+   "paths": [
+    {
+     "mode": "flow",
+     "d": "M256.0 60.0 L395.0 117.0 L452.0 256.0 L395.0 395.0 L256.0 452.0 L117.0 395.0 L60.0 256.0 L117.0 117.0",
+     "order": 1,
+     "budget": [
+      2,
+      10
+     ],
+     "band": 1,
+     "arch": "line",
+     "feature": "skeleton"
+    }
+   ],
+   "guide": []
+  },
+  {
+   "id": "kor17",
+   "tier": "medium",
+   "subject": "kor17",
+   "icon": "ㅓ",
+   "kid": true,
+   "wash": false,
+   "pack": "alphaKor2",
+   "paths": [
+    {
+     "mode": "flow",
+     "d": "M256.0 60.0 L395.0 117.0 L452.0 256.0 L395.0 395.0 L256.0 452.0 L117.0 395.0 L60.0 256.0 L117.0 117.0",
+     "order": 1,
+     "budget": [
+      2,
+      10
+     ],
+     "band": 1,
+     "arch": "line",
+     "feature": "skeleton"
+    }
+   ],
+   "guide": []
+  },
+  {
+   "id": "kor18",
+   "tier": "medium",
+   "subject": "kor18",
+   "icon": "ㅕ",
+   "kid": true,
+   "wash": false,
+   "pack": "alphaKor2",
+   "paths": [
+    {
+     "mode": "flow",
+     "d": "M256.0 60.0 L395.0 117.0 L452.0 256.0 L395.0 395.0 L256.0 452.0 L117.0 395.0 L60.0 256.0 L117.0 117.0",
+     "order": 1,
+     "budget": [
+      2,
+      10
+     ],
+     "band": 1,
+     "arch": "line",
+     "feature": "skeleton"
+    }
+   ],
+   "guide": []
+  },
+  {
+   "id": "kor19",
+   "tier": "medium",
+   "subject": "kor19",
+   "icon": "ㅗ",
+   "kid": true,
+   "wash": false,
+   "pack": "alphaKor2",
+   "paths": [
+    {
+     "mode": "flow",
+     "d": "M256.0 60.0 L395.0 117.0 L452.0 256.0 L395.0 395.0 L256.0 452.0 L117.0 395.0 L60.0 256.0 L117.0 117.0",
+     "order": 1,
+     "budget": [
+      2,
+      10
+     ],
+     "band": 1,
+     "arch": "line",
+     "feature": "skeleton"
+    }
+   ],
+   "guide": []
+  },
+  {
+   "id": "kor20",
+   "tier": "medium",
+   "subject": "kor20",
+   "icon": "ㅛ",
+   "kid": true,
+   "wash": false,
+   "pack": "alphaKor2",
+   "paths": [
+    {
+     "mode": "flow",
+     "d": "M256.0 60.0 L395.0 117.0 L452.0 256.0 L395.0 395.0 L256.0 452.0 L117.0 395.0 L60.0 256.0 L117.0 117.0",
+     "order": 1,
+     "budget": [
+      2,
+      10
+     ],
+     "band": 1,
+     "arch": "line",
+     "feature": "skeleton"
+    }
+   ],
+   "guide": []
+  },
+  {
+   "id": "kor21",
+   "tier": "medium",
+   "subject": "kor21",
+   "icon": "ㅜ",
+   "kid": true,
+   "wash": false,
+   "pack": "alphaKor3",
+   "paths": [
+    {
+     "mode": "flow",
+     "d": "M256.0 60.0 L395.0 117.0 L452.0 256.0 L395.0 395.0 L256.0 452.0 L117.0 395.0 L60.0 256.0 L117.0 117.0",
+     "order": 1,
+     "budget": [
+      2,
+      10
+     ],
+     "band": 1,
+     "arch": "line",
+     "feature": "skeleton"
+    }
+   ],
+   "guide": []
+  },
+  {
+   "id": "kor22",
+   "tier": "medium",
+   "subject": "kor22",
+   "icon": "ㅠ",
+   "kid": true,
+   "wash": false,
+   "pack": "alphaKor3",
+   "paths": [
+    {
+     "mode": "flow",
+     "d": "M256.0 60.0 L395.0 117.0 L452.0 256.0 L395.0 395.0 L256.0 452.0 L117.0 395.0 L60.0 256.0 L117.0 117.0",
+     "order": 1,
+     "budget": [
+      2,
+      10
+     ],
+     "band": 1,
+     "arch": "line",
+     "feature": "skeleton"
+    }
+   ],
+   "guide": []
+  },
+  {
+   "id": "kor23",
+   "tier": "medium",
+   "subject": "kor23",
+   "icon": "ㅡ",
+   "kid": true,
+   "wash": false,
+   "pack": "alphaKor3",
+   "paths": [
+    {
+     "mode": "flow",
+     "d": "M256.0 60.0 L395.0 117.0 L452.0 256.0 L395.0 395.0 L256.0 452.0 L117.0 395.0 L60.0 256.0 L117.0 117.0",
+     "order": 1,
+     "budget": [
+      2,
+      10
+     ],
+     "band": 1,
+     "arch": "line",
+     "feature": "skeleton"
+    }
+   ],
+   "guide": []
+  },
+  {
+   "id": "kor24",
+   "tier": "medium",
+   "subject": "kor24",
+   "icon": "ㅣ",
+   "kid": true,
+   "wash": false,
+   "pack": "alphaKor3",
+   "paths": [
+    {
+     "mode": "flow",
+     "d": "M256.0 60.0 L395.0 117.0 L452.0 256.0 L395.0 395.0 L256.0 452.0 L117.0 395.0 L60.0 256.0 L117.0 117.0",
+     "order": 1,
+     "budget": [
+      2,
+      10
+     ],
+     "band": 1,
+     "arch": "line",
+     "feature": "skeleton"
+    }
+   ],
+   "guide": []
+  },
+  {
+   "id": "hir01",
+   "tier": "medium",
+   "subject": "hir01",
+   "icon": "あ",
+   "kid": true,
+   "wash": false,
+   "pack": "alphaHir1",
+   "paths": [
+    {
+     "mode": "flow",
+     "d": "M256.0 60.0 L395.0 117.0 L452.0 256.0 L395.0 395.0 L256.0 452.0 L117.0 395.0 L60.0 256.0 L117.0 117.0",
+     "order": 1,
+     "budget": [
+      2,
+      10
+     ],
+     "band": 1,
+     "arch": "line",
+     "feature": "skeleton"
+    }
+   ],
+   "guide": []
+  },
+  {
+   "id": "hir02",
+   "tier": "medium",
+   "subject": "hir02",
+   "icon": "い",
+   "kid": true,
+   "wash": false,
+   "pack": "alphaHir1",
+   "paths": [
+    {
+     "mode": "flow",
+     "d": "M256.0 60.0 L395.0 117.0 L452.0 256.0 L395.0 395.0 L256.0 452.0 L117.0 395.0 L60.0 256.0 L117.0 117.0",
+     "order": 1,
+     "budget": [
+      2,
+      10
+     ],
+     "band": 1,
+     "arch": "line",
+     "feature": "skeleton"
+    }
+   ],
+   "guide": []
+  },
+  {
+   "id": "hir03",
+   "tier": "medium",
+   "subject": "hir03",
+   "icon": "う",
+   "kid": true,
+   "wash": false,
+   "pack": "alphaHir1",
+   "paths": [
+    {
+     "mode": "flow",
+     "d": "M256.0 60.0 L395.0 117.0 L452.0 256.0 L395.0 395.0 L256.0 452.0 L117.0 395.0 L60.0 256.0 L117.0 117.0",
+     "order": 1,
+     "budget": [
+      2,
+      10
+     ],
+     "band": 1,
+     "arch": "line",
+     "feature": "skeleton"
+    }
+   ],
+   "guide": []
+  },
+  {
+   "id": "hir04",
+   "tier": "medium",
+   "subject": "hir04",
+   "icon": "え",
+   "kid": true,
+   "wash": false,
+   "pack": "alphaHir1",
+   "paths": [
+    {
+     "mode": "flow",
+     "d": "M256.0 60.0 L395.0 117.0 L452.0 256.0 L395.0 395.0 L256.0 452.0 L117.0 395.0 L60.0 256.0 L117.0 117.0",
+     "order": 1,
+     "budget": [
+      2,
+      10
+     ],
+     "band": 1,
+     "arch": "line",
+     "feature": "skeleton"
+    }
+   ],
+   "guide": []
+  },
+  {
+   "id": "hir05",
+   "tier": "medium",
+   "subject": "hir05",
+   "icon": "お",
+   "kid": true,
+   "wash": false,
+   "pack": "alphaHir1",
+   "paths": [
+    {
+     "mode": "flow",
+     "d": "M256.0 60.0 L395.0 117.0 L452.0 256.0 L395.0 395.0 L256.0 452.0 L117.0 395.0 L60.0 256.0 L117.0 117.0",
+     "order": 1,
+     "budget": [
+      2,
+      10
+     ],
+     "band": 1,
+     "arch": "line",
+     "feature": "skeleton"
+    }
+   ],
+   "guide": []
+  },
+  {
+   "id": "hir06",
+   "tier": "medium",
+   "subject": "hir06",
+   "icon": "か",
+   "kid": true,
+   "wash": false,
+   "pack": "alphaHir1",
+   "paths": [
+    {
+     "mode": "flow",
+     "d": "M256.0 60.0 L395.0 117.0 L452.0 256.0 L395.0 395.0 L256.0 452.0 L117.0 395.0 L60.0 256.0 L117.0 117.0",
+     "order": 1,
+     "budget": [
+      2,
+      10
+     ],
+     "band": 1,
+     "arch": "line",
+     "feature": "skeleton"
+    }
+   ],
+   "guide": []
+  },
+  {
+   "id": "hir07",
+   "tier": "medium",
+   "subject": "hir07",
+   "icon": "き",
+   "kid": true,
+   "wash": false,
+   "pack": "alphaHir1",
+   "paths": [
+    {
+     "mode": "flow",
+     "d": "M256.0 60.0 L395.0 117.0 L452.0 256.0 L395.0 395.0 L256.0 452.0 L117.0 395.0 L60.0 256.0 L117.0 117.0",
+     "order": 1,
+     "budget": [
+      2,
+      10
+     ],
+     "band": 1,
+     "arch": "line",
+     "feature": "skeleton"
+    }
+   ],
+   "guide": []
+  },
+  {
+   "id": "hir08",
+   "tier": "medium",
+   "subject": "hir08",
+   "icon": "く",
+   "kid": true,
+   "wash": false,
+   "pack": "alphaHir1",
+   "paths": [
+    {
+     "mode": "flow",
+     "d": "M256.0 60.0 L395.0 117.0 L452.0 256.0 L395.0 395.0 L256.0 452.0 L117.0 395.0 L60.0 256.0 L117.0 117.0",
+     "order": 1,
+     "budget": [
+      2,
+      10
+     ],
+     "band": 1,
+     "arch": "line",
+     "feature": "skeleton"
+    }
+   ],
+   "guide": []
+  },
+  {
+   "id": "hir09",
+   "tier": "medium",
+   "subject": "hir09",
+   "icon": "け",
+   "kid": true,
+   "wash": false,
+   "pack": "alphaHir1",
+   "paths": [
+    {
+     "mode": "flow",
+     "d": "M256.0 60.0 L395.0 117.0 L452.0 256.0 L395.0 395.0 L256.0 452.0 L117.0 395.0 L60.0 256.0 L117.0 117.0",
+     "order": 1,
+     "budget": [
+      2,
+      10
+     ],
+     "band": 1,
+     "arch": "line",
+     "feature": "skeleton"
+    }
+   ],
+   "guide": []
+  },
+  {
+   "id": "hir10",
+   "tier": "medium",
+   "subject": "hir10",
+   "icon": "こ",
+   "kid": true,
+   "wash": false,
+   "pack": "alphaHir1",
+   "paths": [
+    {
+     "mode": "flow",
+     "d": "M256.0 60.0 L395.0 117.0 L452.0 256.0 L395.0 395.0 L256.0 452.0 L117.0 395.0 L60.0 256.0 L117.0 117.0",
+     "order": 1,
+     "budget": [
+      2,
+      10
+     ],
+     "band": 1,
+     "arch": "line",
+     "feature": "skeleton"
+    }
+   ],
+   "guide": []
+  },
+  {
+   "id": "hir11",
+   "tier": "medium",
+   "subject": "hir11",
+   "icon": "さ",
+   "kid": true,
+   "wash": false,
+   "pack": "alphaHir2",
+   "paths": [
+    {
+     "mode": "flow",
+     "d": "M256.0 60.0 L395.0 117.0 L452.0 256.0 L395.0 395.0 L256.0 452.0 L117.0 395.0 L60.0 256.0 L117.0 117.0",
+     "order": 1,
+     "budget": [
+      2,
+      10
+     ],
+     "band": 1,
+     "arch": "line",
+     "feature": "skeleton"
+    }
+   ],
+   "guide": []
+  },
+  {
+   "id": "hir12",
+   "tier": "medium",
+   "subject": "hir12",
+   "icon": "し",
+   "kid": true,
+   "wash": false,
+   "pack": "alphaHir2",
+   "paths": [
+    {
+     "mode": "flow",
+     "d": "M256.0 60.0 L395.0 117.0 L452.0 256.0 L395.0 395.0 L256.0 452.0 L117.0 395.0 L60.0 256.0 L117.0 117.0",
+     "order": 1,
+     "budget": [
+      2,
+      10
+     ],
+     "band": 1,
+     "arch": "line",
+     "feature": "skeleton"
+    }
+   ],
+   "guide": []
+  },
+  {
+   "id": "hir13",
+   "tier": "medium",
+   "subject": "hir13",
+   "icon": "す",
+   "kid": true,
+   "wash": false,
+   "pack": "alphaHir2",
+   "paths": [
+    {
+     "mode": "flow",
+     "d": "M256.0 60.0 L395.0 117.0 L452.0 256.0 L395.0 395.0 L256.0 452.0 L117.0 395.0 L60.0 256.0 L117.0 117.0",
+     "order": 1,
+     "budget": [
+      2,
+      10
+     ],
+     "band": 1,
+     "arch": "line",
+     "feature": "skeleton"
+    }
+   ],
+   "guide": []
+  },
+  {
+   "id": "hir14",
+   "tier": "medium",
+   "subject": "hir14",
+   "icon": "せ",
+   "kid": true,
+   "wash": false,
+   "pack": "alphaHir2",
+   "paths": [
+    {
+     "mode": "flow",
+     "d": "M256.0 60.0 L395.0 117.0 L452.0 256.0 L395.0 395.0 L256.0 452.0 L117.0 395.0 L60.0 256.0 L117.0 117.0",
+     "order": 1,
+     "budget": [
+      2,
+      10
+     ],
+     "band": 1,
+     "arch": "line",
+     "feature": "skeleton"
+    }
+   ],
+   "guide": []
+  },
+  {
+   "id": "hir15",
+   "tier": "medium",
+   "subject": "hir15",
+   "icon": "そ",
+   "kid": true,
+   "wash": false,
+   "pack": "alphaHir2",
+   "paths": [
+    {
+     "mode": "flow",
+     "d": "M256.0 60.0 L395.0 117.0 L452.0 256.0 L395.0 395.0 L256.0 452.0 L117.0 395.0 L60.0 256.0 L117.0 117.0",
+     "order": 1,
+     "budget": [
+      2,
+      10
+     ],
+     "band": 1,
+     "arch": "line",
+     "feature": "skeleton"
+    }
+   ],
+   "guide": []
+  },
+  {
+   "id": "hir16",
+   "tier": "medium",
+   "subject": "hir16",
+   "icon": "た",
+   "kid": true,
+   "wash": false,
+   "pack": "alphaHir2",
+   "paths": [
+    {
+     "mode": "flow",
+     "d": "M256.0 60.0 L395.0 117.0 L452.0 256.0 L395.0 395.0 L256.0 452.0 L117.0 395.0 L60.0 256.0 L117.0 117.0",
+     "order": 1,
+     "budget": [
+      2,
+      10
+     ],
+     "band": 1,
+     "arch": "line",
+     "feature": "skeleton"
+    }
+   ],
+   "guide": []
+  },
+  {
+   "id": "hir17",
+   "tier": "medium",
+   "subject": "hir17",
+   "icon": "ち",
+   "kid": true,
+   "wash": false,
+   "pack": "alphaHir2",
+   "paths": [
+    {
+     "mode": "flow",
+     "d": "M256.0 60.0 L395.0 117.0 L452.0 256.0 L395.0 395.0 L256.0 452.0 L117.0 395.0 L60.0 256.0 L117.0 117.0",
+     "order": 1,
+     "budget": [
+      2,
+      10
+     ],
+     "band": 1,
+     "arch": "line",
+     "feature": "skeleton"
+    }
+   ],
+   "guide": []
+  },
+  {
+   "id": "hir18",
+   "tier": "medium",
+   "subject": "hir18",
+   "icon": "つ",
+   "kid": true,
+   "wash": false,
+   "pack": "alphaHir2",
+   "paths": [
+    {
+     "mode": "flow",
+     "d": "M256.0 60.0 L395.0 117.0 L452.0 256.0 L395.0 395.0 L256.0 452.0 L117.0 395.0 L60.0 256.0 L117.0 117.0",
+     "order": 1,
+     "budget": [
+      2,
+      10
+     ],
+     "band": 1,
+     "arch": "line",
+     "feature": "skeleton"
+    }
+   ],
+   "guide": []
+  },
+  {
+   "id": "hir19",
+   "tier": "medium",
+   "subject": "hir19",
+   "icon": "て",
+   "kid": true,
+   "wash": false,
+   "pack": "alphaHir2",
+   "paths": [
+    {
+     "mode": "flow",
+     "d": "M256.0 60.0 L395.0 117.0 L452.0 256.0 L395.0 395.0 L256.0 452.0 L117.0 395.0 L60.0 256.0 L117.0 117.0",
+     "order": 1,
+     "budget": [
+      2,
+      10
+     ],
+     "band": 1,
+     "arch": "line",
+     "feature": "skeleton"
+    }
+   ],
+   "guide": []
+  },
+  {
+   "id": "hir20",
+   "tier": "medium",
+   "subject": "hir20",
+   "icon": "と",
+   "kid": true,
+   "wash": false,
+   "pack": "alphaHir2",
+   "paths": [
+    {
+     "mode": "flow",
+     "d": "M256.0 60.0 L395.0 117.0 L452.0 256.0 L395.0 395.0 L256.0 452.0 L117.0 395.0 L60.0 256.0 L117.0 117.0",
+     "order": 1,
+     "budget": [
+      2,
+      10
+     ],
+     "band": 1,
+     "arch": "line",
+     "feature": "skeleton"
+    }
+   ],
+   "guide": []
+  },
+  {
+   "id": "hir21",
+   "tier": "medium",
+   "subject": "hir21",
+   "icon": "な",
+   "kid": true,
+   "wash": false,
+   "pack": "alphaHir3",
+   "paths": [
+    {
+     "mode": "flow",
+     "d": "M256.0 60.0 L395.0 117.0 L452.0 256.0 L395.0 395.0 L256.0 452.0 L117.0 395.0 L60.0 256.0 L117.0 117.0",
+     "order": 1,
+     "budget": [
+      2,
+      10
+     ],
+     "band": 1,
+     "arch": "line",
+     "feature": "skeleton"
+    }
+   ],
+   "guide": []
+  },
+  {
+   "id": "hir22",
+   "tier": "medium",
+   "subject": "hir22",
+   "icon": "に",
+   "kid": true,
+   "wash": false,
+   "pack": "alphaHir3",
+   "paths": [
+    {
+     "mode": "flow",
+     "d": "M256.0 60.0 L395.0 117.0 L452.0 256.0 L395.0 395.0 L256.0 452.0 L117.0 395.0 L60.0 256.0 L117.0 117.0",
+     "order": 1,
+     "budget": [
+      2,
+      10
+     ],
+     "band": 1,
+     "arch": "line",
+     "feature": "skeleton"
+    }
+   ],
+   "guide": []
+  },
+  {
+   "id": "hir23",
+   "tier": "medium",
+   "subject": "hir23",
+   "icon": "ぬ",
+   "kid": true,
+   "wash": false,
+   "pack": "alphaHir3",
+   "paths": [
+    {
+     "mode": "flow",
+     "d": "M256.0 60.0 L395.0 117.0 L452.0 256.0 L395.0 395.0 L256.0 452.0 L117.0 395.0 L60.0 256.0 L117.0 117.0",
+     "order": 1,
+     "budget": [
+      2,
+      10
+     ],
+     "band": 1,
+     "arch": "line",
+     "feature": "skeleton"
+    }
+   ],
+   "guide": []
+  },
+  {
+   "id": "hir24",
+   "tier": "medium",
+   "subject": "hir24",
+   "icon": "ね",
+   "kid": true,
+   "wash": false,
+   "pack": "alphaHir3",
+   "paths": [
+    {
+     "mode": "flow",
+     "d": "M256.0 60.0 L395.0 117.0 L452.0 256.0 L395.0 395.0 L256.0 452.0 L117.0 395.0 L60.0 256.0 L117.0 117.0",
+     "order": 1,
+     "budget": [
+      2,
+      10
+     ],
+     "band": 1,
+     "arch": "line",
+     "feature": "skeleton"
+    }
+   ],
+   "guide": []
+  },
+  {
+   "id": "hir25",
+   "tier": "medium",
+   "subject": "hir25",
+   "icon": "の",
+   "kid": true,
+   "wash": false,
+   "pack": "alphaHir3",
+   "paths": [
+    {
+     "mode": "flow",
+     "d": "M256.0 60.0 L395.0 117.0 L452.0 256.0 L395.0 395.0 L256.0 452.0 L117.0 395.0 L60.0 256.0 L117.0 117.0",
+     "order": 1,
+     "budget": [
+      2,
+      10
+     ],
+     "band": 1,
+     "arch": "line",
+     "feature": "skeleton"
+    }
+   ],
+   "guide": []
+  },
+  {
+   "id": "hir26",
+   "tier": "medium",
+   "subject": "hir26",
+   "icon": "は",
+   "kid": true,
+   "wash": false,
+   "pack": "alphaHir3",
+   "paths": [
+    {
+     "mode": "flow",
+     "d": "M256.0 60.0 L395.0 117.0 L452.0 256.0 L395.0 395.0 L256.0 452.0 L117.0 395.0 L60.0 256.0 L117.0 117.0",
+     "order": 1,
+     "budget": [
+      2,
+      10
+     ],
+     "band": 1,
+     "arch": "line",
+     "feature": "skeleton"
+    }
+   ],
+   "guide": []
+  },
+  {
+   "id": "hir27",
+   "tier": "medium",
+   "subject": "hir27",
+   "icon": "ひ",
+   "kid": true,
+   "wash": false,
+   "pack": "alphaHir3",
+   "paths": [
+    {
+     "mode": "flow",
+     "d": "M256.0 60.0 L395.0 117.0 L452.0 256.0 L395.0 395.0 L256.0 452.0 L117.0 395.0 L60.0 256.0 L117.0 117.0",
+     "order": 1,
+     "budget": [
+      2,
+      10
+     ],
+     "band": 1,
+     "arch": "line",
+     "feature": "skeleton"
+    }
+   ],
+   "guide": []
+  },
+  {
+   "id": "hir28",
+   "tier": "medium",
+   "subject": "hir28",
+   "icon": "ふ",
+   "kid": true,
+   "wash": false,
+   "pack": "alphaHir3",
+   "paths": [
+    {
+     "mode": "flow",
+     "d": "M256.0 60.0 L395.0 117.0 L452.0 256.0 L395.0 395.0 L256.0 452.0 L117.0 395.0 L60.0 256.0 L117.0 117.0",
+     "order": 1,
+     "budget": [
+      2,
+      10
+     ],
+     "band": 1,
+     "arch": "line",
+     "feature": "skeleton"
+    }
+   ],
+   "guide": []
+  },
+  {
+   "id": "hir29",
+   "tier": "medium",
+   "subject": "hir29",
+   "icon": "へ",
+   "kid": true,
+   "wash": false,
+   "pack": "alphaHir3",
+   "paths": [
+    {
+     "mode": "flow",
+     "d": "M256.0 60.0 L395.0 117.0 L452.0 256.0 L395.0 395.0 L256.0 452.0 L117.0 395.0 L60.0 256.0 L117.0 117.0",
+     "order": 1,
+     "budget": [
+      2,
+      10
+     ],
+     "band": 1,
+     "arch": "line",
+     "feature": "skeleton"
+    }
+   ],
+   "guide": []
+  },
+  {
+   "id": "hir30",
+   "tier": "medium",
+   "subject": "hir30",
+   "icon": "ほ",
+   "kid": true,
+   "wash": false,
+   "pack": "alphaHir3",
+   "paths": [
+    {
+     "mode": "flow",
+     "d": "M256.0 60.0 L395.0 117.0 L452.0 256.0 L395.0 395.0 L256.0 452.0 L117.0 395.0 L60.0 256.0 L117.0 117.0",
+     "order": 1,
+     "budget": [
+      2,
+      10
+     ],
+     "band": 1,
+     "arch": "line",
+     "feature": "skeleton"
+    }
+   ],
+   "guide": []
+  },
+  {
+   "id": "hir31",
+   "tier": "medium",
+   "subject": "hir31",
+   "icon": "ま",
+   "kid": true,
+   "wash": false,
+   "pack": "alphaHir4",
+   "paths": [
+    {
+     "mode": "flow",
+     "d": "M256.0 60.0 L395.0 117.0 L452.0 256.0 L395.0 395.0 L256.0 452.0 L117.0 395.0 L60.0 256.0 L117.0 117.0",
+     "order": 1,
+     "budget": [
+      2,
+      10
+     ],
+     "band": 1,
+     "arch": "line",
+     "feature": "skeleton"
+    }
+   ],
+   "guide": []
+  },
+  {
+   "id": "hir32",
+   "tier": "medium",
+   "subject": "hir32",
+   "icon": "み",
+   "kid": true,
+   "wash": false,
+   "pack": "alphaHir4",
+   "paths": [
+    {
+     "mode": "flow",
+     "d": "M256.0 60.0 L395.0 117.0 L452.0 256.0 L395.0 395.0 L256.0 452.0 L117.0 395.0 L60.0 256.0 L117.0 117.0",
+     "order": 1,
+     "budget": [
+      2,
+      10
+     ],
+     "band": 1,
+     "arch": "line",
+     "feature": "skeleton"
+    }
+   ],
+   "guide": []
+  },
+  {
+   "id": "hir33",
+   "tier": "medium",
+   "subject": "hir33",
+   "icon": "む",
+   "kid": true,
+   "wash": false,
+   "pack": "alphaHir4",
+   "paths": [
+    {
+     "mode": "flow",
+     "d": "M256.0 60.0 L395.0 117.0 L452.0 256.0 L395.0 395.0 L256.0 452.0 L117.0 395.0 L60.0 256.0 L117.0 117.0",
+     "order": 1,
+     "budget": [
+      2,
+      10
+     ],
+     "band": 1,
+     "arch": "line",
+     "feature": "skeleton"
+    }
+   ],
+   "guide": []
+  },
+  {
+   "id": "hir34",
+   "tier": "medium",
+   "subject": "hir34",
+   "icon": "め",
+   "kid": true,
+   "wash": false,
+   "pack": "alphaHir4",
+   "paths": [
+    {
+     "mode": "flow",
+     "d": "M256.0 60.0 L395.0 117.0 L452.0 256.0 L395.0 395.0 L256.0 452.0 L117.0 395.0 L60.0 256.0 L117.0 117.0",
+     "order": 1,
+     "budget": [
+      2,
+      10
+     ],
+     "band": 1,
+     "arch": "line",
+     "feature": "skeleton"
+    }
+   ],
+   "guide": []
+  },
+  {
+   "id": "hir35",
+   "tier": "medium",
+   "subject": "hir35",
+   "icon": "も",
+   "kid": true,
+   "wash": false,
+   "pack": "alphaHir4",
+   "paths": [
+    {
+     "mode": "flow",
+     "d": "M256.0 60.0 L395.0 117.0 L452.0 256.0 L395.0 395.0 L256.0 452.0 L117.0 395.0 L60.0 256.0 L117.0 117.0",
+     "order": 1,
+     "budget": [
+      2,
+      10
+     ],
+     "band": 1,
+     "arch": "line",
+     "feature": "skeleton"
+    }
+   ],
+   "guide": []
+  },
+  {
+   "id": "hir36",
+   "tier": "medium",
+   "subject": "hir36",
+   "icon": "や",
+   "kid": true,
+   "wash": false,
+   "pack": "alphaHir4",
+   "paths": [
+    {
+     "mode": "flow",
+     "d": "M256.0 60.0 L395.0 117.0 L452.0 256.0 L395.0 395.0 L256.0 452.0 L117.0 395.0 L60.0 256.0 L117.0 117.0",
+     "order": 1,
+     "budget": [
+      2,
+      10
+     ],
+     "band": 1,
+     "arch": "line",
+     "feature": "skeleton"
+    }
+   ],
+   "guide": []
+  },
+  {
+   "id": "hir37",
+   "tier": "medium",
+   "subject": "hir37",
+   "icon": "ゆ",
+   "kid": true,
+   "wash": false,
+   "pack": "alphaHir4",
+   "paths": [
+    {
+     "mode": "flow",
+     "d": "M256.0 60.0 L395.0 117.0 L452.0 256.0 L395.0 395.0 L256.0 452.0 L117.0 395.0 L60.0 256.0 L117.0 117.0",
+     "order": 1,
+     "budget": [
+      2,
+      10
+     ],
+     "band": 1,
+     "arch": "line",
+     "feature": "skeleton"
+    }
+   ],
+   "guide": []
+  },
+  {
+   "id": "hir38",
+   "tier": "medium",
+   "subject": "hir38",
+   "icon": "よ",
+   "kid": true,
+   "wash": false,
+   "pack": "alphaHir4",
+   "paths": [
+    {
+     "mode": "flow",
+     "d": "M256.0 60.0 L395.0 117.0 L452.0 256.0 L395.0 395.0 L256.0 452.0 L117.0 395.0 L60.0 256.0 L117.0 117.0",
+     "order": 1,
+     "budget": [
+      2,
+      10
+     ],
+     "band": 1,
+     "arch": "line",
+     "feature": "skeleton"
+    }
+   ],
+   "guide": []
+  },
+  {
+   "id": "hir39",
+   "tier": "medium",
+   "subject": "hir39",
+   "icon": "ら",
+   "kid": true,
+   "wash": false,
+   "pack": "alphaHir4",
+   "paths": [
+    {
+     "mode": "flow",
+     "d": "M256.0 60.0 L395.0 117.0 L452.0 256.0 L395.0 395.0 L256.0 452.0 L117.0 395.0 L60.0 256.0 L117.0 117.0",
+     "order": 1,
+     "budget": [
+      2,
+      10
+     ],
+     "band": 1,
+     "arch": "line",
+     "feature": "skeleton"
+    }
+   ],
+   "guide": []
+  },
+  {
+   "id": "hir40",
+   "tier": "medium",
+   "subject": "hir40",
+   "icon": "り",
+   "kid": true,
+   "wash": false,
+   "pack": "alphaHir4",
+   "paths": [
+    {
+     "mode": "flow",
+     "d": "M256.0 60.0 L395.0 117.0 L452.0 256.0 L395.0 395.0 L256.0 452.0 L117.0 395.0 L60.0 256.0 L117.0 117.0",
+     "order": 1,
+     "budget": [
+      2,
+      10
+     ],
+     "band": 1,
+     "arch": "line",
+     "feature": "skeleton"
+    }
+   ],
+   "guide": []
+  },
+  {
+   "id": "hir41",
+   "tier": "medium",
+   "subject": "hir41",
+   "icon": "る",
+   "kid": true,
+   "wash": false,
+   "pack": "alphaHir5",
+   "paths": [
+    {
+     "mode": "flow",
+     "d": "M256.0 60.0 L395.0 117.0 L452.0 256.0 L395.0 395.0 L256.0 452.0 L117.0 395.0 L60.0 256.0 L117.0 117.0",
+     "order": 1,
+     "budget": [
+      2,
+      10
+     ],
+     "band": 1,
+     "arch": "line",
+     "feature": "skeleton"
+    }
+   ],
+   "guide": []
+  },
+  {
+   "id": "hir42",
+   "tier": "medium",
+   "subject": "hir42",
+   "icon": "れ",
+   "kid": true,
+   "wash": false,
+   "pack": "alphaHir5",
+   "paths": [
+    {
+     "mode": "flow",
+     "d": "M256.0 60.0 L395.0 117.0 L452.0 256.0 L395.0 395.0 L256.0 452.0 L117.0 395.0 L60.0 256.0 L117.0 117.0",
+     "order": 1,
+     "budget": [
+      2,
+      10
+     ],
+     "band": 1,
+     "arch": "line",
+     "feature": "skeleton"
+    }
+   ],
+   "guide": []
+  },
+  {
+   "id": "hir43",
+   "tier": "medium",
+   "subject": "hir43",
+   "icon": "ろ",
+   "kid": true,
+   "wash": false,
+   "pack": "alphaHir5",
+   "paths": [
+    {
+     "mode": "flow",
+     "d": "M256.0 60.0 L395.0 117.0 L452.0 256.0 L395.0 395.0 L256.0 452.0 L117.0 395.0 L60.0 256.0 L117.0 117.0",
+     "order": 1,
+     "budget": [
+      2,
+      10
+     ],
+     "band": 1,
+     "arch": "line",
+     "feature": "skeleton"
+    }
+   ],
+   "guide": []
+  },
+  {
+   "id": "hir44",
+   "tier": "medium",
+   "subject": "hir44",
+   "icon": "わ",
+   "kid": true,
+   "wash": false,
+   "pack": "alphaHir5",
+   "paths": [
+    {
+     "mode": "flow",
+     "d": "M256.0 60.0 L395.0 117.0 L452.0 256.0 L395.0 395.0 L256.0 452.0 L117.0 395.0 L60.0 256.0 L117.0 117.0",
+     "order": 1,
+     "budget": [
+      2,
+      10
+     ],
+     "band": 1,
+     "arch": "line",
+     "feature": "skeleton"
+    }
+   ],
+   "guide": []
+  },
+  {
+   "id": "hir45",
+   "tier": "medium",
+   "subject": "hir45",
+   "icon": "を",
+   "kid": true,
+   "wash": false,
+   "pack": "alphaHir5",
+   "paths": [
+    {
+     "mode": "flow",
+     "d": "M256.0 60.0 L395.0 117.0 L452.0 256.0 L395.0 395.0 L256.0 452.0 L117.0 395.0 L60.0 256.0 L117.0 117.0",
+     "order": 1,
+     "budget": [
+      2,
+      10
+     ],
+     "band": 1,
+     "arch": "line",
+     "feature": "skeleton"
+    }
+   ],
+   "guide": []
+  },
+  {
+   "id": "hir46",
+   "tier": "medium",
+   "subject": "hir46",
+   "icon": "ん",
+   "kid": true,
+   "wash": false,
+   "pack": "alphaHir5",
+   "paths": [
+    {
+     "mode": "flow",
+     "d": "M256.0 60.0 L395.0 117.0 L452.0 256.0 L395.0 395.0 L256.0 452.0 L117.0 395.0 L60.0 256.0 L117.0 117.0",
+     "order": 1,
+     "budget": [
+      2,
+      10
+     ],
+     "band": 1,
+     "arch": "line",
+     "feature": "skeleton"
+    }
+   ],
+   "guide": []
+  },
+  {
+   "id": "hnz01",
+   "tier": "medium",
+   "subject": "hnz01",
+   "icon": "一",
+   "kid": true,
+   "wash": false,
+   "pack": "hanziNum",
+   "paths": [
+    {
+     "mode": "flow",
+     "d": "M256.0 60.0 L395.0 117.0 L452.0 256.0 L395.0 395.0 L256.0 452.0 L117.0 395.0 L60.0 256.0 L117.0 117.0",
+     "order": 1,
+     "budget": [
+      2,
+      10
+     ],
+     "band": 1,
+     "arch": "line",
+     "feature": "skeleton"
+    }
+   ],
+   "guide": []
+  },
+  {
+   "id": "hnz02",
+   "tier": "medium",
+   "subject": "hnz02",
+   "icon": "二",
+   "kid": true,
+   "wash": false,
+   "pack": "hanziNum",
+   "paths": [
+    {
+     "mode": "flow",
+     "d": "M256.0 60.0 L395.0 117.0 L452.0 256.0 L395.0 395.0 L256.0 452.0 L117.0 395.0 L60.0 256.0 L117.0 117.0",
+     "order": 1,
+     "budget": [
+      2,
+      10
+     ],
+     "band": 1,
+     "arch": "line",
+     "feature": "skeleton"
+    }
+   ],
+   "guide": []
+  },
+  {
+   "id": "hnz03",
+   "tier": "medium",
+   "subject": "hnz03",
+   "icon": "三",
+   "kid": true,
+   "wash": false,
+   "pack": "hanziNum",
+   "paths": [
+    {
+     "mode": "flow",
+     "d": "M256.0 60.0 L395.0 117.0 L452.0 256.0 L395.0 395.0 L256.0 452.0 L117.0 395.0 L60.0 256.0 L117.0 117.0",
+     "order": 1,
+     "budget": [
+      2,
+      10
+     ],
+     "band": 1,
+     "arch": "line",
+     "feature": "skeleton"
+    }
+   ],
+   "guide": []
+  },
+  {
+   "id": "hnz04",
+   "tier": "medium",
+   "subject": "hnz04",
+   "icon": "四",
+   "kid": true,
+   "wash": false,
+   "pack": "hanziNum",
+   "paths": [
+    {
+     "mode": "flow",
+     "d": "M256.0 60.0 L395.0 117.0 L452.0 256.0 L395.0 395.0 L256.0 452.0 L117.0 395.0 L60.0 256.0 L117.0 117.0",
+     "order": 1,
+     "budget": [
+      2,
+      10
+     ],
+     "band": 1,
+     "arch": "line",
+     "feature": "skeleton"
+    }
+   ],
+   "guide": []
+  },
+  {
+   "id": "hnz05",
+   "tier": "medium",
+   "subject": "hnz05",
+   "icon": "五",
+   "kid": true,
+   "wash": false,
+   "pack": "hanziNum",
+   "paths": [
+    {
+     "mode": "flow",
+     "d": "M256.0 60.0 L395.0 117.0 L452.0 256.0 L395.0 395.0 L256.0 452.0 L117.0 395.0 L60.0 256.0 L117.0 117.0",
+     "order": 1,
+     "budget": [
+      2,
+      10
+     ],
+     "band": 1,
+     "arch": "line",
+     "feature": "skeleton"
+    }
+   ],
+   "guide": []
+  },
+  {
+   "id": "hnz06",
+   "tier": "medium",
+   "subject": "hnz06",
+   "icon": "六",
+   "kid": true,
+   "wash": false,
+   "pack": "hanziNum",
+   "paths": [
+    {
+     "mode": "flow",
+     "d": "M256.0 60.0 L395.0 117.0 L452.0 256.0 L395.0 395.0 L256.0 452.0 L117.0 395.0 L60.0 256.0 L117.0 117.0",
+     "order": 1,
+     "budget": [
+      2,
+      10
+     ],
+     "band": 1,
+     "arch": "line",
+     "feature": "skeleton"
+    }
+   ],
+   "guide": []
+  },
+  {
+   "id": "hnz07",
+   "tier": "medium",
+   "subject": "hnz07",
+   "icon": "七",
+   "kid": true,
+   "wash": false,
+   "pack": "hanziNum",
+   "paths": [
+    {
+     "mode": "flow",
+     "d": "M256.0 60.0 L395.0 117.0 L452.0 256.0 L395.0 395.0 L256.0 452.0 L117.0 395.0 L60.0 256.0 L117.0 117.0",
+     "order": 1,
+     "budget": [
+      2,
+      10
+     ],
+     "band": 1,
+     "arch": "line",
+     "feature": "skeleton"
+    }
+   ],
+   "guide": []
+  },
+  {
+   "id": "hnz08",
+   "tier": "medium",
+   "subject": "hnz08",
+   "icon": "八",
+   "kid": true,
+   "wash": false,
+   "pack": "hanziNum",
+   "paths": [
+    {
+     "mode": "flow",
+     "d": "M256.0 60.0 L395.0 117.0 L452.0 256.0 L395.0 395.0 L256.0 452.0 L117.0 395.0 L60.0 256.0 L117.0 117.0",
+     "order": 1,
+     "budget": [
+      2,
+      10
+     ],
+     "band": 1,
+     "arch": "line",
+     "feature": "skeleton"
+    }
+   ],
+   "guide": []
+  },
+  {
+   "id": "hnz09",
+   "tier": "medium",
+   "subject": "hnz09",
+   "icon": "九",
+   "kid": true,
+   "wash": false,
+   "pack": "hanziNum",
+   "paths": [
+    {
+     "mode": "flow",
+     "d": "M256.0 60.0 L395.0 117.0 L452.0 256.0 L395.0 395.0 L256.0 452.0 L117.0 395.0 L60.0 256.0 L117.0 117.0",
+     "order": 1,
+     "budget": [
+      2,
+      10
+     ],
+     "band": 1,
+     "arch": "line",
+     "feature": "skeleton"
+    }
+   ],
+   "guide": []
+  },
+  {
+   "id": "hnz10",
+   "tier": "medium",
+   "subject": "hnz10",
+   "icon": "十",
+   "kid": true,
+   "wash": false,
+   "pack": "hanziNum",
+   "paths": [
+    {
+     "mode": "flow",
+     "d": "M256.0 60.0 L395.0 117.0 L452.0 256.0 L395.0 395.0 L256.0 452.0 L117.0 395.0 L60.0 256.0 L117.0 117.0",
+     "order": 1,
+     "budget": [
+      2,
+      10
+     ],
+     "band": 1,
+     "arch": "line",
+     "feature": "skeleton"
+    }
+   ],
+   "guide": []
   }
  ]
 }

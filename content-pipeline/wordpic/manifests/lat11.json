@@ -1,0 +1,106 @@
+{
+ "id": "lat11",
+ "tier": "easy",
+ "source": {
+  "title": "Glyph K (lat)",
+  "license": "DejaVu Sans 2.37 glyph - Bitstream Vera Fonts license (free)",
+  "url": "https://github.com/dejavu-fonts/dejavu-fonts",
+  "attribution": ""
+ },
+ "parts": {
+  "root": [
+   0
+  ]
+ },
+ "layers": [
+  {
+   "name": "outline",
+   "path_ids": [
+    0
+   ],
+   "per_language": {
+    "ar": {
+     "words": 1,
+     "band": 0,
+     "band_size": 60
+    },
+    "de": {
+     "words": 1,
+     "band": 0,
+     "band_size": 91
+    },
+    "en": {
+     "words": 1,
+     "band": 0,
+     "band_size": 53
+    },
+    "es": {
+     "words": 1,
+     "band": 0,
+     "band_size": 191
+    },
+    "fil": {
+     "words": 1,
+     "band": 0,
+     "band_size": 75
+    },
+    "fr": {
+     "words": 1,
+     "band": 0,
+     "band_size": 139
+    },
+    "hi": {
+     "words": 1,
+     "band": 0,
+     "band_size": 57
+    },
+    "ja": {
+     "words": 1,
+     "band": 0,
+     "band_size": 377
+    },
+    "ko": {
+     "words": 1,
+     "band": 0,
+     "band_size": 32
+    },
+    "pl": {
+     "words": 1,
+     "band": 0,
+     "band_size": 210
+    },
+    "pt": {
+     "words": 1,
+     "band": 0,
+     "band_size": 220
+    },
+    "ru": {
+     "words": 1,
+     "band": 0,
+     "band_size": 49
+    },
+    "sw": {
+     "words": 1,
+     "band": 0,
+     "band_size": 65
+    },
+    "vi": {
+     "words": 1,
+     "band": 0,
+     "band_size": 94
+    },
+    "zh": {
+     "words": 1,
+     "band": 0,
+     "band_size": 95
+    }
+   }
+  }
+ ],
+ "audio_gate": "starter",
+ "completion": {
+  "all_layers": true
+ },
+ "authoring": "suggested-then-approved",
+ "pin_hash": 14055266599469936183
+}
