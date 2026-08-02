@@ -81,13 +81,13 @@ def acacia():
     # Kilimanjaro CUT (Eric, 2026-08-01) — the acacia stands alone,
     # larger, centred on its plain
     d.ellipse([180, 280, 900, 460], fill=BLACK)   # canopy slab
-    d.polygon([(520, 440), (480, 620), (450, 800), (530, 800), (548, 620), (570, 440)],
-              fill=BLACK)                                              # trunk
-    d.polygon([(540, 470), (680, 620), (710, 460)], fill=BLACK)        # fork limb
-    d.polygon([(665, 610), (690, 800), (750, 800), (700, 590)], fill=BLACK)
-    d.polygon([(510, 480), (380, 610), (360, 460)], fill=BLACK)        # fork limb
-    d.polygon([(388, 600), (350, 800), (290, 800), (352, 585)], fill=BLACK)
-    # the plain
+    # three fat limbs rooted deep in the canopy and fused into the plain
+    # (the skinny forks traced as thin decorative strips in the scan
+    # builder's own tracer and the solver refused the whole tree)
+    d.line([(540, 420), (520, 860)], fill=BLACK, width=76)             # main trunk
+    d.line([(520, 440), (350, 860)], fill=BLACK, width=62)             # left limb
+    d.line([(560, 440), (730, 860)], fill=BLACK, width=62)             # right limb
+    # the plain, fused to all three (the oak's ground rule)
     d.rectangle([60, 830, 1020, 878], fill=BLACK)
     return im
 

@@ -677,5 +677,45 @@
     "sourceUrl": "",
     "file": "tools/draw_wave14.py",
     "note": "Drawn coordinate list; candidates approved by Eric 2026-08-01."
+  },
+  {
+    "subject": "jeepney",
+    "title": "SpellGame original — jeepney (culture 7, fil — release held for Paul)",
+    "license": "Original artwork (SpellGame)",
+    "sourceUrl": "",
+    "file": "tools/draw_wave15.py",
+    "note": "Drawn coordinate list; candidates approved by Eric 2026-08-02."
+  },
+  {
+    "subject": "manekineko",
+    "title": "SpellGame original — maneki-neko (culture 7, ja)",
+    "license": "Original artwork (SpellGame)",
+    "sourceUrl": "",
+    "file": "tools/draw_wave15.py",
+    "note": "Drawn coordinate list; candidates approved by Eric 2026-08-02."
+  },
+  {
+    "subject": "acacia",
+    "title": "SpellGame original — flat-top acacia (culture 7, sw)",
+    "license": "Original artwork (SpellGame)",
+    "sourceUrl": "",
+    "file": "tools/draw_wave15.py",
+    "note": "Drawn coordinate list; candidates approved by Eric 2026-08-02."
+  },
+  {
+    "subject": "samovar",
+    "title": "SpellGame original — samovar (culture 7, ru)",
+    "license": "Original artwork (SpellGame)",
+    "sourceUrl": "",
+    "file": "tools/draw_wave15.py",
+    "note": "Drawn coordinate list; candidates approved by Eric 2026-08-02."
+  },
+  {
+    "subject": "lantern",
+    "title": "SpellGame original — red lantern (culture 7, zh)",
+    "license": "Original artwork (SpellGame)",
+    "sourceUrl": "",
+    "file": "tools/draw_wave15.py",
+    "note": "Drawn coordinate list; candidates approved by Eric 2026-08-02."
   }
 ]
