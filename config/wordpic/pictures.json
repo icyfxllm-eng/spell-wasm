@@ -3154,6 +3154,86 @@
     }
    ],
    "guide": []
+  },
+  {
+   "id": "orion",
+   "tier": "medium",
+   "subject": "orion",
+   "icon": "⭐",
+   "kid": true,
+   "wash": false,
+   "pack": "sky",
+   "paths": [
+    {
+     "mode": "flow",
+     "d": "M256.0 60.0 L395.0 117.0 L452.0 256.0 L395.0 395.0 L256.0 452.0 L117.0 395.0 L60.0 256.0 L117.0 117.0",
+     "order": 1,
+     "budget": [
+      2,
+      10
+     ],
+     "band": 1,
+     "arch": "line",
+     "feature": "skeleton"
+    }
+   ],
+   "guide": []
+  },
+  {
+   "id": "papelpicado",
+   "tier": "medium",
+   "subject": "papelpicado",
+   "icon": "🎉",
+   "kid": true,
+   "wash": false,
+   "pack": "culture3",
+   "paths": [
+    {
+     "mode": "flow",
+     "d": "M256.0 60.0 L395.0 117.0 L452.0 256.0 L395.0 395.0 L256.0 452.0 L117.0 395.0 L60.0 256.0 L117.0 117.0",
+     "order": 1,
+     "budget": [
+      2,
+      10
+     ],
+     "band": 1,
+     "arch": "line",
+     "feature": "skeleton"
+    }
+   ],
+   "guide": []
+  },
+  {
+   "id": "redfuji",
+   "tier": "expert",
+   "subject": "redfuji",
+   "icon": "🗻",
+   "kid": false,
+   "wash": false,
+   "pack": "wave3",
+   "paths": [
+    {
+     "mode": "flow",
+     "d": "M256.0 60.0 L395.0 117.0 L452.0 256.0 L395.0 395.0 L256.0 452.0 L117.0 395.0 L60.0 256.0 L117.0 117.0",
+     "order": 1,
+     "budget": [
+      2,
+      10
+     ],
+     "band": 1,
+     "arch": "line",
+     "feature": "skeleton"
+    }
+   ],
+   "guide": [],
+   "provenance": {
+    "title": "South Wind, Clear Sky (Red Fuji)",
+    "artist": "Katsushika Hokusai (1760–1849)",
+    "source": "Wikimedia Commons (Metropolitan Museum scan)",
+    "sourceUrl": "https://commons.wikimedia.org/wiki/File:Red_Fuji_southern_wind_clear_morning.jpg",
+    "pdBasis": "Public domain: woodblock print ca. 1830-32, artist died 1849; slope-line extraction composed at content time over the PD reference (reference image not shipped)",
+    "retrieved": "2026-08-01"
+   }
   }
  ]
 }

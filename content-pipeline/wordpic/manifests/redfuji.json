@@ -1,0 +1,194 @@
+{
+ "id": "redfuji",
+ "tier": "expert",
+ "source": {
+  "title": "South Wind, Clear Sky (Red Fuji), Katsushika Hokusai, ca. 1830-32",
+  "license": "Public domain (PD-Art)",
+  "url": "https://commons.wikimedia.org/wiki/File:Red_Fuji_southern_wind_clear_morning.jpg",
+  "attribution": "after Hokusai"
+ },
+ "parts": {
+  "root": [
+   0,
+   1,
+   2,
+   3
+  ]
+ },
+ "layers": [
+  {
+   "name": "outline",
+   "path_ids": [
+    0
+   ],
+   "per_language": {
+    "ar": {
+     "words": 1,
+     "band": 0,
+     "band_size": 371
+    },
+    "de": {
+     "words": 1,
+     "band": 0,
+     "band_size": 802
+    },
+    "en": {
+     "words": 1,
+     "band": 0,
+     "band_size": 763
+    },
+    "es": {
+     "words": 1,
+     "band": 0,
+     "band_size": 607
+    },
+    "fil": {
+     "words": 1,
+     "band": 0,
+     "band_size": 762
+    },
+    "fr": {
+     "words": 1,
+     "band": 0,
+     "band_size": 724
+    },
+    "hi": {
+     "words": 1,
+     "band": 0,
+     "band_size": 548
+    },
+    "ja": {
+     "words": 1,
+     "band": 0,
+     "band_size": 720
+    },
+    "ko": {
+     "words": 1,
+     "band": 0,
+     "band_size": 452
+    },
+    "pl": {
+     "words": 1,
+     "band": 0,
+     "band_size": 739
+    },
+    "pt": {
+     "words": 1,
+     "band": 0,
+     "band_size": 772
+    },
+    "ru": {
+     "words": 1,
+     "band": 0,
+     "band_size": 806
+    },
+    "sw": {
+     "words": 1,
+     "band": 0,
+     "band_size": 801
+    },
+    "vi": {
+     "words": 1,
+     "band": 0,
+     "band_size": 551
+    },
+    "zh": {
+     "words": 1,
+     "band": 0,
+     "band_size": 55
+    }
+   }
+  },
+  {
+   "name": "features",
+   "path_ids": [
+    1,
+    2,
+    3
+   ],
+   "per_language": {
+    "ar": {
+     "words": 3,
+     "band": 1,
+     "band_size": 989
+    },
+    "de": {
+     "words": 3,
+     "band": 1,
+     "band_size": 391
+    },
+    "en": {
+     "words": 3,
+     "band": 1,
+     "band_size": 236
+    },
+    "es": {
+     "words": 3,
+     "band": 1,
+     "band_size": 431
+    },
+    "fil": {
+     "words": 3,
+     "band": 1,
+     "band_size": 369
+    },
+    "fr": {
+     "words": 3,
+     "band": 1,
+     "band_size": 346
+    },
+    "hi": {
+     "words": 3,
+     "band": 1,
+     "band_size": 286
+    },
+    "ja": {
+     "words": 3,
+     "band": 1,
+     "band_size": 130
+    },
+    "ko": {
+     "words": 3,
+     "band": 1,
+     "band_size": 404
+    },
+    "pl": {
+     "words": 3,
+     "band": 1,
+     "band_size": 376
+    },
+    "pt": {
+     "words": 3,
+     "band": 1,
+     "band_size": 479
+    },
+    "ru": {
+     "words": 3,
+     "band": 1,
+     "band_size": 289
+    },
+    "sw": {
+     "words": 3,
+     "band": 1,
+     "band_size": 331
+    },
+    "vi": {
+     "words": 3,
+     "band": 1,
+     "band_size": 497
+    },
+    "zh": {
+     "words": 3,
+     "band": 1,
+     "band_size": 428
+    }
+   }
+  }
+ ],
+ "audio_gate": "expert",
+ "completion": {
+  "all_layers": true
+ },
+ "authoring": "suggested-then-approved",
+ "pin_hash": 13386003876175060772
+}
