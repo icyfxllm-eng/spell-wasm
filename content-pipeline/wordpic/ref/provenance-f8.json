@@ -499,5 +499,47 @@
     "sourceUrl": "",
     "file": "tools/draw_wave9.py",
     "note": "Drawn coordinate list; candidates approved by Eric 2026-08-01."
+  },
+  {
+    "subject": "redfuji",
+    "title": "South Wind, Clear Sky (Red Fuji), Katsushika Hokusai, ca. 1830-32",
+    "license": "Public domain (PD-Art)",
+    "sourceUrl": "https://commons.wikimedia.org/wiki/File:Red_Fuji_southern_wind_clear_morning.jpg",
+    "file": "ref/redfuji.png",
+    "bytes": 10239,
+    "attribution": "after Hokusai"
+  },
+  {
+    "subject": "scream",
+    "title": "The Scream, Edvard Munch, 1893 (National Gallery of Norway)",
+    "license": "Public domain (PD-Art)",
+    "sourceUrl": "https://commons.wikimedia.org/wiki/File:The_Scream.jpg",
+    "file": "ref/scream.png",
+    "bytes": 11679,
+    "attribution": "after Edvard Munch"
+  },
+  {
+    "subject": "fuji",
+    "title": "SpellGame original — Mt. Fuji (ja, the spec's torii partner)",
+    "license": "Original artwork (SpellGame)",
+    "sourceUrl": "",
+    "file": "tools/draw_wave10.py",
+    "note": "Drawn coordinate list."
+  },
+  {
+    "subject": "orion",
+    "title": "SpellGame original — Orion constellation map (PICTURE-BANK Done #6's subject)",
+    "license": "Original artwork (SpellGame)",
+    "sourceUrl": "",
+    "file": "tools/draw_wave10.py",
+    "note": "Drawn coordinate list."
+  },
+  {
+    "subject": "papelpicado",
+    "title": "SpellGame original — papel picado banner (es)",
+    "license": "Original artwork (SpellGame)",
+    "sourceUrl": "",
+    "file": "tools/draw_wave10.py",
+    "note": "Drawn coordinate list."
   }
 ]
