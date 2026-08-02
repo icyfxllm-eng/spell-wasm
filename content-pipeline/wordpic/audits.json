@@ -1,0 +1,14 @@
+{
+  "$doc": "CC-PICTURE-BANK Done #7 — per-language culture-pack release audits. A subject listed under a pending audit is STAGED: traced, manifested, provenance-tracked, and BLOCKED from pictures.json by manifest_check until the sign-off is recorded here. To release: set status to 'signed', fill signed_date and quote with the auditor's actual recorded words, then add the subjects to pictures.json in the same change.",
+  "audits": {
+    "tl": {
+      "status": "pending",
+      "auditor": "Paul",
+      "subjects": ["jeepney", "carabao"],
+      "requested": "2026-08-01",
+      "signed_date": null,
+      "quote": null,
+      "note": "Tagalog culture pack. Art approved by Eric (jeepney grounded per 'ground the jeepney'); cultural review is Paul's, per spec Done #7 — pending his audit."
+    }
+  }
+}

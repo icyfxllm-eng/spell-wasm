@@ -115,6 +115,46 @@ def check(sub: str, m: dict, scan: dict) -> list[str]:
     return bad
 
 
+def check_audits(mans: set[str]) -> list[str]:
+    """CC-PICTURE-BANK Done #7 — per-language culture-pack audit gate.
+
+    A subject under a PENDING audit is staged: it may be traced and
+    manifested, but it must NOT be playable (present in pictures.json).
+    A SIGNED audit must carry the recorded sign-off — date and the
+    auditor's actual words; an unrecorded sign-off is not a sign-off.
+    There is no override flag, same doctrine as D5.
+    """
+    bad: list[str] = []
+    audit_path = ROOT / "content-pipeline/wordpic/audits.json"
+    if not audit_path.exists():
+        return ["audits.json is missing — Done #7's gate has nothing to enforce"]
+    audits = json.loads(audit_path.read_text())["audits"]
+    playable = {
+        e["id"]
+        for e in json.loads((ROOT / "config/wordpic/pictures.json").read_text())["pictures"]
+    }
+    for lang, a in sorted(audits.items()):
+        subs = a.get("subjects", [])
+        for sub in subs:
+            if sub not in mans:
+                bad.append(f"audit[{lang}] lists {sub!r}, which has no manifest — typo or lost work")
+        if a["status"] == "pending":
+            leaked = sorted(set(subs) & playable)
+            if leaked:
+                bad.append(
+                    f"audit[{lang}] is PENDING ({a['auditor']}) but {leaked} are "
+                    f"playable in pictures.json — the release is blocked until the "
+                    f"sign-off is recorded in audits.json")
+        elif a["status"] == "signed":
+            if not a.get("signed_date") or not a.get("quote"):
+                bad.append(
+                    f"audit[{lang}] claims signed but the record is incomplete: "
+                    f"signed_date and the auditor's quote are both required")
+        else:
+            bad.append(f"audit[{lang}] has unknown status {a['status']!r}")
+    return bad
+
+
 def main() -> int:
     scans = {p.stem for p in SCANS.glob("*.json")}
     mans = {p.stem for p in MANIFESTS.glob("*.json")}
@@ -125,6 +165,10 @@ def main() -> int:
     if mans - scans:
         print(f"FAIL: manifest with no traced scan: {sorted(mans - scans)}")
         failures += 1
+
+    for b in check_audits(mans):
+        failures += 1
+        print(f"AUDIT      FAIL\n           - {b}")
 
     for sub in sorted(mans & scans):
         m = json.loads((MANIFESTS / f"{sub}.json").read_text())
@@ -144,7 +188,7 @@ def main() -> int:
         print(f"manifest-check: {failures} FAILED")
         return 1
     print(f"manifest-check: OK — {len(mans & scans)} manifests, "
-          f"schema + provenance + path coverage + D5 monotonicity")
+          f"schema + provenance + path coverage + D5 monotonicity + Done #7 audits")
     return 0
 
 

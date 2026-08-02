@@ -32,7 +32,21 @@ thread_local! {
     /// v7 F1 (D1): runtime legality ladder position — 0 = first solve,
     /// 1..=5 = deterministic re-solves, >5 = substitution rung applied.
     static SEED_BUMP: Cell<u32> = const { Cell::new(0) };
+    /// D3: the manual camera (x, y, w viewBox) once the player has taken
+    /// it by dragging or pinching; None = automatic (L7 auto-center or
+    /// the full frame). Reset on every picture open.
+    static PANZOOM: Cell<Option<(f64, f64, f64)>> = const { Cell::new(None) };
+    /// Live pointers on the stage (pointer id, client x, y) — one is a
+    /// drag, two are a pinch.
+    static POINTERS: RefCell<Vec<(i32, f64, f64)>> = const { RefCell::new(Vec::new()) };
+    /// Double-tap detector for the camera-goes-home gesture.
+    static LAST_TAP_MS: Cell<f64> = const { Cell::new(0.0) };
 }
+
+/// D3 camera floor: the tightest legal zoom, in picture units. Tight
+/// enough to read one corridor comfortably, wide enough that a player
+/// can never lose the picture inside a featureless crop.
+const VB_MIN: f64 = 64.0;
 
 /// Scripts whose shaping must not ride a curved textPath (D4 ruling).
 fn complex_script(lang: &str) -> bool {
@@ -179,13 +193,15 @@ pub fn wire(app: &App) {
     let a = app.clone();
     dom::on_click("wpZoom", move || {
         ZOOMED.with(|z| z.set(!z.get()));
-        let (pic, lang) = (PIC.with(|x| x.borrow().clone()), LANG.with(|l| l.borrow().clone()));
-        if let Some(p) = wordpic::picture(&pic) {
-            let words = wordpic::load().run(&pic, &lang).map(|r| r.words.clone()).unwrap_or_default();
-            render_canvas(p, &lang, &words);
-        }
+        // D3: the toggle is also a home button — a manual camera lets go.
+        PANZOOM.with(|c| c.set(None));
+        rerender_open();
         let _ = &a;
     });
+    // CC-PICTURE-BANK D3 — the pan/zoom camera (drag pans, pinch zooms,
+    // double-tap goes home). Listeners live on #wpStage, which survives
+    // re-renders: set_html replaces only its children.
+    wire_camera();
 }
 
 /// Campaign length: scan-locked subjects count their planned words;
@@ -318,6 +334,13 @@ fn open_play(app: &App, pic_id: &str) {
     dom::set_text("wpPlayTitle", &format!("{} {}", p.icon, i18n::t("tools.wordpic.name")));
     crate::dom::toggle_class("wpZoom", "btn-hide", p.tier != "expert");
     ZOOMED.with(|z| z.set(true));
+    // D3: every picture opens with the automatic camera, and on the
+    // pannable tiers the browser must not scroll the page out from
+    // under the gestures.
+    PANZOOM.with(|c| c.set(None));
+    POINTERS.with(|q| q.borrow_mut().clear());
+    let _ = dom::el("wpStage")
+        .set_attribute("style", if p.tier == "expert" { "touch-action:none" } else { "" });
     render_canvas(p, &lang, &run.words);
     reflect_count(p);
     OPEN.with(|c| c.set(true));
@@ -415,7 +438,12 @@ fn render_canvas(p: &wordpic::Picture, lang: &str, words: &[String]) {
     let expert = p.tier == "expert";
     let next_slot = words.len();
     // L7: expert auto-centers the active path; others show the full frame.
-    let viewbox = if expert && next_slot < slots.len() {
+    // D3: a camera the player has taken outranks the L7 auto-center —
+    // a re-render (new word placed) must not yank the view away.
+    let manual = if expert { PANZOOM.with(Cell::get) } else { None };
+    let viewbox = if let Some((mx, my, mw)) = manual {
+        format!("{mx:.1} {my:.1} {mw:.1} {mw:.1}")
+    } else if expert && next_slot < slots.len() {
         let focus = placements
             .iter()
             .find(|pl| pl.slot == next_slot)
@@ -1006,6 +1034,150 @@ pub fn seam_current_word() -> String {
     current_word().unwrap_or_default()
 }
 
+/// Observation-only, for the Done #6 relaunch spec: the open picture's
+/// ladder and how far up it the run has climbed. Same contract as
+/// `seam_current_word` — reads, never writes.
+#[cfg(feature = "testseam")]
+pub fn seam_ladder() -> String {
+    let ladder = LADDER.with(|l| l.borrow().clone());
+    let placed = PLACED.with(Cell::get);
+    serde_json::json!({ "ladder": ladder, "placed": placed }).to_string()
+}
+
+// ------------------------------------------------------------- D3 camera
+
+/// Clamp a square viewBox into the 512 frame. Pure, unit-tested.
+fn vb_clamp(x: f64, y: f64, w: f64) -> (f64, f64, f64) {
+    let w = w.clamp(VB_MIN, 512.0);
+    (x.clamp(0.0, 512.0 - w), y.clamp(0.0, 512.0 - w), w)
+}
+
+/// Pan by a screen-pixel delta, converted through the stage's rendered
+/// width so a finger-width of drag moves a finger-width of picture at
+/// any zoom. Dragging content right moves the window left.
+fn vb_pan(vb: (f64, f64, f64), dx_px: f64, dy_px: f64, stage_px: f64) -> (f64, f64, f64) {
+    let (x, y, w) = vb;
+    let scale = w / stage_px.max(1.0);
+    vb_clamp(x - dx_px * scale, y - dy_px * scale, w)
+}
+
+/// Pinch about a fixed anchor: the picture point under the pinch
+/// midpoint stays under it. `ratio` > 1 = fingers spreading = zoom in.
+fn vb_pinch(vb: (f64, f64, f64), mid_px: (f64, f64), ratio: f64, stage_px: f64) -> (f64, f64, f64) {
+    let (x, y, w) = vb;
+    let s = stage_px.max(1.0);
+    let (ax, ay) = (x + mid_px.0 / s * w, y + mid_px.1 / s * w);
+    let nw = (w / ratio).clamp(VB_MIN, 512.0);
+    vb_clamp(ax - mid_px.0 / s * nw, ay - mid_px.1 / s * nw, nw)
+}
+
+/// The D3 camera exists at expert only (masterpiece rides this same arm
+/// when the tier arrives) and only while a picture is up.
+fn pan_zoom_active() -> bool {
+    OPEN.with(Cell::get) && matches!(current_tier().as_str(), "expert" | "masterpiece")
+}
+
+/// The camera as currently rendered: the manual viewBox if the player
+/// has taken it, else parsed off the live svg — so the first drag picks
+/// up seamlessly from wherever L7's auto-center happens to be looking.
+fn current_vb() -> (f64, f64, f64) {
+    if let Some(vb) = PANZOOM.with(Cell::get) {
+        return vb;
+    }
+    let attr = dom::doc()
+        .query_selector("#wpStage svg")
+        .ok()
+        .flatten()
+        .and_then(|svg| svg.get_attribute("viewBox"))
+        .unwrap_or_default();
+    let n: Vec<f64> = attr.split_whitespace().filter_map(|t| t.parse().ok()).collect();
+    if n.len() == 4 { (n[0], n[1], n[2]) } else { (0.0, 0.0, 512.0) }
+}
+
+/// Take the camera: remember it and write the attribute directly — a
+/// gesture must never pay for a full SVG rebuild per pointermove.
+fn set_vb(vb: (f64, f64, f64)) {
+    PANZOOM.with(|c| c.set(Some(vb)));
+    if let Ok(Some(svg)) = dom::doc().query_selector("#wpStage svg") {
+        let _ = svg.set_attribute(
+            "viewBox",
+            &format!("{:.1} {:.1} {:.1} {:.1}", vb.0, vb.1, vb.2, vb.2),
+        );
+    }
+}
+
+/// Re-render the open picture (the wpZoom recipe, shared with the
+/// double-tap camera reset).
+fn rerender_open() {
+    let (pic, lang) = (PIC.with(|x| x.borrow().clone()), LANG.with(|l| l.borrow().clone()));
+    if let Some(p) = wordpic::picture(&pic) {
+        let words = wordpic::load().run(&pic, &lang).map(|r| r.words.clone()).unwrap_or_default();
+        render_canvas(p, &lang, &words);
+    }
+}
+
+fn wire_camera() {
+    dom::on::<web_sys::PointerEvent, _>("wpStage", "pointerdown", |e| {
+        if !pan_zoom_active() {
+            return;
+        }
+        e.prevent_default();
+        let now = e.time_stamp();
+        let first = POINTERS.with(|p| p.borrow().is_empty());
+        if first && now - LAST_TAP_MS.with(Cell::get) < 300.0 {
+            // Double-tap: the camera goes home — back to L7 auto-center
+            // (or the full frame, per the wpZoom toggle).
+            PANZOOM.with(|c| c.set(None));
+            LAST_TAP_MS.with(|c| c.set(0.0));
+            rerender_open();
+            return;
+        }
+        LAST_TAP_MS.with(|c| c.set(now));
+        POINTERS.with(|p| {
+            p.borrow_mut().push((e.pointer_id(), e.client_x() as f64, e.client_y() as f64))
+        });
+    });
+    dom::on::<web_sys::PointerEvent, _>("wpStage", "pointermove", |e| {
+        if !pan_zoom_active() {
+            return;
+        }
+        let id = e.pointer_id();
+        let (cx, cy) = (e.client_x() as f64, e.client_y() as f64);
+        POINTERS.with(|ps| {
+            let mut ps = ps.borrow_mut();
+            let n = ps.len();
+            let Some(i) = ps.iter().position(|p| p.0 == id) else { return };
+            if n == 1 {
+                let (dx, dy) = (cx - ps[i].1, cy - ps[i].2);
+                ps[i] = (id, cx, cy);
+                if dx != 0.0 || dy != 0.0 {
+                    let r = dom::el("wpStage").get_bounding_client_rect();
+                    set_vb(vb_pan(current_vb(), dx, dy, r.width()));
+                }
+            } else if n >= 2 {
+                let j = if i == 0 { 1 } else { 0 };
+                let d0 = ((ps[i].1 - ps[j].1).powi(2) + (ps[i].2 - ps[j].2).powi(2)).sqrt();
+                ps[i] = (id, cx, cy);
+                let d1 = ((ps[i].1 - ps[j].1).powi(2) + (ps[i].2 - ps[j].2).powi(2)).sqrt();
+                if d0 > 8.0 && d1 > 8.0 {
+                    let r = dom::el("wpStage").get_bounding_client_rect();
+                    let mid = (
+                        (ps[i].1 + ps[j].1) / 2.0 - r.left(),
+                        (ps[i].2 + ps[j].2) / 2.0 - r.top(),
+                    );
+                    set_vb(vb_pinch(current_vb(), mid, d1 / d0, r.width()));
+                }
+            }
+        });
+    });
+    for kind in ["pointerup", "pointercancel", "pointerleave"] {
+        dom::on::<web_sys::PointerEvent, _>("wpStage", kind, |e| {
+            let id = e.pointer_id();
+            POINTERS.with(|p| p.borrow_mut().retain(|q| q.0 != id));
+        });
+    }
+}
+
 /// CC-PICTURE-BANK feature 5 — audio modifiers as tier gates. Listening
 /// skill climbs with spelling skill: starter/intermediate keep Replay and
 /// the slow voice; advanced loses Slow; expert (and masterpiece when the
@@ -1434,5 +1606,43 @@ mod export_tests {
         assert!(!exp.contains("next"), "export must not bake in the next-stroke marker");
         assert!(play.contains("wp-word new"), "play should animate the word just spelled");
         assert!(!exp.contains("wp-word new"), "export must not bake in the entry animation");
+    }
+}
+
+#[cfg(test)]
+mod d3_camera_tests {
+    use super::*;
+
+    #[test]
+    fn clamp_holds_the_frame() {
+        assert_eq!(vb_clamp(-50.0, 600.0, 1000.0), (0.0, 0.0, 512.0));
+        assert_eq!(vb_clamp(400.0, 400.0, 200.0), (312.0, 312.0, 200.0));
+        assert_eq!(vb_clamp(10.0, 10.0, 10.0), (10.0, 10.0, VB_MIN));
+    }
+
+    #[test]
+    fn pan_scales_with_zoom_and_clamps() {
+        // w=256 on a 512px stage: 100px of finger = 50 picture units,
+        // and dragging content right moves the window left.
+        assert_eq!(vb_pan((100.0, 100.0, 256.0), 100.0, 0.0, 512.0), (50.0, 100.0, 256.0));
+        assert_eq!(vb_pan((100.0, 100.0, 256.0), -100.0, 0.0, 512.0), (150.0, 100.0, 256.0));
+        // A wild fling stays inside the frame.
+        assert_eq!(vb_pan((100.0, 100.0, 256.0), 9999.0, 9999.0, 512.0), (0.0, 0.0, 256.0));
+    }
+
+    #[test]
+    fn pinch_keeps_the_anchor_still() {
+        let (x, y, w) = vb_pinch((0.0, 0.0, 512.0), (128.0, 128.0), 2.0, 512.0);
+        assert_eq!(w, 256.0);
+        assert!((x + 128.0 / 512.0 * w - 128.0).abs() < 1e-9, "anchor x moved");
+        assert!((y + 128.0 / 512.0 * w - 128.0).abs() < 1e-9, "anchor y moved");
+    }
+
+    #[test]
+    fn pinch_respects_floor_and_ceiling() {
+        let (_, _, w) = vb_pinch((0.0, 0.0, 512.0), (256.0, 256.0), 100.0, 512.0);
+        assert_eq!(w, VB_MIN, "zoom floor");
+        let vb = vb_pinch((200.0, 200.0, 100.0), (256.0, 256.0), 0.01, 512.0);
+        assert_eq!(vb, (0.0, 0.0, 512.0), "zoom out lands on the full frame");
     }
 }

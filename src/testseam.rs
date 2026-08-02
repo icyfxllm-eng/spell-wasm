@@ -44,6 +44,8 @@ pub fn install(app: &App) {
     {
         let cb = Closure::<dyn Fn() -> String>::new(crate::wordpic_screen::seam_current_word);
         set(&obj, "picWord", cb.into_js_value());
+        let cb = Closure::<dyn Fn() -> String>::new(crate::wordpic_screen::seam_ladder);
+        set(&obj, "picLadder", cb.into_js_value());
     }
     // The export renderer's 1× SVG for the open picture (a Promise —
     // fonts are fetched). OBSERVE-only: renders the same bytes the Save

@@ -7,6 +7,9 @@ set -euo pipefail
 cd "$(dirname "$0")/.."
 LOG="${TMPDIR:-/tmp}/spell-gate-e2e.log"
 
+echo "== gate: manifest check (schema + D5 + Done #7 audits)"
+python3 tools/manifest_check.py
+
 echo "== gate: cargo test"
 cargo test 2>&1 | tail -n 20 | grep -E "test result: ok" >/dev/null || { echo "GATE FAIL: cargo test"; cargo test 2>&1 | grep -E "FAILED|panicked" | head; exit 1; }
 
