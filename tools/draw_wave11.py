@@ -49,8 +49,9 @@ def anubis():
     # (hinge overlap; the first cut left a hairline and the head floated)
     d.polygon([(330, 180), (430, 180), (470, 420), (450, 640), (330, 640), (360, 420)],
               fill=BLACK)
-    # collar: a white band across the neck
-    d.polygon([(338, 300), (444, 300), (450, 344), (336, 344)], fill=WHITE)
+    # no collar: the band sliced the neck nearly full-width and the trace
+    # showed a severed-looking notch (Eric circled it) — the jackal's neck
+    # sweeps unbroken now
     # haunches and body
     d.polygon([(330, 470), (560, 430), (640, 560), (650, 780), (330, 780)], fill=BLACK)
     # forelegs to the base

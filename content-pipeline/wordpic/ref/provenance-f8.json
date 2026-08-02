@@ -541,5 +541,45 @@
     "sourceUrl": "",
     "file": "tools/draw_wave10.py",
     "note": "Drawn coordinate list."
+  },
+  {
+    "subject": "anubis",
+    "title": "SpellGame original — seated Anubis after Egyptian tomb painting (ancient motif)",
+    "license": "Original artwork (SpellGame)",
+    "sourceUrl": "",
+    "file": "tools/draw_wave11.py",
+    "note": "Drawn coordinate list; candidates approved by Eric 2026-08-01."
+  },
+  {
+    "subject": "athenaowl",
+    "title": "SpellGame original — owl of Athena after the tetradrachm motif (ancient)",
+    "license": "Original artwork (SpellGame)",
+    "sourceUrl": "",
+    "file": "tools/draw_wave11.py",
+    "note": "Drawn coordinate list; candidates approved by Eric 2026-08-01."
+  },
+  {
+    "subject": "bamboo",
+    "title": "SpellGame original — ink bamboo after the Chinese literati manner",
+    "license": "Original artwork (SpellGame)",
+    "sourceUrl": "",
+    "file": "tools/draw_wave11.py",
+    "note": "Drawn coordinate list; candidates approved by Eric 2026-08-01."
+  },
+  {
+    "subject": "girih",
+    "title": "SpellGame original — eight-point girih star after Islamic tilework",
+    "license": "Original artwork (SpellGame)",
+    "sourceUrl": "",
+    "file": "tools/draw_wave11.py",
+    "note": "Drawn coordinate list; candidates approved by Eric 2026-08-01."
+  },
+  {
+    "subject": "gyenyame",
+    "title": "SpellGame original — Gye Nyame after the Adinkra symbol (traditional)",
+    "license": "Original artwork (SpellGame)",
+    "sourceUrl": "",
+    "file": "tools/draw_wave11.py",
+    "note": "Drawn coordinate list; candidates approved by Eric 2026-08-01."
   }
 ]
