@@ -741,5 +741,61 @@
     "sourceUrl": "",
     "file": "tools/draw_wave16.py",
     "note": "Drawn coordinate list; candidates approved by Eric 2026-08-02."
+  },
+  {
+    "subject": "fan",
+    "title": "SpellGame original — flamenco fan (culture 9, es)",
+    "license": "Original artwork (SpellGame)",
+    "sourceUrl": "",
+    "file": "tools/draw_wave17.py",
+    "note": "Drawn coordinate list; candidates approved by Eric 2026-08-02."
+  },
+  {
+    "subject": "stonehenge",
+    "title": "SpellGame original — Stonehenge (culture 9, en)",
+    "license": "Original artwork (SpellGame)",
+    "sourceUrl": "",
+    "file": "tools/draw_wave17.py",
+    "note": "Drawn coordinate list; candidates approved by Eric 2026-08-02."
+  },
+  {
+    "subject": "pagoda",
+    "title": "SpellGame original — pagoda (culture 10, zh)",
+    "license": "Original artwork (SpellGame)",
+    "sourceUrl": "",
+    "file": "tools/draw_wave18.py",
+    "note": "Drawn coordinate list; candidates approved by Eric 2026-08-02."
+  },
+  {
+    "subject": "daruma",
+    "title": "SpellGame original — daruma (culture 10, ja)",
+    "license": "Original artwork (SpellGame)",
+    "sourceUrl": "",
+    "file": "tools/draw_wave18.py",
+    "note": "Drawn coordinate list; candidates approved by Eric 2026-08-02."
+  },
+  {
+    "subject": "balalaika",
+    "title": "SpellGame original — balalaika (culture 10, ru)",
+    "license": "Original artwork (SpellGame)",
+    "sourceUrl": "",
+    "file": "tools/draw_wave18.py",
+    "note": "Drawn coordinate list; candidates approved by Eric 2026-08-02."
+  },
+  {
+    "subject": "sombrero",
+    "title": "SpellGame original — sombrero (culture 10, es)",
+    "license": "Original artwork (SpellGame)",
+    "sourceUrl": "",
+    "file": "tools/draw_wave18.py",
+    "note": "Drawn coordinate list; candidates approved by Eric 2026-08-02."
+  },
+  {
+    "subject": "djembe",
+    "title": "SpellGame original — djembe (culture 10, sw)",
+    "license": "Original artwork (SpellGame)",
+    "sourceUrl": "",
+    "file": "tools/draw_wave18.py",
+    "note": "Drawn coordinate list; candidates approved by Eric 2026-08-02."
   }
 ]

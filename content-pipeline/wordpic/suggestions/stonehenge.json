@@ -1,11 +1,1 @@
-{
- "subject": "stonehenge",
- "seed": 1,
- "clearance_floor": 14,
- "candidates": [
-  {"id": 0, "status": "pending", "arc": 1187.1, "clearance": 19.5, "flagged": false, "micro": false, "points": [[280.4,22.0],[465.6,22.0],[465.6,70.8],[455.9,71.2],[455.9,251.1],[402.2,251.1],[401.8,70.8],[343.8,71.2],[343.8,251.1],[290.1,251.1],[290.1,71.2],[280.4,70.8],[280.4,22.5]]},
-  {"id": 1, "status": "pending", "arc": 1187.1, "clearance": 19.5, "flagged": false, "micro": false, "points": [[46.4,22.0],[231.6,22.0],[231.6,70.8],[221.9,71.2],[221.9,251.1],[168.2,251.1],[167.8,70.8],[109.8,71.2],[109.8,251.1],[56.1,251.1],[56.1,71.2],[46.4,70.8],[46.4,22.5]]},
-  {"id": 2, "status": "pending", "arc": 986.2, "clearance": 39.3, "flagged": false, "micro": false, "points": [[22.0,270.6],[490.0,270.6],[490.0,296.0],[22.0,296.0],[22.0,271.1]]},
-  {"id": 3, "status": "pending", "arc": 105.4, "clearance": 19.5, "flagged": false, "micro": true, "points": [[270.6,219.9],[274.5,244.3],[247.2,250.2],[243.3,224.8],[270.1,220.4]]}
- ]
-}
+{"subject": "stonehenge", "seed": 1, "clearance_floor": 14, "candidates": [{"id": 0, "status": "approved", "arc": 1187.1, "clearance": 19.5, "flagged": false, "micro": false, "points": [[280.4, 22.0], [465.6, 22.0], [465.6, 70.8], [455.9, 71.2], [455.9, 251.1], [402.2, 251.1], [401.8, 70.8], [343.8, 71.2], [343.8, 251.1], [290.1, 251.1], [290.1, 71.2], [280.4, 70.8], [280.4, 22.5]], "reviewed_by": "Eric, 2026-08-02 (\"fan and henge pass the rest fail\")"}, {"id": 1, "status": "approved", "arc": 1187.1, "clearance": 19.5, "flagged": false, "micro": false, "points": [[46.4, 22.0], [231.6, 22.0], [231.6, 70.8], [221.9, 71.2], [221.9, 251.1], [168.2, 251.1], [167.8, 70.8], [109.8, 71.2], [109.8, 251.1], [56.1, 251.1], [56.1, 71.2], [46.4, 70.8], [46.4, 22.5]], "reviewed_by": "Eric, 2026-08-02 (\"fan and henge pass the rest fail\")"}, {"id": 2, "status": "approved", "arc": 986.2, "clearance": 39.3, "flagged": false, "micro": false, "points": [[22.0, 270.6], [490.0, 270.6], [490.0, 296.0], [22.0, 296.0], [22.0, 271.1]], "reviewed_by": "Eric, 2026-08-02 (\"fan and henge pass the rest fail\")"}, {"id": 3, "status": "approved", "arc": 105.4, "clearance": 19.5, "flagged": false, "micro": true, "points": [[270.6, 219.9], [274.5, 244.3], [247.2, 250.2], [243.3, 224.8], [270.1, 220.4]], "reviewed_by": "Eric, 2026-08-02 (\"fan and henge pass the rest fail\")"}]}
