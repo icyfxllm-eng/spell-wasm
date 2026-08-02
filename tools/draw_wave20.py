@@ -34,7 +34,7 @@ def shinkansen():
                (1120, 460), (60, 460)], fill=BLACK)
     d.rounded_rectangle([460, 250, 1120, 470], radius=40, fill=BLACK)
     # cab window: the swept slit
-    d.polygon([(262, 382), (378, 336), (412, 354), (306, 402)], fill=WHITE)   # slit pulled off the nose edge
+    d.polygon([(268, 396), (380, 352), (410, 368), (308, 412)], fill=WHITE)   # 39px under the roof line
     # side windows
     for k in range(4):
         d.rounded_rectangle([525 + k * 148, 320, 620 + k * 148, 400], radius=20, fill=WHITE)

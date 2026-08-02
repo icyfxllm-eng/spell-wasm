@@ -79,12 +79,19 @@ def accordion():
     d.rounded_rectangle([760, 180, 960, 620], radius=40, fill=BLACK)
     for by in (280, 380, 480):
         d.ellipse([148, by - 22, 212, by + 22], fill=WHITE)            # buttons
-    d.rectangle([880, 240, 924, 560], fill=WHITE)                      # key column slot
-    # the bellows: one mass with pleat seams ending inside (fan lesson)
-    d.polygon([(280, 220), (760, 220), (760, 580), (280, 580)], fill=BLACK)
-    for k in range(3):
-        x = 375 + k * 105
-        d.line([(x, 262), (x, 538)], fill=WHITE, width=36)
+    # keys as three micro slots (the 44px column was a slit hole that
+    # could not host — the owl's wing-seam failure, third sighting)
+    for ky in (280, 380, 480):
+        d.rectangle([872, ky - 18, 932, ky + 18], fill=WHITE)
+    # the bellows: pleats ARE the silhouette — zigzag top and bottom
+    # edges, no interior slits for the solver to refuse
+    top = [(280, 250)]
+    for k in range(4):
+        top += [(340 + k * 120, 190), (400 + k * 120, 250)]
+    bot = [(760, 550)]
+    for k in range(4):
+        bot += [(700 - k * 120, 610), (640 - k * 120, 550)]
+    d.polygon(top + [(760, 250)] + bot + [(280, 550)], fill=BLACK)
     return im
 
 
