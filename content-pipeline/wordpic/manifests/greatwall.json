@@ -1,0 +1,274 @@
+{
+ "id": "greatwall",
+ "tier": "hard",
+ "source": {
+  "title": "SpellGame original \u2014 Great Wall (culture 4, zh)",
+  "license": "Original artwork (SpellGame)",
+  "url": "",
+  "attribution": ""
+ },
+ "parts": {
+  "root": [
+   0,
+   1,
+   2
+  ]
+ },
+ "layers": [
+  {
+   "name": "outline",
+   "path_ids": [
+    0
+   ],
+   "per_language": {
+    "ar": {
+     "words": 1,
+     "band": 0,
+     "band_size": 60
+    },
+    "de": {
+     "words": 1,
+     "band": 0,
+     "band_size": 630
+    },
+    "en": {
+     "words": 1,
+     "band": 0,
+     "band_size": 761
+    },
+    "es": {
+     "words": 1,
+     "band": 0,
+     "band_size": 560
+    },
+    "fil": {
+     "words": 1,
+     "band": 0,
+     "band_size": 241
+    },
+    "fr": {
+     "words": 1,
+     "band": 0,
+     "band_size": 363
+    },
+    "hi": {
+     "words": 1,
+     "band": 0,
+     "band_size": 548
+    },
+    "ja": {
+     "words": 1,
+     "band": 0,
+     "band_size": 594
+    },
+    "ko": {
+     "words": 1,
+     "band": 0,
+     "band_size": 442
+    },
+    "pl": {
+     "words": 1,
+     "band": 0,
+     "band_size": 452
+    },
+    "pt": {
+     "words": 1,
+     "band": 0,
+     "band_size": 719
+    },
+    "ru": {
+     "words": 1,
+     "band": 0,
+     "band_size": 49
+    },
+    "sw": {
+     "words": 1,
+     "band": 0,
+     "band_size": 65
+    },
+    "vi": {
+     "words": 1,
+     "band": 0,
+     "band_size": 392
+    },
+    "zh": {
+     "words": 1,
+     "band": 0,
+     "band_size": 185
+    }
+   }
+  },
+  {
+   "name": "features",
+   "path_ids": [
+    1
+   ],
+   "per_language": {
+    "ar": {
+     "words": 1,
+     "band": 1,
+     "band_size": 763
+    },
+    "de": {
+     "words": 1,
+     "band": 1,
+     "band_size": 459
+    },
+    "en": {
+     "words": 1,
+     "band": 1,
+     "band_size": 693
+    },
+    "es": {
+     "words": 1,
+     "band": 1,
+     "band_size": 452
+    },
+    "fil": {
+     "words": 1,
+     "band": 1,
+     "band_size": 576
+    },
+    "fr": {
+     "words": 1,
+     "band": 1,
+     "band_size": 640
+    },
+    "hi": {
+     "words": 1,
+     "band": 1,
+     "band_size": 385
+    },
+    "ja": {
+     "words": 1,
+     "band": 1,
+     "band_size": 246
+    },
+    "ko": {
+     "words": 1,
+     "band": 1,
+     "band_size": 326
+    },
+    "pl": {
+     "words": 1,
+     "band": 1,
+     "band_size": 581
+    },
+    "pt": {
+     "words": 1,
+     "band": 1,
+     "band_size": 698
+    },
+    "ru": {
+     "words": 1,
+     "band": 1,
+     "band_size": 757
+    },
+    "sw": {
+     "words": 1,
+     "band": 1,
+     "band_size": 736
+    },
+    "vi": {
+     "words": 1,
+     "band": 1,
+     "band_size": 404
+    },
+    "zh": {
+     "words": 1,
+     "band": 1,
+     "band_size": 313
+    }
+   }
+  },
+  {
+   "name": "texture",
+   "path_ids": [
+    2
+   ],
+   "per_language": {
+    "ar": {
+     "words": 1,
+     "band": 2,
+     "band_size": 2
+    },
+    "de": {
+     "words": 1,
+     "band": 2,
+     "band_size": 505
+    },
+    "en": {
+     "words": 1,
+     "band": 2,
+     "band_size": 145
+    },
+    "es": {
+     "words": 1,
+     "band": 2,
+     "band_size": 527
+    },
+    "fil": {
+     "words": 1,
+     "band": 2,
+     "band_size": 632
+    },
+    "fr": {
+     "words": 1,
+     "band": 2,
+     "band_size": 487
+    },
+    "hi": {
+     "words": 1,
+     "band": 2,
+     "band_size": 593
+    },
+    "ja": {
+     "words": 1,
+     "band": 2,
+     "band_size": 55
+    },
+    "ko": {
+     "words": 1,
+     "band": 2,
+     "band_size": 88
+    },
+    "pl": {
+     "words": 1,
+     "band": 2,
+     "band_size": 474
+    },
+    "pt": {
+     "words": 1,
+     "band": 2,
+     "band_size": 130
+    },
+    "ru": {
+     "words": 1,
+     "band": 2,
+     "band_size": 14
+    },
+    "sw": {
+     "words": 1,
+     "band": 2,
+     "band_size": 2
+    },
+    "vi": {
+     "words": 1,
+     "band": 2,
+     "band_size": 638
+    },
+    "zh": {
+     "words": 1,
+     "band": 2,
+     "band_size": 117
+    }
+   }
+  }
+ ],
+ "audio_gate": "advanced",
+ "completion": {
+  "all_layers": true
+ },
+ "authoring": "suggested-then-approved",
+ "pin_hash": 4406463948618016655
+}
