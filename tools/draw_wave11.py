@@ -85,16 +85,18 @@ def athenaowl():
     circle(d, 510, 290, 30, BLACK)
     # beak between them
     d.polygon([(414, 330), (446, 330), (430, 396)], fill=WHITE)
-    # wing seam down the body
-    d.line([(540, 440), (560, 740)], fill=WHITE, width=36)
+    # no wing seam: the thin slit hole could not host its two words and
+    # the capacity solver refused the whole owl
     # feet
     d.rectangle([330, 850, 380, 920], fill=BLACK)
     d.rectangle([470, 850, 520, 920], fill=BLACK)
-    # olive sprig: stem + three leaf lances, detached from the shoulder
-    d.line([(150, 320), (190, 520)], fill=BLACK, width=22)
-    for (lx, ly, a) in [(150, 350, -0.9), (170, 430, -0.6), (185, 500, -0.8)]:
-        ex, ey = lx - int(90 * math.cos(a)), ly + int(90 * math.sin(a))
-        d.line([(lx, ly), (ex, ey)], fill=BLACK, width=30)
+    # olive sprig: fat enough to host (the 22px stem was sub-floor
+    # decorative and the coverage gate refused the whole owl — the
+    # cuckoo-chain lesson, learned twice now)
+    d.line([(140, 310), (185, 540)], fill=BLACK, width=36)
+    for (lx, ly, ex, ey) in [(148, 360, 60, 300), (165, 445, 68, 420), (180, 520, 90, 560)]:
+        d.line([(lx, ly), (ex, ey)], fill=BLACK, width=42)
+        circle(d, ex, ey, 21, BLACK)
     return im
 
 

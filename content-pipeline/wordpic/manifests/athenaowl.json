@@ -13,8 +13,7 @@
    1,
    2,
    3,
-   4,
-   5
+   4
   ]
  },
  "layers": [
@@ -104,82 +103,81 @@
   {
    "name": "features",
    "path_ids": [
-    1,
-    2
+    1
    ],
    "per_language": {
     "ar": {
-     "words": 2,
+     "words": 1,
      "band": 1,
      "band_size": 311
     },
     "de": {
-     "words": 2,
+     "words": 1,
      "band": 1,
      "band_size": 1095
     },
     "en": {
-     "words": 2,
+     "words": 1,
      "band": 1,
      "band_size": 1192
     },
     "es": {
-     "words": 2,
+     "words": 1,
      "band": 1,
      "band_size": 1052
     },
     "fil": {
-     "words": 2,
+     "words": 1,
      "band": 1,
      "band_size": 868
     },
     "fr": {
-     "words": 2,
+     "words": 1,
      "band": 1,
      "band_size": 865
     },
     "hi": {
-     "words": 2,
+     "words": 1,
      "band": 1,
      "band_size": 925
     },
     "ja": {
-     "words": 2,
+     "words": 1,
      "band": 1,
      "band_size": 591
     },
     "ko": {
-     "words": 2,
+     "words": 1,
      "band": 1,
      "band_size": 431
     },
     "pl": {
-     "words": 2,
+     "words": 1,
      "band": 1,
      "band_size": 707
     },
     "pt": {
-     "words": 2,
+     "words": 1,
      "band": 1,
      "band_size": 780
     },
     "ru": {
-     "words": 2,
+     "words": 1,
      "band": 1,
      "band_size": 190
     },
     "sw": {
-     "words": 2,
+     "words": 1,
      "band": 1,
      "band_size": 736
     },
     "vi": {
-     "words": 2,
+     "words": 1,
      "band": 1,
      "band_size": 739
     },
     "zh": {
-     "words": 2,
+     "words": 1,
      "band": 1,
      "band_size": 315
     }
@@ -188,7 +186,7 @@
   {
    "name": "texture",
    "path_ids": [
-    3
+    2
    ],
    "per_language": {
     "ar": {
@@ -271,8 +269,8 @@
   {
    "name": "shading",
    "path_ids": [
-    4,
-    5
+    3,
+    4
    ],
    "per_language": {
     "ar": {
@@ -358,5 +356,5 @@
   "all_layers": true
  },
  "authoring": "suggested-then-approved",
- "pin_hash": 7093377912868981751
+ "pin_hash": 2582139641425642639
 }
