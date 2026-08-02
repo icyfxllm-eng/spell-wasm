@@ -829,5 +829,37 @@
     "sourceUrl": "",
     "file": "tools/draw_wave19.py",
     "note": "Drawn coordinate list; candidates approved by Eric 2026-08-02."
+  },
+  {
+    "subject": "chichenitza",
+    "title": "SpellGame original — Chichen Itza (culture 12, worldart)",
+    "license": "Original artwork (SpellGame)",
+    "sourceUrl": "",
+    "file": "tools/draw_wave20.py",
+    "note": "Drawn coordinate list; candidates approved by Eric 2026-08-02."
+  },
+  {
+    "subject": "montsaintmichel",
+    "title": "SpellGame original — Mont Saint-Michel (culture 12, fr)",
+    "license": "Original artwork (SpellGame)",
+    "sourceUrl": "",
+    "file": "tools/draw_wave20.py",
+    "note": "Drawn coordinate list; candidates approved by Eric 2026-08-02."
+  },
+  {
+    "subject": "maasaishield",
+    "title": "SpellGame original — Maasai shield (culture 12, sw)",
+    "license": "Original artwork (SpellGame)",
+    "sourceUrl": "",
+    "file": "tools/draw_wave20.py",
+    "note": "Drawn coordinate list; candidates approved by Eric 2026-08-02."
+  },
+  {
+    "subject": "janggu",
+    "title": "SpellGame original — janggu (culture 12, ko)",
+    "license": "Original artwork (SpellGame)",
+    "sourceUrl": "",
+    "file": "tools/draw_wave20.py",
+    "note": "Drawn coordinate list; candidates approved by Eric 2026-08-02."
   }
 ]

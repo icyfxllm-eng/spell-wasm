@@ -137,7 +137,11 @@ SUBJ = {  # subject -> (ref, mode, tier)
     "angkorwat": ("angkorwat.png", "ink", "medium"),
     "accordion": ("accordion.png", "ink", "medium"),
     "quetzal": ("quetzal.png", "ink", "medium"),
-    "grandpiano": ("grandpiano.png", "ink", "medium"), "rhino": ("rhino.png", "ink", "expert"),
+    "grandpiano": ("grandpiano.png", "ink", "medium"),
+    "chichenitza": ("chichenitza.png", "ink", "medium"),
+    "montsaintmichel": ("montsaintmichel.png", "ink", "hard"),
+    "maasaishield": ("maasaishield.png", "ink", "medium"),
+    "janggu": ("janggu.png", "ink", "easy"), "rhino": ("rhino.png", "ink", "expert"),
 }
 
 # ---- per-subject AUTHORING recipes (content work, not renderer tuning:
