@@ -1013,5 +1013,109 @@
   "sourceUrl": "",
   "file": "tools/draw_wave25.py",
   "note": "Drawn coordinate list; candidates approved by Eric 2026-08-02."
+ },
+ {
+  "subject": "aries",
+  "title": "Zodiac glyph — aries (canonical typographic form)",
+  "license": "DejaVu Sans 2.37 glyph — Bitstream Vera Fonts license (free)",
+  "sourceUrl": "https://github.com/dejavu-fonts/dejavu-fonts",
+  "file": "tools/draw_wave27b.py",
+  "note": "Rendered from the free DejaVu Sans font (tools/fonts/DejaVuSans.ttf) and stroke-thickened; approved by Eric 2026-08-02 ('all pass ship 116'). Apple's emoji art untouched — same canonical symbol forms, free source."
+ },
+ {
+  "subject": "taurus",
+  "title": "Zodiac glyph — taurus (canonical typographic form)",
+  "license": "DejaVu Sans 2.37 glyph — Bitstream Vera Fonts license (free)",
+  "sourceUrl": "https://github.com/dejavu-fonts/dejavu-fonts",
+  "file": "tools/draw_wave27b.py",
+  "note": "Rendered from the free DejaVu Sans font (tools/fonts/DejaVuSans.ttf) and stroke-thickened; approved by Eric 2026-08-02 ('all pass ship 116'). Apple's emoji art untouched — same canonical symbol forms, free source."
+ },
+ {
+  "subject": "gemini",
+  "title": "Zodiac glyph — gemini (canonical typographic form)",
+  "license": "DejaVu Sans 2.37 glyph — Bitstream Vera Fonts license (free)",
+  "sourceUrl": "https://github.com/dejavu-fonts/dejavu-fonts",
+  "file": "tools/draw_wave27b.py",
+  "note": "Rendered from the free DejaVu Sans font (tools/fonts/DejaVuSans.ttf) and stroke-thickened; approved by Eric 2026-08-02 ('all pass ship 116'). Apple's emoji art untouched — same canonical symbol forms, free source."
+ },
+ {
+  "subject": "cancer",
+  "title": "Zodiac glyph — cancer (canonical typographic form)",
+  "license": "DejaVu Sans 2.37 glyph — Bitstream Vera Fonts license (free)",
+  "sourceUrl": "https://github.com/dejavu-fonts/dejavu-fonts",
+  "file": "tools/draw_wave27b.py",
+  "note": "Rendered from the free DejaVu Sans font (tools/fonts/DejaVuSans.ttf) and stroke-thickened; approved by Eric 2026-08-02 ('all pass ship 116'). Apple's emoji art untouched — same canonical symbol forms, free source."
+ },
+ {
+  "subject": "leo",
+  "title": "Zodiac glyph — leo (canonical typographic form)",
+  "license": "DejaVu Sans 2.37 glyph — Bitstream Vera Fonts license (free)",
+  "sourceUrl": "https://github.com/dejavu-fonts/dejavu-fonts",
+  "file": "tools/draw_wave27b.py",
+  "note": "Rendered from the free DejaVu Sans font (tools/fonts/DejaVuSans.ttf) and stroke-thickened; approved by Eric 2026-08-02 ('all pass ship 116'). Apple's emoji art untouched — same canonical symbol forms, free source."
+ },
+ {
+  "subject": "virgo",
+  "title": "Zodiac glyph — virgo (canonical typographic form)",
+  "license": "DejaVu Sans 2.37 glyph — Bitstream Vera Fonts license (free)",
+  "sourceUrl": "https://github.com/dejavu-fonts/dejavu-fonts",
+  "file": "tools/draw_wave27b.py",
+  "note": "Rendered from the free DejaVu Sans font (tools/fonts/DejaVuSans.ttf) and stroke-thickened; approved by Eric 2026-08-02 ('all pass ship 116'). Apple's emoji art untouched — same canonical symbol forms, free source."
+ },
+ {
+  "subject": "libra",
+  "title": "Zodiac glyph — libra (canonical typographic form)",
+  "license": "DejaVu Sans 2.37 glyph — Bitstream Vera Fonts license (free)",
+  "sourceUrl": "https://github.com/dejavu-fonts/dejavu-fonts",
+  "file": "tools/draw_wave27b.py",
+  "note": "Rendered from the free DejaVu Sans font (tools/fonts/DejaVuSans.ttf) and stroke-thickened; approved by Eric 2026-08-02 ('all pass ship 116'). Apple's emoji art untouched — same canonical symbol forms, free source."
+ },
+ {
+  "subject": "scorpio",
+  "title": "Zodiac glyph — scorpio (canonical typographic form)",
+  "license": "DejaVu Sans 2.37 glyph — Bitstream Vera Fonts license (free)",
+  "sourceUrl": "https://github.com/dejavu-fonts/dejavu-fonts",
+  "file": "tools/draw_wave27b.py",
+  "note": "Rendered from the free DejaVu Sans font (tools/fonts/DejaVuSans.ttf) and stroke-thickened; approved by Eric 2026-08-02 ('all pass ship 116'). Apple's emoji art untouched — same canonical symbol forms, free source."
+ },
+ {
+  "subject": "sagittarius",
+  "title": "Zodiac glyph — sagittarius (canonical typographic form)",
+  "license": "DejaVu Sans 2.37 glyph — Bitstream Vera Fonts license (free)",
+  "sourceUrl": "https://github.com/dejavu-fonts/dejavu-fonts",
+  "file": "tools/draw_wave27b.py",
+  "note": "Rendered from the free DejaVu Sans font (tools/fonts/DejaVuSans.ttf) and stroke-thickened; approved by Eric 2026-08-02 ('all pass ship 116'). Apple's emoji art untouched — same canonical symbol forms, free source."
+ },
+ {
+  "subject": "capricorn",
+  "title": "Zodiac glyph — capricorn (canonical typographic form)",
+  "license": "DejaVu Sans 2.37 glyph — Bitstream Vera Fonts license (free)",
+  "sourceUrl": "https://github.com/dejavu-fonts/dejavu-fonts",
+  "file": "tools/draw_wave27b.py",
+  "note": "Rendered from the free DejaVu Sans font (tools/fonts/DejaVuSans.ttf) and stroke-thickened; approved by Eric 2026-08-02 ('all pass ship 116'). Apple's emoji art untouched — same canonical symbol forms, free source."
+ },
+ {
+  "subject": "aquarius",
+  "title": "Zodiac glyph — aquarius (canonical typographic form)",
+  "license": "DejaVu Sans 2.37 glyph — Bitstream Vera Fonts license (free)",
+  "sourceUrl": "https://github.com/dejavu-fonts/dejavu-fonts",
+  "file": "tools/draw_wave27b.py",
+  "note": "Rendered from the free DejaVu Sans font (tools/fonts/DejaVuSans.ttf) and stroke-thickened; approved by Eric 2026-08-02 ('all pass ship 116'). Apple's emoji art untouched — same canonical symbol forms, free source."
+ },
+ {
+  "subject": "pisces",
+  "title": "Zodiac glyph — pisces (canonical typographic form)",
+  "license": "DejaVu Sans 2.37 glyph — Bitstream Vera Fonts license (free)",
+  "sourceUrl": "https://github.com/dejavu-fonts/dejavu-fonts",
+  "file": "tools/draw_wave27b.py",
+  "note": "Rendered from the free DejaVu Sans font (tools/fonts/DejaVuSans.ttf) and stroke-thickened; approved by Eric 2026-08-02 ('all pass ship 116'). Apple's emoji art untouched — same canonical symbol forms, free source."
+ },
+ {
+  "subject": "puzzlepiece",
+  "title": "SpellGame original — puzzlepiece",
+  "license": "Original artwork (SpellGame)",
+  "sourceUrl": "",
+  "file": "tools/draw_wave26.py",
+  "note": "Drawn coordinate list; candidates approved by Eric 2026-08-02."
  }
 ]

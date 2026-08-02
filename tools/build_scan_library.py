@@ -161,6 +161,19 @@ SUBJ = {  # subject -> (ref, mode, tier)
     "anchor": ("anchor.png", "ink", "easy"),
     "stoplight": ("stoplight.png", "ink", "medium"),
     "snowflake": ("snowflake.png", "ink", "medium"),
+    "aries": ("aries.png", "ink", "medium"),
+    "taurus": ("taurus.png", "ink", "medium"),
+    "gemini": ("gemini.png", "ink", "medium"),
+    "cancer": ("cancer.png", "ink", "medium"),
+    "leo": ("leo.png", "ink", "medium"),
+    "virgo": ("virgo.png", "ink", "medium"),
+    "libra": ("libra.png", "ink", "medium"),
+    "scorpio": ("scorpio.png", "ink", "medium"),
+    "sagittarius": ("sagittarius.png", "ink", "medium"),
+    "capricorn": ("capricorn.png", "ink", "medium"),
+    "aquarius": ("aquarius.png", "ink", "medium"),
+    "pisces": ("pisces.png", "ink", "medium"),
+    "puzzlepiece": ("puzzlepiece.png", "ink", "easy"),
 }
 
 # ---- per-subject AUTHORING recipes (content work, not renderer tuning:
