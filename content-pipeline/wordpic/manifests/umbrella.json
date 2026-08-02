@@ -1,10 +1,10 @@
 {
- "id": "arb23",
- "tier": "medium",
+ "id": "umbrella",
+ "tier": "easy",
  "source": {
-  "title": "Glyph \u0644 (arb)",
-  "license": "Noto Sans Arabic glyph - SIL Open Font License 1.1 (free)",
-  "url": "https://github.com/google/fonts/tree/main/ofl/notosansarabic",
+  "title": "SpellGame original \u2014 umbrella",
+  "license": "Original artwork (SpellGame)",
+  "url": "",
   "attribution": ""
  },
  "parts": {
@@ -27,12 +27,12 @@
     "de": {
      "words": 1,
      "band": 0,
-     "band_size": 271
+     "band_size": 91
     },
     "en": {
      "words": 1,
      "band": 0,
-     "band_size": 233
+     "band_size": 53
     },
     "es": {
      "words": 1,
@@ -42,7 +42,7 @@
     "fil": {
      "words": 1,
      "band": 0,
-     "band_size": 241
+     "band_size": 75
     },
     "fr": {
      "words": 1,
@@ -52,27 +52,27 @@
     "hi": {
      "words": 1,
      "band": 0,
-     "band_size": 252
+     "band_size": 57
     },
     "ja": {
      "words": 1,
      "band": 0,
-     "band_size": 412
+     "band_size": 377
     },
     "ko": {
      "words": 1,
      "band": 0,
-     "band_size": 47
+     "band_size": 32
     },
     "pl": {
      "words": 1,
      "band": 0,
-     "band_size": 453
+     "band_size": 210
     },
     "pt": {
      "words": 1,
      "band": 0,
-     "band_size": 674
+     "band_size": 220
     },
     "ru": {
      "words": 1,
@@ -87,20 +87,20 @@
     "vi": {
      "words": 1,
      "band": 0,
-     "band_size": 409
+     "band_size": 94
     },
     "zh": {
      "words": 1,
      "band": 0,
-     "band_size": 167
+     "band_size": 95
     }
    }
   }
  ],
- "audio_gate": "intermediate",
+ "audio_gate": "starter",
  "completion": {
   "all_layers": true
  },
  "authoring": "suggested-then-approved",
- "pin_hash": 188623816021384446
+ "pin_hash": 8793473104555730362
 }

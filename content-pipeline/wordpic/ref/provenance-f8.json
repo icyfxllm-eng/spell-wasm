@@ -2893,5 +2893,85 @@
   "sourceUrl": "https://github.com/google/fonts/tree/main/ofl/notosanssc",
   "file": "tools/alphabets/gen_alphabets.py",
   "note": "Alphabet program: rendered from a free-licensed font, auto-thickened, optically centered; approved by Eric 2026-08-02 ('all pass lets get rolling...')."
+ },
+ {
+  "subject": "castle",
+  "title": "SpellGame original — castle",
+  "license": "Original artwork (SpellGame)",
+  "sourceUrl": "",
+  "file": "tools/draw_wave29.py",
+  "note": "Drawn coordinate list; approved by Eric 2026-08-02."
+ },
+ {
+  "subject": "ferriswheel",
+  "title": "SpellGame original — ferriswheel",
+  "license": "Original artwork (SpellGame)",
+  "sourceUrl": "",
+  "file": "tools/draw_wave29.py",
+  "note": "Drawn coordinate list; approved by Eric 2026-08-02."
+ },
+ {
+  "subject": "robot",
+  "title": "SpellGame original — robot",
+  "license": "Original artwork (SpellGame)",
+  "sourceUrl": "",
+  "file": "tools/draw_wave29.py",
+  "note": "Drawn coordinate list; approved by Eric 2026-08-02."
+ },
+ {
+  "subject": "icecream",
+  "title": "SpellGame original — icecream",
+  "license": "Original artwork (SpellGame)",
+  "sourceUrl": "",
+  "file": "tools/draw_wave29.py",
+  "note": "Drawn coordinate list; approved by Eric 2026-08-02."
+ },
+ {
+  "subject": "crown",
+  "title": "SpellGame original — crown",
+  "license": "Original artwork (SpellGame)",
+  "sourceUrl": "",
+  "file": "tools/draw_wave30.py",
+  "note": "Drawn coordinate list; approved by Eric 2026-08-02."
+ },
+ {
+  "subject": "umbrella",
+  "title": "SpellGame original — umbrella",
+  "license": "Original artwork (SpellGame)",
+  "sourceUrl": "",
+  "file": "tools/draw_wave30.py",
+  "note": "Drawn coordinate list; approved by Eric 2026-08-02."
+ },
+ {
+  "subject": "key",
+  "title": "SpellGame original — key",
+  "license": "Original artwork (SpellGame)",
+  "sourceUrl": "",
+  "file": "tools/draw_wave30.py",
+  "note": "Drawn coordinate list; approved by Eric 2026-08-02."
+ },
+ {
+  "subject": "submarine",
+  "title": "SpellGame original — submarine",
+  "license": "Original artwork (SpellGame)",
+  "sourceUrl": "",
+  "file": "tools/draw_wave30.py",
+  "note": "Drawn coordinate list; approved by Eric 2026-08-02."
+ },
+ {
+  "subject": "crystalball",
+  "title": "SpellGame original — crystalball",
+  "license": "Original artwork (SpellGame)",
+  "sourceUrl": "",
+  "file": "tools/draw_wave31.py",
+  "note": "Drawn coordinate list; approved by Eric 2026-08-02."
+ },
+ {
+  "subject": "clock",
+  "title": "SpellGame original — clock",
+  "license": "Original artwork (SpellGame)",
+  "sourceUrl": "",
+  "file": "tools/draw_wave31.py",
+  "note": "Drawn coordinate list; approved by Eric 2026-08-02."
  }
 ]

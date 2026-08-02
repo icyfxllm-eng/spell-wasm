@@ -1,18 +1,16 @@
 {
- "id": "arb21",
- "tier": "medium",
+ "id": "key",
+ "tier": "easy",
  "source": {
-  "title": "Glyph \u0642 (arb)",
-  "license": "Noto Sans Arabic glyph - SIL Open Font License 1.1 (free)",
-  "url": "https://github.com/google/fonts/tree/main/ofl/notosansarabic",
+  "title": "SpellGame original \u2014 key",
+  "license": "Original artwork (SpellGame)",
+  "url": "",
   "attribution": ""
  },
  "parts": {
   "root": [
    0,
-   1,
-   2,
-   3
+   1
   ]
  },
  "layers": [
@@ -30,12 +28,12 @@
     "de": {
      "words": 1,
      "band": 0,
-     "band_size": 271
+     "band_size": 91
     },
     "en": {
      "words": 1,
      "band": 0,
-     "band_size": 233
+     "band_size": 53
     },
     "es": {
      "words": 1,
@@ -45,7 +43,7 @@
     "fil": {
      "words": 1,
      "band": 0,
-     "band_size": 241
+     "band_size": 75
     },
     "fr": {
      "words": 1,
@@ -55,27 +53,27 @@
     "hi": {
      "words": 1,
      "band": 0,
-     "band_size": 252
+     "band_size": 57
     },
     "ja": {
      "words": 1,
      "band": 0,
-     "band_size": 412
+     "band_size": 377
     },
     "ko": {
      "words": 1,
      "band": 0,
-     "band_size": 47
+     "band_size": 32
     },
     "pl": {
      "words": 1,
      "band": 0,
-     "band_size": 453
+     "band_size": 210
     },
     "pt": {
      "words": 1,
      "band": 0,
-     "band_size": 674
+     "band_size": 220
     },
     "ru": {
      "words": 1,
@@ -90,12 +88,12 @@
     "vi": {
      "words": 1,
      "band": 0,
-     "band_size": 409
+     "band_size": 94
     },
     "zh": {
      "words": 1,
      "band": 0,
-     "band_size": 167
+     "band_size": 95
     }
    }
   },
@@ -113,52 +111,52 @@
     "de": {
      "words": 1,
      "band": 1,
-     "band_size": 1095
+     "band_size": 539
     },
     "en": {
      "words": 1,
      "band": 1,
-     "band_size": 1192
+     "band_size": 697
     },
     "es": {
      "words": 1,
      "band": 1,
-     "band_size": 1052
+     "band_size": 416
     },
     "fil": {
      "words": 1,
      "band": 1,
-     "band_size": 868
+     "band_size": 677
     },
     "fr": {
      "words": 1,
      "band": 1,
-     "band_size": 865
+     "band_size": 333
     },
     "hi": {
      "words": 1,
      "band": 1,
-     "band_size": 925
+     "band_size": 491
     },
     "ja": {
      "words": 1,
      "band": 1,
-     "band_size": 591
+     "band_size": 339
     },
     "ko": {
      "words": 1,
      "band": 1,
-     "band_size": 431
+     "band_size": 405
     },
     "pl": {
      "words": 1,
      "band": 1,
-     "band_size": 707
+     "band_size": 529
     },
     "pt": {
      "words": 1,
      "band": 1,
-     "band_size": 780
+     "band_size": 552
     },
     "ru": {
      "words": 1,
@@ -168,109 +166,25 @@
     "sw": {
      "words": 1,
      "band": 1,
-     "band_size": 736
+     "band_size": 162
     },
     "vi": {
      "words": 1,
      "band": 1,
-     "band_size": 739
+     "band_size": 379
     },
     "zh": {
      "words": 1,
      "band": 1,
-     "band_size": 315
-    }
-   }
-  },
-  {
-   "name": "texture",
-   "path_ids": [
-    2,
-    3
-   ],
-   "per_language": {
-    "ar": {
-     "words": 2,
-     "band": 2,
-     "band_size": 452
-    },
-    "de": {
-     "words": 2,
-     "band": 2,
-     "band_size": 226
-    },
-    "en": {
-     "words": 2,
-     "band": 2,
-     "band_size": 171
-    },
-    "es": {
-     "words": 2,
-     "band": 2,
-     "band_size": 338
-    },
-    "fil": {
-     "words": 2,
-     "band": 2,
-     "band_size": 388
-    },
-    "fr": {
-     "words": 2,
-     "band": 2,
-     "band_size": 501
-    },
-    "hi": {
-     "words": 2,
-     "band": 2,
-     "band_size": 385
-    },
-    "ja": {
-     "words": 2,
-     "band": 2,
-     "band_size": 211
-    },
-    "ko": {
-     "words": 2,
-     "band": 2,
-     "band_size": 367
-    },
-    "pl": {
-     "words": 2,
-     "band": 2,
-     "band_size": 427
-    },
-    "pt": {
-     "words": 2,
-     "band": 2,
-     "band_size": 122
-    },
-    "ru": {
-     "words": 2,
-     "band": 2,
-     "band_size": 567
-    },
-    "sw": {
-     "words": 2,
-     "band": 2,
-     "band_size": 356
-    },
-    "vi": {
-     "words": 2,
-     "band": 2,
-     "band_size": 436
-    },
-    "zh": {
-     "words": 2,
-     "band": 2,
-     "band_size": 126
+     "band_size": 163
     }
    }
   }
  ],
- "audio_gate": "intermediate",
+ "audio_gate": "starter",
  "completion": {
   "all_layers": true
  },
  "authoring": "suggested-then-approved",
- "pin_hash": 4389320487400253527
+ "pin_hash": 556676623499938411
 }

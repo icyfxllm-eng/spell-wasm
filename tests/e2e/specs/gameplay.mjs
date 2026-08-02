@@ -25,7 +25,13 @@ export async function run(browser, base, suite) {
         if (!base_only) return; // skip accented words here
         await typeOnKeyboard(page, word.toLowerCase());
         await page.click('#checkBtn');
-        await page.waitForTimeout(400);
+        // POLL, don't sleep: under the 600KB scan bundle a fixed 400ms
+        // races the feedback paint and flaked two ship gates ('they',
+        // 'away'). The app is correct; the wait was the bug.
+        await page.waitForFunction(
+          () => document.getElementById('feedback').className.includes('good')
+             || document.getElementById('feedback').className.includes('bad'),
+          null, { timeout: 5000 });
         const cls = await page.$eval('#feedback', (e) => e.className);
         assert(cls.includes('good'), `expected good feedback, got "${cls}" for ${word}`);
       } finally { await ctx.close(); }
@@ -40,7 +46,9 @@ export async function run(browser, base, suite) {
       const wrong = word === 'zzzz' ? 'xxxx' : 'zzzz';
       await typeOnKeyboard(page, wrong);
       await page.click('#checkBtn');
-      await page.waitForTimeout(400);
+      await page.waitForFunction(
+        () => document.getElementById('feedback').className.trim().length > 0,
+        null, { timeout: 5000 });
       const cls = await page.$eval('#feedback', (e) => e.className);
       // wrong shows a retry ("Not quite") or a bad reveal — never "good".
       assert(!cls.includes('good'), 'wrong answer was accepted');

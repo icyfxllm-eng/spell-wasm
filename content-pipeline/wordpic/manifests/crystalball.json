@@ -1,18 +1,17 @@
 {
- "id": "arb21",
+ "id": "crystalball",
  "tier": "medium",
  "source": {
-  "title": "Glyph \u0642 (arb)",
-  "license": "Noto Sans Arabic glyph - SIL Open Font License 1.1 (free)",
-  "url": "https://github.com/google/fonts/tree/main/ofl/notosansarabic",
+  "title": "SpellGame original \u2014 crystalball",
+  "license": "Original artwork (SpellGame)",
+  "url": "",
   "attribution": ""
  },
  "parts": {
   "root": [
    0,
    1,
-   2,
-   3
+   2
   ]
  },
  "layers": [
@@ -185,82 +184,81 @@
   {
    "name": "texture",
    "path_ids": [
-    2,
-    3
+    2
    ],
    "per_language": {
     "ar": {
-     "words": 2,
+     "words": 1,
      "band": 2,
      "band_size": 452
     },
     "de": {
-     "words": 2,
+     "words": 1,
      "band": 2,
      "band_size": 226
     },
     "en": {
-     "words": 2,
+     "words": 1,
      "band": 2,
      "band_size": 171
     },
     "es": {
-     "words": 2,
+     "words": 1,
      "band": 2,
      "band_size": 338
     },
     "fil": {
-     "words": 2,
+     "words": 1,
      "band": 2,
      "band_size": 388
     },
     "fr": {
-     "words": 2,
+     "words": 1,
      "band": 2,
      "band_size": 501
     },
     "hi": {
-     "words": 2,
+     "words": 1,
      "band": 2,
      "band_size": 385
     },
     "ja": {
-     "words": 2,
+     "words": 1,
      "band": 2,
      "band_size": 211
     },
     "ko": {
-     "words": 2,
+     "words": 1,
      "band": 2,
      "band_size": 367
     },
     "pl": {
-     "words": 2,
+     "words": 1,
      "band": 2,
      "band_size": 427
     },
     "pt": {
-     "words": 2,
+     "words": 1,
      "band": 2,
      "band_size": 122
     },
     "ru": {
-     "words": 2,
+     "words": 1,
      "band": 2,
      "band_size": 567
     },
     "sw": {
-     "words": 2,
+     "words": 1,
      "band": 2,
      "band_size": 356
     },
     "vi": {
-     "words": 2,
+     "words": 1,
      "band": 2,
      "band_size": 436
     },
     "zh": {
-     "words": 2,
+     "words": 1,
      "band": 2,
      "band_size": 126
     }
@@ -272,5 +270,5 @@
   "all_layers": true
  },
  "authoring": "suggested-then-approved",
- "pin_hash": 4389320487400253527
+ "pin_hash": 2462971461553163010
 }
