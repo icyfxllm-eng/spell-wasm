@@ -29,7 +29,7 @@ def circle(d, cx, cy, r, fill):
 
 
 def jeepney():
-    im, d = canvas(1120, 720)
+    im, d = canvas(1120, 830)
     # long body with the flat hood
     d.rounded_rectangle([80, 220, 1040, 540], radius=60, fill=BLACK)
     d.rounded_rectangle([40, 300, 140, 540], radius=40, fill=BLACK)   # hood nose
@@ -49,6 +49,8 @@ def jeepney():
         circle(d, cx, 590, 90, BLACK)
         circle(d, cx, 590, 48, WHITE)
         circle(d, cx, 590, 18, BLACK)
+    # the road under it (Eric: "ground the jeepney")
+    d.rectangle([30, 722, 1090, 772], fill=BLACK)   # 42px under the wheels
     return im
 
 
@@ -76,20 +78,17 @@ def manekineko():
 
 def acacia():
     im, d = canvas(1080, 880)
-    # Kilimanjaro: broad shield cone behind, snowcap across the wolf-gap
-    d.polygon([(540, 300), (300, 420), (60, 560), (1020, 560), (780, 420)], fill=BLACK)
-    zig = [(400, 372), (450, 398), (500, 370), (550, 400), (600, 368), (650, 396), (680, 372)]
-    d.polygon(zig + [(680, 330), (400, 330)], fill=WHITE)
-    cap = [(x, y - 52) for (x, y) in zig]
-    d.polygon(cap + [(640, 258), (540, 240), (440, 258)], fill=BLACK)
-    # the acacia: flat-top canopy on forking trunk, in front on the plain
-    d.ellipse([150, 604, 610, 720], fill=BLACK)   # canopy slab, 44px under the mountain's base edge
-    d.polygon([(350, 690), (330, 780), (310, 840), (360, 840), (372, 760), (390, 690)],
+    # Kilimanjaro CUT (Eric, 2026-08-01) — the acacia stands alone,
+    # larger, centred on its plain
+    d.ellipse([180, 280, 900, 460], fill=BLACK)   # canopy slab
+    d.polygon([(520, 440), (480, 620), (450, 800), (530, 800), (548, 620), (570, 440)],
               fill=BLACK)                                              # trunk
-    d.polygon([(360, 700), (450, 760), (470, 700)], fill=BLACK)        # fork
-    d.polygon([(455, 755), (470, 840), (510, 840), (480, 745)], fill=BLACK)
+    d.polygon([(540, 470), (680, 620), (710, 460)], fill=BLACK)        # fork limb
+    d.polygon([(665, 610), (690, 800), (750, 800), (700, 590)], fill=BLACK)
+    d.polygon([(510, 480), (380, 610), (360, 460)], fill=BLACK)        # fork limb
+    d.polygon([(388, 600), (350, 800), (290, 800), (352, 585)], fill=BLACK)
     # the plain
-    d.rectangle([60, 828, 1020, 878], fill=BLACK)
+    d.rectangle([60, 830, 1020, 878], fill=BLACK)
     return im
 
 
