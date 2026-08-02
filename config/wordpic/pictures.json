@@ -3714,6 +3714,78 @@
     }
    ],
    "guide": []
+  },
+  {
+   "id": "sitar",
+   "tier": "medium",
+   "subject": "sitar",
+   "icon": "🎻",
+   "kid": true,
+   "wash": false,
+   "pack": "culture5",
+   "paths": [
+    {
+     "mode": "flow",
+     "d": "M256.0 60.0 L395.0 117.0 L452.0 256.0 L395.0 395.0 L256.0 452.0 L117.0 395.0 L60.0 256.0 L117.0 117.0",
+     "order": 1,
+     "budget": [
+      2,
+      10
+     ],
+     "band": 1,
+     "arch": "line",
+     "feature": "skeleton"
+    }
+   ],
+   "guide": []
+  },
+  {
+   "id": "brandenburg",
+   "tier": "medium",
+   "subject": "brandenburg",
+   "icon": "🏛️",
+   "kid": true,
+   "wash": false,
+   "pack": "culture5",
+   "paths": [
+    {
+     "mode": "flow",
+     "d": "M256.0 60.0 L395.0 117.0 L452.0 256.0 L395.0 395.0 L256.0 452.0 L117.0 395.0 L60.0 256.0 L117.0 117.0",
+     "order": 1,
+     "budget": [
+      2,
+      10
+     ],
+     "band": 1,
+     "arch": "line",
+     "feature": "skeleton"
+    }
+   ],
+   "guide": []
+  },
+  {
+   "id": "colosseum",
+   "tier": "hard",
+   "subject": "colosseum",
+   "icon": "🏟️",
+   "kid": false,
+   "wash": false,
+   "pack": "culture5",
+   "paths": [
+    {
+     "mode": "flow",
+     "d": "M256.0 60.0 L395.0 117.0 L452.0 256.0 L395.0 395.0 L256.0 452.0 L117.0 395.0 L60.0 256.0 L117.0 117.0",
+     "order": 1,
+     "budget": [
+      2,
+      10
+     ],
+     "band": 1,
+     "arch": "line",
+     "feature": "skeleton"
+    }
+   ],
+   "guide": []
   }
  ]
 }

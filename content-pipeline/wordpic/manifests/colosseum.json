@@ -1,0 +1,218 @@
+{
+ "id": "colosseum",
+ "tier": "hard",
+ "source": {
+  "title": "SpellGame original \u2014 Colosseum (culture 8, worldart)",
+  "license": "Original artwork (SpellGame)",
+  "url": "",
+  "attribution": ""
+ },
+ "parts": {
+  "root": [
+   0,
+   1,
+   2,
+   3,
+   4,
+   5,
+   6,
+   7,
+   8,
+   9,
+   10,
+   11,
+   12,
+   13,
+   14,
+   15
+  ]
+ },
+ "layers": [
+  {
+   "name": "outline",
+   "path_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7
+   ],
+   "per_language": {
+    "ar": {
+     "words": 8,
+     "band": 0,
+     "band_size": 60
+    },
+    "de": {
+     "words": 8,
+     "band": 0,
+     "band_size": 630
+    },
+    "en": {
+     "words": 8,
+     "band": 0,
+     "band_size": 761
+    },
+    "es": {
+     "words": 8,
+     "band": 0,
+     "band_size": 560
+    },
+    "fil": {
+     "words": 8,
+     "band": 0,
+     "band_size": 241
+    },
+    "fr": {
+     "words": 8,
+     "band": 0,
+     "band_size": 363
+    },
+    "hi": {
+     "words": 8,
+     "band": 0,
+     "band_size": 548
+    },
+    "ja": {
+     "words": 8,
+     "band": 0,
+     "band_size": 594
+    },
+    "ko": {
+     "words": 8,
+     "band": 0,
+     "band_size": 442
+    },
+    "pl": {
+     "words": 8,
+     "band": 0,
+     "band_size": 452
+    },
+    "pt": {
+     "words": 8,
+     "band": 0,
+     "band_size": 719
+    },
+    "ru": {
+     "words": 8,
+     "band": 0,
+     "band_size": 49
+    },
+    "sw": {
+     "words": 8,
+     "band": 0,
+     "band_size": 65
+    },
+    "vi": {
+     "words": 8,
+     "band": 0,
+     "band_size": 392
+    },
+    "zh": {
+     "words": 8,
+     "band": 0,
+     "band_size": 185
+    }
+   }
+  },
+  {
+   "name": "features",
+   "path_ids": [
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15
+   ],
+   "per_language": {
+    "ar": {
+     "words": 8,
+     "band": 1,
+     "band_size": 763
+    },
+    "de": {
+     "words": 8,
+     "band": 1,
+     "band_size": 459
+    },
+    "en": {
+     "words": 8,
+     "band": 1,
+     "band_size": 693
+    },
+    "es": {
+     "words": 8,
+     "band": 1,
+     "band_size": 452
+    },
+    "fil": {
+     "words": 8,
+     "band": 1,
+     "band_size": 576
+    },
+    "fr": {
+     "words": 8,
+     "band": 1,
+     "band_size": 640
+    },
+    "hi": {
+     "words": 8,
+     "band": 1,
+     "band_size": 385
+    },
+    "ja": {
+     "words": 8,
+     "band": 1,
+     "band_size": 246
+    },
+    "ko": {
+     "words": 8,
+     "band": 1,
+     "band_size": 326
+    },
+    "pl": {
+     "words": 8,
+     "band": 1,
+     "band_size": 581
+    },
+    "pt": {
+     "words": 8,
+     "band": 1,
+     "band_size": 698
+    },
+    "ru": {
+     "words": 8,
+     "band": 1,
+     "band_size": 757
+    },
+    "sw": {
+     "words": 8,
+     "band": 1,
+     "band_size": 736
+    },
+    "vi": {
+     "words": 8,
+     "band": 1,
+     "band_size": 404
+    },
+    "zh": {
+     "words": 8,
+     "band": 1,
+     "band_size": 313
+    }
+   }
+  }
+ ],
+ "audio_gate": "advanced",
+ "completion": {
+  "all_layers": true
+ },
+ "authoring": "suggested-then-approved",
+ "pin_hash": 3706560935389972636
+}

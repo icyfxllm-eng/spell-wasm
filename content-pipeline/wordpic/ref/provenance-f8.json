@@ -717,5 +717,29 @@
     "sourceUrl": "",
     "file": "tools/draw_wave15.py",
     "note": "Drawn coordinate list; candidates approved by Eric 2026-08-02."
+  },
+  {
+    "subject": "sitar",
+    "title": "SpellGame original — sitar (culture 8, hi)",
+    "license": "Original artwork (SpellGame)",
+    "sourceUrl": "",
+    "file": "tools/draw_wave16.py",
+    "note": "Drawn coordinate list; candidates approved by Eric 2026-08-02."
+  },
+  {
+    "subject": "brandenburg",
+    "title": "SpellGame original — Brandenburg Gate (culture 8, de)",
+    "license": "Original artwork (SpellGame)",
+    "sourceUrl": "",
+    "file": "tools/draw_wave16.py",
+    "note": "Drawn coordinate list; candidates approved by Eric 2026-08-02."
+  },
+  {
+    "subject": "colosseum",
+    "title": "SpellGame original — Colosseum (culture 8, worldart)",
+    "license": "Original artwork (SpellGame)",
+    "sourceUrl": "",
+    "file": "tools/draw_wave16.py",
+    "note": "Drawn coordinate list; candidates approved by Eric 2026-08-02."
   }
 ]
