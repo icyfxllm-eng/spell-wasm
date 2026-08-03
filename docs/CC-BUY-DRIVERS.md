@@ -111,3 +111,16 @@ DECISION LEDGER (Eric, 2026-08-02 — recorded at greenlight)
   (daily, Passport, Home Pair, Match) queues behind the pivot landing.
   BATCH-COMPLETE BUILD: all nine files now have their executable-today scope
   shipped; remaining items are human-gated or paste-gated.
+
+* SHIP 126 (build 133): CC-TRANSLATE-TOOLS core delivered — BATCH COMPLETE.
+  The Wave-3 zero-code CI immediately earned a footnote: its first pattern
+  matched loanword_spelling (a learner SKILL id, prior art) — tightened to
+  loanword_explorer|loanword_pack. BD-3 REMAINDER (signed D6 decoupling)
+  built and committed behind this entry: weekly digest (opt-in, off by
+  default, id 3, Sunday 17:00, body re-templated from live counts at every
+  boot so the fired copy is never staler than the last open) + the printable
+  PDF report (one page per language with learner data, mastery/trouble/
+  week-over-week, via the yearbook's deterministic metadata-free assembler;
+  D5 decided: wordmark carried — teacher-bound page). week_over_week lives
+  in ReportsQuery, preserving the journal's sole-reader law. Awaiting a
+  ship number.

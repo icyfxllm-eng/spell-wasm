@@ -231,7 +231,7 @@ fn nest(piece_svg: &str, x: u32, y: u32, w: u32, h: u32) -> String {
 
 /// Local base64 (the packs precedent — the wall owns the direction of
 /// spellpic imports, and this module must not add one for 15 lines).
-fn b64(bytes: &[u8]) -> String {
+pub(crate) fn b64(bytes: &[u8]) -> String {
     const T: &[u8; 64] = b"ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
     let mut out = String::with_capacity(bytes.len().div_ceil(3) * 4);
     for chunk in bytes.chunks(3) {
@@ -247,7 +247,7 @@ fn b64(bytes: &[u8]) -> String {
 
 // ---------------- rasterize + export ----------------
 
-async fn rasterize(svg: &str, w: u32, h: u32) -> Option<PageJpeg> {
+pub(crate) async fn rasterize(svg: &str, w: u32, h: u32) -> Option<PageJpeg> {
     let doc = web_sys::window()?.document()?;
     let img: web_sys::HtmlImageElement = doc.create_element("img").ok()?.dyn_into().ok()?;
     let url = format!("data:image/svg+xml;base64,{}", b64(svg.as_bytes()));

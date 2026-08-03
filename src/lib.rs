@@ -230,6 +230,15 @@ fn wire(app: &App) {
     family_voices::wire(&app);
     yearbook_ui::wire(&app);
     calendar_ui::wire(&app);
+    {
+        // BD-3 digest: refresh the scheduled copy with live counts so the
+        // Sunday notification is never staler than the last app open.
+        let s = app.borrow();
+        if crate::storage::get_raw("spell_digest_on").as_deref() == Some("1") {
+            let (tw, _) = reports::week_over_week(&s.lang, (js_sys::Date::now() / 86_400_000.0) as u32);
+            notifications::weekly_digest(true, &i18n::tp("gdash.digestBody", &[("n", &tw.to_string())]));
+        }
+    }
     translate_ui::wire(&app);
     packs::wire(app);
     wire_glow_and_settings(app);

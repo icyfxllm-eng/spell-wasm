@@ -135,6 +135,31 @@ fn bucket(i: usize, len: usize) -> Position {
 /// D3's first reader: words answered CORRECTLY but with long gaps between
 /// keystrokes — "right but not yet fluent". Returns (word, avg gap ms),
 /// slowest first.
+/// Mastered-count this week vs last (Sunday weeks, journal-derived).
+/// The dash's week-over-week row and the digest body both ride this.
+pub fn week_over_week(lang: &str, today: u32) -> (u32, u32) {
+    let ws = crate::calendar::week_start(today);
+    let mut this_week = 0u32;
+    let mut last_week = 0u32;
+    for (date, e) in crate::journal::read_all(lang) {
+        let mut it = date.split('-');
+        let (Some(y), Some(m), Some(d)) = (
+            it.next().and_then(|s| s.parse::<i64>().ok()),
+            it.next().and_then(|s| s.parse::<u32>().ok()),
+            it.next().and_then(|s| s.parse::<u32>().ok()),
+        ) else {
+            continue;
+        };
+        let day = crate::yearbook::day_of_pub(y, m, d);
+        if day >= ws {
+            this_week += e.mastered.len() as u32;
+        } else if day >= ws.saturating_sub(7) {
+            last_week += e.mastered.len() as u32;
+        }
+    }
+    (this_week, last_week)
+}
+
 pub fn hesitant_words(lang: &str, cap: usize) -> Vec<(String, u32)> {
     let ring: Vec<(String, Vec<u32>)> =
         crate::storage::get_json(&format!("spell_timing_{lang}")).unwrap_or_default();

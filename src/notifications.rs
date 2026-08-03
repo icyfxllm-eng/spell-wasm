@@ -41,6 +41,45 @@ fn set(obj: &Object, key: &str, val: &JsValue) {
 /// period closes — scheduled on-device for Jan 1, 09:00, id 2, cancelled
 /// whenever the parent opts back out. The only time-based prompt in the
 /// BD batch.
+/// BD-3 weekly digest: ONE local notification per week, generated
+/// on-device (I2 — zero network), off by default. The body is filled
+/// from an audited template at (re)schedule time — every app boot with
+/// the toggle on refreshes the scheduled copy with current counts, so
+/// the fired notification is at most a week stale, never fabricated.
+pub fn weekly_digest(enabled: bool, body: &str) {
+    let Some(ln) = plugin() else { return };
+    let ids = Array::new();
+    let id_obj = Object::new();
+    set(&id_obj, "id", &JsValue::from_f64(3.0));
+    ids.push(&id_obj);
+    let cancel_arg = Object::new();
+    set(&cancel_arg, "notifications", &ids);
+    if let Some(f) = method(&ln, "cancel") {
+        let _ = f.call1(&ln, &cancel_arg);
+    }
+    if !enabled {
+        return;
+    }
+    // Sunday 17:00, repeating weekly (weekday 1 = Sunday in the plugin).
+    let on = Object::new();
+    set(&on, "weekday", &JsValue::from_f64(1.0));
+    set(&on, "hour", &JsValue::from_f64(17.0));
+    let schedule = Object::new();
+    set(&schedule, "on", &on);
+    let notif = Object::new();
+    set(&notif, "id", &JsValue::from_f64(3.0));
+    set(&notif, "title", &JsValue::from_str(&crate::i18n::t("gdash.title")));
+    set(&notif, "body", &JsValue::from_str(body));
+    set(&notif, "schedule", &schedule);
+    let arr = Array::new();
+    arr.push(&notif);
+    let arg = Object::new();
+    set(&arg, "notifications", &arr);
+    if let Some(f) = method(&ln, "schedule") {
+        let _ = f.call1(&ln, &arg);
+    }
+}
+
 pub fn yearbook_ping(enabled: bool) {
     let Some(ln) = plugin() else { return };
     if !enabled {
