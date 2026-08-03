@@ -74,6 +74,22 @@ pub fn promote_miss(state: &mut AppState, word: &str, lang: &str) -> bool {
     state.misses[idx].box_ += 1;
     let cleared;
     if state.misses[idx].box_ > SR_MAXBOX {
+        // CC-REPORTS: graduation IS the redemption moment — record it
+        // before the entry vanishes (3+ misses = a conquered boss).
+        if state.misses[idx].misses >= 3 {
+            let mut reds: Vec<crate::reports::Redemption> =
+                crate::storage::get_json(crate::reports::REDEMPTION_KEY).unwrap_or_default();
+            reds.push(crate::reports::Redemption {
+                word: state.misses[idx].word.clone(),
+                lang: state.misses[idx].lang.clone(),
+                misses: state.misses[idx].misses,
+                mastered_ts: now_ms(),
+            });
+            while reds.len() > crate::reports::REDEMPTION_CAP {
+                reds.remove(0);
+            }
+            crate::storage::set_json(crate::reports::REDEMPTION_KEY, &reds);
+        }
         state.misses.remove(idx);
         cleared = state.misses.is_empty();
     } else {

@@ -203,11 +203,11 @@ mod tests {
     #[test]
     fn registry_parses_and_holds_the_shipped_modes() {
         let all = all();
-        assert_eq!(all.len(), 10, "10 modes registered");
+        assert_eq!(all.len(), 11, "11 modes registered");
         // File order IS tile order (D6); practice leads (CC-PRACTICE D9).
         assert_eq!(
             ids(&all),
-            vec!["practice", "ghost_racing", "syllable_replay", "say_it", "photo_list", "spell_aloud", "word_stories", "online_spelloff", "def_match", "word_picture"],
+            vec!["practice", "ghost_racing", "syllable_replay", "say_it", "photo_list", "spell_aloud", "word_stories", "online_spelloff", "def_match", "word_picture", "reports"],
         );
     }
 
@@ -240,12 +240,13 @@ mod tests {
         let all = all();
         let c = HubCtx { kid: true, ..ctx() };
         let got = ids(&visible(&all, &c));
-        // CC-HUB-CLEANUP D5 menu, reconciled per CC-WORD-PICTURE's own note:
-        // Word Picture registered second, so the menu is exactly these FOUR.
+        // CC-HUB-CLEANUP D5 menu, reconciled twice since: Word Picture per
+        // its own note, and the CC-REPORTS Quest Log — the kid tab IS a kid
+        // surface (D1: free, drives daily play), so it tiles here. FIVE now.
         assert_eq!(
             got,
-            vec!["practice", "ghost_racing", "def_match", "word_picture"],
-            "en Kid: practice first, then ghost_racing + def_match + word_picture"
+            vec!["practice", "ghost_racing", "def_match", "word_picture", "reports"],
+            "en Kid: practice first, then ghost_racing + def_match + word_picture + reports"
         );
         assert!(!got.contains(&"say_it".to_string()), "say_it is never kid-visible (COPPA)");
         assert!(!got.contains(&"photo_list".to_string()));
@@ -255,9 +256,9 @@ mod tests {
     fn little_speller_in_spanish_sees_the_same_pruned_menu() {
         let all = all();
         let c = HubCtx { kid: true, lang: "es".into(), ..ctx() };
-        // CC-HUB-CLEANUP D2/D5 (+ Word Picture reconciliation): the pruned
-        // menu holds even on es.
-        assert_eq!(ids(&visible(&all, &c)), vec!["practice", "ghost_racing", "def_match", "word_picture"]);
+        // CC-HUB-CLEANUP D2/D5 (+ Word Picture and Quest Log
+        // reconciliations): the pruned menu holds even on es.
+        assert_eq!(ids(&visible(&all, &c)), vec!["practice", "ghost_racing", "def_match", "word_picture", "reports"]);
     }
 
     #[test]
@@ -266,7 +267,7 @@ mod tests {
         let c = HubCtx { native: false, ..ctx() };
         let got = ids(&visible(&all, &c));
         assert!(got.contains(&"ghost_racing".to_string()), "ghost racing is all-platforms");
-        for ios_only in ["say_it", "photo_list", "spell_aloud"] {
+        for ios_only in ["say_it", "photo_list", "spell_aloud", "reports"] {
             assert!(!got.contains(&ios_only.to_string()), "{ios_only} is iOS-only");
         }
     }

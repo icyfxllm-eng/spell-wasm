@@ -398,7 +398,13 @@
   .wp-fam-head{width:100%;color:#95a0bb;font-size:13px;letter-spacing:.06em;text-transform:uppercase;padding:10px 2px 4px}
   .pack-section{margin-top:14px;border-top:1px solid #232c42;padding-top:10px}
   .pack-head{color:#95a0bb;font-size:13px;letter-spacing:.06em;text-transform:uppercase;padding-bottom:6px}
-  .pack-row{display:flex;justify-content:space-between;align-items:center;padding:6px 2px}
+  .gd-sec{margin:12px 0}.gd-h{font-weight:700;margin-bottom:4px}.gd-row{padding:3px 0;opacity:.9}
+.gd-chip{display:inline-block;background:rgba(128,128,128,.15);border-radius:8px;padding:2px 8px;margin:2px}
+#gdashAnswer{width:80px;text-align:center}
+.rep-row{display:flex;justify-content:space-between;align-items:center;padding:9px 4px;border-bottom:1px solid rgba(128,128,128,.2)}
+.rep-row.door{cursor:pointer}.rep-pips{letter-spacing:3px}.rep-head{margin:14px 0 4px;font-weight:600;opacity:.75}
+.rep-empty{opacity:.6;padding:8px 4px}.rep-modal{max-height:80vh;overflow-y:auto}
+.pack-row{display:flex;justify-content:space-between;align-items:center;padding:6px 2px}
   .pk-state{color:#95a0bb;font-size:13px}
   .wp-shelf{display:flex;gap:10px;overflow-x:auto;padding:2px 2px 8px}
   .wp-shelf .wp-tile{flex:0 0 auto}
@@ -1270,7 +1276,18 @@
   <section class="card stats">
     <h2><span data-i18n="card.accuracy">Your accuracy</span> <span class="scope" id="statsLang"></span></h2>
     <div id="statsBody"><div class="stats-empty">Spell a few words to start tracking your accuracy by difficulty.</div>
-    <div id="statsGuardian" class="btn-hide"></div></div>
+    <div id="statsGuardian" class="btn-hide"></div>
+    <!-- BD-3 guardian dash: parent-gated, app-only, view-only. -->
+    <div id="gdash">
+      <button class="ghost" id="gdashOpen" data-i18n="gdash.enter">For grown-ups</button>
+      <div id="gdashGate" class="btn-hide">
+        <div id="gdashQ"></div>
+        <input id="gdashAnswer" inputmode="numeric" autocomplete="off" />
+        <button class="ghost" id="gdashGo" data-i18n="gdash.check">Unlock</button>
+        <small id="gdashErr"></small>
+      </div>
+      <div id="gdashBody" class="btn-hide"></div>
+    </div></div>
     <div class="stats-foot"><span class="total" id="statsTotal"></span><button class="ghost danger" id="resetStats" data-i18n="card.resetLang">reset this language</button></div>
   </section>
 
@@ -1860,6 +1877,21 @@
     </div>
   </div>
 
+
+  <!-- CC-REPORTS Quest Log (kid tab): app-shell only, every row a door. -->
+  <button id="repOpenBtn" hidden aria-hidden="true"></button>
+  <div class="scrim" id="repScrim">
+    <div class="modal rep-modal">
+      <h3 data-i18n="reports.name">Quest Log</h3>
+      <div class="rep-head" data-i18n="reports.conquer">Words to Conquer</div>
+      <div id="repConquer"></div>
+      <div class="rep-head" data-i18n="reports.rematch">Ready for a rematch</div>
+      <div id="repRematch"></div>
+      <div class="rep-head" data-i18n="reports.redemption">Redemption List</div>
+      <div id="repRedeemed"></div>
+      <button class="btn btn-check" id="repDone" data-i18n="settings.done" style="width:100%;margin-top:16px">Done</button>
+    </div>
+  </div>
   <div class="scrim" id="setScrim">
     <div class="modal">
       <h3 data-i18n="settings.title">Settings</h3>

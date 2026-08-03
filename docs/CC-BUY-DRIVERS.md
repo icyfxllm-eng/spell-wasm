@@ -39,3 +39,26 @@ DECISION LEDGER (Eric, 2026-08-02 — recorded at greenlight)
 * CC-CALENDAR greenlit (Eric, 2026-08-02) — all eight files now live. Slots after the 121-123 ladder (depends on ReportsQuery from 121, snapshot fields from 120); journal + planner + dealt hand + cheer flow as one wave on Eric's next ship number.
 * CC-TRANSLATE-TOOLS decisions (Eric, 2026-08-02): D5 — WHOLE SUITE APP-ONLY (blanket app-exclusive ruling stands; tools 1-4 join the wall, denylist auto-extends). D1 SIGNED (core+daily+Passport free; depth tools Complete). D2 SIGNED (Kid Mode: full core+Passport+daily, no camera; Little Speller: no translator). D9 decided (word-level only, no phrase path even as stub). Wave-3 gates D3/D4/D6/D7/D8 UNSIGNED — design docs only, zero executable paths, CI-checked. Slots after CC-CALENDAR. NOTE: CC-BANK-TRANSLATE (authoritative parent on gloss pivot) not yet in hand; Phase A gloss column is deadline-critical and untouchable. File awaits per-file greenlight.
 * CC-TRANSLATE-TOOLS GREENLIT (Eric, 2026-08-02) — ninth file live. Slots after CC-CALENDAR in the build ladder. Wave-3 gates remain unsigned. Parent file CC-BANK-TRANSLATE still not in hand; gloss-pivot data availability governs when the core can light up (schema-first build, dark until glossAudited languages exist).
+
+* CC-BANK-COMPLETE decisions (Eric, 2026-08-03): "D-FLOOR as proposed, D1-D5 as proposed."
+  D-FLOOR per-language rank floors signed (en frozen reference; sw 3-tier structural cap).
+  D1 form-level ranking. D2 hash-pinned composite (re-pin = Eric-acknowledged CI event).
+  D3 proper-noun allowlist EMPTY at launch. D4 German compounds rank-decided, >=4-morpheme
+  HUMAN_ONLY. D5 en zero-writes / hi design-ahead only. Solutions plan approved
+  ("kets make 1-5 work! like it"). Still gated: CC-BANK-EXPANSION + CC-WORDLIST-SOURCES
+  pastes (Features 1-2), sampled-audit amendment (UNMUNCH/GENERATE). Findings for the
+  record: wordfreq LACKS sw and silently substitutes English — sw composite rides
+  FrequencyWords+Leipzig only; TTS gate pre-proven by the pack builder run.
+
+* SHIP 121 (build 128 era): BD-2 app half + CC-REPORTS foundation. Wall scanner
+  earned its keep — caught shared code importing the Spell Picture subtree (I3);
+  fixed with a local base64, not an exception.
+
+* 122 WAVE (per standing trigger "green light bd-3 and reports when 121 ships"):
+  CC-REPORTS surfaces (D3 keystroke timing live at both keyboard append paths,
+  gaps never span words; kid Quest Log tile via the hub, rows are doors ->
+  interim smart-review per DEEP_LINKS) + BD-3 guardian dash core (parent-gated
+  by the worded-math challenge — its own instance, never touches the agegate
+  verdict; mastery map / trouble spots / hesitation list / what's-next;
+  BD-D3 English-free honored, gdash pool x16). Weekly digest + PDF ride a
+  later wave under the signed D6 decoupling.

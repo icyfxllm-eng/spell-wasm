@@ -368,6 +368,13 @@ const STORE_PREFIX: &str = "spell_learner_";
 /// degrade to a fresh profile rather than a crash: the learner is an
 /// observer of the game, never a gate on it.
 pub fn note_attempt(lang: &str, word: &str, correct: bool, channel: Channel) {
+    note_attempt_typed(lang, word, correct, channel, None)
+}
+
+/// CC-REPORTS: the submit path passes the raw attempt on MISSES so the
+/// grapheme diagnosis has its material. Correct answers pass None — the
+/// log never stores what didn't diverge.
+pub fn note_attempt_typed(lang: &str, word: &str, correct: bool, channel: Channel, typed: Option<&str>) {
     let key = format!("{STORE_PREFIX}{lang}");
     let mut st = crate::storage::get_raw(&key)
         .and_then(|j| load_state(&j).ok())
@@ -378,7 +385,7 @@ pub fn note_attempt(lang: &str, word: &str, correct: bool, channel: Channel) {
         skills: hazards(lang, word),
         correct,
         channel,
-        typed: None,
+        typed: if correct { None } else { typed.map(|t| t.to_string()) },
     });
     crate::storage::set_json(&key, &st);
 }

@@ -38,7 +38,7 @@ use crate::App;
 /// is what lets the same file describe a mode for a future surface that has no
 /// such element. `None` = an in-round aid with no destination.
 #[cfg(not(feature = "web"))]
-const N_LAUNCH: usize = 10;
+const N_LAUNCH: usize = 11;
 #[cfg(feature = "web")]
 const N_LAUNCH: usize = 9;
 const LAUNCH: [(&str, Option<&str>); N_LAUNCH] = [
@@ -59,6 +59,10 @@ const LAUNCH: [(&str, Option<&str>); N_LAUNCH] = [
     // bundle, which is exactly what the wall scan polices.
     #[cfg(not(feature = "web"))]
     ("word_picture", Some("wordPicOpen")),
+    // CC-REPORTS: app-exclusive like the rest of the batch — the row is
+    // deleted on web so the mode name stays out of the web bundle.
+    #[cfg(not(feature = "web"))]
+    ("reports", Some("repOpenBtn")),
 ];
 
 fn launch_for(id: &str) -> Option<&'static str> {

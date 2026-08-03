@@ -447,6 +447,7 @@ pub fn type_char(app: &App, ch: char) {
         return;
     }
     app.borrow_mut().answer.push(ch);
+    note_key_time();
     render_letters(app, false);
     crate::haptics::key_tap();
     announce(&ch.to_string());
@@ -476,6 +477,7 @@ pub fn type_jamo(app: &App, jamo: char) {
     }
     let composed = crate::hangul::feed(&app.borrow().answer, jamo);
     app.borrow_mut().answer = composed;
+    note_key_time();
     render_letters(app, true);
     crate::haptics::key_tap();
     announce(&jamo.to_string());
@@ -966,8 +968,43 @@ pub fn wire_placement(app: &App) {
     });
 }
 
+
+thread_local! {
+    /// CC-REPORTS D3 (SIGNED): per-keystroke intervals for the current
+    /// word — the batch's one sanctioned new capture. Ms gaps between
+    /// accepted characters; persisted ONLY on correct submits (the
+    /// Hesitation Map reads "correct but shaky"), ring-capped.
+    static KEY_TIMES: std::cell::RefCell<Vec<f64>> = const { std::cell::RefCell::new(Vec::new()) };
+}
+
+pub fn note_key_time() {
+    KEY_TIMES.with(|k| k.borrow_mut().push(js_sys::Date::now()));
+}
+
+const TIMING_KEY_PREFIX: &str = "spell_timing_";
+const TIMING_CAP: usize = 200;
+
+fn persist_timing(lang: &str, word: &str, correct: bool) {
+    let times = KEY_TIMES.with(|k| std::mem::take(&mut *k.borrow_mut()));
+    if !correct || times.len() < 3 {
+        return;
+    }
+    let gaps: Vec<u32> = times.windows(2).map(|w| (w[1] - w[0]).clamp(0.0, 60_000.0) as u32).collect();
+    let key = format!("{TIMING_KEY_PREFIX}{lang}");
+    let mut ring: Vec<(String, Vec<u32>)> =
+        crate::storage::get_json(&key).unwrap_or_default();
+    ring.push((word.to_string(), gaps));
+    while ring.len() > TIMING_CAP {
+        ring.remove(0);
+    }
+    crate::storage::set_json(&key, &ring);
+}
+
 pub fn next_word(app: &App) {
     clear_meaning();
+    // D3: gaps never span words — an abandoned word's times must not
+    // prefix the next word's rhythm.
+    KEY_TIMES.with(|k| k.borrow_mut().clear());
     // Daily Challenge: finish once the fixed set is exhausted.
     if {
         let s = app.borrow();
@@ -1212,7 +1249,8 @@ pub fn submit_guess(app: &App) {
             crate::dom::show_toast(&crate::i18n::t("placement.done"));
         }
     } else {
-        crate::learner::note_attempt(&cur_lang, &word, correct, crate::learner::Channel::Typed);
+        crate::learner::note_attempt_typed(&cur_lang, &word, correct, crate::learner::Channel::Typed, Some(&typed));
+    persist_timing(&cur_lang, &word, correct);
     }
     // CC-IOS-SURFACES (BD-1): the widget snapshot follows meaningful state
     // (streak / daily-done movement). One-way write; a no-op off-app.

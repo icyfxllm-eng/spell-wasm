@@ -1162,7 +1162,18 @@
   <section class="card stats">
     <h2><span data-i18n="card.accuracy">Your accuracy</span> <span class="scope" id="statsLang"></span></h2>
     <div id="statsBody"><div class="stats-empty">Spell a few words to start tracking your accuracy by difficulty.</div>
-    <div id="statsGuardian" class="btn-hide"></div></div>
+    <div id="statsGuardian" class="btn-hide"></div>
+    <!-- BD-3 guardian dash: parent-gated, app-only, view-only. -->
+    <div id="gdash">
+      <button class="ghost" id="gdashOpen" data-i18n="gdash.enter">For grown-ups</button>
+      <div id="gdashGate" class="btn-hide">
+        <div id="gdashQ"></div>
+        <input id="gdashAnswer" inputmode="numeric" autocomplete="off" />
+        <button class="ghost" id="gdashGo" data-i18n="gdash.check">Unlock</button>
+        <small id="gdashErr"></small>
+      </div>
+      <div id="gdashBody" class="btn-hide"></div>
+    </div></div>
     <div class="stats-foot"><span class="total" id="statsTotal"></span><button class="ghost danger" id="resetStats" data-i18n="card.resetLang">reset this language</button></div>
   </section>
 
@@ -1674,6 +1685,21 @@
     </div>
   </div>
 
+
+  <!-- CC-REPORTS Quest Log (kid tab): app-shell only, every row a door. -->
+  <button id="repOpenBtn" hidden aria-hidden="true"></button>
+  <div class="scrim" id="repScrim">
+    <div class="modal rep-modal">
+      <h3 data-i18n="reports.name">Quest Log</h3>
+      <div class="rep-head" data-i18n="reports.conquer">Words to Conquer</div>
+      <div id="repConquer"></div>
+      <div class="rep-head" data-i18n="reports.rematch">Ready for a rematch</div>
+      <div id="repRematch"></div>
+      <div class="rep-head" data-i18n="reports.redemption">Redemption List</div>
+      <div id="repRedeemed"></div>
+      <button class="btn btn-check" id="repDone" data-i18n="settings.done" style="width:100%;margin-top:16px">Done</button>
+    </div>
+  </div>
   <div class="scrim" id="setScrim">
     <div class="modal">
       <h3 data-i18n="settings.title">Settings</h3>

@@ -131,6 +131,29 @@ fn bucket(i: usize, len: usize) -> Position {
 /// Confusion pairs with counts and positions, from the enriched learner
 /// log (entries that carry the typed text — capture began with this
 /// wave; older entries simply don't contribute).
+
+/// D3's first reader: words answered CORRECTLY but with long gaps between
+/// keystrokes — "right but not yet fluent". Returns (word, avg gap ms),
+/// slowest first.
+pub fn hesitant_words(lang: &str, cap: usize) -> Vec<(String, u32)> {
+    let ring: Vec<(String, Vec<u32>)> =
+        crate::storage::get_json(&format!("spell_timing_{lang}")).unwrap_or_default();
+    let mut best: std::collections::HashMap<String, u32> = std::collections::HashMap::new();
+    for (word, gaps) in ring {
+        if gaps.is_empty() {
+            continue;
+        }
+        let avg = (gaps.iter().map(|g| *g as u64).sum::<u64>() / gaps.len() as u64) as u32;
+        // Latest entry wins: the ring is append-ordered, and fluency NOW is
+        // the honest signal, not the worst historical run.
+        best.insert(word, avg);
+    }
+    let mut v: Vec<(String, u32)> = best.into_iter().filter(|(_, a)| *a > 1800).collect();
+    v.sort_by(|a, b| b.1.cmp(&a.1));
+    v.truncate(cap);
+    v
+}
+
 pub fn confusion_pairs(lang: &str) -> Vec<((char, char), Position, u32)> {
     let st = crate::learner::load_for(lang);
     let mut counts: std::collections::BTreeMap<(char, char, u8), u32> = Default::default();
@@ -191,5 +214,48 @@ mod tests {
         let v = words_to_conquer(&st, "en", 10);
         assert_eq!(v[0], ("gnome".to_string(), 4), "capped at four pips");
         assert_eq!(v[1], ("knee".to_string(), 2));
+    }
+}
+
+/// CC-REPORTS I4 — the deep-link contract: every kid-row TYPE declares
+/// its fix door here. A row type absent from this table is a build
+/// failure (the test below is that CI).
+pub const DEEP_LINKS: [(&str, &str); 4] = [
+    ("conquer", "review"),      // Take it on -> smart review
+    ("redemption", "review"),   // celebrate, replay path
+    ("trap", "review"),         // INTERIM until CC-TRAP-BOSSES: class-filtered review
+    ("rematch", "review"),      // the due set -> review session
+];
+
+#[cfg(test)]
+mod kid_pool_lint {
+    /// I4's lint: the conquest pool bans %, failure tallies, and
+    /// comparison language on kid surfaces — checked against the shipped
+    /// en pool (translations are audited to match its register).
+    #[test]
+    fn conquest_pool_has_no_deficit_framing() {
+        let en = include_str!("i18n/locales/en.json");
+        let d: serde_json::Value = serde_json::from_str(en).unwrap();
+        let banned = ["%", "wrong", "failed", "failure", "behind", "worse", "error"];
+        for (k, v) in d.as_object().unwrap() {
+            if !k.starts_with("reports.") {
+                continue;
+            }
+            let text = v.as_str().unwrap_or("").to_lowercase();
+            for b in banned {
+                assert!(!text.contains(b), "kid pool key {k} carries banned token {b:?}");
+            }
+        }
+    }
+
+    /// Every kid row type has a door (reports are doors, not verdicts).
+    #[test]
+    fn every_row_type_has_a_deep_link() {
+        for row in ["conquer", "redemption", "trap", "rematch"] {
+            assert!(super::DEEP_LINKS.iter().any(|(r, _)| *r == row), "{row} has no door");
+        }
+        for (_, target) in super::DEEP_LINKS {
+            assert!(!target.is_empty());
+        }
     }
 }
