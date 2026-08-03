@@ -401,6 +401,7 @@
   .gd-sec{margin:12px 0}.gd-h{font-weight:700;margin-bottom:4px}.gd-row{padding:3px 0;opacity:.9}
 .gd-chip{display:inline-block;background:rgba(128,128,128,.15);border-radius:8px;padding:2px 8px;margin:2px}
 #gdashAnswer{width:80px;text-align:center}
+.tr-word{font-size:44px;font-weight:700;text-align:center;margin:14px 0}
 .cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:4px;margin:10px 0}
 .cal-cell{padding:6px 2px;border-radius:8px;background:rgba(128,128,128,.08);border:none;display:flex;flex-direction:column;align-items:center;cursor:pointer}
 .cal-cell.today{outline:2px solid rgba(100,150,255,.7)}
@@ -1892,6 +1893,14 @@
   <!-- CC-REPORTS Quest Log (kid tab): app-shell only, every row a door. -->
   <button id="repOpenBtn" hidden aria-hidden="true"></button>
   <button id="calOpenBtn" hidden aria-hidden="true"></button>
+  <button id="trOpenBtn" hidden aria-hidden="true"></button>
+  <div class="scrim" id="trScrim">
+    <div class="modal rep-modal">
+      <h3 data-i18n="tr.name">Spell Translator</h3>
+      <div id="trBody"></div>
+      <button class="btn btn-check" id="trDone" data-i18n="settings.done" style="width:100%;margin-top:16px">Done</button>
+    </div>
+  </div>
   <div class="scrim" id="calScrim">
     <div class="modal rep-modal">
       <h3 data-i18n="cal.name">Spell Calendar</h3>

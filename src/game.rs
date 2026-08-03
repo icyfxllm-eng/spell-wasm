@@ -100,7 +100,7 @@ fn pool_for_tier(state: &AppState, tier: &str) -> Vec<String> {
     }
 }
 
-fn active_word_list(state: &AppState, tier: &str) -> Vec<String> {
+pub fn active_word_list(state: &AppState, tier: &str) -> Vec<String> {
     let pool = if state.lang == MINE {
         pool_for_tier(state, tier)
     } else {
@@ -1000,6 +1000,17 @@ fn persist_timing(lang: &str, word: &str, correct: bool) {
     crate::storage::set_json(&key, &ring);
 }
 
+thread_local! {
+    /// One-shot, surface-agnostic "spell this word next" request (today:
+    /// the translator's Door 1). Served by next_word through the standard
+    /// flow — normal scoring, normal learner recording, no owner marker.
+    static REQUESTED_WORD: std::cell::RefCell<Option<String>> = const { std::cell::RefCell::new(None) };
+}
+
+pub fn request_word(entry: String) {
+    REQUESTED_WORD.with(|c| *c.borrow_mut() = Some(entry));
+}
+
 pub fn next_word(app: &App) {
     clear_meaning();
     // D3: gaps never span words — an abandoned word's times must not
@@ -1048,6 +1059,13 @@ pub fn next_word(app: &App) {
             PLACEMENT_LIVE.with(|c| c.set(true));
             s.cur_lang = s.lang.clone();
             s.cur_tier = length_tier(&w).to_string();
+            s.word = w;
+        } else if let Some(w) = REQUESTED_WORD.with(|c| c.borrow_mut().take()) {
+            // zh entries are "pinyin|hanzi": tier from the TYPED side; the
+            // full entry flows on so the existing split point handles it.
+            let typed = w.split_once('|').map(|(p, _)| p.to_string()).unwrap_or_else(|| w.clone());
+            s.cur_lang = s.lang.clone();
+            s.cur_tier = length_tier(&typed).to_string();
             s.word = w;
         } else {
             PLACEMENT_LIVE.with(|c| c.set(false));

@@ -94,3 +94,20 @@ DECISION LEDGER (Eric, 2026-08-02 — recorded at greenlight)
   signed IN — the reserved snapshot fields now fill), 12-mode registry pins.
   Recorded reading: I4's no-free-text applies to the planner too — sources
   are pick-only from the kid's own pools.
+
+* SHIP 125 (build 132): CC-CALENDAR delivered. 126 WAVE — CC-TRANSLATE-TOOLS
+  core, the honest pivot-less start: CC-BANK-TRANSLATE (authoritative on the
+  gloss pivot, NOT in hand; Phase A gloss column still riding the Fiverr
+  audits) means no gloss data exists — so 126 ships every pivot-INDEPENDENT
+  tool: the tab (13th tile, kid-safe per signed D2, app-only per signed D5),
+  pick-only lookup (strict I4: no free-text field exists), single-word cards
+  with audio + the zh transliteration toggle (a re-render of the bank's own
+  pinyin|hanzi halves, never generated), and both doors — "Now spell it" via
+  the new surface-agnostic request_word door (standard flow, normal scoring),
+  "Add to plan" via the planner's own legality + honest decline. gloss_rows()
+  is THE resolver seam (entitlement AND glossAudited, one function): empty
+  today, so fan-out rows are ABSENT, not locked. CI added: closed-space
+  MT-symbol scan + Wave-3 zero-code check (D3/D4/D6/D7/D8 unsigned). Wave 2
+  (daily, Passport, Home Pair, Match) queues behind the pivot landing.
+  BATCH-COMPLETE BUILD: all nine files now have their executable-today scope
+  shipped; remaining items are human-gated or paste-gated.

@@ -203,11 +203,11 @@ mod tests {
     #[test]
     fn registry_parses_and_holds_the_shipped_modes() {
         let all = all();
-        assert_eq!(all.len(), 12, "12 modes registered");
+        assert_eq!(all.len(), 13, "13 modes registered");
         // File order IS tile order (D6); practice leads (CC-PRACTICE D9).
         assert_eq!(
             ids(&all),
-            vec!["practice", "ghost_racing", "syllable_replay", "say_it", "photo_list", "spell_aloud", "word_stories", "online_spelloff", "def_match", "word_picture", "reports", "calendar"],
+            vec!["practice", "ghost_racing", "syllable_replay", "say_it", "photo_list", "spell_aloud", "word_stories", "online_spelloff", "def_match", "word_picture", "reports", "calendar", "translate"],
         );
     }
 
@@ -245,8 +245,8 @@ mod tests {
         // surface (D1: free, drives daily play), so it tiles here. FIVE now.
         assert_eq!(
             got,
-            vec!["practice", "ghost_racing", "def_match", "word_picture", "reports", "calendar"],
-            "en Kid: practice, then ghost_racing + def_match + word_picture + reports + calendar"
+            vec!["practice", "ghost_racing", "def_match", "word_picture", "reports", "calendar", "translate"],
+            "en Kid: practice, then the six companion tiles (D2: kid gets the full translator core)"
         );
         assert!(!got.contains(&"say_it".to_string()), "say_it is never kid-visible (COPPA)");
         assert!(!got.contains(&"photo_list".to_string()));
@@ -258,7 +258,7 @@ mod tests {
         let c = HubCtx { kid: true, lang: "es".into(), ..ctx() };
         // CC-HUB-CLEANUP D2/D5 (+ Word Picture and Quest Log
         // reconciliations): the pruned menu holds even on es.
-        assert_eq!(ids(&visible(&all, &c)), vec!["practice", "ghost_racing", "def_match", "word_picture", "reports", "calendar"]);
+        assert_eq!(ids(&visible(&all, &c)), vec!["practice", "ghost_racing", "def_match", "word_picture", "reports", "calendar", "translate"]);
     }
 
     #[test]
@@ -267,7 +267,7 @@ mod tests {
         let c = HubCtx { native: false, ..ctx() };
         let got = ids(&visible(&all, &c));
         assert!(got.contains(&"ghost_racing".to_string()), "ghost racing is all-platforms");
-        for ios_only in ["say_it", "photo_list", "spell_aloud", "reports", "calendar"] {
+        for ios_only in ["say_it", "photo_list", "spell_aloud", "reports", "calendar", "translate"] {
             assert!(!got.contains(&ios_only.to_string()), "{ios_only} is iOS-only");
         }
     }

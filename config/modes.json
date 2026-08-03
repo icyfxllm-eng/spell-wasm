@@ -224,6 +224,22 @@
    "languages": null,
    "$note": "CC-CALENDAR v2: kid surface; goals originate HERE only (I7 CI-enforced). D2: view/recap/goals free; multi-week planner Complete (checked in-surface). Parent side is read+cheer in the dash.",
    "exitStyle": "instant"
+  },
+  {
+   "id": "translate",
+   "nameKey": "tr.name",
+   "descKey": "tr.desc",
+   "icon": "🌐",
+   "status": "live",
+   "kidSafe": true,
+   "platforms": [
+    "ios"
+   ],
+   "entitlementLevel": "preview",
+   "requiresPremium": null,
+   "languages": null,
+   "$note": "CC-TRANSLATE-TOOLS core (D5 signed: whole suite app-only). Closed space (I1): bank words only, lookup via pick-only UI (I4). Fan-out rows arrive through the gloss_rows seam when CC-BANK-TRANSLATE lands; today cards render the word's own row — absent, not locked. Wave 2/3 tools build per their gates.",
+   "exitStyle": "instant"
   }
  ]
 }

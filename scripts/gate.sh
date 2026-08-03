@@ -28,6 +28,15 @@ if grep -nE "select_goal|week_hand|plan_word|unplan_word" src/guardian_dash.rs; 
   echo "GATE FAIL: a goal-writing symbol reached the parent surface (I7)"; exit 1
 fi
 
+echo "== gate: translator closed space (TR I1) + wave-3 zero-code (TR acceptance 12)"
+if grep -rniE "deepl|libretranslate|mlkit.?translat|translate\.googleapis|MTModel|machine.?translat" src/ ios/App/App/; then
+  echo "GATE FAIL: a machine-translation symbol exists (the closed space is the whole safety story)"; exit 1
+fi
+# (loanword_explorer, not loanword_ — "loanword_spelling" is a learner SKILL id, prior art)
+if grep -rniE "word_globe|language_detective|loanword_explorer|loanword_pack|false_friend|camera_lookup" src/; then
+  echo "GATE FAIL: an unsigned Wave-3 translator tool has executable code"; exit 1
+fi
+
 echo "== gate: cargo test"
 cargo test 2>&1 | tail -n 20 | grep -E "test result: ok" >/dev/null || { echo "GATE FAIL: cargo test"; cargo test 2>&1 | grep -E "FAILED|panicked" | head; exit 1; }
 

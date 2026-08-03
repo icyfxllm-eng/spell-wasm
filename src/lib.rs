@@ -14,7 +14,9 @@ mod practice; // CC-PRACTICE core (curriculum/phases/progress)
 mod wordpic; // CC-WORD-PICTURE core (calligrams)
 mod input_provenance;
 mod learner; // CC-LEARNING-ENGINE L0 (BKT + FSRS core; selection arrives with L1)
-mod surface_hooks; // CC-PICTURE-PLATFORM I3: inverts the surface dependency
+mod surface_hooks;
+mod translate;
+mod translate_ui; // CC-PICTURE-PLATFORM I3: inverts the surface dependency
 #[cfg(not(feature = "web"))]
 mod spellpic;
 #[cfg(not(feature = "web"))]
@@ -228,6 +230,7 @@ fn wire(app: &App) {
     family_voices::wire(&app);
     yearbook_ui::wire(&app);
     calendar_ui::wire(&app);
+    translate_ui::wire(&app);
     packs::wire(app);
     wire_glow_and_settings(app);
     wire_modes(app);
