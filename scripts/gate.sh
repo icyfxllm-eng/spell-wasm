@@ -20,6 +20,14 @@ if grep -inE "URLSession|CFNetwork|train|upload" "ios/App/App/NativeLanguageKitP
   echo "GATE FAIL: V2/network symbol in the V1 voice path"; exit 1
 fi
 
+echo "== gate: calendar store boundary (CAL I1) + kid-only goals (CAL I7)"
+if grep -rn "spell_journal_\|spell_plan_\|spell_goal_\|spell_cheer_" src/ | grep -v "src/journal.rs\|src/calendar.rs"; then
+  echo "GATE FAIL: a calendar/journal store key leaked outside its module"; exit 1
+fi
+if grep -nE "select_goal|week_hand|plan_word|unplan_word" src/guardian_dash.rs; then
+  echo "GATE FAIL: a goal-writing symbol reached the parent surface (I7)"; exit 1
+fi
+
 echo "== gate: cargo test"
 cargo test 2>&1 | tail -n 20 | grep -E "test result: ok" >/dev/null || { echo "GATE FAIL: cargo test"; cargo test 2>&1 | grep -E "FAILED|panicked" | head; exit 1; }
 

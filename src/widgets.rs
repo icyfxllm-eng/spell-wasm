@@ -50,9 +50,11 @@ pub fn write_snapshot(s: &crate::model::AppState) {
         shields_earned: s.aids.shields.min(9) as u32,
         shields_total: 5,
         entitled_langs: entitled,
-        goal_progress: 0,
-        goal_target: 0,
-        planned_today: 0,
+        goal_progress: crate::calendar::active_goal(&s.lang)
+            .map(|g| crate::calendar::goal_progress(&s.lang, &g).min(g.target))
+            .unwrap_or(0),
+        goal_target: crate::calendar::active_goal(&s.lang).map(|g| g.target).unwrap_or(0),
+        planned_today: crate::calendar::planned_for(&s.lang, (js_sys::Date::now() / 86_400_000.0) as u32).len() as u32,
     };
     let Ok(json) = serde_json::to_string(&snap) else { return };
     call_native(&json);

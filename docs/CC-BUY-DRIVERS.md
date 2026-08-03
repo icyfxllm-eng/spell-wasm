@@ -83,3 +83,14 @@ DECISION LEDGER (Eric, 2026-08-02 — recorded at greenlight)
   wired into the bridge filter when it does). D5 ready-ping: ONE-SHOT `at`
   schedule (an `on` clause would repeat yearly — a nag, not a ping), id 2,
   opt-in, cancelled on opt-out.
+
+* SHIP 124 (build 131): BD-5 Yearbook delivered. 125 WAVE — CC-CALENDAR:
+  journal (D3 signed: date-keyed, outcomes-only, 730-cap, today-only-writable
+  API), dealt-hand goals (D4=5/week signed; deterministic, small-win
+  guaranteed, no impossible cards; select_goal = the ONE writing door, I7
+  gate-grepped), planner with planned_pick standing aside whenever anything
+  in the band window is overdue (I2 order as code), read-and-cheer parent
+  section (5-line hard-capped pool, no free text), widget goal ring (D5
+  signed IN — the reserved snapshot fields now fill), 12-mode registry pins.
+  Recorded reading: I4's no-free-text applies to the planner too — sources
+  are pick-only from the kid's own pools.

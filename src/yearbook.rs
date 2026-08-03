@@ -51,6 +51,14 @@ impl Period {
     }
 }
 
+/// Public wrappers: the calendar shares this one civil-date impl.
+pub fn ymd_pub(day: u32) -> (i64, u32, u32) {
+    ymd(day)
+}
+pub fn day_of_pub(y: i64, m: u32, d: u32) -> u32 {
+    day_of(y, m, d)
+}
+
 /// Civil-from-days / days-from-civil (Howard Hinnant's algorithms) — the
 /// no-Date route to period boundaries, so the compiler stays pure.
 fn ymd(day: u32) -> (i64, u32, u32) {

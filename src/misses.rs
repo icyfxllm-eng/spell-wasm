@@ -90,6 +90,13 @@ pub fn promote_miss(state: &mut AppState, word: &str, lang: &str) -> bool {
             }
             crate::storage::set_json(crate::reports::REDEMPTION_KEY, &reds);
         }
+        {
+            let (y, m, d) = crate::yearbook::ymd_pub((now_ms() / 86_400_000.0) as u32);
+            let date = format!("{y:04}-{m:02}-{d:02}");
+            let w = state.misses[idx].word.clone();
+            let lang = state.misses[idx].lang.clone();
+            crate::journal::note_today(&lang, &date, |e| e.mastered.push(w));
+        }
         state.misses.remove(idx);
         cleared = state.misses.is_empty();
     } else {

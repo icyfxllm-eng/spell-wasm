@@ -1096,7 +1096,8 @@ pub fn next_word(app: &App) {
                     let day = crate::learner::current_day();
                     let lang = s.cur_lang.clone();
                     s.decks.entry(key.clone()).or_default().promote(&pool, 8, &mut |win| {
-                        crate::learner::select_within(&st, win, &lang, day, &[], day as u64)
+                        crate::calendar::planned_pick(&st, win, &lang, day)
+                            .or_else(|| crate::learner::select_within(&st, win, &lang, day, &[], day as u64))
                     });
                 }
                 let w = s.decks.entry(key.clone()).or_default().next(&pool);
@@ -1251,6 +1252,19 @@ pub fn submit_guess(app: &App) {
     } else {
         crate::learner::note_attempt_typed(&cur_lang, &word, correct, crate::learner::Channel::Typed, Some(&typed));
     persist_timing(&cur_lang, &word, correct);
+    {
+        // CC-CALENDAR D3 (signed): today's story, outcomes only.
+        let (y, m, d) = crate::yearbook::ymd_pub((js_sys::Date::now() / 86_400_000.0) as u32);
+        let date = format!("{y:04}-{m:02}-{d:02}");
+        let w = word.clone();
+        crate::journal::note_today(&cur_lang, &date, |e| {
+            e.practiced.push(w.clone());
+            if !correct {
+                e.missed.push(w);
+            }
+        });
+        crate::calendar::check_goal_done(&cur_lang);
+    }
     }
     // CC-IOS-SURFACES (BD-1): the widget snapshot follows meaningful state
     // (streak / daily-done movement). One-way write; a no-op off-app.

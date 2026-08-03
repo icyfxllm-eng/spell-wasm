@@ -208,6 +208,22 @@
    "languages": null,
    "$note": "CC-REPORTS D1: kid tab FREE (drives daily play). Conquest framing only (I4); guardian diagnostics live behind the parent gate, never here. Little Speller: registry-filtered out by its edition profile.",
    "exitStyle": "instant"
+  },
+  {
+   "id": "calendar",
+   "nameKey": "cal.name",
+   "descKey": "cal.desc",
+   "icon": "🗓️",
+   "status": "live",
+   "kidSafe": true,
+   "platforms": [
+    "ios"
+   ],
+   "entitlementLevel": "preview",
+   "requiresPremium": null,
+   "languages": null,
+   "$note": "CC-CALENDAR v2: kid surface; goals originate HERE only (I7 CI-enforced). D2: view/recap/goals free; multi-week planner Complete (checked in-surface). Parent side is read+cheer in the dash.",
+   "exitStyle": "instant"
   }
  ]
 }

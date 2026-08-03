@@ -38,7 +38,7 @@ use crate::App;
 /// is what lets the same file describe a mode for a future surface that has no
 /// such element. `None` = an in-round aid with no destination.
 #[cfg(not(feature = "web"))]
-const N_LAUNCH: usize = 11;
+const N_LAUNCH: usize = 12;
 #[cfg(feature = "web")]
 const N_LAUNCH: usize = 9;
 const LAUNCH: [(&str, Option<&str>); N_LAUNCH] = [
@@ -63,6 +63,8 @@ const LAUNCH: [(&str, Option<&str>); N_LAUNCH] = [
     // deleted on web so the mode name stays out of the web bundle.
     #[cfg(not(feature = "web"))]
     ("reports", Some("repOpenBtn")),
+    #[cfg(not(feature = "web"))]
+    ("calendar", Some("calOpenBtn")),
 ];
 
 fn launch_for(id: &str) -> Option<&'static str> {

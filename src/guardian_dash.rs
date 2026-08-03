@@ -69,12 +69,37 @@ fn render_body(app: &crate::App) {
     )));
 
     crate::family_voices::dash_section_into(&mut html);
+    if let Some(g) = crate::calendar::active_goal(&lang) {
+        let p = crate::calendar::goal_progress(&lang, &g).min(g.target);
+        html.push_str(&cheer_section(&g, p, &lang));
+    }
     crate::yearbook_ui::dash_section_into(&mut html);
     crate::dom::set_html("gdashBody", &html);
     crate::family_voices::fill_dash_section();
     crate::yearbook_ui::fill_dash_section(app);
     crate::dom::remove_class("gdashBody", "btn-hide");
     crate::dom::add_class("gdashGate", "btn-hide");
+}
+
+/// Read-and-cheer only (CAL feature 7 / I7): the goal renders read-only
+/// with exactly one action — send a canned cheer. No create, no edit,
+/// no delete, no free text. The gate greps this file to keep it true.
+fn cheer_section(g: &crate::calendar::Goal, p: u32, lang: &str) -> String {
+    let _ = lang;
+    let mut html = format!(
+        "<div class=\"gd-sec\"><div class=\"gd-h\">{}</div><div class=\"gd-row\">{} <b>{p}/{}</b></div><div class=\"gd-row\">",
+        crate::i18n::t("cal.name"),
+        crate::i18n::tp(g.kind.card_key(), &[("n", &g.target.to_string())]),
+        g.target
+    );
+    for i in 0..crate::calendar::CHEER_POOL {
+        html.push_str(&format!(
+            "<button class=\"ghost\" data-gd-cheer=\"{i}\">{}</button>",
+            crate::i18n::t(&format!("cal.cheer.{i}"))
+        ));
+    }
+    html.push_str("</div></div>");
+    html
 }
 
 pub fn wire(app: &crate::App) {
@@ -92,6 +117,18 @@ pub fn wire(app: &crate::App) {
         crate::dom::input("gdashAnswer").focus().ok();
     });
     let a = app.clone();
+    {
+        let a = app.clone();
+        crate::dom::on::<web_sys::MouseEvent, _>("gdashBody", "click", move |e| {
+            use wasm_bindgen::JsCast;
+            let Some(el) = e.target().and_then(|t| t.dyn_into::<web_sys::Element>().ok()) else { return };
+            if let Some(i) = el.get_attribute("data-gd-cheer").and_then(|i| i.parse::<usize>().ok()) {
+                let lang = a.borrow().lang.clone();
+                crate::calendar::send_cheer(&lang, i);
+                crate::dom::show_toast(&crate::i18n::t("cal.cheered"));
+            }
+        });
+    }
     crate::dom::on_click("gdashGo", move || {
         let given: i32 = crate::dom::input("gdashAnswer").value().trim().parse().unwrap_or(-1);
         if given == GATE_ANSWER.with(|c| c.get()) && given >= 0 {
