@@ -33,6 +33,7 @@ import * as audioGate from './specs/audio-gate.mjs';
 import * as finaleRelaunch from './specs/finale-relaunch.mjs';
 import * as metadataAudit from './specs/metadata-audit.mjs';
 import * as kidReveal from './specs/kid-reveal.mjs';
+import * as pickerContinue from './specs/picker-continue.mjs';
 
 const SPECS = [
   ['playhub', playHub],
@@ -53,6 +54,7 @@ const SPECS = [
   ['finale-relaunch', finaleRelaunch],
   ['metadata-audit', metadataAudit],
   ['kid-reveal', kidReveal],
+  ['picker-continue', pickerContinue],
   ['finale-pixels', finalePixels],
   ['platform', platform],
   ['picture-wall', pictureWall],

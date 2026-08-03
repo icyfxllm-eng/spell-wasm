@@ -202,6 +202,9 @@ pub fn wire(app: &App) {
     // double-tap goes home). Listeners live on #wpStage, which survives
     // re-renders: set_html replaces only its children.
     wire_camera();
+    // CC-PICKER-CONTINUE: the Continue row + housekeeping sheet.
+    wire_continue_row(app);
+    wire_housekeeping(app);
 }
 
 /// Campaign length: scan-locked subjects count their planned words;
@@ -245,12 +248,243 @@ fn allowed(app: &App, p: &wordpic::Picture, lang: &str) -> bool {
     full || wordpic::manifest().free.contains(&p.id)
 }
 
+
+// ------------------------------------------------ CC-PICKER-CONTINUE
+
+/// Living stroke thumbnail: a clean re-render from the pinned scan plus
+/// saved piece state (FINALE's never-screenshot rule) — completed paths
+/// at full ink weight, remaining paths at ghost weight, the picture's
+/// own pinned/micro ink at mid weight for recognizability. INVARIANT:
+/// zero glyph typesetting in thumbnails, ever — strokes only, and the
+/// unit test greps for <text> to keep it that way.
+fn thumb_svg(pic: &str, lang: &str, run: &wordpic::Run) -> String {
+    let Some(plan) = crate::spellpic::plan(pic, lang, run.seed) else {
+        return String::new();
+    };
+    let paths = crate::spellpic::scan_paths(pic);
+    let placed = run.words.len();
+    // A path is COMPLETED when every word it hosts is already placed
+    // (strict, per spec); paths hosting nothing are the picture's own
+    // pinned/micro ink and render at mid weight for recognizability.
+    use std::collections::HashSet;
+    let hosting: HashSet<usize> = plan.placements.iter().map(|q| q.path_idx).collect();
+    let mut open: HashSet<usize> = HashSet::new();
+    for (i, q) in plan.placements.iter().enumerate() {
+        if i >= placed {
+            open.insert(q.path_idx);
+        }
+    }
+    let mut svg = String::from("<svg viewBox=\"0 0 512 512\" xmlns=\"http://www.w3.org/2000/svg\">");
+    for (i, path) in paths.iter().enumerate() {
+        if path.points.len() < 2 {
+            continue;
+        }
+        let d: String = path.points.iter().enumerate()
+            .map(|(k, (x, y))| format!("{}{x:.1} {y:.1} ", if k == 0 { "M" } else { "L" }))
+            .collect();
+        let cls = if !hosting.contains(&i) {
+            "wp-th-pin"
+        } else if open.contains(&i) {
+            "wp-th-ghost"
+        } else {
+            "wp-th-ink"
+        };
+        svg.push_str(&format!("<path class=\"{cls}\" d=\"{d}\"/>"));
+    }
+    svg.push_str("</svg>");
+    svg
+}
+
+/// The Continue row: most-recently-played first (Run.touched — the
+/// monotonic play counter, no wall clocks), max 4 visible (D1), overflow
+/// lives in the Gallery's "In progress" section, row hidden entirely
+/// when empty. Tap resumes directly (D2); completed pieces never appear
+/// here (D3 — the !done filter IS the decision).
+fn render_continue_row(state: &wordpic::State, lang: &str) -> Vec<String> {
+    if !crate::dom::exists("wpResumeRow") {
+        return Vec::new();
+    }
+    let mut live: Vec<&wordpic::Run> = state
+        .runs
+        .iter()
+        .filter(|r| r.lang == lang && !r.done && !r.words.is_empty())
+        .collect();
+    live.sort_by(|a, b| b.touched.cmp(&a.touched));
+    let mut html = String::new();
+    let mut overflow = Vec::new();
+    for (n, r) in live.iter().enumerate() {
+        let Some(p) = wordpic::picture(&r.pic) else { continue };
+        let total = subject_total(p, lang);
+        if n < 4 {
+            html.push_str(&format!(
+                "<button type=\"button\" class=\"wp-resume-card\" data-resume=\"{}\" aria-label=\"{}\">{}<span class=\"prog\">{}/{}</span></button>",
+                p.id, p.id, thumb_svg(&r.pic, lang, r), r.words.len(), total
+            ));
+        } else {
+            overflow.push(r.pic.clone());
+        }
+    }
+    dom::set_html("wpResumeRow", &html);
+    dom::toggle_class("wpResumeRow", "btn-hide", html.is_empty());
+    overflow
+}
+
+thread_local! {
+    /// Long-press bookkeeping for the Continue row: (pic, press timestamp).
+    static PRESS: RefCell<Option<(String, f64)>> = const { RefCell::new(None) };
+    static PRESS_FIRED: Cell<bool> = const { Cell::new(false) };
+}
+
+fn wire_continue_row(app: &App) {
+    if !crate::dom::exists("wpResumeRow") {
+        return; // site shell has no picker surfaces
+    }
+    // Tap = resume (D2). Long-press (550ms) = Restart / Remove sheet.
+    let a = app.clone();
+    dom::on::<web_sys::PointerEvent, _>("wpResumeRow", "pointerdown", move |e| {
+        let Some(el) = e.target().and_then(|t| t.dyn_into::<web_sys::Element>().ok()) else { return };
+        let Some(card) = el.closest("[data-resume]").ok().flatten() else { return };
+        let Some(pic) = card.get_attribute("data-resume") else { return };
+        PRESS.with(|p| *p.borrow_mut() = Some((pic.clone(), e.time_stamp())));
+        PRESS_FIRED.with(|c| c.set(false));
+        let a2 = a.clone();
+        after(550, move || {
+            let held = PRESS.with(|p| p.borrow().as_ref().map(|(q, _)| q == &pic).unwrap_or(false));
+            if held {
+                PRESS_FIRED.with(|c| c.set(true));
+                open_housekeeping(&a2, &pic);
+            }
+        });
+    });
+    let a = app.clone();
+    dom::on::<web_sys::PointerEvent, _>("wpResumeRow", "pointerup", move |e| {
+        let pressed = PRESS.with(|p| p.borrow_mut().take());
+        if PRESS_FIRED.with(Cell::get) {
+            return; // the sheet owns this gesture
+        }
+        let Some((pic, _)) = pressed else { return };
+        let _ = e;
+        RESUME_ANIM.with(|c| c.set(true));
+        open_play(&a, &pic);
+    });
+    dom::on::<web_sys::PointerEvent, _>("wpResumeRow", "pointercancel", |_| {
+        PRESS.with(|p| *p.borrow_mut() = None);
+    });
+}
+
+thread_local! {
+    /// Set when a resume-tap opens the piece: the next render gets the
+    /// ghost->ink delight pass (<=1s, skippable, Reduce Motion instant).
+    static RESUME_ANIM: Cell<bool> = const { Cell::new(false) };
+}
+
+/// Housekeeping sheet (long-press): Restart replays the same picture
+/// from zero (same seed — same plan, D5); Remove discards the RUN state
+/// and never the picture. Both confirm before acting.
+fn open_housekeeping(app: &App, pic: &str) {
+    let name = wordpic::picture(pic).map(|p| p.icon.clone()).unwrap_or_default();
+    dom::set_text("wpHkTitle", &format!("{name} {pic}"));
+    dom::el("wpHk").set_attribute("data-pic", pic).ok();
+    dom::add_class("wpHk", "show");
+    let _ = app;
+}
+
+fn wire_housekeeping(app: &App) {
+    if !crate::dom::exists("wpHk") {
+        return;
+    }
+    let a = app.clone();
+    dom::on_click("wpHkRestart", move || {
+        let Some(pic) = dom::el("wpHk").get_attribute("data-pic") else { return };
+        let mut st = wordpic::load();
+        if let Some(r) = st.runs.iter_mut().find(|r| r.pic == pic && !r.done) {
+            r.words.clear();
+        }
+        wordpic::save(&st);
+        dom::remove_class("wpHk", "show");
+        open_picker(&a);
+    });
+    let a = app.clone();
+    dom::on_click("wpHkRemove", move || {
+        let Some(pic) = dom::el("wpHk").get_attribute("data-pic") else { return };
+        let lang = LANG.with(|l| l.borrow().clone());
+        let mut st = wordpic::load();
+        st.runs.retain(|r| !(r.pic == pic && r.lang == lang && !r.done));
+        wordpic::save(&st);
+        dom::remove_class("wpHk", "show");
+        open_picker(&a);
+    });
+    dom::on_click("wpHkCancel", || dom::remove_class("wpHk", "show"));
+}
+
+
+/// Picker family of a picture: pack-driven, with one override — expert
+/// tier always shelves under Masterpieces, wherever its pack lives.
+fn family_of(p: &wordpic::Picture) -> &'static str {
+    if p.tier == "expert" {
+        return "masters";
+    }
+    let pk = p.pack.as_str();
+    if pk == "numbers" || pk == "hanziNum" || pk.starts_with("alpha") {
+        "learn"
+    } else if pk.starts_with("culture") || pk == "worldart" {
+        "world"
+    } else if pk == "animals" {
+        "animals"
+    } else if pk == "sky" || pk.starts_with("zodiac") {
+        "sky"
+    } else {
+        "things"
+    }
+}
+
+/// The learn shelf leads with the ACTIVE language's script, numbers
+/// always first: a Russian learner sees Cyrillic before Latin.
+fn learn_rank(pack: &str, lang: &str) -> u32 {
+    let own: &str = match lang {
+        "ru" => "alphaCyr",
+        "ar" => "alphaArb",
+        "hi" => "alphaDev",
+        "ko" => "alphaKor",
+        "ja" => "alphaHir",
+        "zh" => "hanziNum",
+        _ => "alphaLat",
+    };
+    if pack == "numbers" {
+        0
+    } else if pack.starts_with(own) || pack == own {
+        1
+    } else {
+        2
+    }
+}
+
+const FAMILIES: [(&str, &str); 6] = [
+    ("learn", "wordpic.famLearn"),
+    ("world", "wordpic.famWorld"),
+    ("animals", "wordpic.famAnimals"),
+    ("sky", "wordpic.famSky"),
+    ("things", "wordpic.famThings"),
+    ("masters", "wordpic.famMasters"),
+];
+
 pub fn open_picker(app: &App) {
     let lang = app.borrow().lang.clone();
     LANG.with(|l| *l.borrow_mut() = lang.clone());
     let state = wordpic::load();
     let mut html = String::new();
-    for p in wordpic::picker_order(&state, &lang) {
+    let mut by_fam: std::collections::HashMap<&str, Vec<&wordpic::Picture>> = std::collections::HashMap::new();
+    let ordered = wordpic::picker_order(&state, &lang);
+    for p in &ordered {
+        by_fam.entry(family_of(p)).or_default().push(p);
+    }
+    for (fam, key) in FAMILIES {
+        let Some(list) = by_fam.get_mut(fam) else { continue };
+        if fam == "learn" {
+            list.sort_by_key(|p| learn_rank(&p.pack, &lang));
+        }
+        html.push_str(&format!("<div class=\"wp-fam-head\">{}</div><div class=\"wp-shelf\">", i18n::t(key)));
+        for p in list.iter().copied() {
         let total = subject_total(p, &lang);
         let (cls, prog) = match state.run(&p.id, &lang) {
             Some(r) if r.done => ("wp-tile done", i18n::t("wordpic.done")),
@@ -268,8 +502,11 @@ pub fn open_picker(app: &App) {
             prog
         ));
     }
+        html.push_str("</div>");
+    }
     dom::set_html("wpGrid", &html);
-    render_gallery(&state, &lang);
+    let overflow = render_continue_row(&state, &lang);
+    render_gallery_with_progress(&state, &lang, &overflow);
     // Delegate tile taps once per open (idempotent listener via fresh nodes).
     let a = app.clone();
     dom::on::<web_sys::MouseEvent, _>("wpGrid", "click", move |e| {
@@ -342,6 +579,14 @@ fn open_play(app: &App, pic_id: &str) {
     let _ = dom::el("wpStage")
         .set_attribute("style", if p.tier == "expert" { "touch-action:none" } else { "" });
     render_canvas(p, &lang, &run.words);
+    // CC-PICKER-CONTINUE delight: on resume-expand the already-spelled
+    // strokes animate ghost->ink (<=1s via CSS, skippable by tap,
+    // Reduce Motion renders instant — all in the stylesheet).
+    if RESUME_ANIM.with(|c| c.replace(false)) {
+        dom::add_class("wpStage", "resume-anim");
+        after(1100, || dom::remove_class("wpStage", "resume-anim"));
+        dom::on::<web_sys::Event, _>("wpStage", "click", |_| dom::remove_class("wpStage", "resume-anim"));
+    }
     reflect_count(p);
     OPEN.with(|c| c.set(true));
     // The keyboard syncs against the ACTIVE surface, so it must be told
@@ -765,6 +1010,28 @@ fn wp_input() -> Option<web_sys::HtmlInputElement> {
 /// and lets a finished piece inherit every later renderer improvement --
 /// and it is only exact because the renderer is deterministic, which makes
 /// D5 a standing constraint on the renderer, not just a storage choice.
+fn render_gallery_with_progress(state: &wordpic::State, lang: &str, in_progress: &[String]) {
+    let mut extra = String::new();
+    if !in_progress.is_empty() {
+        extra.push_str(&format!("<div class=\"wp-gal-head\">{}</div>", i18n::t("wordpic.inProgress")));
+        let st = wordpic::load();
+        for pic in in_progress {
+            if let Some(r) = st.runs.iter().find(|r| r.pic == *pic && r.lang == lang && !r.done) {
+                extra.push_str(&format!(
+                    "<button type=\"button\" class=\"wp-resume-card small\" data-resume=\"{pic}\">{}</button>",
+                    thumb_svg(pic, lang, r)
+                ));
+            }
+        }
+    }
+    render_gallery(state, lang);
+    if !extra.is_empty() {
+        let cur = dom::el("wpGallery").inner_html();
+        dom::set_html("wpGallery", &format!("{extra}{cur}"));
+        dom::remove_class("wpGallery", "btn-hide");
+    }
+}
+
 fn render_gallery(state: &wordpic::State, lang: &str) {
     let mut html = String::new();
     let mut n = 0;
@@ -1682,5 +1949,39 @@ mod d3_camera_tests {
         assert_eq!(w, VB_MIN, "zoom floor");
         let vb = vb_pinch((200.0, 200.0, 100.0), (256.0, 256.0), 0.01, 512.0);
         assert_eq!(vb, (0.0, 0.0, 512.0), "zoom out lands on the full frame");
+    }
+}
+
+#[cfg(test)]
+mod continue_row_tests {
+    use super::*;
+
+    /// CC-PICKER-CONTINUE invariant: thumbnails are STROKES ONLY — zero
+    /// glyph typesetting, ever. And the ink/ghost split tracks the run.
+    #[test]
+    fn thumbs_are_strokes_only_and_track_progress() {
+        let run = crate::wordpic::Run {
+            pic: "star".into(),
+            lang: "en".into(),
+            seed: 1,
+            words: vec![],
+            done: false,
+            replay: vec![],
+            replay_seed: 0,
+            touched: 1,
+        };
+        let fresh = thumb_svg("star", "en", &run);
+        assert!(!fresh.is_empty(), "star renders a thumbnail");
+        assert!(!fresh.contains("<text"), "NO glyph typesetting in thumbnails, ever");
+        assert!(!fresh.contains("wp-th-ink"), "nothing placed yet, nothing at ink weight");
+        assert!(fresh.contains("wp-th-ghost"), "unspelled paths render as ghosts");
+        let mut mid = run.clone();
+        let plan = crate::spellpic::plan("star", "en", 1).unwrap();
+        mid.words = plan.words.clone();
+        let done = thumb_svg("star", "en", &mid);
+        assert!(done.contains("wp-th-ink"), "a finished run renders ink");
+        assert!(!done.contains("wp-th-ghost"), "nothing left at ghost weight");
+        assert!(!done.contains("<text"), "still strokes only");
+        assert_eq!(done, thumb_svg("star", "en", &mid), "deterministic re-render");
     }
 }

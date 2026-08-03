@@ -385,6 +385,32 @@
   .wp-stage{flex:1;min-height:0;display:flex;align-items:center;justify-content:center}
   .wp-stage svg{width:100%;height:100%;max-height:64vh}
   .wp-guide{stroke:rgba(232,236,245,.30);stroke-width:2;fill:none;stroke-linecap:round;stroke-linejoin:round}
+  /* CC-PICKER-CONTINUE */
+  .wp-resume-row{display:flex;gap:10px;overflow-x:auto;padding:4px 2px 10px}
+  .wp-resume-card{flex:0 0 118px;height:150px;border-radius:12px;border:1px solid #2c3550;background:#141b2c;padding:6px;display:flex;flex-direction:column;align-items:center}
+  .wp-resume-card svg{width:100%;height:auto;flex:1}
+  .wp-resume-card .prog{font-size:12px;color:#95a0bb;padding-top:4px}
+  .wp-resume-card.small{flex:0 0 88px;height:104px}
+  .wp-th-ink{stroke:rgba(232,236,245,.95);stroke-width:7;fill:none;stroke-linecap:round;stroke-linejoin:round}
+  .wp-th-ghost{stroke:rgba(232,236,245,.22);stroke-width:5;fill:none;stroke-linecap:round;stroke-linejoin:round}
+  .wp-th-pin{stroke:rgba(232,236,245,.55);stroke-width:4;fill:none;stroke-linecap:round;stroke-linejoin:round}
+  .wp-gal-head{width:100%;color:#95a0bb;font-size:13px;letter-spacing:.06em;text-transform:uppercase;padding:6px 2px}
+  .wp-fam-head{width:100%;color:#95a0bb;font-size:13px;letter-spacing:.06em;text-transform:uppercase;padding:10px 2px 4px}
+  .wp-shelf{display:flex;gap:10px;overflow-x:auto;padding:2px 2px 8px}
+  .wp-shelf .wp-tile{flex:0 0 auto}
+  .wp-modal{display:none;position:fixed;inset:0;background:rgba(6,9,16,.6);z-index:60;align-items:center;justify-content:center}
+  .wp-modal.show{display:flex}
+  .wp-modal-card{background:#141b2c;border:1px solid #2c3550;border-radius:14px;padding:18px;display:flex;flex-direction:column;gap:10px;min-width:230px}
+  .wp-hk-title{font-weight:650;text-align:center;padding-bottom:4px}
+  .wp-modal-card .danger{color:#ff7d6b;border-color:#ff7d6b55}
+  #wpStage.resume-anim .wp-word{opacity:.15;animation:wpResumeInk .9s ease forwards}
+  @keyframes wpResumeInk{to{opacity:1}}
+  @media (prefers-reduced-motion: reduce){#wpStage.resume-anim .wp-word{opacity:1;animation:none}}
+  .plc-body{color:#95a0bb;font-size:14px;text-align:center;margin:0 0 6px}
+  .guardian h3{font-size:17px;margin:18px 0 6px}
+  .guardian h4{font-size:13px;color:#95a0bb;letter-spacing:.05em;text-transform:uppercase;margin:12px 0 4px}
+  .guardian ul{margin:0;padding-left:20px}
+  .g-empty,.g-sum{color:#95a0bb;font-size:14px}
   .wp-pinned{stroke:rgba(232,236,245,.92);stroke-width:1.8;fill:none;stroke-linecap:round;stroke-linejoin:round}
   .wp-feature{fill:rgba(232,236,245,.95);stroke:rgba(232,236,245,.95);stroke-width:1.5;stroke-linejoin:round}
   .wp-outline{stroke:rgba(255,255,255,.22);stroke-width:3;fill:none;stroke-linecap:round}
@@ -1239,7 +1265,8 @@
 
   <section class="card stats">
     <h2><span data-i18n="card.accuracy">Your accuracy</span> <span class="scope" id="statsLang"></span></h2>
-    <div id="statsBody"><div class="stats-empty">Spell a few words to start tracking your accuracy by difficulty.</div></div>
+    <div id="statsBody"><div class="stats-empty">Spell a few words to start tracking your accuracy by difficulty.</div>
+    <div id="statsGuardian" class="btn-hide"></div></div>
     <div class="stats-foot"><span class="total" id="statsTotal"></span><button class="ghost danger" id="resetStats" data-i18n="card.resetLang">reset this language</button></div>
   </section>
 
@@ -1443,7 +1470,20 @@
          data + seed and RE-RENDERED on view (D5), never as bitmaps -- so old
          trophies inherit every future renderer improvement. -->
     <div class="wp-gallery btn-hide" id="wpGallery"></div>
+    <div class="wp-modal" id="plcCard"><div class="wp-modal-card">
+      <div class="wp-hk-title" data-i18n="placement.title">Quick spelling check?</div>
+      <p id="plcBody" class="plc-body"></p>
+      <button class="ghost" id="plcTry" data-i18n="placement.try">Try it</button>
+      <button class="ghost" id="plcSkip" data-i18n="placement.skip">Skip</button>
+    </div></div>
+    <div class="wp-resume-row btn-hide" id="wpResumeRow"></div>
     <div class="wp-grid" id="wpGrid"></div>
+    <div class="wp-modal" id="wpHk"><div class="wp-modal-card">
+      <div id="wpHkTitle" class="wp-hk-title"></div>
+      <button class="ghost" id="wpHkRestart" data-i18n="wordpic.restart">Restart</button>
+      <button class="ghost danger" id="wpHkRemove" data-i18n="wordpic.remove">Remove</button>
+      <button class="ghost" id="wpHkCancel" data-i18n="wordpic.cancel">Cancel</button>
+    </div></div>
   </div>
   <div class="wp-screen" id="wpPlay">
     <div class="wp-top">
