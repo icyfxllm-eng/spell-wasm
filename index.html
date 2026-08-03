@@ -396,6 +396,10 @@
   .wp-th-pin{stroke:rgba(232,236,245,.55);stroke-width:4;fill:none;stroke-linecap:round;stroke-linejoin:round}
   .wp-gal-head{width:100%;color:#95a0bb;font-size:13px;letter-spacing:.06em;text-transform:uppercase;padding:6px 2px}
   .wp-fam-head{width:100%;color:#95a0bb;font-size:13px;letter-spacing:.06em;text-transform:uppercase;padding:10px 2px 4px}
+  .pack-section{margin-top:14px;border-top:1px solid #232c42;padding-top:10px}
+  .pack-head{color:#95a0bb;font-size:13px;letter-spacing:.06em;text-transform:uppercase;padding-bottom:6px}
+  .pack-row{display:flex;justify-content:space-between;align-items:center;padding:6px 2px}
+  .pk-state{color:#95a0bb;font-size:13px}
   .wp-shelf{display:flex;gap:10px;overflow-x:auto;padding:2px 2px 8px}
   .wp-shelf .wp-tile{flex:0 0 auto}
   .wp-modal{display:none;position:fixed;inset:0;background:rgba(6,9,16,.6);z-index:60;align-items:center;justify-content:center}
@@ -1848,6 +1852,10 @@
           <option value="off" data-i18n="mode.untimed">Untimed</option>
           <option value="on" data-i18n="mode.timed">Quick Spell</option>
         </select></label>
+      <div class="pack-section">
+        <div class="pack-head" data-i18n="packs.title">Offline packs</div>
+        <div id="packRows"></div>
+      </div>
       <button class="btn btn-check" id="setupDone" data-i18n="settings.done" style="width:100%;margin-top:16px">Done</button>
     </div>
   </div>

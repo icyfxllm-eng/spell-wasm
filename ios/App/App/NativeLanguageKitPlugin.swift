@@ -24,6 +24,16 @@ public class NativeLanguageKitPlugin: CAPPlugin, CAPBridgedPlugin {
         // and the JS call rejects like the plugin is absent.
         CAPPluginMethod(name: "writeWidgetSnapshot", returnType: CAPPluginReturnPromise),
         CAPPluginMethod(name: "donateSpotlight", returnType: CAPPluginReturnPromise),
+        // CC-OFFLINE-PACKS (BD-2): per-file fetch/verify, atomic activate,
+        // storage states, and the pack-first audio src resolver.
+        CAPPluginMethod(name: "packVerifyManifest", returnType: CAPPluginReturnPromise),
+        CAPPluginMethod(name: "packFetch", returnType: CAPPluginReturnPromise),
+        CAPPluginMethod(name: "packMissing", returnType: CAPPluginReturnPromise),
+        CAPPluginMethod(name: "packActivate", returnType: CAPPluginReturnPromise),
+        CAPPluginMethod(name: "packDelete", returnType: CAPPluginReturnPromise),
+        CAPPluginMethod(name: "packStates", returnType: CAPPluginReturnPromise),
+        CAPPluginMethod(name: "packSrcFor", returnType: CAPPluginReturnPromise),
+        CAPPluginMethod(name: "packStoreManifest", returnType: CAPPluginReturnPromise),
         CAPPluginMethod(name: "speak", returnType: CAPPluginReturnPromise),
         CAPPluginMethod(name: "speakSyllables", returnType: CAPPluginReturnPromise),
         CAPPluginMethod(name: "stop", returnType: CAPPluginReturnPromise),

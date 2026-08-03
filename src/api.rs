@@ -31,6 +31,10 @@ fn set_source(s: &'static str) {
 /// AVSpeech (offline). One routing decision, in ONE place (doctrine).
 #[derive(Clone, Copy, PartialEq, Debug)]
 enum Source {
+    /// CC-OFFLINE-PACKS (BD-2): the verified-active language pack. Heads
+    /// the ONE resolution order; a no-op instantly wherever no pack (or
+    /// no native layer) exists, so web/streaming behavior is unchanged.
+    Pack,
     ServerCache,
     NativeTts,
 }
@@ -41,10 +45,10 @@ enum Source {
 /// "native-only".
 fn parse_source_order(cfg: Option<&str>) -> Vec<Source> {
     match cfg {
-        Some("native-first") => vec![Source::NativeTts, Source::ServerCache],
+        Some("native-first") => vec![Source::Pack, Source::NativeTts, Source::ServerCache],
         Some("server-only") => vec![Source::ServerCache],
         Some("native-only") => vec![Source::NativeTts],
-        _ => vec![Source::ServerCache, Source::NativeTts],
+        _ => vec![Source::Pack, Source::ServerCache, Source::NativeTts],
     }
 }
 
@@ -58,14 +62,16 @@ mod router_tests {
 
     #[test]
     fn default_is_server_primary_native_fallback() {
-        // D1 default: try the server clip first, native TTS only as a rescue.
-        assert_eq!(parse_source_order(None), vec![Source::ServerCache, Source::NativeTts]);
-        assert_eq!(parse_source_order(Some("garbage")), vec![Source::ServerCache, Source::NativeTts]);
+        // BD-2 I3: the pack heads the ONE order; server clip next, native
+        // TTS as rescue. Pack no-ops instantly where no pack exists, so
+        // D1's server-primary behavior is preserved on the web.
+        assert_eq!(parse_source_order(None), vec![Source::Pack, Source::ServerCache, Source::NativeTts]);
+        assert_eq!(parse_source_order(Some("garbage")), vec![Source::Pack, Source::ServerCache, Source::NativeTts]);
     }
 
     #[test]
     fn native_first_flips_the_order() {
-        assert_eq!(parse_source_order(Some("native-first")), vec![Source::NativeTts, Source::ServerCache]);
+        assert_eq!(parse_source_order(Some("native-first")), vec![Source::Pack, Source::NativeTts, Source::ServerCache]);
     }
 
     #[test]
@@ -166,6 +172,7 @@ fn play_chain(
     let (w, v, l) = (word.clone(), variant.clone(), lang.clone());
     let next: Box<dyn FnOnce()> = Box::new(move || play_chain(order, i + 1, w, v, rate, l, on_fail));
     match src {
+        Source::Pack => play_pack(&word, &variant, rate, &lang, next),
         Source::ServerCache => play_server_cache(&word, &variant, rate, &lang, next),
         Source::NativeTts => play_native_tts(&word, &variant, rate, &lang, next),
     }
@@ -175,6 +182,28 @@ fn play_chain(
 /// native NativeAudio plugin when present, else the browser `<audio>` element.
 /// Both mechanisms serve the same server-rendered source; `on_fail` advances the
 /// router to the next source.
+/// Source "pack": the verified-active offline pack (BD-2). With an
+/// active pack this is the ONLY audio source that fires — zero network
+/// even online (I1's twin: packs also cut server load by design).
+fn play_pack(word: &str, variant: &str, rate: f64, lang: &str, on_fail: Box<dyn FnOnce()>) {
+    let (word, variant, lang) = (word.to_string(), variant.to_string(), lang.to_string());
+    spawn_local(async move {
+        match crate::packs::src_for(&lang, &word, &variant).await {
+            Some(src) => {
+                if let Ok(audio) = HtmlAudioElement::new_with_src(&src) {
+                    audio.set_playback_rate(rate);
+                    if audio.play().is_ok() {
+                        set_source("pack");
+                        return;
+                    }
+                }
+                on_fail();
+            }
+            None => on_fail(),
+        }
+    });
+}
+
 fn play_server_cache(word: &str, variant: &str, rate: f64, lang: &str, on_fail: Box<dyn FnOnce()>) {
     if native_audio::available() {
         let asset_id = native_audio::asset_id(word, variant, lang);

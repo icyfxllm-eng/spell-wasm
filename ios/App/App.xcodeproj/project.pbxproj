@@ -29,6 +29,7 @@
 		A1F00E5C0B7D42C19E33AA01 /* NativeLanguageKitPlugin+SavePicture.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1F00E5C0B7D42C19E33AA02 /* NativeLanguageKitPlugin+SavePicture.swift */; };
 		CD429B8A6584E795B3BBA233 /* NativeLanguageKitCore in Frameworks */ = {isa = PBXBuildFile; productRef = B2335ADBAD7F5B5D76466705 /* NativeLanguageKitCore */; };
 		FADE0001000000000000EE20 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = FADE0001000000000000EE10 /* InfoPlist.strings */; };
+		5B1DBD1000000000000000F7 /* NativeLanguageKitPlugin+Packs.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B1DBD1000000000000000F6 /* NativeLanguageKitPlugin+Packs.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -97,6 +98,7 @@
 		F60E6967C62728C402EE9227 /* NativeLanguageKitPlugin.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = NativeLanguageKitPlugin.swift; sourceTree = "<group>"; };
 		FADE0001000000000000EE01 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = App/en.lproj/InfoPlist.strings; sourceTree = SOURCE_ROOT; };
 		FADE0001000000000000EE02 /* es */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = es; path = App/es.lproj/InfoPlist.strings; sourceTree = SOURCE_ROOT; };
+		5B1DBD1000000000000000F6 /* NativeLanguageKitPlugin+Packs.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = "NativeLanguageKitPlugin+Packs.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -162,6 +164,7 @@
 				D50A51C8A62BA80E2F6B0354 /* NativeLanguageKitPlugin+PhotoList.swift */,
 				A1F00E5C0B7D42C19E33AA02 /* NativeLanguageKitPlugin+SavePicture.swift */,
 				5B1DBD1000000000000000F1 /* NativeLanguageKitPlugin+Widgets.swift */,
+				5B1DBD1000000000000000F6 /* NativeLanguageKitPlugin+Packs.swift */,
 				5B1DBD1000000000000000F2 /* SpellIntents.swift */,
 				5B1DBD1000000000000000F3 /* App.entitlements */,
 			);
@@ -303,6 +306,7 @@
 				39B22D60CA7B1F84A7ACDB33 /* NativeLanguageKitPlugin+PhotoList.swift in Sources */,
 				A1F00E5C0B7D42C19E33AA01 /* NativeLanguageKitPlugin+SavePicture.swift in Sources */,
 				5B1DBD1000000000000000F4 /* NativeLanguageKitPlugin+Widgets.swift in Sources */,
+				5B1DBD1000000000000000F7 /* NativeLanguageKitPlugin+Packs.swift in Sources */,
 				5B1DBD1000000000000000F5 /* SpellIntents.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

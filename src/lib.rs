@@ -69,6 +69,8 @@ mod tools_hub;
 mod testseam;
 mod versus;
 mod viet;
+mod packs;
+mod reports;
 mod widgets;
 mod word_data;
 mod word_stories;
@@ -212,6 +214,7 @@ pub fn start() -> Result<(), JsValue> {
 fn wire(app: &App) {
     wire_orb_and_answer(app);
     game::wire_placement(app);
+    packs::wire(app);
     wire_glow_and_settings(app);
     wire_modes(app);
     wire_source_level(app);
