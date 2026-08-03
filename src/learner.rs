@@ -81,6 +81,11 @@ pub struct Attempt {
     /// "typed" | "speech" — feature 4: hearing misses must never update
     /// spelling skills, and the flag is how L1's diagnosis will know.
     pub channel: Channel,
+    /// CC-REPORTS: the raw attempt text on MISSES only (None on correct
+    /// answers and on pre-Reports log entries) — the grapheme diagnosis
+    /// raw material. Additive with a default, so no migration.
+    #[serde(default)]
+    pub typed: Option<String>,
 }
 
 #[derive(Clone, Copy, Debug, Serialize, Deserialize, PartialEq, Eq)]
@@ -373,6 +378,7 @@ pub fn note_attempt(lang: &str, word: &str, correct: bool, channel: Channel) {
         skills: hazards(lang, word),
         correct,
         channel,
+        typed: None,
     });
     crate::storage::set_json(&key, &st);
 }
@@ -553,6 +559,7 @@ pub fn apply_placement(state: &mut LearnerState, lang: &str, word: &str, correct
         skills,
         correct,
         channel: Channel::Typed,
+        typed: None,
     });
 }
 
@@ -753,7 +760,7 @@ mod tests {
             word: "receive".into(),
             skills: vec!["silent_letters".into(), "unstressed_vowel_ambiguity".into()],
             correct: true,
-            channel: Channel::Typed,
+            channel: Channel::Typed, typed: None,
         });
         assert_eq!(st.skills.len(), 2);
         assert!(st.skills.iter().all(|s| s.mastery > BKT_PRIOR));
@@ -770,7 +777,7 @@ mod tests {
             word: "receive".into(),
             skills: vec!["silent_letters".into()],
             correct: false,
-            channel: Channel::Speech,
+            channel: Channel::Speech, typed: None,
         });
         assert!(st.skills.is_empty(), "speech must not touch skill state");
         assert_eq!(st.log.len(), 1, "...but the log keeps the evidence");
@@ -786,6 +793,7 @@ mod tests {
                 skills: vec!["doubled_consonant".into()],
                 correct: i % 3 != 0,
                 channel: Channel::Typed,
+                typed: None,
             });
         }
         assert_eq!(st.log.len(), LOG_CAP);
@@ -810,6 +818,7 @@ mod tests {
                     ],
                     correct: (i * 7 + 3) % 5 != 0,
                     channel: if i % 11 == 0 { Channel::Speech } else { Channel::Typed },
+                    typed: None,
                 });
             }
             serde_json::to_string(&st).unwrap()
@@ -826,7 +835,7 @@ mod tests {
                 word: id.into(),
                 skills: vec![id.into()],
                 correct: true,
-                channel: Channel::Typed,
+                channel: Channel::Typed, typed: None,
             });
         }
         let due = st.due_skills(30);
@@ -857,7 +866,7 @@ mod tests {
             word: "quinoa".into(),
             skills: vec!["loanword_spelling".into()],
             correct: false,
-            channel: Channel::Typed,
+            channel: Channel::Typed, typed: None,
         });
         let json = serde_json::to_string(&st).unwrap();
         assert_eq!(load_state(&json).unwrap(), st);
@@ -906,7 +915,7 @@ mod bridge_tests {
                 word: w.into(),
                 skills: hazards("en", w),
                 correct: ok,
-                channel: Channel::Typed,
+                channel: Channel::Typed, typed: None,
             });
         }
         assert!(!st.skills.is_empty(), "typed attempts grew skills");
@@ -916,7 +925,7 @@ mod bridge_tests {
             word: "wrong".into(),
             skills: hazards("en", "wrong"),
             correct: false,
-            channel: Channel::Speech,
+            channel: Channel::Speech, typed: None,
         });
         assert_eq!(st.skills, before, "speech never moves a spelling skill");
         assert_eq!(st.log.len(), 4, "but it IS logged");
@@ -1098,7 +1107,7 @@ mod placement_tests {
             word: "knee".into(),
             skills: hazards("en", "knee"),
             correct: true,
-            channel: Channel::Typed,
+            channel: Channel::Typed, typed: None,
         });
         let s = st.skills.iter().find(|s| s.id == "silent_letters").unwrap();
         assert_eq!(s.mastery, bkt_update(BKT_PRIOR, true), "first update starts from the default prior");
@@ -1135,7 +1144,7 @@ mod guardian_tests {
         st.skills.push(skill("silent_letters", 0.2, 5, 3));
         st.skills.push(skill("doubled_consonant", 0.6, 2, 3)); // 18 days overdue at day 20
         for i in 0..6 {
-            st.record(Attempt { day: 20, word: format!("w{i}"), skills: vec![], correct: i % 3 == 0, channel: Channel::Typed });
+            st.record(Attempt { day: 20, word: format!("w{i}"), skills: vec![], correct: i % 3 == 0, channel: Channel::Typed, typed: None });
         }
         let r = guardian_report(&st, 20);
         assert_eq!(r.attempts, 6);
@@ -1152,7 +1161,7 @@ mod guardian_tests {
         st.skills.push(skill("silent_letters", 0.92, 30, 5));
         st.skills.push(skill("loanword_spelling", 0.85, 28, 4));
         for i in 0..10 {
-            st.record(Attempt { day: 25, word: format!("w{i}"), skills: vec![], correct: true, channel: Channel::Typed });
+            st.record(Attempt { day: 25, word: format!("w{i}"), skills: vec![], correct: true, channel: Channel::Typed, typed: None });
         }
         let r = guardian_report(&st, 25);
         assert_eq!(r.correct, 10);
