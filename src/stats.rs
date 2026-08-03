@@ -24,6 +24,16 @@ pub fn record(state: &mut AppState, lang: &str, tier: &str, correct: bool) {
 }
 
 pub fn render(state: &AppState) {
+    // CC-LEARNING-ENGINE L2 — the guardian section, view-only (sharing
+    // would be an explicit affordance; v1 has none). Dark by default.
+    if crate::dom::exists("statsGuardian") && crate::flags::learner_surfaces() {
+        let st = crate::learner::load_for(&state.lang);
+        let r = crate::learner::guardian_report(&st, crate::learner::current_day());
+        dom::set_html("statsGuardian", &crate::learner::guardian_report_html(&r, &state.lang));
+        dom::remove_class("statsGuardian", "btn-hide");
+    } else if crate::dom::exists("statsGuardian") {
+        dom::add_class("statsGuardian", "btn-hide");
+    }
     // Achievements live on the stats screen and must re-render here so a UI
     // language change (which calls stats::render) refreshes their titles too —
     // otherwise they keep the boot locale while the headers switch (the

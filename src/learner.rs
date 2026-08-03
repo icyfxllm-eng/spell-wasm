@@ -457,6 +457,204 @@ pub fn current_day() -> u32 {
     today_day()
 }
 
+
+// ---------------------------------------------- L1 feature 5: placement
+
+/// The language's hazard taxonomy — the skill ids `hazards()` can emit.
+/// En-only for the same D2 reason hazards() is: other languages join with
+/// their native-speaker sign-off, not before.
+pub fn taxonomy(lang: &str) -> Vec<&'static str> {
+    if lang != "en" {
+        return Vec::new();
+    }
+    vec!["silent_letters", "doubled_consonant", "unstressed_vowel_ambiguity", "loanword_spelling"]
+}
+
+/// Placement words per skill: two exemplars for every taxonomy skill plus
+/// two hazard-free baselines, chosen DETERMINISTICALLY from the easy and
+/// medium pools (first matches in pool order — same set on every device,
+/// every install). Done #4's coverage bar is >=90% of the taxonomy; two
+/// exemplars each makes it 100% with a diagnosis-grade signal.
+pub fn placement_set(lang: &str) -> Vec<String> {
+    let tax = taxonomy(lang);
+    if tax.is_empty() {
+        return Vec::new();
+    }
+    let mut out: Vec<String> = Vec::new();
+    let mut per: std::collections::HashMap<&str, u32> = std::collections::HashMap::new();
+    let mut baseline = 0u32;
+    for tier in ["easy", "medium"] {
+        for w in crate::words::tier_for(lang, tier) {
+            let word = w.split('|').next().unwrap_or(w).to_string();
+            if word.contains(' ') || out.contains(&word) {
+                continue;
+            }
+            let hz = hazards(lang, &word);
+            if hz.is_empty() {
+                if baseline < 2 {
+                    baseline += 1;
+                    out.push(word);
+                }
+                continue;
+            }
+            if hz.iter().any(|h| per.get(h.as_str()).copied().unwrap_or(0) < 2) {
+                for h in &hz {
+                    if let Some(t) = tax.iter().find(|t| **t == h.as_str()) {
+                        *per.entry(t).or_insert(0) += 1;
+                    }
+                }
+                out.push(word);
+            }
+            if baseline >= 2 && tax.iter().all(|t| per.get(t).copied().unwrap_or(0) >= 2) {
+                return out;
+            }
+        }
+    }
+    out
+}
+
+/// Placement is offered exactly once per (profile x language): never
+/// offered again after a completion OR a skip, and never offered at all
+/// for languages without a taxonomy.
+pub fn should_offer_placement(lang: &str) -> bool {
+    !placement_set(lang).is_empty() && load_for(lang).placed.is_none()
+}
+
+/// Placement prior shifts (the fixture-pinned contract): a correct
+/// placement answer lifts every exercised skill's mastery to at least
+/// PLACE_HI; a miss caps it at PLACE_LO. Decisive on purpose — placement
+/// exists to move priors faster than one ordinary BKT step — and clamped,
+/// never crossed: a later placement answer on a shared skill can only
+/// widen what an earlier one set, not silently undo it.
+pub const PLACE_HI: f64 = 0.65;
+pub const PLACE_LO: f64 = 0.12;
+
+pub fn apply_placement(state: &mut LearnerState, lang: &str, word: &str, correct: bool, day: u32) {
+    let skills = hazards(lang, word);
+    for id in &skills {
+        let s = state.skill_mut(id);
+        if correct {
+            s.mastery = s.mastery.max(PLACE_HI);
+        } else {
+            s.mastery = s.mastery.min(PLACE_LO);
+        }
+        if s.fsrs.reps == 0 {
+            s.fsrs.reps = 1;
+            s.fsrs.stability = if correct { 3.0 } else { 0.5 };
+            s.fsrs.due_day = day + if correct { 3 } else { 1 };
+        }
+    }
+    if state.log.len() == LOG_CAP {
+        state.log.pop_front();
+    }
+    state.log.push_back(Attempt {
+        day,
+        word: word.to_string(),
+        skills,
+        correct,
+        channel: Channel::Typed,
+    });
+}
+
+/// Storage-backed wrappers for the UI wave: one placement answer, and the
+/// finish/skip that closes the offer forever. Skip changes NOTHING but
+/// the `placed` flag — the eval's "defaults intact" clause, by
+/// construction and by test.
+pub fn note_placement(lang: &str, word: &str, correct: bool) {
+    let mut st = load_for(lang);
+    let day = today_day();
+    apply_placement(&mut st, lang, word, correct, day);
+    let key = format!("{STORE_PREFIX}{lang}");
+    if let Ok(json) = serde_json::to_string(&st) {
+        crate::storage::set_raw(&key, &json);
+    }
+}
+
+pub fn finish_placement(lang: &str, took: bool) {
+    let mut st = load_for(lang);
+    st.placed = Some(took);
+    let key = format!("{STORE_PREFIX}{lang}");
+    if let Ok(json) = serde_json::to_string(&st) {
+        crate::storage::set_raw(&key, &json);
+    }
+}
+
+// ------------------------------------------- L2: the guardian report
+
+/// The guardian report — pure data, rendered deterministically, shared
+/// only by explicit action (this module renders; it never sends).
+#[derive(Debug, PartialEq)]
+pub struct GuardianReport {
+    pub attempts: u32,
+    pub correct: u32,
+    /// (skill id, mastery, days overdue) — every tracked skill, sorted
+    /// weakest first so the render needs no policy of its own.
+    pub skills: Vec<(String, f64, i64)>,
+    /// Skill ids with mastery >= 0.8 after 2+ reps.
+    pub strengths: Vec<String>,
+    /// Skill ids with mastery < 0.45, or more than 7 days overdue.
+    pub focus: Vec<String>,
+}
+
+pub fn guardian_report(state: &LearnerState, day: u32) -> GuardianReport {
+    let attempts = state.log.len() as u32;
+    let correct = state.log.iter().filter(|a| a.correct).count() as u32;
+    let mut skills: Vec<(String, f64, i64)> = state
+        .skills
+        .iter()
+        .filter(|s| s.fsrs.reps > 0)
+        .map(|s| (s.id.clone(), s.mastery, day as i64 - s.fsrs.due_day as i64))
+        .collect();
+    skills.sort_by(|a, b| a.1.partial_cmp(&b.1).unwrap_or(std::cmp::Ordering::Equal));
+    let strengths = state
+        .skills
+        .iter()
+        .filter(|s| s.fsrs.reps >= 2 && s.mastery >= 0.8)
+        .map(|s| s.id.clone())
+        .collect();
+    let focus = skills
+        .iter()
+        .filter(|(_, m, over)| *m < 0.45 || *over > 7)
+        .map(|(id, _, _)| id.clone())
+        .collect();
+    GuardianReport { attempts, correct, skills, strengths, focus }
+}
+
+/// Render the report as audited-string HTML. Every human-readable string
+/// rides i18n (the audit gate); skill ids map through `skill.<id>` keys.
+/// No share affordance lives here — sharing is the SURFACE's explicit
+/// button, never the renderer's initiative.
+pub fn guardian_report_html(r: &GuardianReport, _lang: &str) -> String {
+    use crate::i18n;
+    let mut h = String::from("<div class=\"guardian\">");
+    h.push_str(&format!("<h3>{}</h3>", i18n::t("guardian.title")));
+    if r.attempts == 0 {
+        h.push_str(&format!("<p class=\"g-empty\">{}</p>", i18n::t("guardian.empty")));
+        h.push_str("</div>");
+        return h;
+    }
+    h.push_str(&format!(
+        "<p class=\"g-sum\">{}</p>",
+        i18n::tp("guardian.summary", &[("n", &r.attempts.to_string()), ("c", &r.correct.to_string())])
+    ));
+    if !r.strengths.is_empty() {
+        h.push_str(&format!("<h4>{}</h4><ul class=\"g-strong\">", i18n::t("guardian.strengths")));
+        for id in &r.strengths {
+            h.push_str(&format!("<li>{}</li>", i18n::t(&format!("skill.{id}"))));
+        }
+        h.push_str("</ul>");
+    }
+    if !r.focus.is_empty() {
+        h.push_str(&format!("<h4>{}</h4><ul class=\"g-focus\">", i18n::t("guardian.focus")));
+        for id in &r.focus {
+            h.push_str(&format!("<li>{}</li>", i18n::t(&format!("skill.{id}"))));
+        }
+        h.push_str("</ul>");
+    }
+    h.push_str("</div>");
+    h
+}
+
 // ----------------------------------------------------------------- tests
 
 #[cfg(test)]
@@ -818,5 +1016,149 @@ mod l1_tests {
         let pick = select_within(&st, &band, "en", 0, &[], 7);
         assert!(matches!(pick, Some(i) if i < band.len()), "empty state must still select");
         assert_eq!(pick, select_within(&st, &band, "en", 0, &[], 7), "and deterministically");
+    }
+}
+
+#[cfg(test)]
+mod placement_tests {
+    use super::*;
+
+    /// Done #4 bar 1: the set spans >=90% of the taxonomy (ours spans
+    /// 100%), deterministically, at a size a first-run flow can carry.
+    #[test]
+    fn placement_set_covers_the_taxonomy() {
+        let set = placement_set("en");
+        assert!(!set.is_empty() && set.len() <= 16, "carryable size, got {}", set.len());
+        let tax = taxonomy("en");
+        let mut covered: std::collections::HashSet<String> = Default::default();
+        for w in &set {
+            for h in hazards("en", w) {
+                covered.insert(h);
+            }
+        }
+        let frac = covered.len() as f64 / tax.len() as f64;
+        assert!(frac >= 0.9, "coverage {frac} below the 90% bar");
+        assert_eq!(set, placement_set("en"), "same set on every device");
+        assert!(placement_set("es").is_empty(), "no taxonomy, no placement");
+    }
+
+    /// Done #4 bar 2, fixture A: acing placement lifts every exercised
+    /// skill's prior to at least PLACE_HI.
+    #[test]
+    fn placement_all_correct_lifts_priors() {
+        let mut st = LearnerState::new("en");
+        for w in placement_set("en") {
+            apply_placement(&mut st, "en", &w, true, 10);
+        }
+        for t in taxonomy("en") {
+            let s = st.skills.iter().find(|s| s.id == t).expect(t);
+            assert!(s.mastery >= PLACE_HI, "{t} prior {} not lifted", s.mastery);
+            assert!(s.fsrs.reps >= 1, "{t} scheduled");
+        }
+    }
+
+    /// Fixture B: missing everything caps every exercised prior at
+    /// PLACE_LO — the learner starts where they actually are.
+    #[test]
+    fn placement_all_wrong_lowers_priors() {
+        let mut st = LearnerState::new("en");
+        for w in placement_set("en") {
+            apply_placement(&mut st, "en", &w, false, 10);
+        }
+        for t in taxonomy("en") {
+            let s = st.skills.iter().find(|s| s.id == t).expect(t);
+            assert!(s.mastery <= PLACE_LO, "{t} prior {} not lowered", s.mastery);
+        }
+    }
+
+    /// Fixture C, mixed: one skill aced, one missed — shifts are
+    /// per-skill, and the clamp never lets a later shared-skill answer
+    /// undo an earlier one silently.
+    #[test]
+    fn placement_mixed_fixture() {
+        let mut st = LearnerState::new("en");
+        apply_placement(&mut st, "en", "knee", true, 10);   // silent_letters aced
+        apply_placement(&mut st, "en", "grass", false, 10); // doubled_consonant missed
+        let hi = st.skills.iter().find(|s| s.id == "silent_letters").unwrap();
+        let lo = st.skills.iter().find(|s| s.id == "doubled_consonant").unwrap();
+        assert!(hi.mastery >= PLACE_HI && lo.mastery <= PLACE_LO);
+        assert_eq!(st.log.len(), 2, "placement attempts are logged");
+    }
+
+    /// Done #4 bar 3: the skip path leaves DEFAULTS intact — nothing but
+    /// the placed flag moves, and the next ordinary attempt starts from
+    /// the untouched BKT prior.
+    #[test]
+    fn skip_leaves_defaults_intact() {
+        let mut st = LearnerState::new("en");
+        st.placed = Some(false);
+        assert!(st.skills.is_empty() && st.log.is_empty(), "skip writes no skill state");
+        st.record(Attempt {
+            day: 5,
+            word: "knee".into(),
+            skills: hazards("en", "knee"),
+            correct: true,
+            channel: Channel::Typed,
+        });
+        let s = st.skills.iter().find(|s| s.id == "silent_letters").unwrap();
+        assert_eq!(s.mastery, bkt_update(BKT_PRIOR, true), "first update starts from the default prior");
+    }
+}
+
+#[cfg(test)]
+mod guardian_tests {
+    use super::*;
+
+    fn skill(id: &str, mastery: f64, due: u32, reps: u32) -> SkillState {
+        SkillState {
+            id: id.into(),
+            mastery,
+            fsrs: FsrsState { stability: 1.0, difficulty: 5.0, due_day: due, reps, lapses: 0 },
+        }
+    }
+
+    /// Fixture 1 — a brand-new learner: the report is the honest empty
+    /// state, no invented numbers.
+    #[test]
+    fn report_fresh_learner() {
+        let st = LearnerState::new("en");
+        let r = guardian_report(&st, 10);
+        assert_eq!(r.attempts, 0);
+        assert!(r.skills.is_empty() && r.strengths.is_empty() && r.focus.is_empty());
+    }
+
+    /// Fixture 2 — struggling: weak and overdue skills surface as focus,
+    /// weakest first, and nothing lands in strengths.
+    #[test]
+    fn report_struggling_learner() {
+        let mut st = LearnerState::new("en");
+        st.skills.push(skill("silent_letters", 0.2, 5, 3));
+        st.skills.push(skill("doubled_consonant", 0.6, 2, 3)); // 18 days overdue at day 20
+        for i in 0..6 {
+            st.record(Attempt { day: 20, word: format!("w{i}"), skills: vec![], correct: i % 3 == 0, channel: Channel::Typed });
+        }
+        let r = guardian_report(&st, 20);
+        assert_eq!(r.attempts, 6);
+        assert_eq!(r.skills[0].0, "silent_letters", "weakest first");
+        assert!(r.focus.contains(&"silent_letters".to_string()), "weak skill in focus");
+        assert!(r.focus.contains(&"doubled_consonant".to_string()), "overdue skill in focus");
+        assert!(r.strengths.is_empty());
+    }
+
+    /// Fixture 3 — thriving: mastered skills in strengths, focus empty.
+    #[test]
+    fn report_thriving_learner() {
+        let mut st = LearnerState::new("en");
+        st.skills.push(skill("silent_letters", 0.92, 30, 5));
+        st.skills.push(skill("loanword_spelling", 0.85, 28, 4));
+        for i in 0..10 {
+            st.record(Attempt { day: 25, word: format!("w{i}"), skills: vec![], correct: true, channel: Channel::Typed });
+        }
+        let r = guardian_report(&st, 25);
+        assert_eq!(r.correct, 10);
+        assert_eq!(r.strengths.len(), 2);
+        assert!(r.focus.is_empty());
+        // determinism: same state, same report
+        assert_eq!(guardian_report(&st, 25), r);
     }
 }

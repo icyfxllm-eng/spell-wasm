@@ -190,6 +190,7 @@ pub fn start() -> Result<(), JsValue> {
 
 fn wire(app: &App) {
     wire_orb_and_answer(app);
+    game::wire_placement(app);
     wire_glow_and_settings(app);
     wire_modes(app);
     wire_source_level(app);

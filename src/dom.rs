@@ -10,6 +10,13 @@ pub fn doc() -> Document {
     window().document().expect("no document")
 }
 
+/// True when the element exists in THIS build's document — the app and
+/// the site ship different HTML, so cross-build wiring must probe before
+/// it grabs (the picker/learner surfaces exist only in the app shell).
+pub fn exists(id: &str) -> bool {
+    doc().get_element_by_id(id).is_some()
+}
+
 pub fn el(id: &str) -> Element {
     doc().get_element_by_id(id).unwrap_or_else(|| panic!("missing element #{id}"))
 }

@@ -142,6 +142,13 @@ pub fn learner_select() -> bool {
     resolve(stored("learner_select").as_deref(), false)
 }
 
+/// CC-LEARNING-ENGINE surfaces — the placement offer card and the Stats
+/// guardian section. **Default OFF**: ships dark; OFF is a true no-op
+/// (no card, no section, zero observable diff).
+pub fn learner_surfaces() -> bool {
+    resolve(stored("learner_surfaces").as_deref(), false)
+}
+
 pub fn is_on(name: &str) -> bool {
     match name {
         "ghost_racing" => ghost_racing(),
@@ -155,6 +162,7 @@ pub fn is_on(name: &str) -> bool {
         "def_match" => def_match(),
         "practice" => practice(),
         "learner_select" => learner_select(),
+        "learner_surfaces" => learner_surfaces(),
         #[cfg(not(feature = "web"))]
         "word_picture" => word_picture(),
         _ => false,

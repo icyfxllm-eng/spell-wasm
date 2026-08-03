@@ -922,6 +922,50 @@ fn speak_word(app: &App, variant: &str, rate: f32) {
     speech_out::speak(&word, browser_rate, &code);
 }
 
+
+thread_local! {
+    /// CC-LEARNING-ENGINE feature 5 — the active placement run: words
+    /// still to serve (served newest-last via pop from the front), and
+    /// whether the word on screen came from placement (so the submit
+    /// path routes to note_placement, never double-recording).
+    static PLACEMENT_QUEUE: std::cell::RefCell<Vec<String>> = const { std::cell::RefCell::new(Vec::new()) };
+    static PLACEMENT_LIVE: std::cell::Cell<bool> = const { std::cell::Cell::new(false) };
+}
+
+/// Offer placement once per language: called at the top of a solo serve.
+/// Returns true when the offer card is up (the serve pauses behind it).
+fn maybe_offer_placement(lang: &str) -> bool {
+    if !crate::dom::exists("plcCard") {
+        return false;
+    }
+    if !crate::flags::learner_surfaces() || !crate::learner::should_offer_placement(lang) {
+        return false;
+    }
+    crate::dom::set_text("plcBody", &crate::i18n::t("placement.body"));
+    crate::dom::add_class("plcCard", "show");
+    true
+}
+
+pub fn wire_placement(app: &App) {
+    if !crate::dom::exists("plcCard") {
+        return; // site shell: no placement surface, wire nothing
+    }
+    let a = app.clone();
+    crate::dom::on_click("plcTry", move || {
+        let lang = a.borrow().lang.clone();
+        PLACEMENT_QUEUE.with(|q| *q.borrow_mut() = crate::learner::placement_set(&lang));
+        crate::dom::remove_class("plcCard", "show");
+        next_word(&a);
+    });
+    let a = app.clone();
+    crate::dom::on_click("plcSkip", move || {
+        let lang = a.borrow().lang.clone();
+        crate::learner::finish_placement(&lang, false);
+        crate::dom::remove_class("plcCard", "show");
+        next_word(&a);
+    });
+}
+
 pub fn next_word(app: &App) {
     clear_meaning();
     // Daily Challenge: finish once the fixed set is exhausted.
@@ -961,7 +1005,21 @@ pub fn next_word(app: &App) {
             s.cur_lang = m.lang.clone();
             s.word = m.word.clone();
             s.cur_tier = m.tier.clone();
+        } else if PLACEMENT_QUEUE.with(|q| !q.borrow().is_empty()) {
+            // Placement run: serve the fixed set through the normal flow.
+            let w = PLACEMENT_QUEUE.with(|q| q.borrow_mut().remove(0));
+            PLACEMENT_LIVE.with(|c| c.set(true));
+            s.cur_lang = s.lang.clone();
+            s.cur_tier = length_tier(&w).to_string();
+            s.word = w;
         } else {
+            PLACEMENT_LIVE.with(|c| c.set(false));
+            {
+                let lang = s.lang.clone();
+                if maybe_offer_placement(&lang) {
+                    return; // the card owns this turn; Try/Skip re-enter
+                }
+            }
             s.cur_lang = s.lang.clone();
             // Climb tier: head-to-head tracks the active player's current chain;
             // solo uses the gentle band (Option A) so a miss drops one tier, not
@@ -1144,8 +1202,18 @@ pub fn submit_guess(app: &App) {
             || crate::homophones::accepts(&cur_lang, &word, &typed)
     };
     // CC-LEARNING-ENGINE: the validated verdict, recorded at the single
-    // submission path — typed channel, so skills update.
-    crate::learner::note_attempt(&cur_lang, &word, correct, crate::learner::Channel::Typed);
+    // submission path — typed channel, so skills update. Placement words
+    // route to the placement recorder (decisive prior shifts) and close
+    // the run when the set is spent.
+    if PLACEMENT_LIVE.with(std::cell::Cell::get) {
+        crate::learner::note_placement(&cur_lang, &word, correct);
+        if PLACEMENT_QUEUE.with(|q| q.borrow().is_empty()) {
+            crate::learner::finish_placement(&cur_lang, true);
+            crate::dom::show_toast(&crate::i18n::t("placement.done"));
+        }
+    } else {
+        crate::learner::note_attempt(&cur_lang, &word, correct, crate::learner::Channel::Typed);
+    }
     if correct {
         on_correct(app);
     } else {
