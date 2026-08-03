@@ -233,7 +233,10 @@ platform :ios do
       development: false, api_key_path: key_path,
       keychain_path: kc_path, keychain_password: kc_pw
     )
-    get_provisioning_profile(app_identifier: "net.spellgame.app", api_key_path: key_path)
+    # force: the App IDs gained the App Group capability (BD-1) — stale
+    # cached profiles predate it and fail codesign with entitlement errors.
+    get_provisioning_profile(app_identifier: "net.spellgame.app", api_key_path: key_path, force: true)
+    get_provisioning_profile(app_identifier: "net.spellgame.app.SpellWidgets", api_key_path: key_path, force: true)
 
     # Let codesign use the key without a GUI prompt (needs the keychain password,
     # which is why the dedicated keychain matters — we know THIS one).
@@ -241,6 +244,16 @@ platform :ios do
        "-s -k #{kc_pw.shellescape} #{kc_path.shellescape} > /dev/null 2>&1 || true")
 
     # 4. Archive + export with ONLY our keychain searchable (see hazard 2 above).
+    update_code_signing_settings(
+      use_automatic_signing: false, path: "ios/App/App.xcodeproj",
+      team_id: "WCH6H5NAWH", bundle_identifier: "net.spellgame.app",
+      code_sign_identity: "Apple Distribution",
+      profile_name: "net.spellgame.app AppStore", targets: ["App"])
+    update_code_signing_settings(
+      use_automatic_signing: false, path: "ios/App/App.xcodeproj",
+      team_id: "WCH6H5NAWH", bundle_identifier: "net.spellgame.app.SpellWidgets",
+      code_sign_identity: "Apple Distribution",
+      profile_name: "net.spellgame.app.SpellWidgets AppStore", targets: ["SpellWidgets"])
     begin
       sh("security list-keychains -d user -s #{kc_path.shellescape}")
       gym(
@@ -250,19 +263,27 @@ platform :ios do
         export_method: "app-store",
         output_directory: "build",
         clean: true,
+        # NOTE: no global PROVISIONING_PROFILE_SPECIFIER in xcargs — it would
+        # poison the widget target. Specifiers are set per-target below.
         xcargs: "CODE_SIGN_STYLE=Manual DEVELOPMENT_TEAM=WCH6H5NAWH " \
-                "CODE_SIGN_IDENTITY='Apple Distribution' " \
-                "PROVISIONING_PROFILE_SPECIFIER='net.spellgame.app AppStore'",
+                "CODE_SIGN_IDENTITY='Apple Distribution'",
         export_options: {
           signingStyle: "manual",
           teamID: "WCH6H5NAWH",
-          provisioningProfiles: { "net.spellgame.app" => "net.spellgame.app AppStore" }
+          provisioningProfiles: {
+            "net.spellgame.app" => "net.spellgame.app AppStore",
+            "net.spellgame.app.SpellWidgets" => "net.spellgame.app.SpellWidgets AppStore"
+          }
         }
       )
     ensure
       # ALWAYS put the login keychain back, even if the build blew up.
       sh("security list-keychains -d user -s login.keychain-db #{kc_path.shellescape}")
     end
+
+    # BD-1 acceptance #2: the shipped widget binary links no networking
+    # symbols — proven on the artifact.
+    sh("cd #{root.shellescape} && unzip -o -q build/App.ipa -d build/ipa-scan && scripts/widget-symbol-scan.sh 'build/ipa-scan/Payload/App.app/PlugIns/SpellWidgets.appex/SpellWidgets' && rm -rf build/ipa-scan")
 
     # 5. TestFlight.
     pilot(
