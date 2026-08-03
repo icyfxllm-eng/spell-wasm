@@ -62,7 +62,7 @@ features = [
   "HtmlInputElement", "HtmlSelectElement", "HtmlTextAreaElement", "HtmlButtonElement",
   "HtmlCanvasElement", "CanvasRenderingContext2d", "HtmlImageElement", "HtmlMediaElement", "HtmlAudioElement",
   "AnimationEvent", "MediaQueryList",
-  "Event", "EventTarget", "MouseEvent", "PointerEvent", "KeyboardEvent", "InputEvent",
+  "Event", "EventTarget", "Location", "MouseEvent", "PointerEvent", "KeyboardEvent", "InputEvent",
   "Storage",
   "Request", "RequestInit", "RequestMode", "Response", "Headers",
   "SpeechSynthesis", "SpeechSynthesisUtterance", "SpeechSynthesisVoice", "SpeechSynthesisEvent",

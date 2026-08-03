@@ -1,0 +1,7 @@
+"widget.daily.name" = "Tages-Challenge";
+"widget.daily.desc" = "Die heutige Challenge und deine Serie";
+"widget.daily.done" = "Geschafft!";
+"widget.daily.notyet" = "Noch nicht";
+"widget.streak.name" = "Serie & Schilde";
+"widget.streak.desc" = "Deine Serie und Climb-Schilde";
+"widget.streak.unit" = "Tage-Serie";

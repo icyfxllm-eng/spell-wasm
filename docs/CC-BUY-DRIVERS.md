@@ -23,3 +23,19 @@ Cross-file decisions awaiting Eric
 * BD-D3: Guardian Dash free teaser — English dashboard free, Complete unlocks all languages?
 * BD-D4: Family Voices V2 training path — where Piper training runs is undecided; V2 executes nothing until this is signed.
 * BD-D5: Yearbook default period — school year (Sep–Jun) vs calendar year vs Climb season.
+
+---
+DECISION LEDGER (Eric, 2026-08-02 — recorded at greenlight)
+* All five files greenlit 2026-08-02, in order BD-1..BD-5.
+* BD-D1: Climb Live Activity CUT from BD-1 v1 — ActivityAttributes stubbed behind a disabled flag, nothing else built.
+* BD-D2: per-language pack granularity. PACKS-D2: 150 MB budget signed. PACKS-D3: auto-suggest signed.
+* BD-D3: signed — full English dashboard free, Complete unlocks all languages.
+* BD-D4: OPEN — V2 Family Voices executes nothing until signed.
+* BD-D5: CALENDAR YEAR default (overrides the school-year proposal; all four periods selectable).
+* IOS-D4: last-active profile, no per-widget pinning v1. VOICES-D4: celebrations allowed from gate-failed voices — signed. VOICES-D5: multi-voice + grandma copy — signed. YEARBOOK-D4: photo pieces excluded by default — signed. YEARBOOK-D5: opt-in ready notification — signed.
+* CC-REPORTS decisions (Eric, 2026-08-02): D3 SIGNED — new on-device per-keystroke timing capture approved (the batch's only new data collection; D3 recon evidence: no timestamps existed — input_provenance counts only, misses/wordstats word-level). Hesitation Map ships in v1. D4: cross-language floor = >=2 languages with >=100 scored attempts each (stricter than the 50 proposal). D6 SIGNED: kid tab may ship before Guardian Dash. CC-REPORTS itself awaits its per-file greenlight.
+* CC-CALENDAR v2 decisions (Eric, 2026-08-02): D1 final per v2 (kid-origination, I7 CI-enforced). D2 SIGNED (recap+goals free; multi-week planner Complete). D3 SIGNED — the daily journal is the batch's second sanctioned new-data store (date-granularity, outcomes-only, 730-day cap, ReportsQuery sole reader). D4: 5 new words per WEEK (adjustable 3-15). D5 SIGNED: goal ring joins the widget snapshot. File awaits per-file greenlight.
+* FOR THE RECORD (Eric, 2026-08-02): "all these read mes are app exclusives" — every file in this batch and its amendments (BD-1..BD-5, CC-REPORTS, CC-CALENDAR) is app-only: platforms:["app"], web symbol-scan denylist auto-extends (S3), zero web mention/symbol/asset.
+* CC-CALENDAR greenlit (Eric, 2026-08-02) — all eight files now live. Slots after the 121-123 ladder (depends on ReportsQuery from 121, snapshot fields from 120); journal + planner + dealt hand + cheer flow as one wave on Eric's next ship number.
+* CC-TRANSLATE-TOOLS decisions (Eric, 2026-08-02): D5 — WHOLE SUITE APP-ONLY (blanket app-exclusive ruling stands; tools 1-4 join the wall, denylist auto-extends). D1 SIGNED (core+daily+Passport free; depth tools Complete). D2 SIGNED (Kid Mode: full core+Passport+daily, no camera; Little Speller: no translator). D9 decided (word-level only, no phrase path even as stub). Wave-3 gates D3/D4/D6/D7/D8 UNSIGNED — design docs only, zero executable paths, CI-checked. Slots after CC-CALENDAR. NOTE: CC-BANK-TRANSLATE (authoritative parent on gloss pivot) not yet in hand; Phase A gloss column is deadline-critical and untouchable. File awaits per-file greenlight.
+* CC-TRANSLATE-TOOLS GREENLIT (Eric, 2026-08-02) — ninth file live. Slots after CC-CALENDAR in the build ladder. Wave-3 gates remain unsigned. Parent file CC-BANK-TRANSLATE still not in hand; gloss-pivot data availability governs when the core can light up (schema-first build, dark until glossAudited languages exist).

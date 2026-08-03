@@ -9,7 +9,7 @@
 git_url("https://github.com/icyfxllm-eng/spell-certs.git")
 storage_mode("git")
 type("appstore")            # `development` / `adhoc` also available
-app_identifier(["net.spellgame.app"])
+app_identifier(["net.spellgame.app", "net.spellgame.app.SpellWidgets"])
 
 # Non-interactive keychain so cert import + partition-list setting don't need a GUI prompt.
 keychain_name("fastlane_tmp.keychain-db")

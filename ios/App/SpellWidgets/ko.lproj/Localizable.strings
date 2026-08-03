@@ -1,0 +1,7 @@
+"widget.daily.name" = "오늘의 도전";
+"widget.daily.desc" = "오늘의 도전과 연속 기록";
+"widget.daily.done" = "완료!";
+"widget.daily.notyet" = "아직";
+"widget.streak.name" = "연속 기록과 방패";
+"widget.streak.desc" = "연속 기록과 클라임 방패";
+"widget.streak.unit" = "일 연속";

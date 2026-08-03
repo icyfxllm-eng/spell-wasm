@@ -19,6 +19,11 @@ public class NativeLanguageKitPlugin: CAPPlugin, CAPBridgedPlugin {
         // it, the JS call rejects, and Save fails in a way that looks exactly
         // like "no plugin installed".
         CAPPluginMethod(name: "savePicture", returnType: CAPPluginReturnPromise),
+        // CC-IOS-SURFACES (BD-1): the one-way widget snapshot writer and
+        // the Spotlight donor. Without these rows the bridge has no route
+        // and the JS call rejects like the plugin is absent.
+        CAPPluginMethod(name: "writeWidgetSnapshot", returnType: CAPPluginReturnPromise),
+        CAPPluginMethod(name: "donateSpotlight", returnType: CAPPluginReturnPromise),
         CAPPluginMethod(name: "speak", returnType: CAPPluginReturnPromise),
         CAPPluginMethod(name: "speakSyllables", returnType: CAPPluginReturnPromise),
         CAPPluginMethod(name: "stop", returnType: CAPPluginReturnPromise),

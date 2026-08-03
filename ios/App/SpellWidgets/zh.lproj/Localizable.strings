@@ -1,0 +1,7 @@
+"widget.daily.name" = "每日挑战";
+"widget.daily.desc" = "今日挑战与连胜";
+"widget.daily.done" = "完成！";
+"widget.daily.notyet" = "还没有";
+"widget.streak.name" = "连胜与盾牌";
+"widget.streak.desc" = "你的连胜和攀登盾牌";
+"widget.streak.unit" = "天连胜";

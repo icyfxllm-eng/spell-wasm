@@ -17,6 +17,23 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         return true
     }
 
+    // CC-IOS-SURFACES (BD-1): widget/intent deep links. The spellgame://
+    // scheme routes by setting the webview hash; the wasm boot (and a
+    // hashchange listener) turn "#daily" / "#practice" into the mode.
+    // Capacitor's own handler still runs (super-style passthrough).
+    func application(_ app: UIApplication, open url: URL, options: [UIApplication.OpenURLOptionsKey: Any] = [:]) -> Bool {
+        if url.scheme == "spellgame" {
+            let route = url.host ?? ""
+            DispatchQueue.main.async {
+                if let bridge = (self.window?.rootViewController as? CAPBridgeViewController)?.bridge {
+                    bridge.webView?.evaluateJavaScript("window.location.hash='" + route + "'; window.dispatchEvent(new HashChangeEvent('hashchange'));", completionHandler: nil)
+                }
+            }
+            return true
+        }
+        return ApplicationDelegateProxy.shared.application(app, open: url, options: options)
+    }
+
     func applicationWillResignActive(_ application: UIApplication) {
         // Sent when the application is about to move from active to inactive state. This can occur for certain types of temporary interruptions (such as an incoming phone call or SMS message) or when the user quits the application and it begins the transition to the background state.
         // Use this method to pause ongoing tasks, disable timers, and invalidate graphics rendering callbacks. Games should use this method to pause the game.

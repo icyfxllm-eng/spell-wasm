@@ -20,7 +20,14 @@
 	<string>APPL</string>
 	<key>CFBundleShortVersionString</key>
 	<string>1.1</string>
-	<key>CFBundleVersion</key>
+	<key>CFBundleURLTypes</key>
+  <array>
+    <dict>
+      <key>CFBundleURLName</key><string>net.spellgame.app</string>
+      <key>CFBundleURLSchemes</key><array><string>spellgame</string></array>
+    </dict>
+  </array>
+  <key>CFBundleVersion</key>
 	<string>$(CURRENT_PROJECT_VERSION)</string>
 	<key>ITSAppUsesNonExemptEncryption</key>
 	<false/>

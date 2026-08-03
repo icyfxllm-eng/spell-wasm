@@ -12,7 +12,17 @@ platform :ios do
 
   desc "Build a signed App Store IPA and upload to TestFlight"
   lane :beta do
-    match(type: "appstore", readonly: is_ci)
+    # CC-IOS-SURFACES (BD-1): the widget extension needs its own App ID
+    # with the App Group, and the app's App ID needs the group too. All
+    # portal work rides the ASC API key; every step is idempotent. If the
+    # key lacks portal permission this fails LOUDLY here, before any
+    # build minutes are spent.
+    produce(app_identifier: "net.spellgame.app.SpellWidgets",
+            app_name: "SpellGame Widgets", skip_itc: true)
+    sh("bundle exec fastlane produce group -g group.net.spellgame.app -n 'SpellGame Shared' || true")
+    sh("bundle exec fastlane produce associate_group -a net.spellgame.app group.net.spellgame.app")
+    sh("bundle exec fastlane produce associate_group -a net.spellgame.app.SpellWidgets group.net.spellgame.app")
+    match(type: "appstore", readonly: is_ci, force_for_new_devices: false)
 
     # Derive the build number from App Store Connect, never from the repo, so a
     # retry / local drift can't re-upload an existing build number (ITMS-90189
@@ -41,6 +51,16 @@ platform :ios do
       profile_name: profile_name,
       targets: ["App"]
     )
+    widget_profile = ENV["sigh_net.spellgame.app.SpellWidgets_appstore_profile-name"]
+    update_code_signing_settings(
+      use_automatic_signing: false,
+      path: "ios/App/App.xcodeproj",
+      team_id: "WCH6H5NAWH",
+      bundle_identifier: "net.spellgame.app.SpellWidgets",
+      code_sign_identity: "Apple Distribution",
+      profile_name: widget_profile,
+      targets: ["SpellWidgets"]
+    )
 
     gym(
       project: "ios/App/App.xcodeproj",
@@ -52,10 +72,14 @@ platform :ios do
       export_options: {
         signingStyle: "manual",
         provisioningProfiles: {
-          "net.spellgame.app" => profile_name
+          "net.spellgame.app" => profile_name,
+          "net.spellgame.app.SpellWidgets" => widget_profile
         }
       }
     )
+    # BD-1 acceptance #2: the widget extension binary links no networking
+    # symbols — proven on the shipped artifact, not assumed.
+    sh("cd .. && unzip -o -q build/App.ipa -d build/ipa-scan && scripts/widget-symbol-scan.sh 'build/ipa-scan/Payload/App.app/PlugIns/SpellWidgets.appex/SpellWidgets' && rm -rf build/ipa-scan")
     pilot(
       skip_waiting_for_build_processing: true,
       changelog: "See release notes."

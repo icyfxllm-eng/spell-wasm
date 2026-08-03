@@ -1,0 +1,7 @@
+"widget.daily.name" = "Reto diario";
+"widget.daily.desc" = "El reto de hoy y tu racha";
+"widget.daily.done" = "¡Hecho!";
+"widget.daily.notyet" = "Aún no";
+"widget.streak.name" = "Racha y escudos";
+"widget.streak.desc" = "Tu racha y escudos del Ascenso";
+"widget.streak.unit" = "días seguidos";

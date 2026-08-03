@@ -1214,6 +1214,9 @@ pub fn submit_guess(app: &App) {
     } else {
         crate::learner::note_attempt(&cur_lang, &word, correct, crate::learner::Channel::Typed);
     }
+    // CC-IOS-SURFACES (BD-1): the widget snapshot follows meaningful state
+    // (streak / daily-done movement). One-way write; a no-op off-app.
+    crate::widgets::write_snapshot(&app.borrow());
     if correct {
         on_correct(app);
     } else {

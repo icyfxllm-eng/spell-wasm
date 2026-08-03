@@ -1,0 +1,7 @@
+"widget.daily.name" = "Daily Challenge";
+"widget.daily.desc" = "Today's challenge and your streak";
+"widget.daily.done" = "Done!";
+"widget.daily.notyet" = "Not yet";
+"widget.streak.name" = "Streak & Shields";
+"widget.streak.desc" = "Your streak and Climb shields";
+"widget.streak.unit" = "day streak";

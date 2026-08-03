@@ -1,0 +1,7 @@
+"widget.daily.name" = "デイリーチャレンジ";
+"widget.daily.desc" = "今日のチャレンジと連続記録";
+"widget.daily.done" = "完了！";
+"widget.daily.notyet" = "まだ";
+"widget.streak.name" = "連続記録とシールド";
+"widget.streak.desc" = "連続記録とクライムのシールド";
+"widget.streak.unit" = "日連続";

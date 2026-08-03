@@ -1,0 +1,7 @@
+"widget.daily.name" = "Desafio diário";
+"widget.daily.desc" = "O desafio de hoje e sua sequência";
+"widget.daily.done" = "Feito!";
+"widget.daily.notyet" = "Ainda não";
+"widget.streak.name" = "Sequência e escudos";
+"widget.streak.desc" = "Sua sequência e escudos";
+"widget.streak.unit" = "dias seguidos";

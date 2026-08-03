@@ -69,6 +69,7 @@ mod tools_hub;
 mod testseam;
 mod versus;
 mod viet;
+mod widgets;
 mod word_data;
 mod word_stories;
 mod words;
@@ -161,6 +162,26 @@ pub fn start() -> Result<(), JsValue> {
     }
 
     wire(&app);
+    // CC-IOS-SURFACES (BD-1): widget/intent deep links arrive as location
+    // hashes (#daily / #practice). Consume on boot and on change; a no-op
+    // when no hash and on the site shell.
+    {
+        let a = app.clone();
+        let route = move || {
+            let hash = dom::window().location().hash().unwrap_or_default();
+            match hash.as_str() {
+                "#daily" => dom::click("dailyBtn"),
+                "#practice" => dom::click("orbWrap"),
+                _ => return,
+            }
+            let _ = dom::window().location().set_hash("");
+            let _ = &a;
+        };
+        route();
+        let cb = wasm_bindgen::closure::Closure::<dyn Fn()>::new(route);
+        let _ = dom::window().add_event_listener_with_callback("hashchange", cb.as_ref().unchecked_ref());
+        cb.forget();
+    }
 
     // Language availability (registry): retry any queued Notify Me taps, and if
     // the current study language isn't active yet, show the coming-soon panel —

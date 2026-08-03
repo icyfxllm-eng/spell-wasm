@@ -20,7 +20,34 @@
 		50B271D11FEDC1A000F3C39B /* public in Resources */ = {isa = PBXBuildFile; fileRef = 50B271D01FEDC1A000F3C39B /* public */; };
 		CD429B8A6584E795B3BBA233 /* NativeLanguageKitCore in Frameworks */ = {isa = PBXBuildFile; productRef = B2335ADBAD7F5B5D76466705 /* NativeLanguageKitCore */; };
 		FADE0001000000000000EE20 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = FADE0001000000000000EE10 /* InfoPlist.strings */; };
+		5B1DBD100000000000000D00 /* Snapshot.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B1DBD1000000000000000A3 /* Snapshot.swift */; };
+		5B1DBD100000000000000D01 /* SpellWidgetsBundle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B1DBD1000000000000000A4 /* SpellWidgetsBundle.swift */; };
+		5B1DBD100000000000000D02 /* DailyChallengeWidget.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B1DBD1000000000000000A5 /* DailyChallengeWidget.swift */; };
+		5B1DBD100000000000000D03 /* StreakShieldsWidget.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B1DBD1000000000000000A6 /* StreakShieldsWidget.swift */; };
+		5B1DBD100000000000000D04 /* Previews.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B1DBD1000000000000000A7 /* Previews.swift */; };
+		5B1DBD100000000000000D90 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 5B1DBD1000000000000000B0 /* Localizable.strings */; };
+		5B1DBD1000000000000000EA /* SpellWidgets.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 5B1DBD1000000000000000A1 /* SpellWidgets.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		5B1DBD1000000000000000F4 /* NativeLanguageKitPlugin+Widgets.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B1DBD1000000000000000F1 /* NativeLanguageKitPlugin+Widgets.swift */; };
+		5B1DBD1000000000000000F5 /* SpellIntents.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B1DBD1000000000000000F2 /* SpellIntents.swift */; };
 /* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		5B1DBD1000000000000000EC /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 504EC2FC1FED79650016851F /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 5B1DBD1000000000000000E5;
+			remoteInfo = SpellWidgets;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXTargetDependency section */
+		5B1DBD1000000000000000EB /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 5B1DBD1000000000000000E5 /* SpellWidgets */;
+			targetProxy = 5B1DBD1000000000000000EC /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
 
 /* Begin PBXFileReference section */
 		2FAD9762203C412B000D30F8 /* config.xml */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = config.xml; sourceTree = "<group>"; };
@@ -38,7 +65,47 @@
 		F60E6967C62728C402EE9227 /* NativeLanguageKitPlugin.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = NativeLanguageKitPlugin.swift; sourceTree = "<group>"; };
 		FADE0001000000000000EE01 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = App/en.lproj/InfoPlist.strings; sourceTree = SOURCE_ROOT; };
 		FADE0001000000000000EE02 /* es */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = es; path = App/es.lproj/InfoPlist.strings; sourceTree = SOURCE_ROOT; };
+		5B1DBD1000000000000000A1 /* SpellWidgets.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = SpellWidgets.appex; sourceTree = BUILT_PRODUCTS_DIR; };
+		5B1DBD1000000000000000A3 /* Snapshot.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Snapshot.swift"; sourceTree = "<group>"; };
+		5B1DBD1000000000000000A4 /* SpellWidgetsBundle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "SpellWidgetsBundle.swift"; sourceTree = "<group>"; };
+		5B1DBD1000000000000000A5 /* DailyChallengeWidget.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "DailyChallengeWidget.swift"; sourceTree = "<group>"; };
+		5B1DBD1000000000000000A6 /* StreakShieldsWidget.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "StreakShieldsWidget.swift"; sourceTree = "<group>"; };
+		5B1DBD1000000000000000A7 /* Previews.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Previews.swift"; sourceTree = "<group>"; };
+		5B1DBD1000000000000000A8 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		5B1DBD1000000000000000A9 /* SpellWidgets.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = SpellWidgets.entitlements; sourceTree = "<group>"; };
+		5B1DBD100000000000000C00 /* ar */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ar; path = "ar.lproj/Localizable.strings"; sourceTree = "<group>"; };
+		5B1DBD100000000000000C01 /* de */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = de; path = "de.lproj/Localizable.strings"; sourceTree = "<group>"; };
+		5B1DBD100000000000000C02 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = "en.lproj/Localizable.strings"; sourceTree = "<group>"; };
+		5B1DBD100000000000000C03 /* es */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = es; path = "es.lproj/Localizable.strings"; sourceTree = "<group>"; };
+		5B1DBD100000000000000C04 /* fil */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fil; path = "fil.lproj/Localizable.strings"; sourceTree = "<group>"; };
+		5B1DBD100000000000000C05 /* fr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fr; path = "fr.lproj/Localizable.strings"; sourceTree = "<group>"; };
+		5B1DBD100000000000000C06 /* hi */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = hi; path = "hi.lproj/Localizable.strings"; sourceTree = "<group>"; };
+		5B1DBD100000000000000C07 /* ja */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ja; path = "ja.lproj/Localizable.strings"; sourceTree = "<group>"; };
+		5B1DBD100000000000000C08 /* ko */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ko; path = "ko.lproj/Localizable.strings"; sourceTree = "<group>"; };
+		5B1DBD100000000000000C09 /* pl */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = pl; path = "pl.lproj/Localizable.strings"; sourceTree = "<group>"; };
+		5B1DBD100000000000000C0A /* pt */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = pt; path = "pt.lproj/Localizable.strings"; sourceTree = "<group>"; };
+		5B1DBD100000000000000C0B /* ru */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ru; path = "ru.lproj/Localizable.strings"; sourceTree = "<group>"; };
+		5B1DBD100000000000000C0C /* sw */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = sw; path = "sw.lproj/Localizable.strings"; sourceTree = "<group>"; };
+		5B1DBD100000000000000C0D /* vi */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = vi; path = "vi.lproj/Localizable.strings"; sourceTree = "<group>"; };
+		5B1DBD100000000000000C0E /* zh */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = zh; path = "zh.lproj/Localizable.strings"; sourceTree = "<group>"; };
+		5B1DBD1000000000000000F1 /* NativeLanguageKitPlugin+Widgets.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = "NativeLanguageKitPlugin+Widgets.swift"; sourceTree = "<group>"; };
+		5B1DBD1000000000000000F2 /* SpellIntents.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = SpellIntents.swift; sourceTree = "<group>"; };
+		5B1DBD1000000000000000F3 /* App.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = App.entitlements; sourceTree = "<group>"; };
 /* End PBXFileReference section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		5B1DBD1000000000000000E9 /* Embed Foundation Extensions */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 13;
+			files = (
+				5B1DBD1000000000000000EA /* SpellWidgets.appex in Embed Foundation Extensions */,
+			);
+			name = "Embed Foundation Extensions";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFrameworksBuildPhase section */
 		504EC3011FED79650016851F /* Frameworks */ = {
@@ -47,6 +114,13 @@
 			files = (
 				4D22ABE92AF431CB00220026 /* CapApp-SPM in Frameworks */,
 				CD429B8A6584E795B3BBA233 /* NativeLanguageKitCore in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		5B1DBD1000000000000000E3 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -68,6 +142,7 @@
 				504EC3061FED79650016851F /* App */,
 				504EC3051FED79650016851F /* Products */,
 				0763D2E73013F7C6003F49A5 /* Recovered References */,
+				5B1DBD1000000000000000A2 /* SpellWidgets */,
 			);
 			sourceTree = "<group>";
 		};
@@ -75,6 +150,7 @@
 			isa = PBXGroup;
 			children = (
 				504EC3041FED79650016851F /* App.app */,
+				5B1DBD1000000000000000A1 /* SpellWidgets.appex */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -93,8 +169,26 @@
 				F60E6967C62728C402EE9227 /* NativeLanguageKitPlugin.swift */,
 				D50A51C8A62BA80E2F6B0354 /* NativeLanguageKitPlugin+PhotoList.swift */,
 				A1F00E5C0B7D42C19E33AA02 /* NativeLanguageKitPlugin+SavePicture.swift */,
+				5B1DBD1000000000000000F1 /* NativeLanguageKitPlugin+Widgets.swift */,
+				5B1DBD1000000000000000F2 /* SpellIntents.swift */,
+				5B1DBD1000000000000000F3 /* App.entitlements */,
 			);
 			path = App;
+			sourceTree = "<group>";
+		};
+		5B1DBD1000000000000000A2 /* SpellWidgets */ = {
+			isa = PBXGroup;
+			children = (
+				5B1DBD1000000000000000A3 /* Snapshot.swift */,
+				5B1DBD1000000000000000A4 /* SpellWidgetsBundle.swift */,
+				5B1DBD1000000000000000A5 /* DailyChallengeWidget.swift */,
+				5B1DBD1000000000000000A6 /* StreakShieldsWidget.swift */,
+				5B1DBD1000000000000000A7 /* Previews.swift */,
+				5B1DBD1000000000000000A8 /* Info.plist */,
+				5B1DBD1000000000000000A9 /* SpellWidgets.entitlements */,
+				5B1DBD1000000000000000B0 /* Localizable.strings */,
+			);
+			path = SpellWidgets;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -107,10 +201,12 @@
 				504EC3001FED79650016851F /* Sources */,
 				504EC3011FED79650016851F /* Frameworks */,
 				504EC3021FED79650016851F /* Resources */,
+				5B1DBD1000000000000000E9 /* Embed Foundation Extensions */,
 			);
 			buildRules = (
 			);
 			dependencies = (
+				5B1DBD1000000000000000EB /* PBXTargetDependency */,
 			);
 			name = App;
 			packageProductDependencies = (
@@ -121,6 +217,23 @@
 			productReference = 504EC3041FED79650016851F /* App.app */;
 			productType = "com.apple.product-type.application";
 		};
+		5B1DBD1000000000000000E5 /* SpellWidgets */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 5B1DBD1000000000000000E6 /* Build configuration list for PBXNativeTarget "SpellWidgets" */;
+			buildPhases = (
+				5B1DBD1000000000000000E1 /* Sources */,
+				5B1DBD1000000000000000E3 /* Frameworks */,
+				5B1DBD1000000000000000E2 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = SpellWidgets;
+			productName = SpellWidgets;
+			productReference = 5B1DBD1000000000000000A1 /* SpellWidgets.appex */;
+			productType = "com.apple.product-type.app-extension";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -130,6 +243,9 @@
 				LastSwiftUpdateCheck = 920;
 				LastUpgradeCheck = 920;
 				TargetAttributes = {
+					5B1DBD1000000000000000E5 = {
+						CreatedOnToolsVersion = 15.0;
+					};
 					504EC3031FED79650016851F = {
 						CreatedOnToolsVersion = 9.2;
 						LastSwiftMigration = 1100;
@@ -155,6 +271,7 @@
 			projectRoot = "";
 			targets = (
 				504EC3031FED79650016851F /* App */,
+				5B1DBD1000000000000000E5 /* SpellWidgets */,
 			);
 		};
 /* End PBXProject section */
@@ -174,6 +291,14 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		5B1DBD1000000000000000E2 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				5B1DBD100000000000000D90 /* Localizable.strings in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
@@ -185,6 +310,20 @@
 				414409BD1838B357D31D9C1A /* NativeLanguageKitPlugin.swift in Sources */,
 				39B22D60CA7B1F84A7ACDB33 /* NativeLanguageKitPlugin+PhotoList.swift in Sources */,
 				A1F00E5C0B7D42C19E33AA01 /* NativeLanguageKitPlugin+SavePicture.swift in Sources */,
+				5B1DBD1000000000000000F4 /* NativeLanguageKitPlugin+Widgets.swift in Sources */,
+				5B1DBD1000000000000000F5 /* SpellIntents.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		5B1DBD1000000000000000E1 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				5B1DBD100000000000000D00 /* Snapshot.swift in Sources */,
+				5B1DBD100000000000000D01 /* SpellWidgetsBundle.swift in Sources */,
+				5B1DBD100000000000000D02 /* DailyChallengeWidget.swift in Sources */,
+				5B1DBD100000000000000D03 /* StreakShieldsWidget.swift in Sources */,
+				5B1DBD100000000000000D04 /* Previews.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -214,6 +353,28 @@
 				FADE0001000000000000EE02 /* es */,
 			);
 			name = InfoPlist.strings;
+			sourceTree = "<group>";
+		};
+		5B1DBD1000000000000000B0 /* Localizable.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+					5B1DBD100000000000000C00 /* ar */,
+					5B1DBD100000000000000C01 /* de */,
+					5B1DBD100000000000000C02 /* en */,
+					5B1DBD100000000000000C03 /* es */,
+					5B1DBD100000000000000C04 /* fil */,
+					5B1DBD100000000000000C05 /* fr */,
+					5B1DBD100000000000000C06 /* hi */,
+					5B1DBD100000000000000C07 /* ja */,
+					5B1DBD100000000000000C08 /* ko */,
+					5B1DBD100000000000000C09 /* pl */,
+					5B1DBD100000000000000C0A /* pt */,
+					5B1DBD100000000000000C0B /* ru */,
+					5B1DBD100000000000000C0C /* sw */,
+					5B1DBD100000000000000C0D /* vi */,
+					5B1DBD100000000000000C0E /* zh */,
+			);
+			name = Localizable.strings;
 			sourceTree = "<group>";
 		};
 /* End PBXVariantGroup section */
@@ -335,7 +496,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 125;
+				CURRENT_PROJECT_VERSION = 126;
 				DEVELOPMENT_TEAM = WCH6H5NAWH;
 				INFOPLIST_FILE = App/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
@@ -360,7 +521,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 125;
+				CURRENT_PROJECT_VERSION = 126;
 				DEVELOPMENT_TEAM = WCH6H5NAWH;
 				INFOPLIST_FILE = App/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
@@ -375,6 +536,58 @@
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+		5B1DBD1000000000000000E7 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_ENTITLEMENTS = SpellWidgets/SpellWidgets.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 126;
+				DEVELOPMENT_TEAM = WCH6H5NAWH;
+				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_FILE = SpellWidgets/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = 1.1;
+				PRODUCT_BUNDLE_IDENTIFIER = net.spellgame.app.SpellWidgets;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+			};
+			name = Debug;
+		};
+		5B1DBD1000000000000000E8 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_ENTITLEMENTS = SpellWidgets/SpellWidgets.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 126;
+				DEVELOPMENT_TEAM = WCH6H5NAWH;
+				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_FILE = SpellWidgets/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = 1.1;
+				PRODUCT_BUNDLE_IDENTIFIER = net.spellgame.app.SpellWidgets;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
 			};
 			name = Release;
 		};
@@ -395,6 +608,15 @@
 			buildConfigurations = (
 				504EC3171FED79650016851F /* Debug */,
 				504EC3181FED79650016851F /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		5B1DBD1000000000000000E6 /* Build configuration list for PBXNativeTarget "SpellWidgets" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				5B1DBD1000000000000000E7 /* Debug */,
+				5B1DBD1000000000000000E8 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

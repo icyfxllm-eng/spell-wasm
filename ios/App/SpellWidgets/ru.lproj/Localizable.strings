@@ -1,0 +1,7 @@
+"widget.daily.name" = "Ежедневный вызов";
+"widget.daily.desc" = "Сегодняшний вызов и твоя серия";
+"widget.daily.done" = "Готово!";
+"widget.daily.notyet" = "Ещё нет";
+"widget.streak.name" = "Серия и щиты";
+"widget.streak.desc" = "Твоя серия и щиты";
+"widget.streak.unit" = "дней подряд";
