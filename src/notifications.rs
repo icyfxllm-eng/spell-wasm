@@ -37,6 +37,44 @@ fn set(obj: &Object, key: &str, val: &JsValue) {
 /// Apply the reminder setting: schedule the daily notification when `enabled`,
 /// otherwise cancel any existing one. `time` is "HH:MM" (24h). Best-effort —
 /// silently does nothing on the web or if the plugin rejects.
+/// CC-YEARBOOK D5 (signed): ONE opt-in local ping when the calendar-year
+/// period closes — scheduled on-device for Jan 1, 09:00, id 2, cancelled
+/// whenever the parent opts back out. The only time-based prompt in the
+/// BD batch.
+pub fn yearbook_ping(enabled: bool) {
+    let Some(ln) = plugin() else { return };
+    if !enabled {
+        let ids = Array::new();
+        let id_obj = Object::new();
+        set(&id_obj, "id", &JsValue::from_f64(2.0));
+        ids.push(&id_obj);
+        let arg = Object::new();
+        set(&arg, "notifications", &ids);
+        if let Some(f) = method(&ln, "cancel") {
+            let _ = f.call1(&ln, &arg);
+        }
+        return;
+    }
+    // One-shot => `at` with a concrete Date (an `on` clause would repeat
+    // every year — a nag, not a ping). Jan 1 next year, 09:00 local.
+    let year = js_sys::Date::new_0().get_full_year();
+    let when = js_sys::Date::new_with_year_month_day_hr(year + 1, 0, 1, 9);
+    let schedule = Object::new();
+    set(&schedule, "at", &when);
+    let notif = Object::new();
+    set(&notif, "id", &JsValue::from_f64(2.0));
+    set(&notif, "title", &JsValue::from_str(&crate::i18n::t("yb.title")));
+    set(&notif, "body", &JsValue::from_str(&crate::i18n::t("yb.ping")));
+    set(&notif, "schedule", &schedule);
+    let arr = Array::new();
+    arr.push(&notif);
+    let arg = Object::new();
+    set(&arg, "notifications", &arr);
+    if let Some(f) = method(&ln, "schedule") {
+        let _ = f.call1(&ln, &arg);
+    }
+}
+
 pub fn apply(enabled: bool, time: &str) {
     let Some(ln) = plugin() else { return };
 

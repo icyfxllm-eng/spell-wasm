@@ -74,6 +74,9 @@ mod reports;
 mod reports_ui;
 mod guardian_dash;
 mod family_voices;
+mod yearbook;
+mod yearbook_pdf;
+mod yearbook_ui;
 mod widgets;
 mod word_data;
 mod word_stories;
@@ -220,6 +223,7 @@ fn wire(app: &App) {
     reports_ui::wire(&app);
     guardian_dash::wire(&app);
     family_voices::wire(&app);
+    yearbook_ui::wire(&app);
     packs::wire(app);
     wire_glow_and_settings(app);
     wire_modes(app);

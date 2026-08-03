@@ -62,3 +62,24 @@ DECISION LEDGER (Eric, 2026-08-02 — recorded at greenlight)
   verdict; mastery map / trouble spots / hesitation list / what's-next;
   BD-D3 English-free honored, gdash pool x16). Weekly digest + PDF ride a
   later wave under the signed D6 decoupling.
+
+* SHIP 123 (build 130): BD-4 V1 Personal Voice. BD-D4 still the batch's one
+  open decision; the V2 symbol scan is a standing gate step. Eric's on-device
+  spot-check (acceptance #1) pending his Personal Voice recording.
+
+* 124 WAVE — BD-5 CC-YEARBOOK, honesty consequences recorded:
+  (a) completed pictures carry NO completion date (Run never stored one) and
+  I1 forbids starting to keep them -> the gallery spread is ALL-TIME, labeled
+  as such; dated spreads (journey/milestones/firsts) honor the period.
+  (b) Climb has no dated season store -> period menu ships calendar year
+  (BD-D5 SIGNED default) / school year / all-time; Climb season joins when
+  seasons have dates. (c) Export entitlement rides progress_reports as the
+  Complete proxy until CC-ENTITLEMENTS lands its own flag. (d) Acceptance #3
+  holds BY CONSTRUCTION: the page embed calls the same plan+export_svg the
+  finale export uses, via the new I3 picture bridge in surface_hooks
+  (install_picture_bridge — picture registers at boot, compiler never
+  imports the subtree; the wall scanner stays the enforcer). D4 photo
+  exclusion is moot until Photo Picture unblocks (recorded, default-exclude
+  wired into the bridge filter when it does). D5 ready-ping: ONE-SHOT `at`
+  schedule (an `on` clause would repeat yearly — a nag, not a ping), id 2,
+  opt-in, cancelled on opt-out.

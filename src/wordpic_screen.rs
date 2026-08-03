@@ -53,7 +53,31 @@ fn complex_script(lang: &str) -> bool {
     matches!(lang, "ar" | "hi")
 }
 
+fn yb_gallery() -> Vec<(String, String, usize, bool, u64)> {
+    crate::wordpic::load()
+        .runs
+        .iter()
+        .filter(|r| r.done)
+        .map(|r| (r.pic.clone(), r.lang.clone(), r.words.len(), !r.replay.is_empty(), r.touched))
+        .collect()
+}
+
+/// CC-YEARBOOK acceptance #3: this IS the finale export path — same plan,
+/// same words, same renderer — so the yearbook page embeds are equivalent
+/// to a clean export by construction, not by pixel luck.
+fn yb_render_piece(pic: &str, lang: &str) -> Option<String> {
+    let st = crate::wordpic::load();
+    let run = st.runs.iter().find(|r| r.pic == pic && r.done)?;
+    let plan = crate::spellpic::plan(&run.pic, &run.lang, run.seed)?;
+    let _ = lang;
+    Some(crate::spellpic_export::export_svg(&plan, &run.lang, &run.words, ""))
+}
+
 pub fn wire(app: &App) {
+    crate::surface_hooks::install_picture_bridge(crate::surface_hooks::PictureBridge {
+        gallery: Some(yb_gallery),
+        render_piece: Some(yb_render_piece),
+    });
     let a = app.clone();
     dom::on_click("wordPicOpen", move || open_picker(&a));
     let a = app.clone();

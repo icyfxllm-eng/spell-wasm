@@ -141,6 +141,35 @@ pub fn share_result(streak: u32, best: u32) {
 /// Write the PNG (base64) to the app cache, then open the share sheet with the
 /// image file attached. Runs async; on any failure it falls back to a text
 /// share so the button always does something.
+/// Share an arbitrary base64 payload as a file (the yearbook PDF door).
+/// Same Filesystem+Share pair as the finale card; no text fallback — a
+/// PDF that cannot be written has nothing sensible to say instead.
+pub(crate) fn share_file(fs: JsValue, share: JsValue, path: &str, b64: String) {
+    let write = Object::new();
+    let _ = Reflect::set(&write, &JsValue::from_str("path"), &JsValue::from_str(path));
+    let _ = Reflect::set(&write, &JsValue::from_str("data"), &JsValue::from_str(&b64));
+    let _ = Reflect::set(&write, &JsValue::from_str("directory"), &JsValue::from_str("CACHE"));
+    let _ = Reflect::set(&write, &JsValue::from_str("recursive"), &JsValue::TRUE);
+    let Some(promise) = call_method(&fs, "writeFile", &write).and_then(|p| p.dyn_into::<js_sys::Promise>().ok())
+    else {
+        return;
+    };
+    spawn_local(async move {
+        let uri = match JsFuture::from(promise).await {
+            Ok(res) => get(&res, "uri"),
+            Err(_) => None,
+        };
+        let Some(uri) = uri else { return };
+        let opts = Object::new();
+        let files = Array::new();
+        files.push(&uri);
+        let _ = Reflect::set(&opts, &JsValue::from_str("files"), &files);
+        if let Some(f) = get(&share, "share").and_then(|f| f.dyn_into::<Function>().ok()) {
+            let _ = f.call1(&share, &opts);
+        }
+    });
+}
+
 pub(crate) fn share_image(fs: JsValue, share: JsValue, text: String, b64: String) {
     let write = Object::new();
     let _ = Reflect::set(&write, &JsValue::from_str("path"), &JsValue::from_str("share/spell-chain.png"));

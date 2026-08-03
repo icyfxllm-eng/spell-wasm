@@ -69,8 +69,10 @@ fn render_body(app: &crate::App) {
     )));
 
     crate::family_voices::dash_section_into(&mut html);
+    crate::yearbook_ui::dash_section_into(&mut html);
     crate::dom::set_html("gdashBody", &html);
     crate::family_voices::fill_dash_section();
+    crate::yearbook_ui::fill_dash_section(app);
     crate::dom::remove_class("gdashBody", "btn-hide");
     crate::dom::add_class("gdashGate", "btn-hide");
 }

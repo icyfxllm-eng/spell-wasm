@@ -46,6 +46,32 @@ pub fn install(h: Hooks) {
     HOOKS.with(|c| c.set(h));
 }
 
+/// CC-YEARBOOK I3 bridge — same inversion, different lifecycle: the
+/// picture registers ONCE at boot; nothing ever uninstalls it. Shared
+/// code (the yearbook compiler) reads whatever is here and knows nothing
+/// about the picture. With the picture feature off, both stay None and
+/// the yearbook ships an honest picture-free book.
+#[derive(Clone, Copy, Default)]
+pub struct PictureBridge {
+    /// Completed runs as (pic, lang, word count, replayed, touched).
+    pub gallery: Option<fn() -> Vec<(String, String, usize, bool, u64)>>,
+    /// Clean re-render of a completed piece (the FINALE export path).
+    pub render_piece: Option<fn(&str, &str) -> Option<String>>,
+}
+
+thread_local! {
+    static PICTURE_BRIDGE: Cell<PictureBridge> =
+        const { Cell::new(PictureBridge { gallery: None, render_piece: None }) };
+}
+
+pub fn install_picture_bridge(b: PictureBridge) {
+    PICTURE_BRIDGE.with(|c| c.set(b));
+}
+
+pub fn picture_bridge() -> PictureBridge {
+    PICTURE_BRIDGE.with(Cell::get)
+}
+
 pub fn get() -> Hooks {
     HOOKS.with(Cell::get)
 }
