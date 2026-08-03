@@ -73,6 +73,7 @@ mod packs;
 mod reports;
 mod reports_ui;
 mod guardian_dash;
+mod family_voices;
 mod widgets;
 mod word_data;
 mod word_stories;
@@ -218,6 +219,7 @@ fn wire(app: &App) {
     game::wire_placement(app);
     reports_ui::wire(&app);
     guardian_dash::wire(&app);
+    family_voices::wire(&app);
     packs::wire(app);
     wire_glow_and_settings(app);
     wire_modes(app);

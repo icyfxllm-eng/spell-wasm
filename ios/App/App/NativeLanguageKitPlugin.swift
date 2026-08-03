@@ -54,6 +54,9 @@ public class NativeLanguageKitPlugin: CAPPlugin, CAPBridgedPlugin {
         // (iOS 26+ Speech framework assets). Progress streams via the
         // `speechAssetProgress` event; recognition never leaves the phone.
         CAPPluginMethod(name: "downloadSpeechAssets", returnType: CAPPluginReturnPromise),
+        CAPPluginMethod(name: "pvStatus", returnType: CAPPluginReturnPromise),
+        CAPPluginMethod(name: "pvRequestAuth", returnType: CAPPluginReturnPromise),
+        CAPPluginMethod(name: "pvCalibrate", returnType: CAPPluginReturnPromise),
     ]
 
     private let speaker = Speaker()

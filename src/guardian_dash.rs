@@ -68,7 +68,9 @@ fn render_body(app: &crate::App) {
         crate::i18n::tp("gdash.nextRematch", &[("n", &due.len().to_string())])
     )));
 
+    crate::family_voices::dash_section_into(&mut html);
     crate::dom::set_html("gdashBody", &html);
+    crate::family_voices::fill_dash_section();
     crate::dom::remove_class("gdashBody", "btn-hide");
     crate::dom::add_class("gdashGate", "btn-hide");
 }

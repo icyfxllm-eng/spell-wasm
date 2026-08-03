@@ -15,6 +15,11 @@ if grep -nE "storage::set|note_attempt|\.record\(|save\(" src/reports.rs; then
   echo "GATE FAIL: ReportsQuery wrote to state"; exit 1
 fi
 
+echo "== gate: family-voices V2 symbol scan (BD-4 Done #7)"
+if grep -inE "URLSession|CFNetwork|train|upload" "ios/App/App/NativeLanguageKitPlugin+FamilyVoices.swift" src/family_voices.rs; then
+  echo "GATE FAIL: V2/network symbol in the V1 voice path"; exit 1
+fi
+
 echo "== gate: cargo test"
 cargo test 2>&1 | tail -n 20 | grep -E "test result: ok" >/dev/null || { echo "GATE FAIL: cargo test"; cargo test 2>&1 | grep -E "FAILED|panicked" | head; exit 1; }
 

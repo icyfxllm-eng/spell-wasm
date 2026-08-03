@@ -248,9 +248,18 @@ fn play_native_tts(word: &str, variant: &str, rate: f64, lang: &str, on_fail: Bo
     let word = word.to_string();
     let lang = lang.to_string();
     spawn_local(async move {
-        let Some(voice) = native_lang::session_voice(&lang).await else {
-            on_fail();
-            return;
+        // BD-4: a fully-earned family voice (picked + approved + readout
+        // gate passed + language-honest) outranks the catalog pick; anything
+        // less falls through to the standard voice — no badge, no tease.
+        let voice = match crate::family_voices::orb_voice(&lang) {
+            Some(v) => v,
+            None => match native_lang::session_voice(&lang).await {
+                Some(v) => v,
+                None => {
+                    on_fail();
+                    return;
+                }
+            },
         };
         match native_lang::speak(&word, &voice, eff_rate) {
             Some(promise) => {
