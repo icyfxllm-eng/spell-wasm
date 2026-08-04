@@ -72,6 +72,41 @@ pub fn picture_bridge() -> PictureBridge {
     PICTURE_BRIDGE.with(Cell::get)
 }
 
+// CC-TONAL-POLISH D2 — the run's flawless-streak words. SHARED-owned by
+// I3 law: the game (shared) writes here, and the picture subtree READS
+// from shared — never the inverse. Session-only, capped, no telemetry.
+thread_local! {
+    static STREAK_WORDS: std::cell::RefCell<Vec<String>> =
+        const { std::cell::RefCell::new(Vec::new()) };
+}
+
+pub fn streak_push(word: &str) {
+    STREAK_WORDS.with(|s| {
+        let mut v = s.borrow_mut();
+        if !v.iter().any(|w| w == word) {
+            v.push(word.to_string());
+            if v.len() > 60 {
+                v.remove(0);
+            }
+        }
+    });
+}
+
+pub fn streak_clear() {
+    STREAK_WORDS.with(|s| s.borrow_mut().clear());
+}
+
+pub fn streak_snapshot() -> Vec<String> {
+    STREAK_WORDS.with(|s| s.borrow().clone())
+}
+
+#[cfg(test)]
+pub fn streak_set(words: &[&str]) {
+    STREAK_WORDS.with(|s| {
+        *s.borrow_mut() = words.iter().map(|w| w.to_string()).collect()
+    });
+}
+
 pub fn get() -> Hooks {
     HOOKS.with(Cell::get)
 }

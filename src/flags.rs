@@ -142,6 +142,15 @@ pub fn learner_select() -> bool {
     resolve(stored("learner_select").as_deref(), false)
 }
 
+/// CC-TONAL-POLISH F4/D2 (signed) — the run's flawless-streak words feed
+/// the focal stroke where available. **Default ON.** Word choice only:
+/// every candidate faces the same solve/overlap/frame law, so OFF vs ON
+/// differs only in WHICH legal word lands on the focal slot. Override
+/// off with `localStorage['spell_flag_streak_focal'] = 'off'`.
+pub fn streak_focal() -> bool {
+    resolve(stored("streak_focal").as_deref(), true)
+}
+
 /// CC-LEARNING-ENGINE surfaces — the placement offer card and the Stats
 /// guardian section. **Default OFF**: ships dark; OFF is a true no-op
 /// (no card, no section, zero observable diff).
@@ -163,6 +172,7 @@ pub fn is_on(name: &str) -> bool {
         "practice" => practice(),
         "learner_select" => learner_select(),
         "learner_surfaces" => learner_surfaces(),
+        "streak_focal" => streak_focal(),
         #[cfg(not(feature = "web"))]
         "word_picture" => word_picture(),
         _ => false,

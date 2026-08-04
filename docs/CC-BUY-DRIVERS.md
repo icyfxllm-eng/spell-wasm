@@ -207,3 +207,29 @@ DECISION LEDGER (Eric, 2026-08-02 — recorded at greenlight)
   arrive WITH the tonal export at her gate. The registry describes what
   ships today; the flip to TONAL + requiredFeatures is part of the tonal
   export, atomically. (The tonal candidates already carry all metadata.)
+
+* SHIP RECORD — ship 130 = build 137 (2026-08-04): batch-27 wired (the
+  sky shelf: sun/rainbow/comet/saturn/raincloud/sunflower + the three
+  photoreal masters as guide art + mona's photoreal carriers) and the
+  tonal-polish tool era rollup. The L9 saga en route produced a new
+  CONTENT DESIGN LAW: no ink tapering to a point, no white channel
+  narrower than ~50px draw-space — a traced outline's converging sides
+  host colliding words (the capped sweep report had hidden 177
+  failures; the panic now stays capped but WP_SWEEP_LOG dumps all, and
+  WP_SWEEP_ONLY=ids scopes a content iteration to ~23s). Geometry fixes
+  by the law, never hand-placed: trapezoid sun rays, one fat comet
+  tail, six blunt sunflower petals, rainbow re-spaced + one-edge-per-
+  band hosting (38px min separation between host lines). LOOK-FLAGS for
+  Eric's on-device pass: sun's ray tips are now flat; sunflower is 6
+  fat petals (was 16); comet is one fat tail (was 3 lobes); all three
+  differ from the previously passed drawings — L9 forced the change.
+
+* SHIP 131 ARMED (Eric verbatim: "ship 131 for the streak-feed when
+  gates pass"): POLISH D2 streak-feed engine (see CC-TONAL-POLISH.md
+  D2 DELIVERED) + CC-PICTURE-COLOR groundwork riding along — palette
+  schema (inert data fields), Done #1 byte-identical layout CI
+  (color_never_touches_layout, all subjects), Done #2 resolution lint,
+  Done #3 contrast lint (band-driven 3.0/4.5 floors vs the shipped
+  #0e1420 canvas), mona tonal exporter staged (gates checklist, D4
+  export-block live). Renderer seam intentionally NOT in this ship —
+  waits on Eric's mona D2 faithful-vs-floored verdict (Done #6 order).

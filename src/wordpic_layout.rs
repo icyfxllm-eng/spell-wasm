@@ -718,7 +718,31 @@ pub fn layout_feed_opt(
             .enumerate()
             .map(|(i, (w, n))| (fresh_first(&w), i as u32, w, n))
             .collect();
-        scored.sort_by_key(|(fresh, i, _, n)| if shrink { (*fresh, *n) } else { (*fresh, *i) });
+        // POLISH F4/D2: on the FOCAL slot the kid's flawless-streak
+        // words rank first — the smile is made of the words you
+        // conquered. Choice only: every candidate still faces the same
+        // solve/overlap/frame law below, so an unfit streak word simply
+        // loses to the next legal one.
+        // I3: the streak store is SHARED-owned (surface_hooks) — the
+        // picture reads from shared, never the inverse.
+        let focal_streak: Vec<String> = if q.focal && crate::flags::streak_focal() {
+            crate::surface_hooks::streak_snapshot()
+        } else {
+            Vec::new()
+        };
+        let mut scored: Vec<(u8, u8, u32, String, u32)> = scored
+            .into_iter()
+            .map(|(fresh, i, w, n)| {
+                (u8::from(!focal_streak.contains(&w)), fresh, i, w, n)
+            })
+            .collect();
+        scored.sort_by_key(|(sk, fresh, i, _, n)| {
+            if shrink { (*sk, *fresh, *n) } else { (*sk, *fresh, *i) }
+        });
+        let scored: Vec<(u8, u32, String, u32)> = scored
+            .into_iter()
+            .map(|(_, fresh, i, w, n)| (fresh, i, w, n))
+            .collect();
         'cand: for (_, _, w, n) in scored {
             if let Some(mut pl) = solve(slot, lang, n) {
                 // v7 F1 root-cause #2: identity BEFORE the hit check. A
@@ -861,6 +885,145 @@ pub const READINESS_EXCEPTIONS: [(&str, &str); 4] =
 mod tests {
     use super::*;
     use crate::wordpic;
+
+    /// CC-PICTURE-COLOR Done #1 — Feature 3 HARD INVARIANT: color is
+    /// fill only; the solver never receives palette data. Proof by
+    /// construction: strip palette + every paletteRef from a clone and
+    /// the full solve output (words, placements, slots) is
+    /// byte-identical. Every subject at en/1; goldens + mona get the
+    /// multi-lang multi-seed deep check.
+    #[test]
+    fn color_never_touches_layout() {
+        let strip = |p: &wordpic::Picture| {
+            let mut off = p.clone();
+            off.palette.clear();
+            off.color_enabled = None;
+            for q in &mut off.paths {
+                q.palette_ref.clear();
+            }
+            off
+        };
+        let solve_bytes = |p: &wordpic::Picture, lang: &str, seed: u64| {
+            let (w, pl, sl) = layout_feed(p, lang, seed, &[]);
+            format!("{w:?}|{pl:?}|{sl:?}")
+        };
+        for p in &wordpic::manifest().pictures {
+            let off = strip(p);
+            assert_eq!(
+                solve_bytes(p, "en", 1),
+                solve_bytes(&off, "en", 1),
+                "{}: palette data reached the solver (en/1)",
+                p.id
+            );
+        }
+        for id in ["dog", "eiffel", "mona"] {
+            let Some(p) = wordpic::picture(id) else { continue };
+            let off = strip(p);
+            for lang in ["en", "ko", "ar"] {
+                for seed in [1u64, 3] {
+                    assert_eq!(
+                        solve_bytes(p, lang, seed),
+                        solve_bytes(&off, lang, seed),
+                        "{id}: palette data reached the solver ({lang}/{seed})"
+                    );
+                }
+            }
+        }
+    }
+
+    /// POLISH F4 CI: a focal stroke schedules LAST — for every registry
+    /// picture that declares one, the focal path carries the max export
+    /// order, and there is at most one focal per picture. Vacuous today
+    /// (no shipped path is focal); mona's tonal export arms it, and the
+    /// negative fixture below proves the law itself bites.
+    #[test]
+    fn focal_order_is_max_registry_wide() {
+        for p in &wordpic::manifest().pictures {
+            let focals: Vec<&crate::wordpic::WordPath> =
+                p.paths.iter().filter(|q| q.focal).collect();
+            assert!(focals.len() <= 1, "{}: {} focal paths", p.id, focals.len());
+            if let Some(f) = focals.first() {
+                let max = p.paths.iter().map(|q| q.order).max().unwrap();
+                assert_eq!(
+                    f.order, max,
+                    "{}: focal order {} != max {} — the smile must land last",
+                    p.id, f.order, max
+                );
+            }
+        }
+        // The negative fixture: focal on a NON-max path must trip the law.
+        let mut bad = wordpic::picture("sun").unwrap().clone();
+        assert!(bad.paths.len() >= 2, "fixture needs two paths");
+        let min_idx = (0..bad.paths.len())
+            .min_by_key(|&i| bad.paths[i].order)
+            .unwrap();
+        bad.paths[min_idx].focal = true;
+        let f = bad.paths.iter().find(|q| q.focal).unwrap();
+        let max = bad.paths.iter().map(|q| q.order).max().unwrap();
+        assert!(
+            f.order != max,
+            "fixture is vacuous — pick a picture with distinct orders"
+        );
+    }
+
+    /// POLISH D2: the run's flawless-streak words feed the FOCAL slot —
+    /// word choice only. A streak word within budget lands on the focal
+    /// slot; with the flag off (or the streak empty) the feed is the
+    /// exact baseline.
+    #[test]
+    fn streak_words_feed_focal_slot() {
+        let mut p = wordpic::picture("sun").unwrap().clone();
+        // Make the max-order path focal (the F4 shape mona's export uses).
+        let max = p.paths.iter().map(|q| q.order).max().unwrap();
+        let fi = p.paths.iter().position(|q| q.order == max).unwrap();
+        p.paths[fi].focal = true;
+
+        crate::surface_hooks::streak_set(&[]);
+        crate::flags::set_test_override(None); // real defaults: flag ON
+        let (base, _, _) = layout_feed(&p, "en", 7, &[]);
+        let slots = slots_for_lang(&p, "en");
+        let fslot = slots.iter().position(|s| s.path_idx == fi).unwrap();
+        let base_word = base[fslot].clone();
+
+        // Streak = every budget-fitting pool word EXCEPT the baseline's
+        // focal pick, so success is only explainable by the streak rank.
+        let (blo, bhi) = p.paths[fi].budget;
+        let streak: Vec<String> = crate::words::tier_for("en", &p.tier)
+            .iter()
+            .map(|w| w.split('|').next().unwrap_or(w).to_string())
+            .filter(|t| {
+                let n = crate::wordpic::unit_len("en", t);
+                n >= blo && n <= bhi && *t != base_word
+            })
+            .collect();
+        assert!(streak.len() >= 2, "pool too thin for the fixture");
+        let streak_refs: Vec<&str> = streak.iter().map(|s| s.as_str()).collect();
+
+        crate::surface_hooks::streak_set(&streak_refs);
+        let (fed, _, _) = layout_feed(&p, "en", 7, &[]);
+        assert!(
+            streak.contains(&fed[fslot]),
+            "focal slot ignored the streak: got {:?}",
+            fed[fslot]
+        );
+        assert_ne!(fed[fslot], base_word);
+
+        // OFF is a true no-op: same seed, streak still set, flag off.
+        crate::flags::set_test_override(Some("off"));
+        let (off, _, _) = layout_feed(&p, "en", 7, &[]);
+        assert_eq!(off, base, "flag off must reproduce the baseline feed");
+
+        // Non-focal slots never read the streak: empty-streak ON == base
+        // was the definition; also prove focal-less pictures ignore it.
+        crate::flags::set_test_override(None);
+        let clean = wordpic::picture("sun").unwrap();
+        crate::surface_hooks::streak_set(&streak_refs);
+        let (plain, _, _) = layout_feed(clean, "en", 7, &[]);
+        crate::surface_hooks::streak_set(&[]);
+        let (plain2, _, _) = layout_feed(clean, "en", 7, &[]);
+        assert_eq!(plain, plain2, "a focal-less picture must ignore the streak");
+        crate::flags::set_test_override(None);
+    }
 
     /// L10 render emitter: outline + solver-filled SVGs for every picture,
     /// straight from the engine (the review artifact generator).

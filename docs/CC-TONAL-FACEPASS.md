@@ -38,3 +38,32 @@ field), not raw luminance — bands follow anatomy through shadow.
 Deterministic, no ML, nothing generated. Evidence: the four-panel demo
 (bands-lit vs bands-de-lit) in the session review artifacts — her eyes
 surface as their own regions through the socket shadows.
+
+## STATUS 2026-08-04 (later): EXPORT MACHINERY STAGED + F7 PROVEN
+- tonal_export.py (content-pipeline/wordpic/): builds mona's atomic
+  LINE->TONAL registry flip (89 hosts = 78 band flows + the 11 iconic
+  strokes; lipParting focal at max order; 144 boundary guides; ~96 est.
+  slots inside her 12..=110 law). --flip REFUSES until the face-session
+  verdicts file records ALL of: contourApproved, landmarksConfirmed,
+  perFeaturePass, handsLasso, smileTouched (D4 as written), and
+  twelfthFeatureNamed — the ledger decrees twelve features, the trace
+  carries eleven named vocabulary strokes; Eric names or waives the
+  twelfth at the session. Staged entry + gate checklist in the session
+  scratchpad (staged-mona-entry.json).
+- F7 SECOND-PORTRAIT PROOF — DONE. Vermeer's Girl with a Pearl Earring
+  (PD, Wikimedia scan, c.1665) through the UNCHANGED pipeline: the same
+  eleven vocabulary strokes name-for-name, facePaths 22/28, clearance
+  drops 3, face polygon found on her tilted pose. Zero face-pass code
+  diff (git-verified). Finding for the session: her honest eye-line
+  tilt is +11.36deg vs mona's -0.75deg — the F6 export tilt bound must
+  be per-piece (pose-relative), not a global constant.
+
+## PER-FEATURE VERDICT (Eric, 2026-08-04, verbatim: "1-6 fail chin
+passes" — the per-feature review page's card order): leftEye FAIL,
+rightEye FAIL, leftBrow FAIL, rightBrow FAIL, nose FAIL, mouth FAIL,
+chin PASS. perFeaturePass gate = false; export stays blocked. The
+failure report's consequence: the six failing vocabulary strokes get
+REWORKED (landmark->stroke mapping precision at zoom — the strokes are
+3-7 points each and sit visibly off the painted anatomy at card scale)
+and re-reviewed on the same page before the gate can flip. The chin
+crescent's placement law is the one that survived his eye.

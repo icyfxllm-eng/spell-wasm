@@ -28,6 +28,44 @@ pub const NO_REPEAT: usize = 5;
 pub const BANDS: [(&str, u32, u32); 4] =
     [("easy", 1, 8), ("medium", 1, 20), ("hard", 1, 45), ("expert", 1, 200)];
 
+/// CC-PICTURE-COLOR F4 — the shipped canvas ground every landed word
+/// sits on (scanlock_svg export rect). The contrast lint measures
+/// against THIS, nothing else.
+pub const COLOR_CANVAS: &str = "#0e1420";
+
+/// WCAG relative luminance of a #RRGGBB hex.
+pub fn hex_luminance(hex: &str) -> f32 {
+    let c = |i: usize| {
+        let v = u8::from_str_radix(&hex[i..i + 2], 16).unwrap_or(0) as f32 / 255.0;
+        if v <= 0.03928 { v / 12.92 } else { ((v + 0.055) / 1.055).powf(2.4) }
+    };
+    0.2126 * c(1) + 0.7152 * c(3) + 0.0722 * c(5)
+}
+
+/// WCAG contrast ratio between two hex colors.
+pub fn hex_contrast(a: &str, b: &str) -> f32 {
+    let (la, lb) = (hex_luminance(a), hex_luminance(b));
+    let (hi, lo) = if la > lb { (la, lb) } else { (lb, la) };
+    (hi + 0.05) / (lo + 0.05)
+}
+
+/// CC-PICTURE-COLOR F4 — the floor a path's color must clear against
+/// the canvas: band 1 renders large glyphs (22-40), everything else is
+/// small text. Deterministic; no runtime measurement.
+pub fn contrast_floor_for_band(band: u8) -> f32 {
+    if band <= 1 { 3.0 } else { 4.5 }
+}
+
+/// CC-PICTURE-COLOR F1 — one curated color: authored at content time,
+/// looked up at render time, NEVER generated. 8-12 per subject max.
+#[derive(Debug, Clone, serde::Deserialize)]
+pub struct PaletteColor {
+    pub id: String,
+    pub hex: String,
+    #[serde(default)]
+    pub role: String,
+}
+
 #[derive(Debug, Clone, serde::Deserialize)]
 pub struct WordPath {
     pub mode: String, // "flow" | "stack"
@@ -50,10 +88,20 @@ pub struct WordPath {
     /// Long flow paths host `segs` one-word segments instead of stretching.
     #[serde(default)]
     pub segs: Option<u32>,
+    /// CC-PICTURE-COLOR F2 — which palette entry this path's LANDED
+    /// words fill with. Empty = neutral. Resolution is a lint, not a
+    /// runtime branch; the solver never reads this.
+    #[serde(default, rename = "paletteRef")]
+    pub palette_ref: String,
     /// Stacks: intended letter count — v6 fixes the COLUMN height at
     /// column × size and solves glyph size per word (fill-the-column).
     #[serde(default)]
     pub column: u32,
+    /// POLISH F4: the focal stroke (the smile). Set only by the tonal
+    /// export; carries max export order (CI-enforced) and is the
+    /// streak-feed target (D2).
+    #[serde(default)]
+    pub focal: bool,
 }
 
 impl WordPath {
@@ -94,6 +142,16 @@ pub struct Picture {
     /// twelve Eric named). Export blocks when one is missing.
     #[serde(default, rename = "requiredFeatures")]
     pub required_features: Vec<String>,
+    /// CC-PICTURE-COLOR F1 — the subject's curated palette (D1 flat
+    /// fill v1; index-0 named-palette reserved for later). Data only:
+    /// the layout solver is proven blind to it by
+    /// `color_never_touches_layout`.
+    #[serde(default)]
+    pub palette: Vec<PaletteColor>,
+    /// CC-PICTURE-COLOR F6 — category exclusion as data: None inherits
+    /// the shelf default (numbers/alphabets false, elsewhere true).
+    #[serde(default, rename = "colorEnabled")]
+    pub color_enabled: Option<bool>,
     /// v7.5 Option 2 (Eric): always-visible guide art — the traced ink he
     /// graded. Renders as outline strokes; never hosts words, never
     /// collides, never counts as a word path.
@@ -454,6 +512,125 @@ mod picker_search_ci {
         }
     }
 
+    /// CC-PICTURE-COLOR Done #3 — contrast lint, both thresholds. Every
+    /// path that names a palette color must clear its band's floor
+    /// against the shipped canvas. Runs over the whole registry (vacuous
+    /// until palettes ship) and over an inline fixture that proves BOTH
+    /// thresholds bite.
+    #[test]
+    fn palette_contrast_floor() {
+        let check = |p: &Picture| -> Vec<String> {
+            let mut bad = Vec::new();
+            for q in &p.paths {
+                if q.palette_ref.is_empty() {
+                    continue;
+                }
+                let Some(c) = p.palette.iter().find(|c| c.id == q.palette_ref) else {
+                    continue; // Done #2's resolution lint owns missing refs
+                };
+                let floor = contrast_floor_for_band(q.band);
+                let got = hex_contrast(&c.hex, COLOR_CANVAS);
+                if got < floor {
+                    bad.push(format!(
+                        "{}: path {} ({}) color {} = {:.2}:1 < {:.1}:1 (band {})",
+                        p.id, q.order, q.palette_ref, c.hex, got, floor, q.band
+                    ));
+                }
+            }
+            bad
+        };
+        for p in registry() {
+            let bad = check(&p);
+            assert!(bad.is_empty(), "contrast floor violations:\n{}", bad.join("\n"));
+        }
+        // Fixture: #8A6A50 is 3.9:1 on the canvas — LEGAL on a band-1
+        // (large) path, ILLEGAL on a band-3 (small) path. Both
+        // thresholds must bite or the lint is decoration.
+        let mut fx = synthetic("colorfx", &["things"]);
+        let donor = registry().into_iter().find(|p| p.id == "sun").unwrap();
+        fx.paths = donor.paths[..2].to_vec();
+        fx.palette = vec![PaletteColor {
+            id: "mid".into(), hex: "#8A6A50".into(), role: "test".into(),
+        }];
+        for q in &mut fx.paths {
+            q.palette_ref = "mid".into();
+        }
+        fx.paths[0].band = 1;
+        fx.paths[1].band = 3;
+        let bad = check(&fx);
+        assert_eq!(bad.len(), 1, "exactly the small-glyph path must trip: {bad:?}");
+        assert!(bad[0].contains("band 3"), "the band-3 path is the violation");
+    }
+
+    /// CC-PICTURE-COLOR Done #2 — resolution lint. Unresolvable color
+    /// is a LINT failure, never a runtime fallback (no default-gray
+    /// escape hatch). Registry-wide, plus the deliberately-unresolvable
+    /// fixture the spec demands — the lint must be seen to bite.
+    #[test]
+    fn palette_resolution() {
+        let check = |p: &Picture| -> Vec<String> {
+            let mut bad = Vec::new();
+            let ids: Vec<&str> = p.palette.iter().map(|c| c.id.as_str()).collect();
+            for (i, c) in p.palette.iter().enumerate() {
+                if ids[..i].contains(&c.id.as_str()) {
+                    bad.push(format!("{}: duplicate palette id '{}'", p.id, c.id));
+                }
+                let hex_ok = c.hex.len() == 7
+                    && c.hex.starts_with('#')
+                    && c.hex[1..].chars().all(|ch| ch.is_ascii_hexdigit());
+                if !hex_ok {
+                    bad.push(format!("{}: palette '{}' bad hex {:?}", p.id, c.id, c.hex));
+                }
+            }
+            if p.palette.len() > 12 {
+                bad.push(format!("{}: {} palette entries (max 12)", p.id, p.palette.len()));
+            }
+            let live = p.color_enabled == Some(true) || !p.palette.is_empty();
+            for q in &p.paths {
+                if q.palette_ref.is_empty() {
+                    if live {
+                        bad.push(format!(
+                            "{}: path {} has NO paletteRef on a color-live subject                              (no default-gray escape hatch)",
+                            p.id, q.order
+                        ));
+                    }
+                    continue;
+                }
+                if !ids.contains(&q.palette_ref.as_str()) {
+                    bad.push(format!(
+                        "{}: path {} names unresolvable color '{}'",
+                        p.id, q.order, q.palette_ref
+                    ));
+                }
+            }
+            bad
+        };
+        for p in registry() {
+            let bad = check(&p);
+            assert!(bad.is_empty(), "resolution violations:\n{}", bad.join("\n"));
+        }
+        // The deliberately-unresolvable entry (Done #2's own fixture):
+        // a ref to a ghost id AND a bare path on a live subject — the
+        // lint must flag exactly these two, by name.
+        let mut fx = synthetic("colorfx", &["things"]);
+        let donor = registry().into_iter().find(|p| p.id == "sun").unwrap();
+        fx.paths = donor.paths[..2].to_vec();
+        fx.palette = vec![PaletteColor {
+            id: "real".into(), hex: "#C8955C".into(), role: "test".into(),
+        }];
+        fx.paths[0].palette_ref = "ghost".into();
+        fx.paths[1].palette_ref = String::new();
+        let bad = check(&fx);
+        assert!(
+            bad.iter().any(|b| b.contains("unresolvable color 'ghost'")),
+            "ghost ref must be flagged: {bad:?}"
+        );
+        assert!(
+            bad.iter().any(|b| b.contains("no default-gray") || b.contains("NO paletteRef")),
+            "bare path on live subject must be flagged: {bad:?}"
+        );
+    }
+
     /// CC-MASTERPIECE-TONAL registry lint: every subject declares its
     /// extraction class; every TONAL subject carries requiredFeatures.
     #[test]
@@ -591,6 +768,8 @@ mod picker_search_ci {
             aliases: vec![format!("{id}-alias")],
             extraction_class: "LINE".into(),
             required_features: vec![],
+            palette: vec![],
+            color_enabled: None,
             guide: vec![],
             paths: vec![],
             provenance: None,

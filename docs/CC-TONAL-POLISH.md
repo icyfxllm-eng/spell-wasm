@@ -63,3 +63,29 @@ when sfumato is the subject. Rollup state: 0a cascade / F1 approved /
 F2 approved / F3 frozen / F4 data-landed (streak flag + CI sweep queue
 for the tree window) / F5 calibrating 3-for-3 files-signed. Remaining:
 his 0b face session + D4 smile touch + the closing side-by-side.
+
+## D2 STREAK-FEED DELIVERED (2026-08-04, tree window after ship 130)
+Eric's assignments verbatim: "carry on with the streak-feed apply when
+130 lands"; "ship 131 for the streak-feed when gates pass".
+Shipped shape (word CHOICE only — D7-legal by construction):
+- WordPath.focal (serde default false): no shipped path carries it; the
+  flag is dormant-by-data until mona's tonal export sets it on
+  lipParting. The feature arms itself at her gate.
+- flags::streak_focal — DEFAULT ON per the signed D2; override off via
+  localStorage['spell_flag_streak_focal']='off'.
+- game.rs pushes each validated-correct word into the session streak
+  store (wordpic_layout::streak_push) and clears it at all three
+  chain-break/reset sites — the words of the current unbroken chain,
+  session-only, no telemetry.
+- layout_feed_opt: on a FOCAL slot with the flag on, streak members
+  rank ahead of the existing (fresh, rotation/fit) order. Every
+  candidate still faces the same solve/overlap/frame law — an unfit
+  streak word simply loses to the next legal one.
+CI landed with it:
+- focal_order_is_max_registry_wide (F4 sweep: focal = max export order,
+  <=1 per picture, negative fixture proves the law bites) — GREEN.
+- streak_words_feed_focal_slot (streak word lands on the focal slot;
+  flag OFF reproduces the baseline feed byte-for-byte; focal-less
+  pictures ignore the streak entirely) — GREEN.
+Celebration framing rides mona's tonal export surface (the smile is
+made of the words you conquered), not this engine change.

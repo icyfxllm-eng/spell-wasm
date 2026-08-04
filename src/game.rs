@@ -1387,6 +1387,7 @@ fn on_correct(app: &App) {
             app.borrow_mut().run_start_ms = now_ms();
         }
         let streak = bump_streak(app);
+        crate::surface_hooks::streak_push(&word); // D2: feed the focal stroke (I3: shared-owned store)
         note_climb(app, true); // Option A: advance the Climb band on a correct answer
         // Spell Racing (F6): in a solo Climb run, log this correct answer's elapsed
         // time and refresh the live pace marker. Flag-gated inside crate::ghost.
@@ -1736,6 +1737,7 @@ fn grant_retry(app: &App, feedback_key: &str) {
 /// still continue via a retry, but the chain does NOT keep growing — PD4).
 fn break_streak(app: &App) {
     app.borrow_mut().streak = 0;
+    crate::surface_hooks::streak_clear(); // D2: the chain broke
     dom::set_text("streakNum", "0");
     set_streak_tier(0);
 }
@@ -1950,6 +1952,7 @@ fn reset_chain_soft(app: &App) {
     note_climb(app, false); // Option A: drop the Climb band one step (not to easy)
     crate::ghost::hide_pace(); // F6: no live ghost between runs
     app.borrow_mut().streak = 0;
+    crate::surface_hooks::streak_clear(); // D2: run over, chain over
     dom::set_text("streakNum", "0");
     // CC-ATTEMPTS-SHIELDS: the run just ended — shields are per-run and do NOT
     // carry into the next one (I7). Reset all run aids.
@@ -2612,6 +2615,7 @@ pub fn exit_versus(app: &App) {
     {
         let mut s = app.borrow_mut();
         s.streak = 0;
+        crate::surface_hooks::streak_clear(); // D2
         s.word = String::new();
         s.answered = false;
     }
