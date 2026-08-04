@@ -124,3 +124,29 @@ DECISION LEDGER (Eric, 2026-08-02 — recorded at greenlight)
   D5 decided: wordmark carried — teacher-bound page). week_over_week lives
   in ReportsQuery, preserving the journal's sole-reader law. Awaiting a
   ship number.
+
+* CC-PICKER-SEARCH (all D1-D6 signed; final gate = Eric on-device):
+  registry migrated one-shot (categories/canonicalCategory/aliases +
+  categoryList; old format = CI failure). Search: pinned bar, fold_lenient
+  (the existing normalizer), corpus = id+subject+aliases+category names+
+  masterpiece captions, uiLang only (D5), kid filter BEFORE matching (D1),
+  zero telemetry. Cross-listing per D2 (rhino/mona/starrynight/redfuji).
+  Feature-5 sort + unified labels + See All(count) + 2-line captions.
+  Seven-test CI battery incl. synthetic pack + 3-char reachability x364 +
+  the +40% caption budget standing in for the pseudo-locale sweep (no
+  CC-LOCALE-LAYOUT cascade exists in-repo — recorded).
+  FLAGGED FOR THE ON-DEVICE PASS: (1) spiderweb left Masterpieces (in-house
+  original, no artist; Feature 3 makes artist-less masters impossible) ->
+  now Animals. (2) learn shelf keeps Eric's script-first ordering as the
+  Not-Started tie-break — Feature 5's strict registry-order reading would
+  regress it. (3) "completed by date" rides the monotonic touched counter
+  (dates were never stored). (4) Localized subject NAMES don't exist as
+  strings yet — ids+aliases carry search until the audit era adds names.
+  D3 VERDICT (Eric): "Proposal A, Zodiac and sky stay together, lets
+  expand sky and masterpieces when all the read mes are done." Proposal A
+  implemented same-session (registry-only, zero picker code — Feature 7
+  held): world 89 -> world 34 + landmarks 16 + music 10 + symbols 13; the
+  split also surfaced and repaired 18 late-batch generics misfiled into
+  world by their cultureN packs (tulip/penguin/castle/... -> things,
+  penguin -> animals, eiffel -> landmarks, violin -> music). Proposals B/C
+  unsigned - untouched. Sky+masterpiece EXPANSION queued post-readmes.

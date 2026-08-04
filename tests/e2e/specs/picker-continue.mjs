@@ -6,6 +6,7 @@
 // section headers render, and the learn shelf leads with the active
 // language's script.
 import { openApp, assert, assertEq } from '../harness.mjs';
+import { pickTile } from './finale.mjs';
 
 async function openPicker(page) {
   await page.evaluate(() => document.getElementById('wordPicOpen').click());
@@ -13,7 +14,7 @@ async function openPicker(page) {
 }
 
 async function startAndLeave(page, pic, words) {
-  await page.click(`[data-pic="${pic}"]`);
+  await pickTile(page, pic);
   await page.waitForSelector('#wpPlay.show', { timeout: 5000 });
   await page.waitForTimeout(500);
   for (let i = 0; i < 6 && (await page.$('#wpHow.show')); i++) {
@@ -88,6 +89,12 @@ export async function run(browser, base, suite) {
       await openPicker(page);
       const heads = await page.$$eval('#wpGrid .wp-fam-head', (els) => els.length);
       assert(heads >= 4, `family headers render (saw ${heads})`);
+      // Collapsed rows can fill the learn row with the numbers pack, so
+      // open the full grid via See All before asserting script order.
+      if (await page.$('[data-cat="learn"]')) {
+        await page.click('[data-cat="learn"]');
+        await page.waitForTimeout(200);
+      }
       // The learn shelf's first alphabet tile is Cyrillic for a ru player.
       const firstLearn = await page.$$eval('#wpGrid .wp-shelf', (shelves) => {
         for (const s of shelves) {

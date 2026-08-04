@@ -15,10 +15,28 @@ const CLASSES = [[320, 568], [375, 667], [390, 844], [428, 926]];
 
 /** Play `pic` to completion through the UI. Returns the word count.
  *  Exported: the gallery spec builds its trophies the same honest way. */
+/// CC-PICKER-SEARCH: rows collapse to one viewport width, so specs reach
+/// tiles the way a player does — type into the search bar, tap the
+/// result. Every e2e run now exercises the search path for free.
+export async function pickTile(page, pic) {
+  await page.evaluate((id) => {
+    const s = document.getElementById('wpSearch');
+    s.value = id;
+    s.dispatchEvent(new Event('input', { bubbles: true }));
+  }, pic);
+  await page.waitForSelector(`#wpGrid [data-pic="${pic}"]`, { timeout: 5000 });
+  await page.click(`#wpGrid [data-pic="${pic}"]`);
+  await page.evaluate(() => {
+    const s = document.getElementById('wpSearch');
+    s.value = '';
+    s.dispatchEvent(new Event('input', { bubbles: true }));
+  });
+}
+
 export async function completePicture(page, pic) {
   await page.evaluate(() => document.getElementById('wordPicOpen').click());
   await page.waitForSelector('#wpPicker.show', { timeout: 5000 });
-  await page.click(`[data-pic="${pic}"]`);
+  await pickTile(page, pic);
   await page.waitForSelector('#wpPlay.show', { timeout: 5000 });
   // The how-to card appears a beat AFTER the play screen and sits over the
   // keyboard, swallowing every key tap. Wait for it rather than sampling

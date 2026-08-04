@@ -17,12 +17,13 @@
 // (rewind + play, no new fetch), which is correct behavior the first
 // version of this spec misread as "the click never reached the router."
 import { openApp, assert } from '../harness.mjs';
+import { pickTile } from './finale.mjs';
 
 /** Open picture `pic` and dismiss the how-to card if it appears. */
 async function openPicture(page, pic) {
   await page.evaluate(() => document.getElementById('wordPicOpen').click());
   await page.waitForSelector('#wpPicker.show', { timeout: 5000 });
-  await page.click(`[data-pic="${pic}"]`);
+  await pickTile(page, pic);
   await page.waitForSelector('#wpPlay.show', { timeout: 5000 });
   await page.waitForTimeout(500);
   for (let i = 0; i < 6 && (await page.$('#wpHow.show')); i++) {

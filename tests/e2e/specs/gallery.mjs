@@ -10,7 +10,7 @@
 // empty — and the missing user-facing flow is flagged in the session notes
 // rather than quietly invented here.
 import { openApp, assert, assertEq } from '../harness.mjs';
-import { completePicture } from './finale.mjs';
+import { completePicture, pickTile } from './finale.mjs';
 
 async function backToPicker(page) {
   await page.click('#wpContinue');
@@ -50,7 +50,7 @@ export async function run(browser, base, suite) {
       assert(shelf.includes('star') && shelf.includes('snowman'), `both tiers shelved (saw ${shelf})`);
 
       // Start a second picture and leave it mid-flight: it must NOT shelve.
-      await page.click('[data-pic="eiffel"]');
+      await pickTile(page, 'eiffel');
       await page.waitForSelector('#wpPlay.show');
       await page.waitForTimeout(500);
       for (let i = 0; i < 6 && (await page.$('#wpHow.show')); i++) {

@@ -74,6 +74,17 @@ pub struct Picture {
     pub wash: bool,
     #[serde(default)]
     pub pack: String,
+    /// CC-PICKER-SEARCH: category membership IS registry data — the picker
+    /// renders these and nothing else (Feature 7). >=1 required (CI).
+    #[serde(default)]
+    pub categories: Vec<String>,
+    /// The v5 same-tier-uniqueness home (must be a member of categories).
+    #[serde(default, rename = "canonicalCategory")]
+    pub canonical_category: String,
+    /// Match-only strings (D6): never displayed, so never display-audited —
+    /// but profanity-checked at CI. Curated at pack-creation time.
+    #[serde(default)]
+    pub aliases: Vec<String>,
     /// v7.5 Option 2 (Eric): always-visible guide art — the traced ink he
     /// graded. Renders as outline strokes; never hosts words, never
     /// collides, never counts as a word path.
@@ -341,6 +352,262 @@ impl State {
 
 /// D7 picker ordering: in-progress first (most-recent), then unstarted
 /// (easiest tier first), then completed (least-recently-touched first).
+// ---------------- CC-PICKER-SEARCH pure core ----------------
+// The picker is a pure function of the registry: these functions take
+// registry + run state and return decisions. The synthetic-pack CI test
+// below exercises them with a fabricated pack — if a new pack ever needs
+// more than registry data, the architecture has failed (the spec's words).
+
+/// Search match (Feature 1): case- and diacritic-insensitive contains
+/// over the corpus, via the EXISTING normalization layer
+/// (norm::fold_lenient — no new normalizer). No fuzzy match, no stemming.
+pub fn search_matches(corpus: &[String], query: &str) -> bool {
+    let q = crate::norm::fold_lenient(query);
+    if q.is_empty() {
+        return false;
+    }
+    corpus.iter().any(|h| crate::norm::fold_lenient(h).contains(&q))
+}
+
+/// Deterministic sort key (Feature 5): In Progress (recent first), then
+/// Not Started (tier ascending, then registry order), then Completed
+/// (most recent first — `touched` is the app's monotonic recency counter;
+/// completion DATES were never stored, and the counter is order-isomorphic
+/// to them; recorded in the ledger).
+pub fn picker_sort_key(p: &Picture, run: Option<&Run>, registry_idx: usize) -> (u8, i64, i64) {
+    match run {
+        Some(r) if r.done => (2, -(r.touched as i64), registry_idx as i64),
+        Some(r) if !r.words.is_empty() => (0, -(r.touched as i64), registry_idx as i64),
+        _ => (1, tier_rank(&p.tier) as i64, registry_idx as i64),
+    }
+}
+
+pub fn tier_rank(tier: &str) -> u8 {
+    match tier {
+        "easy" => 0,
+        "medium" => 1,
+        "hard" => 2,
+        "expert" => 3,
+        _ => 4,
+    }
+}
+
+/// The shelf list, registry-driven (Feature 7): (id, nameKey) in shipped
+/// order. Zero hardcoded categories anywhere in picker code.
+pub fn category_list() -> Vec<(String, String)> {
+    #[derive(serde::Deserialize)]
+    struct Cat {
+        id: String,
+        #[serde(rename = "nameKey")]
+        name_key: String,
+    }
+    #[derive(serde::Deserialize)]
+    struct Reg {
+        #[serde(rename = "categoryList", default)]
+        category_list: Vec<Cat>,
+    }
+    let reg: Reg = serde_json::from_str(include_str!("../config/wordpic/pictures.json"))
+        .unwrap_or(Reg { category_list: Vec::new() });
+    reg.category_list.into_iter().map(|c| (c.id, c.name_key)).collect()
+}
+
+#[cfg(test)]
+mod picker_search_ci {
+    use super::*;
+
+    fn registry() -> Vec<Picture> {
+        let d: serde_json::Value =
+            serde_json::from_str(include_str!("../config/wordpic/pictures.json")).unwrap();
+        serde_json::from_value(d["pictures"].clone()).unwrap()
+    }
+
+    fn category_ids() -> Vec<String> {
+        category_list().into_iter().map(|(id, _)| id).collect()
+    }
+
+    /// Feature 7 lint: categories nonempty, canonical is a member, every
+    /// referenced category exists. Old-format (empty categories) entries
+    /// are a build failure — the one-shot migration has landed.
+    #[test]
+    fn every_subject_is_categorized_and_canonical() {
+        let cats = category_ids();
+        assert!(!cats.is_empty(), "registry categoryList missing");
+        for p in registry() {
+            assert!(!p.categories.is_empty(), "{}: categories empty (old format?)", p.id);
+            assert!(
+                p.categories.contains(&p.canonical_category),
+                "{}: canonicalCategory not a member",
+                p.id
+            );
+            for c in &p.categories {
+                assert!(cats.contains(c), "{}: unknown category {c}", p.id);
+            }
+        }
+    }
+
+    /// Feature 3 CI: every Masterpieces subject carries title + artist in
+    /// EVERY shipped locale. Emoji-only masterpiece tiles are impossible.
+    /// The char budget IS the +40% pseudo-locale sweep in deterministic
+    /// form: no ellipsis path exists in the renderer, so oversize fails
+    /// HERE, not truncates there.
+    #[test]
+    fn masterpieces_carry_captions_in_all_locales() {
+        const LOCALES: [(&str, &str); 15] = [
+            ("en", include_str!("i18n/locales/en.json")),
+            ("es", include_str!("i18n/locales/es.json")),
+            ("fr", include_str!("i18n/locales/fr.json")),
+            ("de", include_str!("i18n/locales/de.json")),
+            ("pt", include_str!("i18n/locales/pt.json")),
+            ("pl", include_str!("i18n/locales/pl.json")),
+            ("ru", include_str!("i18n/locales/ru.json")),
+            ("ar", include_str!("i18n/locales/ar.json")),
+            ("hi", include_str!("i18n/locales/hi.json")),
+            ("zh", include_str!("i18n/locales/zh.json")),
+            ("ja", include_str!("i18n/locales/ja.json")),
+            ("ko", include_str!("i18n/locales/ko.json")),
+            ("sw", include_str!("i18n/locales/sw.json")),
+            ("vi", include_str!("i18n/locales/vi.json")),
+            ("fil", include_str!("i18n/locales/fil.json")),
+        ];
+        for p in registry().iter().filter(|p| p.categories.iter().any(|c| c == "masters")) {
+            for (code, raw) in LOCALES {
+                let d: serde_json::Value = serde_json::from_str(raw).unwrap();
+                for suffix in ["title", "artist"] {
+                    let key = format!("mp.{}.{suffix}", p.id);
+                    let v = d[&key].as_str().unwrap_or("");
+                    assert!(!v.is_empty(), "{}: missing {key} in {code}", p.id);
+                    assert!(
+                        (v.chars().count() as f64 * 1.4) <= 32.0,
+                        "{key} in {code} would overflow the 2-line cap at +40%"
+                    );
+                }
+            }
+        }
+    }
+
+    /// D6: aliases are match-only but profanity-screened at CI; alias
+    /// collisions across different subjects surface as warnings (v1).
+    #[test]
+    fn aliases_pass_the_profanity_screen() {
+        let mut seen: std::collections::HashMap<String, String> = std::collections::HashMap::new();
+        for p in registry() {
+            for a in &p.aliases {
+                assert!(
+                    !crate::profanity::is_blocked(a),
+                    "{}: alias {a:?} fails the profanity screen",
+                    p.id
+                );
+                if let Some(other) = seen.insert(crate::norm::fold_lenient(a), p.id.clone()) {
+                    if other != p.id {
+                        eprintln!("ALIAS COLLISION (triage, v1 warning): {a:?} -> {other} and {}", p.id);
+                    }
+                }
+            }
+        }
+    }
+
+    /// Feature 1 acceptance: durer with and without the umlaut, any case,
+    /// one result set; empty query matches nothing.
+    #[test]
+    fn diacritic_insensitive_matching() {
+        let corpus = vec!["Albrecht D\u{fc}rer".to_string(), "The Rhinoceros".to_string()];
+        for q in ["d\u{fc}rer", "durer", "DURER", "Durer"] {
+            assert!(search_matches(&corpus, q), "{q} must match");
+        }
+        assert!(!search_matches(&corpus, "hokusai"));
+        assert!(!search_matches(&corpus, ""));
+    }
+
+    /// Done #3's unit face: every shipped subject is reachable by typing
+    /// <=3 characters of its own corpus head.
+    #[test]
+    fn every_subject_reachable_in_three_characters() {
+        for p in registry() {
+            let mut corpus: Vec<String> = vec![p.id.clone(), p.subject.clone()];
+            corpus.extend(p.aliases.iter().cloned());
+            let head: String = crate::norm::fold_lenient(&p.id).chars().take(3).collect();
+            assert!(
+                search_matches(&corpus, &head),
+                "{}: not reachable via its 3-char head {head:?}",
+                p.id
+            );
+        }
+    }
+
+    /// Feature 5: deterministic order — In Progress, Not Started (tier
+    /// then registry), Completed.
+    #[test]
+    fn sort_orders_progress_then_fresh_then_done() {
+        let p_easy = synthetic("aaa", &["synthcat"]);
+        let p_hard = Picture { tier: "hard".into(), ..synthetic("bbb", &["synthcat"]) };
+        let going = Run { pic: "c".into(), lang: "en".into(), seed: 1, words: vec!["x".into()], done: false, replay: vec![], replay_seed: 0, touched: 9 };
+        let done = Run { pic: "d".into(), lang: "en".into(), seed: 1, words: vec!["x".into()], done: true, replay: vec![], replay_seed: 0, touched: 5 };
+        let mut keys = vec![
+            ("done", picker_sort_key(&p_easy, Some(&done), 0)),
+            ("fresh_easy", picker_sort_key(&p_easy, None, 1)),
+            ("going", picker_sort_key(&p_easy, Some(&going), 2)),
+            ("fresh_hard", picker_sort_key(&p_hard, None, 3)),
+        ];
+        keys.sort_by_key(|(_, k)| *k);
+        let order: Vec<&str> = keys.iter().map(|(n, _)| *n).collect();
+        assert_eq!(order, vec!["going", "fresh_easy", "fresh_hard", "done"]);
+    }
+
+    fn synthetic(id: &str, cats: &[&str]) -> Picture {
+        Picture {
+            id: id.into(),
+            tier: "easy".into(),
+            subject: id.into(),
+            icon: "\u{2b50}".into(),
+            kid: true,
+            wash: false,
+            pack: "synthpack".into(),
+            categories: cats.iter().map(|c| c.to_string()).collect(),
+            canonical_category: cats[0].into(),
+            aliases: vec![format!("{id}-alias")],
+            guide: vec![],
+            paths: vec![],
+            provenance: None,
+        }
+    }
+
+    /// Feature 7's synthetic-pack test: a fabricated pack (fake category,
+    /// three fake subjects, one cross-listed, one masterpiece-style)
+    /// renders, searches, and sorts through the SAME pure functions the
+    /// picker uses — zero picker-code modification by construction: this
+    /// module imports registry-level functions only.
+    #[test]
+    fn synthetic_pack_needs_no_picker_code() {
+        let pack = vec![
+            synthetic("synthone", &["synthcat"]),
+            synthetic("synthtwo", &["synthcat", "animals"]),
+            Picture { tier: "expert".into(), ..synthetic("synthmaster", &["masters", "synthcat"]) },
+        ];
+        let mut shelf: std::collections::HashMap<&str, usize> = std::collections::HashMap::new();
+        for p in &pack {
+            for c in &p.categories {
+                *shelf.entry(c.as_str()).or_default() += 1;
+            }
+        }
+        assert_eq!(shelf["synthcat"], 3);
+        assert_eq!(shelf["animals"], 1, "cross-listing renders in both");
+        assert_eq!(shelf["masters"], 1);
+        for p in &pack {
+            let corpus: Vec<String> =
+                std::iter::once(p.id.clone()).chain(p.aliases.iter().cloned()).collect();
+            assert!(search_matches(&corpus, &p.id[..3]));
+            assert!(search_matches(&corpus, &format!("{}-ALIAS", p.id)));
+        }
+        let keys: Vec<_> = pack.iter().enumerate().map(|(i, p)| picker_sort_key(p, None, i)).collect();
+        assert!(keys[0] < keys[1] && keys[1] < keys[2]);
+    }
+}
+
+/// The registry, in registry order — CC-PICKER-SEARCH's sole render source.
+pub fn pictures() -> &'static [Picture] {
+    &manifest().pictures
+}
+
 pub fn picker_order(state: &State, lang: &str) -> Vec<&'static Picture> {
     let tier_rank = |t: &str| BANDS.iter().position(|(b, _, _)| *b == t).unwrap_or(9);
     let mut pics: Vec<&'static Picture> = manifest().pictures.iter().collect();

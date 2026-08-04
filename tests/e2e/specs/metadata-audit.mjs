@@ -12,11 +12,12 @@
 // in spellpic_export.rs (the_wordmark_lives_on_the_card_and_never_the_
 // keepsake, masterpiece_cards_carry_the_attribution_and_others_do_not).
 import { openApp, assert } from '../harness.mjs';
+import { pickTile } from './finale.mjs';
 
 async function openPicture(page, pic) {
   await page.evaluate(() => document.getElementById('wordPicOpen').click());
   await page.waitForSelector('#wpPicker.show', { timeout: 5000 });
-  await page.click(`[data-pic="${pic}"]`);
+  await pickTile(page, pic);
   await page.waitForSelector('#wpPlay.show', { timeout: 5000 });
   await page.waitForTimeout(500);
   for (let i = 0; i < 6 && (await page.$('#wpHow.show')); i++) {

@@ -74,6 +74,7 @@ fn yb_render_piece(pic: &str, lang: &str) -> Option<String> {
 }
 
 pub fn wire(app: &App) {
+    wire_picker_inputs(app);
     crate::surface_hooks::install_picture_bridge(crate::surface_hooks::PictureBridge {
         gallery: Some(yb_gallery),
         render_piece: Some(yb_render_piece),
@@ -442,28 +443,16 @@ fn wire_housekeeping(app: &App) {
 }
 
 
-/// Picker family of a picture: pack-driven, with one override — expert
-/// tier always shelves under Masterpieces, wherever its pack lives.
-fn family_of(p: &wordpic::Picture) -> &'static str {
-    if p.tier == "expert" {
-        return "masters";
-    }
-    let pk = p.pack.as_str();
-    if pk == "numbers" || pk == "hanziNum" || pk.starts_with("alpha") {
-        "learn"
-    } else if pk.starts_with("culture") || pk == "worldart" {
-        "world"
-    } else if pk == "animals" {
-        "animals"
-    } else if pk == "sky" || pk.starts_with("zodiac") {
-        "sky"
-    } else {
-        "things"
-    }
-}
+// ---------------- CC-PICKER-SEARCH: the picker as a pure function of
+// the registry. Categories, captions, and aliases are DATA; this file
+// renders whatever the registry says and adds nothing (Feature 7 — the
+// synthetic-pack CI in wordpic.rs is the proof).
 
-/// The learn shelf leads with the ACTIVE language's script, numbers
-/// always first: a Russian learner sees Cyrillic before Latin.
+/// The learn shelf's script-first tie-break survives the Feature-5 sort
+/// as the SECONDARY key within Not Started, learn category only — Eric
+/// asked for it by name ("a Russian learner sees Cyrillic before
+/// Latin"), and Feature 5's tie-break is registry order otherwise.
+/// FLAGGED in the on-device pass notes as a spec-vs-shipped tension.
 fn learn_rank(pack: &str, lang: &str) -> u32 {
     let own: &str = match lang {
         "ru" => "alphaCyr",
@@ -483,69 +472,227 @@ fn learn_rank(pack: &str, lang: &str) -> u32 {
     }
 }
 
-const FAMILIES: [(&str, &str); 6] = [
-    ("learn", "wordpic.famLearn"),
-    ("world", "wordpic.famWorld"),
-    ("animals", "wordpic.famAnimals"),
-    ("sky", "wordpic.famSky"),
-    ("things", "wordpic.famThings"),
-    ("masters", "wordpic.famMasters"),
-];
+#[derive(Clone, PartialEq)]
+enum PickerView {
+    Browse,
+    Category(String),
+    Search,
+}
+
+thread_local! {
+    static VIEW: std::cell::RefCell<PickerView> = const { std::cell::RefCell::new(PickerView::Browse) };
+    static QUERY: std::cell::RefCell<String> = const { std::cell::RefCell::new(String::new()) };
+}
+
+/// D1: the kid filter applies to the CORPUS, before matching — a
+/// kid-hidden subject is unfindable and unbrowsable, not found-then-
+/// hidden. Non-kid contexts keep rendering locked tiles for
+/// entitlement-style locks, exactly as before.
+fn browsable<'a>(app: &App, pics: &'a [wordpic::Picture], lang: &str) -> Vec<(usize, &'a wordpic::Picture)> {
+    let kid = app.borrow().kid;
+    pics.iter()
+        .enumerate()
+        .filter(|(_, p)| !kid || allowed(app, p, lang))
+        .collect()
+}
+
+/// Feature 1's match corpus: id + subject + aliases + localized category
+/// names + (masterpieces) localized title and artist. Built from the
+/// active uiLang only (D5). Nothing typed here leaves the device.
+fn corpus_of(p: &wordpic::Picture) -> Vec<String> {
+    let mut c = vec![p.id.clone(), p.subject.clone()];
+    c.extend(p.aliases.iter().cloned());
+    for (cat, key) in wordpic::category_list() {
+        if p.categories.contains(&cat) {
+            c.push(i18n::t(&key));
+        }
+    }
+    if p.categories.iter().any(|c| c == "masters") {
+        c.push(i18n::t(&format!("mp.{}.title", p.id)));
+        c.push(i18n::t(&format!("mp.{}.artist", p.id)));
+    }
+    c
+}
+
+/// One tile, one component, everywhere (Feature 6's unified label rides
+/// here): untouched = dimmed total, in progress = spelled/total,
+/// complete = checkmark badge and no numbers.
+fn tile_html(app: &App, state: &wordpic::State, p: &wordpic::Picture, lang: &str) -> String {
+    let total = subject_total(p, lang);
+    let (cls, prog) = match state.run(&p.id, lang) {
+        Some(r) if r.done => ("wp-tile done", "\u{2713}".to_string()),
+        Some(r) if !r.words.is_empty() => ("wp-tile", format!("{}/{}", r.words.len(), total)),
+        _ => ("wp-tile fresh", format!("{total}")),
+    };
+    let locked = !allowed(app, p, lang);
+    // Feature 3: a Masterpieces tile is IDENTIFIED — title + artist,
+    // audited strings, two lines, no ellipsis path exists.
+    let caption = if p.categories.iter().any(|c| c == "masters") {
+        format!(
+            "<span class=\"wp-cap\">{}<br>{}</span>",
+            i18n::t(&format!("mp.{}.title", p.id)),
+            i18n::t(&format!("mp.{}.artist", p.id))
+        )
+    } else {
+        String::new()
+    };
+    format!(
+        "<button type=\"button\" class=\"{}{}\" data-pic=\"{}\" {}><span class=\"ico\">{}</span><span class=\"prog\">{}</span>{}</button>",
+        cls,
+        if locked { " locked" } else { "" },
+        p.id,
+        if locked { "disabled" } else { "" },
+        p.icon,
+        prog,
+        caption
+    )
+}
+
+/// Feature-5 ordering over a category's members (indices are registry
+/// order — the deterministic tie-break).
+fn sorted_members<'a>(
+    state: &wordpic::State,
+    members: Vec<(usize, &'a wordpic::Picture)>,
+    lang: &str,
+    cat: &str,
+) -> Vec<&'a wordpic::Picture> {
+    let mut m = members;
+    m.sort_by_key(|(idx, p)| {
+        let base = wordpic::picker_sort_key(p, state.run(&p.id, lang), *idx);
+        let learn_tweak = if cat == "learn" && base.0 == 1 { learn_rank(&p.pack, lang) } else { 0 };
+        (base.0, learn_tweak, base.1, base.2)
+    });
+    m.into_iter().map(|(_, p)| p).collect()
+}
+
+/// Tiles that fit one viewport row, minus the See All tile (Feature 4).
+fn row_capacity() -> usize {
+    let w = web_sys::window()
+        .and_then(|w| w.inner_width().ok())
+        .and_then(|v| v.as_f64())
+        .unwrap_or(390.0);
+    ((w / 96.0).floor() as usize).saturating_sub(1).max(3)
+}
+
+fn render_picker_body(app: &App) {
+    let lang = LANG.with(|l| l.borrow().clone());
+    let state = wordpic::load();
+    let visible = browsable(app, wordpic::pictures(), &lang);
+    let query = QUERY.with(|q| q.borrow().clone());
+    let view = VIEW.with(|v| v.borrow().clone());
+    let mut html = String::new();
+
+    if !query.is_empty() {
+        // Search view: flat grid, same tile, Feature-5 sort.
+        let hits: Vec<(usize, &wordpic::Picture)> = visible
+            .iter()
+            .filter(|(_, p)| wordpic::search_matches(&corpus_of(p), &query))
+            .copied()
+            .collect();
+        if hits.is_empty() {
+            html.push_str(&format!("<div class=\"wp-empty\">{}</div>", i18n::t("wordpic.noResults")));
+        } else {
+            html.push_str("<div class=\"wp-shelf wrap\">");
+            for p in sorted_members(&state, hits, &lang, "") {
+                html.push_str(&tile_html(app, &state, p, &lang));
+            }
+            html.push_str("</div>");
+        }
+    } else if let PickerView::Category(cat) = &view {
+        // See All: the full grid for one category, back affordance first.
+        let (_, name_key) = wordpic::category_list()
+            .into_iter()
+            .find(|(id, _)| id == cat)
+            .unwrap_or((cat.clone(), String::new()));
+        html.push_str(&format!(
+            "<div class=\"wp-fam-head\"><button class=\"ghost\" data-cat-back=\"1\">\u{2039}</button> {}</div><div class=\"wp-shelf wrap\">",
+            i18n::t(&name_key)
+        ));
+        let members: Vec<_> = visible.iter().filter(|(_, p)| p.categories.contains(cat)).copied().collect();
+        for p in sorted_members(&state, members, &lang, cat) {
+            html.push_str(&tile_html(app, &state, p, &lang));
+        }
+        html.push_str("</div>");
+    } else {
+        // Browse: every category row from the registry list, collapsed to
+        // one viewport row + See All (count). A subject renders in EVERY
+        // category it lists (Feature 2).
+        let cap = row_capacity();
+        for (cat, name_key) in wordpic::category_list() {
+            let members: Vec<_> = visible.iter().filter(|(_, p)| p.categories.contains(&cat)).copied().collect();
+            if members.is_empty() {
+                continue;
+            }
+            let count = members.len();
+            let ordered = sorted_members(&state, members, &lang, &cat);
+            html.push_str(&format!("<div class=\"wp-fam-head\">{}</div><div class=\"wp-shelf\">", i18n::t(&name_key)));
+            for p in ordered.iter().take(cap) {
+                html.push_str(&tile_html(app, &state, p, &lang));
+            }
+            if count > cap {
+                html.push_str(&format!(
+                    "<button type=\"button\" class=\"wp-tile wp-seeall\" data-cat=\"{cat}\"><span class=\"ico\">\u{2192}</span><span class=\"prog\">{}</span></button>",
+                    i18n::tp("wordpic.seeAll", &[("n", &count.to_string())])
+                ));
+            }
+            html.push_str("</div>");
+        }
+    }
+    dom::set_html("wpGrid", &html);
+}
 
 pub fn open_picker(app: &App) {
     let lang = app.borrow().lang.clone();
     LANG.with(|l| *l.borrow_mut() = lang.clone());
+    VIEW.with(|v| *v.borrow_mut() = PickerView::Browse);
+    QUERY.with(|q| q.borrow_mut().clear());
+    if dom::exists("wpSearch") {
+        dom::input("wpSearch").set_value("");
+    }
+    render_picker_body(app);
     let state = wordpic::load();
-    let mut html = String::new();
-    let mut by_fam: std::collections::HashMap<&str, Vec<&wordpic::Picture>> = std::collections::HashMap::new();
-    let ordered = wordpic::picker_order(&state, &lang);
-    for p in &ordered {
-        by_fam.entry(family_of(p)).or_default().push(p);
-    }
-    for (fam, key) in FAMILIES {
-        let Some(list) = by_fam.get_mut(fam) else { continue };
-        if fam == "learn" {
-            list.sort_by_key(|p| learn_rank(&p.pack, &lang));
-        }
-        html.push_str(&format!("<div class=\"wp-fam-head\">{}</div><div class=\"wp-shelf\">", i18n::t(key)));
-        for p in list.iter().copied() {
-        let total = subject_total(p, &lang);
-        let (cls, prog) = match state.run(&p.id, &lang) {
-            Some(r) if r.done => ("wp-tile done", i18n::t("wordpic.done")),
-            Some(r) if !r.words.is_empty() => ("wp-tile", format!("{}/{}", r.words.len(), total)),
-            _ => ("wp-tile", format!("{total}")),
-        };
-        let locked = !allowed(app, p, &lang);
-        html.push_str(&format!(
-            "<button type=\"button\" class=\"{}{}\" data-pic=\"{}\" {}><span class=\"ico\">{}</span><span class=\"prog\">{}</span></button>",
-            cls,
-            if locked { " locked" } else { "" },
-            p.id,
-            if locked { "disabled" } else { "" },
-            p.icon,
-            prog
-        ));
-    }
-        html.push_str("</div>");
-    }
-    dom::set_html("wpGrid", &html);
     let overflow = render_continue_row(&state, &lang);
     render_gallery_with_progress(&state, &lang, &overflow);
-    // Delegate tile taps once per open (idempotent listener via fresh nodes).
+    dom::add_class("wpPicker", "show");
+}
+
+/// Registered ONCE at wire time (dom::on is addEventListener — per-open
+/// registration would stack). The input listener takes the plain Event
+/// type: real keystrokes and synthetic dispatches both fire it, and the
+/// value is read from the field, never from the event.
+pub fn wire_picker_inputs(app: &App) {
+    if !dom::exists("wpSearch") {
+        return;
+    }
+    {
+        let a = app.clone();
+        dom::on::<web_sys::Event, _>("wpSearch", "input", move |_| {
+            let q = dom::input("wpSearch").value();
+            QUERY.with(|c| *c.borrow_mut() = q);
+            render_picker_body(&a);
+        });
+    }
+
+    // Tile taps + See All + back, one delegated listener.
     let a = app.clone();
     dom::on::<web_sys::MouseEvent, _>("wpGrid", "click", move |e| {
         let Some(el) = e
             .target()
             .and_then(|t| t.dyn_into::<web_sys::Element>().ok())
-            .and_then(|t| t.closest("[data-pic]").ok().flatten())
+            .and_then(|t| t.closest("[data-pic],[data-cat],[data-cat-back]").ok().flatten())
         else {
             return;
         };
         if let Some(id) = el.get_attribute("data-pic") {
             open_play(&a, &id);
+        } else if let Some(cat) = el.get_attribute("data-cat") {
+            VIEW.with(|v| *v.borrow_mut() = PickerView::Category(cat));
+            render_picker_body(&a);
+        } else if el.get_attribute("data-cat-back").is_some() {
+            VIEW.with(|v| *v.borrow_mut() = PickerView::Browse);
+            render_picker_body(&a);
         }
     });
-    dom::add_class("wpPicker", "show");
 }
 
 fn open_play(app: &App, pic_id: &str) {

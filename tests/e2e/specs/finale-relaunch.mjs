@@ -7,11 +7,12 @@
 // Reads ride the observation-only seam (__spelltest.picLadder): the spec
 // still TYPES every word through the real keyboard like a player would.
 import { openApp, assert, assertEq } from '../harness.mjs';
+import { pickTile } from './finale.mjs';
 
 async function openPicture(page, pic) {
   await page.evaluate(() => document.getElementById('wordPicOpen').click());
   await page.waitForSelector('#wpPicker.show', { timeout: 5000 });
-  await page.click(`[data-pic="${pic}"]`);
+  await pickTile(page, pic);
   await page.waitForSelector('#wpPlay.show', { timeout: 5000 });
   await page.waitForTimeout(500);
   for (let i = 0; i < 6 && (await page.$('#wpHow.show')); i++) {
