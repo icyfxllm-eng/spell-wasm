@@ -150,3 +150,60 @@ DECISION LEDGER (Eric, 2026-08-02 — recorded at greenlight)
   world by their cultureN packs (tulip/penguin/castle/... -> things,
   penguin -> animals, eiffel -> landmarks, violin -> music). Proposals B/C
   unsigned - untouched. Sky+masterpiece EXPANSION queued post-readmes.
+
+* CC-MASTERPIECE-TONAL received + D1-D4 signed (2026-08-04). CONSEQUENCES:
+  (1) greatwave/sunflowers/scream wiring is BLOCKED until mona's tonal gate
+  passes (the masterpiece lane opens on her D4 verdict). Their photoreal
+  previews stand as review material only. (2) mona's interim machine-trace
+  hosting map (six silhouette arcs + four carriers) rides ship 129 ONLY as
+  CI stopgap — the expanded ko/vi pools made her hand-traced short strokes
+  unhostable and extension was whack-a-mole; the tonal re-author replaces
+  it. (3) Built same-session: extractionClass on all 364 subjects + lint;
+  tonal.py (bands/boundaries/tensor-flow, monotonic by construction);
+  vision-landmarks.swift (Vision CLI, T0-only); first mona extraction:
+  boundaries 141, flow 124/82/51/19/17 monotonic, 7/12 features auto-
+  seeded (hands=lasso, hairMass/frame/highlightBand=geometry+review).
+  Sky five + sunflower (LINE-class, PASSED) still wire freely.
+
+* CC-PHOTO-SHADOWS received + D1-D4 signed (2026-08-04). Design-ahead,
+  execution-blocked, unblocks nothing. Done #1 design-acceptance run
+  same-day: zero contradictions vs texts in hand; one watch-item (LR6
+  edge emphasis = density-domain inside faces, structurally enforced by
+  F1 anyway); full-text re-review owed at Phase B. The FACEPASS->SHADOWS
+  inheritance chain is now: Eric-in-the-loop law (tool) -> confidence-
+  floor law (runtime), same vocabulary, same band machinery — shared by
+  extraction into a common module WHEN the parent's P1/P2 gates open,
+  never by the app importing tool code.
+
+* SHIP 129: THE GENERATION WAVE + the bank era's foundations, one commit.
+  ~33,000 new words generated to the signed pool floors across 13 languages
+  (wordfreq-primary interim recipe; sw via Leipzig Wikipedia — FrequencyWords
+  has NO Swahili; zh via pypinyin numbered-tone rows; ja via reading
+  conversion to typeable hiragana; en FROZEN and hi design-ahead per D5,
+  hi candidates parked in tools/bank/candidates-hi). All candidates passed
+  the repo's own gates (keyboard charsets, exclusions, NFC, dedup); the 840
+  export cap gave way to floor*1.25 (legacy-840 floor kept so pre-expansion
+  banks can't become retroactive violations). CC-BANK-COMPLETE slab: floors
+  as data + schema CI, the F2 pin law (verify_pins in the gate; unpin =
+  Eric-ACK event), the U-engine (gates 1-3 live, 4-5 pending their
+  authority files, nothing reaches full U provisionally), F5 red-flip +
+  reverse fixtures (removing one is itself a build failure), F6 pool
+  report. Mona's hosting map: six machine-traced silhouette arcs, INTERIM
+  by decree — the tonal re-author (CC-MASTERPIECE-TONAL) replaces it at
+  her gate. Also riding: extractionClass on all 364 subjects + lint,
+  tonal.py + F0 de-light (signed), vision-landmarks CLI, facepass_steps
+  protocol runner, batch-27 verdicts recorded.
+
+* CC-TONAL-POLISH received (2026-08-04): approved in principle, BLOCKED on
+  D2/D3/D4 signatures by its own text — nothing executed. Consequence noted:
+  F0 makes the PICTURE-COLOR goldens (dog+eiffel) + Mona's dark-painting
+  color side-by-side the PREREQUISITE for all tonal polish, pulling color's
+  Mona case forward of the general post-readme queue (consistent with
+  PICTURE-COLOR D5 rollout + TONAL D4's single combined session).
+
+* INTERIM CLASS NOTE (2026-08-04): mona's registry rides extractionClass
+  LINE while her decreed-interim arc map ships — the v7.4 lint rightly
+  demands requiredFeatures from any TONAL trace, and those twelve features
+  arrive WITH the tonal export at her gate. The registry describes what
+  ships today; the flip to TONAL + requiredFeatures is part of the tonal
+  export, atomically. (The tonal candidates already carry all metadata.)

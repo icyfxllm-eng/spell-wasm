@@ -1240,12 +1240,14 @@ mod tests {
     fn mona_bands_and_density() {
         let p = wordpic::picture("mona").unwrap();
         let slots = slots_for_lang(p, "en");
-        // Option 2 (Eric, v7.5): fine art rides the GUIDE layer; word
-        // paths are the hostable strokes. The Eric-passed Mona hosts a
-        // campaign in the 15-60 word range at expert pacing.
+        // INTERIM (CC-MASTERPIECE-TONAL decree, 2026-08-04): mona hosts
+        // on six machine-traced silhouette arcs until her tonal re-author
+        // passes Eric's gate — the expanded ko/vi pools made the old
+        // hand-traced map unhostable. The tonal map RE-PINS this range
+        // and restores the band-hierarchy assert below.
         assert!(
-            (15..=60).contains(&slots.len()),
-            "expert map hosts 15-60 words (got {})",
+            (12..=110).contains(&slots.len()),
+            "interim arc map hosts a real campaign (got {})",
             slots.len()
         );
         let (_, placements, slots) = layout_feed(p, "en", 3, &[]);
@@ -1259,6 +1261,11 @@ mod tests {
                 .collect();
             v.iter().sum::<f32>() / v.len().max(1) as f32
         };
-        assert!(avg(1) > avg(3) + 2.0, "band hierarchy visible: bg {} vs feature {}", avg(1), avg(3));
+        // Band hierarchy: only meaningful with >=2 distinct bands — the
+        // interim map is single-band; the tonal map brings this back.
+        let bands: std::collections::BTreeSet<u8> = slots.iter().map(|s| s.band).collect();
+        if bands.len() >= 2 {
+            assert!(avg(1) > avg(3) + 2.0, "band hierarchy visible: bg {} vs feature {}", avg(1), avg(3));
+        }
     }
 }

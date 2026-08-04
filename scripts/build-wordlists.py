@@ -47,7 +47,18 @@ MIN_LEN, MAX_LEN = 2, 16
 # one language is variety, not unfairness, so the gate guards against too FEW, not
 # against differing sizes. Lets English + others grow big (build-bigbank.py) while
 # a not-yet-grown language keeps its smaller curated bank above the floor.
-MIN_PER_TIER, MAX_PER_TIER = 30, 840  # 800 + basic-noun growth (2026-07-28)
+# CC-BANK-COMPLETE (Eric's generation greenlight, 2026-08-04): per-tier
+# ceilings come from the signed pool floors (+25% headroom), not a flat
+# 840 — the old cap was the reason eleven languages sat at 800 rows.
+MIN_PER_TIER = 30
+_FLOORS = json.loads((ROOT / "config" / "bank_floors.json").read_text())["languages"]
+def max_for(code, tier_idx):
+    row = _FLOORS.get(code)
+    if not row or tier_idx >= len(row["poolFloors"]):
+        return 840
+    # never below the legacy 840: pre-expansion banks (hi design-ahead,
+    # the thin trio's old 800s) must not become violations retroactively
+    return max(int(row["poolFloors"][tier_idx] * 1.25), 840)
 
 
 def nfc(s: str) -> str:
@@ -127,6 +138,8 @@ def build():
         seen = set()
         for tier in TIERS:
             src = ROOT / "assets" / "words" / code / f"{tier}.txt"
+            if not src.exists() and code == "sw" and tier == "expert":
+                continue  # sw is structurally 3-tier (CC-BANK-COMPLETE, signed)
             out = []
             for raw in src.read_text(encoding="utf-8").splitlines():
                 w = nfc(raw.strip())
@@ -164,9 +177,12 @@ def build():
     # starved) and a ceiling (no runaway). Sizes may differ across languages.
     for tier in TIERS:
         for code in LANGS:
+            if (code, tier) not in banks:
+                continue
             n = len(banks[(code, tier)])
-            if not (MIN_PER_TIER <= n <= MAX_PER_TIER):
-                problems.append(f"size: {code}/{tier} has {n} words, outside [{MIN_PER_TIER},{MAX_PER_TIER}]")
+            hi_cap = max_for(code, TIERS.index(tier))
+            if not (MIN_PER_TIER <= n <= hi_cap):
+                problems.append(f"size: {code}/{tier} has {n} words, outside [{MIN_PER_TIER},{hi_cap}]")
 
     if warnings:
         print(f"build-wordlists: {len(warnings)} word(s) dropped by curation filters:", file=sys.stderr)

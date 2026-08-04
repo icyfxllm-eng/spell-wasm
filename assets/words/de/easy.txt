@@ -231,7 +231,6 @@ tot
 wies
 dank
 ehe
-daß
 saß
 übte
 eins
@@ -314,7 +313,6 @@ holt
 jung
 le
 fürs
-muß
 rät
 with
 dir
@@ -600,7 +598,6 @@ rei
 reif
 rex
 rügt
-sass
 senn
 solo
 soo

@@ -37,6 +37,9 @@ if grep -rniE "word_globe|language_detective|loanword_explorer|loanword_pack|fal
   echo "GATE FAIL: an unsigned Wave-3 translator tool has executable code"; exit 1
 fi
 
+echo "== gate: composite pin law (CC-BANK-COMPLETE F2/D2)"
+python3 tools/bank/verify_pins.py || { echo "GATE FAIL: composite pin law violated"; exit 1; }
+
 echo "== gate: cargo test"
 cargo test 2>&1 | tail -n 20 | grep -E "test result: ok" >/dev/null || { echo "GATE FAIL: cargo test"; cargo test 2>&1 | grep -E "FAILED|panicked" | head; exit 1; }
 

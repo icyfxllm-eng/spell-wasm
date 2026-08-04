@@ -1,0 +1,20 @@
+{
+ "$doc": "CC-BANK-COMPLETE F1 — floors are DATA (signed D-FLOOR verbatim, Eric 2026-08-03). Changing a floor is a reviewable diff, never a code edit. tiers: rank floors ascending T1..T4; sw is STRUCTURALLY 3-tier (a T4 slot for sw anywhere is a build failure). poolFloors: F6 minimum audited rows per tier (thin trio vi/fil/sw reduced; vi keeps a T4). compositePin: F2 — hash of the pinned composite artifact once CC-WORDLIST-SOURCES' recipe lands; null = pre-pin era, coverage runs report-only. launched: false until the language's expansion wave completes (F4 red-build applies only then; en stays frozen-reference per D5 and is NEVER red).",
+ "languages": {
+  "en":  {"tiers": [2000, 6000, 15000, 30000], "poolFloors": [500, 1000, 2000, 3000], "launched": false, "frozen": true,  "compositePin": null},
+  "es":  {"tiers": [2000, 6000, 15000, 30000], "poolFloors": [500, 1000, 2000, 3000], "launched": false, "frozen": false, "compositePin": null},
+  "fr":  {"tiers": [2000, 6000, 15000, 30000], "poolFloors": [500, 1000, 2000, 3000], "launched": false, "frozen": false, "compositePin": null},
+  "de":  {"tiers": [2000, 6000, 14000, 25000], "poolFloors": [500, 1000, 2000, 3000], "launched": false, "frozen": false, "compositePin": null},
+  "pt":  {"tiers": [2000, 6000, 14000, 25000], "poolFloors": [500, 1000, 2000, 3000], "launched": false, "frozen": false, "compositePin": null},
+  "pl":  {"tiers": [2000, 6000, 14000, 25000], "poolFloors": [500, 1000, 2000, 3000], "launched": false, "frozen": false, "compositePin": null},
+  "ru":  {"tiers": [2000, 6000, 14000, 25000], "poolFloors": [500, 1000, 2000, 3000], "launched": false, "frozen": false, "compositePin": null},
+  "ja":  {"tiers": [1500, 5000, 10000, 18000], "poolFloors": [500, 1000, 2000, 3000], "launched": false, "frozen": false, "compositePin": null},
+  "ko":  {"tiers": [1500, 5000, 9000, 15000],  "poolFloors": [500, 1000, 2000, 3000], "launched": false, "frozen": false, "compositePin": null},
+  "ar":  {"tiers": [1500, 4500, 9000, 15000],  "poolFloors": [500, 1000, 2000, 3000], "launched": false, "frozen": false, "compositePin": null},
+  "zh":  {"tiers": [1200, 4000, 7500, 12000],  "poolFloors": [500, 1000, 2000, 3000], "launched": false, "frozen": false, "compositePin": null},
+  "vi":  {"tiers": [1200, 4000, 7500, 12000],  "poolFloors": [300, 600, 1200, 2000],  "launched": false, "frozen": false, "compositePin": null},
+  "hi":  {"tiers": [1200, 3500, 6500, 10000],  "poolFloors": [500, 1000, 2000, 3000], "launched": false, "frozen": false, "designAheadOnly": true, "compositePin": null},
+  "fil": {"tiers": [1000, 3000, 5500, 8000],   "poolFloors": [300, 600, 1200, 2000],  "launched": false, "frozen": false, "compositePin": null},
+  "sw":  {"tiers": [1000, 3500, 10000],        "poolFloors": [300, 600, 1200],        "launched": false, "frozen": false, "compositePin": null}
+ }
+}

@@ -85,6 +85,15 @@ pub struct Picture {
     /// but profanity-checked at CI. Curated at pack-creation time.
     #[serde(default)]
     pub aliases: Vec<String>,
+    /// CC-MASTERPIECE-TONAL: the pipeline fork is explicit data, never a
+    /// heuristic. LINE = v7.5 ink extraction; TONAL = the posterize/flow
+    /// pipeline. Missing = lint failure (the test below).
+    #[serde(default, rename = "extractionClass")]
+    pub extraction_class: String,
+    /// TONAL subjects declare their checkable features (portraits: the
+    /// twelve Eric named). Export blocks when one is missing.
+    #[serde(default, rename = "requiredFeatures")]
+    pub required_features: Vec<String>,
     /// v7.5 Option 2 (Eric): always-visible guide art — the traced ink he
     /// graded. Renders as outline strokes; never hosts words, never
     /// collides, never counts as a word path.
@@ -445,6 +454,21 @@ mod picker_search_ci {
         }
     }
 
+    /// CC-MASTERPIECE-TONAL registry lint: every subject declares its
+    /// extraction class; every TONAL subject carries requiredFeatures.
+    #[test]
+    fn extraction_class_is_explicit_everywhere() {
+        for p in registry() {
+            assert!(
+                p.extraction_class == "LINE" || p.extraction_class == "TONAL",
+                "{}: extractionClass missing or invalid ({:?})", p.id, p.extraction_class
+            );
+            if p.extraction_class == "TONAL" {
+                assert!(!p.required_features.is_empty(), "{}: TONAL without requiredFeatures", p.id);
+            }
+        }
+    }
+
     /// Feature 3 CI: every Masterpieces subject carries title + artist in
     /// EVERY shipped locale. Emoji-only masterpiece tiles are impossible.
     /// The char budget IS the +40% pseudo-locale sweep in deterministic
@@ -565,6 +589,8 @@ mod picker_search_ci {
             categories: cats.iter().map(|c| c.to_string()).collect(),
             canonical_category: cats[0].into(),
             aliases: vec![format!("{id}-alias")],
+            extraction_class: "LINE".into(),
+            required_features: vec![],
             guide: vec![],
             paths: vec![],
             provenance: None,

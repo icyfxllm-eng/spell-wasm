@@ -76,6 +76,7 @@ mod reports;
 mod reports_ui;
 mod guardian_dash;
 mod family_voices;
+mod bank_complete;
 mod calendar;
 mod calendar_ui;
 mod journal;
