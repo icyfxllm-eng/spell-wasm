@@ -36,26 +36,32 @@ def build_feather(ref_gray, quantiles):
     band_map = _n.digitize(ref_gray.astype(float), quantiles)
     feather = _n.zeros_like(band_map, dtype=bool)
     neighbor = _n.copy(band_map)
+    DEPTH = _n.zeros(band_map.shape, dtype=float)
     for b in range(len(quantiles) + 1):
         m = (band_map == b).astype(_n.uint8)
         if m.sum() == 0:
             continue
         dist = _c.distanceTransform(m, _c.DIST_L2, 3)
         thickness = float(dist.max()) * 2 or 1.0
-        zone = (dist > 0) & (dist <= max(1.5, FEATHER_FRAC * thickness))
+        width = max(1.5, FEATHER_FRAC * thickness)
+        zone = (dist > 0) & (dist <= width)
         feather |= zone
+        # graded depth: 1.0 at the edge -> 0.0 at the zone's inner rim
+        DEPTH[zone] = _n.maximum(DEPTH[zone], (1.0 - dist[zone] / width))
         # neighbor band at the closest edge: dilate the complement's ids
         inv = (band_map != b).astype(_n.uint8)
         k = _n.ones((5, 5), _n.uint8)
         near = _c.dilate((band_map * inv).astype(_n.float32), k)
         neighbor[zone] = near[zone].astype(band_map.dtype)
-    return band_map, feather, neighbor
+    return band_map, feather, neighbor, DEPTH
 
-def feather_pick(band, x, y, feather, neighbor):
+def feather_pick(band, x, y, feather, neighbor, depth):
+    """Graded interleave: flip chance rises toward the boundary edge —
+    band cores stay pure, only the rim melts. Still fully seeded."""
     xi, yi = int(x), int(y)
     if 0 <= yi < feather.shape[0] and 0 <= xi < feather.shape[1] and feather[yi, xi]:
         h = (xi * 73856093 ^ yi * 19349663) & 0xffff
-        if h % 100 < 50:
+        if (h % 100) < int(60 * depth[yi, xi]):
             return int(neighbor[yi, xi])
     return band
 
@@ -200,7 +206,7 @@ if "--polish" in sys.argv:
     REF_GRAY = cv2.imread(str(_refp), cv2.IMREAD_GRAYSCALE)
     _q = data.get("bandQuantiles")
     if _q:
-        BAND_MAP, FEATHER_MASK, NEIGHBOR = build_feather(REF_GRAY, _q)
+        BAND_MAP, FEATHER_MASK, NEIGHBOR, DEPTH_MAP = build_feather(REF_GRAY, _q)
         FEATHER = True
 im = Image.new("RGB", (CANVAS * SS, CANVAS * SS), (14, 19, 31))
 dr = ImageDraw.Draw(im)
@@ -213,7 +219,7 @@ for c in flows:
     if FEATHER and c["points"]:
         mx = sum(q[0] for q in c["points"]) / len(c["points"])
         my = sum(q[1] for q in c["points"]) / len(c["points"])
-        b = min(feather_pick(b, mx, my, FEATHER_MASK, NEIGHBOR), len(BAND_TYPE) - 1)
+        b = min(feather_pick(b, mx, my, FEATHER_MASK, NEIGHBOR, DEPTH_MAP), len(BAND_TYPE) - 1)
     px, fill, bold = BAND_TYPE[b]
     CURRENT_BAND[0] = b
     wi = place_words(dr, [(q[0] * SS, q[1] * SS) for q in c["points"]], px * SS, fill, bold > 1, wi)

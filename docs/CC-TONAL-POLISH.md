@@ -52,3 +52,14 @@ Remaining in the rollup: F2 true 15% interleave + F4 focal-last (layout-
 engine side, next tree window, CI sweep as specced); 0b face session
 pieces (contour approval, per-feature pass, hands lasso, D4 smile
 touch); final gate = his side-by-side of fully-polished vs current.
+
+## F2 VERDICT (Eric, 2026-08-04, verbatim: "feather passes lets roll
+with it") — graded feather ON at the signed 15% for mona. The measured
+trade (boundary melt 302->294, quarter-scale SSIM up, thumbnail punch
+.208->.157) is ACCEPTED by his eye — D5 calibration point #3, and the
+first where his grade overrides the thumbnail metric: recorded so the
+scorer learns that mid-scale smoothness outranks thumb-scale contrast
+when sfumato is the subject. Rollup state: 0a cascade / F1 approved /
+F2 approved / F3 frozen / F4 data-landed (streak flag + CI sweep queue
+for the tree window) / F5 calibrating 3-for-3 files-signed. Remaining:
+his 0b face session + D4 smile touch + the closing side-by-side.

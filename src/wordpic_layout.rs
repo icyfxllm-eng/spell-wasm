@@ -1166,6 +1166,14 @@ mod tests {
         assert!(READINESS_EXCEPTIONS.len() <= 4, "readiness list growing — fix maps or the zh bank instead");
         for (code, _, _, _) in crate::consts::BUILTIN_LANGS.iter() {
             for p in &wordpic::manifest().pictures {
+                // Scoped runs for content iteration: WP_SWEEP_ONLY=sun,comet
+                // limits the sweep to those ids (CI never sets it, so the
+                // gate still sweeps everything).
+                if let Ok(only) = std::env::var("WP_SWEEP_ONLY") {
+                    if !only.split(',').any(|s| s.trim() == p.id) {
+                        continue;
+                    }
+                }
                 if READINESS_EXCEPTIONS.contains(&(p.id.as_str(), code)) {
                     continue; // hidden pair — listed in the readiness report
                 }
