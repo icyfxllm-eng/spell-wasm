@@ -548,5 +548,11 @@
  "yb.shields": "صُنعت {n} دروع",
  "yb.streak": "أفضل سلسلة: {n}",
  "yb.title": "كتاب سنوي للإملاء",
- "yb.words": "{n} كلمة"
+ "yb.words": "{n} كلمة",
+ "mp.greatwave.title": "الموجة العظيمة",
+ "mp.greatwave.artist": "كاتسوشيكا هوكوساي",
+ "mp.sunflowers.title": "عباد الشمس",
+ "mp.sunflowers.artist": "فنسنت فان جوخ",
+ "mp.scream.title": "الصرخة",
+ "mp.scream.artist": "إدفارد مونك"
 }

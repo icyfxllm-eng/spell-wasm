@@ -68,6 +68,11 @@ fn yb_gallery() -> Vec<(String, String, usize, bool, u64)> {
 fn yb_render_piece(pic: &str, lang: &str) -> Option<String> {
     let st = crate::wordpic::load();
     let run = st.runs.iter().find(|r| r.pic == pic && r.done)?;
+    // v8.3: TONAL subjects never render from their (stale) scan plan —
+    // honest placeholder until the layout export path exists.
+    if crate::wordpic::picture(pic).map(|p| p.extraction_class == "TONAL").unwrap_or(false) {
+        return None;
+    }
     let plan = crate::spellpic::plan(&run.pic, &run.lang, run.seed)?;
     let _ = lang;
     Some(crate::spellpic_export::export_svg(&plan, &run.lang, &run.words, ""))
@@ -232,10 +237,19 @@ pub fn wire(app: &App) {
     wire_housekeeping(app);
 }
 
+/// v8.3 precedence: a TONAL registry declaration OUTRANKS the scan
+/// bundle — mona's flip shipped in the registry while her old scan
+/// still won every `spellpic::has` gate (Eric, on 139: "139 has the
+/// old mona lisa whats going on here?"). The scan lock now yields to
+/// extractionClass TONAL everywhere.
+fn scan_locked(p: &wordpic::Picture) -> bool {
+    crate::spellpic::has(&p.id) && p.extraction_class != "TONAL"
+}
+
 /// Campaign length: scan-locked subjects count their planned words;
 /// legacy subjects count solver slots.
 fn subject_total(p: &wordpic::Picture, lang: &str) -> u32 {
-    if crate::spellpic::has(&p.id) {
+    if scan_locked(p) {
         let seed = wordpic::load().run(&p.id, lang).map(|r| r.seed).unwrap_or(1);
         return crate::spellpic::plan(&p.id, lang, seed)
             .map(|pl| pl.words.len() as u32)
@@ -261,7 +275,7 @@ fn allowed(app: &App, p: &wordpic::Picture, lang: &str) -> bool {
     if crate::wordpic_layout::READINESS_EXCEPTIONS.contains(&(p.id.as_str(), lang)) {
         return false; // I1 readiness-listed pair — hidden, never jumbled
     }
-    if crate::spellpic::has(&p.id) && subject_total(p, lang) == 0 {
+    if scan_locked(p) && subject_total(p, lang) == 0 {
         return false; // v8.2: no legal plan for this language — not offered
     }
     let kid = app.borrow().kid;
@@ -499,8 +513,37 @@ fn browsable<'a>(app: &App, pics: &'a [wordpic::Picture], lang: &str) -> Vec<(us
 /// Feature 1's match corpus: id + subject + aliases + localized category
 /// names + (masterpieces) localized title and artist. Built from the
 /// active uiLang only (D5). Nothing typed here leaves the device.
+/// The tile's display name: locale override when the key exists,
+/// curated registry name otherwise.
+fn tile_name(p: &wordpic::Picture) -> String {
+    let key = format!("wp.name.{}", p.id);
+    let t = i18n::t(&key);
+    if t == key { p.name.clone() } else { t }
+}
+
+thread_local! {
+    static SEARCH_GEN: std::cell::Cell<u64> = const { std::cell::Cell::new(0) };
+}
+
+thread_local! {
+    /// Per-open search corpus cache: corpus_of walks i18n for every
+    /// picture — doing that 370x per KEYSTROKE was most of the typing
+    /// lag (Eric, 2026-08-05). Cleared on picker open (locale-safe).
+    static CORPUS: std::cell::RefCell<std::collections::HashMap<String, Vec<String>>> =
+        std::cell::RefCell::new(std::collections::HashMap::new());
+}
+
+fn corpus_cached(p: &wordpic::Picture) -> Vec<String> {
+    CORPUS.with(|c| {
+        c.borrow_mut()
+            .entry(p.id.clone())
+            .or_insert_with(|| corpus_of(p))
+            .clone()
+    })
+}
+
 fn corpus_of(p: &wordpic::Picture) -> Vec<String> {
-    let mut c = vec![p.id.clone(), p.subject.clone()];
+    let mut c = vec![p.id.clone(), p.subject.clone(), tile_name(p)];
     c.extend(p.aliases.iter().cloned());
     for (cat, key) in wordpic::category_list() {
         if p.categories.contains(&cat) {
@@ -534,7 +577,15 @@ fn tile_html(app: &App, state: &wordpic::State, p: &wordpic::Picture, lang: &str
             i18n::t(&format!("mp.{}.artist", p.id))
         )
     } else {
-        String::new()
+        // CC-PICKER v2 (Eric: "call the pictures by their name") —
+        // every tile is IDENTIFIED, not just the masters. Same audited
+        // wp-cap component, one line.
+        let n = tile_name(p);
+        if n.is_empty() {
+            String::new()
+        } else {
+            format!("<span class=\"wp-cap\">{n}</span>")
+        }
     };
     format!(
         "<button type=\"button\" class=\"{}{}\" data-pic=\"{}\" {}><span class=\"ico\">{}</span><span class=\"prog\">{}</span>{}</button>",
@@ -586,7 +637,7 @@ fn render_picker_body(app: &App) {
         // Search view: flat grid, same tile, Feature-5 sort.
         let hits: Vec<(usize, &wordpic::Picture)> = visible
             .iter()
-            .filter(|(_, p)| wordpic::search_matches(&corpus_of(p), &query))
+            .filter(|(_, p)| wordpic::search_matches(&corpus_cached(p), &query))
             .copied()
             .collect();
         if hits.is_empty() {
@@ -646,6 +697,7 @@ pub fn open_picker(app: &App) {
     LANG.with(|l| *l.borrow_mut() = lang.clone());
     VIEW.with(|v| *v.borrow_mut() = PickerView::Browse);
     QUERY.with(|q| q.borrow_mut().clear());
+    CORPUS.with(|c| c.borrow_mut().clear());
     if dom::exists("wpSearch") {
         dom::input("wpSearch").set_value("");
     }
@@ -665,11 +717,25 @@ pub fn wire_picker_inputs(app: &App) {
         return;
     }
     {
+        // CC-PICKER v2: DEBOUNCED — the old handler rebuilt the whole
+        // picker synchronously per keystroke, which is exactly the
+        // typing lag Eric hit on-device. Letters now land instantly;
+        // the render fires 150ms after the last keystroke (generation-
+        // counted so stale timers are no-ops).
         let a = app.clone();
         dom::on::<web_sys::Event, _>("wpSearch", "input", move |_| {
             let q = dom::input("wpSearch").value();
             QUERY.with(|c| *c.borrow_mut() = q);
-            render_picker_body(&a);
+            let gen = SEARCH_GEN.with(|g| {
+                g.set(g.get().wrapping_add(1));
+                g.get()
+            });
+            let a2 = a.clone();
+            after(150, move || {
+                if SEARCH_GEN.with(std::cell::Cell::get) == gen {
+                    render_picker_body(&a2);
+                }
+            });
         });
     }
 
@@ -716,7 +782,7 @@ fn open_play(app: &App, pic_id: &str) {
     let bump = SEED_BUMP.with(|b| b.get());
     // v8.2: for scan-locked subjects the FEED is the plan's word order —
     // the word you spell is the word that lands on the next baseline.
-    let mut feed = if crate::spellpic::has(pic_id) {
+    let mut feed = if scan_locked(p) {
         let pl = crate::spellpic::plan(pic_id, &lang, run.seed);
         LADDER.with(|l| {
             *l.borrow_mut() = pl.as_ref().map(|p| p.ladder.clone()).unwrap_or_default()
@@ -824,7 +890,7 @@ fn render_canvas(p: &wordpic::Picture, lang: &str, words: &[String]) {
     // plans through the SAME pure crate against the SAME data as CI, so
     // the layout proven legal offline is the layout drawn here. A
     // subject whose plan is illegal displays NOTHING (F5/I10).
-    if crate::spellpic::has(&p.id) {
+    if scan_locked(p) {
         let seed = wordpic::load().run(&p.id, lang).map(|r| r.seed).unwrap_or(1);
         match crate::spellpic::plan(&p.id, lang, seed) {
             Some(plan) => {

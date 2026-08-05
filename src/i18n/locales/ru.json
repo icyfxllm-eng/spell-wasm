@@ -548,5 +548,11 @@
  "yb.shields": "Выковано щитов: {n}",
  "yb.streak": "Лучшая серия: {n}",
  "yb.title": "Ежегодник правописания",
- "yb.words": "{n} слов"
+ "yb.words": "{n} слов",
+ "mp.greatwave.title": "Большая волна",
+ "mp.greatwave.artist": "Кацусика Хокусай",
+ "mp.sunflowers.title": "Подсолнухи",
+ "mp.sunflowers.artist": "Винсент ван Гог",
+ "mp.scream.title": "Крик",
+ "mp.scream.artist": "Эдвард Мунк"
 }

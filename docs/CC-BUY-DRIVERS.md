@@ -241,3 +241,25 @@ DECISION LEDGER (Eric, 2026-08-02 — recorded at greenlight)
   strokes. Session gates all verbatim in CC-TONAL-FACEPASS.md. First
   TONAL subject shipped; masterpiece lane OPEN; the streak-feed (138)
   goes live on her smile in this build.
+
+* SHIP 133 ASSIGNED (Eric verbatim: "greenlight both ship 133 for the
+  picker fixes when gates pass" + the two field repairs found en route):
+  1. PICKER NAMES — every tile identified (Eric: "call the pictures by
+     their name like for eye of horus"): Picture.name registry field,
+     370 curated en names (letter tiles = their letter), wp.name.<id>
+     locale override hook, name joins the search corpus, name lint
+     (non-empty, <=24 chars) in wordpic-check.
+  2. SEARCH SPEED (Eric: "massive delay... takes forever"): the input
+     handler no longer rebuilds the picker per keystroke — 150ms
+     generation-counted debounce + per-open corpus cache (corpus_of
+     walked i18n 370x per keystroke).
+  3. v8.3 SCAN PRECEDENCE (the 139 field bug): extractionClass TONAL
+     outranks the scan bundle at all five play-path gates — the shipped
+     TONAL mona becomes reachable.
+  4. MASTERS REPAIR: greatwave/sunflowers/scream were NEVER in the
+     registry (ship 130's wire silently skipped; its ledger entry was
+     wrong). Wired now as LINE photoreal per the original approved
+     design, carriers re-selected under the full L9 law (presplit,
+     min-dist separation, Munch's new SELF-CLEARANCE law — a swirl can
+     collide with itself; budget floor [2,10] on expert). mp captions
+     added in all 15 locales. Sweep green all languages x seeds.

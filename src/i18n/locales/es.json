@@ -548,5 +548,11 @@
  "yb.shields": "{n} escudos forjados",
  "yb.streak": "Mejor racha: {n}",
  "yb.title": "Anuario de ortografía",
- "yb.words": "{n} palabras"
+ "yb.words": "{n} palabras",
+ "mp.greatwave.title": "La gran ola",
+ "mp.greatwave.artist": "Katsushika Hokusai",
+ "mp.sunflowers.title": "Los girasoles",
+ "mp.sunflowers.artist": "Vincent van Gogh",
+ "mp.scream.title": "El grito",
+ "mp.scream.artist": "Edvard Munch"
 }

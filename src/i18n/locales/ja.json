@@ -548,5 +548,11 @@
  "yb.shields": "盾を {n} 個作った",
  "yb.streak": "ベスト連続記録: {n}",
  "yb.title": "スペリング・イヤーブック",
- "yb.words": "{n} 語"
+ "yb.words": "{n} 語",
+ "mp.greatwave.title": "神奈川沖浪裏",
+ "mp.greatwave.artist": "葛飾北斎",
+ "mp.sunflowers.title": "ひまわり",
+ "mp.sunflowers.artist": "Vincent van Gogh",
+ "mp.scream.title": "叫び",
+ "mp.scream.artist": "Edvard Munch"
 }

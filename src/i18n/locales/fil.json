@@ -548,5 +548,11 @@
  "yb.shields": "{n} shields forged",
  "yb.streak": "Best streak: {n}",
  "yb.title": "Spelling Yearbook",
- "yb.words": "{n} words"
+ "yb.words": "{n} words",
+ "mp.greatwave.title": "Ang Dakilang Alon",
+ "mp.greatwave.artist": "Katsushika Hokusai",
+ "mp.sunflowers.title": "Mga Mirasol",
+ "mp.sunflowers.artist": "Vincent van Gogh",
+ "mp.scream.title": "Ang Sigaw",
+ "mp.scream.artist": "Edvard Munch"
 }

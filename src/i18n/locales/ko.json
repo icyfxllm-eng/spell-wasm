@@ -548,5 +548,11 @@
  "yb.shields": "방패 {n}개 제작",
  "yb.streak": "최고 연속 기록: {n}",
  "yb.title": "철자 연감",
- "yb.words": "{n}개 단어"
+ "yb.words": "{n}개 단어",
+ "mp.greatwave.title": "가나가와의 큰 파도",
+ "mp.greatwave.artist": "가쓰시카 호쿠사이",
+ "mp.sunflowers.title": "해바라기",
+ "mp.sunflowers.artist": "빈센트 반 고흐",
+ "mp.scream.title": "절규",
+ "mp.scream.artist": "에드바르 뭉크"
 }

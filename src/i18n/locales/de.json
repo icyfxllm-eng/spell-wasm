@@ -548,5 +548,11 @@
  "yb.shields": "{n} Schilde geschmiedet",
  "yb.streak": "Beste Serie: {n}",
  "yb.title": "Rechtschreib-Jahrbuch",
- "yb.words": "{n} Wörter"
+ "yb.words": "{n} Wörter",
+ "mp.greatwave.title": "Die große Welle",
+ "mp.greatwave.artist": "Katsushika Hokusai",
+ "mp.sunflowers.title": "Sonnenblumen",
+ "mp.sunflowers.artist": "Vincent van Gogh",
+ "mp.scream.title": "Der Schrei",
+ "mp.scream.artist": "Edvard Munch"
 }

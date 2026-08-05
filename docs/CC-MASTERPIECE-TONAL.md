@@ -25,3 +25,15 @@ has no eyebrows. Her list is now ten: leftEye rightEye nose mouth chin
 hairMass leftHand rightHand frame highlightBand. Per-subject only.
 Review artifacts: color D2 side-by-side
 https://claude.ai/code/artifact/a30c2f42-594e-4cd8-83a0-82290a37091a
+
+LANE VERDICT (Eric, 2026-08-05, verbatim: "Those limited colorpics are
+awful  those outlines are ruined"): the tonal re-authors of greatwave/
+sunflowers/scream are REJECTED — the lane CLOSES with all three
+STAYING LINE (the shipped photoreal outline carriers he approved).
+Registry untouched: the staged tonal entries were scratchpad-only and
+are shelved as records (staged-*-entry.json + artifact d1577604).
+The tone-vs-line reading was honest to the medium all along: sfumato
+(mona) extracts by tone; woodblock and impasto keep their lines.
+Mona's own TONAL form (shipped 139) was operator-gated stroke by
+stroke and stands separately — her on-device pass remains the check
+on whether her density satisfies his eye.

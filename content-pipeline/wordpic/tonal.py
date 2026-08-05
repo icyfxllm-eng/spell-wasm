@@ -262,11 +262,78 @@ def _upper_arc(eye_pts):
 def _offset(path, dx, dy):
     return [(x + dx, y + dy) for x, y in path]
 
+def _ridge_refine_smooth(pts, img, reach=5.0, end_cap=3.0):
+    """FACEPASS rework (Eric's "1-6 fail chin passes" — the chin lesson):
+    landmarks POSITION a stroke; the painting's own ink SHAPES it. Slide
+    each resampled point along its normal to the darkest ridge in the
+    de-lit reflectance (F0 law: anatomy through shadow), then fit ONE
+    confident curve — least-squares cubic in arclength. Generic: no
+    per-subject numbers (F7 zero-diff law re-proven on the girl)."""
+    import math as _m
+    if len(pts) < 3:
+        return pts
+    L = np.log1p(img.astype(np.float32))
+    refl = L - cv2.GaussianBlur(L, (0, 0), 8.0)
+    refl = cv2.GaussianBlur(refl, (0, 0), 2.5)
+    H, W = refl.shape
+    def sample(x, y):
+        if 0 <= x < W - 1 and 0 <= y < H - 1:
+            x0, y0 = int(x), int(y)
+            fx, fy = x - x0, y - y0
+            a = refl[y0, x0] * (1 - fx) + refl[y0, x0 + 1] * fx
+            b = refl[y0 + 1, x0] * (1 - fx) + refl[y0 + 1, x0 + 1] * fx
+            return a * (1 - fy) + b * fy
+        return 0.0
+    # resample ~3px
+    rs = [list(pts[0])]
+    acc = 0.0
+    for a, b in zip(pts, pts[1:]):
+        seg = _m.hypot(b[0] - a[0], b[1] - a[1])
+        if seg == 0:
+            continue
+        t = 3.0 - acc
+        while t <= seg:
+            rs.append([a[0] + (b[0] - a[0]) * t / seg,
+                       a[1] + (b[1] - a[1]) * t / seg])
+            t += 3.0
+        acc = (acc + seg) % 3.0
+    n = len(rs)
+    if n < 3:
+        return pts
+    ref = []
+    for i, (x, y) in enumerate(rs):
+        a, b = rs[max(0, i - 1)], rs[min(n - 1, i + 1)]
+        tx, ty = b[0] - a[0], b[1] - a[1]
+        tl = _m.hypot(tx, ty) or 1.0
+        nx, ny = -ty / tl, tx / tl
+        cap = end_cap if (i == 0 or i == n - 1) else reach
+        best, bx, by = 1e9, x, y
+        d = -cap
+        while d <= cap:
+            sx, sy = x + nx * d, y + ny * d
+            v = sample(sx, sy) + 0.006 * abs(d)
+            if v < best:
+                best, bx, by = v, sx, sy
+            d += 0.5
+        ref.append([bx, by])
+    ref = np.array(ref)
+    dists = np.concatenate([[0.0], np.cumsum(np.hypot(np.diff(ref[:, 0]),
+                                                      np.diff(ref[:, 1])))])
+    tt = dists / max(dists[-1], 1e-6)
+    deg = min(3, len(ref) - 1)
+    px = np.polyfit(tt, ref[:, 0], deg)
+    py = np.polyfit(tt, ref[:, 1], deg)
+    return [(float(np.polyval(px, u)), float(np.polyval(py, u)))
+            for u in np.linspace(0, 1, 10)]
+
 def iconic_strokes(feats, img):
-    """The closed vocabulary (D2). Landmarks position; Eric approves."""
+    """The closed vocabulary (D2). Landmarks position; Eric approves.
+    Post-rework: every stroke is ridge-refined + smooth-fit (the chin
+    lesson) — operator-drawn strokes still outrank these at export."""
     strokes = []
     def add(name, pts, focal=False):
         if len(pts) >= 2:
+            pts = _ridge_refine_smooth(pts, img)
             strokes.append({"pathKind": "feature", "feature": name,
                             "iconic": True, "focal": focal,
                             "bandIndex": None, "scope": "face",

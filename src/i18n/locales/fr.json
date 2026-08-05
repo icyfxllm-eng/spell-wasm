@@ -548,5 +548,11 @@
  "yb.shields": "{n} boucliers forgés",
  "yb.streak": "Meilleure série : {n}",
  "yb.title": "Album d'orthographe",
- "yb.words": "{n} mots"
+ "yb.words": "{n} mots",
+ "mp.greatwave.title": "La Grande Vague",
+ "mp.greatwave.artist": "Katsushika Hokusai",
+ "mp.sunflowers.title": "Les Tournesols",
+ "mp.sunflowers.artist": "Vincent van Gogh",
+ "mp.scream.title": "Le Cri",
+ "mp.scream.artist": "Edvard Munch"
 }

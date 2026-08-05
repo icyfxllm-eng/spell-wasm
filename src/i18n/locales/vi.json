@@ -548,5 +548,11 @@
  "yb.shields": "Rèn {n} khiên",
  "yb.streak": "Chuỗi tốt nhất: {n}",
  "yb.title": "Kỷ yếu chính tả",
- "yb.words": "{n} từ"
+ "yb.words": "{n} từ",
+ "mp.greatwave.title": "Sóng lừng Kanagawa",
+ "mp.greatwave.artist": "Katsushika Hokusai",
+ "mp.sunflowers.title": "Hoa hướng dương",
+ "mp.sunflowers.artist": "Vincent van Gogh",
+ "mp.scream.title": "Tiếng thét",
+ "mp.scream.artist": "Edvard Munch"
 }

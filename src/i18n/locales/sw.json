@@ -548,5 +548,11 @@
  "yb.shields": "Ngao {n} zimetengenezwa",
  "yb.streak": "Mfululizo bora: {n}",
  "yb.title": "Kitabu cha mwaka cha tahajia",
- "yb.words": "Maneno {n}"
+ "yb.words": "Maneno {n}",
+ "mp.greatwave.title": "Wimbi Kuu",
+ "mp.greatwave.artist": "Katsushika Hokusai",
+ "mp.sunflowers.title": "Alizeti",
+ "mp.sunflowers.artist": "Vincent van Gogh",
+ "mp.scream.title": "Kilio",
+ "mp.scream.artist": "Edvard Munch"
 }

@@ -95,7 +95,8 @@
     "face",
     "smile"
    ],
-   "extractionClass": "LINE"
+   "extractionClass": "LINE",
+   "name": "Smiley"
   },
   {
    "id": "star",
@@ -127,7 +128,8 @@
    "aliases": [
     "stars"
    ],
-   "extractionClass": "LINE"
+   "extractionClass": "LINE",
+   "name": "Star"
   },
   {
    "id": "fish",
@@ -193,7 +195,8 @@
    ],
    "canonicalCategory": "things",
    "aliases": [],
-   "extractionClass": "LINE"
+   "extractionClass": "LINE",
+   "name": "Fish"
   },
   {
    "id": "house",
@@ -315,7 +318,8 @@
    "aliases": [
     "home"
    ],
-   "extractionClass": "LINE"
+   "extractionClass": "LINE",
+   "name": "House"
   },
   {
    "id": "cat",
@@ -491,7 +495,8 @@
    "aliases": [
     "kitten"
    ],
-   "extractionClass": "LINE"
+   "extractionClass": "LINE",
+   "name": "Cat"
   },
   {
    "id": "rocket",
@@ -685,7 +690,8 @@
    "aliases": [
     "spaceship"
    ],
-   "extractionClass": "LINE"
+   "extractionClass": "LINE",
+   "name": "Rocket"
   },
   {
    "id": "snowman",
@@ -730,7 +736,8 @@
    ],
    "canonicalCategory": "things",
    "aliases": [],
-   "extractionClass": "LINE"
+   "extractionClass": "LINE",
+   "name": "Snowman"
   },
   {
    "id": "dragon",
@@ -876,7 +883,8 @@
    ],
    "canonicalCategory": "things",
    "aliases": [],
-   "extractionClass": "LINE"
+   "extractionClass": "LINE",
+   "name": "Dragon"
   },
   {
    "id": "eiffel",
@@ -990,7 +998,8 @@
     "paris",
     "tower"
    ],
-   "extractionClass": "LINE"
+   "extractionClass": "LINE",
+   "name": "Eiffel Tower"
   },
   {
    "id": "mona",
@@ -1468,7 +1477,8 @@
     "rightHand",
     "frame",
     "highlightBand"
-   ]
+   ],
+   "name": "Mona Lisa"
   },
   {
    "id": "dog",
@@ -1577,7 +1587,8 @@
    "aliases": [
     "puppy"
    ],
-   "extractionClass": "LINE"
+   "extractionClass": "LINE",
+   "name": "Dog"
   },
   {
    "id": "butterfly",
@@ -1645,7 +1656,8 @@
    ],
    "canonicalCategory": "animals",
    "aliases": [],
-   "extractionClass": "LINE"
+   "extractionClass": "LINE",
+   "name": "Butterfly"
   },
   {
    "id": "snail",
@@ -1759,7 +1771,8 @@
    ],
    "canonicalCategory": "animals",
    "aliases": [],
-   "extractionClass": "LINE"
+   "extractionClass": "LINE",
+   "name": "Snail"
   },
   {
    "id": "duck",
@@ -1816,7 +1829,8 @@
    ],
    "canonicalCategory": "animals",
    "aliases": [],
-   "extractionClass": "LINE"
+   "extractionClass": "LINE",
+   "name": "Duck"
   },
   {
    "id": "owl",
@@ -1893,7 +1907,8 @@
    ],
    "canonicalCategory": "animals",
    "aliases": [],
-   "extractionClass": "LINE"
+   "extractionClass": "LINE",
+   "name": "Owl"
   },
   {
    "id": "turtle",
@@ -1927,7 +1942,8 @@
    "aliases": [
     "tortoise"
    ],
-   "extractionClass": "LINE"
+   "extractionClass": "LINE",
+   "name": "Turtle"
   },
   {
    "id": "elephant",
@@ -2004,7 +2020,8 @@
    ],
    "canonicalCategory": "animals",
    "aliases": [],
-   "extractionClass": "LINE"
+   "extractionClass": "LINE",
+   "name": "Elephant"
   },
   {
    "id": "horse",
@@ -2125,7 +2142,8 @@
    "aliases": [
     "pony"
    ],
-   "extractionClass": "LINE"
+   "extractionClass": "LINE",
+   "name": "Horse"
   },
   {
    "id": "peacock",
@@ -2196,7 +2214,8 @@
    ],
    "canonicalCategory": "animals",
    "aliases": [],
-   "extractionClass": "LINE"
+   "extractionClass": "LINE",
+   "name": "Peacock"
   },
   {
    "id": "rhino",
@@ -2695,7 +2714,8 @@
     "durer",
     "dürer"
    ],
-   "extractionClass": "LINE"
+   "extractionClass": "LINE",
+   "name": "Rhinoceros"
   },
   {
    "id": "balloon",
@@ -2725,7 +2745,8 @@
    ],
    "canonicalCategory": "things",
    "aliases": [],
-   "extractionClass": "LINE"
+   "extractionClass": "LINE",
+   "name": "Balloon"
   },
   {
    "id": "mug",
@@ -2757,7 +2778,8 @@
    "aliases": [
     "cup"
    ],
-   "extractionClass": "LINE"
+   "extractionClass": "LINE",
+   "name": "Mug"
   },
   {
    "id": "mushroom",
@@ -2787,7 +2809,8 @@
    ],
    "canonicalCategory": "things",
    "aliases": [],
-   "extractionClass": "LINE"
+   "extractionClass": "LINE",
+   "name": "Mushroom"
   },
   {
    "id": "sailboat",
@@ -2820,7 +2843,8 @@
     "boat",
     "sail"
    ],
-   "extractionClass": "LINE"
+   "extractionClass": "LINE",
+   "name": "Sailboat"
   },
   {
    "id": "cactus",
@@ -2850,7 +2874,8 @@
    ],
    "canonicalCategory": "things",
    "aliases": [],
-   "extractionClass": "LINE"
+   "extractionClass": "LINE",
+   "name": "Cactus"
   },
   {
    "id": "moonstar",
@@ -2883,7 +2908,8 @@
     "moon",
     "crescent"
    ],
-   "extractionClass": "LINE"
+   "extractionClass": "LINE",
+   "name": "Moon & Star"
   },
   {
    "id": "kite",
@@ -2913,7 +2939,8 @@
    ],
    "canonicalCategory": "things",
    "aliases": [],
-   "extractionClass": "LINE"
+   "extractionClass": "LINE",
+   "name": "Kite"
   },
   {
    "id": "ladybug",
@@ -2945,7 +2972,8 @@
    "aliases": [
     "ladybird"
    ],
-   "extractionClass": "LINE"
+   "extractionClass": "LINE",
+   "name": "Ladybug"
   },
   {
    "id": "bicycle",
@@ -2977,7 +3005,8 @@
    "aliases": [
     "bike"
    ],
-   "extractionClass": "LINE"
+   "extractionClass": "LINE",
+   "name": "Bicycle"
   },
   {
    "id": "windmill",
@@ -3007,7 +3036,8 @@
    ],
    "canonicalCategory": "things",
    "aliases": [],
-   "extractionClass": "LINE"
+   "extractionClass": "LINE",
+   "name": "Windmill"
   },
   {
    "id": "hotair",
@@ -3040,7 +3070,8 @@
     "hot air balloon",
     "balloon"
    ],
-   "extractionClass": "LINE"
+   "extractionClass": "LINE",
+   "name": "Hot-Air Balloon"
   },
   {
    "id": "lighthouse",
@@ -3070,7 +3101,8 @@
    ],
    "canonicalCategory": "things",
    "aliases": [],
-   "extractionClass": "LINE"
+   "extractionClass": "LINE",
+   "name": "Lighthouse"
   },
   {
    "id": "violin",
@@ -3102,7 +3134,8 @@
    "aliases": [
     "fiddle"
    ],
-   "extractionClass": "LINE"
+   "extractionClass": "LINE",
+   "name": "Violin"
   },
   {
    "id": "hummingbird",
@@ -3132,7 +3165,8 @@
    ],
    "canonicalCategory": "things",
    "aliases": [],
-   "extractionClass": "LINE"
+   "extractionClass": "LINE",
+   "name": "Hummingbird"
   },
   {
    "id": "rooster",
@@ -3164,7 +3198,8 @@
    "aliases": [
     "chicken"
    ],
-   "extractionClass": "LINE"
+   "extractionClass": "LINE",
+   "name": "Rooster"
   },
   {
    "id": "seahorse",
@@ -3194,7 +3229,8 @@
    ],
    "canonicalCategory": "things",
    "aliases": [],
-   "extractionClass": "LINE"
+   "extractionClass": "LINE",
+   "name": "Seahorse"
   },
   {
    "id": "wolf",
@@ -3224,7 +3260,8 @@
    ],
    "canonicalCategory": "things",
    "aliases": [],
-   "extractionClass": "LINE"
+   "extractionClass": "LINE",
+   "name": "Wolf"
   },
   {
    "id": "koi",
@@ -3257,7 +3294,8 @@
     "carp",
     "koi fish"
    ],
-   "extractionClass": "LINE"
+   "extractionClass": "LINE",
+   "name": "Koi"
   },
   {
    "id": "octopus",
@@ -3287,7 +3325,8 @@
    ],
    "canonicalCategory": "things",
    "aliases": [],
-   "extractionClass": "LINE"
+   "extractionClass": "LINE",
+   "name": "Octopus"
   },
   {
    "id": "oak",
@@ -3320,7 +3359,8 @@
     "tree",
     "oak tree"
    ],
-   "extractionClass": "LINE"
+   "extractionClass": "LINE",
+   "name": "Oak Tree"
   },
   {
    "id": "starrynight",
@@ -3363,7 +3403,8 @@
     "van gogh",
     "gogh"
    ],
-   "extractionClass": "LINE"
+   "extractionClass": "LINE",
+   "name": "The Starry Night"
   },
   {
    "id": "crane",
@@ -3395,7 +3436,8 @@
    "aliases": [
     "origami"
    ],
-   "extractionClass": "LINE"
+   "extractionClass": "LINE",
+   "name": "Crane"
   },
   {
    "id": "dallah",
@@ -3427,7 +3469,8 @@
    "aliases": [
     "coffee pot"
    ],
-   "extractionClass": "LINE"
+   "extractionClass": "LINE",
+   "name": "Dallah"
   },
   {
    "id": "basil",
@@ -3459,7 +3502,8 @@
    "aliases": [
     "herb"
    ],
-   "extractionClass": "LINE"
+   "extractionClass": "LINE",
+   "name": "Basil"
   },
   {
    "id": "panda",
@@ -3489,7 +3533,8 @@
    ],
    "canonicalCategory": "world",
    "aliases": [],
-   "extractionClass": "LINE"
+   "extractionClass": "LINE",
+   "name": "Panda"
   },
   {
    "id": "calavera",
@@ -3522,7 +3567,8 @@
     "skull",
     "day of the dead"
    ],
-   "extractionClass": "LINE"
+   "extractionClass": "LINE",
+   "name": "Calavera"
   },
   {
    "id": "tajmahal",
@@ -3555,7 +3601,8 @@
     "taj mahal",
     "india"
    ],
-   "extractionClass": "LINE"
+   "extractionClass": "LINE",
+   "name": "Taj Mahal"
   },
   {
    "id": "stork",
@@ -3585,7 +3632,8 @@
    ],
    "canonicalCategory": "world",
    "aliases": [],
-   "extractionClass": "LINE"
+   "extractionClass": "LINE",
+   "name": "Stork"
   },
   {
    "id": "caravel",
@@ -3617,7 +3665,8 @@
    "aliases": [
     "ship"
    ],
-   "extractionClass": "LINE"
+   "extractionClass": "LINE",
+   "name": "Caravel"
   },
   {
    "id": "bigben",
@@ -3651,7 +3700,8 @@
     "london",
     "clock tower"
    ],
-   "extractionClass": "LINE"
+   "extractionClass": "LINE",
+   "name": "Big Ben"
   },
   {
    "id": "turtleship",
@@ -3684,7 +3734,8 @@
     "turtle ship",
     "geobukseon"
    ],
-   "extractionClass": "LINE"
+   "extractionClass": "LINE",
+   "name": "Turtle Ship"
   },
   {
    "id": "baobab",
@@ -3716,7 +3767,8 @@
    "aliases": [
     "tree"
    ],
-   "extractionClass": "LINE"
+   "extractionClass": "LINE",
+   "name": "Baobab"
   },
   {
    "id": "nonla",
@@ -3749,7 +3801,8 @@
     "conical hat",
     "non la"
    ],
-   "extractionClass": "LINE"
+   "extractionClass": "LINE",
+   "name": "Non La"
   },
   {
    "id": "cuckoo",
@@ -3782,7 +3835,8 @@
     "cuckoo clock",
     "clock"
    ],
-   "extractionClass": "LINE"
+   "extractionClass": "LINE",
+   "name": "Cuckoo Clock"
   },
   {
    "id": "torii",
@@ -3815,7 +3869,8 @@
     "gate",
     "shrine"
    ],
-   "extractionClass": "LINE"
+   "extractionClass": "LINE",
+   "name": "Torii Gate"
   },
   {
    "id": "hanbok",
@@ -3847,7 +3902,8 @@
    "aliases": [
     "dress"
    ],
-   "extractionClass": "LINE"
+   "extractionClass": "LINE",
+   "name": "Hanbok"
   },
   {
    "id": "matryoshka",
@@ -3880,7 +3936,8 @@
     "nesting doll",
     "russian doll"
    ],
-   "extractionClass": "LINE"
+   "extractionClass": "LINE",
+   "name": "Matryoshka"
   },
   {
    "id": "greatwall",
@@ -3914,7 +3971,8 @@
     "china",
     "wall"
    ],
-   "extractionClass": "LINE"
+   "extractionClass": "LINE",
+   "name": "Great Wall"
   },
   {
    "id": "oud",
@@ -3946,7 +4004,8 @@
    "aliases": [
     "lute"
    ],
-   "extractionClass": "LINE"
+   "extractionClass": "LINE",
+   "name": "Oud"
   },
   {
    "id": "orion",
@@ -3978,7 +4037,8 @@
    "aliases": [
     "constellation"
    ],
-   "extractionClass": "LINE"
+   "extractionClass": "LINE",
+   "name": "Orion"
   },
   {
    "id": "papelpicado",
@@ -4011,7 +4071,8 @@
     "papel picado",
     "banner"
    ],
-   "extractionClass": "LINE"
+   "extractionClass": "LINE",
+   "name": "Papel Picado"
   },
   {
    "id": "redfuji",
@@ -4055,7 +4116,8 @@
     "fuji",
     "mount fuji"
    ],
-   "extractionClass": "LINE"
+   "extractionClass": "LINE",
+   "name": "Red Fuji"
   },
   {
    "id": "anubis",
@@ -4087,7 +4149,8 @@
    "aliases": [
     "egypt"
    ],
-   "extractionClass": "LINE"
+   "extractionClass": "LINE",
+   "name": "Anubis"
   },
   {
    "id": "athenaowl",
@@ -4120,7 +4183,8 @@
     "athena",
     "owl"
    ],
-   "extractionClass": "LINE"
+   "extractionClass": "LINE",
+   "name": "Owl of Athena"
   },
   {
    "id": "bamboo",
@@ -4150,7 +4214,8 @@
    ],
    "canonicalCategory": "world",
    "aliases": [],
-   "extractionClass": "LINE"
+   "extractionClass": "LINE",
+   "name": "Bamboo"
   },
   {
    "id": "girih",
@@ -4182,7 +4247,8 @@
    "aliases": [
     "pattern"
    ],
-   "extractionClass": "LINE"
+   "extractionClass": "LINE",
+   "name": "Girih"
   },
   {
    "id": "gyenyame",
@@ -4215,7 +4281,8 @@
     "gye nyame",
     "adinkra"
    ],
-   "extractionClass": "LINE"
+   "extractionClass": "LINE",
+   "name": "Gye Nyame"
   },
   {
    "id": "arcdetriomphe",
@@ -4248,7 +4315,8 @@
     "arc de triomphe",
     "paris"
    ],
-   "extractionClass": "LINE"
+   "extractionClass": "LINE",
+   "name": "Arc de Triomphe"
   },
   {
    "id": "rickshaw",
@@ -4278,7 +4346,8 @@
    ],
    "canonicalCategory": "world",
    "aliases": [],
-   "extractionClass": "LINE"
+   "extractionClass": "LINE",
+   "name": "Rickshaw"
   },
   {
    "id": "dhow",
@@ -4310,7 +4379,8 @@
    "aliases": [
     "boat"
    ],
-   "extractionClass": "LINE"
+   "extractionClass": "LINE",
+   "name": "Dhow"
   },
   {
    "id": "galo",
@@ -4343,7 +4413,8 @@
     "rooster",
     "barcelos"
    ],
-   "extractionClass": "LINE"
+   "extractionClass": "LINE",
+   "name": "Galo de Barcelos"
   },
   {
    "id": "pyramids",
@@ -4377,7 +4448,8 @@
     "giza",
     "egypt"
    ],
-   "extractionClass": "LINE"
+   "extractionClass": "LINE",
+   "name": "Pyramids"
   },
   {
    "id": "eyeofhorus",
@@ -4410,7 +4482,8 @@
     "eye of horus",
     "egypt"
    ],
-   "extractionClass": "LINE"
+   "extractionClass": "LINE",
+   "name": "Eye of Horus"
   },
   {
    "id": "ankh",
@@ -4442,7 +4515,8 @@
    "aliases": [
     "egypt"
    ],
-   "extractionClass": "LINE"
+   "extractionClass": "LINE",
+   "name": "Ankh"
   },
   {
    "id": "waweldragon",
@@ -4475,7 +4549,8 @@
     "wawel",
     "dragon"
    ],
-   "extractionClass": "LINE"
+   "extractionClass": "LINE",
+   "name": "Wawel Dragon"
   },
   {
    "id": "doubledecker",
@@ -4509,7 +4584,8 @@
     "bus",
     "london"
    ],
-   "extractionClass": "LINE"
+   "extractionClass": "LINE",
+   "name": "Double-Decker Bus"
   },
   {
    "id": "halongbay",
@@ -4542,7 +4618,8 @@
     "ha long bay",
     "vietnam"
    ],
-   "extractionClass": "LINE"
+   "extractionClass": "LINE",
+   "name": "Ha Long Bay"
   },
   {
    "id": "fleurdelis",
@@ -4575,7 +4652,8 @@
     "fleur de lis",
     "lily"
    ],
-   "extractionClass": "LINE"
+   "extractionClass": "LINE",
+   "name": "Fleur-de-lis"
   },
   {
    "id": "manekineko",
@@ -4609,7 +4687,8 @@
     "lucky cat",
     "cat"
    ],
-   "extractionClass": "LINE"
+   "extractionClass": "LINE",
+   "name": "Maneki-neko"
   },
   {
    "id": "acacia",
@@ -4641,7 +4720,8 @@
    "aliases": [
     "tree"
    ],
-   "extractionClass": "LINE"
+   "extractionClass": "LINE",
+   "name": "Acacia"
   },
   {
    "id": "samovar",
@@ -4671,7 +4751,8 @@
    ],
    "canonicalCategory": "world",
    "aliases": [],
-   "extractionClass": "LINE"
+   "extractionClass": "LINE",
+   "name": "Samovar"
   },
   {
    "id": "lantern",
@@ -4701,7 +4782,8 @@
    ],
    "canonicalCategory": "world",
    "aliases": [],
-   "extractionClass": "LINE"
+   "extractionClass": "LINE",
+   "name": "Lantern"
   },
   {
    "id": "sitar",
@@ -4731,7 +4813,8 @@
    ],
    "canonicalCategory": "music",
    "aliases": [],
-   "extractionClass": "LINE"
+   "extractionClass": "LINE",
+   "name": "Sitar"
   },
   {
    "id": "brandenburg",
@@ -4764,7 +4847,8 @@
     "brandenburg gate",
     "berlin"
    ],
-   "extractionClass": "LINE"
+   "extractionClass": "LINE",
+   "name": "Brandenburg Gate"
   },
   {
    "id": "colosseum",
@@ -4797,7 +4881,8 @@
     "rome",
     "coliseum"
    ],
-   "extractionClass": "LINE"
+   "extractionClass": "LINE",
+   "name": "Colosseum"
   },
   {
    "id": "fan",
@@ -4829,7 +4914,8 @@
    "aliases": [
     "folding fan"
    ],
-   "extractionClass": "LINE"
+   "extractionClass": "LINE",
+   "name": "Folding Fan"
   },
   {
    "id": "stonehenge",
@@ -4859,7 +4945,8 @@
    ],
    "canonicalCategory": "landmarks",
    "aliases": [],
-   "extractionClass": "LINE"
+   "extractionClass": "LINE",
+   "name": "Stonehenge"
   },
   {
    "id": "pagoda",
@@ -4889,7 +4976,8 @@
    ],
    "canonicalCategory": "landmarks",
    "aliases": [],
-   "extractionClass": "LINE"
+   "extractionClass": "LINE",
+   "name": "Pagoda"
   },
   {
    "id": "daruma",
@@ -4921,7 +5009,8 @@
    "aliases": [
     "doll"
    ],
-   "extractionClass": "LINE"
+   "extractionClass": "LINE",
+   "name": "Daruma"
   },
   {
    "id": "balalaika",
@@ -4951,7 +5040,8 @@
    ],
    "canonicalCategory": "music",
    "aliases": [],
-   "extractionClass": "LINE"
+   "extractionClass": "LINE",
+   "name": "Balalaika"
   },
   {
    "id": "sombrero",
@@ -4983,7 +5073,8 @@
    "aliases": [
     "hat"
    ],
-   "extractionClass": "LINE"
+   "extractionClass": "LINE",
+   "name": "Sombrero"
   },
   {
    "id": "djembe",
@@ -5015,7 +5106,8 @@
    "aliases": [
     "drum"
    ],
-   "extractionClass": "LINE"
+   "extractionClass": "LINE",
+   "name": "Djembe"
   },
   {
    "id": "angkorwat",
@@ -5048,7 +5140,8 @@
     "angkor wat",
     "cambodia"
    ],
-   "extractionClass": "LINE"
+   "extractionClass": "LINE",
+   "name": "Angkor Wat"
   },
   {
    "id": "accordion",
@@ -5078,7 +5171,8 @@
    ],
    "canonicalCategory": "music",
    "aliases": [],
-   "extractionClass": "LINE"
+   "extractionClass": "LINE",
+   "name": "Accordion"
   },
   {
    "id": "quetzal",
@@ -5110,7 +5204,8 @@
    "aliases": [
     "bird"
    ],
-   "extractionClass": "LINE"
+   "extractionClass": "LINE",
+   "name": "Quetzal"
   },
   {
    "id": "grandpiano",
@@ -5143,7 +5238,8 @@
     "grand piano",
     "piano"
    ],
-   "extractionClass": "LINE"
+   "extractionClass": "LINE",
+   "name": "Grand Piano"
   },
   {
    "id": "chichenitza",
@@ -5177,7 +5273,8 @@
     "pyramid",
     "mexico"
    ],
-   "extractionClass": "LINE"
+   "extractionClass": "LINE",
+   "name": "Chichen Itza"
   },
   {
    "id": "montsaintmichel",
@@ -5210,7 +5307,8 @@
     "mont saint michel",
     "france"
    ],
-   "extractionClass": "LINE"
+   "extractionClass": "LINE",
+   "name": "Mont-Saint-Michel"
   },
   {
    "id": "maasaishield",
@@ -5243,7 +5341,8 @@
     "maasai",
     "shield"
    ],
-   "extractionClass": "LINE"
+   "extractionClass": "LINE",
+   "name": "Maasai Shield"
   },
   {
    "id": "janggu",
@@ -5275,7 +5374,8 @@
    "aliases": [
     "drum"
    ],
-   "extractionClass": "LINE"
+   "extractionClass": "LINE",
+   "name": "Janggu"
   },
   {
    "id": "koinobori",
@@ -5308,7 +5408,8 @@
     "carp streamer",
     "koi"
    ],
-   "extractionClass": "LINE"
+   "extractionClass": "LINE",
+   "name": "Koinobori"
   },
   {
    "id": "nazcabird",
@@ -5341,7 +5442,8 @@
     "nazca",
     "bird"
    ],
-   "extractionClass": "LINE"
+   "extractionClass": "LINE",
+   "name": "Nazca Bird"
   },
   {
    "id": "terracotta",
@@ -5374,7 +5476,8 @@
     "terracotta warrior",
     "soldier"
    ],
-   "extractionClass": "LINE"
+   "extractionClass": "LINE",
+   "name": "Terracotta Warrior"
   },
   {
    "id": "hamsa",
@@ -5406,7 +5509,8 @@
    "aliases": [
     "hand"
    ],
-   "extractionClass": "LINE"
+   "extractionClass": "LINE",
+   "name": "Hamsa"
   },
   {
    "id": "pinata",
@@ -5438,7 +5542,8 @@
    "aliases": [
     "piñata"
    ],
-   "extractionClass": "LINE"
+   "extractionClass": "LINE",
+   "name": "Pinata"
   },
   {
    "id": "bagpipes",
@@ -5468,7 +5573,8 @@
    ],
    "canonicalCategory": "music",
    "aliases": [],
-   "extractionClass": "LINE"
+   "extractionClass": "LINE",
+   "name": "Bagpipes"
   },
   {
    "id": "triskele",
@@ -5501,7 +5607,8 @@
     "triskelion",
     "spiral"
    ],
-   "extractionClass": "LINE"
+   "extractionClass": "LINE",
+   "name": "Triskele"
   },
   {
    "id": "mancala",
@@ -5533,7 +5640,8 @@
    "aliases": [
     "board game"
    ],
-   "extractionClass": "LINE"
+   "extractionClass": "LINE",
+   "name": "Mancala"
   },
   {
    "id": "compassrose",
@@ -5566,7 +5674,8 @@
     "compass",
     "rose"
    ],
-   "extractionClass": "LINE"
+   "extractionClass": "LINE",
+   "name": "Compass Rose"
   },
   {
    "id": "scarab",
@@ -5599,7 +5708,8 @@
     "beetle",
     "egypt"
    ],
-   "extractionClass": "LINE"
+   "extractionClass": "LINE",
+   "name": "Scarab"
   },
   {
    "id": "gramophone",
@@ -5632,7 +5742,8 @@
     "phonograph",
     "record player"
    ],
-   "extractionClass": "LINE"
+   "extractionClass": "LINE",
+   "name": "Gramophone"
   },
   {
    "id": "kitsune",
@@ -5664,7 +5775,8 @@
    "aliases": [
     "fox"
    ],
-   "extractionClass": "LINE"
+   "extractionClass": "LINE",
+   "name": "Kitsune"
   },
   {
    "id": "tulip",
@@ -5696,7 +5808,8 @@
    "aliases": [
     "flower"
    ],
-   "extractionClass": "LINE"
+   "extractionClass": "LINE",
+   "name": "Tulip"
   },
   {
    "id": "hourglass",
@@ -5728,7 +5841,8 @@
    "aliases": [
     "sand timer"
    ],
-   "extractionClass": "LINE"
+   "extractionClass": "LINE",
+   "name": "Hourglass"
   },
   {
    "id": "dartboard",
@@ -5768,7 +5882,8 @@
     "darts",
     "bullseye"
    ],
-   "extractionClass": "LINE"
+   "extractionClass": "LINE",
+   "name": "Dartboard"
   },
   {
    "id": "penguin",
@@ -5798,7 +5913,8 @@
    ],
    "canonicalCategory": "animals",
    "aliases": [],
-   "extractionClass": "LINE"
+   "extractionClass": "LINE",
+   "name": "Penguin"
   },
   {
    "id": "anchor",
@@ -5830,7 +5946,8 @@
    "aliases": [
     "boat anchor"
    ],
-   "extractionClass": "LINE"
+   "extractionClass": "LINE",
+   "name": "Anchor"
   },
   {
    "id": "stoplight",
@@ -5862,7 +5979,8 @@
    "aliases": [
     "traffic light"
    ],
-   "extractionClass": "LINE"
+   "extractionClass": "LINE",
+   "name": "Stoplight"
   },
   {
    "id": "snowflake",
@@ -5892,7 +6010,8 @@
    ],
    "canonicalCategory": "things",
    "aliases": [],
-   "extractionClass": "LINE"
+   "extractionClass": "LINE",
+   "name": "Snowflake"
   },
   {
    "id": "aries",
@@ -5925,7 +6044,8 @@
     "ram",
     "zodiac"
    ],
-   "extractionClass": "LINE"
+   "extractionClass": "LINE",
+   "name": "Aries"
   },
   {
    "id": "taurus",
@@ -5958,7 +6078,8 @@
     "bull",
     "zodiac"
    ],
-   "extractionClass": "LINE"
+   "extractionClass": "LINE",
+   "name": "Taurus"
   },
   {
    "id": "gemini",
@@ -5991,7 +6112,8 @@
     "twins",
     "zodiac"
    ],
-   "extractionClass": "LINE"
+   "extractionClass": "LINE",
+   "name": "Gemini"
   },
   {
    "id": "cancer",
@@ -6024,7 +6146,8 @@
     "crab",
     "zodiac"
    ],
-   "extractionClass": "LINE"
+   "extractionClass": "LINE",
+   "name": "Cancer"
   },
   {
    "id": "leo",
@@ -6057,7 +6180,8 @@
     "lion",
     "zodiac"
    ],
-   "extractionClass": "LINE"
+   "extractionClass": "LINE",
+   "name": "Leo"
   },
   {
    "id": "virgo",
@@ -6089,7 +6213,8 @@
    "aliases": [
     "zodiac"
    ],
-   "extractionClass": "LINE"
+   "extractionClass": "LINE",
+   "name": "Virgo"
   },
   {
    "id": "libra",
@@ -6122,7 +6247,8 @@
     "scales",
     "zodiac"
    ],
-   "extractionClass": "LINE"
+   "extractionClass": "LINE",
+   "name": "Libra"
   },
   {
    "id": "scorpio",
@@ -6155,7 +6281,8 @@
     "scorpion",
     "zodiac"
    ],
-   "extractionClass": "LINE"
+   "extractionClass": "LINE",
+   "name": "Scorpio"
   },
   {
    "id": "sagittarius",
@@ -6188,7 +6315,8 @@
     "archer",
     "zodiac"
    ],
-   "extractionClass": "LINE"
+   "extractionClass": "LINE",
+   "name": "Sagittarius"
   },
   {
    "id": "capricorn",
@@ -6221,7 +6349,8 @@
     "goat",
     "zodiac"
    ],
-   "extractionClass": "LINE"
+   "extractionClass": "LINE",
+   "name": "Capricorn"
   },
   {
    "id": "aquarius",
@@ -6254,7 +6383,8 @@
     "water bearer",
     "zodiac"
    ],
-   "extractionClass": "LINE"
+   "extractionClass": "LINE",
+   "name": "Aquarius"
   },
   {
    "id": "pisces",
@@ -6287,7 +6417,8 @@
     "fish",
     "zodiac"
    ],
-   "extractionClass": "LINE"
+   "extractionClass": "LINE",
+   "name": "Pisces"
   },
   {
    "id": "puzzlepiece",
@@ -6320,7 +6451,8 @@
     "puzzle",
     "jigsaw"
    ],
-   "extractionClass": "LINE"
+   "extractionClass": "LINE",
+   "name": "Puzzle Piece"
   },
   {
    "id": "spiderweb",
@@ -6362,7 +6494,8 @@
     "web",
     "spider"
    ],
-   "extractionClass": "LINE"
+   "extractionClass": "LINE",
+   "name": "Spiderweb"
   },
   {
    "id": "zero",
@@ -6392,7 +6525,8 @@
    ],
    "canonicalCategory": "learn",
    "aliases": [],
-   "extractionClass": "LINE"
+   "extractionClass": "LINE",
+   "name": "Zero"
   },
   {
    "id": "one",
@@ -6422,7 +6556,8 @@
    ],
    "canonicalCategory": "learn",
    "aliases": [],
-   "extractionClass": "LINE"
+   "extractionClass": "LINE",
+   "name": "One"
   },
   {
    "id": "two",
@@ -6452,7 +6587,8 @@
    ],
    "canonicalCategory": "learn",
    "aliases": [],
-   "extractionClass": "LINE"
+   "extractionClass": "LINE",
+   "name": "Two"
   },
   {
    "id": "three",
@@ -6482,7 +6618,8 @@
    ],
    "canonicalCategory": "learn",
    "aliases": [],
-   "extractionClass": "LINE"
+   "extractionClass": "LINE",
+   "name": "Three"
   },
   {
    "id": "four",
@@ -6512,7 +6649,8 @@
    ],
    "canonicalCategory": "learn",
    "aliases": [],
-   "extractionClass": "LINE"
+   "extractionClass": "LINE",
+   "name": "Four"
   },
   {
    "id": "five",
@@ -6542,7 +6680,8 @@
    ],
    "canonicalCategory": "learn",
    "aliases": [],
-   "extractionClass": "LINE"
+   "extractionClass": "LINE",
+   "name": "Five"
   },
   {
    "id": "six",
@@ -6572,7 +6711,8 @@
    ],
    "canonicalCategory": "learn",
    "aliases": [],
-   "extractionClass": "LINE"
+   "extractionClass": "LINE",
+   "name": "Six"
   },
   {
    "id": "seven",
@@ -6602,7 +6742,8 @@
    ],
    "canonicalCategory": "learn",
    "aliases": [],
-   "extractionClass": "LINE"
+   "extractionClass": "LINE",
+   "name": "Seven"
   },
   {
    "id": "eight",
@@ -6632,7 +6773,8 @@
    ],
    "canonicalCategory": "learn",
    "aliases": [],
-   "extractionClass": "LINE"
+   "extractionClass": "LINE",
+   "name": "Eight"
   },
   {
    "id": "nine",
@@ -6662,7 +6804,8 @@
    ],
    "canonicalCategory": "learn",
    "aliases": [],
-   "extractionClass": "LINE"
+   "extractionClass": "LINE",
+   "name": "Nine"
   },
   {
    "id": "lat01",
@@ -6692,7 +6835,8 @@
    ],
    "canonicalCategory": "learn",
    "aliases": [],
-   "extractionClass": "LINE"
+   "extractionClass": "LINE",
+   "name": "lat01"
   },
   {
    "id": "lat02",
@@ -6722,7 +6866,8 @@
    ],
    "canonicalCategory": "learn",
    "aliases": [],
-   "extractionClass": "LINE"
+   "extractionClass": "LINE",
+   "name": "lat02"
   },
   {
    "id": "lat03",
@@ -6752,7 +6897,8 @@
    ],
    "canonicalCategory": "learn",
    "aliases": [],
-   "extractionClass": "LINE"
+   "extractionClass": "LINE",
+   "name": "lat03"
   },
   {
    "id": "lat04",
@@ -6782,7 +6928,8 @@
    ],
    "canonicalCategory": "learn",
    "aliases": [],
-   "extractionClass": "LINE"
+   "extractionClass": "LINE",
+   "name": "lat04"
   },
   {
    "id": "lat05",
@@ -6812,7 +6959,8 @@
    ],
    "canonicalCategory": "learn",
    "aliases": [],
-   "extractionClass": "LINE"
+   "extractionClass": "LINE",
+   "name": "lat05"
   },
   {
    "id": "lat06",
@@ -6842,7 +6990,8 @@
    ],
    "canonicalCategory": "learn",
    "aliases": [],
-   "extractionClass": "LINE"
+   "extractionClass": "LINE",
+   "name": "lat06"
   },
   {
    "id": "lat07",
@@ -6872,7 +7021,8 @@
    ],
    "canonicalCategory": "learn",
    "aliases": [],
-   "extractionClass": "LINE"
+   "extractionClass": "LINE",
+   "name": "lat07"
   },
   {
    "id": "lat08",
@@ -6902,7 +7052,8 @@
    ],
    "canonicalCategory": "learn",
    "aliases": [],
-   "extractionClass": "LINE"
+   "extractionClass": "LINE",
+   "name": "lat08"
   },
   {
    "id": "lat09",
@@ -6932,7 +7083,8 @@
    ],
    "canonicalCategory": "learn",
    "aliases": [],
-   "extractionClass": "LINE"
+   "extractionClass": "LINE",
+   "name": "lat09"
   },
   {
    "id": "lat10",
@@ -6962,7 +7114,8 @@
    ],
    "canonicalCategory": "learn",
    "aliases": [],
-   "extractionClass": "LINE"
+   "extractionClass": "LINE",
+   "name": "lat10"
   },
   {
    "id": "lat11",
@@ -6992,7 +7145,8 @@
    ],
    "canonicalCategory": "learn",
    "aliases": [],
-   "extractionClass": "LINE"
+   "extractionClass": "LINE",
+   "name": "lat11"
   },
   {
    "id": "lat12",
@@ -7022,7 +7176,8 @@
    ],
    "canonicalCategory": "learn",
    "aliases": [],
-   "extractionClass": "LINE"
+   "extractionClass": "LINE",
+   "name": "lat12"
   },
   {
    "id": "lat13",
@@ -7052,7 +7207,8 @@
    ],
    "canonicalCategory": "learn",
    "aliases": [],
-   "extractionClass": "LINE"
+   "extractionClass": "LINE",
+   "name": "lat13"
   },
   {
    "id": "lat14",
@@ -7082,7 +7238,8 @@
    ],
    "canonicalCategory": "learn",
    "aliases": [],
-   "extractionClass": "LINE"
+   "extractionClass": "LINE",
+   "name": "lat14"
   },
   {
    "id": "lat15",
@@ -7112,7 +7269,8 @@
    ],
    "canonicalCategory": "learn",
    "aliases": [],
-   "extractionClass": "LINE"
+   "extractionClass": "LINE",
+   "name": "lat15"
   },
   {
    "id": "lat16",
@@ -7142,7 +7300,8 @@
    ],
    "canonicalCategory": "learn",
    "aliases": [],
-   "extractionClass": "LINE"
+   "extractionClass": "LINE",
+   "name": "lat16"
   },
   {
    "id": "lat17",
@@ -7172,7 +7331,8 @@
    ],
    "canonicalCategory": "learn",
    "aliases": [],
-   "extractionClass": "LINE"
+   "extractionClass": "LINE",
+   "name": "lat17"
   },
   {
    "id": "lat18",
@@ -7202,7 +7362,8 @@
    ],
    "canonicalCategory": "learn",
    "aliases": [],
-   "extractionClass": "LINE"
+   "extractionClass": "LINE",
+   "name": "lat18"
   },
   {
    "id": "lat19",
@@ -7232,7 +7393,8 @@
    ],
    "canonicalCategory": "learn",
    "aliases": [],
-   "extractionClass": "LINE"
+   "extractionClass": "LINE",
+   "name": "lat19"
   },
   {
    "id": "lat20",
@@ -7262,7 +7424,8 @@
    ],
    "canonicalCategory": "learn",
    "aliases": [],
-   "extractionClass": "LINE"
+   "extractionClass": "LINE",
+   "name": "lat20"
   },
   {
    "id": "lat21",
@@ -7292,7 +7455,8 @@
    ],
    "canonicalCategory": "learn",
    "aliases": [],
-   "extractionClass": "LINE"
+   "extractionClass": "LINE",
+   "name": "lat21"
   },
   {
    "id": "lat22",
@@ -7322,7 +7486,8 @@
    ],
    "canonicalCategory": "learn",
    "aliases": [],
-   "extractionClass": "LINE"
+   "extractionClass": "LINE",
+   "name": "lat22"
   },
   {
    "id": "lat23",
@@ -7352,7 +7517,8 @@
    ],
    "canonicalCategory": "learn",
    "aliases": [],
-   "extractionClass": "LINE"
+   "extractionClass": "LINE",
+   "name": "lat23"
   },
   {
    "id": "lat24",
@@ -7382,7 +7548,8 @@
    ],
    "canonicalCategory": "learn",
    "aliases": [],
-   "extractionClass": "LINE"
+   "extractionClass": "LINE",
+   "name": "lat24"
   },
   {
    "id": "lat25",
@@ -7412,7 +7579,8 @@
    ],
    "canonicalCategory": "learn",
    "aliases": [],
-   "extractionClass": "LINE"
+   "extractionClass": "LINE",
+   "name": "lat25"
   },
   {
    "id": "lat26",
@@ -7442,7 +7610,8 @@
    ],
    "canonicalCategory": "learn",
    "aliases": [],
-   "extractionClass": "LINE"
+   "extractionClass": "LINE",
+   "name": "lat26"
   },
   {
    "id": "cyr01",
@@ -7472,7 +7641,8 @@
    ],
    "canonicalCategory": "learn",
    "aliases": [],
-   "extractionClass": "LINE"
+   "extractionClass": "LINE",
+   "name": "cyr01"
   },
   {
    "id": "cyr02",
@@ -7502,7 +7672,8 @@
    ],
    "canonicalCategory": "learn",
    "aliases": [],
-   "extractionClass": "LINE"
+   "extractionClass": "LINE",
+   "name": "cyr02"
   },
   {
    "id": "cyr03",
@@ -7532,7 +7703,8 @@
    ],
    "canonicalCategory": "learn",
    "aliases": [],
-   "extractionClass": "LINE"
+   "extractionClass": "LINE",
+   "name": "cyr03"
   },
   {
    "id": "cyr04",
@@ -7562,7 +7734,8 @@
    ],
    "canonicalCategory": "learn",
    "aliases": [],
-   "extractionClass": "LINE"
+   "extractionClass": "LINE",
+   "name": "cyr04"
   },
   {
    "id": "cyr05",
@@ -7592,7 +7765,8 @@
    ],
    "canonicalCategory": "learn",
    "aliases": [],
-   "extractionClass": "LINE"
+   "extractionClass": "LINE",
+   "name": "cyr05"
   },
   {
    "id": "cyr06",
@@ -7622,7 +7796,8 @@
    ],
    "canonicalCategory": "learn",
    "aliases": [],
-   "extractionClass": "LINE"
+   "extractionClass": "LINE",
+   "name": "cyr06"
   },
   {
    "id": "cyr07",
@@ -7652,7 +7827,8 @@
    ],
    "canonicalCategory": "learn",
    "aliases": [],
-   "extractionClass": "LINE"
+   "extractionClass": "LINE",
+   "name": "cyr07"
   },
   {
    "id": "cyr08",
@@ -7682,7 +7858,8 @@
    ],
    "canonicalCategory": "learn",
    "aliases": [],
-   "extractionClass": "LINE"
+   "extractionClass": "LINE",
+   "name": "cyr08"
   },
   {
    "id": "cyr09",
@@ -7712,7 +7889,8 @@
    ],
    "canonicalCategory": "learn",
    "aliases": [],
-   "extractionClass": "LINE"
+   "extractionClass": "LINE",
+   "name": "cyr09"
   },
   {
    "id": "cyr10",
@@ -7742,7 +7920,8 @@
    ],
    "canonicalCategory": "learn",
    "aliases": [],
-   "extractionClass": "LINE"
+   "extractionClass": "LINE",
+   "name": "cyr10"
   },
   {
    "id": "cyr11",
@@ -7772,7 +7951,8 @@
    ],
    "canonicalCategory": "learn",
    "aliases": [],
-   "extractionClass": "LINE"
+   "extractionClass": "LINE",
+   "name": "cyr11"
   },
   {
    "id": "cyr12",
@@ -7802,7 +7982,8 @@
    ],
    "canonicalCategory": "learn",
    "aliases": [],
-   "extractionClass": "LINE"
+   "extractionClass": "LINE",
+   "name": "cyr12"
   },
   {
    "id": "cyr13",
@@ -7832,7 +8013,8 @@
    ],
    "canonicalCategory": "learn",
    "aliases": [],
-   "extractionClass": "LINE"
+   "extractionClass": "LINE",
+   "name": "cyr13"
   },
   {
    "id": "cyr14",
@@ -7862,7 +8044,8 @@
    ],
    "canonicalCategory": "learn",
    "aliases": [],
-   "extractionClass": "LINE"
+   "extractionClass": "LINE",
+   "name": "cyr14"
   },
   {
    "id": "cyr15",
@@ -7892,7 +8075,8 @@
    ],
    "canonicalCategory": "learn",
    "aliases": [],
-   "extractionClass": "LINE"
+   "extractionClass": "LINE",
+   "name": "cyr15"
   },
   {
    "id": "cyr16",
@@ -7922,7 +8106,8 @@
    ],
    "canonicalCategory": "learn",
    "aliases": [],
-   "extractionClass": "LINE"
+   "extractionClass": "LINE",
+   "name": "cyr16"
   },
   {
    "id": "cyr17",
@@ -7952,7 +8137,8 @@
    ],
    "canonicalCategory": "learn",
    "aliases": [],
-   "extractionClass": "LINE"
+   "extractionClass": "LINE",
+   "name": "cyr17"
   },
   {
    "id": "cyr18",
@@ -7982,7 +8168,8 @@
    ],
    "canonicalCategory": "learn",
    "aliases": [],
-   "extractionClass": "LINE"
+   "extractionClass": "LINE",
+   "name": "cyr18"
   },
   {
    "id": "cyr19",
@@ -8012,7 +8199,8 @@
    ],
    "canonicalCategory": "learn",
    "aliases": [],
-   "extractionClass": "LINE"
+   "extractionClass": "LINE",
+   "name": "cyr19"
   },
   {
    "id": "cyr20",
@@ -8042,7 +8230,8 @@
    ],
    "canonicalCategory": "learn",
    "aliases": [],
-   "extractionClass": "LINE"
+   "extractionClass": "LINE",
+   "name": "cyr20"
   },
   {
    "id": "cyr21",
@@ -8072,7 +8261,8 @@
    ],
    "canonicalCategory": "learn",
    "aliases": [],
-   "extractionClass": "LINE"
+   "extractionClass": "LINE",
+   "name": "cyr21"
   },
   {
    "id": "cyr22",
@@ -8102,7 +8292,8 @@
    ],
    "canonicalCategory": "learn",
    "aliases": [],
-   "extractionClass": "LINE"
+   "extractionClass": "LINE",
+   "name": "cyr22"
   },
   {
    "id": "cyr23",
@@ -8132,7 +8323,8 @@
    ],
    "canonicalCategory": "learn",
    "aliases": [],
-   "extractionClass": "LINE"
+   "extractionClass": "LINE",
+   "name": "cyr23"
   },
   {
    "id": "cyr24",
@@ -8162,7 +8354,8 @@
    ],
    "canonicalCategory": "learn",
    "aliases": [],
-   "extractionClass": "LINE"
+   "extractionClass": "LINE",
+   "name": "cyr24"
   },
   {
    "id": "cyr25",
@@ -8192,7 +8385,8 @@
    ],
    "canonicalCategory": "learn",
    "aliases": [],
-   "extractionClass": "LINE"
+   "extractionClass": "LINE",
+   "name": "cyr25"
   },
   {
    "id": "cyr26",
@@ -8222,7 +8416,8 @@
    ],
    "canonicalCategory": "learn",
    "aliases": [],
-   "extractionClass": "LINE"
+   "extractionClass": "LINE",
+   "name": "cyr26"
   },
   {
    "id": "cyr27",
@@ -8252,7 +8447,8 @@
    ],
    "canonicalCategory": "learn",
    "aliases": [],
-   "extractionClass": "LINE"
+   "extractionClass": "LINE",
+   "name": "cyr27"
   },
   {
    "id": "cyr28",
@@ -8282,7 +8478,8 @@
    ],
    "canonicalCategory": "learn",
    "aliases": [],
-   "extractionClass": "LINE"
+   "extractionClass": "LINE",
+   "name": "cyr28"
   },
   {
    "id": "cyr29",
@@ -8312,7 +8509,8 @@
    ],
    "canonicalCategory": "learn",
    "aliases": [],
-   "extractionClass": "LINE"
+   "extractionClass": "LINE",
+   "name": "cyr29"
   },
   {
    "id": "cyr30",
@@ -8342,7 +8540,8 @@
    ],
    "canonicalCategory": "learn",
    "aliases": [],
-   "extractionClass": "LINE"
+   "extractionClass": "LINE",
+   "name": "cyr30"
   },
   {
    "id": "cyr31",
@@ -8372,7 +8571,8 @@
    ],
    "canonicalCategory": "learn",
    "aliases": [],
-   "extractionClass": "LINE"
+   "extractionClass": "LINE",
+   "name": "cyr31"
   },
   {
    "id": "cyr32",
@@ -8402,7 +8602,8 @@
    ],
    "canonicalCategory": "learn",
    "aliases": [],
-   "extractionClass": "LINE"
+   "extractionClass": "LINE",
+   "name": "cyr32"
   },
   {
    "id": "cyr33",
@@ -8432,7 +8633,8 @@
    ],
    "canonicalCategory": "learn",
    "aliases": [],
-   "extractionClass": "LINE"
+   "extractionClass": "LINE",
+   "name": "cyr33"
   },
   {
    "id": "arb01",
@@ -8462,7 +8664,8 @@
    ],
    "canonicalCategory": "learn",
    "aliases": [],
-   "extractionClass": "LINE"
+   "extractionClass": "LINE",
+   "name": "arb01"
   },
   {
    "id": "arb02",
@@ -8492,7 +8695,8 @@
    ],
    "canonicalCategory": "learn",
    "aliases": [],
-   "extractionClass": "LINE"
+   "extractionClass": "LINE",
+   "name": "arb02"
   },
   {
    "id": "arb03",
@@ -8522,7 +8726,8 @@
    ],
    "canonicalCategory": "learn",
    "aliases": [],
-   "extractionClass": "LINE"
+   "extractionClass": "LINE",
+   "name": "arb03"
   },
   {
    "id": "arb04",
@@ -8552,7 +8757,8 @@
    ],
    "canonicalCategory": "learn",
    "aliases": [],
-   "extractionClass": "LINE"
+   "extractionClass": "LINE",
+   "name": "arb04"
   },
   {
    "id": "arb05",
@@ -8582,7 +8788,8 @@
    ],
    "canonicalCategory": "learn",
    "aliases": [],
-   "extractionClass": "LINE"
+   "extractionClass": "LINE",
+   "name": "arb05"
   },
   {
    "id": "arb06",
@@ -8612,7 +8819,8 @@
    ],
    "canonicalCategory": "learn",
    "aliases": [],
-   "extractionClass": "LINE"
+   "extractionClass": "LINE",
+   "name": "arb06"
   },
   {
    "id": "arb07",
@@ -8642,7 +8850,8 @@
    ],
    "canonicalCategory": "learn",
    "aliases": [],
-   "extractionClass": "LINE"
+   "extractionClass": "LINE",
+   "name": "arb07"
   },
   {
    "id": "arb08",
@@ -8672,7 +8881,8 @@
    ],
    "canonicalCategory": "learn",
    "aliases": [],
-   "extractionClass": "LINE"
+   "extractionClass": "LINE",
+   "name": "arb08"
   },
   {
    "id": "arb09",
@@ -8702,7 +8912,8 @@
    ],
    "canonicalCategory": "learn",
    "aliases": [],
-   "extractionClass": "LINE"
+   "extractionClass": "LINE",
+   "name": "arb09"
   },
   {
    "id": "arb10",
@@ -8732,7 +8943,8 @@
    ],
    "canonicalCategory": "learn",
    "aliases": [],
-   "extractionClass": "LINE"
+   "extractionClass": "LINE",
+   "name": "arb10"
   },
   {
    "id": "arb11",
@@ -8762,7 +8974,8 @@
    ],
    "canonicalCategory": "learn",
    "aliases": [],
-   "extractionClass": "LINE"
+   "extractionClass": "LINE",
+   "name": "arb11"
   },
   {
    "id": "arb12",
@@ -8792,7 +9005,8 @@
    ],
    "canonicalCategory": "learn",
    "aliases": [],
-   "extractionClass": "LINE"
+   "extractionClass": "LINE",
+   "name": "arb12"
   },
   {
    "id": "arb13",
@@ -8822,7 +9036,8 @@
    ],
    "canonicalCategory": "learn",
    "aliases": [],
-   "extractionClass": "LINE"
+   "extractionClass": "LINE",
+   "name": "arb13"
   },
   {
    "id": "arb14",
@@ -8852,7 +9067,8 @@
    ],
    "canonicalCategory": "learn",
    "aliases": [],
-   "extractionClass": "LINE"
+   "extractionClass": "LINE",
+   "name": "arb14"
   },
   {
    "id": "arb15",
@@ -8882,7 +9098,8 @@
    ],
    "canonicalCategory": "learn",
    "aliases": [],
-   "extractionClass": "LINE"
+   "extractionClass": "LINE",
+   "name": "arb15"
   },
   {
    "id": "arb16",
@@ -8912,7 +9129,8 @@
    ],
    "canonicalCategory": "learn",
    "aliases": [],
-   "extractionClass": "LINE"
+   "extractionClass": "LINE",
+   "name": "arb16"
   },
   {
    "id": "arb17",
@@ -8942,7 +9160,8 @@
    ],
    "canonicalCategory": "learn",
    "aliases": [],
-   "extractionClass": "LINE"
+   "extractionClass": "LINE",
+   "name": "arb17"
   },
   {
    "id": "arb18",
@@ -8972,7 +9191,8 @@
    ],
    "canonicalCategory": "learn",
    "aliases": [],
-   "extractionClass": "LINE"
+   "extractionClass": "LINE",
+   "name": "arb18"
   },
   {
    "id": "arb19",
@@ -9002,7 +9222,8 @@
    ],
    "canonicalCategory": "learn",
    "aliases": [],
-   "extractionClass": "LINE"
+   "extractionClass": "LINE",
+   "name": "arb19"
   },
   {
    "id": "arb20",
@@ -9032,7 +9253,8 @@
    ],
    "canonicalCategory": "learn",
    "aliases": [],
-   "extractionClass": "LINE"
+   "extractionClass": "LINE",
+   "name": "arb20"
   },
   {
    "id": "arb21",
@@ -9062,7 +9284,8 @@
    ],
    "canonicalCategory": "learn",
    "aliases": [],
-   "extractionClass": "LINE"
+   "extractionClass": "LINE",
+   "name": "arb21"
   },
   {
    "id": "arb22",
@@ -9092,7 +9315,8 @@
    ],
    "canonicalCategory": "learn",
    "aliases": [],
-   "extractionClass": "LINE"
+   "extractionClass": "LINE",
+   "name": "arb22"
   },
   {
    "id": "arb23",
@@ -9122,7 +9346,8 @@
    ],
    "canonicalCategory": "learn",
    "aliases": [],
-   "extractionClass": "LINE"
+   "extractionClass": "LINE",
+   "name": "arb23"
   },
   {
    "id": "arb24",
@@ -9152,7 +9377,8 @@
    ],
    "canonicalCategory": "learn",
    "aliases": [],
-   "extractionClass": "LINE"
+   "extractionClass": "LINE",
+   "name": "arb24"
   },
   {
    "id": "arb25",
@@ -9182,7 +9408,8 @@
    ],
    "canonicalCategory": "learn",
    "aliases": [],
-   "extractionClass": "LINE"
+   "extractionClass": "LINE",
+   "name": "arb25"
   },
   {
    "id": "arb26",
@@ -9212,7 +9439,8 @@
    ],
    "canonicalCategory": "learn",
    "aliases": [],
-   "extractionClass": "LINE"
+   "extractionClass": "LINE",
+   "name": "arb26"
   },
   {
    "id": "arb27",
@@ -9242,7 +9470,8 @@
    ],
    "canonicalCategory": "learn",
    "aliases": [],
-   "extractionClass": "LINE"
+   "extractionClass": "LINE",
+   "name": "arb27"
   },
   {
    "id": "arb28",
@@ -9272,7 +9501,8 @@
    ],
    "canonicalCategory": "learn",
    "aliases": [],
-   "extractionClass": "LINE"
+   "extractionClass": "LINE",
+   "name": "arb28"
   },
   {
    "id": "dev01",
@@ -9302,7 +9532,8 @@
    ],
    "canonicalCategory": "learn",
    "aliases": [],
-   "extractionClass": "LINE"
+   "extractionClass": "LINE",
+   "name": "dev01"
   },
   {
    "id": "dev02",
@@ -9332,7 +9563,8 @@
    ],
    "canonicalCategory": "learn",
    "aliases": [],
-   "extractionClass": "LINE"
+   "extractionClass": "LINE",
+   "name": "dev02"
   },
   {
    "id": "dev03",
@@ -9362,7 +9594,8 @@
    ],
    "canonicalCategory": "learn",
    "aliases": [],
-   "extractionClass": "LINE"
+   "extractionClass": "LINE",
+   "name": "dev03"
   },
   {
    "id": "dev04",
@@ -9392,7 +9625,8 @@
    ],
    "canonicalCategory": "learn",
    "aliases": [],
-   "extractionClass": "LINE"
+   "extractionClass": "LINE",
+   "name": "dev04"
   },
   {
    "id": "dev05",
@@ -9422,7 +9656,8 @@
    ],
    "canonicalCategory": "learn",
    "aliases": [],
-   "extractionClass": "LINE"
+   "extractionClass": "LINE",
+   "name": "dev05"
   },
   {
    "id": "dev06",
@@ -9452,7 +9687,8 @@
    ],
    "canonicalCategory": "learn",
    "aliases": [],
-   "extractionClass": "LINE"
+   "extractionClass": "LINE",
+   "name": "dev06"
   },
   {
    "id": "dev07",
@@ -9482,7 +9718,8 @@
    ],
    "canonicalCategory": "learn",
    "aliases": [],
-   "extractionClass": "LINE"
+   "extractionClass": "LINE",
+   "name": "dev07"
   },
   {
    "id": "dev08",
@@ -9512,7 +9749,8 @@
    ],
    "canonicalCategory": "learn",
    "aliases": [],
-   "extractionClass": "LINE"
+   "extractionClass": "LINE",
+   "name": "dev08"
   },
   {
    "id": "dev09",
@@ -9542,7 +9780,8 @@
    ],
    "canonicalCategory": "learn",
    "aliases": [],
-   "extractionClass": "LINE"
+   "extractionClass": "LINE",
+   "name": "dev09"
   },
   {
    "id": "dev10",
@@ -9572,7 +9811,8 @@
    ],
    "canonicalCategory": "learn",
    "aliases": [],
-   "extractionClass": "LINE"
+   "extractionClass": "LINE",
+   "name": "dev10"
   },
   {
    "id": "dev11",
@@ -9602,7 +9842,8 @@
    ],
    "canonicalCategory": "learn",
    "aliases": [],
-   "extractionClass": "LINE"
+   "extractionClass": "LINE",
+   "name": "dev11"
   },
   {
    "id": "dev12",
@@ -9632,7 +9873,8 @@
    ],
    "canonicalCategory": "learn",
    "aliases": [],
-   "extractionClass": "LINE"
+   "extractionClass": "LINE",
+   "name": "dev12"
   },
   {
    "id": "dev13",
@@ -9662,7 +9904,8 @@
    ],
    "canonicalCategory": "learn",
    "aliases": [],
-   "extractionClass": "LINE"
+   "extractionClass": "LINE",
+   "name": "dev13"
   },
   {
    "id": "dev14",
@@ -9692,7 +9935,8 @@
    ],
    "canonicalCategory": "learn",
    "aliases": [],
-   "extractionClass": "LINE"
+   "extractionClass": "LINE",
+   "name": "dev14"
   },
   {
    "id": "dev15",
@@ -9722,7 +9966,8 @@
    ],
    "canonicalCategory": "learn",
    "aliases": [],
-   "extractionClass": "LINE"
+   "extractionClass": "LINE",
+   "name": "dev15"
   },
   {
    "id": "dev16",
@@ -9752,7 +9997,8 @@
    ],
    "canonicalCategory": "learn",
    "aliases": [],
-   "extractionClass": "LINE"
+   "extractionClass": "LINE",
+   "name": "dev16"
   },
   {
    "id": "dev17",
@@ -9782,7 +10028,8 @@
    ],
    "canonicalCategory": "learn",
    "aliases": [],
-   "extractionClass": "LINE"
+   "extractionClass": "LINE",
+   "name": "dev17"
   },
   {
    "id": "dev18",
@@ -9812,7 +10059,8 @@
    ],
    "canonicalCategory": "learn",
    "aliases": [],
-   "extractionClass": "LINE"
+   "extractionClass": "LINE",
+   "name": "dev18"
   },
   {
    "id": "dev19",
@@ -9842,7 +10090,8 @@
    ],
    "canonicalCategory": "learn",
    "aliases": [],
-   "extractionClass": "LINE"
+   "extractionClass": "LINE",
+   "name": "dev19"
   },
   {
    "id": "dev20",
@@ -9872,7 +10121,8 @@
    ],
    "canonicalCategory": "learn",
    "aliases": [],
-   "extractionClass": "LINE"
+   "extractionClass": "LINE",
+   "name": "dev20"
   },
   {
    "id": "dev21",
@@ -9902,7 +10152,8 @@
    ],
    "canonicalCategory": "learn",
    "aliases": [],
-   "extractionClass": "LINE"
+   "extractionClass": "LINE",
+   "name": "dev21"
   },
   {
    "id": "dev22",
@@ -9932,7 +10183,8 @@
    ],
    "canonicalCategory": "learn",
    "aliases": [],
-   "extractionClass": "LINE"
+   "extractionClass": "LINE",
+   "name": "dev22"
   },
   {
    "id": "dev23",
@@ -9962,7 +10214,8 @@
    ],
    "canonicalCategory": "learn",
    "aliases": [],
-   "extractionClass": "LINE"
+   "extractionClass": "LINE",
+   "name": "dev23"
   },
   {
    "id": "dev24",
@@ -9992,7 +10245,8 @@
    ],
    "canonicalCategory": "learn",
    "aliases": [],
-   "extractionClass": "LINE"
+   "extractionClass": "LINE",
+   "name": "dev24"
   },
   {
    "id": "dev25",
@@ -10022,7 +10276,8 @@
    ],
    "canonicalCategory": "learn",
    "aliases": [],
-   "extractionClass": "LINE"
+   "extractionClass": "LINE",
+   "name": "dev25"
   },
   {
    "id": "dev26",
@@ -10052,7 +10307,8 @@
    ],
    "canonicalCategory": "learn",
    "aliases": [],
-   "extractionClass": "LINE"
+   "extractionClass": "LINE",
+   "name": "dev26"
   },
   {
    "id": "dev27",
@@ -10082,7 +10338,8 @@
    ],
    "canonicalCategory": "learn",
    "aliases": [],
-   "extractionClass": "LINE"
+   "extractionClass": "LINE",
+   "name": "dev27"
   },
   {
    "id": "dev28",
@@ -10112,7 +10369,8 @@
    ],
    "canonicalCategory": "learn",
    "aliases": [],
-   "extractionClass": "LINE"
+   "extractionClass": "LINE",
+   "name": "dev28"
   },
   {
    "id": "dev29",
@@ -10142,7 +10400,8 @@
    ],
    "canonicalCategory": "learn",
    "aliases": [],
-   "extractionClass": "LINE"
+   "extractionClass": "LINE",
+   "name": "dev29"
   },
   {
    "id": "dev30",
@@ -10172,7 +10431,8 @@
    ],
    "canonicalCategory": "learn",
    "aliases": [],
-   "extractionClass": "LINE"
+   "extractionClass": "LINE",
+   "name": "dev30"
   },
   {
    "id": "dev31",
@@ -10202,7 +10462,8 @@
    ],
    "canonicalCategory": "learn",
    "aliases": [],
-   "extractionClass": "LINE"
+   "extractionClass": "LINE",
+   "name": "dev31"
   },
   {
    "id": "dev32",
@@ -10232,7 +10493,8 @@
    ],
    "canonicalCategory": "learn",
    "aliases": [],
-   "extractionClass": "LINE"
+   "extractionClass": "LINE",
+   "name": "dev32"
   },
   {
    "id": "dev33",
@@ -10262,7 +10524,8 @@
    ],
    "canonicalCategory": "learn",
    "aliases": [],
-   "extractionClass": "LINE"
+   "extractionClass": "LINE",
+   "name": "dev33"
   },
   {
    "id": "dev34",
@@ -10292,7 +10555,8 @@
    ],
    "canonicalCategory": "learn",
    "aliases": [],
-   "extractionClass": "LINE"
+   "extractionClass": "LINE",
+   "name": "dev34"
   },
   {
    "id": "dev35",
@@ -10322,7 +10586,8 @@
    ],
    "canonicalCategory": "learn",
    "aliases": [],
-   "extractionClass": "LINE"
+   "extractionClass": "LINE",
+   "name": "dev35"
   },
   {
    "id": "dev36",
@@ -10352,7 +10617,8 @@
    ],
    "canonicalCategory": "learn",
    "aliases": [],
-   "extractionClass": "LINE"
+   "extractionClass": "LINE",
+   "name": "dev36"
   },
   {
    "id": "dev37",
@@ -10382,7 +10648,8 @@
    ],
    "canonicalCategory": "learn",
    "aliases": [],
-   "extractionClass": "LINE"
+   "extractionClass": "LINE",
+   "name": "dev37"
   },
   {
    "id": "dev38",
@@ -10412,7 +10679,8 @@
    ],
    "canonicalCategory": "learn",
    "aliases": [],
-   "extractionClass": "LINE"
+   "extractionClass": "LINE",
+   "name": "dev38"
   },
   {
    "id": "dev39",
@@ -10442,7 +10710,8 @@
    ],
    "canonicalCategory": "learn",
    "aliases": [],
-   "extractionClass": "LINE"
+   "extractionClass": "LINE",
+   "name": "dev39"
   },
   {
    "id": "dev40",
@@ -10472,7 +10741,8 @@
    ],
    "canonicalCategory": "learn",
    "aliases": [],
-   "extractionClass": "LINE"
+   "extractionClass": "LINE",
+   "name": "dev40"
   },
   {
    "id": "dev41",
@@ -10502,7 +10772,8 @@
    ],
    "canonicalCategory": "learn",
    "aliases": [],
-   "extractionClass": "LINE"
+   "extractionClass": "LINE",
+   "name": "dev41"
   },
   {
    "id": "dev42",
@@ -10532,7 +10803,8 @@
    ],
    "canonicalCategory": "learn",
    "aliases": [],
-   "extractionClass": "LINE"
+   "extractionClass": "LINE",
+   "name": "dev42"
   },
   {
    "id": "dev43",
@@ -10562,7 +10834,8 @@
    ],
    "canonicalCategory": "learn",
    "aliases": [],
-   "extractionClass": "LINE"
+   "extractionClass": "LINE",
+   "name": "dev43"
   },
   {
    "id": "dev44",
@@ -10592,7 +10865,8 @@
    ],
    "canonicalCategory": "learn",
    "aliases": [],
-   "extractionClass": "LINE"
+   "extractionClass": "LINE",
+   "name": "dev44"
   },
   {
    "id": "kor01",
@@ -10622,7 +10896,8 @@
    ],
    "canonicalCategory": "learn",
    "aliases": [],
-   "extractionClass": "LINE"
+   "extractionClass": "LINE",
+   "name": "kor01"
   },
   {
    "id": "kor02",
@@ -10652,7 +10927,8 @@
    ],
    "canonicalCategory": "learn",
    "aliases": [],
-   "extractionClass": "LINE"
+   "extractionClass": "LINE",
+   "name": "kor02"
   },
   {
    "id": "kor03",
@@ -10682,7 +10958,8 @@
    ],
    "canonicalCategory": "learn",
    "aliases": [],
-   "extractionClass": "LINE"
+   "extractionClass": "LINE",
+   "name": "kor03"
   },
   {
    "id": "kor04",
@@ -10712,7 +10989,8 @@
    ],
    "canonicalCategory": "learn",
    "aliases": [],
-   "extractionClass": "LINE"
+   "extractionClass": "LINE",
+   "name": "kor04"
   },
   {
    "id": "kor05",
@@ -10742,7 +11020,8 @@
    ],
    "canonicalCategory": "learn",
    "aliases": [],
-   "extractionClass": "LINE"
+   "extractionClass": "LINE",
+   "name": "kor05"
   },
   {
    "id": "kor06",
@@ -10772,7 +11051,8 @@
    ],
    "canonicalCategory": "learn",
    "aliases": [],
-   "extractionClass": "LINE"
+   "extractionClass": "LINE",
+   "name": "kor06"
   },
   {
    "id": "kor07",
@@ -10802,7 +11082,8 @@
    ],
    "canonicalCategory": "learn",
    "aliases": [],
-   "extractionClass": "LINE"
+   "extractionClass": "LINE",
+   "name": "kor07"
   },
   {
    "id": "kor08",
@@ -10832,7 +11113,8 @@
    ],
    "canonicalCategory": "learn",
    "aliases": [],
-   "extractionClass": "LINE"
+   "extractionClass": "LINE",
+   "name": "kor08"
   },
   {
    "id": "kor09",
@@ -10862,7 +11144,8 @@
    ],
    "canonicalCategory": "learn",
    "aliases": [],
-   "extractionClass": "LINE"
+   "extractionClass": "LINE",
+   "name": "kor09"
   },
   {
    "id": "kor10",
@@ -10892,7 +11175,8 @@
    ],
    "canonicalCategory": "learn",
    "aliases": [],
-   "extractionClass": "LINE"
+   "extractionClass": "LINE",
+   "name": "kor10"
   },
   {
    "id": "kor11",
@@ -10922,7 +11206,8 @@
    ],
    "canonicalCategory": "learn",
    "aliases": [],
-   "extractionClass": "LINE"
+   "extractionClass": "LINE",
+   "name": "kor11"
   },
   {
    "id": "kor12",
@@ -10952,7 +11237,8 @@
    ],
    "canonicalCategory": "learn",
    "aliases": [],
-   "extractionClass": "LINE"
+   "extractionClass": "LINE",
+   "name": "kor12"
   },
   {
    "id": "kor13",
@@ -10982,7 +11268,8 @@
    ],
    "canonicalCategory": "learn",
    "aliases": [],
-   "extractionClass": "LINE"
+   "extractionClass": "LINE",
+   "name": "kor13"
   },
   {
    "id": "kor14",
@@ -11012,7 +11299,8 @@
    ],
    "canonicalCategory": "learn",
    "aliases": [],
-   "extractionClass": "LINE"
+   "extractionClass": "LINE",
+   "name": "kor14"
   },
   {
    "id": "kor15",
@@ -11042,7 +11330,8 @@
    ],
    "canonicalCategory": "learn",
    "aliases": [],
-   "extractionClass": "LINE"
+   "extractionClass": "LINE",
+   "name": "kor15"
   },
   {
    "id": "kor16",
@@ -11072,7 +11361,8 @@
    ],
    "canonicalCategory": "learn",
    "aliases": [],
-   "extractionClass": "LINE"
+   "extractionClass": "LINE",
+   "name": "kor16"
   },
   {
    "id": "kor17",
@@ -11102,7 +11392,8 @@
    ],
    "canonicalCategory": "learn",
    "aliases": [],
-   "extractionClass": "LINE"
+   "extractionClass": "LINE",
+   "name": "kor17"
   },
   {
    "id": "kor18",
@@ -11132,7 +11423,8 @@
    ],
    "canonicalCategory": "learn",
    "aliases": [],
-   "extractionClass": "LINE"
+   "extractionClass": "LINE",
+   "name": "kor18"
   },
   {
    "id": "kor19",
@@ -11162,7 +11454,8 @@
    ],
    "canonicalCategory": "learn",
    "aliases": [],
-   "extractionClass": "LINE"
+   "extractionClass": "LINE",
+   "name": "kor19"
   },
   {
    "id": "kor20",
@@ -11192,7 +11485,8 @@
    ],
    "canonicalCategory": "learn",
    "aliases": [],
-   "extractionClass": "LINE"
+   "extractionClass": "LINE",
+   "name": "kor20"
   },
   {
    "id": "kor21",
@@ -11222,7 +11516,8 @@
    ],
    "canonicalCategory": "learn",
    "aliases": [],
-   "extractionClass": "LINE"
+   "extractionClass": "LINE",
+   "name": "kor21"
   },
   {
    "id": "kor22",
@@ -11252,7 +11547,8 @@
    ],
    "canonicalCategory": "learn",
    "aliases": [],
-   "extractionClass": "LINE"
+   "extractionClass": "LINE",
+   "name": "kor22"
   },
   {
    "id": "kor23",
@@ -11282,7 +11578,8 @@
    ],
    "canonicalCategory": "learn",
    "aliases": [],
-   "extractionClass": "LINE"
+   "extractionClass": "LINE",
+   "name": "kor23"
   },
   {
    "id": "kor24",
@@ -11312,7 +11609,8 @@
    ],
    "canonicalCategory": "learn",
    "aliases": [],
-   "extractionClass": "LINE"
+   "extractionClass": "LINE",
+   "name": "kor24"
   },
   {
    "id": "hir01",
@@ -11342,7 +11640,8 @@
    ],
    "canonicalCategory": "learn",
    "aliases": [],
-   "extractionClass": "LINE"
+   "extractionClass": "LINE",
+   "name": "hir01"
   },
   {
    "id": "hir02",
@@ -11372,7 +11671,8 @@
    ],
    "canonicalCategory": "learn",
    "aliases": [],
-   "extractionClass": "LINE"
+   "extractionClass": "LINE",
+   "name": "hir02"
   },
   {
    "id": "hir03",
@@ -11402,7 +11702,8 @@
    ],
    "canonicalCategory": "learn",
    "aliases": [],
-   "extractionClass": "LINE"
+   "extractionClass": "LINE",
+   "name": "hir03"
   },
   {
    "id": "hir04",
@@ -11432,7 +11733,8 @@
    ],
    "canonicalCategory": "learn",
    "aliases": [],
-   "extractionClass": "LINE"
+   "extractionClass": "LINE",
+   "name": "hir04"
   },
   {
    "id": "hir05",
@@ -11462,7 +11764,8 @@
    ],
    "canonicalCategory": "learn",
    "aliases": [],
-   "extractionClass": "LINE"
+   "extractionClass": "LINE",
+   "name": "hir05"
   },
   {
    "id": "hir06",
@@ -11492,7 +11795,8 @@
    ],
    "canonicalCategory": "learn",
    "aliases": [],
-   "extractionClass": "LINE"
+   "extractionClass": "LINE",
+   "name": "hir06"
   },
   {
    "id": "hir07",
@@ -11522,7 +11826,8 @@
    ],
    "canonicalCategory": "learn",
    "aliases": [],
-   "extractionClass": "LINE"
+   "extractionClass": "LINE",
+   "name": "hir07"
   },
   {
    "id": "hir08",
@@ -11552,7 +11857,8 @@
    ],
    "canonicalCategory": "learn",
    "aliases": [],
-   "extractionClass": "LINE"
+   "extractionClass": "LINE",
+   "name": "hir08"
   },
   {
    "id": "hir09",
@@ -11582,7 +11888,8 @@
    ],
    "canonicalCategory": "learn",
    "aliases": [],
-   "extractionClass": "LINE"
+   "extractionClass": "LINE",
+   "name": "hir09"
   },
   {
    "id": "hir10",
@@ -11612,7 +11919,8 @@
    ],
    "canonicalCategory": "learn",
    "aliases": [],
-   "extractionClass": "LINE"
+   "extractionClass": "LINE",
+   "name": "hir10"
   },
   {
    "id": "hir11",
@@ -11642,7 +11950,8 @@
    ],
    "canonicalCategory": "learn",
    "aliases": [],
-   "extractionClass": "LINE"
+   "extractionClass": "LINE",
+   "name": "hir11"
   },
   {
    "id": "hir12",
@@ -11672,7 +11981,8 @@
    ],
    "canonicalCategory": "learn",
    "aliases": [],
-   "extractionClass": "LINE"
+   "extractionClass": "LINE",
+   "name": "hir12"
   },
   {
    "id": "hir13",
@@ -11702,7 +12012,8 @@
    ],
    "canonicalCategory": "learn",
    "aliases": [],
-   "extractionClass": "LINE"
+   "extractionClass": "LINE",
+   "name": "hir13"
   },
   {
    "id": "hir14",
@@ -11732,7 +12043,8 @@
    ],
    "canonicalCategory": "learn",
    "aliases": [],
-   "extractionClass": "LINE"
+   "extractionClass": "LINE",
+   "name": "hir14"
   },
   {
    "id": "hir15",
@@ -11762,7 +12074,8 @@
    ],
    "canonicalCategory": "learn",
    "aliases": [],
-   "extractionClass": "LINE"
+   "extractionClass": "LINE",
+   "name": "hir15"
   },
   {
    "id": "hir16",
@@ -11792,7 +12105,8 @@
    ],
    "canonicalCategory": "learn",
    "aliases": [],
-   "extractionClass": "LINE"
+   "extractionClass": "LINE",
+   "name": "hir16"
   },
   {
    "id": "hir17",
@@ -11822,7 +12136,8 @@
    ],
    "canonicalCategory": "learn",
    "aliases": [],
-   "extractionClass": "LINE"
+   "extractionClass": "LINE",
+   "name": "hir17"
   },
   {
    "id": "hir18",
@@ -11852,7 +12167,8 @@
    ],
    "canonicalCategory": "learn",
    "aliases": [],
-   "extractionClass": "LINE"
+   "extractionClass": "LINE",
+   "name": "hir18"
   },
   {
    "id": "hir19",
@@ -11882,7 +12198,8 @@
    ],
    "canonicalCategory": "learn",
    "aliases": [],
-   "extractionClass": "LINE"
+   "extractionClass": "LINE",
+   "name": "hir19"
   },
   {
    "id": "hir20",
@@ -11912,7 +12229,8 @@
    ],
    "canonicalCategory": "learn",
    "aliases": [],
-   "extractionClass": "LINE"
+   "extractionClass": "LINE",
+   "name": "hir20"
   },
   {
    "id": "hir21",
@@ -11942,7 +12260,8 @@
    ],
    "canonicalCategory": "learn",
    "aliases": [],
-   "extractionClass": "LINE"
+   "extractionClass": "LINE",
+   "name": "hir21"
   },
   {
    "id": "hir22",
@@ -11972,7 +12291,8 @@
    ],
    "canonicalCategory": "learn",
    "aliases": [],
-   "extractionClass": "LINE"
+   "extractionClass": "LINE",
+   "name": "hir22"
   },
   {
    "id": "hir23",
@@ -12002,7 +12322,8 @@
    ],
    "canonicalCategory": "learn",
    "aliases": [],
-   "extractionClass": "LINE"
+   "extractionClass": "LINE",
+   "name": "hir23"
   },
   {
    "id": "hir24",
@@ -12032,7 +12353,8 @@
    ],
    "canonicalCategory": "learn",
    "aliases": [],
-   "extractionClass": "LINE"
+   "extractionClass": "LINE",
+   "name": "hir24"
   },
   {
    "id": "hir25",
@@ -12062,7 +12384,8 @@
    ],
    "canonicalCategory": "learn",
    "aliases": [],
-   "extractionClass": "LINE"
+   "extractionClass": "LINE",
+   "name": "hir25"
   },
   {
    "id": "hir26",
@@ -12092,7 +12415,8 @@
    ],
    "canonicalCategory": "learn",
    "aliases": [],
-   "extractionClass": "LINE"
+   "extractionClass": "LINE",
+   "name": "hir26"
   },
   {
    "id": "hir27",
@@ -12122,7 +12446,8 @@
    ],
    "canonicalCategory": "learn",
    "aliases": [],
-   "extractionClass": "LINE"
+   "extractionClass": "LINE",
+   "name": "hir27"
   },
   {
    "id": "hir28",
@@ -12152,7 +12477,8 @@
    ],
    "canonicalCategory": "learn",
    "aliases": [],
-   "extractionClass": "LINE"
+   "extractionClass": "LINE",
+   "name": "hir28"
   },
   {
    "id": "hir29",
@@ -12182,7 +12508,8 @@
    ],
    "canonicalCategory": "learn",
    "aliases": [],
-   "extractionClass": "LINE"
+   "extractionClass": "LINE",
+   "name": "hir29"
   },
   {
    "id": "hir30",
@@ -12212,7 +12539,8 @@
    ],
    "canonicalCategory": "learn",
    "aliases": [],
-   "extractionClass": "LINE"
+   "extractionClass": "LINE",
+   "name": "hir30"
   },
   {
    "id": "hir31",
@@ -12242,7 +12570,8 @@
    ],
    "canonicalCategory": "learn",
    "aliases": [],
-   "extractionClass": "LINE"
+   "extractionClass": "LINE",
+   "name": "hir31"
   },
   {
    "id": "hir32",
@@ -12272,7 +12601,8 @@
    ],
    "canonicalCategory": "learn",
    "aliases": [],
-   "extractionClass": "LINE"
+   "extractionClass": "LINE",
+   "name": "hir32"
   },
   {
    "id": "hir33",
@@ -12302,7 +12632,8 @@
    ],
    "canonicalCategory": "learn",
    "aliases": [],
-   "extractionClass": "LINE"
+   "extractionClass": "LINE",
+   "name": "hir33"
   },
   {
    "id": "hir34",
@@ -12332,7 +12663,8 @@
    ],
    "canonicalCategory": "learn",
    "aliases": [],
-   "extractionClass": "LINE"
+   "extractionClass": "LINE",
+   "name": "hir34"
   },
   {
    "id": "hir35",
@@ -12362,7 +12694,8 @@
    ],
    "canonicalCategory": "learn",
    "aliases": [],
-   "extractionClass": "LINE"
+   "extractionClass": "LINE",
+   "name": "hir35"
   },
   {
    "id": "hir36",
@@ -12392,7 +12725,8 @@
    ],
    "canonicalCategory": "learn",
    "aliases": [],
-   "extractionClass": "LINE"
+   "extractionClass": "LINE",
+   "name": "hir36"
   },
   {
    "id": "hir37",
@@ -12422,7 +12756,8 @@
    ],
    "canonicalCategory": "learn",
    "aliases": [],
-   "extractionClass": "LINE"
+   "extractionClass": "LINE",
+   "name": "hir37"
   },
   {
    "id": "hir38",
@@ -12452,7 +12787,8 @@
    ],
    "canonicalCategory": "learn",
    "aliases": [],
-   "extractionClass": "LINE"
+   "extractionClass": "LINE",
+   "name": "hir38"
   },
   {
    "id": "hir39",
@@ -12482,7 +12818,8 @@
    ],
    "canonicalCategory": "learn",
    "aliases": [],
-   "extractionClass": "LINE"
+   "extractionClass": "LINE",
+   "name": "hir39"
   },
   {
    "id": "hir40",
@@ -12512,7 +12849,8 @@
    ],
    "canonicalCategory": "learn",
    "aliases": [],
-   "extractionClass": "LINE"
+   "extractionClass": "LINE",
+   "name": "hir40"
   },
   {
    "id": "hir41",
@@ -12542,7 +12880,8 @@
    ],
    "canonicalCategory": "learn",
    "aliases": [],
-   "extractionClass": "LINE"
+   "extractionClass": "LINE",
+   "name": "hir41"
   },
   {
    "id": "hir42",
@@ -12572,7 +12911,8 @@
    ],
    "canonicalCategory": "learn",
    "aliases": [],
-   "extractionClass": "LINE"
+   "extractionClass": "LINE",
+   "name": "hir42"
   },
   {
    "id": "hir43",
@@ -12602,7 +12942,8 @@
    ],
    "canonicalCategory": "learn",
    "aliases": [],
-   "extractionClass": "LINE"
+   "extractionClass": "LINE",
+   "name": "hir43"
   },
   {
    "id": "hir44",
@@ -12632,7 +12973,8 @@
    ],
    "canonicalCategory": "learn",
    "aliases": [],
-   "extractionClass": "LINE"
+   "extractionClass": "LINE",
+   "name": "hir44"
   },
   {
    "id": "hir45",
@@ -12662,7 +13004,8 @@
    ],
    "canonicalCategory": "learn",
    "aliases": [],
-   "extractionClass": "LINE"
+   "extractionClass": "LINE",
+   "name": "hir45"
   },
   {
    "id": "hir46",
@@ -12692,7 +13035,8 @@
    ],
    "canonicalCategory": "learn",
    "aliases": [],
-   "extractionClass": "LINE"
+   "extractionClass": "LINE",
+   "name": "hir46"
   },
   {
    "id": "hnz01",
@@ -12722,7 +13066,8 @@
    ],
    "canonicalCategory": "learn",
    "aliases": [],
-   "extractionClass": "LINE"
+   "extractionClass": "LINE",
+   "name": "hnz01"
   },
   {
    "id": "hnz02",
@@ -12752,7 +13097,8 @@
    ],
    "canonicalCategory": "learn",
    "aliases": [],
-   "extractionClass": "LINE"
+   "extractionClass": "LINE",
+   "name": "hnz02"
   },
   {
    "id": "hnz03",
@@ -12782,7 +13128,8 @@
    ],
    "canonicalCategory": "learn",
    "aliases": [],
-   "extractionClass": "LINE"
+   "extractionClass": "LINE",
+   "name": "hnz03"
   },
   {
    "id": "hnz04",
@@ -12812,7 +13159,8 @@
    ],
    "canonicalCategory": "learn",
    "aliases": [],
-   "extractionClass": "LINE"
+   "extractionClass": "LINE",
+   "name": "hnz04"
   },
   {
    "id": "hnz05",
@@ -12842,7 +13190,8 @@
    ],
    "canonicalCategory": "learn",
    "aliases": [],
-   "extractionClass": "LINE"
+   "extractionClass": "LINE",
+   "name": "hnz05"
   },
   {
    "id": "hnz06",
@@ -12872,7 +13221,8 @@
    ],
    "canonicalCategory": "learn",
    "aliases": [],
-   "extractionClass": "LINE"
+   "extractionClass": "LINE",
+   "name": "hnz06"
   },
   {
    "id": "hnz07",
@@ -12902,7 +13252,8 @@
    ],
    "canonicalCategory": "learn",
    "aliases": [],
-   "extractionClass": "LINE"
+   "extractionClass": "LINE",
+   "name": "hnz07"
   },
   {
    "id": "hnz08",
@@ -12932,7 +13283,8 @@
    ],
    "canonicalCategory": "learn",
    "aliases": [],
-   "extractionClass": "LINE"
+   "extractionClass": "LINE",
+   "name": "hnz08"
   },
   {
    "id": "hnz09",
@@ -12962,7 +13314,8 @@
    ],
    "canonicalCategory": "learn",
    "aliases": [],
-   "extractionClass": "LINE"
+   "extractionClass": "LINE",
+   "name": "hnz09"
   },
   {
    "id": "hnz10",
@@ -12992,7 +13345,8 @@
    ],
    "canonicalCategory": "learn",
    "aliases": [],
-   "extractionClass": "LINE"
+   "extractionClass": "LINE",
+   "name": "hnz10"
   },
   {
    "id": "castle",
@@ -13022,7 +13376,8 @@
    ],
    "canonicalCategory": "things",
    "aliases": [],
-   "extractionClass": "LINE"
+   "extractionClass": "LINE",
+   "name": "Castle"
   },
   {
    "id": "ferriswheel",
@@ -13054,7 +13409,8 @@
    "aliases": [
     "ferris wheel"
    ],
-   "extractionClass": "LINE"
+   "extractionClass": "LINE",
+   "name": "Ferris Wheel"
   },
   {
    "id": "robot",
@@ -13084,7 +13440,8 @@
    ],
    "canonicalCategory": "things",
    "aliases": [],
-   "extractionClass": "LINE"
+   "extractionClass": "LINE",
+   "name": "Robot"
   },
   {
    "id": "icecream",
@@ -13116,7 +13473,8 @@
    "aliases": [
     "ice cream"
    ],
-   "extractionClass": "LINE"
+   "extractionClass": "LINE",
+   "name": "Ice Cream"
   },
   {
    "id": "crown",
@@ -13146,7 +13504,8 @@
    ],
    "canonicalCategory": "things",
    "aliases": [],
-   "extractionClass": "LINE"
+   "extractionClass": "LINE",
+   "name": "Crown"
   },
   {
    "id": "umbrella",
@@ -13176,7 +13535,8 @@
    ],
    "canonicalCategory": "things",
    "aliases": [],
-   "extractionClass": "LINE"
+   "extractionClass": "LINE",
+   "name": "Umbrella"
   },
   {
    "id": "key",
@@ -13206,7 +13566,8 @@
    ],
    "canonicalCategory": "things",
    "aliases": [],
-   "extractionClass": "LINE"
+   "extractionClass": "LINE",
+   "name": "Key"
   },
   {
    "id": "submarine",
@@ -13236,7 +13597,8 @@
    ],
    "canonicalCategory": "things",
    "aliases": [],
-   "extractionClass": "LINE"
+   "extractionClass": "LINE",
+   "name": "Submarine"
   },
   {
    "id": "crystalball",
@@ -13268,7 +13630,8 @@
    "aliases": [
     "crystal ball"
    ],
-   "extractionClass": "LINE"
+   "extractionClass": "LINE",
+   "name": "Crystal Ball"
   },
   {
    "id": "clock",
@@ -13362,7 +13725,8 @@
    ],
    "canonicalCategory": "things",
    "aliases": [],
-   "extractionClass": "LINE"
+   "extractionClass": "LINE",
+   "name": "Clock"
   },
   {
    "id": "sun",
@@ -13458,7 +13822,8 @@
     "sourceUrl": "repo:tools/draw_batch27.py",
     "pdBasis": "original-artwork",
     "retrieved": "2026-08-04"
-   }
+   },
+   "name": "Sun"
   },
   {
    "id": "rainbow",
@@ -13524,7 +13889,8 @@
     "sourceUrl": "repo:tools/draw_batch27.py",
     "pdBasis": "original-artwork",
     "retrieved": "2026-08-04"
-   }
+   },
+   "name": "Rainbow"
   },
   {
    "id": "comet",
@@ -13598,7 +13964,8 @@
     "sourceUrl": "repo:tools/draw_batch27.py",
     "pdBasis": "original-artwork",
     "retrieved": "2026-08-04"
-   }
+   },
+   "name": "Comet"
   },
   {
    "id": "saturn",
@@ -13663,7 +14030,8 @@
     "sourceUrl": "repo:tools/draw_batch27.py",
     "pdBasis": "original-artwork",
     "retrieved": "2026-08-04"
-   }
+   },
+   "name": "Saturn"
   },
   {
    "id": "raincloud",
@@ -13748,7 +14116,8 @@
     "sourceUrl": "repo:tools/draw_batch27.py",
     "pdBasis": "original-artwork",
     "retrieved": "2026-08-04"
-   }
+   },
+   "name": "Rain Cloud"
   },
   {
    "id": "sunflower",
@@ -13879,6 +14248,1016 @@
     "source": "repo:tools/draw_batch27.py",
     "sourceUrl": "repo:tools/draw_batch27.py",
     "pdBasis": "original-artwork",
+    "retrieved": "2026-08-04"
+   },
+   "name": "Sunflower"
+  },
+  {
+   "id": "greatwave",
+   "tier": "expert",
+   "subject": "greatwave",
+   "icon": "🌊",
+   "name": "The Great Wave",
+   "kid": false,
+   "wash": false,
+   "pack": "worldart2",
+   "categories": [
+    "masters"
+   ],
+   "canonicalCategory": "masters",
+   "aliases": [
+    "great wave",
+    "kanagawa",
+    "hokusai",
+    "wave"
+   ],
+   "extractionClass": "LINE",
+   "guide": [
+    "M44.7 96.7 L48.0 108.4 L51.4 99.4 L44.7 96.7 L44.7 96.7",
+    "M37.0 107.5 L42.0 107.5 L37.0 107.5 L37.0 107.5",
+    "M163.7 106.7 L167.8 108.2 L163.7 106.7 L163.7 106.7",
+    "M36.6 115.5 L41.5 115.0 L36.6 115.5 L36.6 115.5",
+    "M200.4 119.4 L206.0 124.9 L194.9 130.5 L189.7 134.0 L179.5 133.0 L179.5 137.6 L188.8 145.5 L189.0 150.5 L182.8 156.1 L184.0 164.1 L176.2 160.5 L171.6 156.5 L163.1 154.5 L153.5 154.8 L158.4 161.2 L153.3 166.8 L141.5 164.5 L140.1 174.3 L130.9 170.5 L129.2 170.9 L128.8 192.7 L138.3 189.9 L140.2 187.6 L146.8 192.6 L148.1 197.0 L154.1 184.4 L155.7 180.0 L157.1 176.0 L167.0 168.6 L161.0 180.2 L157.0 188.2 L158.1 198.3 L158.9 201.2 L155.5 205.0 L154.0 209.0 L154.3 216.0 L157.7 212.7 L164.1 210.0 L163.8 203.3 L170.7 186.2 L175.1 179.5 L177.9 177.0 L170.0 210.2 L173.9 212.2 L177.3 214.8 L171.2 220.2 L176.4 223.4 L198.3 229.1 L189.2 228.7 L192.4 237.5 L185.2 233.7 L180.5 245.0 L180.7 250.9 L177.0 246.9 L172.0 248.1 L176.7 251.2 L174.7 261.4 L172.0 256.1 L175.0 252.5 L171.0 252.5 L169.0 256.0 L167.7 254.5 L166.3 249.6 L163.5 246.0 L155.5 240.0 L151.3 236.9 L149.1 232.0 L140.9 239.0 L134.4 237.5 L130.8 240.3 L127.5 233.2 L121.1 242.0 L128.0 244.0 L130.0 245.0 L143.0 250.5 L154.0 259.7 L148.0 258.0 L150.8 273.7 L148.4 278.2 L144.6 274.0 L139.7 271.2 L138.9 270.0 L136.5 273.6 L141.0 275.0 L138.0 279.9 L134.3 283.1 L133.0 278.0 L123.0 281.5 L121.6 271.0 L118.7 266.0 L111.9 261.4 L111.7 273.9 L110.5 281.0 L104.4 286.0 L100.9 278.0 L101.6 276.1 L104.5 272.4 L101.5 266.0 L99.0 268.0 L96.3 265.2 L95.7 279.6 L96.0 284.5 L94.0 281.1 L80.0 281.0 L86.6 274.4 L77.3 276.0 L74.4 280.0 L72.4 274.6 L75.0 271.2 L81.0 268.6 L78.0 265.3 L77.2 260.7 L83.5 254.0 L83.6 252.0 L81.7 243.0 L79.0 236.4 L70.7 233.9 L67.0 231.0 L61.5 229.0 L46.8 234.0 L49.0 240.2 L57.0 237.4 L58.3 240.1 L66.3 245.7 L69.3 250.0 L68.5 252.0 L62.0 254.9 L59.6 262.3 L56.9 268.1 L52.8 259.7 L44.2 257.5 L38.8 257.2 L30.2 254.7 L38.3 267.1 L43.0 271.0 L46.0 271.2 L50.0 280.2 L61.5 285.3 L80.0 293.4 L87.0 295.4 L92.0 299.4 L98.8 303.0 L104.5 308.0 L113.0 309.2 L121.0 306.9 L123.0 308.9 L148.5 296.7 L144.9 290.1 L153.6 288.7 L163.2 285.9 L161.9 279.2 L161.0 279.2 L161.9 272.1 L174.0 271.0 L177.0 269.2 L190.7 273.0 L191.5 266.0 L193.9 264.7 L196.0 270.0 L195.3 278.4 L200.0 277.7 L217.0 299.1 L220.0 307.3 L223.0 311.6 L226.0 311.5 L224.9 307.1 L245.5 314.4 L272.5 334.7 L336.5 343.6 L335.4 338.5 L330.0 336.0 L324.0 335.9 L302.5 331.0 L295.5 330.3 L293.4 329.9 L293.0 321.5 L315.7 316.6 L315.3 307.6 L302.5 311.0 L283.5 309.9 L266.7 307.1 L257.0 309.0 L244.9 304.6 L239.6 301.2 L220.5 278.2 L209.0 272.0 L211.8 263.2 L204.9 257.4 L207.4 246.9 L208.9 220.5 L210.0 203.0 L205.3 209.2 L202.0 207.0 L203.7 204.0 L205.3 200.0 L208.0 200.0 L211.9 200.2 L217.0 199.0 L227.1 196.5 L226.5 184.5 L221.3 183.6 L227.0 180.4 L231.0 177.5 L227.7 171.9 L219.6 174.4 L209.8 172.2 L205.1 161.7 L200.8 160.5 L203.6 155.0 L200.2 148.4 L197.0 142.0 L200.0 136.1 L199.0 132.5 L223.1 133.5 L232.4 136.4 L235.4 128.3 L224.1 127.0 L218.0 121.2 L211.6 119.0 L206.9 120.3 L207.3 119.1 L200.4 119.4 L200.4 119.4",
+    "M190.2 195.3 L193.0 200.7 L187.0 208.0 L182.3 212.6 L178.0 211.0 L181.3 202.9 L182.9 195.9 L186.0 194.0 L190.2 195.3 L190.2 195.3",
+    "M193.0 122.0 L195.5 120.0 L193.0 122.0 L193.0 122.0",
+    "M248.2 136.6 L254.6 138.0 L251.9 135.0 L248.2 136.6 L248.2 136.6",
+    "M212.3 139.5 L216.8 139.2 L212.3 139.5 L212.3 139.5",
+    "M239.2 139.2 L246.4 140.2 L239.2 139.2 L239.2 139.2",
+    "M221.0 143.1 L226.3 144.0 L221.0 143.1 L221.0 143.1",
+    "M238.0 149.5 L240.5 146.0 L238.0 149.5 L238.0 149.5",
+    "M246.7 150.7 L249.0 155.0 L251.0 151.7 L246.7 150.7 L246.7 150.7",
+    "M43.0 154.0 L46.0 154.0 L43.0 154.0 L43.0 154.0",
+    "M36.0 169.0 L39.0 169.0 L36.0 169.0 L36.0 169.0",
+    "M287.0 169.5 L285.0 172.5 L289.5 168.0 L287.0 169.5 L287.0 169.5",
+    "M246.6 172.6 L251.8 172.2 L246.6 172.6 L246.6 172.6",
+    "M272.7 171.7 L276.0 173.0 L272.7 171.7 L272.7 171.7",
+    "M275.3 185.0 L270.0 191.7 L274.3 195.0 L278.1 192.6 L285.3 192.1 L293.0 192.3 L286.8 185.2 L280.6 183.5 L275.3 185.0 L275.3 185.0",
+    "M297.3 184.5 L298.0 189.5 L303.6 188.4 L297.3 184.5 L297.3 184.5",
+    "M257.0 192.4 L263.8 193.7 L257.0 192.4 L257.0 192.4",
+    "M40.1 195.6 L22.0 201.4 L22.8 213.0 L47.7 198.0 L40.1 195.6 L40.1 195.6",
+    "M287.7 196.7 L294.0 198.0 L287.7 196.7 L287.7 196.7",
+    "M67.0 204.2 L64.1 216.0 L74.3 219.9 L84.5 222.4 L87.0 214.8 L92.6 207.0 L86.8 204.1 L67.0 204.2 L67.0 204.2",
+    "M268.7 203.7 L272.0 205.0 L268.7 203.7 L268.7 203.7",
+    "M284.0 213.0 L290.1 211.0 L284.0 213.0 L284.0 213.0",
+    "M274.0 212.8 L278.0 220.0 L283.5 218.9 L274.0 212.8 L274.0 212.8",
+    "M286.7 221.7 L291.6 222.4 L286.7 221.7 L286.7 221.7",
+    "M94.6 227.5 L89.0 231.0 L94.6 234.5 L99.4 229.7 L94.6 227.5 L94.6 227.5",
+    "M102.0 240.4 L107.0 241.0 L102.0 240.4 L102.0 240.4",
+    "M471.0 264.7 L459.7 266.0 L454.1 272.0 L446.0 280.2 L441.0 284.0 L437.1 286.0 L430.2 291.8 L426.5 295.0 L398.3 295.3 L373.9 298.8 L344.0 301.1 L336.0 303.3 L363.0 329.1 L380.0 325.4 L395.7 319.8 L407.9 316.5 L418.7 307.5 L429.5 308.4 L464.9 278.5 L471.0 264.7 L471.0 264.7",
+    "M486.4 296.5 L485.1 299.6 L478.6 307.0 L476.1 313.3 L464.8 311.5 L460.5 317.0 L450.0 319.2 L456.5 325.8 L440.3 328.5 L429.9 333.0 L422.8 334.6 L410.4 340.7 L413.8 345.5 L450.4 333.6 L462.8 328.6 L489.5 318.3 L488.5 295.0 L486.4 296.5 L486.4 296.5",
+    "M40.5 310.2 L37.6 319.0 L36.2 313.0 L34.2 322.2 L39.0 325.1 L34.4 325.0 L32.0 321.0 L29.8 316.2 L33.4 307.0 L22.0 322.9 L31.3 331.2 L36.2 334.4 L41.7 330.5 L50.3 333.2 L61.8 332.3 L50.7 317.2 L49.8 315.8 L45.6 306.8 L40.5 310.2 L40.5 310.2",
+    "M180.3 312.7 L183.8 313.7 L180.3 312.7 L180.3 312.7",
+    "M111.0 317.6 L95.0 322.5 L114.8 321.5 L111.0 317.6 L111.0 317.6",
+    "M178.0 321.2 L180.5 320.0 L178.0 321.2 L178.0 321.2",
+    "M80.4 323.4 L90.0 328.5 L88.0 324.1 L80.4 323.4 L80.4 323.4",
+    "M319.5 324.0 L315.0 327.2 L329.0 328.9 L323.3 324.9 L319.5 324.0 L319.5 324.0",
+    "M336.3 327.5 L342.6 327.7 L336.3 327.5 L336.3 327.5",
+    "M485.0 328.4 L476.9 338.0 L485.0 328.4 L485.0 328.4",
+    "M147.2 330.5 L145.5 337.0 L151.9 336.9 L147.2 330.5 L147.2 330.5",
+    "M186.4 332.1 L190.0 338.0 L188.2 329.0 L186.4 332.1 L186.4 332.1",
+    "M198.0 332.0 L197.6 343.5 L203.7 345.3 L201.7 331.7 L198.0 332.0 L198.0 332.0",
+    "M179.3 333.0 L178.0 335.0 L170.7 337.7 L169.6 340.5 L162.0 339.4 L157.0 343.4 L154.0 348.2 L149.0 348.0 L140.0 347.2 L130.0 346.5 L134.7 350.6 L148.9 357.1 L159.0 352.1 L171.7 350.0 L181.3 345.7 L182.0 332.5 L179.3 333.0 L179.3 333.0",
+    "M369.0 332.4 L363.0 338.0 L374.5 334.2 L370.5 331.0 L369.0 332.4 L369.0 332.4",
+    "M213.3 335.0 L215.3 346.7 L227.0 355.9 L217.4 336.8 L213.3 335.0 L213.3 335.0",
+    "M348.0 336.5 L351.0 339.9 L362.0 337.1 L355.0 334.9 L348.0 336.5 L348.0 336.5",
+    "M251.0 342.9 L247.2 347.5 L281.6 372.9 L340.0 391.5 L361.0 396.6 L364.0 396.5 L361.0 393.0 L336.2 380.8 L330.0 378.0 L320.5 372.5 L298.9 357.5 L300.2 367.2 L275.1 346.7 L270.4 348.0 L272.7 356.1 L265.2 353.9 L251.0 342.9 L251.0 342.9",
+    "M110.5 342.0 L109.2 352.2 L103.6 352.6 L102.0 361.0 L97.5 359.0 L97.4 367.7 L101.0 368.2 L112.8 365.5 L118.2 362.0 L121.2 359.1 L128.3 352.1 L115.2 341.2 L110.5 342.0 L110.5 342.0",
+    "M459.4 342.9 L435.0 351.0 L424.4 353.0 L450.7 358.7 L459.4 342.9 L459.4 342.9",
+    "M388.0 344.9 L393.4 344.6 L388.0 344.9 L388.0 344.9",
+    "M397.2 345.7 L401.8 346.3 L397.2 345.7 L397.2 345.7",
+    "M183.2 345.9 L186.4 351.4 L183.2 345.9 L183.2 345.9",
+    "M380.0 348.5 L385.8 350.0 L385.8 347.0 L380.0 348.5 L380.0 348.5",
+    "M67.5 349.9 L68.3 356.6 L63.2 358.7 L71.9 363.7 L78.8 373.8 L70.0 373.5 L63.5 374.0 L55.7 375.5 L53.6 375.8 L46.9 375.1 L40.0 380.6 L51.4 388.0 L52.0 391.0 L47.4 409.0 L56.0 416.0 L54.5 403.0 L55.0 401.0 L59.9 393.7 L70.8 387.6 L86.4 367.0 L82.1 360.0 L67.5 349.9 L67.5 349.9",
+    "M62.0 386.3 L57.8 385.2 L62.0 386.3 L62.0 386.3",
+    "M27.4 352.1 L35.0 360.7 L43.0 361.0 L56.7 359.0 L48.8 353.4 L27.4 352.1 L27.4 352.1",
+    "M205.0 353.9 L208.8 365.7 L210.0 373.9 L213.3 378.0 L220.3 389.9 L239.5 405.8 L257.5 416.0 L353.0 411.4 L291.2 411.1 L238.7 380.0 L227.2 368.2 L218.5 364.4 L216.5 354.4 L205.0 353.9 L205.0 353.9",
+    "M238.4 354.3 L238.1 360.0 L244.6 371.6 L256.2 370.8 L244.3 357.5 L238.4 354.3 L238.4 354.3",
+    "M477.3 359.0 L490.0 366.0 L490.0 358.0 L477.3 359.0 L477.3 359.0",
+    "M160.2 361.7 L161.9 360.0 L160.2 361.7 L160.2 361.7",
+    "M420.0 361.8 L411.0 364.3 L423.8 371.5 L388.5 367.1 L421.5 380.4 L447.1 361.5 L420.0 361.8 L420.0 361.8",
+    "M343.2 372.7 L363.2 390.0 L369.0 395.0 L377.2 393.4 L388.5 393.3 L397.0 390.0 L407.5 392.8 L407.6 383.5 L402.5 381.0 L395.4 382.9 L396.8 379.9 L381.8 380.2 L388.2 385.2 L379.4 383.7 L361.0 376.5 L343.2 372.7 L343.2 372.7",
+    "M259.0 373.4 L262.8 372.6 L259.0 373.4 L259.0 373.4",
+    "M479.5 374.9 L468.5 381.0 L466.7 386.7 L486.8 380.6 L479.5 374.9 L479.5 374.9",
+    "M23.5 377.3 L26.3 386.4 L34.6 376.8 L23.5 377.3 L23.5 377.3",
+    "M281.0 380.9 L284.4 379.6 L281.0 380.9 L281.0 380.9",
+    "M166.7 383.8 L181.0 401.0 L191.8 410.2 L185.0 413.0 L193.0 416.0 L194.0 394.2 L187.4 394.5 L186.0 398.1 L183.2 390.1 L177.5 385.0 L173.7 385.0 L166.7 383.8 L166.7 383.8",
+    "M100.1 390.7 L98.0 397.0 L89.0 392.0 L83.3 397.9 L81.9 406.2 L81.1 403.8 L71.3 399.4 L71.0 393.5 L68.0 395.0 L64.0 399.5 L66.0 402.5 L60.6 410.4 L67.1 416.0 L75.7 406.0 L79.5 416.0 L82.9 414.7 L96.9 414.2 L101.8 409.5 L102.0 416.0 L124.0 416.0 L122.8 408.6 L122.5 398.0 L116.0 395.1 L110.0 391.1 L100.1 390.7 L100.1 390.7",
+    "M89.5 408.0 L87.0 410.4 L85.0 410.1 L89.5 408.0 L89.5 408.0",
+    "M37.3 389.0 L46.0 389.9 L37.3 389.0 L37.3 389.0",
+    "M24.3 391.7 L28.7 392.6 L24.3 391.7 L24.3 391.7",
+    "M286.0 392.5 L290.5 391.0 L286.0 392.5 L286.0 392.5",
+    "M484.7 391.7 L436.8 392.5 L434.5 402.6 L414.3 405.4 L385.3 414.4 L451.0 408.9 L459.5 406.0 L485.3 402.0 L490.0 396.5 L484.7 391.7 L484.7 391.7",
+    "M30.4 396.5 L34.8 397.3 L30.4 396.5 L30.4 396.5",
+    "M36.2 399.0 L31.1 405.0 L37.2 416.0 L40.4 412.7 L36.2 399.0 L36.2 399.0",
+    "M204.2 401.2 L200.0 403.0 L203.7 415.5 L215.0 408.9 L204.2 401.2 L204.2 401.2",
+    "M146.2 406.0 L145.2 412.2 L157.0 414.5 L154.8 412.3 L146.2 406.0 L146.2 406.0",
+    "M169.5 405.0 L168.1 410.0 L168.8 416.0 L169.5 405.0 L169.5 405.0",
+    "M26.0 101.6 L23.4 118.3 L22.0 151.5 L24.5 170.4 L33.8 178.0 L37.4 180.0 L26.9 185.6 L27.9 210.7 L51.8 194.1 L81.4 161.8 L122.1 131.0 L159.2 112.4 L184.5 108.7 L222.5 116.6 L247.2 130.0 L250.9 140.5 L257.6 147.6 L258.4 150.0 L252.6 160.1 L266.5 163.4 L282.4 159.0 L302.8 149.5 L281.1 142.5 L268.3 149.6 L267.8 138.3 L272.0 135.5 L269.9 124.6 L274.3 112.2 L273.8 105.7 L268.6 96.0 L256.0 97.5 L262.5 103.0 L244.0 113.1 L237.1 111.0 L238.6 103.9 L247.3 100.9 L183.0 96.0 L114.1 97.6 L26.0 96.0 L26.0 101.6 L26.0 101.6",
+    "M36.6 107.5 L47.4 104.7 L49.2 174.0 L33.0 174.0 L32.3 145.0 L31.8 117.2 L36.6 107.5 L36.6 107.5",
+    "M115.4 111.8 L107.4 121.6 L101.0 126.9 L94.8 122.3 L94.0 114.0 L103.6 123.5 L109.0 112.3 L115.4 111.8 L115.4 111.8",
+    "M78.4 119.3 L72.6 125.5 L78.4 119.3 L78.4 119.3",
+    "M265.4 127.9 L260.9 130.3 L265.4 127.9 L265.4 127.9",
+    "M36.6 115.5 L42.4 115.7 L36.6 115.5 L36.6 115.5",
+    "M38.0 137.5 L42.0 137.5 L38.0 137.5 L38.0 137.5",
+    "M41.2 147.7 L46.8 147.7 L41.2 147.7 L41.2 147.7",
+    "M42.7 151.7 L46.0 154.0 L42.7 151.7 L42.7 151.7",
+    "M35.7 157.7 L40.0 160.1 L35.7 157.7 L35.7 157.7",
+    "M36.0 169.0 L39.4 168.2 L36.0 169.0 L36.0 169.0",
+    "M295.3 99.4 L289.7 109.5 L301.3 114.3 L332.3 115.8 L357.0 115.5 L363.8 109.7 L397.2 106.1 L414.5 103.3 L435.0 113.3 L452.6 120.2 L477.5 106.7 L475.5 96.0 L467.8 99.3 L457.0 98.6 L402.0 96.0 L346.0 98.0 L334.0 96.0 L324.0 100.0 L310.5 101.4 L295.3 99.4 L295.3 99.4",
+    "M337.3 101.1 L332.7 99.8 L337.3 101.1 L337.3 101.1",
+    "M201.3 115.7 L197.1 119.8 L194.3 124.6 L202.5 125.8 L195.2 127.7 L189.2 131.5 L176.1 130.0 L168.6 145.6 L164.9 155.5 L161.1 150.0 L153.7 143.2 L146.0 144.5 L137.4 148.5 L134.0 153.1 L127.4 155.4 L131.5 163.4 L130.0 170.4 L118.0 168.6 L120.0 179.4 L124.0 188.0 L145.0 195.6 L157.5 197.6 L153.8 204.3 L148.0 211.0 L163.3 211.5 L167.1 206.7 L169.1 207.0 L168.5 212.0 L173.1 212.1 L175.4 214.2 L171.0 216.9 L172.9 225.0 L182.5 223.0 L190.5 226.4 L190.5 232.0 L190.4 236.9 L179.5 239.5 L175.8 239.0 L181.0 246.8 L174.3 246.1 L155.3 239.5 L152.3 236.7 L153.0 233.0 L147.5 226.0 L142.5 237.6 L134.7 236.6 L133.0 236.9 L128.0 233.0 L121.8 228.7 L111.5 231.0 L110.9 234.0 L108.7 241.9 L108.0 237.5 L101.3 242.8 L102.1 251.2 L96.7 255.4 L89.3 249.4 L108.0 255.2 L117.8 238.8 L119.2 235.9 L123.3 243.7 L129.0 243.0 L135.8 245.3 L141.0 249.0 L141.0 252.7 L146.3 255.7 L149.5 258.2 L143.0 260.5 L139.0 262.0 L140.1 267.1 L136.5 275.4 L137.9 282.5 L131.2 274.6 L122.0 268.9 L119.8 268.8 L116.7 262.8 L106.5 261.5 L103.0 269.2 L100.0 267.0 L91.2 266.6 L88.0 279.0 L81.6 272.8 L77.3 270.6 L82.2 267.0 L85.6 259.1 L84.0 254.0 L84.6 244.8 L99.0 239.2 L100.3 232.1 L100.0 226.3 L93.5 220.0 L91.0 212.5 L95.0 206.1 L81.0 203.0 L62.0 209.4 L59.0 218.0 L61.2 222.8 L59.5 226.0 L53.2 230.2 L52.1 230.2 L48.2 230.0 L37.7 227.0 L22.0 227.5 L30.0 238.8 L25.0 241.5 L22.0 246.5 L27.0 251.1 L30.2 255.5 L37.0 269.2 L44.0 269.0 L46.6 274.8 L53.4 284.0 L61.5 291.0 L73.7 298.0 L88.9 304.5 L82.7 316.0 L71.3 312.0 L59.8 303.0 L53.4 298.0 L46.3 301.7 L39.9 310.4 L41.6 316.0 L37.2 318.5 L37.4 312.6 L38.0 308.5 L24.6 313.3 L31.3 331.7 L50.3 333.7 L52.6 335.0 L77.5 328.7 L97.6 328.5 L122.7 313.9 L146.0 293.0 L166.4 280.8 L175.1 270.0 L177.9 271.0 L201.5 280.0 L217.9 306.4 L235.6 329.0 L228.7 314.7 L225.9 308.1 L244.7 314.6 L260.7 328.0 L327.5 345.8 L376.6 334.9 L381.0 325.1 L389.9 324.0 L398.9 320.0 L416.5 309.8 L426.1 310.7 L478.0 260.7 L465.1 264.4 L451.4 270.3 L410.3 283.3 L397.1 283.5 L382.5 285.9 L344.0 290.5 L342.7 289.9 L329.7 289.1 L300.0 296.3 L273.5 291.5 L251.8 289.6 L242.0 290.2 L235.4 279.5 L225.6 280.0 L215.7 267.4 L210.6 213.7 L227.6 196.1 L242.2 195.7 L248.3 191.7 L255.3 195.0 L264.8 194.1 L263.0 189.9 L257.3 190.8 L253.5 184.0 L250.0 187.0 L242.1 188.7 L234.2 189.7 L223.9 183.7 L222.0 183.0 L227.5 180.6 L229.5 174.0 L227.5 168.0 L232.6 172.2 L238.3 170.7 L239.8 169.5 L236.0 159.5 L225.0 159.8 L216.0 161.6 L221.0 164.5 L222.5 170.2 L219.7 173.9 L210.8 170.6 L208.4 160.6 L209.5 156.0 L204.7 150.8 L199.6 142.0 L201.9 142.2 L205.9 138.8 L215.5 132.0 L227.8 136.2 L235.5 139.7 L233.3 127.4 L224.5 126.9 L218.0 120.9 L212.0 116.7 L201.3 115.7 L201.3 115.7",
+    "M181.9 141.9 L177.6 146.8 L181.2 156.3 L171.9 161.7 L175.3 151.0 L175.9 145.0 L181.9 141.9 L181.9 141.9",
+    "M147.0 154.0 L152.6 155.6 L158.0 160.0 L155.3 167.5 L149.1 164.3 L143.8 161.0 L144.1 155.7 L147.0 154.0 L147.0 154.0",
+    "M88.5 226.0 L89.1 228.0 L85.0 233.0 L82.6 236.0 L79.0 234.6 L76.9 227.5 L84.6 224.5 L88.5 226.0 L88.5 226.0",
+    "M39.0 241.0 L37.1 246.0 L32.5 245.4 L39.0 241.0 L39.0 241.0",
+    "M56.2 240.7 L62.3 247.1 L64.0 255.3 L58.2 248.5 L54.0 243.0 L56.2 240.7 L56.2 240.7",
+    "M48.0 246.6 L53.9 249.6 L50.1 258.3 L43.3 258.1 L44.0 251.5 L48.0 246.6 L48.0 246.6",
+    "M177.0 256.5 L174.0 259.5 L171.6 261.6 L171.0 259.0 L174.5 255.0 L177.0 256.5 L177.0 256.5",
+    "M60.0 264.6 L57.9 260.0 L60.0 264.6 L60.0 264.6",
+    "M192.0 268.0 L195.9 269.7 L190.9 269.0 L191.0 267.0 L192.0 268.0 L192.0 268.0",
+    "M212.8 271.7 L209.2 271.7 L212.8 271.7 L212.8 271.7",
+    "M112.4 277.3 L109.0 279.5 L104.7 284.7 L104.0 281.0 L108.0 276.6 L112.4 277.3 L112.4 277.3",
+    "M334.1 305.3 L355.9 324.2 L359.3 330.3 L351.5 331.0 L345.0 329.2 L336.0 326.5 L334.0 329.5 L325.2 326.2 L317.7 324.2 L319.3 335.1 L298.6 329.0 L293.8 323.8 L296.9 323.1 L307.0 323.1 L334.1 305.3 L334.1 305.3",
+    "M33.5 318.6 L33.0 323.2 L31.0 319.1 L31.5 313.0 L33.5 318.6 L33.5 318.6",
+    "M110.8 317.8 L108.8 315.2 L110.8 317.8 L110.8 317.8",
+    "M211.8 137.4 L216.0 146.0 L221.5 146.0 L227.0 142.5 L219.4 143.0 L211.8 137.4 L211.8 137.4",
+    "M238.8 139.1 L246.0 139.5 L238.8 139.1 L238.8 139.1",
+    "M238.2 146.3 L244.0 150.1 L238.2 146.3 L238.2 146.3",
+    "M246.0 150.9 L249.0 156.0 L251.1 150.0 L246.0 150.9 L246.0 150.9",
+    "M226.2 152.7 L234.8 153.3 L226.2 152.7 L226.2 152.7",
+    "M462.8 162.7 L469.7 174.0 L476.1 177.0 L481.6 177.2 L484.9 180.6 L490.0 187.1 L490.0 165.8 L484.0 167.3 L462.8 162.7 L462.8 162.7",
+    "M288.2 165.0 L285.4 170.5 L281.4 177.9 L280.6 183.4 L272.0 188.2 L273.6 196.5 L278.2 193.0 L285.0 192.0 L293.0 192.3 L289.5 181.2 L292.1 175.5 L297.2 180.1 L295.5 186.0 L289.5 201.0 L298.8 202.1 L307.3 201.1 L318.0 197.0 L307.0 179.7 L301.9 179.2 L300.5 172.2 L291.4 162.9 L288.2 165.0 L288.2 165.0",
+    "M302.3 163.5 L306.0 163.9 L302.3 163.5 L302.3 163.5",
+    "M409.7 163.7 L417.0 165.0 L409.7 163.7 L409.7 163.7",
+    "M429.2 165.5 L423.0 172.1 L432.9 178.1 L405.8 181.7 L403.3 188.4 L412.6 192.0 L419.0 195.8 L433.7 206.5 L439.4 192.4 L446.4 180.0 L456.8 174.0 L451.4 166.4 L443.1 167.0 L429.2 165.5 L429.2 165.5",
+    "M277.0 167.4 L280.4 168.2 L277.0 167.4 L277.0 167.4",
+    "M248.1 169.4 L243.0 172.4 L246.0 175.5 L250.5 178.0 L254.2 172.0 L248.1 169.4 L248.1 169.4",
+    "M346.5 170.1 L350.2 176.3 L354.0 169.5 L346.5 170.1 L346.5 170.1",
+    "M383.3 167.7 L391.0 168.4 L383.3 167.7 L383.3 167.7",
+    "M272.4 172.5 L276.0 173.5 L272.4 172.5 L272.4 172.5",
+    "M256.0 179.4 L260.4 178.6 L256.0 179.4 L256.0 179.4",
+    "M473.2 180.0 L475.9 186.7 L473.2 180.0 L473.2 180.0",
+    "M236.7 179.6 L241.5 181.5 L236.7 179.6 L236.7 179.6",
+    "M245.6 197.2 L248.6 202.5 L248.9 195.2 L245.6 197.2 L245.6 197.2",
+    "M268.0 205.0 L269.5 217.6 L273.5 235.0 L277.0 245.5 L281.8 240.7 L291.0 243.2 L294.0 243.0 L292.8 236.5 L292.5 231.7 L305.2 221.3 L302.8 207.6 L297.0 210.0 L293.7 216.3 L284.5 210.0 L286.1 221.0 L280.1 213.1 L268.0 205.0 L268.0 205.0",
+    "M121.0 208.2 L124.2 215.0 L123.8 219.0 L128.4 225.5 L140.3 220.3 L133.0 213.7 L121.0 208.2 L121.0 208.2",
+    "M103.0 214.1 L106.3 223.9 L103.0 214.1 L103.0 214.1",
+    "M257.0 213.4 L253.2 215.6 L259.5 212.0 L257.0 213.4 L257.0 213.4",
+    "M165.2 220.6 L168.8 221.4 L165.2 220.6 L165.2 220.6",
+    "M375.0 222.4 L379.4 222.5 L375.0 222.4 L375.0 222.4",
+    "M475.2 224.6 L477.7 229.6 L483.0 224.5 L475.2 224.6 L475.2 224.6",
+    "M329.5 227.9 L330.4 236.8 L327.6 248.2 L333.0 245.9 L343.8 250.7 L349.0 238.2 L345.8 227.0 L329.5 227.9 L329.5 227.9",
+    "M345.0 234.2 L339.4 236.6 L344.3 232.1 L345.0 234.2 L345.0 234.2",
+    "M312.4 233.6 L322.0 246.1 L318.4 236.4 L312.4 233.6 L312.4 233.6",
+    "M302.0 238.5 L307.0 238.5 L302.0 238.5 L302.0 238.5",
+    "M119.0 253.5 L129.0 253.5 L119.0 253.5 L119.0 253.5",
+    "M275.0 253.6 L279.0 252.2 L275.0 253.6 L275.0 253.6",
+    "M485.0 295.3 L476.7 296.8 L475.7 305.2 L471.2 309.1 L452.1 309.5 L447.5 312.0 L447.6 324.5 L436.3 327.0 L426.6 329.5 L412.7 334.5 L403.0 339.2 L390.0 341.6 L388.9 348.8 L470.9 326.3 L490.0 305.7 L487.5 293.0 L485.0 295.3 L485.0 295.3",
+    "M178.7 302.7 L180.0 308.5 L178.0 316.5 L176.7 319.1 L169.5 321.6 L173.2 325.2 L175.0 330.7 L161.4 338.5 L155.8 341.7 L150.8 341.2 L150.6 328.6 L144.6 337.0 L148.0 344.0 L150.5 348.2 L141.0 346.0 L132.4 344.2 L124.4 345.2 L98.0 338.0 L101.0 344.1 L105.9 347.5 L100.7 355.9 L93.4 358.4 L91.9 369.0 L87.4 367.0 L82.9 360.0 L65.0 347.5 L59.3 360.7 L55.0 356.0 L22.0 361.6 L26.0 367.7 L36.4 360.5 L40.6 360.5 L43.0 366.0 L58.3 370.3 L58.2 372.0 L44.1 372.7 L33.3 372.6 L25.0 374.5 L23.7 387.9 L23.5 406.0 L26.0 403.0 L30.0 405.0 L30.3 409.0 L24.3 411.8 L28.3 414.6 L81.4 416.0 L130.4 413.6 L122.1 409.0 L119.2 397.6 L111.4 391.3 L104.4 387.0 L110.8 384.6 L114.5 381.0 L132.6 365.9 L130.7 350.0 L145.1 359.9 L155.1 366.9 L161.6 371.7 L159.6 376.0 L155.0 386.0 L150.4 379.2 L147.7 391.5 L139.5 390.4 L136.6 394.0 L134.1 394.7 L139.3 400.1 L146.0 405.6 L136.2 410.9 L142.0 413.8 L153.6 406.6 L152.3 401.2 L163.0 399.2 L170.5 397.0 L180.5 401.0 L192.0 411.0 L190.9 411.5 L179.6 409.5 L198.9 410.6 L197.0 390.0 L187.0 384.0 L181.3 379.0 L175.1 381.4 L167.0 373.9 L178.8 373.2 L175.9 366.2 L167.0 361.7 L161.7 357.7 L174.4 351.7 L179.9 349.7 L189.8 357.2 L184.4 364.2 L197.0 371.3 L187.0 378.1 L196.2 383.0 L204.4 388.2 L204.5 395.2 L203.7 404.0 L202.5 404.2 L199.5 408.5 L212.5 416.0 L218.0 406.9 L212.6 396.6 L204.0 383.9 L202.4 378.1 L196.2 358.7 L207.4 365.0 L211.6 376.0 L214.2 381.8 L226.7 396.5 L250.8 412.9 L297.5 416.0 L350.3 413.1 L351.8 404.6 L304.5 401.9 L280.8 407.3 L232.8 373.3 L220.0 361.5 L211.9 350.4 L208.5 344.0 L229.2 351.5 L233.0 345.5 L231.1 341.0 L225.7 351.3 L219.7 341.2 L222.6 338.0 L228.5 340.0 L221.1 332.2 L211.3 332.0 L209.4 336.6 L205.9 336.0 L196.6 327.3 L194.4 334.5 L185.5 326.4 L183.8 320.0 L185.8 314.2 L178.7 302.7 L178.7 302.7",
+    "M197.4 336.6 L193.0 344.5 L187.2 344.0 L193.5 338.6 L197.4 336.6 L197.4 336.6",
+    "M119.0 357.4 L120.4 361.2 L119.0 357.4 L119.0 357.4",
+    "M112.0 372.7 L105.5 374.8 L102.8 372.5 L108.4 366.7 L112.0 372.7 L112.0 372.7",
+    "M78.4 367.6 L76.6 373.5 L78.4 367.6 L78.4 367.6",
+    "M98.3 381.8 L92.2 387.6 L81.5 395.7 L75.3 398.2 L69.4 391.0 L68.4 389.6 L90.3 381.0 L98.3 381.8 L98.3 381.8",
+    "M36.7 393.0 L44.1 398.9 L41.0 398.5 L29.7 400.1 L32.1 395.0 L33.9 391.1 L36.7 393.0 L36.7 393.0",
+    "M186.8 393.9 L182.4 392.3 L186.8 393.9 L186.8 393.9",
+    "M100.4 392.6 L98.6 398.5 L97.1 392.2 L100.4 392.6 L100.4 392.6",
+    "M45.8 405.1 L45.0 407.4 L41.7 404.4 L45.8 405.1 L45.8 405.1",
+    "M244.0 325.5 L249.0 325.5 L244.0 325.5 L244.0 325.5",
+    "M480.2 327.1 L461.5 336.0 L438.0 343.4 L413.6 349.0 L420.6 356.5 L440.5 360.8 L414.0 362.1 L375.4 358.0 L389.0 373.7 L363.8 370.0 L327.8 356.0 L335.9 366.5 L348.1 377.8 L341.0 376.1 L318.8 361.3 L293.6 349.5 L289.5 355.0 L289.2 356.5 L273.5 343.8 L267.9 353.0 L257.8 343.0 L249.3 335.0 L248.3 343.0 L243.7 349.9 L232.5 354.4 L233.8 363.0 L241.2 371.3 L250.5 374.4 L244.4 378.2 L256.2 387.2 L270.2 391.0 L277.0 393.0 L284.3 394.9 L301.0 394.5 L297.0 390.5 L283.0 387.4 L280.0 387.0 L274.7 389.2 L269.0 387.1 L264.9 381.0 L261.6 383.0 L272.8 381.6 L280.0 382.8 L308.3 386.5 L338.0 392.1 L360.8 396.9 L365.0 396.0 L368.6 395.5 L373.0 400.1 L383.0 400.9 L396.5 394.3 L398.6 392.9 L416.0 387.9 L423.7 383.6 L450.8 362.4 L453.3 358.5 L482.7 338.3 L480.2 327.1 L480.2 327.1",
+    "M260.6 360.1 L281.5 372.9 L290.7 380.2 L274.4 375.0 L262.5 371.3 L253.6 362.0 L260.6 360.1 L260.6 360.1",
+    "M299.0 366.7 L292.2 360.0 L299.0 366.7 L299.0 366.7",
+    "M406.8 378.5 L416.8 384.2 L408.5 382.6 L401.8 379.1 L406.8 378.5 L406.8 378.5",
+    "M376.4 392.6 L373.0 392.4 L376.4 392.6 L376.4 392.6",
+    "M387.8 392.2 L384.3 392.6 L387.8 392.2 L387.8 392.2",
+    "M486.8 343.8 L473.7 361.5 L458.5 379.5 L478.0 387.4 L488.5 380.4 L486.8 343.8 L486.8 343.8",
+    "M377.0 348.5 L384.8 346.6 L377.0 348.5 L377.0 348.5",
+    "M326.0 350.0 L329.4 348.6 L326.0 350.0 L326.0 350.0",
+    "M332.3 349.5 L347.0 351.6 L338.5 349.0 L332.3 349.5 L332.3 349.5",
+    "M351.7 348.7 L357.4 353.0 L365.1 348.7 L351.7 348.7 L351.7 348.7",
+    "M137.4 365.5 L138.5 372.0 L141.8 365.2 L137.4 365.5 L137.4 365.5",
+    "M117.4 381.0 L123.7 389.0 L127.4 386.2 L120.0 375.0 L117.4 381.0 L117.4 381.0",
+    "M482.0 391.1 L429.8 396.5 L412.9 402.4 L382.0 411.0 L443.2 413.6 L483.6 402.2 L490.0 395.9 L482.0 391.1 L482.0 391.1",
+    "M169.5 405.1 L168.9 410.2 L161.0 412.5 L167.9 416.0 L169.5 405.1 L169.5 405.1",
+    "M481.5 410.2 L459.0 414.7 L490.0 416.0 L481.5 410.2 L481.5 410.2",
+    "M22.0 154.5 L26.5 212.0 L68.4 175.7 L102.4 145.2 L135.0 123.9 L183.7 109.0 L209.1 110.0 L214.3 114.3 L209.5 116.0 L197.2 119.4 L190.9 129.0 L185.5 134.1 L169.4 133.9 L165.8 144.7 L163.3 151.8 L154.9 141.0 L141.0 145.2 L130.7 153.2 L130.0 164.0 L118.6 167.2 L120.0 179.3 L139.9 193.6 L141.4 202.3 L146.7 203.9 L149.9 207.3 L163.0 212.0 L167.3 209.5 L167.9 212.0 L168.9 214.8 L170.0 221.4 L176.6 223.5 L187.6 224.4 L190.4 232.3 L191.1 236.4 L179.0 241.4 L172.0 239.4 L173.3 245.1 L156.4 238.5 L157.8 232.3 L154.8 226.4 L146.8 223.0 L143.6 219.0 L137.0 213.7 L132.0 210.0 L121.4 206.1 L122.5 214.7 L123.0 222.2 L137.2 225.0 L144.2 225.5 L143.0 233.3 L135.0 235.5 L127.8 232.0 L112.4 228.6 L111.6 238.6 L105.2 236.4 L99.1 222.4 L94.5 220.0 L90.3 214.9 L93.6 210.0 L94.5 202.5 L62.5 207.1 L57.8 217.1 L60.3 222.3 L58.7 226.2 L53.4 229.7 L50.1 227.0 L35.9 227.8 L22.0 227.5 L26.5 234.6 L25.0 240.9 L22.0 257.5 L27.3 266.7 L42.2 273.0 L38.5 278.3 L26.5 282.0 L25.4 287.7 L32.7 290.0 L31.2 291.9 L26.0 294.3 L23.2 314.0 L22.5 331.3 L63.5 332.0 L117.7 319.3 L154.0 292.9 L166.0 282.2 L197.0 278.9 L211.3 289.2 L217.8 307.1 L229.6 324.3 L230.0 314.7 L229.5 309.0 L244.3 314.7 L257.3 323.6 L243.0 322.8 L244.0 330.5 L245.2 346.5 L236.9 349.1 L234.6 346.1 L222.1 331.6 L210.1 333.6 L195.4 328.5 L187.3 326.0 L184.3 319.8 L182.3 302.7 L177.4 306.0 L176.8 315.6 L167.0 324.3 L173.0 330.9 L166.7 333.4 L160.7 337.9 L155.6 340.9 L154.5 337.6 L151.2 327.8 L146.0 334.0 L143.1 342.7 L127.2 344.8 L102.8 335.7 L101.0 344.0 L106.0 349.2 L100.0 355.6 L91.5 360.0 L92.7 368.3 L88.9 364.0 L67.8 346.2 L57.5 359.3 L41.0 349.8 L22.0 352.4 L22.0 409.9 L26.5 410.7 L22.0 413.5 L29.0 415.0 L33.0 415.0 L130.5 415.5 L131.1 406.8 L123.1 408.2 L120.0 397.0 L111.0 391.5 L107.0 388.0 L110.1 385.9 L129.3 398.2 L145.8 404.2 L134.4 412.8 L145.6 415.8 L154.6 407.5 L165.3 398.3 L175.2 399.0 L184.6 403.0 L190.0 410.7 L186.6 408.0 L180.0 406.9 L178.0 408.7 L169.0 406.9 L161.0 412.5 L168.5 416.0 L178.5 414.2 L235.7 411.8 L219.7 410.6 L224.8 405.8 L214.0 401.1 L217.0 395.7 L203.3 378.0 L196.5 358.1 L207.0 365.1 L207.0 367.2 L219.3 389.2 L233.5 401.7 L256.9 416.0 L361.8 410.3 L363.0 404.4 L290.5 399.5 L271.4 401.3 L248.5 387.9 L257.5 388.8 L277.6 393.5 L287.9 395.4 L298.7 397.0 L318.5 390.9 L338.0 391.9 L359.7 397.1 L371.4 400.2 L415.1 388.8 L450.5 361.3 L476.1 343.9 L490.0 329.0 L474.9 328.6 L408.4 353.8 L431.2 359.0 L390.3 359.6 L374.2 370.3 L352.4 365.2 L337.3 369.1 L337.0 372.9 L297.0 343.1 L319.4 344.9 L322.2 349.7 L346.8 351.2 L339.2 348.7 L390.0 332.8 L378.0 331.5 L398.5 322.3 L412.0 318.4 L421.9 314.6 L474.5 267.9 L490.0 241.9 L486.0 237.6 L487.1 233.5 L490.0 217.6 L487.7 201.0 L477.0 207.5 L465.1 213.1 L469.8 205.3 L456.8 204.2 L455.6 212.0 L440.4 217.5 L427.5 229.8 L427.3 219.0 L420.4 223.0 L412.0 213.0 L383.2 211.2 L367.2 199.3 L377.0 201.0 L382.3 189.1 L370.2 193.0 L361.0 190.9 L361.7 180.0 L374.5 179.2 L392.3 178.6 L388.0 184.2 L398.3 197.5 L423.4 206.0 L440.9 208.3 L451.7 193.5 L465.5 190.1 L480.0 197.6 L490.0 197.2 L490.0 147.0 L477.5 148.2 L459.2 152.1 L446.0 149.5 L442.3 144.0 L439.4 140.0 L454.4 128.6 L465.3 138.5 L482.4 131.0 L487.4 139.0 L490.0 128.0 L487.2 117.0 L486.0 108.0 L490.0 100.4 L256.0 96.0 L22.0 154.5 L22.0 154.5",
+    "M35.6 106.6 L38.5 119.8 L42.1 110.4 L43.0 106.0 L45.4 103.0 L48.5 165.5 L44.5 170.0 L33.6 171.7 L33.4 103.0 L35.6 106.6 L35.6 106.6",
+    "M382.6 113.0 L380.9 122.5 L375.0 127.1 L365.8 125.0 L373.8 113.6 L382.6 113.0 L382.6 113.0",
+    "M427.8 113.7 L427.9 117.6 L417.0 113.2 L427.8 113.7 L427.8 113.7",
+    "M233.5 120.6 L247.0 130.0 L250.2 133.9 L246.2 138.7 L237.5 134.7 L226.7 127.2 L220.3 123.1 L216.8 116.6 L233.5 120.6 L233.5 120.6",
+    "M295.0 121.0 L282.5 124.6 L295.0 121.0 L295.0 121.0",
+    "M311.0 124.5 L313.3 132.1 L315.4 141.0 L303.6 130.0 L311.0 124.5 L311.0 124.5",
+    "M447.0 126.5 L429.5 133.0 L421.4 136.2 L414.9 153.1 L404.6 153.5 L416.0 147.1 L411.4 142.1 L405.0 136.6 L391.0 136.1 L383.8 139.5 L375.5 139.9 L404.2 130.2 L422.1 125.4 L439.1 124.4 L447.0 126.5 L447.0 126.5",
+    "M345.5 129.0 L322.3 133.0 L331.8 127.2 L345.5 129.0 L345.5 129.0",
+    "M222.5 134.0 L231.8 140.2 L235.5 144.8 L237.4 154.7 L242.8 156.0 L252.9 160.0 L278.7 164.5 L286.8 168.3 L278.5 166.0 L280.9 172.0 L281.5 179.0 L281.0 183.5 L271.9 188.2 L278.6 193.4 L285.0 192.1 L291.0 194.5 L283.3 202.4 L292.3 205.3 L295.8 208.9 L289.9 210.8 L279.4 212.4 L269.4 201.0 L265.0 203.5 L256.5 201.5 L257.0 212.3 L249.4 208.3 L244.0 202.0 L244.4 194.4 L246.9 201.5 L250.5 204.0 L254.6 195.0 L262.3 198.6 L266.1 192.8 L262.8 188.8 L256.5 188.1 L251.0 184.9 L244.3 186.5 L237.8 188.5 L225.5 182.4 L226.7 181.1 L230.5 174.6 L227.8 168.2 L231.5 169.5 L238.8 170.7 L243.2 174.5 L250.7 178.6 L255.0 173.0 L247.8 169.7 L244.6 169.3 L236.0 157.7 L230.0 150.0 L225.6 154.1 L215.5 162.7 L222.1 170.9 L213.1 171.9 L212.0 170.0 L208.9 157.0 L205.3 150.4 L200.5 147.7 L202.0 144.9 L211.7 144.6 L216.0 146.1 L226.0 145.7 L222.3 140.1 L210.2 137.6 L208.3 132.0 L222.5 134.0 L222.5 134.0",
+    "M344.0 141.4 L351.2 148.8 L348.7 159.5 L339.5 160.0 L323.5 162.3 L314.6 155.6 L316.7 151.0 L325.0 144.7 L332.6 143.9 L338.5 141.1 L344.0 141.4 L344.0 141.4",
+    "M253.0 144.5 L256.8 150.3 L253.4 152.2 L244.3 148.1 L247.9 144.6 L253.0 144.5 L253.0 144.5",
+    "M178.4 153.6 L176.0 157.9 L174.8 154.1 L178.4 153.6 L178.4 153.6",
+    "M156.2 156.5 L157.9 159.2 L153.5 164.3 L144.0 157.9 L156.2 156.5 L156.2 156.5",
+    "M295.5 180.0 L295.4 185.5 L289.0 188.0 L288.4 182.0 L295.5 180.0 L295.5 180.0",
+    "M235.3 199.3 L230.0 200.0 L233.4 197.0 L235.3 199.3 L235.3 199.3",
+    "M223.3 204.0 L223.3 211.2 L219.7 216.0 L230.0 218.7 L236.1 211.9 L243.1 217.0 L247.3 224.3 L240.5 226.4 L228.8 226.0 L224.0 230.4 L215.3 234.7 L210.9 231.2 L212.6 215.6 L213.5 209.1 L219.9 202.3 L223.3 204.0 L223.3 204.0",
+    "M242.0 206.3 L240.0 205.0 L242.0 206.3 L242.0 206.3",
+    "M84.9 225.0 L81.0 234.3 L79.7 226.2 L84.9 225.0 L84.9 225.0",
+    "M366.2 232.0 L362.5 235.4 L360.4 231.0 L366.2 232.0 L366.2 232.0",
+    "M253.8 234.2 L250.4 234.1 L253.8 234.2 L253.8 234.2",
+    "M90.4 243.6 L101.0 242.8 L101.1 251.0 L95.3 252.1 L89.5 256.4 L89.9 259.7 L85.6 255.5 L86.0 244.5 L90.4 243.6 L90.4 243.6",
+    "M38.2 242.6 L34.2 241.4 L38.2 242.6 L38.2 242.6",
+    "M57.5 243.8 L65.5 252.2 L62.2 252.1 L57.0 246.6 L54.8 240.2 L57.5 243.8 L57.5 243.8",
+    "M127.5 244.6 L135.0 245.7 L140.7 247.0 L140.5 254.0 L134.0 256.1 L130.8 252.2 L118.4 250.1 L119.3 242.3 L127.5 244.6 L127.5 244.6",
+    "M288.0 249.4 L286.2 242.9 L288.0 249.4 L288.0 249.4",
+    "M228.0 246.5 L222.5 245.4 L228.0 246.5 L228.0 246.5",
+    "M404.3 249.3 L418.3 255.7 L421.7 261.4 L429.5 261.6 L434.0 254.4 L440.4 267.3 L432.5 270.9 L414.3 273.2 L389.3 274.1 L352.8 272.4 L355.5 263.4 L375.0 253.3 L386.5 250.9 L395.3 246.4 L404.3 249.3 L404.3 249.3",
+    "M49.0 250.0 L51.6 252.6 L49.8 256.2 L45.2 251.5 L49.0 250.0 L49.0 250.0",
+    "M120.7 260.0 L125.1 266.0 L118.5 265.4 L113.9 261.2 L105.9 264.7 L100.0 267.0 L98.6 266.2 L105.0 258.5 L112.0 256.0 L120.7 260.0 L120.7 260.0",
+    "M176.0 256.5 L174.0 259.6 L171.8 259.7 L174.0 255.0 L176.0 256.5 L176.0 256.5",
+    "M150.6 257.2 L144.8 260.8 L142.2 256.0 L150.6 257.2 L150.6 257.2",
+    "M324.0 258.0 L325.8 259.9 L321.0 265.1 L310.5 263.8 L324.0 258.0 L324.0 258.0",
+    "M231.5 258.6 L228.4 271.4 L231.5 258.6 L231.5 258.6",
+    "M220.8 263.6 L217.5 262.0 L220.8 263.6 L220.8 263.6",
+    "M336.0 268.1 L331.2 266.6 L336.0 268.1 L336.0 268.1",
+    "M88.7 270.5 L87.9 275.7 L79.0 272.0 L78.7 270.8 L84.4 267.0 L88.7 270.5 L88.7 270.5",
+    "M249.0 270.6 L244.1 269.3 L249.0 270.6 L249.0 270.6",
+    "M292.5 272.9 L290.8 269.8 L292.5 272.9 L292.5 272.9",
+    "M285.8 274.4 L282.2 273.6 L285.8 274.4 L285.8 274.4",
+    "M60.6 285.2 L54.0 290.5 L52.2 294.7 L43.4 294.1 L39.7 285.3 L60.6 285.2 L60.6 285.2",
+    "M148.4 289.6 L145.5 290.0 L148.4 289.6 L148.4 289.6",
+    "M63.4 293.6 L57.7 296.1 L63.4 293.6 L63.4 293.6",
+    "M345.0 315.5 L361.4 328.4 L352.4 330.0 L348.0 328.9 L342.4 326.9 L330.8 331.0 L325.4 326.2 L318.5 324.0 L312.0 327.0 L315.0 334.4 L298.3 323.7 L330.5 304.8 L345.0 315.5 L345.0 315.5",
+    "M33.5 318.6 L33.0 323.2 L31.3 313.0 L33.5 318.6 L33.5 318.6",
+    "M255.5 331.1 L268.7 332.6 L286.8 345.0 L281.8 347.8 L274.0 343.0 L268.0 349.9 L252.8 336.0 L255.5 331.1 L255.5 331.1",
+    "M226.0 344.4 L222.4 341.3 L226.0 344.4 L226.0 344.4",
+    "M212.3 346.4 L208.2 345.0 L212.3 346.4 L212.3 346.4",
+    "M180.0 350.0 L188.9 357.3 L183.4 363.0 L176.0 365.7 L169.4 360.0 L163.5 359.6 L164.5 355.0 L180.0 350.0 L180.0 350.0",
+    "M232.3 353.7 L233.5 362.4 L241.3 374.9 L229.0 367.3 L227.5 363.5 L229.6 355.4 L232.3 353.7 L232.3 353.7",
+    "M136.9 355.0 L147.0 360.3 L153.9 364.5 L158.0 371.0 L158.0 379.5 L148.5 385.2 L145.4 392.2 L137.4 390.7 L128.3 386.0 L126.6 379.5 L127.0 369.0 L136.9 355.0 L136.9 355.0",
+    "M263.0 362.0 L289.2 379.0 L273.3 374.3 L263.1 370.3 L256.5 359.6 L263.0 362.0 L263.0 362.0",
+    "M39.0 362.5 L46.9 368.0 L40.3 371.3 L25.8 369.5 L36.6 360.9 L39.0 362.5 L39.0 362.5"
+   ],
+   "paths": [
+    {
+     "mode": "flow",
+     "d": "M21.0 100.0 L93.0 95.0 L115.0 95.0 L135.0 95.0 L153.0 95.0 L173.0 96.0 L187.0 95.0 L224.0 96.0 L258.0 95.0 L268.0 96.0 L278.0 95.0 L283.0 95.0 L315.0 95.0 L340.0 96.0 L358.0 95.0 L372.0 96.0 L377.0 96.0 L402.0 95.0 L410.0 95.0 L432.0 95.0 L473.0 95.0 L482.0 95.0 L488.0 95.0",
+     "order": 1,
+     "budget": [
+      3,
+      20
+     ],
+     "band": 2,
+     "arch": "line",
+     "feature": "greatwave carrier 1"
+    },
+    {
+     "mode": "flow",
+     "d": "M264.0 332.0 L267.0 332.0 L273.0 335.0 L280.0 337.0 L287.0 339.0 L295.0 341.0 L307.0 343.0 L323.0 345.0 L339.0 346.0 L357.0 344.0 L367.0 342.0 L374.0 340.0 L380.0 338.0 L386.0 335.0 L391.0 333.0 L400.0 329.0 L410.0 325.0 L417.0 321.0 L423.0 317.0 L430.0 312.0 L442.0 302.0 L471.0 272.0 L479.0 262.0 L483.0 255.0 L488.0 249.0",
+     "order": 2,
+     "budget": [
+      2,
+      10
+     ],
+     "band": 2,
+     "arch": "line",
+     "feature": "greatwave carrier 2"
+    },
+    {
+     "mode": "flow",
+     "d": "M230.0 371.0 L247.0 389.0 L255.0 395.0 L263.0 401.0 L268.0 404.0 L273.0 406.0 L284.0 411.0 L291.0 412.0 L323.0 413.0 L345.0 410.0 L345.0 410.0 L323.0 413.0 L291.0 412.0 L284.0 411.0 L272.0 406.0 L267.0 402.0 L260.0 398.0 L253.0 393.0 L233.0 373.0 L229.0 372.0",
+     "order": 3,
+     "budget": [
+      2,
+      10
+     ],
+     "band": 2,
+     "arch": "line",
+     "feature": "greatwave carrier 3"
+    },
+    {
+     "mode": "flow",
+     "d": "M25.0 331.0 L30.0 334.0 L51.0 335.0 L60.0 333.0 L66.0 330.0 L77.0 329.0 L95.0 331.0 L102.0 329.0 L107.0 327.0 L113.0 323.0 L123.0 314.0 L127.0 313.0 L132.0 310.0 L137.0 309.0 L142.0 306.0 L153.0 293.0",
+     "order": 4,
+     "budget": [
+      2,
+      10
+     ],
+     "band": 2,
+     "arch": "line",
+     "feature": "greatwave carrier 4"
+    },
+    {
+     "mode": "flow",
+     "d": "M22.0 415.0 L29.0 413.0 L44.0 415.0 L81.0 416.0 L96.0 416.0 L101.0 416.0 L137.0 416.0 L143.0 416.0 L157.0 415.0",
+     "order": 5,
+     "budget": [
+      2,
+      10
+     ],
+     "band": 2,
+     "arch": "line",
+     "feature": "greatwave carrier 5"
+    },
+    {
+     "mode": "flow",
+     "d": "M476.0 328.0 L463.0 334.0 L457.0 336.0 L451.0 337.0 L446.0 340.0 L440.0 342.0 L434.0 344.0 L425.0 345.0 L415.0 348.0 L415.0 348.0 L425.0 345.0 L434.0 344.0 L440.0 342.0 L446.0 340.0 L454.0 336.0 L460.0 335.0 L466.0 333.0 L478.0 327.0",
+     "order": 6,
+     "budget": [
+      2,
+      10
+     ],
+     "band": 2,
+     "arch": "line",
+     "feature": "greatwave carrier 6"
+    },
+    {
+     "mode": "flow",
+     "d": "M483.0 390.0 L473.0 391.0 L438.0 391.0 L432.0 393.0 L423.0 395.0 L417.0 397.0 L410.0 400.0 L403.0 402.0 L393.0 404.0 L393.0 404.0 L403.0 402.0 L410.0 400.0 L417.0 397.0 L423.0 395.0",
+     "order": 7,
+     "budget": [
+      2,
+      10
+     ],
+     "band": 2,
+     "arch": "line",
+     "feature": "greatwave carrier 7"
+    },
+    {
+     "mode": "flow",
+     "d": "M221.0 279.0 L215.0 271.0 L210.0 260.0 L209.0 252.0 L206.0 244.0 L207.0 230.0 L209.0 213.0 L212.0 207.0 L217.0 201.0 L227.0 196.0",
+     "order": 8,
+     "budget": [
+      2,
+      10
+     ],
+     "band": 2,
+     "arch": "line",
+     "feature": "greatwave carrier 8"
+    }
+   ],
+   "provenance": {
+    "title": "The Great Wave off Kanagawa",
+    "artist": "Katsushika Hokusai (1760–1849)",
+    "source": "Wikimedia Commons",
+    "sourceUrl": "https://commons.wikimedia.org/wiki/Special:FilePath/Great_Wave_off_Kanagawa2.jpg",
+    "pdBasis": "Public domain: woodblock print c. 1831, artist died 1849; three-layer machine trace over the PD scan at content time (reference image not shipped)",
+    "retrieved": "2026-08-04"
+   }
+  },
+  {
+   "id": "sunflowers",
+   "tier": "expert",
+   "subject": "sunflower",
+   "icon": "🌻",
+   "name": "Sunflowers",
+   "kid": false,
+   "wash": false,
+   "pack": "worldart2",
+   "categories": [
+    "masters",
+    "things"
+   ],
+   "canonicalCategory": "masters",
+   "aliases": [
+    "van gogh",
+    "gogh",
+    "vase"
+   ],
+   "extractionClass": "LINE",
+   "guide": [
+    "M254.7 24.0 L251.0 31.0 L248.0 37.0 L247.3 68.5 L262.3 91.0 L275.6 101.7 L282.0 104.0 L290.0 107.0 L296.7 103.0 L326.7 64.7 L324.7 32.5 L316.9 22.0 L283.0 23.4 L280.9 29.9 L304.6 30.1 L311.0 31.1 L313.1 34.3 L303.3 40.6 L299.0 48.5 L296.0 58.8 L282.3 69.3 L276.0 72.3 L272.0 69.7 L266.2 56.3 L260.7 57.9 L261.0 55.0 L263.6 46.5 L270.6 34.7 L267.1 31.4 L268.8 27.2 L254.7 24.0 L254.7 24.0",
+    "M204.9 50.4 L185.2 52.9 L178.2 53.8 L170.0 57.1 L153.0 105.5 L162.0 119.5 L181.2 136.9 L186.6 142.5 L190.0 154.5 L193.0 154.4 L199.1 151.8 L212.6 180.6 L235.5 182.8 L229.9 171.0 L235.1 161.7 L241.0 154.0 L241.6 139.4 L229.8 127.6 L216.4 119.4 L202.0 130.6 L198.0 131.2 L194.5 122.9 L186.0 112.0 L176.3 99.4 L189.0 108.6 L203.0 109.0 L205.4 107.0 L211.5 104.3 L225.0 98.1 L235.1 90.3 L231.6 75.2 L229.2 64.8 L223.2 55.5 L204.9 50.4 L204.9 50.4",
+    "M338.9 90.6 L331.0 97.7 L321.9 113.6 L321.2 124.2 L327.8 132.2 L331.7 144.0 L321.3 152.7 L312.7 157.0 L302.9 162.6 L305.0 172.5 L314.9 175.0 L334.9 156.0 L333.3 163.0 L339.1 162.0 L341.5 173.0 L351.5 173.4 L361.0 170.5 L359.0 163.6 L353.5 158.0 L357.0 139.7 L349.2 141.8 L356.0 125.0 L347.7 121.5 L356.1 110.1 L355.0 118.1 L358.0 123.0 L361.4 132.6 L368.6 141.6 L362.9 154.2 L367.0 154.0 L374.7 131.5 L370.9 111.8 L362.5 103.4 L349.0 93.5 L338.9 90.6 L338.9 90.6",
+    "M346.0 100.8 L337.0 107.9 L331.9 108.1 L346.0 100.8 L346.0 100.8",
+    "M72.0 111.5 L77.0 111.5 L72.0 111.5 L72.0 111.5",
+    "M128.5 111.0 L122.0 113.4 L113.5 119.4 L106.4 116.7 L100.6 112.2 L95.4 115.7 L85.0 128.5 L87.3 133.5 L79.4 139.1 L79.5 159.4 L90.0 165.0 L103.8 172.0 L119.6 172.4 L137.7 167.9 L142.8 163.6 L141.7 141.9 L138.2 135.2 L138.4 133.5 L138.6 124.4 L131.7 114.2 L128.5 111.0 L128.5 111.0",
+    "M285.0 110.9 L290.8 113.7 L285.0 110.9 L285.0 110.9",
+    "M244.2 125.7 L245.3 124.0 L244.2 125.7 L244.2 125.7",
+    "M420.7 125.4 L416.0 131.5 L420.7 125.4 L420.7 125.4",
+    "M432.4 131.7 L429.0 141.1 L412.2 156.2 L407.0 162.0 L403.0 162.4 L400.5 158.2 L392.6 152.7 L387.5 170.4 L384.4 182.0 L384.5 185.0 L391.2 185.5 L421.2 186.6 L439.0 180.7 L440.5 130.5 L432.4 131.7 L432.4 131.7",
+    "M372.0 151.4 L372.8 165.4 L378.0 158.0 L372.0 151.4 L372.0 151.4",
+    "M281.0 153.1 L267.2 165.7 L281.0 165.9 L275.0 176.0 L262.5 191.0 L253.0 187.0 L253.3 195.4 L258.8 210.0 L268.0 211.7 L280.7 217.2 L286.0 223.0 L289.0 225.0 L291.7 223.0 L299.0 223.2 L302.3 211.2 L289.7 213.0 L294.1 205.3 L306.8 204.0 L309.4 197.7 L327.0 204.0 L325.6 191.0 L311.6 186.5 L305.5 189.0 L296.8 181.5 L292.5 168.9 L286.5 160.9 L295.5 163.4 L292.5 154.9 L283.3 152.5 L281.0 153.1 L281.0 153.1",
+    "M256.2 178.7 L261.8 178.7 L256.2 178.7 L256.2 178.7",
+    "M355.0 183.0 L359.0 186.1 L360.2 183.2 L357.0 181.0 L355.0 183.0 L355.0 183.0",
+    "M167.5 191.2 L157.6 204.3 L170.0 209.4 L170.9 212.3 L162.3 219.6 L186.7 218.2 L187.5 208.0 L197.4 202.8 L187.5 194.0 L176.0 191.5 L171.6 188.5 L167.5 191.2 L167.5 191.2",
+    "M365.7 195.7 L368.8 197.7 L365.7 195.7 L365.7 195.7",
+    "M312.0 205.5 L324.0 209.6 L318.7 206.0 L312.0 205.5 L312.0 205.5",
+    "M197.4 213.3 L192.3 223.8 L213.0 239.4 L220.0 250.0 L224.0 242.9 L226.0 235.6 L226.5 224.7 L210.5 219.7 L197.4 213.3 L197.4 213.3",
+    "M350.0 218.9 L352.3 215.2 L350.0 218.9 L350.0 218.9",
+    "M381.7 218.7 L380.0 226.2 L376.1 259.3 L382.5 264.7 L383.2 252.5 L392.9 241.5 L401.0 231.6 L403.5 226.7 L389.0 222.5 L381.7 218.7 L381.7 218.7",
+    "M112.2 229.1 L113.3 227.0 L112.2 229.1 L112.2 229.1",
+    "M143.2 230.7 L116.0 235.2 L114.0 242.0 L124.0 243.1 L126.1 250.8 L131.7 243.6 L134.0 248.6 L144.6 260.4 L167.3 282.3 L173.1 289.9 L176.0 296.8 L173.2 308.4 L157.4 299.0 L159.8 309.1 L156.5 335.0 L165.8 318.5 L183.8 310.2 L185.9 306.0 L186.3 293.7 L181.7 279.2 L184.8 259.2 L179.9 246.2 L159.0 232.0 L143.2 230.7 L143.2 230.7",
+    "M190.0 230.5 L199.9 246.4 L206.4 256.4 L211.4 268.7 L211.0 252.9 L190.0 230.5 L190.0 230.5",
+    "M308.0 235.0 L301.0 248.0 L300.0 269.9 L302.3 283.1 L317.6 284.8 L335.7 282.6 L344.8 289.3 L344.7 276.5 L349.0 256.3 L344.5 247.7 L336.5 245.0 L332.2 242.0 L320.9 238.2 L308.0 235.0 L308.0 235.0",
+    "M326.0 248.5 L325.9 260.4 L318.1 263.3 L326.0 248.5 L326.0 248.5",
+    "M339.7 233.6 L349.0 236.0 L343.4 233.4 L339.7 233.6 L339.7 233.6",
+    "M407.4 236.4 L414.0 239.7 L407.4 236.4 L407.4 236.4",
+    "M235.0 239.0 L239.4 237.6 L235.0 239.0 L235.0 239.0",
+    "M400.4 251.5 L407.0 253.6 L400.4 251.5 L400.4 251.5",
+    "M192.0 261.3 L196.8 261.2 L192.0 261.3 L192.0 261.3",
+    "M368.0 269.2 L368.6 276.0 L371.0 286.8 L373.4 270.3 L368.0 269.2 L368.0 269.2",
+    "M355.6 271.6 L363.0 274.0 L355.6 271.6 L355.6 271.6",
+    "M202.0 279.0 L192.0 281.7 L197.4 294.2 L209.5 285.2 L202.0 279.0 L202.0 279.0",
+    "M387.3 277.7 L391.0 280.0 L387.3 277.7 L387.3 277.7",
+    "M295.2 283.2 L300.7 283.6 L295.2 283.2 L295.2 283.2",
+    "M243.9 286.0 L242.0 304.7 L252.8 308.9 L265.6 313.0 L269.0 302.0 L271.5 299.0 L269.9 295.0 L258.8 288.0 L243.9 286.0 L243.9 286.0",
+    "M328.0 299.5 L319.0 307.6 L331.2 305.0 L334.1 296.0 L328.0 299.5 L328.0 299.5",
+    "M298.7 302.8 L293.5 314.4 L297.5 321.8 L293.1 326.4 L306.1 325.6 L327.2 331.4 L325.8 324.2 L321.5 314.5 L310.6 315.0 L307.4 301.0 L298.7 302.8 L298.7 302.8",
+    "M209.7 310.4 L203.3 320.7 L183.5 353.7 L195.6 354.9 L200.3 349.5 L214.5 348.4 L222.0 358.3 L231.3 362.9 L240.6 367.2 L251.2 363.0 L259.7 362.7 L271.5 361.0 L279.1 355.0 L284.9 343.6 L282.4 328.4 L287.0 326.0 L277.3 324.9 L273.4 323.5 L281.0 314.6 L272.7 317.2 L262.4 325.0 L256.3 322.9 L256.0 320.4 L259.0 317.4 L243.8 312.6 L241.3 319.1 L240.0 336.7 L232.5 338.0 L226.6 329.5 L228.1 316.0 L215.6 306.4 L209.7 310.4 L209.7 310.4",
+    "M219.1 314.3 L215.0 322.6 L210.6 317.0 L216.8 311.0 L219.1 314.3 L219.1 314.3",
+    "M271.7 330.6 L270.0 337.2 L264.8 342.5 L258.1 343.7 L250.1 337.3 L253.0 333.5 L266.0 333.9 L271.7 330.6 L271.7 330.6",
+    "M248.0 347.0 L243.0 349.5 L241.5 346.7 L248.0 347.0 L248.0 347.0",
+    "M369.0 338.8 L370.8 338.2 L369.0 338.8 L369.0 338.8",
+    "M353.5 341.0 L350.0 344.0 L336.2 344.0 L334.9 352.8 L326.8 356.8 L320.0 357.1 L316.0 356.9 L311.0 355.9 L308.5 372.0 L311.6 375.5 L305.0 372.0 L295.0 383.0 L283.0 384.2 L294.3 396.9 L294.4 405.0 L301.1 399.5 L309.8 394.3 L315.7 390.0 L323.9 384.0 L332.9 377.0 L336.6 384.7 L330.6 402.9 L338.7 401.0 L347.3 395.3 L354.9 399.0 L362.6 391.5 L371.1 374.5 L375.9 363.0 L386.6 370.0 L390.9 365.0 L389.7 356.6 L385.5 350.6 L380.0 344.5 L378.0 347.3 L369.0 347.7 L359.2 341.5 L353.5 341.0 L353.5 341.0",
+    "M343.3 379.2 L340.2 379.4 L343.3 379.2 L343.3 379.2",
+    "M114.4 343.4 L114.1 349.7 L114.2 366.5 L118.0 374.8 L119.5 384.0 L128.2 388.3 L142.7 399.0 L148.0 393.5 L145.6 388.5 L141.6 380.6 L145.0 376.0 L133.7 371.6 L134.5 364.8 L139.1 364.9 L147.1 362.0 L139.7 349.7 L127.2 346.5 L114.4 343.4 L114.4 343.4",
+    "M212.0 368.8 L215.9 371.3 L212.0 368.8 L212.0 368.8",
+    "M200.0 379.7 L194.0 394.0 L191.4 385.0 L199.5 437.1 L215.7 469.7 L223.0 490.0 L241.0 488.5 L225.0 474.3 L214.2 454.4 L197.4 416.7 L206.0 414.2 L211.0 410.5 L218.6 411.0 L216.0 400.3 L206.9 384.3 L200.0 379.7 L200.0 379.7",
+    "M382.0 382.0 L387.0 382.0 L382.0 382.0 L382.0 382.0",
+    "M70.0 414.3 L82.1 414.0 L70.0 414.3 L70.0 414.3",
+    "M231.2 414.3 L232.0 423.0 L237.0 416.1 L231.2 414.3 L231.2 414.3",
+    "M93.2 415.7 L97.8 416.3 L93.2 415.7 L93.2 415.7",
+    "M378.7 420.2 L384.5 424.0 L388.1 419.0 L378.7 420.2 L378.7 420.2",
+    "M328.2 423.2 L321.0 443.2 L314.6 458.2 L304.0 490.0 L316.6 471.9 L337.1 424.3 L332.4 419.4 L328.2 423.2 L328.2 423.2",
+    "M398.0 420.5 L396.0 424.0 L401.4 419.0 L398.0 420.5 L398.0 420.5",
+    "M414.2 420.2 L422.3 423.0 L414.2 420.2 L414.2 420.2",
+    "M435.0 421.5 L441.0 421.5 L435.0 421.5 L435.0 421.5",
+    "M249.6 25.5 L247.0 30.7 L242.6 45.7 L244.8 62.3 L248.7 78.3 L253.0 84.7 L257.0 88.5 L270.0 100.5 L285.1 111.3 L291.2 114.5 L293.8 106.0 L299.8 104.0 L314.3 93.0 L328.0 68.4 L333.0 52.5 L323.0 22.8 L250.2 22.0 L249.6 25.5 L249.6 25.5",
+    "M293.2 37.8 L292.0 38.0 L286.7 44.1 L278.0 41.2 L277.8 40.1 L293.2 37.8 L293.2 37.8",
+    "M204.1 45.6 L196.0 46.8 L174.0 51.6 L167.5 55.9 L148.1 88.4 L153.0 108.0 L157.0 114.8 L162.5 124.1 L169.1 130.9 L185.7 145.9 L189.0 155.1 L215.7 184.0 L224.1 186.0 L237.9 182.5 L251.3 186.0 L247.0 190.6 L248.8 198.5 L253.4 208.4 L261.0 216.7 L271.0 223.4 L277.5 220.1 L283.0 221.9 L277.0 228.2 L263.6 239.5 L255.4 239.0 L250.0 238.7 L243.6 240.4 L231.0 233.2 L241.9 230.1 L240.7 224.0 L228.4 220.5 L226.7 212.8 L216.0 209.6 L210.6 217.1 L206.7 212.3 L194.9 212.7 L201.1 199.5 L197.4 189.0 L191.5 185.2 L181.7 188.7 L170.8 185.7 L153.2 184.2 L143.7 164.0 L145.3 158.0 L154.2 155.3 L153.3 145.2 L147.0 136.5 L142.0 130.5 L142.2 121.5 L139.2 115.6 L134.0 113.3 L123.9 104.0 L105.2 100.7 L101.5 105.9 L90.4 108.0 L83.5 111.0 L70.6 106.6 L70.0 140.0 L72.5 144.1 L75.0 151.6 L79.0 154.5 L81.0 163.1 L82.3 170.2 L84.0 191.0 L86.1 172.5 L95.7 174.6 L99.5 177.0 L111.3 173.8 L119.7 180.0 L129.3 173.7 L133.6 169.6 L154.4 191.2 L156.0 198.9 L148.1 197.0 L142.2 196.7 L151.6 208.0 L153.6 211.0 L165.9 210.8 L155.7 217.4 L162.8 220.3 L184.5 221.3 L186.8 232.4 L196.1 240.6 L202.7 251.1 L200.0 257.7 L191.7 257.5 L175.9 237.2 L159.0 226.5 L142.7 226.5 L131.8 221.4 L117.5 218.0 L100.1 205.0 L107.1 228.3 L112.0 240.0 L121.9 239.4 L122.9 243.9 L135.6 241.0 L135.1 256.5 L160.7 270.0 L168.9 296.6 L152.4 296.6 L155.9 304.4 L155.9 312.7 L161.6 344.8 L160.8 318.3 L182.5 313.7 L186.0 309.4 L194.0 309.5 L192.4 303.5 L183.1 270.7 L197.5 274.6 L193.9 277.4 L195.4 292.3 L203.4 297.5 L211.0 306.0 L208.3 309.5 L198.0 321.0 L192.7 330.7 L188.0 345.0 L183.6 352.9 L178.3 362.5 L193.2 358.5 L195.9 367.0 L187.7 419.8 L167.7 418.5 L149.3 418.4 L127.3 415.4 L120.5 418.0 L116.5 415.0 L112.5 418.0 L81.7 413.4 L70.0 430.8 L74.1 449.5 L80.9 445.0 L93.0 439.0 L87.5 447.0 L88.0 461.0 L91.9 450.6 L104.2 453.9 L113.0 449.7 L122.9 442.5 L143.9 441.4 L152.0 452.0 L160.4 462.2 L170.4 462.5 L178.0 459.0 L178.0 467.7 L165.8 467.5 L161.5 463.0 L157.8 466.5 L133.9 469.4 L123.3 475.2 L110.1 477.4 L98.5 481.5 L82.5 485.9 L93.4 490.0 L119.2 487.9 L247.0 488.5 L226.0 474.4 L214.1 453.8 L197.5 416.0 L217.6 421.8 L228.3 427.5 L243.0 430.0 L262.5 434.1 L285.4 429.8 L276.7 423.8 L268.1 427.3 L262.9 418.0 L264.9 399.8 L260.6 398.2 L251.6 415.5 L245.9 403.5 L233.6 399.3 L228.8 390.3 L231.0 378.0 L221.8 366.0 L245.7 367.1 L261.0 367.7 L271.5 367.0 L281.5 358.6 L286.5 346.4 L289.0 327.1 L304.7 329.6 L324.5 330.9 L329.0 356.2 L326.0 353.0 L322.0 352.0 L318.7 354.2 L317.0 352.0 L309.1 345.0 L308.2 355.3 L305.7 372.1 L300.1 363.0 L296.3 368.8 L291.5 373.0 L289.6 381.0 L285.0 390.5 L291.3 394.8 L291.8 397.9 L294.4 406.0 L311.5 404.1 L317.5 393.7 L325.7 393.7 L327.6 403.5 L341.0 398.3 L350.3 398.0 L368.1 393.5 L380.1 382.8 L392.1 380.8 L384.5 372.1 L398.0 364.1 L396.4 353.0 L392.9 348.0 L386.0 343.2 L379.0 341.5 L376.0 340.5 L367.0 339.5 L362.4 339.5 L350.0 341.0 L348.5 345.0 L326.8 323.9 L326.9 317.7 L339.7 302.7 L345.8 290.1 L347.5 280.0 L348.0 274.0 L347.6 271.4 L353.0 275.6 L359.0 280.4 L366.0 283.5 L364.5 292.0 L369.0 289.8 L376.1 287.0 L384.1 284.4 L388.4 287.0 L395.1 273.0 L403.5 270.5 L409.5 257.5 L413.7 247.5 L410.0 230.5 L408.6 213.5 L390.4 217.6 L377.8 224.0 L371.4 226.0 L370.0 229.0 L371.5 237.0 L368.5 246.0 L360.7 248.0 L362.4 232.7 L360.9 218.5 L374.9 195.0 L387.3 186.5 L398.7 187.0 L421.0 191.1 L421.6 205.8 L432.6 212.2 L433.5 198.4 L438.1 183.7 L441.0 152.3 L438.5 124.0 L421.6 122.7 L412.0 128.0 L406.0 129.4 L402.5 133.1 L390.0 135.8 L395.2 144.0 L387.5 151.0 L387.3 159.4 L386.8 167.1 L382.5 167.1 L379.9 154.6 L376.0 131.7 L371.3 112.0 L354.4 91.8 L331.0 91.9 L324.0 102.7 L320.0 113.5 L324.4 135.0 L327.9 139.0 L329.4 144.3 L309.3 157.5 L296.0 152.0 L288.1 150.3 L277.4 153.8 L269.0 161.2 L255.4 174.3 L250.1 169.3 L253.3 160.0 L249.7 151.2 L259.0 152.6 L257.0 146.4 L260.4 145.9 L263.9 142.2 L265.6 127.6 L259.1 119.0 L251.3 115.7 L238.7 110.8 L231.8 104.0 L235.0 73.5 L228.3 54.5 L223.8 49.4 L214.1 46.0 L204.1 45.6 L204.1 45.6",
+    "M357.5 148.7 L354.3 148.5 L357.5 148.7 L357.5 148.7",
+    "M334.6 158.6 L336.0 156.7 L334.6 158.6 L334.6 158.6",
+    "M241.3 161.3 L238.6 164.7 L241.3 161.3 L241.3 161.3",
+    "M339.0 162.0 L338.7 170.3 L347.1 176.4 L349.8 185.0 L347.0 193.7 L352.0 195.0 L372.0 184.7 L372.4 188.0 L368.1 192.6 L359.9 201.6 L350.9 213.0 L346.0 226.0 L334.0 231.5 L327.0 234.0 L323.5 231.0 L307.2 225.4 L303.8 222.0 L307.5 215.0 L315.4 215.5 L313.7 207.7 L324.8 211.6 L316.0 200.9 L328.0 198.3 L328.0 191.4 L320.0 180.8 L302.0 184.6 L324.0 170.2 L339.0 162.0 L339.0 162.0",
+    "M364.6 176.6 L363.3 172.2 L364.6 176.6 L364.6 176.6",
+    "M382.4 180.7 L383.8 177.2 L382.4 180.7 L382.4 180.7",
+    "M335.0 237.0 L329.0 235.4 L335.0 237.0 L335.0 237.0",
+    "M286.6 239.4 L283.6 237.0 L286.6 239.4 L286.6 239.4",
+    "M233.8 241.9 L230.1 244.9 L233.8 241.9 L233.8 241.9",
+    "M276.0 253.0 L287.6 260.8 L268.0 255.5 L265.9 254.7 L276.0 253.0 L276.0 253.0",
+    "M372.4 253.7 L365.8 259.0 L369.2 252.8 L372.4 253.7 L372.4 253.7",
+    "M251.3 255.1 L243.0 255.6 L251.3 255.1 L251.3 255.1",
+    "M202.9 269.0 L199.6 268.8 L202.9 269.0 L202.9 269.0",
+    "M260.2 277.2 L248.8 282.1 L242.6 278.0 L260.2 277.2 L260.2 277.2",
+    "M177.0 283.0 L172.8 285.5 L177.0 283.0 L177.0 283.0",
+    "M237.6 286.5 L233.0 287.4 L237.6 286.5 L237.6 286.5",
+    "M218.0 357.5 L210.4 362.9 L218.0 357.5 L218.0 357.5",
+    "M204.1 453.1 L200.0 452.9 L204.1 453.1 L204.1 453.1",
+    "M164.6 477.6 L154.5 476.6 L164.6 477.6 L164.6 477.6",
+    "M103.0 185.1 L105.1 183.0 L103.0 185.1 L103.0 185.1",
+    "M247.0 215.8 L248.8 215.2 L247.0 215.8 L247.0 215.8",
+    "M172.0 224.9 L176.8 227.6 L177.8 224.0 L172.0 224.9 L172.0 224.9",
+    "M112.2 338.2 L111.6 345.0 L110.0 354.0 L113.5 367.3 L116.2 380.8 L125.8 389.0 L137.6 400.7 L148.0 398.5 L157.0 391.4 L162.0 393.0 L159.4 384.0 L156.0 382.0 L155.5 378.0 L151.8 367.2 L162.0 357.8 L153.6 360.2 L142.6 349.5 L138.5 344.0 L135.0 342.0 L131.5 344.0 L129.0 345.5 L126.5 340.0 L123.0 342.0 L118.8 339.8 L112.2 338.2 L112.2 338.2",
+    "M253.0 369.1 L257.0 370.5 L254.5 366.0 L253.0 369.1 L253.0 369.1",
+    "M236.3 375.1 L242.3 374.1 L236.3 375.1 L236.3 375.1",
+    "M330.2 411.7 L325.9 428.2 L293.4 486.0 L328.5 490.0 L364.3 485.5 L367.1 482.8 L370.0 475.3 L366.0 467.4 L352.6 460.4 L345.9 449.5 L354.9 442.2 L366.3 446.6 L375.6 452.8 L365.2 451.8 L363.9 458.0 L377.4 462.7 L405.6 457.5 L416.2 461.0 L418.1 466.8 L432.9 462.0 L434.6 459.0 L433.0 444.6 L441.0 435.8 L439.8 419.6 L371.0 418.1 L375.7 424.0 L346.8 423.9 L338.4 420.0 L333.4 414.5 L330.2 411.7 L330.2 411.7",
+    "M381.9 433.3 L376.7 433.4 L381.9 433.3 L381.9 433.3",
+    "M371.0 435.0 L365.8 435.6 L371.0 435.0 L371.0 435.0",
+    "M392.8 437.8 L385.5 440.7 L392.8 437.8 L392.8 437.8",
+    "M408.7 449.6 L403.0 449.5 L408.7 449.6 L408.7 449.6",
+    "M335.2 468.7 L330.0 469.5 L335.2 468.7 L335.2 468.7",
+    "M360.9 476.9 L355.0 477.2 L360.9 476.9 L360.9 476.9",
+    "M436.3 471.0 L441.0 476.0 L436.3 471.0 L436.3 471.0",
+    "M81.2 477.7 L84.9 475.9 L81.2 477.7 L81.2 477.7",
+    "M279.7 486.6 L285.8 488.2 L279.7 486.6 L279.7 486.6",
+    "M70.0 26.9 L73.2 35.2 L87.0 46.2 L70.0 46.8 L71.8 70.0 L79.8 61.8 L89.6 61.1 L94.1 53.3 L96.4 53.0 L103.2 64.1 L109.6 68.0 L112.6 56.7 L117.1 53.7 L128.0 55.5 L131.3 63.8 L138.0 57.9 L144.0 52.0 L140.0 49.4 L145.0 43.6 L161.3 33.7 L116.5 22.0 L70.0 26.9 L70.0 26.9",
+    "M246.7 22.7 L244.5 30.0 L242.1 41.2 L242.5 57.1 L245.0 67.4 L248.0 78.2 L253.0 85.4 L257.0 90.5 L260.2 93.2 L268.8 100.3 L284.0 112.9 L269.2 123.3 L264.0 120.3 L258.2 115.9 L247.0 107.3 L241.5 103.6 L235.8 72.2 L235.7 57.3 L226.9 37.5 L219.6 44.1 L211.2 40.0 L202.9 43.3 L198.6 39.0 L189.4 39.5 L173.0 50.0 L160.0 61.8 L145.3 89.8 L148.4 105.1 L156.0 115.0 L160.4 123.1 L168.7 132.0 L183.9 147.7 L188.0 160.8 L196.5 172.4 L215.0 187.0 L203.9 191.7 L200.0 184.5 L196.0 182.9 L191.0 178.0 L190.5 175.0 L187.5 178.6 L183.8 187.4 L181.4 177.0 L177.4 170.0 L170.6 171.1 L161.0 184.7 L146.2 162.9 L157.0 162.5 L162.0 159.0 L155.0 135.9 L153.6 127.4 L150.0 126.2 L146.1 128.9 L146.2 110.7 L135.4 105.5 L120.8 97.0 L111.4 88.6 L103.0 89.0 L104.4 93.4 L92.1 89.0 L100.0 99.2 L89.1 98.5 L84.8 106.2 L70.0 121.9 L71.2 143.3 L76.0 167.1 L81.0 163.1 L80.2 171.2 L79.0 200.0 L85.2 194.2 L93.4 186.6 L100.4 180.5 L103.7 193.8 L113.5 185.6 L126.0 183.4 L129.0 187.2 L132.5 179.3 L139.5 176.5 L147.0 188.7 L147.0 195.6 L141.0 195.9 L152.0 204.0 L136.4 213.3 L125.4 210.5 L117.0 210.0 L97.2 201.0 L103.0 226.5 L106.5 241.6 L112.0 248.2 L122.9 259.0 L134.0 242.3 L136.5 259.0 L156.7 269.5 L166.4 297.9 L157.0 289.5 L148.5 276.9 L137.9 297.6 L117.5 302.3 L119.8 295.6 L112.8 288.1 L95.9 291.3 L95.5 296.0 L98.7 306.5 L106.9 323.5 L117.1 314.1 L115.6 328.5 L110.0 329.2 L106.0 337.3 L103.3 345.5 L96.0 351.1 L98.5 355.2 L108.5 369.0 L110.4 379.7 L136.0 398.5 L145.0 401.9 L157.6 401.9 L163.5 395.0 L166.0 385.2 L161.1 376.0 L158.3 366.8 L160.6 322.5 L180.1 323.5 L188.5 324.5 L177.3 358.6 L190.8 360.2 L191.4 407.7 L188.9 415.5 L121.3 413.9 L78.1 406.4 L70.0 409.1 L70.0 490.0 L441.0 490.0 L436.6 407.5 L422.3 416.5 L419.6 411.0 L423.5 394.0 L430.0 381.0 L433.0 372.0 L428.6 349.0 L423.2 345.2 L418.7 327.9 L409.0 336.2 L406.8 351.8 L397.4 333.0 L393.5 337.0 L387.9 324.5 L381.5 334.6 L376.8 324.4 L372.0 326.4 L363.0 329.5 L349.2 330.9 L348.4 339.8 L338.5 335.5 L335.4 310.0 L357.3 287.3 L365.6 291.8 L375.0 291.0 L382.0 288.2 L392.3 286.2 L403.2 280.0 L404.7 285.0 L406.0 311.0 L411.0 321.2 L423.4 316.0 L418.0 307.4 L413.0 296.3 L416.2 288.5 L434.0 289.1 L425.8 287.4 L432.0 280.6 L417.1 267.9 L409.9 254.8 L416.0 247.9 L418.0 239.2 L411.7 227.1 L412.3 211.4 L399.2 203.2 L393.5 201.0 L378.5 199.0 L368.0 206.4 L373.3 197.1 L389.3 189.4 L399.6 189.7 L407.8 188.1 L417.4 188.5 L426.1 209.3 L432.0 218.0 L435.6 196.6 L441.0 152.6 L438.0 122.5 L428.7 118.0 L415.0 117.5 L399.4 128.7 L389.0 135.6 L385.0 143.7 L383.2 148.5 L377.0 134.7 L374.9 114.8 L371.1 99.7 L375.0 101.0 L371.0 93.9 L362.6 94.4 L338.9 83.8 L323.1 98.0 L314.4 111.0 L307.0 114.9 L299.0 124.3 L292.0 112.6 L297.8 105.9 L311.8 98.8 L324.0 82.0 L331.7 65.6 L332.1 34.0 L325.5 24.0 L246.7 22.7 L246.7 22.7",
+    "M319.6 118.7 L314.6 127.6 L309.0 121.7 L319.4 116.1 L319.6 118.7 L319.6 118.7",
+    "M315.8 141.3 L316.6 137.2 L315.8 141.3 L315.8 141.3",
+    "M329.0 145.5 L323.0 148.2 L329.0 145.5 L329.0 145.5",
+    "M263.6 161.2 L257.5 159.8 L263.6 161.2 L263.6 161.2",
+    "M338.1 162.4 L336.0 169.9 L338.0 179.5 L327.7 174.4 L332.9 163.7 L338.1 162.4 L338.1 162.4",
+    "M328.7 184.5 L346.9 199.2 L359.9 190.6 L367.0 190.1 L354.9 206.5 L350.0 211.1 L347.2 214.8 L346.0 217.5 L348.0 220.5 L336.0 222.0 L333.0 227.5 L335.0 230.0 L326.4 229.4 L315.1 225.4 L311.9 218.4 L319.0 217.0 L313.5 207.9 L324.8 208.1 L323.4 203.1 L324.3 191.4 L325.1 184.3 L328.7 184.5 L328.7 184.5",
+    "M240.3 187.2 L235.0 221.1 L228.6 216.0 L224.3 206.3 L217.5 201.0 L220.2 188.7 L239.1 187.2 L240.3 187.2 L240.3 187.2",
+    "M243.0 201.5 L245.2 226.0 L240.6 198.8 L243.0 201.5 L243.0 201.5",
+    "M252.8 201.1 L252.2 196.9 L252.8 201.1 L252.8 201.1",
+    "M261.0 212.6 L263.6 221.6 L271.3 228.0 L272.8 231.1 L263.7 238.0 L257.0 239.0 L252.9 218.3 L261.0 212.6 L261.0 212.6",
+    "M247.3 231.2 L243.4 230.5 L247.3 231.2 L247.3 231.2",
+    "M235.0 244.0 L230.0 242.4 L235.0 244.0 L235.0 244.0",
+    "M408.9 269.9 L404.0 268.3 L408.9 269.9 L408.9 269.9",
+    "M176.4 280.6 L173.7 279.7 L176.4 280.6 L176.4 280.6",
+    "M209.6 301.1 L201.4 300.7 L209.6 301.1 L209.6 301.1",
+    "M200.9 308.4 L184.3 316.4 L191.4 311.8 L195.9 303.8 L200.9 308.4 L200.9 308.4",
+    "M142.5 307.7 L152.4 331.2 L156.3 357.2 L143.8 346.3 L137.9 335.4 L140.4 307.5 L142.5 307.7 L142.5 307.7",
+    "M322.7 330.9 L329.4 351.8 L321.3 343.7 L316.0 346.5 L322.7 330.9 L322.7 330.9",
+    "M303.5 344.5 L300.7 338.7 L303.5 344.5 L303.5 344.5",
+    "M299.2 360.5 L293.4 360.3 L299.2 360.5 L299.2 360.5",
+    "M409.8 373.6 L416.1 385.3 L415.6 399.8 L410.2 410.8 L356.0 419.7 L357.1 424.5 L351.2 419.0 L333.5 418.8 L349.3 398.3 L365.5 397.0 L376.9 387.4 L395.5 377.1 L409.8 373.6 L409.8 373.6",
+    "M277.8 377.3 L271.8 376.5 L277.8 377.3 L277.8 377.3",
+    "M259.4 386.3 L246.9 392.9 L246.8 382.1 L259.4 386.3 L259.4 386.3",
+    "M277.4 403.7 L284.4 406.3 L274.0 413.7 L276.0 417.5 L273.4 422.2 L268.0 424.1 L271.6 419.7 L269.1 414.0 L277.4 403.7 L277.4 403.7",
+    "M324.8 428.0 L319.3 441.0 L309.3 461.4 L302.5 470.0 L302.5 458.0 L294.3 451.3 L281.2 452.1 L261.7 451.3 L241.6 445.5 L227.4 443.5 L219.5 438.0 L215.8 442.8 L220.6 453.5 L205.0 429.5 L212.2 427.2 L233.5 430.3 L303.8 430.8 L315.0 425.0 L326.0 421.7 L324.8 428.0 L324.8 428.0",
+    "M403.2 399.2 L406.5 397.0 L403.2 399.2 L403.2 399.2",
+    "M355.0 23.1 L365.2 30.9 L342.0 38.7 L340.0 43.5 L343.0 44.5 L346.5 49.5 L357.5 54.3 L357.5 73.4 L364.5 83.5 L367.2 77.1 L369.6 74.4 L374.0 84.0 L380.5 90.6 L382.0 96.2 L395.2 98.9 L410.3 103.0 L426.0 101.0 L435.0 93.7 L440.8 87.8 L428.2 84.3 L431.1 69.0 L432.2 65.0 L436.8 49.5 L441.0 22.0 L355.0 23.1 L355.0 23.1",
+    "M377.8 35.6 L371.3 36.6 L377.8 35.6 L377.8 35.6",
+    "M404.0 56.1 L411.6 63.6 L403.8 60.8 L397.6 51.2 L404.0 56.1 L404.0 56.1",
+    "M364.3 48.4 L360.0 49.0 L364.3 48.4 L364.3 48.4",
+    "M420.3 56.0 L426.0 59.9 L414.0 57.0 L420.3 56.0 L420.3 56.0",
+    "M393.8 84.7 L388.0 85.0 L393.8 84.7 L393.8 84.7",
+    "M413.7 97.4 L413.4 95.1 L413.7 97.4 L413.7 97.4",
+    "M438.0 59.5 L441.0 59.5 L438.0 59.5 L438.0 59.5",
+    "M435.0 68.5 L441.0 71.0 L435.0 68.5 L435.0 68.5",
+    "M429.0 258.4 L432.4 257.6 L429.0 258.4 L429.0 258.4",
+    "M99.0 275.6 L103.0 276.6 L99.0 275.6 L99.0 275.6",
+    "M79.5 279.0 L88.0 283.1 L79.5 279.0 L79.5 279.0",
+    "M70.0 289.5 L74.0 294.1 L70.0 301.0 L75.6 306.4 L75.9 287.4 L70.0 289.5 L70.0 289.5",
+    "M70.5 310.8 L78.0 320.7 L75.5 310.2 L70.5 310.8 L70.5 310.8",
+    "M80.3 334.6 L85.4 333.6 L80.3 334.6 L80.3 334.6",
+    "M89.0 335.5 L94.7 335.5 L89.0 335.5 L89.0 335.5",
+    "M264.4 20.1 L261.6 37.9",
+    "M297.1 34.5 L282.9 23.5",
+    "M320.3 20.6 L313.7 37.4",
+    "M254.7 34.6 L271.3 41.4",
+    "M310.6 31.6 L323.4 44.4",
+    "M253.5 38.0 L254.5 56.0",
+    "M300.2 51.5 L315.8 42.5",
+    "M323.1 38.5 L328.9 55.5",
+    "M173.3 53.9 L190.7 58.1",
+    "M203.7 64.2 L196.3 47.8",
+    "M209.0 55.8 L227.0 56.2",
+    "M254.2 57.9 L271.8 54.1",
+    "M309.5 64.9 L306.5 47.1",
+    "M333.7 51.3 L318.3 60.7",
+    "M185.1 56.5 L178.9 73.5",
+    "M202.3 73.7 L197.7 56.3",
+    "M211.4 58.8 L224.6 71.2",
+    "M253.0 56.1 L255.0 73.9",
+    "M297.7 73.9 L300.3 56.1",
+    "M315.9 56.1 L318.1 73.9",
+    "M178.8 67.1 L167.2 80.9",
+    "M189.6 82.9 L192.4 65.1",
+    "M203.7 81.3 L214.3 66.7",
+    "M218.0 74.0 L236.0 74.0",
+    "M255.8 79.4 L270.2 68.6",
+    "M277.9 82.4 L284.1 65.6",
+    "M292.9 80.6 L305.1 67.4",
+    "M323.5 67.8 L310.5 80.2",
+    "M155.4 80.3 L172.6 85.7",
+    "M190.8 84.7 L173.2 81.3",
+    "M198.1 74.2 L201.9 91.8",
+    "M215.7 91.7 L220.3 74.3",
+    "M257.4 76.0 L268.6 90.0",
+    "M272.9 86.9 L289.1 79.1",
+    "M297.7 91.9 L300.3 74.1",
+    "M163.1 95.9 L146.9 88.1",
+    "M168.3 84.3 L177.7 99.7",
+    "M199.4 95.2 L182.6 88.8",
+    "M217.5 94.9 L200.5 89.1",
+    "M232.5 99.1 L221.5 84.9",
+    "M272.8 95.8 L289.2 88.2",
+    "M307.2 95.7 L290.8 88.3",
+    "M348.2 84.1 L339.8 99.9",
+    "M162.5 92.1 L165.5 109.9",
+    "M189.8 105.6 L174.2 96.4",
+    "M205.4 93.8 L194.6 108.2",
+    "M288.9 92.1 L291.1 109.9",
+    "M172.9 108.5 L155.1 111.5",
+    "M176.2 103.1 L187.8 116.9",
+    "M206.4 103.6 L193.6 116.4",
+    "M352.1 106.2 L335.9 113.8",
+    "M108.4 113.9 L93.6 124.1",
+    "M183.6 110.1 L180.4 127.9",
+    "M334.3 110.0 L335.7 128.0",
+    "M102.0 123.8 L118.0 132.2",
+    "M133.5 135.1 L122.5 120.9",
+    "M188.4 119.4 L193.6 136.6",
+    "M215.0 136.5 L221.0 119.5",
+    "M231.1 120.4 L240.9 135.6",
+    "M368.2 134.6 L355.8 121.4",
+    "M83.9 128.0 L82.1 146.0",
+    "M101.0 136.1 L119.0 137.9",
+    "M130.5 145.6 L125.5 128.4",
+    "M193.4 130.8 L206.6 143.2",
+    "M211.9 143.6 L224.1 130.4",
+    "M232.5 128.7 L239.5 145.3",
+    "M347.0 128.5 L341.0 145.5",
+    "M368.2 145.6 L373.8 128.4",
+    "M102.3 154.9 L99.7 137.1",
+    "M119.3 155.0 L118.7 137.0",
+    "M195.6 138.2 L186.4 153.8",
+    "M203.3 152.9 L214.7 139.1",
+    "M220.2 140.2 L233.8 151.8",
+    "M335.6 149.2 L352.4 142.8",
+    "M418.5 152.2 L431.5 139.8",
+    "M92.3 146.0 L91.7 164.0",
+    "M102.0 150.8 L118.0 159.2",
+    "M119.1 156.0 L136.9 154.0",
+    "M223.2 147.6 L212.8 162.4",
+    "M236.7 146.0 L235.3 164.0",
+    "M367.7 163.4 L374.3 146.6"
+   ],
+   "paths": [
+    {
+     "mode": "flow",
+     "d": "M83.0 21.0 L69.0 57.0 L69.0 66.0 L69.0 95.0 L69.0 171.0 L69.0 212.0 L70.0 245.0 L69.0 258.0 L70.0 272.0 L69.0 294.0 L69.0 309.0 L69.0 322.0 L69.0 333.0 L69.0 349.0 L69.0 362.0 L70.0 394.0 L69.0 423.0 L70.0 430.0 L69.0 435.0 L71.0 490.0",
+     "order": 1,
+     "budget": [
+      3,
+      20
+     ],
+     "band": 2,
+     "arch": "line",
+     "feature": "sunflowers carrier 1"
+    },
+    {
+     "mode": "flow",
+     "d": "M441.0 485.0 L441.0 281.0 L441.0 272.0 L441.0 236.0 L441.0 209.0 L441.0 165.0 L440.0 76.0 L440.0 69.0 L435.0 21.0",
+     "order": 2,
+     "budget": [
+      3,
+      20
+     ],
+     "band": 2,
+     "arch": "line",
+     "feature": "sunflowers carrier 2"
+    },
+    {
+     "mode": "flow",
+     "d": "M196.0 417.0 L198.0 425.0 L200.0 431.0 L203.0 435.0 L205.0 439.0 L206.0 443.0 L212.0 450.0 L217.0 459.0 L220.0 464.0 L223.0 469.0 L225.0 475.0 L233.0 485.0 L238.0 487.0 L238.0 487.0 L226.0 477.0 L224.0 472.0 L223.0 468.0 L220.0 463.0 L216.0 458.0 L208.0 445.0 L205.0 440.0 L203.0 436.0 L198.0 425.0 L196.0 417.0",
+     "order": 3,
+     "budget": [
+      2,
+      10
+     ],
+     "band": 2,
+     "arch": "line",
+     "feature": "sunflowers carrier 3"
+    }
+   ],
+   "provenance": {
+    "title": "Sunflowers",
+    "artist": "Vincent van Gogh (1853–1890)",
+    "source": "Wikimedia Commons",
+    "sourceUrl": "https://commons.wikimedia.org/wiki/Special:FilePath/Vincent_Willem_van_Gogh_127.jpg",
+    "pdBasis": "Public domain: painting 1888, artist died 1890; three-layer machine trace over the PD scan at content time (reference image not shipped)",
+    "retrieved": "2026-08-04"
+   }
+  },
+  {
+   "id": "scream",
+   "tier": "expert",
+   "subject": "scream",
+   "icon": "😱",
+   "name": "The Scream",
+   "kid": false,
+   "wash": false,
+   "pack": "worldart2",
+   "categories": [
+    "masters"
+   ],
+   "canonicalCategory": "masters",
+   "aliases": [
+    "the scream",
+    "munch"
+   ],
+   "extractionClass": "LINE",
+   "guide": [
+    "M115.0 32.5 L123.0 32.5 L115.0 32.5 L115.0 32.5",
+    "M180.2 50.3 L172.5 53.4 L168.0 56.6 L220.0 55.0 L229.3 58.8 L209.0 67.3 L171.0 70.0 L93.9 65.3 L77.9 67.2 L74.6 51.2 L67.0 71.9 L80.7 75.2 L89.0 77.6 L105.6 76.9 L123.0 78.9 L148.0 82.6 L172.5 82.8 L196.0 77.5 L219.0 74.5 L227.9 71.0 L232.8 68.4 L270.5 59.1 L259.5 54.3 L246.5 49.7 L200.4 50.1 L189.4 48.3 L180.2 50.3 L180.2 50.3",
+    "M399.1 48.9 L409.6 54.9 L418.9 66.7 L424.3 68.0 L425.0 64.9 L420.5 52.5 L399.1 48.9 L399.1 48.9",
+    "M160.0 57.5 L165.0 57.5 L160.0 57.5 L160.0 57.5",
+    "M305.8 58.6 L284.0 63.5 L323.5 61.0 L305.8 58.6 L305.8 58.6",
+    "M328.8 59.1 L347.8 61.8 L328.8 59.1 L328.8 59.1",
+    "M224.8 73.7 L225.3 77.6 L229.0 75.0 L224.8 73.7 L224.8 73.7",
+    "M319.2 103.1 L330.0 102.4 L319.2 103.1 L319.2 103.1",
+    "M440.4 103.4 L441.5 131.0 L444.0 116.5 L440.4 103.4 L440.4 103.4",
+    "M67.0 107.0 L83.0 108.8 L96.5 117.5 L107.9 124.0 L111.5 119.0 L121.3 122.1 L162.7 125.4 L191.1 132.0 L220.5 132.6 L170.1 119.7 L129.1 109.6 L113.9 106.0 L99.9 104.5 L67.0 103.0 L67.0 107.0 L67.0 107.0",
+    "M301.9 108.4 L276.8 122.6 L306.2 108.0 L301.9 108.4 L301.9 108.4",
+    "M67.0 118.5 L77.0 119.1 L74.0 114.0 L67.0 118.5 L67.0 118.5",
+    "M263.3 118.7 L268.0 119.4 L263.3 118.7 L263.3 118.7",
+    "M245.3 122.0 L236.3 126.4 L232.9 133.5 L245.8 129.7 L245.3 122.0 L245.3 122.0",
+    "M77.5 123.9 L67.2 128.7 L85.3 128.0 L89.8 123.2 L77.5 123.9 L77.5 123.9",
+    "M385.0 127.1 L303.7 141.2 L284.6 146.2 L276.7 149.4 L229.5 152.6 L160.0 146.0 L125.5 141.7 L69.8 145.9 L74.3 154.0 L74.6 159.4 L90.0 162.4 L112.5 165.6 L142.7 169.1 L173.5 167.1 L225.1 168.5 L244.6 169.6 L266.8 168.0 L304.5 163.5 L325.9 157.6 L340.2 156.5 L363.5 152.7 L383.7 146.4 L422.7 147.8 L432.6 153.1 L436.6 170.0 L439.0 167.0 L439.1 139.0 L432.0 133.0 L423.6 131.9 L410.6 126.9 L400.5 125.2 L385.0 127.1 L385.0 127.1",
+    "M434.1 144.0 L430.7 143.7 L434.1 144.0 L434.1 144.0",
+    "M302.4 151.7 L297.2 151.0 L302.4 151.7 L302.4 151.7",
+    "M389.0 158.0 L391.3 162.0 L394.5 159.4 L391.0 156.0 L389.0 158.0 L389.0 158.0",
+    "M269.5 180.9 L254.0 190.0 L298.8 193.3 L299.7 183.1 L269.5 180.9 L269.5 180.9",
+    "M304.0 183.6 L317.0 187.9 L318.6 193.6 L314.1 206.4 L316.1 224.2 L305.9 236.3 L288.2 247.1 L296.8 229.0 L279.2 234.5 L260.5 241.0 L248.4 244.5 L250.9 234.0 L233.7 241.5 L214.8 244.1 L193.9 237.0 L188.8 245.2 L190.2 250.9 L191.1 257.5 L186.6 266.0 L194.6 271.0 L203.8 271.9 L205.1 264.8 L217.8 262.6 L211.6 273.4 L226.1 266.9 L223.0 274.5 L229.0 281.6 L241.9 266.2 L269.5 245.3 L294.3 262.3 L300.8 270.1 L301.5 298.9 L307.0 295.2 L317.0 261.9 L310.7 257.9 L310.6 252.0 L326.0 241.5 L337.5 223.6 L351.8 210.3 L339.0 208.2 L346.8 198.6 L318.8 182.7 L304.0 183.6 L304.0 183.6",
+    "M87.0 185.1 L76.8 205.6 L81.1 270.8 L95.7 262.0 L95.4 252.9 L95.5 241.0 L114.5 264.8 L122.9 276.5 L132.9 296.2 L148.1 312.8 L182.7 353.3 L188.2 358.0 L197.9 345.5 L196.9 334.6 L178.7 314.0 L160.9 299.0 L140.0 287.2 L134.5 280.0 L115.6 256.1 L116.7 244.8 L127.6 256.0 L166.6 285.7 L176.1 294.9 L185.5 307.0 L196.2 310.6 L222.4 327.8 L207.0 307.5 L168.0 276.0 L122.1 241.1 L111.8 232.5 L103.5 225.0 L105.0 233.3 L109.8 242.5 L95.5 232.9 L94.2 215.2 L95.1 202.9 L90.0 185.0 L87.0 185.1 L87.0 185.1",
+    "M181.3 331.3 L176.6 329.5 L181.3 331.3 L181.3 331.3",
+    "M381.3 184.7 L384.8 185.7 L381.3 184.7 L381.3 184.7",
+    "M436.3 189.0 L428.2 215.1 L424.4 245.9 L422.1 256.5 L423.6 264.5 L428.7 290.9 L436.0 310.5 L439.9 317.0 L443.5 252.0 L440.0 189.5 L436.3 189.0 L436.3 189.0",
+    "M435.0 235.3 L432.0 241.3 L435.0 235.3 L435.0 235.3",
+    "M435.1 274.1 L432.9 279.4 L435.1 274.1 L435.1 274.1",
+    "M414.6 193.6 L416.6 191.0 L414.6 193.6 L414.6 193.6",
+    "M308.0 193.8 L303.0 198.9 L308.8 198.6 L311.8 195.4 L308.0 193.8 L308.0 193.8",
+    "M422.8 195.3 L414.4 204.0 L423.9 200.7 L422.8 195.3 L422.8 195.3",
+    "M372.2 204.3 L376.9 209.1 L386.0 205.1 L372.2 204.3 L372.2 204.3",
+    "M282.5 209.8 L281.6 214.5 L289.0 209.4 L282.5 209.8 L282.5 209.8",
+    "M400.7 209.9 L385.8 215.7 L354.3 223.9 L363.4 228.5 L368.1 230.5 L397.7 217.8 L402.4 214.0 L400.7 209.9 L400.7 209.9",
+    "M248.8 221.5 L215.7 223.3 L164.0 227.4 L181.0 231.0 L248.3 225.4 L248.8 221.5 L248.8 221.5",
+    "M115.8 222.7 L127.5 235.0 L130.3 229.0 L134.6 227.4 L115.8 222.7 L115.8 222.7",
+    "M101.0 269.2 L112.0 291.4 L120.0 309.5 L135.3 329.7 L158.6 360.1 L172.5 382.0 L204.5 426.6 L214.1 433.3 L212.4 470.3 L214.5 489.5 L227.9 490.1 L226.4 472.4 L232.0 433.4 L231.2 452.7 L235.7 490.0 L238.4 485.5 L239.6 473.2 L244.1 415.0 L255.6 386.5 L262.6 366.5 L269.6 360.5 L272.5 377.4 L276.7 387.5 L280.7 394.5 L272.0 433.0 L261.0 466.2 L255.8 483.7 L265.3 489.8 L275.0 486.7 L273.9 455.8 L285.7 426.2 L313.9 460.5 L340.3 490.0 L366.2 486.5 L341.0 463.9 L304.8 424.2 L297.2 414.0 L304.9 410.5 L312.1 392.0 L331.2 410.0 L333.0 414.0 L341.4 420.5 L359.4 432.4 L374.4 448.1 L379.4 459.6 L383.5 477.0 L384.4 463.8 L390.9 459.9 L406.1 470.5 L426.5 490.0 L426.0 477.3 L437.5 471.8 L416.0 447.5 L391.1 430.7 L381.2 422.5 L372.1 419.2 L354.4 403.8 L306.0 360.6 L302.8 345.3 L302.0 322.9 L297.8 314.7 L296.6 340.2 L288.5 342.5 L278.0 344.0 L261.1 347.0 L257.7 332.5 L250.1 342.8 L240.2 365.7 L239.7 382.2 L238.0 388.4 L235.9 398.9 L235.8 410.5 L233.7 411.0 L233.2 401.9 L223.6 402.5 L216.2 405.7 L219.5 356.0 L215.5 378.3 L203.6 398.2 L187.8 377.3 L177.4 360.4 L161.4 342.3 L143.0 318.2 L126.4 294.0 L102.7 265.0 L101.0 269.2 L101.0 269.2",
+    "M250.0 381.9 L243.7 386.5 L250.0 381.9 L250.0 381.9",
+    "M306.0 388.7 L302.0 396.5 L297.0 394.3 L301.7 383.5 L306.0 388.7 L306.0 388.7",
+    "M359.8 414.0 L356.7 412.7 L359.8 414.0 L359.8 414.0",
+    "M420.4 462.6 L417.7 462.6 L420.4 462.6 L420.4 462.6",
+    "M209.0 279.5 L214.0 279.5 L209.0 279.5 L209.0 279.5",
+    "M324.2 308.2 L327.8 308.8 L324.2 308.2 L324.2 308.2",
+    "M436.4 329.2 L436.4 380.5 L444.0 398.5 L443.2 367.7 L440.5 343.0 L436.4 329.2 L436.4 329.2",
+    "M371.0 328.9 L374.6 334.7 L372.5 324.0 L371.0 328.9 L371.0 328.9",
+    "M233.4 326.4 L226.0 332.1 L233.2 334.8 L224.0 343.6 L221.1 346.0 L228.2 366.8 L234.1 354.5 L236.9 325.0 L233.4 326.4 L233.4 326.4",
+    "M78.0 369.5 L81.4 367.6 L78.0 369.5 L78.0 369.5",
+    "M129.0 397.4 L137.0 411.4 L129.0 397.4 L129.0 397.4",
+    "M94.6 408.5 L98.0 423.1 L102.1 421.5 L94.6 408.5 L94.6 408.5",
+    "M103.3 435.4 L107.5 449.2 L107.3 435.7 L103.3 435.4 L103.3 435.4",
+    "M283.0 457.1 L288.3 457.4 L283.0 457.1 L283.0 457.1",
+    "M100.6 464.2 L111.4 486.5 L120.7 490.0 L119.7 473.6 L105.7 462.5 L100.6 464.2 L100.6 464.2",
+    "M298.4 473.6 L307.0 484.4 L305.2 475.7 L298.4 473.6 L298.4 473.6",
+    "M159.0 477.5 L163.2 474.7 L159.0 477.5 L159.0 477.5",
+    "M67.0 23.5 L73.1 31.4 L87.1 27.8 L103.9 27.5 L118.0 23.5 L67.0 23.5 L67.0 23.5",
+    "M137.0 23.4 L130.3 27.2 L100.2 33.2 L137.0 31.5 L148.8 23.7 L137.0 23.4 L137.0 23.4",
+    "M438.0 25.5 L440.5 33.0 L444.0 22.0 L438.0 25.5 L438.0 25.5",
+    "M217.0 28.4 L222.0 29.0 L217.0 28.4 L217.0 28.4",
+    "M223.0 30.0 L231.2 29.3 L223.0 30.0 L223.0 30.0",
+    "M276.7 29.7 L287.7 30.6 L276.7 29.7 L276.7 29.7",
+    "M422.0 32.5 L427.0 32.5 L422.0 32.5 L422.0 32.5",
+    "M211.2 34.7 L222.9 39.4 L222.0 35.3 L211.2 34.7 L211.2 34.7",
+    "M399.8 35.1 L410.0 35.4 L399.8 35.1 L399.8 35.1",
+    "M230.0 40.0 L234.4 38.6 L230.0 40.0 L230.0 40.0",
+    "M237.0 40.5 L243.0 40.5 L237.0 40.5 L237.0 40.5",
+    "M388.0 40.5 L395.0 40.5 L388.0 40.5 L388.0 40.5",
+    "M275.0 44.6 L259.0 49.0 L255.6 54.0 L250.8 50.9 L241.9 48.4 L202.6 48.1 L187.4 46.5 L115.7 51.2 L120.0 61.6 L126.5 67.5 L90.4 62.0 L85.1 58.7 L100.0 56.1 L83.3 54.3 L70.6 45.7 L67.0 64.6 L72.6 80.6 L80.0 77.0 L129.0 84.1 L171.2 85.6 L238.0 79.1 L262.5 71.1 L337.5 65.6 L333.4 56.9 L304.2 46.8 L275.0 44.6 L275.0 44.6",
+    "M166.5 53.0 L153.5 53.0 L166.5 53.0 L166.5 53.0",
+    "M143.0 56.5 L147.1 61.5 L132.3 60.3 L132.1 57.5 L143.0 56.5 L143.0 56.5",
+    "M221.0 57.7 L184.0 65.7 L201.0 58.5 L221.0 57.7 L221.0 57.7",
+    "M185.8 57.7 L178.6 59.4 L185.8 57.7 L185.8 57.7",
+    "M164.0 67.8 L162.7 69.9 L164.0 67.8 L164.0 67.8",
+    "M93.0 48.0 L97.0 48.0 L93.0 48.0 L93.0 48.0",
+    "M397.9 47.7 L392.0 51.1 L361.3 54.8 L396.7 66.6 L406.6 71.5 L432.1 66.2 L397.9 47.7 L397.9 47.7",
+    "M347.0 50.9 L354.8 51.2 L347.0 50.9 L347.0 50.9",
+    "M439.0 85.2 L438.2 116.5 L433.5 130.2 L393.5 124.4 L339.8 130.0 L276.0 145.2 L186.4 147.5 L147.0 141.1 L104.5 139.5 L67.0 150.2 L71.5 157.9 L72.8 160.8 L67.0 165.9 L80.6 171.0 L91.0 168.5 L105.7 166.4 L121.5 172.5 L161.2 174.6 L184.8 171.0 L203.0 171.2 L254.0 171.1 L274.1 170.9 L316.7 165.5 L333.0 166.2 L341.4 168.0 L352.1 167.4 L359.0 166.0 L368.3 170.5 L378.6 173.5 L382.3 181.4 L358.5 182.8 L350.8 183.4 L318.5 180.8 L260.8 183.5 L277.6 194.6 L281.0 209.7 L268.8 217.0 L223.8 219.5 L210.5 224.0 L203.7 223.2 L151.0 222.6 L107.0 224.2 L97.8 219.6 L83.9 184.0 L75.0 200.0 L68.8 181.2 L67.0 210.5 L77.8 227.3 L67.0 224.8 L76.6 250.2 L79.1 265.2 L86.9 269.6 L107.8 286.0 L113.2 305.5 L138.5 339.0 L154.0 356.5 L172.4 388.4 L182.9 405.5 L207.0 453.5 L211.1 476.4 L212.2 490.0 L241.0 490.0 L246.5 486.3 L263.8 490.0 L278.6 486.3 L274.5 459.6 L279.8 453.8 L293.9 471.5 L315.7 487.8 L302.1 465.3 L291.3 452.9 L283.2 432.1 L287.6 430.1 L295.9 443.7 L310.5 462.3 L322.3 473.4 L337.5 490.0 L368.0 488.7 L333.2 453.2 L320.5 440.9 L312.0 432.5 L305.0 424.1 L301.0 417.4 L300.8 415.1 L309.2 412.0 L311.4 400.1 L321.2 417.4 L332.9 424.0 L347.3 428.0 L358.9 437.7 L372.4 455.6 L376.9 473.0 L388.1 482.5 L398.6 468.4 L416.9 484.6 L426.6 490.0 L436.3 484.0 L443.2 460.0 L442.5 457.0 L433.5 458.4 L418.4 448.3 L395.3 430.9 L384.0 423.2 L368.6 411.4 L355.1 401.8 L335.2 385.2 L307.0 360.7 L310.4 352.8 L322.5 360.1 L339.0 371.8 L369.6 394.5 L370.4 388.9 L353.3 369.9 L341.9 362.6 L322.5 339.3 L312.0 336.7 L307.9 337.1 L313.5 300.5 L315.7 272.0 L320.1 264.5 L328.8 248.7 L331.1 246.2 L345.3 238.4 L369.0 234.1 L386.6 228.0 L401.1 220.7 L426.3 208.1 L426.0 233.5 L418.1 266.3 L419.0 273.7 L424.9 264.6 L426.3 279.5 L431.0 303.4 L436.1 323.8 L433.0 346.5 L436.3 397.6 L437.2 429.9 L434.0 435.9 L441.5 435.0 L444.0 394.1 L442.9 344.0 L441.6 192.0 L442.0 156.8 L444.0 114.0 L439.0 85.2 L439.0 85.2",
+    "M429.8 154.2 L425.5 166.0 L430.5 170.0 L430.4 185.9 L423.3 187.2 L413.0 176.8 L402.1 182.0 L395.8 197.3 L404.8 198.6 L393.0 204.1 L390.7 196.9 L381.2 196.5 L360.6 203.2 L366.0 193.6 L393.2 189.5 L392.0 179.0 L398.5 170.4 L403.2 160.4 L414.2 165.5 L415.3 157.6 L423.7 154.1 L429.8 154.2 L429.8 154.2",
+    "M304.4 211.3 L301.6 208.1 L305.1 208.2 L304.4 211.3 L304.4 211.3",
+    "M388.0 210.8 L381.9 211.8 L388.0 210.8 L388.0 210.8",
+    "M296.0 212.0 L284.0 221.5 L272.6 224.5 L296.0 212.0 L296.0 212.0",
+    "M355.8 216.2 L351.6 216.6 L355.8 216.2 L355.8 216.2",
+    "M309.1 218.1 L299.3 221.3 L293.5 220.4 L309.1 218.1 L309.1 218.1",
+    "M314.3 228.7 L309.3 226.1 L314.3 228.7 L314.3 228.7",
+    "M434.9 235.7 L432.6 231.7 L434.9 235.7 L434.9 235.7",
+    "M254.0 228.9 L230.6 231.5 L254.0 228.9 L254.0 228.9",
+    "M291.0 228.8 L286.0 229.5 L291.0 228.8 L291.0 228.8",
+    "M102.3 233.1 L96.0 230.9 L102.3 233.1 L102.3 233.1",
+    "M118.4 233.5 L130.9 241.5 L141.5 249.0 L150.4 254.8 L160.4 263.5 L171.8 263.2 L163.0 259.4 L166.9 256.3 L177.5 263.9 L202.5 281.7 L212.8 300.2 L237.1 312.4 L229.0 287.1 L235.0 277.3 L238.9 280.7 L264.9 251.2 L293.5 277.0 L296.5 294.6 L293.0 327.5 L295.5 341.1 L285.3 323.2 L280.7 329.5 L266.5 353.0 L259.5 330.0 L251.6 313.1 L249.9 329.3 L247.7 349.6 L240.1 357.0 L239.0 322.5 L223.9 330.3 L217.3 314.2 L171.7 277.5 L137.8 252.2 L118.4 233.5 L118.4 233.5",
+    "M146.0 239.3 L177.4 240.6 L153.0 247.7 L151.0 248.1 L137.4 238.4 L146.0 239.3 L146.0 239.3",
+    "M106.7 253.3 L100.0 258.8 L95.0 242.5 L106.7 253.3 L106.7 253.3",
+    "M179.8 251.2 L171.6 249.8 L179.8 251.2 L179.8 251.2",
+    "M138.7 271.2 L151.5 281.2 L160.4 290.6 L179.5 305.3 L147.8 286.1 L135.5 274.2 L138.7 271.2 L138.7 271.2",
+    "M120.1 280.9 L125.3 290.0 L117.4 277.0 L120.1 280.9 L120.1 280.9",
+    "M145.0 313.5 L140.5 313.0 L141.0 307.7 L145.0 313.5 L145.0 313.5",
+    "M192.5 312.7 L201.2 323.0 L214.4 330.3 L216.9 353.1 L201.2 336.0 L192.5 312.7 L192.5 312.7",
+    "M153.9 323.7 L162.1 331.2 L179.1 356.3 L154.0 330.0 L150.9 320.2 L153.9 323.7 L153.9 323.7",
+    "M203.5 352.7 L211.3 359.0 L210.0 398.1 L200.9 393.3 L186.6 370.0 L189.5 363.0 L193.5 357.4 L203.5 352.7 L203.5 352.7",
+    "M237.2 378.0 L231.1 394.7 L223.0 401.4 L220.5 397.4 L226.3 385.0 L236.0 372.3 L237.2 378.0 L237.2 378.0",
+    "M262.5 396.0 L268.6 394.8 L274.0 399.1 L271.3 418.6 L265.3 426.0 L264.3 439.7 L260.5 452.0 L253.3 478.2 L249.1 474.8 L251.5 447.3 L244.3 444.1 L239.5 453.1 L247.2 417.6 L256.1 419.4 L267.0 411.5 L264.0 403.7 L252.5 404.8 L260.5 381.5 L262.5 396.0 L262.5 396.0",
+    "M203.2 377.6 L204.6 376.2 L203.2 377.6 L203.2 377.6",
+    "M260.9 89.0 L248.8 92.4 L254.0 94.4 L260.9 89.0 L260.9 89.0",
+    "M355.0 93.2 L318.5 102.1 L281.5 112.5 L259.1 116.4 L211.4 123.1 L174.4 116.6 L141.5 108.0 L88.8 102.3 L67.0 117.9 L118.0 127.4 L179.0 134.6 L226.0 135.1 L247.0 134.7 L276.2 129.0 L288.9 125.0 L302.0 119.9 L323.4 113.0 L341.3 108.6 L352.1 106.0 L371.0 101.9 L421.8 106.2 L392.4 95.0 L355.0 93.2 L355.0 93.2",
+    "M204.0 102.5 L210.0 102.5 L204.0 102.5 L204.0 102.5",
+    "M361.2 251.2 L363.0 264.4 L371.2 253.0 L361.2 251.2 L361.2 251.2",
+    "M348.4 263.9 L338.9 273.9 L329.5 298.7 L320.9 309.3 L325.3 337.8 L330.8 337.4 L343.6 354.7 L355.5 361.0 L365.8 359.1 L360.9 344.0 L355.2 315.5 L351.1 327.9 L342.9 338.2 L335.4 315.9 L340.1 301.9 L346.0 289.0 L353.1 270.4 L348.4 263.9 L348.4 263.9",
+    "M67.0 273.2 L74.6 286.7 L67.0 273.2 L67.0 273.2",
+    "M322.1 273.0 L326.0 271.5 L322.1 273.0 L322.1 273.0",
+    "M385.7 274.7 L381.4 284.0 L376.9 298.0 L375.1 301.0 L370.9 318.7 L371.0 345.5 L378.3 350.2 L384.4 290.5 L387.6 274.0 L385.7 274.7 L385.7 274.7",
+    "M360.3 285.3 L361.2 301.6 L365.4 283.6 L360.3 285.3 L360.3 285.3",
+    "M72.3 317.2 L70.6 321.2 L67.2 326.2 L76.0 369.0 L80.7 396.6 L88.6 427.3 L97.3 468.7 L90.4 468.9 L74.9 416.7 L70.0 440.7 L73.6 454.8 L80.5 469.8 L84.0 485.5 L88.0 485.6 L99.7 478.2 L106.5 490.0 L126.0 481.9 L118.3 460.0 L102.9 414.6 L95.2 395.5 L96.0 381.7 L104.6 396.7 L100.8 384.5 L98.1 372.7 L106.8 381.2 L116.0 384.4 L114.4 372.3 L121.7 378.0 L115.8 343.1 L110.2 357.4 L104.4 352.1 L94.8 344.3 L73.2 315.0 L72.3 317.2 L72.3 317.2",
+    "M103.0 319.6 L107.0 330.0 L110.0 326.2 L104.9 318.0 L103.0 319.6 L103.0 319.6",
+    "M404.0 346.5 L407.0 346.5 L404.0 346.5 L404.0 346.5",
+    "M418.4 352.5 L422.0 353.5 L418.4 352.5 L418.4 352.5",
+    "M398.0 380.9 L401.8 381.3 L398.0 380.9 L398.0 380.9",
+    "M126.1 395.8 L139.9 422.7 L147.1 445.0 L154.0 441.4 L151.0 419.4 L161.1 444.3 L168.5 443.5 L144.7 394.8 L139.7 401.0 L128.9 390.0 L126.1 395.8 L126.1 395.8",
+    "M385.0 400.2 L394.3 402.2 L385.0 400.2 L385.0 400.2",
+    "M106.0 404.3 L107.8 403.2 L106.0 404.3 L106.0 404.3",
+    "M405.0 412.3 L414.0 421.0 L420.0 421.3 L413.5 417.0 L406.3 411.0 L405.0 412.3 L405.0 412.3",
+    "M122.0 453.5 L127.8 456.3 L122.0 453.5 L122.0 453.5",
+    "M168.5 459.9 L174.3 460.9 L168.5 459.9 L168.5 459.9",
+    "M191.0 459.5 L194.8 458.2 L191.0 459.5 L191.0 459.5",
+    "M153.9 468.2 L152.5 480.0 L157.0 484.6 L170.0 485.5 L173.0 475.2 L168.0 466.0 L153.9 468.2 L153.9 468.2",
+    "M131.7 469.7 L134.0 482.5 L137.3 479.8 L131.7 469.7 L131.7 469.7",
+    "M67.0 480.0 L71.1 490.0 L74.5 485.7 L70.0 473.4 L67.0 480.0 L67.0 480.0",
+    "M67.0 27.5 L77.1 33.1 L86.5 31.0 L124.0 36.1 L155.8 27.2 L195.0 27.8 L214.5 30.5 L221.3 34.4 L209.0 36.0 L212.0 38.1 L255.3 42.7 L242.0 34.1 L214.5 23.4 L67.0 22.0 L67.0 27.5 L67.0 27.5",
+    "M330.5 24.9 L264.5 32.4 L324.9 36.9 L382.7 41.5 L398.0 45.2 L363.5 48.7 L312.8 41.3 L295.7 43.3 L257.5 46.4 L220.0 47.5 L197.0 45.2 L173.0 43.7 L170.0 44.0 L161.0 43.9 L134.2 45.5 L150.0 37.4 L138.0 37.0 L133.4 40.7 L120.9 44.1 L67.0 42.8 L70.8 135.0 L125.0 130.2 L144.5 133.0 L179.5 137.7 L201.6 142.3 L161.5 142.5 L71.5 142.3 L67.2 157.8 L75.7 172.3 L91.3 171.5 L106.9 173.9 L154.7 176.6 L196.7 176.0 L201.7 174.5 L211.0 176.1 L258.8 172.4 L263.1 174.0 L253.0 177.0 L243.3 180.0 L242.8 190.6 L252.5 188.0 L266.3 195.5 L277.0 198.3 L286.0 198.7 L291.0 206.4 L262.2 217.4 L252.0 219.1 L232.5 217.7 L162.2 221.0 L144.6 218.4 L122.9 221.5 L100.7 218.0 L86.6 182.8 L76.0 193.8 L71.4 182.5 L68.9 237.0 L75.9 251.6 L78.0 267.0 L89.5 271.4 L96.5 271.0 L105.4 290.1 L110.7 316.7 L93.3 307.3 L91.5 324.6 L87.6 316.0 L81.3 291.4 L73.6 273.6 L67.0 274.4 L68.6 293.0 L68.9 363.0 L75.0 375.0 L73.4 393.8 L71.3 394.7 L67.0 440.5 L79.5 490.0 L92.0 486.6 L105.0 488.9 L143.0 490.0 L141.8 479.0 L145.0 479.6 L151.0 488.7 L168.3 488.5 L181.2 488.4 L187.4 484.5 L195.3 487.7 L205.8 485.2 L247.6 490.0 L274.6 466.7 L290.1 479.0 L298.7 479.2 L316.7 484.0 L329.5 483.8 L327.8 490.0 L366.5 484.6 L357.0 471.0 L340.3 452.7 L312.0 425.0 L309.7 414.0 L321.8 421.0 L358.5 456.4 L380.4 477.1 L381.2 490.0 L399.5 484.7 L394.4 473.6 L395.5 470.7 L415.9 484.0 L429.7 489.8 L443.9 469.6 L438.5 451.6 L426.4 452.0 L413.8 443.0 L384.5 421.1 L362.0 405.0 L341.5 387.4 L320.9 372.2 L311.1 365.1 L311.1 354.6 L349.2 381.5 L382.5 402.3 L403.0 413.9 L429.6 433.0 L440.3 438.3 L444.0 316.6 L443.0 185.6 L442.0 170.9 L442.8 68.6 L444.0 44.4 L439.1 22.0 L428.7 25.0 L401.4 29.2 L389.1 25.5 L373.1 26.2 L352.4 22.0 L330.5 24.9 L330.5 24.9",
+    "M437.1 33.5 L434.9 58.1 L423.8 52.5 L428.0 47.5 L417.1 43.9 L403.2 41.1 L418.0 37.5 L429.9 32.2 L437.1 33.5 L437.1 33.5",
+    "M109.5 60.9 L104.5 60.9 L109.5 60.9 L109.5 60.9",
+    "M383.4 67.5 L400.8 73.0 L405.4 79.0 L411.4 82.1 L422.7 79.1 L431.0 72.2 L436.4 109.7 L420.0 99.5 L415.1 94.0 L389.1 88.8 L344.5 93.4 L316.4 101.0 L295.0 106.6 L271.5 113.0 L210.7 120.1 L167.4 111.1 L146.0 106.6 L116.5 103.0 L73.2 101.7 L74.2 88.3 L83.8 79.6 L120.3 85.9 L158.0 92.1 L170.1 93.2 L178.3 89.0 L182.0 89.1 L192.6 88.4 L229.5 88.7 L234.5 85.2 L235.1 84.0 L240.8 81.7 L259.5 75.0 L314.7 69.5 L314.0 72.4 L341.6 70.5 L383.4 67.5 L383.4 67.5",
+    "M406.7 108.2 L420.0 118.6 L436.0 120.8 L397.5 123.2 L324.7 131.0 L307.3 134.1 L306.7 131.5 L334.0 117.3 L347.4 113.5 L368.1 110.1 L398.0 111.5 L406.7 108.2 L406.7 108.2",
+    "M272.5 135.2 L300.1 134.0 L246.5 148.4 L227.4 144.3 L208.5 147.4 L226.0 138.1 L237.5 137.9 L272.5 135.2 L272.5 135.2",
+    "M410.7 165.2 L401.9 166.6 L410.7 165.2 L410.7 165.2",
+    "M329.1 168.6 L326.0 175.9 L300.8 177.3 L286.0 175.5 L298.0 169.1 L329.1 168.6 L329.1 168.6",
+    "M423.8 173.2 L419.6 183.6 L417.0 181.0 L423.8 173.2 L423.8 173.2",
+    "M337.4 174.8 L353.3 180.8 L331.6 176.1 L337.4 174.8 L337.4 174.8",
+    "M378.0 176.0 L360.2 179.7 L365.0 179.0 L369.0 177.7 L378.0 176.0 L378.0 176.0",
+    "M405.0 177.5 L399.3 177.3 L405.0 177.5 L405.0 177.5",
+    "M426.1 213.3 L420.1 241.8 L419.6 257.0 L413.7 270.9 L402.4 283.3 L411.3 295.7 L404.5 305.5 L392.4 307.6 L387.6 297.5 L394.1 268.8 L384.8 265.0 L376.9 282.6 L374.8 262.5 L381.6 251.6 L379.2 237.4 L397.9 225.2 L411.7 215.0 L423.8 209.6 L426.1 213.3 L426.1 213.3",
+    "M77.0 225.0 L71.4 217.9 L73.9 217.8 L77.0 225.0 L77.0 225.0",
+    "M434.1 238.4 L433.5 227.5 L434.1 238.4 L434.1 238.4",
+    "M374.4 244.2 L374.1 242.0 L374.4 244.2 L374.4 244.2",
+    "M106.5 255.7 L101.6 259.1 L97.5 247.7 L106.5 255.7 L106.5 255.7",
+    "M348.0 246.2 L344.0 257.5 L336.0 260.1 L342.5 247.2 L348.0 246.2 L348.0 246.2",
+    "M141.4 250.9 L136.0 247.9 L141.4 250.9 L141.4 250.9",
+    "M279.8 255.6 L290.5 275.0 L287.0 302.8 L277.5 331.0 L266.5 351.0 L261.1 330.6 L250.6 308.3 L241.7 281.5 L250.0 265.4 L257.2 253.9 L279.8 255.6 L279.8 255.6",
+    "M425.2 271.2 L426.4 290.0 L433.0 314.2 L428.0 339.4 L435.8 377.5 L434.5 402.4 L434.8 414.7 L423.5 412.6 L425.6 399.9 L417.2 387.8 L412.0 394.6 L409.0 395.4 L405.0 380.2 L399.9 361.6 L406.5 359.9 L423.7 364.2 L420.1 312.8 L417.4 299.2 L415.5 284.4 L425.2 271.2 L425.2 271.2",
+    "M360.0 275.1 L356.6 270.6 L360.0 275.1 L360.0 275.1",
+    "M233.4 278.2 L242.5 306.9 L246.2 345.3 L241.9 354.0 L236.3 310.0 L233.4 278.2 L233.4 278.2",
+    "M187.9 283.1 L204.9 287.6 L220.9 306.4 L234.4 321.4 L215.9 311.0 L185.7 286.7 L187.9 283.1 L187.9 283.1",
+    "M372.6 293.8 L370.2 292.0 L372.6 293.8 L372.6 293.8",
+    "M176.8 305.1 L173.8 303.0 L176.8 305.1 L176.8 305.1",
+    "M295.0 306.4 L294.2 305.0 L295.0 306.4 L295.0 306.4",
+    "M369.0 312.5 L366.4 325.5 L365.7 307.7 L369.0 312.5 L369.0 312.5",
+    "M415.4 307.5 L415.9 327.5 L410.9 322.8 L415.4 307.5 L415.4 307.5",
+    "M290.5 318.3 L289.0 336.1 L290.5 318.3 L290.5 318.3",
+    "M387.0 316.4 L384.3 313.7 L387.0 316.4 L387.0 316.4",
+    "M191.0 316.9 L216.0 343.7 L205.9 338.6 L187.0 317.5 L191.0 316.9 L191.0 316.9",
+    "M405.0 329.1 L400.7 352.9 L399.6 337.3 L401.5 323.0 L405.0 329.1 L405.0 329.1",
+    "M125.0 337.1 L137.3 345.0 L152.0 364.2 L141.7 370.1 L142.0 379.0 L145.3 375.0 L147.9 392.4 L139.6 383.0 L132.0 371.5 L126.4 360.2 L117.7 329.6 L125.0 337.1 L125.0 337.1",
+    "M385.7 332.0 L387.1 341.7 L383.7 341.0 L382.6 330.6 L385.7 332.0 L385.7 332.0",
+    "M173.4 347.4 L168.3 348.9 L173.4 347.4 L173.4 347.4",
+    "M206.9 383.8 L209.2 392.4 L206.1 398.7 L194.6 384.5 L187.4 370.0 L196.9 373.1 L206.9 383.8 L206.9 383.8",
+    "M374.6 371.4 L383.8 384.0 L383.5 392.6 L379.5 393.5 L376.4 384.5 L369.7 369.7 L374.6 371.4 L374.6 371.4",
+    "M172.3 394.5 L186.8 418.8 L193.7 449.8 L177.1 425.0 L180.0 415.7 L164.7 403.8 L161.9 389.4 L172.3 394.5 L172.3 394.5",
+    "M158.6 404.9 L154.0 406.4 L158.6 404.9 L158.6 404.9",
+    "M118.0 408.4 L121.0 418.3 L116.4 407.6 L118.0 408.4 L118.0 408.4",
+    "M129.0 429.7 L131.4 445.0 L121.2 419.1 L129.0 429.7 L129.0 429.7",
+    "M169.6 427.2 L174.6 436.9 L167.5 426.2 L169.6 427.2 L169.6 427.2",
+    "M244.8 434.7 L242.0 432.0 L244.8 434.7 L244.8 434.7",
+    "M288.0 432.5 L284.1 432.8 L288.0 432.5 L288.0 432.5",
+    "M258.1 439.6 L255.1 437.8 L258.1 439.6 L258.1 439.6",
+    "M185.1 451.0 L179.5 447.9 L185.1 451.0 L185.1 451.0",
+    "M149.2 455.5 L145.4 464.0 L137.0 463.8 L146.6 455.2 L149.2 455.5 L149.2 455.5",
+    "M283.4 459.9 L281.0 460.1 L279.0 458.0 L283.4 459.9 L283.4 459.9",
+    "M208.3 468.4 L202.0 466.6 L208.3 468.4 L208.3 468.4",
+    "M302.7 83.7 L307.7 84.6 L302.7 83.7 L302.7 83.7",
+    "M263.5 87.9 L228.6 95.7 L198.0 100.9 L231.8 107.4 L242.0 108.6 L256.0 94.9 L263.5 87.9 L263.5 87.9",
+    "M154.3 100.7 L161.7 103.4 L154.3 100.7 L154.3 100.7",
+    "M165.0 103.4 L168.1 102.2 L165.0 103.4 L165.0 103.4",
+    "M403.1 247.0 L409.0 244.0 L403.1 247.0 L403.1 247.0",
+    "M410.4 254.3 L397.0 266.2 L411.9 263.1 L410.4 254.3 L410.4 254.3",
+    "M261.4 303.6 L270.6 321.2 L261.4 303.6 L261.4 303.6",
+    "M252.8 24.7 L257.0 31.6 L259.0 25.9 L252.8 24.7 L252.8 24.7",
+    "M88.3 292.6 L92.5 292.0 L88.3 292.6 L88.3 292.6",
+    "M70.6 56.7 L77.4 73.3",
+    "M169.0 65.9 L177.0 82.1",
+    "M118.3 106.4 L101.7 113.6",
+    "M164.0 118.5 L146.0 119.5",
+    "M200.0 128.2 L218.0 127.8",
+    "M317.0 137.8 L335.0 136.2",
+    "M392.7 129.7 L403.3 144.3",
+    "M119.1 144.5 L136.9 147.5",
+    "M317.5 142.9 L334.5 149.1",
+    "M90.5 146.1 L93.5 163.9",
+    "M168.3 162.9 L159.7 147.1",
+    "M254.2 156.7 L271.8 153.3",
+    "M350.2 161.5 L337.8 148.5",
+    "M253.9 162.4 L236.1 165.6",
+    "M407.4 193.7 L424.6 188.3",
+    "M378.3 214.3 L363.7 203.7",
+    "M77.7 219.7 L88.3 234.3",
+    "M157.3 227.3 L152.7 244.7",
+    "M294.8 228.4 L285.2 243.6",
+    "M200.0 245.6 L218.0 244.4",
+    "M218.1 246.4 L235.9 243.6",
+    "M236.1 243.9 L253.9 246.1",
+    "M269.1 238.3 L256.9 251.7",
+    "M299.2 254.0 L298.8 236.0",
+    "M199.1 263.0 L200.9 245.0",
+    "M225.9 249.7 L210.1 258.3",
+    "M233.6 262.7 L238.4 245.3",
+    "M303.1 246.5 L312.9 261.5",
+    "M199.9 264.3 L182.1 261.7",
+    "M234.8 271.9 L237.2 254.1",
+    "M310.3 254.3 L305.7 271.7",
+    "M147.8 302.6 L162.2 313.4",
+    "M158.8 309.7 L169.2 324.3",
+    "M294.4 324.7 L303.6 309.3",
+    "M183.2 334.9 L180.8 317.1",
+    "M175.7 326.4 L170.3 343.6",
+    "M240.2 343.0 L231.8 327.0"
+   ],
+   "paths": [
+    {
+     "mode": "flow",
+     "d": "M437.0 490.0 L438.2 483.3 L439.3 476.7 L440.5 470.0 L441.7 463.3 L442.8 456.7 L444.0 450.0 L444.0 443.7 L444.0 437.4 L444.0 431.1 L444.0 424.8 L444.0 418.4 L444.0 412.1 L444.0 405.8 L444.0 399.5 L444.0 393.2 L444.0 386.9 L444.0 380.6 L444.0 374.2 L444.0 367.9 L444.0 361.6 L444.0 355.3 L444.0 349.0 L444.0 342.9 L444.0 336.9 L444.0 330.8 L444.0 324.7 L444.0 318.6 L444.0 312.6 L444.0 306.5 L444.0 300.4 L444.0 294.3 L444.0 288.3 L444.0 282.2 L444.0 276.1 L444.0 270.0 L444.0 264.0 L444.0 257.9 L444.0 251.8 L444.0 245.8 L444.0 239.7 L444.0 233.6 L444.0 227.5 L444.0 221.5 L444.0 215.4 L444.0 209.3 L444.0 203.2 L444.0 197.2 L444.0 191.1 L444.0 185.0 L444.0 179.0 L444.0 172.9 L444.0 166.8 L444.0 160.7 L444.0 154.7 L444.0 148.6 L444.0 142.5 L444.0 136.4 L444.0 130.4 L444.0 124.3 L444.0 118.2 L444.0 112.1 L444.0 106.1 L444.0 100.0 L444.0 93.6 L444.0 87.2 L444.0 80.8 L444.0 74.4 L444.0 68.0 L444.0 61.5 L444.0 55.0 L444.0 48.5 L444.0 42.0 L444.0 35.5 L444.0 29.0 L442.0 21.0",
+     "order": 1,
+     "budget": [
+      3,
+      20
+     ],
+     "band": 2,
+     "arch": "line",
+     "feature": "scream carrier 1"
+    },
+    {
+     "mode": "flow",
+     "d": "M67.0 180.0 L67.0 187.0 L67.0 197.0 L66.0 205.0 L67.0 215.0 L66.0 226.0 L66.0 232.4 L66.0 238.8 L66.0 245.2 L66.0 251.6 L66.0 258.0 L66.0 264.2 L66.0 270.4 L66.0 276.6 L66.0 282.8 L66.0 289.0 L66.0 299.0 L66.5 305.5 L67.0 312.0 L66.5 319.5 L66.0 327.0 L66.1 333.3 L66.2 339.7 L66.3 346.0 L66.4 352.3 L66.6 358.7 L66.7 365.0 L66.8 371.3 L66.9 377.7 L67.0 384.0 L66.0 395.0 L66.0 404.0 L66.0 410.4 L66.0 416.9 L66.0 423.3 L66.0 429.7 L66.0 436.1 L66.0 442.6 L66.0 449.0 L66.0 455.5 L66.0 462.0 L66.2 468.8 L66.5 475.5 L66.8 482.2 L67.0 489.0",
+     "order": 2,
+     "budget": [
+      2,
+      10
+     ],
+     "band": 2,
+     "arch": "line",
+     "feature": "scream carrier 2"
+    },
+    {
+     "mode": "flow",
+     "d": "M147.0 140.0 L141.0 139.0 L141.0 139.0 L147.0 140.0 L153.0 141.0 L159.0 142.0 L165.0 143.0 L171.5 144.0 L178.0 145.0 L184.0 146.5 L190.0 148.0 L197.5 149.0 L205.0 150.0 L212.0 151.0 L219.0 152.0 L225.7 151.3 L232.3 150.7 L239.0 150.0 L245.7 149.7 L252.3 149.3 L259.0 149.0 L267.0 146.0 L278.0 145.0 L283.0 143.0 L290.0 140.0 L297.0 138.0 L304.0 136.0 L311.0 134.0 L318.0 132.0 L326.0 130.0 L334.0 129.0 L342.0 128.0 L349.0 127.3 L356.0 126.7 L363.0 126.0 L370.0 125.7 L377.0 125.3 L384.0 125.0",
+     "order": 3,
+     "budget": [
+      2,
+      10
+     ],
+     "band": 2,
+     "arch": "line",
+     "feature": "scream carrier 3"
+    },
+    {
+     "mode": "flow",
+     "d": "M96.0 217.0 L100.0 221.5 L104.0 226.0 L110.0 231.0 L119.0 238.0 L125.0 243.5 L131.0 249.0 L137.0 252.0 L144.0 256.0 L148.5 260.0 L153.0 264.0 L160.0 268.0 L164.0 273.0 L171.0 277.0 L180.0 284.0 L186.0 289.0 L190.0 293.0 L196.0 297.5 L202.0 302.0 L208.0 307.5 L214.0 313.0 L219.5 318.0 L225.0 323.0",
+     "order": 4,
+     "budget": [
+      2,
+      10
+     ],
+     "band": 2,
+     "arch": "line",
+     "feature": "scream carrier 4"
+    },
+    {
+     "mode": "flow",
+     "d": "M216.0 120.0 L207.0 120.0 L207.0 120.0 L216.0 120.0 L222.5 120.0 L229.0 120.0 L236.5 119.5 L244.0 119.0 L255.0 117.0 L264.0 114.0 L270.0 113.0 L278.0 113.0 L286.0 110.0 L293.0 108.0 L300.0 108.0 L307.0 105.0 L313.0 103.0 L319.0 101.0 L325.0 99.0 L330.0 97.0 L338.0 96.0 L344.0 93.0 L352.0 92.0",
+     "order": 5,
+     "budget": [
+      2,
+      10
+     ],
+     "band": 2,
+     "arch": "line",
+     "feature": "scream carrier 5"
+    },
+    {
+     "mode": "flow",
+     "d": "M238.0 279.0 L238.0 279.0 L239.0 272.0 L241.0 266.0 L243.0 262.0 L248.0 256.0 L255.0 251.0 L263.5 250.5 L272.0 250.0 L278.0 253.0 L283.0 255.0 L291.0 263.0 L293.0 267.0 L294.0 275.0 L293.0 280.0 L293.0 290.0 L290.0 295.0 L289.0 299.0 L285.0 305.0 L283.0 309.0 L281.0 316.0 L280.5 322.0 L280.0 328.0",
+     "order": 6,
+     "budget": [
+      2,
+      10
+     ],
+     "band": 2,
+     "arch": "line",
+     "feature": "scream carrier 6"
+    },
+    {
+     "mode": "flow",
+     "d": "M68.0 21.0 L74.7 21.1 L81.4 21.3 L88.1 21.4 L94.9 21.6 L101.6 21.7 L108.3 21.9 L115.0 22.0 L121.2 21.8 L127.3 21.7 L133.5 21.5 L139.7 21.3 L145.8 21.2 L152.0 21.0 L158.6 21.0 L165.2 21.0 L171.8 21.0 L178.4 21.0 L185.0 21.0 L193.0 22.0",
+     "order": 7,
+     "budget": [
+      2,
+      10
+     ],
+     "band": 2,
+     "arch": "line",
+     "feature": "scream carrier 7"
+    },
+    {
+     "mode": "flow",
+     "d": "M185.0 66.0 L195.0 64.0 L195.0 64.0 L184.0 67.0 L176.0 69.0 L168.0 70.0 L160.0 71.0 L153.7 70.8 L147.3 70.7 L141.0 70.5 L134.7 70.3 L128.3 70.2 L122.0 70.0 L117.0 68.0 L110.0 65.0 L104.0 64.0 L98.0 63.0 L87.0 61.0",
+     "order": 8,
+     "budget": [
+      2,
+      10
+     ],
+     "band": 2,
+     "arch": "line",
+     "feature": "scream carrier 8"
+    },
+    {
+     "mode": "flow",
+     "d": "M244.0 75.0 L252.0 73.0 L262.0 70.0 L272.0 69.0 L280.0 66.0 L286.5 65.8 L293.0 65.5 L299.5 65.2 L306.0 65.0 L313.3 64.7 L320.7 64.3 L328.0 64.0 L334.0 64.0 L340.0 64.0 L346.0 64.0 L352.0 64.0 L358.0 64.0",
+     "order": 9,
+     "budget": [
+      2,
+      10
+     ],
+     "band": 2,
+     "arch": "line",
+     "feature": "scream carrier 9"
+    },
+    {
+     "mode": "flow",
+     "d": "M303.0 348.0 L310.0 353.0 L317.0 358.0 L324.0 364.0 L330.0 368.0 L336.0 372.0 L341.0 376.0 L349.0 381.0 L355.0 385.0 L363.0 391.0 L370.0 397.0 L375.0 399.0 L380.0 402.0 L387.0 407.0 L394.0 412.0",
+     "order": 10,
+     "budget": [
+      2,
+      10
+     ],
+     "band": 2,
+     "arch": "line",
+     "feature": "scream carrier 10"
+    }
+   ],
+   "provenance": {
+    "title": "The Scream",
+    "artist": "Edvard Munch (1863–1944)",
+    "source": "Wikimedia Commons (National Gallery of Norway scan)",
+    "sourceUrl": "https://commons.wikimedia.org/wiki/Special:FilePath/Edvard_Munch,_1893,_The_Scream,_oil,_tempera_and_pastel_on_cardboard,_91_x_73_cm,_National_Gallery_of_Norway.jpg",
+    "pdBasis": "Public domain: painting 1893, artist died 1944 (PD since 2015); three-layer machine trace over the PD scan at content time (reference image not shipped)",
     "retrieved": "2026-08-04"
    }
   }

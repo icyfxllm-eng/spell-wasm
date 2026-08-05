@@ -38,6 +38,10 @@ for (const p of m.pictures) {
     if (q.mode === "flow" && !q.d) problems.push(`${p.id}: flow path missing geometry`);
     if (q.mode === "stack" && !(q.size > 0)) problems.push(`${p.id}: stack missing size`);
   }
+  // CC-PICKER v2: every tile is identified — name required, char-budgeted
+  // (same no-ellipsis philosophy as the masterpiece captions).
+  if (!p.name || !p.name.length) problems.push(`${p.id}: missing display name`);
+  else if (p.name.length > 24) problems.push(`${p.id}: name over 24 chars`);
   // v7.4 required-features: subjects may declare interior features their
   // trace MUST contain — missing one fails lint, not review.
   if (p.requiredFeatures) {

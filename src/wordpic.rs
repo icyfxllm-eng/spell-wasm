@@ -116,6 +116,11 @@ pub struct Picture {
     pub tier: String,
     pub subject: String,
     pub icon: String,
+    /// CC-PICKER v2 (Eric, 2026-08-05: "call the pictures by their
+    /// name"): the display name on every tile, curated en v1; the
+    /// `wp.name.<id>` i18n key overrides per locale when present.
+    #[serde(default)]
+    pub name: String,
     #[serde(default)]
     pub kid: bool,
     #[serde(default)]
@@ -759,6 +764,7 @@ mod picker_search_ci {
             id: id.into(),
             tier: "easy".into(),
             subject: id.into(),
+            name: id.into(),
             icon: "\u{2b50}".into(),
             kid: true,
             wash: false,

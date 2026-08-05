@@ -104,3 +104,41 @@ whether to revisit.
 CONSEQUENCE: the masterpiece lane (greatwave/sunflowers/scream tonal
 re-authors) is UNBLOCKED; the ship-131 streak-feed is LIVE on mona's
 focal smile the moment this ships.
+
+SHIP RECORD: ship 132 = build 139 (2026-08-04 late). The flip's final
+lessons, ledgered for the lane: (1) frame pieces must hug the edge for
+their WHOLE length — an any-point test admitted a boundary that
+wandered to 1.3px from the right hand; (2) structural separation uses
+MIN distance on densified lines — median let crossings through, and
+2-point straight twins dodged sparse vertex sampling entirely; (3) her
+right hand lies over the left wrist: abutting lassos resolve by
+placing the smaller stroke first and trimming the larger within 18px;
+(4) hands host as OPEN ARCS chosen by openness (chord/arc), never
+closed loops. All baked into tonal_export.py; masterpiece_stage.py
+carries the same law for the lane (staged, awaiting Eric's per-piece
+class verdicts + feature signatures).
+
+## REWORK INTEGRATED (2026-08-05): _ridge_refine_smooth in tonal.py
+The chin lesson is now the pipeline's own law: every iconic stroke is
+ridge-refined against the de-lit reflectance (F0) then fit as ONE
+confident cubic — generic, zero per-subject numbers. F7 RE-PROVEN:
+the girl re-ran through the updated shared code — identical 11-stroke
+vocabulary, 22/28 budget, 3 clearance drops, geometry eval unchanged
+(it measures landmarks, not strokes — construction-invariant by
+design). Operator-drawn strokes still outrank machine strokes at
+export (mona's shipped face is untouched by this). LINE goldens
+untouched (tool-side only).
+
+## 139 FIELD BUG (Eric, 2026-08-05, verbatim: "139 has the old mona
+lisa whats going on here?") — ROOT CAUSE: the registry flip shipped,
+but mona is ALSO in the v8.2 scan bundle (scans.json, 366 subjects),
+and every play-path gate checks spellpic::has() FIRST — scan-locked
+subjects render their scan plan and never read registry paths. The
+TONAL mona was aboard 139 but unreachable.
+FIX (v8.3 precedence, in tree): scan_locked(p) = spellpic::has AND
+extractionClass != TONAL — the operator-gated TONAL declaration
+outranks the scan bundle at all five gates (feed, campaign length,
+empty-state, canvas render, yearbook render; yearbook returns the
+honest placeholder for TONAL until a layout export path exists).
+Verified: wordpic battery, density law, streak test, full npm build
+green. Awaits a ship number.
