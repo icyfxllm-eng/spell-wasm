@@ -233,3 +233,11 @@ DECISION LEDGER (Eric, 2026-08-02 — recorded at greenlight)
   #0e1420 canvas), mona tonal exporter staged (gates checklist, D4
   export-block live). Renderer seam intentionally NOT in this ship —
   waits on Eric's mona D2 faithful-vs-floored verdict (Done #6 order).
+
+* SHIP 132 ASSIGNED (Eric verbatim: "ship 132 for the mona flip when
+  gates pass"): the atomic LINE->TONAL flip — extractionClass TONAL,
+  the amended TEN requiredFeatures, 21 hosts (12 tonal flows + Eric's
+  9 operator-drawn strokes, lipParting focal at max order), 200 guide
+  strokes. Session gates all verbatim in CC-TONAL-FACEPASS.md. First
+  TONAL subject shipped; masterpiece lane OPEN; the streak-feed (138)
+  goes live on her smile in this build.

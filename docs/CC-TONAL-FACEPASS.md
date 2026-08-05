@@ -67,3 +67,40 @@ REWORKED (landmark->stroke mapping precision at zoom — the strokes are
 3-7 points each and sit visibly off the painted anatomy at card scale)
 and re-reviewed on the same page before the gate can flip. The chin
 crescent's placement law is the one that survived his eye.
+
+## SESSION VERDICTS (Eric, 2026-08-04, all verbatim)
+- "1-6 fail chin passes" — machine strokes rejected 6-of-7; rework
+  followed (ridge-refine + chin-smooth fit), then SUPERSEDED by:
+- Operator drawing: Eric drew 8 strokes himself on the close-up draw
+  page (lids as loops -> upper envelope; nose as outline -> shadow-side
+  edge; doubled lip line -> median path; all chin-smooth fitted).
+- "they pass drop the brows for mona" — perFeaturePass = TRUE with
+  OPERATOR-DRAWN strokes (the strongest form of the gate), AND the brow
+  amendment: leftBrow/rightBrow dropped from mona's requiredFeatures
+  and vocabulary — the painting has no eyebrows; the twelve become TEN
+  for mona; other portraits keep brows. Exporter + checklist updated.
+- Hands lasso: recorded (left 6pts, right 5pts, verified on-overlay);
+  handsLasso = TRUE. All TEN required features now evidence-checked.
+- REMAINING GATES: contourApproved, landmarksConfirmed, smileTouched
+  (D4 — the smile is now a stroke Eric drew himself).
+
+## THE FLIP (2026-08-04): MONA IS TONAL
+All five session gates green, all verbatim above ("contour approved
+landmarks confirmed" closed the set; D4 "smile touched" on the
+operator-drawn lipParting). tonal_export.py --flip applied atomically:
+extractionClass TONAL, requiredFeatures = the amended TEN, 21 host
+paths (12 tonal flows + Eric's 9 drawn strokes; lipParting focal at
+max order 21) + 200 guide strokes carrying the full painting ink.
+Engine battery GREEN: mona_bands_and_density, playable_everywhere,
+feed determinism, focal-order CI, extraction lint, and the scoped L9
+sweep across ALL languages x seeds. Exporter lessons ledgered in the
+selection law: words-as-shading band INVERSION (light=small band 3,
+dark=heavy band 1), min-separation between hosted lines, corner
+pre-split + sub-60px crumb demotion (CJK dot law).
+HONEST NOTE for Eric's eye: the legal selection is SPARSER than the
+96-slot vision (34ish engine slots; density lives in guide ink). The
+SEP knobs trade density vs CJK fill — his on-device verdict decides
+whether to revisit.
+CONSEQUENCE: the masterpiece lane (greatwave/sunflowers/scream tonal
+re-authors) is UNBLOCKED; the ship-131 streak-feed is LIVE on mona's
+focal smile the moment this ships.

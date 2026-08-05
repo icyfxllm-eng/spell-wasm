@@ -18,3 +18,10 @@ on P1/P2). D4: ONE approval session = tonal golden + PICTURE-COLOR side-by-side;
 her verdict gates BOTH masterpiece lanes. Bar: striking typographic portrait,
 not photorealism. No ML path generation; no runtime extraction; references
 never ship.
+
+AMENDMENT (Eric, 2026-08-04, verbatim: "they pass drop the brows for
+mona"): mona's requiredFeatures lose leftBrow/rightBrow — the painting
+has no eyebrows. Her list is now ten: leftEye rightEye nose mouth chin
+hairMass leftHand rightHand frame highlightBand. Per-subject only.
+Review artifacts: color D2 side-by-side
+https://claude.ai/code/artifact/a30c2f42-594e-4cd8-83a0-82290a37091a
