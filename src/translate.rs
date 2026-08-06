@@ -83,11 +83,78 @@ pub fn daily_word(lang: &str, tier: &str, epoch_day: u32) -> Option<String> {
     Some(pool[(splitmix(h) % pool.len() as u64) as usize].to_string())
 }
 
+// ─────────── CC-BANK-TRANSLATE: the gloss pivot (bones, 2026-08-05)
+//
+// Eric greenlit building the pivot rather than waiting on the file.
+// Three laws, all enforced by scripts/gloss-check.mjs at build time:
+// a key is a live bank word, a concept is a live ENGLISH bank word, and
+// `audited` is a HUMAN claim — no tool sets it. A language's rows exist
+// but stay DARK until a named native speaker signs, which is what keeps
+// the closed space honest while the tool becomes real.
+
+#[derive(serde::Deserialize)]
+struct GlossDoc {
+    #[allow(dead_code)]
+    lang: String,
+    audited: bool,
+    rows: std::collections::HashMap<String, String>,
+}
+
+fn gloss_docs() -> &'static std::collections::HashMap<&'static str, GlossDoc> {
+    static G: std::sync::OnceLock<std::collections::HashMap<&'static str, GlossDoc>> =
+        std::sync::OnceLock::new();
+    G.get_or_init(|| {
+        let mut m = std::collections::HashMap::new();
+        for (lang, raw) in [
+            ("es", include_str!("../config/gloss/es.json")),
+            ("fr", include_str!("../config/gloss/fr.json")),
+            ("de", include_str!("../config/gloss/de.json")),
+        ] {
+            if let Ok(doc) = serde_json::from_str::<GlossDoc>(raw) {
+                m.insert(lang, doc);
+            }
+        }
+        m
+    })
+}
+
+/// I2's single resolver: a language is visible iff its gloss file is
+/// AUDITED. One check, no per-tool conditionals.
+pub fn gloss_audited(lang: &str) -> bool {
+    lang == crate::consts::EN || gloss_docs().get(lang).map(|d| d.audited).unwrap_or(false)
+}
+
+/// Every language that can render a fan-out row today.
+pub fn glossed_languages() -> Vec<&'static str> {
+    let mut out = vec![crate::consts::EN];
+    let mut rest: Vec<&'static str> =
+        gloss_docs().iter().filter(|(_, d)| d.audited).map(|(l, _)| *l).collect();
+    rest.sort_unstable();
+    out.extend(rest);
+    out
+}
+
+/// The word in `lang` that carries `concept`, when that language is
+/// audited. This is the fan-out's row lookup and Match's answer lookup.
+pub fn word_for_concept(lang: &str, concept: &str) -> Option<String> {
+    if lang == crate::consts::EN {
+        return crate::words::tier_for(lang, "easy")
+            .iter()
+            .chain(crate::words::tier_for(lang, "medium").iter())
+            .map(|w| w.split('|').next().unwrap_or(w))
+            .find(|w| w.eq_ignore_ascii_case(concept))
+            .map(|w| w.to_string());
+    }
+    let doc = gloss_docs().get(lang)?;
+    if !doc.audited {
+        return None;
+    }
+    doc.rows.iter().find(|(_, c)| c.as_str() == concept).map(|(w, _)| w.clone())
+}
+
 /// The concept key IS the sense-locked English gloss (the pivot's own
 /// definition). English words are their own concept; every other
-/// language resolves through the gloss table — absent today, so
-/// non-English words have no concept yet and stamp nothing (reduced,
-/// never wrong).
+/// language resolves through its AUDITED gloss table.
 pub fn concept_of(lang: &str, word: &str) -> Option<String> {
     #[cfg(test)]
     if let Some(c) = TEST_GLOSS.with(|g| g.borrow().get(&(lang.to_string(), word.to_string())).cloned()) {
@@ -96,7 +163,11 @@ pub fn concept_of(lang: &str, word: &str) -> Option<String> {
     if lang == crate::consts::EN {
         return Some(display_word(word).to_lowercase());
     }
-    None // the resolver seam: CC-BANK-TRANSLATE fills this
+    let doc = gloss_docs().get(lang)?;
+    if !doc.audited {
+        return None; // rows exist, but no native has signed them yet
+    }
+    doc.rows.get(word).cloned()
 }
 
 /// Tool 8 — Translation Match. Two boards, both CLOSED-SPACE by

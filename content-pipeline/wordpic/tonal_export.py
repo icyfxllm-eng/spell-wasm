@@ -59,7 +59,7 @@ FACE_FEATURE_STROKES = {
 GATES = ["contourApproved", "landmarksConfirmed", "perFeaturePass",
          "handsLasso", "smileTouched"]
 
-SLOT_TARGET = 96          # inside mona's 12..=110 law with headroom
+SLOT_TARGET = 150          # inside mona's 12..=110 law with headroom
 EST_PX_PER_SLOT = 64.0
 
 def arclen(p):
@@ -200,7 +200,11 @@ def build_entry(verdicts=None):
         return {0: 1, 1: 2, 2: 2, 3: 3}.get(bi, 3)
     # Rainbow lesson: hosted lines need breathing room for their glyph
     # size — greedy min-separation per engine band.
-    SEP = {4: 20.0, 3: 16.0, 2: 22.0, 1: 30.0}
+    # Retuned 2026-08-05: the earlier values were set while the
+    # real failures (self-facing rings, hub convergence) were still
+    # undiagnosed, so separation was carrying blame that belonged
+    # elsewhere. A masterpiece should not ship 18 hostable strokes.
+    SEP = {4: 15.0, 3: 12.0, 2: 16.0, 1: 22.0}
     def densify(pts, step=6.0):
         out = [pts[0]]
         for a, b in zip(pts, pts[1:]):

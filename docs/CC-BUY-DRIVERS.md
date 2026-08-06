@@ -328,3 +328,32 @@ DECISION LEDGER (Eric, 2026-08-02 — recorded at greenlight)
   CONSEQUENCE: the gate's tolerance clause is RETIRED. It permitted up
   to three hub reds, which meant a new hub failure could hide behind
   "just the known three". Zero means zero now.
+
+* SHIP 136 (Eric: "ship 136 for all of this when gates pass") — the
+  scans-and-verdicts build.
+  SCANS: 16 of the 21 registry-only pictures entered the SCAN-STACK
+  pipeline (bundle 366 -> 382), so they finally get capacity planning
+  and the 95% coverage floor the rest of the bank has always had. Five
+  constructed symbols were REFUSED by that gate and stay centerline-
+  hosted, which is right: for authored geometry we know the exact lines,
+  so words ride the real triangle edges instead of the outside of a
+  stroke. The scan pipeline earns its keep where geometry is DISCOVERED.
+  VERDICTS: insight copy ON; mona option D (two of five regions ship as
+  Leonardo painted them); the audit rule split 300/3 unmunch, 300/0
+  generator; the photo matrix confirmed on iOS 26.5 — with a correction,
+  hi is Unsupported (Devanagari), which my first report missed because
+  the probe's own list omits it.
+  MONA: her mouth is unsmeared — the two lip strokes sat 3.2px apart and
+  rendered as one blob; Eric's focal parting keeps hosting and the
+  lower-lip shadow becomes guide ink. Density 19 -> 21 hosts.
+  TRANSLATE: the gloss pivot exists (config/gloss/, loader, one
+  resolver, scripts/gloss-check.mjs). 39 validated rows across es/fr/de,
+  ALL DARK — `audited` is a human claim and no language is signed.
+  SYMBOLS: 12 wired from centerlines; tools/wire_symbols.py is now a
+  repo tool (its scratchpad copy was lost twice, and a `git checkout`
+  during the mona work silently reverted the lane once).
+  PHOTO-EXPERT: giza in (31 paths, PD Library of Congress plate). TIGER
+  HELD BACK — stripes trace as closed thin shapes that self-face; the
+  fix is medial-axis extraction, a real build. Two CC-BY candidates were
+  rejected on the way: invariant 1 is PD/CC0 only.
+  CALENDAR D3 signed, closing the last ledger/tree contradiction.

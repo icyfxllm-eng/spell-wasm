@@ -42,6 +42,43 @@ REQUIRED_MICRO = {
 }
 
 SUBJ = {  # subject -> (ref, mode, tier)
+    # FIVE CONSTRUCTIONS STAY OUT (2026-08-05): pentagram, diamond,
+    # merkaba, sriyantra and metatron are refused by the F5 coverage
+    # gate, and rightly. They are crossing straight strokes, so tracing
+    # them yields thin rings around each stroke that no plan can cover
+    # to 95%. For MATHEMATICALLY CONSTRUCTED art the centerline route is
+    # simply better — we know the exact geometry, so words ride the real
+    # triangle edges instead of the outside of a stroke. The scan
+    # pipeline earns its keep on TRACED and PHOTOGRAPHIC subjects, where
+    # the geometry is discovered rather than authored.
+    # PHOTO-EXPERT lane (Eric's brief). Stone courses land cleanly:
+    # they are OPEN horizontal lines, exactly what the planner wants.
+    # TIGER IS HELD BACK: its stripes trace as CLOSED thin shapes, and
+    # a closed thin shape self-faces (the symbols' own law), so the F5
+    # coverage gate refuses it at 38 paths and again at 65. The fix is
+    # medial-axis extraction — turn each stripe into its centerline —
+    # which is a real build rather than a retrace.
+    "giza": ("giza.png", "ink", "expert"),
+    # THE 21 (2026-08-05): these entered the bank through the registry
+    # side door and so never got scans — no capacity planning, no 95%
+    # coverage gate, which is exactly why they read thinner than the
+    # rest of the bank. Registered here so they go through the same
+    # pipeline as everything else.
+    "sun": ("sun.png", "ink", "easy"),
+    "rainbow": ("rainbow.png", "ink", "easy"),
+    "comet": ("comet.png", "ink", "medium"),
+    "saturn": ("saturn.png", "ink", "medium"),
+    "raincloud": ("raincloud.png", "ink", "easy"),
+    "sunflower": ("sunflower.png", "ink", "easy"),
+    "greatwave": ("greatwave.png", "ink", "expert"),
+    "scream": ("scream.png", "ink", "expert"),
+    "triquetra": ("triquetra.png", "ink", "medium"),
+    "yinyang": ("yinyang.png", "ink", "medium"),
+    "vegvisir": ("vegvisir.png", "ink", "hard"),
+    "helmofawe": ("helmofawe.png", "ink", "hard"),
+    "laguz": ("laguz.png", "ink", "easy"),
+    "cross": ("cross.png", "ink", "easy"),
+    "arrow": ("arrow.png", "ink", "easy"),
  "dog": ("dog.png", "ink", "easy"), "butterfly": ("butterfly.png", "ink", "easy"),
  "duck": ("duck.png", "ink", "easy"), "turtle": ("turtle.png", "ink", "easy"),
  "owl": ("owl.png", "ink", "medium"), "elephant": ("elephant.png", "ink", "medium"),
@@ -936,7 +973,15 @@ def _approved_candidates(sub):
     ok = [c for c in doc.get("candidates", []) if c.get("status") == "approved"]
     return [[(float(x), float(y)) for x, y in c["points"]] for c in ok] or None
 
+# Optional subject filter: `build_scan_library.py sun rainbow ...`.
+# Re-tracing a SHIPPED subject would silently rewrite geometry that is
+# already on devices, so a targeted run is the safe way to add new
+# pictures to the library.
+ONLY = set(sys.argv[1:])
+
 for sub, (ref, mode, tier) in SUBJ.items():
+    if ONLY and sub not in ONLY:
+        continue
     npend = _pending_suggestions(sub)
     if npend:
         raise SystemExit(

@@ -155,9 +155,12 @@ pub fn streak_focal() -> bool {
 /// CC-LEARNING-ENGINE L2 feature 6 — the in-game pattern insight, one
 /// line on the post-answer reveal. **Default OFF**: the spec makes the
 /// Kid Mode copy variant Eric's review gate, so the strings ship in the
-/// audited pool and the surface stays dark until he reads them.
+/// audited pool. **Default ON** since Eric read them (2026-08-05:
+/// "insight copy passes") — the Kid-Mode register review the spec
+/// required. Fires only when one skill is genuinely shaky and only
+/// after an answer resolves; silence is the normal case.
 pub fn learner_insight() -> bool {
-    resolve(stored("learner_insight").as_deref(), false)
+    resolve(stored("learner_insight").as_deref(), true)
 }
 
 /// CC-LEARNING-ENGINE surfaces — the placement offer card and the Stats

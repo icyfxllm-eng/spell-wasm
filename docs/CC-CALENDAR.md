@@ -76,3 +76,10 @@ all these for the app not the website")
   planner Complete. (Calendar was already app-only by I6.)
 - D4 SIGNED as proposed: 5 new words PER WEEK default, adjustable 3-15.
 - D5 SIGNED: widget goal ring IN (rides CC-IOS-SURFACES D2 snapshot).
+
+## D3 SIGNED (Eric, 2026-08-05): "D3"
+Daily journal persistence as specced — on-device, date-granularity,
+outcomes-only, 730-day rolling cap, ReportsQuery its only reader. The
+journal shipped in 125 built to exactly this shape; the signature now
+matches the tree, closing the one place where the ledger contradicted
+the code.

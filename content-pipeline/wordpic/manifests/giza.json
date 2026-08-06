@@ -1,0 +1,412 @@
+{
+ "id": "giza",
+ "tier": "expert",
+ "source": {
+  "title": "Egyptian views. The Pyramids of Gizeh. Great Pyramid showing ascent (LOC matpc.00099)",
+  "license": "Public domain",
+  "url": "https://commons.wikimedia.org/wiki/File:Egyptian_views._The_Pyramids_of_Gizeh._Great_Pyramid_showing_ascent_LOC_matpc.00099.tif",
+  "attribution": ""
+ },
+ "parts": {
+  "root": [
+   0,
+   2,
+   3,
+   4,
+   6,
+   1,
+   9,
+   5,
+   7,
+   8,
+   10,
+   11,
+   12,
+   13,
+   14,
+   15,
+   16,
+   17,
+   18,
+   19,
+   20,
+   21,
+   22,
+   23,
+   24,
+   25,
+   26,
+   27,
+   28,
+   29,
+   30
+  ]
+ },
+ "layers": [
+  {
+   "name": "outline",
+   "path_ids": [
+    0,
+    2,
+    3,
+    4
+   ],
+   "per_language": {
+    "ar": {
+     "words": 4,
+     "band": 0,
+     "band_size": 371
+    },
+    "de": {
+     "words": 4,
+     "band": 0,
+     "band_size": 802
+    },
+    "en": {
+     "words": 4,
+     "band": 0,
+     "band_size": 763
+    },
+    "es": {
+     "words": 4,
+     "band": 0,
+     "band_size": 607
+    },
+    "fil": {
+     "words": 4,
+     "band": 0,
+     "band_size": 762
+    },
+    "fr": {
+     "words": 4,
+     "band": 0,
+     "band_size": 724
+    },
+    "hi": {
+     "words": 4,
+     "band": 0,
+     "band_size": 548
+    },
+    "ja": {
+     "words": 4,
+     "band": 0,
+     "band_size": 720
+    },
+    "ko": {
+     "words": 4,
+     "band": 0,
+     "band_size": 452
+    },
+    "pl": {
+     "words": 4,
+     "band": 0,
+     "band_size": 739
+    },
+    "pt": {
+     "words": 4,
+     "band": 0,
+     "band_size": 772
+    },
+    "ru": {
+     "words": 4,
+     "band": 0,
+     "band_size": 806
+    },
+    "sw": {
+     "words": 4,
+     "band": 0,
+     "band_size": 801
+    },
+    "vi": {
+     "words": 4,
+     "band": 0,
+     "band_size": 551
+    },
+    "zh": {
+     "words": 4,
+     "band": 0,
+     "band_size": 55
+    }
+   }
+  },
+  {
+   "name": "features",
+   "path_ids": [
+    6,
+    1,
+    9,
+    5
+   ],
+   "per_language": {
+    "ar": {
+     "words": 4,
+     "band": 1,
+     "band_size": 989
+    },
+    "de": {
+     "words": 4,
+     "band": 1,
+     "band_size": 391
+    },
+    "en": {
+     "words": 4,
+     "band": 1,
+     "band_size": 236
+    },
+    "es": {
+     "words": 4,
+     "band": 1,
+     "band_size": 431
+    },
+    "fil": {
+     "words": 4,
+     "band": 1,
+     "band_size": 369
+    },
+    "fr": {
+     "words": 4,
+     "band": 1,
+     "band_size": 346
+    },
+    "hi": {
+     "words": 4,
+     "band": 1,
+     "band_size": 286
+    },
+    "ja": {
+     "words": 4,
+     "band": 1,
+     "band_size": 130
+    },
+    "ko": {
+     "words": 4,
+     "band": 1,
+     "band_size": 404
+    },
+    "pl": {
+     "words": 4,
+     "band": 1,
+     "band_size": 376
+    },
+    "pt": {
+     "words": 4,
+     "band": 1,
+     "band_size": 479
+    },
+    "ru": {
+     "words": 4,
+     "band": 1,
+     "band_size": 289
+    },
+    "sw": {
+     "words": 4,
+     "band": 1,
+     "band_size": 331
+    },
+    "vi": {
+     "words": 4,
+     "band": 1,
+     "band_size": 497
+    },
+    "zh": {
+     "words": 4,
+     "band": 1,
+     "band_size": 428
+    }
+   }
+  },
+  {
+   "name": "texture",
+   "path_ids": [
+    7,
+    8,
+    10,
+    11
+   ],
+   "per_language": {
+    "ar": {
+     "words": 4,
+     "band": 2,
+     "band_size": 242
+    },
+    "de": {
+     "words": 4,
+     "band": 2,
+     "band_size": 356
+    },
+    "en": {
+     "words": 4,
+     "band": 2,
+     "band_size": 463
+    },
+    "es": {
+     "words": 4,
+     "band": 2,
+     "band_size": 499
+    },
+    "fil": {
+     "words": 4,
+     "band": 2,
+     "band_size": 417
+    },
+    "fr": {
+     "words": 4,
+     "band": 2,
+     "band_size": 470
+    },
+    "hi": {
+     "words": 4,
+     "band": 2,
+     "band_size": 295
+    },
+    "ja": {
+     "words": 4,
+     "band": 2,
+     "band_size": 127
+    },
+    "ko": {
+     "words": 4,
+     "band": 2,
+     "band_size": 683
+    },
+    "pl": {
+     "words": 4,
+     "band": 2,
+     "band_size": 464
+    },
+    "pt": {
+     "words": 4,
+     "band": 2,
+     "band_size": 238
+    },
+    "ru": {
+     "words": 4,
+     "band": 2,
+     "band_size": 443
+    },
+    "sw": {
+     "words": 4,
+     "band": 2,
+     "band_size": 437
+    },
+    "vi": {
+     "words": 4,
+     "band": 2,
+     "band_size": 453
+    },
+    "zh": {
+     "words": 4,
+     "band": 2,
+     "band_size": 123
+    }
+   }
+  },
+  {
+   "name": "shading",
+   "path_ids": [
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    24,
+    25,
+    26,
+    27,
+    28,
+    29,
+    30
+   ],
+   "per_language": {
+    "ar": {
+     "words": 19,
+     "band": 3,
+     "band_size": 23
+    },
+    "de": {
+     "words": 19,
+     "band": 3,
+     "band_size": 60
+    },
+    "en": {
+     "words": 19,
+     "band": 3,
+     "band_size": 144
+    },
+    "es": {
+     "words": 19,
+     "band": 3,
+     "band_size": 63
+    },
+    "fil": {
+     "words": 19,
+     "band": 3,
+     "band_size": 52
+    },
+    "fr": {
+     "words": 19,
+     "band": 3,
+     "band_size": 69
+    },
+    "hi": {
+     "words": 19,
+     "band": 3,
+     "band_size": 500
+    },
+    "ja": {
+     "words": 19,
+     "band": 3,
+     "band_size": 76
+    },
+    "ko": {
+     "words": 19,
+     "band": 3,
+     "band_size": 73
+    },
+    "pl": {
+     "words": 19,
+     "band": 3,
+     "band_size": 34
+    },
+    "pt": {
+     "words": 19,
+     "band": 3,
+     "band_size": 117
+    },
+    "ru": {
+     "words": 19,
+     "band": 3,
+     "band_size": 82
+    },
+    "sw": {
+     "words": 19,
+     "band": 3,
+     "band_size": 35
+    },
+    "vi": {
+     "words": 19,
+     "band": 3,
+     "band_size": 100
+    },
+    "zh": {
+     "words": 19,
+     "band": 3,
+     "band_size": 28
+    }
+   }
+  }
+ ],
+ "audio_gate": "expert",
+ "completion": {
+  "all_layers": true
+ },
+ "authoring": "hand-traced",
+ "pin_hash": 7584416350181466093
+}

@@ -179,6 +179,22 @@ pub enum AuditVerdict {
     Unsigned,
 }
 
+/// THE SIGNED RULE (Eric, 2026-08-05: "audit rule REC"). Split by
+/// source class because the failure modes differ in KIND:
+///   * hunspell unmunch — mechanical, scattered failures, so a small
+///     rate is tolerable: 300 read / 3 allowed.
+///   * a morphological generator — CORRELATED failures: one bad rule
+///     makes thousands of identical wrong forms, so ANY defect in 300
+///     means a systemic bug, not bad luck: 300 read / 0 allowed.
+/// Reading 300 clean puts the true defect rate under ~1% at 95%
+/// confidence (the rule of three).
+pub fn signed_rule(source_class: &str, seed: u64) -> SampleRule {
+    match source_class {
+        "generator" => SampleRule { sample_size: 300, max_defects: 0, seed, signed: true },
+        _ => SampleRule { sample_size: 300, max_defects: 3, seed, signed: true },
+    }
+}
+
 /// The deterministic draw. Sorted population + seeded stride = a sample
 /// any auditor can regenerate from the record alone.
 pub fn audit_sample<'a>(population: &'a [String], rule: &SampleRule) -> Vec<&'a str> {

@@ -273,13 +273,22 @@ mod tests {
     fn bundle_loads_and_every_subject_plans_in_english() {
         let b = bundle();
         assert!(b.subjects.len() >= 12, "twelve subjects shipped");
+        // Report EVERY subject that cannot plan, not just the first —
+        // one failure at a time turns a batch review into twenty runs.
+        let mut refused: Vec<&str> = Vec::new();
         for (name, _) in b.subjects.iter() {
             let p = plan(name, "en", 1);
-            assert!(p.is_some(), "{name} must plan legally on device");
-            let p = p.unwrap();
+            let Some(p) = p else {
+                refused.push(name);
+                continue;
+            };
             assert!(p.size >= FLOOR);
             assert!(!p.words.is_empty());
         }
+        assert!(
+            refused.is_empty(),
+            "these subjects cannot plan legally on device (F5 coverage gate): {refused:?}"
+        );
     }
 
     /// The device draws exactly what CI proved: baselines are verbatim

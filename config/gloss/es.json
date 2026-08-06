@@ -1,0 +1,22 @@
+{
+ "lang": "es",
+ "audited": false,
+ "auditor": "",
+ "note": "Seed rows for CC-BANK-TRANSLATE. Keys are the bank's EXACT form (German nouns capitalise). DARK until a named native speaker signs `audited`.",
+ "rows": {
+  "agua": "water",
+  "casa": "house",
+  "gato": "cat",
+  "perro": "dog",
+  "sol": "sun",
+  "luna": "moon",
+  "libro": "book",
+  "mano": "hand",
+  "noche": "night",
+  "verde": "green",
+  "rojo": "red",
+  "leche": "milk",
+  "flor": "flower",
+  "árbol": "tree"
+ }
+}

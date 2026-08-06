@@ -1,0 +1,19 @@
+{
+ "lang": "de",
+ "audited": false,
+ "auditor": "",
+ "note": "Seed rows for CC-BANK-TRANSLATE. Keys are the bank's EXACT form (German nouns capitalise). DARK until a named native speaker signs `audited`.",
+ "rows": {
+  "Wasser": "water",
+  "Haus": "house",
+  "Katze": "cat",
+  "Hund": "dog",
+  "Sonne": "sun",
+  "Mond": "moon",
+  "Buch": "book",
+  "Nacht": "night",
+  "Milch": "milk",
+  "Blume": "flower",
+  "Baum": "tree"
+ }
+}
