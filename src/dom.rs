@@ -47,6 +47,14 @@ pub fn set_html(id: &str, html: &str) {
     el(id).set_inner_html(html);
 }
 
+/// Append to an element's markup without disturbing what is already
+/// there (the insight line rides under a rendered meaning).
+pub fn append_html(id: &str, html: &str) {
+    let e = el(id);
+    let cur = e.inner_html();
+    e.set_inner_html(&format!("{cur}{html}"));
+}
+
 /// Programmatically click an element, if it exists.
 ///
 /// Lets one surface route to another's EXISTING entry point instead of copying

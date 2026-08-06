@@ -40,7 +40,13 @@ export const DEVICES = {
 };
 
 export async function launch() {
-  return chromium.launch();
+  // The suite must be SILENT (Eric, 2026-08-05: "Whats with all the
+  // voiced out words in the background"). Headless Chromium routes the
+  // Web Speech API to the host's own voices, so a test run narrates
+  // itself out loud through the Mac's speakers. Local + free, but
+  // maddening — mute at the browser, and neuter speechSynthesis in the
+  // page (below) so nothing queues either.
+  return chromium.launch({ args: ['--mute-audio'] });
 }
 
 /** New page at `lang`, age gate satisfied, TTS stubbed silent, wasm booted.
@@ -49,12 +55,56 @@ export async function launch() {
  *  Feature flags are set by each spec via its own `ctx.addInitScript`
  *  (`localStorage['spell_flag_<name>']`), mirroring the FP2 specs (sayit /
  *  spellaloud / ghost) — the harness stays flag-agnostic. */
+/// Every context — openApp's and the specs that build their own — gets
+/// the same BASELINE: learner surfaces off (the placement card would
+/// pause a first serve), and speechSynthesis muted. A spec that is
+/// TESTING one of these turns it on explicitly, which is the only way
+/// the flag state under test is ever ambiguous-free.
+export async function pinBaseline(ctx) {
+  await ctx.addInitScript(() => {
+    try {
+      Object.defineProperty(window, 'speechSynthesis', {
+        configurable: true,
+        get: () => ({
+          speak() {}, cancel() {}, pause() {}, resume() {},
+          getVoices: () => [], speaking: false, pending: false, paused: false,
+          addEventListener() {}, removeEventListener() {},
+        }),
+      });
+    } catch (_) { /* the --mute-audio flag still covers audio */ }
+    if (!localStorage.getItem('spell_flag_learner_surfaces')) {
+      localStorage.setItem('spell_flag_learner_surfaces', 'off');
+      localStorage.setItem('spell_flag_learner_select', 'off');
+    }
+  });
+  return ctx;
+}
+
 export async function openApp(browser, base, { lang = null, device = 'se', viewport = null } = {}) {
   const d = viewport ? { ...DEVICES[device], ...viewport } : DEVICES[device];
   const ctx = await browser.newContext({ viewport: { width: d.width, height: d.height }, deviceScaleFactor: d.dpr, isMobile: d.mobile });
   await ctx.addInitScript(([age, l]) => {
     localStorage.setItem('byear_agegate_v1', age);
     if (l) localStorage.setItem('spellgame.locale', l);
+    // Learner surfaces default ON in the app (L1/L2 QA pass); the e2e
+    // BASELINE pins them off so every legacy spec's first solo serve
+    // stays deterministic. placement.spec turns them on explicitly —
+    // the flag state under test is always the one the spec declares.
+    // Silence the Web Speech API for the whole run — see launch().
+    try {
+      Object.defineProperty(window, 'speechSynthesis', {
+        configurable: true,
+        get: () => ({
+          speak() {}, cancel() {}, pause() {}, resume() {},
+          getVoices: () => [], speaking: false, pending: false, paused: false,
+          addEventListener() {}, removeEventListener() {},
+        }),
+      });
+    } catch (_) { /* older engines: the mute flag still covers audio */ }
+    if (!localStorage.getItem('spell_flag_learner_surfaces')) {
+      localStorage.setItem('spell_flag_learner_surfaces', 'off');
+      localStorage.setItem('spell_flag_learner_select', 'off');
+    }
   }, [AGE, lang]);
   // Stub the backend audio so no real TTS traffic + deterministic timing.
   await ctx.route('**/api/speak**', (r) => r.fulfill({ status: 200, contentType: 'audio/mpeg', body: Buffer.from([]) }));

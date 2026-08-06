@@ -5,7 +5,7 @@
 // in the browser (Invariant I3 — voiceSpell config AND on-device availability).
 // The letter parser itself is exhaustively covered by the Rust unit tests; live
 // mic recognition needs a physical device and isn't covered here.
-import { openApp, assert } from '../harness.mjs';
+import { openApp, assert, pinBaseline } from '../harness.mjs';
 
 const AGE = JSON.stringify({ verdict: 'full', checkedAt: 1700000000 });
 
@@ -26,6 +26,7 @@ export async function run(browser, base, suite) {
 
   await suite.test('spell-aloud: still hidden with flag ON but no native bridge (not iOS)', async () => {
     const ctx = await browser.newContext({ viewport: { width: 375, height: 667 }, deviceScaleFactor: 2, isMobile: true });
+    await pinBaseline(ctx);
     await ctx.addInitScript(([age]) => {
       localStorage.setItem('byear_agegate_v1', age);
       // Force the feature flag ON — the mic must STILL stay hidden on the web,

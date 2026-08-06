@@ -905,7 +905,8 @@
      ],
      "band": 2,
      "arch": "line",
-     "feature": "tower outline"
+     "feature": "tower outline",
+     "paletteRef": "iron"
     },
     {
      "mode": "flow",
@@ -917,7 +918,8 @@
      ],
      "band": 2,
      "arch": "line",
-     "feature": "base arch"
+     "feature": "base arch",
+     "paletteRef": "ironDeep"
     },
     {
      "mode": "flow",
@@ -929,7 +931,8 @@
      ],
      "band": 3,
      "arch": "line",
-     "feature": "first platform"
+     "feature": "first platform",
+     "paletteRef": "ironDeep"
     },
     {
      "mode": "flow",
@@ -941,7 +944,8 @@
      ],
      "band": 3,
      "arch": "line",
-     "feature": "second platform"
+     "feature": "second platform",
+     "paletteRef": "ironDeep"
     },
     {
      "mode": "flow",
@@ -953,7 +957,8 @@
      ],
      "band": 3,
      "arch": "line",
-     "feature": "spire"
+     "feature": "spire",
+     "paletteRef": "spireLight"
     },
     {
      "mode": "flow",
@@ -965,7 +970,8 @@
      ],
      "band": 3,
      "arch": "line",
-     "feature": "left leg lattice"
+     "feature": "left leg lattice",
+     "paletteRef": "lattice"
     },
     {
      "mode": "flow",
@@ -977,7 +983,8 @@
      ],
      "band": 3,
      "arch": "line",
-     "feature": "right leg lattice"
+     "feature": "right leg lattice",
+     "paletteRef": "lattice"
     }
    ],
    "guide": [
@@ -999,7 +1006,30 @@
     "tower"
    ],
    "extractionClass": "LINE",
-   "name": "Eiffel Tower"
+   "name": "Eiffel Tower",
+   "palette": [
+    {
+     "id": "iron",
+     "hex": "#B08D57",
+     "role": "body"
+    },
+    {
+     "id": "ironDeep",
+     "hex": "#9E7B4E",
+     "role": "shade"
+    },
+    {
+     "id": "lattice",
+     "hex": "#C4A265",
+     "role": "detail"
+    },
+    {
+     "id": "spireLight",
+     "hex": "#D9BC7F",
+     "role": "light"
+    }
+   ],
+   "colorEnabled": true
   },
   {
    "id": "mona",
@@ -1499,7 +1529,8 @@
      ],
      "band": 2,
      "arch": "line",
-     "feature": "body outline"
+     "feature": "body outline",
+     "paletteRef": "coat"
     },
     {
      "mode": "flow",
@@ -1511,7 +1542,8 @@
      ],
      "band": 3,
      "arch": "line",
-     "feature": "ear"
+     "feature": "ear",
+     "paletteRef": "earShadow"
     },
     {
      "mode": "flow",
@@ -1523,7 +1555,8 @@
      ],
      "band": 3,
      "arch": "line",
-     "feature": "haunch line"
+     "feature": "haunch line",
+     "paletteRef": "coat"
     },
     {
      "mode": "flow",
@@ -1535,7 +1568,8 @@
      ],
      "band": 3,
      "arch": "line",
-     "feature": "eye"
+     "feature": "eye",
+     "paletteRef": "eyeDark"
     },
     {
      "mode": "flow",
@@ -1547,7 +1581,8 @@
      ],
      "band": 3,
      "arch": "line",
-     "feature": "nose"
+     "feature": "nose",
+     "paletteRef": "noseDark"
     },
     {
      "mode": "flow",
@@ -1559,7 +1594,8 @@
      ],
      "band": 3,
      "arch": "line",
-     "feature": "chest marking"
+     "feature": "chest marking",
+     "paletteRef": "chestCream"
     },
     {
      "mode": "flow",
@@ -1571,7 +1607,8 @@
      ],
      "band": 3,
      "arch": "line",
-     "feature": "collar"
+     "feature": "collar",
+     "paletteRef": "collarRed"
     }
    ],
    "guide": [
@@ -1588,7 +1625,40 @@
     "puppy"
    ],
    "extractionClass": "LINE",
-   "name": "Dog"
+   "name": "Dog",
+   "palette": [
+    {
+     "id": "coat",
+     "hex": "#C8955C",
+     "role": "body"
+    },
+    {
+     "id": "earShadow",
+     "hex": "#A9743F",
+     "role": "shade"
+    },
+    {
+     "id": "eyeDark",
+     "hex": "#A27D5F",
+     "role": "feature"
+    },
+    {
+     "id": "noseDark",
+     "hex": "#9D7D6B",
+     "role": "feature"
+    },
+    {
+     "id": "chestCream",
+     "hex": "#E8D5B5",
+     "role": "light"
+    },
+    {
+     "id": "collarRed",
+     "hex": "#E14949",
+     "role": "accent"
+    }
+   ],
+   "colorEnabled": true
   },
   {
    "id": "butterfly",
@@ -6526,7 +6596,8 @@
    "canonicalCategory": "learn",
    "aliases": [],
    "extractionClass": "LINE",
-   "name": "Zero"
+   "name": "Zero",
+   "folder": "numbers"
   },
   {
    "id": "one",
@@ -6557,7 +6628,8 @@
    "canonicalCategory": "learn",
    "aliases": [],
    "extractionClass": "LINE",
-   "name": "One"
+   "name": "One",
+   "folder": "numbers"
   },
   {
    "id": "two",
@@ -6588,7 +6660,8 @@
    "canonicalCategory": "learn",
    "aliases": [],
    "extractionClass": "LINE",
-   "name": "Two"
+   "name": "Two",
+   "folder": "numbers"
   },
   {
    "id": "three",
@@ -6619,7 +6692,8 @@
    "canonicalCategory": "learn",
    "aliases": [],
    "extractionClass": "LINE",
-   "name": "Three"
+   "name": "Three",
+   "folder": "numbers"
   },
   {
    "id": "four",
@@ -6650,7 +6724,8 @@
    "canonicalCategory": "learn",
    "aliases": [],
    "extractionClass": "LINE",
-   "name": "Four"
+   "name": "Four",
+   "folder": "numbers"
   },
   {
    "id": "five",
@@ -6681,7 +6756,8 @@
    "canonicalCategory": "learn",
    "aliases": [],
    "extractionClass": "LINE",
-   "name": "Five"
+   "name": "Five",
+   "folder": "numbers"
   },
   {
    "id": "six",
@@ -6712,7 +6788,8 @@
    "canonicalCategory": "learn",
    "aliases": [],
    "extractionClass": "LINE",
-   "name": "Six"
+   "name": "Six",
+   "folder": "numbers"
   },
   {
    "id": "seven",
@@ -6743,7 +6820,8 @@
    "canonicalCategory": "learn",
    "aliases": [],
    "extractionClass": "LINE",
-   "name": "Seven"
+   "name": "Seven",
+   "folder": "numbers"
   },
   {
    "id": "eight",
@@ -6774,7 +6852,8 @@
    "canonicalCategory": "learn",
    "aliases": [],
    "extractionClass": "LINE",
-   "name": "Eight"
+   "name": "Eight",
+   "folder": "numbers"
   },
   {
    "id": "nine",
@@ -6805,7 +6884,8 @@
    "canonicalCategory": "learn",
    "aliases": [],
    "extractionClass": "LINE",
-   "name": "Nine"
+   "name": "Nine",
+   "folder": "numbers"
   },
   {
    "id": "lat01",
@@ -6836,7 +6916,8 @@
    "canonicalCategory": "learn",
    "aliases": [],
    "extractionClass": "LINE",
-   "name": "lat01"
+   "name": "lat01",
+   "folder": "latin"
   },
   {
    "id": "lat02",
@@ -6867,7 +6948,8 @@
    "canonicalCategory": "learn",
    "aliases": [],
    "extractionClass": "LINE",
-   "name": "lat02"
+   "name": "lat02",
+   "folder": "latin"
   },
   {
    "id": "lat03",
@@ -6898,7 +6980,8 @@
    "canonicalCategory": "learn",
    "aliases": [],
    "extractionClass": "LINE",
-   "name": "lat03"
+   "name": "lat03",
+   "folder": "latin"
   },
   {
    "id": "lat04",
@@ -6929,7 +7012,8 @@
    "canonicalCategory": "learn",
    "aliases": [],
    "extractionClass": "LINE",
-   "name": "lat04"
+   "name": "lat04",
+   "folder": "latin"
   },
   {
    "id": "lat05",
@@ -6960,7 +7044,8 @@
    "canonicalCategory": "learn",
    "aliases": [],
    "extractionClass": "LINE",
-   "name": "lat05"
+   "name": "lat05",
+   "folder": "latin"
   },
   {
    "id": "lat06",
@@ -6991,7 +7076,8 @@
    "canonicalCategory": "learn",
    "aliases": [],
    "extractionClass": "LINE",
-   "name": "lat06"
+   "name": "lat06",
+   "folder": "latin"
   },
   {
    "id": "lat07",
@@ -7022,7 +7108,8 @@
    "canonicalCategory": "learn",
    "aliases": [],
    "extractionClass": "LINE",
-   "name": "lat07"
+   "name": "lat07",
+   "folder": "latin"
   },
   {
    "id": "lat08",
@@ -7053,7 +7140,8 @@
    "canonicalCategory": "learn",
    "aliases": [],
    "extractionClass": "LINE",
-   "name": "lat08"
+   "name": "lat08",
+   "folder": "latin"
   },
   {
    "id": "lat09",
@@ -7084,7 +7172,8 @@
    "canonicalCategory": "learn",
    "aliases": [],
    "extractionClass": "LINE",
-   "name": "lat09"
+   "name": "lat09",
+   "folder": "latin"
   },
   {
    "id": "lat10",
@@ -7115,7 +7204,8 @@
    "canonicalCategory": "learn",
    "aliases": [],
    "extractionClass": "LINE",
-   "name": "lat10"
+   "name": "lat10",
+   "folder": "latin"
   },
   {
    "id": "lat11",
@@ -7146,7 +7236,8 @@
    "canonicalCategory": "learn",
    "aliases": [],
    "extractionClass": "LINE",
-   "name": "lat11"
+   "name": "lat11",
+   "folder": "latin"
   },
   {
    "id": "lat12",
@@ -7177,7 +7268,8 @@
    "canonicalCategory": "learn",
    "aliases": [],
    "extractionClass": "LINE",
-   "name": "lat12"
+   "name": "lat12",
+   "folder": "latin"
   },
   {
    "id": "lat13",
@@ -7208,7 +7300,8 @@
    "canonicalCategory": "learn",
    "aliases": [],
    "extractionClass": "LINE",
-   "name": "lat13"
+   "name": "lat13",
+   "folder": "latin"
   },
   {
    "id": "lat14",
@@ -7239,7 +7332,8 @@
    "canonicalCategory": "learn",
    "aliases": [],
    "extractionClass": "LINE",
-   "name": "lat14"
+   "name": "lat14",
+   "folder": "latin"
   },
   {
    "id": "lat15",
@@ -7270,7 +7364,8 @@
    "canonicalCategory": "learn",
    "aliases": [],
    "extractionClass": "LINE",
-   "name": "lat15"
+   "name": "lat15",
+   "folder": "latin"
   },
   {
    "id": "lat16",
@@ -7301,7 +7396,8 @@
    "canonicalCategory": "learn",
    "aliases": [],
    "extractionClass": "LINE",
-   "name": "lat16"
+   "name": "lat16",
+   "folder": "latin"
   },
   {
    "id": "lat17",
@@ -7332,7 +7428,8 @@
    "canonicalCategory": "learn",
    "aliases": [],
    "extractionClass": "LINE",
-   "name": "lat17"
+   "name": "lat17",
+   "folder": "latin"
   },
   {
    "id": "lat18",
@@ -7363,7 +7460,8 @@
    "canonicalCategory": "learn",
    "aliases": [],
    "extractionClass": "LINE",
-   "name": "lat18"
+   "name": "lat18",
+   "folder": "latin"
   },
   {
    "id": "lat19",
@@ -7394,7 +7492,8 @@
    "canonicalCategory": "learn",
    "aliases": [],
    "extractionClass": "LINE",
-   "name": "lat19"
+   "name": "lat19",
+   "folder": "latin"
   },
   {
    "id": "lat20",
@@ -7425,7 +7524,8 @@
    "canonicalCategory": "learn",
    "aliases": [],
    "extractionClass": "LINE",
-   "name": "lat20"
+   "name": "lat20",
+   "folder": "latin"
   },
   {
    "id": "lat21",
@@ -7456,7 +7556,8 @@
    "canonicalCategory": "learn",
    "aliases": [],
    "extractionClass": "LINE",
-   "name": "lat21"
+   "name": "lat21",
+   "folder": "latin"
   },
   {
    "id": "lat22",
@@ -7487,7 +7588,8 @@
    "canonicalCategory": "learn",
    "aliases": [],
    "extractionClass": "LINE",
-   "name": "lat22"
+   "name": "lat22",
+   "folder": "latin"
   },
   {
    "id": "lat23",
@@ -7518,7 +7620,8 @@
    "canonicalCategory": "learn",
    "aliases": [],
    "extractionClass": "LINE",
-   "name": "lat23"
+   "name": "lat23",
+   "folder": "latin"
   },
   {
    "id": "lat24",
@@ -7549,7 +7652,8 @@
    "canonicalCategory": "learn",
    "aliases": [],
    "extractionClass": "LINE",
-   "name": "lat24"
+   "name": "lat24",
+   "folder": "latin"
   },
   {
    "id": "lat25",
@@ -7580,7 +7684,8 @@
    "canonicalCategory": "learn",
    "aliases": [],
    "extractionClass": "LINE",
-   "name": "lat25"
+   "name": "lat25",
+   "folder": "latin"
   },
   {
    "id": "lat26",
@@ -7611,7 +7716,8 @@
    "canonicalCategory": "learn",
    "aliases": [],
    "extractionClass": "LINE",
-   "name": "lat26"
+   "name": "lat26",
+   "folder": "latin"
   },
   {
    "id": "cyr01",
@@ -7642,7 +7748,8 @@
    "canonicalCategory": "learn",
    "aliases": [],
    "extractionClass": "LINE",
-   "name": "cyr01"
+   "name": "cyr01",
+   "folder": "cyrillic"
   },
   {
    "id": "cyr02",
@@ -7673,7 +7780,8 @@
    "canonicalCategory": "learn",
    "aliases": [],
    "extractionClass": "LINE",
-   "name": "cyr02"
+   "name": "cyr02",
+   "folder": "cyrillic"
   },
   {
    "id": "cyr03",
@@ -7704,7 +7812,8 @@
    "canonicalCategory": "learn",
    "aliases": [],
    "extractionClass": "LINE",
-   "name": "cyr03"
+   "name": "cyr03",
+   "folder": "cyrillic"
   },
   {
    "id": "cyr04",
@@ -7735,7 +7844,8 @@
    "canonicalCategory": "learn",
    "aliases": [],
    "extractionClass": "LINE",
-   "name": "cyr04"
+   "name": "cyr04",
+   "folder": "cyrillic"
   },
   {
    "id": "cyr05",
@@ -7766,7 +7876,8 @@
    "canonicalCategory": "learn",
    "aliases": [],
    "extractionClass": "LINE",
-   "name": "cyr05"
+   "name": "cyr05",
+   "folder": "cyrillic"
   },
   {
    "id": "cyr06",
@@ -7797,7 +7908,8 @@
    "canonicalCategory": "learn",
    "aliases": [],
    "extractionClass": "LINE",
-   "name": "cyr06"
+   "name": "cyr06",
+   "folder": "cyrillic"
   },
   {
    "id": "cyr07",
@@ -7828,7 +7940,8 @@
    "canonicalCategory": "learn",
    "aliases": [],
    "extractionClass": "LINE",
-   "name": "cyr07"
+   "name": "cyr07",
+   "folder": "cyrillic"
   },
   {
    "id": "cyr08",
@@ -7859,7 +7972,8 @@
    "canonicalCategory": "learn",
    "aliases": [],
    "extractionClass": "LINE",
-   "name": "cyr08"
+   "name": "cyr08",
+   "folder": "cyrillic"
   },
   {
    "id": "cyr09",
@@ -7890,7 +8004,8 @@
    "canonicalCategory": "learn",
    "aliases": [],
    "extractionClass": "LINE",
-   "name": "cyr09"
+   "name": "cyr09",
+   "folder": "cyrillic"
   },
   {
    "id": "cyr10",
@@ -7921,7 +8036,8 @@
    "canonicalCategory": "learn",
    "aliases": [],
    "extractionClass": "LINE",
-   "name": "cyr10"
+   "name": "cyr10",
+   "folder": "cyrillic"
   },
   {
    "id": "cyr11",
@@ -7952,7 +8068,8 @@
    "canonicalCategory": "learn",
    "aliases": [],
    "extractionClass": "LINE",
-   "name": "cyr11"
+   "name": "cyr11",
+   "folder": "cyrillic"
   },
   {
    "id": "cyr12",
@@ -7983,7 +8100,8 @@
    "canonicalCategory": "learn",
    "aliases": [],
    "extractionClass": "LINE",
-   "name": "cyr12"
+   "name": "cyr12",
+   "folder": "cyrillic"
   },
   {
    "id": "cyr13",
@@ -8014,7 +8132,8 @@
    "canonicalCategory": "learn",
    "aliases": [],
    "extractionClass": "LINE",
-   "name": "cyr13"
+   "name": "cyr13",
+   "folder": "cyrillic"
   },
   {
    "id": "cyr14",
@@ -8045,7 +8164,8 @@
    "canonicalCategory": "learn",
    "aliases": [],
    "extractionClass": "LINE",
-   "name": "cyr14"
+   "name": "cyr14",
+   "folder": "cyrillic"
   },
   {
    "id": "cyr15",
@@ -8076,7 +8196,8 @@
    "canonicalCategory": "learn",
    "aliases": [],
    "extractionClass": "LINE",
-   "name": "cyr15"
+   "name": "cyr15",
+   "folder": "cyrillic"
   },
   {
    "id": "cyr16",
@@ -8107,7 +8228,8 @@
    "canonicalCategory": "learn",
    "aliases": [],
    "extractionClass": "LINE",
-   "name": "cyr16"
+   "name": "cyr16",
+   "folder": "cyrillic"
   },
   {
    "id": "cyr17",
@@ -8138,7 +8260,8 @@
    "canonicalCategory": "learn",
    "aliases": [],
    "extractionClass": "LINE",
-   "name": "cyr17"
+   "name": "cyr17",
+   "folder": "cyrillic"
   },
   {
    "id": "cyr18",
@@ -8169,7 +8292,8 @@
    "canonicalCategory": "learn",
    "aliases": [],
    "extractionClass": "LINE",
-   "name": "cyr18"
+   "name": "cyr18",
+   "folder": "cyrillic"
   },
   {
    "id": "cyr19",
@@ -8200,7 +8324,8 @@
    "canonicalCategory": "learn",
    "aliases": [],
    "extractionClass": "LINE",
-   "name": "cyr19"
+   "name": "cyr19",
+   "folder": "cyrillic"
   },
   {
    "id": "cyr20",
@@ -8231,7 +8356,8 @@
    "canonicalCategory": "learn",
    "aliases": [],
    "extractionClass": "LINE",
-   "name": "cyr20"
+   "name": "cyr20",
+   "folder": "cyrillic"
   },
   {
    "id": "cyr21",
@@ -8262,7 +8388,8 @@
    "canonicalCategory": "learn",
    "aliases": [],
    "extractionClass": "LINE",
-   "name": "cyr21"
+   "name": "cyr21",
+   "folder": "cyrillic"
   },
   {
    "id": "cyr22",
@@ -8293,7 +8420,8 @@
    "canonicalCategory": "learn",
    "aliases": [],
    "extractionClass": "LINE",
-   "name": "cyr22"
+   "name": "cyr22",
+   "folder": "cyrillic"
   },
   {
    "id": "cyr23",
@@ -8324,7 +8452,8 @@
    "canonicalCategory": "learn",
    "aliases": [],
    "extractionClass": "LINE",
-   "name": "cyr23"
+   "name": "cyr23",
+   "folder": "cyrillic"
   },
   {
    "id": "cyr24",
@@ -8355,7 +8484,8 @@
    "canonicalCategory": "learn",
    "aliases": [],
    "extractionClass": "LINE",
-   "name": "cyr24"
+   "name": "cyr24",
+   "folder": "cyrillic"
   },
   {
    "id": "cyr25",
@@ -8386,7 +8516,8 @@
    "canonicalCategory": "learn",
    "aliases": [],
    "extractionClass": "LINE",
-   "name": "cyr25"
+   "name": "cyr25",
+   "folder": "cyrillic"
   },
   {
    "id": "cyr26",
@@ -8417,7 +8548,8 @@
    "canonicalCategory": "learn",
    "aliases": [],
    "extractionClass": "LINE",
-   "name": "cyr26"
+   "name": "cyr26",
+   "folder": "cyrillic"
   },
   {
    "id": "cyr27",
@@ -8448,7 +8580,8 @@
    "canonicalCategory": "learn",
    "aliases": [],
    "extractionClass": "LINE",
-   "name": "cyr27"
+   "name": "cyr27",
+   "folder": "cyrillic"
   },
   {
    "id": "cyr28",
@@ -8479,7 +8612,8 @@
    "canonicalCategory": "learn",
    "aliases": [],
    "extractionClass": "LINE",
-   "name": "cyr28"
+   "name": "cyr28",
+   "folder": "cyrillic"
   },
   {
    "id": "cyr29",
@@ -8510,7 +8644,8 @@
    "canonicalCategory": "learn",
    "aliases": [],
    "extractionClass": "LINE",
-   "name": "cyr29"
+   "name": "cyr29",
+   "folder": "cyrillic"
   },
   {
    "id": "cyr30",
@@ -8541,7 +8676,8 @@
    "canonicalCategory": "learn",
    "aliases": [],
    "extractionClass": "LINE",
-   "name": "cyr30"
+   "name": "cyr30",
+   "folder": "cyrillic"
   },
   {
    "id": "cyr31",
@@ -8572,7 +8708,8 @@
    "canonicalCategory": "learn",
    "aliases": [],
    "extractionClass": "LINE",
-   "name": "cyr31"
+   "name": "cyr31",
+   "folder": "cyrillic"
   },
   {
    "id": "cyr32",
@@ -8603,7 +8740,8 @@
    "canonicalCategory": "learn",
    "aliases": [],
    "extractionClass": "LINE",
-   "name": "cyr32"
+   "name": "cyr32",
+   "folder": "cyrillic"
   },
   {
    "id": "cyr33",
@@ -8634,7 +8772,8 @@
    "canonicalCategory": "learn",
    "aliases": [],
    "extractionClass": "LINE",
-   "name": "cyr33"
+   "name": "cyr33",
+   "folder": "cyrillic"
   },
   {
    "id": "arb01",
@@ -8665,7 +8804,8 @@
    "canonicalCategory": "learn",
    "aliases": [],
    "extractionClass": "LINE",
-   "name": "arb01"
+   "name": "arb01",
+   "folder": "arabic"
   },
   {
    "id": "arb02",
@@ -8696,7 +8836,8 @@
    "canonicalCategory": "learn",
    "aliases": [],
    "extractionClass": "LINE",
-   "name": "arb02"
+   "name": "arb02",
+   "folder": "arabic"
   },
   {
    "id": "arb03",
@@ -8727,7 +8868,8 @@
    "canonicalCategory": "learn",
    "aliases": [],
    "extractionClass": "LINE",
-   "name": "arb03"
+   "name": "arb03",
+   "folder": "arabic"
   },
   {
    "id": "arb04",
@@ -8758,7 +8900,8 @@
    "canonicalCategory": "learn",
    "aliases": [],
    "extractionClass": "LINE",
-   "name": "arb04"
+   "name": "arb04",
+   "folder": "arabic"
   },
   {
    "id": "arb05",
@@ -8789,7 +8932,8 @@
    "canonicalCategory": "learn",
    "aliases": [],
    "extractionClass": "LINE",
-   "name": "arb05"
+   "name": "arb05",
+   "folder": "arabic"
   },
   {
    "id": "arb06",
@@ -8820,7 +8964,8 @@
    "canonicalCategory": "learn",
    "aliases": [],
    "extractionClass": "LINE",
-   "name": "arb06"
+   "name": "arb06",
+   "folder": "arabic"
   },
   {
    "id": "arb07",
@@ -8851,7 +8996,8 @@
    "canonicalCategory": "learn",
    "aliases": [],
    "extractionClass": "LINE",
-   "name": "arb07"
+   "name": "arb07",
+   "folder": "arabic"
   },
   {
    "id": "arb08",
@@ -8882,7 +9028,8 @@
    "canonicalCategory": "learn",
    "aliases": [],
    "extractionClass": "LINE",
-   "name": "arb08"
+   "name": "arb08",
+   "folder": "arabic"
   },
   {
    "id": "arb09",
@@ -8913,7 +9060,8 @@
    "canonicalCategory": "learn",
    "aliases": [],
    "extractionClass": "LINE",
-   "name": "arb09"
+   "name": "arb09",
+   "folder": "arabic"
   },
   {
    "id": "arb10",
@@ -8944,7 +9092,8 @@
    "canonicalCategory": "learn",
    "aliases": [],
    "extractionClass": "LINE",
-   "name": "arb10"
+   "name": "arb10",
+   "folder": "arabic"
   },
   {
    "id": "arb11",
@@ -8975,7 +9124,8 @@
    "canonicalCategory": "learn",
    "aliases": [],
    "extractionClass": "LINE",
-   "name": "arb11"
+   "name": "arb11",
+   "folder": "arabic"
   },
   {
    "id": "arb12",
@@ -9006,7 +9156,8 @@
    "canonicalCategory": "learn",
    "aliases": [],
    "extractionClass": "LINE",
-   "name": "arb12"
+   "name": "arb12",
+   "folder": "arabic"
   },
   {
    "id": "arb13",
@@ -9037,7 +9188,8 @@
    "canonicalCategory": "learn",
    "aliases": [],
    "extractionClass": "LINE",
-   "name": "arb13"
+   "name": "arb13",
+   "folder": "arabic"
   },
   {
    "id": "arb14",
@@ -9068,7 +9220,8 @@
    "canonicalCategory": "learn",
    "aliases": [],
    "extractionClass": "LINE",
-   "name": "arb14"
+   "name": "arb14",
+   "folder": "arabic"
   },
   {
    "id": "arb15",
@@ -9099,7 +9252,8 @@
    "canonicalCategory": "learn",
    "aliases": [],
    "extractionClass": "LINE",
-   "name": "arb15"
+   "name": "arb15",
+   "folder": "arabic"
   },
   {
    "id": "arb16",
@@ -9130,7 +9284,8 @@
    "canonicalCategory": "learn",
    "aliases": [],
    "extractionClass": "LINE",
-   "name": "arb16"
+   "name": "arb16",
+   "folder": "arabic"
   },
   {
    "id": "arb17",
@@ -9161,7 +9316,8 @@
    "canonicalCategory": "learn",
    "aliases": [],
    "extractionClass": "LINE",
-   "name": "arb17"
+   "name": "arb17",
+   "folder": "arabic"
   },
   {
    "id": "arb18",
@@ -9192,7 +9348,8 @@
    "canonicalCategory": "learn",
    "aliases": [],
    "extractionClass": "LINE",
-   "name": "arb18"
+   "name": "arb18",
+   "folder": "arabic"
   },
   {
    "id": "arb19",
@@ -9223,7 +9380,8 @@
    "canonicalCategory": "learn",
    "aliases": [],
    "extractionClass": "LINE",
-   "name": "arb19"
+   "name": "arb19",
+   "folder": "arabic"
   },
   {
    "id": "arb20",
@@ -9254,7 +9412,8 @@
    "canonicalCategory": "learn",
    "aliases": [],
    "extractionClass": "LINE",
-   "name": "arb20"
+   "name": "arb20",
+   "folder": "arabic"
   },
   {
    "id": "arb21",
@@ -9285,7 +9444,8 @@
    "canonicalCategory": "learn",
    "aliases": [],
    "extractionClass": "LINE",
-   "name": "arb21"
+   "name": "arb21",
+   "folder": "arabic"
   },
   {
    "id": "arb22",
@@ -9316,7 +9476,8 @@
    "canonicalCategory": "learn",
    "aliases": [],
    "extractionClass": "LINE",
-   "name": "arb22"
+   "name": "arb22",
+   "folder": "arabic"
   },
   {
    "id": "arb23",
@@ -9347,7 +9508,8 @@
    "canonicalCategory": "learn",
    "aliases": [],
    "extractionClass": "LINE",
-   "name": "arb23"
+   "name": "arb23",
+   "folder": "arabic"
   },
   {
    "id": "arb24",
@@ -9378,7 +9540,8 @@
    "canonicalCategory": "learn",
    "aliases": [],
    "extractionClass": "LINE",
-   "name": "arb24"
+   "name": "arb24",
+   "folder": "arabic"
   },
   {
    "id": "arb25",
@@ -9409,7 +9572,8 @@
    "canonicalCategory": "learn",
    "aliases": [],
    "extractionClass": "LINE",
-   "name": "arb25"
+   "name": "arb25",
+   "folder": "arabic"
   },
   {
    "id": "arb26",
@@ -9440,7 +9604,8 @@
    "canonicalCategory": "learn",
    "aliases": [],
    "extractionClass": "LINE",
-   "name": "arb26"
+   "name": "arb26",
+   "folder": "arabic"
   },
   {
    "id": "arb27",
@@ -9471,7 +9636,8 @@
    "canonicalCategory": "learn",
    "aliases": [],
    "extractionClass": "LINE",
-   "name": "arb27"
+   "name": "arb27",
+   "folder": "arabic"
   },
   {
    "id": "arb28",
@@ -9502,7 +9668,8 @@
    "canonicalCategory": "learn",
    "aliases": [],
    "extractionClass": "LINE",
-   "name": "arb28"
+   "name": "arb28",
+   "folder": "arabic"
   },
   {
    "id": "dev01",
@@ -9533,7 +9700,8 @@
    "canonicalCategory": "learn",
    "aliases": [],
    "extractionClass": "LINE",
-   "name": "dev01"
+   "name": "dev01",
+   "folder": "devanagari"
   },
   {
    "id": "dev02",
@@ -9564,7 +9732,8 @@
    "canonicalCategory": "learn",
    "aliases": [],
    "extractionClass": "LINE",
-   "name": "dev02"
+   "name": "dev02",
+   "folder": "devanagari"
   },
   {
    "id": "dev03",
@@ -9595,7 +9764,8 @@
    "canonicalCategory": "learn",
    "aliases": [],
    "extractionClass": "LINE",
-   "name": "dev03"
+   "name": "dev03",
+   "folder": "devanagari"
   },
   {
    "id": "dev04",
@@ -9626,7 +9796,8 @@
    "canonicalCategory": "learn",
    "aliases": [],
    "extractionClass": "LINE",
-   "name": "dev04"
+   "name": "dev04",
+   "folder": "devanagari"
   },
   {
    "id": "dev05",
@@ -9657,7 +9828,8 @@
    "canonicalCategory": "learn",
    "aliases": [],
    "extractionClass": "LINE",
-   "name": "dev05"
+   "name": "dev05",
+   "folder": "devanagari"
   },
   {
    "id": "dev06",
@@ -9688,7 +9860,8 @@
    "canonicalCategory": "learn",
    "aliases": [],
    "extractionClass": "LINE",
-   "name": "dev06"
+   "name": "dev06",
+   "folder": "devanagari"
   },
   {
    "id": "dev07",
@@ -9719,7 +9892,8 @@
    "canonicalCategory": "learn",
    "aliases": [],
    "extractionClass": "LINE",
-   "name": "dev07"
+   "name": "dev07",
+   "folder": "devanagari"
   },
   {
    "id": "dev08",
@@ -9750,7 +9924,8 @@
    "canonicalCategory": "learn",
    "aliases": [],
    "extractionClass": "LINE",
-   "name": "dev08"
+   "name": "dev08",
+   "folder": "devanagari"
   },
   {
    "id": "dev09",
@@ -9781,7 +9956,8 @@
    "canonicalCategory": "learn",
    "aliases": [],
    "extractionClass": "LINE",
-   "name": "dev09"
+   "name": "dev09",
+   "folder": "devanagari"
   },
   {
    "id": "dev10",
@@ -9812,7 +9988,8 @@
    "canonicalCategory": "learn",
    "aliases": [],
    "extractionClass": "LINE",
-   "name": "dev10"
+   "name": "dev10",
+   "folder": "devanagari"
   },
   {
    "id": "dev11",
@@ -9843,7 +10020,8 @@
    "canonicalCategory": "learn",
    "aliases": [],
    "extractionClass": "LINE",
-   "name": "dev11"
+   "name": "dev11",
+   "folder": "devanagari"
   },
   {
    "id": "dev12",
@@ -9874,7 +10052,8 @@
    "canonicalCategory": "learn",
    "aliases": [],
    "extractionClass": "LINE",
-   "name": "dev12"
+   "name": "dev12",
+   "folder": "devanagari"
   },
   {
    "id": "dev13",
@@ -9905,7 +10084,8 @@
    "canonicalCategory": "learn",
    "aliases": [],
    "extractionClass": "LINE",
-   "name": "dev13"
+   "name": "dev13",
+   "folder": "devanagari"
   },
   {
    "id": "dev14",
@@ -9936,7 +10116,8 @@
    "canonicalCategory": "learn",
    "aliases": [],
    "extractionClass": "LINE",
-   "name": "dev14"
+   "name": "dev14",
+   "folder": "devanagari"
   },
   {
    "id": "dev15",
@@ -9967,7 +10148,8 @@
    "canonicalCategory": "learn",
    "aliases": [],
    "extractionClass": "LINE",
-   "name": "dev15"
+   "name": "dev15",
+   "folder": "devanagari"
   },
   {
    "id": "dev16",
@@ -9998,7 +10180,8 @@
    "canonicalCategory": "learn",
    "aliases": [],
    "extractionClass": "LINE",
-   "name": "dev16"
+   "name": "dev16",
+   "folder": "devanagari"
   },
   {
    "id": "dev17",
@@ -10029,7 +10212,8 @@
    "canonicalCategory": "learn",
    "aliases": [],
    "extractionClass": "LINE",
-   "name": "dev17"
+   "name": "dev17",
+   "folder": "devanagari"
   },
   {
    "id": "dev18",
@@ -10060,7 +10244,8 @@
    "canonicalCategory": "learn",
    "aliases": [],
    "extractionClass": "LINE",
-   "name": "dev18"
+   "name": "dev18",
+   "folder": "devanagari"
   },
   {
    "id": "dev19",
@@ -10091,7 +10276,8 @@
    "canonicalCategory": "learn",
    "aliases": [],
    "extractionClass": "LINE",
-   "name": "dev19"
+   "name": "dev19",
+   "folder": "devanagari"
   },
   {
    "id": "dev20",
@@ -10122,7 +10308,8 @@
    "canonicalCategory": "learn",
    "aliases": [],
    "extractionClass": "LINE",
-   "name": "dev20"
+   "name": "dev20",
+   "folder": "devanagari"
   },
   {
    "id": "dev21",
@@ -10153,7 +10340,8 @@
    "canonicalCategory": "learn",
    "aliases": [],
    "extractionClass": "LINE",
-   "name": "dev21"
+   "name": "dev21",
+   "folder": "devanagari"
   },
   {
    "id": "dev22",
@@ -10184,7 +10372,8 @@
    "canonicalCategory": "learn",
    "aliases": [],
    "extractionClass": "LINE",
-   "name": "dev22"
+   "name": "dev22",
+   "folder": "devanagari"
   },
   {
    "id": "dev23",
@@ -10215,7 +10404,8 @@
    "canonicalCategory": "learn",
    "aliases": [],
    "extractionClass": "LINE",
-   "name": "dev23"
+   "name": "dev23",
+   "folder": "devanagari"
   },
   {
    "id": "dev24",
@@ -10246,7 +10436,8 @@
    "canonicalCategory": "learn",
    "aliases": [],
    "extractionClass": "LINE",
-   "name": "dev24"
+   "name": "dev24",
+   "folder": "devanagari"
   },
   {
    "id": "dev25",
@@ -10277,7 +10468,8 @@
    "canonicalCategory": "learn",
    "aliases": [],
    "extractionClass": "LINE",
-   "name": "dev25"
+   "name": "dev25",
+   "folder": "devanagari"
   },
   {
    "id": "dev26",
@@ -10308,7 +10500,8 @@
    "canonicalCategory": "learn",
    "aliases": [],
    "extractionClass": "LINE",
-   "name": "dev26"
+   "name": "dev26",
+   "folder": "devanagari"
   },
   {
    "id": "dev27",
@@ -10339,7 +10532,8 @@
    "canonicalCategory": "learn",
    "aliases": [],
    "extractionClass": "LINE",
-   "name": "dev27"
+   "name": "dev27",
+   "folder": "devanagari"
   },
   {
    "id": "dev28",
@@ -10370,7 +10564,8 @@
    "canonicalCategory": "learn",
    "aliases": [],
    "extractionClass": "LINE",
-   "name": "dev28"
+   "name": "dev28",
+   "folder": "devanagari"
   },
   {
    "id": "dev29",
@@ -10401,7 +10596,8 @@
    "canonicalCategory": "learn",
    "aliases": [],
    "extractionClass": "LINE",
-   "name": "dev29"
+   "name": "dev29",
+   "folder": "devanagari"
   },
   {
    "id": "dev30",
@@ -10432,7 +10628,8 @@
    "canonicalCategory": "learn",
    "aliases": [],
    "extractionClass": "LINE",
-   "name": "dev30"
+   "name": "dev30",
+   "folder": "devanagari"
   },
   {
    "id": "dev31",
@@ -10463,7 +10660,8 @@
    "canonicalCategory": "learn",
    "aliases": [],
    "extractionClass": "LINE",
-   "name": "dev31"
+   "name": "dev31",
+   "folder": "devanagari"
   },
   {
    "id": "dev32",
@@ -10494,7 +10692,8 @@
    "canonicalCategory": "learn",
    "aliases": [],
    "extractionClass": "LINE",
-   "name": "dev32"
+   "name": "dev32",
+   "folder": "devanagari"
   },
   {
    "id": "dev33",
@@ -10525,7 +10724,8 @@
    "canonicalCategory": "learn",
    "aliases": [],
    "extractionClass": "LINE",
-   "name": "dev33"
+   "name": "dev33",
+   "folder": "devanagari"
   },
   {
    "id": "dev34",
@@ -10556,7 +10756,8 @@
    "canonicalCategory": "learn",
    "aliases": [],
    "extractionClass": "LINE",
-   "name": "dev34"
+   "name": "dev34",
+   "folder": "devanagari"
   },
   {
    "id": "dev35",
@@ -10587,7 +10788,8 @@
    "canonicalCategory": "learn",
    "aliases": [],
    "extractionClass": "LINE",
-   "name": "dev35"
+   "name": "dev35",
+   "folder": "devanagari"
   },
   {
    "id": "dev36",
@@ -10618,7 +10820,8 @@
    "canonicalCategory": "learn",
    "aliases": [],
    "extractionClass": "LINE",
-   "name": "dev36"
+   "name": "dev36",
+   "folder": "devanagari"
   },
   {
    "id": "dev37",
@@ -10649,7 +10852,8 @@
    "canonicalCategory": "learn",
    "aliases": [],
    "extractionClass": "LINE",
-   "name": "dev37"
+   "name": "dev37",
+   "folder": "devanagari"
   },
   {
    "id": "dev38",
@@ -10680,7 +10884,8 @@
    "canonicalCategory": "learn",
    "aliases": [],
    "extractionClass": "LINE",
-   "name": "dev38"
+   "name": "dev38",
+   "folder": "devanagari"
   },
   {
    "id": "dev39",
@@ -10711,7 +10916,8 @@
    "canonicalCategory": "learn",
    "aliases": [],
    "extractionClass": "LINE",
-   "name": "dev39"
+   "name": "dev39",
+   "folder": "devanagari"
   },
   {
    "id": "dev40",
@@ -10742,7 +10948,8 @@
    "canonicalCategory": "learn",
    "aliases": [],
    "extractionClass": "LINE",
-   "name": "dev40"
+   "name": "dev40",
+   "folder": "devanagari"
   },
   {
    "id": "dev41",
@@ -10773,7 +10980,8 @@
    "canonicalCategory": "learn",
    "aliases": [],
    "extractionClass": "LINE",
-   "name": "dev41"
+   "name": "dev41",
+   "folder": "devanagari"
   },
   {
    "id": "dev42",
@@ -10804,7 +11012,8 @@
    "canonicalCategory": "learn",
    "aliases": [],
    "extractionClass": "LINE",
-   "name": "dev42"
+   "name": "dev42",
+   "folder": "devanagari"
   },
   {
    "id": "dev43",
@@ -10835,7 +11044,8 @@
    "canonicalCategory": "learn",
    "aliases": [],
    "extractionClass": "LINE",
-   "name": "dev43"
+   "name": "dev43",
+   "folder": "devanagari"
   },
   {
    "id": "dev44",
@@ -10866,7 +11076,8 @@
    "canonicalCategory": "learn",
    "aliases": [],
    "extractionClass": "LINE",
-   "name": "dev44"
+   "name": "dev44",
+   "folder": "devanagari"
   },
   {
    "id": "kor01",
@@ -10897,7 +11108,8 @@
    "canonicalCategory": "learn",
    "aliases": [],
    "extractionClass": "LINE",
-   "name": "kor01"
+   "name": "kor01",
+   "folder": "korean"
   },
   {
    "id": "kor02",
@@ -10928,7 +11140,8 @@
    "canonicalCategory": "learn",
    "aliases": [],
    "extractionClass": "LINE",
-   "name": "kor02"
+   "name": "kor02",
+   "folder": "korean"
   },
   {
    "id": "kor03",
@@ -10959,7 +11172,8 @@
    "canonicalCategory": "learn",
    "aliases": [],
    "extractionClass": "LINE",
-   "name": "kor03"
+   "name": "kor03",
+   "folder": "korean"
   },
   {
    "id": "kor04",
@@ -10990,7 +11204,8 @@
    "canonicalCategory": "learn",
    "aliases": [],
    "extractionClass": "LINE",
-   "name": "kor04"
+   "name": "kor04",
+   "folder": "korean"
   },
   {
    "id": "kor05",
@@ -11021,7 +11236,8 @@
    "canonicalCategory": "learn",
    "aliases": [],
    "extractionClass": "LINE",
-   "name": "kor05"
+   "name": "kor05",
+   "folder": "korean"
   },
   {
    "id": "kor06",
@@ -11052,7 +11268,8 @@
    "canonicalCategory": "learn",
    "aliases": [],
    "extractionClass": "LINE",
-   "name": "kor06"
+   "name": "kor06",
+   "folder": "korean"
   },
   {
    "id": "kor07",
@@ -11083,7 +11300,8 @@
    "canonicalCategory": "learn",
    "aliases": [],
    "extractionClass": "LINE",
-   "name": "kor07"
+   "name": "kor07",
+   "folder": "korean"
   },
   {
    "id": "kor08",
@@ -11114,7 +11332,8 @@
    "canonicalCategory": "learn",
    "aliases": [],
    "extractionClass": "LINE",
-   "name": "kor08"
+   "name": "kor08",
+   "folder": "korean"
   },
   {
    "id": "kor09",
@@ -11145,7 +11364,8 @@
    "canonicalCategory": "learn",
    "aliases": [],
    "extractionClass": "LINE",
-   "name": "kor09"
+   "name": "kor09",
+   "folder": "korean"
   },
   {
    "id": "kor10",
@@ -11176,7 +11396,8 @@
    "canonicalCategory": "learn",
    "aliases": [],
    "extractionClass": "LINE",
-   "name": "kor10"
+   "name": "kor10",
+   "folder": "korean"
   },
   {
    "id": "kor11",
@@ -11207,7 +11428,8 @@
    "canonicalCategory": "learn",
    "aliases": [],
    "extractionClass": "LINE",
-   "name": "kor11"
+   "name": "kor11",
+   "folder": "korean"
   },
   {
    "id": "kor12",
@@ -11238,7 +11460,8 @@
    "canonicalCategory": "learn",
    "aliases": [],
    "extractionClass": "LINE",
-   "name": "kor12"
+   "name": "kor12",
+   "folder": "korean"
   },
   {
    "id": "kor13",
@@ -11269,7 +11492,8 @@
    "canonicalCategory": "learn",
    "aliases": [],
    "extractionClass": "LINE",
-   "name": "kor13"
+   "name": "kor13",
+   "folder": "korean"
   },
   {
    "id": "kor14",
@@ -11300,7 +11524,8 @@
    "canonicalCategory": "learn",
    "aliases": [],
    "extractionClass": "LINE",
-   "name": "kor14"
+   "name": "kor14",
+   "folder": "korean"
   },
   {
    "id": "kor15",
@@ -11331,7 +11556,8 @@
    "canonicalCategory": "learn",
    "aliases": [],
    "extractionClass": "LINE",
-   "name": "kor15"
+   "name": "kor15",
+   "folder": "korean"
   },
   {
    "id": "kor16",
@@ -11362,7 +11588,8 @@
    "canonicalCategory": "learn",
    "aliases": [],
    "extractionClass": "LINE",
-   "name": "kor16"
+   "name": "kor16",
+   "folder": "korean"
   },
   {
    "id": "kor17",
@@ -11393,7 +11620,8 @@
    "canonicalCategory": "learn",
    "aliases": [],
    "extractionClass": "LINE",
-   "name": "kor17"
+   "name": "kor17",
+   "folder": "korean"
   },
   {
    "id": "kor18",
@@ -11424,7 +11652,8 @@
    "canonicalCategory": "learn",
    "aliases": [],
    "extractionClass": "LINE",
-   "name": "kor18"
+   "name": "kor18",
+   "folder": "korean"
   },
   {
    "id": "kor19",
@@ -11455,7 +11684,8 @@
    "canonicalCategory": "learn",
    "aliases": [],
    "extractionClass": "LINE",
-   "name": "kor19"
+   "name": "kor19",
+   "folder": "korean"
   },
   {
    "id": "kor20",
@@ -11486,7 +11716,8 @@
    "canonicalCategory": "learn",
    "aliases": [],
    "extractionClass": "LINE",
-   "name": "kor20"
+   "name": "kor20",
+   "folder": "korean"
   },
   {
    "id": "kor21",
@@ -11517,7 +11748,8 @@
    "canonicalCategory": "learn",
    "aliases": [],
    "extractionClass": "LINE",
-   "name": "kor21"
+   "name": "kor21",
+   "folder": "korean"
   },
   {
    "id": "kor22",
@@ -11548,7 +11780,8 @@
    "canonicalCategory": "learn",
    "aliases": [],
    "extractionClass": "LINE",
-   "name": "kor22"
+   "name": "kor22",
+   "folder": "korean"
   },
   {
    "id": "kor23",
@@ -11579,7 +11812,8 @@
    "canonicalCategory": "learn",
    "aliases": [],
    "extractionClass": "LINE",
-   "name": "kor23"
+   "name": "kor23",
+   "folder": "korean"
   },
   {
    "id": "kor24",
@@ -11610,7 +11844,8 @@
    "canonicalCategory": "learn",
    "aliases": [],
    "extractionClass": "LINE",
-   "name": "kor24"
+   "name": "kor24",
+   "folder": "korean"
   },
   {
    "id": "hir01",
@@ -11641,7 +11876,8 @@
    "canonicalCategory": "learn",
    "aliases": [],
    "extractionClass": "LINE",
-   "name": "hir01"
+   "name": "hir01",
+   "folder": "hiragana"
   },
   {
    "id": "hir02",
@@ -11672,7 +11908,8 @@
    "canonicalCategory": "learn",
    "aliases": [],
    "extractionClass": "LINE",
-   "name": "hir02"
+   "name": "hir02",
+   "folder": "hiragana"
   },
   {
    "id": "hir03",
@@ -11703,7 +11940,8 @@
    "canonicalCategory": "learn",
    "aliases": [],
    "extractionClass": "LINE",
-   "name": "hir03"
+   "name": "hir03",
+   "folder": "hiragana"
   },
   {
    "id": "hir04",
@@ -11734,7 +11972,8 @@
    "canonicalCategory": "learn",
    "aliases": [],
    "extractionClass": "LINE",
-   "name": "hir04"
+   "name": "hir04",
+   "folder": "hiragana"
   },
   {
    "id": "hir05",
@@ -11765,7 +12004,8 @@
    "canonicalCategory": "learn",
    "aliases": [],
    "extractionClass": "LINE",
-   "name": "hir05"
+   "name": "hir05",
+   "folder": "hiragana"
   },
   {
    "id": "hir06",
@@ -11796,7 +12036,8 @@
    "canonicalCategory": "learn",
    "aliases": [],
    "extractionClass": "LINE",
-   "name": "hir06"
+   "name": "hir06",
+   "folder": "hiragana"
   },
   {
    "id": "hir07",
@@ -11827,7 +12068,8 @@
    "canonicalCategory": "learn",
    "aliases": [],
    "extractionClass": "LINE",
-   "name": "hir07"
+   "name": "hir07",
+   "folder": "hiragana"
   },
   {
    "id": "hir08",
@@ -11858,7 +12100,8 @@
    "canonicalCategory": "learn",
    "aliases": [],
    "extractionClass": "LINE",
-   "name": "hir08"
+   "name": "hir08",
+   "folder": "hiragana"
   },
   {
    "id": "hir09",
@@ -11889,7 +12132,8 @@
    "canonicalCategory": "learn",
    "aliases": [],
    "extractionClass": "LINE",
-   "name": "hir09"
+   "name": "hir09",
+   "folder": "hiragana"
   },
   {
    "id": "hir10",
@@ -11920,7 +12164,8 @@
    "canonicalCategory": "learn",
    "aliases": [],
    "extractionClass": "LINE",
-   "name": "hir10"
+   "name": "hir10",
+   "folder": "hiragana"
   },
   {
    "id": "hir11",
@@ -11951,7 +12196,8 @@
    "canonicalCategory": "learn",
    "aliases": [],
    "extractionClass": "LINE",
-   "name": "hir11"
+   "name": "hir11",
+   "folder": "hiragana"
   },
   {
    "id": "hir12",
@@ -11982,7 +12228,8 @@
    "canonicalCategory": "learn",
    "aliases": [],
    "extractionClass": "LINE",
-   "name": "hir12"
+   "name": "hir12",
+   "folder": "hiragana"
   },
   {
    "id": "hir13",
@@ -12013,7 +12260,8 @@
    "canonicalCategory": "learn",
    "aliases": [],
    "extractionClass": "LINE",
-   "name": "hir13"
+   "name": "hir13",
+   "folder": "hiragana"
   },
   {
    "id": "hir14",
@@ -12044,7 +12292,8 @@
    "canonicalCategory": "learn",
    "aliases": [],
    "extractionClass": "LINE",
-   "name": "hir14"
+   "name": "hir14",
+   "folder": "hiragana"
   },
   {
    "id": "hir15",
@@ -12075,7 +12324,8 @@
    "canonicalCategory": "learn",
    "aliases": [],
    "extractionClass": "LINE",
-   "name": "hir15"
+   "name": "hir15",
+   "folder": "hiragana"
   },
   {
    "id": "hir16",
@@ -12106,7 +12356,8 @@
    "canonicalCategory": "learn",
    "aliases": [],
    "extractionClass": "LINE",
-   "name": "hir16"
+   "name": "hir16",
+   "folder": "hiragana"
   },
   {
    "id": "hir17",
@@ -12137,7 +12388,8 @@
    "canonicalCategory": "learn",
    "aliases": [],
    "extractionClass": "LINE",
-   "name": "hir17"
+   "name": "hir17",
+   "folder": "hiragana"
   },
   {
    "id": "hir18",
@@ -12168,7 +12420,8 @@
    "canonicalCategory": "learn",
    "aliases": [],
    "extractionClass": "LINE",
-   "name": "hir18"
+   "name": "hir18",
+   "folder": "hiragana"
   },
   {
    "id": "hir19",
@@ -12199,7 +12452,8 @@
    "canonicalCategory": "learn",
    "aliases": [],
    "extractionClass": "LINE",
-   "name": "hir19"
+   "name": "hir19",
+   "folder": "hiragana"
   },
   {
    "id": "hir20",
@@ -12230,7 +12484,8 @@
    "canonicalCategory": "learn",
    "aliases": [],
    "extractionClass": "LINE",
-   "name": "hir20"
+   "name": "hir20",
+   "folder": "hiragana"
   },
   {
    "id": "hir21",
@@ -12261,7 +12516,8 @@
    "canonicalCategory": "learn",
    "aliases": [],
    "extractionClass": "LINE",
-   "name": "hir21"
+   "name": "hir21",
+   "folder": "hiragana"
   },
   {
    "id": "hir22",
@@ -12292,7 +12548,8 @@
    "canonicalCategory": "learn",
    "aliases": [],
    "extractionClass": "LINE",
-   "name": "hir22"
+   "name": "hir22",
+   "folder": "hiragana"
   },
   {
    "id": "hir23",
@@ -12323,7 +12580,8 @@
    "canonicalCategory": "learn",
    "aliases": [],
    "extractionClass": "LINE",
-   "name": "hir23"
+   "name": "hir23",
+   "folder": "hiragana"
   },
   {
    "id": "hir24",
@@ -12354,7 +12612,8 @@
    "canonicalCategory": "learn",
    "aliases": [],
    "extractionClass": "LINE",
-   "name": "hir24"
+   "name": "hir24",
+   "folder": "hiragana"
   },
   {
    "id": "hir25",
@@ -12385,7 +12644,8 @@
    "canonicalCategory": "learn",
    "aliases": [],
    "extractionClass": "LINE",
-   "name": "hir25"
+   "name": "hir25",
+   "folder": "hiragana"
   },
   {
    "id": "hir26",
@@ -12416,7 +12676,8 @@
    "canonicalCategory": "learn",
    "aliases": [],
    "extractionClass": "LINE",
-   "name": "hir26"
+   "name": "hir26",
+   "folder": "hiragana"
   },
   {
    "id": "hir27",
@@ -12447,7 +12708,8 @@
    "canonicalCategory": "learn",
    "aliases": [],
    "extractionClass": "LINE",
-   "name": "hir27"
+   "name": "hir27",
+   "folder": "hiragana"
   },
   {
    "id": "hir28",
@@ -12478,7 +12740,8 @@
    "canonicalCategory": "learn",
    "aliases": [],
    "extractionClass": "LINE",
-   "name": "hir28"
+   "name": "hir28",
+   "folder": "hiragana"
   },
   {
    "id": "hir29",
@@ -12509,7 +12772,8 @@
    "canonicalCategory": "learn",
    "aliases": [],
    "extractionClass": "LINE",
-   "name": "hir29"
+   "name": "hir29",
+   "folder": "hiragana"
   },
   {
    "id": "hir30",
@@ -12540,7 +12804,8 @@
    "canonicalCategory": "learn",
    "aliases": [],
    "extractionClass": "LINE",
-   "name": "hir30"
+   "name": "hir30",
+   "folder": "hiragana"
   },
   {
    "id": "hir31",
@@ -12571,7 +12836,8 @@
    "canonicalCategory": "learn",
    "aliases": [],
    "extractionClass": "LINE",
-   "name": "hir31"
+   "name": "hir31",
+   "folder": "hiragana"
   },
   {
    "id": "hir32",
@@ -12602,7 +12868,8 @@
    "canonicalCategory": "learn",
    "aliases": [],
    "extractionClass": "LINE",
-   "name": "hir32"
+   "name": "hir32",
+   "folder": "hiragana"
   },
   {
    "id": "hir33",
@@ -12633,7 +12900,8 @@
    "canonicalCategory": "learn",
    "aliases": [],
    "extractionClass": "LINE",
-   "name": "hir33"
+   "name": "hir33",
+   "folder": "hiragana"
   },
   {
    "id": "hir34",
@@ -12664,7 +12932,8 @@
    "canonicalCategory": "learn",
    "aliases": [],
    "extractionClass": "LINE",
-   "name": "hir34"
+   "name": "hir34",
+   "folder": "hiragana"
   },
   {
    "id": "hir35",
@@ -12695,7 +12964,8 @@
    "canonicalCategory": "learn",
    "aliases": [],
    "extractionClass": "LINE",
-   "name": "hir35"
+   "name": "hir35",
+   "folder": "hiragana"
   },
   {
    "id": "hir36",
@@ -12726,7 +12996,8 @@
    "canonicalCategory": "learn",
    "aliases": [],
    "extractionClass": "LINE",
-   "name": "hir36"
+   "name": "hir36",
+   "folder": "hiragana"
   },
   {
    "id": "hir37",
@@ -12757,7 +13028,8 @@
    "canonicalCategory": "learn",
    "aliases": [],
    "extractionClass": "LINE",
-   "name": "hir37"
+   "name": "hir37",
+   "folder": "hiragana"
   },
   {
    "id": "hir38",
@@ -12788,7 +13060,8 @@
    "canonicalCategory": "learn",
    "aliases": [],
    "extractionClass": "LINE",
-   "name": "hir38"
+   "name": "hir38",
+   "folder": "hiragana"
   },
   {
    "id": "hir39",
@@ -12819,7 +13092,8 @@
    "canonicalCategory": "learn",
    "aliases": [],
    "extractionClass": "LINE",
-   "name": "hir39"
+   "name": "hir39",
+   "folder": "hiragana"
   },
   {
    "id": "hir40",
@@ -12850,7 +13124,8 @@
    "canonicalCategory": "learn",
    "aliases": [],
    "extractionClass": "LINE",
-   "name": "hir40"
+   "name": "hir40",
+   "folder": "hiragana"
   },
   {
    "id": "hir41",
@@ -12881,7 +13156,8 @@
    "canonicalCategory": "learn",
    "aliases": [],
    "extractionClass": "LINE",
-   "name": "hir41"
+   "name": "hir41",
+   "folder": "hiragana"
   },
   {
    "id": "hir42",
@@ -12912,7 +13188,8 @@
    "canonicalCategory": "learn",
    "aliases": [],
    "extractionClass": "LINE",
-   "name": "hir42"
+   "name": "hir42",
+   "folder": "hiragana"
   },
   {
    "id": "hir43",
@@ -12943,7 +13220,8 @@
    "canonicalCategory": "learn",
    "aliases": [],
    "extractionClass": "LINE",
-   "name": "hir43"
+   "name": "hir43",
+   "folder": "hiragana"
   },
   {
    "id": "hir44",
@@ -12974,7 +13252,8 @@
    "canonicalCategory": "learn",
    "aliases": [],
    "extractionClass": "LINE",
-   "name": "hir44"
+   "name": "hir44",
+   "folder": "hiragana"
   },
   {
    "id": "hir45",
@@ -13005,7 +13284,8 @@
    "canonicalCategory": "learn",
    "aliases": [],
    "extractionClass": "LINE",
-   "name": "hir45"
+   "name": "hir45",
+   "folder": "hiragana"
   },
   {
    "id": "hir46",
@@ -13036,7 +13316,8 @@
    "canonicalCategory": "learn",
    "aliases": [],
    "extractionClass": "LINE",
-   "name": "hir46"
+   "name": "hir46",
+   "folder": "hiragana"
   },
   {
    "id": "hnz01",
@@ -13067,7 +13348,8 @@
    "canonicalCategory": "learn",
    "aliases": [],
    "extractionClass": "LINE",
-   "name": "hnz01"
+   "name": "hnz01",
+   "folder": "hanzi"
   },
   {
    "id": "hnz02",
@@ -13098,7 +13380,8 @@
    "canonicalCategory": "learn",
    "aliases": [],
    "extractionClass": "LINE",
-   "name": "hnz02"
+   "name": "hnz02",
+   "folder": "hanzi"
   },
   {
    "id": "hnz03",
@@ -13129,7 +13412,8 @@
    "canonicalCategory": "learn",
    "aliases": [],
    "extractionClass": "LINE",
-   "name": "hnz03"
+   "name": "hnz03",
+   "folder": "hanzi"
   },
   {
    "id": "hnz04",
@@ -13160,7 +13444,8 @@
    "canonicalCategory": "learn",
    "aliases": [],
    "extractionClass": "LINE",
-   "name": "hnz04"
+   "name": "hnz04",
+   "folder": "hanzi"
   },
   {
    "id": "hnz05",
@@ -13191,7 +13476,8 @@
    "canonicalCategory": "learn",
    "aliases": [],
    "extractionClass": "LINE",
-   "name": "hnz05"
+   "name": "hnz05",
+   "folder": "hanzi"
   },
   {
    "id": "hnz06",
@@ -13222,7 +13508,8 @@
    "canonicalCategory": "learn",
    "aliases": [],
    "extractionClass": "LINE",
-   "name": "hnz06"
+   "name": "hnz06",
+   "folder": "hanzi"
   },
   {
    "id": "hnz07",
@@ -13253,7 +13540,8 @@
    "canonicalCategory": "learn",
    "aliases": [],
    "extractionClass": "LINE",
-   "name": "hnz07"
+   "name": "hnz07",
+   "folder": "hanzi"
   },
   {
    "id": "hnz08",
@@ -13284,7 +13572,8 @@
    "canonicalCategory": "learn",
    "aliases": [],
    "extractionClass": "LINE",
-   "name": "hnz08"
+   "name": "hnz08",
+   "folder": "hanzi"
   },
   {
    "id": "hnz09",
@@ -13315,7 +13604,8 @@
    "canonicalCategory": "learn",
    "aliases": [],
    "extractionClass": "LINE",
-   "name": "hnz09"
+   "name": "hnz09",
+   "folder": "hanzi"
   },
   {
    "id": "hnz10",
@@ -13346,7 +13636,8 @@
    "canonicalCategory": "learn",
    "aliases": [],
    "extractionClass": "LINE",
-   "name": "hnz10"
+   "name": "hnz10",
+   "folder": "hanzi"
   },
   {
    "id": "castle",

@@ -713,7 +713,7 @@ pub fn layout_feed_opt(
         }
         let fresh_first = |w: &String| if recent.contains(w) { 1u8 } else { 0u8 };
         let mut best: Option<(String, Placement)> = None;
-        let mut scored: Vec<(u8, u32, String, u32)> = cands
+        let scored: Vec<(u8, u32, String, u32)> = cands
             .into_iter()
             .enumerate()
             .map(|(i, (w, n))| (fresh_first(&w), i as u32, w, n))

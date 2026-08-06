@@ -180,3 +180,31 @@ Dependencies worth flagging now, because they change the critical path:
 - The Spell Aloud pipeline already owns a mic surface and a per-surface answer
   state (`spell_aloud.rs`), which is where L3's `channel=speech` flag would
   attach — feature 7 is an extension of that surface, not a new one.
+
+## Status 2026-08-05 — L1/L2 QA PASS COMPLETE, FLAGS ON (rides ship 134)
+The placement flow and guardian report turned out fully built and dark
+(offer card, queue-through-the-real-session, skip-stands, decisive
+prior shifts, guardian render in Stats). The QA pass that the flag
+docs demanded now exists: placement evals (coverage/lift/lower),
+THREE guardian fixtures (fresh/struggling/thriving — Done #5), and a
+new placement e2e (offer-once, skip-never-reoffers, Try serves the
+set through the real session). learner_select + learner_surfaces
+defaults flipped ON; e2e harness pins them OFF as its baseline so
+every legacy spec stays deterministic while placement.spec turns them
+on explicitly. The in-game insight line remains UNBUILT — so the
+Kid-Mode copy review Eric owns is not yet triggered; it gates the
+insight feature, not this flip. Speech input (L3) untouched.
+
+## L2 FEATURE 6 BUILT 2026-08-05 — the insight line (dark)
+`insight_skill` names the WEAKEST skill with enough evidence (>=4 reps,
+mastery <0.55) or stays silent — an insight every word is nagging, and
+silence is the common correct answer. `insight_line` renders an AUDITED
+string from the pool (`insight.<skill>` / `insight.<skill>.kid`), never
+composed prose; a missing key renders nothing (defs-dark). It draws on
+the post-answer reveal only — never mid-word — via `game::render_insight`.
+Both registers exist for all four English taxonomy skills (test-enforced).
+FLAG `learner_insight` DEFAULT OFF: the spec makes the Kid-Mode copy
+variant Eric's review gate, so the strings ship in the pool and the
+surface stays dark until he reads them. THE ONE REMAINING ASK: read the
+eight lines in en.json (`insight.*`) and say go — the flag flips, no
+code needed.

@@ -471,6 +471,58 @@ pub fn current_day() -> u32 {
 }
 
 
+// ------------------------------------------ L2 feature 6: the insight
+//
+// "The model earns trust by showing its work, gently." ONE line, opt-in,
+// never mid-word (the caller is the post-answer reveal), phrasing from
+// the audited pool — no generated prose, ever. The Kid Mode variant is
+// Eric's review gate, so the flag ships OFF until he reads the copy.
+
+/// The pattern worth naming right now: the weakest skill the learner has
+/// enough evidence on (>=MIN_REPS attempts) and that is genuinely shaky
+/// (mastery < INSIGHT_MASTERY). None = say nothing, which is the common
+/// case and the correct one — an insight every word is nagging.
+pub const INSIGHT_MIN_REPS: u32 = 4;
+pub const INSIGHT_MASTERY: f64 = 0.55;
+
+pub fn insight_skill(state: &LearnerState) -> Option<&SkillState> {
+    state
+        .skills
+        .iter()
+        .filter(|s| s.fsrs.reps >= INSIGHT_MIN_REPS && s.mastery < INSIGHT_MASTERY)
+        .min_by(|a, b| a.mastery.partial_cmp(&b.mastery).unwrap_or(std::cmp::Ordering::Equal))
+}
+
+/// The audited i18n key for a skill's insight line. Kid Mode takes the
+/// `.kid` variant (softer register) — BOTH pools are audited strings;
+/// this function never composes prose.
+pub fn insight_key(skill_id: &str, kid_mode: bool) -> String {
+    if kid_mode {
+        format!("insight.{skill_id}.kid")
+    } else {
+        format!("insight.{skill_id}")
+    }
+}
+
+/// The one-line insight for the post-answer moment, or None. Callers
+/// must render it AFTER the answer is resolved (never mid-word) and
+/// only when the flag is on.
+pub fn insight_line(lang: &str, kid_mode: bool) -> Option<String> {
+    if !crate::flags::learner_insight() {
+        return None;
+    }
+    let st = load_for(lang);
+    let skill = insight_skill(&st)?;
+    let key = insight_key(&skill.id, kid_mode);
+    let line = crate::i18n::t(&key);
+    // An unaudited language (or a missing key) renders NOTHING — the
+    // defs-dark pattern: silence beats a key name on screen.
+    if line == key || line.is_empty() {
+        return None;
+    }
+    Some(line)
+}
+
 // ---------------------------------------------- L1 feature 5: placement
 
 /// The language's hazard taxonomy — the skill ids `hazards()` can emit.
@@ -1118,6 +1170,51 @@ mod placement_tests {
         });
         let s = st.skills.iter().find(|s| s.id == "silent_letters").unwrap();
         assert_eq!(s.mastery, bkt_update(BKT_PRIOR, true), "first update starts from the default prior");
+    }
+}
+
+#[cfg(test)]
+mod insight_tests {
+    use super::*;
+
+    fn shaky(id: &str, mastery: f64, reps: u32) -> SkillState {
+        SkillState {
+            id: id.into(),
+            mastery,
+            fsrs: FsrsState { stability: 1.0, difficulty: 5.0, due_day: 1, reps, lapses: 0 },
+        }
+    }
+
+    /// The insight names the WEAKEST well-evidenced skill, and stays
+    /// silent when the evidence is thin or the learner is fine.
+    #[test]
+    fn insight_picks_the_weakest_evidenced_skill() {
+        let mut st = LearnerState::new("en");
+        assert!(insight_skill(&st).is_none(), "a fresh learner is told nothing");
+        st.skills.push(shaky("doubled_consonant", 0.40, 6));
+        st.skills.push(shaky("silent_letters", 0.25, 5));
+        st.skills.push(shaky("loanword_spelling", 0.10, 2)); // too little evidence
+        st.skills.push(shaky("unstressed_vowel_ambiguity", 0.90, 9)); // fine
+        let pick = insight_skill(&st).expect("a pattern worth naming");
+        assert_eq!(pick.id, "silent_letters", "weakest with enough reps");
+        let thin = LearnerState { skills: vec![shaky("silent_letters", 0.1, 1)], ..LearnerState::new("en") };
+        assert!(insight_skill(&thin).is_none(), "one attempt is not a pattern");
+        let strong = LearnerState { skills: vec![shaky("silent_letters", 0.8, 9)], ..LearnerState::new("en") };
+        assert!(insight_skill(&strong).is_none(), "nothing to say to a learner who has it");
+    }
+
+    /// Both registers exist in the audited pool for every taxonomy
+    /// skill — the Kid Mode variant is a REAL string, not a fallback.
+    #[test]
+    fn every_skill_has_both_audited_registers() {
+        let en: serde_json::Value =
+            serde_json::from_str(include_str!("i18n/locales/en.json")).unwrap();
+        for skill in taxonomy("en") {
+            for kid in [false, true] {
+                let key = insight_key(skill, kid);
+                assert!(en.get(&key).is_some(), "missing audited insight string: {key}");
+            }
+        }
     }
 }
 

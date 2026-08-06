@@ -26,15 +26,49 @@ pub enum Gate {
     Rank,
     Orthography,
     Profanity,
-    TtsPending,
-    DefPrecheckPending,
+    /// Gate 4 — no renderable audio for this word.
+    Tts,
+    /// Gate 5 — no pre-checked, flag-clean definition.
+    DefPrecheck,
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub enum Verdict {
     /// Passed every RUNNABLE gate; provisional until pending gates run.
     Provisional,
+    /// Passed ALL FIVE gates against loaded evidence — full U.
+    Full,
     Excluded(Gate),
+}
+
+/// Gates 4 and 5 need per-word EVIDENCE that lives outside this engine
+/// (rendered audio; pre-checked definitions). The engine stays pure —
+/// no clock, no network, no RNG (F3) — by taking that evidence as an
+/// explicit, ordered input. `Evidence::pending()` is the era before a
+/// snapshot exists: every gate-1-3 survivor stays PROVISIONAL, which is
+/// exactly the behaviour that shipped.
+#[derive(Debug, Default, Clone)]
+pub struct Evidence {
+    pub tts: std::collections::BTreeSet<String>,
+    pub defs: std::collections::BTreeSet<String>,
+    /// False = no snapshot loaded (the pending era).
+    pub loaded: bool,
+}
+
+impl Evidence {
+    pub fn pending() -> Self {
+        Self::default()
+    }
+
+    /// Build from two audited word lists — the shape a bundled snapshot
+    /// or a wave's report provides.
+    pub fn from_lists(tts: &[String], defs: &[String]) -> Self {
+        Self {
+            tts: tts.iter().cloned().collect(),
+            defs: defs.iter().cloned().collect(),
+            loaded: true,
+        }
+    }
 }
 
 pub struct URecord {
@@ -71,6 +105,17 @@ fn orthographic(word: &str) -> bool {
 /// The deterministic U-engine core (F3): same inputs, same records,
 /// byte-identical across machines — no clock, no network, no RNG.
 pub fn compute_u(composite: &[(String, u32)], t4_floor: u32) -> Vec<URecord> {
+    compute_u_with(composite, t4_floor, &Evidence::pending())
+}
+
+/// The full five-gate engine. Gate order is FIXED and reported: rank,
+/// orthography, profanity, TTS, def-precheck — so a word's exclusion
+/// always names the first law it broke (auditable by construction).
+pub fn compute_u_with(
+    composite: &[(String, u32)],
+    t4_floor: u32,
+    ev: &Evidence,
+) -> Vec<URecord> {
     composite
         .iter()
         .map(|(word, rank)| {
@@ -80,15 +125,103 @@ pub fn compute_u(composite: &[(String, u32)], t4_floor: u32) -> Vec<URecord> {
                 Verdict::Excluded(Gate::Orthography)
             } else if crate::profanity::is_blocked(word) {
                 Verdict::Excluded(Gate::Profanity)
-            } else {
-                // Gates 4 (TTS) and 5 (DEF-PRECHECK) are pending their
-                // authority files/eras — a word here is PROVISIONAL, never
-                // silently full-U.
+            } else if !ev.loaded {
+                // The pending era: gates 4-5 have no evidence to judge
+                // by, so a survivor is PROVISIONAL — never silently full.
                 Verdict::Provisional
+            } else if !ev.tts.contains(word) {
+                Verdict::Excluded(Gate::Tts)
+            } else if !ev.defs.contains(word) {
+                Verdict::Excluded(Gate::DefPrecheck)
+            } else {
+                Verdict::Full
             };
             URecord { word: word.clone(), rank: *rank, verdict }
         })
         .collect()
+}
+
+// ═══════════════ UNMUNCH / GENERATE — the sampled-audit machinery
+//
+// A machine-expanded surface list (hunspell unmunch; a morphological
+// generator) can hold a million forms. Nobody reads a million words, so
+// the amendment's whole subject is: WHICH words get read, and what
+// makes the batch pass. That policy is Eric's signature. The MACHINERY
+// is here and deterministic — same population + same rule = the same
+// sample, so an auditor can prove what was reviewed and reproduce it.
+//
+// The rule is a PARAMETER, never a default: `SampleRule` has no Default
+// impl and `expansion_allowed` refuses an unsigned rule outright, so an
+// unaudited expansion cannot reach a bank by forgetting to configure it.
+
+#[derive(Debug, Clone, PartialEq)]
+pub struct SampleRule {
+    /// How many forms a human reads per batch.
+    pub sample_size: usize,
+    /// The most defects that sample may contain and still pass.
+    pub max_defects: usize,
+    /// Recorded so a re-run reproduces the same draw for review.
+    pub seed: u64,
+    /// The amendment's own signature marker — set only when Eric's
+    /// signed rule is what is loaded.
+    pub signed: bool,
+}
+
+#[derive(Debug, Clone, PartialEq)]
+pub enum AuditVerdict {
+    /// The sample was clean enough; the batch may enter the bank.
+    Pass,
+    /// Too many defects — the WHOLE batch is refused, not just the
+    /// defective words (a bad sample means a bad expansion).
+    Reject { defects: usize, allowed: usize },
+    /// No signed rule: nothing may ship, and this is not an error state
+    /// to route around.
+    Unsigned,
+}
+
+/// The deterministic draw. Sorted population + seeded stride = a sample
+/// any auditor can regenerate from the record alone.
+pub fn audit_sample<'a>(population: &'a [String], rule: &SampleRule) -> Vec<&'a str> {
+    if !rule.signed || population.is_empty() || rule.sample_size == 0 {
+        return Vec::new();
+    }
+    let mut sorted: Vec<&str> = population.iter().map(|s| s.as_str()).collect();
+    sorted.sort_unstable();
+    sorted.dedup();
+    let n = sorted.len();
+    let take = rule.sample_size.min(n);
+    // A seeded stride spreads the draw across the whole alphabetized
+    // population — never just the head, which is where the easy words
+    // live and where a lazy audit would look.
+    let stride = (n / take).max(1);
+    let start = (rule.seed % n as u64) as usize;
+    let mut out = Vec::with_capacity(take);
+    let mut i = 0usize;
+    while out.len() < take && i < n {
+        out.push(sorted[(start + i * stride) % n]);
+        i += 1;
+    }
+    out.sort_unstable();
+    out.dedup();
+    out
+}
+
+/// The verdict on a reviewed sample.
+pub fn audit_verdict(defects: usize, rule: &SampleRule) -> AuditVerdict {
+    if !rule.signed {
+        return AuditVerdict::Unsigned;
+    }
+    if defects > rule.max_defects {
+        AuditVerdict::Reject { defects, allowed: rule.max_defects }
+    } else {
+        AuditVerdict::Pass
+    }
+}
+
+/// The gate every expansion wave passes through. An unsigned rule can
+/// never yield true, whatever the caller believes about the batch.
+pub fn expansion_allowed(verdict: &AuditVerdict) -> bool {
+    matches!(verdict, AuditVerdict::Pass)
 }
 
 /// F4/F6 coverage core: the gap sets, computable off any bank snapshot.
@@ -96,7 +229,7 @@ pub fn compute_u(composite: &[(String, u32)], t4_floor: u32) -> Vec<URecord> {
 pub fn gaps(u: &[URecord], bank: &std::collections::BTreeSet<String>) -> (Vec<String>, Vec<String>) {
     let u_words: std::collections::BTreeSet<&str> = u
         .iter()
-        .filter(|r| r.verdict == Verdict::Provisional)
+        .filter(|r| matches!(r.verdict, Verdict::Provisional | Verdict::Full))
         .map(|r| r.word.as_str())
         .collect();
     let missing = u_words.iter().filter(|w| !bank.contains(**w)).map(|w| w.to_string()).collect();
@@ -191,5 +324,103 @@ mod bank_complete_ci {
     fn nothing_reaches_full_u_before_the_pending_gates() {
         let u = compute_u(&[("cat".to_string(), 5)], 1000);
         assert_eq!(u[0].verdict, Verdict::Provisional, "provisional, never silently complete");
+    }
+
+    /// Gates 4 and 5, live: with evidence loaded a word reaches FULL U
+    /// only when it has BOTH audio and a pre-checked definition, and an
+    /// exclusion names which one it lacked.
+    #[test]
+    fn tts_and_def_gates_decide_full_u() {
+        let ev = Evidence::from_lists(
+            &["cat".into(), "dog".into(), "fox".into()],
+            &["cat".into(), "fox".into()],
+        );
+        let composite = vec![
+            ("cat".to_string(), 5),   // both -> Full
+            ("dog".to_string(), 6),   // audio, no definition
+            ("owl".to_string(), 7),   // no audio at all
+        ];
+        let u = compute_u_with(&composite, 1000, &ev);
+        assert_eq!(u[0].verdict, Verdict::Full);
+        assert_eq!(u[1].verdict, Verdict::Excluded(Gate::DefPrecheck));
+        assert_eq!(u[2].verdict, Verdict::Excluded(Gate::Tts));
+    }
+
+    /// Gate ORDER is law: a word that fails an earlier gate reports
+    /// that gate, never a later one, however much else is wrong.
+    #[test]
+    fn the_first_broken_law_is_the_reported_one() {
+        let ev = Evidence::from_lists(&[], &[]);
+        // profane AND missing audio AND missing definition
+        let u = compute_u_with(&[("Shit2".to_string(), 5)], 1000, &ev);
+        assert_eq!(
+            u[0].verdict,
+            Verdict::Excluded(Gate::Orthography),
+            "orthography precedes profanity precedes the pending pair"
+        );
+    }
+
+    /// Determinism survives the new gates (F3).
+    #[test]
+    fn evidence_gates_stay_deterministic() {
+        let ev = Evidence::from_lists(&["a".into(), "b".into()], &["a".into()]);
+        let c: Vec<(String, u32)> = (0..200).map(|i| (format!("w{i}"), i)).collect();
+        let x: Vec<_> = compute_u_with(&c, 500, &ev).iter().map(|r| format!("{:?}", r.verdict)).collect();
+        let y: Vec<_> = compute_u_with(&c, 500, &ev).iter().map(|r| format!("{:?}", r.verdict)).collect();
+        assert_eq!(x, y);
+    }
+
+    // ───────────── UNMUNCH / GENERATE sampled audit
+
+    fn pop(n: usize) -> Vec<String> {
+        (0..n).map(|i| format!("form{i:05}")).collect()
+    }
+
+    #[test]
+    fn an_unsigned_rule_ships_nothing() {
+        let unsigned = SampleRule { sample_size: 100, max_defects: 2, seed: 7, signed: false };
+        assert!(audit_sample(&pop(10_000), &unsigned).is_empty(), "no sample without a signed rule");
+        assert_eq!(audit_verdict(0, &unsigned), AuditVerdict::Unsigned, "even a clean read cannot pass");
+        assert!(!expansion_allowed(&AuditVerdict::Unsigned), "the gate cannot be talked around");
+    }
+
+    #[test]
+    fn the_sample_is_reproducible_and_spread() {
+        let rule = SampleRule { sample_size: 50, max_defects: 1, seed: 42, signed: true };
+        let population = pop(10_000);
+        let a = audit_sample(&population, &rule);
+        let b = audit_sample(&population, &rule);
+        assert_eq!(a, b, "an auditor can reproduce the exact draw");
+        assert_eq!(a.len(), 50);
+        // spread: the draw must not be the alphabetical head
+        let head: Vec<String> = (0..50).map(|i| format!("form{i:05}")).collect();
+        assert_ne!(a, head.iter().map(|s| s.as_str()).collect::<Vec<_>>(), "not just the easy words");
+        let distinct_prefixes: std::collections::HashSet<&str> =
+            a.iter().map(|w| &w[4..6]).collect();
+        assert!(distinct_prefixes.len() > 5, "the sample spans the population");
+        // a different seed draws differently
+        let other = SampleRule { seed: 43, ..rule.clone() };
+        assert_ne!(audit_sample(&population, &other), a);
+    }
+
+    #[test]
+    fn too_many_defects_rejects_the_whole_batch() {
+        let rule = SampleRule { sample_size: 100, max_defects: 2, seed: 1, signed: true };
+        assert_eq!(audit_verdict(0, &rule), AuditVerdict::Pass);
+        assert_eq!(audit_verdict(2, &rule), AuditVerdict::Pass, "at the limit still passes");
+        assert_eq!(
+            audit_verdict(3, &rule),
+            AuditVerdict::Reject { defects: 3, allowed: 2 },
+            "one over rejects the BATCH, not the word"
+        );
+        assert!(!expansion_allowed(&audit_verdict(3, &rule)));
+        assert!(expansion_allowed(&audit_verdict(1, &rule)));
+    }
+
+    #[test]
+    fn a_small_population_is_read_entirely() {
+        let rule = SampleRule { sample_size: 500, max_defects: 0, seed: 9, signed: true };
+        let small = pop(20);
+        assert_eq!(audit_sample(&small, &rule).len(), 20, "sample never exceeds the population");
     }
 }

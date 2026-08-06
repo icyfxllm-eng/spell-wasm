@@ -87,26 +87,24 @@ export async function run(browser, base, suite) {
     const { ctx, page } = await openApp(browser, base, { lang: 'ru' });
     try {
       await openPicker(page);
-      const heads = await page.$$eval('#wpGrid .wp-fam-head', (els) => els.length);
-      assert(heads >= 4, `family headers render (saw ${heads})`);
-      // Collapsed rows can fill the learn row with the numbers pack, so
-      // open the full grid via See All before asserting script order.
-      if (await page.$('[data-cat="learn"]')) {
-        await page.click('[data-cat="learn"]');
-        await page.waitForTimeout(200);
-      }
-      // The learn shelf's first alphabet tile is Cyrillic for a ru player.
-      const firstLearn = await page.$$eval('#wpGrid .wp-shelf', (shelves) => {
-        for (const s of shelves) {
-          const tiles = [...s.querySelectorAll('[data-pic]')].map((t) => t.getAttribute('data-pic'));
-          if (tiles.some((t) => /^(lat|cyr|arb|dev|kor|hir|hnz)\d/.test(t) || /^(zero|one|two)$/.test(t))) {
-            return tiles.filter((t) => /^(lat|cyr)\d/.test(t))[0];
-          }
-        }
-        return null;
-      });
+      // v3 hub: categories are CARDS, not sliding shelves. The law is
+      // the same one the old header count guarded — every populated
+      // category is reachable from the first screen.
+      const cards = await page.$$eval('#wpGrid .wp-catcard', (els) =>
+        els.map((e) => e.getAttribute('data-cat')));
+      assert(cards.length >= 4, `category cards render (saw ${cards.length})`);
+      assert(cards.includes('learn'), 'the learn card is on the hub');
+      // v3 hub: Learn opens to script FOLDER cards; the player's own
+      // script leads. Then the folder opens to its letters.
+      await page.click('[data-cat="learn"]');
+      await page.waitForTimeout(200);
+      const firstFolder = await page.$eval('#wpGrid .wp-catcard', (el) => el.getAttribute('data-folder'));
+      assert(firstFolder === 'cyrillic', `ru learner sees Cyrillic first (saw ${firstFolder})`);
+      await page.click('#wpGrid [data-folder="cyrillic"]');
+      await page.waitForTimeout(200);
+      const firstLearn = await page.$eval('#wpGrid [data-pic]', (el) => el.getAttribute('data-pic'));
       assert(firstLearn && firstLearn.startsWith('cyr'),
-        `ru learner sees Cyrillic first (saw ${firstLearn})`);
+        `folder holds Cyrillic letters (saw ${firstLearn})`);
     } finally { await ctx.close(); }
   });
 }

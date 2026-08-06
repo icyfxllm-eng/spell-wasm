@@ -263,3 +263,47 @@ DECISION LEDGER (Eric, 2026-08-02 — recorded at greenlight)
      min-dist separation, Munch's new SELF-CLEARANCE law — a swirl can
      collide with itself; budget floor [2,10] on expert). mp captions
      added in all 15 locales. Sweep green all languages x seeds.
+
+* SHIP 134 ASSIGNED (Eric verbatim: "greenlight 1 and 2 ship 134 when
+  gates pass", then "3 and 4", then "NO more sliding menu options
+  please", then "finish the hub mockup and ship 134 when gates pass"):
+  PICKER v3 — THE HUB. Every horizontal shelf deleted; one scroll
+  direction. Hub = Jump back in (recent finished pieces) + Favorites
+  (long-press to star, storage-backed) + nine category CARDS; a card
+  opens the category as one full wrapped grid. Learn opens to EIGHT
+  script folder cards (221 letter tiles collapsed; registry `folder`
+  data + closed-set cargo lint; the player's own script leads — the
+  ru-sees-Cyrillic e2e law survives translated to folders). A-Z mode
+  toggle beside search (letters excluded — they live in folders).
+  12 new i18n keys x 15 locales. Hub mockup approved at artifact
+  558a7d0f. RIDING ALONG: TRANSLATE Wave 2 (daily word, Passport,
+  Home Pair) + the D5-strong platform wall (whole suite app-only) —
+  decisions ledgered in CC-TRANSLATE-TOOLS.md.
+
+* SHIP 134 SCOPE (all of the above, one build): PICKER v3 HUB (no
+  sliding anywhere; Jump back in + Favorites + nine category cards;
+  Learn -> 8 script folders, own script first; A-Z; long-press stars) +
+  TRANSLATE Waves 2 AND 3 (all 13 tools; suite app-only per D5-strong) +
+  FAMILY-VOICES V2 on the local-Mac path (BD-D4) + PICTURE-COLOR
+  renderer seam & goldens + LEARNING-ENGINE L1 flags ON / L2 insight
+  dark + BANK gates 4-5 + the sampled-audit machinery.
+  E2E 77/80 — the three remaining reds are the pre-existing hub-tile
+  set the gate knows. Two e2e fixes landed en route: a shared
+  `pinBaseline` so every self-built context gets the same flag baseline
+  (the learner flags going ON had paused a first serve behind the
+  placement card), and the suite is now MUTED (--mute-audio + a
+  speechSynthesis stub) after test runs narrated themselves aloud
+  through the Mac's speakers.
+
+* PICKER v3 POLISH (in 134): the no-slide law made literal. Three
+  surfaces still scrolled sideways after the hub landed — the In
+  Progress strip, the base shelf class, and the trophy gallery (which
+  grows forever and needed it most). All three are wrapped grids now,
+  and `wordpic-check` gained a CI guard so an `overflow-x:auto` cannot
+  creep back into a picker surface one CSS line at a time. Favorites
+  also got the missing half: a starred tile now SHOWS its star — a
+  favorite you cannot see is not a favorite.
+  RACE NOTE (my error): I edited the tree while chain-134's third gate
+  was running, which broke its web-wall step on a half-written check
+  script. No tree edits between gate-start and commit — the law exists
+  for exactly this.

@@ -38,6 +38,9 @@ for (const p of m.pictures) {
     if (q.mode === "flow" && !q.d) problems.push(`${p.id}: flow path missing geometry`);
     if (q.mode === "stack" && !(q.size > 0)) problems.push(`${p.id}: stack missing size`);
   }
+  // CC-PICKER v3 (Eric: "NO more sliding menu options please"): no
+  // picker surface may scroll sideways. One direction: down.
+  // (checked once, after the per-picture loop — see below)
   // CC-PICKER v2: every tile is identified — name required, char-budgeted
   // (same no-ellipsis philosophy as the masterpiece captions).
   if (!p.name || !p.name.length) problems.push(`${p.id}: missing display name`);
@@ -78,6 +81,23 @@ for (const dir of ["dist", "ios/App/App/public"]) {
     }
   }
 }
+// CC-PICKER v3 no-slide law: the picker's own surfaces must not carry
+// overflow-x:auto. A sideways row is exactly what Eric asked us to
+// delete, and it is the kind of thing that creeps back in one CSS line
+// at a time.
+{
+  const html = fs.readFileSync(`${ROOT}/index.html`, "utf8");
+  const PICKER_SURFACES = ["wp-shelf", "wp-resume-row", "wp-gallery", "wp-catlist"];
+  for (const cls of PICKER_SURFACES) {
+    const rule = new RegExp(`\\.${cls}\\{[^}]*\\}`, "g");
+    for (const m of html.matchAll(rule)) {
+      if (/overflow-x:\s*auto/.test(m[0])) {
+        problems.push(`.${cls} scrolls sideways — the picker is vertical only (v3)`);
+      }
+    }
+  }
+}
+
 if (problems.length) {
   console.error(`wordpic-check: FAILED — ${problems.length} problem(s):`);
   for (const p of problems) console.error("  ✗ " + p);

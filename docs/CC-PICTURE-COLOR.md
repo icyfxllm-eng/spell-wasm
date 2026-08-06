@@ -19,3 +19,23 @@ Decisions (SIGNED): D1 per-path flat fill v1 (gradients/shading stay in photo-fl
 Constraints: don't touch layout solver/capacity/junctions/scan pipeline/scoring/FINALE animation/active-path/In Progress strip/picker. No runtime generation, no variation, deterministic renders. Schema must not preclude multiple named palettes later (v1 reads index 0). App-only (PLATFORM wall). No new subjects/packs/art. No telemetry.
 
 Done: (1) byte-identical layout CI, (2) resolution lint w/ deliberately-unresolvable test entry, (3) contrast lint both thresholds, (4) Numbers & Alphabets pixel-identical image diff, (5) dog+eiffel goldens hash-pinned + existing regression suite green, (6) Mona side-by-side approved IN THE TOOL before any other masterpiece, (7) gallery retroactive test, (8) Eric on-device pass of color goldens — final gate.
+
+## BUILT 2026-08-05 (Eric: "lets build all the unbuilt code please")
+The renderer seam and every automatable Done item now exist:
+- Resolvers in wordpic.rs: `path_color` (F2, pure lookup) and
+  `color_enabled` (F6 — category exclusion AS DATA; the learn shelf is
+  neutral by default, per-subject override wins, and no `if category ==`
+  exists at any call site).
+- The seam: scan paths carry an optional palette ref (`RawPath.c`),
+  the Plan carries the subject + index-aligned refs, and scanlock_svg
+  fills LANDED word glyphs only. Outlines, pinned strokes and micro scan
+  stay monochrome (F5) — asserted byte-for-byte by test.
+- Goldens authored (D5 order): dog (6 colors) + eiffel (4), every path
+  refed, all values clearing the 4.5:1 small-glyph floor vs #0e1420.
+- Done #1 byte-identical layout CI, #2 resolution lint, #3 contrast
+  lint (both thresholds), #4 Numbers & Alphabets cannot take color even
+  with a planted ref, #5 goldens render their palette, #7 gallery
+  re-render is retroactive (runs store words, never colors) — ALL GREEN.
+STILL ERIC'S: #6 the Mona faithful-vs-floored verdict (artifact
+a30c2f42) — no masterpiece palette is authored until he calls it — and
+#8 his on-device pass of the goldens.

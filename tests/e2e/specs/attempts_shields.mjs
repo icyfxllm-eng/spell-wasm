@@ -14,7 +14,7 @@
 //   * extra-attempts ON   -> one wrong submission grants exactly one clean retry.
 //   * language matrix (en / es / ja) reruns identical assertions — zero
 //     per-language behavior.
-import { openApp, typeOnKeyboard, assert } from '../harness.mjs';
+import { openApp, typeOnKeyboard, assert, pinBaseline } from '../harness.mjs';
 
 const AGE = JSON.stringify({ verdict: 'full', checkedAt: 1700000000 });
 const FLAG = 'spell_flag_attempts_shields';
@@ -25,6 +25,7 @@ const exists = (page, sel) => page.$(sel).then((h) => !!h);
  *  mirroring the FP2 spec pattern (real localStorage via addInitScript). */
 async function openWithFlag(browser, base, value, lang = null) {
   const ctx = await browser.newContext({ viewport: { width: 375, height: 667 }, deviceScaleFactor: 2, isMobile: true });
+    await pinBaseline(ctx);
   await ctx.addInitScript(([age, l, flag, v]) => {
     localStorage.setItem('byear_agegate_v1', age);
     if (l) localStorage.setItem('spellgame.locale', l);

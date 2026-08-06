@@ -1,7 +1,7 @@
 // menu.spec — the language selector shows each language's endonym in its own
 // script, and selecting a language switches the whole UI to match (menu
 // integrity: selector is generated from the language registry, no drift).
-import { openApp, assert } from '../harness.mjs';
+import { openApp, assert, pinBaseline } from '../harness.mjs';
 import { readFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import { dirname, join } from 'node:path';
@@ -185,8 +185,15 @@ export async function run(browser, base, suite) {
     // Active or UI/study are separated. This test proves the WIRING is right for
     // that day, the same "gated until then" footing as the rest of F4.
     const ctx = await browser.newContext({ viewport: { width: 375, height: 667 }, deviceScaleFactor: 2, isMobile: true });
+    await pinBaseline(ctx);
     await ctx.addInitScript(() => {
       localStorage.setItem('byear_agegate_v1', JSON.stringify({ verdict: 'full', checkedAt: 1700000000 }));
+      // This spec builds its own context, so it must pin the learner
+      // surfaces itself (openApp's harness does it for every other
+      // spec): with them ON the placement offer pauses the first serve
+      // behind its card, and no word — hence no hint — ever loads.
+      localStorage.setItem('spell_flag_learner_surfaces', 'off');
+      localStorage.setItem('spell_flag_learner_select', 'off');
       localStorage.setItem('spellgame.locale', 'es');
     });
     await ctx.route('**/api/speak**', (r) => r.fulfill({ status: 200, contentType: 'audio/mpeg', body: Buffer.from([]) }));

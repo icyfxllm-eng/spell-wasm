@@ -1,6 +1,6 @@
 // modes.spec — Daily Challenge start; Head-to-Head start + quit-mid-game clean
 // state; menu/agegate integrity.
-import { openApp, assert } from '../harness.mjs';
+import { openApp, assert, pinBaseline } from '../harness.mjs';
 
 export async function run(browser, base, suite) {
   await suite.test('daily: entering shows progress bar + locks language', async () => {
@@ -45,6 +45,7 @@ export async function run(browser, base, suite) {
   await suite.test('agegate: no stored verdict shows the DOB prompt cold', async () => {
     // Fresh context WITHOUT the age-gate seed -> the gate must appear.
     const ctx = await browser.newContext();
+    await pinBaseline(ctx);
     const page = await ctx.newPage();
     try {
       await page.goto(base, { waitUntil: 'load' });

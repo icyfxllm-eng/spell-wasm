@@ -15,8 +15,10 @@ mod wordpic; // CC-WORD-PICTURE core (calligrams)
 mod input_provenance;
 mod learner; // CC-LEARNING-ENGINE L0 (BKT + FSRS core; selection arrives with L1)
 mod surface_hooks;
-mod translate;
-mod translate_ui; // CC-PICTURE-PLATFORM I3: inverts the surface dependency
+#[cfg(not(feature = "web"))]
+mod translate; // TR D5 STRONG (Eric 2026-08-05: "for the app not the website")
+#[cfg(not(feature = "web"))]
+mod translate_ui; // the WHOLE suite is behind the platform wall
 #[cfg(not(feature = "web"))]
 mod spellpic;
 #[cfg(not(feature = "web"))]
@@ -240,6 +242,7 @@ fn wire(app: &App) {
             notifications::weekly_digest(true, &i18n::tp("gdash.digestBody", &[("n", &tw.to_string())]));
         }
     }
+    #[cfg(not(feature = "web"))]
     translate_ui::wire(&app);
     packs::wire(app);
     wire_glow_and_settings(app);

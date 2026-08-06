@@ -320,6 +320,94 @@ pub fn wire(app: &crate::App) {
     });
 }
 
+// ═══════════════════ V2 CUSTOM FAMILY VOICES — BD-D4: LOCAL MAC ONLY
+//
+// Eric, 2026-08-05: training runs on the household's own Mac. Recordings
+// NEVER leave the home. There is no upload path in this module and none
+// may be added — `no_upload_path_exists` is the standing test, and the
+// build's symbol scan is the second lock. The app's only jobs are:
+// record the scripted prompts locally, write a training BUNDLE to the
+// user's own storage, and later IMPORT the finished voice as a pack.
+
+/// One line of the scripted prompt set. The script is drawn from the
+/// AUDITED pools (I5) — this module never composes prompt text.
+#[derive(Debug, Clone, PartialEq)]
+pub struct VoicePrompt {
+    /// i18n key in the audited pool.
+    pub key: String,
+    /// Ordinal in the session (stable: a resumed session asks the same
+    /// prompt in the same place).
+    pub idx: usize,
+}
+
+/// Piper needs a spread of phonetics, not volume: a short, fixed script
+/// the parent can finish in one sitting. Keys only — the strings live
+/// in the audited pool and are rendered by the caller.
+pub const PROMPT_KEYS: [&str; 12] = [
+    "fv.script.01", "fv.script.02", "fv.script.03", "fv.script.04",
+    "fv.script.05", "fv.script.06", "fv.script.07", "fv.script.08",
+    "fv.script.09", "fv.script.10", "fv.script.11", "fv.script.12",
+];
+
+pub fn prompt_script() -> Vec<VoicePrompt> {
+    PROMPT_KEYS
+        .iter()
+        .enumerate()
+        .map(|(idx, key)| VoicePrompt { key: (*key).to_string(), idx })
+        .collect()
+}
+
+/// What the companion Mac app consumes. It names LOCAL clip handles —
+/// never bytes, never a URL — so the bundle itself cannot become an
+/// upload payload.
+#[derive(Debug, Clone, PartialEq, serde::Serialize, serde::Deserialize)]
+pub struct TrainingBundle {
+    pub voice_id: String,
+    pub lang: String,
+    /// (prompt key, local clip handle) in script order.
+    pub clips: Vec<(String, String)>,
+    /// Schema version so the companion can refuse a future shape.
+    pub v: u32,
+}
+
+pub const BUNDLE_V: u32 = 1;
+
+/// A bundle is only complete when EVERY scripted prompt has a clip —
+/// a partial recording session trains a bad voice, so it cannot export.
+pub fn build_bundle(voice_id: &str, lang: &str, clips: &[(String, String)]) -> Option<TrainingBundle> {
+    let script = prompt_script();
+    if clips.len() != script.len() {
+        return None;
+    }
+    for (i, p) in script.iter().enumerate() {
+        let (key, handle) = clips.get(i)?;
+        if key != &p.key || handle.trim().is_empty() {
+            return None;
+        }
+    }
+    Some(TrainingBundle {
+        voice_id: voice_id.to_string(),
+        lang: lang.to_string(),
+        clips: clips.to_vec(),
+        v: BUNDLE_V,
+    })
+}
+
+/// The finished voice comes back as an offline voice pack (the
+/// CC-OFFLINE-PACKS manifest shape, voice ID field). Import REFUSES a
+/// pack whose voice id was never recorded on this device — a voice
+/// cannot arrive from nowhere.
+pub fn import_trained_voice(pack_voice_id: &str, recorded_ids: &[String]) -> bool {
+    !pack_voice_id.is_empty() && recorded_ids.iter().any(|id| id == pack_voice_id)
+}
+
+/// A trained voice still faces V1's readout gate before it may read
+/// words — training locally does not exempt it from quality (D4: it may
+/// still do celebrations after a gate failure).
+pub fn trained_voice_may_read(voice_id: &str) -> bool {
+    gate_passed(voice_id).unwrap_or(false)
+}
+
 #[cfg(test)]
 mod tests {
     use super::{judge_calibration, lang_matches, CALIBRATION_EN};
@@ -352,5 +440,65 @@ mod tests {
         assert!(!lang_matches("en-US", "es"), "never a cross-language readout");
         assert!(!lang_matches("", "en"));
         assert!(!lang_matches("en-US", ""));
+    }
+}
+
+#[cfg(test)]
+mod v2_tests {
+    use super::*;
+
+    #[test]
+    fn bundle_requires_the_whole_script() {
+        let script = prompt_script();
+        assert_eq!(script.len(), PROMPT_KEYS.len());
+        let full: Vec<(String, String)> = script
+            .iter()
+            .map(|p| (p.key.clone(), format!("clip-{}", p.idx)))
+            .collect();
+        assert!(build_bundle("v1", "en", &full).is_some(), "a complete session exports");
+        assert!(build_bundle("v1", "en", &full[..5]).is_none(), "a partial session cannot export");
+        let mut blank = full.clone();
+        blank[3].1 = "  ".into();
+        assert!(build_bundle("v1", "en", &blank).is_none(), "an empty clip is not a clip");
+        let mut wrong = full.clone();
+        wrong[2].0 = "fv.script.99".into();
+        assert!(build_bundle("v1", "en", &wrong).is_none(), "script order is part of the contract");
+    }
+
+    #[test]
+    fn a_voice_cannot_arrive_from_nowhere() {
+        let recorded = vec!["mom-en".to_string()];
+        assert!(import_trained_voice("mom-en", &recorded));
+        assert!(!import_trained_voice("stranger", &recorded), "unrecorded id is refused");
+        assert!(!import_trained_voice("", &recorded));
+    }
+
+    /// BD-D4 IS AN INVARIANT: recordings never leave the household. This
+    /// module must contain no network symbol of any kind — if someone
+    /// adds one, this fails before the build's own scan does.
+    #[test]
+    fn no_upload_path_exists() {
+        // CODE only: comments discuss the ban, code must not embody it.
+        let src = include_str!("family_voices.rs");
+        let code: String = src
+            .lines()
+            .take_while(|l| !l.contains("mod v2_tests"))
+            .filter(|l| !l.trim_start().starts_with("//"))
+            .collect::<Vec<_>>()
+            .join("\n");
+        for banned in [
+            "fetch_post", "fetch_json", "fetch_text", "XMLHttpRequest",
+            "api_base", "https://", "http://", "Request::new",
+        ] {
+            assert!(
+                !code.contains(banned),
+                "BD-D4 is an invariant: family_voices code must not reference `{banned}`"
+            );
+        }
+    }
+
+    #[test]
+    fn training_locally_does_not_skip_the_readout_gate() {
+        assert!(!trained_voice_may_read("never-gated"), "ungated voice cannot read words");
     }
 }

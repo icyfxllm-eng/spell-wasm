@@ -135,11 +135,12 @@ pub fn practice() -> bool {
 }
 
 /// CC-LEARNING-ENGINE L1 — Learner Model word selection (reorders the next
-/// few deck draws toward due/uncertain skills). **Default OFF**: ships dark
-/// until the policy has a QA pass; OFF is a true no-op — the deck draws in
-/// its shuffled order exactly as before, zero observable diff.
+/// few deck draws toward due/uncertain skills). **Default ON** since the
+/// L1/L2 QA pass (2026-08-05: selection property tests 10k-seeded, the
+/// placement evals, three guardian fixtures, and the placement e2e).
+/// Override off with `localStorage['spell_flag_learner_select']='off'`.
 pub fn learner_select() -> bool {
-    resolve(stored("learner_select").as_deref(), false)
+    resolve(stored("learner_select").as_deref(), true)
 }
 
 /// CC-TONAL-POLISH F4/D2 (signed) — the run's flawless-streak words feed
@@ -151,11 +152,21 @@ pub fn streak_focal() -> bool {
     resolve(stored("streak_focal").as_deref(), true)
 }
 
+/// CC-LEARNING-ENGINE L2 feature 6 — the in-game pattern insight, one
+/// line on the post-answer reveal. **Default OFF**: the spec makes the
+/// Kid Mode copy variant Eric's review gate, so the strings ship in the
+/// audited pool and the surface stays dark until he reads them.
+pub fn learner_insight() -> bool {
+    resolve(stored("learner_insight").as_deref(), false)
+}
+
 /// CC-LEARNING-ENGINE surfaces — the placement offer card and the Stats
-/// guardian section. **Default OFF**: ships dark; OFF is a true no-op
-/// (no card, no section, zero observable diff).
+/// guardian section. **Default ON** since the same QA pass (the in-game
+/// insight line stays unbuilt, so nothing here needs the Kid-Mode copy
+/// review — placement + guardian report only). Override off with
+/// `localStorage['spell_flag_learner_surfaces']='off'`.
 pub fn learner_surfaces() -> bool {
-    resolve(stored("learner_surfaces").as_deref(), false)
+    resolve(stored("learner_surfaces").as_deref(), true)
 }
 
 pub fn is_on(name: &str) -> bool {
@@ -172,6 +183,7 @@ pub fn is_on(name: &str) -> bool {
         "practice" => practice(),
         "learner_select" => learner_select(),
         "learner_surfaces" => learner_surfaces(),
+        "learner_insight" => learner_insight(),
         "streak_focal" => streak_focal(),
         #[cfg(not(feature = "web"))]
         "word_picture" => word_picture(),

@@ -33,3 +33,22 @@ Acceptance tests / Done (V1)
 5. Network assertion: entire feature under proxy shows zero voice-related requests.
 6. Kid Mode: recording/setup unreachable from any kid-facing route.
 7. V2 check: repo contains V2 design docs + manifest schema affordance and zero V2 executable code paths (CI symbol check on training/upload symbols).
+
+## BD-D4 DECIDED (Eric, 2026-08-05): LOCAL MAC COMPANION
+Piper training runs on the household's own Mac — recordings NEVER leave
+the home. No upload path to spellgame.net or anywhere else may exist in
+any target; that is now an invariant, not a preference, and a planted
+upload symbol must fail CI. V2 custom voices are unblocked to build
+along this path only: the app records the scripted prompt set locally,
+exports a training bundle the companion consumes, and imports the
+finished voice as an offline voice pack (CC-OFFLINE-PACKS manifest,
+voice ID field).
+
+GATE AMENDED with the BD-D4 decision (2026-08-05): the old scan banned
+`train` and `upload` in the voice path because V2 was execution-blocked.
+V2 is now unblocked on the local-Mac path, so `train` is a sanctioned
+symbol; the NETWORK ban tightened in its place — URLSession, CFNetwork,
+upload, fetch_*, and any http(s) URL are refused in shipped voice-path
+code (full-line comments stripped so the files may discuss the ban, and
+the test module excluded because the test that ASSERTS the ban must
+name the symbols it forbids).

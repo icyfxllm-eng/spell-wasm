@@ -33,6 +33,34 @@ fn render(app: &crate::App) {
     drop(s);
     let mut html = String::new();
 
+    // Wave 2 tool 5+7: today's card up top (deterministic; the Home
+    // Pair's other side rides the resolver and renders reduced until
+    // glosses land), pick-only as everything here (I4).
+    if CARD_WORD.with(|c| c.borrow().is_none()) {
+        let day = (js_sys::Date::now() / 86_400_000.0) as u32;
+        if let Some(dw) = crate::translate::daily_word(&lang, &tier, day) {
+            let concept = crate::translate::concept_of(&lang, &dw);
+            let stamps = concept.as_deref().map(crate::translate::passport_count).unwrap_or(0);
+            html.push_str(&format!(
+                "<div class=\"rep-head\">{}</div>\
+                 <button class=\"ghost tr-daily\" data-tr-word=\"{}\">{}</button>\
+                 <span class=\"tr-passport\">{}</span>",
+                t("tr.daily"),
+                crate::dom::escape_html(&dw),
+                crate::dom::escape_html(&crate::translate::display_word(&dw)),
+                crate::i18n::tp("tr.passport", &[("n", &stamps.to_string())])
+            ));
+        }
+        if let Some((a, b)) = crate::translate::home_pair() {
+            html.push_str(&format!(
+                "<div class=\"tr-pair\">{} {} \u{2194} {}</div>",
+                t("tr.homePair"),
+                crate::dom::escape_html(&a),
+                crate::dom::escape_html(&b)
+            ));
+        }
+    }
+
     if let Some(word) = CARD_WORD.with(|c| c.borrow().clone()) {
         html.push_str(&card_html(&word));
     } else {

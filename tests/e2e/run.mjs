@@ -17,6 +17,7 @@ import * as platform from './specs/platform.mjs';
 import * as pictureWall from './specs/picture-wall.mjs';
 import * as gallery from './specs/gallery.mjs';
 import * as gameplay from './specs/gameplay.mjs';
+import * as placement from './specs/placement.mjs';
 import * as modes from './specs/modes.mjs';
 import * as menu from './specs/menu.mjs';
 import * as coming from './specs/coming.mjs';
@@ -36,7 +37,7 @@ import * as kidReveal from './specs/kid-reveal.mjs';
 import * as pickerContinue from './specs/picker-continue.mjs';
 
 const SPECS = [
-  ['playhub', playHub],
+  ['playhub', playHub, placement],
   ['keyboard', keyboard],
   ['gameplay', gameplay],
   ['modes', modes],

@@ -378,6 +378,8 @@
   .wp-count{font-size:13px;opacity:.85}
   .wp-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;overflow-y:auto;padding-bottom:16px}
   .wp-tile{display:flex;flex-direction:column;align-items:center;gap:4px;padding:14px 8px;border-radius:14px;border:1px solid rgba(255,255,255,.16);background:rgba(255,255,255,.05);color:inherit}
+  .wp-tile{position:relative}
+  .wp-tile.fav::after{content:'\2605';position:absolute;top:4px;right:6px;font-size:12px;color:#e8b44f;line-height:1}
   .wp-tile .ico{font-size:34px}
   .wp-tile .prog{font-size:12px;opacity:.85}
   .wp-tile.locked{opacity:.4}
@@ -386,16 +388,17 @@
   .wp-stage svg{width:100%;height:100%;max-height:64vh}
   .wp-guide{stroke:rgba(232,236,245,.30);stroke-width:2;fill:none;stroke-linecap:round;stroke-linejoin:round}
   /* CC-PICKER-CONTINUE */
-  .wp-resume-row{display:flex;gap:10px;overflow-x:auto;padding:4px 2px 10px}
-  .wp-resume-card{flex:0 0 118px;height:150px;border-radius:12px;border:1px solid #2c3550;background:#141b2c;padding:6px;display:flex;flex-direction:column;align-items:center}
+  /* v3: no sideways scrolling anywhere — every row wraps. */
+  .wp-resume-row{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;padding:4px 2px 10px}
+  .wp-resume-card{width:100%;height:150px;border-radius:12px;border:1px solid #2c3550;background:#141b2c;padding:6px;display:flex;flex-direction:column;align-items:center}
   .wp-resume-card svg{width:100%;height:auto;flex:1}
   .wp-resume-card .prog{font-size:12px;color:#95a0bb;padding-top:4px}
-  .wp-resume-card.small{flex:0 0 88px;height:104px}
+  .wp-resume-card.small{height:104px}
   .wp-th-ink{stroke:rgba(232,236,245,.95);stroke-width:7;fill:none;stroke-linecap:round;stroke-linejoin:round}
   .wp-th-ghost{stroke:rgba(232,236,245,.22);stroke-width:5;fill:none;stroke-linecap:round;stroke-linejoin:round}
   .wp-th-pin{stroke:rgba(232,236,245,.55);stroke-width:4;fill:none;stroke-linecap:round;stroke-linejoin:round}
   .wp-gal-head{width:100%;color:#95a0bb;font-size:13px;letter-spacing:.06em;text-transform:uppercase;padding:6px 2px}
-  .wp-fam-head{width:100%;color:#95a0bb;font-size:13px;letter-spacing:.06em;text-transform:uppercase;padding:10px 2px 4px}
+  .wp-fam-head{width:100%;color:#95a0bb;font-size:13px;letter-spacing:.06em;text-transform:uppercase;padding:10px 2px 4px;grid-column:1/-1}
   .pack-section{margin-top:14px;border-top:1px solid #232c42;padding-top:10px}
   .pack-head{color:#95a0bb;font-size:13px;letter-spacing:.06em;text-transform:uppercase;padding-bottom:6px}
   .gd-sec{margin:12px 0}.gd-h{font-weight:700;margin-bottom:4px}.gd-row{padding:3px 0;opacity:.9}
@@ -414,6 +417,13 @@
    the strip is OUT OF SCOPE for CC-PICKER-SEARCH and keeps its size;
    the scrollable grid absorbs the new row instead. */
 #wpResumeRow{flex-shrink:0}
+.wp-searchrow{display:flex;gap:8px;align-items:center}
+.wp-az{flex-shrink:0;padding:8px 12px;border-radius:10px}
+.wp-catlist{display:flex;flex-direction:column;gap:8px;margin:6px 0;grid-column:1/-1}
+.wp-catcard{display:flex;align-items:center;gap:12px;width:100%;padding:12px 14px;border-radius:14px;border:1px solid rgba(128,128,128,.3);background:rgba(128,128,128,.08);color:inherit;font-size:16px;text-align:left}
+.wp-catcard .ci{font-size:1.5rem;min-width:2rem;text-align:center}
+.wp-catcard .cl{flex:1;font-weight:600}
+.wp-catcard .cc{opacity:.6;font-size:.85rem}
 #wpSearch{width:100%;padding:10px 14px;border-radius:12px;border:1px solid rgba(128,128,128,.3);font-size:16px;background:rgba(128,128,128,.08);color:inherit}
 .wp-shelf.wrap{flex-wrap:wrap}
 .wp-tile .wp-cap{display:block;font-size:10px;line-height:1.25;max-height:2.6em;overflow:hidden;text-align:center;margin-top:2px}
@@ -426,7 +436,9 @@
 .rep-empty{opacity:.6;padding:8px 4px}.rep-modal{max-height:80vh;overflow-y:auto}
 .pack-row{display:flex;justify-content:space-between;align-items:center;padding:6px 2px}
   .pk-state{color:#95a0bb;font-size:13px}
-  .wp-shelf{display:flex;gap:10px;overflow-x:auto;padding:2px 2px 8px}
+  .wp-shelf{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;padding:2px 2px 8px;grid-column:1/-1}
+  /* v3 hub: no sideways scroll — a wrapped shelf is a grid row. */
+  .wp-shelf.wrap{display:grid;grid-template-columns:repeat(4,1fr);overflow-x:visible}
   .wp-shelf .wp-tile{flex:0 0 auto}
   .wp-modal{display:none;position:fixed;inset:0;background:rgba(6,9,16,.6);z-index:60;align-items:center;justify-content:center}
   .wp-modal.show{display:flex}
@@ -462,7 +474,7 @@
      masterpiece, always skippable). The build is a fade-in per word in
      SPELLING order, driven by a per-word animation-delay set in
      wordpic_screen.rs, so the picture assembles the way it was made. */
-  .wp-gallery{display:flex;gap:8px;overflow-x:auto;padding:2px 0 6px}
+  .wp-gallery{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;padding:2px 0 6px}
   .wp-gallery button{flex:0 0 auto;width:76px;height:76px;border-radius:12px;border:1px solid var(--edge);
     background:var(--panel);cursor:pointer;padding:4px;line-height:0}
   .wp-gallery svg{width:100%;height:100%}
@@ -1505,7 +1517,8 @@
     </div>
     <!-- CC-PICKER-SEARCH Feature 1: pinned, live-filtering, on-device only. -->
     <div class="wp-searchrow"><input id="wpSearch" type="search" autocomplete="off"
-      autocapitalize="none" spellcheck="false" data-i18n-ph="wordpic.search" placeholder="Search pictures" /></div>
+      autocapitalize="none" spellcheck="false" data-i18n-ph="wordpic.search" placeholder="Search pictures" /><button
+      type="button" id="wpAz" class="ghost wp-az" data-az="1" data-i18n="wordpic.az">A-Z</button></div>
     <!-- CC-FINALE feature 5: finished pieces are trophies. Stored as piece
          data + seed and RE-RENDERED on view (D5), never as bitmaps -- so old
          trophies inherit every future renderer improvement. -->

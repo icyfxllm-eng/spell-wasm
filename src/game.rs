@@ -678,6 +678,21 @@ thread_local! {
     static BELOVED_SHOWN: std::cell::Cell<bool> = const { std::cell::Cell::new(false) };
 }
 
+/// CC-LEARNING-ENGINE L2 feature 6 — the insight line, appended to the
+/// post-answer reveal. Called only after the answer resolves (never
+/// mid-word, per the spec) and only when the flag is on; renders an
+/// audited string or nothing at all.
+pub fn render_insight(lang: &str, kid_mode: bool) {
+    if !crate::dom::exists("meaning") {
+        return;
+    }
+    let Some(line) = crate::learner::insight_line(lang, kid_mode) else {
+        return;
+    };
+    let html = format!("<div class=\"insight-line\">{}</div>", crate::dom::escape_html(&line));
+    crate::dom::append_html("meaning", &html);
+}
+
 pub fn clear_meaning() {
     MEANING_SEQ.with(|c| *c.borrow_mut() += 1);
     dom::set_html("meaning", "");
@@ -1374,6 +1389,10 @@ fn on_correct(app: &App) {
         // Adaptive word stats: solo practice only (Misses/review has its own SR).
         if !app.borrow().review {
             wordstats::record(&cur_lang, &word, true);
+            // TR Wave-2 tool 6: the Passport stamps ride the SAME
+            // validated-correct seam — never from lookup (test 4).
+            #[cfg(not(feature = "web"))]
+            crate::translate::passport_stamp(&cur_lang, &word);
             selection::note_outcome(&cur_lang, &word, true);
         }
         let cleared = misses::promote_miss(&mut app.borrow_mut(), &word, &cur_lang);

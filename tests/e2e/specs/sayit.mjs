@@ -3,7 +3,7 @@
 // AND it stays hidden even with the flag forced on, because the native on-device
 // speech bridge (Capacitor) isn't present in the browser. Live mic recognition
 // itself needs a physical device and isn't covered here.
-import { openApp, assert } from '../harness.mjs';
+import { openApp, assert, pinBaseline } from '../harness.mjs';
 
 const AGE = JSON.stringify({ verdict: 'full', checkedAt: 1700000000 });
 
@@ -21,6 +21,7 @@ export async function run(browser, base, suite) {
 
   await suite.test('say-it: still hidden with flag ON but no native bridge (not iOS)', async () => {
     const ctx = await browser.newContext({ viewport: { width: 375, height: 667 }, deviceScaleFactor: 2, isMobile: true });
+    await pinBaseline(ctx);
     await ctx.addInitScript(([age]) => {
       localStorage.setItem('byear_agegate_v1', age);
       // Force the feature flag ON — the mode must STILL stay hidden on the web,

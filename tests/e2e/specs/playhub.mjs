@@ -10,7 +10,7 @@
 //   <div class="mode-tile info">      an in-round aid — no destination
 //   <div class="mode-tile teaser">    coming_soon (no notify-me hook, D7)
 // A tappable tile that goes nowhere is a lie the markup cannot tell.
-import { openApp, assert } from '../harness.mjs';
+import { openApp, assert, pinBaseline } from '../harness.mjs';
 
 const AGE_KID = JSON.stringify({ verdict: 'kid', checkedAt: 1700000000 });
 
@@ -98,6 +98,7 @@ export async function run(browser, base, suite) {
 
   await suite.test('hub: A2.2 — Little Speller sees only kidSafe tiles, zero upsell', async () => {
     const ctx = await browser.newContext({ viewport: { width: 390, height: 844 }, isMobile: true });
+    await pinBaseline(ctx);
     try {
       await ctx.addInitScript(([age]) => {
         localStorage.setItem('byear_agegate_v1', age);

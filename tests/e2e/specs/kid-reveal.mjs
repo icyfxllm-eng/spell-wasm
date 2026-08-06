@@ -3,7 +3,7 @@
 // #wpShare at the stylesheet level, so there is no code path to leak it).
 // The other half of Done #6 — Eric personally reviewing the Kid Mode
 // reveal screen — cannot live in CI and is tracked in the session notes.
-import { openApp, assert } from '../harness.mjs';
+import { openApp, assert, pinBaseline } from '../harness.mjs';
 import { completePicture } from './finale.mjs';
 
 const AGE_KID = JSON.stringify({ verdict: 'kid', checkedAt: 1700000000 });
@@ -11,6 +11,7 @@ const AGE_KID = JSON.stringify({ verdict: 'kid', checkedAt: 1700000000 });
 export async function run(browser, base, suite) {
   await suite.test('kid reveal: Share is gone, Save stays', async () => {
     const ctx = await browser.newContext({ viewport: { width: 390, height: 844 }, isMobile: true });
+    await pinBaseline(ctx);
     try {
       await ctx.addInitScript(([age]) => {
         localStorage.setItem('byear_agegate_v1', age);

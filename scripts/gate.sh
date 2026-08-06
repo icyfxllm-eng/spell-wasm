@@ -15,10 +15,24 @@ if grep -nE "storage::set|note_attempt|\.record\(|save\(" src/reports.rs; then
   echo "GATE FAIL: ReportsQuery wrote to state"; exit 1
 fi
 
-echo "== gate: family-voices V2 symbol scan (BD-4 Done #7)"
-if grep -inE "URLSession|CFNetwork|train|upload" "ios/App/App/NativeLanguageKitPlugin+FamilyVoices.swift" src/family_voices.rs; then
-  echo "GATE FAIL: V2/network symbol in the V1 voice path"; exit 1
-fi
+echo "== gate: family-voices network scan (BD-D4: local Mac only)"
+# BD-D4 DECIDED 2026-08-05 (Eric: "Local Mac companion"): V2 custom
+# voices are UNBLOCKED, so `train` is no longer a forbidden symbol —
+# local training is the sanctioned path. What tightened instead is the
+# network ban: household recordings never leave the home, so NO network
+# symbol may appear in the voice path at all. Full-line comments are
+# stripped first (the files must be free to DISCUSS the ban without
+# tripping it); an inline URL in real code still matches.
+for f in "ios/App/App/NativeLanguageKitPlugin+FamilyVoices.swift" src/family_voices.rs; do
+  # Judge SHIPPED code: strip full-line comments, and stop at the test
+  # module — the test that ASSERTS this ban necessarily names the very
+  # symbols it forbids (`no_upload_path_exists`), and that is the ban
+  # working, not breaking.
+  if sed -E '/^#\[cfg\(test\)\]/,$d; /^[[:space:]]*\/\//d' "$f" \
+       | grep -inE "URLSession|CFNetwork|upload|fetch_post|fetch_json|https?:"; then
+    echo "GATE FAIL: network symbol in the voice path ($f) — BD-D4 says recordings stay home"; exit 1
+  fi
+done
 
 echo "== gate: calendar store boundary (CAL I1) + kid-only goals (CAL I7)"
 if grep -rn "spell_journal_\|spell_plan_\|spell_goal_\|spell_cheer_" src/ | grep -v "src/journal.rs\|src/calendar.rs"; then
@@ -32,9 +46,16 @@ echo "== gate: translator closed space (TR I1) + wave-3 zero-code (TR acceptance
 if grep -rniE "deepl|libretranslate|mlkit.?translat|translate\.googleapis|MTModel|machine.?translat" src/ ios/App/App/; then
   echo "GATE FAIL: a machine-translation symbol exists (the closed space is the whole safety story)"; exit 1
 fi
-# (loanword_explorer, not loanword_ — "loanword_spelling" is a learner SKILL id, prior art)
-if grep -rniE "word_globe|language_detective|loanword_explorer|loanword_pack|false_friend|camera_lookup" src/; then
-  echo "GATE FAIL: an unsigned Wave-3 translator tool has executable code"; exit 1
+# WAVE 3 SIGNED 2026-08-05 (D3/D4/D6/D7/D8): the tools may exist, so the
+# zero-code scan is retired. What the signed specs STILL require is that
+# no UNAUDITED content ships: D3's per-pair tables and D8's per-pack
+# lists stay empty until each one's audit lands, and the closed space
+# holds. Those are asserted in-engine (translate.rs
+# `authored_tables_are_dark_until_audited`); here we keep the guard that
+# never relaxes — no machine translation, ever (checked just above) —
+# and verify the audited-content accessors are still the ONLY source.
+if grep -rniE "fn (pair_table|loanword_packs)\b" src/ | grep -v "^src/translate.rs"; then
+  echo "GATE FAIL: audited-table accessors exist outside the one resolver"; exit 1
 fi
 
 echo "== gate: composite pin law (CC-BANK-COMPLETE F2/D2)"

@@ -490,7 +490,35 @@ fn learn_rank(pack: &str, lang: &str) -> u32 {
 enum PickerView {
     Browse,
     Category(String),
+    /// CC-PICKER v3 hub: a script folder's letters (idea 1).
+    Folder(String),
+    /// CC-PICKER v3: alphabetical browse by display name (idea 3).
+    Alpha,
     Search,
+}
+
+// CC-PICKER v3 idea 4 — favorites: storage-backed id list; long-press
+// a tile to star (same gesture family as the resume strip).
+fn favs() -> Vec<String> {
+    crate::storage::get_raw("spell_wpfavs")
+        .and_then(|s| serde_json::from_str(&s).ok())
+        .unwrap_or_default()
+}
+fn fav_toggle(id: &str) {
+    let mut f = favs();
+    if let Some(i) = f.iter().position(|x| x == id) {
+        f.remove(i);
+    } else {
+        f.push(id.to_string());
+    }
+    crate::storage::set_raw("spell_wpfavs", &serde_json::to_string(&f).unwrap_or_default());
+}
+
+thread_local! {
+    /// v3 favorites long-press: pressed (pic, at-ms); the click that
+    /// follows a completed long-press is suppressed.
+    static FAV_PRESS: std::cell::RefCell<Option<(String, f64)>> = const { std::cell::RefCell::new(None) };
+    static FAV_SUPPRESS: std::cell::Cell<bool> = const { std::cell::Cell::new(false) };
 }
 
 thread_local! {
@@ -568,6 +596,9 @@ fn tile_html(app: &App, state: &wordpic::State, p: &wordpic::Picture, lang: &str
         _ => ("wp-tile fresh", format!("{total}")),
     };
     let locked = !allowed(app, p, lang);
+    // v3 idea 4: a starred tile SHOWS it — long-press is invisible
+    // otherwise, and a favorite you cannot see is not a favorite.
+    let fav = if favs().iter().any(|id| id == &p.id) { " fav" } else { "" };
     // Feature 3: a Masterpieces tile is IDENTIFIED — title + artist,
     // audited strings, two lines, no ellipsis path exists.
     let caption = if p.categories.iter().any(|c| c == "masters") {
@@ -588,9 +619,10 @@ fn tile_html(app: &App, state: &wordpic::State, p: &wordpic::Picture, lang: &str
         }
     };
     format!(
-        "<button type=\"button\" class=\"{}{}\" data-pic=\"{}\" {}><span class=\"ico\">{}</span><span class=\"prog\">{}</span>{}</button>",
+        "<button type=\"button\" class=\"{}{}{}\" data-pic=\"{}\" {}><span class=\"ico\">{}</span><span class=\"prog\">{}</span>{}</button>",
         cls,
         if locked { " locked" } else { "" },
+        fav,
         p.id,
         if locked { "disabled" } else { "" },
         p.icon,
@@ -649,45 +681,144 @@ fn render_picker_body(app: &App) {
             }
             html.push_str("</div>");
         }
+    } else if let PickerView::Folder(f) = &view {
+        // v3 hub: one script folder, full wrapped grid, back to Learn.
+        html.push_str(&format!(
+            "<div class=\"wp-fam-head\"><button class=\"ghost\" data-cat-back=\"1\">\u{2039}</button> {}</div><div class=\"wp-shelf wrap\">",
+            i18n::t(&format!("wp.folder.{f}"))
+        ));
+        let members: Vec<_> = visible.iter().filter(|(_, p)| &p.folder == f).copied().collect();
+        for p in sorted_members(&state, members, &lang, "learn") {
+            html.push_str(&tile_html(app, &state, p, &lang));
+        }
+        html.push_str("</div>");
+    } else if matches!(view, PickerView::Alpha) {
+        // v3 idea 3: A-Z by display name; letters stay in their folders.
+        html.push_str(&format!(
+            "<div class=\"wp-fam-head\"><button class=\"ghost\" data-cat-back=\"1\">\u{2039}</button> {}</div><div class=\"wp-shelf wrap\">",
+            i18n::t("wordpic.az")
+        ));
+        let mut members: Vec<&wordpic::Picture> = visible
+            .iter()
+            .filter(|(_, p)| p.folder.is_empty())
+            .map(|(_, p)| *p)
+            .collect();
+        members.sort_by_key(|p| tile_name(p).to_lowercase());
+        for p in members {
+            html.push_str(&tile_html(app, &state, p, &lang));
+        }
+        html.push_str("</div>");
     } else if let PickerView::Category(cat) = &view {
-        // See All: the full grid for one category, back affordance first.
+        // A category page: full wrapped grid (the ONLY member view —
+        // v3 killed the sliding shelves). Learn opens to folder cards.
         let (_, name_key) = wordpic::category_list()
             .into_iter()
             .find(|(id, _)| id == cat)
             .unwrap_or((cat.clone(), String::new()));
         html.push_str(&format!(
-            "<div class=\"wp-fam-head\"><button class=\"ghost\" data-cat-back=\"1\">\u{2039}</button> {}</div><div class=\"wp-shelf wrap\">",
+            "<div class=\"wp-fam-head\"><button class=\"ghost\" data-cat-back=\"1\">\u{2039}</button> {}</div>",
             i18n::t(&name_key)
         ));
-        let members: Vec<_> = visible.iter().filter(|(_, p)| p.categories.contains(cat)).copied().collect();
-        for p in sorted_members(&state, members, &lang, cat) {
-            html.push_str(&tile_html(app, &state, p, &lang));
-        }
-        html.push_str("</div>");
-    } else {
-        // Browse: every category row from the registry list, collapsed to
-        // one viewport row + See All (count). A subject renders in EVERY
-        // category it lists (Feature 2).
-        let cap = row_capacity();
-        for (cat, name_key) in wordpic::category_list() {
-            let members: Vec<_> = visible.iter().filter(|(_, p)| p.categories.contains(&cat)).copied().collect();
-            if members.is_empty() {
-                continue;
-            }
-            let count = members.len();
-            let ordered = sorted_members(&state, members, &lang, &cat);
-            html.push_str(&format!("<div class=\"wp-fam-head\">{}</div><div class=\"wp-shelf\">", i18n::t(&name_key)));
-            for p in ordered.iter().take(cap) {
-                html.push_str(&tile_html(app, &state, p, &lang));
-            }
-            if count > cap {
+        if cat == "learn" {
+            // The old shelf law survives the hub: the player's own
+            // script leads (ru sees Cyrillic first — e2e-pinned).
+            let own = match lang.as_str() {
+                "ru" => "cyrillic",
+                "ar" => "arabic",
+                "hi" => "devanagari",
+                "ko" => "korean",
+                "ja" => "hiragana",
+                "zh" => "hanzi",
+                _ => "latin",
+            };
+            let mut folders: Vec<(&str, &str)> = wordpic::FOLDERS.to_vec();
+            folders.sort_by_key(|(id, _)| *id != own);
+            html.push_str("<div class=\"wp-catlist\">");
+            for (fid, glyph) in folders {
+                let count = visible.iter().filter(|(_, p)| p.folder == fid).count();
+                if count == 0 {
+                    continue;
+                }
                 html.push_str(&format!(
-                    "<button type=\"button\" class=\"wp-tile wp-seeall\" data-cat=\"{cat}\"><span class=\"ico\">\u{2192}</span><span class=\"prog\">{}</span></button>",
-                    i18n::tp("wordpic.seeAll", &[("n", &count.to_string())])
+                    "<button type=\"button\" class=\"wp-catcard\" data-folder=\"{fid}\">\
+                     <span class=\"ci\">{glyph}</span><span class=\"cl\">{}</span>\
+                     <span class=\"cc\">{count}</span></button>",
+                    i18n::t(&format!("wp.folder.{fid}"))
                 ));
             }
             html.push_str("</div>");
+        } else {
+            html.push_str("<div class=\"wp-shelf wrap\">");
+            let members: Vec<_> = visible.iter().filter(|(_, p)| p.categories.contains(cat)).copied().collect();
+            for p in sorted_members(&state, members, &lang, cat) {
+                html.push_str(&tile_html(app, &state, p, &lang));
+            }
+            html.push_str("</div>");
         }
+    } else {
+        // v3 HUB (Eric: "NO more sliding menu options"): the horizontal
+        // shelves are DELETED. One scroll direction. Jump back in, then
+        // Favorites, then nine big category cards; a card opens the
+        // category as a full wrapped grid.
+        let mut recent: Vec<&wordpic::Picture> = Vec::new();
+        let mut dones: Vec<&wordpic::Run> =
+            state.runs.iter().filter(|r| r.done && r.lang == lang).collect();
+        dones.sort_by_key(|r| std::cmp::Reverse(r.touched));
+        for r in dones.iter().take(4) {
+            if let Some((_, p)) = visible.iter().find(|(_, p)| p.id == r.pic) {
+                if !recent.iter().any(|q| q.id == p.id) {
+                    recent.push(p);
+                }
+            }
+        }
+        if !recent.is_empty() {
+            html.push_str(&format!(
+                "<div class=\"wp-fam-head\">{}</div><div class=\"wp-shelf wrap\">",
+                i18n::t("wordpic.jumpBackIn")
+            ));
+            for p in &recent {
+                html.push_str(&tile_html(app, &state, p, &lang));
+            }
+            html.push_str("</div>");
+        }
+        let fav_ids = favs();
+        let fav_pics: Vec<&wordpic::Picture> = fav_ids
+            .iter()
+            .filter_map(|id| visible.iter().find(|(_, p)| &p.id == id).map(|(_, p)| *p))
+            .collect();
+        if !fav_pics.is_empty() {
+            html.push_str(&format!(
+                "<div class=\"wp-fam-head\">{}</div><div class=\"wp-shelf wrap\">",
+                i18n::t("wordpic.favorites")
+            ));
+            for p in &fav_pics {
+                html.push_str(&tile_html(app, &state, p, &lang));
+            }
+            html.push_str("</div>");
+        }
+        html.push_str(&format!(
+            "<div class=\"wp-fam-head\">{}</div><div class=\"wp-catlist\">",
+            i18n::t("wordpic.browse")
+        ));
+        for (cat, name_key) in wordpic::category_list() {
+            let members: Vec<_> =
+                visible.iter().filter(|(_, p)| p.categories.contains(&cat)).copied().collect();
+            if members.is_empty() {
+                continue;
+            }
+            let (icon, sub) = if cat == "learn" {
+                ("\u{1f524}".to_string(), wordpic::FOLDERS.len().to_string())
+            } else {
+                (members[0].1.icon.clone(), members.len().to_string())
+            };
+            html.push_str(&format!(
+                "<button type=\"button\" class=\"wp-catcard\" data-cat=\"{cat}\">\
+                 <span class=\"ci\">{icon}</span><span class=\"cl\">{}</span>\
+                 <span class=\"cc\">{sub}</span></button>",
+                i18n::t(&name_key)
+            ));
+        }
+        html.push_str("</div>");
     }
     dom::set_html("wpGrid", &html);
 }
@@ -716,6 +847,20 @@ pub fn wire_picker_inputs(app: &App) {
     if !dom::exists("wpSearch") {
         return;
     }
+    if dom::exists("wpAz") {
+        let a = app.clone();
+        dom::on_click("wpAz", move || {
+            VIEW.with(|v| {
+                let mut b = v.borrow_mut();
+                *b = if matches!(*b, PickerView::Alpha) { PickerView::Browse } else { PickerView::Alpha };
+            });
+            QUERY.with(|q| q.borrow_mut().clear());
+            if dom::exists("wpSearch") {
+                dom::input("wpSearch").set_value("");
+            }
+            render_picker_body(&a);
+        });
+    }
     {
         // CC-PICKER v2: DEBOUNCED — the old handler rebuilt the whole
         // picker synchronously per keystroke, which is exactly the
@@ -741,21 +886,75 @@ pub fn wire_picker_inputs(app: &App) {
 
     // Tile taps + See All + back, one delegated listener.
     let a = app.clone();
+    {
+        // v3 idea 4: long-press to star. Same pointer pair the resume
+        // strip uses; >=550ms on a [data-pic] toggles the favorite and
+        // suppresses the click that follows.
+        let a = app.clone();
+        dom::on::<web_sys::PointerEvent, _>("wpGrid", "pointerdown", move |e| {
+            let _ = &a;
+            let pic = e
+                .target()
+                .and_then(|t| t.dyn_into::<web_sys::Element>().ok())
+                .and_then(|t| t.closest("[data-pic]").ok().flatten())
+                .and_then(|el| el.get_attribute("data-pic"));
+            FAV_PRESS.with(|c| {
+                *c.borrow_mut() = pic.map(|p| (p, js_sys::Date::now()));
+            });
+        });
+        let a = app.clone();
+        dom::on::<web_sys::PointerEvent, _>("wpGrid", "pointerup", move |e| {
+            let pic = e
+                .target()
+                .and_then(|t| t.dyn_into::<web_sys::Element>().ok())
+                .and_then(|t| t.closest("[data-pic]").ok().flatten())
+                .and_then(|el| el.get_attribute("data-pic"));
+            let held = FAV_PRESS.with(|c| c.borrow_mut().take());
+            if let (Some(up), Some((down, at))) = (pic, held) {
+                if up == down && js_sys::Date::now() - at >= 550.0 {
+                    fav_toggle(&up);
+                    crate::haptics::correct();
+                    FAV_SUPPRESS.with(|c| c.set(true));
+                    render_picker_body(&a);
+                }
+            }
+        });
+    }
     dom::on::<web_sys::MouseEvent, _>("wpGrid", "click", move |e| {
         let Some(el) = e
             .target()
             .and_then(|t| t.dyn_into::<web_sys::Element>().ok())
-            .and_then(|t| t.closest("[data-pic],[data-cat],[data-cat-back]").ok().flatten())
+            .and_then(|t| t.closest("[data-pic],[data-cat],[data-cat-back],[data-folder],[data-az]").ok().flatten())
         else {
             return;
         };
         if let Some(id) = el.get_attribute("data-pic") {
             open_play(&a, &id);
+        } else if FAV_SUPPRESS.with(|c| c.replace(false)) {
+            // a long-press just starred this tile; eat the click
+        } else if let Some(f) = el.get_attribute("data-folder") {
+            VIEW.with(|v| *v.borrow_mut() = PickerView::Folder(f));
+            render_picker_body(&a);
+        } else if el.get_attribute("data-az").is_some() {
+            VIEW.with(|v| {
+                let mut b = v.borrow_mut();
+                *b = if matches!(*b, PickerView::Alpha) { PickerView::Browse } else { PickerView::Alpha };
+            });
+            render_picker_body(&a);
         } else if let Some(cat) = el.get_attribute("data-cat") {
             VIEW.with(|v| *v.borrow_mut() = PickerView::Category(cat));
             render_picker_body(&a);
         } else if el.get_attribute("data-cat-back").is_some() {
-            VIEW.with(|v| *v.borrow_mut() = PickerView::Browse);
+            VIEW.with(|v| {
+                let mut b = v.borrow_mut();
+                // v3: a folder backs out to the Learn card list; every
+                // other page backs to the hub.
+                *b = if matches!(*b, PickerView::Folder(_)) {
+                    PickerView::Category("learn".into())
+                } else {
+                    PickerView::Browse
+                };
+            });
             render_picker_body(&a);
         }
     });
@@ -1200,9 +1399,27 @@ pub fn scanlock_svg(
         svg.push_str(&format!("<path class=\"wp-feature\" d=\"{d}Z\"/>"));
     }
     // spelled words on their baselines, justified to the exact span
+    // CC-PICTURE-COLOR F1/F5: a LANDED word takes its path's curated
+    // color; outlines, pinned strokes and micro scan stay neutral. Fill
+    // only — geometry above is untouched (Feature 3's hard invariant).
+    let pic_for_color = crate::wordpic::picture(&plan.subject);
+    let scan_fill = |idx: usize| -> Option<String> {
+        let pic = pic_for_color?;
+        if !crate::wordpic::color_enabled(pic) {
+            return None;
+        }
+        let key = plan.path_colors.get(idx)?;
+        if key.is_empty() {
+            return None;
+        }
+        pic.palette.iter().find(|c| &c.id == key).map(|c| c.hex.clone())
+    };
     for (i, pl) in plan.placements.iter().take(placed).enumerate() {
         let len = crate::spellpic::poly_len(&pl.baseline);
         let cls = if i + 1 == placed && mode == RenderMode::Play { "wp-word new" } else { "wp-word" };
+        let fill = scan_fill(pl.path_idx)
+            .map(|hex| format!(" fill=\"{hex}\""))
+            .unwrap_or_default();
         if complex {
             // D4 ruling: complex-shaping scripts render straight at the
             // chord angle rather than along the curve.
@@ -1211,13 +1428,13 @@ pub fn scanlock_svg(
             let (cx, cy) = ((x0 + x1) / 2.0, (y0 + y1) / 2.0);
             let ang = (y1 - y0).atan2(x1 - x0).to_degrees();
             svg.push_str(&format!(
-                "<text class=\"{cls}\" x=\"{cx:.0}\" y=\"{cy:.0}\" font-size=\"{:.0}\" text-anchor=\"middle\" textLength=\"{len:.0}\" lengthAdjust=\"spacingAndGlyphs\" transform=\"rotate({ang:.1} {cx:.0} {cy:.0})\">{}</text>",
+                "<text class=\"{cls}\"{fill} x=\"{cx:.0}\" y=\"{cy:.0}\" font-size=\"{:.0}\" text-anchor=\"middle\" textLength=\"{len:.0}\" lengthAdjust=\"spacingAndGlyphs\" transform=\"rotate({ang:.1} {cx:.0} {cy:.0})\">{}</text>",
                 pl.glyph_size,
                 dom::escape_html(&pl.word)
             ));
         } else {
             svg.push_str(&format!(
-                "<text class=\"{cls}\" font-size=\"{:.0}\"><textPath href=\"#sl{i}\" textLength=\"{len:.0}\" lengthAdjust=\"spacing\">{}</textPath></text>",
+                "<text class=\"{cls}\"{fill} font-size=\"{:.0}\"><textPath href=\"#sl{i}\" textLength=\"{len:.0}\" lengthAdjust=\"spacing\">{}</textPath></text>",
                 pl.glyph_size,
                 dom::escape_html(&pl.word)
             ));
@@ -2055,6 +2272,103 @@ mod audio_gate_tests {
 }
 
 #[cfg(test)]
+mod color_render_tests {
+    use super::*;
+    use crate::spellpic::Plan;
+    use scanlock::{MicroStroke, Placement};
+
+    /// Two words on path 0, one on path 1 — enough to prove per-path
+    /// color and to keep the outline/pinned bytes comparable.
+    fn plan_for(subject: &str, colors: Vec<String>) -> Plan {
+        Plan {
+            subject: subject.into(),
+            path_colors: colors,
+            size: 13.0,
+            placements: vec![
+                Placement { path_idx: 0, t0: 0.0, t1: 0.5, word: "alpha".into(),
+                            glyph_size: 13.0, advance_px: 7.0,
+                            baseline: vec![(10.0, 20.0), (90.0, 24.0)] },
+                Placement { path_idx: 1, t0: 0.0, t1: 0.5, word: "beta".into(),
+                            glyph_size: 13.0, advance_px: 7.0,
+                            baseline: vec![(120.0, 40.0), (200.0, 60.0)] },
+            ],
+            micro: vec![MicroStroke { path_idx: 2, points: vec![(5.0, 5.0), (9.0, 9.0)] }],
+            pinned: vec![MicroStroke { path_idx: 3, points: vec![(3.0, 3.0), (7.0, 7.0)] }],
+            words: vec!["alpha".into(), "beta".into()],
+            ladder: vec![("outline".into(), 2)],
+        }
+    }
+
+    fn outline_bytes(svg: &str) -> String {
+        // everything that is NOT a word glyph — the state layer that
+        // Feature 5 freezes as monochrome.
+        svg.split("<text").next().unwrap_or("").to_string()
+    }
+
+    /// Done #5 + F1: a color-live subject renders its LANDED words in
+    /// the curated hexes, and nothing else changes.
+    #[test]
+    fn goldens_render_their_palette() {
+        for (id, first, second) in
+            [("dog", "coat", "earShadow"), ("eiffel", "iron", "ironDeep")]
+        {
+            let pic = wordpic::picture(id).expect("golden in registry");
+            let hex = |key: &str| {
+                pic.palette.iter().find(|c| c.id == key).map(|c| c.hex.clone()).expect(key)
+            };
+            let plan = plan_for(id, vec![first.into(), second.into()]);
+            let words = vec!["alpha".to_string(), "beta".to_string()];
+            let svg = scanlock_svg(&plan, "en", &words, RenderMode::Play);
+            assert!(svg.contains(&format!("fill=\"{}\"", hex(first))), "{id}: path-0 color");
+            assert!(svg.contains(&format!("fill=\"{}\"", hex(second))), "{id}: path-1 color");
+            // F5: the outline layer is untouched by color.
+            let mono = scanlock_svg(&plan_for(id, vec![]), "en", &words, RenderMode::Play);
+            assert_eq!(outline_bytes(&svg), outline_bytes(&mono), "{id}: outlines are monochrome");
+        }
+    }
+
+    /// Done #4 — Numbers & Alphabets are pixel-identical: the learn
+    /// shelf is color-disabled BY DATA, so even a planted palette ref
+    /// cannot tint it. (Rendered-bytes equality is the deterministic
+    /// form of the image diff.)
+    #[test]
+    fn numbers_and_alphabets_never_take_color() {
+        let learn = wordpic::manifest()
+            .pictures
+            .iter()
+            .find(|p| p.categories.iter().any(|c| c == "learn"))
+            .expect("a learn subject ships");
+        assert!(!wordpic::color_enabled(learn), "{}: learn is neutral by data", learn.id);
+        let words = vec!["alpha".to_string(), "beta".to_string()];
+        let planted = scanlock_svg(
+            &plan_for(&learn.id, vec!["coat".into(), "coat".into()]),
+            "en", &words, RenderMode::Play);
+        let plain = scanlock_svg(&plan_for(&learn.id, vec![]), "en", &words, RenderMode::Play);
+        assert_eq!(planted, plain, "a planted ref cannot color the learn shelf");
+    }
+
+    /// Done #7 — the gallery is RETROACTIVE: runs store words, never
+    /// colors, so the same finished run re-renders in color the moment
+    /// the registry gains a palette. Same words + same plan geometry,
+    /// palette absent vs present: only the fills differ.
+    #[test]
+    fn gallery_rerender_is_retroactive() {
+        let words = vec!["alpha".to_string(), "beta".to_string()];
+        let before = scanlock_svg(&plan_for("dog", vec![]), "en", &words, RenderMode::Play);
+        let after = scanlock_svg(
+            &plan_for("dog", vec!["coat".into(), "earShadow".into()]),
+            "en", &words, RenderMode::Play);
+        assert_ne!(before, after, "the palette reaches an already-finished piece");
+        assert_eq!(outline_bytes(&before), outline_bytes(&after), "only fills changed");
+        assert_eq!(
+            before.matches("<text").count(),
+            after.matches("<text").count(),
+            "same glyph count — nothing re-laid out"
+        );
+    }
+}
+
+#[cfg(test)]
 mod export_tests {
     use super::*;
     use crate::spellpic::Plan;
@@ -2062,6 +2376,8 @@ mod export_tests {
 
     fn plan() -> Plan {
         Plan {
+            subject: String::new(),
+            path_colors: Vec::new(),
             placements: vec![
                 Placement {
                     path_idx: 0,

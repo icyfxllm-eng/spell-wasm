@@ -19,6 +19,11 @@ pub struct RawPath {
     pub p: Vec<[f32; 2]>,
     pub s: Vec<f32>,
     pub f: u8,
+    /// CC-PICTURE-COLOR F2 — the palette entry this scan path's LANDED
+    /// words fill with (bundled from the subject manifest). Empty =
+    /// neutral. Data only; capacity planning never reads it.
+    #[serde(default)]
+    pub c: String,
 }
 
 #[derive(serde::Deserialize)]
@@ -159,6 +164,11 @@ pub struct Plan {
     /// rhino's legs), never silently dropped.
     pub pinned: Vec<MicroStroke>,
     pub words: Vec<String>,
+    /// The subject id — lets the renderer resolve F2 colors without a
+    /// second bundle lookup (fill only; geometry never consults it).
+    pub subject: String,
+    /// Per-path palette refs, index-aligned with the scan paths.
+    pub path_colors: Vec<String>,
     /// F3 — the word ladder: (layer name, words in that layer), in climb
     /// order, empty rungs already collapsed. Sums to `words.len()`.
     pub ladder: Vec<(String, u32)>,
@@ -237,7 +247,17 @@ pub fn plan(subject: &str, lang: &str, seed: u64) -> Option<Plan> {
         }
     }
     let words = placements.iter().map(|pl| pl.word.clone()).collect();
-    Some(Plan { size, placements, micro, pinned, words, ladder })
+    let path_colors: Vec<String> = s.paths.iter().map(|q| q.c.clone()).collect();
+    Some(Plan {
+        size,
+        placements,
+        micro,
+        pinned,
+        words,
+        ladder,
+        subject: subject.to_string(),
+        path_colors,
+    })
 }
 
 /// Arc length of a polyline (shared by the renderer for textLength).

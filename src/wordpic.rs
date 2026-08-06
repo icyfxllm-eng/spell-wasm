@@ -25,8 +25,45 @@ pub const RECENCY_PICS: usize = 3;
 /// D7: "Surprise me" no-repeat window (last N starts, capped at library-1).
 pub const NO_REPEAT: usize = 5;
 /// D3 path-count bands.
+/// CC-PICKER v3: the script folders, fixed order; display names are
+/// i18n `wp.folder.<id>` (15-locale parity enforced by i18n-check).
+pub const FOLDERS: [(&str, &str); 8] = [
+    ("latin", "ABC"), ("cyrillic", "\u{410}\u{411}"), ("arabic", "\u{627}\u{628}"),
+    ("devanagari", "\u{905}"), ("korean", "\u{d55c}"), ("hiragana", "\u{3042}"),
+    ("hanzi", "\u{5b57}"), ("numbers", "123"),
+];
+
 pub const BANDS: [(&str, u32, u32); 4] =
     [("easy", 1, 8), ("medium", 1, 20), ("hard", 1, 45), ("expert", 1, 200)];
+
+/// CC-PICTURE-COLOR F2 — resolve a path's fill: the palette entry its
+/// `paletteRef` names, when the subject is color-live. Returns None for
+/// neutral (the shipped monochrome). Pure lookup, never generated (F1);
+/// the solver never calls this (proven by `color_never_touches_layout`).
+pub fn path_color(p: &Picture, path_idx: usize) -> Option<&str> {
+    if !color_enabled(p) {
+        return None;
+    }
+    let q = p.paths.get(path_idx)?;
+    if q.palette_ref.is_empty() {
+        return None;
+    }
+    p.palette
+        .iter()
+        .find(|c| c.id == q.palette_ref)
+        .map(|c| c.hex.as_str())
+}
+
+/// CC-PICTURE-COLOR F6 — category exclusion AS DATA: the per-subject
+/// override wins; otherwise Numbers & Alphabets (the learn shelf) are
+/// neutral and everything else is color-enabled. No `if category ==`
+/// lives at any call site — this is the one resolver.
+pub fn color_enabled(p: &Picture) -> bool {
+    if let Some(v) = p.color_enabled {
+        return v;
+    }
+    !p.categories.iter().any(|c| c == "learn")
+}
 
 /// CC-PICTURE-COLOR F4 — the shipped canvas ground every landed word
 /// sits on (scanlock_svg export rect). The contrast lint measures
@@ -116,6 +153,11 @@ pub struct Picture {
     pub tier: String,
     pub subject: String,
     pub icon: String,
+    /// CC-PICKER v3 hub (Eric: "NO more sliding menu options" +
+    /// "greenlight 1 and 2 ship 134" + "3 and 4"): letter tiles live in
+    /// script FOLDERS — membership is registry data.
+    #[serde(default)]
+    pub folder: String,
     /// CC-PICKER v2 (Eric, 2026-08-05: "call the pictures by their
     /// name"): the display name on every tile, curated en v1; the
     /// `wp.name.<id>` i18n key overrides per locale when present.
@@ -636,6 +678,21 @@ mod picker_search_ci {
         );
     }
 
+    /// CC-PICKER v3: folder ids are a closed set, and every Learn-shelf
+    /// picture is foldered — the 221-tile avalanche can never return.
+    #[test]
+    fn folders_are_closed_and_learn_is_foldered() {
+        let ids: Vec<&str> = FOLDERS.iter().map(|(id, _)| *id).collect();
+        for p in registry() {
+            if !p.folder.is_empty() {
+                assert!(ids.contains(&p.folder.as_str()), "{}: unknown folder {}", p.id, p.folder);
+            }
+            if p.categories.iter().any(|c| c == "learn") {
+                assert!(!p.folder.is_empty(), "{}: learn picture without a folder", p.id);
+            }
+        }
+    }
+
     /// CC-MASTERPIECE-TONAL registry lint: every subject declares its
     /// extraction class; every TONAL subject carries requiredFeatures.
     #[test]
@@ -765,6 +822,7 @@ mod picker_search_ci {
             tier: "easy".into(),
             subject: id.into(),
             name: id.into(),
+            folder: String::new(),
             icon: "\u{2b50}".into(),
             kid: true,
             wash: false,

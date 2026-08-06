@@ -304,3 +304,26 @@ imports without an explicit confirm.
 - **Confidence threshold** for "low-confidence" pre-shown chips — a first value in
   Phase 3, calibrated against the Phase 7 handwriting fixtures; bring the number to
   you rather than hard-code it silently.
+
+## G-B MEASURED (2026-08-05) — the data, not a guess
+Run: `VNRecognizeTextRequest.supportedRecognitionLanguages()` (accurate
+level) on **iOS 26.5 (23F77)**, iPhone 17 Pro simulator. The probe is
+`ios/NativeLanguageKit/Tests/.../VisionLanguageMatrixTests.swift`; it was
+compiled standalone for the simulator because the SPM package is
+UIKit-bound and has no macOS scheme (recorded so the run is repeatable).
+
+Vision reports 30 recognition languages:
+en-US, fr-FR, it-IT, de-DE, es-ES, pt-BR, zh-Hans, zh-Hant, yue-Hans,
+yue-Hant, ko-KR, ja-JP, ru-RU, uk-UA, th-TH, vi-VT, ar-SA, ars-SA,
+tr-TR, id-ID, cs-CZ, da-DK, nl-NL, no-NO, nn-NO, nb-NO, ms-MY, pl-PL,
+ro-RO, sv-SE.
+
+CLASSIFICATION for the app's 14 registry languages — AWAITING ERIC'S
+SIGN-OFF (the plan's own rule: Phase 0 lands these values only after he
+signs):
+  Native (12): en es fr de pt pl vi ko ja zh ru ar
+  EnglishFallback (2, both Latin-script): fil sw
+Both predictions in the plan held: Filipino and Swahili are the gaps,
+and Arabic turned out SUPPORTED on this OS (the plan flagged it as
+OS-dependent). Nothing is Unsupported — every gap language is Latin, so
+the English recognizer is a sound fallback for both.
