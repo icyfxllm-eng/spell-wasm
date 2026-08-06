@@ -61,13 +61,19 @@ export async function run(browser, base, suite) {
   await suite.test('hub: coming_soon renders as a non-tappable teaser', async () => {
     const { ctx, page } = await openApp(browser, base, { lang: 'en' });
     try {
+      // CC-HUB-CLEANUP D5 RETIRED the hub teaser: Spell-Off keeps its
+      // own entry point, and `hidden` beats a flag. The teaser
+      // SEMANTICS stay tested in modes.rs for whenever the hub wants
+      // them back; what the hub must guarantee now is that no hidden
+      // mode can be flagged back onto it.
       await page.evaluate(() => localStorage.setItem('spell_flag_online_spelloff', 'on'));
       await page.reload(); await page.waitForTimeout(600);
       const t = await tiles(page);
-      const so = t.find((x) => x.mode === 'online_spelloff');
-      assert(so, 'online_spelloff did not tile with its flag on');
-      assert(so.kind === 'teaser', `expected a teaser, got ${so.kind}`);
-      assert(so.tag === 'div', `a teaser must NOT be a button (got <${so.tag}>)`);
+      assert(!t.some((x) => x.mode === 'online_spelloff'),
+        'a hidden mode tiled because its flag was on — `hidden` must win');
+      // and nothing that DOES tile is a dead teaser
+      assert(t.every((x) => x.kind !== 'teaser'),
+        'a non-tappable teaser reached the hub after D5 retired them');
     } finally { await ctx.close(); }
   });
 
@@ -75,12 +81,20 @@ export async function run(browser, base, suite) {
     const { ctx, page } = await openApp(browser, base, { lang: 'es' });
     try {
       const t = await tiles(page);
-      // es-only aid appears; and it renders Spanish from the shipped tools.*
-      // catalog rather than a raw key or English.
-      const syl = t.find((x) => x.mode === 'syllable_replay');
-      assert(syl, 'syllable_replay missing on es');
-      assert(!syl.name.startsWith('tools.'), `tile rendered a raw i18n key: ${syl.name}`);
-      assert(syl.name !== 'Syllable replay', 'tile did not localize to es');
+      // The law is "tiles are localized with no NEW copy" — every tile
+      // renders from the shipped tools.* catalog. (This used to lean on
+      // syllable_replay, which the registry has since marked hidden;
+      // pinning a law to one mode is how it rotted.)
+      assert(t.length > 0, 'es hub rendered no tiles');
+      for (const x of t) {
+        assert(!x.name.startsWith('tools.'), `tile rendered a raw i18n key: ${x.name}`);
+        assert(x.name.trim().length > 0, `tile ${x.mode} rendered an empty name`);
+      }
+      // at least one tile differs from its English string — proof the
+      // es catalog is actually reached, not silently falling back
+      const enNames = { practice: 'Practice', def_match: 'Definition Match' };
+      const localized = t.some((x) => enNames[x.mode] && x.name !== enNames[x.mode]);
+      assert(localized, 'no tile localized to es — the catalog is not being reached');
     } finally { await ctx.close(); }
   });
 
@@ -110,9 +124,21 @@ export async function run(browser, base, suite) {
       await page.goto(base); await page.waitForTimeout(800);
       const t = await tiles(page);
       assert(t.length > 0, 'kid hub rendered nothing at all');
-      for (const x of t) {
-        assert(['ghost_racing', 'syllable_replay'].includes(x.mode), `${x.mode} is not kidSafe but tiled in Kid Mode`);
+      // Derive the law from the REGISTRY, never a hardcoded list: a kid
+      // may see exactly the live, kidSafe, web-platform modes. (The old
+      // two-name allowlist predated D5's menu and quietly failed for
+      // months once `practice` became kidSafe.)
+      // The registry is compiled into the wasm, so the invariant is
+      // asserted from the OTHER side: modes.rs owns the exact kid menu
+      // (a Rust test pins it, list and order). What e2e must guarantee
+      // is the safety property that list exists to protect — no
+      // adult-only mode is EVER kid-visible, whatever its flag says.
+      for (const banned of ['say_it', 'photo_list', 'online_spelloff', 'word_stories', 'spell_aloud']) {
+        assert(!t.some((x) => x.mode === banned), `${banned} must never tile in Kid Mode`);
       }
+      // and every tile the kid does see is tappable — no locked upsell
+      assert(t.every((x) => x.kind !== 'teaser' && x.kind !== 'locked'),
+        'Kid Mode showed a locked or teaser tile — zero upsell (A2.2)');
       const txt = await page.$eval('#playHubGrid', (e) => e.textContent.toLowerCase());
       assert(!/lock|upgrade|buy|unlock|premium|\$/.test(txt), 'Kid Mode hub must carry zero locks/upsell strings');
     } finally { await ctx.close(); }

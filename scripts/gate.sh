@@ -69,12 +69,16 @@ npm run build 2>&1 | grep bundled
 
 echo "== gate: e2e (app + site)"
 if ! npm run e2e > "$LOG" 2>&1; then
+  # SHIP 135: the three tolerated hub reds are GONE — they were stale
+  # tests asserting a pre-D5 world, not app bugs. With the board clean
+  # the tolerance clause retires too: it let any NEW hub failure hide
+  # behind "just the known three", which is the whole cost of a
+  # tolerated red. Zero means zero now.
   REDS=$(grep -c "✗" "$LOG" || true)
-  KNOWN=$(grep -c "✗ hub:" "$LOG" || true)
-  if [ "${REDS:-99}" -ne "${KNOWN:-0}" ] || [ "${REDS:-99}" -gt 3 ]; then
-    echo "GATE FAIL: e2e has non-hub reds"; grep "✗" "$LOG"; exit 1
+  if [ "${REDS:-99}" -ne 0 ]; then
+    echo "GATE FAIL: e2e has reds"; grep "✗" "$LOG"; exit 1
   fi
-  echo "e2e: only the ${REDS} spun-out hub reds"
+  echo "e2e: clean board (zero reds)"
 fi
 grep -E "E2E:" "$LOG"
 

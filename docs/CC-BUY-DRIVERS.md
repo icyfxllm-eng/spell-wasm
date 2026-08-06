@@ -307,3 +307,24 @@ DECISION LEDGER (Eric, 2026-08-02 — recorded at greenlight)
   was running, which broke its web-wall step on a half-written check
   script. No tree edits between gate-start and commit — the law exists
   for exactly this.
+
+* SHIP 135 (Eric: "yes fix the three hub reds for 135"): the board is
+  CLEAN — e2e 80/80 for the first time. The finding: none of the three
+  was an app bug. All three tests encoded a pre-CC-HUB-CLEANUP-D5
+  world while the Rust unit tests in modes.rs had been asserting the
+  current law and passing all along:
+    - the teaser test demanded online_spelloff tile, but D5 RETIRED the
+      hub teaser and `hidden` beats a flag;
+    - the es test pinned "tiles are localized" to syllable_replay,
+      which the registry has since marked hidden — pinning a law to one
+      mode is how it rotted;
+    - the Kid Mode test carried a two-name allowlist and so had been
+      calling a CORRECT app a kid-safety leak ever since `practice`
+      became kidSafe.
+  All three now assert the current law and, where possible, the
+  underlying safety property rather than a list that can rot (Kid Mode
+  checks "no adult-only mode is ever kid-visible, and nothing shown is
+  locked or a teaser"; modes.rs keeps owning the exact menu).
+  CONSEQUENCE: the gate's tolerance clause is RETIRED. It permitted up
+  to three hub reds, which meant a new hub failure could hide behind
+  "just the known three". Zero means zero now.
