@@ -370,50 +370,41 @@ fn live_runs<'a>(state: &'a wordpic::State, lang: &str) -> Vec<&'a wordpic::Run>
     live
 }
 
-/// The resume affordances one render emits: (cards, overflow). Disjoint
-/// by construction and each free of duplicates — asserted in tests.
-fn resume_split(state: &wordpic::State, lang: &str) -> (Vec<String>, Vec<String>) {
-    let live = live_runs(state, lang);
-    let mut cards = Vec::new();
-    let mut overflow = Vec::new();
-    for (n, r) in live.iter().enumerate() {
-        if wordpic::picture(&r.pic).is_none() {
-            continue;
-        }
-        if n < RESUME_CARDS {
-            cards.push(r.pic.clone());
-        } else {
-            overflow.push(r.pic.clone());
-        }
-    }
-    (cards, overflow)
+/// Every unfinished subject, most-recent first — THE in-progress history.
+///
+/// F5 (Eric, 2026-08-06: "1 in progress history where players can look at
+/// all the different Spell Pics they started and have not finished").
+/// There used to be two surfaces: a Continue strip capped at four and a
+/// gallery "In Progress" head that caught the fifth onward. That split is
+/// what made one subject look like it lived in two places, and it meant
+/// a player with five unfinished pictures had to know about both to see
+/// them all. One wrapped grid, everything in it, no overflow concept.
+fn resume_history(state: &wordpic::State, lang: &str) -> Vec<String> {
+    live_runs(state, lang)
+        .iter()
+        .filter(|r| wordpic::picture(&r.pic).is_some())
+        .map(|r| r.pic.clone())
+        .collect()
 }
 
-/// Visible Continue cards before the rest spill into the gallery head.
-const RESUME_CARDS: usize = 4;
-
-fn render_continue_row(state: &wordpic::State, lang: &str) -> Vec<String> {
+fn render_continue_row(state: &wordpic::State, lang: &str) {
     if !crate::dom::exists("wpResumeRow") {
-        return Vec::new();
+        return;
     }
     let live = live_runs(state, lang);
     let mut html = String::new();
-    let mut overflow = Vec::new();
-    for (n, r) in live.iter().enumerate() {
+    for r in live.iter() {
         let Some(p) = wordpic::picture(&r.pic) else { continue };
         let total = subject_total(p, lang);
-        if n < RESUME_CARDS {
+        {
             html.push_str(&format!(
                 "<button type=\"button\" class=\"wp-resume-card\" data-resume=\"{}\" aria-label=\"{}\">{}<span class=\"prog\">{}/{}</span></button>",
                 p.id, p.id, thumb_svg(&r.pic, lang, r), r.words.len(), total
             ));
-        } else {
-            overflow.push(r.pic.clone());
         }
     }
     dom::set_html("wpResumeRow", &html);
     dom::toggle_class("wpResumeRow", "btn-hide", html.is_empty());
-    overflow
 }
 
 thread_local! {
@@ -882,8 +873,11 @@ pub fn open_picker(app: &App) {
     }
     render_picker_body(app);
     let state = wordpic::load();
-    let overflow = render_continue_row(&state, &lang);
-    render_gallery_with_progress(&state, &lang, &overflow);
+    render_continue_row(&state, &lang);
+    // F5: the gallery shows FINISHED work only. Unfinished pictures live
+    // in exactly one place now (the Continue history above), so there is
+    // no second in-progress list to fall out of sync with it.
+    render_gallery(&state, &lang);
     dom::add_class("wpPicker", "show");
 }
 
@@ -1512,27 +1506,6 @@ fn wp_input() -> Option<web_sys::HtmlInputElement> {
 /// and lets a finished piece inherit every later renderer improvement --
 /// and it is only exact because the renderer is deterministic, which makes
 /// D5 a standing constraint on the renderer, not just a storage choice.
-fn render_gallery_with_progress(state: &wordpic::State, lang: &str, in_progress: &[String]) {
-    let mut extra = String::new();
-    if !in_progress.is_empty() {
-        extra.push_str(&format!("<div class=\"wp-gal-head\">{}</div>", i18n::t("wordpic.inProgress")));
-        let st = wordpic::load();
-        for pic in in_progress {
-            if let Some(r) = st.runs.iter().find(|r| r.pic == *pic && r.lang == lang && !r.done) {
-                extra.push_str(&format!(
-                    "<button type=\"button\" class=\"wp-resume-card small\" data-resume=\"{pic}\">{}</button>",
-                    thumb_svg(pic, lang, r)
-                ));
-            }
-        }
-    }
-    render_gallery(state, lang);
-    if !extra.is_empty() {
-        let cur = dom::el("wpGallery").inner_html();
-        dom::set_html("wpGallery", &format!("{extra}{cur}"));
-        dom::remove_class("wpGallery", "btn-hide");
-    }
-}
 
 fn render_gallery(state: &wordpic::State, lang: &str) {
     let mut html = String::new();
@@ -2395,46 +2368,46 @@ mod color_render_tests {
         assert_eq!(planted, plain, "a planted ref cannot color the learn shelf");
     }
 
-    /// AUDITPASS D5 — ONE RESUME AFFORDANCE PER SUBJECT.
+    /// AUDITPASS F5 — ONE IN-PROGRESS HISTORY, EVERY SUBJECT ONCE.
     ///
-    /// A subject mid-way through must offer exactly one place to resume
-    /// it. The Continue strip takes the first four; everything after
-    /// spills to the gallery head. The two lists must stay disjoint and
-    /// duplicate-free, so a player never sees the same unfinished
-    /// picture twice and cannot wonder which one holds their progress.
-    /// Seeded with more runs than fit in the strip so both sides are
-    /// exercised, plus a repeat touch to prove re-entry does not clone.
+    /// Eric asked for a single place listing every Spell Pic started and
+    /// not finished. Before, a four-card Continue strip held the recent
+    /// ones and a gallery "In Progress" head caught the rest, so the
+    /// answer to "what have I got going?" lived in two places and a
+    /// subject could look duplicated. Now one wrapped grid holds all of
+    /// them: no cap, no overflow, and the gallery carries finished work
+    /// only. Seeded past the old cap so a regression that reintroduces
+    /// one would show up as a short list.
     #[test]
-    fn one_resume_affordance_per_subject() {
+    fn one_in_progress_history_holds_every_unfinished_subject() {
         let mut st = wordpic::State::default();
         let ids: Vec<String> = wordpic::pictures()
             .iter()
-            .take(RESUME_CARDS + 3)
+            .take(7)
             .map(|p| p.id.clone())
             .collect();
-        assert!(ids.len() > RESUME_CARDS, "need more subjects than the strip holds");
         for id in &ids {
             st.open(id, "en");
             if let Some(live) = st.runs.iter_mut().find(|r| &r.pic == id && r.lang == "en") {
                 live.words.push("alpha".into());
             }
         }
-        // resuming an existing subject must not create a second record
-        st.open(&ids[0], "en");
+        st.open(&ids[0], "en"); // re-entering must not clone a record
 
-        let (cards, overflow) = resume_split(&st, "en");
-        assert_eq!(cards.len(), RESUME_CARDS, "the strip fills before it spills");
-        assert_eq!(cards.len() + overflow.len(), ids.len(), "every live run is offered once");
-
-        let mut all = cards.clone();
-        all.extend(overflow.iter().cloned());
-        let mut uniq = all.clone();
+        let history = resume_history(&st, "en");
+        assert_eq!(history.len(), ids.len(), "every unfinished subject is listed");
+        let mut uniq = history.clone();
         uniq.sort();
         uniq.dedup();
-        assert_eq!(all.len(), uniq.len(), "a subject was offered twice: {all:?}");
-        for c in &cards {
-            assert!(!overflow.contains(c), "{c} is in BOTH the strip and the gallery head");
+        assert_eq!(history.len(), uniq.len(), "and each exactly once: {history:?}");
+
+        // a finished run leaves the history for the gallery
+        if let Some(done) = st.runs.iter_mut().find(|r| r.pic == ids[1]) {
+            done.done = true;
         }
+        let after = resume_history(&st, "en");
+        assert_eq!(after.len(), ids.len() - 1, "finishing removes it from the history");
+        assert!(!after.contains(&ids[1]), "a finished subject is not 'in progress'");
     }
 
     /// Done #7 — the gallery is RETROACTIVE: runs store words, never

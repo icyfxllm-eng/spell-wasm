@@ -197,4 +197,33 @@ export async function run(browser, base, suite) {
       assert(checked, 'syllable replay defaults ON (resolve(stored, TRUE))');
     } finally { await ctx.close(); }
   });
+
+  await suite.test('btn_hide_actually_hides', async () => {
+    const { ctx, page } = await openApp(browser, base, { lang: 'en' });
+    try {
+      // AUDITPASS F16-adjacent. `.btn-hide` existed only in SCOPED forms
+      // (.launch.btn-hide, .wp-screen .btn-hide, …), so a bare use was
+      // not hidden at all — three 4px entry-point buttons stacked at the
+      // bottom of the base game as Eric's "stray white line", plus a
+      // 156x40 share button and the shield HUD. A second fault hid
+      // behind the first: shareBtn's INLINE display:block beat every
+      // stylesheet rule. Both are invisible to static reading, so this
+      // has to be measured in a browser.
+      const bad = await page.evaluate(() =>
+        [...document.querySelectorAll('.btn-hide')]
+          .filter((el) => {
+            const b = el.getBoundingClientRect();
+            return getComputedStyle(el).display !== 'none' && (b.height > 0 || b.width > 0);
+          })
+          .map((el) => el.id || el.className));
+      assert(bad.length === 0, `btn-hide failed to hide: ${JSON.stringify(bad)}`);
+      // ...and hiding must not become permanent: dropping the class reveals.
+      const shown = await page.evaluate(() => {
+        const el = document.getElementById('shareBtn');
+        el.classList.remove('btn-hide');
+        return getComputedStyle(el).display;
+      });
+      assert(shown !== 'none', 'removing btn-hide must reveal the element');
+    } finally { await ctx.close(); }
+  });
 }

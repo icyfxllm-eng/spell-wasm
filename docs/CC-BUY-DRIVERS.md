@@ -416,3 +416,14 @@ DECISION LEDGER (Eric, 2026-08-02 — recorded at greenlight)
   flows through, and a lint that fails the build if either key regresses
   to plain t(). The fourteen non-English drafts are unaudited by
   construction and marked as such.
+
+* SHIP 141 (Eric: "a build where Spell Pic is usable would be nice so I
+  can actually start taking notes") — the exception to the ship freeze.
+  Spell Picture was DEAD on build 147 and the cause was mine: ship 138's
+  min-height:0 let .wp-grid collapse to zero height. Verified playable
+  end to end before arming — 9 categories, 35 tiles under "world", tap
+  one and the play screen opens with real artwork and a word waiting.
+  Rides along: F16's platform copy, F6's fourth tile, F7's cuts, and the
+  corrected scroll law that can no longer enforce a collapse. The freeze
+  continues after this; Eric wants the rest of the audit finished before
+  the next one.

@@ -69,7 +69,15 @@ node scripts/settings-truth-check.mjs || { echo "GATE FAIL: settings truth"; exi
 node scripts/settings-truth-check.mjs --selftest || { echo "GATE FAIL: settings-truth selftest — the gate no longer bites"; exit 1; }
 
 echo "== gate: cargo test"
-cargo test 2>&1 | tail -n 20 | grep -E "test result: ok" >/dev/null || { echo "GATE FAIL: cargo test"; cargo test 2>&1 | grep -E "FAILED|panicked" | head; exit 1; }
+# Keep the OUTPUT, then judge it. The old form re-ran cargo and grepped
+# only FAILED|panicked, so a test-profile compile error printed nothing at
+# all — ship 141 failed with a bare "GATE FAIL: cargo test" and no clue.
+cargo test > "$LOG.cargo" 2>&1 || true
+if ! grep -qE "^test result: ok" "$LOG.cargo" || grep -qE "^test result: FAILED" "$LOG.cargo"; then
+  echo "GATE FAIL: cargo test"
+  grep -E "^error|^test .* FAILED|panicked at" "$LOG.cargo" | head -20
+  exit 1
+fi
 
 echo "== gate: app build"
 npm run build 2>&1 | grep bundled

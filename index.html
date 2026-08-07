@@ -276,6 +276,24 @@
   .meta-icon:hover{border-color:var(--amber);color:var(--ink)}
   .meta-icon:active{transform:translateY(1px)}
   .meta-icon.signed-in{border-color:var(--teal);color:var(--teal)}
+  /* THE btn-hide rule. It only ever existed in SCOPED forms
+     (.launch.btn-hide, .data-chip.btn-hide, and other per-surface
+     variants), so a bare class="btn-hide" matching none of them was not
+     hidden at all. NOTE: this comment ships in the site build and the
+     wall scan reads it, so it must not name any app-only surface —
+     spelling one out here is what failed the gate the first time. Five
+     elements rendered that the code intends hidden: the three 4px
+     entry-point buttons stacked at the very bottom of the base game
+     (Eric's "stray white line" — default #efefef button chrome), a
+     156x40 share button, and the shield HUD. Every scoped variant also
+     sets display:none, so this is a strict superset, not a behaviour
+     change. */
+  /* shareBtn needs display:block for `margin:0 auto` to centre it, but
+     that lived INLINE — and an inline style beats every stylesheet rule,
+     so .btn-hide could never hide it. As a class it sits above the hide
+     rule and loses to it on source order, which is the whole point. */
+  .share-cta{display:block;margin:0 auto 6px}
+  .btn-hide{display:none}
   .meta-icon.btn-hide{display:none}
 
   /* Group rows inside the centered stage, one per functional class */
@@ -1204,6 +1222,11 @@
       <button class="launch" id="vsBtn">⚡ <span data-i18n="top.headToHead">Spell Off</span></button>
       <button class="launch" id="climbBtn" data-i18n="top.theClimb">🏔 The Climb</button>
       <button class="launch" id="dailyBtn">🗓 Daily</button>
+      <!-- SPELL-PICTURE:BEGIN F6 home tile. The whole region is cut
+           from the site build (scripts/build-web.sh), sentinels and
+           all — I1 says the site carries no picture markup, and the
+           wall scan caught this the first time because even the
+           COMMENT named tools.wordpic.name. -->
       <!-- AUDITPASS F6 / D3. Eric's note said "replace the Climb tile",
            but climbBtn above is The Climb's ONLY entrance (climb.rs wires
            it to open_leaderboard, and ghost.rs reaches the mode by
@@ -1214,6 +1237,7 @@
            rather than minting a sixteenth string that would owe fourteen
            more unaudited translations. -->
       <button class="launch" id="wordPicTile"><span aria-hidden="true">🖼</span> <span data-i18n="tools.wordpic.name">Spell Picture</span></button>
+      <!-- SPELL-PICTURE:END -->
       <!-- Say It (Feature F2): on-device pronunciation practice. Ships DARK —
            stays btn-hide until the feature flag is on AND the native speech
            bridge is present AND Kid Mode is off (say_it::reflect_gating). -->
@@ -1343,7 +1367,7 @@
        best run exists for the language. Augments the chain bar without obscuring
        it; stays hidden otherwise (and entirely when the feature flag is off). -->
   <div class="ghost-pace btn-hide" id="ghostPace" aria-live="polite"></div>
-  <button class="pill btn-hide" id="shareBtn" data-i18n-aria="share.button" aria-label="Share your chain" style="margin:0 auto 6px;display:block">↗ <span data-i18n="share.button">Share your chain</span></button>
+  <button class="pill share-cta btn-hide" id="shareBtn" data-i18n-aria="share.button" aria-label="Share your chain">↗ <span data-i18n="share.button">Share your chain</span></button>
 
   <section class="card stats">
     <h2><span data-i18n="card.accuracy">Your accuracy</span> <span class="scope" id="statsLang"></span></h2>

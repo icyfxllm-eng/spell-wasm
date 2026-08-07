@@ -245,7 +245,7 @@ mod tests {
         // surface (D1: free, drives daily play), so it tiles here. FIVE now.
         assert_eq!(
             got,
-            vec!["practice", "ghost_racing", "def_match", "word_picture", "reports", "calendar", "translate"],
+            vec!["practice", "def_match", "word_picture", "reports", "calendar", "translate"],
             "en Kid: practice, then the six companion tiles (D2: kid gets the full translator core)"
         );
         assert!(!got.contains(&"say_it".to_string()), "say_it is never kid-visible (COPPA)");
@@ -258,7 +258,7 @@ mod tests {
         let c = HubCtx { kid: true, lang: "es".into(), ..ctx() };
         // CC-HUB-CLEANUP D2/D5 (+ Word Picture and Quest Log
         // reconciliations): the pruned menu holds even on es.
-        assert_eq!(ids(&visible(&all, &c)), vec!["practice", "ghost_racing", "def_match", "word_picture", "reports", "calendar", "translate"]);
+        assert_eq!(ids(&visible(&all, &c)), vec!["practice", "def_match", "word_picture", "reports", "calendar", "translate"]);
     }
 
     #[test]
@@ -266,7 +266,11 @@ mod tests {
         let all = all();
         let c = HubCtx { native: false, ..ctx() };
         let got = ids(&visible(&all, &c));
-        assert!(got.contains(&"ghost_racing".to_string()), "ghost racing is all-platforms");
+        // AUDITPASS F7: ghost_racing is CUT (status:hidden), so it is no
+        // longer this test's all-platform witness. def_match carries that
+        // — the point is that a non-iOS mode still tiles on web, not that
+        // any particular mode does.
+        assert!(got.contains(&"def_match".to_string()), "an all-platform mode still tiles on web");
         for ios_only in ["say_it", "photo_list", "spell_aloud", "reports", "calendar", "translate"] {
             assert!(!got.contains(&ios_only.to_string()), "{ios_only} is iOS-only");
         }
@@ -275,10 +279,21 @@ mod tests {
     #[test]
     fn a23_full_only_mode_is_absent_on_a_previewed_language() {
         let all = all();
-        // ghost_racing needs Full (preview_allows denies GhostRace to Preview).
+        // AUDITPASS F7 hollowed this out and it should say so. Only two
+        // modes were ever entitlementLevel:"full" — ghost_racing, now CUT,
+        // and online_spelloff, which is hidden with its flag off. So no
+        // LIVE mode requires Full, and the assertion below now passes
+        // because ghost is cut, not because entitlement gated anything.
+        // Kept (absence must never become a lock) but no longer proof of
+        // Full-tier gating: when a Full mode goes live, assert on THAT.
         let c = HubCtx { level: AccessLevel::Preview, ..ctx() };
         let got = ids(&visible(&all, &c));
         assert!(!got.contains(&"ghost_racing".to_string()), "absent on a previewed language — NOT locked");
+        assert!(
+            all.iter().filter(|m| m.status == Status::Live)
+                .all(|m| m.entitlement_level != Level::Full),
+            "a Full-tier mode went live — point this test at it and delete this note"
+        );
         // ...and a preview-level mode survives (practice is free at PREVIEW).
         let c2 = HubCtx { level: AccessLevel::Preview, lang: "es".into(), ..ctx() };
         assert!(ids(&visible(&all, &c2)).contains(&"practice".to_string()));
@@ -313,8 +328,13 @@ mod tests {
         let all = all();
         let c = HubCtx { enabled: vec![], ..ctx() };
         assert!(visible(&all, &c).is_empty(), "no flags on -> no tiles");
-        let c = HubCtx { enabled: vec!["ghost_racing".into()], ..ctx() };
-        assert_eq!(ids(&visible(&all, &c)), vec!["ghost_racing"]);
+        // AUDITPASS F7: ghost_racing is hidden now, and `hidden_beats_an_
+        // enabled_flag` below already pins that a hidden mode stays dark.
+        // This case needs a LIVE mode to show the flag actually gates, so
+        // it uses def_match — otherwise it would pass because the mode is
+        // cut rather than because the flag is off.
+        let c = HubCtx { enabled: vec!["def_match".into()], ..ctx() };
+        assert_eq!(ids(&visible(&all, &c)), vec!["def_match"]);
     }
 
     /// ...and `hidden` still beats an ON flag. word_stories' flag can be flipped
