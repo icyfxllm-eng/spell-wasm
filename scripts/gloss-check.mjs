@@ -7,11 +7,16 @@ import path from "node:path";
 
 const ROOT = path.dirname(new URL(import.meta.url).pathname) + "/..";
 const src = fs.readFileSync(`${ROOT}/src/word_data.rs`, "utf8");
+// Chinese lives in its own file because it stores `pinyin|hanzi` pairs
+// rather than bare words. Its gloss keys are the pinyin half, which is
+// what pool() below yields for every language.
+const zhSrc = fs.readFileSync(`${ROOT}/src/words.rs`, "utf8");
 
 function pool(lang) {
   const out = new Set();
+  const from = lang === "zh" ? zhSrc : src;
   for (const tier of ["EASY", "MEDIUM", "HARD", "EXPERT"]) {
-    const m = src.match(new RegExp(`pub const ${lang.toUpperCase()}_${tier}: &\\[&str\\] = &\\[([^;]*)\\];`, "s"));
+    const m = from.match(new RegExp(`pub const ${lang.toUpperCase()}_${tier}: &\\[&str\\] = &\\[([^;]*)\\];`, "s"));
     if (!m) continue;
     for (const w of m[1].matchAll(/"([^"]+)"/g)) out.add(w[1].split("|")[0]);
   }

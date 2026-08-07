@@ -357,3 +357,31 @@ DECISION LEDGER (Eric, 2026-08-02 — recorded at greenlight)
   fix is medial-axis extraction, a real build. Two CC-BY candidates were
   rejected on the way: invariant 1 is PD/CC0 only.
   CALENDAR D3 signed, closing the last ledger/tree contradiction.
+
+* SHIP 137 (Eric: "ship 137 for the gloss when gates pass") — the gloss
+  wave. The translator's pivot goes from 39 rows in three languages to
+  2,662 across all fourteen banked ones, authored from a single
+  300-concept core list and filtered by the three laws, so the yield is
+  a measurement rather than a target. zh is included and was never a
+  candidate for cutting: 6,500 words, second-deepest bank in the game.
+  My "zh is empty" reading came from grepping word_data.rs, which holds
+  the other fourteen; Chinese lives in words.rs because it stores
+  pinyin|hanzi pairs. gloss-check.mjs learned to read that file.
+  EVERYTHING STAYS DARK. `audited` is false in all fourteen and the
+  resolver still gates on it — now covered by a test that loads all
+  2,662 rows through the real include_str! pipe and asserts the
+  resolver yields None anyway. Rows existing must never be what lights
+  a language up; only a native speaker's signature is.
+  THIS SHIP CHANGES NOTHING A USER CAN SEE. That is the point: the
+  tables, loader, CI and resolver are now complete, so the ONLY thing
+  between the translator and being usable is one signature. Spanish at
+  258 rows is the obvious first ask.
+  FOUND ON THE WAY, all filed and none worked around: BD-G1 the German
+  bank lacks mann/frau/mutter/vater/kopf/bein; BD-G2 the German bank is
+  97% lowercase so its nouns are stored against German orthography
+  (grossmutter, not Großmutter) and a German speller is being taught
+  wrong spelling; BD-G3 the widest one — core-vocabulary coverage is
+  poor across most banks (hi 9/15 on a fifteen-word floor, missing even
+  "book" and "milk"), because the generation wave measured volume and
+  never measured coverage. Gloss yield now serves as that missing
+  coverage metric and is recomputed on every gate run.

@@ -117,3 +117,88 @@ exactly one resolver, the per-pair/per-pack tables stay EMPTY until each
 audit lands (asserted in-engine by
 `authored_tables_are_dark_until_audited`), and the machine-translation
 ban — the one guard that never relaxes — stands untouched.
+
+## Gloss wave 1 — 39 rows to 2,662 (2026-08-06, post-136)
+
+Eric: "build the 300 concept gloss for all languages so chinese is an
+empty shell and should just be cut?"
+
+CHINESE IS NOT AN EMPTY SHELL — I reported that wrongly and the
+correction matters. zh holds 6,500 words, second-deepest in the game,
+plus 1,170 CC-CEDICT rows in backend/zh_glosses.json, its own keyboard,
+kid-exclude list, definition pool and bank builder. My zero came from
+grepping src/word_data.rs, which holds fourteen languages; zh lives
+alone in src/words.rs because it stores `pinyin|hanzi` pairs. Nothing
+was cut.
+
+The gloss now covers all fourteen banked languages. Every row was
+authored from one 300-concept core list and then FILTERED by the three
+laws, so the yield is a measurement, not a target — the counts are in
+config/gloss/README.md. scripts/gloss-check.mjs learned to read
+words.rs for zh; translate.rs include_str!s all fourteen files.
+
+Everything stays DARK. `audited` is still false everywhere and the
+resolver still gates on it, which is now covered by a test that loads
+all 2,662 rows through the real include_str! pipe and asserts the
+resolver yields None anyway — rows existing must never be the thing
+that lights a language up.
+
+TWO BANK DEFECTS FOUND, both filed rather than worked around:
+
+* BD-G1 GERMAN BANK VOCABULARY. `mann`, `frau`, `mutter`, `vater`,
+  `kopf`, `bein` are absent in every casing from a 6,809-word bank that
+  does contain `kind`, `haus`, `hund`, `wasser`. German glosses cannot
+  exceed the bank, so de landed 169 where its peers landed ~250.
+* BD-G2 GERMAN CASING. The bank is 97% lowercase — 170 of 6,809 words
+  capitalised, all in the EASY tier. German nouns are therefore stored
+  against German orthography, and `Großmutter` is in the bank as
+  `grossmutter` (ß is inconsistent too: 73 words use ß, 263 use ss).
+  A German speller is being taught wrong spelling. This is a bank fix,
+  not a gloss fix, and it needs Eric's call on whether the bank
+  recapitalises or the comparator formally goes case-blind.
+
+OPEN, unchanged by this wave: no language renders until a named native
+speaker signs one. That is now the ONLY thing between the translator
+and being usable — the tables, the loader, the CI and the resolver are
+all done. Spanish is the obvious first ask at 258 rows.
+
+### CORRECTION + widening: BD-G3, core-vocabulary coverage (all banks)
+
+I told Eric Korean's 38% was "probably verb form, recoverable, unlike
+German." That was wrong and the correction changes the action. Of ko's
+169 misses only 41 are `-다` verbs, and only 12 of those have a stem in
+the bank. The other 128 are plain nouns the bank simply does not have:
+태양 sun, 곰 bear, 팔 arm, 피 blood, 뼈 bone, 소년 boy. Korean is the
+same disease as German, not a different one.
+
+So I measured it directly — fifteen words no general bank can lack,
+checked against each bank in its own stored form:
+
+```
+es 15/15   fil 15/15   pt 15/15   fr 14/15   pl 14/15   sw 14/15
+ru 13/15   ko 13/15    ar 12/15   vi 12/15   ja 11/15   de 10/15
+hi  9/15
+```
+
+hi is missing सूरज sun, आदमी man, औरत woman, रोटी bread, दूध milk and
+किताब book. A Hindi speller cannot be asked to spell "book".
+
+THE SHAPE OF THE DEFECT: the banks are not thin, they are MISCOMPOSED.
+ru/ar/ko/ja each hold ~6,800 words while missing words a first-week
+learner needs. The generation wave optimised for count against a
+per-language floor, and nothing ever asserted that the commonest words
+were among them. Volume was measured; coverage never was.
+
+USEFUL SIDE EFFECT: gloss yield IS a coverage metric. Each language's
+row count is exactly "how many of one fixed 300-concept core list this
+bank can express", measured through the same three laws for every
+language. es 258 and hi 119 is not a statement about Spanish and Hindi
+— it is a statement about two banks. That number is now recomputed by
+scripts/gloss-check.mjs on every run, so the regression is watched
+even before anyone decides to fix it.
+
+NOT FIXED, needs Eric: filling core vocabulary means regenerating parts
+of thirteen banks, which moves word IDs and therefore touches saved
+progress, offline packs and the composite pin law. That is a wave, not
+a patch, and it is his call whether it precedes or follows a native
+speaker signing Spanish.

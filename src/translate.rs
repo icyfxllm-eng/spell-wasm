@@ -105,10 +105,24 @@ fn gloss_docs() -> &'static std::collections::HashMap<&'static str, GlossDoc> {
         std::sync::OnceLock::new();
     G.get_or_init(|| {
         let mut m = std::collections::HashMap::new();
+        // Every language with a bank gets a table. zh's keys are the
+        // bank's own pinyin half (`fang2zi5`), because that is the form
+        // the pool is keyed by — see scripts/gloss-check.mjs.
         for (lang, raw) in [
             ("es", include_str!("../config/gloss/es.json")),
             ("fr", include_str!("../config/gloss/fr.json")),
             ("de", include_str!("../config/gloss/de.json")),
+            ("pt", include_str!("../config/gloss/pt.json")),
+            ("pl", include_str!("../config/gloss/pl.json")),
+            ("ru", include_str!("../config/gloss/ru.json")),
+            ("vi", include_str!("../config/gloss/vi.json")),
+            ("fil", include_str!("../config/gloss/fil.json")),
+            ("sw", include_str!("../config/gloss/sw.json")),
+            ("ja", include_str!("../config/gloss/ja.json")),
+            ("ko", include_str!("../config/gloss/ko.json")),
+            ("ar", include_str!("../config/gloss/ar.json")),
+            ("hi", include_str!("../config/gloss/hi.json")),
+            ("zh", include_str!("../config/gloss/zh.json")),
         ] {
             if let Ok(doc) = serde_json::from_str::<GlossDoc>(raw) {
                 m.insert(lang, doc);
@@ -471,6 +485,29 @@ mod tests {
         // Acceptance #2's unit face: with no glossAudited language the
         // resolver yields nothing — absent, not locked, not generated.
         assert!(gloss_rows("water", "en").is_empty());
+    }
+
+    #[test]
+    fn every_banked_language_loads_a_gloss_through_the_real_pipe() {
+        // Not a constructed table — this reads what include_str! actually
+        // compiled in, so a file added to config/gloss/ without being
+        // wired here fails instead of silently sitting on disk.
+        let docs = gloss_docs();
+        for lang in ["es", "fr", "de", "pt", "pl", "ru", "vi", "fil", "sw", "ja", "ko", "ar",
+                     "hi", "zh"] {
+            let d = docs.get(lang).unwrap_or_else(|| panic!("{lang} gloss not compiled in"));
+            assert!(d.rows.len() >= 100, "{lang} has only {} rows", d.rows.len());
+            assert!(!d.audited, "{lang} claims audited — only a human signs that");
+        }
+        // the rows really carry the pairs — a Latin bank, and zh whose
+        // keys are the bank's pinyin half
+        assert_eq!(docs["es"].rows.get("agua").map(|s| s.as_str()), Some("water"));
+        assert_eq!(docs["zh"].rows.get("fang2zi5").map(|s| s.as_str()), Some("house"));
+        // ...and they stay DARK through the resolver regardless, because
+        // the gate is `audited`, not "are there rows". 2662 loaded rows
+        // must not leak one visible pair.
+        assert_eq!(word_for_concept("es", "water"), None);
+        assert_eq!(concept_of("zh", "fang2zi5"), None);
     }
 
     #[test]
