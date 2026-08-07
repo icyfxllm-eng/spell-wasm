@@ -6,6 +6,7 @@
 //!   __spelltest.currentSpoken()    -> what TTS speaks (hanzi for zh, else = word)
 //!   __spelltest.currentTier()      -> the active difficulty tier
 //!   __spelltest.currentLang()      -> the active word language
+//!   __spelltest.rate()             -> the live TTS playback rate
 //!   __spelltest.pool(lang, tier)   -> the full word bank for (lang, tier), JSON
 //!   __spelltest.build()            -> "testseam" marker string
 //!   __spelltest.picWord()          -> the word Spell Picture is waiting on
@@ -34,6 +35,17 @@ pub fn install(app: &App) {
         let a = app.clone();
         let cb = Closure::<dyn Fn() -> String>::new(move || a.borrow().word.clone());
         set(&obj, "currentWord", cb.into_js_value());
+    }
+    {
+        // AUDITPASS F8. Derived state the player can already hear, so
+        // reading it observes rather than bypasses — same category as
+        // currentTier(). The Rust test pins the CONSTANT (0.55); this
+        // lets e2e prove the constant actually reached a running
+        // session, which is the failure this whole audit was about: a
+        // value that is correct in source and never arrives.
+        let a = app.clone();
+        let cb = Closure::<dyn Fn() -> f64>::new(move || a.borrow().rate as f64);
+        set(&obj, "rate", cb.into_js_value());
     }
     // Spell Picture keeps its own feed, so the base game's currentWord is
     // not the picture's. CC-FINALE Done #2 needs a picture played to

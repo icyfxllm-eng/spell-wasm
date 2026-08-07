@@ -207,6 +207,16 @@
      aligned with its hidden input, and the orb/canvas are already large);
      everything here is a reflowing text block, so growing it doesn't break
      layout. Extend this list to cover any new interface text. */
+  /* AUDITPASS F8 (Eric, 2026-08-06): BIG TEXT REACHES THE PLAY SURFACE.
+     The 32 rules below this one scale chrome — labels, notes, captions,
+     the footer — and not one of them touched the word being spelled.
+     A child turns this on because reading is hard, and the single
+     thing that stayed small was the thing they were reading. */
+  body.big-text .ltr{ font-size:32px; }
+  body.big-text .hint-line{ font-size:23px; }
+  body.big-text .feedback{ font-size:19px; }
+  body.big-text .meaning{ font-size:17px; }
+  body.big-text .tries-line{ font-size:14px; }
   body.big-text .brand .tag{ font-size:19px; }
   body.big-text .glow-pick .gl,
   body.big-text .chain .lbl,
@@ -281,6 +291,10 @@
   .data-chip .dc-badge{background:var(--panel-2);border:1px solid var(--edge);color:var(--muted);border-radius:999px;min-width:22px;padding:1px 7px;font-size:12px;font-weight:700;text-align:center}
   .data-chip.btn-hide{display:none}
   /* F1 photo-to-word-list review chips (only present when the feature flag is on) */
+  /* AUDITPASS F8: a setting a mode overrides must LOOK overridden —
+     a live-looking switch that ignores you is the original complaint. */
+  .set-row.suppressed{opacity:.5}
+  .set-row.suppressed .switch{cursor:not-allowed}
   .pchips{display:flex;flex-direction:column;gap:6px;max-height:46vh;overflow-y:auto;min-height:0;margin:4px 0 2px}
   .pchip-row{display:flex;align-items:center;gap:8px}
   .pchip-row .pchip{flex:1;min-width:0;min-height:40px;background:var(--panel-2);border:1px solid var(--edge);color:var(--ink);border-radius:10px;padding:6px 10px;font-size:15px}

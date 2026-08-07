@@ -64,6 +64,10 @@ python3 tools/bank/verify_pins.py || { echo "GATE FAIL: composite pin law violat
 echo "== gate: reachability laws — scroll + modal nesting (AUDITPASS F1/F4)"
 node scripts/scroll-check.mjs || { echo "GATE FAIL: scroll law"; exit 1; }
 
+echo "== gate: settings truth (AUDITPASS F8)"
+node scripts/settings-truth-check.mjs || { echo "GATE FAIL: settings truth"; exit 1; }
+node scripts/settings-truth-check.mjs --selftest || { echo "GATE FAIL: settings-truth selftest — the gate no longer bites"; exit 1; }
+
 echo "== gate: cargo test"
 cargo test 2>&1 | tail -n 20 | grep -E "test result: ok" >/dev/null || { echo "GATE FAIL: cargo test"; cargo test 2>&1 | grep -E "FAILED|panicked" | head; exit 1; }
 

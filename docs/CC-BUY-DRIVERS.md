@@ -400,3 +400,12 @@ DECISION LEDGER (Eric, 2026-08-02 — recorded at greenlight)
   suite is 82/82. F5 is NOT in this ship — the code contradicts D5, so
   it goes back to Eric instead of getting a fix aimed at the wrong
   cause. Full diagnoses in docs/CC-AUG6-AUDITPASS.md.
+
+* SHIP 140 (Eric: "ship 140 if it's clean") — the settings-truth gate.
+  Seventeen controls, seventeen declared effects, thirteen live web
+  effect tests and four owed a device pass. The invariant is permanent
+  and self-checking: a new toggle without an effect test fails the
+  build, and the gate proves it still bites on every run. Big Text now
+  reaches the play surface, which it never has. One real dead switch
+  fell out of writing the tests, and it folds into the F7 cut. Full
+  account in docs/CC-AUG6-AUDITPASS.md.

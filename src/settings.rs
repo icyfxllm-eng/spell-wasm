@@ -60,6 +60,22 @@ pub fn apply_reminder(state: &AppState) {
     crate::notifications::apply(state.remind && !state.kid, &state.remind_time);
 }
 
+
+/// Renders a control as overridden-by-a-mode: the switch is disabled and
+/// its row carries `.suppressed`, so the state is visible to the player
+/// and assertable by an effect test. Paired with the `suppressed_by`
+/// column in config/settings-effects.json — recording an override
+/// without showing it only fixes the documentation.
+fn set_suppressed(toggle_id: &str, on: bool) {
+    if !dom::exists(toggle_id) {
+        return;
+    }
+    dom::input(toggle_id).set_disabled(on);
+    if let Some(row) = dom::el(toggle_id).closest(".set-row").ok().flatten() {
+        let _ = row.class_list().toggle_with_force("suppressed", on);
+    }
+}
+
 /// Marks whichever swatch under `container_id` matches `color` as active,
 /// clearing the others.
 fn sync_swatches(container_id: &str, selector: &str, color: &str) {
@@ -204,6 +220,15 @@ pub fn apply_settings(app: &App) {
     dom::input("bigTextToggle").set_checked(s.big_text);
     dom::input("slowToggle").set_checked(s.slow);
     dom::input("remindToggle").set_checked(s.remind);
+    // AUDITPASS F8 — a control a mode OVERRIDES must look overridden.
+    // Kid Mode suppresses the daily reminder (`remind && !kid` in
+    // apply_reminder), and until now the row stayed a live-looking
+    // switch the player could move to no effect. That is the exact
+    // complaint the Aug 6 audit filed as "dead switches": five of the
+    // seventeen controls are suppressed by Kid Mode, and none of them
+    // said so. Disabling the input also makes the override reachable to
+    // a test, which is what `suppressed_by` in the manifest asserts.
+    set_suppressed("remindToggle", s.kid);
     dom::input("remindTime").set_value(&s.remind_time);
     dom::input("volumeSlider").set_value(&s.volume.to_string());
     audio_boost::set_gain(s.volume);
@@ -223,4 +248,59 @@ pub fn apply_settings(app: &App) {
     // Pillar 3: keep the Tools hub rows (switch states, availability hints, and
     // Kid-Mode visibility) in sync every time Settings is applied/opened.
     crate::tools_hub::reflect(app);
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    /// AUDITPASS F8 — `settings_effect_slow_rate`, the constant half.
+    ///
+    /// Slower Voice was never unwired: it reached both the server path
+    /// (`audio.set_playback_rate`) and the native path (SpeechRate's
+    /// `avRate(fromGameRate:)`) the whole time. It read as a dead switch
+    /// because 0.9 -> 0.7 is a 1.29x duration change — over the 1.25x
+    /// bar and still imperceptible. Eric set 0.55 (~1.64x) on
+    /// 2026-08-06. This pins the constant so a future "tidy-up" cannot
+    /// quietly walk it back toward inaudible; the e2e half proves the
+    /// value actually reaches a live session.
+    #[test]
+    fn settings_effect_slow_rate() {
+        let mut s = AppState::default();
+        s.slow = true;
+        s.rate = if s.slow { 0.55 } else { 0.9 };
+        assert!(s.rate <= 0.6, "slow must be audibly slow, got {}", s.rate);
+        let slow_ratio = 0.9 / s.rate;
+        assert!(
+            slow_ratio >= 1.25,
+            "a word must take >= 1.25x as long when slowed, got {slow_ratio:.2}x"
+        );
+        s.slow = false;
+        s.rate = if s.slow { 0.55 } else { 0.9 };
+        assert_eq!(s.rate, 0.9, "normal is unchanged");
+    }
+
+    /// AUDITPASS D8 — the Kid Mode default is a DEFAULT, not an override.
+    ///
+    /// `extra_attempt_ctx` used to read `extra_attempts || kid`, so the
+    /// switch did nothing in Spell Jr. Now Kid Mode seeds the preference
+    /// once (via `extra_attempts_seen`) and then obeys it — including a
+    /// parent turning it off, which the old code could not express.
+    #[test]
+    fn kid_mode_defaults_extra_attempts_without_overriding_them() {
+        // a device already in Kid Mode from before the flag existed
+        let mut st = AppState::default();
+        st.kid = true;
+        let legacy = Prefs { kid: true, extra_attempts: false, extra_attempts_seen: false, ..Default::default() };
+        assert!(
+            legacy.extra_attempts || (st.kid && !legacy.extra_attempts_seen),
+            "a pre-flag Kid Mode device keeps the second try it already had"
+        );
+        // once a choice is recorded, OFF means OFF even in Kid Mode
+        let chosen = Prefs { kid: true, extra_attempts: false, extra_attempts_seen: true, ..Default::default() };
+        assert!(
+            !(chosen.extra_attempts || (st.kid && !chosen.extra_attempts_seen)),
+            "a parent turning the second try off is obeyed in Spell Jr"
+        );
+    }
 }

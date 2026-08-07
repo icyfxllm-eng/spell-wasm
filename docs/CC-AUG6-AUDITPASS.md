@@ -168,3 +168,56 @@ Four of those are deliberate; one was the D8 bug. Spell Jr silently
 overrides nearly a third of the settings surface and none of it renders
 as overridden, which is very likely what most of the "dead switches"
 in the audit actually were. The CI half of F8 is not in this ship.
+
+## Ship 140 — F8, the settings-truth invariant
+
+The gate is `scripts/settings-truth-check.mjs`. It deliberately does NOT
+check wiring, because diagnosing all seventeen controls produced the
+finding that shapes this feature: EVERY control was already wired. Not
+one was disconnected. A connectivity check would have gone green on all
+seventeen while every symptom Eric found stayed broken. They failed
+three other ways — SUPPRESSED by a mode, TOO SMALL to perceive, or
+UNSERVED by a backend that does not exist.
+
+So the gate checks that each control names an observable effect and a
+test that EXISTS, and that a mode-overridden control declares its
+suppressor. Five laws: rendered ⊆ manifest, manifest ⊆ rendered, an
+effect stated, a live effect test named, `suppressed_by` present (null
+is a claim too). `--selftest` plants a dead toggle and must fail the
+build — the gate runs BOTH itself and its selftest, so a gate that
+stops biting is itself a gate failure.
+
+FOUND BY WRITING THE TESTS — one genuinely dead switch. `toolSayItToggle`
+has exactly one consumer, gating `wire()` for a mode the code calls
+dormant with no entry points; the Spell It launcher beside it is gated
+by `spell_aloud`. It resolves into the F7 cut rather than needing a fix.
+
+SUPPRESSED ROWS NOW SAY SO. Five of seventeen controls are overridden by
+Kid Mode (extra attempts, reminders, Say It, photo import, Ghost
+Racing). Four are deliberate and NONE of them told the player — a live
+looking switch that ignores you is most of what "dead switch" meant in
+the audit. `set_suppressed` disables the input and marks the row.
+
+BIG TEXT REACHES THE PLAY SURFACE (Eric, 2026-08-06). All 32 existing
+rules scaled chrome — labels, notes, captions, footer — and nothing
+matched the word being spelled. A child turns this on because reading
+is hard, and the one thing that stayed small was the thing they were
+reading. `.ltr` 24->32, hint 18->23, feedback 15->19, meaning 13.5->17.
+
+HARNESS SPLIT. Four tools are Avail::Native/Server; in headless
+Chromium `native_lang::available()` is false, so flipping those flags
+changes nothing a web test could see and an assertion would pass for the
+WRONG REASON. They declare `harness:"device"` and a `maestro:` id, owed
+a device pass. Calling them covered would have been the same lie the
+gate exists to catch.
+
+THREE OF MY OWN MISTAKES, all caught by the tests rather than review:
+the prefs key was `spell_prefs` (real: `byear_prefs_v1`), which would
+have compared undefined === false and passed vacuously; the big-text
+assertion measured `body`, which no rule touches (16 -> 16); then it
+scoped to `#setupScrim`, but the document's first `.set-row .lbl2 small`
+lives in `#accountScrim`. A test asserting `classList.contains` would
+have been green through all three.
+
+App suite 82 -> 91. The count was checked, not the registration:
+placement.mjs was registered for weeks and never ran.

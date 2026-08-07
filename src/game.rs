@@ -1528,12 +1528,13 @@ fn finalize_incorrect_ex(app: &App, glyph: &str, prefix: &str, feedback_class: &
     // syllables with a "hear it slowly" control that replays the word
     // syllable-by-syllable, highlighting each in turn.
     //
-    // This comment used to claim "Flag OFF (default) => zero behavioral
-    // difference". That was false: flags::syllable_replay() is resolve(stored,
-    // TRUE) — it defaults ON. What actually makes this unreachable is the `es`
-    // gate, since Spanish is ComingSoon and cannot be played. Different reason,
-    // same outcome, but "it's behind an off flag" would have been a dangerous
-    // thing to believe while editing it.
+    // Reachability, stated once and correctly: the flag defaults ON
+    // (resolve(stored, TRUE)) and every language in BUILTIN_LANGS is
+    // Active, so the `es` branch below IS reachable in the app — the
+    // site is the English-only build, not this one. A previous note here
+    // claimed Spanish was ComingSoon and could not be played, which was
+    // true when written and false by the time anyone read it. The `es`
+    // gate is a deliberate scope limit, not a dead branch.
     //
     // CC-RTL F4: the `.syl` branch below emits one <span> PER SYLLABLE, which is
     // the same shattering that F4 removed from #letters — a cursive word split

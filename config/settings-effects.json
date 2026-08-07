@@ -1,72 +1,166 @@
 {
   "note": "CC-AUG6-AUDITPASS F8 — the settings-truth manifest. Every RENDERED control maps to an entry here, and every entry names an observable effect plus the test that proves it. A switch with no effect test fails the build. `suppressed_by` exists because the Aug 6 audit's 'dead switches' were mostly NOT unwired — all 17 controls were connected. They were alive and overridden: extra attempts forced ON by Kid Mode, reminders forced OFF by Kid Mode. A control that a mode overrides must SAY SO here, and must render as overridden rather than as an ordinary toggle the player can move to no effect.",
   "controls": [
-    { "key": "kidToggle", "surface": "settings", "state": "kid",
+    {
+      "key": "kidToggle",
+      "surface": "settings",
+      "state": "kid",
       "effect": "body.kid class; kid_filter applied to word selection; camera absent; Say It disabled; account entry points hidden",
-      "test": "settings_effect_kid", "suppressed_by": "age_locked (under-cutoff device cannot switch it off without the parent gate)" },
-
-    { "key": "readToggle", "surface": "settings", "state": "readable",
+      "test": "settings_effect_kid",
+      "suppressed_by": "age_locked (under-cutoff device cannot switch it off without the parent gate)",
+      "harness": "web"
+    },
+    {
+      "key": "readToggle",
+      "surface": "settings",
+      "state": "readable",
       "effect": "body.readable class",
-      "test": "settings_effect_readable", "suppressed_by": null },
-
-    { "key": "bigTextToggle", "surface": "settings", "state": "big_text",
+      "test": "settings_effect_readable",
+      "suppressed_by": null,
+      "harness": "web"
+    },
+    {
+      "key": "bigTextToggle",
+      "surface": "settings",
+      "state": "big_text",
       "effect": "body.big-text class (1.5x scale)",
-      "test": "settings_effect_big_text", "suppressed_by": null },
-
-    { "key": "slowToggle", "surface": "settings", "state": "slow",
+      "test": "settings_effect_big_text",
+      "suppressed_by": null,
+      "harness": "web"
+    },
+    {
+      "key": "slowToggle",
+      "surface": "settings",
+      "state": "slow",
       "effect": "state.rate 0.9 -> 0.55; server path sets playbackRate, native path maps via SpeechRate.avRate; same word's audio runs >= 1.25x longer",
-      "test": "settings_effect_slow_rate", "suppressed_by": null },
-
-    { "key": "extraAttemptsToggle", "surface": "settings", "state": "extra_attempts",
+      "test": "settings_effect_slow_rate",
+      "suppressed_by": null,
+      "harness": "web"
+    },
+    {
+      "key": "extraAttemptsToggle",
+      "surface": "settings",
+      "state": "extra_attempts",
       "effect": "a missed word offers a second try",
       "test": "settings_effect_extra_attempt",
       "suppressed_by": null,
-      "was": "kid — Kid Mode forced this ON via `s.extra_attempts || s.kid`, so the switch did nothing in Spell Jr. D8 (delegated to Claude, 2026-08-06): the preference is authoritative; Kid Mode now DEFAULTS it on instead of overriding it." },
-
-    { "key": "remindToggle", "surface": "settings", "state": "remind",
+      "was": "kid — Kid Mode forced this ON via `s.extra_attempts || s.kid`, so the switch did nothing in Spell Jr. D8 (delegated to Claude, 2026-08-06): the preference is authoritative; Kid Mode now DEFAULTS it on instead of overriding it.",
+      "harness": "web"
+    },
+    {
+      "key": "remindToggle",
+      "surface": "settings",
+      "state": "remind",
       "effect": "notifications::apply schedules/cancels the daily reminder",
       "test": "settings_effect_remind",
-      "suppressed_by": "kid — Kid Mode suppresses the daily reminder (`remind && !kid`). DELIBERATE, but the row must render as suppressed in Kid Mode, not as a live toggle." },
-
-    { "key": "volumeSlider", "surface": "settings", "state": "volume",
+      "suppressed_by": "kid — Kid Mode suppresses the daily reminder (`remind && !kid`). DELIBERATE, but the row must render as suppressed in Kid Mode, not as a live toggle.",
+      "harness": "web"
+    },
+    {
+      "key": "volumeSlider",
+      "surface": "settings",
+      "state": "volume",
       "effect": "audio_boost gain node, 0.5-2.0; loopback RMS rises monotonically across slider positions",
       "test": "settings_effect_volume_gain",
       "suppressed_by": null,
-      "caveat": "the AudioContext is created lazily and only when a boost is requested (anti-fingerprinting). If unlock() has not run on a user gesture the context can be born suspended — the effect test must move the slider AFTER a gesture." },
-
-    { "key": "photoReplace", "surface": "photo import", "state": "(local, photo_list)",
+      "caveat": "the AudioContext is created lazily and only when a boost is requested (anti-fingerprinting). If unlock() has not run on a user gesture the context can be born suspended — the effect test must move the slider AFTER a gesture.",
+      "harness": "web"
+    },
+    {
+      "key": "photoReplace",
+      "surface": "photo import",
+      "state": "(local, photo_list)",
       "effect": "imported words replace the list instead of appending",
-      "test": "settings_effect_photo_replace", "suppressed_by": null },
-
-    { "key": "devEntitlements", "surface": "dev drawer", "state": "(dev only)",
-      "effect": "dev entitlement overrides",
-      "test": null, "dev_only": true, "suppressed_by": null },
-
-    { "key": "toolGhostToggle", "surface": "tools", "flag": "ghost",
-      "effect": "Ghost Racing availability in a Climb run",
-      "test": "tools_hub_flag_visibility", "suppressed_by": "kid (kid_ok=false)" },
-    { "key": "toolSyllableToggle", "surface": "tools", "flag": "syllable",
-      "effect": "syllable replay offered on a miss",
-      "test": "tools_hub_flag_visibility", "suppressed_by": null },
-    { "key": "toolSayItToggle", "surface": "tools", "flag": "say_it",
-      "effect": "Say It launcher present",
-      "test": "tools_hub_flag_visibility", "suppressed_by": "kid (COPPA D5 hard-disables Say It)" },
-    { "key": "toolPhotoToggle", "surface": "tools", "flag": "photo",
-      "effect": "photo word-list import available",
-      "test": "tools_hub_flag_visibility", "suppressed_by": "kid (camera absent in Spell Jr)" },
-    { "key": "toolSpellAloudToggle", "surface": "tools", "flag": "spell_aloud",
-      "effect": "Spell Aloud available",
-      "test": "tools_hub_flag_visibility", "suppressed_by": null },
-    { "key": "toolStoriesToggle", "surface": "tools", "flag": "stories",
-      "effect": "Stories available",
-      "test": "tools_hub_flag_visibility", "suppressed_by": null },
-    { "key": "toolSpelloffToggle", "surface": "tools", "flag": "spelloff",
-      "effect": "Spell Off available",
-      "test": "tools_hub_flag_visibility", "suppressed_by": null },
-    { "key": "toolShieldsToggle", "surface": "tools", "flag": "attempts_shields",
-      "effect": "grants AVAILABILITY of shields + extra attempts; gates whether extraAttemptsRow renders at all",
-      "test": "tools_hub_flag_visibility",
+      "test": "maestro:photoReplace",
       "suppressed_by": null,
-      "caveat": "NOT a duplicate of extraAttemptsToggle. This is the feature flag; that is the user preference. Both are required by extra_attempt_ctx(). D8's original plan to delete the top-level control was dropped by Eric on 2026-08-06." }
+      "harness": "device",
+      "device_note": "Avail::Native/Server — native_lang::available() is false in headless Chromium, so flipping the flag changes nothing a web test could see and the assertion would pass for the wrong reason. Owed a Maestro flow."
+    },
+    {
+      "key": "devEntitlements",
+      "surface": "dev drawer",
+      "state": "(dev only)",
+      "effect": "dev entitlement overrides",
+      "test": null,
+      "dev_only": true,
+      "suppressed_by": null
+    },
+    {
+      "key": "toolGhostToggle",
+      "surface": "tools",
+      "flag": "ghost",
+      "effect": "Ghost Racing availability in a Climb run",
+      "test": "flipping ghost off/on changes the tool visibility in a Climb run",
+      "suppressed_by": "kid (kid_ok=false)",
+      "harness": "web"
+    },
+    {
+      "key": "toolSyllableToggle",
+      "surface": "tools",
+      "flag": "syllable",
+      "effect": "syllable replay offered on a miss",
+      "test": "settings_effect_syllable_replay",
+      "suppressed_by": null,
+      "harness": "web"
+    },
+    {
+      "key": "toolSayItToggle",
+      "surface": "tools",
+      "flag": "say_it",
+      "effect": "Say It launcher present",
+      "test": "maestro:toolSayItToggle",
+      "suppressed_by": "kid (COPPA D5 hard-disables Say It)",
+      "harness": "device",
+      "device_note": "Avail::Native/Server — native_lang::available() is false in headless Chromium, so flipping the flag changes nothing a web test could see and the assertion would pass for the wrong reason. Owed a Maestro flow."
+    },
+    {
+      "key": "toolPhotoToggle",
+      "surface": "tools",
+      "flag": "photo",
+      "effect": "photo word-list import available",
+      "test": "maestro:toolPhotoToggle",
+      "suppressed_by": "kid (camera absent in Spell Jr)",
+      "harness": "device",
+      "device_note": "Avail::Native/Server — native_lang::available() is false in headless Chromium, so flipping the flag changes nothing a web test could see and the assertion would pass for the wrong reason. Owed a Maestro flow."
+    },
+    {
+      "key": "toolSpellAloudToggle",
+      "surface": "tools",
+      "flag": "spell_aloud",
+      "effect": "Spell Aloud available",
+      "test": "maestro:toolSpellAloudToggle",
+      "suppressed_by": null,
+      "harness": "device",
+      "device_note": "Avail::Native/Server — native_lang::available() is false in headless Chromium, so flipping the flag changes nothing a web test could see and the assertion would pass for the wrong reason. Owed a Maestro flow."
+    },
+    {
+      "key": "toolStoriesToggle",
+      "surface": "tools",
+      "flag": "stories",
+      "effect": "Stories available",
+      "test": "settings_effect_word_stories",
+      "suppressed_by": null,
+      "harness": "web"
+    },
+    {
+      "key": "toolSpelloffToggle",
+      "surface": "tools",
+      "flag": "spelloff",
+      "effect": "Spell Off available",
+      "test": "maestro:toolSpelloffToggle",
+      "suppressed_by": null,
+      "harness": "device",
+      "device_note": "Avail::Native/Server — native_lang::available() is false in headless Chromium, so flipping the flag changes nothing a web test could see and the assertion would pass for the wrong reason. Owed a Maestro flow."
+    },
+    {
+      "key": "toolShieldsToggle",
+      "surface": "tools",
+      "flag": "attempts_shields",
+      "effect": "grants AVAILABILITY of shields + extra attempts; gates whether extraAttemptsRow renders at all",
+      "test": "extra-attempts ON: a wrong submission grants exactly one clean retry",
+      "suppressed_by": null,
+      "caveat": "NOT a duplicate of extraAttemptsToggle. This is the feature flag; that is the user preference. Both are required by extra_attempt_ctx(). D8's original plan to delete the top-level control was dropped by Eric on 2026-08-06.",
+      "harness": "web"
+    }
   ]
 }
