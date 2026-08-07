@@ -136,9 +136,149 @@ fn in_banks(lang: &str, word: &str) -> bool {
     false
 }
 
+// ── F14: smashed-word segmentation ──────────────────────────────────
+//
+// Eric's audit: photographing a page can yield "Thisisanexample" as ONE
+// candidate where a child sees four words. OCR loses the spaces; the
+// import had no way to get them back.
+//
+// D7 (recommendation, and the reason this only ever PROPOSES): a
+// prototype over the real EN bank split 1 in 10 plausible custom words
+// wrongly — "Sundeep" becomes "sun" + "deep". Silently auto-splitting
+// would rename somebody's child. So this returns a suggestion and the
+// review sheet asks; nothing splits without a tap.
+//
+// Its ceiling is the bank. "thecatsatonthemat" does not segment because
+// `sat` and `mat` are missing from the EN bank (see BD-G3, the
+// core-vocabulary gap). That is the right failure: no proposal at all
+// beats a wrong one.
+
+/// No 1-letter pieces — "a"/"i" turn every long token into confetti.
+const MIN_PIECE: usize = 2;
+/// Beyond this the DP is not worth running on a review sheet.
+const MAX_WORD: usize = 24;
+
+/// Folded bank forms for one language, built once. `in_banks` walks all
+/// ~6,800 entries per call; the segmenter needs hundreds of lookups per
+/// word, so it needs a set rather than a scan.
+fn bank_set(lang: &str) -> std::collections::HashSet<String> {
+    let mut set = std::collections::HashSet::new();
+    for tier in ["easy", "medium", "hard", "expert"] {
+        for entry in crate::words::tier_for(lang, tier) {
+            match entry.split_once('|') {
+                Some((typed, spoken)) => {
+                    set.insert(norm::fold_strict(typed));
+                    set.insert(norm::fold_strict(spoken));
+                }
+                None => {
+                    set.insert(norm::fold_strict(entry));
+                }
+            }
+        }
+    }
+    set
+}
+
+/// Propose a split of a smashed token into two or more bank words, or
+/// `None` when the word is already known, cannot be fully segmented, or
+/// is too long to bother with. Prefers the FEWEST pieces, so
+/// "onetwothree" is three words rather than any longer shredding.
+pub fn propose_split(lang: &str, word: &str) -> Option<Vec<String>> {
+    let folded = norm::fold_strict(word);
+    let chars: Vec<char> = folded.chars().collect();
+    let n = chars.len();
+    if n < MIN_PIECE * 2 || n > MAX_WORD {
+        return None;
+    }
+    let bank = bank_set(lang);
+    if bank.contains(&folded) {
+        return None; // a real word is not a smash-up
+    }
+    // best[i] = fewest-piece segmentation of the first i chars
+    let mut best: Vec<Option<Vec<String>>> = vec![None; n + 1];
+    best[0] = Some(Vec::new());
+    for i in MIN_PIECE..=n {
+        for j in 0..=i.saturating_sub(MIN_PIECE) {
+            let Some(prefix) = best[j].clone() else { continue };
+            let piece: String = chars[j..i].iter().collect();
+            if !bank.contains(&piece) {
+                continue;
+            }
+            let mut cand = prefix;
+            cand.push(piece);
+            let better = match &best[i] {
+                Some(cur) => cand.len() < cur.len(),
+                None => true,
+            };
+            if better {
+                best[i] = Some(cand);
+            }
+        }
+    }
+    match best.pop().flatten() {
+        Some(pieces) if pieces.len() >= 2 => Some(pieces),
+        _ => None,
+    }
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    /// F14 — the smash-up Eric photographed actually comes apart.
+    #[test]
+    fn propose_split_recovers_lost_spaces() {
+        assert_eq!(
+            propose_split("en", "Thisisanexample"),
+            Some(vec!["this".into(), "is".into(), "an".into(), "example".into()])
+        );
+        assert_eq!(
+            propose_split("en", "goodmorning"),
+            Some(vec!["good".into(), "morning".into()])
+        );
+        // fewest pieces wins — never shredded into more than needed
+        assert_eq!(
+            propose_split("en", "onetwothree"),
+            Some(vec!["one".into(), "two".into(), "three".into()])
+        );
+    }
+
+    /// A real word is not a smash-up, however splittable it looks.
+    /// "notebook" IS note+book, and both are bank words — the guard that
+    /// stops it is the whole-word bank check, not the segmenter.
+    #[test]
+    fn propose_split_leaves_real_words_alone() {
+        for w in ["example", "notebook", "together", "understand", "morning"] {
+            assert_eq!(propose_split("en", w), None, "{w} is already a word");
+        }
+    }
+
+    /// F14/D7 — WHY this only proposes. A prototype over the real bank
+    /// mis-split 1 in 10 plausible custom words, and this is the one:
+    /// a person's name becomes two nouns. The behaviour is CORRECT (the
+    /// pieces really are bank words); the safeguard is that a human
+    /// confirms. If this ever starts returning None, the segmenter got
+    /// more conservative and D7's confirm step could be revisited.
+    #[test]
+    fn a_name_can_still_be_mis_split_which_is_why_a_human_confirms() {
+        assert_eq!(
+            propose_split("en", "Sundeep"),
+            Some(vec!["sun".into(), "deep".into()]),
+            "documented false positive — never auto-applied"
+        );
+    }
+
+    /// The bank is the ceiling. `sat` and `mat` are missing from the EN
+    /// bank (BD-G3), so this sentence cannot be recovered — and NO
+    /// proposal is the right answer, not a partial or wrong one.
+    #[test]
+    fn an_unsegmentable_smash_up_proposes_nothing() {
+        assert_eq!(propose_split("en", "thecatsatonthemat"), None);
+        assert_eq!(propose_split("en", "zzzqqqxxx"), None);
+        assert_eq!(propose_split("en", "ab"), None, "too short to be two pieces");
+        let long = "a".repeat(40);
+        assert_eq!(propose_split("en", &long), None, "past the length cap");
+    }
 
     fn words(tokens: &[&str]) -> Vec<(String, bool)> {
         tokens.iter().map(|t| (t.to_string(), false)).collect()

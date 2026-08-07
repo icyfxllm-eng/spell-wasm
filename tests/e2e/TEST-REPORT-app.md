@@ -1,6 +1,6 @@
 # TEST-REPORT — Web E2E (app build)
 
-**92/92 passed** across 22 areas.
+**93/93 passed** across 22 areas.
 
 ## playhub — 8/8
 - ✅ hub: opens from the meta corner and renders registry tiles
@@ -40,7 +40,7 @@
 - ✅ rtl F4: the hint carries the word's direction and counts letters, not codepoints
 - ✅ rtl F4: the hint count is translated, not hardcoded English
 
-## settings-effects — 10/10
+## settings-effects — 11/11
 - ✅ settings_effect_big_text
 - ✅ settings_effect_readable
 - ✅ settings_effect_kid
@@ -51,6 +51,7 @@
 - ✅ settings_effect_word_stories
 - ✅ settings_effect_syllable_replay
 - ✅ btn_hide_actually_hides
+- ✅ photo_split_proposes_and_never_auto_applies
 
 ## sayit — 2/2
 - ✅ say-it: launcher hidden by default (flag off = zero diff)

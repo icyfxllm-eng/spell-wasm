@@ -579,5 +579,6 @@
  "insight.loanword_spelling": "Your pattern: words borrowed from other languages.",
  "insight.loanword_spelling.kid": "You're taking on words from far away!",
  "help.howItWorks.native": "<b>Cómo funciona:</b> pulsa el orbe para oír una palabra y luego escríbela o dítela — aparece un significado después de cada respuesta, y los fallos vuelven con los días en <b>↻ Fallos</b>. Todo es gratis. Importa tus propias palabras en <b>＋ Mis palabras</b> para practicar lo que quieras; tu progreso se guarda en este dispositivo.",
- "speech.noVoice.native": "El habla no está disponible ahora — comprueba que tu dispositivo no esté en silencio."
+ "speech.noVoice.native": "El habla no está disponible ahora — comprueba que tu dispositivo no esté en silencio.",
+ "photo.split": "Dividir:"
 }

@@ -123,6 +123,44 @@ pub fn wire(app: &App) {
             if let Ok(Some(row)) = target.closest(".pchip-row") {
                 row.remove();
             }
+            return;
+        }
+        // F14: apply a proposed split. ONE tap, and only because the
+        // parent read the pieces and chose them — the chip is replaced
+        // by its pieces in place, each one an ordinary chip that
+        // re-classifies and re-flags exactly like a recognized word.
+        if target.class_list().contains("pchip-split") {
+            let Some(pieces) = target.get_attribute("data-split") else { return };
+            let Ok(Some(row)) = target.closest(".pchip-row") else { return };
+            let Some(parent) = row.parent_element() else { return };
+            let include = i18n::t("photo.include");
+            let remove = i18n::t("photo.remove");
+            let mut html = String::new();
+            for piece in pieces.split(' ').filter(|p| !p.is_empty()) {
+                html.push_str(&format!(
+                    "<div class=\"pchip-row\">\
+                       <input class=\"pchip-on\" type=\"checkbox\" checked aria-label=\"{inc}\" />\
+                       <input class=\"pchip\" type=\"text\" value=\"{val}\" \
+                         autocomplete=\"off\" autocorrect=\"off\" autocapitalize=\"off\" spellcheck=\"false\" />\
+                       <button type=\"button\" class=\"pchip-x\" aria-label=\"{aria}\">\u{00d7}</button>\
+                       <span class=\"pchip-flag\"></span>\
+                     </div>",
+                    inc = dom::escape_html(&include),
+                    val = dom::escape_html(piece),
+                    aria = dom::escape_html(&remove),
+                ));
+            }
+            let _ = row.insert_adjacent_html("beforebegin", &html);
+            row.remove();
+            // Re-flag the freshly inserted chips so each piece shows its
+            // own class/flag rather than an empty status.
+            if let Ok(list) = parent.query_selector_all(".pchip") {
+                for i in 0..list.length() {
+                    if let Some(el) = list.get(i).and_then(|n| n.dyn_into::<web_sys::HtmlInputElement>().ok()) {
+                        reflag(&el);
+                    }
+                }
+            }
         }
     });
     // Live re-flag as the user edits a chip, so a fixed misread clears its flag
@@ -227,6 +265,30 @@ fn on_recognized(app: &App, val: &wasm_bindgen::JsValue) {
     dom::add_class("photoScrim", "show");
 }
 
+/// TEST SEAM — render the review sheet from synthetic OCR lines.
+///
+/// The photo flow is native-gated (`native_lang::supported()` is false in
+/// a browser), so the review sheet is unreachable in e2e through the
+/// camera. F14's split proposal lives ENTIRELY in that sheet, and this
+/// session has repeatedly shown that reasoning about DOM I cannot see is
+/// how bugs ship. This drives the real `on_recognized` with real
+/// classification and the real renderer — it fabricates the OCR result,
+/// nothing downstream. Observe-only in the sense that matters: there is
+/// no path here that saves a word or bypasses a gate.
+#[cfg(feature = "testseam")]
+pub fn seam_review_sheet(app: &App, words: Vec<String>) {
+    let arr = js_sys::Array::new();
+    for w in words {
+        let o = js_sys::Object::new();
+        let _ = js_sys::Reflect::set(&o, &"text".into(), &w.into());
+        let _ = js_sys::Reflect::set(&o, &"confidence".into(), &1.0f64.into());
+        arr.push(&o);
+    }
+    let val = js_sys::Object::new();
+    let _ = js_sys::Reflect::set(&val, &"lines".into(), &arr);
+    on_recognized(app, &val.into());
+}
+
 /// Extract the `lines: {text, confidence}[]` field from the recognizer result
 /// (legacy plain-string entries read as confidence 1). Anything missing or
 /// mistyped yields an empty list (treated as "no words found").
@@ -292,13 +354,28 @@ fn render_chips(candidates: &[crate::photo_import::Candidate]) {
         // anyway until edited clean); everything else starts ON.
         let checked = if reason.is_none() { " checked" } else { "" };
         let status = chip_status(cand.class, cand.confidence_low, reason);
+        // F14/D7: PROPOSE a split, never apply one. The PIECES are shown
+        // rather than a count (Eric, 2026-08-06) because some proposals
+        // are wrong — "Sundeep" segments to sun · deep — and reading them
+        // is the only way a parent can tell. One tap swaps this chip for
+        // the pieces; ignoring it leaves the chip exactly as it was.
+        // Skipped on flagged chips: those must be edited clean first.
+        let split = match crate::photo_import::propose_split(&STUDY_LANG.with(|l| l.borrow().clone()), word) {
+            Some(pieces) if reason.is_none() => format!(
+                "<button type=\"button\" class=\"pchip-split\" data-split=\"{joined}\">{label} {shown}</button>",
+                joined = dom::escape_html(&pieces.join(" ")),
+                label = dom::escape_html(&i18n::t("photo.split")),
+                shown = dom::escape_html(&pieces.join(" \u{00b7} ")),
+            ),
+            _ => String::new(),
+        };
         html.push_str(&format!(
             "<div class=\"pchip-row{flagged}{lowconf}{custom}\">\
                <input class=\"pchip-on\" type=\"checkbox\"{checked} aria-label=\"{inc}\" />\
                <input class=\"pchip\" type=\"text\" value=\"{val}\" \
                  autocomplete=\"off\" autocorrect=\"off\" autocapitalize=\"off\" spellcheck=\"false\" />\
                <button type=\"button\" class=\"pchip-x\" aria-label=\"{aria}\">\u{00d7}</button>\
-               <span class=\"pchip-flag\">{status}</span>\
+               <span class=\"pchip-flag\">{status}</span>{split}\
              </div>",
             flagged = flagged,
             lowconf = lowconf,
@@ -308,6 +385,7 @@ fn render_chips(candidates: &[crate::photo_import::Candidate]) {
             val = dom::escape_html(word),
             aria = dom::escape_html(&remove_label),
             status = dom::escape_html(&status),
+            split = split,
         ));
     }
     dom::set_html("photoChips", &html);

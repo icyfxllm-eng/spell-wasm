@@ -266,3 +266,52 @@ crashed rather than passing vacuously, the right failure mode.
 
 STILL OPEN in F16: the stray white tail element Eric circled. Not
 located; needs the screenshot or the screen name.
+
+## Ship 142 — F14 smashed-word segmentation
+
+`propose_split` (photo_import.rs): fewest-pieces DP over a folded bank
+set, 2-letter minimum piece, 24-char cap. "Thisisanexample" comes apart
+into this·is·an·example; a word already in the bank is never offered a
+split, so "notebook" stays whole.
+
+IT ONLY PROPOSES, AND HERE IS WHY. A prototype over the real EN bank
+mis-split 1 in 10 plausible custom words: "Sundeep" -> sun · deep. A
+silent auto-split would rename somebody's child. That case is pinned as
+a TEST — the behaviour is correct (both pieces really are bank words),
+and the safeguard is the human. D7's confirm step is not ceremony.
+
+THE PIECES ARE SHOWN, NOT A COUNT (Eric, 2026-08-06). "Split: this · is
+· an · example", full width under its chip. Reading the pieces is the
+only way a parent can catch a Sundeep, so a count would have removed
+the very thing that makes the confirm meaningful.
+
+CEILING = THE BANK. "thecatsatonthemat" proposes nothing because `sat`
+and `mat` are missing from the EN bank (BD-G3 again). No proposal is
+the right failure; a partial or wrong one is not.
+
+VERIFIED IN A BROWSER, not reasoned about. The photo flow is
+native-gated so e2e cannot reach the review sheet through the camera —
+`__spelltest.photoReview(words)` fabricates the recognizer RESULT and
+lets the real classifier and renderer run (it saves nothing and skips
+no gate). The spec asserts the pieces render with separators, that a
+bank word gets no proposal, and — the one that matters — that NOTHING
+has split before the tap. App suite 92 -> 93.
+
+## FOUND: Calendar, Translate and Reports cannot tile (pre-existing)
+
+`play_hub` builds `ctx.enabled` as every mode id filtered through
+`flags::is_on(id)`, and `is_on` is a match with `_ => false`. There is
+no arm for calendar, translate or reports, so all three read as OFF,
+`permitted()` refuses them, and their tiles never render. Their only
+entry points are the hidden buttons the tile would have clicked
+(calOpenBtn / trOpenBtn / repOpenBtn), so THREE SHIPPED MODES ARE
+UNREACHABLE.
+
+This is what Eric was asking when he said "is the calendar and translate
+installed on the app yet" — they are built, wired, and invisible.
+
+scripts/modes-check.mjs has been reporting exactly this and is NOT in
+gate.sh, so it has failed unread. Fixing the flags is a one-line-each
+change; fixing the silence is adding the check to the gate. Both belong
+in the next ship, not this one — 142 is F14 and I am not bundling a
+three-mode visibility change into it unannounced.

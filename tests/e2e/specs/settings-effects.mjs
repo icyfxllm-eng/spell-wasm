@@ -226,4 +226,49 @@ export async function run(browser, base, suite) {
       assert(shown !== 'none', 'removing btn-hide must reveal the element');
     } finally { await ctx.close(); }
   });
+
+  await suite.test('photo_split_proposes_and_never_auto_applies', async () => {
+    const { ctx, page } = await openApp(browser, base, { lang: 'en' });
+    try {
+      // F14. The photo flow is native-gated, so the review sheet is
+      // unreachable in a browser through the camera. The seam fabricates
+      // the OCR RESULT only — real classification, real renderer.
+      await page.evaluate(() => localStorage.setItem('spell_flag_photo_list', 'on'));
+      await page.reload();
+      await page.waitForTimeout(700);
+      await page.evaluate(() =>
+        window.__spelltest.photoReview(['Thisisanexample', 'window', 'Sundeep']));
+      await page.waitForSelector('#photoScrim.show', { timeout: 4000 });
+
+      const before = await page.evaluate(() => ({
+        rows: document.querySelectorAll('#photoChips .pchip-row').length,
+        // the proposal must SHOW THE PIECES, not a count (Eric's call)
+        splits: [...document.querySelectorAll('.pchip-split')].map((b) => b.textContent.trim()),
+        words: [...document.querySelectorAll('#photoChips .pchip')].map((i) => i.value),
+      }));
+      assert(before.rows === 3, `three chips rendered, got ${before.rows}`);
+      assert(before.words.includes('Thisisanexample'), 'the smash-up is a chip');
+      const smash = before.splits.find((t) => t.includes('example'));
+      assert(smash, `a split is proposed showing its pieces: ${JSON.stringify(before.splits)}`);
+      assert(smash.includes('·'), 'pieces are shown separated, not counted');
+      // a real word is never offered a split
+      assert(!before.splits.some((t) => t === 'Split: window'), 'a bank word gets no proposal');
+      // NOTHING has split yet — the proposal is inert until tapped
+      assert(!before.words.includes('this'), 'no auto-split before the tap');
+
+      await page.evaluate(() => {
+        const b = [...document.querySelectorAll('.pchip-split')]
+          .find((x) => x.textContent.includes('example'));
+        b.click();
+      });
+      await page.waitForTimeout(300);
+      const after = await page.evaluate(() =>
+        [...document.querySelectorAll('#photoChips .pchip')].map((i) => i.value));
+      for (const piece of ['this', 'is', 'an', 'example']) {
+        assert(after.includes(piece), `tap produced "${piece}" — got ${JSON.stringify(after)}`);
+      }
+      assert(!after.includes('Thisisanexample'), 'the smashed chip was replaced');
+      assert(after.includes('window'), 'other chips are untouched');
+    } finally { await ctx.close(); }
+  });
 }

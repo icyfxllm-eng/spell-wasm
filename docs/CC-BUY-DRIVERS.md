@@ -427,3 +427,10 @@ DECISION LEDGER (Eric, 2026-08-02 — recorded at greenlight)
   corrected scroll law that can no longer enforce a collapse. The freeze
   continues after this; Eric wants the rest of the audit finished before
   the next one.
+
+* SHIP 142 — F14: OCR smash-ups come apart. The segmenter proposes and
+  never applies, and it shows the PIECES so a parent can catch the ones
+  it gets wrong ("Sundeep" -> sun · deep is a pinned test, not a
+  hypothetical). Verified through a new seam that renders the review
+  sheet in a browser, because the photo flow is native-gated and this
+  UI would otherwise have shipped never having rendered. 93/93.

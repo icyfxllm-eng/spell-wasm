@@ -586,6 +586,12 @@
   .pchip-on{width:22px;height:22px;flex:none;accent-color:var(--accent,#7aa2ff)}
   .pchip-row:has(.pchip-on:not(:checked)) .pchip{opacity:.4;text-decoration:line-through}
   .pchip-x{flex:none;width:32px;height:32px;border-radius:8px;border:1px solid var(--edge);background:transparent;color:var(--muted);font-size:18px;line-height:1;cursor:pointer}
+  /* F14: the split proposal. Full-width under its chip because it
+     shows the PIECES, not a count — four or five of them will not fit
+     beside the text field, and reading them is the point. */
+  .pchip-split{grid-column:1/-1;justify-self:start;margin-top:2px;font-size:12px;
+    padding:4px 10px;border-radius:999px;border:1px solid var(--edge);
+    background:var(--panel-2);color:var(--ink);cursor:pointer}
   .pchip-flag{flex:none;min-width:64px;font-size:11px;font-weight:600;color:var(--bad,#e0564f);text-align:end}
   .pchip-row:not(.flagged) .pchip-flag{display:none}
 

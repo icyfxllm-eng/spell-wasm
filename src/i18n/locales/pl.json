@@ -579,5 +579,6 @@
  "insight.loanword_spelling": "Your pattern: words borrowed from other languages.",
  "insight.loanword_spelling.kid": "You're taking on words from far away!",
  "help.howItWorks.native": "<b>Jak to działa:</b> naciśnij kulę, aby usłyszeć słowo, a potem je zapisz lub przeliteruj na głos — po każdej odpowiedzi pojawia się znaczenie, a błędy wracają przez kolejne dni w <b>↻ Błędy</b>. Wszystko jest za darmo. Zaimportuj własne słowa w <b>＋ Moje słowa</b>, aby ćwiczyć cokolwiek; twoje postępy są zapisywane na tym urządzeniu.",
- "speech.noVoice.native": "Mowa jest teraz niedostępna — sprawdź, czy urządzenie nie jest wyciszone."
+ "speech.noVoice.native": "Mowa jest teraz niedostępna — sprawdź, czy urządzenie nie jest wyciszone.",
+ "photo.split": "Podziel:"
 }

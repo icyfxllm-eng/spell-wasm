@@ -7,6 +7,7 @@
 //!   __spelltest.currentTier()      -> the active difficulty tier
 //!   __spelltest.currentLang()      -> the active word language
 //!   __spelltest.rate()             -> the live TTS playback rate
+//!   __spelltest.photoReview(words) -> render the import review sheet
 //!   __spelltest.pool(lang, tier)   -> the full word bank for (lang, tier), JSON
 //!   __spelltest.build()            -> "testseam" marker string
 //!   __spelltest.picWord()          -> the word Spell Picture is waiting on
@@ -35,6 +36,19 @@ pub fn install(app: &App) {
         let a = app.clone();
         let cb = Closure::<dyn Fn() -> String>::new(move || a.borrow().word.clone());
         set(&obj, "currentWord", cb.into_js_value());
+    }
+    {
+        // F14. The photo review sheet is native-gated, so e2e cannot
+        // reach it through the camera — and the split proposal lives
+        // only there. This fabricates the OCR RESULT and lets the real
+        // classifier and renderer run; it saves nothing and skips no
+        // gate. Without it, F14's UI would ship having never rendered.
+        let a = app.clone();
+        let cb = Closure::<dyn Fn(js_sys::Array)>::new(move |words: js_sys::Array| {
+            let list: Vec<String> = words.iter().filter_map(|w| w.as_string()).collect();
+            crate::photo_list::seam_review_sheet(&a, list);
+        });
+        set(&obj, "photoReview", cb.into_js_value());
     }
     {
         // AUDITPASS F8. Derived state the player can already hear, so
