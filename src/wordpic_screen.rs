@@ -339,22 +339,62 @@ fn thumb_svg(pic: &str, lang: &str, run: &wordpic::Run) -> String {
 /// lives in the Gallery's "In progress" section, row hidden entirely
 /// when empty. Tap resumes directly (D2); completed pieces never appear
 /// here (D3 — the !done filter IS the decision).
-fn render_continue_row(state: &wordpic::State, lang: &str) -> Vec<String> {
-    if !crate::dom::exists("wpResumeRow") {
-        return Vec::new();
-    }
+/// D5 (delegated to Claude, 2026-08-06). The live in-progress runs for
+/// one language, most-recent first — pure, so the ONE-RESUME-CARD law
+/// below is testable without a document.
+///
+/// Eric's audit saw "three variations of the same in-progress subject".
+/// The file blamed one saved instance per difficulty tier; `Run` has no
+/// tier and creation is keyed on `(pic, lang)`, so that cannot happen.
+/// Tracing every emitter found exactly two appearances, both legitimate
+/// — a Continue shortcut plus the picture's ordinary place in browse.
+/// The third surface is not reproducible from the code, so rather than
+/// invent a fix for a cause I cannot find, this pins the guarantee that
+/// IS provable: a subject offers at most one resume affordance. If a
+/// future hub section adds a second, CI says so instead of the phone.
+fn live_runs<'a>(state: &'a wordpic::State, lang: &str) -> Vec<&'a wordpic::Run> {
     let mut live: Vec<&wordpic::Run> = state
         .runs
         .iter()
         .filter(|r| r.lang == lang && !r.done && !r.words.is_empty())
         .collect();
     live.sort_by(|a, b| b.touched.cmp(&a.touched));
+    live
+}
+
+/// The resume affordances one render emits: (cards, overflow). Disjoint
+/// by construction and each free of duplicates — asserted in tests.
+fn resume_split(state: &wordpic::State, lang: &str) -> (Vec<String>, Vec<String>) {
+    let live = live_runs(state, lang);
+    let mut cards = Vec::new();
+    let mut overflow = Vec::new();
+    for (n, r) in live.iter().enumerate() {
+        if wordpic::picture(&r.pic).is_none() {
+            continue;
+        }
+        if n < RESUME_CARDS {
+            cards.push(r.pic.clone());
+        } else {
+            overflow.push(r.pic.clone());
+        }
+    }
+    (cards, overflow)
+}
+
+/// Visible Continue cards before the rest spill into the gallery head.
+const RESUME_CARDS: usize = 4;
+
+fn render_continue_row(state: &wordpic::State, lang: &str) -> Vec<String> {
+    if !crate::dom::exists("wpResumeRow") {
+        return Vec::new();
+    }
+    let live = live_runs(state, lang);
     let mut html = String::new();
     let mut overflow = Vec::new();
     for (n, r) in live.iter().enumerate() {
         let Some(p) = wordpic::picture(&r.pic) else { continue };
         let total = subject_total(p, lang);
-        if n < 4 {
+        if n < RESUME_CARDS {
             html.push_str(&format!(
                 "<button type=\"button\" class=\"wp-resume-card\" data-resume=\"{}\" aria-label=\"{}\">{}<span class=\"prog\">{}/{}</span></button>",
                 p.id, p.id, thumb_svg(&r.pic, lang, r), r.words.len(), total
@@ -2345,6 +2385,48 @@ mod color_render_tests {
             "en", &words, RenderMode::Play);
         let plain = scanlock_svg(&plan_for(&learn.id, vec![]), "en", &words, RenderMode::Play);
         assert_eq!(planted, plain, "a planted ref cannot color the learn shelf");
+    }
+
+    /// AUDITPASS D5 — ONE RESUME AFFORDANCE PER SUBJECT.
+    ///
+    /// A subject mid-way through must offer exactly one place to resume
+    /// it. The Continue strip takes the first four; everything after
+    /// spills to the gallery head. The two lists must stay disjoint and
+    /// duplicate-free, so a player never sees the same unfinished
+    /// picture twice and cannot wonder which one holds their progress.
+    /// Seeded with more runs than fit in the strip so both sides are
+    /// exercised, plus a repeat touch to prove re-entry does not clone.
+    #[test]
+    fn one_resume_affordance_per_subject() {
+        let mut st = wordpic::State::default();
+        let ids: Vec<String> = wordpic::pictures()
+            .iter()
+            .take(RESUME_CARDS + 3)
+            .map(|p| p.id.clone())
+            .collect();
+        assert!(ids.len() > RESUME_CARDS, "need more subjects than the strip holds");
+        for id in &ids {
+            st.open(id, "en");
+            if let Some(live) = st.runs.iter_mut().find(|r| &r.pic == id && r.lang == "en") {
+                live.words.push("alpha".into());
+            }
+        }
+        // resuming an existing subject must not create a second record
+        st.open(&ids[0], "en");
+
+        let (cards, overflow) = resume_split(&st, "en");
+        assert_eq!(cards.len(), RESUME_CARDS, "the strip fills before it spills");
+        assert_eq!(cards.len() + overflow.len(), ids.len(), "every live run is offered once");
+
+        let mut all = cards.clone();
+        all.extend(overflow.iter().cloned());
+        let mut uniq = all.clone();
+        uniq.sort();
+        uniq.dedup();
+        assert_eq!(all.len(), uniq.len(), "a subject was offered twice: {all:?}");
+        for c in &cards {
+            assert!(!overflow.contains(c), "{c} is in BOTH the strip and the gallery head");
+        }
     }
 
     /// Done #7 — the gallery is RETROACTIVE: runs store words, never

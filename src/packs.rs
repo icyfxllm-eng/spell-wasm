@@ -212,9 +212,17 @@ async fn fetch_b64(url: &str) -> Option<String> {
 /// The settings rows: one per Active language, download/progress/delete.
 /// App-shell-only (dom::exists), audited strings only.
 pub fn render_rows() {
+    // F15/D9: hidden entirely until there is a server to talk to. Note
+    // this hides the SECTION, not just the buttons — a heading over an
+    // empty box still promises a feature that does not exist.
+    if !crate::flags::offline_packs() {
+        crate::dom::toggle_class("packSection", "btn-hide", true);
+        return;
+    }
     if !crate::dom::exists("packRows") || !available() {
         return;
     }
+    crate::dom::toggle_class("packSection", "btn-hide", false);
     let mut html = String::new();
     for (code, info) in crate::words::LANGUAGES.iter() {
         if !crate::consts::is_active_lang(code) {
@@ -238,6 +246,10 @@ pub fn render_rows() {
 pub fn wire(app: &crate::App) {
     if !crate::dom::exists("packRows") {
         return;
+    }
+    if !crate::flags::offline_packs() {
+        crate::dom::toggle_class("packSection", "btn-hide", true);
+        return; // no listeners, no auto-suggest toast, no dead affordance
     }
     let _ = app;
     crate::dom::on::<web_sys::MouseEvent, _>("packRows", "click", |e| {

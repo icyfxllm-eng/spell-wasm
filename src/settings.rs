@@ -16,11 +16,21 @@ pub fn load_prefs(state: &mut AppState) {
     state.readable = p.readable;
     state.big_text = p.big_text;
     state.slow = p.slow;
-    state.rate = if state.slow { 0.7 } else { 0.9 };
+    // 0.55, not 0.7 (Eric, 2026-08-06). The Aug 6 audit read Slower
+    // Voice as dead; it was wired on both paths the whole time, but
+    // 0.9 -> 0.7 is only a 1.29x duration change — technically over
+    // the 1.25x bar and still imperceptible. 0.55 gives ~1.64x.
+    state.rate = if state.slow { 0.55 } else { 0.9 };
     state.volume = audio_boost::clamp_gain(p.volume.unwrap_or(1.0));
     state.remind = p.remind;
     state.remind_time = p.remind_time.filter(|t| !t.is_empty()).unwrap_or_else(|| "17:00".to_string());
-    state.extra_attempts = p.extra_attempts;
+    // D8: a device ALREADY in Kid Mode from a build where the read-time
+    // override existed has never had this preference set true, and an
+    // age-locked device cannot reach the toggle without the parent gate
+    // — so it would silently lose the second try. Default it on once
+    // here; a parent turning it off afterwards is honoured, because
+    // save_prefs then persists false against kid=true.
+    state.extra_attempts = p.extra_attempts || (state.kid && !p.extra_attempts_seen);
 }
 
 pub fn save_prefs(state: &AppState) {
@@ -37,6 +47,9 @@ pub fn save_prefs(state: &AppState) {
         remind: state.remind,
         remind_time: Some(state.remind_time.clone()),
         extra_attempts: state.extra_attempts,
+        // Any save is a genuine choice, so the one-time Kid Mode default
+        // never fires again and a parent's "off" survives a relaunch.
+        extra_attempts_seen: true,
     };
     storage::set_json(PREFS_KEY, &p);
 }
@@ -172,7 +185,7 @@ pub fn set_volume(app: &App, value: f32) {
 pub fn apply_settings(app: &App) {
     {
         let mut s = app.borrow_mut();
-        s.rate = if s.slow { 0.7 } else { 0.9 };
+        s.rate = if s.slow { 0.55 } else { 0.9 };
     }
     let s = app.borrow();
     let body = dom::doc().body().unwrap();

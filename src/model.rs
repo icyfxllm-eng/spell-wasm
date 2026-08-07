@@ -24,6 +24,16 @@ pub struct Prefs {
     /// Single source of truth for the toggle (I1). Absent in old prefs -> OFF.
     #[serde(rename = "extraAttempts", default)]
     pub extra_attempts: bool,
+    /// D8 migration flag. Before 2026-08-06 `extra_attempt_ctx` read
+    /// `extra_attempts || kid`, so every Kid Mode device EXPERIENCED the
+    /// second try while its stored preference stayed false — the switch
+    /// was overridden, not obeyed. Now that the preference is
+    /// authoritative, a false on such a device would silently REMOVE the
+    /// second try from a young speller. This records "the preference has
+    /// been genuinely chosen", so the one-time default can be applied
+    /// without also overriding a parent who later turns it off.
+    #[serde(rename = "extraAttemptsSeen", default)]
+    pub extra_attempts_seen: bool,
 }
 
 #[derive(Serialize, Deserialize, Default, Clone)]

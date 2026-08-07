@@ -534,7 +534,16 @@ fn wire_glow_and_settings(app: &App) {
                 open_parent_gate();
                 return;
             }
-            a.borrow_mut().kid = v;
+            {
+                let mut s = a.borrow_mut();
+                s.kid = v;
+                // D8: switching Kid Mode ON defaults the second try on,
+                // rather than overriding the preference at read time.
+                // Turning Kid Mode off leaves whatever the parent chose.
+                if v {
+                    s.extra_attempts = true;
+                }
+            }
             settings::save_prefs(&a.borrow());
             settings::apply_settings(&a);
             // Kid Mode suppresses the daily reminder — reschedule/cancel.

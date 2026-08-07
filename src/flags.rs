@@ -108,6 +108,24 @@ pub fn attempts_shields() -> bool {
     resolve(stored("attempts_shields").as_deref(), true)
 }
 
+/// AUDITPASS F15 / D9 (signed, Eric 2026-08-06) — the offline-packs
+/// section. **Default OFF.**
+///
+/// The client is complete: rows render per active language, the click
+/// dispatches, `download()` fetches `{api_base}/packs/{lang}/v1/
+/// manifest.json` and verifies its signature against PACK_PUB_KEY. What
+/// does not exist is the SERVER — there is no `/packs` route anywhere in
+/// backend/. So every Download 404s into `fail()`, which is why the Aug
+/// 6 audit read the buttons as doing nothing. No client work can fix a
+/// missing endpoint, and a button that cannot succeed is the dead
+/// switch F8 exists to forbid, so the whole section stays hidden until
+/// the pack artifacts are built and deployed. Flip with
+/// `localStorage['spell_flag_offline_packs'] = 'on'` to develop against
+/// a local server.
+pub fn offline_packs() -> bool {
+    resolve(stored("offline_packs").as_deref(), false)
+}
+
 /// Effective value of a tool flag by its storage name (the `<name>` in
 /// `spell_flag_<name>`), honoring each flag's compiled-in default. Used by the
 /// Tools hub to set a row's initial switch state without duplicating defaults.

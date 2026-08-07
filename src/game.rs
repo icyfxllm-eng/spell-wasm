@@ -1708,8 +1708,16 @@ fn shield_ctx(s: &AppState) -> bool {
 /// 3-try mechanic would otherwise make one-shot too harsh for the youngest
 /// users. Normal (non-kid) users still opt in via the toggle.
 fn extra_attempt_ctx(s: &AppState) -> bool {
+    // D8 (delegated to Claude, 2026-08-06): the PREFERENCE is
+    // authoritative. This used to read `s.extra_attempts || s.kid`, so
+    // in Spell Jr the switch was overridden and moving it did nothing —
+    // a live control that looks broken, which is most of what the Aug 6
+    // audit's "dead switches" turned out to be. Kid Mode now DEFAULTS
+    // the preference on (see lib.rs kidToggle / settings::load) instead
+    // of ignoring it: young spellers still get the second try without
+    // anyone opting in, and a parent who turns it off gets it off.
     flags::attempts_shields()
-        && (s.extra_attempts || s.kid)
+        && s.extra_attempts
         && s.level != "climb"
         && !s.versus.enabled
         && !s.daily.active

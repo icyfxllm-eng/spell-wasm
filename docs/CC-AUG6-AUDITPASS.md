@@ -112,3 +112,59 @@ about. Fixed to `[name, ...mods]`; the app suite went 80 -> 82.
 `tests/e2e/TEST-REPORT.md`, so the site's 11 results clobbered the app's
 80 and no record survived of WHICH app specs ran. Split into
 `TEST-REPORT-app.md` and `TEST-REPORT-site.md`.
+
+## Ship 139 — the queue
+
+**Slower Voice 0.55** (Eric, 2026-08-06). Not a wiring fix: the setting
+reached both paths already. 0.9 -> 0.7 was a 1.29x duration change,
+over the 1.25x bar and still imperceptible, which is why it read as
+dead. 0.55 gives ~1.64x. SpeechRate.swift's doc comment updated too —
+it documented 0.7 as "slow" and would otherwise have become a lie.
+
+**D8 (delegated to Claude).** The two controls are NOT duplicates:
+`toolShieldsToggle` is the feature flag, `extraAttemptsToggle` is the
+preference, and `extra_attempt_ctx` needs both. Eric dropped the
+removal plan. The real defect was `s.extra_attempts || s.kid` — in
+Spell Jr the preference was overridden, so moving the switch did
+nothing. The preference is now authoritative and Kid Mode DEFAULTS it
+on instead. A migration flag (`extraAttemptsSeen`) carries devices that
+were already in Kid Mode: they experienced the second try while their
+stored preference stayed false, so a naive read would have silently
+taken it away from a young speller — and an age-locked device cannot
+reach the toggle to put it back without the parent gate.
+
+**D5 (delegated to Claude) — NOT the fix the file asked for.** The
+premise fails twice. `Run` has no tier and creation is keyed on
+`(pic, lang)`, so tiers cannot duplicate anything. Tracing every
+emitter: one resume card (strip if in the first four, gallery head if
+after — index-disjoint, never both) plus one browse tile. The gallery
+proper skips unfinished runs; Category and Folder views each render one
+flat list and a picture has exactly one folder. That is TWO
+appearances, both legitimate. Three is not reproducible from the code,
+so no fix was invented for it. What shipped is the provable half:
+`resume_split` extracted pure, and a test that a subject offers at most
+one resume affordance, the strip fills before it spills, and re-opening
+a subject never clones its record. If a future hub section adds a
+second, CI catches it. OPEN FOR ERIC: on device, are the three in the
+Continue strip, a folder, or the hub — and do they show the SAME
+progress number or different ones? Different numbers would mean three
+real Run records, which the code says cannot exist, and that would be a
+different hunt.
+
+**F15 offline packs hidden (D9).** Class (d), which F0's taxonomy does
+not have: not unpersisted, not unread, not unimplemented — implemented
+and UNSERVED. The client verifies signatures and streams shards; there
+is no `/packs` route in backend/ at all. The section (not just the
+buttons) is behind `flags::offline_packs`, default OFF, and the wire
+path returns before attaching listeners or firing the auto-suggest
+toast. A heading over an empty box still promises a feature.
+
+**config/settings-effects.json** lands as F8's data, with the
+`suppressed_by` column Eric asked for. Writing it surfaced the real
+shape of the audit: ALL 17 rendered controls are wired — there is no
+class (a) or (b) anywhere in settings — and FIVE are suppressed by Kid
+Mode (extra attempts, reminders, Say It, photo import, Ghost Racing).
+Four of those are deliberate; one was the D8 bug. Spell Jr silently
+overrides nearly a third of the settings surface and none of it renders
+as overridden, which is very likely what most of the "dead switches"
+in the audit actually were. The CI half of F8 is not in this ship.
