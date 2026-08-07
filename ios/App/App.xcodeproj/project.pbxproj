@@ -275,7 +275,7 @@
 			mainGroup = 504EC2FB1FED79650016851F;
 			packageReferences = (
 				D4C12C0A2AAA248700AAC8A2 /* XCLocalSwiftPackageReference "CapApp-SPM" */,
-				3C5F9E773F718730434B3105 /* XCLocalSwiftPackageReference "../NativeLanguageKit" */,
+				3C5F9E773F718730434B3105 /* XCLocalSwiftPackageReference "NativeLanguageKit" */,
 			);
 			productRefGroup = 504EC3051FED79650016851F /* Products */;
 			projectDirPath = "";
@@ -517,7 +517,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_IDENTITY = "Apple Distribution";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 146;
+				CURRENT_PROJECT_VERSION = 147;
 				DEVELOPMENT_TEAM = WCH6H5NAWH;
 				INFOPLIST_FILE = App/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
@@ -542,7 +542,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_IDENTITY = "Apple Distribution";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 146;
+				CURRENT_PROJECT_VERSION = 147;
 				DEVELOPMENT_TEAM = WCH6H5NAWH;
 				INFOPLIST_FILE = App/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
@@ -566,7 +566,7 @@
 				CODE_SIGN_ENTITLEMENTS = SpellWidgets/SpellWidgets.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Distribution";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 146;
+				CURRENT_PROJECT_VERSION = 147;
 				DEVELOPMENT_TEAM = WCH6H5NAWH;
 				GENERATE_INFOPLIST_FILE = NO;
 				INFOPLIST_FILE = SpellWidgets/Info.plist;
@@ -594,7 +594,7 @@
 				CODE_SIGN_ENTITLEMENTS = SpellWidgets/SpellWidgets.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Distribution";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 146;
+				CURRENT_PROJECT_VERSION = 147;
 				DEVELOPMENT_TEAM = WCH6H5NAWH;
 				GENERATE_INFOPLIST_FILE = NO;
 				INFOPLIST_FILE = SpellWidgets/Info.plist;
@@ -649,7 +649,7 @@
 /* End XCConfigurationList section */
 
 /* Begin XCLocalSwiftPackageReference section */
-		3C5F9E773F718730434B3105 /* XCLocalSwiftPackageReference "../NativeLanguageKit" */ = {
+		3C5F9E773F718730434B3105 /* XCLocalSwiftPackageReference "NativeLanguageKit" */ = {
 			isa = XCLocalSwiftPackageReference;
 			relativePath = ../NativeLanguageKit;
 		};
@@ -667,7 +667,7 @@
 		};
 		B2335ADBAD7F5B5D76466705 /* NativeLanguageKitCore */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 3C5F9E773F718730434B3105 /* XCLocalSwiftPackageReference "../NativeLanguageKit" */;
+			package = 3C5F9E773F718730434B3105 /* XCLocalSwiftPackageReference "NativeLanguageKit" */;
 			productName = NativeLanguageKitCore;
 		};
 /* End XCSwiftPackageProductDependency section */

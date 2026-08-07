@@ -45,10 +45,15 @@ struct Tool {
     kid_ok: bool,
 }
 
-const TOOLS: [Tool; 8] = [
-    Tool { flag: "ghost_racing", toggle: "toolGhostToggle", hint: "toolGhostHint", row: "toolGhostRow", avail_key: "tools.racing.avail", avail: Avail::Universal, next_round: true, kid_ok: true },
+// AUDITPASS F7 / D2 — Spell Racing and Say It are CUT. Their rows are
+// gone from Tools & Features, so their TOOLS entries must go too:
+// `reflect` calls `dom::input(tool.toggle)`, which PANICS on a missing
+// element, so a row deleted from the shell without its entry here would
+// crash the settings screen on open. say_it's row was also the one
+// genuinely dead switch the F8 effect tests found — it gated `wire()`
+// for a mode the code itself calls dormant, with no entry points.
+const TOOLS: [Tool; 6] = [
     Tool { flag: "syllable_replay", toggle: "toolSyllableToggle", hint: "toolSyllableHint", row: "toolSyllableRow", avail_key: "tools.syllable.avail", avail: Avail::Universal, next_round: true, kid_ok: true },
-    Tool { flag: "say_it", toggle: "toolSayItToggle", hint: "toolSayItHint", row: "toolSayItRow", avail_key: "tools.sayit.avail", avail: Avail::Native, next_round: false, kid_ok: false },
     Tool { flag: "photo_list", toggle: "toolPhotoToggle", hint: "toolPhotoHint", row: "toolPhotoRow", avail_key: "tools.photo.avail", avail: Avail::Native, next_round: false, kid_ok: false },
     Tool { flag: "spell_aloud", toggle: "toolSpellAloudToggle", hint: "toolSpellAloudHint", row: "toolSpellAloudRow", avail_key: "tools.spellaloud.avail", avail: Avail::Native, next_round: false, kid_ok: false },
     Tool { flag: "word_stories", toggle: "toolStoriesToggle", hint: "toolStoriesHint", row: "toolStoriesRow", avail_key: "tools.stories.avail", avail: Avail::Universal, next_round: true, kid_ok: false },

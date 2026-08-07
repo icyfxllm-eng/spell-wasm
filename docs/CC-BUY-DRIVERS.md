@@ -409,3 +409,10 @@ DECISION LEDGER (Eric, 2026-08-02 — recorded at greenlight)
   reaches the play surface, which it never has. One real dead switch
   fell out of writing the tests, and it folds into the F7 cut. Full
   account in docs/CC-AUG6-AUDITPASS.md.
+
+* SHIP 141 (Eric: "ship 141 for f16 when gates pass") — the app stops
+  telling iPhone owners to install Chrome. Two strings across fifteen
+  locales, one platform-aware resolver that every [data-i18n] key now
+  flows through, and a lint that fails the build if either key regresses
+  to plain t(). The fourteen non-English drafts are unaudited by
+  construction and marked as such.

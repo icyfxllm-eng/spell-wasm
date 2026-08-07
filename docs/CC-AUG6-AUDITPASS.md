@@ -221,3 +221,48 @@ have been green through all three.
 
 App suite 82 -> 91. The count was checked, not the registration:
 placement.mjs was registered for weeks and never ran.
+
+## Ship 141 — F16, the platform-wrong copy
+
+TWO strings, not one. The audit named the explainer; the worse offender
+was the failure path. `help.howItWorks` told an iPhone user their words
+are "spoken with your browser's voices — smoothest in Chrome or Edge on
+a computer" and that progress is "saved in this browser only" — three
+false claims in one sentence on iOS. `speech.noVoice` said "This browser
+can't speak — try Chrome or Edge", and it fires exactly when audio has
+already failed, so a parent mid-problem was told to install a different
+browser.
+
+MECHANISM. `i18n::t_platform(key)` prefers `<key>.native` IN THE CURRENT
+LOCALE on the wrapped build, reading `window.isWrappedPlatform()` — the
+shell already declares that as THE single source of truth for "am I
+wrapped", so this asks it rather than inventing a second answer that
+could drift. `translate_page`'s `apply()` now routes EVERY `[data-i18n]`
+key through it, so any future key gains platform-awareness for free;
+F16 asked for one source, not a check per surface.
+
+IT DOES NOT FALL BACK TO ENGLISH `.native`. An untranslated locale keeps
+its own ordinary string. Wrong-language is a worse failure than
+platform-wrong, and silently serving English to a Spanish child to fix a
+platform detail would trade a small lie for a big one.
+
+CONTENT: 30 strings, both keys across all fifteen locales, parity intact
+at 581 keys. UNAUDITED for the fourteen non-English locales (Eric:
+"draft all fourteen unaudited", 2026-08-06) — same posture as the gloss.
+Each reuses that locale's OWN existing bold terms verbatim (↻ Fallos,
+↻ 間違い, ＋ Maneno yangu) so the nav labels still match the screen
+instead of being re-coined. iOS copy is three sentences, no browser.
+
+GUARD: i18n-check gained a law — a key with a `.native` sibling must not
+be reached through plain `t()`. Proven by regressing the call site and
+watching it fail. Without it the next edit silently puts browser copy
+back on a phone, which is precisely how this survived to a device audit.
+
+CAUGHT IN DRAFTING: the Japanese string contained the English word
+"answer" (`answerのたびに`), found by scanning non-Latin drafts for Latin
+words before they reached a locale file. The first version of the guard
+itself referenced `fs`/`ROOT`, which that script does not define — it
+crashed rather than passing vacuously, the right failure mode.
+
+STILL OPEN in F16: the stray white tail element Eric circled. Not
+located; needs the screenshot or the screen name.

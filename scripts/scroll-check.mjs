@@ -52,6 +52,14 @@ const problems = [];
 let checked = 0;
 
 // ── Law 1 ────────────────────────────────────────────────────────────
+// TWO halves, because the first half ALONE shipped a P0. `min-height:0`
+// removes the min-content floor that was holding a flex child open; with
+// default flex-shrink and nothing to size it, the element can then
+// collapse to zero. That is what happened to `.wp-grid` in ship 138 —
+// Spell Picture rendered nothing on build 147. So a scroller must also
+// be able to HOLD space: a definite size (max-height/height/flex-basis)
+// or flex-grow. Requiring the release valve without the floor is worse
+// than requiring neither.
 for (const { sel, body } of rules) {
   if (!scrolls(body) || ALLOW.has(sel)) continue;
   checked++;
@@ -59,6 +67,22 @@ for (const { sel, body } of rules) {
     problems.push(
       `${sel} scrolls but never declares min-height:0 — as a flex child its ` +
         `default min-height:auto stops overflow-y from ever engaging`
+    );
+    continue;
+  }
+  const sized = /max-height:\s*[^;]/.test(body)
+    || /(^|;)\s*height:\s*[^;]/.test(body)
+    || /flex(-grow)?:\s*[1-9]/.test(body)
+    || /flex:\s*\d+\s+\d+/.test(body)
+    // A fixed element pinned on both edges is sized BY THE VIEWPORT, so
+    // it has no flex parent to shrink it and cannot collapse.
+    || (/position:\s*fixed/.test(body) && /(inset:\s*0|top:[^;]*;[^}]*bottom:)/.test(body));
+  if (!sized) {
+    problems.push(
+      `${sel} declares min-height:0 with nothing to hold its space — no ` +
+        `max-height, height, or flex-grow. min-height:0 removes the ` +
+        `min-content floor, so as a flex child this can COLLAPSE TO ZERO ` +
+        `(that is how .wp-grid emptied Spell Picture in ship 138)`
     );
   }
 }

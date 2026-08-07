@@ -394,7 +394,15 @@
   .wp-top{display:flex;align-items:center;gap:10px;position:relative;z-index:6}
   .wp-title{flex:1;font-weight:800;text-align:center}
   .wp-count{font-size:13px;opacity:.85}
-  .wp-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;overflow-y:auto;min-height:0;padding-bottom:16px}
+  /* `flex:1 1 auto` is LOAD-BEARING, not tidiness. min-height:0 alone
+     (ship 138) removed the min-content floor that had been holding this
+     grid open, and with default flex-shrink and no flex-grow it
+     collapsed to zero height — the picker rendered nothing at all on
+     build 147. Every other scroller I gave min-height:0 has a
+     max-height to size it; this one had no height constraint of any
+     kind, which is exactly why it was the one that vanished. Grow to
+     fill what the header leaves, and only then let overflow scroll. */
+  .wp-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;flex:1 1 auto;overflow-y:auto;min-height:0;padding-bottom:16px}
   .wp-tile{display:flex;flex-direction:column;align-items:center;gap:4px;padding:14px 8px;border-radius:14px;border:1px solid rgba(255,255,255,.16);background:rgba(255,255,255,.05);color:inherit}
   .wp-tile{position:relative}
   .wp-tile.fav::after{content:'\2605';position:absolute;top:4px;right:6px;font-size:12px;color:#e8b44f;line-height:1}
@@ -1196,6 +1204,16 @@
       <button class="launch" id="vsBtn">⚡ <span data-i18n="top.headToHead">Spell Off</span></button>
       <button class="launch" id="climbBtn" data-i18n="top.theClimb">🏔 The Climb</button>
       <button class="launch" id="dailyBtn">🗓 Daily</button>
+      <!-- AUDITPASS F6 / D3. Eric's note said "replace the Climb tile",
+           but climbBtn above is The Climb's ONLY entrance (climb.rs wires
+           it to open_leaderboard, and ghost.rs reaches the mode by
+           synthesising a click on it) — replacing it would have removed
+           the mode while D3 also required it stay reachable from home.
+           Eric chose a fourth tile instead, so Spell Off, Climb and
+           Daily all keep their positions. Label reuses tools.wordpic.name
+           rather than minting a sixteenth string that would owe fourteen
+           more unaudited translations. -->
+      <button class="launch" id="wordPicTile"><span aria-hidden="true">🖼</span> <span data-i18n="tools.wordpic.name">Spell Picture</span></button>
       <!-- Say It (Feature F2): on-device pronunciation practice. Ships DARK —
            stays btn-hide until the feature flag is on AND the native speech
            bridge is present AND Kid Mode is off (say_it::reflect_gating). -->
@@ -2000,9 +2018,7 @@
            re-runs each tool's reflect when its switch flips. -->
       <div class="tools-hub" id="toolsHub">
         <div class="tools-head"><span class="tools-title" data-i18n="tools.title">Tools &amp; Features</span><small class="tools-sub" data-i18n="tools.subtitle">Turn features on or off — all in one place.</small></div>
-        <label class="set-row tool-row" id="toolGhostRow"><span class="lbl2"><span class="tool-name"><span class="tool-ico" aria-hidden="true">👻</span> <span data-i18n="tools.racing.name">Spell Racing</span></span><small data-i18n="tools.racing.desc">Race against your best Climb run.</small><small class="tool-avail" id="toolGhostHint"></small></span><input type="checkbox" class="switch" id="toolGhostToggle" /></label>
         <label class="set-row tool-row" id="toolSyllableRow"><span class="lbl2"><span class="tool-name"><span class="tool-ico" aria-hidden="true">🔤</span> <span data-i18n="tools.syllable.name">Syllable replay</span></span><small data-i18n="tools.syllable.desc">Hear a missed word slowly, part by part.</small><small class="tool-avail" id="toolSyllableHint"></small></span><input type="checkbox" class="switch" id="toolSyllableToggle" /></label>
-        <label class="set-row tool-row btn-hide" id="toolSayItRow"><span class="lbl2"><span class="tool-name"><span class="tool-ico" aria-hidden="true">🗣</span> <span data-i18n="tools.sayit.name">Say It</span></span><small data-i18n="tools.sayit.desc">Practice saying a word out loud.</small><small class="tool-avail" id="toolSayItHint"></small></span><input type="checkbox" class="switch" id="toolSayItToggle" /></label>
         <label class="set-row tool-row" id="toolPhotoRow"><span class="lbl2"><span class="tool-name"><span class="tool-ico" aria-hidden="true">📷</span> <span data-i18n="tools.photo.name">Photo → word list</span></span><small data-i18n="tools.photo.desc">Scan a printed list with the camera.</small><small class="tool-avail" id="toolPhotoHint"></small></span><input type="checkbox" class="switch" id="toolPhotoToggle" /></label>
         <label class="set-row tool-row" id="toolSpellAloudRow"><span class="lbl2"><span class="tool-name"><span class="tool-ico" aria-hidden="true">🎤</span> <span data-i18n="tools.spellaloud.name">Spell it out loud</span></span><small data-i18n="tools.spellaloud.desc">Say the letters instead of typing.</small><small class="tool-avail" id="toolSpellAloudHint"></small></span><input type="checkbox" class="switch" id="toolSpellAloudToggle" /></label>
         <label class="set-row tool-row" id="toolStoriesRow"><span class="lbl2"><span class="tool-name"><span class="tool-ico" aria-hidden="true">📖</span> <span data-i18n="tools.stories.name">Word stories</span></span><small data-i18n="tools.stories.desc">Where a word comes from — its history.</small><small class="tool-avail" id="toolStoriesHint"></small></span><input type="checkbox" class="switch" id="toolStoriesToggle" /></label>

@@ -111,6 +111,48 @@ pub fn device_lang() -> Option<String> {
     device_base().filter(|b| crate::consts::is_builtin_lang(b))
 }
 
+/// True when this is the wrapped (native) build. `window.isWrappedPlatform()`
+/// is declared in the shell as THE single source of truth for "am I
+/// wrapped?" — Capacitor iOS or Tauri desktop — so this reads that rather
+/// than inventing a second answer that could disagree with it.
+fn wrapped() -> bool {
+    (|| -> Option<bool> {
+        let win = web_sys::window()?;
+        let f = js_sys::Reflect::get(&win, &wasm_bindgen::JsValue::from_str("isWrappedPlatform"))
+            .ok()?
+            .dyn_into::<js_sys::Function>()
+            .ok()?;
+        Some(f.call0(&win).ok()?.as_bool().unwrap_or(false))
+    })()
+    .unwrap_or(false)
+}
+
+/// AUDITPASS F16 — platform-aware copy from ONE source.
+///
+/// The shipped explainer told an iPhone user their words are "spoken with
+/// your browser's voices — smoothest in Chrome or Edge on a computer" and
+/// that progress is "saved in this browser only". `speech.noVoice` was
+/// worse: it fires on the actual failure path, so a parent whose audio
+/// broke was told to install a different browser.
+///
+/// On the wrapped build this prefers `<key>.native` IN THE CURRENT LOCALE
+/// and otherwise returns that locale's ordinary string. It deliberately
+/// does NOT fall back to English `.native`: wrong-language is a worse
+/// failure than platform-wrong, so an untranslated locale keeps its own
+/// words. Every locale carries both variants today, drafted unaudited on
+/// 2026-08-06 and owed a native-speaker pass.
+pub fn t_platform(key: &str) -> String {
+    if wrapped() {
+        let tbls = tables();
+        let loc = current();
+        let native = format!("{key}.native");
+        if let Some(s) = tbls.get(loc.as_str()).and_then(|m| m.get(native.as_str())) {
+            return s.clone();
+        }
+    }
+    t(key)
+}
+
 /// Translate a key. active locale -> en -> key.
 pub fn t(key: &str) -> String {
     let tbls = tables();
@@ -185,7 +227,11 @@ fn apply(selector: &str, attr: &str, set: impl Fn(&web_sys::Element, &str)) {
         for i in 0..list.length() {
             if let Some(el) = list.get(i).and_then(|n| n.dyn_into::<web_sys::Element>().ok()) {
                 if let Some(key) = el.get_attribute(attr) {
-                    set(&el, &t(&key));
+                    // t_platform, not t: any key may carry a `.native`
+                    // variant for the wrapped build, and F16's whole
+                    // point is that platform-correct copy comes from ONE
+                    // place rather than a scattered check per surface.
+                    set(&el, &t_platform(&key));
                 }
             }
         }

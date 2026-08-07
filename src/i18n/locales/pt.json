@@ -577,5 +577,7 @@
  "insight.unstressed_vowel_ambiguity": "Your pattern: quiet middle vowels.",
  "insight.unstressed_vowel_ambiguity.kid": "Those soft middle sounds are tricky!",
  "insight.loanword_spelling": "Your pattern: words borrowed from other languages.",
- "insight.loanword_spelling.kid": "You're taking on words from far away!"
+ "insight.loanword_spelling.kid": "You're taking on words from far away!",
+ "help.howItWorks.native": "<b>Como funciona:</b> toque no orbe para ouvir uma palavra e depois escreva ou diga como se soletra — um significado aparece após cada resposta, e os erros voltam ao longo dos dias em <b>↻ Erros</b>. Tudo é gratuito. Importe as suas próprias palavras em <b>＋ Minhas palavras</b> para praticar o que quiser; o seu progresso fica guardado neste aparelho.",
+ "speech.noVoice.native": "A voz não está disponível agora — verifique se o seu aparelho não está no silencioso."
 }

@@ -7,7 +7,7 @@
 - ✅ hub: word_stories is never rendered (F8 hard gate)
 - ✅ hub: coming_soon renders as a non-tappable teaser
 - ✅ hub: tiles are localized with no new copy (es)
-- ✅ hub: A2.3 — a Full-only mode is ABSENT on a previewed language
+- ✅ hub: A2.3 — Full-only gating (UNPROVABLE while no live mode is Full-tier)
 - ✅ hub: A2.2 — Little Speller sees only kidSafe tiles, zero upsell
 - ✅ placement: offered once, skip stands, no re-offer
 - ✅ placement: Try serves the set through the real session
@@ -86,7 +86,7 @@
 - ✅ flag ON in ja: toggle revealed (identical test code)
 
 ## tools-hub — 4/4
-- ✅ renders: Tools section + all eight rows + populated hints
+- ✅ renders: Tools section + all six rows + populated hints
 - ✅ toggle flips localStorage flag and persists across reload
 - ✅ flipping ghost off/on changes the tool visibility in a Climb run
 - ✅ Kid Mode simplifies the hub: dark/owner rows hidden, play aids kept

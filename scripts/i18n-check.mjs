@@ -45,3 +45,35 @@ if (problems) {
   process.exit(1);
 }
 console.log(`i18n-check: OK — ${enKeys.size} keys parity across ${files.length} locales.`);
+
+// AUDITPASS F16 — a key with a `.native` sibling exists BECAUSE the plain
+// text is wrong on the wrapped build (the shipped explainer told iPhone
+// users to "try Chrome or Edge"). Reaching such a key through `t()` puts
+// the browser copy back on a phone, silently. They must go through
+// `t_platform`, or through a [data-i18n] attribute, which resolves that
+// way for every key.
+{
+  const src = join(dirname(fileURLToPath(import.meta.url)), '..', 'src');
+  const rs = [];
+  const walk = (d) => {
+    for (const e of readdirSync(d, { withFileTypes: true })) {
+      const q = join(d, e.name);
+      if (e.isDirectory()) walk(q);
+      else if (e.name.endsWith('.rs')) rs.push([q, readFileSync(q, 'utf8')]);
+    }
+  };
+  walk(src);
+  const nativeKeys = Object.keys(en)
+    .filter((k) => k.endsWith('.native'))
+    .map((k) => k.slice(0, -'.native'.length));
+  for (const key of nativeKeys) {
+    for (const [file, body] of rs) {
+      if (body.includes(`t("${key}")`)) {
+        console.log(`i18n-check: ${file} calls t("${key}") — a .native variant exists, use t_platform`);
+        problems++;
+      }
+    }
+  }
+  if (problems) process.exit(1);
+  console.log(`i18n-check: OK — ${nativeKeys.length} platform-aware keys route through t_platform.`);
+}

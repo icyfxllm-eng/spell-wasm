@@ -36,10 +36,14 @@ export async function run(browser, base, suite) {
       const shown = await page.$eval('#playHub', (e) => e.classList.contains('show'));
       assert(shown, 'hub did not open');
       assert(t.length > 0, 'hub rendered no tiles');
-      // On web/en: ghost racing is the all-platform aid. say_it / photo_list /
-      // spell_aloud are iOS-only, syllable_replay is es-only, word_stories is
-      // hidden, online_spelloff's flag is off.
-      assert(t.some((x) => x.mode === 'ghost_racing'), 'ghost_racing missing on web/en');
+      // AUDITPASS F7 / D2: ghost_racing is CUT — status:hidden in the
+      // registry, so it tiles nowhere for anyone. It used to be this
+      // spec's proof that an all-platform aid reaches the hub; def_match
+      // carries that now. say_it / photo_list / spell_aloud are iOS-only,
+      // syllable_replay is es-only, word_stories is hidden, and
+      // online_spelloff's flag is off.
+      assert(!t.some((x) => x.mode === 'ghost_racing'), 'ghost_racing is cut and must not tile');
+      assert(t.some((x) => x.mode === 'def_match'), 'an all-platform mode still reaches the hub');
       for (const iosOnly of ['say_it', 'photo_list', 'spell_aloud']) {
         assert(!t.some((x) => x.mode === iosOnly), `${iosOnly} is iOS-only and must not tile on web`);
       }
@@ -98,12 +102,18 @@ export async function run(browser, base, suite) {
     } finally { await ctx.close(); }
   });
 
-  await suite.test('hub: A2.3 — a Full-only mode is ABSENT on a previewed language', async () => {
+  await suite.test('hub: A2.3 — Full-only gating (UNPROVABLE while no live mode is Full-tier)', async () => {
     const { ctx, page } = await openApp(browser, base, { lang: 'es' });
     try {
       const t = await tiles(page);
-      // ghost_racing needs Full; es resolves to Preview under FREE_TIER, so it is
-      // absent — never a locked tile.
+      // AUDITPASS F7 left this spec with nothing real to prove. Only two
+      // modes were ever entitlementLevel:"full" — ghost_racing, now cut,
+      // and online_spelloff, which is status:hidden with its flag off.
+      // So a previewed language hides no Full-tier mode because none is
+      // LIVE, not because entitlement gated it. Asserting ghost's absence
+      // here would pass for the wrong reason, which is the exact failure
+      // this audit kept finding. The gap is named out loud instead: when
+      // a Full-tier mode goes live again, assert on THAT and delete this.
       assert(!t.some((x) => x.mode === 'ghost_racing'), 'ghost_racing must be absent on a previewed language');
       const txt = await page.$eval('#playHubGrid', (e) => e.textContent.toLowerCase());
       assert(!/lock|upgrade|unlock|premium/.test(txt), 'hub rendered lock/upsell copy — absence, not locks');

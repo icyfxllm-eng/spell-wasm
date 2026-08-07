@@ -86,6 +86,14 @@ pub fn wire(app: &App) {
     });
     let a = app.clone();
     dom::on_click("wordPicOpen", move || open_picker(&a));
+    // AUDITPASS F6: the home-screen shortcut. It ROUTES to the same
+    // opener rather than reimplementing it — the indirection every other
+    // launcher uses, so there is one way into the picker and no second
+    // path to keep in sync. Guarded because the site shell has no tile.
+    if dom::exists("wordPicTile") {
+        let a = app.clone();
+        dom::on_click("wordPicTile", move || open_picker(&a));
+    }
     let a = app.clone();
     dom::on_click("wpPickerExit", move || {
         dom::remove_class("wpPicker", "show");

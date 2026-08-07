@@ -577,5 +577,7 @@
  "insight.unstressed_vowel_ambiguity": "Your pattern: quiet middle vowels.",
  "insight.unstressed_vowel_ambiguity.kid": "Those soft middle sounds are tricky!",
  "insight.loanword_spelling": "Your pattern: words borrowed from other languages.",
- "insight.loanword_spelling.kid": "You're taking on words from far away!"
+ "insight.loanword_spelling.kid": "You're taking on words from far away!",
+ "help.howItWorks.native": "<b>Paano ito gumagana:</b> pindutin ang orb para marinig ang isang salita, tapos i-type o sabihin ang baybay nito — may lalabas na kahulugan pagkatapos ng bawat sagot, at babalik ang mga mali sa paglipas ng mga araw sa <b>↻ Mga Mali</b>. Libre ang lahat. Mag-import ng sarili mong mga salita sa <b>＋ Mga salita ko</b> para makapag-ensayo ng kahit ano; nakaimbak ang progreso mo sa device na ito.",
+ "speech.noVoice.native": "Hindi available ang boses ngayon — tingnan kung naka-silent ang device mo."
 }

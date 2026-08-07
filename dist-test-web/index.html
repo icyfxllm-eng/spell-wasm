@@ -1046,6 +1046,16 @@
       <button class="launch" id="vsBtn">⚡ <span data-i18n="top.headToHead">Spell Off</span></button>
       <button class="launch" id="climbBtn" data-i18n="top.theClimb">🏔 The Climb</button>
       <button class="launch" id="dailyBtn">🗓 Daily</button>
+      <!-- AUDITPASS F6 / D3. Eric's note said "replace the Climb tile",
+           but climbBtn above is The Climb's ONLY entrance (climb.rs wires
+           it to open_leaderboard, and ghost.rs reaches the mode by
+           synthesising a click on it) — replacing it would have removed
+           the mode while D3 also required it stay reachable from home.
+           Eric chose a fourth tile instead, so Spell Off, Climb and
+           Daily all keep their positions. Label reuses tools.wordpic.name
+           rather than minting a sixteenth string that would owe fourteen
+           more unaudited translations. -->
+      <button class="launch" id="wordPicTile"><span aria-hidden="true">🖼</span> <span data-i18n="tools.wordpic.name">Spell Picture</span></button>
       <!-- Say It (Feature F2): on-device pronunciation practice. Ships DARK —
            stays btn-hide until the feature flag is on AND the native speech
            bridge is present AND Kid Mode is off (say_it::reflect_gating). -->
@@ -1757,9 +1767,7 @@
            re-runs each tool's reflect when its switch flips. -->
       <div class="tools-hub" id="toolsHub">
         <div class="tools-head"><span class="tools-title" data-i18n="tools.title">Tools &amp; Features</span><small class="tools-sub" data-i18n="tools.subtitle">Turn features on or off — all in one place.</small></div>
-        <label class="set-row tool-row" id="toolGhostRow"><span class="lbl2"><span class="tool-name"><span class="tool-ico" aria-hidden="true">👻</span> <span data-i18n="tools.racing.name">Spell Racing</span></span><small data-i18n="tools.racing.desc">Race against your best Climb run.</small><small class="tool-avail" id="toolGhostHint"></small></span><input type="checkbox" class="switch" id="toolGhostToggle" /></label>
         <label class="set-row tool-row" id="toolSyllableRow"><span class="lbl2"><span class="tool-name"><span class="tool-ico" aria-hidden="true">🔤</span> <span data-i18n="tools.syllable.name">Syllable replay</span></span><small data-i18n="tools.syllable.desc">Hear a missed word slowly, part by part.</small><small class="tool-avail" id="toolSyllableHint"></small></span><input type="checkbox" class="switch" id="toolSyllableToggle" /></label>
-        <label class="set-row tool-row btn-hide" id="toolSayItRow"><span class="lbl2"><span class="tool-name"><span class="tool-ico" aria-hidden="true">🗣</span> <span data-i18n="tools.sayit.name">Say It</span></span><small data-i18n="tools.sayit.desc">Practice saying a word out loud.</small><small class="tool-avail" id="toolSayItHint"></small></span><input type="checkbox" class="switch" id="toolSayItToggle" /></label>
         <label class="set-row tool-row" id="toolPhotoRow"><span class="lbl2"><span class="tool-name"><span class="tool-ico" aria-hidden="true">📷</span> <span data-i18n="tools.photo.name">Photo → word list</span></span><small data-i18n="tools.photo.desc">Scan a printed list with the camera.</small><small class="tool-avail" id="toolPhotoHint"></small></span><input type="checkbox" class="switch" id="toolPhotoToggle" /></label>
         <label class="set-row tool-row" id="toolSpellAloudRow"><span class="lbl2"><span class="tool-name"><span class="tool-ico" aria-hidden="true">🎤</span> <span data-i18n="tools.spellaloud.name">Spell it out loud</span></span><small data-i18n="tools.spellaloud.desc">Say the letters instead of typing.</small><small class="tool-avail" id="toolSpellAloudHint"></small></span><input type="checkbox" class="switch" id="toolSpellAloudToggle" /></label>
         <label class="set-row tool-row" id="toolStoriesRow"><span class="lbl2"><span class="tool-name"><span class="tool-ico" aria-hidden="true">📖</span> <span data-i18n="tools.stories.name">Word stories</span></span><small data-i18n="tools.stories.desc">Where a word comes from — its history.</small><small class="tool-avail" id="toolStoriesHint"></small></span><input type="checkbox" class="switch" id="toolStoriesToggle" /></label>
