@@ -17,6 +17,26 @@ pub fn exists(id: &str) -> bool {
     doc().get_element_by_id(id).is_some()
 }
 
+/// True when the element is actually RENDERED — not merely present in
+/// the document. `exists` is not enough for anything that gates play:
+/// an element inside a `display:none` ancestor is in the DOM, answers
+/// `exists`, accepts classes, and shows the user nothing. That gap is
+/// what killed the orb on Aug 6, so any surface that can swallow a turn
+/// must ask this instead.
+///
+/// `offsetParent` is null exactly when the element or an ancestor is
+/// `display:none` (and for `position:fixed`, which our modals are — so
+/// fall back to measuring a box, which a hidden subtree cannot produce).
+pub fn rendered(id: &str) -> bool {
+    let Some(e) = doc().get_element_by_id(id) else { return false };
+    let Ok(h) = e.dyn_into::<web_sys::HtmlElement>() else { return false };
+    if h.offset_parent().is_some() {
+        return true;
+    }
+    let r = h.get_bounding_client_rect();
+    r.width() > 0.0 && r.height() > 0.0
+}
+
 pub fn el(id: &str) -> Element {
     doc().get_element_by_id(id).unwrap_or_else(|| panic!("missing element #{id}"))
 }

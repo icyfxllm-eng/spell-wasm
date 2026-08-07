@@ -22,7 +22,9 @@ npm run e2e        # builds dist-test/ (with the seam) + runs the suite
   (Daily start + determinism, H2H quit-mid-game clean state, age-gate cold), menu
   (endonyms + UI switches per language). Typing is real key **clicks** on the
   anti-dictation keyboard — never `input.fill`.
-- Output: `tests/e2e/TEST-REPORT.md` (pass/fail by area).
+- Output: `tests/e2e/TEST-REPORT-app.md` and `TEST-REPORT-site.md`
+  (pass/fail by area, one per build — they used to share one path and
+  the site run overwrote the app run).
 - **Currently 34/34 passing.**
 
 **Gaps flagged for Eric (Hard Review Gate 1):** the leaderboard/name-server specs

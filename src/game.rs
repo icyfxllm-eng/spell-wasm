@@ -960,6 +960,15 @@ fn maybe_offer_placement(lang: &str) -> bool {
     }
     crate::dom::set_text("plcBody", &crate::i18n::t("placement.body"));
     crate::dom::add_class("plcCard", "show");
+    // A gate must never eat a turn it cannot show. Adding `.show` is not
+    // proof the card reached the player — it was nested in a hidden
+    // screen for two builds, and the orb died silently in every
+    // language because this returned true anyway. If the card is not
+    // actually on screen, take the class back off and serve the word.
+    if !crate::dom::rendered("plcCard") {
+        crate::dom::remove_class("plcCard", "show");
+        return false;
+    }
     true
 }
 

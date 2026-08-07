@@ -385,3 +385,18 @@ DECISION LEDGER (Eric, 2026-08-02 — recorded at greenlight)
   "book" and "milk"), because the generation wave measured volume and
   never measured coverage. Gloss yield now serves as that missing
   coverage metric and is recomputed on every gate run.
+
+* SHIP 138 (Eric: "ship 138 when the e2e comes back clean") — the Aug 6
+  audit P0s. The orb was dead because a modal was nested in a hidden
+  screen and the serve handed it the turn anyway; Practice's exit was
+  under the notch because a CSS shorthand ate the safe-area inset; and
+  four scrollers plus two whole surfaces could not scroll because no one
+  had ever written down that a flex-child scroller needs min-height:0.
+  All three are now laws in the gate rather than fixes, because each was
+  a class and not an instance — the modal law immediately caught #wpHk
+  too. Two test faults fell out: placement.mjs had never once run (the
+  runner dropped every module after the first in a tuple), and the app
+  e2e report was being overwritten by the site run. Both fixed; the app
+  suite is 82/82. F5 is NOT in this ship — the code contradicts D5, so
+  it goes back to Eric instead of getting a fix aimed at the wrong
+  cause. Full diagnoses in docs/CC-AUG6-AUDITPASS.md.
