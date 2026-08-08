@@ -2000,6 +2000,11 @@
         }
         // Persist the last voice-capture diagnostic so it's readable here after a mic try.
         if (window.__lastLetterDiag) el.textContent += ' | cap: ' + window.__lastLetterDiag;
+        // AUDITPASS F3: picker render timing, published by Rust on every
+        // Spell Picture render (search included). Readable on TestFlight
+        // — the test seam is dev-only, and this bug was found on device.
+        if (window.__pickerMs) el.textContent += ' | picker: ' + window.__pickerMs;
+        if (window.__pickerGeom) el.textContent += ' | geom: ' + window.__pickerGeom;
       }
       window.__refreshNativeStatus = refresh;
       document.addEventListener('DOMContentLoaded', function () { setTimeout(refresh, 1200); });

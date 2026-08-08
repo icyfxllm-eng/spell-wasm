@@ -407,7 +407,12 @@
   .pr-input{transition:opacity .6s}
   /* SPELL-PICTURE:BEGIN — stripped from the site build (I1) */
   /* CC-WORD-PICTURE v5 */
-  .wp-screen{position:fixed;inset:0;background:var(--bg,#0e1420);z-index:59;display:none;flex-direction:column;padding:calc(env(safe-area-inset-top,0px) + 8px) 14px 10px;gap:10px}
+    /* The BOTTOM inset was missing while the top was respected, so on any
+     iPhone with a home indicator roughly the last 34px of the picker sat
+     underneath it — the final row of tiles half-hidden and awkward to tap
+     even when scrolled fully down. .pr-screen already did this correctly;
+     Spell Picture was the surface that did not. */
+  .wp-screen{position:fixed;inset:0;background:var(--bg,#0e1420);z-index:59;display:none;flex-direction:column;padding:calc(env(safe-area-inset-top,0px) + 8px) 14px calc(env(safe-area-inset-bottom,0px) + 10px);gap:10px}
   .wp-screen.show{display:flex}
   .wp-top{display:flex;align-items:center;gap:10px;position:relative;z-index:6}
   .wp-title{flex:1;font-weight:800;text-align:center}
@@ -2266,6 +2271,11 @@
         }
         // Persist the last voice-capture diagnostic so it's readable here after a mic try.
         if (window.__lastLetterDiag) el.textContent += ' | cap: ' + window.__lastLetterDiag;
+        // AUDITPASS F3: picker render timing, published by Rust on every
+        // Spell Picture render (search included). Readable on TestFlight
+        // — the test seam is dev-only, and this bug was found on device.
+        if (window.__pickerMs) el.textContent += ' | picker: ' + window.__pickerMs;
+        if (window.__pickerGeom) el.textContent += ' | geom: ' + window.__pickerGeom;
       }
       window.__refreshNativeStatus = refresh;
       document.addEventListener('DOMContentLoaded', function () { setTimeout(refresh, 1200); });

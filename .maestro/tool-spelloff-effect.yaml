@@ -1,0 +1,44 @@
+# CC-AUG6-AUDITPASS F8 — effect test for `toolSpelloffToggle`.
+#
+# HONEST SCOPE. online_spelloff is Avail::SERVER and its flag ships OFF
+# because /api/match must be deployed before the mode can function. So
+# this flow proves what is provable today — the toggle governs whether
+# the entry point EXISTS — and deliberately does not assert a match can
+# be played, which would fail for a backend reason and teach nothing
+# about the control.
+#
+# When the server lands, extend this flow rather than writing a new one:
+# add a step that starts a match after the launcher appears.
+#
+# Prereqs:
+#   1. Booted simulator, app installed (net.spellgame.app).
+#
+# Run:  maestro test .maestro/tool-spelloff-effect.yaml
+appId: net.spellgame.app
+---
+- launchApp:
+    clearState: true
+# Ships OFF: no entry point at all (absence, not a locked tile).
+- assertNotVisible:
+    id: "soBtn"
+- tapOn:
+    id: "setupChip"
+- scrollUntilVisible:
+    element: "Online Spell-Off"
+    direction: DOWN
+- tapOn:
+    id: "toolSpelloffToggle"
+- tapOn: "Done"
+# THE EFFECT: the launcher exists once the tool is on.
+- assertVisible:
+    id: "soBtn"
+- tapOn:
+    id: "setupChip"
+- scrollUntilVisible:
+    element: "Online Spell-Off"
+    direction: DOWN
+- tapOn:
+    id: "toolSpelloffToggle"
+- tapOn: "Done"
+- assertNotVisible:
+    id: "soBtn"

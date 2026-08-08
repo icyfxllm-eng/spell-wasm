@@ -1,0 +1,50 @@
+# CC-AUG6-AUDITPASS F8 — effect test for `toolPhotoToggle`.
+#
+# WHY THIS IS A DEVICE FLOW AND NOT AN E2E SPEC. The camera affordance is
+# Avail::Native: `photo_list::reflect_visibility` requires the VisionKit
+# recognizer, and `native_lang::supported()` is FALSE in headless
+# Chromium. A web assertion that the button is absent would therefore
+# pass whether the flag works or not — green for the wrong reason, which
+# is the exact defect the settings-truth gate exists to prevent. So the
+# manifest marks this harness:"device" and the gate accepts it as owed
+# rather than pretending it is covered.
+#
+# Prereqs (the flow cannot create these):
+#   1. Booted simulator with the app installed (net.spellgame.app).
+#   2. Dev entitlements ON (5 taps on the SPELL logo → "Test
+#      entitlements") — the camera is premium-gated (photo_ocr).
+#   3. Study language with OCR support (English is fine).
+#
+# Run:  maestro test .maestro/tool-photo-effect.yaml
+appId: net.spellgame.app
+---
+- launchApp:
+    clearState: true
+# Baseline: the flag ships ON, so the camera affordance is present.
+- tapOn: "＋ My words"
+- assertVisible: "📷 From a photo"
+- back
+# Turn the tool OFF via its real control in Tools & Features.
+- tapOn:
+    id: "setupChip"
+- scrollUntilVisible:
+    element: "Photo → word list"
+    direction: DOWN
+- tapOn:
+    id: "toolPhotoToggle"
+- tapOn: "Done"
+# THE EFFECT: the camera affordance is gone, not merely inert.
+- tapOn: "＋ My words"
+- assertNotVisible: "📷 From a photo"
+- back
+# ...and back ON restores it, so this proves the toggle both ways.
+- tapOn:
+    id: "setupChip"
+- scrollUntilVisible:
+    element: "Photo → word list"
+    direction: DOWN
+- tapOn:
+    id: "toolPhotoToggle"
+- tapOn: "Done"
+- tapOn: "＋ My words"
+- assertVisible: "📷 From a photo"

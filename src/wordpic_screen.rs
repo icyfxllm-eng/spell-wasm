@@ -256,14 +256,49 @@ fn scan_locked(p: &wordpic::Picture) -> bool {
 
 /// Campaign length: scan-locked subjects count their planned words;
 /// legacy subjects count solver slots.
+thread_local! {
+    /// AUDITPASS F3 — memo for `subject_total`, keyed (pic, lang, seed).
+    static TOTAL_MEMO: std::cell::RefCell<std::collections::HashMap<(String, String, u64), u32>> =
+        std::cell::RefCell::new(std::collections::HashMap::new());
+}
+
+/// How many words a subject holds — the number under every tile.
+///
+/// AUDITPASS F3, the freeze. This is called ONCE PER TILE, and for a
+/// scan-locked picture it used to do two costly things each time: reload
+/// and deserialize the whole State from storage, and run
+/// `spellpic::plan` — the scan-stack capacity planner, the same
+/// computation whose full sweep takes ~18 minutes across 382 subjects.
+/// Measured at ~10ms per tile: a one-letter search matched 378 pictures
+/// and took 3.7 SECONDS to render, which is exactly the "freeze on
+/// search" Eric reported. It was never DOM cost, so windowing the list
+/// would have hidden it rather than fixed it.
+///
+/// Now: the caller's already-loaded state supplies the seed, and the
+/// result is memoized on (pic, lang, seed). The plan is deterministic
+/// for a seed, so the memo cannot go stale within a session — and a run
+/// that changes seed changes the key.
 fn subject_total(p: &wordpic::Picture, lang: &str) -> u32 {
-    if scan_locked(p) {
-        let seed = wordpic::load().run(&p.id, lang).map(|r| r.seed).unwrap_or(1);
-        return crate::spellpic::plan(&p.id, lang, seed)
-            .map(|pl| pl.words.len() as u32)
-            .unwrap_or(0);
+    subject_total_with(p, lang, None)
+}
+
+fn subject_total_with(p: &wordpic::Picture, lang: &str, state: Option<&wordpic::State>) -> u32 {
+    if !scan_locked(p) {
+        return crate::wordpic_layout::slots_for_lang(p, lang).len() as u32;
     }
-    crate::wordpic_layout::slots_for_lang(p, lang).len() as u32
+    let seed = match state {
+        Some(st) => st.run(&p.id, lang).map(|r| r.seed).unwrap_or(1),
+        None => wordpic::load().run(&p.id, lang).map(|r| r.seed).unwrap_or(1),
+    };
+    let key = (p.id.clone(), lang.to_string(), seed);
+    if let Some(hit) = TOTAL_MEMO.with(|m| m.borrow().get(&key).copied()) {
+        return hit;
+    }
+    let total = crate::spellpic::plan(&p.id, lang, seed)
+        .map(|pl| pl.words.len() as u32)
+        .unwrap_or(0);
+    TOTAL_MEMO.with(|m| m.borrow_mut().insert(key, total));
+    total
 }
 
 fn startable_ids(app: &App, state: &wordpic::State, lang: &str) -> Vec<String> {
@@ -628,7 +663,7 @@ fn corpus_of(p: &wordpic::Picture) -> Vec<String> {
 /// here): untouched = dimmed total, in progress = spelled/total,
 /// complete = checkmark badge and no numbers.
 fn tile_html(app: &App, state: &wordpic::State, p: &wordpic::Picture, lang: &str) -> String {
-    let total = subject_total(p, lang);
+    let total = subject_total_with(p, lang, Some(state));
     let (cls, prog) = match state.run(&p.id, lang) {
         Some(r) if r.done => ("wp-tile done", "\u{2713}".to_string()),
         Some(r) if !r.words.is_empty() => ("wp-tile", format!("{}/{}", r.words.len(), total)),
@@ -696,7 +731,111 @@ fn row_capacity() -> usize {
     ((w / 96.0).floor() as usize).saturating_sub(1).max(3)
 }
 
+thread_local! {
+    /// AUDITPASS F3 — picker render timing. last / worst / count.
+    static PICKER_MS: std::cell::Cell<(f64, f64, u32)> = const { std::cell::Cell::new((0.0, 0.0, 0)) };
+}
+
+/// Milliseconds since navigation start, or None where unavailable.
+fn now_ms() -> Option<f64> {
+    web_sys::window()?.performance().map(|p| p.now())
+}
+
+/// AUDITPASS F3 — measure the picker render instead of guessing at it.
+///
+/// Eric reported the picker "freezes on search". The debounce was already
+/// correct (150ms, generation-counted), and the collapsed `.wp-grid` may
+/// have accounted for the whole symptom — typing into a zero-height list
+/// looks exactly like a hang. Rather than optimise a problem that might
+/// no longer exist, this publishes the real number.
+///
+/// It goes to `window.__pickerMs`, which the #nativeStatus debug row in
+/// Settings appends to its line. That matters: the test seam is
+/// `--features testseam` and absent from TestFlight, so a seam-only
+/// counter would be unreadable on the device where the bug was found.
+/// Two clock reads per render; nothing measurable.
+/// AUDITPASS F3/F4 — publish the picker's real geometry for the debug row.
+///
+/// Eric reports Spell Picture cannot be scrolled AT ALL on device (build
+/// 150) — nothing moves. A 375x667 Chromium viewport does not reproduce
+/// it: the grid overflows correctly and scrolls its full range. Rather
+/// than keep guessing at a device I cannot see, publish the numbers that
+/// distinguish the possibilities:
+///   * grid scrollH == clientH  -> nothing to scroll (content fits, or
+///     the list rendered empty)
+///   * screen scrollH > screen h -> the SCREEN is overflowing instead of
+///     the grid, i.e. the flex chain is not constraining on device
+///   * grid scrollH > clientH but no movement -> touch is being blocked
+fn publish_geom() {
+    let Some(win) = web_sys::window() else { return };
+    let Some(doc) = win.document() else { return };
+    let g = |id: &str| -> Option<(i32, i32)> {
+        let el = doc.get_element_by_id(id)?;
+        Some((el.client_height(), el.scroll_height()))
+    };
+    let (gc, gs) = g("wpGrid").unwrap_or((-1, -1));
+    let (sc, ss) = g("wpPicker").unwrap_or((-1, -1));
+    let s = format!("grid {gc}/{gs} screen {sc}/{ss}");
+    let _ = js_sys::Reflect::set(
+        &win,
+        &wasm_bindgen::JsValue::from_str("__pickerGeom"),
+        &wasm_bindgen::JsValue::from_str(&s),
+    );
+}
+
+fn record_picker_ms(dt: f64) {
+    PICKER_MS.with(|c| {
+        let (_, worst, n) = c.get();
+        let worst = if dt > worst { dt } else { worst };
+        c.set((dt, worst, n + 1));
+        if let Some(win) = web_sys::window() {
+            let s = format!("last={:.0}ms worst={:.0}ms n={}", dt, worst, n + 1);
+            let _ = js_sys::Reflect::set(
+                &win,
+                &wasm_bindgen::JsValue::from_str("__pickerMs"),
+                &wasm_bindgen::JsValue::from_str(&s),
+            );
+        }
+    });
+}
+
+/// AUDITPASS F3 — fill the total-memo in the BACKGROUND once the picker
+/// opens, so the first broad search does not pay for it.
+///
+/// Memoizing took a 378-tile render from 3727ms to 65ms, but the first
+/// one still cost ~2s while the planner ran for every match. The work is
+/// unavoidable; doing it on the keystroke is not. This walks the bank in
+/// small chunks between timer ticks, so each slice is a few milliseconds
+/// and typing stays responsive. Idempotent: a warmed key is a map hit.
+fn warm_totals(lang: &str) {
+    const CHUNK: usize = 12;
+    let ids: Vec<String> = wordpic::pictures().iter().map(|p| p.id.clone()).collect();
+    let lang = lang.to_string();
+    fn step(ids: std::rc::Rc<Vec<String>>, lang: String, from: usize) {
+        let state = wordpic::load();
+        let end = (from + CHUNK).min(ids.len());
+        for id in &ids[from..end] {
+            if let Some(p) = wordpic::picture(id) {
+                let _ = subject_total_with(p, &lang, Some(&state));
+            }
+        }
+        if end < ids.len() {
+            after(16, move || step(ids, lang, end));
+        }
+    }
+    step(std::rc::Rc::new(ids), lang, 0);
+}
+
 fn render_picker_body(app: &App) {
+    let started = now_ms();
+    render_picker_body_inner(app);
+    if let (Some(t0), Some(t1)) = (started, now_ms()) {
+        record_picker_ms(t1 - t0);
+    }
+    publish_geom();
+}
+
+fn render_picker_body_inner(app: &App) {
     let lang = LANG.with(|l| l.borrow().clone());
     let state = wordpic::load();
     let visible = browsable(app, wordpic::pictures(), &lang);
@@ -879,6 +1018,9 @@ pub fn open_picker(app: &App) {
     // no second in-progress list to fall out of sync with it.
     render_gallery(&state, &lang);
     dom::add_class("wpPicker", "show");
+    // F3: start filling the total-memo now, in the background, so the
+    // first broad search finds it warm instead of paying ~2s mid-keystroke.
+    warm_totals(&lang);
 }
 
 /// Registered ONCE at wire time (dom::on is addEventListener — per-open

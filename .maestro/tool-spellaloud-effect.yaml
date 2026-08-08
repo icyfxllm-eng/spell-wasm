@@ -1,0 +1,42 @@
+# CC-AUG6-AUDITPASS F8 — effect test for `toolSpellAloudToggle`.
+#
+# DEVICE-ONLY for the same reason as the camera: the Spell It mic is
+# gated on `spell_aloud() && native_lang::available()`, and the bridge
+# does not exist in a browser. Worth stating plainly because the naming
+# misleads — the launcher `sayItBtn` is governed by the SPELL_ALOUD flag,
+# not by `say_it` (that mode is dormant and was cut in F7). A flow that
+# flipped the wrong row would pass while proving nothing.
+#
+# Prereqs:
+#   1. Booted simulator, app installed (net.spellgame.app).
+#   2. A study language with on-device speech (English).
+#
+# Run:  maestro test .maestro/tool-spellaloud-effect.yaml
+appId: net.spellgame.app
+---
+- launchApp:
+    clearState: true
+# Ships ON: the mic launcher is on the home surface.
+- assertVisible:
+    id: "sayItBtn"
+- tapOn:
+    id: "setupChip"
+- scrollUntilVisible:
+    element: "Spell It"
+    direction: DOWN
+- tapOn:
+    id: "toolSpellAloudToggle"
+- tapOn: "Done"
+# THE EFFECT: the launcher is absent — absence, never a locked button.
+- assertNotVisible:
+    id: "sayItBtn"
+- tapOn:
+    id: "setupChip"
+- scrollUntilVisible:
+    element: "Spell It"
+    direction: DOWN
+- tapOn:
+    id: "toolSpellAloudToggle"
+- tapOn: "Done"
+- assertVisible:
+    id: "sayItBtn"

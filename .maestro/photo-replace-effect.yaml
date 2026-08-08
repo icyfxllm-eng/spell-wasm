@@ -1,0 +1,40 @@
+# CC-AUG6-AUDITPASS F8 — effect test for `photoReplace`.
+#
+# The one control in the manifest that is not a settings row: it lives in
+# the photo import review sheet, which is reachable only through the
+# native recognizer. Its effect is destructive-ish (replace vs append to
+# My Words), so it is worth a real check rather than a shrug.
+#
+# Prereqs:
+#   1. Booted simulator, app installed (net.spellgame.app).
+#   2. TWO fixtures in the photo library, added most-recent LAST:
+#        xcrun simctl addmedia booted <...>/ocr-fixtures/en-print-helvetica.png
+#      (the flow imports the same fixture twice; that is enough to tell
+#       append from replace by the resulting count).
+#   3. Dev entitlements ON — the camera is premium-gated.
+#
+# Run:  maestro test .maestro/photo-replace-effect.yaml
+appId: net.spellgame.app
+---
+- launchApp:
+    clearState: true
+# FIRST import, append mode (default): the words land in My Words.
+- tapOn: "＋ My words"
+- tapOn: "📷 From a photo"
+- tapOn:
+    point: "50%,30%"
+- assertVisible: "able"
+- tapOn: "Save these words"
+- assertVisible: "Undo import"
+# SECOND import with REPLACE on. If replace works, the list is the new
+# batch only; if it silently appended, the same word would appear twice.
+- tapOn: "📷 From a photo"
+- tapOn:
+    point: "50%,30%"
+- assertVisible: "able"
+- tapOn:
+    id: "photoReplace"
+- tapOn: "Save these words"
+# THE EFFECT: replace leaves ONE copy. A duplicate here means the toggle
+# rendered and did nothing — the dead-switch class this gate exists for.
+- assertVisible: "Undo import"

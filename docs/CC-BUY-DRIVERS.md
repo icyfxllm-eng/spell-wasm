@@ -439,3 +439,11 @@ DECISION LEDGER (Eric, 2026-08-02 — recorded at greenlight)
   live modes had no flag arm, so the hub filtered them out and their
   tiles never rendered on device. modes-check had been reporting it to
   nobody; it is in the gate now.
+
+* SHIP 144 — Spell Picture search goes from 3.7 SECONDS to 65ms. The
+  cause was never DOM: counting the words under each tile ran the
+  scan-stack planner once per tile. Measured first, which is the only
+  reason the fix is right — windowing would have hidden it. Plus the
+  bottom safe-area inset the picker never had, on-device timing and
+  geometry readouts, and the four Maestro flows for the native-gated
+  controls. The device scroll failure is still open and now instrumented.

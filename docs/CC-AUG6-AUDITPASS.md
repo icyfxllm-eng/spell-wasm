@@ -346,3 +346,68 @@ that actually failed (`flags::is_on` answers yes for every live mode)
 and verified by removing an arm and watching it fail. That makes three
 times today a test had to be checked against the bug it claims to catch:
 the wp-grid collapse, the F8 selftest, and this.
+
+## Ship 144 — F3 SOLVED, and it was none of the suspects
+
+Instrumented before optimising, and the measurement changed the fix.
+`render_picker_body` timing, published to window.__pickerMs and shown on
+the #nativeStatus debug row (the test seam is dev-only and this bug lives
+on device, so a seam counter would have been unreadable where it matters).
+
+  query   tiles   before -> after
+  zzzz        0    154ms
+  mona        1     37ms
+  "e"       368   3503ms -> 65ms
+  "a"       378   3727ms -> 190ms cold, 65ms warm
+
+~10ms PER TILE, and not one of them was DOM. `subject_total()` runs once
+per tile, and for a scan-locked picture it reloaded the entire saved
+State from storage AND ran `spellpic::plan` — the scan-stack capacity
+planner, the same computation whose full sweep takes ~18 minutes over 382
+subjects — just to count words. A one-letter search planned 378 pictures
+on the keystroke.
+
+WINDOWING WOULD HAVE BEEN THE WRONG FIX, and it is the one I proposed to
+Eric before measuring. It would have hidden the cost behind fewer visible
+tiles while leaving a planner call on every tile that did render.
+
+Fixed by memoizing on (pic, lang, seed) — deterministic, so it cannot go
+stale — and threading the caller's already-loaded state through so no
+tile re-reads storage. Then `warm_totals` fills the memo in 12-picture
+chunks between timer ticks when the picker opens, so the first broad
+search finds it warm rather than paying ~2s mid-keystroke.
+
+ALSO: .wp-screen respected the TOP safe-area inset and not the bottom
+(flat 10px), so on any iPhone with a home indicator the last row of tiles
+sat under it. .pr-screen already did this correctly — Spell Picture was
+the one surface that did not.
+
+## OPEN: Spell Picture cannot be scrolled on device (build 150)
+
+Eric: "cant scroll, nothing moves at all". NOT the .wp-grid collapse —
+that shipped fixed in 141/build 148, and he is on 150. A 375x667 Chromium
+viewport does not reproduce: the grid overflows (654 in a 505 window) and
+scrolls its full range. Ruled out so far: no global touchmove/touchstart
+preventDefault in the shell, no touch-action:none on the grid or an
+ancestor, the long-press handler does not preventDefault, and the
+Capacitor config sets no scroll override with no Swift touching the
+scrollView.
+
+So the geometry is published too — `window.__pickerGeom` as
+"grid clientH/scrollH screen clientH/scrollH" on the same debug row. It
+separates the live hypotheses: scrollH == clientH means nothing to
+scroll; screen scrollH > its clientH means the flex chain is not
+constraining on device and the SCREEN is the overflowing box; grid
+overflowing but immovable means touch is blocked. Guessing at a device I
+cannot see has been the expensive way to work today.
+
+## Maestro device flows (the four harness:"device" manifest entries)
+
+tool-photo-effect, tool-spellaloud-effect, photo-replace-effect,
+tool-spelloff-effect. Each header states WHY it cannot be an e2e spec:
+`native_lang::available()` is false in headless Chromium, so a web
+assertion would pass whether the flag works or not. Verifying the ids and
+labels against the shell first caught three wrong row names I had
+guessed — the real ones are "Photo → word list", "Spell It" and
+"Online Spell-Off". The spell-aloud header also records the naming trap:
+`sayItBtn` is governed by the SPELL_ALOUD flag, not `say_it`.
