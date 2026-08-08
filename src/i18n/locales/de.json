@@ -580,5 +580,9 @@
  "insight.loanword_spelling.kid": "You're taking on words from far away!",
  "help.howItWorks.native": "<b>So funktioniert's:</b> Tippe auf die Kugel, um ein Wort zu hören, und schreib oder sprich dann die Schreibweise — nach jeder Antwort erscheint eine Bedeutung, und Fehler kommen über Tage hinweg unter <b>↻ Fehler</b> zurück. Importiere eigene Wörter unter <b>＋ Meine Wörter</b>, um alles zu üben; dein Fortschritt wird auf diesem Gerät gespeichert.",
  "speech.noVoice.native": "Die Sprachausgabe ist gerade nicht verfügbar — prüfe, ob dein Gerät stummgeschaltet ist.",
- "photo.split": "Trennen:"
+ "photo.split": "Trennen:",
+ "spellit.guide.hear": "Tippe auf die Kugel, um dein Wort zu hören.",
+ "spellit.guide.check": "Tippe auf ✓, wenn dein Wort stimmt.",
+ "spellit.guide.start": "Verstanden",
+ "spellit.guide.again": "So geht's"
 }

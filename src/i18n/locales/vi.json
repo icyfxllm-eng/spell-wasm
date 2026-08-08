@@ -580,5 +580,9 @@
  "insight.loanword_spelling.kid": "You're taking on words from far away!",
  "help.howItWorks.native": "<b>Cách chơi:</b> chạm vào quả cầu để nghe một từ, rồi gõ hoặc đánh vần thành tiếng — sau mỗi câu trả lời sẽ hiện nghĩa của từ, và những từ sai sẽ quay lại sau vài ngày trong <b>↻ Từ sai</b>. Nhập từ của riêng bạn trong <b>＋ Từ của tôi</b> để luyện bất cứ điều gì; tiến độ được lưu trên thiết bị này.",
  "speech.noVoice.native": "Hiện không phát được giọng nói — hãy kiểm tra xem thiết bị có đang tắt tiếng không.",
- "photo.split": "Tách:"
+ "photo.split": "Tách:",
+ "spellit.guide.hear": "Chạm vào quả cầu để nghe từ của bạn.",
+ "spellit.guide.check": "Chạm ✓ khi từ của bạn đã đúng.",
+ "spellit.guide.start": "Đã hiểu",
+ "spellit.guide.again": "Cách hoạt động"
 }

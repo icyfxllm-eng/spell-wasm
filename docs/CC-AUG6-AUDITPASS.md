@@ -496,3 +496,121 @@ slowly.
 DEFERRED: the Spell It tutorial (orb → listen → say letters → confirm).
 New UI and new copy, so fourteen unaudited translations — Eric asked for
 it separately, after seeing the rejection behave on device.
+
+## Ship 147 — F13 the Spell It guide (the audit's last feature)
+
+spell_aloud.rs had carried this note for months: "Routes to the
+CC-SPELLIT-GUIDE guide screen once that spec lands; direct entry until
+then (deviation flagged in the review notes)." This is that screen, and
+the deviation closes.
+
+ONCE, WITH A WAY BACK (Eric, 2026-08-08). Four steps — hear the word,
+listening, spell it letter by letter, tap ✓ — on first entry, remembered
+in storage, then straight to play. "How this works" on the mic surface
+brings it back, because showing it once must not make it unfindable:
+Eric's yellow-circled mic annotation was about discoverability, and a
+guide you can tap past once and never find again fixes nothing.
+
+Replaying does NOT clear the seen flag. Asking for a reminder is not the
+same as never having read it, and clearing would re-show it unbidden on
+the next entry.
+
+THREE OF THE FOUR STEPS REUSE COPY THAT ALREADY SHIPPED — top.spellIt,
+voiceSpell.listening, voiceSpell.spellItOut — so the guide teaches the
+same words the live mic uses, and only four new keys were needed (60
+unaudited strings rather than ~105). Deliberately NOT reused:
+sayit.begin ("Continue"). It reads perfectly and it is in the CUT mode's
+namespace — D2 deletes Say It's code next release, and a guide depending
+on sayit.* would break then. Borrowing from something scheduled for
+deletion is how a mystery failure arrives two releases later.
+
+Body level, like every modal since F1: the reachability law would reject
+it inside a mode screen, and that law exists because #plcCard nested in
+a hidden screen is what killed the orb.
+
+## Ship 147 — THE SCROLL FIX (and my three wasted rounds)
+
+Eric, build 150: "cant scroll, nothing moves at all". I asked for the
+geom readout three times instead of eliminating the obvious pattern.
+
+THE CAUSE: a nested scroller inside a position:fixed container —
+`.wp-grid { overflow-y:auto }` inside `.wp-screen { position:fixed }`.
+That is the classic WKWebView failure, and it scrolls PERFECTLY in
+Chromium. Which is exactly why three rounds of desktop measurement told
+me "654 in a 505 window, scrolls its full range" while Eric could not
+move it at all. Every measurement I took was true and none of them was
+about his device.
+
+THE FIX: one scroller — the screen itself — plus
+-webkit-overflow-scrolling:touch and an explicit touch-action:pan-y.
+Verified with 378 tiles: 11,205px of scroll range, last tile reachable.
+Scoped to #wpPicker because #wpPlay is also .wp-screen and must NOT
+scroll, or the lent keyboard slides away mid-word.
+
+MY LINT BLOCKED THE FIX TWICE. It demanded min-height:0 on any scroller,
+then rejected it for having nothing to hold space — unsatisfiable for
+#wpPicker, which is not a flex child at all but viewport-pinned via
+.wp-screen's inset:0. It judged one rule at a time and could not see
+across them. Now it resolves the element's full token set against the
+DOM, because a law that cannot be satisfied is a law someone disables.
+
+LESSON, recorded because it cost the most today: when a symptom is
+device-only and the desktop says fine, stop measuring the desktop. The
+pattern (nested scroller in a fixed container) was diagnosable from the
+CSS alone on the first pass.
+
+## The translation queue is now reviewable
+
+Two sheets under docs/review/, so the language pass is a task someone
+can pick up rather than a hunt:
+
+  * gloss-es-review.md — 258 Spanish rows, sorted by English concept,
+    with what the reviewer is and is NOT checking (the keys are already
+    live bank words; only the sense pairing is in question) and the two
+    fields to set when done. Spanish is the cheapest language to light:
+    the tables, loader, CI and resolver are all finished, and ONE
+    signature turns the translator from dark to usable.
+  * ui-strings-unaudited.md — the 98 UI strings drafted during this
+    audit (F16 platform copy, F14's split label, F13's guide), grouped
+    by key with English above each locale, so a reviewer needs only
+    their own language.
+
+### The pinned header (Eric: "pin the search bar")
+
+`.wp-searchrow` had ALREADY declared position:sticky — it was inert,
+because the scroll container used to be `.wp-grid` and the search row is
+a SIBLING of the grid, not inside it. Making the screen the scroller
+activated it for the first time.
+
+Pinning the search bar alone would have shipped a regression: `.wp-top`
+holds the ✕, so the exit would have scrolled away and needed a scroll
+back up to find — the F2 complaint in a new costume, introduced by the
+fix for F4. Both rows pin as ONE sticky wrapper instead. Not two stacked
+offsets: those need a hard-coded header height and Big Text changes it.
+
+Background is explicit rather than `inherit`, because a transparent
+sticky header lets the tiles show through it — a bug that could only
+appear now, since the rule had never actually stuck to anything.
+
+Verified 4000px into a 378-tile list: exit at y=22, search at y=86, both
+on screen, header opaque.
+
+### The site-boot break (caught by the gate, not by me)
+
+Placing the Spell It guide next to #plcCard put it INSIDE a Spell
+Picture strip region — pure proximity, nothing to do with the picker. On
+the site build those elements vanish, `dom::on_click` calls `el()`, which
+PANICS, and boot dies. All eleven site tests timed out waiting for wasm
+that never started.
+
+My own e2e run before arming had passed because I only read the APP
+suite. The gate runs both, which is the only reason this did not ship.
+
+Fixed twice over: the markup moved out of the strip region, and the
+wiring guarded with `dom::exists` (the idiom wire_placement already uses)
+so a future strip-region edit cannot take the site down again.
+
+And I wrote the guard as an early `return` first, which would have
+skipped the `spellAloudEnter` wiring below it — breaking Spell It entry
+on the site while "fixing" the panic. Scoped `if` now. Checking a fix
+against what it skips is as necessary as checking what it catches.

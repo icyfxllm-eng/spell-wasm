@@ -580,5 +580,9 @@
  "insight.loanword_spelling.kid": "You're taking on words from far away!",
  "help.howItWorks.native": "<b>Cómo funciona:</b> pulsa el orbe para oír una palabra y luego escríbela o dítela — aparece un significado después de cada respuesta, y los fallos vuelven con los días en <b>↻ Fallos</b>. Importa tus propias palabras en <b>＋ Mis palabras</b> para practicar lo que quieras; tu progreso se guarda en este dispositivo.",
  "speech.noVoice.native": "El habla no está disponible ahora — comprueba que tu dispositivo no esté en silencio.",
- "photo.split": "Dividir:"
+ "photo.split": "Dividir:",
+ "spellit.guide.hear": "Toca el orbe para oír tu palabra.",
+ "spellit.guide.check": "Toca ✓ cuando tu palabra esté bien.",
+ "spellit.guide.start": "Entendido",
+ "spellit.guide.again": "Cómo funciona"
 }

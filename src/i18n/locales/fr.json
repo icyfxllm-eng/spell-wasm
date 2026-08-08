@@ -580,5 +580,9 @@
  "insight.loanword_spelling.kid": "You're taking on words from far away!",
  "help.howItWorks.native": "<b>Comment ça marche :</b> appuie sur l'orbe pour entendre un mot, puis écris-le ou épelle-le à voix haute — un sens apparaît après chaque réponse, et les erreurs reviennent au fil des jours dans <b>↻ Erreurs</b>. Importe tes propres mots dans <b>＋ Mes mots</b> pour t'entraîner sur ce que tu veux ; ta progression est enregistrée sur cet appareil.",
  "speech.noVoice.native": "La voix n'est pas disponible pour le moment — vérifie que ton appareil n'est pas en mode silencieux.",
- "photo.split": "Séparer :"
+ "photo.split": "Séparer :",
+ "spellit.guide.hear": "Appuie sur l'orbe pour entendre ton mot.",
+ "spellit.guide.check": "Appuie sur ✓ quand ton mot est correct.",
+ "spellit.guide.start": "C'est compris",
+ "spellit.guide.again": "Comment ça marche"
 }

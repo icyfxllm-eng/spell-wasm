@@ -580,5 +580,9 @@
  "insight.loanword_spelling.kid": "You're taking on words from far away!",
  "help.howItWorks.native": "<b>Jak to działa:</b> naciśnij kulę, aby usłyszeć słowo, a potem je zapisz lub przeliteruj na głos — po każdej odpowiedzi pojawia się znaczenie, a błędy wracają przez kolejne dni w <b>↻ Błędy</b>. Zaimportuj własne słowa w <b>＋ Moje słowa</b>, aby ćwiczyć cokolwiek; twoje postępy są zapisywane na tym urządzeniu.",
  "speech.noVoice.native": "Mowa jest teraz niedostępna — sprawdź, czy urządzenie nie jest wyciszone.",
- "photo.split": "Podziel:"
+ "photo.split": "Podziel:",
+ "spellit.guide.hear": "Naciśnij kulę, aby usłyszeć swoje słowo.",
+ "spellit.guide.check": "Naciśnij ✓, gdy słowo wygląda dobrze.",
+ "spellit.guide.start": "Rozumiem",
+ "spellit.guide.again": "Jak to działa"
 }

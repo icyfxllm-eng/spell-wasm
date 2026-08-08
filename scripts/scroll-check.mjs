@@ -48,48 +48,8 @@ for (const { sel, body } of rules) {
   }
 }
 
-const problems = [];
-let checked = 0;
-
-// ── Law 1 ────────────────────────────────────────────────────────────
-// TWO halves, because the first half ALONE shipped a P0. `min-height:0`
-// removes the min-content floor that was holding a flex child open; with
-// default flex-shrink and nothing to size it, the element can then
-// collapse to zero. That is what happened to `.wp-grid` in ship 138 —
-// Spell Picture rendered nothing on build 147. So a scroller must also
-// be able to HOLD space: a definite size (max-height/height/flex-basis)
-// or flex-grow. Requiring the release valve without the floor is worse
-// than requiring neither.
-for (const { sel, body } of rules) {
-  if (!scrolls(body) || ALLOW.has(sel)) continue;
-  checked++;
-  if (!/min-height:\s*0/.test(body)) {
-    problems.push(
-      `${sel} scrolls but never declares min-height:0 — as a flex child its ` +
-        `default min-height:auto stops overflow-y from ever engaging`
-    );
-    continue;
-  }
-  const sized = /max-height:\s*[^;]/.test(body)
-    || /(^|;)\s*height:\s*[^;]/.test(body)
-    || /flex(-grow)?:\s*[1-9]/.test(body)
-    || /flex:\s*\d+\s+\d+/.test(body)
-    // A fixed element pinned on both edges is sized BY THE VIEWPORT, so
-    // it has no flex parent to shrink it and cannot collapse.
-    || (/position:\s*fixed/.test(body) && /(inset:\s*0|top:[^;]*;[^}]*bottom:)/.test(body));
-  if (!sized) {
-    problems.push(
-      `${sel} declares min-height:0 with nothing to hold its space — no ` +
-        `max-height, height, or flex-grow. min-height:0 removes the ` +
-        `min-content floor, so as a flex child this can COLLAPSE TO ZERO ` +
-        `(that is how .wp-grid emptied Spell Picture in ship 138)`
-    );
-  }
-}
-
-// ── Law 2 ── walk the real element tree ──────────────────────────────
-// Minimal well-formed-enough walker: we only need ancestry, and the
-// shell is hand-authored HTML with closed containers.
+// The element tree, built once: Law 1 needs it to resolve
+// viewport-pinned across rules, and Laws 2/3 walk it.
 const VOID = new Set(["br", "img", "input", "meta", "link", "hr", "source", "use", "path", "circle"]);
 const tags = [...css.matchAll(/<(\/?)([a-zA-Z][\w-]*)([^>]*?)(\/?)>/g)];
 const stack = [];
@@ -118,6 +78,75 @@ for (const t of tags) {
 
 const anyDescendantScrolls = (n) =>
   n.children.some((c) => c.tokens.some((t) => scrollTokens.has(t)) || anyDescendantScrolls(c));
+
+// Tokens whose rule pins them to the viewport (position:fixed + inset).
+// An element carrying one of these is sized by the VIEWPORT, not by a flex
+// parent, so min-height:0 is irrelevant to it — it has no flex parent that
+// could shrink it. #wpPicker is `.wp-screen` (fixed, inset:0) and scrolls
+// itself; judging its overflow rule in isolation demanded min-height:0 and
+// then rejected it for having nothing to hold space. A law that cannot be
+// satisfied is a law that gets disabled, so it resolves across rules.
+const pinnedTokens = new Set();
+for (const { sel, body } of rules) {
+  if (!/position:\s*fixed/.test(body)) continue;
+  if (!/(inset:\s*0|top:[^;]*;[^}]*bottom:)/.test(body)) continue;
+  for (const tok of sel.split(",")) {
+    const m = tok.trim().match(/^([.#][\w-]+)/);
+    if (m) pinnedTokens.add(m[1]);
+  }
+}
+
+const problems = [];
+let checked = 0;
+
+// ── Law 1 ────────────────────────────────────────────────────────────
+// TWO halves, because the first half ALONE shipped a P0. `min-height:0`
+// removes the min-content floor that was holding a flex child open; with
+// default flex-shrink and nothing to size it, the element can then
+// collapse to zero. That is what happened to `.wp-grid` in ship 138 —
+// Spell Picture rendered nothing on build 147. So a scroller must also
+// be able to HOLD space: a definite size (max-height/height/flex-basis)
+// or flex-grow. Requiring the release valve without the floor is worse
+// than requiring neither.
+const viewportPinned = (sel) => {
+  const tok = sel.split(",")[0].trim().match(/^([.#][\w-]+)/)?.[1];
+  if (!tok) return false;
+  if (pinnedTokens.has(tok)) return true;
+  // or the element carrying this token also carries a pinned one
+  return nodes.some((n) => n.tokens.includes(tok) && n.tokens.some((t) => pinnedTokens.has(t)));
+};
+
+for (const { sel, body } of rules) {
+  if (!scrolls(body) || ALLOW.has(sel)) continue;
+  checked++;
+  if (viewportPinned(sel)) continue; // sized by the viewport: no flex parent to shrink it
+  if (!/min-height:\s*0/.test(body)) {
+    problems.push(
+      `${sel} scrolls but never declares min-height:0 — as a flex child its ` +
+        `default min-height:auto stops overflow-y from ever engaging`
+    );
+    continue;
+  }
+  const sized = /max-height:\s*[^;]/.test(body)
+    || /(^|;)\s*height:\s*[^;]/.test(body)
+    || /flex(-grow)?:\s*[1-9]/.test(body)
+    || /flex:\s*\d+\s+\d+/.test(body)
+    // A fixed element pinned on both edges is sized BY THE VIEWPORT, so
+    // it has no flex parent to shrink it and cannot collapse.
+    || (/position:\s*fixed/.test(body) && /(inset:\s*0|top:[^;]*;[^}]*bottom:)/.test(body));
+  if (!sized) {
+    problems.push(
+      `${sel} declares min-height:0 with nothing to hold its space — no ` +
+        `max-height, height, or flex-grow. min-height:0 removes the ` +
+        `min-content floor, so as a flex child this can COLLAPSE TO ZERO ` +
+        `(that is how .wp-grid emptied Spell Picture in ship 138)`
+    );
+  }
+}
+
+// ── Law 2 ── walk the real element tree ──────────────────────────────
+// Minimal well-formed-enough walker: we only need ancestry, and the
+// shell is hand-authored HTML with closed containers.
 
 for (const { sel, body } of rules) {
   if (!/position:\s*fixed/.test(body) || !/flex-direction:\s*column/.test(body)) continue;

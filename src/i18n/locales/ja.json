@@ -580,5 +580,9 @@
  "insight.loanword_spelling.kid": "You're taking on words from far away!",
  "help.howItWorks.native": "<b>遊び方:</b> オーブをタップして単語を聞き、つづりを入力するか声に出して言ってね — 答えるたびに意味が出て、間違えた単語は日をおいて <b>↻ 間違い</b> に戻ってくるよ。<b>＋ マイ単語</b> から自分の単語を取りこめば何でも練習できて、進み具合はこの端末に保存されるよ。",
  "speech.noVoice.native": "いま音声を再生できません — 端末が消音になっていないか確認してね。",
- "photo.split": "分ける:"
+ "photo.split": "分ける:",
+ "spellit.guide.hear": "オーブをタップして単語を聞こう。",
+ "spellit.guide.check": "単語が合っていたら ✓ をタップ。",
+ "spellit.guide.start": "わかった",
+ "spellit.guide.again": "使い方"
 }

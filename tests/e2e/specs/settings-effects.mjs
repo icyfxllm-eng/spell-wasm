@@ -306,4 +306,41 @@ export async function run(browser, base, suite) {
       assert(chips === 0, `Spell Jr saw ${chips} lock chip(s) — absence, never locks`);
     } finally { await ctx.close(); }
   });
+
+  await suite.test('spellit_guide_shows_once_and_can_be_replayed', async () => {
+    const { ctx, page } = await openApp(browser, base, { lang: 'en' });
+    try {
+      // AUDITPASS F13. Eric's yellow-circled mic annotation: the flow was
+      // not discoverable. ONCE, with a way back (his call) — a returning
+      // child should not re-read four steps, but showing it once must not
+      // make it unfindable, so the mic surface can replay it.
+      const shown = await page.evaluate(() => {
+        document.getElementById('sayItBtn')?.click();
+        return document.getElementById('spellItGuide')?.classList.contains('show');
+      });
+      assert(shown, 'the guide appears on first entry');
+      const steps = await page.evaluate(() =>
+        [...document.querySelectorAll('#spellItGuide .sig-steps li')].map((l) => l.textContent.trim()));
+      assert(steps.length === 4, `four steps, got ${steps.length}`);
+      assert(/letter/i.test(steps.join(' ')), 'the letters rule is taught, not just implied');
+
+      await page.evaluate(() => document.getElementById('spellItGuideGo')?.click());
+      const again = await page.evaluate(() => {
+        document.getElementById('sayItBtn')?.click();
+        return document.getElementById('spellItGuide')?.classList.contains('show');
+      });
+      assert(!again, 'a second entry goes straight to play — shown ONCE');
+
+      const replayed = await page.evaluate(() => {
+        document.getElementById('spellItGuideAgain')?.click();
+        return document.getElementById('spellItGuide')?.classList.contains('show');
+      });
+      assert(replayed, 'the way back works');
+      // ...and replaying must NOT forget: asking for a reminder is not the
+      // same as never having read it, and clearing would re-show it unbidden.
+      const stillSeen = await page.evaluate(() =>
+        localStorage.getItem('spell_spellit_guide_seen'));
+      assert(stillSeen === '1', 'replaying does not reset the seen flag');
+    } finally { await ctx.close(); }
+  });
 }

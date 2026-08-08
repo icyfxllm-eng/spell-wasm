@@ -580,5 +580,9 @@
  "insight.loanword_spelling.kid": "You're taking on words from far away!",
  "help.howItWorks.native": "<b>Jinsi inavyofanya kazi:</b> gusa tufe kusikia neno, kisha andika au tamka herufi zake — maana huonekana baada ya kila jibu, na makosa hurudi baada ya siku kadhaa katika <b>↻ Makosa</b>. Ingiza maneno yako mwenyewe katika <b>＋ Maneno yangu</b> ili kufanya mazoezi ya chochote; maendeleo yako huhifadhiwa kwenye kifaa hiki.",
  "speech.noVoice.native": "Sauti haipatikani kwa sasa — angalia kama kifaa chako kimezimwa sauti.",
- "photo.split": "Gawanya:"
+ "photo.split": "Gawanya:",
+ "spellit.guide.hear": "Gusa tufe kusikia neno lako.",
+ "spellit.guide.check": "Gusa ✓ neno lako likiwa sahihi.",
+ "spellit.guide.start": "Nimeelewa",
+ "spellit.guide.again": "Jinsi inavyofanya kazi"
 }

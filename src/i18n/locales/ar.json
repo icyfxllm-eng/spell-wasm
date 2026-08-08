@@ -580,5 +580,9 @@
  "insight.loanword_spelling.kid": "You're taking on words from far away!",
  "help.howItWorks.native": "<b>كيف تعمل اللعبة:</b> اضغط على الكرة لتسمع كلمة، ثم اكتب تهجئتها أو انطقها — يظهر المعنى بعد كل إجابة، وتعود الأخطاء على مدى أيام في <b>↻ الأخطاء</b>. استورد كلماتك الخاصة من <b>＋ كلماتي</b> لتتدرب على أي شيء، ويُحفظ تقدّمك على هذا الجهاز.",
  "speech.noVoice.native": "النطق غير متاح الآن — تأكد من أن جهازك ليس في وضع الصامت.",
- "photo.split": "تقسيم:"
+ "photo.split": "تقسيم:",
+ "spellit.guide.hear": "اضغط على الكرة لتسمع كلمتك.",
+ "spellit.guide.check": "اضغط ✓ عندما تصبح كلمتك صحيحة.",
+ "spellit.guide.start": "فهمت",
+ "spellit.guide.again": "كيف يعمل"
 }

@@ -686,6 +686,18 @@ pub fn reflect(app: &App) {
 }
 
 /// Attach the mic handlers — ONLY when the flag is on. Flag off ⇒ nothing wired.
+/// F13 — set once the guide has been read, so it shows exactly one time.
+const GUIDE_SEEN: &str = "spell_spellit_guide_seen";
+
+/// Route into play through the SAME hidden entry every other launcher
+/// uses, so the guide adds a step in front of the flow rather than a
+/// second way in.
+fn enter_play() {
+    if let Ok(el) = crate::dom::el("spellAloudEnter").dyn_into::<web_sys::HtmlElement>() {
+        el.click();
+    }
+}
+
 pub fn wire(app: &App) {
     if !enabled() {
         return;
@@ -720,16 +732,44 @@ pub fn wire(app: &App) {
     // else replay it — so the player hears what to spell. The voice mic is already
     // shown for voice-spell languages. Mirrors the orb; scoring stays the typed path.
     // CC-HUB-CLEANUP D1: the home quick tile (sayItBtn, renamed Spell It) is
-    // the mode's single front door — same behavior as the hub entry. Routes to
-    // the CC-SPELLIT-GUIDE guide screen once that spec lands; direct entry
-    // until then (deviation flagged in the review notes).
+    // the mode's single front door — same behavior as the hub entry.
+    //
+    // AUDITPASS F13: it now routes through the guide screen the note here
+    // has been waiting for. ONCE (Eric, 2026-08-08) — a returning child
+    // should not re-read four steps to spell a word — with "How this
+    // works" on the mic surface to bring it back, so showing it once does
+    // not make it unfindable, which was the point of the annotation.
     let a_tile = app.clone();
     crate::dom::on_click("sayItBtn", move || {
-        if let Ok(el) = crate::dom::el("spellAloudEnter").dyn_into::<web_sys::HtmlElement>() {
-            el.click();
+        if crate::storage::get_raw(GUIDE_SEEN).is_none() {
+            crate::dom::add_class("spellItGuide", "show");
+        } else {
+            enter_play();
         }
         let _ = &a_tile;
     });
+    // GUARD, not optional. `dom::on_click` -> `el()` PANICS on a missing
+    // element, and a panic at wire time kills boot outright. The guide
+    // markup was briefly inside a Spell-Picture-stripped region, so the
+    // SITE build had no #spellItGuideGo and every site e2e test timed out
+    // waiting for wasm that never started. The markup is placed correctly
+    // now; this guard means a future strip-region edit cannot take the
+    // whole site down again. Same idiom as wire_placement's dom::exists.
+    if crate::dom::exists("spellItGuideGo") {
+        crate::dom::on_click("spellItGuideGo", || {
+            crate::storage::set_raw(GUIDE_SEEN, "1");
+            crate::dom::remove_class("spellItGuide", "show");
+            enter_play();
+        });
+    }
+    // The way back: replay the guide from the mic surface. Does NOT clear
+    // the seen flag — asking for help is not the same as never having read
+    // it, and clearing would re-show it unbidden on the next entry.
+    if crate::dom::exists("spellItGuideAgain") {
+        crate::dom::on_click("spellItGuideAgain", || {
+            crate::dom::add_class("spellItGuide", "show");
+        });
+    }
     let a_enter = app.clone();
     crate::dom::on_click("spellAloudEnter", move || {
         let (answered, active) = {

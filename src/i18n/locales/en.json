@@ -580,5 +580,9 @@
  "insight.loanword_spelling.kid": "You're taking on words from far away!",
  "help.howItWorks.native": "<b>How it works:</b> press the orb to hear a word, then type or speak its spelling — a meaning appears after each answer, and misses return over days under <b>↻ Misses</b>. Import your own words under <b>＋ My words</b> to practice anything, and your progress is saved on this device.",
  "speech.noVoice.native": "Speech isn't available right now — check that your device isn't on silent.",
- "photo.split": "Split:"
+ "photo.split": "Split:",
+ "spellit.guide.hear": "Tap the orb to hear your word.",
+ "spellit.guide.check": "Tap ✓ when your word looks right.",
+ "spellit.guide.start": "Got it",
+ "spellit.guide.again": "How this works"
 }

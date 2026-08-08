@@ -919,7 +919,10 @@
   .sayit-mic:active{transform:scale(.94)}
   .sayit-mic.listening{box-shadow:0 0 0 6px rgba(70,214,184,.22);border-color:var(--teal,#46d6b8);animation:sayitPulse 1.1s ease-in-out infinite}
   @keyframes sayitPulse{0%,100%{box-shadow:0 0 0 5px rgba(70,214,184,.18)}50%{box-shadow:0 0 0 12px rgba(70,214,184,.05)}}
-  .sayit-status{min-height:20px;color:var(--muted);font-size:13.5px;margin:8px 0 16px}
+
+  /* F13 guide steps: numbered because the ORDER is the lesson. */
+  .sig-steps{text-align:start;margin:10px 0 14px;padding-inline-start:22px;
+    display:flex;flex-direction:column;gap:8px;font-size:14px;line-height:1.5}  .sayit-status{min-height:20px;color:var(--muted);font-size:13.5px;margin:8px 0 16px}
   /* Age gate — sits above every other scrim; must be answered to proceed. */
   .age-scrim{z-index:60}
   .dob-row{display:flex;gap:8px;margin-bottom:8px}
@@ -1537,6 +1540,25 @@
   <!-- Say It (Feature F2): on-device pronunciation practice. All state lives in
        one modal, sub-views toggled by say_it.rs. Present in the DOM but inert and
        unreachable unless the feature flag is on (ships dark). -->
+  <!-- AUDITPASS F13 — the Spell It guide. spell_aloud.rs carried a note
+       for months: "Routes to the CC-SPELLIT-GUIDE guide screen once that
+       spec lands; direct entry until then". This is that screen.
+       Shown ONCE (storage-remembered) so a returning child is not taxed,
+       with "How this works" on the mic surface to bring it back — Eric's
+       call, 2026-08-08. Body level because a modal must never nest in a
+       screen it can outlive. -->
+  <div class="scrim" id="spellItGuide">
+    <div class="modal">
+      <h3><span aria-hidden="true">🎤</span> <span data-i18n="top.spellIt">Spell It</span></h3>
+      <ol class="sig-steps">
+        <li data-i18n="spellit.guide.hear">Tap the orb to hear your word.</li>
+        <li data-i18n="voiceSpell.listening">Listening… say the letters</li>
+        <li data-i18n="voiceSpell.spellItOut">Spell it letter by letter!</li>
+        <li data-i18n="spellit.guide.check">Tap ✓ when your word looks right.</li>
+      </ol>
+      <button class="btn btn-check" id="spellItGuideGo" data-i18n="spellit.guide.start" style="width:100%">Got it</button>
+    </div>
+  </div>
   <div class="scrim" id="sayItScrim">
     <div class="modal sayit">
       <!-- Pre-prompt: plain-language explanation shown BEFORE any permission
@@ -1557,6 +1579,7 @@
         <div class="sayit-word" id="sayItWord">—</div>
         <button class="sayit-mic" id="sayItMic" aria-label="Say the word"><span aria-hidden="true">🎤</span></button>
         <div class="sayit-status" id="sayItStatus" aria-live="polite"></div>
+        <button class="ghost" id="spellItGuideAgain" data-i18n="spellit.guide.again" style="font-size:12px">How this works</button>
         <div class="row">
           <button class="ghost" id="sayItExit" data-i18n="sayit.exit">Exit</button>
           <button class="btn btn-check" id="sayItNext" data-i18n="sayit.next" style="margin-inline-start:auto" disabled>Next word</button>

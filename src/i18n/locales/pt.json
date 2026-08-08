@@ -580,5 +580,9 @@
  "insight.loanword_spelling.kid": "You're taking on words from far away!",
  "help.howItWorks.native": "<b>Como funciona:</b> toque no orbe para ouvir uma palavra e depois escreva ou diga como se soletra — um significado aparece após cada resposta, e os erros voltam ao longo dos dias em <b>↻ Erros</b>. Importe as suas próprias palavras em <b>＋ Minhas palavras</b> para praticar o que quiser; o seu progresso fica guardado neste aparelho.",
  "speech.noVoice.native": "A voz não está disponível agora — verifique se o seu aparelho não está no silencioso.",
- "photo.split": "Dividir:"
+ "photo.split": "Dividir:",
+ "spellit.guide.hear": "Toque no orbe para ouvir a sua palavra.",
+ "spellit.guide.check": "Toque em ✓ quando a sua palavra estiver certa.",
+ "spellit.guide.start": "Entendi",
+ "spellit.guide.again": "Como funciona"
 }

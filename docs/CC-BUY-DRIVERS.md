@@ -458,3 +458,14 @@ DECISION LEDGER (Eric, 2026-08-02 — recorded at greenlight)
   so "undo" survives, and only when a segment produced nothing so a
   child's visible letters are never eaten. D7 and D10 signed — the
   audit's review gate is closed.
+
+* SHIP 147 — the Spell It guide, and the Aug 6 audit is complete. Four
+  steps on first entry, remembered after, replayable from the mic. All
+  seventeen features are now done or explicitly closed, and D1–D10 are
+  signed.
+
+* SHIP 147 — Spell Picture scrolls. The picker used a nested scroller
+  inside a fixed container: fine in every desktop measurement I took,
+  dead under WKWebView. One scroller now, the screen itself, verified at
+  378 tiles. Carries the Spell It guide, and adds docs/review/ so the
+  Spanish gloss and the 98 unaudited UI strings are a reviewable task.
