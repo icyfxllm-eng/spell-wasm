@@ -64,6 +64,9 @@ python3 tools/bank/verify_pins.py || { echo "GATE FAIL: composite pin law violat
 echo "== gate: reachability laws — scroll + modal nesting (AUDITPASS F1/F4)"
 node scripts/scroll-check.mjs || { echo "GATE FAIL: scroll law"; exit 1; }
 
+echo "== gate: element IDs are unique (CC-SPELLPIC F0)"
+node scripts/dom-id-check.mjs || { echo "GATE FAIL: duplicate element ID"; exit 1; }
+
 echo "== gate: modes registry has implementations"
 # This check was CORRECT and UNREAD. It had been reporting that calendar,
 # translate and reports were registry entries with no flag — three live

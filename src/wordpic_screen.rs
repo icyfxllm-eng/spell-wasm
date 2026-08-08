@@ -159,14 +159,11 @@ pub fn wire(app: &App) {
             open_play(&a, &id);
         }
     });
-    let a = app.clone();
-    dom::on_click("wpShare", move || {
-        let lang = LANG.with(|l| l.borrow().clone());
-        let pic = PIC.with(|p| p.borrow().clone());
-        let n = PLACED.with(Cell::get);
-        share_wordpic(&lang, &pic, n);
-        let _ = &a;
-    });
+    // NOTE: #wpShare is wired ONCE, below, with the image path. There used
+    // to be a second, earlier on_click here that called share_wordpic
+    // directly. dom::on_click is addEventListener -- it ADDS, it never
+    // replaces -- so both fired on a single tap and the player got a text
+    // share and an image share from one press.
     // CC-FINALE: Continue is the one advancing affordance, and it is always
     // one tap away. Nothing else leaves the rest state on its own.
     let a = app.clone();
@@ -1144,6 +1141,34 @@ pub fn wire_picker_inputs(app: &App) {
     });
 }
 
+/// The ONE place PIC changes, and the one place everything keyed to the
+/// picture is dropped.
+///
+/// There used to be two writers. `open_play` reset the reroll counter and
+/// the feed; `open_gallery_piece` moved PIC and reset nothing. So merely
+/// LOOKING at a finished fish in the gallery left SEED_BUMP on the value
+/// from whatever you had played last, and `open_play`'s
+/// `if PIC != pic_id` guard then saw fish already bound and skipped the
+/// reset -- silently reseeding the next fish you played
+/// (`layout_feed_opt(.., seed + bump, .., bump >= 5)` changes both the
+/// word feed and the relax flag). FEED, LADDER and MILESTONE were left
+/// stale by the same path; nothing reads them before `open_play`
+/// overwrites them today, which made it latent rather than live.
+///
+/// Two writers with different discipline is the bug. One writer.
+fn bind_pic(pic_id: &str) {
+    if PIC.with(|x| x.borrow().as_str() == pic_id) {
+        // Same picture: the reroll position is deliberately kept, so
+        // reopening what you were just on does not reshuffle it.
+        return;
+    }
+    PIC.with(|x| *x.borrow_mut() = pic_id.to_string());
+    SEED_BUMP.with(|b| b.set(0));
+    MILESTONE.with(|c| c.set(0));
+    FEED.with(|f| f.borrow_mut().clear());
+    LADDER.with(|l| l.borrow_mut().clear());
+}
+
 fn open_play(app: &App, pic_id: &str) {
     let lang = LANG.with(|l| l.borrow().clone());
     let Some(p) = wordpic::picture(pic_id) else { return };
@@ -1151,10 +1176,7 @@ fn open_play(app: &App, pic_id: &str) {
     let run = s.open(pic_id, &lang);
     let first_time = !s.how_shown;
     wordpic::save(&s);
-    if PIC.with(|x| x.borrow().clone()) != pic_id {
-        SEED_BUMP.with(|b| b.set(0));
-    }
-    PIC.with(|x| *x.borrow_mut() = pic_id.to_string());
+    bind_pic(pic_id);
     PLACED.with(|c| c.set(run.words.len() as u32));
     MILESTONE.with(|c| c.set(0));
     // v6: the layout engine solves words AND placements together. Placed
@@ -1266,9 +1288,89 @@ fn close_play(app: &App) {
     open_picker(app);
 }
 
+thread_local! {
+    /// CC-SPELLPIC F0. Monotonic namespace for SVG element IDs.
+    ///
+    /// An `href="#sl3"` resolves against the DOCUMENT, not the enclosing
+    /// <svg>. Both ID generators here used a bare loop index, so every
+    /// picture with a baseline emitted `sl0` and every picture with a
+    /// stroke emitted `wps0`. Two picture SVGs alive at once -- which is
+    /// permanent, since #wpStage and #wpRevealStage are both always in
+    /// #wpPlay, and the gallery concatenates one SVG per trophy -- meant
+    /// the second one's <textPath>s bound to the FIRST one's geometry.
+    /// The dragon's words rendered along the fish's baselines.
+    ///
+    /// One bump per render call, not per picture: the same picture
+    /// legitimately appears twice (a gallery tile and the reveal of that
+    /// tile), and those two copies must not share IDs either.
+    static SVG_NS: Cell<u32> = const { Cell::new(0) };
+}
+
+fn next_ns() -> u32 {
+    SVG_NS.with(|n| {
+        let v = n.get().wrapping_add(1);
+        n.set(v);
+        v
+    })
+}
+
+/// Test-only: erase the per-render ID namespace so two renders of the same
+/// geometry can be compared byte-for-byte.
+///
+/// F0 made every render mint its own namespace (`sl7_0`, not `sl0`) — that
+/// IS the fix, and it means any test comparing two renders must compare
+/// them modulo the counter. Both directions matter. `assert_eq!` pairs
+/// start failing for a reason that is not the property under test, and,
+/// less obviously, `assert_ne!` pairs start PASSING for a reason that is
+/// not the property under test: `gallery_rerender_is_retroactive` asserts
+/// that a palette changes the output, and two different namespaces alone
+/// would satisfy that forever.
+///
+/// The distinctness of the namespaces is a separate law, held by
+/// `two_renders_never_share_element_ids`. This helper must never be used
+/// there — it would erase exactly what that test exists to check.
+#[cfg(test)]
+fn strip_ns(svg: &str) -> String {
+    let b = svg.as_bytes();
+    // Byte-wise, not char-wise: word text can be non-ASCII, and only ASCII
+    // digits and one underscore are ever dropped.
+    let mut out: Vec<u8> = Vec::with_capacity(b.len());
+    let mut i = 0;
+    while i < b.len() {
+        // A namespace only ever appears inside `id="sl7_0"` or
+        // `href="#sl7_0"`, so it always sits just after a quote or a hash.
+        let anchored = i > 0 && (b[i - 1] == b'"' || b[i - 1] == b'#');
+        let pfx = if !anchored {
+            0
+        } else if b[i..].starts_with(b"wps") {
+            3
+        } else if b[i..].starts_with(b"sl") {
+            2
+        } else {
+            0
+        };
+        if pfx > 0 {
+            let mut j = i + pfx;
+            let first_digit = j;
+            while j < b.len() && b[j].is_ascii_digit() {
+                j += 1;
+            }
+            if j > first_digit && b.get(j) == Some(&b'_') {
+                out.extend_from_slice(&b[i..i + pfx]);
+                i = j + 1;
+                continue;
+            }
+        }
+        out.push(b[i]);
+        i += 1;
+    }
+    String::from_utf8(out).expect("a byte-wise copy preserves UTF-8")
+}
+
 /// Build the SVG canvas from the SOLVER's placements (v6 L2 path-lock: the
 /// renderer accepts no free positions — only slots and placements).
 fn render_canvas(p: &wordpic::Picture, lang: &str, words: &[String]) {
+    let ns = next_ns();
     // v8.2 SCANLOCK: when the subject ships a pinned scan, the device
     // plans through the SAME pure crate against the SAME data as CI, so
     // the layout proven legal offline is the layout drawn here. A
@@ -1343,7 +1445,7 @@ fn render_canvas(p: &wordpic::Picture, lang: &str, words: &[String]) {
                 .enumerate()
                 .map(|(k, (x, y))| format!("{}{x:.1} {y:.1} ", if k == 0 { "M" } else { "L" }))
                 .collect();
-            svg.push_str(&format!("<path id=\"wps{si}\" d=\"{d}\"/>"));
+            svg.push_str(&format!("<path id=\"wps{ns}_{si}\" d=\"{d}\"/>"));
         }
     }
     svg.push_str("</defs>");
@@ -1365,7 +1467,7 @@ fn render_canvas(p: &wordpic::Picture, lang: &str, words: &[String]) {
             match (&sl.poly, &sl.stack) {
                 (Some(_), _) => {
                     svg.push_str(&format!(
-                        "<use href=\"#wps{si}\" class=\"wp-outline{}\"/>",
+                        "<use href=\"#wps{ns}_{si}\" class=\"wp-outline{}\"/>",
                         if is_next { " next" } else { "" }
                     ));
                 }
@@ -1426,7 +1528,7 @@ fn render_canvas(p: &wordpic::Picture, lang: &str, words: &[String]) {
                 // letter-spacing alone (round 2) let real font metrics spill
                 // past the slot: the star overlap escape.
                 svg.push_str(&format!(
-                    "<text class=\"{cls}\" data-s=\"{si}\" font-size=\"{:.0}\" text-anchor=\"middle\"><textPath href=\"#wps{si}\" startOffset=\"50%\" textLength=\"{:.0}\" lengthAdjust=\"spacingAndGlyphs\">{}</textPath></text>",
+                    "<text class=\"{cls}\" data-s=\"{si}\" font-size=\"{:.0}\" text-anchor=\"middle\"><textPath href=\"#wps{ns}_{si}\" startOffset=\"50%\" textLength=\"{:.0}\" lengthAdjust=\"spacingAndGlyphs\">{}</textPath></text>",
                     pl.size,
                     poly.len() * pl.fill,
                     dom::escape_html(w)
@@ -1516,6 +1618,7 @@ pub fn scanlock_svg(
     words: &[String],
     mode: RenderMode,
 ) -> String {
+    let ns = next_ns();
     let complex = complex_script(lang);
     let placed = words.len().min(plan.placements.len());
     let mut svg = String::from("<svg viewBox=\"0 0 512 512\" xmlns=\"http://www.w3.org/2000/svg\">");
@@ -1542,7 +1645,7 @@ pub fn scanlock_svg(
             .enumerate()
             .map(|(k, (x, y))| format!("{}{x:.1} {y:.1} ", if k == 0 { "M" } else { "L" }))
             .collect();
-        svg.push_str(&format!("<path id=\"sl{i}\" d=\"{d}\"/>"));
+        svg.push_str(&format!("<path id=\"sl{ns}_{i}\" d=\"{d}\"/>"));
     }
     svg.push_str("</defs>");
     // unspelled placements draw as the pinned stroke (F5)
@@ -1618,7 +1721,7 @@ pub fn scanlock_svg(
             ));
         } else {
             svg.push_str(&format!(
-                "<text class=\"{cls}\"{fill} font-size=\"{:.0}\"><textPath href=\"#sl{i}\" textLength=\"{len:.0}\" lengthAdjust=\"spacing\">{}</textPath></text>",
+                "<text class=\"{cls}\"{fill} font-size=\"{:.0}\"><textPath href=\"#sl{ns}_{i}\" textLength=\"{len:.0}\" lengthAdjust=\"spacing\">{}</textPath></text>",
                 pl.glyph_size,
                 dom::escape_html(&pl.word)
             ));
@@ -1677,7 +1780,7 @@ fn open_gallery_piece(app: &App, pic: &str) {
     let _ = app;
     let st = wordpic::load();
     let Some(run) = st.run(pic, &lang).cloned() else { return };
-    PIC.with(|p| *p.borrow_mut() = pic.to_string());
+    bind_pic(pic);
     PLACED.with(|c| c.set(run.words.len() as u32));
     match crate::spellpic::plan(pic, &lang, run.seed) {
         Some(plan) => dom::set_html(
@@ -2464,8 +2567,9 @@ mod color_render_tests {
 
     fn outline_bytes(svg: &str) -> String {
         // everything that is NOT a word glyph — the state layer that
-        // Feature 5 freezes as monochrome.
-        svg.split("<text").next().unwrap_or("").to_string()
+        // Feature 5 freezes as monochrome. strip_ns because the <defs>
+        // fall in this slice and carry the per-render ID namespace.
+        strip_ns(svg.split("<text").next().unwrap_or(""))
     }
 
     /// Done #5 + F1: a color-live subject renders its LANDED words in
@@ -2507,7 +2611,11 @@ mod color_render_tests {
             &plan_for(&learn.id, vec!["coat".into(), "coat".into()]),
             "en", &words, RenderMode::Play);
         let plain = scanlock_svg(&plan_for(&learn.id, vec![]), "en", &words, RenderMode::Play);
-        assert_eq!(planted, plain, "a planted ref cannot color the learn shelf");
+        assert_eq!(
+            strip_ns(&planted),
+            strip_ns(&plain),
+            "a planted ref cannot color the learn shelf"
+        );
     }
 
     /// AUDITPASS F5 — ONE IN-PROGRESS HISTORY, EVERY SUBJECT ONCE.
@@ -2563,7 +2671,13 @@ mod color_render_tests {
         let after = scanlock_svg(
             &plan_for("dog", vec!["coat".into(), "earShadow".into()]),
             "en", &words, RenderMode::Play);
-        assert_ne!(before, after, "the palette reaches an already-finished piece");
+        // strip_ns or this assertion is satisfied by the ID namespace alone
+        // and stops testing the palette entirely.
+        assert_ne!(
+            strip_ns(&before),
+            strip_ns(&after),
+            "the palette reaches an already-finished piece"
+        );
         assert_eq!(outline_bytes(&before), outline_bytes(&after), "only fills changed");
         assert_eq!(
             before.matches("<text").count(),
@@ -2611,6 +2725,50 @@ mod export_tests {
         }
     }
 
+    /// CC-SPELLPIC F0. An `href="#sl0"` resolves against the DOCUMENT, not
+    /// the enclosing <svg>. Two picture SVGs therefore must not mint the
+    /// same element IDs, or the second one's <textPath>s bind to the FIRST
+    /// one's geometry and lay its words along the wrong picture. This is
+    /// the normal case, not an edge one: #wpStage and #wpRevealStage are
+    /// both permanently in #wpPlay, and the gallery concatenates one SVG
+    /// per trophy.
+    #[test]
+    fn two_renders_never_share_element_ids() {
+        let p = plan();
+        let words = ["turtle".to_string()];
+        let a = scanlock_svg(&p, "en", &words, RenderMode::Play);
+        let b = scanlock_svg(&p, "en", &words, RenderMode::Play);
+
+        // Same picture, same words, same mode -- so the only thing that may
+        // differ between these two strings is the ID namespace. Holding for
+        // two IDENTICAL renders is the strongest form of this law: if the
+        // namespaces separate here, they separate for any two renders.
+        let ids = |s: &str| -> std::collections::HashSet<String> {
+            s.match_indices(" id=\"")
+                .filter_map(|(i, m)| {
+                    let rest = &s[i + m.len()..];
+                    rest.find('"').map(|e| rest[..e].to_string())
+                })
+                .collect()
+        };
+        let (ia, ib) = (ids(&a), ids(&b));
+        assert!(!ia.is_empty(), "render minted no IDs -- this test would pass vacuously");
+        let shared: Vec<_> = ia.intersection(&ib).collect();
+        assert!(shared.is_empty(), "two renders share element IDs: {shared:?}");
+
+        // Disjoint IDs are only half of it: every reference must also
+        // resolve INSIDE its own render. A namespaced <path> paired with a
+        // stale href would collide exactly as before.
+        for (svg, own) in [(&a, &ia), (&b, &ib)] {
+            for (i, m) in svg.match_indices("href=\"#") {
+                let rest = &svg[i + m.len()..];
+                let Some(e) = rest.find('"') else { continue };
+                let target = &rest[..e];
+                assert!(own.contains(target), "href #{target} escapes its own <svg>");
+            }
+        }
+    }
+
     /// Strip what is legitimately mode-specific -- the export's own styles
     /// and background -- and what is left must be identical. This is
     /// CC-FINALE Done #1 held as an invariant instead of a pixel diff that
@@ -2625,8 +2783,13 @@ mod export_tests {
         // settled play frame and the export agree -- which is what Done #1
         // actually claims. Normalising it here keeps that honest rather than
         // letting the test pass on a technicality.
-        out.replace("<rect width=\"512\" height=\"512\" fill=\"#0e1420\"/>", "")
-            .replace("wp-word new", "wp-word")
+        // strip_ns: play and export are two separate renders, so they carry
+        // two different ID namespaces. Geometry parity is a claim about the
+        // geometry, not about the counter.
+        strip_ns(
+            &out.replace("<rect width=\"512\" height=\"512\" fill=\"#0e1420\"/>", "")
+                .replace("wp-word new", "wp-word"),
+        )
     }
 
     #[test]

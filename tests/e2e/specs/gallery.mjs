@@ -72,7 +72,16 @@ export async function run(browser, base, suite) {
       // completion frame's words, and those are live-play state -- by the
       // time the frame is settled the delays have burned off, and the
       // gallery renders at rest with none. Geometry must match exactly.
-      const settle = (html) => html.replace(/ style="animation-delay:\d+ms"/g, '');
+      // Second normalisation, CC-SPELLPIC F0: every render mints its own SVG
+      // ID namespace (`sl125_0`, not `sl0`) so that two picture SVGs in one
+      // document cannot capture each other's <textPath>s. The completion
+      // frame and the reopened trophy are therefore two different renders
+      // and carry two different namespaces. D5 is a claim about geometry,
+      // not about the counter. Mirrors strip_ns in wordpic_screen.rs.
+      const settle = (html) =>
+        html
+          .replace(/ style="animation-delay:\d+ms"/g, '')
+          .replace(/(["#])(wps|sl)\d+_/g, '$1$2_');
       await page.click('#wpGallery [data-gallery="star"]');
       await page.waitForSelector('#wpReveal.show.rest', { timeout: 5000 });
       const reopened = await page.evaluate(() => document.getElementById('wpRevealStage').innerHTML);
