@@ -411,3 +411,38 @@ labels against the shell first caught three wrong row names I had
 guessed — the real ones are "Photo → word list", "Spell It" and
 "Online Spell-Off". The spell-aloud header also records the naming trap:
 `sayItBtn` is governed by the SPELL_ALOUD flag, not `say_it`.
+
+## Ship 145 — F12 "no prices" made true, and a false claim removed
+
+F12's label promises "Bigger text, friendly words, no prices". Big text
+was real; friendly words were real (kid_filter on selection); NO PRICES
+was not. Calendar is kidSafe:true, and its planner rendered
+"Unlocks with Complete" for any week past the current one — an upsell on
+a surface a child reaches, on the very setting that says there are none.
+modes.rs states the Little Speller zero-purchase-surface doctrine and a
+playhub spec enforces it FOR TILES; nothing extended it to copy rendered
+INSIDE a surface, which is exactly how this survived. Kid Mode now shows
+absence.
+
+THE FREE CLAIM (Eric, 2026-08-08: "the app is 12.99 no matter what").
+help.howItWorks said "Everything is free" in all fifteen locales — and I
+had carried that sentence into the iOS variants I wrote for F16 without
+questioning it. With a paid download AND net.spellgame.complete as a
+product, it was false on two counts, on the screen App Review reads.
+Eric then confirmed to strip it from the site copy too. Removed from
+both keys in all fifteen locales; deleting a sentence needs no
+translation, so nothing new is unaudited.
+
+pt/pl/ja needed a second pass — their ORIGINAL copy words it differently
+from the variants I authored (Tudo é grátis vs gratuito, Wszystko jest
+darmowe vs za darmo, すべて無料です vs だよ). A blanket sweep would have
+reported success while the claim stood in three languages, so the check
+is a regex over every free-word in every locale, not a replace count.
+
+MY TEST WAS WRONG FIRST. It banned the word "Complete" outright and
+flagged the goal card "Complete 3 Daily Challenges", where it is a verb.
+A test that cannot tell an upsell from ordinary copy would force the
+product to avoid a common English word. Retargeted at the actual upsell
+— the "Unlocks with" phrase and the .gd-chip element. Fourth test today
+that needed correcting; every one failed loudly rather than passing
+empty. 94/94.

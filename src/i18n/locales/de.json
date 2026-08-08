@@ -163,7 +163,7 @@
  "guardian.strengths": "Starke Fähigkeiten",
  "guardian.summary": "{n} Wörter versucht, {c} richtig.",
  "guardian.title": "Lernbericht",
- "help.howItWorks": "<b>So funktioniert's:</b> Tippe auf die Kugel, um ein Wort zu hören, dann tippe oder sprich die Schreibweise — nach jeder Antwort erscheint eine Bedeutung, und Fehler kehren über Tage unter <b>↻ Fehler</b> zurück. Alles ist kostenlos. Englische Wörter liest dein Wortserver vor; importiere eigene unter <b>＋ Meine Wörter</b>, um alles zu üben, gesprochen mit den Stimmen deines Browsers — am besten in Chrome oder Edge am Computer. Der Fortschritt wird nur in diesem Browser gespeichert.",
+ "help.howItWorks": "<b>So funktioniert's:</b> Tippe auf die Kugel, um ein Wort zu hören, dann tippe oder sprich die Schreibweise — nach jeder Antwort erscheint eine Bedeutung, und Fehler kehren über Tage unter <b>↻ Fehler</b> zurück. Englische Wörter liest dein Wortserver vor; importiere eigene unter <b>＋ Meine Wörter</b>, um alles zu üben, gesprochen mit den Stimmen deines Browsers — am besten in Chrome oder Edge am Computer. Der Fortschritt wird nur in diesem Browser gespeichert.",
  "hint.letterOne": "(1 Buchstabe)",
  "hint.letters": "({n} Buchstaben)",
  "hub.empty": "Für diese Sprache gibt es noch keine weiteren Spielarten.",
@@ -578,7 +578,7 @@
  "insight.unstressed_vowel_ambiguity.kid": "Those soft middle sounds are tricky!",
  "insight.loanword_spelling": "Your pattern: words borrowed from other languages.",
  "insight.loanword_spelling.kid": "You're taking on words from far away!",
- "help.howItWorks.native": "<b>So funktioniert's:</b> Tippe auf die Kugel, um ein Wort zu hören, und schreib oder sprich dann die Schreibweise — nach jeder Antwort erscheint eine Bedeutung, und Fehler kommen über Tage hinweg unter <b>↻ Fehler</b> zurück. Alles ist kostenlos. Importiere eigene Wörter unter <b>＋ Meine Wörter</b>, um alles zu üben; dein Fortschritt wird auf diesem Gerät gespeichert.",
+ "help.howItWorks.native": "<b>So funktioniert's:</b> Tippe auf die Kugel, um ein Wort zu hören, und schreib oder sprich dann die Schreibweise — nach jeder Antwort erscheint eine Bedeutung, und Fehler kommen über Tage hinweg unter <b>↻ Fehler</b> zurück. Importiere eigene Wörter unter <b>＋ Meine Wörter</b>, um alles zu üben; dein Fortschritt wird auf diesem Gerät gespeichert.",
  "speech.noVoice.native": "Die Sprachausgabe ist gerade nicht verfügbar — prüfe, ob dein Gerät stummgeschaltet ist.",
  "photo.split": "Trennen:"
 }

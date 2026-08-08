@@ -163,7 +163,7 @@
  "guardian.strengths": "得意なスキル",
  "guardian.summary": "{n} 語に挑戦、{c} 語正解。",
  "guardian.title": "学習レポート",
- "help.howItWorks": "<b>遊び方:</b> オーブを押して単語を聞き、つづりを入力または発音してください — 回答ごとに意味が表示され、間違えた単語は数日かけて <b>↻ 間違い</b> に戻ってきます。すべて無料です。英単語は単語サーバーが読み上げます。<b>＋ マイ単語</b> から自分の単語を取り込めば何でも練習でき、ブラウザの音声で読み上げられます — パソコンの Chrome か Edge が最適です。進捗はこのブラウザにのみ保存されます。",
+ "help.howItWorks": "<b>遊び方:</b> オーブを押して単語を聞き、つづりを入力または発音してください — 回答ごとに意味が表示され、間違えた単語は数日かけて <b>↻ 間違い</b> に戻ってきます。英単語は単語サーバーが読み上げます。<b>＋ マイ単語</b> から自分の単語を取り込めば何でも練習でき、ブラウザの音声で読み上げられます — パソコンの Chrome か Edge が最適です。進捗はこのブラウザにのみ保存されます。",
  "hint.letterOne": "(1文字)",
  "hint.letters": "({n}文字)",
  "hub.empty": "この言語で利用できる他の遊び方はまだありません。",
@@ -578,7 +578,7 @@
  "insight.unstressed_vowel_ambiguity.kid": "Those soft middle sounds are tricky!",
  "insight.loanword_spelling": "Your pattern: words borrowed from other languages.",
  "insight.loanword_spelling.kid": "You're taking on words from far away!",
- "help.howItWorks.native": "<b>遊び方:</b> オーブをタップして単語を聞き、つづりを入力するか声に出して言ってね — 答えるたびに意味が出て、間違えた単語は日をおいて <b>↻ 間違い</b> に戻ってくるよ。すべて無料だよ。<b>＋ マイ単語</b> から自分の単語を取りこめば何でも練習できて、進み具合はこの端末に保存されるよ。",
+ "help.howItWorks.native": "<b>遊び方:</b> オーブをタップして単語を聞き、つづりを入力するか声に出して言ってね — 答えるたびに意味が出て、間違えた単語は日をおいて <b>↻ 間違い</b> に戻ってくるよ。<b>＋ マイ単語</b> から自分の単語を取りこめば何でも練習できて、進み具合はこの端末に保存されるよ。",
  "speech.noVoice.native": "いま音声を再生できません — 端末が消音になっていないか確認してね。",
  "photo.split": "分ける:"
 }

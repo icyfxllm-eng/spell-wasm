@@ -163,7 +163,7 @@
  "guardian.strengths": "Strong skills",
  "guardian.summary": "{n} words attempted, {c} spelled right.",
  "guardian.title": "Learning report",
- "help.howItWorks": "<b>Jak to działa:</b> naciśnij kulę, aby usłyszeć słowo, a potem wpisz lub wymów jego pisownię — po każdej odpowiedzi pojawia się znaczenie, a błędy wracają przez kolejne dni w <b>↻ Błędy</b>. Wszystko jest darmowe. Angielskie słowa czyta twój serwer słów; zaimportuj własne w <b>＋ Moje słowa</b>, aby ćwiczyć cokolwiek, wymawiane głosami przeglądarki — najlepiej w Chrome lub Edge na komputerze. Postęp jest zapisywany tylko w tej przeglądarce.",
+ "help.howItWorks": "<b>Jak to działa:</b> naciśnij kulę, aby usłyszeć słowo, a potem wpisz lub wymów jego pisownię — po każdej odpowiedzi pojawia się znaczenie, a błędy wracają przez kolejne dni w <b>↻ Błędy</b>. Angielskie słowa czyta twój serwer słów; zaimportuj własne w <b>＋ Moje słowa</b>, aby ćwiczyć cokolwiek, wymawiane głosami przeglądarki — najlepiej w Chrome lub Edge na komputerze. Postęp jest zapisywany tylko w tej przeglądarce.",
  "hint.letterOne": "(1 litera)",
  "hint.letters": "({n} liter)",
  "hub.empty": "Nie ma jeszcze innych trybów gry dla tego języka.",
@@ -578,7 +578,7 @@
  "insight.unstressed_vowel_ambiguity.kid": "Those soft middle sounds are tricky!",
  "insight.loanword_spelling": "Your pattern: words borrowed from other languages.",
  "insight.loanword_spelling.kid": "You're taking on words from far away!",
- "help.howItWorks.native": "<b>Jak to działa:</b> naciśnij kulę, aby usłyszeć słowo, a potem je zapisz lub przeliteruj na głos — po każdej odpowiedzi pojawia się znaczenie, a błędy wracają przez kolejne dni w <b>↻ Błędy</b>. Wszystko jest za darmo. Zaimportuj własne słowa w <b>＋ Moje słowa</b>, aby ćwiczyć cokolwiek; twoje postępy są zapisywane na tym urządzeniu.",
+ "help.howItWorks.native": "<b>Jak to działa:</b> naciśnij kulę, aby usłyszeć słowo, a potem je zapisz lub przeliteruj na głos — po każdej odpowiedzi pojawia się znaczenie, a błędy wracają przez kolejne dni w <b>↻ Błędy</b>. Zaimportuj własne słowa w <b>＋ Moje słowa</b>, aby ćwiczyć cokolwiek; twoje postępy są zapisywane na tym urządzeniu.",
  "speech.noVoice.native": "Mowa jest teraz niedostępna — sprawdź, czy urządzenie nie jest wyciszone.",
  "photo.split": "Podziel:"
 }

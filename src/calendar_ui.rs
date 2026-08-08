@@ -181,8 +181,25 @@ fn render_detail(app: &crate::App, day: u32) {
     } else {
         // Planner. D2 (signed): beyond the current week is Complete.
         let in_free_week = week_start(day) == week_start(today);
+        // AUDITPASS F12 — Spell Jr promises "no prices", and this was the
+        // one kid-reachable surface that broke it. Calendar is
+        // kidSafe:true, so a child looking past the current week met
+        // "Unlocks with Complete" — an upsell, on the surface whose own
+        // settings row says there are none.
+        //
+        // modes.rs already states the Little Speller zero-purchase-surface
+        // doctrine and a playhub spec enforces it FOR TILES; nothing
+        // extended it to copy rendered inside a surface, which is exactly
+        // how this survived. In Kid Mode the planner shows ABSENCE — the
+        // same "absent, never locked" rule the hub follows.
+        let kid = crate::dom::doc()
+            .body()
+            .map(|b| b.class_list().contains("kid"))
+            .unwrap_or(false);
         if !in_free_week && !crate::play_hub::live_entitlements().progress_reports {
-            html.push_str(&format!("<div class=\"gd-chip\">{}</div>", t("yb.locked")));
+            if !kid {
+                html.push_str(&format!("<div class=\"gd-chip\">{}</div>", t("yb.locked")));
+            }
         } else {
             let planned = planned_for(&lang, day);
             if !planned.is_empty() {

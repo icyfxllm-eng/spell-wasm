@@ -163,7 +163,7 @@
  "guardian.strengths": "Strong skills",
  "guardian.summary": "{n} words attempted, {c} spelled right.",
  "guardian.title": "Learning report",
- "help.howItWorks": "<b>How it works:</b> press the orb to hear a word, then type or speak its spelling — a meaning appears after each answer, and misses return over days under <b>↻ Misses</b>. Everything is free. English words are read aloud by your word server; import your own under <b>＋ My words</b> to practice anything, spoken with your browser's voices — smoothest in Chrome or Edge on a computer. Progress is saved in this browser only.",
+ "help.howItWorks": "<b>How it works:</b> press the orb to hear a word, then type or speak its spelling — a meaning appears after each answer, and misses return over days under <b>↻ Misses</b>. English words are read aloud by your word server; import your own under <b>＋ My words</b> to practice anything, spoken with your browser's voices — smoothest in Chrome or Edge on a computer. Progress is saved in this browser only.",
  "hint.letterOne": "(1 letter)",
  "hint.letters": "({n} letters)",
  "hub.empty": "No extra ways to play for this language yet.",
@@ -578,7 +578,7 @@
  "insight.unstressed_vowel_ambiguity.kid": "Those soft middle sounds are tricky!",
  "insight.loanword_spelling": "Your pattern: words borrowed from other languages.",
  "insight.loanword_spelling.kid": "You're taking on words from far away!",
- "help.howItWorks.native": "<b>How it works:</b> press the orb to hear a word, then type or speak its spelling — a meaning appears after each answer, and misses return over days under <b>↻ Misses</b>. Everything is free. Import your own words under <b>＋ My words</b> to practice anything, and your progress is saved on this device.",
+ "help.howItWorks.native": "<b>How it works:</b> press the orb to hear a word, then type or speak its spelling — a meaning appears after each answer, and misses return over days under <b>↻ Misses</b>. Import your own words under <b>＋ My words</b> to practice anything, and your progress is saved on this device.",
  "speech.noVoice.native": "Speech isn't available right now — check that your device isn't on silent.",
  "photo.split": "Split:"
 }

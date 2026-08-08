@@ -163,7 +163,7 @@
  "guardian.strengths": "Ujuzi imara",
  "guardian.summary": "Maneno {n} yamejaribiwa, {c} sahihi.",
  "guardian.title": "Ripoti ya kujifunza",
- "help.howItWorks": "<b>Jinsi inavyofanya kazi:</b> bonyeza tufe usikie neno, kisha andika au tamka tahajia yake — maana huonekana baada ya kila jibu, na makosa hurudi kwa siku chini ya <b>↻ Makosa</b>. Kila kitu ni bure. Leta maneno yako chini ya <b>＋ Maneno yangu</b> ufanye mazoezi ya chochote. Maendeleo huhifadhiwa kwenye kivinjari hiki.",
+ "help.howItWorks": "<b>Jinsi inavyofanya kazi:</b> bonyeza tufe usikie neno, kisha andika au tamka tahajia yake — maana huonekana baada ya kila jibu, na makosa hurudi kwa siku chini ya <b>↻ Makosa</b>. Leta maneno yako chini ya <b>＋ Maneno yangu</b> ufanye mazoezi ya chochote. Maendeleo huhifadhiwa kwenye kivinjari hiki.",
  "hint.letterOne": "(herufi 1)",
  "hint.letters": "(herufi {n})",
  "hub.empty": "Hakuna njia za ziada za kucheza kwa lugha hii bado.",
@@ -578,7 +578,7 @@
  "insight.unstressed_vowel_ambiguity.kid": "Those soft middle sounds are tricky!",
  "insight.loanword_spelling": "Your pattern: words borrowed from other languages.",
  "insight.loanword_spelling.kid": "You're taking on words from far away!",
- "help.howItWorks.native": "<b>Jinsi inavyofanya kazi:</b> gusa tufe kusikia neno, kisha andika au tamka herufi zake — maana huonekana baada ya kila jibu, na makosa hurudi baada ya siku kadhaa katika <b>↻ Makosa</b>. Kila kitu ni bure. Ingiza maneno yako mwenyewe katika <b>＋ Maneno yangu</b> ili kufanya mazoezi ya chochote; maendeleo yako huhifadhiwa kwenye kifaa hiki.",
+ "help.howItWorks.native": "<b>Jinsi inavyofanya kazi:</b> gusa tufe kusikia neno, kisha andika au tamka herufi zake — maana huonekana baada ya kila jibu, na makosa hurudi baada ya siku kadhaa katika <b>↻ Makosa</b>. Ingiza maneno yako mwenyewe katika <b>＋ Maneno yangu</b> ili kufanya mazoezi ya chochote; maendeleo yako huhifadhiwa kwenye kifaa hiki.",
  "speech.noVoice.native": "Sauti haipatikani kwa sasa — angalia kama kifaa chako kimezimwa sauti.",
  "photo.split": "Gawanya:"
 }

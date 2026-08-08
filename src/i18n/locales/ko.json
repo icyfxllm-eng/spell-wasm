@@ -163,7 +163,7 @@
  "guardian.strengths": "강한 기술",
  "guardian.summary": "{n}개 단어 시도, {c}개 정답.",
  "guardian.title": "학습 리포트",
- "help.howItWorks": "<b>이렇게 해요:</b> 구슬을 눌러 단어를 듣고, 철자를 입력하거나 말해 보세요 — 답할 때마다 뜻이 나타나고, 틀린 단어는 며칠에 걸쳐 <b>↻ 틀린 단어</b>에 다시 나와요. 모두 무료예요. 영어 단어는 단어 서버가 읽어 줘요; <b>＋ 내 단어</b>에서 직접 가져와 무엇이든 연습하고 브라우저 음성으로 들을 수 있어요 — 컴퓨터의 Chrome이나 Edge에서 가장 매끄러워요. 진행 상황은 이 브라우저에만 저장돼요.",
+ "help.howItWorks": "<b>이렇게 해요:</b> 구슬을 눌러 단어를 듣고, 철자를 입력하거나 말해 보세요 — 답할 때마다 뜻이 나타나고, 틀린 단어는 며칠에 걸쳐 <b>↻ 틀린 단어</b>에 다시 나와요. 영어 단어는 단어 서버가 읽어 줘요; <b>＋ 내 단어</b>에서 직접 가져와 무엇이든 연습하고 브라우저 음성으로 들을 수 있어요 — 컴퓨터의 Chrome이나 Edge에서 가장 매끄러워요. 진행 상황은 이 브라우저에만 저장돼요.",
  "hint.letterOne": "(1글자)",
  "hint.letters": "({n}글자)",
  "hub.empty": "이 언어에서 이용할 수 있는 다른 플레이 방식이 아직 없습니다.",
@@ -578,7 +578,7 @@
  "insight.unstressed_vowel_ambiguity.kid": "Those soft middle sounds are tricky!",
  "insight.loanword_spelling": "Your pattern: words borrowed from other languages.",
  "insight.loanword_spelling.kid": "You're taking on words from far away!",
- "help.howItWorks.native": "<b>이렇게 해요:</b> 구슬을 눌러 단어를 듣고, 철자를 입력하거나 소리 내어 말해요 — 답할 때마다 뜻이 나오고, 틀린 단어는 며칠에 걸쳐 <b>↻ 틀린 단어</b>에 다시 나와요. 모두 무료예요. <b>＋ 내 단어</b>에서 원하는 단어를 가져와 연습할 수 있고, 진행 상황은 이 기기에 저장돼요.",
+ "help.howItWorks.native": "<b>이렇게 해요:</b> 구슬을 눌러 단어를 듣고, 철자를 입력하거나 소리 내어 말해요 — 답할 때마다 뜻이 나오고, 틀린 단어는 며칠에 걸쳐 <b>↻ 틀린 단어</b>에 다시 나와요. <b>＋ 내 단어</b>에서 원하는 단어를 가져와 연습할 수 있고, 진행 상황은 이 기기에 저장돼요.",
  "speech.noVoice.native": "지금은 음성을 사용할 수 없어요 — 기기가 무음 모드인지 확인해 보세요.",
  "photo.split": "나누기:"
 }

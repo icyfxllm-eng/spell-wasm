@@ -447,3 +447,8 @@ DECISION LEDGER (Eric, 2026-08-02 — recorded at greenlight)
   bottom safe-area inset the picker never had, on-device timing and
   geometry readouts, and the four Maestro flows for the native-gated
   controls. The device scroll failure is still open and now instrumented.
+
+* SHIP 145 — Spell Jr stops showing a child an upsell, and the app stops
+  claiming to be free when it costs $12.99. The calendar planner's
+  "Unlocks with Complete" chip is absent in Kid Mode; the free claim is
+  gone from web and app copy in all fifteen locales.

@@ -163,7 +163,7 @@
  "guardian.strengths": "强项",
  "guardian.summary": "尝试 {n} 个词，答对 {c} 个。",
  "guardian.title": "学习报告",
- "help.howItWorks": "<b>玩法：</b>按下光球听一个单词，然后输入或朗读它的拼写 — 每次作答后会出现释义，答错的词会在接下来的几天里在 <b>↻ 错词</b> 中重现。全部免费。英语单词由你的单词服务器朗读；在 <b>＋ 我的单词</b> 中导入自己的词表即可练习任何内容，用浏览器的语音朗读 — 在电脑上的 Chrome 或 Edge 中最流畅。进度仅保存在此浏览器中。",
+ "help.howItWorks": "<b>玩法：</b>按下光球听一个单词，然后输入或朗读它的拼写 — 每次作答后会出现释义，答错的词会在接下来的几天里在 <b>↻ 错词</b> 中重现。英语单词由你的单词服务器朗读；在 <b>＋ 我的单词</b> 中导入自己的词表即可练习任何内容，用浏览器的语音朗读 — 在电脑上的 Chrome 或 Edge 中最流畅。进度仅保存在此浏览器中。",
  "hint.letterOne": "(1个字母)",
  "hint.letters": "({n}个字母)",
  "hub.empty": "该语言暂时还没有其他玩法。",
@@ -578,7 +578,7 @@
  "insight.unstressed_vowel_ambiguity.kid": "Those soft middle sounds are tricky!",
  "insight.loanword_spelling": "Your pattern: words borrowed from other languages.",
  "insight.loanword_spelling.kid": "You're taking on words from far away!",
- "help.howItWorks.native": "<b>玩法：</b>点一下光球来听单词，然后输入或读出它的拼写 — 每次作答后都会显示词义，拼错的词会在几天内回到 <b>↻ 错词</b> 里。全部免费。在 <b>＋ 我的单词</b> 里导入自己的单词就能练习任何内容，进度保存在本设备上。",
+ "help.howItWorks.native": "<b>玩法：</b>点一下光球来听单词，然后输入或读出它的拼写 — 每次作答后都会显示词义，拼错的词会在几天内回到 <b>↻ 错词</b> 里。在 <b>＋ 我的单词</b> 里导入自己的单词就能练习任何内容，进度保存在本设备上。",
  "speech.noVoice.native": "现在无法朗读 — 请检查设备是否已静音。",
  "photo.split": "拆分："
 }

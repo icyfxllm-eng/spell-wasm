@@ -271,4 +271,39 @@ export async function run(browser, base, suite) {
       assert(after.includes('window'), 'other chips are untouched');
     } finally { await ctx.close(); }
   });
+
+  await suite.test('spell_jr_shows_no_prices', async () => {
+    const { ctx, page } = await openApp(browser, base, { lang: 'en' });
+    try {
+      // AUDITPASS F12. The settings row promises "Bigger text, friendly
+      // words, no prices". Big text and the friendly bank were real; NO
+      // PRICES was not. Calendar is kidSafe:true, and its planner rendered
+      // "Unlocks with Complete" for any week past the current one — an
+      // upsell on a surface a child reaches. modes.rs states the Little
+      // Speller zero-purchase-surface doctrine and playhub enforces it for
+      // TILES; nothing checked copy rendered INSIDE a surface.
+      await openSettings(page);
+      await flip(page, 'kidToggle', true);
+      await page.evaluate(() => document.getElementById('setupDone')?.click());
+      await page.waitForTimeout(200);
+      await page.evaluate(() => document.getElementById('calOpenBtn')?.click());
+      await page.waitForTimeout(600);
+      const text = await page.evaluate(() => {
+        const el = document.getElementById('calScrim');
+        return el ? (el.textContent || '') : '';
+      });
+      assert(text.length > 0, 'the calendar surface rendered');
+      // Match the UPSELL, not the English word. A first version banned
+      // "Complete" outright and flagged the goal card "Complete 3 Daily
+      // Challenges", where it is a verb — a test that cannot tell an
+      // upsell from ordinary copy would force the product to avoid a
+      // common word. The upsell is the yb.locked chip: "Unlocks with
+      // Complete", rendered as .gd-chip.
+      assert(!/Unlocks? with/i.test(text),
+        `Spell Jr saw an "Unlocks with" upsell in the calendar: ${text.slice(0, 120)}`);
+      const chips = await page.evaluate(() =>
+        document.querySelectorAll('#calScrim .gd-chip').length);
+      assert(chips === 0, `Spell Jr saw ${chips} lock chip(s) — absence, never locks`);
+    } finally { await ctx.close(); }
+  });
 }

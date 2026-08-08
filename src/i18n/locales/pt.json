@@ -163,7 +163,7 @@
  "guardian.strengths": "Pontos fortes",
  "guardian.summary": "{n} palavras tentadas, {c} corretas.",
  "guardian.title": "Relatório de aprendizagem",
- "help.howItWorks": "<b>Como funciona:</b> toque no orbe para ouvir uma palavra, depois digite ou fale a ortografia — um significado aparece após cada resposta, e os erros voltam ao longo dos dias em <b>↻ Erros</b>. Tudo é grátis. As palavras em inglês são lidas pelo seu servidor de palavras; importe as suas em <b>＋ Minhas palavras</b> para praticar qualquer coisa, faladas pelas vozes do navegador — melhor no Chrome ou Edge no computador. O progresso é salvo apenas neste navegador.",
+ "help.howItWorks": "<b>Como funciona:</b> toque no orbe para ouvir uma palavra, depois digite ou fale a ortografia — um significado aparece após cada resposta, e os erros voltam ao longo dos dias em <b>↻ Erros</b>. As palavras em inglês são lidas pelo seu servidor de palavras; importe as suas em <b>＋ Minhas palavras</b> para praticar qualquer coisa, faladas pelas vozes do navegador — melhor no Chrome ou Edge no computador. O progresso é salvo apenas neste navegador.",
  "hint.letterOne": "(1 letra)",
  "hint.letters": "({n} letras)",
  "hub.empty": "Ainda não há outras formas de jogar neste idioma.",
@@ -578,7 +578,7 @@
  "insight.unstressed_vowel_ambiguity.kid": "Those soft middle sounds are tricky!",
  "insight.loanword_spelling": "Your pattern: words borrowed from other languages.",
  "insight.loanword_spelling.kid": "You're taking on words from far away!",
- "help.howItWorks.native": "<b>Como funciona:</b> toque no orbe para ouvir uma palavra e depois escreva ou diga como se soletra — um significado aparece após cada resposta, e os erros voltam ao longo dos dias em <b>↻ Erros</b>. Tudo é gratuito. Importe as suas próprias palavras em <b>＋ Minhas palavras</b> para praticar o que quiser; o seu progresso fica guardado neste aparelho.",
+ "help.howItWorks.native": "<b>Como funciona:</b> toque no orbe para ouvir uma palavra e depois escreva ou diga como se soletra — um significado aparece após cada resposta, e os erros voltam ao longo dos dias em <b>↻ Erros</b>. Importe as suas próprias palavras em <b>＋ Minhas palavras</b> para praticar o que quiser; o seu progresso fica guardado neste aparelho.",
  "speech.noVoice.native": "A voz não está disponível agora — verifique se o seu aparelho não está no silencioso.",
  "photo.split": "Dividir:"
 }

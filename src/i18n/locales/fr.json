@@ -163,7 +163,7 @@
  "guardian.strengths": "Points forts",
  "guardian.summary": "{n} mots essayés, {c} réussis.",
  "guardian.title": "Rapport d'apprentissage",
- "help.howItWorks": "<b>Comment ça marche :</b> appuie sur l'orbe pour entendre un mot, puis tape ou prononce son orthographe — un sens apparaît après chaque réponse, et les erreurs reviennent au fil des jours dans <b>↻ Erreurs</b>. Tout est gratuit. Les mots anglais sont lus par ton serveur de mots ; importe les tiens dans <b>＋ Mes mots</b> pour t'entraîner sur tout, avec les voix de ton navigateur — idéal sur Chrome ou Edge sur ordinateur. La progression est enregistrée dans ce navigateur uniquement.",
+ "help.howItWorks": "<b>Comment ça marche :</b> appuie sur l'orbe pour entendre un mot, puis tape ou prononce son orthographe — un sens apparaît après chaque réponse, et les erreurs reviennent au fil des jours dans <b>↻ Erreurs</b>. Les mots anglais sont lus par ton serveur de mots ; importe les tiens dans <b>＋ Mes mots</b> pour t'entraîner sur tout, avec les voix de ton navigateur — idéal sur Chrome ou Edge sur ordinateur. La progression est enregistrée dans ce navigateur uniquement.",
  "hint.letterOne": "(1 lettre)",
  "hint.letters": "({n} lettres)",
  "hub.empty": "Pas encore d'autres façons de jouer dans cette langue.",
@@ -578,7 +578,7 @@
  "insight.unstressed_vowel_ambiguity.kid": "Those soft middle sounds are tricky!",
  "insight.loanword_spelling": "Your pattern: words borrowed from other languages.",
  "insight.loanword_spelling.kid": "You're taking on words from far away!",
- "help.howItWorks.native": "<b>Comment ça marche :</b> appuie sur l'orbe pour entendre un mot, puis écris-le ou épelle-le à voix haute — un sens apparaît après chaque réponse, et les erreurs reviennent au fil des jours dans <b>↻ Erreurs</b>. Tout est gratuit. Importe tes propres mots dans <b>＋ Mes mots</b> pour t'entraîner sur ce que tu veux ; ta progression est enregistrée sur cet appareil.",
+ "help.howItWorks.native": "<b>Comment ça marche :</b> appuie sur l'orbe pour entendre un mot, puis écris-le ou épelle-le à voix haute — un sens apparaît après chaque réponse, et les erreurs reviennent au fil des jours dans <b>↻ Erreurs</b>. Importe tes propres mots dans <b>＋ Mes mots</b> pour t'entraîner sur ce que tu veux ; ta progression est enregistrée sur cet appareil.",
  "speech.noVoice.native": "La voix n'est pas disponible pour le moment — vérifie que ton appareil n'est pas en mode silencieux.",
  "photo.split": "Séparer :"
 }

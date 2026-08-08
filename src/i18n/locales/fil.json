@@ -163,7 +163,7 @@
  "guardian.strengths": "Strong skills",
  "guardian.summary": "{n} words attempted, {c} spelled right.",
  "guardian.title": "Learning report",
- "help.howItWorks": "<b>Paano ito gumagana:</b> pindutin ang orb para marinig ang salita, tapos i-type o sabihin ang ispeling — may kahulugang lalabas pagkatapos ng bawat sagot, at babalik ang mga mali sa paglipas ng araw sa <b>↻ Mga Mali</b>. Libre ang lahat. Binabasa ang mga salitang Ingles ng iyong word server; mag-import ng sarili mo sa <b>＋ Mga salita ko</b> para magsanay ng kahit ano, binabasa ng mga boses ng browser mo — pinakamaayos sa Chrome o Edge sa kompyuter. Naka-save ang progreso sa browser na ito lang.",
+ "help.howItWorks": "<b>Paano ito gumagana:</b> pindutin ang orb para marinig ang salita, tapos i-type o sabihin ang ispeling — may kahulugang lalabas pagkatapos ng bawat sagot, at babalik ang mga mali sa paglipas ng araw sa <b>↻ Mga Mali</b>. Binabasa ang mga salitang Ingles ng iyong word server; mag-import ng sarili mo sa <b>＋ Mga salita ko</b> para magsanay ng kahit ano, binabasa ng mga boses ng browser mo — pinakamaayos sa Chrome o Edge sa kompyuter. Naka-save ang progreso sa browser na ito lang.",
  "hint.letterOne": "(1 titik)",
  "hint.letters": "({n} titik)",
  "hub.empty": "Wala pang ibang paraan ng paglalaro para sa wikang ito.",
@@ -578,7 +578,7 @@
  "insight.unstressed_vowel_ambiguity.kid": "Those soft middle sounds are tricky!",
  "insight.loanword_spelling": "Your pattern: words borrowed from other languages.",
  "insight.loanword_spelling.kid": "You're taking on words from far away!",
- "help.howItWorks.native": "<b>Paano ito gumagana:</b> pindutin ang orb para marinig ang isang salita, tapos i-type o sabihin ang baybay nito — may lalabas na kahulugan pagkatapos ng bawat sagot, at babalik ang mga mali sa paglipas ng mga araw sa <b>↻ Mga Mali</b>. Libre ang lahat. Mag-import ng sarili mong mga salita sa <b>＋ Mga salita ko</b> para makapag-ensayo ng kahit ano; nakaimbak ang progreso mo sa device na ito.",
+ "help.howItWorks.native": "<b>Paano ito gumagana:</b> pindutin ang orb para marinig ang isang salita, tapos i-type o sabihin ang baybay nito — may lalabas na kahulugan pagkatapos ng bawat sagot, at babalik ang mga mali sa paglipas ng mga araw sa <b>↻ Mga Mali</b>. Mag-import ng sarili mong mga salita sa <b>＋ Mga salita ko</b> para makapag-ensayo ng kahit ano; nakaimbak ang progreso mo sa device na ito.",
  "speech.noVoice.native": "Hindi available ang boses ngayon — tingnan kung naka-silent ang device mo.",
  "photo.split": "Hatiin:"
 }
