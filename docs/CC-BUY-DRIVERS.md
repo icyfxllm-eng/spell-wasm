@@ -434,3 +434,8 @@ DECISION LEDGER (Eric, 2026-08-02 — recorded at greenlight)
   hypothetical). Verified through a new seam that renders the review
   sheet in a browser, because the photo flow is native-gated and this
   UI would otherwise have shipped never having rendered. 93/93.
+
+* SHIP 143 — Calendar, Translate and Reports become reachable. Three
+  live modes had no flag arm, so the hub filtered them out and their
+  tiles never rendered on device. modes-check had been reporting it to
+  nobody; it is in the gate now.

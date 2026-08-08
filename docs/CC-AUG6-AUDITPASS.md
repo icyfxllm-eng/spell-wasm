@@ -315,3 +315,34 @@ gate.sh, so it has failed unread. Fixing the flags is a one-line-each
 change; fixing the silence is adding the check to the gate. Both belong
 in the next ship, not this one — 142 is F14 and I am not bundling a
 three-mode visibility change into it unannounced.
+
+## Ship 143 — three shipped modes could not be reached
+
+Calendar, Translate and Reports were built, wired, tested and INVISIBLE.
+`play_hub` builds `ctx.enabled` from `flags::is_on(id)`; `is_on` is a
+match ending in `_ => false`; those three had no arm. So they read as
+OFF, `permitted()` refused them, and their tiles never rendered. Their
+only other entry points are the hidden buttons the tile would have
+clicked. Eric asked hours earlier whether Calendar and Translate were
+"installed on the app yet" — they were, and nothing could open them.
+
+Three flag fns (default ON — all three are live in the registry and were
+never meant to be switchable off) plus their three `is_on` arms.
+
+WHY NOBODY SAW IT. Two reasons, both worth keeping in mind:
+  * scripts/modes-check.mjs had been saying it in plain words — "a
+    registry entry with no implementation is a tile leading nowhere" —
+    and was NOT in gate.sh. It is now. A check nobody runs does not
+    exist.
+  * A browser cannot show this. All three are platforms:["ios"], so the
+    web build omits them for a legitimate reason and looks identical
+    either way. The bug was only visible on device, which is exactly
+    where Eric found it and where CI never looks.
+
+MY FIRST TEST FOR THIS WAS VACUOUS. It built ctx.enabled straight from
+the live list and passed with the bug still in place — it proved
+`permitted()` works, which was never in doubt. Retargeted at the seam
+that actually failed (`flags::is_on` answers yes for every live mode)
+and verified by removing an arm and watching it fail. That makes three
+times today a test had to be checked against the bug it claims to catch:
+the wp-grid collapse, the F8 selftest, and this.

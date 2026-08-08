@@ -64,6 +64,13 @@ python3 tools/bank/verify_pins.py || { echo "GATE FAIL: composite pin law violat
 echo "== gate: reachability laws — scroll + modal nesting (AUDITPASS F1/F4)"
 node scripts/scroll-check.mjs || { echo "GATE FAIL: scroll law"; exit 1; }
 
+echo "== gate: modes registry has implementations"
+# This check was CORRECT and UNREAD. It had been reporting that calendar,
+# translate and reports were registry entries with no flag — three live
+# modes whose tiles therefore never rendered — and it was not in the gate,
+# so nobody saw it. A check nobody runs is a check that does not exist.
+node scripts/modes-check.mjs || { echo "GATE FAIL: a mode has no implementation"; exit 1; }
+
 echo "== gate: settings truth (AUDITPASS F8)"
 node scripts/settings-truth-check.mjs || { echo "GATE FAIL: settings truth"; exit 1; }
 node scripts/settings-truth-check.mjs --selftest || { echo "GATE FAIL: settings-truth selftest — the gate no longer bites"; exit 1; }

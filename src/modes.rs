@@ -276,6 +276,47 @@ mod tests {
         }
     }
 
+    /// THE regression that hid three shipped modes.
+    ///
+    /// `play_hub` builds `ctx.enabled` from `flags::is_on(id)`, whose
+    /// match ended in `_ => false`. calendar, translate and reports had
+    /// no arm, so on DEVICE — where the ios platform check passes — they
+    /// were filtered out and their tiles never rendered. A browser could
+    /// never show this: all three are platforms:["ios"], so the web build
+    /// omits them for a legitimate reason and looks identical.
+    ///
+    /// This asserts the ACTUAL seam. A first version of this test built
+    /// ctx.enabled straight from the live list and passed with the bug
+    /// still in place — it proved `permitted()` works, which was never in
+    /// doubt. What matters is that `flags::is_on` answers for every live
+    /// mode, because that is the function that silently said no.
+    #[test]
+    fn every_live_mode_has_a_flag_that_says_yes() {
+        crate::flags::set_test_override(None); // each flag reports its default
+        for m in all().iter().filter(|m| m.status == Status::Live) {
+            assert!(
+                crate::flags::is_on(&m.id),
+                "{} is LIVE but flags::is_on says off — it will never tile, \
+                 which is how calendar/translate/reports stayed invisible",
+                m.id
+            );
+        }
+    }
+
+    /// ...and with those flags on, a device context really does tile them.
+    #[test]
+    fn every_live_mode_tiles_on_device_when_enabled() {
+        let all = all();
+        let live: Vec<String> =
+            all.iter().filter(|m| m.status == Status::Live).map(|m| m.id.clone()).collect();
+        assert!(live.len() >= 6, "expected the shipped live set, got {live:?}");
+        let c = HubCtx { native: true, enabled: live.clone(), ..ctx() };
+        let got = ids(&visible(&all, &c));
+        for id in &live {
+            assert!(got.contains(id), "{id} is LIVE but does not tile on device — got {got:?}");
+        }
+    }
+
     #[test]
     fn a23_full_only_mode_is_absent_on_a_previewed_language() {
         let all = all();

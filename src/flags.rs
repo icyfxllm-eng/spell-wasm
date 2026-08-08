@@ -146,6 +146,32 @@ pub fn word_picture() -> bool {
     resolve(stored("word_picture").as_deref(), true)
 }
 
+/// CC-REPORTS / CC-CALENDAR / CC-TRANSLATE — three SHIPPED modes that
+/// could not be reached.
+///
+/// `play_hub` builds its enabled set as every mode id filtered through
+/// `is_on`, and `is_on` is a match ending in `_ => false`. These three
+/// had no arm, so they read as OFF, `permitted()` refused them, and
+/// their tiles never rendered — their only other entry points are the
+/// hidden buttons the tile would have clicked. Built, wired, tested,
+/// invisible. Eric asked "is the calendar and translate installed on the
+/// app yet"; this is the answer.
+///
+/// Default ON: all three are live in the registry and were never meant
+/// to be switchable off. scripts/modes-check.mjs had been reporting the
+/// gap in plain words the whole time and was not in the gate — it is now.
+pub fn reports() -> bool {
+    resolve(stored("reports").as_deref(), true)
+}
+
+pub fn calendar() -> bool {
+    resolve(stored("calendar").as_deref(), true)
+}
+
+pub fn translate() -> bool {
+    resolve(stored("translate").as_deref(), true)
+}
+
 /// CC-PRACTICE — the guided first-contact mode. Default ON (failure-proof,
 /// writes nothing outside its own record); per-language gate is consts::practice.
 pub fn practice() -> bool {
@@ -208,6 +234,12 @@ pub fn is_on(name: &str) -> bool {
         "streak_focal" => streak_focal(),
         #[cfg(not(feature = "web"))]
         "word_picture" => word_picture(),
+        #[cfg(not(feature = "web"))]
+        "reports" => reports(),
+        #[cfg(not(feature = "web"))]
+        "calendar" => calendar(),
+        #[cfg(not(feature = "web"))]
+        "translate" => translate(),
         _ => false,
     }
 }
