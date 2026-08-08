@@ -452,3 +452,9 @@ DECISION LEDGER (Eric, 2026-08-02 — recorded at greenlight)
   claiming to be free when it costs $12.99. The calendar planner's
   "Unlocks with Complete" chip is absent in Kid Mode; the free claim is
   gone from web and app copy in all fifteen locales.
+
+* SHIP 146 — Spell It stops accepting whole words. The rule existed in a
+  function nobody called; it is wired now, after the edit-command check
+  so "undo" survives, and only when a segment produced nothing so a
+  child's visible letters are never eaten. D7 and D10 signed — the
+  audit's review gate is closed.

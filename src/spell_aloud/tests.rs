@@ -729,3 +729,70 @@ fn d9_mic_gate_is_the_registry_not_a_per_mode_rule() {
     // button. (The on-device capability ladder in reflect() gates further.)
     assert!(!crate::consts::voice_spell("xx"), "unregistered language shows no mic");
 }
+
+/// AUDITPASS F13 — a full-word utterance yields NOTHING.
+///
+/// `interpret` had computed this since the module was written and nothing
+/// outside it ever called the result, so the rule lived on paper: say any
+/// word that is not the target and the parse scraped whatever letters it
+/// could find in the noise. These pin the classification the wiring in
+/// `on_final` now depends on.
+#[test]
+fn f13_a_spoken_word_is_not_a_spelling() {
+    use super::{interpret, SpellOutcome};
+    for word in ["cat", "hello", "banana", "i dont know"] {
+        assert!(
+            matches!(interpret(crate::consts::EN, word), SpellOutcome::WholeWord),
+            "{word:?} must read as a word, not a spelling"
+        );
+    }
+    // ...and genuine spelling still gets through, filler and all.
+    for spelled in ["see ay tee", "um see ay uh tee"] {
+        assert!(
+            matches!(interpret(crate::consts::EN, spelled), SpellOutcome::Insert(_)),
+            "{spelled:?} is a spelling and must be accepted"
+        );
+    }
+}
+
+/// F13 — the guard that protects a child's visible work.
+///
+/// Letters accumulate DURING a segment and are already on screen. The
+/// rejection fires only when the segment produced nothing, so a child who
+/// spells c-a-t and then trails off into a word keeps their letters.
+/// `says_target` may discard visible letters (D3: saying the answer voids
+/// the attempt) but a stray word must never carry that penalty.
+#[test]
+fn f13_rejection_never_eats_letters_already_spelled() {
+    use super::{interpret, parse, says_target, SpellOutcome};
+    // the trailing word alone would classify as WholeWord...
+    assert!(matches!(interpret(crate::consts::EN, "banana"), SpellOutcome::WholeWord));
+    // ...but the segment's accumulated letters are what on_final commits,
+    // and they are non-empty, so the rejection branch is not taken.
+    let spelled = parse(crate::consts::EN, "see ay tee").letters;
+    assert!(!spelled.is_empty(), "the segment really did accumulate letters");
+    // and the target-word rule is unchanged: it still voids the attempt
+    assert!(says_target("cat", "cat"), "saying the answer still voids it");
+    assert!(!says_target("banana", "cat"), "a stray word is not the target");
+}
+
+/// F13 — ordering. "undo" and "clear" are single WORDS, so the rejection
+/// must sit AFTER the edit-command check. Ahead of it, wiring the rule
+/// would have swallowed voice editing entirely.
+#[test]
+fn f13_edit_commands_survive_the_word_rejection() {
+    use super::{edit_command, interpret, Command, SpellOutcome};
+    for (utterance, expect) in [("undo", Command::Delete), ("clear", Command::Clear)] {
+        // it WOULD be rejected as a word if the order were wrong...
+        assert!(
+            matches!(interpret(crate::consts::EN, utterance), SpellOutcome::WholeWord),
+            "{utterance:?} looks like a word to interpret()"
+        );
+        // ...so edit_command must be consulted first, and still answers.
+        assert_eq!(
+            edit_command(crate::consts::EN, utterance),
+            Some(expect),
+            "{utterance:?} must stay a voice edit command"
+        );
+    }
+}

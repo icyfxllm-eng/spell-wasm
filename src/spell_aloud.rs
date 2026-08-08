@@ -995,6 +995,27 @@ fn on_final(app: &App, lang: &str, transcript: &str, is_end: bool) {
         surface_set(app, &edited);
         crate::haptics::key_tap();
         set_status(if still { "voiceSpell.listening" } else { "" });
+    } else if accumulated.is_empty()
+        && matches!(interpret(lang, transcript), SpellOutcome::WholeWord)
+    {
+        // AUDITPASS F13 — a full-word utterance is not a spelling, so it
+        // produces nothing and nudges instead. `interpret` has computed
+        // this since the module was written and NOTHING outside it ever
+        // called it, so the rule existed on paper only: say any word that
+        // is not the target and the parse scraped whatever letters it
+        // could out of the noise.
+        //
+        // TWO GUARDS, both load-bearing:
+        //   * it sits AFTER `edit_command`, because "undo" and "clear"
+        //     are single words — ahead of that check, wiring this would
+        //     have swallowed voice editing whole.
+        //   * it fires only when the segment accumulated NOTHING. Letters
+        //     spelled during a segment are already on screen; a child who
+        //     spells c-a-t and then trails off into a word must keep them.
+        //     `says_target` may discard visible letters (D3: saying the
+        //     answer voids the attempt) but a stray word must not.
+        surface_set(app, &base);
+        set_status("voiceSpell.spellItOut");
     } else {
         // Commit the accumulated letters (or the final parse if it's somehow longer).
         let final_letters = parse(lang, transcript).letters;

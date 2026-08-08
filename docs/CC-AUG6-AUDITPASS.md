@@ -24,13 +24,30 @@ Authority order: trust > layout law > fidelity > speed.
   implemented; awaiting a replacement decision.
 * D6 Spell It letters-only — per Eric's notes; letter definition comes
   from the registry, no per-language branches.
-* D7 smashed-word imports — propose-split with user confirm, never
-  silent. PENDING.
-* D8 extra-attempt single source — Tools & Features wins. PENDING.
+* D7 smashed-word imports — SIGNED (Eric, 2026-08-08). Propose-split
+  with user confirm, never silent. Retroactive: F14 shipped in 142 built
+  to this recommendation, so the signature confirms what is running.
+* D8 extra-attempt single source — DELEGATED to Claude and resolved: the
+  two controls are not duplicates (flag vs preference), Eric dropped the
+  removal plan, and the preference is now authoritative.
 * D9 family voice / offline packs — SIGNED: hide behind a remote flag
   until the Voice Studio pipeline lands. Dead Download buttons violate
   F8.
-* D10 settings-truth CI is permanent. PROPOSED STANDING RULE.
+* D10 settings-truth CI is permanent — SIGNED (Eric, 2026-08-08) as a
+  STANDING RULE. Every future toggle needs a manifest entry with an
+  observable effect and a live effect test, or the build fails. In one
+  day it found a genuinely dead switch (toolSayItToggle), forced the
+  suppressed-row rendering, shrank correctly when F7 removed two
+  controls, and proved its own selftest still bites on every run.
+
+## THE REVIEW GATE IS CLOSED (2026-08-08)
+
+The file opened "REVIEW-GATED: nothing enters the submission pipeline
+until Eric signs D1–D10." All ten are now resolved — D1/D2/D4/D9 signed
+2026-08-06, D3/D6 per Eric's notes, D5 and D8 delegated to Claude and
+implemented, D7 and D10 signed 2026-08-08. D3 needed amending on the way:
+"replace the Climb tile" would have deleted the mode's only entrance, so
+Spell Picture became a fourth tile instead.
 
 ## F0 step-0 diagnoses
 
@@ -446,3 +463,36 @@ product to avoid a common English word. Retargeted at the actual upsell
 — the "Unlocks with" phrase and the .gd-chip element. Fourth test today
 that needed correcting; every one failed loudly rather than passing
 empty. 94/94.
+
+## Ship 146 — F13 rejection wiring (tutorial deferred)
+
+F13 was far more built than the sheet implied. Saying the TARGET word
+already voided the utterance and re-prompted, even with letters mixed in;
+letters already came from a per-language lexicon with no per-language
+branches (D6 satisfied); and the re-prompt copy "Spell it letter by
+letter!" already existed in all fifteen locales.
+
+THE HOLE: `interpret()` returns SpellOutcome::WholeWord for ANY word-like
+utterance, and nothing outside the module ever called it. So the rule
+lived on paper — say any word that is not the target and the parse
+scraped whatever letters it could out of the noise. Now wired in
+`on_final`, with two guards that are the whole design:
+
+  * AFTER the edit-command check. "undo" and "clear" are single WORDS and
+    a test confirms they classify as WholeWord — wiring the rejection
+    ahead of that would have swallowed voice editing entirely.
+  * ONLY when the segment accumulated nothing. Letters spelled during a
+    segment are already on screen; a child who spells c-a-t then trails
+    off into a word must keep them. `says_target` may discard visible
+    letters (D3: saying the answer voids the attempt) but a stray word
+    must not carry that penalty.
+
+Threshold checked before wiring rather than after: WHOLE_WORD_YIELD is
+0.5 and the comparison is `<`, so "um see ay uh tee" (3/5) passes and a
+lone stray word beside one letter (1/2) still keeps the letter. It errs
+toward accepting, which is the right direction for a child spelling
+slowly.
+
+DEFERRED: the Spell It tutorial (orb → listen → say letters → confirm).
+New UI and new copy, so fourteen unaudited translations — Eric asked for
+it separately, after seeing the rejection behave on device.
