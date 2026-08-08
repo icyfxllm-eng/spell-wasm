@@ -469,3 +469,9 @@ DECISION LEDGER (Eric, 2026-08-02 — recorded at greenlight)
   dead under WKWebView. One scroller now, the screen itself, verified at
   378 tiles. Carries the Spell It guide, and adds docs/review/ so the
   Spanish gloss and the 98 unaudited UI strings are a reviewable task.
+
+* AUDIT COMPLETE (2026-08-08). Build 154 confirmed on device: Spell
+  Picture scrolls. Seventeen features, D1–D10 signed, twelve ships.
+  Pagination and the iOS scroll config were both prepared and both
+  deliberately NOT shipped — the first is unneeded dead code, the second
+  a no-op.

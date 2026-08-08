@@ -614,3 +614,42 @@ And I wrote the guard as an early `return` first, which would have
 skipped the `spellAloudEnter` wiring below it — breaking Spell It entry
 on the site while "fixing" the panic. Scoped `if` now. Checking a fix
 against what it skips is as necessary as checking what it catches.
+
+## CONFIRMED ON DEVICE — build 154 (Eric, 2026-08-08: "it scrolls")
+
+The nested-scroller diagnosis was right. `.wp-grid { overflow-y:auto }`
+inside a `position:fixed` screen scrolls in every desktop browser and can
+refuse touch entirely under WKWebView. One scroller — the screen itself —
+fixes it.
+
+WHAT THIS COST, recorded so the next device-only bug goes faster: three
+rounds of desktop measurement, each accurate and each irrelevant, plus
+three requests for a readout Eric could not easily produce. The pattern
+was visible in the CSS on day one. RULE: when a symptom is device-only
+and the desktop reports healthy, the desktop has stopped being evidence —
+stop measuring it and start eliminating patterns known to differ.
+
+## THE AUDIT IS COMPLETE
+
+Seventeen features done or explicitly closed. D1–D10 signed. Twelve ships
+(136–147, builds 143–154).
+
+Found beyond the sheet: three shipped modes nobody could reach
+(calendar/translate/reports had no flag arm), a search running the
+scan-stack planner 378 times per keystroke, a picker I broke and
+repaired, a share button and shield HUD rendering while "hidden", a spec
+that had never once executed, a checker reporting a real bug to nobody,
+an upsell shown to children in Spell Jr, and "Everything is free" in
+fifteen languages on a $12.99 app.
+
+FALLBACK NOT SHIPPED: picker pagination was drafted (8 tiles/page, no
+scrolling required, no new strings) as insurance against the scroll fix
+failing. It is not needed and is NOT in the tree — dead code behind a
+dark flag is a maintenance cost with no user. The draft stays in the
+session scratchpad if the class of bug ever returns.
+
+CONFIG NOT SHIPPED: `ios.scrollEnabled` was queued as belt-and-braces.
+It defaults to true in Capacitor, so with scrolling proven working it
+would be a no-op committed for reassurance — and `contentInset` was
+deliberately never touched because it moves safe-area layout and would
+confound the fix just verified.
