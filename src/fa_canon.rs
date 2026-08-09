@@ -47,15 +47,33 @@ const FA_LETTERS: &str = "\u{627}\u{628}\u{67e}\u{62a}\u{62b}\u{62c}\u{686}\u{62
 /// the fixed point. This is an ordering change, not a table change — no row is
 /// added, removed or altered — but it is a deliberate deviation from the
 /// literal reading and is flagged for Eric.
+/// # Why NFC runs before the rows, not only after
+///
+/// The harakat row strips U+064B–065F, which contains MADDAH ABOVE (U+0653)
+/// and HAMZA ABOVE (U+0654). A DECOMPOSED آ is ا + U+0653, so stripping first
+/// would quietly turn آب into اب — losing a distinction Eric ruled meaningful.
+/// Composing first turns those sequences into أ and آ, which the rows then
+/// handle deliberately: أ folds to ا, آ is kept.
 pub fn canon(s: &str) -> String {
     let folded = fold_presentation_forms(s);
-    let mapped: String = folded
+    let composed: String = folded.nfc().collect();
+    let mapped: String = composed
         .chars()
         .filter_map(|c| match c {
             // Arabic yeh / alef maksura -> Persian yeh
             '\u{64a}' | '\u{649}' => Some('\u{6cc}'),
             // Arabic kaf -> Persian kaf
             '\u{643}' => Some('\u{6a9}'),
+            // D1 EXTENSION (Eric 2026-08-09, "whatever doesn't limit the
+            // player or frustrate them"): alef with hamza folds to plain alef
+            // and teh marbuta to heh. These are not Persian letters — standard
+            // Persian orthography already writes ا and ه — so a bank word
+            // carrying them is mis-sourced, and normalising is what lets the
+            // player type the word they actually see. آ is NOT here: it is a
+            // real distinction and is kept (leniency for it lives in
+            // `match_key`, not in the stored form).
+            '\u{623}' | '\u{625}' => Some('\u{627}'),
+            '\u{629}' => Some('\u{647}'),
             // Eastern-Arabic digits -> Persian digits
             '\u{660}'..='\u{669}' => {
                 char::from_u32(c as u32 - 0x0660 + 0x06F0)
@@ -93,10 +111,44 @@ fn fold_presentation_forms(s: &str) -> String {
         .collect()
 }
 
+/// Beyond the 32: legal in a canonical fa word, and reachable on the fa
+/// keyboard (آ ء on long-press of ا, ؤ on و, ئ on ی).
+///
+/// D1 EXTENSION (Eric 2026-08-09). The specified set of "32 letters + ZWNJ +
+/// digits" rejects آب — water — because آ is counted as a form of ا rather
+/// than a letter. A lint that fails on ordinary vocabulary is the definition
+/// of limiting the player. ء ؤ ئ join it: they are genuinely Persian, in
+/// جزء, مؤسسه, مسئول, and unlike أ إ ة they have no plain-letter equivalent
+/// that standard orthography would substitute.
+const FA_EXTRA: &str = "\u{622}\u{621}\u{624}\u{626}";
+
 /// The closed set of codepoints a canonical fa bank word may contain:
-/// the 32 letters, ZWNJ, and Persian digits.
+/// the 32 letters, the four above, ZWNJ, and Persian digits.
 pub fn is_fa_legal_char(c: char) -> bool {
-    FA_LETTERS.contains(c) || c == ZWNJ || ('\u{6f0}'..='\u{6f9}').contains(&c)
+    FA_LETTERS.contains(c)
+        || FA_EXTRA.contains(c)
+        || c == ZWNJ
+        || ('\u{6f0}'..='\u{6f9}').contains(&c)
+}
+
+/// What an answer is COMPARED against — canonical, minus the distinctions a
+/// player should never lose a round over.
+///
+/// F2 states the principle for ZWNJ: the player spells letters, the game owns
+/// orthography. The same reasoning covers آ. The bank stores آب because that
+/// is correct Persian and correct Persian is what gets displayed — but typing
+/// اب is a keyboard reflex, not a spelling error, so the match folds آ to ا.
+/// The keyboard still offers آ on long-press, so a player who wants the exact
+/// form can produce it; accepting the plain form is generosity, not a
+/// workaround for a missing key.
+///
+/// Display always uses `canon`. This is comparison only.
+pub fn match_key(s: &str) -> String {
+    canon(s)
+        .chars()
+        .filter(|c| *c != ZWNJ)
+        .map(|c| if c == '\u{622}' { '\u{627}' } else { c })
+        .collect()
 }
 
 /// Characters in `s` outside the legal set, in order, deduplicated.
@@ -193,12 +245,48 @@ mod tests {
                    "a planted Arabic yeh fails ingestion");
     }
 
-    /// Pins the gap in the specified legal set rather than quietly widening
-    /// it: آب (water) is ordinary Persian and is currently ILLEGAL, because
-    /// آ is not among the 32 letters. Awaiting Eric — see the open questions.
+    /// D1 EXTENSION (Eric 2026-08-09): آ is legal, because آب is water.
     #[test]
-    fn alef_madda_is_currently_illegal() {
-        assert_eq!(illegal_chars("\u{622}\u{628}"), vec!['\u{622}'],
-                   "if this starts passing, the legal set was extended — that needs a decision");
+    fn ordinary_persian_vocabulary_is_legal() {
+        for w in ["\u{622}\u{628}", "\u{62c}\u{632}\u{621}",
+                  "\u{645}\u{624}\u{633}\u{633}\u{647}", "\u{645}\u{633}\u{626}\u{648}\u{644}"] {
+            assert!(illegal_chars(w).is_empty(), "{w} must be legal: {:?}", illegal_chars(w));
+        }
+    }
+
+    /// The rows that fold: not Persian letters, so a bank word carrying them
+    /// is mis-sourced. Standard Persian already writes ا and ه.
+    #[test]
+    fn arabic_only_forms_normalise_away() {
+        assert_eq!(canon("\u{623}"), "\u{627}", "alef+hamza above -> alef");
+        assert_eq!(canon("\u{625}"), "\u{627}", "alef+hamza below -> alef");
+        assert_eq!(canon("\u{629}"), "\u{647}", "teh marbuta -> heh");
+        // ...and they are consequently illegal in a canonical word
+        assert_eq!(illegal_chars("\u{623}"), vec!['\u{623}']);
+    }
+
+    /// The madda survives composition. A DECOMPOSED آ is ا + U+0653, and
+    /// U+0653 sits inside the harakat range the table strips — so without
+    /// composing first, آب would silently become اب.
+    #[test]
+    fn decomposed_alef_madda_keeps_its_madda() {
+        assert_eq!(canon("\u{627}\u{653}\u{628}"), "\u{622}\u{628}", "composed, not stripped");
+        assert_eq!(canon("\u{627}\u{654}"), "\u{627}", "hamza above still folds to plain alef");
+    }
+
+    /// F2's principle, applied to آ per the ruling: correct orthography is
+    /// stored and displayed; the comparison forgives the keyboard.
+    #[test]
+    fn match_key_forgives_what_display_preserves() {
+        let stored = canon("\u{622}\u{628}");                 // آب
+        assert_eq!(stored, "\u{622}\u{628}", "display keeps the madda");
+        assert_eq!(match_key("\u{627}\u{628}"), match_key(&stored),
+                   "typing اب must be accepted for آب");
+        // ZWNJ likewise: with or without, same verdict (F2).
+        let ketabha = "\u{6a9}\u{62a}\u{627}\u{628}\u{200c}\u{647}\u{627}";
+        assert_eq!(match_key(ketabha), match_key("\u{6a9}\u{62a}\u{627}\u{628}\u{647}\u{627}"));
+        assert!(canon(ketabha).contains(ZWNJ), "but the stored form KEEPS its ZWNJ");
+        // and it stays a fixed point
+        assert_eq!(match_key(&match_key(ketabha)), match_key(ketabha));
     }
 }

@@ -125,6 +125,18 @@ const AR: Layout = Layout {
     rows: &["ضصثقفغعهخحج", "شسيبلاتنمكط", "ذرزوظدء"],
     long_press: &[('ا', "أإآ"), ('و', "ؤ"), ('ي', "ئى"), ('ت', "ة")],
 };
+// Persian (CC-PERSIAN-FOUNDATION F1). Arabic-script but NOT Arabic: ک U+06A9
+// and ی U+06CC where Arabic has ك and ي, plus the four Persian-only letters
+// پ چ ژ گ. All 32 letters sit on the BASE layer — iOS hides ژ on long-press of
+// ز, but hunting a base letter behind a hold is exactly the friction Eric's
+// 2026-08-09 ruling rules out, and unlike آ it has no lenient form the match
+// key could forgive. No row exceeds 11 keys (the de/ar maximum), so it cannot
+// overflow at 320px. Long-press carries آ ء ؤ ئ. No ZWNJ key: F2 makes it
+// orthography the game owns, never a required keystroke.
+const FA: Layout = Layout {
+    rows: &["ضصثقفغعهخحج", "شسیبلاتنمکگ", "ظطزژرذدپوچ"],
+    long_press: &[('ا', "آء"), ('و', "ؤ"), ('ی', "ئ")],
+};
 // Devanagari for Hindi (CC-HINDI-PHASE0 groundwork — the input-side companion to
 // akshara.rs; a CHARSET declaration, not a registered language). Covers the full
 // Hindi Devanagari inventory: independent vowels, consonants, matras, virama,
@@ -163,6 +175,10 @@ fn layout_for(locale: &str) -> &'static Layout {
         // pipeline reads; RTL input behaviour is still unimplemented, but these
         // are unreachable in play while rtl_blocked.
         "ar" => &AR,
+        // Unreachable until fa enters the registry (that reversal is Eric's),
+        // wired the same way ar is while rtl_blocked: the charset must exist
+        // for the pipeline to validate content against.
+        "fa" => &FA,
         "hi" => &HI,
         _ => &EN,
     }
@@ -612,6 +628,7 @@ mod tests {
             ("zh", include_str!("../assets/keyboards/zh.json")),
             ("sw", include_str!("../assets/keyboards/sw.json")),
             ("ar", include_str!("../assets/keyboards/ar.json")),
+            ("fa", include_str!("../assets/keyboards/fa.json")),
             ("hi", include_str!("../assets/keyboards/hi.json")),
         ];
         for (code, json) in jsons {
@@ -642,6 +659,29 @@ mod tests {
         let ar = reachable(&AR);
         for c in "ابتثجحخدذرزسشصضطظعغفقكلمنهوي".chars() {
             assert!(ar.contains(&c), "Arabic letter {c:?} (U+{:04X}) not reachable", c as u32);
+        }
+
+        // Persian. fa is not in BUILTIN_LANGS yet, so every_word_char_is_typeable
+        // does not reach it — without this, nothing would pin the coverage.
+        let fa = reachable(&FA);
+        for c in "ابپتثجچحخدذرزژسشصضطظعغفقکگلمنوهی".chars() {
+            assert!(fa.contains(&c), "Persian letter {c:?} (U+{:04X}) not reachable", c as u32);
+        }
+        // The extras Eric's 2026-08-09 ruling made legal must be reachable too,
+        // or the legal set admits words the player cannot type.
+        for c in "آءؤئ".chars() {
+            assert!(fa.contains(&c), "legal fa char {c:?} (U+{:04X}) not reachable", c as u32);
+        }
+        // Every base key is a Persian letter, not its Arabic lookalike: a bank
+        // word is stored canonical, so ك/ي on the keyboard would only ever
+        // produce a form the canonicalizer has to undo.
+        let base: String = FA.rows.concat();
+        assert!(!base.contains('\u{643}'), "Arabic kaf on the Persian base layer");
+        assert!(!base.contains('\u{64a}'), "Arabic yeh on the Persian base layer");
+        // And every legal codepoint round-trips: reachable => legal.
+        for c in fa.iter() {
+            assert!(crate::fa_canon::is_fa_legal_char(*c),
+                    "{c:?} is typeable but not legal in a fa word");
         }
     }
 
