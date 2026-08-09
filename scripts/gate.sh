@@ -67,6 +67,9 @@ node scripts/scroll-check.mjs || { echo "GATE FAIL: scroll law"; exit 1; }
 echo "== gate: element IDs are unique (CC-SPELLPIC F0)"
 node scripts/dom-id-check.mjs || { echo "GATE FAIL: duplicate element ID"; exit 1; }
 
+echo "== gate: every word in exactly one tier (BD-G4)"
+node scripts/tier-partition-check.mjs || { echo "GATE FAIL: a word is in two tiers"; exit 1; }
+
 echo "== gate: no tracking on joined scripts (CC-LOCALE-TYPESET F2)"
 node scripts/tracking-check.mjs || { echo "GATE FAIL: tracking on a joining script"; exit 1; }
 

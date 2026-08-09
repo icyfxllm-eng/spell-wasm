@@ -40,7 +40,6 @@ wydarzenie
 wystarczający
 zazwyczaj
 łyżka
-żółty
 żółw
 natomiast
 mieszkańców
@@ -1319,7 +1318,6 @@ zbigniewa
 zdecydowałam
 zestawieniu
 zginęły
-zimny
 zmienione
 zostawiając
 zrozumiałeś
@@ -1426,7 +1424,6 @@ literackiej
 lokali
 lubelskiego
 lucas
-lód
 magazynów
 mającego
 mającym
@@ -1506,7 +1503,6 @@ przypuszczam
 pytaniami
 pytałem
 płytki
-pływać
 rade
 rajd
 ramion
@@ -1648,7 +1644,6 @@ ceremonia
 che
 chujowa
 ciut
-ciągnąć
 collins
 crystal
 czekanie
@@ -2410,7 +2405,6 @@ szefów
 sąsiadami
 słowniku
 taksówki
-talerz
 techniką
 teledyski
 tempa
@@ -2884,7 +2878,6 @@ mazurek
 małpy
 mna
 modlitwie
-mokry
 molestowanie
 momentem
 monopol

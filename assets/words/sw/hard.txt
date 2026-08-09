@@ -32,9 +32,7 @@ biashara
 kampuni
 matibabu
 wanawake
-familia
 ulikuwa
-chakula
 binadamu
 historia
 nyumbani
@@ -73,9 +71,7 @@ kuingia
 kijamii
 kutumika
 kulikuwa
-maumivu
 kitaifa
-hadithi
 kuongeza
 wakristo
 hutokea
@@ -180,7 +176,6 @@ mwanzoni
 mapenzi
 wamebaki
 aliweza
-dhahabu
 vipindi
 wananchi
 kulevya
@@ -206,10 +201,7 @@ hifadhi
 mahitaji
 mzunguko
 sherehe
-mashine
-mwalimu
 wafuasi
-kushoto
 kinyume
 mwishoni
 marafiki
@@ -286,7 +278,6 @@ mwelekeo
 kiafrika
 kuhamia
 kupanda
-mchanga
 msichana
 kuigiza
 mikutano
@@ -366,7 +357,6 @@ kuvunja
 mhusika
 michache
 wachanga
-asubuhi
 kinaweza
 kiwanda
 kupumua
@@ -470,7 +460,6 @@ ardhini
 kuandaa
 kusimama
 uhusika
-ukurasa
 youtube
 burudani
 hawakuwa
@@ -579,7 +568,6 @@ mashtaka
 mawaziri
 mikataba
 pakubwa
-theluji
 wanasema
 kikabila
 kliniki
@@ -814,7 +802,6 @@ pumzi
 rufaa
 ruhusa
 sanifu
-shairi
 shauku
 shingo
 stesheni
@@ -925,8 +912,6 @@ inavyoonekana
 inayotumika
 inflamesheni
 jahazi
-kamera
-kelele
 kibiolojia
 kibofu
 kielimu
@@ -970,7 +955,6 @@ mashambulio
 masimulizi
 matamasha
 mchawi
-mchele
 meupe
 meusi
 mgawanyiko
@@ -985,7 +969,6 @@ obiti
 pingili
 pinzani
 rushwa
-sakafu
 shukrani
 skrini
 talaka
@@ -1097,7 +1080,6 @@ busara
 chapisho
 chote
 dhoruba
-duara
 fadhili
 fiche
 gereza
@@ -1176,7 +1158,6 @@ onesho
 posta
 ratiba
 rutuba
-sarafu
 teolojia
 tofautitofauti
 tropiki

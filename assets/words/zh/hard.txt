@@ -1,11 +1,7 @@
 jiu4shi4|就是
-xu1yao4|需要
-kai1shi3|开始
-xi1wang4|希望
 fa1sheng1|发生
 wei4le5|为了
 zhi3shi4|只是
-shi4jie4|世界
 qing2kuang4|情况
 bi3sai4|比赛
 dan1xin1|担心
@@ -50,9 +46,7 @@ ji2le5|极了
 yan2jiu1|研究
 bao3zheng4|保证
 gen1ben3|根本
-cheng2shi4|城市
 mu4qian2|目前
-you2xi4|游戏
 bi3jiao4|比较
 kao3lü4|考虑
 cun2zai4|存在
@@ -62,8 +56,6 @@ xian4chang3|现场
 xia4lai5|下来
 ge4ren2|个人
 chu2le5|除了
-zong3shi4|总是
-jing1shen2|精神
 dai4biao3|代表
 bao3chi2|保持
 tu1ran2|突然
@@ -71,7 +63,6 @@ li3mian4|里面
 que4ding4|确定
 mu4biao1|目标
 ren4wu5|任务
-rong2yi4|容易
 lian2xi4|联系
 yin1ci3|因此
 he2zuo4|合作
@@ -99,8 +90,6 @@ yan2zhong4|严重
 ge4wei4|各位
 bao1kuo4|包括
 yi4yi4|意义
-fa3lü4|法律
-fu4qin1|父亲
 bing4qie3|并且
 she4hui4|社会
 xia4qu4|下去
@@ -119,23 +108,19 @@ li3jie3|理解
 bao4dao4|报道
 fu4mu3|父母
 zhi1yi1|之一
-li4liang5|力量
 an1pai2|安排
 xiang4mu4|项目
 zao4cheng2|造成
 ren2sheng1|人生
 hui4yi4|会议
 xing4fu2|幸福
-zi4ran2|自然
 ze2ren4|责任
-shi1qu4|失去
 ren2min2|人民
 mian4dui4|面对
 shi4jian4|事件
 ya1li4|压力
 you2yu2|由于
 jie2hun1|结婚
-mu3qin1|母亲
 xun4lian4|训练
 tong2yi4|同意
 zong3tong3|总统
@@ -190,7 +175,6 @@ ting2xia4|停下
 geng4jia1|更加
 lao3ban3|老板
 qi1zi3|妻子
-shi4chang3|市场
 bi4yao4|必要
 wei1xian3|危险
 qin1ai4|亲爱
@@ -216,7 +200,6 @@ chong2jian4|重建
 ping2tai2|平台
 dong1jing1|东京
 fen4zi3|分子
-jie1dao4|街道
 xi1bu4|西部
 sui2zhe5|随着
 er4shi2|二十
@@ -393,7 +376,6 @@ wei4|喂
 o1|喔
 guo2nei4wai4|国内外
 shi4|士
-xia4|夏
 da4ge1|大哥
 jie3mei4|姐妹
 niao4|尿
@@ -489,7 +471,6 @@ wang2zi3|王子
 rui4shi4|瑞士
 you2ci3|由此
 jia3|甲
-teng2|疼
 bai3nian2|百年
 huang2hou4|皇后
 xiang1dang1yu2|相当于
@@ -504,7 +485,6 @@ hua1fei4|花费
 jie3fang4jun1|解放军
 pei2chang2|赔偿
 shen1wei4|身为
-ruan3|软
 cai3|采
 gang1tie3|钢铁
 fang2yu4|防御
@@ -549,7 +529,6 @@ jie1shou1|接收
 miao2xie3|描写
 shan4chang2|擅长
 jiao4yu4bu4|教育部
-chun1tian1|春天
 xian3zhu4|显著
 shai4|晒
 ji4|暨
@@ -561,9 +540,7 @@ mu3|母
 qi4xiang4|气象
 jiang1|江
 tang1|汤
-sha1|沙
 mei2yong4|没用
-deng1|灯
 bao4|爆
 gan1su4|甘肃
 sheng1xiao4|生效
@@ -603,7 +580,6 @@ yi1sheng1|一声
 yi1bian4|一遍
 shang4ci4|上次
 bu4yuan4|不愿
-cong2bu4|从不
 cang1ku4|仓库
 ren4yi4|任意
 gong1shi4|公式
@@ -648,7 +624,6 @@ du2zi4|独自
 wa3|瓦
 shen2me5|甚么
 ai2zheng4|癌症
-xiang4ji1|相机
 po4chan3|破产
 shen2sheng4|神圣
 cheng1zhi1wei4|称之为
@@ -784,13 +759,11 @@ qu3|娶
 ji4jie2|季节
 gu1du2|孤独
 fu4|富
-wu1ding3|屋顶
 shu3xing4|属性
 ling3|岭
 gong1zuo4zhe3|工作者
 xi1|希
 chang2yong4|常用
-ruo4|弱
 suo3zai4di4|所在地
 kuo4san4|扩散
 chi2you3|持有
@@ -950,7 +923,6 @@ she4ying3shi1|摄影师
 geng4da4|更大
 geng1huan4|更换
 fu2|服
-cun1zhuang1|村庄
 bu4zhou4|步骤
 pai4qian3|派遣
 ran2shao1|燃烧
@@ -971,13 +943,11 @@ rong2yao4|荣耀
 huo4jiang3|获奖
 xi1ya4|西亚
 feng3ci4|讽刺
-tiao4wu3|跳舞
 xuan3piao4|选票
 pei4tao4|配套
 gang1qin2|钢琴
 a1fu4han4|阿富汗
 lu4|陆
-xue3|雪
 shou3xi2|首席
 yan4zheng4|验证
 gao1feng1|高峰
@@ -1010,7 +980,6 @@ xi1te4lei1|希特勒
 dai4zou3|带走
 ping2jing4|平静
 kai1pi4|开辟
-xing2zhuang4|形状
 ying3shi4|影视
 zong3du1|总督
 bei1shang1|悲伤
@@ -1034,7 +1003,6 @@ liu2cheng2|流程
 mei2gui1|玫瑰
 yong4tu2|用途
 fan1|番
-yan2|盐
 duan3pian4|短片
 peng4dao4|碰到
 qiong2|穷
@@ -1158,7 +1126,6 @@ kun4jing4|困境
 guo2qi2|国旗
 guo2ji2|国籍
 tu2an4|图案
-yuan2|圆
 zai4chang3|在场
 di4yu4|地域
 pei2yu4|培育
@@ -1226,7 +1193,6 @@ ti3zhong4|体重
 tou1tou1|偷偷
 yang3lao3|养老
 nei4wai4|内外
-dong1tian1|冬天
 chu1guo2|出国
 chu1ban3she4|出版社
 fen1cheng2|分成
@@ -1271,7 +1237,6 @@ fen1wei2|氛围
 chao3|炒
 ai4er3lan2|爱尔兰
 fu4|父
-niu2nai3|牛奶
 qiu2mi2|球迷
 sheng1chan3li4|生产力
 yue1shu4|约束
@@ -1362,7 +1327,6 @@ shui3ni2|水泥
 she4xian2|涉嫌
 shen1hua4|深化
 man4chang2|漫长
-xiong2|熊
 kuang2|狂
 yu4mi3|玉米
 li3shi4|理事
@@ -1465,7 +1429,6 @@ huan3jie3|缓解
 lao3da4|老大
 lao3hu3|老虎
 kao3gu3|考古
-er3duo3|耳朵
 zi4dong4hua4|自动化
 yi4ren2|艺人
 meng2|蒙
@@ -1577,7 +1540,6 @@ chu3bei4|储备
 dang3nei4|党内
 gong4he2|共和
 guan1shui4|关税
-bing1|冰
 jing4|净
 chu1zu1che1|出租车
 chu1zi4|出自
@@ -1619,7 +1581,6 @@ lv3|旅
 ri4qi3|日起
 chun1qiu1|春秋
 pu3cha2|普查
-nuan3|暖
 man4|曼
 mou3ren2|某人
 mei2|梅
@@ -1681,7 +1642,6 @@ wu3ru3|侮辱
 jian4quan2|健全
 xian1qian2|先前
 guang1xu4|光绪
-gong1jiao1|公交
 ji3wei4|几位
 fen1san4|分散
 qie4shi2|切实
@@ -1713,7 +1673,6 @@ fang1yan2|方言
 xing1qi1yi1|星期一
 zuo2ri4|昨日
 an4sha1|暗杀
-yue4liang4|月亮
 qi1xian4|期限
 ji2xian4|极限
 ge2ju2|格局
@@ -1883,7 +1842,6 @@ jin3ke3neng2|尽可能
 gong1shang1|工商
 dai4gei3|带给
 chang2gui1|常规
-mao4zi5|帽子
 ping2mian4|平面
 ying1you3|应有
 cai3|彩

@@ -1691,7 +1691,6 @@ lex
 loureiro
 luxemburgo
 machine
-macio
 malandro
 manu
 marcio

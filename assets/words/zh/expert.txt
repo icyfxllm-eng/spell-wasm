@@ -78,7 +78,6 @@ yi2han4|遗憾
 bu4dui4|部队
 jie1chu4|接触
 cong1ming5|聪明
-pi2fu1|皮肤
 li4hai5|厉害
 zun1zhong4|尊重
 sun3shi1|损失
@@ -172,12 +171,10 @@ yi1mian4|一面
 zheng4zhuang4|症状
 shi4tu2|试图
 huan4zhe3|患者
-bo1li5|玻璃
 jun1shi4|军事
 fen3si1|粉丝
 zhi4yu2|至于
 suo3zai4|所在
-ling2hun2|灵魂
 dai4kuan3|贷款
 que1fa2|缺乏
 ling2chen2|凌晨
@@ -245,7 +242,6 @@ gai3wei2|改为
 wu4li3|物理
 te4zheng1|特征
 yi4yuan2|议员
-guo2wang2|国王
 xue2zhe3|学者
 kai1fang4|开放
 hai3wai4|海外
@@ -268,7 +264,6 @@ ao4men2|澳门
 fu2jian4|福建
 shi4shi4|逝世
 yuan2shi3|原始
-da4xiao3|大小
 zi4mu3|字母
 jia1zhong1|家中
 zuo3you4|左右
@@ -678,7 +673,6 @@ guang1mang2|光芒
 ru4xuan3|入选
 gong1zi5|公子
 nong2tian2|农田
-liang2|凉
 jian3ruo4|减弱
 fen1hui4|分会
 ke4|刻
@@ -695,7 +689,6 @@ hou4qin2|后勤
 fou3jue2|否决
 ge1|咯
 ge1men5|哥们
-zao4yin1|噪音
 si4chuan1sheng3|四川省
 guo2gong4|国共
 tu2xing2|图形
@@ -901,7 +894,6 @@ sheng4da4|盛大
 zhi2jue2|直觉
 zhi1hu1|知乎
 zhi1ming2du4|知名度
-ying4bi4|硬币
 li3yi2|礼仪
 zu3fu4|祖父
 dao3gao4|祷告
@@ -980,7 +972,6 @@ xi1yan1|吸烟
 jia1|嘉
 zuo4lao2|坐牢
 jian1xin4|坚信
-qiang2bi4|墙壁
 zeng1tian1|增添
 bei4shou4|备受
 fu4huo2|复活
@@ -1466,7 +1457,6 @@ ye4jie4|业界
 liang3mian4|两面
 zhi1xin1|之心
 shi4fa1|事发
-jing3|井
 jiao1zhan4|交战
 you1mei3|优美
 chuan2jiao4|传教
@@ -1557,7 +1547,6 @@ zhuo2xiang3|着想
 man2|瞒
 she4hui4xue2|社会学
 zu3mu3|祖母
-chuang1|窗
 di4yi1pi1|第一批
 di4yi1bu4|第一步
 zhu4|筑
@@ -1800,7 +1789,6 @@ cha2chu3|查处
 jian3suo3|检索
 fa3shi1|法师
 luo4ke4|洛克
-lang4|浪
 hun4xiao2|混淆
 tian1|添
 qing1shui3|清水
@@ -2407,7 +2395,6 @@ wei1sheng1wu4|微生物
 ji2xu1|急需
 xuan2ya2|悬崖
 can3an4|惨案
-jie4zhi3|戒指
 fang2zu1|房租
 da3zhao1hu1|打招呼
 tou2fang4|投放
@@ -2569,7 +2556,6 @@ an4zhong1|暗中
 zui4shen1|最深
 you3ru2|有如
 you3guo4|有过
-mu4tou5|木头
 lai2hui2|来回
 zhen3tou5|枕头
 lin2biao1|林彪
@@ -2613,7 +2599,6 @@ shen4|肾
 qiang1|腔
 zi4ci3|自此
 cai4dan1|菜单
-wa4zi5|袜子
 xi1gua1|西瓜
 ji4hua4sheng1yu4|计划生育
 ping2fen1|评分
@@ -2836,7 +2821,6 @@ di4xia4shui3|地下水
 jian1shi2|坚实
 mai2zang4|埋葬
 mo4er3ben3|墨尔本
-wai4tao4|外套
 duo1da2|多达
 da4zhuan1|大专
 da4jiang4|大将

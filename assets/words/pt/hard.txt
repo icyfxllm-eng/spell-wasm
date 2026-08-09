@@ -8,24 +8,18 @@ borboleta
 brinquedo
 cachecol
 chaminé
-chapéu
 crocodilo
 elefante
 elevador
 espinafre
 esqueleto
-família
 floresta
 guitarra
-lâmpada
 maçã
-mercado
 mochila
 montanha
 morango
 morcego
-música
-número
 padaria
 perpendicular
 pinguim
@@ -98,7 +92,6 @@ oficial
 episódio
 diversos
 crianças
-direito
 formação
 poderia
 conjunto
@@ -176,7 +169,6 @@ mudança
 últimos
 portanto
 encontra
-pequeno
 partida
 partido
 sentido
@@ -187,10 +179,8 @@ problema
 prática
 artista
 aumento
-palavra
 palavras
 campeão
-tamanho
 efeitos
 pesquisa
 projetos
@@ -232,7 +222,6 @@ relações
 assumiu
 crítica
 críticas
-difícil
 federal
 contudo
 estreia
@@ -240,7 +229,6 @@ resposta
 realizar
 valores
 títulos
-criança
 publicou
 unidade
 composto
@@ -307,7 +295,6 @@ torneio
 infância
 passaram
 décadas
-madeira
 próxima
 incluem
 mandato
@@ -378,7 +365,6 @@ expansão
 hospital
 complexo
 posições
-coração
 atingir
 possuía
 palácio
@@ -416,8 +402,6 @@ inimigos
 usuário
 chegaram
 colocado
-começar
-estrada
 padrões
 planeta
 públicas
@@ -461,7 +445,6 @@ medalha
 assinou
 cidadãos
 espanhol
-estrela
 milhares
 vontade
 esforço
@@ -503,7 +486,6 @@ espaços
 evolução
 figuras
 antigas
-fazenda
 fábrica
 marcado
 software
@@ -584,8 +566,6 @@ clientes
 dividido
 exibido
 motivos
-máquina
-comprar
 descreve
 ministro
 reinado
@@ -618,7 +598,6 @@ volumes
 aspecto
 indicado
 iniciais
-inverno
 moderno
 músicos
 policial
@@ -1126,7 +1105,6 @@ proporção
 proposto
 provocou
 publicamente
-pular
 quartel
 quintal
 secção
@@ -1275,7 +1253,6 @@ babaca
 bandeiras
 business
 campeã
-casaco
 caxias
 cerco
 cocaína
@@ -1404,7 +1381,6 @@ falecido
 fantástica
 farinha
 fisicamente
-fresco
 fumo
 gaúcho
 geraldo

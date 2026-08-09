@@ -1,7 +1,6 @@
 czekolada
 czerwony
 dinozaur
-dziecko
 hipopotam
 kalendarz
 kilometr
@@ -10,7 +9,6 @@ konieczny
 koszula
 krokodyl
 królik
-kuchnia
 lodówka
 lotnisko
 marchewka
@@ -18,13 +16,10 @@ naturalny
 piekarnia
 pierwotny
 przygoda
-rodzina
 rękawica
 serwetka
 sumienie
 szkielet
-szkoła
-szpital
 słownik
 telefon
 telewizja
@@ -34,7 +29,6 @@ uniwersytet
 urodziny
 widelec
 zasłona
-zielony
 ziemniak
 łąka
 żyrafa
@@ -100,7 +94,6 @@ pozycji
 dopiero
 stronie
 połowie
-kościół
 punktów
 kierunku
 świecie
@@ -145,7 +138,6 @@ kultury
 mężczyzn
 akademii
 pobliżu
-kształt
 łącznie
 gatunków
 kariery
@@ -320,7 +312,6 @@ oficerów
 wspólnie
 wydarzeń
 imienia
-znaleźć
 parafia
 budynki
 głównej
@@ -426,7 +417,6 @@ wysokie
 całości
 dowódca
 działał
-kobieta
 nazwisko
 rocznie
 trzecie
@@ -462,7 +452,6 @@ własnego
 zginęło
 zupełnie
 historia
-czasami
 człowiek
 dowódcą
 imieniu
@@ -487,7 +476,6 @@ tekstów
 tygodni
 wskutek
 złotych
-dzisiaj
 edukacji
 kampanii
 naukowe
@@ -672,7 +660,6 @@ wielkich
 średnicy
 drużyną
 krytyków
-książka
 niewiele
 powinny
 redakcji
@@ -888,7 +875,6 @@ zapytaj
 zasadach
 zbytnio
 zgromadzenie
-zima
 zmarłych
 zmianą
 zrobiłeś
@@ -1023,7 +1009,6 @@ inteligencji
 jakub
 jasny
 jebany
-jezioro
 ka
 king
 klasę
@@ -1201,7 +1186,6 @@ uwierz
 użyciem
 wesele
 wi
-wiersz
 więzienie
 wydane
 wyjaśnienia
@@ -1228,7 +1212,6 @@ danii
 disco
 dochody
 dowodzi
-dusza
 dystans
 dziwię
 dzwoni
@@ -1292,7 +1275,6 @@ przebiegu
 przyjaciółki
 publiczną
 publikacje
-ramię
 republice
 robin
 robiąc
@@ -1528,7 +1510,6 @@ lokalny
 lotów
 mamę
 may
-metal
 miasteczka
 mowi
 muzyczne
@@ -1975,7 +1956,6 @@ transmisji
 trump
 trwało
 turcja
-tył
 ucieka
 uczelnie
 uczestnik

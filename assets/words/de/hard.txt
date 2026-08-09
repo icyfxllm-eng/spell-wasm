@@ -26,7 +26,6 @@ Krokodil
 Löwenzahn
 Marmelade
 Muschel
-Mädchen
 Obstgarten
 Qualität
 Regierung
@@ -35,9 +34,7 @@ Schlange
 Schokolade
 Schwester
 Serviette
-Straße
 Werkzeug
-schwarz
 zwischen
 anderen
 bereits
@@ -109,7 +106,6 @@ versucht
 gehören
 entfernt
 relativ
-schnell
 gründete
 bestehen
 gesamte
@@ -136,11 +132,9 @@ weltweit
 bedeutet
 folgten
 größeren
-spielen
 geprägt
 brachte
 beendete
-bringen
 gemacht
 welcher
 gegeben
@@ -294,7 +288,6 @@ verteilt
 änderte
 gewonnen
 aktuelle
-langsam
 gefangen
 genannte
 stärker
@@ -422,7 +415,6 @@ bedient
 endlich
 gezogen
 gezählt
-hundert
 inneren
 moderne
 richtig
@@ -457,7 +449,6 @@ erklären
 geschah
 letztes
 passiert
-schwach
 versorgt
 besaßen
 besuchen
@@ -786,7 +777,6 @@ ständige
 vermerkt
 wirksam
 zählten
-brechen
 dreißig
 erlauben
 gesungen
@@ -831,7 +821,6 @@ straftaten
 stufen
 störungen
 suchst
-teller
 transparenz
 trends
 umsetzen
@@ -990,7 +979,6 @@ helm
 herstellen
 historiker
 hä
-hügel
 ingenieur
 innenminister
 jonas
@@ -1128,7 +1116,6 @@ stadtrat
 stirn
 stuttgarter
 stürzen
-tasse
 tobias
 topf
 unfassbar
@@ -1172,7 +1159,6 @@ ewigkeit
 exemplare
 explosion
 fahrzeugen
-felsen
 flammen
 flecken
 freundinnen
@@ -1202,13 +1188,11 @@ mobil
 nsu
 orientiert
 passenden
-plastik
 politisches
 prüfungen
 ringe
 royal
 russlands
-samen
 schwache
 schwachen
 solltet
@@ -1228,7 +1212,6 @@ vermutung
 vernichtet
 verschieben
 väter
-weich
 zaun
 zeitalter
 zukommen
@@ -1286,7 +1269,6 @@ kärnten
 liebhaber
 long
 manches
-mantel
 maximilian
 mayer
 mediziner
@@ -1822,7 +1804,6 @@ keines
 kleinsten
 kohl
 label
-lampe
 lothar
 lucas
 manchester
@@ -1954,7 +1935,6 @@ juristen
 kater
 ki
 kirchengemeinde
-kiste
 kollegin
 kommissar
 komödie

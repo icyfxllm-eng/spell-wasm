@@ -1,15 +1,7 @@
 hardin
 himala
-kabayo
 kamote
-kusina
-lalaki
 lamesa
-langit
-mahaba
-mainit
-malaki
-maliit
 masaya
 mataas
 ngipin
@@ -19,26 +11,17 @@ pinsan
 prutas
 putahe
 saging
-tainga
 talong
 titser
 unggoy
 aklatan
-bintana
 drayber
 kalabaw
 kamatis
 kambing
-kapatid
-kuwarto
 langgam
-mabilis
 maganda
-malamig
-ospital
-pamilya
 panahon
-sanggol
 sapatos
 sibuyas
 tadhana
@@ -49,7 +32,6 @@ kanilang
 hanggang
 dalawang
 maaaring
-lungsod
 maraming
 kaniyang
 pangalan
@@ -68,7 +50,6 @@ estados
 paggamit
 katulad
 pangkat
-katawan
 matapos
 binubuo
 panahong
@@ -79,7 +60,6 @@ inilabas
 palabas
 oktubre
 ginamit
-madalas
 namatay
 miyembro
 mayroon
@@ -92,7 +72,6 @@ rehiyon
 sistema
 sariling
 paggawa
-pagkain
 maynila
 subalit
 tinawag
@@ -103,15 +82,12 @@ dahilan
 malawak
 kabuuang
 gamitin
-trabaho
 babaeng
 larangan
 bansang
 kilalang
-kuwento
 ganitong
 bagaman
-digmaan
 bersyon
 tanging
 itinayo
@@ -120,7 +96,6 @@ militar
 patuloy
 resulta
 sapagkat
-malakas
 magiging
 isinulat
 lumabas
@@ -159,7 +134,6 @@ problema
 hapones
 bumubuo
 pagganap
-larawan
 nasabing
 pananaw
 madaling
@@ -194,7 +168,6 @@ kabuuan
 publiko
 nilikha
 griyego
-halaman
 gobyerno
 kumpanya
 lumikha
@@ -205,7 +178,6 @@ termino
 pisikal
 lalaking
 sintomas
-mahirap
 kolehiyo
 olimpiko
 gawaing
@@ -301,7 +273,6 @@ seryeng
 inilagay
 matagal
 pinatay
-liwanag
 sasakyan
 mismong
 simbolo
@@ -360,7 +331,6 @@ bersiyon
 inilipat
 kumpara
 paglipas
-sumulat
 palarong
 maiwasan
 sekswal
@@ -463,7 +433,6 @@ palapag
 palasyo
 paunang
 totoong
-tumakbo
 general
 channel
 iskolar
@@ -666,7 +635,6 @@ ikinasal
 estilong
 gintong
 itinaas
-madilim
 makukuha
 matigas
 nagpunta
@@ -743,9 +711,7 @@ daluyan
 demonyo
 gustong
 halimaw
-hanapin
 iginuhit
-mabagal
 nakatala
 narinig
 pagtakbo
@@ -826,7 +792,6 @@ roque
 saserdote
 sumigaw
 telepono
-tigil
 toni
 topic
 trade
@@ -1143,7 +1108,6 @@ nakakalungkot
 paggalang
 parusa
 pinalaki
-plato
 portal
 posts
 request

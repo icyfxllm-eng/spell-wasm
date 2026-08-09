@@ -33,7 +33,6 @@ farmacia
 hamburguesa
 hospital
 kilogramo
-lámpara
 mariposa
 mochila
 murciélago
@@ -69,7 +68,6 @@ hombres
 segundo
 millones
 nacional
-canción
 estados
 carrera
 grandes
@@ -78,7 +76,6 @@ comenzó
 octubre
 programa
 algunas
-siempre
 miembros
 partido
 llamado
@@ -129,8 +126,6 @@ director
 primero
 especies
 decidió
-hermano
-pequeño
 realizó
 anunció
 permite
@@ -166,7 +161,6 @@ estación
 popular
 pequeña
 batalla
-derecho
 sentido
 derechos
 entrada
@@ -242,7 +236,6 @@ pruebas
 fuentes
 bastante
 hermanos
-difícil
 elegido
 objetos
 descrito
@@ -259,7 +252,6 @@ humanos
 produce
 variedad
 lanzado
-palabra
 presentó
 derecha
 análisis
@@ -297,7 +289,6 @@ concepto
 familias
 propios
 cantante
-hermana
 mantuvo
 usuarios
 asimismo
@@ -352,7 +343,6 @@ formato
 poderes
 aspectos
 encontró
-maestro
 términos
 títulos
 prisión
@@ -399,7 +389,6 @@ vecinos
 enemigo
 refiere
 carreras
-corazón
 formado
 consiste
 mejorar
@@ -562,7 +551,6 @@ oficina
 alcalde
 clientes
 cuidado
-máquina
 abandonó
 dedicada
 depende
@@ -654,7 +642,6 @@ voluntad
 ecuador
 cientos
 columna
-comprar
 incluyó
 papeles
 próximo
@@ -1099,7 +1086,6 @@ favorable
 fi
 fibra
 gases
-granja
 grano
 hermosas
 hombros
@@ -1146,7 +1132,6 @@ rodillas
 ruptura
 sacando
 saldo
-saltar
 sanción
 tablas
 tanque
@@ -1165,7 +1150,6 @@ aislamiento
 alcaldía
 amarilla
 aprovechando
-buque
 burla
 carros
 compartido
@@ -1307,7 +1291,6 @@ gigantes
 gobernación
 gubernamentales
 guinea
-gustar
 guzmán
 horizonte
 incertidumbre
@@ -1485,7 +1468,6 @@ sostenible
 sucediendo
 sugerencias
 sustitución
-taza
 tributo
 turístico
 uruguayo

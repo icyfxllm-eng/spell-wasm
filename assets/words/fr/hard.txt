@@ -20,7 +20,6 @@ framboise
 girafe
 grenouille
 hirondelle
-hôpital
 kilomètre
 obstacle
 ordinateur
@@ -42,8 +41,6 @@ premier
 première
 commune
 devient
-souvent
-nouveau
 pendant
 quelques
 ensuite
@@ -54,7 +51,6 @@ nouvelle
 peuvent
 toujours
 français
-travail
 deuxième
 général
 carrière
@@ -62,7 +58,6 @@ période
 système
 enfants
 membres
-pouvoir
 beaucoup
 service
 certains
@@ -70,7 +65,6 @@ communes
 société
 plupart
 présente
-parfois
 commence
 dernière
 exemple
@@ -88,7 +82,6 @@ surtout
 laquelle
 création
 bâtiment
-prendre
 utilisé
 domaine
 lorsque
@@ -110,7 +103,6 @@ obtient
 culture
 position
 quartier
-couleur
 comprend
 millions
 troupes
@@ -166,9 +158,7 @@ pourrait
 décembre
 termine
 diverses
-trouver
 anciens
-chanson
 critique
 hauteur
 octobre
@@ -236,7 +226,6 @@ apprend
 chansons
 ancienne
 compris
-lumière
 contient
 reprend
 sociale
@@ -256,11 +245,9 @@ appelée
 demeure
 poursuit
 auteurs
-chambre
 distance
 langues
 mémoire
-semaine
 éditions
 allemand
 parcours
@@ -403,7 +390,6 @@ complet
 locales
 trouvait
 humaine
-machine
 mondial
 monument
 portant
@@ -476,7 +462,6 @@ classes
 cultures
 destiné
 devaient
-mauvais
 origines
 romaine
 viennent
@@ -566,7 +551,6 @@ oiseaux
 réaction
 suivent
 tribunal
-cheveux
 compter
 interne
 preuves
@@ -694,7 +678,6 @@ tournage
 églises
 annuelle
 auraient
-colline
 dizaines
 entière
 femelle
@@ -764,7 +747,6 @@ dossier
 facteur
 formant
 matches
-monnaie
 profite
 préparer
 rappelle
@@ -962,7 +944,6 @@ affiches
 aimerait
 amendement
 amusant
-anneau
 approcher
 are
 arrivant
@@ -1099,7 +1080,6 @@ intéressantes
 jeff
 jimmy
 karl
-lampe
 livret
 madagascar
 maquillage
@@ -1214,7 +1194,6 @@ recommencer
 reconnais
 renvoyer
 richesses
-rocher
 sacrifice
 sanction
 sauve
