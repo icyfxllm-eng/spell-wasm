@@ -33,6 +33,7 @@ mod dom;
 pub mod editor;
 mod enrich;
 pub mod entitlements;
+mod fa_canon; // CC-PERSIAN-FOUNDATION F1 (canonicalizer; fa not yet in the registry)
 mod flags;
 mod game;
 mod ghost;

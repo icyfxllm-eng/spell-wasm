@@ -90,7 +90,18 @@ if ! grep -qE "^test result: ok" "$LOG.cargo" || grep -qE "^test result: FAILED"
 fi
 
 echo "== gate: app build"
-npm run build 2>&1 | grep bundled
+# `npm run build | grep bundled` failed CORRECTLY under pipefail, but printed
+# NOTHING when it failed — grep dropped every line that was not the bundle
+# summary, including the error. Two red gates on 2026-08-08 read as silence:
+# a stale word_data.rs, then a web-feature compile break. Same family as the
+# swallowed exit code this file's header warns about — that one lied about
+# the verdict, this one told the truth and hid the reason.
+if ! npm run build > "$LOG.build" 2>&1; then
+  echo "GATE FAIL: app build"
+  tail -30 "$LOG.build"
+  exit 1
+fi
+grep bundled "$LOG.build" || true
 
 echo "== gate: e2e (app + site)"
 if ! npm run e2e > "$LOG" 2>&1; then
