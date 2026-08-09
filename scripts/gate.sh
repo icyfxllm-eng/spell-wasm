@@ -67,6 +67,9 @@ node scripts/scroll-check.mjs || { echo "GATE FAIL: scroll law"; exit 1; }
 echo "== gate: element IDs are unique (CC-SPELLPIC F0)"
 node scripts/dom-id-check.mjs || { echo "GATE FAIL: duplicate element ID"; exit 1; }
 
+echo "== gate: no tracking on joined scripts (CC-LOCALE-TYPESET F2)"
+node scripts/tracking-check.mjs || { echo "GATE FAIL: tracking on a joining script"; exit 1; }
+
 echo "== gate: modes registry has implementations"
 # This check was CORRECT and UNREAD. It had been reporting that calendar,
 # translate and reports were registry entries with no flag — three live

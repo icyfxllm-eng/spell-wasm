@@ -397,6 +397,28 @@ fn start_word(app: &App) {
     let lang = LANG.with(|l| l.borrow().clone());
     let pos = POS.with(Cell::get);
     let Some(word) = cur_word(&lang, pos) else { return };
+
+    // CC-LOCALE-TYPESET F0. #prWord shows a word in the STUDY language, and
+    // nothing stamped it — so it was invisible to every language-aware rule in
+    // the app. An Arabic practice word got `.pr-word`'s .06em tracking (which
+    // prises cursive joins apart, exactly as this codebase documents on
+    // `.ltr.joined`) and no RTL isolation.
+    //
+    // CSS could not fix it: `:lang()` on an unstamped element resolves against
+    // <html lang>, the UI locale, which would strip tracking for an Arabic
+    // speaker practising English and leave it on for an English speaker
+    // practising Arabic — the inversion game.rs warns about. The element has to
+    // declare its own language, so it does, the way say_it.rs already does.
+    //
+    // `lang` here is Practice's own session language, not `cur_lang`: Practice
+    // picks its word from its own curriculum, so keying off the play surface's
+    // word would put one word's direction on another.
+    {
+        let el = dom::el("prWord");
+        let _ = el.set_attribute("lang", &lang);
+        let _ = el.set_attribute("dir", crate::consts::dir_attr(&lang));
+    }
+
     GEN.with(|g| g.set(g.get() + 1));
     let gen = GEN.with(Cell::get);
     ECHOING.with(|c| c.set(false));

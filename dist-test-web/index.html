@@ -721,7 +721,38 @@
      way readable mode did (see .ltr.joined). Cursive scripts get `normal`. */
   .feedback .reveal:lang(ar),
   .feedback .reveal:lang(fa),
-  .feedback .reveal:lang(ur){letter-spacing:normal}
+  .feedback .reveal:lang(ur),
+  /* hi added by CC-LOCALE-TYPESET: this rule predates the Hindi finding in
+     ship 149, so Devanagari kept the .1em and its matras detached from their
+     base consonant the same way cursive joins came apart. Found by the lint
+     below, in the one rule that looked already-handled. */
+  .feedback .reveal:lang(hi){letter-spacing:normal}
+  /* CC-LOCALE-TYPESET F0/F2 — the same law, everywhere else it was missing.
+     Tracking is not a style preference on a joining script; it prises cursive
+     joins apart (see `.ltr.joined` above) and detaches Devanagari matras. It
+     was fixed on the answer path and the reveal and nowhere else, so eleven
+     localized surfaces still shipped it — the Arabic tagline among them.
+     `hi` is included deliberately: script_joins (ship 149) is ar + hi, and
+     fixing only Arabic here would recreate the Hindi gap that fix closed.
+     `fa`/`ur` are inert until registered, matching the reveal rule above.
+
+     These are per-component because CSS is all that exists today; F1's token
+     cascade is the real answer and replaces them. Equal specificity to the
+     rule each overrides, so source order decides — no !important needed.
+     tracking-check.mjs fails the build if a new tracked rule on localized
+     text lands without a companion here. */
+  .brand .tag:lang(ar), .brand .tag:lang(fa), .brand .tag:lang(ur), .brand .tag:lang(hi),
+  .card h2 .scope:lang(ar), .card h2 .scope:lang(fa), .card h2 .scope:lang(ur), .card h2 .scope:lang(hi),
+  .chain .lbl:lang(ar), .chain .lbl:lang(fa), .chain .lbl:lang(ur), .chain .lbl:lang(hi),
+  .coming-badge:lang(ar), .coming-badge:lang(fa), .coming-badge:lang(ur), .coming-badge:lang(hi),
+  .field-label:lang(ar), .field-label:lang(fa), .field-label:lang(ur), .field-label:lang(hi),
+  .ghost-pace:lang(ar), .ghost-pace:lang(fa), .ghost-pace:lang(ur), .ghost-pace:lang(hi),
+  .hint-line:lang(ar), .hint-line:lang(fa), .hint-line:lang(ur), .hint-line:lang(hi),
+  .orb-glyph:lang(ar), .orb-glyph:lang(fa), .orb-glyph:lang(ur), .orb-glyph:lang(hi),
+  .pack-head:lang(ar), .pack-head:lang(fa), .pack-head:lang(ur), .pack-head:lang(hi),
+  .pr-word:lang(ar), .pr-word:lang(fa), .pr-word:lang(ur), .pr-word:lang(hi),
+  .tools-title:lang(ar), .tools-title:lang(fa), .tools-title:lang(ur), .tools-title:lang(hi)
+  {letter-spacing:normal}
   /* CC-RTL per-akshara colour feedback (cursive scripts). ONLY color — never a
      box-forming property (transform/inline-block/margin/padding), which would
      shatter the shaping run; colour keeps the word joined. rv-sp is the passthrough
