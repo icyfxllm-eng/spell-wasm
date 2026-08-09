@@ -874,7 +874,6 @@ start
 there
 tropa
 watch
-why
 aabuso
 ago
 aparato
@@ -890,7 +889,6 @@ ituloy
 kaba
 kalungkutan
 kumilos
-lrt
 makikilala
 mapanganib
 matupad
@@ -946,7 +944,6 @@ nakasaad
 need
 pampanga
 payat
-pc
 pina
 ramon
 sangguniang
@@ -963,7 +960,6 @@ andres
 anggulo
 ayokong
 bakas
-bf
 bulag
 care
 cesar
@@ -1019,7 +1015,6 @@ death
 demokrasya
 edit
 effective
-fb
 front
 ganung
 gen

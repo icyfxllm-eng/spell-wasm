@@ -841,7 +841,6 @@ verstärkung
 weimar
 weitaus
 wellen
-wg
 wärst
 zeig
 ziehe
@@ -921,7 +920,6 @@ vereinbart
 versagen
 versionen
 vertrieb
-vfl
 volumen
 vorfall
 vorsprung
@@ -1029,7 +1027,6 @@ thailand
 tony
 tricks
 trinkt
-tsv
 university
 verarbeitet
 vereint
@@ -1060,7 +1057,6 @@ beeindruckend
 befreiung
 belohnung
 bitter
-btw
 bundesland
 bunte
 effekte
@@ -1130,10 +1126,8 @@ socken
 staats
 stadtrat
 stirn
-str
 stuttgarter
 stürzen
-sz
 tasse
 tobias
 topf
@@ -1280,7 +1274,6 @@ geister
 gewählten
 gärten
 hessischen
-html
 ideologie
 ios
 ip
@@ -1317,7 +1310,6 @@ rechter
 rechtfertigen
 riesig
 ross
-sch
 scharfe
 schwierigen
 schwule
@@ -1336,7 +1328,6 @@ uk
 vergehen
 verhandlung
 vorgelegt
-wdr
 werben
 willi
 wirtschafts
@@ -1593,7 +1584,6 @@ beschwerde
 bosch
 brötchen
 busch
-bw
 campus
 dating
 depression
@@ -1645,7 +1635,6 @@ nichtmal
 offenbach
 oskar
 petra
-pp
 richtiges
 rufe
 sanft
@@ -1773,7 +1762,6 @@ sternen
 ständigen
 teure
 theorien
-tl
 trio
 unterschrift
 verdächtigen
@@ -1862,7 +1850,6 @@ sonntags
 spazieren
 sprichst
 standorte
-std
 steiermark
 stillen
 substanz

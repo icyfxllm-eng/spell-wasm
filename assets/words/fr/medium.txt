@@ -800,7 +800,6 @@ touche
 verte
 congrès
 discussion
-dr
 effort
 noirs
 parlent
@@ -852,7 +851,6 @@ métro
 nation
 oeuvre
 penses
-pq
 réponses
 salaire
 soeur
@@ -876,7 +874,6 @@ informatique
 magasin
 monte
 parfaite
-pc
 pensent
 plaît
 préféré
@@ -913,7 +910,6 @@ coucher
 devrais
 entends
 essai
-fr
 gentil
 infos
 marcher
@@ -956,7 +952,6 @@ option
 orient
 patrick
 policier
-pp
 précis
 remarque
 règlement
@@ -983,7 +978,6 @@ fermer
 hausse
 joli
 manuel
-mr
 one
 organisme
 passée
@@ -998,3 +992,7 @@ alexandre
 attente
 by
 charges
+regarder
+médicament
+plastique
+assiette

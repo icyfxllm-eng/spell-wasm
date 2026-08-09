@@ -894,7 +894,6 @@ consulte
 contestado
 contribuyeron
 costarricense
-cr
 cruceros
 danés
 deberian
@@ -971,7 +970,6 @@ laptop
 last
 legítimos
 ligados
-ll
 llegaran
 llevarlos
 localizada
@@ -1079,7 +1077,6 @@ ventura
 vicepresidenta
 vitalidad
 wade
-wp
 zombie
 étnica
 abanico
@@ -1269,7 +1266,6 @@ penitenciario
 pensemos
 pereza
 pestañas
-pf
 picasso
 pileta
 pioneros
@@ -1485,7 +1481,6 @@ maurice
 metálicos
 montt
 moros
-mt
 módulos
 navaja
 norteamericanas
@@ -1654,7 +1649,6 @@ dirigiéndose
 disidentes
 dominan
 dona
-ds
 elijo
 eliminatorias
 emotivo
@@ -1699,7 +1693,6 @@ jacobo
 josep
 joshua
 jugadas
-kms
 lane
 lanzas
 lidia
@@ -1850,7 +1843,6 @@ chota
 chrome
 chu
 cito
-cl
 claustro
 cleveland
 clubs
@@ -1966,7 +1958,6 @@ mayúsculas
 mermelada
 mongolia
 motín
-mrs
 mudar
 obedece
 oficialismo
@@ -2046,7 +2037,6 @@ turísticas
 tuviéramos
 uf
 vieran
-why
 zócalo
 abandonando
 abdominal
@@ -2251,7 +2241,6 @@ respectiva
 reventar
 rezando
 riñones
-rs
 ría
 salon
 semejanza
@@ -2268,7 +2257,6 @@ sufra
 susceptibles
 tardado
 titula
-tn
 tomarán
 topo
 tratará
@@ -2289,7 +2277,6 @@ visitaron
 visualizar
 water
 western
-wn
 xenofobia
 yace
 zumo
@@ -2315,7 +2302,6 @@ beijing
 biológicas
 birra
 blackberry
-br
 británicas
 caido
 callate
@@ -2429,7 +2415,6 @@ justifican
 lanka
 lechuga
 let
-lg
 lineamientos
 lingüístico
 luchamos
@@ -2617,7 +2602,6 @@ directivas
 disminuyó
 disputado
 distinciones
-dm
 dominicanos
 dormitorios
 dotar
@@ -2655,7 +2639,6 @@ forme
 fosas
 fracasar
 front
-ft
 funcionará
 gallega
 gallos
@@ -2730,12 +2713,10 @@ pensaste
 percepciones
 permitirse
 pezones
-pgr
 pineda
 pintados
 pinzas
 pizca
-pnv
 podrida
 ponencia
 practicas
@@ -2982,7 +2963,6 @@ lideres
 llenaron
 lope
 louise
-ltd
 lucho
 luther
 lácteos

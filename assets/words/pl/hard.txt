@@ -871,7 +871,6 @@ szczecinie
 szkołą
 słucha
 taty
-tl
 tradycyjnych
 trafiła
 uciekł
@@ -1027,7 +1026,6 @@ jebany
 jezioro
 ka
 king
-kl
 klasę
 korporacji
 kosmos
@@ -1096,7 +1094,6 @@ urlop
 wakacji
 warsztaty
 wiejskich
-wp
 wrogiem
 wschodniego
 wspaniałą
@@ -1172,7 +1169,6 @@ otwartym
 państwowy
 pełnego
 piwnicy
-pkb
 platformę
 podobnej
 podstawową
@@ -1195,7 +1191,6 @@ sprzedam
 sprzedał
 spójrz
 starają
-str
 stulecia
 style
 szwajcarii
@@ -1362,7 +1357,6 @@ ekran
 ekspert
 filmiki
 gościu
-gw
 głosowaniu
 historyczny
 holandia
@@ -1384,7 +1378,6 @@ marzy
 miller
 mniejszy
 modele
-ms
 myśląc
 nadchodzi
 najlepsi
@@ -1633,7 +1626,6 @@ austrii
 baterii
 białystok
 blok
-br
 brzuch
 centralny
 chłop
@@ -1724,7 +1716,6 @@ silniki
 siostrą
 siostrę
 skuteczne
-sld
 smutna
 spotka
 statków
@@ -1770,7 +1761,6 @@ bramy
 brała
 brytyjskiego
 buduje
-cc
 chiński
 ciałem
 ciemne
@@ -1785,7 +1775,6 @@ dalszego
 dostarczyć
 drzwiach
 duma
-dz
 długiej
 eksperyment
 elity

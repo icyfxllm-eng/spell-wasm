@@ -824,7 +824,6 @@ lucy
 lì
 marco
 marion
-mt
 murphy
 pan
 phất
@@ -887,7 +886,6 @@ thằn
 trầy
 trỏ
 tít
-vn
 vy
 vằn
 đôla
@@ -925,7 +923,6 @@ sophie
 stanley
 sum
 trệ
-tt
 tuý
 tốp
 viii
@@ -978,10 +975,8 @@ cọp
 diamond
 doi
 food
-gb
 gập
 halloween
-hcm
 hotel
 ireland
 jun
@@ -1057,7 +1052,6 @@ away
 been
 bolton
 bruno
-bts
 bần
 bịa
 clara
@@ -1077,7 +1071,6 @@ mon
 morning
 máng
 national
-pt
 ráng
 ráo
 rợn
@@ -1085,8 +1078,6 @@ summer
 toạ
 trĩ
 uông
-xp
-bc
 bradley
 bull
 bói
@@ -1102,7 +1093,6 @@ dẫu
 edgar
 garcia
 gene
-hq
 human
 kara
 khế
@@ -1156,7 +1146,6 @@ lin
 logan
 lotus
 miệt
-mp
 mãng
 méo
 nhõm
@@ -1189,7 +1178,6 @@ chần
 chập
 chắt
 cleveland
-cnn
 costa
 crawford
 cùi

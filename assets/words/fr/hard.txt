@@ -861,7 +861,6 @@ typique
 united
 verser
 vivante
-xv
 écrans
 allure
 american
@@ -922,7 +921,6 @@ litres
 marbre
 maturité
 mette
-ms
 mètre
 mélenchon
 métrage
@@ -933,7 +931,6 @@ paille
 panier
 partagent
 people
-pl
 plages
 pouces
 poursuivi
@@ -985,7 +982,6 @@ deviens
 diesel
 diffuser
 discrimination
-dj
 drogues
 dédiée
 dés
@@ -1134,7 +1130,6 @@ récits
 réflexions
 saisie
 soutiennent
-ss
 tenus
 tracé
 trahison
@@ -1390,7 +1385,6 @@ légitimité
 marathon
 marco
 mettait
-mn
 munich
 opposants
 organe
@@ -1441,7 +1435,6 @@ blocs
 blues
 bonhomme
 cdi
-cgt
 charmant
 chili
 cloche
@@ -1478,7 +1471,6 @@ ouvertement
 ouvrent
 pa
 pauline
-pdg
 posent
 prenons
 press
@@ -1581,7 +1573,6 @@ journalisme
 libye
 linge
 lionel
-lr
 manipulation
 marais
 marguerite
@@ -1826,11 +1817,9 @@ ri
 régie
 réservoir
 sensations
-sfr
 souhait
 statuts
 styles
-svp
 thermique
 transaction
 trouvais
@@ -1842,7 +1831,6 @@ vedette
 vegas
 vietnam
 voudra
-xd
 énerve
 épidémie
 évoqué

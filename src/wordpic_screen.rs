@@ -49,8 +49,39 @@ thread_local! {
 const VB_MIN: f64 = 64.0;
 
 /// Scripts whose shaping must not ride a curved textPath (D4 ruling).
-fn complex_script(lang: &str) -> bool {
-    matches!(lang, "ar" | "hi")
+///
+/// Derived from `consts::script_joins`, not a second list. This used to be its
+/// own `matches!(lang, "ar" | "hi")`, and it was RIGHT while the answer
+/// surface's copy was wrong — `script_joins` derived from `rtl_required`, so
+/// left-to-right Hindi was excluded there and its matras were split into
+/// per-letter spans. Two hand-maintained lists, one correct, nothing comparing
+/// them. One source now; `spell_picture_shares_the_shaping_verdict` pins it.
+pub(crate) fn complex_script(lang: &str) -> bool {
+    crate::consts::script_joins(lang)
+}
+
+#[cfg(test)]
+mod shaping_tests {
+    /// The two surfaces must agree about which scripts shape.
+    ///
+    /// This lives HERE rather than beside `script_joins` in consts because I3
+    /// forbids shared code from importing the Spell Picture subtree, and
+    /// picture-import-check enforces it. The dependency runs picture ->
+    /// shared, so the test does too.
+    ///
+    /// It cannot fail while `complex_script` delegates — that is the point.
+    /// It is a re-divergence tripwire: reintroduce a hand-maintained list here
+    /// and it fails, which is exactly how Hindi was lost the first time.
+    #[test]
+    fn spell_picture_shares_the_shaping_verdict() {
+        for (code, ..) in crate::consts::BUILTIN_LANGS {
+            assert_eq!(
+                super::complex_script(code),
+                crate::consts::script_joins(code),
+                "{code}: Spell Picture and the answer surface disagree about shaping"
+            );
+        }
+    }
 }
 
 fn yb_gallery() -> Vec<(String, String, usize, bool, u64)> {

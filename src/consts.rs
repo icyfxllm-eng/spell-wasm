@@ -219,22 +219,27 @@ pub fn rtl_blocked(lang: &str) -> bool {
     rtl_required(lang) && !RTL_SUPPORTED
 }
 
-/// Whether `lang`'s script is CURSIVE — its letters join, so the word must reach
-/// the text shaper as ONE run.
+/// Whether `lang`'s script REQUIRES SHAPING — its glyphs combine, so the word
+/// must reach the text shaper as ONE run.
 ///
-/// This is what the answer surface needs to know, and it is NOT the same question
-/// as "is it RTL". Splitting a word into per-element letters is harmless for
-/// Latin, Hangul and kana (nothing joins), and destroys Arabic (everything does).
-/// Direction is irrelevant to it: Hebrew is RTL and does not join; if Hebrew ever
-/// enters the lineup this MUST become its own registry field rather than keep
-/// riding on `rtl_required`.
+/// This is what the answer surface needs to know, and it is NOT the same
+/// question as "is it RTL". Splitting a word into per-element letters is
+/// harmless for Latin, Hangul and kana (nothing combines) and destroys Arabic
+/// (everything joins) and Devanagari (matras and conjuncts attach to their base
+/// consonant — split `कि` into two spans and the matra detaches).
 ///
-/// Today it derives from `rtl_required` because every RTL language in the lineup
-/// (ar) is Arabic-script, and Arabic-script joins. That coincidence is
-/// load-bearing, so it is stated here rather than left for someone to discover:
-/// the test `cursive_is_exactly_the_arabic_script_languages` pins it.
+/// It used to derive from `rtl_required`, on the reasoning that every RTL
+/// language in the lineup was Arabic-script. That framing asked the wrong
+/// question. Hindi is left-to-right and still needs the shaper, so it silently
+/// took the per-letter path while Spell Picture's own `complex_script` — a
+/// second, hand-maintained list — correctly protected it. Two lists, one of
+/// them wrong, and nothing comparing them.
+///
+/// So this is now its own predicate, and `wordpic_screen` derives from it
+/// rather than keeping a parallel copy. Adding a language whose script shapes
+/// means adding it HERE, once.
 pub fn script_joins(lang: &str) -> bool {
-    rtl_required(lang)
+    matches!(lang, AR | HI)
 }
 
 /// CC-DEF-MATCH per-language activation (Invariant 7/8: THE registry flag, no
@@ -556,23 +561,42 @@ mod registry_tests {
         assert!(!rtl_blocked("ar"), "the render gate is open");
     }
 
-    /// CC-RTL F4 leans on `script_joins` deriving from `rtl_required`, which is
-    /// only sound while every RTL language in the lineup is Arabic-script. Pin it:
-    /// if someone adds Hebrew (RTL, does NOT join) this test fails, which is the
-    /// moment `script_joins` must become its own registry field instead of riding
-    /// on direction.
+    /// Every language must be on ONE side of the shaping question, explicitly.
+    ///
+    /// The previous version of this test asserted the joined set was exactly
+    /// `["ar"]` and then listed fourteen languages that must split — and Hindi
+    /// was in NEITHER list. It fell through the gap while Devanagari silently
+    /// took the per-letter path, which detaches its matras. So the test now
+    /// enumerates the whole lineup and fails if a language is unaccounted for:
+    /// adding a language forces a decision here rather than allowing a default.
     #[test]
-    fn cursive_is_exactly_the_arabic_script_languages() {
-        let joins: Vec<&str> = BUILTIN_LANGS.iter().map(|(c, _, _, _)| *c).filter(|c| script_joins(c)).collect();
-        assert_eq!(joins, vec!["ar"], "only the Arabic-script language is cursive");
-        // Nothing else may take the joined path — splitting is harmless for them
-        // and the `pop` animation depends on it.
-        for lang in ["en", "es", "fr", "de", "pt", "pl", "tr", "vi", "ko", "ja", "fil", "zh", "ru", "sw"] {
-            assert!(!script_joins(lang), "{lang} does not join — it must keep the per-letter path");
+    fn every_language_declares_whether_its_script_shapes() {
+        let joins: Vec<&str> =
+            BUILTIN_LANGS.iter().map(|(c, _, _, _)| *c).filter(|c| script_joins(c)).collect();
+        assert_eq!(joins, vec!["ar", "hi"], "Arabic joins; Devanagari conjoins");
+
+        // Nothing else may take the joined path — splitting is harmless for
+        // them and the `pop` animation depends on it.
+        let splits = ["en", "es", "fr", "de", "pt", "pl", "tr", "vi", "ko", "ja", "fil", "zh", "ru", "sw"];
+        for lang in splits {
+            assert!(!script_joins(lang), "{lang} does not shape — it must keep the per-letter path");
         }
         // Russian is the trap: new, non-Latin, and Cyrillic does NOT join.
         assert!(!script_joins("ru"), "Cyrillic is not cursive");
+
+        // The gap-closer: no registered language may be absent from both lists.
+        for (code, ..) in BUILTIN_LANGS {
+            assert!(
+                joins.contains(&code) || splits.contains(&code),
+                "{code} is in neither list — decide whether its script shapes"
+            );
+        }
     }
+
+    // The Spell-Picture-agrees-with-us test deliberately lives in
+    // wordpic_screen, not here: I3 forbids shared code from importing the
+    // picture subtree, and picture-import-check enforces it. The dependency
+    // runs picture -> shared, so the test does too.
 
     /// CC-RTL F1/D3 — direction lives in the registry, and `dir_attr` is what
     /// surfaces write. Pinned because the failure mode is silent: a wrong `dir`

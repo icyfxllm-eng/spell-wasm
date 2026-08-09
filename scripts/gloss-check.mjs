@@ -7,9 +7,16 @@ import path from "node:path";
 
 const ROOT = path.dirname(new URL(import.meta.url).pathname) + "/..";
 const src = fs.readFileSync(`${ROOT}/src/word_data.rs`, "utf8");
-// Chinese lives in its own file because it stores `pinyin|hanzi` pairs
-// rather than bare words. Its gloss keys are the pinyin half, which is
-// what pool() below yields for every language.
+// Chinese lives in its own file because it stores `pinyin|hanzi` pairs rather
+// than bare words. Its gloss keys are now the FULL pair, not the pinyin half.
+//
+// Keying on pinyin alone silently conflated homophones: 九 (nine) and 酒 (wine)
+// are both `jiu3`, as are 班/搬, 新/心, 要/药, 前/钱, 页/夜 and 下/夏. Those are
+// unrelated words, but only one of each pair could hold the key, so seven
+// concepts were unreachable for a reason that was never about Chinese — the
+// bank already stored the character that disambiguates, and the gloss threw it
+// away. The full `pinyin|hanzi` string is exactly the bank's stored form, which
+// is what the "key is a live bank word" law wants anyway.
 const zhSrc = fs.readFileSync(`${ROOT}/src/words.rs`, "utf8");
 
 function pool(lang) {
@@ -18,7 +25,7 @@ function pool(lang) {
   for (const tier of ["EASY", "MEDIUM", "HARD", "EXPERT"]) {
     const m = from.match(new RegExp(`pub const ${lang.toUpperCase()}_${tier}: &\\[&str\\] = &\\[([^;]*)\\];`, "s"));
     if (!m) continue;
-    for (const w of m[1].matchAll(/"([^"]+)"/g)) out.add(w[1].split("|")[0]);
+    for (const w of m[1].matchAll(/"([^"]+)"/g)) out.add(w[1]);
   }
   return out;
 }

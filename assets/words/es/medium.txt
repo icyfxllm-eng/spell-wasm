@@ -951,7 +951,6 @@ quiso
 responde
 salido
 seguros
-xd
 alternativa
 arena
 bajos
@@ -998,3 +997,4 @@ anti
 asegurar
 brazo
 caballero
+plástico

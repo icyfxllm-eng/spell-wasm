@@ -805,7 +805,6 @@ tasten
 technisches
 thun
 traurigen
-tt
 turin
 ua
 unendliche
@@ -826,7 +825,6 @@ week
 weitesten
 wertvoller
 wusstest
-xxl
 ziehst
 zuneigung
 zurückkommen
@@ -880,7 +878,6 @@ drink
 drohenden
 durchfall
 durchgängig
-dvds
 eingabe
 eingeben
 einzuhalten
@@ -915,7 +912,6 @@ gertrud
 geschrei
 gesondert
 ghana
-gl
 glatten
 glaubwürdig
 glückwünsche
@@ -1044,7 +1040,6 @@ wiege
 witzige
 wordpress
 würzburger
-xp
 zen
 zombies
 zugabe
@@ -1115,7 +1110,6 @@ fed
 fernando
 fernseh
 flugplatz
-fm
 formulierte
 fragebogen
 franco
@@ -1192,7 +1186,6 @@ mitchell
 mitsamt
 mitteleuropa
 mittelfristig
-mv
 mächtiger
 mündliche
 nachdenklich
@@ -1227,7 +1220,6 @@ repräsentative
 respektiert
 rohre
 rumpf
-rv
 schauer
 schweben
 schwersten
@@ -1258,8 +1250,6 @@ thematisch
 think
 three
 titanic
-tk
-tr
 trainings
 trinkgeld
 truck
@@ -1281,7 +1271,6 @@ vorträgen
 vorzugehen
 wahlergebnis
 warteten
-wc
 weide
 weissrussland
 werdende
@@ -1289,7 +1278,6 @@ wetzlar
 widersprüche
 wildnis
 wohnten
-www
 wählten
 zarte
 zuordnen
@@ -1349,12 +1337,10 @@ bittere
 bluetooth
 born
 brasilianische
-bt
 buben
 buddha
 bushaltestelle
 chronisch
-cnn
 court
 dauerhaften
 definitionen
@@ -1427,7 +1413,6 @@ komma
 konsolen
 kooperationen
 kotzt
-kpd
 kuppel
 kärntner
 kümmerte
@@ -1443,19 +1428,16 @@ lilly
 lindau
 lionel
 lot
-ltd
 lyon
 mangelnder
 mediathek
 meh
-mh
 missstände
 modul
 mächte
 nickel
 niederrhein
 niedrigere
-nl
 nordafrika
 olga
 optimieren
@@ -1466,7 +1448,6 @@ panther
 parodie
 pfeife
 physikalischen
-pn
 potenzielle
 price
 prämie
@@ -1590,7 +1571,6 @@ denkmalschutz
 dirty
 drittens
 durchsetzt
-dw
 dynastie
 düster
 early
@@ -1625,7 +1605,6 @@ gesprächspartner
 getäuscht
 gitarren
 give
-gs
 gysi
 halter
 handele
@@ -1651,8 +1630,6 @@ kan
 kaufst
 kill
 kontrollierte
-kp
-kr
 kreditkarten
 kreuzen
 kriegsende
@@ -1798,7 +1775,6 @@ weithin
 welpen
 wichsen
 willkür
-wk
 wohle
 women
 wunderbares
@@ -1845,7 +1821,6 @@ bergab
 beruhigend
 beständig
 bezirken
-bg
 biegen
 braunkohle
 brennende
@@ -1882,7 +1857,6 @@ falk
 farbige
 filmemacher
 fine
-fn
 fokussiert
 fragestellung
 fragten
@@ -1915,7 +1889,6 @@ heimsieg
 herbei
 him
 hipster
-htc
 ioc
 irrelevant
 islamischer
@@ -2056,7 +2029,6 @@ winters
 wodka
 wu
 xiv
-xl
 zeitgeist
 zink
 zubereitet
@@ -2216,7 +2188,6 @@ moor
 motorräder
 mundart
 nachzuweisen
-nhl
 niedrigsten
 nordischen
 nordwesten
@@ -2243,7 +2214,6 @@ riese
 rings
 riskiert
 roms
-rp
 rundgang
 running
 schlucht
@@ -2269,7 +2239,6 @@ streamen
 strukturelle
 tan
 teheran
-thw
 toast
 toronto
 treffend
@@ -2292,7 +2261,6 @@ verstärkten
 vorenthalten
 vorgegangen
 vorschau
-vp
 völkerrecht
 wacker
 wahn
@@ -2369,7 +2337,6 @@ cook
 cyrus
 dargestellten
 datierung
-dd
 definierten
 department
 diesjährige
@@ -2488,7 +2455,6 @@ pendant
 permanente
 pharma
 playoffs
-plz
 porträts
 potenziellen
 pracht
@@ -2506,7 +2472,6 @@ rückgabe
 rückrunde
 sabrina
 sami
-sbb
 scanner
 scheuer
 schlussfolgerung
@@ -2515,7 +2480,6 @@ separat
 siedler
 sinnen
 site
-sl
 sockel
 spargel
 spezieller
@@ -2523,7 +2487,6 @@ stage
 streicheln
 strenger
 sus
-tc
 them
 theologen
 today
@@ -2603,11 +2566,9 @@ betrieblichen
 betty
 bewundert
 bezeugt
-bj
 blonden
 blutige
 bologna
-bp
 brothers
 buchholz
 bänden
@@ -2706,8 +2667,6 @@ milan
 minecraft
 mitteilte
 mose
-mp
-mw
 münden
 nachfolgend
 navi
@@ -2846,7 +2805,6 @@ betriebliche
 better
 bewies
 bewältigung
-bf
 bliebe
 bordeaux
 brad
@@ -2952,8 +2910,6 @@ lehramt
 liveticker
 luc
 materiellen
-mbh
-mdb
 merklich
 militärischer
 missbrauchen
@@ -2972,7 +2928,6 @@ nasse
 nennenswerte
 nicholas
 notaufnahme
-nw
 obhut
 omg
 operieren

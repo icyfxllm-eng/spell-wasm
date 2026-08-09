@@ -811,7 +811,6 @@ michigan
 moderação
 moscovo
 moção
-mv
 nadia
 noivado
 noutro
@@ -837,7 +836,6 @@ probabilidades
 propondo
 providência
 provisório
-psp
 publicitária
 pólvora
 quaresma
@@ -910,7 +908,6 @@ baixado
 balneário
 bilheteria
 bird
-bmw
 boicote
 bombeiro
 boss
@@ -948,7 +945,6 @@ distinto
 ditos
 doado
 downloads
-dp
 edition
 electricidade
 elimina
@@ -973,7 +969,6 @@ fight
 figueirense
 figurino
 finn
-fl
 freddie
 freira
 fuzil
@@ -1065,7 +1060,6 @@ salvos
 servos
 share
 silenciosa
-sl
 sobreviveram
 solene
 sortudo
@@ -1121,7 +1115,6 @@ atestado
 atrapalha
 avançadas
 banks
-bbb
 beja
 beverly
 biológicos
@@ -1154,7 +1147,6 @@ contempla
 contradições
 corporation
 cruzou
-ct
 curador
 decretou
 demarcação
@@ -1211,8 +1203,6 @@ girando
 guerreira
 guru
 herrera
-hj
-hm
 hospedado
 imediatas
 independent
@@ -1236,10 +1226,8 @@ montando
 moradias
 motivações
 motta
-msn
 natalie
 negativamente
-ng
 normalidade
 obesidade
 obscuro
@@ -1280,7 +1268,6 @@ rende
 repetidas
 resende
 reunido
-rr
 saberia
 salientar
 saltou
@@ -1296,7 +1283,6 @@ suporto
 surpreendentes
 tambor
 tara
-tcc
 telhados
 temáticas
 tensa
@@ -1421,7 +1407,6 @@ firmeza
 flui
 fornecida
 frustrado
-ft
 furiosa
 gentilmente
 geo
@@ -1492,7 +1477,6 @@ persegue
 persistente
 pesadelos
 petrobrás
-pgr
 piper
 planeamento
 podermos
@@ -1509,7 +1493,6 @@ prestados
 processados
 produziram
 provocação
-ptb
 pulmonar
 qaeda
 rampa
@@ -1768,7 +1751,6 @@ resumir
 retirando
 retornando
 reunidas
-rm
 rocky
 românticos
 roosevelt
@@ -1779,7 +1761,6 @@ salões
 sediar
 sesc
 sextas
-sg
 studies
 sueca
 supervisionar
@@ -1910,7 +1891,6 @@ divindade
 doa
 driver
 duros
-dvds
 earl
 ecossistemas
 efetuar
@@ -1990,7 +1970,6 @@ obstrução
 op
 originário
 pedofilia
-pg
 pianista
 pinho
 piscar
@@ -2016,7 +1995,6 @@ roubados
 rue
 running
 sarcasmo
-sd
 separando
 shake
 sharp
@@ -2035,12 +2013,10 @@ theo
 torcidas
 tornamos
 toyota
-tr
 traça
 trip
 trocam
 tsunami
-tt
 tucano
 tumulto
 utilizaram
@@ -2211,7 +2187,6 @@ medíocre
 megan
 milícias
 miriam
-ml
 mma
 mocidade
 monique
@@ -2259,7 +2234,6 @@ restringir
 reviravolta
 revoluções
 revólver
-rg
 rogers
 rolling
 roubadas
@@ -2276,7 +2250,6 @@ subterrânea
 sérvios
 tan
 tardes
-td
 temple
 terceirização
 tocada
@@ -2295,7 +2268,6 @@ vidros
 vinci
 visam
 wade
-xd
 zac
 zinco
 abacaxi
@@ -2338,7 +2310,6 @@ capoeira
 casaram
 caseira
 caças
-cbs
 cereja
 certidão
 charmoso
@@ -2551,7 +2522,6 @@ autorizadas
 autorizar
 banquete
 bart
-bd
 bebem
 beijinhos
 berlin
@@ -2581,7 +2551,6 @@ consultora
 continuarão
 controlando
 conversam
-cpf
 crescentes
 croata
 cubra
@@ -2925,10 +2894,8 @@ miley
 milk
 monde
 movimentado
-mst
 nascemos
 nate
-nbc
 nerds
 nilton
 nixon

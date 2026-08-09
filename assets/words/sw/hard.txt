@@ -848,7 +848,6 @@ bob
 carl
 christian
 congress
-dj
 diamond
 frank
 henry

@@ -803,7 +803,6 @@ quantas
 senado
 senador
 viajar
-br
 co
 conseguem
 dizia
@@ -825,7 +824,6 @@ henrique
 jantar
 rural
 senti
-vc
 és
 canto
 cheiro
@@ -856,7 +854,6 @@ miguel
 piada
 porquê
 rapaz
-rs
 use
 vinho
 acompanhar
@@ -892,7 +889,6 @@ mendes
 mentira
 nação
 ouvido
-rj
 subir
 virtual
 brincar
@@ -998,3 +994,9 @@ médica
 oferta
 paraná
 peguei
+carregar
+precisar
+plástico
+empurrar
+primavera
+quadrado

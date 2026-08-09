@@ -105,9 +105,10 @@ fn gloss_docs() -> &'static std::collections::HashMap<&'static str, GlossDoc> {
         std::sync::OnceLock::new();
     G.get_or_init(|| {
         let mut m = std::collections::HashMap::new();
-        // Every language with a bank gets a table. zh's keys are the
-        // bank's own pinyin half (`fang2zi5`), because that is the form
-        // the pool is keyed by — see scripts/gloss-check.mjs.
+        // Every language with a bank gets a table. zh's keys are the bank's
+        // FULL stored entry (`fang2zi5|房子`), not the pinyin half. The half
+        // was ambiguous: 九 (nine) and 酒 (wine) are both `jiu3`, so seven
+        // concepts could never be glossed at all. See scripts/gloss-check.mjs.
         for (lang, raw) in [
             ("es", include_str!("../config/gloss/es.json")),
             ("fr", include_str!("../config/gloss/fr.json")),
@@ -499,15 +500,25 @@ mod tests {
             assert!(d.rows.len() >= 100, "{lang} has only {} rows", d.rows.len());
             assert!(!d.audited, "{lang} claims audited — only a human signs that");
         }
-        // the rows really carry the pairs — a Latin bank, and zh whose
-        // keys are the bank's pinyin half
+        // the rows really carry the pairs — a Latin bank, and zh whose keys
+        // are the bank's FULL `pinyin|hanzi` entry. They used to be the pinyin
+        // half alone, which conflated homophones: 九 (nine) and 酒 (wine) are
+        // both jiu3, so only one of the pair could hold a key. Pinning the
+        // full form here is what makes that regression visible.
         assert_eq!(docs["es"].rows.get("agua").map(|s| s.as_str()), Some("water"));
-        assert_eq!(docs["zh"].rows.get("fang2zi5").map(|s| s.as_str()), Some("house"));
+        assert_eq!(
+            docs["zh"].rows.get("fang2zi5|\u{623f}\u{5b50}").map(|s| s.as_str()),
+            Some("house")
+        );
+        assert!(
+            docs["zh"].rows.get("fang2zi5").is_none(),
+            "a bare-pinyin key means the gloss regressed to the ambiguous form"
+        );
         // ...and they stay DARK through the resolver regardless, because
         // the gate is `audited`, not "are there rows". 2662 loaded rows
         // must not leak one visible pair.
         assert_eq!(word_for_concept("es", "water"), None);
-        assert_eq!(concept_of("zh", "fang2zi5"), None);
+        assert_eq!(concept_of("zh", "fang2zi5|\u{623f}\u{5b50}"), None);
     }
 
     #[test]

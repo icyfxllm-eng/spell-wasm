@@ -980,7 +980,6 @@ faltando
 familia
 famosas
 favorável
-fm
 franquia
 frutos
 futuras
@@ -1235,7 +1234,6 @@ parei
 patrocínio
 pensado
 perfeição
-pl
 pênis
 reabilitação
 realizando
@@ -1317,10 +1315,8 @@ incomum
 itunes
 lendas
 marcando
-mc
 menção
 morena
-mtv
 ne
 negou
 nucleares
@@ -1426,7 +1422,6 @@ mansão
 minerais
 montes
 moradia
-mp
 multi
 mundos
 office
@@ -1596,7 +1591,6 @@ departamentos
 deputada
 destinada
 determinou
-df
 diárias
 domínios
 editores
@@ -1714,7 +1708,6 @@ biografia
 bonitos
 brigar
 camiseta
-cbf
 chamaram
 chat
 cheias
@@ -1786,7 +1779,6 @@ postado
 preocupados
 pretendia
 processamento
-ps
 reagir
 reclamações
 reduzido
@@ -1797,12 +1789,10 @@ saint
 saldo
 sensibilidade
 seremos
-sky
 sombras
 stephen
 stop
 suspenso
-tb
 terceiros
 teresa
 tricolor

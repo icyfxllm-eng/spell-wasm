@@ -1218,7 +1218,6 @@ opina
 orquesta
 palmas
 papi
-pdf
 pedidos
 pegar
 pelos
@@ -1233,7 +1232,6 @@ recompensa
 rehabilitación
 rollo
 romance
-rt
 ruinas
 sacaron
 sesenta
@@ -1248,7 +1246,6 @@ titulo
 trasero
 trece
 uribe
-xv
 xvii
 éramos
 abren
@@ -1263,7 +1260,6 @@ aportes
 aprovecha
 avanza
 barro
-bbc
 bici
 boston
 camioneta
@@ -1439,7 +1435,6 @@ extrañas
 fallecimiento
 faltas
 fantástico
-fc
 flaco
 franquicia
 félix
@@ -1548,7 +1543,6 @@ marte
 masivo
 mediterráneo
 mentes
-mmm
 márquez
 nacidos
 normativa
@@ -1779,7 +1773,6 @@ parámetros
 pasadas
 piratas
 planeado
-pr
 practica
 prioridades
 procedente
@@ -1871,7 +1864,6 @@ desesperación
 designación
 deterioro
 determinadas
-df
 dimos
 diseñador
 disponer
