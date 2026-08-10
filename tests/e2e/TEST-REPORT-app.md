@@ -111,7 +111,7 @@
 ## audio-gate — 3/3
 - ✅ audio gate: starter keeps Replay AND the slow voice
 - ✅ audio gate: advanced keeps Replay but loses Slow
-- ✅ audio gate: expert hides Replay — the word plays once
+- ✅ audio gate: expert SHOWS Replay — F5 supersedes the listening ladder
 
 ## finale-relaunch — 1/1
 - ✅ finale: layer 1 of orion survives the kill — layer 2 unlocked on relaunch
@@ -125,8 +125,8 @@
 - ✅ kid reveal control: an adult sees both actions
 
 ## picker-continue — 3/3
-- ✅ continue: exact resume, LRU order, hidden when empty
-- ✅ continue: long-press Remove discards state, not the picture
+- ✅ in-progress lives on the tile, and the resume strip is gone
+- ✅ contextual long-press: a run offers Remove, a plain tile stars
 - ✅ families: shelves render; learn leads with the active script
 
 ## finale-pixels — 2/2

@@ -269,7 +269,6 @@ pub fn wire(app: &App) {
     // re-renders: set_html replaces only its children.
     wire_camera();
     // CC-PICKER-CONTINUE: the Continue row + housekeeping sheet.
-    wire_continue_row(app);
     wire_housekeeping(app);
 }
 
@@ -437,82 +436,6 @@ fn live_runs<'a>(state: &'a wordpic::State, lang: &str) -> Vec<&'a wordpic::Run>
 ///
 /// F5 (Eric, 2026-08-06: "1 in progress history where players can look at
 /// all the different Spell Pics they started and have not finished").
-/// There used to be two surfaces: a Continue strip capped at four and a
-/// gallery "In Progress" head that caught the fifth onward. That split is
-/// what made one subject look like it lived in two places, and it meant
-/// a player with five unfinished pictures had to know about both to see
-/// them all. One wrapped grid, everything in it, no overflow concept.
-fn resume_history(state: &wordpic::State, lang: &str) -> Vec<String> {
-    live_runs(state, lang)
-        .iter()
-        .filter(|r| wordpic::picture(&r.pic).is_some())
-        .map(|r| r.pic.clone())
-        .collect()
-}
-
-fn render_continue_row(state: &wordpic::State, lang: &str) {
-    if !crate::dom::exists("wpResumeRow") {
-        return;
-    }
-    let live = live_runs(state, lang);
-    let mut html = String::new();
-    for r in live.iter() {
-        let Some(p) = wordpic::picture(&r.pic) else { continue };
-        let total = subject_total(p, lang);
-        {
-            html.push_str(&format!(
-                "<button type=\"button\" class=\"wp-resume-card\" data-resume=\"{}\" aria-label=\"{}\">{}<span class=\"prog\">{}/{}</span></button>",
-                p.id, p.id, thumb_svg(&r.pic, lang, r), r.words.len(), total
-            ));
-        }
-    }
-    dom::set_html("wpResumeRow", &html);
-    dom::toggle_class("wpResumeRow", "btn-hide", html.is_empty());
-}
-
-thread_local! {
-    /// Long-press bookkeeping for the Continue row: (pic, press timestamp).
-    static PRESS: RefCell<Option<(String, f64)>> = const { RefCell::new(None) };
-    static PRESS_FIRED: Cell<bool> = const { Cell::new(false) };
-}
-
-fn wire_continue_row(app: &App) {
-    if !crate::dom::exists("wpResumeRow") {
-        return; // site shell has no picker surfaces
-    }
-    // Tap = resume (D2). Long-press (550ms) = Restart / Remove sheet.
-    let a = app.clone();
-    dom::on::<web_sys::PointerEvent, _>("wpResumeRow", "pointerdown", move |e| {
-        let Some(el) = e.target().and_then(|t| t.dyn_into::<web_sys::Element>().ok()) else { return };
-        let Some(card) = el.closest("[data-resume]").ok().flatten() else { return };
-        let Some(pic) = card.get_attribute("data-resume") else { return };
-        PRESS.with(|p| *p.borrow_mut() = Some((pic.clone(), e.time_stamp())));
-        PRESS_FIRED.with(|c| c.set(false));
-        let a2 = a.clone();
-        after(550, move || {
-            let held = PRESS.with(|p| p.borrow().as_ref().map(|(q, _)| q == &pic).unwrap_or(false));
-            if held {
-                PRESS_FIRED.with(|c| c.set(true));
-                open_housekeeping(&a2, &pic);
-            }
-        });
-    });
-    let a = app.clone();
-    dom::on::<web_sys::PointerEvent, _>("wpResumeRow", "pointerup", move |e| {
-        let pressed = PRESS.with(|p| p.borrow_mut().take());
-        if PRESS_FIRED.with(Cell::get) {
-            return; // the sheet owns this gesture
-        }
-        let Some((pic, _)) = pressed else { return };
-        let _ = e;
-        RESUME_ANIM.with(|c| c.set(true));
-        open_play(&a, &pic);
-    });
-    dom::on::<web_sys::PointerEvent, _>("wpResumeRow", "pointercancel", |_| {
-        PRESS.with(|p| *p.borrow_mut() = None);
-    });
-}
-
 thread_local! {
     /// Set when a resume-tap opens the piece: the next render gets the
     /// ghost->ink delight pass (<=1s, skippable, Reduce Motion instant).
@@ -963,30 +886,14 @@ fn render_picker_body_inner(app: &App) {
         }
     } else {
         // v3 HUB (Eric: "NO more sliding menu options"): the horizontal
-        // shelves are DELETED. One scroll direction. Jump back in, then
-        // Favorites, then nine big category cards; a card opens the
-        // category as a full wrapped grid.
-        let mut recent: Vec<&wordpic::Picture> = Vec::new();
-        let mut dones: Vec<&wordpic::Run> =
-            state.runs.iter().filter(|r| r.done && r.lang == lang).collect();
-        dones.sort_by_key(|r| std::cmp::Reverse(r.touched));
-        for r in dones.iter().take(4) {
-            if let Some((_, p)) = visible.iter().find(|(_, p)| p.id == r.pic) {
-                if !recent.iter().any(|q| q.id == p.id) {
-                    recent.push(p);
-                }
-            }
-        }
-        if !recent.is_empty() {
-            html.push_str(&format!(
-                "<div class=\"wp-fam-head\">{}</div><div class=\"wp-shelf wrap\">",
-                i18n::t("wordpic.jumpBackIn")
-            ));
-            for p in &recent {
-                html.push_str(&tile_html(app, &state, p, &lang));
-            }
-            html.push_str("</div>");
-        }
+        // shelves are DELETED. One scroll direction. Favorites, then nine
+        // big category cards; a card opens the category as a full wrapped
+        // grid.
+        //
+        // CC-SPELLPIC F3 removed the "Jump back in" shelf that used to
+        // lead: it listed the four most recently FINISHED pictures, which
+        // the gallery already holds and the tile already marks. Eric's
+        // markup red-X'd it for that reason — one session, one surface.
         let fav_ids = favs();
         let fav_pics: Vec<&wordpic::Picture> = fav_ids
             .iter()
@@ -1029,23 +936,43 @@ fn render_picker_body_inner(app: &App) {
     dom::set_html("wpGrid", &html);
 }
 
+thread_local! {
+    /// CC-SPELLPIC F4 — where the hub was when a round took over.
+    ///
+    /// Set only by `close_play`, so entering the hub fresh still resets to
+    /// the Browse root while RETURNING from a round lands you where you
+    /// left. Scroll alone would not be enough: `open_picker` also reset the
+    /// view and the query, so a player who opened a picture from inside a
+    /// category came back to the top of Browse — F4's "thrown out of the
+    /// library" rather than "closed a page".
+    static HUB_RETURN: Cell<f64> = const { Cell::new(-1.0) };
+}
+
 pub fn open_picker(app: &App) {
     let lang = app.borrow().lang.clone();
     LANG.with(|l| *l.borrow_mut() = lang.clone());
-    VIEW.with(|v| *v.borrow_mut() = PickerView::Browse);
-    QUERY.with(|q| q.borrow_mut().clear());
-    CORPUS.with(|c| c.borrow_mut().clear());
-    if dom::exists("wpSearch") {
-        dom::input("wpSearch").set_value("");
+    // -1 means "fresh entry": reset. Anything else is a return from a round.
+    let returning = HUB_RETURN.with(|c| c.replace(-1.0));
+    if returning < 0.0 {
+        VIEW.with(|v| *v.borrow_mut() = PickerView::Browse);
+        QUERY.with(|q| q.borrow_mut().clear());
+        CORPUS.with(|c| c.borrow_mut().clear());
+        if dom::exists("wpSearch") {
+            dom::input("wpSearch").set_value("");
+        }
     }
     render_picker_body(app);
     let state = wordpic::load();
-    render_continue_row(&state, &lang);
     // F5: the gallery shows FINISHED work only. Unfinished pictures live
     // in exactly one place now (the Continue history above), so there is
     // no second in-progress list to fall out of sync with it.
     render_gallery(&state, &lang);
     dom::add_class("wpPicker", "show");
+    // F4: put the scroll back AFTER `show`, or the element has no layout yet
+    // and the assignment is silently dropped.
+    if returning >= 0.0 && dom::exists("wpPicker") {
+        dom::el("wpPicker").set_scroll_top(returning as i32);
+    }
     // F3: start filling the total-memo now, in the background, so the
     // first broad search finds it warm instead of paying ~2s mid-keystroke.
     warm_totals(&lang);
@@ -1124,10 +1051,33 @@ pub fn wire_picker_inputs(app: &App) {
             let held = FAV_PRESS.with(|c| c.borrow_mut().take());
             if let (Some(up), Some((down, at))) = (pic, held) {
                 if up == down && js_sys::Date::now() - at >= 550.0 {
-                    fav_toggle(&up);
+                    // CC-SPELLPIC F3 fallout, resolved by Eric 2026-08-10:
+                    // CONTEXTUAL long-press.
+                    //
+                    // Restart/Remove used to hang off the Continue strip's
+                    // long-press, and F3 deleted the strip — which silently
+                    // took the only route to `open_housekeeping` with it. F3
+                    // asked to remove two hub SURFACES, not the ability to
+                    // reset a half-finished picture, and the compiler caught
+                    // it as dead code before an e2e did.
+                    //
+                    // The tile long-press was already spent on favourites, so
+                    // the gesture splits by what the tile IS: a picture with a
+                    // live run offers housekeeping (the only thing you can
+                    // usefully do to a run), anything else stars. F3 put
+                    // in-progress on the tile; this puts its verbs there too.
+                    let in_progress = wordpic::load()
+                        .run(&up, &LANG.with(|l| l.borrow().clone()))
+                        .map(|r| !r.done && !r.words.is_empty())
+                        .unwrap_or(false);
+                    if in_progress {
+                        open_housekeeping(&a, &up);
+                    } else {
+                        fav_toggle(&up);
+                        render_picker_body(&a);
+                    }
                     crate::haptics::correct();
                     FAV_SUPPRESS.with(|c| c.set(true));
-                    render_picker_body(&a);
                 }
             }
         });
@@ -1305,6 +1255,12 @@ fn how_next(app: &App) {
 }
 
 fn close_play(app: &App) {
+    // F4: the round exits to the HUB, and the hub is where the player left
+    // it. Read the scroll before anything hides, while the element still
+    // has layout.
+    if dom::exists("wpPicker") {
+        HUB_RETURN.with(|c| c.set(dom::el("wpPicker").scroll_top() as f64));
+    }
     OPEN.with(|c| c.set(false));
     dom::remove_class("wpPlay", "show");
     for id in ["wpHow", "wpConfirm", "wpDone"] {
@@ -2203,10 +2159,55 @@ fn wire_camera() {
 /// never disable, per the file.
 pub fn audio_gate(tier: &str) -> (bool, bool) {
     // (replay_allowed, slow_allowed)
+    //
+    // CC-SPELLPIC F5 — REPLAY IS ALWAYS ALLOWED.
+    //
+    // It used to be a difficulty mechanic: expert rounds got no replay at
+    // all, this arm returning (false, false). Masterpieces are expert tier,
+    // so the Mona Lisa round rendered no speaker while the Dragon round did
+    // — which is exactly what Eric hit, and it reads as a broken screen
+    // rather than a difficulty setting. A player who cannot re-hear the word
+    // cannot play; F5 calls that a Replay Invariant violation and states
+    // that conditional rendering of audio controls per subject is illegal.
+    //
+    // Slow-rate keeps its ladder. F5 defers slow to "the same slow-rate
+    // escalation as AUDIO-REPLAY specifies", and CC-AUDIO-REPLAY is not in
+    // this repo — changing it here would be inventing the policy rather than
+    // following it. Flagged for Eric.
     match tier {
         "easy" | "medium" => (true, true),
-        "hard" => (true, false),
-        _ => (false, false),
+        _ => (true, false),
+    }
+}
+
+#[cfg(test)]
+mod audio_tests {
+    /// CC-SPELLPIC F5 — the Replay Invariant.
+    ///
+    /// Replay must be available in EVERY Spell Picture round, whatever the
+    /// subject or tier. It used to be a difficulty mechanic and expert
+    /// returned (false, false), so masterpieces — Mona Lisa among them —
+    /// rendered no speaker at all while easier rounds did. That is not a
+    /// difficulty curve to a player; it is a screen missing its control.
+    ///
+    /// Checked against the registry's real tiers plus an unknown string, so
+    /// a new tier cannot quietly land in a fallthrough arm that hides it.
+    #[test]
+    fn replay_is_available_in_every_round() {
+        for tier in ["easy", "medium", "hard", "expert", "", "some-future-tier"] {
+            assert!(
+                super::audio_gate(tier).0,
+                "{tier:?}: replay must render — F5 forbids conditional audio controls"
+            );
+        }
+        // every tier the picture registry actually ships
+        for p in crate::wordpic::pictures() {
+            assert!(
+                super::audio_gate(&p.tier).0,
+                "{}: tier {:?} hides replay",
+                p.id, p.tier
+            );
+        }
     }
 }
 
@@ -2537,16 +2538,28 @@ fn after(ms: i32, f: impl FnOnce() + 'static) {
 mod audio_gate_tests {
     use super::audio_gate;
 
-    /// CC-PICTURE-BANK feature 5, as a table. If a tier is ever added
-    /// (masterpiece), the wildcard already treats it as the strictest gate,
-    /// which is the safe direction for a tier ABOVE expert.
+    /// The ladder, as a table — now a SLOW ladder only.
+    ///
+    /// CC-PICTURE-BANK feature 5 wrote this as a listening ladder where
+    /// expert "hears it once": audio_gate("expert") was (false, false). That
+    /// is superseded by CC-SPELLPIC F5 (Eric 2026-08-10), and the reason is
+    /// what it did in practice rather than a change of taste. Masterpieces
+    /// are expert tier, so the rule silently removed the speaker from the
+    /// Mona Lisa round while the Dragon round kept it — Eric hit exactly
+    /// that on device, and it reads as a broken screen, not a difficulty
+    /// setting. F5: "a player who cannot re-hear the word cannot play",
+    /// and conditional rendering of audio controls per subject is illegal.
+    ///
+    /// So REPLAY is now universal and only SLOW still climbs. The wildcard
+    /// still resolves an unknown tier to the strictest SLOW setting, which
+    /// remains the safe direction for a tier above expert.
     #[test]
     fn the_ladder_of_listening() {
         assert_eq!(audio_gate("easy"), (true, true), "starter keeps Replay + Slow");
         assert_eq!(audio_gate("medium"), (true, true), "intermediate too");
         assert_eq!(audio_gate("hard"), (true, false), "advanced loses Slow");
-        assert_eq!(audio_gate("expert"), (false, false), "expert hears it once");
-        assert_eq!(audio_gate("masterpiece"), (false, false), "future tiers inherit the strictest");
+        assert_eq!(audio_gate("expert"), (true, false), "expert loses Slow — but KEEPS Replay (F5)");
+        assert_eq!(audio_gate("masterpiece"), (true, false), "future tiers inherit the strictest SLOW");
     }
 
     /// CC-PICTURE-BANK feature 6, as a table. Exactly one economy applies
@@ -2654,19 +2667,25 @@ mod color_render_tests {
     /// Eric asked for a single place listing every Spell Pic started and
     /// not finished. Before, a four-card Continue strip held the recent
     /// ones and a gallery "In Progress" head caught the rest, so the
-    /// answer to "what have I got going?" lived in two places and a
-    /// subject could look duplicated. Now one wrapped grid holds all of
-    /// them: no cap, no overflow, and the gallery carries finished work
-    /// only. Seeded past the old cap so a regression that reintroduces
-    /// one would show up as a short list.
+    /// CC-SPELLPIC F3 — one session, one hub surface.
+    ///
+    /// There were three hub surfaces carrying session state: a Continue
+    /// strip (in-progress), a "Jump back in" shelf (the four most recently
+    /// FINISHED), and the tile itself, which marks both. Eric's markup
+    /// red-X'd the first two. AUG6's F5 had already merged the strip and a
+    /// gallery head into one strip; F3 deletes the strip as well, so
+    /// in-progress lives only on the tile as its {done}/{total} badge and
+    /// finished work only in the gallery.
+    ///
+    /// This asserts the data behind that: every unfinished subject has
+    /// exactly ONE live run, so a tile can render it once and no second
+    /// surface can disagree. Seeded past the old four-cap so a regression
+    /// that reintroduces a capped strip shows up as a short list.
     #[test]
-    fn one_in_progress_history_holds_every_unfinished_subject() {
+    fn every_unfinished_subject_has_exactly_one_live_run() {
         let mut st = wordpic::State::default();
-        let ids: Vec<String> = wordpic::pictures()
-            .iter()
-            .take(7)
-            .map(|p| p.id.clone())
-            .collect();
+        let ids: Vec<String> =
+            wordpic::pictures().iter().take(7).map(|p| p.id.clone()).collect();
         for id in &ids {
             st.open(id, "en");
             if let Some(live) = st.runs.iter_mut().find(|r| &r.pic == id && r.lang == "en") {
@@ -2675,20 +2694,20 @@ mod color_render_tests {
         }
         st.open(&ids[0], "en"); // re-entering must not clone a record
 
-        let history = resume_history(&st, "en");
-        assert_eq!(history.len(), ids.len(), "every unfinished subject is listed");
-        let mut uniq = history.clone();
+        let live = live_runs(&st, "en");
+        assert_eq!(live.len(), ids.len(), "every unfinished subject is live exactly once");
+        let mut uniq: Vec<String> = live.iter().map(|r| r.pic.clone()).collect();
         uniq.sort();
         uniq.dedup();
-        assert_eq!(history.len(), uniq.len(), "and each exactly once: {history:?}");
+        assert_eq!(uniq.len(), ids.len(), "no subject is live twice");
 
-        // a finished run leaves the history for the gallery
+        // finishing moves it to the gallery; it is no longer in progress
         if let Some(done) = st.runs.iter_mut().find(|r| r.pic == ids[1]) {
             done.done = true;
         }
-        let after = resume_history(&st, "en");
-        assert_eq!(after.len(), ids.len() - 1, "finishing removes it from the history");
-        assert!(!after.contains(&ids[1]), "a finished subject is not 'in progress'");
+        let after = live_runs(&st, "en");
+        assert_eq!(after.len(), ids.len() - 1, "a finished subject stops being in progress");
+        assert!(!after.iter().any(|r| r.pic == ids[1]));
     }
 
     /// Done #7 — the gallery is RETROACTIVE: runs store words, never

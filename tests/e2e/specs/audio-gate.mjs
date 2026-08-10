@@ -99,18 +99,26 @@ export async function run(browser, base, suite) {
     } finally { await ctx.close(); }
   });
 
-  await suite.test('audio gate: expert hides Replay — the word plays once', async () => {
+  await suite.test('audio gate: expert SHOWS Replay — F5 supersedes the listening ladder', async () => {
     const { ctx, page } = await openApp(browser, base, { lang: 'en' });
     try {
       await armAudioProbe(ctx, page);
       await openPicture(page, 'mona');
-      assert(await replayHidden(page), 'expert HIDES the Replay button');
-      // Hidden, not disabled-and-clickable: the control is off the
-      // surface, so nothing the player taps can start a second clip. The
-      // open may play the word ONCE; nothing else is allowed to.
+      // This asserted the opposite until CC-SPELLPIC F5 (Eric 2026-08-10).
+      // CC-PICTURE-BANK feature 5 made expert "hear it once", and because
+      // masterpieces are expert tier that silently removed the speaker from
+      // the Mona Lisa round while easier rounds kept it — which reads as a
+      // broken screen, not a difficulty setting. F5: a player who cannot
+      // re-hear the word cannot play, and conditional audio controls are
+      // illegal. Mona is the exact round Eric hit, so it is the right case.
+      assert(!(await replayHidden(page)), 'expert SHOWS Replay (F5)');
+      // Slow still climbs — F5 changed replay only, and defers slow-rate
+      // escalation to CC-AUDIO-REPLAY.
+      await page.click('#wpReplay');
       await page.waitForTimeout(600);
       const seen = await variantsSeen(page);
-      assert(seen.length <= 1, `expert heard at most one clip (saw ${seen})`);
+      assert(seen.includes('normal'), `replay plays the word (saw ${seen})`);
+      assert(!seen.includes('slow'), `expert still has no slow voice (saw ${seen})`);
     } finally { await ctx.close(); }
   });
 }

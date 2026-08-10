@@ -461,11 +461,6 @@
   .wp-guide{stroke:rgba(232,236,245,.30);stroke-width:2;fill:none;stroke-linecap:round;stroke-linejoin:round}
   /* CC-PICKER-CONTINUE */
   /* v3: no sideways scrolling anywhere — every row wraps. */
-  .wp-resume-row{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;padding:4px 2px 10px}
-  .wp-resume-card{width:100%;height:150px;border-radius:12px;border:1px solid #2c3550;background:#141b2c;padding:6px;display:flex;flex-direction:column;align-items:center}
-  .wp-resume-card svg{width:100%;height:auto;flex:1}
-  .wp-resume-card .prog{font-size:12px;color:#95a0bb;padding-top:4px}
-  .wp-resume-card.small{height:104px}
   .wp-th-ink{stroke:rgba(232,236,245,.95);stroke-width:7;fill:none;stroke-linecap:round;stroke-linejoin:round}
   .wp-th-ghost{stroke:rgba(232,236,245,.22);stroke-width:5;fill:none;stroke-linecap:round;stroke-linejoin:round}
   .wp-th-pin{stroke:rgba(232,236,245,.55);stroke-width:4;fill:none;stroke-linecap:round;stroke-linejoin:round}
@@ -488,7 +483,7 @@
 /* The search row must never steal the In Progress strip's height —
    the strip is OUT OF SCOPE for CC-PICKER-SEARCH and keeps its size;
    the scrollable grid absorbs the new row instead. */
-#wpResumeRow{flex-shrink:0}
+
 .wp-searchrow{display:flex;gap:8px;align-items:center}
 .wp-az{flex-shrink:0;padding:8px 12px;border-radius:10px}
 .wp-catlist{display:flex;flex-direction:column;gap:8px;margin:6px 0;grid-column:1/-1}
@@ -1660,7 +1655,6 @@
          data + seed and RE-RENDERED on view (D5), never as bitmaps -- so old
          trophies inherit every future renderer improvement. -->
     <div class="wp-gallery btn-hide" id="wpGallery"></div>
-    <div class="wp-resume-row btn-hide" id="wpResumeRow"></div>
     <div class="wp-grid" id="wpGrid"></div>
   </div>
   <!-- The placement offer is a GAME-screen surface and must live at body

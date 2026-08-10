@@ -80,6 +80,26 @@ instead."* The guilty layer is the renderer. Awaiting Eric.
   second is dead markup with a colliding ID. Introduced during the F5 /
   sticky-head rework.
 
+## D3 STRUCK (Eric, 2026-08-10)
+
+D3 read: contaminated legacy sessions are quarantined and that picture's
+progress is reset. It is struck, because F0 disproved its premise.
+
+F2 and D3 both assume the session store can hold cross-subject
+contamination — "does the session store hold fish paths under a dragon key?"
+It cannot. A picture run stores WORDS (strings) and a seed; it has never
+stored paths. The fusion happened at DOM-resolution time, after correct data
+reached a correct renderer, because SVG element IDs were document-scoped.
+
+So a migration sweep would find nothing to quarantine, and D3's progress reset
+would either be a no-op or destroy real player progress to fix a bug that was
+never in the save file. The half of F1 worth keeping is the render-layer
+invariant, which shipped in build 155.
+
+F2 is left unbuilt pending Eric — its hygiene rules (one record per
+(subjectId, tier), restore replaces rather than appends) may still be worth
+having on their own merits, but not as contamination remedies.
+
 ## Resolution
 
 **F0.** `next_ns()` mints a monotonic namespace, bumped once per render call.
