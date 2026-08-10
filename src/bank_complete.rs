@@ -264,7 +264,17 @@ mod bank_complete_ci {
     fn floor_registry_is_lawful() {
         let f = floors();
         let langs = f["languages"].as_object().unwrap();
-        assert_eq!(langs.len(), 15, "fifteen languages, as signed");
+        // Was fifteen, signed 2026-08-03. Sixteen since Persian:
+        // CC-PERSIAN-FOUNDATION D3 signs fa INTO this table by name — "fa
+        // frequency floor 15,000 (matches ar in the CC-BANK-COMPLETE floor
+        // table)" — so the row implements a later signature rather than
+        // overriding the earlier one. fa's values mirror ar's exactly, per D3.
+        //
+        // Note this is a floor-table entry only. fa is still absent from the
+        // language registry (CC-MASTER-PARITY Phase A cut it, and
+        // registry_is_the_swapped_lineup_of_14 still asserts that); reversing
+        // THAT remains Eric's call and is not implied here.
+        assert_eq!(langs.len(), 16, "fifteen signed 2026-08-03, plus fa per PERSIAN D3");
         for (lang, row) in langs {
             let tiers: Vec<u64> =
                 row["tiers"].as_array().unwrap().iter().map(|v| v.as_u64().unwrap()).collect();

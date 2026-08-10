@@ -39,7 +39,7 @@ ROOT = Path(__file__).resolve().parent.parent
 # ar joined on Eric's ungate ruling (2026-07-25): sources assets/words/ar/,
 # keyboard ar.json, RTL_SUPPORTED flipped in the same change.
 # and listing them before the sources land would just fail the build.
-LANGS = ["en", "es", "fr", "de", "pt", "pl", "vi", "ko", "ja", "fil", "ru", "sw", "ar", "hi"]
+LANGS = ["en", "es", "fr", "de", "pt", "pl", "vi", "ko", "ja", "fil", "ru", "sw", "ar", "fa", "hi"]
 TIERS = ["easy", "medium", "hard", "expert"]
 MIN_LEN, MAX_LEN = 2, 16
 # Tier size gate: a floor (no language starved of words) and a ceiling (sanity).
@@ -152,14 +152,34 @@ def build():
                 # in spirit — Devanagari matras (hi) fail isalpha() but are part
                 # of the word's spelling; the keyboard charset gate still applies.
                 import unicodedata as _ud
-                if not all(c.isalpha() or _ud.category(c) in ("Mn", "Mc") or (code == "fil" and c == "-") for c in w):
+                # fa keeps ZWNJ (U+200C, category Cf so isalpha() rejects it).
+                # CC-PERSIAN-FOUNDATION D2 is explicit: the bank stores the
+                # canonical form WITH ZWNJ from v1. Without this exception the
+                # filter silently drops 717 ordinary Persian words — می‌شود,
+                # می‌کند, دنده‌های — which is the ZWNJ Law failing at ingestion,
+                # the one place D2 calls the only write path. Same shape as the
+                # Filipino hyphen exception beside it: a per-language
+                # orthographic character, not a loophole.
+                if not all(c.isalpha() or _ud.category(c) in ("Mn", "Mc")
+                           or (code == "fil" and c == "-")
+                           or (code == "fa" and c == "‌") for c in w):
                     warnings.append(f"{where} — dropped (non-alphabetic)")
                     continue
                 if not (min_len <= len(w) <= MAX_LEN):
                     warnings.append(f"{where} — dropped (length {len(w)} outside {MIN_LEN}..{MAX_LEN})")
                     continue
                 # Hard gates (fail the build).
-                bad = [c for c in strict_fold(w) if c not in reach]
+                #
+                # fa: ZWNJ is exempt from reachability BY DESIGN, not as a
+                # concession. CC-PERSIAN-FOUNDATION F2 makes it orthography the
+                # game owns: it is "never a tile, never a required keystroke",
+                # and the match key is the ZWNJ-stripped canonical form, so the
+                # player is never asked to type it. Requiring it on the keyboard
+                # would contradict F2 and would delete 717 ordinary Persian
+                # words (می‌شود, می‌کند) that D2 says the bank must store WITH
+                # their ZWNJ. Every other character still has to be typeable.
+                skip = {"‌"} if code == "fa" else set()
+                bad = [c for c in strict_fold(w) if c not in reach and c not in skip]
                 if bad:
                     problems.append(f"{where} — chars not on {code} keyboard: {''.join(bad)}")
                     continue

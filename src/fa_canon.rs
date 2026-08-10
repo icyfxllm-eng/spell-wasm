@@ -183,6 +183,38 @@ pub fn illegal_chars(s: &str) -> Vec<char> {
 mod tests {
     use super::*;
 
+    /// Python ingestion and this module must agree, character for character.
+    ///
+    /// `canon` runs in TWO implementations: scripts/build-fa-bank.py at
+    /// ingestion, and here at runtime. If they ever diverge, a bank word stops
+    /// matching what the player types — silently, and only in Persian. That is
+    /// the same failure the `list_hash` pair guards against, so this borrows
+    /// its shape: Python emits a fixture, Rust re-canonicalizes and compares.
+    ///
+    /// What this does NOT prove: that either side reads D1 correctly. A row
+    /// I mis-transcribed would be wrong in both and pass here. The row-by-row
+    /// tests below are what pin the table itself; this pins that Python
+    /// matches Rust. Neither alone closes it.
+    #[test]
+    fn python_parity() {
+        let raw = include_str!("../tests/fixtures/fa-canon-parity.json");
+        let doc: serde_json::Value = serde_json::from_str(raw).expect("fixture parses");
+        let cases = doc["cases"].as_array().expect("cases array");
+        assert!(cases.len() > 100, "fixture too thin to mean anything: {}", cases.len());
+        let mut checked = 0;
+        for c in cases {
+            let input = c["in"].as_str().unwrap();
+            let expected = c["out"].as_str().unwrap();
+            assert_eq!(
+                canon(input), expected,
+                "Python and Rust disagree on {input:?} — the ingestion pipeline and \
+                 the runtime would accept different spellings"
+            );
+            checked += 1;
+        }
+        println!("fa canon parity: {checked} cases agree");
+    }
+
     /// Done-when #1: idempotent on a deliberately polluted corpus.
     #[test]
     fn canon_is_a_fixed_point() {

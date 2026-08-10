@@ -6297,6 +6297,11 @@ pub fn tier_for(lang: &str, tier: &str) -> &'static [&'static str] {
         // keyboard-reachability gated). No registered language is contentless
         // anymore — the serves-its-OWN-bank test below is the fallthrough tripwire.
         AR => simple_tier(AR_EASY, AR_MEDIUM, AR_HARD, AR_EXPERT, tier),
+        // Persian. Unreachable until fa enters the registry — that reverses
+        // CC-MASTER-PARITY Phase A and is Eric's call — but wired the same way
+        // the fa keyboard is, so the bank is serveable the moment it lands
+        // rather than needing a second pass to remember this arm exists.
+        "fa" => simple_tier(FA_EASY, FA_MEDIUM, FA_HARD, FA_EXPERT, tier),
         HI => simple_tier(HI_EASY, HI_MEDIUM, HI_HARD, HI_EXPERT, tier),
         ES => es_tier(tier),
         FR => simple_tier(FR_EASY, FR_MEDIUM, FR_HARD, FR_EXPERT, tier),
