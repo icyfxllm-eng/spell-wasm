@@ -73,6 +73,10 @@ node scripts/tier-partition-check.mjs || { echo "GATE FAIL: a word is in two tie
 echo "== gate: no tracking on joined scripts (CC-LOCALE-TYPESET F2)"
 node scripts/tracking-check.mjs || { echo "GATE FAIL: tracking on a joining script"; exit 1; }
 
+echo "== gate: masterpiece outline hierarchy (CC-MASTERPIECE-RECOG F2)"
+python3 tools/masterpiece_lint.py || { echo "GATE FAIL: masterpiece outline hierarchy"; exit 1; }
+python3 tools/masterpiece_lint.py --selftest || { echo "GATE FAIL: masterpiece-lint selftest — the gate no longer bites"; exit 1; }
+
 echo "== gate: modes registry has implementations"
 # This check was CORRECT and UNREAD. It had been reporting that calendar,
 # translate and reports were registry entries with no flag — three live

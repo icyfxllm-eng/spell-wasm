@@ -153,3 +153,55 @@ references is a workflow that lives outside this repository.
 **F0's provenance question is answerable now, cheaply:** every scan source
 carries an `authoring` field. If the Aug 11 traces say `hand-traced` they did
 not come from a raw edge pass, and the prime suspect in F0 is wrong.
+
+### F2 lints landed 2026-08-11 (ship 158) — and two rulings that bent F2
+
+Written literally, two of F2's three lints **fail Mona** — the piece this
+project treats as the reference success. Both were put to Eric; both readings
+below are his ruling, recorded because the code now visibly diverges from the
+prose above it.
+
+**Silhouette continuity.** F2 says the silhouette "must be topologically
+unbroken; a fragmented silhouette is a build failure." Read as *every outline
+path chains into one component*, Mona fails: her outline is a closed frame
+rectangle (5 points, arc 1346), the figure contour (145 points, arc 840) and
+two shorter edges, and the nearest endpoint gap between them is **36.5px** —
+not a tolerance problem, genuinely separate contours. A portrait is a frame
+and a figure. The ruling: F2 requires the piece to *have* an unbroken
+principal contour, not that all of them join. The lint asks whether the
+longest single path carries at least 30% of the silhouette's arc. Mona's frame
+and figure sit at 52/33, Great Wave and Red Fuji are single paths at 100%, and
+a silhouette shattered into twenty even fragments lands near 5% — which is the
+Sunflowers-scribble mode the rule exists to catch.
+
+**Weight monotonicity.** F2 extends this "to **all** masterpieces regardless
+of extractionClass." But on TONAL pieces a thin stroke is the medium, not a
+weak stroke: Mona carries `decorative_thin` on a silhouette path and two
+anchors because that is FACEPASS's thin-line-plus-band-fill treatment — the
+same move F3 credits with fixing her shadow rims. Applied across classes the
+rule outlaws the fix. The ruling: it is a LINE-class rule. Mona is the only
+TONAL master; the other five are LINE and pass on their own merits, so the
+check is not vacuous.
+
+**A fourth check, not in F2.** The three-layer mapping is inferred from the
+manifests, not stated in the spec, so a manifest inventing a fourth layer name
+would silently fall outside all three lints. It fails loudly instead. Eric
+kept it.
+
+**Anchor presence is scaffolded, not enforced.** No piece carries
+`required_anchors` yet — F4's tables are prose Eric authors in the tool, and
+"snow-streak zigzag at summit" is not a geometric predicate. The lint reports
+all six traced masters as unauthored and checks properly the moment a table
+exists.
+
+**F7 is discharged in CI, not by a one-off.** `masterpiece_lint.py --selftest`
+runs eight deliberate fixtures on every gate — five that must fail naming the
+exact rule, and Mona's frame-plus-figure-plus-thin-strokes shape, which must
+stay clean. Disabling any rule turns the selftest red; that was verified by
+neutering each of the five in turn. Same pattern as
+`settings-truth-check --selftest`.
+
+The first draft of that selftest was itself blind. It asserted only that a
+fixture produced *some* failure, and the shattered-silhouette fixture carried
+an empty features layer — so it tripped the anchor rule and kept passing with
+the continuity rule disabled outright. Cases now assert on the message.
