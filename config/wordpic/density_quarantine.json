@@ -1,0 +1,8 @@
+{
+  "_comment": "Masters known to fail the density floor, held so the gate stays green while they are re-authored. This list SHRINKS ONLY — the check fails if an entry starts passing (remove it) or names a picture not in the bank. Adding an entry is a deliberate act that should be argued for in the commit, not a way to silence the floor.",
+  "starved": {
+    "redfuji": "214 points, suggested-then-approved; anchors of 8/15/8 points. Read as Starry Night in the Aug 11 review. Needs a hand trace at masters density.",
+    "starrynight": "138 points, suggested-then-approved; a 50-point outline. The piece Red Fuji was mistaken for — the confusion pair must be fixed together.",
+    "sunflowers": "No scan at all; runs the legacy solver, which is what rendered it as a scribble. Needs creating, not fixing. D4 recommends TONAL."
+  }
+}

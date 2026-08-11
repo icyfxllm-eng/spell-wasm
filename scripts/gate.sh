@@ -77,6 +77,10 @@ echo "== gate: masterpiece outline hierarchy (CC-MASTERPIECE-RECOG F2)"
 python3 tools/masterpiece_lint.py || { echo "GATE FAIL: masterpiece outline hierarchy"; exit 1; }
 python3 tools/masterpiece_lint.py --selftest || { echo "GATE FAIL: masterpiece-lint selftest — the gate no longer bites"; exit 1; }
 
+echo "== gate: masterpiece density floor + bank-wide ratchet (CC-MASTERPIECE-RECOG)"
+python3 tools/density_check.py || { echo "GATE FAIL: a trace is too thin, or thinner than it was"; exit 1; }
+python3 tools/density_check.py --selftest || { echo "GATE FAIL: density-check selftest — the gate no longer bites"; exit 1; }
+
 echo "== gate: modes registry has implementations"
 # This check was CORRECT and UNREAD. It had been reporting that calendar,
 # translate and reports were registry entries with no flag — three live

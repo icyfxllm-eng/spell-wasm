@@ -205,3 +205,100 @@ The first draft of that selftest was itself blind. It asserted only that a
 fixture produced *some* failure, and the shattered-silhouette fixture carried
 an empty features layer — so it tripped the anchor rule and kept passing with
 the continuity rule disabled outright. Cases now assert on the message.
+
+### Eric's rulings, 2026-08-11
+
+**D1 — Starry Night joins the scope.** The list is now five: Red Fuji,
+Sunflowers, Great Wave, The Scream, **Starry Night**. It was not in the
+original four, but it is the other half of the confusion pair — Red Fuji was
+misread *as* Starry Night — and it is the other suggester-derived master, a
+50-point outline. Fixing Fuji alone would have left the pair half-repaired.
+Of the five, Great Wave needs nothing (rank 4 in the bank, read correctly), so
+the work list is: re-trace Red Fuji and Starry Night, create Sunflowers,
+reassess The Scream.
+
+**D3 — INVERTED.** As written, D3 chose to delete demoted fragments outright
+rather than thin them, on the reasoning that fewer deliberate strokes beat
+many faint ones. That is the right cure for over-extraction, and the bank says
+these pieces suffer the opposite: Red Fuji is 214 points where hand-traced
+masters run a median of 857. Deleting anything from a starved Hokusai makes it
+less nameable, not more.
+
+The inverted policy: **for a LINE piece below or near the masters floor,
+fragments are retained or merged, never deleted.** Curation by subtraction is
+a privilege of pieces that already have substance to spare; it is not a filter
+to run over a thin trace. F3's Noise Demotion Law is scoped the same way — it
+remains correct for a dense piece with genuine confetti, and must not run on a
+piece that has not cleared the floor.
+
+**This needs no new lint: the ratchet already enforces it.** Deleting
+fragments lowers a trace's point count, and any drop beyond 5% fails
+tools/density_check.py. An author who deletes their way through a sparse piece
+hits the gate. The one deliberate exception — a re-authoring that genuinely
+replaces a trace — goes through --accept, which prints every lowered piece by
+name so the loss is stated rather than absorbed.
+
+### F0 REVERSED, and the density work (ship 159)
+
+**F0's hypothesis is backwards. The Aug 11 failures are starvation, not noise.**
+Measured across all 382 traces: hand-traced pieces run a median of 857 points,
+suggester output runs 60 — a 14x gap — and the two masterpieces that failed
+review are exactly the two suggester-derived masterpieces.
+
+| piece | points | authoring | Aug 11 verdict |
+|---|---|---|---|
+| Great Wave | 2076 | hand-traced | recognizable |
+| The Scream | 1128 | hand-traced | marginal |
+| Rhinoceros | 786 | hand-traced | not reviewed |
+| Mona Lisa | 445 | hand-traced (TONAL) | the reference success |
+| Red Fuji | 214 | suggested-then-approved | read as Starry Night |
+| Starry Night | 138 | suggested-then-approved | the piece Fuji was mistaken for |
+| Sunflowers | — | no scan; legacy solver | scribble |
+
+Red Fuji's three anchors carry 8, 15 and 8 points. No weighting rule rescues
+that — there is nothing there to weight. **The F2 hierarchy lints pass Red Fuji
+green today**, because they check the shape of a trace and this is a question
+of whether there is enough of one to shape. F2 is necessary and not sufficient.
+
+This reverses two things above. **F3's Noise Demotion Law and D3's "delete
+demoted fragments" both prescribe removal for pieces whose disease is
+emptiness.** D3 should be inverted or made conditional on a piece first
+clearing the floor; deleting anything from a 214-point Hokusai makes it worse.
+
+**The floor (masters only).** 500 points for LINE masters, hand-traced
+required, and a master with no trace at all is a failure rather than a silent
+skip. 500 is calibrated to the recorded verdicts: the sparsest LINE master
+that reads is Rhinoceros at 786, the densest that fails is Red Fuji at 214.
+Above 786 it would condemn a working piece; below 215 it would admit a known
+failure.
+
+**Why masters only.** Category is not complexity — a 200-point floor would
+fail 15 of 17 landmarks, because "landmark" covers a signpost and a Hokusai
+alike. A per-anchor floor was tried and abandoned: it cannot separate the
+failures from the successes, since Mona's thinnest legitimate anchor (13
+points) is thinner than Red Fuji's (15).
+
+**Why TONAL is exempt from the point floor.** Substance on a TONAL piece lives
+in posterized bands, not vertices. Mona would happen to clear a 350-point
+floor, but that is a coincidence of her trace, not a property of the medium.
+TONAL keeps its own floor — requiredFeatures non-empty, asserted in
+src/wordpic.rs — and is still bound by the hand-traced rule.
+
+**The ratchet (all 382).** No trace may lose points: the gate fails if any
+picture drops more than 5% below its recorded baseline, or if a baselined
+trace disappears entirely. That is the guard the bank actually lacked. Red
+Fuji is a hand-traced *subject* carrying suggester-grade density, which is
+what re-running the suggester over an existing trace produces, and nothing
+would have caught it. 5% slack absorbs re-bundling quantization; a real
+regression is not subtle.
+
+**The quarantine shrinks only.** Red Fuji, Starry Night and Sunflowers fail
+the floor today and re-tracing them is Eric's authoring work, so they are held
+in config/wordpic/density_quarantine.json with the measured reason each. The
+gate fails if a held piece starts passing (stale entry, remove it) or names a
+picture not in the bank. It cannot become the place failures go to be
+forgotten.
+
+**Open consequence for D1.** Starry Night is not in D1's four, but it is the
+other half of the confusion pair and a 50-point outline. Fixing Red Fuji alone
+leaves the pair half-repaired.
