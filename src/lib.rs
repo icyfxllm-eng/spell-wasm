@@ -11,6 +11,8 @@ mod deck;
 mod defmatch; // CC-DEF-MATCH core engine (REVIEW-GATED)
 mod practice; // CC-PRACTICE core (curriculum/phases/progress)
 #[cfg(not(feature = "web"))]
+mod forge; // CC-LETTER-FORGE D2 (puzzle generator)
+#[cfg(not(feature = "web"))]
 mod word_index; // CC-LETTER-FORGE F2 (validity index; LETTER-FORGE + WORD-CHAINS)
 mod wordpic; // CC-WORD-PICTURE core (calligrams)
 mod input_provenance;
