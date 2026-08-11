@@ -115,6 +115,35 @@ def check(sub: str, m: dict, scan: dict) -> list[str]:
     return bad
 
 
+def check_attribution() -> list[str]:
+    """Every master credits its artist.
+
+    The `attribution` on a scan is what the app SHOWS beside the piece. Dürer
+    shipped uncredited: rhino.json carried an empty string while Hokusai,
+    Munch and Leonardo were all named, and nothing noticed because provenance
+    (source.title / source.license, above) lives in the MANIFEST and is a
+    different field from the attribution in the SCAN. Two records of where a
+    picture came from, one checked.
+
+    Scoped to the `masters` category: a spiderweb has no artist to credit, and
+    demanding one would be noise. A master with no scan yet is not a failure —
+    it simply has nothing to attribute.
+    """
+    bad: list[str] = []
+    pics = json.loads((ROOT / "config/wordpic/pictures.json").read_text())["pictures"]
+    for e in sorted(pics, key=lambda x: x["id"]):
+        if "masters" not in e.get("categories", []):
+            continue
+        scan = SCANS / f"{e['id']}.json"
+        if not scan.exists():
+            continue
+        if not json.loads(scan.read_text()).get("attribution", "").strip():
+            bad.append(
+                f"{e['id']} is in `masters` but its scan carries no attribution — "
+                f"the artist must be credited where the app displays it")
+    return bad
+
+
 def check_audits(mans: set[str]) -> list[str]:
     """CC-PICTURE-BANK Done #7 — per-language culture-pack audit gate.
 
@@ -169,6 +198,10 @@ def main() -> int:
     for b in check_audits(mans):
         failures += 1
         print(f"AUDIT      FAIL\n           - {b}")
+
+    for b in check_attribution():
+        failures += 1
+        print(f"ATTRIB     FAIL\n           - {b}")
 
     for sub in sorted(mans & scans):
         m = json.loads((MANIFESTS / f"{sub}.json").read_text())
