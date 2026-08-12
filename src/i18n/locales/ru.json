@@ -584,5 +584,22 @@
  "spellit.guide.hear": "Нажми на сферу, чтобы услышать своё слово.",
  "spellit.guide.check": "Нажми ✓, когда слово выглядит верно.",
  "spellit.guide.start": "Понятно",
- "spellit.guide.again": "Как это работает"
+ "spellit.guide.again": "Как это работает",
+ "tools.forge.name": "Кузница Букв",
+ "tools.forge.desc": "Семь букв. Сколько слов ты выкуешь?",
+ "forge.rank.start": "Начни",
+ "forge.rank.good": "Хорошо",
+ "forge.rank.great": "Отлично",
+ "forge.rank.amazing": "Потрясающе",
+ "forge.rank.master": "Мастер кузницы",
+ "forge.dup": "Уже найдено",
+ "forge.invalid": "Нет в списке",
+ "forge.pangram": "Панграмма!",
+ "forge.revealed": "Раунд окончен — вот остальное",
+ "forge.unavailable": "Пока недоступно на этом языке",
+ "forge.shuffle": "Перемешать",
+ "forge.delete": "Удалить",
+ "forge.submit": "Ввод",
+ "forge.reveal": "Показать остальное",
+ "forge.found": "Найдено"
 }

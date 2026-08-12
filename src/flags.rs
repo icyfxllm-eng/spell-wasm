@@ -72,6 +72,13 @@ pub fn photo_list() -> bool {
     resolve(stored("photo_list").as_deref(), true)
 }
 
+/// CC-LETTER-FORGE — the honeycomb word-finding mode. **Default OFF**: dark
+/// until its strings are audited and Eric has passed the Korean block-assembly
+/// animation, which the spec calls a headline feature rather than polish.
+pub fn letter_forge() -> bool {
+    resolve(stored("letter_forge").as_deref(), false)
+}
+
 /// F5 "Word stories" — etymology cards. **Default OFF**: dark until the CC BY-SA
 /// attribution approach is approved.
 pub fn word_stories() -> bool {

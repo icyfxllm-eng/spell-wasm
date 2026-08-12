@@ -584,5 +584,22 @@
  "spellit.guide.hear": "Naciśnij kulę, aby usłyszeć swoje słowo.",
  "spellit.guide.check": "Naciśnij ✓, gdy słowo wygląda dobrze.",
  "spellit.guide.start": "Rozumiem",
- "spellit.guide.again": "Jak to działa"
+ "spellit.guide.again": "Jak to działa",
+ "tools.forge.name": "Kuźnia Liter",
+ "tools.forge.desc": "Siedem liter. Ile słów wykujesz?",
+ "forge.rank.start": "Zacznij",
+ "forge.rank.good": "Dobrze",
+ "forge.rank.great": "Świetnie",
+ "forge.rank.amazing": "Wspaniale",
+ "forge.rank.master": "Mistrz Kuźni",
+ "forge.dup": "Już znalezione",
+ "forge.invalid": "Nie ma na liście",
+ "forge.pangram": "Pangram!",
+ "forge.revealed": "Koniec rundy — oto reszta",
+ "forge.unavailable": "Jeszcze niedostępne w tym języku",
+ "forge.shuffle": "Przetasuj",
+ "forge.delete": "Usuń",
+ "forge.submit": "Zatwierdź",
+ "forge.reveal": "Pokaż resztę",
+ "forge.found": "Znalezione"
 }

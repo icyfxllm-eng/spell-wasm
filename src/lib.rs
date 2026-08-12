@@ -32,6 +32,8 @@ mod wordpic_layout; // CC-WORD-PICTURE v6 layout engine (L1-L5)
 mod wordpic_screen; // CC-WORD-PICTURE v5 screen
 mod practice_screen; // CC-PRACTICE screen (the front porch)
 mod defmatch_screen; // CC-DEF-MATCH P3 frontend loop
+#[cfg(not(feature = "web"))]
+mod forge_screen; // CC-LETTER-FORGE F1 honeycomb
 mod dom;
 pub mod editor;
 mod enrich;
@@ -275,6 +277,10 @@ fn wire(app: &App) {
     ghost::wire_screen(app);
     racing::screen::wire(app); // CC-SPELL-RACING Phase 5 screen (hidden until activation)
     defmatch_screen::wire(app); // CC-DEF-MATCH P3 loop (live tile where consts::def_match holds)
+    #[cfg(not(feature = "web"))]
+    if flags::letter_forge() {
+        forge_screen::wire(app); // CC-LETTER-FORGE F1 (dark by default)
+    }
     practice_screen::wire(app); // CC-PRACTICE (visible where consts::practice holds — en first)
     // CC-PICTURE-PLATFORM D1: compile-out, not runtime-hide. The site build
     // (`--features web`) contains no picture machinery at all -- and because

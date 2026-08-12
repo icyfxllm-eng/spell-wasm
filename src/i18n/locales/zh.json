@@ -584,5 +584,22 @@
  "spellit.guide.hear": "点一下光球来听你的单词。",
  "spellit.guide.check": "单词没错时点 ✓。",
  "spellit.guide.start": "明白了",
- "spellit.guide.again": "使用方法"
+ "spellit.guide.again": "使用方法",
+ "tools.forge.name": "字母锻炉",
+ "tools.forge.desc": "七个字母，能拼出多少词？",
+ "forge.rank.start": "开始",
+ "forge.rank.good": "不错",
+ "forge.rank.great": "很棒",
+ "forge.rank.amazing": "惊艳",
+ "forge.rank.master": "锻造大师",
+ "forge.dup": "已经找到了",
+ "forge.invalid": "不在词表里",
+ "forge.pangram": "全字母词！",
+ "forge.revealed": "本轮结束 — 这是其余的",
+ "forge.unavailable": "该语言暂未开放",
+ "forge.shuffle": "打乱",
+ "forge.delete": "删除",
+ "forge.submit": "确定",
+ "forge.reveal": "查看其余",
+ "forge.found": "已找到"
 }

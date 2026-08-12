@@ -584,5 +584,22 @@
  "spellit.guide.hear": "オーブをタップして単語を聞こう。",
  "spellit.guide.check": "単語が合っていたら ✓ をタップ。",
  "spellit.guide.start": "わかった",
- "spellit.guide.again": "使い方"
+ "spellit.guide.again": "使い方",
+ "tools.forge.name": "もじのかじば",
+ "tools.forge.desc": "七つの文字。いくつ言葉を作れる？",
+ "forge.rank.start": "スタート",
+ "forge.rank.good": "いいね",
+ "forge.rank.great": "すごい",
+ "forge.rank.amazing": "みごと",
+ "forge.rank.master": "かじの達人",
+ "forge.dup": "もう見つけたよ",
+ "forge.invalid": "リストにないよ",
+ "forge.pangram": "パングラム！",
+ "forge.revealed": "ラウンド終了 — 残りはこちら",
+ "forge.unavailable": "この言語ではまだ使えません",
+ "forge.shuffle": "シャッフル",
+ "forge.delete": "けす",
+ "forge.submit": "決定",
+ "forge.reveal": "残りを見る",
+ "forge.found": "みつけた数"
 }

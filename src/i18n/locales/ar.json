@@ -584,5 +584,22 @@
  "spellit.guide.hear": "اضغط على الكرة لتسمع كلمتك.",
  "spellit.guide.check": "اضغط ✓ عندما تصبح كلمتك صحيحة.",
  "spellit.guide.start": "فهمت",
- "spellit.guide.again": "كيف يعمل"
+ "spellit.guide.again": "كيف يعمل",
+ "tools.forge.name": "مِطرقة الحروف",
+ "tools.forge.desc": "سبعة حروف. كم كلمة تصوغ؟",
+ "forge.rank.start": "ابدأ",
+ "forge.rank.good": "جيد",
+ "forge.rank.great": "رائع",
+ "forge.rank.amazing": "مذهل",
+ "forge.rank.master": "سيّد الصياغة",
+ "forge.dup": "وجدتها من قبل",
+ "forge.invalid": "ليست في القائمة",
+ "forge.pangram": "بانجرام!",
+ "forge.revealed": "انتهت الجولة — هذا ما تبقّى",
+ "forge.unavailable": "غير متاح بعد بهذه اللغة",
+ "forge.shuffle": "خلط",
+ "forge.delete": "حذف",
+ "forge.submit": "إدخال",
+ "forge.reveal": "أظهر الباقي",
+ "forge.found": "الكلمات"
 }

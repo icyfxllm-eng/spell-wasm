@@ -584,5 +584,22 @@
  "spellit.guide.hear": "Gusa tufe kusikia neno lako.",
  "spellit.guide.check": "Gusa ✓ neno lako likiwa sahihi.",
  "spellit.guide.start": "Nimeelewa",
- "spellit.guide.again": "Jinsi inavyofanya kazi"
+ "spellit.guide.again": "Jinsi inavyofanya kazi",
+ "tools.forge.name": "Fua la Herufi",
+ "tools.forge.desc": "Herufi saba. Unaweza kufua maneno mangapi?",
+ "forge.rank.start": "Anza",
+ "forge.rank.good": "Vizuri",
+ "forge.rank.great": "Vyema sana",
+ "forge.rank.amazing": "Ajabu",
+ "forge.rank.master": "Mfuaji Bingwa",
+ "forge.dup": "Umeshapata",
+ "forge.invalid": "Haipo kwenye orodha",
+ "forge.pangram": "Pangramu!",
+ "forge.revealed": "Raundi imeisha — hizi ndizo zilizobaki",
+ "forge.unavailable": "Bado haipatikani kwa lugha hii",
+ "forge.shuffle": "Changanya",
+ "forge.delete": "Futa",
+ "forge.submit": "Ingiza",
+ "forge.reveal": "Onyesha zilizobaki",
+ "forge.found": "Zilizopatikana"
 }

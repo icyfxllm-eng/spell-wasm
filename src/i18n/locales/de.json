@@ -584,5 +584,22 @@
  "spellit.guide.hear": "Tippe auf die Kugel, um dein Wort zu hören.",
  "spellit.guide.check": "Tippe auf ✓, wenn dein Wort stimmt.",
  "spellit.guide.start": "Verstanden",
- "spellit.guide.again": "So geht's"
+ "spellit.guide.again": "So geht's",
+ "tools.forge.name": "Buchstabenschmiede",
+ "tools.forge.desc": "Sieben Buchstaben. Wie viele Wörter schmiedest du?",
+ "forge.rank.start": "Los",
+ "forge.rank.good": "Gut",
+ "forge.rank.great": "Stark",
+ "forge.rank.amazing": "Fantastisch",
+ "forge.rank.master": "Schmiedemeister",
+ "forge.dup": "Schon gefunden",
+ "forge.invalid": "Nicht in der Liste",
+ "forge.pangram": "Pangramm!",
+ "forge.revealed": "Runde beendet — hier ist der Rest",
+ "forge.unavailable": "In dieser Sprache noch nicht verfügbar",
+ "forge.shuffle": "Mischen",
+ "forge.delete": "Löschen",
+ "forge.submit": "Eingabe",
+ "forge.reveal": "Rest zeigen",
+ "forge.found": "Gefunden"
 }

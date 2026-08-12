@@ -38,7 +38,7 @@ use crate::App;
 /// is what lets the same file describe a mode for a future surface that has no
 /// such element. `None` = an in-round aid with no destination.
 #[cfg(not(feature = "web"))]
-const N_LAUNCH: usize = 13;
+const N_LAUNCH: usize = 14;
 #[cfg(feature = "web")]
 const N_LAUNCH: usize = 9;
 const LAUNCH: [(&str, Option<&str>); N_LAUNCH] = [
@@ -53,6 +53,11 @@ const LAUNCH: [(&str, Option<&str>); N_LAUNCH] = [
     ("word_stories", None),       // after-answer flourish; hidden anyway
     ("online_spelloff", Some("soBtn")),
     ("def_match", Some("defMatchOpen")), // CC-DEF-MATCH P3: the floating-cards loop
+    // CC-LETTER-FORGE F1. App-only, and not by preference: `mod forge` — the
+    // generator this screen drives — is itself cfg'd out of the web build, so
+    // a web row here would bind a tile to a mode whose engine does not exist.
+    #[cfg(not(feature = "web"))]
+    ("letter_forge", Some("forgeOpen")),
     // CC-WORD-PICTURE v5: calligram picker. Compiled out with the mode
     // (I1): the registry row is deleted on web, so this would be a dead
     // table entry -- but a dead entry still puts the mode's name in the

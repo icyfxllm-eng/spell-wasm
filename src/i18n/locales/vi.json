@@ -584,5 +584,22 @@
  "spellit.guide.hear": "Chạm vào quả cầu để nghe từ của bạn.",
  "spellit.guide.check": "Chạm ✓ khi từ của bạn đã đúng.",
  "spellit.guide.start": "Đã hiểu",
- "spellit.guide.again": "Cách hoạt động"
+ "spellit.guide.again": "Cách hoạt động",
+ "tools.forge.name": "Lò Rèn Chữ",
+ "tools.forge.desc": "Bảy chữ cái. Bạn rèn được bao nhiêu từ?",
+ "forge.rank.start": "Bắt đầu",
+ "forge.rank.good": "Tốt",
+ "forge.rank.great": "Tuyệt",
+ "forge.rank.amazing": "Xuất sắc",
+ "forge.rank.master": "Bậc thầy lò rèn",
+ "forge.dup": "Đã tìm thấy rồi",
+ "forge.invalid": "Không có trong danh sách",
+ "forge.pangram": "Pangram!",
+ "forge.revealed": "Hết lượt — đây là phần còn lại",
+ "forge.unavailable": "Ngôn ngữ này chưa sẵn sàng",
+ "forge.shuffle": "Xáo trộn",
+ "forge.delete": "Xóa",
+ "forge.submit": "Nhập",
+ "forge.reveal": "Xem phần còn lại",
+ "forge.found": "Đã tìm"
 }

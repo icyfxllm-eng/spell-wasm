@@ -584,5 +584,22 @@
  "spellit.guide.hear": "अपना शब्द सुनने के लिए गोले को दबाओ।",
  "spellit.guide.check": "शब्द सही लगे तो ✓ दबाओ।",
  "spellit.guide.start": "समझ गया",
- "spellit.guide.again": "यह कैसे काम करता है"
+ "spellit.guide.again": "यह कैसे काम करता है",
+ "tools.forge.name": "अक्षर भट्ठी",
+ "tools.forge.desc": "सात अक्षर। कितने शब्द बना सकते हो?",
+ "forge.rank.start": "शुरू",
+ "forge.rank.good": "अच्छा",
+ "forge.rank.great": "बढ़िया",
+ "forge.rank.amazing": "शानदार",
+ "forge.rank.master": "भट्ठी का उस्ताद",
+ "forge.dup": "पहले मिल चुका",
+ "forge.invalid": "सूची में नहीं",
+ "forge.pangram": "पैनग्राम!",
+ "forge.revealed": "दौर ख़त्म — बाकी शब्द ये रहे",
+ "forge.unavailable": "इस भाषा में अभी उपलब्ध नहीं",
+ "forge.shuffle": "फेंटो",
+ "forge.delete": "मिटाओ",
+ "forge.submit": "दर्ज करो",
+ "forge.reveal": "बाकी दिखाओ",
+ "forge.found": "मिले"
 }

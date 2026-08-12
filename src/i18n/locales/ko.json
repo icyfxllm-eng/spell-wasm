@@ -584,5 +584,22 @@
  "spellit.guide.hear": "구슬을 눌러 단어를 들어요.",
  "spellit.guide.check": "단어가 맞으면 ✓ 를 눌러요.",
  "spellit.guide.start": "알겠어요",
- "spellit.guide.again": "사용 방법"
+ "spellit.guide.again": "사용 방법",
+ "tools.forge.name": "글자 대장간",
+ "tools.forge.desc": "일곱 글자. 몇 단어를 만들 수 있나요?",
+ "forge.rank.start": "시작",
+ "forge.rank.good": "좋아요",
+ "forge.rank.great": "훌륭해요",
+ "forge.rank.amazing": "놀라워요",
+ "forge.rank.master": "대장간 명인",
+ "forge.dup": "이미 찾았어요",
+ "forge.invalid": "목록에 없어요",
+ "forge.pangram": "팬그램!",
+ "forge.revealed": "라운드 종료 — 남은 단어예요",
+ "forge.unavailable": "이 언어는 아직 준비 중이에요",
+ "forge.shuffle": "섞기",
+ "forge.delete": "지우기",
+ "forge.submit": "입력",
+ "forge.reveal": "남은 단어 보기",
+ "forge.found": "찾은 수"
 }

@@ -179,6 +179,22 @@
       "exitStyle": "instant"
     },
     {
+      "id": "letter_forge",
+      "nameKey": "tools.forge.name",
+      "descKey": "tools.forge.desc",
+      "icon": "🐝",
+      "status": "hidden",
+      "kidSafe": true,
+      "platforms": [
+        "ios"
+      ],
+      "entitlementLevel": "preview",
+      "requiresPremium": null,
+      "languages": null,
+      "$note": "CC-LETTER-FORGE F1: honeycomb screen over the generator shipped in 157. HIDDEN until (a) Eric reads the 17 new strings across 15 locales, which landed unaudited so i18n-parity could pass, and (b) the Korean jamo block-assembly capture in Done #4 is reviewed. Per-language offer is forge::forge_ready — Hindi is excluded because its bank cannot sustain a board. App-only because mod forge is cfg'd out of the web build, so the row is stripped there rather than binding a tile to an absent engine. F4's daily archive and F5's how-to cards are not built.",
+      "exitStyle": "instant"
+    },
+    {
       "id": "word_picture",
       "nameKey": "tools.wordpic.name",
       "descKey": "tools.wordpic.desc",

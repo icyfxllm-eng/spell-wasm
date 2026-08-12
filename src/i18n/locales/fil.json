@@ -584,5 +584,22 @@
  "spellit.guide.hear": "Pindutin ang orb para marinig ang salita mo.",
  "spellit.guide.check": "Pindutin ang ✓ kapag tama na ang salita mo.",
  "spellit.guide.start": "Nakuha ko",
- "spellit.guide.again": "Paano ito gumagana"
+ "spellit.guide.again": "Paano ito gumagana",
+ "tools.forge.name": "Pandayan ng Titik",
+ "tools.forge.desc": "Pitong titik. Ilang salita ang mapapanday mo?",
+ "forge.rank.start": "Simulan",
+ "forge.rank.good": "Magaling",
+ "forge.rank.great": "Ang galing",
+ "forge.rank.amazing": "Kahanga-hanga",
+ "forge.rank.master": "Panday na Bihasa",
+ "forge.dup": "Nahanap na",
+ "forge.invalid": "Wala sa listahan",
+ "forge.pangram": "Pangram!",
+ "forge.revealed": "Tapos na ang round — ito ang natitira",
+ "forge.unavailable": "Hindi pa handa sa wikang ito",
+ "forge.shuffle": "Haluin",
+ "forge.delete": "Burahin",
+ "forge.submit": "Ipasok",
+ "forge.reveal": "Ipakita ang natitira",
+ "forge.found": "Nahanap"
 }

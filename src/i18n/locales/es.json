@@ -584,5 +584,22 @@
  "spellit.guide.hear": "Toca el orbe para oír tu palabra.",
  "spellit.guide.check": "Toca ✓ cuando tu palabra esté bien.",
  "spellit.guide.start": "Entendido",
- "spellit.guide.again": "Cómo funciona"
+ "spellit.guide.again": "Cómo funciona",
+ "tools.forge.name": "Forja de Letras",
+ "tools.forge.desc": "Siete letras. ¿Cuántas palabras puedes forjar?",
+ "forge.rank.start": "Empieza",
+ "forge.rank.good": "Bien",
+ "forge.rank.great": "Genial",
+ "forge.rank.amazing": "Increíble",
+ "forge.rank.master": "Maestro de la Forja",
+ "forge.dup": "Ya la tienes",
+ "forge.invalid": "No está en la lista",
+ "forge.pangram": "¡Pangrama!",
+ "forge.revealed": "Ronda terminada: esto es lo que falta",
+ "forge.unavailable": "Aún no disponible en este idioma",
+ "forge.shuffle": "Mezclar",
+ "forge.delete": "Borrar",
+ "forge.submit": "Entrar",
+ "forge.reveal": "Ver lo que falta",
+ "forge.found": "Encontradas"
 }

@@ -584,5 +584,22 @@
  "spellit.guide.hear": "Tap the orb to hear your word.",
  "spellit.guide.check": "Tap ✓ when your word looks right.",
  "spellit.guide.start": "Got it",
- "spellit.guide.again": "How this works"
+ "spellit.guide.again": "How this works",
+ "tools.forge.name": "Letter Forge",
+ "tools.forge.desc": "Seven letters. How many words can you forge?",
+ "forge.rank.start": "Begin",
+ "forge.rank.good": "Good",
+ "forge.rank.great": "Great",
+ "forge.rank.amazing": "Amazing",
+ "forge.rank.master": "Forge Master",
+ "forge.dup": "Already found",
+ "forge.invalid": "Not in the list",
+ "forge.pangram": "Pangram!",
+ "forge.revealed": "Round ended — here's the rest",
+ "forge.unavailable": "Not ready in this language yet",
+ "forge.shuffle": "Shuffle",
+ "forge.delete": "Delete",
+ "forge.submit": "Enter",
+ "forge.reveal": "Reveal remaining",
+ "forge.found": "Found"
 }

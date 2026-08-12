@@ -370,7 +370,42 @@
   /* btn-hide is per-surface in this stylesheet; the practice screen scopes
      one rule for all its toggled children (keyboard, micro replay). */
   .pr-screen .btn-hide{display:none}
-  #practiceOpen,#spellAloudEnter,#defMatchOpen{display:none}
+  #practiceOpen,#spellAloudEnter,#defMatchOpen,#forgeOpen{display:none}
+  /* CC-LETTER-FORGE F1 */
+  .fg-screen{position:fixed;inset:0;background:var(--bg,#0e1420);z-index:60;
+    display:none;flex-direction:column;gap:10px;padding:12px}
+  .fg-screen.show{display:flex}
+  .fg-top{display:flex;align-items:center;gap:10px}
+  .fg-rank{font-weight:600}
+  .fg-score{margin-inline-start:auto;font-variant-numeric:tabular-nums;font-weight:700}
+  .fg-bar{height:6px;border-radius:3px;background:#ffffff1a;overflow:hidden}
+  .fg-bar i{display:block;height:100%;width:0;background:var(--accent,#5bd1a5);transition:width .25s}
+  .fg-status{min-height:1.2em;text-align:center;font-size:.9rem;opacity:.8}
+  .fg-word{min-height:2.2em;font-size:1.8rem;font-weight:700;text-align:center;letter-spacing:.04em}
+  /* D5: three distinct feels, none of them a punishment. */
+  .fg-word.good{color:#5bd1a5}
+  .fg-word.dup{color:#9aa3ad;animation:fg-shake .3s}
+  .fg-word.miss{animation:fg-bounce .3s}
+  .fg-word.pangram{color:#f2c14e;animation:fg-pop .45s}
+  @keyframes fg-shake{25%{transform:translateX(-6px)}75%{transform:translateX(6px)}}
+  @keyframes fg-bounce{50%{transform:translateY(4px)}}
+  @keyframes fg-pop{40%{transform:scale(1.18)}}
+  .fg-comb{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;max-width:340px;
+    margin:0 auto;width:100%}
+  .fg-cell{aspect-ratio:1;border:none;border-radius:14px;background:#ffffff14;color:inherit;
+    font-size:1.5rem;font-weight:700;cursor:pointer;touch-action:manipulation}
+  .fg-cell.centre{background:var(--accent,#5bd1a5);color:#0e1420}
+  .fg-controls{display:flex;gap:8px;justify-content:center}
+  .fg-drawer{display:flex;flex-direction:column;min-height:0}
+  .fg-drawer h4{margin:0 0 4px;font-size:.85rem;opacity:.7;display:flex;gap:6px}
+  .fg-found{display:flex;flex-wrap:wrap;gap:6px;overflow-y:auto;min-height:0;max-height:22vh}
+  .fg-found-word{background:#ffffff12;border-radius:8px;padding:2px 8px;font-size:.9rem}
+  .fg-found-word.rest{opacity:.6}
+  .fg-remaining{display:none}
+  .fg-remaining.show{display:block;overflow-y:auto;min-height:0;max-height:28vh}
+  @media (prefers-reduced-motion:reduce){
+    .fg-word{animation:none!important}.fg-bar i{transition:none}}
+
   /* padding-top carries the safe-area inset INLINE. The shorthand used
      to be `padding:10px 14px`, which silently overrode the safe-area
      rule above (same specificity, later in the cascade) and pushed the
@@ -923,6 +958,11 @@
   .chain .lbl:lang(ar), .chain .lbl:lang(fa), .chain .lbl:lang(ur), .chain .lbl:lang(hi),
   .coming-badge:lang(ar), .coming-badge:lang(fa), .coming-badge:lang(ur), .coming-badge:lang(hi),
   .field-label:lang(ar), .field-label:lang(fa), .field-label:lang(ur), .field-label:lang(hi),
+  /* CC-LETTER-FORGE F1: the composed word tracks for Latin legibility, so it
+     needs the same reset. forge_screen::reflect_direction stamps the BOARD's
+     language on #fgWord, so :lang() keys off the language being forged rather
+     than the UI locale — without that attribute this rule never matches. */
+  .fg-word:lang(ar), .fg-word:lang(fa), .fg-word:lang(ur), .fg-word:lang(hi),
   .ghost-pace:lang(ar), .ghost-pace:lang(fa), .ghost-pace:lang(ur), .ghost-pace:lang(hi),
   .hint-line:lang(ar), .hint-line:lang(fa), .hint-line:lang(ur), .hint-line:lang(hi),
   .orb-glyph:lang(ar), .orb-glyph:lang(fa), .orb-glyph:lang(ur), .orb-glyph:lang(hi),
@@ -1725,6 +1765,36 @@
   </div>
 
 <!-- SPELL-PICTURE:END -->
+
+
+  <!-- CC-LETTER-FORGE F1: the honeycomb. The centre unit is required in every
+       word, so it is visually distinct and shuffle never moves it. The POOL
+       TOTAL is deliberately absent from this markup — D4 forbids showing it
+       before "Reveal remaining", and the surest way not to leak a number is to
+       have no element bound to it. -->
+  <div class="fg-screen" id="forge">
+    <div class="fg-top">
+      <button class="ghost mode-exit" id="fgExit" aria-label="Exit">✕</button>
+      <span class="fg-rank" id="fgRank" aria-live="polite"></span>
+      <span class="fg-score" id="fgScore">0</span>
+    </div>
+    <div class="fg-bar"><i id="fgBarFill"></i></div>
+    <div class="fg-status" id="fgStatus" aria-live="polite"></div>
+    <div class="fg-word" id="fgWord" aria-live="polite"></div>
+    <div class="fg-comb" id="fgComb"></div>
+    <div class="fg-controls">
+      <button class="btn" id="fgDelete" data-i18n="forge.delete">Delete</button>
+      <button class="btn" id="fgShuffle" data-i18n="forge.shuffle">Shuffle</button>
+      <button class="btn btn-check" id="fgSubmit" data-i18n="forge.submit">Enter</button>
+    </div>
+    <div class="fg-drawer">
+      <h4><span data-i18n="forge.found">Found</span> <b id="fgFoundCount">0</b></h4>
+      <div class="fg-found" id="fgFound"></div>
+    </div>
+    <button class="ghost fg-reveal" id="fgReveal" data-i18n="forge.reveal">Reveal remaining</button>
+    <div class="fg-remaining" id="fgRemaining"><div class="fg-found" id="fgRemainingList"></div></div>
+  </div>
+  <button id="forgeOpen" class="btn-hide" aria-hidden="true" tabindex="-1"></button>
 
   <!-- CC-DEF-MATCH P3: the Definition Match screen. Cards float bottom→top in
        lanes; the orb speaks the word and replays on tap. No visible timer (D2). -->
