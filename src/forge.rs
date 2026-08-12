@@ -255,6 +255,71 @@ pub fn generate_with(
     None
 }
 
+// ---- D6 scoring and D4 ranks (pure, so the screen holds no rules) ----
+
+/// D6: a word scores its unit count; a pangram takes a flat bonus on top.
+pub const PANGRAM_BONUS: u32 = 7;
+
+/// What one submission is worth. Korean scores JAMO, not blocks — the unit is
+/// the thing the honeycomb holds, so a two-block word built from five jamo
+/// scores five. Anything else would make the tiles and the score disagree.
+pub fn score_word(lang: &str, p: &Puzzle, word: &str) -> u32 {
+    let n = units_of(lang, word).len() as u32;
+    if is_pangram(lang, p, word) {
+        n + PANGRAM_BONUS
+    } else {
+        n
+    }
+}
+
+/// Everything the pool is worth — the denominator the rank ladder divides by,
+/// and the number D4 forbids showing before "Reveal remaining".
+pub fn max_score(lang: &str, p: &Puzzle, pool: &[String]) -> u32 {
+    pool.iter().map(|w| score_word(lang, p, w)).sum()
+}
+
+/// D4's ladder. Deliberately generous at the bottom: the intent is that a
+/// beginner can reach the first rung and feel finished, so "Good" sits at a
+/// twentieth of the board rather than a quarter. Only the TOP rung requires
+/// the whole pool, and reaching it is not expected — it is the completionist's
+/// horizon, not a bar to clear.
+pub const RANK_THRESHOLDS: [u32; 4] = [5, 25, 55, 100];
+
+/// i18n keys, in ladder order. The screen never spells a rank name itself.
+pub const RANK_KEYS: [&str; 4] =
+    ["forge.rank.good", "forge.rank.great", "forge.rank.amazing", "forge.rank.master"];
+
+/// Index into [`RANK_KEYS`], or `None` below the first rung.
+///
+/// Integer maths on purpose: `score * 100 / max` cannot drift the way a float
+/// comparison against 5.0 can, and a rank that flickers at the boundary would
+/// be felt immediately in a mode built on hundreds of submissions.
+pub fn rank_index(score: u32, max: u32) -> Option<usize> {
+    if max == 0 {
+        return None;
+    }
+    let pct = (score as u64 * 100 / max as u64) as u32;
+    RANK_THRESHOLDS.iter().rposition(|t| pct >= *t)
+}
+
+/// Progress toward the NEXT rung, 0..=100 — what the bar fills to. At the top
+/// rung it reads full. This is a ratio, never a count: showing "12 of 214" is
+/// exactly what D4 forbids.
+pub fn rank_progress(score: u32, max: u32) -> u32 {
+    if max == 0 {
+        return 0;
+    }
+    let pct = (score as u64 * 100 / max as u64) as u32;
+    match rank_index(score, max) {
+        Some(i) if i + 1 >= RANK_THRESHOLDS.len() => 100,
+        Some(i) => {
+            let (lo, hi) = (RANK_THRESHOLDS[i], RANK_THRESHOLDS[i + 1]);
+            ((pct - lo) * 100 / (hi - lo)).min(100)
+        }
+        None => (pct * 100 / RANK_THRESHOLDS[0]).min(100),
+    }
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;

@@ -16,11 +16,24 @@ F2's three layers map onto the layer names the manifests already use:
 That mapping is asserted, not assumed (unknown_layer_names), so a manifest
 inventing a fourth category fails rather than being silently ignored.
 
-WHAT THIS DOES NOT DO. F4's anchor tables are prose — "snow-streak zigzag at
-summit" is not a geometric predicate — and Eric authors them in the tool with
-position and scale tolerances. Until a piece carries `required_anchors`, the
-anchor lint REPORTS it as unauthored instead of inventing coordinates for a
-Hokusai. A piece that does carry them is checked properly.
+THE ANCHOR RULE, corrected 2026-08-11. This lint first shipped reading
+`required_anchors` off the scan and `anchor_id` off its paths. Neither exists
+anywhere in the repo — they were invented from F2's prose. The real mechanism
+predates this file: a picture declares `requiredFeatures` in pictures.json,
+every layout path carries a `feature` label, and scripts/wordpic-check.mjs
+fails the build when a declared feature has no path. Mona has carried ten
+that way since the TONAL pass.
+
+So the name matching is already enforced, on the correct vocabulary, and
+duplicating it here would only add a second place to be wrong. What was NOT
+enforced is F2's actual widening: src/wordpic.rs asserts requiredFeatures only
+for TONAL subjects, while F2 extends the anchor rule to "all masterpieces
+regardless of extractionClass". That gap is this lint's job — every master
+must declare a table, and wordpic-check then holds it to it.
+
+F4's tables are prose Eric authors in the tool ("snow-streak zigzag at
+summit" is not a geometric predicate), so the six masters without one are
+named in ANCHOR_TABLES_PENDING, which shrinks and cannot silently grow.
 """
 from __future__ import annotations
 
@@ -37,6 +50,19 @@ SILHOUETTE = {"outline"}
 ANCHORS = {"features"}
 TEXTURE = {"texture", "shading"}
 KNOWN = SILHOUETTE | ANCHORS | TEXTURE
+
+# Masters with no F4 anchor table yet. Held so the gate stays green while Eric
+# authors them in the tool; the list SHRINKS ONLY — a piece that gains a table
+# must leave, or the next master to ship without one hides behind a stale pass.
+# Adding a name here is a deliberate act to argue for in the commit.
+#
+# redfuji, starrynight and sunflowers cannot gain one before they are re-traced:
+# their whole layout is a single path labelled "skeleton". greatwave, scream and
+# rhino could be authored today.
+ANCHOR_TABLES_PENDING = frozenset({
+    "greatwave", "scream", "rhino", "redfuji", "starrynight", "sunflowers",
+})
+
 
 def masters() -> list[str]:
     pics = json.loads(PICTURES.read_text())["pictures"]
@@ -85,7 +111,13 @@ def classes() -> dict[str, str]:
     return {p["id"]: p.get("extractionClass") for p in pics}
 
 
+def required_features() -> dict[str, list]:
+    pics = json.loads(PICTURES.read_text())["pictures"]
+    return {p["id"]: p.get("requiredFeatures") or [] for p in pics}
+
+
 CLASS = classes()
+REQUIRED = required_features()
 
 
 def check(pid: str) -> list[str]:
@@ -95,10 +127,12 @@ def check(pid: str) -> list[str]:
         # check. It is reported by the scan-gap audit, which owns that.
         return []
     return evaluate(pid, json.loads(sf.read_text()), layers_of(pid),
-                    CLASS.get(pid))
+                    CLASS.get(pid), REQUIRED.get(pid, []),
+                    pid in ANCHOR_TABLES_PENDING)
 
 
-def evaluate(pid: str, doc: dict, lay: dict, cls: str | None) -> list[str]:
+def evaluate(pid: str, doc: dict, lay: dict, cls: str | None,
+             required: list | None = None, pending: bool = False) -> list[str]:
     """The four rules, over data rather than files, so --selftest can feed
     them deliberately broken input without writing to the tree."""
     bad: list[str] = []
@@ -142,24 +176,31 @@ def evaluate(pid: str, doc: dict, lay: dict, cls: str | None) -> list[str]:
             bad.append(f"{pid}: {label} path(s) {thin} are decorative_thin — an "
                        f"anchor is never thinner than texture (weight monotonicity)")
 
-    # L3 — anchor presence. Scaffolded: checked when authored, reported when not.
-    required = doc.get("required_anchors")
-    if required is None:
-        if not anc_ids:
-            bad.append(f"{pid}: no anchors layer AND no required_anchors — nothing "
-                       f"names this piece")
-        # else: anchors exist but F4's table is unauthored; not a failure yet.
-    else:
-        have = {paths[i].get("anchor_id") for i in anc_ids if i < len(paths)}
-        for a in required:
-            if a not in have:
-                bad.append(f"{pid}: required anchor {a!r} is missing — export blocked (F2)")
+    # L3 — every master declares an anchor table.
+    #
+    # F2 generalizes the TONAL requiredFeatures lint to all masterpieces
+    # regardless of extractionClass; src/wordpic.rs only asserts it for TONAL.
+    # This closes that. The NAMES are matched by scripts/wordpic-check.mjs
+    # against each layout path's `feature` label — the vocabulary that actually
+    # exists — so this asks only that a table be declared, and never
+    # re-implements the matching.
+    if not required:
+        if not pending:
+            bad.append(f"{pid}: no requiredFeatures — F2 requires an anchor table "
+                       f"for every master, not only TONAL ones. Declare it in "
+                       f"config/wordpic/pictures.json; wordpic-check enforces the names")
+    elif pending:
+        bad.append(f"{pid}: has an anchor table but is still listed in "
+                   f"ANCHOR_TABLES_PENDING — remove it from the list")
+
+    # A declared table is meaningless if no path was ever assigned to anchors.
+    if not anc_ids:
+        bad.append(f"{pid}: no anchors layer in the manifest — nothing names this piece")
     return bad
 
 
-def _p(arc: float, thin: bool = False, anchor: str | None = None) -> dict:
-    return {"points": [[0, 0], [1, 1]], "arc": arc,
-            "decorative_thin": thin, "anchor_id": anchor}
+def _p(arc: float, thin: bool = False) -> dict:
+    return {"points": [[0, 0], [1, 1]], "arc": arc, "decorative_thin": thin}
 
 
 def selftest() -> int:
@@ -176,39 +217,51 @@ def selftest() -> int:
     Every fixture is otherwise well-formed so exactly one rule can fire.
     """
     one = {"outline": [0], "features": [1], "texture": [2]}
+    TABLE = ["nose"]          # a declared anchor table
     cases = [
         ("shattered silhouette",
-         {"paths": [_p(10) for _ in range(20)] + [_p(10, anchor="a")]},
-         {"outline": list(range(20)), "features": [20]}, "LINE",
+         {"paths": [_p(10) for _ in range(21)]},
+         {"outline": list(range(20)), "features": [20]}, "LINE", TABLE, False,
          "principal contour"),
         ("thin silhouette on a LINE piece",
-         {"paths": [_p(100, thin=True), _p(10), _p(5)]}, one, "LINE",
+         {"paths": [_p(100, thin=True), _p(10), _p(5)]}, one, "LINE", TABLE, False,
          "silhouette path(s)"),
         ("thin anchor on a LINE piece",
-         {"paths": [_p(100), _p(10, thin=True), _p(5)]}, one, "LINE",
+         {"paths": [_p(100), _p(10, thin=True), _p(5)]}, one, "LINE", TABLE, False,
          "anchor path(s)"),
-        ("missing required anchor",
-         {"paths": [_p(100), _p(10, anchor="nose")], "required_anchors": ["eyes"]},
-         {"outline": [0], "features": [1]}, "LINE", "required anchor"),
+        ("master with no anchor table",
+         {"paths": [_p(100), _p(10)]},
+         {"outline": [0], "features": [1]}, "LINE", [], False,
+         "no requiredFeatures"),
+        ("table exists but still listed pending",
+         {"paths": [_p(100), _p(10)]},
+         {"outline": [0], "features": [1]}, "LINE", TABLE, True,
+         "still listed in ANCHOR_TABLES_PENDING"),
+        ("no anchors layer at all",
+         {"paths": [_p(100)]}, {"outline": [0]}, "LINE", TABLE, False,
+         "no anchors layer"),
         ("unknown layer name",
          {"paths": [_p(100), _p(10)]},
-         {"outline": [0], "features": [1], "highlights": []}, "LINE",
+         {"outline": [0], "features": [1], "highlights": []}, "LINE", TABLE, False,
          "unknown layer name"),
         ("no silhouette layer",
-         {"paths": [_p(100)]}, {"features": [0]}, "LINE", "no silhouette layer"),
-        ("no anchors and no table",
-         {"paths": [_p(100)]}, {"outline": [0]}, "LINE", "nothing"),
+         {"paths": [_p(100)]}, {"features": [0]}, "LINE", TABLE, False,
+         "no silhouette layer"),
+        # A master awaiting its F4 table is held, not failed.
+        ("pending master with no table",
+         {"paths": [_p(100), _p(10)]},
+         {"outline": [0], "features": [1]}, "LINE", [], True, None),
         # The regression that forced Eric's two rulings: Mona's shape is legal.
         # Frame and figure 36.5px apart, thin strokes on outline and features.
         ("frame + figure + thin strokes on TONAL (Mona)",
          {"paths": [_p(1346), _p(840), _p(221, thin=True), _p(165),
                     _p(50, thin=True), _p(40, thin=True)]},
          {"outline": [0, 1, 2, 3], "features": [4, 5], "texture": []},
-         "TONAL", None),
+         "TONAL", TABLE, False, None),
     ]
     bad = []
-    for name, doc, lay, cls, want in cases:
-        got = evaluate("selftest", doc, lay, cls)
+    for name, doc, lay, cls, req, pend, want in cases:
+        got = evaluate("selftest", doc, lay, cls, req, pend)
         if want is None:
             if got:
                 bad.append(f"  {name}: expected clean, got {got}")
@@ -230,23 +283,31 @@ def main() -> int:
     if not ids:
         print("FAIL: no pictures in the `masters` category — this lint is vacuous")
         return 1
-    failures, checked, unauthored = [], 0, []
+    failures, checked, tabled = [], 0, []
     for pid in ids:
         if not (SCANS / f"{pid}.json").exists():
             continue
         checked += 1
-        if json.loads((SCANS / f"{pid}.json").read_text()).get("required_anchors") is None:
-            unauthored.append(pid)
+        if REQUIRED.get(pid):
+            tabled.append(pid)
         failures += check(pid)
+
+    # The pending list may only shrink; a name that has left the bank is as
+    # stale as one that has gained a table.
+    for pid in sorted(ANCHOR_TABLES_PENDING - set(ids)):
+        failures.append(f"{pid}: listed in ANCHOR_TABLES_PENDING but is not a "
+                        f"master — remove the entry")
+
     for f in failures:
         print(f"FAIL {f}")
     if failures:
         return 1
     print(f"masterpiece-lint: OK — {checked} traced masters, silhouettes continuous, "
-          f"weights monotonic")
-    if unauthored:
-        print(f"  note: F4 anchor tables unauthored for {unauthored} — anchor "
-              f"presence is reported, not enforced, until Eric writes them")
+          f"weights monotonic, {len(tabled)}/{len(ids)} with an F4 anchor table")
+    waiting = sorted(ANCHOR_TABLES_PENDING & set(ids))
+    if waiting:
+        print(f"  awaiting F4 anchor tables: {waiting}")
+        print(f"  (names are enforced by scripts/wordpic-check.mjs once declared)")
     return 0
 
 
