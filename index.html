@@ -370,7 +370,45 @@
   /* btn-hide is per-surface in this stylesheet; the practice screen scopes
      one rule for all its toggled children (keyboard, micro replay). */
   .pr-screen .btn-hide{display:none}
-  #practiceOpen,#spellAloudEnter,#defMatchOpen,#forgeOpen{display:none}
+  #practiceOpen,#spellAloudEnter,#defMatchOpen,#forgeOpen,#chainsOpen{display:none}
+  /* CC-WORD-CHAINS F1 */
+  .cn-screen{position:fixed;inset:0;background:var(--bg,#0e1420);z-index:60;
+    display:none;flex-direction:column;gap:8px;padding:12px}
+  .cn-screen.show{display:flex}
+  .cn-top{display:flex;align-items:center;gap:10px}
+  .cn-meta{margin-inline-start:auto;font-variant-numeric:tabular-nums;opacity:.8;font-size:.9rem}
+  .cn-hooklbl{text-align:center;font-size:.8rem;opacity:.6}
+  /* The largest element on screen, per F1. */
+  .cn-hook{text-align:center;font-size:4.2rem;font-weight:800;line-height:1.05;
+    color:var(--accent,#5bd1a5);min-height:1.1em}
+  .cn-ribbon{display:flex;gap:6px;overflow-x:auto;overflow-y:hidden;min-height:0;
+    padding-bottom:4px;scrollbar-width:thin}
+  .cn-link{background:#ffffff12;border-radius:8px;padding:2px 8px;font-size:.85rem;white-space:nowrap}
+  .cn-status{min-height:1.2em;text-align:center;font-size:.9rem;opacity:.8}
+  .cn-word{min-height:1.8em;font-size:1.6rem;font-weight:700;text-align:center}
+  .cn-word.good{color:#5bd1a5}
+  .cn-word.dup{color:#9aa3ad;animation:cn-shake .3s}
+  .cn-word.miss{animation:cn-bounce .3s}
+  @keyframes cn-shake{25%{transform:translateX(-6px)}75%{transform:translateX(6px)}}
+  @keyframes cn-bounce{50%{transform:translateY(4px)}}
+  .cn-keys{display:flex;flex-direction:column;gap:6px;margin-top:auto;
+    overflow-y:auto;min-height:0;max-height:40vh}
+  .cn-row{display:flex;gap:5px;justify-content:center;flex-wrap:wrap}
+  .cn-key{min-width:34px;padding:10px 6px;border:none;border-radius:9px;
+    background:#ffffff14;color:inherit;font-size:1.05rem;font-weight:600;
+    cursor:pointer;touch-action:manipulation}
+  .cn-controls{display:flex;gap:8px;justify-content:center}
+  .cn-over{position:fixed;inset:0;background:#0009;display:none;
+    align-items:center;justify-content:center;z-index:61;padding:16px}
+  .cn-over.show{display:flex}
+  .cn-why{opacity:.75;font-size:.9rem;margin:0 0 10px}
+  #cnOverBody{display:flex;gap:18px;justify-content:center;margin-bottom:14px;
+    overflow-y:auto;min-height:0;max-height:40vh}
+  .cn-stat{display:flex;flex-direction:column;align-items:center;gap:2px}
+  .cn-stat b{font-size:1.7rem}
+  .cn-stat span{font-size:.78rem;opacity:.7}
+  @media (prefers-reduced-motion:reduce){.cn-word{animation:none!important}}
+
   /* CC-LETTER-FORGE F1 */
   .fg-screen{position:fixed;inset:0;background:var(--bg,#0e1420);z-index:60;
     display:none;flex-direction:column;gap:10px;padding:12px}
@@ -1795,6 +1833,40 @@
     <div class="fg-remaining" id="fgRemaining"><div class="fg-found" id="fgRemainingList"></div></div>
   </div>
   <button id="forgeOpen" class="btn-hide" aria-hidden="true" tabindex="-1"></button>
+
+
+  <!-- CC-WORD-CHAINS F1: the hook unit is the largest element on screen
+       because it IS the question. The ribbon scrolls horizontally and is kept
+       scrolled to its end, so the live word is always the visible one. -->
+  <div class="cn-screen" id="chains">
+    <div class="cn-top">
+      <button class="ghost mode-exit" id="cnExit" aria-label="Exit">✕</button>
+      <span class="cn-meta"><b id="cnScore">0</b> <span data-i18n="chains.best">best</span> <b id="cnBest">0</b></span>
+    </div>
+    <div class="cn-hooklbl" data-i18n="chains.hook">Next word starts with</div>
+    <div class="cn-hook" id="cnHook" aria-live="polite"></div>
+    <div class="cn-ribbon" id="cnRibbon"></div>
+    <div class="cn-status" id="cnStatus" aria-live="polite"></div>
+    <div class="cn-word" id="cnWord" aria-live="polite"></div>
+    <div class="cn-keys" id="cnKeys"></div>
+    <div class="cn-controls">
+      <button class="btn" id="cnDelete" data-i18n="chains.delete">Delete</button>
+      <button class="btn" id="cnPass" data-i18n="chains.pass">Pass</button>
+      <button class="btn btn-check" id="cnSubmit" data-i18n="chains.submit">Enter</button>
+    </div>
+    <div class="cn-over" id="cnOver">
+      <div class="modal">
+        <h3 data-i18n="chains.over.title">Chain complete</h3>
+        <p class="cn-why" id="cnOverWhy"></p>
+        <div id="cnOverBody">
+          <div class="cn-stat"><b id="cnOverLen">0</b><span data-i18n="chains.over.length">links</span></div>
+          <div class="cn-stat"><b id="cnOverLongest"></b><span data-i18n="chains.over.longest">longest word</span></div>
+        </div>
+        <button class="btn btn-check" id="cnReplay" data-i18n="chains.replay" style="width:100%">Again</button>
+      </div>
+    </div>
+  </div>
+  <button id="chainsOpen" class="btn-hide" aria-hidden="true" tabindex="-1"></button>
 
   <!-- CC-DEF-MATCH P3: the Definition Match screen. Cards float bottom→top in
        lanes; the orb speaks the word and replays on tap. No visible timer (D2). -->

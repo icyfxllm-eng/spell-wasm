@@ -195,6 +195,22 @@
       "exitStyle": "instant"
     },
     {
+      "id": "word_chains",
+      "nameKey": "tools.chains.name",
+      "descKey": "tools.chains.desc",
+      "icon": "🔗",
+      "status": "hidden",
+      "kidSafe": true,
+      "platforms": [
+        "ios"
+      ],
+      "entitlementLevel": "preview",
+      "requiresPremium": null,
+      "languages": null,
+      "$note": "CC-WORD-CHAINS F1 over the F2/F3 engine. HIDDEN until Eric reads the 18 new strings across 15 locales (unaudited, landed so i18n-parity passes) and rules on the three open D1 items: vi diacritic sensitivity, zh tone sensitivity, ja dakuten flexibility. App-only because chains.rs depends on word_index, which is cfg'd out of the web build. Untimed mood only — D3's Timed mood, its clock ring and D4's dead-end rejection are not built, nor is D3 Phase 2 pass-and-play. Per-language offer is chains::chains_ready; all 15 are offered, with ko/pl/ru/hi medianing 7-9 links (measured).",
+      "exitStyle": "instant"
+    },
+    {
       "id": "word_picture",
       "nameKey": "tools.wordpic.name",
       "descKey": "tools.wordpic.desc",

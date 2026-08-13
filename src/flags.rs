@@ -79,6 +79,13 @@ pub fn letter_forge() -> bool {
     resolve(stored("letter_forge").as_deref(), false)
 }
 
+/// CC-WORD-CHAINS — per-language chaining (shiritori done right). **Default
+/// OFF**: dark until its strings are audited and the D1 unit table has Eric's
+/// ruling, since changing a chain unit changes which words are legal.
+pub fn word_chains() -> bool {
+    resolve(stored("word_chains").as_deref(), false)
+}
+
 /// F5 "Word stories" — etymology cards. **Default OFF**: dark until the CC BY-SA
 /// attribution approach is approved.
 pub fn word_stories() -> bool {

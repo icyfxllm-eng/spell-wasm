@@ -156,6 +156,19 @@ const HI: Layout = Layout {
 };
 
 
+/// The typing-unit rows for a locale — the registry's own layout, exposed so a
+/// second surface can offer real units without re-deriving them.
+///
+/// CC-WORD-CHAINS F1 says "input via existing typing-unit input". The keyboard
+/// proper is not mountable elsewhere: build_keys renders into the play screen's
+/// letters container and wire_actions binds the game's submit path, so reusing
+/// it would mean refactoring the core play surface. This hands over the DATA
+/// instead, which is the part that must not be duplicated — a chain screen
+/// inventing its own kana grid is a second place for the alphabet to be wrong.
+pub fn unit_rows(locale: &str) -> &'static [&'static str] {
+    layout_for(locale).rows
+}
+
 fn layout_for(locale: &str) -> &'static Layout {
     match locale {
         "es" => &ES,
