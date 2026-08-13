@@ -203,14 +203,14 @@ mod tests {
     #[test]
     fn registry_parses_and_holds_the_shipped_modes() {
         let all = all();
-        assert_eq!(all.len(), 16, "16 modes registered");
+        assert_eq!(all.len(), 17, "17 modes registered");
         // File order IS tile order (D6); practice leads (CC-PRACTICE D9).
         // letter_forge (CC-LETTER-FORGE F1) sits after def_match, where its
         // registry row was inserted. It is `hidden`, so it appears here — this
         // pin covers all() — and in none of the visible() expectations below.
         assert_eq!(
             ids(&all),
-            vec!["practice", "ghost_racing", "syllable_replay", "say_it", "photo_list", "spell_aloud", "word_stories", "online_spelloff", "def_match", "letter_forge", "word_chains", "impostor", "word_picture", "reports", "calendar", "translate"],
+            vec!["practice", "ghost_racing", "syllable_replay", "say_it", "photo_list", "spell_aloud", "word_stories", "online_spelloff", "def_match", "letter_forge", "word_chains", "impostor", "bee_sim", "word_picture", "reports", "calendar", "translate"],
         );
     }
 
@@ -220,7 +220,7 @@ mod tests {
     #[test]
     fn exit_classification_table() {
         for m in all() {
-            let want = if m.id == "ghost_racing" { "confirm" } else { "instant" };
+            let want = if m.id == "ghost_racing" || m.id == "bee_sim" { "confirm" } else { "instant" };
             assert_eq!(m.exit_style, want, "{}: exit style drifted", m.id);
         }
     }

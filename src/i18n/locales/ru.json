@@ -636,5 +636,21 @@
  "imp.trap.ieei": "i перед e.",
  "imp.trap.doubles": "Одна согласная или две?",
  "imp.trap.suffix": "-енция или -анция?",
- "imp.trap.homophone": "Звучит так же, пишется иначе."
+ "imp.trap.homophone": "Звучит так же, пишется иначе.",
+ "tools.bee.name": "Конкурс по орфографии",
+ "tools.bee.desc": "Выйди на сцену. Пиши без ошибок.",
+ "bee.round": "Раунд {n}",
+ "bee.yourword": "Твоё слово…",
+ "bee.repeat": "Повторить",
+ "bee.slower": "Медленнее",
+ "bee.official": "Официальные правила",
+ "bee.delete": "Удалить",
+ "bee.submit": "Записать",
+ "bee.unavailable": "Пока недоступно на этом языке",
+ "bee.out.title": "Хороший конкурс",
+ "bee.win.title": "Чемпион!",
+ "bee.ribbon.title": "Ленты всем",
+ "bee.out.placed": "Ты занял {n} место из {m}",
+ "bee.next": "Следующий конкурс начнётся с раунда {n}",
+ "bee.clean": "слов без подсказок"
 }

@@ -636,5 +636,21 @@
  "imp.trap.ieei": "i の あとに e。",
  "imp.trap.doubles": "しいん は 1つ？2つ？",
  "imp.trap.suffix": "-ence か -ance か。",
- "imp.trap.homophone": "おなじ おと、ちがう つづり。"
+ "imp.trap.homophone": "おなじ おと、ちがう つづり。",
+ "tools.bee.name": "スペリング・ビー",
+ "tools.bee.desc": "ぶたいへ どうぞ。つづりで のころう。",
+ "bee.round": "ラウンド {n}",
+ "bee.yourword": "あなたの ことばは…",
+ "bee.repeat": "もういちど",
+ "bee.slower": "ゆっくり",
+ "bee.official": "こうしきルール",
+ "bee.delete": "けす",
+ "bee.submit": "つづる",
+ "bee.unavailable": "この言語ではまだ使えません",
+ "bee.out.title": "いい しあいでした",
+ "bee.win.title": "ゆうしょう！",
+ "bee.ribbon.title": "みんなに リボン",
+ "bee.out.placed": "{m}にん中 {n}い",
+ "bee.next": "つぎは ラウンド {n} から",
+ "bee.clean": "ノーヒントの ことば"
 }

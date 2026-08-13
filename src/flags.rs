@@ -93,6 +93,13 @@ pub fn impostor() -> bool {
     resolve(stored("impostor").as_deref(), false)
 }
 
+/// CC-BEE-SIM — the staged spelling bee. **Default OFF**: dark until its
+/// strings are audited and Eric has reviewed the contestant table, which is
+/// displayed content in every market.
+pub fn bee_sim() -> bool {
+    resolve(stored("bee_sim").as_deref(), false)
+}
+
 /// F5 "Word stories" — etymology cards. **Default OFF**: dark until the CC BY-SA
 /// attribution approach is approved.
 pub fn word_stories() -> bool {

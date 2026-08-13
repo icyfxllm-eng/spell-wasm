@@ -636,5 +636,21 @@
  "imp.trap.ieei": "i bago ang e.",
  "imp.trap.doubles": "Doble ba o isa?",
  "imp.trap.suffix": "-ence o -ance?",
- "imp.trap.homophone": "Parehong tunog, ibang baybay."
+ "imp.trap.homophone": "Parehong tunog, ibang baybay.",
+ "tools.bee.name": "Paligsahan sa Pagbaybay",
+ "tools.bee.desc": "Umakyat sa entablado. Bumaybay para manatili.",
+ "bee.round": "Round {n}",
+ "bee.yourword": "Ang salita mo ay…",
+ "bee.repeat": "Ulitin",
+ "bee.slower": "Bagalan",
+ "bee.official": "Opisyal na alituntunin",
+ "bee.delete": "Burahin",
+ "bee.submit": "Baybayin",
+ "bee.unavailable": "Hindi pa handa sa wikang ito",
+ "bee.out.title": "Magandang paligsahan",
+ "bee.win.title": "Kampeon!",
+ "bee.ribbon.title": "Laso para sa lahat",
+ "bee.out.placed": "Ikaw ay pang-{n} sa {m}",
+ "bee.next": "Magsisimula ang susunod sa round {n}",
+ "bee.clean": "walang tulong na salita"
 }

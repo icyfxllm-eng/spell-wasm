@@ -636,5 +636,21 @@
  "imp.trap.ieei": "i before e, except after c.",
  "imp.trap.doubles": "Double consonant — one or two?",
  "imp.trap.suffix": "-ence or -ance? Easy to mix up.",
- "imp.trap.homophone": "Same sound, different spelling."
+ "imp.trap.homophone": "Same sound, different spelling.",
+ "tools.bee.name": "Spelling Bee",
+ "tools.bee.desc": "Take the stage. Spell to stay in.",
+ "bee.round": "Round {n}",
+ "bee.yourword": "Your word is…",
+ "bee.repeat": "Repeat",
+ "bee.slower": "Slower",
+ "bee.official": "Official rules",
+ "bee.delete": "Delete",
+ "bee.submit": "Spell it",
+ "bee.unavailable": "Not ready in this language yet",
+ "bee.out.title": "A fine bee",
+ "bee.win.title": "Champion!",
+ "bee.ribbon.title": "Ribbons all round",
+ "bee.out.placed": "You placed {n} of {m}",
+ "bee.next": "Next bee starts at round {n}",
+ "bee.clean": "clean words"
 }

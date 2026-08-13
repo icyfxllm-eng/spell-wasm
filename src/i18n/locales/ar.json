@@ -636,5 +636,21 @@
  "imp.trap.ieei": "i قبل e.",
  "imp.trap.doubles": "حرف مشدد أم لا؟",
  "imp.trap.suffix": "‏-ence أم ‏-ance؟",
- "imp.trap.homophone": "نفس الصوت، كتابة مختلفة."
+ "imp.trap.homophone": "نفس الصوت، كتابة مختلفة.",
+ "tools.bee.name": "مسابقة التهجئة",
+ "tools.bee.desc": "اصعد إلى المسرح. تهجَّ لتبقى.",
+ "bee.round": "الجولة {n}",
+ "bee.yourword": "كلمتك هي…",
+ "bee.repeat": "إعادة",
+ "bee.slower": "أبطأ",
+ "bee.official": "القواعد الرسمية",
+ "bee.delete": "حذف",
+ "bee.submit": "تهجَّ",
+ "bee.unavailable": "غير متاح بعد بهذه اللغة",
+ "bee.out.title": "مسابقة جميلة",
+ "bee.win.title": "بطل!",
+ "bee.ribbon.title": "أشرطة للجميع",
+ "bee.out.placed": "حللت {n} من {m}",
+ "bee.next": "المسابقة القادمة تبدأ من الجولة {n}",
+ "bee.clean": "كلمات بلا مساعدة"
 }

@@ -370,7 +370,39 @@
   /* btn-hide is per-surface in this stylesheet; the practice screen scopes
      one rule for all its toggled children (keyboard, micro replay). */
   .pr-screen .btn-hide{display:none}
-  #practiceOpen,#spellAloudEnter,#defMatchOpen,#forgeOpen,#chainsOpen,#impostorOpen{display:none}
+  #practiceOpen,#spellAloudEnter,#defMatchOpen,#forgeOpen,#chainsOpen,#impostorOpen,#beeOpen{display:none}
+  /* CC-BEE-SIM F1 */
+  .bee-screen{position:fixed;inset:0;background:var(--bg,#0e1420);z-index:60;
+    display:none;flex-direction:column;gap:8px;padding:12px}
+  .bee-screen.show{display:flex}
+  .bee-top{display:flex;align-items:center;gap:10px}
+  .bee-round{font-weight:600;opacity:.8}
+  .bee-rules{font-family:inherit}
+  .bee-strip{display:flex;gap:6px;overflow-x:auto;overflow-y:hidden;min-height:0;
+    padding-bottom:4px}
+  .bee-c{background:#ffffff12;border-radius:999px;padding:3px 10px;font-size:.8rem;white-space:nowrap}
+  /* D4: dimmed, never crossed out. A board of red crosses is the atmosphere
+     this mode exists to avoid. */
+  .bee-c.out{opacity:.32}
+  .bee-announce{text-align:center;font-size:1.05rem;opacity:.85;min-height:1.4em}
+  .bee-word{min-height:1.9em;font-size:1.7rem;font-weight:700;text-align:center}
+  .bee-spelling{min-height:1.3em;text-align:center;font-size:1.05rem;color:#8fd3b6}
+  .bee-asks{display:flex;gap:8px;justify-content:center}
+  .bee-keys{display:flex;flex-direction:column;gap:6px;margin-top:auto;
+    overflow-y:auto;min-height:0;max-height:38vh}
+  .bee-row{display:flex;gap:5px;justify-content:center;flex-wrap:wrap}
+  .bee-key{min-width:34px;padding:10px 6px;border:none;border-radius:9px;
+    background:#ffffff14;color:inherit;font-size:1.05rem;font-weight:600;
+    cursor:pointer;touch-action:manipulation}
+  .bee-controls{display:flex;gap:8px;justify-content:center}
+  .bee-over{position:fixed;inset:0;background:#0009;display:none;
+    align-items:center;justify-content:center;z-index:61;padding:16px}
+  .bee-over.show{display:flex}
+  .bee-place{opacity:.85;margin:0 0 12px}
+  .bee-stat{display:flex;flex-direction:column;align-items:center;gap:2px;margin-bottom:14px}
+  .bee-stat b{font-size:1.7rem}
+  .bee-stat span{font-size:.78rem;opacity:.7}
+
   /* CC-IMPOSTOR F1 */
   .imp-screen{position:fixed;inset:0;background:var(--bg,#0e1420);z-index:60;
     display:none;flex-direction:column;gap:12px;padding:12px}
@@ -1918,6 +1950,42 @@
     </div>
   </div>
   <button id="impostorOpen" class="btn-hide" aria-hidden="true" tabindex="-1"></button>
+
+
+  <!-- CC-BEE-SIM F1: the stage. The contestant strip dims the fallen rather
+       than crossing them out — D4's dignity rule covers the synthetics too. No
+       Definition button: the app's definitions come over the network and D7
+       makes this mode offline, so I1's gate renders nothing. -->
+  <div class="bee-screen" id="bee">
+    <div class="bee-top">
+      <button class="ghost mode-exit" id="beeExit" aria-label="Exit">✕</button>
+      <span class="bee-round" id="beeRound"></span>
+      <button type="button" class="ghost bee-rules" id="beeOfficial"
+              aria-label="Official rules" style="margin-inline-start:auto">—</button>
+    </div>
+    <div class="bee-strip" id="beeStrip"></div>
+    <div class="bee-announce" id="beeAnnounce" aria-live="polite"></div>
+    <div class="bee-word" id="beeWord" aria-live="polite"></div>
+    <div class="bee-spelling" id="beeSpelling" aria-live="polite"></div>
+    <div class="bee-asks">
+      <button class="btn" id="beeRepeat" data-i18n="bee.repeat">Repeat</button>
+      <button class="btn" id="beeSlower" data-i18n="bee.slower">Slower</button>
+    </div>
+    <div class="bee-keys" id="beeKeys"></div>
+    <div class="bee-controls">
+      <button class="btn" id="beeDelete" data-i18n="bee.delete">Delete</button>
+      <button class="btn btn-check" id="beeSubmit" data-i18n="bee.submit">Spell it</button>
+    </div>
+    <div class="bee-over" id="beeOver">
+      <div class="modal">
+        <h3 id="beeOverTitle"></h3>
+        <p class="bee-place" id="beeOverPlace"></p>
+        <div class="bee-stat"><b id="beeOverClean">0</b><span data-i18n="bee.clean">clean words</span></div>
+        <button class="btn btn-check" id="beeNext" style="width:100%"><span id="beeOverNext"></span></button>
+      </div>
+    </div>
+  </div>
+  <button id="beeOpen" class="btn-hide" aria-hidden="true" tabindex="-1"></button>
 
   <!-- CC-DEF-MATCH P3: the Definition Match screen. Cards float bottom→top in
        lanes; the orb speaks the word and replays on tap. No visible timer (D2). -->

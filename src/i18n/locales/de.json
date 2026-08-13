@@ -636,5 +636,21 @@
  "imp.trap.ieei": "i vor e.",
  "imp.trap.doubles": "Doppelt oder einfach?",
  "imp.trap.suffix": "-enz oder -anz?",
- "imp.trap.homophone": "Gleicher Klang, andere Schreibung."
+ "imp.trap.homophone": "Gleicher Klang, andere Schreibung.",
+ "tools.bee.name": "Buchstabierwettbewerb",
+ "tools.bee.desc": "Auf die Bühne. Buchstabiere, um zu bleiben.",
+ "bee.round": "Runde {n}",
+ "bee.yourword": "Dein Wort lautet…",
+ "bee.repeat": "Wiederholen",
+ "bee.slower": "Langsamer",
+ "bee.official": "Offizielle Regeln",
+ "bee.delete": "Löschen",
+ "bee.submit": "Buchstabieren",
+ "bee.unavailable": "In dieser Sprache noch nicht verfügbar",
+ "bee.out.title": "Ein guter Wettbewerb",
+ "bee.win.title": "Sieger!",
+ "bee.ribbon.title": "Schleifen für alle",
+ "bee.out.placed": "Du wurdest {n}. von {m}",
+ "bee.next": "Der nächste Wettbewerb beginnt in Runde {n}",
+ "bee.clean": "Wörter ohne Hilfe"
 }

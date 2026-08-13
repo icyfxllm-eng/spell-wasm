@@ -636,5 +636,21 @@
  "imp.trap.ieei": "i 다음 e.",
  "imp.trap.doubles": "쌍자음일까요?",
  "imp.trap.suffix": "-ence 인가 -ance 인가?",
- "imp.trap.homophone": "소리는 같고 철자는 달라요."
+ "imp.trap.homophone": "소리는 같고 철자는 달라요.",
+ "tools.bee.name": "스펠링 비",
+ "tools.bee.desc": "무대에 오르세요. 철자를 맞혀 살아남으세요.",
+ "bee.round": "{n}라운드",
+ "bee.yourword": "당신의 단어는…",
+ "bee.repeat": "다시",
+ "bee.slower": "천천히",
+ "bee.official": "공식 규칙",
+ "bee.delete": "지우기",
+ "bee.submit": "철자 쓰기",
+ "bee.unavailable": "이 언어는 아직 준비 중이에요",
+ "bee.out.title": "좋은 경기였어요",
+ "bee.win.title": "우승!",
+ "bee.ribbon.title": "모두에게 리본",
+ "bee.out.placed": "{m}명 중 {n}위",
+ "bee.next": "다음 대회는 {n}라운드부터",
+ "bee.clean": "도움 없이 맞힌 단어"
 }

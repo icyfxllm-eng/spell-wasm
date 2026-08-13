@@ -38,7 +38,7 @@ use crate::App;
 /// is what lets the same file describe a mode for a future surface that has no
 /// such element. `None` = an in-round aid with no destination.
 #[cfg(not(feature = "web"))]
-const N_LAUNCH: usize = 16;
+const N_LAUNCH: usize = 17;
 #[cfg(feature = "web")]
 const N_LAUNCH: usize = 9;
 const LAUNCH: [(&str, Option<&str>); N_LAUNCH] = [
@@ -65,6 +65,10 @@ const LAUNCH: [(&str, Option<&str>); N_LAUNCH] = [
     // CC-IMPOSTOR F1. App-only: its generator depends on word_index.
     #[cfg(not(feature = "web"))]
     ("impostor", Some("impostorOpen")),
+    // CC-BEE-SIM F1. App-only: the ladder reads the bundled banks and the
+    // ceremony leans on local TTS, both of which the web build omits.
+    #[cfg(not(feature = "web"))]
+    ("bee_sim", Some("beeOpen")),
     // CC-WORD-PICTURE v5: calligram picker. Compiled out with the mode
     // (I1): the registry row is deleted on web, so this would be a dead
     // table entry -- but a dead entry still puts the mode's name in the

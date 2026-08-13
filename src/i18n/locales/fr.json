@@ -636,5 +636,21 @@
  "imp.trap.ieei": "i avant e.",
  "imp.trap.doubles": "Consonne double ou simple ?",
  "imp.trap.suffix": "-ence ou -ance ?",
- "imp.trap.homophone": "Même son, autre orthographe."
+ "imp.trap.homophone": "Même son, autre orthographe.",
+ "tools.bee.name": "Concours d'Orthographe",
+ "tools.bee.desc": "Monte sur scène. Épelle pour rester.",
+ "bee.round": "Manche {n}",
+ "bee.yourword": "Ton mot est…",
+ "bee.repeat": "Répéter",
+ "bee.slower": "Plus lentement",
+ "bee.official": "Règles officielles",
+ "bee.delete": "Effacer",
+ "bee.submit": "Épeler",
+ "bee.unavailable": "Pas encore disponible dans cette langue",
+ "bee.out.title": "Beau concours",
+ "bee.win.title": "Champion !",
+ "bee.ribbon.title": "Des rubans pour tous",
+ "bee.out.placed": "Tu finis {n}e sur {m}",
+ "bee.next": "Le prochain concours commence à la manche {n}",
+ "bee.clean": "mots sans aide"
 }

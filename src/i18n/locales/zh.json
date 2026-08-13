@@ -636,5 +636,21 @@
  "imp.trap.ieei": "i 在 e 前。",
  "imp.trap.doubles": "双辅音还是单辅音？",
  "imp.trap.suffix": "-ence 还是 -ance？",
- "imp.trap.homophone": "音同拼法不同。"
+ "imp.trap.homophone": "音同拼法不同。",
+ "tools.bee.name": "拼字比赛",
+ "tools.bee.desc": "登上舞台，拼对就留下。",
+ "bee.round": "第 {n} 轮",
+ "bee.yourword": "你的词是…",
+ "bee.repeat": "重复",
+ "bee.slower": "放慢",
+ "bee.official": "正式规则",
+ "bee.delete": "删除",
+ "bee.submit": "拼写",
+ "bee.unavailable": "该语言暂未开放",
+ "bee.out.title": "一场好比赛",
+ "bee.win.title": "冠军！",
+ "bee.ribbon.title": "人人有奖带",
+ "bee.out.placed": "你在 {m} 人中排第 {n}",
+ "bee.next": "下一场从第 {n} 轮开始",
+ "bee.clean": "无提示词数"
 }

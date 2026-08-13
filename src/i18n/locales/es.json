@@ -636,5 +636,21 @@
  "imp.trap.ieei": "i antes de e.",
  "imp.trap.doubles": "¿Consonante doble o simple?",
  "imp.trap.suffix": "¿-encia o -ancia?",
- "imp.trap.homophone": "Mismo sonido, distinta escritura."
+ "imp.trap.homophone": "Mismo sonido, distinta escritura.",
+ "tools.bee.name": "Concurso de Deletreo",
+ "tools.bee.desc": "Sal al escenario. Deletrea para seguir.",
+ "bee.round": "Ronda {n}",
+ "bee.yourword": "Tu palabra es…",
+ "bee.repeat": "Repetir",
+ "bee.slower": "Más despacio",
+ "bee.official": "Reglas oficiales",
+ "bee.delete": "Borrar",
+ "bee.submit": "Deletrear",
+ "bee.unavailable": "Aún no disponible en este idioma",
+ "bee.out.title": "Buen concurso",
+ "bee.win.title": "¡Campeón!",
+ "bee.ribbon.title": "Cintas para todos",
+ "bee.out.placed": "Quedaste {n} de {m}",
+ "bee.next": "El próximo concurso empieza en la ronda {n}",
+ "bee.clean": "palabras limpias"
 }

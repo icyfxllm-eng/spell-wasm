@@ -227,6 +227,22 @@
       "exitStyle": "instant"
     },
     {
+      "id": "bee_sim",
+      "nameKey": "tools.bee.name",
+      "descKey": "tools.bee.desc",
+      "icon": "🐝",
+      "status": "hidden",
+      "kidSafe": true,
+      "platforms": [
+        "ios"
+      ],
+      "entitlementLevel": "preview",
+      "requiresPremium": null,
+      "languages": null,
+      "$note": "CC-BEE-SIM F1/F2/F3. HIDDEN until Eric reads the 16 new strings and reviews the contestant table. D3's Definition request is NOT BUILT and cannot be: the app's definitions arrive from /api/defpool over the network and D7 requires this mode to be fully offline, so bee::definitions_available answers false everywhere and I1 renders no button. D2 departure: the contestant table ships as flat (name, flag) pairs rather than combinable components, because combining can pair a name with an unrelated culture's flag — a bar the spec sets and no schema check would catch. Built: ladder, seeded roster and survival, no-repeat words, placement, re-entry, Kid ribbons, Official Rules toggle. Not built: F4 how-to cards, D5's spoken letter input (a v2 door by the spec's own text).",
+      "exitStyle": "confirm"
+    },
+    {
       "id": "word_picture",
       "nameKey": "tools.wordpic.name",
       "descKey": "tools.wordpic.desc",

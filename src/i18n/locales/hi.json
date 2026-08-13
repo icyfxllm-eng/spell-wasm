@@ -636,5 +636,21 @@
  "imp.trap.ieei": "i से पहले e।",
  "imp.trap.doubles": "दोहरा व्यंजन या इकहरा?",
  "imp.trap.suffix": "-ence या -ance?",
- "imp.trap.homophone": "एक जैसी ध्वनि, अलग वर्तनी।"
+ "imp.trap.homophone": "एक जैसी ध्वनि, अलग वर्तनी।",
+ "tools.bee.name": "वर्तनी प्रतियोगिता",
+ "tools.bee.desc": "मंच पर आओ। सही लिखो, टिके रहो।",
+ "bee.round": "दौर {n}",
+ "bee.yourword": "तुम्हारा शब्द है…",
+ "bee.repeat": "दोहराओ",
+ "bee.slower": "धीरे",
+ "bee.official": "आधिकारिक नियम",
+ "bee.delete": "मिटाओ",
+ "bee.submit": "लिखो",
+ "bee.unavailable": "इस भाषा में अभी उपलब्ध नहीं",
+ "bee.out.title": "अच्छी प्रतियोगिता",
+ "bee.win.title": "विजेता!",
+ "bee.ribbon.title": "सबको रिबन",
+ "bee.out.placed": "तुम {m} में से {n}वें रहे",
+ "bee.next": "अगली प्रतियोगिता दौर {n} से शुरू",
+ "bee.clean": "बिना मदद के शब्द"
 }

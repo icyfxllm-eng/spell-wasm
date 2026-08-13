@@ -636,5 +636,21 @@
  "imp.trap.ieei": "i antes de e.",
  "imp.trap.doubles": "Consoante dobrada ou não?",
  "imp.trap.suffix": "-ência ou -ância?",
- "imp.trap.homophone": "Mesmo som, grafia diferente."
+ "imp.trap.homophone": "Mesmo som, grafia diferente.",
+ "tools.bee.name": "Concurso de Soletração",
+ "tools.bee.desc": "Suba ao palco. Soletre para continuar.",
+ "bee.round": "Rodada {n}",
+ "bee.yourword": "Sua palavra é…",
+ "bee.repeat": "Repetir",
+ "bee.slower": "Mais devagar",
+ "bee.official": "Regras oficiais",
+ "bee.delete": "Apagar",
+ "bee.submit": "Soletrar",
+ "bee.unavailable": "Ainda não disponível neste idioma",
+ "bee.out.title": "Um bom concurso",
+ "bee.win.title": "Campeão!",
+ "bee.ribbon.title": "Fitas para todos",
+ "bee.out.placed": "Você ficou em {n}º de {m}",
+ "bee.next": "O próximo concurso começa na rodada {n}",
+ "bee.clean": "palavras limpas"
 }

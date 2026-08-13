@@ -636,5 +636,21 @@
  "imp.trap.ieei": "i trước e.",
  "imp.trap.doubles": "Phụ âm đôi hay đơn?",
  "imp.trap.suffix": "-ence hay -ance?",
- "imp.trap.homophone": "Cùng âm, khác cách viết."
+ "imp.trap.homophone": "Cùng âm, khác cách viết.",
+ "tools.bee.name": "Cuộc Thi Đánh Vần",
+ "tools.bee.desc": "Lên sân khấu. Đánh vần đúng để đi tiếp.",
+ "bee.round": "Vòng {n}",
+ "bee.yourword": "Từ của bạn là…",
+ "bee.repeat": "Nhắc lại",
+ "bee.slower": "Chậm hơn",
+ "bee.official": "Luật chính thức",
+ "bee.delete": "Xóa",
+ "bee.submit": "Đánh vần",
+ "bee.unavailable": "Ngôn ngữ này chưa sẵn sàng",
+ "bee.out.title": "Một cuộc thi hay",
+ "bee.win.title": "Quán quân!",
+ "bee.ribbon.title": "Ruy băng cho tất cả",
+ "bee.out.placed": "Bạn xếp thứ {n} trên {m}",
+ "bee.next": "Cuộc thi sau bắt đầu từ vòng {n}",
+ "bee.clean": "từ không cần trợ giúp"
 }

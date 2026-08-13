@@ -636,5 +636,21 @@
  "imp.trap.ieei": "i kabla ya e.",
  "imp.trap.doubles": "Konsonanti mbili au moja?",
  "imp.trap.suffix": "-ence au -ance?",
- "imp.trap.homophone": "Sauti sawa, tahajia tofauti."
+ "imp.trap.homophone": "Sauti sawa, tahajia tofauti.",
+ "tools.bee.name": "Mashindano ya Tahajia",
+ "tools.bee.desc": "Panda jukwaani. Andika sawa ubaki.",
+ "bee.round": "Raundi {n}",
+ "bee.yourword": "Neno lako ni…",
+ "bee.repeat": "Rudia",
+ "bee.slower": "Polepole",
+ "bee.official": "Kanuni rasmi",
+ "bee.delete": "Futa",
+ "bee.submit": "Andika",
+ "bee.unavailable": "Bado haipatikani kwa lugha hii",
+ "bee.out.title": "Mashindano mazuri",
+ "bee.win.title": "Bingwa!",
+ "bee.ribbon.title": "Riboni kwa wote",
+ "bee.out.placed": "Umeshika nafasi ya {n} kati ya {m}",
+ "bee.next": "Mashindano yajayo yaanzia raundi {n}",
+ "bee.clean": "maneno bila msaada"
 }

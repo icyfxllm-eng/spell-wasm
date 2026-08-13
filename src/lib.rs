@@ -18,6 +18,8 @@ mod word_index; // CC-LETTER-FORGE F2 (validity index; LETTER-FORGE + WORD-CHAIN
 mod chains; // CC-WORD-CHAINS F2/F3 (chain rules + per-language unit table)
 #[cfg(not(feature = "web"))]
 mod impostor; // CC-IMPOSTOR F2 (distractor generator)
+#[cfg(not(feature = "web"))]
+mod bee; // CC-BEE-SIM F2/F3 (bee engine + contestant table)
 mod wordpic; // CC-WORD-PICTURE core (calligrams)
 mod input_provenance;
 mod learner; // CC-LEARNING-ENGINE L0 (BKT + FSRS core; selection arrives with L1)
@@ -42,6 +44,8 @@ mod forge_screen; // CC-LETTER-FORGE F1 honeycomb
 mod chains_screen; // CC-WORD-CHAINS F1 chain screen
 #[cfg(not(feature = "web"))]
 mod impostor_screen; // CC-IMPOSTOR F1/F5 round loop
+#[cfg(not(feature = "web"))]
+mod bee_screen; // CC-BEE-SIM F1 stage
 mod dom;
 pub mod editor;
 mod enrich;
@@ -296,6 +300,10 @@ fn wire(app: &App) {
     #[cfg(not(feature = "web"))]
     if flags::impostor() {
         impostor_screen::wire(app); // CC-IMPOSTOR F1 (dark by default)
+    }
+    #[cfg(not(feature = "web"))]
+    if flags::bee_sim() {
+        bee_screen::wire(app); // CC-BEE-SIM F1 (dark by default)
     }
     practice_screen::wire(app); // CC-PRACTICE (visible where consts::practice holds — en first)
     // CC-PICTURE-PLATFORM D1: compile-out, not runtime-hide. The site build

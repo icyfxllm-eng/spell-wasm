@@ -636,5 +636,21 @@
  "imp.trap.ieei": "i przed e.",
  "imp.trap.doubles": "Podwójna spółgłoska?",
  "imp.trap.suffix": "-encja czy -ancja?",
- "imp.trap.homophone": "Ten sam dźwięk, inna pisownia."
+ "imp.trap.homophone": "Ten sam dźwięk, inna pisownia.",
+ "tools.bee.name": "Konkurs Ortograficzny",
+ "tools.bee.desc": "Wejdź na scenę. Literuj, by zostać.",
+ "bee.round": "Runda {n}",
+ "bee.yourword": "Twoje słowo to…",
+ "bee.repeat": "Powtórz",
+ "bee.slower": "Wolniej",
+ "bee.official": "Zasady oficjalne",
+ "bee.delete": "Usuń",
+ "bee.submit": "Przeliteruj",
+ "bee.unavailable": "Jeszcze niedostępne w tym języku",
+ "bee.out.title": "Udany konkurs",
+ "bee.win.title": "Mistrz!",
+ "bee.ribbon.title": "Wstążki dla wszystkich",
+ "bee.out.placed": "Zająłeś {n} miejsce na {m}",
+ "bee.next": "Następny konkurs zaczyna się od rundy {n}",
+ "bee.clean": "słowa bez podpowiedzi"
 }
