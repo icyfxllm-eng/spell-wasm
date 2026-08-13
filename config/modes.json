@@ -183,7 +183,7 @@
       "nameKey": "tools.forge.name",
       "descKey": "tools.forge.desc",
       "icon": "🐝",
-      "status": "hidden",
+      "status": "live",
       "kidSafe": true,
       "platforms": [
         "ios"
@@ -191,7 +191,7 @@
       "entitlementLevel": "preview",
       "requiresPremium": null,
       "languages": null,
-      "$note": "CC-LETTER-FORGE F1: honeycomb screen over the generator shipped in 157. HIDDEN until (a) Eric reads the 17 new strings across 15 locales, which landed unaudited so i18n-parity could pass, and (b) the Korean jamo block-assembly capture in Done #4 is reviewed. Per-language offer is forge::forge_ready — Hindi is excluded because its bank cannot sustain a board. App-only because mod forge is cfg'd out of the web build, so the row is stripped there rather than binding a tile to an absent engine. F4's daily archive and F5's how-to cards are not built.",
+      "$note": "STRINGS SIGNED by Eric 2026-08-13. LIVE. Per-language offer is forge::forge_ready — Hindi is excluded because its bank cannot sustain a board. Flipped on with two gaps Eric accepted: Done #4's Korean jamo block-assembly capture was never reviewed, and F4's daily archive and F5's how-to cards do not exist, so a first-time player gets no intro.",
       "exitStyle": "instant"
     },
     {
@@ -207,7 +207,7 @@
       "entitlementLevel": "preview",
       "requiresPremium": null,
       "languages": null,
-      "$note": "CC-WORD-CHAINS F1 over the F2/F3 engine. HIDDEN until Eric reads the 18 new strings across 15 locales (unaudited, landed so i18n-parity passes) and rules on the three open D1 items: vi diacritic sensitivity, zh tone sensitivity, ja dakuten flexibility. App-only because chains.rs depends on word_index, which is cfg'd out of the web build. Untimed mood only — D3's Timed mood, its clock ring and D4's dead-end rejection are not built, nor is D3 Phase 2 pass-and-play. Per-language offer is chains::chains_ready; all 15 are offered, with ko/pl/ru/hi medianing 7-9 links (measured).",
+      "$note": "STRINGS SIGNED by Eric 2026-08-13. Still HIDDEN — strings were never the only blocker. Three D1 rulings are outstanding and each changes which words are legal: vi diacritic sensitivity (built SENSITIVE, 2.2% dead-end so there is no fairness problem to solve), zh tone sensitivity (built INSENSITIVE, 380 hooks and median 27 successors against 916 and 10 for the strict game), and ja dakuten flexibility (ON per D2's proposed default, symmetric). Untimed mood only. ko/pl/ru/hi median 7-9 links, measured.",
       "exitStyle": "instant"
     },
     {
@@ -223,7 +223,7 @@
       "entitlementLevel": "preview",
       "requiresPremium": null,
       "languages": null,
-      "$note": "CC-IMPOSTOR F1/F2/F5. HIDDEN until Eric reads the 17 new strings. D3 BANK-VS-DICTIONARY GAP: ACCEPTED by Eric 2026-08-12. The validity screen checks the AUDITED BANK, not a dictionary, so a distractor that is a real word absent from the bank still renders — arid for acid, cow for con. D3 calls that class of bug non-negotiable, and it cannot be closed with the data in this repo; every such card is at least a plausible misspelling, and the alternative is a fuller word list per language. Revisit if testers report it. D1 was implemented as option B (Eric's ruling): the trap registry covers ru and ar only and holds MATCHERS not transforms, so every language gets shape transforms from its own typing units and English additionally gets nine authored trap classes. App-only because impostor.rs depends on word_index, cfg'd out of web. Built: round loop, streaks, reveal-why (English only per I4), end screen. Not built: D7 tier gating beyond the free easy set, F4 how-to cards, D6 analytics write. D3 exclusion report clears 2% everywhere except ko at 3.0% — flagged per Done #3, not silently accepted.",
+      "$note": "STRINGS SIGNED by Eric 2026-08-13. Still HIDDEN. D3 bank-vs-dictionary gap ACCEPTED by Eric 2026-08-12: the validity screen checks the audited BANK, not a dictionary, so a distractor that is a real word absent from the bank still renders (arid for acid). D1 was built as option B — shape transforms everywhere, nine authored English trap classes. Reveal-why is English-only per I4. D3 exclusion clears 2% everywhere except ko at 3.0%, flagged per Done #3. Not built: D7 tier gating beyond the free easy set, F4, D6 analytics.",
       "exitStyle": "instant"
     },
     {
@@ -239,7 +239,7 @@
       "entitlementLevel": "preview",
       "requiresPremium": null,
       "languages": null,
-      "$note": "CC-BEE-SIM F1/F2/F3. HIDDEN until Eric reads the 16 new strings and reviews the contestant table. D3's Definition request is NOT BUILT and cannot be: the app's definitions arrive from /api/defpool over the network and D7 requires this mode to be fully offline, so bee::definitions_available answers false everywhere and I1 renders no button. D2 departure: the contestant table ships as flat (name, flag) pairs rather than combinable components, because combining can pair a name with an unrelated culture's flag — a bar the spec sets and no schema check would catch. Built: ladder, seeded roster and survival, no-repeat words, placement, re-entry, Kid ribbons, Official Rules toggle. Not built: F4 how-to cards, D5's spoken letter input (a v2 door by the spec's own text).",
+      "$note": "STRINGS SIGNED by Eric 2026-08-13. Still HIDDEN — the contestant table is displayed content in every market and has not been reviewed. D3's Definition request is NOT BUILT and cannot be: definitions arrive from /api/defpool over the network and D7 requires offline, so I1 renders no button. D2 departure: 24 flat (name, flag) pairs rather than combinable components, because combining can pair a name with an unrelated culture's flag. Not built: F4, and D5's spoken letter input, a v2 door by the spec's own text.",
       "exitStyle": "confirm"
     },
     {

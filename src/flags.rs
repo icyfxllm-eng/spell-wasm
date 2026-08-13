@@ -72,11 +72,13 @@ pub fn photo_list() -> bool {
     resolve(stored("photo_list").as_deref(), true)
 }
 
-/// CC-LETTER-FORGE — the honeycomb word-finding mode. **Default OFF**: dark
-/// until its strings are audited and Eric has passed the Korean block-assembly
-/// animation, which the spec calls a headline feature rather than polish.
+/// CC-LETTER-FORGE — the honeycomb word-finding mode. **Default ON** since Eric
+/// signed the strings and flipped it live (2026-08-13). He did so before Done
+/// #4's Korean block-assembly capture was reviewed and before F4/F5 exist, so a
+/// first-time player currently gets no how-to; that was his call, recorded here
+/// so the gap is not mistaken for an oversight.
 pub fn letter_forge() -> bool {
-    resolve(stored("letter_forge").as_deref(), false)
+    resolve(stored("letter_forge").as_deref(), true)
 }
 
 /// CC-WORD-CHAINS — per-language chaining (shiritori done right). **Default
@@ -260,6 +262,18 @@ pub fn is_on(name: &str) -> bool {
         "learner_surfaces" => learner_surfaces(),
         "learner_insight" => learner_insight(),
         "streak_focal" => streak_focal(),
+        // The four arcade modes. Registered here as well as above because
+        // is_on is the dispatcher the hub asks — a mode LIVE in the registry
+        // with no arm here is on paper only, which is exactly how calendar,
+        // translate and reports stayed invisible for a release.
+        #[cfg(not(feature = "web"))]
+        "letter_forge" => letter_forge(),
+        #[cfg(not(feature = "web"))]
+        "word_chains" => word_chains(),
+        #[cfg(not(feature = "web"))]
+        "impostor" => impostor(),
+        #[cfg(not(feature = "web"))]
+        "bee_sim" => bee_sim(),
         #[cfg(not(feature = "web"))]
         "word_picture" => word_picture(),
         #[cfg(not(feature = "web"))]
