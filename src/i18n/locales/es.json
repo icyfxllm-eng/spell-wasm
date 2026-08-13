@@ -619,5 +619,22 @@
  "chains.ended.out": "No queda nada que encadenar",
  "chains.over.title": "Cadena completa",
  "chains.over.length": "eslabones",
- "chains.over.longest": "palabra más larga"
+ "chains.over.longest": "palabra más larga",
+ "tools.impostor.name": "El Impostor",
+ "tools.impostor.desc": "Tres son falsas. Toca la correcta.",
+ "imp.unavailable": "Aún no disponible en este idioma",
+ "imp.streak": "racha",
+ "imp.replay": "Otra vez",
+ "imp.over.title": "Serie completa",
+ "imp.over.acc": "aciertos",
+ "imp.over.streak": "mejor racha",
+ "imp.trap.transpose": "Dos letras cambiadas de sitio.",
+ "imp.trap.double": "Una letra duplicada.",
+ "imp.trap.drop": "Falta una letra.",
+ "imp.trap.substitute": "Una letra distinta.",
+ "imp.trap.silent": "Letra muda.",
+ "imp.trap.ieei": "i antes de e.",
+ "imp.trap.doubles": "¿Consonante doble o simple?",
+ "imp.trap.suffix": "¿-encia o -ancia?",
+ "imp.trap.homophone": "Mismo sonido, distinta escritura."
 }

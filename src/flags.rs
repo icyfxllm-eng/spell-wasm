@@ -86,6 +86,13 @@ pub fn word_chains() -> bool {
     resolve(stored("word_chains").as_deref(), false)
 }
 
+/// CC-IMPOSTOR — spot the real spelling. **Default OFF**: dark until the D3
+/// bank-versus-dictionary gap has Eric's ruling, since a distractor that is a
+/// real word is the one failure this mode cannot afford.
+pub fn impostor() -> bool {
+    resolve(stored("impostor").as_deref(), false)
+}
+
 /// F5 "Word stories" — etymology cards. **Default OFF**: dark until the CC BY-SA
 /// attribution approach is approved.
 pub fn word_stories() -> bool {

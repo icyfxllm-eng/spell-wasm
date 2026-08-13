@@ -370,7 +370,32 @@
   /* btn-hide is per-surface in this stylesheet; the practice screen scopes
      one rule for all its toggled children (keyboard, micro replay). */
   .pr-screen .btn-hide{display:none}
-  #practiceOpen,#spellAloudEnter,#defMatchOpen,#forgeOpen,#chainsOpen{display:none}
+  #practiceOpen,#spellAloudEnter,#defMatchOpen,#forgeOpen,#chainsOpen,#impostorOpen{display:none}
+  /* CC-IMPOSTOR F1 */
+  .imp-screen{position:fixed;inset:0;background:var(--bg,#0e1420);z-index:60;
+    display:none;flex-direction:column;gap:12px;padding:12px}
+  .imp-screen.show{display:flex}
+  .imp-top{display:flex;align-items:center;gap:10px}
+  .imp-orb{background:none;border:none;font-size:1.6rem;cursor:pointer;padding:4px}
+  .imp-streak{font-weight:700;font-variant-numeric:tabular-nums}
+  .imp-prog{margin-inline-start:auto;opacity:.6;font-size:.85rem;font-variant-numeric:tabular-nums}
+  .imp-cards{display:flex;flex-direction:column;gap:10px;justify-content:center;
+    flex:1 1 auto;overflow-y:auto;min-height:0}
+  .imp-card{padding:18px 14px;border:none;border-radius:14px;background:#ffffff14;
+    color:inherit;font-size:1.35rem;font-weight:600;cursor:pointer;
+    touch-action:manipulation;text-align:center}
+  .imp-card.right{background:#2f7d5c;color:#fff}
+  .imp-card.wrong{background:#7d3a3a;color:#fff}
+  .imp-why{min-height:2.4em;text-align:center;font-size:.95rem;opacity:.85}
+  .imp-over{position:fixed;inset:0;background:#0009;display:none;
+    align-items:center;justify-content:center;z-index:61;padding:16px}
+  .imp-over.show{display:flex}
+  #impOverBody{display:flex;gap:22px;justify-content:center;margin-bottom:14px;
+    overflow-y:auto;min-height:0;max-height:40vh}
+  .imp-stat{display:flex;flex-direction:column;align-items:center;gap:2px}
+  .imp-stat b{font-size:1.8rem}
+  .imp-stat span{font-size:.78rem;opacity:.7}
+
   /* CC-WORD-CHAINS F1 */
   .cn-screen{position:fixed;inset:0;background:var(--bg,#0e1420);z-index:60;
     display:none;flex-direction:column;gap:8px;padding:12px}
@@ -1867,6 +1892,32 @@
     </div>
   </div>
   <button id="chainsOpen" class="btn-hide" aria-hidden="true" tabindex="-1"></button>
+
+
+  <!-- CC-IMPOSTOR F1: four cards, one real. The orb replays the word for free
+       and forever — the word IS the prompt, so hearing it again must never
+       cost anything. -->
+  <div class="imp-screen" id="impostor">
+    <div class="imp-top">
+      <button class="ghost mode-exit" id="impExit" aria-label="Exit">✕</button>
+      <button type="button" class="imp-orb" id="impOrb" aria-label="Replay word">🔊</button>
+      <span class="imp-streak" id="impStreak" aria-live="polite">0</span>
+      <span class="imp-prog" id="impProgress"></span>
+    </div>
+    <div class="imp-cards" id="impCards"></div>
+    <div class="imp-why" id="impWhy" aria-live="polite"></div>
+    <div class="imp-over" id="impOver">
+      <div class="modal">
+        <h3 data-i18n="imp.over.title">Set complete</h3>
+        <div id="impOverBody">
+          <div class="imp-stat"><b id="impOverAcc">0/10</b><span data-i18n="imp.over.acc">correct</span></div>
+          <div class="imp-stat"><b id="impOverStreak">0</b><span data-i18n="imp.over.streak">best streak</span></div>
+        </div>
+        <button class="btn btn-check" id="impReplay" data-i18n="imp.replay" style="width:100%">Again</button>
+      </div>
+    </div>
+  </div>
+  <button id="impostorOpen" class="btn-hide" aria-hidden="true" tabindex="-1"></button>
 
   <!-- CC-DEF-MATCH P3: the Definition Match screen. Cards float bottom→top in
        lanes; the orb speaks the word and replays on tap. No visible timer (D2). -->

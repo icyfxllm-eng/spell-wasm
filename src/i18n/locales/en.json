@@ -619,5 +619,22 @@
  "chains.ended.out": "Nothing left to chain",
  "chains.over.title": "Chain complete",
  "chains.over.length": "links",
- "chains.over.longest": "longest word"
+ "chains.over.longest": "longest word",
+ "tools.impostor.name": "The Impostor",
+ "tools.impostor.desc": "Three are fakes. Tap the real spelling.",
+ "imp.unavailable": "Not ready in this language yet",
+ "imp.streak": "streak",
+ "imp.replay": "Again",
+ "imp.over.title": "Set complete",
+ "imp.over.acc": "correct",
+ "imp.over.streak": "best streak",
+ "imp.trap.transpose": "Two letters swapped.",
+ "imp.trap.double": "A letter doubled.",
+ "imp.trap.drop": "A letter missing.",
+ "imp.trap.substitute": "One letter changed.",
+ "imp.trap.silent": "Silent letter — English is full of them.",
+ "imp.trap.ieei": "i before e, except after c.",
+ "imp.trap.doubles": "Double consonant — one or two?",
+ "imp.trap.suffix": "-ence or -ance? Easy to mix up.",
+ "imp.trap.homophone": "Same sound, different spelling."
 }

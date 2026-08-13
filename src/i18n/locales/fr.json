@@ -619,5 +619,22 @@
  "chains.ended.out": "Plus rien à enchaîner",
  "chains.over.title": "Chaîne terminée",
  "chains.over.length": "maillons",
- "chains.over.longest": "mot le plus long"
+ "chains.over.longest": "mot le plus long",
+ "tools.impostor.name": "L'Imposteur",
+ "tools.impostor.desc": "Trois sont fausses. Touche la bonne.",
+ "imp.unavailable": "Pas encore disponible dans cette langue",
+ "imp.streak": "série",
+ "imp.replay": "Encore",
+ "imp.over.title": "Série terminée",
+ "imp.over.acc": "bonnes réponses",
+ "imp.over.streak": "meilleure série",
+ "imp.trap.transpose": "Deux lettres inversées.",
+ "imp.trap.double": "Une lettre doublée.",
+ "imp.trap.drop": "Une lettre manquante.",
+ "imp.trap.substitute": "Une lettre changée.",
+ "imp.trap.silent": "Lettre muette.",
+ "imp.trap.ieei": "i avant e.",
+ "imp.trap.doubles": "Consonne double ou simple ?",
+ "imp.trap.suffix": "-ence ou -ance ?",
+ "imp.trap.homophone": "Même son, autre orthographe."
 }

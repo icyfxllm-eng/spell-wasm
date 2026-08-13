@@ -619,5 +619,22 @@
  "chains.ended.out": "이어갈 단어가 없어요",
  "chains.over.title": "사슬 완성",
  "chains.over.length": "개",
- "chains.over.longest": "가장 긴 단어"
+ "chains.over.longest": "가장 긴 단어",
+ "tools.impostor.name": "사기꾼",
+ "tools.impostor.desc": "셋은 가짜예요. 진짜를 누르세요.",
+ "imp.unavailable": "이 언어는 아직 준비 중이에요",
+ "imp.streak": "연속",
+ "imp.replay": "다시",
+ "imp.over.title": "세트 완료",
+ "imp.over.acc": "정답",
+ "imp.over.streak": "최고 연속",
+ "imp.trap.transpose": "글자 두 개가 바뀌었어요.",
+ "imp.trap.double": "글자가 겹쳤어요.",
+ "imp.trap.drop": "글자가 빠졌어요.",
+ "imp.trap.substitute": "글자가 달라요.",
+ "imp.trap.silent": "묵음 글자예요.",
+ "imp.trap.ieei": "i 다음 e.",
+ "imp.trap.doubles": "쌍자음일까요?",
+ "imp.trap.suffix": "-ence 인가 -ance 인가?",
+ "imp.trap.homophone": "소리는 같고 철자는 달라요."
 }

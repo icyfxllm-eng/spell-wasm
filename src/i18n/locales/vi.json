@@ -619,5 +619,22 @@
  "chains.ended.out": "Không còn từ để nối",
  "chains.over.title": "Hoàn thành chuỗi",
  "chains.over.length": "mắt xích",
- "chains.over.longest": "từ dài nhất"
+ "chains.over.longest": "từ dài nhất",
+ "tools.impostor.name": "Kẻ Mạo Danh",
+ "tools.impostor.desc": "Ba cách viết là giả. Chạm vào cách đúng.",
+ "imp.unavailable": "Ngôn ngữ này chưa sẵn sàng",
+ "imp.streak": "chuỗi",
+ "imp.replay": "Chơi lại",
+ "imp.over.title": "Hết lượt",
+ "imp.over.acc": "đúng",
+ "imp.over.streak": "chuỗi dài nhất",
+ "imp.trap.transpose": "Hai chữ bị đổi chỗ.",
+ "imp.trap.double": "Một chữ bị lặp.",
+ "imp.trap.drop": "Thiếu một chữ.",
+ "imp.trap.substitute": "Một chữ bị đổi.",
+ "imp.trap.silent": "Chữ câm.",
+ "imp.trap.ieei": "i trước e.",
+ "imp.trap.doubles": "Phụ âm đôi hay đơn?",
+ "imp.trap.suffix": "-ence hay -ance?",
+ "imp.trap.homophone": "Cùng âm, khác cách viết."
 }

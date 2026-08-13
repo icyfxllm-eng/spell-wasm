@@ -619,5 +619,22 @@
  "chains.ended.out": "لم يبق ما يُوصل",
  "chains.over.title": "اكتملت السلسلة",
  "chains.over.length": "حلقات",
- "chains.over.longest": "أطول كلمة"
+ "chains.over.longest": "أطول كلمة",
+ "tools.impostor.name": "المحتال",
+ "tools.impostor.desc": "ثلاثة خاطئة. المس الصحيح.",
+ "imp.unavailable": "غير متاح بعد بهذه اللغة",
+ "imp.streak": "سلسلة",
+ "imp.replay": "مرة أخرى",
+ "imp.over.title": "اكتملت الجولة",
+ "imp.over.acc": "صحيحة",
+ "imp.over.streak": "أفضل سلسلة",
+ "imp.trap.transpose": "حرفان مُبدَّلان.",
+ "imp.trap.double": "حرف مُضاعف.",
+ "imp.trap.drop": "حرف ناقص.",
+ "imp.trap.substitute": "حرف مُغيَّر.",
+ "imp.trap.silent": "حرف صامت.",
+ "imp.trap.ieei": "i قبل e.",
+ "imp.trap.doubles": "حرف مشدد أم لا؟",
+ "imp.trap.suffix": "‏-ence أم ‏-ance؟",
+ "imp.trap.homophone": "نفس الصوت، كتابة مختلفة."
 }

@@ -619,5 +619,22 @@
  "chains.ended.out": "आगे जोड़ने को कुछ नहीं बचा",
  "chains.over.title": "शृंखला पूरी",
  "chains.over.length": "कड़ियाँ",
- "chains.over.longest": "सबसे लंबा शब्द"
+ "chains.over.longest": "सबसे लंबा शब्द",
+ "tools.impostor.name": "नक़लची",
+ "tools.impostor.desc": "तीन ग़लत हैं। सही वाला छुओ।",
+ "imp.unavailable": "इस भाषा में अभी उपलब्ध नहीं",
+ "imp.streak": "लगातार",
+ "imp.replay": "फिर से",
+ "imp.over.title": "सेट पूरा",
+ "imp.over.acc": "सही",
+ "imp.over.streak": "सबसे लंबी लड़ी",
+ "imp.trap.transpose": "दो अक्षर आगे-पीछे।",
+ "imp.trap.double": "एक अक्षर दोहरा।",
+ "imp.trap.drop": "एक अक्षर ग़ायब।",
+ "imp.trap.substitute": "एक अक्षर बदला।",
+ "imp.trap.silent": "मौन अक्षर।",
+ "imp.trap.ieei": "i से पहले e।",
+ "imp.trap.doubles": "दोहरा व्यंजन या इकहरा?",
+ "imp.trap.suffix": "-ence या -ance?",
+ "imp.trap.homophone": "एक जैसी ध्वनि, अलग वर्तनी।"
 }

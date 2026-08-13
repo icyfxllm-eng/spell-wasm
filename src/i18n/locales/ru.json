@@ -619,5 +619,22 @@
  "chains.ended.out": "Продолжить нечем",
  "chains.over.title": "Цепочка завершена",
  "chains.over.length": "звеньев",
- "chains.over.longest": "самое длинное слово"
+ "chains.over.longest": "самое длинное слово",
+ "tools.impostor.name": "Самозванец",
+ "tools.impostor.desc": "Три написания ложные. Нажми верное.",
+ "imp.unavailable": "Пока недоступно на этом языке",
+ "imp.streak": "серия",
+ "imp.replay": "Ещё раз",
+ "imp.over.title": "Серия завершена",
+ "imp.over.acc": "верно",
+ "imp.over.streak": "лучшая серия",
+ "imp.trap.transpose": "Две буквы переставлены.",
+ "imp.trap.double": "Буква удвоена.",
+ "imp.trap.drop": "Пропущена буква.",
+ "imp.trap.substitute": "Одна буква заменена.",
+ "imp.trap.silent": "Непроизносимая буква.",
+ "imp.trap.ieei": "i перед e.",
+ "imp.trap.doubles": "Одна согласная или две?",
+ "imp.trap.suffix": "-енция или -анция?",
+ "imp.trap.homophone": "Звучит так же, пишется иначе."
 }

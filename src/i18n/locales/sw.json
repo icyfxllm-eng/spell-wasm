@@ -619,5 +619,22 @@
  "chains.ended.out": "Hakuna la kuunganisha tena",
  "chains.over.title": "Mnyororo umekamilika",
  "chains.over.length": "viungo",
- "chains.over.longest": "neno refu zaidi"
+ "chains.over.longest": "neno refu zaidi",
+ "tools.impostor.name": "Mlaghai",
+ "tools.impostor.desc": "Matatu ni bandia. Gusa sahihi.",
+ "imp.unavailable": "Bado haipatikani kwa lugha hii",
+ "imp.streak": "mfululizo",
+ "imp.replay": "Tena",
+ "imp.over.title": "Seti imekamilika",
+ "imp.over.acc": "sahihi",
+ "imp.over.streak": "mfululizo bora",
+ "imp.trap.transpose": "Herufi mbili zimebadilishana.",
+ "imp.trap.double": "Herufi imerudiwa.",
+ "imp.trap.drop": "Herufi imekosekana.",
+ "imp.trap.substitute": "Herufi imebadilishwa.",
+ "imp.trap.silent": "Herufi kimya.",
+ "imp.trap.ieei": "i kabla ya e.",
+ "imp.trap.doubles": "Konsonanti mbili au moja?",
+ "imp.trap.suffix": "-ence au -ance?",
+ "imp.trap.homophone": "Sauti sawa, tahajia tofauti."
 }

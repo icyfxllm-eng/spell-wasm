@@ -91,6 +91,21 @@ pub fn vocabulary_size(lang: &str) -> usize {
     index_for(lang).len()
 }
 
+/// The `i`th word of `lang`, for callers that need a DETERMINISTIC pick rather
+/// than a search.
+///
+/// CC-IMPOSTOR seeds a round from (wordId, roundIndex) and must reproduce the
+/// same card set on every platform (I2). Picking by index over the sorted index
+/// gives that for free; picking by prefix would bias every round toward one
+/// letter, and picking at random would not be reproducible in a bug report.
+pub fn word_at(lang: &str, i: usize) -> Option<String> {
+    let idx = index_for(lang);
+    if idx.is_empty() {
+        return None;
+    }
+    idx.get(i % idx.len()).cloned()
+}
+
 /// Every word whose comparable form starts with `prefix`.
 ///
 /// Not used by the forge. It exists because CC-WORD-CHAINS needs successor

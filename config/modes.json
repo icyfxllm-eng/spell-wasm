@@ -211,6 +211,22 @@
       "exitStyle": "instant"
     },
     {
+      "id": "impostor",
+      "nameKey": "tools.impostor.name",
+      "descKey": "tools.impostor.desc",
+      "icon": "🕵",
+      "status": "hidden",
+      "kidSafe": true,
+      "platforms": [
+        "ios"
+      ],
+      "entitlementLevel": "preview",
+      "requiresPremium": null,
+      "languages": null,
+      "$note": "CC-IMPOSTOR F1/F2/F5. HIDDEN until Eric reads the 17 new strings. D3 BANK-VS-DICTIONARY GAP: ACCEPTED by Eric 2026-08-12. The validity screen checks the AUDITED BANK, not a dictionary, so a distractor that is a real word absent from the bank still renders — arid for acid, cow for con. D3 calls that class of bug non-negotiable, and it cannot be closed with the data in this repo; every such card is at least a plausible misspelling, and the alternative is a fuller word list per language. Revisit if testers report it. D1 was implemented as option B (Eric's ruling): the trap registry covers ru and ar only and holds MATCHERS not transforms, so every language gets shape transforms from its own typing units and English additionally gets nine authored trap classes. App-only because impostor.rs depends on word_index, cfg'd out of web. Built: round loop, streaks, reveal-why (English only per I4), end screen. Not built: D7 tier gating beyond the free easy set, F4 how-to cards, D6 analytics write. D3 exclusion report clears 2% everywhere except ko at 3.0% — flagged per Done #3, not silently accepted.",
+      "exitStyle": "instant"
+    },
+    {
       "id": "word_picture",
       "nameKey": "tools.wordpic.name",
       "descKey": "tools.wordpic.desc",

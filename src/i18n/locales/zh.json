@@ -619,5 +619,22 @@
  "chains.ended.out": "接不下去了",
  "chains.over.title": "接龙完成",
  "chains.over.length": "节",
- "chains.over.longest": "最长的词"
+ "chains.over.longest": "最长的词",
+ "tools.impostor.name": "冒名顶替",
+ "tools.impostor.desc": "三个是假的，点出真的。",
+ "imp.unavailable": "该语言暂未开放",
+ "imp.streak": "连对",
+ "imp.replay": "再来",
+ "imp.over.title": "本组结束",
+ "imp.over.acc": "答对",
+ "imp.over.streak": "最佳连对",
+ "imp.trap.transpose": "两个字母调换了。",
+ "imp.trap.double": "字母重复了。",
+ "imp.trap.drop": "少了一个字母。",
+ "imp.trap.substitute": "换了一个字母。",
+ "imp.trap.silent": "不发音的字母。",
+ "imp.trap.ieei": "i 在 e 前。",
+ "imp.trap.doubles": "双辅音还是单辅音？",
+ "imp.trap.suffix": "-ence 还是 -ance？",
+ "imp.trap.homophone": "音同拼法不同。"
 }

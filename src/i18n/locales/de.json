@@ -619,5 +619,22 @@
  "chains.ended.out": "Nichts mehr zum Anknüpfen",
  "chains.over.title": "Kette vollständig",
  "chains.over.length": "Glieder",
- "chains.over.longest": "längstes Wort"
+ "chains.over.longest": "längstes Wort",
+ "tools.impostor.name": "Der Hochstapler",
+ "tools.impostor.desc": "Drei sind falsch. Tippe die richtige.",
+ "imp.unavailable": "In dieser Sprache noch nicht verfügbar",
+ "imp.streak": "Serie",
+ "imp.replay": "Nochmal",
+ "imp.over.title": "Runde beendet",
+ "imp.over.acc": "richtig",
+ "imp.over.streak": "beste Serie",
+ "imp.trap.transpose": "Zwei Buchstaben vertauscht.",
+ "imp.trap.double": "Ein Buchstabe doppelt.",
+ "imp.trap.drop": "Ein Buchstabe fehlt.",
+ "imp.trap.substitute": "Ein Buchstabe geändert.",
+ "imp.trap.silent": "Stummer Buchstabe.",
+ "imp.trap.ieei": "i vor e.",
+ "imp.trap.doubles": "Doppelt oder einfach?",
+ "imp.trap.suffix": "-enz oder -anz?",
+ "imp.trap.homophone": "Gleicher Klang, andere Schreibung."
 }

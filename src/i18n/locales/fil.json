@@ -619,5 +619,22 @@
  "chains.ended.out": "Wala nang maikakabit",
  "chains.over.title": "Kumpleto ang kadena",
  "chains.over.length": "kawing",
- "chains.over.longest": "pinakamahabang salita"
+ "chains.over.longest": "pinakamahabang salita",
+ "tools.impostor.name": "Ang Impostor",
+ "tools.impostor.desc": "Tatlo ay peke. Pindutin ang totoo.",
+ "imp.unavailable": "Hindi pa handa sa wikang ito",
+ "imp.streak": "sunod-sunod",
+ "imp.replay": "Ulit",
+ "imp.over.title": "Tapos ang set",
+ "imp.over.acc": "tama",
+ "imp.over.streak": "pinakamahabang sunod",
+ "imp.trap.transpose": "Nagpalit ng puwesto ang dalawang letra.",
+ "imp.trap.double": "Doble ang letra.",
+ "imp.trap.drop": "May kulang na letra.",
+ "imp.trap.substitute": "May naibang letra.",
+ "imp.trap.silent": "Tahimik na letra.",
+ "imp.trap.ieei": "i bago ang e.",
+ "imp.trap.doubles": "Doble ba o isa?",
+ "imp.trap.suffix": "-ence o -ance?",
+ "imp.trap.homophone": "Parehong tunog, ibang baybay."
 }

@@ -619,5 +619,22 @@
  "chains.ended.out": "Nie ma czym przedłużyć",
  "chains.over.title": "Łańcuch ukończony",
  "chains.over.length": "ogniwa",
- "chains.over.longest": "najdłuższe słowo"
+ "chains.over.longest": "najdłuższe słowo",
+ "tools.impostor.name": "Oszust",
+ "tools.impostor.desc": "Trzy są fałszywe. Dotknij poprawnej.",
+ "imp.unavailable": "Jeszcze niedostępne w tym języku",
+ "imp.streak": "seria",
+ "imp.replay": "Jeszcze raz",
+ "imp.over.title": "Seria ukończona",
+ "imp.over.acc": "poprawnych",
+ "imp.over.streak": "najlepsza seria",
+ "imp.trap.transpose": "Dwie litery zamienione.",
+ "imp.trap.double": "Litera podwojona.",
+ "imp.trap.drop": "Brakuje litery.",
+ "imp.trap.substitute": "Zmieniona litera.",
+ "imp.trap.silent": "Litera niema.",
+ "imp.trap.ieei": "i przed e.",
+ "imp.trap.doubles": "Podwójna spółgłoska?",
+ "imp.trap.suffix": "-encja czy -ancja?",
+ "imp.trap.homophone": "Ten sam dźwięk, inna pisownia."
 }
