@@ -166,7 +166,10 @@ fn render_strip() {
         let html: String = ROSTER.with(|r| {
             r.borrow()
                 .iter()
-                .map(|c| format!("<span class=\"bee-c\">{} {}</span>", c.flag, dom::escape_html(c.name)))
+                .map(|c| format!(
+                    "<span class=\"bee-c\"><i class=\"bee-av t{}\">{}</i>{}</span>",
+                    c.tint, initial(c.name), dom::escape_html(c.name)
+                ))
                 .collect()
         });
         dom::set_html("beeStrip", &html);
@@ -179,15 +182,23 @@ fn render_strip() {
             .map(|c| {
                 let out = matches!(c.out_on, Some(r) if r <= n);
                 format!(
-                    "<span class=\"bee-c{}\">{} {}</span>",
+                    "<span class=\"bee-c{}\"><i class=\"bee-av t{}\">{}</i>{}</span>",
                     if out { " out" } else { "" },
-                    c.flag,
+                    c.tint,
+                    initial(c.name),
                     dom::escape_html(c.name)
                 )
             })
             .collect()
     });
     dom::set_html("beeStrip", &html);
+}
+
+/// The avatar face: one letter, escaped. Names are curated ASCII, but this is
+/// rendered into markup, so it is escaped like anything else that came from a
+/// table rather than trusted because the table looks safe today.
+fn initial(name: &str) -> String {
+    dom::escape_html(&name.chars().next().unwrap_or('?').to_uppercase().to_string())
 }
 
 fn render_word() {

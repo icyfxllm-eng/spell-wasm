@@ -63,31 +63,63 @@ pub enum ChainUnit {
     ArabicLetter,
 }
 
+/// How strictly a language compares its hooks.
+///
+/// These three were the open D1 questions, and they live here as DATA so that
+/// reversing one is a table edit and a ship rather than a code change. Each
+/// alters which words are legal, so being able to move a single language
+/// without touching the others is the point.
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct Strictness {
+    /// Diacritics distinguish words. TRUE for Vietnamese, deliberately: bà, bá,
+    /// bả, bã and bạ are five different words, so folding them would let "ba"
+    /// answer a "bà" hook — which reads as broken to a speaker rather than
+    /// generous. D1 proposed insensitive; the measured dead-end rate with
+    /// diacritics intact is 2.2%, so there was no fairness problem to solve.
+    pub diacritics_matter: bool,
+    /// Tone distinguishes syllables. FALSE for Mandarin, and this is the one
+    /// genuine trade in the table: tones ARE lexical (mā/má/mǎ/mà), but casual
+    /// 接龙 generally does not require them, and the difference is 380 hooks at
+    /// median 27 successors against 916 at median 10. The authenticity call
+    /// worth a native speaker's eye.
+    pub tone_matters: bool,
+    /// A voiced kana answers its unvoiced hook — が accepted for a か hook, and
+    /// symmetrically. TRUE per D2's proposed default: strict shiritori wants an
+    /// exact match, casual play allows this, and casual is the mode's register.
+    pub dakuten_flexible: bool,
+}
+
+const STRICT: Strictness =
+    Strictness { diacritics_matter: true, tone_matters: true, dakuten_flexible: false };
+
 /// D1's table. The reviewable artifact: one row per live language.
-const TABLE: &[(&str, ChainUnit)] = &[
-    ("en", ChainUnit::Letter),
-    ("es", ChainUnit::Letter),
-    ("fr", ChainUnit::Letter),
-    ("de", ChainUnit::Letter),
-    ("pt", ChainUnit::Letter),
-    ("pl", ChainUnit::Letter),
-    ("ru", ChainUnit::Letter),
-    ("fil", ChainUnit::Letter),
-    ("sw", ChainUnit::Letter),
-    // vi: diacritic-SENSITIVE. D1 proposed insensitive hooks, but the measured
-    // dead-end rate with diacritics intact is 2.2% — there is no fairness
-    // problem to solve, and folding them away would accept "ba" for a "bà"
-    // hook, which is a different word. Flagged for Eric in the notes.
-    ("vi", ChainUnit::Letter),
-    ("ja", ChainUnit::Kana),
-    ("ko", ChainUnit::HangulBlock),
-    ("zh", ChainUnit::PinyinSyllable),
-    ("hi", ChainUnit::Akshara),
-    ("ar", ChainUnit::ArabicLetter),
+const TABLE: &[(&str, ChainUnit, Strictness)] = &[
+    ("en", ChainUnit::Letter, STRICT),
+    ("es", ChainUnit::Letter, STRICT),
+    ("fr", ChainUnit::Letter, STRICT),
+    ("de", ChainUnit::Letter, STRICT),
+    ("pt", ChainUnit::Letter, STRICT),
+    ("pl", ChainUnit::Letter, STRICT),
+    ("ru", ChainUnit::Letter, STRICT),
+    ("fil", ChainUnit::Letter, STRICT),
+    ("sw", ChainUnit::Letter, STRICT),
+    ("vi", ChainUnit::Letter, STRICT),
+    ("ja", ChainUnit::Kana, Strictness { dakuten_flexible: true, ..STRICT }),
+    ("ko", ChainUnit::HangulBlock, STRICT),
+    ("zh", ChainUnit::PinyinSyllable, Strictness { tone_matters: false, ..STRICT }),
+    ("hi", ChainUnit::Akshara, STRICT),
+    ("ar", ChainUnit::ArabicLetter, STRICT),
 ];
 
 pub fn chain_unit(lang: &str) -> Option<ChainUnit> {
-    TABLE.iter().find(|(c, _)| *c == lang).map(|(_, u)| *u)
+    TABLE.iter().find(|(c, _, _)| *c == lang).map(|(_, u, _)| *u)
+}
+
+/// How strictly `lang` compares hooks. Defaults to the strictest reading for a
+/// language with no row, which cannot be reached through [`chains_ready`] but
+/// keeps the function total.
+pub fn strictness(lang: &str) -> Strictness {
+    TABLE.iter().find(|(c, _, _)| *c == lang).map(|(_, _, s)| *s).unwrap_or(STRICT)
 }
 
 /// Languages this mode can offer. A language with no row cannot chain at all —
@@ -131,7 +163,8 @@ fn devoice(c: char) -> char {
 }
 
 fn ja_norm(c: char) -> String {
-    devoice(desmall(c)).to_string()
+    let c = desmall(c);
+    if strictness("ja").dakuten_flexible { devoice(c) } else { c }.to_string()
 }
 
 /// D2: a word ending in ん cannot be chained from — in official mode it ends
@@ -157,13 +190,16 @@ fn ar_base(c: char) -> char {
 /// Split a pinyin string into syllables. Every entry in the zh bank carries a
 /// tone digit per syllable ("a1fu4han4"), which is what makes this reliable —
 /// the digit is the boundary, so no pinyin dictionary is needed.
-fn pinyin_sylls(p: &str) -> Vec<String> {
+fn pinyin_sylls_with(p: &str, tone_matters: bool) -> Vec<String> {
     let mut out = Vec::new();
     let mut cur = String::new();
     for c in p.chars() {
         if c.is_ascii_digit() {
+            if tone_matters {
+                cur.push(c); // the digit stays: tone is part of the syllable
+            }
             if !cur.is_empty() {
-                out.push(std::mem::take(&mut cur)); // tone digit dropped: toneless hooks
+                out.push(std::mem::take(&mut cur));
             }
         } else {
             cur.push(c);
@@ -175,10 +211,31 @@ fn pinyin_sylls(p: &str) -> Vec<String> {
     out
 }
 
+fn pinyin_sylls(p: &str) -> Vec<String> {
+    pinyin_sylls_with(p, strictness("zh").tone_matters)
+}
+
+/// Strip the marks a diacritic-insensitive language ignores. Only reached when
+/// the table says diacritics do NOT matter, which no language sets today.
+fn defold(s: &str) -> String {
+    use unicode_normalization::UnicodeNormalization;
+    s.nfd().filter(|c| !matches!(*c as u32, 0x0300..=0x036F)).nfc().collect()
+}
+
 /// The typed form of a bank entry — zh stores `pinyin|hanzi` and the chain is
 /// played in pinyin.
 fn typed(word: &str) -> String {
     fold_strict(word.split('|').next().unwrap_or(word))
+}
+
+/// The comparable form of a hook or head under a given strictness.
+///
+/// Takes the [`Strictness`] rather than a language code so a test can exercise
+/// the insensitive branch without a language having to select it. No language
+/// sets `diacritics_matter: false` today; config that nothing exercises is
+/// config nobody can trust when it is finally switched on.
+fn compare_as(s: Strictness, unit: String) -> String {
+    if s.diacritics_matter { unit } else { defold(&unit) }
 }
 
 /// The unit the NEXT word must begin with.
@@ -191,7 +248,7 @@ pub fn hook(lang: &str, word: &str) -> Option<String> {
     if w.is_empty() || is_losing(lang, &w) {
         return None;
     }
-    Some(match u {
+    Some(compare_as(strictness(lang), match u {
         ChainUnit::Kana => {
             // A trailing ー lengthens the previous kana, so the hook is that
             // kana. Repeated ー collapses the same way.
@@ -205,7 +262,7 @@ pub fn hook(lang: &str, word: &str) -> Option<String> {
         }
         ChainUnit::ArabicLetter => ar_base(w.chars().next_back()?).to_string(),
         ChainUnit::Letter | ChainUnit::HangulBlock => w.chars().next_back()?.to_string(),
-    })
+    }))
 }
 
 /// The unit this word BEGINS with — what a hook is compared against.
@@ -215,7 +272,7 @@ pub fn head(lang: &str, word: &str) -> Option<String> {
     if w.is_empty() {
         return None;
     }
-    Some(match u {
+    Some(compare_as(strictness(lang), match u {
         ChainUnit::Kana => ja_norm(w.chars().next()?),
         ChainUnit::PinyinSyllable => pinyin_sylls(&w).into_iter().next()?,
         ChainUnit::ArabicLetter => ar_base(w.chars().next()?).to_string(),
@@ -224,7 +281,7 @@ pub fn head(lang: &str, word: &str) -> Option<String> {
         ChainUnit::Akshara | ChainUnit::Letter | ChainUnit::HangulBlock => {
             w.chars().next()?.to_string()
         }
-    })
+    }))
 }
 
 /// Does `next` legally follow `prev`?
@@ -382,6 +439,25 @@ mod tests {
         assert!(!links("en", "apple", "apple"));
         // vi keeps its diacritics: bà and ba are different words.
         assert_ne!(hook("vi", "bà"), hook("vi", "ba"));
+    }
+
+    /// The strictness table is real config, so the branch nothing selects
+    /// today still has to work the day someone selects it.
+    #[test]
+    fn strictness_flags_change_what_matches() {
+        let loose = Strictness { diacritics_matter: false, ..strictness("vi") };
+        assert_eq!(compare_as(strictness("vi"), "à".into()), "à", "vi keeps its marks");
+        assert_eq!(compare_as(loose, "à".into()), "a", "folding strips them");
+
+        // Mandarin is toneless by table; the strict reading keeps the digit.
+        assert_eq!(pinyin_sylls_with("han4zi4", false), vec!["han", "zi"]);
+        assert_eq!(pinyin_sylls_with("han4zi4", true), vec!["han4", "zi4"]);
+
+        // Japanese dakuten flexibility is what makes a か hook accept が.
+        assert!(strictness("ja").dakuten_flexible);
+        assert!(!strictness("en").dakuten_flexible);
+        assert!(strictness("vi").diacritics_matter);
+        assert!(!strictness("zh").tone_matters);
     }
 
     #[test]

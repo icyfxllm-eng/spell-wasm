@@ -380,7 +380,15 @@
   .bee-rules{font-family:inherit}
   .bee-strip{display:flex;gap:6px;overflow-x:auto;overflow-y:hidden;min-height:0;
     padding-bottom:4px}
-  .bee-c{background:#ffffff12;border-radius:999px;padding:3px 10px;font-size:.8rem;white-space:nowrap}
+  .bee-c{background:#ffffff12;border-radius:999px;padding:3px 10px 3px 3px;font-size:.8rem;
+    white-space:nowrap;display:inline-flex;align-items:center;gap:6px}
+  /* The avatar replaces the flag: a name and a colour make a rival, and carry
+     no claim about where anybody is from. */
+  .bee-av{width:20px;height:20px;border-radius:50%;display:inline-grid;place-items:center;
+    font-style:normal;font-size:.7rem;font-weight:700;color:#0e1420}
+  .bee-av.t0{background:#7fb2f0}.bee-av.t1{background:#8fd3b6}.bee-av.t2{background:#f2c14e}
+  .bee-av.t3{background:#e59ac4}.bee-av.t4{background:#a99af0}.bee-av.t5{background:#77cbd6}
+  .bee-av.t6{background:#e8a37c}
   /* D4: dimmed, never crossed out. A board of red crosses is the atmosphere
      this mode exists to avoid. */
   .bee-c.out{opacity:.32}

@@ -207,7 +207,7 @@
       "entitlementLevel": "preview",
       "requiresPremium": null,
       "languages": null,
-      "$note": "STRINGS SIGNED by Eric 2026-08-13. Still HIDDEN — strings were never the only blocker. Three D1 rulings are outstanding and each changes which words are legal: vi diacritic sensitivity (built SENSITIVE, 2.2% dead-end so there is no fairness problem to solve), zh tone sensitivity (built INSENSITIVE, 380 hooks and median 27 successors against 916 and 10 for the strict game), and ja dakuten flexibility (ON per D2's proposed default, symmetric). Untimed mood only. ko/pl/ru/hi median 7-9 links, measured.",
+      "$note": "STRINGS SIGNED by Eric 2026-08-13. Still HIDDEN — strings were never the only blocker. The three D1 settings are now DATA in chains::Strictness, so reversing one is a table edit rather than a code change and one language can move without the others. As built: vi diacritic sensitivity (built SENSITIVE, 2.2% dead-end so there is no fairness problem to solve), zh tone sensitivity (built INSENSITIVE, 380 hooks and median 27 successors against 916 and 10 for the strict game), and ja dakuten flexibility (ON per D2's proposed default, symmetric). Untimed mood only. ko/pl/ru/hi median 7-9 links, measured.",
       "exitStyle": "instant"
     },
     {
@@ -215,7 +215,7 @@
       "nameKey": "tools.impostor.name",
       "descKey": "tools.impostor.desc",
       "icon": "🕵",
-      "status": "hidden",
+      "status": "live",
       "kidSafe": true,
       "platforms": [
         "ios"
@@ -223,7 +223,7 @@
       "entitlementLevel": "preview",
       "requiresPremium": null,
       "languages": null,
-      "$note": "STRINGS SIGNED by Eric 2026-08-13. Still HIDDEN. D3 bank-vs-dictionary gap ACCEPTED by Eric 2026-08-12: the validity screen checks the audited BANK, not a dictionary, so a distractor that is a real word absent from the bank still renders (arid for acid). D1 was built as option B — shape transforms everywhere, nine authored English trap classes. Reveal-why is English-only per I4. D3 exclusion clears 2% everywhere except ko at 3.0%, flagged per Done #3. Not built: D7 tier gating beyond the free easy set, F4, D6 analytics.",
+      "$note": "STRINGS SIGNED by Eric 2026-08-13. LIVE. D3 bank-vs-dictionary gap ACCEPTED 2026-08-12: the validity screen checks the audited BANK, not a dictionary, so a distractor that is a real word absent from the bank still renders (arid for acid). ko sits at 3.0% exclusion against D3's 2% REVIEW TRIGGER — examined and accepted, because the excluded words are single-block Korean and excluding them is correct rather than a defect. D1 built as option B: shape transforms everywhere, nine authored English trap classes. Reveal-why is English-only per I4. Not built: D7 tier gating beyond the free easy set, F4 how-to cards, D6 analytics write.",
       "exitStyle": "instant"
     },
     {

@@ -88,11 +88,10 @@ pub fn word_chains() -> bool {
     resolve(stored("word_chains").as_deref(), false)
 }
 
-/// CC-IMPOSTOR — spot the real spelling. **Default OFF**: dark until the D3
-/// bank-versus-dictionary gap has Eric's ruling, since a distractor that is a
-/// real word is the one failure this mode cannot afford.
+/// CC-IMPOSTOR — spot the real spelling. **Default ON** since Eric accepted the
+/// D3 bank-versus-dictionary gap (2026-08-12) and signed the strings.
 pub fn impostor() -> bool {
-    resolve(stored("impostor").as_deref(), false)
+    resolve(stored("impostor").as_deref(), true)
 }
 
 /// CC-BEE-SIM — the staged spelling bee. **Default OFF**: dark until its

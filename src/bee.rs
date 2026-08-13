@@ -16,14 +16,17 @@
 //! — which is exactly what I1 specifies for a language whose definitions have
 //! not cleared. Repeat and Slower are local TTS and work now.
 //!
-//! # Contestants are picked, not assembled (D2/F3)
+//! # Contestants have names, not nationalities (D2/F3)
 //!
-//! D2 asks for a curated name/flag COMPONENT table. This ships flat (name,
-//! flag) pairs instead, because combining components can pair a name with a
-//! flag from an unrelated culture — a small indignity the spec's own
-//! "culturally plausible and inoffensive across markets" bar rules out, and one
-//! no schema check would catch. A flat table is reviewable line by line and
-//! cannot generate free text.
+//! D2 asks for a curated name/flag or AVATAR table, and this takes the avatar
+//! arm: a coloured initial, no flag. The flag was carrying all of the risk and
+//! buying none of the atmosphere. Which flags appear is itself a statement;
+//! pairing a name with one invites "is that name right for that country?"; and
+//! several are charged in markets this ships to. A bee's tension comes from
+//! named rivals, not from nationalities.
+//!
+//! What remains is twenty-four given names — reviewable in a minute, incapable
+//! of generating free text, and carrying no claim about anybody's origin.
 
 use std::collections::BTreeSet;
 
@@ -33,26 +36,19 @@ const LADDER: [(u32, &str); 4] = [(1, "easy"), (3, "medium"), (5, "hard"), (7, "
 /// D6: the Kid Mode ceiling, matching the standing kid tier cap.
 const KID_CEILING: &str = "medium";
 
-/// D2. Flat, reviewable, and deliberately not combinatorial.
-const CONTESTANTS: [(&str, &str); 24] = [
-    ("Amara", "\u{1F1F3}\u{1F1EC}"), ("Mateo", "\u{1F1F2}\u{1F1FD}"),
-    ("Yuki", "\u{1F1EF}\u{1F1F5}"), ("Priya", "\u{1F1EE}\u{1F1F3}"),
-    ("Lukas", "\u{1F1E9}\u{1F1EA}"), ("Sofia", "\u{1F1EE}\u{1F1F9}"),
-    ("Omar", "\u{1F1EA}\u{1F1EC}"), ("Mei", "\u{1F1E8}\u{1F1F3}"),
-    ("Noah", "\u{1F1FA}\u{1F1F8}"), ("Ines", "\u{1F1F5}\u{1F1F9}"),
-    ("Dmitri", "\u{1F1F7}\u{1F1FA}"), ("Aisha", "\u{1F1F0}\u{1F1EA}"),
-    ("Tomas", "\u{1F1E8}\u{1F1FF}"), ("Elif", "\u{1F1F9}\u{1F1F7}"),
-    ("Jae", "\u{1F1F0}\u{1F1F7}"), ("Camila", "\u{1F1E8}\u{1F1F4}"),
-    ("Hugo", "\u{1F1EB}\u{1F1F7}"), ("Nadia", "\u{1F1F5}\u{1F1F1}"),
-    ("Kofi", "\u{1F1EC}\u{1F1ED}"), ("Linh", "\u{1F1FB}\u{1F1F3}"),
-    ("Sara", "\u{1F1F8}\u{1F1EA}"), ("Diego", "\u{1F1E6}\u{1F1F7}"),
-    ("Ravi", "\u{1F1F1}\u{1F1F0}"), ("Maya", "\u{1F1E7}\u{1F1F7}"),
+/// D2. Names only — reviewable line by line, and no claim about origin.
+const CONTESTANTS: [&str; 24] = [
+    "Amara", "Mateo", "Yuki", "Priya", "Lukas", "Sofia", "Omar", "Mei",
+    "Noah", "Ines", "Dmitri", "Aisha", "Tomas", "Elif", "Jae", "Camila",
+    "Hugo", "Nadia", "Kofi", "Linh", "Sara", "Diego", "Ravi", "Maya",
 ];
 
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct Contestant {
     pub name: &'static str,
-    pub flag: &'static str,
+    /// Which of the avatar tints this contestant wears, 0..6. Derived from the
+    /// name so it is stable without another table to review.
+    pub tint: u8,
     /// Deterministic skill, 0..=100. Higher survives longer.
     pub skill: u32,
     /// The round this contestant goes out on, or `None` if they reach the end.
@@ -106,13 +102,18 @@ pub fn roster(seed: u64, size: usize) -> Vec<Contestant> {
         .into_iter()
         .enumerate()
         .map(|(rank, i)| {
-            let (name, flag) = CONTESTANTS[i];
+            let name = CONTESTANTS[i];
             // Spread skill across the field so there is always a weak tail to
             // cull early and a strong head to survive to the finals.
             let base = 30 + (rank as u64 * 60 / n.max(1) as u64) as u32;
             let jitter = (mix(seed ^ i as u64) % 12) as u32;
             let skill = (base + jitter).min(99);
-            Contestant { name, flag, skill, out_on: elimination_round(seed, i as u64, skill) }
+            Contestant {
+                name,
+                tint: (i % 7) as u8,
+                skill,
+                out_on: elimination_round(seed, i as u64, skill),
+            }
         })
         .collect()
 }
@@ -288,10 +289,10 @@ mod tests {
     #[test]
     fn placement_counts_only_those_still_standing() {
         let r = vec![
-            Contestant { name: "A", flag: "", skill: 90, out_on: None },
-            Contestant { name: "B", flag: "", skill: 80, out_on: Some(7) },
-            Contestant { name: "C", flag: "", skill: 40, out_on: Some(3) },
-            Contestant { name: "D", flag: "", skill: 30, out_on: Some(2) },
+            Contestant { name: "A", tint: 0, skill: 90, out_on: None },
+            Contestant { name: "B", tint: 0, skill: 80, out_on: Some(7) },
+            Contestant { name: "C", tint: 0, skill: 40, out_on: Some(3) },
+            Contestant { name: "D", tint: 0, skill: 30, out_on: Some(2) },
         ];
         // Out in round 4: A (never out) and B (out later) are ahead.
         assert_eq!(placement(&r, Some(4)), 3);
@@ -318,10 +319,12 @@ mod tests {
     #[test]
     fn the_contestant_table_is_curated_and_finite() {
         assert!(CONTESTANTS.len() >= 12, "the field needs more people than a bee seats");
-        let names: BTreeSet<&str> = CONTESTANTS.iter().map(|(n, _)| *n).collect();
+        let names: BTreeSet<&str> = CONTESTANTS.iter().copied().collect();
         assert_eq!(names.len(), CONTESTANTS.len(), "a duplicate name in the table");
-        for (n, f) in CONTESTANTS {
-            assert!(!n.is_empty() && !f.is_empty());
+        for n in CONTESTANTS {
+            assert!(!n.is_empty());
+            // Plain given names only: nothing that could read as a claim about
+            // origin, and nothing that could smuggle markup into the avatar.
             assert!(n.chars().all(|c| c.is_alphabetic()), "{n} is not a plain name");
         }
     }
