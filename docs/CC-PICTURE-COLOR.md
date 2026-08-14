@@ -39,3 +39,82 @@ The renderer seam and every automatable Done item now exist:
 STILL ERIC'S: #6 the Mona faithful-vs-floored verdict (artifact
 a30c2f42) — no masterpiece palette is authored until he calls it — and
 #8 his on-device pass of the goldens.
+
+---
+
+## Done #6 CALLED, 2026-08-13 — neither faithful nor floored
+
+Eric asked for the verdict; it is **neither**, and the measurement says the
+question was framed around the wrong variable.
+
+**Faithful is unreadable on the current ground.** Mona's regions sampled from
+`ref/mona-lisa.jpg` and scored against `#0e1420`, which is what the glyph colour
+sits on:
+
+```
+face 4.20 (large only)   hands 2.52   hair/veil 2.79   dress 5.20 (passes)
+sleeve 1.11   landscape L 2.26   landscape R 2.70   dark surround 1.01
+                                            → 7 of 8 fail the 4.5 small-glyph floor
+```
+
+Even the face misses. Words in the sleeve or surround colour are invisible, not
+subtle.
+
+**Floored is a different painting.** Lifting each failing colour to 4.5:1 costs
++10 to +53 points of lightness, and because the shadows are near-black with a
+faint violet cast, flooring amplifies it:
+
+```
+#1c1223 → #966db4      #120a1e → #916acd      #331e24 → #a96c7e
+```
+
+Leonardo's shadows become lavender and dusty pink. That is not the Mona Lisa in
+any register, "dark Rembrandt" included.
+
+**Colouring only the paths that pass** gives a floating gold bodice. Worse than
+either.
+
+### The variable was the ground, not the palette
+
+All three fail for one reason: the painting's luminance sits almost entirely
+below what a near-black canvas can carry. Same regions, same faithful colours,
+scored against candidate light grounds:
+
+```
+ground              fails of 8 (4.5:1)   the two that fail
+#0e1420 current              7           (everything but the dress)
+#f4efe4 warm off-white       2           face 3.83, dress 3.09
+#e8e0d0 gallery linen        2           face 3.35, dress 2.70
+#ffffff plain white          2           face 4.39, dress 3.54
+#faf6ec paper cream          2           face 4.07, dress 3.28
+```
+
+The only regions that struggle on a light ground are the MID-tones, which is
+expected — a mid-tone is the hardest value against either extreme. And both
+clear the 3.0:1 **large-glyph** threshold on warm off-white, plain white and
+paper cream. So:
+
+> **On a light ground at large-glyph size, the faithful Mona palette passes
+> completely.** No flooring, no lavender, no compromise.
+
+`#e8e0d0` is the one to avoid: the dress lands at 2.70 and fails both thresholds.
+
+### What this decides and what it leaves open
+
+- **Mona stays monochrome today.** Not pending a verdict any more — pending a
+  ground. Recorded so nobody re-runs this analysis.
+- **The colour system is not implicated.** dog and eiffel are bright subjects
+  clearing 4.5:1 on the dark ground; D5's rollout order was right and stands.
+- **D2 picked the wrong pilot.** Making the darkest painting in the bank the
+  mandatory first colour case guaranteed this outcome. That is a lesson about
+  test-case selection, not about colour.
+- **Still Eric's:** whether masterpieces render on a light ground, and at what
+  glyph size. That is a renderer change, and PICTURE-COLOR F3's zero-layout-
+  impact invariant covers the SOLVER — a background swap does not feed it — but
+  the claim needs proving, not assuming.
+- **Worth knowing before choosing a different pilot:** Great Wave and Red Fuji
+  have no colour to sample, since their references are 1-bit pictograms. The
+  only masterpieces with continuous-tone references are Mona and the Dürer
+  rhino, and a woodcut is ink-on-paper — also a light-ground register. The
+  source-scan gap blocks masterpiece colour exactly as it blocks re-tracing.
+
