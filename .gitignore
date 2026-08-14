@@ -88,3 +88,9 @@ tools/wordpipe/out/
 
 # Swift package build artifacts (ios/ScanStack)
 .build/
+
+# SwiftPM build output for the NativeLanguageKit package. The PACKAGE is
+# tracked (Package.swift + Sources); this is only its build cache, and it was
+# committed by accident — 2,266 files and 197MB whose module caches embed
+# absolute paths, which is how they turned up when the repo moved.
+ios/NativeLanguageKit/.build/
