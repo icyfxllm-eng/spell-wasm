@@ -9,7 +9,7 @@
         "http.server",
         "8123",
         "--directory",
-        "/Users/eric/Desktop/xcode-backup/repos/spell-wasm/dist"
+        "/Users/eric/repos/spell-wasm/dist"
       ],
       "port": 8123
     }

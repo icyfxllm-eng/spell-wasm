@@ -29,7 +29,7 @@ Selection law (v1, documented for the review):
 import json, math, pathlib, sys
 
 SCRATCH = pathlib.Path("/private/tmp/claude-501/-Users-eric/d5d833c7-982c-4f16-9353-8fe37d983a28/scratchpad")
-ROOT = pathlib.Path("/Users/eric/Desktop/xcode-backup/repos/spell-wasm")
+ROOT = pathlib.Path("/Users/eric/repos/spell-wasm")
 REG = ROOT / "config/wordpic/pictures.json"
 TRACE = SCRATCH / "mona-tonal.json"
 VERDICTS = SCRATCH / "facepass-verdicts.json"

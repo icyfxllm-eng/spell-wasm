@@ -7,7 +7,7 @@ from PIL import Image, ImageDraw, ImageFont, ImageFilter
 import json, math, os, subprocess
 
 S = os.path.dirname(os.path.abspath(__file__))
-SUGGEST = "/Users/eric/Desktop/xcode-backup/repos/spell-wasm/target/release/suggest"
+SUGGEST = "/Users/eric/repos/spell-wasm/target/release/suggest"
 CASES = {"arb02": "ب", "arb03": "ت", "arb05": "ج", "arb07": "خ",
          "arb19": "غ", "arb20": "ف", "arb21": "ق", "arb28": "ي"}
 

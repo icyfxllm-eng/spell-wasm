@@ -7,7 +7,7 @@ S = os.path.dirname(os.path.abspath(__file__))
 spec = importlib.util.spec_from_file_location("gen", f"{S}/gen_alphabets.py")
 # reuse render/audit by re-defining minimal copies
 from PIL import Image, ImageDraw, ImageFont, ImageFilter
-SUGGEST = "/Users/eric/Desktop/xcode-backup/repos/spell-wasm/target/release/suggest"
+SUGGEST = "/Users/eric/repos/spell-wasm/target/release/suggest"
 FONT_OF = {"cyr": "DejaVuSans.ttf", "arb": "NotoSansArabic.ttf", "hir": "NotoSansJP.ttf"}
 
 def render(ch, fontfile, k, fit=430):

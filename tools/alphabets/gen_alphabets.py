@@ -5,7 +5,7 @@ from PIL import Image, ImageDraw, ImageFont, ImageFilter
 import json, os, subprocess, sys
 
 S = os.path.dirname(os.path.abspath(__file__))
-SUGGEST = "/Users/eric/Desktop/xcode-backup/repos/spell-wasm/target/release/suggest"
+SUGGEST = "/Users/eric/repos/spell-wasm/target/release/suggest"
 
 SETS = [
     ("lat",  "DejaVuSans.ttf",         [chr(c) for c in range(65, 91)],            [13, 11, 9]),
