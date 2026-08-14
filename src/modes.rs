@@ -248,7 +248,7 @@ mod tests {
         // surface (D1: free, drives daily play), so it tiles here. FIVE now.
         assert_eq!(
             got,
-            vec!["practice", "def_match", "letter_forge", "impostor", "word_picture", "reports", "calendar", "translate"],
+            vec!["practice", "def_match", "letter_forge", "word_chains", "impostor", "bee_sim", "word_picture", "reports", "calendar", "translate"],
             "en Kid: practice, then the six companion tiles (D2: kid gets the full translator core)"
         );
         assert!(!got.contains(&"say_it".to_string()), "say_it is never kid-visible (COPPA)");
@@ -261,7 +261,7 @@ mod tests {
         let c = HubCtx { kid: true, lang: "es".into(), ..ctx() };
         // CC-HUB-CLEANUP D2/D5 (+ Word Picture and Quest Log
         // reconciliations): the pruned menu holds even on es.
-        assert_eq!(ids(&visible(&all, &c)), vec!["practice", "def_match", "letter_forge", "impostor", "word_picture", "reports", "calendar", "translate"]);
+        assert_eq!(ids(&visible(&all, &c)), vec!["practice", "def_match", "letter_forge", "word_chains", "impostor", "bee_sim", "word_picture", "reports", "calendar", "translate"]);
     }
 
     #[test]

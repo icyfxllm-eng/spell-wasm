@@ -199,7 +199,7 @@
       "nameKey": "tools.chains.name",
       "descKey": "tools.chains.desc",
       "icon": "🔗",
-      "status": "hidden",
+      "status": "live",
       "kidSafe": true,
       "platforms": [
         "ios"
@@ -207,7 +207,7 @@
       "entitlementLevel": "preview",
       "requiresPremium": null,
       "languages": null,
-      "$note": "STRINGS SIGNED by Eric 2026-08-13. Still HIDDEN — strings were never the only blocker. The three D1 settings are now DATA in chains::Strictness, so reversing one is a table edit rather than a code change and one language can move without the others. As built: vi diacritic sensitivity (built SENSITIVE, 2.2% dead-end so there is no fairness problem to solve), zh tone sensitivity (built INSENSITIVE, 380 hooks and median 27 successors against 916 and 10 for the strict game), and ja dakuten flexibility (ON per D2's proposed default, symmetric). Untimed mood only. ko/pl/ru/hi median 7-9 links, measured.",
+      "$note": "STRINGS SIGNED by Eric 2026-08-13. LIVE. The three D1 settings are DATA in chains::Strictness, so reversing one is a table edit rather than a code change and one language can move without the others. As built: vi diacritic-SENSITIVE, zh tone-INSENSITIVE, ja dakuten flexible. The zh tone call is the one Eric flipped live WITHOUT a native check — tones are lexical, but casual 接龙 does not require them and the toneless reading triples the successor pool. Untimed mood only: D3's Timed mood, its clock ring and D4's dead-end rejection are not built, nor is Phase 2 pass-and-play. ko/pl/ru/hi median 7-9 links.",
       "exitStyle": "instant"
     },
     {
@@ -231,7 +231,7 @@
       "nameKey": "tools.bee.name",
       "descKey": "tools.bee.desc",
       "icon": "🐝",
-      "status": "hidden",
+      "status": "live",
       "kidSafe": true,
       "platforms": [
         "ios"
@@ -239,7 +239,7 @@
       "entitlementLevel": "preview",
       "requiresPremium": null,
       "languages": null,
-      "$note": "STRINGS SIGNED by Eric 2026-08-13. Still HIDDEN — the contestant table is displayed content in every market and has not been reviewed. D3's Definition request is NOT BUILT and cannot be: definitions arrive from /api/defpool over the network and D7 requires offline, so I1 renders no button. D2 departure: 24 flat (name, flag) pairs rather than combinable components, because combining can pair a name with an unrelated culture's flag. Not built: F4, and D5's spoken letter input, a v2 door by the spec's own text.",
+      "$note": "STRINGS SIGNED by Eric 2026-08-13. LIVE. The 24-name contestant table went live WITHOUT a line-by-line review — it is displayed content in every market, and Eric flipped it knowing that. Flags were removed first so the table carries no claim about anybody's origin; what ships is given names and a colour. D3's Definition request is NOT BUILT and cannot be: definitions arrive from /api/defpool over the network and D7 requires offline, so I1 renders no button. Not built: F4 how-to cards, D5's spoken letter input (a v2 door by the spec).",
       "exitStyle": "confirm"
     },
     {

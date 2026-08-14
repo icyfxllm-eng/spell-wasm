@@ -81,11 +81,13 @@ pub fn letter_forge() -> bool {
     resolve(stored("letter_forge").as_deref(), true)
 }
 
-/// CC-WORD-CHAINS — per-language chaining (shiritori done right). **Default
-/// OFF**: dark until its strings are audited and the D1 unit table has Eric's
-/// ruling, since changing a chain unit changes which words are legal.
+/// CC-WORD-CHAINS — per-language chaining (shiritori done right). **Default ON**
+/// since Eric signed the strings and flipped it live (2026-08-13). The D1
+/// settings live in chains::Strictness, so a wrong call is a table edit rather
+/// than a rebuild — which is what made flipping it before a native check of the
+/// zh tone reading a reasonable risk.
 pub fn word_chains() -> bool {
-    resolve(stored("word_chains").as_deref(), false)
+    resolve(stored("word_chains").as_deref(), true)
 }
 
 /// CC-IMPOSTOR — spot the real spelling. **Default ON** since Eric accepted the
@@ -94,11 +96,12 @@ pub fn impostor() -> bool {
     resolve(stored("impostor").as_deref(), true)
 }
 
-/// CC-BEE-SIM — the staged spelling bee. **Default OFF**: dark until its
-/// strings are audited and Eric has reviewed the contestant table, which is
-/// displayed content in every market.
+/// CC-BEE-SIM — the staged spelling bee. **Default ON** since Eric signed the
+/// strings and flipped it live (2026-08-13). The contestant table went live
+/// without a line-by-line review; dropping the flags first is what made that
+/// tolerable, since twenty-four given names claim nothing about anyone.
 pub fn bee_sim() -> bool {
-    resolve(stored("bee_sim").as_deref(), false)
+    resolve(stored("bee_sim").as_deref(), true)
 }
 
 /// F5 "Word stories" — etymology cards. **Default OFF**: dark until the CC BY-SA
