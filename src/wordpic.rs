@@ -65,10 +65,68 @@ pub fn color_enabled(p: &Picture) -> bool {
     !p.categories.iter().any(|c| c == "learn")
 }
 
-/// CC-PICTURE-COLOR F4 — the shipped canvas ground every landed word
-/// sits on (scanlock_svg export rect). The contrast lint measures
-/// against THIS, nothing else.
-pub const COLOR_CANVAS: &str = "#0e1420";
+/// CC-PICTURE-COLOR F4 — the canvas a picture renders on, and the neutral
+/// tokens that go with it.
+///
+/// This was a single constant until Done #6 (2026-08-13). Sampling the Mona
+/// Lisa against the dark ground showed SEVEN of eight regions failing the
+/// 4.5:1 floor — the face included — while flooring them to pass turned
+/// Leonardo's near-black shadows lavender. Neither answer was the painting.
+/// The variable was the GROUND: the same faithful colours fail only two of
+/// eight on a light one, and both of those clear the large-glyph threshold.
+///
+/// So a dark painting gets a light canvas, and the ink flips with it. Every
+/// token here moves together — a ground swap that changed only the rect would
+/// leave near-white words on near-white paper.
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct Ground {
+    /// The canvas rect, and what the contrast lint measures against.
+    pub bg: &'static str,
+    /// Landed words with no palette color of their own.
+    pub ink: &'static str,
+    /// Pinned strokes and features — the picture's own line work.
+    pub stroke: &'static str,
+    /// The guide outline, deliberately faint.
+    pub outline: &'static str,
+}
+
+/// The default: near-white on near-black. 15.57:1.
+pub const DARK: Ground = Ground {
+    bg: "#0e1420",
+    ink: "#e8ecf5",
+    stroke: "rgba(232,236,245,.92)",
+    outline: "rgba(255,255,255,.22)",
+};
+
+/// The gallery ground for paintings. Warm off-white rather than plain white
+/// because a painting reads as a painting on paper, not on a screen; #1a1712
+/// on it measures 15.58:1, near-exactly mirroring the dark ground's 15.57:1.
+/// `#e8e0d0` was the other candidate and is REJECTED — Mona's dress lands at
+/// 2.70:1 there and fails even the large-glyph threshold.
+pub const LIGHT: Ground = Ground {
+    bg: "#f4efe4",
+    ink: "#1a1712",
+    stroke: "rgba(26,23,18,.92)",
+    outline: "rgba(0,0,0,.22)",
+};
+
+/// Which ground a picture renders on. Masterpieces are paintings and get the
+/// gallery ground; everything else keeps the app's dark canvas.
+pub fn ground_for(p: &Picture) -> Ground {
+    if p.categories.iter().any(|c| c == "masters") {
+        LIGHT
+    } else {
+        DARK
+    }
+}
+
+/// The ground for a subject id, for callers holding only a Plan.
+pub fn ground_of(subject: &str) -> Ground {
+    picture(subject).map(ground_for).unwrap_or(DARK)
+}
+
+/// Kept as the DARK ground's canvas so existing callers keep their meaning.
+pub const COLOR_CANVAS: &str = DARK.bg;
 
 /// WCAG relative luminance of a #RRGGBB hex.
 pub fn hex_luminance(hex: &str) -> f32 {
@@ -576,7 +634,11 @@ mod picker_search_ci {
                     continue; // Done #2's resolution lint owns missing refs
                 };
                 let floor = contrast_floor_for_band(q.band);
-                let got = hex_contrast(&c.hex, COLOR_CANVAS);
+                // Against the picture's OWN ground. Measuring every palette
+                // against the dark canvas would pass masterpiece colours that
+                // are illegible on the light one, and fail ones that are fine
+                // — the lint has to follow the ground, not assume it.
+                let got = hex_contrast(&c.hex, ground_for(p).bg);
                 if got < floor {
                     bad.push(format!(
                         "{}: path {} ({}) color {} = {:.2}:1 < {:.1}:1 (band {})",
@@ -1082,5 +1144,52 @@ mod tests {
         assert!(!kid_ok(picture("mona").unwrap(), "en", 1), "expert never kid");
         assert!(!kid_ok(picture("eiffel").unwrap(), "en", 1), "hard never kid");
         assert!(kid_ok(picture("smiley").unwrap(), "en", 1), "easy smiley kid-ok");
+    }
+}
+
+#[cfg(test)]
+mod ground_tests {
+    use super::*;
+
+    /// Done #6 — a painting gets the gallery ground, everything else keeps the
+    /// app's canvas.
+    #[test]
+    fn masterpieces_render_light_and_nothing_else_does() {
+        let mut masters = 0;
+        for p in pictures() {
+            let g = ground_for(p);
+            if p.categories.iter().any(|c| c == "masters") {
+                masters += 1;
+                assert_eq!(g, LIGHT, "{} is a master and should be on the gallery ground", p.id);
+            } else {
+                assert_eq!(g, DARK, "{} is not a master and should stay dark", p.id);
+            }
+        }
+        assert!(masters >= 6, "only {masters} masters found — the split proves nothing");
+        assert_eq!(ground_of("nosuchpicture"), DARK, "an unknown id must not go light");
+    }
+
+    /// Every ground's own ink has to be readable ON that ground. This is the
+    /// check the first draft of the light ground would have failed: swapping
+    /// the background alone leaves near-white words on near-white paper.
+    #[test]
+    fn each_ground_can_read_its_own_ink() {
+        for (name, g) in [("DARK", DARK), ("LIGHT", LIGHT)] {
+            let r = hex_contrast(g.ink, g.bg);
+            assert!(r >= 4.5, "{name}: ink {} on {} is {r:.2}:1", g.ink, g.bg);
+        }
+        // The two are near-mirrors, which is the point — a masterpiece should
+        // read as well as anything else, not merely legibly.
+        let (d, l) = (hex_contrast(DARK.ink, DARK.bg), hex_contrast(LIGHT.ink, LIGHT.bg));
+        assert!((d - l).abs() < 1.0, "grounds differ in legibility: {d:.2} vs {l:.2}");
+    }
+
+    /// The rejected candidate, pinned so nobody reinstates it. Mona's dress
+    /// lands at 2.70:1 on #e8e0d0 and fails even the large-glyph threshold.
+    #[test]
+    fn the_rejected_ground_is_recorded() {
+        let dress = "#a28446";
+        assert!(hex_contrast(dress, "#e8e0d0") < 3.0, "gallery linen was rejected for this");
+        assert!(hex_contrast(dress, LIGHT.bg) >= 3.0, "the chosen ground clears large-glyph");
     }
 }

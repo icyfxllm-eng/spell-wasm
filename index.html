@@ -669,6 +669,21 @@
      other correct stroke can be touched by construction. */
   .wp-outline.next.miss-dim{stroke:rgba(255,255,255,.30)}
   .wp-outline.next.miss-charged{stroke:rgba(255,138,101,.75)}
+
+  /* CC-PICTURE-COLOR Done #6 — the gallery ground for masterpieces. A dark
+     painting cannot be read on a near-black canvas: sampled, seven of Mona's
+     eight regions fail the 4.5:1 floor, the face included, and lifting them
+     to pass turns Leonardo's shadows lavender. The ground was the variable.
+     Every neutral flips together — a swap that changed only the background
+     would leave near-white words on near-white paper. Kept in step with
+     wordpic::LIGHT in Rust, which the export path inlines. */
+  .wp-light{background:#f4efe4;--wp-ink:#1a1712}
+  .wp-light .wp-pinned{stroke:rgba(26,23,18,.92)}
+  .wp-light .wp-feature{fill:rgba(26,23,18,.95);stroke:rgba(26,23,18,.95)}
+  .wp-light .wp-outline{stroke:rgba(0,0,0,.22)}
+  .wp-light .wp-outline.next{stroke:rgba(26,23,18,.92)}
+  .wp-light .wp-outline.next.miss-dim{stroke:rgba(26,23,18,.30)}
+  .wp-light .wp-outline.next.miss-charged{stroke:rgba(180,70,30,.85)}
   @keyframes wpPulse{50%{stroke-opacity:.45}}
   .wp-word{fill:var(--wp-ink,#e8ecf5);font-weight:700;font-family:inherit}
   .wp-word.new{animation:wpIn 1s ease}

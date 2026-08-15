@@ -383,7 +383,17 @@ fn thumb_svg(pic: &str, lang: &str, run: &wordpic::Run) -> String {
             open.insert(q.path_idx);
         }
     }
-    let mut svg = String::from("<svg viewBox=\"0 0 512 512\" xmlns=\"http://www.w3.org/2000/svg\">");
+    // CC-PICTURE-COLOR Done #6: a painting renders on a gallery ground, and
+    // every neutral token moves with it. Play mode picks the tokens up from
+    // index.html via this class; Export inlines them below, because a
+    // rasterized SVG loads no stylesheet.
+    let g = crate::wordpic::ground_of(&plan.subject);
+    let light = g.bg != crate::wordpic::DARK.bg;
+    let mut svg = String::from(if light {
+        "<svg class=\"wp-light\" viewBox=\"0 0 512 512\" xmlns=\"http://www.w3.org/2000/svg\">"
+    } else {
+        "<svg viewBox=\"0 0 512 512\" xmlns=\"http://www.w3.org/2000/svg\">"
+    });
     for (i, path) in paths.iter().enumerate() {
         if path.points.len() < 2 {
             continue;
@@ -1608,7 +1618,16 @@ pub fn scanlock_svg(
     let ns = next_ns();
     let complex = complex_script(lang);
     let placed = words.len().min(plan.placements.len());
-    let mut svg = String::from("<svg viewBox=\"0 0 512 512\" xmlns=\"http://www.w3.org/2000/svg\">");
+    // CC-PICTURE-COLOR Done #6: a painting renders on a gallery ground and
+    // every neutral token moves with it. Play picks these up from index.html
+    // through the class; Export inlines them, since a rasterized SVG loads no
+    // stylesheet.
+    let g = crate::wordpic::ground_of(&plan.subject);
+    let mut svg = String::from(if g.bg == crate::wordpic::DARK.bg {
+        "<svg viewBox=\"0 0 512 512\" xmlns=\"http://www.w3.org/2000/svg\">"
+    } else {
+        "<svg class=\"wp-light\" viewBox=\"0 0 512 512\" xmlns=\"http://www.w3.org/2000/svg\">"
+    });
     if let RenderMode::Export { font_data_uri } = mode {
         // Rasterizing an SVG through an <img> loads no stylesheet and no
         // webfont, so everything the picture needs travels with it. Values
@@ -1616,11 +1635,12 @@ pub fn scanlock_svg(
         // build if the two ever drift.
         svg.push_str(&format!(
             "<style>@font-face{{font-family:'SpellExport';src:url({font_data_uri});}}\
-             .wp-pinned{{stroke:rgba(232,236,245,.92);stroke-width:1.8;fill:none;stroke-linecap:round;stroke-linejoin:round}}\
-             .wp-feature{{fill:rgba(232,236,245,.95);stroke:rgba(232,236,245,.95);stroke-width:1.5;stroke-linejoin:round}}\
-             .wp-outline{{stroke:rgba(255,255,255,.22);stroke-width:3;fill:none;stroke-linecap:round}}\
-             .wp-word{{fill:#e8ecf5;font-weight:700;font-family:'SpellExport',system-ui,sans-serif}}</style>\
-             <rect width=\"512\" height=\"512\" fill=\"#0e1420\"/>"
+             .wp-pinned{{stroke:{stroke};stroke-width:1.8;fill:none;stroke-linecap:round;stroke-linejoin:round}}\
+             .wp-feature{{fill:{stroke};stroke:{stroke};stroke-width:1.5;stroke-linejoin:round}}\
+             .wp-outline{{stroke:{outline};stroke-width:3;fill:none;stroke-linecap:round}}\
+             .wp-word{{fill:{ink};font-weight:700;font-family:'SpellExport',system-ui,sans-serif}}</style>\
+             <rect width=\"512\" height=\"512\" fill=\"{bg}\"/>",
+            stroke = g.stroke, outline = g.outline, ink = g.ink, bg = g.bg
         ));
     }
     // defs: one path per placement baseline
@@ -2867,6 +2887,36 @@ mod export_tests {
         assert!(exp.contains("fill=\"#0e1420\""), "no background: PNG would export transparent");
         assert!(!scanlock_svg(&p, "en", &words, RenderMode::Play).contains("@font-face"),
                 "the play frame must keep using the page's own font, not a duplicate");
+    }
+
+    /// CC-PICTURE-COLOR Done #6 — the export path's LIGHT branch. The test
+    /// above pins the dark tokens using a non-master fixture, so without this
+    /// the gallery ground would ship with its export side unexercised: a
+    /// masterpiece PNG could rasterize near-white words onto near-white paper
+    /// and nothing would say so.
+    #[test]
+    fn a_masterpiece_exports_on_the_gallery_ground() {
+        let mut p = plan();
+        p.subject = "mona".into();
+        let words: Vec<String> = p.placements.iter().map(|x| x.word.clone()).collect();
+        let exp = scanlock_svg(&p, "en", &words, RenderMode::Export { font_data_uri: "d" });
+        let g = crate::wordpic::LIGHT;
+        assert!(exp.contains(&format!("fill=\"{}\"", g.bg)), "masterpiece export lost its ground");
+        assert!(exp.contains(&format!(".wp-word{{fill:{}", g.ink)), "ink did not follow the ground");
+        assert!(!exp.contains("#0e1420"), "the dark canvas leaked into a light export");
+        assert!(!exp.contains("#e8ecf5"), "the dark ink leaked into a light export");
+
+        // And Play marks the root so index.html's tokens apply.
+        let play = scanlock_svg(&p, "en", &words, RenderMode::Play);
+        assert!(play.contains("class=\"wp-light\""), "play frame is not marked light");
+
+        // A non-master must be untouched by any of this.
+        let mut d = plan();
+        d.subject = "dog".into();
+        let dog = scanlock_svg(&d, "en", &words, RenderMode::Play);
+        assert!(!dog.contains("wp-light"), "a non-master went light");
+        assert!(dog.contains("fill=\"#e8ecf5\"") || !dog.contains("wp-light"),
+                "the dark path must be unchanged");
     }
 
     /// A finished piece has no "next stroke" marker and no entry animation:
