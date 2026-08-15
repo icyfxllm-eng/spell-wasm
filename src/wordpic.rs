@@ -84,8 +84,13 @@ pub struct Ground {
     pub bg: &'static str,
     /// Landed words with no palette color of their own.
     pub ink: &'static str,
-    /// Pinned strokes and features — the picture's own line work.
+    /// Pinned strokes — the picture's own line work.
     pub stroke: &'static str,
+    /// Feature strokes and fills. A NOTCH more opaque than `stroke` (.95 vs
+    /// .92), and that difference is load-bearing: collapsing the two into one
+    /// token silently dropped exported features to .92 in build 178, which is
+    /// the drift wordpic-export-parity.mjs now exists to catch.
+    pub feature: &'static str,
     /// The guide outline, deliberately faint.
     pub outline: &'static str,
 }
@@ -95,6 +100,7 @@ pub const DARK: Ground = Ground {
     bg: "#0e1420",
     ink: "#e8ecf5",
     stroke: "rgba(232,236,245,.92)",
+    feature: "rgba(232,236,245,.95)",
     outline: "rgba(255,255,255,.22)",
 };
 
@@ -107,6 +113,7 @@ pub const LIGHT: Ground = Ground {
     bg: "#f4efe4",
     ink: "#1a1712",
     stroke: "rgba(26,23,18,.92)",
+    feature: "rgba(26,23,18,.95)",
     outline: "rgba(0,0,0,.22)",
 };
 

@@ -1630,17 +1630,20 @@ pub fn scanlock_svg(
     });
     if let RenderMode::Export { font_data_uri } = mode {
         // Rasterizing an SVG through an <img> loads no stylesheet and no
-        // webfont, so everything the picture needs travels with it. Values
-        // are copied from index.html; wordpic-export-parity.mjs fails the
-        // build if the two ever drift.
+        // webfont, so everything the picture needs travels with it. The
+        // wordpic::Ground constants are the source of truth and index.html
+        // must agree; scripts/wordpic-export-parity.mjs fails the build if the
+        // two drift. That script was cited here for a long time before it
+        // existed, which is how the feature alpha slipped from .95 to .92 in
+        // build 178 — a comment is not a guard.
         svg.push_str(&format!(
             "<style>@font-face{{font-family:'SpellExport';src:url({font_data_uri});}}\
              .wp-pinned{{stroke:{stroke};stroke-width:1.8;fill:none;stroke-linecap:round;stroke-linejoin:round}}\
-             .wp-feature{{fill:{stroke};stroke:{stroke};stroke-width:1.5;stroke-linejoin:round}}\
+             .wp-feature{{fill:{feature};stroke:{feature};stroke-width:1.5;stroke-linejoin:round}}\
              .wp-outline{{stroke:{outline};stroke-width:3;fill:none;stroke-linecap:round}}\
              .wp-word{{fill:{ink};font-weight:700;font-family:'SpellExport',system-ui,sans-serif}}</style>\
              <rect width=\"512\" height=\"512\" fill=\"{bg}\"/>",
-            stroke = g.stroke, outline = g.outline, ink = g.ink, bg = g.bg
+            stroke = g.stroke, feature = g.feature, outline = g.outline, ink = g.ink, bg = g.bg
         ));
     }
     // defs: one path per placement baseline
