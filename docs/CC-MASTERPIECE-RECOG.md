@@ -302,3 +302,190 @@ forgotten.
 **Open consequence for D1.** Starry Night is not in D1's four, but it is the
 other half of the confusion pair and a 50-point outline. Fixing Red Fuji alone
 leaves the pair half-repaired.
+
+### Eric's rulings, 2026-08-15
+
+**D2 — SIGNED as recommended.** The Great Wave's LINE silhouette and anchor
+authoring proceeds now; its *word render* stays behind the Mona Lisa
+side-by-side gate. The two were only ever coupled by the proving-ground
+sequence, and tracer-lane work does not touch the word-typesetting logic this
+file is forbidden to touch. The Wave is the one D1 piece needing nothing
+structural — 2076 points, rank 4 in the bank, read correctly on Aug 11 — so
+signing D2 unblocks the cheapest anchor table of the five.
+
+**D4 — SIGNED as written.** Red Fuji LINE, Great Wave LINE, Sunflowers TONAL,
+The Scream TONAL.
+
+**What D4 unblocks today: Great Wave only.** The other three assignments are
+each blocked, and by different things, so the signature is worth less than it
+looks:
+
+- Red Fuji is LINE and its class is now settled, but at 214 points it sits
+  under the 500 masters floor and is held in the density quarantine. LINE
+  authoring cannot start until it is re-traced.
+- Sunflowers is TONAL and has no scan file at all — not a thin one, none — and
+  its only reference is a 1-bit pictogram. TONAL needs grey levels that do not
+  exist in the file on disk.
+- The Scream is TONAL and does have a healthy 1128-point trace, but its
+  reference is also 1-bit. Its class assignment is therefore unexecutable for
+  the same reason as Sunflowers, despite the trace being fine.
+
+Of the seven masters in the bank, only Mona Lisa and the Dürer rhinoceros have
+continuous-tone references. Every TONAL assignment D4 makes lands on a piece
+that has none. This is not an objection to the ruling — the class calls are
+right on the artwork — it is the statement that **two of D4's four assignments
+convert directly into a request for source scans** rather than into authoring
+work.
+
+**Open sub-fork: Starry Night has no D4 class.** D4 was written against the
+original four; D1 later added Starry Night as the other half of the confusion
+pair, and no ruling has assigned it a class. Recommendation: **LINE.** Its
+identity is the directional swirl — stroke direction, not tonal mass — and
+LINE is the only class implementable from a 1-bit reference at all. Filed here
+rather than assumed, per this file's no-unstated-decisions rule.
+
+### The source pass, 2026-08-15 (Eric: "lets get all these right")
+
+**Rhino's F4 anchor table is authored — and rhino was the piece that was
+actually ready, not Great Wave.** The Aug 15 recommendation that the Wave's
+table was cheap and unblocked was wrong. Its eight layout paths are labelled
+"greatwave carrier 1" through "carrier 8", and Scream's ten are "scream
+carrier 1..10": placeholders that satisfy the unlabeled-stroke check and carry
+no semantics. An anchor is a claim about the claw crest or the boats; there is
+no table to write over carrier 3. Rhino, looked at properly, already carried
+25 real names across 39 paths, so its 13-name table (horn, dorsal hornlet,
+forehead, jaw, gorget fold, shoulder/body/haunch plate, belly scales, shoulder
+rivets, back, front leg, hind leg) was authorable from labels that existed.
+Scene furniture — cloud, bird, ground, woodcut caption — is deliberately not
+an anchor. Proven by breaking: renaming the dorsal-hornlet path fails
+wordpic-check with "required feature 'dorsal hornlet' missing from trace".
+Rhino has left ANCHOR_TABLES_PENDING; the list is now five.
+
+**The references did not match their own provenance.** Every manifest pinned a
+real Commons scan and every file on disk was a two-tone pictogram of 9-17KB:
+Red Fuji, Starry Night, Great Wave and Scream all claimed PD-Art photographs
+of the artworks and held bitmaps. Mona was the only master whose reference was
+the thing its manifest named. All five have been re-fetched at 1920px from the
+URLs the provenance already recorded, and are now genuine continuous-tone
+colour scans (150k-313k distinct colours each). Sunflowers is the National
+Gallery London version, "Vase with Fifteen Sunflowers", August 1888, per
+Eric's call. This unblocks re-tracing, TONAL, ridge refinement and colour
+sampling together — they were all waiting on the same missing grey levels.
+
+**Two provenance records disagreed, and one was false.** The manifests and
+pictures.json cited different Commons files for Great Wave and for Scream.
+pictures.json wins: it is the record wordpic-check enforces, so the manifests
+were brought to it. Worse, rhino's manifest claimed "SpellGame original —
+drawn rhino silhouette", licence "Original artwork (SpellGame)", while its
+trace carries woodcut-caption and gorget-fold paths and pictures.json has
+always recorded Duerer 1515. A wrong licence record is worse than a missing
+one; it now reads PD-Art after Duerer.
+
+**The I4 bundle scan was a grep for one filename.** It looked for
+"mona-lisa.jpg" in dist and the iOS public folder, from when that was the only
+continuous-tone artwork on disk. There are now six. Matching is by sha256 over
+the whole reference directory instead of by name — names in ref/ are generic
+enough (star, anchor, cloud) that basename matching would fire on legitimate
+bundle assets, and content matching also catches a reference copied in under a
+different name. Proven by planting sunflowers-source.jpg in the iOS bundle as
+_i4probe.bin: the old grep passed it, the new scan names it.
+
+**The density floor was guarding the authoring input, not the render.** It
+measures content-pipeline/wordpic/scans; what ships is the "d" strings in
+pictures.json, and nothing rendered on a device has ever read the scan. Great
+Wave clears the 500-point floor on a scan of 2076 and ships eight paths. The
+new SHIPPED_PATHS_FLOOR = 6 measures what renders. Vertices do not transfer as
+the shipped measure — rhino reads correctly on 103 vertices across 39 short
+carriers — but path count separates the record cleanly: rhino 39, mona 21,
+scream 10, greatwave 8 all read correctly, against redfuji 1, starrynight 1
+and sunflowers 3. The new floor fails exactly the three pieces already in
+quarantine and nothing else, which is the calibration claim. Seven new
+selftest cases, including Red Fuji's exact shape: a fat scan rendering as one
+line, the case the scan-only floor could never see.
+
+**Still open.** Starry Night has no D4 class (recommendation: LINE). The five
+pending anchor tables now print WHY they are pending: all five carry
+placeholder labels on every layout path, so naming the strokes comes before
+any table. Re-tracing redfuji and starrynight and creating sunflowers is the
+next block of work, and it is now unblocked for the first time.
+
+### The 2026-08-15 pass: what landed and what did not
+
+**Red Fuji did NOT land, and the reason is worth more than the trace was.**
+It was re-traced off the real Commons scan into 38 named paths and 1638
+points, Eric passed it on sight, and the layout solver could not fill it: 20
+of 43 slots unfilled, and the rainbow's authored clouds 14 of 45.
+
+CORNER_DEG is 35 degrees -- a turn past it ends a word run. All 38 paths
+turned more than 60, most between 135 and 180. Great Wave's principal contour
+turns 21.7.
+
+The cause is inherent to the method, not to the tuning. These were **closed
+region boundaries**: a contour walks out along a snow streak and comes back,
+so there is a 180-degree reversal at every tip by construction. Great Wave's
+paths are open ribbons. The medium wants strokes and it was given outlines --
+it looks right as an SVG and cannot carry text. refine_trace with resample
+auto and smooth 6 left the turns at 154-180 and cost 684 points: smoothing
+cannot remove a reversal, because a reversal is a real feature of the path.
+
+**So the re-trace has to be centerlines** -- ink-skeleton, or a medial axis per
+region -- not boundary contours. Both Red Fuji and the rainbow's clouds are
+reverted to their previous geometry pending that. Red Fuji is back in the
+quarantine and back in ANCHOR_TABLES_PENDING; its anchor table described the
+new trace and goes with it.
+
+**What did land.**
+
+- **The artist rule** (see below), enforced over every master.
+- **F2's L1 measures the principal against its own feature group**, not the
+  arc-sorted layer. The old calibration cited "Red Fuji ... 100%", a number
+  taken from the 214-point single-skeleton trace -- the starvation this file
+  exists to catch -- and it is not evidence of anything. Two new selftest
+  cases: twenty even fragments sharing one feature label still score 5% and
+  still fail, and a strong cone sharing its layer with longer texture passes.
+- **The I4 bundle scan hashes the reference directory** instead of grepping
+  for the single filename "mona-lisa.jpg". There are six continuous-tone
+  artworks on disk now. Matching is by sha256, so generic names like star.png
+  cannot false-positive and a reference copied in under a new name is still
+  caught. Proven by planting sunflowers-source.jpg in the iOS bundle.
+- **SHIPPED_PATHS_FLOOR = 6** in density_check. The floor measured
+  content-pipeline scans, the authoring input; what renders is the "d" strings
+  in pictures.json. Great Wave cleared a 500-point floor on a scan of 2076 and
+  ships 8 paths. Path count separates the record where vertex count does not:
+  rhino 39, mona 21, scream 10, greatwave 8 read correctly against redfuji 1,
+  starrynight 1, sunflowers 3.
+- **Five real source scans**, fetched from the URLs the provenance already
+  pinned. Every one of them was a 9-17KB two-grey pictogram on disk while its
+  manifest claimed a PD-Art photograph.
+- **Four replacement candidates rejected**: Hiroshige, Rousseau, Bruegel,
+  Klimt. Sources deleted. Between them and Van Gogh they bound the method:
+  impasto fails (no region boundaries exist), filigree fails (Bruegel's masks
+  are excellent and a bare tree's contour is a scribble), fine linework fails
+  (the bridge truss contours into two long lines). Filigree and impasto defeat
+  it from opposite directions.
+
+**THE ARTIST RULE (Eric 2026-08-15).** "Every artist on masterpiece the artist
+name should be recognized and never labeled as a spell game orginal if its
+based off another artist painting."
+
+The rhino was the case. Its provenance read licence "Original artwork
+(SpellGame)", no artist, no URL, on the strength of a true note: the Duerer
+plate's hatching floods every threshold, so the coordinate list was redrawn by
+hand rather than machine-traced. That is a statement about method and it does
+not transfer authorship -- the drawing is Duerer's rhinoceros down to the
+dorsal hornlet and the gorget fold. It now reads PD-Art after Albrecht Duerer,
+with the method note kept beside it, and the title says "SpellGame redraw"
+because that is honest and is not an authorship claim.
+
+Sunflowers had no provenance entry at all, so a Van Gogh was shipping
+uncredited; it now credits him whatever becomes of its trace.
+
+Enforced in masterpiece_lint over every master: an entry must exist, it must
+name an artist, and its licence may not claim original authorship. Proven both
+ways -- stripping the attribution fails, restoring the SpellGame licence fails.
+
+Rhino's 13-name F4 anchor table stands: its trace is untouched and its strokes
+were already named (horn, dorsal hornlet, gorget fold, shoulder/body/haunch
+plate, belly scales, shoulder rivets, forehead, jaw, back, front leg, hind
+leg). Scene furniture -- cloud, bird, ground, woodcut caption -- is not an
+anchor. Proven by renaming the dorsal-hornlet path.

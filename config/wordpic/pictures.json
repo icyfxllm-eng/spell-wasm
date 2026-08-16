@@ -2808,6 +2808,21 @@
     "dürer"
    ],
    "extractionClass": "LINE",
+   "requiredFeatures": [
+    "horn",
+    "dorsal hornlet",
+    "forehead",
+    "jaw",
+    "gorget fold",
+    "shoulder plate",
+    "body plate",
+    "haunch plate",
+    "belly scales",
+    "shoulder rivets",
+    "back",
+    "front leg",
+    "hind leg"
+   ],
    "name": "Rhinoceros"
   },
   {

@@ -2,10 +2,10 @@
  "id": "rhino",
  "tier": "expert",
  "source": {
-  "title": "SpellGame original \u2014 drawn rhino silhouette",
-  "license": "Original artwork (SpellGame)",
-  "url": "",
-  "attribution": ""
+  "title": "The Rhinoceros, Albrecht Duerer, 1515 (woodcut) \u2014 SpellGame redraw",
+  "license": "Public domain (PD-Art): woodcut 1515, artist died 1528",
+  "url": "https://commons.wikimedia.org/wiki/Special:FilePath/D%C3%BCrer's%20Rhinoceros,%201515.jpg",
+  "attribution": "after Albrecht Duerer"
  },
  "parts": {
   "root": [

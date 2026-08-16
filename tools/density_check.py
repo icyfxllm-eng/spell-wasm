@@ -71,6 +71,35 @@ MASTERS_FLOOR = 500
 # point for a cactus and is not a deliverable for a Hokusai.
 MASTERS_AUTHORING = {"hand-traced"}
 
+# THE SHIPPED-LAYOUT FLOOR, added 2026-08-15.
+#
+# Everything above measures content-pipeline/wordpic/scans — the authoring
+# INPUT. Nothing rendered on a device has ever read that file. What ships is
+# the "d" strings in config/wordpic/pictures.json, and the two are not close:
+#
+#     greatwave   scan 2076 -> ships   8 paths      scream  scan 1128 -> 10
+#     mona        scan  445 -> ships  21 paths      rhino   scan  786 -> 39
+#     redfuji     scan  214 -> ships   1 path       starrynight  138 ->  1
+#
+# So Great Wave clears a 500-point floor on a number nobody renders. The floor
+# was guarding the wrong artifact, which is the same class of mistake the
+# density work exists to catch, aimed one file to the left.
+#
+# Vertices do not transfer as the shipped measure: the layout deliberately
+# reduces a contour to a word carrier, and rhino reads correctly on 103
+# vertices spread over 39 short paths. The quantity that separates the
+# recorded successes from the recorded failures is the NUMBER OF DISTINCT
+# PATHS the layout ships:
+#
+#     reads correctly   rhino 39, mona 21, scream 10, greatwave 8
+#     failed Aug 11     redfuji 1, starrynight 1        (sunflowers 3)
+#
+# 6 sits in that gap with room on both sides: it clears Great Wave, the
+# sparsest piece Eric graded as correct, by 2, and fails a single-skeleton
+# masterpiece by 5. A piece that ships as one line cannot be a masterpiece
+# whatever its scan says, and that is precisely what shipped twice.
+SHIPPED_PATHS_FLOOR = 6
+
 
 def load_pictures() -> list[dict]:
     return json.loads(PICTURES.read_text())["pictures"]
@@ -100,6 +129,16 @@ def evaluate(pid: str, pic: dict, doc: dict | None) -> list[str]:
     bad: list[str] = []
     if "masters" not in pic.get("categories", []):
         return bad
+
+    # The shipped layout is checked first and for every class, because it is
+    # the only geometry a player ever sees. A TONAL piece gets no exemption
+    # here: bands are why its vertex count is meaningless, not a reason for
+    # it to ship as two strokes.
+    shipped = len(pic.get("paths") or [])
+    if shipped < SHIPPED_PATHS_FLOOR:
+        bad.append(f"{pid}: ships {shipped} layout path(s), under the "
+                   f"{SHIPPED_PATHS_FLOOR}-path shipped floor — this is what "
+                   f"renders on the device, whatever the scan holds")
 
     if doc is None:
         return [f"{pid}: a master with no trace at all — it falls back to the "
@@ -230,7 +269,8 @@ def main() -> int:
         return 1
 
     print(f"density-floor: OK — {checked} masters, {checked - len(held)} meet the "
-          f"{MASTERS_FLOOR}-point floor hand-traced")
+          f"{MASTERS_FLOOR}-point scan floor hand-traced and ship at least "
+          f"{SHIPPED_PATHS_FLOOR} layout paths")
     if held:
         print(f"  quarantined pending re-authoring: {sorted(held)}")
         for pid, why in sorted(held.items()):
@@ -241,8 +281,12 @@ def main() -> int:
     return 0
 
 
-def _pic(pid, cls="LINE", cats=("masters",)):
-    return {"id": pid, "extractionClass": cls, "categories": list(cats)}
+def _pic(pid, cls="LINE", cats=("masters",), shipped=10):
+    # `shipped` is the number of layout paths in pictures.json. It defaults
+    # clear of SHIPPED_PATHS_FLOOR so the older cases keep testing the one
+    # rule they were written for.
+    return {"id": pid, "extractionClass": cls, "categories": list(cats),
+            "paths": [{"d": "M0 0 L1 1"}] * shipped}
 
 
 def _doc(n, auth="hand-traced"):
@@ -264,6 +308,20 @@ def selftest() -> int:
          _doc(445, "suggested-then-approved"), "hand-traced"),
         # A 60-point cactus is fine; the floor must not reach outside masters.
         ("thin non-master", _pic("x", "LINE", ("learn",)), _doc(11), None),
+        # The shipped-layout floor. Red Fuji's exact shape: a fat scan that
+        # clears the point floor, rendering as one line. This is the case the
+        # scan-only floor could never see.
+        ("single-skeleton master with a fat scan", _pic("x", shipped=1), _doc(2000),
+         "shipped floor"),
+        ("shipped floor reaches TONAL too", _pic("x", "TONAL", shipped=2), _doc(445),
+         "shipped floor"),
+        ("Great Wave's shipped width passes", _pic("x", shipped=8), _doc(2076), None),
+        ("one path under the floor fails", _pic("x", shipped=5), _doc(786),
+         "shipped floor"),
+        # Same as above but outside masters: a 3-stroke cactus is not this
+        # rule's business either.
+        ("narrow non-master layout", _pic("x", "LINE", ("learn",), shipped=3), _doc(60),
+         None),
     ]
     bad = []
     for name, pic, doc, want in cases:

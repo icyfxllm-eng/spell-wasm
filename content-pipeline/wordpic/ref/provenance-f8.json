@@ -64,7 +64,7 @@
   "sourceUrl": "https://commons.wikimedia.org/wiki/File:Horse_(49794)_-_The_Noun_Project.svg",
   "file": "ref/horse.png",
   "bytes": 20451,
-  "note": "Eric 2026-07-31: asked for a horse with its head upright. Trotting CC0 pictogram \u2014 head high, four legs clear, mane and tail."
+  "note": "Eric 2026-07-31: asked for a horse with its head upright. Trotting CC0 pictogram — head high, four legs clear, mane and tail."
  },
  {
   "subject": "peacock",
@@ -73,7 +73,7 @@
   "sourceUrl": "https://commons.wikimedia.org/wiki/File:Taiwan_road_sign_d0_peacock.svg",
   "file": "ref/peacock.png",
   "bytes": 58574,
-  "note": "Eric 2026-08-01: the displaying-peacock PHOTO was untraceable (translucent fan). Swapped to this pictogram \u2014 clean fan eyespots, body, crest, eye."
+  "note": "Eric 2026-08-01: the displaying-peacock PHOTO was untraceable (translucent fan). Swapped to this pictogram — clean fan eyespots, body, crest, eye."
  },
  {
   "subject": "fish",
@@ -125,7 +125,7 @@
   "sourceUrl": "https://commons.wikimedia.org/wiki/File:Joconde_de_Calamatta.jpg",
   "file": "ref/mona-engraving.jpg",
   "bytes": 280515,
-  "note": "Luigi Calamatta's engraving of the Mona Lisa \u2014 ink-branch tracing source (Eric-approved 2026-07-31); painting photo retained for side-by-side; red/blue annotation is the review standard"
+  "note": "Luigi Calamatta's engraving of the Mona Lisa — ink-branch tracing source (Eric-approved 2026-07-31); painting photo retained for side-by-side; red/blue annotation is the review standard"
  },
  {
   "subject": "cat",
@@ -138,7 +138,7 @@
  },
  {
   "subject": "rocket",
-  "title": "SpellGame original \u2014 drawn rocket silhouette",
+  "title": "SpellGame original — drawn rocket silhouette",
   "license": "Original artwork (SpellGame)",
   "sourceUrl": "",
   "file": "tools/draw_ref.py::rocket",
@@ -147,16 +147,17 @@
  },
  {
   "subject": "rhino",
-  "title": "SpellGame original \u2014 drawn rhino silhouette",
-  "license": "Original artwork (SpellGame)",
-  "sourceUrl": "",
+  "title": "The Rhinoceros, Albrecht Duerer, 1515 (woodcut) — SpellGame redraw",
+  "license": "Public domain (PD-Art): woodcut 1515, artist died 1528",
+  "sourceUrl": "https://commons.wikimedia.org/wiki/Special:FilePath/D%C3%BCrer's%20Rhinoceros,%201515.jpg",
   "file": "tools/draw_ref.py::rhino",
   "bytes": 432779,
-  "note": "Eric 2026-07-31: replaced the Duerer plate, whose hatching floods every threshold (legs merged into the ground shadow, eye lost). Hand-authored coordinate list, not traced from any source image."
+  "note": "Eric 2026-07-31: replaced the Duerer plate as a TRACING SOURCE, whose hatching floods every threshold (legs merged into the ground shadow, eye lost). The coordinate list is hand-authored, not machine-traced. Eric 2026-08-15: that is a statement about method, not authorship — the drawing is Duerer's rhinoceros, down to the dorsal hornlet and the gorget fold, and every masterpiece credits its artist. It is a redraw after Duerer and must never read as a SpellGame original.",
+  "attribution": "after Albrecht Duerer"
  },
  {
   "subject": "house",
-  "title": "SpellGame original \u2014 house (geometric scan)",
+  "title": "SpellGame original — house (geometric scan)",
   "license": "Original artwork (SpellGame)",
   "sourceUrl": "",
   "file": "content-pipeline/wordpic/geometric-scans.json",
@@ -164,7 +165,7 @@
  },
  {
   "subject": "smiley",
-  "title": "SpellGame original \u2014 smiley (geometric scan)",
+  "title": "SpellGame original — smiley (geometric scan)",
   "license": "Original artwork (SpellGame)",
   "sourceUrl": "",
   "file": "content-pipeline/wordpic/geometric-scans.json",
@@ -172,7 +173,7 @@
  },
  {
   "subject": "star",
-  "title": "SpellGame original \u2014 star (geometric scan)",
+  "title": "SpellGame original — star (geometric scan)",
   "license": "Original artwork (SpellGame)",
   "sourceUrl": "",
   "file": "content-pipeline/wordpic/geometric-scans.json",
@@ -180,7 +181,7 @@
  },
  {
   "subject": "balloon",
-  "title": "SpellGame original \u2014 balloon (wave 1 batch 1)",
+  "title": "SpellGame original — balloon (wave 1 batch 1)",
   "license": "Original artwork (SpellGame)",
   "sourceUrl": "",
   "file": "tools/draw_wave1.py",
@@ -188,7 +189,7 @@
  },
  {
   "subject": "mug",
-  "title": "SpellGame original \u2014 mug (wave 1 batch 1)",
+  "title": "SpellGame original — mug (wave 1 batch 1)",
   "license": "Original artwork (SpellGame)",
   "sourceUrl": "",
   "file": "tools/draw_wave1.py",
@@ -196,7 +197,7 @@
  },
  {
   "subject": "kite",
-  "title": "SpellGame original \u2014 kite (wave 1 batch 1)",
+  "title": "SpellGame original — kite (wave 1 batch 1)",
   "license": "Original artwork (SpellGame)",
   "sourceUrl": "",
   "file": "tools/draw_wave1.py",
@@ -204,7 +205,7 @@
  },
  {
   "subject": "mushroom",
-  "title": "SpellGame original \u2014 mushroom (wave 1 batch 1)",
+  "title": "SpellGame original — mushroom (wave 1 batch 1)",
   "license": "Original artwork (SpellGame)",
   "sourceUrl": "",
   "file": "tools/draw_wave1.py",
@@ -212,7 +213,7 @@
  },
  {
   "subject": "sailboat",
-  "title": "SpellGame original \u2014 sailboat (wave 1 batch 1)",
+  "title": "SpellGame original — sailboat (wave 1 batch 1)",
   "license": "Original artwork (SpellGame)",
   "sourceUrl": "",
   "file": "tools/draw_wave1.py",
@@ -220,7 +221,7 @@
  },
  {
   "subject": "cactus",
-  "title": "SpellGame original \u2014 cactus (wave 1 batch 1)",
+  "title": "SpellGame original — cactus (wave 1 batch 1)",
   "license": "Original artwork (SpellGame)",
   "sourceUrl": "",
   "file": "tools/draw_wave1.py",
@@ -228,7 +229,7 @@
  },
  {
   "subject": "ladybug",
-  "title": "SpellGame original \u2014 ladybug (wave 1 batch 1)",
+  "title": "SpellGame original — ladybug (wave 1 batch 1)",
   "license": "Original artwork (SpellGame)",
   "sourceUrl": "",
   "file": "tools/draw_wave1.py",
@@ -236,7 +237,7 @@
  },
  {
   "subject": "moonstar",
-  "title": "SpellGame original \u2014 moonstar (wave 1 batch 1)",
+  "title": "SpellGame original — moonstar (wave 1 batch 1)",
   "license": "Original artwork (SpellGame)",
   "sourceUrl": "",
   "file": "tools/draw_wave1.py",
@@ -244,7 +245,7 @@
  },
  {
   "subject": "bicycle",
-  "title": "SpellGame original \u2014 bicycle (wave 1 batch 2)",
+  "title": "SpellGame original — bicycle (wave 1 batch 2)",
   "license": "Original artwork (SpellGame)",
   "sourceUrl": "",
   "file": "tools/draw_wave2.py",
@@ -252,7 +253,7 @@
  },
  {
   "subject": "windmill",
-  "title": "SpellGame original \u2014 windmill (wave 1 batch 2)",
+  "title": "SpellGame original — windmill (wave 1 batch 2)",
   "license": "Original artwork (SpellGame)",
   "sourceUrl": "",
   "file": "tools/draw_wave2.py",
@@ -260,7 +261,7 @@
  },
  {
   "subject": "hotair",
-  "title": "SpellGame original \u2014 hotair (wave 1 batch 2)",
+  "title": "SpellGame original — hotair (wave 1 batch 2)",
   "license": "Original artwork (SpellGame)",
   "sourceUrl": "",
   "file": "tools/draw_wave2.py",
@@ -268,7 +269,7 @@
  },
  {
   "subject": "lighthouse",
-  "title": "SpellGame original \u2014 lighthouse (wave 1 batch 2)",
+  "title": "SpellGame original — lighthouse (wave 1 batch 2)",
   "license": "Original artwork (SpellGame)",
   "sourceUrl": "",
   "file": "tools/draw_wave2.py",
@@ -276,7 +277,7 @@
  },
  {
   "subject": "violin",
-  "title": "SpellGame original \u2014 violin (wave 1 batch 2)",
+  "title": "SpellGame original — violin (wave 1 batch 2)",
   "license": "Original artwork (SpellGame)",
   "sourceUrl": "",
   "file": "tools/draw_wave2.py",
@@ -284,7 +285,7 @@
  },
  {
   "subject": "hummingbird",
-  "title": "SpellGame original \u2014 hummingbird (wave 1 batch 2)",
+  "title": "SpellGame original — hummingbird (wave 1 batch 2)",
   "license": "Original artwork (SpellGame)",
   "sourceUrl": "",
   "file": "tools/draw_wave2.py",
@@ -292,7 +293,7 @@
  },
  {
   "subject": "rooster",
-  "title": "SpellGame original \u2014 rooster (wave 1 batch 2)",
+  "title": "SpellGame original — rooster (wave 1 batch 2)",
   "license": "Original artwork (SpellGame)",
   "sourceUrl": "",
   "file": "tools/draw_wave2.py",
@@ -300,7 +301,7 @@
  },
  {
   "subject": "seahorse",
-  "title": "SpellGame original \u2014 seahorse (wave 1 batch 2)",
+  "title": "SpellGame original — seahorse (wave 1 batch 2)",
   "license": "Original artwork (SpellGame)",
   "sourceUrl": "",
   "file": "tools/draw_wave2.py",
@@ -358,7 +359,7 @@
  },
  {
   "subject": "crane",
-  "title": "SpellGame original \u2014 origami crane (culture five, ja)",
+  "title": "SpellGame original — origami crane (culture five, ja)",
   "license": "Original artwork (SpellGame)",
   "sourceUrl": "",
   "file": "ref/crane.png",
@@ -366,7 +367,7 @@
  },
  {
   "subject": "dallah",
-  "title": "SpellGame original \u2014 dallah coffee pot (culture five, ar)",
+  "title": "SpellGame original — dallah coffee pot (culture five, ar)",
   "license": "Original artwork (SpellGame)",
   "sourceUrl": "",
   "file": "ref/dallah.png",
@@ -374,7 +375,7 @@
  },
  {
   "subject": "basil",
-  "title": "SpellGame original \u2014 Saint Basil's skyline (culture five, ru)",
+  "title": "SpellGame original — Saint Basil's skyline (culture five, ru)",
   "license": "Original artwork (SpellGame)",
   "sourceUrl": "",
   "file": "ref/basil.png",
@@ -382,7 +383,7 @@
  },
  {
   "subject": "panda",
-  "title": "SpellGame original \u2014 panda (culture five, zh)",
+  "title": "SpellGame original — panda (culture five, zh)",
   "license": "Original artwork (SpellGame)",
   "sourceUrl": "",
   "file": "ref/panda.png",
@@ -390,7 +391,7 @@
  },
  {
   "subject": "calavera",
-  "title": "SpellGame original \u2014 calavera sugar skull (culture 2, es)",
+  "title": "SpellGame original — calavera sugar skull (culture 2, es)",
   "license": "Original artwork (SpellGame)",
   "sourceUrl": "",
   "file": "tools/draw_wave7.py",
@@ -398,7 +399,7 @@
  },
  {
   "subject": "tajmahal",
-  "title": "SpellGame original \u2014 Taj Mahal (culture 2, hi)",
+  "title": "SpellGame original — Taj Mahal (culture 2, hi)",
   "license": "Original artwork (SpellGame)",
   "sourceUrl": "",
   "file": "tools/draw_wave7.py",
@@ -406,7 +407,7 @@
  },
  {
   "subject": "stork",
-  "title": "SpellGame original \u2014 white stork on nest (culture 2, pl)",
+  "title": "SpellGame original — white stork on nest (culture 2, pl)",
   "license": "Original artwork (SpellGame)",
   "sourceUrl": "",
   "file": "tools/draw_wave7.py",
@@ -414,7 +415,7 @@
  },
  {
   "subject": "caravel",
-  "title": "SpellGame original \u2014 caravel (culture 2, pt)",
+  "title": "SpellGame original — caravel (culture 2, pt)",
   "license": "Original artwork (SpellGame)",
   "sourceUrl": "",
   "file": "tools/draw_wave7.py",
@@ -422,7 +423,7 @@
  },
  {
   "subject": "bigben",
-  "title": "SpellGame original \u2014 Big Ben (culture 2, en)",
+  "title": "SpellGame original — Big Ben (culture 2, en)",
   "license": "Original artwork (SpellGame)",
   "sourceUrl": "",
   "file": "tools/draw_wave7.py",
@@ -430,7 +431,7 @@
  },
  {
   "subject": "turtleship",
-  "title": "SpellGame original \u2014 geobukseon turtle ship (culture 3, ko)",
+  "title": "SpellGame original — geobukseon turtle ship (culture 3, ko)",
   "license": "Original artwork (SpellGame)",
   "sourceUrl": "",
   "file": "tools/draw_wave8.py",
@@ -438,7 +439,7 @@
  },
  {
   "subject": "baobab",
-  "title": "SpellGame original \u2014 baobab (culture 3, sw)",
+  "title": "SpellGame original — baobab (culture 3, sw)",
   "license": "Original artwork (SpellGame)",
   "sourceUrl": "",
   "file": "tools/draw_wave8.py",
@@ -446,7 +447,7 @@
  },
  {
   "subject": "nonla",
-  "title": "SpellGame original \u2014 non la + ao dai (culture 3, vi)",
+  "title": "SpellGame original — non la + ao dai (culture 3, vi)",
   "license": "Original artwork (SpellGame)",
   "sourceUrl": "",
   "file": "tools/draw_wave8.py",
@@ -454,7 +455,7 @@
  },
  {
   "subject": "cuckoo",
-  "title": "SpellGame original \u2014 cuckoo clock (culture 3, de)",
+  "title": "SpellGame original — cuckoo clock (culture 3, de)",
   "license": "Original artwork (SpellGame)",
   "sourceUrl": "",
   "file": "tools/draw_wave8.py",
@@ -462,7 +463,7 @@
  },
  {
   "subject": "torii",
-  "title": "SpellGame original \u2014 torii gate (culture 4, ja)",
+  "title": "SpellGame original — torii gate (culture 4, ja)",
   "license": "Original artwork (SpellGame)",
   "sourceUrl": "",
   "file": "tools/draw_wave9.py",
@@ -470,7 +471,7 @@
  },
  {
   "subject": "hanbok",
-  "title": "SpellGame original \u2014 hanbok (culture 4, ko)",
+  "title": "SpellGame original — hanbok (culture 4, ko)",
   "license": "Original artwork (SpellGame)",
   "sourceUrl": "",
   "file": "tools/draw_wave9.py",
@@ -478,7 +479,7 @@
  },
  {
   "subject": "matryoshka",
-  "title": "SpellGame original \u2014 matryoshka (culture 4, ru)",
+  "title": "SpellGame original — matryoshka (culture 4, ru)",
   "license": "Original artwork (SpellGame)",
   "sourceUrl": "",
   "file": "tools/draw_wave9.py",
@@ -486,7 +487,7 @@
  },
  {
   "subject": "greatwall",
-  "title": "SpellGame original \u2014 Great Wall (culture 4, zh)",
+  "title": "SpellGame original — Great Wall (culture 4, zh)",
   "license": "Original artwork (SpellGame)",
   "sourceUrl": "",
   "file": "tools/draw_wave9.py",
@@ -494,7 +495,7 @@
  },
  {
   "subject": "oud",
-  "title": "SpellGame original \u2014 oud (culture 4, ar)",
+  "title": "SpellGame original — oud (culture 4, ar)",
   "license": "Original artwork (SpellGame)",
   "sourceUrl": "",
   "file": "tools/draw_wave9.py",
@@ -505,9 +506,10 @@
   "title": "South Wind, Clear Sky (Red Fuji), Katsushika Hokusai, ca. 1830-32",
   "license": "Public domain (PD-Art)",
   "sourceUrl": "https://commons.wikimedia.org/wiki/File:Red_Fuji_southern_wind_clear_morning.jpg",
-  "file": "ref/redfuji.png",
-  "bytes": 10239,
-  "attribution": "after Hokusai"
+  "file": "ref/redfuji-source.jpg",
+  "bytes": 990124,
+  "attribution": "after Hokusai",
+  "note": "Eric 2026-08-15: the real Commons scan replaces ref/redfuji.png, which was a 2-grey pictogram and not the PD-Art photograph this entry has always named. The re-trace off it is not landed: boundary contours cannot host words (see CC-MASTERPIECE-RECOG), so the shipped trace is still the 214-point original until a centerline pass replaces it."
  },
  {
   "subject": "scream",
@@ -520,7 +522,7 @@
  },
  {
   "subject": "fuji",
-  "title": "SpellGame original \u2014 Mt. Fuji (ja, the spec's torii partner)",
+  "title": "SpellGame original — Mt. Fuji (ja, the spec's torii partner)",
   "license": "Original artwork (SpellGame)",
   "sourceUrl": "",
   "file": "tools/draw_wave10.py",
@@ -528,7 +530,7 @@
  },
  {
   "subject": "orion",
-  "title": "SpellGame original \u2014 Orion constellation map (PICTURE-BANK Done #6's subject)",
+  "title": "SpellGame original — Orion constellation map (PICTURE-BANK Done #6's subject)",
   "license": "Original artwork (SpellGame)",
   "sourceUrl": "",
   "file": "tools/draw_wave10.py",
@@ -536,7 +538,7 @@
  },
  {
   "subject": "papelpicado",
-  "title": "SpellGame original \u2014 papel picado banner (es)",
+  "title": "SpellGame original — papel picado banner (es)",
   "license": "Original artwork (SpellGame)",
   "sourceUrl": "",
   "file": "tools/draw_wave10.py",
@@ -544,7 +546,7 @@
  },
  {
   "subject": "anubis",
-  "title": "SpellGame original \u2014 seated Anubis after Egyptian tomb painting (ancient motif)",
+  "title": "SpellGame original — seated Anubis after Egyptian tomb painting (ancient motif)",
   "license": "Original artwork (SpellGame)",
   "sourceUrl": "",
   "file": "tools/draw_wave11.py",
@@ -552,7 +554,7 @@
  },
  {
   "subject": "athenaowl",
-  "title": "SpellGame original \u2014 owl of Athena after the tetradrachm motif (ancient)",
+  "title": "SpellGame original — owl of Athena after the tetradrachm motif (ancient)",
   "license": "Original artwork (SpellGame)",
   "sourceUrl": "",
   "file": "tools/draw_wave11.py",
@@ -560,7 +562,7 @@
  },
  {
   "subject": "bamboo",
-  "title": "SpellGame original \u2014 ink bamboo after the Chinese literati manner",
+  "title": "SpellGame original — ink bamboo after the Chinese literati manner",
   "license": "Original artwork (SpellGame)",
   "sourceUrl": "",
   "file": "tools/draw_wave11.py",
@@ -568,7 +570,7 @@
  },
  {
   "subject": "girih",
-  "title": "SpellGame original \u2014 eight-point girih star after Islamic tilework",
+  "title": "SpellGame original — eight-point girih star after Islamic tilework",
   "license": "Original artwork (SpellGame)",
   "sourceUrl": "",
   "file": "tools/draw_wave11.py",
@@ -576,7 +578,7 @@
  },
  {
   "subject": "gyenyame",
-  "title": "SpellGame original \u2014 Gye Nyame after the Adinkra symbol (traditional)",
+  "title": "SpellGame original — Gye Nyame after the Adinkra symbol (traditional)",
   "license": "Original artwork (SpellGame)",
   "sourceUrl": "",
   "file": "tools/draw_wave11.py",
@@ -584,7 +586,7 @@
  },
  {
   "subject": "arcdetriomphe",
-  "title": "SpellGame original \u2014 Arc de Triomphe (culture 5, fr)",
+  "title": "SpellGame original — Arc de Triomphe (culture 5, fr)",
   "license": "Original artwork (SpellGame)",
   "sourceUrl": "",
   "file": "tools/draw_wave13.py",
@@ -592,7 +594,7 @@
  },
  {
   "subject": "rickshaw",
-  "title": "SpellGame original \u2014 auto-rickshaw (culture 5, hi)",
+  "title": "SpellGame original — auto-rickshaw (culture 5, hi)",
   "license": "Original artwork (SpellGame)",
   "sourceUrl": "",
   "file": "tools/draw_wave13.py",
@@ -600,7 +602,7 @@
  },
  {
   "subject": "dhow",
-  "title": "SpellGame original \u2014 dhow (culture 5, sw)",
+  "title": "SpellGame original — dhow (culture 5, sw)",
   "license": "Original artwork (SpellGame)",
   "sourceUrl": "",
   "file": "tools/draw_wave13.py",
@@ -608,7 +610,7 @@
  },
  {
   "subject": "galo",
-  "title": "SpellGame original \u2014 Barcelos rooster (culture 5, pt)",
+  "title": "SpellGame original — Barcelos rooster (culture 5, pt)",
   "license": "Original artwork (SpellGame)",
   "sourceUrl": "",
   "file": "tools/draw_wave13.py",
@@ -616,7 +618,7 @@
  },
  {
   "subject": "pyramids",
-  "title": "SpellGame original \u2014 pyramids of Giza (culture 5, ar)",
+  "title": "SpellGame original — pyramids of Giza (culture 5, ar)",
   "license": "Original artwork (SpellGame)",
   "sourceUrl": "",
   "file": "tools/draw_wave13.py",
@@ -624,7 +626,7 @@
  },
  {
   "subject": "eyeofhorus",
-  "title": "SpellGame original \u2014 Eye of Horus after the ancient wedjat (wave 12)",
+  "title": "SpellGame original — Eye of Horus after the ancient wedjat (wave 12)",
   "license": "Original artwork (SpellGame)",
   "sourceUrl": "",
   "file": "tools/draw_wave12.py",
@@ -632,7 +634,7 @@
  },
  {
   "subject": "ankh",
-  "title": "SpellGame original \u2014 ankh after the ancient symbol (wave 12)",
+  "title": "SpellGame original — ankh after the ancient symbol (wave 12)",
   "license": "Original artwork (SpellGame)",
   "sourceUrl": "",
   "file": "tools/draw_wave12.py",
@@ -640,7 +642,7 @@
  },
  {
   "subject": "waweldragon",
-  "title": "SpellGame original \u2014 Wawel dragon, drawn original (culture 6, pl)",
+  "title": "SpellGame original — Wawel dragon, drawn original (culture 6, pl)",
   "license": "Original artwork (SpellGame)",
   "sourceUrl": "",
   "file": "tools/draw_wave14.py",
@@ -648,7 +650,7 @@
  },
  {
   "subject": "doubledecker",
-  "title": "SpellGame original \u2014 double-decker bus (culture 6, en)",
+  "title": "SpellGame original — double-decker bus (culture 6, en)",
   "license": "Original artwork (SpellGame)",
   "sourceUrl": "",
   "file": "tools/draw_wave14.py",
@@ -656,7 +658,7 @@
  },
  {
   "subject": "halongbay",
-  "title": "SpellGame original \u2014 Ha Long Bay (culture 6, vi)",
+  "title": "SpellGame original — Ha Long Bay (culture 6, vi)",
   "license": "Original artwork (SpellGame)",
   "sourceUrl": "",
   "file": "tools/draw_wave14.py",
@@ -664,7 +666,7 @@
  },
  {
   "subject": "carabao",
-  "title": "SpellGame original \u2014 carabao (culture 6, fil \u2014 release held for Paul)",
+  "title": "SpellGame original — carabao (culture 6, fil — release held for Paul)",
   "license": "Original artwork (SpellGame)",
   "sourceUrl": "",
   "file": "tools/draw_wave14.py",
@@ -672,7 +674,7 @@
  },
  {
   "subject": "fleurdelis",
-  "title": "SpellGame original \u2014 fleur-de-lis (culture 6, fr)",
+  "title": "SpellGame original — fleur-de-lis (culture 6, fr)",
   "license": "Original artwork (SpellGame)",
   "sourceUrl": "",
   "file": "tools/draw_wave14.py",
@@ -680,7 +682,7 @@
  },
  {
   "subject": "jeepney",
-  "title": "SpellGame original \u2014 jeepney (culture 7, fil \u2014 release held for Paul)",
+  "title": "SpellGame original — jeepney (culture 7, fil — release held for Paul)",
   "license": "Original artwork (SpellGame)",
   "sourceUrl": "",
   "file": "tools/draw_wave15.py",
@@ -688,7 +690,7 @@
  },
  {
   "subject": "manekineko",
-  "title": "SpellGame original \u2014 maneki-neko (culture 7, ja)",
+  "title": "SpellGame original — maneki-neko (culture 7, ja)",
   "license": "Original artwork (SpellGame)",
   "sourceUrl": "",
   "file": "tools/draw_wave15.py",
@@ -696,7 +698,7 @@
  },
  {
   "subject": "acacia",
-  "title": "SpellGame original \u2014 flat-top acacia (culture 7, sw)",
+  "title": "SpellGame original — flat-top acacia (culture 7, sw)",
   "license": "Original artwork (SpellGame)",
   "sourceUrl": "",
   "file": "tools/draw_wave15.py",
@@ -704,7 +706,7 @@
  },
  {
   "subject": "samovar",
-  "title": "SpellGame original \u2014 samovar (culture 7, ru)",
+  "title": "SpellGame original — samovar (culture 7, ru)",
   "license": "Original artwork (SpellGame)",
   "sourceUrl": "",
   "file": "tools/draw_wave15.py",
@@ -712,7 +714,7 @@
  },
  {
   "subject": "lantern",
-  "title": "SpellGame original \u2014 red lantern (culture 7, zh)",
+  "title": "SpellGame original — red lantern (culture 7, zh)",
   "license": "Original artwork (SpellGame)",
   "sourceUrl": "",
   "file": "tools/draw_wave15.py",
@@ -720,7 +722,7 @@
  },
  {
   "subject": "sitar",
-  "title": "SpellGame original \u2014 sitar (culture 8, hi)",
+  "title": "SpellGame original — sitar (culture 8, hi)",
   "license": "Original artwork (SpellGame)",
   "sourceUrl": "",
   "file": "tools/draw_wave16.py",
@@ -728,7 +730,7 @@
  },
  {
   "subject": "brandenburg",
-  "title": "SpellGame original \u2014 Brandenburg Gate (culture 8, de)",
+  "title": "SpellGame original — Brandenburg Gate (culture 8, de)",
   "license": "Original artwork (SpellGame)",
   "sourceUrl": "",
   "file": "tools/draw_wave16.py",
@@ -736,7 +738,7 @@
  },
  {
   "subject": "colosseum",
-  "title": "SpellGame original \u2014 Colosseum (culture 8, worldart)",
+  "title": "SpellGame original — Colosseum (culture 8, worldart)",
   "license": "Original artwork (SpellGame)",
   "sourceUrl": "",
   "file": "tools/draw_wave16.py",
@@ -744,7 +746,7 @@
  },
  {
   "subject": "fan",
-  "title": "SpellGame original \u2014 flamenco fan (culture 9, es)",
+  "title": "SpellGame original — flamenco fan (culture 9, es)",
   "license": "Original artwork (SpellGame)",
   "sourceUrl": "",
   "file": "tools/draw_wave17.py",
@@ -752,7 +754,7 @@
  },
  {
   "subject": "stonehenge",
-  "title": "SpellGame original \u2014 Stonehenge (culture 9, en)",
+  "title": "SpellGame original — Stonehenge (culture 9, en)",
   "license": "Original artwork (SpellGame)",
   "sourceUrl": "",
   "file": "tools/draw_wave17.py",
@@ -760,7 +762,7 @@
  },
  {
   "subject": "pagoda",
-  "title": "SpellGame original \u2014 pagoda (culture 10, zh)",
+  "title": "SpellGame original — pagoda (culture 10, zh)",
   "license": "Original artwork (SpellGame)",
   "sourceUrl": "",
   "file": "tools/draw_wave18.py",
@@ -768,7 +770,7 @@
  },
  {
   "subject": "daruma",
-  "title": "SpellGame original \u2014 daruma (culture 10, ja)",
+  "title": "SpellGame original — daruma (culture 10, ja)",
   "license": "Original artwork (SpellGame)",
   "sourceUrl": "",
   "file": "tools/draw_wave18.py",
@@ -776,7 +778,7 @@
  },
  {
   "subject": "balalaika",
-  "title": "SpellGame original \u2014 balalaika (culture 10, ru)",
+  "title": "SpellGame original — balalaika (culture 10, ru)",
   "license": "Original artwork (SpellGame)",
   "sourceUrl": "",
   "file": "tools/draw_wave18.py",
@@ -784,7 +786,7 @@
  },
  {
   "subject": "sombrero",
-  "title": "SpellGame original \u2014 sombrero (culture 10, es)",
+  "title": "SpellGame original — sombrero (culture 10, es)",
   "license": "Original artwork (SpellGame)",
   "sourceUrl": "",
   "file": "tools/draw_wave18.py",
@@ -792,7 +794,7 @@
  },
  {
   "subject": "djembe",
-  "title": "SpellGame original \u2014 djembe (culture 10, sw)",
+  "title": "SpellGame original — djembe (culture 10, sw)",
   "license": "Original artwork (SpellGame)",
   "sourceUrl": "",
   "file": "tools/draw_wave18.py",
@@ -800,7 +802,7 @@
  },
  {
   "subject": "angkorwat",
-  "title": "SpellGame original \u2014 Angkor Wat (culture 11, worldart)",
+  "title": "SpellGame original — Angkor Wat (culture 11, worldart)",
   "license": "Original artwork (SpellGame)",
   "sourceUrl": "",
   "file": "tools/draw_wave19.py",
@@ -808,7 +810,7 @@
  },
  {
   "subject": "accordion",
-  "title": "SpellGame original \u2014 accordion (culture 11, fr)",
+  "title": "SpellGame original — accordion (culture 11, fr)",
   "license": "Original artwork (SpellGame)",
   "sourceUrl": "",
   "file": "tools/draw_wave19.py",
@@ -816,7 +818,7 @@
  },
  {
   "subject": "quetzal",
-  "title": "SpellGame original \u2014 quetzal (culture 11, es)",
+  "title": "SpellGame original — quetzal (culture 11, es)",
   "license": "Original artwork (SpellGame)",
   "sourceUrl": "",
   "file": "tools/draw_wave19.py",
@@ -824,7 +826,7 @@
  },
  {
   "subject": "grandpiano",
-  "title": "SpellGame original \u2014 grand piano (culture 11, pl)",
+  "title": "SpellGame original — grand piano (culture 11, pl)",
   "license": "Original artwork (SpellGame)",
   "sourceUrl": "",
   "file": "tools/draw_wave19.py",
@@ -832,7 +834,7 @@
  },
  {
   "subject": "chichenitza",
-  "title": "SpellGame original \u2014 Chichen Itza (culture 12, worldart)",
+  "title": "SpellGame original — Chichen Itza (culture 12, worldart)",
   "license": "Original artwork (SpellGame)",
   "sourceUrl": "",
   "file": "tools/draw_wave20.py",
@@ -840,7 +842,7 @@
  },
  {
   "subject": "montsaintmichel",
-  "title": "SpellGame original \u2014 Mont Saint-Michel (culture 12, fr)",
+  "title": "SpellGame original — Mont Saint-Michel (culture 12, fr)",
   "license": "Original artwork (SpellGame)",
   "sourceUrl": "",
   "file": "tools/draw_wave20.py",
@@ -848,7 +850,7 @@
  },
  {
   "subject": "maasaishield",
-  "title": "SpellGame original \u2014 Maasai shield (culture 12, sw)",
+  "title": "SpellGame original — Maasai shield (culture 12, sw)",
   "license": "Original artwork (SpellGame)",
   "sourceUrl": "",
   "file": "tools/draw_wave20.py",
@@ -856,7 +858,7 @@
  },
  {
   "subject": "janggu",
-  "title": "SpellGame original \u2014 janggu (culture 12, ko)",
+  "title": "SpellGame original — janggu (culture 12, ko)",
   "license": "Original artwork (SpellGame)",
   "sourceUrl": "",
   "file": "tools/draw_wave20.py",
@@ -864,7 +866,7 @@
  },
  {
   "subject": "koinobori",
-  "title": "SpellGame original \u2014 koinobori (batch 13, ja)",
+  "title": "SpellGame original — koinobori (batch 13, ja)",
   "license": "Original artwork (SpellGame)",
   "sourceUrl": "",
   "file": "tools/draw_wave21.py",
@@ -872,7 +874,7 @@
  },
  {
   "subject": "nazcabird",
-  "title": "SpellGame original \u2014 after the Nazca hummingbird geoglyph (ancient)",
+  "title": "SpellGame original — after the Nazca hummingbird geoglyph (ancient)",
   "license": "Original artwork (SpellGame)",
   "sourceUrl": "",
   "file": "tools/draw_wave21.py",
@@ -880,7 +882,7 @@
  },
  {
   "subject": "terracotta",
-  "title": "SpellGame original \u2014 terracotta warrior (batch 13, zh)",
+  "title": "SpellGame original — terracotta warrior (batch 13, zh)",
   "license": "Original artwork (SpellGame)",
   "sourceUrl": "",
   "file": "tools/draw_wave21.py",
@@ -888,7 +890,7 @@
  },
  {
   "subject": "hamsa",
-  "title": "SpellGame original \u2014 hamsa (batch 13, ar)",
+  "title": "SpellGame original — hamsa (batch 13, ar)",
   "license": "Original artwork (SpellGame)",
   "sourceUrl": "",
   "file": "tools/draw_wave21.py",
@@ -896,7 +898,7 @@
  },
  {
   "subject": "pinata",
-  "title": "SpellGame original \u2014 pinata (batch 13, es)",
+  "title": "SpellGame original — pinata (batch 13, es)",
   "license": "Original artwork (SpellGame)",
   "sourceUrl": "",
   "file": "tools/draw_wave21.py",
@@ -904,7 +906,7 @@
  },
  {
   "subject": "bagpipes",
-  "title": "SpellGame original \u2014 bagpipes (batch 13, en)",
+  "title": "SpellGame original — bagpipes (batch 13, en)",
   "license": "Original artwork (SpellGame)",
   "sourceUrl": "",
   "file": "tools/draw_wave21.py",
@@ -912,7 +914,7 @@
  },
  {
   "subject": "triskele",
-  "title": "SpellGame original \u2014 triskele after the ancient motif",
+  "title": "SpellGame original — triskele after the ancient motif",
   "license": "Original artwork (SpellGame)",
   "sourceUrl": "",
   "file": "tools/draw_wave21.py",
@@ -920,7 +922,7 @@
  },
  {
   "subject": "mancala",
-  "title": "SpellGame original \u2014 mancala board (batch 13, sw)",
+  "title": "SpellGame original — mancala board (batch 13, sw)",
   "license": "Original artwork (SpellGame)",
   "sourceUrl": "",
   "file": "tools/draw_wave21.py",
@@ -928,7 +930,7 @@
  },
  {
   "subject": "compassrose",
-  "title": "SpellGame original \u2014 compass rose (batch 14, worldart)",
+  "title": "SpellGame original — compass rose (batch 14, worldart)",
   "license": "Original artwork (SpellGame)",
   "sourceUrl": "",
   "file": "tools/draw_wave22.py",
@@ -936,7 +938,7 @@
  },
  {
   "subject": "gramophone",
-  "title": "SpellGame original \u2014 gramophone with horn",
+  "title": "SpellGame original — gramophone with horn",
   "license": "Original artwork (SpellGame)",
   "sourceUrl": "",
   "file": "tools/draw_wave23.py",
@@ -944,7 +946,7 @@
  },
  {
   "subject": "scarab",
-  "title": "SpellGame original \u2014 Egyptian scarab",
+  "title": "SpellGame original — Egyptian scarab",
   "license": "Original artwork (SpellGame)",
   "sourceUrl": "",
   "file": "tools/draw_wave23.py",
@@ -952,7 +954,7 @@
  },
  {
   "subject": "kitsune",
-  "title": "SpellGame original \u2014 kitsune fox mask",
+  "title": "SpellGame original — kitsune fox mask",
   "license": "Original artwork (SpellGame)",
   "sourceUrl": "",
   "file": "tools/draw_wave23.py",
@@ -960,7 +962,7 @@
  },
  {
   "subject": "tulip",
-  "title": "SpellGame original \u2014 tulip",
+  "title": "SpellGame original — tulip",
   "license": "Original artwork (SpellGame)",
   "sourceUrl": "",
   "file": "tools/draw_wave24.py",
@@ -968,7 +970,7 @@
  },
  {
   "subject": "hourglass",
-  "title": "SpellGame original \u2014 hourglass",
+  "title": "SpellGame original — hourglass",
   "license": "Original artwork (SpellGame)",
   "sourceUrl": "",
   "file": "tools/draw_wave24.py",
@@ -976,7 +978,7 @@
  },
  {
   "subject": "dartboard",
-  "title": "SpellGame original \u2014 dartboard",
+  "title": "SpellGame original — dartboard",
   "license": "Original artwork (SpellGame)",
   "sourceUrl": "",
   "file": "tools/draw_wave25.py",
@@ -984,7 +986,7 @@
  },
  {
   "subject": "penguin",
-  "title": "SpellGame original \u2014 penguin",
+  "title": "SpellGame original — penguin",
   "license": "Original artwork (SpellGame)",
   "sourceUrl": "",
   "file": "tools/draw_wave25.py",
@@ -992,7 +994,7 @@
  },
  {
   "subject": "anchor",
-  "title": "SpellGame original \u2014 anchor",
+  "title": "SpellGame original — anchor",
   "license": "Original artwork (SpellGame)",
   "sourceUrl": "",
   "file": "tools/draw_wave25.py",
@@ -1000,7 +1002,7 @@
  },
  {
   "subject": "stoplight",
-  "title": "SpellGame original \u2014 stoplight",
+  "title": "SpellGame original — stoplight",
   "license": "Original artwork (SpellGame)",
   "sourceUrl": "",
   "file": "tools/draw_wave25.py",
@@ -1008,7 +1010,7 @@
  },
  {
   "subject": "snowflake",
-  "title": "SpellGame original \u2014 snowflake",
+  "title": "SpellGame original — snowflake",
   "license": "Original artwork (SpellGame)",
   "sourceUrl": "",
   "file": "tools/draw_wave25.py",
@@ -1016,103 +1018,103 @@
  },
  {
   "subject": "aries",
-  "title": "Zodiac glyph \u2014 aries (canonical typographic form)",
-  "license": "DejaVu Sans 2.37 glyph \u2014 Bitstream Vera Fonts license (free)",
+  "title": "Zodiac glyph — aries (canonical typographic form)",
+  "license": "DejaVu Sans 2.37 glyph — Bitstream Vera Fonts license (free)",
   "sourceUrl": "https://github.com/dejavu-fonts/dejavu-fonts",
   "file": "tools/draw_wave27b.py",
-  "note": "Rendered from the free DejaVu Sans font (tools/fonts/DejaVuSans.ttf) and stroke-thickened; approved by Eric 2026-08-02 ('all pass ship 116'). Apple's emoji art untouched \u2014 same canonical symbol forms, free source."
+  "note": "Rendered from the free DejaVu Sans font (tools/fonts/DejaVuSans.ttf) and stroke-thickened; approved by Eric 2026-08-02 ('all pass ship 116'). Apple's emoji art untouched — same canonical symbol forms, free source."
  },
  {
   "subject": "taurus",
-  "title": "Zodiac glyph \u2014 taurus (canonical typographic form)",
-  "license": "DejaVu Sans 2.37 glyph \u2014 Bitstream Vera Fonts license (free)",
+  "title": "Zodiac glyph — taurus (canonical typographic form)",
+  "license": "DejaVu Sans 2.37 glyph — Bitstream Vera Fonts license (free)",
   "sourceUrl": "https://github.com/dejavu-fonts/dejavu-fonts",
   "file": "tools/draw_wave27b.py",
-  "note": "Rendered from the free DejaVu Sans font (tools/fonts/DejaVuSans.ttf) and stroke-thickened; approved by Eric 2026-08-02 ('all pass ship 116'). Apple's emoji art untouched \u2014 same canonical symbol forms, free source."
+  "note": "Rendered from the free DejaVu Sans font (tools/fonts/DejaVuSans.ttf) and stroke-thickened; approved by Eric 2026-08-02 ('all pass ship 116'). Apple's emoji art untouched — same canonical symbol forms, free source."
  },
  {
   "subject": "gemini",
-  "title": "Zodiac glyph \u2014 gemini (canonical typographic form)",
-  "license": "DejaVu Sans 2.37 glyph \u2014 Bitstream Vera Fonts license (free)",
+  "title": "Zodiac glyph — gemini (canonical typographic form)",
+  "license": "DejaVu Sans 2.37 glyph — Bitstream Vera Fonts license (free)",
   "sourceUrl": "https://github.com/dejavu-fonts/dejavu-fonts",
   "file": "tools/draw_wave27b.py",
-  "note": "Rendered from the free DejaVu Sans font (tools/fonts/DejaVuSans.ttf) and stroke-thickened; approved by Eric 2026-08-02 ('all pass ship 116'). Apple's emoji art untouched \u2014 same canonical symbol forms, free source."
+  "note": "Rendered from the free DejaVu Sans font (tools/fonts/DejaVuSans.ttf) and stroke-thickened; approved by Eric 2026-08-02 ('all pass ship 116'). Apple's emoji art untouched — same canonical symbol forms, free source."
  },
  {
   "subject": "cancer",
-  "title": "Zodiac glyph \u2014 cancer (canonical typographic form)",
-  "license": "DejaVu Sans 2.37 glyph \u2014 Bitstream Vera Fonts license (free)",
+  "title": "Zodiac glyph — cancer (canonical typographic form)",
+  "license": "DejaVu Sans 2.37 glyph — Bitstream Vera Fonts license (free)",
   "sourceUrl": "https://github.com/dejavu-fonts/dejavu-fonts",
   "file": "tools/draw_wave27b.py",
-  "note": "Rendered from the free DejaVu Sans font (tools/fonts/DejaVuSans.ttf) and stroke-thickened; approved by Eric 2026-08-02 ('all pass ship 116'). Apple's emoji art untouched \u2014 same canonical symbol forms, free source."
+  "note": "Rendered from the free DejaVu Sans font (tools/fonts/DejaVuSans.ttf) and stroke-thickened; approved by Eric 2026-08-02 ('all pass ship 116'). Apple's emoji art untouched — same canonical symbol forms, free source."
  },
  {
   "subject": "leo",
-  "title": "Zodiac glyph \u2014 leo (canonical typographic form)",
-  "license": "DejaVu Sans 2.37 glyph \u2014 Bitstream Vera Fonts license (free)",
+  "title": "Zodiac glyph — leo (canonical typographic form)",
+  "license": "DejaVu Sans 2.37 glyph — Bitstream Vera Fonts license (free)",
   "sourceUrl": "https://github.com/dejavu-fonts/dejavu-fonts",
   "file": "tools/draw_wave27b.py",
-  "note": "Rendered from the free DejaVu Sans font (tools/fonts/DejaVuSans.ttf) and stroke-thickened; approved by Eric 2026-08-02 ('all pass ship 116'). Apple's emoji art untouched \u2014 same canonical symbol forms, free source."
+  "note": "Rendered from the free DejaVu Sans font (tools/fonts/DejaVuSans.ttf) and stroke-thickened; approved by Eric 2026-08-02 ('all pass ship 116'). Apple's emoji art untouched — same canonical symbol forms, free source."
  },
  {
   "subject": "virgo",
-  "title": "Zodiac glyph \u2014 virgo (canonical typographic form)",
-  "license": "DejaVu Sans 2.37 glyph \u2014 Bitstream Vera Fonts license (free)",
+  "title": "Zodiac glyph — virgo (canonical typographic form)",
+  "license": "DejaVu Sans 2.37 glyph — Bitstream Vera Fonts license (free)",
   "sourceUrl": "https://github.com/dejavu-fonts/dejavu-fonts",
   "file": "tools/draw_wave27b.py",
-  "note": "Rendered from the free DejaVu Sans font (tools/fonts/DejaVuSans.ttf) and stroke-thickened; approved by Eric 2026-08-02 ('all pass ship 116'). Apple's emoji art untouched \u2014 same canonical symbol forms, free source."
+  "note": "Rendered from the free DejaVu Sans font (tools/fonts/DejaVuSans.ttf) and stroke-thickened; approved by Eric 2026-08-02 ('all pass ship 116'). Apple's emoji art untouched — same canonical symbol forms, free source."
  },
  {
   "subject": "libra",
-  "title": "Zodiac glyph \u2014 libra (canonical typographic form)",
-  "license": "DejaVu Sans 2.37 glyph \u2014 Bitstream Vera Fonts license (free)",
+  "title": "Zodiac glyph — libra (canonical typographic form)",
+  "license": "DejaVu Sans 2.37 glyph — Bitstream Vera Fonts license (free)",
   "sourceUrl": "https://github.com/dejavu-fonts/dejavu-fonts",
   "file": "tools/draw_wave27b.py",
-  "note": "Rendered from the free DejaVu Sans font (tools/fonts/DejaVuSans.ttf) and stroke-thickened; approved by Eric 2026-08-02 ('all pass ship 116'). Apple's emoji art untouched \u2014 same canonical symbol forms, free source."
+  "note": "Rendered from the free DejaVu Sans font (tools/fonts/DejaVuSans.ttf) and stroke-thickened; approved by Eric 2026-08-02 ('all pass ship 116'). Apple's emoji art untouched — same canonical symbol forms, free source."
  },
  {
   "subject": "scorpio",
-  "title": "Zodiac glyph \u2014 scorpio (canonical typographic form)",
-  "license": "DejaVu Sans 2.37 glyph \u2014 Bitstream Vera Fonts license (free)",
+  "title": "Zodiac glyph — scorpio (canonical typographic form)",
+  "license": "DejaVu Sans 2.37 glyph — Bitstream Vera Fonts license (free)",
   "sourceUrl": "https://github.com/dejavu-fonts/dejavu-fonts",
   "file": "tools/draw_wave27b.py",
-  "note": "Rendered from the free DejaVu Sans font (tools/fonts/DejaVuSans.ttf) and stroke-thickened; approved by Eric 2026-08-02 ('all pass ship 116'). Apple's emoji art untouched \u2014 same canonical symbol forms, free source."
+  "note": "Rendered from the free DejaVu Sans font (tools/fonts/DejaVuSans.ttf) and stroke-thickened; approved by Eric 2026-08-02 ('all pass ship 116'). Apple's emoji art untouched — same canonical symbol forms, free source."
  },
  {
   "subject": "sagittarius",
-  "title": "Zodiac glyph \u2014 sagittarius (canonical typographic form)",
-  "license": "DejaVu Sans 2.37 glyph \u2014 Bitstream Vera Fonts license (free)",
+  "title": "Zodiac glyph — sagittarius (canonical typographic form)",
+  "license": "DejaVu Sans 2.37 glyph — Bitstream Vera Fonts license (free)",
   "sourceUrl": "https://github.com/dejavu-fonts/dejavu-fonts",
   "file": "tools/draw_wave27b.py",
-  "note": "Rendered from the free DejaVu Sans font (tools/fonts/DejaVuSans.ttf) and stroke-thickened; approved by Eric 2026-08-02 ('all pass ship 116'). Apple's emoji art untouched \u2014 same canonical symbol forms, free source."
+  "note": "Rendered from the free DejaVu Sans font (tools/fonts/DejaVuSans.ttf) and stroke-thickened; approved by Eric 2026-08-02 ('all pass ship 116'). Apple's emoji art untouched — same canonical symbol forms, free source."
  },
  {
   "subject": "capricorn",
-  "title": "Zodiac glyph \u2014 capricorn (canonical typographic form)",
-  "license": "DejaVu Sans 2.37 glyph \u2014 Bitstream Vera Fonts license (free)",
+  "title": "Zodiac glyph — capricorn (canonical typographic form)",
+  "license": "DejaVu Sans 2.37 glyph — Bitstream Vera Fonts license (free)",
   "sourceUrl": "https://github.com/dejavu-fonts/dejavu-fonts",
   "file": "tools/draw_wave27b.py",
-  "note": "Rendered from the free DejaVu Sans font (tools/fonts/DejaVuSans.ttf) and stroke-thickened; approved by Eric 2026-08-02 ('all pass ship 116'). Apple's emoji art untouched \u2014 same canonical symbol forms, free source."
+  "note": "Rendered from the free DejaVu Sans font (tools/fonts/DejaVuSans.ttf) and stroke-thickened; approved by Eric 2026-08-02 ('all pass ship 116'). Apple's emoji art untouched — same canonical symbol forms, free source."
  },
  {
   "subject": "aquarius",
-  "title": "Zodiac glyph \u2014 aquarius (canonical typographic form)",
-  "license": "DejaVu Sans 2.37 glyph \u2014 Bitstream Vera Fonts license (free)",
+  "title": "Zodiac glyph — aquarius (canonical typographic form)",
+  "license": "DejaVu Sans 2.37 glyph — Bitstream Vera Fonts license (free)",
   "sourceUrl": "https://github.com/dejavu-fonts/dejavu-fonts",
   "file": "tools/draw_wave27b.py",
-  "note": "Rendered from the free DejaVu Sans font (tools/fonts/DejaVuSans.ttf) and stroke-thickened; approved by Eric 2026-08-02 ('all pass ship 116'). Apple's emoji art untouched \u2014 same canonical symbol forms, free source."
+  "note": "Rendered from the free DejaVu Sans font (tools/fonts/DejaVuSans.ttf) and stroke-thickened; approved by Eric 2026-08-02 ('all pass ship 116'). Apple's emoji art untouched — same canonical symbol forms, free source."
  },
  {
   "subject": "pisces",
-  "title": "Zodiac glyph \u2014 pisces (canonical typographic form)",
-  "license": "DejaVu Sans 2.37 glyph \u2014 Bitstream Vera Fonts license (free)",
+  "title": "Zodiac glyph — pisces (canonical typographic form)",
+  "license": "DejaVu Sans 2.37 glyph — Bitstream Vera Fonts license (free)",
   "sourceUrl": "https://github.com/dejavu-fonts/dejavu-fonts",
   "file": "tools/draw_wave27b.py",
-  "note": "Rendered from the free DejaVu Sans font (tools/fonts/DejaVuSans.ttf) and stroke-thickened; approved by Eric 2026-08-02 ('all pass ship 116'). Apple's emoji art untouched \u2014 same canonical symbol forms, free source."
+  "note": "Rendered from the free DejaVu Sans font (tools/fonts/DejaVuSans.ttf) and stroke-thickened; approved by Eric 2026-08-02 ('all pass ship 116'). Apple's emoji art untouched — same canonical symbol forms, free source."
  },
  {
   "subject": "puzzlepiece",
-  "title": "SpellGame original \u2014 puzzlepiece",
+  "title": "SpellGame original — puzzlepiece",
   "license": "Original artwork (SpellGame)",
   "sourceUrl": "",
   "file": "tools/draw_wave26.py",
@@ -1120,7 +1122,7 @@
  },
  {
   "subject": "spiderweb",
-  "title": "SpellGame original \u2014 spider web (expert)",
+  "title": "SpellGame original — spider web (expert)",
   "license": "Original artwork (SpellGame)",
   "sourceUrl": "",
   "file": "tools/draw_wave28.py",
@@ -1416,7 +1418,7 @@
  },
  {
   "subject": "cyr01",
-  "title": "Glyph \u0401 (cyr)",
+  "title": "Glyph Ё (cyr)",
   "license": "DejaVu Sans 2.37 glyph - Bitstream Vera Fonts license (free)",
   "sourceUrl": "https://github.com/dejavu-fonts/dejavu-fonts",
   "file": "tools/alphabets/gen_alphabets.py",
@@ -1424,7 +1426,7 @@
  },
  {
   "subject": "cyr02",
-  "title": "Glyph \u0410 (cyr)",
+  "title": "Glyph А (cyr)",
   "license": "DejaVu Sans 2.37 glyph - Bitstream Vera Fonts license (free)",
   "sourceUrl": "https://github.com/dejavu-fonts/dejavu-fonts",
   "file": "tools/alphabets/gen_alphabets.py",
@@ -1432,7 +1434,7 @@
  },
  {
   "subject": "cyr03",
-  "title": "Glyph \u0411 (cyr)",
+  "title": "Glyph Б (cyr)",
   "license": "DejaVu Sans 2.37 glyph - Bitstream Vera Fonts license (free)",
   "sourceUrl": "https://github.com/dejavu-fonts/dejavu-fonts",
   "file": "tools/alphabets/gen_alphabets.py",
@@ -1440,7 +1442,7 @@
  },
  {
   "subject": "cyr04",
-  "title": "Glyph \u0412 (cyr)",
+  "title": "Glyph В (cyr)",
   "license": "DejaVu Sans 2.37 glyph - Bitstream Vera Fonts license (free)",
   "sourceUrl": "https://github.com/dejavu-fonts/dejavu-fonts",
   "file": "tools/alphabets/gen_alphabets.py",
@@ -1448,7 +1450,7 @@
  },
  {
   "subject": "cyr05",
-  "title": "Glyph \u0413 (cyr)",
+  "title": "Glyph Г (cyr)",
   "license": "DejaVu Sans 2.37 glyph - Bitstream Vera Fonts license (free)",
   "sourceUrl": "https://github.com/dejavu-fonts/dejavu-fonts",
   "file": "tools/alphabets/gen_alphabets.py",
@@ -1456,7 +1458,7 @@
  },
  {
   "subject": "cyr06",
-  "title": "Glyph \u0414 (cyr)",
+  "title": "Glyph Д (cyr)",
   "license": "DejaVu Sans 2.37 glyph - Bitstream Vera Fonts license (free)",
   "sourceUrl": "https://github.com/dejavu-fonts/dejavu-fonts",
   "file": "tools/alphabets/gen_alphabets.py",
@@ -1464,7 +1466,7 @@
  },
  {
   "subject": "cyr07",
-  "title": "Glyph \u0415 (cyr)",
+  "title": "Glyph Е (cyr)",
   "license": "DejaVu Sans 2.37 glyph - Bitstream Vera Fonts license (free)",
   "sourceUrl": "https://github.com/dejavu-fonts/dejavu-fonts",
   "file": "tools/alphabets/gen_alphabets.py",
@@ -1472,7 +1474,7 @@
  },
  {
   "subject": "cyr08",
-  "title": "Glyph \u0416 (cyr)",
+  "title": "Glyph Ж (cyr)",
   "license": "DejaVu Sans 2.37 glyph - Bitstream Vera Fonts license (free)",
   "sourceUrl": "https://github.com/dejavu-fonts/dejavu-fonts",
   "file": "tools/alphabets/gen_alphabets.py",
@@ -1480,7 +1482,7 @@
  },
  {
   "subject": "cyr09",
-  "title": "Glyph \u0417 (cyr)",
+  "title": "Glyph З (cyr)",
   "license": "DejaVu Sans 2.37 glyph - Bitstream Vera Fonts license (free)",
   "sourceUrl": "https://github.com/dejavu-fonts/dejavu-fonts",
   "file": "tools/alphabets/gen_alphabets.py",
@@ -1488,7 +1490,7 @@
  },
  {
   "subject": "cyr10",
-  "title": "Glyph \u0418 (cyr)",
+  "title": "Glyph И (cyr)",
   "license": "DejaVu Sans 2.37 glyph - Bitstream Vera Fonts license (free)",
   "sourceUrl": "https://github.com/dejavu-fonts/dejavu-fonts",
   "file": "tools/alphabets/gen_alphabets.py",
@@ -1496,7 +1498,7 @@
  },
  {
   "subject": "cyr11",
-  "title": "Glyph \u0419 (cyr)",
+  "title": "Glyph Й (cyr)",
   "license": "DejaVu Sans 2.37 glyph - Bitstream Vera Fonts license (free)",
   "sourceUrl": "https://github.com/dejavu-fonts/dejavu-fonts",
   "file": "tools/alphabets/gen_alphabets.py",
@@ -1504,7 +1506,7 @@
  },
  {
   "subject": "cyr12",
-  "title": "Glyph \u041a (cyr)",
+  "title": "Glyph К (cyr)",
   "license": "DejaVu Sans 2.37 glyph - Bitstream Vera Fonts license (free)",
   "sourceUrl": "https://github.com/dejavu-fonts/dejavu-fonts",
   "file": "tools/alphabets/gen_alphabets.py",
@@ -1512,7 +1514,7 @@
  },
  {
   "subject": "cyr13",
-  "title": "Glyph \u041b (cyr)",
+  "title": "Glyph Л (cyr)",
   "license": "DejaVu Sans 2.37 glyph - Bitstream Vera Fonts license (free)",
   "sourceUrl": "https://github.com/dejavu-fonts/dejavu-fonts",
   "file": "tools/alphabets/gen_alphabets.py",
@@ -1520,7 +1522,7 @@
  },
  {
   "subject": "cyr14",
-  "title": "Glyph \u041c (cyr)",
+  "title": "Glyph М (cyr)",
   "license": "DejaVu Sans 2.37 glyph - Bitstream Vera Fonts license (free)",
   "sourceUrl": "https://github.com/dejavu-fonts/dejavu-fonts",
   "file": "tools/alphabets/gen_alphabets.py",
@@ -1528,7 +1530,7 @@
  },
  {
   "subject": "cyr15",
-  "title": "Glyph \u041d (cyr)",
+  "title": "Glyph Н (cyr)",
   "license": "DejaVu Sans 2.37 glyph - Bitstream Vera Fonts license (free)",
   "sourceUrl": "https://github.com/dejavu-fonts/dejavu-fonts",
   "file": "tools/alphabets/gen_alphabets.py",
@@ -1536,7 +1538,7 @@
  },
  {
   "subject": "cyr16",
-  "title": "Glyph \u041e (cyr)",
+  "title": "Glyph О (cyr)",
   "license": "DejaVu Sans 2.37 glyph - Bitstream Vera Fonts license (free)",
   "sourceUrl": "https://github.com/dejavu-fonts/dejavu-fonts",
   "file": "tools/alphabets/gen_alphabets.py",
@@ -1544,7 +1546,7 @@
  },
  {
   "subject": "cyr17",
-  "title": "Glyph \u041f (cyr)",
+  "title": "Glyph П (cyr)",
   "license": "DejaVu Sans 2.37 glyph - Bitstream Vera Fonts license (free)",
   "sourceUrl": "https://github.com/dejavu-fonts/dejavu-fonts",
   "file": "tools/alphabets/gen_alphabets.py",
@@ -1552,7 +1554,7 @@
  },
  {
   "subject": "cyr18",
-  "title": "Glyph \u0420 (cyr)",
+  "title": "Glyph Р (cyr)",
   "license": "DejaVu Sans 2.37 glyph - Bitstream Vera Fonts license (free)",
   "sourceUrl": "https://github.com/dejavu-fonts/dejavu-fonts",
   "file": "tools/alphabets/gen_alphabets.py",
@@ -1560,7 +1562,7 @@
  },
  {
   "subject": "cyr19",
-  "title": "Glyph \u0421 (cyr)",
+  "title": "Glyph С (cyr)",
   "license": "DejaVu Sans 2.37 glyph - Bitstream Vera Fonts license (free)",
   "sourceUrl": "https://github.com/dejavu-fonts/dejavu-fonts",
   "file": "tools/alphabets/gen_alphabets.py",
@@ -1568,7 +1570,7 @@
  },
  {
   "subject": "cyr20",
-  "title": "Glyph \u0422 (cyr)",
+  "title": "Glyph Т (cyr)",
   "license": "DejaVu Sans 2.37 glyph - Bitstream Vera Fonts license (free)",
   "sourceUrl": "https://github.com/dejavu-fonts/dejavu-fonts",
   "file": "tools/alphabets/gen_alphabets.py",
@@ -1576,7 +1578,7 @@
  },
  {
   "subject": "cyr21",
-  "title": "Glyph \u0423 (cyr)",
+  "title": "Glyph У (cyr)",
   "license": "DejaVu Sans 2.37 glyph - Bitstream Vera Fonts license (free)",
   "sourceUrl": "https://github.com/dejavu-fonts/dejavu-fonts",
   "file": "tools/alphabets/gen_alphabets.py",
@@ -1584,7 +1586,7 @@
  },
  {
   "subject": "cyr22",
-  "title": "Glyph \u0424 (cyr)",
+  "title": "Glyph Ф (cyr)",
   "license": "DejaVu Sans 2.37 glyph - Bitstream Vera Fonts license (free)",
   "sourceUrl": "https://github.com/dejavu-fonts/dejavu-fonts",
   "file": "tools/alphabets/gen_alphabets.py",
@@ -1592,7 +1594,7 @@
  },
  {
   "subject": "cyr23",
-  "title": "Glyph \u0425 (cyr)",
+  "title": "Glyph Х (cyr)",
   "license": "DejaVu Sans 2.37 glyph - Bitstream Vera Fonts license (free)",
   "sourceUrl": "https://github.com/dejavu-fonts/dejavu-fonts",
   "file": "tools/alphabets/gen_alphabets.py",
@@ -1600,7 +1602,7 @@
  },
  {
   "subject": "cyr24",
-  "title": "Glyph \u0426 (cyr)",
+  "title": "Glyph Ц (cyr)",
   "license": "DejaVu Sans 2.37 glyph - Bitstream Vera Fonts license (free)",
   "sourceUrl": "https://github.com/dejavu-fonts/dejavu-fonts",
   "file": "tools/alphabets/gen_alphabets.py",
@@ -1608,7 +1610,7 @@
  },
  {
   "subject": "cyr25",
-  "title": "Glyph \u0427 (cyr)",
+  "title": "Glyph Ч (cyr)",
   "license": "DejaVu Sans 2.37 glyph - Bitstream Vera Fonts license (free)",
   "sourceUrl": "https://github.com/dejavu-fonts/dejavu-fonts",
   "file": "tools/alphabets/gen_alphabets.py",
@@ -1616,7 +1618,7 @@
  },
  {
   "subject": "cyr26",
-  "title": "Glyph \u0428 (cyr)",
+  "title": "Glyph Ш (cyr)",
   "license": "DejaVu Sans 2.37 glyph - Bitstream Vera Fonts license (free)",
   "sourceUrl": "https://github.com/dejavu-fonts/dejavu-fonts",
   "file": "tools/alphabets/gen_alphabets.py",
@@ -1624,7 +1626,7 @@
  },
  {
   "subject": "cyr27",
-  "title": "Glyph \u0429 (cyr)",
+  "title": "Glyph Щ (cyr)",
   "license": "DejaVu Sans 2.37 glyph - Bitstream Vera Fonts license (free)",
   "sourceUrl": "https://github.com/dejavu-fonts/dejavu-fonts",
   "file": "tools/alphabets/gen_alphabets.py",
@@ -1632,7 +1634,7 @@
  },
  {
   "subject": "cyr28",
-  "title": "Glyph \u042a (cyr)",
+  "title": "Glyph Ъ (cyr)",
   "license": "DejaVu Sans 2.37 glyph - Bitstream Vera Fonts license (free)",
   "sourceUrl": "https://github.com/dejavu-fonts/dejavu-fonts",
   "file": "tools/alphabets/gen_alphabets.py",
@@ -1640,7 +1642,7 @@
  },
  {
   "subject": "cyr29",
-  "title": "Glyph \u042b (cyr)",
+  "title": "Glyph Ы (cyr)",
   "license": "DejaVu Sans 2.37 glyph - Bitstream Vera Fonts license (free)",
   "sourceUrl": "https://github.com/dejavu-fonts/dejavu-fonts",
   "file": "tools/alphabets/gen_alphabets.py",
@@ -1648,7 +1650,7 @@
  },
  {
   "subject": "cyr30",
-  "title": "Glyph \u042c (cyr)",
+  "title": "Glyph Ь (cyr)",
   "license": "DejaVu Sans 2.37 glyph - Bitstream Vera Fonts license (free)",
   "sourceUrl": "https://github.com/dejavu-fonts/dejavu-fonts",
   "file": "tools/alphabets/gen_alphabets.py",
@@ -1656,7 +1658,7 @@
  },
  {
   "subject": "cyr31",
-  "title": "Glyph \u042d (cyr)",
+  "title": "Glyph Э (cyr)",
   "license": "DejaVu Sans 2.37 glyph - Bitstream Vera Fonts license (free)",
   "sourceUrl": "https://github.com/dejavu-fonts/dejavu-fonts",
   "file": "tools/alphabets/gen_alphabets.py",
@@ -1664,7 +1666,7 @@
  },
  {
   "subject": "cyr32",
-  "title": "Glyph \u042e (cyr)",
+  "title": "Glyph Ю (cyr)",
   "license": "DejaVu Sans 2.37 glyph - Bitstream Vera Fonts license (free)",
   "sourceUrl": "https://github.com/dejavu-fonts/dejavu-fonts",
   "file": "tools/alphabets/gen_alphabets.py",
@@ -1672,7 +1674,7 @@
  },
  {
   "subject": "cyr33",
-  "title": "Glyph \u042f (cyr)",
+  "title": "Glyph Я (cyr)",
   "license": "DejaVu Sans 2.37 glyph - Bitstream Vera Fonts license (free)",
   "sourceUrl": "https://github.com/dejavu-fonts/dejavu-fonts",
   "file": "tools/alphabets/gen_alphabets.py",
@@ -1680,7 +1682,7 @@
  },
  {
   "subject": "arb01",
-  "title": "Glyph \u0627 (arb)",
+  "title": "Glyph ا (arb)",
   "license": "Noto Sans Arabic glyph - SIL Open Font License 1.1 (free)",
   "sourceUrl": "https://github.com/google/fonts/tree/main/ofl/notosansarabic",
   "file": "tools/alphabets/gen_alphabets.py",
@@ -1688,7 +1690,7 @@
  },
  {
   "subject": "arb02",
-  "title": "Glyph \u0628 (arb)",
+  "title": "Glyph ب (arb)",
   "license": "Noto Sans Arabic glyph - SIL Open Font License 1.1 (free)",
   "sourceUrl": "https://github.com/google/fonts/tree/main/ofl/notosansarabic",
   "file": "tools/alphabets/gen_alphabets.py",
@@ -1696,7 +1698,7 @@
  },
  {
   "subject": "arb03",
-  "title": "Glyph \u062a (arb)",
+  "title": "Glyph ت (arb)",
   "license": "Noto Sans Arabic glyph - SIL Open Font License 1.1 (free)",
   "sourceUrl": "https://github.com/google/fonts/tree/main/ofl/notosansarabic",
   "file": "tools/alphabets/gen_alphabets.py",
@@ -1704,7 +1706,7 @@
  },
  {
   "subject": "arb04",
-  "title": "Glyph \u062b (arb)",
+  "title": "Glyph ث (arb)",
   "license": "Noto Sans Arabic glyph - SIL Open Font License 1.1 (free)",
   "sourceUrl": "https://github.com/google/fonts/tree/main/ofl/notosansarabic",
   "file": "tools/alphabets/gen_alphabets.py",
@@ -1712,7 +1714,7 @@
  },
  {
   "subject": "arb05",
-  "title": "Glyph \u062c (arb)",
+  "title": "Glyph ج (arb)",
   "license": "Noto Sans Arabic glyph - SIL Open Font License 1.1 (free)",
   "sourceUrl": "https://github.com/google/fonts/tree/main/ofl/notosansarabic",
   "file": "tools/alphabets/gen_alphabets.py",
@@ -1720,7 +1722,7 @@
  },
  {
   "subject": "arb06",
-  "title": "Glyph \u062d (arb)",
+  "title": "Glyph ح (arb)",
   "license": "Noto Sans Arabic glyph - SIL Open Font License 1.1 (free)",
   "sourceUrl": "https://github.com/google/fonts/tree/main/ofl/notosansarabic",
   "file": "tools/alphabets/gen_alphabets.py",
@@ -1728,7 +1730,7 @@
  },
  {
   "subject": "arb07",
-  "title": "Glyph \u062e (arb)",
+  "title": "Glyph خ (arb)",
   "license": "Noto Sans Arabic glyph - SIL Open Font License 1.1 (free)",
   "sourceUrl": "https://github.com/google/fonts/tree/main/ofl/notosansarabic",
   "file": "tools/alphabets/gen_alphabets.py",
@@ -1736,7 +1738,7 @@
  },
  {
   "subject": "arb08",
-  "title": "Glyph \u062f (arb)",
+  "title": "Glyph د (arb)",
   "license": "Noto Sans Arabic glyph - SIL Open Font License 1.1 (free)",
   "sourceUrl": "https://github.com/google/fonts/tree/main/ofl/notosansarabic",
   "file": "tools/alphabets/gen_alphabets.py",
@@ -1744,7 +1746,7 @@
  },
  {
   "subject": "arb09",
-  "title": "Glyph \u0630 (arb)",
+  "title": "Glyph ذ (arb)",
   "license": "Noto Sans Arabic glyph - SIL Open Font License 1.1 (free)",
   "sourceUrl": "https://github.com/google/fonts/tree/main/ofl/notosansarabic",
   "file": "tools/alphabets/gen_alphabets.py",
@@ -1752,7 +1754,7 @@
  },
  {
   "subject": "arb10",
-  "title": "Glyph \u0631 (arb)",
+  "title": "Glyph ر (arb)",
   "license": "Noto Sans Arabic glyph - SIL Open Font License 1.1 (free)",
   "sourceUrl": "https://github.com/google/fonts/tree/main/ofl/notosansarabic",
   "file": "tools/alphabets/gen_alphabets.py",
@@ -1760,7 +1762,7 @@
  },
  {
   "subject": "arb11",
-  "title": "Glyph \u0632 (arb)",
+  "title": "Glyph ز (arb)",
   "license": "Noto Sans Arabic glyph - SIL Open Font License 1.1 (free)",
   "sourceUrl": "https://github.com/google/fonts/tree/main/ofl/notosansarabic",
   "file": "tools/alphabets/gen_alphabets.py",
@@ -1768,7 +1770,7 @@
  },
  {
   "subject": "arb12",
-  "title": "Glyph \u0633 (arb)",
+  "title": "Glyph س (arb)",
   "license": "Noto Sans Arabic glyph - SIL Open Font License 1.1 (free)",
   "sourceUrl": "https://github.com/google/fonts/tree/main/ofl/notosansarabic",
   "file": "tools/alphabets/gen_alphabets.py",
@@ -1776,7 +1778,7 @@
  },
  {
   "subject": "arb13",
-  "title": "Glyph \u0634 (arb)",
+  "title": "Glyph ش (arb)",
   "license": "Noto Sans Arabic glyph - SIL Open Font License 1.1 (free)",
   "sourceUrl": "https://github.com/google/fonts/tree/main/ofl/notosansarabic",
   "file": "tools/alphabets/gen_alphabets.py",
@@ -1784,7 +1786,7 @@
  },
  {
   "subject": "arb14",
-  "title": "Glyph \u0635 (arb)",
+  "title": "Glyph ص (arb)",
   "license": "Noto Sans Arabic glyph - SIL Open Font License 1.1 (free)",
   "sourceUrl": "https://github.com/google/fonts/tree/main/ofl/notosansarabic",
   "file": "tools/alphabets/gen_alphabets.py",
@@ -1792,7 +1794,7 @@
  },
  {
   "subject": "arb15",
-  "title": "Glyph \u0636 (arb)",
+  "title": "Glyph ض (arb)",
   "license": "Noto Sans Arabic glyph - SIL Open Font License 1.1 (free)",
   "sourceUrl": "https://github.com/google/fonts/tree/main/ofl/notosansarabic",
   "file": "tools/alphabets/gen_alphabets.py",
@@ -1800,7 +1802,7 @@
  },
  {
   "subject": "arb16",
-  "title": "Glyph \u0637 (arb)",
+  "title": "Glyph ط (arb)",
   "license": "Noto Sans Arabic glyph - SIL Open Font License 1.1 (free)",
   "sourceUrl": "https://github.com/google/fonts/tree/main/ofl/notosansarabic",
   "file": "tools/alphabets/gen_alphabets.py",
@@ -1808,7 +1810,7 @@
  },
  {
   "subject": "arb17",
-  "title": "Glyph \u0638 (arb)",
+  "title": "Glyph ظ (arb)",
   "license": "Noto Sans Arabic glyph - SIL Open Font License 1.1 (free)",
   "sourceUrl": "https://github.com/google/fonts/tree/main/ofl/notosansarabic",
   "file": "tools/alphabets/gen_alphabets.py",
@@ -1816,7 +1818,7 @@
  },
  {
   "subject": "arb18",
-  "title": "Glyph \u0639 (arb)",
+  "title": "Glyph ع (arb)",
   "license": "Noto Sans Arabic glyph - SIL Open Font License 1.1 (free)",
   "sourceUrl": "https://github.com/google/fonts/tree/main/ofl/notosansarabic",
   "file": "tools/alphabets/gen_alphabets.py",
@@ -1824,7 +1826,7 @@
  },
  {
   "subject": "arb19",
-  "title": "Glyph \u063a (arb)",
+  "title": "Glyph غ (arb)",
   "license": "Noto Sans Arabic glyph - SIL Open Font License 1.1 (free)",
   "sourceUrl": "https://github.com/google/fonts/tree/main/ofl/notosansarabic",
   "file": "tools/alphabets/gen_alphabets.py",
@@ -1832,7 +1834,7 @@
  },
  {
   "subject": "arb20",
-  "title": "Glyph \u0641 (arb)",
+  "title": "Glyph ف (arb)",
   "license": "Noto Sans Arabic glyph - SIL Open Font License 1.1 (free)",
   "sourceUrl": "https://github.com/google/fonts/tree/main/ofl/notosansarabic",
   "file": "tools/alphabets/gen_alphabets.py",
@@ -1840,7 +1842,7 @@
  },
  {
   "subject": "arb21",
-  "title": "Glyph \u0642 (arb)",
+  "title": "Glyph ق (arb)",
   "license": "Noto Sans Arabic glyph - SIL Open Font License 1.1 (free)",
   "sourceUrl": "https://github.com/google/fonts/tree/main/ofl/notosansarabic",
   "file": "tools/alphabets/gen_alphabets.py",
@@ -1848,7 +1850,7 @@
  },
  {
   "subject": "arb22",
-  "title": "Glyph \u0643 (arb)",
+  "title": "Glyph ك (arb)",
   "license": "Noto Sans Arabic glyph - SIL Open Font License 1.1 (free)",
   "sourceUrl": "https://github.com/google/fonts/tree/main/ofl/notosansarabic",
   "file": "tools/alphabets/gen_alphabets.py",
@@ -1856,7 +1858,7 @@
  },
  {
   "subject": "arb23",
-  "title": "Glyph \u0644 (arb)",
+  "title": "Glyph ل (arb)",
   "license": "Noto Sans Arabic glyph - SIL Open Font License 1.1 (free)",
   "sourceUrl": "https://github.com/google/fonts/tree/main/ofl/notosansarabic",
   "file": "tools/alphabets/gen_alphabets.py",
@@ -1864,7 +1866,7 @@
  },
  {
   "subject": "arb24",
-  "title": "Glyph \u0645 (arb)",
+  "title": "Glyph م (arb)",
   "license": "Noto Sans Arabic glyph - SIL Open Font License 1.1 (free)",
   "sourceUrl": "https://github.com/google/fonts/tree/main/ofl/notosansarabic",
   "file": "tools/alphabets/gen_alphabets.py",
@@ -1872,7 +1874,7 @@
  },
  {
   "subject": "arb25",
-  "title": "Glyph \u0646 (arb)",
+  "title": "Glyph ن (arb)",
   "license": "Noto Sans Arabic glyph - SIL Open Font License 1.1 (free)",
   "sourceUrl": "https://github.com/google/fonts/tree/main/ofl/notosansarabic",
   "file": "tools/alphabets/gen_alphabets.py",
@@ -1880,7 +1882,7 @@
  },
  {
   "subject": "arb26",
-  "title": "Glyph \u0647 (arb)",
+  "title": "Glyph ه (arb)",
   "license": "Noto Sans Arabic glyph - SIL Open Font License 1.1 (free)",
   "sourceUrl": "https://github.com/google/fonts/tree/main/ofl/notosansarabic",
   "file": "tools/alphabets/gen_alphabets.py",
@@ -1888,7 +1890,7 @@
  },
  {
   "subject": "arb27",
-  "title": "Glyph \u0648 (arb)",
+  "title": "Glyph و (arb)",
   "license": "Noto Sans Arabic glyph - SIL Open Font License 1.1 (free)",
   "sourceUrl": "https://github.com/google/fonts/tree/main/ofl/notosansarabic",
   "file": "tools/alphabets/gen_alphabets.py",
@@ -1896,7 +1898,7 @@
  },
  {
   "subject": "arb28",
-  "title": "Glyph \u064a (arb)",
+  "title": "Glyph ي (arb)",
   "license": "Noto Sans Arabic glyph - SIL Open Font License 1.1 (free)",
   "sourceUrl": "https://github.com/google/fonts/tree/main/ofl/notosansarabic",
   "file": "tools/alphabets/gen_alphabets.py",
@@ -1904,7 +1906,7 @@
  },
  {
   "subject": "dev01",
-  "title": "Glyph \u0905 (dev)",
+  "title": "Glyph अ (dev)",
   "license": "Noto Sans Devanagari glyph - SIL Open Font License 1.1 (free)",
   "sourceUrl": "https://github.com/google/fonts/tree/main/ofl/notosansdevanagari",
   "file": "tools/alphabets/gen_alphabets.py",
@@ -1912,7 +1914,7 @@
  },
  {
   "subject": "dev02",
-  "title": "Glyph \u0906 (dev)",
+  "title": "Glyph आ (dev)",
   "license": "Noto Sans Devanagari glyph - SIL Open Font License 1.1 (free)",
   "sourceUrl": "https://github.com/google/fonts/tree/main/ofl/notosansdevanagari",
   "file": "tools/alphabets/gen_alphabets.py",
@@ -1920,7 +1922,7 @@
  },
  {
   "subject": "dev03",
-  "title": "Glyph \u0907 (dev)",
+  "title": "Glyph इ (dev)",
   "license": "Noto Sans Devanagari glyph - SIL Open Font License 1.1 (free)",
   "sourceUrl": "https://github.com/google/fonts/tree/main/ofl/notosansdevanagari",
   "file": "tools/alphabets/gen_alphabets.py",
@@ -1928,7 +1930,7 @@
  },
  {
   "subject": "dev04",
-  "title": "Glyph \u0908 (dev)",
+  "title": "Glyph ई (dev)",
   "license": "Noto Sans Devanagari glyph - SIL Open Font License 1.1 (free)",
   "sourceUrl": "https://github.com/google/fonts/tree/main/ofl/notosansdevanagari",
   "file": "tools/alphabets/gen_alphabets.py",
@@ -1936,7 +1938,7 @@
  },
  {
   "subject": "dev05",
-  "title": "Glyph \u0909 (dev)",
+  "title": "Glyph उ (dev)",
   "license": "Noto Sans Devanagari glyph - SIL Open Font License 1.1 (free)",
   "sourceUrl": "https://github.com/google/fonts/tree/main/ofl/notosansdevanagari",
   "file": "tools/alphabets/gen_alphabets.py",
@@ -1944,7 +1946,7 @@
  },
  {
   "subject": "dev06",
-  "title": "Glyph \u090a (dev)",
+  "title": "Glyph ऊ (dev)",
   "license": "Noto Sans Devanagari glyph - SIL Open Font License 1.1 (free)",
   "sourceUrl": "https://github.com/google/fonts/tree/main/ofl/notosansdevanagari",
   "file": "tools/alphabets/gen_alphabets.py",
@@ -1952,7 +1954,7 @@
  },
  {
   "subject": "dev07",
-  "title": "Glyph \u090b (dev)",
+  "title": "Glyph ऋ (dev)",
   "license": "Noto Sans Devanagari glyph - SIL Open Font License 1.1 (free)",
   "sourceUrl": "https://github.com/google/fonts/tree/main/ofl/notosansdevanagari",
   "file": "tools/alphabets/gen_alphabets.py",
@@ -1960,7 +1962,7 @@
  },
  {
   "subject": "dev08",
-  "title": "Glyph \u090f (dev)",
+  "title": "Glyph ए (dev)",
   "license": "Noto Sans Devanagari glyph - SIL Open Font License 1.1 (free)",
   "sourceUrl": "https://github.com/google/fonts/tree/main/ofl/notosansdevanagari",
   "file": "tools/alphabets/gen_alphabets.py",
@@ -1968,7 +1970,7 @@
  },
  {
   "subject": "dev09",
-  "title": "Glyph \u0910 (dev)",
+  "title": "Glyph ऐ (dev)",
   "license": "Noto Sans Devanagari glyph - SIL Open Font License 1.1 (free)",
   "sourceUrl": "https://github.com/google/fonts/tree/main/ofl/notosansdevanagari",
   "file": "tools/alphabets/gen_alphabets.py",
@@ -1976,7 +1978,7 @@
  },
  {
   "subject": "dev10",
-  "title": "Glyph \u0913 (dev)",
+  "title": "Glyph ओ (dev)",
   "license": "Noto Sans Devanagari glyph - SIL Open Font License 1.1 (free)",
   "sourceUrl": "https://github.com/google/fonts/tree/main/ofl/notosansdevanagari",
   "file": "tools/alphabets/gen_alphabets.py",
@@ -1984,7 +1986,7 @@
  },
  {
   "subject": "dev11",
-  "title": "Glyph \u0914 (dev)",
+  "title": "Glyph औ (dev)",
   "license": "Noto Sans Devanagari glyph - SIL Open Font License 1.1 (free)",
   "sourceUrl": "https://github.com/google/fonts/tree/main/ofl/notosansdevanagari",
   "file": "tools/alphabets/gen_alphabets.py",
@@ -1992,7 +1994,7 @@
  },
  {
   "subject": "dev12",
-  "title": "Glyph \u0915 (dev)",
+  "title": "Glyph क (dev)",
   "license": "Noto Sans Devanagari glyph - SIL Open Font License 1.1 (free)",
   "sourceUrl": "https://github.com/google/fonts/tree/main/ofl/notosansdevanagari",
   "file": "tools/alphabets/gen_alphabets.py",
@@ -2000,7 +2002,7 @@
  },
  {
   "subject": "dev13",
-  "title": "Glyph \u0916 (dev)",
+  "title": "Glyph ख (dev)",
   "license": "Noto Sans Devanagari glyph - SIL Open Font License 1.1 (free)",
   "sourceUrl": "https://github.com/google/fonts/tree/main/ofl/notosansdevanagari",
   "file": "tools/alphabets/gen_alphabets.py",
@@ -2008,7 +2010,7 @@
  },
  {
   "subject": "dev14",
-  "title": "Glyph \u0917 (dev)",
+  "title": "Glyph ग (dev)",
   "license": "Noto Sans Devanagari glyph - SIL Open Font License 1.1 (free)",
   "sourceUrl": "https://github.com/google/fonts/tree/main/ofl/notosansdevanagari",
   "file": "tools/alphabets/gen_alphabets.py",
@@ -2016,7 +2018,7 @@
  },
  {
   "subject": "dev15",
-  "title": "Glyph \u0918 (dev)",
+  "title": "Glyph घ (dev)",
   "license": "Noto Sans Devanagari glyph - SIL Open Font License 1.1 (free)",
   "sourceUrl": "https://github.com/google/fonts/tree/main/ofl/notosansdevanagari",
   "file": "tools/alphabets/gen_alphabets.py",
@@ -2024,7 +2026,7 @@
  },
  {
   "subject": "dev16",
-  "title": "Glyph \u0919 (dev)",
+  "title": "Glyph ङ (dev)",
   "license": "Noto Sans Devanagari glyph - SIL Open Font License 1.1 (free)",
   "sourceUrl": "https://github.com/google/fonts/tree/main/ofl/notosansdevanagari",
   "file": "tools/alphabets/gen_alphabets.py",
@@ -2032,7 +2034,7 @@
  },
  {
   "subject": "dev17",
-  "title": "Glyph \u091a (dev)",
+  "title": "Glyph च (dev)",
   "license": "Noto Sans Devanagari glyph - SIL Open Font License 1.1 (free)",
   "sourceUrl": "https://github.com/google/fonts/tree/main/ofl/notosansdevanagari",
   "file": "tools/alphabets/gen_alphabets.py",
@@ -2040,7 +2042,7 @@
  },
  {
   "subject": "dev18",
-  "title": "Glyph \u091b (dev)",
+  "title": "Glyph छ (dev)",
   "license": "Noto Sans Devanagari glyph - SIL Open Font License 1.1 (free)",
   "sourceUrl": "https://github.com/google/fonts/tree/main/ofl/notosansdevanagari",
   "file": "tools/alphabets/gen_alphabets.py",
@@ -2048,7 +2050,7 @@
  },
  {
   "subject": "dev19",
-  "title": "Glyph \u091c (dev)",
+  "title": "Glyph ज (dev)",
   "license": "Noto Sans Devanagari glyph - SIL Open Font License 1.1 (free)",
   "sourceUrl": "https://github.com/google/fonts/tree/main/ofl/notosansdevanagari",
   "file": "tools/alphabets/gen_alphabets.py",
@@ -2056,7 +2058,7 @@
  },
  {
   "subject": "dev20",
-  "title": "Glyph \u091d (dev)",
+  "title": "Glyph झ (dev)",
   "license": "Noto Sans Devanagari glyph - SIL Open Font License 1.1 (free)",
   "sourceUrl": "https://github.com/google/fonts/tree/main/ofl/notosansdevanagari",
   "file": "tools/alphabets/gen_alphabets.py",
@@ -2064,7 +2066,7 @@
  },
  {
   "subject": "dev21",
-  "title": "Glyph \u091e (dev)",
+  "title": "Glyph ञ (dev)",
   "license": "Noto Sans Devanagari glyph - SIL Open Font License 1.1 (free)",
   "sourceUrl": "https://github.com/google/fonts/tree/main/ofl/notosansdevanagari",
   "file": "tools/alphabets/gen_alphabets.py",
@@ -2072,7 +2074,7 @@
  },
  {
   "subject": "dev22",
-  "title": "Glyph \u091f (dev)",
+  "title": "Glyph ट (dev)",
   "license": "Noto Sans Devanagari glyph - SIL Open Font License 1.1 (free)",
   "sourceUrl": "https://github.com/google/fonts/tree/main/ofl/notosansdevanagari",
   "file": "tools/alphabets/gen_alphabets.py",
@@ -2080,7 +2082,7 @@
  },
  {
   "subject": "dev23",
-  "title": "Glyph \u0920 (dev)",
+  "title": "Glyph ठ (dev)",
   "license": "Noto Sans Devanagari glyph - SIL Open Font License 1.1 (free)",
   "sourceUrl": "https://github.com/google/fonts/tree/main/ofl/notosansdevanagari",
   "file": "tools/alphabets/gen_alphabets.py",
@@ -2088,7 +2090,7 @@
  },
  {
   "subject": "dev24",
-  "title": "Glyph \u0921 (dev)",
+  "title": "Glyph ड (dev)",
   "license": "Noto Sans Devanagari glyph - SIL Open Font License 1.1 (free)",
   "sourceUrl": "https://github.com/google/fonts/tree/main/ofl/notosansdevanagari",
   "file": "tools/alphabets/gen_alphabets.py",
@@ -2096,7 +2098,7 @@
  },
  {
   "subject": "dev25",
-  "title": "Glyph \u0922 (dev)",
+  "title": "Glyph ढ (dev)",
   "license": "Noto Sans Devanagari glyph - SIL Open Font License 1.1 (free)",
   "sourceUrl": "https://github.com/google/fonts/tree/main/ofl/notosansdevanagari",
   "file": "tools/alphabets/gen_alphabets.py",
@@ -2104,7 +2106,7 @@
  },
  {
   "subject": "dev26",
-  "title": "Glyph \u0923 (dev)",
+  "title": "Glyph ण (dev)",
   "license": "Noto Sans Devanagari glyph - SIL Open Font License 1.1 (free)",
   "sourceUrl": "https://github.com/google/fonts/tree/main/ofl/notosansdevanagari",
   "file": "tools/alphabets/gen_alphabets.py",
@@ -2112,7 +2114,7 @@
  },
  {
   "subject": "dev27",
-  "title": "Glyph \u0924 (dev)",
+  "title": "Glyph त (dev)",
   "license": "Noto Sans Devanagari glyph - SIL Open Font License 1.1 (free)",
   "sourceUrl": "https://github.com/google/fonts/tree/main/ofl/notosansdevanagari",
   "file": "tools/alphabets/gen_alphabets.py",
@@ -2120,7 +2122,7 @@
  },
  {
   "subject": "dev28",
-  "title": "Glyph \u0925 (dev)",
+  "title": "Glyph थ (dev)",
   "license": "Noto Sans Devanagari glyph - SIL Open Font License 1.1 (free)",
   "sourceUrl": "https://github.com/google/fonts/tree/main/ofl/notosansdevanagari",
   "file": "tools/alphabets/gen_alphabets.py",
@@ -2128,7 +2130,7 @@
  },
  {
   "subject": "dev29",
-  "title": "Glyph \u0926 (dev)",
+  "title": "Glyph द (dev)",
   "license": "Noto Sans Devanagari glyph - SIL Open Font License 1.1 (free)",
   "sourceUrl": "https://github.com/google/fonts/tree/main/ofl/notosansdevanagari",
   "file": "tools/alphabets/gen_alphabets.py",
@@ -2136,7 +2138,7 @@
  },
  {
   "subject": "dev30",
-  "title": "Glyph \u0927 (dev)",
+  "title": "Glyph ध (dev)",
   "license": "Noto Sans Devanagari glyph - SIL Open Font License 1.1 (free)",
   "sourceUrl": "https://github.com/google/fonts/tree/main/ofl/notosansdevanagari",
   "file": "tools/alphabets/gen_alphabets.py",
@@ -2144,7 +2146,7 @@
  },
  {
   "subject": "dev31",
-  "title": "Glyph \u0928 (dev)",
+  "title": "Glyph न (dev)",
   "license": "Noto Sans Devanagari glyph - SIL Open Font License 1.1 (free)",
   "sourceUrl": "https://github.com/google/fonts/tree/main/ofl/notosansdevanagari",
   "file": "tools/alphabets/gen_alphabets.py",
@@ -2152,7 +2154,7 @@
  },
  {
   "subject": "dev32",
-  "title": "Glyph \u092a (dev)",
+  "title": "Glyph प (dev)",
   "license": "Noto Sans Devanagari glyph - SIL Open Font License 1.1 (free)",
   "sourceUrl": "https://github.com/google/fonts/tree/main/ofl/notosansdevanagari",
   "file": "tools/alphabets/gen_alphabets.py",
@@ -2160,7 +2162,7 @@
  },
  {
   "subject": "dev33",
-  "title": "Glyph \u092b (dev)",
+  "title": "Glyph फ (dev)",
   "license": "Noto Sans Devanagari glyph - SIL Open Font License 1.1 (free)",
   "sourceUrl": "https://github.com/google/fonts/tree/main/ofl/notosansdevanagari",
   "file": "tools/alphabets/gen_alphabets.py",
@@ -2168,7 +2170,7 @@
  },
  {
   "subject": "dev34",
-  "title": "Glyph \u092c (dev)",
+  "title": "Glyph ब (dev)",
   "license": "Noto Sans Devanagari glyph - SIL Open Font License 1.1 (free)",
   "sourceUrl": "https://github.com/google/fonts/tree/main/ofl/notosansdevanagari",
   "file": "tools/alphabets/gen_alphabets.py",
@@ -2176,7 +2178,7 @@
  },
  {
   "subject": "dev35",
-  "title": "Glyph \u092d (dev)",
+  "title": "Glyph भ (dev)",
   "license": "Noto Sans Devanagari glyph - SIL Open Font License 1.1 (free)",
   "sourceUrl": "https://github.com/google/fonts/tree/main/ofl/notosansdevanagari",
   "file": "tools/alphabets/gen_alphabets.py",
@@ -2184,7 +2186,7 @@
  },
  {
   "subject": "dev36",
-  "title": "Glyph \u092e (dev)",
+  "title": "Glyph म (dev)",
   "license": "Noto Sans Devanagari glyph - SIL Open Font License 1.1 (free)",
   "sourceUrl": "https://github.com/google/fonts/tree/main/ofl/notosansdevanagari",
   "file": "tools/alphabets/gen_alphabets.py",
@@ -2192,7 +2194,7 @@
  },
  {
   "subject": "dev37",
-  "title": "Glyph \u092f (dev)",
+  "title": "Glyph य (dev)",
   "license": "Noto Sans Devanagari glyph - SIL Open Font License 1.1 (free)",
   "sourceUrl": "https://github.com/google/fonts/tree/main/ofl/notosansdevanagari",
   "file": "tools/alphabets/gen_alphabets.py",
@@ -2200,7 +2202,7 @@
  },
  {
   "subject": "dev38",
-  "title": "Glyph \u0930 (dev)",
+  "title": "Glyph र (dev)",
   "license": "Noto Sans Devanagari glyph - SIL Open Font License 1.1 (free)",
   "sourceUrl": "https://github.com/google/fonts/tree/main/ofl/notosansdevanagari",
   "file": "tools/alphabets/gen_alphabets.py",
@@ -2208,7 +2210,7 @@
  },
  {
   "subject": "dev39",
-  "title": "Glyph \u0932 (dev)",
+  "title": "Glyph ल (dev)",
   "license": "Noto Sans Devanagari glyph - SIL Open Font License 1.1 (free)",
   "sourceUrl": "https://github.com/google/fonts/tree/main/ofl/notosansdevanagari",
   "file": "tools/alphabets/gen_alphabets.py",
@@ -2216,7 +2218,7 @@
  },
  {
   "subject": "dev40",
-  "title": "Glyph \u0935 (dev)",
+  "title": "Glyph व (dev)",
   "license": "Noto Sans Devanagari glyph - SIL Open Font License 1.1 (free)",
   "sourceUrl": "https://github.com/google/fonts/tree/main/ofl/notosansdevanagari",
   "file": "tools/alphabets/gen_alphabets.py",
@@ -2224,7 +2226,7 @@
  },
  {
   "subject": "dev41",
-  "title": "Glyph \u0936 (dev)",
+  "title": "Glyph श (dev)",
   "license": "Noto Sans Devanagari glyph - SIL Open Font License 1.1 (free)",
   "sourceUrl": "https://github.com/google/fonts/tree/main/ofl/notosansdevanagari",
   "file": "tools/alphabets/gen_alphabets.py",
@@ -2232,7 +2234,7 @@
  },
  {
   "subject": "dev42",
-  "title": "Glyph \u0937 (dev)",
+  "title": "Glyph ष (dev)",
   "license": "Noto Sans Devanagari glyph - SIL Open Font License 1.1 (free)",
   "sourceUrl": "https://github.com/google/fonts/tree/main/ofl/notosansdevanagari",
   "file": "tools/alphabets/gen_alphabets.py",
@@ -2240,7 +2242,7 @@
  },
  {
   "subject": "dev43",
-  "title": "Glyph \u0938 (dev)",
+  "title": "Glyph स (dev)",
   "license": "Noto Sans Devanagari glyph - SIL Open Font License 1.1 (free)",
   "sourceUrl": "https://github.com/google/fonts/tree/main/ofl/notosansdevanagari",
   "file": "tools/alphabets/gen_alphabets.py",
@@ -2248,7 +2250,7 @@
  },
  {
   "subject": "dev44",
-  "title": "Glyph \u0939 (dev)",
+  "title": "Glyph ह (dev)",
   "license": "Noto Sans Devanagari glyph - SIL Open Font License 1.1 (free)",
   "sourceUrl": "https://github.com/google/fonts/tree/main/ofl/notosansdevanagari",
   "file": "tools/alphabets/gen_alphabets.py",
@@ -2256,7 +2258,7 @@
  },
  {
   "subject": "kor01",
-  "title": "Glyph \u3131 (kor)",
+  "title": "Glyph ㄱ (kor)",
   "license": "Noto Sans KR glyph - SIL Open Font License 1.1 (free)",
   "sourceUrl": "https://github.com/google/fonts/tree/main/ofl/notosanskr",
   "file": "tools/alphabets/gen_alphabets.py",
@@ -2264,7 +2266,7 @@
  },
  {
   "subject": "kor02",
-  "title": "Glyph \u3134 (kor)",
+  "title": "Glyph ㄴ (kor)",
   "license": "Noto Sans KR glyph - SIL Open Font License 1.1 (free)",
   "sourceUrl": "https://github.com/google/fonts/tree/main/ofl/notosanskr",
   "file": "tools/alphabets/gen_alphabets.py",
@@ -2272,7 +2274,7 @@
  },
  {
   "subject": "kor03",
-  "title": "Glyph \u3137 (kor)",
+  "title": "Glyph ㄷ (kor)",
   "license": "Noto Sans KR glyph - SIL Open Font License 1.1 (free)",
   "sourceUrl": "https://github.com/google/fonts/tree/main/ofl/notosanskr",
   "file": "tools/alphabets/gen_alphabets.py",
@@ -2280,7 +2282,7 @@
  },
  {
   "subject": "kor04",
-  "title": "Glyph \u3139 (kor)",
+  "title": "Glyph ㄹ (kor)",
   "license": "Noto Sans KR glyph - SIL Open Font License 1.1 (free)",
   "sourceUrl": "https://github.com/google/fonts/tree/main/ofl/notosanskr",
   "file": "tools/alphabets/gen_alphabets.py",
@@ -2288,7 +2290,7 @@
  },
  {
   "subject": "kor05",
-  "title": "Glyph \u3141 (kor)",
+  "title": "Glyph ㅁ (kor)",
   "license": "Noto Sans KR glyph - SIL Open Font License 1.1 (free)",
   "sourceUrl": "https://github.com/google/fonts/tree/main/ofl/notosanskr",
   "file": "tools/alphabets/gen_alphabets.py",
@@ -2296,7 +2298,7 @@
  },
  {
   "subject": "kor06",
-  "title": "Glyph \u3142 (kor)",
+  "title": "Glyph ㅂ (kor)",
   "license": "Noto Sans KR glyph - SIL Open Font License 1.1 (free)",
   "sourceUrl": "https://github.com/google/fonts/tree/main/ofl/notosanskr",
   "file": "tools/alphabets/gen_alphabets.py",
@@ -2304,7 +2306,7 @@
  },
  {
   "subject": "kor07",
-  "title": "Glyph \u3145 (kor)",
+  "title": "Glyph ㅅ (kor)",
   "license": "Noto Sans KR glyph - SIL Open Font License 1.1 (free)",
   "sourceUrl": "https://github.com/google/fonts/tree/main/ofl/notosanskr",
   "file": "tools/alphabets/gen_alphabets.py",
@@ -2312,7 +2314,7 @@
  },
  {
   "subject": "kor08",
-  "title": "Glyph \u3147 (kor)",
+  "title": "Glyph ㅇ (kor)",
   "license": "Noto Sans KR glyph - SIL Open Font License 1.1 (free)",
   "sourceUrl": "https://github.com/google/fonts/tree/main/ofl/notosanskr",
   "file": "tools/alphabets/gen_alphabets.py",
@@ -2320,7 +2322,7 @@
  },
  {
   "subject": "kor09",
-  "title": "Glyph \u3148 (kor)",
+  "title": "Glyph ㅈ (kor)",
   "license": "Noto Sans KR glyph - SIL Open Font License 1.1 (free)",
   "sourceUrl": "https://github.com/google/fonts/tree/main/ofl/notosanskr",
   "file": "tools/alphabets/gen_alphabets.py",
@@ -2328,7 +2330,7 @@
  },
  {
   "subject": "kor10",
-  "title": "Glyph \u314a (kor)",
+  "title": "Glyph ㅊ (kor)",
   "license": "Noto Sans KR glyph - SIL Open Font License 1.1 (free)",
   "sourceUrl": "https://github.com/google/fonts/tree/main/ofl/notosanskr",
   "file": "tools/alphabets/gen_alphabets.py",
@@ -2336,7 +2338,7 @@
  },
  {
   "subject": "kor11",
-  "title": "Glyph \u314b (kor)",
+  "title": "Glyph ㅋ (kor)",
   "license": "Noto Sans KR glyph - SIL Open Font License 1.1 (free)",
   "sourceUrl": "https://github.com/google/fonts/tree/main/ofl/notosanskr",
   "file": "tools/alphabets/gen_alphabets.py",
@@ -2344,7 +2346,7 @@
  },
  {
   "subject": "kor12",
-  "title": "Glyph \u314c (kor)",
+  "title": "Glyph ㅌ (kor)",
   "license": "Noto Sans KR glyph - SIL Open Font License 1.1 (free)",
   "sourceUrl": "https://github.com/google/fonts/tree/main/ofl/notosanskr",
   "file": "tools/alphabets/gen_alphabets.py",
@@ -2352,7 +2354,7 @@
  },
  {
   "subject": "kor13",
-  "title": "Glyph \u314d (kor)",
+  "title": "Glyph ㅍ (kor)",
   "license": "Noto Sans KR glyph - SIL Open Font License 1.1 (free)",
   "sourceUrl": "https://github.com/google/fonts/tree/main/ofl/notosanskr",
   "file": "tools/alphabets/gen_alphabets.py",
@@ -2360,7 +2362,7 @@
  },
  {
   "subject": "kor14",
-  "title": "Glyph \u314e (kor)",
+  "title": "Glyph ㅎ (kor)",
   "license": "Noto Sans KR glyph - SIL Open Font License 1.1 (free)",
   "sourceUrl": "https://github.com/google/fonts/tree/main/ofl/notosanskr",
   "file": "tools/alphabets/gen_alphabets.py",
@@ -2368,7 +2370,7 @@
  },
  {
   "subject": "kor15",
-  "title": "Glyph \u314f (kor)",
+  "title": "Glyph ㅏ (kor)",
   "license": "Noto Sans KR glyph - SIL Open Font License 1.1 (free)",
   "sourceUrl": "https://github.com/google/fonts/tree/main/ofl/notosanskr",
   "file": "tools/alphabets/gen_alphabets.py",
@@ -2376,7 +2378,7 @@
  },
  {
   "subject": "kor16",
-  "title": "Glyph \u3151 (kor)",
+  "title": "Glyph ㅑ (kor)",
   "license": "Noto Sans KR glyph - SIL Open Font License 1.1 (free)",
   "sourceUrl": "https://github.com/google/fonts/tree/main/ofl/notosanskr",
   "file": "tools/alphabets/gen_alphabets.py",
@@ -2384,7 +2386,7 @@
  },
  {
   "subject": "kor17",
-  "title": "Glyph \u3153 (kor)",
+  "title": "Glyph ㅓ (kor)",
   "license": "Noto Sans KR glyph - SIL Open Font License 1.1 (free)",
   "sourceUrl": "https://github.com/google/fonts/tree/main/ofl/notosanskr",
   "file": "tools/alphabets/gen_alphabets.py",
@@ -2392,7 +2394,7 @@
  },
  {
   "subject": "kor18",
-  "title": "Glyph \u3155 (kor)",
+  "title": "Glyph ㅕ (kor)",
   "license": "Noto Sans KR glyph - SIL Open Font License 1.1 (free)",
   "sourceUrl": "https://github.com/google/fonts/tree/main/ofl/notosanskr",
   "file": "tools/alphabets/gen_alphabets.py",
@@ -2400,7 +2402,7 @@
  },
  {
   "subject": "kor19",
-  "title": "Glyph \u3157 (kor)",
+  "title": "Glyph ㅗ (kor)",
   "license": "Noto Sans KR glyph - SIL Open Font License 1.1 (free)",
   "sourceUrl": "https://github.com/google/fonts/tree/main/ofl/notosanskr",
   "file": "tools/alphabets/gen_alphabets.py",
@@ -2408,7 +2410,7 @@
  },
  {
   "subject": "kor20",
-  "title": "Glyph \u315b (kor)",
+  "title": "Glyph ㅛ (kor)",
   "license": "Noto Sans KR glyph - SIL Open Font License 1.1 (free)",
   "sourceUrl": "https://github.com/google/fonts/tree/main/ofl/notosanskr",
   "file": "tools/alphabets/gen_alphabets.py",
@@ -2416,7 +2418,7 @@
  },
  {
   "subject": "kor21",
-  "title": "Glyph \u315c (kor)",
+  "title": "Glyph ㅜ (kor)",
   "license": "Noto Sans KR glyph - SIL Open Font License 1.1 (free)",
   "sourceUrl": "https://github.com/google/fonts/tree/main/ofl/notosanskr",
   "file": "tools/alphabets/gen_alphabets.py",
@@ -2424,7 +2426,7 @@
  },
  {
   "subject": "kor22",
-  "title": "Glyph \u3160 (kor)",
+  "title": "Glyph ㅠ (kor)",
   "license": "Noto Sans KR glyph - SIL Open Font License 1.1 (free)",
   "sourceUrl": "https://github.com/google/fonts/tree/main/ofl/notosanskr",
   "file": "tools/alphabets/gen_alphabets.py",
@@ -2432,7 +2434,7 @@
  },
  {
   "subject": "kor23",
-  "title": "Glyph \u3161 (kor)",
+  "title": "Glyph ㅡ (kor)",
   "license": "Noto Sans KR glyph - SIL Open Font License 1.1 (free)",
   "sourceUrl": "https://github.com/google/fonts/tree/main/ofl/notosanskr",
   "file": "tools/alphabets/gen_alphabets.py",
@@ -2440,7 +2442,7 @@
  },
  {
   "subject": "kor24",
-  "title": "Glyph \u3163 (kor)",
+  "title": "Glyph ㅣ (kor)",
   "license": "Noto Sans KR glyph - SIL Open Font License 1.1 (free)",
   "sourceUrl": "https://github.com/google/fonts/tree/main/ofl/notosanskr",
   "file": "tools/alphabets/gen_alphabets.py",
@@ -2448,7 +2450,7 @@
  },
  {
   "subject": "hir01",
-  "title": "Glyph \u3042 (hir)",
+  "title": "Glyph あ (hir)",
   "license": "Noto Sans JP glyph - SIL Open Font License 1.1 (free)",
   "sourceUrl": "https://github.com/google/fonts/tree/main/ofl/notosansjp",
   "file": "tools/alphabets/gen_alphabets.py",
@@ -2456,7 +2458,7 @@
  },
  {
   "subject": "hir02",
-  "title": "Glyph \u3044 (hir)",
+  "title": "Glyph い (hir)",
   "license": "Noto Sans JP glyph - SIL Open Font License 1.1 (free)",
   "sourceUrl": "https://github.com/google/fonts/tree/main/ofl/notosansjp",
   "file": "tools/alphabets/gen_alphabets.py",
@@ -2464,7 +2466,7 @@
  },
  {
   "subject": "hir03",
-  "title": "Glyph \u3046 (hir)",
+  "title": "Glyph う (hir)",
   "license": "Noto Sans JP glyph - SIL Open Font License 1.1 (free)",
   "sourceUrl": "https://github.com/google/fonts/tree/main/ofl/notosansjp",
   "file": "tools/alphabets/gen_alphabets.py",
@@ -2472,7 +2474,7 @@
  },
  {
   "subject": "hir04",
-  "title": "Glyph \u3048 (hir)",
+  "title": "Glyph え (hir)",
   "license": "Noto Sans JP glyph - SIL Open Font License 1.1 (free)",
   "sourceUrl": "https://github.com/google/fonts/tree/main/ofl/notosansjp",
   "file": "tools/alphabets/gen_alphabets.py",
@@ -2480,7 +2482,7 @@
  },
  {
   "subject": "hir05",
-  "title": "Glyph \u304a (hir)",
+  "title": "Glyph お (hir)",
   "license": "Noto Sans JP glyph - SIL Open Font License 1.1 (free)",
   "sourceUrl": "https://github.com/google/fonts/tree/main/ofl/notosansjp",
   "file": "tools/alphabets/gen_alphabets.py",
@@ -2488,7 +2490,7 @@
  },
  {
   "subject": "hir06",
-  "title": "Glyph \u304b (hir)",
+  "title": "Glyph か (hir)",
   "license": "Noto Sans JP glyph - SIL Open Font License 1.1 (free)",
   "sourceUrl": "https://github.com/google/fonts/tree/main/ofl/notosansjp",
   "file": "tools/alphabets/gen_alphabets.py",
@@ -2496,7 +2498,7 @@
  },
  {
   "subject": "hir07",
-  "title": "Glyph \u304d (hir)",
+  "title": "Glyph き (hir)",
   "license": "Noto Sans JP glyph - SIL Open Font License 1.1 (free)",
   "sourceUrl": "https://github.com/google/fonts/tree/main/ofl/notosansjp",
   "file": "tools/alphabets/gen_alphabets.py",
@@ -2504,7 +2506,7 @@
  },
  {
   "subject": "hir08",
-  "title": "Glyph \u304f (hir)",
+  "title": "Glyph く (hir)",
   "license": "Noto Sans JP glyph - SIL Open Font License 1.1 (free)",
   "sourceUrl": "https://github.com/google/fonts/tree/main/ofl/notosansjp",
   "file": "tools/alphabets/gen_alphabets.py",
@@ -2512,7 +2514,7 @@
  },
  {
   "subject": "hir09",
-  "title": "Glyph \u3051 (hir)",
+  "title": "Glyph け (hir)",
   "license": "Noto Sans JP glyph - SIL Open Font License 1.1 (free)",
   "sourceUrl": "https://github.com/google/fonts/tree/main/ofl/notosansjp",
   "file": "tools/alphabets/gen_alphabets.py",
@@ -2520,7 +2522,7 @@
  },
  {
   "subject": "hir10",
-  "title": "Glyph \u3053 (hir)",
+  "title": "Glyph こ (hir)",
   "license": "Noto Sans JP glyph - SIL Open Font License 1.1 (free)",
   "sourceUrl": "https://github.com/google/fonts/tree/main/ofl/notosansjp",
   "file": "tools/alphabets/gen_alphabets.py",
@@ -2528,7 +2530,7 @@
  },
  {
   "subject": "hir11",
-  "title": "Glyph \u3055 (hir)",
+  "title": "Glyph さ (hir)",
   "license": "Noto Sans JP glyph - SIL Open Font License 1.1 (free)",
   "sourceUrl": "https://github.com/google/fonts/tree/main/ofl/notosansjp",
   "file": "tools/alphabets/gen_alphabets.py",
@@ -2536,7 +2538,7 @@
  },
  {
   "subject": "hir12",
-  "title": "Glyph \u3057 (hir)",
+  "title": "Glyph し (hir)",
   "license": "Noto Sans JP glyph - SIL Open Font License 1.1 (free)",
   "sourceUrl": "https://github.com/google/fonts/tree/main/ofl/notosansjp",
   "file": "tools/alphabets/gen_alphabets.py",
@@ -2544,7 +2546,7 @@
  },
  {
   "subject": "hir13",
-  "title": "Glyph \u3059 (hir)",
+  "title": "Glyph す (hir)",
   "license": "Noto Sans JP glyph - SIL Open Font License 1.1 (free)",
   "sourceUrl": "https://github.com/google/fonts/tree/main/ofl/notosansjp",
   "file": "tools/alphabets/gen_alphabets.py",
@@ -2552,7 +2554,7 @@
  },
  {
   "subject": "hir14",
-  "title": "Glyph \u305b (hir)",
+  "title": "Glyph せ (hir)",
   "license": "Noto Sans JP glyph - SIL Open Font License 1.1 (free)",
   "sourceUrl": "https://github.com/google/fonts/tree/main/ofl/notosansjp",
   "file": "tools/alphabets/gen_alphabets.py",
@@ -2560,7 +2562,7 @@
  },
  {
   "subject": "hir15",
-  "title": "Glyph \u305d (hir)",
+  "title": "Glyph そ (hir)",
   "license": "Noto Sans JP glyph - SIL Open Font License 1.1 (free)",
   "sourceUrl": "https://github.com/google/fonts/tree/main/ofl/notosansjp",
   "file": "tools/alphabets/gen_alphabets.py",
@@ -2568,7 +2570,7 @@
  },
  {
   "subject": "hir16",
-  "title": "Glyph \u305f (hir)",
+  "title": "Glyph た (hir)",
   "license": "Noto Sans JP glyph - SIL Open Font License 1.1 (free)",
   "sourceUrl": "https://github.com/google/fonts/tree/main/ofl/notosansjp",
   "file": "tools/alphabets/gen_alphabets.py",
@@ -2576,7 +2578,7 @@
  },
  {
   "subject": "hir17",
-  "title": "Glyph \u3061 (hir)",
+  "title": "Glyph ち (hir)",
   "license": "Noto Sans JP glyph - SIL Open Font License 1.1 (free)",
   "sourceUrl": "https://github.com/google/fonts/tree/main/ofl/notosansjp",
   "file": "tools/alphabets/gen_alphabets.py",
@@ -2584,7 +2586,7 @@
  },
  {
   "subject": "hir18",
-  "title": "Glyph \u3064 (hir)",
+  "title": "Glyph つ (hir)",
   "license": "Noto Sans JP glyph - SIL Open Font License 1.1 (free)",
   "sourceUrl": "https://github.com/google/fonts/tree/main/ofl/notosansjp",
   "file": "tools/alphabets/gen_alphabets.py",
@@ -2592,7 +2594,7 @@
  },
  {
   "subject": "hir19",
-  "title": "Glyph \u3066 (hir)",
+  "title": "Glyph て (hir)",
   "license": "Noto Sans JP glyph - SIL Open Font License 1.1 (free)",
   "sourceUrl": "https://github.com/google/fonts/tree/main/ofl/notosansjp",
   "file": "tools/alphabets/gen_alphabets.py",
@@ -2600,7 +2602,7 @@
  },
  {
   "subject": "hir20",
-  "title": "Glyph \u3068 (hir)",
+  "title": "Glyph と (hir)",
   "license": "Noto Sans JP glyph - SIL Open Font License 1.1 (free)",
   "sourceUrl": "https://github.com/google/fonts/tree/main/ofl/notosansjp",
   "file": "tools/alphabets/gen_alphabets.py",
@@ -2608,7 +2610,7 @@
  },
  {
   "subject": "hir21",
-  "title": "Glyph \u306a (hir)",
+  "title": "Glyph な (hir)",
   "license": "Noto Sans JP glyph - SIL Open Font License 1.1 (free)",
   "sourceUrl": "https://github.com/google/fonts/tree/main/ofl/notosansjp",
   "file": "tools/alphabets/gen_alphabets.py",
@@ -2616,7 +2618,7 @@
  },
  {
   "subject": "hir22",
-  "title": "Glyph \u306b (hir)",
+  "title": "Glyph に (hir)",
   "license": "Noto Sans JP glyph - SIL Open Font License 1.1 (free)",
   "sourceUrl": "https://github.com/google/fonts/tree/main/ofl/notosansjp",
   "file": "tools/alphabets/gen_alphabets.py",
@@ -2624,7 +2626,7 @@
  },
  {
   "subject": "hir23",
-  "title": "Glyph \u306c (hir)",
+  "title": "Glyph ぬ (hir)",
   "license": "Noto Sans JP glyph - SIL Open Font License 1.1 (free)",
   "sourceUrl": "https://github.com/google/fonts/tree/main/ofl/notosansjp",
   "file": "tools/alphabets/gen_alphabets.py",
@@ -2632,7 +2634,7 @@
  },
  {
   "subject": "hir24",
-  "title": "Glyph \u306d (hir)",
+  "title": "Glyph ね (hir)",
   "license": "Noto Sans JP glyph - SIL Open Font License 1.1 (free)",
   "sourceUrl": "https://github.com/google/fonts/tree/main/ofl/notosansjp",
   "file": "tools/alphabets/gen_alphabets.py",
@@ -2640,7 +2642,7 @@
  },
  {
   "subject": "hir25",
-  "title": "Glyph \u306e (hir)",
+  "title": "Glyph の (hir)",
   "license": "Noto Sans JP glyph - SIL Open Font License 1.1 (free)",
   "sourceUrl": "https://github.com/google/fonts/tree/main/ofl/notosansjp",
   "file": "tools/alphabets/gen_alphabets.py",
@@ -2648,7 +2650,7 @@
  },
  {
   "subject": "hir26",
-  "title": "Glyph \u306f (hir)",
+  "title": "Glyph は (hir)",
   "license": "Noto Sans JP glyph - SIL Open Font License 1.1 (free)",
   "sourceUrl": "https://github.com/google/fonts/tree/main/ofl/notosansjp",
   "file": "tools/alphabets/gen_alphabets.py",
@@ -2656,7 +2658,7 @@
  },
  {
   "subject": "hir27",
-  "title": "Glyph \u3072 (hir)",
+  "title": "Glyph ひ (hir)",
   "license": "Noto Sans JP glyph - SIL Open Font License 1.1 (free)",
   "sourceUrl": "https://github.com/google/fonts/tree/main/ofl/notosansjp",
   "file": "tools/alphabets/gen_alphabets.py",
@@ -2664,7 +2666,7 @@
  },
  {
   "subject": "hir28",
-  "title": "Glyph \u3075 (hir)",
+  "title": "Glyph ふ (hir)",
   "license": "Noto Sans JP glyph - SIL Open Font License 1.1 (free)",
   "sourceUrl": "https://github.com/google/fonts/tree/main/ofl/notosansjp",
   "file": "tools/alphabets/gen_alphabets.py",
@@ -2672,7 +2674,7 @@
  },
  {
   "subject": "hir29",
-  "title": "Glyph \u3078 (hir)",
+  "title": "Glyph へ (hir)",
   "license": "Noto Sans JP glyph - SIL Open Font License 1.1 (free)",
   "sourceUrl": "https://github.com/google/fonts/tree/main/ofl/notosansjp",
   "file": "tools/alphabets/gen_alphabets.py",
@@ -2680,7 +2682,7 @@
  },
  {
   "subject": "hir30",
-  "title": "Glyph \u307b (hir)",
+  "title": "Glyph ほ (hir)",
   "license": "Noto Sans JP glyph - SIL Open Font License 1.1 (free)",
   "sourceUrl": "https://github.com/google/fonts/tree/main/ofl/notosansjp",
   "file": "tools/alphabets/gen_alphabets.py",
@@ -2688,7 +2690,7 @@
  },
  {
   "subject": "hir31",
-  "title": "Glyph \u307e (hir)",
+  "title": "Glyph ま (hir)",
   "license": "Noto Sans JP glyph - SIL Open Font License 1.1 (free)",
   "sourceUrl": "https://github.com/google/fonts/tree/main/ofl/notosansjp",
   "file": "tools/alphabets/gen_alphabets.py",
@@ -2696,7 +2698,7 @@
  },
  {
   "subject": "hir32",
-  "title": "Glyph \u307f (hir)",
+  "title": "Glyph み (hir)",
   "license": "Noto Sans JP glyph - SIL Open Font License 1.1 (free)",
   "sourceUrl": "https://github.com/google/fonts/tree/main/ofl/notosansjp",
   "file": "tools/alphabets/gen_alphabets.py",
@@ -2704,7 +2706,7 @@
  },
  {
   "subject": "hir33",
-  "title": "Glyph \u3080 (hir)",
+  "title": "Glyph む (hir)",
   "license": "Noto Sans JP glyph - SIL Open Font License 1.1 (free)",
   "sourceUrl": "https://github.com/google/fonts/tree/main/ofl/notosansjp",
   "file": "tools/alphabets/gen_alphabets.py",
@@ -2712,7 +2714,7 @@
  },
  {
   "subject": "hir34",
-  "title": "Glyph \u3081 (hir)",
+  "title": "Glyph め (hir)",
   "license": "Noto Sans JP glyph - SIL Open Font License 1.1 (free)",
   "sourceUrl": "https://github.com/google/fonts/tree/main/ofl/notosansjp",
   "file": "tools/alphabets/gen_alphabets.py",
@@ -2720,7 +2722,7 @@
  },
  {
   "subject": "hir35",
-  "title": "Glyph \u3082 (hir)",
+  "title": "Glyph も (hir)",
   "license": "Noto Sans JP glyph - SIL Open Font License 1.1 (free)",
   "sourceUrl": "https://github.com/google/fonts/tree/main/ofl/notosansjp",
   "file": "tools/alphabets/gen_alphabets.py",
@@ -2728,7 +2730,7 @@
  },
  {
   "subject": "hir36",
-  "title": "Glyph \u3084 (hir)",
+  "title": "Glyph や (hir)",
   "license": "Noto Sans JP glyph - SIL Open Font License 1.1 (free)",
   "sourceUrl": "https://github.com/google/fonts/tree/main/ofl/notosansjp",
   "file": "tools/alphabets/gen_alphabets.py",
@@ -2736,7 +2738,7 @@
  },
  {
   "subject": "hir37",
-  "title": "Glyph \u3086 (hir)",
+  "title": "Glyph ゆ (hir)",
   "license": "Noto Sans JP glyph - SIL Open Font License 1.1 (free)",
   "sourceUrl": "https://github.com/google/fonts/tree/main/ofl/notosansjp",
   "file": "tools/alphabets/gen_alphabets.py",
@@ -2744,7 +2746,7 @@
  },
  {
   "subject": "hir38",
-  "title": "Glyph \u3088 (hir)",
+  "title": "Glyph よ (hir)",
   "license": "Noto Sans JP glyph - SIL Open Font License 1.1 (free)",
   "sourceUrl": "https://github.com/google/fonts/tree/main/ofl/notosansjp",
   "file": "tools/alphabets/gen_alphabets.py",
@@ -2752,7 +2754,7 @@
  },
  {
   "subject": "hir39",
-  "title": "Glyph \u3089 (hir)",
+  "title": "Glyph ら (hir)",
   "license": "Noto Sans JP glyph - SIL Open Font License 1.1 (free)",
   "sourceUrl": "https://github.com/google/fonts/tree/main/ofl/notosansjp",
   "file": "tools/alphabets/gen_alphabets.py",
@@ -2760,7 +2762,7 @@
  },
  {
   "subject": "hir40",
-  "title": "Glyph \u308a (hir)",
+  "title": "Glyph り (hir)",
   "license": "Noto Sans JP glyph - SIL Open Font License 1.1 (free)",
   "sourceUrl": "https://github.com/google/fonts/tree/main/ofl/notosansjp",
   "file": "tools/alphabets/gen_alphabets.py",
@@ -2768,7 +2770,7 @@
  },
  {
   "subject": "hir41",
-  "title": "Glyph \u308b (hir)",
+  "title": "Glyph る (hir)",
   "license": "Noto Sans JP glyph - SIL Open Font License 1.1 (free)",
   "sourceUrl": "https://github.com/google/fonts/tree/main/ofl/notosansjp",
   "file": "tools/alphabets/gen_alphabets.py",
@@ -2776,7 +2778,7 @@
  },
  {
   "subject": "hir42",
-  "title": "Glyph \u308c (hir)",
+  "title": "Glyph れ (hir)",
   "license": "Noto Sans JP glyph - SIL Open Font License 1.1 (free)",
   "sourceUrl": "https://github.com/google/fonts/tree/main/ofl/notosansjp",
   "file": "tools/alphabets/gen_alphabets.py",
@@ -2784,7 +2786,7 @@
  },
  {
   "subject": "hir43",
-  "title": "Glyph \u308d (hir)",
+  "title": "Glyph ろ (hir)",
   "license": "Noto Sans JP glyph - SIL Open Font License 1.1 (free)",
   "sourceUrl": "https://github.com/google/fonts/tree/main/ofl/notosansjp",
   "file": "tools/alphabets/gen_alphabets.py",
@@ -2792,7 +2794,7 @@
  },
  {
   "subject": "hir44",
-  "title": "Glyph \u308f (hir)",
+  "title": "Glyph わ (hir)",
   "license": "Noto Sans JP glyph - SIL Open Font License 1.1 (free)",
   "sourceUrl": "https://github.com/google/fonts/tree/main/ofl/notosansjp",
   "file": "tools/alphabets/gen_alphabets.py",
@@ -2800,7 +2802,7 @@
  },
  {
   "subject": "hir45",
-  "title": "Glyph \u3092 (hir)",
+  "title": "Glyph を (hir)",
   "license": "Noto Sans JP glyph - SIL Open Font License 1.1 (free)",
   "sourceUrl": "https://github.com/google/fonts/tree/main/ofl/notosansjp",
   "file": "tools/alphabets/gen_alphabets.py",
@@ -2808,7 +2810,7 @@
  },
  {
   "subject": "hir46",
-  "title": "Glyph \u3093 (hir)",
+  "title": "Glyph ん (hir)",
   "license": "Noto Sans JP glyph - SIL Open Font License 1.1 (free)",
   "sourceUrl": "https://github.com/google/fonts/tree/main/ofl/notosansjp",
   "file": "tools/alphabets/gen_alphabets.py",
@@ -2816,7 +2818,7 @@
  },
  {
   "subject": "hnz01",
-  "title": "Glyph \u4e00 (hnz)",
+  "title": "Glyph 一 (hnz)",
   "license": "Noto Sans SC glyph - SIL Open Font License 1.1 (free)",
   "sourceUrl": "https://github.com/google/fonts/tree/main/ofl/notosanssc",
   "file": "tools/alphabets/gen_alphabets.py",
@@ -2824,7 +2826,7 @@
  },
  {
   "subject": "hnz02",
-  "title": "Glyph \u4e8c (hnz)",
+  "title": "Glyph 二 (hnz)",
   "license": "Noto Sans SC glyph - SIL Open Font License 1.1 (free)",
   "sourceUrl": "https://github.com/google/fonts/tree/main/ofl/notosanssc",
   "file": "tools/alphabets/gen_alphabets.py",
@@ -2832,7 +2834,7 @@
  },
  {
   "subject": "hnz03",
-  "title": "Glyph \u4e09 (hnz)",
+  "title": "Glyph 三 (hnz)",
   "license": "Noto Sans SC glyph - SIL Open Font License 1.1 (free)",
   "sourceUrl": "https://github.com/google/fonts/tree/main/ofl/notosanssc",
   "file": "tools/alphabets/gen_alphabets.py",
@@ -2840,7 +2842,7 @@
  },
  {
   "subject": "hnz04",
-  "title": "Glyph \u56db (hnz)",
+  "title": "Glyph 四 (hnz)",
   "license": "Noto Sans SC glyph - SIL Open Font License 1.1 (free)",
   "sourceUrl": "https://github.com/google/fonts/tree/main/ofl/notosanssc",
   "file": "tools/alphabets/gen_alphabets.py",
@@ -2848,7 +2850,7 @@
  },
  {
   "subject": "hnz05",
-  "title": "Glyph \u4e94 (hnz)",
+  "title": "Glyph 五 (hnz)",
   "license": "Noto Sans SC glyph - SIL Open Font License 1.1 (free)",
   "sourceUrl": "https://github.com/google/fonts/tree/main/ofl/notosanssc",
   "file": "tools/alphabets/gen_alphabets.py",
@@ -2856,7 +2858,7 @@
  },
  {
   "subject": "hnz06",
-  "title": "Glyph \u516d (hnz)",
+  "title": "Glyph 六 (hnz)",
   "license": "Noto Sans SC glyph - SIL Open Font License 1.1 (free)",
   "sourceUrl": "https://github.com/google/fonts/tree/main/ofl/notosanssc",
   "file": "tools/alphabets/gen_alphabets.py",
@@ -2864,7 +2866,7 @@
  },
  {
   "subject": "hnz07",
-  "title": "Glyph \u4e03 (hnz)",
+  "title": "Glyph 七 (hnz)",
   "license": "Noto Sans SC glyph - SIL Open Font License 1.1 (free)",
   "sourceUrl": "https://github.com/google/fonts/tree/main/ofl/notosanssc",
   "file": "tools/alphabets/gen_alphabets.py",
@@ -2872,7 +2874,7 @@
  },
  {
   "subject": "hnz08",
-  "title": "Glyph \u516b (hnz)",
+  "title": "Glyph 八 (hnz)",
   "license": "Noto Sans SC glyph - SIL Open Font License 1.1 (free)",
   "sourceUrl": "https://github.com/google/fonts/tree/main/ofl/notosanssc",
   "file": "tools/alphabets/gen_alphabets.py",
@@ -2880,7 +2882,7 @@
  },
  {
   "subject": "hnz09",
-  "title": "Glyph \u4e5d (hnz)",
+  "title": "Glyph 九 (hnz)",
   "license": "Noto Sans SC glyph - SIL Open Font License 1.1 (free)",
   "sourceUrl": "https://github.com/google/fonts/tree/main/ofl/notosanssc",
   "file": "tools/alphabets/gen_alphabets.py",
@@ -2888,7 +2890,7 @@
  },
  {
   "subject": "hnz10",
-  "title": "Glyph \u5341 (hnz)",
+  "title": "Glyph 十 (hnz)",
   "license": "Noto Sans SC glyph - SIL Open Font License 1.1 (free)",
   "sourceUrl": "https://github.com/google/fonts/tree/main/ofl/notosanssc",
   "file": "tools/alphabets/gen_alphabets.py",
@@ -2896,7 +2898,7 @@
  },
  {
   "subject": "castle",
-  "title": "SpellGame original \u2014 castle",
+  "title": "SpellGame original — castle",
   "license": "Original artwork (SpellGame)",
   "sourceUrl": "",
   "file": "tools/draw_wave29.py",
@@ -2904,7 +2906,7 @@
  },
  {
   "subject": "ferriswheel",
-  "title": "SpellGame original \u2014 ferriswheel",
+  "title": "SpellGame original — ferriswheel",
   "license": "Original artwork (SpellGame)",
   "sourceUrl": "",
   "file": "tools/draw_wave29.py",
@@ -2912,7 +2914,7 @@
  },
  {
   "subject": "robot",
-  "title": "SpellGame original \u2014 robot",
+  "title": "SpellGame original — robot",
   "license": "Original artwork (SpellGame)",
   "sourceUrl": "",
   "file": "tools/draw_wave29.py",
@@ -2920,7 +2922,7 @@
  },
  {
   "subject": "icecream",
-  "title": "SpellGame original \u2014 icecream",
+  "title": "SpellGame original — icecream",
   "license": "Original artwork (SpellGame)",
   "sourceUrl": "",
   "file": "tools/draw_wave29.py",
@@ -2928,7 +2930,7 @@
  },
  {
   "subject": "crown",
-  "title": "SpellGame original \u2014 crown",
+  "title": "SpellGame original — crown",
   "license": "Original artwork (SpellGame)",
   "sourceUrl": "",
   "file": "tools/draw_wave30.py",
@@ -2936,7 +2938,7 @@
  },
  {
   "subject": "umbrella",
-  "title": "SpellGame original \u2014 umbrella",
+  "title": "SpellGame original — umbrella",
   "license": "Original artwork (SpellGame)",
   "sourceUrl": "",
   "file": "tools/draw_wave30.py",
@@ -2944,7 +2946,7 @@
  },
  {
   "subject": "key",
-  "title": "SpellGame original \u2014 key",
+  "title": "SpellGame original — key",
   "license": "Original artwork (SpellGame)",
   "sourceUrl": "",
   "file": "tools/draw_wave30.py",
@@ -2952,7 +2954,7 @@
  },
  {
   "subject": "submarine",
-  "title": "SpellGame original \u2014 submarine",
+  "title": "SpellGame original — submarine",
   "license": "Original artwork (SpellGame)",
   "sourceUrl": "",
   "file": "tools/draw_wave30.py",
@@ -2960,7 +2962,7 @@
  },
  {
   "subject": "crystalball",
-  "title": "SpellGame original \u2014 crystalball",
+  "title": "SpellGame original — crystalball",
   "license": "Original artwork (SpellGame)",
   "sourceUrl": "",
   "file": "tools/draw_wave31.py",
@@ -2968,7 +2970,7 @@
  },
  {
   "subject": "clock",
-  "title": "SpellGame original \u2014 clock",
+  "title": "SpellGame original — clock",
   "license": "Original artwork (SpellGame)",
   "sourceUrl": "",
   "file": "tools/draw_wave31.py",
@@ -2976,7 +2978,7 @@
  },
  {
   "subject": "triquetra",
-  "title": "SpellGame original \u2014 triquetra, mathematical construction",
+  "title": "SpellGame original — triquetra, mathematical construction",
   "license": "Original artwork (SpellGame)",
   "sourceUrl": "",
   "file": "tools/draw_symbols.py::triquetra",
@@ -2985,7 +2987,7 @@
  },
  {
   "subject": "pentagram",
-  "title": "SpellGame original \u2014 pentagram, mathematical construction",
+  "title": "SpellGame original — pentagram, mathematical construction",
   "license": "Original artwork (SpellGame)",
   "sourceUrl": "",
   "file": "tools/draw_symbols.py::pentagram",
@@ -2994,7 +2996,7 @@
  },
  {
   "subject": "yinyang",
-  "title": "SpellGame original \u2014 yinyang, mathematical construction",
+  "title": "SpellGame original — yinyang, mathematical construction",
   "license": "Original artwork (SpellGame)",
   "sourceUrl": "",
   "file": "tools/draw_symbols.py::yinyang",
@@ -3003,7 +3005,7 @@
  },
  {
   "subject": "merkaba",
-  "title": "SpellGame original \u2014 merkaba, mathematical construction",
+  "title": "SpellGame original — merkaba, mathematical construction",
   "license": "Original artwork (SpellGame)",
   "sourceUrl": "",
   "file": "tools/draw_symbols.py::merkaba",
@@ -3012,7 +3014,7 @@
  },
  {
   "subject": "vegvisir",
-  "title": "SpellGame original \u2014 vegvisir, mathematical construction",
+  "title": "SpellGame original — vegvisir, mathematical construction",
   "license": "Original artwork (SpellGame)",
   "sourceUrl": "",
   "file": "tools/draw_symbols.py::vegvisir",
@@ -3021,7 +3023,7 @@
  },
  {
   "subject": "helmofawe",
-  "title": "SpellGame original \u2014 helmofawe, mathematical construction",
+  "title": "SpellGame original — helmofawe, mathematical construction",
   "license": "Original artwork (SpellGame)",
   "sourceUrl": "",
   "file": "tools/draw_symbols.py::helmofawe",
@@ -3030,7 +3032,7 @@
  },
  {
   "subject": "laguz",
-  "title": "SpellGame original \u2014 laguz, mathematical construction",
+  "title": "SpellGame original — laguz, mathematical construction",
   "license": "Original artwork (SpellGame)",
   "sourceUrl": "",
   "file": "tools/draw_symbols.py::laguz",
@@ -3039,7 +3041,7 @@
  },
  {
   "subject": "cross",
-  "title": "SpellGame original \u2014 cross, mathematical construction",
+  "title": "SpellGame original — cross, mathematical construction",
   "license": "Original artwork (SpellGame)",
   "sourceUrl": "",
   "file": "tools/draw_symbols.py::cross",
@@ -3048,7 +3050,7 @@
  },
  {
   "subject": "diamond",
-  "title": "SpellGame original \u2014 diamond, mathematical construction",
+  "title": "SpellGame original — diamond, mathematical construction",
   "license": "Original artwork (SpellGame)",
   "sourceUrl": "",
   "file": "tools/draw_symbols.py::diamond",
@@ -3057,7 +3059,7 @@
  },
  {
   "subject": "arrow",
-  "title": "SpellGame original \u2014 arrow, mathematical construction",
+  "title": "SpellGame original — arrow, mathematical construction",
   "license": "Original artwork (SpellGame)",
   "sourceUrl": "",
   "file": "tools/draw_symbols.py::arrow",
@@ -3066,7 +3068,7 @@
  },
  {
   "subject": "sriyantra",
-  "title": "SpellGame original \u2014 sriyantra, mathematical construction",
+  "title": "SpellGame original — sriyantra, mathematical construction",
   "license": "Original artwork (SpellGame)",
   "sourceUrl": "",
   "file": "tools/draw_symbols.py::sriyantra",
@@ -3075,7 +3077,7 @@
  },
  {
   "subject": "metatron",
-  "title": "SpellGame original \u2014 metatron, mathematical construction",
+  "title": "SpellGame original — metatron, mathematical construction",
   "license": "Original artwork (SpellGame)",
   "sourceUrl": "",
   "file": "tools/draw_symbols.py::metatron",
@@ -3084,7 +3086,7 @@
  },
  {
   "subject": "sun",
-  "title": "SpellGame original \u2014 drawn sun",
+  "title": "SpellGame original — drawn sun",
   "license": "Original artwork (SpellGame)",
   "sourceUrl": "",
   "file": "tools/draw_batch27.py::sun",
@@ -3093,7 +3095,7 @@
  },
  {
   "subject": "rainbow",
-  "title": "SpellGame original \u2014 drawn rainbow",
+  "title": "SpellGame original — drawn rainbow",
   "license": "Original artwork (SpellGame)",
   "sourceUrl": "",
   "file": "tools/draw_batch27.py::rainbow",
@@ -3102,7 +3104,7 @@
  },
  {
   "subject": "comet",
-  "title": "SpellGame original \u2014 drawn comet",
+  "title": "SpellGame original — drawn comet",
   "license": "Original artwork (SpellGame)",
   "sourceUrl": "",
   "file": "tools/draw_batch27.py::comet",
@@ -3111,7 +3113,7 @@
  },
  {
   "subject": "saturn",
-  "title": "SpellGame original \u2014 drawn saturn",
+  "title": "SpellGame original — drawn saturn",
   "license": "Original artwork (SpellGame)",
   "sourceUrl": "",
   "file": "tools/draw_batch27.py::saturn",
@@ -3120,7 +3122,7 @@
  },
  {
   "subject": "raincloud",
-  "title": "SpellGame original \u2014 drawn raincloud",
+  "title": "SpellGame original — drawn raincloud",
   "license": "Original artwork (SpellGame)",
   "sourceUrl": "",
   "file": "tools/draw_batch27.py::raincloud",
@@ -3129,7 +3131,7 @@
  },
  {
   "subject": "sunflower",
-  "title": "SpellGame original \u2014 drawn sunflower",
+  "title": "SpellGame original — drawn sunflower",
   "license": "Original artwork (SpellGame)",
   "sourceUrl": "",
   "file": "tools/draw_batch27.py::sunflower",
@@ -3152,6 +3154,16 @@
   "sourceUrl": "https://commons.wikimedia.org/wiki/File:Egyptian_views._The_Pyramids_of_Gizeh._Great_Pyramid_showing_ascent_LOC_matpc.00099.tif",
   "file": "ref/giza.png",
   "bytes": 1469673,
-  "note": "Photo-trace lane, Library of Congress Matson Collection. PD. Stone courses read as horizontal word lines. Two CC-licensed candidates were REJECTED first \u2014 invariant 1 is PD/CC0 only."
+  "note": "Photo-trace lane, Library of Congress Matson Collection. PD. Stone courses read as horizontal word lines. Two CC-licensed candidates were REJECTED first — invariant 1 is PD/CC0 only."
+ },
+ {
+  "subject": "sunflowers",
+  "title": "Sunflowers (Vase with Fifteen Sunflowers), Vincent van Gogh, August 1888, National Gallery, London",
+  "license": "Public domain (PD-Art)",
+  "sourceUrl": "https://commons.wikimedia.org/wiki/Special:FilePath/Vincent_Willem_van_Gogh_127.jpg",
+  "file": "ref/sunflowers-source.jpg",
+  "bytes": 1663200,
+  "attribution": "after Vincent van Gogh",
+  "note": "Eric 2026-08-15: the London 1888 version. The bank shipped this subject with no provenance record at all; the entry exists now even though the retrace failed review, so the artist is credited whatever happens to the trace."
  }
 ]

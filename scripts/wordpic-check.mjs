@@ -3,6 +3,7 @@
 // The geometry law (L9 sweep: overlaps/fill/floor/frame across 15 languages
 // × 5 seeds) lives in `cargo test --lib wordpic_layout` — this script covers
 // the data-side invariants that don't need the solver.
+import crypto from "node:crypto";
 import fs from "node:fs";
 import path from "node:path";
 
@@ -66,18 +67,39 @@ for (const p of m.pictures) {
     console.warn(`  lint: ${p.id} is ${Math.round((top[1] / p.paths.length) * 100)}% '${top[0]}' strokes`);
 }
 // I4 bundle scan: the PD reference must never reach the shipped bundle.
+//
+// This scan used to grep for the single filename "mona-lisa.jpg", from the
+// days when that was the only continuous-tone artwork on disk. It is now one
+// of six: the four D1 masters and Sunflowers were re-fetched from the Commons
+// scans their provenance already pinned, so the reference directory holds
+// full colour reproductions of Hokusai, Van Gogh and Munch. A name-based grep
+// would have shipped every one of them.
+//
+// Matching is by CONTENT, not name. Names in ref/ are generic enough (star,
+// anchor, cloud) that basename matching would fire on legitimate bundle
+// assets; a sha256 over the reference set cannot false-positive, and it still
+// catches a reference that was copied in under a different name.
+const refDir = `${ROOT}/content-pipeline/wordpic/ref`;
+const refHashes = new Map();
+if (fs.existsSync(refDir)) {
+  for (const e of fs.readdirSync(refDir, { withFileTypes: true })) {
+    if (!e.isFile() || !/\.(jpg|jpeg|png|webp|gif)$/i.test(e.name)) continue;
+    const h = crypto.createHash("sha256").update(fs.readFileSync(`${refDir}/${e.name}`)).digest("hex");
+    refHashes.set(h, e.name);
+  }
+}
 for (const dir of ["dist", "ios/App/App/public"]) {
   const full = `${ROOT}/${dir}`;
-  if (fs.existsSync(full)) {
-    const stack = [full];
-    while (stack.length) {
-      const d = stack.pop();
-      for (const e of fs.readdirSync(d, { withFileTypes: true })) {
-        const fp = `${d}/${e.name}`;
-        if (e.isDirectory()) stack.push(fp);
-        else if (/mona-lisa\.(jpg|jpeg|png)$/i.test(e.name))
-          problems.push(`PD reference in shipped bundle: ${fp} (I4)`);
-      }
+  if (!fs.existsSync(full)) continue;
+  const stack = [full];
+  while (stack.length) {
+    const d = stack.pop();
+    for (const e of fs.readdirSync(d, { withFileTypes: true })) {
+      const fp = `${d}/${e.name}`;
+      if (e.isDirectory()) { stack.push(fp); continue; }
+      const h = crypto.createHash("sha256").update(fs.readFileSync(fp)).digest("hex");
+      const ref = refHashes.get(h);
+      if (ref) problems.push(`PD reference in shipped bundle: ${fp} is ref/${ref} (I4)`);
     }
   }
 }

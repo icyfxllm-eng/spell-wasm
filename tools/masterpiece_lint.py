@@ -46,6 +46,21 @@ SCANS = ROOT / "content-pipeline/wordpic/scans"
 MANIFESTS = ROOT / "content-pipeline/wordpic/manifests"
 PICTURES = ROOT / "config/wordpic/pictures.json"
 
+PROVENANCE = ROOT / "content-pipeline/wordpic/ref/provenance-f8.json"
+
+# THE ARTIST RULE, Eric 2026-08-15: "every artist on masterpiece the artist
+# name should be recognized and never labeled as a spell game orginal if its
+# based off another artist painting."
+#
+# The rhino is why. Its coordinate list really is hand-authored -- the Duerer
+# plate's hatching floods every threshold, so it was redrawn rather than
+# traced -- and the provenance recorded that as licence "Original artwork
+# (SpellGame)" with no artist and no URL. That is a true statement about
+# method and a false one about authorship: the drawing is Duerer's rhinoceros
+# down to the dorsal hornlet. How a stroke was produced never transfers
+# authorship of what it depicts.
+ORIGINAL_CLAIMS = ("spellgame", "spell game", "original artwork")
+
 SILHOUETTE = {"outline"}
 ANCHORS = {"features"}
 TEXTURE = {"texture", "shading"}
@@ -56,11 +71,19 @@ KNOWN = SILHOUETTE | ANCHORS | TEXTURE
 # must leave, or the next master to ship without one hides behind a stale pass.
 # Adding a name here is a deliberate act to argue for in the commit.
 #
-# redfuji, starrynight and sunflowers cannot gain one before they are re-traced:
-# their whole layout is a single path labelled "skeleton". greatwave, scream and
-# rhino could be authored today.
+# redfuji, starrynight and sunflowers cannot gain one before they are
+# re-traced: their whole layout is a single path labelled "skeleton".
+# greatwave and scream have 8 and 10 paths but every label is a positional
+# placeholder, so their strokes must be named first.
+#
+# Red Fuji briefly left this list on 2026-08-15 with a 38-path trace off the
+# real Commons scan, and went back on: the trace was region BOUNDARIES, and a
+# boundary reverses direction at every tip, so all 38 paths turned 60-180
+# degrees against a CORNER_DEG of 35 and the layout could not fill 20 of 43
+# slots. Smoothing cannot help -- a reversal is a real feature of the path.
+# The re-trace has to be centerlines, and the table comes back with it.
 ANCHOR_TABLES_PENDING = frozenset({
-    "greatwave", "scream", "rhino", "redfuji", "starrynight", "sunflowers",
+    "greatwave", "scream", "redfuji", "starrynight", "sunflowers",
 })
 
 
@@ -76,11 +99,17 @@ def layers_of(pid: str) -> dict[str, list[int]]:
     return {L["name"]: list(L["path_ids"]) for L in json.loads(mf.read_text())["layers"]}
 
 
-# A principal contour must carry at least this share of the silhouette's
-# total arc. Calibrated against the reference success: Mona's figure contour
-# and frame split 52/33, and Red Fuji and Great Wave are single paths at 100%.
-# A silhouette shattered into twenty even fragments tops out near 5% and fails,
-# which is the mode this rule exists to catch.
+# A principal contour must carry at least this share of its own feature's arc
+# (see principal_contour for why "its own feature" and not "the layer").
+# Calibrated on: Mona's figure contour and frame split 52/33; Red Fuji's cone
+# is 606 of 794 across three border-split runs, 76%; Great Wave is a single
+# path at 100%. A silhouette shattered into twenty even fragments tops out
+# near 5% and fails, which is the mode this rule exists to catch.
+#
+# The pre-2026-08-15 note cited "Red Fuji ... 100%" as a calibration point.
+# That number came from the 214-point single-skeleton trace, i.e. from the
+# starvation this whole file exists to catch, and it is not evidence of
+# anything. Do not restore it.
 PRINCIPAL_SHARE = 0.30
 
 
@@ -96,6 +125,28 @@ def principal_contour(paths: list[dict]) -> tuple[bool, float]:
     So: find the longest single path and ask whether it dominates. One path is
     trivially unbroken; the question is whether the silhouette is carried by a
     contour or scattered across fragments.
+
+    MEASURED AGAINST ITS OWN FEATURE, Eric 2026-08-15. The share used to be
+    taken over the whole silhouette layer, and that layer is not curated: the
+    manifest assigns layers mechanically by arc length, which is a deliberate
+    design law, so "outline" simply means the longest strokes in the picture.
+    That works while a piece is thin and breaks the moment it is not. Red Fuji
+    re-traced off the real Commons scan puts a 894-arc forest fringe and a
+    643-arc summit crown above the 606-arc cone: a stipple boundary has an
+    enormous perimeter and almost no meaning, and the mountain came third in
+    its own silhouette layer at 17%.
+
+    The old calibration cannot arbitrate that, because it was taken from the
+    broken piece — "Red Fuji and Great Wave are single paths at 100%" was true
+    of the 214-point single-skeleton trace this lint's own file exists to
+    replace. Fixing the starvation invalidated the data point.
+
+    So the principal is compared against the paths sharing ITS feature label,
+    which is the silhouette as authored rather than as sorted. Red Fuji's cone
+    scores 606/794 = 76%. Twenty even fragments all labelled the same thing
+    still score 5% and still fail, so the mode this rule exists to catch is
+    caught unchanged. Traces with no feature labels are one unnamed group and
+    behave exactly as before.
     """
     if not paths:
         return False, 0.0
@@ -103,7 +154,10 @@ def principal_contour(paths: list[dict]) -> tuple[bool, float]:
     total = sum(arcs)
     if total <= 0:
         return False, 0.0
-    return (max(arcs) / total) >= PRINCIPAL_SHARE, max(arcs) / total
+    lead = max(range(len(paths)), key=lambda i: arcs[i])
+    kin = paths[lead].get("feature")
+    group = sum(a for p, a in zip(paths, arcs) if p.get("feature") == kin) or total
+    return (arcs[lead] / group) >= PRINCIPAL_SHARE, arcs[lead] / group
 
 
 def classes() -> dict[str, str]:
@@ -199,8 +253,9 @@ def evaluate(pid: str, doc: dict, lay: dict, cls: str | None,
     return bad
 
 
-def _p(arc: float, thin: bool = False) -> dict:
-    return {"points": [[0, 0], [1, 1]], "arc": arc, "decorative_thin": thin}
+def _p(arc: float, thin: bool = False, feature: str | None = None) -> dict:
+    return {"points": [[0, 0], [1, 1]], "arc": arc, "decorative_thin": thin,
+            "feature": feature}
 
 
 def selftest() -> int:
@@ -223,6 +278,23 @@ def selftest() -> int:
          {"paths": [_p(10) for _ in range(21)]},
          {"outline": list(range(20)), "features": [20]}, "LINE", TABLE, False,
          "principal contour"),
+        # Same shattering, every fragment carrying the SAME feature label, so
+        # the feature-group measure cannot rescue it: 20 even pieces of one
+        # silhouette is still 5%.
+        ("shattered silhouette, one feature",
+         {"paths": [_p(10, feature="cone profile") for _ in range(20)]
+                   + [_p(10, feature="snow")]},
+         {"outline": list(range(20)), "features": [20]}, "LINE", TABLE, False,
+         "principal contour"),
+        # Red Fuji's actual shape: a strong cone sharing its layer with longer
+        # texture contours. Third by arc in its own layer, and legal.
+        ("silhouette layer carrying longer texture (Red Fuji)",
+         {"paths": [_p(894, feature="forest base"), _p(643, feature="summit crown"),
+                    _p(606, feature="cone profile"), _p(162, feature="cone profile"),
+                    _p(26, feature="cone profile"), _p(516, feature="cloud band"),
+                    _p(30, feature="snow streak")]},
+         {"outline": [0, 1, 2, 3, 4, 5], "features": [6]}, "LINE", TABLE, False,
+         None),
         ("thin silhouette on a LINE piece",
          {"paths": [_p(100, thin=True), _p(10), _p(5)]}, one, "LINE", TABLE, False,
          "silhouette path(s)"),
@@ -292,6 +364,26 @@ def main() -> int:
             tabled.append(pid)
         failures += check(pid)
 
+    # The artist rule, over every master in the bank.
+    prov = {r["subject"]: r for r in json.loads(PROVENANCE.read_text())}
+    for pid in ids:
+        r = prov.get(pid)
+        if r is None:
+            failures.append(f"{pid}: a master with no provenance entry — every "
+                            f"masterpiece names its artist")
+            continue
+        if not (r.get("attribution") or "").strip():
+            failures.append(f"{pid}: no attribution — every masterpiece names its "
+                            f"artist, whatever the trace was made from")
+        # Only the LICENCE field carries the authorship claim. The title may
+        # say "SpellGame redraw" and should -- that is an honest note about
+        # method sitting next to a credited artist, which is exactly the shape
+        # the rule wants.
+        if any(c in (r.get("license") or "").lower() for c in ORIGINAL_CLAIMS):
+            failures.append(f"{pid}: provenance claims original authorship "
+                            f"({r.get('license','')!r}) — a redraw of another "
+                            f"artist's work is still that artist's work")
+
     # The pending list may only shrink; a name that has left the bank is as
     # stale as one that has gained a table.
     for pid in sorted(ANCHOR_TABLES_PENDING - set(ids)):
@@ -308,6 +400,26 @@ def main() -> int:
     if waiting:
         print(f"  awaiting F4 anchor tables: {waiting}")
         print(f"  (names are enforced by scripts/wordpic-check.mjs once declared)")
+        # WHY each one is waiting, because "pending" read as "someone just has
+        # to sit down and type it" and that is only true for a piece whose
+        # strokes are named. A layout labelled "greatwave carrier 1..8" has
+        # nothing to build a table out of: an anchor is a claim about the claw
+        # crest or the dorsal hornlet, not about carrier 3. Rhino left this
+        # list the day it was looked at, because its 39 paths already carried
+        # 25 real names.
+        by_pid = {p["id"]: p for p in json.loads(PICTURES.read_text())["pictures"]}
+        for pid in waiting:
+            feats = [(q.get("feature") or "") for q in by_pid[pid].get("paths", [])]
+            placeholder = [f for f in feats
+                           if f == "skeleton" or f.startswith(f"{pid} carrier ")]
+            if feats and len(placeholder) == len(feats):
+                print(f"    {pid}: all {len(feats)} layout path(s) carry placeholder "
+                      f"labels — the strokes must be named before a table can exist")
+            elif placeholder:
+                print(f"    {pid}: {len(placeholder)}/{len(feats)} layout paths still "
+                      f"carry placeholder labels")
+            else:
+                print(f"    {pid}: strokes are named — the table can be authored now")
     return 0
 
 
