@@ -689,6 +689,17 @@ pub fn layout_feed_opt(
     shrink: bool,
 ) -> (Vec<String>, Vec<Placement>, Vec<Slot>) {
     let slots = slots_for_lang(p, lang);
+    // WP_SLOT_DEBUG=1 — say WHY each empty slot stayed empty. The sweep can
+    // only report that a slot went unfilled, and "unfilled" has several very
+    // different causes that look identical from outside: no word solves the
+    // geometry at all, or a word solves and then collides with one already
+    // placed, or it lands outside the frame. Re-tracing Red Fuji cost three
+    // wrong diagnoses to that ambiguity — boundaries-versus-centerlines, then
+    // corner angle, then run length — each of which fit the summary and none
+    // of which was the cause. One run with this on separated it in seconds:
+    // short slots were nosolve, long ones were collide, outframe was zero
+    // throughout. Pair it with WP_SWEEP_ONLY to scope the sweep to a subject.
+    let dbg = std::env::var("WP_SLOT_DEBUG").is_ok();
     let pool = crate::words::tier_for(lang, &p.tier);
     let mut st = seed ^ 0x57505F5636; // v6 salt
     let mut used: Vec<String> = Vec::new();
@@ -743,8 +754,17 @@ pub fn layout_feed_opt(
             .into_iter()
             .map(|(_, fresh, i, w, n)| (fresh, i, w, n))
             .collect();
+        let (mut n_cands, mut n_nosolve, mut n_hit, mut n_frame, mut n_shrunk) =
+            (0usize, 0usize, 0usize, 0usize, 0usize);
         'cand: for (_, _, w, n) in scored {
-            if let Some(mut pl) = solve(slot, lang, n) {
+            let solved = solve(slot, lang, n);
+            if dbg {
+                n_cands += 1;
+                if solved.is_none() {
+                    n_nosolve += 1;
+                }
+            }
+            if let Some(mut pl) = solved {
                 // v7 F1 root-cause #2: identity BEFORE the hit check. A
                 // candidate used to carry placeholder slot/path_idx 0, so
                 // the same-path and seam exemptions misfired against any
@@ -753,6 +773,13 @@ pub fn layout_feed_opt(
                 pl.slot = si;
                 pl.path_idx = slot.path_idx;
                 let hit = placements.iter().any(|other| overlaps(&pl, other));
+                if dbg {
+                    if hit {
+                        n_hit += 1;
+                    } else if !in_frame(&pl) {
+                        n_frame += 1;
+                    }
+                }
                 if !hit && in_frame(&pl) {
                     best = Some((w, pl));
                     break;
@@ -777,6 +804,9 @@ pub fn layout_feed_opt(
                     }
                     pl2.bounds = (bx0 - pad * 0.4, by0 - pad, bx1 + pad * 0.4, by1 + pad * 0.35);
                     let hit2 = placements.iter().any(|other| overlaps(&pl2, other));
+                    if dbg && hit2 {
+                        n_shrunk += 1;
+                    }
                     if !hit2 && in_frame(&pl2) {
                         best = Some((w, pl2));
                         break 'cand;
@@ -829,6 +859,15 @@ pub fn layout_feed_opt(
                 }
             }
             }
+        }
+        if dbg && best.is_none() {
+            eprintln!(
+                "SLOT s{si} p{} band{} len{:.0}: cands={n_cands} nosolve={n_nosolve} \
+                 collide={n_hit} outframe={n_frame} shrunk_collide={n_shrunk}",
+                slot.path_idx,
+                slot.band,
+                slot.poly.as_ref().map(|q| q.len()).unwrap_or(0.0)
+            );
         }
         if let Some((w, mut pl)) = best {
             pl.slot = si;

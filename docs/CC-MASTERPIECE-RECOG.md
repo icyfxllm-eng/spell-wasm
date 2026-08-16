@@ -489,3 +489,68 @@ were already named (horn, dorsal hornlet, gorget fold, shoulder/body/haunch
 plate, belly scales, shoulder rivets, forehead, jaw, back, front leg, hind
 leg). Scene furniture -- cloud, bird, ground, woodcut caption -- is not an
 anchor. Proven by renaming the dorsal-hornlet path.
+
+### WP_SLOT_DEBUG, and why Red Fuji stays quarantined (2026-08-15)
+
+**The flag.** WP_SLOT_DEBUG=1 prints, for every slot the layout left empty,
+which branch each of its ~790 candidates died in:
+
+    SLOT s16 p3 band1 len164: cands=793 nosolve=24 collide=769 outframe=0 shrunk_collide=1538
+    SLOT s15 p3 band2 len34:  cands=791 nosolve=791 collide=0 outframe=0 shrunk_collide=0
+
+Pair it with WP_SWEEP_ONLY to scope the sweep to one subject: 19 minutes
+becomes 33 seconds. Zero cost when the variable is unset -- one env read per
+call, and every counter is behind the flag.
+
+It exists because "unfilled" has several causes that look identical from
+outside, and the re-trace cost three wrong diagnoses to that ambiguity. Each
+fit the summary. None was the cause.
+
+**The three wrong answers, kept because each is true of something.**
+
+1. *Boundary contours cannot host words; it has to be centerlines.* True of a
+   CLOSED thin region -- it reverses at both tips and no smoothing straightens
+   it (155 degrees becomes 143 at step 17 x 52 passes). False of an open run:
+   the skyline goes 114 -> 20 with plain resampling. The centerline pass built
+   on this premise was gentle and unrecognisable as Fuji.
+2. *It is the pixel-grid sampling; resampling fixes it.* True of open runs, and
+   it lifted paths carrying a word-sized run from 2 of 38 to 12 of 38. Still
+   failed, because run length was never the gate.
+3. *Every path needs a run longer than its band's longest word.* Measured the
+   wrong thing entirely. len in the failure report is the SLOT's length, not
+   the word's, and 164px slots go unfilled beside 34px ones.
+
+**The two real causes, which the flag separates in one run.**
+
+- **nosolve** on short slots (34-47px): no word in any pool, down the whole
+  borrow chain to easy, fits. A corner mints a slot boundary, so a short
+  corner-split segment mints a runt slot nothing can fill.
+- **collide** on long slots (95-164px): the word solves and lands on one
+  already placed. outframe was zero throughout -- the frame was never it.
+
+The collisions were not bad luck. v4's median clearance between paths was
+3.96px with seven paths at 0-0.1, against a FLOOR of 13px per character:
+eleven cloud ribbons stacked four pixels apart have room ALONG each stroke and
+none ACROSS it. Great Wave fills 349 corner-split slots happily at a minimum
+clearance of 23px, and Mona's word-hosting paths never come within the cap at
+all.
+
+**So the rule the bank had never written down: parallel strokes closer than
+about 20px cannot both be spelled.** Curvature, length and count are all
+downstream of it.
+
+**Why Red Fuji is still quarantined.** Curating for separation (v5) took the
+unfilled count from 23 of 55 to 8 of 26 -- and stalled. Tracing each region the
+way its own shape allows (v6: open runs resampled, closed regions as spines)
+collapsed to 3 paths, because a cloud's medial axis branches and comes back at
+75-104 degrees, and the clean spines are 35-88px.
+
+Red Fuji's cloud band is eleven small stacked parallel ribbons, and
+small-parallel-many is precisely the shape this medium cannot host words on:
+too short apart, too crowded together, and a closed loop each. What survives
+every constraint is the cone, the treeline and perhaps two clouds -- five
+paths, under the six-path shipped floor. The trace that FILLS is a thinner
+picture than the one Eric passed on sight.
+
+That is a statement about Red Fuji, not about the tracer. The high-water mark
+is v5 at 7 paths and 594 points, in the scratchpad, not landed.
