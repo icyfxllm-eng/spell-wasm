@@ -361,12 +361,18 @@ an anchor. Proven by breaking: renaming the dorsal-hornlet path fails
 wordpic-check with "required feature 'dorsal hornlet' missing from trace".
 Rhino has left ANCHOR_TABLES_PENDING; the list is now five.
 
-**The references did not match their own provenance.** Every manifest pinned a
-real Commons scan and every file on disk was a two-tone pictogram of 9-17KB:
-Red Fuji, Starry Night, Great Wave and Scream all claimed PD-Art photographs
-of the artworks and held bitmaps. Mona was the only master whose reference was
-the thing its manifest named. All five have been re-fetched at 1920px from the
-URLs the provenance already recorded, and are now genuine continuous-tone
+**The original scans were not on disk.** Every manifest pinned a Commons
+photograph and what sat beside it was a two-tone file of 9-17KB.
+
+CORRECTED 2026-08-16: those files are not bad downloads, and calling this a
+provenance mismatch was wrong. tools/prep_wave10.py AUTHORED them as subject
+MASKS from those same scans, with its reasoning in the file -- Red Fuji's
+mountain is taken as the region below its own two slopes because three
+global-threshold attempts welded cloud lace into the summit, and Scream's dark
+masses ARE the composition. A derived mask pointed at by its source's
+provenance is the pipeline working. What was true is only that the originals
+themselves were absent, which still mattered. All five originals have been fetched at 1920px from the URLs the provenance
+already recorded, and sit alongside the masks as genuine continuous-tone
 colour scans (150k-313k distinct colours each). Sunflowers is the National
 Gallery London version, "Vase with Fifteen Sunflowers", August 1888, per
 Eric's call. This unblocks re-tracing, TONAL, ridge refinement and colour
@@ -554,3 +560,53 @@ picture than the one Eric passed on sight.
 
 That is a statement about Red Fuji, not about the tracer. The high-water mark
 is v5 at 7 paths and 594 points, in the scratchpad, not landed.
+
+### The guide layer is the picture (2026-08-16)
+
+Rendering all seven masters for the first time showed what the bank actually
+looks like, and it was not what any of this file assumed.
+
+**Red Fuji and Starry Night ship as the same octagon.** Not similar — the
+identical generic polygon. That is the confusion pair: they were never two
+pictures, and no amount of work on their word carriers was going to separate
+them.
+
+**Recognition lives in the guide layer, not the carriers.** Mona, Great Wave,
+Scream and Sunflowers each carry ~200 guide paths; that is the artwork. The
+word carriers are a handful of loose strokes on top. Red Fuji, Starry Night
+and rhino have no guide at all.
+
+And from guide_polys: the guide "never hosts words, never collides". So every
+constraint the 2026-08-15 retrace fought — slot length, corner splits, the
+20px separation rule, collision — applies ONLY to carriers. The whole retrace
+was spent forcing the recognisable picture into the one layer that cannot hold
+it.
+
+**Three bugs on that layer, found by Eric asking why he could barely see it.**
+
+1. The guide was painted rgba(232,236,245,.30) on EVERY ground. Ship 171 moved
+   masterpieces to a cream canvas and added light overrides for pinned,
+   feature and outline — and missed the guide, so near-white ink sat on a
+   near-white ground. Six of seven masters had invisible artwork for three
+   ships.
+2. .30 is too faint for the layer that carries recognition even on dark.
+   Now .62 dark / .58 light.
+3. The inline export style block never declared .wp-guide at all. An <img>
+   loads no stylesheet and SVG defaults an unstyled stroke to none, so
+   exported pictures did not render the artwork faintly — they omitted it.
+
+`guide` is now a token on Ground rather than a loose CSS rule, and
+wordpic-export-parity checks 12 bindings AND that the export block paints the
+same CLASS SET as the screen. A missing rule and a wrong value are the same
+bug; the gate only knew about the second.
+
+**How a good guide is actually made.** Not by a general tracer. Great Wave and
+Scream look right because tools/prep_wave10.py hand-authored a per-piece MASK
+first, with its judgement recorded — Fuji's mountain as the region below its
+own two slopes, because three global-threshold attempts welded cloud lace into
+the summit. Four general methods were tried on 2026-08-16 (boundary contours,
+centerlines, a posterized level sweep, feature extraction) and only the last
+produced anything shippable, because it is a per-piece mask in miniature.
+
+Red Fuji's guide is landed: 40 paths, 1126 points, by feature extraction.
+Starry Night has none and stays an octagon; it needs its own authored mask.

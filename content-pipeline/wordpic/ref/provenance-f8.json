@@ -355,7 +355,8 @@
   "sourceUrl": "https://commons.wikimedia.org/wiki/File:Van_Gogh_-_Starry_Night_-_Google_Art_Project.jpg",
   "file": "ref/starrynight.png",
   "bytes": 9968,
-  "attribution": "after Vincent van Gogh"
+  "attribution": "after Vincent van Gogh",
+  "note": "ref/starrynight-source.jpg is the Commons scan. No guide layer yet: boundary contours, centerlines, a posterized sweep and feature extraction were all tried on 2026-08-16 and none reads as the painting. The master guides that DO work came from hand-authored per-piece masks (tools/prep_wave10.py), which is the route this needs."
  },
  {
   "subject": "crane",
@@ -509,7 +510,7 @@
   "file": "ref/redfuji-source.jpg",
   "bytes": 990124,
   "attribution": "after Hokusai",
-  "note": "Eric 2026-08-15: the real Commons scan replaces ref/redfuji.png, which was a 2-grey pictogram and not the PD-Art photograph this entry has always named. The re-trace off it is not landed: boundary contours cannot host words (see CC-MASTERPIECE-RECOG), so the shipped trace is still the 214-point original until a centerline pass replaces it."
+  "note": "Eric 2026-08-16: guide layer traced by feature extraction from the Commons scan — cone, snow streaks, cloud band, forest, summit crown, cartouche. ref/redfuji.png is NOT a bad download: tools/prep_wave10.py authored it as a subject MASK from this same scan, taking the mountain as the region below its own two slopes because three global-threshold attempts welded cloud lace into the summit. The 2026-08-15 note calling that a provenance mismatch was wrong. What was true is narrower — the mask is a derived asset and the original scan was not on disk; it is now, as ref/redfuji-source.jpg."
  },
  {
   "subject": "scream",
@@ -518,7 +519,8 @@
   "sourceUrl": "https://commons.wikimedia.org/wiki/File:The_Scream.jpg",
   "file": "ref/scream.png",
   "bytes": 11679,
-  "attribution": "after Edvard Munch"
+  "attribution": "after Edvard Munch",
+  "note": "ref/scream.png is a subject mask authored by tools/prep_wave10.py from the Commons scan (dark masses ARE the composition: figure with its pale face holes, bridge rails, fjord). ref/scream-source.jpg is the scan it was derived from."
  },
  {
   "subject": "fuji",

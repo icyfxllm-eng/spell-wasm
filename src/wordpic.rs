@@ -93,6 +93,16 @@ pub struct Ground {
     pub feature: &'static str,
     /// The guide outline, deliberately faint.
     pub outline: &'static str,
+    /// The GUIDE LAYER — the traced artwork itself, under the words.
+    ///
+    /// This carries recognition. Great Wave is 220 paths of Hokusai here and
+    /// eight loose word carriers on top; strip the guide and the picture is
+    /// gone. It was a bare CSS rule until 2026-08-16, painted
+    /// rgba(232,236,245,.30) on every ground — which is near-white ink on the
+    /// LIGHT canvas the masterpieces moved to in ship 171, so the artwork on
+    /// six of seven masters was invisible on the ground beneath it for three
+    /// ships. Eric: "lift it, its the whole picture."
+    pub guide: &'static str,
 }
 
 /// The default: near-white on near-black. 15.57:1.
@@ -102,6 +112,7 @@ pub const DARK: Ground = Ground {
     stroke: "rgba(232,236,245,.92)",
     feature: "rgba(232,236,245,.95)",
     outline: "rgba(255,255,255,.22)",
+    guide: "rgba(232,236,245,.62)",
 };
 
 /// The gallery ground for paintings. Warm off-white rather than plain white
@@ -115,6 +126,7 @@ pub const LIGHT: Ground = Ground {
     stroke: "rgba(26,23,18,.92)",
     feature: "rgba(26,23,18,.95)",
     outline: "rgba(0,0,0,.22)",
+    guide: "rgba(26,23,18,.58)",
 };
 
 /// Which ground a picture renders on. Masterpieces are paintings and get the

@@ -1636,14 +1636,24 @@ pub fn scanlock_svg(
         // two drift. That script was cited here for a long time before it
         // existed, which is how the feature alpha slipped from .95 to .92 in
         // build 178 — a comment is not a guard.
+        //
+        // EVERY class the screen paints must appear here. .wp-guide did not,
+        // for the whole life of the guide layer: exported pictures carried the
+        // artwork as <path class="wp-guide"> with no rule, and SVG defaults an
+        // unstyled stroke to none, so the traced painting was not faint in a
+        // shared image — it was absent. The parity gate now asserts the class
+        // SET matches, not only the token values, because a missing rule and a
+        // wrong rule are the same bug with different symptoms.
         svg.push_str(&format!(
             "<style>@font-face{{font-family:'SpellExport';src:url({font_data_uri});}}\
              .wp-pinned{{stroke:{stroke};stroke-width:1.8;fill:none;stroke-linecap:round;stroke-linejoin:round}}\
              .wp-feature{{fill:{feature};stroke:{feature};stroke-width:1.5;stroke-linejoin:round}}\
              .wp-outline{{stroke:{outline};stroke-width:3;fill:none;stroke-linecap:round}}\
+             .wp-guide{{stroke:{guide};stroke-width:2;fill:none;stroke-linecap:round;stroke-linejoin:round}}\
              .wp-word{{fill:{ink};font-weight:700;font-family:'SpellExport',system-ui,sans-serif}}</style>\
              <rect width=\"512\" height=\"512\" fill=\"{bg}\"/>",
-            stroke = g.stroke, feature = g.feature, outline = g.outline, ink = g.ink, bg = g.bg
+            stroke = g.stroke, feature = g.feature, outline = g.outline, guide = g.guide,
+            ink = g.ink, bg = g.bg
         ));
     }
     // defs: one path per placement baseline

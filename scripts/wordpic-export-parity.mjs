@@ -17,8 +17,15 @@
 // The Rust `Ground` constants are the source of truth; index.html must agree.
 // Checked BOTH ways round, for both grounds:
 //
-//   DARK   .wp-pinned / .wp-feature / .wp-outline / --wp-ink   (base rules)
+//   DARK   .wp-pinned / .wp-feature / .wp-outline / .wp-guide / --wp-ink
 //   LIGHT  the same, under .wp-light                            (overrides)
+//
+// The guide joined the Ground on 2026-08-16 and it is the reason this file
+// was not enough. It was a loose CSS rule outside the token set, painted
+// near-white on EVERY ground -- so when ship 171 moved the masterpieces to a
+// cream canvas, the traced artwork underneath the words went invisible on six
+// of seven masters, and this gate could not see it because the biggest layer
+// in the picture was not one of the things it checked.
 import { readFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import { dirname, join } from 'node:path';
@@ -26,6 +33,7 @@ import { dirname, join } from 'node:path';
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
 const rust = readFileSync(join(ROOT, 'src/wordpic.rs'), 'utf8');
 const html = readFileSync(join(ROOT, 'index.html'), 'utf8');
+const screen = readFileSync(join(ROOT, 'src/wordpic_screen.rs'), 'utf8');
 
 const problems = [];
 
@@ -38,7 +46,7 @@ function ground(name) {
   }
   const out = {};
   for (const f of m[1].matchAll(/(\w+)\s*:\s*"([^"]+)"/g)) out[f[1]] = f[2];
-  for (const k of ['bg', 'ink', 'stroke', 'feature', 'outline']) {
+  for (const k of ['bg', 'ink', 'stroke', 'feature', 'outline', 'guide']) {
     if (!out[k]) problems.push(`${name} is missing the "${k}" token`);
   }
   return out;
@@ -82,6 +90,7 @@ if (DARK) {
   declares('.wp-feature', 'fill', DARK.feature, 'DARK feature fill');
   declares('.wp-feature', 'stroke', DARK.feature, 'DARK feature stroke');
   declares('.wp-outline', 'stroke', DARK.outline, 'DARK outline');
+  declares('.wp-guide', 'stroke', DARK.guide, 'DARK guide layer');
   // The word ink reaches Play through a custom property with a fallback.
   declares('.wp-word', 'fill', `var(--wp-ink,${DARK.ink})`, 'DARK word ink fallback');
 }
@@ -93,6 +102,31 @@ if (LIGHT) {
   declares('.wp-light .wp-feature', 'fill', LIGHT.feature, 'LIGHT feature fill');
   declares('.wp-light .wp-feature', 'stroke', LIGHT.feature, 'LIGHT feature stroke');
   declares('.wp-light .wp-outline', 'stroke', LIGHT.outline, 'LIGHT outline');
+  declares('.wp-light .wp-guide', 'stroke', LIGHT.guide, 'LIGHT guide layer');
+}
+
+// THE CLASS SET, not only the values. index.html and the inline export block
+// must paint the SAME classes: a rule that is missing from the export is not
+// a drift in a number, it is a layer that does not render at all. .wp-guide
+// was absent from the export block for the guide layer's whole life, so every
+// shared picture lost the artwork while the screen kept it, and a
+// value-only check could never see it.
+{
+  const inline = screen.match(/<style>@font-face[\s\S]*?<\/style>/);
+  if (!inline) {
+    problems.push('src/wordpic_screen.rs: cannot find the inline export style block');
+  } else {
+    const classesIn = (src) => new Set(
+      [...src.matchAll(/\.(wp-[a-z-]+)\s*\{/g)].map((m) => m[1]));
+    const painted = classesIn(inline[0]);
+    for (const cls of ['wp-pinned', 'wp-feature', 'wp-outline', 'wp-guide', 'wp-word']) {
+      if (!painted.has(cls)) {
+        problems.push(
+          `export block does not paint .${cls} — an <img> loads no stylesheet, ` +
+          `so that layer renders with SVG defaults (an unstyled stroke is none)`);
+      }
+    }
+  }
 }
 
 // The two grounds must actually differ, or the light one is decoration.
@@ -124,5 +158,5 @@ if (problems.length) {
 }
 console.log(
   'wordpic-export-parity: OK — index.html matches wordpic::DARK and wordpic::LIGHT ' +
-  '(10 token bindings across both grounds)'
+  '(12 token bindings across both grounds)'
 );
