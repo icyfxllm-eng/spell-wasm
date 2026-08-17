@@ -638,3 +638,50 @@ does not fire, because the scan is still there — nothing was lost, only
 unlisted.
 
 Masters are six, and every one of them carries traced geometry.
+
+### The first photographs, and what a rail may not do (2026-08-16)
+
+Saguaro and Church, Taos Pueblo join as masters -- the bank's first
+photographs. Ansel Adams, National Park Service Mural Project 1941-42, public
+domain as US FEDERAL WORKS rather than by the artist's death, which is a new
+pdBasis for this file. The artist is credited regardless: the rule is that a
+masterpiece names its artist, and the licence basis is a separate fact.
+
+**Guides by mkbitmap + potrace, not by threshold sweep.** The old generator
+sliced at five luminance levels and contoured each region, which draws a line
+wherever a smooth gradient crosses a threshold -- an Adams sky came out as five
+stacked bands that are not in the photograph. potrace does curve fitting with
+corner detection, and mkbitmap's highpass removes the gradient BEFORE
+thresholding. Saguaro scores recall 0.856, precision 0.979 against a house
+range of 0.80-0.89 and 0.58-0.87.
+
+**But recall is not quality, and it is not a gate.** Red Fuji's 40-path guide
+scores 0.174 and reads better than a potrace version at 0.877, because a
+woodblock print's ink includes every decorative stripe and maximising coverage
+buys clutter. Eric's ruling: keep the 40-path Fuji. Record recall per guide;
+never gate on it. Precision is the number that tracks whether strokes are
+honest. potrace for photographs, curated features for prints.
+
+**RAILS MAY NOT CROSS.** The new law, and it cost four rounds to find. Word
+carriers must clear each other by ~20px -- established earlier -- but the
+saguaro showed the sharper form: two rails that INTERSECT put two words at the
+intersection. Its trunk crossed both arm roots and the desert-floor line, and
+1-2 slots went unfilled every seed. Widening the arm clearance did nothing,
+because the arms were never the problem; ending the trunk above the floor line
+fixed all fifteen languages at once.
+
+Two corollaries worth keeping:
+
+- Crossing is fine for GEOMETRY and fatal for PLACEMENT. An earlier filter
+  rejected rails by minimum clearance, which scores 0 at every crossing and
+  threw away every sky band the trunk passed through. The test that works is
+  the FRACTION of a rail running alongside another; the rule that works is
+  that rails must not intersect at all.
+- Separation must hold for the WIDEST script, not the one being looked at.
+  23px of clearance passed en and es and failed vi and ko, because Korean sets
+  in blocks and Vietnamese stacks diacritics.
+
+Rails are authored, not traced. They cannot come from the guide -- every guide
+path is a closed contour that reverses at its tips, so none survives
+corner_split. That is not a workaround: Great Wave has always shipped eight
+paths named "greatwave carrier 1..8" under 220 paths of Hokusai.

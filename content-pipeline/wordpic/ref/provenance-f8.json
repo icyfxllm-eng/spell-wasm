@@ -3167,5 +3167,25 @@
   "bytes": 1663200,
   "attribution": "after Vincent van Gogh",
   "note": "Eric 2026-08-15: the London 1888 version. The bank shipped this subject with no provenance record at all; the entry exists now even though the retrace failed review, so the artist is credited whatever happens to the trace."
+ },
+ {
+  "subject": "saguaro",
+  "title": "Saguaros, Saguaro National Monument, Arizona, 1941-42 (Mural Project)",
+  "license": "Public domain (US federal work)",
+  "sourceUrl": "https://commons.wikimedia.org/wiki/Special:FilePath/Ansel%20Adams%20-%20National%20Archives%2079-AA-N01.jpg",
+  "file": "ref/saguaro-source.jpg",
+  "bytes": 966972,
+  "attribution": "Ansel Adams",
+  "note": "Eric 2026-08-16: the bank's first photographs. PD basis is FEDERAL WORK, not PD-Art: Adams made these for the National Park Service on the Mural Project, so they are public domain as works of the US government rather than by the artist's death. The artist is still credited -- the rule is that a masterpiece names its artist, and the licence basis is a separate fact. Guide traced with mkbitmap+potrace (recall 0.856, precision 0.979)."
+ },
+ {
+  "subject": "taos",
+  "title": "Church, Taos Pueblo, New Mexico, 1941-42 (Mural Project)",
+  "license": "Public domain (US federal work)",
+  "sourceUrl": "https://commons.wikimedia.org/wiki/Special:FilePath/Ansel%20Adams%20-%20National%20Archives%2079-AA-Q01%20restored.jpg",
+  "file": "ref/taos-source.jpg",
+  "bytes": 1257133,
+  "attribution": "Ansel Adams",
+  "note": "Federal-work PD, National Park Service Mural Project. Guide traced with mkbitmap+potrace (recall 0.585, precision 0.958)."
  }
 ]

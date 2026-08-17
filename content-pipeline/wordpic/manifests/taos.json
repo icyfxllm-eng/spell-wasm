@@ -1,0 +1,288 @@
+{
+ "id": "taos",
+ "tier": "expert",
+ "source": {
+  "title": "Church, Taos Pueblo, New Mexico, 1941-42 (Mural Project)",
+  "license": "Public domain (US federal work)",
+  "url": "https://commons.wikimedia.org/wiki/Special:FilePath/Ansel%20Adams%20-%20National%20Archives%2079-AA-Q01%20restored.jpg",
+  "attribution": "Ansel Adams"
+ },
+ "parts": {
+  "root": [
+   7,
+   6,
+   1,
+   2,
+   0,
+   4,
+   5,
+   3,
+   9,
+   8
+  ]
+ },
+ "layers": [
+  {
+   "name": "outline",
+   "path_ids": [
+    7,
+    6,
+    1
+   ],
+   "per_language": {
+    "ar": {
+     "words": 3,
+     "band": 0,
+     "band_size": 371
+    },
+    "de": {
+     "words": 3,
+     "band": 0,
+     "band_size": 802
+    },
+    "en": {
+     "words": 3,
+     "band": 0,
+     "band_size": 763
+    },
+    "es": {
+     "words": 3,
+     "band": 0,
+     "band_size": 607
+    },
+    "fil": {
+     "words": 3,
+     "band": 0,
+     "band_size": 762
+    },
+    "fr": {
+     "words": 3,
+     "band": 0,
+     "band_size": 724
+    },
+    "hi": {
+     "words": 3,
+     "band": 0,
+     "band_size": 548
+    },
+    "ja": {
+     "words": 3,
+     "band": 0,
+     "band_size": 720
+    },
+    "ko": {
+     "words": 3,
+     "band": 0,
+     "band_size": 452
+    },
+    "pl": {
+     "words": 3,
+     "band": 0,
+     "band_size": 739
+    },
+    "pt": {
+     "words": 3,
+     "band": 0,
+     "band_size": 772
+    },
+    "ru": {
+     "words": 3,
+     "band": 0,
+     "band_size": 806
+    },
+    "sw": {
+     "words": 3,
+     "band": 0,
+     "band_size": 801
+    },
+    "vi": {
+     "words": 3,
+     "band": 0,
+     "band_size": 551
+    },
+    "zh": {
+     "words": 3,
+     "band": 0,
+     "band_size": 55
+    }
+   }
+  },
+  {
+   "name": "features",
+   "path_ids": [
+    2,
+    0,
+    4,
+    5
+   ],
+   "per_language": {
+    "ar": {
+     "words": 4,
+     "band": 1,
+     "band_size": 989
+    },
+    "de": {
+     "words": 4,
+     "band": 1,
+     "band_size": 391
+    },
+    "en": {
+     "words": 4,
+     "band": 1,
+     "band_size": 236
+    },
+    "es": {
+     "words": 4,
+     "band": 1,
+     "band_size": 431
+    },
+    "fil": {
+     "words": 4,
+     "band": 1,
+     "band_size": 369
+    },
+    "fr": {
+     "words": 4,
+     "band": 1,
+     "band_size": 346
+    },
+    "hi": {
+     "words": 4,
+     "band": 1,
+     "band_size": 286
+    },
+    "ja": {
+     "words": 4,
+     "band": 1,
+     "band_size": 130
+    },
+    "ko": {
+     "words": 4,
+     "band": 1,
+     "band_size": 404
+    },
+    "pl": {
+     "words": 4,
+     "band": 1,
+     "band_size": 376
+    },
+    "pt": {
+     "words": 4,
+     "band": 1,
+     "band_size": 479
+    },
+    "ru": {
+     "words": 4,
+     "band": 1,
+     "band_size": 289
+    },
+    "sw": {
+     "words": 4,
+     "band": 1,
+     "band_size": 331
+    },
+    "vi": {
+     "words": 4,
+     "band": 1,
+     "band_size": 497
+    },
+    "zh": {
+     "words": 4,
+     "band": 1,
+     "band_size": 428
+    }
+   }
+  },
+  {
+   "name": "texture",
+   "path_ids": [
+    3,
+    9,
+    8
+   ],
+   "per_language": {
+    "ar": {
+     "words": 3,
+     "band": 2,
+     "band_size": 242
+    },
+    "de": {
+     "words": 3,
+     "band": 2,
+     "band_size": 356
+    },
+    "en": {
+     "words": 3,
+     "band": 2,
+     "band_size": 463
+    },
+    "es": {
+     "words": 3,
+     "band": 2,
+     "band_size": 499
+    },
+    "fil": {
+     "words": 3,
+     "band": 2,
+     "band_size": 417
+    },
+    "fr": {
+     "words": 3,
+     "band": 2,
+     "band_size": 470
+    },
+    "hi": {
+     "words": 3,
+     "band": 2,
+     "band_size": 295
+    },
+    "ja": {
+     "words": 3,
+     "band": 2,
+     "band_size": 127
+    },
+    "ko": {
+     "words": 3,
+     "band": 2,
+     "band_size": 683
+    },
+    "pl": {
+     "words": 3,
+     "band": 2,
+     "band_size": 464
+    },
+    "pt": {
+     "words": 3,
+     "band": 2,
+     "band_size": 238
+    },
+    "ru": {
+     "words": 3,
+     "band": 2,
+     "band_size": 443
+    },
+    "sw": {
+     "words": 3,
+     "band": 2,
+     "band_size": 437
+    },
+    "vi": {
+     "words": 3,
+     "band": 2,
+     "band_size": 453
+    },
+    "zh": {
+     "words": 3,
+     "band": 2,
+     "band_size": 123
+    }
+   }
+  }
+ ],
+ "audio_gate": "expert",
+ "completion": {
+  "all_layers": true
+ },
+ "authoring": "hand-traced",
+ "pin_hash": 3567326101689578016
+}
