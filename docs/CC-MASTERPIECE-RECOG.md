@@ -610,3 +610,31 @@ produced anything shippable, because it is a per-piece mask in miniature.
 
 Red Fuji's guide is landed: 40 paths, 1126 points, by feature extraction.
 Starry Night has none and stays an octagon; it needs its own authored mask.
+
+### Starry Night leaves the bank (Eric, 2026-08-16)
+
+Not just the masters set — the bank. Eight extraction passes over two days
+could not produce a guide that reads as the painting: boundary contours,
+centerlines, an ink-edge chain, a posterized level sweep, feature extraction,
+an authored mask, a hybrid, and a straight threshold of the cypress. The
+subject is brush DIRECTION and every tool here finds regions.
+
+What settled it was removing the two elements only authoring could supply.
+With the swirl and the cypress crown taken out, what remained -- a moon, eight
+stars, a hill line, a village with a spire -- is a generic night scene. The
+parts that can be extracted honestly are exactly the parts that do not
+identify the painting, and the parts that identify it were being drawn rather
+than traced.
+
+It was un-mastered rather than deleted at first, and that was worse: a picture
+called Starry Night rendering as a bare octagon in the sky shelf, under a name
+everyone knows. So it is out of config/wordpic/pictures.json entirely; the
+bank is 385.
+
+Everything needed to bring it back stays: the scan, ref/starrynight-source.jpg,
+the manifest and the provenance entry. It returns by re-adding one registry
+entry, once someone authors it the way Mona was authored. The density ratchet
+does not fire, because the scan is still there — nothing was lost, only
+unlisted.
+
+Masters are six, and every one of them carries traced geometry.
