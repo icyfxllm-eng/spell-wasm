@@ -685,3 +685,38 @@ Rails are authored, not traced. They cannot come from the guide -- every guide
 path is a closed contour that reverses at its tips, so none survives
 corner_split. That is not a workaround: Great Wave has always shipped eight
 paths named "greatwave carrier 1..8" under 220 paths of Hokusai.
+
+### The quarantine empties (2026-08-16)
+
+Red Fuji and Sunflowers get rails, and the density quarantine is empty for the
+first time since it was created: all 8 masters clear the 500-point scan floor
+and the 6-path shipped floor.
+
+Both filled on the FIRST sweep, which is the point worth recording. The
+saguaro cost four rounds to discover the rules; applied up front they simply
+work:
+
+  authored, never lifted from the guide -- guide paths are closed contours
+    that reverse at their tips and do not survive corner_split;
+  no rail may INTERSECT another, because a crossing puts two words in one
+    place -- Red Fuji's cone is ONE path carrying both slopes so they cannot
+    cross at the summit;
+  34px clearance, sized for Korean blocks and Vietnamese diacritics rather
+    than for English;
+  arc over 130 so a rail mints a slot a word can use.
+
+Red Fuji: 6 rails, 605 points -- cone profile, cloud bands above the summit
+and clear to its right, treeline. Sunflowers: 7 rails, 561 points -- table
+edge, vase rim, bloom rows, flower rows. Minimum gaps 43px and 35px, zero
+crossings in either.
+
+Three pictures entered the ratchet baseline (saguaro, sunflowers, taos) via
+--accept, which names them rather than absorbing them.
+
+**Still open on this file.** Six masters await F4 anchor tables. Great Wave and
+Scream cannot have one at all until their rails are named -- every one is
+"carrier N", a positional placeholder. Saguaro and Taos have named rails and
+are ready whenever Eric rules. Rhino has no guide layer at all and reads
+anyway, which is worth understanding rather than fixing. And Done #6, the
+five-second naming pass on device, is untouched: it is the only check that
+would catch a guide which passes every lint and still does not read.

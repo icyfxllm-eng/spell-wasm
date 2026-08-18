@@ -1,20 +1,21 @@
 {
- "id": "redfuji",
+ "id": "sunflowers",
  "tier": "expert",
  "source": {
-  "title": "South Wind, Clear Sky (Red Fuji), Katsushika Hokusai, ca. 1830-32",
+  "title": "Sunflowers (Vase with Fifteen Sunflowers), Vincent van Gogh, August 1888, National Gallery, London",
   "license": "Public domain (PD-Art)",
-  "url": "https://commons.wikimedia.org/wiki/File:Red_Fuji_southern_wind_clear_morning.jpg",
-  "attribution": "after Hokusai"
+  "url": "https://commons.wikimedia.org/wiki/Special:FilePath/Vincent_Willem_van_Gogh_127.jpg",
+  "attribution": "after Vincent van Gogh"
  },
  "parts": {
   "root": [
    0,
    4,
    5,
-   1,
    2,
-   3
+   3,
+   6,
+   1
   ]
  },
  "layers": [
@@ -106,81 +107,82 @@
    "name": "features",
    "path_ids": [
     5,
-    1
+    2,
+    3
    ],
    "per_language": {
     "ar": {
-     "words": 2,
+     "words": 3,
      "band": 1,
      "band_size": 989
     },
     "de": {
-     "words": 2,
+     "words": 3,
      "band": 1,
      "band_size": 391
     },
     "en": {
-     "words": 2,
+     "words": 3,
      "band": 1,
      "band_size": 236
     },
     "es": {
-     "words": 2,
+     "words": 3,
      "band": 1,
      "band_size": 431
     },
     "fil": {
-     "words": 2,
+     "words": 3,
      "band": 1,
      "band_size": 369
     },
     "fr": {
-     "words": 2,
+     "words": 3,
      "band": 1,
      "band_size": 346
     },
     "hi": {
-     "words": 2,
+     "words": 3,
      "band": 1,
      "band_size": 286
     },
     "ja": {
-     "words": 2,
+     "words": 3,
      "band": 1,
      "band_size": 130
     },
     "ko": {
-     "words": 2,
+     "words": 3,
      "band": 1,
      "band_size": 404
     },
     "pl": {
-     "words": 2,
+     "words": 3,
      "band": 1,
      "band_size": 376
     },
     "pt": {
-     "words": 2,
+     "words": 3,
      "band": 1,
      "band_size": 479
     },
     "ru": {
-     "words": 2,
+     "words": 3,
      "band": 1,
      "band_size": 289
     },
     "sw": {
-     "words": 2,
+     "words": 3,
      "band": 1,
      "band_size": 331
     },
     "vi": {
-     "words": 2,
+     "words": 3,
      "band": 1,
      "band_size": 497
     },
     "zh": {
-     "words": 2,
+     "words": 3,
      "band": 1,
      "band_size": 428
     }
@@ -189,8 +191,8 @@
   {
    "name": "texture",
    "path_ids": [
-    2,
-    3
+    6,
+    1
    ],
    "per_language": {
     "ar": {
@@ -276,5 +278,5 @@
   "all_layers": true
  },
  "authoring": "hand-traced",
- "pin_hash": 16073593398443288771
+ "pin_hash": 1395410113206899062
 }
