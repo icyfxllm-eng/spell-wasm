@@ -83,7 +83,7 @@ KNOWN = SILHOUETTE | ANCHORS | TEXTURE
 # slots. Smoothing cannot help -- a reversal is a real feature of the path.
 # The re-trace has to be centerlines, and the table comes back with it.
 ANCHOR_TABLES_PENDING = frozenset({
-    "greatwave", "scream", "redfuji", "sunflowers", "saguaro", "taos",
+    "greatwave", "redfuji", "sunflowers", "saguaro", "taos",
 })
 
 

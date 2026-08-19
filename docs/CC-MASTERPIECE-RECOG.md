@@ -720,3 +720,51 @@ are ready whenever Eric rules. Rhino has no guide layer at all and reads
 anyway, which is worth understanding rather than fixing. And Done #6, the
 five-second naming pass on device, is untouched: it is the only check that
 would catch a guide which passes every lint and still does not read.
+
+## F9 -- the subject rule, and the eight that passed
+
+Two masters left the bank in one session for the same reason. Starry Night
+and Scream are soft paint: no tonal edge anywhere for potrace to find, so
+every trace of them was an octagon or a smear. Red Fuji and Starry Night had
+in fact shipped as the IDENTICAL octagon, which is what the confusion pair
+was the whole time.
+
+That failure is what the selection rule came out of. A subject passes when it
+is a SINGLE CLEAR SUBJECT ON CLEAN GROUND -- engraving, woodblock, botanical
+plate. Filigree, soft paint, ornament and multi-specimen sheets all fail, and
+they fail before a single trace is run. Fifteen candidates were put to Eric at
+full size; eight passed.
+
+  hare      Duerer, A Young Hare, 1502          215 paths
+  beetle    Duerer, Stag Beetle, 1505            55   frame + monogram stripped
+  wing      Duerer, Wing of a Roller, c.1500    215   frame stripped
+  banana    Merian, Metamorphosis, 1705         159
+  flamingo  Audubon, Birds of America, c.1838    67
+  carp      Hokusai, Two Carp in a Cascade       182
+  rose      H. J. Redoute, Pompon Rose, 1817    166   caption + rule cut
+  owl       Koson, Scops Owl, before 1945       112   frame REBUILT, not stripped
+
+Two entries there record findings rather than settings.
+
+The rose is by HENRY Joseph Redoute, not Pierre-Joseph -- the brother, not the
+famous rose painter. The filename says so and the Cleveland accession says so;
+the assumption would have put the wrong artist on a shipped picture. Cleveland
+releases it CC0, a licence GRANT rather than a term expiry, so its pdBasis is
+worded differently from the other seven on purpose.
+
+The owl is the one picture here that keeps its frame. The beetle's frame came
+off because the beetle is an isolated subject on blank ground; the owl's moon
+and branch RUN INTO its border, so stripping it left the composition hanging.
+The frame is rebuilt from the art's own bounding box at zero margin -- derived
+from the extent rather than imposed on it, so it cannot clip. It is worth
+knowing that the right-hand rule is positioned by a SINGLE stroke; a re-trace
+that drops that stroke moves the frame.
+
+Judging these at thumbnail size got three of the first candidates wrong. Every
+review after that was at full size.
+
+**Staged, not shipped.** All eight are in
+content-pipeline/wordpic/staged-batch-f9.json with verified provenance and
+their source scans in ref/. None is registered: each still needs authored
+rails and captions in 15 locales, which is a Saguaro-sized job per picture.
+The six F4 anchor tables remain drafted and unruled.
