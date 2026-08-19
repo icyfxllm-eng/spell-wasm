@@ -71,6 +71,7 @@ mod photo_list;
 mod norm;
 mod online_spelloff;
 mod pinyin;
+mod pinyin_inventory; // GENERATED — tools/build-pinyin-inventory.py (CC-ZH-TONE F1a)
 mod notifications;
 mod notify;
 mod profanity;

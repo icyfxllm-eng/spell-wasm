@@ -1,0 +1,155 @@
+# CC-ZH-TONE
+
+**Status:** D1–D7 SIGNED by Eric 2026-08-19. F0 complete, F1 complete.
+F2–F6 not started.
+
+**Depends on:** the shared-canonicalizer pattern from CC-PERSIAN-FOUNDATION F1.
+**Blocks:** zh bank tooling, zh Climb pools, the drawn-character stage.
+
+## Intent
+
+Mandarin answers in standard mode must carry tone. Toneless pinyin is not
+Mandarin -- *ma* is not a word -- and accepting it teaches a fossilized error
+adult learners never shake. The audio carries tone; grading that discards it
+throws away the only information the audio contained.
+
+The risk is not difficulty, it is the keyboard. Requiring tone *marks* on a
+phone means fighting a long-press diacritic picker that may not offer pinyin
+vowels at all. So: require the tone, accept any encoding of it, and give the
+player a one-tap way to express it.
+
+## Decisions (signed 2026-08-19)
+
+- **D1.** Tone required in standard mode at all tiers including the free tier-1
+  preview. Little Speller stays tone-blind. *The ja analogue is pitch accent and
+  the answer there is never grade it -- kana does not encode pitch, it varies by
+  region, and there is no writing convention for it. Recorded so a future ja
+  file inherits the reasoning rather than re-litigating it.*
+- **D2.** Input is encoding-agnostic: diacritics, trailing digits, `v` and `u:`
+  for ü, any separator. All normalize to one key.
+- **D3.** Neutral is written bare and parses to tone 5. Bare input where the
+  answer is tone 1–4 is a TONE_MISS, not a pass.
+- **D4.** Sandhi: grade citation, synthesize surface, accept both at tiers 1–2
+  with a teaching note on reveal, citation only at tier 3+.
+- **D5.** A TONE_MISS-only answer at tier 1 grants one free retry before
+  scoring. Tier 2+ scores partial credit with no retry.
+- **D6.** Ambiguous segmentation resolves by charitable parse.
+- **D7.** Tone colours are **Pleco's scheme**: 1 red, 2 green, 3 blue,
+  4 purple, 5 grey. One map on the orb, the input buttons and the reveal.
+  Colour is never the sole carrier.
+
+**Amendments made at signing:**
+
+- **Neutral stays `bao3bao5` in the bank.** D3 describes canonical neutral as
+  written bare; the bank writes it explicitly. Both are true at once because
+  tone is a *value* in the key -- `bao3bao5` and `bao3bao` produce the same
+  PinyinKey, so the stored spelling stops mattering. No bank rewrite.
+- **The apostrophe is a hard syllable boundary**, not a discarded separator.
+  It is pinyin's own disambiguator and nobody types one by accident, so
+  `xi'an` is never read back as `xian`. Space and hyphen stay discarded: a
+  stray space is a plausible typo and must not wreck a good answer.
+
+## F0 — Step 0 findings
+
+The live path is `submit()` in src/game.rs, branching at the language check to
+`crate::pinyin::matches`. Comparison was never raw-string equality and NFC was
+already applied. `s.word` holds the pinyin half; `s.spoken` holds the hanzi.
+
+Four findings that changed the shape of the work:
+
+1. **A tone-tolerant branch already existed.** The old `normalize` dropped every
+   `5`, so `de5` and `de` were equal. It agreed with D3 by accident, not by
+   design -- it was a global character filter with no notion of syllables. Its
+   header cited a "spec §Mandarin normalization" that does not exist in docs/.
+2. **The bank already carried pinyin**, unnamed, as the left half of a
+   `pinyin|hanzi` string (`bao3bao5|宝宝`). No `pinyinSurface`, no `syllables`.
+3. **The bank stores ü two ways** -- 45 entries as `v` (`lv3xing2|旅行`), 5 as
+   `ü` (`lü3ke4|旅客`), including the same syllable both ways. Both key
+   identically after D2 folding, but F5's named `pinyinCitation` must pick one.
+4. **Invariant 4 is violated today.** zh synthesizes from bare Hanzi:
+   `SynthesisInput(text=word)` in backend/app.py with `word` = the hanzi, via
+   Google rather than the Azure SSML builder. F6 is a fix, not a hardening.
+   Separately the TTS cache key carries no voice id, so changing the zh voice
+   serves stale clips -- a latent bug independent of this file.
+
+**A second zh grading path already exists.** src/bee_screen.rs grades with
+`norm::fold_strict` and never touches the canonicalizer, so `lv4` does not match
+`lü4` in Bee mode. F2's deliberate-failure lint has a real violation to catch on
+day one. (src/photo_import.rs also compares zh, but that is dictionary
+membership, not grading.)
+
+**Stale dependency.** This file's header blocks a drawn-character stage, but
+REVIEW_zh_metadata.md records that drawing is retired app-wide and zh is
+typed-only. src/drawing.rs still exists at 434 lines. Resolve before CC-CJK-INK
+is written against a removed stage.
+
+## F1 — the canonicalizer
+
+`src/pinyin.rs` exports `canonicalize_pinyin(input, expected_syllable_count)
+-> Result<PinyinKey, ParseError>`, total, never throwing and never silently
+returning its input. `PinyinKey` is an ordered `Vec<Syllable { segment, tone }>`
+and is the only thing zh grading compares.
+
+**F1a — the pinned inventory.** `src/pinyin_inventory.rs`, generated by
+`tools/build-pinyin-inventory.py`, 426 syllables, sha256-pinned. Three sources
+reconciled rather than trusted: pypinyin's reading table, the shipped zh bank,
+and a standard-Mandarin review list. Bank coverage is a hard gate -- a syllable
+the bank can ask for but the inventory lacks makes that word unanswerable, so
+the generator fails rather than shipping the gap. After D2's v→ü fold, all 383
+bank syllables are covered. `scripts/pinyin-inventory-check.mjs` recomputes the
+pin in the gate, so editing the list by hand fails CI.
+
+**F1b — segmentation.** Greedy longest-match with backtracking against the
+expected count. Two rules were forced by test failures rather than chosen:
+
+- *Prefer parses using no flagged syllable.* pypinyin's inventory includes bare
+  interjections (`n`, `m`, `ng`, `hm`, `hng`) and dialect readings. Greedy
+  longest-match read `xian` at two syllables as `xia` + `n`, because the
+  interjection is found before `xi` + `an`. The 14 flagged syllables stay legal
+  as answers but lose ties. **This preference is invented, not specified.**
+- *Over-inclusion in the inventory is NOT harmless.* The original reasoning --
+  that a too-large inventory only changes a typo's error class -- was wrong, and
+  the `xian` failure is the counterexample.
+
+**Deviations from the letter of the spec:**
+
+- **Full-width folding.** D2 says NFC, "universal baseline, unchanged", but NFC
+  does not fold full-width forms and Done 2 requires them in the fixture. Only
+  NFKC would, and NFKC mangles unrelated text, so the `U+FF01–FF5E` block is
+  folded explicitly. A full-width `３` from a Chinese IME means tone three.
+- **D6 cannot be implemented at F1's signature.** The charitable parse scores
+  candidates *against the expected answer*, but `canonicalize_pinyin` receives
+  only a count. Grading therefore calls `canonicalize_against(input,
+  &expected_key)`; the spec'd signature returns the deterministic greedy parse.
+  Either the signature grows a parameter or D6 belongs to the matcher.
+
+**`ê` is a legal pinyin letter** (欸/诶) and its circumflex is not a tone mark.
+Lifting tone marks off vowels rejected it until the base-letter guard learned
+the difference.
+
+## Invariants
+
+1. No raw-string equality anywhere in zh grading; comparison is on PinyinKey.
+2. The canonicalizer is total.
+3. Every zh bank entry carries `pinyinCitation`, `pinyinSurface`, `sandhiClass`.
+4. No zh audio is ever synthesized from bare Hanzi.
+5. Tone-blind mode is reachable only via the explicit matcher flag.
+6. TONE_MISS-only words never enter the general missed-words queue.
+7. Colour is redundant with a textual tone indicator on every surface.
+8. Freshness is not implemented here; zh consumes the global invariant.
+
+## Done
+
+1. **Canonicalizer coverage** — PASSING. Every syllable in the inventory, in
+   every accepted encoding, maps to exactly one key: 0 unmapped, 0 collisions
+   across all 2,130 syllable-tone pairs.
+2. **Adversarial fixture** — PASSING. `lv3 / lü3 / lu:3 / lǜ` with the last
+   staying tone 4, `ma / ma5 / ma0`, uppercase, trailing whitespace, full-width,
+   `mǎ3` erroring, `xian` vs `xi'an` at both counts.
+3. Bank field lint — not started (F5).
+4. Error-class routing — not started (F3).
+5. Settings-truth effect test — not started (F4).
+6. TTS loopback — not started (F6).
+7. Tier-1 recoverability fuzz — not started (F3/D5).
+8. Deliberate-failure piece — not started (F5/F6).
+9. **Eric's device pass** — this gate closes the file. The tests do not.
