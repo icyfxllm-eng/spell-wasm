@@ -1,7 +1,7 @@
 # CC-ZH-TONE
 
-**Status:** D1–D7 SIGNED by Eric 2026-08-19. F0, F1, F2 complete.
-F3–F6 not started.
+**Status:** D1–D7 SIGNED by Eric 2026-08-19. F0, F1, F2, F3 complete.
+F4–F6 not started.
 
 **Depends on:** the shared-canonicalizer pattern from CC-PERSIAN-FOUNDATION F1.
 **Blocks:** zh bank tooling, zh Climb pools, the drawn-character stage.
@@ -164,6 +164,65 @@ inherit the pass, so the two true grading surfaces are also checked by name.
   OCR output against the pinyin half, but a camera pointed at Chinese text
   recognizes hanzi, so no zh word can ever be found. Out of scope here.
 
+## F3 — error classification and routing
+
+`grade(typed, answer, mode) -> WordVerdict` returns a verdict PER SYLLABLE:
+Exact, ToneMiss, SegmentMiss, Both, or a whole-word LengthMismatch. The word is
+correct iff every syllable is Exact. `is_tone_only` is the routing predicate and
+is deliberately strict: any segment error anywhere makes it false.
+
+**The queue is a sibling, not a flag.** `src/tone_drill.rs` mirrors `misses.rs`
+-- same Leitner ladder, its own storage key and cap. A tone-only miss goes there
+and never into the general queue (Invariant 6), and the converse is enforced
+too: a word that later comes back with a segment wrong is evicted from the drill
+on its way into the general queue, so it cannot sit in both being drilled for
+the wrong reason.
+
+The routing law is a pure function, `tone_drill::route`, so Invariant 6 is
+testable without a running app. misses.rs learned half this lesson -- it split
+the clock out for tests but left the storage write in, so its own spaced-rep
+rules are still untested today.
+
+**Two rules the tests forced, both about forcing a reading nobody typed.**
+Constraining a parse to the answer's syllable count always finds SOME reading if
+one exists, which made LengthMismatch unreportable:
+
+- `ping2` against `ping2guo3` came back as `pi` + the interjection `ng`. When
+  the constrained parse leans on a flagged syllable the answer does not use, the
+  player's own unconstrained reading wins and it is a length mismatch.
+- `suo3` against `suo3yi3` came back as `su` + `o`, and `o` is not flagged, so
+  the rule above did not catch it. The real signal is simpler: **a tone digit
+  terminates a syllable**, so input where every syllable carries one has already
+  declared its own count. Re-reading it at another count invents an answer.
+  Input with bare syllables stays ambiguous and still resolves by the expected
+  count, which is what keeps `xian` readable as `xi` + `an`.
+
+**The reveal names the failure.** Each syllable is tinted by its tone from the
+one Pleco map, marked with its verdict, and carries its tone mark in a `sup`;
+underneath, a sentence names the failing syllable by index and class in all 15
+locales. Invariant 7 holds three ways over -- colour, mark, and words -- so the
+message survives a colour-blind player and a greyscale screenshot.
+
+**D5, and where partial credit went.** At tier 1 (`TIER_ORDER[0]`, "easy") a
+tone-only answer earns one free retry and NOTHING is scored first -- unlike the
+extra-attempts path, which records the miss before granting its retry. The
+budget is `aids.retry_used`, cleared per word by `attempts::start_word`, so it
+is once per word. Head-to-head is excluded: a free swing one side gets and the
+other does not is not a fair match. Little Speller cannot reach it at all,
+since tone-blind grading never yields a tone-only verdict.
+
+The rule lives in `tone_drill::tier1_retry_earned` rather than in the app, so
+Done 7 can fuzz it; game.rs decides only the runtime context (language, versus)
+that a pure function cannot see.
+
+Scoring in this app was boolean everywhere -- `TierStat` counted `seen` and
+`correct` and nothing else -- so partial credit had no home and the constant
+would have shipped unused. `TierStat` now carries `tone_partial` beside
+`correct`, and `credited()` weights it by `ZH_TONE_MISS_CREDIT` (0.5). The
+displayed pair stays the honest whole-correct count; only the percentage is
+credited, and the tone credit is NAMED next to it in all 15 locales rather than
+silently inflating the number.
+
 ## Invariants
 
 1. No raw-string equality anywhere in zh grading; comparison is on PinyinKey.
@@ -186,9 +245,13 @@ inherit the pass, so the two true grading surfaces are also checked by name.
 3. **Second-grading-path lint** — PASSING (F2's deliberate-failure gate).
    Reverting Bee to fold_strict fails the scan by name.
 3b. Bank field lint — not started (F5).
-4. Error-class routing — not started (F3).
+4. **Error-class routing** — PASSING. 50 tone-wrong, 50 segment-wrong and 50
+   length-mismatch synthetics classify correctly; all 50 tone-only words route
+   to the drill and none to the general queue.
 5. Settings-truth effect test — not started (F4).
 6. TTS loopback — not started (F6).
-7. Tier-1 recoverability fuzz — not started (F3/D5).
+7. **Tier-1 recoverability fuzz** — PASSING. 100+ randomized tone-only
+   submissions at tier 1, deterministic seed so a failure reproduces: zero
+   unrecoverable zeros on first encounter.
 8. Deliberate-failure piece — not started (F5/F6).
 9. **Eric's device pass** — this gate closes the file. The tests do not.

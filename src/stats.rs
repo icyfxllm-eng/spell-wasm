@@ -23,6 +23,18 @@ pub fn record(state: &mut AppState, lang: &str, tier: &str, correct: bool) {
     render(state);
 }
 
+/// CC-ZH-TONE F3: a tone-only miss is an attempt like any other, but it is
+/// neither correct nor a plain miss. Separate from `record` so `seen` is
+/// incremented exactly once and `correct` is never inflated.
+pub fn record_tone_only(state: &mut AppState, lang: &str, tier: &str) {
+    let lang_stats = state.stats.entry(lang.to_string()).or_default();
+    let t = lang_stats.entry(tier.to_string()).or_default();
+    t.seen += 1;
+    t.tone_partial += 1;
+    save(state);
+    render(state);
+}
+
 pub fn render(state: &AppState) {
     // CC-LEARNING-ENGINE L2 — the guardian section, view-only (sharing
     // would be an explicit affordance; v1 has none). Dark by default.
@@ -49,9 +61,25 @@ pub fn render(state: &AppState) {
         let d = by_tier.and_then(|m| m.get(tier)).unwrap_or(&empty);
         total_seen += d.seen;
         total_correct += d.correct;
-        let pct = if d.seen > 0 { (100 * d.correct) / d.seen } else { 0 };
+        // Credited, not raw: a tone-only miss earns a fraction (F3). The
+        // numerator shown stays the honest whole-correct count, and the tone
+        // credit is named next to it rather than silently inflating the pair.
+        let pct = if d.seen > 0 {
+            (100.0 * d.credited() / d.seen as f64).round() as u32
+        } else {
+            0
+        };
         let num = if d.seen > 0 {
-            format!("<b>{}</b>/{} \u{b7} {}%", d.correct, d.seen, pct)
+            {
+                let mut cell = format!("<b>{}</b>/{} \u{b7} {}%", d.correct, d.seen, pct);
+                if d.tone_partial > 0 {
+                    cell.push_str(&format!(
+                        " <span class=\"tone-credit\">({})</span>",
+                        crate::i18n::tp("stats.toneCredit", &[("n", &d.tone_partial.to_string())])
+                    ));
+                }
+                cell
+            }
         } else {
             "\u{2014}".to_string()
         };

@@ -373,6 +373,13 @@ pub const CORRECT_DELAY_MS: i32 = 2200;
 // base game is one attempt per word; the only retries are shields (The Climb)
 // and the extra-attempts toggle (normal mode), both in crate::attempts.
 
+/// CC-ZH-TONE F3: what a tone-only answer is worth. Above a segment miss
+/// (0.0) and below correct (1.0) -- the player heard the word and spelled it,
+/// they just put the wrong tone on it. A tuning constant on purpose: the exact
+/// value is a product call, and it must never be a bare number inside the
+/// matcher.
+pub const ZH_TONE_MISS_CREDIT: f64 = 0.5;
+
 pub const SR_MAXBOX: u32 = 5;
 // ms intervals per box, index = box number (box 0 unused)
 pub const SR_INT: [i64; 6] = [0, 0, 10 * 60 * 1000, 24 * 3600 * 1000, 3 * 24 * 3600 * 1000, 7 * 24 * 3600 * 1000];

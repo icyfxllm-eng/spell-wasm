@@ -1173,6 +1173,10 @@ pub fn next_word(app: &App) {
         }
     }
 
+    // F3: the previous word's verdict must not survive into this one, or a
+    // stale tone-only reading would route the next miss to the wrong queue.
+    ZH_VERDICT.with(|c| *c.borrow_mut() = None);
+
     app.borrow_mut().answered = false;
     // CC-ATTEMPTS-SHIELDS: a new word refreshes its one-retry budget (I4/PD5).
     crate::attempts::start_word(&mut app.borrow_mut());
@@ -1270,8 +1274,13 @@ pub fn submit_guess(app: &App) {
     // other language uses the NFC/case fold (accent-strict, Kid-lenient).
     let correct = if cur_lang == crate::consts::ZH {
         // F2: Little Speller is tone-blind by FLAG on the one matcher, never
-        // by a second code path (Invariant 5).
-        crate::pinyin::matches_with(&typed, &word, crate::pinyin::ToneMode::for_kid(kid))
+        // by a second code path (Invariant 5). F3: keep the per-syllable
+        // verdict — it decides which queue a miss studies in, and what the
+        // reveal is allowed to say.
+        let v = crate::pinyin::grade(&typed, &word, crate::pinyin::ToneMode::for_kid(kid));
+        let ok = v.is_correct();
+        ZH_VERDICT.with(|c| *c.borrow_mut() = Some(v));
+        ok
     } else if cur_lang == crate::consts::KO {
         // Korean grades at jamo granularity (Phase 3); an exact block match is
         // score 1.0. The per-jamo diff drives the wrong-answer coaching below.
@@ -1407,6 +1416,8 @@ fn on_correct(app: &App) {
             selection::note_outcome(&cur_lang, &word, true);
         }
         let cleared = misses::promote_miss(&mut app.borrow_mut(), &word, &cur_lang);
+        // F3: the drill spaces on the same Leitner ladder.
+        crate::tone_drill::promote(&mut app.borrow_mut(), &word, &cur_lang);
         refresh_mode_buttons(app);
         if cleared {
             achievements::unlock(&mut app.borrow_mut(), "cleared");
@@ -1505,7 +1516,7 @@ fn finalize_incorrect_ex(app: &App, glyph: &str, prefix: &str, feedback_class: &
     // word stats) — the match never counts toward solo progress.
     if record && !versus_on {
         stats::record(&mut app.borrow_mut(), &cur_lang, &cur_tier, false);
-        misses::add_miss(&mut app.borrow_mut(), &word, &cur_lang, &cur_tier);
+        record_miss_routed(app, &word, &cur_lang, &cur_tier);
         refresh_mode_buttons(app);
     }
     // Adaptive word stats: a loss (out of tries / timeout / give-up) is a miss,
@@ -1570,6 +1581,13 @@ fn finalize_incorrect_ex(app: &App, glyph: &str, prefix: &str, feedback_class: &
         // on a cascading script, but colouring the letters can (they stay one
         // shaped run). CC-RTL; reachable only once RTL_SUPPORTED flips.
         dom::set_html("feedback", &format!("{}{}", prefix, render_reveal_colored(&reveal, &typed)));
+        dom::el("feedback").set_class_name(feedback_class);
+    } else if let Some(zh) = zh_reveal_html(&cur_lang, &word, &app.borrow().spoken.clone()) {
+        // CC-ZH-TONE F3: never an opaque "incorrect". The reveal marks each
+        // syllable with its own verdict and names the failing one by index and
+        // error class, because a player who was one tone away has to be told
+        // that rather than left to guess which part was wrong.
+        dom::set_html("feedback", &format!("{prefix}{zh}"));
         dom::el("feedback").set_class_name(feedback_class);
     } else {
         dom::set_html("feedback", &format!("{}<span class=\"reveal\">{}</span>", prefix, dom::escape_html(&reveal)));
@@ -1727,6 +1745,122 @@ fn extra_attempt_ctx(s: &AppState) -> bool {
         && !s.review
 }
 
+thread_local! {
+    /// The per-syllable verdict for the zh answer just submitted (F3). Held
+    /// here because the routing decision happens several calls later, in the
+    /// miss recorder, and threading it through every mode's wrong-answer path
+    /// would touch code that has nothing to do with Mandarin.
+    static ZH_VERDICT: std::cell::RefCell<Option<crate::pinyin::WordVerdict>> =
+        const { std::cell::RefCell::new(None) };
+}
+
+/// CC-ZH-TONE F3 routing, Invariant 6: a word whose ONLY failures were tone
+/// misses studies in the tone drill and never enters the general missed-words
+/// queue — they are different studies and mixing them wastes both.
+///
+/// The converse matters as much: a word that comes back with a segment wrong is
+/// no longer a tone problem, so it leaves the drill on its way into the general
+/// queue. Without that, a word could sit in both and be drilled for the wrong
+/// reason forever.
+/// CC-ZH-TONE F3 — the per-syllable reveal.
+///
+/// Returns None for anything that is not a graded Mandarin miss, so every other
+/// language keeps the plain reveal untouched.
+///
+/// Invariant 7: colour is never the sole carrier. Each syllable is tinted by
+/// its tone AND carries its tone mark, and the failure is stated in words
+/// underneath, so the message survives a colour-blind player and a greyscale
+/// screenshot alike.
+fn zh_reveal_html(lang: &str, word: &str, hanzi: &str) -> Option<String> {
+    use crate::pinyin::{SyllableVerdict, WordVerdict, TONE_COLOURS, TONE_MARKS_DISPLAY};
+    if lang != crate::consts::ZH {
+        return None;
+    }
+    let verdict = ZH_VERDICT.with(|v| v.borrow().clone())?;
+    let key = crate::pinyin::canonicalize_answer(word).ok()?;
+    let note = match &verdict {
+        WordVerdict::LengthMismatch { expected, got } => crate::i18n::tp(
+            "zh.rev.lengthMismatch",
+            &[("got", &got.to_string()), ("want", &expected.to_string())],
+        ),
+        WordVerdict::Graded(v) => {
+            let (i, first) = v.iter().enumerate().find(|(_, s)| **s != SyllableVerdict::Exact)?;
+            let k = match first {
+                SyllableVerdict::ToneMiss => "zh.rev.toneMiss",
+                _ => "zh.rev.segmentMiss",
+            };
+            crate::i18n::tp(k, &[("n", &(i + 1).to_string())])
+        }
+        // A stored form we could not parse is a bank bug; say nothing clever.
+        WordVerdict::Unparseable(_) => return None,
+    };
+    let per: Vec<SyllableVerdict> = match &verdict {
+        WordVerdict::Graded(v) => v.clone(),
+        _ => vec![SyllableVerdict::SegmentMiss; key.len()],
+    };
+    let mut spans = String::new();
+    for (i, syl) in key.iter().enumerate() {
+        let cls = per.get(i).copied().unwrap_or(SyllableVerdict::SegmentMiss).css_class();
+        let tone = syl.tone as usize;
+        spans.push_str(&format!(
+            "<span class=\"zh-syl {}\" style=\"color:{}\" data-tone=\"{}\">{}<sup class=\"zh-tone\">{}</sup></span>",
+            cls,
+            TONE_COLOURS[tone],
+            tone,
+            dom::escape_html(&syl.segment),
+            dom::escape_html(TONE_MARKS_DISPLAY[tone]),
+        ));
+    }
+    // The hanzi still rides along -- the player types pinyin but is learning
+    // the character it stands for, which is what the old reveal showed.
+    Some(format!(
+        "<span class=\"reveal zh-reveal\">{spans}<span class=\"zh-hanzi\">{}</span></span>\
+         <span class=\"zh-note\">{}</span>",
+        dom::escape_html(hanzi),
+        dom::escape_html(&note)
+    ))
+}
+
+/// CC-ZH-TONE D5 — is this miss one the player should get a free swing at?
+///
+/// Only when every failing syllable is a TONE miss, only at tier 1, and only
+/// once per word (`aids.retry_used` is cleared by `attempts::start_word`).
+/// Head-to-head is excluded: a free retry one side gets and the other does not
+/// is not a fair match.
+///
+/// Little Speller cannot reach this: tone-blind grading never produces a tone
+/// miss, so the verdict can never be tone-only there.
+fn zh_tone_retry_available(app: &App) -> bool {
+    let (lang, tier, retry_used, versus) = {
+        let s = app.borrow();
+        (s.cur_lang.clone(), s.cur_tier.clone(), s.aids.retry_used, s.versus.enabled)
+    };
+    if lang != crate::consts::ZH || versus {
+        return false;
+    }
+    // The tier/tone/once rule itself lives in tone_drill so it is fuzzable
+    // (Done 7). Only the runtime context it cannot see is decided here.
+    ZH_VERDICT.with(|v| {
+        v.borrow()
+            .as_ref()
+            .is_some_and(|d| crate::tone_drill::tier1_retry_earned(d, &tier, retry_used))
+    })
+}
+
+fn record_miss_routed(app: &App, word: &str, lang: &str, tier: &str) {
+    use crate::tone_drill::Queue;
+    let queue = ZH_VERDICT.with(|v| {
+        v.borrow().as_ref().map_or(Queue::General, crate::tone_drill::route)
+    });
+    let mut s = app.borrow_mut();
+    if queue == Queue::ToneDrill {
+        crate::tone_drill::add(&mut s, word, lang, tier);
+    } else {
+        misses::add_miss(&mut s, word, lang, tier);
+        crate::tone_drill::remove(&mut s, word, lang);
+    }
+}
+
 /// Record the FIRST-submission miss exactly once: accuracy, spaced-rep/Misses,
 /// and adaptive word stats. The retry outcome never re-records (I2 / A2 / A9).
 fn record_first_miss(app: &App) {
@@ -1734,8 +1868,17 @@ fn record_first_miss(app: &App) {
         let s = app.borrow();
         (s.cur_lang.clone(), s.cur_tier.clone(), s.word.clone(), s.review)
     };
-    stats::record(&mut app.borrow_mut(), &cur_lang, &cur_tier, false);
-    misses::add_miss(&mut app.borrow_mut(), &word, &cur_lang, &cur_tier);
+    // F3: a tone-only miss is neither correct nor a plain miss — it earns
+    // partial credit instead of a zero.
+    let tone_only = ZH_VERDICT.with(|v| {
+        v.borrow().as_ref().is_some_and(crate::pinyin::WordVerdict::is_tone_only)
+    });
+    if tone_only {
+        stats::record_tone_only(&mut app.borrow_mut(), &cur_lang, &cur_tier);
+    } else {
+        stats::record(&mut app.borrow_mut(), &cur_lang, &cur_tier, false);
+    }
+    record_miss_routed(app, &word, &cur_lang, &cur_tier);
     refresh_mode_buttons(app);
     if !review {
         wordstats::record(&cur_lang, &word, false);
@@ -1908,6 +2051,18 @@ fn on_wrong(app: &App) {
     }
     if extra_attempt_ctx(&app.borrow()) {
         on_wrong_extra_attempt(app);
+        return;
+    }
+    // CC-ZH-TONE D5: at tier 1 a tone-only answer is one tap from right, and
+    // tier 1 is the shop window — sending a player to zero for a tone they
+    // nearly had is the conversion risk D1 flagged. One free retry, and
+    // NOTHING is scored first: unlike the extra-attempts path above, this does
+    // not record a miss before granting it. Tier 2+ takes partial credit with
+    // no retry.
+    if zh_tone_retry_available(app) {
+        app.borrow_mut().aids.retry_used = true;
+        crate::haptics::incorrect(app.borrow().kid);
+        grant_retry(app, "zh.rev.toneRetry");
         return;
     }
     // build-54: the legacy 3-try mechanic is RETIRED. The base game is now one

@@ -40,6 +40,21 @@ pub struct Prefs {
 pub struct TierStat {
     pub seen: u32,
     pub correct: u32,
+    /// CC-ZH-TONE F3: attempts that were right in every syllable but wrong in
+    /// tone. Counted apart from `correct` so accuracy can credit them at
+    /// ZH_TONE_MISS_CREDIT without ever claiming the word was spelled right.
+    /// `default` so stats saved before this field still load.
+    #[serde(default)]
+    pub tone_partial: u32,
+}
+
+impl TierStat {
+    /// Credited correctness: whole for a correct answer, a fraction of one for
+    /// a tone-only miss. The fraction is a tuning constant in consts.rs, never
+    /// a number written here.
+    pub fn credited(&self) -> f64 {
+        self.correct as f64 + self.tone_partial as f64 * crate::consts::ZH_TONE_MISS_CREDIT
+    }
 }
 
 /// lang key -> tier -> stat
@@ -172,6 +187,9 @@ pub struct AppState {
 
     pub custom: CustomSet,
     pub misses: Vec<MissEntry>,
+    /// CC-ZH-TONE F3: tone-only misses, a separate study from `misses`.
+    /// Persisted under its own key by tone_drill.rs, not with AppState.
+    pub tone_drill: Vec<MissEntry>,
     pub achievements: AchState,
     pub stats: Stats,
     pub saved_name: String,
@@ -235,6 +253,7 @@ impl Default for AppState {
                 custom_marks: Default::default(),
             },
             misses: Vec::new(),
+            tone_drill: Vec::new(),
             achievements: AchState::default(),
             stats: Stats::default(),
             saved_name: String::new(),

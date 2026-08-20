@@ -826,6 +826,16 @@
 
   .feedback{min-height:30px;margin-top:18px;text-align:center;font-size:15px;font-weight:600}
   .feedback .reveal{font-family:var(--mono);color:var(--amber-soft);letter-spacing:.1em;word-break:break-word}
+  /* CC-ZH-TONE F3/D7 — Pleco tone colours come from pinyin::TONE_COLOURS as an
+     inline style, so the map lives in ONE place and this stylesheet cannot
+     drift from it. Invariant 7: the tone mark rides in a <sup> and the verdict
+     is stated in words below, so colour is never the sole carrier. */
+  .feedback .zh-syl{margin-right:.35em}
+  .feedback .zh-syl .zh-tone{font-size:.7em;opacity:.85;margin-left:.05em}
+  .feedback .zh-syl.zh-tone-miss{text-decoration:underline wavy currentColor;text-underline-offset:.25em}
+  .feedback .zh-syl.zh-miss{opacity:.75;text-decoration:line-through}
+  .feedback .zh-hanzi{font-family:inherit;color:var(--amber-soft);margin-left:.2em;letter-spacing:0}
+  .feedback .zh-note{display:block;margin-top:.35em;font-size:.85em;opacity:.9;letter-spacing:0}
 
   /* ==== CC-RTL F3 — bidi isolation at every embed point ==================
      These spans hold a WORD dropped into surrounding chrome: the reveal is

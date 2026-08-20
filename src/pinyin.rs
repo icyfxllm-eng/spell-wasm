@@ -414,6 +414,157 @@ pub fn matches_with(typed: &str, answer: &str, mode: ToneMode) -> bool {
     }
 }
 
+/// F3 — what kind of wrong. "Wrong segment" and "right segment, wrong tone" are
+/// different mistakes, and showing them identically is the largest avoidable
+/// retention loss in this feature: a player one tone away needs to be told so.
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum SyllableVerdict {
+    /// Segment and tone both match.
+    Exact,
+    /// Segment matches, tone does not. The amber case.
+    ToneMiss,
+    /// Segment does not match, tone happens to.
+    SegmentMiss,
+    /// Neither matches.
+    Both,
+}
+
+impl SyllableVerdict {
+    /// The class name a surface uses, so colour is never invented per-screen.
+    pub fn css_class(self) -> &'static str {
+        match self {
+            SyllableVerdict::Exact => "zh-exact",
+            SyllableVerdict::ToneMiss => "zh-tone-miss",
+            SyllableVerdict::SegmentMiss | SyllableVerdict::Both => "zh-miss",
+        }
+    }
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub enum WordVerdict {
+    /// One verdict per syllable of the ANSWER, in order.
+    Graded(Vec<SyllableVerdict>),
+    /// Syllable counts differ — red, whole word. Carries both counts so the
+    /// reveal can say which way it went instead of just failing.
+    LengthMismatch { expected: usize, got: usize },
+    /// The typed answer is not parseable pinyin at all. Distinct from a wrong
+    /// answer: the player wrote something the notation cannot express, and the
+    /// error names which rule it broke.
+    Unparseable(ParseError),
+}
+
+impl WordVerdict {
+    /// The word is correct iff every syllable is Exact.
+    pub fn is_correct(&self) -> bool {
+        matches!(self, WordVerdict::Graded(v) if v.iter().all(|s| *s == SyllableVerdict::Exact))
+    }
+
+    /// Tone-only: at least one tone miss, and nothing worse. This is the
+    /// predicate that routes a word to the tone drill instead of the general
+    /// missed-words queue (Invariant 6), so it must never be true for a word
+    /// that also got a segment wrong.
+    pub fn is_tone_only(&self) -> bool {
+        match self {
+            WordVerdict::Graded(v) => {
+                v.iter().any(|s| *s == SyllableVerdict::ToneMiss)
+                    && v.iter().all(|s| {
+                        matches!(s, SyllableVerdict::Exact | SyllableVerdict::ToneMiss)
+                    })
+            }
+            _ => false,
+        }
+    }
+
+    /// 1-based indices of the syllables that failed, for a reveal that names
+    /// the failure instead of saying "incorrect".
+    pub fn failing_indices(&self) -> Vec<usize> {
+        match self {
+            WordVerdict::Graded(v) => v
+                .iter()
+                .enumerate()
+                .filter(|(_, s)| **s != SyllableVerdict::Exact)
+                .map(|(i, _)| i + 1)
+                .collect(),
+            _ => Vec::new(),
+        }
+    }
+}
+
+/// Grade a typed Mandarin answer syllable by syllable.
+///
+/// In [`ToneMode::Blind`] a tone difference is not a miss, so a tone-only
+/// answer grades Exact — Little Speller never sees an amber verdict.
+pub fn grade(typed: &str, answer: &str, mode: ToneMode) -> WordVerdict {
+    let want = match canonicalize_answer(answer) {
+        Ok(w) => w,
+        // An unparseable STORED form is a bank bug, not a player mistake. Fall
+        // back to text equality so the round is still playable.
+        Err(e) => {
+            return if typed == answer {
+                WordVerdict::Graded(vec![SyllableVerdict::Exact])
+            } else {
+                WordVerdict::Unparseable(e)
+            }
+        }
+    };
+    // A tone digit terminates a syllable, so input where EVERY syllable carries
+    // one has already declared how many syllables the player meant. Re-reading
+    // it at some other count invents an answer nobody typed: "suo3" against
+    // "suo3yi3" would come back as su + o rather than the length mismatch it
+    // plainly is.
+    //
+    // Input with bare syllables is genuinely ambiguous and still resolves by
+    // the expected count, which is what keeps "xian" readable as xi + an.
+    if let Ok(nat) = canonicalize_answer(typed) {
+        let digits = lex(typed)
+            .map(|ls| ls.iter().filter(|l| l.digit_tone.is_some()).count())
+            .unwrap_or(0);
+        if digits == nat.len() && nat.len() != want.len() {
+            return WordVerdict::LengthMismatch { expected: want.len(), got: nat.len() };
+        }
+    }
+    let got = match canonicalize_against(typed, &want) {
+        Ok(g) => g,
+        Err(ParseError::Unsegmentable { expected, found }) => {
+            return WordVerdict::LengthMismatch { expected, got: found }
+        }
+        Err(e) => return WordVerdict::Unparseable(e),
+    };
+    if got.len() != want.len() {
+        return WordVerdict::LengthMismatch { expected: want.len(), got: got.len() };
+    }
+    // Constraining to the answer's syllable count always finds SOME reading if
+    // one exists, which would make a length mismatch unreportable: "ping2"
+    // against "ping2guo3" comes back as pi + ng, using the bare interjection.
+    // That is an invented reading, not the player's. When the constrained parse
+    // leans on a flagged syllable the answer itself does not use, trust the
+    // player's own unconstrained reading and call it a length mismatch.
+    //
+    // This is why "xian" against xi + an still works: that parse invents
+    // nothing, so the charitable reading stands (F1b/D6).
+    if odd_syllables(&got) > odd_syllables(&want) {
+        let natural = canonicalize_answer(typed).map(|k| k.len()).unwrap_or(0);
+        if natural != want.len() {
+            return WordVerdict::LengthMismatch { expected: want.len(), got: natural };
+        }
+    }
+    WordVerdict::Graded(
+        got.iter()
+            .zip(&want)
+            .map(|(g, w)| {
+                let seg = g.segment == w.segment;
+                let tone = g.tone == w.tone || mode == ToneMode::Blind;
+                match (seg, tone) {
+                    (true, true) => SyllableVerdict::Exact,
+                    (true, false) => SyllableVerdict::ToneMiss,
+                    (false, true) => SyllableVerdict::SegmentMiss,
+                    (false, false) => SyllableVerdict::Both,
+                }
+            })
+            .collect(),
+    )
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -660,6 +811,121 @@ mod tests {
         seen.sort_unstable();
         seen.dedup();
         assert_eq!(seen.len(), 5, "two tones share a colour");
+    }
+
+    // ---- F3: error classification (Done 4) ----
+
+    #[test]
+    fn verdicts_name_the_kind_of_wrong() {
+        use SyllableVerdict::*;
+        let g = |t: &str, a: &str| grade(t, a, ToneMode::Graded);
+        assert_eq!(g("ma3", "ma3"), WordVerdict::Graded(vec![Exact]));
+        assert_eq!(g("ma1", "ma3"), WordVerdict::Graded(vec![ToneMiss]));
+        assert_eq!(g("mao3", "ma3"), WordVerdict::Graded(vec![SegmentMiss]));
+        assert_eq!(g("mao1", "ma3"), WordVerdict::Graded(vec![Both]));
+        // D3 again, now as a verdict: bare where the answer is toned is amber.
+        assert_eq!(g("ma", "ma3"), WordVerdict::Graded(vec![ToneMiss]));
+        // Per syllable, not per word: one right, one mis-toned.
+        assert_eq!(g("ping2guo2", "ping2guo3"), WordVerdict::Graded(vec![Exact, ToneMiss]));
+    }
+
+    #[test]
+    fn length_mismatch_is_a_whole_word_verdict() {
+        assert!(matches!(
+            grade("ping2", "ping2guo3", ToneMode::Graded),
+            WordVerdict::LengthMismatch { .. }
+        ));
+    }
+
+    #[test]
+    fn correct_requires_every_syllable_exact() {
+        assert!(grade("ping2guo3", "ping2guo3", ToneMode::Graded).is_correct());
+        assert!(!grade("ping2guo2", "ping2guo3", ToneMode::Graded).is_correct());
+        assert!(!grade("ping2", "ping2guo3", ToneMode::Graded).is_correct());
+    }
+
+    #[test]
+    fn tone_only_is_exactly_the_routing_predicate() {
+        // Invariant 6 hangs off this: true routes to the drill, false to the
+        // general queue. A word with ANY segment error must be false.
+        assert!(grade("ping2guo2", "ping2guo3", ToneMode::Graded).is_tone_only());
+        assert!(grade("ma1", "ma3", ToneMode::Graded).is_tone_only());
+        assert!(!grade("ping2guo3", "ping2guo3", ToneMode::Graded).is_tone_only());
+        assert!(!grade("ping2gua3", "ping2guo3", ToneMode::Graded).is_tone_only());
+        // Mixed: one tone miss AND one segment miss is not a tone study.
+        assert!(!grade("ping2gua2", "ping2guo3", ToneMode::Graded).is_tone_only());
+        assert!(!grade("ping2", "ping2guo3", ToneMode::Graded).is_tone_only());
+    }
+
+    #[test]
+    fn the_reveal_can_name_the_failing_syllable() {
+        let v = grade("ping2guo2", "ping2guo3", ToneMode::Graded);
+        assert_eq!(v.failing_indices(), vec![2], "1-based, so the reveal can say it");
+        assert!(grade("ping2guo3", "ping2guo3", ToneMode::Graded).failing_indices().is_empty());
+    }
+
+    #[test]
+    fn little_speller_never_sees_amber() {
+        // Tone-blind grading cannot produce a tone miss, so no Little Speller
+        // answer can route to the tone drill.
+        let v = grade("ma1", "ma3", ToneMode::Blind);
+        assert!(v.is_correct());
+        assert!(!v.is_tone_only());
+    }
+
+    /// Done 4: a hundred synthetic wrong answers, half segment-wrong and half
+    /// tone-wrong, plus length mismatches — every one classified correctly, and
+    /// every tone-only word routed away from the general queue.
+    #[test]
+    fn hundred_synthetic_wrong_answers_classify() {
+        let words: Vec<&str> = crate::words::tier_for("zh", "medium")
+            .iter()
+            .filter_map(|e| e.split('|').next())
+            .filter(|p| canonicalize_answer(p).map(|k| k.len() == 2).unwrap_or(false))
+            .take(50)
+            .collect();
+        assert!(words.len() >= 50, "need 50 two-syllable words, got {}", words.len());
+        let (mut tone_cases, mut seg_cases, mut len_cases) = (0, 0, 0);
+        for w in &words {
+            let key = canonicalize_answer(w).unwrap();
+            // Tone-wrong: same segments, one tone rotated.
+            let toned: String = key
+                .iter()
+                .enumerate()
+                .map(|(i, s)| {
+                    let t = if i == 0 { s.tone % 5 + 1 } else { s.tone };
+                    format!("{}{}", s.segment, t)
+                })
+                .collect();
+            let v = grade(&toned, w, ToneMode::Graded);
+            assert!(v.is_tone_only(), "{w}: {toned} should be tone-only, got {v:?}");
+            assert!(!v.is_correct(), "{w}: a tone miss is not correct");
+            tone_cases += 1;
+
+            // Segment-wrong: first syllable replaced by a different legal one,
+            // tones untouched.
+            let other = if key[0].segment == "ma" { "shu" } else { "ma" };
+            let segged = format!(
+                "{}{}{}{}",
+                other, key[0].tone, key[1].segment, key[1].tone
+            );
+            let v = grade(&segged, w, ToneMode::Graded);
+            assert!(!v.is_tone_only(), "{w}: {segged} is a segment miss, not a tone study");
+            assert!(!v.is_correct());
+            seg_cases += 1;
+
+            // Length: drop the second syllable.
+            let short = format!("{}{}", key[0].segment, key[0].tone);
+            let v = grade(&short, w, ToneMode::Graded);
+            assert!(
+                matches!(v, WordVerdict::LengthMismatch { .. }),
+                "{w}: {short} should be a length mismatch, got {v:?}"
+            );
+            assert!(!v.is_tone_only(), "a length mismatch never routes to the drill");
+            len_cases += 1;
+        }
+        assert_eq!((tone_cases, seg_cases), (50, 50));
+        assert_eq!(len_cases, 50);
     }
 
     #[test]

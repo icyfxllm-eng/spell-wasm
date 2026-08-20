@@ -32,7 +32,7 @@ const COMPARISONS = [
   /\bfold_lenient\s*\(/,
 ];
 // The canonicalizer. A grading site that calls one of these is compliant.
-const CANONICAL = /\bpinyin::(matches|matches_with|canonicalize_\w+)\b/;
+const CANONICAL = /\bpinyin::(grade|matches|matches_with|canonicalize_\w+)\b/;
 // How far from the split a comparison still counts as the same logic.
 const WINDOW = 12;
 
@@ -84,8 +84,11 @@ for (const f of files) {
 // The two real grading sites are checked by name rather than by heuristic, so
 // that renaming or gutting one is a failure instead of a quiet pass.
 const game = fs.readFileSync(`${SRC}/game.rs`, "utf8");
-if (!/crate::pinyin::matches_with\s*\(/.test(game))
-  problems.push("game.rs no longer grades zh through pinyin::matches_with (F2)");
+// F3 moved the submission path from matches_with to grade, which returns the
+// per-syllable verdict. Either is the canonical path; neither being present
+// means zh grading has left the canonicalizer.
+if (!/crate::pinyin::(grade|matches_with)\s*\(/.test(game))
+  problems.push("game.rs no longer grades zh through the canonicalizer (F2)");
 if (!/ToneMode::for_kid\s*\(/.test(game))
   problems.push(
     "game.rs does not derive the tone mode from the kid flag — Little Speller " +
@@ -106,7 +109,7 @@ if (problems.length) {
 }
 console.log(
   `zh-grading-path-check: OK — ${files.length} sources scanned, one zh grading ` +
-    `path (pinyin::matches_with), tone-blindness is a flag.`,
+    `path (pinyin::grade / matches_with), tone-blindness is a flag.`,
 );
 
 // Selftest: the scan has to actually catch the thing it exists to catch. Feed

@@ -71,6 +71,7 @@ mod photo_list;
 mod norm;
 mod online_spelloff;
 mod pinyin;
+mod tone_drill; // CC-ZH-TONE F3 — tone misses study separately (Invariant 6)
 mod pinyin_inventory; // GENERATED — tools/build-pinyin-inventory.py (CC-ZH-TONE F1a)
 mod notifications;
 mod notify;
@@ -132,6 +133,7 @@ pub fn start() -> Result<(), JsValue> {
     settings::load_prefs(&mut state);
     importer::load_custom(&mut state);
     misses::load(&mut state);
+    tone_drill::load(&mut state); // CC-ZH-TONE F3
     achievements::load(&mut state);
     stats::load(&mut state);
     // Restore the persisted free-play decks so no-repeat continues across
