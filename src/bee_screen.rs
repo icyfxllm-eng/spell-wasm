@@ -248,6 +248,18 @@ fn speak(app: &App, rate: f32) {
     let Some(w) = word_now() else { return };
     let lang = LANG.with(|l| l.borrow().clone());
     let _ = app;
+    // CC-ZH-TONE F6. This used to hand the PINYIN half to the device voice, so
+    // a Mandarin voice read romanization aloud and zh Bee audio was wrong
+    // outright — the main game speaks the hanzi. Mandarin now takes the same
+    // server clip as everywhere else, with its reading forced, and never the
+    // on-device voice, which cannot be given a reading (Invariant 4).
+    if lang == crate::consts::ZH {
+        let (pinyin, hanzi) = w.split_once('|').unwrap_or((w.as_str(), w.as_str()));
+        if let Some(py) = crate::pinyin::phoneme_reading(pinyin) {
+            crate::api::play_word_with(hanzi, Some(&py), "normal", rate as f64, &lang, || {});
+        }
+        return;
+    }
     speech_out::speak(w.split('|').next().unwrap_or(&w), rate, &lang);
 }
 

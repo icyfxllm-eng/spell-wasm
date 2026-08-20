@@ -113,8 +113,19 @@ fn urlencode(s: &str) -> String {
     js_sys::encode_uri_component(s).as_string().unwrap_or_else(|| s.to_string())
 }
 
-fn speak_url(word: &str, variant: &str, lang: &str) -> String {
-    format!("{}/api/speak?word={}&variant={}&lang={}", api_base(), urlencode(word), variant, lang)
+fn speak_url(word: &str, py: Option<&str>, variant: &str, lang: &str) -> String {
+    // CC-ZH-TONE F6: `py` carries the forced pinyin reading. It rides in its
+    // own parameter because `word` is validated as letters-and-marks only —
+    // tone digits and the spaces between syllables would be rejected outright.
+    let reading = py.map(|p| format!("&py={}", urlencode(p))).unwrap_or_default();
+    format!(
+        "{}/api/speak?word={}&variant={}&lang={}{}",
+        api_base(),
+        urlencode(word),
+        variant,
+        lang,
+        reading
+    )
 }
 
 /// Plays `word`'s audio (rewinding + reusing the element if it's already the
@@ -139,10 +150,35 @@ fn speak_url(word: &str, variant: &str, lang: &str) -> String {
 /// natively just fine. `rate` still applies on the browser `<audio>` fallback
 /// (and on the web build, which never takes the native path).
 pub fn play_word(word: &str, variant: &str, rate: f64, lang: &str, on_fail: impl FnOnce() + 'static) {
+    play_word_with(word, None, variant, rate, lang, on_fail);
+}
+
+/// CC-ZH-TONE F6 — as `play_word`, plus the forced reading.
+///
+/// Mandarin REQUIRES `py`: the server refuses a zh clip without one, because a
+/// guessed polyphone is the failure this whole feature exists to remove.
+///
+/// zh also drops the on-device rescue from its source chain. Native TTS cannot
+/// be handed a reading, so it would speak bare Hanzi and guess — exactly what
+/// Invariant 4 forbids. The consequence is deliberate and worth stating: with
+/// no pack and no server, Mandarin has NO audio rather than wrong audio.
+pub fn play_word_with(
+    word: &str,
+    py: Option<&str>,
+    variant: &str,
+    rate: f64,
+    lang: &str,
+    on_fail: impl FnOnce() + 'static,
+) {
+    let mut order = source_order();
+    if lang == crate::consts::ZH {
+        order.retain(|s| *s != Source::NativeTts);
+    }
     play_chain(
-        source_order(),
+        order,
         0,
         word.to_string(),
+        py.map(str::to_string),
         variant.to_string(),
         rate,
         lang.to_string(),
@@ -152,10 +188,12 @@ pub fn play_word(word: &str, variant: &str, rate: f64, lang: &str, on_fail: impl
 
 /// Try source `order[i]`; each source's failure advances to the next, and the
 /// last source's failure runs the caller's `on_fail`. Wall of the whole router.
+#[allow(clippy::too_many_arguments)]
 fn play_chain(
     order: Vec<Source>,
     i: usize,
     word: String,
+    py: Option<String>,
     variant: String,
     rate: f64,
     lang: String,
@@ -169,11 +207,12 @@ fn play_chain(
             return;
         }
     };
-    let (w, v, l) = (word.clone(), variant.clone(), lang.clone());
-    let next: Box<dyn FnOnce()> = Box::new(move || play_chain(order, i + 1, w, v, rate, l, on_fail));
+    let (w, v, l, pyc) = (word.clone(), variant.clone(), lang.clone(), py.clone());
+    let next: Box<dyn FnOnce()> =
+        Box::new(move || play_chain(order, i + 1, w, pyc, v, rate, l, on_fail));
     match src {
         Source::Pack => play_pack(&word, &variant, rate, &lang, next),
-        Source::ServerCache => play_server_cache(&word, &variant, rate, &lang, next),
+        Source::ServerCache => play_server_cache(&word, py.as_deref(), &variant, rate, &lang, next),
         Source::NativeTts => play_native_tts(&word, &variant, rate, &lang, next),
     }
 }
@@ -204,19 +243,20 @@ fn play_pack(word: &str, variant: &str, rate: f64, lang: &str, on_fail: Box<dyn 
     });
 }
 
-fn play_server_cache(word: &str, variant: &str, rate: f64, lang: &str, on_fail: Box<dyn FnOnce()>) {
+fn play_server_cache(word: &str, py: Option<&str>, variant: &str, rate: f64, lang: &str, on_fail: Box<dyn FnOnce()>) {
     if native_audio::available() {
         let asset_id = native_audio::asset_id(word, variant, lang);
-        let url = speak_url(word, variant, lang);
+        let url = speak_url(word, py, variant, lang);
         if let Some(promise) = native_audio::play_word(&asset_id, &url) {
             let word = word.to_string();
             let variant = variant.to_string();
             let lang = lang.to_string();
+            let py = py.map(str::to_string);
             spawn_local(async move {
                 if JsFuture::from(promise).await.is_err() {
                     // Native download/playback failed → try the <audio> mechanism
                     // for the same server clip; it owns the hop to `on_fail`.
-                    play_word_html(&word, &variant, rate, &lang, on_fail);
+                    play_word_html(&word, py.as_deref(), &variant, rate, &lang, on_fail);
                 } else {
                     set_source("server-cache");
                 }
@@ -224,7 +264,7 @@ fn play_server_cache(word: &str, variant: &str, rate: f64, lang: &str, on_fail: 
             return;
         }
     }
-    play_word_html(word, variant, rate, lang, on_fail);
+    play_word_html(word, py, variant, rate, lang, on_fail);
 }
 
 /// CC-PHOTO-IMPORT Phase 5 (gate G-A): speak a word ON-DEVICE ONLY — native
@@ -274,7 +314,7 @@ fn play_native_tts(word: &str, variant: &str, rate: f64, lang: &str, on_fail: Bo
     });
 }
 
-fn play_word_html(word: &str, variant: &str, rate: f64, lang: &str, on_fail: impl FnOnce() + 'static) {
+fn play_word_html(word: &str, py: Option<&str>, variant: &str, rate: f64, lang: &str, on_fail: impl FnOnce() + 'static) {
     let already_current =
         CURRENT.with(|c| c.borrow().as_ref().map(|(w, v, l, _)| w == word && v == variant && l == lang).unwrap_or(false));
     if already_current {
@@ -289,7 +329,7 @@ fn play_word_html(word: &str, variant: &str, rate: f64, lang: &str, on_fail: imp
         return;
     }
 
-    let url = speak_url(word, variant, lang);
+    let url = speak_url(word, py, variant, lang);
     let Ok(audio) = HtmlAudioElement::new_with_src(&url) else {
         on_fail();
         return;
@@ -324,7 +364,13 @@ fn play_word_html(word: &str, variant: &str, rate: f64, lang: &str, on_fail: imp
 /// that when the player actually reaches this word moments later,
 /// `play_word` resolves instantly instead of waiting on a fresh TTS fetch.
 pub fn preload_word(word: &str, lang: &str) {
-    let url = speak_url(word, "normal", lang);
+    preload_word_with(word, None, lang);
+}
+
+/// F6: zh must warm with its reading, or the warm URL is not the URL the real
+/// play requests and the warm-up is wasted (worse, it would 400).
+pub fn preload_word_with(word: &str, py: Option<&str>, lang: &str) {
+    let url = speak_url(word, py, "normal", lang);
     // On the native build, warming means downloading the clip to on-device
     // storage (so it's instant AND offline later); the browser HTTP-cache
     // warm-up below is redundant there.

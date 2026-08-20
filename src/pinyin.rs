@@ -565,6 +565,28 @@ pub fn grade(typed: &str, answer: &str, mode: ToneMode) -> WordVerdict {
     )
 }
 
+/// CC-ZH-TONE F6 — the reading, formatted for Google's pinyin alphabet.
+///
+/// Numeric tone at the end of each syllable, one space between syllables:
+/// their own documented example is `wo3 de5`. Neutral is written 5, which that
+/// example uses even though the tone chart also lists 0.
+///
+/// Built from the canonicalizer rather than from the stored string, so the
+/// bank's two ü spellings (`lv3xing2` and `lü3ke4`) and its unspaced syllables
+/// all come out in one form.
+///
+/// Returns None for a stored form that will not parse — the caller must then
+/// refuse to synthesize rather than fall back to guessing (Invariant 4).
+pub fn phoneme_reading(stored: &str) -> Option<String> {
+    let key = canonicalize_answer(stored).ok()?;
+    Some(
+        key.iter()
+            .map(|s| format!("{}{}", s.segment, s.tone))
+            .collect::<Vec<_>>()
+            .join(" "),
+    )
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -926,6 +948,63 @@ mod tests {
         }
         assert_eq!((tone_cases, seg_cases), (50, 50));
         assert_eq!(len_cases, 50);
+    }
+
+    // ---- F6: the forced reading ----
+
+    #[test]
+    fn phoneme_reading_matches_googles_pinyin_alphabet() {
+        // Numeric tone at the end of each syllable, one space between them --
+        // Google's own documented example is "wo3 de5".
+        assert_eq!(phoneme_reading("wo3de5").as_deref(), Some("wo3 de5"));
+        assert_eq!(phoneme_reading("ping2guo3").as_deref(), Some("ping2 guo3"));
+        assert_eq!(phoneme_reading("ai4").as_deref(), Some("ai4"));
+        // Neutral is written 5, never dropped, never 0.
+        assert_eq!(phoneme_reading("bao3bao5").as_deref(), Some("bao3 bao5"));
+        assert_eq!(phoneme_reading("bao3bao0").as_deref(), Some("bao3 bao5"));
+    }
+
+    #[test]
+    fn the_banks_two_umlaut_spellings_give_one_reading() {
+        // lv3xing2 and lü3ke4 are both in the bank; the reading must not depend
+        // on which spelling an entry happened to use.
+        assert_eq!(phoneme_reading("lv3xing2"), phoneme_reading("lü3xing2"));
+        assert_eq!(phoneme_reading("lv3xing2").as_deref(), Some("lü3 xing2"));
+    }
+
+    #[test]
+    fn an_unparseable_form_yields_no_reading() {
+        // The caller must then refuse to synthesize rather than guess.
+        assert_eq!(phoneme_reading("qqq9"), None);
+        assert_eq!(phoneme_reading(""), None);
+    }
+
+    #[test]
+    fn every_bank_word_has_a_reading() {
+        // Invariant 4 has teeth only if every word CAN name its reading --
+        // otherwise some word silently loses audio.
+        let mut bad = Vec::new();
+        for tier in ["easy", "medium", "hard", "expert"] {
+            for entry in crate::words::tier_for("zh", tier) {
+                let pinyin = entry.split('|').next().unwrap_or(entry);
+                match phoneme_reading(pinyin) {
+                    Some(r) => {
+                        // Must satisfy the server's own validator shape.
+                        let ok = r.split(' ').all(|syl| {
+                            let (seg, tone) = syl.split_at(syl.len() - 1);
+                            !seg.is_empty()
+                                && tone.chars().all(|c| ('0'..='5').contains(&c))
+                                && seg.chars().all(|c| c.is_ascii_lowercase() || c == 'ü')
+                        });
+                        if !ok {
+                            bad.push(format!("{pinyin} -> {r:?}"));
+                        }
+                    }
+                    None => bad.push(format!("{pinyin} -> no reading")),
+                }
+            }
+        }
+        assert!(bad.is_empty(), "{} words cannot be spoken:\n{}", bad.len(), bad.join("\n"));
     }
 
     #[test]

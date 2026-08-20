@@ -70,6 +70,9 @@ node scripts/dom-id-check.mjs || { echo "GATE FAIL: duplicate element ID"; exit 
 echo "== gate: every word in exactly one tier (BD-G4)"
 node scripts/tier-partition-check.mjs || { echo "GATE FAIL: a word is in two tiers"; exit 1; }
 
+echo "== gate: no zh audio from bare Hanzi (CC-ZH-TONE F6)"
+node scripts/zh-audio-path-check.mjs || { echo "GATE FAIL: zh audio can skip its reading"; exit 1; }
+
 echo "== gate: one zh grading path (CC-ZH-TONE F2)"
 node scripts/zh-grading-path-check.mjs || { echo "GATE FAIL: a second zh grading path"; exit 1; }
 

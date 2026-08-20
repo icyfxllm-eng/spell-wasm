@@ -161,7 +161,11 @@ pub fn preload_pool(app: &App) {
     let lang = s.lang.clone();
     drop(s);
     for word in pool.into_iter().take(PRELOAD_AT_OPEN) {
-        api::preload_word(&word, &lang);
+        // F6: warm the SAME url the real play will request, reading included.
+        match crate::pinyin::phoneme_reading(&word).filter(|_| lang == crate::consts::ZH) {
+            Some(py) => api::preload_word_with(&word, Some(&py), &lang),
+            None => api::preload_word(&word, &lang),
+        }
     }
 }
 
@@ -903,8 +907,16 @@ fn speak_word(app: &App, variant: &str, rate: f32) {
 
     if is_builtin_lang(&s.cur_lang) {
         let lang = s.cur_lang.clone();
+        // CC-ZH-TONE F6: Mandarin names its reading. `s.word` holds the pinyin
+        // and `s.spoken` the hanzi, so the clip is the character voiced by the
+        // reading the bank actually stores — no polyphone guess.
+        let py = if lang == crate::consts::ZH {
+            crate::pinyin::phoneme_reading(&s.word)
+        } else {
+            None
+        };
         drop(s);
-        api::play_word(&word, variant, rate as f64, &lang, || {});
+        api::play_word_with(&word, py.as_deref(), variant, rate as f64, &lang, || {});
         return;
     }
     if s.cur_lang == MINE && s.custom.custom_marks.contains(&s.word) {
@@ -1149,7 +1161,12 @@ pub fn next_word(app: &App) {
                 // instant instead of waiting on a fresh TTS fetch.
                 if is_builtin_lang(&s.cur_lang) {
                     if let Some(next_up) = s.decks.get(&key).and_then(|d| d.peek()) {
-                        api::preload_word(&next_up, &s.cur_lang);
+                        match crate::pinyin::phoneme_reading(&next_up)
+                            .filter(|_| s.cur_lang == crate::consts::ZH)
+                        {
+                            Some(py) => api::preload_word_with(&next_up, Some(&py), &s.cur_lang),
+                            None => api::preload_word(&next_up, &s.cur_lang),
+                        }
                     }
                 }
             }

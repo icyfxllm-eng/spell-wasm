@@ -1,7 +1,7 @@
 # CC-ZH-TONE
 
-**Status:** D1–D7 SIGNED by Eric 2026-08-19. F0, F1, F2, F3 complete.
-F4–F6 not started.
+**Status:** D1–D7 SIGNED by Eric 2026-08-19. F0–F3 and F6 complete
+(F6 less Done 6, which needs keys and whisper.cpp). F4, F5 not started.
 
 **Depends on:** the shared-canonicalizer pattern from CC-PERSIAN-FOUNDATION F1.
 **Blocks:** zh bank tooling, zh Climb pools, the drawn-character stage.
@@ -223,6 +223,60 @@ displayed pair stays the honest whole-correct count; only the percentage is
 credited, and the tone credit is NAMED next to it in all 15 locales rather than
 silently inflating the number.
 
+## F6 — forced-pinyin TTS
+
+Google Cloud TTS supports `alphabet="pinyin"` and in fact REQUIRES it for
+Chinese: numeric tones at the end of each syllable, whitespace between
+syllables, their own example being `wo3 de5`. Verified against the docs
+2026-08-20 rather than assumed, because the whole feature turns on it — had it
+been IPA-only, zh would have had to move providers.
+
+`pinyin::phoneme_reading` builds the `ph` value from the canonicalizer, not
+from the stored string, so the bank's two ü spellings and its unspaced
+syllables all come out in one form. A word whose stored form will not parse
+gets NO reading, and the caller must then refuse to speak it.
+
+The reading rides in its own `py` parameter. It cannot share `word`:
+`validate_word` rejects digits and whitespace by design, so `bao3 bao5` would be
+thrown out before it reached synthesis.
+
+**The cache key is the reading plus the voice id**, never the hanzi. Pinyin
+keeps clips valid across bank edits that do not change pronunciation, and the
+voice id fixes a latent bug older than this file — without it, changing any
+language's voice silently kept serving the old one's clips.
+
+**Invariant 4 had FOUR leaks, and only one was the obvious one.** The scan found
+the last one by itself:
+
+1. the backend synthesized zh as plain text;
+2. Bee spoke through the browser voice and handed it the PINYIN, so a Mandarin
+   voice read romanization aloud — zh Bee audio was simply wrong;
+3. the audio router fell back to on-device TTS, which cannot be given a reading
+   at all (and a player set to "native-only" got nothing else);
+4. the word-picture replay sent the pinyin as `word`, which the server rejects,
+   so every zh replay fell through to the device voice reading romanization.
+   Its feed keeps only the typed half, so the character had to be looked up
+   again before it could be spoken.
+
+`scripts/zh-audio-path-check.mjs` holds all four shut and carries a selftest.
+
+**A deliberate consequence, stated plainly:** zh no longer falls back to the
+on-device voice, so with no pack and no server, Mandarin has NO audio rather
+than wrong audio. That is what Invariant 4 asks for, but it is a real behaviour
+change for offline play and Eric should know it rather than discover it.
+
+**One leak left open on purpose.** A My Words import with "Speak in: Chinese"
+still reaches the device voice. There is no bank entry and therefore no reading
+to force, so honouring the invariant there would delete the feature rather than
+fix it. Out of scope for this file; recorded rather than silently closed.
+
+**Done 6 cannot run here.** The loopback needs live synthesis and whisper.cpp:
+this machine has neither TTS key set nor whisper.cpp installed. Everything the
+gate can check is checked; the 30-word polyphone verification is outstanding and
+needs Eric's machine. Until it runs, one detail is unconfirmed: whether Google's
+pinyin alphabet wants `ü` or `v`. The reading sends `ü` (standard pinyin) and the
+server's validator accepts both.
+
 ## Invariants
 
 1. No raw-string equality anywhere in zh grading; comparison is on PinyinKey.
@@ -249,7 +303,9 @@ silently inflating the number.
    length-mismatch synthetics classify correctly; all 50 tone-only words route
    to the drill and none to the general queue.
 5. Settings-truth effect test — not started (F4).
-6. TTS loopback — not started (F6).
+6. **TTS loopback** — BLOCKED, not failed. Needs a TTS key and whisper.cpp,
+   neither present on this machine. The forced-reading path itself is built,
+   gated and tested; only the acoustic verification is outstanding.
 7. **Tier-1 recoverability fuzz** — PASSING. 100+ randomized tone-only
    submissions at tier 1, deterministic seed so a failure reproduces: zero
    unrecoverable zeros on first encounter.

@@ -2249,6 +2249,22 @@ fn current_tier() -> String {
     wordpic::picture(&pic).map(|p| p.tier.clone()).unwrap_or_default()
 }
 
+/// The hanzi a zh feed word stands for. The picture feed keeps only the typed
+/// half of `pinyin|hanzi`, so the character has to be found again before the
+/// word can be spoken (CC-ZH-TONE F6).
+fn zh_hanzi_for(pinyin: &str) -> Option<String> {
+    for tier in ["easy", "medium", "hard", "expert"] {
+        for entry in crate::words::tier_for("zh", tier) {
+            if let Some((p, hanzi)) = entry.split_once('|') {
+                if p == pinyin {
+                    return Some(hanzi.to_string());
+                }
+            }
+        }
+    }
+    None
+}
+
 fn replay(app: &App) {
     let lang = LANG.with(|l| l.borrow().clone());
     let Some(w) = current_word() else { return };
@@ -2257,6 +2273,18 @@ fn replay(app: &App) {
     let (_, slow) = audio_gate(&current_tier());
     let variant = if slow { "slow" } else { "normal" };
     let rate = if slow { 0.55 } else { 0.9 };
+    // CC-ZH-TONE F6. This path sent the PINYIN as the word, which the server
+    // rejects (tone digits are not word characters), so every zh replay fell
+    // through to the device voice and read romanization aloud. Mandarin now
+    // speaks the character with its reading forced, and has no device
+    // fallback — a voice that cannot be given a reading would guess
+    // (Invariant 4).
+    if lang == crate::consts::ZH {
+        if let (Some(hanzi), Some(py)) = (zh_hanzi_for(&w), crate::pinyin::phoneme_reading(&w)) {
+            api::play_word_with(&hanzi, Some(&py), variant, 1.0, &lang, || {});
+        }
+        return;
+    }
     api::play_word(&w.clone(), variant, 1.0, &lang, move || {
         crate::speech_out::speak(&w, rate, &code)
     });

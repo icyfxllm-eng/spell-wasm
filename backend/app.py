@@ -186,10 +186,37 @@ def validate_word(word: str):
     return word
 
 
-def cache_path_for(word: str, variant: str, lang: str = "en") -> str:
+MAX_PINYIN_LENGTH = 120
+# Syllables of latin letters (v and ü both spell ü), each closed by a tone
+# digit, single-space separated -- the shape Google's pinyin alphabet wants.
+# Deliberately strict: this string is interpolated into SSML, so anything that
+# is not pinyin has no business in it.
+_PINYIN_RE = re.compile(r"^[a-zü]+[0-5](?: [a-zü]+[0-5])*$")
+
+
+def validate_pinyin(py):
+    """Normalize and validate a pinyin reading for <phoneme>. Returns it or None."""
+    py = (py or "").strip().lower()
+    if not py or len(py) > MAX_PINYIN_LENGTH:
+        return None
+    return py if _PINYIN_RE.match(py) else None
+
+
+def zh_cache_key(py: str) -> str:
+    """CC-ZH-TONE F6: keyed on the READING and the voice, never the hanzi.
+
+    Pinyin keeps the cache stable across bank edits that do not change how a
+    word sounds. The voice id fixes a latent bug older than this file: without
+    it, changing a voice silently kept serving clips in the previous one.
+    """
+    _, voice_name = LANG_VOICES["zh"]
+    return f"zh:{py}:{voice_name}"
+
+
+def cache_path_for(word: str, variant: str, lang: str = "en", key_override: str = None) -> str:
     # `lang` is part of the key so e.g. Spanish "casa" and English "casa" don't
     # share a clip. Existing English clips (no lang prefix) stay valid via "en".
-    key = word if lang == "en" else f"{lang}:{word}"
+    key = key_override or (word if lang == "en" else f"{lang}:{word}")
     digest = hashlib.md5(key.encode()).hexdigest()
     return os.path.join(CACHE_DIR, f"{CACHE_VERSION}_{digest}_{variant}.mp3")
 
@@ -245,7 +272,34 @@ def _synthesize_azure(word: str, variant: str, path: str, lang: str) -> None:
         f.write(audio)
 
 
-def synthesize_to_cache(word: str, variant: str, path: str, lang: str = "en") -> None:
+def _synthesize_zh(word: str, py: str, variant: str, path: str) -> None:
+    """CC-ZH-TONE F6 — Mandarin, with the reading forced.
+
+    An isolated word carries no context, so the TTS frontend guesses polyphone
+    readings: 行 xíng/háng, 长 cháng/zhǎng, 重 zhòng/chóng, 了 le/liǎo. That is
+    the real cause of most wrong-sounding Mandarin here, and it gets
+    misdiagnosed as a tone problem. Naming the reading removes the guess.
+
+    Google's pinyin alphabet takes numeric tones at the end of each syllable,
+    whitespace between syllables -- their own example is /wo3 de5/.
+    """
+    language_code, voice_name = LANG_VOICES["zh"]
+    rate = SPEAKING_RATE_SLOW if variant == "slow" else SPEAKING_RATE_NORMAL
+    ssml = (
+        "<speak><phoneme alphabet=\"pinyin\" ph=\"{}\">{}</phoneme></speak>".format(
+            html.escape(py, quote=True), html.escape(word, quote=False)
+        )
+    )
+    response = tts_client.synthesize_speech(
+        input=texttospeech.SynthesisInput(ssml=ssml),
+        voice=texttospeech.VoiceSelectionParams(language_code=language_code, name=voice_name),
+        audio_config=_audio_config(rate),
+    )
+    with open(path, "wb") as f:
+        f.write(response.audio_content)
+
+
+def synthesize_to_cache(word: str, variant: str, path: str, lang: str = "en", py: str = None) -> None:
     """Synthesize a word once and store the MP3 permanently. Routes to Azure for
     AZURE_VOICES languages, otherwise Google.
 
@@ -253,6 +307,14 @@ def synthesize_to_cache(word: str, variant: str, path: str, lang: str = "en") ->
     button for hearing a word again, so a built-in double-speak just means
     two automatic hearings before they've even asked for a repeat.
     """
+    if lang == "zh":
+        # Invariant 4: zh is NEVER synthesized from bare Hanzi. A missing or
+        # malformed reading is an error, not a quiet fall back to guessing.
+        if not py:
+            raise ValueError("zh synthesis requires a pinyin reading (CC-ZH-TONE F6)")
+        _synthesize_zh(word, py, variant, path)
+        return
+
     if lang in AZURE_VOICES:
         _synthesize_azure(word, variant, path, lang)
         return
@@ -452,11 +514,17 @@ def speak():
     if lang not in LANG_VOICES and lang not in AZURE_VOICES:
         lang = DEFAULT_LANG
 
-    path = cache_path_for(word, variant, lang)
+    # F6: Mandarin must name its reading. No reading, no audio -- guessing is
+    # what this feature exists to stop.
+    py = validate_pinyin(request.args.get("py", "")) if lang == "zh" else None
+    if lang == "zh" and py is None:
+        return jsonify({"error": "zh requires a valid pinyin reading"}), 400
+
+    path = cache_path_for(word, variant, lang, zh_cache_key(py) if py else None)
 
     if not os.path.exists(path):
         try:
-            synthesize_to_cache(word, variant, path, lang)
+            synthesize_to_cache(word, variant, path, lang, py)
         except Exception as e:
             app.logger.error(f"TTS failed for '{word}' ({variant}): {e}")
             return jsonify({"error": "speech synthesis failed"}), 502
