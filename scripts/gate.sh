@@ -70,6 +70,9 @@ node scripts/dom-id-check.mjs || { echo "GATE FAIL: duplicate element ID"; exit 
 echo "== gate: every word in exactly one tier (BD-G4)"
 node scripts/tier-partition-check.mjs || { echo "GATE FAIL: a word is in two tiers"; exit 1; }
 
+echo "== gate: one zh grading path (CC-ZH-TONE F2)"
+node scripts/zh-grading-path-check.mjs || { echo "GATE FAIL: a second zh grading path"; exit 1; }
+
 echo "== gate: pinned pinyin syllable inventory (CC-ZH-TONE F1a)"
 node scripts/pinyin-inventory-check.mjs || { echo "GATE FAIL: pinyin inventory does not match its pin"; exit 1; }
 

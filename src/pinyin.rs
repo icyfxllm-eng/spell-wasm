@@ -365,6 +365,55 @@ pub fn matches(typed: &str, answer: &str) -> bool {
     }
 }
 
+/// F2, the Tone Law. In standard mode, at every tier, each syllable carries a
+/// tone and there is no untoned state. Little Speller is tone-BLIND: the reveal
+/// still shows tone marks, but grading ignores them.
+///
+/// This is a flag on the one matcher, never a second code path (Invariant 5).
+/// One matcher, one behaviour switch.
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum ToneMode {
+    /// Standard mode, all tiers including the free tier-1 preview (D1).
+    Graded,
+    /// Little Speller. Tone is displayed, never graded.
+    Blind,
+}
+
+impl ToneMode {
+    /// Little Speller is the `kid` flag (see modes.rs — "Little Speller / Kid
+    /// Mode"), so callers pass the flag they already hold rather than
+    /// re-deriving the rule.
+    pub fn for_kid(kid: bool) -> Self {
+        if kid {
+            ToneMode::Blind
+        } else {
+            ToneMode::Graded
+        }
+    }
+}
+
+/// The single zh grading entry point. Every surface that decides whether a
+/// typed Mandarin answer is correct calls this and nothing else.
+pub fn matches_with(typed: &str, answer: &str, mode: ToneMode) -> bool {
+    let Ok(want) = canonicalize_answer(answer) else {
+        // An unparseable stored form falls back to exact text equality rather
+        // than accepting everything.
+        return typed == answer;
+    };
+    let Ok(got) = canonicalize_against(typed, &want) else {
+        return false;
+    };
+    match mode {
+        ToneMode::Graded => got == want,
+        // Segments only. Tone is still carried in the key -- it is ignored
+        // here, not stripped, so the reveal can display it.
+        ToneMode::Blind => {
+            got.len() == want.len()
+                && got.iter().zip(&want).all(|(a, b)| a.segment == b.segment)
+        }
+    }
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -562,6 +611,55 @@ mod tests {
         assert_eq!(canonicalize_answer("lv3xing2"), canonicalize_answer("lü3xing2"));
         assert!(matches("lü3xing2", "lv3xing2"));
         assert!(matches("lv3ke4", "lü3ke4"));
+    }
+
+    // ---- F2: the Tone Law ----
+
+    #[test]
+    fn standard_mode_grades_tone_at_every_tier() {
+        // D1: no tier relaxes this, including the free tier-1 preview.
+        assert!(!matches_with("ma1", "ma3", ToneMode::Graded));
+        assert!(!matches_with("bao3bao3", "bao3bao5", ToneMode::Graded));
+        assert!(matches_with("bao3bao5", "bao3bao5", ToneMode::Graded));
+    }
+
+    #[test]
+    fn little_speller_is_tone_blind() {
+        // Same matcher, one flag -- tone ignored, never stripped.
+        assert!(matches_with("ma1", "ma3", ToneMode::Blind));
+        assert!(matches_with("ma", "ma3", ToneMode::Blind));
+        assert!(matches_with("bao3bao3", "bao3bao5", ToneMode::Blind));
+    }
+
+    #[test]
+    fn tone_blind_still_grades_the_segments() {
+        // Blind to tone is not blind to spelling.
+        assert!(!matches_with("ma1", "mao3", ToneMode::Blind));
+        assert!(!matches_with("lv3", "nv3", ToneMode::Blind));
+        // ...nor to syllable count.
+        assert!(!matches_with("bao3", "bao3bao5", ToneMode::Blind));
+    }
+
+    #[test]
+    fn tone_mode_comes_from_the_kid_flag() {
+        assert_eq!(ToneMode::for_kid(true), ToneMode::Blind);
+        assert_eq!(ToneMode::for_kid(false), ToneMode::Graded);
+        // The default entry point is the graded one.
+        assert_eq!(matches("ma1", "ma3"), matches_with("ma1", "ma3", ToneMode::Graded));
+    }
+
+    #[test]
+    fn tone_colours_are_pleco_and_never_alone() {
+        // D7 + Invariant 7: every graded tone has both a colour and a mark, so
+        // no surface can carry tone by colour alone.
+        for tone in 1..=5usize {
+            assert!(TONE_COLOURS[tone].starts_with('#'), "tone {tone} has no colour");
+            assert!(!TONE_MARKS_DISPLAY[tone].is_empty(), "tone {tone} has no mark");
+        }
+        let mut seen = TONE_COLOURS[1..].to_vec();
+        seen.sort_unstable();
+        seen.dedup();
+        assert_eq!(seen.len(), 5, "two tones share a colour");
     }
 
     #[test]

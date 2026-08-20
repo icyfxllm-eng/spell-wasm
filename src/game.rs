@@ -1269,7 +1269,9 @@ pub fn submit_guess(app: &App) {
     // Mandarin compares tone-numbered pinyin (v→ü, neutral-5 optional); every
     // other language uses the NFC/case fold (accent-strict, Kid-lenient).
     let correct = if cur_lang == crate::consts::ZH {
-        crate::pinyin::matches(&typed, &word)
+        // F2: Little Speller is tone-blind by FLAG on the one matcher, never
+        // by a second code path (Invariant 5).
+        crate::pinyin::matches_with(&typed, &word, crate::pinyin::ToneMode::for_kid(kid))
     } else if cur_lang == crate::consts::KO {
         // Korean grades at jamo granularity (Phase 3); an exact block match is
         // score 1.0. The per-jamo diff drives the wrong-answer coaching below.

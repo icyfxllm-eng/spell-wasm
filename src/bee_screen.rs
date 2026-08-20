@@ -305,10 +305,20 @@ fn submit(app: &App) {
     if typed.is_empty() {
         return;
     }
-    let want = crate::norm::fold_strict(target.split('|').next().unwrap_or(&target));
-    let got = crate::norm::fold_strict(&typed);
+    let target_word = target.split('|').next().unwrap_or(&target);
+    // CC-ZH-TONE F2: Mandarin grades through the canonicalizer like every other
+    // zh surface. This used to be a plain fold_strict, which looks correct for
+    // English and silently drops tone for Mandarin -- lv4 would not match lü4
+    // and a tone-perfect answer could be marked wrong. Tone-blindness for
+    // Little Speller is the matcher's FLAG, not a branch of its own.
+    let correct = if LANG.with(|l| l.borrow().clone()) == crate::consts::ZH {
+        let mode = crate::pinyin::ToneMode::for_kid(KID.with(Cell::get));
+        crate::pinyin::matches_with(&typed, target_word, mode)
+    } else {
+        crate::norm::fold_strict(&typed) == crate::norm::fold_strict(target_word)
+    };
 
-    if got == want {
+    if correct {
         if !ASKED.with(Cell::get) {
             CLEAN.with(|c| c.set(c.get() + 1));
         }
@@ -323,7 +333,7 @@ fn submit(app: &App) {
         }
     } else if KID.with(Cell::get) {
         // D6: no elimination. The word is shown and the bee moves on.
-        dom::set_text("beeSpelling", &want);
+        dom::set_text("beeSpelling", target_word);
         haptics::key_tap();
         let n = ROUND.with(Cell::get) + 1;
         let have = WORDS.with(|w| w.borrow().len()) as u32;
@@ -337,7 +347,7 @@ fn submit(app: &App) {
         // D4: the bell, then the spelling shown plainly, then the placement.
         crate::audio_boost::chime();
         haptics::key_tap();
-        dom::set_text("beeSpelling", &want);
+        dom::set_text("beeSpelling", target_word);
         finish(Some(ROUND.with(Cell::get)));
     }
 }

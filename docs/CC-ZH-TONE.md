@@ -1,7 +1,7 @@
 # CC-ZH-TONE
 
-**Status:** D1–D7 SIGNED by Eric 2026-08-19. F0 complete, F1 complete.
-F2–F6 not started.
+**Status:** D1–D7 SIGNED by Eric 2026-08-19. F0, F1, F2 complete.
+F3–F6 not started.
 
 **Depends on:** the shared-canonicalizer pattern from CC-PERSIAN-FOUNDATION F1.
 **Blocks:** zh bank tooling, zh Climb pools, the drawn-character stage.
@@ -127,6 +127,43 @@ expected count. Two rules were forced by test failures rather than chosen:
 Lifting tone marks off vowels rejected it until the base-letter guard learned
 the difference.
 
+## F2 — the Tone Law
+
+`ToneMode` is `Graded` or `Blind`, derived from the `kid` flag callers already
+hold (`modes.rs` calls it "Little Speller / Kid Mode"). `matches_with(typed,
+answer, mode)` is the single zh grading entry point. Blind ignores tone rather
+than stripping it -- the key still carries tone, so the reveal can display it.
+Blind is not blind to spelling or to syllable count.
+
+**The violation was real, and it was live.** Bee lists zh among its languages,
+and graded with `norm::fold_strict`, so `lv4` did not match `lü4` and a
+tone-perfect answer could be marked wrong. Bee now routes through
+`matches_with`. Its reveal shows the stored form with tone digits intact, which
+is F2.3 working: Little Speller sees tone even though grading ignored it.
+
+`scripts/zh-grading-path-check.mjs` keys on the pipe -- Mandarin is the only
+language whose entries are `pinyin|hanzi`, so a site that splits on `|` and then
+compares against typed input is grading Mandarin. It carries a selftest, and
+reverting Bee to `fold_strict` fails it by name.
+
+**The scan found four sites the manual inventory missed** -- chains.rs,
+impostor.rs, keyboard.rs, translate.rs. All four turned out to be non-grading
+(chain identity, distractor cards, a keyboard-reachability assertion, OCR
+lookup) and are allowlisted with reasons. The exemption is per FILE, which is
+coarser than it looks: a real grading path added to an allowlisted file would
+inherit the pass, so the two true grading surfaces are also checked by name.
+
+**Two bugs found while wiring F2, both left for their own file:**
+
+- **Bee speaks the wrong half.** `bee_screen.rs` synthesizes
+  `split('|').next()` -- the *pinyin* -- where the main game speaks the hanzi.
+  A zh Bee round currently reads romanization aloud to a Mandarin voice. F6
+  territory; the invariant it breaks is the spirit of "never synthesize zh from
+  bare Hanzi", from the other side.
+- **Camera lookup can never match zh.** `translate.rs` `camera_lookup` compares
+  OCR output against the pinyin half, but a camera pointed at Chinese text
+  recognizes hanzi, so no zh word can ever be found. Out of scope here.
+
 ## Invariants
 
 1. No raw-string equality anywhere in zh grading; comparison is on PinyinKey.
@@ -146,7 +183,9 @@ the difference.
 2. **Adversarial fixture** — PASSING. `lv3 / lü3 / lu:3 / lǜ` with the last
    staying tone 4, `ma / ma5 / ma0`, uppercase, trailing whitespace, full-width,
    `mǎ3` erroring, `xian` vs `xi'an` at both counts.
-3. Bank field lint — not started (F5).
+3. **Second-grading-path lint** — PASSING (F2's deliberate-failure gate).
+   Reverting Bee to fold_strict fails the scan by name.
+3b. Bank field lint — not started (F5).
 4. Error-class routing — not started (F3).
 5. Settings-truth effect test — not started (F4).
 6. TTS loopback — not started (F6).
