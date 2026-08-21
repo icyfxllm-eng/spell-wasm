@@ -57,6 +57,16 @@ for (const m of html.matchAll(/<input[^>]*>/g)) {
   if (!id || !["checkbox", "range"].includes(type)) continue;
   rendered.add(id);
 }
+// CC-ZH-TONE F4: the tone buttons are controls too. Only switches and sliders
+// used to count, because those were the only kinds that existed — but a tone
+// button that does nothing is exactly the failure this gate is for, and a
+// <button> would have sailed past a scan that only reads <input>. Matched by
+// the class rather than by id pattern, so a sixth button cannot be added
+// without also being declared.
+for (const m of html.matchAll(/<button[^>]*class="[^"]*\btone-btn\b[^"]*"[^>]*>/g)) {
+  const id = (m[0].match(/\bid="([^"]+)"/) || [])[1];
+  if (id) rendered.add(id);
+}
 
 // Every test name the tree actually defines.
 const testNames = new Set();
@@ -121,6 +131,27 @@ for (const c of manifest.controls) {
     problems.push(`${c.key}: names no effect test (F8: a switch with no effect test fails the build)`);
   } else if (!testNames.has(c.test) && ![...testNames].some((t) => t.startsWith(c.test))) {
     problems.push(`${c.key}: effect test '${c.test}' does not exist in src/ or tests/`);
+  }
+}
+
+// CC-ZH-TONE F4 — a declared effect test is not proof of a live button.
+//
+// Found the hard way: unwiring the click handler left the build green, because
+// the effect tests exercise the pure transform and never touch the wiring. A
+// rendered, declared, fully-tested button can still be inert. So the handler
+// itself is asserted by name.
+{
+  const wiring = fs.readFileSync(`${ROOT}/src/lib.rs`, "utf8");
+  const looped = /on_click\(&format!\("toneBtn\{tone\}"\)/.test(wiring) &&
+    /game::tap_tone\(/.test(wiring);
+  for (const id of [...rendered].filter((r) => /^toneBtn\d$/.test(r))) {
+    const literal = new RegExp(`on_click\\("${id}"`).test(wiring);
+    if (!looped && !literal) {
+      problems.push(
+        `${id} is rendered and declared but nothing wires it — its effect test ` +
+          `proves the transform, not the button (F4)`,
+      );
+    }
   }
 }
 

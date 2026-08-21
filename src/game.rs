@@ -435,6 +435,43 @@ pub fn sync_keyboard(app: &App) {
 /// on-screen keyboard or a physical key. Recording it is what lets the
 /// single submit path tell typing from dictation (F7/D8) without
 /// rejecting legitimate play.
+/// CC-ZH-TONE F4 — the tone buttons.
+///
+/// Mandarin only, and hidden at expert tier where the player types the tone
+/// themselves. Called wherever the word or the tier changes, so the row cannot
+/// linger into a language that has no tones.
+pub fn reflect_tone_row(app: &App) {
+    let (lang, tier) = {
+        let s = app.borrow();
+        (s.cur_lang.clone(), s.cur_tier.clone())
+    };
+    let show = lang == crate::consts::ZH && tier != "expert";
+    if let Some(el) = dom::doc().get_element_by_id("toneRow") {
+        if show {
+            let _ = el.remove_attribute("hidden");
+        } else {
+            let _ = el.set_attribute("hidden", "");
+        }
+    }
+}
+
+/// Apply `tone` to the syllable being typed. A no-op when nothing is typed yet,
+/// so a stray tap cannot leave a dangling digit the parser would reject.
+pub fn tap_tone(app: &App, tone: u8) {
+    if !can_type(&app.borrow()) {
+        return;
+    }
+    let before = app.borrow().answer.clone();
+    let after = crate::pinyin::apply_tone(&before, tone);
+    if after == before {
+        return;
+    }
+    app.borrow_mut().answer = after;
+    note_key_time();
+    render_letters(app, false);
+    crate::haptics::key_tap();
+}
+
 pub fn type_char(app: &App, ch: char) {
     // F7: Spell Picture borrows this same keyboard (per-language layouts,
     // Korean composition, Vietnamese tones) instead of a system field.
@@ -1193,6 +1230,8 @@ pub fn next_word(app: &App) {
     // F3: the previous word's verdict must not survive into this one, or a
     // stale tone-only reading would route the next miss to the wrong queue.
     ZH_VERDICT.with(|c| *c.borrow_mut() = None);
+    // F4: the tone row follows the language and tier of the word just loaded.
+    reflect_tone_row(app);
 
     app.borrow_mut().answered = false;
     // CC-ATTEMPTS-SHIELDS: a new word refreshes its one-retry budget (I4/PD5).

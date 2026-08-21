@@ -587,6 +587,35 @@ pub fn phoneme_reading(stored: &str) -> Option<String> {
     )
 }
 
+/// CC-ZH-TONE F4 — apply a tone to the syllable being typed.
+///
+/// The point of the buttons is that choosing a tone is ONE deliberate tap
+/// rather than a fight with a long-press diacritic picker that may not even
+/// offer pinyin vowels. The deliberation is the learning: the player commits to
+/// a tone on every syllable and finds out immediately whether they heard it.
+///
+/// Tapping again RE-tones rather than appending, so a wrong choice costs one
+/// tap and never a retype. Scope worth stating: "the active syllable" is the
+/// one at the end of the answer — the one being typed. Re-toning an earlier
+/// syllable would need a selection affordance that does not exist yet, so it
+/// still costs a backspace.
+///
+/// Typed digits and typed diacritics keep working untouched; this is an
+/// affordance, never the only path (D2).
+pub fn apply_tone(answer: &str, tone: u8) -> String {
+    if !(1..=5).contains(&tone) {
+        return answer.to_string();
+    }
+    let trimmed = answer.trim_end();
+    // Nothing typed yet: a tone with no syllable to sit on is a no-op, not a
+    // stray digit the parser would later reject as a dangling tone.
+    let base = trimmed.strip_suffix(|c: char| c.is_ascii_digit()).unwrap_or(trimmed);
+    if base.is_empty() {
+        return answer.to_string();
+    }
+    format!("{base}{tone}")
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -1013,5 +1042,63 @@ mod tests {
         assert!(matches("ma1", "ma1"));
         assert!(matches("ping2 guo3", "ping2guo3"));
         assert!(matches("xie4xie5", "xie4xie5"));
+    }
+}
+
+/// CC-ZH-TONE F4 — the settings-truth effect tests (Done 5).
+///
+/// One per button. AUG6 says a rendered control must have a test proving it
+/// does something observable; a tone button that does nothing is a build
+/// failure, not a cosmetic bug. The names are what
+/// config/settings-effects.json points at, so renaming one fails the gate.
+#[cfg(test)]
+mod tone_button_effects {
+    use super::apply_tone;
+
+    fn observable(tone: u8) {
+        // A bare syllable gains the tone...
+        let toned = apply_tone("ma", tone);
+        assert_eq!(toned, format!("ma{tone}"), "tone {tone} did not apply");
+        assert_ne!(toned, "ma", "tone {tone} changed nothing");
+        // ...and re-tapping REPLACES rather than appending, so a wrong choice
+        // costs one tap instead of a retype.
+        let other = if tone == 1 { 2 } else { 1 };
+        assert_eq!(apply_tone(&toned, other), format!("ma{other}"));
+        assert_eq!(apply_tone(&format!("ma{other}"), tone), toned);
+        // The active syllable is the one being typed, not the whole answer.
+        assert_eq!(apply_tone("ping2guo", tone), format!("ping2guo{tone}"));
+        assert_eq!(apply_tone("ping2guo3", tone), format!("ping2guo{tone}"));
+    }
+
+    #[test]
+    fn settings_effect_tone1() {
+        observable(1);
+    }
+    #[test]
+    fn settings_effect_tone2() {
+        observable(2);
+    }
+    #[test]
+    fn settings_effect_tone3() {
+        observable(3);
+    }
+    #[test]
+    fn settings_effect_tone4() {
+        observable(4);
+    }
+    #[test]
+    fn settings_effect_tone5() {
+        // Neutral is a value like any other (D3), so it is written, not omitted.
+        observable(5);
+        assert_eq!(apply_tone("bao3bao", 5), "bao3bao5");
+    }
+
+    #[test]
+    fn a_tone_with_no_syllable_is_a_no_op() {
+        // Never leave a dangling digit the parser would reject.
+        for t in 1..=5u8 {
+            assert_eq!(apply_tone("", t), "");
+            assert_eq!(apply_tone("   ", t), "   ");
+        }
     }
 }

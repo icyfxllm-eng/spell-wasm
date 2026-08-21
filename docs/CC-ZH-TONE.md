@@ -1,7 +1,7 @@
 # CC-ZH-TONE
 
-**Status:** D1–D7 SIGNED by Eric 2026-08-19. F0–F3 and F6 complete
-(F6 less Done 6, which needs keys and whisper.cpp). F4, F5 not started.
+**Status:** D1–D7 SIGNED by Eric 2026-08-19. F0–F4 and F6 complete
+(F6 less Done 6, which needs keys and whisper.cpp). F5 not started.
 
 **Depends on:** the shared-canonicalizer pattern from CC-PERSIAN-FOUNDATION F1.
 **Blocks:** zh bank tooling, zh Climb pools, the drawn-character stage.
@@ -223,6 +223,34 @@ displayed pair stays the honest whole-correct count; only the percentage is
 credited, and the tone credit is NAMED next to it in all 15 locales rather than
 silently inflating the number.
 
+## F4 — tone input affordance
+
+Five buttons under the answer: ¯ ´ ˇ ` ˙, each carrying its numeral as well as
+its mark and tinted from the same Pleco map as the reveal, so Invariant 7 holds
+without leaning on colour. Mandarin only, hidden at expert tier — the row is
+ABSENT there rather than disabled, which is the same doctrine the mode registry
+uses. Typed digits and typed diacritics keep working in parallel; the buttons
+are an affordance, never the only path.
+
+`pinyin::apply_tone` is a pure transform: it replaces any tone already on the
+syllable being typed rather than appending, so a wrong choice costs one tap and
+never a retype, and it is a no-op on an empty answer so a stray tap cannot leave
+a dangling digit the parser would reject.
+
+Scope worth stating: "the active syllable" is the one at the END of the answer.
+The spec says any syllable can be re-toned without retyping, and for the
+syllable being typed that holds — but re-toning an EARLIER one still costs a
+backspace, because there is no syllable-selection affordance to hang it on.
+
+**The settings-truth gate had a hole, and this feature found it.** AUG6 scanned
+`<input>` only, because switches and sliders were the only control kinds that
+existed; a `<button>` sailed straight past it. Worse, once declared, the five
+buttons passed with a dead handler — the effect tests exercise the transform,
+not the wiring, so a rendered, declared, fully-tested button was still allowed
+to be inert. Both are closed now: the scan reads `.tone-btn` buttons, and the
+click wiring is asserted by name. Unwiring the handler fails the build, which
+was verified by actually unwiring it.
+
 ## F6 — forced-pinyin TTS
 
 Google Cloud TTS supports `alphabet="pinyin"` and in fact REQUIRES it for
@@ -302,7 +330,9 @@ server's validator accepts both.
 4. **Error-class routing** — PASSING. 50 tone-wrong, 50 segment-wrong and 50
    length-mismatch synthetics classify correctly; all 50 tone-only words route
    to the drill and none to the general queue.
-5. Settings-truth effect test — not started (F4).
+5. **Settings-truth effect test** — PASSING. 5/5 tone buttons produce an
+   observable tone change on the active syllable, and a dead handler now
+   fails the build (it did not before this feature).
 6. **TTS loopback** — BLOCKED, not failed. Needs a TTS key and whisper.cpp,
    neither present on this machine. The forced-reading path itself is built,
    gated and tested; only the acoustic verification is outstanding.

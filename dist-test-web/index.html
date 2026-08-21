@@ -830,6 +830,20 @@
      inline style, so the map lives in ONE place and this stylesheet cannot
      drift from it. Invariant 7: the tone mark rides in a <sup> and the verdict
      is stated in words below, so colour is never the sole carrier. */
+  /* F4 tone buttons — tinted from pinyin::TONE_COLOURS, the same Pleco map
+     the reveal uses. The numeral in the <sub> is the non-colour carrier. */
+  .tone-row{display:flex;gap:.5rem;justify-content:center;margin:.5rem 0 .25rem}
+  .tone-row[hidden]{display:none}
+  .tone-btn{min-width:2.75rem;min-height:2.75rem;border-radius:.6rem;
+    border:1px solid var(--line);background:var(--card);font-size:1.15rem;
+    line-height:1;cursor:pointer}
+  .tone-btn sub{font-size:.62em;opacity:.8;margin-left:.1em}
+  .tone-btn:active{transform:translateY(1px)}
+  .tone-btn#toneBtn1{color:#d0342c}
+  .tone-btn#toneBtn2{color:#2e9e4f}
+  .tone-btn#toneBtn3{color:#2f6fd0}
+  .tone-btn#toneBtn4{color:#8b46c4}
+  .tone-btn#toneBtn5{color:#7a7a7a}
   .feedback .zh-syl{margin-right:.35em}
   .feedback .zh-syl .zh-tone{font-size:.7em;opacity:.85;margin-left:.05em}
   .feedback .zh-syl.zh-tone-miss{text-decoration:underline wavy currentColor;text-underline-offset:.25em}
@@ -1319,6 +1333,19 @@
 
     <div class="spellbox" id="spellbox" role="group" aria-label="Your spelling">
       <div class="letters" id="letters"></div>
+    </div>
+    <!-- CC-ZH-TONE F4 — one deliberate tap per tone, instead of a long-press
+         diacritic picker that may not offer pinyin vowels at all. Mandarin
+         only, hidden at expert tier (type it yourself). Typed digits and typed
+         diacritics keep working in parallel; this is an affordance, never the
+         only path. Each button carries its numeral as well as its mark, so
+         Invariant 7 holds without relying on the tone colour. -->
+    <div class="tone-row" id="toneRow" role="group" aria-label="Tone" hidden>
+      <button type="button" class="tone-btn" id="toneBtn1" data-tone="1">&#175;<sub>1</sub></button>
+      <button type="button" class="tone-btn" id="toneBtn2" data-tone="2">&#180;<sub>2</sub></button>
+      <button type="button" class="tone-btn" id="toneBtn3" data-tone="3">&#711;<sub>3</sub></button>
+      <button type="button" class="tone-btn" id="toneBtn4" data-tone="4">`<sub>4</sub></button>
+      <button type="button" class="tone-btn" id="toneBtn5" data-tone="5">&#729;<sub>5</sub></button>
     </div>
     <!-- Voice-spelling live status ("Listening…", "Spell it letter by letter!",
          "didn't catch that"). Empty unless a capture is in flight. -->

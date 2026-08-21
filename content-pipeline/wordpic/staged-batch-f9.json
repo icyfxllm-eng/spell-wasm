@@ -1165,7 +1165,7 @@
    "paths": [],
    "status": "guide approved by Eric 2026-08-18; rails and captions pending"
   },
-  "owl": {
+  "kosonowl": {
    "provenance": {
     "title": "Scops Owl on a Ginkgo Branch under a Crescent Moon",
     "artist": "Ohara Koson",
@@ -1290,7 +1290,7 @@
     "M59.6 488.0 L59.6 471.4 L59.6 454.9 L59.6 438.3 L59.6 421.7 L59.6 405.1 L59.6 388.6 L59.6 372.0 L59.6 355.4 L59.6 338.9 L59.6 322.3 L59.6 305.7 L59.6 289.1 L59.6 272.6 L59.6 256.0 L59.6 239.4 L59.6 222.9 L59.6 206.3 L59.6 189.7 L59.6 173.1 L59.6 156.6 L59.6 140.0 L59.6 123.4 L59.6 106.9 L59.6 90.3 L59.6 73.7 L59.6 57.1 L59.6 40.6 L59.6 24.0"
    ],
    "paths": [],
-   "status": "guide approved by Eric 2026-08-18; rails and captions pending"
+   "status": "guide approved by Eric 2026-08-18; rails and captions pending; id was 'owl', which collides with the shipped animals-pack Owl -- renamed 2026-08-20 before registration could overwrite it"
   }
  }
 }

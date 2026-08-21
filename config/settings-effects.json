@@ -142,6 +142,51 @@
       "suppressed_by": null,
       "caveat": "NOT a duplicate of extraAttemptsToggle. This is the feature flag; that is the user preference. Both are required by extra_attempt_ctx(). D8's original plan to delete the top-level control was dropped by Eric on 2026-08-06.",
       "harness": "web"
+    },
+    {
+      "key": "toneBtn1",
+      "surface": "game",
+      "state": "answer tone 1",
+      "effect": "applies tone 1 (macron) to the syllable being typed, replacing any tone already on it; no-op when nothing is typed",
+      "test": "settings_effect_tone1",
+      "suppressed_by": "hidden for non-Mandarin and at expert tier (the row is absent, not disabled)",
+      "harness": "web"
+    },
+    {
+      "key": "toneBtn2",
+      "surface": "game",
+      "state": "answer tone 2",
+      "effect": "applies tone 2 (acute) to the syllable being typed, replacing any tone already on it; no-op when nothing is typed",
+      "test": "settings_effect_tone2",
+      "suppressed_by": "hidden for non-Mandarin and at expert tier (the row is absent, not disabled)",
+      "harness": "web"
+    },
+    {
+      "key": "toneBtn3",
+      "surface": "game",
+      "state": "answer tone 3",
+      "effect": "applies tone 3 (caron) to the syllable being typed, replacing any tone already on it; no-op when nothing is typed",
+      "test": "settings_effect_tone3",
+      "suppressed_by": "hidden for non-Mandarin and at expert tier (the row is absent, not disabled)",
+      "harness": "web"
+    },
+    {
+      "key": "toneBtn4",
+      "surface": "game",
+      "state": "answer tone 4",
+      "effect": "applies tone 4 (grave) to the syllable being typed, replacing any tone already on it; no-op when nothing is typed",
+      "test": "settings_effect_tone4",
+      "suppressed_by": "hidden for non-Mandarin and at expert tier (the row is absent, not disabled)",
+      "harness": "web"
+    },
+    {
+      "key": "toneBtn5",
+      "surface": "game",
+      "state": "answer tone 5",
+      "effect": "applies tone 5 (dot) to the syllable being typed, replacing any tone already on it; no-op when nothing is typed",
+      "test": "settings_effect_tone5",
+      "suppressed_by": "hidden for non-Mandarin and at expert tier (the row is absent, not disabled)",
+      "harness": "web"
     }
   ],
   "_cut_note": "AUDITPASS F7: toolGhostToggle and toolSayItToggle were removed with Spell Racing and Say It. A control that no longer renders owes no effect test — the manifest shrinks with the UI, which is the `manifest subset of rendered` law doing its job rather than leaving a ghost entry behind."

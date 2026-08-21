@@ -490,6 +490,13 @@ fn wire_orb_and_answer(app: &App) {
             game::submit_guess(&a);
         });
     }
+    // CC-ZH-TONE F4: five tone buttons, one deliberate tap each. Wired
+    // unconditionally; the row itself is hidden for languages without tones and
+    // at expert tier, so a hidden button is unreachable rather than inert.
+    for tone in 1u8..=5 {
+        let a = app.clone();
+        dom::on_click(&format!("toneBtn{tone}"), move || game::tap_tone(&a, tone));
+    }
     // NOTE: the answer is typed via the custom on-screen keyboard + physical
     // keydown (see wire_keyboard) — there is no #guess <input>, so the system
     // keyboard (dictation / autocorrect) never opens during a round.
