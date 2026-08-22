@@ -71,7 +71,8 @@ mod photo_list;
 mod norm;
 mod online_spelloff;
 mod pinyin;
-mod tone_drill; // CC-ZH-TONE F3 — tone misses study separately (Invariant 6)
+mod tone_drill;
+mod zh_sandhi; // GENERATED — tools/build-zh-sandhi.py (CC-ZH-TONE F5) // CC-ZH-TONE F3 — tone misses study separately (Invariant 6)
 mod pinyin_inventory; // GENERATED — tools/build-pinyin-inventory.py (CC-ZH-TONE F1a)
 mod notifications;
 mod notify;

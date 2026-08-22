@@ -1,0 +1,256 @@
+{
+ "note": "CC-ZH-TONE Done 3. Fifty cases derived BY HAND from the sandhi rules, never from the tagger's output -- an audit built from what it is auditing proves nothing. The tagger pre-fills; this fixture is the human half, and on a disagreement the FIXTURE is the authority. Awaiting Eric's confirmation, which is what Done 3 actually asks for.",
+ "confirmed_by": null,
+ "cases": [
+  {
+   "entry": "yi1|一",
+   "surface": "yi1",
+   "class": "none"
+  },
+  {
+   "entry": "yi1ding4|一定",
+   "surface": "yi2ding4",
+   "class": "yi"
+  },
+  {
+   "entry": "yi1zhi2|一直",
+   "surface": "yi4zhi2",
+   "class": "yi"
+  },
+  {
+   "entry": "yi1ban1|一般",
+   "surface": "yi4ban1",
+   "class": "yi"
+  },
+  {
+   "entry": "yi1jia1|一家",
+   "surface": "yi4jia1",
+   "class": "yi"
+  },
+  {
+   "entry": "yi1bu4fen4|一部分",
+   "surface": "yi2bu4fen4",
+   "class": "yi"
+  },
+  {
+   "entry": "yi1zhang1|一张",
+   "surface": "yi4zhang1",
+   "class": "yi"
+  },
+  {
+   "entry": "yi1jian4|一件",
+   "surface": "yi2jian4",
+   "class": "yi"
+  },
+  {
+   "entry": "yi1duan4|一段",
+   "surface": "yi2duan4",
+   "class": "yi"
+  },
+  {
+   "entry": "di4yi2ge4|第一个",
+   "surface": "di4yi2ge4",
+   "class": "none"
+  },
+  {
+   "entry": "yi1xiang4|一项",
+   "surface": "yi2xiang4",
+   "class": "yi"
+  },
+  {
+   "entry": "yi1bu4|一步",
+   "surface": "yi2bu4",
+   "class": "yi"
+  },
+  {
+   "entry": "yi1fen4|一份",
+   "surface": "yi2fen4",
+   "class": "yi"
+  },
+  {
+   "entry": "yi1ju4|一句",
+   "surface": "yi2ju4",
+   "class": "yi"
+  },
+  {
+   "entry": "bu4|不",
+   "surface": "bu4",
+   "class": "none"
+  },
+  {
+   "entry": "cong2bu4|从不",
+   "surface": "cong2bu4",
+   "class": "none"
+  },
+  {
+   "entry": "bu4guo4|不过",
+   "surface": "bu2guo4",
+   "class": "bu"
+  },
+  {
+   "entry": "bu4yao4|不要",
+   "surface": "bu2yao4",
+   "class": "bu"
+  },
+  {
+   "entry": "bu4cuo4|不错",
+   "surface": "bu2cuo4",
+   "class": "bu"
+  },
+  {
+   "entry": "bu4tong2|不同",
+   "surface": "bu4tong2",
+   "class": "none"
+  },
+  {
+   "entry": "bu4shao3|不少",
+   "surface": "bu4shao3",
+   "class": "none"
+  },
+  {
+   "entry": "bu4zu2|不足",
+   "surface": "bu4zu2",
+   "class": "none"
+  },
+  {
+   "entry": "bu4ke3|不可",
+   "surface": "bu4ke3",
+   "class": "none"
+  },
+  {
+   "entry": "bu4gou4|不够",
+   "surface": "bu2gou4",
+   "class": "bu"
+  },
+  {
+   "entry": "bu4hao3|不好",
+   "surface": "bu4hao3",
+   "class": "none"
+  },
+  {
+   "entry": "bu4gan3|不敢",
+   "surface": "bu4gan3",
+   "class": "none"
+  },
+  {
+   "entry": "er3duo3|耳朵",
+   "surface": "er2duo3",
+   "class": "third-third"
+  },
+  {
+   "entry": "lao3shu3|老鼠",
+   "surface": "lao2shu3",
+   "class": "third-third"
+  },
+  {
+   "entry": "ke3yi3|可以",
+   "surface": "ke2yi3",
+   "class": "third-third"
+  },
+  {
+   "entry": "suo3yi3|所以",
+   "surface": "suo2yi3",
+   "class": "third-third"
+  },
+  {
+   "entry": "suo3you3|所有",
+   "surface": "suo2you3",
+   "class": "third-third"
+  },
+  {
+   "entry": "ying3xiang3|影响",
+   "surface": "ying2xiang3",
+   "class": "third-third"
+  },
+  {
+   "entry": "yong3yuan3|永远",
+   "surface": "yong2yuan3",
+   "class": "third-third"
+  },
+  {
+   "entry": "ye3xu3|也许",
+   "surface": "ye2xu3",
+   "class": "third-third"
+  },
+  {
+   "entry": "zhi3dao3|指导",
+   "surface": "zhi2dao3",
+   "class": "third-third"
+  },
+  {
+   "entry": "zheng3ti3|整体",
+   "surface": "zheng2ti3",
+   "class": "third-third"
+  },
+  {
+   "entry": "wang3you3|网友",
+   "surface": "wang2you3",
+   "class": "third-third"
+  },
+  {
+   "entry": "xiang3fa3|想法",
+   "surface": "xiang2fa3",
+   "class": "third-third"
+  },
+  {
+   "entry": "ling3dao3ren2|领导人",
+   "surface": "ling2dao3ren2",
+   "class": "third-third"
+  },
+  {
+   "entry": "dao3yan3|导演",
+   "surface": "dao2yan3",
+   "class": "third-third"
+  },
+  {
+   "entry": "bang1zhu4|帮助",
+   "surface": "bang1zhu4",
+   "class": "none"
+  },
+  {
+   "entry": "bao3bao5|宝宝",
+   "surface": "bao3bao5",
+   "class": "none"
+  },
+  {
+   "entry": "bei1zi5|杯子",
+   "surface": "bei1zi5",
+   "class": "none"
+  },
+  {
+   "entry": "bi2zi5|鼻子",
+   "surface": "bi2zi5",
+   "class": "none"
+  },
+  {
+   "entry": "bo1li5|玻璃",
+   "surface": "bo1li5",
+   "class": "none"
+  },
+  {
+   "entry": "chao2shi1|潮湿",
+   "surface": "chao2shi1",
+   "class": "none"
+  },
+  {
+   "entry": "cheng2shi4|城市",
+   "surface": "cheng2shi4",
+   "class": "none"
+  },
+  {
+   "entry": "chu2fang2|厨房",
+   "surface": "chu2fang2",
+   "class": "none"
+  },
+  {
+   "entry": "chun1tian1|春天",
+   "surface": "chun1tian1",
+   "class": "none"
+  },
+  {
+   "entry": "da4xiao3|大小",
+   "surface": "da4xiao3",
+   "class": "none"
+  }
+ ]
+}

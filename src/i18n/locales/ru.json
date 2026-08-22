@@ -661,5 +661,6 @@
   "zh.rev.segmentMiss": "Слог {n}: неверный слог",
   "zh.rev.lengthMismatch": "Вы написали слогов: {got}; в слове их {want}",
   "zh.rev.toneRetry": "Почти — слоги верные, проверьте тоны",
-  "stats.toneCredit": "вкл. {n} по тону"
+  "stats.toneCredit": "вкл. {n} по тону",
+  "zh.rev.sandhi": "Вы написали {heard} — так это звучит. В записи пиньинь сохраняется исходный тон: {written}."
 }

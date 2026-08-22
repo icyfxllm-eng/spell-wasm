@@ -661,5 +661,6 @@
   "zh.rev.segmentMiss": "Sílaba {n}: sílaba errada",
   "zh.rev.lengthMismatch": "Você escreveu {got} sílabas; esta palavra tem {want}",
   "zh.rev.toneRetry": "Quase — sílabas certas, confira os tons",
-  "stats.toneCredit": "incl. {n} de tom"
+  "stats.toneCredit": "incl. {n} de tom",
+  "zh.rev.sandhi": "Você escreveu {heard}, que é o que se ouve. O pinyin escrito mantém o tom original: {written}."
 }

@@ -661,5 +661,6 @@
   "zh.rev.segmentMiss": "{n}番目の音節：音節が違います",
   "zh.rev.lengthMismatch": "{got}音節で書きましたが、この語は{want}音節です",
   "zh.rev.toneRetry": "惜しい — 音節は正解、声調を確認",
-  "stats.toneCredit": "うち声調{n}"
+  "stats.toneCredit": "うち声調{n}",
+  "zh.rev.sandhi": "聞こえたとおり {heard} と書きましたね。表記のピンインは元の声調のまま {written} です。"
 }

@@ -661,5 +661,6 @@
   "zh.rev.segmentMiss": "Sylaba {n}: zła sylaba",
   "zh.rev.lengthMismatch": "Napisałeś {got} sylab; to słowo ma {want}",
   "zh.rev.toneRetry": "Blisko — sylaby dobre, sprawdź tony",
-  "stats.toneCredit": "w tym {n} tonu"
+  "stats.toneCredit": "w tym {n} tonu",
+  "zh.rev.sandhi": "Napisałeś {heard} — tak to brzmi. Zapisany pinyin zachowuje pierwotny ton: {written}."
 }

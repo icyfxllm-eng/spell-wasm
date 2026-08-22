@@ -661,5 +661,6 @@
   "zh.rev.segmentMiss": "अक्षर {n}: ग़लत अक्षर",
   "zh.rev.lengthMismatch": "आपने {got} अक्षर लिखे; इस शब्द में {want} हैं",
   "zh.rev.toneRetry": "बहुत क़रीब — अक्षर सही, स्वर देखिए",
-  "stats.toneCredit": "इसमें {n} स्वर"
+  "stats.toneCredit": "इसमें {n} स्वर",
+  "zh.rev.sandhi": "आपने {heard} लिखा — सुनाई यही देता है। लिखित पिनयिन मूल स्वर रखता है: {written}।"
 }

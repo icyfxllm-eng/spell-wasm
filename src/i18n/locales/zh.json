@@ -661,5 +661,6 @@
   "zh.rev.segmentMiss": "第 {n} 个音节：拼错了",
   "zh.rev.lengthMismatch": "你写了 {got} 个音节，这个词有 {want} 个",
   "zh.rev.toneRetry": "就差一点 — 拼音对了，检查声调",
-  "stats.toneCredit": "含声调 {n}"
+  "stats.toneCredit": "含声调 {n}",
+  "zh.rev.sandhi": "你写的是 {heard}，这正是听到的音。书面拼音保留原调：{written}。"
 }

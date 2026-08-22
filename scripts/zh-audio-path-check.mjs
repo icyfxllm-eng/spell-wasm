@@ -54,8 +54,16 @@ for (const f of fs.readdirSync(`${ROOT}/src`).filter((n) => n.endsWith(".rs"))) 
   if (!/speech_out::speak\s*\(/.test(src)) continue;
   const knowsZh = /consts::ZH|"zh"/.test(src);
   if (!knowsZh) continue;
-  // Compliant shape: the zh case returns before reaching the device voice.
-  const guarded = /==\s*crate::consts::ZH[\s\S]{0,600}?play_word_with/.test(src);
+  // Compliant shape: the zh case routes to the forced-reading clip before it
+  // can reach the device voice.
+  //
+  // Proximity is measured on CODE, with line comments stripped first. F5 added
+  // a sandhi lookup and four lines explaining it between the guard and the
+  // call, which pushed them past the window and failed this check on a change
+  // that was entirely correct. A gate that fires on comment length is a gate
+  // people learn to route around.
+  const code = src.replace(/^\s*\/\/.*$/gm, "");
+  const guarded = /==\s*crate::consts::ZH[\s\S]{0,600}?play_word_with/.test(code);
   if (!guarded)
     problems.push(
       `src/${f} can reach speech_out::speak for zh — the device voice cannot be ` +

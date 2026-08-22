@@ -661,5 +661,6 @@
   "zh.rev.segmentMiss": "Silbe {n}: falsche Silbe",
   "zh.rev.lengthMismatch": "Du hast {got} Silben geschrieben; dieses Wort hat {want}",
   "zh.rev.toneRetry": "Fast — Silben stimmen, prüfe die Töne",
-  "stats.toneCredit": "inkl. {n} Ton"
+  "stats.toneCredit": "inkl. {n} Ton",
+  "zh.rev.sandhi": "Du hast {heard} geschrieben — so klingt es. Geschriebenes Pinyin behält den ursprünglichen Ton: {written}."
 }

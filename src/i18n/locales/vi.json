@@ -661,5 +661,6 @@
   "zh.rev.segmentMiss": "Âm tiết {n}: sai âm tiết",
   "zh.rev.lengthMismatch": "Bạn viết {got} âm tiết; từ này có {want}",
   "zh.rev.toneRetry": "Suýt rồi — đúng âm tiết, xem lại thanh điệu",
-  "stats.toneCredit": "gồm {n} thanh điệu"
+  "stats.toneCredit": "gồm {n} thanh điệu",
+  "zh.rev.sandhi": "Bạn viết {heard} — đúng như nghe được. Pinyin viết giữ thanh gốc: {written}."
 }

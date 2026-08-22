@@ -661,5 +661,6 @@
   "zh.rev.segmentMiss": "المقطع {n}: مقطع خاطئ",
   "zh.rev.lengthMismatch": "كتبت {got} مقاطع، وهذه الكلمة فيها {want}",
   "zh.rev.toneRetry": "اقتربت — المقاطع صحيحة، راجع النبرات",
-  "stats.toneCredit": "منها {n} نبرة"
+  "stats.toneCredit": "منها {n} نبرة",
+  "zh.rev.sandhi": "كتبت {heard}، وهذا ما يُسمع. أما البينيين المكتوب فيحتفظ بالنبرة الأصلية: {written}."
 }

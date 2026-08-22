@@ -32,7 +32,7 @@ const COMPARISONS = [
   /\bfold_lenient\s*\(/,
 ];
 // The canonicalizer. A grading site that calls one of these is compliant.
-const CANONICAL = /\bpinyin::(grade|matches|matches_with|canonicalize_\w+)\b/;
+const CANONICAL = /\bpinyin::(grade\w*|matches|matches_with|canonicalize_\w+)\b/;
 // How far from the split a comparison still counts as the same logic.
 const WINDOW = 12;
 
@@ -84,10 +84,11 @@ for (const f of files) {
 // The two real grading sites are checked by name rather than by heuristic, so
 // that renaming or gutting one is a failure instead of a quiet pass.
 const game = fs.readFileSync(`${SRC}/game.rs`, "utf8");
-// F3 moved the submission path from matches_with to grade, which returns the
-// per-syllable verdict. Either is the canonical path; neither being present
-// means zh grading has left the canonicalizer.
-if (!/crate::pinyin::(grade|matches_with)\s*\(/.test(game))
+// The submission path has been renamed twice as this file grew: F3 moved it
+// from matches_with to grade, F5 to grade_sandhi_aware. Match the FAMILY rather
+// than a fixed name -- anything in pinyin:: is the canonicalizer, and pinning
+// the exact symbol just means the gate fails on correct refactors.
+if (!/crate::pinyin::(grade\w*|matches_with)\s*\(/.test(game))
   problems.push("game.rs no longer grades zh through the canonicalizer (F2)");
 if (!/ToneMode::for_kid\s*\(/.test(game))
   problems.push(

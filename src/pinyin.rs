@@ -616,6 +616,50 @@ pub fn apply_tone(answer: &str, tone: u8) -> String {
     format!("{base}{tone}")
 }
 
+/// CC-ZH-TONE F5 / D4 — grading against both forms of a word.
+///
+/// 你好 is SPOKEN ni2 hao3; written pinyin keeps ni3 hao3. We tell the player to
+/// spell what they hear and then mark it wrong, so the conflict has to be
+/// designed rather than discovered on device.
+///
+/// Grading always compares the CITATION. At tiers 1–2 the surface form is also
+/// accepted and the reveal teaches the difference; at tier 3+ only the citation
+/// passes and the surface reads as an ordinary tone miss.
+///
+/// Returns the verdict and whether the pass came via the surface form, because
+/// the caller has to know to show the teaching note.
+pub fn grade_sandhi_aware(
+    typed: &str,
+    citation: &str,
+    surface: Option<&str>,
+    mode: ToneMode,
+    accept_surface: bool,
+) -> (WordVerdict, bool) {
+    let verdict = grade(typed, citation, mode);
+    if verdict.is_correct() {
+        return (verdict, false);
+    }
+    if !accept_surface {
+        return (verdict, false);
+    }
+    // Only worth a second look when sandhi actually moved something.
+    let Some(surface) = surface.filter(|s| *s != citation) else {
+        return (verdict, false);
+    };
+    let via = grade(typed, surface, mode);
+    if via.is_correct() {
+        return (via, true);
+    }
+    // The citation verdict is the one that teaches; a surface miss is not a
+    // more useful description of the same wrong answer.
+    (verdict, false)
+}
+
+/// D4's tier split: tiers 1–2 accept the surface, tier 3+ do not.
+pub fn tier_accepts_surface(tier: &str) -> bool {
+    matches!(tier, "easy" | "medium")
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;

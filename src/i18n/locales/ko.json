@@ -661,5 +661,6 @@
   "zh.rev.segmentMiss": "{n}번째 음절: 음절이 틀림",
   "zh.rev.lengthMismatch": "{got}음절로 썼지만 이 단어는 {want}음절입니다",
   "zh.rev.toneRetry": "거의 맞았어요 — 음절은 정확, 성조를 확인",
-  "stats.toneCredit": "성조 {n} 포함"
+  "stats.toneCredit": "성조 {n} 포함",
+  "zh.rev.sandhi": "들리는 대로 {heard}라고 썼군요. 표기 병음은 원래 성조인 {written}을 유지합니다."
 }

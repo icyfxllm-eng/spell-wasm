@@ -661,5 +661,6 @@
   "zh.rev.segmentMiss": "Syllable {n}: wrong syllable",
   "zh.rev.lengthMismatch": "You wrote {got} syllables; this word has {want}",
   "zh.rev.toneRetry": "So close — right syllables, check the tones",
-  "stats.toneCredit": "incl. {n} tone"
+  "stats.toneCredit": "incl. {n} tone",
+  "zh.rev.sandhi": "You wrote {heard} — that's what you hear. Written pinyin keeps the original tone: {written}."
 }

@@ -1,7 +1,8 @@
 # CC-ZH-TONE
 
-**Status:** D1–D7 SIGNED by Eric 2026-08-19. F0–F4 and F6 complete
-(F6 less Done 6, which needs keys and whisper.cpp). F5 not started.
+**Status:** D1–D7 SIGNED by Eric 2026-08-19. ALL FEATURES COMPLETE.
+Outstanding: Done 3's human confirmation, Done 6 (needs keys and whisper.cpp),
+and Done 9, Eric's device pass, which closes the file.
 
 **Depends on:** the shared-canonicalizer pattern from CC-PERSIAN-FOUNDATION F1.
 **Blocks:** zh bank tooling, zh Climb pools, the drawn-character stage.
@@ -251,6 +252,49 @@ to be inert. Both are closed now: the scan reads `.tone-btn` buttons, and the
 click wiring is asserted by name. Unwiring the handler fails the build, which
 was verified by actually unwiring it.
 
+## F5 — sandhi
+
+你好 is spoken ni2 hao3; written pinyin keeps ni3 hao3. We tell the player to
+spell what they hear and then mark it wrong, so the conflict had to be designed
+rather than discovered on device. Grading compares the CITATION, TTS speaks the
+SURFACE, and tiers 1–2 accept both with a teaching note that explains the
+difference. Tier 3+ takes the citation only, and a surface answer there reads as
+a tone miss — which is exactly what it is.
+
+**Where the three fields live, and why not in the bank string.** The spec says
+every entry gains three fields. `src/words.rs` entries are parsed POSITIONALLY
+in a dozen places and inconsistently -- game.rs takes field 2 as the hanzi while
+kid_filter.rs takes the LAST field -- so any extension of `pinyin|hanzi` breaks
+one or the other silently. The fields therefore live in `src/zh_sandhi.rs`,
+generated, keyed 1:1 off the whole bank entry. `pinyinCitation` is not
+duplicated: it is the left half of the key, which is already what grading
+compares. Nothing that reads the bank had to change, and the lint still requires
+a row for every entry, so a missing field is a build failure exactly as
+Invariant 3 asks.
+
+**The tagger.** `tools/build-zh-sandhi.py` applies three rules: 一 shifts to yi2
+before a falling tone and yi4 before the rest, 不 shifts to bu2 only before a
+falling tone, and in a run of third tones every one but the last rises to
+second. 一 and 不 are CHARACTER-specific -- a syllable that merely sounds like
+yi1 does not take 一's sandhi -- so the tagger aligns syllables to characters
+positionally and reports any entry where that does not hold rather than
+guessing.
+
+Of 6,182 entries: 5,888 none, 185 third-third, 83 yi, 26 bu.
+
+**The audit is hand-derived, and that is the point.** Done 3 asks the tagger and
+a human to agree 50/50. The fifty cases in `config/zh-sandhi-audit.json` were
+worked out from the rules, never copied from the tagger's output -- an audit
+built from the thing it audits proves nothing, which is the same trap as grading
+a generator against its own product. They agreed 50/50 on the first run. The
+fixture is the authority: on a disagreement the TAGGER is what is wrong.
+
+**Done 3 is not fully closed.** The fixture records `confirmed_by: null`. The
+expectations are mine, and "a human confirms" means Eric, not the author of the
+tagger's sibling. Two cases are worth his eye in particular: `di4yi2ge4|第一个`,
+where the bank already wrote the shifted tone so no rule fires, and
+`bao3bao5|宝宝`, where a third tone before a NEUTRAL is correctly not 3-3.
+
 ## F6 — forced-pinyin TTS
 
 Google Cloud TTS supports `alphabet="pinyin"` and in fact REQUIRES it for
@@ -287,6 +331,12 @@ the last one by itself:
    again before it could be spoken.
 
 `scripts/zh-audio-path-check.mjs` holds all four shut and carries a selftest.
+
+Its proximity check measures CODE, with comments stripped. F5 added a sandhi
+lookup and four lines explaining it between the zh guard and the call, which
+pushed them past the window and failed the gate on a change that was entirely
+correct. A gate that fires on comment length is a gate people learn to route
+around.
 
 **A deliberate consequence, stated plainly:** zh no longer falls back to the
 on-device voice, so with no pack and no server, Mandarin has NO audio rather
@@ -326,7 +376,9 @@ server's validator accepts both.
    `mǎ3` erroring, `xian` vs `xi'an` at both counts.
 3. **Second-grading-path lint** — PASSING (F2's deliberate-failure gate).
    Reverting Bee to fold_strict fails the scan by name.
-3b. Bank field lint — not started (F5).
+3b. **Bank field lint** — PASSING on the machine half: 6,182 entries, all three
+    fields, and tagger/audit agree 50/50. The HUMAN half is open — the audit
+    records confirmed_by: null and needs Eric.
 4. **Error-class routing** — PASSING. 50 tone-wrong, 50 segment-wrong and 50
    length-mismatch synthetics classify correctly; all 50 tone-only words route
    to the drill and none to the general queue.
@@ -339,5 +391,7 @@ server's validator accepts both.
 7. **Tier-1 recoverability fuzz** — PASSING. 100+ randomized tone-only
    submissions at tier 1, deterministic seed so a failure reproduces: zero
    unrecoverable zeros on first encounter.
-8. Deliberate-failure piece — not started (F5/F6).
+8. **Deliberate-failure piece** — PASSING, both halves. A missing surface form
+   fails zh-bank-sandhi-check's selftest; a bare-Hanzi synthesis path fails
+   zh-audio-path-check's.
 9. **Eric's device pass** — this gate closes the file. The tests do not.

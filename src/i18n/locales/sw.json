@@ -661,5 +661,6 @@
   "zh.rev.segmentMiss": "Silabi {n}: silabi si sahihi",
   "zh.rev.lengthMismatch": "Umeandika silabi {got}; neno hili lina {want}",
   "zh.rev.toneRetry": "Karibu — silabi sahihi, angalia toni",
-  "stats.toneCredit": "pamoja na toni {n}"
+  "stats.toneCredit": "pamoja na toni {n}",
+  "zh.rev.sandhi": "Umeandika {heard} — ndivyo inavyosikika. Pinyin ya maandishi hubaki na toni asilia: {written}."
 }

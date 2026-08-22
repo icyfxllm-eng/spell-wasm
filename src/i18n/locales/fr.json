@@ -661,5 +661,6 @@
   "zh.rev.segmentMiss": "Syllabe {n} : mauvaise syllabe",
   "zh.rev.lengthMismatch": "Vous avez écrit {got} syllabes ; ce mot en a {want}",
   "zh.rev.toneRetry": "Tout près — bonnes syllabes, vérifiez les tons",
-  "stats.toneCredit": "dont {n} de ton"
+  "stats.toneCredit": "dont {n} de ton",
+  "zh.rev.sandhi": "Vous avez écrit {heard}, ce qui s'entend. Le pinyin écrit garde le ton d'origine : {written}."
 }

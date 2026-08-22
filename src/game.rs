@@ -948,7 +948,15 @@ fn speak_word(app: &App, variant: &str, rate: f32) {
         // and `s.spoken` the hanzi, so the clip is the character voiced by the
         // reading the bank actually stores — no polyphone guess.
         let py = if lang == crate::consts::ZH {
-            crate::pinyin::phoneme_reading(&s.word)
+            // F5: TTS speaks the SURFACE form. Grading compares the citation,
+            // but the player must HEAR natural speech -- 你好 is spoken
+            // ni2 hao3 even though it is written ni3 hao3, and synthesizing the
+            // citation would teach an accent nobody uses.
+            let entry = format!("{}|{}", s.word, s.spoken);
+            let spoken_form = crate::zh_sandhi::lookup(&entry)
+                .map(|(surface, _)| surface.to_string())
+                .unwrap_or_else(|| s.word.clone());
+            crate::pinyin::phoneme_reading(&spoken_form)
         } else {
             None
         };
@@ -1230,6 +1238,7 @@ pub fn next_word(app: &App) {
     // F3: the previous word's verdict must not survive into this one, or a
     // stale tone-only reading would route the next miss to the wrong queue.
     ZH_VERDICT.with(|c| *c.borrow_mut() = None);
+    ZH_VIA_SURFACE.with(|c| c.set(false));
     // F4: the tone row follows the language and tier of the word just loaded.
     reflect_tone_row(app);
 
@@ -1333,8 +1342,20 @@ pub fn submit_guess(app: &App) {
         // by a second code path (Invariant 5). F3: keep the per-syllable
         // verdict — it decides which queue a miss studies in, and what the
         // reveal is allowed to say.
-        let v = crate::pinyin::grade(&typed, &word, crate::pinyin::ToneMode::for_kid(kid));
+        // F5/D4: grading compares the citation, but at tiers 1-2 the surface
+        // form is also correct -- the player spelled what they actually heard --
+        // and the reveal teaches the difference.
+        let entry = format!("{}|{}", word, app.borrow().spoken);
+        let surface = crate::zh_sandhi::lookup(&entry).map(|(s, _)| s);
+        let (v, via_surface) = crate::pinyin::grade_sandhi_aware(
+            &typed,
+            &word,
+            surface,
+            crate::pinyin::ToneMode::for_kid(kid),
+            crate::pinyin::tier_accepts_surface(&app.borrow().cur_tier),
+        );
         let ok = v.is_correct();
+        ZH_VIA_SURFACE.with(|c| c.set(via_surface));
         ZH_VERDICT.with(|c| *c.borrow_mut() = Some(v));
         ok
     } else if cur_lang == crate::consts::KO {
@@ -1423,6 +1444,28 @@ fn bump_streak(app: &App) -> u32 {
         s.best = s.streak;
     }
     s.streak
+}
+
+/// CC-ZH-TONE F5 — the teaching note, shown when a tier-1/2 answer passed via
+/// the SURFACE form.
+///
+/// The player spelled what they heard, which is right, and the note is the only
+/// place they learn that written pinyin keeps the underlying tone. Without it
+/// the acceptance is silent and teaches nothing.
+///
+/// Returns None whenever the pass was an ordinary citation match, so no other
+/// language and no other answer ever sees it.
+fn zh_sandhi_note(app: &App) -> Option<String> {
+    if !ZH_VIA_SURFACE.with(std::cell::Cell::get) {
+        return None;
+    }
+    let s = app.borrow();
+    let entry = format!("{}|{}", s.word, s.spoken);
+    let (surface, _class) = crate::zh_sandhi::lookup(&entry)?;
+    Some(crate::i18n::tp(
+        "zh.rev.sandhi",
+        &[("heard", surface), ("written", &s.word)],
+    ))
 }
 
 fn on_correct(app: &App) {
@@ -1515,7 +1558,17 @@ fn on_correct(app: &App) {
         if earned {
             flash_shield_earned(app);
         } else {
-            dom::set_text("feedback", &pick_praise(app));
+            match zh_sandhi_note(app) {
+                Some(note) => dom::set_html(
+                    "feedback",
+                    &format!(
+                        "{}<span class=\"zh-note\">{}</span>",
+                        dom::escape_html(&pick_praise(app)),
+                        dom::escape_html(&note)
+                    ),
+                ),
+                None => dom::set_text("feedback", &pick_praise(app)),
+            }
             dom::el("feedback").set_class_name("feedback good");
         }
         update_shield_hud(app);
@@ -1802,6 +1855,9 @@ fn extra_attempt_ctx(s: &AppState) -> bool {
 }
 
 thread_local! {
+    /// F5: the answer just submitted matched the SURFACE (sandhi) form rather
+    /// than the citation, so the reveal owes the player the teaching note.
+    static ZH_VIA_SURFACE: std::cell::Cell<bool> = const { std::cell::Cell::new(false) };
     /// The per-syllable verdict for the zh answer just submitted (F3). Held
     /// here because the routing decision happens several calls later, in the
     /// miss recorder, and threading it through every mode's wrong-answer path

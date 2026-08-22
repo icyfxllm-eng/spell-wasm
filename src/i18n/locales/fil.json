@@ -661,5 +661,6 @@
   "zh.rev.segmentMiss": "Pantig {n}: maling pantig",
   "zh.rev.lengthMismatch": "{got} pantig ang isinulat mo; {want} ang salitang ito",
   "zh.rev.toneRetry": "Malapit na — tamang pantig, tingnan ang tono",
-  "stats.toneCredit": "kasama {n} tono"
+  "stats.toneCredit": "kasama {n} tono",
+  "zh.rev.sandhi": "Isinulat mo ang {heard} — iyon ang naririnig. Ang nakasulat na pinyin ay nananatili sa orihinal na tono: {written}."
 }
