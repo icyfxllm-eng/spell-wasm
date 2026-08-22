@@ -801,3 +801,55 @@ Great Wave for "≥1 boat line". Its trace has no boat stroke at all, so the tab
 cannot require one. The three anchors it does declare are the crest, the Fuji
 triangle and the trough; the boats remain unrepresented in the layout, which is
 a tracing question, not an anchoring one.
+
+## F9 registered — eight masters, and what registration actually costs (2026-08-22)
+
+The bank goes from 7 traced masters to 15, all 15 with an anchor table.
+
+Registration turned out to need five artifacts per picture, not the two that
+were assumed. Rails and captions are the visible half; the scan document, the
+manifest and the provenance row are the half nobody sees until the generators
+refuse to run.
+
+  1. RAILS, authored. 49 across the eight, verified against all four laws
+     before the sweep rather than after: no crossings, 34px clearance, arc over
+     130, and every rail lying on the subject's own ink at that height.
+  2. SCAN DOCUMENT, hand-authored, and the only artifact that is. Everything
+     downstream derives from it -- and the masters 500-point floor counts ITS
+     points, not the guide's, which is why rail density had to rise.
+  3. PROVENANCE ROW in ref/provenance-f8.json. build_manifests reads that file
+     and nothing else, so the batch's own provenance had to be merged across
+     rather than left in the staged file.
+  4. MANIFEST, generated. Layers by arc length, per-language word and band
+     specs from the 60 pools. manifest-check RECOMPUTES those bands instead of
+     trusting the output.
+  5. REGISTRY ENTRY plus an anchor table.
+
+**Three failures worth keeping, because each was silent.**
+
+Borrowing three helper functions by importing build_scan_library ran its module
+body and rewrote redfuji.json and rhino.json -- two shipped masters -- as a side
+effect. The tool now takes the definitions via ast without executing the
+statements that do work. The alternative, copying the functions, was rejected:
+min_clearance and the pin must have exactly ONE implementation, because a second
+implementation is a second answer and the pin is later compared exactly.
+
+`order` is required on every rail by the Rust registry with no serde default, so
+the eight without it made the WHOLE registry fail to deserialize -- not just
+those pictures. The generator sets it now.
+
+The rails-and-captions estimate was simply wrong, and stated twice before the
+pipeline was read properly.
+
+And the batch shipped a category that does not exist. `nature` reads like it
+belongs in a set containing `animals` and `sky`, but categoryList is a fixed
+list of nine and does not have it, so the registry test rejected all eight. The
+living subjects are `animals` and the two botanical plates are `things` -- there
+is no plants family, and inventing one is exactly what went wrong. Every one of
+these was caught by a gate that already existed, which is the argument for
+running the whole battery rather than the checks that seem relevant.
+
+**Unsigned, and needing Eric.** All eight anchor tables are proposals, like
+saguaro's and taos's. The batch went into a new pack, worldart3, rather than
+splitting across worldart2's four remaining slots -- a pack is a picker surface,
+so that is a product call made by default rather than by ruling.

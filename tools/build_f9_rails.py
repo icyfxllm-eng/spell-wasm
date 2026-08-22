@@ -166,8 +166,11 @@ def main():
         if len(rails) < 6:
             problems.append(f"{pid}: {len(rails)} rails, the shipped floor is 6")
         out[pid] = [
+            # `order` is the fill sequence and the Rust registry requires it
+            # with no default -- one rail missing it makes the whole registry
+            # fail to deserialize, not just this picture.
             {"mode": "flow", "arch": "line", "band": 1 + i % 3, "budget": [3, 20],
-             "feature": n,
+             "order": i + 1, "feature": n,
              "d": "M" + " L".join(f"{x:.1f} {y:.1f}" for x, y in r)}
             for i, (n, r) in enumerate(rails)
         ]

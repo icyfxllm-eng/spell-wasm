@@ -1,813 +1,10 @@
 [
  {
-  "subject": "dog",
-  "title": "File:Dog Silhouette 01.svg",
-  "license": "Public domain",
-  "sourceUrl": "https://commons.wikimedia.org/wiki/File:Dog_Silhouette_01.svg",
-  "file": "ref/dog.png",
-  "bytes": 27180
- },
- {
-  "subject": "butterfly",
-  "title": "File:Butterfly Pinhead icon.svg",
-  "license": "CC0",
-  "sourceUrl": "https://commons.wikimedia.org/wiki/File:Butterfly_Pinhead_icon.svg",
-  "file": "ref/butterfly.png",
-  "bytes": 22647
- },
- {
-  "subject": "snail",
-  "title": "File:Snail (761489) - The Noun Project.svg",
-  "license": "CC0",
-  "sourceUrl": "https://commons.wikimedia.org/wiki/File:Snail_(761489)_-_The_Noun_Project.svg",
-  "file": "ref/snail.png",
-  "bytes": 24582,
-  "note": "Eric 2026-07-31: remaining-8 scanlock pass; CC0 pictogram"
- },
- {
-  "subject": "duck",
-  "title": "File:Duck Silhouette (NIH BioArt 135 - 629482).svg",
-  "license": "Public domain",
-  "sourceUrl": "https://commons.wikimedia.org/wiki/File:Duck_Silhouette_(NIH_BioArt_135_-_629482).svg",
-  "file": "ref/duck.png",
-  "bytes": 20951
- },
- {
-  "subject": "owl",
-  "title": "File:Owl (13455) - The Noun Project.svg",
-  "license": "CC0",
-  "sourceUrl": "https://commons.wikimedia.org/wiki/File:Owl_(13455)_-_The_Noun_Project.svg",
-  "file": "ref/owl.png",
-  "bytes": 41299,
-  "note": "Eric 2026-08-01: 'easier owl picture'. The detailed eagle-owl illustration drowned in feather stippling; this pictogram carries ear tufts, two eyes, beak, spread wings and talons cleanly."
- },
- {
-  "subject": "turtle",
-  "title": "File:Turtle.svg",
-  "license": "Public domain",
-  "sourceUrl": "https://commons.wikimedia.org/wiki/File:Turtle.svg",
-  "file": "ref/turtle.png",
-  "bytes": 11169
- },
- {
-  "subject": "elephant",
-  "title": "File:Elephant Vector.svg",
-  "license": "CC0",
-  "sourceUrl": "https://commons.wikimedia.org/wiki/File:Elephant_Vector.svg",
-  "file": "ref/elephant.png",
-  "bytes": 18816
- },
- {
-  "subject": "horse",
-  "title": "File:Horse (49794) - The Noun Project.svg",
-  "license": "CC0",
-  "sourceUrl": "https://commons.wikimedia.org/wiki/File:Horse_(49794)_-_The_Noun_Project.svg",
-  "file": "ref/horse.png",
-  "bytes": 20451,
-  "note": "Eric 2026-07-31: asked for a horse with its head upright. Trotting CC0 pictogram — head high, four legs clear, mane and tail."
- },
- {
-  "subject": "peacock",
-  "title": "File:Taiwan road sign d0 peacock.svg",
-  "license": "Public domain",
-  "sourceUrl": "https://commons.wikimedia.org/wiki/File:Taiwan_road_sign_d0_peacock.svg",
-  "file": "ref/peacock.png",
-  "bytes": 58574,
-  "note": "Eric 2026-08-01: the displaying-peacock PHOTO was untraceable (translucent fan). Swapped to this pictogram — clean fan eyespots, body, crest, eye."
- },
- {
-  "subject": "fish",
-  "title": "File:Salmo salar silhouette transparent.png",
-  "license": "CC0",
-  "sourceUrl": "https://commons.wikimedia.org/wiki/File:Salmo_salar_silhouette_transparent.png",
-  "file": "ref/fish.png",
-  "bytes": 10703
- },
- {
-  "subject": "snowman",
-  "title": "File:Snowman - The Noun Project.svg",
-  "license": "CC0",
-  "sourceUrl": "https://commons.wikimedia.org/wiki/File:Snowman_-_The_Noun_Project.svg",
-  "file": "ref/snowman.png",
-  "bytes": 23443
- },
- {
-  "subject": "eiffel",
-  "title": "File:Eiffel Tower Silhouette.svg",
-  "license": "CC0",
-  "sourceUrl": "https://commons.wikimedia.org/wiki/File:Eiffel_Tower_Silhouette.svg",
-  "file": "ref/eiffel.png",
-  "bytes": 30478
- },
- {
-  "subject": "dragon",
-  "title": "File:Dragon from Chinese Dragon Banner Red Version.svg",
-  "license": "CC0",
-  "sourceUrl": "https://commons.wikimedia.org/wiki/File:Dragon_from_Chinese_Dragon_Banner_Red_Version.svg",
-  "file": "ref/dragon.png",
-  "bytes": 349136,
-  "note": "Eric 2026-08-01: asked for a clean Chinese-dragon clipart like his reference image. Hokusai panel was tonal (untraceable, like the Mona photo); this is line-art clean."
- },
- {
-  "subject": "mona",
-  "title": "File:Mona Lisa, by Leonardo da Vinci, from C2RMF retouched.jpg",
-  "license": "Public domain",
-  "sourceUrl": "https://commons.wikimedia.org/wiki/File:Mona_Lisa,_by_Leonardo_da_Vinci,_from_C2RMF_retouched.jpg",
-  "file": "ref/mona-engraving.jpg",
-  "bytes": 980329,
-  "note": "ink-branch tracing source (Eric-approved 2026-07-31); painting photo retained for side-by-side; red/blue annotation is the review standard",
-  "attribution": "after Leonardo da Vinci"
- },
- {
-  "subject": "mona-engraving",
-  "title": "File:Joconde de Calamatta.jpg",
-  "license": "Public domain",
-  "sourceUrl": "https://commons.wikimedia.org/wiki/File:Joconde_de_Calamatta.jpg",
-  "file": "ref/mona-engraving.jpg",
-  "bytes": 280515,
-  "note": "Luigi Calamatta's engraving of the Mona Lisa — ink-branch tracing source (Eric-approved 2026-07-31); painting photo retained for side-by-side; red/blue annotation is the review standard"
- },
- {
-  "subject": "cat",
-  "title": "File:Cat (49952) - The Noun Project.svg",
-  "license": "CC0",
-  "sourceUrl": "https://commons.wikimedia.org/wiki/File:Cat_(49952)_-_The_Noun_Project.svg",
-  "file": "ref/cat.png",
-  "bytes": 18096,
-  "note": "Eric 2026-07-31: remaining-8 scanlock pass; CC0 pictogram"
- },
- {
-  "subject": "rocket",
-  "title": "SpellGame original — drawn rocket silhouette",
-  "license": "Original artwork (SpellGame)",
-  "sourceUrl": "",
-  "file": "tools/draw_ref.py::rocket",
-  "bytes": 12142,
-  "note": "Eric 2026-07-31: replaced the CC0 pictogram, which was split by a white seam so largest-component kept one half. Hand-authored."
- },
- {
-  "subject": "rhino",
-  "title": "The Rhinoceros, Albrecht Duerer, 1515 (woodcut) — SpellGame redraw",
-  "license": "Public domain (PD-Art): woodcut 1515, artist died 1528",
-  "sourceUrl": "https://commons.wikimedia.org/wiki/Special:FilePath/D%C3%BCrer's%20Rhinoceros,%201515.jpg",
-  "file": "tools/draw_ref.py::rhino",
-  "bytes": 432779,
-  "note": "Eric 2026-07-31: replaced the Duerer plate as a TRACING SOURCE, whose hatching floods every threshold (legs merged into the ground shadow, eye lost). The coordinate list is hand-authored, not machine-traced. Eric 2026-08-15: that is a statement about method, not authorship — the drawing is Duerer's rhinoceros, down to the dorsal hornlet and the gorget fold, and every masterpiece credits its artist. It is a redraw after Duerer and must never read as a SpellGame original.",
-  "attribution": "after Albrecht Duerer"
- },
- {
-  "subject": "house",
-  "title": "SpellGame original — house (geometric scan)",
-  "license": "Original artwork (SpellGame)",
-  "sourceUrl": "",
-  "file": "content-pipeline/wordpic/geometric-scans.json",
-  "note": "Hand-authored geometry, never traced from a reference image."
- },
- {
-  "subject": "smiley",
-  "title": "SpellGame original — smiley (geometric scan)",
-  "license": "Original artwork (SpellGame)",
-  "sourceUrl": "",
-  "file": "content-pipeline/wordpic/geometric-scans.json",
-  "note": "Hand-authored geometry, never traced from a reference image."
- },
- {
-  "subject": "star",
-  "title": "SpellGame original — star (geometric scan)",
-  "license": "Original artwork (SpellGame)",
-  "sourceUrl": "",
-  "file": "content-pipeline/wordpic/geometric-scans.json",
-  "note": "Hand-authored geometry, never traced from a reference image."
- },
- {
-  "subject": "balloon",
-  "title": "SpellGame original — balloon (wave 1 batch 1)",
-  "license": "Original artwork (SpellGame)",
-  "sourceUrl": "",
-  "file": "tools/draw_wave1.py",
-  "note": "Drawn coordinate list; candidates approved by Eric 2026-08-01."
- },
- {
-  "subject": "mug",
-  "title": "SpellGame original — mug (wave 1 batch 1)",
-  "license": "Original artwork (SpellGame)",
-  "sourceUrl": "",
-  "file": "tools/draw_wave1.py",
-  "note": "Drawn coordinate list; candidates approved by Eric 2026-08-01."
- },
- {
-  "subject": "kite",
-  "title": "SpellGame original — kite (wave 1 batch 1)",
-  "license": "Original artwork (SpellGame)",
-  "sourceUrl": "",
-  "file": "tools/draw_wave1.py",
-  "note": "Drawn coordinate list; candidates approved by Eric 2026-08-01."
- },
- {
-  "subject": "mushroom",
-  "title": "SpellGame original — mushroom (wave 1 batch 1)",
-  "license": "Original artwork (SpellGame)",
-  "sourceUrl": "",
-  "file": "tools/draw_wave1.py",
-  "note": "Drawn coordinate list; candidates approved by Eric 2026-08-01."
- },
- {
-  "subject": "sailboat",
-  "title": "SpellGame original — sailboat (wave 1 batch 1)",
-  "license": "Original artwork (SpellGame)",
-  "sourceUrl": "",
-  "file": "tools/draw_wave1.py",
-  "note": "Drawn coordinate list; candidates approved by Eric 2026-08-01."
- },
- {
-  "subject": "cactus",
-  "title": "SpellGame original — cactus (wave 1 batch 1)",
-  "license": "Original artwork (SpellGame)",
-  "sourceUrl": "",
-  "file": "tools/draw_wave1.py",
-  "note": "Drawn coordinate list; candidates approved by Eric 2026-08-01."
- },
- {
-  "subject": "ladybug",
-  "title": "SpellGame original — ladybug (wave 1 batch 1)",
-  "license": "Original artwork (SpellGame)",
-  "sourceUrl": "",
-  "file": "tools/draw_wave1.py",
-  "note": "Drawn coordinate list; candidates approved by Eric 2026-08-01."
- },
- {
-  "subject": "moonstar",
-  "title": "SpellGame original — moonstar (wave 1 batch 1)",
-  "license": "Original artwork (SpellGame)",
-  "sourceUrl": "",
-  "file": "tools/draw_wave1.py",
-  "note": "Drawn coordinate list; candidates approved by Eric 2026-08-01."
- },
- {
-  "subject": "bicycle",
-  "title": "SpellGame original — bicycle (wave 1 batch 2)",
-  "license": "Original artwork (SpellGame)",
-  "sourceUrl": "",
-  "file": "tools/draw_wave2.py",
-  "note": "Drawn coordinate list; candidates approved by Eric 2026-08-01."
- },
- {
-  "subject": "windmill",
-  "title": "SpellGame original — windmill (wave 1 batch 2)",
-  "license": "Original artwork (SpellGame)",
-  "sourceUrl": "",
-  "file": "tools/draw_wave2.py",
-  "note": "Drawn coordinate list; candidates approved by Eric 2026-08-01."
- },
- {
-  "subject": "hotair",
-  "title": "SpellGame original — hotair (wave 1 batch 2)",
-  "license": "Original artwork (SpellGame)",
-  "sourceUrl": "",
-  "file": "tools/draw_wave2.py",
-  "note": "Drawn coordinate list; candidates approved by Eric 2026-08-01."
- },
- {
-  "subject": "lighthouse",
-  "title": "SpellGame original — lighthouse (wave 1 batch 2)",
-  "license": "Original artwork (SpellGame)",
-  "sourceUrl": "",
-  "file": "tools/draw_wave2.py",
-  "note": "Drawn coordinate list; candidates approved by Eric 2026-08-01."
- },
- {
-  "subject": "violin",
-  "title": "SpellGame original — violin (wave 1 batch 2)",
-  "license": "Original artwork (SpellGame)",
-  "sourceUrl": "",
-  "file": "tools/draw_wave2.py",
-  "note": "Drawn coordinate list; candidates approved by Eric 2026-08-01."
- },
- {
-  "subject": "hummingbird",
-  "title": "SpellGame original — hummingbird (wave 1 batch 2)",
-  "license": "Original artwork (SpellGame)",
-  "sourceUrl": "",
-  "file": "tools/draw_wave2.py",
-  "note": "Drawn coordinate list; candidates approved by Eric 2026-08-01."
- },
- {
-  "subject": "rooster",
-  "title": "SpellGame original — rooster (wave 1 batch 2)",
-  "license": "Original artwork (SpellGame)",
-  "sourceUrl": "",
-  "file": "tools/draw_wave2.py",
-  "note": "Drawn coordinate list; candidates approved by Eric 2026-08-01."
- },
- {
-  "subject": "seahorse",
-  "title": "SpellGame original — seahorse (wave 1 batch 2)",
-  "license": "Original artwork (SpellGame)",
-  "sourceUrl": "",
-  "file": "tools/draw_wave2.py",
-  "note": "Drawn coordinate list; candidates approved by Eric 2026-08-01."
- },
- {
-  "subject": "wolf",
-  "title": "File:Wolf.svg (howling wolf silhouette)",
-  "license": "CC0 1.0",
-  "sourceUrl": "https://commons.wikimedia.org/wiki/File:Wolf.svg",
-  "file": "ref/wolf.png",
-  "note": "Eric approved sourcing 2026-08-01. Composed over a drawn perch with an aligned 36px seam (tools/prep_sourced.py) so wolf and rock trace as two contours -- paws flush over the rock line reads as standing-on, not fused."
- },
- {
-  "subject": "koi",
-  "title": "Koi-Fish (OpenClipart via FreeSVG)",
-  "license": "Public domain",
-  "sourceUrl": "https://freesvg.org/koi-fish",
-  "file": "ref/koi.png",
-  "note": "Eric approved sourcing 2026-08-01. Silhouette extracted from the coloured top view (opaque-and-not-tan mask, components >800px, morphological close to fuse hairline fin gaps), placed twice rotated 180 for the circling pair (tools/prep_sourced.py). Two copies of PD art composed is PD."
- },
- {
-  "subject": "octopus",
-  "title": "Kid-Octopi-Redrawn (OpenClipart via FreeSVG)",
-  "license": "Public domain",
-  "sourceUrl": "https://freesvg.org/octopus-silhouette",
-  "file": "ref/octopus.png",
-  "note": "Eric's standing wikimedia-sourcing run 2026-08-01. Used near-as-is; light close only so the eye and smile holes survive."
- },
- {
-  "subject": "oak",
-  "title": "Tree78 (OpenClipart via FreeSVG)",
-  "license": "Public domain",
-  "sourceUrl": "https://freesvg.org/black-and-white-tree",
-  "file": "ref/oak.png",
-  "note": "Same run. Etching solidified in tools/prep_sourced.py --wave4: heavy close, largest component, hole fill, LANCZOS round-trip to re-round the staircased crown."
- },
- {
-  "subject": "greatwave",
-  "title": "Under the Wave off Kanagawa (The Great Wave), Katsushika Hokusai, ca. 1830-32 (Met JP1847 scan)",
-  "license": "Public domain (PD-Art)",
-  "sourceUrl": "https://commons.wikimedia.org/wiki/File:Tsunami_by_hokusai_19th_century.jpg",
-  "file": "ref/greatwave.png",
-  "bytes": 17987,
-  "attribution": "after Hokusai"
- },
- {
-  "subject": "starrynight",
-  "title": "The Starry Night, Vincent van Gogh, 1889 (Google Art Project scan)",
-  "license": "Public domain (PD-Art)",
-  "sourceUrl": "https://commons.wikimedia.org/wiki/File:Van_Gogh_-_Starry_Night_-_Google_Art_Project.jpg",
-  "file": "ref/starrynight.png",
-  "bytes": 9968,
-  "attribution": "after Vincent van Gogh",
-  "note": "ref/starrynight-source.jpg is the Commons scan. No guide layer yet: boundary contours, centerlines, a posterized sweep and feature extraction were all tried on 2026-08-16 and none reads as the painting. The master guides that DO work came from hand-authored per-piece masks (tools/prep_wave10.py), which is the route this needs."
- },
- {
-  "subject": "crane",
-  "title": "SpellGame original — origami crane (culture five, ja)",
-  "license": "Original artwork (SpellGame)",
-  "sourceUrl": "",
-  "file": "ref/crane.png",
-  "bytes": 4945
- },
- {
-  "subject": "dallah",
-  "title": "SpellGame original — dallah coffee pot (culture five, ar)",
-  "license": "Original artwork (SpellGame)",
-  "sourceUrl": "",
-  "file": "ref/dallah.png",
-  "bytes": 5240
- },
- {
-  "subject": "basil",
-  "title": "SpellGame original — Saint Basil's skyline (culture five, ru)",
-  "license": "Original artwork (SpellGame)",
-  "sourceUrl": "",
-  "file": "ref/basil.png",
-  "bytes": 4046
- },
- {
-  "subject": "panda",
-  "title": "SpellGame original — panda (culture five, zh)",
-  "license": "Original artwork (SpellGame)",
-  "sourceUrl": "",
-  "file": "ref/panda.png",
-  "bytes": 5389
- },
- {
-  "subject": "calavera",
-  "title": "SpellGame original — calavera sugar skull (culture 2, es)",
-  "license": "Original artwork (SpellGame)",
-  "sourceUrl": "",
-  "file": "tools/draw_wave7.py",
-  "note": "Drawn coordinate list; candidates approved by Eric 2026-08-01."
- },
- {
-  "subject": "tajmahal",
-  "title": "SpellGame original — Taj Mahal (culture 2, hi)",
-  "license": "Original artwork (SpellGame)",
-  "sourceUrl": "",
-  "file": "tools/draw_wave7.py",
-  "note": "Drawn coordinate list; candidates approved by Eric 2026-08-01."
- },
- {
-  "subject": "stork",
-  "title": "SpellGame original — white stork on nest (culture 2, pl)",
-  "license": "Original artwork (SpellGame)",
-  "sourceUrl": "",
-  "file": "tools/draw_wave7.py",
-  "note": "Drawn coordinate list; candidates approved by Eric 2026-08-01."
- },
- {
-  "subject": "caravel",
-  "title": "SpellGame original — caravel (culture 2, pt)",
-  "license": "Original artwork (SpellGame)",
-  "sourceUrl": "",
-  "file": "tools/draw_wave7.py",
-  "note": "Drawn coordinate list; candidates approved by Eric 2026-08-01."
- },
- {
-  "subject": "bigben",
-  "title": "SpellGame original — Big Ben (culture 2, en)",
-  "license": "Original artwork (SpellGame)",
-  "sourceUrl": "",
-  "file": "tools/draw_wave7.py",
-  "note": "Drawn coordinate list; candidates approved by Eric 2026-08-01."
- },
- {
-  "subject": "turtleship",
-  "title": "SpellGame original — geobukseon turtle ship (culture 3, ko)",
-  "license": "Original artwork (SpellGame)",
-  "sourceUrl": "",
-  "file": "tools/draw_wave8.py",
-  "note": "Drawn coordinate list; candidates approved by Eric 2026-08-01."
- },
- {
-  "subject": "baobab",
-  "title": "SpellGame original — baobab (culture 3, sw)",
-  "license": "Original artwork (SpellGame)",
-  "sourceUrl": "",
-  "file": "tools/draw_wave8.py",
-  "note": "Drawn coordinate list; candidates approved by Eric 2026-08-01."
- },
- {
-  "subject": "nonla",
-  "title": "SpellGame original — non la + ao dai (culture 3, vi)",
-  "license": "Original artwork (SpellGame)",
-  "sourceUrl": "",
-  "file": "tools/draw_wave8.py",
-  "note": "Drawn coordinate list; candidates approved by Eric 2026-08-01."
- },
- {
-  "subject": "cuckoo",
-  "title": "SpellGame original — cuckoo clock (culture 3, de)",
-  "license": "Original artwork (SpellGame)",
-  "sourceUrl": "",
-  "file": "tools/draw_wave8.py",
-  "note": "Drawn coordinate list; candidates approved by Eric 2026-08-01."
- },
- {
-  "subject": "torii",
-  "title": "SpellGame original — torii gate (culture 4, ja)",
-  "license": "Original artwork (SpellGame)",
-  "sourceUrl": "",
-  "file": "tools/draw_wave9.py",
-  "note": "Drawn coordinate list; candidates approved by Eric 2026-08-01."
- },
- {
-  "subject": "hanbok",
-  "title": "SpellGame original — hanbok (culture 4, ko)",
-  "license": "Original artwork (SpellGame)",
-  "sourceUrl": "",
-  "file": "tools/draw_wave9.py",
-  "note": "Drawn coordinate list; candidates approved by Eric 2026-08-01."
- },
- {
-  "subject": "matryoshka",
-  "title": "SpellGame original — matryoshka (culture 4, ru)",
-  "license": "Original artwork (SpellGame)",
-  "sourceUrl": "",
-  "file": "tools/draw_wave9.py",
-  "note": "Drawn coordinate list; candidates approved by Eric 2026-08-01."
- },
- {
-  "subject": "greatwall",
-  "title": "SpellGame original — Great Wall (culture 4, zh)",
-  "license": "Original artwork (SpellGame)",
-  "sourceUrl": "",
-  "file": "tools/draw_wave9.py",
-  "note": "Drawn coordinate list; candidates approved by Eric 2026-08-01."
- },
- {
-  "subject": "oud",
-  "title": "SpellGame original — oud (culture 4, ar)",
-  "license": "Original artwork (SpellGame)",
-  "sourceUrl": "",
-  "file": "tools/draw_wave9.py",
-  "note": "Drawn coordinate list; candidates approved by Eric 2026-08-01."
- },
- {
-  "subject": "redfuji",
-  "title": "South Wind, Clear Sky (Red Fuji), Katsushika Hokusai, ca. 1830-32",
-  "license": "Public domain (PD-Art)",
-  "sourceUrl": "https://commons.wikimedia.org/wiki/File:Red_Fuji_southern_wind_clear_morning.jpg",
-  "file": "ref/redfuji-source.jpg",
-  "bytes": 990124,
-  "attribution": "after Hokusai",
-  "note": "Eric 2026-08-16: guide layer traced by feature extraction from the Commons scan — cone, snow streaks, cloud band, forest, summit crown, cartouche. ref/redfuji.png is NOT a bad download: tools/prep_wave10.py authored it as a subject MASK from this same scan, taking the mountain as the region below its own two slopes because three global-threshold attempts welded cloud lace into the summit. The 2026-08-15 note calling that a provenance mismatch was wrong. What was true is narrower — the mask is a derived asset and the original scan was not on disk; it is now, as ref/redfuji-source.jpg."
- },
- {
-  "subject": "scream",
-  "title": "The Scream, Edvard Munch, 1893 (National Gallery of Norway)",
-  "license": "Public domain (PD-Art)",
-  "sourceUrl": "https://commons.wikimedia.org/wiki/File:The_Scream.jpg",
-  "file": "ref/scream.png",
-  "bytes": 11679,
-  "attribution": "after Edvard Munch",
-  "note": "ref/scream.png is a subject mask authored by tools/prep_wave10.py from the Commons scan (dark masses ARE the composition: figure with its pale face holes, bridge rails, fjord). ref/scream-source.jpg is the scan it was derived from."
- },
- {
-  "subject": "fuji",
-  "title": "SpellGame original — Mt. Fuji (ja, the spec's torii partner)",
-  "license": "Original artwork (SpellGame)",
-  "sourceUrl": "",
-  "file": "tools/draw_wave10.py",
-  "note": "Drawn coordinate list."
- },
- {
-  "subject": "orion",
-  "title": "SpellGame original — Orion constellation map (PICTURE-BANK Done #6's subject)",
-  "license": "Original artwork (SpellGame)",
-  "sourceUrl": "",
-  "file": "tools/draw_wave10.py",
-  "note": "Drawn coordinate list."
- },
- {
-  "subject": "papelpicado",
-  "title": "SpellGame original — papel picado banner (es)",
-  "license": "Original artwork (SpellGame)",
-  "sourceUrl": "",
-  "file": "tools/draw_wave10.py",
-  "note": "Drawn coordinate list."
- },
- {
-  "subject": "anubis",
-  "title": "SpellGame original — seated Anubis after Egyptian tomb painting (ancient motif)",
-  "license": "Original artwork (SpellGame)",
-  "sourceUrl": "",
-  "file": "tools/draw_wave11.py",
-  "note": "Drawn coordinate list; candidates approved by Eric 2026-08-01."
- },
- {
-  "subject": "athenaowl",
-  "title": "SpellGame original — owl of Athena after the tetradrachm motif (ancient)",
-  "license": "Original artwork (SpellGame)",
-  "sourceUrl": "",
-  "file": "tools/draw_wave11.py",
-  "note": "Drawn coordinate list; candidates approved by Eric 2026-08-01."
- },
- {
-  "subject": "bamboo",
-  "title": "SpellGame original — ink bamboo after the Chinese literati manner",
-  "license": "Original artwork (SpellGame)",
-  "sourceUrl": "",
-  "file": "tools/draw_wave11.py",
-  "note": "Drawn coordinate list; candidates approved by Eric 2026-08-01."
- },
- {
-  "subject": "girih",
-  "title": "SpellGame original — eight-point girih star after Islamic tilework",
-  "license": "Original artwork (SpellGame)",
-  "sourceUrl": "",
-  "file": "tools/draw_wave11.py",
-  "note": "Drawn coordinate list; candidates approved by Eric 2026-08-01."
- },
- {
-  "subject": "gyenyame",
-  "title": "SpellGame original — Gye Nyame after the Adinkra symbol (traditional)",
-  "license": "Original artwork (SpellGame)",
-  "sourceUrl": "",
-  "file": "tools/draw_wave11.py",
-  "note": "Drawn coordinate list; candidates approved by Eric 2026-08-01."
- },
- {
-  "subject": "arcdetriomphe",
-  "title": "SpellGame original — Arc de Triomphe (culture 5, fr)",
-  "license": "Original artwork (SpellGame)",
-  "sourceUrl": "",
-  "file": "tools/draw_wave13.py",
-  "note": "Drawn coordinate list; candidates approved by Eric 2026-08-01."
- },
- {
-  "subject": "rickshaw",
-  "title": "SpellGame original — auto-rickshaw (culture 5, hi)",
-  "license": "Original artwork (SpellGame)",
-  "sourceUrl": "",
-  "file": "tools/draw_wave13.py",
-  "note": "Drawn coordinate list; candidates approved by Eric 2026-08-01."
- },
- {
-  "subject": "dhow",
-  "title": "SpellGame original — dhow (culture 5, sw)",
-  "license": "Original artwork (SpellGame)",
-  "sourceUrl": "",
-  "file": "tools/draw_wave13.py",
-  "note": "Drawn coordinate list; candidates approved by Eric 2026-08-01."
- },
- {
-  "subject": "galo",
-  "title": "SpellGame original — Barcelos rooster (culture 5, pt)",
-  "license": "Original artwork (SpellGame)",
-  "sourceUrl": "",
-  "file": "tools/draw_wave13.py",
-  "note": "Drawn coordinate list; candidates approved by Eric 2026-08-01."
- },
- {
-  "subject": "pyramids",
-  "title": "SpellGame original — pyramids of Giza (culture 5, ar)",
-  "license": "Original artwork (SpellGame)",
-  "sourceUrl": "",
-  "file": "tools/draw_wave13.py",
-  "note": "Drawn coordinate list; candidates approved by Eric 2026-08-01."
- },
- {
-  "subject": "eyeofhorus",
-  "title": "SpellGame original — Eye of Horus after the ancient wedjat (wave 12)",
-  "license": "Original artwork (SpellGame)",
-  "sourceUrl": "",
-  "file": "tools/draw_wave12.py",
-  "note": "Drawn coordinate list; candidates approved by Eric 2026-08-01."
- },
- {
-  "subject": "ankh",
-  "title": "SpellGame original — ankh after the ancient symbol (wave 12)",
-  "license": "Original artwork (SpellGame)",
-  "sourceUrl": "",
-  "file": "tools/draw_wave12.py",
-  "note": "Drawn coordinate list; candidates approved by Eric 2026-08-01."
- },
- {
-  "subject": "waweldragon",
-  "title": "SpellGame original — Wawel dragon, drawn original (culture 6, pl)",
-  "license": "Original artwork (SpellGame)",
-  "sourceUrl": "",
-  "file": "tools/draw_wave14.py",
-  "note": "Drawn coordinate list; candidates approved by Eric 2026-08-01."
- },
- {
-  "subject": "doubledecker",
-  "title": "SpellGame original — double-decker bus (culture 6, en)",
-  "license": "Original artwork (SpellGame)",
-  "sourceUrl": "",
-  "file": "tools/draw_wave14.py",
-  "note": "Drawn coordinate list; candidates approved by Eric 2026-08-01."
- },
- {
-  "subject": "halongbay",
-  "title": "SpellGame original — Ha Long Bay (culture 6, vi)",
-  "license": "Original artwork (SpellGame)",
-  "sourceUrl": "",
-  "file": "tools/draw_wave14.py",
-  "note": "Drawn coordinate list; candidates approved by Eric 2026-08-01."
- },
- {
-  "subject": "carabao",
-  "title": "SpellGame original — carabao (culture 6, fil — release held for Paul)",
-  "license": "Original artwork (SpellGame)",
-  "sourceUrl": "",
-  "file": "tools/draw_wave14.py",
-  "note": "Drawn coordinate list; candidates approved by Eric 2026-08-01."
- },
- {
-  "subject": "fleurdelis",
-  "title": "SpellGame original — fleur-de-lis (culture 6, fr)",
-  "license": "Original artwork (SpellGame)",
-  "sourceUrl": "",
-  "file": "tools/draw_wave14.py",
-  "note": "Drawn coordinate list; candidates approved by Eric 2026-08-01."
- },
- {
-  "subject": "jeepney",
-  "title": "SpellGame original — jeepney (culture 7, fil — release held for Paul)",
-  "license": "Original artwork (SpellGame)",
-  "sourceUrl": "",
-  "file": "tools/draw_wave15.py",
-  "note": "Drawn coordinate list; candidates approved by Eric 2026-08-02."
- },
- {
-  "subject": "manekineko",
-  "title": "SpellGame original — maneki-neko (culture 7, ja)",
-  "license": "Original artwork (SpellGame)",
-  "sourceUrl": "",
-  "file": "tools/draw_wave15.py",
-  "note": "Drawn coordinate list; candidates approved by Eric 2026-08-02."
- },
- {
   "subject": "acacia",
   "title": "SpellGame original — flat-top acacia (culture 7, sw)",
   "license": "Original artwork (SpellGame)",
   "sourceUrl": "",
   "file": "tools/draw_wave15.py",
-  "note": "Drawn coordinate list; candidates approved by Eric 2026-08-02."
- },
- {
-  "subject": "samovar",
-  "title": "SpellGame original — samovar (culture 7, ru)",
-  "license": "Original artwork (SpellGame)",
-  "sourceUrl": "",
-  "file": "tools/draw_wave15.py",
-  "note": "Drawn coordinate list; candidates approved by Eric 2026-08-02."
- },
- {
-  "subject": "lantern",
-  "title": "SpellGame original — red lantern (culture 7, zh)",
-  "license": "Original artwork (SpellGame)",
-  "sourceUrl": "",
-  "file": "tools/draw_wave15.py",
-  "note": "Drawn coordinate list; candidates approved by Eric 2026-08-02."
- },
- {
-  "subject": "sitar",
-  "title": "SpellGame original — sitar (culture 8, hi)",
-  "license": "Original artwork (SpellGame)",
-  "sourceUrl": "",
-  "file": "tools/draw_wave16.py",
-  "note": "Drawn coordinate list; candidates approved by Eric 2026-08-02."
- },
- {
-  "subject": "brandenburg",
-  "title": "SpellGame original — Brandenburg Gate (culture 8, de)",
-  "license": "Original artwork (SpellGame)",
-  "sourceUrl": "",
-  "file": "tools/draw_wave16.py",
-  "note": "Drawn coordinate list; candidates approved by Eric 2026-08-02."
- },
- {
-  "subject": "colosseum",
-  "title": "SpellGame original — Colosseum (culture 8, worldart)",
-  "license": "Original artwork (SpellGame)",
-  "sourceUrl": "",
-  "file": "tools/draw_wave16.py",
-  "note": "Drawn coordinate list; candidates approved by Eric 2026-08-02."
- },
- {
-  "subject": "fan",
-  "title": "SpellGame original — flamenco fan (culture 9, es)",
-  "license": "Original artwork (SpellGame)",
-  "sourceUrl": "",
-  "file": "tools/draw_wave17.py",
-  "note": "Drawn coordinate list; candidates approved by Eric 2026-08-02."
- },
- {
-  "subject": "stonehenge",
-  "title": "SpellGame original — Stonehenge (culture 9, en)",
-  "license": "Original artwork (SpellGame)",
-  "sourceUrl": "",
-  "file": "tools/draw_wave17.py",
-  "note": "Drawn coordinate list; candidates approved by Eric 2026-08-02."
- },
- {
-  "subject": "pagoda",
-  "title": "SpellGame original — pagoda (culture 10, zh)",
-  "license": "Original artwork (SpellGame)",
-  "sourceUrl": "",
-  "file": "tools/draw_wave18.py",
-  "note": "Drawn coordinate list; candidates approved by Eric 2026-08-02."
- },
- {
-  "subject": "daruma",
-  "title": "SpellGame original — daruma (culture 10, ja)",
-  "license": "Original artwork (SpellGame)",
-  "sourceUrl": "",
-  "file": "tools/draw_wave18.py",
-  "note": "Drawn coordinate list; candidates approved by Eric 2026-08-02."
- },
- {
-  "subject": "balalaika",
-  "title": "SpellGame original — balalaika (culture 10, ru)",
-  "license": "Original artwork (SpellGame)",
-  "sourceUrl": "",
-  "file": "tools/draw_wave18.py",
-  "note": "Drawn coordinate list; candidates approved by Eric 2026-08-02."
- },
- {
-  "subject": "sombrero",
-  "title": "SpellGame original — sombrero (culture 10, es)",
-  "license": "Original artwork (SpellGame)",
-  "sourceUrl": "",
-  "file": "tools/draw_wave18.py",
-  "note": "Drawn coordinate list; candidates approved by Eric 2026-08-02."
- },
- {
-  "subject": "djembe",
-  "title": "SpellGame original — djembe (culture 10, sw)",
-  "license": "Original artwork (SpellGame)",
-  "sourceUrl": "",
-  "file": "tools/draw_wave18.py",
-  "note": "Drawn coordinate list; candidates approved by Eric 2026-08-02."
- },
- {
-  "subject": "angkorwat",
-  "title": "SpellGame original — Angkor Wat (culture 11, worldart)",
-  "license": "Original artwork (SpellGame)",
-  "sourceUrl": "",
-  "file": "tools/draw_wave19.py",
   "note": "Drawn coordinate list; candidates approved by Eric 2026-08-02."
  },
  {
@@ -819,182 +16,6 @@
   "note": "Drawn coordinate list; candidates approved by Eric 2026-08-02."
  },
  {
-  "subject": "quetzal",
-  "title": "SpellGame original — quetzal (culture 11, es)",
-  "license": "Original artwork (SpellGame)",
-  "sourceUrl": "",
-  "file": "tools/draw_wave19.py",
-  "note": "Drawn coordinate list; candidates approved by Eric 2026-08-02."
- },
- {
-  "subject": "grandpiano",
-  "title": "SpellGame original — grand piano (culture 11, pl)",
-  "license": "Original artwork (SpellGame)",
-  "sourceUrl": "",
-  "file": "tools/draw_wave19.py",
-  "note": "Drawn coordinate list; candidates approved by Eric 2026-08-02."
- },
- {
-  "subject": "chichenitza",
-  "title": "SpellGame original — Chichen Itza (culture 12, worldart)",
-  "license": "Original artwork (SpellGame)",
-  "sourceUrl": "",
-  "file": "tools/draw_wave20.py",
-  "note": "Drawn coordinate list; candidates approved by Eric 2026-08-02."
- },
- {
-  "subject": "montsaintmichel",
-  "title": "SpellGame original — Mont Saint-Michel (culture 12, fr)",
-  "license": "Original artwork (SpellGame)",
-  "sourceUrl": "",
-  "file": "tools/draw_wave20.py",
-  "note": "Drawn coordinate list; candidates approved by Eric 2026-08-02."
- },
- {
-  "subject": "maasaishield",
-  "title": "SpellGame original — Maasai shield (culture 12, sw)",
-  "license": "Original artwork (SpellGame)",
-  "sourceUrl": "",
-  "file": "tools/draw_wave20.py",
-  "note": "Drawn coordinate list; candidates approved by Eric 2026-08-02."
- },
- {
-  "subject": "janggu",
-  "title": "SpellGame original — janggu (culture 12, ko)",
-  "license": "Original artwork (SpellGame)",
-  "sourceUrl": "",
-  "file": "tools/draw_wave20.py",
-  "note": "Drawn coordinate list; candidates approved by Eric 2026-08-02."
- },
- {
-  "subject": "koinobori",
-  "title": "SpellGame original — koinobori (batch 13, ja)",
-  "license": "Original artwork (SpellGame)",
-  "sourceUrl": "",
-  "file": "tools/draw_wave21.py",
-  "note": "Drawn coordinate list; candidates approved by Eric 2026-08-02."
- },
- {
-  "subject": "nazcabird",
-  "title": "SpellGame original — after the Nazca hummingbird geoglyph (ancient)",
-  "license": "Original artwork (SpellGame)",
-  "sourceUrl": "",
-  "file": "tools/draw_wave21.py",
-  "note": "Drawn coordinate list; candidates approved by Eric 2026-08-02."
- },
- {
-  "subject": "terracotta",
-  "title": "SpellGame original — terracotta warrior (batch 13, zh)",
-  "license": "Original artwork (SpellGame)",
-  "sourceUrl": "",
-  "file": "tools/draw_wave21.py",
-  "note": "Drawn coordinate list; candidates approved by Eric 2026-08-02."
- },
- {
-  "subject": "hamsa",
-  "title": "SpellGame original — hamsa (batch 13, ar)",
-  "license": "Original artwork (SpellGame)",
-  "sourceUrl": "",
-  "file": "tools/draw_wave21.py",
-  "note": "Drawn coordinate list; candidates approved by Eric 2026-08-02."
- },
- {
-  "subject": "pinata",
-  "title": "SpellGame original — pinata (batch 13, es)",
-  "license": "Original artwork (SpellGame)",
-  "sourceUrl": "",
-  "file": "tools/draw_wave21.py",
-  "note": "Drawn coordinate list; candidates approved by Eric 2026-08-02."
- },
- {
-  "subject": "bagpipes",
-  "title": "SpellGame original — bagpipes (batch 13, en)",
-  "license": "Original artwork (SpellGame)",
-  "sourceUrl": "",
-  "file": "tools/draw_wave21.py",
-  "note": "Drawn coordinate list; candidates approved by Eric 2026-08-02."
- },
- {
-  "subject": "triskele",
-  "title": "SpellGame original — triskele after the ancient motif",
-  "license": "Original artwork (SpellGame)",
-  "sourceUrl": "",
-  "file": "tools/draw_wave21.py",
-  "note": "Drawn coordinate list; candidates approved by Eric 2026-08-02."
- },
- {
-  "subject": "mancala",
-  "title": "SpellGame original — mancala board (batch 13, sw)",
-  "license": "Original artwork (SpellGame)",
-  "sourceUrl": "",
-  "file": "tools/draw_wave21.py",
-  "note": "Drawn coordinate list; candidates approved by Eric 2026-08-02."
- },
- {
-  "subject": "compassrose",
-  "title": "SpellGame original — compass rose (batch 14, worldart)",
-  "license": "Original artwork (SpellGame)",
-  "sourceUrl": "",
-  "file": "tools/draw_wave22.py",
-  "note": "Drawn coordinate list; candidates approved by Eric 2026-08-02."
- },
- {
-  "subject": "gramophone",
-  "title": "SpellGame original — gramophone with horn",
-  "license": "Original artwork (SpellGame)",
-  "sourceUrl": "",
-  "file": "tools/draw_wave23.py",
-  "note": "Drawn coordinate list; candidates approved by Eric 2026-08-02."
- },
- {
-  "subject": "scarab",
-  "title": "SpellGame original — Egyptian scarab",
-  "license": "Original artwork (SpellGame)",
-  "sourceUrl": "",
-  "file": "tools/draw_wave23.py",
-  "note": "Drawn coordinate list; candidates approved by Eric 2026-08-02."
- },
- {
-  "subject": "kitsune",
-  "title": "SpellGame original — kitsune fox mask",
-  "license": "Original artwork (SpellGame)",
-  "sourceUrl": "",
-  "file": "tools/draw_wave23.py",
-  "note": "Drawn coordinate list; candidates approved by Eric 2026-08-02."
- },
- {
-  "subject": "tulip",
-  "title": "SpellGame original — tulip",
-  "license": "Original artwork (SpellGame)",
-  "sourceUrl": "",
-  "file": "tools/draw_wave24.py",
-  "note": "Drawn coordinate list; candidates approved by Eric 2026-08-02."
- },
- {
-  "subject": "hourglass",
-  "title": "SpellGame original — hourglass",
-  "license": "Original artwork (SpellGame)",
-  "sourceUrl": "",
-  "file": "tools/draw_wave24.py",
-  "note": "Drawn coordinate list; candidates approved by Eric 2026-08-02."
- },
- {
-  "subject": "dartboard",
-  "title": "SpellGame original — dartboard",
-  "license": "Original artwork (SpellGame)",
-  "sourceUrl": "",
-  "file": "tools/draw_wave25.py",
-  "note": "Drawn coordinate list; candidates approved by Eric 2026-08-02."
- },
- {
-  "subject": "penguin",
-  "title": "SpellGame original — penguin",
-  "license": "Original artwork (SpellGame)",
-  "sourceUrl": "",
-  "file": "tools/draw_wave25.py",
-  "note": "Drawn coordinate list; candidates approved by Eric 2026-08-02."
- },
- {
   "subject": "anchor",
   "title": "SpellGame original — anchor",
   "license": "Original artwork (SpellGame)",
@@ -1003,20 +24,268 @@
   "note": "Drawn coordinate list; candidates approved by Eric 2026-08-02."
  },
  {
-  "subject": "stoplight",
-  "title": "SpellGame original — stoplight",
+  "subject": "angkorwat",
+  "title": "SpellGame original — Angkor Wat (culture 11, worldart)",
   "license": "Original artwork (SpellGame)",
   "sourceUrl": "",
-  "file": "tools/draw_wave25.py",
+  "file": "tools/draw_wave19.py",
   "note": "Drawn coordinate list; candidates approved by Eric 2026-08-02."
  },
  {
-  "subject": "snowflake",
-  "title": "SpellGame original — snowflake",
+  "subject": "ankh",
+  "title": "SpellGame original — ankh after the ancient symbol (wave 12)",
   "license": "Original artwork (SpellGame)",
   "sourceUrl": "",
-  "file": "tools/draw_wave25.py",
-  "note": "Drawn coordinate list; candidates approved by Eric 2026-08-02."
+  "file": "tools/draw_wave12.py",
+  "note": "Drawn coordinate list; candidates approved by Eric 2026-08-01."
+ },
+ {
+  "subject": "anubis",
+  "title": "SpellGame original — seated Anubis after Egyptian tomb painting (ancient motif)",
+  "license": "Original artwork (SpellGame)",
+  "sourceUrl": "",
+  "file": "tools/draw_wave11.py",
+  "note": "Drawn coordinate list; candidates approved by Eric 2026-08-01."
+ },
+ {
+  "subject": "aquarius",
+  "title": "Zodiac glyph — aquarius (canonical typographic form)",
+  "license": "DejaVu Sans 2.37 glyph — Bitstream Vera Fonts license (free)",
+  "sourceUrl": "https://github.com/dejavu-fonts/dejavu-fonts",
+  "file": "tools/draw_wave27b.py",
+  "note": "Rendered from the free DejaVu Sans font (tools/fonts/DejaVuSans.ttf) and stroke-thickened; approved by Eric 2026-08-02 ('all pass ship 116'). Apple's emoji art untouched — same canonical symbol forms, free source."
+ },
+ {
+  "subject": "arb01",
+  "title": "Glyph ا (arb)",
+  "license": "Noto Sans Arabic glyph - SIL Open Font License 1.1 (free)",
+  "sourceUrl": "https://github.com/google/fonts/tree/main/ofl/notosansarabic",
+  "file": "tools/alphabets/gen_alphabets.py",
+  "note": "Alphabet program: rendered from a free-licensed font, auto-thickened, optically centered; approved by Eric 2026-08-02 ('all pass lets get rolling...')."
+ },
+ {
+  "subject": "arb02",
+  "title": "Glyph ب (arb)",
+  "license": "Noto Sans Arabic glyph - SIL Open Font License 1.1 (free)",
+  "sourceUrl": "https://github.com/google/fonts/tree/main/ofl/notosansarabic",
+  "file": "tools/alphabets/gen_alphabets.py",
+  "note": "Alphabet program: rendered from a free-licensed font, auto-thickened, optically centered; approved by Eric 2026-08-02 ('all pass lets get rolling...')."
+ },
+ {
+  "subject": "arb03",
+  "title": "Glyph ت (arb)",
+  "license": "Noto Sans Arabic glyph - SIL Open Font License 1.1 (free)",
+  "sourceUrl": "https://github.com/google/fonts/tree/main/ofl/notosansarabic",
+  "file": "tools/alphabets/gen_alphabets.py",
+  "note": "Alphabet program: rendered from a free-licensed font, auto-thickened, optically centered; approved by Eric 2026-08-02 ('all pass lets get rolling...')."
+ },
+ {
+  "subject": "arb04",
+  "title": "Glyph ث (arb)",
+  "license": "Noto Sans Arabic glyph - SIL Open Font License 1.1 (free)",
+  "sourceUrl": "https://github.com/google/fonts/tree/main/ofl/notosansarabic",
+  "file": "tools/alphabets/gen_alphabets.py",
+  "note": "Alphabet program: rendered from a free-licensed font, auto-thickened, optically centered; approved by Eric 2026-08-02 ('all pass lets get rolling...')."
+ },
+ {
+  "subject": "arb05",
+  "title": "Glyph ج (arb)",
+  "license": "Noto Sans Arabic glyph - SIL Open Font License 1.1 (free)",
+  "sourceUrl": "https://github.com/google/fonts/tree/main/ofl/notosansarabic",
+  "file": "tools/alphabets/gen_alphabets.py",
+  "note": "Alphabet program: rendered from a free-licensed font, auto-thickened, optically centered; approved by Eric 2026-08-02 ('all pass lets get rolling...')."
+ },
+ {
+  "subject": "arb06",
+  "title": "Glyph ح (arb)",
+  "license": "Noto Sans Arabic glyph - SIL Open Font License 1.1 (free)",
+  "sourceUrl": "https://github.com/google/fonts/tree/main/ofl/notosansarabic",
+  "file": "tools/alphabets/gen_alphabets.py",
+  "note": "Alphabet program: rendered from a free-licensed font, auto-thickened, optically centered; approved by Eric 2026-08-02 ('all pass lets get rolling...')."
+ },
+ {
+  "subject": "arb07",
+  "title": "Glyph خ (arb)",
+  "license": "Noto Sans Arabic glyph - SIL Open Font License 1.1 (free)",
+  "sourceUrl": "https://github.com/google/fonts/tree/main/ofl/notosansarabic",
+  "file": "tools/alphabets/gen_alphabets.py",
+  "note": "Alphabet program: rendered from a free-licensed font, auto-thickened, optically centered; approved by Eric 2026-08-02 ('all pass lets get rolling...')."
+ },
+ {
+  "subject": "arb08",
+  "title": "Glyph د (arb)",
+  "license": "Noto Sans Arabic glyph - SIL Open Font License 1.1 (free)",
+  "sourceUrl": "https://github.com/google/fonts/tree/main/ofl/notosansarabic",
+  "file": "tools/alphabets/gen_alphabets.py",
+  "note": "Alphabet program: rendered from a free-licensed font, auto-thickened, optically centered; approved by Eric 2026-08-02 ('all pass lets get rolling...')."
+ },
+ {
+  "subject": "arb09",
+  "title": "Glyph ذ (arb)",
+  "license": "Noto Sans Arabic glyph - SIL Open Font License 1.1 (free)",
+  "sourceUrl": "https://github.com/google/fonts/tree/main/ofl/notosansarabic",
+  "file": "tools/alphabets/gen_alphabets.py",
+  "note": "Alphabet program: rendered from a free-licensed font, auto-thickened, optically centered; approved by Eric 2026-08-02 ('all pass lets get rolling...')."
+ },
+ {
+  "subject": "arb10",
+  "title": "Glyph ر (arb)",
+  "license": "Noto Sans Arabic glyph - SIL Open Font License 1.1 (free)",
+  "sourceUrl": "https://github.com/google/fonts/tree/main/ofl/notosansarabic",
+  "file": "tools/alphabets/gen_alphabets.py",
+  "note": "Alphabet program: rendered from a free-licensed font, auto-thickened, optically centered; approved by Eric 2026-08-02 ('all pass lets get rolling...')."
+ },
+ {
+  "subject": "arb11",
+  "title": "Glyph ز (arb)",
+  "license": "Noto Sans Arabic glyph - SIL Open Font License 1.1 (free)",
+  "sourceUrl": "https://github.com/google/fonts/tree/main/ofl/notosansarabic",
+  "file": "tools/alphabets/gen_alphabets.py",
+  "note": "Alphabet program: rendered from a free-licensed font, auto-thickened, optically centered; approved by Eric 2026-08-02 ('all pass lets get rolling...')."
+ },
+ {
+  "subject": "arb12",
+  "title": "Glyph س (arb)",
+  "license": "Noto Sans Arabic glyph - SIL Open Font License 1.1 (free)",
+  "sourceUrl": "https://github.com/google/fonts/tree/main/ofl/notosansarabic",
+  "file": "tools/alphabets/gen_alphabets.py",
+  "note": "Alphabet program: rendered from a free-licensed font, auto-thickened, optically centered; approved by Eric 2026-08-02 ('all pass lets get rolling...')."
+ },
+ {
+  "subject": "arb13",
+  "title": "Glyph ش (arb)",
+  "license": "Noto Sans Arabic glyph - SIL Open Font License 1.1 (free)",
+  "sourceUrl": "https://github.com/google/fonts/tree/main/ofl/notosansarabic",
+  "file": "tools/alphabets/gen_alphabets.py",
+  "note": "Alphabet program: rendered from a free-licensed font, auto-thickened, optically centered; approved by Eric 2026-08-02 ('all pass lets get rolling...')."
+ },
+ {
+  "subject": "arb14",
+  "title": "Glyph ص (arb)",
+  "license": "Noto Sans Arabic glyph - SIL Open Font License 1.1 (free)",
+  "sourceUrl": "https://github.com/google/fonts/tree/main/ofl/notosansarabic",
+  "file": "tools/alphabets/gen_alphabets.py",
+  "note": "Alphabet program: rendered from a free-licensed font, auto-thickened, optically centered; approved by Eric 2026-08-02 ('all pass lets get rolling...')."
+ },
+ {
+  "subject": "arb15",
+  "title": "Glyph ض (arb)",
+  "license": "Noto Sans Arabic glyph - SIL Open Font License 1.1 (free)",
+  "sourceUrl": "https://github.com/google/fonts/tree/main/ofl/notosansarabic",
+  "file": "tools/alphabets/gen_alphabets.py",
+  "note": "Alphabet program: rendered from a free-licensed font, auto-thickened, optically centered; approved by Eric 2026-08-02 ('all pass lets get rolling...')."
+ },
+ {
+  "subject": "arb16",
+  "title": "Glyph ط (arb)",
+  "license": "Noto Sans Arabic glyph - SIL Open Font License 1.1 (free)",
+  "sourceUrl": "https://github.com/google/fonts/tree/main/ofl/notosansarabic",
+  "file": "tools/alphabets/gen_alphabets.py",
+  "note": "Alphabet program: rendered from a free-licensed font, auto-thickened, optically centered; approved by Eric 2026-08-02 ('all pass lets get rolling...')."
+ },
+ {
+  "subject": "arb17",
+  "title": "Glyph ظ (arb)",
+  "license": "Noto Sans Arabic glyph - SIL Open Font License 1.1 (free)",
+  "sourceUrl": "https://github.com/google/fonts/tree/main/ofl/notosansarabic",
+  "file": "tools/alphabets/gen_alphabets.py",
+  "note": "Alphabet program: rendered from a free-licensed font, auto-thickened, optically centered; approved by Eric 2026-08-02 ('all pass lets get rolling...')."
+ },
+ {
+  "subject": "arb18",
+  "title": "Glyph ع (arb)",
+  "license": "Noto Sans Arabic glyph - SIL Open Font License 1.1 (free)",
+  "sourceUrl": "https://github.com/google/fonts/tree/main/ofl/notosansarabic",
+  "file": "tools/alphabets/gen_alphabets.py",
+  "note": "Alphabet program: rendered from a free-licensed font, auto-thickened, optically centered; approved by Eric 2026-08-02 ('all pass lets get rolling...')."
+ },
+ {
+  "subject": "arb19",
+  "title": "Glyph غ (arb)",
+  "license": "Noto Sans Arabic glyph - SIL Open Font License 1.1 (free)",
+  "sourceUrl": "https://github.com/google/fonts/tree/main/ofl/notosansarabic",
+  "file": "tools/alphabets/gen_alphabets.py",
+  "note": "Alphabet program: rendered from a free-licensed font, auto-thickened, optically centered; approved by Eric 2026-08-02 ('all pass lets get rolling...')."
+ },
+ {
+  "subject": "arb20",
+  "title": "Glyph ف (arb)",
+  "license": "Noto Sans Arabic glyph - SIL Open Font License 1.1 (free)",
+  "sourceUrl": "https://github.com/google/fonts/tree/main/ofl/notosansarabic",
+  "file": "tools/alphabets/gen_alphabets.py",
+  "note": "Alphabet program: rendered from a free-licensed font, auto-thickened, optically centered; approved by Eric 2026-08-02 ('all pass lets get rolling...')."
+ },
+ {
+  "subject": "arb21",
+  "title": "Glyph ق (arb)",
+  "license": "Noto Sans Arabic glyph - SIL Open Font License 1.1 (free)",
+  "sourceUrl": "https://github.com/google/fonts/tree/main/ofl/notosansarabic",
+  "file": "tools/alphabets/gen_alphabets.py",
+  "note": "Alphabet program: rendered from a free-licensed font, auto-thickened, optically centered; approved by Eric 2026-08-02 ('all pass lets get rolling...')."
+ },
+ {
+  "subject": "arb22",
+  "title": "Glyph ك (arb)",
+  "license": "Noto Sans Arabic glyph - SIL Open Font License 1.1 (free)",
+  "sourceUrl": "https://github.com/google/fonts/tree/main/ofl/notosansarabic",
+  "file": "tools/alphabets/gen_alphabets.py",
+  "note": "Alphabet program: rendered from a free-licensed font, auto-thickened, optically centered; approved by Eric 2026-08-02 ('all pass lets get rolling...')."
+ },
+ {
+  "subject": "arb23",
+  "title": "Glyph ل (arb)",
+  "license": "Noto Sans Arabic glyph - SIL Open Font License 1.1 (free)",
+  "sourceUrl": "https://github.com/google/fonts/tree/main/ofl/notosansarabic",
+  "file": "tools/alphabets/gen_alphabets.py",
+  "note": "Alphabet program: rendered from a free-licensed font, auto-thickened, optically centered; approved by Eric 2026-08-02 ('all pass lets get rolling...')."
+ },
+ {
+  "subject": "arb24",
+  "title": "Glyph م (arb)",
+  "license": "Noto Sans Arabic glyph - SIL Open Font License 1.1 (free)",
+  "sourceUrl": "https://github.com/google/fonts/tree/main/ofl/notosansarabic",
+  "file": "tools/alphabets/gen_alphabets.py",
+  "note": "Alphabet program: rendered from a free-licensed font, auto-thickened, optically centered; approved by Eric 2026-08-02 ('all pass lets get rolling...')."
+ },
+ {
+  "subject": "arb25",
+  "title": "Glyph ن (arb)",
+  "license": "Noto Sans Arabic glyph - SIL Open Font License 1.1 (free)",
+  "sourceUrl": "https://github.com/google/fonts/tree/main/ofl/notosansarabic",
+  "file": "tools/alphabets/gen_alphabets.py",
+  "note": "Alphabet program: rendered from a free-licensed font, auto-thickened, optically centered; approved by Eric 2026-08-02 ('all pass lets get rolling...')."
+ },
+ {
+  "subject": "arb26",
+  "title": "Glyph ه (arb)",
+  "license": "Noto Sans Arabic glyph - SIL Open Font License 1.1 (free)",
+  "sourceUrl": "https://github.com/google/fonts/tree/main/ofl/notosansarabic",
+  "file": "tools/alphabets/gen_alphabets.py",
+  "note": "Alphabet program: rendered from a free-licensed font, auto-thickened, optically centered; approved by Eric 2026-08-02 ('all pass lets get rolling...')."
+ },
+ {
+  "subject": "arb27",
+  "title": "Glyph و (arb)",
+  "license": "Noto Sans Arabic glyph - SIL Open Font License 1.1 (free)",
+  "sourceUrl": "https://github.com/google/fonts/tree/main/ofl/notosansarabic",
+  "file": "tools/alphabets/gen_alphabets.py",
+  "note": "Alphabet program: rendered from a free-licensed font, auto-thickened, optically centered; approved by Eric 2026-08-02 ('all pass lets get rolling...')."
+ },
+ {
+  "subject": "arb28",
+  "title": "Glyph ي (arb)",
+  "license": "Noto Sans Arabic glyph - SIL Open Font License 1.1 (free)",
+  "sourceUrl": "https://github.com/google/fonts/tree/main/ofl/notosansarabic",
+  "file": "tools/alphabets/gen_alphabets.py",
+  "note": "Alphabet program: rendered from a free-licensed font, auto-thickened, optically centered; approved by Eric 2026-08-02 ('all pass lets get rolling...')."
+ },
+ {
+  "subject": "arcdetriomphe",
+  "title": "SpellGame original — Arc de Triomphe (culture 5, fr)",
+  "license": "Original artwork (SpellGame)",
+  "sourceUrl": "",
+  "file": "tools/draw_wave13.py",
+  "note": "Drawn coordinate list; candidates approved by Eric 2026-08-01."
  },
  {
   "subject": "aries",
@@ -1027,64 +296,141 @@
   "note": "Rendered from the free DejaVu Sans font (tools/fonts/DejaVuSans.ttf) and stroke-thickened; approved by Eric 2026-08-02 ('all pass ship 116'). Apple's emoji art untouched — same canonical symbol forms, free source."
  },
  {
-  "subject": "taurus",
-  "title": "Zodiac glyph — taurus (canonical typographic form)",
-  "license": "DejaVu Sans 2.37 glyph — Bitstream Vera Fonts license (free)",
-  "sourceUrl": "https://github.com/dejavu-fonts/dejavu-fonts",
-  "file": "tools/draw_wave27b.py",
-  "note": "Rendered from the free DejaVu Sans font (tools/fonts/DejaVuSans.ttf) and stroke-thickened; approved by Eric 2026-08-02 ('all pass ship 116'). Apple's emoji art untouched — same canonical symbol forms, free source."
+  "subject": "arrow",
+  "title": "SpellGame original — arrow, mathematical construction",
+  "license": "Original artwork (SpellGame)",
+  "sourceUrl": "",
+  "file": "tools/draw_symbols.py::arrow",
+  "bytes": 5433,
+  "note": "CC-PICTURE-BANK-SYMBOLS geometric lane: compass-and-straightedge construction, no photo or third-party reference. Centerlines emitted by the generator."
  },
  {
-  "subject": "gemini",
-  "title": "Zodiac glyph — gemini (canonical typographic form)",
-  "license": "DejaVu Sans 2.37 glyph — Bitstream Vera Fonts license (free)",
-  "sourceUrl": "https://github.com/dejavu-fonts/dejavu-fonts",
-  "file": "tools/draw_wave27b.py",
-  "note": "Rendered from the free DejaVu Sans font (tools/fonts/DejaVuSans.ttf) and stroke-thickened; approved by Eric 2026-08-02 ('all pass ship 116'). Apple's emoji art untouched — same canonical symbol forms, free source."
+  "subject": "athenaowl",
+  "title": "SpellGame original — owl of Athena after the tetradrachm motif (ancient)",
+  "license": "Original artwork (SpellGame)",
+  "sourceUrl": "",
+  "file": "tools/draw_wave11.py",
+  "note": "Drawn coordinate list; candidates approved by Eric 2026-08-01."
+ },
+ {
+  "subject": "bagpipes",
+  "title": "SpellGame original — bagpipes (batch 13, en)",
+  "license": "Original artwork (SpellGame)",
+  "sourceUrl": "",
+  "file": "tools/draw_wave21.py",
+  "note": "Drawn coordinate list; candidates approved by Eric 2026-08-02."
+ },
+ {
+  "subject": "balalaika",
+  "title": "SpellGame original — balalaika (culture 10, ru)",
+  "license": "Original artwork (SpellGame)",
+  "sourceUrl": "",
+  "file": "tools/draw_wave18.py",
+  "note": "Drawn coordinate list; candidates approved by Eric 2026-08-02."
+ },
+ {
+  "subject": "balloon",
+  "title": "SpellGame original — balloon (wave 1 batch 1)",
+  "license": "Original artwork (SpellGame)",
+  "sourceUrl": "",
+  "file": "tools/draw_wave1.py",
+  "note": "Drawn coordinate list; candidates approved by Eric 2026-08-01."
+ },
+ {
+  "subject": "bamboo",
+  "title": "SpellGame original — ink bamboo after the Chinese literati manner",
+  "license": "Original artwork (SpellGame)",
+  "sourceUrl": "",
+  "file": "tools/draw_wave11.py",
+  "note": "Drawn coordinate list; candidates approved by Eric 2026-08-01."
+ },
+ {
+  "subject": "banana",
+  "title": "Banana Flower and Fruit, from Metamorphosis insectorum Surinamensium",
+  "license": "Public domain (author died 1717; PD-old-100)",
+  "sourceUrl": "https://commons.wikimedia.org/wiki/File:Maria_Sibylla_Merian_Banana_Flower_and_Fruit%2C_from_Metamorphosis_insectorum_Surinamensium_1705.jpg",
+  "file": "ref/banana-source.jpg",
+  "bytes": 1880509,
+  "attribution": "Maria Sibylla Merian",
+  "note": "F9 batch, approved by Eric at full size 2026-08-18. Artist and licence basis verified against Commons rather than inferred from the filename -- which is how the Pompon Rose was caught as Henry Joseph Redoute, not his brother Pierre-Joseph, and as a CC0 grant from Cleveland rather than a term expiry. Rails authored 2026-08-22; the guide is potrace via tools/guidegen.py."
+ },
+ {
+  "subject": "baobab",
+  "title": "SpellGame original — baobab (culture 3, sw)",
+  "license": "Original artwork (SpellGame)",
+  "sourceUrl": "",
+  "file": "tools/draw_wave8.py",
+  "note": "Drawn coordinate list; candidates approved by Eric 2026-08-01."
+ },
+ {
+  "subject": "basil",
+  "title": "SpellGame original — Saint Basil's skyline (culture five, ru)",
+  "license": "Original artwork (SpellGame)",
+  "sourceUrl": "",
+  "file": "ref/basil.png",
+  "bytes": 4046
+ },
+ {
+  "subject": "beetle",
+  "title": "Stag Beetle",
+  "license": "Public domain (author died 1528; PD-old-100)",
+  "sourceUrl": "https://commons.wikimedia.org/wiki/File:Duerer_hirschk%C3%A4fer.jpg",
+  "file": "ref/beetle-source.jpg",
+  "bytes": 441280,
+  "attribution": "Albrecht Dürer",
+  "note": "F9 batch, approved by Eric at full size 2026-08-18. Artist and licence basis verified against Commons rather than inferred from the filename -- which is how the Pompon Rose was caught as Henry Joseph Redoute, not his brother Pierre-Joseph, and as a CC0 grant from Cleveland rather than a term expiry. Rails authored 2026-08-22; the guide is potrace via tools/guidegen.py."
+ },
+ {
+  "subject": "bicycle",
+  "title": "SpellGame original — bicycle (wave 1 batch 2)",
+  "license": "Original artwork (SpellGame)",
+  "sourceUrl": "",
+  "file": "tools/draw_wave2.py",
+  "note": "Drawn coordinate list; candidates approved by Eric 2026-08-01."
+ },
+ {
+  "subject": "bigben",
+  "title": "SpellGame original — Big Ben (culture 2, en)",
+  "license": "Original artwork (SpellGame)",
+  "sourceUrl": "",
+  "file": "tools/draw_wave7.py",
+  "note": "Drawn coordinate list; candidates approved by Eric 2026-08-01."
+ },
+ {
+  "subject": "brandenburg",
+  "title": "SpellGame original — Brandenburg Gate (culture 8, de)",
+  "license": "Original artwork (SpellGame)",
+  "sourceUrl": "",
+  "file": "tools/draw_wave16.py",
+  "note": "Drawn coordinate list; candidates approved by Eric 2026-08-02."
+ },
+ {
+  "subject": "butterfly",
+  "title": "File:Butterfly Pinhead icon.svg",
+  "license": "CC0",
+  "sourceUrl": "https://commons.wikimedia.org/wiki/File:Butterfly_Pinhead_icon.svg",
+  "file": "ref/butterfly.png",
+  "bytes": 22647
+ },
+ {
+  "subject": "cactus",
+  "title": "SpellGame original — cactus (wave 1 batch 1)",
+  "license": "Original artwork (SpellGame)",
+  "sourceUrl": "",
+  "file": "tools/draw_wave1.py",
+  "note": "Drawn coordinate list; candidates approved by Eric 2026-08-01."
+ },
+ {
+  "subject": "calavera",
+  "title": "SpellGame original — calavera sugar skull (culture 2, es)",
+  "license": "Original artwork (SpellGame)",
+  "sourceUrl": "",
+  "file": "tools/draw_wave7.py",
+  "note": "Drawn coordinate list; candidates approved by Eric 2026-08-01."
  },
  {
   "subject": "cancer",
   "title": "Zodiac glyph — cancer (canonical typographic form)",
-  "license": "DejaVu Sans 2.37 glyph — Bitstream Vera Fonts license (free)",
-  "sourceUrl": "https://github.com/dejavu-fonts/dejavu-fonts",
-  "file": "tools/draw_wave27b.py",
-  "note": "Rendered from the free DejaVu Sans font (tools/fonts/DejaVuSans.ttf) and stroke-thickened; approved by Eric 2026-08-02 ('all pass ship 116'). Apple's emoji art untouched — same canonical symbol forms, free source."
- },
- {
-  "subject": "leo",
-  "title": "Zodiac glyph — leo (canonical typographic form)",
-  "license": "DejaVu Sans 2.37 glyph — Bitstream Vera Fonts license (free)",
-  "sourceUrl": "https://github.com/dejavu-fonts/dejavu-fonts",
-  "file": "tools/draw_wave27b.py",
-  "note": "Rendered from the free DejaVu Sans font (tools/fonts/DejaVuSans.ttf) and stroke-thickened; approved by Eric 2026-08-02 ('all pass ship 116'). Apple's emoji art untouched — same canonical symbol forms, free source."
- },
- {
-  "subject": "virgo",
-  "title": "Zodiac glyph — virgo (canonical typographic form)",
-  "license": "DejaVu Sans 2.37 glyph — Bitstream Vera Fonts license (free)",
-  "sourceUrl": "https://github.com/dejavu-fonts/dejavu-fonts",
-  "file": "tools/draw_wave27b.py",
-  "note": "Rendered from the free DejaVu Sans font (tools/fonts/DejaVuSans.ttf) and stroke-thickened; approved by Eric 2026-08-02 ('all pass ship 116'). Apple's emoji art untouched — same canonical symbol forms, free source."
- },
- {
-  "subject": "libra",
-  "title": "Zodiac glyph — libra (canonical typographic form)",
-  "license": "DejaVu Sans 2.37 glyph — Bitstream Vera Fonts license (free)",
-  "sourceUrl": "https://github.com/dejavu-fonts/dejavu-fonts",
-  "file": "tools/draw_wave27b.py",
-  "note": "Rendered from the free DejaVu Sans font (tools/fonts/DejaVuSans.ttf) and stroke-thickened; approved by Eric 2026-08-02 ('all pass ship 116'). Apple's emoji art untouched — same canonical symbol forms, free source."
- },
- {
-  "subject": "scorpio",
-  "title": "Zodiac glyph — scorpio (canonical typographic form)",
-  "license": "DejaVu Sans 2.37 glyph — Bitstream Vera Fonts license (free)",
-  "sourceUrl": "https://github.com/dejavu-fonts/dejavu-fonts",
-  "file": "tools/draw_wave27b.py",
-  "note": "Rendered from the free DejaVu Sans font (tools/fonts/DejaVuSans.ttf) and stroke-thickened; approved by Eric 2026-08-02 ('all pass ship 116'). Apple's emoji art untouched — same canonical symbol forms, free source."
- },
- {
-  "subject": "sagittarius",
-  "title": "Zodiac glyph — sagittarius (canonical typographic form)",
   "license": "DejaVu Sans 2.37 glyph — Bitstream Vera Fonts license (free)",
   "sourceUrl": "https://github.com/dejavu-fonts/dejavu-fonts",
   "file": "tools/draw_wave27b.py",
@@ -1099,324 +445,129 @@
   "note": "Rendered from the free DejaVu Sans font (tools/fonts/DejaVuSans.ttf) and stroke-thickened; approved by Eric 2026-08-02 ('all pass ship 116'). Apple's emoji art untouched — same canonical symbol forms, free source."
  },
  {
-  "subject": "aquarius",
-  "title": "Zodiac glyph — aquarius (canonical typographic form)",
-  "license": "DejaVu Sans 2.37 glyph — Bitstream Vera Fonts license (free)",
-  "sourceUrl": "https://github.com/dejavu-fonts/dejavu-fonts",
-  "file": "tools/draw_wave27b.py",
-  "note": "Rendered from the free DejaVu Sans font (tools/fonts/DejaVuSans.ttf) and stroke-thickened; approved by Eric 2026-08-02 ('all pass ship 116'). Apple's emoji art untouched — same canonical symbol forms, free source."
- },
- {
-  "subject": "pisces",
-  "title": "Zodiac glyph — pisces (canonical typographic form)",
-  "license": "DejaVu Sans 2.37 glyph — Bitstream Vera Fonts license (free)",
-  "sourceUrl": "https://github.com/dejavu-fonts/dejavu-fonts",
-  "file": "tools/draw_wave27b.py",
-  "note": "Rendered from the free DejaVu Sans font (tools/fonts/DejaVuSans.ttf) and stroke-thickened; approved by Eric 2026-08-02 ('all pass ship 116'). Apple's emoji art untouched — same canonical symbol forms, free source."
- },
- {
-  "subject": "puzzlepiece",
-  "title": "SpellGame original — puzzlepiece",
+  "subject": "carabao",
+  "title": "SpellGame original — carabao (culture 6, fil — release held for Paul)",
   "license": "Original artwork (SpellGame)",
   "sourceUrl": "",
-  "file": "tools/draw_wave26.py",
+  "file": "tools/draw_wave14.py",
+  "note": "Drawn coordinate list; candidates approved by Eric 2026-08-01."
+ },
+ {
+  "subject": "caravel",
+  "title": "SpellGame original — caravel (culture 2, pt)",
+  "license": "Original artwork (SpellGame)",
+  "sourceUrl": "",
+  "file": "tools/draw_wave7.py",
+  "note": "Drawn coordinate list; candidates approved by Eric 2026-08-01."
+ },
+ {
+  "subject": "carp",
+  "title": "Two Carp in a Cascade",
+  "license": "Public domain (author died 1849; PD-old-100)",
+  "sourceUrl": "https://commons.wikimedia.org/wiki/File:Two_carp_in_a_cascade.jpg",
+  "file": "ref/carp-source.jpg",
+  "bytes": 1136697,
+  "attribution": "Katsushika Hokusai",
+  "note": "F9 batch, approved by Eric at full size 2026-08-18. Artist and licence basis verified against Commons rather than inferred from the filename -- which is how the Pompon Rose was caught as Henry Joseph Redoute, not his brother Pierre-Joseph, and as a CC0 grant from Cleveland rather than a term expiry. Rails authored 2026-08-22; the guide is potrace via tools/guidegen.py."
+ },
+ {
+  "subject": "castle",
+  "title": "SpellGame original — castle",
+  "license": "Original artwork (SpellGame)",
+  "sourceUrl": "",
+  "file": "tools/draw_wave29.py",
+  "note": "Drawn coordinate list; approved by Eric 2026-08-02."
+ },
+ {
+  "subject": "cat",
+  "title": "File:Cat (49952) - The Noun Project.svg",
+  "license": "CC0",
+  "sourceUrl": "https://commons.wikimedia.org/wiki/File:Cat_(49952)_-_The_Noun_Project.svg",
+  "file": "ref/cat.png",
+  "bytes": 18096,
+  "note": "Eric 2026-07-31: remaining-8 scanlock pass; CC0 pictogram"
+ },
+ {
+  "subject": "chichenitza",
+  "title": "SpellGame original — Chichen Itza (culture 12, worldart)",
+  "license": "Original artwork (SpellGame)",
+  "sourceUrl": "",
+  "file": "tools/draw_wave20.py",
   "note": "Drawn coordinate list; candidates approved by Eric 2026-08-02."
  },
  {
-  "subject": "spiderweb",
-  "title": "SpellGame original — spider web (expert)",
+  "subject": "clock",
+  "title": "SpellGame original — clock",
   "license": "Original artwork (SpellGame)",
   "sourceUrl": "",
-  "file": "tools/draw_wave28.py",
-  "note": "Drawn coordinate list; take three (uniform, no spider) approved by Eric 2026-08-02 ('volcano fail web passes'). Volcano takes recorded rejected in its sidecar."
+  "file": "tools/draw_wave31.py",
+  "note": "Drawn coordinate list; approved by Eric 2026-08-02."
  },
  {
-  "subject": "zero",
-  "title": "Digit 0 (canonical typographic form)",
-  "license": "DejaVu Sans 2.37 glyph - Bitstream Vera Fonts license (free)",
-  "sourceUrl": "https://github.com/dejavu-fonts/dejavu-fonts",
-  "file": "tools/alphabets/draw_digits.py",
-  "note": "Rendered from the free DejaVu Sans font, stroke-thickened, optically centered; approved by Eric 2026-08-02."
+  "subject": "colosseum",
+  "title": "SpellGame original — Colosseum (culture 8, worldart)",
+  "license": "Original artwork (SpellGame)",
+  "sourceUrl": "",
+  "file": "tools/draw_wave16.py",
+  "note": "Drawn coordinate list; candidates approved by Eric 2026-08-02."
  },
  {
-  "subject": "one",
-  "title": "Digit 1 (canonical typographic form)",
-  "license": "DejaVu Sans 2.37 glyph - Bitstream Vera Fonts license (free)",
-  "sourceUrl": "https://github.com/dejavu-fonts/dejavu-fonts",
-  "file": "tools/alphabets/draw_digits.py",
-  "note": "Rendered from the free DejaVu Sans font, stroke-thickened, optically centered; approved by Eric 2026-08-02."
+  "subject": "comet",
+  "title": "SpellGame original — drawn comet",
+  "license": "Original artwork (SpellGame)",
+  "sourceUrl": "",
+  "file": "tools/draw_batch27.py::comet",
+  "bytes": 4155,
+  "note": "Batch 27. Redrawn under the L9 channel law: no ink tapering to a point, no white channel under ~50px."
  },
  {
-  "subject": "two",
-  "title": "Digit 2 (canonical typographic form)",
-  "license": "DejaVu Sans 2.37 glyph - Bitstream Vera Fonts license (free)",
-  "sourceUrl": "https://github.com/dejavu-fonts/dejavu-fonts",
-  "file": "tools/alphabets/draw_digits.py",
-  "note": "Rendered from the free DejaVu Sans font, stroke-thickened, optically centered; approved by Eric 2026-08-02."
+  "subject": "compassrose",
+  "title": "SpellGame original — compass rose (batch 14, worldart)",
+  "license": "Original artwork (SpellGame)",
+  "sourceUrl": "",
+  "file": "tools/draw_wave22.py",
+  "note": "Drawn coordinate list; candidates approved by Eric 2026-08-02."
  },
  {
-  "subject": "three",
-  "title": "Digit 3 (canonical typographic form)",
-  "license": "DejaVu Sans 2.37 glyph - Bitstream Vera Fonts license (free)",
-  "sourceUrl": "https://github.com/dejavu-fonts/dejavu-fonts",
-  "file": "tools/alphabets/draw_digits.py",
-  "note": "Rendered from the free DejaVu Sans font, stroke-thickened, optically centered; approved by Eric 2026-08-02."
+  "subject": "crane",
+  "title": "SpellGame original — origami crane (culture five, ja)",
+  "license": "Original artwork (SpellGame)",
+  "sourceUrl": "",
+  "file": "ref/crane.png",
+  "bytes": 4945
  },
  {
-  "subject": "four",
-  "title": "Digit 4 (canonical typographic form)",
-  "license": "DejaVu Sans 2.37 glyph - Bitstream Vera Fonts license (free)",
-  "sourceUrl": "https://github.com/dejavu-fonts/dejavu-fonts",
-  "file": "tools/alphabets/draw_digits.py",
-  "note": "Rendered from the free DejaVu Sans font, stroke-thickened, optically centered; approved by Eric 2026-08-02."
+  "subject": "cross",
+  "title": "SpellGame original — cross, mathematical construction",
+  "license": "Original artwork (SpellGame)",
+  "sourceUrl": "",
+  "file": "tools/draw_symbols.py::cross",
+  "bytes": 3263,
+  "note": "CC-PICTURE-BANK-SYMBOLS geometric lane: compass-and-straightedge construction, no photo or third-party reference. Centerlines emitted by the generator."
  },
  {
-  "subject": "five",
-  "title": "Digit 5 (canonical typographic form)",
-  "license": "DejaVu Sans 2.37 glyph - Bitstream Vera Fonts license (free)",
-  "sourceUrl": "https://github.com/dejavu-fonts/dejavu-fonts",
-  "file": "tools/alphabets/draw_digits.py",
-  "note": "Rendered from the free DejaVu Sans font, stroke-thickened, optically centered; approved by Eric 2026-08-02."
+  "subject": "crown",
+  "title": "SpellGame original — crown",
+  "license": "Original artwork (SpellGame)",
+  "sourceUrl": "",
+  "file": "tools/draw_wave30.py",
+  "note": "Drawn coordinate list; approved by Eric 2026-08-02."
  },
  {
-  "subject": "six",
-  "title": "Digit 6 (canonical typographic form)",
-  "license": "DejaVu Sans 2.37 glyph - Bitstream Vera Fonts license (free)",
-  "sourceUrl": "https://github.com/dejavu-fonts/dejavu-fonts",
-  "file": "tools/alphabets/draw_digits.py",
-  "note": "Rendered from the free DejaVu Sans font, stroke-thickened, optically centered; approved by Eric 2026-08-02."
+  "subject": "crystalball",
+  "title": "SpellGame original — crystalball",
+  "license": "Original artwork (SpellGame)",
+  "sourceUrl": "",
+  "file": "tools/draw_wave31.py",
+  "note": "Drawn coordinate list; approved by Eric 2026-08-02."
  },
  {
-  "subject": "seven",
-  "title": "Digit 7 (canonical typographic form)",
-  "license": "DejaVu Sans 2.37 glyph - Bitstream Vera Fonts license (free)",
-  "sourceUrl": "https://github.com/dejavu-fonts/dejavu-fonts",
-  "file": "tools/alphabets/draw_digits.py",
-  "note": "Rendered from the free DejaVu Sans font, stroke-thickened, optically centered; approved by Eric 2026-08-02."
- },
- {
-  "subject": "eight",
-  "title": "Digit 8 (canonical typographic form)",
-  "license": "DejaVu Sans 2.37 glyph - Bitstream Vera Fonts license (free)",
-  "sourceUrl": "https://github.com/dejavu-fonts/dejavu-fonts",
-  "file": "tools/alphabets/draw_digits.py",
-  "note": "Rendered from the free DejaVu Sans font, stroke-thickened, optically centered; approved by Eric 2026-08-02."
- },
- {
-  "subject": "nine",
-  "title": "Digit 9 (canonical typographic form)",
-  "license": "DejaVu Sans 2.37 glyph - Bitstream Vera Fonts license (free)",
-  "sourceUrl": "https://github.com/dejavu-fonts/dejavu-fonts",
-  "file": "tools/alphabets/draw_digits.py",
-  "note": "Rendered from the free DejaVu Sans font, stroke-thickened, optically centered; approved by Eric 2026-08-02."
- },
- {
-  "subject": "lat01",
-  "title": "Glyph A (lat)",
-  "license": "DejaVu Sans 2.37 glyph - Bitstream Vera Fonts license (free)",
-  "sourceUrl": "https://github.com/dejavu-fonts/dejavu-fonts",
-  "file": "tools/alphabets/gen_alphabets.py",
-  "note": "Alphabet program: rendered from a free-licensed font, auto-thickened, optically centered; approved by Eric 2026-08-02 ('all pass lets get rolling...')."
- },
- {
-  "subject": "lat02",
-  "title": "Glyph B (lat)",
-  "license": "DejaVu Sans 2.37 glyph - Bitstream Vera Fonts license (free)",
-  "sourceUrl": "https://github.com/dejavu-fonts/dejavu-fonts",
-  "file": "tools/alphabets/gen_alphabets.py",
-  "note": "Alphabet program: rendered from a free-licensed font, auto-thickened, optically centered; approved by Eric 2026-08-02 ('all pass lets get rolling...')."
- },
- {
-  "subject": "lat03",
-  "title": "Glyph C (lat)",
-  "license": "DejaVu Sans 2.37 glyph - Bitstream Vera Fonts license (free)",
-  "sourceUrl": "https://github.com/dejavu-fonts/dejavu-fonts",
-  "file": "tools/alphabets/gen_alphabets.py",
-  "note": "Alphabet program: rendered from a free-licensed font, auto-thickened, optically centered; approved by Eric 2026-08-02 ('all pass lets get rolling...')."
- },
- {
-  "subject": "lat04",
-  "title": "Glyph D (lat)",
-  "license": "DejaVu Sans 2.37 glyph - Bitstream Vera Fonts license (free)",
-  "sourceUrl": "https://github.com/dejavu-fonts/dejavu-fonts",
-  "file": "tools/alphabets/gen_alphabets.py",
-  "note": "Alphabet program: rendered from a free-licensed font, auto-thickened, optically centered; approved by Eric 2026-08-02 ('all pass lets get rolling...')."
- },
- {
-  "subject": "lat05",
-  "title": "Glyph E (lat)",
-  "license": "DejaVu Sans 2.37 glyph - Bitstream Vera Fonts license (free)",
-  "sourceUrl": "https://github.com/dejavu-fonts/dejavu-fonts",
-  "file": "tools/alphabets/gen_alphabets.py",
-  "note": "Alphabet program: rendered from a free-licensed font, auto-thickened, optically centered; approved by Eric 2026-08-02 ('all pass lets get rolling...')."
- },
- {
-  "subject": "lat06",
-  "title": "Glyph F (lat)",
-  "license": "DejaVu Sans 2.37 glyph - Bitstream Vera Fonts license (free)",
-  "sourceUrl": "https://github.com/dejavu-fonts/dejavu-fonts",
-  "file": "tools/alphabets/gen_alphabets.py",
-  "note": "Alphabet program: rendered from a free-licensed font, auto-thickened, optically centered; approved by Eric 2026-08-02 ('all pass lets get rolling...')."
- },
- {
-  "subject": "lat07",
-  "title": "Glyph G (lat)",
-  "license": "DejaVu Sans 2.37 glyph - Bitstream Vera Fonts license (free)",
-  "sourceUrl": "https://github.com/dejavu-fonts/dejavu-fonts",
-  "file": "tools/alphabets/gen_alphabets.py",
-  "note": "Alphabet program: rendered from a free-licensed font, auto-thickened, optically centered; approved by Eric 2026-08-02 ('all pass lets get rolling...')."
- },
- {
-  "subject": "lat08",
-  "title": "Glyph H (lat)",
-  "license": "DejaVu Sans 2.37 glyph - Bitstream Vera Fonts license (free)",
-  "sourceUrl": "https://github.com/dejavu-fonts/dejavu-fonts",
-  "file": "tools/alphabets/gen_alphabets.py",
-  "note": "Alphabet program: rendered from a free-licensed font, auto-thickened, optically centered; approved by Eric 2026-08-02 ('all pass lets get rolling...')."
- },
- {
-  "subject": "lat09",
-  "title": "Glyph I (lat)",
-  "license": "DejaVu Sans 2.37 glyph - Bitstream Vera Fonts license (free)",
-  "sourceUrl": "https://github.com/dejavu-fonts/dejavu-fonts",
-  "file": "tools/alphabets/gen_alphabets.py",
-  "note": "Alphabet program: rendered from a free-licensed font, auto-thickened, optically centered; approved by Eric 2026-08-02 ('all pass lets get rolling...')."
- },
- {
-  "subject": "lat10",
-  "title": "Glyph J (lat)",
-  "license": "DejaVu Sans 2.37 glyph - Bitstream Vera Fonts license (free)",
-  "sourceUrl": "https://github.com/dejavu-fonts/dejavu-fonts",
-  "file": "tools/alphabets/gen_alphabets.py",
-  "note": "Alphabet program: rendered from a free-licensed font, auto-thickened, optically centered; approved by Eric 2026-08-02 ('all pass lets get rolling...')."
- },
- {
-  "subject": "lat11",
-  "title": "Glyph K (lat)",
-  "license": "DejaVu Sans 2.37 glyph - Bitstream Vera Fonts license (free)",
-  "sourceUrl": "https://github.com/dejavu-fonts/dejavu-fonts",
-  "file": "tools/alphabets/gen_alphabets.py",
-  "note": "Alphabet program: rendered from a free-licensed font, auto-thickened, optically centered; approved by Eric 2026-08-02 ('all pass lets get rolling...')."
- },
- {
-  "subject": "lat12",
-  "title": "Glyph L (lat)",
-  "license": "DejaVu Sans 2.37 glyph - Bitstream Vera Fonts license (free)",
-  "sourceUrl": "https://github.com/dejavu-fonts/dejavu-fonts",
-  "file": "tools/alphabets/gen_alphabets.py",
-  "note": "Alphabet program: rendered from a free-licensed font, auto-thickened, optically centered; approved by Eric 2026-08-02 ('all pass lets get rolling...')."
- },
- {
-  "subject": "lat13",
-  "title": "Glyph M (lat)",
-  "license": "DejaVu Sans 2.37 glyph - Bitstream Vera Fonts license (free)",
-  "sourceUrl": "https://github.com/dejavu-fonts/dejavu-fonts",
-  "file": "tools/alphabets/gen_alphabets.py",
-  "note": "Alphabet program: rendered from a free-licensed font, auto-thickened, optically centered; approved by Eric 2026-08-02 ('all pass lets get rolling...')."
- },
- {
-  "subject": "lat14",
-  "title": "Glyph N (lat)",
-  "license": "DejaVu Sans 2.37 glyph - Bitstream Vera Fonts license (free)",
-  "sourceUrl": "https://github.com/dejavu-fonts/dejavu-fonts",
-  "file": "tools/alphabets/gen_alphabets.py",
-  "note": "Alphabet program: rendered from a free-licensed font, auto-thickened, optically centered; approved by Eric 2026-08-02 ('all pass lets get rolling...')."
- },
- {
-  "subject": "lat15",
-  "title": "Glyph O (lat)",
-  "license": "DejaVu Sans 2.37 glyph - Bitstream Vera Fonts license (free)",
-  "sourceUrl": "https://github.com/dejavu-fonts/dejavu-fonts",
-  "file": "tools/alphabets/gen_alphabets.py",
-  "note": "Alphabet program: rendered from a free-licensed font, auto-thickened, optically centered; approved by Eric 2026-08-02 ('all pass lets get rolling...')."
- },
- {
-  "subject": "lat16",
-  "title": "Glyph P (lat)",
-  "license": "DejaVu Sans 2.37 glyph - Bitstream Vera Fonts license (free)",
-  "sourceUrl": "https://github.com/dejavu-fonts/dejavu-fonts",
-  "file": "tools/alphabets/gen_alphabets.py",
-  "note": "Alphabet program: rendered from a free-licensed font, auto-thickened, optically centered; approved by Eric 2026-08-02 ('all pass lets get rolling...')."
- },
- {
-  "subject": "lat17",
-  "title": "Glyph Q (lat)",
-  "license": "DejaVu Sans 2.37 glyph - Bitstream Vera Fonts license (free)",
-  "sourceUrl": "https://github.com/dejavu-fonts/dejavu-fonts",
-  "file": "tools/alphabets/gen_alphabets.py",
-  "note": "Alphabet program: rendered from a free-licensed font, auto-thickened, optically centered; approved by Eric 2026-08-02 ('all pass lets get rolling...')."
- },
- {
-  "subject": "lat18",
-  "title": "Glyph R (lat)",
-  "license": "DejaVu Sans 2.37 glyph - Bitstream Vera Fonts license (free)",
-  "sourceUrl": "https://github.com/dejavu-fonts/dejavu-fonts",
-  "file": "tools/alphabets/gen_alphabets.py",
-  "note": "Alphabet program: rendered from a free-licensed font, auto-thickened, optically centered; approved by Eric 2026-08-02 ('all pass lets get rolling...')."
- },
- {
-  "subject": "lat19",
-  "title": "Glyph S (lat)",
-  "license": "DejaVu Sans 2.37 glyph - Bitstream Vera Fonts license (free)",
-  "sourceUrl": "https://github.com/dejavu-fonts/dejavu-fonts",
-  "file": "tools/alphabets/gen_alphabets.py",
-  "note": "Alphabet program: rendered from a free-licensed font, auto-thickened, optically centered; approved by Eric 2026-08-02 ('all pass lets get rolling...')."
- },
- {
-  "subject": "lat20",
-  "title": "Glyph T (lat)",
-  "license": "DejaVu Sans 2.37 glyph - Bitstream Vera Fonts license (free)",
-  "sourceUrl": "https://github.com/dejavu-fonts/dejavu-fonts",
-  "file": "tools/alphabets/gen_alphabets.py",
-  "note": "Alphabet program: rendered from a free-licensed font, auto-thickened, optically centered; approved by Eric 2026-08-02 ('all pass lets get rolling...')."
- },
- {
-  "subject": "lat21",
-  "title": "Glyph U (lat)",
-  "license": "DejaVu Sans 2.37 glyph - Bitstream Vera Fonts license (free)",
-  "sourceUrl": "https://github.com/dejavu-fonts/dejavu-fonts",
-  "file": "tools/alphabets/gen_alphabets.py",
-  "note": "Alphabet program: rendered from a free-licensed font, auto-thickened, optically centered; approved by Eric 2026-08-02 ('all pass lets get rolling...')."
- },
- {
-  "subject": "lat22",
-  "title": "Glyph V (lat)",
-  "license": "DejaVu Sans 2.37 glyph - Bitstream Vera Fonts license (free)",
-  "sourceUrl": "https://github.com/dejavu-fonts/dejavu-fonts",
-  "file": "tools/alphabets/gen_alphabets.py",
-  "note": "Alphabet program: rendered from a free-licensed font, auto-thickened, optically centered; approved by Eric 2026-08-02 ('all pass lets get rolling...')."
- },
- {
-  "subject": "lat23",
-  "title": "Glyph W (lat)",
-  "license": "DejaVu Sans 2.37 glyph - Bitstream Vera Fonts license (free)",
-  "sourceUrl": "https://github.com/dejavu-fonts/dejavu-fonts",
-  "file": "tools/alphabets/gen_alphabets.py",
-  "note": "Alphabet program: rendered from a free-licensed font, auto-thickened, optically centered; approved by Eric 2026-08-02 ('all pass lets get rolling...')."
- },
- {
-  "subject": "lat24",
-  "title": "Glyph X (lat)",
-  "license": "DejaVu Sans 2.37 glyph - Bitstream Vera Fonts license (free)",
-  "sourceUrl": "https://github.com/dejavu-fonts/dejavu-fonts",
-  "file": "tools/alphabets/gen_alphabets.py",
-  "note": "Alphabet program: rendered from a free-licensed font, auto-thickened, optically centered; approved by Eric 2026-08-02 ('all pass lets get rolling...')."
- },
- {
-  "subject": "lat25",
-  "title": "Glyph Y (lat)",
-  "license": "DejaVu Sans 2.37 glyph - Bitstream Vera Fonts license (free)",
-  "sourceUrl": "https://github.com/dejavu-fonts/dejavu-fonts",
-  "file": "tools/alphabets/gen_alphabets.py",
-  "note": "Alphabet program: rendered from a free-licensed font, auto-thickened, optically centered; approved by Eric 2026-08-02 ('all pass lets get rolling...')."
- },
- {
-  "subject": "lat26",
-  "title": "Glyph Z (lat)",
-  "license": "DejaVu Sans 2.37 glyph - Bitstream Vera Fonts license (free)",
-  "sourceUrl": "https://github.com/dejavu-fonts/dejavu-fonts",
-  "file": "tools/alphabets/gen_alphabets.py",
-  "note": "Alphabet program: rendered from a free-licensed font, auto-thickened, optically centered; approved by Eric 2026-08-02 ('all pass lets get rolling...')."
+  "subject": "cuckoo",
+  "title": "SpellGame original — cuckoo clock (culture 3, de)",
+  "license": "Original artwork (SpellGame)",
+  "sourceUrl": "",
+  "file": "tools/draw_wave8.py",
+  "note": "Drawn coordinate list; candidates approved by Eric 2026-08-01."
  },
  {
   "subject": "cyr01",
@@ -1683,228 +834,28 @@
   "note": "Alphabet program: rendered from a free-licensed font, auto-thickened, optically centered; approved by Eric 2026-08-02 ('all pass lets get rolling...')."
  },
  {
-  "subject": "arb01",
-  "title": "Glyph ا (arb)",
-  "license": "Noto Sans Arabic glyph - SIL Open Font License 1.1 (free)",
-  "sourceUrl": "https://github.com/google/fonts/tree/main/ofl/notosansarabic",
-  "file": "tools/alphabets/gen_alphabets.py",
-  "note": "Alphabet program: rendered from a free-licensed font, auto-thickened, optically centered; approved by Eric 2026-08-02 ('all pass lets get rolling...')."
+  "subject": "dallah",
+  "title": "SpellGame original — dallah coffee pot (culture five, ar)",
+  "license": "Original artwork (SpellGame)",
+  "sourceUrl": "",
+  "file": "ref/dallah.png",
+  "bytes": 5240
  },
  {
-  "subject": "arb02",
-  "title": "Glyph ب (arb)",
-  "license": "Noto Sans Arabic glyph - SIL Open Font License 1.1 (free)",
-  "sourceUrl": "https://github.com/google/fonts/tree/main/ofl/notosansarabic",
-  "file": "tools/alphabets/gen_alphabets.py",
-  "note": "Alphabet program: rendered from a free-licensed font, auto-thickened, optically centered; approved by Eric 2026-08-02 ('all pass lets get rolling...')."
+  "subject": "dartboard",
+  "title": "SpellGame original — dartboard",
+  "license": "Original artwork (SpellGame)",
+  "sourceUrl": "",
+  "file": "tools/draw_wave25.py",
+  "note": "Drawn coordinate list; candidates approved by Eric 2026-08-02."
  },
  {
-  "subject": "arb03",
-  "title": "Glyph ت (arb)",
-  "license": "Noto Sans Arabic glyph - SIL Open Font License 1.1 (free)",
-  "sourceUrl": "https://github.com/google/fonts/tree/main/ofl/notosansarabic",
-  "file": "tools/alphabets/gen_alphabets.py",
-  "note": "Alphabet program: rendered from a free-licensed font, auto-thickened, optically centered; approved by Eric 2026-08-02 ('all pass lets get rolling...')."
- },
- {
-  "subject": "arb04",
-  "title": "Glyph ث (arb)",
-  "license": "Noto Sans Arabic glyph - SIL Open Font License 1.1 (free)",
-  "sourceUrl": "https://github.com/google/fonts/tree/main/ofl/notosansarabic",
-  "file": "tools/alphabets/gen_alphabets.py",
-  "note": "Alphabet program: rendered from a free-licensed font, auto-thickened, optically centered; approved by Eric 2026-08-02 ('all pass lets get rolling...')."
- },
- {
-  "subject": "arb05",
-  "title": "Glyph ج (arb)",
-  "license": "Noto Sans Arabic glyph - SIL Open Font License 1.1 (free)",
-  "sourceUrl": "https://github.com/google/fonts/tree/main/ofl/notosansarabic",
-  "file": "tools/alphabets/gen_alphabets.py",
-  "note": "Alphabet program: rendered from a free-licensed font, auto-thickened, optically centered; approved by Eric 2026-08-02 ('all pass lets get rolling...')."
- },
- {
-  "subject": "arb06",
-  "title": "Glyph ح (arb)",
-  "license": "Noto Sans Arabic glyph - SIL Open Font License 1.1 (free)",
-  "sourceUrl": "https://github.com/google/fonts/tree/main/ofl/notosansarabic",
-  "file": "tools/alphabets/gen_alphabets.py",
-  "note": "Alphabet program: rendered from a free-licensed font, auto-thickened, optically centered; approved by Eric 2026-08-02 ('all pass lets get rolling...')."
- },
- {
-  "subject": "arb07",
-  "title": "Glyph خ (arb)",
-  "license": "Noto Sans Arabic glyph - SIL Open Font License 1.1 (free)",
-  "sourceUrl": "https://github.com/google/fonts/tree/main/ofl/notosansarabic",
-  "file": "tools/alphabets/gen_alphabets.py",
-  "note": "Alphabet program: rendered from a free-licensed font, auto-thickened, optically centered; approved by Eric 2026-08-02 ('all pass lets get rolling...')."
- },
- {
-  "subject": "arb08",
-  "title": "Glyph د (arb)",
-  "license": "Noto Sans Arabic glyph - SIL Open Font License 1.1 (free)",
-  "sourceUrl": "https://github.com/google/fonts/tree/main/ofl/notosansarabic",
-  "file": "tools/alphabets/gen_alphabets.py",
-  "note": "Alphabet program: rendered from a free-licensed font, auto-thickened, optically centered; approved by Eric 2026-08-02 ('all pass lets get rolling...')."
- },
- {
-  "subject": "arb09",
-  "title": "Glyph ذ (arb)",
-  "license": "Noto Sans Arabic glyph - SIL Open Font License 1.1 (free)",
-  "sourceUrl": "https://github.com/google/fonts/tree/main/ofl/notosansarabic",
-  "file": "tools/alphabets/gen_alphabets.py",
-  "note": "Alphabet program: rendered from a free-licensed font, auto-thickened, optically centered; approved by Eric 2026-08-02 ('all pass lets get rolling...')."
- },
- {
-  "subject": "arb10",
-  "title": "Glyph ر (arb)",
-  "license": "Noto Sans Arabic glyph - SIL Open Font License 1.1 (free)",
-  "sourceUrl": "https://github.com/google/fonts/tree/main/ofl/notosansarabic",
-  "file": "tools/alphabets/gen_alphabets.py",
-  "note": "Alphabet program: rendered from a free-licensed font, auto-thickened, optically centered; approved by Eric 2026-08-02 ('all pass lets get rolling...')."
- },
- {
-  "subject": "arb11",
-  "title": "Glyph ز (arb)",
-  "license": "Noto Sans Arabic glyph - SIL Open Font License 1.1 (free)",
-  "sourceUrl": "https://github.com/google/fonts/tree/main/ofl/notosansarabic",
-  "file": "tools/alphabets/gen_alphabets.py",
-  "note": "Alphabet program: rendered from a free-licensed font, auto-thickened, optically centered; approved by Eric 2026-08-02 ('all pass lets get rolling...')."
- },
- {
-  "subject": "arb12",
-  "title": "Glyph س (arb)",
-  "license": "Noto Sans Arabic glyph - SIL Open Font License 1.1 (free)",
-  "sourceUrl": "https://github.com/google/fonts/tree/main/ofl/notosansarabic",
-  "file": "tools/alphabets/gen_alphabets.py",
-  "note": "Alphabet program: rendered from a free-licensed font, auto-thickened, optically centered; approved by Eric 2026-08-02 ('all pass lets get rolling...')."
- },
- {
-  "subject": "arb13",
-  "title": "Glyph ش (arb)",
-  "license": "Noto Sans Arabic glyph - SIL Open Font License 1.1 (free)",
-  "sourceUrl": "https://github.com/google/fonts/tree/main/ofl/notosansarabic",
-  "file": "tools/alphabets/gen_alphabets.py",
-  "note": "Alphabet program: rendered from a free-licensed font, auto-thickened, optically centered; approved by Eric 2026-08-02 ('all pass lets get rolling...')."
- },
- {
-  "subject": "arb14",
-  "title": "Glyph ص (arb)",
-  "license": "Noto Sans Arabic glyph - SIL Open Font License 1.1 (free)",
-  "sourceUrl": "https://github.com/google/fonts/tree/main/ofl/notosansarabic",
-  "file": "tools/alphabets/gen_alphabets.py",
-  "note": "Alphabet program: rendered from a free-licensed font, auto-thickened, optically centered; approved by Eric 2026-08-02 ('all pass lets get rolling...')."
- },
- {
-  "subject": "arb15",
-  "title": "Glyph ض (arb)",
-  "license": "Noto Sans Arabic glyph - SIL Open Font License 1.1 (free)",
-  "sourceUrl": "https://github.com/google/fonts/tree/main/ofl/notosansarabic",
-  "file": "tools/alphabets/gen_alphabets.py",
-  "note": "Alphabet program: rendered from a free-licensed font, auto-thickened, optically centered; approved by Eric 2026-08-02 ('all pass lets get rolling...')."
- },
- {
-  "subject": "arb16",
-  "title": "Glyph ط (arb)",
-  "license": "Noto Sans Arabic glyph - SIL Open Font License 1.1 (free)",
-  "sourceUrl": "https://github.com/google/fonts/tree/main/ofl/notosansarabic",
-  "file": "tools/alphabets/gen_alphabets.py",
-  "note": "Alphabet program: rendered from a free-licensed font, auto-thickened, optically centered; approved by Eric 2026-08-02 ('all pass lets get rolling...')."
- },
- {
-  "subject": "arb17",
-  "title": "Glyph ظ (arb)",
-  "license": "Noto Sans Arabic glyph - SIL Open Font License 1.1 (free)",
-  "sourceUrl": "https://github.com/google/fonts/tree/main/ofl/notosansarabic",
-  "file": "tools/alphabets/gen_alphabets.py",
-  "note": "Alphabet program: rendered from a free-licensed font, auto-thickened, optically centered; approved by Eric 2026-08-02 ('all pass lets get rolling...')."
- },
- {
-  "subject": "arb18",
-  "title": "Glyph ع (arb)",
-  "license": "Noto Sans Arabic glyph - SIL Open Font License 1.1 (free)",
-  "sourceUrl": "https://github.com/google/fonts/tree/main/ofl/notosansarabic",
-  "file": "tools/alphabets/gen_alphabets.py",
-  "note": "Alphabet program: rendered from a free-licensed font, auto-thickened, optically centered; approved by Eric 2026-08-02 ('all pass lets get rolling...')."
- },
- {
-  "subject": "arb19",
-  "title": "Glyph غ (arb)",
-  "license": "Noto Sans Arabic glyph - SIL Open Font License 1.1 (free)",
-  "sourceUrl": "https://github.com/google/fonts/tree/main/ofl/notosansarabic",
-  "file": "tools/alphabets/gen_alphabets.py",
-  "note": "Alphabet program: rendered from a free-licensed font, auto-thickened, optically centered; approved by Eric 2026-08-02 ('all pass lets get rolling...')."
- },
- {
-  "subject": "arb20",
-  "title": "Glyph ف (arb)",
-  "license": "Noto Sans Arabic glyph - SIL Open Font License 1.1 (free)",
-  "sourceUrl": "https://github.com/google/fonts/tree/main/ofl/notosansarabic",
-  "file": "tools/alphabets/gen_alphabets.py",
-  "note": "Alphabet program: rendered from a free-licensed font, auto-thickened, optically centered; approved by Eric 2026-08-02 ('all pass lets get rolling...')."
- },
- {
-  "subject": "arb21",
-  "title": "Glyph ق (arb)",
-  "license": "Noto Sans Arabic glyph - SIL Open Font License 1.1 (free)",
-  "sourceUrl": "https://github.com/google/fonts/tree/main/ofl/notosansarabic",
-  "file": "tools/alphabets/gen_alphabets.py",
-  "note": "Alphabet program: rendered from a free-licensed font, auto-thickened, optically centered; approved by Eric 2026-08-02 ('all pass lets get rolling...')."
- },
- {
-  "subject": "arb22",
-  "title": "Glyph ك (arb)",
-  "license": "Noto Sans Arabic glyph - SIL Open Font License 1.1 (free)",
-  "sourceUrl": "https://github.com/google/fonts/tree/main/ofl/notosansarabic",
-  "file": "tools/alphabets/gen_alphabets.py",
-  "note": "Alphabet program: rendered from a free-licensed font, auto-thickened, optically centered; approved by Eric 2026-08-02 ('all pass lets get rolling...')."
- },
- {
-  "subject": "arb23",
-  "title": "Glyph ل (arb)",
-  "license": "Noto Sans Arabic glyph - SIL Open Font License 1.1 (free)",
-  "sourceUrl": "https://github.com/google/fonts/tree/main/ofl/notosansarabic",
-  "file": "tools/alphabets/gen_alphabets.py",
-  "note": "Alphabet program: rendered from a free-licensed font, auto-thickened, optically centered; approved by Eric 2026-08-02 ('all pass lets get rolling...')."
- },
- {
-  "subject": "arb24",
-  "title": "Glyph م (arb)",
-  "license": "Noto Sans Arabic glyph - SIL Open Font License 1.1 (free)",
-  "sourceUrl": "https://github.com/google/fonts/tree/main/ofl/notosansarabic",
-  "file": "tools/alphabets/gen_alphabets.py",
-  "note": "Alphabet program: rendered from a free-licensed font, auto-thickened, optically centered; approved by Eric 2026-08-02 ('all pass lets get rolling...')."
- },
- {
-  "subject": "arb25",
-  "title": "Glyph ن (arb)",
-  "license": "Noto Sans Arabic glyph - SIL Open Font License 1.1 (free)",
-  "sourceUrl": "https://github.com/google/fonts/tree/main/ofl/notosansarabic",
-  "file": "tools/alphabets/gen_alphabets.py",
-  "note": "Alphabet program: rendered from a free-licensed font, auto-thickened, optically centered; approved by Eric 2026-08-02 ('all pass lets get rolling...')."
- },
- {
-  "subject": "arb26",
-  "title": "Glyph ه (arb)",
-  "license": "Noto Sans Arabic glyph - SIL Open Font License 1.1 (free)",
-  "sourceUrl": "https://github.com/google/fonts/tree/main/ofl/notosansarabic",
-  "file": "tools/alphabets/gen_alphabets.py",
-  "note": "Alphabet program: rendered from a free-licensed font, auto-thickened, optically centered; approved by Eric 2026-08-02 ('all pass lets get rolling...')."
- },
- {
-  "subject": "arb27",
-  "title": "Glyph و (arb)",
-  "license": "Noto Sans Arabic glyph - SIL Open Font License 1.1 (free)",
-  "sourceUrl": "https://github.com/google/fonts/tree/main/ofl/notosansarabic",
-  "file": "tools/alphabets/gen_alphabets.py",
-  "note": "Alphabet program: rendered from a free-licensed font, auto-thickened, optically centered; approved by Eric 2026-08-02 ('all pass lets get rolling...')."
- },
- {
-  "subject": "arb28",
-  "title": "Glyph ي (arb)",
-  "license": "Noto Sans Arabic glyph - SIL Open Font License 1.1 (free)",
-  "sourceUrl": "https://github.com/google/fonts/tree/main/ofl/notosansarabic",
-  "file": "tools/alphabets/gen_alphabets.py",
-  "note": "Alphabet program: rendered from a free-licensed font, auto-thickened, optically centered; approved by Eric 2026-08-02 ('all pass lets get rolling...')."
+  "subject": "daruma",
+  "title": "SpellGame original — daruma (culture 10, ja)",
+  "license": "Original artwork (SpellGame)",
+  "sourceUrl": "",
+  "file": "tools/draw_wave18.py",
+  "note": "Drawn coordinate list; candidates approved by Eric 2026-08-02."
  },
  {
   "subject": "dev01",
@@ -2259,196 +1210,277 @@
   "note": "Alphabet program: rendered from a free-licensed font, auto-thickened, optically centered; approved by Eric 2026-08-02 ('all pass lets get rolling...')."
  },
  {
-  "subject": "kor01",
-  "title": "Glyph ㄱ (kor)",
-  "license": "Noto Sans KR glyph - SIL Open Font License 1.1 (free)",
-  "sourceUrl": "https://github.com/google/fonts/tree/main/ofl/notosanskr",
-  "file": "tools/alphabets/gen_alphabets.py",
-  "note": "Alphabet program: rendered from a free-licensed font, auto-thickened, optically centered; approved by Eric 2026-08-02 ('all pass lets get rolling...')."
+  "subject": "dhow",
+  "title": "SpellGame original — dhow (culture 5, sw)",
+  "license": "Original artwork (SpellGame)",
+  "sourceUrl": "",
+  "file": "tools/draw_wave13.py",
+  "note": "Drawn coordinate list; candidates approved by Eric 2026-08-01."
  },
  {
-  "subject": "kor02",
-  "title": "Glyph ㄴ (kor)",
-  "license": "Noto Sans KR glyph - SIL Open Font License 1.1 (free)",
-  "sourceUrl": "https://github.com/google/fonts/tree/main/ofl/notosanskr",
-  "file": "tools/alphabets/gen_alphabets.py",
-  "note": "Alphabet program: rendered from a free-licensed font, auto-thickened, optically centered; approved by Eric 2026-08-02 ('all pass lets get rolling...')."
+  "subject": "diamond",
+  "title": "SpellGame original — diamond, mathematical construction",
+  "license": "Original artwork (SpellGame)",
+  "sourceUrl": "",
+  "file": "tools/draw_symbols.py::diamond",
+  "bytes": 7054,
+  "note": "CC-PICTURE-BANK-SYMBOLS geometric lane: compass-and-straightedge construction, no photo or third-party reference. Centerlines emitted by the generator."
  },
  {
-  "subject": "kor03",
-  "title": "Glyph ㄷ (kor)",
-  "license": "Noto Sans KR glyph - SIL Open Font License 1.1 (free)",
-  "sourceUrl": "https://github.com/google/fonts/tree/main/ofl/notosanskr",
-  "file": "tools/alphabets/gen_alphabets.py",
-  "note": "Alphabet program: rendered from a free-licensed font, auto-thickened, optically centered; approved by Eric 2026-08-02 ('all pass lets get rolling...')."
+  "subject": "djembe",
+  "title": "SpellGame original — djembe (culture 10, sw)",
+  "license": "Original artwork (SpellGame)",
+  "sourceUrl": "",
+  "file": "tools/draw_wave18.py",
+  "note": "Drawn coordinate list; candidates approved by Eric 2026-08-02."
  },
  {
-  "subject": "kor04",
-  "title": "Glyph ㄹ (kor)",
-  "license": "Noto Sans KR glyph - SIL Open Font License 1.1 (free)",
-  "sourceUrl": "https://github.com/google/fonts/tree/main/ofl/notosanskr",
-  "file": "tools/alphabets/gen_alphabets.py",
-  "note": "Alphabet program: rendered from a free-licensed font, auto-thickened, optically centered; approved by Eric 2026-08-02 ('all pass lets get rolling...')."
+  "subject": "dog",
+  "title": "File:Dog Silhouette 01.svg",
+  "license": "Public domain",
+  "sourceUrl": "https://commons.wikimedia.org/wiki/File:Dog_Silhouette_01.svg",
+  "file": "ref/dog.png",
+  "bytes": 27180
  },
  {
-  "subject": "kor05",
-  "title": "Glyph ㅁ (kor)",
-  "license": "Noto Sans KR glyph - SIL Open Font License 1.1 (free)",
-  "sourceUrl": "https://github.com/google/fonts/tree/main/ofl/notosanskr",
-  "file": "tools/alphabets/gen_alphabets.py",
-  "note": "Alphabet program: rendered from a free-licensed font, auto-thickened, optically centered; approved by Eric 2026-08-02 ('all pass lets get rolling...')."
+  "subject": "doubledecker",
+  "title": "SpellGame original — double-decker bus (culture 6, en)",
+  "license": "Original artwork (SpellGame)",
+  "sourceUrl": "",
+  "file": "tools/draw_wave14.py",
+  "note": "Drawn coordinate list; candidates approved by Eric 2026-08-01."
  },
  {
-  "subject": "kor06",
-  "title": "Glyph ㅂ (kor)",
-  "license": "Noto Sans KR glyph - SIL Open Font License 1.1 (free)",
-  "sourceUrl": "https://github.com/google/fonts/tree/main/ofl/notosanskr",
-  "file": "tools/alphabets/gen_alphabets.py",
-  "note": "Alphabet program: rendered from a free-licensed font, auto-thickened, optically centered; approved by Eric 2026-08-02 ('all pass lets get rolling...')."
+  "subject": "dragon",
+  "title": "File:Dragon from Chinese Dragon Banner Red Version.svg",
+  "license": "CC0",
+  "sourceUrl": "https://commons.wikimedia.org/wiki/File:Dragon_from_Chinese_Dragon_Banner_Red_Version.svg",
+  "file": "ref/dragon.png",
+  "bytes": 349136,
+  "note": "Eric 2026-08-01: asked for a clean Chinese-dragon clipart like his reference image. Hokusai panel was tonal (untraceable, like the Mona photo); this is line-art clean."
  },
  {
-  "subject": "kor07",
-  "title": "Glyph ㅅ (kor)",
-  "license": "Noto Sans KR glyph - SIL Open Font License 1.1 (free)",
-  "sourceUrl": "https://github.com/google/fonts/tree/main/ofl/notosanskr",
-  "file": "tools/alphabets/gen_alphabets.py",
-  "note": "Alphabet program: rendered from a free-licensed font, auto-thickened, optically centered; approved by Eric 2026-08-02 ('all pass lets get rolling...')."
+  "subject": "duck",
+  "title": "File:Duck Silhouette (NIH BioArt 135 - 629482).svg",
+  "license": "Public domain",
+  "sourceUrl": "https://commons.wikimedia.org/wiki/File:Duck_Silhouette_(NIH_BioArt_135_-_629482).svg",
+  "file": "ref/duck.png",
+  "bytes": 20951
  },
  {
-  "subject": "kor08",
-  "title": "Glyph ㅇ (kor)",
-  "license": "Noto Sans KR glyph - SIL Open Font License 1.1 (free)",
-  "sourceUrl": "https://github.com/google/fonts/tree/main/ofl/notosanskr",
-  "file": "tools/alphabets/gen_alphabets.py",
-  "note": "Alphabet program: rendered from a free-licensed font, auto-thickened, optically centered; approved by Eric 2026-08-02 ('all pass lets get rolling...')."
+  "subject": "eiffel",
+  "title": "File:Eiffel Tower Silhouette.svg",
+  "license": "CC0",
+  "sourceUrl": "https://commons.wikimedia.org/wiki/File:Eiffel_Tower_Silhouette.svg",
+  "file": "ref/eiffel.png",
+  "bytes": 30478
  },
  {
-  "subject": "kor09",
-  "title": "Glyph ㅈ (kor)",
-  "license": "Noto Sans KR glyph - SIL Open Font License 1.1 (free)",
-  "sourceUrl": "https://github.com/google/fonts/tree/main/ofl/notosanskr",
-  "file": "tools/alphabets/gen_alphabets.py",
-  "note": "Alphabet program: rendered from a free-licensed font, auto-thickened, optically centered; approved by Eric 2026-08-02 ('all pass lets get rolling...')."
+  "subject": "eight",
+  "title": "Digit 8 (canonical typographic form)",
+  "license": "DejaVu Sans 2.37 glyph - Bitstream Vera Fonts license (free)",
+  "sourceUrl": "https://github.com/dejavu-fonts/dejavu-fonts",
+  "file": "tools/alphabets/draw_digits.py",
+  "note": "Rendered from the free DejaVu Sans font, stroke-thickened, optically centered; approved by Eric 2026-08-02."
  },
  {
-  "subject": "kor10",
-  "title": "Glyph ㅊ (kor)",
-  "license": "Noto Sans KR glyph - SIL Open Font License 1.1 (free)",
-  "sourceUrl": "https://github.com/google/fonts/tree/main/ofl/notosanskr",
-  "file": "tools/alphabets/gen_alphabets.py",
-  "note": "Alphabet program: rendered from a free-licensed font, auto-thickened, optically centered; approved by Eric 2026-08-02 ('all pass lets get rolling...')."
+  "subject": "elephant",
+  "title": "File:Elephant Vector.svg",
+  "license": "CC0",
+  "sourceUrl": "https://commons.wikimedia.org/wiki/File:Elephant_Vector.svg",
+  "file": "ref/elephant.png",
+  "bytes": 18816
  },
  {
-  "subject": "kor11",
-  "title": "Glyph ㅋ (kor)",
-  "license": "Noto Sans KR glyph - SIL Open Font License 1.1 (free)",
-  "sourceUrl": "https://github.com/google/fonts/tree/main/ofl/notosanskr",
-  "file": "tools/alphabets/gen_alphabets.py",
-  "note": "Alphabet program: rendered from a free-licensed font, auto-thickened, optically centered; approved by Eric 2026-08-02 ('all pass lets get rolling...')."
+  "subject": "eyeofhorus",
+  "title": "SpellGame original — Eye of Horus after the ancient wedjat (wave 12)",
+  "license": "Original artwork (SpellGame)",
+  "sourceUrl": "",
+  "file": "tools/draw_wave12.py",
+  "note": "Drawn coordinate list; candidates approved by Eric 2026-08-01."
  },
  {
-  "subject": "kor12",
-  "title": "Glyph ㅌ (kor)",
-  "license": "Noto Sans KR glyph - SIL Open Font License 1.1 (free)",
-  "sourceUrl": "https://github.com/google/fonts/tree/main/ofl/notosanskr",
-  "file": "tools/alphabets/gen_alphabets.py",
-  "note": "Alphabet program: rendered from a free-licensed font, auto-thickened, optically centered; approved by Eric 2026-08-02 ('all pass lets get rolling...')."
+  "subject": "fan",
+  "title": "SpellGame original — flamenco fan (culture 9, es)",
+  "license": "Original artwork (SpellGame)",
+  "sourceUrl": "",
+  "file": "tools/draw_wave17.py",
+  "note": "Drawn coordinate list; candidates approved by Eric 2026-08-02."
  },
  {
-  "subject": "kor13",
-  "title": "Glyph ㅍ (kor)",
-  "license": "Noto Sans KR glyph - SIL Open Font License 1.1 (free)",
-  "sourceUrl": "https://github.com/google/fonts/tree/main/ofl/notosanskr",
-  "file": "tools/alphabets/gen_alphabets.py",
-  "note": "Alphabet program: rendered from a free-licensed font, auto-thickened, optically centered; approved by Eric 2026-08-02 ('all pass lets get rolling...')."
+  "subject": "ferriswheel",
+  "title": "SpellGame original — ferriswheel",
+  "license": "Original artwork (SpellGame)",
+  "sourceUrl": "",
+  "file": "tools/draw_wave29.py",
+  "note": "Drawn coordinate list; approved by Eric 2026-08-02."
  },
  {
-  "subject": "kor14",
-  "title": "Glyph ㅎ (kor)",
-  "license": "Noto Sans KR glyph - SIL Open Font License 1.1 (free)",
-  "sourceUrl": "https://github.com/google/fonts/tree/main/ofl/notosanskr",
-  "file": "tools/alphabets/gen_alphabets.py",
-  "note": "Alphabet program: rendered from a free-licensed font, auto-thickened, optically centered; approved by Eric 2026-08-02 ('all pass lets get rolling...')."
+  "subject": "fish",
+  "title": "File:Salmo salar silhouette transparent.png",
+  "license": "CC0",
+  "sourceUrl": "https://commons.wikimedia.org/wiki/File:Salmo_salar_silhouette_transparent.png",
+  "file": "ref/fish.png",
+  "bytes": 10703
  },
  {
-  "subject": "kor15",
-  "title": "Glyph ㅏ (kor)",
-  "license": "Noto Sans KR glyph - SIL Open Font License 1.1 (free)",
-  "sourceUrl": "https://github.com/google/fonts/tree/main/ofl/notosanskr",
-  "file": "tools/alphabets/gen_alphabets.py",
-  "note": "Alphabet program: rendered from a free-licensed font, auto-thickened, optically centered; approved by Eric 2026-08-02 ('all pass lets get rolling...')."
+  "subject": "five",
+  "title": "Digit 5 (canonical typographic form)",
+  "license": "DejaVu Sans 2.37 glyph - Bitstream Vera Fonts license (free)",
+  "sourceUrl": "https://github.com/dejavu-fonts/dejavu-fonts",
+  "file": "tools/alphabets/draw_digits.py",
+  "note": "Rendered from the free DejaVu Sans font, stroke-thickened, optically centered; approved by Eric 2026-08-02."
  },
  {
-  "subject": "kor16",
-  "title": "Glyph ㅑ (kor)",
-  "license": "Noto Sans KR glyph - SIL Open Font License 1.1 (free)",
-  "sourceUrl": "https://github.com/google/fonts/tree/main/ofl/notosanskr",
-  "file": "tools/alphabets/gen_alphabets.py",
-  "note": "Alphabet program: rendered from a free-licensed font, auto-thickened, optically centered; approved by Eric 2026-08-02 ('all pass lets get rolling...')."
+  "subject": "flamingo",
+  "title": "American Flamingo, from The Birds of America",
+  "license": "Public domain (author died 1851; PD-old-100)",
+  "sourceUrl": "https://commons.wikimedia.org/wiki/File:Audubon-Flamingo.jpg",
+  "file": "ref/flamingo-source.jpg",
+  "bytes": 111297,
+  "attribution": "John James Audubon",
+  "note": "F9 batch, approved by Eric at full size 2026-08-18. Artist and licence basis verified against Commons rather than inferred from the filename -- which is how the Pompon Rose was caught as Henry Joseph Redoute, not his brother Pierre-Joseph, and as a CC0 grant from Cleveland rather than a term expiry. Rails authored 2026-08-22; the guide is potrace via tools/guidegen.py."
  },
  {
-  "subject": "kor17",
-  "title": "Glyph ㅓ (kor)",
-  "license": "Noto Sans KR glyph - SIL Open Font License 1.1 (free)",
-  "sourceUrl": "https://github.com/google/fonts/tree/main/ofl/notosanskr",
-  "file": "tools/alphabets/gen_alphabets.py",
-  "note": "Alphabet program: rendered from a free-licensed font, auto-thickened, optically centered; approved by Eric 2026-08-02 ('all pass lets get rolling...')."
+  "subject": "fleurdelis",
+  "title": "SpellGame original — fleur-de-lis (culture 6, fr)",
+  "license": "Original artwork (SpellGame)",
+  "sourceUrl": "",
+  "file": "tools/draw_wave14.py",
+  "note": "Drawn coordinate list; candidates approved by Eric 2026-08-01."
  },
  {
-  "subject": "kor18",
-  "title": "Glyph ㅕ (kor)",
-  "license": "Noto Sans KR glyph - SIL Open Font License 1.1 (free)",
-  "sourceUrl": "https://github.com/google/fonts/tree/main/ofl/notosanskr",
-  "file": "tools/alphabets/gen_alphabets.py",
-  "note": "Alphabet program: rendered from a free-licensed font, auto-thickened, optically centered; approved by Eric 2026-08-02 ('all pass lets get rolling...')."
+  "subject": "four",
+  "title": "Digit 4 (canonical typographic form)",
+  "license": "DejaVu Sans 2.37 glyph - Bitstream Vera Fonts license (free)",
+  "sourceUrl": "https://github.com/dejavu-fonts/dejavu-fonts",
+  "file": "tools/alphabets/draw_digits.py",
+  "note": "Rendered from the free DejaVu Sans font, stroke-thickened, optically centered; approved by Eric 2026-08-02."
  },
  {
-  "subject": "kor19",
-  "title": "Glyph ㅗ (kor)",
-  "license": "Noto Sans KR glyph - SIL Open Font License 1.1 (free)",
-  "sourceUrl": "https://github.com/google/fonts/tree/main/ofl/notosanskr",
-  "file": "tools/alphabets/gen_alphabets.py",
-  "note": "Alphabet program: rendered from a free-licensed font, auto-thickened, optically centered; approved by Eric 2026-08-02 ('all pass lets get rolling...')."
+  "subject": "fuji",
+  "title": "SpellGame original — Mt. Fuji (ja, the spec's torii partner)",
+  "license": "Original artwork (SpellGame)",
+  "sourceUrl": "",
+  "file": "tools/draw_wave10.py",
+  "note": "Drawn coordinate list."
  },
  {
-  "subject": "kor20",
-  "title": "Glyph ㅛ (kor)",
-  "license": "Noto Sans KR glyph - SIL Open Font License 1.1 (free)",
-  "sourceUrl": "https://github.com/google/fonts/tree/main/ofl/notosanskr",
-  "file": "tools/alphabets/gen_alphabets.py",
-  "note": "Alphabet program: rendered from a free-licensed font, auto-thickened, optically centered; approved by Eric 2026-08-02 ('all pass lets get rolling...')."
+  "subject": "galo",
+  "title": "SpellGame original — Barcelos rooster (culture 5, pt)",
+  "license": "Original artwork (SpellGame)",
+  "sourceUrl": "",
+  "file": "tools/draw_wave13.py",
+  "note": "Drawn coordinate list; candidates approved by Eric 2026-08-01."
  },
  {
-  "subject": "kor21",
-  "title": "Glyph ㅜ (kor)",
-  "license": "Noto Sans KR glyph - SIL Open Font License 1.1 (free)",
-  "sourceUrl": "https://github.com/google/fonts/tree/main/ofl/notosanskr",
-  "file": "tools/alphabets/gen_alphabets.py",
-  "note": "Alphabet program: rendered from a free-licensed font, auto-thickened, optically centered; approved by Eric 2026-08-02 ('all pass lets get rolling...')."
+  "subject": "gemini",
+  "title": "Zodiac glyph — gemini (canonical typographic form)",
+  "license": "DejaVu Sans 2.37 glyph — Bitstream Vera Fonts license (free)",
+  "sourceUrl": "https://github.com/dejavu-fonts/dejavu-fonts",
+  "file": "tools/draw_wave27b.py",
+  "note": "Rendered from the free DejaVu Sans font (tools/fonts/DejaVuSans.ttf) and stroke-thickened; approved by Eric 2026-08-02 ('all pass ship 116'). Apple's emoji art untouched — same canonical symbol forms, free source."
  },
  {
-  "subject": "kor22",
-  "title": "Glyph ㅠ (kor)",
-  "license": "Noto Sans KR glyph - SIL Open Font License 1.1 (free)",
-  "sourceUrl": "https://github.com/google/fonts/tree/main/ofl/notosanskr",
-  "file": "tools/alphabets/gen_alphabets.py",
-  "note": "Alphabet program: rendered from a free-licensed font, auto-thickened, optically centered; approved by Eric 2026-08-02 ('all pass lets get rolling...')."
+  "subject": "girih",
+  "title": "SpellGame original — eight-point girih star after Islamic tilework",
+  "license": "Original artwork (SpellGame)",
+  "sourceUrl": "",
+  "file": "tools/draw_wave11.py",
+  "note": "Drawn coordinate list; candidates approved by Eric 2026-08-01."
  },
  {
-  "subject": "kor23",
-  "title": "Glyph ㅡ (kor)",
-  "license": "Noto Sans KR glyph - SIL Open Font License 1.1 (free)",
-  "sourceUrl": "https://github.com/google/fonts/tree/main/ofl/notosanskr",
-  "file": "tools/alphabets/gen_alphabets.py",
-  "note": "Alphabet program: rendered from a free-licensed font, auto-thickened, optically centered; approved by Eric 2026-08-02 ('all pass lets get rolling...')."
+  "subject": "giza",
+  "title": "Egyptian views. The Pyramids of Gizeh. Great Pyramid showing ascent (LOC matpc.00099)",
+  "license": "Public domain",
+  "sourceUrl": "https://commons.wikimedia.org/wiki/File:Egyptian_views._The_Pyramids_of_Gizeh._Great_Pyramid_showing_ascent_LOC_matpc.00099.tif",
+  "file": "ref/giza.png",
+  "bytes": 1469673,
+  "note": "Photo-trace lane, Library of Congress Matson Collection. PD. Stone courses read as horizontal word lines. Two CC-licensed candidates were REJECTED first — invariant 1 is PD/CC0 only."
  },
  {
-  "subject": "kor24",
-  "title": "Glyph ㅣ (kor)",
-  "license": "Noto Sans KR glyph - SIL Open Font License 1.1 (free)",
-  "sourceUrl": "https://github.com/google/fonts/tree/main/ofl/notosanskr",
-  "file": "tools/alphabets/gen_alphabets.py",
-  "note": "Alphabet program: rendered from a free-licensed font, auto-thickened, optically centered; approved by Eric 2026-08-02 ('all pass lets get rolling...')."
+  "subject": "gramophone",
+  "title": "SpellGame original — gramophone with horn",
+  "license": "Original artwork (SpellGame)",
+  "sourceUrl": "",
+  "file": "tools/draw_wave23.py",
+  "note": "Drawn coordinate list; candidates approved by Eric 2026-08-02."
+ },
+ {
+  "subject": "grandpiano",
+  "title": "SpellGame original — grand piano (culture 11, pl)",
+  "license": "Original artwork (SpellGame)",
+  "sourceUrl": "",
+  "file": "tools/draw_wave19.py",
+  "note": "Drawn coordinate list; candidates approved by Eric 2026-08-02."
+ },
+ {
+  "subject": "greatwall",
+  "title": "SpellGame original — Great Wall (culture 4, zh)",
+  "license": "Original artwork (SpellGame)",
+  "sourceUrl": "",
+  "file": "tools/draw_wave9.py",
+  "note": "Drawn coordinate list; candidates approved by Eric 2026-08-01."
+ },
+ {
+  "subject": "greatwave",
+  "title": "Under the Wave off Kanagawa (The Great Wave), Katsushika Hokusai, ca. 1830-32 (Met JP1847 scan)",
+  "license": "Public domain (PD-Art)",
+  "sourceUrl": "https://commons.wikimedia.org/wiki/File:Tsunami_by_hokusai_19th_century.jpg",
+  "file": "ref/greatwave.png",
+  "bytes": 17987,
+  "attribution": "after Hokusai"
+ },
+ {
+  "subject": "gyenyame",
+  "title": "SpellGame original — Gye Nyame after the Adinkra symbol (traditional)",
+  "license": "Original artwork (SpellGame)",
+  "sourceUrl": "",
+  "file": "tools/draw_wave11.py",
+  "note": "Drawn coordinate list; candidates approved by Eric 2026-08-01."
+ },
+ {
+  "subject": "halongbay",
+  "title": "SpellGame original — Ha Long Bay (culture 6, vi)",
+  "license": "Original artwork (SpellGame)",
+  "sourceUrl": "",
+  "file": "tools/draw_wave14.py",
+  "note": "Drawn coordinate list; candidates approved by Eric 2026-08-01."
+ },
+ {
+  "subject": "hamsa",
+  "title": "SpellGame original — hamsa (batch 13, ar)",
+  "license": "Original artwork (SpellGame)",
+  "sourceUrl": "",
+  "file": "tools/draw_wave21.py",
+  "note": "Drawn coordinate list; candidates approved by Eric 2026-08-02."
+ },
+ {
+  "subject": "hanbok",
+  "title": "SpellGame original — hanbok (culture 4, ko)",
+  "license": "Original artwork (SpellGame)",
+  "sourceUrl": "",
+  "file": "tools/draw_wave9.py",
+  "note": "Drawn coordinate list; candidates approved by Eric 2026-08-01."
+ },
+ {
+  "subject": "hare",
+  "title": "A Young Hare",
+  "license": "Public domain (author died 1528; PD-old-100)",
+  "sourceUrl": "https://commons.wikimedia.org/wiki/File:Duerer_a_young_hare.jpg",
+  "file": "ref/hare-source.jpg",
+  "bytes": 2117895,
+  "attribution": "Albrecht Dürer",
+  "note": "F9 batch, approved by Eric at full size 2026-08-18. Artist and licence basis verified against Commons rather than inferred from the filename -- which is how the Pompon Rose was caught as Henry Joseph Redoute, not his brother Pierre-Joseph, and as a CC0 grant from Cleveland rather than a term expiry. Rails authored 2026-08-22; the guide is potrace via tools/guidegen.py."
+ },
+ {
+  "subject": "helmofawe",
+  "title": "SpellGame original — helmofawe, mathematical construction",
+  "license": "Original artwork (SpellGame)",
+  "sourceUrl": "",
+  "file": "tools/draw_symbols.py::helmofawe",
+  "bytes": 11005,
+  "note": "CC-PICTURE-BANK-SYMBOLS geometric lane: compass-and-straightedge construction, no photo or third-party reference. Centerlines emitted by the generator."
  },
  {
   "subject": "hir01",
@@ -2899,28 +1931,45 @@
   "note": "Alphabet program: rendered from a free-licensed font, auto-thickened, optically centered; approved by Eric 2026-08-02 ('all pass lets get rolling...')."
  },
  {
-  "subject": "castle",
-  "title": "SpellGame original — castle",
-  "license": "Original artwork (SpellGame)",
-  "sourceUrl": "",
-  "file": "tools/draw_wave29.py",
-  "note": "Drawn coordinate list; approved by Eric 2026-08-02."
+  "subject": "horse",
+  "title": "File:Horse (49794) - The Noun Project.svg",
+  "license": "CC0",
+  "sourceUrl": "https://commons.wikimedia.org/wiki/File:Horse_(49794)_-_The_Noun_Project.svg",
+  "file": "ref/horse.png",
+  "bytes": 20451,
+  "note": "Eric 2026-07-31: asked for a horse with its head upright. Trotting CC0 pictogram — head high, four legs clear, mane and tail."
  },
  {
-  "subject": "ferriswheel",
-  "title": "SpellGame original — ferriswheel",
+  "subject": "hotair",
+  "title": "SpellGame original — hotair (wave 1 batch 2)",
   "license": "Original artwork (SpellGame)",
   "sourceUrl": "",
-  "file": "tools/draw_wave29.py",
-  "note": "Drawn coordinate list; approved by Eric 2026-08-02."
+  "file": "tools/draw_wave2.py",
+  "note": "Drawn coordinate list; candidates approved by Eric 2026-08-01."
  },
  {
-  "subject": "robot",
-  "title": "SpellGame original — robot",
+  "subject": "hourglass",
+  "title": "SpellGame original — hourglass",
   "license": "Original artwork (SpellGame)",
   "sourceUrl": "",
-  "file": "tools/draw_wave29.py",
-  "note": "Drawn coordinate list; approved by Eric 2026-08-02."
+  "file": "tools/draw_wave24.py",
+  "note": "Drawn coordinate list; candidates approved by Eric 2026-08-02."
+ },
+ {
+  "subject": "house",
+  "title": "SpellGame original — house (geometric scan)",
+  "license": "Original artwork (SpellGame)",
+  "sourceUrl": "",
+  "file": "content-pipeline/wordpic/geometric-scans.json",
+  "note": "Hand-authored geometry, never traced from a reference image."
+ },
+ {
+  "subject": "hummingbird",
+  "title": "SpellGame original — hummingbird (wave 1 batch 2)",
+  "license": "Original artwork (SpellGame)",
+  "sourceUrl": "",
+  "file": "tools/draw_wave2.py",
+  "note": "Drawn coordinate list; candidates approved by Eric 2026-08-01."
  },
  {
   "subject": "icecream",
@@ -2931,20 +1980,20 @@
   "note": "Drawn coordinate list; approved by Eric 2026-08-02."
  },
  {
-  "subject": "crown",
-  "title": "SpellGame original — crown",
+  "subject": "janggu",
+  "title": "SpellGame original — janggu (culture 12, ko)",
   "license": "Original artwork (SpellGame)",
   "sourceUrl": "",
-  "file": "tools/draw_wave30.py",
-  "note": "Drawn coordinate list; approved by Eric 2026-08-02."
+  "file": "tools/draw_wave20.py",
+  "note": "Drawn coordinate list; candidates approved by Eric 2026-08-02."
  },
  {
-  "subject": "umbrella",
-  "title": "SpellGame original — umbrella",
+  "subject": "jeepney",
+  "title": "SpellGame original — jeepney (culture 7, fil — release held for Paul)",
   "license": "Original artwork (SpellGame)",
   "sourceUrl": "",
-  "file": "tools/draw_wave30.py",
-  "note": "Drawn coordinate list; approved by Eric 2026-08-02."
+  "file": "tools/draw_wave15.py",
+  "note": "Drawn coordinate list; candidates approved by Eric 2026-08-02."
  },
  {
   "subject": "key",
@@ -2955,82 +2004,246 @@
   "note": "Drawn coordinate list; approved by Eric 2026-08-02."
  },
  {
-  "subject": "submarine",
-  "title": "SpellGame original — submarine",
+  "subject": "kite",
+  "title": "SpellGame original — kite (wave 1 batch 1)",
   "license": "Original artwork (SpellGame)",
   "sourceUrl": "",
-  "file": "tools/draw_wave30.py",
-  "note": "Drawn coordinate list; approved by Eric 2026-08-02."
+  "file": "tools/draw_wave1.py",
+  "note": "Drawn coordinate list; candidates approved by Eric 2026-08-01."
  },
  {
-  "subject": "crystalball",
-  "title": "SpellGame original — crystalball",
+  "subject": "kitsune",
+  "title": "SpellGame original — kitsune fox mask",
   "license": "Original artwork (SpellGame)",
   "sourceUrl": "",
-  "file": "tools/draw_wave31.py",
-  "note": "Drawn coordinate list; approved by Eric 2026-08-02."
+  "file": "tools/draw_wave23.py",
+  "note": "Drawn coordinate list; candidates approved by Eric 2026-08-02."
  },
  {
-  "subject": "clock",
-  "title": "SpellGame original — clock",
-  "license": "Original artwork (SpellGame)",
-  "sourceUrl": "",
-  "file": "tools/draw_wave31.py",
-  "note": "Drawn coordinate list; approved by Eric 2026-08-02."
+  "subject": "koi",
+  "title": "Koi-Fish (OpenClipart via FreeSVG)",
+  "license": "Public domain",
+  "sourceUrl": "https://freesvg.org/koi-fish",
+  "file": "ref/koi.png",
+  "note": "Eric approved sourcing 2026-08-01. Silhouette extracted from the coloured top view (opaque-and-not-tan mask, components >800px, morphological close to fuse hairline fin gaps), placed twice rotated 180 for the circling pair (tools/prep_sourced.py). Two copies of PD art composed is PD."
  },
  {
-  "subject": "triquetra",
-  "title": "SpellGame original — triquetra, mathematical construction",
+  "subject": "koinobori",
+  "title": "SpellGame original — koinobori (batch 13, ja)",
   "license": "Original artwork (SpellGame)",
   "sourceUrl": "",
-  "file": "tools/draw_symbols.py::triquetra",
-  "bytes": 8535,
-  "note": "CC-PICTURE-BANK-SYMBOLS geometric lane: compass-and-straightedge construction, no photo or third-party reference. Centerlines emitted by the generator."
+  "file": "tools/draw_wave21.py",
+  "note": "Drawn coordinate list; candidates approved by Eric 2026-08-02."
  },
  {
-  "subject": "pentagram",
-  "title": "SpellGame original — pentagram, mathematical construction",
-  "license": "Original artwork (SpellGame)",
-  "sourceUrl": "",
-  "file": "tools/draw_symbols.py::pentagram",
-  "bytes": 7423,
-  "note": "CC-PICTURE-BANK-SYMBOLS geometric lane: compass-and-straightedge construction, no photo or third-party reference. Centerlines emitted by the generator."
+  "subject": "kor01",
+  "title": "Glyph ㄱ (kor)",
+  "license": "Noto Sans KR glyph - SIL Open Font License 1.1 (free)",
+  "sourceUrl": "https://github.com/google/fonts/tree/main/ofl/notosanskr",
+  "file": "tools/alphabets/gen_alphabets.py",
+  "note": "Alphabet program: rendered from a free-licensed font, auto-thickened, optically centered; approved by Eric 2026-08-02 ('all pass lets get rolling...')."
  },
  {
-  "subject": "yinyang",
-  "title": "SpellGame original — yinyang, mathematical construction",
-  "license": "Original artwork (SpellGame)",
-  "sourceUrl": "",
-  "file": "tools/draw_symbols.py::yinyang",
-  "bytes": 10100,
-  "note": "CC-PICTURE-BANK-SYMBOLS geometric lane: compass-and-straightedge construction, no photo or third-party reference. Centerlines emitted by the generator."
+  "subject": "kor02",
+  "title": "Glyph ㄴ (kor)",
+  "license": "Noto Sans KR glyph - SIL Open Font License 1.1 (free)",
+  "sourceUrl": "https://github.com/google/fonts/tree/main/ofl/notosanskr",
+  "file": "tools/alphabets/gen_alphabets.py",
+  "note": "Alphabet program: rendered from a free-licensed font, auto-thickened, optically centered; approved by Eric 2026-08-02 ('all pass lets get rolling...')."
  },
  {
-  "subject": "merkaba",
-  "title": "SpellGame original — merkaba, mathematical construction",
-  "license": "Original artwork (SpellGame)",
-  "sourceUrl": "",
-  "file": "tools/draw_symbols.py::merkaba",
-  "bytes": 7940,
-  "note": "CC-PICTURE-BANK-SYMBOLS geometric lane: compass-and-straightedge construction, no photo or third-party reference. Centerlines emitted by the generator."
+  "subject": "kor03",
+  "title": "Glyph ㄷ (kor)",
+  "license": "Noto Sans KR glyph - SIL Open Font License 1.1 (free)",
+  "sourceUrl": "https://github.com/google/fonts/tree/main/ofl/notosanskr",
+  "file": "tools/alphabets/gen_alphabets.py",
+  "note": "Alphabet program: rendered from a free-licensed font, auto-thickened, optically centered; approved by Eric 2026-08-02 ('all pass lets get rolling...')."
  },
  {
-  "subject": "vegvisir",
-  "title": "SpellGame original — vegvisir, mathematical construction",
-  "license": "Original artwork (SpellGame)",
-  "sourceUrl": "",
-  "file": "tools/draw_symbols.py::vegvisir",
-  "bytes": 8251,
-  "note": "CC-PICTURE-BANK-SYMBOLS geometric lane: compass-and-straightedge construction, no photo or third-party reference. Centerlines emitted by the generator."
+  "subject": "kor04",
+  "title": "Glyph ㄹ (kor)",
+  "license": "Noto Sans KR glyph - SIL Open Font License 1.1 (free)",
+  "sourceUrl": "https://github.com/google/fonts/tree/main/ofl/notosanskr",
+  "file": "tools/alphabets/gen_alphabets.py",
+  "note": "Alphabet program: rendered from a free-licensed font, auto-thickened, optically centered; approved by Eric 2026-08-02 ('all pass lets get rolling...')."
  },
  {
-  "subject": "helmofawe",
-  "title": "SpellGame original — helmofawe, mathematical construction",
+  "subject": "kor05",
+  "title": "Glyph ㅁ (kor)",
+  "license": "Noto Sans KR glyph - SIL Open Font License 1.1 (free)",
+  "sourceUrl": "https://github.com/google/fonts/tree/main/ofl/notosanskr",
+  "file": "tools/alphabets/gen_alphabets.py",
+  "note": "Alphabet program: rendered from a free-licensed font, auto-thickened, optically centered; approved by Eric 2026-08-02 ('all pass lets get rolling...')."
+ },
+ {
+  "subject": "kor06",
+  "title": "Glyph ㅂ (kor)",
+  "license": "Noto Sans KR glyph - SIL Open Font License 1.1 (free)",
+  "sourceUrl": "https://github.com/google/fonts/tree/main/ofl/notosanskr",
+  "file": "tools/alphabets/gen_alphabets.py",
+  "note": "Alphabet program: rendered from a free-licensed font, auto-thickened, optically centered; approved by Eric 2026-08-02 ('all pass lets get rolling...')."
+ },
+ {
+  "subject": "kor07",
+  "title": "Glyph ㅅ (kor)",
+  "license": "Noto Sans KR glyph - SIL Open Font License 1.1 (free)",
+  "sourceUrl": "https://github.com/google/fonts/tree/main/ofl/notosanskr",
+  "file": "tools/alphabets/gen_alphabets.py",
+  "note": "Alphabet program: rendered from a free-licensed font, auto-thickened, optically centered; approved by Eric 2026-08-02 ('all pass lets get rolling...')."
+ },
+ {
+  "subject": "kor08",
+  "title": "Glyph ㅇ (kor)",
+  "license": "Noto Sans KR glyph - SIL Open Font License 1.1 (free)",
+  "sourceUrl": "https://github.com/google/fonts/tree/main/ofl/notosanskr",
+  "file": "tools/alphabets/gen_alphabets.py",
+  "note": "Alphabet program: rendered from a free-licensed font, auto-thickened, optically centered; approved by Eric 2026-08-02 ('all pass lets get rolling...')."
+ },
+ {
+  "subject": "kor09",
+  "title": "Glyph ㅈ (kor)",
+  "license": "Noto Sans KR glyph - SIL Open Font License 1.1 (free)",
+  "sourceUrl": "https://github.com/google/fonts/tree/main/ofl/notosanskr",
+  "file": "tools/alphabets/gen_alphabets.py",
+  "note": "Alphabet program: rendered from a free-licensed font, auto-thickened, optically centered; approved by Eric 2026-08-02 ('all pass lets get rolling...')."
+ },
+ {
+  "subject": "kor10",
+  "title": "Glyph ㅊ (kor)",
+  "license": "Noto Sans KR glyph - SIL Open Font License 1.1 (free)",
+  "sourceUrl": "https://github.com/google/fonts/tree/main/ofl/notosanskr",
+  "file": "tools/alphabets/gen_alphabets.py",
+  "note": "Alphabet program: rendered from a free-licensed font, auto-thickened, optically centered; approved by Eric 2026-08-02 ('all pass lets get rolling...')."
+ },
+ {
+  "subject": "kor11",
+  "title": "Glyph ㅋ (kor)",
+  "license": "Noto Sans KR glyph - SIL Open Font License 1.1 (free)",
+  "sourceUrl": "https://github.com/google/fonts/tree/main/ofl/notosanskr",
+  "file": "tools/alphabets/gen_alphabets.py",
+  "note": "Alphabet program: rendered from a free-licensed font, auto-thickened, optically centered; approved by Eric 2026-08-02 ('all pass lets get rolling...')."
+ },
+ {
+  "subject": "kor12",
+  "title": "Glyph ㅌ (kor)",
+  "license": "Noto Sans KR glyph - SIL Open Font License 1.1 (free)",
+  "sourceUrl": "https://github.com/google/fonts/tree/main/ofl/notosanskr",
+  "file": "tools/alphabets/gen_alphabets.py",
+  "note": "Alphabet program: rendered from a free-licensed font, auto-thickened, optically centered; approved by Eric 2026-08-02 ('all pass lets get rolling...')."
+ },
+ {
+  "subject": "kor13",
+  "title": "Glyph ㅍ (kor)",
+  "license": "Noto Sans KR glyph - SIL Open Font License 1.1 (free)",
+  "sourceUrl": "https://github.com/google/fonts/tree/main/ofl/notosanskr",
+  "file": "tools/alphabets/gen_alphabets.py",
+  "note": "Alphabet program: rendered from a free-licensed font, auto-thickened, optically centered; approved by Eric 2026-08-02 ('all pass lets get rolling...')."
+ },
+ {
+  "subject": "kor14",
+  "title": "Glyph ㅎ (kor)",
+  "license": "Noto Sans KR glyph - SIL Open Font License 1.1 (free)",
+  "sourceUrl": "https://github.com/google/fonts/tree/main/ofl/notosanskr",
+  "file": "tools/alphabets/gen_alphabets.py",
+  "note": "Alphabet program: rendered from a free-licensed font, auto-thickened, optically centered; approved by Eric 2026-08-02 ('all pass lets get rolling...')."
+ },
+ {
+  "subject": "kor15",
+  "title": "Glyph ㅏ (kor)",
+  "license": "Noto Sans KR glyph - SIL Open Font License 1.1 (free)",
+  "sourceUrl": "https://github.com/google/fonts/tree/main/ofl/notosanskr",
+  "file": "tools/alphabets/gen_alphabets.py",
+  "note": "Alphabet program: rendered from a free-licensed font, auto-thickened, optically centered; approved by Eric 2026-08-02 ('all pass lets get rolling...')."
+ },
+ {
+  "subject": "kor16",
+  "title": "Glyph ㅑ (kor)",
+  "license": "Noto Sans KR glyph - SIL Open Font License 1.1 (free)",
+  "sourceUrl": "https://github.com/google/fonts/tree/main/ofl/notosanskr",
+  "file": "tools/alphabets/gen_alphabets.py",
+  "note": "Alphabet program: rendered from a free-licensed font, auto-thickened, optically centered; approved by Eric 2026-08-02 ('all pass lets get rolling...')."
+ },
+ {
+  "subject": "kor17",
+  "title": "Glyph ㅓ (kor)",
+  "license": "Noto Sans KR glyph - SIL Open Font License 1.1 (free)",
+  "sourceUrl": "https://github.com/google/fonts/tree/main/ofl/notosanskr",
+  "file": "tools/alphabets/gen_alphabets.py",
+  "note": "Alphabet program: rendered from a free-licensed font, auto-thickened, optically centered; approved by Eric 2026-08-02 ('all pass lets get rolling...')."
+ },
+ {
+  "subject": "kor18",
+  "title": "Glyph ㅕ (kor)",
+  "license": "Noto Sans KR glyph - SIL Open Font License 1.1 (free)",
+  "sourceUrl": "https://github.com/google/fonts/tree/main/ofl/notosanskr",
+  "file": "tools/alphabets/gen_alphabets.py",
+  "note": "Alphabet program: rendered from a free-licensed font, auto-thickened, optically centered; approved by Eric 2026-08-02 ('all pass lets get rolling...')."
+ },
+ {
+  "subject": "kor19",
+  "title": "Glyph ㅗ (kor)",
+  "license": "Noto Sans KR glyph - SIL Open Font License 1.1 (free)",
+  "sourceUrl": "https://github.com/google/fonts/tree/main/ofl/notosanskr",
+  "file": "tools/alphabets/gen_alphabets.py",
+  "note": "Alphabet program: rendered from a free-licensed font, auto-thickened, optically centered; approved by Eric 2026-08-02 ('all pass lets get rolling...')."
+ },
+ {
+  "subject": "kor20",
+  "title": "Glyph ㅛ (kor)",
+  "license": "Noto Sans KR glyph - SIL Open Font License 1.1 (free)",
+  "sourceUrl": "https://github.com/google/fonts/tree/main/ofl/notosanskr",
+  "file": "tools/alphabets/gen_alphabets.py",
+  "note": "Alphabet program: rendered from a free-licensed font, auto-thickened, optically centered; approved by Eric 2026-08-02 ('all pass lets get rolling...')."
+ },
+ {
+  "subject": "kor21",
+  "title": "Glyph ㅜ (kor)",
+  "license": "Noto Sans KR glyph - SIL Open Font License 1.1 (free)",
+  "sourceUrl": "https://github.com/google/fonts/tree/main/ofl/notosanskr",
+  "file": "tools/alphabets/gen_alphabets.py",
+  "note": "Alphabet program: rendered from a free-licensed font, auto-thickened, optically centered; approved by Eric 2026-08-02 ('all pass lets get rolling...')."
+ },
+ {
+  "subject": "kor22",
+  "title": "Glyph ㅠ (kor)",
+  "license": "Noto Sans KR glyph - SIL Open Font License 1.1 (free)",
+  "sourceUrl": "https://github.com/google/fonts/tree/main/ofl/notosanskr",
+  "file": "tools/alphabets/gen_alphabets.py",
+  "note": "Alphabet program: rendered from a free-licensed font, auto-thickened, optically centered; approved by Eric 2026-08-02 ('all pass lets get rolling...')."
+ },
+ {
+  "subject": "kor23",
+  "title": "Glyph ㅡ (kor)",
+  "license": "Noto Sans KR glyph - SIL Open Font License 1.1 (free)",
+  "sourceUrl": "https://github.com/google/fonts/tree/main/ofl/notosanskr",
+  "file": "tools/alphabets/gen_alphabets.py",
+  "note": "Alphabet program: rendered from a free-licensed font, auto-thickened, optically centered; approved by Eric 2026-08-02 ('all pass lets get rolling...')."
+ },
+ {
+  "subject": "kor24",
+  "title": "Glyph ㅣ (kor)",
+  "license": "Noto Sans KR glyph - SIL Open Font License 1.1 (free)",
+  "sourceUrl": "https://github.com/google/fonts/tree/main/ofl/notosanskr",
+  "file": "tools/alphabets/gen_alphabets.py",
+  "note": "Alphabet program: rendered from a free-licensed font, auto-thickened, optically centered; approved by Eric 2026-08-02 ('all pass lets get rolling...')."
+ },
+ {
+  "subject": "kosonowl",
+  "title": "Scops Owl on a Ginkgo Branch under a Crescent Moon",
+  "license": "Public domain (author died 1945; PD-old-70)",
+  "sourceUrl": "https://commons.wikimedia.org/wiki/File:Koson_-_owl-on-ginkgo-branch-scops-owl-under-crescent-moon.jpg",
+  "file": "ref/kosonowl-source.jpg",
+  "bytes": 25062,
+  "attribution": "Ohara Koson",
+  "note": "F9 batch, approved by Eric at full size 2026-08-18. Artist and licence basis verified against Commons rather than inferred from the filename -- which is how the Pompon Rose was caught as Henry Joseph Redoute, not his brother Pierre-Joseph, and as a CC0 grant from Cleveland rather than a term expiry. Rails authored 2026-08-22; the guide is potrace via tools/guidegen.py."
+ },
+ {
+  "subject": "ladybug",
+  "title": "SpellGame original — ladybug (wave 1 batch 1)",
   "license": "Original artwork (SpellGame)",
   "sourceUrl": "",
-  "file": "tools/draw_symbols.py::helmofawe",
-  "bytes": 11005,
-  "note": "CC-PICTURE-BANK-SYMBOLS geometric lane: compass-and-straightedge construction, no photo or third-party reference. Centerlines emitted by the generator."
+  "file": "tools/draw_wave1.py",
+  "note": "Drawn coordinate list; candidates approved by Eric 2026-08-01."
  },
  {
   "subject": "laguz",
@@ -3042,39 +2255,284 @@
   "note": "CC-PICTURE-BANK-SYMBOLS geometric lane: compass-and-straightedge construction, no photo or third-party reference. Centerlines emitted by the generator."
  },
  {
-  "subject": "cross",
-  "title": "SpellGame original — cross, mathematical construction",
+  "subject": "lantern",
+  "title": "SpellGame original — red lantern (culture 7, zh)",
   "license": "Original artwork (SpellGame)",
   "sourceUrl": "",
-  "file": "tools/draw_symbols.py::cross",
-  "bytes": 3263,
-  "note": "CC-PICTURE-BANK-SYMBOLS geometric lane: compass-and-straightedge construction, no photo or third-party reference. Centerlines emitted by the generator."
+  "file": "tools/draw_wave15.py",
+  "note": "Drawn coordinate list; candidates approved by Eric 2026-08-02."
  },
  {
-  "subject": "diamond",
-  "title": "SpellGame original — diamond, mathematical construction",
-  "license": "Original artwork (SpellGame)",
-  "sourceUrl": "",
-  "file": "tools/draw_symbols.py::diamond",
-  "bytes": 7054,
-  "note": "CC-PICTURE-BANK-SYMBOLS geometric lane: compass-and-straightedge construction, no photo or third-party reference. Centerlines emitted by the generator."
+  "subject": "lat01",
+  "title": "Glyph A (lat)",
+  "license": "DejaVu Sans 2.37 glyph - Bitstream Vera Fonts license (free)",
+  "sourceUrl": "https://github.com/dejavu-fonts/dejavu-fonts",
+  "file": "tools/alphabets/gen_alphabets.py",
+  "note": "Alphabet program: rendered from a free-licensed font, auto-thickened, optically centered; approved by Eric 2026-08-02 ('all pass lets get rolling...')."
  },
  {
-  "subject": "arrow",
-  "title": "SpellGame original — arrow, mathematical construction",
-  "license": "Original artwork (SpellGame)",
-  "sourceUrl": "",
-  "file": "tools/draw_symbols.py::arrow",
-  "bytes": 5433,
-  "note": "CC-PICTURE-BANK-SYMBOLS geometric lane: compass-and-straightedge construction, no photo or third-party reference. Centerlines emitted by the generator."
+  "subject": "lat02",
+  "title": "Glyph B (lat)",
+  "license": "DejaVu Sans 2.37 glyph - Bitstream Vera Fonts license (free)",
+  "sourceUrl": "https://github.com/dejavu-fonts/dejavu-fonts",
+  "file": "tools/alphabets/gen_alphabets.py",
+  "note": "Alphabet program: rendered from a free-licensed font, auto-thickened, optically centered; approved by Eric 2026-08-02 ('all pass lets get rolling...')."
  },
  {
-  "subject": "sriyantra",
-  "title": "SpellGame original — sriyantra, mathematical construction",
+  "subject": "lat03",
+  "title": "Glyph C (lat)",
+  "license": "DejaVu Sans 2.37 glyph - Bitstream Vera Fonts license (free)",
+  "sourceUrl": "https://github.com/dejavu-fonts/dejavu-fonts",
+  "file": "tools/alphabets/gen_alphabets.py",
+  "note": "Alphabet program: rendered from a free-licensed font, auto-thickened, optically centered; approved by Eric 2026-08-02 ('all pass lets get rolling...')."
+ },
+ {
+  "subject": "lat04",
+  "title": "Glyph D (lat)",
+  "license": "DejaVu Sans 2.37 glyph - Bitstream Vera Fonts license (free)",
+  "sourceUrl": "https://github.com/dejavu-fonts/dejavu-fonts",
+  "file": "tools/alphabets/gen_alphabets.py",
+  "note": "Alphabet program: rendered from a free-licensed font, auto-thickened, optically centered; approved by Eric 2026-08-02 ('all pass lets get rolling...')."
+ },
+ {
+  "subject": "lat05",
+  "title": "Glyph E (lat)",
+  "license": "DejaVu Sans 2.37 glyph - Bitstream Vera Fonts license (free)",
+  "sourceUrl": "https://github.com/dejavu-fonts/dejavu-fonts",
+  "file": "tools/alphabets/gen_alphabets.py",
+  "note": "Alphabet program: rendered from a free-licensed font, auto-thickened, optically centered; approved by Eric 2026-08-02 ('all pass lets get rolling...')."
+ },
+ {
+  "subject": "lat06",
+  "title": "Glyph F (lat)",
+  "license": "DejaVu Sans 2.37 glyph - Bitstream Vera Fonts license (free)",
+  "sourceUrl": "https://github.com/dejavu-fonts/dejavu-fonts",
+  "file": "tools/alphabets/gen_alphabets.py",
+  "note": "Alphabet program: rendered from a free-licensed font, auto-thickened, optically centered; approved by Eric 2026-08-02 ('all pass lets get rolling...')."
+ },
+ {
+  "subject": "lat07",
+  "title": "Glyph G (lat)",
+  "license": "DejaVu Sans 2.37 glyph - Bitstream Vera Fonts license (free)",
+  "sourceUrl": "https://github.com/dejavu-fonts/dejavu-fonts",
+  "file": "tools/alphabets/gen_alphabets.py",
+  "note": "Alphabet program: rendered from a free-licensed font, auto-thickened, optically centered; approved by Eric 2026-08-02 ('all pass lets get rolling...')."
+ },
+ {
+  "subject": "lat08",
+  "title": "Glyph H (lat)",
+  "license": "DejaVu Sans 2.37 glyph - Bitstream Vera Fonts license (free)",
+  "sourceUrl": "https://github.com/dejavu-fonts/dejavu-fonts",
+  "file": "tools/alphabets/gen_alphabets.py",
+  "note": "Alphabet program: rendered from a free-licensed font, auto-thickened, optically centered; approved by Eric 2026-08-02 ('all pass lets get rolling...')."
+ },
+ {
+  "subject": "lat09",
+  "title": "Glyph I (lat)",
+  "license": "DejaVu Sans 2.37 glyph - Bitstream Vera Fonts license (free)",
+  "sourceUrl": "https://github.com/dejavu-fonts/dejavu-fonts",
+  "file": "tools/alphabets/gen_alphabets.py",
+  "note": "Alphabet program: rendered from a free-licensed font, auto-thickened, optically centered; approved by Eric 2026-08-02 ('all pass lets get rolling...')."
+ },
+ {
+  "subject": "lat10",
+  "title": "Glyph J (lat)",
+  "license": "DejaVu Sans 2.37 glyph - Bitstream Vera Fonts license (free)",
+  "sourceUrl": "https://github.com/dejavu-fonts/dejavu-fonts",
+  "file": "tools/alphabets/gen_alphabets.py",
+  "note": "Alphabet program: rendered from a free-licensed font, auto-thickened, optically centered; approved by Eric 2026-08-02 ('all pass lets get rolling...')."
+ },
+ {
+  "subject": "lat11",
+  "title": "Glyph K (lat)",
+  "license": "DejaVu Sans 2.37 glyph - Bitstream Vera Fonts license (free)",
+  "sourceUrl": "https://github.com/dejavu-fonts/dejavu-fonts",
+  "file": "tools/alphabets/gen_alphabets.py",
+  "note": "Alphabet program: rendered from a free-licensed font, auto-thickened, optically centered; approved by Eric 2026-08-02 ('all pass lets get rolling...')."
+ },
+ {
+  "subject": "lat12",
+  "title": "Glyph L (lat)",
+  "license": "DejaVu Sans 2.37 glyph - Bitstream Vera Fonts license (free)",
+  "sourceUrl": "https://github.com/dejavu-fonts/dejavu-fonts",
+  "file": "tools/alphabets/gen_alphabets.py",
+  "note": "Alphabet program: rendered from a free-licensed font, auto-thickened, optically centered; approved by Eric 2026-08-02 ('all pass lets get rolling...')."
+ },
+ {
+  "subject": "lat13",
+  "title": "Glyph M (lat)",
+  "license": "DejaVu Sans 2.37 glyph - Bitstream Vera Fonts license (free)",
+  "sourceUrl": "https://github.com/dejavu-fonts/dejavu-fonts",
+  "file": "tools/alphabets/gen_alphabets.py",
+  "note": "Alphabet program: rendered from a free-licensed font, auto-thickened, optically centered; approved by Eric 2026-08-02 ('all pass lets get rolling...')."
+ },
+ {
+  "subject": "lat14",
+  "title": "Glyph N (lat)",
+  "license": "DejaVu Sans 2.37 glyph - Bitstream Vera Fonts license (free)",
+  "sourceUrl": "https://github.com/dejavu-fonts/dejavu-fonts",
+  "file": "tools/alphabets/gen_alphabets.py",
+  "note": "Alphabet program: rendered from a free-licensed font, auto-thickened, optically centered; approved by Eric 2026-08-02 ('all pass lets get rolling...')."
+ },
+ {
+  "subject": "lat15",
+  "title": "Glyph O (lat)",
+  "license": "DejaVu Sans 2.37 glyph - Bitstream Vera Fonts license (free)",
+  "sourceUrl": "https://github.com/dejavu-fonts/dejavu-fonts",
+  "file": "tools/alphabets/gen_alphabets.py",
+  "note": "Alphabet program: rendered from a free-licensed font, auto-thickened, optically centered; approved by Eric 2026-08-02 ('all pass lets get rolling...')."
+ },
+ {
+  "subject": "lat16",
+  "title": "Glyph P (lat)",
+  "license": "DejaVu Sans 2.37 glyph - Bitstream Vera Fonts license (free)",
+  "sourceUrl": "https://github.com/dejavu-fonts/dejavu-fonts",
+  "file": "tools/alphabets/gen_alphabets.py",
+  "note": "Alphabet program: rendered from a free-licensed font, auto-thickened, optically centered; approved by Eric 2026-08-02 ('all pass lets get rolling...')."
+ },
+ {
+  "subject": "lat17",
+  "title": "Glyph Q (lat)",
+  "license": "DejaVu Sans 2.37 glyph - Bitstream Vera Fonts license (free)",
+  "sourceUrl": "https://github.com/dejavu-fonts/dejavu-fonts",
+  "file": "tools/alphabets/gen_alphabets.py",
+  "note": "Alphabet program: rendered from a free-licensed font, auto-thickened, optically centered; approved by Eric 2026-08-02 ('all pass lets get rolling...')."
+ },
+ {
+  "subject": "lat18",
+  "title": "Glyph R (lat)",
+  "license": "DejaVu Sans 2.37 glyph - Bitstream Vera Fonts license (free)",
+  "sourceUrl": "https://github.com/dejavu-fonts/dejavu-fonts",
+  "file": "tools/alphabets/gen_alphabets.py",
+  "note": "Alphabet program: rendered from a free-licensed font, auto-thickened, optically centered; approved by Eric 2026-08-02 ('all pass lets get rolling...')."
+ },
+ {
+  "subject": "lat19",
+  "title": "Glyph S (lat)",
+  "license": "DejaVu Sans 2.37 glyph - Bitstream Vera Fonts license (free)",
+  "sourceUrl": "https://github.com/dejavu-fonts/dejavu-fonts",
+  "file": "tools/alphabets/gen_alphabets.py",
+  "note": "Alphabet program: rendered from a free-licensed font, auto-thickened, optically centered; approved by Eric 2026-08-02 ('all pass lets get rolling...')."
+ },
+ {
+  "subject": "lat20",
+  "title": "Glyph T (lat)",
+  "license": "DejaVu Sans 2.37 glyph - Bitstream Vera Fonts license (free)",
+  "sourceUrl": "https://github.com/dejavu-fonts/dejavu-fonts",
+  "file": "tools/alphabets/gen_alphabets.py",
+  "note": "Alphabet program: rendered from a free-licensed font, auto-thickened, optically centered; approved by Eric 2026-08-02 ('all pass lets get rolling...')."
+ },
+ {
+  "subject": "lat21",
+  "title": "Glyph U (lat)",
+  "license": "DejaVu Sans 2.37 glyph - Bitstream Vera Fonts license (free)",
+  "sourceUrl": "https://github.com/dejavu-fonts/dejavu-fonts",
+  "file": "tools/alphabets/gen_alphabets.py",
+  "note": "Alphabet program: rendered from a free-licensed font, auto-thickened, optically centered; approved by Eric 2026-08-02 ('all pass lets get rolling...')."
+ },
+ {
+  "subject": "lat22",
+  "title": "Glyph V (lat)",
+  "license": "DejaVu Sans 2.37 glyph - Bitstream Vera Fonts license (free)",
+  "sourceUrl": "https://github.com/dejavu-fonts/dejavu-fonts",
+  "file": "tools/alphabets/gen_alphabets.py",
+  "note": "Alphabet program: rendered from a free-licensed font, auto-thickened, optically centered; approved by Eric 2026-08-02 ('all pass lets get rolling...')."
+ },
+ {
+  "subject": "lat23",
+  "title": "Glyph W (lat)",
+  "license": "DejaVu Sans 2.37 glyph - Bitstream Vera Fonts license (free)",
+  "sourceUrl": "https://github.com/dejavu-fonts/dejavu-fonts",
+  "file": "tools/alphabets/gen_alphabets.py",
+  "note": "Alphabet program: rendered from a free-licensed font, auto-thickened, optically centered; approved by Eric 2026-08-02 ('all pass lets get rolling...')."
+ },
+ {
+  "subject": "lat24",
+  "title": "Glyph X (lat)",
+  "license": "DejaVu Sans 2.37 glyph - Bitstream Vera Fonts license (free)",
+  "sourceUrl": "https://github.com/dejavu-fonts/dejavu-fonts",
+  "file": "tools/alphabets/gen_alphabets.py",
+  "note": "Alphabet program: rendered from a free-licensed font, auto-thickened, optically centered; approved by Eric 2026-08-02 ('all pass lets get rolling...')."
+ },
+ {
+  "subject": "lat25",
+  "title": "Glyph Y (lat)",
+  "license": "DejaVu Sans 2.37 glyph - Bitstream Vera Fonts license (free)",
+  "sourceUrl": "https://github.com/dejavu-fonts/dejavu-fonts",
+  "file": "tools/alphabets/gen_alphabets.py",
+  "note": "Alphabet program: rendered from a free-licensed font, auto-thickened, optically centered; approved by Eric 2026-08-02 ('all pass lets get rolling...')."
+ },
+ {
+  "subject": "lat26",
+  "title": "Glyph Z (lat)",
+  "license": "DejaVu Sans 2.37 glyph - Bitstream Vera Fonts license (free)",
+  "sourceUrl": "https://github.com/dejavu-fonts/dejavu-fonts",
+  "file": "tools/alphabets/gen_alphabets.py",
+  "note": "Alphabet program: rendered from a free-licensed font, auto-thickened, optically centered; approved by Eric 2026-08-02 ('all pass lets get rolling...')."
+ },
+ {
+  "subject": "leo",
+  "title": "Zodiac glyph — leo (canonical typographic form)",
+  "license": "DejaVu Sans 2.37 glyph — Bitstream Vera Fonts license (free)",
+  "sourceUrl": "https://github.com/dejavu-fonts/dejavu-fonts",
+  "file": "tools/draw_wave27b.py",
+  "note": "Rendered from the free DejaVu Sans font (tools/fonts/DejaVuSans.ttf) and stroke-thickened; approved by Eric 2026-08-02 ('all pass ship 116'). Apple's emoji art untouched — same canonical symbol forms, free source."
+ },
+ {
+  "subject": "libra",
+  "title": "Zodiac glyph — libra (canonical typographic form)",
+  "license": "DejaVu Sans 2.37 glyph — Bitstream Vera Fonts license (free)",
+  "sourceUrl": "https://github.com/dejavu-fonts/dejavu-fonts",
+  "file": "tools/draw_wave27b.py",
+  "note": "Rendered from the free DejaVu Sans font (tools/fonts/DejaVuSans.ttf) and stroke-thickened; approved by Eric 2026-08-02 ('all pass ship 116'). Apple's emoji art untouched — same canonical symbol forms, free source."
+ },
+ {
+  "subject": "lighthouse",
+  "title": "SpellGame original — lighthouse (wave 1 batch 2)",
   "license": "Original artwork (SpellGame)",
   "sourceUrl": "",
-  "file": "tools/draw_symbols.py::sriyantra",
-  "bytes": 14221,
+  "file": "tools/draw_wave2.py",
+  "note": "Drawn coordinate list; candidates approved by Eric 2026-08-01."
+ },
+ {
+  "subject": "maasaishield",
+  "title": "SpellGame original — Maasai shield (culture 12, sw)",
+  "license": "Original artwork (SpellGame)",
+  "sourceUrl": "",
+  "file": "tools/draw_wave20.py",
+  "note": "Drawn coordinate list; candidates approved by Eric 2026-08-02."
+ },
+ {
+  "subject": "mancala",
+  "title": "SpellGame original — mancala board (batch 13, sw)",
+  "license": "Original artwork (SpellGame)",
+  "sourceUrl": "",
+  "file": "tools/draw_wave21.py",
+  "note": "Drawn coordinate list; candidates approved by Eric 2026-08-02."
+ },
+ {
+  "subject": "manekineko",
+  "title": "SpellGame original — maneki-neko (culture 7, ja)",
+  "license": "Original artwork (SpellGame)",
+  "sourceUrl": "",
+  "file": "tools/draw_wave15.py",
+  "note": "Drawn coordinate list; candidates approved by Eric 2026-08-02."
+ },
+ {
+  "subject": "matryoshka",
+  "title": "SpellGame original — matryoshka (culture 4, ru)",
+  "license": "Original artwork (SpellGame)",
+  "sourceUrl": "",
+  "file": "tools/draw_wave9.py",
+  "note": "Drawn coordinate list; candidates approved by Eric 2026-08-01."
+ },
+ {
+  "subject": "merkaba",
+  "title": "SpellGame original — merkaba, mathematical construction",
+  "license": "Original artwork (SpellGame)",
+  "sourceUrl": "",
+  "file": "tools/draw_symbols.py::merkaba",
+  "bytes": 7940,
   "note": "CC-PICTURE-BANK-SYMBOLS geometric lane: compass-and-straightedge construction, no photo or third-party reference. Centerlines emitted by the generator."
  },
  {
@@ -3087,13 +2545,218 @@
   "note": "CC-PICTURE-BANK-SYMBOLS geometric lane: compass-and-straightedge construction, no photo or third-party reference. Centerlines emitted by the generator."
  },
  {
-  "subject": "sun",
-  "title": "SpellGame original — drawn sun",
+  "subject": "mona",
+  "title": "File:Mona Lisa, by Leonardo da Vinci, from C2RMF retouched.jpg",
+  "license": "Public domain",
+  "sourceUrl": "https://commons.wikimedia.org/wiki/File:Mona_Lisa,_by_Leonardo_da_Vinci,_from_C2RMF_retouched.jpg",
+  "file": "ref/mona-engraving.jpg",
+  "bytes": 980329,
+  "note": "ink-branch tracing source (Eric-approved 2026-07-31); painting photo retained for side-by-side; red/blue annotation is the review standard",
+  "attribution": "after Leonardo da Vinci"
+ },
+ {
+  "subject": "mona-engraving",
+  "title": "File:Joconde de Calamatta.jpg",
+  "license": "Public domain",
+  "sourceUrl": "https://commons.wikimedia.org/wiki/File:Joconde_de_Calamatta.jpg",
+  "file": "ref/mona-engraving.jpg",
+  "bytes": 280515,
+  "note": "Luigi Calamatta's engraving of the Mona Lisa — ink-branch tracing source (Eric-approved 2026-07-31); painting photo retained for side-by-side; red/blue annotation is the review standard"
+ },
+ {
+  "subject": "montsaintmichel",
+  "title": "SpellGame original — Mont Saint-Michel (culture 12, fr)",
   "license": "Original artwork (SpellGame)",
   "sourceUrl": "",
-  "file": "tools/draw_batch27.py::sun",
-  "bytes": 6980,
-  "note": "Batch 27. Redrawn under the L9 channel law: no ink tapering to a point, no white channel under ~50px."
+  "file": "tools/draw_wave20.py",
+  "note": "Drawn coordinate list; candidates approved by Eric 2026-08-02."
+ },
+ {
+  "subject": "moonstar",
+  "title": "SpellGame original — moonstar (wave 1 batch 1)",
+  "license": "Original artwork (SpellGame)",
+  "sourceUrl": "",
+  "file": "tools/draw_wave1.py",
+  "note": "Drawn coordinate list; candidates approved by Eric 2026-08-01."
+ },
+ {
+  "subject": "mug",
+  "title": "SpellGame original — mug (wave 1 batch 1)",
+  "license": "Original artwork (SpellGame)",
+  "sourceUrl": "",
+  "file": "tools/draw_wave1.py",
+  "note": "Drawn coordinate list; candidates approved by Eric 2026-08-01."
+ },
+ {
+  "subject": "mushroom",
+  "title": "SpellGame original — mushroom (wave 1 batch 1)",
+  "license": "Original artwork (SpellGame)",
+  "sourceUrl": "",
+  "file": "tools/draw_wave1.py",
+  "note": "Drawn coordinate list; candidates approved by Eric 2026-08-01."
+ },
+ {
+  "subject": "nazcabird",
+  "title": "SpellGame original — after the Nazca hummingbird geoglyph (ancient)",
+  "license": "Original artwork (SpellGame)",
+  "sourceUrl": "",
+  "file": "tools/draw_wave21.py",
+  "note": "Drawn coordinate list; candidates approved by Eric 2026-08-02."
+ },
+ {
+  "subject": "nine",
+  "title": "Digit 9 (canonical typographic form)",
+  "license": "DejaVu Sans 2.37 glyph - Bitstream Vera Fonts license (free)",
+  "sourceUrl": "https://github.com/dejavu-fonts/dejavu-fonts",
+  "file": "tools/alphabets/draw_digits.py",
+  "note": "Rendered from the free DejaVu Sans font, stroke-thickened, optically centered; approved by Eric 2026-08-02."
+ },
+ {
+  "subject": "nonla",
+  "title": "SpellGame original — non la + ao dai (culture 3, vi)",
+  "license": "Original artwork (SpellGame)",
+  "sourceUrl": "",
+  "file": "tools/draw_wave8.py",
+  "note": "Drawn coordinate list; candidates approved by Eric 2026-08-01."
+ },
+ {
+  "subject": "oak",
+  "title": "Tree78 (OpenClipart via FreeSVG)",
+  "license": "Public domain",
+  "sourceUrl": "https://freesvg.org/black-and-white-tree",
+  "file": "ref/oak.png",
+  "note": "Same run. Etching solidified in tools/prep_sourced.py --wave4: heavy close, largest component, hole fill, LANCZOS round-trip to re-round the staircased crown."
+ },
+ {
+  "subject": "octopus",
+  "title": "Kid-Octopi-Redrawn (OpenClipart via FreeSVG)",
+  "license": "Public domain",
+  "sourceUrl": "https://freesvg.org/octopus-silhouette",
+  "file": "ref/octopus.png",
+  "note": "Eric's standing wikimedia-sourcing run 2026-08-01. Used near-as-is; light close only so the eye and smile holes survive."
+ },
+ {
+  "subject": "one",
+  "title": "Digit 1 (canonical typographic form)",
+  "license": "DejaVu Sans 2.37 glyph - Bitstream Vera Fonts license (free)",
+  "sourceUrl": "https://github.com/dejavu-fonts/dejavu-fonts",
+  "file": "tools/alphabets/draw_digits.py",
+  "note": "Rendered from the free DejaVu Sans font, stroke-thickened, optically centered; approved by Eric 2026-08-02."
+ },
+ {
+  "subject": "orion",
+  "title": "SpellGame original — Orion constellation map (PICTURE-BANK Done #6's subject)",
+  "license": "Original artwork (SpellGame)",
+  "sourceUrl": "",
+  "file": "tools/draw_wave10.py",
+  "note": "Drawn coordinate list."
+ },
+ {
+  "subject": "oud",
+  "title": "SpellGame original — oud (culture 4, ar)",
+  "license": "Original artwork (SpellGame)",
+  "sourceUrl": "",
+  "file": "tools/draw_wave9.py",
+  "note": "Drawn coordinate list; candidates approved by Eric 2026-08-01."
+ },
+ {
+  "subject": "owl",
+  "title": "File:Owl (13455) - The Noun Project.svg",
+  "license": "CC0",
+  "sourceUrl": "https://commons.wikimedia.org/wiki/File:Owl_(13455)_-_The_Noun_Project.svg",
+  "file": "ref/owl.png",
+  "bytes": 41299,
+  "note": "Eric 2026-08-01: 'easier owl picture'. The detailed eagle-owl illustration drowned in feather stippling; this pictogram carries ear tufts, two eyes, beak, spread wings and talons cleanly."
+ },
+ {
+  "subject": "pagoda",
+  "title": "SpellGame original — pagoda (culture 10, zh)",
+  "license": "Original artwork (SpellGame)",
+  "sourceUrl": "",
+  "file": "tools/draw_wave18.py",
+  "note": "Drawn coordinate list; candidates approved by Eric 2026-08-02."
+ },
+ {
+  "subject": "panda",
+  "title": "SpellGame original — panda (culture five, zh)",
+  "license": "Original artwork (SpellGame)",
+  "sourceUrl": "",
+  "file": "ref/panda.png",
+  "bytes": 5389
+ },
+ {
+  "subject": "papelpicado",
+  "title": "SpellGame original — papel picado banner (es)",
+  "license": "Original artwork (SpellGame)",
+  "sourceUrl": "",
+  "file": "tools/draw_wave10.py",
+  "note": "Drawn coordinate list."
+ },
+ {
+  "subject": "peacock",
+  "title": "File:Taiwan road sign d0 peacock.svg",
+  "license": "Public domain",
+  "sourceUrl": "https://commons.wikimedia.org/wiki/File:Taiwan_road_sign_d0_peacock.svg",
+  "file": "ref/peacock.png",
+  "bytes": 58574,
+  "note": "Eric 2026-08-01: the displaying-peacock PHOTO was untraceable (translucent fan). Swapped to this pictogram — clean fan eyespots, body, crest, eye."
+ },
+ {
+  "subject": "penguin",
+  "title": "SpellGame original — penguin",
+  "license": "Original artwork (SpellGame)",
+  "sourceUrl": "",
+  "file": "tools/draw_wave25.py",
+  "note": "Drawn coordinate list; candidates approved by Eric 2026-08-02."
+ },
+ {
+  "subject": "pentagram",
+  "title": "SpellGame original — pentagram, mathematical construction",
+  "license": "Original artwork (SpellGame)",
+  "sourceUrl": "",
+  "file": "tools/draw_symbols.py::pentagram",
+  "bytes": 7423,
+  "note": "CC-PICTURE-BANK-SYMBOLS geometric lane: compass-and-straightedge construction, no photo or third-party reference. Centerlines emitted by the generator."
+ },
+ {
+  "subject": "pinata",
+  "title": "SpellGame original — pinata (batch 13, es)",
+  "license": "Original artwork (SpellGame)",
+  "sourceUrl": "",
+  "file": "tools/draw_wave21.py",
+  "note": "Drawn coordinate list; candidates approved by Eric 2026-08-02."
+ },
+ {
+  "subject": "pisces",
+  "title": "Zodiac glyph — pisces (canonical typographic form)",
+  "license": "DejaVu Sans 2.37 glyph — Bitstream Vera Fonts license (free)",
+  "sourceUrl": "https://github.com/dejavu-fonts/dejavu-fonts",
+  "file": "tools/draw_wave27b.py",
+  "note": "Rendered from the free DejaVu Sans font (tools/fonts/DejaVuSans.ttf) and stroke-thickened; approved by Eric 2026-08-02 ('all pass ship 116'). Apple's emoji art untouched — same canonical symbol forms, free source."
+ },
+ {
+  "subject": "puzzlepiece",
+  "title": "SpellGame original — puzzlepiece",
+  "license": "Original artwork (SpellGame)",
+  "sourceUrl": "",
+  "file": "tools/draw_wave26.py",
+  "note": "Drawn coordinate list; candidates approved by Eric 2026-08-02."
+ },
+ {
+  "subject": "pyramids",
+  "title": "SpellGame original — pyramids of Giza (culture 5, ar)",
+  "license": "Original artwork (SpellGame)",
+  "sourceUrl": "",
+  "file": "tools/draw_wave13.py",
+  "note": "Drawn coordinate list; candidates approved by Eric 2026-08-01."
+ },
+ {
+  "subject": "quetzal",
+  "title": "SpellGame original — quetzal (culture 11, es)",
+  "license": "Original artwork (SpellGame)",
+  "sourceUrl": "",
+  "file": "tools/draw_wave19.py",
+  "note": "Drawn coordinate list; candidates approved by Eric 2026-08-02."
  },
  {
   "subject": "rainbow",
@@ -3102,24 +2765,6 @@
   "sourceUrl": "",
   "file": "tools/draw_batch27.py::rainbow",
   "bytes": 6922,
-  "note": "Batch 27. Redrawn under the L9 channel law: no ink tapering to a point, no white channel under ~50px."
- },
- {
-  "subject": "comet",
-  "title": "SpellGame original — drawn comet",
-  "license": "Original artwork (SpellGame)",
-  "sourceUrl": "",
-  "file": "tools/draw_batch27.py::comet",
-  "bytes": 4155,
-  "note": "Batch 27. Redrawn under the L9 channel law: no ink tapering to a point, no white channel under ~50px."
- },
- {
-  "subject": "saturn",
-  "title": "SpellGame original — drawn saturn",
-  "license": "Original artwork (SpellGame)",
-  "sourceUrl": "",
-  "file": "tools/draw_batch27.py::saturn",
-  "bytes": 6560,
   "note": "Batch 27. Redrawn under the L9 channel law: no ink tapering to a point, no white channel under ~50px."
  },
  {
@@ -3132,41 +2777,75 @@
   "note": "Batch 27. Redrawn under the L9 channel law: no ink tapering to a point, no white channel under ~50px."
  },
  {
-  "subject": "sunflower",
-  "title": "SpellGame original — drawn sunflower",
+  "subject": "redfuji",
+  "title": "South Wind, Clear Sky (Red Fuji), Katsushika Hokusai, ca. 1830-32",
+  "license": "Public domain (PD-Art)",
+  "sourceUrl": "https://commons.wikimedia.org/wiki/File:Red_Fuji_southern_wind_clear_morning.jpg",
+  "file": "ref/redfuji-source.jpg",
+  "bytes": 990124,
+  "attribution": "after Hokusai",
+  "note": "Eric 2026-08-16: guide layer traced by feature extraction from the Commons scan — cone, snow streaks, cloud band, forest, summit crown, cartouche. ref/redfuji.png is NOT a bad download: tools/prep_wave10.py authored it as a subject MASK from this same scan, taking the mountain as the region below its own two slopes because three global-threshold attempts welded cloud lace into the summit. The 2026-08-15 note calling that a provenance mismatch was wrong. What was true is narrower — the mask is a derived asset and the original scan was not on disk; it is now, as ref/redfuji-source.jpg."
+ },
+ {
+  "subject": "rhino",
+  "title": "The Rhinoceros, Albrecht Duerer, 1515 (woodcut) — SpellGame redraw",
+  "license": "Public domain (PD-Art): woodcut 1515, artist died 1528",
+  "sourceUrl": "https://commons.wikimedia.org/wiki/Special:FilePath/D%C3%BCrer's%20Rhinoceros,%201515.jpg",
+  "file": "tools/draw_ref.py::rhino",
+  "bytes": 432779,
+  "note": "Eric 2026-07-31: replaced the Duerer plate as a TRACING SOURCE, whose hatching floods every threshold (legs merged into the ground shadow, eye lost). The coordinate list is hand-authored, not machine-traced. Eric 2026-08-15: that is a statement about method, not authorship — the drawing is Duerer's rhinoceros, down to the dorsal hornlet and the gorget fold, and every masterpiece credits its artist. It is a redraw after Duerer and must never read as a SpellGame original.",
+  "attribution": "after Albrecht Duerer"
+ },
+ {
+  "subject": "rickshaw",
+  "title": "SpellGame original — auto-rickshaw (culture 5, hi)",
   "license": "Original artwork (SpellGame)",
   "sourceUrl": "",
-  "file": "tools/draw_batch27.py::sunflower",
-  "bytes": 6224,
-  "note": "Batch 27. Redrawn under the L9 channel law: no ink tapering to a point, no white channel under ~50px."
+  "file": "tools/draw_wave13.py",
+  "note": "Drawn coordinate list; candidates approved by Eric 2026-08-01."
  },
  {
-  "subject": "tiger",
-  "title": "Panthera tigris tigris drawing",
-  "license": "Public domain",
-  "sourceUrl": "https://commons.wikimedia.org/wiki/File:Panthera_tigris_tigris_drawing.jpg",
-  "file": "ref/tiger.png",
-  "bytes": 152706,
-  "note": "Photo-trace lane. PD source; stripes ARE the word paths (Eric's brief). Reference never ships (I6)."
+  "subject": "robot",
+  "title": "SpellGame original — robot",
+  "license": "Original artwork (SpellGame)",
+  "sourceUrl": "",
+  "file": "tools/draw_wave29.py",
+  "note": "Drawn coordinate list; approved by Eric 2026-08-02."
  },
  {
-  "subject": "giza",
-  "title": "Egyptian views. The Pyramids of Gizeh. Great Pyramid showing ascent (LOC matpc.00099)",
-  "license": "Public domain",
-  "sourceUrl": "https://commons.wikimedia.org/wiki/File:Egyptian_views._The_Pyramids_of_Gizeh._Great_Pyramid_showing_ascent_LOC_matpc.00099.tif",
-  "file": "ref/giza.png",
-  "bytes": 1469673,
-  "note": "Photo-trace lane, Library of Congress Matson Collection. PD. Stone courses read as horizontal word lines. Two CC-licensed candidates were REJECTED first — invariant 1 is PD/CC0 only."
+  "subject": "rocket",
+  "title": "SpellGame original — drawn rocket silhouette",
+  "license": "Original artwork (SpellGame)",
+  "sourceUrl": "",
+  "file": "tools/draw_ref.py::rocket",
+  "bytes": 12142,
+  "note": "Eric 2026-07-31: replaced the CC0 pictogram, which was split by a white seam so largest-component kept one half. Hand-authored."
  },
  {
-  "subject": "sunflowers",
-  "title": "Sunflowers (Vase with Fifteen Sunflowers), Vincent van Gogh, August 1888, National Gallery, London",
-  "license": "Public domain (PD-Art)",
-  "sourceUrl": "https://commons.wikimedia.org/wiki/Special:FilePath/Vincent_Willem_van_Gogh_127.jpg",
-  "file": "ref/sunflowers-source.jpg",
-  "bytes": 1663200,
-  "attribution": "after Vincent van Gogh",
-  "note": "Eric 2026-08-15: the London 1888 version. The bank shipped this subject with no provenance record at all; the entry exists now even though the retrace failed review, so the artist is credited whatever happens to the trace."
+  "subject": "rooster",
+  "title": "SpellGame original — rooster (wave 1 batch 2)",
+  "license": "Original artwork (SpellGame)",
+  "sourceUrl": "",
+  "file": "tools/draw_wave2.py",
+  "note": "Drawn coordinate list; candidates approved by Eric 2026-08-01."
+ },
+ {
+  "subject": "rose",
+  "title": "Pompon Rose",
+  "license": "Public domain (CC0 dedication, Cleveland Museum of Art acc. 1943.142)",
+  "sourceUrl": "https://commons.wikimedia.org/wiki/File:Henry_Joseph_Redout%C3%A9_-_Pompon_Rose_-_1943.142_-_Cleveland_Museum_of_Art.jpg",
+  "file": "ref/rose-source.jpg",
+  "bytes": 1014962,
+  "attribution": "Henry Joseph Redouté",
+  "note": "F9 batch, approved by Eric at full size 2026-08-18. Artist and licence basis verified against Commons rather than inferred from the filename -- which is how the Pompon Rose was caught as Henry Joseph Redoute, not his brother Pierre-Joseph, and as a CC0 grant from Cleveland rather than a term expiry. Rails authored 2026-08-22; the guide is potrace via tools/guidegen.py."
+ },
+ {
+  "subject": "sagittarius",
+  "title": "Zodiac glyph — sagittarius (canonical typographic form)",
+  "license": "DejaVu Sans 2.37 glyph — Bitstream Vera Fonts license (free)",
+  "sourceUrl": "https://github.com/dejavu-fonts/dejavu-fonts",
+  "file": "tools/draw_wave27b.py",
+  "note": "Rendered from the free DejaVu Sans font (tools/fonts/DejaVuSans.ttf) and stroke-thickened; approved by Eric 2026-08-02 ('all pass ship 116'). Apple's emoji art untouched — same canonical symbol forms, free source."
  },
  {
   "subject": "saguaro",
@@ -3179,6 +2858,233 @@
   "note": "Eric 2026-08-16: the bank's first photographs. PD basis is FEDERAL WORK, not PD-Art: Adams made these for the National Park Service on the Mural Project, so they are public domain as works of the US government rather than by the artist's death. The artist is still credited -- the rule is that a masterpiece names its artist, and the licence basis is a separate fact. Guide traced with mkbitmap+potrace (recall 0.856, precision 0.979)."
  },
  {
+  "subject": "sailboat",
+  "title": "SpellGame original — sailboat (wave 1 batch 1)",
+  "license": "Original artwork (SpellGame)",
+  "sourceUrl": "",
+  "file": "tools/draw_wave1.py",
+  "note": "Drawn coordinate list; candidates approved by Eric 2026-08-01."
+ },
+ {
+  "subject": "samovar",
+  "title": "SpellGame original — samovar (culture 7, ru)",
+  "license": "Original artwork (SpellGame)",
+  "sourceUrl": "",
+  "file": "tools/draw_wave15.py",
+  "note": "Drawn coordinate list; candidates approved by Eric 2026-08-02."
+ },
+ {
+  "subject": "saturn",
+  "title": "SpellGame original — drawn saturn",
+  "license": "Original artwork (SpellGame)",
+  "sourceUrl": "",
+  "file": "tools/draw_batch27.py::saturn",
+  "bytes": 6560,
+  "note": "Batch 27. Redrawn under the L9 channel law: no ink tapering to a point, no white channel under ~50px."
+ },
+ {
+  "subject": "scarab",
+  "title": "SpellGame original — Egyptian scarab",
+  "license": "Original artwork (SpellGame)",
+  "sourceUrl": "",
+  "file": "tools/draw_wave23.py",
+  "note": "Drawn coordinate list; candidates approved by Eric 2026-08-02."
+ },
+ {
+  "subject": "scorpio",
+  "title": "Zodiac glyph — scorpio (canonical typographic form)",
+  "license": "DejaVu Sans 2.37 glyph — Bitstream Vera Fonts license (free)",
+  "sourceUrl": "https://github.com/dejavu-fonts/dejavu-fonts",
+  "file": "tools/draw_wave27b.py",
+  "note": "Rendered from the free DejaVu Sans font (tools/fonts/DejaVuSans.ttf) and stroke-thickened; approved by Eric 2026-08-02 ('all pass ship 116'). Apple's emoji art untouched — same canonical symbol forms, free source."
+ },
+ {
+  "subject": "scream",
+  "title": "The Scream, Edvard Munch, 1893 (National Gallery of Norway)",
+  "license": "Public domain (PD-Art)",
+  "sourceUrl": "https://commons.wikimedia.org/wiki/File:The_Scream.jpg",
+  "file": "ref/scream.png",
+  "bytes": 11679,
+  "attribution": "after Edvard Munch",
+  "note": "ref/scream.png is a subject mask authored by tools/prep_wave10.py from the Commons scan (dark masses ARE the composition: figure with its pale face holes, bridge rails, fjord). ref/scream-source.jpg is the scan it was derived from."
+ },
+ {
+  "subject": "seahorse",
+  "title": "SpellGame original — seahorse (wave 1 batch 2)",
+  "license": "Original artwork (SpellGame)",
+  "sourceUrl": "",
+  "file": "tools/draw_wave2.py",
+  "note": "Drawn coordinate list; candidates approved by Eric 2026-08-01."
+ },
+ {
+  "subject": "seven",
+  "title": "Digit 7 (canonical typographic form)",
+  "license": "DejaVu Sans 2.37 glyph - Bitstream Vera Fonts license (free)",
+  "sourceUrl": "https://github.com/dejavu-fonts/dejavu-fonts",
+  "file": "tools/alphabets/draw_digits.py",
+  "note": "Rendered from the free DejaVu Sans font, stroke-thickened, optically centered; approved by Eric 2026-08-02."
+ },
+ {
+  "subject": "sitar",
+  "title": "SpellGame original — sitar (culture 8, hi)",
+  "license": "Original artwork (SpellGame)",
+  "sourceUrl": "",
+  "file": "tools/draw_wave16.py",
+  "note": "Drawn coordinate list; candidates approved by Eric 2026-08-02."
+ },
+ {
+  "subject": "six",
+  "title": "Digit 6 (canonical typographic form)",
+  "license": "DejaVu Sans 2.37 glyph - Bitstream Vera Fonts license (free)",
+  "sourceUrl": "https://github.com/dejavu-fonts/dejavu-fonts",
+  "file": "tools/alphabets/draw_digits.py",
+  "note": "Rendered from the free DejaVu Sans font, stroke-thickened, optically centered; approved by Eric 2026-08-02."
+ },
+ {
+  "subject": "smiley",
+  "title": "SpellGame original — smiley (geometric scan)",
+  "license": "Original artwork (SpellGame)",
+  "sourceUrl": "",
+  "file": "content-pipeline/wordpic/geometric-scans.json",
+  "note": "Hand-authored geometry, never traced from a reference image."
+ },
+ {
+  "subject": "snail",
+  "title": "File:Snail (761489) - The Noun Project.svg",
+  "license": "CC0",
+  "sourceUrl": "https://commons.wikimedia.org/wiki/File:Snail_(761489)_-_The_Noun_Project.svg",
+  "file": "ref/snail.png",
+  "bytes": 24582,
+  "note": "Eric 2026-07-31: remaining-8 scanlock pass; CC0 pictogram"
+ },
+ {
+  "subject": "snowflake",
+  "title": "SpellGame original — snowflake",
+  "license": "Original artwork (SpellGame)",
+  "sourceUrl": "",
+  "file": "tools/draw_wave25.py",
+  "note": "Drawn coordinate list; candidates approved by Eric 2026-08-02."
+ },
+ {
+  "subject": "snowman",
+  "title": "File:Snowman - The Noun Project.svg",
+  "license": "CC0",
+  "sourceUrl": "https://commons.wikimedia.org/wiki/File:Snowman_-_The_Noun_Project.svg",
+  "file": "ref/snowman.png",
+  "bytes": 23443
+ },
+ {
+  "subject": "sombrero",
+  "title": "SpellGame original — sombrero (culture 10, es)",
+  "license": "Original artwork (SpellGame)",
+  "sourceUrl": "",
+  "file": "tools/draw_wave18.py",
+  "note": "Drawn coordinate list; candidates approved by Eric 2026-08-02."
+ },
+ {
+  "subject": "spiderweb",
+  "title": "SpellGame original — spider web (expert)",
+  "license": "Original artwork (SpellGame)",
+  "sourceUrl": "",
+  "file": "tools/draw_wave28.py",
+  "note": "Drawn coordinate list; take three (uniform, no spider) approved by Eric 2026-08-02 ('volcano fail web passes'). Volcano takes recorded rejected in its sidecar."
+ },
+ {
+  "subject": "sriyantra",
+  "title": "SpellGame original — sriyantra, mathematical construction",
+  "license": "Original artwork (SpellGame)",
+  "sourceUrl": "",
+  "file": "tools/draw_symbols.py::sriyantra",
+  "bytes": 14221,
+  "note": "CC-PICTURE-BANK-SYMBOLS geometric lane: compass-and-straightedge construction, no photo or third-party reference. Centerlines emitted by the generator."
+ },
+ {
+  "subject": "star",
+  "title": "SpellGame original — star (geometric scan)",
+  "license": "Original artwork (SpellGame)",
+  "sourceUrl": "",
+  "file": "content-pipeline/wordpic/geometric-scans.json",
+  "note": "Hand-authored geometry, never traced from a reference image."
+ },
+ {
+  "subject": "starrynight",
+  "title": "The Starry Night, Vincent van Gogh, 1889 (Google Art Project scan)",
+  "license": "Public domain (PD-Art)",
+  "sourceUrl": "https://commons.wikimedia.org/wiki/File:Van_Gogh_-_Starry_Night_-_Google_Art_Project.jpg",
+  "file": "ref/starrynight.png",
+  "bytes": 9968,
+  "attribution": "after Vincent van Gogh",
+  "note": "ref/starrynight-source.jpg is the Commons scan. No guide layer yet: boundary contours, centerlines, a posterized sweep and feature extraction were all tried on 2026-08-16 and none reads as the painting. The master guides that DO work came from hand-authored per-piece masks (tools/prep_wave10.py), which is the route this needs."
+ },
+ {
+  "subject": "stonehenge",
+  "title": "SpellGame original — Stonehenge (culture 9, en)",
+  "license": "Original artwork (SpellGame)",
+  "sourceUrl": "",
+  "file": "tools/draw_wave17.py",
+  "note": "Drawn coordinate list; candidates approved by Eric 2026-08-02."
+ },
+ {
+  "subject": "stoplight",
+  "title": "SpellGame original — stoplight",
+  "license": "Original artwork (SpellGame)",
+  "sourceUrl": "",
+  "file": "tools/draw_wave25.py",
+  "note": "Drawn coordinate list; candidates approved by Eric 2026-08-02."
+ },
+ {
+  "subject": "stork",
+  "title": "SpellGame original — white stork on nest (culture 2, pl)",
+  "license": "Original artwork (SpellGame)",
+  "sourceUrl": "",
+  "file": "tools/draw_wave7.py",
+  "note": "Drawn coordinate list; candidates approved by Eric 2026-08-01."
+ },
+ {
+  "subject": "submarine",
+  "title": "SpellGame original — submarine",
+  "license": "Original artwork (SpellGame)",
+  "sourceUrl": "",
+  "file": "tools/draw_wave30.py",
+  "note": "Drawn coordinate list; approved by Eric 2026-08-02."
+ },
+ {
+  "subject": "sun",
+  "title": "SpellGame original — drawn sun",
+  "license": "Original artwork (SpellGame)",
+  "sourceUrl": "",
+  "file": "tools/draw_batch27.py::sun",
+  "bytes": 6980,
+  "note": "Batch 27. Redrawn under the L9 channel law: no ink tapering to a point, no white channel under ~50px."
+ },
+ {
+  "subject": "sunflower",
+  "title": "SpellGame original — drawn sunflower",
+  "license": "Original artwork (SpellGame)",
+  "sourceUrl": "",
+  "file": "tools/draw_batch27.py::sunflower",
+  "bytes": 6224,
+  "note": "Batch 27. Redrawn under the L9 channel law: no ink tapering to a point, no white channel under ~50px."
+ },
+ {
+  "subject": "sunflowers",
+  "title": "Sunflowers (Vase with Fifteen Sunflowers), Vincent van Gogh, August 1888, National Gallery, London",
+  "license": "Public domain (PD-Art)",
+  "sourceUrl": "https://commons.wikimedia.org/wiki/Special:FilePath/Vincent_Willem_van_Gogh_127.jpg",
+  "file": "ref/sunflowers-source.jpg",
+  "bytes": 1663200,
+  "attribution": "after Vincent van Gogh",
+  "note": "Eric 2026-08-15: the London 1888 version. The bank shipped this subject with no provenance record at all; the entry exists now even though the retrace failed review, so the artist is credited whatever happens to the trace."
+ },
+ {
+  "subject": "tajmahal",
+  "title": "SpellGame original — Taj Mahal (culture 2, hi)",
+  "license": "Original artwork (SpellGame)",
+  "sourceUrl": "",
+  "file": "tools/draw_wave7.py",
+  "note": "Drawn coordinate list; candidates approved by Eric 2026-08-01."
+ },
+ {
   "subject": "taos",
   "title": "Church, Taos Pueblo, New Mexico, 1941-42 (Mural Project)",
   "license": "Public domain (US federal work)",
@@ -3187,5 +3093,179 @@
   "bytes": 1257133,
   "attribution": "Ansel Adams",
   "note": "Federal-work PD, National Park Service Mural Project. Guide traced with mkbitmap+potrace (recall 0.585, precision 0.958)."
+ },
+ {
+  "subject": "taurus",
+  "title": "Zodiac glyph — taurus (canonical typographic form)",
+  "license": "DejaVu Sans 2.37 glyph — Bitstream Vera Fonts license (free)",
+  "sourceUrl": "https://github.com/dejavu-fonts/dejavu-fonts",
+  "file": "tools/draw_wave27b.py",
+  "note": "Rendered from the free DejaVu Sans font (tools/fonts/DejaVuSans.ttf) and stroke-thickened; approved by Eric 2026-08-02 ('all pass ship 116'). Apple's emoji art untouched — same canonical symbol forms, free source."
+ },
+ {
+  "subject": "terracotta",
+  "title": "SpellGame original — terracotta warrior (batch 13, zh)",
+  "license": "Original artwork (SpellGame)",
+  "sourceUrl": "",
+  "file": "tools/draw_wave21.py",
+  "note": "Drawn coordinate list; candidates approved by Eric 2026-08-02."
+ },
+ {
+  "subject": "three",
+  "title": "Digit 3 (canonical typographic form)",
+  "license": "DejaVu Sans 2.37 glyph - Bitstream Vera Fonts license (free)",
+  "sourceUrl": "https://github.com/dejavu-fonts/dejavu-fonts",
+  "file": "tools/alphabets/draw_digits.py",
+  "note": "Rendered from the free DejaVu Sans font, stroke-thickened, optically centered; approved by Eric 2026-08-02."
+ },
+ {
+  "subject": "tiger",
+  "title": "Panthera tigris tigris drawing",
+  "license": "Public domain",
+  "sourceUrl": "https://commons.wikimedia.org/wiki/File:Panthera_tigris_tigris_drawing.jpg",
+  "file": "ref/tiger.png",
+  "bytes": 152706,
+  "note": "Photo-trace lane. PD source; stripes ARE the word paths (Eric's brief). Reference never ships (I6)."
+ },
+ {
+  "subject": "torii",
+  "title": "SpellGame original — torii gate (culture 4, ja)",
+  "license": "Original artwork (SpellGame)",
+  "sourceUrl": "",
+  "file": "tools/draw_wave9.py",
+  "note": "Drawn coordinate list; candidates approved by Eric 2026-08-01."
+ },
+ {
+  "subject": "triquetra",
+  "title": "SpellGame original — triquetra, mathematical construction",
+  "license": "Original artwork (SpellGame)",
+  "sourceUrl": "",
+  "file": "tools/draw_symbols.py::triquetra",
+  "bytes": 8535,
+  "note": "CC-PICTURE-BANK-SYMBOLS geometric lane: compass-and-straightedge construction, no photo or third-party reference. Centerlines emitted by the generator."
+ },
+ {
+  "subject": "triskele",
+  "title": "SpellGame original — triskele after the ancient motif",
+  "license": "Original artwork (SpellGame)",
+  "sourceUrl": "",
+  "file": "tools/draw_wave21.py",
+  "note": "Drawn coordinate list; candidates approved by Eric 2026-08-02."
+ },
+ {
+  "subject": "tulip",
+  "title": "SpellGame original — tulip",
+  "license": "Original artwork (SpellGame)",
+  "sourceUrl": "",
+  "file": "tools/draw_wave24.py",
+  "note": "Drawn coordinate list; candidates approved by Eric 2026-08-02."
+ },
+ {
+  "subject": "turtle",
+  "title": "File:Turtle.svg",
+  "license": "Public domain",
+  "sourceUrl": "https://commons.wikimedia.org/wiki/File:Turtle.svg",
+  "file": "ref/turtle.png",
+  "bytes": 11169
+ },
+ {
+  "subject": "turtleship",
+  "title": "SpellGame original — geobukseon turtle ship (culture 3, ko)",
+  "license": "Original artwork (SpellGame)",
+  "sourceUrl": "",
+  "file": "tools/draw_wave8.py",
+  "note": "Drawn coordinate list; candidates approved by Eric 2026-08-01."
+ },
+ {
+  "subject": "two",
+  "title": "Digit 2 (canonical typographic form)",
+  "license": "DejaVu Sans 2.37 glyph - Bitstream Vera Fonts license (free)",
+  "sourceUrl": "https://github.com/dejavu-fonts/dejavu-fonts",
+  "file": "tools/alphabets/draw_digits.py",
+  "note": "Rendered from the free DejaVu Sans font, stroke-thickened, optically centered; approved by Eric 2026-08-02."
+ },
+ {
+  "subject": "umbrella",
+  "title": "SpellGame original — umbrella",
+  "license": "Original artwork (SpellGame)",
+  "sourceUrl": "",
+  "file": "tools/draw_wave30.py",
+  "note": "Drawn coordinate list; approved by Eric 2026-08-02."
+ },
+ {
+  "subject": "vegvisir",
+  "title": "SpellGame original — vegvisir, mathematical construction",
+  "license": "Original artwork (SpellGame)",
+  "sourceUrl": "",
+  "file": "tools/draw_symbols.py::vegvisir",
+  "bytes": 8251,
+  "note": "CC-PICTURE-BANK-SYMBOLS geometric lane: compass-and-straightedge construction, no photo or third-party reference. Centerlines emitted by the generator."
+ },
+ {
+  "subject": "violin",
+  "title": "SpellGame original — violin (wave 1 batch 2)",
+  "license": "Original artwork (SpellGame)",
+  "sourceUrl": "",
+  "file": "tools/draw_wave2.py",
+  "note": "Drawn coordinate list; candidates approved by Eric 2026-08-01."
+ },
+ {
+  "subject": "virgo",
+  "title": "Zodiac glyph — virgo (canonical typographic form)",
+  "license": "DejaVu Sans 2.37 glyph — Bitstream Vera Fonts license (free)",
+  "sourceUrl": "https://github.com/dejavu-fonts/dejavu-fonts",
+  "file": "tools/draw_wave27b.py",
+  "note": "Rendered from the free DejaVu Sans font (tools/fonts/DejaVuSans.ttf) and stroke-thickened; approved by Eric 2026-08-02 ('all pass ship 116'). Apple's emoji art untouched — same canonical symbol forms, free source."
+ },
+ {
+  "subject": "waweldragon",
+  "title": "SpellGame original — Wawel dragon, drawn original (culture 6, pl)",
+  "license": "Original artwork (SpellGame)",
+  "sourceUrl": "",
+  "file": "tools/draw_wave14.py",
+  "note": "Drawn coordinate list; candidates approved by Eric 2026-08-01."
+ },
+ {
+  "subject": "windmill",
+  "title": "SpellGame original — windmill (wave 1 batch 2)",
+  "license": "Original artwork (SpellGame)",
+  "sourceUrl": "",
+  "file": "tools/draw_wave2.py",
+  "note": "Drawn coordinate list; candidates approved by Eric 2026-08-01."
+ },
+ {
+  "subject": "wing",
+  "title": "Wing of a European Roller",
+  "license": "Public domain (author died 1528; PD-old-100)",
+  "sourceUrl": "https://commons.wikimedia.org/wiki/File:Duerer_wing_of_a_blue_roller.jpg",
+  "file": "ref/wing-source.jpg",
+  "bytes": 1548561,
+  "attribution": "Albrecht Dürer",
+  "note": "F9 batch, approved by Eric at full size 2026-08-18. Artist and licence basis verified against Commons rather than inferred from the filename -- which is how the Pompon Rose was caught as Henry Joseph Redoute, not his brother Pierre-Joseph, and as a CC0 grant from Cleveland rather than a term expiry. Rails authored 2026-08-22; the guide is potrace via tools/guidegen.py."
+ },
+ {
+  "subject": "wolf",
+  "title": "File:Wolf.svg (howling wolf silhouette)",
+  "license": "CC0 1.0",
+  "sourceUrl": "https://commons.wikimedia.org/wiki/File:Wolf.svg",
+  "file": "ref/wolf.png",
+  "note": "Eric approved sourcing 2026-08-01. Composed over a drawn perch with an aligned 36px seam (tools/prep_sourced.py) so wolf and rock trace as two contours -- paws flush over the rock line reads as standing-on, not fused."
+ },
+ {
+  "subject": "yinyang",
+  "title": "SpellGame original — yinyang, mathematical construction",
+  "license": "Original artwork (SpellGame)",
+  "sourceUrl": "",
+  "file": "tools/draw_symbols.py::yinyang",
+  "bytes": 10100,
+  "note": "CC-PICTURE-BANK-SYMBOLS geometric lane: compass-and-straightedge construction, no photo or third-party reference. Centerlines emitted by the generator."
+ },
+ {
+  "subject": "zero",
+  "title": "Digit 0 (canonical typographic form)",
+  "license": "DejaVu Sans 2.37 glyph - Bitstream Vera Fonts license (free)",
+  "sourceUrl": "https://github.com/dejavu-fonts/dejavu-fonts",
+  "file": "tools/alphabets/draw_digits.py",
+  "note": "Rendered from the free DejaVu Sans font, stroke-thickened, optically centered; approved by Eric 2026-08-02."
  }
 ]
