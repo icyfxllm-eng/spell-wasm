@@ -82,9 +82,11 @@ KNOWN = SILHOUETTE | ANCHORS | TEXTURE
 # degrees against a CORNER_DEG of 35 and the layout could not fill 20 of 43
 # slots. Smoothing cannot help -- a reversal is a real feature of the path.
 # The re-trace has to be centerlines, and the table comes back with it.
-ANCHOR_TABLES_PENDING = frozenset({
-    "greatwave", "redfuji", "sunflowers", "saguaro", "taos",
-})
+# EMPTY as of 2026-08-20: every traced master now declares its anchors.
+# Empty by ACHIEVEMENT, not by anyone forgetting to add to it -- the check below
+# fails a master that has no table AND is not listed here, so a new master
+# cannot slip in unanchored, and one that gains a table cannot stay listed.
+ANCHOR_TABLES_PENDING: frozenset[str] = frozenset()
 
 
 def masters() -> list[str]:

@@ -768,3 +768,36 @@ content-pipeline/wordpic/staged-batch-f9.json with verified provenance and
 their source scans in ref/. None is registered: each still needs authored
 rails and captions in 15 locales, which is a Saguaro-sized job per picture.
 The six F4 anchor tables remain drafted and unruled.
+
+## F4 complete — every traced master declares its anchors (2026-08-20)
+
+ANCHOR_TABLES_PENDING is empty, and empty by achievement rather than by
+omission: the lint fails a master that has no table and is not on the list, so
+a new master cannot slip in unanchored and one that gains a table cannot stay
+listed.
+
+  redfuji     cone profile, cloud band, treeline
+  greatwave   wave crest, fuji, foreground trough
+  sunflowers  flower row, vase rim, table edge
+  saguaro     trunk, arm, desert floor
+  taos        wall edge, parapet, door jamb, cross
+
+The first three follow the signed F4 table at the top of this file. The two
+photographs never had a signed row -- Adams arrived long after F4 was written --
+so **saguaro and taos are proposals, not rulings**, and are the two Eric should
+look at. The reasoning: a saguaro without arms is not a saguaro, and the cross
+is what makes Taos read as the church rather than as adobe massing. Sky bands
+are Adams's tonal atmosphere and are deliberately NOT required -- the picture
+survives losing one, and requiring the most numerous stroke would make every
+re-trace a build failure.
+
+**A table names the minimum load-bearing set, not the inventory.** Listing every
+stroke would make any re-trace fail and teach people to delete the table, which
+is the opposite of what F4 is for. Verified by removing Red Fuji's cone profile
+and watching wordpic-check fail by name.
+
+**One gap worth recording rather than papering over.** The signed table asks the
+Great Wave for "≥1 boat line". Its trace has no boat stroke at all, so the table
+cannot require one. The three anchors it does declare are the crest, the Fuji
+triangle and the trough; the boats remain unrepresented in the layout, which is
+a tracing question, not an anchoring one.

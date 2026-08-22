@@ -4282,7 +4282,12 @@
     "mount fuji"
    ],
    "extractionClass": "LINE",
-   "name": "Red Fuji"
+   "name": "Red Fuji",
+   "requiredFeatures": [
+    "cone profile",
+    "cloud band",
+    "treeline"
+   ]
   },
   {
    "id": "anubis",
@@ -14985,7 +14990,12 @@
     "sourceUrl": "https://commons.wikimedia.org/wiki/Special:FilePath/Great_Wave_off_Kanagawa2.jpg",
     "pdBasis": "Public domain: woodblock print c. 1831, artist died 1849; three-layer machine trace over the PD scan at content time (reference image not shipped)",
     "retrieved": "2026-08-04"
-   }
+   },
+   "requiredFeatures": [
+    "wave crest",
+    "fuji",
+    "foreground trough"
+   ]
   },
   {
    "id": "sunflowers",
@@ -15322,7 +15332,12 @@
     "sourceUrl": "https://commons.wikimedia.org/wiki/Special:FilePath/Vincent_Willem_van_Gogh_127.jpg",
     "pdBasis": "Public domain: painting 1888, artist died 1890; three-layer machine trace over the PD scan at content time (reference image not shipped)",
     "retrieved": "2026-08-04"
-   }
+   },
+   "requiredFeatures": [
+    "flower row",
+    "vase rim",
+    "table edge"
+   ]
   },
   {
    "id": "giza",
@@ -17425,7 +17440,12 @@
     "sourceUrl": "https://commons.wikimedia.org/wiki/Special:FilePath/Ansel%20Adams%20-%20National%20Archives%2079-AA-N01.jpg",
     "pdBasis": "Public domain: made for the National Park Service Mural Project, 1941-42, a work of the US federal government; guide traced from the PD scan at content time (reference image not shipped)",
     "retrieved": "2026-08-16"
-   }
+   },
+   "requiredFeatures": [
+    "trunk",
+    "arm",
+    "desert floor"
+   ]
   },
   {
    "id": "taos",
@@ -17733,7 +17753,13 @@
     "sourceUrl": "https://commons.wikimedia.org/wiki/Special:FilePath/Ansel%20Adams%20-%20National%20Archives%2079-AA-Q01%20restored.jpg",
     "pdBasis": "Public domain: made for the National Park Service Mural Project, 1941-42, a work of the US federal government; guide traced from the PD scan at content time (reference image not shipped)",
     "retrieved": "2026-08-16"
-   }
+   },
+   "requiredFeatures": [
+    "wall edge",
+    "parapet",
+    "door jamb",
+    "cross"
+   ]
   }
  ],
  "categoryList": [
