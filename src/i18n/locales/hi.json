@@ -662,5 +662,21 @@
   "zh.rev.lengthMismatch": "आपने {got} अक्षर लिखे; इस शब्द में {want} हैं",
   "zh.rev.toneRetry": "बहुत क़रीब — अक्षर सही, स्वर देखिए",
   "stats.toneCredit": "इसमें {n} स्वर",
-  "zh.rev.sandhi": "आपने {heard} लिखा — सुनाई यही देता है। लिखित पिनयिन मूल स्वर रखता है: {written}।"
+  "zh.rev.sandhi": "आपने {heard} लिखा — सुनाई यही देता है। लिखित पिनयिन मूल स्वर रखता है: {written}।",
+  "mp.hare.title": "युवा खरगोश",
+  "mp.hare.artist": "अल्ब्रेख्त ड्यूरर",
+  "mp.beetle.title": "स्टैग बीटल",
+  "mp.beetle.artist": "अल्ब्रेख्त ड्यूरर",
+  "mp.wing.title": "रोलर का पंख",
+  "mp.wing.artist": "अल्ब्रेख्त ड्यूरर",
+  "mp.banana.title": "केले का फूल",
+  "mp.banana.artist": "एम. एस. मेरियन",
+  "mp.flamingo.title": "अमेरिकी फ्लेमिंगो",
+  "mp.flamingo.artist": "जे. जे. ऑडुबोन",
+  "mp.carp.title": "दो कार्प",
+  "mp.carp.artist": "होकुसाई",
+  "mp.rose.title": "पॉमपॉन गुलाब",
+  "mp.rose.artist": "एच. जे. रेदूते",
+  "mp.kosonowl.title": "चुगद उल्लू",
+  "mp.kosonowl.artist": "ओहारा कोसोन"
 }

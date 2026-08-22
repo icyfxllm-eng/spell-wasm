@@ -662,5 +662,21 @@
   "zh.rev.lengthMismatch": "你写了 {got} 个音节，这个词有 {want} 个",
   "zh.rev.toneRetry": "就差一点 — 拼音对了，检查声调",
   "stats.toneCredit": "含声调 {n}",
-  "zh.rev.sandhi": "你写的是 {heard}，这正是听到的音。书面拼音保留原调：{written}。"
+  "zh.rev.sandhi": "你写的是 {heard}，这正是听到的音。书面拼音保留原调：{written}。",
+  "mp.hare.title": "野兔",
+  "mp.hare.artist": "丢勒",
+  "mp.beetle.title": "锹形虫",
+  "mp.beetle.artist": "丢勒",
+  "mp.wing.title": "佛法僧之翼",
+  "mp.wing.artist": "丢勒",
+  "mp.banana.title": "香蕉花",
+  "mp.banana.artist": "梅里安",
+  "mp.flamingo.title": "美洲红鹳",
+  "mp.flamingo.artist": "奥杜邦",
+  "mp.carp.title": "双鲤",
+  "mp.carp.artist": "葛饰北斋",
+  "mp.rose.title": "绒球玫瑰",
+  "mp.rose.artist": "雷杜德",
+  "mp.kosonowl.title": "角鸮",
+  "mp.kosonowl.artist": "小原古邨"
 }

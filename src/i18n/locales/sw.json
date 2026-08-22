@@ -662,5 +662,21 @@
   "zh.rev.lengthMismatch": "Umeandika silabi {got}; neno hili lina {want}",
   "zh.rev.toneRetry": "Karibu — silabi sahihi, angalia toni",
   "stats.toneCredit": "pamoja na toni {n}",
-  "zh.rev.sandhi": "Umeandika {heard} — ndivyo inavyosikika. Pinyin ya maandishi hubaki na toni asilia: {written}."
+  "zh.rev.sandhi": "Umeandika {heard} — ndivyo inavyosikika. Pinyin ya maandishi hubaki na toni asilia: {written}.",
+  "mp.hare.title": "Sungura kijana",
+  "mp.hare.artist": "Albrecht Dürer",
+  "mp.beetle.title": "Mbawakawa",
+  "mp.beetle.artist": "Albrecht Dürer",
+  "mp.wing.title": "Bawa la ndege",
+  "mp.wing.artist": "Albrecht Dürer",
+  "mp.banana.title": "Ua la ndizi",
+  "mp.banana.artist": "M. S. Merian",
+  "mp.flamingo.title": "Heroe mwekundu",
+  "mp.flamingo.artist": "J. J. Audubon",
+  "mp.carp.title": "Kambare wawili",
+  "mp.carp.artist": "Hokusai",
+  "mp.rose.title": "Waridi pomponi",
+  "mp.rose.artist": "H. J. Redouté",
+  "mp.kosonowl.title": "Bundi mdogo",
+  "mp.kosonowl.artist": "Ohara Koson"
 }

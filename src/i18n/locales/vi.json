@@ -662,5 +662,21 @@
   "zh.rev.lengthMismatch": "Bạn viết {got} âm tiết; từ này có {want}",
   "zh.rev.toneRetry": "Suýt rồi — đúng âm tiết, xem lại thanh điệu",
   "stats.toneCredit": "gồm {n} thanh điệu",
-  "zh.rev.sandhi": "Bạn viết {heard} — đúng như nghe được. Pinyin viết giữ thanh gốc: {written}."
+  "zh.rev.sandhi": "Bạn viết {heard} — đúng như nghe được. Pinyin viết giữ thanh gốc: {written}.",
+  "mp.hare.title": "Thỏ rừng non",
+  "mp.hare.artist": "Albrecht Dürer",
+  "mp.beetle.title": "Bọ sừng hươu",
+  "mp.beetle.artist": "Albrecht Dürer",
+  "mp.wing.title": "Cánh chim sả",
+  "mp.wing.artist": "Albrecht Dürer",
+  "mp.banana.title": "Hoa chuối",
+  "mp.banana.artist": "M. S. Merian",
+  "mp.flamingo.title": "Hồng hạc Mỹ",
+  "mp.flamingo.artist": "J. J. Audubon",
+  "mp.carp.title": "Đôi cá chép",
+  "mp.carp.artist": "Hokusai",
+  "mp.rose.title": "Hoa hồng pompon",
+  "mp.rose.artist": "H. J. Redouté",
+  "mp.kosonowl.title": "Cú mèo",
+  "mp.kosonowl.artist": "Ohara Koson"
 }

@@ -662,5 +662,21 @@
   "zh.rev.lengthMismatch": "You wrote {got} syllables; this word has {want}",
   "zh.rev.toneRetry": "So close — right syllables, check the tones",
   "stats.toneCredit": "incl. {n} tone",
-  "zh.rev.sandhi": "You wrote {heard} — that's what you hear. Written pinyin keeps the original tone: {written}."
+  "zh.rev.sandhi": "You wrote {heard} — that's what you hear. Written pinyin keeps the original tone: {written}.",
+  "mp.hare.title": "Young Hare",
+  "mp.hare.artist": "Albrecht Dürer",
+  "mp.beetle.title": "Stag Beetle",
+  "mp.beetle.artist": "Albrecht Dürer",
+  "mp.wing.title": "Roller's Wing",
+  "mp.wing.artist": "Albrecht Dürer",
+  "mp.banana.title": "Banana Flower",
+  "mp.banana.artist": "M. S. Merian",
+  "mp.flamingo.title": "American Flamingo",
+  "mp.flamingo.artist": "J. J. Audubon",
+  "mp.carp.title": "Two Carp",
+  "mp.carp.artist": "Hokusai",
+  "mp.rose.title": "Pompon Rose",
+  "mp.rose.artist": "H. J. Redouté",
+  "mp.kosonowl.title": "Scops Owl",
+  "mp.kosonowl.artist": "Ohara Koson"
 }

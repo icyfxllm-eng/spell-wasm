@@ -662,5 +662,21 @@
   "zh.rev.lengthMismatch": "Napisałeś {got} sylab; to słowo ma {want}",
   "zh.rev.toneRetry": "Blisko — sylaby dobre, sprawdź tony",
   "stats.toneCredit": "w tym {n} tonu",
-  "zh.rev.sandhi": "Napisałeś {heard} — tak to brzmi. Zapisany pinyin zachowuje pierwotny ton: {written}."
+  "zh.rev.sandhi": "Napisałeś {heard} — tak to brzmi. Zapisany pinyin zachowuje pierwotny ton: {written}.",
+  "mp.hare.title": "Młody zając",
+  "mp.hare.artist": "Albrecht Dürer",
+  "mp.beetle.title": "Jelonek rogacz",
+  "mp.beetle.artist": "Albrecht Dürer",
+  "mp.wing.title": "Skrzydło kraski",
+  "mp.wing.artist": "Albrecht Dürer",
+  "mp.banana.title": "Kwiat banana",
+  "mp.banana.artist": "M. S. Merian",
+  "mp.flamingo.title": "Flaming karmazynowy",
+  "mp.flamingo.artist": "J. J. Audubon",
+  "mp.carp.title": "Dwa karpie",
+  "mp.carp.artist": "Hokusai",
+  "mp.rose.title": "Róża pomponowa",
+  "mp.rose.artist": "H. J. Redouté",
+  "mp.kosonowl.title": "Syczek",
+  "mp.kosonowl.artist": "Ohara Koson"
 }

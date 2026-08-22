@@ -662,5 +662,21 @@
   "zh.rev.lengthMismatch": "{got} pantig ang isinulat mo; {want} ang salitang ito",
   "zh.rev.toneRetry": "Malapit na — tamang pantig, tingnan ang tono",
   "stats.toneCredit": "kasama {n} tono",
-  "zh.rev.sandhi": "Isinulat mo ang {heard} — iyon ang naririnig. Ang nakasulat na pinyin ay nananatili sa orihinal na tono: {written}."
+  "zh.rev.sandhi": "Isinulat mo ang {heard} — iyon ang naririnig. Ang nakasulat na pinyin ay nananatili sa orihinal na tono: {written}.",
+  "mp.hare.title": "Batang liyebre",
+  "mp.hare.artist": "Albrecht Dürer",
+  "mp.beetle.title": "Salagubang",
+  "mp.beetle.artist": "Albrecht Dürer",
+  "mp.wing.title": "Pakpak ng ibon",
+  "mp.wing.artist": "Albrecht Dürer",
+  "mp.banana.title": "Bulaklak ng saging",
+  "mp.banana.artist": "M. S. Merian",
+  "mp.flamingo.title": "Pulang flamingo",
+  "mp.flamingo.artist": "J. J. Audubon",
+  "mp.carp.title": "Dalawang karpa",
+  "mp.carp.artist": "Hokusai",
+  "mp.rose.title": "Rosas pompon",
+  "mp.rose.artist": "H. J. Redouté",
+  "mp.kosonowl.title": "Kuwago",
+  "mp.kosonowl.artist": "Ohara Koson"
 }

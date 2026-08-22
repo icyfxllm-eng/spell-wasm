@@ -662,5 +662,21 @@
   "zh.rev.lengthMismatch": "Вы написали слогов: {got}; в слове их {want}",
   "zh.rev.toneRetry": "Почти — слоги верные, проверьте тоны",
   "stats.toneCredit": "вкл. {n} по тону",
-  "zh.rev.sandhi": "Вы написали {heard} — так это звучит. В записи пиньинь сохраняется исходный тон: {written}."
+  "zh.rev.sandhi": "Вы написали {heard} — так это звучит. В записи пиньинь сохраняется исходный тон: {written}.",
+  "mp.hare.title": "Молодой заяц",
+  "mp.hare.artist": "Альбрехт Дюрер",
+  "mp.beetle.title": "Жук-олень",
+  "mp.beetle.artist": "Альбрехт Дюрер",
+  "mp.wing.title": "Крыло сизоворонки",
+  "mp.wing.artist": "Альбрехт Дюрер",
+  "mp.banana.title": "Цветок банана",
+  "mp.banana.artist": "М. С. Мериан",
+  "mp.flamingo.title": "Красный фламинго",
+  "mp.flamingo.artist": "Дж. Дж. Одюбон",
+  "mp.carp.title": "Два карпа",
+  "mp.carp.artist": "Хокусай",
+  "mp.rose.title": "Роза помпон",
+  "mp.rose.artist": "А. Ж. Редуте",
+  "mp.kosonowl.title": "Совка",
+  "mp.kosonowl.artist": "Охара Косон"
 }

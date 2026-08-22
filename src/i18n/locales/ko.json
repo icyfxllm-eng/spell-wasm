@@ -662,5 +662,21 @@
   "zh.rev.lengthMismatch": "{got}음절로 썼지만 이 단어는 {want}음절입니다",
   "zh.rev.toneRetry": "거의 맞았어요 — 음절은 정확, 성조를 확인",
   "stats.toneCredit": "성조 {n} 포함",
-  "zh.rev.sandhi": "들리는 대로 {heard}라고 썼군요. 표기 병음은 원래 성조인 {written}을 유지합니다."
+  "zh.rev.sandhi": "들리는 대로 {heard}라고 썼군요. 표기 병음은 원래 성조인 {written}을 유지합니다.",
+  "mp.hare.title": "어린 산토끼",
+  "mp.hare.artist": "뒤러",
+  "mp.beetle.title": "사슴벌레",
+  "mp.beetle.artist": "뒤러",
+  "mp.wing.title": "파랑새 날개",
+  "mp.wing.artist": "뒤러",
+  "mp.banana.title": "바나나 꽃",
+  "mp.banana.artist": "메리안",
+  "mp.flamingo.title": "홍학",
+  "mp.flamingo.artist": "오듀본",
+  "mp.carp.title": "잉어 두 마리",
+  "mp.carp.artist": "호쿠사이",
+  "mp.rose.title": "퐁퐁 장미",
+  "mp.rose.artist": "르두테",
+  "mp.kosonowl.title": "소쩍새",
+  "mp.kosonowl.artist": "오하라 코손"
 }

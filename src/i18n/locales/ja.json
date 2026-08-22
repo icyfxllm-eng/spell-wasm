@@ -662,5 +662,21 @@
   "zh.rev.lengthMismatch": "{got}音節で書きましたが、この語は{want}音節です",
   "zh.rev.toneRetry": "惜しい — 音節は正解、声調を確認",
   "stats.toneCredit": "うち声調{n}",
-  "zh.rev.sandhi": "聞こえたとおり {heard} と書きましたね。表記のピンインは元の声調のまま {written} です。"
+  "zh.rev.sandhi": "聞こえたとおり {heard} と書きましたね。表記のピンインは元の声調のまま {written} です。",
+  "mp.hare.title": "野うさぎ",
+  "mp.hare.artist": "デューラー",
+  "mp.beetle.title": "クワガタムシ",
+  "mp.beetle.artist": "デューラー",
+  "mp.wing.title": "ブッポウソウの翼",
+  "mp.wing.artist": "デューラー",
+  "mp.banana.title": "バナナの花",
+  "mp.banana.artist": "メーリアン",
+  "mp.flamingo.title": "ベニイロフラミンゴ",
+  "mp.flamingo.artist": "オーデュボン",
+  "mp.carp.title": "二匹の鯉",
+  "mp.carp.artist": "葛飾北斎",
+  "mp.rose.title": "ポンポンローズ",
+  "mp.rose.artist": "ルドゥーテ",
+  "mp.kosonowl.title": "木菟",
+  "mp.kosonowl.artist": "小原古邨"
 }

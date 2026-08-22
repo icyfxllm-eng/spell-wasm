@@ -662,5 +662,21 @@
   "zh.rev.lengthMismatch": "كتبت {got} مقاطع، وهذه الكلمة فيها {want}",
   "zh.rev.toneRetry": "اقتربت — المقاطع صحيحة، راجع النبرات",
   "stats.toneCredit": "منها {n} نبرة",
-  "zh.rev.sandhi": "كتبت {heard}، وهذا ما يُسمع. أما البينيين المكتوب فيحتفظ بالنبرة الأصلية: {written}."
+  "zh.rev.sandhi": "كتبت {heard}، وهذا ما يُسمع. أما البينيين المكتوب فيحتفظ بالنبرة الأصلية: {written}.",
+  "mp.hare.title": "أرنب بري صغير",
+  "mp.hare.artist": "ألبريشت دورر",
+  "mp.beetle.title": "خنفساء الأيل",
+  "mp.beetle.artist": "ألبريشت دورر",
+  "mp.wing.title": "جناح الشقراق",
+  "mp.wing.artist": "ألبريشت دورر",
+  "mp.banana.title": "زهرة الموز",
+  "mp.banana.artist": "م. س. ميريان",
+  "mp.flamingo.title": "فلامنغو أمريكي",
+  "mp.flamingo.artist": "ج. ج. أودوبون",
+  "mp.carp.title": "سمكتا شبوط",
+  "mp.carp.artist": "هوكوساي",
+  "mp.rose.title": "وردة بومبون",
+  "mp.rose.artist": "ه. ج. ريدوتيه",
+  "mp.kosonowl.title": "بومة صغيرة",
+  "mp.kosonowl.artist": "أوهارا كوسون"
 }

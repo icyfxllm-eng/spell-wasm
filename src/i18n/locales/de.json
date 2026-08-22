@@ -662,5 +662,21 @@
   "zh.rev.lengthMismatch": "Du hast {got} Silben geschrieben; dieses Wort hat {want}",
   "zh.rev.toneRetry": "Fast — Silben stimmen, prüfe die Töne",
   "stats.toneCredit": "inkl. {n} Ton",
-  "zh.rev.sandhi": "Du hast {heard} geschrieben — so klingt es. Geschriebenes Pinyin behält den ursprünglichen Ton: {written}."
+  "zh.rev.sandhi": "Du hast {heard} geschrieben — so klingt es. Geschriebenes Pinyin behält den ursprünglichen Ton: {written}.",
+  "mp.hare.title": "Feldhase",
+  "mp.hare.artist": "Albrecht Dürer",
+  "mp.beetle.title": "Hirschkäfer",
+  "mp.beetle.artist": "Albrecht Dürer",
+  "mp.wing.title": "Blaurackenflügel",
+  "mp.wing.artist": "Albrecht Dürer",
+  "mp.banana.title": "Bananenblüte",
+  "mp.banana.artist": "M. S. Merian",
+  "mp.flamingo.title": "Rotflamingo",
+  "mp.flamingo.artist": "J. J. Audubon",
+  "mp.carp.title": "Zwei Karpfen",
+  "mp.carp.artist": "Hokusai",
+  "mp.rose.title": "Pomponrose",
+  "mp.rose.artist": "H. J. Redouté",
+  "mp.kosonowl.title": "Zwergohreule",
+  "mp.kosonowl.artist": "Ohara Koson"
 }

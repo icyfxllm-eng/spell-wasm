@@ -662,5 +662,21 @@
   "zh.rev.lengthMismatch": "Você escreveu {got} sílabas; esta palavra tem {want}",
   "zh.rev.toneRetry": "Quase — sílabas certas, confira os tons",
   "stats.toneCredit": "incl. {n} de tom",
-  "zh.rev.sandhi": "Você escreveu {heard}, que é o que se ouve. O pinyin escrito mantém o tom original: {written}."
+  "zh.rev.sandhi": "Você escreveu {heard}, que é o que se ouve. O pinyin escrito mantém o tom original: {written}.",
+  "mp.hare.title": "Lebre jovem",
+  "mp.hare.artist": "Alberto Dürer",
+  "mp.beetle.title": "Vaca-loura",
+  "mp.beetle.artist": "Alberto Dürer",
+  "mp.wing.title": "Asa de rolieiro",
+  "mp.wing.artist": "Alberto Dürer",
+  "mp.banana.title": "Flor de bananeira",
+  "mp.banana.artist": "M. S. Merian",
+  "mp.flamingo.title": "Flamingo-americano",
+  "mp.flamingo.artist": "J. J. Audubon",
+  "mp.carp.title": "Duas carpas",
+  "mp.carp.artist": "Hokusai",
+  "mp.rose.title": "Rosa pompom",
+  "mp.rose.artist": "H. J. Redouté",
+  "mp.kosonowl.title": "Mocho-pequeno",
+  "mp.kosonowl.artist": "Ohara Koson"
 }

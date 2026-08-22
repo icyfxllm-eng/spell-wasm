@@ -662,5 +662,21 @@
   "zh.rev.lengthMismatch": "Vous avez écrit {got} syllabes ; ce mot en a {want}",
   "zh.rev.toneRetry": "Tout près — bonnes syllabes, vérifiez les tons",
   "stats.toneCredit": "dont {n} de ton",
-  "zh.rev.sandhi": "Vous avez écrit {heard}, ce qui s'entend. Le pinyin écrit garde le ton d'origine : {written}."
+  "zh.rev.sandhi": "Vous avez écrit {heard}, ce qui s'entend. Le pinyin écrit garde le ton d'origine : {written}.",
+  "mp.hare.title": "Jeune lièvre",
+  "mp.hare.artist": "Albrecht Dürer",
+  "mp.beetle.title": "Lucane cerf-volant",
+  "mp.beetle.artist": "Albrecht Dürer",
+  "mp.wing.title": "Aile de rollier",
+  "mp.wing.artist": "Albrecht Dürer",
+  "mp.banana.title": "Fleur de bananier",
+  "mp.banana.artist": "M. S. Merian",
+  "mp.flamingo.title": "Flamant d'Amérique",
+  "mp.flamingo.artist": "J. J. Audubon",
+  "mp.carp.title": "Deux carpes",
+  "mp.carp.artist": "Hokusai",
+  "mp.rose.title": "Rose pompon",
+  "mp.rose.artist": "H. J. Redouté",
+  "mp.kosonowl.title": "Petit-duc",
+  "mp.kosonowl.artist": "Ohara Koson"
 }
