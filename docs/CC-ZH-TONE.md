@@ -1,7 +1,7 @@
 # CC-ZH-TONE
 
 **Status:** D1–D7 SIGNED by Eric 2026-08-19. ALL FEATURES COMPLETE.
-Outstanding: Done 3's human confirmation, Done 6 (needs keys and whisper.cpp),
+Done 3 signed 2026-08-20. Outstanding: Done 6 (needs keys and whisper.cpp)
 and Done 9, Eric's device pass, which closes the file.
 
 **Depends on:** the shared-canonicalizer pattern from CC-PERSIAN-FOUNDATION F1.
@@ -289,11 +289,11 @@ built from the thing it audits proves nothing, which is the same trap as grading
 a generator against its own product. They agreed 50/50 on the first run. The
 fixture is the authority: on a disagreement the TAGGER is what is wrong.
 
-**Done 3 is not fully closed.** The fixture records `confirmed_by: null`. The
-expectations are mine, and "a human confirms" means Eric, not the author of the
-tagger's sibling. Two cases are worth his eye in particular: `di4yi2ge4|第一个`,
-where the bank already wrote the shifted tone so no rule fires, and
-`bao3bao5|宝宝`, where a third tone before a NEUTRAL is correctly not 3-3.
+**Done 3 is closed.** Eric signed the fixture 2026-08-20 and the tagger matched
+it 50/50. The signature is load-bearing rather than decorative: the lint fails on
+`confirmed_by: null`, so changing any expectation re-opens the gate and needs
+signing again. Agreement with an unsigned fixture would only be the tagger
+agreeing with its own author.
 
 ## F6 — forced-pinyin TTS
 
@@ -376,9 +376,9 @@ server's validator accepts both.
    `mǎ3` erroring, `xian` vs `xi'an` at both counts.
 3. **Second-grading-path lint** — PASSING (F2's deliberate-failure gate).
    Reverting Bee to fold_strict fails the scan by name.
-3b. **Bank field lint** — PASSING on the machine half: 6,182 entries, all three
-    fields, and tagger/audit agree 50/50. The HUMAN half is open — the audit
-    records confirmed_by: null and needs Eric.
+3b. **Bank field lint** — PASSING, both halves. 6,182 entries carry all three
+    fields; tagger and hand audit agree 50/50; the audit is signed (Eric,
+    2026-08-20) and the lint enforces the signature.
 4. **Error-class routing** — PASSING. 50 tone-wrong, 50 segment-wrong and 50
    length-mismatch synthetics classify correctly; all 50 tone-only words route
    to the drill and none to the general queue.

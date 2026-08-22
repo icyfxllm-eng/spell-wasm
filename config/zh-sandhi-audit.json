@@ -1,6 +1,6 @@
 {
- "note": "CC-ZH-TONE Done 3. Fifty cases derived BY HAND from the sandhi rules, never from the tagger's output -- an audit built from what it is auditing proves nothing. The tagger pre-fills; this fixture is the human half, and on a disagreement the FIXTURE is the authority. Awaiting Eric's confirmation, which is what Done 3 actually asks for.",
- "confirmed_by": null,
+ "note": "CC-ZH-TONE Done 3. Fifty cases derived BY HAND from the sandhi rules, never from the tagger's output -- an audit built from what it is auditing proves nothing. The tagger pre-fills; this fixture is the human half, and on a disagreement the FIXTURE is the authority. Signed by Eric 2026-08-20; tagger and audit agreed 50/50. Changing any expectation here re-opens the gate and needs signing again.",
+ "confirmed_by": "Eric, 2026-08-20",
  "cases": [
   {
    "entry": "yi1|一",

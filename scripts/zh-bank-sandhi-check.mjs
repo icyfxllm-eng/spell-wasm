@@ -58,6 +58,14 @@ for (const [entry, r] of rows) {
 
 // ---- the hand audit ----
 const audit = JSON.parse(fs.readFileSync(`${ROOT}/config/zh-sandhi-audit.json`, "utf8"));
+// Done 3 asks the TAGGER and a HUMAN to agree. Agreement with an unsigned
+// fixture is the tagger agreeing with its own author, which proves nothing, so
+// the signature is enforced rather than noted.
+if (!audit.confirmed_by)
+  problems.push(
+    "config/zh-sandhi-audit.json is unsigned (confirmed_by is null) — Done 3 " +
+      "needs a human who did not write the tagger",
+  );
 let agree = 0;
 for (const c of audit.cases) {
   const row = rows.get(c.entry);
