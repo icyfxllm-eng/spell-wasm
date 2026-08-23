@@ -94,3 +94,4 @@ tools/wordpipe/out/
 # committed by accident — 2,266 files and 197MB whose module caches embed
 # absolute paths, which is how they turned up when the repo moved.
 ios/NativeLanguageKit/.build/
+content-pipeline/wordpic/.tone-probe/

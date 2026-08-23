@@ -1,0 +1,227 @@
+{
+ "ran": "2026-08-22",
+ "voice": "cmn-CN-Wavenet-A",
+ "method": "F0 autocorrelation, contour in semitones, no ASR",
+ "calibration": [
+  {
+   "hanzi": "妈",
+   "asked": "ma1",
+   "heard_tone": 1,
+   "match": true,
+   "held_out": false,
+   "slope_st": -0.3,
+   "dip_st": 0.0,
+   "range_st": 0.55,
+   "frames": 30
+  },
+  {
+   "hanzi": "麻",
+   "asked": "ma2",
+   "heard_tone": 2,
+   "match": true,
+   "held_out": false,
+   "slope_st": 2.33,
+   "dip_st": -1.75,
+   "range_st": 6.13,
+   "frames": 38
+  },
+  {
+   "hanzi": "马",
+   "asked": "ma3",
+   "heard_tone": 3,
+   "match": true,
+   "held_out": false,
+   "slope_st": -2.12,
+   "dip_st": -1.79,
+   "range_st": 5.08,
+   "frames": 43
+  },
+  {
+   "hanzi": "骂",
+   "asked": "ma4",
+   "heard_tone": 4,
+   "match": true,
+   "held_out": false,
+   "slope_st": -7.7,
+   "dip_st": -2.48,
+   "range_st": 10.44,
+   "frames": 25
+  },
+  {
+   "hanzi": "拔",
+   "asked": "ba2",
+   "heard_tone": 2,
+   "match": true,
+   "held_out": false,
+   "slope_st": 3.05,
+   "dip_st": -0.65,
+   "range_st": 5.15,
+   "frames": 30
+  },
+  {
+   "hanzi": "把",
+   "asked": "ba3",
+   "heard_tone": 3,
+   "match": true,
+   "held_out": false,
+   "slope_st": -0.08,
+   "dip_st": -1.88,
+   "range_st": 5.51,
+   "frames": 38
+  },
+  {
+   "hanzi": "爸",
+   "asked": "ba4",
+   "heard_tone": 4,
+   "match": true,
+   "held_out": false,
+   "slope_st": -7.15,
+   "dip_st": -2.02,
+   "range_st": 9.65,
+   "frames": 19
+  },
+  {
+   "hanzi": "八",
+   "asked": "ba1",
+   "heard_tone": 1,
+   "match": true,
+   "held_out": false,
+   "slope_st": -0.39,
+   "dip_st": -0.13,
+   "range_st": 0.78,
+   "frames": 25
+  },
+  {
+   "hanzi": "低",
+   "asked": "di1",
+   "heard_tone": 1,
+   "match": true,
+   "held_out": true,
+   "slope_st": -0.31,
+   "dip_st": -0.28,
+   "range_st": 0.84,
+   "frames": 28
+  },
+  {
+   "hanzi": "敌",
+   "asked": "di2",
+   "heard_tone": 2,
+   "match": true,
+   "held_out": true,
+   "slope_st": 3.34,
+   "dip_st": -0.29,
+   "range_st": 5.04,
+   "frames": 32
+  },
+  {
+   "hanzi": "底",
+   "asked": "di3",
+   "heard_tone": 3,
+   "match": true,
+   "held_out": true,
+   "slope_st": -0.17,
+   "dip_st": -1.65,
+   "range_st": 2.72,
+   "frames": 42
+  },
+  {
+   "hanzi": "地",
+   "asked": "di4",
+   "heard_tone": 4,
+   "match": true,
+   "held_out": true,
+   "slope_st": -9.6,
+   "dip_st": -1.51,
+   "range_st": 11.52,
+   "frames": 20
+  },
+  {
+   "hanzi": "书",
+   "asked": "shu1",
+   "heard_tone": 1,
+   "match": true,
+   "held_out": true,
+   "slope_st": -1.15,
+   "dip_st": -0.21,
+   "range_st": 3.59,
+   "frames": 27
+  },
+  {
+   "hanzi": "熟",
+   "asked": "shu2",
+   "heard_tone": 2,
+   "match": true,
+   "held_out": true,
+   "slope_st": 2.99,
+   "dip_st": -1.22,
+   "range_st": 5.69,
+   "frames": 30
+  },
+  {
+   "hanzi": "鼠",
+   "asked": "shu3",
+   "heard_tone": 3,
+   "match": true,
+   "held_out": true,
+   "slope_st": -2.24,
+   "dip_st": -3.75,
+   "range_st": 10.61,
+   "frames": 42
+  },
+  {
+   "hanzi": "树",
+   "asked": "shu4",
+   "heard_tone": 4,
+   "match": true,
+   "held_out": true,
+   "slope_st": -10.18,
+   "dip_st": -0.51,
+   "range_st": 11.84,
+   "frames": 21
+  },
+  {
+   "hanzi": "发",
+   "asked": "fa1",
+   "heard_tone": 1,
+   "match": true,
+   "held_out": true,
+   "slope_st": -0.51,
+   "dip_st": 0.0,
+   "range_st": 0.82,
+   "frames": 25
+  },
+  {
+   "hanzi": "罚",
+   "asked": "fa2",
+   "heard_tone": 2,
+   "match": true,
+   "held_out": true,
+   "slope_st": 4.37,
+   "dip_st": -0.66,
+   "range_st": 6.7,
+   "frames": 27
+  },
+  {
+   "hanzi": "法",
+   "asked": "fa3",
+   "heard_tone": 3,
+   "match": true,
+   "held_out": true,
+   "slope_st": 0.63,
+   "dip_st": -3.22,
+   "range_st": 4.88,
+   "frames": 31
+  },
+  {
+   "hanzi": "话",
+   "asked": "hua4",
+   "heard_tone": 4,
+   "match": true,
+   "held_out": true,
+   "slope_st": -7.75,
+   "dip_st": -1.7,
+   "range_st": 9.9,
+   "frames": 18
+  }
+ ]
+}

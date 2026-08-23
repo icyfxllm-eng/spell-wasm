@@ -849,6 +849,14 @@ is no plants family, and inventing one is exactly what went wrong. Every one of
 these was caught by a gate that already existed, which is the argument for
 running the whole battery rather than the checks that seem relevant.
 
+**The density ratchet fired on the removals, correctly.** Deleting the scream
+and starrynight scans reads to it as two traces vanishing, which is exactly the
+silent recognizability loss it exists to catch. Re-recorded with --accept: both
+pictures were cut from the bank for being untraceable soft paint, so their scans
+going with them is intended. The check asks the operator to "say why" and gives
+nowhere to say it, so the why is here -- the baseline file records the numbers
+and this line records the reason.
+
 **Unsigned, and needing Eric.** All eight anchor tables are proposals, like
 saguaro's and taos's. The batch went into a new pack, worldart3, rather than
 splitting across worldart2's four remaining slots -- a pack is a picker surface,

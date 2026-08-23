@@ -348,12 +348,71 @@ still reaches the device voice. There is no bank entry and therefore no reading
 to force, so honouring the invariant there would delete the feature rather than
 fix it. Out of scope for this file; recorded rather than silently closed.
 
-**Done 6 cannot run here.** The loopback needs live synthesis and whisper.cpp:
-this machine has neither TTS key set nor whisper.cpp installed. Everything the
-gate can check is checked; the 30-word polyphone verification is outstanding and
-needs Eric's machine. Until it runs, one detail is unconfirmed: whether Google's
-pinyin alphabet wants `ü` or `v`. The reading sends `ü` (standard pinyin) and the
-server's validator accepts both.
+**Done 6 ran 2026-08-22, and the answer it gives is narrower than the gate
+asks for.** The keys were in ~/spellgame-server/.env all along and whisper.cpp
+installs from brew, so "blocked" was wrong -- it was unlooked-for.
+
+THE RESULT THAT MATTERS: all 30 forced clips differ byte-for-byte from their
+bare twins. Google is honouring the phoneme tag rather than ignoring it, which
+was the real unverified risk. **And the `ph` value was sent in the ü form and
+accepted**, which closes the ü-versus-v question the F6 note left open.
+
+The transcription half is much weaker evidence than 28/30 makes it sound, and
+the flaw is in the method rather than the audio. The chain is
+audio -> whisper -> hanzi -> pypinyin -> pinyin, and that last hop is a
+DICTIONARY LOOKUP of the characters, not a reading of the acoustics. For a
+fixed transcription the pinyin comes out the same whatever was actually spoken,
+so the harness largely measures whisper's character accuracy and is close to
+blind to tone. It catches a wrong reading only when that reading changes which
+characters whisper hears -- which is exactly what happened once, 处于 heard as
+出于, in BOTH runs.
+
+Raw figures, for the record: 24/30 exact characters, 28/30 once traditional
+forms are normalized against simplified (因為/傳統/生長/興趣 are whisper's
+output, not errors), 27/30 pinyin after folding ü and v. Two genuine failures:
+干部, which whisper garbled entirely, and 处于 above.
+
+**The fix was to take the ASR off the critical path entirely.** Tone in
+Mandarin IS the pitch contour, and the clip is raw 16 kHz PCM, so
+tools/zh-tone-probe.py measures F0 by autocorrelation and reads the contour in
+semitones. No transcription, so whisper's garbled 干部 and its traditional
+output stop mattering.
+
+It is a test against ground truth WE CONTROL: force tone N on a syllable and
+check tone N comes back. If forcing 2 yields a rise and forcing 4 yields a fall,
+then <phoneme> governs tone, which is the entire claim.
+
+  isolated syllables, HELD OUT   12/12
+  polyphone words, per syllable  44/57 toned (3 neutral, not gradable)
+
+Two things keep those numbers honest. The thresholds were tuned on ma and ba,
+so the reported figure is the HELD-OUT one -- di, shu, fa, hua, different rimes,
+never used to pick a threshold. Tuned-set accuracy would be a classifier
+grading its own homework, the same circularity that made the sandhi audit worth
+hand-deriving.
+
+And the first ordering was wrong in a way worth keeping: testing the dip before
+the rise called 麻 ma2 a tone 3, because a rising tone commonly sags before it
+climbs. Tone 4 separates by MAGNITUDE -- it is the steepest fall in the
+language at -7 to -10 semitones, where tone 3 also ends lower but by about -2.
+
+**Why the word figure is lower, and why it was not tuned further.** The misses
+were overwhelmingly tone 3 heard as 1 or 4, which is the HALF-THIRD: tone 3
+shows its dip-and-rise only in isolation or utterance-finally, and inside a word
+it is simply a low tone that falls a little. Judging syllables against the
+WORD's register rather than their own took it from 35/57 to 44/57. The
+remaining gap is the classifier's limit in connected speech, not the audio's --
+and tuning further would mean fitting thresholds to these same thirty words
+until the number looked good, which would measure nothing.
+
+**Done 6 is therefore ANSWERED but not signed off.** What is established: the
+lever is connected (30/30 clips change), the encoding is right (ü accepted), and
+the forced tone is the tone produced (12/12 held out, measured acoustically).
+What a literal 30/30 still wants is a connected-speech tone model or a human
+ear on the clips -- Eric's call. Everything is reproducible:
+config/zh-polyphone-set.json, config/zh-loopback-result.json,
+config/zh-tone-probe-result.json, config/zh-tone-probe-words.json, via
+tools/zh-tone-probe.py and tools/zh-tts-loopback.py.
 
 ## Invariants
 
@@ -385,9 +444,10 @@ server's validator accepts both.
 5. **Settings-truth effect test** — PASSING. 5/5 tone buttons produce an
    observable tone change on the active syllable, and a dead handler now
    fails the build (it did not before this feature).
-6. **TTS loopback** — BLOCKED, not failed. Needs a TTS key and whisper.cpp,
-   neither present on this machine. The forced-reading path itself is built,
-   gated and tested; only the acoustic verification is outstanding.
+6. **TTS loopback** — ANSWERED, not signed. Measured acoustically rather than
+   by ASR: 30/30 clips change under the phoneme, ü is accepted, and the forced
+   tone is the tone produced (12/12 held out). Connected words read 44/57,
+   limited by the half-third in connected speech rather than by the audio.
 7. **Tier-1 recoverability fuzz** — PASSING. 100+ randomized tone-only
    submissions at tier 1, deterministic seed so a failure reproduces: zero
    unrecoverable zeros on first encounter.

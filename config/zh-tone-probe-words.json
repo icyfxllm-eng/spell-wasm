@@ -1,0 +1,520 @@
+{
+ "ran": "2026-08-22",
+ "voice": "cmn-CN-Wavenet-A",
+ "method": "F0 autocorrelation per syllable, no ASR",
+ "toned_correct": 44,
+ "toned_total": 57,
+ "neutral_skipped": 3,
+ "rows": [
+  {
+   "hanzi": "地板",
+   "surface": "di4ban3",
+   "asked": "di4 ban3",
+   "want": [
+    4,
+    3
+   ],
+   "heard": [
+    4,
+    3
+   ],
+   "per_syllable": [
+    "OK",
+    "OK"
+   ]
+  },
+  {
+   "hanzi": "教堂",
+   "surface": "jiao4tang2",
+   "asked": "jiao4 tang2",
+   "want": [
+    4,
+    2
+   ],
+   "heard": [
+    4,
+    3
+   ],
+   "per_syllable": [
+    "OK",
+    "want 2 heard 3"
+   ]
+  },
+  {
+   "hanzi": "旅行",
+   "surface": "lv3xing2",
+   "asked": "lü3 xing2",
+   "want": [
+    3,
+    2
+   ],
+   "heard": [
+    4,
+    2
+   ],
+   "per_syllable": [
+    "want 3 heard 4",
+    "OK"
+   ]
+  },
+  {
+   "hanzi": "数字",
+   "surface": "shu4zi4",
+   "asked": "shu4 zi4",
+   "want": [
+    4,
+    4
+   ],
+   "heard": [
+    4,
+    3
+   ],
+   "per_syllable": [
+    "OK",
+    "want 4 heard 3"
+   ]
+  },
+  {
+   "hanzi": "头发",
+   "surface": "tou2fa5",
+   "asked": "tou2 fa5",
+   "want": [
+    2,
+    5
+   ],
+   "heard": [
+    4,
+    4
+   ],
+   "per_syllable": [
+    "want 2 heard 4",
+    "neutral"
+   ]
+  },
+  {
+   "hanzi": "相机",
+   "surface": "xiang4ji1",
+   "asked": "xiang4 ji1",
+   "want": [
+    4,
+    1
+   ],
+   "heard": [
+    4,
+    1
+   ],
+   "per_syllable": [
+    "OK",
+    "OK"
+   ]
+  },
+  {
+   "hanzi": "音乐",
+   "surface": "yin1yue4",
+   "asked": "yin1 yue4",
+   "want": [
+    1,
+    4
+   ],
+   "heard": [
+    1,
+    4
+   ],
+   "per_syllable": [
+    "OK",
+    "OK"
+   ]
+  },
+  {
+   "hanzi": "中间",
+   "surface": "zhong1jian1",
+   "asked": "zhong1 jian1",
+   "want": [
+    1,
+    1
+   ],
+   "heard": [
+    1,
+    1
+   ],
+   "per_syllable": [
+    "OK",
+    "OK"
+   ]
+  },
+  {
+   "hanzi": "种子",
+   "surface": "zhong3zi5",
+   "asked": "zhong3 zi5",
+   "want": [
+    3,
+    5
+   ],
+   "heard": [
+    3,
+    4
+   ],
+   "per_syllable": [
+    "OK",
+    "neutral"
+   ]
+  },
+  {
+   "hanzi": "因为",
+   "surface": "yin1wei4",
+   "asked": "yin1 wei4",
+   "want": [
+    1,
+    4
+   ],
+   "heard": [
+    1,
+    4
+   ],
+   "per_syllable": [
+    "OK",
+    "OK"
+   ]
+  },
+  {
+   "hanzi": "感觉",
+   "surface": "gan3jue2",
+   "asked": "gan3 jue2",
+   "want": [
+    3,
+    2
+   ],
+   "heard": [
+    4,
+    2
+   ],
+   "per_syllable": [
+    "want 3 heard 4",
+    "OK"
+   ]
+  },
+  {
+   "hanzi": "机会",
+   "surface": "ji1hui4",
+   "asked": "ji1 hui4",
+   "want": [
+    1,
+    4
+   ],
+   "heard": [
+    2,
+    3
+   ],
+   "per_syllable": [
+    "want 1 heard 2",
+    "want 4 heard 3"
+   ]
+  },
+  {
+   "hanzi": "分钟",
+   "surface": "fen1zhong1",
+   "asked": "fen1 zhong1",
+   "want": [
+    1,
+    1
+   ],
+   "heard": [
+    1,
+    1
+   ],
+   "per_syllable": [
+    "OK",
+    "OK"
+   ]
+  },
+  {
+   "hanzi": "当时",
+   "surface": "dang1shi2",
+   "asked": "dang1 shi2",
+   "want": [
+    1,
+    2
+   ],
+   "heard": [
+    1,
+    3
+   ],
+   "per_syllable": [
+    "OK",
+    "want 2 heard 3"
+   ]
+  },
+  {
+   "hanzi": "好像",
+   "surface": "hao3xiang4",
+   "asked": "hao3 xiang4",
+   "want": [
+    3,
+    4
+   ],
+   "heard": [
+    3,
+    4
+   ],
+   "per_syllable": [
+    "OK",
+    "OK"
+   ]
+  },
+  {
+   "hanzi": "重新",
+   "surface": "chong2xin1",
+   "asked": "chong2 xin1",
+   "want": [
+    2,
+    1
+   ],
+   "heard": [
+    3,
+    1
+   ],
+   "per_syllable": [
+    "want 2 heard 3",
+    "OK"
+   ]
+  },
+  {
+   "hanzi": "不少",
+   "surface": "bu4shao3",
+   "asked": "bu4 shao3",
+   "want": [
+    4,
+    3
+   ],
+   "heard": [
+    4,
+    3
+   ],
+   "per_syllable": [
+    "OK",
+    "OK"
+   ]
+  },
+  {
+   "hanzi": "提出",
+   "surface": "ti2chu1",
+   "asked": "ti2 chu1",
+   "want": [
+    2,
+    1
+   ],
+   "heard": [
+    3,
+    1
+   ],
+   "per_syllable": [
+    "want 2 heard 3",
+    "OK"
+   ]
+  },
+  {
+   "hanzi": "传统",
+   "surface": "chuan2tong3",
+   "asked": "chuan2 tong3",
+   "want": [
+    2,
+    3
+   ],
+   "heard": [
+    2,
+    3
+   ],
+   "per_syllable": [
+    "OK",
+    "OK"
+   ]
+  },
+  {
+   "hanzi": "生长",
+   "surface": "sheng1zhang3",
+   "asked": "sheng1 zhang3",
+   "want": [
+    1,
+    3
+   ],
+   "heard": [
+    4,
+    3
+   ],
+   "per_syllable": [
+    "want 1 heard 4",
+    "OK"
+   ]
+  },
+  {
+   "hanzi": "得以",
+   "surface": "de2yi3",
+   "asked": "de2 yi3",
+   "want": [
+    2,
+    3
+   ],
+   "heard": [
+    2,
+    3
+   ],
+   "per_syllable": [
+    "OK",
+    "OK"
+   ]
+  },
+  {
+   "hanzi": "再度",
+   "surface": "zai4du4",
+   "asked": "zai4 du4",
+   "want": [
+    4,
+    4
+   ],
+   "heard": [
+    4,
+    4
+   ],
+   "per_syllable": [
+    "OK",
+    "OK"
+   ]
+  },
+  {
+   "hanzi": "干部",
+   "surface": "gan4bu4",
+   "asked": "gan4 bu4",
+   "want": [
+    4,
+    4
+   ],
+   "heard": [
+    4,
+    4
+   ],
+   "per_syllable": [
+    "OK",
+    "OK"
+   ]
+  },
+  {
+   "hanzi": "兴趣",
+   "surface": "xing4qu4",
+   "asked": "xing4 qu4",
+   "want": [
+    4,
+    4
+   ],
+   "heard": [
+    4,
+    4
+   ],
+   "per_syllable": [
+    "OK",
+    "OK"
+   ]
+  },
+  {
+   "hanzi": "强烈",
+   "surface": "qiang2lie4",
+   "asked": "qiang2 lie4",
+   "want": [
+    2,
+    4
+   ],
+   "heard": [
+    3,
+    4
+   ],
+   "per_syllable": [
+    "want 2 heard 3",
+    "OK"
+   ]
+  },
+  {
+   "hanzi": "挑战",
+   "surface": "tiao3zhan4",
+   "asked": "tiao3 zhan4",
+   "want": [
+    3,
+    4
+   ],
+   "heard": [
+    3,
+    4
+   ],
+   "per_syllable": [
+    "OK",
+    "OK"
+   ]
+  },
+  {
+   "hanzi": "看着",
+   "surface": "kan4zhe5",
+   "asked": "kan4 zhe5",
+   "want": [
+    4,
+    5
+   ],
+   "heard": [
+    4,
+    3
+   ],
+   "per_syllable": [
+    "OK",
+    "neutral"
+   ]
+  },
+  {
+   "hanzi": "更好",
+   "surface": "geng4hao3",
+   "asked": "geng4 hao3",
+   "want": [
+    4,
+    3
+   ],
+   "heard": [
+    4,
+    3
+   ],
+   "per_syllable": [
+    "OK",
+    "OK"
+   ]
+  },
+  {
+   "hanzi": "处于",
+   "surface": "chu3yu2",
+   "asked": "chu3 yu2",
+   "want": [
+    3,
+    2
+   ],
+   "heard": [
+    4,
+    2
+   ],
+   "per_syllable": [
+    "want 3 heard 4",
+    "OK"
+   ]
+  },
+  {
+   "hanzi": "角度",
+   "surface": "jiao3du4",
+   "asked": "jiao3 du4",
+   "want": [
+    3,
+    4
+   ],
+   "heard": [
+    3,
+    4
+   ],
+   "per_syllable": [
+    "OK",
+    "OK"
+   ]
+  }
+ ]
+}

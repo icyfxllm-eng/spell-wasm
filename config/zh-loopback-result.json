@@ -1,0 +1,340 @@
+{
+ "ran": "2026-08-22",
+ "voice": "cmn-CN-Wavenet-A",
+ "asr": "whisper.cpp ggml-small, -l zh",
+ "audio_differs_forced_vs_bare": "30/30",
+ "characters_correct_after_trad_simp_normalization": "28/30",
+ "note": "CC-ZH-TONE Done 6. The decisive result is the FIRST line: every forced clip differs from its bare twin, so Google is honouring <phoneme alphabet=pinyin> rather than ignoring it, and the ph value was sent in the ü form and accepted. The transcription figures are weaker evidence than they look -- see the doc.",
+ "rows": [
+  {
+   "hanzi": "地板",
+   "citation": "di4ban3",
+   "surface": "di4ban3",
+   "want": [
+    "di4",
+    "ban3"
+   ],
+   "forced_text": "地板。",
+   "bare_text": "第1版"
+  },
+  {
+   "hanzi": "教堂",
+   "citation": "jiao4tang2",
+   "surface": "jiao4tang2",
+   "want": [
+    "jiao4",
+    "tang2"
+   ],
+   "forced_text": "教堂",
+   "bare_text": "教堂。"
+  },
+  {
+   "hanzi": "旅行",
+   "citation": "lv3xing2",
+   "surface": "lv3xing2",
+   "want": [
+    "lü3",
+    "xing2"
+   ],
+   "forced_text": "旅行",
+   "bare_text": "旅行"
+  },
+  {
+   "hanzi": "数字",
+   "citation": "shu4zi4",
+   "surface": "shu4zi4",
+   "want": [
+    "shu4",
+    "zi4"
+   ],
+   "forced_text": "数字。",
+   "bare_text": "数字。"
+  },
+  {
+   "hanzi": "头发",
+   "citation": "tou2fa5",
+   "surface": "tou2fa5",
+   "want": [
+    "tou2",
+    "fa5"
+   ],
+   "forced_text": "头发",
+   "bare_text": "头发。"
+  },
+  {
+   "hanzi": "相机",
+   "citation": "xiang4ji1",
+   "surface": "xiang4ji1",
+   "want": [
+    "xiang4",
+    "ji1"
+   ],
+   "forced_text": "相机。",
+   "bare_text": "相机。"
+  },
+  {
+   "hanzi": "音乐",
+   "citation": "yin1yue4",
+   "surface": "yin1yue4",
+   "want": [
+    "yin1",
+    "yue4"
+   ],
+   "forced_text": "音乐",
+   "bare_text": "音乐"
+  },
+  {
+   "hanzi": "中间",
+   "citation": "zhong1jian1",
+   "surface": "zhong1jian1",
+   "want": [
+    "zhong1",
+    "jian1"
+   ],
+   "forced_text": "中间",
+   "bare_text": "中间。"
+  },
+  {
+   "hanzi": "种子",
+   "citation": "zhong3zi5",
+   "surface": "zhong3zi5",
+   "want": [
+    "zhong3",
+    "zi5"
+   ],
+   "forced_text": "种子。",
+   "bare_text": "种资。"
+  },
+  {
+   "hanzi": "因为",
+   "citation": "yin1wei4",
+   "surface": "yin1wei4",
+   "want": [
+    "yin1",
+    "wei4"
+   ],
+   "forced_text": "因為",
+   "bare_text": "因為"
+  },
+  {
+   "hanzi": "感觉",
+   "citation": "gan3jue2",
+   "surface": "gan3jue2",
+   "want": [
+    "gan3",
+    "jue2"
+   ],
+   "forced_text": "感觉。",
+   "bare_text": "感觉。"
+  },
+  {
+   "hanzi": "机会",
+   "citation": "ji1hui4",
+   "surface": "ji1hui4",
+   "want": [
+    "ji1",
+    "hui4"
+   ],
+   "forced_text": "机会!",
+   "bare_text": "机会。"
+  },
+  {
+   "hanzi": "分钟",
+   "citation": "fen1zhong1",
+   "surface": "fen1zhong1",
+   "want": [
+    "fen1",
+    "zhong1"
+   ],
+   "forced_text": "分钟",
+   "bare_text": "分钟"
+  },
+  {
+   "hanzi": "当时",
+   "citation": "dang1shi2",
+   "surface": "dang1shi2",
+   "want": [
+    "dang1",
+    "shi2"
+   ],
+   "forced_text": "当时",
+   "bare_text": "当时"
+  },
+  {
+   "hanzi": "好像",
+   "citation": "hao3xiang4",
+   "surface": "hao3xiang4",
+   "want": [
+    "hao3",
+    "xiang4"
+   ],
+   "forced_text": "好像",
+   "bare_text": "好像"
+  },
+  {
+   "hanzi": "重新",
+   "citation": "chong2xin1",
+   "surface": "chong2xin1",
+   "want": [
+    "chong2",
+    "xin1"
+   ],
+   "forced_text": "重新",
+   "bare_text": "重新"
+  },
+  {
+   "hanzi": "不少",
+   "citation": "bu4shao3",
+   "surface": "bu4shao3",
+   "want": [
+    "bu4",
+    "shao3"
+   ],
+   "forced_text": "不少。",
+   "bare_text": "不少。"
+  },
+  {
+   "hanzi": "提出",
+   "citation": "ti2chu1",
+   "surface": "ti2chu1",
+   "want": [
+    "ti2",
+    "chu1"
+   ],
+   "forced_text": "提出",
+   "bare_text": "提出"
+  },
+  {
+   "hanzi": "传统",
+   "citation": "chuan2tong3",
+   "surface": "chuan2tong3",
+   "want": [
+    "chuan2",
+    "tong3"
+   ],
+   "forced_text": "傳統",
+   "bare_text": "传统"
+  },
+  {
+   "hanzi": "生长",
+   "citation": "sheng1zhang3",
+   "surface": "sheng1zhang3",
+   "want": [
+    "sheng1",
+    "zhang3"
+   ],
+   "forced_text": "生長",
+   "bare_text": "生長"
+  },
+  {
+   "hanzi": "得以",
+   "citation": "de2yi3",
+   "surface": "de2yi3",
+   "want": [
+    "de2",
+    "yi3"
+   ],
+   "forced_text": "得以。",
+   "bare_text": "得以"
+  },
+  {
+   "hanzi": "再度",
+   "citation": "zai4du4",
+   "surface": "zai4du4",
+   "want": [
+    "zai4",
+    "du4"
+   ],
+   "forced_text": "再度。",
+   "bare_text": "再度。"
+  },
+  {
+   "hanzi": "干部",
+   "citation": "gan4bu4",
+   "surface": "gan4bu4",
+   "want": [
+    "gan4",
+    "bu4"
+   ],
+   "forced_text": "compo",
+   "bare_text": "干部"
+  },
+  {
+   "hanzi": "兴趣",
+   "citation": "xing4qu4",
+   "surface": "xing4qu4",
+   "want": [
+    "xing4",
+    "qu4"
+   ],
+   "forced_text": "興趣",
+   "bare_text": "興趣!"
+  },
+  {
+   "hanzi": "强烈",
+   "citation": "qiang2lie4",
+   "surface": "qiang2lie4",
+   "want": [
+    "qiang2",
+    "lie4"
+   ],
+   "forced_text": "强烈",
+   "bare_text": "强烈"
+  },
+  {
+   "hanzi": "挑战",
+   "citation": "tiao3zhan4",
+   "surface": "tiao3zhan4",
+   "want": [
+    "tiao3",
+    "zhan4"
+   ],
+   "forced_text": "挑战!",
+   "bare_text": "挑战!"
+  },
+  {
+   "hanzi": "看着",
+   "citation": "kan4zhe5",
+   "surface": "kan4zhe5",
+   "want": [
+    "kan4",
+    "zhe5"
+   ],
+   "forced_text": "看着!",
+   "bare_text": "看着。"
+  },
+  {
+   "hanzi": "更好",
+   "citation": "geng4hao3",
+   "surface": "geng4hao3",
+   "want": [
+    "geng4",
+    "hao3"
+   ],
+   "forced_text": "更好!",
+   "bare_text": "更好!"
+  },
+  {
+   "hanzi": "处于",
+   "citation": "chu3yu2",
+   "surface": "chu3yu2",
+   "want": [
+    "chu3",
+    "yu2"
+   ],
+   "forced_text": "出于",
+   "bare_text": "出于"
+  },
+  {
+   "hanzi": "角度",
+   "citation": "jiao3du4",
+   "surface": "jiao3du4",
+   "want": [
+    "jiao3",
+    "du4"
+   ],
+   "forced_text": "角度",
+   "bare_text": "角度。"
+  }
+ ]
+}
