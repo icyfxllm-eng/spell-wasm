@@ -293,6 +293,32 @@
      *   is Vision's 0..1 line confidence (Phase 2); legacy string lines from an
      *   older native build normalize to confidence 1.
      */
+    /**
+     * CC-CJK-INK F3 — recognize a hand-drawn CJK character on device.
+     *
+     * `png` is a data URI straight from the drawing pad's canvas. It is decoded
+     * by the plugin, recognized, and dropped: never written to disk, never
+     * cached, never uploaded. No network call exists in this path (Invariant 1),
+     * the same posture the photo word-list already ships under.
+     *
+     * Resolves { supported, candidates: [{ text, confidence }] }, top three,
+     * UNCHOSEN — picking one for the player turns a wrong answer into a mystery.
+     */
+    recognizeInk: function (opts) {
+      var P = plugin();
+      if (!P || typeof P.recognizeInk !== 'function') {
+        return Promise.resolve({ supported: false, candidates: [] });
+      }
+      return P.recognizeInk({
+        png: (opts && opts.png) || '',
+        lang: (opts && opts.lang) || 'zh',
+      }).then(function (res) {
+        return { supported: true, candidates: (res && res.candidates) || [] };
+      }).catch(function () {
+        return { supported: true, candidates: [] };
+      });
+    },
+
     recognizeWordList: function (opts) {
       var P = plugin();
       if (!P) return Promise.resolve({ supported: false, lines: [] });
