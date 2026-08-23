@@ -638,9 +638,20 @@ pub fn refresh_mode_buttons(app: &App) {
         )
     };
     dom::set_html("missesBtn", &html);
-    dom::el("missesBtn").set_attribute("title", &if total > 0 { format!("{} saved \u{b7} {} due now", total, due) } else { String::new() }).ok();
+    // F3: tone-drill words are reachable through the same chip, so its enabled
+    // state and tooltip have to count them or a player with only tone words to
+    // practise sees a dead button.
+    let tone_due = crate::tone_drill::due(&s).len();
+    let tone_total = s.tone_drill.len();
+    let tip = match (total, tone_total) {
+        (0, 0) => String::new(),
+        (_, 0) => format!("{} saved \u{b7} {} due now", total, due),
+        _ => format!("{} saved \u{b7} {} due now \u{b7} {} tone words ({} due)",
+                     total, due, tone_total, tone_due),
+    };
+    dom::el("missesBtn").set_attribute("title", &tip).ok();
     dom::toggle_class("missesBtn", "on", s.review);
-    dom::set_disabled("missesBtn", !s.review && total == 0);
+    dom::set_disabled("missesBtn", !s.review && total == 0 && tone_total == 0);
 }
 
 /// Keep the setup chip's summary in lock-step with the three round-parameter
@@ -1115,11 +1126,22 @@ pub fn next_word(app: &App) {
             s.word = w;
         } else if s.review {
             let due = misses::due_misses(&s);
-            if due.is_empty() {
+            // CC-ZH-TONE F3: the tone drill is a SEPARATE study, so it is served
+            // only once the real misses are clear rather than shuffled in with
+            // them. Until this existed the queue was WRITE-ONLY -- words were
+            // routed into it correctly and nothing ever handed them back.
+            let tone = if due.is_empty() { crate::tone_drill::due(&s) } else { Vec::new() };
+            if due.is_empty() && tone.is_empty() {
                 drop(s);
                 exit_review(app, Some("All caught up \u{2014} your misses are scheduled for later review."));
                 return;
             }
+            if due.is_empty() {
+                let e = s.tone_drill[tone[0]].clone();
+                s.cur_lang = e.lang.clone();
+                s.word = e.word.clone();
+                s.cur_tier = e.tier.clone();
+            } else {
             // Deck-select over the due misses (keyed by the same lang::word
             // identity misses.rs already uses) so review turns don't repeat
             // the same due word back-to-back either.
@@ -1134,6 +1156,7 @@ pub fn next_word(app: &App) {
             s.cur_lang = m.lang.clone();
             s.word = m.word.clone();
             s.cur_tier = m.tier.clone();
+            }
         } else if PLACEMENT_QUEUE.with(|q| !q.borrow().is_empty()) {
             // Placement run: serve the fixed set through the normal flow.
             let w = PLACEMENT_QUEUE.with(|q| q.borrow_mut().remove(0));

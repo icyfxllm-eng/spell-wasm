@@ -832,6 +832,17 @@
      is stated in words below, so colour is never the sole carrier. */
   /* F4 tone buttons — tinted from pinyin::TONE_COLOURS, the same Pleco map
      the reveal uses. The numeral in the <sub> is the non-colour carrier. */
+  /* CC-CJK-INK F1 pad. Square, high-contrast, nothing to look at but the ink:
+     the recogniser sees a crop of this and a busy ground would cost accuracy. */
+  .ink-modal{display:flex;flex-direction:column;gap:.6rem;align-items:stretch}
+  .ink-progress{margin:0;font-size:.78rem;opacity:.7}
+  .ink-prompt{margin:0;font-size:3.2rem;line-height:1;text-align:center}
+  .ink-wrap{position:relative;width:100%;aspect-ratio:1/1;max-height:52vh;
+    border:2px dashed var(--line,#888);border-radius:10px;background:#fff;
+    touch-action:none}
+  .ink-wrap canvas{width:100%;height:100%;display:block;border-radius:8px}
+  .ink-result{margin:0;min-height:2.4em;font-size:.85rem;text-align:center}
+  .ink-row{display:flex;gap:.5rem;justify-content:center;flex-wrap:wrap}
   .tone-row{display:flex;gap:.5rem;justify-content:center;margin:.5rem 0 .25rem}
   .tone-row[hidden]{display:none}
   .tone-btn{min-width:2.75rem;min-height:2.75rem;border-radius:.6rem;
@@ -1550,12 +1561,33 @@
   <!-- Dev door menu (TEMPORARY — removed at activation). Reveal with five quick taps
        on the SPELL logo; routes to the hidden REVIEW-GATED screens for on-device
        testing. Wired by src/dev.rs. Not discoverable by normal testers. -->
+  <!-- CC-CJK-INK F1 — the real-ink gate. Dev-only: reached by the five-tap
+       logo door, never rendered for a normal tester. It prompts a character,
+       takes the drawing, runs the on-device recognizer, and scores itself, so
+       the only human step is the hand. -->
+  <div class="scrim" id="inkPad">
+    <div class="modal ink-modal">
+      <button class="ghost hub-x" id="inkClose" aria-label="Close">✕</button>
+      <p class="ink-progress" id="inkProgress"></p>
+      <p class="ink-prompt" id="inkPrompt" lang="zh"></p>
+      <div class="ink-wrap" id="inkCanvasWrap"><canvas id="canvas"></canvas></div>
+      <p class="ink-result" id="inkResult" aria-live="polite"></p>
+      <div class="ink-row">
+        <button type="button" class="ghost" id="inkUndo">Undo</button>
+        <button type="button" class="ghost" id="inkClear">Clear</button>
+        <button type="button" class="ghost" id="inkSkip">Skip</button>
+        <button type="button" class="btn" id="inkCommit">Read it</button>
+      </div>
+    </div>
+  </div>
+
   <div class="scrim" id="devMenu">
     <div class="modal">
       <button class="ghost hub-x" id="devMenuClose" aria-label="Close">✕</button>
       <h3><span aria-hidden="true">🛠️</span> Dev preview</h3>
       <div class="dev-list">
         <button type="button" class="dev-item" id="devOpenRacing">🏁 Spell Racing</button>
+        <button type="button" class="dev-item" id="devOpenInk">✍️ CJK ink probe (F1)</button>
         <button type="button" class="dev-item" id="devOpenArabic">ع Arabic (العربية)</button>
         <label class="dev-item" style="display:flex;align-items:center;gap:8px">
           <input type="checkbox" id="devEntitlements" style="width:20px;height:20px" />

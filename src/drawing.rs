@@ -12,10 +12,52 @@ use web_sys::{CanvasRenderingContext2d, HtmlCanvasElement, PointerEvent};
 
 use crate::dom;
 
+// CC-CJK-INK F2. The pad used to call a `window.spellOcr` global that no longer
+// exists -- the retirement took the JS with it. It now goes to the SAME
+// on-device Vision recognizer the photo word-list uses, through the native
+// bridge, so no ink touches the network (Invariant 1).
 #[wasm_bindgen]
 extern "C" {
-    #[wasm_bindgen(js_namespace = window, js_name = spellOcr)]
-    fn spell_ocr(canvas: &HtmlCanvasElement) -> js_sys::Promise;
+    #[wasm_bindgen(js_namespace = ["window", "NativeLanguageKit"], js_name = recognizeInk)]
+    fn recognize_ink(opts: &JsValue) -> js_sys::Promise;
+}
+
+/// Hand the current drawing to the recognizer and return its candidates,
+/// best first. An empty list means "nothing legible", never a guess.
+pub async fn recognize(lang: &str) -> Vec<(String, f64)> {
+    // The CROPPED render, not the live pad: render_for_ocr tightens to the ink
+    // and drops the UI-sized backing store, and Vision needs the glyph to fill
+    // the frame -- the probe had to lower minimumTextHeight even on centred
+    // renders.
+    let canvas = render_for_ocr();
+    let Ok(png) = canvas.to_data_url_with_type("image/png") else {
+        return Vec::new();
+    };
+    let opts = js_sys::Object::new();
+    let _ = js_sys::Reflect::set(&opts, &"png".into(), &png.into());
+    let _ = js_sys::Reflect::set(&opts, &"lang".into(), &lang.into());
+    let Ok(res) = JsFuture::from(recognize_ink(&opts)).await else {
+        return Vec::new();
+    };
+    let Ok(list) = js_sys::Reflect::get(&res, &"candidates".into()) else {
+        return Vec::new();
+    };
+    let arr = js_sys::Array::from(&list);
+    let mut out = Vec::new();
+    for v in arr.iter() {
+        let t = js_sys::Reflect::get(&v, &"text".into())
+            .ok()
+            .and_then(|x| x.as_string())
+            .unwrap_or_default();
+        let c = js_sys::Reflect::get(&v, &"confidence".into())
+            .ok()
+            .and_then(|x| x.as_f64())
+            .unwrap_or(0.0);
+        if !t.is_empty() {
+            out.push((t, c));
+        }
+    }
+    out
 }
 
 #[derive(Clone, Copy, PartialEq, Debug)]
@@ -411,24 +453,37 @@ pub enum OcrOutcome {
 }
 
 pub async fn read_writing() -> OcrOutcome {
+    read_writing_in("en").await
+}
+
+/// Read the pad for a given study language.
+///
+/// Latin keeps its old shape: letters only, thresholded, because an English
+/// answer is a word and stray marks are noise.
+///
+/// CJK does NOT filter to letters. The retired code kept only
+/// `is_ascii_alphabetic`, which would strip every character this feature exists
+/// to read -- a filter that was correct for the feature it was written for and
+/// silently fatal for this one.
+pub async fn read_writing_in(lang: &str) -> OcrOutcome {
     if !has_strokes() {
         return OcrOutcome::Empty;
     }
-    let canvas = render_for_ocr();
-    let promise = spell_ocr(&canvas);
-    match JsFuture::from(promise).await {
-        Ok(v) => {
-            let text = js_sys::Reflect::get(&v, &JsValue::from_str("text")).ok().and_then(|t| t.as_string()).unwrap_or_default();
-            let confidence = js_sys::Reflect::get(&v, &JsValue::from_str("confidence")).ok().and_then(|c| c.as_f64()).unwrap_or(0.0);
-            let letters_only: String = text.chars().filter(|c| c.is_ascii_alphabetic()).collect();
-            if letters_only.is_empty() {
-                OcrOutcome::Empty
-            } else if confidence >= OCR_CONFIDENCE_THRESHOLD {
-                OcrOutcome::Confident(letters_only)
-            } else {
-                OcrOutcome::Unsure(letters_only)
-            }
-        }
-        Err(_) => OcrOutcome::Failed,
+    let cands = recognize(lang).await;
+    let Some((text, confidence)) = cands.into_iter().next() else {
+        return OcrOutcome::Empty;
+    };
+    let cjk = lang.starts_with("zh") || lang.starts_with("ja");
+    let kept: String = if cjk {
+        text.chars().filter(|c| !c.is_whitespace()).collect()
+    } else {
+        text.chars().filter(|c| c.is_ascii_alphabetic()).collect()
+    };
+    if kept.is_empty() {
+        OcrOutcome::Empty
+    } else if confidence >= OCR_CONFIDENCE_THRESHOLD {
+        OcrOutcome::Confident(kept)
+    } else {
+        OcrOutcome::Unsure(kept)
     }
 }

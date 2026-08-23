@@ -7662,6 +7662,38 @@
     "wave crest",
     "fuji",
     "foreground trough"
+   ],
+   "guideAnchors": [
+    {
+     "name": "boat line",
+     "box": [
+      205,
+      330,
+      385,
+      405
+     ],
+     "minRun": 48
+    },
+    {
+     "name": "fuji triangle",
+     "box": [
+      255,
+      288,
+      352,
+      332
+     ],
+     "minRun": 9
+    },
+    {
+     "name": "foam claws",
+     "box": [
+      130,
+      108,
+      312,
+      232
+     ],
+     "minRun": 51
+    }
    ]
   },
   {
@@ -15073,6 +15105,38 @@
     "cone profile",
     "cloud band",
     "treeline"
+   ],
+   "guideAnchors": [
+    {
+     "name": "summit",
+     "box": [
+      200,
+      128,
+      322,
+      202
+     ],
+     "minRun": 12
+    },
+    {
+     "name": "cloud bands",
+     "box": [
+      28,
+      108,
+      272,
+      232
+     ],
+     "minRun": 15
+    },
+    {
+     "name": "slope to sky",
+     "box": [
+      40,
+      198,
+      482,
+      400
+     ],
+     "minRun": 159
+    }
    ]
   },
   {
@@ -18189,6 +18253,38 @@
     "flower row",
     "vase rim",
     "table edge"
+   ],
+   "guideAnchors": [
+    {
+     "name": "flower heads",
+     "box": [
+      78,
+      68,
+      432,
+      232
+     ],
+     "minRun": 29
+    },
+    {
+     "name": "vase",
+     "box": [
+      138,
+      298,
+      396,
+      402
+     ],
+     "minRun": 24
+    },
+    {
+     "name": "table line",
+     "box": [
+      70,
+      378,
+      446,
+      412
+     ],
+     "minRun": 10
+    }
    ]
   },
   {

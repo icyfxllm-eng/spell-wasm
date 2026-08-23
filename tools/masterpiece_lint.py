@@ -38,6 +38,7 @@ named in ANCHOR_TABLES_PENDING, which shrinks and cannot silently grow.
 from __future__ import annotations
 
 import json
+import re
 import pathlib
 import sys
 
@@ -87,6 +88,16 @@ KNOWN = SILHOUETTE | ANCHORS | TEXTURE
 # fails a master that has no table AND is not listed here, so a new master
 # cannot slip in unanchored, and one that gains a table cannot stay listed.
 ANCHOR_TABLES_PENDING: frozenset[str] = frozenset()
+
+
+_PICS: dict | None = None
+
+
+def pic_by_id() -> dict:
+    global _PICS
+    if _PICS is None:
+        _PICS = {p["id"]: p for p in json.loads(PICTURES.read_text())["pictures"]}
+    return _PICS
 
 
 def masters() -> list[str]:
@@ -350,6 +361,66 @@ def selftest() -> int:
     return 0
 
 
+
+def check_guide_anchors(pic) -> list[str]:
+    """F4 as it was actually written: anchors are POSITIONAL, on the trace.
+
+    The first implementation used `requiredFeatures`, which names RAILS -- the
+    lines words ride on, not the picture. An anchor saying the Great Wave must
+    show a boat had no mechanism behind it: the boats live in the guide, guide
+    contours are anonymous, and no lint could see them.
+
+    Two weaker versions of this check are worth recording, because each failed
+    in a way the next had to answer.
+
+    ASKING WHETHER THE REGION HAS INK is nearly always true -- a dense trace has
+    ink everywhere. A box moved into the Wave's empty sky still found 48 points
+    of foam and cloud edge, so it passed a boat drawn in the sky, which is the
+    wrong-place anchor F4 says must fail.
+
+    ASKING FOR A WHOLE CONTOUR INSIDE THE REGION is too strict, because only
+    some features are standalone shapes. The Wave's boats are, so they passed;
+    Fuji's triangle and Red Fuji's summit are SEGMENTS of longer lines and
+    failed, though both are plainly present.
+
+    What holds for both is a sustained RUN: the trace enters the region and
+    stays there for a while, whether or not the shape closes on itself.
+
+    Be clear about what this proves. Requiring the run to SPAN its box was
+    tried and discarded -- a box in the empty sky spanned 70% of itself, more
+    than several genuine anchors -- so run length is the only usable signal,
+    and its margin is thin for small features: the sky box managed 10 points
+    against the Wave's fuji triangle at 13. The threshold is therefore set per
+    anchor from the feature's own measured run with headroom.
+
+    So this is a RATCHET, not an identification. It reliably catches a feature
+    that thins or disappears under a re-trace, which is the risk that actually
+    materialises; it does not prove that the shape in the region is a boat
+    rather than something else the same size. Naming guide contours would, and
+    would cost a schema change.
+    """
+    out = []
+    for a in pic.get("guideAnchors", []):
+        x0, y0, x1, y1 = a["box"]
+        need = a.get("minRun", 12)
+        best = 0
+        for d in pic.get("guide") or []:
+            run = 0
+            for xs, ys in re.findall(r"([-\d.]+) ([-\d.]+)", d):
+                x, y = float(xs), float(ys)
+                if x0 <= x <= x1 and y0 <= y <= y1:
+                    run += 1
+                    best = max(best, run)
+                else:
+                    run = 0
+        if best < need:
+            out.append(
+                f"{pic['id']}: anchor '{a['name']}' — the trace never runs through "
+                f"its region for more than {best} points, needs {need}. Missing, "
+                f"or drawn somewhere else")
+    return out
+
+
 def main() -> int:
     if "--selftest" in sys.argv:
         return selftest()
@@ -365,6 +436,7 @@ def main() -> int:
         if REQUIRED.get(pid):
             tabled.append(pid)
         failures += check(pid)
+        failures += check_guide_anchors(pic_by_id()[pid])
 
     # The artist rule, over every master in the bank.
     prov = {r["subject"]: r for r in json.loads(PROVENANCE.read_text())}

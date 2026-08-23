@@ -46,6 +46,8 @@ mod chains_screen; // CC-WORD-CHAINS F1 chain screen
 mod impostor_screen; // CC-IMPOSTOR F1/F5 round loop
 #[cfg(not(feature = "web"))]
 mod bee_screen; // CC-BEE-SIM F1 stage
+mod drawing;
+mod ink_probe; // CC-CJK-INK F1 — the real-ink gate (dev-only) // CC-CJK-INK F2 — the pad returns (D1 signed 2026-08-23)
 mod dom;
 pub mod editor;
 mod enrich;
@@ -327,6 +329,7 @@ fn wire(app: &App) {
         wordpic_screen::install_surface_hooks(); // I3: the picture registers itself
     }
     dev::wire(app); // TEMP dev door: 5-tap logo → menu for the hidden racing/aloud screens
+    ink_probe::wire(app); // CC-CJK-INK F1 — dev-only ink gate
     tools_hub::wire(app);
     tools_hub::reflect(app);
 

@@ -41,6 +41,15 @@ pub fn el(id: &str) -> Element {
     doc().get_element_by_id(id).unwrap_or_else(|| panic!("missing element #{id}"))
 }
 
+/// The drawing pad's canvas. Removed when drawing was retired and restored for
+/// CC-CJK-INK; the pad is the only caller, and it panics on absence for the
+/// same reason `el` does -- a missing canvas is a build mistake, not a state.
+pub fn canvas(id: &str) -> web_sys::HtmlCanvasElement {
+    el(id)
+        .dyn_into::<web_sys::HtmlCanvasElement>()
+        .unwrap_or_else(|_| panic!("#{id} is not a canvas"))
+}
+
 pub fn set_css_var(name: &str, value: &str) {
     if let Some(de) = doc().document_element().and_then(|e| e.dyn_into::<web_sys::HtmlElement>().ok()) {
         let _ = de.style().set_property(name, value);

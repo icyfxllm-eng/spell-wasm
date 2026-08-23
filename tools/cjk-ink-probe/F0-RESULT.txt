@@ -1,0 +1,13 @@
+  zh print  want 百  got 百 1.00  HIT
+
+  ja/pen     8/10
+  ja/print   9/10
+  zh/pen     9/10
+  zh/print   10/10
+
+Vision reads isolated CJK and barely degrades under distortion. The pen
+condition is a DEGRADED PRINTED GLYPH, not handwriting -- no handwriting CJK
+font is installed -- so failure here would have been decisive and success is
+only suggestive. F1 replaces it with real ink.
+
+Reproduce: swiftc -O probe.swift -o probe && ./probe <dir of NAME__COND__CHAR.png>

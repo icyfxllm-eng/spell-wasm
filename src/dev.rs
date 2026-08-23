@@ -62,6 +62,14 @@ pub fn wire(app: &App) {
         crate::racing::screen::open(&a_race);
     });
 
+    // CC-CJK-INK F1: the ink gate is dev-only until real handwriting has been
+    // measured, which is the whole point of it.
+    let a_ink = app.clone();
+    dom::on_click("devOpenInk", move || {
+        close_menu();
+        crate::ink_probe::open(&a_ink);
+    });
+
     // Arabic shortcut: jump straight into the freshly ungated language without
     // scrolling the picker. Sets langSel and fires its own change event, so the
     // ONE existing language-switch handler does all the work (RTL dir, keyboard,

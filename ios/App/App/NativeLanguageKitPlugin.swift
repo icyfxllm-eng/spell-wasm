@@ -27,6 +27,8 @@ public class NativeLanguageKitPlugin: CAPPlugin, CAPBridgedPlugin {
         // CC-OFFLINE-PACKS (BD-2): per-file fetch/verify, atomic activate,
         // storage states, and the pack-first audio src resolver.
         CAPPluginMethod(name: "packVerifyManifest", returnType: CAPPluginReturnPromise),
+        // CC-CJK-INK F3 — on-device handwriting recognition, no network.
+        CAPPluginMethod(name: "recognizeInk", returnType: CAPPluginReturnPromise),
         CAPPluginMethod(name: "packFetch", returnType: CAPPluginReturnPromise),
         CAPPluginMethod(name: "packMissing", returnType: CAPPluginReturnPromise),
         CAPPluginMethod(name: "packActivate", returnType: CAPPluginReturnPromise),
