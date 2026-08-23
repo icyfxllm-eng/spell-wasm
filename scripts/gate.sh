@@ -34,6 +34,20 @@ for f in "ios/App/App/NativeLanguageKitPlugin+FamilyVoices.swift" src/family_voi
   fi
 done
 
+echo "== gate: ink never leaves the device (CC-CJK-INK Invariant 1)"
+# Done 4 says airplane mode must change nothing, and that is only a promise
+# until something checks it. A child's handwriting is as personal as the
+# household recordings BD-D4 protects, and the same shape of scan applies:
+# NO network symbol may appear in the ink path at all. Full-line comments are
+# stripped first so the files stay free to DISCUSS the ban -- this very
+# invariant is written in them -- while an inline URL in real code still trips.
+for f in "ios/App/App/NativeLanguageKitPlugin+Ink.swift" src/drawing.rs src/ink_probe.rs; do
+  if sed -E '/^#\[cfg\(test\)\]/,$d; /^[[:space:]]*\/\//d' "$f" \
+       | grep -inE "URLSession|CFNetwork|upload|fetch_post|fetch_json|https?:"; then
+    echo "GATE FAIL: network symbol in the ink path ($f) — ink stays on the device"; exit 1
+  fi
+done
+
 echo "== gate: calendar store boundary (CAL I1) + kid-only goals (CAL I7)"
 if grep -rn "spell_journal_\|spell_plan_\|spell_goal_\|spell_cheer_" src/ | grep -v "src/journal.rs\|src/calendar.rs"; then
   echo "GATE FAIL: a calendar/journal store key leaked outside its module"; exit 1

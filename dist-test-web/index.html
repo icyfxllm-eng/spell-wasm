@@ -842,6 +842,16 @@
     touch-action:none}
   .ink-wrap canvas{width:100%;height:100%;display:block;border-radius:8px}
   .ink-result{margin:0;min-height:2.4em;font-size:.85rem;text-align:center}
+  /* F3: candidates are OFFERED, never chosen for the player. The recogniser
+     read the ink; only the player knows what they meant to write. */
+  .ink-offer{display:flex;justify-content:center;margin:.35rem 0}
+  .ink-offer[hidden]{display:none}
+  .ink-cands{display:flex;gap:.5rem;justify-content:center;flex-wrap:wrap;min-height:3.2rem}
+  .ink-cand{min-width:3rem;min-height:3rem;border-radius:.6rem;border:1px solid var(--line,#888);
+    background:var(--card,#fff);font-size:1.6rem;line-height:1;cursor:pointer;
+    display:flex;flex-direction:column;align-items:center;justify-content:center;gap:.1rem}
+  .ink-cand small{font-size:.55rem;opacity:.6}
+  .ink-cand.none{font-size:.85rem;min-width:5rem}
   .ink-row{display:flex;gap:.5rem;justify-content:center;flex-wrap:wrap}
   .tone-row{display:flex;gap:.5rem;justify-content:center;margin:.5rem 0 .25rem}
   .tone-row[hidden]{display:none}
@@ -1351,6 +1361,12 @@
          diacritics keep working in parallel; this is an affordance, never the
          only path. Each button carries its numeral as well as its mark, so
          Invariant 7 holds without relying on the tone colour. -->
+    <!-- CC-CJK-INK F4 — "write it" is PRACTICE beside the round, never a
+         second way to answer it. Absent for every language without characters,
+         rather than present and disabled. -->
+    <div class="ink-offer" id="inkOffer" hidden>
+      <button type="button" class="ghost" id="inkWriteBtn">✎ Write it</button>
+    </div>
     <div class="tone-row" id="toneRow" role="group" aria-label="Tone" hidden>
       <button type="button" class="tone-btn" id="toneBtn1" data-tone="1">&#175;<sub>1</sub></button>
       <button type="button" class="tone-btn" id="toneBtn2" data-tone="2">&#180;<sub>2</sub></button>
@@ -1572,6 +1588,7 @@
       <p class="ink-prompt" id="inkPrompt" lang="zh"></p>
       <div class="ink-wrap" id="inkCanvasWrap"><canvas id="canvas"></canvas></div>
       <p class="ink-result" id="inkResult" aria-live="polite"></p>
+      <div class="ink-cands" id="inkCands" role="group" aria-label="What was read"></div>
       <div class="ink-row">
         <button type="button" class="ghost" id="inkUndo">Undo</button>
         <button type="button" class="ghost" id="inkClear">Clear</button>

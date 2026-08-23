@@ -47,6 +47,7 @@ mod impostor_screen; // CC-IMPOSTOR F1/F5 round loop
 #[cfg(not(feature = "web"))]
 mod bee_screen; // CC-BEE-SIM F1 stage
 mod drawing;
+mod stroke_counts; // GENERATED — tools/build-stroke-counts.py (CC-CJK-INK F5)
 mod ink_probe; // CC-CJK-INK F1 — the real-ink gate (dev-only) // CC-CJK-INK F2 — the pad returns (D1 signed 2026-08-23)
 mod dom;
 pub mod editor;
@@ -330,6 +331,19 @@ fn wire(app: &App) {
     }
     dev::wire(app); // TEMP dev door: 5-tap logo → menu for the hidden racing/aloud screens
     ink_probe::wire(app); // CC-CJK-INK F1 — dev-only ink gate
+    {
+        // F4: the pad opens on the CHARACTERS -- s.spoken holds the hanzi for
+        // zh, where s.word is the pinyin the player types.
+        let a = app.clone();
+        dom::on_click("inkWriteBtn", move || {
+            let (lang, chars) = {
+                let s = a.borrow();
+                let c = if s.spoken.is_empty() { s.word.clone() } else { s.spoken.clone() };
+                (s.cur_lang.clone(), c)
+            };
+            ink_probe::open_practice(&a, &lang, &chars);
+        });
+    }
     tools_hub::wire(app);
     tools_hub::reflect(app);
 

@@ -440,6 +440,38 @@ pub fn sync_keyboard(app: &App) {
 /// Mandarin only, and hidden at expert tier where the player types the tone
 /// themselves. Called wherever the word or the tier changes, so the row cannot
 /// linger into a language that has no tones.
+/// CC-CJK-INK F4 — offer the pad beside a Chinese or Japanese round.
+///
+/// PRACTICE, never a second way to answer: the typed round still asks for the
+/// sound and this asks for the shape, and nothing the pad does reaches stats,
+/// the misses queue or the tone drill. Absent for every other language rather
+/// than disabled, the same doctrine the mode registry follows.
+pub fn reflect_ink_offer(app: &App) {
+    let (lang, kid) = {
+        let s = app.borrow();
+        (s.cur_lang.clone(), s.kid)
+    };
+    // D6: Little Speller does not get the pad. Drawing a character is a
+    // fine-motor task well above the age this mode is for.
+    // F5 closes the gate F4 had to leave open: the offer only appears where the
+    // recogniser can be trusted. Tier 4 -- thirteen strokes and up -- is where
+    // every F1 miss lived, and a pad that cannot read what you drew is
+    // discouraging even when it costs nothing.
+    let writable = {
+        let s = app.borrow();
+        let chars = if s.spoken.is_empty() { s.word.clone() } else { s.spoken.clone() };
+        crate::stroke_counts::writing_ready(&chars)
+    };
+    let show = !kid && writable && crate::ink_probe::ink_allowed(&lang);
+    if let Some(el) = dom::doc().get_element_by_id("inkOffer") {
+        if show {
+            let _ = el.remove_attribute("hidden");
+        } else {
+            let _ = el.set_attribute("hidden", "");
+        }
+    }
+}
+
 pub fn reflect_tone_row(app: &App) {
     let (lang, tier) = {
         let s = app.borrow();
@@ -1264,6 +1296,9 @@ pub fn next_word(app: &App) {
     ZH_VIA_SURFACE.with(|c| c.set(false));
     // F4: the tone row follows the language and tier of the word just loaded.
     reflect_tone_row(app);
+    // CC-CJK-INK F4: the write-it offer follows the same rule -- present only
+    // where there are characters to write.
+    reflect_ink_offer(app);
 
     app.borrow_mut().answered = false;
     // CC-ATTEMPTS-SHIELDS: a new word refreshes its one-retry budget (I4/PD5).

@@ -41,6 +41,32 @@ pub fn el(id: &str) -> Element {
     doc().get_element_by_id(id).unwrap_or_else(|| panic!("missing element #{id}"))
 }
 
+/// Attach a click handler to an element that is REPLACED each time it is
+/// rendered — candidate chips, for instance. `on_click` leaks a handler per
+/// call for long-lived controls; this is for markup that is thrown away and
+/// rebuilt, where the element carrying the old handler no longer exists.
+pub fn on_click_once(id: &str, f: impl Fn() + 'static) -> bool {
+    let Some(el) = doc().get_element_by_id(id) else { return false };
+    let cb = wasm_bindgen::closure::Closure::<dyn FnMut()>::new(move || f());
+    let ok = el
+        .add_event_listener_with_callback("click", cb.as_ref().unchecked_ref())
+        .is_ok();
+    cb.forget();
+    ok
+}
+
+/// `on_click_once` for an element found by selector rather than id — candidate
+/// chips are generated and have no stable ids of their own.
+pub fn on_click_once_sel(sel: &str, f: impl Fn() + 'static) -> bool {
+    let Ok(Some(el)) = doc().query_selector(sel) else { return false };
+    let cb = wasm_bindgen::closure::Closure::<dyn FnMut()>::new(move || f());
+    let ok = el
+        .add_event_listener_with_callback("click", cb.as_ref().unchecked_ref())
+        .is_ok();
+    cb.forget();
+    ok
+}
+
 /// The drawing pad's canvas. Removed when drawing was retired and restored for
 /// CC-CJK-INK; the pad is the only caller, and it panics on absence for the
 /// same reason `el` does -- a missing canvas is a build mistake, not a state.
