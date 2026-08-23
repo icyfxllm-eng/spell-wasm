@@ -861,3 +861,43 @@ and this line records the reason.
 saguaro's and taos's. The batch went into a new pack, worldart3, rather than
 splitting across worldart2's four remaining slots -- a pack is a picker surface,
 so that is a product call made by default rather than by ruling.
+
+## The Great Wave's boats (2026-08-22)
+
+The signed F4 table asks the Wave for "at least one boat line" and the trace had
+none. It has four now, extracted from the source rather than drawn from memory.
+
+**Colour, not brightness, is what separates them.** The hulls are the only warm
+elements in the picture -- ochre against blue water and white foam -- and no
+luminance threshold can pull a tan boat out of a blue-and-white print. Warmth
+(R minus B) can. The aged paper is warm too, so warmth alone is not enough; what
+finishes the job is that a boat is an ENCLOSED warm island, completely
+surrounded by water, while the sky and the paper margin touch the image border.
+Sixteen enclosed islands survived that rule and five were confirmed as boats by
+eye against the source, the rest being the cartouche and foam.
+
+**The transform was verified, not assumed.** Landing the contours in the guide's
+coordinate frame needed the mapping guidegen had used, which is not recorded.
+It was recovered by matching the source's printed area to the guide's own
+bounding box -- the horizontal and vertical scales came out 0.2439 and 0.2437,
+agreeing to four decimals, which is the uniform fit confirming itself. Then the
+independent check that mattered: Fuji's peak in the source maps to (327, 310),
+which lands inside the existing `fuji` rail's box. A landmark neither side of
+the calculation knew about.
+
+**No boat can carry a rail, and that is measured rather than assumed.** Every
+hull was tested for the longest span that clears the eight existing rails by
+34px: the best is 24px against a 130 minimum. The boats are small and the wave's
+rails already occupy the troughs they sit in. The foreground boat comes closest
+and still fails three ways -- 20.2px from fuji, 19.8px from the foreground
+trough, 33.3px from the foreground swell, that last one short by less than a
+pixel.
+
+So `boat` is NOT added to requiredFeatures: it would fail the lint by naming a
+rail that cannot exist. The anchor is satisfied in the guide, which is where
+recognition actually lives, and not in the rails, which is where the lint can
+see. **That gap is the finding.** requiredFeatures can only name rails, so an
+anchor about what the TRACE contains has no mechanism behind it -- guide
+contours are anonymous. Closing it properly means either naming guide paths or
+re-authoring the Wave's eight rails to make room, and re-authoring a shipped
+picture's whole layout to satisfy one anchor is Eric's call, not a tidy-up.
