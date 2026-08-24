@@ -846,6 +846,11 @@
      read the ink; only the player knows what they meant to write. */
   .ink-offer{display:flex;justify-content:center;margin:.35rem 0}
   .ink-offer[hidden]{display:none}
+  /* Dev diagnostic: the exact image handed to Vision. A failed read is then
+     a thing you can LOOK at rather than a mystery to reason about. */
+  .ink-sent{display:block;margin:.3rem auto 0;max-width:150px;border:1px solid var(--line,#888);
+    border-radius:6px;background:#fff}
+  .ink-sent[hidden]{display:none}
   .ink-cands{display:flex;gap:.5rem;justify-content:center;flex-wrap:wrap;min-height:3.2rem}
   .ink-cand{min-width:3rem;min-height:3rem;border-radius:.6rem;border:1px solid var(--line,#888);
     background:var(--card,#fff);font-size:1.6rem;line-height:1;cursor:pointer;
@@ -1589,6 +1594,7 @@
       <div class="ink-wrap" id="inkCanvasWrap"><canvas id="canvas"></canvas></div>
       <p class="ink-result" id="inkResult" aria-live="polite"></p>
       <div class="ink-cands" id="inkCands" role="group" aria-label="What was read"></div>
+      <img class="ink-sent" id="inkSent" alt="What the recognizer was given" hidden />
       <div class="ink-row">
         <button type="button" class="ghost" id="inkUndo">Undo</button>
         <button type="button" class="ghost" id="inkClear">Clear</button>

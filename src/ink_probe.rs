@@ -88,6 +88,13 @@ pub fn ink_allowed(lang: &str) -> bool {
     lang == crate::consts::ZH || lang == crate::consts::JA
 }
 
+/// True while the pad is being used for a single CJK character, which the
+/// renderer needs to know: a character wants the square frame F0 validated,
+/// a Latin word wants the wide one.
+pub fn wants_square() -> bool {
+    !matches!(mode(), Mode::Practice { ref lang, .. } if !ink_allowed(lang))
+}
+
 fn mode() -> Mode {
     MODE.with(|m| m.borrow().clone())
 }

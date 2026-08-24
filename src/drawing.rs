@@ -36,6 +36,13 @@ pub async fn recognize(lang: &str) -> Vec<(String, f64)> {
     let Ok(png) = canvas.to_data_url_with_type("image/png") else {
         return Vec::new();
     };
+    // Show what was actually sent. Two rounds of this feature were debugged by
+    // reasoning about an image nobody had seen -- first a bridge that resolved
+    // to nothing, then a geometry guess. The picture settles it.
+    if let Some(el) = dom::doc().get_element_by_id("inkSent") {
+        let _ = el.set_attribute("src", &png);
+        let _ = el.remove_attribute("hidden");
+    }
     let Some(win) = web_sys::window() else { return Vec::new() };
     let Ok(kit) = js_sys::Reflect::get(&win, &JsValue::from_str("SpellNativeLang")) else {
         return Vec::new();
@@ -414,8 +421,17 @@ fn render_for_ocr() -> HtmlCanvasElement {
 
     let w = (max_x - min_x).max(40.0);
     let h = (max_y - min_y).max(40.0);
-    let scale = (900.0 / w).min(300.0 / h);
-    let pad = 24.0_f64;
+    // Two geometries, because two different things are being read.
+    //
+    // A Latin word is a wide ribbon, so it goes into a 900x300 box. A CJK
+    // character is a square, and F0 measured the recogniser on SQUARE images
+    // with the glyph filling about 78% of the frame -- 3/3 there against 2/3
+    // once the same characters were put in a bigger frame with more margin.
+    // Sending a shape the recogniser was never measured on is guessing, so a
+    // single character gets the geometry that was validated.
+    let square = crate::ink_probe::wants_square();
+    let (box_w, box_h, pad) = if square { (256.0, 256.0, 28.0) } else { (900.0, 300.0, 24.0) };
+    let scale = (box_w / w).min(box_h / h);
 
     let doc = dom::doc();
     let out: HtmlCanvasElement = doc.create_element("canvas").unwrap().dyn_into().unwrap();
@@ -427,7 +443,10 @@ fn render_for_ocr() -> HtmlCanvasElement {
     o.set_stroke_style_str("#000");
     o.set_line_cap("round");
     o.set_line_join("round");
-    o.set_line_width((6.0_f64).max(8.0 * scale * 0.5));
+    // A pen line, not a hairline. Thin strokes survived the local test, but a
+    // heavier line is closer to the filled glyphs F0 read at full confidence
+    // and costs nothing on a character this size.
+    o.set_line_width(if square { (10.0_f64).max(w * scale * 0.055) } else { (6.0_f64).max(8.0 * scale * 0.5) });
 
     STATE.with(|s| {
         for stroke in &s.borrow().strokes {
