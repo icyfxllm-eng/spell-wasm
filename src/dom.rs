@@ -98,6 +98,14 @@ pub fn set_text(id: &str, text: &str) {
     el(id).set_text_content(Some(text));
 }
 
+/// What an element currently reads. Used where a writer must not stomp a
+/// message it did not write — the audio router clears its own failure banner
+/// on recovery, but `voiceNote` is shared with the missing-browser-voice
+/// notice, which is not the router's to erase.
+pub fn text(id: &str) -> String {
+    el(id).text_content().unwrap_or_default()
+}
+
 pub fn set_html(id: &str, html: &str) {
     el(id).set_inner_html(html);
 }

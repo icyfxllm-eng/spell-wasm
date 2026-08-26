@@ -4,6 +4,7 @@
 //! client-side (see `words::EN_*`) — this backend doesn't hide it.
 
 use std::cell::RefCell;
+use std::rc::Rc;
 use wasm_bindgen::closure::Closure;
 use wasm_bindgen::{JsCast, JsValue};
 use wasm_bindgen_futures::{spawn_local, JsFuture};
@@ -22,8 +23,27 @@ thread_local! {
 pub fn last_audio_source() -> &'static str {
     LAST_SOURCE.with(|c| *c.borrow())
 }
+/// Records which source produced the audio — and owns the failure banner.
+///
+/// The banner used to be painted by the `<audio>` element's own onerror, which
+/// made it a lie: the order is Pack -> ServerCache -> NativeTts, so a
+/// ServerCache miss announced "couldn't reach the audio server" and NativeTts
+/// then played the word perfectly. True about one source, false about the
+/// outcome — and nothing cleared it, so it sat there for the rest of the word.
+///
+/// Only the router knows the outcome, so only the router may speak. "none" is
+/// the wall: every source has been tried and none of them played.
 fn set_source(s: &'static str) {
     LAST_SOURCE.with(|c| *c.borrow_mut() = s);
+    let banner = crate::i18n::t("voice.audioFail");
+    if s == "none" {
+        dom::set_text("voiceNote", &banner);
+    } else if dom::text("voiceNote") == banner {
+        // Recovered on a later source. Clear only OUR message: `voiceNote` is
+        // shared with the missing-browser-voice notice (game::update_voice_note),
+        // which is still true and not ours to erase.
+        dom::set_text("voiceNote", "");
+    }
 }
 
 /// The ordered audio sources the router tries. "server-cache" = the pre-rendered
@@ -315,48 +335,96 @@ fn play_native_tts(word: &str, variant: &str, rate: f64, lang: &str, on_fail: Bo
 }
 
 fn play_word_html(word: &str, py: Option<&str>, variant: &str, rate: f64, lang: &str, on_fail: impl FnOnce() + 'static) {
-    let already_current =
-        CURRENT.with(|c| c.borrow().as_ref().map(|(w, v, l, _)| w == word && v == variant && l == lang).unwrap_or(false));
-    if already_current {
-        CURRENT.with(|c| {
-            if let Some((_, _, _, audio)) = c.borrow().as_ref() {
-                audio.set_playback_rate(rate);
-                audio.set_current_time(0.0);
-                let _ = audio.play();
-            }
-        });
-        set_source("server-cache");
-        return;
-    }
+    // Reuse the cached element only if it is still ALIVE. An HTMLMediaElement
+    // latches its failure: once `error` is set, play() on that element can only
+    // reject, forever. The old code compared the key alone, so one failed clip
+    // meant every "hear it again" tap on that word re-failed against the same
+    // corpse and never re-entered the router.
+    let already_current = CURRENT.with(|c| {
+        c.borrow()
+            .as_ref()
+            .map(|(w, v, l, a)| w == word && v == variant && l == lang && a.error().is_none())
+            .unwrap_or(false)
+    });
 
-    let url = speak_url(word, py, variant, lang);
-    let Ok(audio) = HtmlAudioElement::new_with_src(&url) else {
-        on_fail();
-        return;
+    let audio = if already_current {
+        let a = CURRENT.with(|c| c.borrow().as_ref().map(|(_, _, _, a)| a.clone()));
+        let Some(a) = a else { on_fail(); return };
+        a.set_current_time(0.0);
+        a
+    } else {
+        // Drop a dead element rather than replaying it.
+        CURRENT.with(|c| {
+            c.borrow_mut().take();
+        });
+        let url = speak_url(word, py, variant, lang);
+        let Ok(a) = HtmlAudioElement::new_with_src(&url) else {
+            on_fail();
+            return;
+        };
+        // crossOrigin is only needed to let the Web Audio gain graph
+        // (audio_boost::wire) use this element's audio without tainting it —
+        // and only when a boost is actually requested does that graph get
+        // used at all (see audio_boost::wire). Setting it unconditionally
+        // makes some browsers enforce a real CORS check even for same-origin
+        // URLs, for no benefit at default settings — so it's set only when
+        // it'll actually matter.
+        if audio_boost::boost_requested() {
+            a.set_cross_origin(Some("anonymous"));
+        }
+        // Wired once per element, never on the reuse path — a second source
+        // node on the same element would be a duplicate gain graph.
+        audio_boost::wire(&a);
+        a
     };
     audio.set_playback_rate(rate);
-    // crossOrigin is only needed to let the Web Audio gain graph
-    // (audio_boost::wire) use this element's audio without tainting it —
-    // and only when a boost is actually requested does that graph get
-    // used at all (see audio_boost::wire). Setting it unconditionally
-    // makes some browsers enforce a real CORS check even for same-origin
-    // URLs, for no benefit at default settings — so it's set only when
-    // it'll actually matter.
-    if audio_boost::boost_requested() {
-        audio.set_cross_origin(Some("anonymous"));
-    }
-    audio_boost::wire(&audio);
 
-    let err_cb = Closure::once(move || {
-        dom::set_text("voiceNote", &crate::i18n::t("voice.audioFail"));
-        on_fail();
-    });
+    // Two routes lead to failure — the element's `error` event and play()'s
+    // rejected promise — and whichever arrives first must be the only one to
+    // advance the router. `error` can also fire more than once, so the old
+    // `Closure::once` here was a live abort: the second fire would invoke an
+    // already-consumed FnOnce.
+    let once: Rc<RefCell<Option<Box<dyn FnOnce()>>>> = Rc::new(RefCell::new(Some(Box::new(on_fail))));
+    let advance = {
+        let once = Rc::clone(&once);
+        move || {
+            if let Some(f) = once.borrow_mut().take() {
+                f();
+            }
+        }
+    };
+
+    let on_err = advance.clone();
+    let err_cb = Closure::wrap(Box::new(move || on_err()) as Box<dyn FnMut()>);
     audio.set_onerror(Some(err_cb.as_ref().unchecked_ref()));
     err_cb.forget();
 
-    let _ = audio.play();
-    set_source("server-cache");
-    CURRENT.with(|c| *c.borrow_mut() = Some((word.to_string(), variant.to_string(), lang.to_string(), audio)));
+    CURRENT
+        .with(|c| *c.borrow_mut() = Some((word.to_string(), variant.to_string(), lang.to_string(), audio.clone())));
+
+    match audio.play() {
+        Ok(p) => spawn_local(async move {
+            match JsFuture::from(p).await {
+                // Only now has audio actually started. Recording the source
+                // before this point reported a success that had not happened.
+                Ok(_) => set_source("server-cache"),
+                Err(e) => {
+                    // AbortError means a NEWER play on this same element
+                    // superseded ours (tapping replay faster than the clip
+                    // loads). The word is playing — advancing the router here
+                    // would stack native TTS on top of it.
+                    let name = js_sys::Reflect::get(&e, &JsValue::from_str("name"))
+                        .ok()
+                        .and_then(|v| v.as_string())
+                        .unwrap_or_default();
+                    if name != "AbortError" {
+                        advance();
+                    }
+                }
+            }
+        }),
+        Err(_) => advance(),
+    }
 }
 
 /// Fire-and-forget warm-up of a word's normal-variant audio in the browser's
@@ -449,5 +517,12 @@ pub fn play_sentence_audio(word: &str, lang: &str) {
     let Ok(audio) = HtmlAudioElement::new_with_src(&url) else { return };
     audio.set_cross_origin(Some("anonymous"));
     audio_boost::wire(&audio);
-    let _ = audio.play();
+    // Fire-and-forget: there is no fallback chain for sentence audio, so a
+    // failure has nowhere to go. Awaited-and-dropped rather than discarded,
+    // so a rejection dies here instead of surfacing as an unhandled rejection.
+    if let Ok(p) = audio.play() {
+        spawn_local(async move {
+            let _ = JsFuture::from(p).await;
+        });
+    }
 }

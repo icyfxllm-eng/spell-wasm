@@ -60,7 +60,7 @@ features = [
   "console",
   "Window", "Navigator", "Document", "Element", "HtmlElement", "Node", "NodeList", "DomTokenList",
   "HtmlInputElement", "HtmlSelectElement", "HtmlTextAreaElement", "HtmlButtonElement",
-  "HtmlCanvasElement", "CanvasRenderingContext2d", "HtmlImageElement", "HtmlMediaElement", "HtmlAudioElement",
+  "HtmlCanvasElement", "CanvasRenderingContext2d", "HtmlImageElement", "HtmlMediaElement", "HtmlAudioElement", "MediaError",
   "AnimationEvent", "MediaQueryList",
   "Event", "EventTarget", "Location", "MouseEvent", "PointerEvent", "KeyboardEvent", "InputEvent",
   "Storage",
