@@ -32,26 +32,53 @@ use wasm_bindgen_futures::spawn_local;
 
 use crate::{dom, App};
 
-/// The set. Simple and dense in both languages, because F0 says complexity is
-/// the ceiling — 語 failed there in BOTH conditions while 山 and 川 sailed
-/// through. A set of easy characters would flatter the recognizer and tell us
-/// nothing about the words the bank actually holds.
-const SET: [(&str, &str); 50] = [
-    // zh — ascending stroke count
-    ("zh", "八"), ("zh", "人"), ("zh", "大"), ("zh", "小"), ("zh", "山"),
-    ("zh", "口"), ("zh", "日"), ("zh", "月"), ("zh", "白"), ("zh", "六"),
-    ("zh", "百"), ("zh", "杯"), ("zh", "果"), ("zh", "树"), ("zh", "帮"),
-    ("zh", "宝"), ("zh", "爱"), ("zh", "搬"), ("zh", "谢"), ("zh", "餐"),
-    ("zh", "楼"), ("zh", "熊"), ("zh", "颜"), ("zh", "警"), ("zh", "蓝"),
-    // ja — kana first (D5), then kanji
-    ("ja", "あ"), ("ja", "い"), ("ja", "う"), ("ja", "え"), ("ja", "お"),
-    ("ja", "か"), ("ja", "き"), ("ja", "ア"), ("ja", "イ"), ("ja", "ウ"),
-    ("ja", "日"), ("ja", "本"), ("ja", "山"), ("ja", "川"), ("ja", "水"),
-    ("ja", "火"), ("ja", "花"), ("ja", "犬"), ("ja", "猫"), ("ja", "空"),
-    ("ja", "語"), ("ja", "電"), ("ja", "曜"), ("ja", "験"), ("ja", "議"),
-];
+/// The set, drawn from the REAL banks rather than hand-picked.
+///
+/// A list I chose could flatter the recogniser or punish it in ways the shipped
+/// word list never would, and the point of this gate is to measure what players
+/// actually meet. So the characters come from the zh and ja banks, ordered by
+/// stroke count and sampled at an even stride, which spans the bank's real
+/// difficulty range instead of clustering wherever it happens to be dense.
+///
+/// Deterministic: same banks in, same fifty out. Two runs are then comparable,
+/// and a changed number means the recogniser or the render changed rather than
+/// the sample.
+fn probe_set() -> Vec<(String, String)> {
+    let mut out = Vec::new();
+    for lang in ["zh", "ja"] {
+        let mut chars: Vec<(String, u8)> = Vec::new();
+        let mut seen: Vec<String> = Vec::new();
+        for tier in ["easy", "medium", "hard", "expert"] {
+            for entry in crate::words::tier_for(lang, tier) {
+                // zh entries are "pinyin|hanzi"; ja entries are the kana word.
+                let shown = entry.split('|').nth(1).unwrap_or(entry);
+                for c in shown.chars().filter(|c| !c.is_ascii()) {
+                    let cs = c.to_string();
+                    if seen.contains(&cs) {
+                        continue;
+                    }
+                    if let Some(n) = crate::stroke_counts::strokes(&cs) {
+                        seen.push(cs.clone());
+                        chars.push((cs, n));
+                    }
+                }
+            }
+        }
+        if chars.is_empty() {
+            continue;
+        }
+        chars.sort_by(|a, b| a.1.cmp(&b.1).then(a.0.cmp(&b.0)));
+        let want = 25usize;
+        for i in 0..want {
+            let idx = (i * chars.len() / want).min(chars.len() - 1);
+            out.push((lang.to_string(), chars[idx].0.clone()));
+        }
+    }
+    out
+}
 
 struct Run {
+    set: Vec<(String, String)>,
     idx: usize,
     /// (language, expected, what came back, hit)
     rows: Vec<(String, String, String, bool)>,
@@ -212,16 +239,16 @@ fn prompt() {
     RUN.with(|r| {
         let b = r.borrow();
         let Some(run) = b.as_ref() else { return };
-        if run.idx >= SET.len() {
+        if run.idx >= run.set.len() {
             drop(b);
             report();
             return;
         }
-        let (lang, ch) = SET[run.idx];
-        dom::set_text("inkPrompt", ch);
+        let (lang, ch) = run.set[run.idx].clone();
+        dom::set_text("inkPrompt", &ch);
         dom::set_text(
             "inkProgress",
-            &format!("{} · {} of {}", lang, run.idx + 1, SET.len()),
+            &format!("{} · {} of {}", lang, run.idx + 1, run.set.len()),
         );
         dom::set_text("inkResult", "");
         dom::set_html("inkCands", "");
@@ -251,21 +278,21 @@ fn commit(app: &App) {
         });
         return;
     }
-    let (lang, want) = RUN.with(|r| {
+    let Some((lang, want)) = RUN.with(|r| {
         let b = r.borrow();
-        b.as_ref().filter(|run| run.idx < SET.len()).map(|run| SET[run.idx])
-    })
-    .unwrap_or(("zh", ""));
-    if want.is_empty() {
+        b.as_ref()
+            .filter(|run| run.idx < run.set.len())
+            .map(|run| run.set[run.idx].clone())
+    }) else {
         return;
-    }
+    };
     spawn_local(async move {
-        let cands = crate::drawing::recognize(lang).await;
+        let cands = crate::drawing::recognize(&lang).await;
         // A HIT is the expected character appearing among the candidates at
         // all, not only as the top one. The pad will show candidates to the
         // player (F3), so "it was offered" is the honest measure of whether
         // the recogniser found it.
-        let hit = cands.iter().any(|(t, _)| t.contains(want));
+        let hit = cands.iter().any(|(t, _)| t.contains(&want));
         let got = cands
             .iter()
             .take(3)
@@ -274,12 +301,7 @@ fn commit(app: &App) {
             .join("  ");
         RUN.with(|r| {
             if let Some(run) = r.borrow_mut().as_mut() {
-                run.rows.push((
-                    lang.to_string(),
-                    want.to_string(),
-                    got.clone(),
-                    hit,
-                ));
+                run.rows.push((lang.clone(), want.clone(), got.clone(), hit));
                 run.idx += 1;
             }
         });
@@ -327,7 +349,7 @@ fn report() {
 
 pub fn open(app: &App) {
     MODE.with(|m| *m.borrow_mut() = Mode::Probe);
-    RUN.with(|r| *r.borrow_mut() = Some(Run { idx: 0, rows: Vec::new() }));
+    RUN.with(|r| *r.borrow_mut() = Some(Run { set: probe_set(), idx: 0, rows: Vec::new() }));
     dom::add_class("inkPad", "show");
     crate::drawing::size_canvas();
     crate::drawing::clear_canvas();
@@ -356,9 +378,9 @@ pub fn wire(app: &App) {
         }
         RUN.with(|r| {
             if let Some(run) = r.borrow_mut().as_mut() {
-                if run.idx < SET.len() {
-                    let (lang, want) = SET[run.idx];
-                    run.rows.push((lang.into(), want.into(), "skipped".into(), false));
+                if run.idx < run.set.len() {
+                    let (lang, want) = run.set[run.idx].clone();
+                    run.rows.push((lang, want, "skipped".into(), false));
                     run.idx += 1;
                 }
             }
@@ -483,5 +505,40 @@ mod done7_tests {
     #[test]
     fn korean_is_excluded_on_purpose() {
         assert!(!ink_allowed(crate::consts::KO));
+    }
+}
+
+#[cfg(test)]
+mod set_tests {
+    use super::*;
+
+    /// The set has to come from the banks and span their real range. A sample
+    /// that quietly collapsed to 25 copies of 一, or that skipped a language,
+    /// would produce a number that looked like a measurement and was not.
+    #[test]
+    fn the_probe_set_spans_both_banks() {
+        let set = probe_set();
+        assert_eq!(set.len(), 50, "want 25 per language");
+        let zh: Vec<&String> = set.iter().filter(|(l, _)| l == "zh").map(|(_, c)| c).collect();
+        let ja: Vec<&String> = set.iter().filter(|(l, _)| l == "ja").map(|(_, c)| c).collect();
+        assert_eq!(zh.len(), 25);
+        assert_eq!(ja.len(), 25);
+
+        // Every character is a real bank character with a known stroke count.
+        for (_, c) in &set {
+            assert!(crate::stroke_counts::strokes(c).is_some(), "{c} is not a bank character");
+        }
+        // And the sample spans difficulty rather than clustering: the zh set
+        // must reach both the simple end and the dense tail.
+        let strokes: Vec<u8> = zh.iter().filter_map(|c| crate::stroke_counts::strokes(c)).collect();
+        let (lo, hi) = (*strokes.iter().min().unwrap(), *strokes.iter().max().unwrap());
+        assert!(lo <= 4, "zh sample never gets simple (min {lo} strokes)");
+        assert!(hi >= 13, "zh sample never reaches the dense tail (max {hi} strokes)");
+    }
+
+    /// Deterministic, so two runs are comparable.
+    #[test]
+    fn the_set_is_stable() {
+        assert_eq!(probe_set(), probe_set());
     }
 }

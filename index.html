@@ -1027,24 +1027,39 @@
      the reveal uses. The numeral in the <sub> is the non-colour carrier. */
   /* CC-CJK-INK F1 pad. Square, high-contrast, nothing to look at but the ink:
      the recogniser sees a crop of this and a busy ground would cost accuracy. */
-  .ink-modal{display:flex;flex-direction:column;gap:.6rem;align-items:stretch}
-  .ink-progress{margin:0;font-size:.78rem;opacity:.7}
-  .ink-prompt{margin:0;font-size:3.2rem;line-height:1;text-align:center}
-  .ink-wrap{position:relative;width:100%;aspect-ratio:1/1;max-height:52vh;
+  /* The whole modal has to FIT. Both device screenshots showed the canvas
+     flush against the top of the viewport with the prompt scrolled off above
+     it, so the player was asked to write a character they could not see and
+     drew a different one -- scored a miss, correctly, for the wrong reason.
+     The prompt is the single most important thing on this screen; it stays
+     pinned. */
+     min-height:0 is what makes that true. The scrim is display:grid with
+     place-items:center, so this modal is a CENTRED grid item, and a grid
+     item's default min-height:auto refuses to shrink below its content --
+     max-height never engages, the overflow lands on the scrim instead, and
+     a centred item that overflows is unreachable off the TOP edge. That is
+     the clipped prompt, and the scroll law (F4) catches it. */
+  .ink-modal{display:flex;flex-direction:column;gap:.5rem;align-items:stretch;
+    min-height:0;max-height:92vh;overflow-y:auto}
+  .ink-progress{margin:0;font-size:.78rem;opacity:.7;text-align:center}
+  .ink-prompt{margin:0;font-size:2.6rem;line-height:1.1;text-align:center;
+    position:sticky;top:0;background:var(--card,#1b1830);z-index:2;
+    padding:.15rem 0}
+  .ink-wrap{position:relative;width:100%;aspect-ratio:1/1;max-height:38vh;
     border:2px dashed var(--line,#888);border-radius:10px;background:#fff;
     touch-action:none}
   .ink-wrap canvas{width:100%;height:100%;display:block;border-radius:8px}
-  .ink-result{margin:0;min-height:2.4em;font-size:.85rem;text-align:center}
+  .ink-result{margin:0;min-height:1.4em;font-size:.85rem;text-align:center}
   /* F3: candidates are OFFERED, never chosen for the player. The recogniser
      read the ink; only the player knows what they meant to write. */
   .ink-offer{display:flex;justify-content:center;margin:.35rem 0}
   .ink-offer[hidden]{display:none}
   /* Dev diagnostic: the exact image handed to Vision. A failed read is then
      a thing you can LOOK at rather than a mystery to reason about. */
-  .ink-sent{display:block;margin:.3rem auto 0;max-width:150px;border:1px solid var(--line,#888);
+  .ink-sent{display:block;margin:.3rem auto 0;max-width:84px;border:1px solid var(--line,#888);
     border-radius:6px;background:#fff}
   .ink-sent[hidden]{display:none}
-  .ink-cands{display:flex;gap:.5rem;justify-content:center;flex-wrap:wrap;min-height:3.2rem}
+  .ink-cands{display:flex;gap:.5rem;justify-content:center;flex-wrap:wrap;min-height:0}
   .ink-cand{min-width:3rem;min-height:3rem;border-radius:.6rem;border:1px solid var(--line,#888);
     background:var(--card,#fff);font-size:1.6rem;line-height:1;cursor:pointer;
     display:flex;flex-direction:column;align-items:center;justify-content:center;gap:.1rem}

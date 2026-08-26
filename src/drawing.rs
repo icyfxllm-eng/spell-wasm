@@ -430,13 +430,33 @@ fn render_for_ocr() -> HtmlCanvasElement {
     // Sending a shape the recogniser was never measured on is guessing, so a
     // single character gets the geometry that was validated.
     let square = crate::ink_probe::wants_square();
-    let (box_w, box_h, pad) = if square { (256.0, 256.0, 28.0) } else { (900.0, 300.0, 24.0) };
-    let scale = (box_w / w).min(box_h / h);
+    // A CJK character goes into an actual SQUARE with the glyph centred at
+    // ~78% of the frame, which is the condition F0 measured at 10/10. The
+    // previous attempt only clamped the SCALE to a 256 box and still sized the
+    // canvas from the ink's own bounding box, so a tall character produced a
+    // tall image -- not the shape that was validated. The diagnostic showed it
+    // immediately; reasoning about it had not.
+    // 220, measured rather than picked. Vision's reading of a single CJK glyph
+    // DEGRADES as the frame grows: across eight characters, 180/220/260 all
+    // scored 8/8 while 312 fell to 5/8 and 384 to 3/8. The original pad
+    // rendered around 348 -- squarely in the bad zone -- which is likely part
+    // of why F1 measured 84% and 72% rather than something better.
+    const SQ: f64 = 220.0;
+    const FILL: f64 = 0.78;
+    let (out_w, out_h, scale, ox, oy) = if square {
+        let sc = (SQ * FILL) / w.max(h);
+        (SQ, SQ, sc, (SQ - w * sc) / 2.0, (SQ - h * sc) / 2.0)
+    } else {
+        let sc = (900.0 / w).min(300.0 / h);
+        (w * sc + 48.0, h * sc + 48.0, sc, 24.0, 24.0)
+    };
+    let pad = 0.0_f64;
+    let _ = pad;
 
     let doc = dom::doc();
     let out: HtmlCanvasElement = doc.create_element("canvas").unwrap().dyn_into().unwrap();
-    out.set_width((w * scale + pad * 2.0).round() as u32);
-    out.set_height((h * scale + pad * 2.0).round() as u32);
+    out.set_width(out_w.round() as u32);
+    out.set_height(out_h.round() as u32);
     let o = ctx_2d(&out);
     o.set_fill_style_str("#fff");
     o.fill_rect(0.0, 0.0, out.width() as f64, out.height() as f64);
@@ -446,7 +466,11 @@ fn render_for_ocr() -> HtmlCanvasElement {
     // A pen line, not a hairline. Thin strokes survived the local test, but a
     // heavier line is closer to the filled glyphs F0 read at full confidence
     // and costs nothing on a character this size.
-    o.set_line_width(if square { (10.0_f64).max(w * scale * 0.055) } else { (6.0_f64).max(8.0 * scale * 0.5) });
+    o.set_line_width(if square {
+        (10.0_f64).max(SQ * FILL * 0.055)
+    } else {
+        (6.0_f64).max(8.0 * scale * 0.5)
+    });
 
     STATE.with(|s| {
         for stroke in &s.borrow().strokes {
@@ -455,8 +479,8 @@ fn render_for_ocr() -> HtmlCanvasElement {
             }
             o.begin_path();
             for (i, (x, y)) in stroke.pts.iter().enumerate() {
-                let px = (x - min_x) * scale + pad;
-                let py = (y - min_y) * scale + pad;
+                let px = (x - min_x) * scale + ox;
+                let py = (y - min_y) * scale + oy;
                 if i == 0 {
                     o.move_to(px, py);
                 } else {

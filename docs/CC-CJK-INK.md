@@ -1,8 +1,15 @@
 # CC-CJK-INK
 
-**Status:** D1–D7 SIGNED by Eric 2026-08-23. F0 complete. F1 is the next gate
-and it needs a human hand: nothing else in this file proceeds until real ink has
-been measured.
+**Status:** D1–D7 SIGNED by Eric 2026-08-23. F0–F5 complete, Done 1–7 passing.
+
+**The pad WORKS.** On 2026-08-23 Vision read a hand-drawn 不 at 0.50 on device
+— real handwriting, on-device, no network. The diagnostic image that proved it
+is the reason two earlier ships chased the wrong thing: both were debugged by
+reasoning about a picture nobody had looked at.
+
+Outstanding: F1 is being RE-RUN (see below — the first number was measured
+through an oversized frame and a clipped prompt), and Done 8, Eric's device
+pass.
 
 **Depends on:** CC-ZH-TONE, all features complete. The orthographic stage
 consumes the phonetic stage's output: a player is asked to WRITE a character
@@ -90,13 +97,39 @@ Artifacts: `tools/cjk-ink-probe/` (renderer, Swift probe, images, results).
 **Intent.** F0 used a proxy. This uses a finger.
 
 **Mechanism.** The retired pad is re-enabled behind a dev flag, on device, for
-one session. Fifty characters drawn by hand — a mix of simple and dense, zh and
-ja — are saved as images and put through the SAME probe F0 used. Nothing else
-in this file proceeds until that number exists.
+one session. Fifty characters drawn by hand are put through the SAME recogniser
+the feature uses. Nothing else in this file proceeds until that number exists.
+
+**The fifty come from the BANKS, not from a list I chose** (Eric, 2026-08-24).
+A hand-picked set can flatter the recogniser or punish it in ways the shipped
+word list never would, and this gate exists to measure what players actually
+meet. The characters are pulled from the zh and ja banks, ordered by stroke
+count and sampled at an even stride, so the set spans the bank's real range
+instead of clustering where it is dense. Deterministic, so two runs compare.
+Tests assert it reaches both the simple end and the dense tail, and that a
+sample cannot silently collapse or drop a language.
 
 **Stop-and-ask tripwire.** If real-ink accuracy lands materially below F0's
 proxy figures, **stop and ask before continuing.** The answer is then D2's
 fallback, not a tuning exercise on the Vision path.
+
+**FIRST RESULT — SUPERSEDED, and being re-run 2026-08-24.** It was measured
+under two handicaps discovered afterwards, both mine:
+
+  * the pad rendered into a ~348px frame. Vision's reading of a single glyph
+    DEGRADES as the frame grows -- eight characters across five sizes scored
+    8/8 at 180, 220 and 260, then 5/8 at 312 and 3/8 at 384. The measurement
+    ran in the bad zone;
+  * the modal was taller than the viewport, so the PROMPT was clipped off the
+    top of the screen. A player could be asked for 八 and never see it. At
+    least one miss in the follow-up session was exactly that -- a correctly
+    drawn 不 scored against a prompt nobody could read.
+
+So an unknown share of the eleven misses may be the wrong character drawn
+rather than a failed read, which means the number below is a FLOOR and the tier
+boundaries derived from it rest on it. Kept here because a superseded
+measurement that is still on the record is worth more than one quietly
+replaced.
 
 **RESULT, 2026-08-23, Eric's hand on device:**
 
