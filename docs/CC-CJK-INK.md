@@ -7,9 +7,9 @@
 is the reason two earlier ships chased the wrong thing: both were debugged by
 reasoning about a picture nobody had looked at.
 
-Outstanding: F1 is being RE-RUN (see below — the first number was measured
-through an oversized frame and a clipped prompt), and Done 8, Eric's device
-pass.
+Outstanding: Done 8, Eric's device pass. F1 is CLOSED — re-run on build 202
+at zh 96% / ja 88%, above F0's proxy on both languages. The four misses were
+not captured, so D7's 13+ tier boundary still rests on the superseded run.
 
 **Depends on:** CC-ZH-TONE, all features complete. The orthographic stage
 consumes the phonetic stage's output: a player is asked to WRITE a character
@@ -113,7 +113,33 @@ sample cannot silently collapse or drop a language.
 proxy figures, **stop and ask before continuing.** The answer is then D2's
 fallback, not a tuning exercise on the Vision path.
 
-**FIRST RESULT — SUPERSEDED, and being re-run 2026-08-24.** It was measured
+**RE-RUN RESULT, 2026-08-26, Eric's hand on device, build 202 — THIS IS F1.**
+
+    zh  24/25   (96%)      F0 proxy (pen-like) said 9/10 — 90%
+    ja  22/25   (88%)      F0 proxy (pen-like) said 8/10 — 80%
+
+Measured through the 220px frame, with the prompt pinned and visible, on fifty
+characters sampled from the real banks by stroke count rather than picked by
+me. The tripwire asked whether real ink lands MATERIALLY BELOW the proxy. It
+lands above it, on both languages.
+
+**F0's asymmetry broke in our favour, and that is the interesting part.** F0
+warned that its "pen" condition was a degraded PRINTED glyph — thinned Songti
+with a wobble — and that success there was suggestive, not proof. The
+implication everyone drew, including me, was that real handwriting would do
+WORSE. It does better. Vision apparently finds a thinned, rotated print face
+harder to read than an actual hand. The proxy was conservative, not optimistic;
+its stated weakness was real but pointed the other way.
+
+**Still open:** the four misses were not captured. The tier-4 boundary (13+
+strokes, D7) was derived from the SUPERSEDED run, where every miss was dense.
+Four misses out of fifty is too few to confirm that cut and too few to move it,
+so the boundary stands on the old evidence until the miss characters are known.
+Flagged rather than quietly inherited.
+
+---
+
+**FIRST RESULT — SUPERSEDED, re-run 2026-08-26 (above).** It was measured
 under two handicaps discovered afterwards, both mine:
 
   * the pad rendered into a ~348px frame. Vision's reading of a single glyph
@@ -152,6 +178,15 @@ and those are different answers:
   * as PRACTICE with candidates shown (F3) and no penalty for a failed read, it
     is plausibly fine: the player writes, sees what came back, and tries again.
     The recogniser becomes a mirror rather than a judge.
+
+**THE GRADE VERDICT ABOVE RESTS ON SUPERSEDED NUMBERS — Eric's to re-take.**
+It was argued from one-in-four (ja 72%). The re-run says one-in-eight for ja
+and one-in-twenty-five for zh, which is a different question, not a stronger
+answer to the same one. "Mirror, not judge" may still be the right call for
+reasons that have nothing to do with the hit rate — a false rejection in a
+spelling test costs more than in a keyboard, and that argument survives any
+accuracy figure. But it should be re-affirmed on the new number rather than
+inherited from the old one. Not changed here; flagged.
 
 **WHICH characters failed, which matters more than the total.** Seven were
 reported: 蓝 語 餐 曜 験 警 議. Every one is thirteen strokes or more. (The
