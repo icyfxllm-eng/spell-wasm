@@ -35,6 +35,20 @@ pub fn last_audio_source() -> &'static str {
 /// the wall: every source has been tried and none of them played.
 fn set_source(s: &'static str) {
     LAST_SOURCE.with(|c| *c.borrow_mut() = s);
+    // Mirror the outcome into Settings. This value already existed for QA and
+    // the loopback harness but was reachable only from the test seam — so when
+    // testers reported "no audio", there was nothing to ask them to read, and
+    // the fault could not be told apart from a muted phone without a debugger.
+    dom::set_text_if(
+        "audioSourceNote",
+        match s {
+            "pack" => "offline pack",
+            "server-cache" => "server clip",
+            "native-tts" => "on-device voice",
+            "none" => "NO SOURCE — every source failed",
+            _ => s,
+        },
+    );
     let banner = crate::i18n::t("voice.audioFail");
     if s == "none" {
         dom::set_text("voiceNote", &banner);

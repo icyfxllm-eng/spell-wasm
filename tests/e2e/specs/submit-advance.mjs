@@ -274,6 +274,15 @@ export async function run(browser, base, suite) {
         const w = await currentWord(page);
         await typeWord(page, w);
         await page.click('#checkBtn'); // en → async backend_verify → on_correct
+        // Wait for the GRADE to land before timing the advance -- exactly what
+        // A4 does. Starting the clock at the click made this the only timing
+        // assertion in the file that also had to cover a live /api/check round
+        // trip to the word server, leaving 800ms for a call measured at 232ms
+        // mean and 577ms worst while the rest of the gate saturates the CPU.
+        // It went red at HEAD with no code change: the test was timing the
+        // network, not the auto-advance it exists to prove.
+        await page.waitForFunction(() => document.getElementById('feedback').className.includes('good'),
+          null, { timeout: 3500 });
         await page.waitForFunction((i) => window.__spelltest.dailyIdx() === i + 1, idx0, { timeout: DELAY + 800 });
         assertEq(await dailyIdx(page), idx0 + 1, 'async-path correct answer did not auto-advance');
       } finally { await ctx.close(); }

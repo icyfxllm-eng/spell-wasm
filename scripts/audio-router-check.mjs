@@ -62,12 +62,15 @@ function evaluate(api) {
       "  total failure; the router still has NativeTts to try after ServerCache");
     check(painters === 1,
       `voice.audioFail is painted in ${painters} places; only set_source's "none" arm may paint it`);
-    check(/set_text\(\s*"voiceNote"\s*,\s*""\s*\)/.test(setSource[1]),
-      "set_source never clears voiceNote — a word that recovers on a later source keeps\n" +
-      "  showing the failure banner until the word changes");
-    check(/"none"/.test(setSource[1]),
-      'set_source paints the banner without testing for the "none" source — it would fire\n' +
-      "  on success too");
+    // Anchored to the GUARDED PAINT, not merely to the presence of "none"
+    // somewhere in the body — the debug readout also matches on "none", and
+    // matching that instead let two lesions through.
+    check(/if s == "none"\s*\{[^}]*set_text\(\s*"voiceNote"\s*,\s*&banner\s*\)/.test(setSource[1]),
+      'the banner is not painted under `if s == "none"` — only the router\'s wall, where every\n' +
+      "  source has been tried and none played, may announce total failure");
+    check(/else[^{]*\{[^}]*set_text\(\s*"voiceNote"\s*,\s*""\s*\)/.test(setSource[1]),
+      "set_source never clears voiceNote on a non-\"none\" source — a word that recovers on a\n" +
+      "  later source keeps showing the failure banner until the word changes");
   }
 
   const reuse = code.match(/let already_current[\s\S]{0,500}?\n\n/);
@@ -95,7 +98,49 @@ function evaluate(api) {
   return fails;
 }
 
+// ---------- Law 2: the audio session is configured, awaited, and retried ----
+//
+// focus:true puts AVAudioSession on .playback, which is the ONLY reason word
+// audio survives the ring/silent switch. The original fired configure() and
+// forgot it — latch set before the promise resolved, rejection swallowed — so
+// one failure left the session on .ambient for the whole app session with no
+// retry and no log. Silent, permanent, and invisible from outside a debugger.
+function evaluateSession(js) {
+  const fails = [];
+  const check = (cond, msg) => { if (!cond) fails.push(msg); };
+  const code = js.replace(/^[ \t]*\/\/.*$/gm, "");
+
+  const fn = code.match(/function ensureSession\([\s\S]*?\n  \}/);
+  check(!!fn, "no ensureSession() in audio-native.js — the audio session must be configured in\n" +
+    "  one awaited place, not fired and forgotten from plugins()");
+
+  check(/focus:\s*true/.test(code),
+    "configure() is not called with focus:true — the session stays .ambient and every word\n" +
+    "  is silenced for anyone with their ring/silent switch on");
+
+  if (fn) {
+    check(/_sessionReady = null/.test(fn[0]),
+      "ensureSession never clears its latch on failure — one failed configure would leave the\n" +
+      "  session on .ambient for the entire app session, with no retry");
+    check(/warn\(/.test(fn[0]),
+      "a failed configure is swallowed silently — this failure mutes the game, so it must be\n" +
+      "  logged rather than hidden");
+  }
+
+  const play = code.match(/playWord: function[\s\S]*?\n    \},/);
+  check(!!play, "could not find playWord in audio-native.js — re-anchor this gate");
+  check(play && /ensureSession\(/.test(play[0]),
+    "playWord does not await ensureSession — the first word can go out before the category\n" +
+    "  is set, which is silent on a muted phone");
+
+  check(!/if \(!_configured\) \{\s*_configured = true;/.test(code),
+    "the latch is set before configure() resolves — that is the original fire-and-forget bug");
+
+  return fails;
+}
+
 const api = fs.readFileSync(`${ROOT}/src/api.rs`, "utf8");
+const js = fs.readFileSync(`${ROOT}/audio-native.js`, "utf8");
 
 if (SELFTEST) {
   // Each law gets its own targeted lesion. A law that survives its lesion is
@@ -115,32 +160,45 @@ if (SELFTEST) {
       (s) => s.replace(/"AbortError"/, '"SomeOtherError"')],
     ["onerror is a Closure::once",
       (s) => s.replace(/let err_cb = Closure::wrap/, "let err_cb = Closure::once")],
+  ]
+
+  const JS_LESIONS = [
+    ["configure latch never cleared on failure",
+      (s) => s.replace(/_sessionReady = null; \/\/ not configured.*/, "")],
+    ["playWord no longer awaits the session",
+      (s) => s.replace(/return ensureSession\(P\)\.catch\(function \(\) \{\}\)\n        \.then\(function \(\) \{ return stopPrev; \}\)/, "return stopPrev")],
+    ["session configured without focus:true",
+      (s) => s.replace(/focus: true/, "focus: false")],
+    ["a failed configure is swallowed silently",
+      (s) => s.replace(/warn\("audio session configure FAILED[^;]*;/, ";")],
   ];
 
   let bad = 0;
-  for (const [name, lesion] of LESIONS) {
-    const mutated = lesion(api);
-    if (mutated === api) {
+  const ALL = LESIONS.map((l) => [...l, api, evaluate])
+    .concat(JS_LESIONS.map((l) => [...l, js, evaluateSession]));
+  for (const [name, lesion, source, evaluator] of ALL) {
+    const mutated = lesion(source);
+    if (mutated === source) {
       console.error(`  LESION DID NOT APPLY: ${name} — the code shape changed and this\n` +
                     "    selftest is no longer testing anything. Re-target the lesion.");
       bad++;
       continue;
     }
-    if (evaluate(mutated).length === 0) {
+    if (evaluator(mutated).length === 0) {
       console.error(`  SURVIVED: ${name}`);
       bad++;
     }
   }
   if (bad) {
-    console.error(`audio-router-check: FAILED\n  ${bad} of ${LESIONS.length} lesions were not caught —\n` +
+    console.error(`audio-router-check: FAILED\n  ${bad} of ${ALL.length} lesions were not caught —\n` +
                   "  those laws are decoration and would pass a broken router");
     process.exit(1);
   }
-  console.log(`audio-router-check: selftest OK — all ${LESIONS.length} lesions fail the build`);
+  console.log(`audio-router-check: selftest OK — all ${ALL.length} lesions fail the build`);
   process.exit(0);
 }
 
-const fails = evaluate(api);
+const fails = [...evaluate(api), ...evaluateSession(js)];
 if (fails.length) {
   console.error("audio-router-check: FAILED");
   for (const f of fails) console.error("  " + f);

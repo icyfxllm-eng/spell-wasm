@@ -74,6 +74,42 @@ console.log(`i18n-check: OK — ${enKeys.size} keys parity across ${files.length
       }
     }
   }
+  // ---- Every key that is USED must be DEFINED -------------------------
+  //
+  // Parity above only compares the locale files with each other. A key that
+  // is referenced but defined NOWHERE is identical in all fifteen and sails
+  // straight through -- which is how `placement.title/body/try/skip/done`
+  // shipped. `t()` returns the KEY when it cannot resolve one, so the
+  // placement card greeted every new player with the literal text
+  // "placement.title". Eric's testers hit it on the first tap of the orb;
+  // nobody had seen it because it only appears for a player with no
+  // placement on record, and every device here had done its placement
+  // months earlier.
+  //
+  // The console warning t() emits was never going to save this: nobody is
+  // attached to a console on a TestFlight phone.
+  const htmlSrc = readFileSync(join(dirname(fileURLToPath(import.meta.url)), '..', 'index.html'), 'utf8');
+  const used = new Map(); // key -> Set<source>
+  const use = (k, where) => { if (!used.has(k)) used.set(k, new Set()); used.get(k).add(where); };
+  for (const m of htmlSrc.matchAll(/data-i18n(?:-[a-z]+)?="([^"]+)"/g)) use(m[1], 'index.html');
+  for (const [file, body] of rs) {
+    for (const m of body.matchAll(/i18n::t\("([^"]+)"\)/g)) use(m[1], file);
+    // Bare t("a.b") inside the i18n-importing modules.
+    for (const m of body.matchAll(/\bt\("([a-zA-Z][\w]*\.[\w.]+)"\)/g)) use(m[1], file);
+  }
+  // A `.native` variant is resolved by t_platform at runtime, so the base
+  // key standing alone is legitimate.
+  const defined = new Set(Object.keys(en));
+  const undef = [...used.entries()].filter(
+    ([k]) => !defined.has(k) && !defined.has(`${k}.native`)
+  );
+  for (const [k, where] of undef) {
+    console.error(`  [used-but-undefined] ${k} — referenced by ${[...where].join(', ')} but in no locale;`);
+    console.error(`      t() will render the key itself to the player`);
+    problems++;
+  }
+
   if (problems) process.exit(1);
   console.log(`i18n-check: OK — ${nativeKeys.length} platform-aware keys route through t_platform.`);
+  console.log(`i18n-check: OK — all ${used.size} referenced keys are defined.`);
 }

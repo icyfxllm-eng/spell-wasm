@@ -38,26 +38,54 @@
       && C.Plugins && C.Plugins.NativeAudio && C.Plugins.Filesystem);
   }
 
-  var _configured = false;
   // Returns { NativeAudio, Filesystem } from the Capacitor bridge, or null on
-  // the web / before the bridge is ready.
+  // the web / before the bridge is ready. Pure lookup — configuring the audio
+  // session is ensureSession()'s job, and only playback needs it.
   function plugins() {
     if (!isNative()) return null;
     var P = window.Capacitor.Plugins;
-    if (!_configured) {
-      _configured = true;
-      // focus:true → the plugin sets AVAudioSession category .playback, so word
-      // audio is AUDIBLE EVEN WHEN THE RING/SILENT SWITCH IS ON. Audio *is* the
-      // game ("hear it, spell it"), so it must never be muted by the hardware
-      // switch. (focus:false maps to .ambient, which respects the mute switch and
-      // silenced every word for anyone with their phone on silent — the P0 bug.)
-      // Trade-off: .playback interrupts background music, which is the right call
-      // for a spelling game where the word must be heard.
-      if (typeof P.NativeAudio.configure === "function") {
-        P.NativeAudio.configure({ focus: true, fade: false }).catch(function () {});
-      }
-    }
     return { NativeAudio: P.NativeAudio, Filesystem: P.Filesystem };
+  }
+
+  // Resolves once the AVAudioSession category is .playback. Null until the
+  // first attempt; holds the in-flight/settled promise after that.
+  var _sessionReady = null;
+
+  // Put the audio session into .playback BEFORE the first clip plays.
+  //
+  // focus:true → the plugin sets AVAudioSession category .playback, so word
+  // audio is AUDIBLE EVEN WHEN THE RING/SILENT SWITCH IS ON. Audio *is* the
+  // game ("hear it, spell it"), so it must never be muted by the hardware
+  // switch. (focus:false maps to .ambient, which respects the mute switch and
+  // silenced every word for anyone with their phone on silent — the P0 bug.)
+  // Trade-off: .playback interrupts background music, which is the right call
+  // for a spelling game where the word must be heard.
+  //
+  // THE OLD VERSION FIRED THIS AND FORGOT IT. It set its latch BEFORE the
+  // promise resolved and swallowed any rejection, so one failed configure left
+  // the session on .ambient for the entire app session -- no retry, no log,
+  // and every word silent for anyone with their switch on. A permanent mute
+  // on exactly the devices this call exists to rescue, and invisible from the
+  // outside. Three things follow from that:
+  //
+  //   - the latch is set only when configure RESOLVES. A rejection clears it
+  //     so the next play tries again;
+  //   - playback AWAITS it, so the first word cannot go out under .ambient;
+  //   - a failure is warned about rather than swallowed silently.
+  function ensureSession(P) {
+    if (_sessionReady) return _sessionReady;
+    if (typeof P.NativeAudio.configure !== "function") {
+      // Older plugin build with no configure(): nothing to await, and nothing
+      // that can be retried into working.
+      _sessionReady = Promise.resolve();
+      return _sessionReady;
+    }
+    _sessionReady = P.NativeAudio.configure({ focus: true, fade: false }).catch(function (err) {
+      _sessionReady = null; // not configured — let the next play retry
+      warn("audio session configure FAILED; audio may be silenced by the ring switch. Retrying on next play:", String(err));
+      throw err;
+    });
+    return _sessionReady;
   }
 
   // Cap how many clips stay preloaded in native memory at once. The game
@@ -189,7 +217,11 @@
       var stopPrev = current && current !== assetId
         ? P.NativeAudio.stop({ assetId: current }).catch(function () {})
         : Promise.resolve();
-      return stopPrev
+      // A configure failure must not BLOCK playback -- .ambient audio still
+      // plays for anyone whose ring switch is off, and silence helps nobody.
+      // It is awaited only so the category is set first when it can be.
+      return ensureSession(P).catch(function () {})
+        .then(function () { return stopPrev; })
         .then(function () { return ensurePreloaded(assetId, url); })
         .then(function () {
           current = assetId;

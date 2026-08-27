@@ -98,6 +98,16 @@ pub fn set_text(id: &str, text: &str) {
     el(id).set_text_content(Some(text));
 }
 
+/// Set text on an element that MAY not be rendered, without panicking. For
+/// diagnostics that ride along with whatever screen happens to be up — `el`
+/// panics on a missing id, which is right for real controls and wrong for a
+/// readout nobody's looking at yet.
+pub fn set_text_if(id: &str, text: &str) {
+    if let Some(e) = doc().get_element_by_id(id) {
+        e.set_text_content(Some(text));
+    }
+}
+
 /// What an element currently reads. Used where a writer must not stomp a
 /// message it did not write — the audio router clears its own failure banner
 /// on recovery, but `voiceNote` is shared with the missing-browser-voice

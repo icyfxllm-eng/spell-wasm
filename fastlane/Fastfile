@@ -293,4 +293,50 @@ platform :ios do
     )
     UI.success("Shipped build #{next_build} to TestFlight.")
   end
+
+  # Submit a build that is ALREADY uploaded for external Beta App Review.
+  #
+  # `ship` uploads internal-only, so external testers -- including anyone who
+  # joins through the public TestFlight link -- see "no builds available" until
+  # a build clears Beta App Review. This lane submits one without rebuilding
+  # it, so the reviewed artifact is byte-identical to the tested one.
+  #
+  #   bundle exec fastlane submit_external_review build:204
+  #
+  # notify_external_testers is FALSE by design (Eric, 2026-08-26): the public
+  # link is the invitation, so testers arrive on their own and nobody gets
+  # mailed about a build they did not ask for.
+  desc "Submit an already-uploaded build for external Beta App Review"
+  lane :submit_external_review do |options|
+    build = options[:build] or UI.user_error!("pass build:NNN")
+    pilot(
+      api_key_path: File.expand_path("api_key.json", __dir__),
+      app_identifier: "net.spellgame.app",
+      # Without this, pilot stops to ASK for the platform and then crashes in
+      # non-interactive mode.
+      app_platform: "ios",
+      distribute_only: true,
+      app_version: options[:version] || "1.1",
+      build_number: build.to_s,
+      distribute_external: true,
+      groups: ["Spell"],
+      # Default false: the public link is the invitation, so a first submission
+      # should not mail people who have not joined yet. Pass notify:true when
+      # the group ALREADY has testers who need to be told a build is waiting --
+      # they are not prompted otherwise, and will sit on an old build forever.
+      notify_external_testers: options[:notify].to_s == "true",
+      beta_app_feedback_email: "icyfxllm@gmail.com",
+      beta_app_description: "Spell is a spelling game you play by ear. Tap the glowing orb to hear a word, then spell it on the on-screen keyboard and press Check. Replay or slow the word, use Definition/Sentence hints, and grow your chain. Fully playable offline after first load.",
+      changelog: "Tap the orb to hear a word and spell it on the on-screen keyboard. Try Replay and Slow, the Definition and Sentence hints, head-to-head mode, and Kid Mode / Big Text in Settings. Everything works offline after the first load.",
+      beta_app_review_info: {
+        contact_email: "icyfxllm@gmail.com",
+        contact_first_name: "Eric",
+        contact_last_name: "Hillman",
+        contact_phone: "2604584592",
+        demo_account_required: false,
+        notes: "Native iOS spelling game, fully playable offline. No account or login required; no demo account needed. Tap the orb to hear a word, spell it on the on-screen keyboard, and press Check spelling."
+      }
+    )
+    UI.success("Build #{build} submitted for external Beta App Review.")
+  end
 end
