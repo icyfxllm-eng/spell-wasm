@@ -1481,6 +1481,25 @@ mod tone_button_sequence {
         }
     }
 
+    /// Eric on device typed hai3zi4 for 孩子 (hai2zi5) and it was refused.
+    /// Refusing it is right -- both tones are wrong -- but the REASON must
+    /// read "right sound, wrong tone" and not "wrong syllable", and the
+    /// neutral second syllable is the interesting half.
+    #[test]
+    fn haizi_wrong_tones_is_a_tone_miss_not_a_spelling_miss() {
+        let v = grade("hai3zi4", "hai2zi5", ToneMode::Graded);
+        println!("\n  hai3zi4 vs hai2zi5 -> {v:?}");
+        match v {
+            WordVerdict::Graded(ref sv) => assert!(
+                sv.iter().all(|x| *x == SyllableVerdict::ToneMiss),
+                "both syllables are spelled right; only the tones differ -- got {sv:?}"
+            ),
+            other => panic!("expected a graded verdict, got {other:?}"),
+        }
+        // The neutral half on its own: tone 4 where the answer is neutral.
+        println!("  zi4 vs zi5 -> {:?}", grade("zi4", "zi5", ToneMode::Graded));
+    }
+
     #[test]
     fn typing_youxi_with_the_tone_buttons() {
         // 游戏 = you2 xi4. The player has no space bar, so: y o u ② x i ④
@@ -1504,5 +1523,40 @@ mod tone_button_sequence {
         }
         println!("  three-syllable 尽可能 -> {b2:?} grades {:?}",
                  grade(&b2, "jin3ke3neng2", ToneMode::Graded));
+    }
+}
+
+#[cfg(test)]
+mod submit_path_haizi {
+    //! Eric on device: typed `hai2zi5` for 孩子 -- the EXACT bank answer -- and
+    //! Check refused it.
+    //!
+    //! My earlier survey tested `grade()` and reported 6182/6182 correct. The
+    //! app does not call `grade()`. `submit_guess`'s zh branch calls
+    //! `grade_sandhi_aware`, with the sandhi surface form and a tier flag.
+    //! Testing the grader in isolation instead of the path the button takes is
+    //! how a real report got dismissed as not reproducible.
+    use super::*;
+
+    #[test]
+    fn the_exact_bank_answer_must_be_accepted_through_the_submit_path() {
+        let word = "hai2zi5";          // s.word for zh is the pinyin
+        let spoken = "孩子";            // s.spoken is the hanzi
+        let entry = format!("{word}|{spoken}");
+        let surface = crate::zh_sandhi::lookup(&entry).map(|(s, _)| s);
+        println!("\n  entry {entry:?}  sandhi surface = {surface:?}");
+
+        for tier in ["easy", "medium", "hard", "expert"] {
+            let accepts = tier_accepts_surface(tier);
+            let (v, via) = grade_sandhi_aware(
+                word, word, surface, ToneMode::Graded, accepts,
+            );
+            println!("    tier {tier:<7} accepts_surface={accepts:<5} correct={} via_surface={via} {v:?}",
+                     v.is_correct());
+            assert!(
+                v.is_correct(),
+                "tier {tier}: the exact stored answer {word:?} was REFUSED -- {v:?}"
+            );
+        }
     }
 }

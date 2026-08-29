@@ -138,3 +138,67 @@ mod tests {
         assert!(!is_speech_input_type("deleteContentBackward"));
     }
 }
+
+#[cfg(test)]
+mod tone_taps_are_keystrokes {
+    //! Eric on device: typed the EXACT bank answer `hai2zi5` for 孩子 and Check
+    //! silently refused it. Nothing graded, no feedback -- submit_guess returns
+    //! early when this module says the value was dictated.
+    //!
+    //! A tone-button tap IS a keystroke, but `tap_tone` changed the answer
+    //! without recording one. So the field held 7 characters while this module
+    //! had counted 5, and `value_len > keys + 1` declared it speech.
+    use super::*;
+
+    #[test]
+    fn two_tone_taps_must_not_read_as_dictation() {
+        // 5 letters typed, then two tone taps: h a i [2] z i [5] -> "hai2zi5"
+        reset("answerField");
+        for _ in 0..5 {
+            note_insert("answerField", "insertText", 1);
+        }
+        // THE BUG: with the two tone taps unrecorded, a 7-char field looks
+        // dictated. The +1 tolerance hides it for ONE tone and not for two,
+        // which is exactly the reported symptom.
+        assert!(
+            is_dictated("answerField", 7),
+            "precondition: unrecorded tone taps are what made this look dictated"
+        );
+        assert!(
+            !is_dictated("answerField", 6),
+            "one tone tap slips under the +1 tolerance -- why one tone 'worked'"
+        );
+
+        // THE FIX: a tone tap notes a keystroke like any other key.
+        reset("answerField");
+        for _ in 0..7 {
+            note_insert("answerField", "insertText", 1);
+        }
+        assert!(!is_dictated("answerField", 7), "hai2zi5 must be accepted");
+    }
+
+    /// Korean had the same hole and worse. Hangul composition SHRINKS the
+    /// buffer -- 6 jamo become 2 blocks -- so with `type_jamo` recording no
+    /// keystroke at all, `value_len > keys + 1` fired on any word of two
+    /// blocks or more. Every multi-block Korean answer was silently discarded.
+    #[test]
+    fn korean_multi_block_words_must_not_read_as_dictation() {
+        // BEFORE: no keystroke recorded for jamo taps.
+        reset("answerField");
+        assert!(is_dictated("answerField", 2), "precondition: 2 blocks, 0 keys read as dictated");
+
+        // AFTER: one keystroke per jamo. 한글 is six jamo composing to two blocks.
+        reset("answerField");
+        for _ in 0..6 {
+            note_insert("answerField", "insertText", 1);
+        }
+        assert!(!is_dictated("answerField", 2), "한글 must be accepted");
+
+        // A long word stays safe: composition can only shrink, never grow.
+        reset("answerField");
+        for _ in 0..12 {
+            note_insert("answerField", "insertText", 1);
+        }
+        assert!(!is_dictated("answerField", 4), "a 4-block word must be accepted");
+    }
+}

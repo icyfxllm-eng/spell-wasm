@@ -498,6 +498,16 @@ pub fn tap_tone(app: &App, tone: u8) {
     if after == before {
         return;
     }
+    // A TONE TAP IS A KEYSTROKE, and must be recorded as one.
+    //
+    // Without this, `tap_tone` changed the answer while input_provenance kept
+    // counting only the letter keys, so the anti-dictation guard in
+    // submit_guess saw a 7-character field backed by 5 keystrokes and declared
+    // `hai2zi5` speech. It then returned SILENTLY -- no grading, no feedback,
+    // the correct answer simply discarded. The +1 tolerance hid it for one
+    // tone and not for two, which is why Eric reported it as "it won't accept
+    // answers where the two words have tones" rather than as a total failure.
+    crate::input_provenance::note_insert("answerField", "insertText", 1);
     app.borrow_mut().answer = after;
     note_key_time();
     render_letters(app, false);
@@ -548,6 +558,12 @@ pub fn type_jamo(app: &App, jamo: char) {
     if !can_type(&app.borrow()) {
         return;
     }
+    // A jamo tap is a keystroke. Hangul composition SHRINKS the buffer -- three
+    // jamo become one block -- so with no keystroke recorded, any word of two
+    // blocks or more read as dictated and was silently discarded by
+    // submit_guess. Same defect as the zh tone buttons, found by auditing every
+    // writer of `answer` rather than only the one that was reported.
+    crate::input_provenance::note_insert("answerField", "insertText", 1);
     let composed = crate::hangul::feed(&app.borrow().answer, jamo);
     app.borrow_mut().answer = composed;
     note_key_time();
@@ -569,6 +585,7 @@ pub fn apply_vi_tone(app: &App, tone: char) {
     if let Some(retoned) = crate::viet::retone(last, tone) {
         ans.pop();
         ans.push_str(&retoned);
+        crate::input_provenance::note_insert("answerField", "insertText", 1);
         app.borrow_mut().answer = ans;
         render_letters(app, true);
         crate::haptics::key_tap();
