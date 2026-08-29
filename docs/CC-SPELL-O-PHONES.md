@@ -73,7 +73,7 @@ computed: pear rides with pair; rite rides with right/write; pare and wright
 are genuinely uncommon words and sit in hard. Verified that exactly those four
 entries changed across all fifteen locales.
 
-**Post-addition inventory:**
+**Post-addition inventory (superseded by the heteronym pass below):**
 
     UNIVERSAL sets                     59   (was 58)
     3-member                            4
@@ -175,9 +175,111 @@ guarantee about which engine produced the sound. A set that is homophonous in
 Google's US voice and distinct in AVSpeech makes the question unanswerable, and
 the player is marked wrong for hearing correctly.
 
-**Recommendation: pin this mode to a single source.** It is the one mode that
-cannot tolerate the router. That is a live conflict this mode exposes rather
-than creates, and it should be settled before any carrier is authored.
+**RESOLVED (Eric, 2026-08-28): the mode is PINNED.**
+
+    Pack -> ServerCache.  NativeTts is REMOVED from the order.
+
+Not a new mechanism -- Mandarin already does exactly this, and for a reason of
+the same shape. `play_word_with` carries:
+
+    if lang == crate::consts::ZH {
+        order.retain(|s| *s != Source::NativeTts);
+    }
+
+zh drops the on-device rescue because AVSpeech cannot be handed a reading and
+would guess a polyphone. Spell-O-Phones drops it because AVSpeech is a
+DIFFERENT VOICE WITH DIFFERENT PHONETICS, and a mode whose entire question is
+"do these two spellings sound the same" cannot let the answer depend on which
+engine happened to speak. Pack and ServerCache are the same rendered audio --
+a pack clip is the server clip cached on disk -- so the two agree by
+construction. AVSpeech does not.
+
+**The consequence is deliberate and worth stating in the same words zh uses:
+with no pack and no server, this mode has NO AUDIO rather than wrong audio.**
+A silent question a player can skip is recoverable. A question where the app
+and the player disagree about what was said is not -- the player is marked
+wrong for hearing correctly, which is the exact failure F1 exists to prevent,
+arriving through the audio path instead of the grading path.
+
+Implementation, when the mode is built: extend the same `retain` in
+`play_word_with`, keyed on the mode rather than the language. Do not add a
+second routing decision -- the file's own doctrine is ONE resolution order in
+ONE place, and a mode-specific audio path elsewhere would be a second router
+wearing a different hat.
+
+**A GAP THIS OPENS, and it must be closed before any carrier is authored.**
+The sets in F0 were derived from CMUdict. CMUdict is a phonemic dictionary of
+General American -- it is NOT the pinned voice. It says `to`, `too` and `two`
+share a pronunciation; it does not promise that the Google US voice renders
+them indistinguishably, and the mode's whole premise is that the player cannot
+tell them apart BY EAR.
+
+So the pin creates a verification obligation that did not exist while the
+source was undecided: every shipped set must be confirmed to actually merge in
+the pinned voice. That is a listening pass over roughly 50 sets, or an
+automated one -- render each member through /api/speak and compare the audio.
+The zh work already built that machinery for tone (`tools/zh-tts-loopback.py`,
+an F0 autocorrelation pitch probe), and the same shape applies here: two clips
+that are supposed to be identical should measure as identical.
+
+A set that CMUdict calls homophonous and the voice renders distinctly is an
+unwinnable question that looks winnable -- F2's failure, arriving through the
+audio path. Neither F0 nor F2 catches it.
+
+### VOICE CHECK RESULT — 2026-08-28, `tools/spellophones-voice-check.py`
+
+Every member synthesized through the pinned source, decoded, reduced to
+per-frame log band energies, compared pairwise with DTW (alignment-invariant --
+raw waveform correlation is useless here, `to` vs `too` scores -0.054 while
+sounding the same).
+
+The bar is CALIBRATED EVERY RUN, never hardcoded. Two different input strings
+never produce identical audio from this engine, so "distance 0" is the wrong
+bar. Spelling variants of ONE word -- gray/grey, center/centre, color/colour,
+disc/disk -- are what a listener calls identical, so their worst case IS the
+floor. Different-word pairs set the ceiling.
+
+    indistinguishable floor  0.5445
+    different-word ceiling   0.9169
+    pass bar                 0.6189
+
+    43 VERIFIED     14 SUSPECT     0 unusable
+
+**The two that matter are HETERONYM failures, and F0 missed them:**
+
+    read/red   0.8038    the voice says "reed", not "red"
+    lead/led   0.7544    the voice says "leed", not "led"
+
+CMUdict's primary entry for `read` is R EH1 D and for `lead` is L EH1 D -- the
+past tense and the metal. The TTS, handed the bare word, speaks the COMMON
+reading instead. F0 listed both among its 184 multi-pronunciation words but
+never removed the SETS they form, because F1's homograph rule excludes a set
+whose MEMBERS SHARE A SPELLING and these do not. **A set containing a heteronym
+is broken for a different reason: the voice must choose a reading, and it may
+not choose the one that makes the set homophonous.** That is a third exclusion
+rule, and it belongs in F1.
+
+**Not actually homophones** -- CMUdict artifacts and accent effects the
+inventory could not see: hour/our (0.87), are/or (0.70), are/our (0.68),
+when/win (0.68, already flagged wh-merger), cars/cause (0.67), la/law (0.67).
+
+**Genuine homophones sitting just over a deliberately tight bar** -- these need
+EARS, not a number: passed/past (0.653), wood/would (0.641), hear/here (0.641),
+to/too/two (0.632), peace/piece (0.623). The tool's job is to shrink a fifty-set
+listening pass to the handful that need a human, not to overrule one.
+
+**What this tool cannot tell you.** It measures whether the synthesized audio
+DIFFERS, not whether a person would notice. A set just over the bar is flagged,
+not condemned.
+
+Two bugs of my own, fixed and recorded because both produced confident wrong
+answers first. The initial run reported 28 sets as having NO AUDIO; the truth
+was that it fired ~110 rapid requests, Cloudflare answered `error code: 1015`,
+and the tool cached those 17-byte error bodies as if they were clips. It now
+checks the MP3 frame header, never caches a non-audio response, backs off and
+retries, and paces itself. It also listed hour/our twice, because a word with
+two cmudict entries can put one member set under two keys -- deduped by
+members now, not by pronunciation string.
 
 ---
 
@@ -348,7 +450,7 @@ or fall-for-autumn.
 | D9 | Wrong Sentence text only, or text + emoji? | Text + emoji. |
 | D10 | Does tier 2's blind gamble cost a shield? | Yes, no exception. |
 | D11 | Punchline pack in v1? | v1, ~40 items. |
-| D13 | Which English voice speaks this mode? | **ANSWERED ABOVE — web and app disagree, and the app disagrees with itself. Pin one source.** |
+| D13 | Which English voice speaks this mode? | **RESOLVED — pinned to Pack -> ServerCache, NativeTts removed, mirroring zh. Opens a verification obligation: every set must be confirmed to merge in the pinned voice, because CMUdict is a dictionary and not the voice.** |
 
 ---
 

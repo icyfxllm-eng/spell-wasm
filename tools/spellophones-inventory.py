@@ -141,10 +141,33 @@ def main():
     # because cmudict also lists `tew`, `tu` and `tue`, and reported ZERO
     # Sweep-eligible families. That was an artifact of the test, not a fact
     # about English.
-    closed, risk = [], []
+    # HETERONYM EXCLUSION (added after the voice check, 2026-08-28).
+    #
+    # F1 excludes a set whose MEMBERS SHARE A SPELLING. read/red and lead/led
+    # do not share one, so they passed -- and both are broken anyway. cmudict's
+    # primary entry for `read` is R EH1 D and for `lead` is L EH1 D, the past
+    # tense and the metal, so the dictionary calls them homophones of red and
+    # led. The pinned voice, handed a bare word, speaks the COMMON reading
+    # instead: "reed" and "leed". The voice check measured 0.80 and 0.75,
+    # nearly the different-word band.
+    #
+    # The rule is not "the members share a spelling" but "the VOICE MUST
+    # CHOOSE, and the dictionary cannot tell us what it will choose". Any set
+    # with a heteronym member is therefore unsafe by construction, and the
+    # voice check stays the authority on what actually merges.
+    # Dedupe by MEMBERS, not by pronunciation string: a word with two cmudict
+    # entries files the same member set under two keys, which listed hour/our
+    # twice.
+    seen_sets = set()
+    closed, risk, hetero = [], [], []
     for p, members in groups.items():
         inb = sorted(w for w in members if w in B)
-        if len(inb) < 2:
+        if len(inb) < 2 or tuple(inb) in seen_sets:
+            continue
+        seen_sets.add(tuple(inb))
+        bad = [w for w in inb if len(SK.get(w, ())) > 1]
+        if bad:
+            hetero.append((inb, bad))
             continue
         closed.append((p, inb))
         shadow = sorted(members - set(inb))
@@ -181,7 +204,8 @@ def main():
     print(f"    UNIVERSAL, usable in v1:               {len(universal)}")
     print(f"  sets carrying a GRADING RISK (an unbanked real word")
     print(f"    shares the sound; player could type it):     {len(risk)}")
-    print(f"  homographs excluded by construction:     {len(homographs)}")
+    print(f"  sets EXCLUDED for a heteronym member:    {len(hetero)}")
+    print(f"  multi-pronunciation bank words:          {len(homographs)}")
     print()
 
     print("  SET-SIZE DISTRIBUTION (universal, bank-closed) — the number that")
@@ -214,6 +238,14 @@ def main():
         print("  ACCENT-CONDITIONAL, excluded from v1 (D2 recommends exclude):")
         for p, ms, why in accent:
             print(f"    {'/'.join(ms):<34} {why}")
+        print()
+
+    if hetero:
+        print("  SETS EXCLUDED — a member is a heteronym, so the voice must pick a")
+        print("  reading and the dictionary cannot say which. Verified by the voice")
+        print("  check: read/red measured 0.80, lead/led 0.75.")
+        for ms, bad in sorted(hetero, key=lambda x: x[0]):
+            print(f"    {'/'.join(ms):<28} heteronym: {'/'.join(bad)}")
         print()
 
     print(f"  MULTI-PRONUNCIATION bank words (two distinct stressed readings;")
