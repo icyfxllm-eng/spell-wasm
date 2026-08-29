@@ -264,6 +264,14 @@ pub fn render_letters(app: &App, animate_all: bool) {
         app.borrow_mut().prev_letter_len = 0;
         return;
     }
+    // Mandarin shows the LIVE precomposed form -- `hai2` renders as `hái` --
+    // through the one F1 display function. The buffer still holds the digits;
+    // only what the player sees changes.
+    let value = if app.borrow().cur_lang == crate::consts::ZH {
+        crate::pinyin::display_partial(&value)
+    } else {
+        value
+    };
     let joins = crate::consts::script_joins(&app.borrow().lang);
     let html = if joins {
         render_letters_joined(&value)

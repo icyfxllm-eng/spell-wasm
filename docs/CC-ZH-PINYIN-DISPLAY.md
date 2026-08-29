@@ -116,3 +116,21 @@ every `ZH_*` entry finds zero uses. (A substring scan disagrees and is wrong:
 * **Device pass (Done 10)** — 游戏 reads `yóu xì`, marks on their vowels, the
   `i` showing no tittle under its mark, one unbroken typeface. **The suite does
   not close this file; the device call does.**
+
+---
+
+## The zh voice — DECIDED, keep Wavenet (Eric, 2026-08-29)
+
+cmn-CN offers 4 Standard, 4 Wavenet, and 30 Chirp3-HD voices. No Neural2, so
+Chirp3-HD is the only newer tier. Both Wavenet and Chirp3-HD honour
+`<phoneme alphabet="pinyin">`, verified against the API rather than assumed, so
+the choice was free of the forced-reading constraint.
+
+Eric listened to both on identical content -- 妈麻马骂 (four tones, one
+syllable), 你好, 孩子, 重, 游戏 -- and chose **A, `cmn-CN-Wavenet-A`**, which is
+what already ships. No change.
+
+Recorded because "newer tier" is a trap here: Chirp3 returned 19KB against
+Wavenet's 47KB for the same content, and a more natural voice can be a WORSE
+teacher of tone if its contours are less exaggerated. Anyone proposing the
+upgrade later should re-run the listen, not read the version numbers.

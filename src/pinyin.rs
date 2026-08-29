@@ -169,6 +169,49 @@ pub fn display_syllable(segment: &str, tone: u8) -> Option<String> {
     Some(out)
 }
 
+/// CC-ZH-PINYIN-DISPLAY F1 — the LIVE form of a partly-typed answer.
+///
+/// F1 says every surface carrying pinyin calls the one display function, and
+/// the answer field is such a surface: a player typing `hai2` should see `hái`
+/// the moment the tone lands, the way a real pinyin IME behaves (Eric,
+/// 2026-08-29, "so the mark sticks to the letter before it's submitted").
+///
+/// This is DISPLAY ONLY. The buffer keeps the digits, so grading, the
+/// canonicalizer and the input-provenance keystroke count are all untouched --
+/// the field shows one thing and the machinery compares another, deliberately.
+///
+/// Lenient by necessity: it is called on every keystroke, so it sees half-typed
+/// input like `hai2z` that no parser would accept. Each complete
+/// letters-plus-digit run becomes its precomposed form; anything trailing is
+/// left exactly as typed. It never rejects and never reorders.
+pub fn display_partial(buf: &str) -> String {
+    let mut out = String::with_capacity(buf.len());
+    let mut run = String::new();
+    for c in buf.chars() {
+        if c.is_ascii_alphabetic() || c == '\u{fc}' {
+            run.push(c);
+        } else if ('1'..='5').contains(&c) && !run.is_empty() {
+            let tone = c as u8 - b'0';
+            match display_syllable(&run, tone) {
+                Some(marked) => out.push_str(&marked),
+                // Unrenderable (the m/n/ng interjections): show it as typed
+                // rather than dropping the tone the player just chose.
+                None => {
+                    out.push_str(&run);
+                    out.push(c);
+                }
+            }
+            run.clear();
+        } else {
+            out.push_str(&run);
+            run.clear();
+            out.push(c);
+        }
+    }
+    out.push_str(&run);
+    out
+}
+
 /// The whole key as one display string, syllables space-separated.
 pub fn display_key(key: &[Syllable]) -> Option<String> {
     let mut parts = Vec::with_capacity(key.len());
@@ -1557,6 +1600,63 @@ mod submit_path_haizi {
                 v.is_correct(),
                 "tier {tier}: the exact stored answer {word:?} was REFUSED -- {v:?}"
             );
+        }
+    }
+}
+
+#[cfg(test)]
+mod live_marks {
+    //! Eric: "I'd like it so the mark sticks to the letter before it's
+    //! submitted, like it does on the ToneBoard application."
+    use super::*;
+
+    #[test]
+    fn the_mark_lands_as_soon_as_the_tone_is_typed() {
+        // Keystroke by keystroke through 孩子 = hai2zi5, the word that was
+        // being thrown away. The field must read like pinyin the whole way.
+        let steps = [
+            ("h", "h"), ("ha", "ha"), ("hai", "hai"),
+            ("hai2", "h\u{e1}i"),                       // mark lands on the a
+            ("hai2z", "h\u{e1}iz"), ("hai2zi", "h\u{e1}izi"),
+            ("hai2zi5", "h\u{e1}izi"),                  // neutral takes no mark
+        ];
+        for (buf, want) in steps {
+            assert_eq!(display_partial(buf), want, "buffer {buf:?}");
+        }
+    }
+
+    #[test]
+    fn every_tone_lands_on_the_right_vowel_live() {
+        for (buf, want) in [
+            ("you2xi4", "y\u{f3}ux\u{ec}"),   // o wins over u; i is the only vowel
+            ("hao3", "h\u{1ce}o"),            // a wins
+            ("liu2", "li\u{fa}"),             // last of iu
+            ("gui1", "gu\u{12b}"),            // last of ui
+            ("n\u{fc}3", "n\u{1da}"),         // ü
+            ("zhong4guo2", "zh\u{f2}nggu\u{f3}"),
+        ] {
+            assert_eq!(display_partial(buf), want, "buffer {buf:?}");
+        }
+    }
+
+    #[test]
+    fn it_never_mangles_half_typed_or_odd_input() {
+        // Called on EVERY keystroke, so it must be total: no panic, no
+        // reordering, nothing silently dropped.
+        for buf in ["", "2", "5hai", "hai22", "hai2 zi5", "xyz", "n", "ng3", "hai2-zi5"] {
+            let out = display_partial(buf);
+            assert!(!out.is_empty() || buf.is_empty(), "{buf:?} vanished");
+            // Every non-tone character survives in order.
+            let kept: String = buf.chars().filter(|c| !('1'..='5').contains(c)).collect();
+            let stripped: String = out
+                .chars()
+                .map(|c| PRECOMPOSED.iter()
+                    .find(|(_, m)| m.contains(&c))
+                    .map(|(base, _)| *base)
+                    .unwrap_or(c))
+                .filter(|c| !('1'..='5').contains(c))
+                .collect();
+            assert_eq!(stripped, kept, "{buf:?} lost or reordered a letter");
         }
     }
 }
