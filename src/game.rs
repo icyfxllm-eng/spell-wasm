@@ -1942,7 +1942,7 @@ thread_local! {
 /// underneath, so the message survives a colour-blind player and a greyscale
 /// screenshot alike.
 fn zh_reveal_html(lang: &str, word: &str, hanzi: &str) -> Option<String> {
-    use crate::pinyin::{SyllableVerdict, WordVerdict, TONE_COLOURS, TONE_MARKS_DISPLAY};
+    use crate::pinyin::{SyllableVerdict, WordVerdict, TONE_COLOURS};
     if lang != crate::consts::ZH {
         return None;
     }
@@ -1972,13 +1972,28 @@ fn zh_reveal_html(lang: &str, word: &str, hanzi: &str) -> Option<String> {
     for (i, syl) in key.iter().enumerate() {
         let cls = per.get(i).copied().unwrap_or(SyllableVerdict::SegmentMiss).css_class();
         let tone = syl.tone as usize;
+        // F1: ONE display function. The mark rides its own vowel, precomposed,
+        // inside the span -- never a separate <sup> holding a spacing accent,
+        // which is what rendered 游戏 as `you` with a mark floating beside it.
+        //
+        // Invariant 7 still holds and is why this is a real fix rather than a
+        // deletion: the <sup> existed so colour was never the sole carrier of
+        // tone. A precomposed ó carries the tone in the glyph itself, visible
+        // in greyscale and to a colour-blind player, so the redundancy the
+        // <sup> provided is preserved -- by the letter instead of beside it.
+        //
+        // A syllable F1 cannot render (the m/n/ng interjections, which have no
+        // precomposed form in Unicode) falls back to the BARE segment rather
+        // than to a combining mark. L2 keeps those out of the bank; if one
+        // reaches here the reveal is toneless, never illegally encoded.
+        let shown = crate::pinyin::display_syllable(&syl.segment, syl.tone)
+            .unwrap_or_else(|| syl.segment.clone());
         spans.push_str(&format!(
-            "<span class=\"zh-syl {}\" style=\"color:{}\" data-tone=\"{}\">{}<sup class=\"zh-tone\">{}</sup></span>",
+            "<span class=\"zh-syl {}\" style=\"color:{}\" data-tone=\"{}\">{}</span>",
             cls,
             TONE_COLOURS[tone],
             tone,
-            dom::escape_html(&syl.segment),
-            dom::escape_html(TONE_MARKS_DISPLAY[tone]),
+            dom::escape_html(&shown),
         ));
     }
     // The hanzi still rides along -- the player types pinyin but is learning
@@ -3346,5 +3361,47 @@ mod climb_band_tests {
         }
         note_climb(&a, false);
         assert_eq!(a.borrow().climb_band, 0); // fixed level: band never moves
+    }
+}
+
+#[cfg(test)]
+mod zh_display_f0 {
+    //! CC-ZH-PINYIN-DISPLAY F0 — the diagnostic dump. Prove which layer is
+    //! broken before changing anything.
+    //!
+    //! Dumps the RUNTIME value handed to the text view for 游戏, not the source
+    //! literal, and names the decision-table row it matches.
+    //!
+    //! INVERTED once F1 landed. It asserted the broken state as F0 evidence;
+    //! it now asserts the fix, which is what makes it a regression test rather
+    //! than a test pinning a defect.
+
+    #[test]
+    fn the_reveal_for_youxi_is_precomposed() {
+        let key = crate::pinyin::canonicalize_answer("you2 xi4").expect("游戏 must parse");
+        let shown: String = key
+            .iter()
+            .map(|s| crate::pinyin::display_syllable(&s.segment, s.tone).expect("renderable"))
+            .collect::<Vec<_>>()
+            .join(" ");
+        assert_eq!(shown, "y\u{f3}u x\u{ec}", "游戏 must read yóu xì");
+
+        // The device symptom, asserted directly: no spacing accent, no
+        // combining mark, and the marks sit ON their vowels.
+        for c in shown.chars() {
+            assert!(
+                crate::pinyin::is_legal_display_char(c),
+                "illegal display codepoint {c:?} U+{:04X}", c as u32
+            );
+            assert!(
+                !(0x300..=0x36F).contains(&(c as u32)),
+                "combining mark U+{:04X} reached the player", c as u32
+            );
+        }
+        for bad in ['\u{b4}', '\u{af}', '\u{2c7}', '`', '\u{2d9}'] {
+            assert!(!shown.contains(bad), "spacing accent {bad:?} is back in the reveal");
+        }
+        assert!(shown.contains('\u{f3}') && shown.contains('\u{ec}'),
+            "precomposed ó and ì must both be present");
     }
 }

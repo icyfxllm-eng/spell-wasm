@@ -74,8 +74,116 @@ pub const TONE_COLOURS: [&str; 6] = [
     "#7a7a7a", // 5 neutral       — grey
 ];
 
-/// The tone's written mark, so a surface can satisfy Invariant 7 without
-/// inventing its own label.
+/// CC-ZH-PINYIN-DISPLAY F1 — THE PRECOMPOSED DISPLAY ALPHABET.
+///
+/// `(bare vowel, [tone1, tone2, tone3, tone4])`. Every entry is a single
+/// precomposed codepoint. Combining marks (U+0300-U+036F) and spacing accents
+/// (U+00B4, U+02C7, U+00AF, ...) are ILLEGAL in player-visible pinyin, so they
+/// appear nowhere in this table.
+///
+/// Uppercase is carried even though no surface emits it today (D5): sentence-
+/// initial pinyin arrives the moment carrier sentences reach zh, and the cost
+/// of having it already right is 24 rows.
+const PRECOMPOSED: [(char, [char; 4]); 12] = [
+    ('a', ['\u{101}', '\u{e1}', '\u{1ce}', '\u{e0}']),
+    ('o', ['\u{14d}', '\u{f3}', '\u{1d2}', '\u{f2}']),
+    ('e', ['\u{113}', '\u{e9}', '\u{11b}', '\u{e8}']),
+    ('i', ['\u{12b}', '\u{ed}', '\u{1d0}', '\u{ec}']),
+    ('u', ['\u{16b}', '\u{fa}', '\u{1d4}', '\u{f9}']),
+    ('\u{fc}', ['\u{1d6}', '\u{1d8}', '\u{1da}', '\u{1dc}']),
+    ('A', ['\u{100}', '\u{c1}', '\u{1cd}', '\u{c0}']),
+    ('O', ['\u{14c}', '\u{d3}', '\u{1d1}', '\u{d2}']),
+    ('E', ['\u{112}', '\u{c9}', '\u{11a}', '\u{c8}']),
+    ('I', ['\u{12a}', '\u{cd}', '\u{1cf}', '\u{cc}']),
+    ('U', ['\u{16a}', '\u{da}', '\u{1d3}', '\u{d9}']),
+    ('\u{dc}', ['\u{1d5}', '\u{1d7}', '\u{1d9}', '\u{1db}']),
+];
+
+/// Every codepoint F1 permits in a player-visible pinyin string, beyond ASCII
+/// letters. L1 fails the build on anything else.
+pub fn is_legal_display_char(c: char) -> bool {
+    if c.is_ascii_alphabetic() || c == ' ' {
+        return true;
+    }
+    if c == '\u{fc}' || c == '\u{dc}' {
+        return true; // bare ü / Ü, tone 5
+    }
+    PRECOMPOSED.iter().any(|(_, marks)| marks.contains(&c))
+}
+
+/// CC-ZH-PINYIN-DISPLAY F2 — which vowel carries the mark.
+///
+///   1. tone 5 -> no mark
+///   2. an `a` -> mark it
+///   3. else an `o` -> mark it
+///   4. else an `e` -> mark it
+///   5. else the LAST of `i u ü`
+///
+/// Returns the byte index of the tone-bearing vowel, or None when the syllable
+/// has no vowel to carry a mark -- the `m/n/ng` interjections, which have no
+/// precomposed form in Unicode and therefore cannot satisfy F1 at all (D2).
+fn tone_vowel_index(segment: &str) -> Option<usize> {
+    for want in ['a', 'A', 'o', 'O', 'e', 'E'] {
+        if let Some(i) = segment.find(want) {
+            return Some(i);
+        }
+    }
+    segment
+        .char_indices()
+        .filter(|(_, c)| matches!(c, 'i' | 'u' | '\u{fc}' | 'I' | 'U' | '\u{dc}'))
+        .next_back()
+        .map(|(i, _)| i)
+}
+
+/// CC-ZH-PINYIN-DISPLAY F1 — THE one PinyinKey -> display function.
+///
+/// Every player-visible surface calls this: answer reveal, hint, definition
+/// line, tone-drill queue, share card, Reports, any tile or button carrying
+/// pinyin. A second builder anywhere is the bug this file exists to remove.
+///
+/// Before this existed, the reveal composed display text inline as
+/// `segment + <sup>spacing-accent</sup>`, which is how 游戏 rendered as `you`
+/// with a detached mark instead of `yóu`. The mark was never on a vowel; it was
+/// a separate element holding U+00B4.
+///
+/// None when the syllable cannot be rendered under F1+F2 -- never a silent
+/// fallback to a combining mark, which would put an illegal codepoint on screen
+/// while looking almost right.
+pub fn display_syllable(segment: &str, tone: u8) -> Option<String> {
+    if tone == 5 || tone == 0 {
+        return segment.chars().all(is_legal_display_char).then(|| segment.to_string());
+    }
+    if !(1..=4).contains(&tone) {
+        return None;
+    }
+    let i = tone_vowel_index(segment)?;
+    let base = segment[i..].chars().next()?;
+    let marked = PRECOMPOSED
+        .iter()
+        .find(|(v, _)| *v == base)
+        .map(|(_, marks)| marks[(tone - 1) as usize])?;
+    let mut out = String::with_capacity(segment.len() + 2);
+    out.push_str(&segment[..i]);
+    out.push(marked);
+    out.push_str(&segment[i + base.len_utf8()..]);
+    Some(out)
+}
+
+/// The whole key as one display string, syllables space-separated.
+pub fn display_key(key: &[Syllable]) -> Option<String> {
+    let mut parts = Vec::with_capacity(key.len());
+    for s in key {
+        parts.push(display_syllable(&s.segment, s.tone)?);
+    }
+    Some(parts.join(" "))
+}
+
+/// RETIRED by CC-ZH-PINYIN-DISPLAY F1. These are SPACING ACCENTS -- U+00AF,
+/// U+00B4, U+02C7, an ASCII backtick, U+02D9 -- rendered in their own element
+/// beside the syllable. That is what produced `you` + a floating mark on
+/// device. Kept only so the F0 evidence test can still name what was wrong;
+/// no display path may use it.
+#[cfg(test)]
 pub const TONE_MARKS_DISPLAY: [&str; 6] = ["", "\u{af}", "\u{b4}", "\u{2c7}", "`", "\u{2d9}"];
 
 /// The longest syllable in the inventory (`zhuang`, `chuang`), so the
@@ -1144,5 +1252,257 @@ mod tone_button_effects {
             assert_eq!(apply_tone("", t), "");
             assert_eq!(apply_tone("   ", t), "   ");
         }
+    }
+}
+
+#[cfg(test)]
+mod display_f1_f2 {
+    use super::*;
+
+    /// CC-ZH-PINYIN-DISPLAY F2 — the worked table from the spec, verbatim.
+    #[test]
+    fn f2_placement_table() {
+        let rows = [
+            ("you", 2, "y\u{f3}u", "step 3 (o)"),
+            ("xi", 4, "x\u{ec}", "step 5 (i)"),
+            ("liu", 2, "li\u{fa}", "step 5, last of iu = u"),
+            ("gui", 1, "gu\u{12b}", "step 5, last of ui = i"),
+            ("n\u{fc}", 3, "n\u{1da}", "step 5 (ü)"),
+            ("hao", 3, "h\u{1ce}o", "step 2 (a)"),
+            ("de", 5, "de", "step 1, neutral takes no mark"),
+        ];
+        for (seg, tone, want, why) in rows {
+            let got = display_syllable(seg, tone).unwrap_or_else(|| panic!("{seg}{tone} unrenderable"));
+            assert_eq!(got, want, "{seg} + {tone} ({why})");
+        }
+    }
+
+    /// L1 — nothing outside the F1 alphabet may reach a player.
+    #[test]
+    fn l1_only_precomposed_reaches_the_player() {
+        for (_, marks) in PRECOMPOSED.iter() {
+            for m in marks {
+                assert!(is_legal_display_char(*m), "{m:?} is in the table but rejected");
+            }
+        }
+        // The spacing accents that caused the bug, and the combining range.
+        for bad in ['\u{b4}', '\u{2c7}', '\u{af}', '`', '\u{2d9}', '\u{2ca}', '\u{2cb}'] {
+            assert!(!is_legal_display_char(bad), "spacing accent {bad:?} must be illegal");
+        }
+        for cp in 0x300u32..=0x36F {
+            let c = char::from_u32(cp).unwrap();
+            assert!(!is_legal_display_char(c), "combining U+{cp:04X} must be illegal");
+        }
+        // And the function never emits one.
+        for tone in 1..=5u8 {
+            for seg in ["you", "xi", "hao", "n\u{fc}", "zhuang", "er"] {
+                if let Some(out) = display_syllable(seg, tone) {
+                    for c in out.chars() {
+                        assert!(is_legal_display_char(c),
+                            "display_syllable({seg},{tone}) emitted illegal {c:?} U+{:04X}", c as u32);
+                    }
+                }
+            }
+        }
+    }
+
+    /// F5 — PinyinKey -> display -> parse -> PinyinKey is identity across the
+    /// WHOLE pinned inventory x 5 tones, not a sample. Two encodings of "yóu"
+    /// would mean two cache keys and two match candidates.
+    #[test]
+    fn f5_round_trip_identity_over_the_full_inventory() {
+        let mut checked = 0usize;
+        let mut unrenderable = Vec::new();
+        let mut broken = Vec::new();
+        for syl in crate::pinyin_inventory::SYLLABLES.iter() {
+            for tone in 1..=5u8 {
+                let Some(shown) = display_syllable(syl, tone) else {
+                    unrenderable.push((*syl, tone));
+                    continue;
+                };
+                let back = canonicalize_answer(&shown);
+                let ok = matches!(&back, Ok(k) if k.len() == 1 && k[0].segment == *syl && k[0].tone == tone);
+                if !ok {
+                    broken.push((*syl, tone, format!("{back:?}")));
+                    continue;
+                }
+                checked += 1;
+            }
+        }
+        assert!(checked > 2000, "expected the whole inventory, only checked {checked}");
+
+        // PRE-EXISTING, NOT THIS FILE'S TO FIX. `biang` is in the pinned
+        // inventory but the segmenter splits it into bi+ang in EVERY form --
+        // digit or mark, so it is not a display defect. CC-ZH-PINYIN-DISPLAY's
+        // non-goals forbid touching the canonicalizer's matching semantics, so
+        // it is NAMED here rather than skipped: this allowlist cannot grow
+        // without someone deciding it should.
+        // Verified unreachable from the zh bank: an exact-syllable scan over
+        // every ZH_* entry finds zero uses of any of them, so no player can
+        // meet one. (A substring scan says otherwise and is wrong -- `nian2`
+        // contains "nia" but its syllable is `nian`.)
+        let known: &[&str] = &["biang", "nia", "rua"];
+        let unexpected: Vec<_> = broken.iter().filter(|(s, _, _)| !known.contains(s)).collect();
+        assert!(
+            unexpected.is_empty(),
+            "display -> parse is not identity for {} syllable/tone pairs that are NOT the known \
+             pre-existing case: {:?}",
+            unexpected.len(),
+            unexpected
+        );
+        // D2: the interjections are the only legal casualties, and they are
+        // named rather than silently skipped.
+        for (syl, tone) in &unrenderable {
+            assert!(
+                matches!(*syl, "m" | "n" | "ng" | "hm" | "hng" | "\u{ea}"),
+                "{syl}+{tone} is unrenderable but is not a known interjection"
+            );
+        }
+    }
+}
+
+#[cfg(test)]
+mod display_f6 {
+    //! CC-ZH-PINYIN-DISPLAY F6 — verdict fidelity for 游戏.
+    //!
+    //! The device showed `第 1 个音节：拼错了` — segmentMiss, "wrong syllable" —
+    //! on a syllable whose only visible problem was the tone mark. The routing
+    //! in zh_reveal_html is correct (ToneMiss -> zh.rev.toneMiss), so a
+    //! segmentMiss message means the VERDICT was segmentMiss. This grades the
+    //! plausible player inputs and shows which one reproduces it.
+    use super::*;
+
+    #[test]
+    fn f6_what_each_plausible_input_grades_as() {
+        let answer = "you2 xi4";
+        let cases = [
+            ("you2 xi4", "digits, spaced — the canonical form"),
+            ("y\u{f3}u x\u{ec}", "diacritics, spaced — what the reveal now shows"),
+            ("you xi", "toneless, spaced — the TONE_MISS case"),
+            ("youxi", "toneless, NO SPACE — the keyboard has no space key"),
+            ("you2xi4", "digits, NO SPACE"),
+            ("y\u{f3}ux\u{ec}", "diacritics, NO SPACE"),
+            ("yo2 xi4", "a REAL segment error — yo, not you"),
+            ("you2 shi4", "a REAL segment error on syllable 2"),
+        ];
+        println!("\n  F6 — grading plausible player answers for 游戏 (you2 xi4)");
+        for (typed, why) in cases {
+            let v = grade(typed, answer, ToneMode::Graded);
+            let label = match &v {
+                WordVerdict::Graded(s) if s.iter().all(|x| *x == SyllableVerdict::Exact) => "CORRECT".to_string(),
+                WordVerdict::Graded(s) => format!("{:?}", s),
+                other => format!("{other:?}"),
+            };
+            println!("    {typed:<12} {label:<58} {why}");
+        }
+    }
+}
+
+#[cfg(test)]
+mod zh_no_space_survey {
+    //! Eric, on device: "there's no space bar so there's not many words I can
+    //! get correct in Chinese." 游戏 grades fine without a space, so the claim
+    //! and the measurement disagree. This surveys the WHOLE zh bank to find
+    //! which words actually fail, rather than reasoning from one example.
+    use super::*;
+
+    fn zh_bank() -> Vec<(String, String)> {
+        let mut out = Vec::new();
+        for tier in ["easy", "medium", "hard", "expert"] {
+            for e in crate::words::tier_for("zh", tier) {
+                let mut it = e.split('|');
+                if let (Some(py), Some(hz)) = (it.next(), it.next()) {
+                    out.push((py.to_string(), hz.to_string()));
+                }
+            }
+        }
+        out
+    }
+
+    #[test]
+    fn survey_which_zh_words_fail_without_a_space() {
+        let bank = zh_bank();
+        let (mut exact_ok, mut toneless_tonemiss, mut broken) = (0, 0, Vec::new());
+        let mut spacing_victims = Vec::new();
+        for (py, hz) in &bank {
+            // 1. The stored form typed verbatim (digits, no spaces) must grade
+            //    CORRECT. If this fails the word is unwinnable, full stop.
+            match grade(py, py, ToneMode::Graded) {
+                WordVerdict::Graded(v) if v.iter().all(|s| *s == SyllableVerdict::Exact) => exact_ok += 1,
+                other => broken.push((py.clone(), hz.clone(), format!("{other:?}"))),
+            }
+            // 2. Toneless, no space -- should be ToneMiss on every syllable,
+            //    never SegmentMiss. A SegmentMiss here is the segmentation law
+            //    failing: the player spelled it right and is told otherwise.
+            let toneless: String = py.chars().filter(|c| !c.is_ascii_digit()).collect();
+            match grade(&toneless, py, ToneMode::Graded) {
+                WordVerdict::Graded(v)
+                    if v.iter().all(|s| *s == SyllableVerdict::ToneMiss || *s == SyllableVerdict::Exact) =>
+                {
+                    toneless_tonemiss += 1
+                }
+                other => spacing_victims.push((toneless.clone(), py.clone(), hz.clone(), format!("{other:?}"))),
+            }
+        }
+        println!("\n  zh bank: {} words", bank.len());
+        println!("  stored form typed verbatim grades CORRECT : {exact_ok}/{}", bank.len());
+        println!("  toneless no-space grades ToneMiss (not SegmentMiss) : {toneless_tonemiss}/{}", bank.len());
+        println!("  UNWINNABLE (correct input does not grade correct)  : {}", broken.len());
+        for (py, hz, v) in broken.iter().take(25) {
+            println!("    {py:<16} {hz:<8} {v}");
+        }
+        if broken.len() > 25 {
+            println!("    ... and {} more", broken.len() - 25);
+        }
+        println!("\n  SPACING VICTIMS -- spelled right, told otherwise ({}):", spacing_victims.len());
+        for (typed, want, hz, v) in spacing_victims.iter().take(40) {
+            println!("    typed {typed:<14} want {want:<14} {hz:<8} {v}");
+        }
+    }
+}
+
+#[cfg(test)]
+mod tone_button_sequence {
+    //! Eric on device: "it won't accept answers where the two words in the
+    //! answer have tones at the end of more than one word."
+    //!
+    //! Typed digits grade fine (`you2xi4` is CORRECT), so the failure must be
+    //! in how the TONE BUTTONS build the string. This replays the actual key
+    //! sequence a player performs, one tap at a time, instead of testing the
+    //! finished string.
+    use super::*;
+
+    /// One tap: a letter key, or a tone button routed through apply_tone.
+    fn tap(buf: &str, key: char) -> String {
+        if let Some(t) = key.to_digit(10) {
+            apply_tone(buf, t as u8)
+        } else {
+            format!("{buf}{key}")
+        }
+    }
+
+    #[test]
+    fn typing_youxi_with_the_tone_buttons() {
+        // 游戏 = you2 xi4. The player has no space bar, so: y o u ② x i ④
+        let mut buf = String::new();
+        let mut trace = Vec::new();
+        for k in ['y', 'o', 'u', '2', 'x', 'i', '4'] {
+            buf = tap(&buf, k);
+            trace.push(format!("{k} -> {buf:?}"));
+        }
+        println!("\n  tone-button sequence for 游戏 (no space bar):");
+        for t in &trace {
+            println!("    {t}");
+        }
+        let v = grade(&buf, "you2xi4", ToneMode::Graded);
+        println!("  final buffer {buf:?} grades {v:?}");
+
+        // A three-syllable word makes the pattern unmistakable if it exists.
+        let mut b2 = String::new();
+        for k in ['j', 'i', 'n', '3', 'k', 'e', '3', 'n', 'e', 'n', 'g', '2'] {
+            b2 = tap(&b2, k);
+        }
+        println!("  three-syllable 尽可能 -> {b2:?} grades {:?}",
+                 grade(&b2, "jin3ke3neng2", ToneMode::Graded));
     }
 }

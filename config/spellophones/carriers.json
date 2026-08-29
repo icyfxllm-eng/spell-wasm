@@ -1,0 +1,80 @@
+{
+  "$doc": "CC-SPELL-O-PHONES prototype carriers. AUTHORED BY A PERSON, NEVER GENERATED (Non-goals: 'Do not generate carriers or punchlines with an LLM. Same class of string as definitions; same standing rejection.'). Every `carrier` below is a sentence with ___ where the word goes. F2's invariant: EXACTLY ONE member of the set may be semantically legal in it. Write it, then read it back with each of the other members substituted -- if another one fits, the carrier is unwinnable and must be rewritten. A null carrier means the slot is unauthored; the prototype QUARANTINES the whole set rather than serving a partial one (F1). The ten sets are the voice-verified families from tools/spellophones-voice-check.py -- each one measured at or under the indistinguishable floor, so the audio genuinely does not give the answer away.",
+  "axis": "orthographic",
+  "dialectScope": "UNIVERSAL",
+  "sets": [
+    {
+      "id": "pair",
+      "members": [
+        { "id": "pair", "carrier": "I bought a ___ of shoes." },
+        { "id": "pear", "carrier": null },
+        { "id": "pare", "carrier": null }
+      ]
+    },
+    {
+      "id": "right",
+      "members": [
+        { "id": "right", "carrier": null },
+        { "id": "write", "carrier": null },
+        { "id": "rite", "carrier": null },
+        { "id": "wright", "carrier": null }
+      ]
+    },
+    {
+      "id": "meat",
+      "members": [
+        { "id": "meat", "carrier": null },
+        { "id": "meet", "carrier": null }
+      ]
+    },
+    {
+      "id": "tail",
+      "members": [
+        { "id": "tail", "carrier": null },
+        { "id": "tale", "carrier": null }
+      ]
+    },
+    {
+      "id": "sail",
+      "members": [
+        { "id": "sail", "carrier": null },
+        { "id": "sale", "carrier": null }
+      ]
+    },
+    {
+      "id": "cell",
+      "members": [
+        { "id": "cell", "carrier": null },
+        { "id": "sell", "carrier": null }
+      ]
+    },
+    {
+      "id": "one",
+      "members": [
+        { "id": "one", "carrier": null },
+        { "id": "won", "carrier": null }
+      ]
+    },
+    {
+      "id": "their",
+      "members": [
+        { "id": "their", "carrier": null },
+        { "id": "there", "carrier": null }
+      ]
+    },
+    {
+      "id": "for",
+      "members": [
+        { "id": "for", "carrier": null },
+        { "id": "four", "carrier": null }
+      ]
+    },
+    {
+      "id": "wait",
+      "members": [
+        { "id": "wait", "carrier": null },
+        { "id": "weight", "carrier": null }
+      ]
+    }
+  ]
+}

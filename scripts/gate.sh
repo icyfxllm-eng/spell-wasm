@@ -78,6 +78,10 @@ python3 tools/bank/verify_pins.py || { echo "GATE FAIL: composite pin law violat
 echo "== gate: reachability laws — scroll + modal nesting (AUDITPASS F1/F4)"
 node scripts/scroll-check.mjs || { echo "GATE FAIL: scroll law"; exit 1; }
 
+echo "== gate: pinyin display is precomposed, one builder (CC-ZH-PINYIN-DISPLAY L1)"
+node scripts/pinyin-display-check.mjs || { echo "GATE FAIL: pinyin display law"; exit 1; }
+node scripts/pinyin-display-check.mjs --selftest || { echo "GATE FAIL: pinyin display selftest"; exit 1; }
+
 echo "== gate: the audio router owns its failure banner (CC-AUDIO-REPLAY F1)"
 node scripts/audio-router-check.mjs || { echo "GATE FAIL: audio router banner law"; exit 1; }
 node scripts/audio-router-check.mjs --selftest || { echo "GATE FAIL: audio router selftest"; exit 1; }
