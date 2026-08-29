@@ -86,6 +86,29 @@ entries changed across all fifteen locales.
     sea/see/si                  <- si is bank contamination
     do/du/due                   <- du is bank contamination
 
+**Contamination stripped 2026-08-28 (Eric).** Forty Wikipedia-dump artifacts
+removed from the English bank: abbreviations and units (ab ac bc cf cm dc fm kg
+km mm pc ph pp ss), Roman numerals (ii iii iv ix vi vii viii), foreign
+particles (de del der des di du et eu le los un von si), and outright markup
+debris (sfn, seealso, urbe, ibn, abc, al). `sfn` and `seealso` are citation
+templates; `urbe` is Latin. Kept deliberately: la, el, en, os, don, bob, tom,
+ben, lee, ion, mac, max -- every one a real English word that merely looks odd
+in a list.
+
+Both fake families collapsed as predicted. Final inventory:
+
+    UNIVERSAL sets                     50
+    3+ MEMBER FAMILIES                  3   all genuine
+
+    right/rite/wright/write
+    pair/pare/pear
+    to/too/two
+
+Removing words from a shipping bank is safe here: `deck.rs` keys its
+persisted no-repeat cursor on `pool_len`, so a changed word list forces a
+reshuffle and a stale queue holding a removed word is discarded rather than
+served. Removal only shrinks the pool, so the length always changes.
+
 **F5 is still not satisfied.** Discounting the two contaminated families,
 THREE genuine Sweep families exist. The spec's rule -- under 15 is thin -- still
 bites, and "the Sweep must be the last family" means the same three rotate
@@ -267,6 +290,29 @@ standalone homophone table is being written, this feature has failed.
 
 `spellOPhonesEnabled(lang)` -- English true, all fourteen others false. Absent
 from the hub, not greyed, not "coming soon".
+
+## F13 — APP ONLY. Never on spellgame.net (Eric, 2026-08-28)
+
+F12 gates by LANGUAGE. This gates by SURFACE, and it is a different axis: the
+mode ships in the Capacitor app and must never reach the deployed site.
+
+A runtime flag is NOT sufficient -- it would still send the markup, the styles
+and the sets to spellgame.net, where anyone can read them. The site build
+already solves this exactly once, for Spell Picture, and this mode uses the
+same mechanism rather than inventing a second one:
+
+1. **Sentinels.** All markup and CSS wrapped in `SPELL-O-PHONES:BEGIN` /
+   `SPELL-O-PHONES:END` comments, cut by `scripts/build-web.sh` under
+   SPELL_WEB=1 -- the same cut that strips Spell Picture.
+2. **A scan that proves the cut happened.** Modelled on
+   `web-picture-wall-scan.mjs`, which exists because a cut that is assumed is a
+   cut that silently stops happening. Any sentinel content surviving into
+   `dist/` fails the build.
+3. **Rust gated too**, so the mode is unreachable even if markup leaked.
+
+Cutting between explicit sentinels rather than pattern-matching selectors is
+deliberate: the regions are visible in the source, and a renamed class cannot
+quietly defeat the strip.
 
 ---
 

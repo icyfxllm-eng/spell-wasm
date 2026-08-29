@@ -1333,12 +1333,32 @@ mod tests {
         // Round-2 reconstruction: three words render far wider than the
         // solver estimated (real font metrics, no textLength) and jam into
         // their neighbors. The check must catch every jam.
-        // Widen every third word, whatever the star's path count is (F6
-        // deleted its rails, so fixed indices would be brittle).
-        let widen: Vec<usize> = (0..pls.len()).step_by(3).take(3).collect();
+        // Widen three CONSECUTIVE words. Adjacency is what makes this
+        // reliable: neighbouring slots sit next to each other on the path by
+        // definition, so a word rendered 2.6x wide MUST reach its neighbour,
+        // whatever word happens to land there.
+        //
+        // This was `step_by(3)` -- itself a fix for fixed indices, which F6
+        // had made brittle. The stride was brittle in the same way, one level
+        // up: it still depended on WHICH words landed in slots 0, 3 and 6.
+        // Deleting forty artifacts from the English bank (cf, ix, sfn,
+        // seealso) reshuffled the star's word selection, two of those three
+        // slots turned out to be isolated star points, and the escape that is
+        // supposed to produce three violations produced one. The test caught
+        // a real coupling -- bank content reaches picture layout -- but it
+        // failed for a reason that had nothing to do with the checker it
+        // exists to prove. Adjacency removes the content dependency entirely.
+        let widen: Vec<usize> = (0..3).collect();
         assert!(widen.len() >= 3, "star hosts enough words to reconstruct the escape");
         let spill = boxes(&widen);
-        assert!(glyph_violations(&spill) >= 3, "check catches the round-2 escape");
+        let caught = glyph_violations(&spill);
+        assert!(
+            caught >= 3,
+            "check catches the round-2 escape: widened {} of {} star words to 2.6x \
+             and the overlap check found only {caught} violations",
+            widen.len(),
+            pls.len()
+        );
     }
 
     /// v7 acceptance: star renders legally across 25 consecutive seeds in
