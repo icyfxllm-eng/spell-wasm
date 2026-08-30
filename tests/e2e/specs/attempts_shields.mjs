@@ -51,7 +51,20 @@ async function missOnce(page) {
   const wrong = word === 'zzzz' ? 'xxxx' : 'zzzz';
   await typeOnKeyboard(page, wrong);
   await page.click('#checkBtn');
-  await page.waitForTimeout(500);
+  // WAIT FOR THE VERDICT, never sleep a guess at how long it takes.
+  //
+  // English grades through an ASYNC /api/check, and from the e2e's origin
+  // that request is CORS-blocked by design -- the allowlist covers :3000,
+  // :5173, capacitor://localhost and the production domain, not the random
+  // port this harness serves on. So the app correctly falls back to a local
+  // comparison, and the verdict arrives whenever the doomed fetch finishes
+  // failing. That was inside 500ms for a long time and is now around 2.7s,
+  // which is not a behaviour change -- it is a fixed sleep wrapped around a
+  // network call, the same defect A9 had.
+  await page.waitForFunction(() => {
+    const c = document.getElementById('feedback')?.className || '';
+    return c.includes('good') || c.includes('bad');
+  }, null, { timeout: 15000 });
 }
 
 export async function run(browser, base, suite) {

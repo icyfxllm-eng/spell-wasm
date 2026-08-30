@@ -144,6 +144,12 @@ pub fn install(app: &App) {
         let cb = Closure::<dyn Fn() -> f64>::new(move || a.borrow().daily.correct as f64);
         set(&obj, "dailyCorrect", cb.into_js_value());
     }
+    // CC-PLACEMENT-IDEMPOTENCE F4 — the run the offer must not interrupt.
+    {
+        let a = app.clone();
+        let cb = Closure::<dyn Fn() -> f64>::new(move || a.borrow().streak as f64);
+        set(&obj, "streak", cb.into_js_value());
+    }
     // CC-PLACEMENT-IDEMPOTENCE F0 — the probe's live state. `placed` is
     // readable from localStorage, but PLACEMENT_LIVE and the queue depth are
     // thread-locals, and without them a failing probe can only be guessed at.

@@ -1076,6 +1076,24 @@ thread_local! {
 
 /// Offer placement once per language: called at the top of a solo serve.
 /// Returns true when the offer card is up (the serve pauses behind it).
+/// CC-PLACEMENT-IDEMPOTENCE F4 — THE NO-INTERRUPTION RULE.
+///
+/// A modal offer may not render while a run is in progress. Eric's screenshot
+/// was the placement sheet landing on top of a live twenty-word chain: a
+/// player with twenty right in a row is having the exact experience this app
+/// exists to produce, and interrupting it to ask a question is indefensible
+/// whatever the question is.
+///
+/// A run is `streak > 0`. The boundary is a fresh session or a chain that has
+/// just ended, which is where `streak` returns to zero.
+///
+/// Written as a shared predicate rather than an `if` inside the placement
+/// offer, because the rule is general (CC-BLITZ: "nothing may interrupt a
+/// run") and the next modal should inherit it instead of rediscovering it.
+pub fn modal_offer_allowed(state: &AppState) -> bool {
+    state.streak == 0
+}
+
 fn maybe_offer_placement(lang: &str) -> bool {
     if !crate::dom::exists("plcCard") {
         return false;
@@ -1256,8 +1274,13 @@ pub fn next_word(app: &App) {
         } else {
             PLACEMENT_LIVE.with(|c| c.set(false)); // redundant now; harmless
             {
+                // F4: never over a live run. A suppressed offer cannot be
+                // lost -- should_offer_placement is a pure function of the
+                // durable record, so it stays true and the next boundary
+                // picks it up. That is the "queues, does not drop" property
+                // without a queue to get out of sync.
                 let lang = s.lang.clone();
-                if maybe_offer_placement(&lang) {
+                if modal_offer_allowed(&s) && maybe_offer_placement(&lang) {
                     return; // the card owns this turn; Try/Skip re-enter
                 }
             }

@@ -22,6 +22,41 @@ const MIME = { '.html': 'text/html', '.js': 'text/javascript', '.wasm': 'applica
 export function startServer(port = 8129) {
   const server = createServer((req, res) => {
     let p = decodeURIComponent(req.url.split('?')[0]);
+
+    // STUB /api/check LOCALLY.
+    //
+    // English grades through an async POST to /api/check. Against the real
+    // backend that request is CORS-blocked from this harness -- the allowlist
+    // covers :3000, :5173, capacitor://localhost and the production domain,
+    // never the port we serve on -- so it FAILS, and the app falls back to a
+    // local comparison. Two consequences, both bad:
+    //
+    //   1. Every English grading assertion in this suite has been timing a
+    //      doomed network round trip. It took under 500ms for a long time and
+    //      now takes ~2.7s, which broke A9 and both attempts-shields tests in
+    //      one day -- three "regressions" that were fixed sleeps drifting past
+    //      a call nobody meant to make.
+    //   2. backend_verify's SUCCESS path has never been exercised. The suite
+    //      only ever ran its error fallback.
+    //
+    // Serving it here makes English grading instant, deterministic, offline,
+    // and -- for the first time -- actually the path the player takes.
+    if (p === '/api/check' && req.method === 'POST') {
+      let body = '';
+      req.on('data', (c) => { body += c; });
+      req.on('end', () => {
+        let correct = false;
+        try {
+          const d = JSON.parse(body || '{}');
+          const norm = (x) => String(x || '').trim().toLowerCase();
+          correct = norm(d.word) === norm(d.answer);
+        } catch (_) { /* malformed body grades wrong, same as the server */ }
+        res.writeHead(200, { 'Content-Type': 'application/json' });
+        res.end(JSON.stringify({ correct }));
+      });
+      return;
+    }
+
     if (p === '/') p = '/index.html';
     const file = join(DIST, p);
     if (!file.startsWith(DIST) || !existsSync(file) || statSync(file).isDirectory()) {
@@ -110,6 +145,12 @@ export async function openApp(browser, base, { lang = null, device = 'se', viewp
   await ctx.route('**/api/speak**', (r) => r.fulfill({ status: 200, contentType: 'audio/mpeg', body: Buffer.from([]) }));
   const page = await ctx.newPage();
   await page.goto(base, { waitUntil: 'load' });
+  // Point the app's API base at THIS server, so /api/check hits the local stub
+  // above instead of a cross-origin request that is guaranteed to fail. Set
+  // AFTER load on purpose: index.html assigns SPELL_API_BASE in a script tag,
+  // so an addInitScript would be overwritten. api_base() re-reads window on
+  // every call, so a late assignment is honoured.
+  await page.evaluate((b) => { window.SPELL_API_BASE = b.replace(/\/$/, ''); }, base);
   // Wait for wasm boot: the seam installs once the app is up.
   await page.waitForFunction(() => window.__spelltest && window.__spelltest.build() === 'testseam', null, { timeout: 30000 });
   // The language picker lives in the setup sheet (home-regroup F3), so open the
