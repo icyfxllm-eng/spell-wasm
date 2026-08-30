@@ -7,7 +7,11 @@ fn now_ms() -> f64 {
 }
 
 pub fn miss_key(word: &str, lang: &str) -> String {
-    format!("{}::{}", lang, word.to_lowercase())
+    // CC-RUSSIAN-STRESS v3 I8: identity lives in ONE place now. Sense 0 emits
+    // the byte-identical legacy key, so every miss record in the field keeps
+    // working and no migration runs. A homograph (sense > 0) would key apart --
+    // which is the point, since за́мок and замо́к must not share a miss record.
+    crate::word_id::word_id0(lang, word)
 }
 
 pub fn load(state: &mut AppState) {

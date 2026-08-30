@@ -30,7 +30,8 @@ fn now_ms() -> f64 {
 }
 
 pub fn key_of(word: &str, lang: &str) -> String {
-    format!("{}::{}", lang, word.to_lowercase())
+    // v3 I8 — see word_id. Sense 0 is the legacy key, byte for byte.
+    crate::word_id::word_id0(lang, word)
 }
 
 pub fn load(state: &mut AppState) {

@@ -78,6 +78,10 @@ python3 tools/bank/verify_pins.py || { echo "GATE FAIL: composite pin law violat
 echo "== gate: reachability laws — scroll + modal nesting (AUDITPASS F1/F4)"
 node scripts/scroll-check.mjs || { echo "GATE FAIL: scroll law"; exit 1; }
 
+echo "== gate: ru entry identity — one spelling, one entry (CC-RUSSIAN-STRESS v3 F6)"
+node scripts/ru-identity-check.mjs || { echo "GATE FAIL: ru entry identity"; exit 1; }
+node scripts/ru-identity-check.mjs --selftest || { echo "GATE FAIL: ru identity selftest"; exit 1; }
+
 echo "== gate: pinyin display is precomposed, one builder (CC-ZH-PINYIN-DISPLAY L1)"
 node scripts/pinyin-display-check.mjs || { echo "GATE FAIL: pinyin display law"; exit 1; }
 node scripts/pinyin-display-check.mjs --selftest || { echo "GATE FAIL: pinyin display selftest"; exit 1; }

@@ -66,7 +66,10 @@ fn norm_key(lang: &str, word: &str) -> String {
     // Keyed by (locale, word) so mastery in Español never pollutes Français
     // (§4.1) — words like "sol"/"casa"/"banana" exist in several languages.
     // Case-normalized to match how answers are compared.
-    format!("{}::{}", lang, word.to_lowercase())
+    //
+    // v3 I8 — the third copy of this line, now the same function as the other
+    // two. Sense 0 is the legacy key, so no stats row moves.
+    crate::word_id::word_id0(lang, word)
 }
 
 thread_local! {
