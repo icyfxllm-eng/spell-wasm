@@ -1175,6 +1175,20 @@ pub fn next_word(app: &App) {
     }
     {
         let mut s = app.borrow_mut();
+        // PLACEMENT_LIVE describes THIS word: "was it served from the placement
+        // queue". Derive it per serve instead of leaving it latched.
+        //
+        // It used to be set true in the placement branch and cleared only in
+        // the LAST branch of this chain, so every other branch inherited
+        // whatever the previous word had. Start a placement run, then enter
+        // review -- which is where you are after a hundred misses -- and the
+        // review branch left it true. From then on every correct answer routed
+        // to note_placement instead of note_attempt_typed: graded correct,
+        // shown correct, and recorded nowhere. That is Eric's "I got one right
+        // and it was not recorded as a right answer", and the tier jumping from
+        // easy to medium is the same cause, because a placement serve sets
+        // cur_tier from the WORD LENGTH rather than from the Climb.
+        PLACEMENT_LIVE.with(|c| c.set(false));
         if s.daily.active {
             let w = s.daily.words[s.daily.idx].clone();
             s.daily.idx += 1;
@@ -1229,7 +1243,7 @@ pub fn next_word(app: &App) {
             s.cur_tier = length_tier(&typed).to_string();
             s.word = w;
         } else {
-            PLACEMENT_LIVE.with(|c| c.set(false));
+            PLACEMENT_LIVE.with(|c| c.set(false)); // redundant now; harmless
             {
                 let lang = s.lang.clone();
                 if maybe_offer_placement(&lang) {
@@ -3428,5 +3442,67 @@ mod zh_display_f0 {
         }
         assert!(shown.contains('\u{f3}') && shown.contains('\u{ec}'),
             "precomposed ó and ì must both be present");
+    }
+}
+
+#[cfg(test)]
+mod placement_flag_latch {
+    //! Eric: "I got one right on medium after 100 failures on easy... even
+    //! though I got the right answer it was not recorded AS a right answer."
+    //!
+    //! PLACEMENT_LIVE was set in the placement branch and cleared only in the
+    //! LAST branch of next_word's chain. Every other branch -- review,
+    //! requested-word, daily -- inherited the previous word's value. So a
+    //! placement run followed by review left it latched true, and from then on
+    //! submit_guess routed every answer to note_placement: graded correct,
+    //! shown correct, recorded nowhere.
+    //!
+    //! The chain is inside next_word and needs a live App, so this pins the
+    //! SHAPE that made it possible: a flag describing THIS word must be
+    //! assigned on every path, never only on some.
+
+    /// Models the old chain (clear only in the tail) against the new one
+    /// (derive at the top), over the branch sequence Eric actually walked.
+    #[test]
+    fn a_flag_describing_this_word_must_be_set_on_every_path() {
+        #[derive(Clone, Copy, PartialEq, Debug)]
+        enum Branch { Daily, Review, Placement, Requested, Normal }
+
+        // OLD: only Placement sets true, only Normal sets false.
+        fn old(seq: &[Branch]) -> bool {
+            let mut live = false;
+            for b in seq {
+                match b {
+                    Branch::Placement => live = true,
+                    Branch::Normal => live = false,
+                    _ => {} // latched
+                }
+            }
+            live
+        }
+        // NEW: cleared every serve, set only by a placement serve.
+        fn new(seq: &[Branch]) -> bool {
+            let mut live = false;
+            for b in seq {
+                live = false;
+                if *b == Branch::Placement {
+                    live = true;
+                }
+            }
+            live
+        }
+
+        // The reported path: a placement run, then review after many misses.
+        let walked = [Branch::Placement, Branch::Placement, Branch::Review, Branch::Review];
+        assert!(old(&walked), "precondition: the old chain latched true into review");
+        assert!(!new(&walked), "a review word is not a placement word");
+
+        // Every non-placement branch must clear it, from a latched state.
+        for b in [Branch::Daily, Branch::Review, Branch::Requested, Branch::Normal] {
+            let seq = [Branch::Placement, b];
+            assert!(!new(&seq), "{b:?} must not inherit a placement flag");
+        }
+        // And a placement serve still sets it.
+        assert!(new(&[Branch::Review, Branch::Placement]), "placement must still register");
     }
 }

@@ -1275,3 +1275,25 @@ mod guardian_tests {
         assert_eq!(guardian_report(&st, 25), r);
     }
 }
+
+#[cfg(test)]
+mod placement_f0 {
+    //! CC-PLACEMENT-IDEMPOTENCE F0 — dump before changing anything.
+    use super::*;
+
+    #[test]
+    fn f0c_the_draw_is_unseeded_and_deterministic() {
+        for lang in ["en", "es", "fr", "de", "zh", "ja", "ko", "pt", "ru", "pl", "vi", "ar", "hi", "sw", "fil"] {
+            let a = placement_set(lang);
+            let b = placement_set(lang);
+            assert_eq!(a, b, "{lang}: two draws in one session differ — there IS a seed");
+            let mut uniq = a.clone();
+            uniq.sort();
+            uniq.dedup();
+            println!("  {lang:<4} n={:<3} distinct={:<3} first={:?}",
+                     a.len(), uniq.len(), a.first().map(|s| s.as_str()).unwrap_or("-"));
+            assert_eq!(a.len(), uniq.len(), "{lang}: DUPLICATE item inside one probe");
+        }
+    }
+}
+
