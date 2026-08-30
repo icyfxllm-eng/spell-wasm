@@ -1097,6 +1097,17 @@ fn maybe_offer_placement(lang: &str) -> bool {
     true
 }
 
+/// CC-PLACEMENT-IDEMPOTENCE F0 — read-only views of the probe's thread-locals
+/// for the e2e seam. `placed` lives in localStorage and is already visible; these
+/// two are not, and a probe that fails to close cannot be diagnosed without them.
+pub fn seam_placement_live() -> bool {
+    PLACEMENT_LIVE.with(std::cell::Cell::get)
+}
+
+pub fn seam_placement_queue_len() -> usize {
+    PLACEMENT_QUEUE.with(|q| q.borrow().len())
+}
+
 pub fn wire_placement(app: &App) {
     if !crate::dom::exists("plcCard") {
         return; // site shell: no placement surface, wire nothing
@@ -1511,9 +1522,32 @@ async fn backend_verify(app: App, word: String, typed: String, kid: bool) {
         Ok(c) => c,
         Err(_) => crate::norm::answer_matches(&typed, &word, kid),
     };
-    // The English backend-verified path is the same submission, one
-    // network hop later — recorded with the same channel.
-    crate::learner::note_attempt(crate::consts::EN, &word, correct, crate::learner::Channel::Typed);
+    // THE PLACEMENT PROBE COULD NEVER COMPLETE, AND THIS IS WHY.
+    //
+    // submit_guess routes English to this async path and RETURNS before its
+    // placement block. Placement only exists for English -- placement_set is
+    // empty for the other fourteen languages -- so note_placement and
+    // finish_placement were unreachable code. `placed` therefore stayed None
+    // forever, should_offer_placement stayed true forever, and the probe
+    // re-offered on every run. The draw is unseeded, so it re-offered the SAME
+    // words, which is why the report was "it asked me again with the same
+    // words" rather than "it asked me again".
+    //
+    // Measured, not reasoned: an e2e answered the full ten-word set in a real
+    // browser and read localStorage 120ms after each Check. `placed` was null
+    // at every step, including the last, with PLACEMENT_LIVE true and the
+    // queue empty -- both guards satisfied, the block simply never reached.
+    if PLACEMENT_LIVE.with(std::cell::Cell::get) {
+        crate::learner::note_placement(crate::consts::EN, &word, correct);
+        if PLACEMENT_QUEUE.with(|q| q.borrow().is_empty()) {
+            crate::learner::finish_placement(crate::consts::EN, true);
+            crate::dom::show_toast(&crate::i18n::t("placement.done"));
+        }
+    } else {
+        // The English backend-verified path is the same submission, one
+        // network hop later — recorded with the same channel.
+        crate::learner::note_attempt(crate::consts::EN, &word, correct, crate::learner::Channel::Typed);
+    }
     if correct {
         on_correct(&app);
     } else {

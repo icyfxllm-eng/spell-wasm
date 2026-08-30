@@ -1,8 +1,8 @@
 # TEST-REPORT — Web E2E (app build)
 
-**95/95 passed** across 22 areas.
+**96/96 passed** across 22 areas.
 
-## playhub — 8/8
+## playhub — 9/9
 - ✅ hub: opens from the meta corner and renders registry tiles
 - ✅ hub: word_stories is never rendered (F8 hard gate)
 - ✅ hub: coming_soon renders as a non-tappable teaser
@@ -11,6 +11,7 @@
 - ✅ hub: A2.2 — Little Speller sees only kidSafe tiles, zero upsell
 - ✅ placement: offered once, skip stands, no re-offer
 - ✅ placement: Try serves the set through the real session
+- ✅ placement: a COMPLETED probe never re-offers, across a reload
 
 ## keyboard — 6/6
 - ✅ keyboard[en]: keys visible with hit area at SE
