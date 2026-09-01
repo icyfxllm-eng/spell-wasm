@@ -82,6 +82,10 @@ echo "== gate: ru entry identity — one spelling, one entry (CC-RUSSIAN-STRESS 
 node scripts/ru-identity-check.mjs || { echo "GATE FAIL: ru entry identity"; exit 1; }
 node scripts/ru-identity-check.mjs --selftest || { echo "GATE FAIL: ru identity selftest"; exit 1; }
 
+echo "== gate: ru stress ingest is the only write path (CC-RUSSIAN-STRESS Phase 3)"
+node scripts/ru-stress-ingest-check.mjs || { echo "GATE FAIL: ru stress ingest/audit claim"; exit 1; }
+node scripts/ru-stress-ingest-check.mjs --selftest || { echo "GATE FAIL: ru stress ingest selftest"; exit 1; }
+
 echo "== gate: pinyin display is precomposed, one builder (CC-ZH-PINYIN-DISPLAY L1)"
 node scripts/pinyin-display-check.mjs || { echo "GATE FAIL: pinyin display law"; exit 1; }
 node scripts/pinyin-display-check.mjs --selftest || { echo "GATE FAIL: pinyin display selftest"; exit 1; }

@@ -47,6 +47,7 @@ mod impostor_screen; // CC-IMPOSTOR F1/F5 round loop
 #[cfg(not(feature = "web"))]
 mod bee_screen; // CC-BEE-SIM F1 stage
 mod drawing;
+mod ru_stress_data; // GENERATED — tools/ru_stress_ingest.py
 mod ru_stress; // CC-RUSSIAN-STRESS Phase 1 — the only two functions that know U+0301
 mod word_id;   // CC-RUSSIAN-STRESS v3 I8 — entry identity, sense 0 == the legacy key
 mod stroke_counts; // GENERATED — tools/build-stroke-counts.py (CC-CJK-INK F5)

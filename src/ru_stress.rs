@@ -48,6 +48,33 @@ pub fn strip_stress(s: &str) -> String {
     s.chars().filter(|c| *c != ACUTE).collect()
 }
 
+/// The audited index for a word, or None if it has no coverage.
+///
+/// Returns None for EVERYTHING while `ru_stress_data::AUDITED` is false. The
+/// table is present and diffable but inert: Wiktionary pre-fill is a good
+/// source, not an audit, and a wrong mark teaches a wrong word.
+///
+/// None is a legitimate answer, not a gap to paper over: I5 excludes an
+/// uncovered entry from selection rather than rendering it bare, so a partial
+/// audit ships correctly instead of half-working. Monosyllables are None by
+/// rule; so is anything the auditor left blank, including the 112 spellings
+/// Wiktionary gives more than one stress for.
+pub fn stress_index(word: &str) -> Option<u8> {
+    if !crate::ru_stress_data::AUDITED {
+        return None;
+    }
+    crate::ru_stress_data::RU_STRESS
+        .binary_search_by(|(k, _)| (*k).cmp(word))
+        .ok()
+        .map(|i| crate::ru_stress_data::RU_STRESS[i].1)
+}
+
+/// The display form for a covered word: `молоко` -> `молоко́`.
+/// None where there is no coverage, which is the same thing as "do not mark".
+pub fn marked(word: &str) -> Option<String> {
+    mark_stress(word, stress_index(word)? as usize)
+}
+
 /// `ё` is inherently stressed, so its index is forced. An entry carrying `ё`
 /// with an index elsewhere is a data error, not a variant (v2 rule 3).
 pub fn yo_index(word: &str) -> Option<usize> {
@@ -64,6 +91,47 @@ mod tests {
     use super::*;
 
     /// I1 — no U+0301 survives into anything grading compares.
+    /// The audited table must satisfy I1 and I4 for EVERY row, not just the
+    /// hand-picked examples below: strip the mark and the answer key comes
+    /// back byte-identical. The ingest asserts this on the sheet; this asserts
+    /// it on what actually shipped.
+    #[test]
+    fn the_shipped_table_round_trips_and_marks_only_vowels() {
+        let n = crate::ru_stress_data::RU_STRESS.len();
+        assert!(n > 0, "no stress data shipped");
+        let mut prev = "";
+        for (word, i) in crate::ru_stress_data::RU_STRESS.iter() {
+            assert!(*word > prev, "table must be sorted for binary search: {prev} then {word}");
+            prev = word;
+            let ch = word.chars().nth(*i as usize)
+                .unwrap_or_else(|| panic!("{word}: index {i} is past the end"));
+            assert!(VOWELS.contains(ch), "{word}: index {i} is {ch:?}, not a vowel");
+            let m = mark_stress(word, *i as usize).expect("covered word must mark");
+            assert_eq!(strip_stress(&m), *word, "{word}: round trip changed the answer key");
+            assert_eq!(m.chars().filter(|c| *c == ACUTE).count(), 1, "{word}: not exactly one mark");
+            if crate::ru_stress_data::AUDITED {
+                assert_eq!(stress_index(word), Some(*i), "{word}: lookup disagrees with the table");
+            }
+        }
+        assert!(stress_index("нетакогослова").is_none(), "an unknown word must be None");
+    }
+
+    /// The dark rule, asserted rather than trusted. This is the test that will
+    /// FAIL the day someone flips the claim, which is the point: flipping it
+    /// must be a deliberate act that shows up in a diff, not a default.
+    #[test]
+    fn the_table_is_dark_until_a_human_signs_off() {
+        let covered = crate::ru_stress_data::RU_STRESS.first().map(|(w, _)| *w);
+        if crate::ru_stress_data::AUDITED {
+            assert_eq!(stress_index(covered.unwrap()), Some(crate::ru_stress_data::RU_STRESS[0].1),
+                       "audited: the lookup must serve the table");
+        } else {
+            assert!(stress_index(covered.unwrap()).is_none(),
+                    "unaudited: every lookup must be None, even for a word in the table");
+            assert!(marked(covered.unwrap()).is_none(), "unaudited: nothing may be marked");
+        }
+    }
+
     #[test]
     fn i1_strip_undoes_mark_for_every_vowel_position() {
         for word in ["замок", "молодец", "молоко", "рука", "окно", "начал", "ёж", "своё"] {

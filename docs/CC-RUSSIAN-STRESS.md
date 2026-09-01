@@ -68,3 +68,48 @@ introduce the first collision — but it blocks nothing today.
 **Scope of the audit job: 5961 rows.** That is the number to weigh before
 committing to a `ru` release date, and it is the cheapest audit column in the
 project: binary, no judgment, hundreds of rows an hour for a native speaker.
+
+## Phase 3 — ingest (BUILT 2026-08-31)
+
+`tools/ru_stress_ingest.py` is the only write path for stress data, as with
+definitions. It reads the auditor's filled sheet, converts `stressed_form` back
+to a character `stress_index`, and emits `src/ru_stress_data.rs`.
+
+**Four gates, each rejecting the WHOLE sheet rather than dropping a row.**
+
+| gate | what it catches |
+|---|---|
+| AGREEMENT | `strip_stress(stressed_form) != word` — the answer key was edited (typo, autocorrect, stray space). I1's promise rests on the key being untouched. |
+| WELL-FORMED | not exactly one U+0301, or a mark on a consonant. This project has produced that defect by hand three times. |
+| Ё | an entry containing ё indexed anywhere but the ё. |
+| DECOY | more than one of the six planted rows left uncorrected. Rejects the sheet and gates payment (v2 Feature 2). One miss is tolerated; two is a pattern. |
+
+A rejected sheet writes nothing. There is no partial ingest: I5 excludes an
+uncovered entry from selection, so an absent row degrades safely and a wrong
+row does not.
+
+Verified by construction, not assertion — the unaudited sheet (6 decoys intact)
+is REJECTED; a corrected sheet is ACCEPTED; and three lesions each trip their
+own gate with a message naming the actual cause.
+
+### The table ships DARK
+
+`config/ru-stress-audit.json` holds `audited: false`. **The ingest reads that
+file and never writes it**, following `gloss_docs` in `src/translate.rs`:
+`audited` is a HUMAN claim, no tool sets it. The ingest's gates prove the sheet
+is well-formed and the auditor was awake; they cannot prove the answers are
+right, and the 973 pre-filled rows are Wiktionary — a good source, not an audit.
+
+While the claim is false, `ru_stress.rs::stress_index` returns `None` for every
+word, including words in the table. The data is present and diffable; it is
+inert. `scripts/ru-stress-ingest-check.mjs` (5 lesions, in the gate) catches the
+forgery that a unit test cannot: flipping `AUDITED` in the *generated* file
+instead of the config, which would take 973 unread rows live.
+
+Eric flips it after his own pass (he expects ~a month of study; stated
+2026-08-29). Flipping it makes `the_table_is_dark_until_a_human_signs_off` fail
+until the lookup is expected live — deliberate, and visible in a diff.
+
+**Still open:** the 112 stress-homographs need `senseDiscriminator` + two
+definitions each before they can be covered at all; D20 (Phase 6 report
+content) and D21's threshold remain unsigned.

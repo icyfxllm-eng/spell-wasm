@@ -1,0 +1,6 @@
+{
+  "$doc": "CC-RUSSIAN-STRESS: the human audit claim for the stress table. THE INGEST CANNOT WRITE THIS FILE. It follows the rule already set by gloss_docs in src/translate.rs -- `audited` is a HUMAN claim, no tool sets it -- because the ingest's own gates cannot certify their input. The decoy gate proves an auditor was PAYING ATTENTION; it cannot prove they were RIGHT, and the 973 pre-filled rows come from Wiktionary, which is a good source and not an audit. While this is false, src/ru_stress.rs::stress_index returns None for every word, I5 excludes those entries from stress selection, and the game behaves exactly as it did before the table existed. Eric flips it after his own pass (he expects roughly a month of study first, stated 2026-08-29).",
+  "audited": false,
+  "by": null,
+  "date": null
+}
