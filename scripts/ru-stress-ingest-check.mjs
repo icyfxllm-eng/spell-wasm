@@ -17,11 +17,75 @@
 //       two disagree, the copy is a forgery -- and a unit test cannot catch it,
 //       because the unit test reads the forged constant and happily agrees
 //       with itself.
+//   L3  The stress mark is DISPLAY ONLY. Feature 5: "Never on the answer
+//       field, never on anything the player types into." I1 says no diacritic
+//       may reach grading, and grading compares against the bare answer key --
+//       so a marked string reaching the input path does not merely look wrong,
+//       it marks a correct answer wrong. The marking functions may therefore be
+//       called from exactly one place, ru_reveal_html, and from nowhere else in
+//       shipped code. Pinyin's lint forbids combining marks on its output path
+//       because pinyin is precomposed; Russian is the mirror image -- U+0301 has
+//       no precomposed Cyrillic form, so the mark is REQUIRED on output and
+//       banned on input.
 import fs from "node:fs";
 import path from "node:path";
 
 const ROOT = path.dirname(new URL(import.meta.url).pathname) + "/..";
 const SELFTEST = process.argv.includes("--selftest");
+
+/** Brace-matched body of a named fn, or "" when absent. */
+function fnBody(src, sig) {
+  const at = src.indexOf(sig);
+  if (at < 0) return "";
+  let depth = 0, j = src.indexOf("{", at);
+  const b = j;
+  for (; j < src.length; j++) {
+    if (src[j] === "{") depth++;
+    else if (src[j] === "}" && --depth === 0) { j++; break; }
+  }
+  return src.slice(b, j);
+}
+
+function stripTests(src) {
+  let out = "", i = 0;
+  for (;;) {
+    const m = src.indexOf("#[cfg(test)]", i);
+    if (m < 0) { out += src.slice(i); break; }
+    out += src.slice(i, m);
+    let depth = 0, j = src.indexOf("{", m);
+    if (j < 0) break;
+    for (; j < src.length; j++) {
+      if (src[j] === "{") depth++;
+      else if (src[j] === "}" && --depth === 0) { j++; break; }
+    }
+    i = j;
+  }
+  return out;
+}
+
+const MARKERS = /crate::ru_stress::(marked|mark_stress)\s*\(/g;
+
+/** L3 — the marking functions are reachable from ru_reveal_html and nowhere else. */
+function evaluateDisplayOnly(files) {
+  const fails = [];
+  for (const [name, raw] of files) {
+    const code = stripTests(raw);
+    const total = (code.match(MARKERS) || []).length;
+    if (!total) continue;
+    const allowed = name.endsWith("game.rs")
+      ? (fnBody(code, "fn ru_reveal_html").match(MARKERS) || []).length
+      : 0;
+    if (total !== allowed) {
+      fails.push(
+        `${name}: ${total - allowed} call(s) to ru_stress::marked/mark_stress outside ru_reveal_html. ` +
+        `Feature 5 puts the mark on the reveal and NOWHERE else — never the answer field, never anything ` +
+        `the player types into. Grading compares against the bare answer key, so a marked string on the ` +
+        `input path marks a CORRECT answer wrong.`
+      );
+    }
+  }
+  return fails;
+}
 
 function evaluate(rs, claimRaw) {
   const fails = [];
@@ -64,19 +128,38 @@ if (SELFTEST) {
   let bad = 0;
   for (const [name, rs, claim] of lesions)
     if (evaluate(rs, claim).length === 0) { console.error(`  SURVIVED: ${name}`); bad++; }
+
+  const okGame = 'fn ru_reveal_html(a: u8) {\n  let m = crate::ru_stress::marked(word)?;\n}\nfn other() {}\n';
+  const l3 = [
+    ["marked() called outside ru_reveal_html", [["src/game.rs", okGame + 'fn type_letter() { crate::ru_stress::marked(w); }']]],
+    ["mark_stress() on the input path", [["src/keyboard.rs", 'fn key(){ crate::ru_stress::mark_stress(w, 1); }']]],
+    ["marked() in the answer-field module", [["src/editor.rs", 'crate::ru_stress::marked(buf)']]],
+  ];
+  for (const [name, f] of l3)
+    if (evaluateDisplayOnly(f).length === 0) { console.error(`  SURVIVED: ${name}`); bad++; }
+  if (evaluateDisplayOnly([["src/game.rs", okGame]]).length !== 0) {
+    console.error("  FALSE POSITIVE: the legitimate ru_reveal_html call was flagged"); bad++;
+  }
   if (evaluate(good, '{"audited":false}').length !== 0) { console.error("  FALSE POSITIVE on the clean pair"); bad++; }
   if (bad) { console.error(`ru-stress-ingest-check: FAILED\n  ${bad} lesion(s) not caught`); process.exit(1); }
-  console.log(`ru-stress-ingest-check: selftest OK — all ${lesions.length} lesions fail the build`);
+  console.log(`ru-stress-ingest-check: selftest OK — all ${lesions.length + 3} lesions fail the build`);
   process.exit(0);
 }
 
-const fails = evaluate(
-  fs.readFileSync(path.join(ROOT, "src/ru_stress_data.rs"), "utf8"),
-  fs.readFileSync(path.join(ROOT, "config/ru-stress-audit.json"), "utf8"),
-);
+const srcDir = path.join(ROOT, "src");
+const rustFiles = fs.readdirSync(srcDir).filter(f => f.endsWith(".rs") && f !== "ru_stress.rs")
+  .map(f => [`src/${f}`, fs.readFileSync(path.join(srcDir, f), "utf8")]);
+
+const fails = [
+  ...evaluate(
+    fs.readFileSync(path.join(ROOT, "src/ru_stress_data.rs"), "utf8"),
+    fs.readFileSync(path.join(ROOT, "config/ru-stress-audit.json"), "utf8"),
+  ),
+  ...evaluateDisplayOnly(rustFiles),
+];
 if (fails.length) {
   console.error("ru-stress-ingest-check: FAILED");
   for (const f of fails) console.error("  " + f);
   process.exit(1);
 }
-console.log("ru-stress-ingest-check: OK — generated table intact, audit claim matches the human-signed config");
+console.log("ru-stress-ingest-check: OK — generated table intact, audit claim matches the human-signed config, mark confined to the reveal");

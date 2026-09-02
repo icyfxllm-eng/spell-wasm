@@ -113,3 +113,50 @@ until the lookup is expected live — deliberate, and visible in a diff.
 **Still open:** the 112 stress-homographs need `senseDiscriminator` + two
 definitions each before they can be covered at all; D20 (Phase 6 report
 content) and D21's threshold remain unsigned.
+
+## Phase 4 — Feature 5, visual stress on the reveal (BUILT 2026-08-31)
+
+**Why the reveal and not a pre-answer surface.** Feature 5 says "the
+hint/prompt surface", and in this game that can only be the reveal. Every
+pre-answer surface deliberately withholds spelling: `mask_word` shows one
+letter and bullets, and `show_sentence_hint` masks the word inside its own
+example sentence on the stated grounds that "hearing it doesn't give away the
+spelling the way reading it would". Rendering молоко́ before the answer would
+hand over the whole word, which is the one thing this game never does.
+Post-answer the word is already on screen, so the mark is pure teaching.
+
+`ru_reveal_html` sits in `finalize_incorrect_ex` beside `zh_reveal_html`, the
+exact precedent — Chinese already puts its tone marks on that surface.
+
+**Gating.** Russian, easy tier, and AUDITED coverage. Tier comes from the new
+`effective_tier`, because Climb reports a *band* and a check against the raw
+`level` string would be false for every Climb player. `preload_pool` had the
+same logic inline and now shares it, so the two cannot drift.
+
+**I1 holds.** `ru_reveal_html` builds a display string and returns it. It never
+touches `reveal`, which stays bare for grading, for the audit-preview
+attribute, and for every store keyed on the word.
+
+**L3, new gate law.** The marking functions are callable from `ru_reveal_html`
+and nowhere else in shipped code. Feature 5: "Never on the answer field, never
+on anything the player types into." Grading compares against the bare answer
+key, so a marked string on the input path would mark a CORRECT answer wrong.
+Pinyin's lint is the mirror image — it *forbids* combining marks on its output
+path because pinyin is precomposed; U+0301 has no precomposed Cyrillic form, so
+here the mark is required on output and banned on input. 8 lesions total.
+
+### The rendering note, measured
+
+The spec flags that U+0301 must render as a true combining mark. The bundled
+webfont subsets declare U+0300-0301 (for Vietnamese) but carry **no Cyrillic**,
+so the letters fall back to a system font while the mark could be matched from
+a different face — mark and base from different fonts is exactly when combining
+marks break. Measured in the browser against the real `.reveal` stack
+("Space Mono", ui-monospace, monospace): adding U+0301 adds **zero advance
+width** both to a whole word and to a lone vowel, and a visual check renders
+молоко́, за́мок / замо́к, хорошо́ and ёж with the acute on the correct vowel.
+The browser stack is clear. **iOS WKWebView remains a device-pass item.**
+
+**Ships invisible.** `marked()` returns None while the table is dark, so this
+changes nothing a player sees until `config/ru-stress-audit.json` is signed.
+`ru_reveal_is_dark_until_a_human_signs_off` asserts exactly that.

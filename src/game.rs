@@ -146,17 +146,9 @@ pub fn preload_pool(app: &App) {
     if !is_builtin_lang(&s.lang) {
         return;
     }
-    let mut tier = if s.level == "climb" {
-        tier_for_streak(s.streak).to_string()
-    } else {
-        s.level.clone()
-    };
-    // Kid Mode caps difficulty at Hard: only Expert (the spelling nightmares)
-    // steps down, so easy→medium→hard stay distinct instead of collapsing to
-    // one pool.
-    if s.kid && tier == "expert" {
-        tier = "hard".to_string();
-    }
+    // Kid Mode caps difficulty at Hard, and Climb reports its band -- both live
+    // in effective_tier, which this used to duplicate.
+    let tier = effective_tier(&s);
     let pool = active_word_list(&s, &tier);
     let lang = s.lang.clone();
     drop(s);
@@ -167,6 +159,21 @@ pub fn preload_pool(app: &App) {
             None => api::preload_word(&word, &lang),
         }
     }
+}
+
+/// The tier the player is ACTUALLY on right now. Climb reports its band, not
+/// the literal "climb", so a Feature 5 check against the raw `level` string
+/// would be false for every Climb player -- which is most of them.
+fn effective_tier(s: &AppState) -> String {
+    let mut tier = if s.level == "climb" {
+        tier_for_streak(s.streak).to_string()
+    } else {
+        s.level.clone()
+    };
+    if s.kid && tier == "expert" {
+        tier = "hard".to_string();
+    }
+    tier
 }
 
 fn tier_for_streak(streak: u32) -> &'static str {
@@ -1845,6 +1852,12 @@ fn finalize_incorrect_ex(app: &App, glyph: &str, prefix: &str, feedback_class: &
         // shaped run). CC-RTL; reachable only once RTL_SUPPORTED flips.
         dom::set_html("feedback", &format!("{}{}", prefix, render_reveal_colored(&reveal, &typed)));
         dom::el("feedback").set_class_name(feedback_class);
+    } else if let Some(ru) = ru_reveal_html(&cur_lang, &reveal, &effective_tier(&app.borrow())) {
+        // CC-RUSSIAN-STRESS Feature 5: the reveal carries the stress mark.
+        // молоко́ teaches the reduction rule; молоко teaches six letters. Every
+        // Russian dictionary marks stress for this reason.
+        dom::set_html("feedback", &format!("{prefix}{ru}"));
+        dom::el("feedback").set_class_name(feedback_class);
     } else if let Some(zh) = zh_reveal_html(&cur_lang, &word, &app.borrow().spoken.clone()) {
         // CC-ZH-TONE F3: never an opaque "incorrect". The reveal marks each
         // syllable with its own verdict and names the failing one by index and
@@ -2037,6 +2050,43 @@ thread_local! {
 /// its tone AND carries its tone mark, and the failure is stated in words
 /// underneath, so the message survives a colour-blind player and a greyscale
 /// screenshot alike.
+/// CC-RUSSIAN-STRESS Feature 5 — the marked form on the reveal surface.
+///
+/// WHY THE REVEAL AND NOT A PRE-ANSWER SURFACE. Feature 5 says "the hint/prompt
+/// surface", and in this game that can only be the reveal. Every pre-answer
+/// surface deliberately withholds spelling: mask_word shows one letter and
+/// bullets, and show_sentence_hint masks the word inside its own example
+/// sentence on the stated grounds that "hearing it doesn't give away the
+/// spelling the way reading it would". Rendering молоко́ before the answer
+/// would hand over the whole word, which is the one thing this game never
+/// does. Post-answer the word is already on screen, so the mark is pure
+/// teaching and costs nothing.
+///
+/// I1 HOLDS. This builds a display string and returns it. It does not touch
+/// `reveal`, which stays bare for grading, for the audit-preview attribute,
+/// and for every store keyed on the word. No diacritic reaches any of them.
+///
+/// Returns None -- falling through to the plain reveal -- when the language is
+/// not Russian, when the tier is not easy, or when the word has no AUDITED
+/// coverage. Today that last case is every word: the table ships dark until a
+/// human signs config/ru-stress-audit.json, so this renders nothing yet.
+fn ru_reveal_html(lang: &str, word: &str, level: &str) -> Option<String> {
+    if lang != crate::consts::RU || !ru_stress_display_allowed(level) {
+        return None;
+    }
+    let marked = crate::ru_stress::marked(word)?;
+    Some(format!(
+        "<span class=\"reveal ru-stress\">{}</span>",
+        dom::escape_html(&marked)
+    ))
+}
+
+/// Feature 5 gates the mark to easy mode. One predicate, so widening it to
+/// every tier is a one-line change with one place to test.
+fn ru_stress_display_allowed(level: &str) -> bool {
+    level == "easy"
+}
+
 fn zh_reveal_html(lang: &str, word: &str, hanzi: &str) -> Option<String> {
     use crate::pinyin::{SyllableVerdict, WordVerdict, TONE_COLOURS};
     if lang != crate::consts::ZH {
@@ -3271,6 +3321,46 @@ mod climb_band_tests {
     /// on any letter span would form a box and shatter the join — that (not the
     /// span) is what F4 actually found. If this test fails, cursive feedback stops
     /// joining.
+
+    /// Feature 5 is gated to easy mode, and Climb reports a BAND, never the
+    /// literal "climb" -- a check against the raw level string would be false
+    /// for every Climb player, which is most of them.
+    #[test]
+    fn ru_stress_shows_on_easy_only() {
+        assert!(super::ru_stress_display_allowed("easy"));
+        for t in ["medium", "hard", "expert", "climb", ""] {
+            assert!(!super::ru_stress_display_allowed(t), "{t} must not show the mark");
+        }
+    }
+
+    /// The reveal renders NOTHING while the table is dark, for every language
+    /// and tier -- including a word that is in the table. This is the test that
+    /// proves build 218 changed nothing a player can see.
+    #[test]
+    fn ru_reveal_is_dark_until_a_human_signs_off() {
+        let w = crate::ru_stress_data::RU_STRESS.first().map(|(w, _)| *w).unwrap();
+        if !crate::ru_stress_data::AUDITED {
+            assert!(super::ru_reveal_html("ru", w, "easy").is_none(),
+                    "unaudited: the reveal must not mark {w}");
+        }
+        // Gating holds regardless of the audit claim.
+        assert!(super::ru_reveal_html("en", "moloko", "easy").is_none(), "not Russian");
+        assert!(super::ru_reveal_html("ru", w, "hard").is_none(), "not easy mode");
+    }
+
+    /// I1: the mark is DISPLAY ONLY. Whatever the reveal renders must strip
+    /// back to the exact answer key -- the string grading, the stores and the
+    /// audit-preview attribute all use.
+    #[test]
+    fn the_marked_reveal_strips_back_to_the_answer_key() {
+        for (w, i) in crate::ru_stress_data::RU_STRESS.iter().take(200) {
+            let m = crate::ru_stress::mark_stress(w, *i as usize).expect("covered word marks");
+            assert_ne!(&m, w, "{w}: the marked form must actually differ");
+            assert_eq!(&crate::ru_stress::strip_stress(&m), w,
+                       "{w}: a diacritic would reach grading");
+        }
+    }
+
     #[test]
     fn coloured_reveal_uses_only_colour_never_box_forming_styles() {
         let html = super::render_reveal_colored("\u{643}\u{62a}\u{627}\u{628}", "\u{643}\u{628}\u{627}\u{628}"); // كتاب vs كباب
