@@ -599,6 +599,11 @@
   .wp-guide{stroke:rgba(232,236,245,.62);stroke-width:2;fill:none;stroke-linecap:round;stroke-linejoin:round}
   /* CC-PICKER-CONTINUE */
   /* v3: no sideways scrolling anywhere — every row wraps. */
+  /* The traced artwork inside a gallery card. Lighter than every carrier
+     weight so progress still reads at a glance, but heavier than the play
+     frame's guide (2px): a card is ~120px of a 512 viewBox, so a 2px stroke
+     lands under half a pixel and vanishes. */
+  .wp-th-guide{stroke:rgba(232,236,245,.42);stroke-width:3;fill:none;stroke-linecap:round;stroke-linejoin:round}
   .wp-th-ink{stroke:rgba(232,236,245,.95);stroke-width:7;fill:none;stroke-linecap:round;stroke-linejoin:round}
   .wp-th-ghost{stroke:rgba(232,236,245,.22);stroke-width:5;fill:none;stroke-linecap:round;stroke-linejoin:round}
   .wp-th-pin{stroke:rgba(232,236,245,.55);stroke-width:4;fill:none;stroke-linecap:round;stroke-linejoin:round}
@@ -681,6 +686,7 @@
   .wp-light .wp-pinned{stroke:rgba(26,23,18,.92)}
   .wp-light .wp-feature{fill:rgba(26,23,18,.95);stroke:rgba(26,23,18,.95)}
   .wp-light .wp-guide{stroke:rgba(26,23,18,.58)}
+  .wp-light .wp-th-guide{stroke:rgba(26,23,18,.5)}
   .wp-light .wp-outline{stroke:rgba(0,0,0,.22)}
   .wp-light .wp-outline.next{stroke:rgba(26,23,18,.92)}
   .wp-light .wp-outline.next.miss-dim{stroke:rgba(26,23,18,.30)}

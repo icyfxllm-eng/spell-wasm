@@ -394,6 +394,35 @@ fn thumb_svg(pic: &str, lang: &str, run: &wordpic::Run) -> String {
     } else {
         "<svg viewBox=\"0 0 512 512\" xmlns=\"http://www.w3.org/2000/svg\">"
     });
+    // THE GUIDE LAYER — the traced artwork, under the carriers.
+    //
+    // Thumbnails drew only `scan_paths` (the word carriers) from the day they
+    // were written, and for an ordinary picture that reads fine because the
+    // carriers follow the subject: the dog's carriers ARE a dog. A masterpiece
+    // carries its subject in `guide` and uses a handful of near-horizontal
+    // rails as carriers, so a carriers-only card was six dashes on a beige
+    // ground -- the whole Masterpieces gallery, plus Red Fuji and the Flamingo,
+    // rendered as abstract lines. The artwork was in the bundle the entire
+    // time (Flamingo 67 paths / 1041 points, Great Wave 225) and shipped to the
+    // device; nothing ever drew it here.
+    //
+    // Drawn for EVERY picture, not just masters: one rule, no per-pack branch.
+    // The play frame and the export already draw this layer; this is the third
+    // surface catching up, through the same guide_polys the others call.
+    if let Some(pic) = crate::wordpic::picture(&plan.subject) {
+        for g in crate::wordpic_layout::guide_polys(pic) {
+            if g.pts.len() < 2 {
+                continue;
+            }
+            let d: String = g
+                .pts
+                .iter()
+                .enumerate()
+                .map(|(k, (x, y))| format!("{}{x:.1} {y:.1} ", if k == 0 { "M" } else { "L" }))
+                .collect();
+            svg.push_str(&format!("<path class=\"wp-th-guide\" d=\"{d}\"/>"));
+        }
+    }
     for (i, path) in paths.iter().enumerate() {
         if path.points.len() < 2 {
             continue;
@@ -3021,6 +3050,52 @@ mod continue_row_tests {
     /// CC-PICKER-CONTINUE invariant: thumbnails are STROKES ONLY — zero
     /// glyph typesetting, ever. And the ink/ghost split tracks the run.
     #[test]
+    /// THE REGRESSION THIS FILE SHIPPED. A gallery card drew only the word
+    /// carriers, so every masterpiece -- whose subject lives in the guide layer
+    /// and whose carriers are a few near-horizontal rails -- rendered as a
+    /// handful of dashes on a beige ground. The artwork was in the bundle and
+    /// on the device the whole time; the card just never drew it.
+    ///
+    /// Asserted on a MASTER, because that is where carriers alone say nothing.
+    #[test]
+    fn a_gallery_card_draws_the_artwork_not_just_the_carriers() {
+        let run = crate::wordpic::Run {
+            pic: "flamingo".into(), lang: "en".into(), seed: 1, words: vec![],
+            done: false, replay: vec![], replay_seed: 0, touched: 1,
+        };
+        let svg = thumb_svg("flamingo", "en", &run);
+        assert!(!svg.is_empty(), "flamingo renders a thumbnail");
+        let guides = svg.matches("wp-th-guide").count();
+        let carriers = svg.matches("wp-th-").count() - guides;
+        assert!(guides > 20,
+                "a master's card must carry its artwork, got {guides} guide paths");
+        assert!(guides > carriers,
+                "the artwork ({guides}) must outweigh the carriers ({carriers}) -- \
+                 carriers alone are the six dashes this test exists to prevent");
+        // Under, never over: progress must stay readable on top of the art.
+        let first_guide = svg.find("wp-th-guide").unwrap();
+        let first_carrier = ["wp-th-ghost", "wp-th-ink", "wp-th-pin"]
+            .iter().filter_map(|c| svg.find(c)).min().unwrap();
+        assert!(first_guide < first_carrier, "the guide must render beneath the carriers");
+        assert!(!svg.contains("<text"), "still strokes only");
+    }
+
+    /// rhino is the one master with NO artwork (0 guide paths) -- the single
+    /// genuine content gap the forensics found. It must not crash the card, and
+    /// it must not silently look like the others.
+    #[test]
+    fn a_picture_with_no_guide_still_renders_its_carriers() {
+        let p = crate::wordpic::picture("rhino").expect("rhino is in the registry");
+        assert!(p.guide.is_empty(), "if rhino gained artwork, retire this test");
+        let run = crate::wordpic::Run {
+            pic: "rhino".into(), lang: "en".into(), seed: 1, words: vec![],
+            done: false, replay: vec![], replay_seed: 0, touched: 1,
+        };
+        let svg = thumb_svg("rhino", "en", &run);
+        assert!(!svg.contains("wp-th-guide"), "no artwork to draw");
+        assert!(svg.contains("wp-th-"), "carriers still render");
+    }
+
     fn thumbs_are_strokes_only_and_track_progress() {
         let run = crate::wordpic::Run {
             pic: "star".into(),
