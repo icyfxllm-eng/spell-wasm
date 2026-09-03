@@ -1,0 +1,12 @@
+{
+  "$doc": "CC-BUILD219-FIXES F1 — which launchers belong in the home 'Ways to play' row. THE FLAG IS THE ONLY THING THAT DECIDES ROW MEMBERSHIP; there is no per-mode branch in the code, so removing a tile is a data edit and never a conditional. The row is static markup in index.html (bespoke wiring, i18n keys and feature gates per button), so this registry does not build the row -- it SUPPRESSES members. A tile with hubTile true is a member and may still be hidden moment to moment by its own feature gate (Spell It waits on the speech bridge, Challenge a friend on the online flag, and the Climb button is hidden in Kid Mode by climb::reflect_auth). Membership and momentary visibility are different questions with different owners. Suppression uses its own class, tile-off, precisely BECAUSE reflect_auth toggles btn-hide on climbBtn whenever auth state changes -- sharing that class would have the gate un-hide a tile the registry removed.",
+  "$wall": "THIS FILE IS COMPILED INTO THE SITE BUILD TOO, so it may not name an app-only mode. The gallery launcher is deliberately absent: its markup is cut from the site by the SPELL-PICTURE sentinels in index.html (CC-PICTURE-BANK I1), and web-picture-wall-scan.mjs fails the build if its symbols reach the site bundle. Naming it here breached that wall on the first attempt at F1 -- the site e2e caught it. Its membership is owned by the sentinel cut, not by this registry, and omitting it costs nothing because this registry only ever suppresses.",
+  "tiles": [
+    { "id": "vsBtn",    "hubTile": true },
+    { "id": "climbBtn", "hubTile": false,
+      "$note": "D1 SIGNED (Eric, 2026-09-02): out of the row. The mode is untouched -- Climb is a LEVEL_OPTS entry (src/consts.rs) and stays selectable from the setup chip; shields, leaderboard and scoring are unchanged. The button element STAYS IN THE DOM, hidden: it owns the leaderboard scrim's handler (climb.rs open_leaderboard) and ghost.rs reaches the board by synthesising a click on it, so deleting the markup would break a second feature. Suppressed, not removed." },
+    { "id": "dailyBtn", "hubTile": true },
+    { "id": "sayItBtn", "hubTile": true },
+    { "id": "soBtn",    "hubTile": true }
+  ]
+}

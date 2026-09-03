@@ -386,6 +386,13 @@ fn wire(app: &App) {
         }
     });
     dom::on_click("climbBtn", || open_leaderboard());
+    // The leaderboard's entrance since F1 took the home tile out of the row.
+    // Closes the account sheet first rather than stacking a second scrim on it
+    // -- the same shape as ghost.rs, which closes its screen before routing.
+    dom::on_click("acctClimb", || {
+        dom::remove_class("accountScrim", "show");
+        open_leaderboard();
+    });
 
     // Auth modal: toggle login/signup, submit, close.
     dom::on_click("authToLogin", || dom::toggle_class("authScrim", "login-mode", true));
@@ -436,4 +443,25 @@ fn wire(app: &App) {
             }
         }
     });
+}
+
+#[cfg(test)]
+mod entrance_tests {
+    /// F1 suppressed the home tile, which had been the leaderboard's only tap
+    /// entrance -- ghost.rs can reach the board, but ghost racing is
+    /// status:hidden, so without this the standings became unreachable while
+    /// D1 said they stay exactly as they are. Static, because the sheet only
+    /// opens for a signed-in player and an e2e cannot get there cheaply.
+    #[test]
+    fn the_leaderboard_keeps_a_tap_entrance() {
+        let html = include_str!("../index.html");
+        assert!(html.contains("id=\"acctClimb\""),
+                "the account sheet lost the leaderboard entrance");
+        let src = include_str!("climb.rs");
+        assert!(src.contains("on_click(\"acctClimb\""),
+                "the entrance exists in markup but nothing wires it");
+        // The suppressed tile still owns the handler ghost.rs clicks.
+        assert!(src.contains("on_click(\"climbBtn\""),
+                "climbBtn still owns open_leaderboard -- ghost.rs reaches the board through it");
+    }
 }

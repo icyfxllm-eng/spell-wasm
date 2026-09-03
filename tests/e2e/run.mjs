@@ -28,6 +28,7 @@ import * as submitAdvance from './specs/submit-advance.mjs';
 import * as attemptsShields from './specs/attempts_shields.mjs';
 import * as toolsHub from './specs/tools-hub.mjs';
 import * as playHub from './specs/playhub.mjs';
+import * as hubRow from './specs/hub-row.mjs';
 import * as economics from './specs/economics.mjs';
 import * as finalePixels from './specs/finale-pixels.mjs';
 import * as audioGate from './specs/audio-gate.mjs';
@@ -39,6 +40,7 @@ import * as settingsEffects from './specs/settings-effects.mjs';
 
 const SPECS = [
   ['playhub', playHub, placement],
+  ['hub-row', hubRow],
   ['keyboard', keyboard],
   ['gameplay', gameplay],
   ['modes', modes],

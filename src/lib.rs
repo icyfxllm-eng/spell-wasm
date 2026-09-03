@@ -59,6 +59,7 @@ pub mod entitlements;
 mod fa_canon; // CC-PERSIAN-FOUNDATION F1 (canonicalizer; fa not yet in the registry)
 mod flags;
 mod game;
+mod hub_tiles; // CC-BUILD219-FIXES F1
 mod ghost;
 mod haptics;
 mod hangul;
@@ -180,6 +181,7 @@ pub fn start() -> Result<(), JsValue> {
     i18n::init(&app.borrow().lang);
     game::build_source_options(&app);
     game::build_level_options(&app);
+    hub_tiles::apply(); // F1: the home row is registry-decided
     game::refresh_mode_buttons(&app);
     game::refresh_daily_btn(&app);
     game::render_letters(&app, false);

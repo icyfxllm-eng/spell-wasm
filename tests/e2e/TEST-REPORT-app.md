@@ -1,6 +1,6 @@
 # TEST-REPORT — Web E2E (app build)
 
-**97/97 passed** across 22 areas.
+**99/99 passed** across 23 areas.
 
 ## playhub — 10/10
 - ✅ hub: opens from the meta corner and renders registry tiles
@@ -13,6 +13,10 @@
 - ✅ placement: Try serves the set through the real session
 - ✅ placement: the offer never interrupts a live run
 - ✅ placement: a COMPLETED probe never re-offers, across a reload
+
+## hub-row — 2/2
+- ✅ hub row: The Climb is out, the rest stay
+- ✅ hub row: the mode is untouched and the board still routes
 
 ## keyboard — 6/6
 - ✅ keyboard[en]: keys visible with hit area at SE
