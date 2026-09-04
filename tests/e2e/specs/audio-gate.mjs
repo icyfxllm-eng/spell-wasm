@@ -103,7 +103,10 @@ export async function run(browser, base, suite) {
     const { ctx, page } = await openApp(browser, base, { lang: 'en' });
     try {
       await armAudioProbe(ctx, page);
-      await openPicture(page, 'mona');
+      // Mona was the round Eric hit, and stays named below because she is why
+      // this test exists. She is archived as of 2026-09-03, so the assertion
+      // now runs on giza — the rule is about the EXPERT TIER, not the subject.
+      await openPicture(page, 'giza');
       // This asserted the opposite until CC-SPELLPIC F5 (Eric 2026-08-10).
       // CC-PICTURE-BANK feature 5 made expert "hear it once", and because
       // masterpieces are expert tier that silently removed the speaker from

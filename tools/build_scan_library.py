@@ -20,6 +20,9 @@ FLOOR = 13.0
 MIN_WORD_CHARS = 3
 CORNER_DEG = 35.0
 SMALL_FEATURE_MAX = 130.0
+# A residual strand is only worth keeping if it can host the shortest
+# legal word; below that it is a stub that refuses the subject's plan.
+RESIDUAL_MIN_PX = 120
 SEG_MAX = 100000.0  # v8.1: pack per path; corner marks only   # a segment longer than this gets an interior mark
 
 # Eric's per-path sign-off (D4): features that MUST be present, named.
@@ -799,8 +802,26 @@ def rings(path, subject=None):
         return ring
 
     ordered = []
-    for comp in comps:
-        if len(comp) < 8: continue
+    # A component can hold MORE THAN ONE strand. The walk below stops at the
+    # first >6px jump, and until CC-BUILD219-FIXES F3 everything after that
+    # jump was thrown away: the Dallah shipped its body and silently dropped
+    # the spout and handle joins, which is the "open runs" Eric photographed.
+    # The leftover is now re-queued and traced as its own ring instead of
+    # discarded, so a subject carries as many paths as its ink actually has.
+    #
+    # This is general, not a Dallah exception (spec 6 forbids those), and it is
+    # a no-op for most of the bank: dog, fish, daruma, cat and turtle discard
+    # 0.0% of their boundary and rebuild byte-identical. It CHANGES eiffel
+    # (4.3% discarded) and owl (0.7%), which is why the rebuild scope is a
+    # separate decision from this code -- the goldens are not to be touched
+    # without Eric's re-grade.
+    pending = [c for c in comps if len(c) >= 8]
+    guard = 0
+    while pending:
+        comp = pending.pop(0)
+        guard += 1
+        if guard > 400:      # a malformed mask must not spin forever
+            break
         rem = set(comp)
         cur = min(rem)
         ring = [cur]; rem.discard(cur)
@@ -816,6 +837,19 @@ def rings(path, subject=None):
             # start at the topmost-leftmost pixel of this component
             start = min(comp, key=lambda p: (p[1], p[0]))
             ring = moore(set(comp), start)
+            # moore re-walks the whole component, so recompute what it missed
+            on = set(ring)
+            rem = {q for q in comp
+                   if q not in on and min((abs(q[0]-r[0]) + abs(q[1]-r[1]) for r in on), default=99) > 2}
+        # Whatever this ring did not reach becomes its own strand -- but only
+        # if it could actually carry a word. The first cut re-queued anything
+        # over 34px and produced three stubs of arc 27-33 on the Dallah, under
+        # this file's OWN definition of hostable (FLOOR * MIN_WORD_CHARS = 39).
+        # An unplaceable path does not merely waste space: spellpic refuses the
+        # whole plan, and a subject with no legal plan renders NOTHING on
+        # device (F5/I10). The retrace would have shipped a blank Dallah.
+        if len(rem) >= RESIDUAL_MIN_PX:
+            pending.append(sorted(rem))
         if len(ring) >= 8 and len(comp) >= 34:
             ring.append(ring[0])  # close the loop
             pts = [(float(x), float(y)) for x, y in ring[::2]]
@@ -1142,6 +1176,49 @@ for sub, (ref, mode, tier) in SUBJ.items():
         pts = e["points"][::2]
         tight = sum(1 for pt in pts if any(sd2(pt, u, v) < FLOOR for q in others for u, v in zip(q, q[1:])))
         e["tight_frac"] = round(tight / max(1, len(pts)), 3)
+
+    # CORRIDOR FLOOR. The packer refuses a subject outright if any two WORD
+    # paths come within FLOOR of each other (scanlock CorridorConflict), and a
+    # refused subject renders NOTHING on device. The tight-run split above is
+    # meant to catch this, but it smooths runs -- a run only flips when three
+    # consecutive points agree -- so a BRIEF pinch survives it. The Dallah's
+    # retrace produced exactly that: two word paths touching at 12.985 against
+    # a 13.0 floor, no run long enough to split, and the whole subject refused.
+    #
+    # A path that cannot host words beside its neighbour is a drawn line, not a
+    # word baseline, which is precisely what decorative_thin means here. Demote
+    # the SHORTER of each conflicting pair: it keeps the ink (so the drawing and
+    # its continuity survive) and takes it out of the packer's corridor set.
+    #
+    # A NO-OP FOR THE EXISTING BANK, measured rather than assumed: 0 of 1060
+    # shipped word paths sit under the floor, which is unsurprising -- one that
+    # did would already fail to plan. This only ever bites geometry that is new.
+    for _ in range(len(entries)):
+        conflict = None
+        word_ids = [i for i, e in enumerate(entries)
+                    if not e["sub_floor"] and not e["decorative_thin"]]
+        for a_i in range(len(word_ids)):
+            for b_i in range(a_i + 1, len(word_ids)):
+                i, j = word_ids[a_i], word_ids[b_i]
+                d = path_min_clearance(entries[i]["points"], [entries[j]["points"]])
+                if d < FLOOR:
+                    conflict = (i, j, d)
+                    break
+            if conflict:
+                break
+        if not conflict:
+            break
+        i, j = conflict[0], conflict[1]
+        loser = i if plen(entries[i]["points"]) <= plen(entries[j]["points"]) else j
+        entries[loser]["decorative_thin"] = True
+        print(f"    corridor: path{i} and path{j} at {conflict[2]:.2f} < {FLOOR} "
+              f"-> path{loser} becomes decorative")
+        # clearances are stale once a path leaves the word set
+        for k, e in enumerate(entries):
+            others = [q["points"] for m, q in enumerate(entries)
+                      if m != k and not q["sub_floor"] and not q["decorative_thin"]]
+            e["min_clearance"] = round(path_min_clearance(e["points"], others), 2) if others else 999.0
+
     drops = DROP_FEATURES.get(sub, [])
     for p in small_feats:
         cx = sum(x for x, _ in p) / len(p)

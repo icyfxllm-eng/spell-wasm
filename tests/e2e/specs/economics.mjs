@@ -90,7 +90,10 @@ export async function run(browser, base, suite) {
   await suite.test('economics: an expert miss charges the stroke; erase-to-recover restores it', async () => {
     const { ctx, page } = await openApp(browser, base, { lang: 'en' });
     try {
-      await openPicture(page, 'mona');
+      // Was mona until the masterpieces were archived (Eric 2026-09-03). This
+      // exercises EXPERT-TIER economics, not one subject, so any live expert
+      // piece carries it; giza is one of the four the archive left standing.
+      await openPicture(page, 'giza');
       const word = await page.evaluate(() => window.__spelltest.picWord());
       const before = await placedCount(page);
       const bad = wrongFirst(word);

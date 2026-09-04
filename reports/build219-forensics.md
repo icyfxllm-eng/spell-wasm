@@ -224,3 +224,40 @@ Maasai Shield.
   and 7 points, `authoring: "suggested-then-approved"`. Its thumbnail problem is
   not the guide-layer bug — it is genuinely thin. It needs its own look.
 - Whether to fix the thumbnail before executing F6, per §8.1.
+
+---
+
+## Addendum, 2026-09-03 — the thumbnail was only the first of two
+
+§1 named `thumb_svg` as the reason the artwork never appeared, and fixing it
+(shipped in build 219) was necessary but not sufficient. Eric photographed
+**Sunflowers on the play screen** in build 220: seven ruled lines on a beige
+card, artwork still absent.
+
+There are two play renderers, and the one that runs does not draw the guide:
+
+* `render_canvas` emits `<path class="wp-guide">` (`wordpic_screen.rs:1487`).
+* `render_canvas` also returns early at :1404 — `if scan_locked(p)` hands off to
+  `render_scanlock` → `scanlock_svg`, whose 150-line body contained **zero**
+  guide emissions.
+
+So the emit at :1487 was dead code for every subject with a pinned scan:
+
+| | |
+|---|---|
+| scan-locked subjects | 388 |
+| of those, carrying artwork | 38 — none of it reaching the screen |
+| TONAL, exempt from scan-lock | 1 (`mona`) |
+
+**Mona was the only picture in the bank that rendered its artwork**, and only
+because `scan_locked()` excludes TONAL and she fell through to the legacy path.
+
+The class was already styled in both grounds in `index.html` and in
+`scanlock_svg`'s own export CSS — whose comment records adding the rule after
+finding it missing, without noticing nothing emits the element. A rule for an
+element nobody emits is the same shape of defect as the thumbnail: the layer
+is drawn in the renderer that is not used.
+
+**This strengthens §8.1 rather than changing it.** F6 would still have pulled 17
+assets whose artwork was intact all along; there were simply two surfaces
+hiding it, not one. The re-grade should happen on a build carrying both fixes.

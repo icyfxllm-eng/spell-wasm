@@ -227,6 +227,11 @@ impl WordPath {
 #[derive(Debug, Clone, serde::Deserialize)]
 pub struct Picture {
     pub id: String,
+    /// "active" (or absent) or "archived". ARCHIVED IS REGISTRY-HIDDEN, NEVER
+    /// DELETED: the scan, the guide, the manifest and the goldens all stay, so
+    /// restoring a piece is a one-word edit rather than a re-authoring job.
+    #[serde(default)]
+    pub status: String,
     pub tier: String,
     pub subject: String,
     pub icon: String,
@@ -897,9 +902,50 @@ mod picker_search_ci {
         assert_eq!(order, vec!["going", "fresh_easy", "fresh_hard", "done"]);
     }
 
+    /// Eric 2026-09-03: the masterpieces are out. ARCHIVED IS REGISTRY-HIDDEN,
+    /// NEVER DELETED — every scan, guide, manifest and golden stays on disk, so
+    /// bringing them back is a one-word edit. That matters here more than usual:
+    /// they were judged on builds where scanlock_svg never drew their artwork.
+    #[test]
+    fn archived_pieces_never_reach_a_player() {
+        let listed: Vec<&str> = pictures().iter().map(|p| p.id.as_str()).collect();
+        let archived: Vec<&str> = manifest().pictures.iter()
+            .filter(|p| !is_active(p)).map(|p| p.id.as_str()).collect();
+        assert_eq!(archived.len(), 15, "the fifteen masterpieces are archived");
+        for id in &archived {
+            assert!(!listed.contains(id),
+                    "{id} is archived but still listed — pictures() feeds gallery, picker, \
+                     Surprise-me and every count, so one leak here reaches all of them");
+        }
+        assert_eq!(listed.len(), manifest().pictures.len() - 15);
+    }
+
+    /// A player mid-run on a piece archived under them must still resolve it.
+    /// picture() deliberately does NOT filter: a stored run, a Continue entry
+    /// or an export should degrade quietly, not panic on a None that appeared
+    /// between one launch and the next.
+    #[test]
+    fn an_archived_piece_still_resolves_by_id() {
+        let archived = manifest().pictures.iter().find(|p| !is_active(p))
+            .expect("a masterpiece is archived");
+        assert!(picture(&archived.id).is_some(),
+                "{} must still resolve for a run already in progress", archived.id);
+        assert!(!is_active(picture(&archived.id).unwrap()));
+    }
+
+    /// Absent status means active — the 379 entries that never carried the
+    /// field must be untouched by its introduction.
+    #[test]
+    fn a_picture_without_a_status_is_active() {
+        let n = manifest().pictures.iter().filter(|p| p.status.is_empty()).count();
+        assert!(n >= 300, "most of the bank carries no status field, saw {n}");
+        assert!(manifest().pictures.iter().filter(|p| p.status.is_empty()).all(is_active));
+    }
+
     fn synthetic(id: &str, cats: &[&str]) -> Picture {
         Picture {
             id: id.into(),
+            status: String::new(), // synthetic fixtures are active
             tier: "easy".into(),
             subject: id.into(),
             name: id.into(),
@@ -953,14 +999,33 @@ mod picker_search_ci {
     }
 }
 
+/// Is this piece offered to players? Absent status means active, so the 379
+/// entries that never carried the field keep working untouched.
+pub fn is_active(p: &Picture) -> bool {
+    p.status.is_empty() || p.status == "active"
+}
+
 /// The registry, in registry order — CC-PICKER-SEARCH's sole render source.
+///
+/// ARCHIVED PIECES ARE FILTERED HERE, at the one accessor every listing goes
+/// through: gallery, picker, Surprise-me, counts, the Continue row. Filtering
+/// at the source rather than at each call site is what makes "archived never
+/// surfaces" a property of the registry instead of a promise repeated in a
+/// dozen places, any one of which could be missed.
+///
+/// `picture(id)` deliberately does NOT filter. A player mid-run on a piece
+/// that was archived under them must still resolve it — a stored run, a
+/// Continue entry, an export — and degrade quietly, rather than panic on a
+/// lookup that suddenly returns None.
 pub fn pictures() -> &'static [Picture] {
-    &manifest().pictures
+    use std::sync::OnceLock;
+    static ACTIVE: OnceLock<Vec<Picture>> = OnceLock::new();
+    ACTIVE.get_or_init(|| manifest().pictures.iter().filter(|p| is_active(p)).cloned().collect())
 }
 
 pub fn picker_order(state: &State, lang: &str) -> Vec<&'static Picture> {
     let tier_rank = |t: &str| BANDS.iter().position(|(b, _, _)| *b == t).unwrap_or(9);
-    let mut pics: Vec<&'static Picture> = manifest().pictures.iter().collect();
+    let mut pics: Vec<&'static Picture> = pictures().iter().collect();
     pics.sort_by_key(|p| match state.run(&p.id, lang) {
         Some(r) if !r.done && !r.words.is_empty() => (0u8, u64::MAX - r.touched),
         Some(r) if r.done => (2, r.touched),
@@ -1175,7 +1240,13 @@ mod ground_tests {
     #[test]
     fn masterpieces_render_light_and_nothing_else_does() {
         let mut masters = 0;
-        for p in pictures() {
+        // The FULL registry, not pictures(). ground_for maps category to ground
+        // and says nothing about whether a piece is offered: an archived master
+        // resumed from a stored run still belongs on the gallery ground. Reading
+        // the filtered list here found zero masters once the fifteen were
+        // archived, and this test's own guard caught it rather than passing on
+        // an empty set -- which is the difference between a check and a decoration.
+        for p in manifest().pictures.iter() {
             let g = ground_for(p);
             if p.categories.iter().any(|c| c == "masters") {
                 masters += 1;

@@ -1697,6 +1697,42 @@ pub fn scanlock_svg(
         svg.push_str(&format!("<path id=\"sl{ns}_{i}\" d=\"{d}\"/>"));
     }
     svg.push_str("</defs>");
+    // THE GUIDE LAYER — the traced artwork, beneath the words.
+    //
+    // This is where Sunflowers lost its painting. render_canvas draws the
+    // guide, but `scan_locked` sends every subject with a pinned scan into
+    // this function instead and returns before reaching that code, so the
+    // emit in render_canvas is dead for 388 of the 389 scanned subjects. The
+    // only picture in the bank that rendered its artwork was Mona, and only
+    // because TONAL is excluded from scan-lock and falls through to the
+    // legacy path. Everything else played as bare word carriers: on a dog the
+    // carriers look like a dog so nobody noticed, and on a Van Gogh they are
+    // seven ruled rails on a beige card, which is what Eric photographed.
+    //
+    // The class was already styled in BOTH grounds (index.html) and in the
+    // export CSS above -- the export comment even records adding the rule
+    // after finding it missing. A rule for an element nobody emits is the
+    // same shape of bug as the thumbnail: the layer is drawn in the renderer
+    // that is not used.
+    //
+    // Same 512 space as the placements: the guide ships pre-normalized to the
+    // frame (every bbox inside 22..490, i.e. FRAME minus MARGIN), so
+    // guide_polys' transform is identity here and the artwork lands in
+    // register with the baselines.
+    if let Some(pic) = crate::wordpic::picture(&plan.subject) {
+        for gp in crate::wordpic_layout::guide_polys(pic) {
+            if gp.pts.len() < 2 {
+                continue;
+            }
+            let d: String = gp
+                .pts
+                .iter()
+                .enumerate()
+                .map(|(k, (x, y))| format!("{}{x:.1} {y:.1} ", if k == 0 { "M" } else { "L" }))
+                .collect();
+            svg.push_str(&format!("<path class=\"wp-guide\" d=\"{d}\"/>"));
+        }
+    }
     // unspelled placements draw as the pinned stroke (F5)
     for (i, pl) in plan.placements.iter().enumerate().skip(placed) {
         let d: String = pl
@@ -3050,6 +3086,46 @@ mod continue_row_tests {
     /// CC-PICKER-CONTINUE invariant: thumbnails are STROKES ONLY — zero
     /// glyph typesetting, ever. And the ink/ghost split tracks the run.
     #[test]
+    /// THE BUG ERIC PHOTOGRAPHED: Sunflowers played as seven ruled lines on a
+    /// beige card. `scan_locked` routes every scanned subject into
+    /// scanlock_svg, which never emitted the guide layer, so render_canvas's
+    /// emit was dead code for the whole bank. Mona was the only picture that
+    /// showed its artwork, and only because TONAL is excluded from scan-lock.
+    #[test]
+    fn the_play_frame_draws_the_artwork_not_just_the_carriers() {
+        let plan = crate::spellpic::plan("sunflowers", "en", 1).expect("sunflowers plans");
+        let svg = scanlock_svg(&plan, "en", &[], RenderMode::Play);
+        let guides = svg.matches("class=\"wp-guide\"").count();
+        assert!(guides > 100, "Van Gogh must reach the play frame, got {guides} guide paths");
+        // Beneath the words: the artwork is the ground the words sit on.
+        let first_guide = svg.find("wp-guide").expect("guide present");
+        for later in ["wp-pinned", "wp-word", "<use"] {
+            if let Some(at) = svg.find(later) {
+                assert!(first_guide < at, "the guide must render beneath {later}");
+            }
+        }
+    }
+
+    /// The invariant, not the instance. Every scan-locked subject that ships
+    /// artwork must render it; a renderer that silently drops a whole layer
+    /// for 388 subjects is exactly how this survived three builds.
+    #[test]
+    fn no_scanned_subject_plays_without_its_artwork() {
+        let mut checked = 0;
+        for pic in crate::wordpic::pictures() {
+            if pic.guide.is_empty() || pic.extraction_class == "TONAL" {
+                continue;
+            }
+            let Some(plan) = crate::spellpic::plan(&pic.id, "en", 1) else { continue };
+            let svg = scanlock_svg(&plan, "en", &[], RenderMode::Play);
+            let n = svg.matches("class=\"wp-guide\"").count();
+            assert!(n > 0, "{} ships {} guide paths and plays none",
+                    pic.id, pic.guide.len());
+            checked += 1;
+        }
+        assert!(checked >= 20, "expected the artwork-carrying subjects, saw {checked}");
+    }
+
     /// THE REGRESSION THIS FILE SHIPPED. A gallery card drew only the word
     /// carriers, so every masterpiece -- whose subject lives in the guide layer
     /// and whose carriers are a few near-horizontal rails -- rendered as a

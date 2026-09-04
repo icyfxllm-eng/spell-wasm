@@ -1699,7 +1699,9 @@
     "leaf blade",
     "flower",
     "fruit hand"
-   ]
+   ],
+   "status": "archived",
+   "archivedReason": "Eric 2026-09-03: the masterpieces do not meet players' expectations. Registry-hidden, never deleted — scans, guides, goldens and manifests all stay, so this is a status flip to undo."
   },
   {
    "id": "baobab",
@@ -1930,7 +1932,9 @@
     "mandible",
     "thorax",
     "wing case"
-   ]
+   ],
+   "status": "archived",
+   "archivedReason": "Eric 2026-09-03: the masterpieces do not meet players' expectations. Registry-hidden, never deleted — scans, guides, goldens and manifests all stay, so this is a status flip to undo."
   },
   {
    "id": "bicycle",
@@ -2560,7 +2564,9 @@
     "dorsal",
     "body",
     "tail"
-   ]
+   ],
+   "status": "archived",
+   "archivedReason": "Eric 2026-09-03: the masterpieces do not meet players' expectations. Registry-hidden, never deleted — scans, guides, goldens and manifests all stay, so this is a status flip to undo."
   },
   {
    "id": "castle",
@@ -6989,7 +6995,9 @@
     "neck",
     "breast",
     "leg"
-   ]
+   ],
+   "status": "archived",
+   "archivedReason": "Eric 2026-09-03: the masterpieces do not meet players' expectations. Registry-hidden, never deleted — scans, guides, goldens and manifests all stay, so this is a status flip to undo."
   },
   {
    "id": "fleurdelis",
@@ -7694,7 +7702,9 @@
      ],
      "minRun": 51
     }
-   ]
+   ],
+   "status": "archived",
+   "archivedReason": "Eric 2026-09-03: the masterpieces do not meet players' expectations. Registry-hidden, never deleted — scans, guides, goldens and manifests all stay, so this is a status flip to undo."
   },
   {
    "id": "gyenyame",
@@ -8166,7 +8176,9 @@
     "ear",
     "back",
     "haunch"
-   ]
+   ],
+   "status": "archived",
+   "archivedReason": "Eric 2026-09-03: the masterpieces do not meet players' expectations. Registry-hidden, never deleted — scans, guides, goldens and manifests all stay, so this is a status flip to undo."
   },
   {
    "id": "helmofawe",
@@ -11761,7 +11773,9 @@
     "moon",
     "branch",
     "ear tuft"
-   ]
+   ],
+   "status": "archived",
+   "archivedReason": "Eric 2026-09-03: the masterpieces do not meet players' expectations. Registry-hidden, never deleted — scans, guides, goldens and manifests all stay, so this is a status flip to undo."
   },
   {
    "id": "ladybug",
@@ -13863,7 +13877,9 @@
     "frame",
     "highlightBand"
    ],
-   "name": "Mona Lisa"
+   "name": "Mona Lisa",
+   "status": "archived",
+   "archivedReason": "Eric 2026-09-03: the masterpieces do not meet players' expectations. Registry-hidden, never deleted — scans, guides, goldens and manifests all stay, so this is a status flip to undo."
   },
   {
    "id": "montsaintmichel",
@@ -15137,7 +15153,9 @@
      ],
      "minRun": 159
     }
-   ]
+   ],
+   "status": "archived",
+   "archivedReason": "Eric 2026-09-03: the masterpieces do not meet players' expectations. Registry-hidden, never deleted — scans, guides, goldens and manifests all stay, so this is a status flip to undo."
   },
   {
    "id": "rhino",
@@ -15652,7 +15670,9 @@
     "front leg",
     "hind leg"
    ],
-   "name": "Rhinoceros"
+   "name": "Rhinoceros",
+   "status": "archived",
+   "archivedReason": "Eric 2026-09-03: the masterpieces do not meet players' expectations. Registry-hidden, never deleted — scans, guides, goldens and manifests all stay, so this is a status flip to undo."
   },
   {
    "id": "rickshaw",
@@ -16218,7 +16238,9 @@
     "bloom",
     "calyx",
     "stem"
-   ]
+   ],
+   "status": "archived",
+   "archivedReason": "Eric 2026-09-03: the masterpieces do not meet players' expectations. Registry-hidden, never deleted — scans, guides, goldens and manifests all stay, so this is a status flip to undo."
   },
   {
    "id": "sagittarius",
@@ -16552,7 +16574,9 @@
     "trunk",
     "arm",
     "desert floor"
-   ]
+   ],
+   "status": "archived",
+   "archivedReason": "Eric 2026-09-03: the masterpieces do not meet players' expectations. Registry-hidden, never deleted — scans, guides, goldens and manifests all stay, so this is a status flip to undo."
   },
   {
    "id": "sailboat",
@@ -18285,7 +18309,9 @@
      ],
      "minRun": 10
     }
-   ]
+   ],
+   "status": "archived",
+   "archivedReason": "Eric 2026-09-03: the masterpieces do not meet players' expectations. Registry-hidden, never deleted — scans, guides, goldens and manifests all stay, so this is a status flip to undo."
   },
   {
    "id": "tajmahal",
@@ -18633,7 +18659,9 @@
     "parapet",
     "door jamb",
     "cross"
-   ]
+   ],
+   "status": "archived",
+   "archivedReason": "Eric 2026-09-03: the masterpieces do not meet players' expectations. Registry-hidden, never deleted — scans, guides, goldens and manifests all stay, so this is a status flip to undo."
   },
   {
    "id": "taurus",
@@ -19728,7 +19756,9 @@
     "shoulder",
     "primary",
     "shaft"
-   ]
+   ],
+   "status": "archived",
+   "archivedReason": "Eric 2026-09-03: the masterpieces do not meet players' expectations. Registry-hidden, never deleted — scans, guides, goldens and manifests all stay, so this is a status flip to undo."
   },
   {
    "id": "wolf",
