@@ -37,8 +37,20 @@ TAU = 0.01 * math.sqrt(2 * CANVAS ** 2)   # ~7.2px, same as run-ink-batch
 MAX_RUN_FRAC = 0.03                        # F3
 MIN_COMPONENT = 40                         # ignore specks: below this a "run" is noise
 
-REFS = {"daruma": "daruma.png", "dallah": "dallah.png", "taos": "taos-source.jpg",
+REFS = {"basil": "basil.png", "daruma": "daruma.png", "dallah": "dallah.png", "taos": "taos-source.jpg",
         "dog": "dog.png", "fish": "fish.png", "eiffel": "eiffel.png"}
+
+
+def ref_for(sub):
+    """The subject's reference, by name. REFS pins the handful with an odd
+    filename (taos-source.jpg); everything else is <subject>.png|.jpg."""
+    if sub in REFS:
+        return REF / REFS[sub]
+    for ext in (".png", ".jpg", ".jpeg"):
+        c = REF / f"{sub}{ext}"
+        if c.exists():
+            return c
+    return None
 
 
 def canvas_gray(path):
@@ -97,7 +109,10 @@ def traced_paths(sub):
 
 
 def report(sub):
-    g = canvas_gray(REF / REFS[sub])
+    rf = ref_for(sub)
+    if rf is None:
+        print(f"  {sub:8} no reference on disk"); return True
+    g = canvas_gray(rf)
     w, h = g.size
     px = g.load()
     solid = bytearray(1 if px[i % w, i // w] < THRESH else 0 for i in range(w * h))
@@ -147,5 +162,5 @@ def report(sub):
 if __name__ == "__main__":
     subs = sys.argv[1:] or ["daruma", "dallah", "taos"]
     print(f"CC-BUILD219-FIXES F3 continuity — longest untraced run per reference ink component")
-    bad = sum(0 if report(s) else 1 for s in subs if s in REFS)
+    bad = sum(0 if report(s) else 1 for s in subs)
     raise SystemExit(1 if bad else 0)

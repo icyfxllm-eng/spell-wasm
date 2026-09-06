@@ -21,82 +21,81 @@
   {
    "name": "outline",
    "path_ids": [
-    0,
-    1
+    0
    ],
    "per_language": {
     "ar": {
-     "words": 2,
+     "words": 1,
      "band": 0,
      "band_size": 60
     },
     "de": {
-     "words": 2,
+     "words": 1,
      "band": 0,
      "band_size": 91
     },
     "en": {
-     "words": 2,
+     "words": 1,
      "band": 0,
      "band_size": 53
     },
     "es": {
-     "words": 2,
+     "words": 1,
      "band": 0,
      "band_size": 191
     },
     "fil": {
-     "words": 2,
+     "words": 1,
      "band": 0,
      "band_size": 75
     },
     "fr": {
-     "words": 2,
+     "words": 1,
      "band": 0,
      "band_size": 139
     },
     "hi": {
-     "words": 2,
+     "words": 1,
      "band": 0,
      "band_size": 57
     },
     "ja": {
-     "words": 2,
+     "words": 1,
      "band": 0,
      "band_size": 377
     },
     "ko": {
-     "words": 2,
+     "words": 1,
      "band": 0,
      "band_size": 32
     },
     "pl": {
-     "words": 2,
+     "words": 1,
      "band": 0,
      "band_size": 210
     },
     "pt": {
-     "words": 2,
+     "words": 1,
      "band": 0,
      "band_size": 220
     },
     "ru": {
-     "words": 2,
+     "words": 1,
      "band": 0,
      "band_size": 49
     },
     "sw": {
-     "words": 2,
+     "words": 1,
      "band": 0,
      "band_size": 65
     },
     "vi": {
-     "words": 2,
+     "words": 1,
      "band": 0,
      "band_size": 94
     },
     "zh": {
-     "words": 2,
+     "words": 1,
      "band": 0,
      "band_size": 95
     }
@@ -105,7 +104,7 @@
   {
    "name": "features",
    "path_ids": [
-    2
+    1
    ],
    "per_language": {
     "ar": {
@@ -188,83 +187,84 @@
   {
    "name": "texture",
    "path_ids": [
+    2,
     3,
     4,
     5
    ],
    "per_language": {
     "ar": {
-     "words": 3,
+     "words": 4,
      "band": 2,
      "band_size": 452
     },
     "de": {
-     "words": 3,
+     "words": 4,
      "band": 2,
      "band_size": 172
     },
     "en": {
-     "words": 3,
+     "words": 4,
      "band": 2,
      "band_size": 11
     },
     "es": {
-     "words": 3,
+     "words": 4,
      "band": 2,
      "band_size": 171
     },
     "fil": {
-     "words": 3,
+     "words": 4,
      "band": 2,
      "band_size": 10
     },
     "fr": {
-     "words": 3,
+     "words": 4,
      "band": 2,
      "band_size": 271
     },
     "hi": {
-     "words": 3,
+     "words": 4,
      "band": 2,
      "band_size": 203
     },
     "ja": {
-     "words": 3,
+     "words": 4,
      "band": 2,
      "band_size": 82
     },
     "ko": {
-     "words": 3,
+     "words": 4,
      "band": 2,
      "band_size": 288
     },
     "pl": {
-     "words": 3,
+     "words": 4,
      "band": 2,
      "band_size": 69
     },
     "pt": {
-     "words": 3,
+     "words": 4,
      "band": 2,
      "band_size": 24
     },
     "ru": {
-     "words": 3,
+     "words": 4,
      "band": 2,
      "band_size": 567
     },
     "sw": {
-     "words": 3,
+     "words": 4,
      "band": 2,
      "band_size": 574
     },
     "vi": {
-     "words": 3,
+     "words": 4,
      "band": 2,
      "band_size": 284
     },
     "zh": {
-     "words": 3,
+     "words": 4,
      "band": 2,
      "band_size": 63
     }
@@ -275,6 +275,6 @@
  "completion": {
   "all_layers": true
  },
- "authoring": "suggested-then-approved",
- "pin_hash": 7068486417187028027
+ "authoring": "hand-traced",
+ "pin_hash": 1139971496365705649
 }
