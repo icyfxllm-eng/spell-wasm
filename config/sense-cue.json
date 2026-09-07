@@ -1,0 +1,16 @@
+{
+  "$doc": "CC-SENSE-CUE F6 — per-language cue mode. off: no cues; collision sets fall back to accept-all (F2a), which is what Phase B shipped. support: audio plays normally and the cue appears only via Second Look. sole: the picture is the entire prompt and audio is suppressed. THE MODE IS DATA, NOT A CODE BRANCH, so a per-language rollout is a config edit and never a build.",
+  "$law": "D9: cueMode defaults to off and requires a NAMED NATIVE AUDITOR to leave it. The auditor field is a HUMAN CLAIM -- no tool writes it, exactly as `audited` works for gloss_docs in src/translate.rs. sense_cue::cue_mode enforces this IN CODE: a language claiming support or sole with no auditor resolves to off, so a forgotten audit degrades to the safe state instead of shipping unaudited cues to a child.",
+  "$blocked": "Phase C is blocked on two things this file cannot supply: D10 (the player-facing name -- 'picture' is overloaded four ways already) and a named Russian auditor. Both are listed as Blocking Phase C in the spec's own open questions. Until then every language stays off and this registry changes nothing a player sees.",
+  "languages": {
+    "en": { "cueMode": "off", "auditor": null, "auditorDate": null },
+    "es": { "cueMode": "off", "auditor": null, "auditorDate": null },
+    "ru": { "cueMode": "off", "auditor": null, "auditorDate": null,
+            "$note": "Pilot language for Phase C AND for CC-STRESS-LAYER. Both wait on the same person." },
+    "pl": { "cueMode": "off", "auditor": null, "auditorDate": null },
+    "de": { "cueMode": "off", "auditor": null, "auditorDate": null },
+    "fr": { "cueMode": "off", "auditor": null, "auditorDate": null },
+    "pt": { "cueMode": "off", "auditor": null, "auditorDate": null },
+    "ko": { "cueMode": "off", "auditor": null, "auditorDate": null }
+  }
+}

@@ -60,6 +60,7 @@ mod fa_canon; // CC-PERSIAN-FOUNDATION F1 (canonicalizer; fa not yet in the regi
 mod flags;
 mod game;
 mod hub_tiles; // CC-BUILD219-FIXES F1
+mod sense_cue; // CC-SENSE-CUE F6 // CC-BUILD219-FIXES F1
 mod ghost;
 mod haptics;
 mod hangul;
