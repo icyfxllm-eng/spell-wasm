@@ -23,6 +23,17 @@ use crate::norm::fold_strict;
 fn source(lang: &str) -> &'static str {
     match lang {
         c if c == crate::consts::ES => include_str!("../assets/words/es/homophones.txt"),
+        // CC-SENSE-CUE F1/D6: these tables are COMPUTED by
+        // tools/build_collisions.py, never hand-listed. The Spanish file was 16
+        // hand-written groups, three of which named words that are not in the
+        // bank at all -- accepting spellings for prompts that never occur.
+        c if c == crate::consts::EN => include_str!("../assets/words/en/homophones.txt"),
+        // Russian is the STRESS-INDEPENDENT key only (final devoicing and
+        // assimilation). Vowel reduction is conditioned on stress, and applying
+        // it blind merges grammatical inflections -- академии/академия -- which
+        // is not the survivable direction of error. The full ru table waits on
+        // src/ru_stress_data.rs going live, which waits on a human audit.
+        c if c == crate::consts::RU => include_str!("../assets/words/ru/homophones.txt"),
         _ => "",
     }
 }
@@ -65,6 +76,64 @@ pub fn accepts(lang: &str, word: &str, typed: &str) -> bool {
     match (t.get(&fold_strict(word)), t.get(&fold_strict(typed))) {
         (Some(a), Some(b)) => a == b,
         _ => false,
+    }
+}
+
+#[cfg(test)]
+mod phase_b_tests {
+    use super::*;
+    use crate::consts::{EN, RU};
+
+    /// CC-SENSE-CUE Invariant 1: a learner is never told they are wrong for a
+    /// real spelling the audio supports. English is the language this most
+    /// affects and the one that had NO fairness layer -- submit_guess returned
+    /// into the server round trip before ever reaching accepts().
+    #[test]
+    fn english_accepts_a_real_homophone_of_the_prompt() {
+        for (prompt, typed) in [("pair", "pear"), ("pear", "pair"), ("pair", "pare"),
+                                ("their", "there"), ("for", "four"), ("to", "too")] {
+            assert!(accepts(EN, prompt, typed),
+                    "{typed} is a real word the audio cannot distinguish from {prompt}");
+        }
+    }
+
+    /// Not a free pass. A misspelling that merely resembles a homophone is
+    /// still a miss -- acceptance is membership in a computed set, not fuzzy
+    /// matching. This is CC-SENSE-CUE acceptance test 2.
+    #[test]
+    fn english_still_rejects_misspellings() {
+        for (prompt, typed) in [("pair", "pare1"), ("their", "thier"),
+                                ("for", "fore4"), ("pear", "peer")] {
+            assert!(!accepts(EN, prompt, typed), "{typed} must remain a miss for {prompt}");
+        }
+    }
+
+    /// The Russian table is the STRESS-INDEPENDENT key only. привезти/привести
+    /// collide by devoicing alone; inflection pairs like академии/академия must
+    /// NOT, because merging them needs stress data that is still dark.
+    #[test]
+    fn russian_is_devoicing_only_until_stress_data_is_audited() {
+        assert!(accepts(RU, "привезти", "привести"), "з devoices to с before т");
+        assert!(!accepts(RU, "академии", "академия"),
+                "grammatical inflections are not homophones -- that merge needs stress");
+    }
+
+    /// Every group is internally consistent: each member accepts every other,
+    /// in both directions. F2 forbids a half-covered set.
+    #[test]
+    fn every_generated_set_is_symmetric_and_complete() {
+        for lang in [EN, RU, crate::consts::ES] {
+            for line in source(lang).lines() {
+                let line = line.trim();
+                if line.is_empty() || line.starts_with('#') { continue; }
+                let ms: Vec<&str> = line.split_whitespace().collect();
+                for a in &ms {
+                    for b in &ms {
+                        assert!(accepts(lang, a, b), "{lang}: {a} must accept {b}");
+                    }
+                }
+            }
+        }
     }
 }
 

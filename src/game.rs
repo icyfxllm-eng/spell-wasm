@@ -1468,8 +1468,29 @@ pub fn submit_guess(app: &App) {
     app.borrow_mut().answered = true;
     stop_timer(true);
     lock_inputs();
+    VALID_OTHER_SENSE.with(|c| c.set(false));
 
-    if cur_lang == EN {
+    // CC-SENSE-CUE F2(a) -- ACCEPT-ALL. A learner who hears [pɛər] and types
+    // "pear" for "pair" has typed a real English word, spelled correctly, from
+    // a hearing the audio fully supports. Marking that wrong is an unfair item,
+    // not a hard one.
+    //
+    // English is the ONLY language that never reached the accept-all layer: it
+    // returns here into the server round trip, while every other language falls
+    // through to the homophones::accepts check below. So the language with the
+    // most players had no fairness layer at all.
+    //
+    // The exact-match case still goes to the server, unchanged -- accepts() is
+    // true for a word against itself (same group), and short-circuiting there
+    // would quietly remove backend verification from ordinary English answers.
+    // Only a DIFFERENT member of the collision set resolves locally.
+    let en_other_sense = cur_lang == EN
+        && crate::norm::fold_strict(&typed) != crate::norm::fold_strict(&word)
+        && crate::homophones::accepts(EN, &word, &typed);
+    if en_other_sense {
+        VALID_OTHER_SENSE.with(|c| c.set(true));
+    }
+    if cur_lang == EN && !en_other_sense {
         spawn_local(backend_verify(app.clone(), word, typed, kid));
         return;
     }
@@ -1504,8 +1525,14 @@ pub fn submit_guess(app: &App) {
         // Normal fold, plus the data-driven accept-any homophone layer: a real
         // homophone of the prompt (audio can't carry b/v, silent h, seseo,
         // yeísmo) is accepted. Empty table for languages without a file -> no-op.
-        crate::norm::answer_matches(&typed, &word, kid)
-            || crate::homophones::accepts(&cur_lang, &word, &typed)
+        crate::norm::answer_matches(&typed, &word, kid) || {
+            let other = crate::homophones::accepts(&cur_lang, &word, &typed)
+                && crate::norm::fold_strict(&typed) != crate::norm::fold_strict(&word);
+            if other {
+                VALID_OTHER_SENSE.with(|c| c.set(true));
+            }
+            other
+        }
     };
     // CC-LEARNING-ENGINE: the validated verdict, recorded at the single
     // submission path — typed channel, so skills update. Placement words
@@ -2435,6 +2462,7 @@ pub fn give_up(app: &App) {
     app.borrow_mut().answered = true;
     stop_timer(true);
     lock_inputs();
+    VALID_OTHER_SENSE.with(|c| c.set(false));
 
     // build-54: no tries to zero out — a give-up is the single miss.
     render_tries(app);
@@ -2546,6 +2574,31 @@ struct TimerState {
     interval_id: Option<i32>,
     deadline: f64,
     total: f64,
+}
+
+/// CC-SENSE-CUE F5 — the `valid_other_sense` outcome class.
+///
+/// A learner who types a different member of the target's collision set has
+/// not misspelled anything: they spelled a real word, correctly, from a
+/// hearing the audio supports. Recording that as a MISS would put its letters
+/// into the grapheme-alignment diagnosis and report that the learner cannot
+/// spell the target -- a false diagnosis manufactured by our own
+/// instrumentation, which then propagates into the at-risk forecast.
+///
+/// Invariant 3 is already satisfied by construction rather than by this flag:
+/// `learner::note_attempt_typed` stores the typed string ONLY for incorrect
+/// attempts, so grading a collision as correct contributes no confusion cells
+/// at all. The flag exists to make the class OBSERVABLE -- distinguishable
+/// from an ordinary correct answer -- which is what F5's "words you mix up"
+/// row will need, and what the acceptance tests assert.
+thread_local! {
+    static VALID_OTHER_SENSE: std::cell::Cell<bool> = const { std::cell::Cell::new(false) };
+}
+
+/// Test/e2e seam: was the last graded submission accepted as a different
+/// sense rather than as an exact answer?
+pub fn seam_valid_other_sense() -> bool {
+    VALID_OTHER_SENSE.with(std::cell::Cell::get)
 }
 
 thread_local! {
