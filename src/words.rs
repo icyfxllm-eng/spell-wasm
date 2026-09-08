@@ -6410,3 +6410,56 @@ mod pool_dump {
         }
     }
 }
+
+#[cfg(test)]
+mod tier_ladder_tests {
+    /// CC-PLAYER-CONTRACT P5 — a given tier means comparable difficulty in
+    /// every language.
+    ///
+    /// LENGTH IS A PROXY, AND FOR ko/ja IT IS THE WRONG ONE. Measured by
+    /// character count, Korean looked broken: easy 4.71, medium 10.51, hard
+    /// 9.80, expert 10.23 jamo. Re-measuring in jamo instead of characters
+    /// confirmed the same shape, so the instrument seemed sound — but the
+    /// dimension was wrong from the start. Measured by FREQUENCY, which is what
+    /// difficulty means in a spelling game (you cannot spell a word you have
+    /// never met), Korean already climbs: bands 405, 441, 493, 528.
+    ///
+    /// So ko and ja are EXCLUDED here and their ladders are verified on the
+    /// frequency signal by tools/retier_cjk.py, which reads
+    /// tools/wordpipe/sources/freq_{ko,ja}.txt. Those files are build inputs
+    /// and gitignored, so a test cannot depend on them and still pass in a
+    /// fresh clone.
+    ///
+    /// For the other thirteen banks length remains a fair proxy — they are
+    /// alphabetic, and a longer word is more to spell — and this catches a
+    /// tier that stops climbing.
+    #[test]
+    fn every_tier_ladder_climbs() {
+        use unicode_normalization::UnicodeNormalization;
+        let mean = |ws: &[&str]| -> f64 {
+            if ws.is_empty() { return 0.0; }
+            ws.iter().map(|w| {
+                let base = w.split('|').next().unwrap_or(w);
+                base.nfd().count() as f64
+            }).sum::<f64>() / ws.len() as f64
+        };
+        let mut checked = 0;
+        for lang in crate::consts::BUILTIN_LANGS.iter().map(|(c, _, _, _)| *c) {
+            // See the note above: their difficulty is frequency-ordered.
+            if lang == "ko" || lang == "ja" {
+                continue;
+            }
+            let tiers = ["easy", "medium", "hard", "expert"];
+            let means: Vec<f64> = tiers.iter().map(|t| mean(crate::words::tier_for(lang, t))).collect();
+            if means.iter().any(|m| *m == 0.0) { continue; }
+            checked += 1;
+            for i in 1..means.len() {
+                assert!(means[i] > means[i - 1],
+                    "{lang}: {} ({:.2}) is not harder than {} ({:.2}) — a tier that \
+                     does not climb tells the player nothing",
+                    tiers[i], means[i], tiers[i - 1], means[i - 1]);
+            }
+        }
+        assert!(checked >= 10, "expected the built-in banks, saw {checked}");
+    }
+}
