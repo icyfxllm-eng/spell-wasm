@@ -8,13 +8,14 @@
     "attempts_shields": "Deliberately ABSENT. It is a Climb mechanic, not a discoverable mode, and CC-MODE-HUB's constraints say shields belong to CC-CLIMB-SHIELDS. It stays a tools_hub row only."
   },
   "$fields": {
-    "status": "live = renders as a tappable Play-hub tile. coming_soon = non-tappable teaser. hidden = renders nowhere, for anyone.",
+    "status": "live = renders as a tappable Play-hub tile. coming_soon = non-tappable teaser. hidden = renders nowhere, for anyone. core = a base-game surface this registry GOVERNS but never renders as a tile (CC-ONBOARD-JR option (a), signed 2026-09-11): the base game, The Climb and the Daily Challenge are entries here so that juniorPolicy reaches the surfaces a child actually plays.",
     "kidSafe": "true = survives the Little Speller hub. Little Speller shows ABSENCE, not locks — the zero-purchase-surface doctrine carried over.",
     "platforms": "Where the mode can function at runtime. A mode absent on this platform does not tile.",
     "entitlementLevel": "Minimum per-language AccessLevel (none < preview < full). A mode requiring `full` on a previewed language is ABSENT, not locked (A2.3).",
     "requiresPremium": "Optional parent-premium entitlement (EntitlementSet boolean) this mode needs, or null. See $deviations.",
     "languages": "Language codes the mode supports, or null for any. Absent outside them.",
-    "ordering": "Hub tile order = FILE order (D6, RECONSTRUCTED — Eric must confirm). No popularity sort, no per-user reordering in v1."
+    "ordering": "Hub tile order = FILE order (D6, RECONSTRUCTED — Eric must confirm). No popularity sort, no per-user reordering in v1.",
+    "juniorPolicy": "REQUIRED (I4 — a missing policy fails the build). What Spell Jr may do with this mode, read by experience::allowed_tiers and nothing else. ceiling:<tier> = offer tiers up to and including <tier>. variant:<id> = junior plays a junior variant (Jr Climb, Jr Daily), always Easy + Medium. hidden = absent from every junior surface. ungated = the mode has no difficulty ladder (Reports, Calendar); junior is still held to Easy + Medium defensively, so a future word source cannot leak Hard."
   },
   "$decisionsPending": [
     "D6 (RECONSTRUCTED): tile ordering = registry file order. Implemented as stated; confirm.",
@@ -37,7 +38,8 @@
       "requiresPremium": null,
       "languages": null,
       "$note": "CC-PRACTICE: first among modes (D9). Per-language availability = consts::practice (D7: en pre-audit exempt; others await the interim-content ruling).",
-      "exitStyle": "instant"
+      "exitStyle": "instant",
+      "juniorPolicy": "ceiling:medium"
     },
     {
       "id": "ghost_racing",
@@ -55,7 +57,8 @@
       "languages": null,
       "$note": "CC-HUB-CLEANUP D4: user-facing name is Spell Racing (tools.racing.name); internal id stays ghost_racing per CC-SPELL-RACING.",
       "exitStyle": "confirm",
-      "statusNote": "AUDITPASS F7 / D2 (Eric, 2026-08-06): Spell Racing is cut. Hidden removes every tile; the compiled flag default stays ON so the code path survives one release and a revert is a flag flip, not a git revert. Delete the code next release if there is no reversal."
+      "statusNote": "AUDITPASS F7 / D2 (Eric, 2026-08-06): Spell Racing is cut. Hidden removes every tile; the compiled flag default stays ON so the code path survives one release and a revert is a flag flip, not a git revert. Delete the code next release if there is no reversal.",
+      "juniorPolicy": "hidden"
     },
     {
       "id": "syllable_replay",
@@ -74,7 +77,8 @@
         "es"
       ],
       "$note": "es-only: it needs syllabification data, and absence is data-driven (CC-MODE-HUB I4.1).",
-      "exitStyle": "instant"
+      "exitStyle": "instant",
+      "juniorPolicy": "hidden"
     },
     {
       "id": "say_it",
@@ -90,7 +94,8 @@
       "requiresPremium": null,
       "languages": null,
       "$note": "CC-HUB-CLEANUP D3: DORMANT, not deleted — zero entry points (home tile rerouted to Spell It, hub hidden, tools row hidden). Code/assets retained; may return renamed.",
-      "exitStyle": "instant"
+      "exitStyle": "instant",
+      "juniorPolicy": "hidden"
     },
     {
       "id": "photo_list",
@@ -106,7 +111,8 @@
       "requiresPremium": "photo_ocr",
       "languages": null,
       "$note": "The mode CC-MODE-HUB calls 'ocrMode'/'Photo/OCR' is `photo_list` in this codebase. Gated by the photo_ocr parent-premium entitlement — see $deviations.entitlementLevel.",
-      "exitStyle": "instant"
+      "exitStyle": "instant",
+      "juniorPolicy": "hidden"
     },
     {
       "id": "spell_aloud",
@@ -122,7 +128,8 @@
       "requiresPremium": null,
       "languages": null,
       "$note": "CC-SPELL-ALOUD-INTEGRATION Feature 6: shown on ALL platforms(ios) languages; per-language availability is the language registry's voiceSpell gate (consts::voice_spell / VOICE_SPELL_LANGS = en,es), rendered live vs a 'coming soon' unavailable tile by play_hub. languages:null (not [en,es]) so an unsupported language shows the unavailable tile rather than being filtered out (A7).",
-      "exitStyle": "instant"
+      "exitStyle": "instant",
+      "juniorPolicy": "hidden"
     },
     {
       "id": "word_stories",
@@ -142,7 +149,8 @@
         "es"
       ],
       "$note": "F8/D5: hidden until spec'd and reviewed — a hard gate. The spec proposal ALREADY EXISTS: docs/word-stories-review.md (37e5a0f), which recommends keeping it hub-hidden pending (1) CC BY-SA attribution via the CC-WORDLIST-SOURCES Tier-B credits surface and (2) a kid-appropriateness spot-check of the en/es strings. Its flag is OFF for the same reason. `hidden` here matches all of that.",
-      "exitStyle": "instant"
+      "exitStyle": "instant",
+      "juniorPolicy": "hidden"
     },
     {
       "id": "online_spelloff",
@@ -159,7 +167,8 @@
       "requiresPremium": null,
       "languages": null,
       "$note": "Flag OFF because /api/match is not deployed yet — 'ships dark until then' IS coming_soon. See $deviations.online_spelloff.",
-      "exitStyle": "instant"
+      "exitStyle": "instant",
+      "juniorPolicy": "hidden"
     },
     {
       "id": "def_match",
@@ -176,7 +185,8 @@
       "requiresPremium": null,
       "languages": null,
       "$note": "CC-DEF-MATCH: P3 loop live. Per-language activation = consts::def_match (D3 pool floor + interim-content ruling); inactive languages render the unavailable teaser. PREVIEW depth = easy tier only (defmatch::allowed_tiers).",
-      "exitStyle": "instant"
+      "exitStyle": "instant",
+      "juniorPolicy": "ceiling:medium"
     },
     {
       "id": "letter_forge",
@@ -192,7 +202,8 @@
       "requiresPremium": null,
       "languages": null,
       "$note": "STRINGS SIGNED by Eric 2026-08-13. LIVE. Per-language offer is forge::forge_ready — Hindi is excluded because its bank cannot sustain a board. Flipped on with two gaps Eric accepted: Done #4's Korean jamo block-assembly capture was never reviewed, and F4's daily archive and F5's how-to cards do not exist, so a first-time player gets no intro.",
-      "exitStyle": "instant"
+      "exitStyle": "instant",
+      "juniorPolicy": "ceiling:medium"
     },
     {
       "id": "word_chains",
@@ -208,7 +219,8 @@
       "requiresPremium": null,
       "languages": null,
       "$note": "STRINGS SIGNED by Eric 2026-08-13. LIVE. The three D1 settings are DATA in chains::Strictness, so reversing one is a table edit rather than a code change and one language can move without the others. As built: vi diacritic-SENSITIVE, zh tone-INSENSITIVE, ja dakuten flexible. The zh tone call is the one Eric flipped live WITHOUT a native check — tones are lexical, but casual 接龙 does not require them and the toneless reading triples the successor pool. Untimed mood only: D3's Timed mood, its clock ring and D4's dead-end rejection are not built, nor is Phase 2 pass-and-play. ko/pl/ru/hi median 7-9 links.",
-      "exitStyle": "instant"
+      "exitStyle": "instant",
+      "juniorPolicy": "ceiling:medium"
     },
     {
       "id": "impostor",
@@ -224,7 +236,8 @@
       "requiresPremium": null,
       "languages": null,
       "$note": "STRINGS SIGNED by Eric 2026-08-13. LIVE. D3 bank-vs-dictionary gap ACCEPTED 2026-08-12: the validity screen checks the audited BANK, not a dictionary, so a distractor that is a real word absent from the bank still renders (arid for acid). ko sits at 3.0% exclusion against D3's 2% REVIEW TRIGGER — examined and accepted, because the excluded words are single-block Korean and excluding them is correct rather than a defect. D1 built as option B: shape transforms everywhere, nine authored English trap classes. Reveal-why is English-only per I4. Not built: D7 tier gating beyond the free easy set, F4 how-to cards, D6 analytics write.",
-      "exitStyle": "instant"
+      "exitStyle": "instant",
+      "juniorPolicy": "ceiling:medium"
     },
     {
       "id": "bee_sim",
@@ -240,7 +253,8 @@
       "requiresPremium": null,
       "languages": null,
       "$note": "STRINGS SIGNED by Eric 2026-08-13. LIVE. The 24-name contestant table went live WITHOUT a line-by-line review — it is displayed content in every market, and Eric flipped it knowing that. Flags were removed first so the table carries no claim about anybody's origin; what ships is given names and a colour. D3's Definition request is NOT BUILT and cannot be: definitions arrive from /api/defpool over the network and D7 requires offline, so I1 renders no button. Not built: F4 how-to cards, D5's spoken letter input (a v2 door by the spec).",
-      "exitStyle": "confirm"
+      "exitStyle": "confirm",
+      "juniorPolicy": "ceiling:medium"
     },
     {
       "id": "word_picture",
@@ -256,7 +270,8 @@
       "requiresPremium": null,
       "languages": null,
       "$note": "CC-WORD-PICTURE v5: calligram mode — words typeset along guide strokes. Menu grows to 4 (CC-HUB-CLEANUP D5 reconciliation: Word Picture registered second, per that spec's own note). PREVIEW = free trio from pictures.json; Kid Mode = computed eligibility (tier<=medium + kid-filtered feed).",
-      "exitStyle": "instant"
+      "exitStyle": "instant",
+      "juniorPolicy": "ceiling:medium"
     },
     {
       "id": "reports",
@@ -272,7 +287,8 @@
       "requiresPremium": null,
       "languages": null,
       "$note": "CC-REPORTS D1: kid tab FREE (drives daily play). Conquest framing only (I4); guardian diagnostics live behind the parent gate, never here. Little Speller: registry-filtered out by its edition profile.",
-      "exitStyle": "instant"
+      "exitStyle": "instant",
+      "juniorPolicy": "ungated"
     },
     {
       "id": "calendar",
@@ -288,7 +304,8 @@
       "requiresPremium": null,
       "languages": null,
       "$note": "CC-CALENDAR v2: kid surface; goals originate HERE only (I7 CI-enforced). D2: view/recap/goals free; multi-week planner Complete (checked in-surface). Parent side is read+cheer in the dash.",
-      "exitStyle": "instant"
+      "exitStyle": "instant",
+      "juniorPolicy": "ungated"
     },
     {
       "id": "translate",
@@ -304,7 +321,62 @@
       "requiresPremium": null,
       "languages": null,
       "$note": "CC-TRANSLATE-TOOLS core (D5 signed: whole suite app-only). Closed space (I1): bank words only, lookup via pick-only UI (I4). Fan-out rows arrive through the gloss_rows seam when CC-BANK-TRANSLATE lands; today cards render the word's own row — absent, not locked. Wave 2/3 tools build per their gates.",
-      "exitStyle": "instant"
+      "exitStyle": "instant",
+      "juniorPolicy": "ceiling:medium"
+    },
+    {
+      "id": "standard",
+      "nameKey": "brand.tag",
+      "descKey": "share.tagline",
+      "icon": "🔊",
+      "status": "core",
+      "kidSafe": true,
+      "platforms": [
+        "ios",
+        "web"
+      ],
+      "entitlementLevel": "preview",
+      "requiresPremium": null,
+      "languages": null,
+      "$note": "CC-ONBOARD-JR option (a): the base game. Its difficulty selector is LEVEL_OPTS, now filtered through experience::allowed_tiers. Core: never a hub tile.",
+      "exitStyle": "instant",
+      "juniorPolicy": "ceiling:medium"
+    },
+    {
+      "id": "climb",
+      "nameKey": "top.theClimb",
+      "descKey": "level.climb.desc",
+      "icon": "🏔",
+      "status": "core",
+      "kidSafe": true,
+      "platforms": [
+        "ios",
+        "web"
+      ],
+      "entitlementLevel": "full",
+      "requiresPremium": null,
+      "languages": null,
+      "$note": "CC-ONBOARD-JR F3: junior plays Jr Climb — words 1-20 Easy, 21+ Medium, unranked, zero leaderboard calls. Core: never a hub tile.",
+      "exitStyle": "instant",
+      "juniorPolicy": "variant:jr-climb"
+    },
+    {
+      "id": "daily",
+      "nameKey": "widget.daily.name",
+      "descKey": "widget.daily.desc",
+      "icon": "🗓",
+      "status": "core",
+      "kidSafe": true,
+      "platforms": [
+        "ios",
+        "web"
+      ],
+      "entitlementLevel": "full",
+      "requiresPremium": null,
+      "languages": null,
+      "$note": "CC-ONBOARD-JR F4: junior plays Jr Daily — Easy + Medium, its own seed namespace. Core: never a hub tile.",
+      "exitStyle": "instant",
+      "juniorPolicy": "variant:jr-daily"
     }
   ]
 }

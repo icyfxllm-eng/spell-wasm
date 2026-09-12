@@ -91,6 +91,15 @@ pub fn wire(app: &App) {
     dom::on::<web_sys::MouseEvent, _>("cnKeys", "click", tap);
 }
 
+thread_local! {
+    /// CC-ONBOARD-JR: this chain is a Spell Jr chain. Set at open; Pass has no App.
+    static JUNIOR: Cell<bool> = Cell::new(false);
+}
+
+fn experience() -> crate::experience::Experience {
+    crate::experience::of_kid(JUNIOR.with(Cell::get))
+}
+
 pub fn open(app: &App) {
     let lang = app.borrow().lang.clone();
     LANG.with(|l| *l.borrow_mut() = lang.clone());
@@ -104,6 +113,7 @@ pub fn open(app: &App) {
     PASSES.with(|c| c.set(0));
     OVER.with(|c| c.set(false));
     SEED.with(|c| c.set(js_sys::Date::now() as u64));
+    JUNIOR.with(|j| j.set(app.borrow().kid));
 
     if !chains::chains_ready(&lang) {
         dom::set_text("cnHook", "");
@@ -120,7 +130,7 @@ pub fn open(app: &App) {
         .unwrap_or('a')
         .to_string();
     let used = BTreeSet::new();
-    let opener = chains::pass_draw(&lang, &first, &used, SEED.with(Cell::get));
+    let opener = chains::pass_draw_for(experience(), &lang, &first, &used, SEED.with(Cell::get));
     match opener {
         Some(w) => {
             let h = chains::hook(&lang, &w).unwrap_or(first);
@@ -320,7 +330,7 @@ fn pass() {
     let hook = HOOK.with(|h| h.borrow().clone());
     let used = USED.with(|u| u.borrow().clone());
     let seed = SEED.with(Cell::get).wrapping_add(CHAIN.with(|c| c.borrow().len() as u64));
-    match chains::pass_draw(&lang, &hook, &used, seed) {
+    match chains::pass_draw_for(experience(), &lang, &hook, &used, seed) {
         Some(w) => {
             let h = chains::hook(&lang, &w).unwrap_or_default();
             PASSES.with(|c| c.set(c.get() + 1));

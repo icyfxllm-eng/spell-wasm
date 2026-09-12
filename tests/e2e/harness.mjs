@@ -115,7 +115,7 @@ export async function pinBaseline(ctx) {
   return ctx;
 }
 
-export async function openApp(browser, base, { lang = null, device = 'se', viewport = null } = {}) {
+export async function openApp(browser, base, { lang = null, device = 'se', viewport = null, age = AGE } = {}) {
   const d = viewport ? { ...DEVICES[device], ...viewport } : DEVICES[device];
   const ctx = await browser.newContext({ viewport: { width: d.width, height: d.height }, deviceScaleFactor: d.dpr, isMobile: d.mobile });
   await ctx.addInitScript(([age, l]) => {
@@ -140,7 +140,7 @@ export async function openApp(browser, base, { lang = null, device = 'se', viewp
       localStorage.setItem('spell_flag_learner_surfaces', 'off');
       localStorage.setItem('spell_flag_learner_select', 'off');
     }
-  }, [AGE, lang]);
+  }, [age, lang]);
   // Stub the backend audio so no real TTS traffic + deterministic timing.
   await ctx.route('**/api/speak**', (r) => r.fulfill({ status: 200, contentType: 'audio/mpeg', body: Buffer.from([]) }));
   const page = await ctx.newPage();

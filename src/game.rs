@@ -165,15 +165,73 @@ pub fn preload_pool(app: &App) {
 /// the literal "climb", so a Feature 5 check against the raw `level` string
 /// would be false for every Climb player -- which is most of them.
 fn effective_tier(s: &AppState) -> String {
-    let mut tier = if s.level == "climb" {
+    if s.level == "climb" && crate::experience::of_kid(s.kid) == crate::experience::Experience::Junior {
+        return crate::experience::jr_climb_tier(s.jr_climb_served.max(1)).to_string();
+    }
+    let tier = if s.level == "climb" {
         tier_for_streak(s.streak).to_string()
     } else {
         s.level.clone()
     };
-    if s.kid && tier == "expert" {
-        tier = "hard".to_string();
+    clamp_base_tier(s.kid, tier)
+}
+
+/// CC-ONBOARD-JR I5 — the base game's tier after the experience decides.
+/// Standard passes through untouched. Spell Jr asks `experience::serve_tier`,
+/// which refuses Hard and Expert: the old clamp here capped Kid Mode at HARD
+/// while every companion mode capped it at Medium, and the selector offered
+/// Expert on top of that (inventory §2).
+fn clamp_base_tier(kid: bool, tier: String) -> String {
+    match crate::experience::of_kid(kid) {
+        crate::experience::Experience::Standard => tier,
+        exp => crate::experience::serve_tier(exp, "standard", &tier).to_string(),
     }
-    tier
+}
+
+/// The solo Climb tier for the word about to be served, and whether this serve
+/// is Jr Climb's one level-up beat. Pure over AppState, so a whole run's shape
+/// is testable without a DOM.
+///
+/// Standard Climb is exactly what it was: head-to-head follows the active
+/// player's chain, solo follows the Option A band. Spell Jr plays Jr Climb
+/// (F3, D9): words 1-20 Easy, 21 on Medium, counting words SERVED so a miss
+/// the run survives still moves the player toward Medium.
+fn serve_climb_tier(s: &mut AppState) -> (String, bool) {
+    if s.versus.enabled {
+        return (tier_for_streak(s.versus.active_player().current).to_string(), false);
+    }
+    if crate::experience::of_kid(s.kid) == crate::experience::Experience::Junior {
+        s.jr_climb_served += 1;
+        let n = s.jr_climb_served;
+        return (crate::experience::jr_climb_tier(n).to_string(), crate::experience::jr_climb_levels_up(n));
+    }
+    (band_to_tier(s.climb_band).to_string(), false)
+}
+
+/// CC-ONBOARD-JR F3 — the once-per-run beat as Jr Climb steps up to Medium.
+/// Built only from strings every locale already has ("On a roll." and the
+/// Medium label), so it adds no copy to audit. F3 asks for at most 1.5 s,
+/// skippable, and static under Reduce Motion: it shows for 1.5 s on the
+/// feedback line, never blocks typing (so there is nothing to skip past), and
+/// has no motion at all. It clears itself only if it is still the line on
+/// screen, so it can never wipe the feedback for an answer given meanwhile.
+/// Deliberately not the Achievement toast, which would announce something the
+/// player did not earn.
+fn show_jr_level_up() {
+    let msg = format!("{} \u{2191} {}", crate::i18n::t("praise.3"), crate::i18n::t("level.medium"));
+    dom::set_text("feedback", &msg);
+    schedule_raw(1500, move || {
+        if dom::el("feedback").text_content().as_deref() == Some(msg.as_str()) {
+            dom::set_text("feedback", "");
+        }
+    });
+}
+
+/// Spell Racing is hidden from Spell Jr (juniorPolicy). A Jr Climb run is
+/// Easy + Medium, so recording it as a ghost would set a pace no standard
+/// Climb could fairly race.
+fn racing_allowed(kid: bool) -> bool {
+    !crate::experience::allowed_tiers(crate::experience::of_kid(kid), "ghost_racing").is_empty()
 }
 
 fn tier_for_streak(streak: u32) -> &'static str {
@@ -772,18 +830,38 @@ pub fn build_source_options(app: &App) {
 }
 
 pub fn build_level_options(app: &App) {
-    let s = app.borrow();
-    let opts: String = LEVEL_OPTS
+    let offered = offered_levels(crate::experience::of_kid(app.borrow().kid));
+    let opts: String = offered
         .iter()
-        .map(|(v, _)| {
+        .map(|v| {
             let label = crate::i18n::t(&format!("level.{v}"));
             format!("<option value=\"{v}\">{label}</option>")
         })
         .collect();
     dom::set_html("levelSel", &opts);
-    dom::select("levelSel").set_value(&s.level);
-    drop(s);
+    {
+        // A level the experience no longer offers (Expert, when Spell Jr turns
+        // on) falls back to Medium rather than leaving the select blank.
+        let mut s = app.borrow_mut();
+        if !offered.contains(&s.level.as_str()) {
+            s.level = "medium".to_string();
+        }
+    }
+    dom::select("levelSel").set_value(&app.borrow().level);
     update_setup_chip(app);
+}
+
+/// CC-ONBOARD-JR F2 — the level selector's entries, in LEVEL_OPTS order: Climb
+/// when its policy allows it, then each base-game tier the resolver allows.
+/// Standard gets all five, unchanged. Spell Jr gets Climb, Easy, Medium.
+pub fn offered_levels(exp: crate::experience::Experience) -> Vec<&'static str> {
+    let tiers = crate::experience::allowed_tiers(exp, "standard");
+    let climb = !crate::experience::allowed_tiers(exp, "climb").is_empty();
+    LEVEL_OPTS
+        .iter()
+        .map(|(v, _)| *v)
+        .filter(|v| if *v == "climb" { climb } else { tiers.contains(v) })
+        .collect()
 }
 
 // ---------- meanings (dictionary lookups) ----------
@@ -1209,6 +1287,7 @@ pub fn next_word(app: &App) {
         finish_daily(app);
         return;
     }
+    let mut jr_level_up = false;
     {
         let mut s = app.borrow_mut();
         // PLACEMENT_LIVE describes THIS word: "was it served from the placement
@@ -1295,20 +1374,16 @@ pub fn next_word(app: &App) {
             // Climb tier: head-to-head tracks the active player's current chain;
             // solo uses the gentle band (Option A) so a miss drops one tier, not
             // all the way to easy — hard languages keep progressing.
-            let mut tier = if s.level == "climb" {
-                if s.versus.enabled {
-                    tier_for_streak(s.versus.active_player().current).to_string()
-                } else {
-                    band_to_tier(s.climb_band).to_string()
-                }
+            let tier = if s.level == "climb" {
+                let (t, beat) = serve_climb_tier(&mut s);
+                jr_level_up = beat;
+                t
             } else {
                 s.level.clone()
             };
-            // Kid Mode caps at Hard (Expert nightmares excluded) while keeping
-            // easy→medium→hard distinct.
-            if s.kid && tier == "expert" {
-                tier = "hard".to_string();
-            }
+            // CC-ONBOARD-JR I5: enforced where the word is chosen, not only in
+            // the selector — the UI may ask for Hard, the engine does not serve it.
+            let tier = clamp_base_tier(s.kid, tier);
             s.cur_tier = tier.clone();
             let pool = active_word_list(&s, &tier);
             if !pool.is_empty() {
@@ -1414,6 +1489,9 @@ pub fn next_word(app: &App) {
     render_tries(app);
     dom::el("feedback").set_class_name("feedback");
     dom::set_text("feedback", "");
+    if jr_level_up {
+        show_jr_level_up();
+    }
     update_voice_note(app);
     sync_keyboard(app);
     if app.borrow().daily.active {
@@ -1722,7 +1800,7 @@ fn on_correct(app: &App) {
         {
             let (climb_run, run_start, lang) = {
                 let s = app.borrow();
-                (s.level == "climb" && !s.review, s.run_start_ms, s.lang.clone())
+                (s.level == "climb" && !s.review && racing_allowed(s.kid), s.run_start_ms, s.lang.clone())
             };
             if climb_run {
                 if streak == 1 {
@@ -2475,16 +2553,17 @@ fn end_chain(app: &App) {
         (s.streak, s.level.clone(), s.run_start_ms, s.kid, s.review)
     };
     // Post to The Climb: ranked difficulty (submit_run filters to medium/hard/
-    // expert) and logged-in only; never in Kid Mode. A plausible run duration
+    // expert) and logged-in only; never in Spell Jr — Jr Climb is unranked and
+    // makes zero leaderboard calls (CC-ONBOARD-JR I6). A plausible run duration
     // feeds the server-side anti-cheat.
-    if reached > 0 && !kid {
+    if reached > 0 && crate::experience::leaderboard_allowed(crate::experience::of_kid(kid)) {
         let duration = (now_ms() - run_start).max(0.0);
         crate::climb::submit_run(&level, reached, duration);
     }
     // Spell Racing (F6): a solo Climb run just ended. Record the terminating
     // miss, then keep the run if it's a new best; celebrate beating a prior
     // ghost. Local-only; independent of The Climb leaderboard above.
-    if level == "climb" && !review {
+    if level == "climb" && !review && racing_allowed(kid) {
         crate::ghost::note_incorrect((now_ms() - run_start).max(0.0));
         if let crate::ghost::Outcome::Beat = crate::ghost::finish_run() {
             dom::show_toast(&crate::i18n::t("ghost.beat"));
@@ -2505,6 +2584,7 @@ fn reset_chain_soft(app: &App) {
     note_climb(app, false); // Option A: drop the Climb band one step (not to easy)
     crate::ghost::hide_pace(); // F6: no live ghost between runs
     app.borrow_mut().streak = 0;
+    app.borrow_mut().jr_climb_served = 0; // CC-ONBOARD-JR F3: the next run starts at word 1
     crate::surface_hooks::streak_clear(); // D2: run over, chain over
     dom::set_text("streakNum", "0");
     // CC-ATTEMPTS-SHIELDS: the run just ended — shields are per-run and do NOT
@@ -3193,6 +3273,7 @@ pub fn exit_versus(app: &App) {
     {
         let mut s = app.borrow_mut();
         s.streak = 0;
+        s.jr_climb_served = 0; // CC-ONBOARD-JR F3
         crate::surface_hooks::streak_clear(); // D2
         s.word = String::new();
         s.answered = false;
@@ -3704,5 +3785,67 @@ mod placement_flag_latch {
         }
         // And a placement serve still sets it.
         assert!(new(&[Branch::Review, Branch::Placement]), "placement must still register");
+    }
+}
+
+#[cfg(test)]
+mod jr_climb_tests {
+    //! CC-ONBOARD-JR Done 3/4/5 at the engine, where the DOM cannot hide a bug.
+    use super::*;
+    use crate::experience::Experience;
+
+    fn player(kid: bool) -> AppState {
+        let mut s = AppState::default();
+        s.kid = kid;
+        s.level = "climb".to_string();
+        s
+    }
+
+    /// Done 4 — a 25-word Jr Climb run: 20 Easy, then Medium, one beat at 21.
+    #[test]
+    fn a_25_word_jr_climb_run_is_20_easy_then_medium_with_one_beat() {
+        let mut s = player(true);
+        let run: Vec<(String, bool)> = (0..25).map(|_| serve_climb_tier(&mut s)).collect();
+        assert!(run[..20].iter().all(|(t, _)| t == "easy"), "words 1-20 are Easy");
+        assert!(run[20..].iter().all(|(t, _)| t == "medium"), "words 21-25 are Medium");
+        let beats: Vec<usize> = run.iter().enumerate().filter(|(_, (_, b))| *b).map(|(i, _)| i + 1).collect();
+        assert_eq!(beats, vec![21], "exactly one level-up beat, on word 21");
+        assert_eq!(effective_tier(&s), "medium");
+    }
+
+    /// Standard Climb is untouched: the Option A band decides, the Jr counter never moves.
+    #[test]
+    fn standard_climb_still_follows_the_band() {
+        let mut s = player(false);
+        s.climb_band = 3;
+        assert_eq!(serve_climb_tier(&mut s), ("expert".to_string(), false));
+        assert_eq!(s.jr_climb_served, 0);
+    }
+
+    /// Done 3 — the selector: Spell Jr sees Climb, Easy, Medium; standard sees all five.
+    #[test]
+    fn the_selector_offers_what_the_resolver_allows() {
+        assert_eq!(offered_levels(Experience::Junior), vec!["climb", "easy", "medium"]);
+        assert_eq!(offered_levels(Experience::Standard), vec!["climb", "easy", "medium", "hard", "expert"]);
+    }
+
+    /// Done 3 / I5 — the base game refuses Hard and Expert for Spell Jr even if asked.
+    #[test]
+    fn the_base_game_never_serves_a_junior_hard() {
+        for asked in ["hard", "expert"] {
+            let mut s = player(true);
+            s.level = asked.to_string();
+            assert_eq!(effective_tier(&s), "medium", "junior asked for {asked}");
+            assert_eq!(clamp_base_tier(true, asked.to_string()), "medium");
+            assert_eq!(clamp_base_tier(false, asked.to_string()), asked, "standard is untouched");
+        }
+    }
+
+    /// Done 5 — Jr Climb makes no leaderboard call; Spell Racing records nothing.
+    #[test]
+    fn jr_climb_is_unranked_and_unraced() {
+        assert!(!crate::experience::leaderboard_allowed(crate::experience::of_kid(true)));
+        assert!(!racing_allowed(true));
+        assert!(racing_allowed(false));
     }
 }

@@ -139,6 +139,16 @@ echo "== gate: modes registry has implementations"
 # modes whose tiles therefore never rendered — and it was not in the gate,
 # so nobody saw it. A check nobody runs is a check that does not exist.
 node scripts/modes-check.mjs || { echo "GATE FAIL: a mode has no implementation"; exit 1; }
+# CC-ONBOARD-JR I4: the selftest was never gated, and its fixture had rotted
+# (copy keys renamed) without anyone seeing. A checker that cannot fail is decoration.
+node scripts/modes-check.mjs --selftest || { echo "GATE FAIL: modes-check selftest — the registry gate no longer bites"; exit 1; }
+# CC-ONBOARD-JR F0: one player-facing name for the junior experience.
+node scripts/spell-jr-name-check.mjs || { echo "GATE FAIL: a retired name for Spell Jr is player-facing"; exit 1; }
+node scripts/spell-jr-name-check.mjs --selftest || { echo "GATE FAIL: spell-jr-name selftest — the gate no longer bites"; exit 1; }
+# CC-ONBOARD-JR I3: src/experience.rs is the one tier authority. A new tier list
+# elsewhere in production Rust fails unless allowlisted with its reason.
+node scripts/tier-list-check.mjs || { echo "GATE FAIL: a tier list outside the resolver"; exit 1; }
+node scripts/tier-list-check.mjs --selftest || { echo "GATE FAIL: tier-list selftest — the gate no longer bites"; exit 1; }
 
 echo "== gate: settings truth (AUDITPASS F8)"
 node scripts/settings-truth-check.mjs || { echo "GATE FAIL: settings truth"; exit 1; }

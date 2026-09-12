@@ -79,8 +79,6 @@ pub enum GameMode {
     Climb,
     /// Spell Racing (race your best run).
     GhostRace,
-    /// Little Speller (young-learner mode).
-    LittleSpeller,
 }
 
 /// The resolved entitlements for one user, right now. Produced ONLY by
@@ -335,8 +333,7 @@ pub fn preview_allows(lang: &str, mode: GameMode, tier: u32) -> bool {
         // Every premium mode is Full-only; Preview never reaches them.
         GameMode::Daily
         | GameMode::Climb
-        | GameMode::GhostRace
-        | GameMode::LittleSpeller => false,
+        | GameMode::GhostRace => false,
     }
 }
 
@@ -488,7 +485,7 @@ mod tests {
             assert!(preview_allows(lang, GameMode::Standard, 1), "{lang} tier1 standard ok");
             assert!(!preview_allows(lang, GameMode::Standard, 2), "{lang} tier2 gated");
             // Preview NEVER leaks into premium modes.
-            for m in [GameMode::Daily, GameMode::Climb, GameMode::GhostRace, GameMode::LittleSpeller] {
+            for m in [GameMode::Daily, GameMode::Climb, GameMode::GhostRace] {
                 assert!(!preview_allows(lang, m, 1), "{lang} {m:?} must be Full-only");
             }
         }

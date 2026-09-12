@@ -96,7 +96,8 @@ pub fn open(app: &App) {
     // D7: the free tier is easy. I5 caps Kid Mode regardless of what is asked.
     let tier = impostor::effective_tier(Tier::Easy, kid);
     let seed = js_sys::Date::now() as u64;
-    let set = impostor::set_of_ten(&lang, seed, tier);
+    // CC-ONBOARD-JR I5: a Spell Jr set's real words are Easy + Medium, kid-safe.
+    let set = impostor::set_of_ten_for(crate::experience::of_kid(kid), &lang, seed, tier);
     let empty = set.is_empty();
     SET.with(|s| *s.borrow_mut() = set);
     if empty {

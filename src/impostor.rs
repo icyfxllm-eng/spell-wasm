@@ -100,12 +100,23 @@ pub enum Tier {
     Expert,
 }
 
-/// I5 — Kid Mode never receives hard or expert rounds. One place decides, so no
-/// caller can forget.
+/// I5 — Spell Jr never receives hard or expert rounds. CC-ONBOARD-JR: the one
+/// place that decides is `experience::serve_tier`; this only translates.
 pub fn effective_tier(t: Tier, kid: bool) -> Tier {
-    match (t, kid) {
-        (Tier::Hard, true) | (Tier::Expert, true) => Tier::Medium,
-        _ => t,
+    if !kid {
+        return t;
+    }
+    let asked = match t {
+        Tier::Easy => "easy",
+        Tier::Medium => "medium",
+        Tier::Hard => "hard",
+        Tier::Expert => "expert",
+    };
+    match crate::experience::serve_tier(crate::experience::Experience::Junior, "impostor", asked) {
+        "easy" => Tier::Easy,
+        "medium" => Tier::Medium,
+        "hard" => Tier::Hard,
+        _ => Tier::Expert,
     }
 }
 
@@ -506,6 +517,46 @@ pub fn set_of_ten(lang: &str, seed: u64, tier: Tier) -> Vec<Round> {
     out
 }
 
+/// CC-ONBOARD-JR I5 + D8 — the real words a Spell Jr set may be built on: the
+/// bank tiers the resolver allows for this mode, kid-safe entries only, in a
+/// stable order so a seed deals the same set on every device (I2).
+fn junior_vocabulary(lang: &str) -> Vec<&'static str> {
+    let mut v: Vec<&'static str> =
+        crate::experience::allowed_tiers(crate::experience::Experience::Junior, "impostor")
+            .iter()
+            .flat_map(|t| crate::words::tier_for(lang, t).iter().copied())
+            .filter(|w| crate::kid_filter::kid_allowed(lang, w))
+            .collect();
+    v.sort_unstable();
+    v.dedup();
+    v
+}
+
+/// `set_of_ten` for `exp`. Standard is exactly `set_of_ten`: the real word may
+/// come from anywhere in the vocabulary and the tier shapes the fakes. The
+/// inventory found that a Spell Jr set did the same, so the one card a child is
+/// asked to trust could be an Expert word; a Spell Jr set now builds its real
+/// words from `junior_vocabulary` only.
+pub fn set_of_ten_for(exp: crate::experience::Experience, lang: &str, seed: u64, tier: Tier) -> Vec<Round> {
+    if exp == crate::experience::Experience::Standard {
+        return set_of_ten(lang, seed, tier);
+    }
+    let vocab = junior_vocabulary(lang);
+    if vocab.is_empty() {
+        return Vec::new();
+    }
+    let mut out = Vec::new();
+    let mut i = 0u64;
+    while out.len() < 10 && i < 400 {
+        let at = (mix(seed ^ i) % vocab.len() as u64) as usize;
+        if let Some(r) = round(lang, vocab[at], seed ^ i, tier) {
+            out.push(r);
+        }
+        i += 1;
+    }
+    out
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -513,6 +564,29 @@ mod tests {
     const LANGS: [&str; 15] = [
         "en", "es", "fr", "de", "pt", "pl", "ru", "vi", "fil", "sw", "ja", "ko", "zh", "hi", "ar",
     ];
+
+    /// CC-ONBOARD-JR I5 + D8 (Done 10) — every real card a Spell Jr set deals
+    /// is a kid-safe Easy or Medium word. It lives here, beside the deal it
+    /// checks: the comparison splits a "pinyin|hanzi" bank entry, and this is
+    /// the file where that shape is already on the record as card-building
+    /// rather than grading a typed answer.
+    #[test]
+    fn junior_real_cards_are_kid_safe_easy_medium() {
+        let mut dealt = 0;
+        for lang in LANGS {
+            let jr: std::collections::HashSet<String> = junior_vocabulary(lang)
+                .iter()
+                .map(|w| fold_strict(w.split('|').next().unwrap_or(w)))
+                .collect();
+            for seed in 0..3u64 {
+                for r in set_of_ten_for(crate::experience::Experience::Junior, lang, seed, Tier::Easy) {
+                    assert!(jr.contains(&r.word), "{lang}: a Spell Jr real card {:?} is not a kid-safe Easy or Medium word", r.word);
+                    dealt += 1;
+                }
+            }
+        }
+        assert!(dealt > 0, "no Spell Jr set dealt a single card — the check proved nothing");
+    }
 
     /// I1 — the fairness invariant. Not one rendered distractor may be a real
     /// word in its script group. This is the assertion the mode's credibility

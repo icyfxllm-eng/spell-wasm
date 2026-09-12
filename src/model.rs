@@ -153,6 +153,9 @@ pub struct AppState {
     pub climb_band: u8,
     /// Correct answers accumulated toward the next Climb promotion.
     pub climb_prog: u8,
+    /// CC-ONBOARD-JR F3 — words served in the current Jr Climb run (session
+    /// only). Words 1-20 are Easy, 21 on Medium; reset when the run ends.
+    pub jr_climb_served: u32,
     pub answered: bool,
     /// True while an IME composition is open (compositionstart seen, no matching
     /// compositionend yet). Guards the shared submit/advance path so we never
@@ -227,6 +230,7 @@ impl Default for AppState {
             best: 0,
             climb_band: 0,
             climb_prog: 0,
+            jr_climb_served: 0,
             answered: false,
             composing: false,
             rate: 0.9,

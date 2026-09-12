@@ -188,6 +188,7 @@ fn tile_html(m: &Mode, lang: &str) -> String {
         // An aid: informational, deliberately not a button.
         (Status::Live, None) => format!("<div class=\"mode-tile info\" data-mode=\"{}\">{body}</div>", m.id),
         (Status::Hidden, _) => String::new(), // unreachable: `visible` filtered it
+        (Status::Core, _) => String::new(), // unreachable: core surfaces never tile
     }
 }
 
@@ -260,9 +261,18 @@ mod tests {
     /// The binding table must cover the registry exactly — a mode with no entry
     /// here would silently render as an aid, which is a lie if it has a
     /// destination.
+    ///
+    /// Core entries are the exception (CC-ONBOARD-JR): the base game, the
+    /// Climb and the Daily are registered so one registry governs their
+    /// juniorPolicy, and they are never hub tiles. They are excluded rather
+    /// than bound to None, which would claim they are in-round aids.
     #[test]
     fn launch_table_covers_every_registered_mode() {
-        let ids: Vec<String> = modes::all().iter().map(|m| m.id.clone()).collect();
+        let ids: Vec<String> = modes::all()
+            .iter()
+            .filter(|m| m.status != Status::Core)
+            .map(|m| m.id.clone())
+            .collect();
         let bound: Vec<String> = LAUNCH.iter().map(|(k, _)| k.to_string()).collect();
         assert_eq!(bound, ids, "LAUNCH must list every mode, in registry order");
     }

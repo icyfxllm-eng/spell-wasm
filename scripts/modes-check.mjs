@@ -27,7 +27,13 @@ import { dirname, join } from 'node:path';
 import { tmpdir } from 'node:os';
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
-const STATUSES = new Set(['live', 'hidden', 'coming_soon']);
+const STATUSES = new Set(['live', 'hidden', 'coming_soon', 'core']);
+const TIERS = ['easy', 'medium', 'hard', 'expert'];
+// CC-ONBOARD-JR I4 — what Spell Jr may do with a mode. Read by src/experience.rs.
+const POLICY = /^(hidden|ungated|variant:[a-z][a-z0-9-]*|ceiling:(easy|medium|hard|expert))$/;
+// Spell Jr is Easy + Medium everywhere (C3). A ceiling above medium is a policy
+// that promises Hard to a child, so it is refused here rather than trusted.
+const JUNIOR_MAX = 'medium';
 const PLATFORMS = new Set(['web', 'ios']);
 const LEVELS = new Set(['none', 'preview', 'full']);
 const PREMIUM = new Set(['photo_ocr', 'multiple_profiles', 'progress_reports', 'custom_lists_unlimited']);
@@ -49,6 +55,21 @@ function validate(reg, { locale, flags } = {}) {
     if (!m.descKey) problems.push(`${at}: missing descKey`);
     if (!m.icon) problems.push(`${at}: missing icon`);
 
+    // CC-ONBOARD-JR I4: no mode ships without a junior policy.
+    if (typeof m.juniorPolicy !== 'string' || !m.juniorPolicy) {
+      problems.push(`${at}: missing juniorPolicy — every mode must say what Spell Jr may do with it`);
+    } else if (!POLICY.test(m.juniorPolicy)) {
+      problems.push(`${at}: juniorPolicy must be hidden | ungated | variant:<id> | ceiling:<tier>, got ${JSON.stringify(m.juniorPolicy)}`);
+    } else {
+      const cap = m.juniorPolicy.startsWith('ceiling:') ? m.juniorPolicy.slice(8) : null;
+      if (cap && TIERS.indexOf(cap) > TIERS.indexOf(JUNIOR_MAX)) {
+        problems.push(`${at}: juniorPolicy ${m.juniorPolicy} offers a child more than ${JUNIOR_MAX} — Spell Jr is Easy + Medium`);
+      }
+      if (m.kidSafe === false && m.juniorPolicy !== 'hidden') {
+        problems.push(`${at}: kidSafe is false but juniorPolicy is ${m.juniorPolicy} — a kid-unsafe mode must be hidden from Spell Jr`);
+      }
+    }
+
     if (!Array.isArray(m.platforms) || m.platforms.length === 0) problems.push(`${at}: platforms must be a non-empty array`);
     else for (const p of m.platforms) if (!PLATFORMS.has(p)) problems.push(`${at}: unknown platform ${JSON.stringify(p)}`);
 
@@ -68,7 +89,8 @@ function validate(reg, { locale, flags } = {}) {
       }
     }
     // Cross-check: the mode must actually exist in the app.
-    if (flags && m.id && !flags.includes(`pub fn ${m.id}(`)) {
+    // Core surfaces (the base game, the Climb, the Daily) always run; they have no flag.
+    if (flags && m.id && m.status !== 'core' && !flags.includes(`pub fn ${m.id}(`)) {
       problems.push(`${at}: no flag "pub fn ${m.id}()" in src/flags.rs — a registry entry with no implementation is a tile leading nowhere`);
     }
   }
@@ -87,8 +109,9 @@ if (process.argv.includes('--selftest')) {
   // A checker that cannot fail is decoration. Each fixture breaks ONE rule.
   const { locale, flags } = loadReal();
   const base = () => ({
-    id: 'ghost_racing', nameKey: 'tools.ghost.name', descKey: 'tools.ghost.desc', icon: '👻',
+    id: 'ghost_racing', nameKey: 'tools.racing.name', descKey: 'tools.racing.desc', icon: '👻',
     status: 'live', kidSafe: true, platforms: ['web'], entitlementLevel: 'full', requiresPremium: null, languages: null,
+    juniorPolicy: 'ceiling:medium',
   });
   const cases = [
     ['bad status', (m) => { m.status = 'enabled'; }],
@@ -99,6 +122,10 @@ if (process.argv.includes('--selftest')) {
     ['invented copy key', (m) => { m.nameKey = 'tools.invented.name'; }],
     ['no implementation', (m) => { m.id = 'teleport_mode'; }],
     ['missing icon', (m) => { delete m.icon; }],
+    ['missing juniorPolicy', (m) => { delete m.juniorPolicy; }],
+    ['unknown juniorPolicy', (m) => { m.juniorPolicy = 'sometimes'; }],
+    ['junior ceiling above medium', (m) => { m.juniorPolicy = 'ceiling:hard'; }],
+    ['kid-unsafe mode not hidden from junior', (m) => { m.kidSafe = false; }],
   ];
   const missed = [];
   for (const [name, mutate] of cases) {
@@ -130,5 +157,6 @@ if (problems.length) {
 const live = reg.modes.filter((m) => m.status === 'live').length;
 const soon = reg.modes.filter((m) => m.status === 'coming_soon').length;
 const hidden = reg.modes.filter((m) => m.status === 'hidden').length;
+const core = reg.modes.filter((m) => m.status === 'core').length;
 const kid = reg.modes.filter((m) => m.kidSafe && m.status === 'live').length;
-console.log(`modes-check: OK — ${reg.modes.length} modes (${live} live, ${soon} coming_soon, ${hidden} hidden; ${kid} kidSafe live).`);
+console.log(`modes-check: OK — ${reg.modes.length} modes (${live} live, ${soon} coming_soon, ${hidden} hidden, ${core} core; ${kid} kidSafe live; every one carries a juniorPolicy).`);

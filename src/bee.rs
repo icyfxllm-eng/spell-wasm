@@ -33,9 +33,6 @@ use std::collections::BTreeSet;
 /// D1's ladder. Round number (1-based) to the bank tier it draws from.
 const LADDER: [(u32, &str); 4] = [(1, "easy"), (3, "medium"), (5, "hard"), (7, "expert")];
 
-/// D6: the Kid Mode ceiling, matching the standing kid tier cap.
-const KID_CEILING: &str = "medium";
-
 /// D2. Names only — reviewable line by line, and no claim about origin.
 const CONTESTANTS: [&str; 24] = [
     "Amara", "Mateo", "Yuki", "Priya", "Lukas", "Sofia", "Omar", "Mei",
@@ -62,7 +59,8 @@ fn mix(seed: u64) -> u64 {
     z ^ (z >> 31)
 }
 
-/// The tier round `n` draws from, respecting D6's Kid ceiling.
+/// The tier round `n` draws from, respecting D6's Spell Jr ceiling — which
+/// `experience::serve_tier` decides (CC-ONBOARD-JR), not this file.
 pub fn tier_for_round(n: u32, kid: bool) -> &'static str {
     let mut t = "easy";
     for (from, name) in LADDER {
@@ -70,8 +68,8 @@ pub fn tier_for_round(n: u32, kid: bool) -> &'static str {
             t = name;
         }
     }
-    if kid && (t == "hard" || t == "expert") {
-        return KID_CEILING;
+    if kid {
+        return crate::experience::serve_tier(crate::experience::Experience::Junior, "bee_sim", t);
     }
     t
 }
@@ -139,7 +137,15 @@ pub fn words(lang: &str, seed: u64, rounds: u32, kid: bool) -> Vec<String> {
     let mut out = Vec::new();
     for n in 1..=rounds {
         let tier = tier_for_round(n, kid);
-        let pool = crate::words::tier_for(lang, tier);
+        let full = crate::words::tier_for(lang, tier);
+        // CC-ONBOARD-JR D8: a Spell Jr bee draws kid-safe words only. No
+        // fallback to the unfiltered tier — a pool the filter empties ends the
+        // bee, the same exhaustion arm as any dry tier.
+        let pool: Vec<&str> = if kid {
+            full.iter().copied().filter(|w| crate::kid_filter::kid_allowed(lang, w)).collect()
+        } else {
+            full.to_vec()
+        };
         if pool.is_empty() {
             break;
         }

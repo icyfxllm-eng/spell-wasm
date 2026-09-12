@@ -74,8 +74,19 @@ fn daily_seed(lang: &str) -> u64 {
     h
 }
 
+thread_local! {
+    /// CC-ONBOARD-JR: the board on screen is a Spell Jr board. Set at open.
+    static JUNIOR: std::cell::Cell<bool> = std::cell::Cell::new(false);
+}
+
+/// Junior and standard boards differ, so their found-word lists must not mix.
+/// The standard key is unchanged.
 fn save_key(lang: &str) -> String {
-    format!("spell_forge_{lang}_{}", today())
+    if JUNIOR.with(|j| j.get()) {
+        format!("spell_forge_jr_{lang}_{}", today())
+    } else {
+        format!("spell_forge_{lang}_{}", today())
+    }
 }
 
 /// The comparable form of a submission. Mirrors what the generator did when it
@@ -130,14 +141,18 @@ pub fn open(app: &App) {
 
     // A language whose bank cannot sustain a board says so plainly rather than
     // dealing a thin one. forge_ready is the engine's call, not the screen's.
-    if !forge::forge_ready(&lang) {
+    // CC-ONBOARD-JR: a Spell Jr board is its own board (Easy + Medium letters
+    // and pool), with its own readiness and its own saved progress.
+    let exp = crate::experience::of_kid(app.borrow().kid);
+    JUNIOR.with(|j| j.set(exp == crate::experience::Experience::Junior));
+    if !forge::forge_ready_for(exp, &lang) {
         dom::set_html("fgComb", "");
         dom::set_text("fgWord", "");
         dom::set_text("fgStatus", &i18n::t("forge.unavailable"));
         return;
     }
 
-    let Some((p, pool, _walk)) = forge::generate(&lang, daily_seed(&lang), 512) else {
+    let Some((p, pool, _walk)) = forge::generate_for(exp, &lang, daily_seed(&lang), 512) else {
         dom::set_html("fgComb", "");
         dom::set_text("fgWord", "");
         dom::set_text("fgStatus", &i18n::t("forge.unavailable"));

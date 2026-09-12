@@ -95,6 +95,95 @@ export async function run(browser, base, suite) {
     } finally { await ctx.close(); }
   });
 
+  // CC-ONBOARD-JR Done 8 — the level selector follows the experience at once,
+  // not at the next launch. The inventory found the toggle rebuilt nothing, so
+  // a player who switched Spell Jr on could still pick Expert.
+  // Done 3 asks for English plus one non-Latin language.
+  for (const lang of ['en', 'ko']) await suite.test(`settings_effect_kid_levels_${lang}`, async () => {
+    const { ctx, page } = await openApp(browser, base, { lang });
+    try {
+      await openSettings(page);
+      const levels = () => page.evaluate(() =>
+        [...document.querySelectorAll('#levelSel option')].map((o) => o.value));
+      const before = await levels();
+      assert(before.includes('hard') && before.includes('expert'),
+        `standard offers Hard and Expert, got ${JSON.stringify(before)}`);
+      await page.selectOption('#levelSel', 'expert');
+      await page.waitForTimeout(150);
+      await flip(page, 'kidToggle', true);
+      const on = await levels();
+      assert(!on.includes('hard') && !on.includes('expert'),
+        `Spell Jr offers no Hard or Expert, got ${JSON.stringify(on)}`);
+      assert(['climb', 'easy', 'medium'].every((v) => on.includes(v)),
+        `Spell Jr keeps Climb, Easy, Medium, got ${JSON.stringify(on)}`);
+      const value = await page.evaluate(() => document.getElementById('levelSel').value);
+      assert(value === 'medium', `an Expert selection falls back to Medium, got ${JSON.stringify(value)}`);
+      await flip(page, 'kidToggle', false);
+      const off = await levels();
+      assert(off.includes('hard') && off.includes('expert'),
+        `switching Spell Jr off brings Hard and Expert back, got ${JSON.stringify(off)}`);
+    } finally { await ctx.close(); }
+  });
+
+  // CC-ONBOARD-JR Done 9 — a locked Spell Jr player finds no switch and no
+  // birthday re-entry; only a grown-up passing the existing parent gate
+  // reaches the birthday prompt, and an adult date reaches the standard game.
+  await suite.test('settings_effect_kid_locked', async () => {
+    const kidVerdict = JSON.stringify({ verdict: 'kid', checkedAt: 1700000000 });
+    const { ctx, page } = await openApp(browser, base, { lang: 'en', age: kidVerdict });
+    try {
+      // REAL visibility. An element inside a closed panel still reports its
+      // own display, so the first draft of this check passed while the
+      // settings sheet was shut and the click then timed out. offsetParent
+      // plus a box is what a player can actually see and press.
+      const shown = (id) => page.evaluate((i) => {
+        const el = document.getElementById(i);
+        if (!el) return false;
+        const r = el.getBoundingClientRect();
+        return !!el.offsetParent && r.width > 0 && r.height > 0 && getComputedStyle(el).visibility !== 'hidden';
+      }, id);
+      const scrimUp = (id) => page.evaluate((i) => document.getElementById(i).classList.contains('show'), id);
+      const levels = () => page.evaluate(() =>
+        [...document.querySelectorAll('#levelSel option')].map((o) => o.value));
+      // The Spell Jr row lives in the SETTINGS sheet (#setScrim), not the
+      // round-setup sheet openSettings opens. Every other test in this file
+      // dispatches change events, so no test had ever needed the sheet open.
+      await page.click('#setBtn');
+      await page.waitForSelector('#setScrim.show', { timeout: 4000 });
+      assert(await bodyHas(page, 'kid'), 'an under-13 verdict boots into Spell Jr');
+      assert(!(await shown('kidToggle')), 'a locked Spell Jr player sees no Spell Jr switch');
+      assert(await shown('kidGrownups'), 'the row offers the grown-up gate instead');
+      assert(!(await scrimUp('ageScrim')), 'no birthday re-entry without the gate');
+      const jr = await levels();
+      assert(!jr.includes('hard') && !jr.includes('expert'), `locked Spell Jr offers no Hard or Expert, got ${JSON.stringify(jr)}`);
+
+      await page.click('#kidGrownups');
+      await page.waitForSelector('#parentScrim.show', { timeout: 4000 });
+      await page.fill('#parentAnswer', '0');
+      await page.click('#parentSubmit');
+      await page.waitForTimeout(150);
+      assert(!(await scrimUp('ageScrim')), 'a wrong answer does not open the birthday prompt');
+
+      const q = (await page.textContent('#parentQ')) || '';
+      const W = { three: 3, four: 4, five: 5, six: 6, seven: 7, eight: 8 };
+      const nums = (q.toLowerCase().match(/three|four|five|six|seven|eight/g) || []).map((w) => W[w]);
+      assert(nums.length === 2, `could not read the parent question ${JSON.stringify(q)}`);
+      await page.fill('#parentAnswer', String(nums[0] * nums[1]));
+      await page.click('#parentSubmit');
+      await page.waitForSelector('#ageScrim.show', { timeout: 4000 });
+      await page.selectOption('#ageYear', '1990');
+      await page.selectOption('#ageMonth', '1');
+      await page.selectOption('#ageDay', '1');
+      await page.click('#ageSubmit');
+      await page.waitForTimeout(250);
+      assert(!(await bodyHas(page, 'kid')), 'a grown-up birthday leaves Spell Jr');
+      assert(await shown('kidToggle'), 'the switch returns for a standard player');
+      assert(!(await shown('kidGrownups')), 'and the grown-up button leaves');
+      const std = await levels();
+      assert(std.includes('hard') && std.includes('expert'), `standard is reachable again, got ${JSON.stringify(std)}`);
+    } finally { await ctx.close(); }
+  });
+
   await suite.test('settings_effect_extra_attempt', async () => {
     const { ctx, page } = await openApp(browser, base, { lang: 'en' });
     try {

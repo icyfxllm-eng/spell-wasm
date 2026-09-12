@@ -32,6 +32,10 @@ pub enum Status {
     ComingSoon,
     /// Renders nowhere, for anyone.
     Hidden,
+    /// A base-game surface the registry GOVERNS but never renders as a tile
+    /// (CC-ONBOARD-JR option (a)): the base game, The Climb, the Daily. They are
+    /// registered so that `juniorPolicy` reaches what a child actually plays.
+    Core,
 }
 
 fn default_exit_style() -> String {
@@ -62,6 +66,11 @@ pub struct Mode {
     #[serde(rename = "exitStyle", default = "default_exit_style")]
     pub exit_style: String,
     pub languages: Option<Vec<String>>,
+    /// CC-ONBOARD-JR F2/I4 — what Spell Jr may do with this mode. NO serde
+    /// default, on purpose: a registry entry without a policy does not parse,
+    /// so it cannot ship. Read only by `experience::allowed_tiers`.
+    #[serde(rename = "juniorPolicy")]
+    pub junior_policy: String,
 }
 
 /// The registry's spelling of [`AccessLevel`]. Separate so the JSON schema and
@@ -134,14 +143,21 @@ fn permitted(m: &Mode, ctx: &HubCtx) -> bool {
     if m.status == Status::Hidden {
         return false;
     }
+    // Core entries are governed here and rendered elsewhere (the base game,
+    // the Climb, the Daily). They never become hub tiles.
+    if m.status == Status::Core {
+        return false;
+    }
     // The runtime flag is off -> the feature does not run, so it must not tile.
     // A tile for an inert mode is worse than no tile: it promises a thing that
     // will not happen.
     if !ctx.enabled.iter().any(|e| *e == m.id) {
         return false;
     }
-    // Little Speller shows only kid-safe modes — ABSENCE, not locks.
-    if ctx.kid && !m.kid_safe {
+    // Spell Jr shows only kid-safe modes — ABSENCE, not locks. A `hidden`
+    // juniorPolicy also removes the tile: the two fields must never disagree in
+    // the permissive direction (CC-ONBOARD-JR I4; modes-check enforces it).
+    if ctx.kid && (!m.kid_safe || m.junior_policy == "hidden") {
         return false;
     }
     // A mode that cannot run on this platform does not tile.
@@ -203,14 +219,14 @@ mod tests {
     #[test]
     fn registry_parses_and_holds_the_shipped_modes() {
         let all = all();
-        assert_eq!(all.len(), 17, "17 modes registered");
+        assert_eq!(all.len(), 20, "17 modes + 3 core surfaces registered");
         // File order IS tile order (D6); practice leads (CC-PRACTICE D9).
         // letter_forge (CC-LETTER-FORGE F1) sits after def_match, where its
         // registry row was inserted. It is `hidden`, so it appears here — this
         // pin covers all() — and in none of the visible() expectations below.
         assert_eq!(
             ids(&all),
-            vec!["practice", "ghost_racing", "syllable_replay", "say_it", "photo_list", "spell_aloud", "word_stories", "online_spelloff", "def_match", "letter_forge", "word_chains", "impostor", "bee_sim", "word_picture", "reports", "calendar", "translate"],
+            vec!["practice", "ghost_racing", "syllable_replay", "say_it", "photo_list", "spell_aloud", "word_stories", "online_spelloff", "def_match", "letter_forge", "word_chains", "impostor", "bee_sim", "word_picture", "reports", "calendar", "translate", "standard", "climb", "daily"],
         );
     }
 

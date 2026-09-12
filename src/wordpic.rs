@@ -406,10 +406,12 @@ pub fn playable(p: &Picture, lang: &str) -> bool {
     })
 }
 
-/// D16 kid eligibility: tier ≤ medium, manifest flag, and the language's
-/// deterministic feed passes the kid filter end-to-end.
+/// D16 kid eligibility: a tier Spell Jr allows (`experience::allowed_tiers`),
+/// manifest flag, and the language's deterministic feed passes the kid filter
+/// end-to-end.
 pub fn kid_ok(p: &Picture, lang: &str, seed: u64) -> bool {
-    if !p.kid || !(p.tier == "easy" || p.tier == "medium") {
+    let jr = crate::experience::allowed_tiers(crate::experience::Experience::Junior, "word_picture");
+    if !p.kid || !jr.iter().any(|t| *t == p.tier) {
         return false;
     }
     word_feed(p, lang, seed, &[]).iter().all(|w| crate::kid_filter::kid_allowed(lang, w))

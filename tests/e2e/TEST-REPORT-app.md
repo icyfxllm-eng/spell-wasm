@@ -1,6 +1,6 @@
 # TEST-REPORT — Web E2E (app build)
 
-**99/99 passed** across 23 areas.
+**102/102 passed** across 23 areas.
 
 ## playhub — 10/10
 - ✅ hub: opens from the meta corner and renders registry tiles
@@ -46,10 +46,13 @@
 - ✅ rtl F4: the hint carries the word's direction and counts letters, not codepoints
 - ✅ rtl F4: the hint count is translated, not hardcoded English
 
-## settings-effects — 13/13
+## settings-effects — 16/16
 - ✅ settings_effect_big_text
 - ✅ settings_effect_readable
 - ✅ settings_effect_kid
+- ✅ settings_effect_kid_levels_en
+- ✅ settings_effect_kid_levels_ko
+- ✅ settings_effect_kid_locked
 - ✅ settings_effect_extra_attempt
 - ✅ settings_effect_slow_rate
 - ✅ settings_effect_volume_gain

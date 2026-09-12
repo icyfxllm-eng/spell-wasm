@@ -5,9 +5,9 @@
       "key": "kidToggle",
       "surface": "settings",
       "state": "kid",
-      "effect": "body.kid class; kid_filter applied to word selection; camera absent; Say It disabled; account entry points hidden",
+      "effect": "body.kid class; kid_filter applied to word selection; camera absent; Say It disabled; account entry points hidden; level selector rebuilt at once to the tiers experience::allowed_tiers returns (Spell Jr: Climb, Easy, Medium; Hard and Expert return when switched off)",
       "test": "settings_effect_kid",
-      "suppressed_by": "age_locked (under-cutoff device cannot switch it off without the parent gate)",
+      "suppressed_by": "age_locked (under-cutoff device: the switch is not rendered at all; the row offers the existing parent gate, labelled Ask a grown-up, instead — CC-ONBOARD-JR F5)",
       "harness": "web"
     },
     {

@@ -357,7 +357,11 @@ pub fn pass_draw(
     used: &BTreeSet<String>,
     seed: u64,
 ) -> Option<String> {
-    let all = successors(lang, hook_unit, used); // sorted + deduped
+    draw(lang, successors(lang, hook_unit, used), seed)
+}
+
+/// The draw itself, over an already-narrowed successor list (sorted + deduped).
+fn draw(lang: &str, all: Vec<String>, seed: u64) -> Option<String> {
     // Pass must never hand the player a loss. A ん-ending word is a LEGAL
     // successor — the player may choose one deliberately — but drawing one on
     // their behalf ends the run in official mode, which is the opposite of
@@ -379,12 +383,87 @@ pub fn pass_draw(
     Some(opts[(z % opts.len() as u64) as usize].clone())
 }
 
+thread_local! {
+    /// Folded kid-safe Easy + Medium vocabulary per language, built once: the
+    /// kid filter is the expensive part and Pass is a tap the player waits on.
+    static JUNIOR_SET: std::cell::RefCell<std::collections::HashMap<String, std::rc::Rc<std::collections::HashSet<String>>>> =
+        std::cell::RefCell::new(std::collections::HashMap::new());
+}
+
+/// CC-ONBOARD-JR I5 + D8 — the words a Spell Jr chain may be DEALT: the bank
+/// tiers the resolver allows for this mode, kid-safe entries only, in the
+/// validity index's folded form.
+fn junior_set(lang: &str) -> std::rc::Rc<std::collections::HashSet<String>> {
+    if let Some(hit) = JUNIOR_SET.with(|m| m.borrow().get(lang).cloned()) {
+        return hit;
+    }
+    let set: std::collections::HashSet<String> =
+        crate::experience::allowed_tiers(crate::experience::Experience::Junior, "word_chains")
+            .iter()
+            .flat_map(|t| crate::words::tier_for(lang, t).iter().copied())
+            .filter(|w| crate::kid_filter::kid_allowed(lang, w))
+            .map(|w| crate::norm::fold_strict(w.split('|').next().unwrap_or(w)))
+            .collect();
+    let rc = std::rc::Rc::new(set);
+    JUNIOR_SET.with(|m| m.borrow_mut().insert(lang.to_string(), rc.clone()));
+    rc
+}
+
+/// Pass for `exp`. Standard is exactly `pass_draw`. A Spell Jr Pass — and the
+/// opening word, which is a Pass — deals only kid-safe Easy or Medium words, so
+/// the game never hands a child a word the resolver would refuse. The player
+/// may still TYPE any valid word: what they choose is theirs, what the game
+/// deals is gated.
+pub fn pass_draw_for(
+    exp: crate::experience::Experience,
+    lang: &str,
+    hook_unit: &str,
+    used: &BTreeSet<String>,
+    seed: u64,
+) -> Option<String> {
+    if exp == crate::experience::Experience::Standard {
+        return pass_draw(lang, hook_unit, used, seed);
+    }
+    let jr = junior_set(lang);
+    let all: Vec<String> = successors(lang, hook_unit, used).into_iter().filter(|w| jr.contains(w)).collect();
+    draw(lang, all, seed)
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
 
     fn no_used() -> BTreeSet<String> {
         BTreeSet::new()
+    }
+
+    /// CC-ONBOARD-JR I5 + D8 — every word a Spell Jr chain DEALS is a kid-safe
+    /// Easy or Medium word; a standard Pass is unchanged.
+    #[test]
+    fn a_junior_chain_deals_only_kid_safe_easy_medium() {
+        use crate::experience::Experience;
+        for (lang, start) in [("en", "a"), ("es", "a"), ("fr", "a"), ("de", "a"), ("ru", "\u{430}"), ("ja", "\u{3042}"), ("ko", "\u{ac00}")] {
+            let jr = junior_set(lang);
+            let mut dealt = 0;
+            for run in 0..8u64 {
+                let mut used = BTreeSet::new();
+                let mut hook_unit = start.to_string();
+                for step in 0..25u64 {
+                    let seed = run * 977 + step;
+                    assert_eq!(pass_draw_for(Experience::Standard, lang, &hook_unit, &used, seed),
+                               pass_draw(lang, &hook_unit, &used, seed), "{lang}: standard Pass changed");
+                    let Some(w) = pass_draw_for(Experience::Junior, lang, &hook_unit, &used, seed) else { break };
+                    assert!(jr.contains(&w), "{lang}: a Spell Jr chain dealt {w:?}, not a kid-safe Easy or Medium word");
+                    dealt += 1;
+                    let Some(h) = hook(lang, &w) else { break };
+                    used.insert(w);
+                    hook_unit = h;
+                }
+            }
+            if lang == "en" || lang == "es" {
+                assert!(dealt > 0, "{lang}: a Spell Jr chain dealt nothing at all");
+            }
+        }
     }
 
     /// I2 — D2's shiritori conventions, case by case. This fixture table is the

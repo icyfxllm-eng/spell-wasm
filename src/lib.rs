@@ -95,6 +95,7 @@ mod speech_out;
 mod stats;
 mod storage;
 mod syllable;
+mod experience; // CC-ONBOARD-JR F1/F2
 mod modes;
 mod play_hub;
 mod tools_hub;
@@ -416,6 +417,8 @@ fn wire_age_gate(app: &App) {
             }
             settings::save_prefs(&a.borrow());
             settings::apply_settings(&a);
+            // CC-ONBOARD-JR F5: a verdict can switch the experience either way.
+            game::build_level_options(&a);
             dom::set_text("ageErr", "");
             dom::remove_class("ageScrim", "show");
         });
@@ -591,6 +594,8 @@ fn wire_glow_and_settings(app: &App) {
             dom::add_class("setScrim", "show");
         });
     }
+    // CC-ONBOARD-JR F5: the locked Spell Jr row's one control is the parent gate.
+    dom::on_click("kidGrownups", || open_parent_gate());
     {
         let a = app.clone();
         dom::on::<web_sys::Event, _>("kidToggle", "change", move |_| {
@@ -614,6 +619,10 @@ fn wire_glow_and_settings(app: &App) {
             }
             settings::save_prefs(&a.borrow());
             settings::apply_settings(&a);
+            // CC-ONBOARD-JR F5: Hard and Expert leave the selector when Spell Jr
+            // turns on and come back when it turns off — immediately, not at
+            // the next launch.
+            game::build_level_options(&a);
             // Kid Mode suppresses the daily reminder — reschedule/cancel.
             settings::apply_reminder(&a.borrow());
         });
@@ -817,6 +826,7 @@ fn wire_source_level(app: &App) {
         let a = app.clone();
         dom::on::<web_sys::Event, _>("levelSel", "change", move |_| {
             a.borrow_mut().level = dom::select("levelSel").value();
+            a.borrow_mut().jr_climb_served = 0; // CC-ONBOARD-JR F3: a new level is a new run
             game::update_setup_chip(&a);
             // Pull a fresh word at the newly-selected difficulty right away,
             // instead of leaving the old (wrong-tier) word on screen until

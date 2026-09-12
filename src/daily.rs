@@ -146,8 +146,11 @@ fn pool_hash(pool: &[&str]) -> u64 {
 
 /// Seed for one `(lang, tier, cycle)` shuffle, plus a retry salt for the
 /// cycle-boundary guard. Deterministic FNV-1a of the descriptor string.
-fn walk_seed(lang: &str, tier: &str, cycle: i64, ph: u64, salt: u32) -> u64 {
-    let desc = format!("daily-v2|{lang}|{tier}|{cycle}|{ph}|{salt}");
+///
+/// `ns` separates the standard Daily from Jr Daily. The standard descriptor is
+/// byte-identical to every Daily ever served (pinned by `standard_seed_is_unchanged`).
+fn walk_seed(ns: &str, lang: &str, tier: &str, cycle: i64, ph: u64, salt: u32) -> u64 {
+    let desc = format!("{ns}|{lang}|{tier}|{cycle}|{ph}|{salt}");
     let mut h: u64 = 0xcbf29ce484222325;
     for b in desc.bytes() {
         h ^= b as u64;
@@ -172,7 +175,7 @@ fn permutation(n: usize, seed: u64) -> Vec<usize> {
 /// until the whole pool is spent (`L = |pool|/w` days). `slice_for` returns the
 /// day's words for an arbitrary `day_idx`, so the boundary guard can peek at
 /// yesterday deterministically.
-fn tier_slice(lang: &str, tier: &str, pool: &[&str], w: usize, day_idx: i64) -> Vec<String> {
+fn tier_slice_ns(ns: &str, lang: &str, tier: &str, pool: &[&str], w: usize, day_idx: i64) -> Vec<String> {
     let n = pool.len();
     if n == 0 || w == 0 {
         return Vec::new();
@@ -183,7 +186,7 @@ fn tier_slice(lang: &str, tier: &str, pool: &[&str], w: usize, day_idx: i64) -> 
     let slice_for = |di: i64, salt: u32| -> Vec<usize> {
         let cycle = di.div_euclid(l);
         let day = di.rem_euclid(l) as usize;
-        let perm = permutation(n, walk_seed(lang, tier, cycle, ph, salt));
+        let perm = permutation(n, walk_seed(ns, lang, tier, cycle, ph, salt));
         let start = day * w;
         perm[start..(start + take).min(n)].to_vec()
     };
@@ -239,12 +242,28 @@ pub fn build_words(lang: &str, date: &str, kid: bool) -> (String, Vec<String>) {
         let mut pool = base;
         pool.sort_unstable();
         // Cycle walk: this tier's deck, W=count per day, no repeat for L days.
-        let mut picked = tier_slice(&locale, tier, &pool, *count, di);
+        // CC-ONBOARD-JR F4: Jr Daily deals from its own namespace.
+        let ns = if kid { JR_DAILY_NS } else { DAILY_NS };
+        let mut picked = tier_slice_ns(ns, &locale, tier, &pool, *count, di);
         // Ramp within the tier: easiest first (shorter = easier proxy for now).
         picked.sort_by_key(|w| w.chars().count());
         out.extend(picked);
     }
     (locale, out)
+}
+
+/// The standard Daily's seed namespace. Changing it re-deals every player's
+/// Daily history, so it never changes.
+const DAILY_NS: &str = "daily-v2";
+/// CC-ONBOARD-JR F4 — Jr Daily's namespace. The junior deal is its own walk,
+/// not a filtered copy of the standard one, so a Spell Jr player's Daily is a
+/// complete Easy + Medium set rather than whatever survived a filter.
+const JR_DAILY_NS: &str = "daily-jr-v1";
+
+/// The standard walk, for the tests that pin its cycle properties.
+#[cfg(test)]
+fn tier_slice(lang: &str, tier: &str, pool: &[&str], w: usize, day_idx: i64) -> Vec<String> {
+    tier_slice_ns(DAILY_NS, lang, tier, pool, w, day_idx)
 }
 
 /// Seed for one `(lang, tier)` shuffle driven by an ARBITRARY server seed
@@ -454,6 +473,60 @@ mod tests {
                 let (_, a) = build_words(lang, &date, false);
                 let (_, b) = build_words(lang, &date, false);
                 assert_eq!(a, b, "{lang} {date}: non-deterministic");
+            }
+        }
+    }
+}
+
+#[cfg(test)]
+mod jr_daily_tests {
+    //! CC-ONBOARD-JR Done 6 — Jr Daily is deterministic for a date, differs from
+    //! the standard Daily, and never deals outside Easy + Medium.
+    use super::*;
+    use crate::experience::{allowed_tiers, Experience};
+
+    fn fnv(s: &str) -> u64 {
+        let mut h: u64 = 0xcbf29ce484222325;
+        for b in s.bytes() {
+            h ^= b as u64;
+            h = h.wrapping_mul(0x100000001b3);
+        }
+        h
+    }
+
+    /// The standard descriptor is the one every shipped Daily was dealt from.
+    #[test]
+    fn standard_seed_is_unchanged() {
+        assert_eq!(walk_seed(DAILY_NS, "en", "easy", 3, 42, 0), fnv("daily-v2|en|easy|3|42|0"));
+        assert_ne!(walk_seed(JR_DAILY_NS, "en", "easy", 3, 42, 0), walk_seed(DAILY_NS, "en", "easy", 3, 42, 0));
+    }
+
+    #[test]
+    fn jr_daily_is_deterministic_distinct_and_easy_medium() {
+        let jr: Vec<&str> = allowed_tiers(Experience::Junior, "daily");
+        for (tier, _) in KID_ARC {
+            assert!(jr.contains(&tier), "KID_ARC deals {tier}, which Jr Daily does not allow");
+        }
+        for lang in ["en", "es", "ko", "ja", "zh"] {
+            for date in ["2026-09-11", "2027-02-28"] {
+                let (loc, a) = build_words(lang, date, true);
+                let (_, b) = build_words(lang, date, true);
+                assert_eq!(a, b, "{lang} {date}: Jr Daily must be deterministic");
+                assert!(!a.is_empty(), "{lang} {date}: Jr Daily dealt nothing");
+                let (_, standard) = build_words(lang, date, false);
+                assert_ne!(a, standard, "{lang} {date}: Jr Daily must differ from the standard Daily");
+                for w in &a {
+                    let in_jr = jr.iter().any(|t| words::tier_for(&loc, t).iter().any(|x| *x == w.as_str()));
+                    assert!(in_jr, "{lang} {date}: Jr Daily dealt {w:?}, which is not Easy or Medium");
+                }
+            }
+            // The namespace itself separates the deals, not only the kid filter.
+            let loc = locale_for(lang);
+            let mut pool: Vec<&str> = words::tier_for(&loc, "easy").to_vec();
+            pool.sort_unstable();
+            if pool.len() > 10 {
+                assert_ne!(tier_slice_ns(JR_DAILY_NS, &loc, "easy", &pool, 5, 100),
+                           tier_slice_ns(DAILY_NS, &loc, "easy", &pool, 5, 100), "{lang}: same pool, same deal");
             }
         }
     }

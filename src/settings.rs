@@ -212,6 +212,12 @@ pub fn apply_settings(app: &App) {
     let _ = body.class_list().toggle_with_force("readable", s.readable);
     let _ = body.class_list().toggle_with_force("big-text", s.big_text);
     dom::input("kidToggle").set_checked(s.kid);
+    // CC-ONBOARD-JR F5: a locked Spell Jr player (under-13 verdict) gets no
+    // switch at all. The only way out is a grown-up, so the row offers exactly
+    // that — the existing parent gate under its existing "Ask a grown-up"
+    // label. No lock glyph: I10 allows zero lock UI on junior surfaces.
+    dom::toggle_class("kidToggle", "btn-hide", s.age_locked);
+    dom::toggle_class("kidGrownups", "btn-hide", !s.age_locked);
     // CC-ATTEMPTS-SHIELDS Feature 1: reflect the toggle + show its row only when
     // the dark flag is on (hidden -> byte-for-byte the current settings screen).
     dom::input("extraAttemptsToggle").set_checked(s.extra_attempts);

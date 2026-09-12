@@ -49,12 +49,23 @@ thread_local! {
 }
 
 fn decomposed(lang: &str) -> Decomposed {
-    if let Some(hit) = DECOMPOSED.with(|m| m.borrow().get(lang).cloned()) {
+    decomposed_in(lang, &crate::experience::TIERS, false)
+}
+
+/// The bank restricted to `tiers` — and, for a Spell Jr board, to kid-safe
+/// words (D8: Jr Easy/Medium = standard Easy/Medium ∩ kidSafe). Memoized per
+/// (lang, tiers, kid_only).
+fn decomposed_in(lang: &str, tiers: &[&str], kid_only: bool) -> Decomposed {
+    let memo = format!("{lang}|{}|{}", tiers.join(","), if kid_only { "kid" } else { "all" });
+    if let Some(hit) = DECOMPOSED.with(|m| m.borrow().get(&memo).cloned()) {
         return hit;
     }
     let mut out: Vec<(String, usize, BTreeSet<String>)> = Vec::new();
-    for tier in ["easy", "medium", "hard", "expert"] {
+    for tier in tiers {
         for w in crate::words::tier_for(lang, tier) {
+            if kid_only && !crate::kid_filter::kid_allowed(lang, w) {
+                continue;
+            }
             let folded = fold_strict(w.split('|').next().unwrap_or(w));
             let seq = units_of(lang, w);
             let n = seq.len();
@@ -64,7 +75,7 @@ fn decomposed(lang: &str) -> Decomposed {
     out.sort();
     out.dedup();
     let rc = Rc::new(out);
-    DECOMPOSED.with(|m| m.borrow_mut().insert(lang.to_string(), rc.clone()));
+    DECOMPOSED.with(|m| m.borrow_mut().insert(memo, rc.clone()));
     rc
 }
 
@@ -139,8 +150,8 @@ fn next_u64(state: &mut u64) -> u64 {
 
 /// Words of `lang` whose distinct-unit count is exactly seven: the pangram
 /// candidates a honeycomb can be built from.
-fn pangram_candidates(lang: &str) -> Vec<Vec<String>> {
-    let mut out: Vec<Vec<String>> = decomposed(lang)
+fn pangram_candidates(lang: &str, tiers: &[&str], kid_only: bool) -> Vec<Vec<String>> {
+    let mut out: Vec<Vec<String>> = decomposed_in(lang, tiers, kid_only)
         .iter()
         .filter(|(_, _, u)| u.len() == 7)
         .map(|(_, _, u)| u.iter().cloned().collect())
@@ -152,10 +163,11 @@ fn pangram_candidates(lang: &str) -> Vec<Vec<String>> {
 
 /// Every word playable on this puzzle: built only from its units, containing
 /// the centre, and at least `forge_min_units` long.
-pub fn pool(lang: &str, p: &Puzzle) -> Vec<String> {
+/// Drawn only from `tiers` (CC-ONBOARD-JR: a Spell Jr pool holds Easy + Medium).
+fn pool_in(lang: &str, p: &Puzzle, tiers: &[&str], kid_only: bool) -> Vec<String> {
     let allowed: BTreeSet<&String> = p.units.iter().collect();
     let min = forge_min_units(lang);
-    let mut out: Vec<String> = decomposed(lang)
+    let mut out: Vec<String> = decomposed_in(lang, tiers, kid_only)
         .iter()
         .filter(|(_, n, u)| {
             *n >= min && u.contains(&p.centre) && u.iter().all(|x| allowed.contains(x))
@@ -216,6 +228,34 @@ pub fn forge_ready(lang: &str) -> bool {
     min_pool(lang) >= 8
 }
 
+/// CC-ONBOARD-JR — the pool gate for a Spell Jr board, whose letters and pool
+/// come from Easy + Medium only. Measured by `calibrate_junior_min_pool` at the
+/// screen's walk (512): the highest gate that yields a board on every day of a
+/// year, kept a step or two below that ceiling as `min_pool` is, and never
+/// above the standard gate. Ceilings measured 2026-09-11: en 29, es 25, fr 18,
+/// de 35, pt 25, fil 33, sw 28, ar 11, ko 10, zh 11, ru 11, ja 9, pl 7; vi has
+/// no Easy + Medium pangram at all.
+pub fn junior_min_pool(lang: &str) -> usize {
+    match lang {
+        "fr" => 16,
+        "ar" | "zh" => 9,
+        // ja keeps a margin of one: its ceiling is 9 and the floor is 8.
+        "ko" | "ja" => 8,
+        // Below forge_ready's floor of eight: Spell Jr is told the board is
+        // unavailable rather than dealt a thin one, the same call hi gets.
+        "pl" => 7,
+        "vi" => 0,
+        other => min_pool(other),
+    }
+}
+
+/// Can this language sustain a board for `exp`? Standard is exactly
+/// `forge_ready`. A Spell Jr board must clear the same floor of eight words
+/// from Easy + Medium alone.
+pub fn forge_ready_for(exp: crate::experience::Experience, lang: &str) -> bool {
+    forge_ready(lang) && (exp == crate::experience::Experience::Standard || junior_min_pool(lang) >= 8)
+}
+
 /// Kept for callers that want D2's literal number.
 pub const MIN_POOL: usize = 20;
 
@@ -237,7 +277,37 @@ pub fn generate_with(
     walk_limit: u32,
     gate: usize,
 ) -> Option<(Puzzle, Vec<String>, u32)> {
-    let cands = pangram_candidates(lang);
+    generate_in(lang, seed, walk_limit, gate, &crate::experience::TIERS, false)
+}
+
+/// CC-ONBOARD-JR I5 — the day's board for `exp`. Standard is exactly
+/// `generate`. A Spell Jr board builds BOTH its seven letters and its answer
+/// pool from the tiers the resolver allows, kid-safe words only (D8), so
+/// neither the honeycomb nor "Reveal remaining" can hand a junior player a
+/// Hard word or an unfriendly one.
+pub fn generate_for(
+    exp: crate::experience::Experience,
+    lang: &str,
+    seed: u64,
+    walk_limit: u32,
+) -> Option<(Puzzle, Vec<String>, u32)> {
+    let tiers = crate::experience::allowed_tiers(exp, "letter_forge");
+    let (gate, kid_only) = match exp {
+        crate::experience::Experience::Standard => (min_pool(lang), false),
+        crate::experience::Experience::Junior => (junior_min_pool(lang), true),
+    };
+    generate_in(lang, seed, walk_limit, gate, &tiers, kid_only)
+}
+
+fn generate_in(
+    lang: &str,
+    seed: u64,
+    walk_limit: u32,
+    gate: usize,
+    tiers: &[&str],
+    kid_only: bool,
+) -> Option<(Puzzle, Vec<String>, u32)> {
+    let cands = pangram_candidates(lang, tiers, kid_only);
     if cands.is_empty() {
         return None;
     }
@@ -247,7 +317,7 @@ pub fn generate_with(
         let units = &cands[(next_u64(&mut st) % cands.len() as u64) as usize];
         let centre = units[(next_u64(&mut st) % units.len() as u64) as usize].clone();
         let p = Puzzle { units: units.clone(), centre, seed: s };
-        let words = pool(lang, &p);
+        let words = pool_in(lang, &p, tiers, kid_only);
         if words.len() >= gate {
             return Some((p, words, step));
         }
@@ -462,6 +532,95 @@ mod tests {
 mod diag {
     use super::*;
     use std::collections::BTreeMap;
+    const JR_LANGS: [&str; 15] = ["en", "es", "fr", "de", "pt", "fil", "sw", "ar", "ko", "vi", "ja", "zh", "ru", "pl", "hi"];
+
+    /// (Easy + Medium pangram candidates, the smallest best pool any day of a
+    /// year reaches within `walk` steps). A junior board generates on EVERY day
+    /// at gate g exactly when g <= that floor. Pool size depends only on
+    /// (letters, centre), so each distinct board is sized once and the walk is
+    /// a lookup — a year of boards in milliseconds instead of minutes.
+    fn junior_floor(lang: &str, walk: u32) -> (usize, usize) {
+        let tiers = &crate::experience::TIERS[..2];
+        let cands = pangram_candidates(lang, tiers, true);
+        if cands.is_empty() {
+            return (0, 0);
+        }
+        let mut sized: std::collections::HashMap<(usize, usize), usize> = std::collections::HashMap::new();
+        let floor = (0..365u64)
+            .map(|d| {
+                let seed = d.wrapping_mul(0x9E3779B9);
+                (0..walk)
+                    .map(|step| {
+                        let mut st = seed.wrapping_add(step as u64);
+                        let ci = (next_u64(&mut st) % cands.len() as u64) as usize;
+                        let units = &cands[ci];
+                        let ui = (next_u64(&mut st) % units.len() as u64) as usize;
+                        *sized.entry((ci, ui)).or_insert_with(|| {
+                            let p = Puzzle { units: units.clone(), centre: units[ui].clone(), seed: 0 };
+                            pool_in(lang, &p, tiers, true).len()
+                        })
+                    })
+                    .max()
+                    .unwrap_or(0)
+            })
+            .min()
+            .unwrap_or(0);
+        (cands.len(), floor)
+    }
+
+    /// CC-ONBOARD-JR I5 — a Spell Jr board draws its letters AND its answer
+    /// pool from Easy + Medium only, through the real screen path (walk 512).
+    /// Standard boards are unchanged by the refactor.
+    #[test]
+    fn junior_boards_hold_only_easy_and_medium_words() {
+        use crate::experience::{Experience, TIERS};
+        for lang in JR_LANGS {
+            let seeds = (0..30u64).map(|d| d.wrapping_mul(0x9E3779B9));
+            if !forge_ready_for(Experience::Junior, lang) {
+                continue;
+            }
+            let jr: BTreeSet<String> = decomposed_in(lang, &TIERS[..2], true).iter().map(|(w, _, _)| w.clone()).collect();
+            for seed in seeds {
+                let (_, words, _) = generate_for(Experience::Junior, lang, seed, 512)
+                    .unwrap_or_else(|| panic!("{lang}: no junior board for seed {seed}"));
+                for w in &words {
+                    assert!(jr.contains(w), "{lang}: junior pool holds {w:?}, which is not a kid-safe Easy or Medium word");
+                }
+                assert_eq!(generate_for(Experience::Standard, lang, seed, 64), generate(lang, seed, 64));
+            }
+        }
+    }
+
+    /// CC-ONBOARD-JR — every language offered a junior board gets one on every
+    /// day of a year at its junior gate, and no language that COULD sustain
+    /// one is silently refused it.
+    #[test]
+    fn every_junior_ready_language_gets_a_board_every_day() {
+        use crate::experience::Experience;
+        for lang in JR_LANGS {
+            let (_, floor) = junior_floor(lang, 512);
+            if forge_ready_for(Experience::Junior, lang) {
+                assert!(floor >= junior_min_pool(lang),
+                        "{lang}: junior gate {} but some day's best board holds only {floor}", junior_min_pool(lang));
+            } else {
+                assert!(floor < 8 || !forge_ready(lang),
+                        "{lang}: Easy + Medium sustains a board of {floor} every day, yet Spell Jr is refused one");
+            }
+        }
+    }
+
+    /// The measurement behind junior_min_pool().
+    #[test]
+    #[ignore]
+    fn calibrate_junior_min_pool() {
+        for lang in JR_LANGS {
+            let (cands, w512) = junior_floor(lang, 512);
+            let (_, w64) = junior_floor(lang, 64);
+            println!("JUNIOR_CEILING {lang:4} cands={cands:5} walk512={w512:3} walk64={w64:3} junior_gate={} standard_gate={}",
+                     junior_min_pool(lang), min_pool(lang));
+        }
+    }
+
     /// The measurement behind min_pool(): for each language, the highest
     /// gate that still leaves ZERO ungenerable seeds in a 365-seed year.
     /// Re-run when banks grow — the table should rise with them.

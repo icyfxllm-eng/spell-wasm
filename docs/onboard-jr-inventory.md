@@ -311,7 +311,15 @@ anything.
   plays and one registry governs every tier decision.
 - **Inventory committed** to `cc-onboard-jr` for review.
 
-Still open: item 3 below (the seven flagged policies and an `ungated` value).
+- **Items 3, 4, 6 — SIGNED ("yes, use your proposals and start phase a").**
+  Read as covering every recommendation in the list below that Phase A needs:
+  the seven ⚠ policies as proposed plus `ungated` for Reports and Calendar
+  (item 3); persisted storage names are not renamed (item 4); I3 ships as an
+  allowlisted gate rather than a bare grep (item 6). Item 5 is Phase B.
+  Phase A started on this branch the same day. If that reading is wider than
+  intended, item 4 is the one to revisit: it is why F1 derives
+  `{experience, locked, source}` from the stored `kid` and `age_locked` rather
+  than storing that shape.
 
 ## Decisions this inventory asks Eric for
 

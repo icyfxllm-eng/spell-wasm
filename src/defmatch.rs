@@ -160,14 +160,14 @@ pub fn allowed_tiers(level: crate::entitlements::AccessLevel) -> &'static [&'sta
     }
 }
 
-/// The Kid Mode tier ceiling (Invariant 6): hard/expert requests clamp to
-/// medium IN CORE — the UI can ask, the engine refuses.
+/// The Spell Jr tier ceiling (Invariant 6): the UI can ask, the engine
+/// refuses. CC-ONBOARD-JR: the answer comes from `experience::serve_tier`, the
+/// one authority, so this mode cannot drift from the others.
 pub fn effective_tier<'a>(tier: &'a str, kid: bool) -> &'a str {
-    if kid && matches!(tier, "hard" | "expert") {
-        "medium"
-    } else {
-        tier
+    if !kid {
+        return tier;
     }
+    crate::experience::serve_tier(crate::experience::Experience::Junior, "def_match", tier)
 }
 
 /// The mode's word pool for one (rows, tier, kid) view: prompt-grade AND
