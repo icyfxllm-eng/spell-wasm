@@ -36,6 +36,7 @@ import * as finaleRelaunch from './specs/finale-relaunch.mjs';
 import * as metadataAudit from './specs/metadata-audit.mjs';
 import * as kidReveal from './specs/kid-reveal.mjs';
 import * as pickerContinue from './specs/picker-continue.mjs';
+import * as frontDoor from './specs/front-door.mjs';
 import * as settingsEffects from './specs/settings-effects.mjs';
 
 const SPECS = [
@@ -46,6 +47,7 @@ const SPECS = [
   ['modes', modes],
   ['menu', menu],
   ['settings-effects', settingsEffects],
+  ['front-door', frontDoor],
   ['coming', coming],
   ['sayit', sayit],
   ['ghost', ghost],

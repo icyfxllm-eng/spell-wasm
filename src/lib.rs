@@ -400,6 +400,10 @@ fn wire_age_gate(app: &App) {
                 return;
             }
             let was_locked = a.borrow().age_locked;
+            // CC-ONBOARD-JR F6: the front door belongs to a FIRST launch. An
+            // install that already had a verdict is a player mid-game, and F12
+            // forbids meeting them with a login screen at update time.
+            let first_launch = agegate::stored().is_none();
             let full = agegate::save(agegate::age_from(y, m, d));
             {
                 let mut s = a.borrow_mut();
@@ -415,12 +419,21 @@ fn wire_age_gate(app: &App) {
                     s.age_locked = true;
                 }
             }
+            // F6: 13+ on a first launch meets the front door; under-13 goes
+            // straight to Spell Jr with no account surface at all (F11/I1/I2).
+            let show_front_door = full && first_launch && !a.borrow().front_door_seen && !climb::is_logged_in();
+            if show_front_door {
+                a.borrow_mut().front_door_seen = true;
+            }
             settings::save_prefs(&a.borrow());
             settings::apply_settings(&a);
             // CC-ONBOARD-JR F5: a verdict can switch the experience either way.
             game::build_level_options(&a);
             dom::set_text("ageErr", "");
             dom::remove_class("ageScrim", "show");
+            if show_front_door {
+                climb::open_front_door();
+            }
         });
     }
     // Parent gate answer (uses no app state — just the challenge answer).
@@ -699,6 +712,12 @@ fn wire_glow_and_settings(app: &App) {
         });
     }
     dom::on_click("setDone", || dom::remove_class("setScrim", "show"));
+    // CC-ONBOARD-JR F12: Settings is a route to account deletion, not a second
+    // copy of it — the row opens the account sheet that already owns the flow.
+    dom::on_click("setAccountBtn", || {
+        dom::remove_class("setScrim", "show");
+        climb::open_account_sheet();
+    });
     dom::on::<web_sys::Event, _>("setScrim", "click", |e| {
         if dom::is_self_target(&e, "setScrim") {
             dom::remove_class("setScrim", "show");

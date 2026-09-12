@@ -1284,6 +1284,34 @@
   .board .empty{color:var(--muted-2);font-size:13.5px;padding:8px 0 12px;text-align:center}
 
 
+  /* CC-ONBOARD-JR F7 — the first-launch front door. A SCREEN, not a scrim: it is
+     the first thing a 13+ player sees after the birthday, and a modal would
+     imply a game behind it to dismiss back to. Same fixed-screen shape as the
+     mode screens, so safe-area and theming behave identically rather than
+     inventing a second kind of full-screen surface. */
+  .fd-screen{position:fixed;inset:0;background:var(--bg,#0e1420);z-index:70;display:none;overflow:auto;
+    padding:max(24px,env(safe-area-inset-top)) 20px max(24px,env(safe-area-inset-bottom))}
+  .fd-screen.show{display:block}
+  .fd-inner{max-width:420px;margin:0 auto;display:flex;flex-direction:column;gap:10px;text-align:center}
+  .fd-orb{margin:4px auto 8px;pointer-events:none}
+  .fd-screen input{width:100%}
+  .fd-help{color:var(--muted-2);font-size:12.5px;margin:2px 0 4px;text-align:start}
+  .fd-pw-row{display:flex;gap:8px;align-items:center}
+  .fd-pw-row input{flex:1}
+  .fd-pw-row .fd-pw-toggle{flex:0 0 auto;width:auto;border-radius:12px;padding:10px 12px}
+  /* The live rule checklist (F9). Unmet rules are stated, not scolded: the row
+     is the same text before and after, only its marker and colour change. */
+  .fd-rules{list-style:none;padding:0;margin:2px 0 6px;text-align:start;font-size:12.5px;color:var(--muted-2)}
+  .fd-rules li::before{content:"\25CB  "}
+  .fd-rules li.met{color:var(--good,#3ddc97)}
+  .fd-rules li.met::before{content:"\25CF  "}
+  .fd-link{width:100%;margin-top:4px}
+  .fd-guest{width:100%;margin-top:16px}
+  .fd-step{display:none;flex-direction:column;gap:8px}
+  #frontDoor[data-step="start"] .fd-start,
+  #frontDoor[data-step="code"] .fd-code,
+  #frontDoor[data-step="password"] .fd-pw,
+  #frontDoor[data-step="name"] .fd-name{display:flex}
   .scrim{position:fixed;inset:0;background:rgba(10,8,18,.72);backdrop-filter:blur(4px);display:none;place-items:center;padding:20px;z-index:30;overflow:auto}
   .scrim.show{display:grid}
 
@@ -2194,6 +2222,69 @@
   </div>
 
   <!-- age gate: first-launch date-of-birth prompt (only the verdict is stored) -->
+  <!-- CC-ONBOARD-JR F7 — the front door, in the mockup's order: wordmark, orb,
+       email, password, Log in / Create account / Forgot password, and the way
+       past it without an account (D1, signed). The steps live in ONE screen so
+       email -> code -> password -> name is a single motion, not four sheets.
+       I1: none of this is reachable before the birthday verdict exists. -->
+  <div class="fd-screen" id="frontDoor" data-step="start" role="dialog" aria-modal="true" aria-labelledby="fdMark">
+    <div class="fd-inner">
+      <div class="brand"><div class="mark" id="fdMark">Spell<b>Game</b></div></div>
+      <!-- The base game's orb, reused component and CSS (F7: never a redraw or a
+           bitmap copy). Decorative here, so it is hidden from assistive tech. -->
+      <div class="orb-wrap fd-orb" aria-hidden="true"><div class="orb"><div class="orb-glyph" id="fdOrbGlyph">spell</div></div></div>
+
+      <div class="fd-step fd-start">
+        <input id="fdEmail" type="email" inputmode="email" autocomplete="email" placeholder="email" data-i18n-ph="ph.email" autocorrect="off" autocapitalize="none" spellcheck="false" />
+        <p class="fd-help" data-i18n="fd.emailHelp">We'll send a confirmation code to this email.</p>
+        <div class="fd-pw-row">
+          <input id="fdPassword" type="password" autocomplete="current-password" placeholder="password" data-i18n-ph="ph.password" />
+          <button type="button" class="ghost fd-pw-toggle" id="fdPwToggle" data-i18n="fd.show" aria-pressed="false">Show</button>
+        </div>
+        <button class="btn btn-check" id="fdLogin" data-i18n="auth.login" style="width:100%">Log in</button>
+        <button class="ghost" id="fdCreate" data-i18n="auth.create" style="width:100%;margin-top:6px">Create account</button>
+        <button class="ghost fd-link" id="fdForgot" data-i18n="fd.forgot">Forgot password?</button>
+      </div>
+
+      <div class="fd-step fd-code">
+        <h3 data-i18n="fd.codeTitle">Check your email</h3>
+        <p class="fd-help" id="fdCodeHelp"></p>
+        <input id="fdCode" type="text" inputmode="numeric" maxlength="6" autocomplete="one-time-code" placeholder="000000" aria-label="Six-digit code" />
+        <button class="btn btn-check" id="fdCodeSubmit" data-i18n="age.continue" style="width:100%">Continue</button>
+        <button class="ghost fd-link" id="fdResend" data-i18n="fd.resend">Send a new code</button>
+        <button class="ghost fd-link" id="fdBack" data-i18n="fd.back">Back</button>
+      </div>
+
+      <!-- Set-password step, shared by Create account and Forgot password. The
+           field is `new-password` with Apple's passwordrules, so the suggested
+           strong password always satisfies F9 (Done 15). -->
+      <div class="fd-step fd-pw">
+        <h3 id="fdPwTitle" data-i18n="fd.pwTitle">Choose a password</h3>
+        <div class="fd-pw-row">
+          <input id="fdNewPassword" type="password" autocomplete="new-password" passwordrules="minlength: 8; required: digit; required: special;" placeholder="password" data-i18n-ph="ph.password" />
+          <button type="button" class="ghost fd-pw-toggle" id="fdNewPwToggle" data-i18n="fd.show" aria-pressed="false">Show</button>
+        </div>
+        <ul class="fd-rules" id="fdRules" aria-live="polite">
+          <li id="fdRuleLen" data-i18n="fd.ruleLen">At least 8 characters</li>
+          <li id="fdRuleDigit" data-i18n="fd.ruleDigit">At least one number</li>
+          <li id="fdRuleSymbol" data-i18n="fd.ruleSymbol">At least one symbol</li>
+        </ul>
+        <button class="btn btn-check" id="fdPwSubmit" data-i18n="age.continue" style="width:100%">Continue</button>
+        <button class="ghost fd-link" id="fdPwBack" data-i18n="fd.back">Back</button>
+      </div>
+
+      <div class="fd-step fd-name">
+        <h3 data-i18n="fd.nameTitle">Pick your Climb name</h3>
+        <p class="fd-help" data-i18n="fd.nameHelp">Other players see this name on the leaderboard.</p>
+        <input id="fdUsername" type="text" maxlength="16" autocomplete="username" placeholder="username" data-i18n-ph="ph.username" autocorrect="off" autocapitalize="none" spellcheck="false" />
+        <button class="btn btn-check" id="fdNameSubmit" data-i18n="age.continue" style="width:100%">Continue</button>
+      </div>
+
+      <div class="dob-err" id="fdErr" aria-live="polite"></div>
+      <button class="ghost fd-guest" id="fdGuest" data-i18n="fd.guest">Play without an account</button>
+    </div>
+  </div>
+
   <div class="scrim age-scrim" id="ageScrim">
     <div class="modal">
       <h3 data-i18n="age.title">When's your birthday?</h3>
@@ -2522,6 +2613,10 @@
   <div class="scrim" id="setScrim">
     <div class="modal">
       <h3 data-i18n="settings.title">Settings</h3>
+      <!-- CC-ONBOARD-JR F12 — account deletion within three taps of Settings
+           (Apple 5.1.1(v)): Settings, this row, then Delete my account. Hidden
+           when there is no account to delete (climb::reflect_auth). -->
+      <div class="set-row btn-hide" id="setAccountRow"><span class="lbl2"><span data-i18n="acct.title">Your account</span><small data-i18n="acct.deleteSmall">Removes your account and all Climb entries. This can't be undone.</small></span><button class="ghost" id="setAccountBtn" data-i18n="acct.deleteLabel" style="flex:none;border-radius:12px">Delete account</button></div>
       <label class="set-row"><span class="lbl2"><span data-i18n="settings.kid">Spell Jr</span><small data-i18n="settings.kidSmall">Bigger text, friendly words, no prices</small></span><input type="checkbox" class="switch" id="kidToggle" /><button type="button" class="btn btn-icon btn-hide" id="kidGrownups" data-i18n="parent.title" style="flex:none;border-radius:12px">Ask a grown-up</button></label>
       <label class="set-row"><span class="lbl2"><span data-i18n="settings.readable">Readable mode</span><small data-i18n="settings.readableSmall">Larger, spaced, dyslexia-friendly type</small></span><input type="checkbox" class="switch" id="readToggle" /></label>
       <label class="set-row"><span class="lbl2"><span data-i18n="settings.bigText">Big text</span><small data-i18n="settings.bigTextSmall">Enlarge the interface text (about 1.5×)</small></span><input type="checkbox" class="switch" id="bigTextToggle" /></label>

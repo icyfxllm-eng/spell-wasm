@@ -27,8 +27,6 @@ CREATE TABLE IF NOT EXISTS users (
   email               TEXT NOT NULL,
   email_lc            TEXT NOT NULL UNIQUE,
   email_verified      INTEGER NOT NULL DEFAULT 0,
-  phone               TEXT,                        -- only if provided; never displayed
-  phone_verified      INTEGER NOT NULL DEFAULT 0,
   pw_hash             TEXT NOT NULL,               -- bcrypt; plaintext never stored/logged
   created_at          REAL NOT NULL,
   username_changed_at REAL
@@ -51,25 +49,30 @@ CREATE TABLE IF NOT EXISTS sessions (
   FOREIGN KEY(user_id) REFERENCES users(id) ON DELETE CASCADE
 );
 
-CREATE TABLE IF NOT EXISTS email_verifications (
-  token      TEXT PRIMARY KEY,
-  user_id    INTEGER NOT NULL,
-  expires_at REAL NOT NULL,
-  FOREIGN KEY(user_id) REFERENCES users(id) ON DELETE CASCADE
-);
-
--- Email (link) and SMS (OTP) password resets share this table. Email rows have
--- code_hash NULL; SMS rows store a bcrypt hash of the 6-digit code.
-CREATE TABLE IF NOT EXISTS password_resets (
-  token      TEXT PRIMARY KEY,
-  user_id    INTEGER NOT NULL,
-  kind       TEXT NOT NULL CHECK (kind IN ('email','sms')),
-  code_hash  TEXT,
+-- CC-ONBOARD-JR F8/F10 (D4) — one-time 6-digit codes for signup verification
+-- and password reset. Replaces the emailed LINKS: a code is typed on the device
+-- that asked for it, so a first launch never needs a browser round trip. The
+-- code is bcrypt-hashed at rest, exactly like a password.
+CREATE TABLE IF NOT EXISTS email_codes (
+  email_lc   TEXT NOT NULL,
+  purpose    TEXT NOT NULL CHECK (purpose IN ('signup','reset')),
+  code_hash  TEXT NOT NULL,
   expires_at REAL NOT NULL,
   attempts   INTEGER NOT NULL DEFAULT 0,
   used       INTEGER NOT NULL DEFAULT 0,
-  FOREIGN KEY(user_id) REFERENCES users(id) ON DELETE CASCADE
+  created_at REAL NOT NULL,
+  PRIMARY KEY (email_lc, purpose)
 );
+
+-- The send log behind D4's per-ADDRESS limits (60 s cooldown, five per hour).
+-- In the database on purpose: two gunicorn workers make an in-memory counter
+-- two counters, which is how the existing per-IP limits ended up doubled.
+CREATE TABLE IF NOT EXISTS email_sends (
+  email_lc TEXT NOT NULL,
+  purpose  TEXT NOT NULL,
+  sent_at  REAL NOT NULL
+);
+CREATE INDEX IF NOT EXISTS idx_email_sends ON email_sends(email_lc, purpose, sent_at);
 
 -- One row per player per category (upsert on a new record). NO 'easy'.
 CREATE TABLE IF NOT EXISTS leaderboard_entries (
@@ -167,7 +170,38 @@ def init() -> None:
     # Migrate BEFORE running SCHEMA: the SCHEMA index references the locale
     # column, which an old table won't have until this rebuild adds it.
     _migrate_leaderboard_locale(c)
+    _migrate_drop_phone(c)
+    _migrate_drop_link_tables(c)
     c.executescript(SCHEMA)
+    c.commit()
+
+
+def _migrate_drop_phone(c) -> None:
+    """CC-ONBOARD-JR F12 / I12 — phone signup is deleted, its columns included.
+    The inventory counted zero accounts with a phone (and zero accounts at all),
+    so removing them strands nobody."""
+    if not c.execute("SELECT 1 FROM sqlite_master WHERE type='table' AND name='users'").fetchone():
+        return
+    cols = [r["name"] for r in c.execute("PRAGMA table_info(users)").fetchall()]
+    for col in ("phone", "phone_verified"):
+        if col in cols:
+            c.execute(f"ALTER TABLE users DROP COLUMN {col}")
+    c.commit()
+
+
+def _migrate_drop_link_tables(c) -> None:
+    """The emailed-link tables are replaced by email_codes (F8/F10).
+
+    Dropped only when EMPTY. A pending verification or reset is a person waiting
+    to get into their account, and no cleanup is worth stranding them; if a row
+    exists the table stays and the next start tries again.
+    """
+    for name in ("email_verifications", "password_resets"):
+        if not c.execute("SELECT 1 FROM sqlite_master WHERE type='table' AND name=?", (name,)).fetchone():
+            continue
+        if c.execute(f"SELECT COUNT(*) AS n FROM {name}").fetchone()["n"]:
+            continue
+        c.execute(f"DROP TABLE {name}")
     c.commit()
 
 

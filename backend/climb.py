@@ -1,8 +1,9 @@
 """The Climb — HTTP routes (Flask blueprint).
 
-Phase 2: account auth — signup, login, logout, refresh, me, verify-email.
-Leaderboard submit/read, password recovery, change-username and account
-deletion come in later phases. All input is validated; signup/login are
+Account auth — signup by emailed code, login, logout, refresh, me.
+Leaderboard submit/read, password recovery by emailed code, change-username and
+account deletion. CC-ONBOARD-JR F8/F10 replaced the emailed LINKS with six-digit
+codes, and F12 deleted phone signup and SMS recovery outright. All input is validated; signup/login are
 rate-limited and Turnstile-gated (skipped when unconfigured); errors are generic
 to avoid revealing which rule failed or whether an account exists.
 """
@@ -48,65 +49,125 @@ def _auth_response(user_row, token, extra=None):
     return auth.set_session_cookie(resp, token)
 
 
-@bp.route("/api/auth/signup", methods=["POST"])
-def signup():
-    if not auth.rate_limit(f"signup:{auth.client_ip()}", 5, 3600):
+# ---------- signup and recovery by 6-digit code (CC-ONBOARD-JR F8/F10, D4) ----------
+
+def _send_code(email: str, email_lc: str, purpose: str) -> None:
+    code = auth.issue_code(email_lc, purpose)
+    auth.note_code_send(email_lc, purpose)
+    if purpose == "signup":
+        subject = "Your Spell code"
+        html = (f"<p>Your code to finish setting up Spell is <b>{code}</b>.</p>"
+                f"<p>It expires in ten minutes. If you did not ask for it, ignore this email.</p>")
+    else:
+        subject = "Your Spell password reset code"
+        html = (f"<p>Your Spell password reset code is <b>{code}</b>.</p>"
+                f"<p>It expires in ten minutes. If you did not ask for it, ignore this email.</p>")
+    auth.send_email(email, subject, html)
+
+
+@bp.route("/api/auth/request-code", methods=["POST"])
+def request_code():
+    """Send a six-digit code for signup or for a password reset.
+
+    The response is IDENTICAL in every case: valid address or not, registered or
+    not, first request or sixth. F10 requires that for reset, because a
+    different answer is an account-enumeration oracle; signup gets the same
+    treatment, or the oracle simply moves to the other endpoint.
+    """
+    if not auth.rate_limit(f"code:{auth.client_ip()}", 20, 3600):
         return jsonify(error="Too many attempts. Please try again later."), 429
     data = request.get_json(silent=True) or {}
-    username = (data.get("username") or "").strip()
     email = (data.get("email") or "").strip()
+    purpose = (data.get("purpose") or "").strip()
+    generic = jsonify(ok=True, message="If that address can receive it, we have sent a code.")
+    if purpose not in ("signup", "reset") or not auth.valid_email(email):
+        return generic
+    email_lc = email.lower()
+    if auth.code_send_problem(email_lc, purpose):
+        return generic
+    c = db.conn()
+    exists = c.execute("SELECT 1 FROM users WHERE email_lc=?", (email_lc,)).fetchone()
+    if purpose == "signup" and exists:
+        # Tell the OWNER of the address, not whoever typed it in.
+        auth.note_code_send(email_lc, purpose)
+        auth.send_email(
+            email,
+            "You already have a Spell account",
+            "<p>Someone tried to create a Spell account with this address. You already "
+            "have one — use Forgot password if you need to get back in.</p>",
+        )
+        return generic
+    if purpose == "reset" and not exists:
+        return generic
+    _send_code(email, email_lc, purpose)
+    return generic
+
+
+@bp.route("/api/auth/verify-code", methods=["POST"])
+def verify_code():
+    """Check a code WITHOUT spending it, so the app can move on to the password
+    step before an account exists. Completion is what consumes it."""
+    data = request.get_json(silent=True) or {}
+    email_lc = (data.get("email") or "").strip().lower()
+    purpose = (data.get("purpose") or "").strip()
+    if purpose not in ("signup", "reset"):
+        return jsonify(error="That code is invalid or has expired."), 400
+    problem = auth.check_code(email_lc, purpose, data.get("code") or "", consume=False)
+    if problem:
+        return jsonify(error=problem), 400
+    return jsonify(ok=True)
+
+
+@bp.route("/api/auth/complete-signup", methods=["POST"])
+def complete_signup():
+    """Create the account once the code is proved. The code IS the verification,
+    so there is no link to click and no half-verified account to chase."""
+    data = request.get_json(silent=True) or {}
+    email = (data.get("email") or "").strip()
+    email_lc = email.lower()
+    username = (data.get("username") or "").strip()
     password = data.get("password") or ""
     display_name = (data.get("displayName") or "").strip() or None
-    phone = (data.get("phone") or "").strip() or None
-
     if not auth.verify_turnstile(data.get("turnstile")):
         return jsonify(error="Verification failed. Please try again."), 400
-    if not usernames.is_acceptable(username):
-        return jsonify(error="That username isn't available.", field="username"), 400
     if not auth.valid_email(email):
         return jsonify(error="Enter a valid email address.", field="email"), 400
-    if len(password) < 8:
-        return jsonify(error="Password must be at least 8 characters.", field="password"), 400
+    problem = auth.check_code(email_lc, "signup", data.get("code") or "", consume=False)
+    if problem:
+        return jsonify(error=problem, field="code"), 400
+    if not usernames.is_acceptable(username):
+        return jsonify(error="That username isn't available.", field="username"), 400
+    pw_problem = auth.password_problem(password)
+    if pw_problem:
+        return jsonify(error=pw_problem, field="password"), 400
 
     c = db.conn()
-    ulc, elc = username.lower(), email.lower()
+    ulc = username.lower()
     taken = c.execute("SELECT 1 FROM users WHERE username_lc=?", (ulc,)).fetchone() or c.execute(
         "SELECT 1 FROM reserved_usernames WHERE username_lc=? AND reserved_until>?", (ulc, time.time())
     ).fetchone()
     if taken:
         return jsonify(error="That username isn't available.", field="username"), 400
-    if c.execute("SELECT 1 FROM users WHERE email_lc=?", (elc,)).fetchone():
-        # Generic — don't confirm which email is registered.
+    if c.execute("SELECT 1 FROM users WHERE email_lc=?", (email_lc,)).fetchone():
         return jsonify(error="That email can't be used.", field="email"), 400
 
+    auth.check_code(email_lc, "signup", data.get("code") or "", consume=True)
     t = time.time()
     cur = c.execute(
-        "INSERT INTO users(username,username_lc,display_name,email,email_lc,phone,pw_hash,created_at) "
-        "VALUES(?,?,?,?,?,?,?,?)",
-        (username, ulc, display_name, email, elc, phone, auth.hash_password(password), t),
+        "INSERT INTO users(username,username_lc,display_name,email,email_lc,email_verified,pw_hash,created_at) "
+        "VALUES(?,?,?,?,?,1,?,?)",
+        (username, ulc, display_name, email, email_lc, auth.hash_password(password), t),
     )
     c.commit()
-    uid = cur.lastrowid
+    token = auth.create_session(cur.lastrowid)
+    return _auth_response(auth.session_user(token), token)
 
-    # Email verification (stubbed delivery until a provider is configured).
-    vtok = secrets.token_urlsafe(32)
-    c.execute(
-        "INSERT INTO email_verifications(token,user_id,expires_at) VALUES(?,?,?)",
-        (vtok, uid, t + auth.EMAIL_VERIFY_TTL),
-    )
-    c.commit()
-    link = f"{auth.FRONTEND_BASE}/api/auth/verify-email?token={vtok}"
-    auth.send_email(
-        email,
-        "Verify your Spell account",
-        f'<p>Welcome to Spell! Confirm your email to finish setting up The Climb:</p>'
-        f'<p><a href="{link}">Verify email</a></p>',
-    )
 
-    token = auth.create_session(uid)
-    user_row = auth.session_user(token)
-    extra = {"devVerifyLink": link} if auth.DEV else None
-    return _auth_response(user_row, token, extra)
+@bp.route("/api/auth/signup", methods=["POST"])
+def signup_gone():
+    """An older installed build still posts here. 410 with a plain instruction
+    beats a 404: the player is told what to do instead of seeing a dead end."""
+    return jsonify(error="Please update the app to create an account."), 410
 
 
 @bp.route("/api/auth/login", methods=["POST"])
@@ -154,21 +215,6 @@ def refresh():
 def me():
     u = auth.current_user()
     return jsonify(user=_public_user(u) if u else None)
-
-
-@bp.route("/api/auth/verify-email")
-def verify_email():
-    tok = request.args.get("token", "")
-    c = db.conn()
-    row = c.execute("SELECT * FROM email_verifications WHERE token=?", (tok,)).fetchone()
-    if not row or row["expires_at"] < time.time():
-        return "This verification link is invalid or has expired.", 400
-    c.execute("UPDATE users SET email_verified=1 WHERE id=?", (row["user_id"],))
-    c.execute("DELETE FROM email_verifications WHERE token=?", (tok,))
-    c.commit()
-    resp = make_response("", 302)
-    resp.headers["Location"] = f"{auth.FRONTEND_BASE}/?verified=1"
-    return resp
 
 
 # ---------- leaderboard ("The Climb") ----------
@@ -314,103 +360,31 @@ def report_name():
 
 # ---------- password recovery ----------
 
-RESET_EMAIL_TTL = 30 * 60   # 30 minutes
-RESET_SMS_TTL = 10 * 60     # 10 minutes
-RESET_SMS_MAX_ATTEMPTS = 3
 
 
-@bp.route("/api/auth/request-reset-email", methods=["POST"])
-def request_reset_email():
-    if not auth.rate_limit(f"reset-email:{auth.client_ip()}", 5, 3600):
-        return jsonify(error="Too many requests. Please try again later."), 429
-    data = request.get_json(silent=True) or {}
-    email = (data.get("email") or "").strip().lower()
-    c = db.conn()
-    row = c.execute("SELECT id FROM users WHERE email_lc=?", (email,)).fetchone()
-    token = None
-    if row:
-        token = secrets.token_urlsafe(32)
-        c.execute(
-            "INSERT INTO password_resets(token,user_id,kind,expires_at) VALUES(?,?,?,?)",
-            (token, row["id"], "email", time.time() + RESET_EMAIL_TTL),
-        )
-        c.commit()
-        link = f"{auth.FRONTEND_BASE}/?reset={token}"
-        auth.send_email(
-            email,
-            "Reset your Spell password",
-            f'<p>Reset your Spell password (link valid 30 minutes):</p>'
-            f'<p><a href="{link}">Reset password</a></p>',
-        )
-    # Never reveal whether the account exists.
-    body = {"ok": True, "message": "If that account exists, we've sent a reset link."}
-    if auth.DEV and token:
-        body["devResetToken"] = token
-    return jsonify(body)
-
-
-@bp.route("/api/auth/request-reset-sms", methods=["POST"])
-def request_reset_sms():
-    if not auth.rate_limit(f"reset-sms:{auth.client_ip()}", 5, 3600):
-        return jsonify(error="Too many requests. Please try again later."), 429
-    data = request.get_json(silent=True) or {}
-    identifier = (data.get("identifier") or "").strip().lower()
-    c = db.conn()
-    row = c.execute(
-        "SELECT id, phone, phone_verified FROM users WHERE username_lc=? OR email_lc=?",
-        (identifier, identifier),
-    ).fetchone()
-    # Always return a token so absence can't be probed; it maps to a real reset
-    # row only when the account exists AND has a verified phone.
-    token = secrets.token_urlsafe(24)
-    dev_code = None
-    if row and row["phone"] and row["phone_verified"]:
-        code = f"{secrets.randbelow(1000000):06d}"
-        c.execute(
-            "INSERT INTO password_resets(token,user_id,kind,code_hash,expires_at) VALUES(?,?,?,?,?)",
-            (token, row["id"], "sms", auth.hash_password(code), time.time() + RESET_SMS_TTL),
-        )
-        c.commit()
-        auth.send_sms(row["phone"], f"Your Spell reset code is {code}")
-        dev_code = code
-    body = {"ok": True, "message": "If that account has a verified phone, we've sent a code.", "token": token}
-    if auth.DEV and dev_code:
-        body["devSmsCode"] = dev_code
-    return jsonify(body)
-
-
-@bp.route("/api/auth/confirm-reset", methods=["POST"])
-def confirm_reset():
-    if not auth.rate_limit(f"confirm-reset:{auth.client_ip()}", 10, 900):
+@bp.route("/api/auth/reset-password", methods=["POST"])
+def reset_password():
+    """F10 — finish a reset with the emailed code, then revoke every session:
+    if the reset was somebody else getting in, this is what pushes them out."""
+    if not auth.rate_limit(f"reset:{auth.client_ip()}", 10, 900):
         return jsonify(error="Too many attempts. Please try again later."), 429
     data = request.get_json(silent=True) or {}
-    token = data.get("token") or ""
+    email_lc = (data.get("email") or "").strip().lower()
     new_password = data.get("newPassword") or ""
-    code = (data.get("code") or "").strip()
-    if len(new_password) < 8:
-        return jsonify(error="Password must be at least 8 characters.", field="password"), 400
-
+    problem = auth.check_code(email_lc, "reset", data.get("code") or "", consume=False)
+    if problem:
+        return jsonify(error=problem, field="code"), 400
+    pw_problem = auth.password_problem(new_password)
+    if pw_problem:
+        return jsonify(error=pw_problem, field="password"), 400
     c = db.conn()
-    row = c.execute("SELECT * FROM password_resets WHERE token=?", (token,)).fetchone()
-    if not row or row["used"] or row["expires_at"] < time.time():
-        return jsonify(error="This reset link or code is invalid or has expired."), 400
-
-    if row["kind"] == "sms":
-        if row["attempts"] >= RESET_SMS_MAX_ATTEMPTS:
-            c.execute("UPDATE password_resets SET used=1 WHERE token=?", (token,))
-            c.commit()
-            return jsonify(error="Too many incorrect codes. Request a new one."), 400
-        if not auth.verify_password(code, row["code_hash"] or ""):
-            c.execute("UPDATE password_resets SET attempts=attempts+1 WHERE token=?", (token,))
-            c.commit()
-            return jsonify(error="Incorrect code."), 400
-
-    # Success: set the new password, consume the token, and invalidate ALL
-    # existing sessions (both reset flows).
-    c.execute("UPDATE users SET pw_hash=? WHERE id=?", (auth.hash_password(new_password), row["user_id"]))
-    c.execute("UPDATE password_resets SET used=1 WHERE token=?", (token,))
+    row = c.execute("SELECT id FROM users WHERE email_lc=?", (email_lc,)).fetchone()
+    if not row:
+        return jsonify(error="That code is invalid or has expired."), 400
+    auth.check_code(email_lc, "reset", data.get("code") or "", consume=True)
+    c.execute("UPDATE users SET pw_hash=? WHERE id=?", (auth.hash_password(new_password), row["id"]))
     c.commit()
-    auth.revoke_all_for_user(row["user_id"])
+    auth.revoke_all_for_user(row["id"])
     return jsonify(ok=True)
 
 

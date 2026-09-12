@@ -55,6 +55,130 @@ def verify_password(pw: str, hashed: str) -> bool:
         return False
 
 
+# ---------- password policy (CC-ONBOARD-JR F9 / D3) ----------
+
+PASSWORD_MIN = 8
+PASSWORD_MAX = 200            # D3 asks for a max of at least 64; passphrases welcome
+_BLOCKLIST_PATH = os.path.join(os.path.dirname(__file__), "password-blocklist.txt")
+_pw_blocklist = None
+
+
+def _password_blocklist() -> set:
+    global _pw_blocklist
+    if _pw_blocklist is None:
+        try:
+            with open(_BLOCKLIST_PATH, encoding="utf-8") as f:
+                _pw_blocklist = {
+                    ln.strip().lower() for ln in f if ln.strip() and not ln.lstrip().startswith("#")
+                }
+        except OSError:
+            _pw_blocklist = set()
+    return _pw_blocklist
+
+
+def password_problem(pw: str):
+    """None if the password is acceptable, else the reason in a player's words.
+
+    Eric's rule (D3): eight or more characters, at least one digit, at least one
+    symbol. Around it: a generous maximum, spaces allowed, and a common-password
+    blocklist -- because composition rules alone wave through exactly what is
+    tried first ("Password1!" satisfies all three). A space does not count as the
+    symbol, or "password 1" would pass on a space.
+    """
+    pw = pw or ""
+    if len(pw) < PASSWORD_MIN:
+        return "Password must be at least 8 characters."
+    if len(pw) > PASSWORD_MAX:
+        return f"Password must be {PASSWORD_MAX} characters or fewer."
+    if not any(ch.isdigit() for ch in pw):
+        return "Password needs at least one number."
+    if not any((not ch.isalnum()) and not ch.isspace() for ch in pw):
+        return "Password needs at least one symbol."
+    lowered = pw.lower()
+    letters = "".join(ch for ch in lowered if ch.isalpha())
+    blocked = _password_blocklist()
+    if lowered in blocked or (letters and letters in blocked):
+        return "That password is too common. Please pick another."
+    return None
+
+
+# ---------- one-time email codes (CC-ONBOARD-JR F8/F10 / D4) ----------
+
+CODE_TTL = 10 * 60            # ten minutes
+CODE_MAX_ATTEMPTS = 5         # then the code is dead, not merely wrong
+CODE_RESEND_COOLDOWN = 60     # seconds between sends to one address
+CODE_SENDS_PER_HOUR = 5       # per address, per hour
+
+
+def new_code() -> str:
+    return f"{secrets.randbelow(1000000):06d}"
+
+
+def code_send_problem(email_lc: str, purpose: str):
+    """None if another code may go to this address now, else the reason.
+
+    Counted in the DATABASE, not in memory. The backend runs two gunicorn
+    workers, so an in-process counter is two counters and every limit is quietly
+    doubled -- which is what the Step 0 inventory found for the per-IP limiter.
+    """
+    t = now()
+    row = db.conn().execute(
+        "SELECT MAX(sent_at) AS last, COUNT(*) AS n FROM email_sends "
+        "WHERE email_lc=? AND purpose=? AND sent_at > ?",
+        (email_lc, purpose, t - 3600),
+    ).fetchone()
+    if row and row["last"] and row["last"] > t - CODE_RESEND_COOLDOWN:
+        return "Please wait a minute before asking for another code."
+    if row and row["n"] >= CODE_SENDS_PER_HOUR:
+        return "Too many codes requested for that address. Please try again later."
+    return None
+
+
+def note_code_send(email_lc: str, purpose: str) -> None:
+    c = db.conn()
+    c.execute("INSERT INTO email_sends(email_lc,purpose,sent_at) VALUES(?,?,?)", (email_lc, purpose, now()))
+    c.commit()
+
+
+def issue_code(email_lc: str, purpose: str) -> str:
+    """Replace any live code for (address, purpose) with a fresh one."""
+    c = db.conn()
+    code = new_code()
+    t = now()
+    c.execute("DELETE FROM email_codes WHERE email_lc=? AND purpose=?", (email_lc, purpose))
+    c.execute(
+        "INSERT INTO email_codes(email_lc,purpose,code_hash,expires_at,attempts,used,created_at) "
+        "VALUES(?,?,?,?,0,0,?)",
+        (email_lc, purpose, hash_password(code), t + CODE_TTL, t),
+    )
+    c.commit()
+    return code
+
+
+def check_code(email_lc: str, purpose: str, code: str, consume: bool):
+    """None when the code is right, else the reason. Attempts are counted and the
+    code dies after CODE_MAX_ATTEMPTS, so guessing six digits is not a matter of
+    patience. Codes are bcrypt-hashed at rest, like passwords."""
+    c = db.conn()
+    row = c.execute(
+        "SELECT * FROM email_codes WHERE email_lc=? AND purpose=?", (email_lc, purpose)
+    ).fetchone()
+    if not row or row["used"] or row["expires_at"] < now():
+        return "That code is invalid or has expired."
+    if row["attempts"] >= CODE_MAX_ATTEMPTS:
+        c.execute("UPDATE email_codes SET used=1 WHERE email_lc=? AND purpose=?", (email_lc, purpose))
+        c.commit()
+        return "Too many incorrect codes. Please ask for a new one."
+    if not verify_password(code or "", row["code_hash"]):
+        c.execute("UPDATE email_codes SET attempts=attempts+1 WHERE email_lc=? AND purpose=?", (email_lc, purpose))
+        c.commit()
+        return "That code isn't right."
+    if consume:
+        c.execute("UPDATE email_codes SET used=1 WHERE email_lc=? AND purpose=?", (email_lc, purpose))
+        c.commit()
+    return None
+
+
 # ---------- sessions ----------
 
 def _new_token() -> str:
@@ -220,8 +344,6 @@ def send_email(to: str, subject: str, html: str) -> bool:
     return True
 
 
-def send_sms(to: str, body: str) -> bool:
-    """SMS delivery. TODO: wire Twilio Verify (TWILIO_* env) when configured.
-    Stubbed (logged) for now — see README."""
-    print(f"[climb] (stub sms) to={to} body={body!r}", flush=True)
-    return True
+# CC-ONBOARD-JR F12 / I12: send_sms is DELETED, not stubbed. Phone signup and
+# SMS recovery are gone from the product, and a dormant sender is how they
+# would quietly come back.

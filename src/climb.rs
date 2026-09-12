@@ -120,6 +120,7 @@ fn s(v: &str) -> serde_json::Value {
 /// stored token against /me; drops it if the server rejects it).
 pub fn setup(app: &App) {
     wire(app);
+    wire_front_door(app);
     reflect_auth();
     if token().is_some() {
         let app = app.clone();
@@ -146,6 +147,9 @@ pub fn reflect_auth() {
     let gated = dom::doc().body().map(|b| b.class_list().contains("kid")).unwrap_or(false);
     dom::toggle_class("climbBtn", "btn-hide", gated);
     dom::toggle_class("accountBtn", "btn-hide", gated);
+    // F12: the Settings route to account deletion exists only when there is an
+    // account to delete (and never in Spell Jr, which has none).
+    dom::toggle_class("setAccountRow", "btn-hide", gated || !is_logged_in());
     // The online Spell Off entry follows the same account + Kid-Mode gate (plus
     // its own feature flag); keep it in sync whenever auth state changes.
     crate::online_spelloff::reflect_gate();
@@ -169,6 +173,17 @@ pub fn reflect_auth() {
 }
 
 // ---------- auth actions ----------
+
+/// The account sheet, where a player renames themselves or deletes the account.
+/// CC-ONBOARD-JR F12 wants deletion within three taps of Settings, so the
+/// Settings row opens this same sheet rather than a second copy of it.
+pub fn open_account_sheet() {
+    dom::set_text("acctErr", "");
+    dom::set_text("acctUsername", &username().unwrap_or_default());
+    dom::input("acctNewUsername").set_value("");
+    dom::input("acctDeletePassword").set_value("");
+    dom::add_class("accountScrim", "show");
+}
 
 fn set_auth_err(msg: &str) {
     dom::set_text("authErr", msg);
@@ -375,11 +390,7 @@ fn wire(app: &App) {
     // Open account: sign-in form when logged out, settings when logged in.
     dom::on_click("accountBtn", || {
         if is_logged_in() {
-            dom::set_text("acctErr", "");
-            dom::set_text("acctUsername", &username().unwrap_or_default());
-            dom::input("acctNewUsername").set_value("");
-            dom::input("acctDeletePassword").set_value("");
-            dom::add_class("accountScrim", "show");
+            open_account_sheet();
         } else {
             set_auth_err("");
             dom::add_class("authScrim", "show");
@@ -464,4 +475,269 @@ mod entrance_tests {
         assert!(src.contains("on_click(\"climbBtn\""),
                 "climbBtn still owns open_leaderboard -- ghost.rs reaches the board through it");
     }
+}
+
+// ---------- the front door (CC-ONBOARD-JR F6-F10) ----------
+//
+// One screen, four steps. The order is F8's: email, then the six-digit code,
+// then the password, then the Climb name -- so the account only exists once the
+// address is proved, and there is no half-made account to chase. Log in is the
+// same screen's first step, because a returning player and a new one arrive at
+// the same door.
+//
+// D1 (signed) is why the guest link is always visible: play never requires an
+// account. I8 is why the typed password lives in memory for the two steps
+// between typing and sending, and is never stored or logged.
+
+#[derive(Default, Clone)]
+struct FrontDoor {
+    email: String,
+    purpose: String, // "signup" | "reset"
+    code: String,
+    password: String,
+}
+
+thread_local! {
+    static FD: std::cell::RefCell<FrontDoor> = std::cell::RefCell::new(FrontDoor::default());
+}
+
+fn fd_step(step: &str) {
+    let _ = dom::el("frontDoor").set_attribute("data-step", step);
+    dom::set_text("fdErr", "");
+}
+
+fn fd_err(msg: &str) {
+    dom::set_text("fdErr", msg);
+}
+
+fn online() -> bool {
+    web_sys::window().map(|w| w.navigator().on_line()).unwrap_or(true)
+}
+
+/// True when the device cannot reach anything; the front door says so plainly
+/// instead of failing into a generic error (F12: offline first launch still
+/// plays, it just cannot make an account).
+fn fd_offline_guard() -> bool {
+    if online() {
+        return false;
+    }
+    fd_err(&crate::i18n::t("fd.offline"));
+    true
+}
+
+pub fn open_front_door() {
+    FD.with(|f| *f.borrow_mut() = FrontDoor::default());
+    dom::input("fdEmail").set_value("");
+    dom::input("fdPassword").set_value("");
+    dom::input("fdCode").set_value("");
+    dom::input("fdNewPassword").set_value("");
+    dom::input("fdUsername").set_value("");
+    fd_step("start");
+    dom::add_class("frontDoor", "show");
+}
+
+pub fn close_front_door() {
+    dom::remove_class("frontDoor", "show");
+}
+
+/// F9's live checklist. The three rules the player can see are checked here;
+/// the server is still the authority and owns the rest (length ceiling, the
+/// common-password blocklist), whose answers arrive as an error on submit.
+fn fd_update_rules() {
+    let pw = dom::input("fdNewPassword").value();
+    let len = pw.chars().count() >= 8;
+    let digit = pw.chars().any(|c| c.is_ascii_digit());
+    let symbol = pw.chars().any(|c| !c.is_alphanumeric() && !c.is_whitespace());
+    for (id, met) in [("fdRuleLen", len), ("fdRuleDigit", digit), ("fdRuleSymbol", symbol)] {
+        dom::toggle_class(id, "met", met);
+    }
+}
+
+fn fd_toggle_password(input_id: &str, button_id: &str) {
+    let el = dom::input(input_id);
+    let showing = el.type_() == "text";
+    el.set_type(if showing { "password" } else { "text" });
+    let b = dom::el(button_id);
+    let _ = b.set_attribute("aria-pressed", if showing { "false" } else { "true" });
+    b.set_text_content(Some(&crate::i18n::t(if showing { "fd.show" } else { "fd.hide" })));
+}
+
+fn fd_request_code(purpose: &str) {
+    let email = dom::input("fdEmail").value().trim().to_string();
+    if !email.contains('@') || !email.contains('.') {
+        fd_err(&crate::i18n::t("fd.badEmail"));
+        return;
+    }
+    if fd_offline_guard() {
+        return;
+    }
+    FD.with(|f| {
+        let mut f = f.borrow_mut();
+        f.email = email.clone();
+        f.purpose = purpose.to_string();
+    });
+    let purpose = purpose.to_string();
+    spawn_local(async move {
+        let b = body(&[("email", s(&email)), ("purpose", s(&purpose))]);
+        // The response is deliberately the same whatever the address is, so
+        // there is nothing here to branch on -- and nothing to leak.
+        let _ = call("POST", "/api/auth/request-code", Some(b)).await;
+        dom::set_text(
+            "fdCodeHelp",
+            &crate::i18n::tp("fd.codeHelp", &[("email", &email)]),
+        );
+        dom::input("fdCode").set_value("");
+        fd_step("code");
+    });
+}
+
+fn fd_submit_code() {
+    let code = dom::input("fdCode").value().trim().to_string();
+    let (email, purpose) = FD.with(|f| {
+        let f = f.borrow();
+        (f.email.clone(), f.purpose.clone())
+    });
+    if fd_offline_guard() {
+        return;
+    }
+    spawn_local(async move {
+        let b = body(&[("email", s(&email)), ("purpose", s(&purpose)), ("code", s(&code))]);
+        match call("POST", "/api/auth/verify-code", Some(b)).await {
+            Ok(_) => {
+                FD.with(|f| f.borrow_mut().code = code.clone());
+                dom::set_text(
+                    "fdPwTitle",
+                    &crate::i18n::t(if purpose == "reset" { "fd.newPwTitle" } else { "fd.pwTitle" }),
+                );
+                dom::input("fdNewPassword").set_value("");
+                fd_update_rules();
+                fd_step("password");
+            }
+            Err(e) => fd_err(&e.message),
+        }
+    });
+}
+
+fn fd_submit_password() {
+    let password = dom::input("fdNewPassword").value();
+    let (email, purpose, code) = FD.with(|f| {
+        let f = f.borrow();
+        (f.email.clone(), f.purpose.clone(), f.code.clone())
+    });
+    if fd_offline_guard() {
+        return;
+    }
+    if purpose == "signup" {
+        FD.with(|f| f.borrow_mut().password = password);
+        dom::input("fdUsername").set_value("");
+        fd_step("name");
+        return;
+    }
+    // Reset: set the password, then sign in with it, so the player lands in the
+    // game rather than back at a login form they just proved they own.
+    spawn_local(async move {
+        let b = body(&[("email", s(&email)), ("code", s(&code)), ("newPassword", s(&password))]);
+        match call("POST", "/api/auth/reset-password", Some(b)).await {
+            Ok(_) => {
+                let lb = body(&[("identifier", s(&email)), ("password", s(&password))]);
+                match call("POST", "/api/auth/login", Some(lb)).await {
+                    Ok(v) => {
+                        on_auth_success(&v);
+                        upload_local_bests();
+                        close_front_door();
+                    }
+                    Err(_) => fd_step("start"),
+                }
+            }
+            Err(e) => fd_err(&e.message),
+        }
+    });
+}
+
+fn fd_submit_name() {
+    let username = dom::input("fdUsername").value().trim().to_string();
+    let (email, code, password) = FD.with(|f| {
+        let f = f.borrow();
+        (f.email.clone(), f.code.clone(), f.password.clone())
+    });
+    if fd_offline_guard() {
+        return;
+    }
+    spawn_local(async move {
+        let b = body(&[
+            ("email", s(&email)),
+            ("code", s(&code)),
+            ("username", s(&username)),
+            ("password", s(&password)),
+        ]);
+        match call("POST", "/api/auth/complete-signup", Some(b)).await {
+            Ok(v) => {
+                on_auth_success(&v);
+                FD.with(|f| *f.borrow_mut() = FrontDoor::default()); // drop the password
+                upload_local_bests();
+                close_front_door();
+            }
+            Err(e) => fd_err(&e.message),
+        }
+    });
+}
+
+/// F12 / Done 22a — a guest's runs follow them onto the account, exactly once.
+///
+/// Only runs with a REAL recorded duration are sent: the leaderboard's
+/// anti-cheat judges a run by its timing, and inventing one to make an old
+/// score fit would be lying to it. Runs recorded before this shipped simply
+/// stay local, which loses the player nothing they can see.
+fn upload_local_bests() {
+    let mut board: Vec<crate::model::BoardEntry> =
+        crate::storage::get_json(crate::model::LB_KEY).unwrap_or_default();
+    let mut changed = false;
+    for e in board.iter_mut() {
+        if e.uploaded || e.duration_ms <= 0.0 || !DIFFICULTIES.contains(&e.level.as_str()) {
+            continue;
+        }
+        submit_run(&e.level, e.streak, e.duration_ms);
+        e.uploaded = true;
+        changed = true;
+    }
+    if changed {
+        crate::storage::set_json(crate::model::LB_KEY, &board);
+    }
+}
+
+pub fn wire_front_door(app: &App) {
+    let _ = app;
+    dom::on_click("fdLogin", || {
+        let email = dom::input("fdEmail").value().trim().to_string();
+        let password = dom::input("fdPassword").value();
+        if fd_offline_guard() {
+            return;
+        }
+        spawn_local(async move {
+            let b = body(&[("identifier", s(&email)), ("password", s(&password))]);
+            match call("POST", "/api/auth/login", Some(b)).await {
+                Ok(v) => {
+                    on_auth_success(&v);
+                    upload_local_bests();
+                    close_front_door();
+                }
+                Err(e) => fd_err(&e.message),
+            }
+        });
+    });
+    dom::on_click("fdCreate", || fd_request_code("signup"));
+    dom::on_click("fdForgot", || fd_request_code("reset"));
+    dom::on_click("fdCodeSubmit", || fd_submit_code());
+    dom::on_click("fdResend", || {
+        let purpose = FD.with(|f| f.borrow().purpose.clone());
+        fd_request_code(&purpose);
+    });
+    dom::on_click("fdBack", || fd_step("start"));
+    dom::on_click("fdPwBack", || fd_step("start"));
+    dom::on_click("fdPwSubmit", || fd_submit_password());
+    dom::on_click("fdNameSubmit", || fd_submit_name());
+    dom::on_click("fdGuest", || close_front_door());
+    dom::on_click("fdPwToggle", || fd_toggle_password("fdPassword", "fdPwToggle"));
+    dom::on_click("fdNewPwToggle", || fd_toggle_password("fdNewPassword", "fdNewPwToggle"));
+    dom::on::<web_sys::Event, _>("fdNewPassword", "input", |_| fd_update_rules());
 }

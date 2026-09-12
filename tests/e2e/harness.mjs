@@ -119,7 +119,9 @@ export async function openApp(browser, base, { lang = null, device = 'se', viewp
   const d = viewport ? { ...DEVICES[device], ...viewport } : DEVICES[device];
   const ctx = await browser.newContext({ viewport: { width: d.width, height: d.height }, deviceScaleFactor: d.dpr, isMobile: d.mobile });
   await ctx.addInitScript(([age, l]) => {
-    localStorage.setItem('byear_agegate_v1', age);
+    // A falsy age means NO stored verdict: a true first launch, which is the
+    // only state where the birthday prompt and the front door can be observed.
+    if (age) localStorage.setItem('byear_agegate_v1', age);
     if (l) localStorage.setItem('spellgame.locale', l);
     // Learner surfaces default ON in the app (L1/L2 QA pass); the e2e
     // BASELINE pins them off so every legacy spec's first solo serve

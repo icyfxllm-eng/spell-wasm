@@ -31,6 +31,7 @@ pub fn load_prefs(state: &mut AppState) {
     // here; a parent turning it off afterwards is honoured, because
     // save_prefs then persists false against kid=true.
     state.extra_attempts = p.extra_attempts || (state.kid && !p.extra_attempts_seen);
+    state.front_door_seen = p.front_door_seen;
 }
 
 pub fn save_prefs(state: &AppState) {
@@ -47,6 +48,7 @@ pub fn save_prefs(state: &AppState) {
         remind: state.remind,
         remind_time: Some(state.remind_time.clone()),
         extra_attempts: state.extra_attempts,
+        front_door_seen: state.front_door_seen,
         // Any save is a genuine choice, so the one-time Kid Mode default
         // never fires again and a parent's "off" survives a relaunch.
         extra_attempts_seen: true,

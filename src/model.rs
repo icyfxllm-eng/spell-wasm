@@ -32,6 +32,12 @@ pub struct Prefs {
     /// second try from a young speller. This records "the preference has
     /// been genuinely chosen", so the one-time default can be applied
     /// without also overriding a parent who later turns it off.
+    /// CC-ONBOARD-JR F6/F12 — the first-launch front door has been shown once.
+    /// An install that predates it has no flag and never sees it: F12 forbids
+    /// dropping an existing guest onto a login screen at update time, so the
+    /// door opens only from a FIRST-launch birthday verdict, which sets this.
+    #[serde(rename = "frontDoorSeen", default)]
+    pub front_door_seen: bool,
     #[serde(rename = "extraAttemptsSeen", default)]
     pub extra_attempts_seen: bool,
 }
@@ -113,6 +119,15 @@ pub struct BoardEntry {
     pub level: String,
     pub timed: bool,
     pub ts: f64,
+    /// How long the run took. CC-ONBOARD-JR F12: a guest's runs follow them onto
+    /// an account, and the leaderboard's anti-cheat judges a run by its timing —
+    /// so a run with no recorded duration is kept local rather than sent with an
+    /// invented one. Absent in entries saved before this shipped.
+    #[serde(rename = "durationMs", default)]
+    pub duration_ms: f64,
+    /// Already posted to The Climb, so a second sign-in cannot post it twice.
+    #[serde(default)]
+    pub uploaded: bool,
 }
 
 pub const PREFS_KEY: &str = "byear_prefs_v1";
@@ -156,6 +171,8 @@ pub struct AppState {
     /// CC-ONBOARD-JR F3 — words served in the current Jr Climb run (session
     /// only). Words 1-20 are Easy, 21 on Medium; reset when the run ends.
     pub jr_climb_served: u32,
+    /// Mirrors `Prefs.front_door_seen` (CC-ONBOARD-JR F6).
+    pub front_door_seen: bool,
     pub answered: bool,
     /// True while an IME composition is open (compositionstart seen, no matching
     /// compositionend yet). Guards the shared submit/advance path so we never
@@ -231,6 +248,7 @@ impl Default for AppState {
             climb_band: 0,
             climb_prog: 0,
             jr_climb_served: 0,
+            front_door_seen: false,
             answered: false,
             composing: false,
             rate: 0.9,

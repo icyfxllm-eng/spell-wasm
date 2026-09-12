@@ -23,14 +23,27 @@ export async function run(browser, base, suite) {
 
       // Play one correct answer in the default English Climb run.
       await page.click('#orbWrap');
-      await page.waitForTimeout(500);
+      // Wait for the word to exist, not for a guess at how long serving one takes.
+      await page.waitForFunction(() => {
+        const w = window.__spelltest && window.__spelltest.currentWord();
+        return typeof w === 'string' && w.length > 0;
+      }, null, { timeout: 8000 }).catch(() => {});
       const word = await page.evaluate(() => window.__spelltest.currentWord());
       assert(word && word.length > 0, 'no current word from seam');
       const base_only = [...word.toLowerCase()].every((c) => /[a-z'-]/.test(c));
       if (!base_only) return; // accented first word — grading covered by unit tests
       await typeOnKeyboard(page, word.toLowerCase());
       await page.click('#checkBtn');
-      await page.waitForTimeout(400);
+      // The marker appears once the answer is graded and the pace recomputed,
+      // which is asynchronous. A fixed 400 ms measured the machine: under a
+      // full-suite load the render outran the sleep and the assertion below read
+      // a marker that had not been drawn yet. Wait for the state itself. The
+      // wait is allowed to expire so the assertion still reports the real
+      // failure ("marker did not appear") rather than a Playwright timeout.
+      await page.waitForFunction(
+        () => !document.getElementById('ghostPace').classList.contains('btn-hide'),
+        null, { timeout: 8000 },
+      ).catch(() => {});
 
       // The marker is now visible, shows the ghost emoji, and reads AHEAD (the
       // real answer beat the 8s ghost to the first word).

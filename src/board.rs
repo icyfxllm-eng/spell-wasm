@@ -65,6 +65,11 @@ pub fn save_score(state: &mut AppState, name: &str, streak: u32) {
         level,
         timed: state.timed,
         ts: js_sys::Date::now(),
+        // The real elapsed time of this run. Recorded so a guest who later makes
+        // an account can have it posted to The Climb honestly (F12); zero would
+        // mean "unknown", and unknown runs are never posted.
+        duration_ms: (js_sys::Date::now() - state.run_start_ms).max(0.0),
+        uploaded: false,
     });
     board.sort_by(|a, b| b.streak.cmp(&a.streak));
     board.truncate(10);
