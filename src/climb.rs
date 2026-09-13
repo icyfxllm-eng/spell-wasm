@@ -374,9 +374,9 @@ fn wire(_app: &App) {
     });
     // The board opens for everyone, guests included. D1 (signed 2026-09-02) keeps
     // the standings exactly as they were, and ghost.rs reaches them through this
-    // click. CC-ONBOARD-JR F7 / Done 22a would send a guest to the front door
-    // instead; the two decisions conflict, so this stays as D1 has it until Eric
-    // picks one -- the spec's own stop-and-ask rule.
+    // click. CC-ONBOARD-JR F7 / Done 22a asked to send a guest to the front door
+    // instead; Eric resolved the conflict for D1 (2026-09-12): guests keep the
+    // leaderboard. Posting a run to it still requires an account.
     dom::on_click("climbBtn", || open_leaderboard());
     // The leaderboard's entrance since F1 took the home tile out of the row.
     // Closes the account sheet first rather than stacking a second scrim on it

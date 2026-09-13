@@ -321,6 +321,16 @@ anything.
   `{experience, locked, source}` from the stored `kid` and `age_locked` rather
   than storing that shape.
 
+## Signed during Phase B review (Eric, 2026-09-12)
+
+- **Guest leaderboard — SIGNED: D1 wins.** "use D1, guests keep the
+  leaderboard." CC-ONBOARD-JR F7 item 6 and Done 22a asked that a guest who
+  opens the Climb leaderboard be routed to the front door; D1 (signed
+  2026-09-02) keeps the standings exactly as they were. The two conflicted, the
+  gate caught it (the hub-row e2e), and the branch kept D1 pending this call.
+  Guests view the board; posting a run still requires an account. The rest of
+  Done 22a stands: a guest's runs land on a new account exactly once.
+
 ## Decisions this inventory asks Eric for
 
 1. **§0.1** — confirm Spell Jr loses Hard in the base game and the Climb.
