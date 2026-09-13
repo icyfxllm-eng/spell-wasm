@@ -21,10 +21,14 @@ signed file, the earlier ruling is named.
 | §8 Done | **Map to repo equivalents.** The commands below name a `spell-core` crate, `src/screens/`, `.spec.ts` Playwright files and `scripts/symbol-scan.mjs`; none exist. Use the `spell_wasm` crate, `tests/e2e/specs/*.mjs`, and the gate's existing machine-translation scan. The existing audio router (`api::play_word`) is "the one resolver", since CC-PLAYER-CONTRACT and CC-BUILD219-FIXES are not in the repo. |
 | Branch | **Built on top of `cc-onboard-jr`**, because D4's Jr gating consumes that branch's resolver. |
 
-Still open: D7 and D8 (Phase B), D11 (deferred), and **which languages get a
-native-speaker gloss audit first**. Today zero of the fourteen gloss files in
-`config/gloss/` are `audited`, so Phase A builds a screen that can answer
-nothing in production until the first audit lands (Phase C blocker).
+**Launch audit languages — SIGNED (Eric, 2026-09-13): Spanish and Japanese
+first.** Review packets are prepared per language; the sign-off itself stays a
+human act, as `config/gloss/README.md` requires: a named native speaker reviews
+the rows, then the file gets `"audited": true` and that person's name.
+
+Still open: D7 and D8 (Phase B), D11 (deferred). Until the Spanish and Japanese
+files are signed, zero of the fourteen gloss files in `config/gloss/` are
+`audited`, so the screen answers nothing in production (Phase C blocker).
 
 ## Phase A build notes (2026-09-12)
 

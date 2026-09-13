@@ -429,6 +429,28 @@ mod tests {
         assert_eq!(spell_it_verdict(Experience::Standard, AccessLevel::Full, "es", "not-a-bank-word"), SpellVerdict::Decline);
     }
 
+    /// Eric, 2026-09-13: English lookup reaches all four tiers. Every English
+    /// meaning above Medium in the Spanish table must answer for a standard
+    /// player, be findable by typing it, and still be refused to Spell Jr.
+    #[test]
+    fn translate_english_lookup_reaches_every_tier() {
+        let _a = Audit::on(&["es"]);
+        let above_medium: Vec<String> = crate::translate::audited_rows("es")
+            .into_iter()
+            .map(|(_, c)| c)
+            .filter(|c| bank_tier_of("en", c).is_some_and(|t| t == TIERS[2] || t == TIERS[3]))
+            .collect();
+        assert!(!above_medium.is_empty(), "the Spanish table carries English meanings above Medium");
+        for c in &above_medium {
+            assert_eq!(resolve_target(Experience::Standard, "en", c).as_deref(), Some(c.as_str()),
+                       "{c}: an English meaning above Medium must answer");
+            assert!(search(Experience::Standard, "en", "es", c).iter().any(|s| &s.concept == c),
+                    "{c}: findable by typing the English word");
+            assert!(resolve_target(Experience::Junior, "en", c).is_none(),
+                    "{c}: Spell Jr is still held to Easy + Medium");
+        }
+    }
+
     /// Done #7 (I3, I7) — over the REAL bank: every answer the screen can
     /// render is the single (concept, language) lookup and a real bank word,
     /// and every answerable word can be found by typing it (the inverse of I2).

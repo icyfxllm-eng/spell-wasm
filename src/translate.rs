@@ -210,18 +210,24 @@ pub fn source_rows(lang: &str) -> Vec<(String, String)> {
     audited_rows(lang)
 }
 
-/// English words by lowercase form, easy then medium, first occurrence kept --
-/// the same answer the old linear scan gave, as a lookup.
+/// English words by lowercase form across ALL FOUR tiers, easy first, first
+/// occurrence kept.
+///
+/// Eric, 2026-09-13: English lookup reaches every tier. It used to stop at
+/// Medium, so basic words the English bank files under Hard -- teacher,
+/// morning, country, hundred -- could never answer in any pair involving
+/// English, and nine rows of each launch language's gloss table were dead.
+/// Spell Jr is unaffected: its Easy + Medium band is applied by the Jr
+/// resolver in translate_screen.rs, separately from this lookup.
 fn en_by_concept() -> &'static std::collections::HashMap<String, String> {
     static I: std::sync::OnceLock<std::collections::HashMap<String, String>> = std::sync::OnceLock::new();
     I.get_or_init(|| {
         let mut m = std::collections::HashMap::new();
-        for w in crate::words::tier_for(crate::consts::EN, "easy")
-            .iter()
-            .chain(crate::words::tier_for(crate::consts::EN, "medium").iter())
-        {
-            let shown = w.split('|').next().unwrap_or(w);
-            m.entry(shown.to_ascii_lowercase()).or_insert_with(|| shown.to_string());
+        for tier in crate::experience::TIERS {
+            for w in crate::words::tier_for(crate::consts::EN, tier) {
+                let shown = w.split('|').next().unwrap_or(w);
+                m.entry(shown.to_ascii_lowercase()).or_insert_with(|| shown.to_string());
+            }
         }
         m
     })
