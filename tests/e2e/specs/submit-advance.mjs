@@ -327,4 +327,31 @@ export async function run(browser, base, suite) {
     assert(a.length === 4 && a.every((w) => w && w.length), 'daily produced empty words');
     assertEq(JSON.stringify(a), JSON.stringify(b), 'daily word sequence not deterministic across runs');
   });
+
+  // ---- Solo: the orb skip and the pending auto-advance --------------------
+  await suite.test('A12: solo orb-skip — the next word is not replaced when the old timer fires', async () => {
+    // The solo correct answer sets the same DELAY timer Daily does. Skip ahead
+    // with the orb, start typing the next word, and outlast the old timer: the
+    // word on screen and the letters typed into it must both survive.
+    const { ctx, page } = await openApp(browser, base, { lang: 'en' });
+    try {
+      await page.click('#orbWrap');
+      await page.waitForFunction(() => !!window.__spelltest.currentWord(), null, { timeout: 4000 });
+      const w1 = await currentWord(page);
+      assert(typeable(w1), `A12 needs a base-typeable word, got "${w1}"`);
+      await typeWord(page, w1);
+      await page.click('#checkBtn');
+      await page.waitForFunction(() => document.getElementById('feedback').className.includes('good'), null, { timeout: 3500 });
+      await page.click('#orbWrap'); // skip
+      await page.waitForFunction((p) => window.__spelltest.currentWord() !== p, w1, { timeout: 800 });
+      const w2 = await currentWord(page);
+      await page.waitForFunction(() => !document.getElementById('gameKeyboard').classList.contains('locked'), null, { timeout: 3000 });
+      const first = w2.toLowerCase()[0];
+      await page.click(`#gameKeyboard .kb-key[data-k="${first}"]`);
+      await page.waitForTimeout(DELAY + 600);
+      assertEq(await currentWord(page), w2, 'the old timer replaced the word skipped to');
+      const box = await page.$eval('#spellbox', (e) => e.textContent.trim());
+      assertEq(box, first, 'the letter typed into the skipped-to word was wiped');
+    } finally { await ctx.close(); }
+  });
 }

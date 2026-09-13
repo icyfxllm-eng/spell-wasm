@@ -1,6 +1,6 @@
 # TEST-REPORT — Web E2E (app build)
 
-**109/109 passed** across 24 areas.
+**112/112 passed** across 25 areas.
 
 ## playhub — 10/10
 - ✅ hub: opens from the meta corner and renders registry tiles
@@ -73,6 +73,10 @@
 - ✅ front_door_is_the_only_sign_in_surface
 - ✅ front_door_refuses_a_locked_junior_even_programmatically
 
+## jr-climb — 2/2
+- ✅ jr_climb_run_steps_to_medium_at_word_21_once
+- ✅ jr_climb_leaderboard_guard_has_a_control
+
 ## sayit — 2/2
 - ✅ say-it: launcher hidden by default (flag off = zero diff)
 - ✅ say-it: still hidden with flag ON but no native bridge (not iOS)
@@ -84,7 +88,7 @@
 - ✅ spell-aloud: mic hidden by default (flag off = zero diff)
 - ✅ spell-aloud: still hidden with flag ON but no native bridge (not iOS)
 
-## submit-advance — 11/11
+## submit-advance — 12/12
 - ✅ A1: exactly one visible submit control at each width (320→1280)
 - ✅ A2: the submit control sits in-viewport and never overlaps the input
 - ✅ A3: submit fires exactly once — via button click and via Enter
@@ -96,6 +100,7 @@
 - ✅ A9: language matrix — es is coming-soon-gated; en async path proves agnosticism
 - ✅ A10: open IME composition blocks validation until compositionend
 - ✅ A11: daily sequence is deterministic for a fixed date+language
+- ✅ A12: solo orb-skip — the next word is not replaced when the old timer fires
 
 ## attempts-shields — 8/8
 - ✅ flag OFF (explicit): extra-attempts row + shield HUD hidden

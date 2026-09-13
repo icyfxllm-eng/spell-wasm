@@ -173,6 +173,10 @@ pub struct AppState {
     pub jr_climb_served: u32,
     /// Mirrors `Prefs.front_door_seen` (CC-ONBOARD-JR F6).
     pub front_door_seen: bool,
+    /// Counts every word `next_word` serves (session only). The post-answer
+    /// auto-advance timer is pinned to the serve it was set for, so an orb skip
+    /// leaves it a no-op instead of replacing the next word mid-typing.
+    pub word_serial: u64,
     pub answered: bool,
     /// True while an IME composition is open (compositionstart seen, no matching
     /// compositionend yet). Guards the shared submit/advance path so we never
@@ -249,6 +253,7 @@ impl Default for AppState {
             climb_prog: 0,
             jr_climb_served: 0,
             front_door_seen: false,
+            word_serial: 0,
             answered: false,
             composing: false,
             rate: 0.9,

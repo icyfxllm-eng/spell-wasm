@@ -1455,7 +1455,11 @@ pub fn next_word(app: &App) {
     // where there are characters to write.
     reflect_ink_offer(app);
 
-    app.borrow_mut().answered = false;
+    {
+        let mut s = app.borrow_mut();
+        s.answered = false;
+        s.word_serial += 1;
+    }
     // CC-ATTEMPTS-SHIELDS: a new word refreshes its one-retry budget (I4/PD5).
     crate::attempts::start_word(&mut app.borrow_mut());
     update_shield_hud(app);
@@ -1852,7 +1856,7 @@ fn on_correct(app: &App) {
         show_meaning(app, word, cur_lang);
     }
 
-    schedule(app, CORRECT_DELAY_MS, |app| next_word(app));
+    schedule_auto_advance(app);
 }
 
 /// Feedback color state on the spell box (F1). GLOBAL — identical in every
@@ -2991,6 +2995,31 @@ fn daily_auto_advance(app: &App, at_idx: usize) {
     }
 }
 
+/// The solo and head-to-head counterpart of `daily_auto_advance`: after a
+/// correct answer, move on CORRECT_DELAY_MS later -- but only if the word this
+/// timer was set for is still the one on screen. The orb is an instant skip
+/// that does not cancel the timer, so without the pin a player who skipped
+/// ahead had the next word replaced under them 2.2 s after the previous answer,
+/// mid-typing, and the old word's letters then graded as a miss.
+fn schedule_auto_advance(app: &App) {
+    let at_serial = app.borrow().word_serial;
+    schedule(app, CORRECT_DELAY_MS, move |app| {
+        let go = {
+            let s = app.borrow();
+            auto_advance_due(s.word_serial, at_serial, s.answered)
+        };
+        if go {
+            next_word(app);
+        }
+    });
+}
+
+/// Pure so the rule can be tested without a DOM: advance only the serve the
+/// timer was set for, and only while that word stands answered.
+fn auto_advance_due(serial_now: u64, at_serial: u64, answered: bool) -> bool {
+    serial_now == at_serial && answered
+}
+
 fn render_daily_bar(app: &App) {
     let s = app.borrow();
     let n = s.daily.words.len();
@@ -3362,7 +3391,7 @@ fn versus_on_correct(app: &App) {
     dom::set_text("feedback", &praise);
     dom::el("feedback").set_class_name("feedback good");
     show_meaning(app, word, cur_lang);
-    schedule(app, CORRECT_DELAY_MS, |app| next_word(app));
+    schedule_auto_advance(app);
 }
 
 /// A miss ends the active player's turn; hand off to the other player, or show
@@ -3416,6 +3445,30 @@ fn show_versus_result(app: &App) {
     dom::set_text("vsResultTitle", &title);
     dom::set_text("vsResultMsg", &msg);
     dom::add_class("vsResultScrim", "show");
+}
+
+#[cfg(test)]
+mod auto_advance_tests {
+    //! A stale post-answer timer must not replace a word the player skipped to.
+    use super::auto_advance_due;
+
+    #[test]
+    fn advances_the_answered_word_it_was_set_for() {
+        assert!(auto_advance_due(7, 7, true));
+    }
+
+    #[test]
+    fn a_skip_to_the_next_word_leaves_the_timer_a_no_op() {
+        // Answered word 7, tapped the orb: word 8 is live and unanswered.
+        assert!(!auto_advance_due(8, 7, false));
+        // Even if word 8 is already answered too, it has its own timer.
+        assert!(!auto_advance_due(8, 7, true));
+    }
+
+    #[test]
+    fn an_unanswered_word_is_never_advanced() {
+        assert!(!auto_advance_due(7, 7, false));
+    }
 }
 
 #[cfg(test)]
