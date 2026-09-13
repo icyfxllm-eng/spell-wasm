@@ -620,7 +620,6 @@
   .gd-sec{margin:12px 0}.gd-h{font-weight:700;margin-bottom:4px}.gd-row{padding:3px 0;opacity:.9}
 .gd-chip{display:inline-block;background:rgba(128,128,128,.15);border-radius:8px;padding:2px 8px;margin:2px}
 #gdashAnswer{width:80px;text-align:center}
-.tr-word{font-size:44px;font-weight:700;text-align:center;margin:14px 0}
 .cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:4px;margin:10px 0}
 .cal-cell{padding:6px 2px;border-radius:8px;background:rgba(128,128,128,.08);border:none;display:flex;flex-direction:column;align-items:center;cursor:pointer}
 .cal-cell.today{outline:2px solid rgba(100,150,255,.7)}
@@ -1312,6 +1311,56 @@
   #frontDoor[data-step="code"] .fd-code,
   #frontDoor[data-step="password"] .fd-pw,
   #frontDoor[data-step="name"] .fd-name{display:flex}
+  /* CC-TRANSLATE-SCREEN F1 — two cards, one spine, nothing that moves. Card
+     heights are RESERVED in em, so they scale with Big Text but never with
+     content. Suggestions and the picker overlay the spine instead of pushing
+     it, and the fan-out link hides with visibility so its line is always held.
+     Together these keep the action row's y offset constant (I1). */
+  .tr-screen{position:fixed;inset:0;background:var(--bg,#0e1420);z-index:60;display:none;overflow:auto;min-height:0;
+    padding:max(12px,env(safe-area-inset-top)) 16px max(20px,env(safe-area-inset-bottom))}
+  .tr-screen.show{display:block}
+  .tr-top{display:flex;align-items:center;gap:10px;max-width:480px;margin:0 auto 10px}
+  .tr-top h2{margin:0;font-size:18px}
+  .tr-spine{position:relative;display:flex;flex-direction:column;gap:14px;max-width:480px;margin:0 auto;font-size:16px}
+  body.big-text .tr-spine{font-size:22px}
+  .tr-spine button,.tr-spine input{font:inherit}
+  .tr-card{box-sizing:border-box;height:9.5em;padding:.7em .9em;border-radius:16px;background:var(--panel);
+    border:1px solid var(--edge);display:flex;flex-direction:column;justify-content:space-between}
+  .tr-card-head,.tr-card-body{display:flex;align-items:center;gap:10px}
+  .tr-card-head{justify-content:space-between}
+  .tr-chip{border:1px solid var(--edge);background:transparent;color:var(--ink);border-radius:999px;
+    padding:.2em .8em;font-size:.85em;cursor:pointer}
+  .tr-dir{font-size:.72em;color:var(--muted-2);letter-spacing:.06em;text-transform:uppercase}
+  /* CC-LOCALE-TYPESET F2: tracking prises Arabic joins apart and detaches
+     Devanagari matras, so the labels drop it for every joining script. */
+  .tr-dir:lang(ar),.tr-dir:lang(fa),.tr-dir:lang(ur),.tr-dir:lang(hi){letter-spacing:normal}
+  .tr-word{flex:1;min-width:0;font-size:2em;font-weight:700;line-height:1.2;color:var(--ink);
+    white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .tr-input{background:transparent;border:none;outline:none;padding:0;width:100%}
+  .tr-input:focus-visible{box-shadow:0 2px 0 var(--amber)}
+  .tr-audio{flex:0 0 auto;width:2.4em;height:2.4em;border-radius:50%;border:1px solid var(--edge);
+    background:transparent;color:var(--ink);cursor:pointer}
+  .tr-audio[data-state="loading"]{opacity:.6}
+  .tr-audio[data-state="unavailable"]{opacity:.35}
+  .tr-sub{min-height:1.5em;font-size:.8em;color:var(--muted-2);display:flex;align-items:center;gap:8px;overflow:hidden}
+  .tr-translit{font-size:12.5px}
+  .tr-translit-toggle{margin-inline-start:auto;border:none;background:transparent;color:var(--muted-2);font-size:.9em;cursor:pointer}
+  .tr-swap{position:absolute;inset-inline-start:50%;top:calc(9.5em + 7px);transform:translate(-50%,-50%);z-index:2;
+    width:2.4em;height:2.4em;border-radius:50%;border:1px solid var(--edge);background:var(--bg,#0e1420);color:var(--ink);cursor:pointer}
+  [dir="rtl"] .tr-swap{transform:translate(50%,-50%)}
+  .tr-swap[aria-disabled="true"]{opacity:.45}
+  .tr-suggest,.tr-picker{position:absolute;left:0;right:0;top:calc(9.5em + 4px);z-index:3;background:var(--panel);
+    border:1px solid var(--edge);border-radius:14px;max-height:19em;overflow:auto;min-height:0;padding:4px}
+  .tr-suggest button,.tr-picker button{display:block;width:100%;text-align:start;padding:.55em .8em;border:none;
+    background:transparent;color:var(--ink);cursor:pointer;border-radius:10px}
+  .tr-suggest .tr-decline,.tr-picker-title{padding:.6em .8em;color:var(--muted-2);font-size:.9em}
+  .tr-fanout{display:block;margin:10px auto 0;max-width:480px}
+  .tr-fanout.off{visibility:hidden}
+  .tr-actions{display:flex;gap:8px;max-width:480px;margin:8px auto 0}
+  .tr-actions .btn{flex:1.4}
+  .tr-actions .ghost{flex:1}
+  .tr-note{min-height:1.5em;max-width:480px;margin:6px auto 0;text-align:center;font-size:.85em;color:var(--muted-2)}
+  .tr-extras{max-width:480px;margin:14px auto 0;display:flex;flex-direction:column;gap:6px}
   .scrim{position:fixed;inset:0;background:rgba(10,8,18,.72);backdrop-filter:blur(4px);display:none;place-items:center;padding:20px;z-index:30;overflow:auto}
   .scrim.show{display:grid}
 
@@ -2557,12 +2606,58 @@
   <button id="repOpenBtn" hidden aria-hidden="true"></button>
   <button id="calOpenBtn" hidden aria-hidden="true"></button>
   <button id="trOpenBtn" hidden aria-hidden="true"></button>
-  <div class="scrim" id="trScrim">
-    <div class="modal rep-modal">
-      <h3 data-i18n="tr.name">Spell Translator</h3>
-      <div id="trBody"></div>
-      <button class="btn btn-check" id="trDone" data-i18n="settings.done" style="width:100%;margin-top:16px">Done</button>
+  <!-- CC-TRANSLATE-SCREEN F1 — the two-card spine. A SCREEN, not a scrim: title,
+       source card, swap on the seam, target card, fan-out link, action row, and
+       below it the daily word, Passport and Home Pair (Eric, 2026-09-12), placed
+       under the action row so nothing above can move it (I1). Card heights are
+       reserved in CSS, suggestions and the language picker overlay the spine
+       instead of pushing it, and every state is inline -- no modal, no toast. -->
+  <div class="tr-screen" id="trScreen" role="dialog" aria-modal="true" aria-labelledby="trTitle">
+    <div class="tr-top">
+      <button class="ghost mode-exit" id="trExit" aria-label="Exit">✕</button>
+      <h2 id="trTitle" data-i18n="tr.name">Spell Translator</h2>
     </div>
+    <div class="tr-spine" id="trSpine">
+      <section class="tr-card" id="trSrcCard" data-role="source">
+        <div class="tr-card-head">
+          <button type="button" class="tr-chip" id="trSrcLang" aria-haspopup="listbox"></button>
+          <span class="tr-dir" data-i18n="tr.from">from</span>
+        </div>
+        <div class="tr-card-body">
+          <input class="tr-word tr-input" id="trSrcInput" type="text" autocomplete="off" autocorrect="off" autocapitalize="none" spellcheck="false" placeholder="Type a word" data-i18n-ph="tr.search" />
+          <button type="button" class="tr-audio" id="trSrcAudio" data-state="ready" aria-label="Hear it">🔊</button>
+        </div>
+        <div class="tr-sub" id="trSrcSub" aria-live="polite"></div>
+      </section>
+      <button type="button" class="tr-swap" id="trSwap" aria-label="Swap languages">⇅</button>
+      <section class="tr-card" id="trTgtCard" data-role="target">
+        <div class="tr-card-head">
+          <button type="button" class="tr-chip" id="trTgtLang" aria-haspopup="listbox"></button>
+          <span class="tr-dir" data-i18n="tr.to">to</span>
+        </div>
+        <div class="tr-card-body">
+          <div class="tr-word" id="trTgtWord"></div>
+          <button type="button" class="tr-audio" id="trTgtAudio" data-state="ready" aria-label="Hear it">🔊</button>
+        </div>
+        <div class="tr-sub" id="trTgtSub" aria-live="polite">
+          <span class="tr-translit" id="trTgtTranslit"></span>
+          <button type="button" class="tr-translit-toggle" id="trTranslitToggle" aria-pressed="false" data-i18n="tr.translit">Aa ↔ 拼</button>
+        </div>
+      </section>
+      <div class="tr-suggest" id="trSuggest" role="listbox" hidden></div>
+      <div class="tr-picker" id="trPicker" role="listbox" hidden>
+        <div class="tr-picker-title" data-i18n="tr.pickLang">Choose a language</div>
+        <div id="trPickerList"></div>
+      </div>
+    </div>
+    <button type="button" class="ghost tr-fanout off" id="trFanout" data-i18n="tr.fanout">See it in every language</button>
+    <div class="tr-actions" id="trActions">
+      <button class="btn btn-check" id="trSpell" data-i18n="tr.spellIt">Now spell it</button>
+      <button class="ghost" id="trSave" data-i18n="tr.save">Save to My Words</button>
+      <button class="ghost" id="trClear" data-i18n="tr.clear">Clear</button>
+    </div>
+    <div class="tr-note" id="trNote" aria-live="polite"></div>
+    <div class="tr-extras" id="trExtras"></div>
   </div>
   <div class="scrim" id="calScrim">
     <div class="modal rep-modal">

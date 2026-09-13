@@ -167,6 +167,22 @@ pub fn install(app: &App) {
         set(&obj, "dailyActive", cb.into_js_value());
     }
 
+    #[cfg(not(feature = "web"))]
+    {
+        // CC-TRANSLATE-SCREEN fixtures. Marks a language's REAL gloss rows as
+        // audited -- it cannot author a row -- so the screen's state matrix can
+        // render before any native speaker has signed a gloss file.
+        let cb = Closure::<dyn Fn(String, bool)>::new(move |lang: String, on: bool| {
+            crate::translate::seam_set_audited(&lang, on);
+        });
+        set(&obj, "translateAudit", cb.into_js_value());
+        let cb = Closure::<dyn Fn(String, String, String) -> String>::new(
+            move |src: String, have: String, lack: String| {
+                crate::translate_screen::seam_gap(&src, &have, &lack).unwrap_or_default()
+            },
+        );
+        set(&obj, "translateGap", cb.into_js_value());
+    }
     let _ = js_sys::Reflect::set(win.as_ref(), &JsValue::from_str("__spelltest"), obj.as_ref());
     web_sys::console::warn_1(&"[testseam] window.__spelltest installed (DEV build only)".into());
 }

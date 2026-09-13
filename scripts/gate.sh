@@ -72,6 +72,20 @@ if grep -rniE "fn (pair_table|loanword_packs)\b" src/ | grep -v "^src/translate.
   echo "GATE FAIL: audited-table accessors exist outside the one resolver"; exit 1
 fi
 
+echo "== gate: Translate screen -- no platform speech API (I5), no per-language branch"
+# CC-TRANSLATE-SCREEN I5: audio goes through the one router (api::play_word_with);
+# a direct speech call here would be a second resolver and a synthetic fallback.
+if grep -nE "SpeechSynthesis|speechSynthesis|AVSpeechSynthesizer|TextToSpeech|native_lang::speak" src/translate_ui.rs src/translate_screen.rs; then
+  echo "GATE FAIL: the Translate screen reaches a platform speech API directly (I5)"; exit 1
+fi
+# Single-source doctrine: nothing on this screen may special-case a language.
+# Per-language behaviour comes from data (the registry, the gloss tables).
+if grep -nE "lang *== *\"[a-z]{2,3}\"|== *crate::consts::(EN|ES|FR|DE|PT|PL|RU|VI|FIL|SW|JA|KO|ZH|AR|HI)\b|\"(en|es|fr|de|pt|pl|ru|vi|fil|sw|ja|ko|zh|ar|hi)\" *=>" src/translate_ui.rs src/translate_screen.rs; then
+  echo "GATE FAIL: the Translate screen branches on a specific language"; exit 1
+fi
+# Done #1/#7 mapped: the screen's rules and the real-bank traceability property.
+cargo test --lib translate_ -q > "$LOG.translate" 2>&1 || { echo "GATE FAIL: Translate screen rules"; tail -20 "$LOG.translate"; exit 1; }
+
 echo "== gate: composite pin law (CC-BANK-COMPLETE F2/D2)"
 python3 tools/bank/verify_pins.py || { echo "GATE FAIL: composite pin law violated"; exit 1; }
 

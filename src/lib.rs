@@ -29,6 +29,8 @@ mod translate; // TR D5 STRONG (Eric 2026-08-05: "for the app not the website")
 #[cfg(not(feature = "web"))]
 mod translate_ui; // the WHOLE suite is behind the platform wall
 #[cfg(not(feature = "web"))]
+mod translate_screen; // CC-TRANSLATE-SCREEN rules (D5 signed: app-only)
+#[cfg(not(feature = "web"))]
 mod spellpic;
 #[cfg(not(feature = "web"))]
 mod spellpic_export; // CC-FINALE feature 2 (clean export renderer)

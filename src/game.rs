@@ -1267,11 +1267,15 @@ thread_local! {
     /// One-shot, surface-agnostic "spell this word next" request (today:
     /// the translator's Door 1). Served by next_word through the standard
     /// flow — normal scoring, normal learner recording, no owner marker.
-    static REQUESTED_WORD: std::cell::RefCell<Option<String>> = const { std::cell::RefCell::new(None) };
+    static REQUESTED_WORD: std::cell::RefCell<Option<(String, String)>> = const { std::cell::RefCell::new(None) };
 }
 
-pub fn request_word(entry: String) {
-    REQUESTED_WORD.with(|c| *c.borrow_mut() = Some(entry));
+/// Queue `entry` as the next word, served in `lang`. CC-TRANSLATE-SCREEN F10:
+/// a Translate result is often in a language other than the player's study
+/// language, so the word carries its own -- exactly as the Daily Challenge
+/// serves its locale -- and the study language is never changed.
+pub fn request_word(entry: String, lang: String) {
+    REQUESTED_WORD.with(|c| *c.borrow_mut() = Some((entry, lang)));
 }
 
 pub fn next_word(app: &App) {
@@ -1350,11 +1354,11 @@ pub fn next_word(app: &App) {
             s.cur_lang = s.lang.clone();
             s.cur_tier = length_tier(&w).to_string();
             s.word = w;
-        } else if let Some(w) = REQUESTED_WORD.with(|c| c.borrow_mut().take()) {
+        } else if let Some((w, lang)) = REQUESTED_WORD.with(|c| c.borrow_mut().take()) {
             // zh entries are "pinyin|hanzi": tier from the TYPED side; the
             // full entry flows on so the existing split point handles it.
             let typed = w.split_once('|').map(|(p, _)| p.to_string()).unwrap_or_else(|| w.clone());
-            s.cur_lang = s.lang.clone();
+            s.cur_lang = if crate::consts::is_builtin_lang(&lang) { lang } else { s.lang.clone() };
             s.cur_tier = length_tier(&typed).to_string();
             s.word = w;
         } else {

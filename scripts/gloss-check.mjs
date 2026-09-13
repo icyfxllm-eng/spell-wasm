@@ -40,7 +40,16 @@ for (const f of fs.readdirSync(dir).filter((x) => x.endsWith(".json"))) {
   if (`${lang}.json` !== f) problems.push(`${f}: lang field '${lang}' does not match the filename`);
   const p = pool(lang);
   if (!p.size) problems.push(`${f}: no word bank for '${lang}'`);
+  // CC-TRANSLATE-SCREEN I3: one word per concept per language. The target
+  // lookup takes the concept and returns the word that carries it; with two
+  // words for one concept, HashMap order would pick the answer. Zero exist
+  // today -- this keeps it that way rather than trusting that it stays so.
+  const wordForConcept = new Map();
   for (const [word, concept] of Object.entries(doc.rows || {})) {
+    if (wordForConcept.has(concept)) {
+      problems.push(`${f}: concept '${concept}' is carried by both '${wordForConcept.get(concept)}' and '${word}' -- a target lookup would be arbitrary (I3)`);
+    }
+    wordForConcept.set(concept, word);
     rows++;
     if (!p.has(word)) problems.push(`${f}: '${word}' is not a live ${lang} bank word`);
     if (!en.has(concept)) problems.push(`${f}: concept '${concept}' is not a live EN bank word`);

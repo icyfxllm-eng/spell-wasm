@@ -98,6 +98,12 @@ struct GlossDoc {
     lang: String,
     audited: bool,
     rows: std::collections::HashMap<String, String>,
+    /// concept -> word, built once at load. scripts/gloss-check.mjs guarantees
+    /// one word per concept per language, so this is a lookup, never a choice:
+    /// the target a player sees is the single (concept, language) row
+    /// (CC-TRANSLATE-SCREEN I3), not whichever entry a HashMap yields first.
+    #[serde(skip)]
+    by_concept: std::collections::HashMap<String, String>,
 }
 
 fn gloss_docs() -> &'static std::collections::HashMap<&'static str, GlossDoc> {
@@ -125,7 +131,8 @@ fn gloss_docs() -> &'static std::collections::HashMap<&'static str, GlossDoc> {
             ("hi", include_str!("../config/gloss/hi.json")),
             ("zh", include_str!("../config/gloss/zh.json")),
         ] {
-            if let Ok(doc) = serde_json::from_str::<GlossDoc>(raw) {
+            if let Ok(mut doc) = serde_json::from_str::<GlossDoc>(raw) {
+                doc.by_concept = doc.rows.iter().map(|(w, c)| (c.clone(), w.clone())).collect();
                 m.insert(lang, doc);
             }
         }
@@ -133,17 +140,98 @@ fn gloss_docs() -> &'static std::collections::HashMap<&'static str, GlossDoc> {
     })
 }
 
+// Test and e2e builds only: mark a language's REAL gloss rows as audited, so the
+// Translate screen's state matrix can run before any native speaker has signed a
+// file. It flips the flag on rows that already exist -- it cannot author a row --
+// so the closed space holds even here. Compiled out of production builds.
+#[cfg(any(test, feature = "testseam"))]
+thread_local! {
+    static AUDIT_OVERRIDE: std::cell::RefCell<std::collections::HashSet<String>> =
+        std::cell::RefCell::new(std::collections::HashSet::new());
+}
+
+#[cfg(any(test, feature = "testseam"))]
+pub fn seam_set_audited(lang: &str, on: bool) {
+    AUDIT_OVERRIDE.with(|o| {
+        let mut o = o.borrow_mut();
+        if on {
+            o.insert(lang.to_string());
+        } else {
+            o.remove(lang);
+        }
+    });
+}
+
+fn doc_audited(lang: &str, doc: &GlossDoc) -> bool {
+    #[cfg(any(test, feature = "testseam"))]
+    if AUDIT_OVERRIDE.with(|o| o.borrow().contains(lang)) {
+        return true;
+    }
+    let _ = lang;
+    doc.audited
+}
+
 /// I2's single resolver: a language is visible iff its gloss file is
 /// AUDITED. One check, no per-tool conditionals.
 pub fn gloss_audited(lang: &str) -> bool {
-    lang == crate::consts::EN || gloss_docs().get(lang).map(|d| d.audited).unwrap_or(false)
+    lang == crate::consts::EN || gloss_docs().get(lang).map(|d| doc_audited(lang, d)).unwrap_or(false)
+}
+
+/// Every (stored entry, concept) row of an AUDITED language, sorted so any
+/// consumer iterates deterministically. Empty for a dark language.
+pub fn audited_rows(lang: &str) -> Vec<(String, String)> {
+    let Some(doc) = gloss_docs().get(lang) else { return Vec::new() };
+    if !doc_audited(lang, doc) {
+        return Vec::new();
+    }
+    let mut v: Vec<(String, String)> = doc.rows.iter().map(|(w, c)| (w.clone(), c.clone())).collect();
+    v.sort();
+    v
+}
+
+/// Every (entry, concept) a player can pick in `lang` as a translation SOURCE.
+/// A glossed language offers its audited rows. English is the pivot, so its
+/// pickable words are the concepts the audited languages carry, resolved back
+/// to the English bank word. The Translate screen searches these rows rather
+/// than the whole bank: they are exactly the words it can answer.
+pub fn source_rows(lang: &str) -> Vec<(String, String)> {
+    if lang == crate::consts::EN {
+        let mut concepts = std::collections::BTreeSet::new();
+        for l in glossed_languages() {
+            for (_, c) in audited_rows(l) {
+                concepts.insert(c);
+            }
+        }
+        return concepts
+            .into_iter()
+            .filter_map(|c| word_for_concept(lang, &c).map(|w| (w, c)))
+            .collect();
+    }
+    audited_rows(lang)
+}
+
+/// English words by lowercase form, easy then medium, first occurrence kept --
+/// the same answer the old linear scan gave, as a lookup.
+fn en_by_concept() -> &'static std::collections::HashMap<String, String> {
+    static I: std::sync::OnceLock<std::collections::HashMap<String, String>> = std::sync::OnceLock::new();
+    I.get_or_init(|| {
+        let mut m = std::collections::HashMap::new();
+        for w in crate::words::tier_for(crate::consts::EN, "easy")
+            .iter()
+            .chain(crate::words::tier_for(crate::consts::EN, "medium").iter())
+        {
+            let shown = w.split('|').next().unwrap_or(w);
+            m.entry(shown.to_ascii_lowercase()).or_insert_with(|| shown.to_string());
+        }
+        m
+    })
 }
 
 /// Every language that can render a fan-out row today.
 pub fn glossed_languages() -> Vec<&'static str> {
     let mut out = vec![crate::consts::EN];
     let mut rest: Vec<&'static str> =
-        gloss_docs().iter().filter(|(_, d)| d.audited).map(|(l, _)| *l).collect();
+        gloss_docs().iter().filter(|(l, d)| doc_audited(l, d)).map(|(l, _)| *l).collect();
     rest.sort_unstable();
     out.extend(rest);
     out
@@ -153,18 +241,13 @@ pub fn glossed_languages() -> Vec<&'static str> {
 /// audited. This is the fan-out's row lookup and Match's answer lookup.
 pub fn word_for_concept(lang: &str, concept: &str) -> Option<String> {
     if lang == crate::consts::EN {
-        return crate::words::tier_for(lang, "easy")
-            .iter()
-            .chain(crate::words::tier_for(lang, "medium").iter())
-            .map(|w| w.split('|').next().unwrap_or(w))
-            .find(|w| w.eq_ignore_ascii_case(concept))
-            .map(|w| w.to_string());
+        return en_by_concept().get(&concept.to_ascii_lowercase()).cloned();
     }
     let doc = gloss_docs().get(lang)?;
-    if !doc.audited {
+    if !doc_audited(lang, doc) {
         return None;
     }
-    doc.rows.iter().find(|(_, c)| c.as_str() == concept).map(|(w, _)| w.clone())
+    doc.by_concept.get(concept).cloned()
 }
 
 /// The concept key IS the sense-locked English gloss (the pivot's own
@@ -179,7 +262,7 @@ pub fn concept_of(lang: &str, word: &str) -> Option<String> {
         return Some(display_word(word).to_lowercase());
     }
     let doc = gloss_docs().get(lang)?;
-    if !doc.audited {
+    if !doc_audited(lang, doc) {
         return None; // rows exist, but no native has signed them yet
     }
     doc.rows.get(word).cloned()
