@@ -196,6 +196,52 @@ class CodeFlow(unittest.TestCase):
                          "no signup code is issued for an address that already has an account")
 
 
+class CodesNeverReachTheLog(unittest.TestCase):
+    """I8 -- with no email provider configured, which is production today, the
+    stub sender must print neither the code nor the address. A log holding
+    sign-in codes next to the addresses they unlock is a credential store."""
+
+    def setUp(self):
+        db.init()
+        c = db.conn()
+        for table in ("email_codes", "email_sends"):
+            c.execute(f"DELETE FROM {table}")
+        c.commit()
+        auth._rl.clear()
+        self._key = os.environ.pop("RESEND_API_KEY", None)
+        self.c = _client()
+
+    def tearDown(self):
+        if self._key is not None:
+            os.environ["RESEND_API_KEY"] = self._key
+
+    def test_stub_email_logs_neither_code_nor_address(self):
+        import contextlib
+        import io
+        import re
+
+        for purpose in ("signup", "reset"):
+            if purpose == "reset":
+                # A reset only sends to a real account, so make one first.
+                db.conn().execute(
+                    "INSERT INTO users(username,username_lc,email,email_lc,pw_hash,created_at) "
+                    "VALUES(?,?,?,?,?,?)",
+                    ("logtest", "logtest", "secret.person@example.com", "secret.person@example.com",
+                     auth.hash_password("Example5%"), time.time()),
+                )
+                db.conn().execute("DELETE FROM email_sends")
+                db.conn().commit()
+            buf = io.StringIO()
+            with contextlib.redirect_stdout(buf):
+                self.c.post("/api/auth/request-code",
+                            json={"email": "secret.person@example.com", "purpose": purpose})
+            out = buf.getvalue()
+            self.assertNotIn("secret.person", out, f"{purpose}: the address reached the log: {out!r}")
+            self.assertIsNone(re.search(r"(?<!\d)\d{6}(?!\d)", out),
+                              f"{purpose}: a six-digit code reached the log: {out!r}")
+            self.assertTrue(out.strip(), f"{purpose}: a skipped send must still be visible in the log")
+
+
 class PhoneAuthIsGone(unittest.TestCase):
     """F12 / I12 — zero phone fields, zero SMS paths."""
 

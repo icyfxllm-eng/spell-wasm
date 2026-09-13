@@ -185,10 +185,6 @@ pub fn open_account_sheet() {
     dom::add_class("accountScrim", "show");
 }
 
-fn set_auth_err(msg: &str) {
-    dom::set_text("authErr", msg);
-}
-
 fn on_auth_success(v: &serde_json::Value) {
     if let Some(t) = v.get("token").and_then(|t| t.as_str()) {
         set_token(t);
@@ -196,35 +192,7 @@ fn on_auth_success(v: &serde_json::Value) {
     if let Some(u) = v.get("user").and_then(|u| serde_json::from_value::<ClimbUser>(u.clone()).ok()) {
         set_user(Some(u));
     }
-    dom::remove_class("authScrim", "show");
     reflect_auth();
-}
-
-fn do_signup(_app: &App) {
-    let username = dom::input("authUsername").value();
-    let email = dom::input("authEmail").value();
-    let password = dom::input("authPassword").value();
-    set_auth_err("");
-    spawn_local(async move {
-        let b = body(&[("username", s(&username)), ("email", s(&email)), ("password", s(&password))]);
-        match call("POST", "/api/auth/signup", Some(b)).await {
-            Ok(v) => on_auth_success(&v),
-            Err(e) => set_auth_err(&e.message),
-        }
-    });
-}
-
-fn do_login(_app: &App) {
-    let identifier = dom::input("authIdentifier").value();
-    let password = dom::input("authLoginPassword").value();
-    set_auth_err("");
-    spawn_local(async move {
-        let b = body(&[("identifier", s(&identifier)), ("password", s(&password))]);
-        match call("POST", "/api/auth/login", Some(b)).await {
-            Ok(v) => on_auth_success(&v),
-            Err(e) => set_auth_err(&e.message),
-        }
-    });
 }
 
 fn do_logout() {
@@ -277,6 +245,12 @@ fn do_delete_account() {
 // ---------- leaderboard ----------
 
 fn open_leaderboard() {
+    // I2: a locked junior reaches no leaderboard surface. climbBtn is hidden in
+    // Spell Jr, but ghost.rs clicks it programmatically and a hidden button still
+    // dispatches, so the refusal lives here rather than in the button's visibility.
+    if dom::doc().body().map(|b| b.class_list().contains("kid")).unwrap_or(false) {
+        return;
+    }
     let tab = TAB.with(|t| {
         let mut t = t.borrow_mut();
         if t.is_empty() {
@@ -386,16 +360,23 @@ pub fn submit_run(difficulty: &str, chain: u32, duration_ms: f64) {
 
 // ---------- wiring ----------
 
-fn wire(app: &App) {
+fn wire(_app: &App) {
     // Open account: sign-in form when logged out, settings when logged in.
+    // Signed in: the account sheet. Signed out: the front door, which is now the
+    // only sign-in surface (CC-ONBOARD-JR F7) -- the old signup modal posted to a
+    // route that answers 410, so it was a dead end inside this very build.
     dom::on_click("accountBtn", || {
         if is_logged_in() {
             open_account_sheet();
         } else {
-            set_auth_err("");
-            dom::add_class("authScrim", "show");
+            open_front_door();
         }
     });
+    // The board opens for everyone, guests included. D1 (signed 2026-09-02) keeps
+    // the standings exactly as they were, and ghost.rs reaches them through this
+    // click. CC-ONBOARD-JR F7 / Done 22a would send a guest to the front door
+    // instead; the two decisions conflict, so this stays as D1 has it until Eric
+    // picks one -- the spec's own stop-and-ask rule.
     dom::on_click("climbBtn", || open_leaderboard());
     // The leaderboard's entrance since F1 took the home tile out of the row.
     // Closes the account sheet first rather than stacking a second scrim on it
@@ -403,24 +384,6 @@ fn wire(app: &App) {
     dom::on_click("acctClimb", || {
         dom::remove_class("accountScrim", "show");
         open_leaderboard();
-    });
-
-    // Auth modal: toggle login/signup, submit, close.
-    dom::on_click("authToLogin", || dom::toggle_class("authScrim", "login-mode", true));
-    dom::on_click("authToSignup", || dom::toggle_class("authScrim", "login-mode", false));
-    {
-        let a = app.clone();
-        dom::on_click("authSignupBtn", move || do_signup(&a));
-    }
-    {
-        let a = app.clone();
-        dom::on_click("authLoginBtn", move || do_login(&a));
-    }
-    dom::on_click("authClose", || dom::remove_class("authScrim", "show"));
-    dom::on::<web_sys::Event, _>("authScrim", "click", |e| {
-        if dom::is_self_target(&e, "authScrim") {
-            dom::remove_class("authScrim", "show");
-        }
     });
 
     // Account settings modal.
@@ -526,6 +489,13 @@ fn fd_offline_guard() -> bool {
 }
 
 pub fn open_front_door() {
+    // I1/I2 — the one place the door opens is the one place a child is refused.
+    // Every caller goes through here -- first launch and the account icon -- and a
+    // programmatic click fires even on a hidden button, so no caller present or
+    // future can put an email or password field in front of a Spell Jr player.
+    if dom::doc().body().map(|b| b.class_list().contains("kid")).unwrap_or(false) {
+        return;
+    }
     FD.with(|f| *f.borrow_mut() = FrontDoor::default());
     dom::input("fdEmail").set_value("");
     dom::input("fdPassword").set_value("");

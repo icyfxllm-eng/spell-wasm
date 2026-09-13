@@ -1,6 +1,6 @@
 # TEST-REPORT — Web E2E (app build)
 
-**107/107 passed** across 24 areas.
+**109/109 passed** across 24 areas.
 
 ## playhub — 10/10
 - ✅ hub: opens from the meta corner and renders registry tiles
@@ -64,12 +64,14 @@
 - ✅ spell_jr_shows_no_prices
 - ✅ spellit_guide_shows_once_and_can_be_replayed
 
-## front-door — 5/5
+## front-door — 7/7
 - ✅ front_door_no_credential_field_before_a_verdict
 - ✅ front_door_opens_for_13_plus_and_can_be_walked_past
 - ✅ front_door_never_opens_for_under_13
 - ✅ front_door_never_meets_an_existing_install
 - ✅ front_door_password_checklist_is_live
+- ✅ front_door_is_the_only_sign_in_surface
+- ✅ front_door_refuses_a_locked_junior_even_programmatically
 
 ## sayit — 2/2
 - ✅ say-it: launcher hidden by default (flag off = zero diff)

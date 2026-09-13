@@ -1201,9 +1201,6 @@
   /* The Climb — accounts + leaderboard */
   .modal input[type=email],.modal input[type=password]{width:100%;background:var(--panel-2);border:1.5px solid var(--edge);border-radius:12px;padding:13px;color:var(--ink);font-family:var(--body);font-size:16px;margin-bottom:10px}
   .modal input[type=email]:focus,.modal input[type=password]:focus{outline:none;border-color:var(--amber)}
-  .auth-login{display:none}
-  #authScrim.login-mode .auth-signup{display:none}
-  #authScrim.login-mode .auth-login{display:block}
   .climb-tabs{display:flex;gap:6px;justify-content:center;margin-bottom:12px;flex-wrap:wrap}
   .climb-tab{font-size:12px;padding:7px 12px}
   .climb-tab.on{border-color:var(--amber);color:var(--amber-soft)}
@@ -2135,30 +2132,6 @@
         <button class="btn btn-icon" id="soResultClose" data-i18n="so.close" style="flex:1;border-radius:12px">Close</button>
         <button class="btn btn-check" id="soResultRefresh" data-i18n="so.refresh">Check again</button>
       </div>
-    </div>
-  </div>
-
-  <!-- The Climb: auth (signup/login) modal -->
-  <div class="scrim" id="authScrim">
-    <div class="modal">
-      <div class="auth-signup">
-        <h3 data-i18n="auth.createTitle">Create your account</h3>
-        <p data-i18n="auth.createBlurb">Post your best chains to The Climb. Your email is used only to verify your account and reset your password — never shown to anyone.</p>
-        <input id="authUsername" type="text" maxlength="16" placeholder="username" data-i18n-ph="ph.username" autocomplete="off" autocorrect="off" autocapitalize="none" spellcheck="false" />
-        <input id="authEmail" type="email" placeholder="email" data-i18n-ph="ph.email" autocomplete="off" autocorrect="off" autocapitalize="none" spellcheck="false" />
-        <input id="authPassword" type="password" placeholder="password (8+ characters)" data-i18n-ph="ph.password8" autocomplete="off" />
-        <button class="btn btn-check" id="authSignupBtn" data-i18n="auth.create" style="width:100%">Create account</button>
-        <button class="ghost" id="authToLogin" data-i18n="auth.haveAccount" style="margin-top:8px">Have an account? Log in</button>
-      </div>
-      <div class="auth-login">
-        <h3 data-i18n="auth.welcomeBack">Welcome back</h3>
-        <input id="authIdentifier" type="text" placeholder="username or email" data-i18n-ph="ph.usernameOrEmail" autocomplete="off" autocorrect="off" autocapitalize="none" spellcheck="false" />
-        <input id="authLoginPassword" type="password" placeholder="password" data-i18n-ph="ph.password" autocomplete="off" />
-        <button class="btn btn-check" id="authLoginBtn" data-i18n="auth.login" style="width:100%">Log in</button>
-        <button class="ghost" id="authToSignup" data-i18n="auth.newHere" style="margin-top:8px">New here? Sign up</button>
-      </div>
-      <div class="dob-err" id="authErr"></div>
-      <button class="ghost" id="authClose" data-i18n="auth.close" style="width:100%">Close</button>
     </div>
   </div>
 

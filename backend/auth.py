@@ -340,7 +340,12 @@ def send_email(to: str, subject: str, html: str) -> bool:
         except Exception as e:  # pragma: no cover
             print(f"[climb] email send failed: {e}", flush=True)
             return False
-    print(f"[climb] (stub email) to={to} subject={subject!r}\n{html}", flush=True)
+    # I8: never log the body -- it carries a sign-in code -- and never log the
+    # address, which is personal data. Production has no RESEND_API_KEY today, so
+    # this branch is the live path: printing here would turn the server log into
+    # a list of codes beside the addresses they unlock. Record only that delivery
+    # was skipped, so a missing key is still visible to whoever reads the log.
+    print(f"[climb] email not sent: RESEND_API_KEY is not configured (subject={subject!r})", flush=True)
     return True
 
 

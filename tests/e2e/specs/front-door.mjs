@@ -158,4 +158,38 @@ export async function run(browser, base, suite) {
       assert((await met()).length === 3, `all three rules met, got ${JSON.stringify(await met())}`);
     } finally { await ctx.close(); }
   });
+
+  // F7 — the front door is the ONLY sign-in surface. The old signup modal posted
+  // to a route that now answers 410, so a guest who reached it hit a dead end.
+  await suite.test('front_door_is_the_only_sign_in_surface', async () => {
+    const { ctx, page } = await openApp(browser, base, { lang: 'en' });
+    try {
+      assert(!(await page.evaluate(() => !!document.getElementById('authScrim'))),
+        'the retired signup modal must not exist at all');
+      await page.click('#accountBtn');
+      await page.waitForSelector('#frontDoor.show', { timeout: 5000 });
+      assert(await shown(page, 'fdEmail'), 'a signed-out account tap opens the front door');
+    } finally { await ctx.close(); }
+  });
+
+  // I1/I2 — a locked junior is refused even when something clicks the hidden
+  // buttons for them. ghost.rs does exactly that, so this is not hypothetical.
+  await suite.test('front_door_refuses_a_locked_junior_even_programmatically', async () => {
+    const kidVerdict = JSON.stringify({ verdict: 'kid', checkedAt: 1700000000 });
+    const { ctx, page } = await openApp(browser, base, { lang: 'en', age: kidVerdict });
+    try {
+      await page.evaluate(() => {
+        document.getElementById('climbBtn').click();
+        document.getElementById('accountBtn').click();
+      });
+      // Absence needs time to fail in.
+      await page.waitForTimeout(800);
+      assert(!(await page.evaluate(() => document.getElementById('frontDoor').classList.contains('show'))),
+        'the front door must never open for a Spell Jr player');
+      assert(!(await page.evaluate(() => document.getElementById('climbScrim').classList.contains('show'))),
+        'I2: no leaderboard for a Spell Jr player either, even via a programmatic click');
+      const visible = await visibleAuthFields(page);
+      assert(visible.length === 0, `I2: no email/password field reachable by a child, found ${JSON.stringify(visible)}`);
+    } finally { await ctx.close(); }
+  });
 }
