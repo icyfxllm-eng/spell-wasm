@@ -200,8 +200,13 @@ pub fn calendar() -> bool {
     resolve(stored("calendar").as_deref(), true)
 }
 
+/// CC-TRANSLATE-SCREEN Phase A ships behind this flag. **Default OFF** (Eric,
+/// 2026-09-14: "flag off"): until Phase B's hub placement and naming are signed
+/// and a gloss file is audited, the screen answers nothing, and a tile that
+/// answers nothing is a dead end. Develop with
+/// `localStorage['spell_flag_translate'] = 'on'`.
 pub fn translate() -> bool {
-    resolve(stored("translate").as_deref(), true)
+    resolve(stored("translate").as_deref(), false)
 }
 
 /// CC-PRACTICE — the guided first-contact mode. Default ON (failure-proof,
@@ -308,6 +313,9 @@ mod tests {
         set_test_override(None);
         assert!(ghost_racing() && syllable_replay() && say_it() && photo_list());
         assert!(!word_stories(), "F5 ships dark");
+        assert!(!translate(), "Translate Phase A ships dark until Phase B");
+        set_test_override(Some("on"));
+        assert!(translate(), "and the override turns it on");
         set_test_override(Some("off"));
         assert!(!ghost_racing());
         set_test_override(None);

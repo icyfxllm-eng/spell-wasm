@@ -10,13 +10,20 @@
 //   #9 declines (I6), #11 RTL + largest text  ->  this file
 //   #1 / #7 unit + traceability             ->  cargo test --lib translate_
 //   #4 closed space, #5 speech API, #6 no per-language branch -> scripts/gate.sh
+//   The flag itself (OFF, Eric 2026-09-14) cannot be proven here: the hub hides
+//   every iOS-only mode in a browser whatever the flag says, so an absence check
+//   would pass vacuously. It is proven in modes::tests against the live flag
+//   default, and on the iOS Simulator.
 import { openApp, assert } from '../harness.mjs';
 
 const actionsY = (page) => page.evaluate(() =>
   Math.round(document.getElementById('trActions').getBoundingClientRect().top));
 
+// Phase A ships behind a flag that is OFF (Eric, 2026-09-14), so every fixture
+// turns it on first, the way a developer would.
 async function openTranslate(page, audit = []) {
   await page.evaluate((langs) => {
+    localStorage.setItem('spell_flag_translate', 'on');
     for (const l of langs) window.__spelltest.translateAudit(l, true);
   }, audit);
   await page.evaluate(() => document.getElementById('trOpenBtn').click());
@@ -186,6 +193,30 @@ export async function run(browser, base, suite) {
       await typeSource(page, 'a');
       const panel = await page.$eval('#trSuggest', (e) => !e.hidden);
       assert(panel, 'a Spell Jr player can search');
+    } finally { await ctx.close(); }
+  });
+
+  // translate-audio-unavailable / F6 / D12 — the router fails, the control
+  // says so inline, and nothing moves or pops up.
+  await suite.test('translate_audio_unavailable_says_so_inline', async () => {
+    const { ctx, page } = await openApp(browser, base, { lang: 'en' });
+    try {
+      // Registered after the harness's stub, so it wins: every clip fails, and
+      // with the server as the only source there is nothing to fall back to.
+      await ctx.route('**/api/speak**', (r) => r.fulfill({ status: 503, contentType: 'text/plain', body: '' }));
+      await page.evaluate(() => localStorage.setItem('spell_audio_src', 'server-only'));
+      await openTranslate(page, ['es']);
+      await commitFirst(page, 'a');
+      const y0 = await actionsY(page);
+      assert(await page.$eval('#trTgtAudio', (e) => e.dataset.state === 'ready'), 'audio starts ready');
+      await page.click('#trTgtAudio');
+      await page.waitForFunction(() => document.getElementById('trTgtAudio').dataset.state === 'unavailable',
+        null, { timeout: 6000 });
+      assert((await page.$eval('#trNote', (e) => e.textContent.trim())).length > 0, 'the note says audio is unavailable');
+      assert((await page.$eval('#trTgtWord', (e) => e.textContent)).length > 0, 'the word still renders (D12)');
+      assert((await actionsY(page)) === y0, 'the failure does not move the action row (I1)');
+      const popups = await page.$$eval('.scrim.show', (els) => els.map((e) => e.id).filter((id) => id !== 'trScreen'));
+      assert(popups.length === 0, `no modal, alert or sheet opens (saw ${JSON.stringify(popups)})`);
     } finally { await ctx.close(); }
   });
 }

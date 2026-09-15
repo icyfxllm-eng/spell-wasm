@@ -313,12 +313,42 @@ mod tests {
     fn every_live_mode_has_a_flag_that_says_yes() {
         crate::flags::set_test_override(None); // each flag reports its default
         for m in all().iter().filter(|m| m.status == Status::Live) {
+            if DELIBERATELY_DARK.iter().any(|(id, _)| *id == m.id) {
+                continue; // proven separately below: off by default, and a real arm
+            }
             assert!(
                 crate::flags::is_on(&m.id),
                 "{} is LIVE but flags::is_on says off — it will never tile, \
                  which is how calendar/translate/reports stayed invisible",
                 m.id
             );
+        }
+    }
+
+    /// LIVE modes whose flag is off BY A SIGNED RULING, each with its reason.
+    /// The guard above exists because an off flag once hid modes by accident;
+    /// an entry here is the opposite, so it must name who decided and when.
+    const DELIBERATELY_DARK: &[(&str, &str)] = &[
+        ("translate", "Eric, 2026-09-14: Phase A ships behind its flag, off, until Phase B"),
+    ];
+
+    /// A deliberately dark mode is dark by DEFAULT only: its flag has a real
+    /// arm, so turning it on tiles it on device, and leaving it off does not.
+    #[test]
+    fn a_deliberately_dark_mode_tiles_only_when_its_flag_is_on() {
+        let all = all();
+        let enabled_now = || -> Vec<String> {
+            all.iter().map(|m| m.id.clone()).filter(|id| crate::flags::is_on(id)).collect()
+        };
+        for (id, why) in DELIBERATELY_DARK {
+            assert!(all.iter().any(|m| m.id == *id && m.status == Status::Live), "{id} must be a LIVE mode ({why})");
+            crate::flags::set_test_override(None);
+            let off = ids(&visible(&all, &HubCtx { native: true, enabled: enabled_now(), ..ctx() }));
+            assert!(!off.contains(&id.to_string()), "{id} tiles on device with its flag at the default ({why})");
+            crate::flags::set_test_override(Some("on"));
+            let on = ids(&visible(&all, &HubCtx { native: true, enabled: enabled_now(), ..ctx() }));
+            crate::flags::set_test_override(None);
+            assert!(on.contains(&id.to_string()), "{id} does not tile on device with its flag on — got {on:?}");
         }
     }
 

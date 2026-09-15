@@ -1,6 +1,6 @@
 # TEST-REPORT — Web E2E (app build)
 
-**120/120 passed** across 26 areas.
+**121/121 passed** across 26 areas.
 
 ## playhub — 10/10
 - ✅ hub: opens from the meta corner and renders registry tiles
@@ -77,7 +77,7 @@
 - ✅ jr_climb_run_steps_to_medium_at_word_21_once
 - ✅ jr_climb_leaderboard_guard_has_a_control
 
-## translate-screen — 8/8
+## translate-screen — 9/9
 - ✅ translate_state_matrix_holds_the_action_row_still
 - ✅ translate_no_committable_miss
 - ✅ translate_no_target_answer_declines_with_a_way_out
@@ -86,6 +86,7 @@
 - ✅ translate_save_keeps_the_target_word
 - ✅ translate_spell_it_serves_or_declines_honestly
 - ✅ translate_spell_jr_gets_the_screen
+- ✅ translate_audio_unavailable_says_so_inline
 
 ## sayit — 2/2
 - ✅ say-it: launcher hidden by default (flag off = zero diff)

@@ -85,6 +85,26 @@ finding to review, not a silent near-match.
   is not reachable through the screen; it is covered by the Spell it verdict's
   unit test.
 
+## Review readiness (Eric, 2026-09-14: "flag off, light-only packet, use the Simulator")
+
+- **Flag off.** `flags::translate()` defaults off, so no player sees the tile.
+  `modes::tests` names Translate as the one deliberately dark LIVE mode and
+  proves it tiles on device only with its flag on. A browser cannot prove this
+  (the hub hides every iOS-only mode there), so the device run did.
+- **Packet.** `docs/review/translate-phase-a/README.md`, from
+  `node tools/review/translate_packet.mjs`: six reachable states at default and
+  largest text. The app has one look, so one theme. Multi-sense, Jr band decline
+  and cap reached cannot occur and are explained there, not pictured.
+- **Audio unavailable** now has a browser test
+  (`translate_audio_unavailable_says_so_inline`).
+- **Done #10.** `docs/review/translate-phase-a/device/README.md`: the whole loop
+  on the iOS Simulator, test build in the real shell, with what was installed
+  and why.
+- **Seen for review** (both READMEs): Spell it's decline borrows the Calendar's
+  words; an English sense repeats the word; Word of the day and Passport look
+  unstyled; the tile subtitle says "languages you own" against D3; closing left
+  home scrolled to the bottom.
+
 ---
 
 **Status:** REVIEW-GATED. Phase A executable on sign-off of D1–D5; Phases B–C blocked (see §Phases).
