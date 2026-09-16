@@ -121,8 +121,10 @@ fn render(app: &App) {
     );
     set_card_lang("trSrcCard", "trSrcInput", &pair.source);
     set_card_lang("trTgtCard", "trTgtWord", &pair.target);
-    // F3: the sense the player asked for stays visible under their word.
-    dom::set_text("trSrcSub", pair.concept.as_deref().unwrap_or(""));
+    // F3: the sense the player asked for stays visible under their word --
+    // unless it would only repeat that word (English is its own pivot).
+    let src_shown = pair.source_entry.as_deref().map(crate::translate::display_word).unwrap_or_default();
+    dom::set_text("trSrcSub", &rules::sense_line(&src_shown, pair.concept.as_deref()));
     render_target(&pair);
     let empty = pair.source_entry.is_none() && pair.target_entry.is_none();
     let _ = dom::el("trSwap").set_attribute("aria-disabled", if empty { "true" } else { "false" });

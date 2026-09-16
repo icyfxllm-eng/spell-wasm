@@ -174,6 +174,17 @@ pub fn senses(source: &str, entry: &str) -> Vec<String> {
     crate::translate::source_rows(source).into_iter().filter(|(e, _)| e == entry).map(|(_, c)| c).collect()
 }
 
+/// The sense line under the source word, empty when it would only repeat the
+/// word. English is its own pivot, so an English source's sense IS the word --
+/// "cat" under "cat" tells a player nothing. Every other source keeps its gloss.
+pub fn sense_line(shown: &str, concept: Option<&str>) -> String {
+    let c = concept.unwrap_or("");
+    if normalize(c) == normalize(shown) {
+        return String::new();
+    }
+    c.to_string()
+}
+
 /// D9 (signed): the senses to show, and whether a "more" control is needed.
 pub fn visible_senses(all: &[String], expanded: bool) -> (Vec<String>, bool) {
     if expanded || all.len() <= SENSES_INLINE {
@@ -298,6 +309,18 @@ pub fn seam_gap(source: &str, have: &str, lack: &str) -> Option<String> {
 
 #[cfg(test)]
 mod tests {
+    use super::*;
+
+    /// An English source's gloss is the English word, so printing it under the
+    /// word says nothing twice. Every other source keeps its sense.
+    #[test]
+    fn a_sense_that_only_repeats_the_word_is_dropped() {
+        assert_eq!(sense_line("cat", Some("cat")), "");
+        assert_eq!(sense_line("Cat", Some("cat")), "", "case is not a difference");
+        assert_eq!(sense_line("gato", Some("cat")), "cat");
+        assert_eq!(sense_line("cat", None), "");
+    }
+
     use super::*;
     use crate::translate::seam_set_audited;
 

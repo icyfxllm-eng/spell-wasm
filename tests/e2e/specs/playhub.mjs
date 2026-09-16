@@ -10,7 +10,7 @@
 //   <div class="mode-tile info">      an in-round aid — no destination
 //   <div class="mode-tile teaser">    coming_soon (no notify-me hook, D7)
 // A tappable tile that goes nowhere is a lie the markup cannot tell.
-import { openApp, assert, pinBaseline } from '../harness.mjs';
+import { openApp, assert, assertEq, pinBaseline } from '../harness.mjs';
 
 const AGE_KID = JSON.stringify({ verdict: 'kid', checkedAt: 1700000000 });
 
@@ -81,6 +81,20 @@ export async function run(browser, base, suite) {
     } finally { await ctx.close(); }
   });
 
+  // "No chains yet — be the first to start one." was wrapping one word per line.
+  await suite.test('home: the empty chains line reads as a sentence, not a column', async () => {
+    const { ctx, page } = await openApp(browser, base, { lang: 'en' });
+    try {
+      const box = await page.$eval('#boardList li.empty', (e) => {
+        const r = e.getBoundingClientRect();
+        const line = parseFloat(getComputedStyle(e).lineHeight) || 20;
+        return { width: Math.round(r.width), height: Math.round(r.height), line: Math.round(line) };
+      });
+      assert(box.width > 200, `the line gets the card's width, not the rank column (got ${box.width}px)`);
+      assert(box.height <= box.line * 3, `and wraps at most three lines (got ${box.height}px)`);
+    } finally { await ctx.close(); }
+  });
+
   await suite.test('hub: tiles are localized with no new copy (es)', async () => {
     const { ctx, page } = await openApp(browser, base, { lang: 'es' });
     try {
@@ -99,6 +113,38 @@ export async function run(browser, base, suite) {
       const enNames = { practice: 'Practice', def_match: 'Definition Match' };
       const localized = t.some((x) => enNames[x.mode] && x.name !== enNames[x.mode]);
       assert(localized, 'no tile localized to es — the catalog is not being reached');
+    } finally { await ctx.close(); }
+  });
+
+  // The hub is taller than a phone screen. It used to let the wheel scroll the
+  // PAGE behind it, so closing dropped the player at the bottom of home.
+  await suite.test('hub: scrolling the hub never scrolls the page behind it', async () => {
+    // Short viewport so the hub's own content overflows, as it does on a phone.
+    const { ctx, page } = await openApp(browser, base, { lang: 'en', viewport: { width: 375, height: 320 } });
+    try {
+      const pageY = () => page.evaluate(() => Math.round(window.scrollY));
+      const before = await pageY();
+      await page.click('#playHubBtn');
+      await page.waitForSelector('#playHub.show', { timeout: 4000 });
+      const overflows = await page.evaluate(() => {
+        const h = document.getElementById('playHub');
+        return h.scrollHeight > h.clientHeight;
+      });
+      assert(overflows, 'this viewport must make the hub overflow, or the test proves nothing');
+      await page.mouse.move(180, 200);
+      for (let i = 0; i < 6; i++) { await page.mouse.wheel(0, 200); await page.waitForTimeout(40); }
+      await page.waitForTimeout(250);
+      const after = await page.evaluate(() => ({
+        hub: Math.round(document.getElementById('playHub').scrollTop),
+        page: Math.round(window.scrollY),
+      }));
+      assert(after.hub > 0, 'the hub itself scrolls');
+      assertEq(after.page, before, 'the page behind the hub stays where the player left it');
+      await page.click('#playHubClose');
+      await page.waitForTimeout(250);
+      assertEq(await pageY(), before, 'and closing lands back there, not at the bottom of home');
+      assert(!(await page.evaluate(() => document.body.classList.contains('hub-open'))),
+        'the scroll lock is released on close');
     } finally { await ctx.close(); }
   });
 

@@ -231,13 +231,27 @@ pub fn reflect(app: &App) {
     }
 }
 
+/// Lock or release the page behind the hub. `body` carries the class because the
+/// hub's own element cannot stop the page from scrolling under it.
+fn body_scroll_lock(on: bool) {
+    if let Some(body) = dom::doc().body() {
+        let _ = body.class_list().toggle_with_force("hub-open", on);
+    }
+}
+
 pub fn open(app: &App) {
     reflect(app);
     dom::add_class("playHub", "show");
+    // The hub is taller than a phone screen, and without this the wheel/drag
+    // went to the PAGE behind it: the hub stayed put while home scrolled to its
+    // bottom, which is where the player landed after closing. Locking the body
+    // makes the hub itself the scroller for as long as it is open.
+    body_scroll_lock(true);
 }
 
 pub fn close() {
     dom::remove_class("playHub", "show");
+    body_scroll_lock(false);
 }
 
 /// Wire the hub's entry + dismiss once at startup.

@@ -1,12 +1,14 @@
 # TEST-REPORT — Web E2E (app build)
 
-**121/121 passed** across 26 areas.
+**124/124 passed** across 26 areas.
 
-## playhub — 10/10
+## playhub — 12/12
 - ✅ hub: opens from the meta corner and renders registry tiles
 - ✅ hub: word_stories is never rendered (F8 hard gate)
 - ✅ hub: coming_soon renders as a non-tappable teaser
+- ✅ home: the empty chains line reads as a sentence, not a column
 - ✅ hub: tiles are localized with no new copy (es)
+- ✅ hub: scrolling the hub never scrolls the page behind it
 - ✅ hub: A2.3 — Full-only gating (UNPROVABLE while no live mode is Full-tier)
 - ✅ hub: A2.2 — Little Speller sees only kidSafe tiles, zero upsell
 - ✅ placement: offered once, skip stands, no re-offer
@@ -64,11 +66,12 @@
 - ✅ spell_jr_shows_no_prices
 - ✅ spellit_guide_shows_once_and_can_be_replayed
 
-## front-door — 7/7
+## front-door — 8/8
 - ✅ front_door_no_credential_field_before_a_verdict
 - ✅ front_door_opens_for_13_plus_and_can_be_walked_past
 - ✅ front_door_never_opens_for_under_13
 - ✅ front_door_never_meets_an_existing_install
+- ✅ front_door_fields_wear_the_app_styling
 - ✅ front_door_password_checklist_is_live
 - ✅ front_door_is_the_only_sign_in_surface
 - ✅ front_door_refuses_a_locked_junior_even_programmatically

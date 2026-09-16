@@ -1074,6 +1074,7 @@
   .board ol{list-style:none;margin:14px 0 4px}
   .board li{display:grid;grid-template-columns:24px 1fr auto auto;align-items:center;gap:12px;padding:9px 0;border-top:1px solid rgba(255,255,255,.04);font-size:14px}
   .board li:first-child{border-top:none}
+  .board li.empty{display:block;color:var(--muted-2)}
   .board .rank{font-family:var(--mono);color:var(--muted-2);font-size:13px}
   .board li.top .rank{color:var(--amber)}
   .board .who{font-weight:600;letter-spacing:.02em;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;min-width:0}
@@ -1159,7 +1160,12 @@
   .tr-actions .btn{flex:1.4}
   .tr-actions .ghost{flex:1}
   .tr-note{min-height:1.5em;max-width:480px;margin:6px auto 0;text-align:center;font-size:.85em;color:var(--muted-2)}
-  .tr-extras{max-width:480px;margin:14px auto 0;display:flex;flex-direction:column;gap:6px}
+  .tr-extras{max-width:480px;margin:14px auto 0;display:flex;flex-direction:column;align-items:center;gap:8px}
+  .tr-extras:not(:empty){background:var(--panel-2);border:1px solid var(--edge);border-radius:14px;padding:14px}
+  .tr-extras .rep-head{margin:0;color:var(--muted-2);font-size:.8em;text-align:center}
+  .tr-extras .tr-daily{width:auto;padding:8px 18px;border-radius:12px;font-size:1.05em}
+  .tr-extras .tr-passport{color:var(--muted-2);font-size:.8em}
+  .tr-extras .tr-pair{color:var(--muted-2);font-size:.8em;text-align:center}
   .scrim{position:fixed;inset:0;background:rgba(10,8,18,.72);backdrop-filter:blur(4px);display:none;place-items:center;padding:20px;z-index:30;overflow:auto}
   .scrim.show{display:grid}
 
@@ -1174,6 +1180,9 @@
      #playHub rather than all .modal: other dialogs have absolutely-positioned
      children (colour swatches, switches) whose containing block must not move. */
   #playHub .modal{position:relative}
+  /* While the hub is open it owns scrolling; the page behind must not move. */
+  body.hub-open{overflow:hidden}
+  #playHub{overscroll-behavior:contain}
   .hub-x{position:absolute;top:10px;inset-inline-end:12px}
   /* Empty hub: never render a blank box. Reachable today — e.g. a Preview
      language on web filters out every mode. */
@@ -1249,7 +1258,9 @@
   .dob-row select{flex:1;min-width:0;text-align:center}
   .dob-err{min-height:18px;margin-bottom:10px;color:var(--coral);font-size:12.5px;font-weight:600}
   /* The Climb — accounts + leaderboard */
+  .fd-screen input[type=email],.fd-screen input[type=password],
   .modal input[type=email],.modal input[type=password]{width:100%;background:var(--panel-2);border:1.5px solid var(--edge);border-radius:12px;padding:13px;color:var(--ink);font-family:var(--body);font-size:16px;margin-bottom:10px}
+  .fd-screen input[type=email]:focus,.fd-screen input[type=password]:focus,
   .modal input[type=email]:focus,.modal input[type=password]:focus{outline:none;border-color:var(--amber)}
   .climb-tabs{display:flex;gap:6px;justify-content:center;margin-bottom:12px;flex-wrap:wrap}
   .climb-tab{font-size:12px;padding:7px 12px}

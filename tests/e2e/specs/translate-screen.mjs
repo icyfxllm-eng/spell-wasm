@@ -59,13 +59,27 @@ export async function run(browser, base, suite) {
       await page.click('#trSuggest [data-tr-sugg]');
       await page.waitForFunction(() => document.getElementById('trTgtWord').textContent.length > 0, null, { timeout: 4000 });
       assert((await actionsY(page)) === y0, 'filling does not move the action row (I1)');
-      assert((await page.$eval('#trSrcSub', (e) => e.textContent)).length > 0, 'the chosen sense stays visible (F3)');
+      // F3, with the English exception: English is its own pivot, so its sense
+      // would only repeat the word. It shows for every other source (after swap).
+      assert((await page.$eval('#trSrcSub', (e) => e.textContent.trim())) === '',
+        'an English source shows no sense line, because it would repeat the word');
+      // The extras below the action row are a card, not loose text on the page.
+      const extras = await page.$eval('#trExtras', (e) => {
+        const cs = getComputedStyle(e);
+        return { empty: e.children.length === 0, bg: cs.backgroundColor, pad: parseFloat(cs.paddingTop) };
+      });
+      if (!extras.empty) {
+        assert(extras.bg !== 'rgba(0, 0, 0, 0)' && extras.pad > 0,
+          `Word of the day and Passport sit in a card (got ${JSON.stringify(extras)})`);
+      }
 
       const before = await page.evaluate(() => [trSrcLang.textContent, trTgtLang.textContent, trTgtWord.textContent]);
       await page.click('#trSwap');
       const after = await page.evaluate(() => [trSrcLang.textContent, trTgtLang.textContent, trSrcInput.value]);
       assert(after[0] === before[1] && after[1] === before[0], `swap exchanges the languages (F7): ${JSON.stringify([before, after])}`);
       assert(after[2] === before[2], 'and the words: the old answer is the new question');
+      assert((await page.$eval('#trSrcSub', (e) => e.textContent.trim())).length > 0,
+        'a non-English source does show its sense (F3)');
       assert((await actionsY(page)) === y0, 'swapping does not move the action row (I1)');
 
       await page.click('#trClear');

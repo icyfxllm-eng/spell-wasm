@@ -131,6 +131,24 @@ export async function run(browser, base, suite) {
   });
 
   // F9 — the live checklist, on the field that sets a password.
+  // On iOS these rendered as plain white system fields: the styling was scoped
+  // to .modal, and the front door is not a modal.
+  await suite.test('front_door_fields_wear_the_app_styling', async () => {
+    const { ctx, page } = await openApp(browser, base, { lang: 'en', age: ADULT });
+    try {
+      await page.waitForSelector('#frontDoor.show', { timeout: 5000 }).catch(() => {});
+      for (const id of ['fdEmail', 'fdPassword']) {
+        const css = await page.$eval(`#${id}`, (e) => {
+          const cs = getComputedStyle(e);
+          return { bg: cs.backgroundColor, radius: parseFloat(cs.borderTopLeftRadius), color: cs.color };
+        });
+        assert(css.radius >= 8, `#${id} is a rounded app field, not a system box (radius ${css.radius})`);
+        assert(css.bg !== 'rgb(255, 255, 255)' && css.bg !== 'rgba(0, 0, 0, 0)',
+          `#${id} sits on the app's panel colour (got ${css.bg})`);
+      }
+    } finally { await ctx.close(); }
+  });
+
   await suite.test('front_door_password_checklist_is_live', async () => {
     const { ctx, page } = await openApp(browser, base, { lang: 'en', age: '' });
     try {
