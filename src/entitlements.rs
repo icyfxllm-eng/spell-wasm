@@ -48,9 +48,11 @@ use crate::consts::{Edition, BUILTIN_LANGS, EN};
 #[cfg(not(feature = "education"))]
 pub const COMPLETE_PRODUCT_ID: &str = "net.spellgame.complete";
 
-/// FREE_TIER custom-list cap (Feature 8): free users may keep at most this many
-/// custom word lists. The Complete unlock lifts the cap (unlimited).
-pub const FREE_CUSTOM_LISTS_CAP: u32 = 2;
+// CC-MYWORDS-LISTS D6 (Eric, 2026-09-17: "no free limit"): the custom-list cap
+// is gone. It counted LISTS -- the very thing dated lists multiply, roughly one
+// a week -- it was declared here and enforced nowhere, and organizing saved
+// words was never the thing to charge for (the photo feature is gated on its
+// own). Any future free limit counts words, and would be its own named thing.
 
 /// Per-language access is a LEVEL, ordered `None < Preview < Full`. The derived
 /// `Ord` follows declaration order, so `max` gives union semantics for free.
@@ -93,9 +95,6 @@ pub struct EntitlementSet {
     /// (CC-LINEUP-SWAP D2). It is not "free at a lower tier", it is unreachable,
     /// and saying `Preview` would be a lie a caller could act on.
     pub languages: BTreeMap<&'static str, AccessLevel>,
-    /// Max number of custom word lists. `Some(n)` = capped at n; `None` =
-    /// unlimited (the Complete `custom_lists_unlimited` entitlement).
-    pub custom_lists_cap: Option<u32>,
     /// VisionKit photo → word-list OCR (Complete parent-premium).
     pub photo_ocr: bool,
     /// Multiple child profiles (Complete parent-premium).
@@ -110,10 +109,6 @@ impl EntitlementSet {
         self.languages.get(lang).copied().unwrap_or(AccessLevel::None)
     }
 
-    /// The `custom_lists_unlimited` entitlement (cap lifted).
-    pub fn custom_lists_unlimited(&self) -> bool {
-        self.custom_lists_cap.is_none()
-    }
 }
 
 /// **FREE_TIER** — the canonical baseline entitlement, defined HERE in the core
@@ -126,8 +121,7 @@ impl EntitlementSet {
 ///   achievements / widgets / etymology cards ride along outside this map).
 /// - **`Preview` for every OTHER shipped language** — the taster (see
 ///   [`preview_allows`]).
-/// - **custom lists capped at [`FREE_CUSTOM_LISTS_CAP`]**; parent-premium
-///   entitlements all OFF.
+/// - parent-premium entitlements all OFF.
 pub fn free_tier() -> EntitlementSet {
     let mut languages = BTreeMap::new();
     for (code, _, _, _) in BUILTIN_LANGS {
@@ -136,7 +130,6 @@ pub fn free_tier() -> EntitlementSet {
     }
     let mut set = EntitlementSet {
         languages,
-        custom_lists_cap: Some(FREE_CUSTOM_LISTS_CAP),
         photo_ocr: false,
         multiple_profiles: false,
         progress_reports: false,
@@ -260,7 +253,6 @@ fn apply_education_grant(set: &mut EntitlementSet) {
         }
         // Audit-gated-off: left exactly as consumer resolved it (D3(a)).
     }
-    set.custom_lists_cap = None; // unlimited
     set.photo_ocr = true;
     set.multiple_profiles = true;
     set.progress_reports = true;
@@ -282,7 +274,6 @@ fn raise_to_complete(set: &mut EntitlementSet) {
     for level in set.languages.values_mut() {
         *level = (*level).max(AccessLevel::Full);
     }
-    set.custom_lists_cap = None; // unlimited
     set.photo_ocr = true;
     set.multiple_profiles = true;
     set.progress_reports = true;
@@ -408,7 +399,6 @@ mod tests {
         for lang in rtl_blocked_langs() {
             assert_eq!(got.lang_level(lang), AccessLevel::None, "{lang} is RTL-blocked, not Preview");
         }
-        assert_eq!(got.custom_lists_cap, Some(FREE_CUSTOM_LISTS_CAP));
         assert!(!got.photo_ocr && !got.multiple_profiles && !got.progress_reports);
     }
 
@@ -439,7 +429,6 @@ mod tests {
                 assert_eq!(ent.photo_ocr, purchased);
                 assert_eq!(ent.multiple_profiles, purchased);
                 assert_eq!(ent.progress_reports, purchased);
-                assert_eq!(ent.custom_lists_unlimited(), purchased);
             }
         }
     }
@@ -466,17 +455,11 @@ mod tests {
         for lang in rtl_blocked_langs() {
             assert_eq!(ent.lang_level(lang), AccessLevel::None, "{lang} must stay blocked even under AUDIT_MODE");
         }
-        assert!(ent.custom_lists_unlimited());
         assert!(ent.photo_ocr && ent.multiple_profiles && ent.progress_reports);
         // audit ignores purchase surface entirely
         assert_eq!(ent, resolve_consumer(true, &["de"], true));
     }
 
-    #[test]
-    fn custom_list_cap_two_free_unlimited_with_complete() {
-        assert_eq!(resolve_consumer(false, &[], false).custom_lists_cap, Some(2));
-        assert_eq!(resolve_consumer(true, &[], false).custom_lists_cap, None);
-    }
 
     // ---- Preview constants / helpers (Feature 11) ----
     #[test]
@@ -594,8 +577,6 @@ mod prop_tests {
             prop_assert!(bigger.photo_ocr >= base.photo_ocr);
             prop_assert!(bigger.multiple_profiles >= base.multiple_profiles);
             prop_assert!(bigger.progress_reports >= base.progress_reports);
-            // unlimited (None) is "more" than any Some(n); model as bool.
-            prop_assert!(bigger.custom_lists_unlimited() >= base.custom_lists_unlimited());
         }
     }
 
@@ -645,7 +626,6 @@ mod prop_tests {
             }
             // The parent-premium set is unconditional in education.
             prop_assert!(edu.photo_ocr && edu.multiple_profiles && edu.progress_reports);
-            prop_assert!(edu.custom_lists_unlimited());
         }
 
         /// CC-EDITIONS D3(c) — consumer union semantics are untouched by the
@@ -733,7 +713,6 @@ mod prop_tests {
                 let expected = if crate::consts::rtl_blocked(lang) { AccessLevel::None } else { AccessLevel::Full };
                 prop_assert_eq!(audit.lang_level(lang), expected);
             }
-            prop_assert!(audit.custom_lists_unlimited());
         }
     }
 }

@@ -119,6 +119,7 @@ mod yearbook_pdf;
 mod yearbook_ui;
 mod widgets;
 mod word_data;
+mod word_lists; // CC-MYWORDS-LISTS v1 — dated word lists
 mod word_stories;
 mod words;
 mod wordid; // CC-SPELL-RACING G-B: stable content-derived word IDs + list hash
@@ -145,6 +146,16 @@ pub fn start() -> Result<(), JsValue> {
     settings::load_prefs(&mut state);
     importer::load_custom(&mut state);
     misses::load(&mut state);
+    // CC-MYWORDS-LISTS F6: the flat My Words becomes one dated list, once, before
+    // any screen reads either. Idempotent; an empty set produces no list.
+    {
+        let now = js_sys::Date::now();
+        let label = i18n::tp(
+            "lists.savedBefore",
+            &[("date", &word_lists::today_label(now, &i18n::current()))],
+        );
+        word_lists::boot(&state.custom, now, &label);
+    }
     tone_drill::load(&mut state); // CC-ZH-TONE F3
     achievements::load(&mut state);
     stats::load(&mut state);

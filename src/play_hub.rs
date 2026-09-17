@@ -120,9 +120,6 @@ fn ctx(app: &App) -> modes::HubCtx {
     if ent.progress_reports {
         premium.push("progress_reports".to_string());
     }
-    if ent.custom_lists_unlimited() {
-        premium.push("custom_lists_unlimited".to_string());
-    }
     modes::HubCtx {
         kid,
         // PLATFORM gate for the hub: is this iOS at all? (not "is the speech plugin
