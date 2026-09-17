@@ -120,6 +120,7 @@ mod yearbook_ui;
 mod widgets;
 mod word_data;
 mod word_lists; // CC-MYWORDS-LISTS v1 — dated word lists
+mod lists_ui; // CC-MYWORDS-LISTS F1 — the save sheet's destination
 mod word_stories;
 mod words;
 mod wordid; // CC-SPELL-RACING G-B: stable content-derived word IDs + list hash
@@ -223,6 +224,7 @@ pub fn start() -> Result<(), JsValue> {
     }
 
     wire(&app);
+    lists_ui::wire(); // CC-MYWORDS-LISTS F1: the save destination, both sheets
     // CC-IOS-SURFACES (BD-1): widget/intent deep links arrive as location
     // hashes (#daily / #practice). Consume on boot and on change; a no-op
     // when no hash and on the site shell.
@@ -945,6 +947,7 @@ fn wire_import(app: &App) {
             // (saved words persist; save is additive).
             update_import_count();
             dom::set_text("importNote", &i18n::t("import.note"));
+            lists_ui::populate("importDest", "saveWords"); // F1/D1: today's list, or a new one
             dom::add_class("importScrim", "show");
             dom::textarea("importText").focus().ok();
         });
@@ -1018,6 +1021,11 @@ fn wire_import(app: &App) {
         return;
     }
     let count = words.len();
+    // CC-MYWORDS-LISTS F1: the same destination control as the photo sheet.
+    let dest = lists_ui::chosen("importDest");
+    let entries: Vec<(String, String)> =
+        words.iter().map(|w| (w.clone(), speak_lang.clone())).collect();
+    let (list_name, _) = lists_ui::commit(dest, &entries, word_lists::ListSource::Manual);
     let batch = importer::save_words(&mut a.borrow_mut(), words, speak_lang, &[]);
     LAST_IMPORT_BATCH.with(|b| b.set(Some(batch)));
     dom::remove_class("undoImportBtn", "btn-hide");
@@ -1056,7 +1064,7 @@ fn wire_import(app: &App) {
     let mut saved_msg = if blocked > 0 {
         i18n::tp("import.savedSkipped", &[("n", &count.to_string()), ("b", &blocked.to_string())])
     } else {
-        i18n::tp("import.saved", &[("n", &count.to_string())])
+        lists_ui::saved_note(&list_name, count)
     };
     if let Some(note) = extra_note {
         saved_msg.push(' ');

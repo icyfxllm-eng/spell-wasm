@@ -1,6 +1,6 @@
 # TEST-REPORT — Web E2E (app build)
 
-**127/127 passed** across 27 areas.
+**131/131 passed** across 27 areas.
 
 ## playhub — 12/12
 - ✅ hub: opens from the meta corner and renders registry tiles
@@ -80,10 +80,14 @@
 - ✅ jr_climb_run_steps_to_medium_at_word_21_once
 - ✅ jr_climb_leaderboard_guard_has_a_control
 
-## mywords-lists — 3/3
+## mywords-lists — 7/7
 - ✅ mywords_migration_keeps_every_saved_word
 - ✅ mywords_migration_runs_once_across_boots
 - ✅ mywords_migration_of_an_empty_set_makes_no_list
+- ✅ mywords_save_sheet_offers_no_way_to_erase
+- ✅ mywords_second_save_today_joins_todays_list
+- ✅ mywords_choosing_new_list_leaves_the_other_alone
+- ✅ mywords_save_button_follows_the_destination
 
 ## translate-screen — 9/9
 - ✅ translate_state_matrix_holds_the_action_row_still

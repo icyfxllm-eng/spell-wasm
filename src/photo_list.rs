@@ -262,6 +262,7 @@ fn on_recognized(app: &App, val: &wasm_bindgen::JsValue) {
     dom::set_text("photoVoiceNote", &voice_note);
     dom::set_text("photoNote", &i18n::t("photo.note"));
     dom::set_text("feedback", "");
+    crate::lists_ui::populate("photoDest", "photoConfirm"); // F1/D1
     dom::add_class("photoScrim", "show");
 }
 
@@ -488,23 +489,19 @@ fn confirm(app: &App) {
         .filter(|w| crate::photo_import::classify_word(&study, w) == crate::photo_import::WordClass::Custom)
         .cloned()
         .collect();
-    // "Replace my current words" (default ON): a fresh page replaces the last
-    // batch — otherwise every photo session ADDS to "My Words" (the shared save
-    // path is additive) and last week's list keeps cycling into play forever.
-    let replace = dom::doc()
-        .get_element_by_id("photoReplace")
-        .and_then(|e| e.dyn_into::<web_sys::HtmlInputElement>().ok())
-        .map(|c| c.checked())
-        .unwrap_or(false);
-    if replace {
-        crate::importer::clear_words(&mut app.borrow_mut());
-    }
+    // CC-MYWORDS-LISTS F1: the save lands in a list the player chose, and adds
+    // to it. Nothing here can remove a word -- the destructive checkbox that
+    // used to sit above this button is gone.
+    let dest = crate::lists_ui::chosen("photoDest");
+    let entries: Vec<(String, String)> =
+        words.iter().map(|w| (w.clone(), speak_lang.clone())).collect();
+    let (list_name, _) = crate::lists_ui::commit(dest, &entries, crate::word_lists::ListSource::Photo);
     crate::apply_saved_words(app, words, speak_lang, &custom_marks);
     close();
     let msg = if blocked > 0 {
         i18n::tp("import.savedSkipped", &[("n", &count.to_string()), ("b", &blocked.to_string())])
     } else {
-        i18n::tp("import.saved", &[("n", &count.to_string())])
+        crate::lists_ui::saved_note(&list_name, count)
     };
     dom::set_text("feedback", &msg);
     dom::el("feedback").set_class_name("feedback good");

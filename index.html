@@ -1825,7 +1825,9 @@
         <label class="imp-lang"><span data-i18n="import.speakIn">Speak in</span> <select id="importLang" aria-label="Pronunciation language"></select></label>
         <span class="imp-count" id="importCount">0 words</span>
       </div>
-      <button class="btn btn-check" id="saveWords" data-i18n="import.save" style="width:100%">Save my words</button>
+      <label class="imp-lang" style="margin-bottom:8px"><span data-i18n="lists.saveTo">Save to</span>
+        <select id="importDest" aria-label="Save to"></select></label>
+      <button class="btn btn-check" id="saveWords" data-i18n="lists.saveNew" style="width:100%">Save as new list</button>
       <div class="row" style="margin-top:8px">
         <button class="ghost danger" id="clearWords" data-i18n="import.clear">Clear my words</button>
         <button class="ghost" id="cancelImport" data-i18n="import.close" style="margin-inline-start:auto">Close</button>
@@ -2265,11 +2267,9 @@
       <div class="imp-foot">
         <label class="imp-lang"><span data-i18n="import.speakIn">Speak in</span> <select id="photoLang" aria-label="Pronunciation language"></select></label>
       </div>
-      <label class="imp-lang" style="display:flex;align-items:center;gap:8px;margin-top:8px">
-        <input type="checkbox" id="photoReplace" checked />
-        <span data-i18n="photo.replace">Replace my current words</span>
-      </label>
-      <button class="btn btn-check" id="photoConfirm" data-i18n="photo.save" style="width:100%">Save these words</button>
+      <label class="imp-lang" style="margin-top:8px"><span data-i18n="lists.saveTo">Save to</span>
+        <select id="photoDest" aria-label="Save to"></select></label>
+      <button class="btn btn-check" id="photoConfirm" data-i18n="lists.saveNew" style="width:100%">Save as new list</button>
       <div class="row" style="margin-top:8px">
         <button class="ghost" id="photoCancel" data-i18n="import.close" style="margin-inline-start:auto">Close</button>
       </div>

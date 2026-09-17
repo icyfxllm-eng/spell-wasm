@@ -67,16 +67,6 @@
       "harness": "web"
     },
     {
-      "key": "photoReplace",
-      "surface": "photo import",
-      "state": "(local, photo_list)",
-      "effect": "imported words replace the list instead of appending",
-      "test": "maestro:photoReplace",
-      "suppressed_by": null,
-      "harness": "device",
-      "device_note": "Avail::Native/Server — native_lang::available() is false in headless Chromium, so flipping the flag changes nothing a web test could see and the assertion would pass for the wrong reason. Owed a Maestro flow."
-    },
-    {
       "key": "devEntitlements",
       "surface": "dev drawer",
       "state": "(dev only)",
