@@ -16,6 +16,26 @@ Blast radius:
 > is no profile system (C4), CC-SNAP-LIST v1 is not in this repo, and the §8
 > commands name paths this repo does not have. Nothing below is implemented.
 
+## Signed decisions (Eric, 2026-09-17: "Use the recomendations")
+
+App only. Recorded before any code. Where a ruling changes text below, the
+changed line says so.
+
+| # | Ruling |
+|---|---|
+| **D1** | **SIGNED, amended.** The save sheet's default follows the day: if a list was already created today, it defaults to **Add to that list**; otherwise to **a new dated list**. Either is one tap to switch. A worksheet photographed in two pages lands in one list; next week's photo still gets its own. Amends F1 behavior 2. |
+| **D2** | **SIGNED, extended.** A word may live in several lists, never twice in one. Inside an opened list every entry is editable: **fix its text, change its language, remove it (with Undo), add words, copy it to another list.** Editing a word's text starts that word's progress fresh, because it is a different word (C3 keys progress by word + language). Extends F3 behavior 2. |
+| **D3** | **SIGNED, extended.** The newest list is preselected for play. Each list also carries a switch: **Mixed** (default; the existing adaptive order, misses weighted) or **In my order** (entries played in the list's order, which the player sets by dragging; a starred entry moves to the front). **Amends §7:** "In my order" is the one permitted change to how a mode draws words. |
+| **D4** | **SIGNED, extended.** As proposed: whole-list delete only inside an opened list, confirm naming the list and its word count, 8 s Undo, 30-day Recently deleted with Restore and Delete now; single-word removal needs no confirm, only Undo; in Spell Jr, deleting a list needs the parent gate. **Added:** lists older than a few weeks fold into an **Older lists** section, so the screen stays tidy without deleting. |
+| **D5** | **SIGNED.** Translate's "Save to My Words" uses the same sheet, opened already set to today's list (D1), so it is a one-tap confirm with Cancel always present. Nothing reaches My Words from Translate unless the player taps Save; lookups, swap and Now spell it never add a word. |
+| **D6** | **SIGNED in part.** **No cap on lists or words for anyone who has paid.** Organizing words is not a second thing to pay for; the photo feature is already gated on its own (`photo_ocr`). If the free tier needs a limit, it counts **total saved words**, never lists. **Still open:** whether the free tier is limited at all, and at what number. Until then `FREE_CUSTOM_LISTS_CAP` (declared in lists, enforced nowhere) must not be enforced, and is to be removed or re-pointed at words before this ships. |
+| **D7** | **SIGNED.** Players, Spell Jr included, can create lists and add words. They cannot delete a list without the parent gate (D4). Kids keep their own discoveries; parents' lists stay safe. |
+| **Scope** | **SIGNED: per device.** There is no profile system (census C4). Lists, the remembered play selection and Recently deleted are per device, like progress and misses already are. The data model keeps room for a profile id, so if profiles ship, the device's lists move into the first profile with nothing lost. Amends §2, F2 behavior 4, F4 behavior 2, and I6. |
+| **§8** | **Map to repo equivalents**, as signed for CC-TRANSLATE-SCREEN: `cargo test --lib mywords_` on the `spell_wasm` crate, browser specs in `tests/e2e/specs/*.mjs` through `tests/e2e/run.mjs`, and device checks on the iOS Simulator in place of Maestro. |
+
+**Still open before build:** D6's free-tier limit (if any), and CC-SNAP-LIST v1,
+which is not in this repo, so its D8 cannot be marked resolved there.
+
 ## 1. Intent
 
 Parents and teachers get a new spelling list every week. Today, saving a new photo
@@ -37,8 +57,8 @@ destroyed by accident. If that is unclear, stop and ask.
   a flat list, stop and ask.
 * CC-SNAP-LIST owns everything before Save: reading, rows, and flags.
 * CC-TRANSLATE-SCREEN F9 uses the save sheet only if D5 is signed.
-* CC-ONBOARD-JR owns profiles and Jr gating. Lists are scoped per profile and do
-  not change that.
+* CC-ONBOARD-JR owns profiles and Jr gating. Lists are scoped per device (signed
+  Scope ruling: there is no profile system) and do not change that.
 * Scoring, spaced repetition, and missed-words are untouched. See invariant I5.
 
 ## 0. Blocking census
@@ -92,6 +112,8 @@ Save button, and it was checked by default. Saving should only ever add words.
    destructive option of any kind.
 2. Add a destination control above Save, with two choices:
    * New list · Sep 14, 2026, the default, shown with today's local date.
+     *(Amended by D1: when a list was already created today, the default is Add
+     to that list instead.)*
    * Add to a list…, which opens a picker of the profile's lists, newest first.
 3. The button label follows the choice: "Save as new list" or "Add to Sep 7, 2026".
 4. After saving, show a toast ("12 words saved to Sep 14, 2026") with an Open
@@ -118,7 +140,7 @@ is the name, so no one has to type anything.
 3. `createdAt` is stored in UTC. The label is derived once, at creation. Changing
    time zones later does not rename a list.
 4. Players can rename a list, trimmed to 1–40 characters. Names are unique per
-   profile; a clash appends " (2)".
+   device (Scope ruling); a clash appends " (2)".
 
 **Acceptance.**
 
@@ -137,7 +159,10 @@ is the name, so no one has to type anything.
    shows the name, word count, and language chips (distinct languages, maximum 4,
    then "+N").
 2. Tapping a card opens the list: entries in saved order, each with its language
-   chip, plus rename, add words, and delete list.
+   chip, plus rename, add words, and delete list. *(Extended by D2: each entry can
+   be edited, re-languaged, removed with Undo, or copied to another list. Extended
+   by D3: the list's Mixed / In my order switch, drag to reorder, star to front.
+   Extended by D4: lists older than a few weeks fold into Older lists.)*
 3. An All words view at the top shows the union of every list, deduplicated by
    text + language, sorted A→Z within each language.
 4. With zero lists, the empty state offers "Snap a word list" and "Add words".
@@ -158,8 +183,8 @@ not every word ever saved.
 1. When My Words is chosen as a word source, the source picker lets the player
    select one or more lists. The newest list is preselected. An "All words" option
    is also available.
-2. The selection is remembered per profile. If a remembered list is deleted, fall
-   back to the newest list.
+2. The selection is remembered per device (Scope ruling). If a remembered list is
+   deleted, fall back to the newest list.
 3. The selected entries are deduplicated by text + language before being handed to
    the mode. The mode receives the same entry shape it receives today (C5).
 
@@ -226,12 +251,14 @@ disappear or lose progress when this ships.
 * I4 NFC entries. [property test]
 * I5 Progress is independent of lists. Deleting, renaming, or moving a list changes
   no spaced-repetition or missed-word data. [snapshot compare]
-* I6 Profile isolation. No list is readable across profiles. [unit test]
+* I6 Device scope (amended by the Scope ruling). Lists live on the device; the
+  model keeps a profile slot so a future profile system can adopt them without
+  loss. [unit test]
 * I7 Migration is lossless and idempotent. [AT6.1, AT6.2]
 
 ## 6. Decisions
 
-PROPOSED (Eric signs or edits):
+PROPOSED (Eric signs or edits): *all signed 2026-09-17 — see the table at the top.*
 
 * D1 The default destination is a new dated list.
 * D2 A word may exist in several lists. Duplicates are removed only within a list,
@@ -239,7 +266,7 @@ PROPOSED (Eric signs or edits):
 * D3 The newest list is preselected for play.
 * D4 Soft delete with 8 s undo and a 30-day Recently deleted.
 
-Open (do not guess):
+Open (do not guess): *answered 2026-09-17 — see the table at the top; D6's free-tier number remains open.*
 
 * D5 Should Spell Translate's "Save to My Words" (CC-TRANSLATE-SCREEN F9) use this
   same destination sheet? The proposal is yes, with a single sheet, but that edits
@@ -253,7 +280,8 @@ Open (do not guess):
 
 * No folders, tags, colors, or sharing lists between devices or people.
 * No list export or import, and no cross-device sync.
-* No changes to the ingest path, the modes, scoring, or spaced repetition.
+* No changes to the ingest path, the modes, scoring, or spaced repetition — except
+  D3's "In my order", the one signed change to how a mode draws words.
 * No automatic weekly grouping. The date is the organization.
 
 ## 8. Done means
