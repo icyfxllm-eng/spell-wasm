@@ -96,6 +96,7 @@ pub fn open(app: &App) {
     set_pair(pair);
     dom::input("trSrcInput").set_value(&shown);
     hide_overlays();
+    cancel_save();
     dom::set_text("trNote", "");
     render(app);
     dom::add_class("trScreen", "show");
@@ -356,17 +357,44 @@ fn hear(which: &'static str) {
 
 /// F9 / D10: save the TARGET word through the existing My Words write path,
 /// tagged with its own "Speak in" language. No navigation: the player stays.
+/// F9 / D5 (signed): Save opens the same destination control the other two
+/// sheets use, already set to today's list, so it is a one-tap confirm with
+/// Cancel always there. Nothing reaches My Words unless this is confirmed.
 fn save(app: &App) {
+    let pair = pair_of();
+    if pair.target_entry.is_none() {
+        return;
+    }
+    let _ = app;
+    crate::lists_ui::populate("trDest", "trSaveGo");
+    let _ = dom::el("trSaveRow").remove_attribute("hidden");
+    dom::set_text("trNote", "");
+}
+
+fn cancel_save() {
+    let _ = dom::el("trSaveRow").set_attribute("hidden", "");
+}
+
+/// The confirmed save: one word, into the list the player chose.
+fn save_confirm(app: &App) {
     let pair = pair_of();
     let Some(entry) = pair.target_entry.clone() else { return };
     let (words, _blocked) = crate::profanity::filter_allowed(vec![entry]);
     if words.is_empty() {
+        cancel_save();
         dom::set_text("trNote", &crate::profanity::rejection_message().to_string());
         return;
     }
-    crate::importer::save_words(&mut app.borrow_mut(), words, speak_code(&pair.target), &[]);
+    let lang = speak_code(&pair.target);
+    let entries: Vec<(String, String)> =
+        words.iter().map(|w| (w.clone(), lang.clone())).collect();
+    let dest = crate::lists_ui::chosen("trDest");
+    let (list_name, _) = crate::lists_ui::commit(dest, &entries, crate::word_lists::ListSource::Translate);
+    crate::importer::save_words(&mut app.borrow_mut(), words, lang, &[]);
+    crate::lists_ui::refresh_pool(app);
     crate::game::build_source_options(app);
-    dom::set_text("trNote", &t("tr.saved"));
+    cancel_save();
+    dom::set_text("trNote", &crate::lists_ui::saved_note(&list_name, 1));
 }
 
 /// F10: hand the target word to the standard session, in its own language.
@@ -445,6 +473,15 @@ pub fn wire(app: &App) {
     {
         let a = app.clone();
         dom::on_click("trSave", move || save(&a));
+    }
+    {
+        let a = app.clone();
+        dom::on_click("trSaveGo", move || save_confirm(&a));
+    }
+    {
+        dom::on_click("trSaveCancel", cancel_save);
+        // Leaving the screen never leaves a half-finished save behind.
+        dom::on_click("trExit", cancel_save);
     }
     {
         let a = app.clone();

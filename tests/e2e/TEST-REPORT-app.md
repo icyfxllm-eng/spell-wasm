@@ -1,6 +1,6 @@
 # TEST-REPORT — Web E2E (app build)
 
-**140/140 passed** across 27 areas.
+**141/141 passed** across 27 areas.
 
 ## playhub — 12/12
 - ✅ hub: opens from the meta corner and renders registry tiles
@@ -98,7 +98,7 @@
 - ✅ mywords_play_falls_back_when_the_chosen_list_is_deleted
 - ✅ mywords_in_my_order_serves_the_players_order
 
-## translate-screen — 9/9
+## translate-screen — 10/10
 - ✅ translate_state_matrix_holds_the_action_row_still
 - ✅ translate_no_committable_miss
 - ✅ translate_no_target_answer_declines_with_a_way_out
@@ -108,6 +108,7 @@
 - ✅ translate_spell_it_serves_or_declines_honestly
 - ✅ translate_spell_jr_gets_the_screen
 - ✅ translate_audio_unavailable_says_so_inline
+- ✅ translate_cancelling_the_destination_saves_nothing
 
 ## sayit — 2/2
 - ✅ say-it: launcher hidden by default (flag off = zero diff)

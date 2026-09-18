@@ -14,7 +14,7 @@
 //   every iOS-only mode in a browser whatever the flag says, so an absence check
 //   would pass vacuously. It is proven in modes::tests against the live flag
 //   default, and on the iOS Simulator.
-import { openApp, assert } from '../harness.mjs';
+import { openApp, assert, assertEq } from '../harness.mjs';
 
 const actionsY = (page) => page.evaluate(() =>
   Math.round(document.getElementById('trActions').getBoundingClientRect().top));
@@ -168,13 +168,30 @@ export async function run(browser, base, suite) {
       await openTranslate(page, ['es']);
       await commitFirst(page, 'a');
       const target = await page.$eval('#trTgtWord', (e) => e.textContent);
+      const y0 = await actionsY(page);
+      // D5 (signed): Save opens the same destination control the other sheets
+      // use, below the action row, and nothing is saved until it is confirmed.
       await page.click('#trSave');
-      await page.waitForTimeout(150);
-      assert((await page.$eval('#trNote', (e) => e.textContent)).length > 0, 'an inline confirmation');
+      await page.waitForSelector('#trSaveRow:not([hidden])', { timeout: 4000 });
+      assert((await actionsY(page)) === y0, 'the destination row does not move the action row (I1)');
+      let saved = await page.evaluate(() => JSON.parse(localStorage.getItem('byear_custom_v1') || '{}'));
+      assert(!(saved.words || []).includes(target), 'opening the destination saves nothing yet');
+      const dest = await page.$$eval('#trDest option', (o) => o.map((x) => x.textContent));
+      assert(dest.length >= 1 && /new list/i.test(dest[0]), `it offers a dated list (got ${JSON.stringify(dest)})`);
+
+      await page.click('#trSaveGo');
+      await page.waitForTimeout(200);
+      assert((await page.$eval('#trNote', (e) => e.textContent)).length > 0, 'an inline confirmation naming the list');
+      assert(await page.$eval('#trSaveRow', (e) => e.hasAttribute('hidden')), 'the destination row closes');
       assert(await page.$eval('#trScreen', (e) => e.classList.contains('show')), 'no navigation away');
-      const saved = await page.evaluate(() => JSON.parse(localStorage.getItem('byear_custom_v1') || '{}'));
+      saved = await page.evaluate(() => JSON.parse(localStorage.getItem('byear_custom_v1') || '{}'));
       assert((saved.words || []).includes(target), `the TARGET word is saved (D10): ${JSON.stringify(saved.words)}`);
       assert(saved.wordLang && saved.wordLang[target], 'tagged with its own speak-in language');
+      const lists = await page.evaluate(() => JSON.parse(localStorage.getItem('byear_word_lists_v1') || '{"lists":[]}'));
+      const live = lists.lists.filter((l) => !l.deletedAt);
+      assertEq(live.length, 1, 'it landed in one dated list');
+      assertEq(live[0].entries.map((e) => e.text).join(','), target, 'holding the target word');
+      assertEq(live[0].source, 'Translate', 'recorded as coming from Translate');
     } finally { await ctx.close(); }
   });
 
@@ -231,6 +248,24 @@ export async function run(browser, base, suite) {
       assert((await actionsY(page)) === y0, 'the failure does not move the action row (I1)');
       const popups = await page.$$eval('.scrim.show', (els) => els.map((e) => e.id).filter((id) => id !== 'trScreen'));
       assert(popups.length === 0, `no modal, alert or sheet opens (saw ${JSON.stringify(popups)})`);
+    } finally { await ctx.close(); }
+  });
+
+  // D5 — Cancel leaves My Words untouched: nothing is saved without a tap on Save.
+  await suite.test('translate_cancelling_the_destination_saves_nothing', async () => {
+    const { ctx, page } = await openApp(browser, base, { lang: 'en' });
+    try {
+      await openTranslate(page, ['es']);
+      await commitFirst(page, 'a');
+      await page.click('#trSave');
+      await page.waitForSelector('#trSaveRow:not([hidden])', { timeout: 4000 });
+      await page.click('#trSaveCancel');
+      await page.waitForTimeout(150);
+      assert(await page.$eval('#trSaveRow', (e) => e.hasAttribute('hidden')), 'the row closes');
+      const saved = await page.evaluate(() => JSON.parse(localStorage.getItem('byear_custom_v1') || '{}'));
+      assert(!(saved.words || []).length, `My Words is untouched (got ${JSON.stringify(saved.words)})`);
+      const lists = await page.evaluate(() => JSON.parse(localStorage.getItem('byear_word_lists_v1') || '{"lists":[]}'));
+      assertEq(lists.lists.length, 0, 'and no list was created');
     } finally { await ctx.close(); }
   });
 }

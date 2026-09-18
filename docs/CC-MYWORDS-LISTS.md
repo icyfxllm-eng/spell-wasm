@@ -55,6 +55,12 @@ which is not in this repo, so its D8 cannot be marked resolved there.
   adaptive draw and its no-repeat deck. Only *In my order* changes the draw, the
   one signed exception to the non-goal on modes.
 
+**Phase 5 (2026-09-17).** Translate's Save uses the same destination control,
+rendered BELOW the action row so Translate's own I1 (the action row never moves)
+still holds. Save opens it, set to today's list; Save again commits; Cancel, the
+close button and reopening the screen all leave My Words untouched. A word saved
+this way is recorded with source Translate.
+
 ## 1. Intent
 
 Parents and teachers get a new spelling list every week. Today, saving a new photo
