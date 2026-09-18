@@ -7,6 +7,35 @@
 > Stop conditions fired for en, es and ru (E3, E4, E5, E6, E7) and for >5% E2
 > failure (vi, hi). Nothing past Phase 0 is built.
 
+## Census rulings (Eric, 2026-09-18: "use your recommendations")
+
+Recorded before any feature code. Where the census offered options rather than
+one recommendation, the choice below is marked **chosen now** so it can be
+changed.
+
+| Item | Ruling |
+|---|---|
+| **E5 decoys** | **SIGNED.** Each launch language gets a **hand-authored confusion list** drawn from its spelling rules (double letters, ie/ei, silent letters; б/п, о/а, е/и, ться/тся; b/v, ll/y, c/s/z, h). No pooled player data -- that would be new data collection against the zero-telemetry posture. The per-player `reports::confusion_pairs` stays what it is and is never a decoy source (D6). |
+| **E3 audio** | **SIGNED, chosen now.** A word counts as audio-served when its language has a server TTS voice; the live server is not swept word by word (tens of thousands of paid renders). I6 is enforced per language at generation. |
+| **E4 pool** | **SIGNED, chosen now.** The threshold is what the window needs, not a flat 400: targets per puzzle × 20 puzzles × 1.5. At Easy's 8 targets that is 240, which every Latin/Cyrillic launch-candidate tier meets; F-X3's relaxation covers the rest. |
+| **E6 dictionary** | **SIGNED.** English uses `/usr/share/dict/web2` plus a rule rejecting any decoy that is a bank word with a common English inflection (-s, -es, -ed, -ing), since web2 has no plurals. Spanish and Russian have no external list, so they ship **without decoys** under D11. A new wordlist source needs a licensing sign-off first (`data/LICENSES.md` is a stop gate). |
+| **E1/E2 scripts** | **SIGNED.** Not eligible in v1: ja (syllabary), hi (abugida; 98.2% E2 failure), vi (tone marks need several presses; 20.7% E2 failure), ar (right-to-left). ko and zh stay excluded (D4). |
+| **D9** | **SIGNED as recommended:** 20 puzzles or 14 days, whichever is longer; 90 days for the Daily Puzzle. |
+| **D10** | **SIGNED:** "same words don't show up" = F-X3; "hints don't show up" = F-X4 -- a hint never reveals the spelling. Hints are not removed. |
+| **D11** | **SIGNED as recommended:** a language that passes E1–E4 and E7 but fails E5 or E6 ships Spell Search **with no decoys, capped at Easy** (and Jr). Its Spell Cross is unaffected, since crossings use the confusion list's positions, not decoys. |
+| **D12** | **SIGNED, chosen now:** two new hub tiles, **Spell Cross** and **Spell Search**. Both are scored sessions with stars, and a tile is how the hub says "a session". |
+
+**Resulting launch set.**
+
+- **en:** both modes, with decoys.
+- **es, ru:** Spell Cross in full, its crossings weighted by their confusion
+  lists; Spell Search without decoys, Easy and Jr only (D11, no E6 dictionary).
+- **fr, de, pt, pl, fil:** eligible under D4 and D11 -- they pass E1–E4 (new E4
+  rule) and E7, but have no confusion list or dictionary -- so Spell Search
+  without decoys at Easy and Jr, and Spell Cross with unweighted crossings
+  (test 8 does not apply to them until a confusion list exists).
+- **Not in v1:** sw (no blocklist, E7), vi, hi, ja, ar (E1/E2), ko and zh (D4).
+
 ---
 
 ## 0. Intent (read first)
