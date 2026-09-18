@@ -16,7 +16,7 @@ repo; each says why rather than guessing.
 |---|---|---|---|---|---|---|---|---|---|
 | **en** | pass | 3170/3170 (0%) | none | 768 / 801 / 801 / 800 ✓ | unmeasured | **fail** | **weak** | yes | **stop** |
 | **es** | pass | 6097/6097 (0%) | none | **268** / 877 / 1974 / 2978 | unmeasured | **fail** | **fail** | yes | **stop** |
-| **ru** | pass (Cyrillic) | 6210/6210 (0%) | none | **267** / 970 / 1978 / 2995 | unmeasured | **fail** | **fail** | **none** | **stop** |
+| **ru** | pass (Cyrillic) | 6208/6208 (0%) | none | **267** / 970 / 1977 / 2994 | unmeasured | **fail** | **fail** | yes (added 2026-09-18) | **stop** |
 | fr | pass | 6109/6109 (0%) | none | **279** / 889 / 1967 / 2974 | unmeasured | fail | fail | yes | not eligible (E4) |
 | de | pass | 6144/6144 (0%) | none | **272** / 954 / 1967 / 2951 | unmeasured | fail | fail | yes | not eligible (E4) |
 | pt | pass | 6112/6112 (0%) | none | **272** / 908 / 1966 / 2966 | unmeasured | fail | fail | yes | not eligible (E4) |
@@ -48,8 +48,9 @@ repo; each says why rather than guessing.
   (235,976 entries), but it is a 1913 dictionary with no plurals ("cats",
   "emails" are absent), so it cannot prove a decoy like *runs* is not a word.
   es and ru have nothing beyond their own banks.
-- **E7 — no Russian profanity blocklist.** `assets/words/profanity/` has no
-  `ru.txt` (nor sw, hi, ar), and Russian is a launch language.
+- **E7 — Russian now has a blocklist (added 2026-09-18, Eric's list).** It
+  pairs `assets/words/profanity/ru.txt` with a stem layer in `src/profanity.rs`
+  that is tested to block no word in any bank. sw, hi and ar still have none.
 - **E4 — every language but English fails at Easy.** The Easy tiers hold 247–290
   words against the 400 the no-repeat window needs; English holds 768.
 
@@ -72,3 +73,16 @@ repo; each says why rather than guessing.
 2. More than 5% of a bank fails E2: vi (20.7%) and hi (98.2%).
 3. Cells that need more than one key press beyond handled diacritics: hi
    (vowel-sign composition) and vi (tone marks).
+
+## Found while building the Russian blocklist
+
+- **The Russian bank served бля (Hard) and пиздец (Expert).** Both are removed
+  from `assets/words/ru/` (Eric, 2026-09-18: "Lets not use these words").
+- **Other banks contain real profanity** the all-language union catches:
+  Polish *jebany*, *kurwy*; Korean 개새끼, 야동; Vietnamese *đéo*, *cứt*;
+  German *wichsen*; Portuguese *foda*; French *chatte*, *branler*; Japanese
+  ちんこ; among others. Not removed — each language's bank is its reviewer's call.
+- **The older all-language union also blocks innocent words** in the banks:
+  English *am*, *fan*, *pot*; Spanish *hora*, *leche*, *comer*; Swahili *mama*.
+  Because it is matched against every language at once, a parent pasting a
+  Swahili list cannot save *mama*. It predates this work and is left as found.
