@@ -1317,6 +1317,36 @@
      content. Suggestions and the picker overlay the spine instead of pushing
      it, and the fan-out link hides with visibility so its line is always held.
      Together these keep the action row's y offset constant (I1). */
+  /* CC-MYWORDS-LISTS F3 — the My Words screen. Cards, an opened list, and the
+     way back from a delete. Same full-screen shape as Translate. */
+  /* The parent gate and the birthday prompt are last-resort modals: they must
+     sit ABOVE full-screen surfaces (Translate, My Words), or a grown-up cannot
+     answer the question the app just asked. */
+  #parentScrim,#ageScrim{z-index:80}
+  .lists-screen{position:fixed;inset:0;background:var(--bg,#0e1420);z-index:60;display:none;overflow:auto;min-height:0;
+    padding:max(12px,env(safe-area-inset-top)) 16px max(20px,env(safe-area-inset-bottom))}
+  .lists-screen.show{display:block}
+  .lists-top{display:flex;align-items:center;gap:10px;max-width:480px;margin:0 auto 12px}
+  .lists-top h2{margin:0;font-size:18px}
+  .lists-wrap{max-width:480px;margin:0 auto;display:flex;flex-direction:column;gap:10px}
+  .lists-card{display:flex;flex-direction:column;gap:6px;background:var(--panel-2);border:1px solid var(--edge);
+    border-radius:14px;padding:14px;color:var(--ink);font-family:inherit;text-align:start;width:100%}
+  button.lists-card{cursor:pointer}
+  .lists-card .lc-name{font-weight:700;font-size:1.05em}
+  .lists-card .lc-meta{color:var(--muted-2);font-size:.85em}
+  .lists-chips{display:flex;flex-wrap:wrap;gap:6px}
+  .lists-chip{background:var(--panel);border:1px solid var(--edge);border-radius:999px;padding:2px 10px;font-size:.78em;color:var(--muted-2)}
+  .lists-head{color:var(--muted-2);font-size:.85em;margin:10px 0 2px}
+  .lists-row{display:flex;align-items:center;gap:10px}
+  .lists-row .le-word{flex:1;min-width:0;overflow-wrap:anywhere}
+  .lists-entry{display:flex;align-items:center;gap:10px;padding:10px 0;border-top:1px solid rgba(255,255,255,.06)}
+  .lists-entry:first-child{border-top:none}
+  .lists-actions{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}
+  .lists-undo{position:sticky;bottom:0;display:flex;align-items:center;gap:12px;background:var(--panel-2);
+    border:1px solid var(--edge);border-radius:12px;padding:10px 14px;margin-top:12px;max-width:480px;margin-inline:auto}
+  .lists-empty{color:var(--muted-2);text-align:center;padding:24px 8px;line-height:1.6}
+  .lists-screen input[type=text]{flex:1;min-width:0;background:var(--panel-2);border:1.5px solid var(--edge);
+    border-radius:10px;padding:10px;color:var(--ink);font-family:var(--body);font-size:16px}
   .tr-screen{position:fixed;inset:0;background:var(--bg,#0e1420);z-index:60;display:none;overflow:auto;min-height:0;
     padding:max(12px,env(safe-area-inset-top)) 16px max(20px,env(safe-area-inset-bottom))}
   .tr-screen.show{display:block}
@@ -1753,6 +1783,7 @@
     <div class="tries-line" id="triesLine" aria-hidden="true"></div>
     <div class="feedback" id="feedback" aria-live="polite"></div>
     <button class="ghost btn-hide" id="undoImportBtn" data-i18n="import.undo" style="margin:4px auto 0">Undo import</button>
+    <button class="ghost btn-hide" id="openSavedList" data-i18n="lists.open" style="margin:4px auto 0">Open</button>
     <div class="meaning" id="meaning" aria-live="polite"></div>
     <div class="didYouKnow" id="didYouKnow" aria-live="polite"></div>
   </main>
@@ -2670,6 +2701,19 @@
     <div class="tr-note" id="trNote" aria-live="polite"></div>
     <div class="tr-extras" id="trExtras"></div>
   </div>
+  <!-- CC-MYWORDS-LISTS F3: the My Words screen (app only). -->
+  <div class="lists-screen" id="listsScreen" role="dialog" aria-modal="true" aria-labelledby="listsTitle">
+    <div class="lists-top">
+      <button class="ghost" id="listsClose" aria-label="Close">✕</button>
+      <h2 id="listsTitle" data-i18n="lists.title">My words</h2>
+    </div>
+    <div class="lists-wrap" id="listsBody"></div>
+    <div class="lists-undo" id="listsUndo" hidden>
+      <span id="listsUndoText"></span>
+      <button class="ghost" id="listsUndoBtn" data-i18n="lists.undo" style="margin-inline-start:auto">Undo</button>
+    </div>
+  </div>
+
   <div class="scrim" id="calScrim">
     <div class="modal rep-modal">
       <h3 data-i18n="cal.name">Spell Calendar</h3>

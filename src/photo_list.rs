@@ -64,6 +64,12 @@ pub fn reflect_visibility(app: &App) {
     dom::toggle_class("photoBtn", "btn-hide", !show);
 }
 
+/// The camera door: a source chooser (camera or library), both feeding the same
+/// recognition pipeline. Callable from the My Words screen too (F3.4).
+pub fn open_camera() {
+    dom::add_class("photoSrcScrim", "show");
+}
+
 /// Wire the photo flow. Entirely gated: when the flag is off we return before
 /// touching a single listener, so the branch adds no behaviour to shipped
 /// builds.
@@ -75,9 +81,7 @@ pub fn wire(app: &App) {
     // Capture -> recognize -> review. The camera button opens a SOURCE CHOOSER
     // (Eric's request): take a photo with the camera, or pick an existing one
     // from the photo library — both feed the same recognition pipeline.
-    dom::on_click("photoBtn", || {
-        dom::add_class("photoSrcScrim", "show");
-    });
+    dom::on_click("photoBtn", || open_camera());
     {
         let a = app.clone();
         dom::on_click("photoSrcCamera", move || {
@@ -262,7 +266,8 @@ fn on_recognized(app: &App, val: &wasm_bindgen::JsValue) {
     dom::set_text("photoVoiceNote", &voice_note);
     dom::set_text("photoNote", &i18n::t("photo.note"));
     dom::set_text("feedback", "");
-    crate::lists_ui::populate("photoDest", "photoConfirm"); // F1/D1
+    #[cfg(not(feature = "web"))]
+    crate::lists_ui::populate("photoDest", "photoConfirm"); // F1/D1 (app only)
     dom::add_class("photoScrim", "show");
 }
 
@@ -492,16 +497,28 @@ fn confirm(app: &App) {
     // CC-MYWORDS-LISTS F1: the save lands in a list the player chose, and adds
     // to it. Nothing here can remove a word -- the destructive checkbox that
     // used to sit above this button is gone.
-    let dest = crate::lists_ui::chosen("photoDest");
-    let entries: Vec<(String, String)> =
-        words.iter().map(|w| (w.clone(), speak_lang.clone())).collect();
-    let (list_name, _) = crate::lists_ui::commit(dest, &entries, crate::word_lists::ListSource::Photo);
+    // The camera is app-only, but this file still compiles for the site, so the
+    // list save sits behind the same wall as the rest of the feature.
+    #[cfg(not(feature = "web"))]
+    let list_name = {
+        let dest = crate::lists_ui::chosen("photoDest");
+        let entries: Vec<(String, String)> =
+            words.iter().map(|w| (w.clone(), speak_lang.clone())).collect();
+        crate::lists_ui::commit(dest, &entries, crate::word_lists::ListSource::Photo).0
+    };
     crate::apply_saved_words(app, words, speak_lang, &custom_marks);
     close();
     let msg = if blocked > 0 {
         i18n::tp("import.savedSkipped", &[("n", &count.to_string()), ("b", &blocked.to_string())])
     } else {
-        crate::lists_ui::saved_note(&list_name, count)
+        #[cfg(not(feature = "web"))]
+        {
+            crate::lists_ui::saved_note(&list_name, count)
+        }
+        #[cfg(feature = "web")]
+        {
+            i18n::tp("import.saved", &[("n", &count.to_string())])
+        }
     };
     dom::set_text("feedback", &msg);
     dom::el("feedback").set_class_name("feedback good");

@@ -120,7 +120,10 @@ mod yearbook_ui;
 mod widgets;
 mod word_data;
 mod word_lists; // CC-MYWORDS-LISTS v1 — dated word lists
-mod lists_ui; // CC-MYWORDS-LISTS F1 — the save sheet's destination
+#[cfg(not(feature = "web"))]
+mod lists_ui; // CC-MYWORDS-LISTS F1 — the save sheet's destination (app only)
+#[cfg(not(feature = "web"))]
+mod lists_screen; // CC-MYWORDS-LISTS F3 — the My Words screen (app only)
 mod word_stories;
 mod words;
 mod wordid; // CC-SPELL-RACING G-B: stable content-derived word IDs + list hash
@@ -224,7 +227,11 @@ pub fn start() -> Result<(), JsValue> {
     }
 
     wire(&app);
-    lists_ui::wire(); // CC-MYWORDS-LISTS F1: the save destination, both sheets
+    #[cfg(not(feature = "web"))]
+    {
+        lists_ui::wire(); // CC-MYWORDS-LISTS F1: the save destination, both sheets
+        lists_screen::wire(&app); // CC-MYWORDS-LISTS F3: the My Words screen
+    }
     // CC-IOS-SURFACES (BD-1): widget/intent deep links arrive as location
     // hashes (#daily / #practice). Consume on boot and on change; a no-op
     // when no hash and on the site shell.
@@ -389,6 +396,10 @@ fn wire(app: &App) {
 thread_local! {
     /// Expected answer to the current parent-gate math challenge.
     static PARENT_ANSWER: std::cell::Cell<i32> = const { std::cell::Cell::new(0) };
+    /// What to run when the gate is passed. None means the default: let the
+    /// grown-up re-enter a date of birth.
+    static PARENT_THEN: std::cell::RefCell<Option<Box<dyn FnOnce()>>> =
+        const { std::cell::RefCell::new(None) };
 }
 
 /// Opens the parent gate (a fresh worded-math challenge). Passing it lets a
@@ -458,6 +469,10 @@ fn wire_age_gate(app: &App) {
         if given == expected {
             dom::remove_class("parentScrim", "show");
             dom::set_text("parentErr", "");
+            if let Some(then) = PARENT_THEN.with(|c| c.borrow_mut().take()) {
+                then(); // the gate was opened for one specific action
+                return;
+            }
             // Let the grown-up re-run DOB entry (an adult date unlocks).
             agegate::populate_selects();
             dom::add_class("ageScrim", "show");
@@ -465,7 +480,10 @@ fn wire_age_gate(app: &App) {
             dom::set_text("parentErr", &i18n::t("parent.tryAgain"));
         }
     });
-    dom::on_click("parentCancel", || dom::remove_class("parentScrim", "show"));
+    dom::on_click("parentCancel", || {
+        PARENT_THEN.with(|c| *c.borrow_mut() = None);
+        dom::remove_class("parentScrim", "show");
+    });
     dom::on::<web_sys::KeyboardEvent, _>("parentAnswer", "keydown", |e| {
         if e.key() == "Enter" {
             if let Some(el) = dom::el("parentSubmit").dyn_ref::<web_sys::HtmlElement>() {
@@ -936,20 +954,46 @@ pub(crate) fn apply_saved_words(app: &App, words: Vec<String>, speak_lang: Strin
     game::clear_meaning();
 }
 
+/// Open the paste sheet. The My Words screen's "Add words" and the top chip are
+/// the same door (CC-MYWORDS-LISTS F3.4).
+pub(crate) fn open_import_sheet(app: &App) {
+    build_import_lang_options(app);
+    update_import_count();
+    dom::set_text("importNote", &i18n::t("import.note"));
+    #[cfg(not(feature = "web"))]
+    lists_ui::populate("importDest", "saveWords"); // F1/D1: today's list, or a new one
+    dom::add_class("importScrim", "show");
+    dom::textarea("importText").focus().ok();
+}
+
+/// Run `then` once a grown-up passes the parent gate. Used where a child must
+/// not act alone — deleting a list (CC-MYWORDS-LISTS F5.5).
+pub(crate) fn parent_gate_then(then: Box<dyn FnOnce()>) {
+    PARENT_THEN.with(|c| *c.borrow_mut() = Some(then));
+    open_parent_gate();
+}
+
 fn wire_import(app: &App) {
     {
         let a = app.clone();
         dom::on_click("importBtn", move || {
-            build_import_lang_options(&a);
-            // Do NOT repopulate with saved words (that was the stale-input bug),
-            // and do NOT wipe an in-progress draft either — the textarea keeps
-            // whatever the player last typed. Only a successful Save clears it
-            // (saved words persist; save is additive).
-            update_import_count();
-            dom::set_text("importNote", &i18n::t("import.note"));
-            lists_ui::populate("importDest", "saveWords"); // F1/D1: today's list, or a new one
-            dom::add_class("importScrim", "show");
-            dom::textarea("importText").focus().ok();
+            // CC-MYWORDS-LISTS F3 (app only): the chip opens My Words, which
+            // offers both doors. The site has no lists screen, so there the chip
+            // stays the paste sheet it has always been.
+            #[cfg(not(feature = "web"))]
+            lists_screen::open(&a);
+            #[cfg(feature = "web")]
+            open_import_sheet(&a);
+        });
+    }
+    #[cfg(not(feature = "web"))]
+    {
+        let a = app.clone();
+        dom::on_click("openSavedList", move || {
+            if let Some(id) = lists_ui::last_saved() {
+                lists_ui::hide_open();
+                lists_screen::open_list(&a, &id);
+            }
         });
     }
     dom::on::<web_sys::Event, _>("importText", "input", |_| update_import_count());
@@ -1021,11 +1065,15 @@ fn wire_import(app: &App) {
         return;
     }
     let count = words.len();
-    // CC-MYWORDS-LISTS F1: the same destination control as the photo sheet.
-    let dest = lists_ui::chosen("importDest");
-    let entries: Vec<(String, String)> =
-        words.iter().map(|w| (w.clone(), speak_lang.clone())).collect();
-    let (list_name, _) = lists_ui::commit(dest, &entries, word_lists::ListSource::Manual);
+    // CC-MYWORDS-LISTS F1 (app only): the same destination control as the photo
+    // sheet. The site keeps the flat save it has always had.
+    #[cfg(not(feature = "web"))]
+    let list_name = {
+        let dest = lists_ui::chosen("importDest");
+        let entries: Vec<(String, String)> =
+            words.iter().map(|w| (w.clone(), speak_lang.clone())).collect();
+        lists_ui::commit(dest, &entries, word_lists::ListSource::Manual).0
+    };
     let batch = importer::save_words(&mut a.borrow_mut(), words, speak_lang, &[]);
     LAST_IMPORT_BATCH.with(|b| b.set(Some(batch)));
     dom::remove_class("undoImportBtn", "btn-hide");
@@ -1064,7 +1112,14 @@ fn wire_import(app: &App) {
     let mut saved_msg = if blocked > 0 {
         i18n::tp("import.savedSkipped", &[("n", &count.to_string()), ("b", &blocked.to_string())])
     } else {
-        lists_ui::saved_note(&list_name, count)
+        #[cfg(not(feature = "web"))]
+        {
+            lists_ui::saved_note(&list_name, count)
+        }
+        #[cfg(feature = "web")]
+        {
+            i18n::tp("import.saved", &[("n", &count.to_string())])
+        }
     };
     if let Some(note) = extra_note {
         saved_msg.push(' ');

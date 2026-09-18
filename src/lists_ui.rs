@@ -94,7 +94,29 @@ pub fn commit(dest: Destination, words: &[(String, String)], source: ListSource)
     let added = word_lists::add_entries(&mut lists, &id, words, now);
     let name = lists.lists.iter().find(|l| l.id == id).map(|l| l.name.clone()).unwrap_or_default();
     word_lists::store(&lists);
+    offer_open(&id);
     (name, added)
+}
+
+thread_local! {
+    /// F1.4: the list the last save landed in, so the confirmation can offer to
+    /// open it. Cleared once taken.
+    static LAST_SAVED: std::cell::RefCell<Option<String>> = const { std::cell::RefCell::new(None) };
+}
+
+/// F1.4: show the Open action for the list a save just landed in.
+pub fn offer_open(id: &str) {
+    LAST_SAVED.with(|c| *c.borrow_mut() = Some(id.to_string()));
+    dom::remove_class("openSavedList", "btn-hide");
+}
+
+pub fn hide_open() {
+    LAST_SAVED.with(|c| *c.borrow_mut() = None);
+    dom::add_class("openSavedList", "btn-hide");
+}
+
+pub fn last_saved() -> Option<String> {
+    LAST_SAVED.with(|c| c.borrow().clone())
 }
 
 /// The line a sheet shows after saving: how many words, and which list.

@@ -3,6 +3,7 @@
 // that an existing player's words survive is a real browser boot.
 import { openApp, assert, assertEq } from '../harness.mjs';
 
+const KID = JSON.stringify({ verdict: 'kid', checkedAt: 1700000000 });
 const CUSTOM_KEY = 'byear_custom_v1';
 const LISTS_KEY = 'byear_word_lists_v1';
 
@@ -33,9 +34,19 @@ const listNames = (page) => page.evaluate((k) => {
   return l.lists.filter((x) => !x.deletedAt).map((x) => ({ name: x.name, words: x.entries.map((e) => e.text) }));
 }, LISTS_KEY);
 
-async function pasteSave(page, words, dest) {
+async function openScreen(page) {
   await page.click('#importBtn');
+  await page.waitForSelector('#listsScreen.show', { timeout: 4000 });
+}
+
+async function openPasteSheet(page) {
+  await openScreen(page);
+  await page.click('[data-l-add]');
   await page.waitForSelector('#importScrim.show', { timeout: 4000 });
+}
+
+async function pasteSave(page, words, dest) {
+  await openPasteSheet(page);
   await page.fill('#importText', words.join('\n'));
   await page.waitForTimeout(120);
   if (dest) await page.selectOption('#importDest', dest);
@@ -96,8 +107,7 @@ export async function run(browser, base, suite) {
   await suite.test('mywords_save_sheet_offers_no_way_to_erase', async () => {
     const { ctx, page } = await openApp(browser, base, { lang: 'en' });
     try {
-      await page.click('#importBtn');
-      await page.waitForSelector('#importScrim.show', { timeout: 4000 });
+      await openPasteSheet(page);
       const text = await page.$eval('#importScrim', (e) => e.innerText);
       assert(!/replace/i.test(text), `the paste sheet offers no "replace" (got: ${text.slice(0, 160)})`);
       assert(await page.$('#photoReplace') === null, 'the old replace checkbox is gone from the document');
@@ -146,14 +156,134 @@ export async function run(browser, base, suite) {
     const { ctx, page } = await openApp(browser, base, { lang: 'en' });
     try {
       await pasteSave(page, ['cat']);
-      await page.click('#importBtn');
-      await page.waitForSelector('#importScrim.show', { timeout: 4000 });
+      await openPasteSheet(page);
       const addLabel = await page.$eval('#saveWords', (e) => e.textContent.trim());
       assert(/^add to /i.test(addLabel), `today's list reads as an add (got "${addLabel}")`);
       await page.selectOption('#importDest', '__new');
       await page.waitForTimeout(120);
       const newLabel = await page.$eval('#saveWords', (e) => e.textContent.trim());
       assert(/new list/i.test(newLabel), `choosing a new list says so (got "${newLabel}")`);
+    } finally { await ctx.close(); }
+  });
+
+  // F3.4 — an empty screen offers both doors, never a blank box.
+  await suite.test('mywords_empty_screen_offers_both_doors', async () => {
+    const { ctx, page } = await openApp(browser, base, { lang: 'en' });
+    try {
+      await openScreen(page);
+      const text = await page.$eval('#listsBody', (e) => e.innerText);
+      assert(/no word lists yet/i.test(text), `the empty state speaks (got "${text}")`);
+      assert(await page.$('[data-l-snap]'), 'Snap a word list');
+      assert(await page.$('[data-l-add]'), 'Add words');
+    } finally { await ctx.close(); }
+  });
+
+  // F3.1 / AT3.1 — cards newest first, with counts and language chips.
+  await suite.test('mywords_cards_are_newest_first_with_counts', async () => {
+    const { ctx, page } = await openApp(browser, base, { lang: 'en' });
+    try {
+      await pasteSave(page, ['cat', 'dog']);
+      await pasteSave(page, ['fox'], '__new');
+      await openScreen(page);
+      const cards = await page.$$eval('#listsBody [data-l-open]', (els) =>
+        els.map((e) => e.innerText.replace(/\s+/g, ' ').trim()));
+      assert(/all words/i.test(cards[0]), `All words leads (got ${JSON.stringify(cards)})`);
+      assert(/3 words/i.test(cards[0]), 'and counts the union');
+      assert(cards.length === 3, `then one card per list (got ${JSON.stringify(cards)})`);
+      assert(/1 words|1 word/.test(cards[1]), `the newest list is first (got "${cards[1]}")`);
+    } finally { await ctx.close(); }
+  });
+
+  // F1.4 — the confirmation's Open action lands in that list.
+  await suite.test('mywords_open_action_lands_in_the_saved_list', async () => {
+    const { ctx, page } = await openApp(browser, base, { lang: 'en' });
+    try {
+      await pasteSave(page, ['cat', 'dog']);
+      await page.waitForSelector('#openSavedList:not(.btn-hide)', { timeout: 4000 });
+      await page.click('#openSavedList');
+      await page.waitForSelector('#listsScreen.show', { timeout: 4000 });
+      const text = await page.$eval('#listsBody', (e) => e.innerText);
+      assert(text.includes('cat') && text.includes('dog'), `the list is open (got "${text}")`);
+    } finally { await ctx.close(); }
+  });
+
+  // D2 — an opened list is editable: fix a word, remove one, undo the removal.
+  await suite.test('mywords_an_opened_list_can_be_fixed_and_undone', async () => {
+    const { ctx, page } = await openApp(browser, base, { lang: 'en' });
+    try {
+      await pasteSave(page, ['becuase', 'dog']);
+      await openScreen(page);
+      await page.click('#listsBody [data-l-open]:nth-of-type(2)').catch(async () => {
+        const cards = await page.$$('#listsBody [data-l-open]');
+        await cards[1].click();
+      });
+      await page.waitForTimeout(200);
+      await page.click('[data-e-edit="0"]');
+      await page.fill('#listsEdit', 'because');
+      await page.click('[data-e-save="0"]');
+      await page.waitForTimeout(200);
+      let words = await page.$$eval('#listsBody .le-word', (e) => e.map((x) => x.textContent));
+      assertEq(words.join(','), 'because,dog', 'the misread is fixed');
+      await page.click('[data-e-remove="1"]');
+      await page.waitForTimeout(200);
+      words = await page.$$eval('#listsBody .le-word', (e) => e.map((x) => x.textContent));
+      assertEq(words.join(','), 'because', 'and a word can be removed');
+      await page.click('#listsUndoBtn');
+      await page.waitForTimeout(200);
+      words = await page.$$eval('#listsBody .le-word', (e) => e.map((x) => x.textContent));
+      assertEq(words.join(','), 'because,dog', 'Undo puts it back where it was');
+    } finally { await ctx.close(); }
+  });
+
+  // F5.1 / F5.2 / AT5.1 / AT5.2 — delete asks, hides, and can be taken back.
+  await suite.test('mywords_deleting_a_list_asks_first_and_can_be_undone', async () => {
+    const { ctx, page } = await openApp(browser, base, { lang: 'en' });
+    try {
+      await pasteSave(page, ['cat', 'dog']);
+      await openScreen(page);
+      const cards = await page.$$('#listsBody [data-l-open]');
+      await cards[1].click();
+      await page.waitForTimeout(200);
+      await page.click('[data-l-del-ask]');
+      await page.waitForTimeout(150);
+      const ask = await page.$eval('#listsBody', (e) => e.innerText);
+      assert(/delete .* and its 2 words\?/i.test(ask), `it asks, naming the list and the count (got "${ask}")`);
+      await page.click('[data-l-del]');
+      await page.waitForTimeout(300);
+      let body = await page.$eval('#listsBody', (e) => e.innerText);
+      assert(/no word lists yet/i.test(body), `My Words says it is empty (got "${body}")`);
+      assert(!/2 words/.test(body), 'and the deleted list is not among the cards (AT5.2)');
+      assert(/recently deleted/i.test(body), 'it waits under Recently deleted instead');
+      await page.click('#listsUndoBtn');
+      await page.waitForTimeout(250);
+      body = await page.$eval('#listsBody', (e) => e.innerText);
+      assert(/2 words/.test(body), `Undo brings it back whole (got "${body}")`);
+    } finally { await ctx.close(); }
+  });
+
+  // F5.5 / D7 — a Spell Jr player keeps their own words, but cannot delete a
+  // list on their own: the grown-up gate stands in front of it.
+  await suite.test('mywords_spell_jr_cannot_delete_without_a_grown_up', async () => {
+    const { ctx, page } = await openApp(browser, base, { lang: 'en', age: KID });
+    try {
+      assert(await page.evaluate(() => document.body.classList.contains('kid')), 'a Spell Jr player');
+      await pasteSave(page, ['cat', 'dog']);
+      await openScreen(page);
+      const cards = await page.$$('#listsBody [data-l-open]');
+      await cards[1].click();
+      await page.waitForTimeout(200);
+      await page.click('[data-l-del-ask]');
+      await page.waitForTimeout(250);
+      assert(await page.$eval('#parentScrim', (e) => e.classList.contains('show')),
+        'the parent gate opens instead of a confirm');
+      const body = await page.$eval('#listsBody', (e) => e.innerText);
+      assert(/2 words|cat/i.test(body), 'and nothing is deleted meanwhile');
+      // Walking away from the gate leaves the list alone and disarms it.
+      await page.click('#parentCancel');
+      await page.waitForTimeout(200);
+      assert(!(await page.$eval('#parentScrim', (e) => e.classList.contains('show'))), 'the gate closes');
+      const after = await page.evaluate((k) => JSON.parse(localStorage.getItem(k)).lists.filter((l) => !l.deletedAt).length, LISTS_KEY);
+      assertEq(after, 1, 'the list is still there');
     } finally { await ctx.close(); }
   });
 }
