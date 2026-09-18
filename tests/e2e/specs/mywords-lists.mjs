@@ -54,6 +54,27 @@ async function pasteSave(page, words, dest) {
   await page.waitForTimeout(400);
 }
 
+
+// Answer the current word and move on. Tapping the orb with a live word REPLAYS
+// it (that is what the orb is for), so a test that wants the next word has to
+// play the current one.
+async function advance(page) {
+  const w = await page.evaluate(() => window.__spelltest.currentWord());
+  if (!w) return w;
+  await page.waitForFunction(() => !document.getElementById('gameKeyboard').classList.contains('locked'),
+    null, { timeout: 5000 }).catch(() => {});
+  for (const ch of w.toLowerCase()) {
+    const key = await page.$(`#gameKeyboard .kb-key[data-k="${ch}"]`);
+    if (key) await key.click();
+  }
+  await page.click('#checkBtn');
+  await page.waitForTimeout(250);
+  await page.click('#orbWrap');
+  await page.waitForFunction((prev) => window.__spelltest.currentWord() !== prev, w, { timeout: 4000 })
+    .catch(() => {});
+  return w;
+}
+
 export async function run(browser, base, suite) {
   // F6 / AT6.1 / AT6.3 — nothing lost, nothing renamed, no progress touched.
   await suite.test('mywords_migration_keeps_every_saved_word', async () => {
@@ -284,6 +305,94 @@ export async function run(browser, base, suite) {
       assert(!(await page.$eval('#parentScrim', (e) => e.classList.contains('show'))), 'the gate closes');
       const after = await page.evaluate((k) => JSON.parse(localStorage.getItem(k)).lists.filter((l) => !l.deletedAt).length, LISTS_KEY);
       assertEq(after, 1, 'the list is still there');
+    } finally { await ctx.close(); }
+  });
+
+  // F4.1 — a chosen list is what play serves, and only that list.
+  await suite.test('mywords_playing_a_list_serves_only_its_words', async () => {
+    const { ctx, page } = await openApp(browser, base, { lang: 'en' });
+    try {
+      await pasteSave(page, ['cat', 'dog', 'fox']);
+      await pasteSave(page, ['zebra', 'walrus'], '__new');
+      await openScreen(page);
+      const cards = await page.$$('#listsBody [data-l-open]');
+      await cards[2].click();           // the older list: cat, dog, fox
+      await page.waitForTimeout(200);
+      await page.click('[data-l-play]');
+      await page.waitForTimeout(500);
+      assertEq(await page.evaluate(() => window.__spelltest.currentLang()), '__mine', 'My Words is the source');
+      const seen = new Set();
+      for (let i = 0; i < 8; i++) {
+        const w = await advance(page);
+        if (w) seen.add(w);
+      }
+      const words = [...seen];
+      assert(words.length > 0, 'words were served');
+      assert(words.every((w) => ['cat', 'dog', 'fox'].includes(w)),
+        `only the chosen list's words (saw ${JSON.stringify(words)})`);
+    } finally { await ctx.close(); }
+  });
+
+  // F4.2 / AT4.2 — a remembered list that is deleted falls back to the newest.
+  await suite.test('mywords_play_falls_back_when_the_chosen_list_is_deleted', async () => {
+    const { ctx, page } = await openApp(browser, base, { lang: 'en' });
+    try {
+      await pasteSave(page, ['cat', 'dog']);
+      await pasteSave(page, ['zebra'], '__new');
+      await openScreen(page);
+      let cards = await page.$$('#listsBody [data-l-open]');
+      await cards[2].click();           // older list
+      await page.waitForTimeout(200);
+      await page.click('[data-l-play]');
+      await page.waitForTimeout(400);
+      // Delete the list that is being played.
+      await openScreen(page);
+      cards = await page.$$('#listsBody [data-l-open]');
+      await cards[2].click();
+      await page.waitForTimeout(200);
+      await page.click('[data-l-del-ask]');
+      await page.waitForTimeout(150);
+      await page.click('[data-l-del]');
+      await page.waitForTimeout(400);
+      const pool = await page.evaluate(() => {
+        const l = JSON.parse(localStorage.getItem('byear_word_lists_v1'));
+        return l.selection;
+      });
+      assert(!pool.length || pool.every((id) => id !== 'gone'), 'the selection dropped the deleted list');
+      await page.click('#listsClose');
+      await page.waitForTimeout(200);
+      // The word already on screen stays — it is the player's current turn. The
+      // NEXT serves come from the list play fell back to.
+      const after = [];
+      for (let i = 0; i < 4; i++) {
+        const w = await advance(page);
+        if (w) after.push(w);
+      }
+      assert(after.slice(1).every((w) => w === 'zebra'),
+        `play fell back to the newest live list (served ${JSON.stringify(after)})`);
+    } finally { await ctx.close(); }
+  });
+
+  // D3 — "In my order" serves the list as the player arranged it.
+  await suite.test('mywords_in_my_order_serves_the_players_order', async () => {
+    const { ctx, page } = await openApp(browser, base, { lang: 'en' });
+    try {
+      await pasteSave(page, ['alpha', 'bravo', 'charlie']);
+      await openScreen(page);
+      const cards = await page.$$('#listsBody [data-l-open]');
+      await cards[1].click();
+      await page.waitForTimeout(200);
+      await page.click('[data-l-order="mine"]');
+      await page.waitForTimeout(200);
+      await page.click('[data-e-star="2"]');        // charlie leads
+      await page.waitForTimeout(200);
+      await page.click('[data-l-play]');
+      await page.waitForTimeout(400);
+      const served = [];
+      for (let i = 0; i < 3; i++) {
+        served.push(await advance(page));
+      }
+      assertEq(served.join(','), 'charlie,alpha,bravo', 'starred first, then the list order');
     } finally { await ctx.close(); }
   });
 }

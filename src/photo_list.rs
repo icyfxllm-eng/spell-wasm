@@ -504,7 +504,9 @@ fn confirm(app: &App) {
         let dest = crate::lists_ui::chosen("photoDest");
         let entries: Vec<(String, String)> =
             words.iter().map(|w| (w.clone(), speak_lang.clone())).collect();
-        crate::lists_ui::commit(dest, &entries, crate::word_lists::ListSource::Photo).0
+        let (name, _) = crate::lists_ui::commit(dest, &entries, crate::word_lists::ListSource::Photo);
+        crate::lists_ui::refresh_pool(app);
+        name
     };
     crate::apply_saved_words(app, words, speak_lang, &custom_marks);
     close();

@@ -231,6 +231,7 @@ pub fn start() -> Result<(), JsValue> {
     {
         lists_ui::wire(); // CC-MYWORDS-LISTS F1: the save destination, both sheets
         lists_screen::wire(&app); // CC-MYWORDS-LISTS F3: the My Words screen
+        lists_ui::refresh_pool(&app); // F4: the remembered list is what play serves
     }
     // CC-IOS-SURFACES (BD-1): widget/intent deep links arrive as location
     // hashes (#daily / #practice). Consume on boot and on change; a no-op
@@ -1072,7 +1073,9 @@ fn wire_import(app: &App) {
         let dest = lists_ui::chosen("importDest");
         let entries: Vec<(String, String)> =
             words.iter().map(|w| (w.clone(), speak_lang.clone())).collect();
-        lists_ui::commit(dest, &entries, word_lists::ListSource::Manual).0
+        let (name, _) = lists_ui::commit(dest, &entries, word_lists::ListSource::Manual);
+        lists_ui::refresh_pool(a);
+        name
     };
     let batch = importer::save_words(&mut a.borrow_mut(), words, speak_lang, &[]);
     LAST_IMPORT_BATCH.with(|b| b.set(Some(batch)));

@@ -36,6 +36,25 @@ changed line says so.
 **Still open before build:** D6's free-tier limit (if any), and CC-SNAP-LIST v1,
 which is not in this repo, so its D8 cannot be marked resolved there.
 
+## Build notes
+
+**Phase 4 (2026-09-17), Eric: "build it the simple way".**
+
+- **The screen is the picker.** F4.1 describes a source picker that selects one
+  or more lists; the app has no such control — choosing My Words is one entry in
+  the language dropdown. So playing starts from the My Words screen: *Play this
+  list* inside an opened list, *Play all words* on the All words card. The choice
+  is remembered per device and falls back to the newest live list when the
+  remembered one is deleted, exactly as F4.2 asks.
+- **Not built: an arbitrary subset.** One list, or everything. Signed as the
+  simple way; a multi-select would need a control this app does not have.
+- **Reordering is buttons, not dragging.** D3's order is set with up/down and a
+  star that leads; a drag handle needs pointer work the screen does not yet do.
+  The rule is the same either way, and the star is also the accessible route.
+- **Mixed is untouched play.** A list in Mixed hands its words to the existing
+  adaptive draw and its no-repeat deck. Only *In my order* changes the draw, the
+  one signed exception to the non-goal on modes.
+
 ## 1. Intent
 
 Parents and teachers get a new spelling list every week. Today, saving a new photo

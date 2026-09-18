@@ -88,6 +88,17 @@ fn length_tier(word: &str) -> &'static str {
 }
 
 fn pool_for_tier(state: &AppState, tier: &str) -> Vec<String> {
+    // CC-MYWORDS-LISTS F4: a chosen list is the pool. In the player's own order
+    // (D3) the list is handed over whole, because an order the player set must
+    // not be re-sorted by word length.
+    if !state.list_words.is_empty() {
+        if state.list_sequential {
+            return state.list_words.clone();
+        }
+        let filtered: Vec<String> =
+            state.list_words.iter().filter(|w| length_tier(w) == tier).cloned().collect();
+        return if filtered.is_empty() { state.list_words.clone() } else { filtered };
+    }
     let all = &state.custom.words;
     if all.is_empty() {
         return vec!["word".to_string()];
@@ -1413,7 +1424,16 @@ pub fn next_word(app: &App) {
                             .or_else(|| crate::learner::select_within(&st, win, &lang, day, &[], day as u64))
                     });
                 }
-                let w = s.decks.entry(key.clone()).or_default().next(&pool);
+                // D3: "In my order" serves the list as it stands, starred words
+                // first, one after another. Everything else keeps the no-repeat
+                // deck it has always used.
+                let w = if s.lang == MINE && s.list_sequential {
+                    let i = s.list_cursor % pool.len();
+                    s.list_cursor = s.list_cursor.wrapping_add(1);
+                    pool[i].clone()
+                } else {
+                    s.decks.entry(key.clone()).or_default().next(&pool)
+                };
                 s.word = w;
                 // Warm the browser's audio cache for whatever this same
                 // pool will hand out next time, so that turn's playback is

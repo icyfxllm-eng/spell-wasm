@@ -144,7 +144,7 @@ fn home_html(lists: &Lists) -> String {
     html
 }
 
-fn entry_row(idx: usize, e: &ListEntry, editable: bool) -> String {
+fn entry_row(idx: usize, e: &ListEntry, editable: bool, ordered: bool, last: bool) -> String {
     if !editable {
         return format!(
             "<div class=\"lists-entry\"><span class=\"le-word\">{}</span>\
@@ -166,9 +166,25 @@ fn entry_row(idx: usize, e: &ListEntry, editable: bool) -> String {
             esc(&t("parent.cancel")),
         );
     }
+    // D3: in the player's own order, each word can be starred to the front or
+    // nudged up and down. In Mixed those controls would promise something the
+    // adaptive draw does not honour, so they are absent.
+    let ordering = if ordered {
+        format!(
+            "<button type=\"button\" class=\"ghost\" data-e-star=\"{idx}\" aria-pressed=\"{}\">{}</button>\
+             <button type=\"button\" class=\"ghost\" data-e-up=\"{idx}\"{}>↑</button>\
+             <button type=\"button\" class=\"ghost\" data-e-down=\"{idx}\"{}>↓</button>",
+            if e.starred { "true" } else { "false" },
+            if e.starred { "\u{2605}" } else { "\u{2606}" },
+            if idx == 0 { " disabled" } else { "" },
+            if last { " disabled" } else { "" },
+        )
+    } else {
+        String::new()
+    };
     format!(
         "<div class=\"lists-entry\"><span class=\"le-word\">{}</span>\
-           <span class=\"lists-chip\">{}</span>\
+           <span class=\"lists-chip\">{}</span>{ordering}\
            <button type=\"button\" class=\"ghost\" data-e-edit=\"{idx}\">{}</button>\
            <button type=\"button\" class=\"ghost\" data-e-remove=\"{idx}\">{}</button>\
          </div>",
@@ -186,11 +202,16 @@ fn detail_html(lists: &Lists, id: &str, kid: bool) -> String {
     );
     if id == ALL {
         let all = word_lists::all_words(lists);
-        let rows: String = all.iter().enumerate().map(|(i, e)| entry_row(i, e, false)).collect();
+        let rows: String =
+            all.iter().enumerate().map(|(i, e)| entry_row(i, e, false, false, false)).collect();
         return format!(
-            "{back}<div class=\"lists-head\">{} · {}</div>{rows}",
+            "{back}<div class=\"lists-head\">{} · {}</div>\
+             <div class=\"lists-actions\">\
+               <button type=\"button\" class=\"btn btn-check\" data-l-play-all>{}</button>\
+             </div>{rows}",
             esc(&t("lists.allWords")),
-            esc(&count_label(all.len()))
+            esc(&count_label(all.len())),
+            esc(&t("lists.playAll")),
         );
     }
     let Some(l) = lists.lists.iter().find(|l| l.id == id && l.live()) else {
@@ -219,7 +240,24 @@ fn detail_html(lists: &Lists, id: &str, kid: bool) -> String {
             esc(&t("lists.rename")),
         )
     };
-    let rows: String = l.entries.iter().enumerate().map(|(i, e)| entry_row(i, e, true)).collect();
+    let mine = l.order == word_lists::Order::InMyOrder;
+    let rows: String = l
+        .entries
+        .iter()
+        .enumerate()
+        .map(|(i, e)| entry_row(i, e, true, mine, i + 1 == l.entries.len()))
+        .collect();
+    // D3: how this list hands its words to play.
+    let order = format!(
+        "<div class=\"lists-row\">\
+           <button type=\"button\" class=\"ghost{}\" data-l-order=\"mixed\">{}</button>\
+           <button type=\"button\" class=\"ghost{}\" data-l-order=\"mine\">{}</button>\
+         </div>",
+        if mine { "" } else { " on" },
+        esc(&t("lists.orderMixed")),
+        if mine { " on" } else { "" },
+        esc(&t("lists.orderMine")),
+    );
     // F5.1/F5.2: delete lives here and nowhere else, and it asks first.
     let danger = if CONFIRMING.with(|c| c.get()) {
         format!(
@@ -243,11 +281,16 @@ fn detail_html(lists: &Lists, id: &str, kid: bool) -> String {
         )
     };
     format!(
-        "{back}{head}{rows}\
+        "{back}{head}\
+         <div class=\"lists-actions\">\
+           <button type=\"button\" class=\"btn btn-check\" data-l-play=\"{id}\">{}</button>\
+         </div>\
+         {order}{rows}\
          <div class=\"lists-actions\">\
            <button type=\"button\" class=\"ghost\" data-l-add=\"{id}\">{}</button>\
            {danger}\
          </div>",
+        esc(&t("lists.play")),
         esc(&t("lists.addWords")),
         id = esc(&l.id),
     )
@@ -300,6 +343,7 @@ fn take_undo(app: &App) {
         }
     }
     word_lists::store(&lists);
+    crate::lists_ui::refresh_pool(app);
     clear_undo();
     render(app);
 }
@@ -313,6 +357,7 @@ fn delete_list(app: &App, id: &str) {
         return;
     }
     word_lists::store(&lists);
+    crate::lists_ui::refresh_pool(app);
     CONFIRMING.with(|c| c.set(false));
     OPEN_LIST.with(|c| *c.borrow_mut() = None);
     render(app);
@@ -366,7 +411,9 @@ pub fn wire(app: &App) {
                 "[data-l-open],[data-l-back],[data-l-older],[data-l-trash],[data-l-restore],\
                  [data-l-purge],[data-l-rename],[data-l-rename-save],[data-l-rename-cancel],\
                  [data-l-del],[data-l-del-ask],[data-l-del-cancel],[data-l-add],[data-l-snap],\
-                 [data-e-edit],[data-e-save],[data-e-cancel],[data-e-remove]",
+                 [data-l-play],[data-l-play-all],[data-l-order],\
+                 [data-e-edit],[data-e-save],[data-e-cancel],[data-e-remove],\
+                 [data-e-star],[data-e-up],[data-e-down]",
             )
             .ok()
             .flatten()
@@ -374,7 +421,60 @@ pub fn wire(app: &App) {
             return;
         };
 
-        if let Some(id) = attr(&el, "data-l-open") {
+        if let Some(id) = attr(&el, "data-l-play") {
+            // F4.1: this list becomes what play serves, and the screen gets out
+            // of the way.
+            close();
+            crate::lists_ui::play(&a, &[id]);
+            return;
+        } else if attr(&el, "data-l-play-all").is_some() {
+            let lists = word_lists::load();
+            let every: Vec<String> = word_lists::visible(&lists).iter().map(|l| l.id.clone()).collect();
+            close();
+            crate::lists_ui::play(&a, &every);
+            return;
+        } else if let Some(kind) = attr(&el, "data-l-order") {
+            if let Some(id) = OPEN_LIST.with(|c| c.borrow().clone()) {
+                let order = if kind == "mine" {
+                    word_lists::Order::InMyOrder
+                } else {
+                    word_lists::Order::Mixed
+                };
+                let mut lists = word_lists::load();
+                word_lists::set_order(&mut lists, &id, order, now());
+                word_lists::store(&lists);
+                crate::lists_ui::refresh_pool(&a);
+            }
+            render(&a);
+        } else if let Some(i) = attr(&el, "data-e-star").and_then(|v| v.parse::<usize>().ok()) {
+            if let Some(id) = OPEN_LIST.with(|c| c.borrow().clone()) {
+                let mut lists = word_lists::load();
+                let on = lists
+                    .lists
+                    .iter()
+                    .find(|l| l.id == id)
+                    .and_then(|l| l.entries.get(i))
+                    .map(|e| !e.starred)
+                    .unwrap_or(false);
+                word_lists::set_star(&mut lists, &id, i, on, now());
+                word_lists::store(&lists);
+                crate::lists_ui::refresh_pool(&a);
+            }
+            render(&a);
+        } else if let Some(i) = attr(&el, "data-e-up")
+            .or_else(|| attr(&el, "data-e-down"))
+            .and_then(|v| v.parse::<usize>().ok())
+        {
+            let down = attr(&el, "data-e-down").is_some();
+            if let Some(id) = OPEN_LIST.with(|c| c.borrow().clone()) {
+                let to = if down { i + 1 } else { i.saturating_sub(1) };
+                let mut lists = word_lists::load();
+                word_lists::move_entry(&mut lists, &id, i, to, now());
+                word_lists::store(&lists);
+                crate::lists_ui::refresh_pool(&a);
+            }
+            render(&a);
+        } else if let Some(id) = attr(&el, "data-l-open") {
             OPEN_LIST.with(|c| *c.borrow_mut() = Some(id));
             EDITING.with(|c| c.set(None));
             CONFIRMING.with(|c| c.set(false));
@@ -464,6 +564,7 @@ pub fn wire(app: &App) {
                     .unwrap_or_default();
                 if word_lists::edit_entry(&mut lists, &id, i, &typed, &lang, now()) {
                     word_lists::store(&lists);
+                    crate::lists_ui::refresh_pool(&a);
                 }
             }
             EDITING.with(|c| c.set(None));
@@ -473,6 +574,7 @@ pub fn wire(app: &App) {
                 let mut lists = word_lists::load();
                 if let Some(gone) = word_lists::remove_entry(&mut lists, &id, i, now()) {
                     word_lists::store(&lists);
+                    crate::lists_ui::refresh_pool(&a);
                     let word = gone.text.clone();
                     render(&a);
                     offer_undo(

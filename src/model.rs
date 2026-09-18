@@ -173,6 +173,15 @@ pub struct AppState {
     pub jr_climb_served: u32,
     /// Mirrors `Prefs.front_door_seen` (CC-ONBOARD-JR F6).
     pub front_door_seen: bool,
+    /// CC-MYWORDS-LISTS F4 — the words the chosen list(s) hand to play, in the
+    /// list's own order. Empty means "no lists": My Words falls back to the flat
+    /// set, exactly as before this feature.
+    pub list_words: Vec<String>,
+    /// D3 — the chosen list plays in the player's order rather than the adaptive
+    /// one. Only a single chosen list can say yes; All words is always adaptive.
+    pub list_sequential: bool,
+    /// Where that ordered walk has got to.
+    pub list_cursor: usize,
     /// Counts every word `next_word` serves (session only). The post-answer
     /// auto-advance timer is pinned to the serve it was set for, so an orb skip
     /// leaves it a no-op instead of replacing the next word mid-typing.
@@ -253,6 +262,9 @@ impl Default for AppState {
             climb_prog: 0,
             jr_climb_served: 0,
             front_door_seen: false,
+            list_words: Vec::new(),
+            list_sequential: false,
+            list_cursor: 0,
             word_serial: 0,
             answered: false,
             composing: false,

@@ -10,7 +10,7 @@
 
 use crate::i18n;
 use crate::word_lists::{self, Destination, ListSource};
-use crate::{dom, i18n::t};
+use crate::{dom, i18n::t, App};
 
 /// The option value that means "a new dated list".
 const NEW: &str = "__new";
@@ -122,6 +122,43 @@ pub fn last_saved() -> Option<String> {
 /// The line a sheet shows after saving: how many words, and which list.
 pub fn saved_note(name: &str, n: usize) -> String {
     i18n::tp("lists.savedTo", &[("n", &n.to_string()), ("name", name)])
+}
+
+/// F4: load the chosen lists into the state the draw reads. Called at boot and
+/// after anything that changes what a list holds, so play never serves a word
+/// the player just removed.
+pub fn refresh_pool(app: &App) {
+    let lists = word_lists::load();
+    let chosen = word_lists::play_selection(&lists);
+    let entries = word_lists::play_entries(&lists, &chosen);
+    let sequential = chosen.len() == 1
+        && lists
+            .lists
+            .iter()
+            .any(|l| l.id == chosen[0] && l.live() && l.order == word_lists::Order::InMyOrder);
+    let mut s = app.borrow_mut();
+    s.list_words = entries.into_iter().map(|e| e.text).collect();
+    s.list_sequential = sequential;
+    s.list_cursor = 0;
+}
+
+/// F4.1: play these lists. The choice is remembered per device, and My Words
+/// becomes the study language for this session.
+pub fn play(app: &App, chosen: &[String]) {
+    let mut lists = word_lists::load();
+    word_lists::remember_selection(&mut lists, chosen);
+    word_lists::store(&lists);
+    refresh_pool(app);
+    {
+        let mut s = app.borrow_mut();
+        s.lang = crate::consts::MINE.to_string();
+        s.cur_lang = crate::consts::MINE.to_string();
+    }
+    crate::settings::save_prefs(&app.borrow());
+    crate::game::build_source_options(app);
+    crate::game::build_level_options(app);
+    crate::keyboard::rebuild(app);
+    crate::game::next_word(app);
 }
 
 /// Keep both sheets' buttons honest as the player changes the destination.
