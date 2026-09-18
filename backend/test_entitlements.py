@@ -43,9 +43,12 @@ class RegionalGrantTests(unittest.TestCase):
         self.assertEqual(self.get("VN")["grants"], ["vi"])
 
     def test_multi_language_country_grants_all_shipped_official(self):
-        # Switzerland ships three of its official languages.
-        self.assertEqual(sorted(self.get("CH")["grants"]), ["de", "fr", "it"])
-        self.assertEqual(sorted(self.get("BE")["grants"]), ["fr", "nl"])
+        # A country grants every one of its official languages THAT SHIPS.
+        # CC-LINEUP-SWAP (ed6964f3) cut Italian and Dutch, so Switzerland now
+        # grants two of its official languages and Belgium one. This test still
+        # expected the pre-swap lineup and had failed ever since.
+        self.assertEqual(sorted(self.get("CH")["grants"]), ["de", "fr"])
+        self.assertEqual(sorted(self.get("BE")["grants"]), ["fr"])
 
     def test_spanish_across_latin_america(self):
         for country in ("ES", "MX", "AR", "CO", "PE"):
