@@ -46,6 +46,23 @@ exists: it holds 34,359 Russian files where Lingua Libre's query service knows
 - **Arabic speech-to-text stays ar-SA.** Google's v1 recognizer (what the
   backend calls) has no MSA code; ar-XA exists only on v2 Chirp 3. Changing the
   map to ar-XA would break the Arabic mic. Do not "fix" it.
+- **D13. The pilot's clips ship bundled in the app, not from a server.**
+  This amends F8, which said clips are "served from SpellGame's own backend".
+  For the pilot language, the verified clips are built into the app binary and
+  hash-checked at build time, and the resolver plays the bundled clip before TTS.
+  Nothing is fetched at runtime, so I9 holds without a hosting dependency.
+  Consequences:
+  - **App size:** about +8 MB for an English pilot, +15 MB for French (≈3–4 KB
+    per compressed one-second clip).
+  - **Acceptance test 12** becomes "the bundled clips play identically offline,
+    hash-verified at build". Offline packs (CC-OFFLINE-PACKS) are the route for
+    later languages, when bundling every language (~300 MB) stops fitting.
+  - **D10 parity:** spellgame.net serves the same files as static assets, so
+    web and app still resolve the same clip.
+  - **Licenses:** a bundled BY-SA clip is distributed inside the binary, so D1's
+    BY-SA legal check lands before the first build that contains one. That
+    applies to a French pilot (mostly BY-SA) and hardly at all to an English one
+    (62% of the bank is covered by CC0 clips).
 
 ## Filters applied, in order
 
@@ -233,7 +250,9 @@ tie-break toward Russian.
   declared *residence* stand in when place of learning is missing? It moves
   French to 77.4%, German to 10.2%, Russian Easy to 24.7%, and Mandarin to 6.7%.
 - **R2. Which languages have an active auditor?** Needed to close D6.
-- **R3. French or English pilot**, if both qualify (see D6).
+- **R3. French or English pilot**, if both qualify (see D6). D13 adds a factor:
+  bundling puts every pilot clip inside the app, so French needs the BY-SA
+  legal check before its first build and English almost certainly does not.
 - **D11, D12** remain open, as in the spec. D12's inputs are the gap column.
 
 ## Not measured
