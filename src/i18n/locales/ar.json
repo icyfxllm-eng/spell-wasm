@@ -466,6 +466,8 @@
   "settings.remindSmall": "تنبيه لطيف واحد يوميًا للتمرين",
   "settings.remindTime": "وقت التذكير",
   "settings.remindTimeSmall": "متى يُرسل التنبيه اليومي",
+  "settings.telemetry": "ساعد في تحسين SpellGame",
+  "settings.telemetrySmall": "يرسل تقارير الأعطال والسرعة. لا يرسل أبدًا كلماتك أو إجاباتك أو أي شيء عنك.",
   "settings.slow": "صوت أبطأ",
   "settings.slowSmall": "نطق كل كلمة ببطء أكثر",
   "settings.title": "الإعدادات",

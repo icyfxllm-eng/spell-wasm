@@ -466,6 +466,8 @@
   "settings.remindSmall": "Một lời nhắc nhẹ nhàng mỗi ngày để luyện tập",
   "settings.remindTime": "Giờ nhắc",
   "settings.remindTimeSmall": "Thời điểm gửi lời nhắc hằng ngày",
+  "settings.telemetry": "Giúp cải thiện SpellGame",
+  "settings.telemetrySmall": "Gửi báo cáo lỗi và tốc độ. Không bao giờ gửi từ, câu trả lời hay bất cứ điều gì về bạn.",
   "settings.slow": "Giọng chậm hơn",
   "settings.slowSmall": "Đọc từng từ chậm hơn",
   "settings.title": "Cài đặt",

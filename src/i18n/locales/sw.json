@@ -466,6 +466,8 @@
   "settings.remindSmall": "Kikumbusho kimoja laini kwa siku cha kufanya mazoezi",
   "settings.remindTime": "Muda wa kikumbusho",
   "settings.remindTimeSmall": "Wakati wa kutuma kikumbusho cha siku",
+  "settings.telemetry": "Saidia kuboresha SpellGame",
+  "settings.telemetrySmall": "Hutuma ripoti za hitilafu na kasi. Kamwe si maneno yako, majibu, au chochote kukuhusu.",
   "settings.slow": "Sauti ya polepole",
   "settings.slowSmall": "Tamka kila neno polepole zaidi",
   "settings.title": "Mipangilio",

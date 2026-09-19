@@ -60,6 +60,7 @@ mod enrich;
 pub mod entitlements;
 mod fa_canon; // CC-PERSIAN-FOUNDATION F1 (canonicalizer; fa not yet in the registry)
 mod flags;
+mod telemetry; // CC-TELEMETRY-FOUNDATION v1.1 (F1 crash reporting)
 mod game;
 mod hub_tiles; // CC-BUILD219-FIXES F1
 mod sense_cue; // CC-SENSE-CUE F6 // CC-BUILD219-FIXES F1
@@ -150,7 +151,8 @@ pub type App = Rc<RefCell<AppState>>;
 
 #[wasm_bindgen(start)]
 pub fn start() -> Result<(), JsValue> {
-    console_error_panic_hook::set_once();
+    // Console output as before, plus one F1 `wasm_panic` record per panic site.
+    telemetry::install_panic_hook();
 
     let mut state = AppState::default();
     settings::load_prefs(&mut state);
@@ -265,6 +267,15 @@ pub fn start() -> Result<(), JsValue> {
     // the current study language isn't active yet, show the coming-soon panel —
     // play is gated while the interface stays in that language (uiLang untouched).
     notify::flush();
+    // CC-TELEMETRY-FOUNDATION v1.1: route, drain the pre-WASM error buffer,
+    // fetch the kill switch. Best-effort; never blocks or fails the launch.
+    telemetry::init(&app.borrow().lang);
+    // F5: page load to a ready app, bucketed.
+    telemetry::record_perf(
+        telemetry::schema::PerfMetric::WasmInitMs,
+        telemetry::schema::Bucket::of_ms(telemetry::now_ms()),
+        &app.borrow().lang,
+    );
     {
         let lang = app.borrow().lang.clone();
         if lang != MINE && !consts::is_active_lang(&lang) {
@@ -646,6 +657,25 @@ fn wire_glow_and_settings(app: &App) {
         dom::on_click("setBtn", move || {
             settings::apply_settings(&a);
             dom::add_class("setScrim", "show");
+        });
+    }
+    // CC-TELEMETRY-FOUNDATION F7: "Help improve SpellGame". A standard player
+    // flips it directly; for a Jr or not-yet-answered player the switch snaps
+    // back and only the parent gate can change it.
+    {
+        let a = app.clone();
+        dom::on::<web_sys::Event, _>("telemetryToggle", "change", move |_| {
+            let v = dom::input("telemetryToggle").checked();
+            if telemetry::switch_needs_grown_up() {
+                dom::input("telemetryToggle").set_checked(!v);
+                let a2 = a.clone();
+                parent_gate_then(Box::new(move || {
+                    telemetry::set_switch(v);
+                    settings::apply_settings(&a2);
+                }));
+                return;
+            }
+            telemetry::set_switch(v);
         });
     }
     // CC-ONBOARD-JR F5: the locked Spell Jr row's one control is the parent gate.

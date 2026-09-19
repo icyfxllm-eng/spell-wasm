@@ -17,6 +17,8 @@ thread_local! {
     // The source that produced the last word audio ("server-cache" | "native-tts"
     // | "none"). Surfaced for QA and the whisper.cpp loopback harness.
     static LAST_SOURCE: RefCell<&'static str> = const { RefCell::new("") };
+    /// F5: when the current `play_word_with` request started, and its language.
+    static PLAY_START: RefCell<Option<(f64, String)>> = const { RefCell::new(None) };
 }
 
 /// Which audio source last produced (or failed to produce) word audio.
@@ -35,6 +37,7 @@ pub fn last_audio_source() -> &'static str {
 /// the wall: every source has been tried and none of them played.
 fn set_source(s: &'static str) {
     LAST_SOURCE.with(|c| *c.borrow_mut() = s);
+    observe_resolution(s);
     // Mirror the outcome into Settings. This value already existed for QA and
     // the loopback harness but was reachable only from the test seam — so when
     // testers reported "no audio", there was nothing to ask them to read, and
@@ -192,6 +195,25 @@ pub fn play_word(word: &str, variant: &str, rate: f64, lang: &str, on_fail: impl
 /// Mandarin REQUIRES `py`: the server refuses a zh clip without one, because a
 /// guessed polyphone is the failure this whole feature exists to remove.
 ///
+/// CC-TELEMETRY-FOUNDATION F5 — observe the resolver's outcome for the request
+/// `play_word_with` started. Observation only: nothing here feeds back into
+/// which source plays (I8). Tap-to-audio is timed only for the pack and the
+/// server clip, which report when playback STARTS; the on-device voice
+/// reports when it has finished speaking, so it counts as resolved, untimed.
+fn observe_resolution(s: &str) {
+    use crate::telemetry::{self, schema::{Bucket, PerfMetric}};
+    let Some((t0, lang)) = PLAY_START.with(|c| c.borrow_mut().take()) else { return };
+    match s {
+        "pack" | "server-cache" => {
+            telemetry::record_perf(PerfMetric::TapToAudioMs, Bucket::of_ms(telemetry::now_ms() - t0), &lang);
+            telemetry::record_perf(PerfMetric::AudioResolution, Bucket::Resolved, &lang);
+        }
+        "native-tts" => telemetry::record_perf(PerfMetric::AudioResolution, Bucket::Resolved, &lang),
+        "none" => telemetry::record_perf(PerfMetric::AudioResolution, Bucket::Unavailable, &lang),
+        _ => {}
+    }
+}
+
 /// zh also drops the on-device rescue from its source chain. Native TTS cannot
 /// be handed a reading, so it would speak bare Hanzi and guess — exactly what
 /// Invariant 4 forbids. The consequence is deliberate and worth stating: with
@@ -204,6 +226,7 @@ pub fn play_word_with(
     lang: &str,
     on_fail: impl FnOnce() + 'static,
 ) {
+    PLAY_START.with(|c| *c.borrow_mut() = Some((crate::telemetry::now_ms(), lang.to_string())));
     let mut order = source_order();
     if lang == crate::consts::ZH {
         order.retain(|s| *s != Source::NativeTts);

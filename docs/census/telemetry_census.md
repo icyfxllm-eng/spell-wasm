@@ -1,5 +1,8 @@
 # CC-TELEMETRY-FOUNDATION §0 census
 
+> **Resolved 2026-09-18:** Eric signed R1–R7, then R8–R11, as recommended. Phase A
+> is built on `cc-telemetry`; see `docs/CC-TELEMETRY-FOUNDATION.md`.
+
 ## v1.1 update (2026-09-18, after R1–R7 were signed and v1.1 rescoped to F1 + F5)
 
 **Outcome: STOP for review again.** v1.1's §0 items 1, 2 and 4 are answered

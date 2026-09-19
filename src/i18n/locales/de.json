@@ -466,6 +466,8 @@
   "settings.remindSmall": "Ein sanfter Anstoß pro Tag zum Üben",
   "settings.remindTime": "Erinnerungszeit",
   "settings.remindTimeSmall": "Wann die tägliche Erinnerung gesendet wird",
+  "settings.telemetry": "SpellGame verbessern helfen",
+  "settings.telemetrySmall": "Sendet Absturz- und Geschwindigkeitsberichte. Niemals deine Wörter, Antworten oder etwas über dich.",
   "settings.slow": "Langsamere Stimme",
   "settings.slowSmall": "Spricht jedes Wort langsamer",
   "settings.title": "Einstellungen",

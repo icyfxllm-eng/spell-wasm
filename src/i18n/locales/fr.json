@@ -466,6 +466,8 @@
   "settings.remindSmall": "Un petit rappel par jour pour s'entraîner",
   "settings.remindTime": "Heure du rappel",
   "settings.remindTimeSmall": "Quand envoyer le rappel quotidien",
+  "settings.telemetry": "Aider à améliorer SpellGame",
+  "settings.telemetrySmall": "Envoie des rapports de plantage et de vitesse. Jamais vos mots, vos réponses ni rien sur vous.",
   "settings.slow": "Voix plus lente",
   "settings.slowSmall": "Prononce chaque mot plus lentement",
   "settings.title": "Réglages",

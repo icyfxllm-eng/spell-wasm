@@ -466,6 +466,8 @@
   "settings.remindSmall": "Um lembrete gentil por dia para praticar",
   "settings.remindTime": "Hora do lembrete",
   "settings.remindTimeSmall": "Quando enviar o lembrete diário",
+  "settings.telemetry": "Ajude a melhorar o SpellGame",
+  "settings.telemetrySmall": "Envia relatórios de falhas e de velocidade. Nunca as suas palavras, respostas ou nada sobre você.",
   "settings.slow": "Voz mais lenta",
   "settings.slowSmall": "Fala cada palavra mais devagar",
   "settings.title": "Configurações",

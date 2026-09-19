@@ -466,6 +466,8 @@
   "settings.remindSmall": "Одно мягкое напоминание в день",
   "settings.remindTime": "Время напоминания",
   "settings.remindTimeSmall": "Когда присылать ежедневное напоминание",
+  "settings.telemetry": "Помочь улучшить SpellGame",
+  "settings.telemetrySmall": "Отправляет отчёты о сбоях и скорости. Никогда — ваши слова, ответы или что-либо о вас.",
   "settings.slow": "Медленный голос",
   "settings.slowSmall": "Произносить каждое слово медленнее",
   "settings.title": "Настройки",

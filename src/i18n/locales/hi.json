@@ -466,6 +466,8 @@
   "settings.remindSmall": "अभ्यास के लिए दिन में एक हल्की याद",
   "settings.remindTime": "याद दिलाने का समय",
   "settings.remindTimeSmall": "रोज़ की याद कब भेजें",
+  "settings.telemetry": "SpellGame को बेहतर बनाने में मदद करें",
+  "settings.telemetrySmall": "क्रैश और गति की रिपोर्ट भेजता है। आपके शब्द, उत्तर या आपके बारे में कुछ भी कभी नहीं।",
   "settings.slow": "धीमी आवाज़",
   "settings.slowSmall": "हर शब्द और धीरे बोलो",
   "settings.title": "सेटिंग्स",

@@ -52,7 +52,7 @@ STRIP
 else
   cp index.html "$DIST/"
 fi
-cp audio-native.js native-language-kit.js manifest.json sw.js "$DIST/"
+cp audio-native.js native-language-kit.js telemetry-schema.js manifest.json sw.js "$DIST/"
 cp -r icons "$DIST/icons"
 # Self-hosted web fonts (FIX 1): index.html references ./fonts/*.woff2 locally
 # instead of Google Fonts / jsdelivr, and sw.js precaches them. Must be copied
@@ -79,6 +79,7 @@ fi
 if [ -f "$WASM" ]; then
   STAMP=$(cat "$WASM" "$DIST/index.html" "$DIST/sw.js" | shasum -a 256 | cut -c1-12)
   sed -i '' "s/v=DEV/v=$STAMP/g" "$DIST/index.html" "$DIST/sw.js"
+  sed -i '' "s/SPELL_BUILD = \"DEV\"/SPELL_BUILD = \"$STAMP\"/" "$DIST/index.html"
   sed -i '' "s/^const CACHE_VERSION = .*/const CACHE_VERSION = \"$STAMP\";/" "$DIST/sw.js"
   echo "==> cache stamp: $STAMP"
 fi

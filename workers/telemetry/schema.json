@@ -1,0 +1,270 @@
+{
+  "records": {
+    "agg_batch": [
+      {
+        "name": "v",
+        "type": "version"
+      },
+      {
+        "name": "build",
+        "type": "build"
+      },
+      {
+        "name": "platform",
+        "type": {
+          "enum": [
+            "ios",
+            "android",
+            "web",
+            "desktop"
+          ]
+        }
+      },
+      {
+        "name": "rows",
+        "type": {
+          "list": "agg_row",
+          "max": 7
+        }
+      },
+      {
+        "name": "perf",
+        "type": {
+          "list": "agg_perf_row",
+          "max": 27
+        }
+      }
+    ],
+    "agg_perf_row": [
+      {
+        "name": "metric",
+        "type": {
+          "enum": [
+            "wasm_init_ms",
+            "tap_to_audio_ms",
+            "audio_resolution"
+          ]
+        }
+      },
+      {
+        "name": "bucket",
+        "type": {
+          "enum": [
+            "lt100",
+            "lt250",
+            "lt500",
+            "lt1000",
+            "lt2000",
+            "lt5000",
+            "ge5000",
+            "resolved",
+            "unavailable"
+          ]
+        }
+      },
+      {
+        "name": "count",
+        "type": {
+          "uint": 1000000
+        }
+      }
+    ],
+    "agg_row": [
+      {
+        "name": "error_code",
+        "type": {
+          "enum": [
+            "js_uncaught",
+            "js_unhandled_rejection",
+            "wasm_panic",
+            "wasm_init_failed",
+            "pack_load_failed",
+            "native_crash",
+            "native_hang"
+          ]
+        }
+      },
+      {
+        "name": "count",
+        "type": {
+          "uint": 1000000
+        }
+      }
+    ],
+    "error_event": [
+      {
+        "name": "error_code",
+        "type": {
+          "enum": [
+            "js_uncaught",
+            "js_unhandled_rejection",
+            "wasm_panic",
+            "wasm_init_failed",
+            "pack_load_failed",
+            "native_crash",
+            "native_hang"
+          ]
+        }
+      },
+      {
+        "name": "lang",
+        "type": {
+          "enum": [
+            "en",
+            "es",
+            "fr",
+            "de",
+            "pt",
+            "pl",
+            "vi",
+            "ko",
+            "ja",
+            "fil",
+            "ru",
+            "sw",
+            "ar",
+            "hi",
+            "fa",
+            "zh",
+            "mine",
+            "other"
+          ]
+        }
+      },
+      {
+        "name": "mode",
+        "type": {
+          "enum": [
+            "home",
+            "standard",
+            "daily",
+            "review",
+            "versus",
+            "practice",
+            "ghost_racing",
+            "racing",
+            "say_it",
+            "def_match",
+            "letter_forge",
+            "word_chains",
+            "impostor",
+            "bee_sim",
+            "word_picture",
+            "translate",
+            "online_spelloff",
+            "my_lists"
+          ]
+        }
+      },
+      {
+        "name": "stack_hash",
+        "type": "hash64"
+      }
+    ],
+    "event_batch": [
+      {
+        "name": "v",
+        "type": "version"
+      },
+      {
+        "name": "build",
+        "type": "build"
+      },
+      {
+        "name": "platform",
+        "type": {
+          "enum": [
+            "ios",
+            "android",
+            "web",
+            "desktop"
+          ]
+        }
+      },
+      {
+        "name": "session_id",
+        "type": "hash64"
+      },
+      {
+        "name": "events",
+        "type": {
+          "list": "error_event",
+          "max": 200
+        }
+      },
+      {
+        "name": "perf",
+        "type": {
+          "list": "perf_row",
+          "max": 486
+        }
+      }
+    ],
+    "flags": [
+      {
+        "name": "telemetry_enabled",
+        "type": "bool"
+      }
+    ],
+    "perf_row": [
+      {
+        "name": "metric",
+        "type": {
+          "enum": [
+            "wasm_init_ms",
+            "tap_to_audio_ms",
+            "audio_resolution"
+          ]
+        }
+      },
+      {
+        "name": "bucket",
+        "type": {
+          "enum": [
+            "lt100",
+            "lt250",
+            "lt500",
+            "lt1000",
+            "lt2000",
+            "lt5000",
+            "ge5000",
+            "resolved",
+            "unavailable"
+          ]
+        }
+      },
+      {
+        "name": "lang",
+        "type": {
+          "enum": [
+            "en",
+            "es",
+            "fr",
+            "de",
+            "pt",
+            "pl",
+            "vi",
+            "ko",
+            "ja",
+            "fil",
+            "ru",
+            "sw",
+            "ar",
+            "hi",
+            "fa",
+            "zh",
+            "mine",
+            "other"
+          ]
+        }
+      },
+      {
+        "name": "count",
+        "type": {
+          "uint": 1000000
+        }
+      }
+    ]
+  },
+  "version": 1
+}

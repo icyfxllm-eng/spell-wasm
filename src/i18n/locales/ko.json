@@ -466,6 +466,8 @@
   "settings.remindSmall": "연습을 위한 하루 한 번의 알림",
   "settings.remindTime": "알림 시간",
   "settings.remindTimeSmall": "매일 알림을 보낼 시간",
+  "settings.telemetry": "SpellGame 개선에 참여",
+  "settings.telemetrySmall": "오류 및 속도 보고서를 보냅니다. 단어, 답변, 개인 정보는 절대 보내지 않습니다.",
   "settings.slow": "느린 음성",
   "settings.slowSmall": "각 단어를 더 천천히 읽기",
   "settings.title": "설정",

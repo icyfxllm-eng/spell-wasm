@@ -466,6 +466,8 @@
   "settings.remindSmall": "每天一次温和的练习提醒",
   "settings.remindTime": "提醒时间",
   "settings.remindTimeSmall": "何时发送每日提醒",
+  "settings.telemetry": "帮助改进 SpellGame",
+  "settings.telemetrySmall": "发送崩溃和速度报告。绝不发送你的单词、答案或任何关于你的信息。",
   "settings.slow": "慢速语音",
   "settings.slowSmall": "更慢地朗读每个词",
   "settings.title": "设置",
