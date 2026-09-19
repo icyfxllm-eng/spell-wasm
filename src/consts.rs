@@ -121,6 +121,13 @@ pub fn telemetry_default_on() -> bool {
     EDITION == Edition::Consumer
 }
 
+/// Whether telemetry is aggregate-only regardless of audience
+/// (CC-TELEMETRY-FOUNDATION D7: in the Education edition, when a school turns
+/// it on, only aggregate counts are kept, never per-event records).
+pub fn telemetry_aggregate_only() -> bool {
+    EDITION == Edition::Education
+}
+
 /// Whether the app can render, input, and mirror right-to-left scripts.
 ///
 /// CC-LINEUP-SWAP D2: this is the ONLY switch that can ever un-gate an
