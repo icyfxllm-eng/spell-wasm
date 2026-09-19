@@ -122,6 +122,8 @@ mod word_data;
 mod word_lists; // CC-MYWORDS-LISTS v1 — dated word lists
 #[cfg(test)]
 mod wordgrid_census; // CC-WORDGRID §3: measurement only
+#[cfg(test)]
+mod human_audio_census; // CC-HUMAN-AUDIO Phase A: bank dump for the census
 #[cfg(not(feature = "web"))]
 mod lists_ui; // CC-MYWORDS-LISTS F1 — the save sheet's destination (app only)
 #[cfg(not(feature = "web"))]
