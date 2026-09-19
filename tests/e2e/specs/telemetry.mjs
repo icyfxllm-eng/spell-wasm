@@ -1,4 +1,4 @@
-// telemetry.spec — CC-TELEMETRY-FOUNDATION v1.1 acceptance 2, 3, 5, 6, 7.
+// telemetry.spec — CC-TELEMETRY-FOUNDATION v1.1 acceptance 2–7, and F7.
 //
 // Every telemetry request is answered by this spec (flags) or captured (posts),
 // and every captured payload is checked with the WORKER's own validator over
@@ -108,6 +108,20 @@ async function playRounds(page, rounds) {
   }
   return { seen, latencies };
 }
+
+// Flip a settings switch the way settings-effects.spec does.
+const flip = (page, id, on) => page.evaluate(([i, v]) => {
+  const el = document.getElementById(i);
+  el.checked = v;
+  el.dispatchEvent(new Event('change', { bubbles: true }));
+}, [id, on]);
+
+const openSettingsSheet = async (page) => {
+  await page.click('#setBtn');
+  await page.waitForSelector('#setScrim.show', { timeout: 4000 });
+};
+
+const eventCount = (ep) => ep.posts.reduce((n, p) => n + (JSON.parse(p.text).events || []).length, 0);
 
 const median = (xs) => { const s = [...xs].sort((a, b) => a - b); return s[Math.floor(s.length / 2)]; };
 
@@ -274,5 +288,131 @@ export async function run(browser, base, suite) {
     const tol = Math.max(0.05 * med.up, 16.7);
     process.stdout.write(`    round latency median: up ${med.up} ms, down ${med.down} ms (tolerance ${tol.toFixed(1)} ms)\n`);
     assert(Math.abs(med.down - med.up) <= tol, `down ${med.down} ms vs up ${med.up} ms`);
+  });
+  // F7 — "Help improve SpellGame". Off: nothing leaves and nothing held
+  // survives; on: sending resumes.
+  await suite.test('settings_effect_telemetry', async () => {
+    const ep = endpoint();
+    const { ctx, page } = await openApp(browser, base, { lang: 'en', telemetry: ep.handler });
+    try {
+      assert(await until(async () => (await store(page, 'spell_flag_telemetry_enabled')) === 'on'), 'kill switch never cached');
+      await openSettingsSheet(page);
+      assert(await page.evaluate(() => document.getElementById('telemetryToggle').checked), 'on by default for a standard player (D3)');
+      await page.evaluate(() => localStorage.setItem('spell_tel_queue_v1', JSON.stringify([{ c: 'wasm_panic', l: 'en', m: 'home', h: '0123456789abcdef' }])));
+      await flip(page, 'telemetryToggle', false);
+      assertEq(await store(page, 'spell_telemetry_opt_v1'), 'off', 'choice stored');
+      assertEq(await store(page, 'spell_tel_queue_v1'), null, 'queue cleared when switched off');
+      const before = eventCount(ep);
+      await raise(page);
+      await page.waitForTimeout(100);
+      await hide(page);
+      await page.waitForTimeout(800);
+      assertEq(eventCount(ep), before, 'events sent while off');
+
+      await flip(page, 'telemetryToggle', true);
+      await raise(page, 'again');
+      await page.waitForTimeout(100);
+      await hide(page);
+      assert(await until(() => eventCount(ep) > before), 'nothing sent after switching back on');
+    } finally { await ctx.close(); }
+  });
+
+  await suite.test('settings_effect_telemetry_jr_needs_a_grown_up', async () => {
+    const ep = endpoint();
+    const { ctx, page } = await openApp(browser, base, { lang: 'en', age: KID, telemetry: ep.handler });
+    try {
+      await openSettingsSheet(page);
+      await flip(page, 'telemetryToggle', false);
+      await page.waitForSelector('#parentScrim.show', { timeout: 4000 });
+      assert(await page.evaluate(() => document.getElementById('telemetryToggle').checked), 'the switch snapped back');
+      assertEq(await store(page, 'spell_telemetry_opt_v1'), null, 'a child changed it without the gate');
+      const q = (await page.textContent('#parentQ')) || '';
+      const W = { three: 3, four: 4, five: 5, six: 6, seven: 7, eight: 8 };
+      const nums = (q.toLowerCase().match(/three|four|five|six|seven|eight/g) || []).map((w) => W[w]);
+      assert(nums.length === 2, `could not read the parent question ${JSON.stringify(q)}`);
+      await page.fill('#parentAnswer', String(nums[0] * nums[1]));
+      await page.click('#parentSubmit');
+      assert(await until(async () => (await store(page, 'spell_telemetry_opt_v1')) === 'off'), 'the grown-up could not turn it off');
+      assert(!(await page.evaluate(() => document.getElementById('telemetryToggle').checked)), 'switch shows off');
+      assert(!(await page.evaluate(() => document.getElementById('ageScrim').classList.contains('show'))), 'the gate reopened the birthday prompt instead');
+    } finally { await ctx.close(); }
+  });
+
+  await suite.test('settings_effect_telemetry_kill_switch_overrides', async () => {
+    const ep = endpoint({ on: false });
+    const { ctx, page } = await openApp(browser, base, { lang: 'en', telemetry: ep.handler });
+    try {
+      assert(await until(async () => (await store(page, 'spell_flag_telemetry_enabled')) === 'off'), 'kill switch never cached');
+      await openSettingsSheet(page);
+      const st = await page.evaluate(() => {
+        const el = document.getElementById('telemetryToggle');
+        return { disabled: el.disabled, checked: el.checked, row: el.closest('.set-row').classList.contains('suppressed') };
+      });
+      assert(st.disabled && st.row && !st.checked, `not rendered as overridden: ${JSON.stringify(st)}`);
+    } finally { await ctx.close(); }
+  });
+  // Acceptance 4 — personal data never reaches a payload: My Words, sign-in,
+  // and a Snap a List review, with errors raised and flushed at each stage.
+  // Say It needs the iOS speech bridge and can't run here (sayit.spec proves
+  // it stays hidden off-iOS); the schema has no field that could carry audio
+  // either way (schema_lint, I2).
+  await suite.test('personal_data_never_reaches_a_payload', async () => {
+    const SECRETS = ['quokkazebra', 'marmotflute', 'snapwordalpha', 'secret.parent@example.com', 'Tr0ub4dorXyz9%', 'Pat Parent'];
+    const ep = endpoint();
+    const urls = [];
+    const capture = (route) => { urls.push(route.request().url()); return ep.handler(route); };
+    const custom = { words: ['quokkazebra', 'marmotflute'], speakLang: 'en-US', wordLang: {} };
+    const { ctx, page } = await openApp(browser, base, { age: '', telemetry: capture });
+    // Seeded for the reload below (addInitScript applies to later navigations).
+    await ctx.addInitScript((c) => { if (!localStorage.getItem('byear_custom_v1')) localStorage.setItem('byear_custom_v1', JSON.stringify(c)); }, custom);
+    await ctx.route('**/api/auth/**', (r) => r.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify({ ok: true }) }));
+    try {
+      assert(await until(async () => (await store(page, 'spell_flag_telemetry_enabled')) === 'on'), 'kill switch never cached');
+      const flushNow = async (label) => { await raise(page, `${label} ${SECRETS.join(' ')}`); await page.waitForTimeout(100); await hide(page); await page.waitForTimeout(400); };
+
+      // Sign-in: an adult birthday opens the front door; type an address and a password.
+      await page.waitForSelector('#ageScrim.show', { timeout: 4000 });
+      await page.selectOption('#ageYear', '1990');
+      await page.selectOption('#ageMonth', '1');
+      await page.selectOption('#ageDay', '1');
+      await page.click('#ageSubmit');
+      await page.waitForSelector('#frontDoor.show', { timeout: 5000 });
+      await page.fill('#fdEmail', 'secret.parent@example.com');
+      await page.fill('#fdPassword', 'Tr0ub4dorXyz9%');
+      await page.click('#fdLogin').catch(() => {});
+      await page.waitForTimeout(400);
+      await flushNow('login');
+      await page.click('#fdGuest').catch(() => {});
+      await page.waitForTimeout(300);
+
+      // My Words: reload so the seeded words exist, play them.
+      await page.reload({ waitUntil: 'load' });
+      await page.evaluate((b) => { window.SPELL_API_BASE = b.replace(/\/$/, ''); }, base);
+      await page.waitForFunction(() => window.__spelltest && window.__spelltest.build() === 'testseam', null, { timeout: 30000 });
+      await page.click('#setupChip').catch(() => {});
+      await page.selectOption('#langSel', '__mine').catch(() => {});
+      await page.click('#setupDone').catch(() => {});
+      await page.waitForTimeout(200);
+      await page.click('#orbWrap');
+      await page.waitForTimeout(400);
+      const served = await page.evaluate(() => window.__spelltest.currentWord());
+      assert(['quokkazebra', 'marmotflute'].includes(served), `My Words not served (got ${served})`);
+      await flushNow('mywords');
+
+      // Snap a List: the review sheet with a recognised word.
+      await page.evaluate(() => window.__spelltest.photoReview(JSON.stringify(['snapwordalpha'])));
+      await page.waitForTimeout(300);
+      await flushNow('photo');
+
+      assert(ep.posts.length > 0, 'nothing was sent: the test proves nothing');
+      for (const p of ep.posts) {
+        const b = JSON.parse(p.text);
+        assertEq(validate(p.path.endsWith('/v1/events') ? 'event_batch' : 'agg_batch', b), null, 'schema');
+        for (const secret of SECRETS) assert(!p.text.includes(secret), `payload carried "${secret}": ${p.text}`);
+      }
+      for (const u of urls) for (const secret of SECRETS) assert(!u.includes(encodeURIComponent(secret)) && !u.includes(secret), `URL carried "${secret}"`);
+      const langs = new Set(ep.posts.flatMap((p) => JSON.parse(p.text).events || []).map((e) => e.lang));
+      assert(langs.has('mine'), `a My Words error is recorded as lang "mine", got ${JSON.stringify([...langs])}`);
+    } finally { await ctx.close(); }
   });
 }

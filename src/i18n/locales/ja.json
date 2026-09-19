@@ -466,6 +466,8 @@
   "settings.remindSmall": "練習のための一日一回のやさしいお知らせ",
   "settings.remindTime": "リマインダー時刻",
   "settings.remindTimeSmall": "毎日のお知らせを送る時刻",
+  "settings.telemetry": "SpellGame の改善に協力",
+  "settings.telemetrySmall": "クラッシュと速度のレポートを送信します。単語や回答、あなたに関する情報は送信しません。",
   "settings.slow": "ゆっくりの声",
   "settings.slowSmall": "単語をよりゆっくり読む",
   "settings.title": "設定",

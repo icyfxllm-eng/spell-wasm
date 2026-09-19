@@ -466,6 +466,8 @@
   "settings.remindSmall": "One gentle nudge a day to practice",
   "settings.remindTime": "Reminder time",
   "settings.remindTimeSmall": "When to send the daily nudge",
+  "settings.telemetry": "Help improve SpellGame",
+  "settings.telemetrySmall": "Sends crash and speed reports. Never your words, answers, or anything about you.",
   "settings.slow": "Slower voice",
   "settings.slowSmall": "Speak each word more slowly",
   "settings.title": "Settings",

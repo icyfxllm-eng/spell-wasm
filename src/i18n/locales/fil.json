@@ -466,6 +466,8 @@
   "settings.remindSmall": "Isang magiliw na paalala kada araw para mag-ensayo",
   "settings.remindTime": "Oras ng paalala",
   "settings.remindTimeSmall": "Kailan ipapadala ang pang-araw-araw na paalala",
+  "settings.telemetry": "Tumulong pagbutihin ang SpellGame",
+  "settings.telemetrySmall": "Nagpapadala ng ulat tungkol sa crash at bilis. Hindi kailanman ang iyong mga salita, sagot, o anumang tungkol sa iyo.",
   "settings.slow": "Mas mabagal na boses",
   "settings.slowSmall": "Bigkasin ang bawat salita nang mas mabagal",
   "settings.title": "Mga setting",

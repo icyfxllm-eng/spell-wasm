@@ -652,6 +652,25 @@ fn wire_glow_and_settings(app: &App) {
             dom::add_class("setScrim", "show");
         });
     }
+    // CC-TELEMETRY-FOUNDATION F7: "Help improve SpellGame". A standard player
+    // flips it directly; for a Jr or not-yet-answered player the switch snaps
+    // back and only the parent gate can change it.
+    {
+        let a = app.clone();
+        dom::on::<web_sys::Event, _>("telemetryToggle", "change", move |_| {
+            let v = dom::input("telemetryToggle").checked();
+            if telemetry::switch_needs_grown_up() {
+                dom::input("telemetryToggle").set_checked(!v);
+                let a2 = a.clone();
+                parent_gate_then(Box::new(move || {
+                    telemetry::set_switch(v);
+                    settings::apply_settings(&a2);
+                }));
+                return;
+            }
+            telemetry::set_switch(v);
+        });
+    }
     // CC-ONBOARD-JR F5: the locked Spell Jr row's one control is the parent gate.
     dom::on_click("kidGrownups", || open_parent_gate());
     {

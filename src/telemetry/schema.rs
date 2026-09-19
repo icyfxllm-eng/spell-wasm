@@ -477,6 +477,7 @@ mod tests {
             "workers/telemetry/schema.json",    // generated
             "workers/telemetry/src/index.js",   // the endpoint (validates via schema.json)
             "workers/telemetry/migrations/0001_init.sql",
+            "workers/telemetry/reports/crashes.sql", // acceptance 9 report
             "workers/telemetry/test/worker.test.js",
             "workers/telemetry/README.md",
             "tests/e2e/specs/telemetry.mjs",

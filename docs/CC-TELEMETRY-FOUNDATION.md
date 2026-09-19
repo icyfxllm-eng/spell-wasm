@@ -1,6 +1,6 @@
 # CC-TELEMETRY-FOUNDATION v1.1
 
-**Status:** Phases A and B BUILT on branch `cc-telemetry` (2026-09-18). Not deployed: the Worker needs Eric's first deploy (`workers/telemetry/README.md`) and the R8 server change needs `deploy.sh`. Nothing ships to players before the F7 disclosures are signed.
+**Status:** Phases A, B and C BUILT on branch `cc-telemetry` (2026-09-18). Not deployed: the Worker needs Eric's first deploy (`workers/telemetry/README.md`) and the R8 server change needs `deploy.sh`. Nothing ships to players before the F7 disclosures are signed.
 **Supersedes v1.** v1.1 covers **crash reporting (F1) and performance (F5) only**, per Eric's D-TEL sign-off (2026-09-18, "add with the recommendations").
 **Blast radius:** one new network endpoint plus error and performance hooks. Zero gameplay behavior change. Must not delay the next TestFlight build (R10b: the v1.1 draft said "build 56"; TestFlight was at build 226).
 
@@ -66,9 +66,14 @@ If any boundary no longer holds: **stop and ask.**
 **Behavior:** when `audience()` is Junior or Unknown, and always in the Education edition, only aggregate counts are kept: crashes by `error_code`, and performance buckets. They're sent at most once per day, at a random time 24–48 h after the previous send, with no identifier of any kind.
 
 ### F7. Consent surface and disclosures
-- Settings toggle "Help improve SpellGame" (default on for standard players; in the parent-gated area for Jr). The storage key `spell_telemetry_opt_v1` exists; the row itself is Phase C.
-- `privacy_label_answers.md`: expected Diagnostics only, *Not Linked to You*, *Not Used for Tracking*. Eric enters these manually.
-- A draft privacy-policy paragraph for spellgame.net (REVIEW-GATED, don't publish). R7's fix for the existing inaccuracies lands first.
+- **Toggle (built):** Settings → "Help improve SpellGame" (`telemetryToggle`, stored in `spell_telemetry_opt_v1`).
+  - Defaults: on for consumers (D3), off in Education (D7).
+  - Off stops all sending and clears everything held locally.
+  - For a Jr or not-yet-answered player the switch snaps back, and only the parent gate (`parent_gate_then`) can change it. That works on web and in the app; the guardian dashboard is app-only.
+  - It renders disabled when the server's kill switch is off.
+  - It's declared in `config/settings-effects.json`. Its label is translated into all 15 locales; those translations need native review like other UI copy.
+- **`docs/telemetry/privacy_label_answers.md` (written):** Diagnostics → Crash Data + Performance Data, *Not Linked to You*, *Not Used for Tracking*, App Functionality. Eric enters these manually. It also lists the non-telemetry flows the label should be checked against.
+- **`docs/telemetry/privacy_policy_draft.md` (written, REVIEW-GATED, don't publish):** the new section plus a sentence for the short version. It depends on R7 landing first and on the Cloudflare IP check.
 
 ---
 
@@ -131,7 +136,12 @@ If any boundary no longer holds: **stop and ask.**
   2. F5 client buckets (`08cec32e`)
   3. MetricKit bridge (`82ff60f2`)
   4. Acceptance 7 and 5-timing; telemetry randomness moved to `crypto` (I8)
-- **Phase C:** F7 toggle row, `privacy_label_answers.md`, privacy-policy draft → the usefulness report (acceptance 9).
+- **Phase C (built):**
+  1. F7 toggle row
+  2. `privacy_label_answers.md`
+  3. privacy-policy draft
+  4. acceptance 4
+  5. the usefulness report: `scripts/telemetry_report.sh` + `workers/telemetry/reports/*.sql`, checked against a SQLite built from the migrations
 
 ## Deferred (not in scope; each needs a signed CC-LEARNING-ENGINE D5 amendment first)
 
@@ -149,12 +159,12 @@ If any boundary no longer holds: **stop and ask.**
 | 1 | Schema lint: no unbounded string; no learning-data field name | `telemetry::schema::tests::schema_lint` | ✅ |
 | 2 | Jr capture | e2e `telemetry` `jr_sends_only_one_daily_aggregate` | ✅ |
 | 3 | Unknown-age capture | e2e `telemetry` `unknown_age_sends_only_one_daily_aggregate` | ✅ |
-| 4 | Personal-data capture (Say-It, Snap a List, My Words, login) | — | Phase C: needs the native mic and photo surfaces |
+| 4 | Personal-data capture (Say-It, Snap a List, My Words, login) | e2e `personal_data_never_reaches_a_payload` | ✅ for My Words, sign-in (email + password typed) and the Snap a List review sheet. Say It needs the iOS speech bridge and can't run in the browser; the schema has no field that could carry audio (`schema_lint`). |
 | 5 | Endpoint down: invisible, queue kept and capped, no added latency | e2e `endpoint_down_is_invisible_and_keeps_the_queue`, `endpoint_down_costs_no_round_latency` + `queue_caps_drop_oldest` | ✅ Tolerance is max(5%, one 60 Hz frame); medians are about 50 ms, where 5% can't be measured. It measures verdict-paint latency, not frame time. |
 | 6 | Kill switch | e2e `kill_switch_sends_nothing_and_clears_the_queue` | ✅ (the flags GET itself continues; it carries no data) |
 | 7 | Observe-never-act | e2e `observe_never_act_replay_is_identical_on_and_off` | ✅ Mutation-checked: telemetry stealing one `Math.random` changes the served words, and the test fails |
 | 8 | Single source | `telemetry::schema::tests::single_source`, `bindings_are_current` | ✅ |
-| 9 | Usefulness | — | After two weeks on TestFlight |
+| 9 | Usefulness | `scripts/telemetry_report.sh` | Report built; the pass/fail needs two weeks of TestFlight data after deploy |
 
 ## Non-goals
 

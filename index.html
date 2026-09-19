@@ -2780,6 +2780,9 @@
            phone and a dead router is invisible from outside the debugger. -->
       <div class="set-row" id="audioSourceRow"><span class="lbl2"><span>Audio source (debug)</span><small id="audioSourceNote" style="word-break:break-word;opacity:.75">nothing played yet</small></span></div>
       <label class="set-row"><span class="lbl2"><span data-i18n="settings.remind">Daily reminder</span><small data-i18n="settings.remindSmall">One gentle nudge a day to practice</small></span><input type="checkbox" class="switch" id="remindToggle" /></label>
+      <!-- CC-TELEMETRY-FOUNDATION F7 (D11). A Jr or not-yet-answered player can
+           only change it through the parent gate (lib.rs). -->
+      <label class="set-row" id="telemetryRow"><span class="lbl2"><span data-i18n="settings.telemetry">Help improve SpellGame</span><small data-i18n="settings.telemetrySmall">Sends crash and speed reports. Never your words, answers, or anything about you.</small></span><input type="checkbox" class="switch" id="telemetryToggle" /></label>
       <label class="set-row" id="remindTimeRow"><span class="lbl2"><span data-i18n="settings.remindTime">Reminder time</span><small data-i18n="settings.remindTimeSmall">When to send the daily nudge</small></span><input type="time" id="remindTime" value="17:00" aria-label="Daily reminder time" /></label>
       <div class="set-row">
         <span class="lbl2"><span data-i18n="settings.volume">Volume boost</span><small data-i18n="settings.volumeSmall">Louder than 100% for quiet speakers</small></span>

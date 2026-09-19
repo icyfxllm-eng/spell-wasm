@@ -247,6 +247,34 @@ fn clear_all() {
     }
 }
 
+// ---- F7: "Help improve SpellGame" -------------------------------------------
+
+/// The switch as the player sees it: their choice, else the edition default
+/// (on for consumers, D3; off in the Education build, D7).
+pub fn switch_on() -> bool {
+    opted().unwrap_or(consts::telemetry_default_on())
+}
+
+/// F7 — only a grown-up may change it for a Jr or not-yet-answered player.
+pub fn switch_needs_grown_up() -> bool {
+    audience_now() != Audience::Standard
+}
+
+/// The server has turned telemetry off (I7): the switch is overridden and
+/// renders as such, since nothing is sent whatever it says.
+pub fn switch_overridden() -> bool {
+    KILLED.with(Cell::get) || remote() == Some(false)
+}
+
+/// Record the player's choice. Off also clears everything held locally, so
+/// turning it off means nothing already recorded leaves either.
+pub fn set_switch(on: bool) {
+    storage::set_raw(OPT_KEY, if on { "on" } else { "off" });
+    if !on {
+        clear_all();
+    }
+}
+
 // ---- Recording ---------------------------------------------------------------
 
 /// F1 — record one error. Cheap, bounded, and silent on every failure.

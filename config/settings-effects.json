@@ -48,6 +48,15 @@
       "harness": "web"
     },
     {
+      "key": "telemetryToggle",
+      "surface": "settings",
+      "state": "localStorage spell_telemetry_opt_v1 (absent = edition default: on for consumers, off in Education)",
+      "effect": "CC-TELEMETRY-FOUNDATION F7: off stops every telemetry send and clears the local queue, aggregate and perf cells at once; on resumes. For a Jr or not-yet-answered player the switch snaps back and only the parent gate can change it",
+      "test": "settings_effect_telemetry",
+      "suppressed_by": "the server kill switch (spell_flag_telemetry_enabled = off): nothing is sent whatever the switch says, so it renders disabled",
+      "harness": "web"
+    },
+    {
       "key": "remindToggle",
       "surface": "settings",
       "state": "remind",
