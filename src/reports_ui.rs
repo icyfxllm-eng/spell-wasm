@@ -29,7 +29,7 @@ fn render(app: &crate::App) {
     crate::dom::set_html("repConquer", &html);
 
     let mut html = String::new();
-    for word in crate::reports::rematch_set(&s, &lang, js_sys::Date::now(), 36.0 * 3600.0 * 1000.0) {
+    for word in crate::learner_query::LearnerQuery::at_risk_set(&crate::learner_query::live(&s), crate::learner_query::DEVICE, &lang, 1.5) {
         html.push_str(&format!(
             "<div class=\"rep-row door\" data-door=\"rematch\"><span>{}</span><span>\u{25B6}</span></div>",
             crate::dom::escape_html(&word)

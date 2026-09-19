@@ -143,24 +143,24 @@ pub fn compile(state: &crate::model::AppState, period: Period, today: u32) -> Bo
         .max_by_key(|(_, _, _, _, touched)| *touched)
         .map(|(pic, _, _, _, _)| pic.clone());
 
-    let st = crate::learner::load_for(&state.lang);
+    // Through LearnerQuery (L0 I6).
+    let log = crate::learner_query::LearnerQuery::attempt_log(
+        &crate::learner_query::live(state), crate::learner_query::DEVICE, &state.lang);
     let in_period =
         |day: u32| day >= lo && day <= hi;
-    let mastered_in_period = st
-        .log
+    let mastered_in_period = log
         .iter()
         .filter(|a| a.correct && in_period(a.day))
         .map(|a| a.word.as_str())
         .collect::<std::collections::BTreeSet<_>>()
         .len();
-    let hardest_word = st
-        .log
+    let hardest_word = log
         .iter()
         .filter(|a| a.correct && in_period(a.day))
         .max_by_key(|a| a.word.chars().count())
         .map(|a| a.word.clone());
     let mut first_words: Vec<(String, String)> = Vec::new();
-    if let Some(first) = st.log.iter().find(|a| a.correct && in_period(a.day)) {
+    if let Some(first) = log.iter().find(|a| a.correct && in_period(a.day)) {
         first_words.push((state.lang.clone(), first.word.clone()));
     }
 

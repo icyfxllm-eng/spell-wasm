@@ -1,5 +1,5 @@
 //! CC-REPORTS — ReportsQuery, the ONE data path (feature 3). Strictly
-//! read-only over learner state, misses, and stats (I1: any write from
+//! read-only over learner state (through `LearnerQuery`, L0 I6), misses, and stats (I1: any write from
 //! here is a build failure — the gate greps for it). Two framings, one
 //! computation (D5): the kid sees a quest log, the guardian sees a
 //! diagnosis, and no deficit framing ever reaches a kid surface (I4).
@@ -43,27 +43,15 @@ pub fn words_to_conquer(state: &crate::model::AppState, lang: &str, cap: usize) 
     v.into_iter().map(|(w, n)| (w, (n.min(4)) as u8)).collect()
 }
 
-/// Ready for a rematch (kid) / At risk this week (guardian) — the SAME
-/// FSRS due window, two audited names (D5). Words currently in the miss
-/// scheduler due within `horizon_ms`.
-pub fn rematch_set(state: &crate::model::AppState, lang: &str, now_ms: f64, horizon_ms: f64) -> Vec<String> {
-    let mut v: Vec<(f64, String)> = state
-        .misses
-        .iter()
-        .filter(|m| m.lang == lang && m.due <= now_ms + horizon_ms)
-        .map(|m| (m.due, m.word.clone()))
-        .collect();
-    v.sort_by(|a, b| a.0.partial_cmp(&b.0).unwrap_or(std::cmp::Ordering::Equal));
-    v.into_iter().map(|(_, w)| w).collect()
-}
-
 /// Trap Boss mastery bars: the learner model's per-skill mastery, 0..=100.
-pub fn trap_mastery(lang: &str) -> Vec<(String, u8)> {
-    let st = crate::learner::load_for(lang);
+/// Reads through `LearnerQuery` (L0 I6). No caller yet (Trap Boss UI).
+#[cfg_attr(not(test), allow(dead_code))]
+pub fn trap_mastery(q: &dyn crate::learner_query::LearnerQuery, lang: &str) -> Vec<(String, u8)> {
+    let skills = q.skill_states(crate::learner_query::DEVICE, lang);
     crate::learner::taxonomy(lang)
         .into_iter()
         .map(|t| {
-            let m = st.skills.iter().find(|s| s.id == t).map(|s| s.mastery).unwrap_or(0.0);
+            let m = skills.iter().find(|s| s.id == t).map(|s| s.mastery).unwrap_or(0.0);
             (t.to_string(), (m * 100.0).round().clamp(0.0, 100.0) as u8)
         })
         .collect()
@@ -179,13 +167,12 @@ pub fn hesitant_words(lang: &str, cap: usize) -> Vec<(String, u32)> {
     v
 }
 
-pub fn confusion_pairs(lang: &str) -> Vec<((char, char), Position, u32)> {
-    let st = crate::learner::load_for(lang);
+/// Reads the typed misses through `LearnerQuery` (L0 I6).
+pub fn confusion_pairs(q: &dyn crate::learner_query::LearnerQuery, lang: &str) -> Vec<((char, char), Position, u32)> {
     let mut counts: std::collections::BTreeMap<(char, char, u8), u32> = Default::default();
-    for a in st.log.iter().filter(|a| !a.correct) {
-        let Some(typed) = &a.typed else { continue };
+    for a in q.miss_log(crate::learner_query::DEVICE, lang) {
         if let Some((MissClass::Substitution | MissClass::Transposition, x, y, pos)) =
-            classify_miss(typed, &a.word)
+            classify_miss(&a.typed, &a.word)
         {
             let p = match pos { Position::Initial => 0, Position::Medial => 1, Position::Final => 2 };
             *counts.entry((x, y, p)).or_insert(0) += 1;

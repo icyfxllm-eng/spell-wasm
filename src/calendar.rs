@@ -90,8 +90,10 @@ pub fn unplan_word(lang: &str, day: u32, word: &str) {
 /// index into `win` for a word planned for `day`, but ONLY when nothing
 /// in the window is overdue (due reviews are never displaced). Purely a
 /// function of its arguments — deterministic, D7-style.
+///
+/// `skills` comes from `LearnerQuery::skill_states` for `day` (L0 I6).
 pub fn planned_pick(
-    st: &crate::learner::LearnerState,
+    skills: &[crate::learner_query::SkillView],
     win: &[String],
     lang: &str,
     day: u32,
@@ -100,16 +102,21 @@ pub fn planned_pick(
     if planned.is_empty() {
         return None;
     }
-    for word in win {
-        for id in crate::learner::hazards(lang, word) {
-            if let Some(s) = st.skills.iter().find(|s| s.id == id) {
-                if s.fsrs.reps > 0 && day > s.fsrs.due_day {
-                    return None; // an overdue review outranks every plan
-                }
-            }
-        }
+    if window_has_overdue(skills, win, lang) {
+        return None; // an overdue review outranks every plan
     }
     win.iter().position(|w| planned.contains(w))
+}
+
+/// True if any word in `win` exercises a reviewed skill that is past due.
+/// Split out so the rule is testable against the `LearnerQuery` fake
+/// (plans themselves live in storage).
+pub fn window_has_overdue(skills: &[crate::learner_query::SkillView], win: &[String], lang: &str) -> bool {
+    win.iter().any(|word| {
+        crate::learner::hazards(lang, word)
+            .iter()
+            .any(|id| skills.iter().any(|s| &s.id == id && s.reps > 0 && s.overdue_days > 0))
+    })
 }
 
 // ---------------- goals: the dealt hand ----------------
