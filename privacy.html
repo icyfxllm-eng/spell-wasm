@@ -44,7 +44,7 @@
     <div class="orb">S</div>
     <h1>Spell — Privacy Policy</h1>
   </header>
-  <p class="sub">Effective 10 July 2026</p>
+  <p class="sub">Effective 18 September 2026</p>
 
   <p>Spell is a spelling game published by the maker of <a href="https://spellgame.net">spellgame.net</a>.
      We built Spell to be private by design. This policy explains, in plain language, exactly what
@@ -54,20 +54,42 @@
     <strong>The short version:</strong> Playing Spell requires no account and collects no personal
     information — your progress stays on your device. The only time we collect personal data is if you
     <em>choose</em> to create an account to compete on the online leaderboard ("The Climb"). We never
-    show ads, and we use no third-party analytics or tracking.
+    show ads, and we use no third-party analytics or tracking. A few features do need our server to work
+    — checking English answers, spelling out loud in some languages, and voting for a coming-soon
+    language — and each is explained below, including exactly what is sent and what is kept.
   </div>
 
   <h2>Playing the game — no data collected</h2>
   <p>You can play Spell fully without an account. Your gameplay — streaks, statistics, settings, custom
      word lists, and language choices — is saved only in your device's local storage. It stays on your
-     device, is never sent to us, and is removed if you delete the app or clear its data.</p>
+     device, is never sent to us except as described below, and is removed if you delete
+     the app or clear its data.</p>
 
   <h2>What the app sends to our server to play</h2>
   <p>To play a word, the app asks our server (<code>spellgame.net</code>) for that word's pronunciation
-     audio and dictionary definition. Only the dictionary word is sent — never anything about you. Our
-     server generates and caches audio for common words (using Google Cloud Text-to-Speech) so the app
-     loads quickly; this cache is by word, not by user. All traffic uses HTTPS. We keep standard,
-     short-lived server logs for security and reliability; they are not used to identify or profile you.</p>
+     audio and dictionary definition. For this, only the dictionary word is sent — never anything about
+     you. Our server generates and caches audio for common words (using Google Cloud Text-to-Speech, and
+     Microsoft Azure Speech for Swahili) so the app loads quickly; this cache is by word, not by user.
+     All traffic uses HTTPS and reaches our server through Cloudflare, our network provider. We keep
+     standard, short-lived server logs for security and reliability; they are not used to identify or
+     profile you.</p>
+  <p><strong>Checking English answers.</strong> When you answer an English word, the app sends the word
+     and the answer you typed to our server, which replies only "correct" or "not correct". Your answer
+     is compared and then discarded: our server does not save it or write it to its logs, and it is not
+     linked to you or your device. This happens in every mode, including Spell Jr and the Education
+     edition. If our server can't be reached, the app checks your answer on your device instead.</p>
+
+  <h2>Voting for coming-soon languages</h2>
+  <p>When a language is marked "coming soon", you can tap "Vote for this language" to tell us
+     you'd like it. The app then sends our server the language code and a random ID that the app creates on your device the first
+     time you tap. The ID is not your name, email, device name or advertising ID, and it is not linked to
+     a Climb account. We use it only so that repeated taps from the same device count once when we decide
+     which language to finish next. If the app is offline, the tap is saved and sent the next time it
+     starts.</p>
+  <p>We keep these IDs, grouped by language, for as long as we are counting interest. Because the ID is
+     random and not connected to you, we can't look up which one is yours. Deleting the app removes the
+     copy on your device. Voting does not sign you up for any email or message; see
+     Notifications below.</p>
 
   <h2>The Climb — optional accounts &amp; leaderboard</h2>
   <p>"The Climb" is an optional online leaderboard. It is the only part of Spell that collects personal
@@ -95,16 +117,33 @@
 
   <h2>Microphone and camera</h2>
   <p>The optional handwriting feature recognizes letters you draw on your own screen; the drawing is
-     processed on your device and is not uploaded. Spell does not record audio or use your camera.</p>
+     processed on your device and is not uploaded.</p>
+  <p><strong>Microphone.</strong> On iPhone and iPad you can speak instead of typing. Normally your
+     device's own speech recognition handles this: the audio is recognized on your device and never sent
+     to us.</p>
+  <p>Some languages can't be recognized on some devices. For those, you can choose to use our server
+     instead. The app asks first, on a one-time screen, and only uses the server if you tap "Use the
+     internet". After that, while the microphone is on, the app sends short audio clips of what you say
+     to our server. Each clip goes with the language and a fixed list of that alphabet's letter names,
+     which helps recognition. Our server passes the clip to Google Cloud Speech-to-Text, which acts as
+     our service provider and returns the recognized text. Our server does not save the audio or write
+     it to its logs, and it is not linked to you or your device. This option is never offered in Spell Jr
+     or in the Education edition.</p>
+  <p><strong>Camera and photos.</strong> On iPhone and iPad you can photograph a spelling list, or pick a
+     photo of one, to turn it into your own word list. The photo is read on your device and is not
+     uploaded. This feature is not available in Spell Jr.</p>
 
   <h2>Notifications</h2>
   <p>If you turn on the daily practice reminder, it is scheduled locally on your device. We do not run a
-     push-notification server and cannot send you messages.</p>
+     push-notification server and cannot send you messages. Voting for a coming-soon
+     language records your interest (see above) but does not sign you up for any notification.</p>
 
   <h2>Children's privacy</h2>
   <p>The game itself collects no personal information from anyone, including children. Creating a Climb
      account requires an email address and is intended for players old enough to have one; children
-     playing in Spell Jr do not create accounts, and no personal information is collected from them. We
+     playing in Spell Jr do not create accounts, and no personal information is collected from them.
+     In Spell Jr the app never sends voice audio to our server and the camera feature is hidden. Typed
+     English answers are still checked by our server, as described above, and are not stored. We
      do not knowingly collect personal information from children under 13. If you believe a child has
      created an account, contact us and we will delete it.</p>
 
