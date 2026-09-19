@@ -64,12 +64,14 @@ jobs:
       - name: Run E2E suite
         run: node tests/e2e/run.mjs
 
-      # The suite writes tests/e2e/TEST-REPORT.md; keep it on failure so a red run
-      # is diagnosable without re-running locally.
+      # The suite writes tests/e2e/TEST-REPORT-app.md (run.mjs: one report per
+      # build). This path said TEST-REPORT.md, a file nothing writes, so with
+      # if-no-files-found: ignore no failure report was ever uploaded. Keep it on
+      # failure so a red run is diagnosable without re-running locally.
       - name: Upload test report
         if: always()
         uses: actions/upload-artifact@v4
         with:
           name: e2e-report
-          path: tests/e2e/TEST-REPORT.md
-          if-no-files-found: ignore
+          path: tests/e2e/TEST-REPORT-*.md
+          if-no-files-found: warn
