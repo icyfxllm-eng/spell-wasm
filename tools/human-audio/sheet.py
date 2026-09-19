@@ -17,7 +17,7 @@ Outputs, under <dir>/audit/<sheet-id>/:
   sheet.csv          what the auditor fills (verdict column), stamped
   clips/rNNNN.m4a    the normalized clips, named by row
   listen.html        a local page to play each row and fill the verdicts
-  <sheet-id>-DECOY-KEY.json   next to the audit folder, NOT inside it; never send it
+  keys/<sheet-id>-DECOY-KEY.json   outside the audit folder (which may be served); never send it
 
 Run: python3 tools/human-audio/sheet.py --dir ~/repos/ha-census-cache/phase-b/en
 """
@@ -138,6 +138,8 @@ def main():
     ap.add_argument("--tiers", nargs="*", default=TIERS)
     ap.add_argument("--seed", type=int, default=20260919)
     ap.add_argument("--bank", help="bank.tsv from the census dump (default: two levels above --dir)")
+    ap.add_argument("--entries", help="with one --tiers value: only these entries (a file, one per line)")
+    ap.add_argument("--label", help="sheet-id label instead of the tier name, e.g. easy-part2")
     ap.add_argument("--second-look", nargs="+", metavar="TIER",
                     help="instead: one sheet of these tiers' entries lost to the whisper check alone")
     a = ap.parse_args()
@@ -194,10 +196,17 @@ def main():
         jobs.append((f"{lang}-secondlook-{today}", "secondlook", real, a.second_look,
                      set(whisper_only)))
     else:
+        only = None
+        if a.entries:
+            # A partial re-audit (Eric, 2026-09-19): a sheet whose decoys failed
+            # is redone as a FRESH sheet of the rows in question, with new
+            # decoys, so nothing learned from the failed sheet carries over.
+            only = {l.strip() for l in pathlib.Path(a.entries).expanduser().read_text().splitlines() if l.strip()}
         for tier in a.tiers:
-            real = [real_row(*sorted(passed[k], key=rank)[0])
-                    for k in sorted(k for k in passed if min(tiers_of[k], key=TIERS.index) == tier)]
-            jobs.append((f"{lang}-{tier}-{today}", tier, real, [tier], set()))
+            keys = sorted(k for k in passed if min(tiers_of[k], key=TIERS.index) == tier
+                          and (only is None or passed[k][0][0]["entry"] in only))
+            real = [real_row(*sorted(passed[k], key=rank)[0]) for k in keys]
+            jobs.append((f"{lang}-{a.label or tier}-{today}", tier, real, [tier], set()))
 
     for sheet_id, tier, real, gap_tiers, also_taken in jobs:
         folder = audit_root / sheet_id
@@ -245,7 +254,8 @@ def main():
                 .replace("__VERDICTS__", json.dumps(VERDICTS))
                 .replace("__ROWS__", rows_json(folder, public)))
         (folder / "listen.html").write_text(page, encoding="utf-8")
-        (audit_root / f"{sheet_id}-DECOY-KEY.json").write_text(json.dumps({
+        (d / "keys").mkdir(exist_ok=True)
+        (d / "keys" / f"{sheet_id}-DECOY-KEY.json").write_text(json.dumps({
             "sheet_id": sheet_id, "lang": lang, "tier": tier, "stamp": st,
             "verdicts": VERDICTS, "rows": key_rows}, ensure_ascii=False, indent=1))
         print(f"{sheet_id}: {len(real)} real rows + {len(decoys)} decoys -> {folder}")
