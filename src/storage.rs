@@ -29,6 +29,12 @@ pub fn set_raw(key: &str, value: &str) {
     }
 }
 
+pub fn remove(key: &str) {
+    if let Some(s) = storage() {
+        let _ = s.remove_item(key);
+    }
+}
+
 pub fn get_json<T: DeserializeOwned>(key: &str) -> Option<T> {
     let raw = get_raw(key)?;
     serde_json::from_str(&raw).ok()

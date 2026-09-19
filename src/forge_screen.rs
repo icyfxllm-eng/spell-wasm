@@ -132,6 +132,7 @@ fn reflect_direction(lang: &str) {
 }
 
 pub fn open(app: &App) {
+    crate::telemetry::set_mode(crate::telemetry::schema::Mode::LetterForge);
     let lang = app.borrow().lang.clone();
     LANG.with(|l| *l.borrow_mut() = lang.clone());
     reflect_direction(&lang);

@@ -98,6 +98,7 @@ pub fn wire(app: &App) {
 }
 
 pub fn open(app: &App) {
+    crate::telemetry::set_mode(crate::telemetry::schema::Mode::BeeSim);
     open_at(app, 1);
 }
 

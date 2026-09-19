@@ -27,6 +27,7 @@ const STATIC_ASSETS = [
   "./index.html",
   "./manifest.json",
   "./audio-native.js",
+  "./telemetry-schema.js",
   "./pkg/spell_wasm.js?v=DEV",
   "./pkg/spell_wasm_bg.wasm?v=DEV",
   "./icons/icon-192.png",
@@ -70,7 +71,7 @@ self.addEventListener("fetch", (event) => {
   if (req.method !== "GET") return;
 
   const url = new URL(req.url);
-  if (url.origin !== self.location.origin || url.pathname.startsWith("/api/")) return; // let backend/API calls pass straight through
+  if (url.origin !== self.location.origin || url.pathname.startsWith("/api/") || url.pathname.startsWith("/telemetry/")) return; // let backend/API and telemetry calls pass straight through
 
   event.respondWith(
     fetch(req)

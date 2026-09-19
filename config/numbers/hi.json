@@ -1,0 +1,124 @@
+{
+  "lang": "hi",
+  "authority": "Wiktionary",
+  "note": "Sourced by tools/numbers/source_numbers.py from English Wiktionary's cardinal-number translation tables, each row verified against its own entry. status stays 'sourced' until the Fiverr audit ingest.",
+  "rows": [
+    {
+      "n": 0,
+      "spellings": [
+        "शून्य"
+      ],
+      "status": "sourced",
+      "source": "Wiktionary",
+      "locator": "https://en.wiktionary.org/wiki/zero ; https://en.wiktionary.org/wiki/%E0%A4%B6%E0%A5%82%E0%A4%A8%E0%A5%8D%E0%A4%AF#Hindi"
+    },
+    {
+      "n": 1,
+      "spellings": [
+        "एक"
+      ],
+      "status": "sourced",
+      "source": "Wiktionary",
+      "locator": "https://en.wiktionary.org/wiki/one/translations ; https://en.wiktionary.org/wiki/%E0%A4%8F%E0%A4%95#Hindi"
+    },
+    {
+      "n": 2,
+      "spellings": [
+        "दो"
+      ],
+      "status": "sourced",
+      "source": "Wiktionary",
+      "locator": "https://en.wiktionary.org/wiki/two ; https://en.wiktionary.org/wiki/%E0%A4%A6%E0%A5%8B#Hindi"
+    },
+    {
+      "n": 3,
+      "spellings": [
+        "तीन"
+      ],
+      "status": "sourced",
+      "source": "Wiktionary",
+      "locator": "https://en.wiktionary.org/wiki/three ; https://en.wiktionary.org/wiki/%E0%A4%A4%E0%A5%80%E0%A4%A8#Hindi"
+    },
+    {
+      "n": 4,
+      "spellings": [
+        "चार"
+      ],
+      "status": "sourced",
+      "source": "Wiktionary",
+      "locator": "https://en.wiktionary.org/wiki/four ; https://en.wiktionary.org/wiki/%E0%A4%9A%E0%A4%BE%E0%A4%B0#Hindi"
+    },
+    {
+      "n": 5,
+      "spellings": [
+        "पाँच"
+      ],
+      "status": "sourced",
+      "source": "Wiktionary",
+      "locator": "https://en.wiktionary.org/wiki/five ; https://en.wiktionary.org/wiki/%E0%A4%AA%E0%A4%BE%E0%A4%81%E0%A4%9A#Hindi"
+    },
+    {
+      "n": 6,
+      "spellings": [
+        "छह"
+      ],
+      "status": "sourced",
+      "source": "Wiktionary",
+      "locator": "https://en.wiktionary.org/wiki/six ; https://en.wiktionary.org/wiki/%E0%A4%9B%E0%A4%B9#Hindi"
+    },
+    {
+      "n": 7,
+      "spellings": [
+        "सात"
+      ],
+      "status": "sourced",
+      "source": "Wiktionary",
+      "locator": "https://en.wiktionary.org/wiki/seven/translations ; https://en.wiktionary.org/wiki/%E0%A4%B8%E0%A4%BE%E0%A4%A4#Hindi"
+    },
+    {
+      "n": 8,
+      "spellings": [
+        "आठ"
+      ],
+      "status": "sourced",
+      "source": "Wiktionary",
+      "locator": "https://en.wiktionary.org/wiki/eight ; https://en.wiktionary.org/wiki/%E0%A4%86%E0%A4%A0#Hindi"
+    },
+    {
+      "n": 9,
+      "spellings": [
+        "नौ"
+      ],
+      "status": "sourced",
+      "source": "Wiktionary",
+      "locator": "https://en.wiktionary.org/wiki/nine ; https://en.wiktionary.org/wiki/%E0%A4%A8%E0%A5%8C#Hindi"
+    },
+    {
+      "n": 10,
+      "spellings": [
+        "दस"
+      ],
+      "status": "sourced",
+      "source": "Wiktionary",
+      "locator": "https://en.wiktionary.org/wiki/ten/translations ; https://en.wiktionary.org/wiki/%E0%A4%A6%E0%A4%B8#Hindi"
+    },
+    {
+      "n": 11,
+      "spellings": [
+        "ग्यारह"
+      ],
+      "status": "sourced",
+      "source": "Wiktionary",
+      "locator": "https://en.wiktionary.org/wiki/eleven ; https://en.wiktionary.org/wiki/%E0%A4%97%E0%A5%8D%E0%A4%AF%E0%A4%BE%E0%A4%B0%E0%A4%B9#Hindi"
+    },
+    {
+      "n": 12,
+      "spellings": [
+        "बारह"
+      ],
+      "status": "sourced",
+      "source": "Wiktionary",
+      "locator": "https://en.wiktionary.org/wiki/twelve ; https://en.wiktionary.org/wiki/%E0%A4%AC%E0%A4%BE%E0%A4%B0%E0%A4%B9#Hindi"
+    }
+  ]
+}

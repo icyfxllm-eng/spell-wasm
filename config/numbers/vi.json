@@ -1,0 +1,124 @@
+{
+  "lang": "vi",
+  "authority": "Wiktionary",
+  "note": "Sourced by tools/numbers/source_numbers.py from English Wiktionary's cardinal-number translation tables, each row verified against its own entry. status stays 'sourced' until the Fiverr audit ingest.",
+  "rows": [
+    {
+      "n": 0,
+      "spellings": [
+        "không"
+      ],
+      "status": "sourced",
+      "source": "Wiktionary",
+      "locator": "https://en.wiktionary.org/wiki/zero ; https://en.wiktionary.org/wiki/kh%C3%B4ng#Vietnamese"
+    },
+    {
+      "n": 1,
+      "spellings": [
+        "một"
+      ],
+      "status": "sourced",
+      "source": "Wiktionary",
+      "locator": "https://en.wiktionary.org/wiki/one/translations ; https://en.wiktionary.org/wiki/m%E1%BB%99t#Vietnamese"
+    },
+    {
+      "n": 2,
+      "spellings": [
+        "hai"
+      ],
+      "status": "sourced",
+      "source": "Wiktionary",
+      "locator": "https://en.wiktionary.org/wiki/two ; https://en.wiktionary.org/wiki/hai#Vietnamese"
+    },
+    {
+      "n": 3,
+      "spellings": [
+        "ba"
+      ],
+      "status": "sourced",
+      "source": "Wiktionary",
+      "locator": "https://en.wiktionary.org/wiki/three ; https://en.wiktionary.org/wiki/ba#Vietnamese"
+    },
+    {
+      "n": 4,
+      "spellings": [
+        "bốn"
+      ],
+      "status": "sourced",
+      "source": "Wiktionary",
+      "locator": "https://en.wiktionary.org/wiki/four ; https://en.wiktionary.org/wiki/b%E1%BB%91n#Vietnamese"
+    },
+    {
+      "n": 5,
+      "spellings": [
+        "năm"
+      ],
+      "status": "sourced",
+      "source": "Wiktionary",
+      "locator": "https://en.wiktionary.org/wiki/five ; https://en.wiktionary.org/wiki/n%C4%83m#Vietnamese"
+    },
+    {
+      "n": 6,
+      "spellings": [
+        "sáu"
+      ],
+      "status": "sourced",
+      "source": "Wiktionary",
+      "locator": "https://en.wiktionary.org/wiki/six ; https://en.wiktionary.org/wiki/s%C3%A1u#Vietnamese"
+    },
+    {
+      "n": 7,
+      "spellings": [
+        "bảy"
+      ],
+      "status": "sourced",
+      "source": "Wiktionary",
+      "locator": "https://en.wiktionary.org/wiki/seven/translations ; https://en.wiktionary.org/wiki/b%E1%BA%A3y#Vietnamese"
+    },
+    {
+      "n": 8,
+      "spellings": [
+        "tám"
+      ],
+      "status": "sourced",
+      "source": "Wiktionary",
+      "locator": "https://en.wiktionary.org/wiki/eight ; https://en.wiktionary.org/wiki/t%C3%A1m#Vietnamese"
+    },
+    {
+      "n": 9,
+      "spellings": [
+        "chín"
+      ],
+      "status": "sourced",
+      "source": "Wiktionary",
+      "locator": "https://en.wiktionary.org/wiki/nine ; https://en.wiktionary.org/wiki/ch%C3%ADn#Vietnamese"
+    },
+    {
+      "n": 10,
+      "spellings": [
+        "mười"
+      ],
+      "status": "sourced",
+      "source": "Wiktionary",
+      "locator": "https://en.wiktionary.org/wiki/ten/translations ; https://en.wiktionary.org/wiki/m%C6%B0%E1%BB%9Di#Vietnamese"
+    },
+    {
+      "n": 11,
+      "spellings": [
+        "mười một"
+      ],
+      "status": "sourced",
+      "source": "Wiktionary",
+      "locator": "https://en.wiktionary.org/wiki/eleven ; https://en.wiktionary.org/wiki/m%C6%B0%E1%BB%9Di%20m%E1%BB%99t#Vietnamese"
+    },
+    {
+      "n": 12,
+      "spellings": [
+        "mười hai"
+      ],
+      "status": "sourced",
+      "source": "Wiktionary",
+      "locator": "https://en.wiktionary.org/wiki/twelve ; https://en.wiktionary.org/wiki/m%C6%B0%E1%BB%9Di%20hai#Vietnamese"
+    }
+  ]
+}

@@ -1,224 +1,236 @@
 {
- "$doc": "CC-ONBOARD-JR Done 1 — allowed_tiers for every registered mode x {junior, standard}. Derived from config/modes.json by an implementation separate from src/experience.rs, so a change to either shows up as a failing test. Regenerate deliberately when a policy changes.",
- "modes": {
-  "practice": {
-   "junior": [
-    "easy",
-    "medium"
-   ],
-   "standard": [
-    "easy",
-    "medium",
-    "hard",
-    "expert"
-   ]
-  },
-  "ghost_racing": {
-   "junior": [],
-   "standard": [
-    "easy",
-    "medium",
-    "hard",
-    "expert"
-   ]
-  },
-  "syllable_replay": {
-   "junior": [],
-   "standard": [
-    "easy",
-    "medium",
-    "hard",
-    "expert"
-   ]
-  },
-  "say_it": {
-   "junior": [],
-   "standard": [
-    "easy",
-    "medium",
-    "hard",
-    "expert"
-   ]
-  },
-  "photo_list": {
-   "junior": [],
-   "standard": [
-    "easy",
-    "medium",
-    "hard",
-    "expert"
-   ]
-  },
-  "spell_aloud": {
-   "junior": [],
-   "standard": [
-    "easy",
-    "medium",
-    "hard",
-    "expert"
-   ]
-  },
-  "word_stories": {
-   "junior": [],
-   "standard": [
-    "easy",
-    "medium",
-    "hard",
-    "expert"
-   ]
-  },
-  "online_spelloff": {
-   "junior": [],
-   "standard": [
-    "easy",
-    "medium",
-    "hard",
-    "expert"
-   ]
-  },
-  "def_match": {
-   "junior": [
-    "easy",
-    "medium"
-   ],
-   "standard": [
-    "easy",
-    "medium",
-    "hard",
-    "expert"
-   ]
-  },
-  "letter_forge": {
-   "junior": [
-    "easy",
-    "medium"
-   ],
-   "standard": [
-    "easy",
-    "medium",
-    "hard",
-    "expert"
-   ]
-  },
-  "word_chains": {
-   "junior": [
-    "easy",
-    "medium"
-   ],
-   "standard": [
-    "easy",
-    "medium",
-    "hard",
-    "expert"
-   ]
-  },
-  "impostor": {
-   "junior": [
-    "easy",
-    "medium"
-   ],
-   "standard": [
-    "easy",
-    "medium",
-    "hard",
-    "expert"
-   ]
-  },
-  "bee_sim": {
-   "junior": [
-    "easy",
-    "medium"
-   ],
-   "standard": [
-    "easy",
-    "medium",
-    "hard",
-    "expert"
-   ]
-  },
-  "word_picture": {
-   "junior": [
-    "easy",
-    "medium"
-   ],
-   "standard": [
-    "easy",
-    "medium",
-    "hard",
-    "expert"
-   ]
-  },
-  "reports": {
-   "junior": [
-    "easy",
-    "medium"
-   ],
-   "standard": [
-    "easy",
-    "medium",
-    "hard",
-    "expert"
-   ]
-  },
-  "calendar": {
-   "junior": [
-    "easy",
-    "medium"
-   ],
-   "standard": [
-    "easy",
-    "medium",
-    "hard",
-    "expert"
-   ]
-  },
-  "translate": {
-   "junior": [
-    "easy",
-    "medium"
-   ],
-   "standard": [
-    "easy",
-    "medium",
-    "hard",
-    "expert"
-   ]
-  },
-  "standard": {
-   "junior": [
-    "easy",
-    "medium"
-   ],
-   "standard": [
-    "easy",
-    "medium",
-    "hard",
-    "expert"
-   ]
-  },
-  "climb": {
-   "junior": [
-    "easy",
-    "medium"
-   ],
-   "standard": [
-    "easy",
-    "medium",
-    "hard",
-    "expert"
-   ]
-  },
-  "daily": {
-   "junior": [
-    "easy",
-    "medium"
-   ],
-   "standard": [
-    "easy",
-    "medium",
-    "hard",
-    "expert"
-   ]
+  "$doc": "CC-ONBOARD-JR Done 1 — allowed_tiers for every registered mode x {junior, standard}. Derived from config/modes.json by an implementation separate from src/experience.rs, so a change to either shows up as a failing test. Regenerate deliberately when a policy changes.",
+  "modes": {
+    "practice": {
+      "junior": [
+        "easy",
+        "medium"
+      ],
+      "standard": [
+        "easy",
+        "medium",
+        "hard",
+        "expert"
+      ]
+    },
+    "ghost_racing": {
+      "junior": [],
+      "standard": [
+        "easy",
+        "medium",
+        "hard",
+        "expert"
+      ]
+    },
+    "syllable_replay": {
+      "junior": [],
+      "standard": [
+        "easy",
+        "medium",
+        "hard",
+        "expert"
+      ]
+    },
+    "say_it": {
+      "junior": [],
+      "standard": [
+        "easy",
+        "medium",
+        "hard",
+        "expert"
+      ]
+    },
+    "photo_list": {
+      "junior": [],
+      "standard": [
+        "easy",
+        "medium",
+        "hard",
+        "expert"
+      ]
+    },
+    "spell_aloud": {
+      "junior": [],
+      "standard": [
+        "easy",
+        "medium",
+        "hard",
+        "expert"
+      ]
+    },
+    "word_stories": {
+      "junior": [],
+      "standard": [
+        "easy",
+        "medium",
+        "hard",
+        "expert"
+      ]
+    },
+    "online_spelloff": {
+      "junior": [],
+      "standard": [
+        "easy",
+        "medium",
+        "hard",
+        "expert"
+      ]
+    },
+    "def_match": {
+      "junior": [
+        "easy",
+        "medium"
+      ],
+      "standard": [
+        "easy",
+        "medium",
+        "hard",
+        "expert"
+      ]
+    },
+    "letter_forge": {
+      "junior": [
+        "easy",
+        "medium"
+      ],
+      "standard": [
+        "easy",
+        "medium",
+        "hard",
+        "expert"
+      ]
+    },
+    "word_chains": {
+      "junior": [
+        "easy",
+        "medium"
+      ],
+      "standard": [
+        "easy",
+        "medium",
+        "hard",
+        "expert"
+      ]
+    },
+    "impostor": {
+      "junior": [
+        "easy",
+        "medium"
+      ],
+      "standard": [
+        "easy",
+        "medium",
+        "hard",
+        "expert"
+      ]
+    },
+    "bee_sim": {
+      "junior": [
+        "easy",
+        "medium"
+      ],
+      "standard": [
+        "easy",
+        "medium",
+        "hard",
+        "expert"
+      ]
+    },
+    "word_picture": {
+      "junior": [
+        "easy",
+        "medium"
+      ],
+      "standard": [
+        "easy",
+        "medium",
+        "hard",
+        "expert"
+      ]
+    },
+    "reports": {
+      "junior": [
+        "easy",
+        "medium"
+      ],
+      "standard": [
+        "easy",
+        "medium",
+        "hard",
+        "expert"
+      ]
+    },
+    "calendar": {
+      "junior": [
+        "easy",
+        "medium"
+      ],
+      "standard": [
+        "easy",
+        "medium",
+        "hard",
+        "expert"
+      ]
+    },
+    "translate": {
+      "junior": [
+        "easy",
+        "medium"
+      ],
+      "standard": [
+        "easy",
+        "medium",
+        "hard",
+        "expert"
+      ]
+    },
+    "standard": {
+      "junior": [
+        "easy",
+        "medium"
+      ],
+      "standard": [
+        "easy",
+        "medium",
+        "hard",
+        "expert"
+      ]
+    },
+    "climb": {
+      "junior": [
+        "easy",
+        "medium"
+      ],
+      "standard": [
+        "easy",
+        "medium",
+        "hard",
+        "expert"
+      ]
+    },
+    "daily": {
+      "junior": [
+        "easy",
+        "medium"
+      ],
+      "standard": [
+        "easy",
+        "medium",
+        "hard",
+        "expert"
+      ]
+    },
+    "spelldoku": {
+      "junior": [
+        "easy",
+        "medium"
+      ],
+      "standard": [
+        "easy",
+        "medium",
+        "hard",
+        "expert"
+      ]
+    }
   }
- }
 }

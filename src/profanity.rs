@@ -55,6 +55,7 @@ fn extra_blocklist() -> &'static HashSet<String> {
             include_str!("../assets/words/profanity/th.txt"),
             include_str!("../assets/words/profanity/fil.txt"),
             include_str!("../assets/words/profanity/zh.txt"),
+            include_str!("../assets/words/profanity/ru.txt"),
         ] {
             for line in raw.lines() {
                 let t = line.trim();
@@ -151,8 +152,83 @@ fn normalize_loose(word: &str) -> String {
     out
 }
 
+// ---- Russian (Eric, 2026-09-18) ----
+//
+// Russian builds most profanity from a handful of mat roots plus prefixes and
+// endings, so an exact list alone misses the forms nobody seeded. But the short
+// roots also sit inside ordinary words -- "еб" in небо, хлеб, себе, учебу,
+// требую, колебание; "бля" in корабля, рубля; "хуй" in страхуй -- so each root is
+// matched only where it cannot be innocent. The guard for all of this is a test:
+// no word in any of the fifteen banks may be blocked.
+
+/// Stems that never occur inside a normal Russian word.
+const RU_ROOTS: &[&str] = &[
+    "пизд", "бляд", "блят", "пидор", "пидар", "пидр", "мудак", "мудил", "залуп",
+    "говн", "засран", "обосран", "дроч", "гандон", "гондон", "шлюх",
+    "хуй", "хуе", "хуя", "хую", "хуи",
+];
+
+/// The "еб" family is matched only at the start of a word, bare or after one of
+/// these prefixes -- which is where ебать and its derivatives always put it, and
+/// where небо, хлеб and себе never do.
+const RU_EB_PREFIXES: &[&str] = &[
+    "", "за", "на", "вы", "по", "у", "от", "отъ", "раз", "разъ", "съ", "до", "долбо",
+];
+
+/// Fold a word to plain lowercase Cyrillic for matching: ё counts as е, and --
+/// only when the word already contains Cyrillic -- Latin lookalikes and digit
+/// leet become the Cyrillic letters they imitate ("xуй", "пи3да"). A word with no
+/// Cyrillic at all returns None, so this layer never touches other languages.
+fn ru_fold(word: &str) -> Option<String> {
+    let lower: String = word.nfc().collect::<String>().to_lowercase();
+    if !lower.chars().any(|c| ('\u{0400}'..='\u{04FF}').contains(&c)) {
+        return None;
+    }
+    let mut out = String::with_capacity(lower.len());
+    for c in lower.chars() {
+        let f = match c {
+            'ё' => 'е',
+            'a' => 'а', 'e' => 'е', 'o' | '0' => 'о', 'p' => 'р', 'c' => 'с', 'x' => 'х',
+            'y' => 'у', 'k' => 'к', 'm' => 'м', 'h' => 'н', 't' => 'т', 'b' | '6' => 'б',
+            '3' => 'з',
+            other => other,
+        };
+        if ('\u{0400}'..='\u{04FF}').contains(&f) {
+            out.push(f);
+        }
+    }
+    Some(out)
+}
+
+fn ru_blocked(word: &str) -> bool {
+    let Some(w) = ru_fold(word) else { return false };
+    if w.is_empty() {
+        return false;
+    }
+    for root in RU_ROOTS {
+        let mut from = 0;
+        while let Some(i) = w[from..].find(root) {
+            let at = from + i;
+            // страховать: "застрахуй", "страхую" are insurance, not profanity.
+            let innocent = root.starts_with("ху") && w[..at].ends_with("стра");
+            if !innocent {
+                return true;
+            }
+            from = at + root.len();
+        }
+    }
+    RU_EB_PREFIXES.iter().any(|p| {
+        w.strip_prefix(p)
+            .map(|rest| rest.starts_with("еб") && rest.chars().count() > 2 || rest == "еб")
+            .unwrap_or(false)
+    })
+}
+
 /// True if this custom word should be blocked from "My Words".
 pub fn is_blocked(word: &str) -> bool {
+    if ru_blocked(word) {
+        return true;
+    }
     // English/Latin + leetspeak layer (accent-strip + homoglyph fold to a-z).
     let n = normalize(word);
     if !n.is_empty() {
@@ -224,6 +300,77 @@ pub fn rejection_message() -> &'static str {
 
 #[cfg(test)]
 mod tests {
+    // ---- Russian (Eric, 2026-09-18) ----
+
+    const RU_TXT: &str = include_str!("../assets/words/profanity/ru.txt");
+
+    #[test]
+    fn russian_mat_and_insults_are_blocked() {
+        for w in [
+            // the core roots and their common derivatives
+            "хуй", "пизда", "ебать", "ёб", "блядь", "блять", "бля",
+            "пиздец", "охуеть", "заебать", "хуйня", "пиздеть", "долбоеб", "долбоёб",
+            "ебланик", "нихуя", "похуй", "нахуй", "ебанутый", "уёбок", "отъебись",
+            "разъебай", "заебись", "выебать", "наебал",
+            // slurs, insults, bodily vulgarities
+            "пидорас", "пидор", "сука", "мудак", "гондон", "гандон", "залупа",
+            "срать", "сраный", "засранец", "говно", "говнюк", "жопа", "шлюха", "мразь",
+            // forms nobody seeded, caught by the stems
+            "распиздяй", "пиздатый", "хуёвый", "охуенно", "ебучий", "говнище",
+            // evasions: Latin lookalikes and digit leet inside Cyrillic words
+            "xуй", "пи3да", "6лядь", "хyй", "EБАТЬ",
+            // unambiguous Latin spellings
+            "blyat", "pizdets", "nahuy",
+        ] {
+            assert!(is_blocked(w), "{w} must be blocked");
+        }
+    }
+
+    #[test]
+    fn russian_words_that_merely_contain_a_root_are_allowed() {
+        for w in [
+            "небо", "хлеб", "себе", "учебу", "требую", "колебание", "колебался",
+            "колеблется", "корабля", "рубля", "стебля", "страхуй", "застрахуйте",
+            "страхую", "барсука", "гондола", "странный", "пространство", "ребёнок",
+            "учебник", "победа", "обедать",
+        ] {
+            assert!(!is_blocked(w), "{w} is an ordinary word and must stay allowed");
+        }
+        // Real words in other languages that a looser Latin list would catch: the
+        // Russian layer must not be the thing that blocks them.
+        for w in ["suka", "hui", "huy"] {
+            assert!(!ru_blocked(w), "{w} is a real word elsewhere (sw/id, pinyin, vi)");
+            assert!(!RU_TXT.lines().any(|l| l.trim() == w), "{w} must not be seeded in ru.txt");
+        }
+    }
+
+    /// The guard that makes the Russian stems safe: nothing the Russian layer or
+    /// ru.txt adds blocks a word the game can serve, in any language. (The older
+    /// all-language union has false positives of its own -- en "am", sw "mama" --
+    /// which predate this and are reported, not fixed, here.)
+    #[test]
+    fn russian_layer_blocks_no_bank_word_in_any_language() {
+        let seeded: std::collections::HashSet<String> = RU_TXT
+            .lines()
+            .map(|l| l.trim())
+            .filter(|l| !l.is_empty() && !l.starts_with('#'))
+            .map(|l| l.nfc().collect::<String>().to_lowercase())
+            .collect();
+        let mut hits = Vec::new();
+        for (code, _, _, _) in crate::consts::BUILTIN_LANGS {
+            for tier in crate::experience::TIERS {
+                for w in crate::words::tier_for(code, tier) {
+                    let shown = w.split('|').next().unwrap_or(w);
+                    let lower: String = shown.nfc().collect::<String>().to_lowercase();
+                    if ru_blocked(shown) || seeded.contains(&lower) {
+                        hits.push(format!("{code}/{tier}: {shown}"));
+                    }
+                }
+            }
+        }
+        assert!(hits.is_empty(), "bank words the Russian layer would block: {hits:?}");
+    }
+
     use super::*;
 
     #[test]

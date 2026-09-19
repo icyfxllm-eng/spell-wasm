@@ -139,6 +139,7 @@ pub fn wire(app: &App) {
 }
 
 pub fn open(app: &App) {
+    crate::telemetry::set_mode(crate::telemetry::schema::Mode::Practice);
     let lang = app.borrow().lang.clone();
     if !crate::consts::practice(&lang) || practice::curriculum(&lang).is_none() {
         return;

@@ -1,0 +1,124 @@
+{
+  "lang": "pl",
+  "authority": "Wiktionary",
+  "note": "Sourced by tools/numbers/source_numbers.py from English Wiktionary's cardinal-number translation tables, each row verified against its own entry. status stays 'sourced' until the Fiverr audit ingest.",
+  "rows": [
+    {
+      "n": 0,
+      "spellings": [
+        "zero"
+      ],
+      "status": "sourced",
+      "source": "Wiktionary",
+      "locator": "https://en.wiktionary.org/wiki/zero ; https://en.wiktionary.org/wiki/zero#Polish"
+    },
+    {
+      "n": 1,
+      "spellings": [
+        "jeden"
+      ],
+      "status": "sourced",
+      "source": "Wiktionary",
+      "locator": "https://en.wiktionary.org/wiki/one/translations ; https://en.wiktionary.org/wiki/jeden#Polish"
+    },
+    {
+      "n": 2,
+      "spellings": [
+        "dwa"
+      ],
+      "status": "sourced",
+      "source": "Wiktionary",
+      "locator": "https://en.wiktionary.org/wiki/two ; https://en.wiktionary.org/wiki/dwa#Polish"
+    },
+    {
+      "n": 3,
+      "spellings": [
+        "trzy"
+      ],
+      "status": "sourced",
+      "source": "Wiktionary",
+      "locator": "https://en.wiktionary.org/wiki/three ; https://en.wiktionary.org/wiki/trzy#Polish"
+    },
+    {
+      "n": 4,
+      "spellings": [
+        "cztery"
+      ],
+      "status": "sourced",
+      "source": "Wiktionary",
+      "locator": "https://en.wiktionary.org/wiki/four ; https://en.wiktionary.org/wiki/cztery#Polish"
+    },
+    {
+      "n": 5,
+      "spellings": [
+        "pięć"
+      ],
+      "status": "sourced",
+      "source": "Wiktionary",
+      "locator": "https://en.wiktionary.org/wiki/five ; https://en.wiktionary.org/wiki/pi%C4%99%C4%87#Polish"
+    },
+    {
+      "n": 6,
+      "spellings": [
+        "sześć"
+      ],
+      "status": "sourced",
+      "source": "Wiktionary",
+      "locator": "https://en.wiktionary.org/wiki/six ; https://en.wiktionary.org/wiki/sze%C5%9B%C4%87#Polish"
+    },
+    {
+      "n": 7,
+      "spellings": [
+        "siedem"
+      ],
+      "status": "sourced",
+      "source": "Wiktionary",
+      "locator": "https://en.wiktionary.org/wiki/seven/translations ; https://en.wiktionary.org/wiki/siedem#Polish"
+    },
+    {
+      "n": 8,
+      "spellings": [
+        "osiem"
+      ],
+      "status": "sourced",
+      "source": "Wiktionary",
+      "locator": "https://en.wiktionary.org/wiki/eight ; https://en.wiktionary.org/wiki/osiem#Polish"
+    },
+    {
+      "n": 9,
+      "spellings": [
+        "dziewięć"
+      ],
+      "status": "sourced",
+      "source": "Wiktionary",
+      "locator": "https://en.wiktionary.org/wiki/nine ; https://en.wiktionary.org/wiki/dziewi%C4%99%C4%87#Polish"
+    },
+    {
+      "n": 10,
+      "spellings": [
+        "dziesięć"
+      ],
+      "status": "sourced",
+      "source": "Wiktionary",
+      "locator": "https://en.wiktionary.org/wiki/ten/translations ; https://en.wiktionary.org/wiki/dziesi%C4%99%C4%87#Polish"
+    },
+    {
+      "n": 11,
+      "spellings": [
+        "jedenaście"
+      ],
+      "status": "sourced",
+      "source": "Wiktionary",
+      "locator": "https://en.wiktionary.org/wiki/eleven ; https://en.wiktionary.org/wiki/jedena%C5%9Bcie#Polish"
+    },
+    {
+      "n": 12,
+      "spellings": [
+        "dwanaście"
+      ],
+      "status": "sourced",
+      "source": "Wiktionary",
+      "locator": "https://en.wiktionary.org/wiki/twelve ; https://en.wiktionary.org/wiki/dwana%C5%9Bcie#Polish"
+    }
+  ]
+}

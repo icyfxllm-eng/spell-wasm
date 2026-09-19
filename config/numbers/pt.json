@@ -1,0 +1,124 @@
+{
+  "lang": "pt",
+  "authority": "Wiktionary",
+  "note": "Sourced by tools/numbers/source_numbers.py from English Wiktionary's cardinal-number translation tables, each row verified against its own entry. status stays 'sourced' until the Fiverr audit ingest.",
+  "rows": [
+    {
+      "n": 0,
+      "spellings": [
+        "zero"
+      ],
+      "status": "sourced",
+      "source": "Wiktionary",
+      "locator": "https://en.wiktionary.org/wiki/zero ; https://en.wiktionary.org/wiki/zero#Portuguese"
+    },
+    {
+      "n": 1,
+      "spellings": [
+        "um"
+      ],
+      "status": "sourced",
+      "source": "Wiktionary",
+      "locator": "https://en.wiktionary.org/wiki/one/translations ; https://en.wiktionary.org/wiki/um#Portuguese"
+    },
+    {
+      "n": 2,
+      "spellings": [
+        "dois"
+      ],
+      "status": "sourced",
+      "source": "Wiktionary",
+      "locator": "https://en.wiktionary.org/wiki/two ; https://en.wiktionary.org/wiki/dois#Portuguese"
+    },
+    {
+      "n": 3,
+      "spellings": [
+        "três"
+      ],
+      "status": "sourced",
+      "source": "Wiktionary",
+      "locator": "https://en.wiktionary.org/wiki/three ; https://en.wiktionary.org/wiki/tr%C3%AAs#Portuguese"
+    },
+    {
+      "n": 4,
+      "spellings": [
+        "quatro"
+      ],
+      "status": "sourced",
+      "source": "Wiktionary",
+      "locator": "https://en.wiktionary.org/wiki/four ; https://en.wiktionary.org/wiki/quatro#Portuguese"
+    },
+    {
+      "n": 5,
+      "spellings": [
+        "cinco"
+      ],
+      "status": "sourced",
+      "source": "Wiktionary",
+      "locator": "https://en.wiktionary.org/wiki/five ; https://en.wiktionary.org/wiki/cinco#Portuguese"
+    },
+    {
+      "n": 6,
+      "spellings": [
+        "seis"
+      ],
+      "status": "sourced",
+      "source": "Wiktionary",
+      "locator": "https://en.wiktionary.org/wiki/six ; https://en.wiktionary.org/wiki/seis#Portuguese"
+    },
+    {
+      "n": 7,
+      "spellings": [
+        "sete"
+      ],
+      "status": "sourced",
+      "source": "Wiktionary",
+      "locator": "https://en.wiktionary.org/wiki/seven/translations ; https://en.wiktionary.org/wiki/sete#Portuguese"
+    },
+    {
+      "n": 8,
+      "spellings": [
+        "oito"
+      ],
+      "status": "sourced",
+      "source": "Wiktionary",
+      "locator": "https://en.wiktionary.org/wiki/eight ; https://en.wiktionary.org/wiki/oito#Portuguese"
+    },
+    {
+      "n": 9,
+      "spellings": [
+        "nove"
+      ],
+      "status": "sourced",
+      "source": "Wiktionary",
+      "locator": "https://en.wiktionary.org/wiki/nine ; https://en.wiktionary.org/wiki/nove#Portuguese"
+    },
+    {
+      "n": 10,
+      "spellings": [
+        "dez"
+      ],
+      "status": "sourced",
+      "source": "Wiktionary",
+      "locator": "https://en.wiktionary.org/wiki/ten/translations ; https://en.wiktionary.org/wiki/dez#Portuguese"
+    },
+    {
+      "n": 11,
+      "spellings": [
+        "onze"
+      ],
+      "status": "sourced",
+      "source": "Wiktionary",
+      "locator": "https://en.wiktionary.org/wiki/eleven ; https://en.wiktionary.org/wiki/onze#Portuguese"
+    },
+    {
+      "n": 12,
+      "spellings": [
+        "doze"
+      ],
+      "status": "sourced",
+      "source": "Wiktionary",
+      "locator": "https://en.wiktionary.org/wiki/twelve ; https://en.wiktionary.org/wiki/doze#Portuguese"
+    }
+  ]
+}

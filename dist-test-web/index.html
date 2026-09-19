@@ -683,14 +683,14 @@
   .fh-left{display:flex;align-items:center;gap:9px}
   .field-label{font-size:11.5px;text-transform:uppercase;letter-spacing:.18em;color:var(--muted-on-bg)}
   /* Spell It Out Loud — mic beside the answer field (voice spelling INPUT). */
-  .voice-spell-mic{width:44px;height:44px;margin-left:8px;border-radius:50%;display:grid;place-items:center;font-size:22px;line-height:1;padding:0;background:var(--panel-2);border:1.5px solid var(--edge);color:inherit;cursor:pointer;transition:transform .12s,box-shadow .2s,border-color .2s;touch-action:none;user-select:none;-webkit-user-select:none}
+  .voice-spell-mic{width:44px;height:44px;margin-inline-start:8px;border-radius:50%;display:grid;place-items:center;font-size:22px;line-height:1;padding:0;background:var(--panel-2);border:1.5px solid var(--edge);color:inherit;cursor:pointer;transition:transform .12s,box-shadow .2s,border-color .2s;touch-action:none;user-select:none;-webkit-user-select:none}
   body.kid .voice-spell-mic{width:52px;height:52px;font-size:26px}
   .voice-spell-mic.btn-hide,.voice-spell-perm.btn-hide{display:none}
   /* Mic-everywhere: a downloadable-state mic wears a small ⬇ badge — the first
      tap fetches the on-device voice pack, then the badge drops. */
   .voice-spell-mic.dl,.voice-spell-mic.net{position:relative}
-  .voice-spell-mic.net::after{content:"🌐";position:absolute;right:-4px;bottom:-4px;font-size:11px;line-height:1}
-  .voice-spell-mic.dl::after{content:"⬇";position:absolute;right:-4px;bottom:-4px;font-size:12px;line-height:1;background:var(--accent,#7aa2ff);color:#fff;border-radius:50%;width:16px;height:16px;display:flex;align-items:center;justify-content:center}
+  .voice-spell-mic.net::after{content:"🌐";position:absolute;inset-inline-end:-4px;bottom:-4px;font-size:11px;line-height:1}
+  .voice-spell-mic.dl::after{content:"⬇";position:absolute;inset-inline-end:-4px;bottom:-4px;font-size:12px;line-height:1;background:var(--accent,#7aa2ff);color:#fff;border-radius:50%;width:16px;height:16px;display:flex;align-items:center;justify-content:center}
   .voice-spell-mic:active{transform:scale(.9)}
   .voice-spell-mic.listening{border-color:var(--teal,#46d6b8);box-shadow:0 0 0 5px rgba(70,214,184,.22);animation:sayitPulse 1.1s ease-in-out infinite}
   .voice-spell-status{width:100%;min-height:16px;margin:6px 0 0;font-size:12.5px;color:var(--muted-on-bg);text-align:center}
@@ -881,18 +881,18 @@
   .tone-btn{min-width:2.75rem;min-height:2.75rem;border-radius:.6rem;
     border:1px solid var(--line);background:var(--card);font-size:1.15rem;
     line-height:1;cursor:pointer}
-  .tone-btn sub{font-size:.62em;opacity:.8;margin-left:.1em}
+  .tone-btn sub{font-size:.62em;opacity:.8;margin-inline-start:.1em}
   .tone-btn:active{transform:translateY(1px)}
   .tone-btn#toneBtn1{color:#d0342c}
   .tone-btn#toneBtn2{color:#2e9e4f}
   .tone-btn#toneBtn3{color:#2f6fd0}
   .tone-btn#toneBtn4{color:#8b46c4}
   .tone-btn#toneBtn5{color:#7a7a7a}
-  .feedback .zh-syl{margin-right:.35em}
-  .feedback .zh-syl .zh-tone{font-size:.7em;opacity:.85;margin-left:.05em}
+  .feedback .zh-syl{margin-inline-end:.35em}
+  .feedback .zh-syl .zh-tone{font-size:.7em;opacity:.85;margin-inline-start:.05em}
   .feedback .zh-syl.zh-tone-miss{text-decoration:underline wavy currentColor;text-underline-offset:.25em}
   .feedback .zh-syl.zh-miss{opacity:.75;text-decoration:line-through}
-  .feedback .zh-hanzi{font-family:inherit;color:var(--amber-soft);margin-left:.2em;letter-spacing:0}
+  .feedback .zh-hanzi{font-family:inherit;color:var(--amber-soft);margin-inline-start:.2em;letter-spacing:0}
   .feedback .zh-note{display:block;margin-top:.35em;font-size:.85em;opacity:.9;letter-spacing:0}
 
   /* ==== CC-RTL F3 — bidi isolation at every embed point ==================
@@ -1116,6 +1116,40 @@
      content. Suggestions and the picker overlay the spine instead of pushing
      it, and the fan-out link hides with visibility so its line is always held.
      Together these keep the action row's y offset constant (I1). */
+  /* CC-SPELLDOKU v1 — Sudoku committed by spelling (app only). */
+  .sd-screen{position:fixed;inset:0;background:var(--bg,#0e1420);z-index:60;display:none;overflow:auto;min-height:0;
+    padding:max(12px,env(safe-area-inset-top)) 12px max(16px,env(safe-area-inset-bottom))}
+  .sd-screen.show{display:block}
+  .sd-top{display:flex;align-items:center;gap:8px;max-width:520px;margin:0 auto 10px;flex-wrap:wrap}
+  .sd-top h2{margin:0;font-size:18px;flex:1}
+  .sd-top select{background:var(--panel-2);color:var(--ink);border:1px solid var(--edge);border-radius:10px;padding:8px;font-size:16px}
+  .sd-grid{--sd-n:9;display:grid;grid-template-columns:repeat(var(--sd-n),1fr);max-width:520px;margin:0 auto;
+    border:2px solid var(--ink);border-radius:6px;overflow:hidden;min-height:0}
+  .sd-cell{aspect-ratio:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1px;
+    background:var(--panel);color:var(--ink);border:0;border-inline-end:1px solid var(--edge);border-bottom:1px solid var(--edge);
+    font-family:var(--mono);font-size:clamp(14px,4.5vw,22px);padding:0;cursor:pointer}
+  .sd-cell.bx-r{border-inline-end:2px solid var(--ink)}
+  .sd-cell.bx-b{border-bottom:2px solid var(--ink)}
+  .sd-cell.given{font-weight:700;cursor:default;background:var(--panel-2)}
+  .sd-cell.word{font-family:var(--body);font-size:clamp(8px,2.4vw,12px);font-weight:600}
+  .sd-cell.frag small{font-family:var(--body);font-size:clamp(8px,2.2vw,11px);color:var(--amber)}
+  .sd-cell.mine{color:var(--teal)}
+  .sd-cell.sel{background:rgba(255,190,90,.18);outline:2px solid var(--amber);outline-offset:-2px}
+  .sd-cell.hint{box-shadow:inset 0 0 0 3px var(--teal)}
+  .sd-cell.wrong{color:#ff6b6b}
+  .sd-pen{font-size:clamp(7px,2vw,10px);color:var(--muted-2);line-height:1.1;text-align:center}
+  .sd-note{min-height:1.5em;max-width:520px;margin:8px auto;text-align:center;color:var(--muted-2)}
+  .sd-tray{max-width:520px;margin:0 auto;display:flex;flex-direction:column;gap:8px}
+  .sd-chips{display:flex;flex-wrap:wrap;gap:6px;justify-content:center;min-height:0}
+  .sd-chip{min-width:40px;padding:8px 12px;border-radius:10px;background:var(--panel-2);color:var(--ink);border:1px solid var(--teal);font-size:18px}
+  .sd-typed{min-height:1.6em;text-align:center;font-size:20px;font-family:var(--mono);color:var(--ink)}
+  .sd-keys{display:flex;flex-direction:column;gap:6px;align-items:center}
+  .sd-row{display:flex;gap:4px;justify-content:center;width:100%}
+  .sd-keys .kb-key{flex:1 1 0;min-width:0;max-width:42px;padding:8px 2px;border-radius:8px;background:var(--panel-2);color:var(--ink);border:1px solid var(--edge);font-size:17px}
+  .sd-keys .kb-key.wide{max-width:96px;flex-grow:2}
+  .sd-keys .kb-key.go{border-color:var(--amber)}
+  .sd-actions{display:flex;flex-wrap:wrap;gap:8px;justify-content:center}
+
   /* CC-MYWORDS-LISTS F3 — the My Words screen. Cards, an opened list, and the
      way back from a delete. Same full-screen shape as Translate. */
   /* The parent gate and the birthday prompt are last-resort modals: they must
@@ -1180,7 +1214,7 @@
     width:2.4em;height:2.4em;border-radius:50%;border:1px solid var(--edge);background:var(--bg,#0e1420);color:var(--ink);cursor:pointer}
   [dir="rtl"] .tr-swap{transform:translate(50%,-50%)}
   .tr-swap[aria-disabled="true"]{opacity:.45}
-  .tr-suggest,.tr-picker{position:absolute;left:0;right:0;top:calc(9.5em + 4px);z-index:3;background:var(--panel);
+  .tr-suggest,.tr-picker{position:absolute;inset-inline:0;top:calc(9.5em + 4px);z-index:3;background:var(--panel);
     border:1px solid var(--edge);border-radius:14px;max-height:19em;overflow:auto;min-height:0;padding:4px}
   .tr-suggest button,.tr-picker button{display:block;width:100%;text-align:start;padding:.55em .8em;border:none;
     background:transparent;color:var(--ink);cursor:pointer;border-radius:10px}
@@ -1237,7 +1271,7 @@
   .sr-empty{color:var(--muted-2);font-size:13px;text-align:center;padding:12px 6px;line-height:1.5}
   /* Dev door menu (temporary). */
   .dev-list{display:flex;flex-direction:column;gap:10px;margin-top:8px}
-  .dev-item{padding:14px;background:var(--panel-2);border:1px solid var(--edge);border-radius:12px;color:inherit;font-weight:700;font-size:15px;font-family:inherit;cursor:pointer;text-align:left}
+  .dev-item{padding:14px;background:var(--panel-2);border:1px solid var(--edge);border-radius:12px;color:inherit;font-weight:700;font-size:15px;font-family:inherit;cursor:pointer;text-align:start}
   .dev-item:active{border-color:var(--amber)}
   /* Spell Racing screen — same containing-block requirement as the hub. */
   #ghostScreen .modal{position:relative}
@@ -2399,6 +2433,30 @@
     <div class="tr-note" id="trNote" aria-live="polite"></div>
     <div class="tr-extras" id="trExtras"></div>
   </div>
+  <!-- CC-SPELLDOKU v1 (app only, D9). -->
+  <button id="sdOpenBtn" hidden aria-hidden="true"></button>
+  <div class="sd-screen" id="sdScreen" role="dialog" aria-modal="true" aria-labelledby="sdTitle">
+    <div class="sd-top">
+      <button class="ghost mode-exit" id="sdExit" aria-label="Exit">✕</button>
+      <h2 id="sdTitle" data-i18n="sd.name">SpellDoku</h2>
+      <select id="sdPick" aria-label="Board"></select>
+      <button class="ghost" id="sdDaily" data-i18n="sd.daily">Daily</button>
+    </div>
+    <div class="sd-grid" id="sdGrid"></div>
+    <div class="sd-note" id="sdNote" aria-live="polite"></div>
+    <div class="sd-tray">
+      <div class="sd-chips" id="sdChips"></div>
+      <div class="sd-typed" id="sdTyped" dir="auto" aria-live="polite"></div>
+      <div class="sd-keys" id="sdKeys"></div>
+      <div class="sd-actions">
+        <button class="ghost" id="sdPencil" data-i18n="sd.pencil" aria-pressed="false">Pencil</button>
+        <button class="ghost" id="sdHint" data-i18n="sd.hint">Hint</button>
+        <button class="ghost btn-hide" id="sdCheck">Check board</button>
+        <button class="ghost" id="sdNew" data-i18n="sd.new">New board</button>
+      </div>
+    </div>
+  </div>
+
   <!-- CC-MYWORDS-LISTS F3: the My Words screen (app only). -->
   <div class="lists-screen" id="listsScreen" role="dialog" aria-modal="true" aria-labelledby="listsTitle">
     <div class="lists-top">
