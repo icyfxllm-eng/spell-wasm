@@ -80,7 +80,8 @@ button{font:inherit;padding:8px 14px;border-radius:8px;border:1px solid var(--li
 <h1>Audio audit: __ID__</h1>
 <p>Play each clip. Does it say the word shown, in US English, cleanly, with nothing unsuitable for kids in the background? Pick a verdict for every row, then export the sheet and send back <b>sheet.csv</b>.</p>
 <p>Keys: <b>Space</b> play, <b>A</b> accept, <b>1–5</b> the other verdicts in list order, <b>J/K</b> next/previous.</p>
-<div class="bar"><button id="exp">Export sheet.csv</button><span id="cnt" class="done"></span></div>
+<div class="bar"><button id="exp">Export sheet.csv</button><button id="cpy" style="display:none">Copy sheet</button><span id="cnt" class="done"></span></div>
+<textarea id="out" readonly style="display:none;width:100%;height:9em;font:12px ui-monospace,monospace;margin:8px 0;background:var(--row);color:var(--fg);border:1px solid var(--line);border-radius:8px"></textarea>
 <div id="rows"></div></main>
 <script>
 const ID="__ID__",ROWS=__ROWS__,VERDICTS=__VERDICTS__,KEY="audit-"+ID;
@@ -101,9 +102,16 @@ document.addEventListener("keydown",e=>{if(e.target.tagName==="SELECT")return;co
 if(k===" "){e.preventDefault();play()}else if(k==="a")setV("accept");else if("12345".includes(k)&&k)setV(VERDICTS[+k]);
 else if(k==="j")focusRow(cur+1);else if(k==="k")focusRow(cur-1)});
 function csvCell(s){return /[",\\n]/.test(s)?'"'+s.replace(/"/g,'""')+'"':s}
-document.getElementById("exp").onclick=()=>{const lines=["# sheet "+ID+" stamp __STAMP__","row,entry,clip,verdict,note"];
-ROWS.forEach(r=>lines.push([r.row,r.entry,r.clip,saved[r.row]||"",""].map(csvCell).join(",")));
-const b=new Blob([lines.join("\\n")+"\\n"],{type:"text/csv"});const a=document.createElement("a");a.href=URL.createObjectURL(b);a.download="sheet.csv";a.click()};
+function sheetText(){const lines=["# sheet "+ID+" stamp __STAMP__","row,entry,clip,verdict,note"];
+ROWS.forEach(r=>lines.push([r.row,r.entry,r.clip,saved[r.row]||"",""].map(csvCell).join(",")));return lines.join("\\n")+"\\n"}
+// Some browsers silently block downloads from a page opened as a file, so the
+// sheet is ALSO shown as text with a Copy button: an export can't be lost.
+document.getElementById("exp").onclick=()=>{const t=sheetText();
+try{const b=new Blob([t],{type:"text/csv"});const a=document.createElement("a");a.href=URL.createObjectURL(b);a.download="sheet.csv";document.body.appendChild(a);a.click();a.remove()}catch(e){}
+const o=document.getElementById("out");o.value=t;o.style.display="block";document.getElementById("cpy").style.display=""};
+document.getElementById("cpy").onclick=async()=>{const o=document.getElementById("out");let ok=false;
+try{await navigator.clipboard.writeText(o.value);ok=true}catch(e){o.select();try{ok=document.execCommand("copy")}catch(e2){}}
+document.getElementById("cpy").textContent=ok?"Copied — paste it to Claude":"Select the text and copy it"};
 focusRow(0,false);count();
 </script></body></html>
 """
