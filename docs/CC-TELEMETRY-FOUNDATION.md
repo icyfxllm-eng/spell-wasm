@@ -1,6 +1,6 @@
 # CC-TELEMETRY-FOUNDATION v1.1
 
-**Status:** Phase A BUILT on branch `cc-telemetry` (2026-09-18). Not deployed: the Worker needs Eric's first deploy (`workers/telemetry/README.md`), and nothing ships to players before the F7 disclosures are signed.
+**Status:** Phases A and B BUILT on branch `cc-telemetry` (2026-09-18). Not deployed: the Worker needs Eric's first deploy (`workers/telemetry/README.md`) and the R8 server change needs `deploy.sh`. Nothing ships to players before the F7 disclosures are signed.
 **Supersedes v1.** v1.1 covers **crash reporting (F1) and performance (F5) only**, per Eric's D-TEL sign-off (2026-09-18, "add with the recommendations").
 **Blast radius:** one new network endpoint plus error and performance hooks. Zero gameplay behavior change. Must not delay the next TestFlight build (R10b: the v1.1 draft said "build 56"; TestFlight was at build 226).
 
@@ -51,14 +51,15 @@ If any boundary no longer holds: **stop and ask.**
   - WASM panics (the Rust panic hook, keyed by source location)
   - WASM boot failure after all retries
   - offline language-pack load failures (keyed by stage)
-- The MetricKit bridge (native hangs, memory kills) follows as its own step, because it needs an Xcode project change.
+- MetricKit (Phase B): a subscriber registered at launch keeps each crash or hang diagnostic as a kind plus a 64-bit signature (exception type, signal, the attributed thread's top 8 frames as binary + text-segment offset). The Rust core drains them at launch and maps them to `native_crash` / `native_hang`. The Swift lives in `NativeLanguageKitPlugin.swift` so that `project.pbxproj` is untouched.
 - Payload: `build`, `platform`, `lang`, `mode`, `error_code` (enum), `stack_hash`. The hash is FNV-1a-64 of the normalized stack: JS function names or the Rust file:line:col, never message text. Standard players add `session_id`: random per launch, held only in memory.
 
 ### F5. Performance and backend health
 **Intent:** know the backend is slow before players feel it.
 **Behavior:**
 - **Server side first (R8):** existing logs record none of this. Add one structured line per `/api/speak` request: `lang, variant, cache=hit|miss, ms, status`, with no IP and no word. A daily script reports TTS p50/p95, cache hit rate and error rate per language.
-- Client: `wasm_init_ms_bucket`, `tap_to_audio_ms_bucket`, and `audio_resolution{resolved|unavailable}` **counts per language** (no word IDs).
+- **Server line (built):** `backend/speak_metrics.py` writes one line per request into daily files. `scripts/speak_report.py` prints p50/p95, disk-cache hit rate and error rate per language per day, and `--prune` deletes files older than 90 days. Requests Cloudflare's edge answers from cache never reach the server.
+- **Client (built):** histograms, never raw ms: `wasm_init_ms`, `tap_to_audio_ms` and `audio_resolution{resolved|unavailable}`, per language for standard players, without language in aggregates. `tap_to_audio` is timed only for the pack and server clip, which report when playback starts. The on-device voice reports when it has finished speaking, so it counts as resolved but untimed.
 
 ### F6. Spell Jr handling
 **Intent:** collect nothing about any child.
@@ -118,14 +119,18 @@ If any boundary no longer holds: **stop and ask.**
 
 ## Phases
 
-- **Phase A (built):**
+- **Phase A (built, `07cbd205`):**
   1. R3 `audience()`
   2. schema + generated bindings
   3. transport, routing and kill switch
   4. F1 (JS, WASM panic, boot failure, pack load)
   5. Worker + D1 schema + retention cron
   6. R9 annotations
-- **Phase B:** R8 server log line and report → F5 client buckets → MetricKit bridge (F1 native).
+- **Phase B (built):**
+  1. R8 server log line and report (`8f0e8e65`)
+  2. F5 client buckets (`08cec32e`)
+  3. MetricKit bridge (`82ff60f2`)
+  4. Acceptance 7 and 5-timing; telemetry randomness moved to `crypto` (I8)
 - **Phase C:** F7 toggle row, `privacy_label_answers.md`, privacy-policy draft → the usefulness report (acceptance 9).
 
 ## Deferred (not in scope; each needs a signed CC-LEARNING-ENGINE D5 amendment first)
@@ -145,9 +150,9 @@ If any boundary no longer holds: **stop and ask.**
 | 2 | Jr capture | e2e `telemetry` `jr_sends_only_one_daily_aggregate` | ✅ |
 | 3 | Unknown-age capture | e2e `telemetry` `unknown_age_sends_only_one_daily_aggregate` | ✅ |
 | 4 | Personal-data capture (Say-It, Snap a List, My Words, login) | — | Phase C: needs the native mic and photo surfaces |
-| 5 | Endpoint down: invisible, queue kept and capped | e2e `endpoint_down_is_invisible_and_keeps_the_queue` + `queue_caps_drop_oldest` | ✅ except the ±5% frame-time measurement (Phase B, with the F5 buckets) |
+| 5 | Endpoint down: invisible, queue kept and capped, no added latency | e2e `endpoint_down_is_invisible_and_keeps_the_queue`, `endpoint_down_costs_no_round_latency` + `queue_caps_drop_oldest` | ✅ Tolerance is max(5%, one 60 Hz frame); medians are about 50 ms, where 5% can't be measured. It measures verdict-paint latency, not frame time. |
 | 6 | Kill switch | e2e `kill_switch_sends_nothing_and_clears_the_queue` | ✅ (the flags GET itself continues; it carries no data) |
-| 7 | Observe-never-act | — | Phase B: fixed-seed replay harness |
+| 7 | Observe-never-act | e2e `observe_never_act_replay_is_identical_on_and_off` | ✅ Mutation-checked: telemetry stealing one `Math.random` changes the served words, and the test fails |
 | 8 | Single source | `telemetry::schema::tests::single_source`, `bindings_are_current` | ✅ |
 | 9 | Usefulness | — | After two weeks on TestFlight |
 

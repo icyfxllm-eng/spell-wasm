@@ -299,6 +299,25 @@ pub fn record_perf(metric: PerfMetric, bucket: Bucket, lang_code: &str) {
     }
 }
 
+/// Randomness from `crypto.getRandomValues`, NEVER `Math.random`: the game's
+/// word selection draws from Math.random, and telemetry taking numbers from
+/// the same stream would change which words a player is served (I8).
+fn rand_u32() -> u32 {
+    (|| -> Option<u32> {
+        let w: JsValue = web_sys::window()?.into();
+        let crypto = js_sys::Reflect::get(&w, &JsValue::from_str("crypto")).ok()?;
+        let f: js_sys::Function = js_sys::Reflect::get(&crypto, &JsValue::from_str("getRandomValues")).ok()?.dyn_into().ok()?;
+        let buf = js_sys::Uint32Array::new_with_length(1);
+        f.call1(&crypto, &buf).ok()?;
+        Some(buf.get_index(0))
+    })()
+    .unwrap_or(0)
+}
+
+fn rand01() -> f64 {
+    rand_u32() as f64 / 4_294_967_296.0
+}
+
 /// Milliseconds since the page started loading (`performance.now()`).
 pub fn now_ms() -> f64 {
     web_sys::window()
@@ -481,7 +500,7 @@ async fn flush_inner() {
             }
             let now = js_sys::Date::now();
             if a.due == 0.0 {
-                a.due = now + js_sys::Math::random() * DAY_MS;
+                a.due = now + rand01() * DAY_MS;
             }
             storage::set_json(AGG_KEY, &a);
             if (a.counts.is_empty() && a.perf.is_empty()) || now < a.due {
@@ -498,7 +517,7 @@ async fn flush_inner() {
                 let mut latest: Agg = storage::get_json(AGG_KEY).unwrap_or_default();
                 subtract(&mut latest.counts, &a.counts);
                 subtract(&mut latest.perf, &a.perf);
-                latest.due = next_due(now, js_sys::Math::random());
+                latest.due = next_due(now, rand01());
                 storage::set_json(AGG_KEY, &latest);
             }
         }
@@ -531,9 +550,7 @@ pub fn init(lang: &str) {
         clear_all();
     }
     // A random per-launch id, held only in memory (D4).
-    let hi = (js_sys::Math::random() * 4_294_967_296.0) as u64;
-    let lo = (js_sys::Math::random() * 4_294_967_296.0) as u64;
-    SESSION.with(|s| s.set((hi << 32) | lo));
+    SESSION.with(|s| s.set(((rand_u32() as u64) << 32) | rand_u32() as u64));
     drain_js_buffer();
 
     if let Some(w) = web_sys::window() {

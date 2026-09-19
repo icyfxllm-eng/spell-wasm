@@ -1,4 +1,4 @@
-// telemetry.spec — CC-TELEMETRY-FOUNDATION v1.1 acceptance 2, 3, 5, 6.
+// telemetry.spec — CC-TELEMETRY-FOUNDATION v1.1 acceptance 2, 3, 5, 6, 7.
 //
 // Every telemetry request is answered by this spec (flags) or captured (posts),
 // and every captured payload is checked with the WORKER's own validator over
@@ -9,7 +9,7 @@
 // page -- and flushed the way the app flushes on a phone: the page going
 // hidden. No seam, no private entry point.
 import { gunzipSync } from 'node:zlib';
-import { openApp, assert, assertEq } from '../harness.mjs';
+import { openApp, typeOnKeyboard, assert, assertEq } from '../harness.mjs';
 import { validate } from '../../../workers/telemetry/src/index.js';
 
 const KID = JSON.stringify({ verdict: 'kid', checkedAt: 1700000000 });
@@ -53,6 +53,63 @@ async function until(fn, ms = 4000) {
   }
   return false;
 }
+
+// Math.random seeded (mulberry32) before the app loads, so word selection is
+// a fixed sequence. Telemetry draws from crypto, never from this stream.
+const SEEDED = () => {
+  let a = 0x5eed;
+  Math.random = () => {
+    a |= 0; a = (a + 0x6d2b79f5) | 0;
+    let t = Math.imul(a ^ (a >>> 15), 1 | a);
+    t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
+    return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+  };
+};
+
+const feedbackPainted = (page) => page.waitForFunction(() => {
+  const c = document.getElementById('feedback').className;
+  return c.includes('good') || c.includes('bad');
+}, null, { timeout: 5000 });
+
+// Play `rounds` words: every third answer wrong, an error raised and a flush
+// forced every round so telemetry is busy the whole time. Returns what the
+// player saw, and how long each check took to paint its verdict.
+async function playRounds(page, rounds) {
+  const seen = [];
+  const latencies = [];
+  // Telemetry busy BEFORE the first word too: the deck is shuffled at the
+  // first serve, so that is where a stolen random number would show.
+  await raise(page, 'before the first word');
+  await page.waitForTimeout(100);
+  await hide(page);
+  await page.waitForTimeout(250);
+  for (let i = 0; i < rounds; i++) {
+    await page.click('#orbWrap');
+    await page.waitForTimeout(350);
+    const word = await page.evaluate(() => window.__spelltest.currentWord());
+    const answer = i % 3 === 2 ? 'zzzz' : word.toLowerCase();
+    await typeOnKeyboard(page, answer);
+    const t0 = Date.now();
+    await page.click('#checkBtn');
+    await feedbackPainted(page);
+    latencies.push(Date.now() - t0);
+    const verdict = await page.$eval('#feedback', (e) => (e.className.includes('good') ? 'good' : 'bad'));
+    const streak = await page.evaluate(() => window.__spelltest.streak());
+    // A miss that breaks a chain opens "Chain broken!": part of what the
+    // player saw, then dismissed the way a player would.
+    // It opens after the answer reveal, so a miss waits for it.
+    const chainBroken = verdict === 'bad'
+      && (await page.waitForSelector('#scrim.show', { timeout: 4000 }).then(() => true, () => false));
+    if (chainBroken) await page.click('#skipSave');
+    seen.push({ word, verdict, streak, chainBroken });
+    await raise(page, `round ${i}`);
+    await hide(page); // flushes: the app sees itself backgrounded
+    await page.waitForTimeout(250);
+  }
+  return { seen, latencies };
+}
+
+const median = (xs) => { const s = [...xs].sort((a, b) => a - b); return s[Math.floor(s.length / 2)]; };
 
 export async function run(browser, base, suite) {
   await suite.test('standard_player_sends_valid_batches_with_perf_and_no_text', async () => {
@@ -177,5 +234,45 @@ export async function run(browser, base, suite) {
       assert(!toast, 'a toast appeared');
       assert(await page.evaluate(() => window.__spelltest.build() === 'testseam'), 'app stopped responding');
     } finally { await ctx.close(); }
+  });
+  // Acceptance 7 — observe, never act: a fixed-seed replay serves the same
+  // words, verdicts and streaks with telemetry on as with it killed.
+  await suite.test('observe_never_act_replay_is_identical_on_and_off', async () => {
+    const runs = [];
+    for (const on of [true, false]) {
+      const ep = endpoint({ on });
+      const { ctx, page } = await openApp(browser, base, { lang: 'en', telemetry: ep.handler, init: SEEDED });
+      try {
+        assert(await until(async () => (await store(page, 'spell_flag_telemetry_enabled')) === (on ? 'on' : 'off')), 'kill switch never cached');
+        runs.push({ on, ...(await playRounds(page, 8)), posts: ep.posts.length });
+      } finally { await ctx.close(); }
+    }
+    const [withT, without] = runs;
+    assert(withT.posts > 0, 'telemetry never sent during the "on" run: the comparison proves nothing');
+    assertEq(without.posts, 0, 'posts during the killed run');
+    assertEq(JSON.stringify(withT.seen), JSON.stringify(without.seen), 'what the player saw');
+    assert(new Set(withT.seen.map((r) => r.word)).size > 1, 'the replay served one word: seed not applied');
+  });
+
+  // Acceptance 5, timing half: with the endpoint refusing every connection,
+  // a round's verdict paints as fast as with a healthy endpoint. Tolerance is
+  // the larger of 5% and one 60 Hz frame: medians here are tens of ms, where
+  // 5% is below what a browser can measure.
+  await suite.test('endpoint_down_costs_no_round_latency', async () => {
+    const med = {};
+    for (const down of [false, true]) {
+      const ep = endpoint({ down });
+      const { ctx, page } = await openApp(browser, base, { lang: 'en', telemetry: ep.handler, init: SEEDED });
+      try {
+        assert(await until(async () => (await store(page, 'spell_flag_telemetry_enabled')) === 'on'), 'kill switch never cached');
+        const { latencies } = await playRounds(page, 10);
+        med[down ? 'down' : 'up'] = median(latencies);
+        const q = JSON.parse((await store(page, 'spell_tel_queue_v1')) || '[]');
+        if (down) assert(q.length > 0 && q.length <= 200, `queue ${q.length}`);
+      } finally { await ctx.close(); }
+    }
+    const tol = Math.max(0.05 * med.up, 16.7);
+    process.stdout.write(`    round latency median: up ${med.up} ms, down ${med.down} ms (tolerance ${tol.toFixed(1)} ms)\n`);
+    assert(Math.abs(med.down - med.up) <= tol, `down ${med.down} ms vs up ${med.up} ms`);
   });
 }
