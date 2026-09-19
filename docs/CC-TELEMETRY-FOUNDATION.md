@@ -1,6 +1,6 @@
 # CC-TELEMETRY-FOUNDATION v1.1
 
-**Status:** Phases A, B and C BUILT on branch `cc-telemetry` (2026-09-18). Not deployed: the Worker needs Eric's first deploy (`workers/telemetry/README.md`) and the R8 server change needs `deploy.sh`. Nothing ships to players before the F7 disclosures are signed.
+**Status:** Phases A, B and C BUILT and merged to `main` (2026-09-18). The **Worker is DEPLOYED and ON** (`TELEMETRY_ENABLED=true` since ~22:54 2026-09-18). It was deployed off, and turned on after the R7 fix and the telemetry privacy section went live (origin/main 8023f662). Build 228, the first build that sends, is in TestFlight external review. Still to do: the R8 server change needs `deploy.sh`. Raw-event retention (D6) runs on the Mac mini as the `net.spellgame.telemetry-purge` LaunchAgent, because Cloudflare refused the Worker cron (see the Worker README).
 **Supersedes v1.** v1.1 covers **crash reporting (F1) and performance (F5) only**, per Eric's D-TEL sign-off (2026-09-18, "add with the recommendations").
 **Blast radius:** one new network endpoint plus error and performance hooks. Zero gameplay behavior change. Must not delay the next TestFlight build (R10b: the v1.1 draft said "build 56"; TestFlight was at build 226).
 
@@ -82,7 +82,7 @@ If any boundary no longer holds: **stop and ask.**
 - The event schema is defined once in the Rust core (`src/telemetry/schema.rs`). The JS constants (`telemetry-schema.js`) and the Worker's validator input (`workers/telemetry/schema.json`) are generated from it, and a test fails if they're stale.
 - The queue is capped at 200 events or 128 KB, with the oldest dropped. It flushes when the page goes hidden, every 10 minutes, and at launch. Bodies are gzip JSON POSTs where `CompressionStream` exists, plain JSON otherwise.
 - The endpoint is the Cloudflare Worker `spell-telemetry` on `spellgame.net/telemetry/*` (D5), in front of the tunnel. It never reads the IP, `request.cf` or the User-Agent. Observability is off, and there's no request logging.
-- Raw events are deleted after 90 days by a daily cron. The per-day counts in `daily_counts` are kept.
+- Raw events are deleted after 90 days by the Mac mini's daily `net.spellgame.telemetry-purge` job (Eric, 2026-09-18: Cloudflare refused the Worker cron). The per-day counts are kept. The job depends on the Mac mini and the Wrangler login, and a failure shows in its log.
 
 ---
 
@@ -121,6 +121,7 @@ If any boundary no longer holds: **stop and ask.**
 | R9 | Annotate D5 / S1 instead of superseding them | Signed, recorded |
 | R10 | Correct the Pi, "build 56" and dead-cite facts | Signed, applied above |
 | R11 | Record D5 as signed | Signed, recorded |
+| IP | Cloudflare's own Security Analytics samples client IPs for all proxied spellgame.net traffic and can't be turned off per path | **Accepted (Eric, 2026-09-18)** as the host's standing security logs. The Worker itself reads and stores no IP, and has no workers.dev or preview URL. The privacy draft must say the provider may keep short security logs. |
 
 ## Phases
 

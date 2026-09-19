@@ -8,10 +8,26 @@ REPO="$(cd "$(dirname "$0")/../.." && pwd)"
 
 [ -d "$SRV/venv" ] || { echo "deploy: run setup.sh first"; exit 1; }
 
-rsync -a --delete "$REPO/backend/" "$SRV/backend/"
-# Frontend: serve the same dist/ the iOS bundle uses (build with `npm run build`).
+# The site must be the SITE build (npm run build:web), never the app build,
+# which carries Spell Picture and every language. Checked before anything is
+# touched, with the same scan build:web runs, so a wrong dist/ changes nothing.
 if [ -d "$REPO/dist" ]; then
-  rsync -a --delete "$REPO/dist/" "$SRV/web/"
+  if ! scan=$(cd "$REPO" && node scripts/web-picture-wall-scan.mjs dist 2>&1); then
+    printf '%s\n' "$scan" | tail -5
+    echo "deploy: REFUSED. dist/ is not a site build (or the scan could not run). Nothing was changed."
+    echo "deploy: rebuild it with 'npm run build:web', or remove dist/ to deploy the backend only."
+    exit 1
+  fi
+fi
+
+rsync -a --delete "$REPO/backend/" "$SRV/backend/"
+# Frontend: the SITE build in dist/ (build with `npm run build:web`; guarded above).
+if [ -d "$REPO/dist" ]; then
+  # web/ also holds things dist/ never has, which --delete must not touch:
+  # packs/ is the server-hosted offline language packs (built on the server,
+  # about 1 GB; nothing restores it), and privacy.html + .well-known/ are
+  # copied in below. Excluded, they are never deleted, not even briefly.
+  rsync -a --delete --exclude /packs/ --exclude /.well-known/ --exclude /privacy.html "$REPO/dist/" "$SRV/web/"
   # privacy.html + well-known live at the repo root, outside dist.
   [ -f "$REPO/privacy.html" ] && cp "$REPO/privacy.html" "$SRV/web/privacy.html"
   [ -d "$REPO/.well-known" ] && rsync -a "$REPO/.well-known/" "$SRV/web/.well-known/"

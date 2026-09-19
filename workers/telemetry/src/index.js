@@ -12,8 +12,9 @@
 // stored is what `schema.json` (GENERATED from src/telemetry/schema.rs)
 // declares, plus the UTC day it arrived.
 //
-// Retention (D6): raw events 90 days, deleted by the daily cron; the per-day
-// counts in `daily_counts` are kept.
+// Retention (D6): raw events 90 days, deleted daily by the Mac mini's
+// net.spellgame.telemetry-purge job (same SQL as purge() below); the per-day
+// counts are kept.
 
 import SCHEMA from "../schema.json" with { type: "json" };
 
