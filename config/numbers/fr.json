@@ -1,0 +1,124 @@
+{
+  "lang": "fr",
+  "authority": "Wiktionary",
+  "note": "Sourced by tools/numbers/source_numbers.py from English Wiktionary's cardinal-number translation tables, each row verified against its own entry. status stays 'sourced' until the Fiverr audit ingest.",
+  "rows": [
+    {
+      "n": 0,
+      "spellings": [
+        "zéro"
+      ],
+      "status": "sourced",
+      "source": "Wiktionary",
+      "locator": "https://en.wiktionary.org/wiki/zero ; https://en.wiktionary.org/wiki/z%C3%A9ro#French"
+    },
+    {
+      "n": 1,
+      "spellings": [
+        "un"
+      ],
+      "status": "sourced",
+      "source": "Wiktionary",
+      "locator": "https://en.wiktionary.org/wiki/one/translations ; https://en.wiktionary.org/wiki/un#French"
+    },
+    {
+      "n": 2,
+      "spellings": [
+        "deux"
+      ],
+      "status": "sourced",
+      "source": "Wiktionary",
+      "locator": "https://en.wiktionary.org/wiki/two ; https://en.wiktionary.org/wiki/deux#French"
+    },
+    {
+      "n": 3,
+      "spellings": [
+        "trois"
+      ],
+      "status": "sourced",
+      "source": "Wiktionary",
+      "locator": "https://en.wiktionary.org/wiki/three ; https://en.wiktionary.org/wiki/trois#French"
+    },
+    {
+      "n": 4,
+      "spellings": [
+        "quatre"
+      ],
+      "status": "sourced",
+      "source": "Wiktionary",
+      "locator": "https://en.wiktionary.org/wiki/four ; https://en.wiktionary.org/wiki/quatre#French"
+    },
+    {
+      "n": 5,
+      "spellings": [
+        "cinq"
+      ],
+      "status": "sourced",
+      "source": "Wiktionary",
+      "locator": "https://en.wiktionary.org/wiki/five ; https://en.wiktionary.org/wiki/cinq#French"
+    },
+    {
+      "n": 6,
+      "spellings": [
+        "six"
+      ],
+      "status": "sourced",
+      "source": "Wiktionary",
+      "locator": "https://en.wiktionary.org/wiki/six ; https://en.wiktionary.org/wiki/six#French"
+    },
+    {
+      "n": 7,
+      "spellings": [
+        "sept"
+      ],
+      "status": "sourced",
+      "source": "Wiktionary",
+      "locator": "https://en.wiktionary.org/wiki/seven/translations ; https://en.wiktionary.org/wiki/sept#French"
+    },
+    {
+      "n": 8,
+      "spellings": [
+        "huit"
+      ],
+      "status": "sourced",
+      "source": "Wiktionary",
+      "locator": "https://en.wiktionary.org/wiki/eight ; https://en.wiktionary.org/wiki/huit#French"
+    },
+    {
+      "n": 9,
+      "spellings": [
+        "neuf"
+      ],
+      "status": "sourced",
+      "source": "Wiktionary",
+      "locator": "https://en.wiktionary.org/wiki/nine ; https://en.wiktionary.org/wiki/neuf#French"
+    },
+    {
+      "n": 10,
+      "spellings": [
+        "dix"
+      ],
+      "status": "sourced",
+      "source": "Wiktionary",
+      "locator": "https://en.wiktionary.org/wiki/ten/translations ; https://en.wiktionary.org/wiki/dix#French"
+    },
+    {
+      "n": 11,
+      "spellings": [
+        "onze"
+      ],
+      "status": "sourced",
+      "source": "Wiktionary",
+      "locator": "https://en.wiktionary.org/wiki/eleven ; https://en.wiktionary.org/wiki/onze#French"
+    },
+    {
+      "n": 12,
+      "spellings": [
+        "douze"
+      ],
+      "status": "sourced",
+      "source": "Wiktionary",
+      "locator": "https://en.wiktionary.org/wiki/twelve ; https://en.wiktionary.org/wiki/douze#French"
+    }
+  ]
+}

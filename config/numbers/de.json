@@ -1,0 +1,124 @@
+{
+  "lang": "de",
+  "authority": "Wiktionary",
+  "note": "Sourced by tools/numbers/source_numbers.py from English Wiktionary's cardinal-number translation tables, each row verified against its own entry. status stays 'sourced' until the Fiverr audit ingest.",
+  "rows": [
+    {
+      "n": 0,
+      "spellings": [
+        "null"
+      ],
+      "status": "sourced",
+      "source": "Wiktionary",
+      "locator": "https://en.wiktionary.org/wiki/zero ; https://en.wiktionary.org/wiki/null#German"
+    },
+    {
+      "n": 1,
+      "spellings": [
+        "eins"
+      ],
+      "status": "sourced",
+      "source": "Wiktionary",
+      "locator": "https://en.wiktionary.org/wiki/one/translations ; https://en.wiktionary.org/wiki/eins#German"
+    },
+    {
+      "n": 2,
+      "spellings": [
+        "zwei"
+      ],
+      "status": "sourced",
+      "source": "Wiktionary",
+      "locator": "https://en.wiktionary.org/wiki/two ; https://en.wiktionary.org/wiki/zwei#German"
+    },
+    {
+      "n": 3,
+      "spellings": [
+        "drei"
+      ],
+      "status": "sourced",
+      "source": "Wiktionary",
+      "locator": "https://en.wiktionary.org/wiki/three ; https://en.wiktionary.org/wiki/drei#German"
+    },
+    {
+      "n": 4,
+      "spellings": [
+        "vier"
+      ],
+      "status": "sourced",
+      "source": "Wiktionary",
+      "locator": "https://en.wiktionary.org/wiki/four ; https://en.wiktionary.org/wiki/vier#German"
+    },
+    {
+      "n": 5,
+      "spellings": [
+        "fünf"
+      ],
+      "status": "sourced",
+      "source": "Wiktionary",
+      "locator": "https://en.wiktionary.org/wiki/five ; https://en.wiktionary.org/wiki/f%C3%BCnf#German"
+    },
+    {
+      "n": 6,
+      "spellings": [
+        "sechs"
+      ],
+      "status": "sourced",
+      "source": "Wiktionary",
+      "locator": "https://en.wiktionary.org/wiki/six ; https://en.wiktionary.org/wiki/sechs#German"
+    },
+    {
+      "n": 7,
+      "spellings": [
+        "sieben"
+      ],
+      "status": "sourced",
+      "source": "Wiktionary",
+      "locator": "https://en.wiktionary.org/wiki/seven/translations ; https://en.wiktionary.org/wiki/sieben#German"
+    },
+    {
+      "n": 8,
+      "spellings": [
+        "acht"
+      ],
+      "status": "sourced",
+      "source": "Wiktionary",
+      "locator": "https://en.wiktionary.org/wiki/eight ; https://en.wiktionary.org/wiki/acht#German"
+    },
+    {
+      "n": 9,
+      "spellings": [
+        "neun"
+      ],
+      "status": "sourced",
+      "source": "Wiktionary",
+      "locator": "https://en.wiktionary.org/wiki/nine ; https://en.wiktionary.org/wiki/neun#German"
+    },
+    {
+      "n": 10,
+      "spellings": [
+        "zehn"
+      ],
+      "status": "sourced",
+      "source": "Wiktionary",
+      "locator": "https://en.wiktionary.org/wiki/ten/translations ; https://en.wiktionary.org/wiki/zehn#German"
+    },
+    {
+      "n": 11,
+      "spellings": [
+        "elf"
+      ],
+      "status": "sourced",
+      "source": "Wiktionary",
+      "locator": "https://en.wiktionary.org/wiki/eleven ; https://en.wiktionary.org/wiki/elf#German"
+    },
+    {
+      "n": 12,
+      "spellings": [
+        "zwölf"
+      ],
+      "status": "sourced",
+      "source": "Wiktionary",
+      "locator": "https://en.wiktionary.org/wiki/twelve ; https://en.wiktionary.org/wiki/zw%C3%B6lf#German"
+    }
+  ]
+}

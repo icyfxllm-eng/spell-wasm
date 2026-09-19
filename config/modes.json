@@ -325,6 +325,23 @@
       "juniorPolicy": "ceiling:medium"
     },
     {
+      "id": "spelldoku",
+      "nameKey": "sd.name",
+      "descKey": "sd.desc",
+      "icon": "🔢",
+      "status": "live",
+      "kidSafe": true,
+      "platforms": [
+        "ios"
+      ],
+      "entitlementLevel": "preview",
+      "requiresPremium": null,
+      "languages": null,
+      "$note": "CC-SPELLDOKU v1: Sudoku committed by spelling number words. App only (D9). A language plays only when its number-word table is servable in this build (D3); otherwise the tile is the unavailable teaser. Spell Jr: 4x4 Easy and 6x6 Medium (F7).",
+      "exitStyle": "instant",
+      "juniorPolicy": "ceiling:medium"
+    },
+    {
       "id": "standard",
       "nameKey": "brand.tag",
       "descKey": "share.tagline",
