@@ -11,7 +11,11 @@ REPO="$(cd "$(dirname "$0")/../.." && pwd)"
 rsync -a --delete "$REPO/backend/" "$SRV/backend/"
 # Frontend: serve the same dist/ the iOS bundle uses (build with `npm run build`).
 if [ -d "$REPO/dist" ]; then
-  rsync -a --delete "$REPO/dist/" "$SRV/web/"
+  # web/ also holds things dist/ never has, which --delete must not touch:
+  # packs/ is the server-hosted offline language packs (built on the server,
+  # about 1 GB; nothing restores it), and privacy.html + .well-known/ are
+  # copied in below. Excluded, they are never deleted, not even briefly.
+  rsync -a --delete --exclude /packs/ --exclude /.well-known/ --exclude /privacy.html "$REPO/dist/" "$SRV/web/"
   # privacy.html + well-known live at the repo root, outside dist.
   [ -f "$REPO/privacy.html" ] && cp "$REPO/privacy.html" "$SRV/web/privacy.html"
   [ -d "$REPO/.well-known" ] && rsync -a "$REPO/.well-known/" "$SRV/web/.well-known/"
