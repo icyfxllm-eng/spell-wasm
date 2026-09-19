@@ -1,0 +1,1097 @@
+{
+ "lang": "en",
+ "entries": {
+  "all": [
+   {
+    "verdict": "accept",
+    "clip_sha256": "51bf7f786e8f8dcd77306d517f77015b6737db64c393d19d13f1e0b5e2adbb81",
+    "commons_sha1": "6a4fb7e79849ebe646ab3e660f7a760e2519eb2c",
+    "speaker": "Grendelkhan",
+    "license": "CC0",
+    "note": "",
+    "sheet": "en-secondlook-20260919",
+    "auditor": "eric",
+    "ingested": "2026-09-19"
+   }
+  ],
+  "appear": [
+   {
+    "verdict": "accept",
+    "clip_sha256": "00efe339793d38b028f3383a5ec9a52d1f6826a95044a5dcdd41b0cda351bf79",
+    "commons_sha1": "f5433db18201a3228addbc9f6f9b40b383655e98",
+    "speaker": "Grendelkhan",
+    "license": "CC0",
+    "note": "",
+    "sheet": "en-secondlook-20260919",
+    "auditor": "eric",
+    "ingested": "2026-09-19"
+   }
+  ],
+  "asked": [
+   {
+    "verdict": "accept",
+    "clip_sha256": "2b0192da4bdf9a8b487869854c79130ee7509d9db3fcd6056528ad60929e5b91",
+    "commons_sha1": "ae484ced5f076827d1a6844458e90a0e61dcf45e",
+    "speaker": "Grendelkhan",
+    "license": "CC0",
+    "note": "",
+    "sheet": "en-secondlook-20260919",
+    "auditor": "eric",
+    "ingested": "2026-09-19"
+   }
+  ],
+  "at": [
+   {
+    "verdict": "accept",
+    "clip_sha256": "27c233ec87d75b8198327129f6f5275cdc3e5cd45d50d77f38448ba778ec426f",
+    "commons_sha1": "aa56bab1435732362c0cf22deabfc041553ae592",
+    "speaker": "Grendelkhan",
+    "license": "CC0",
+    "note": "",
+    "sheet": "en-secondlook-20260919",
+    "auditor": "eric",
+    "ingested": "2026-09-19"
+   }
+  ],
+  "atoms": [
+   {
+    "verdict": "accept",
+    "clip_sha256": "531eea5e41771801e16f53f8b9008b76b5ff9cb88e0501c17991362bfa401d43",
+    "commons_sha1": "0ab02e7f0dd5bef7c7d04101530707a1148d907e",
+    "speaker": "Arlo Barnes",
+    "license": "CC0",
+    "note": "",
+    "sheet": "en-secondlook-20260919",
+    "auditor": "eric",
+    "ingested": "2026-09-19"
+   }
+  ],
+  "ban": [
+   {
+    "verdict": "poor quality",
+    "clip_sha256": "49931061e7cf27f28e511ddc10621b2898324f3c4e46166f808af4cbc84cac11",
+    "commons_sha1": "f8ba023ebe1a0b20caed7187455ca4e1925a435f",
+    "speaker": "Simplificationalizer",
+    "license": "CC0",
+    "note": "",
+    "sheet": "en-secondlook-20260919",
+    "auditor": "eric",
+    "ingested": "2026-09-19"
+   }
+  ],
+  "bank": [
+   {
+    "verdict": "accept",
+    "clip_sha256": "16cb142ff65454fbf6b778da1f324e1396ac1ef1b4012fa0621af9584859892f",
+    "commons_sha1": "842860531c85ae6206c56e3efd0b23eee74e7958",
+    "speaker": "Grendelkhan",
+    "license": "CC0",
+    "note": "",
+    "sheet": "en-secondlook-20260919",
+    "auditor": "eric",
+    "ingested": "2026-09-19"
+   }
+  ],
+  "beer": [
+   {
+    "verdict": "accept",
+    "clip_sha256": "980639772ae4ab75644c791b812ea219c525fd1c66d38e608ffa3fc1c0fac0cc",
+    "commons_sha1": "077a93c65c3bb247055c97ca21734780857e0850",
+    "speaker": "Grendelkhan",
+    "license": "CC0",
+    "note": "",
+    "sheet": "en-secondlook-20260919",
+    "auditor": "eric",
+    "ingested": "2026-09-19"
+   }
+  ],
+  "blow": [
+   {
+    "verdict": "accept",
+    "clip_sha256": "17ccfd6bbcec6c487de74ba49fdef530956fb1a9b85575a23206d892be16d9ad",
+    "commons_sha1": "9b7513c288ff2d6fd3ba890da20600eb2cbae285",
+    "speaker": "Grendelkhan",
+    "license": "CC0",
+    "note": "",
+    "sheet": "en-secondlook-20260919",
+    "auditor": "eric",
+    "ingested": "2026-09-19"
+   }
+  ],
+  "bone": [
+   {
+    "verdict": "accept",
+    "clip_sha256": "4736fcd4db8d6d3ce6ba0963ba1d92f106c59e0501425fa0ff5fa34025bc6b0e",
+    "commons_sha1": "9dfd5db7205283b22d551304e4d2f131ee98ac0e",
+    "speaker": "Grendelkhan",
+    "license": "CC0",
+    "note": "",
+    "sheet": "en-secondlook-20260919",
+    "auditor": "eric",
+    "ingested": "2026-09-19"
+   }
+  ],
+  "bottom": [
+   {
+    "verdict": "accept",
+    "clip_sha256": "d552b120f1386159dd2c89d5c701df1e6fbadf191561e121c1d970e6462a1e78",
+    "commons_sha1": "2bd858ed3654370da96451bf6adbce9e331867d0",
+    "speaker": "Grendelkhan",
+    "license": "CC0",
+    "note": "",
+    "sheet": "en-secondlook-20260919",
+    "auditor": "eric",
+    "ingested": "2026-09-19"
+   }
+  ],
+  "bowl": [
+   {
+    "verdict": "accept",
+    "clip_sha256": "f0881a8380b0907afe5f6d35ff68556c861d75fceaba8e1b5b7bc688a79bda4e",
+    "commons_sha1": "e4249b87f2d4114fda66cb352f97e393475cda6b",
+    "speaker": "Grendelkhan",
+    "license": "CC0",
+    "note": "",
+    "sheet": "en-secondlook-20260919",
+    "auditor": "eric",
+    "ingested": "2026-09-19"
+   }
+  ],
+  "bus": [
+   {
+    "verdict": "accept",
+    "clip_sha256": "f539842e6a100464f10a74740d660888973ba6222d0065ebee1afafe173fe3c2",
+    "commons_sha1": "d9c5d57874a7f084bd7191d3cdf7c3a0779e9869",
+    "speaker": "Grendelkhan",
+    "license": "CC0",
+    "note": "",
+    "sheet": "en-secondlook-20260919",
+    "auditor": "eric",
+    "ingested": "2026-09-19"
+   }
+  ],
+  "cell": [
+   {
+    "verdict": "accept",
+    "clip_sha256": "15b55d4161e26a69e1e28833a492ccb39063bbd7cb238d6b3abf0379c184f76a",
+    "commons_sha1": "bd680ecbc7f46fff1e7d68ff52546bd7d1a83f5b",
+    "speaker": "Grendelkhan",
+    "license": "CC0",
+    "note": "",
+    "sheet": "en-secondlook-20260919",
+    "auditor": "eric",
+    "ingested": "2026-09-19"
+   }
+  ],
+  "could": [
+   {
+    "verdict": "accept",
+    "clip_sha256": "47e056d569c0ccca0fc58543582f46fcc6468a6459e538874a9f6235c07e4281",
+    "commons_sha1": "10db94b826ec42b08bb1b91dbbdaf73fd2d02da9",
+    "speaker": "Grendelkhan",
+    "license": "CC0",
+    "note": "",
+    "sheet": "en-secondlook-20260919",
+    "auditor": "eric",
+    "ingested": "2026-09-19"
+   }
+  ],
+  "date": [
+   {
+    "verdict": "accept",
+    "clip_sha256": "617fc4c5d2c5bd6079fecde880348e60d93c17329475695efc4ab33746b90768",
+    "commons_sha1": "9760d1646279d714e8a07e820b3adc78f1c4c998",
+    "speaker": "Grendelkhan",
+    "license": "CC0",
+    "note": "",
+    "sheet": "en-secondlook-20260919",
+    "auditor": "eric",
+    "ingested": "2026-09-19"
+   }
+  ],
+  "do": [
+   {
+    "verdict": "accept",
+    "clip_sha256": "0cc9086d3c3a09871006553cff822536f30f9ac22f3850f79960912ac24896cf",
+    "commons_sha1": "f1cdf6488d7e300c68c85135ad2b2c69505a6a9d",
+    "speaker": "Grendelkhan",
+    "license": "CC0",
+    "note": "",
+    "sheet": "en-secondlook-20260919",
+    "auditor": "eric",
+    "ingested": "2026-09-19"
+   }
+  ],
+  "don": [
+   {
+    "verdict": "accept",
+    "clip_sha256": "8d315c74ef7042119fa8a5484366784684cc9b2b66126701a7599d1ed47eab96",
+    "commons_sha1": "761a4d34c7befe30eaeeea8aae1b5d242b3ab350",
+    "speaker": "Grendelkhan",
+    "license": "CC0",
+    "note": "",
+    "sheet": "en-secondlook-20260919",
+    "auditor": "eric",
+    "ingested": "2026-09-19"
+   }
+  ],
+  "east": [
+   {
+    "verdict": "accept",
+    "clip_sha256": "cbfa846a553ad11ba4ff589df513b788e1f9e99de2dc5753db575e1cd2597f7e",
+    "commons_sha1": "83258ee5e14b8fdada190069bc1f58252367f769",
+    "speaker": "Grendelkhan",
+    "license": "CC0",
+    "note": "",
+    "sheet": "en-secondlook-20260919",
+    "auditor": "eric",
+    "ingested": "2026-09-19"
+   }
+  ],
+  "en": [
+   {
+    "verdict": "accept",
+    "clip_sha256": "13bf47d45275d75c4454565eadcf1fdff64eaa25667032c2aad8742213e0b10d",
+    "commons_sha1": "ab4387c072aca67f5f216c03d5cafe1f2e1be4f8",
+    "speaker": "StuckInLagToad",
+    "license": "CC BY-SA",
+    "note": "",
+    "sheet": "en-secondlook-20260919",
+    "auditor": "eric",
+    "ingested": "2026-09-19"
+   }
+  ],
+  "end": [
+   {
+    "verdict": "accept",
+    "clip_sha256": "6750b33a083e1c12302d297dac2992c5b9adae01358f4b6b71b78f516a96c847",
+    "commons_sha1": "5ae5a869d5a1a59066e535a40078130b445eb004",
+    "speaker": "Grendelkhan",
+    "license": "CC0",
+    "note": "",
+    "sheet": "en-secondlook-20260919",
+    "auditor": "eric",
+    "ingested": "2026-09-19"
+   }
+  ],
+  "ended": [
+   {
+    "verdict": "accept",
+    "clip_sha256": "dd542ea5f8fe7a91726b105bde4bc729d2808b5fb9b358629a9a0ca60fcc8971",
+    "commons_sha1": "871fffd68fc2cf6182245b7949a3aae1f8f0951f",
+    "speaker": "Grendelkhan",
+    "license": "CC0",
+    "note": "",
+    "sheet": "en-secondlook-20260919",
+    "auditor": "eric",
+    "ingested": "2026-09-19"
+   }
+  ],
+  "events": [
+   {
+    "verdict": "accept",
+    "clip_sha256": "649e9d7cfc7750fed87e665c663000af7b3e52a46e576d88810d2d2bcd69efdf",
+    "commons_sha1": "becfff54c70c36823cdcae120f065d9a3c6bf0db",
+    "speaker": "Grendelkhan",
+    "license": "CC0",
+    "note": "",
+    "sheet": "en-secondlook-20260919",
+    "auditor": "eric",
+    "ingested": "2026-09-19"
+   }
+  ],
+  "eye": [
+   {
+    "verdict": "accept",
+    "clip_sha256": "17c821bfc8b726afcd831c0c0e03ee6bac575a4e7edcefa88f4146a65a3288d9",
+    "commons_sha1": "eb9562ed9e5088f698ce65c079342a9289209a0e",
+    "speaker": "Grendelkhan",
+    "license": "CC0",
+    "note": "",
+    "sheet": "en-secondlook-20260919",
+    "auditor": "eric",
+    "ingested": "2026-09-19"
+   }
+  ],
+  "famous": [
+   {
+    "verdict": "accept",
+    "clip_sha256": "e1bb2714182b4d41eda9eb12912921274c5e0923243b2fc15558a31f8de91080",
+    "commons_sha1": "aa976fff8a4956f0eca2d52f8d6d45873701b077",
+    "speaker": "Grendelkhan",
+    "license": "CC0",
+    "note": "",
+    "sheet": "en-secondlook-20260919",
+    "auditor": "eric",
+    "ingested": "2026-09-19"
+   }
+  ],
+  "festival": [
+   {
+    "verdict": "accept",
+    "clip_sha256": "ffa612b66770c0797b3e0e30b0d46d287ddc09035121edff6bcb12899a2b5e5d",
+    "commons_sha1": "491a2aafa19bb827337697d085fad4203fd892e8",
+    "speaker": "Grendelkhan",
+    "license": "CC0",
+    "note": "",
+    "sheet": "en-secondlook-20260919",
+    "auditor": "eric",
+    "ingested": "2026-09-19"
+   }
+  ],
+  "fill": [
+   {
+    "verdict": "accept",
+    "clip_sha256": "4952619267f6b620a6f538160972b0ee4e7a20993289800cee387dac4e29552d",
+    "commons_sha1": "df726cb929751ec1da3134ac7800f13465e5fdf8",
+    "speaker": "Grendelkhan",
+    "license": "CC0",
+    "note": "",
+    "sheet": "en-secondlook-20260919",
+    "auditor": "eric",
+    "ingested": "2026-09-19"
+   }
+  ],
+  "fixed": [
+   {
+    "verdict": "accept",
+    "clip_sha256": "3cf257adac4921b0ef4967676430d7382d1445e4bb61dcee825d9a304d636405",
+    "commons_sha1": "89076267ec592e43d86c3becf3bd54ce2c8820f9",
+    "speaker": "Grendelkhan",
+    "license": "CC0",
+    "note": "",
+    "sheet": "en-secondlook-20260919",
+    "auditor": "eric",
+    "ingested": "2026-09-19"
+   }
+  ],
+  "foot": [
+   {
+    "verdict": "accept",
+    "clip_sha256": "7361f303f704a67dbb2e4e334871db51ef9e39926a909e60044de7b440276bdd",
+    "commons_sha1": "c4b1ec625b83f8905462b63f12099446590cd5bd",
+    "speaker": "Grendelkhan",
+    "license": "CC0",
+    "note": "",
+    "sheet": "en-secondlook-20260919",
+    "auditor": "eric",
+    "ingested": "2026-09-19"
+   }
+  ],
+  "full": [
+   {
+    "verdict": "accept",
+    "clip_sha256": "9bb710532e2b17482d95006ca5a99725e3d932dc5b7c60a134ed2adcce2dfcb5",
+    "commons_sha1": "fd82e0870670794f928ea268f6de21044589b382",
+    "speaker": "Grendelkhan",
+    "license": "CC0",
+    "note": "",
+    "sheet": "en-secondlook-20260919",
+    "auditor": "eric",
+    "ingested": "2026-09-19"
+   }
+  ],
+  "gear": [
+   {
+    "verdict": "accept",
+    "clip_sha256": "e96078f0ac684b2dcde4bbe6d71fa14dac7dfe7f1b421a6928d969c82007151a",
+    "commons_sha1": "3d120da794728da80ae3c812deb79ed8b572d13e",
+    "speaker": "Grendelkhan",
+    "license": "CC0",
+    "note": "",
+    "sheet": "en-secondlook-20260919",
+    "auditor": "eric",
+    "ingested": "2026-09-19"
+   }
+  ],
+  "glass": [
+   {
+    "verdict": "accept",
+    "clip_sha256": "107125d72ce37b32deb5810e9cbe194e0db649a69dbacafab95dc16a86451b7d",
+    "commons_sha1": "fd6de9961da2b72308ee9252441a380f62e78b05",
+    "speaker": "Grendelkhan",
+    "license": "CC0",
+    "note": "",
+    "sheet": "en-secondlook-20260919",
+    "auditor": "eric",
+    "ingested": "2026-09-19"
+   }
+  ],
+  "goal": [
+   {
+    "verdict": "accept",
+    "clip_sha256": "cbf50fecf4a33952716844ffcfc3bae1ed42cf72ef843b20171c00c76b471f8e",
+    "commons_sha1": "a7cb79ef16383db5cef81bfbf7f0474e29b10d57",
+    "speaker": "Grendelkhan",
+    "license": "CC0",
+    "note": "",
+    "sheet": "en-secondlook-20260919",
+    "auditor": "eric",
+    "ingested": "2026-09-19"
+   }
+  ],
+  "gray": [
+   {
+    "verdict": "accept",
+    "clip_sha256": "6e58f039d114ce72137c61d3ef279bf0cad693aa44b65978911124938be926db",
+    "commons_sha1": "e5adc0fdb4cf62d8fb65c1d33c477a02a6329417",
+    "speaker": "Grendelkhan",
+    "license": "CC0",
+    "note": "",
+    "sheet": "en-secondlook-20260919",
+    "auditor": "eric",
+    "ingested": "2026-09-19"
+   }
+  ],
+  "grey": [
+   {
+    "verdict": "accept",
+    "clip_sha256": "12b4bf1c76379088d1d5002b69f0b87b41e3308360520c9d94ae590e954cb94a",
+    "commons_sha1": "4e69af3bc40653c371b8d2f29517f1e8db36f909",
+    "speaker": "Grendelkhan",
+    "license": "CC0",
+    "note": "",
+    "sheet": "en-secondlook-20260919",
+    "auditor": "eric",
+    "ingested": "2026-09-19"
+   }
+  ],
+  "gun": [
+   {
+    "verdict": "accept",
+    "clip_sha256": "1316c60bb89916671f786c00b0983b944bd4a821a01503350a88aa9727fbb908",
+    "commons_sha1": "662e02f209dacbe99a864919c73b73a7c5e9897b",
+    "speaker": "Grendelkhan",
+    "license": "CC0",
+    "note": "",
+    "sheet": "en-secondlook-20260919",
+    "auditor": "eric",
+    "ingested": "2026-09-19"
+   }
+  ],
+  "half": [
+   {
+    "verdict": "accept",
+    "clip_sha256": "b364ce5f37ff905a75ced648bee9cb73badc413ca54bb266a48e61a54bd8045e",
+    "commons_sha1": "9cba208b5f32fb5c2fd97b31cf25e4e2731d58a3",
+    "speaker": "Grendelkhan",
+    "license": "CC0",
+    "note": "",
+    "sheet": "en-secondlook-20260919",
+    "auditor": "eric",
+    "ingested": "2026-09-19"
+   }
+  ],
+  "hand": [
+   {
+    "verdict": "accept",
+    "clip_sha256": "2ab0fa08b515c829f3471924db558399b1af18567faf0c43a21805ada76ff0ea",
+    "commons_sha1": "7cea062f52c1d70d3214487ddccda38f9469ba06",
+    "speaker": "Grendelkhan",
+    "license": "CC0",
+    "note": "",
+    "sheet": "en-secondlook-20260919",
+    "auditor": "eric",
+    "ingested": "2026-09-19"
+   }
+  ],
+  "hole": [
+   {
+    "verdict": "accept",
+    "clip_sha256": "d3b46275e28af4bf9c7b2acaea07721a34924939a7ba439fec06b4e3588a1a0f",
+    "commons_sha1": "eac1055e50ab79e0fb3756e3887a3e5b0455698c",
+    "speaker": "Grendelkhan",
+    "license": "CC0",
+    "note": "",
+    "sheet": "en-secondlook-20260919",
+    "auditor": "eric",
+    "ingested": "2026-09-19"
+   }
+  ],
+  "hop": [
+   {
+    "verdict": "accept",
+    "clip_sha256": "04b2184a0572ecd5eaf3e17b181eab38775028b0debd174e71fba240c029065c",
+    "commons_sha1": "33e8868c6b5ec65d800f343c2fb474961118339b",
+    "speaker": "Grendelkhan",
+    "license": "CC0",
+    "note": "",
+    "sheet": "en-secondlook-20260919",
+    "auditor": "eric",
+    "ingested": "2026-09-19"
+   }
+  ],
+  "ill": [
+   {
+    "verdict": "accept",
+    "clip_sha256": "8cf6099d1109e99ac7383759c449187c9336ff28ad85de39be482f0096fdb814",
+    "commons_sha1": "00390e1e833f7bfcafe76e5ff2c2a7f3b27c9e75",
+    "speaker": "Grendelkhan",
+    "license": "CC0",
+    "note": "",
+    "sheet": "en-secondlook-20260919",
+    "auditor": "eric",
+    "ingested": "2026-09-19"
+   }
+  ],
+  "leads": [
+   {
+    "verdict": "accept",
+    "clip_sha256": "83b3aaadb8a67b5f7aca0d93e53c31e3d2c05a522ac4a337cca6634c9f3c5d4b",
+    "commons_sha1": "5e35e43a75039cf2bbfa606537ac0440a59f771b",
+    "speaker": "Grendelkhan",
+    "license": "CC0",
+    "note": "",
+    "sheet": "en-secondlook-20260919",
+    "auditor": "eric",
+    "ingested": "2026-09-19"
+   }
+  ],
+  "lee": [
+   {
+    "verdict": "accept",
+    "clip_sha256": "224d9860e2cc6e65efd0a37168e9b0553b77f92eabfa086e7795547f6f10887b",
+    "commons_sha1": "a6a451c5bdaadaee9289e41b87b2650e9c327cf1",
+    "speaker": "Grendelkhan",
+    "license": "CC0",
+    "note": "",
+    "sheet": "en-secondlook-20260919",
+    "auditor": "eric",
+    "ingested": "2026-09-19"
+   }
+  ],
+  "lies": [
+   {
+    "verdict": "accept",
+    "clip_sha256": "5b446af49bac7b52cc100e9eed0e7ac1999fc84ee229b238e2a0cc3b52bc228e",
+    "commons_sha1": "abe7abcd9a842e5831912de232076eeafcde2a11",
+    "speaker": "Grendelkhan",
+    "license": "CC0",
+    "note": "",
+    "sheet": "en-secondlook-20260919",
+    "auditor": "eric",
+    "ingested": "2026-09-19"
+   }
+  ],
+  "life": [
+   {
+    "verdict": "accept",
+    "clip_sha256": "ea73727ce76e41b08c3144f5b3fe3606d8cbc46e4c1a3b58df67db89e9512588",
+    "commons_sha1": "6c5d3471c396a9ef46efd290b834dc67249601b7",
+    "speaker": "Grendelkhan",
+    "license": "CC0",
+    "note": "",
+    "sheet": "en-secondlook-20260919",
+    "auditor": "eric",
+    "ingested": "2026-09-19"
+   }
+  ],
+  "meal": [
+   {
+    "verdict": "accept",
+    "clip_sha256": "6e402998a127a305ff788ec17ce46eef1871c0d583988752d333dd4c00a6b603",
+    "commons_sha1": "4f3291a77281d18f7a351f39d8eaa439e270223f",
+    "speaker": "Grendelkhan",
+    "license": "CC0",
+    "note": "",
+    "sheet": "en-secondlook-20260919",
+    "auditor": "eric",
+    "ingested": "2026-09-19"
+   }
+  ],
+  "might": [
+   {
+    "verdict": "accept",
+    "clip_sha256": "98f2d1f2a19a3687200e31dd1b32a0bf473c03c1e6dc2149961b79fceb1eaab6",
+    "commons_sha1": "bfee2d39cf9b238d51ea84b1b4916a1908037679",
+    "speaker": "Grendelkhan",
+    "license": "CC0",
+    "note": "",
+    "sheet": "en-secondlook-20260919",
+    "auditor": "eric",
+    "ingested": "2026-09-19"
+   }
+  ],
+  "month": [
+   {
+    "verdict": "accept",
+    "clip_sha256": "eec8e0dbb91f0ec0d9fde8a996d8fee5ef4c7ac84e4a1bb05807cc0a0ca43562",
+    "commons_sha1": "51177daa2864502a09e2492ec95643136367c507",
+    "speaker": "Grendelkhan",
+    "license": "CC0",
+    "note": "",
+    "sheet": "en-secondlook-20260919",
+    "auditor": "eric",
+    "ingested": "2026-09-19"
+   }
+  ],
+  "most": [
+   {
+    "verdict": "accept",
+    "clip_sha256": "8a3e74762c4d7754d55ef5f81bacc738f890de3b94fdadd260f2cd851cc3d346",
+    "commons_sha1": "d001428151f671a56adf136cfe536cf6e5570a9c",
+    "speaker": "Grendelkhan",
+    "license": "CC0",
+    "note": "",
+    "sheet": "en-secondlook-20260919",
+    "auditor": "eric",
+    "ingested": "2026-09-19"
+   }
+  ],
+  "mouth": [
+   {
+    "verdict": "poor quality",
+    "clip_sha256": "2170a6505fc0791f3ef9558e3b79e0a1b5f872be835a157de192b1d6ae318914",
+    "commons_sha1": "a5f1bfb7d058c1db21c90cfb37607e7cd87abd1e",
+    "speaker": "Grendelkhan",
+    "license": "CC0",
+    "note": "",
+    "sheet": "en-secondlook-20260919",
+    "auditor": "eric",
+    "ingested": "2026-09-19"
+   }
+  ],
+  "my": [
+   {
+    "verdict": "accept",
+    "clip_sha256": "9a5dcab5a17385ecc6f597ea73481eb52a50c66125c611e050f3ca29a85b8880",
+    "commons_sha1": "079e284362b4d49aca611b8d41fc78c9023da1db",
+    "speaker": "Grendelkhan",
+    "license": "CC0",
+    "note": "",
+    "sheet": "en-secondlook-20260919",
+    "auditor": "eric",
+    "ingested": "2026-09-19"
+   }
+  ],
+  "neck": [
+   {
+    "verdict": "accept",
+    "clip_sha256": "d2a170b5b81e4943c848afae76179fed30ddde07ce2db5c9829e1d38c56471d1",
+    "commons_sha1": "86600b50a777939fb3551192271d4225f5562d8b",
+    "speaker": "Grendelkhan",
+    "license": "CC0",
+    "note": "",
+    "sheet": "en-secondlook-20260919",
+    "auditor": "eric",
+    "ingested": "2026-09-19"
+   }
+  ],
+  "nine": [
+   {
+    "verdict": "accept",
+    "clip_sha256": "9d048e8bb797f7121230fecc08cf4bed49b0736c1cfe1d217ccd3007e2724a63",
+    "commons_sha1": "61b165f9455e34827e8d2826a7ddbcb31cc28c83",
+    "speaker": "Grendelkhan",
+    "license": "CC0",
+    "note": "",
+    "sheet": "en-secondlook-20260919",
+    "auditor": "eric",
+    "ingested": "2026-09-19"
+   }
+  ],
+  "nor": [
+   {
+    "verdict": "accept",
+    "clip_sha256": "202db6940f2258f005e0cc2ccaa3721fa610e490613dd8c849b59332bef91c42",
+    "commons_sha1": "1b9512f1922e2878e6a82da29d41a4f6072f6c14",
+    "speaker": "Grendelkhan",
+    "license": "CC0",
+    "note": "",
+    "sheet": "en-secondlook-20260919",
+    "auditor": "eric",
+    "ingested": "2026-09-19"
+   }
+  ],
+  "one": [
+   {
+    "verdict": "accept",
+    "clip_sha256": "249ba507cd3dafd51bdf1a6b262888328a79c1ddb744f9015547fe22f1f438c0",
+    "commons_sha1": "c6c7383f86940eb15e47ef6fa5bd6f9ef747ec76",
+    "speaker": "Grendelkhan",
+    "license": "CC0",
+    "note": "",
+    "sheet": "en-secondlook-20260919",
+    "auditor": "eric",
+    "ingested": "2026-09-19"
+   }
+  ],
+  "plays": [
+   {
+    "verdict": "accept",
+    "clip_sha256": "15ea164dad222f5f75703c9a76a88af3ca4ca40ae9486754403d643d94b4534b",
+    "commons_sha1": "dd57079ac3325c58b0e7196f4a66d58a0aeed230",
+    "speaker": "Grendelkhan",
+    "license": "CC0",
+    "note": "",
+    "sheet": "en-secondlook-20260919",
+    "auditor": "eric",
+    "ingested": "2026-09-19"
+   }
+  ],
+  "pool": [
+   {
+    "verdict": "accept",
+    "clip_sha256": "58552596cf84a8724221f503ba9f223e59fa74b370e08a25856306ecadddb735",
+    "commons_sha1": "6d8aaa5498c0094c95af174771c4006cad16de93",
+    "speaker": "Grendelkhan",
+    "license": "CC0",
+    "note": "",
+    "sheet": "en-secondlook-20260919",
+    "auditor": "eric",
+    "ingested": "2026-09-19"
+   }
+  ],
+  "pot": [
+   {
+    "verdict": "accept",
+    "clip_sha256": "ecff746f60d6def85b2fa9fd0ceaaf983bfec4e2834532cc59a99c0b8ef23485",
+    "commons_sha1": "7f53cc1b6cc921de53cd8ca0e249a63f720287cb",
+    "speaker": "Grendelkhan",
+    "license": "CC0",
+    "note": "",
+    "sheet": "en-secondlook-20260919",
+    "auditor": "eric",
+    "ingested": "2026-09-19"
+   }
+  ],
+  "pull": [
+   {
+    "verdict": "accept",
+    "clip_sha256": "b24b879de88baee323f47e0f7468f50b21e2bc912b57e4ed3c3b1adcb9699847",
+    "commons_sha1": "f7df75268d62a1d3037292d156bc2d7224ca8292",
+    "speaker": "Grendelkhan",
+    "license": "CC0",
+    "note": "",
+    "sheet": "en-secondlook-20260919",
+    "auditor": "eric",
+    "ingested": "2026-09-19"
+   }
+  ],
+  "rate": [
+   {
+    "verdict": "accept",
+    "clip_sha256": "44bff34ab0948f366165cba75c5f85e3381f8158ccdcf0490bab22b9d04e46fe",
+    "commons_sha1": "181a494e15c65757b901d78d6a363dd3a8555d94",
+    "speaker": "Grendelkhan",
+    "license": "CC0",
+    "note": "",
+    "sheet": "en-secondlook-20260919",
+    "auditor": "eric",
+    "ingested": "2026-09-19"
+   }
+  ],
+  "seal": [
+   {
+    "verdict": "accept",
+    "clip_sha256": "caebda1cc362c07e5f5cce2a36d8b96a0e844480a4f47a44ac0ce56b56671734",
+    "commons_sha1": "ed5a1531139c148b776337d77c5525c24721f07d",
+    "speaker": "Grendelkhan",
+    "license": "CC0",
+    "note": "",
+    "sheet": "en-secondlook-20260919",
+    "auditor": "eric",
+    "ingested": "2026-09-19"
+   }
+  ],
+  "seat": [
+   {
+    "verdict": "accept",
+    "clip_sha256": "45eae2cb171428229e7d7dc1f8543762580823b7e27563b778f980355fab1f71",
+    "commons_sha1": "ca32a0bccda2b159e3f2c9426988fee6e54cd3a1",
+    "speaker": "Grendelkhan",
+    "license": "CC0",
+    "note": "",
+    "sheet": "en-secondlook-20260919",
+    "auditor": "eric",
+    "ingested": "2026-09-19"
+   }
+  ],
+  "seem": [
+   {
+    "verdict": "accept",
+    "clip_sha256": "ef44c2e59937b24f932611b8fb41ba22c921d187b528571f95c64394ae381501",
+    "commons_sha1": "dd91322d566c25b7e628b0e821d694237b248695",
+    "speaker": "Grendelkhan",
+    "license": "CC0",
+    "note": "",
+    "sheet": "en-secondlook-20260919",
+    "auditor": "eric",
+    "ingested": "2026-09-19"
+   }
+  ],
+  "sees": [
+   {
+    "verdict": "accept",
+    "clip_sha256": "0eb7e2883f2947c668aec3bbf359782f920b118f86fe29ef8fd4e5f1fa5dad6e",
+    "commons_sha1": "5edacfa9584cbc39a97daecec84660bebf8933f6",
+    "speaker": "Grendelkhan",
+    "license": "CC0",
+    "note": "",
+    "sheet": "en-secondlook-20260919",
+    "auditor": "eric",
+    "ingested": "2026-09-19"
+   }
+  ],
+  "sell": [
+   {
+    "verdict": "accept",
+    "clip_sha256": "3ab105ab90ef1c84f30d15c4574618a0c04a1eb00c6ad76d0edf5b8d6f7c034b",
+    "commons_sha1": "849f791db0217457022bb339008debfa04177f79",
+    "speaker": "Grendelkhan",
+    "license": "CC0",
+    "note": "",
+    "sheet": "en-secondlook-20260919",
+    "auditor": "eric",
+    "ingested": "2026-09-19"
+   }
+  ],
+  "serve": [
+   {
+    "verdict": "accept",
+    "clip_sha256": "441a7048ef9385b07a940b5a60d2b4df75f7031344dc33abb8f105326a50930e",
+    "commons_sha1": "f601a804225004553707600059c202b95695e9eb",
+    "speaker": "Grendelkhan",
+    "license": "CC0",
+    "note": "",
+    "sheet": "en-secondlook-20260919",
+    "auditor": "eric",
+    "ingested": "2026-09-19"
+   }
+  ],
+  "seven": [
+   {
+    "verdict": "accept",
+    "clip_sha256": "bf108f780ba732f6bdf3d26a62f4d6e934579b49a5be676fdaffecace3481c9a",
+    "commons_sha1": "7aab07551c43b621dc95ca41b01b0cd19638a2ca",
+    "speaker": "Grendelkhan",
+    "license": "CC0",
+    "note": "",
+    "sheet": "en-secondlook-20260919",
+    "auditor": "eric",
+    "ingested": "2026-09-19"
+   }
+  ],
+  "six": [
+   {
+    "verdict": "accept",
+    "clip_sha256": "20f295a96fa549fbc4e8f3d4d0e1a7bd8fca5b02f2f6c4b09147b619304dfd0a",
+    "commons_sha1": "11410cc0f6dbe3a398f2c9c572143939c01548e8",
+    "speaker": "Grendelkhan",
+    "license": "CC0",
+    "note": "",
+    "sheet": "en-secondlook-20260919",
+    "auditor": "eric",
+    "ingested": "2026-09-19"
+   }
+  ],
+  "soul": [
+   {
+    "verdict": "accept",
+    "clip_sha256": "328360bddfa0407936caa9726fb71da661d26530973c099976aa344b2f0b05be",
+    "commons_sha1": "9ff0e2110231ff249e2d41ec9e9f20c35d23ccf4",
+    "speaker": "Grendelkhan",
+    "license": "CC0",
+    "note": "",
+    "sheet": "en-secondlook-20260919",
+    "auditor": "eric",
+    "ingested": "2026-09-19"
+   }
+  ],
+  "tank": [
+   {
+    "verdict": "accept",
+    "clip_sha256": "c9b45d3ffcfe745fcf7400d3bb8e3abd558fc0ea9911a99ba39d17f7017de8fd",
+    "commons_sha1": "42f780957edcca42d07f6d51c0dd8a2fa87e83d6",
+    "speaker": "Grendelkhan",
+    "license": "CC0",
+    "note": "",
+    "sheet": "en-secondlook-20260919",
+    "auditor": "eric",
+    "ingested": "2026-09-19"
+   }
+  ],
+  "ten": [
+   {
+    "verdict": "accept",
+    "clip_sha256": "05eef373ec465e22b8903c80dda84fad72d3a9a956a154e5f0a5bd7705dceb63",
+    "commons_sha1": "0624717116dcdb865d761d20b151a043029c7e89",
+    "speaker": "Grendelkhan",
+    "license": "CC0",
+    "note": "",
+    "sheet": "en-secondlook-20260919",
+    "auditor": "eric",
+    "ingested": "2026-09-19"
+   }
+  ],
+  "tend": [
+   {
+    "verdict": "accept",
+    "clip_sha256": "784f929d71da68b0c2cb36f69d2205ad04d840b4bc1c8caa456ec71595267476",
+    "commons_sha1": "a2f4372a910d19d3a6df56ce6a227dc189918635",
+    "speaker": "Grendelkhan",
+    "license": "CC0",
+    "note": "",
+    "sheet": "en-secondlook-20260919",
+    "auditor": "eric",
+    "ingested": "2026-09-19"
+   }
+  ],
+  "tent": [
+   {
+    "verdict": "accept",
+    "clip_sha256": "e81866e3eacefb31def8579de2c90d99a83d8b1e416a83fb0a680a9401b928ab",
+    "commons_sha1": "f6ca724e1552055eac05fed177688a58084a06b7",
+    "speaker": "Grendelkhan",
+    "license": "CC0",
+    "note": "",
+    "sheet": "en-secondlook-20260919",
+    "auditor": "eric",
+    "ingested": "2026-09-19"
+   }
+  ],
+  "these": [
+   {
+    "verdict": "accept",
+    "clip_sha256": "427169d83de0f3328b7b8f515a4bbe0c021b925488e1aa7b6f374712158bb7d8",
+    "commons_sha1": "6c37ae5323cdc7af7b27fb5e2ccce2535d5eeda1",
+    "speaker": "Grendelkhan",
+    "license": "CC0",
+    "note": "",
+    "sheet": "en-secondlook-20260919",
+    "auditor": "eric",
+    "ingested": "2026-09-19"
+   }
+  ],
+  "they": [
+   {
+    "verdict": "accept",
+    "clip_sha256": "32c2b159e13add72b6c1dc25582f986ff93a33c76a5f2f83e6c6dfc4fcfdfe4b",
+    "commons_sha1": "d709dff7e59470bc0353e380ae73f58ff1ef5c37",
+    "speaker": "Grendelkhan",
+    "license": "CC0",
+    "note": "",
+    "sheet": "en-secondlook-20260919",
+    "auditor": "eric",
+    "ingested": "2026-09-19"
+   }
+  ],
+  "tour": [
+   {
+    "verdict": "poor quality",
+    "clip_sha256": "54671fe5eb0da7603e85a488f5107cb5180fde9fc157073df50b476eefdf3a75",
+    "commons_sha1": "0838812ef21bc52aa06a89631df05e578cdca551",
+    "speaker": "Grendelkhan",
+    "license": "CC0",
+    "note": "",
+    "sheet": "en-secondlook-20260919",
+    "auditor": "eric",
+    "ingested": "2026-09-19"
+   }
+  ],
+  "twelve": [
+   {
+    "verdict": "accept",
+    "clip_sha256": "5953d22d87733b281690e363e6e52e143c852b86e94cf7675117c0ea58584d05",
+    "commons_sha1": "7206fff0c28a6510e0ec320c5f2f36e7ce8e8d6c",
+    "speaker": "Grendelkhan",
+    "license": "CC0",
+    "note": "",
+    "sheet": "en-secondlook-20260919",
+    "auditor": "eric",
+    "ingested": "2026-09-19"
+   }
+  ],
+  "wall": [
+   {
+    "verdict": "accept",
+    "clip_sha256": "5723da0b6c509bfb8df52b3cb3985401e849e9654d87db818c3291ceda081a79",
+    "commons_sha1": "b68b308f8bcd44a9378ac8972e4e938721c34d43",
+    "speaker": "Grendelkhan",
+    "license": "CC0",
+    "note": "",
+    "sheet": "en-secondlook-20260919",
+    "auditor": "eric",
+    "ingested": "2026-09-19"
+   }
+  ],
+  "who": [
+   {
+    "verdict": "accept",
+    "clip_sha256": "05e4e76edf0228e90c8b63fa2e862453872c10fa653ef64e7b34758a9f9510ea",
+    "commons_sha1": "edf3a2d9480b2b66e7e26605968185604f6d0744",
+    "speaker": "Grendelkhan",
+    "license": "CC0",
+    "note": "",
+    "sheet": "en-secondlook-20260919",
+    "auditor": "eric",
+    "ingested": "2026-09-19"
+   }
+  ],
+  "whole": [
+   {
+    "verdict": "accept",
+    "clip_sha256": "a22fa505202048a429f4d35475343a2710f0fb70a6c63cb355b4c1086343ceda",
+    "commons_sha1": "fe1cd890d74ec4b586dba213c5f396ace4441f6e",
+    "speaker": "Grendelkhan",
+    "license": "CC0",
+    "note": "",
+    "sheet": "en-secondlook-20260919",
+    "auditor": "eric",
+    "ingested": "2026-09-19"
+   }
+  ],
+  "whom": [
+   {
+    "verdict": "wrong word",
+    "clip_sha256": "588b43c4e71e1c2b6db848f8190cf5e0179f3a6070d05ce079b67bffdd989184",
+    "commons_sha1": "3fbc68bf8a393b27030d1cf747aba9e822cdf72c",
+    "speaker": "Grendelkhan",
+    "license": "CC0",
+    "note": "",
+    "sheet": "en-secondlook-20260919",
+    "auditor": "eric",
+    "ingested": "2026-09-19"
+   }
+  ],
+  "whose": [
+   {
+    "verdict": "accept",
+    "clip_sha256": "d431187f1f1f0cffc7a2095862e2a314e56f3ee43952d7fbab531387170932af",
+    "commons_sha1": "86674dabac885e105056342951d8f8ca56e529ca",
+    "speaker": "Grendelkhan",
+    "license": "CC0",
+    "note": "",
+    "sheet": "en-secondlook-20260919",
+    "auditor": "eric",
+    "ingested": "2026-09-19"
+   }
+  ],
+  "wife": [
+   {
+    "verdict": "accept",
+    "clip_sha256": "282bc12560bfd2e270812cb79142ab233a80a0bf106f3aa20d77062cca2e1ebe",
+    "commons_sha1": "e8688b304d3038b0b084b747048a54d8776565d0",
+    "speaker": "Grendelkhan",
+    "license": "CC0",
+    "note": "",
+    "sheet": "en-secondlook-20260919",
+    "auditor": "eric",
+    "ingested": "2026-09-19"
+   }
+  ],
+  "wild": [
+   {
+    "verdict": "accept",
+    "clip_sha256": "fa2c3a4c01a851fde2a58b9baf1740a9cb4b5d9210191b7e06cf35f57e6e345c",
+    "commons_sha1": "1172701eabc0faef285cc6befb5e3f7529bf1abf",
+    "speaker": "Grendelkhan",
+    "license": "CC0",
+    "note": "",
+    "sheet": "en-secondlook-20260919",
+    "auditor": "eric",
+    "ingested": "2026-09-19"
+   }
+  ]
+ }
+}
