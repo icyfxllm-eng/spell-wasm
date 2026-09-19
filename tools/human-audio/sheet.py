@@ -62,65 +62,67 @@ def stamp(sheet_id, rows):
 
 
 def rows_json(folder, public):
-    """The page's rows, each clip EMBEDDED as a data: URI. WebKit browsers
-    (Safari, DuckDuckGo) refuse to load a sibling file from a page opened as a
-    file, so a page that referenced clips/rNNNN.m4a showed "Error" on every row.
-    Embedded, the page plays anywhere with no server. The clips folder stays:
-    it is what the stamp and the ingest verify."""
-    import base64
-    out = []
-    for r in public:
-        data = base64.b64encode((pathlib.Path(folder) / "clips" / r["clip"]).read_bytes()).decode()
-        out.append({"row": r["row"], "entry": r["entry"], "clip": r["clip"],
-                    "data": "data:audio/mp4;base64," + data})
-    return json.dumps(out, ensure_ascii=False)
+    """The page's rows. Clips are fetched by URL from the local audit server
+    (one shared player), not embedded: hundreds of embedded media elements
+    were more than DuckDuckGo/Safari (WebKit) would run."""
+    return json.dumps([{"row": r["row"], "entry": r["entry"], "clip": r["clip"]} for r in public],
+                      ensure_ascii=False)
 
 
 LISTEN = """<!doctype html><html lang="en"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Audio audit __ID__</title>
 <style>
-:root{--bg:#fff;--fg:#1b1d22;--mut:#646b78;--line:#e3e6ec;--acc:#2f5bd3;--row:#f6f7f9}
-@media (prefers-color-scheme:dark){:root{--bg:#15171b;--fg:#e8eaee;--mut:#9aa1ad;--line:#2b2f37;--acc:#7da2ff;--row:#1c1f24}}
+:root{--bg:#fff;--fg:#1b1d22;--mut:#646b78;--line:#e3e6ec;--acc:#2f5bd3;--row:#f6f7f9;--bad:#b3261e}
+@media (prefers-color-scheme:dark){:root{--bg:#15171b;--fg:#e8eaee;--mut:#9aa1ad;--line:#2b2f37;--acc:#7da2ff;--row:#1c1f24;--bad:#ff8a80}}
 body{margin:0;background:var(--bg);color:var(--fg);font:15px/1.4 -apple-system,system-ui,sans-serif}
 main{max-width:760px;margin:0 auto;padding:16px}
 h1{font-size:20px;margin:8px 0}p{color:var(--mut);margin:4px 0 12px}
 .bar{position:sticky;top:0;background:var(--bg);padding:10px 0;border-bottom:1px solid var(--line);display:flex;gap:10px;align-items:center;flex-wrap:wrap;z-index:1}
 button{font:inherit;padding:8px 14px;border-radius:8px;border:1px solid var(--line);background:var(--acc);color:#fff;cursor:pointer}
-.r{display:grid;grid-template-columns:52px 1fr auto;gap:10px;align-items:center;padding:10px;border-bottom:1px solid var(--line)}
+.r{display:grid;grid-template-columns:44px 52px 1fr auto;gap:10px;align-items:center;padding:10px;border-bottom:1px solid var(--line)}
 .r.cur{background:var(--row)}.n{color:var(--mut);font-variant-numeric:tabular-nums}
+.pl{width:44px;height:44px;padding:0;border-radius:50%;font-size:16px}
 .w{font-size:20px;font-weight:600}select{font:inherit;padding:6px;border-radius:6px;max-width:210px}
-.done{color:var(--mut)}
+.done{color:var(--mut)}#msg{color:var(--bad);min-height:1.2em}
 </style></head><body><main>
 <h1>Audio audit: __ID__</h1>
-<p>Play each clip. Does it say the word shown, in US English, cleanly, with nothing unsuitable for kids in the background? Pick a verdict for every row, then export the sheet and send back <b>sheet.csv</b>.</p>
-<p>Keys: <b>Space</b> play, <b>A</b> accept, <b>1–5</b> the other verdicts in list order, <b>J/K</b> next/previous.</p>
+<p>Play each clip. Is it <b>exactly</b> the word shown, in US English, clean, with nothing unsuitable for kids in the background? Some rows are planted with a different, similar word: listen for the word, not just for a nice voice.</p>
+<p>Keys: <b>Space</b> play, <b>A</b> accept, <b>1–5</b> the other verdicts in list order, <b>J/K</b> next/previous. Or tap ▶ and pick from the list.</p>
 <div class="bar"><button id="exp">Export sheet.csv</button><button id="cpy" style="display:none">Copy sheet</button><span id="cnt" class="done"></span></div>
+<div id="msg"></div>
 <textarea id="out" readonly style="display:none;width:100%;height:9em;font:12px ui-monospace,monospace;margin:8px 0;background:var(--row);color:var(--fg);border:1px solid var(--line);border-radius:8px"></textarea>
 <div id="rows"></div></main>
 <script>
 const ID="__ID__",ROWS=__ROWS__,VERDICTS=__VERDICTS__,KEY="audit-v2-"+ID;
+// ONE shared player, loading each clip from the local server only when asked.
+// A media element per row (hundreds) is more than WebKit will run on one page.
+const player=new Audio();player.preload="auto";
+player.onerror=()=>say("That clip would not play ("+(player.error?player.error.code:"?")+"). Reload the page; if it keeps happening, tell Claude.");
 let saved={};try{saved=JSON.parse(localStorage.getItem(KEY)||"{}")}catch(e){}
 const box=document.getElementById("rows");let cur=0;
+function say(t){document.getElementById("msg").textContent=t}
 ROWS.forEach((r,i)=>{const d=document.createElement("div");d.className="r";d.id="row"+i;
-d.innerHTML=`<span class="n">${r.row}</span><span><span class="w"></span><br><audio preload="none" controls src="${r.data||("clips/"+r.clip)}"></audio></span>`;
-d.querySelector(".w").textContent=r.entry;
-const s=document.createElement("select");s.innerHTML='<option value="">verdict…</option>'+VERDICTS.map(v=>`<option>${v}</option>`).join("");
-s.value=saved[r.row]||"";s.onchange=()=>{saved[r.row]=s.value;store()};d.appendChild(s);
-d.onclick=()=>focusRow(i,false);box.appendChild(d)});
+const b=document.createElement("button");b.className="pl";b.textContent="▶";b.onclick=(e)=>{e.stopPropagation();focusRow(i,false);play()};
+const n=document.createElement("span");n.className="n";n.textContent=r.row;
+const w=document.createElement("span");w.className="w";w.textContent=r.entry;
+const s=document.createElement("select");s.innerHTML='<option value="">verdict…</option>'+VERDICTS.map(v=>'<option>'+v+'</option>').join("");
+s.value=saved[r.row]||"";s.onchange=()=>{saved[r.row]=s.value;store()};s.onclick=(e)=>e.stopPropagation();
+d.append(b,n,w,s);d.onclick=()=>focusRow(i,false);box.appendChild(d)});
 function store(){try{localStorage.setItem(KEY,JSON.stringify(saved))}catch(e){}count()}
 function count(){const n=ROWS.filter(r=>saved[r.row]).length;document.getElementById("cnt").textContent=n+" of "+ROWS.length+" done"}
 function focusRow(i,scroll=true){document.querySelectorAll(".r.cur").forEach(e=>e.classList.remove("cur"));cur=Math.max(0,Math.min(ROWS.length-1,i));const e=document.getElementById("row"+cur);e.classList.add("cur");if(scroll)e.scrollIntoView({block:"center"})}
 function setV(v){const r=ROWS[cur];saved[r.row]=v;document.querySelector("#row"+cur+" select").value=v;store();focusRow(cur+1);play()}
-function play(){const a=document.querySelector("#row"+cur+" audio");document.querySelectorAll("audio").forEach(x=>{if(x!==a)x.pause()});a.currentTime=0;a.play()}
-document.addEventListener("keydown",e=>{if(e.target.tagName==="SELECT")return;const k=e.key.toLowerCase();
-if(k===" "){e.preventDefault();play()}else if(k==="a")setV("accept");else if("12345".includes(k)&&k)setV(VERDICTS[+k]);
+function play(){say("");try{player.pause()}catch(e){}player.src="clips/"+ROWS[cur].clip;
+const p=player.play();if(p&&p.catch)p.catch(err=>{if(err&&err.name!=="AbortError")say("Could not play: "+err.name+". Tap ▶ on the row to try again.")})}
+document.addEventListener("keydown",e=>{if(e.target.tagName==="SELECT"||e.metaKey||e.ctrlKey)return;const k=e.key.toLowerCase();
+if(k===" "){e.preventDefault();play()}else if(k==="a")setV("accept");else if(["1","2","3","4","5"].includes(k))setV(VERDICTS[+k]);
 else if(k==="j")focusRow(cur+1);else if(k==="k")focusRow(cur-1)});
 function csvCell(s){return /[",\\n]/.test(s)?'"'+s.replace(/"/g,'""')+'"':s}
 function sheetText(){const lines=["# sheet "+ID+" stamp __STAMP__","row,entry,clip,verdict,note"];
 ROWS.forEach(r=>lines.push([r.row,r.entry,r.clip,saved[r.row]||"",""].map(csvCell).join(",")));return lines.join("\\n")+"\\n"}
-// Some browsers silently block downloads from a page opened as a file, so the
-// sheet is ALSO shown as text with a Copy button: an export can't be lost.
+// Some browsers silently block downloads from a local page, so the sheet is
+// ALSO shown as text with a Copy button: an export can't be lost.
 document.getElementById("exp").onclick=()=>{const t=sheetText();
 try{const b=new Blob([t],{type:"text/csv"});const a=document.createElement("a");a.href=URL.createObjectURL(b);a.download="sheet.csv";document.body.appendChild(a);a.click();a.remove()}catch(e){}
 const o=document.getElementById("out");o.value=t;o.style.display="block";document.getElementById("cpy").style.display=""};
