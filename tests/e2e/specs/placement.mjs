@@ -138,6 +138,14 @@ export async function run(browser, base, suite) {
         assert(!(await page.$('#plcCard.show')),
           `the probe offer re-rendered during the run, after ${served} words`);
         if (await page.evaluate(() => !!document.querySelector('#plcCard.show'))) break;
+        // STOP WHEN THE PROBE CLOSES. The last placement answer writes
+        // placed=true and the session carries on into ordinary play. Without
+        // this break the loop played up to 30 words, the last ~20 of them
+        // ordinary deck words this test does not police, and CI's run hit a
+        // turn that left the keyboard locked (#kbHome took the click, 30s
+        // timeout), failing a test whose subject had already passed.
+        if (await page.evaluate(() =>
+          JSON.parse(localStorage.getItem('spell_learner_en') || '{}').placed === true)) break;
       }
       assert(served >= 5, `expected the probe to serve its set, only saw ${served}`);
 
