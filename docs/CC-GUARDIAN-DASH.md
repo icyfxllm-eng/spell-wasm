@@ -7,7 +7,7 @@ Features
 Per kid profile × language:
 * Mastery map: skill list with BKT mastery states, grouped how a parent thinks (sounds, letter patterns, word lengths) not how the model thinks.
 * Trouble spots: top current struggles from the grapheme-diagnosis data + existing heatmap analytics, each with one plain-language line ("mixes up -tion and -sion").
-* What's next: the FSRS scheduler's upcoming review set, framed as "this week we're working on…".
+* What's next: the FSRS scheduler's upcoming review set, framed as "this week we're working on…". *[Annotated 2026-09-19, CC-LEARNING-ENGINE-L0 census C8: as built, this reads the Leitner misses queue through `LearnerQuery::at_risk_set` (formerly `reports::rematch_set`), not FSRS; it becomes FSRS when L0 R2 lands.]*
 * Placement summary: where the kid landed and movement since.
 2. Weekly digest (opt-in, local)
 One local notification per week per profile, generated on-device from the same data ("Maya mastered 14 new words in Spanish"). Off by default. No remote push, no server.
