@@ -238,7 +238,7 @@ fn route_now() -> Route {
     if KILLED.with(Cell::get) {
         return Route::Off;
     }
-    route_for(remote(), opted(), consts::telemetry_default_on(), consts::EDITION == consts::Edition::Education, audience_now())
+    route_for(remote(), opted(), consts::telemetry_default_on(), !consts::telemetry_events_available(), audience_now())
 }
 
 fn clear_all() {
