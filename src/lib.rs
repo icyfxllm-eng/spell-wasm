@@ -106,6 +106,8 @@ mod tools_hub;
 mod testseam;
 mod versus;
 mod viet;
+mod credits; // CC-HUMAN-AUDIO F7 — generated attribution screen
+mod human_audio; // CC-HUMAN-AUDIO F5/F6 — bundled verified recordings
 mod packs;
 mod reports;
 mod reports_ui;
@@ -736,6 +738,17 @@ fn wire_glow_and_settings(app: &App) {
         dom::on::<web_sys::Event, _>("slowToggle", "change", move |_| {
             let v = dom::input("slowToggle").checked();
             a.borrow_mut().slow = v;
+            settings::save_prefs(&a.borrow());
+            settings::apply_settings(&a);
+        });
+    }
+    credits::wire(); // CC-HUMAN-AUDIO F7
+    {
+        // CC-HUMAN-AUDIO F6 — "Real voices when available" (default on, D4).
+        let a = app.clone();
+        dom::on::<web_sys::Event, _>("realVoicesToggle", "change", move |_| {
+            let v = dom::input("realVoicesToggle").checked();
+            a.borrow_mut().real_voices_off = !v;
             settings::save_prefs(&a.borrow());
             settings::apply_settings(&a);
         });

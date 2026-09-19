@@ -25,6 +25,10 @@ COPY icons /srv/icons
 # instead of Google Fonts / jsdelivr, so the site makes zero external font
 # requests and the fonts are offline-cached by the service worker.
 COPY fonts /srv/fonts
+# CC-HUMAN-AUDIO D13/D10: the same bundled human clips the app ships, so the
+# site resolves a word to the same recording. Build inputs (verdicts, bundle
+# provenance) are copied too but are small; only the .m4a files are fetched.
+COPY assets/human-audio /srv/human-audio
 # Android App Links verification file, served at /.well-known/assetlinks.json.
 COPY .well-known /srv/.well-known
 COPY --from=build /out/pkg /srv/pkg

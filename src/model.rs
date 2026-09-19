@@ -15,6 +15,10 @@ pub struct Prefs {
     #[serde(rename = "bigText", default)]
     pub big_text: bool,
     pub slow: bool,
+    /// CC-HUMAN-AUDIO F6/D4 — "Real voices when available", stored inverted so
+    /// that absent (a fresh install, or prefs from an older build) means ON.
+    #[serde(rename = "realVoicesOff", default)]
+    pub real_voices_off: bool,
     pub volume: Option<f32>,
     #[serde(default)]
     pub remind: bool,
@@ -205,6 +209,8 @@ pub struct AppState {
     pub readable: bool,
     pub big_text: bool,
     pub slow: bool,
+    /// CC-HUMAN-AUDIO F6 — see `Prefs::real_voices_off`.
+    pub real_voices_off: bool,
     pub volume: f32,
     /// Daily practice reminder (native local notification). `remind_time` is
     /// "HH:MM" 24h. Suppressed while Kid Mode is on.
@@ -278,6 +284,7 @@ impl Default for AppState {
             readable: false,
             big_text: false,
             slow: false,
+            real_voices_off: false,
             volume: 1.0,
             remind: false,
             remind_time: "17:00".into(),

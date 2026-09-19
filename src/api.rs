@@ -45,6 +45,7 @@ fn set_source(s: &'static str) {
     dom::set_text_if(
         "audioSourceNote",
         match s {
+            "human" => "real voice",
             "pack" => "offline pack",
             "server-cache" => "server clip",
             "native-tts" => "on-device voice",
@@ -68,6 +69,11 @@ fn set_source(s: &'static str) {
 /// AVSpeech (offline). One routing decision, in ONE place (doctrine).
 #[derive(Clone, Copy, PartialEq, Debug)]
 enum Source {
+    /// CC-HUMAN-AUDIO F5/D2: a verified human recording bundled with the app.
+    /// Heads the order when the player's switch is on (F6) and the word has
+    /// a clip; otherwise it steps aside instantly. A clip that fails to load
+    /// falls through to the next source, never silence plus credit (I6).
+    Human,
     /// CC-OFFLINE-PACKS (BD-2): the verified-active language pack. Heads
     /// the ONE resolution order; a no-op instantly wherever no pack (or
     /// no native layer) exists, so web/streaming behavior is unchanged.
@@ -82,10 +88,10 @@ enum Source {
 /// "native-only".
 fn parse_source_order(cfg: Option<&str>) -> Vec<Source> {
     match cfg {
-        Some("native-first") => vec![Source::Pack, Source::NativeTts, Source::ServerCache],
+        Some("native-first") => vec![Source::Human, Source::Pack, Source::NativeTts, Source::ServerCache],
         Some("server-only") => vec![Source::ServerCache],
         Some("native-only") => vec![Source::NativeTts],
-        _ => vec![Source::Pack, Source::ServerCache, Source::NativeTts],
+        _ => vec![Source::Human, Source::Pack, Source::ServerCache, Source::NativeTts],
     }
 }
 
@@ -102,13 +108,19 @@ mod router_tests {
         // BD-2 I3: the pack heads the ONE order; server clip next, native
         // TTS as rescue. Pack no-ops instantly where no pack exists, so
         // D1's server-primary behavior is preserved on the web.
-        assert_eq!(parse_source_order(None), vec![Source::Pack, Source::ServerCache, Source::NativeTts]);
-        assert_eq!(parse_source_order(Some("garbage")), vec![Source::Pack, Source::ServerCache, Source::NativeTts]);
+        // CC-HUMAN-AUDIO D2: a verified human clip heads it, and steps aside
+        // instantly for any word without one.
+        let default = vec![Source::Human, Source::Pack, Source::ServerCache, Source::NativeTts];
+        assert_eq!(parse_source_order(None), default);
+        assert_eq!(parse_source_order(Some("garbage")), default);
     }
 
     #[test]
     fn native_first_flips_the_order() {
-        assert_eq!(parse_source_order(Some("native-first")), vec![Source::Pack, Source::NativeTts, Source::ServerCache]);
+        assert_eq!(
+            parse_source_order(Some("native-first")),
+            vec![Source::Human, Source::Pack, Source::NativeTts, Source::ServerCache]
+        );
     }
 
     #[test]
@@ -204,7 +216,7 @@ fn observe_resolution(s: &str) {
     use crate::telemetry::{self, schema::{Bucket, PerfMetric}};
     let Some((t0, lang)) = PLAY_START.with(|c| c.borrow_mut().take()) else { return };
     match s {
-        "pack" | "server-cache" => {
+        "human" | "pack" | "server-cache" => {
             telemetry::record_perf(PerfMetric::TapToAudioMs, Bucket::of_ms(telemetry::now_ms() - t0), &lang);
             telemetry::record_perf(PerfMetric::AudioResolution, Bucket::Resolved, &lang);
         }
@@ -268,6 +280,7 @@ fn play_chain(
     let next: Box<dyn FnOnce()> =
         Box::new(move || play_chain(order, i + 1, w, pyc, v, rate, l, on_fail));
     match src {
+        Source::Human => play_human(&word, &variant, rate, &lang, next),
         Source::Pack => play_pack(&word, &variant, rate, &lang, next),
         Source::ServerCache => play_server_cache(&word, py.as_deref(), &variant, rate, &lang, next),
         Source::NativeTts => play_native_tts(&word, &variant, rate, &lang, next),
@@ -298,6 +311,65 @@ fn play_pack(word: &str, variant: &str, rate: f64, lang: &str, on_fail: Box<dyn 
             None => on_fail(),
         }
     });
+}
+
+/// Source "human" (CC-HUMAN-AUDIO F5): the bundled, auditor-verified clip.
+/// Slow replay is the same clip at a pitch-preserving rate (D8). Success is
+/// recorded only once playback has actually started; a missing or undecodable
+/// file advances the router to the next source (I6).
+fn play_human(word: &str, variant: &str, rate: f64, lang: &str, on_fail: Box<dyn FnOnce()>) {
+    let Some(src) = crate::human_audio::clip_url(lang, word) else {
+        on_fail();
+        return;
+    };
+    let Ok(audio) = HtmlAudioElement::new_with_src(&src) else {
+        on_fail();
+        return;
+    };
+    // preservesPitch is the default in current engines; set it anyway, because
+    // a slowed clip that also drops in pitch is a different-sounding word.
+    let _ = js_sys::Reflect::set(&audio, &JsValue::from_str("preservesPitch"), &JsValue::TRUE);
+    let _ = js_sys::Reflect::set(&audio, &JsValue::from_str("webkitPreservesPitch"), &JsValue::TRUE);
+    audio.set_playback_rate(crate::human_audio::playback_rate(variant, rate));
+
+    // The error event and play()'s rejection can both report one failure;
+    // only the first may advance the router (as in play_word_html).
+    let once: Rc<RefCell<Option<Box<dyn FnOnce()>>>> = Rc::new(RefCell::new(Some(on_fail)));
+    let advance = {
+        let once = Rc::clone(&once);
+        move || {
+            if let Some(f) = once.borrow_mut().take() {
+                f();
+            }
+        }
+    };
+    let on_err = advance.clone();
+    let err_cb = Closure::wrap(Box::new(move || on_err()) as Box<dyn FnMut()>);
+    audio.set_onerror(Some(err_cb.as_ref().unchecked_ref()));
+    err_cb.forget();
+
+    match audio.play() {
+        Ok(p) => spawn_local(async move {
+            match JsFuture::from(p).await {
+                Ok(_) => {
+                    // Started: the router's outcome is final, so a late error
+                    // event must not advance it into a second voice.
+                    once.borrow_mut().take();
+                    set_source("human");
+                }
+                Err(e) => {
+                    let name = js_sys::Reflect::get(&e, &JsValue::from_str("name"))
+                        .ok()
+                        .and_then(|v| v.as_string())
+                        .unwrap_or_default();
+                    if name != "AbortError" {
+                        advance();
+                    }
+                }
+            }
+        }),
+        Err(_) => advance(),
+    }
 }
 
 fn play_server_cache(word: &str, py: Option<&str>, variant: &str, rate: f64, lang: &str, on_fail: Box<dyn FnOnce()>) {
@@ -475,6 +547,12 @@ pub fn preload_word(word: &str, lang: &str) {
 /// F6: zh must warm with its reading, or the warm URL is not the URL the real
 /// play requests and the warm-up is wasted (worse, it would 400).
 pub fn preload_word_with(word: &str, py: Option<&str>, lang: &str) {
+    // CC-HUMAN-AUDIO: a word with a bundled human clip will play that clip, so
+    // warming its TTS render is a wasted fetch (and, on a cache miss, a paid
+    // synthesis the player never hears).
+    if crate::human_audio::clip_url(lang, word).is_some() {
+        return;
+    }
     let url = speak_url(word, py, "normal", lang);
     // On the native build, warming means downloading the clip to on-device
     // storage (so it's instant AND offline later); the browser HTTP-cache

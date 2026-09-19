@@ -167,6 +167,8 @@ node scripts/tier-list-check.mjs --selftest || { echo "GATE FAIL: tier-list self
 echo "== gate: settings truth (AUDITPASS F8)"
 node scripts/settings-truth-check.mjs || { echo "GATE FAIL: settings truth"; exit 1; }
 node scripts/settings-truth-check.mjs --selftest || { echo "GATE FAIL: settings-truth selftest — the gate no longer bites"; exit 1; }
+node scripts/human-audio-check.mjs || { echo "GATE FAIL: human audio (CC-HUMAN-AUDIO I2/I7/F7)"; exit 1; }
+node scripts/human-audio-check.mjs --selftest || { echo "GATE FAIL: human-audio selftest — the gate no longer bites"; exit 1; }
 
 echo "== gate: cargo test"
 # Keep the OUTPUT, then judge it. The old form re-ran cargo and grepped

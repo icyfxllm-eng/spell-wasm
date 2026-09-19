@@ -1,7 +1,7 @@
 # Unaudited UI strings — review queue
 
-7 keys x 14 locales = 98 strings, drafted by tooling
-during the Aug 6 audit and never reviewed by a speaker. None is load-bearing
+13 keys x 14 locales = 182 strings, drafted by tooling (7 during the Aug 6
+audit, 6 for CC-HUMAN-AUDIO F6/F7 on 2026-09-19) and never reviewed by a speaker. None is load-bearing
 for correctness; all are user-facing.
 
 Each locale's block below is self-contained — a reviewer needs only their own
@@ -133,3 +133,111 @@ language and the English above it.
 - **sw** — Jinsi inavyofanya kazi
 - **hi** — यह कैसे काम करता है
 
+
+### `settings.realVoices`
+**en** — Real voices when available
+
+- **es** — Voces reales cuando estén disponibles
+- **fr** — Vraies voix si disponibles
+- **de** — Echte Stimmen, wenn verfügbar
+- **pt** — Vozes reais quando disponíveis
+- **pl** — Prawdziwe głosy, gdy są dostępne
+- **vi** — Giọng thật khi có
+- **ko** — 가능할 때 실제 목소리
+- **ja** — 本物の声を使う（ある場合）
+- **fil** — Totoong boses kung mayroon
+- **zh** — 有真人语音时使用
+- **ru** — Живые голоса, если есть
+- **ar** — أصوات حقيقية عند توفرها
+- **sw** — Sauti halisi zinapopatikana
+- **hi** — उपलब्ध होने पर असली आवाज़
+
+### `settings.realVoicesSmall`
+**en** — Hear a person say the word, where we have a checked recording
+
+- **es** — Escucha a una persona decir la palabra, cuando tengamos una grabación revisada
+- **fr** — Entends une personne dire le mot, quand nous avons un enregistrement vérifié
+- **de** — Hör einen Menschen das Wort sagen, wo es eine geprüfte Aufnahme gibt
+- **pt** — Ouça uma pessoa dizer a palavra, quando tivermos uma gravação verificada
+- **pl** — Usłysz, jak człowiek wymawia słowo, jeśli mamy sprawdzone nagranie
+- **vi** — Nghe người thật đọc từ, khi có bản ghi âm đã được kiểm tra
+- **ko** — 확인된 녹음이 있으면 사람이 단어를 말하는 소리를 들어요
+- **ja** — 確認済みの録音がある単語は、人の声で聞けるよ
+- **fil** — Marinig ang isang tao na sinasabi ang salita, kung may nasuring recording
+- **zh** — 有经过核对的录音时，听真人读这个单词
+- **ru** — Слушай, как слово произносит человек, если есть проверенная запись
+- **ar** — استمع إلى شخص ينطق الكلمة، عندما يتوفر تسجيل تم التحقق منه
+- **sw** — Sikia mtu akitamka neno, pale tulipo na rekodi iliyokaguliwa
+- **hi** — जहाँ जाँची हुई रिकॉर्डिंग हो, वहाँ किसी व्यक्ति को शब्द बोलते सुनो
+
+### `credits.title`
+**en** — Credits
+
+- **es** — Créditos
+- **fr** — Crédits
+- **de** — Danksagungen
+- **pt** — Créditos
+- **pl** — Podziękowania
+- **vi** — Ghi công
+- **ko** — 크레딧
+- **ja** — クレジット
+- **fil** — Mga Kredito
+- **zh** — 致谢
+- **ru** — Благодарности
+- **ar** — شكر وتقدير
+- **sw** — Shukrani
+- **hi** — आभार
+
+### `credits.small`
+**en** — The people whose recordings you hear
+
+- **es** — Las personas cuyas grabaciones escuchas
+- **fr** — Les personnes dont tu entends les enregistrements
+- **de** — Die Menschen, deren Aufnahmen du hörst
+- **pt** — As pessoas cujas gravações você ouve
+- **pl** — Osoby, których nagrań słuchasz
+- **vi** — Những người có bản ghi âm mà bạn nghe
+- **ko** — 녹음을 들려주는 사람들
+- **ja** — 録音してくれた人たち
+- **fil** — Ang mga taong naririnig mo sa mga recording
+- **zh** — 为你录音的人
+- **ru** — Люди, чьи записи ты слышишь
+- **ar** — الأشخاص الذين تسمع تسجيلاتهم
+- **sw** — Watu ambao rekodi zao unazisikia
+- **hi** — वे लोग जिनकी रिकॉर्डिंग तुम सुनते हो
+
+### `credits.intro`
+**en** — Real-voice recordings come from Lingua Libre, a Wikimedia project where volunteers record words in their own language.
+
+- **es** — Las grabaciones de voces reales vienen de Lingua Libre, un proyecto de Wikimedia en el que voluntarios graban palabras en su propio idioma.
+- **fr** — Les enregistrements de vraies voix viennent de Lingua Libre, un projet Wikimedia où des bénévoles enregistrent des mots dans leur propre langue.
+- **de** — Die Aufnahmen echter Stimmen stammen von Lingua Libre, einem Wikimedia-Projekt, in dem Freiwillige Wörter in ihrer eigenen Sprache aufnehmen.
+- **pt** — As gravações de vozes reais vêm do Lingua Libre, um projeto da Wikimedia em que voluntários gravam palavras no próprio idioma.
+- **pl** — Nagrania prawdziwych głosów pochodzą z Lingua Libre, projektu Wikimedia, w którym wolontariusze nagrywają słowa w swoim języku.
+- **vi** — Các bản ghi giọng thật đến từ Lingua Libre, một dự án của Wikimedia nơi tình nguyện viên ghi âm các từ bằng ngôn ngữ của mình.
+- **ko** — 실제 목소리 녹음은 자원봉사자들이 자기 언어로 단어를 녹음하는 위키미디어 프로젝트, Lingua Libre에서 가져왔어요.
+- **ja** — 本物の声の録音は、ボランティアが自分の言語で単語を録音するウィキメディアのプロジェクト、Lingua Libre のものだよ。
+- **fil** — Galing ang mga recording ng totoong boses sa Lingua Libre, isang proyekto ng Wikimedia kung saan nagre-record ang mga boluntaryo ng mga salita sa sarili nilang wika.
+- **zh** — 真人语音录音来自 Lingua Libre，这是一个维基媒体项目，志愿者用自己的语言录制单词。
+- **ru** — Записи живых голосов взяты из Lingua Libre — проекта Викимедиа, где волонтёры записывают слова на своём языке.
+- **ar** — تأتي تسجيلات الأصوات الحقيقية من Lingua Libre، وهو مشروع من ويكيميديا يسجّل فيه متطوعون كلمات بلغتهم.
+- **sw** — Rekodi za sauti halisi zinatoka Lingua Libre, mradi wa Wikimedia ambapo wajitolea hurekodi maneno kwa lugha zao.
+- **hi** — असली आवाज़ की रिकॉर्डिंग Lingua Libre से आती हैं, जो विकिमीडिया की एक परियोजना है जहाँ स्वयंसेवक अपनी भाषा में शब्द रिकॉर्ड करते हैं।
+
+### `credits.none`
+**en** — Every real-voice recording in this version is in the public domain, so none needs a credit line. Thank you to the speakers all the same.
+
+- **es** — Todas las grabaciones de voces reales de esta versión son de dominio público, así que ninguna necesita crédito. Aun así, gracias a quienes las grabaron.
+- **fr** — Tous les enregistrements de vraies voix de cette version sont dans le domaine public, aucun n'exige donc de mention. Merci quand même aux personnes qui les ont enregistrés.
+- **de** — Alle Aufnahmen echter Stimmen in dieser Version sind gemeinfrei, deshalb braucht keine eine Namensnennung. Trotzdem danke an alle Sprecherinnen und Sprecher.
+- **pt** — Todas as gravações de vozes reais desta versão estão em domínio público, então nenhuma precisa de crédito. Mesmo assim, obrigado a quem gravou.
+- **pl** — Wszystkie nagrania prawdziwych głosów w tej wersji są w domenie publicznej, więc żadne nie wymaga podania autora. Mimo to dziękujemy osobom, które je nagrały.
+- **vi** — Mọi bản ghi giọng thật trong phiên bản này đều thuộc phạm vi công cộng, nên không bản nào cần ghi công. Dù vậy, xin cảm ơn những người đã ghi âm.
+- **ko** — 이 버전의 실제 목소리 녹음은 모두 퍼블릭 도메인이라 출처 표기가 필요 없어요. 그래도 녹음해 준 분들께 감사해요.
+- **ja** — このバージョンの本物の声の録音はすべてパブリックドメインなので、クレジット表記は必要ないよ。それでも録音してくれた人たちに感謝！
+- **fil** — Nasa public domain ang lahat ng recording ng totoong boses sa bersyong ito, kaya walang kailangang kredito. Salamat pa rin sa mga nag-record.
+- **zh** — 本版本中的所有真人语音录音都属于公有领域，因此无需署名。依然感谢每一位录音者。
+- **ru** — Все записи живых голосов в этой версии находятся в общественном достоянии, поэтому указывать авторов не нужно. И всё же спасибо тем, кто их записал.
+- **ar** — جميع تسجيلات الأصوات الحقيقية في هذا الإصدار ملك عام، لذا لا يحتاج أيّ منها إلى إسناد. ومع ذلك، شكرًا لمن سجّلوها.
+- **sw** — Rekodi zote za sauti halisi katika toleo hili ziko katika uwanja wa umma, kwa hiyo hakuna inayohitaji kutajwa kwa mwandishi. Hata hivyo, asante kwa waliorekodi.
+- **hi** — इस संस्करण की सभी असली आवाज़ वाली रिकॉर्डिंग सार्वजनिक डोमेन में हैं, इसलिए किसी के लिए श्रेय देना ज़रूरी नहीं। फिर भी रिकॉर्ड करने वालों का धन्यवाद।

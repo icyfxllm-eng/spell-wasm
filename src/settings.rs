@@ -16,6 +16,7 @@ pub fn load_prefs(state: &mut AppState) {
     state.readable = p.readable;
     state.big_text = p.big_text;
     state.slow = p.slow;
+    state.real_voices_off = p.real_voices_off;
     // 0.55, not 0.7 (Eric, 2026-08-06). The Aug 6 audit read Slower
     // Voice as dead; it was wired on both paths the whole time, but
     // 0.9 -> 0.7 is only a 1.29x duration change — technically over
@@ -44,6 +45,7 @@ pub fn save_prefs(state: &AppState) {
         readable: state.readable,
         big_text: state.big_text,
         slow: state.slow,
+        real_voices_off: state.real_voices_off,
         volume: Some(state.volume),
         remind: state.remind,
         remind_time: Some(state.remind_time.clone()),
@@ -227,6 +229,9 @@ pub fn apply_settings(app: &App) {
     dom::input("readToggle").set_checked(s.readable);
     dom::input("bigTextToggle").set_checked(s.big_text);
     dom::input("slowToggle").set_checked(s.slow);
+    // CC-HUMAN-AUDIO F6: the switch and the router read one value.
+    crate::human_audio::set_enabled(!s.real_voices_off);
+    dom::input("realVoicesToggle").set_checked(!s.real_voices_off);
     dom::input("remindToggle").set_checked(s.remind);
     // AUDITPASS F8 — a control a mode OVERRIDES must look overridden.
     // Kid Mode suppresses the daily reminder (`remind && !kid` in

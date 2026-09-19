@@ -32,6 +32,7 @@ import * as hubRow from './specs/hub-row.mjs';
 import * as economics from './specs/economics.mjs';
 import * as finalePixels from './specs/finale-pixels.mjs';
 import * as audioGate from './specs/audio-gate.mjs';
+import * as humanAudio from './specs/human-audio.mjs';
 import * as finaleRelaunch from './specs/finale-relaunch.mjs';
 import * as metadataAudit from './specs/metadata-audit.mjs';
 import * as kidReveal from './specs/kid-reveal.mjs';
@@ -68,6 +69,7 @@ const SPECS = [
   ['finale', finale],
   ['economics', economics],
   ['audio-gate', audioGate],
+  ['human-audio', humanAudio],
   ['finale-relaunch', finaleRelaunch],
   ['metadata-audit', metadataAudit],
   ['kid-reveal', kidReveal],
@@ -87,7 +89,7 @@ const ROOT = join(fileURLToPath(import.meta.url), '..', '..', '..');
 const WEB_ONLY_SPECS = new Set(['coming', 'picture-wall']);
 // Specs that must run in BOTH configurations -- a platform claim checked on
 // one side only is half a check.
-const BOTH_SPECS = new Set(['platform']);
+const BOTH_SPECS = new Set(['platform', 'human-audio']);
 const IS_WEB = process.env.SPELL_WEB === '1';
 
 const { server, base } = await startServer();

@@ -6,6 +6,8 @@
   4  inflection       a lemma recording (рука) never serves an inflected entry (руку)
   6  auto-QC          a clip of the wrong word is rejected by the loopback, logged
   7  decoy gate       a sheet with two accepted decoys is rejected at ingest
+  9  D3 gate          a tier under 80% verified coverage ships nothing (whole
+                      tier stays on TTS); at 80% it ships, with credits for BY
 
 Test 6 needs whisper-cli, a model and macOS `say`; it skips, naming what is
 missing, rather than passing. Run with the Phase B venv (numpy, soundfile,
@@ -26,6 +28,7 @@ import unittest
 HERE = pathlib.Path(__file__).resolve().parent
 sys.path.insert(0, str(HERE))
 sys.path.insert(0, str(HERE.parent / "human-audio-census"))
+import bundle  # noqa: E402
 import harvest  # noqa: E402
 import ingest  # noqa: E402
 import sheet  # noqa: E402
@@ -138,6 +141,56 @@ class DecoyGate(unittest.TestCase):
     def test_7_all_caught(self):
         out, problems = self.run_sheet(["wrong word"] * 3)
         self.assertEqual(problems, [])
+
+
+class BundleGate(unittest.TestCase):
+    """D3: five easy entries; 4 accepted is 80% and ships, 3 is 60% and doesn't."""
+
+    def build(self, accepted_n):
+        td = tempfile.TemporaryDirectory()
+        self.addCleanup(td.cleanup)
+        root = pathlib.Path(td.name)
+        work, assets = root / "work", root / "assets"
+        (work / "clips" / "norm").mkdir(parents=True)
+        (assets / "en").mkdir(parents=True)
+        words = ["cat", "dog", "hat", "sun", "map"]
+        (root / "bank.tsv").write_text("".join(f"en\teasy\t{w}\n" for w in words))
+        clips, qc, entries = [], {}, {}
+        target = json.loads((HERE.parents[1] / "config" / "audio-loudness.json").read_text())["target_lufs"]
+        for i, w in enumerate(words):
+            sha1 = f"{i:040d}"
+            data = f"clip {w}".encode()
+            (work / "clips" / "norm" / f"{sha1}.m4a").write_bytes(data)
+            lic = "CC BY-SA" if w == "cat" else "CC0"
+            clips.append({"key": w, "entry": w, "commons_sha1": sha1, "license": lic,
+                          "speaker": "Spk", "page_url": f"https://example/{w}"})
+            qc[sha1] = {"norm_path": f"clips/norm/{sha1}.m4a", "final_lufs": target, "status": "to_audit"}
+            if i < accepted_n:
+                entries[w] = [{"verdict": "accept", "clip_sha256": hashlib.sha256(data).hexdigest(),
+                               "commons_sha1": sha1, "sheet": "t", "auditor": "eric"}]
+        (work / "manifest.json").write_text(json.dumps({"lang": "en", "clips": clips}))
+        (work / "qc.json").write_text(json.dumps({"clips": qc}))
+        (assets / "en" / "verdicts.json").write_text(json.dumps({"lang": "en", "entries": entries}))
+        (assets / "runtime.json").write_text(json.dumps({"version": 1, "langs": {}}))
+        (assets / "credits.json").write_text(json.dumps({"version": 1, "clips": []}))
+        res = bundle.main(["--lang", "en", "--work", str(work), "--bank", str(root / "bank.tsv"),
+                           "--assets", str(assets), "--write"])
+        return res, assets
+
+    def test_9_under_80_percent_ships_nothing(self):
+        res, assets = self.build(3)
+        self.assertEqual(res["enabled"], [])
+        self.assertEqual(list((assets / "en").glob("*.m4a")), [])
+        self.assertNotIn("en", json.loads((assets / "runtime.json").read_text())["langs"])
+
+    def test_9_at_80_percent_the_tier_ships_with_credits(self):
+        res, assets = self.build(4)
+        self.assertEqual(res["enabled"], ["easy"])
+        self.assertEqual(sorted(res["ship"]), ["cat", "dog", "hat", "sun"])
+        rt = json.loads((assets / "runtime.json").read_text())
+        self.assertEqual(sorted(rt["langs"]["en"]["clips"]), ["cat", "dog", "hat", "sun"])
+        credits = json.loads((assets / "credits.json").read_text())["clips"]
+        self.assertEqual([c["entry"] for c in credits], ["cat"], "only the BY-SA clip needs a credit")
 
 
 class AutoQC(unittest.TestCase):
