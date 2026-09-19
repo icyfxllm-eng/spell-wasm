@@ -5,15 +5,66 @@
 // skippable (skip leaves language-default priors standing and never
 // re-offers), and Try serves the deterministic placement set through
 // the REAL session path — no placement-specific scoring exists.
-import { openApp, assert, typeOnKeyboard } from '../harness.mjs';
+import { openApp, assert } from '../harness.mjs';
+
+// Reload and wait for the wasm app to be up, not a fixed delay: on a slow
+// boot the keyboard isn't built yet, and a test that types then presses
+// Check submits nothing (an empty answer is ignored), so a learner write
+// the test is about never happens. That made C10's backup test flaky.
+async function reloadBooted(page) {
+  await page.reload();
+  await page.waitForFunction(() => window.__spelltest && window.__spelltest.build() === 'testseam', null, { timeout: 30000 });
+  await page.waitForTimeout(300);
+}
 
 async function surfacesOn(page) {
   await page.evaluate(() => {
     localStorage.setItem('spell_flag_learner_surfaces', 'on');
     localStorage.setItem('spell_flag_learner_select', 'on');
   });
-  await page.reload();
-  await page.waitForTimeout(600);
+  await reloadBooted(page);
+}
+
+// Type `w` on the on-screen keyboard, press Check, and wait for the next
+// serve. Any failure throws AT ONCE with the evidence that tells the
+// possible causes apart (a lost key, an untypeable character, a serve
+// race). Before this, the loops swallowed a word that didn't advance and
+// kept typing into a locked keyboard, so CI only ever reported a 30 s
+// click timeout on #kbHome, long after the actual miss.
+async function evidence(page, w, where, what) {
+  const e = await page.evaluate(() => ({
+    now: window.__spelltest.currentWord(),
+    typed: (document.getElementById('letters') || {}).textContent || '',
+    feedback: ((document.getElementById('feedback') || {}).textContent || '').trim().slice(0, 120),
+    modal: document.getElementById('scrim') && document.getElementById('scrim').classList.contains('show')
+      ? (document.getElementById('modalTitle') || {}).textContent : null,
+    kb: (document.getElementById('gameKeyboard') || {}).className,
+    streak: window.__spelltest.streak ? window.__spelltest.streak() : null,
+  }));
+  return `${where}: ${what}. expected ${JSON.stringify(w)}, typed ${JSON.stringify(e.typed.trim())}, ` +
+    `now serving ${JSON.stringify(e.now)}, feedback ${JSON.stringify(e.feedback)}, ` +
+    `modal ${JSON.stringify(e.modal)}, keyboard "${e.kb}", streak ${e.streak}`;
+}
+
+async function answerAndAdvance(page, w, where) {
+  for (const ch of w.toLowerCase()) {
+    const k = await page.$(`#gameKeyboard .kb-key[data-k="${ch}"]`);
+    if (!k) throw new Error(await evidence(page, w, where, `no key for ${JSON.stringify(ch)}`));
+    if (await page.evaluate(() => document.getElementById('gameKeyboard').classList.contains('locked'))) {
+      throw new Error(await evidence(page, w, where, 'keyboard LOCKED mid-word'));
+    }
+    await k.click({ timeout: 5000 }).catch(async () => {
+      throw new Error(await evidence(page, w, where, `key ${JSON.stringify(ch)} would not take a click`));
+    });
+  }
+  await page.click('#checkBtn');
+  // WAIT FOR THE AUTO-ADVANCE. Do not tap the orb: a correct answer
+  // already schedules a serve (CORRECT_DELAY_MS), and an orb tap 500ms
+  // later races it, draining two words from the placement queue for one
+  // answered.
+  const moved = await page.waitForFunction((prev) => window.__spelltest.currentWord() !== prev, w, { timeout: 6000 })
+    .then(() => true).catch(() => false);
+  if (!moved) throw new Error(await evidence(page, w, where, 'a correct-looking answer did not advance within 6 s'));
 }
 
 export async function run(browser, base, suite) {
@@ -69,12 +120,7 @@ export async function run(browser, base, suite) {
       for (let i = 0; i < 6 && streak < 3; i++) {
         const w = await page.evaluate(() => window.__spelltest.currentWord());
         if (!w || !/^[a-z]+$/i.test(w)) { await page.click('#orbWrap'); await page.waitForTimeout(350); continue; }
-        for (const ch of w.toLowerCase()) {
-          const k = await page.$(`#gameKeyboard .kb-key[data-k="${ch}"]`);
-          if (k) await k.click();
-        }
-        await page.click('#checkBtn');
-        await page.waitForFunction((prev) => window.__spelltest.currentWord() !== prev, w, { timeout: 6000 }).catch(() => {});
+        await answerAndAdvance(page, w, `live-run chain, word ${i + 1}`);
         streak = await page.evaluate(() => window.__spelltest.streak());
       }
       assert(streak > 0, `needed a live run to test against, streak=${streak}`);
@@ -82,12 +128,9 @@ export async function run(browser, base, suite) {
       // Predicate true again, mid-run.
       await page.evaluate(() => localStorage.removeItem('spell_learner_en'));
       const w2 = await page.evaluate(() => window.__spelltest.currentWord());
-      for (const ch of (w2 || 'a').toLowerCase()) {
-        const k = await page.$(`#gameKeyboard .kb-key[data-k="${ch}"]`);
-        if (k) await k.click();
-      }
-      await page.click('#checkBtn');
-      await page.waitForTimeout(2800);
+      assert(w2, 'no live word to answer mid-run');
+      await answerAndAdvance(page, w2, 'the mid-run answer after clearing the record');
+      await page.waitForTimeout(600);
       assert(!(await page.$('#plcCard.show')),
         'the offer rendered OVER a live run — F4 violated');
     } finally { await ctx.close(); }
@@ -118,21 +161,11 @@ export async function run(browser, base, suite) {
       for (let i = 0; i < 30; i++) {
         const w = await page.evaluate(() => window.__spelltest.currentWord());
         if (!w) break;
-        for (const ch of w.toLowerCase()) {
-          const k = await page.$(`#gameKeyboard .kb-key[data-k="${ch}"]`);
-          if (k) await k.click();
-        }
-        await page.click('#checkBtn');
-        // WAIT FOR THE AUTO-ADVANCE. Do not tap the orb: a correct answer
-        // already schedules a serve (CORRECT_DELAY_MS), and an orb tap 500ms
-        // later races it, draining two words from the placement queue for one
-        // answered. That is the harness driving the app in a way no player
-        // does, and it drained the queue before the last answer could close
-        // the probe.
-        const before = w;
-        await page.waitForFunction(
-          (prev) => window.__spelltest.currentWord() !== prev,
-          before, { timeout: 6000 }).catch(() => {});
+        // answerAndAdvance waits for the auto-advance and never taps the orb
+        // (an orb tap races it and drains two placement words for one
+        // answered, which is the harness driving the app in a way no player
+        // does).
+        await answerAndAdvance(page, w, `placement probe, word ${i + 1}`);
         served++;
         // The card must NEVER reappear mid-run (F4: no interruption).
         assert(!(await page.$('#plcCard.show')),
@@ -156,8 +189,7 @@ export async function run(browser, base, suite) {
         JSON.parse(localStorage.getItem('spell_learner_en') || '{}').placed);
       assert(placed === true,
         `a completed probe must write placed=true; localStorage says ${JSON.stringify(placed)}`);
-      await page.reload();
-      await page.waitForTimeout(900);
+      await reloadBooted(page);
       await page.click('#orbWrap');
       await page.waitForTimeout(700);
       assert(!(await page.$('#plcCard.show')),
@@ -167,14 +199,17 @@ export async function run(browser, base, suite) {
 
   // C10 — a failed learner load never wipes. Only a browser can prove this:
   // the danger is a WRITE over stored bytes, and host tests have no storage.
+  // Serve a word and answer it through answerAndAdvance, so a key that
+  // can't be pressed or an answer that isn't taken fails loudly instead of
+  // silently skipping the learner write under test.
   async function answerOneWord(page) {
+    const before = await page.evaluate(() => window.__spelltest.currentWord());
     await page.click('#orbWrap');
-    await page.waitForTimeout(500);
+    await page.waitForFunction((b) => { const w = window.__spelltest.currentWord(); return w && w !== b; }, before, { timeout: 5000 })
+      .catch(() => {});
     const w = await page.evaluate(() => window.__spelltest.currentWord());
     assert(w, 'no word served');
-    await typeOnKeyboard(page, w.toLowerCase());
-    await page.click('#checkBtn');
-    await page.waitForTimeout(800);
+    await answerAndAdvance(page, w, 'C10 answer');
   }
   const rawOf = (page, k) => page.evaluate((key) => localStorage.getItem(key), k);
 
@@ -208,11 +243,12 @@ export async function run(browser, base, suite) {
         localStorage.removeItem('spell_learner_en_unreadable');
       }, garbage);
       await page.evaluate(() => localStorage.setItem('spell_flag_learner_surfaces', 'off'));
-      await page.reload();
-      await page.waitForTimeout(600);
+      await reloadBooted(page);
       await answerOneWord(page);
-      assert((await rawOf(page, 'spell_learner_en_unreadable')) === garbage,
-        'the unreadable bytes were not preserved in the backup key');
+      const bak = await rawOf(page, 'spell_learner_en_unreadable');
+      assert(bak === garbage,
+        `the unreadable bytes were not preserved in the backup key: backup=${JSON.stringify(bak)}, ` +
+        `main=${JSON.stringify(((await rawOf(page, 'spell_learner_en')) || '').slice(0, 160))}`);
       const st = JSON.parse((await rawOf(page, 'spell_learner_en')) || 'null');
       assert(st && typeof st.version === 'number' && Array.isArray(st.log) && st.log.length === 1,
         `play did not recover to a fresh, valid state: ${JSON.stringify(st)}`);
