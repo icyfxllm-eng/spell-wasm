@@ -14,14 +14,14 @@ use super::rng::fnv;
 fn kind(c: &Clue) -> u8 {
     match c {
         Clue::Empty => 0,
-        Clue::Given(_) | Clue::Word(_) => 1,
+        Clue::Given(_) | Clue::Spelled(_) => 1,
         Clue::Fragment(_) => 2,
     }
 }
 
 fn value(c: &Clue) -> Option<u8> {
     match c {
-        Clue::Given(v) | Clue::Word(v) => Some(*v),
+        Clue::Given(v) | Clue::Spelled(v) => Some(*v),
         _ => None,
     }
 }

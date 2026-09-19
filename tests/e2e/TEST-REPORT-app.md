@@ -1,8 +1,8 @@
 # TEST-REPORT — Web E2E (app build)
 
-**172/172 passed** across 30 areas.
+**180/180 passed** across 31 areas.
 
-## playhub — 12/12
+## playhub — 16/16
 - ✅ hub: opens from the meta corner and renders registry tiles
 - ✅ hub: word_stories is never rendered (F8 hard gate)
 - ✅ hub: coming_soon renders as a non-tappable teaser
@@ -15,6 +15,13 @@
 - ✅ placement: Try serves the set through the real session
 - ✅ placement: the offer never interrupts a live run
 - ✅ placement: a COMPLETED probe never re-offers, across a reload
+- ✅ learner: a NEWER build's stored state survives an older build, byte for byte
+- ✅ learner: unreadable stored bytes are backed up exactly, then play recovers
+- ✅ learner surfaces render through LearnerQuery: Reports, Stats, Guardian Dash, Calendar
+- ✅ learner: "reset this language" deletes its learner state and backup, only for that language
+
+## stats-sheet — 1/1
+- ✅ stats: the guardian section and Guardian Dash door survive boot and a stats render
 
 ## hub-row — 2/2
 - ✅ hub row: The Climb is out, the rest stay
@@ -111,7 +118,7 @@
 - ✅ mywords_play_falls_back_when_the_chosen_list_is_deleted
 - ✅ mywords_in_my_order_serves_the_players_order
 
-## spelldoku — 10/10
+## spelldoku — 13/13
 - ✅ spelldoku_every_language_opens_a_board
 - ✅ spelldoku_mandarin_needs_its_tone
 - ✅ spelldoku_vietnamese_uses_the_tone_row
@@ -122,6 +129,9 @@
 - ✅ spelldoku_spell_jr_sees_only_its_column
 - ✅ spelldoku_wasm_matches_the_pinned_golden_digest
 - ✅ spelldoku_daily_is_the_same_for_everyone
+- ✅ spelldoku_word_mode_never_shows_a_spelling
+- ✅ spelldoku_word_mode_spells_to_commit_and_feeds_missed_words
+- ✅ spelldoku_word_mode_draws_my_words_first
 
 ## spell-search — 10/10
 - ✅ spell_search_opens_in_every_launch_language

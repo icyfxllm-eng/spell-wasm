@@ -781,5 +781,8 @@
   "ws.next": "Susunod na puzzle",
   "ws.makePuzzle": "Gumawa ng puzzle",
   "ws.listShort": "Kailangan ng listahang ito ng hindi bababa sa 3 salita sa wikang ito para makagawa ng puzzle",
-  "ws.audioOff": "Walang audio sa ngayon"
+  "ws.audioOff": "Walang audio sa ngayon",
+  "sd.sayAria": "Pakinggan ang salitang ito",
+  "sd.badge": "{n} sa iyong mga salita",
+  "sd.misspelledWord": "Hindi iyan isa sa mga salita ng board — suriin ang baybay"
 }

@@ -1350,6 +1350,13 @@
   .sd-keys .kb-key.wide{max-width:96px;flex-grow:2}
   .sd-keys .kb-key.go{border-color:var(--amber)}
   .sd-actions{display:flex;flex-wrap:wrap;gap:8px;justify-content:center}
+  /* CC-SPELLDOKU v1.2 Word Mode: the legend names each symbol by its glyph and
+     an audio orb, never its spelling (I12). */
+  .sd-legend{display:flex;flex-wrap:wrap;gap:6px;justify-content:center;max-width:520px;margin:8px auto 0;min-height:0}
+  .sd-say{min-width:48px;padding:6px 10px;border-radius:999px;background:var(--panel-2);color:var(--ink);border:1px solid var(--edge);font-size:15px}
+  .sd-say b{font-size:18px}
+  .sd-badge{max-width:520px;margin:4px auto 0;text-align:center;color:var(--muted-2);font-size:.85em;min-height:0}
+  .sd-badge:empty{display:none}
   /* CC-WORDGRID v1 Phase A — Spell Search (app only). A slot is the word's
      length and a play button (F-S1); the grid takes drags, so it never scrolls. */
   .ws-screen{position:fixed;inset:0;background:var(--bg,#0e1420);z-index:60;display:none;overflow:auto;min-height:0;
@@ -2788,6 +2795,8 @@
       <button class="ghost" id="sdDaily" data-i18n="sd.daily">Daily</button>
     </div>
     <div class="sd-grid" id="sdGrid"></div>
+    <div class="sd-legend" id="sdLegend"></div>
+    <div class="sd-badge" id="sdBadge"></div>
     <div class="sd-note" id="sdNote" aria-live="polite"></div>
     <div class="sd-tray">
       <div class="sd-chips" id="sdChips"></div>

@@ -781,5 +781,8 @@
   "ws.next": "Fumbo linalofuata",
   "ws.makePuzzle": "Tengeneza fumbo",
   "ws.listShort": "Orodha hii inahitaji angalau maneno 3 kwa lugha hii ili kutengeneza fumbo",
-  "ws.audioOff": "Sauti haipatikani sasa"
+  "ws.audioOff": "Sauti haipatikani sasa",
+  "sd.sayAria": "Sikiliza neno hili",
+  "sd.badge": "Maneno yako {n}",
+  "sd.misspelledWord": "Hilo si mojawapo ya maneno ya ubao huu — kagua tahajia"
 }

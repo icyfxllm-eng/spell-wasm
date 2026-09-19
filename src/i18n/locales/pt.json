@@ -781,5 +781,8 @@
   "ws.next": "Próximo quebra-cabeça",
   "ws.makePuzzle": "Criar quebra-cabeça",
   "ws.listShort": "Esta lista precisa de pelo menos 3 palavras neste idioma para criar um quebra-cabeça",
-  "ws.audioOff": "O áudio não está disponível agora"
+  "ws.audioOff": "O áudio não está disponível agora",
+  "sd.sayAria": "Ouvir esta palavra",
+  "sd.badge": "{n} das suas palavras",
+  "sd.misspelledWord": "Essa não é uma das palavras do tabuleiro — confira a ortografia"
 }

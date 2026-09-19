@@ -781,5 +781,8 @@
   "ws.next": "Câu đố tiếp theo",
   "ws.makePuzzle": "Tạo câu đố",
   "ws.listShort": "Danh sách cần ít nhất 3 từ bằng ngôn ngữ này để tạo câu đố",
-  "ws.audioOff": "Hiện chưa có âm thanh"
+  "ws.audioOff": "Hiện chưa có âm thanh",
+  "sd.sayAria": "Nghe từ này",
+  "sd.badge": "{n} từ của bạn",
+  "sd.misspelledWord": "Đó không phải từ nào trên bảng — kiểm tra chính tả"
 }

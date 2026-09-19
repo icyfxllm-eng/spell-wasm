@@ -781,5 +781,8 @@
   "ws.next": "次のパズル",
   "ws.makePuzzle": "パズルを作る",
   "ws.listShort": "パズルを作るには、この言語の単語が3つ以上必要です",
-  "ws.audioOff": "今は音声を使えません"
+  "ws.audioOff": "今は音声を使えません",
+  "sd.sayAria": "この単語を聞く",
+  "sd.badge": "あなたの単語 {n} 個",
+  "sd.misspelledWord": "この盤面の単語ではありません。つづりを確認しよう"
 }

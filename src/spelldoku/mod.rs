@@ -6,13 +6,18 @@
 //! function of `(seed, config)`, and the only randomness is `rng::Rng`, which is
 //! integer arithmetic with no platform dependence.
 
+pub mod bind;
 pub mod canon;
 pub mod geo;
 pub mod gen;
 pub mod play;
 pub mod rng;
 pub mod solve;
+pub mod symbols;
 pub mod table;
+pub mod wordmode;
 
 #[cfg(test)]
 mod tests;
+#[cfg(test)]
+mod wordmode_tests;

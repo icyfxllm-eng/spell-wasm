@@ -781,5 +781,8 @@
   "ws.next": "Next puzzle",
   "ws.makePuzzle": "Make a puzzle",
   "ws.listShort": "This list needs at least 3 words in this language to make a puzzle",
-  "ws.audioOff": "Audio isn't available right now"
+  "ws.audioOff": "Audio isn't available right now",
+  "sd.sayAria": "Hear this word",
+  "sd.badge": "{n} of your words",
+  "sd.misspelledWord": "That isn't one of this board's words — check the spelling"
 }

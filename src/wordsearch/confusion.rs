@@ -5,19 +5,14 @@
 //! `edits` re-derives them from the same rules so a test can hold the table to
 //! "exactly one confusion edit from its target" (I2).
 
-use std::collections::HashMap;
-#[cfg(test)]
-use std::collections::BTreeSet;
+use std::collections::{BTreeSet, HashMap};
 use std::sync::OnceLock;
 
-#[cfg(test)]
 use serde::Deserialize;
 
-#[cfg(test)]
 const EN_RULES: &str = include_str!("../../config/confusions/en.json");
 const EN_DECOYS: &str = include_str!("../../assets/wordsearch/en-decoys.txt");
 
-#[cfg(test)]
 #[derive(Deserialize)]
 struct Rules {
     swaps: Vec<serde_json::Value>,
@@ -31,16 +26,15 @@ pub fn has_decoys(lang: &str) -> bool {
     lang == "en"
 }
 
-#[cfg(test)]
 fn rules(lang: &str) -> Option<&'static Rules> {
     static EN: OnceLock<Rules> = OnceLock::new();
     (lang == "en").then(|| EN.get_or_init(|| serde_json::from_str(EN_RULES).expect("config/confusions/en.json")))
 }
 
 /// Every string exactly one confusion edit from `word` (ASCII English rules).
-/// Mirrors `edits` in tools/wordsearch/build_decoys.py. The app ships only the
-/// table this produced; the rules themselves are read by the tests (I2).
-#[cfg(test)]
+/// Mirrors `edits` in tools/wordsearch/build_decoys.py. Spell Search ships the
+/// decoy table this produced; SpellDoku Word Mode asks it whether two bank
+/// words are one edit apart (CC-SPELLDOKU v1.2 R4).
 pub fn edits(lang: &str, word: &str) -> BTreeSet<String> {
     let mut out = BTreeSet::new();
     let Some(r) = rules(lang) else { return out };

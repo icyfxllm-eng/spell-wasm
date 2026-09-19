@@ -19,7 +19,12 @@ pub enum Verdict {
 }
 
 pub fn judge(table: &Table, typed: &str, expected: u8) -> Verdict {
-    let values = table.values_for(typed);
+    verdict(&table.values_for(typed), expected)
+}
+
+/// I4 on any board: `values` are the symbols whose spelling matches what was
+/// typed (numbers in Number Mode, this board's words in Word Mode).
+pub fn verdict(values: &[u8], expected: u8) -> Verdict {
     if values.contains(&expected) {
         Verdict::Correct
     } else if values.is_empty() {

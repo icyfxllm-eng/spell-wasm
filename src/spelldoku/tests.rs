@@ -2,7 +2,8 @@
 
 use super::canon;
 use super::geo::{size_of, Geo, S4, S6, S9};
-use super::gen::{generate, Clue, Config, Puzzle, Tier};
+use super::bind::{golden_digest, number_symbols};
+use super::gen::{generate as gen_symbols, Clue, Config, Puzzle, Tier};
 use super::play::{self, judge, Unlocks, Verdict};
 use super::rng::Rng;
 use super::solve::{count_solutions, grade, next_step};
@@ -15,6 +16,21 @@ const LANGS: &[&str] = &["en", "es", "fr", "de", "pt", "pl", "ru", "vi", "ko", "
 
 fn en() -> Table {
     table::load("en").expect("the English table loads")
+}
+
+/// Number Mode generation, through the binding layer as the screen does it.
+fn generate(seed: u64, cfg: &Config, t: &Table) -> Option<Puzzle> {
+    gen_symbols(seed, cfg, &number_symbols(t, cfg.size.n).0)
+}
+
+fn constraints(p: &Puzzle, t: &Table) -> (Vec<u8>, Vec<u16>) {
+    p.constraints(&number_symbols(t, p.n).0)
+}
+
+/// A fragment's letters, as the screen shows them.
+fn fragment_letters(p: &[Option<u32>], t: &Table, n: usize) -> Vec<Option<String>> {
+    let (_, g) = number_symbols(t, n);
+    p.iter().map(|x| x.map(|id| g.text(id).to_string())).collect()
 }
 
 const CONFIGS: &[(usize, Tier)] = &[
@@ -39,21 +55,22 @@ fn a_four_by_four_has_exactly_288_solution_grids() {
 /// I1, I2, F2 and Done #5 for one board.
 fn check_board(p: &Puzzle, t: &Table) {
     let geo = Geo::new(size_of(p.n).unwrap());
-    let (fixed, restrict) = p.constraints(t);
+    let (fixed, restrict) = constraints(p, t);
     assert_eq!(count_solutions(&geo, &fixed, &restrict, 2), 1, "I1: seed {} is not unique", p.seed);
     assert_eq!(grade(&geo, &fixed, &restrict), Some(p.tier.tech()), "I2: seed {} graded wrong", p.seed);
     // The solution satisfies every clue.
     for (i, c) in p.clues.iter().enumerate() {
         match c {
-            Clue::Given(v) | Clue::Word(v) => assert_eq!(*v, p.solution[i]),
-            Clue::Fragment(pat) => {
+            Clue::Given(v) | Clue::Spelled(v) => assert_eq!(*v, p.solution[i]),
+            Clue::Fragment(ids) => {
+                let pat = fragment_letters(ids, t, p.n);
                 // F2: the solver's candidate set equals brute force against the table.
                 let brute: u16 = (1..=p.n as u32)
                     .filter(|&v| {
                         t.row(v).is_some_and(|r| {
                             r.spellings.iter().any(|s| {
                                 let l: Vec<&str> = s.graphemes(true).collect();
-                                l.len() == pat.len() && l.iter().zip(pat).all(|(c, q)| q.as_deref().map_or(true, |q| q == *c))
+                                l.len() == pat.len() && l.iter().zip(&pat).all(|(c, q)| q.as_deref().map_or(true, |q| q == *c))
                             })
                         })
                     })
@@ -144,7 +161,7 @@ fn scramble(p: &Puzzle, seed: u64) -> Puzzle {
             solution[dst] = map(p.solution[src]);
             clues[dst] = match &p.clues[src] {
                 Clue::Given(v) => Clue::Given(map(*v)),
-                Clue::Word(v) => Clue::Word(map(*v)),
+                Clue::Spelled(v) => Clue::Spelled(map(*v)),
                 other => other.clone(),
             };
         }
@@ -317,7 +334,7 @@ fn every_language_can_type_one_to_nine_on_its_own_keyboard() {
 fn every_language_generates_a_graded_board_with_its_own_fragments() {
     for lang in LANGS {
         let t = table::load(lang).unwrap();
-        let frag = super::gen::fragments_possible(&t, 9);
+        let frag = number_symbols(&t, 9).0.fragments_possible();
         let tier = if frag { Tier::Hard } else { Tier::Medium };
         let p = generate(11, &Config { size: S9, tier }, &t).unwrap_or_else(|| panic!("{lang}: no {tier:?} board"));
         check_board(&p, &t);
@@ -358,7 +375,7 @@ fn hints_point_and_name_but_never_spell() {
     let t = en();
     let p = generate(3, &Config { size: S9, tier: Tier::Medium }, &t).unwrap();
     let geo = Geo::new(S9);
-    let (fixed, restrict) = p.constraints(&t);
+    let (fixed, restrict) = constraints(&p, &t);
     let (cell, _tech) = next_step(&geo, &fixed, &restrict).expect("a hint exists");
     assert_eq!(fixed[cell], 0, "the hint points at an empty cell");
     let _ = S6;
@@ -370,7 +387,7 @@ pub const GOLDEN: u64 = 0x660953a49c47d76c;
 
 #[test]
 fn the_golden_digest_is_pinned() {
-    let got = super::gen::golden_digest(&en());
+    let got = golden_digest(&en());
     assert_eq!(got, GOLDEN, "golden digest moved: {got:#x}");
 }
 
@@ -387,6 +404,9 @@ fn spelldoku_never_touches_the_leaderboard_or_shields() {
         include_str!("rng.rs"),
         include_str!("solve.rs"),
         include_str!("table.rs"),
+        include_str!("bind.rs"),
+        include_str!("symbols.rs"),
+        include_str!("wordmode.rs"),
         include_str!("../spelldoku_ui.rs"),
     ];
     for needle in ["climb::", "submit_run", "submit-chain", "/api/climb", "/api/match", "online_spelloff", "leaderboard(", "shields", "attempts::"] {

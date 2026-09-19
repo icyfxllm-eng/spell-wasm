@@ -781,5 +781,8 @@
   "ws.next": "Nächstes Rätsel",
   "ws.makePuzzle": "Rätsel erstellen",
   "ws.listShort": "Diese Liste braucht mindestens 3 Wörter in dieser Sprache für ein Rätsel",
-  "ws.audioOff": "Audio ist gerade nicht verfügbar"
+  "ws.audioOff": "Audio ist gerade nicht verfügbar",
+  "sd.sayAria": "Dieses Wort anhören",
+  "sd.badge": "{n} deiner Wörter",
+  "sd.misspelledWord": "Das ist keins der Wörter dieses Rätsels – prüf die Schreibweise"
 }

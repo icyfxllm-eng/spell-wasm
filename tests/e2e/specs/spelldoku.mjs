@@ -47,9 +47,9 @@ export async function run(browser, base, suite) {
         const study = await page.evaluate(() => window.__spelltest.currentLang());
         assert(cells > 0, `${lang} (studying ${study}): SpellDoku opens onto a board`);
         const opts = await page.$$eval('#sdPick option', (o) => o.map((x) => x.value));
-        if (study === 'hi') {
-          assert(!opts.includes('9-hard') && !opts.includes('9-expert'), 'Hindi stops at Medium');
-        }
+        // v1.2 D12: 9x9 Hard and Expert are Word Mode, whose bank words make
+        // fragments even where the number words cannot (Hindi's cannot).
+        assert(opts.includes('9-hard') && opts.includes('9-expert'), `${study}: 9x9 Hard and Expert are offered`);
       } finally { await ctx.close(); }
     }
   });
@@ -169,10 +169,11 @@ export async function run(browser, base, suite) {
       assert(b.clues.some((c) => c.Fragment), 'Hard carries a fragment clue (F2)');
       const i = empties(b).find((k) => !b.clues[k].Fragment);
       const wrongV = b.solution[i] === 1 ? 2 : 1;
+      assert(b.words, 'v1.2 D12: a 9x9 Hard board is Word Mode');
       await page.click(`[data-sd-cell="${i}"]`);
-      await spell(page, WORDS[wrongV]);
+      await spell(page, b.words[wrongV - 1]);
       assertEq(await page.$eval('#sdNote', (e) => e.textContent.trim()), '', 'no logic feedback yet');
-      assertEq(await page.$eval(`[data-sd-cell="${i}"]`, (e) => e.textContent.trim()), String(wrongV), 'placed as entered');
+      assertEq(await page.$eval(`[data-sd-cell="${i}"]`, (e) => e.textContent.trim()), b.glyphs[wrongV - 1], 'placed as entered, shown as its glyph');
       assert(!(await page.$eval('#sdCheck', (e) => e.classList.contains('btn-hide'))), 'Check Board is offered');
       await page.click('#sdCheck');
       await page.waitForTimeout(100);
@@ -195,7 +196,7 @@ export async function run(browser, base, suite) {
         await page.waitForTimeout(100);
         const b = await board(page);
         const cell = await page.$eval('.sd-cell.hint', (e) => Number(e.dataset.sdCell));
-        const word = WORDS[b.solution[cell]];
+        const word = b.words ? b.words[b.solution[cell] - 1] : WORDS[b.solution[cell]];
         const shown = await page.$eval('#sdScreen', (e) => e.innerText.toLowerCase());
         const note = await page.$eval('#sdNote', (e) => e.textContent.toLowerCase());
         assert(!note.includes(word), `hint level ${level} does not spell "${word}"`);
@@ -239,5 +240,66 @@ export async function run(browser, base, suite) {
       } finally { await ctx.close(); }
     }
     assertEq(boards[0], boards[1], 'two players, one Daily');
+  });
+
+  // v1.2 F10 / I12 — a Word Mode board: nine bank words, one glyph each, a
+  // legend of audio orbs, and no surface that spells a word.
+  await suite.test('spelldoku_word_mode_never_shows_a_spelling', async () => {
+    const { ctx, page } = await openApp(browser, base, { lang: 'en' });
+    try {
+      await openSpellDoku(page);
+      await pick(page, '9-medium');
+      const b = await board(page);
+      assert(b.words && b.words.length === 9, 'nine words');
+      assertEq(new Set(b.glyphs.map((g) => g.toLowerCase())).size, 9, 'I11: nine distinct glyphs');
+      assertEq(await page.$$eval('#sdLegend .sd-say', (e) => e.length), 9, 'a legend orb per symbol');
+      const shown = await page.evaluate(() => ['sdGrid', 'sdLegend', 'sdChips', 'sdBadge', 'sdNote']
+        .map((id) => document.getElementById(id).innerText.toLowerCase()).join(' | '));
+      for (const w of b.words) assert(!shown.includes(w), `I12: "${w}" is not spelled anywhere on the board`);
+      await page.click('#sdLegend [data-sd-say="1"]'); // the orb plays; nothing breaks
+    } finally { await ctx.close(); }
+  });
+
+  // v1.2 F1 + D13 — spelling a word commits its glyph; a misspelling joins the
+  // missed-words queue through the existing path.
+  await suite.test('spelldoku_word_mode_spells_to_commit_and_feeds_missed_words', async () => {
+    const { ctx, page } = await openApp(browser, base, { lang: 'en' });
+    try {
+      await openSpellDoku(page);
+      await pick(page, '9-medium');
+      const b = await board(page);
+      const i = empties(b).find((k) => !b.clues[k].Fragment);
+      const want = b.words[b.solution[i] - 1];
+      await page.click(`[data-sd-cell="${i}"]`);
+      await spell(page, 'qqzx');
+      assert(/spell/i.test(await page.$eval('#sdNote', (e) => e.textContent)), 'MISSPELLED');
+      const misses = await page.evaluate(() => JSON.parse(localStorage.getItem('byear_misses_v1') || '[]'));
+      assert(misses.some((m) => m.word === want && m.lang === 'en'), `D13: "${want}" joined the missed-words queue`);
+      await spell(page, want);
+      assertEq(await page.$eval(`[data-sd-cell="${i}"]`, (e) => e.textContent.trim()), b.glyphs[b.solution[i] - 1], 'committed, shown as its glyph');
+    } finally { await ctx.close(); }
+  });
+
+  // v1.2 F11 / D14 — the player's own words come first, and the badge says so.
+  await suite.test('spelldoku_word_mode_draws_my_words_first', async () => {
+    const { ctx, page } = await openApp(browser, base, { lang: 'en' });
+    try {
+      const mine = ['baby', 'dark', 'each', 'face', 'gift', 'hand', 'king', 'lamp', 'nose', 'rain', 'wolf', 'about', 'better', 'circle', 'engine', 'family', 'island'];
+      await page.evaluate((ws) => {
+        const now = Date.now();
+        localStorage.setItem('byear_word_lists_v1', JSON.stringify({ v: 1, nextId: 2, migrated: true, selection: [],
+          lists: [{ id: 'l1', name: 'Week', createdAt: now, updatedAt: now, source: 'Manual', order: 'Mixed',
+            entries: ws.map((w) => ({ text: w, lang: 'en', addedAt: now })) }] }));
+      }, mine);
+      await page.reload({ waitUntil: 'load' });
+      await page.waitForFunction(() => window.__spelltest && window.__spelltest.build() === 'testseam', null, { timeout: 30000 });
+      await openSpellDoku(page);
+      await pick(page, '9-medium');
+      const b = await board(page);
+      const fromMine = b.words.filter((w) => mine.includes(w)).length;
+      assert(fromMine >= 6, `at least 6 of 9 from My Words (got ${fromMine})`);
+      assertEq(b.mine, fromMine, 'the board counts them');
+      assert((await page.$eval('#sdBadge', (e) => e.textContent)).includes(String(fromMine)), 'the badge names how many');
+    } finally { await ctx.close(); }
   });
 }

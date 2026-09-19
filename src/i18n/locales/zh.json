@@ -781,5 +781,8 @@
   "ws.next": "下一个谜题",
   "ws.makePuzzle": "生成谜题",
   "ws.listShort": "此列表至少需要 3 个该语言的词才能生成谜题",
-  "ws.audioOff": "目前无法播放音频"
+  "ws.audioOff": "目前无法播放音频",
+  "sd.sayAria": "听这个词",
+  "sd.badge": "你的词语 {n} 个",
+  "sd.misspelledWord": "这不是棋盘上的词，检查一下拼写"
 }

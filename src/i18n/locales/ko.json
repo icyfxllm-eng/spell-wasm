@@ -781,5 +781,8 @@
   "ws.next": "다음 퍼즐",
   "ws.makePuzzle": "퍼즐 만들기",
   "ws.listShort": "퍼즐을 만들려면 이 언어로 된 단어가 3개 이상 필요해요",
-  "ws.audioOff": "지금은 오디오를 쓸 수 없어요"
+  "ws.audioOff": "지금은 오디오를 쓸 수 없어요",
+  "sd.sayAria": "이 단어 듣기",
+  "sd.badge": "내 단어 {n}개",
+  "sd.misspelledWord": "이 판의 단어가 아니에요 — 철자를 확인하세요"
 }

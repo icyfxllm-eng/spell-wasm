@@ -781,5 +781,8 @@
   "ws.next": "Siguiente puzle",
   "ws.makePuzzle": "Crear un puzle",
   "ws.listShort": "Esta lista necesita al menos 3 palabras en este idioma para crear un puzle",
-  "ws.audioOff": "El audio no está disponible ahora"
+  "ws.audioOff": "El audio no está disponible ahora",
+  "sd.sayAria": "Escuchar esta palabra",
+  "sd.badge": "{n} de tus palabras",
+  "sd.misspelledWord": "Esa no es una de las palabras del tablero; revisa la ortografía"
 }

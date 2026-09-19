@@ -781,5 +781,8 @@
   "ws.next": "Następna łamigłówka",
   "ws.makePuzzle": "Utwórz łamigłówkę",
   "ws.listShort": "Ta lista potrzebuje co najmniej 3 słów w tym języku, by utworzyć łamigłówkę",
-  "ws.audioOff": "Dźwięk jest teraz niedostępny"
+  "ws.audioOff": "Dźwięk jest teraz niedostępny",
+  "sd.sayAria": "Posłuchaj tego słowa",
+  "sd.badge": "{n} z twoich słów",
+  "sd.misspelledWord": "To nie jest żadne ze słów tej planszy — sprawdź pisownię"
 }

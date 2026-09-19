@@ -11,10 +11,12 @@ use serde::{Deserialize, Serialize};
 
 use crate::spelldoku::canon;
 use crate::spelldoku::geo::{size_of, Geo};
-use crate::spelldoku::gen::{generate, Clue, Config, Puzzle, Tier};
-use crate::spelldoku::play::{self, judge, Unlocks, Verdict};
+use crate::spelldoku::bind::{Board, Mode};
+use crate::spelldoku::gen::{Clue, Config, Tier};
+use crate::spelldoku::play::{self, Unlocks, Verdict};
 use crate::spelldoku::solve::{next_step, Tech};
-use crate::spelldoku::table::{self, Build, Table};
+use crate::spelldoku::table::{self, Build};
+use crate::spelldoku::wordmode::{self, Personal};
 use crate::{dom, i18n, i18n::t, App};
 
 const SEEN_KEY: &str = "spell_spelldoku_seen_v1";
@@ -23,6 +25,8 @@ const DAY_MS: f64 = 86_400_000.0;
 
 thread_local! {
     static GAME: RefCell<Option<Game>> = const { RefCell::new(None) };
+    /// The app, for D13's missed-words path (wired once).
+    static APP: RefCell<Option<App>> = const { RefCell::new(None) };
     /// Test builds only: play the English table as a preview build would.
     #[cfg(feature = "testseam")]
     static PREVIEW: std::cell::Cell<bool> = const { std::cell::Cell::new(false) };
@@ -42,8 +46,7 @@ fn build() -> Build {
 }
 
 struct Game {
-    puzzle: Puzzle,
-    table: Table,
+    board: Board,
     /// What is in each cell now: givens, and whatever the player committed.
     entries: Vec<u8>,
     pencil: Vec<u16>,
@@ -92,12 +95,13 @@ pub fn playable(lang: &str) -> bool {
 
 fn configs(kid: bool, lang: &str) -> Vec<(usize, Tier)> {
     let all = [(4, Tier::Easy), (6, Tier::Easy), (6, Tier::Medium), (9, Tier::Easy), (9, Tier::Medium), (9, Tier::Hard), (9, Tier::Expert)];
-    let frag = table::load(lang).is_some_and(|t| crate::spelldoku::gen::fragments_possible(&t, 9));
+    let frag = table::load(lang).is_some_and(|t| crate::spelldoku::bind::number_symbols(&t, 9).0.fragments_possible());
     all.into_iter()
         .filter(|&(n, tier)| play::allowed(kid, n, tier))
-        // Hard and Expert need a necessary fragment; a language whose words
-        // cannot make one plays Easy and Medium only.
-        .filter(|&(_, tier)| frag || matches!(tier, Tier::Easy | Tier::Medium))
+        // Hard and Expert need a necessary fragment. Their boards are Word
+        // Mode (D12), where bank words make fragments; a language whose number
+        // words cannot make one still falls back no further than Medium.
+        .filter(|&(n, tier)| frag || matches!(tier, Tier::Easy | Tier::Medium) || wordmode::is_word_mode(kid, n, tier))
         .collect()
 }
 
@@ -131,32 +135,37 @@ fn serve(app: &App, n: usize, tier: Tier, daily: bool) -> bool {
     } else {
         (js_sys::Date::now() as u64) ^ ((js_sys::Math::random() * 4_294_967_296.0) as u64) << 20
     };
-    let mut puzzle = None;
+    // D12: 9x9 Medium and up are Word Mode; the Daily draws from the bank
+    // alone, so it is the same for everyone (F8). F13: a set that cannot be
+    // drawn serves Number Mode instead, never a partial board.
+    let personal = if daily { Personal::default() } else { personal(app, &lang) };
+    let mut board = None;
     for k in 0..64u64 {
-        let Some(p) = generate(base.wrapping_add(k), &cfg, &tbl) else { continue };
-        let h = canon::hash(&p);
+        let seed = base.wrapping_add(k);
+        let Some(b) = wordmode::board_or_number(&lang, kid, &cfg, seed, &personal, Some(&tbl)) else { continue };
+        let h = canon::hash(&b.puzzle);
         if daily || !seen.boards.iter().any(|(s, _)| *s == h) {
             seen.boards.push((h, now));
-            puzzle = Some(p);
+            board = Some(b);
             break;
         }
     }
-    let Some(puzzle) = puzzle else { return false };
+    let Some(board) = board else { return false };
+    let puzzle = &board.puzzle;
     crate::storage::set_json(SEEN_KEY, &seen);
     let cells = puzzle.clues.len();
     let entries: Vec<u8> = puzzle
         .clues
         .iter()
         .map(|c| match c {
-            Clue::Given(v) | Clue::Word(v) => *v,
+            Clue::Given(v) | Clue::Spelled(v) => *v,
             _ => 0,
         })
         .collect();
     GAME.with(|g| {
         *g.borrow_mut() = Some(Game {
             unlocks: Unlocks::new(tier),
-            puzzle,
-            table: tbl,
+            board,
             entries,
             pencil: vec![0; cells],
             sel: None,
@@ -174,6 +183,33 @@ fn serve(app: &App, n: usize, tier: Tier, daily: bool) -> bool {
     dom::set_text("sdNote", "");
     render();
     true
+}
+
+/// F11: the player's own words in this language -- My Words, then the
+/// missed-words queue with its band. Read only (the spec's non-goals).
+fn personal(app: &App, lang: &str) -> Personal {
+    let lists = crate::word_lists::load();
+    let mine = crate::word_lists::visible(&lists)
+        .iter()
+        .flat_map(|l| l.entries.iter())
+        .filter(|e| e.lang == lang)
+        .map(|e| e.text.clone())
+        .collect();
+    let missed = app.borrow().misses.iter().filter(|m| m.lang == lang).map(|m| (m.word.clone(), m.tier.clone())).collect();
+    Personal { mine, missed }
+}
+
+/// Play a symbol's word through the one audio resolver. Chinese is spoken from
+/// its characters with the reading forced (CC-ZH-TONE F6).
+fn speak(board: &Board, v: u8, on_fail: impl FnOnce() + 'static) {
+    let Some(spelling) = board.spelling(v) else { return };
+    match &board.mode {
+        Mode::Words(w) if board.lang == "zh" => {
+            let hanzi = w.get(v as usize - 1).and_then(|s| s.display.clone()).unwrap_or_default();
+            crate::api::play_word_with(&hanzi, Some(&spelling), "normal", 1.0, &board.lang, on_fail);
+        }
+        _ => crate::api::play_word(&spelling, "normal", 1.0, &board.lang, on_fail),
+    }
 }
 
 /// D10: the keys come from the in-app keyboard's own layout file -- the same
@@ -244,14 +280,14 @@ fn backspace(lang: &str, typed: &str) -> String {
 }
 
 fn is_clue(g: &Game, i: usize) -> bool {
-    matches!(g.puzzle.clues[i], Clue::Given(_) | Clue::Word(_))
+    matches!(g.board.puzzle.clues[i], Clue::Given(_) | Clue::Spelled(_))
 }
 
 fn render() {
     GAME.with(|cell| {
         let gb = cell.borrow();
         let Some(g) = gb.as_ref() else { return };
-        let n = g.puzzle.n;
+        let n = g.board.puzzle.n;
         let size = size_of(n).expect("size");
         let mut html = String::new();
         for i in 0..n * n {
@@ -272,20 +308,26 @@ fn render() {
             if g.wrong[i] {
                 cls.push("wrong");
             }
-            let body = match &g.puzzle.clues[i] {
-                Clue::Given(v) => {
+            let b = &g.board;
+            let body = match &b.puzzle.clues[i] {
+                Clue::Given(_) => {
                     cls.push("given");
-                    v.to_string()
+                    dom::escape_html(&b.clue_text(i))
                 }
-                Clue::Word(v) => {
+                Clue::Spelled(_) if !b.is_words() => {
                     cls.push("given word");
-                    format!("<span dir=\"auto\">{}</span>", dom::escape_html(g.table.word(*v).unwrap_or("")))
+                    format!("<span dir=\"auto\">{}</span>", dom::escape_html(&b.clue_text(i)))
+                }
+                Clue::Spelled(_) => {
+                    cls.push("given");
+                    dom::escape_html(&b.clue_text(i))
                 }
                 Clue::Fragment(p) => {
                     cls.push("frag");
-                    let pat: String = p.iter().map(|c| c.as_deref().unwrap_or("_")).collect::<Vec<&str>>().join(" ");
+                    let pat: String =
+                        b.fragment_text(p).into_iter().map(|c| c.unwrap_or_else(|| "_".into())).collect::<Vec<_>>().join(" ");
                     if g.entries[i] > 0 {
-                        format!("<b>{}</b><small dir=\"auto\">{}</small>", g.entries[i], dom::escape_html(&pat))
+                        format!("<b>{}</b><small dir=\"auto\">{}</small>", dom::escape_html(&b.label(g.entries[i])), dom::escape_html(&pat))
                     } else {
                         format!("<small dir=\"auto\">{}</small>", dom::escape_html(&pat))
                     }
@@ -293,11 +335,11 @@ fn render() {
                 Clue::Empty => {
                     if g.entries[i] > 0 {
                         cls.push("mine");
-                        g.entries[i].to_string()
+                        dom::escape_html(&b.label(g.entries[i]))
                     } else if g.pencil[i] != 0 {
                         let marks: String = (1..=n as u8)
                             .filter(|v| g.pencil[i] & (1 << v) != 0)
-                            .map(|v| v.to_string())
+                            .map(|v| dom::escape_html(&b.label(v)))
                             .collect::<Vec<_>>()
                             .join(" ");
                         format!("<small class=\"sd-pen\">{marks}</small>")
@@ -318,7 +360,10 @@ fn render() {
         let mut chips = String::new();
         for v in 1..=n as u8 {
             if g.unlocks.chip(v) {
-                chips.push_str(&format!("<button type=\"button\" class=\"sd-chip\" data-sd-chip=\"{v}\">{v}</button>"));
+                chips.push_str(&format!(
+                    "<button type=\"button\" class=\"sd-chip\" data-sd-chip=\"{v}\">{}</button>",
+                    dom::escape_html(&g.board.label(v))
+                ));
             }
         }
         dom::set_html("sdChips", &chips);
@@ -331,11 +376,11 @@ fn render() {
         let keys = if g.pencil_mode {
             // F1: pencil marks are digits and never open the keyboard.
             (1..=n as u8)
-                .map(|v| format!("<button type=\"button\" class=\"kb-key\" data-sd-pen=\"{v}\">{v}</button>"))
+                .map(|v| format!("<button type=\"button\" class=\"kb-key\" data-sd-pen=\"{v}\">{}</button>", dom::escape_html(&g.board.label(v))))
                 .collect::<String>()
         } else {
             let mut k = String::new();
-            let (rows, extras) = layout(&g.puzzle.lang);
+            let (rows, extras) = layout(&g.board.lang);
             let key = |c: &str| {
                 format!(
                     "<button type=\"button\" class=\"kb-key\" data-sd-key=\"{0}\">{0}</button>",
@@ -349,7 +394,7 @@ fn render() {
                 }
                 k.push_str("</div>");
             }
-            if g.puzzle.lang == "vi" {
+            if g.board.lang == "vi" {
                 k.push_str("<div class=\"sd-row\">");
                 for t in VI_TONE_KEYS {
                     k.push_str(&format!(
@@ -368,11 +413,30 @@ fn render() {
         dom::set_html("sdKeys", &keys);
         let _ = dom::el("sdPencil").set_attribute("aria-pressed", if g.pencil_mode { "true" } else { "false" });
         // D2: Check Board exists on Hard and Expert, three times.
-        let check = !play::logic_errors_shown_at_once(g.puzzle.tier);
+        let check = !play::logic_errors_shown_at_once(g.board.puzzle.tier);
         dom::toggle_class("sdCheck", "btn-hide", !check);
         dom::set_text("sdCheck", &i18n::tp("sd.check", &[("n", &g.checks_left.to_string())]));
         dom::set_disabled("sdCheck", g.checks_left == 0 || g.solved);
         dom::toggle_class("sdDaily", "on", g.daily);
+
+        // F10: in Word Mode the legend names each symbol by its glyph and an
+        // audio orb -- never its spelling (I12). D14: a quiet source badge.
+        let legend: String = if g.board.is_words() {
+            (1..=n as u8)
+                .map(|v| {
+                    format!(
+                        "<button type=\"button\" class=\"sd-say\" data-sd-say=\"{v}\" aria-label=\"{}\"><b>{}</b> \u{25B6}</button>",
+                        dom::escape_html(&t("sd.sayAria")),
+                        dom::escape_html(&g.board.label(v))
+                    )
+                })
+                .collect()
+        } else {
+            String::new()
+        };
+        dom::set_html("sdLegend", &legend);
+        let mine = g.board.mine();
+        dom::set_text("sdBadge", &if mine > 0 { i18n::tp("sd.badge", &[("n", &mine.to_string())]) } else { String::new() });
     });
 }
 
@@ -400,7 +464,7 @@ fn commit_value(v: u8, spelled: bool, verdict: Verdict) {
             }
             Verdict::WrongValue => {
                 record_stat(|s| s.wrong_value += 1);
-                if play::logic_errors_shown_at_once(g.puzzle.tier) {
+                if play::logic_errors_shown_at_once(g.board.puzzle.tier) {
                     dom::set_text("sdNote", &t("sd.wrongValue"));
                 } else {
                     // D2: on Hard and Expert a logic error waits for Check Board.
@@ -411,7 +475,7 @@ fn commit_value(v: u8, spelled: bool, verdict: Verdict) {
             }
             Verdict::Misspelled => {
                 record_stat(|s| s.misspelled += 1);
-                dom::set_text("sdNote", &t("sd.misspelled"));
+                dom::set_text("sdNote", &t(if g.board.is_words() { "sd.misspelledWord" } else { "sd.misspelled" }));
             }
             Verdict::WrongSystem => {
                 record_stat(|s| s.wrong_system += 1);
@@ -420,7 +484,7 @@ fn commit_value(v: u8, spelled: bool, verdict: Verdict) {
         g.typed.clear();
         g.hint_cell = None;
         g.hint_level = 0;
-        if !g.solved && g.entries == g.puzzle.solution {
+        if !g.solved && g.entries == g.board.puzzle.solution {
             g.solved = true;
             solved_now = true;
         }
@@ -440,15 +504,30 @@ fn submit_typed() {
         if g.typed.trim().is_empty() {
             return None;
         }
-        let verdict = judge(&g.table, &g.typed, g.puzzle.solution[i]);
+        let expected = g.board.puzzle.solution[i];
+        let values = g.board.values_for(&g.typed);
+        let verdict = play::verdict(&values, expected);
         let v = match verdict {
-            Verdict::Correct => g.puzzle.solution[i],
-            Verdict::WrongValue => g.table.values_for(&g.typed).first().copied().unwrap_or(0),
+            Verdict::Correct => expected,
+            Verdict::WrongValue => values.first().copied().unwrap_or(0),
             _ => 0,
         };
-        Some((v, verdict))
+        // D13: a Word Mode misspelling joins the existing missed-words queue,
+        // through its existing path, with the band the word came from.
+        let missed = match (&g.board.mode, verdict) {
+            (Mode::Words(w), Verdict::Misspelled) => w.get(expected as usize - 1).map(|s| (s.spelling.clone(), s.band, g.board.lang.clone())),
+            _ => None,
+        };
+        Some((v, verdict, missed))
     });
-    if let Some((v, verdict)) = res {
+    if let Some((v, verdict, missed)) = res {
+        if let Some((word, band, lang)) = missed {
+            APP.with(|a| {
+                if let Some(app) = a.borrow().as_ref() {
+                    crate::misses::add_miss(&mut app.borrow_mut(), &word, &lang, band);
+                }
+            });
+        }
         commit_value(v, true, verdict);
     }
 }
@@ -460,12 +539,12 @@ fn hint() {
         if g.solved {
             return;
         }
-        let geo = Geo::new(size_of(g.puzzle.n).expect("size"));
-        let (mut fixed, restrict) = g.puzzle.constraints(&g.table);
+        let geo = Geo::new(size_of(g.board.puzzle.n).expect("size"));
+        let (mut fixed, restrict) = g.board.puzzle.constraints(&g.board.symbols());
         // Only the player's RIGHT entries count as known: a wrong one would
         // mislead the ladder, and using them reveals nothing on screen.
         for i in 0..fixed.len() {
-            if fixed[i] == 0 && g.entries[i] == g.puzzle.solution[i] {
+            if fixed[i] == 0 && g.entries[i] == g.board.puzzle.solution[i] {
                 fixed[i] = g.entries[i];
             }
         }
@@ -482,14 +561,18 @@ fn hint() {
                     Tech::Intersection => t("sd.tech.intersection"),
                     Tech::Fish => t("sd.tech.fish"),
                 };
-                dom::set_text("sdNote", &i18n::tp("sd.hintTech", &[("tech", &name)]));
+                let line = i18n::tp("sd.hintTech", &[("tech", &name)]);
+                // F9 / I12: a technique name that happens to spell one of this
+                // board's words would give it away; point at the cell instead.
+                let spells = (1..=g.board.puzzle.n as u8)
+                    .filter_map(|v| g.board.spelling(v))
+                    .any(|w| table::norm(&line).contains(&table::norm(&w)));
+                dom::set_text("sdNote", &if spells { t("sd.hintCell") } else { line });
             }
             _ if g.audio_ok => {
                 // F9 level 3: hear it through the one resolver; still spell it.
-                let word = g.table.word(g.puzzle.solution[cell_i]).unwrap_or("").to_string();
-                let lang = g.puzzle.lang.clone();
                 dom::set_text("sdNote", &t("sd.hintAudio"));
-                crate::api::play_word(&word, "normal", 1.0, &lang, || {
+                speak(&g.board, g.board.puzzle.solution[cell_i], || {
                     GAME.with(|c| {
                         if let Some(g) = c.borrow_mut().as_mut() {
                             g.audio_ok = false; // level 3 is not offered again
@@ -514,7 +597,7 @@ fn check_board() {
         g.checks_left -= 1;
         let mut wrong = 0;
         for i in 0..g.entries.len() {
-            let bad = !is_clue(g, i) && g.entries[i] > 0 && g.entries[i] != g.puzzle.solution[i];
+            let bad = !is_clue(g, i) && g.entries[i] > 0 && g.entries[i] != g.board.puzzle.solution[i];
             g.wrong[i] = bad;
             if bad {
                 wrong += 1;
@@ -567,6 +650,7 @@ fn close() {
 }
 
 pub fn wire(app: &App) {
+    APP.with(|a| *a.borrow_mut() = Some(app.clone()));
     {
         let a = app.clone();
         dom::on_click("sdOpenBtn", move || open(&a));
@@ -613,13 +697,19 @@ pub fn wire(app: &App) {
         use wasm_bindgen::JsCast;
         let Some(target) = ev.target().and_then(|t| t.dyn_into::<web_sys::Element>().ok()) else { return };
         let Some(el) = target
-            .closest("[data-sd-cell],[data-sd-key],[data-sd-back],[data-sd-go],[data-sd-chip],[data-sd-pen]")
+            .closest("[data-sd-cell],[data-sd-key],[data-sd-back],[data-sd-go],[data-sd-chip],[data-sd-pen],[data-sd-say]")
             .ok()
             .flatten()
         else {
             return;
         };
-        if let Some(i) = el.get_attribute("data-sd-cell").and_then(|v| v.parse::<usize>().ok()) {
+        if let Some(v) = el.get_attribute("data-sd-say").and_then(|v| v.parse::<u8>().ok()) {
+            GAME.with(|c| {
+                if let Some(g) = c.borrow().as_ref() {
+                    speak(&g.board, v, || dom::set_text("sdNote", &t("sd.audioOff")));
+                }
+            });
+        } else if let Some(i) = el.get_attribute("data-sd-cell").and_then(|v| v.parse::<usize>().ok()) {
             GAME.with(|c| {
                 if let Some(g) = c.borrow_mut().as_mut() {
                     if !is_clue(g, i) && !g.solved {
@@ -633,7 +723,7 @@ pub fn wire(app: &App) {
             GAME.with(|c| {
                 if let Some(g) = c.borrow_mut().as_mut() {
                     if g.sel.is_some() && g.typed.chars().count() < 24 {
-                        g.typed = type_key(&g.puzzle.lang, &g.typed, &k);
+                        g.typed = type_key(&g.board.lang, &g.typed, &k);
                     }
                 }
             });
@@ -641,7 +731,7 @@ pub fn wire(app: &App) {
         } else if el.get_attribute("data-sd-back").is_some() {
             GAME.with(|c| {
                 if let Some(g) = c.borrow_mut().as_mut() {
-                    g.typed = backspace(&g.puzzle.lang, &g.typed);
+                    g.typed = backspace(&g.board.lang, &g.typed);
                 }
             });
             render();
@@ -655,7 +745,7 @@ pub fn wire(app: &App) {
                 if !g.unlocks.chip(v) {
                     return None;
                 }
-                Some(if g.puzzle.solution[i] == v { Verdict::Correct } else { Verdict::WrongValue })
+                Some(if g.board.puzzle.solution[i] == v { Verdict::Correct } else { Verdict::WrongValue })
             });
             if let Some(verdict) = verdict {
                 commit_value(v, false, verdict);
@@ -678,7 +768,7 @@ pub fn wire(app: &App) {
 /// Test builds only: the golden digest as this build computes it (Done #3).
 #[cfg(feature = "testseam")]
 pub fn seam_golden() -> String {
-    table::load("en").map(|t| format!("{:#x}", crate::spelldoku::gen::golden_digest(&t))).unwrap_or_default()
+    table::load("en").map(|t| format!("{:#x}", crate::spelldoku::bind::golden_digest(&t))).unwrap_or_default()
 }
 
 /// Test builds only: the served board, so a browser test knows the answers.
@@ -687,7 +777,17 @@ pub fn seam_board() -> String {
     GAME.with(|c| {
         c.borrow()
             .as_ref()
-            .map(|g| serde_json::to_string(&g.puzzle).unwrap_or_default())
+            .map(|g| {
+                let mut v = serde_json::to_value(&g.board.puzzle).unwrap_or_default();
+                // Word Mode: the words, so a browser test can spell them.
+                if let Mode::Words(w) = &g.board.mode {
+                    v["words"] = w.iter().map(|s| s.spelling.clone()).collect::<Vec<_>>().into();
+                    v["glyphs"] = w.iter().map(|s| s.glyph.clone()).collect::<Vec<_>>().into();
+                    v["mine"] = g.board.mine().into();
+                }
+                v["lang"] = g.board.lang.clone().into();
+                v.to_string()
+            })
             .unwrap_or_default()
     })
 }

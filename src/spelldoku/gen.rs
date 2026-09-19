@@ -5,8 +5,7 @@ use serde::{Deserialize, Serialize};
 use super::geo::{bit, Geo, Size};
 use super::rng::{mix, Rng};
 use super::solve::{count_solutions, grade, Tech};
-use super::table::Table;
-use unicode_segmentation::UnicodeSegmentation;
+use super::symbols::Symbols;
 
 #[derive(Clone, Copy, Debug, PartialEq, Eq, PartialOrd, Ord, Serialize, Deserialize)]
 pub enum Tier {
@@ -50,20 +49,20 @@ impl Tier {
 #[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize)]
 pub enum Clue {
     Empty,
-    /// A given shown as a numeral.
+    /// A given shown as its symbol.
     Given(u8),
-    /// A given shown as its number word.
-    Word(u8),
-    /// F2: a number word, grapheme by grapheme, with some hidden. The value is
-    /// NOT stored here.
-    Fragment(Vec<Option<String>>),
+    /// A given the binding layer may show spelled out (Number Mode); Word Mode
+    /// shows it as its glyph, since a spelled symbol would be a free spelling (I12).
+    Spelled(u8),
+    /// F2: a symbol's form, glyph id by glyph id, with some hidden. The value
+    /// is NOT stored here.
+    Fragment(Vec<Option<u32>>),
 }
 
 #[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize)]
 pub struct Puzzle {
     pub n: usize,
     pub tier: Tier,
-    pub lang: String,
     pub clues: Vec<Clue>,
     pub solution: Vec<u8>,
     pub seed: u64,
@@ -71,15 +70,15 @@ pub struct Puzzle {
 
 impl Puzzle {
     /// Placed values and per-cell candidate restrictions, as the solvers take them.
-    pub fn constraints(&self, table: &Table) -> (Vec<u8>, Vec<u16>) {
+    pub fn constraints(&self, symbols: &Symbols) -> (Vec<u8>, Vec<u16>) {
         let geo = Geo::new(super::geo::size_of(self.n).expect("size"));
         let full = geo.full();
         let mut fixed = vec![0u8; self.clues.len()];
         let mut restrict = vec![full; self.clues.len()];
         for (i, c) in self.clues.iter().enumerate() {
             match c {
-                Clue::Given(v) | Clue::Word(v) => fixed[i] = *v,
-                Clue::Fragment(p) => restrict[i] = table.fragment_set(p, self.n) & full,
+                Clue::Given(v) | Clue::Spelled(v) => fixed[i] = *v,
+                Clue::Fragment(p) => restrict[i] = symbols.fragment_set(p) & full,
                 Clue::Empty => {}
             }
         }
@@ -126,19 +125,18 @@ fn fill(geo: &Geo, rng: &mut Rng) -> Vec<u8> {
     vals
 }
 
-/// Up to `tries` reveal patterns for a value's word: at least one letter shown
+/// Up to `tries` reveal patterns for a symbol's form: at least one glyph shown
 /// and at least one hidden, deterministic in the stream. An all-hidden pattern
-/// would say only "a three-letter number", which is length, not spelling.
-fn patterns(word: &str, rng: &mut Rng, tries: usize) -> Vec<Vec<Option<String>>> {
-    let letters: Vec<String> = word.graphemes(true).map(str::to_string).collect();
+/// would say only "a three-glyph symbol", which is length, not spelling.
+fn patterns(form: &[u32], rng: &mut Rng, tries: usize) -> Vec<Vec<Option<u32>>> {
     let mut out = Vec::new();
-    if letters.len() < 2 {
+    if form.len() < 2 {
         return out;
     }
     for _ in 0..tries {
-        let mut p: Vec<Option<String>> = letters.iter().map(|c| Some(c.clone())).collect();
-        let hide = 1 + rng.below(letters.len() - 1);
-        let mut idx: Vec<usize> = (0..letters.len()).collect();
+        let mut p: Vec<Option<u32>> = form.iter().map(|c| Some(*c)).collect();
+        let hide = 1 + rng.below(form.len() - 1);
+        let mut idx: Vec<usize> = (0..form.len()).collect();
         rng.shuffle(&mut idx);
         for &k in idx.iter().take(hide) {
             p[k] = None;
@@ -150,51 +148,37 @@ fn patterns(word: &str, rng: &mut Rng, tries: usize) -> Vec<Vec<Option<String>>>
     out
 }
 
-const ATTEMPTS: u64 = 4000;
-
-/// Can this language's words make a fragment at all on a board of side `n` --
-/// some partly hidden word that still fits two or more numbers? Hard and Expert
-/// need a NECESSARY fragment (F2), so a language whose number words share no
-/// letter in the same place (Hindi's do not) offers only Easy and Medium: the
-/// mode fits it that far and no further.
-pub fn fragments_possible(table: &Table, n: usize) -> bool {
-    let full = ((1u32 << (n + 1)) - 2) as u16;
-    (1..=n as u8).any(|v| {
-        let Some(word) = table.word(v) else { return false };
-        let letters: Vec<String> = word.graphemes(true).map(str::to_string).collect();
-        let len = letters.len();
-        (1..len).any(|hide| {
-            (0..(1u32 << len)).filter(|m| m.count_ones() as usize == hide).any(|mask| {
-                let p: Vec<Option<String>> = letters
-                    .iter()
-                    .enumerate()
-                    .map(|(i, c)| if mask & (1 << i) != 0 { None } else { Some(c.clone()) })
-                    .collect();
-                (table.fragment_set(&p, n) & full).count_ones() >= 2
-            })
-        })
-    })
-}
-
-/// I5 / Done #3: a digest of fixed seeds across every configuration. The host
-/// test pins it, and the browser test asks the wasm build for the same value,
-/// so a platform that generated a different board would fail both.
-pub fn golden_digest(table: &Table) -> u64 {
-    let mut bytes = Vec::new();
-    for &(n, tier) in &[(4usize, Tier::Easy), (6, Tier::Easy), (6, Tier::Medium), (9, Tier::Easy), (9, Tier::Medium), (9, Tier::Hard), (9, Tier::Expert)] {
-        let cfg = Config { size: super::geo::size_of(n).expect("size"), tier };
-        for seed in 0..3u64 {
-            if let Some(p) = generate(seed, &cfg, table) {
-                bytes.extend(serde_json::to_vec(&p).unwrap_or_default());
+/// Aimed reveal patterns (`Symbols::aimed`): for each other symbol that agrees
+/// with `v` somewhere, reveal exactly the agreeing glyphs, then a random
+/// non-empty part of them. Each pattern fits at least two symbols.
+fn aimed_patterns(symbols: &Symbols, v: u8, rng: &mut Rng) -> Vec<Vec<Option<u32>>> {
+    let Some(form) = symbols.first(v) else { return Vec::new() };
+    let mut out = Vec::new();
+    let mut groups = symbols.agreements(v);
+    rng.shuffle(&mut groups);
+    for a in groups {
+        let mut subsets = vec![a.clone()];
+        if a.len() > 1 {
+            let mut part = a.clone();
+            rng.shuffle(&mut part);
+            part.truncate(1 + rng.below(a.len() - 1));
+            subsets.push(part);
+        }
+        for keep in subsets {
+            let p: Vec<Option<u32>> = form.iter().enumerate().map(|(i, c)| keep.contains(&i).then_some(*c)).collect();
+            if !out.contains(&p) {
+                out.push(p);
             }
         }
     }
-    super::rng::fnv(&bytes)
+    out
 }
+
+const ATTEMPTS: u64 = 4000;
 
 /// Build one board. None only if every attempt failed (the sweep tests pin
 /// that this does not happen for any allowed configuration).
-pub fn generate(seed: u64, cfg: &Config, table: &Table) -> Option<Puzzle> {
+pub fn generate(seed: u64, cfg: &Config, symbols: &Symbols) -> Option<Puzzle> {
     let geo = Geo::new(cfg.size);
     let full = geo.full();
     let target = cfg.tier.tech();
@@ -219,7 +203,7 @@ pub fn generate(seed: u64, cfg: &Config, table: &Table) -> Option<Puzzle> {
             continue;
         }
         let mut restrict = unrestricted.clone();
-        let mut fragment_at: Option<(usize, Vec<Option<String>>)> = None;
+        let mut fragment_at: Option<(usize, Vec<Option<u32>>)> = None;
         let want_fragment = match cfg.tier {
             Tier::Easy => false,
             Tier::Medium => rng.below(2) == 0,
@@ -230,9 +214,10 @@ pub fn generate(seed: u64, cfg: &Config, table: &Table) -> Option<Puzzle> {
             rng.shuffle(&mut givens);
             'found: for &g in &givens {
                 let v = fixed[g];
-                let Some(word) = table.word(v) else { continue };
-                for p in patterns(word, &mut rng, 10) {
-                    let set = table.fragment_set(&p, cfg.size.n) & full;
+                let Some(form) = symbols.first(v) else { continue };
+                let cuts = if symbols.is_aimed() { aimed_patterns(symbols, v, &mut rng) } else { patterns(form, &mut rng, 10) };
+                for p in cuts {
+                    let set = symbols.fragment_set(&p) & full;
                     if set.count_ones() < 2 || set & bit(v) == 0 {
                         continue;
                     }
@@ -260,7 +245,7 @@ pub fn generate(seed: u64, cfg: &Config, table: &Table) -> Option<Puzzle> {
             }
         }
         let _ = &restrict;
-        // Presentation: above Easy, about a third of givens show as words.
+        // Above Easy, about a third of givens are marked spelled.
         let clues: Vec<Clue> = (0..cells)
             .map(|i| {
                 if let Some((g, p)) = &fragment_at {
@@ -271,7 +256,7 @@ pub fn generate(seed: u64, cfg: &Config, table: &Table) -> Option<Puzzle> {
                 if fixed[i] == 0 {
                     Clue::Empty
                 } else if cfg.tier != Tier::Easy && rng.below(3) == 0 {
-                    Clue::Word(fixed[i])
+                    Clue::Spelled(fixed[i])
                 } else {
                     Clue::Given(fixed[i])
                 }
@@ -280,7 +265,6 @@ pub fn generate(seed: u64, cfg: &Config, table: &Table) -> Option<Puzzle> {
         return Some(Puzzle {
             n: cfg.size.n,
             tier: cfg.tier,
-            lang: table.lang.clone(),
             clues,
             solution,
             seed,

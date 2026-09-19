@@ -3,9 +3,34 @@
 **Status:** REVIEW-GATED. The §0 census ran on 2026-09-19
 (`docs/census/spelldoku-v1.2-census.md`). Eric, 2026-09-19: "use your
 recommendations" — the rulings below are recorded from that. Phase A2 code
-waits for Eric's approval of this file.
+was started by Eric on 2026-09-19 (see Phase A2 below).
 
 The spec text Eric sent follows the rulings, unchanged.
+
+## Phase A2 — built (Eric, 2026-09-19: "start Word Mode phase A2")
+
+- **I14 first.** The core (`gen`, `solve`, `canon`, `geo`, the new `symbols`)
+  sees each symbol only as sequences of opaque glyph ids; `bind` turns number
+  words or bank words into ids and back. A scan test fails the build if the
+  core names a word, table, grapheme, spelling or language. The Phase A golden
+  digest is recomputed through `bind` in Phase A's own JSON shape and is
+  unchanged (host and WebAssembly), so the refactor moved no board.
+- **Word Mode** (`wordmode`): 9×9 Medium, Hard and Expert (D12); Jr and Easy
+  stay Number Mode (D16). F11 ladder, F12 mixes, F13 gates as ruled (R1–R6),
+  and two gates the spec implies: no two words that sound alike on one board
+  (the legend is an audio orb), and every word typeable on the in-app keyboard
+  (D10). A set that cannot be drawn serves Number Mode (F13 fallback).
+- **Screen.** Cells, chips and pencil marks show glyphs; a Number Mode
+  "spelled" given shows its glyph in Word Mode (I12). The legend is glyph +
+  audio orb in every language (D15 default; no definition cards yet). A
+  source badge counts the player's words (D14). A Word Mode misspelling joins
+  the existing missed-words queue (D13).
+- **Fragments.** Unrelated words rarely line up, so for Word Mode the
+  generator cuts fragments where another symbol of the same length shares a
+  glyph (`Symbols::aimed`); Number Mode keeps Phase A's search.
+- **I12 guard.** A board is redrawn if any fragment would spell another
+  symbol's whole word.
+- **Not in A2:** 12×12 (Phase A3), definition-card legend (D15 gate).
 
 ## Census rulings (Eric, 2026-09-19: "use your recommendations")
 

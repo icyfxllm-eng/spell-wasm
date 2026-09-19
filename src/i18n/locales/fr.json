@@ -781,5 +781,8 @@
   "ws.next": "Grille suivante",
   "ws.makePuzzle": "Créer une grille",
   "ws.listShort": "Il faut au moins 3 mots dans cette langue pour créer une grille",
-  "ws.audioOff": "L'audio n'est pas disponible pour l'instant"
+  "ws.audioOff": "L'audio n'est pas disponible pour l'instant",
+  "sd.sayAria": "Écouter ce mot",
+  "sd.badge": "{n} de tes mots",
+  "sd.misspelledWord": "Ce n'est pas un des mots de la grille — vérifie l'orthographe"
 }
