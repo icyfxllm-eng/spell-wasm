@@ -1,0 +1,214 @@
+{
+  "lang": "en",
+  "authority": "Merriam-Webster",
+  "note": "CC-SPELLDOKU D3. One row per number word, each citing its own Merriam-Webster entry. status is 'sourced' until Eric signs English off, when it becomes 'audited' by hand -- no tool may set it. Compound numbers (21-29, 31-39, 41-45) are absent: D3 forbids composing them by rule, each needs its own citation, and the English keyboard has no hyphen key. They are Phase B.",
+  "rows": [
+    {
+      "n": 0,
+      "spellings": [
+        "zero"
+      ],
+      "status": "sourced",
+      "source": "Merriam-Webster",
+      "locator": "https://www.merriam-webster.com/dictionary/zero"
+    },
+    {
+      "n": 1,
+      "spellings": [
+        "one"
+      ],
+      "status": "sourced",
+      "source": "Merriam-Webster",
+      "locator": "https://www.merriam-webster.com/dictionary/one"
+    },
+    {
+      "n": 2,
+      "spellings": [
+        "two"
+      ],
+      "status": "sourced",
+      "source": "Merriam-Webster",
+      "locator": "https://www.merriam-webster.com/dictionary/two"
+    },
+    {
+      "n": 3,
+      "spellings": [
+        "three"
+      ],
+      "status": "sourced",
+      "source": "Merriam-Webster",
+      "locator": "https://www.merriam-webster.com/dictionary/three"
+    },
+    {
+      "n": 4,
+      "spellings": [
+        "four"
+      ],
+      "status": "sourced",
+      "source": "Merriam-Webster",
+      "locator": "https://www.merriam-webster.com/dictionary/four"
+    },
+    {
+      "n": 5,
+      "spellings": [
+        "five"
+      ],
+      "status": "sourced",
+      "source": "Merriam-Webster",
+      "locator": "https://www.merriam-webster.com/dictionary/five"
+    },
+    {
+      "n": 6,
+      "spellings": [
+        "six"
+      ],
+      "status": "sourced",
+      "source": "Merriam-Webster",
+      "locator": "https://www.merriam-webster.com/dictionary/six"
+    },
+    {
+      "n": 7,
+      "spellings": [
+        "seven"
+      ],
+      "status": "sourced",
+      "source": "Merriam-Webster",
+      "locator": "https://www.merriam-webster.com/dictionary/seven"
+    },
+    {
+      "n": 8,
+      "spellings": [
+        "eight"
+      ],
+      "status": "sourced",
+      "source": "Merriam-Webster",
+      "locator": "https://www.merriam-webster.com/dictionary/eight"
+    },
+    {
+      "n": 9,
+      "spellings": [
+        "nine"
+      ],
+      "status": "sourced",
+      "source": "Merriam-Webster",
+      "locator": "https://www.merriam-webster.com/dictionary/nine"
+    },
+    {
+      "n": 10,
+      "spellings": [
+        "ten"
+      ],
+      "status": "sourced",
+      "source": "Merriam-Webster",
+      "locator": "https://www.merriam-webster.com/dictionary/ten"
+    },
+    {
+      "n": 11,
+      "spellings": [
+        "eleven"
+      ],
+      "status": "sourced",
+      "source": "Merriam-Webster",
+      "locator": "https://www.merriam-webster.com/dictionary/eleven"
+    },
+    {
+      "n": 12,
+      "spellings": [
+        "twelve"
+      ],
+      "status": "sourced",
+      "source": "Merriam-Webster",
+      "locator": "https://www.merriam-webster.com/dictionary/twelve"
+    },
+    {
+      "n": 13,
+      "spellings": [
+        "thirteen"
+      ],
+      "status": "sourced",
+      "source": "Merriam-Webster",
+      "locator": "https://www.merriam-webster.com/dictionary/thirteen"
+    },
+    {
+      "n": 14,
+      "spellings": [
+        "fourteen"
+      ],
+      "status": "sourced",
+      "source": "Merriam-Webster",
+      "locator": "https://www.merriam-webster.com/dictionary/fourteen"
+    },
+    {
+      "n": 15,
+      "spellings": [
+        "fifteen"
+      ],
+      "status": "sourced",
+      "source": "Merriam-Webster",
+      "locator": "https://www.merriam-webster.com/dictionary/fifteen"
+    },
+    {
+      "n": 16,
+      "spellings": [
+        "sixteen"
+      ],
+      "status": "sourced",
+      "source": "Merriam-Webster",
+      "locator": "https://www.merriam-webster.com/dictionary/sixteen"
+    },
+    {
+      "n": 17,
+      "spellings": [
+        "seventeen"
+      ],
+      "status": "sourced",
+      "source": "Merriam-Webster",
+      "locator": "https://www.merriam-webster.com/dictionary/seventeen"
+    },
+    {
+      "n": 18,
+      "spellings": [
+        "eighteen"
+      ],
+      "status": "sourced",
+      "source": "Merriam-Webster",
+      "locator": "https://www.merriam-webster.com/dictionary/eighteen"
+    },
+    {
+      "n": 19,
+      "spellings": [
+        "nineteen"
+      ],
+      "status": "sourced",
+      "source": "Merriam-Webster",
+      "locator": "https://www.merriam-webster.com/dictionary/nineteen"
+    },
+    {
+      "n": 20,
+      "spellings": [
+        "twenty"
+      ],
+      "status": "sourced",
+      "source": "Merriam-Webster",
+      "locator": "https://www.merriam-webster.com/dictionary/twenty"
+    },
+    {
+      "n": 30,
+      "spellings": [
+        "thirty"
+      ],
+      "status": "sourced",
+      "source": "Merriam-Webster",
+      "locator": "https://www.merriam-webster.com/dictionary/thirty"
+    },
+    {
+      "n": 40,
+      "spellings": [
+        "forty"
+      ],
+      "status": "sourced",
+      "source": "Merriam-Webster",
+      "locator": "https://www.merriam-webster.com/dictionary/forty"
+    }
+  ]
+}

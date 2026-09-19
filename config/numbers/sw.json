@@ -1,0 +1,124 @@
+{
+  "lang": "sw",
+  "authority": "Wiktionary",
+  "note": "Sourced by tools/numbers/source_numbers.py from English Wiktionary's cardinal-number translation tables, each row verified against its own entry. status stays 'sourced' until the Fiverr audit ingest.",
+  "rows": [
+    {
+      "n": 0,
+      "spellings": [
+        "sifuri"
+      ],
+      "status": "sourced",
+      "source": "Wiktionary",
+      "locator": "https://en.wiktionary.org/wiki/zero ; https://en.wiktionary.org/wiki/sifuri#Swahili"
+    },
+    {
+      "n": 1,
+      "spellings": [
+        "moja"
+      ],
+      "status": "sourced",
+      "source": "Wiktionary",
+      "locator": "https://en.wiktionary.org/wiki/one/translations ; https://en.wiktionary.org/wiki/moja#Swahili"
+    },
+    {
+      "n": 2,
+      "spellings": [
+        "wili"
+      ],
+      "status": "sourced",
+      "source": "Wiktionary",
+      "locator": "https://en.wiktionary.org/wiki/two ; https://en.wiktionary.org/wiki/wili#Swahili"
+    },
+    {
+      "n": 3,
+      "spellings": [
+        "tatu"
+      ],
+      "status": "sourced",
+      "source": "Wiktionary",
+      "locator": "https://en.wiktionary.org/wiki/three ; https://en.wiktionary.org/wiki/tatu#Swahili"
+    },
+    {
+      "n": 4,
+      "spellings": [
+        "nne"
+      ],
+      "status": "sourced",
+      "source": "Wiktionary",
+      "locator": "https://en.wiktionary.org/wiki/four ; https://en.wiktionary.org/wiki/nne#Swahili"
+    },
+    {
+      "n": 5,
+      "spellings": [
+        "tano"
+      ],
+      "status": "sourced",
+      "source": "Wiktionary",
+      "locator": "https://en.wiktionary.org/wiki/five ; https://en.wiktionary.org/wiki/tano#Swahili"
+    },
+    {
+      "n": 6,
+      "spellings": [
+        "sita"
+      ],
+      "status": "sourced",
+      "source": "Wiktionary",
+      "locator": "https://en.wiktionary.org/wiki/six ; https://en.wiktionary.org/wiki/sita#Swahili"
+    },
+    {
+      "n": 7,
+      "spellings": [
+        "saba"
+      ],
+      "status": "sourced",
+      "source": "Wiktionary",
+      "locator": "https://en.wiktionary.org/wiki/seven/translations ; https://en.wiktionary.org/wiki/saba#Swahili"
+    },
+    {
+      "n": 8,
+      "spellings": [
+        "nane"
+      ],
+      "status": "sourced",
+      "source": "Wiktionary",
+      "locator": "https://en.wiktionary.org/wiki/eight ; https://en.wiktionary.org/wiki/nane#Swahili"
+    },
+    {
+      "n": 9,
+      "spellings": [
+        "tisa"
+      ],
+      "status": "sourced",
+      "source": "Wiktionary",
+      "locator": "https://en.wiktionary.org/wiki/nine ; https://en.wiktionary.org/wiki/tisa#Swahili"
+    },
+    {
+      "n": 10,
+      "spellings": [
+        "kumi"
+      ],
+      "status": "sourced",
+      "source": "Wiktionary",
+      "locator": "https://en.wiktionary.org/wiki/ten/translations ; https://en.wiktionary.org/wiki/kumi#Swahili"
+    },
+    {
+      "n": 11,
+      "spellings": [
+        "kumi na moja"
+      ],
+      "status": "sourced",
+      "source": "Wiktionary",
+      "locator": "https://en.wiktionary.org/wiki/eleven ; https://en.wiktionary.org/wiki/kumi%20na%20moja#Swahili"
+    },
+    {
+      "n": 12,
+      "spellings": [
+        "kumi na mbili"
+      ],
+      "status": "sourced",
+      "source": "Wiktionary",
+      "locator": "https://en.wiktionary.org/wiki/twelve ; https://en.wiktionary.org/wiki/kumi%20na%20mbili#Swahili"
+    }
+  ]
+}

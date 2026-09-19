@@ -182,6 +182,16 @@ pub fn install(app: &App) {
             },
         );
         set(&obj, "translateGap", cb.into_js_value());
+
+        // CC-SPELLDOKU: play the English table as a preview build would (it is
+        // sourced, not yet signed), and read the served board so a test knows
+        // the answers. The table itself is the real one; nothing is authored.
+        let cb = Closure::<dyn Fn(bool)>::new(move |on: bool| crate::spelldoku_ui::seam_preview(on));
+        set(&obj, "spelldokuPreview", cb.into_js_value());
+        let cb = Closure::<dyn Fn() -> String>::new(move || crate::spelldoku_ui::seam_board());
+        set(&obj, "spelldokuBoard", cb.into_js_value());
+        let cb = Closure::<dyn Fn() -> String>::new(move || crate::spelldoku_ui::seam_golden());
+        set(&obj, "spelldokuGolden", cb.into_js_value());
     }
     let _ = js_sys::Reflect::set(win.as_ref(), &JsValue::from_str("__spelltest"), obj.as_ref());
     web_sys::console::warn_1(&"[testseam] window.__spelltest installed (DEV build only)".into());

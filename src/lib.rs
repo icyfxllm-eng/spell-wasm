@@ -121,6 +121,12 @@ mod yearbook_ui;
 mod widgets;
 mod word_data;
 mod word_lists; // CC-MYWORDS-LISTS v1 — dated word lists
+#[cfg(test)]
+mod wordgrid_census; // CC-WORDGRID §3: measurement only
+#[cfg(not(feature = "web"))]
+mod spelldoku; // CC-SPELLDOKU v1 — app only (D9)
+#[cfg(not(feature = "web"))]
+mod spelldoku_ui; // CC-SPELLDOKU v1 — the screen (app only)
 #[cfg(not(feature = "web"))]
 mod lists_ui; // CC-MYWORDS-LISTS F1 — the save sheet's destination (app only)
 #[cfg(not(feature = "web"))]
@@ -234,6 +240,7 @@ pub fn start() -> Result<(), JsValue> {
         lists_ui::wire(); // CC-MYWORDS-LISTS F1: the save destination, both sheets
         lists_screen::wire(&app); // CC-MYWORDS-LISTS F3: the My Words screen
         lists_ui::refresh_pool(&app); // F4: the remembered list is what play serves
+        spelldoku_ui::wire(&app); // CC-SPELLDOKU v1
     }
     // CC-IOS-SURFACES (BD-1): widget/intent deep links arrive as location
     // hashes (#daily / #practice). Consume on boot and on change; a no-op

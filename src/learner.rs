@@ -239,15 +239,19 @@ pub fn fsrs_review(f: &mut FsrsState, correct: bool, day: u32) {
         // First exposure: initial stability from the grade (w0 = again,
         // w3 = easy; pass uses "good" = w2).
         f.stability = if correct { w[2] } else { w[0] };
-        f.difficulty = (w[4] - det_exp((if correct { 3.0 } else { 1.0 } - 1.0) * w[5]) + 1.0)
-            .clamp(1.0, 10.0);
+        // FSRS-4.5 D0(G) = w4 − (G−3)·w5. The exponential form
+        // w4 − e^(w5·(G−1)) + 1 is FSRS-5's and needs FSRS-5's weights: fed
+        // these 4.5 weights it gave a pass −5.5, clamped to 1.0 (the floor).
+        let g = if correct { 3.0 } else { 1.0 };
+        f.difficulty = (w[4] - (g - 3.0) * w[5]).clamp(1.0, 10.0);
     } else {
         let elapsed = (day.saturating_sub(f.due_day.saturating_sub(interval_days(f.stability)))) as f64;
         let r = retrievability(elapsed.max(0.0), f.stability);
         let g = if correct { 3.0 } else { 1.0 };
-        // difficulty update with mean reversion (w7 toward D0)
+        // difficulty update with mean reversion (w7 toward D0(3) = w4, the
+        // FSRS-4.5 target; FSRS-5 moved it to D0(4))
         let d = f.difficulty - w[6] * (g - 3.0);
-        f.difficulty = (w[7] * FSRS_D0 + (1.0 - w[7]) * d).clamp(1.0, 10.0);
+        f.difficulty = (w[7] * w[4] + (1.0 - w[7]) * d).clamp(1.0, 10.0);
         if correct {
             // S' = S · (1 + e^w8 · (11−D) · S^−w9 · (e^(w10·(1−R)) − 1))
             let inc = det_exp(w[8])
@@ -756,6 +760,30 @@ mod tests {
         fsrs_review(&mut fail, false, 0);
         assert!((fail.stability - FSRS_W[0]).abs() < 1e-12, "again => w0");
         assert!(fail.difficulty > pass.difficulty, "failing is harder than passing");
+    }
+
+    #[test]
+    fn fsrs_difficulty_matches_the_published_4_5_formulas() {
+        // D0(G) = w4 − (G−3)·w5: good = w4 = 5.1618, again = w4 + 2·w5 =
+        // 7.6214. Values, not an ordering: an ordering test passed while a
+        // version mix pinned every correct first answer to the 1.0 floor.
+        let mut pass = FsrsState { stability: 0.0, difficulty: FSRS_D0, due_day: 0, reps: 0, lapses: 0 };
+        fsrs_review(&mut pass, true, 0);
+        assert!((pass.difficulty - 5.1618).abs() < 1e-9, "D0(good) = {}", pass.difficulty);
+        let mut fail = FsrsState { stability: 0.0, difficulty: FSRS_D0, due_day: 0, reps: 0, lapses: 0 };
+        fsrs_review(&mut fail, false, 0);
+        assert!((fail.difficulty - 7.6214).abs() < 1e-9, "D0(again) = {}", fail.difficulty);
+
+        // A good review leaves D at the reversion target w4: D − w6·0 = w4.
+        let day = pass.due_day;
+        fsrs_review(&mut pass, true, day);
+        assert!((pass.difficulty - FSRS_W[4]).abs() < 1e-9, "good on target = {}", pass.difficulty);
+        // An again review: D' = w7·w4 + (1−w7)·(D + 2·w6).
+        let d = fail.difficulty;
+        let day = fail.due_day;
+        fsrs_review(&mut fail, false, day);
+        let want = FSRS_W[7] * FSRS_W[4] + (1.0 - FSRS_W[7]) * (d + 2.0 * FSRS_W[6]);
+        assert!((fail.difficulty - want.clamp(1.0, 10.0)).abs() < 1e-9, "again: {} vs {want}", fail.difficulty);
     }
 
     #[test]

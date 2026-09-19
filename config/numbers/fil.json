@@ -1,0 +1,124 @@
+{
+  "lang": "fil",
+  "authority": "Wiktionary",
+  "note": "Sourced by tools/numbers/source_numbers.py from English Wiktionary's cardinal-number translation tables, each row verified against its own entry. status stays 'sourced' until the Fiverr audit ingest.",
+  "rows": [
+    {
+      "n": 0,
+      "spellings": [
+        "awan"
+      ],
+      "status": "sourced",
+      "source": "Wiktionary",
+      "locator": "https://en.wiktionary.org/wiki/zero ; https://en.wiktionary.org/wiki/awan#Tagalog"
+    },
+    {
+      "n": 1,
+      "spellings": [
+        "isa"
+      ],
+      "status": "sourced",
+      "source": "Wiktionary",
+      "locator": "https://en.wiktionary.org/wiki/one/translations ; https://en.wiktionary.org/wiki/isa#Tagalog"
+    },
+    {
+      "n": 2,
+      "spellings": [
+        "dalawa"
+      ],
+      "status": "sourced",
+      "source": "Wiktionary",
+      "locator": "https://en.wiktionary.org/wiki/two ; https://en.wiktionary.org/wiki/dalawa#Tagalog"
+    },
+    {
+      "n": 3,
+      "spellings": [
+        "tatlo"
+      ],
+      "status": "sourced",
+      "source": "Wiktionary",
+      "locator": "https://en.wiktionary.org/wiki/three ; https://en.wiktionary.org/wiki/tatlo#Tagalog"
+    },
+    {
+      "n": 4,
+      "spellings": [
+        "apat"
+      ],
+      "status": "sourced",
+      "source": "Wiktionary",
+      "locator": "https://en.wiktionary.org/wiki/four ; https://en.wiktionary.org/wiki/apat#Tagalog"
+    },
+    {
+      "n": 5,
+      "spellings": [
+        "lima"
+      ],
+      "status": "sourced",
+      "source": "Wiktionary",
+      "locator": "https://en.wiktionary.org/wiki/five ; https://en.wiktionary.org/wiki/lima#Tagalog"
+    },
+    {
+      "n": 6,
+      "spellings": [
+        "anim"
+      ],
+      "status": "sourced",
+      "source": "Wiktionary",
+      "locator": "https://en.wiktionary.org/wiki/six ; https://en.wiktionary.org/wiki/anim#Tagalog"
+    },
+    {
+      "n": 7,
+      "spellings": [
+        "pito"
+      ],
+      "status": "sourced",
+      "source": "Wiktionary",
+      "locator": "https://en.wiktionary.org/wiki/seven/translations ; https://en.wiktionary.org/wiki/pito#Tagalog"
+    },
+    {
+      "n": 8,
+      "spellings": [
+        "walo"
+      ],
+      "status": "sourced",
+      "source": "Wiktionary",
+      "locator": "https://en.wiktionary.org/wiki/eight ; https://en.wiktionary.org/wiki/walo#Tagalog"
+    },
+    {
+      "n": 9,
+      "spellings": [
+        "siyam"
+      ],
+      "status": "sourced",
+      "source": "Wiktionary",
+      "locator": "https://en.wiktionary.org/wiki/nine ; https://en.wiktionary.org/wiki/siyam#Tagalog"
+    },
+    {
+      "n": 10,
+      "spellings": [
+        "sampu"
+      ],
+      "status": "sourced",
+      "source": "Wiktionary",
+      "locator": "https://en.wiktionary.org/wiki/ten/translations ; https://en.wiktionary.org/wiki/sampu#Tagalog"
+    },
+    {
+      "n": 11,
+      "spellings": [
+        "labing-isa"
+      ],
+      "status": "sourced",
+      "source": "Wiktionary",
+      "locator": "https://en.wiktionary.org/wiki/eleven ; https://en.wiktionary.org/wiki/labing-isa#Tagalog"
+    },
+    {
+      "n": 12,
+      "spellings": [
+        "labindalawa"
+      ],
+      "status": "sourced",
+      "source": "Wiktionary",
+      "locator": "https://en.wiktionary.org/wiki/twelve ; https://en.wiktionary.org/wiki/labindalawa#Tagalog"
+    }
+  ]
+}

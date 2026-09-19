@@ -1,6 +1,6 @@
 # TEST-REPORT — Web E2E (app build)
 
-**141/141 passed** across 27 areas.
+**151/151 passed** across 28 areas.
 
 ## playhub — 12/12
 - ✅ hub: opens from the meta corner and renders registry tiles
@@ -97,6 +97,18 @@
 - ✅ mywords_playing_a_list_serves_only_its_words
 - ✅ mywords_play_falls_back_when_the_chosen_list_is_deleted
 - ✅ mywords_in_my_order_serves_the_players_order
+
+## spelldoku — 10/10
+- ✅ spelldoku_every_language_opens_a_board
+- ✅ spelldoku_mandarin_needs_its_tone
+- ✅ spelldoku_vietnamese_uses_the_tone_row
+- ✅ spelldoku_spelling_commits_and_unlocks_a_chip
+- ✅ spelldoku_a_board_can_be_solved_by_spelling
+- ✅ spelldoku_hard_waits_for_check_board
+- ✅ spelldoku_hints_never_show_a_letter
+- ✅ spelldoku_spell_jr_sees_only_its_column
+- ✅ spelldoku_wasm_matches_the_pinned_golden_digest
+- ✅ spelldoku_daily_is_the_same_for_everyone
 
 ## translate-screen — 10/10
 - ✅ translate_state_matrix_holds_the_action_row_still
