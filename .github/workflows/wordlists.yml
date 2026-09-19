@@ -39,3 +39,6 @@ jobs:
 
       - name: Word-list pipeline gates (charset / exclusions / balance / determinism)
         run: python3 scripts/build-wordlists.py --check
+
+      - name: Word-list pipeline self-test (small-kana gate bites)
+        run: python3 scripts/build-wordlists.py --selftest
