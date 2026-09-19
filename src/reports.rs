@@ -44,8 +44,11 @@ pub fn words_to_conquer(state: &crate::model::AppState, lang: &str, cap: usize) 
 }
 
 /// Ready for a rematch (kid) / At risk this week (guardian) — the SAME
-/// FSRS due window, two audited names (D5). Words currently in the miss
-/// scheduler due within `horizon_ms`.
+/// due window, two audited names (D5). Words in the misses queue
+/// (`misses.rs`, the Leitner-box scheduler — NOT FSRS) due within
+/// `horizon_ms`. Also feeds Guardian Dash "What's next" and the Calendar's
+/// forecast and planner. CC-LEARNING-ENGINE-L0 R2 moves this queue to
+/// per-word FSRS; until then nothing here is FSRS (census ruling C8).
 pub fn rematch_set(state: &crate::model::AppState, lang: &str, now_ms: f64, horizon_ms: f64) -> Vec<String> {
     let mut v: Vec<(f64, String)> = state
         .misses
