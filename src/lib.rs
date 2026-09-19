@@ -1346,6 +1346,10 @@ fn wire_stats_board_modal(app: &App) {
     {
         let a = app.clone();
         dom::on_click("resetStats", move || {
+            // "Reset this language" includes what the learner model knows
+            // about it (Done #8). Read the language before stats clears.
+            let lang = a.borrow().lang.clone();
+            crate::learner::reset(&lang);
             stats::reset_current_lang(&mut a.borrow_mut());
             // Also clear adaptive word stats (the only reset affordance today).
             wordstats::clear();

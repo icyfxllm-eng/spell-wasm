@@ -43,9 +43,10 @@ import * as spellDoku from './specs/spelldoku.mjs';
 import * as translateScreen from './specs/translate-screen.mjs';
 import * as settingsEffects from './specs/settings-effects.mjs';
 import * as telemetry from './specs/telemetry.mjs';
+import * as learnerReset from './specs/learner-reset.mjs';
 
 const SPECS = [
-  ['playhub', playHub, placement],
+  ['playhub', playHub, placement, learnerReset],
   ['hub-row', hubRow],
   ['keyboard', keyboard],
   ['gameplay', gameplay],
