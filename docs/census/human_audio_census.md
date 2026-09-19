@@ -64,6 +64,31 @@ exists: it holds 34,359 Russian files where Lingua Libre's query service knows
     applies to a French pilot (mostly BY-SA) and hardly at all to an English one
     (62% of the bank is covered by CC0 clips).
 
+- **R1 → I8 stays strict** (Eric, 2026-09-18). Variety comes from the speaker's
+  declared place of learning only; a declared residence does not stand in. The
+  "usable if residence counts" column is kept for the record, not for use.
+- **R3 → English is the pilot** (Eric, 2026-09-18). This is Eric's pick over
+  D6's coverage rule, which would have named French (64.7% vs 62.4%). English
+  is one dominant US speaker and nearly all CC0, so with D13 the pilot ships no
+  BY-SA clip and needs no D1 legal check.
+
+### What the English pilot needs before any tier switches on
+
+Under strict I8, **no English tier reaches D3's 80% even as a ceiling**, so the
+pilot cannot enable a tier from Lingua Libre alone. Gig C recordings (F4) fill
+the rest. The counts are the *minimum*, assuming every usable clip passes F3;
+each auditor rejection adds one.
+
+| Tier | Entries | Usable (I8) | Short of 80% | Held out by D5 (Gig C only) | Whole gap |
+|---|---:|---:|---:|---:|---:|
+| easy | 768 | 603 (78.5%) | 12 | 70 | 165 |
+| medium | 801 | 617 (77.0%) | 24 | 38 | 184 |
+| hard | 801 | 459 (57.3%) | 182 | 51 | 342 |
+| expert | 800 | 299 (37.4%) | 341 | 21 | 501 |
+
+Easy and Medium are a few dozen Gig C recordings from the gate, so they are
+the natural first pilot tiers. Hard and Expert need hundreds.
+
 ## Filters applied, in order
 
 1. **Exact match**: NFC, case-sensitive, title word = bank entry (zh: hanzi half
@@ -246,13 +271,9 @@ tie-break toward Russian.
 
 ## Open for Eric
 
-- **R1. Variety source.** Keep I8 strict (place of learning only), or let a
-  declared *residence* stand in when place of learning is missing? It moves
-  French to 77.4%, German to 10.2%, Russian Easy to 24.7%, and Mandarin to 6.7%.
-- **R2. Which languages have an active auditor?** Needed to close D6.
-- **R3. French or English pilot**, if both qualify (see D6). D13 adds a factor:
-  bundling puts every pilot clip inside the app, so French needs the BY-SA
-  legal check before its first build and English almost certainly does not.
+- **R2. Is there an active English auditor?** R3 settled the pilot, so this
+  now asks only about English. F3 verification and the second-auditor check on
+  Gig C recordings (D7) both need one.
 - **D11, D12** remain open, as in the spec. D12's inputs are the gap column.
 
 ## Not measured
