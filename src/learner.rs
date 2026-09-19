@@ -78,7 +78,7 @@ pub struct Attempt {
     /// Skills the word exercises (its hazard vector).
     pub skills: Vec<String>,
     pub correct: bool,
-    /// "typed" | "speech" — feature 4: hearing misses must never update
+    /// "typed" | "speech" | "trap" — feature 4: hearing misses must never update
     /// spelling skills, and the flag is how L1's diagnosis will know.
     pub channel: Channel,
     /// CC-REPORTS: the raw attempt text on MISSES only (None on correct
@@ -93,6 +93,10 @@ pub struct Attempt {
 pub enum Channel {
     Typed,
     Speech,
+    /// CC-WORDGRID F-S2: TRAP_MISS -- a Spell Search player picked a trap
+    /// spelling. `typed` holds the decoy. It is a spelling miss (the player took
+    /// the wrong spelling for the word), so it updates skills like a typed one.
+    Trap,
 }
 
 impl LearnerState {
@@ -124,7 +128,7 @@ impl LearnerState {
     /// appends to the bounded log. Speech attempts are LOGGED but update
     /// no spelling skill — a hearing miss is not a spelling miss.
     pub fn record(&mut self, attempt: Attempt) {
-        if attempt.channel == Channel::Typed {
+        if matches!(attempt.channel, Channel::Typed | Channel::Trap) {
             for id in &attempt.skills {
                 let s = self.skill_mut(id);
                 s.mastery = bkt_update(s.mastery, attempt.correct);
@@ -383,15 +387,38 @@ pub fn note_attempt_typed(lang: &str, word: &str, correct: bool, channel: Channe
     let mut st = crate::storage::get_raw(&key)
         .and_then(|j| load_state(&j).ok())
         .unwrap_or_else(|| LearnerState::new(lang));
-    st.record(Attempt {
-        day: today_day(),
+    st.record(attempt(lang, word, correct, channel, typed, today_day()));
+    crate::storage::set_json(&key, &st);
+}
+
+/// Record an attempt another mode built with `attempt` (CC-WORDGRID F-X6):
+/// the same load, record and save as every base-game answer.
+pub fn note_built(lang: &str, a: Attempt) {
+    let key = format!("{STORE_PREFIX}{lang}");
+    let mut st = crate::storage::get_raw(&key)
+        .and_then(|j| load_state(&j).ok())
+        .unwrap_or_else(|| LearnerState::new(lang));
+    st.record(a);
+    crate::storage::set_json(&key, &st);
+}
+
+/// Today's day index, as the log stores it.
+pub fn day_now() -> u32 {
+    today_day()
+}
+
+/// One attempt as the log stores it. Every mode builds its record here, so a
+/// misspelling looks the same in the log whichever mode it came from
+/// (CC-WORDGRID F-X6).
+pub fn attempt(lang: &str, word: &str, correct: bool, channel: Channel, typed: Option<&str>, day: u32) -> Attempt {
+    Attempt {
+        day,
         word: word.to_string(),
         skills: hazards(lang, word),
         correct,
         channel,
         typed: if correct { None } else { typed.map(|t| t.to_string()) },
-    });
-    crate::storage::set_json(&key, &st);
+    }
 }
 
 

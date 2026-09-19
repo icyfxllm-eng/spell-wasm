@@ -284,6 +284,7 @@ fn detail_html(lists: &Lists, id: &str, kid: bool) -> String {
         "{back}{head}\
          <div class=\"lists-actions\">\
            <button type=\"button\" class=\"btn btn-check\" data-l-play=\"{id}\">{}</button>\
+           {puzzle}\
          </div>\
          {order}{rows}\
          <div class=\"lists-actions\">\
@@ -293,6 +294,12 @@ fn detail_html(lists: &Lists, id: &str, kid: bool) -> String {
         esc(&t("lists.play")),
         esc(&t("lists.addWords")),
         id = esc(&l.id),
+        // CC-WORDGRID F-X1: a dated list can become a Spell Search puzzle.
+        puzzle = if crate::flags::spell_search() {
+            format!("<button type=\"button\" class=\"ghost\" data-l-puzzle=\"{}\">{}</button>", esc(&l.id), esc(&t("ws.makePuzzle")))
+        } else {
+            String::new()
+        },
     )
 }
 
@@ -411,7 +418,7 @@ pub fn wire(app: &App) {
                 "[data-l-open],[data-l-back],[data-l-older],[data-l-trash],[data-l-restore],\
                  [data-l-purge],[data-l-rename],[data-l-rename-save],[data-l-rename-cancel],\
                  [data-l-del],[data-l-del-ask],[data-l-del-cancel],[data-l-add],[data-l-snap],\
-                 [data-l-play],[data-l-play-all],[data-l-order],\
+                 [data-l-play],[data-l-play-all],[data-l-order],[data-l-puzzle],\
                  [data-e-edit],[data-e-save],[data-e-cancel],[data-e-remove],\
                  [data-e-star],[data-e-up],[data-e-down]",
             )
@@ -421,7 +428,12 @@ pub fn wire(app: &App) {
             return;
         };
 
-        if let Some(id) = attr(&el, "data-l-play") {
+        if let Some(id) = attr(&el, "data-l-puzzle") {
+            if crate::wordsearch_ui::open_list(&a, &id) {
+                close();
+            }
+            return;
+        } else if let Some(id) = attr(&el, "data-l-play") {
             // F4.1: this list becomes what play serves, and the screen gets out
             // of the way.
             close();

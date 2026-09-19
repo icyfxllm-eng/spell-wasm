@@ -342,6 +342,23 @@
       "juniorPolicy": "ceiling:medium"
     },
     {
+      "id": "spell_search",
+      "nameKey": "ws.name",
+      "descKey": "ws.desc",
+      "icon": "🔎",
+      "status": "live",
+      "kidSafe": true,
+      "platforms": [
+        "ios"
+      ],
+      "entitlementLevel": "preview",
+      "requiresPremium": null,
+      "languages": null,
+      "$note": "CC-WORDGRID v1 Phase A: a word search where every target is heard, never shown (F-S1), with trap spellings from the hand-authored confusion list (F-S2). App only. Launch set en, es, ru, fr, de, pt, pl, fil; English alone has decoys and all five tiers, the rest play Easy (D11). Under-13 players get the Jr grid only (F-X5). ko and zh never (D4).",
+      "exitStyle": "instant",
+      "juniorPolicy": "ceiling:easy"
+    },
+    {
       "id": "standard",
       "nameKey": "brand.tag",
       "descKey": "share.tagline",

@@ -1350,6 +1350,37 @@
   .sd-keys .kb-key.wide{max-width:96px;flex-grow:2}
   .sd-keys .kb-key.go{border-color:var(--amber)}
   .sd-actions{display:flex;flex-wrap:wrap;gap:8px;justify-content:center}
+  /* CC-WORDGRID v1 Phase A — Spell Search (app only). A slot is the word's
+     length and a play button (F-S1); the grid takes drags, so it never scrolls. */
+  .ws-screen{position:fixed;inset:0;background:var(--bg,#0e1420);z-index:60;display:none;overflow:auto;min-height:0;
+    padding:max(12px,env(safe-area-inset-top)) 12px max(16px,env(safe-area-inset-bottom))}
+  .ws-screen.show{display:block}
+  .ws-screen .btn-hide{display:none}
+  .ws-wrap{width:100%;max-width:520px;margin:0 auto;display:flex;flex-direction:column;gap:8px}
+  .ws-wrap .ws-wrap{max-width:none}
+  .ws-note{min-height:1.3em;margin:0;text-align:center;color:var(--muted-2)}
+  .ws-slots{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:6px}
+  .ws-slot{display:flex;align-items:center;gap:6px;background:var(--panel-2);border:1px solid var(--edge);border-radius:10px;padding:3px 4px;min-width:0}
+  .ws-slot.active{border-color:var(--amber)}
+  .ws-slot.found{border-color:var(--teal)}
+  .ws-slot .ws-word{flex:1;min-width:0;font-family:var(--mono);font-size:15px;overflow-wrap:anywhere;color:var(--muted-2)}
+  /* Tracking only on the underscore mask, which is never script text: a found
+     word shows untracked (CC-LOCALE-TYPESET F2). */
+  .ws-slot:not(.found) .ws-word{letter-spacing:.12em}
+  .ws-slot.found .ws-word{color:var(--teal);letter-spacing:.02em;font-weight:700}
+  .ws-play,.ws-slow{flex:none;width:34px;height:34px;border-radius:8px;background:var(--panel);color:var(--ink);border:1px solid var(--edge);font-size:14px;padding:0}
+  .ws-grid{--ws-n:9;display:grid;grid-template-columns:repeat(var(--ws-n),1fr);border:2px solid var(--ink);border-radius:8px;overflow:hidden;
+    touch-action:none;user-select:none;-webkit-user-select:none;min-height:0}
+  .ws-cell{aspect-ratio:1;display:flex;align-items:center;justify-content:center;background:var(--panel);color:var(--ink);
+    font-family:var(--mono);font-size:clamp(13px,4.2vw,22px);text-transform:lowercase;cursor:pointer}
+  .ws-cell.found{background:rgba(64,200,180,.22);color:var(--teal);font-weight:700}
+  .ws-cell.sel{background:rgba(255,190,90,.30);outline:2px solid var(--amber);outline-offset:-2px}
+  .ws-cell.trap{background:rgba(255,107,122,.28);color:var(--coral)}
+  .ws-meaning{min-height:1.2em;color:var(--muted-2);text-align:center}
+  .ws-lock{display:flex;flex-direction:column;gap:8px;align-items:stretch}
+  .ws-lock h3{margin:0;text-align:center}
+  .ws-stars{font-size:40px;text-align:center;color:var(--amber)}
+  @media (prefers-reduced-motion:no-preference){.ws-cell.trap{transition:background .2s}}
 
   /* CC-MYWORDS-LISTS F3 — the My Words screen. Cards, an opened list, and the
      way back from a delete. Same full-screen shape as Translate. */
@@ -2765,6 +2796,43 @@
         <button class="ghost" id="sdHint" data-i18n="sd.hint">Hint</button>
         <button class="ghost btn-hide" id="sdCheck">Check board</button>
         <button class="ghost" id="sdNew" data-i18n="sd.new">New board</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- CC-WORDGRID v1 Phase A: Spell Search (app only). -->
+  <button id="wsOpenBtn" hidden aria-hidden="true"></button>
+  <div class="ws-screen" id="wsScreen" role="dialog" aria-modal="true" aria-labelledby="wsTitle">
+    <div class="sd-top">
+      <button class="ghost mode-exit" id="wsExit" aria-label="Exit">✕</button>
+      <h2 id="wsTitle" data-i18n="ws.name">Spell Search</h2>
+      <select id="wsPick" aria-label="Level"></select>
+      <button class="ghost" id="wsDaily" data-i18n="ws.daily">Daily</button>
+    </div>
+    <div class="ws-wrap">
+      <div class="ws-note" id="wsNote" aria-live="polite"></div>
+      <div id="wsFind" class="ws-wrap">
+        <div class="ws-grid" id="wsGrid"></div>
+        <div class="ws-slots" id="wsSlots"></div>
+        <div class="ws-meaning" id="wsMeaning" aria-live="polite"></div>
+        <div class="sd-actions">
+          <button class="ghost btn-hide" id="wsMeaningBtn" data-i18n="ws.meaning">Meaning</button>
+          <button class="ghost" id="wsNew" data-i18n="ws.new">New puzzle</button>
+        </div>
+      </div>
+      <div id="wsLock" class="ws-lock btn-hide">
+        <h3 data-i18n="ws.lockTitle">Lock it in</h3>
+        <div class="sd-actions">
+          <button class="btn btn-check" id="wsLockPlay" aria-label="Play">▶</button>
+          <span id="wsLockCount"></span>
+        </div>
+        <div class="sd-typed" id="wsTyped" dir="auto" aria-live="polite"></div>
+        <div class="sd-keys" id="wsKeys"></div>
+        <div class="sd-actions"><button class="ghost" id="wsSkip" data-i18n="ws.skip">Skip</button></div>
+      </div>
+      <div id="wsDone" class="ws-lock btn-hide">
+        <div class="ws-stars" id="wsStars" aria-live="polite"></div>
+        <div class="sd-actions"><button class="btn btn-check" id="wsNext" data-i18n="ws.next">Next puzzle</button></div>
       </div>
     </div>
   </div>

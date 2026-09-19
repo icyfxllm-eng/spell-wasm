@@ -219,14 +219,14 @@ mod tests {
     #[test]
     fn registry_parses_and_holds_the_shipped_modes() {
         let all = all();
-        assert_eq!(all.len(), 21, "18 modes + 3 core surfaces registered (SpellDoku, CC-SPELLDOKU)");
+        assert_eq!(all.len(), 22, "19 modes + 3 core surfaces registered (Spell Search, CC-WORDGRID Phase A)");
         // File order IS tile order (D6); practice leads (CC-PRACTICE D9).
         // letter_forge (CC-LETTER-FORGE F1) sits after def_match, where its
         // registry row was inserted. It is `hidden`, so it appears here — this
         // pin covers all() — and in none of the visible() expectations below.
         assert_eq!(
             ids(&all),
-            vec!["practice", "ghost_racing", "syllable_replay", "say_it", "photo_list", "spell_aloud", "word_stories", "online_spelloff", "def_match", "letter_forge", "word_chains", "impostor", "bee_sim", "word_picture", "reports", "calendar", "translate", "spelldoku", "standard", "climb", "daily"],
+            vec!["practice", "ghost_racing", "syllable_replay", "say_it", "photo_list", "spell_aloud", "word_stories", "online_spelloff", "def_match", "letter_forge", "word_chains", "impostor", "bee_sim", "word_picture", "reports", "calendar", "translate", "spelldoku", "spell_search", "standard", "climb", "daily"],
         );
     }
 
@@ -264,7 +264,7 @@ mod tests {
         // surface (D1: free, drives daily play), so it tiles here. FIVE now.
         assert_eq!(
             got,
-            vec!["practice", "def_match", "letter_forge", "word_chains", "impostor", "bee_sim", "word_picture", "reports", "calendar", "translate", "spelldoku"],
+            vec!["practice", "def_match", "letter_forge", "word_chains", "impostor", "bee_sim", "word_picture", "reports", "calendar", "translate", "spelldoku", "spell_search"],
             "en Kid: practice, then the six companion tiles (D2: kid gets the full translator core)"
         );
         assert!(!got.contains(&"say_it".to_string()), "say_it is never kid-visible (COPPA)");
@@ -277,7 +277,7 @@ mod tests {
         let c = HubCtx { kid: true, lang: "es".into(), ..ctx() };
         // CC-HUB-CLEANUP D2/D5 (+ Word Picture and Quest Log
         // reconciliations): the pruned menu holds even on es.
-        assert_eq!(ids(&visible(&all, &c)), vec!["practice", "def_match", "letter_forge", "word_chains", "impostor", "bee_sim", "word_picture", "reports", "calendar", "translate", "spelldoku"]);
+        assert_eq!(ids(&visible(&all, &c)), vec!["practice", "def_match", "letter_forge", "word_chains", "impostor", "bee_sim", "word_picture", "reports", "calendar", "translate", "spelldoku", "spell_search"]);
     }
 
     #[test]
@@ -290,7 +290,7 @@ mod tests {
         // — the point is that a non-iOS mode still tiles on web, not that
         // any particular mode does.
         assert!(got.contains(&"def_match".to_string()), "an all-platform mode still tiles on web");
-        for ios_only in ["say_it", "photo_list", "spell_aloud", "reports", "calendar", "translate", "spelldoku"] {
+        for ios_only in ["say_it", "photo_list", "spell_aloud", "reports", "calendar", "translate", "spelldoku", "spell_search"] {
             assert!(!got.contains(&ios_only.to_string()), "{ios_only} is iOS-only");
         }
     }
@@ -468,7 +468,8 @@ mod web_wall_tests {
     fn app_only_modes_are_absent_from_the_site_registry() {
         let ids: Vec<String> = all().iter().map(|m| m.id.clone()).collect();
         // CC-SPELLDOKU Done #11: SpellDoku never registers on the site.
-        for app_only in ["word_picture", "say_it", "photo_list", "spell_aloud", "spelldoku"] {
+        // CC-WORDGRID Phase A: nor does Spell Search.
+        for app_only in ["word_picture", "say_it", "photo_list", "spell_aloud", "spelldoku", "spell_search"] {
             assert!(!ids.contains(&app_only.to_string()),
                     "{app_only} is still in the site registry — hiding is not removing");
         }

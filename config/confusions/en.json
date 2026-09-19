@@ -1,0 +1,32 @@
+{
+  "$comment": "CC-WORDGRID E5 (signed 2026-09-18) -- the English confusion list. HAND-AUTHORED from English spelling rules, never from player data (D6). One entry is one edit: a decoy is its target with exactly ONE of these applied at ONE position. Read by tools/wordsearch/build_decoys.py (which proves each result is not a word, E6) and by src/wordsearch/confusion.rs (which re-derives every shipped decoy, I2). `at` is where the edit may apply: any, start, mid (not the first letter) or end; an optional fourth value is the shortest word it applies to. `double` doubles a consonant standing between two vowels (sepparate); `single` undoes a doubled one (adress).",
+  "lang": "en",
+  "swaps": [
+    ["ie", "ei", "any"], ["ei", "ie", "any"],
+    ["ant", "ent", "end"], ["ent", "ant", "end"],
+    ["ance", "ence", "end"], ["ence", "ance", "end"],
+    ["ancy", "ency", "end"], ["ency", "ancy", "end"],
+    ["able", "ible", "end"], ["ible", "able", "end"],
+    ["er", "or", "end"], ["or", "er", "end"], ["ar", "er", "end"], ["er", "ar", "end"],
+    ["ary", "ery", "end"], ["ery", "ary", "end"],
+    ["ate", "ite", "end", 6], ["ite", "ate", "end", 6],
+    ["le", "el", "end"], ["el", "le", "end"],
+    ["tion", "sion", "end"], ["sion", "tion", "end"],
+    ["cial", "tial", "any"], ["tial", "cial", "any"],
+    ["ous", "us", "end"],
+    ["our", "or", "end"],
+    ["y", "ey", "end"], ["ey", "y", "end"],
+    ["kn", "n", "start"], ["wr", "r", "start"], ["gn", "n", "start"], ["ps", "s", "start"],
+    ["wh", "w", "start"], ["rh", "r", "start"], ["gh", "g", "start"],
+    ["mb", "m", "end"], ["mn", "m", "end"],
+    ["sc", "s", "any"],
+    ["ce", "se", "any"], ["ci", "si", "any"], ["se", "ce", "mid"],
+    ["ck", "k", "any"], ["ck", "c", "any"],
+    ["tch", "ch", "any"], ["dg", "g", "any"],
+    ["ph", "f", "any"],
+    ["ee", "ea", "any"], ["ea", "ee", "any"],
+    ["ight", "ite", "any"]
+  ],
+  "double": "bcdfglmnprstz",
+  "single": "bcdfglmnprstz"
+}

@@ -397,3 +397,47 @@ fn spelldoku_never_touches_the_leaderboard_or_shields() {
         }
     }
 }
+
+/// F9 / Done #9, for every language: no hint line -- the cell pointer, every
+/// technique name inside the level-2 template, or the audio prompt -- contains
+/// the spelling of a number the board can ask for. "only one number fits"
+/// spelled "one" whenever the hinted cell was a 1; the browser test caught it
+/// only on boards that happened to hint a 1, so this checks the copy itself.
+#[test]
+fn no_hint_line_spells_a_number_word() {
+    let locales: [(&str, &str); 15] = [
+        ("en", include_str!("../i18n/locales/en.json")),
+        ("es", include_str!("../i18n/locales/es.json")),
+        ("fr", include_str!("../i18n/locales/fr.json")),
+        ("de", include_str!("../i18n/locales/de.json")),
+        ("pt", include_str!("../i18n/locales/pt.json")),
+        ("pl", include_str!("../i18n/locales/pl.json")),
+        ("ru", include_str!("../i18n/locales/ru.json")),
+        ("vi", include_str!("../i18n/locales/vi.json")),
+        ("ko", include_str!("../i18n/locales/ko.json")),
+        ("ja", include_str!("../i18n/locales/ja.json")),
+        ("zh", include_str!("../i18n/locales/zh.json")),
+        ("fil", include_str!("../i18n/locales/fil.json")),
+        ("sw", include_str!("../i18n/locales/sw.json")),
+        ("ar", include_str!("../i18n/locales/ar.json")),
+        ("hi", include_str!("../i18n/locales/hi.json")),
+    ];
+    for (lang, raw) in locales {
+        let loc: serde_json::Value = serde_json::from_str(raw).unwrap();
+        let s = |k: &str| loc[k].as_str().unwrap_or_else(|| panic!("{lang}: {k}")).to_string();
+        let mut lines = vec![s("sd.hintCell"), s("sd.hintAudio")];
+        for tech in ["single", "subset", "intersection", "fish"] {
+            lines.push(s("sd.hintTech").replace("{tech}", &s(&format!("sd.tech.{tech}"))));
+        }
+        let t = crate::spelldoku::table::load(lang).expect("table");
+        for row in t.rows.iter().filter(|r| (1..=9).contains(&r.n)) {
+            for w in &row.spellings {
+                let w = crate::spelldoku::table::norm(w);
+                for line in &lines {
+                    assert!(!crate::spelldoku::table::norm(line).contains(&w),
+                        "{lang}: \"{line}\" spells {} ({w})", row.n);
+                }
+            }
+        }
+    }
+}

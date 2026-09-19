@@ -231,6 +231,17 @@
         "hard",
         "expert"
       ]
+    },
+    "spell_search": {
+      "junior": [
+        "easy"
+      ],
+      "standard": [
+        "easy",
+        "medium",
+        "hard",
+        "expert"
+      ]
     }
   }
 }

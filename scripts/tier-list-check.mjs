@@ -47,6 +47,7 @@ export const ALLOW = [
   { file: 'src/say_it.rs', has: 'for tier in ["easy", "medium"]', why: 'Say It pool; Say It is hidden from Spell Jr by juniorPolicy' },
   { file: 'src/online_spelloff.rs', has: '=> s.level.clone()', why: 'match tier from level; Online Spell-Off is hidden from Spell Jr' },
   { file: 'src/word_index.rs', has: 'for tier in [', why: 'whole-bank lookup index for answer checking; serves nothing' },
+  { file: 'src/wordsearch/lexicon.rs', has: 'for tier in [', why: 'whole-bank lexicon for the Spell Search filler check (I3) and letter frequency; serves nothing (tiers_for decides the tiers)' },
   { file: 'src/photo_import.rs', has: 'for tier in [', why: 'matches scanned words against the bank; Photo list is hidden from Spell Jr' },
   { file: 'src/ink_probe.rs', has: 'for tier in [', why: 'handwriting-recogniser probe sample; never shown to a player' },
 ];

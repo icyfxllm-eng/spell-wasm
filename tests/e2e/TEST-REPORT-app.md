@@ -1,6 +1,6 @@
 # TEST-REPORT — Web E2E (app build)
 
-**151/151 passed** across 28 areas.
+**161/161 passed** across 29 areas.
 
 ## playhub — 12/12
 - ✅ hub: opens from the meta corner and renders registry tiles
@@ -109,6 +109,18 @@
 - ✅ spelldoku_spell_jr_sees_only_its_column
 - ✅ spelldoku_wasm_matches_the_pinned_golden_digest
 - ✅ spelldoku_daily_is_the_same_for_everyone
+
+## spell-search — 10/10
+- ✅ spell_search_opens_in_every_launch_language
+- ✅ spell_search_never_opens_in_korean_or_chinese
+- ✅ spell_search_a_drag_finds_a_word
+- ✅ spell_search_trap_then_lock_in_scores_in_stars_only
+- ✅ spell_search_spell_jr_gets_only_jr
+- ✅ spell_search_wasm_matches_the_pinned_golden_digest
+- ✅ spell_search_daily_is_the_same_for_everyone
+- ✅ spell_search_make_a_puzzle_from_my_words
+- ✅ spell_search_meaning_never_gives_the_word_away
+- ✅ spell_search_twelve_word_list_builds_fast
 
 ## translate-screen — 10/10
 - ✅ translate_state_matrix_holds_the_action_row_still

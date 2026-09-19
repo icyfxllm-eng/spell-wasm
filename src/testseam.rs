@@ -192,6 +192,17 @@ pub fn install(app: &App) {
         set(&obj, "spelldokuBoard", cb.into_js_value());
         let cb = Closure::<dyn Fn() -> String>::new(move || crate::spelldoku_ui::seam_golden());
         set(&obj, "spelldokuGolden", cb.into_js_value());
+
+        // CC-WORDGRID Phase A: the wasm grid digest (test 2), the served
+        // puzzle (so a test can drag to a real word), and list build time (test 11).
+        let cb = Closure::<dyn Fn() -> String>::new(move || crate::wordsearch_ui::seam_golden());
+        set(&obj, "spellSearchGolden", cb.into_js_value());
+        let cb = Closure::<dyn Fn() -> String>::new(move || crate::wordsearch_ui::seam_board());
+        set(&obj, "spellSearchBoard", cb.into_js_value());
+        let cb = Closure::<dyn Fn(String, String, u32) -> f64>::new(move |lang: String, words: String, n: u32| {
+            crate::wordsearch_ui::seam_time_list(&lang, &words, n)
+        });
+        set(&obj, "spellSearchTimeList", cb.into_js_value());
     }
     let _ = js_sys::Reflect::set(win.as_ref(), &JsValue::from_str("__spelltest"), obj.as_ref());
     web_sys::console::warn_1(&"[testseam] window.__spelltest installed (DEV build only)".into());
