@@ -115,7 +115,7 @@ export async function pinBaseline(ctx) {
   return ctx;
 }
 
-export async function openApp(browser, base, { lang = null, device = 'se', viewport = null, age = AGE } = {}) {
+export async function openApp(browser, base, { lang = null, device = 'se', viewport = null, age = AGE, telemetry = null } = {}) {
   const d = viewport ? { ...DEVICES[device], ...viewport } : DEVICES[device];
   const ctx = await browser.newContext({ viewport: { width: d.width, height: d.height }, deviceScaleFactor: d.dpr, isMobile: d.mobile });
   await ctx.addInitScript(([age, l]) => {
@@ -143,6 +143,11 @@ export async function openApp(browser, base, { lang = null, device = 'se', viewp
       localStorage.setItem('spell_flag_learner_select', 'off');
     }
   }, [age, lang]);
+  // CC-TELEMETRY-FOUNDATION: the suite is hermetic. Every telemetry request
+  // (flags and posts, to spellgame.net or here) is answered locally: 404 by
+  // default, which leaves the kill switch unknown so the app sends nothing.
+  // telemetry.spec passes its own handler to capture and answer.
+  await ctx.route('**/telemetry/**', telemetry || ((r) => r.fulfill({ status: 404, body: '' })));
   // Stub the backend audio so no real TTS traffic + deterministic timing.
   await ctx.route('**/api/speak**', (r) => r.fulfill({ status: 200, contentType: 'audio/mpeg', body: Buffer.from([]) }));
   const page = await ctx.newPage();

@@ -125,6 +125,31 @@ pub fn jr_climb_levels_up(word_number: u32) -> bool {
     word_number == JR_CLIMB_EASY_WORDS + 1
 }
 
+/// Who is playing, for surfaces that must treat "not yet known" as its own
+/// answer (CC-TELEMETRY-FOUNDATION R3). `Experience` has no unknown: an
+/// unanswered age gate plays as Standard behind the scrim, which is right for
+/// gameplay and wrong for anything that leaves the device.
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum Audience {
+    Junior,
+    Standard,
+    /// The age gate has never been answered on this device.
+    Unknown,
+}
+
+/// R3 — the three-way answer. `gate_answered` is `agegate::stored().is_some()`.
+/// An unanswered gate is Unknown even if a grown-up already flipped the Jr
+/// toggle on: Unknown is the stricter of the two for every caller that exists.
+pub fn audience(kid: bool, gate_answered: bool) -> Audience {
+    if !gate_answered {
+        return Audience::Unknown;
+    }
+    match of_kid(kid) {
+        Experience::Junior => Audience::Junior,
+        Experience::Standard => Audience::Standard,
+    }
+}
+
 /// I6 — Jr Climb is unranked: zero leaderboard reads or writes.
 pub fn leaderboard_allowed(exp: Experience) -> bool {
     exp == Experience::Standard
@@ -255,5 +280,15 @@ mod tests {
     fn junior_has_no_leaderboard() {
         assert!(!leaderboard_allowed(Experience::Junior));
         assert!(leaderboard_allowed(Experience::Standard));
+    }
+
+    /// R3 — an unanswered gate is Unknown whatever the kid flag says; an
+    /// answered one follows the flag.
+    #[test]
+    fn audience_is_three_way() {
+        assert_eq!(audience(false, false), Audience::Unknown);
+        assert_eq!(audience(true, false), Audience::Unknown);
+        assert_eq!(audience(true, true), Audience::Junior);
+        assert_eq!(audience(false, true), Audience::Standard);
     }
 }

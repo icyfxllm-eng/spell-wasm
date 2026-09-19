@@ -12,7 +12,7 @@ Build order
 5. BD-5 CC-YEARBOOK — blocked on CC-FINALE export path shipping
 Stop and ask before starting each file (per-file greenlight, arcade-batch precedent).
 Shared law (inherited by all five, build-failing)
-* S1: All privacy posture from CC-LEARNING-ENGINE D5 is global: everything on-device, zero telemetry, no engagement optimization, no server-side accounts.
+* S1: All privacy posture from CC-LEARNING-ENGINE D5 is global: everything on-device, zero telemetry, no engagement optimization, no server-side accounts. *(Annotated 2026-09-18, CC-TELEMETRY-FOUNDATION R9: "zero telemetry" = zero learning or gameplay data. Crash and performance diagnostics under CC-TELEMETRY-FOUNDATION v1.1 are permitted. See CC-LEARNING-ENGINE D5.)*
 * S2: Little Speller zero-purchase-surface invariant applies everywhere, including widgets, notifications, and exports.
 * S3: App-only features declare `platforms: ["app"]` in the registry (CC-PICTURE-PLATFORM law); web symbol scan denylist auto-extends.
 * S4: No new displayed strings outside hard-capped audited pools; anything user-facing in 15 languages rides the registry/audit machinery.

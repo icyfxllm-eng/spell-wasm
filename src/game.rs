@@ -1483,6 +1483,8 @@ pub fn next_word(app: &App) {
         let mut s = app.borrow_mut();
         s.answered = false;
         s.word_serial += 1;
+        // F1 context: the language this word is played in (never the word).
+        crate::telemetry::set_lang(&s.cur_lang);
     }
     // CC-ATTEMPTS-SHIELDS: a new word refreshes its one-retry budget (I4/PD5).
     crate::attempts::start_word(&mut app.borrow_mut());
@@ -2722,6 +2724,7 @@ fn now_ms() -> f64 {
 /// Start today's Daily Challenge: a fixed, date+language-seeded set played once
 /// through, one attempt per word, isolated from streak/stats/Misses/Climb.
 pub fn enter_daily(app: &App) {
+    crate::telemetry::set_mode(crate::telemetry::schema::Mode::Daily);
     let (lang, kid) = {
         let s = app.borrow();
         (s.lang.clone(), s.kid)
@@ -2784,6 +2787,7 @@ pub fn exit_daily(app: &App) {
 /// caller (online_spelloff.rs) owns the words (derived from the shared seed) and
 /// the match code / timing.
 pub fn start_spelloff_run(app: &App, locale: String, words: Vec<String>) {
+    crate::telemetry::set_mode(crate::telemetry::schema::Mode::OnlineSpelloff);
     if words.is_empty() {
         return;
     }
@@ -2828,6 +2832,7 @@ pub fn start_spelloff_run(app: &App, locale: String, words: Vec<String>) {
 /// loop serves the words while the race session records lap timing. Returns false if
 /// the opponent's words can't be resolved on the current list (never substitutes).
 pub fn start_race(app: &App, circuit: crate::racing::track::Circuit, opponent: crate::racing::format::RaceGhost) -> bool {
+    crate::telemetry::set_mode(crate::telemetry::schema::Mode::Racing);
     let lang = opponent.language.clone();
     let tier = opponent.tier.clone();
     let (mut words, mut track_ids, mut finishes) = (Vec::new(), Vec::new(), Vec::new());
@@ -3186,6 +3191,7 @@ pub fn schedule_raw(delay_ms: i32, f: impl FnOnce() + 'static) {
 // ---------- misses / review mode ----------
 
 pub fn enter_review(app: &App) {
+    crate::telemetry::set_mode(crate::telemetry::schema::Mode::Review);
     let total = app.borrow().misses.len();
     if total == 0 {
         dom::set_text("feedback", &crate::i18n::t("fb.noMisses"));
@@ -3287,6 +3293,7 @@ fn clean_name(name: &str, fallback: &str) -> String {
 /// Enters head-to-head and starts the first turn. Kid Mode shortens the match
 /// (2 turns each vs 3) so it stays quick for younger players.
 pub fn start_versus(app: &App, name1: String, name2: String) {
+    crate::telemetry::set_mode(crate::telemetry::schema::Mode::Versus);
     if app.borrow().review {
         exit_review(app, None);
     }

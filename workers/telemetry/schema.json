@@ -1,0 +1,159 @@
+{
+  "records": {
+    "agg_batch": [
+      {
+        "name": "v",
+        "type": "version"
+      },
+      {
+        "name": "build",
+        "type": "build"
+      },
+      {
+        "name": "platform",
+        "type": {
+          "enum": [
+            "ios",
+            "android",
+            "web",
+            "desktop"
+          ]
+        }
+      },
+      {
+        "name": "rows",
+        "type": {
+          "list": "agg_row",
+          "max": 5
+        }
+      }
+    ],
+    "agg_row": [
+      {
+        "name": "error_code",
+        "type": {
+          "enum": [
+            "js_uncaught",
+            "js_unhandled_rejection",
+            "wasm_panic",
+            "wasm_init_failed",
+            "pack_load_failed"
+          ]
+        }
+      },
+      {
+        "name": "count",
+        "type": {
+          "uint": 1000000
+        }
+      }
+    ],
+    "error_event": [
+      {
+        "name": "error_code",
+        "type": {
+          "enum": [
+            "js_uncaught",
+            "js_unhandled_rejection",
+            "wasm_panic",
+            "wasm_init_failed",
+            "pack_load_failed"
+          ]
+        }
+      },
+      {
+        "name": "lang",
+        "type": {
+          "enum": [
+            "en",
+            "es",
+            "fr",
+            "de",
+            "pt",
+            "pl",
+            "vi",
+            "ko",
+            "ja",
+            "fil",
+            "ru",
+            "sw",
+            "ar",
+            "hi",
+            "fa",
+            "zh",
+            "mine",
+            "other"
+          ]
+        }
+      },
+      {
+        "name": "mode",
+        "type": {
+          "enum": [
+            "home",
+            "standard",
+            "daily",
+            "review",
+            "versus",
+            "practice",
+            "ghost_racing",
+            "racing",
+            "say_it",
+            "def_match",
+            "letter_forge",
+            "word_chains",
+            "impostor",
+            "bee_sim",
+            "word_picture",
+            "translate",
+            "online_spelloff",
+            "my_lists"
+          ]
+        }
+      },
+      {
+        "name": "stack_hash",
+        "type": "hash64"
+      }
+    ],
+    "event_batch": [
+      {
+        "name": "v",
+        "type": "version"
+      },
+      {
+        "name": "build",
+        "type": "build"
+      },
+      {
+        "name": "platform",
+        "type": {
+          "enum": [
+            "ios",
+            "android",
+            "web",
+            "desktop"
+          ]
+        }
+      },
+      {
+        "name": "session_id",
+        "type": "hash64"
+      },
+      {
+        "name": "events",
+        "type": {
+          "list": "error_event",
+          "max": 200
+        }
+      }
+    ],
+    "flags": [
+      {
+        "name": "telemetry_enabled",
+        "type": "bool"
+      }
+    ]
+  },
+  "version": 1
+}

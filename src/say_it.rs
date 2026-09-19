@@ -118,6 +118,7 @@ fn current_lang(app: &App) -> String {
 /// Open the mode: verify on-device capability for the current language, then show
 /// the pre-prompt (first use) or go straight to play.
 pub fn open(app: &App) {
+    crate::telemetry::set_mode(crate::telemetry::schema::Mode::SayIt);
     // Belt-and-suspenders: never open in Kid Mode even if somehow wired.
     if app.borrow().kid {
         return;

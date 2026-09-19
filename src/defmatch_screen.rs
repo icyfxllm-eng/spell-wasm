@@ -177,6 +177,7 @@ fn show_recap() {
 /// Enter the mode: resolve tier (entitlement depth + Kid clamp), fetch the
 /// pool if needed, then start the first round.
 pub fn open(app: &App) {
+    crate::telemetry::set_mode(crate::telemetry::schema::Mode::DefMatch);
     let (lang, kid, mut tier) = {
         let s = app.borrow();
         (s.lang.clone(), s.kid, s.level.clone())

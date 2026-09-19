@@ -29,7 +29,7 @@ wasm-bindgen target/wasm32-unknown-unknown/release/spell_wasm.wasm \
 echo "==> assembling dist-audit/"
 rm -rf "$DIST"
 mkdir -p "$DIST"
-cp index.html audio-native.js native-language-kit.js manifest.json sw.js "$DIST/"
+cp index.html audio-native.js native-language-kit.js telemetry-schema.js manifest.json sw.js "$DIST/"
 cp -r icons "$DIST/icons"
 cp -r fonts "$DIST/fonts"
 cp -r pkg-audit "$DIST/pkg"

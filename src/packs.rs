@@ -124,11 +124,11 @@ pub async fn download(lang: String) {
     let base = format!("{}/packs/{}/v1", crate::api::api_base(), lang);
     let manifest_txt = match fetch_text(&format!("{base}/manifest.json")).await {
         Some(t) => t,
-        None => return fail(&lang),
+        None => return fail(&lang, "manifest"),
     };
     let sig_b64 = match fetch_b64(&format!("{base}/manifest.sig")).await {
         Some(s) => s,
-        None => return fail(&lang),
+        None => return fail(&lang, "sig"),
     };
     let v = call("packVerifyManifest", &obj(&[("manifest", &manifest_txt), ("sig", &sig_b64), ("pubKey", PACK_PUB_KEY)])).await;
     let valid = v
@@ -137,9 +137,9 @@ pub async fn download(lang: String) {
         .and_then(|b| b.as_bool())
         .unwrap_or(false);
     if !valid {
-        return fail(&lang);
+        return fail(&lang, "verify");
     }
-    let Ok(man) = serde_json::from_str::<Manifest>(&manifest_txt) else { return fail(&lang) };
+    let Ok(man) = serde_json::from_str::<Manifest>(&manifest_txt) else { return fail(&lang, "parse") };
     let _ = call("packStoreManifest", &obj(&[("lang", &lang), ("manifest", &manifest_txt)])).await;
     let total = man.files.len() as u32;
     for (i, f) in man.files.iter().enumerate() {
@@ -149,11 +149,11 @@ pub async fn download(lang: String) {
         }
         let url = format!("{base}/{}", f.name);
         if call("packFetch", &obj(&[("url", &url), ("lang", &lang), ("name", &f.name), ("sha256", &f.sha256)])).await.is_err() {
-            return fail(&lang);
+            return fail(&lang, "fetch");
         }
     }
     if call("packActivate", &obj(&[("lang", &lang)])).await.is_err() {
-        return fail(&lang);
+        return fail(&lang, "activate");
     }
     let _ = man.version;
     PROGRESS.with(|p| *p.borrow_mut() = None);
@@ -165,9 +165,15 @@ pub async fn delete(lang: String) {
     refresh_states().await;
 }
 
-fn fail(lang: &str) {
+/// `stage` is a fixed label naming which step failed; its hash is the F1
+/// stack hash, so the report tells manifest, signature and file failures apart.
+fn fail(lang: &str, stage: &'static str) {
     PROGRESS.with(|p| *p.borrow_mut() = None);
-    let _ = lang;
+    crate::telemetry::record_error_in(
+        crate::telemetry::schema::ErrorCode::PackLoadFailed,
+        lang,
+        crate::telemetry::schema::Hash64::of(format!("packs:{stage}").as_bytes()),
+    );
     crate::dom::show_toast(&crate::i18n::t("packs.error"));
     render_rows();
 }
