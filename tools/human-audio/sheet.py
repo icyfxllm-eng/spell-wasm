@@ -115,6 +115,8 @@ def main():
     ap.add_argument("--tiers", nargs="*", default=TIERS)
     ap.add_argument("--seed", type=int, default=20260919)
     ap.add_argument("--bank", help="bank.tsv from the census dump (default: two levels above --dir)")
+    ap.add_argument("--second-look", nargs="+", metavar="TIER",
+                    help="instead: one sheet of these tiers' entries lost to the whisper check alone")
     a = ap.parse_args()
     d = pathlib.Path(a.dir).expanduser()
     man = json.loads((d / "manifest.json").read_text())
@@ -146,20 +148,41 @@ def main():
 
     audit_root = d / "audit"
     audit_root.mkdir(exist_ok=True)
-    for tier in a.tiers:
-        sheet_id = f"{lang}-{tier}-{time.strftime('%Y%m%d')}"
+    today = time.strftime('%Y%m%d')
+
+    def real_row(c, q):
+        return {"entry": c["entry"], "src": d / q["norm_path"], "decoy": False,
+                "commons_sha1": c["commons_sha1"], "speaker": c["speaker"], "license": c["license"]}
+
+    jobs = []
+    if a.second_look:
+        # SECOND LOOK (Eric, 2026-09-19): entries whose EVERY clip failed F2
+        # only because whisper heard another word. Whisper saves the auditor
+        # time; it is not the judge. Loudness, clipping, noise and duration
+        # rejects never come back here.
+        whisper_only = collections.defaultdict(list)
+        for c in man["clips"]:
+            q = qc.get(c["commons_sha1"])
+            if (q and q["status"] == "rejected" and c["key"] not in passed
+                    and q["reasons"] and all(r.startswith("loopback heard") for r in q["reasons"])
+                    and min(tiers_of[c["key"]], key=TIERS.index) in a.second_look):
+                whisper_only[c["key"]].append((c, q))
+        real = [real_row(*sorted(v, key=rank)[0]) for _, v in sorted(whisper_only.items())]
+        jobs.append((f"{lang}-secondlook-{today}", "secondlook", real, a.second_look,
+                     set(whisper_only)))
+    else:
+        for tier in a.tiers:
+            real = [real_row(*sorted(passed[k], key=rank)[0])
+                    for k in sorted(k for k in passed if min(tiers_of[k], key=TIERS.index) == tier)]
+            jobs.append((f"{lang}-{tier}-{today}", tier, real, [tier], set()))
+
+    for sheet_id, tier, real, gap_tiers, also_taken in jobs:
         folder = audit_root / sheet_id
         if folder.exists():
             shutil.rmtree(folder)
         (folder / "clips").mkdir(parents=True)
-        real = []
-        for key in sorted(k for k in passed if min(tiers_of[k], key=TIERS.index) == tier):
-            c, q = sorted(passed[key], key=rank)[0]
-            real.append({"entry": c["entry"], "src": d / q["norm_path"], "decoy": False,
-                         "commons_sha1": c["commons_sha1"], "speaker": c["speaker"],
-                         "license": c["license"]})
-        # Decoys: a gap entry in this tier, played with a real clip of a close word.
-        gaps = [e for e in tier_entries[tier] if e not in have]
+        # Decoys: a gap entry (no clip at all), played with a real clip of a close word.
+        gaps = [e for t in gap_tiers for e in tier_entries[t] if e not in have and e not in also_taken]
         rng.shuffle(gaps)
         # A donor is heard once per sheet and never alongside its own real row:
         # the same recording twice on one sheet would give the decoy away.
@@ -204,7 +227,6 @@ def main():
             "sheet_id": sheet_id, "lang": lang, "tier": tier, "stamp": st,
             "verdicts": VERDICTS, "rows": key_rows}, ensure_ascii=False, indent=1))
         print(f"{sheet_id}: {len(real)} real rows + {len(decoys)} decoys -> {folder}")
-
 
 if __name__ == "__main__":
     main()
