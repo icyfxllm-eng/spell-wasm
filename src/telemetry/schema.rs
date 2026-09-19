@@ -38,13 +38,15 @@ macro_rules! wire_enum {
 wire_enum!(Platform { Ios => "ios", Android => "android", Web => "web", Desktop => "desktop" });
 
 wire_enum!(
-    /// F1 — what broke. Native crash/hang codes arrive with the MetricKit bridge.
+    /// F1 — what broke. `native_*` come from MetricKit via the iOS bridge.
     ErrorCode {
         JsUncaught => "js_uncaught",
         JsUnhandledRejection => "js_unhandled_rejection",
         WasmPanic => "wasm_panic",
         WasmInitFailed => "wasm_init_failed",
         PackLoadFailed => "pack_load_failed",
+        NativeCrash => "native_crash",
+        NativeHang => "native_hang",
     }
 );
 

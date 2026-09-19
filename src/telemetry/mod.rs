@@ -320,6 +320,43 @@ pub fn install_panic_hook() {
     }));
 }
 
+/// F1 — MetricKit's crash and hang diagnostics, drained from the iOS bridge.
+/// Swift reports a kind and a signature; the mapping to error codes is here,
+/// so the schema stays the only place an event is defined (I9).
+async fn drain_metrickit() {
+    let Some(kit) = web_sys::window()
+        .and_then(|w| js_sys::Reflect::get(&w, &JsValue::from_str("Capacitor")).ok())
+        .and_then(|c| js_sys::Reflect::get(&c, &JsValue::from_str("Plugins")).ok())
+        .and_then(|p| js_sys::Reflect::get(&p, &JsValue::from_str("NativeLanguageKit")).ok())
+        .filter(|k| !k.is_undefined() && !k.is_null())
+    else {
+        return;
+    };
+    let Some(f) = js_sys::Reflect::get(&kit, &JsValue::from_str("metricKitDrain")).ok().and_then(|f| f.dyn_into::<js_sys::Function>().ok()) else {
+        return;
+    };
+    let Some(p) = f.call0(&kit).ok().and_then(|p| p.dyn_into::<js_sys::Promise>().ok()) else { return };
+    let Ok(res) = wasm_bindgen_futures::JsFuture::from(p).await else { return };
+    let items = js_sys::Reflect::get(&res, &JsValue::from_str("items")).unwrap_or(JsValue::UNDEFINED);
+    let Ok(items) = items.dyn_into::<js_sys::Array>() else { return };
+    for it in items.iter().take(JSBUF_MAX) {
+        let get = |k: &str| js_sys::Reflect::get(&it, &JsValue::from_str(k)).ok().and_then(|v| v.as_string());
+        if let (Some(kind), Some(sig)) = (get("kind"), get("sig").and_then(|s| Hash64::parse(&s))) {
+            if let Some(code) = native_code(&kind) {
+                record_error(code, sig);
+            }
+        }
+    }
+}
+
+fn native_code(kind: &str) -> Option<ErrorCode> {
+    match kind {
+        "crash" => Some(ErrorCode::NativeCrash),
+        "hang" => Some(ErrorCode::NativeHang),
+        _ => None,
+    }
+}
+
 /// Move whatever index.html's pre-WASM hook buffered into the live route.
 fn drain_js_buffer() {
     let buf: Vec<JsBuffered> = storage::get_json(JSBUF_KEY).unwrap_or_default();
@@ -515,6 +552,7 @@ pub fn init(lang: &str) {
     }
 
     wasm_bindgen_futures::spawn_local(async {
+        drain_metrickit().await;
         refresh_flags().await;
         flush();
     });
@@ -606,6 +644,14 @@ mod tests {
         let all = now.clone();
         subtract(&mut now, &all);
         assert!(now.is_empty());
+    }
+
+    #[test]
+    fn metrickit_kinds_map_to_native_codes_only() {
+        assert_eq!(native_code("crash"), Some(ErrorCode::NativeCrash));
+        assert_eq!(native_code("hang"), Some(ErrorCode::NativeHang));
+        assert_eq!(native_code("CRASH"), None);
+        assert_eq!(native_code("launch"), None);
     }
 
     #[test]

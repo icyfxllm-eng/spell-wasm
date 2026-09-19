@@ -2,7 +2,7 @@
 // Bless: TELEMETRY_BLESS=1 cargo test --lib telemetry
 window.SpellTelemetrySchema = Object.freeze({
   version: 1,
-  errorCodes: Object.freeze(["js_uncaught","js_unhandled_rejection","wasm_panic","wasm_init_failed","pack_load_failed"]),
+  errorCodes: Object.freeze(["js_uncaught","js_unhandled_rejection","wasm_panic","wasm_init_failed","pack_load_failed","native_crash","native_hang"]),
   jsBufferKey: "spell_tel_jsbuf_v1",
   jsBufferMax: 20,
 });

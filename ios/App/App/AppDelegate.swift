@@ -13,6 +13,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             try AVAudioSession.sharedInstance().setCategory(.playback, mode: .default)
             try AVAudioSession.sharedInstance().setActive(true)
         } catch { print("AVAudioSession error: \(error)") }
+        // CC-TELEMETRY-FOUNDATION F1: collect MetricKit crash/hang diagnostics
+        // (kind + stack signature only) for the web layer to route. Sends nothing.
+        SpellMetricKitSink.shared.start()
         // Override point for customization after application launch.
         return true
     }

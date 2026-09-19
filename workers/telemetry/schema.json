@@ -24,7 +24,7 @@
         "name": "rows",
         "type": {
           "list": "agg_row",
-          "max": 5
+          "max": 7
         }
       },
       {
@@ -78,7 +78,9 @@
             "js_unhandled_rejection",
             "wasm_panic",
             "wasm_init_failed",
-            "pack_load_failed"
+            "pack_load_failed",
+            "native_crash",
+            "native_hang"
           ]
         }
       },
@@ -98,7 +100,9 @@
             "js_unhandled_rejection",
             "wasm_panic",
             "wasm_init_failed",
-            "pack_load_failed"
+            "pack_load_failed",
+            "native_crash",
+            "native_hang"
           ]
         }
       },
