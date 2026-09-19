@@ -30,6 +30,13 @@ on:
 env:
   AUDIT_MODE: "0"
 
+# A newer push to the same branch or PR cancels this run: a stale run's
+# result is noise, and the queue backs up across a dozen active branches.
+# main keeps every run so each commit on it gets its own verdict.
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: ${{ github.ref != 'refs/heads/main' }}
+
 jobs:
   editions:
     name: Edition axis gates
