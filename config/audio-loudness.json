@@ -1,0 +1,10 @@
+{
+ "target_lufs": -19.9,
+ "tolerance_lu": 1.0,
+ "measured_from": "median of 400 cached en server TTS clips (normal speed)",
+ "p10_p90": [
+  -21.46,
+  -18.62
+ ],
+ "decided": "Eric, 2026-09-18: match today's TTS loudness (CC-HUMAN-AUDIO I7)"
+}
