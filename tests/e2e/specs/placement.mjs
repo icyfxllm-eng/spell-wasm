@@ -5,7 +5,7 @@
 // skippable (skip leaves language-default priors standing and never
 // re-offers), and Try serves the deterministic placement set through
 // the REAL session path — no placement-specific scoring exists.
-import { openApp, assert } from '../harness.mjs';
+import { openApp, assert, typeOnKeyboard } from '../harness.mjs';
 
 async function surfacesOn(page) {
   await page.evaluate(() => {
@@ -162,6 +162,65 @@ export async function run(browser, base, suite) {
       await page.waitForTimeout(700);
       assert(!(await page.$('#plcCard.show')),
         'RE-OFFERED after a reload — a completed placement was not recorded durably');
+    } finally { await ctx.close(); }
+  });
+
+  // C10 — a failed learner load never wipes. Only a browser can prove this:
+  // the danger is a WRITE over stored bytes, and host tests have no storage.
+  async function answerOneWord(page) {
+    await page.click('#orbWrap');
+    await page.waitForTimeout(500);
+    const w = await page.evaluate(() => window.__spelltest.currentWord());
+    assert(w, 'no word served');
+    await typeOnKeyboard(page, w.toLowerCase());
+    await page.click('#checkBtn');
+    await page.waitForTimeout(800);
+  }
+  const rawOf = (page, k) => page.evaluate((key) => localStorage.getItem(key), k);
+
+  await suite.test('learner: a NEWER build\'s stored state survives an older build, byte for byte', async () => {
+    // What a player on a later build leaves behind when they reinstall this one.
+    const newer = JSON.stringify({
+      version: 99, lang: 'en', placed: true, profile: 3,
+      skills: [{ id: 'silent_letters', mastery: 0.9, fsrs: { stability: 40, difficulty: 5.2, due_day: 20500, reps: 12, lapses: 1 } }],
+      log: [{ day: 20400, word: 'knight', skills: ['silent_letters'], correct: true, channel: 'typed' }],
+    });
+    const { ctx, page } = await openApp(browser, base, { lang: 'en' });
+    try {
+      await page.evaluate((s) => localStorage.setItem('spell_learner_en', s), newer);
+      await surfacesOn(page);
+      await answerOneWord(page);
+      await answerOneWord(page);
+      assert((await rawOf(page, 'spell_learner_en')) === newer,
+        'the newer build\'s learner state was OVERWRITTEN by an older build');
+      assert(!(await page.$('#plcCard.show')), 'placement re-offered to a player whose newer state says placed');
+      assert((await rawOf(page, 'spell_learner_en_unreadable')) === null,
+        'a newer-schema state is not corruption and must not be backed up as such');
+    } finally { await ctx.close(); }
+  });
+
+  await suite.test('learner: unreadable stored bytes are backed up exactly, then play recovers', async () => {
+    const garbage = '{"version":1,"lang":"en","skills":"oops'; // truncated write
+    const { ctx, page } = await openApp(browser, base, { lang: 'en' });
+    try {
+      await page.evaluate((s) => {
+        localStorage.setItem('spell_learner_en', s);
+        localStorage.removeItem('spell_learner_en_unreadable');
+      }, garbage);
+      await page.evaluate(() => localStorage.setItem('spell_flag_learner_surfaces', 'off'));
+      await page.reload();
+      await page.waitForTimeout(600);
+      await answerOneWord(page);
+      assert((await rawOf(page, 'spell_learner_en_unreadable')) === garbage,
+        'the unreadable bytes were not preserved in the backup key');
+      const st = JSON.parse((await rawOf(page, 'spell_learner_en')) || 'null');
+      assert(st && typeof st.version === 'number' && Array.isArray(st.log) && st.log.length === 1,
+        `play did not recover to a fresh, valid state: ${JSON.stringify(st)}`);
+      // A second corruption must not clobber the FIRST backup.
+      await page.evaluate(() => localStorage.setItem('spell_learner_en', 'second garbage'));
+      await answerOneWord(page);
+      assert((await rawOf(page, 'spell_learner_en_unreadable')) === garbage,
+        'a later failure overwrote the original backup');
     } finally { await ctx.close(); }
   });
 }
