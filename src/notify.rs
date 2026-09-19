@@ -16,7 +16,7 @@ fn notified() -> HashSet<String> {
 }
 
 /// True if this device already registered interest in `lang` (persists — drives
-/// the confirmed "You're on the list" button state across sessions).
+/// the confirmed "Vote counted" button state across sessions).
 pub fn has(lang: &str) -> bool {
     notified().contains(lang)
 }
