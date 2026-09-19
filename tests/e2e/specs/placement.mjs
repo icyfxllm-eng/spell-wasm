@@ -259,4 +259,61 @@ export async function run(browser, base, suite) {
         'a later failure overwrote the original backup');
     } finally { await ctx.close(); }
   });
+
+  // Learner schema v1 -> v2 (FSRS difficulty reset). The unit test proves
+  // migrate() on a string; only a real browser proves the stored bytes. The
+  // stakes: a failed load makes load_for/note_attempt start FRESH and save
+  // over the old state, so a broken migration silently wipes a player.
+  await suite.test('learner: a stored v1 state migrates to v2 on the next write, losing nothing', async () => {
+    const W4 = 5.1618;
+    const v1 = {
+      version: 1, lang: 'en', placed: true,
+      skills: [
+        // stuck at the 1.0 floor by the FSRS version mix
+        { id: 'silent_letters', mastery: 0.7, fsrs: { stability: 12.5, difficulty: 1.0, due_day: 20400, reps: 6, lapses: 1 } },
+        { id: 'doubled_consonant', mastery: 0.2, fsrs: { stability: 0.4872, difficulty: 1.0, due_day: 20391, reps: 1, lapses: 0 } },
+      ],
+      log: [{ day: 20390, word: 'knight', skills: ['silent_letters'], correct: false, channel: 'typed', typed: 'nite' }],
+    };
+    const { ctx, page } = await openApp(browser, base, { lang: 'en' });
+    try {
+      await page.evaluate((s) => localStorage.setItem('spell_learner_en', JSON.stringify(s)), v1);
+      await surfacesOn(page); // reload with v1 in place; placed=true means no offer card
+      const read = () => page.evaluate(() => JSON.parse(localStorage.getItem('spell_learner_en') || 'null'));
+
+      // Booting and reading must not rewrite (or wipe) the stored state.
+      const booted = await read();
+      assert(booted && booted.version === 1 && booted.log.length === 1,
+        `boot alone changed the stored v1 state: ${JSON.stringify(booted)}`);
+
+      // One real answer through the game: the save path writes v2.
+      await page.click('#orbWrap');
+      await page.waitForTimeout(500);
+      const w = await page.evaluate(() => window.__spelltest.currentWord());
+      assert(w, 'no word served');
+      await typeOnKeyboard(page, w.toLowerCase());
+      await page.click('#checkBtn');
+      await page.waitForFunction(() => {
+        const s = JSON.parse(localStorage.getItem('spell_learner_en') || 'null');
+        return s && s.log && s.log.length === 2;
+      }, null, { timeout: 5000 }).catch(() => {});
+
+      const st = await read();
+      assert(st, 'learner state GONE after a write — migration failure wiped it');
+      assert(st.version === 2, `saved as v${st.version}, expected v2`);
+      assert(st.log.length === 2, `log should be the v1 entry + this answer, got ${st.log.length}`);
+      assert(st.log[0].word === 'knight' && st.log[0].typed === 'nite', 'the v1 log entry did not survive');
+      assert(st.placed === true, `placed lost: ${JSON.stringify(st.placed)}`);
+      for (const id of ['silent_letters', 'doubled_consonant']) {
+        const s = st.skills.find((k) => k.id === id);
+        assert(s, `${id} vanished`);
+        // Reset to W4; a review of this word may since have raised it (a miss)
+        // or kept it (a pass reverts to exactly W4). Never back at the floor.
+        assert(s.fsrs.difficulty >= W4 - 1e-9,
+          `${id} difficulty ${s.fsrs.difficulty}: not reset (the floor was 1.0)`);
+      }
+      const sl = st.skills.find((k) => k.id === 'silent_letters');
+      assert(sl.fsrs.reps >= 6 && sl.fsrs.lapses >= 1, 'review counts were reset, not just difficulty');
+    } finally { await ctx.close(); }
+  });
 }
