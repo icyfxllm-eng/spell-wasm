@@ -49,6 +49,44 @@ wire_enum!(
 );
 
 wire_enum!(
+    /// F5 — what was measured. The ms metrics take an ms bucket; the
+    /// resolution metric takes `resolved` or `unavailable` (`Bucket::fits`).
+    PerfMetric {
+        WasmInitMs => "wasm_init_ms",
+        TapToAudioMs => "tap_to_audio_ms",
+        AudioResolution => "audio_resolution",
+    }
+);
+
+wire_enum!(
+    /// F5 — a histogram bucket. Never a raw number of milliseconds.
+    Bucket {
+        Lt100 => "lt100", Lt250 => "lt250", Lt500 => "lt500", Lt1000 => "lt1000",
+        Lt2000 => "lt2000", Lt5000 => "lt5000", Ge5000 => "ge5000",
+        Resolved => "resolved", Unavailable => "unavailable",
+    }
+);
+
+impl Bucket {
+    pub fn of_ms(ms: f64) -> Bucket {
+        match ms {
+            x if x < 100.0 => Bucket::Lt100,
+            x if x < 250.0 => Bucket::Lt250,
+            x if x < 500.0 => Bucket::Lt500,
+            x if x < 1000.0 => Bucket::Lt1000,
+            x if x < 2000.0 => Bucket::Lt2000,
+            x if x < 5000.0 => Bucket::Lt5000,
+            _ => Bucket::Ge5000,
+        }
+    }
+    /// Whether this bucket belongs to `metric` (the pairing the schema can't express).
+    pub fn fits(self, metric: PerfMetric) -> bool {
+        let resolution = matches!(self, Bucket::Resolved | Bucket::Unavailable);
+        resolution == (metric == PerfMetric::AudioResolution)
+    }
+}
+
+wire_enum!(
     /// The study language when it broke. `Mine` is My Words (its contents are
     /// never sent, I4); `Other` is any code not listed here.
     Lang {
@@ -124,6 +162,23 @@ pub struct ErrorEvent {
     pub stack_hash: Hash64,
 }
 
+/// F5 — a standard player's histogram cell since the last send.
+#[derive(Debug, Clone, PartialEq, Serialize)]
+pub struct PerfRow {
+    pub metric: PerfMetric,
+    pub bucket: Bucket,
+    pub lang: Lang,
+    pub count: u32,
+}
+
+/// F5 + F6 — an aggregate device's histogram cell: no language.
+#[derive(Debug, Clone, PartialEq, Serialize)]
+pub struct AggPerfRow {
+    pub metric: PerfMetric,
+    pub bucket: Bucket,
+    pub count: u32,
+}
+
 /// POST /v1/events — a standard player's batch. `session_id` is random per
 /// launch and never reused (D4).
 #[derive(Debug, Clone, Serialize)]
@@ -133,6 +188,7 @@ pub struct EventBatch {
     pub platform: Platform,
     pub session_id: Hash64,
     pub events: Vec<ErrorEvent>,
+    pub perf: Vec<PerfRow>,
 }
 
 /// F6 — one aggregate row: how many times `error_code` happened since the last send.
@@ -150,6 +206,7 @@ pub struct AggBatch {
     pub build: BuildId,
     pub platform: Platform,
     pub rows: Vec<AggRow>,
+    pub perf: Vec<AggPerfRow>,
 }
 
 /// GET /v1/flags — the remote kill switch (I7, R4). The Worker's answer;
@@ -190,6 +247,8 @@ pub struct Record {
 pub const QUEUE_MAX_EVENTS: u32 = 200;
 pub const QUEUE_MAX_BYTES: usize = 128 * 1024;
 pub const AGG_MAX_COUNT: u64 = 1_000_000;
+/// Every (metric, bucket, lang) cell, so a full histogram always fits.
+pub const PERF_MAX_ROWS: u32 = (PerfMetric::ALL.len() * Bucket::ALL.len() * Lang::ALL.len()) as u32;
 
 const fn f(name: &'static str, ty: FieldType) -> Field { Field { name, ty } }
 
@@ -206,6 +265,18 @@ pub const RECORDS: &[Record] = &[
         f("platform", FieldType::Enum(Platform::ALL)),
         f("session_id", FieldType::Hash64),
         f("events", FieldType::List { of: "error_event", max: QUEUE_MAX_EVENTS }),
+        f("perf", FieldType::List { of: "perf_row", max: PERF_MAX_ROWS }),
+    ]},
+    Record { name: "perf_row", fields: &[
+        f("metric", FieldType::Enum(PerfMetric::ALL)),
+        f("bucket", FieldType::Enum(Bucket::ALL)),
+        f("lang", FieldType::Enum(Lang::ALL)),
+        f("count", FieldType::UInt { max: AGG_MAX_COUNT }),
+    ]},
+    Record { name: "agg_perf_row", fields: &[
+        f("metric", FieldType::Enum(PerfMetric::ALL)),
+        f("bucket", FieldType::Enum(Bucket::ALL)),
+        f("count", FieldType::UInt { max: AGG_MAX_COUNT }),
     ]},
     Record { name: "agg_row", fields: &[
         f("error_code", FieldType::Enum(ErrorCode::ALL)),
@@ -216,6 +287,7 @@ pub const RECORDS: &[Record] = &[
         f("build", FieldType::BuildId),
         f("platform", FieldType::Enum(Platform::ALL)),
         f("rows", FieldType::List { of: "agg_row", max: ErrorCode::ALL.len() as u32 }),
+        f("perf", FieldType::List { of: "agg_perf_row", max: (PerfMetric::ALL.len() * Bucket::ALL.len()) as u32 }),
     ]},
     Record { name: "flags", fields: &[
         f("telemetry_enabled", FieldType::Bool),
@@ -337,7 +409,7 @@ mod tests {
                     assert!(record(of).is_some(), "{}.{} lists unknown record {of}", r.name, fd.name);
                 }
                 if let FieldType::Enum(vals) = fd.ty {
-                    assert!(!vals.is_empty() && vals.iter().all(|v| v.len() <= 32 && v.bytes().all(|b| b.is_ascii_lowercase() || b == b'_')));
+                    assert!(!vals.is_empty() && vals.iter().all(|v| v.len() <= 32 && v.bytes().all(|b| b.is_ascii_lowercase() || b.is_ascii_digit() || b == b'_')));
                 }
             }
         }
@@ -348,12 +420,13 @@ mod tests {
     fn rust_types_match_schema() {
         let ev = sample_event();
         validate("error_event", &serde_json::to_value(&ev).unwrap()).unwrap();
-        let batch = EventBatch { v: SCHEMA_VERSION, build: BuildId::parse("0123456789ab"), platform: Platform::Ios, session_id: Hash64(7), events: vec![ev] };
+        let batch = EventBatch { v: SCHEMA_VERSION, build: BuildId::parse("0123456789ab"), platform: Platform::Ios, session_id: Hash64(7), events: vec![ev], perf: vec![PerfRow { metric: PerfMetric::TapToAudioMs, bucket: Bucket::Lt250, lang: Lang::Ko, count: 4 }] };
         validate("event_batch", &serde_json::to_value(&batch).unwrap()).unwrap();
-        let agg = AggBatch { v: SCHEMA_VERSION, build: BuildId::parse("DEV"), platform: Platform::Web, rows: vec![AggRow { error_code: ErrorCode::JsUncaught, count: 3 }] };
+        let agg = AggBatch { v: SCHEMA_VERSION, build: BuildId::parse("DEV"), platform: Platform::Web, rows: vec![AggRow { error_code: ErrorCode::JsUncaught, count: 3 }], perf: vec![AggPerfRow { metric: PerfMetric::AudioResolution, bucket: Bucket::Unavailable, count: 1 }] };
         let aj = serde_json::to_value(&agg).unwrap();
         validate("agg_batch", &aj).unwrap();
         assert!(aj.get("session_id").is_none(), "an aggregate carries no identifier (F6)");
+        assert!(!aj.to_string().contains("\"lang\""), "an aggregate carries no language (F6)");
         validate("flags", &serde_json::to_value(Flags { telemetry_enabled: false }).unwrap()).unwrap();
     }
 
@@ -368,6 +441,19 @@ mod tests {
         let mut v = serde_json::to_value(sample_event()).unwrap();
         v["stack_hash"] = serde_json::json!("at foo (app.js:1:2)");
         assert!(validate("error_event", &v).is_err());
+    }
+
+    #[test]
+    fn buckets_are_ranges_and_pair_with_their_metric() {
+        assert_eq!(Bucket::of_ms(0.0), Bucket::Lt100);
+        assert_eq!(Bucket::of_ms(99.9), Bucket::Lt100);
+        assert_eq!(Bucket::of_ms(100.0), Bucket::Lt250);
+        assert_eq!(Bucket::of_ms(4999.0), Bucket::Lt5000);
+        assert_eq!(Bucket::of_ms(60_000.0), Bucket::Ge5000);
+        assert!(Bucket::of_ms(300.0).fits(PerfMetric::TapToAudioMs));
+        assert!(!Bucket::of_ms(300.0).fits(PerfMetric::AudioResolution));
+        assert!(Bucket::Resolved.fits(PerfMetric::AudioResolution));
+        assert!(!Bucket::Unavailable.fits(PerfMetric::WasmInitMs));
     }
 
     #[test]

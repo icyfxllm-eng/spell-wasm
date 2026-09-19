@@ -263,6 +263,12 @@ pub fn start() -> Result<(), JsValue> {
     // CC-TELEMETRY-FOUNDATION v1.1: route, drain the pre-WASM error buffer,
     // fetch the kill switch. Best-effort; never blocks or fails the launch.
     telemetry::init(&app.borrow().lang);
+    // F5: page load to a ready app, bucketed.
+    telemetry::record_perf(
+        telemetry::schema::PerfMetric::WasmInitMs,
+        telemetry::schema::Bucket::of_ms(telemetry::now_ms()),
+        &app.borrow().lang,
+    );
     {
         let lang = app.borrow().lang.clone();
         if lang != MINE && !consts::is_active_lang(&lang) {

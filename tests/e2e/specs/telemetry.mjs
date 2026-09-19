@@ -55,24 +55,33 @@ async function until(fn, ms = 4000) {
 }
 
 export async function run(browser, base, suite) {
-  await suite.test('standard_player_sends_one_valid_event_batch_and_no_text', async () => {
+  await suite.test('standard_player_sends_valid_batches_with_perf_and_no_text', async () => {
     const ep = endpoint();
     const { ctx, page } = await openApp(browser, base, { lang: 'en', telemetry: ep.handler });
     try {
       assert(await until(async () => (await store(page, 'spell_flag_telemetry_enabled')) === 'on'), 'kill switch never cached');
+      // Serve a word so the audio resolver runs (F5 tap_to_audio / resolution).
+      await page.click('#orbWrap').catch(() => {});
+      await page.waitForTimeout(1500);
       await raise(page);
       await page.waitForTimeout(100);
       await hide(page);
-      assert(await until(() => ep.posts.length > 0), 'no batch sent');
-      assertEq(ep.posts.length, 1, 'batches');
-      const p = ep.posts[0];
-      assert(p.path.endsWith('/v1/events'), `posted to ${p.path}`);
-      const body = JSON.parse(p.text);
-      assertEq(validate('event_batch', body), null, 'schema');
-      assertEq(body.events.length, 1, 'events');
-      assertEq(body.events[0].error_code, 'js_uncaught', 'code');
-      assert(!/secret|kitten|boom|TypeError|http/.test(p.text), `payload leaked text: ${p.text}`);
-      assert(!('cookie' in p.headers), 'sent a cookie');
+      assert(await until(() => ep.posts.some((p) => JSON.parse(p.text).events.length > 0)), 'no error batch sent');
+      const bodies = ep.posts.map((p) => {
+        assert(p.path.endsWith('/v1/events'), `posted to ${p.path}`);
+        assert(!/secret|kitten|boom|TypeError|http/.test(p.text), `payload leaked text: ${p.text}`);
+        assert(!('cookie' in p.headers), 'sent a cookie');
+        const b = JSON.parse(p.text);
+        assertEq(validate('event_batch', b), null, 'schema');
+        return b;
+      });
+      const events = bodies.flatMap((b) => b.events);
+      assertEq(events.length, 1, 'events across batches');
+      assertEq(events[0].error_code, 'js_uncaught', 'code');
+      const perf = bodies.flatMap((b) => b.perf);
+      assert(perf.some((r) => r.metric === 'wasm_init_ms' && r.lang === 'en'), `no wasm_init_ms: ${JSON.stringify(perf)}`);
+      assert(perf.some((r) => r.metric === 'audio_resolution'), `no audio_resolution: ${JSON.stringify(perf)}`);
+      assertEq(new Set(bodies.map((b) => b.session_id)).size, 1, 'one session id per launch');
     } finally { await ctx.close(); }
   });
 
@@ -113,6 +122,7 @@ export async function run(browser, base, suite) {
         assertEq(validate('agg_batch', body), null, 'schema');
         assert(!/session_id|stack_hash|"lang"|"mode"/.test(p.text), `aggregate carried an identifier: ${p.text}`);
         assertEq(body.rows.find((r) => r.error_code === 'js_uncaught')?.count, 2, 'count');
+        assert(body.perf.some((r) => r.metric === 'wasm_init_ms'), 'no wasm_init_ms in the aggregate');
         const next = JSON.parse(await store(page, 'spell_tel_agg_v1')).due;
         assert(next >= Date.now() + 86_400_000 - 5000, 'next send less than a day away');
       } finally { await ctx.close(); }

@@ -26,6 +26,47 @@
           "list": "agg_row",
           "max": 5
         }
+      },
+      {
+        "name": "perf",
+        "type": {
+          "list": "agg_perf_row",
+          "max": 27
+        }
+      }
+    ],
+    "agg_perf_row": [
+      {
+        "name": "metric",
+        "type": {
+          "enum": [
+            "wasm_init_ms",
+            "tap_to_audio_ms",
+            "audio_resolution"
+          ]
+        }
+      },
+      {
+        "name": "bucket",
+        "type": {
+          "enum": [
+            "lt100",
+            "lt250",
+            "lt500",
+            "lt1000",
+            "lt2000",
+            "lt5000",
+            "ge5000",
+            "resolved",
+            "unavailable"
+          ]
+        }
+      },
+      {
+        "name": "count",
+        "type": {
+          "uint": 1000000
+        }
       }
     ],
     "agg_row": [
@@ -146,12 +187,78 @@
           "list": "error_event",
           "max": 200
         }
+      },
+      {
+        "name": "perf",
+        "type": {
+          "list": "perf_row",
+          "max": 486
+        }
       }
     ],
     "flags": [
       {
         "name": "telemetry_enabled",
         "type": "bool"
+      }
+    ],
+    "perf_row": [
+      {
+        "name": "metric",
+        "type": {
+          "enum": [
+            "wasm_init_ms",
+            "tap_to_audio_ms",
+            "audio_resolution"
+          ]
+        }
+      },
+      {
+        "name": "bucket",
+        "type": {
+          "enum": [
+            "lt100",
+            "lt250",
+            "lt500",
+            "lt1000",
+            "lt2000",
+            "lt5000",
+            "ge5000",
+            "resolved",
+            "unavailable"
+          ]
+        }
+      },
+      {
+        "name": "lang",
+        "type": {
+          "enum": [
+            "en",
+            "es",
+            "fr",
+            "de",
+            "pt",
+            "pl",
+            "vi",
+            "ko",
+            "ja",
+            "fil",
+            "ru",
+            "sw",
+            "ar",
+            "hi",
+            "fa",
+            "zh",
+            "mine",
+            "other"
+          ]
+        }
+      },
+      {
+        "name": "count",
+        "type": {
+          "uint": 1000000
+        }
       }
     ]
   },

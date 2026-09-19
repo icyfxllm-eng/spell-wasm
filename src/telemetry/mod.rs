@@ -37,6 +37,8 @@ use schema::*;
 
 const QUEUE_KEY: &str = "spell_tel_queue_v1";
 const AGG_KEY: &str = "spell_tel_agg_v1";
+/// F5 histogram cells for a standard player, "metric|bucket|lang" → count.
+const PERF_KEY: &str = "spell_tel_perf_v1";
 /// Written by index.html's pre-WASM error hook; drained into the route here.
 pub const JSBUF_KEY: &str = "spell_tel_jsbuf_v1";
 pub const JSBUF_MAX: usize = 20;
@@ -96,6 +98,9 @@ impl Queued {
 #[derive(Debug, Clone, Default, PartialEq, Serialize, Deserialize)]
 struct Agg {
     counts: BTreeMap<String, u32>,
+    /// F5 cells with no language: "metric|bucket" → count.
+    #[serde(default)]
+    perf: BTreeMap<String, u32>,
     /// Epoch ms before which no aggregate may be sent (F6: at most daily).
     due: f64,
 }
@@ -118,8 +123,56 @@ fn push_capped(q: &mut Vec<Queued>, item: Queued) {
 }
 
 fn bump(agg: &mut Agg, code: ErrorCode) {
-    let n = agg.counts.entry(code.as_str().to_string()).or_insert(0);
-    *n = n.saturating_add(1).min(AGG_MAX_COUNT as u32);
+    add(&mut agg.counts, code.as_str().to_string(), 1);
+}
+
+fn add(map: &mut BTreeMap<String, u32>, key: String, n: u32) {
+    let v = map.entry(key).or_insert(0);
+    *v = v.saturating_add(n).min(AGG_MAX_COUNT as u32);
+}
+
+fn perf_key(metric: PerfMetric, bucket: Bucket, lang: Option<Lang>) -> String {
+    match lang {
+        Some(l) => format!("{}|{}|{}", metric.as_str(), bucket.as_str(), l.as_str()),
+        None => format!("{}|{}", metric.as_str(), bucket.as_str()),
+    }
+}
+
+fn perf_rows(map: &BTreeMap<String, u32>) -> Vec<PerfRow> {
+    map.iter()
+        .filter_map(|(k, n)| {
+            let mut it = k.split('|');
+            let (m, b, l) = (it.next()?, it.next()?, it.next()?);
+            Some(PerfRow { metric: PerfMetric::from_wire(m)?, bucket: Bucket::from_wire(b)?, lang: Lang::from_wire(l)?, count: *n })
+        })
+        .collect()
+}
+
+fn agg_perf_rows(map: &BTreeMap<String, u32>) -> Vec<AggPerfRow> {
+    map.iter()
+        .filter_map(|(k, n)| {
+            let (m, b) = k.split_once('|')?;
+            Some(AggPerfRow { metric: PerfMetric::from_wire(m)?, bucket: Bucket::from_wire(b)?, count: *n })
+        })
+        .collect()
+}
+
+/// Demote a standard player's cells to aggregate ones: the language is dropped.
+fn fold_perf(into: &mut Agg, cells: &BTreeMap<String, u32>) {
+    for r in perf_rows(cells) {
+        add(&mut into.perf, perf_key(r.metric, r.bucket, None), r.count);
+    }
+}
+
+/// Subtract what was sent from what is stored now (anything recorded while
+/// the POST was in flight survives).
+fn subtract(now: &mut BTreeMap<String, u32>, sent: &BTreeMap<String, u32>) {
+    for (k, n) in sent {
+        if let Some(v) = now.get_mut(k) {
+            *v = v.saturating_sub(*n);
+        }
+    }
+    now.retain(|_, v| *v > 0);
 }
 
 /// Next permitted aggregate send: a random moment 24–48 h after `now`, so two
@@ -189,7 +242,7 @@ fn route_now() -> Route {
 }
 
 fn clear_all() {
-    for k in [QUEUE_KEY, AGG_KEY, JSBUF_KEY] {
+    for k in [QUEUE_KEY, AGG_KEY, PERF_KEY, JSBUF_KEY] {
         storage::remove(k);
     }
 }
@@ -222,6 +275,39 @@ fn record(code: ErrorCode, lang: Lang, stack_hash: Hash64) {
             storage::set_json(AGG_KEY, &a);
         }
     }
+}
+
+/// F5 — count one measurement in its histogram cell. A bucket that doesn't
+/// belong to the metric is dropped rather than sent.
+pub fn record_perf(metric: PerfMetric, bucket: Bucket, lang_code: &str) {
+    if !bucket.fits(metric) {
+        return;
+    }
+    let lang = if lang_code == consts::MINE { Lang::Mine } else { Lang::from_wire(lang_code).unwrap_or(Lang::Other) };
+    match route_now() {
+        Route::Off => {}
+        Route::Events | Route::Hold => {
+            let mut m: BTreeMap<String, u32> = storage::get_json(PERF_KEY).unwrap_or_default();
+            add(&mut m, perf_key(metric, bucket, Some(lang)), 1);
+            storage::set_json(PERF_KEY, &m);
+        }
+        Route::Aggregate => {
+            let mut a: Agg = storage::get_json(AGG_KEY).unwrap_or_default();
+            add(&mut a.perf, perf_key(metric, bucket, None), 1);
+            storage::set_json(AGG_KEY, &a);
+        }
+    }
+}
+
+/// Milliseconds since the page started loading (`performance.now()`).
+pub fn now_ms() -> f64 {
+    web_sys::window()
+        .and_then(|w| js_sys::Reflect::get(&w, &JsValue::from_str("performance")).ok())
+        .and_then(|p| {
+            let f: js_sys::Function = js_sys::Reflect::get(&p, &JsValue::from_str("now")).ok()?.dyn_into().ok()?;
+            f.call0(&p).ok()?.as_f64()
+        })
+        .unwrap_or(0.0)
 }
 
 /// The panic hook: console output as before, then one `wasm_panic` keyed by
@@ -315,11 +401,19 @@ async fn flush_inner() {
         Route::Hold => {}
         Route::Events => {
             let q: Vec<Queued> = storage::get_json(QUEUE_KEY).unwrap_or_default();
-            if q.is_empty() {
+            let cells: BTreeMap<String, u32> = storage::get_json(PERF_KEY).unwrap_or_default();
+            if q.is_empty() && cells.is_empty() {
                 return;
             }
             let events: Vec<ErrorEvent> = q.iter().filter_map(Queued::to_event).collect();
-            let batch = EventBatch { v: SCHEMA_VERSION, build: build(), platform: platform(), session_id: Hash64(SESSION.with(Cell::get)), events };
+            let batch = EventBatch {
+                v: SCHEMA_VERSION,
+                build: build(),
+                platform: platform(),
+                session_id: Hash64(SESSION.with(Cell::get)),
+                events,
+                perf: perf_rows(&cells),
+            };
             let Ok(body) = serde_json::to_string(&batch) else { return };
             if post(&format!("{}/v1/events", base()), body).await {
                 // Keep anything recorded while the POST was in flight.
@@ -327,6 +421,9 @@ async fn flush_inner() {
                 let sent = q.len().min(now.len());
                 now.drain(..sent);
                 storage::set_json(QUEUE_KEY, &now);
+                let mut now_cells: BTreeMap<String, u32> = storage::get_json(PERF_KEY).unwrap_or_default();
+                subtract(&mut now_cells, &cells);
+                storage::set_json(PERF_KEY, &now_cells);
             }
         }
         Route::Aggregate => {
@@ -340,12 +437,17 @@ async fn flush_inner() {
                 }
                 storage::remove(QUEUE_KEY);
             }
+            let cells: BTreeMap<String, u32> = storage::get_json(PERF_KEY).unwrap_or_default();
+            if !cells.is_empty() {
+                fold_perf(&mut a, &cells);
+                storage::remove(PERF_KEY);
+            }
             let now = js_sys::Date::now();
             if a.due == 0.0 {
                 a.due = now + js_sys::Math::random() * DAY_MS;
             }
             storage::set_json(AGG_KEY, &a);
-            if a.counts.is_empty() || now < a.due {
+            if (a.counts.is_empty() && a.perf.is_empty()) || now < a.due {
                 return;
             }
             let rows: Vec<AggRow> = a
@@ -353,16 +455,12 @@ async fn flush_inner() {
                 .iter()
                 .filter_map(|(c, n)| Some(AggRow { error_code: ErrorCode::from_wire(c)?, count: *n }))
                 .collect();
-            let batch = AggBatch { v: SCHEMA_VERSION, build: build(), platform: platform(), rows };
+            let batch = AggBatch { v: SCHEMA_VERSION, build: build(), platform: platform(), rows, perf: agg_perf_rows(&a.perf) };
             let Ok(body) = serde_json::to_string(&batch) else { return };
             if post(&format!("{}/v1/aggregate", base()), body).await {
                 let mut latest: Agg = storage::get_json(AGG_KEY).unwrap_or_default();
-                for (c, n) in &a.counts {
-                    if let Some(v) = latest.counts.get_mut(c) {
-                        *v = v.saturating_sub(*n);
-                    }
-                }
-                latest.counts.retain(|_, v| *v > 0);
+                subtract(&mut latest.counts, &a.counts);
+                subtract(&mut latest.perf, &a.perf);
                 latest.due = next_due(now, js_sys::Math::random());
                 storage::set_json(AGG_KEY, &latest);
             }
@@ -476,6 +574,38 @@ mod tests {
         assert_eq!(next_due(now, 0.0), now + DAY_MS);
         assert_eq!(next_due(now, 1.0), now + 2.0 * DAY_MS);
         assert!(next_due(now, 0.37) > now + DAY_MS);
+    }
+
+    #[test]
+    fn perf_cells_round_trip_and_demote_without_lang() {
+        let mut cells = BTreeMap::new();
+        add(&mut cells, perf_key(PerfMetric::TapToAudioMs, Bucket::Lt250, Some(Lang::Ru)), 2);
+        add(&mut cells, perf_key(PerfMetric::TapToAudioMs, Bucket::Lt250, Some(Lang::En)), 3);
+        add(&mut cells, perf_key(PerfMetric::AudioResolution, Bucket::Unavailable, Some(Lang::Zh)), 1);
+        assert_eq!(perf_rows(&cells).len(), 3);
+        let mut a = Agg::default();
+        fold_perf(&mut a, &cells);
+        // ru + en collapse into one language-free cell.
+        assert_eq!(a.perf.get("tap_to_audio_ms|lt250"), Some(&5));
+        assert_eq!(a.perf.get("audio_resolution|unavailable"), Some(&1));
+        assert!(a.perf.keys().all(|k| k.split('|').count() == 2));
+        let rows = agg_perf_rows(&a.perf);
+        assert_eq!(rows.len(), 2);
+    }
+
+    #[test]
+    fn subtract_keeps_what_arrived_in_flight() {
+        let mut sent = BTreeMap::new();
+        add(&mut sent, "a".into(), 2);
+        let mut now = BTreeMap::new();
+        add(&mut now, "a".into(), 5);
+        add(&mut now, "b".into(), 1);
+        subtract(&mut now, &sent);
+        assert_eq!(now.get("a"), Some(&3));
+        assert_eq!(now.get("b"), Some(&1));
+        let all = now.clone();
+        subtract(&mut now, &all);
+        assert!(now.is_empty());
     }
 
     #[test]

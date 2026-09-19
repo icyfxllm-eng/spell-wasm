@@ -137,7 +137,20 @@ async function storeEvents(env, batch, day) {
       ).bind(day, batch.build, batch.platform, e.error_code, e.lang),
     );
   }
+  stmts.push(...perfStmts(env, batch, day, "events"));
   if (stmts.length) await env.DB.batch(stmts);
+}
+
+// F5 histogram cells. Aggregate rows have no lang; they are stored as ''.
+function perfStmts(env, batch, day, source) {
+  return batch.perf
+    .filter((p) => p.count > 0)
+    .map((p) =>
+      env.DB.prepare(
+        "INSERT INTO perf_counts (day, build, platform, source, metric, bucket, lang, n) VALUES (?, ?, ?, ?, ?, ?, ?, ?) " +
+          "ON CONFLICT (day, build, platform, source, metric, bucket, lang) DO UPDATE SET n = n + excluded.n",
+      ).bind(day, batch.build, batch.platform, source, p.metric, p.bucket, p.lang ?? "", p.count),
+    );
 }
 
 async function storeAggregate(env, batch, day) {
@@ -149,6 +162,7 @@ async function storeAggregate(env, batch, day) {
           "ON CONFLICT (day, build, platform, source, error_code, lang) DO UPDATE SET n = n + excluded.n",
       ).bind(day, batch.build, batch.platform, r.error_code, r.count),
     );
+  stmts.push(...perfStmts(env, batch, day, "aggregate"));
   if (stmts.length) await env.DB.batch(stmts);
 }
 
