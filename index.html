@@ -1837,7 +1837,9 @@
 
   <section class="card stats">
     <h2><span data-i18n="card.accuracy">Your accuracy</span> <span class="scope" id="statsLang"></span></h2>
-    <div id="statsBody"><div class="stats-empty">Spell a few words to start tracking your accuracy by difficulty.</div>
+    <div id="statsBody"><div class="stats-empty">Spell a few words to start tracking your accuracy by difficulty.</div></div>
+    <!-- statsGuardian and gdash sit OUTSIDE statsBody: stats::render rewrites
+         statsBody's innerHTML, which deleted both from 64ad436a (ship 120) on. -->
     <div id="statsGuardian" class="btn-hide"></div>
     <!-- BD-3 guardian dash: parent-gated, app-only, view-only. -->
     <div id="gdash">
@@ -1849,7 +1851,7 @@
         <small id="gdashErr"></small>
       </div>
       <div id="gdashBody" class="btn-hide"></div>
-    </div></div>
+    </div>
     <div class="stats-foot"><span class="total" id="statsTotal"></span><button class="ghost danger" id="resetStats" data-i18n="card.resetLang">reset this language</button></div>
   </section>
 
