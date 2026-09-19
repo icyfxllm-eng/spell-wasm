@@ -121,6 +121,14 @@ pub fn telemetry_default_on() -> bool {
     EDITION == Edition::Consumer
 }
 
+/// Whether telemetry may ever leave as individual events (CC-TELEMETRY-FOUNDATION).
+///
+/// False in education: a school's binary sends aggregates only, whatever the
+/// player's audience. The telemetry router reads this instead of the edition.
+pub fn telemetry_events_available() -> bool {
+    EDITION == Edition::Consumer
+}
+
 /// Whether the app can render, input, and mirror right-to-left scripts.
 ///
 /// CC-LINEUP-SWAP D2: this is the ONLY switch that can ever un-gate an
