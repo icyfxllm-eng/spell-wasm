@@ -2,7 +2,7 @@
 
 [stashed verbatim from Eric 2026-09-18. §0 census: docs/census/learning_l0_census.md]
 
-**Status:** REVIEW-GATED. Phase 0 census DONE (`docs/census/learning_l0_census.md`). **Census rulings C1–C9 SIGNED as drafted (Eric, 2026-09-19)**; where this file and a ruling differ, the ruling governs. L0 is a retrofit over the shipped engine (C1). Phases 1–4 still wait on the open decisions below (D3–D8).
+**Status:** REVIEW-GATED. Phase 0 census DONE (`docs/census/learning_l0_census.md`). **Census rulings C1–C9 SIGNED as drafted (Eric, 2026-09-19)**; where this file and a ruling differ, the ruling governs. L0 is a retrofit over the shipped engine (C1). **Phase 1 UNBLOCKED (Eric, 2026-09-19): "Phase 1 may start; D3–D8 gate only the phases they name."** D3/D4 gate Phase 2, D5/D6 gate Phase 3, D8 gates CC-REPORTS' surface; D7 (deadline) gates no code.
 **Relationship to CC-LEARNING-ENGINE:** this file **supersedes its scope**, not its decisions. The signed decisions there (D1 BKT+FSRS chosen over IRT/DKT, D5 all on-device zero telemetry, D7 learner state may touch word choice and feedback text only) carry forward unchanged. Everything in the original file that is not listed under **In scope** below moves to a named successor file (see Successors) and is explicitly **out of L0's scope**.
 **Blast radius:** one new read-only interface + one scheduler + a dev-only inspector. No gameplay, scoring, layout, or bank changes.
 

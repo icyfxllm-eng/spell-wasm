@@ -256,6 +256,8 @@ first". Implemented in PR 7:
 
 It must reach players before schema v2 does.
 
+**Phase 1 unblocked (Eric, 2026-09-19):** "Phase 1 may start; D3–D8 gate only the phases they name."
+
 **Also recorded (2026-09-18/19, Eric):**
 - Stored FSRS difficulty resets to 5.1618 for existing players: schema v2,
   PR 6, held behind C10.
