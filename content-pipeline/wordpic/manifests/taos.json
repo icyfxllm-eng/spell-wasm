@@ -68,7 +68,7 @@
     "ja": {
      "words": 3,
      "band": 0,
-     "band_size": 720
+     "band_size": 719
     },
     "ko": {
      "words": 3,
@@ -154,7 +154,7 @@
     "ja": {
      "words": 4,
      "band": 1,
-     "band_size": 130
+     "band_size": 128
     },
     "ko": {
      "words": 4,
@@ -239,7 +239,7 @@
     "ja": {
      "words": 3,
      "band": 2,
-     "band_size": 127
+     "band_size": 34
     },
     "ko": {
      "words": 3,

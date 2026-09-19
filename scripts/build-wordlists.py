@@ -328,6 +328,20 @@ def render(banks) -> str:
     return "\n".join(lines) + "\n"
 
 
+WORDPIC_POOLS = ROOT / "content-pipeline" / "wordpic" / "pools"
+
+
+def ja_pool_problems(pool_dir: Path = WORDPIC_POOLS):
+    """The Spell Picture pools are a separate snapshot of the bank (they size
+    each picture's word bands), and they carried the same segmenter fragments."""
+    problems = []
+    for f in sorted(pool_dir.glob("ja-*.json")):
+        for w in json.loads(f.read_text(encoding="utf-8")):
+            if ja_starts_with_small_kana(w):
+                problems.append(f"{f.name}: {w!r} — starts with a small kana (segmenter fragment, not a word)")
+    return problems
+
+
 def selftest():
     """Prove the small-kana gate bites, through the real gather() path.
 
@@ -357,6 +371,11 @@ def selftest():
         hard = words / "ja" / "hard.txt"
         hard.write_text(hard.read_text(encoding="utf-8") + "\n".join(planted) + "\n", encoding="utf-8")
         banks, problems, _ = gather(words)
+        pools = Path(tmp) / "pools"
+        shutil.copytree(WORDPIC_POOLS, pools)
+        pool = pools / "ja-expert.json"
+        pool.write_text(json.dumps(json.loads(pool.read_text(encoding="utf-8")) + planted, ensure_ascii=False), encoding="utf-8")
+        pool_flagged = ja_pool_problems(pools)
     flagged = [p for p in problems if "small kana" in p]
     for w in planted:
         if not any(repr(w) in p for p in flagged):
@@ -365,13 +384,17 @@ def selftest():
             fails.append(f"planted fragment {w!r} reached the bank")
     if len(flagged) != len(planted):
         fails.append(f"expected {len(planted)} small-kana violation(s), got {len(flagged)}: {flagged}")
+    if ja_pool_problems():
+        fails.append("live Spell Picture ja pools are not clean; fixture needs a clean base")
+    if len(pool_flagged) != len(planted):
+        fails.append(f"pool check: expected {len(planted)} violation(s), got {len(pool_flagged)}: {pool_flagged}")
 
     if fails:
         print("build-wordlists selftest: FAIL", file=sys.stderr)
         for f in fails:
             print("  " + f, file=sys.stderr)
         sys.exit(1)
-    print(f"build-wordlists selftest: OK — small-kana gate rejected {len(planted)} planted fragment(s), passed real words.")
+    print(f"build-wordlists selftest: OK — small-kana gate rejected {len(planted)} planted fragment(s) in the bank and the picture pools, passed real words.")
 
 
 def main():
@@ -381,6 +404,12 @@ def main():
     check_only = "--check" in sys.argv
     banks = build()
     if banks is None:
+        sys.exit(1)
+    pool_problems = ja_pool_problems()
+    if pool_problems:
+        print(f"build-wordlists: {len(pool_problems)} Spell Picture pool violation(s):", file=sys.stderr)
+        for p in pool_problems:
+            print("  " + p, file=sys.stderr)
         sys.exit(1)
     id_problems = check_id_collisions(banks)
     if id_problems:
