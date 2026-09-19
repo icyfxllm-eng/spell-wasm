@@ -74,6 +74,29 @@ fn main() {
     let staged_modes = if web { strip_app_only_modes(&modes) } else { modes };
     fs::write(Path::new(&env::var("OUT_DIR").unwrap()).join("modes.json"), staged_modes).unwrap();
 
+    // CC-HUMAN-AUDIO e2e fixture. The testseam build compiles in a manifest
+    // that maps every English bank word to one test clip, so the browser suite
+    // can exercise the human provider for whatever word it is served. It is
+    // inert until a spec arms it (human_audio.rs), and a production build never
+    // sees it: it only exists under --features testseam.
+    if env::var("CARGO_FEATURE_TESTSEAM").is_ok() {
+        println!("cargo:rerun-if-changed=assets/words/en");
+        let mut words: Vec<String> = Vec::new();
+        for tier in ["easy", "medium", "hard", "expert"] {
+            let p = format!("assets/words/en/{tier}.txt");
+            if let Ok(txt) = fs::read_to_string(&p) {
+                words.extend(txt.lines().map(str::trim).filter(|w| !w.is_empty() && !w.starts_with('#')).map(String::from));
+            }
+        }
+        let clips: String = words
+            .iter()
+            .map(|w| format!("{}:\"fixture.m4a\"", serde_json_string(w)))
+            .collect::<Vec<_>>()
+            .join(",");
+        let json = format!("{{\"version\":1,\"langs\":{{\"en\":{{\"base\":\"human-audio/en/\",\"clips\":{{{clips}}}}}}}}}");
+        fs::write(Path::new(&env::var("OUT_DIR").unwrap()).join("human-audio-fixture.json"), json).unwrap();
+    }
+
     if web {
         println!("cargo:warning=site build: dropped {dropped} Spell Picture locale strings");
     }
@@ -127,4 +150,19 @@ fn strip_app_only_modes(src: &str) -> String {
         })
         .collect();
     format!("{}\n    {}\n  {}", &src[..=arr], kept.join(",\n    "), &src[arr_end..])
+}
+
+/// Minimal JSON string quoting for the fixture (build scripts avoid a serde dep).
+fn serde_json_string(s: &str) -> String {
+    let mut out = String::from("\"");
+    for c in s.chars() {
+        match c {
+            '"' => out.push_str("\\\""),
+            '\\' => out.push_str("\\\\"),
+            c if (c as u32) < 0x20 => out.push_str(&format!("\\u{:04x}", c as u32)),
+            c => out.push(c),
+        }
+    }
+    out.push('"');
+    out
 }

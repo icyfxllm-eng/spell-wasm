@@ -58,6 +58,15 @@ cp -r icons "$DIST/icons"
 # instead of Google Fonts / jsdelivr, and sw.js precaches them. Must be copied
 # into dist/ or the app falls back to system fonts offline.
 cp -r fonts "$DIST/fonts"
+# CC-HUMAN-AUDIO D13: verified human clips ship with the app and the site at
+# human-audio/<lang>/<sha256>.m4a. Only the .m4a files: verdicts, provenance and
+# the runtime manifest are build inputs (runtime.json is compiled into the wasm).
+for d in assets/human-audio/*/; do
+  lang=$(basename "$d")
+  ls "$d"*.m4a >/dev/null 2>&1 || continue
+  mkdir -p "$DIST/human-audio/$lang"
+  cp "$d"*.m4a "$DIST/human-audio/$lang/"
+done
 cp -r pkg "$DIST/pkg"
 
 # Precompress the ~2.3MB wasm (FIX 2) so Caddy's `precompressed br gzip` can

@@ -48,6 +48,19 @@ fi
 cp audio-native.js native-language-kit.js telemetry-schema.js manifest.json sw.js "$DIST/"
 cp -r icons "$DIST/icons"
 cp -r fonts "$DIST/fonts"
+# CC-HUMAN-AUDIO D13: verified human clips ship with the app and the site at
+# human-audio/<lang>/<sha256>.m4a. Only the .m4a files: verdicts, provenance and
+# the runtime manifest are build inputs (runtime.json is compiled into the wasm).
+for d in assets/human-audio/*/; do
+  lang=$(basename "$d")
+  ls "$d"*.m4a >/dev/null 2>&1 || continue
+  mkdir -p "$DIST/human-audio/$lang"
+  cp "$d"*.m4a "$DIST/human-audio/$lang/"
+done
 cp -r pkg-test "$DIST/pkg"
+# CC-HUMAN-AUDIO e2e: the one clip the testseam fixture manifest points every
+# English word at (build.rs). Inert unless a spec arms it.
+mkdir -p "$DIST/human-audio/en"
+cp tests/fixtures/human-audio/fixture.m4a "$DIST/human-audio/en/fixture.m4a"
 
 echo "==> dist-test/ ready (has __spelltest seam)"

@@ -38,6 +38,15 @@
       "harness": "web"
     },
     {
+      "key": "realVoicesToggle",
+      "surface": "settings",
+      "state": "real_voices_off (inverted)",
+      "effect": "off: no word resolves to the 'human' provider, the router starts at the pack/server clip; on: a word with a verified bundled clip plays it (CC-HUMAN-AUDIO F6)",
+      "test": "settings_effect_real_voices",
+      "suppressed_by": null,
+      "harness": "web"
+    },
+    {
       "key": "extraAttemptsToggle",
       "surface": "settings",
       "state": "extra_attempts",
