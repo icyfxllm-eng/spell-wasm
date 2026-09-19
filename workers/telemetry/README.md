@@ -30,7 +30,15 @@ never reads or stores an IP. Check the zone as well:
    every spellgame.net request through the tunnel today. **This is Eric's call
    under the stop-and-ask rule.**
 
-## First deploy (Eric)
+## Deployed 2026-09-18
+
+- Account "Icyfxllm@gmail.com's Account"; D1 `spell-telemetry` (`88eeaf34-…`, ENAM), migrations 0001 and 0002 applied.
+- Route `spellgame.net/telemetry/*` only. `workers_dev = false`, `preview_urls = false`.
+- **Kill switch OFF** (`TELEMETRY_ENABLED = "false"` in wrangler.toml) until the privacy policy is live. To turn it on, set it to `"true"` in wrangler.toml and `npx wrangler deploy`, so the file stays the record.
+- IP rule: Eric accepted Cloudflare's standing Security Analytics sampling (it can't be switched off per path).
+- **Open: the daily purge cron is NOT registered.** Cloudflare refuses cron triggers (code 10063) until the account has a workers.dev subdomain, which is created the first time the Workers page is opened in the dashboard. After that, run `npx wrangler deploy` again. Nothing is stored while the kill switch is off, so nothing ages past 90 days meanwhile.
+
+## First deploy (reference)
 
 ```bash
 cd workers/telemetry

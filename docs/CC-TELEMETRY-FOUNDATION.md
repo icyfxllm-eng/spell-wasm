@@ -1,6 +1,6 @@
 # CC-TELEMETRY-FOUNDATION v1.1
 
-**Status:** Phases A, B and C BUILT on branch `cc-telemetry` (2026-09-18). Not deployed: the Worker needs Eric's first deploy (`workers/telemetry/README.md`) and the R8 server change needs `deploy.sh`. Nothing ships to players before the F7 disclosures are signed.
+**Status:** Phases A, B and C BUILT and merged to `main` (2026-09-18). The **Worker is DEPLOYED with the kill switch OFF** (`TELEMETRY_ENABLED=false`, 2026-09-18): `spellgame.net/telemetry/v1/flags` answers false, so clients send nothing and clear their queues. It gets turned on once the privacy policy (R7 + the F7 draft) is live. Still to do: the R8 server change needs `deploy.sh`, and the daily purge cron needs a workers.dev subdomain (see the Worker README).
 **Supersedes v1.** v1.1 covers **crash reporting (F1) and performance (F5) only**, per Eric's D-TEL sign-off (2026-09-18, "add with the recommendations").
 **Blast radius:** one new network endpoint plus error and performance hooks. Zero gameplay behavior change. Must not delay the next TestFlight build (R10b: the v1.1 draft said "build 56"; TestFlight was at build 226).
 
@@ -121,6 +121,7 @@ If any boundary no longer holds: **stop and ask.**
 | R9 | Annotate D5 / S1 instead of superseding them | Signed, recorded |
 | R10 | Correct the Pi, "build 56" and dead-cite facts | Signed, applied above |
 | R11 | Record D5 as signed | Signed, recorded |
+| IP | Cloudflare's own Security Analytics samples client IPs for all proxied spellgame.net traffic and can't be turned off per path | **Accepted (Eric, 2026-09-18)** as the host's standing security logs. The Worker itself reads and stores no IP, and has no workers.dev or preview URL. The privacy draft must say the provider may keep short security logs. |
 
 ## Phases
 
