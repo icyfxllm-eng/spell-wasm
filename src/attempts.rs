@@ -38,6 +38,10 @@ pub struct RunAids {
     /// attempt or a shield). Enforces "at most one retry per word" (I4 / PD5 no
     /// chaining). Cleared when a new word starts.
     pub retry_used: bool,
+    /// True once the player replayed the current word's audio (orb, replay or
+    /// slow button). A correct first submission after a replay grades Hard,
+    /// not Good (CC-LEARNING-ENGINE-L0 D3). Cleared when a new word starts.
+    pub replayed: bool,
 }
 
 // ---------- run / word lifecycle ----------
@@ -52,6 +56,7 @@ pub fn reset_run(state: &mut AppState) {
 /// held shields are untouched (they span the whole run).
 pub fn start_word(state: &mut AppState) {
     state.aids.retry_used = false;
+    state.aids.replayed = false;
 }
 
 // ---------- Feature 1: extra attempts (normal mode) ----------

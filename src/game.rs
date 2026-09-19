@@ -1251,6 +1251,15 @@ thread_local! {
     static KEY_TIMES: std::cell::RefCell<Vec<f64>> = const { std::cell::RefCell::new(Vec::new()) };
 }
 
+/// The player asked to hear the current word again (orb, replay, slow).
+/// Grades a correct first submission Hard rather than Good (L0 D3).
+pub fn note_replay(app: &App) {
+    let mut s = app.borrow_mut();
+    if has_active_word(&s) && !s.answered {
+        s.aids.replayed = true;
+    }
+}
+
 pub fn note_key_time() {
     KEY_TIMES.with(|k| k.borrow_mut().push(js_sys::Date::now()));
 }
@@ -1833,9 +1842,13 @@ fn on_correct(app: &App) {
             crate::translate::passport_stamp(&cur_lang, &word);
             selection::note_outcome(&cur_lang, &word, true);
         }
-        let cleared = misses::promote_miss(&mut app.borrow_mut(), &word, &cur_lang);
-        // F3: the drill spaces on the same Leitner ladder.
-        crate::tone_drill::promote(&mut app.borrow_mut(), &word, &cur_lang);
+        // L0 D3: a clean first submission is Good; one after replaying the
+        // audio is Hard. (A retry-rescued word never reaches here: it stays a
+        // miss, CC-ATTEMPTS-SHIELDS I2.)
+        let grade = if app.borrow().aids.replayed { crate::review::Grade::Hard } else { crate::review::Grade::Good };
+        let cleared = misses::promote_miss(&mut app.borrow_mut(), &word, &cur_lang, grade);
+        // F3 / C2: the drill schedules through the same one rule.
+        crate::tone_drill::promote(&mut app.borrow_mut(), &word, &cur_lang, grade);
         refresh_mode_buttons(app);
         if cleared {
             achievements::unlock(&mut app.borrow_mut(), "cleared");

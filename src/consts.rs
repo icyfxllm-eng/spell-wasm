@@ -396,9 +396,6 @@ pub const CORRECT_DELAY_MS: i32 = 2200;
 /// matcher.
 pub const ZH_TONE_MISS_CREDIT: f64 = 0.5;
 
-pub const SR_MAXBOX: u32 = 5;
-// ms intervals per box, index = box number (box 0 unused)
-pub const SR_INT: [i64; 6] = [0, 0, 10 * 60 * 1000, 24 * 3600 * 1000, 3 * 24 * 3600 * 1000, 7 * 24 * 3600 * 1000];
 
 pub const PRAISE: [&str; 8] = [
     "Clean.", "Locked in.", "On a roll.", "Nice ear.", "Spot on.", "Sharp.", "Chain grows.", "Perfect.",

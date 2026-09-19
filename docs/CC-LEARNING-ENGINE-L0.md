@@ -111,6 +111,16 @@ Produce `learning_l0_census.md`:
 
 ---
 
+### R2 as built (2026-09-19)
+
+- **One rule, `src/review.rs`** (I5). The misses queue and the zh tone drill both schedule through it (C2). The Leitner constants (`SR_INT`, `SR_MAXBOX`) are deleted, and a scan in `cargo test` fails on a due time computed anywhere else, with a planted-violation self-test.
+- **Same-day learning steps kept.** A miss is due now, then 10 minutes after a correct answer (the old boxes 1-2), so a missed word is still reviewable the same day. Same-day answers don't touch the FSRS state (FSRS-4.5 models whole days).
+- **Then FSRS-4.5** at whole-day granularity, graded per D3, through `learner::fsrs_review_graded`, the crate's one FSRS (C3). A miss on a learned word is a lapse back to learning.
+- **Graduation:** a success whose next interval is over 7 days (the old ladder's top rung) leaves the queue, firing redemption and the journal's "mastered" as before. With the defaults that's about 5 successes over about 9 days (boxes: 5 over about 11).
+- **Carry-over (signed 2026-09-19):** entries stored by a pre-R2 build keep their due time. Boxes 1-2 become the learning steps, and boxes 3, 4 and 5 become FSRS stability 1, 3 and 7 days, with difficulty D0(Again).
+- **Identity-keyed** (I4) on the existing `word_id0` key: за́мок and замо́к, and рука and ру́ку, are independent cards (unit test).
+- **Not yet:** acceptance 3's vendored FSRS-4.5 reference vectors. The formulas are checked against their published form in-test, and per-word scheduling is checked end to end in `review-queue.mjs`.
+
 ## Invariants
 
 - **I1 — On-device only.** No learner data leaves the device, ever (CC-LEARNING-ENGINE D5). Not to telemetry, not to the Pi, not to reports.
@@ -130,8 +140,8 @@ Produce `learning_l0_census.md`:
 |---|---|---|
 | D1 | Split CC-LEARNING-ENGINE into L0 + five named successors | **Signed** (Eric, 2026-09-18, option 1) |
 | D2 | Defer BKT; ship FSRS alone in L0 | **WITHDRAWN by C1 (2026-09-19).** BKT already ships and feeds Reports, Guardian Dash and Trap Boss; it stays as shipped, and CC-LEARNING-SKILL checks that shipped BKT is correct rather than building it. |
-| D3 | Outcome → FSRS rating mapping. Rec: correct first try = Good; correct after replay or extra attempt = Hard; miss = Again; no Easy rating in v1 (avoids over-long intervals for kids) | **OPEN** |
-| D4 | FSRS parameter optimization from player history | **OPEN** — rec: out of scope for L0, defaults only |
+| D3 | Outcome → FSRS rating mapping | **SIGNED (Eric, 2026-09-19)**: correct on the first submission = Good; correct on the first submission after replaying the audio (orb, replay or slow) = Hard; miss = Again. No Easy. **A word rescued by the retry stays a miss (Again)**, keeping CC-ATTEMPTS-SHIELDS I2 ("the first submission alone decides"). Skills keep pass/fail: an attempt exercises several skills, and a replay is evidence about the word. |
+| D4 | FSRS parameter optimization from player history | **SIGNED (Eric, 2026-09-19)**: published FSRS-4.5 defaults only; no per-player fitting in L0. |
 | D5 | Simulator tolerances (how close is close enough) | **OPEN** — rec: report-only in Phase 3, frozen after Eric reads the first report (v7.5 trust pattern) |
 | D6 | SBIR/STARTALK wording of the simulator claim | **OPEN** — must state the synthetic-player limitation |
 | D7 | Deadline: bind L0 to an SBIR FY2027 or STARTALK milestone | **OPEN** — without a date it loses every scheduling contest |
@@ -143,7 +153,7 @@ Produce `learning_l0_census.md`:
 
 - **Phase 0:** §0 census → stop-and-report.
 - **Phase 1:** R1 contract + fake + consumer migration + symbol scan. **Ships alone**; no engine required.
-- **Phase 2:** R2 FSRS behind the contract; old rule deleted.
+- **Phase 2:** R2 FSRS behind the contract; old rule deleted. *(Built 2026-09-19, see "R2 as built" below.)*
 - **Phase 3:** R3 simulator; first report to Eric; tolerances frozen after he reads it.
 - **Phase 4:** R4 inspector; Eric's device pass closes L0.
 

@@ -1,4 +1,3 @@
-use crate::consts::{SR_INT, SR_MAXBOX};
 use crate::model::{AppState, MissEntry, MISS_CAP, MISS_KEY};
 use crate::storage;
 
@@ -16,6 +15,15 @@ pub fn miss_key(word: &str, lang: &str) -> String {
 
 pub fn load(state: &mut AppState) {
     state.misses = storage::get_json::<Vec<MissEntry>>(MISS_KEY).unwrap_or_default();
+    carry_over_all(&mut state.misses);
+}
+
+/// L0 R2 carry-over: an entry stored by a pre-R2 build gets a `review`
+/// schedule from its Leitner box, keeping its due time. Idempotent.
+pub fn carry_over_all(list: &mut [MissEntry]) {
+    for e in list.iter_mut().filter(|e| e.review.is_none()) {
+        e.review = Some(crate::review::carry_over(e.box_, e.due));
+    }
 }
 
 fn save(state: &AppState) {
@@ -46,10 +54,11 @@ pub fn add_miss_at(state: &mut AppState, word: &str, lang: &str, tier: &str, now
     let key = miss_key(word, lang);
     if let Some(e) = state.misses.iter_mut().find(|x| miss_key(&x.word, &x.lang) == key) {
         e.misses += 1;
-        e.box_ = 1;
-        e.due = now;
         e.ts = now;
+        let r = e.review.get_or_insert_with(|| crate::review::carry_over(e.box_, e.due));
+        e.due = crate::review::on_miss(r, now);
     } else {
+        let (r, due) = crate::review::start(now);
         state.misses.insert(
             0,
             MissEntry {
@@ -57,9 +66,10 @@ pub fn add_miss_at(state: &mut AppState, word: &str, lang: &str, tier: &str, now
                 lang: lang.to_string(),
                 tier: tier.to_string(),
                 misses: 1,
-                box_: 1,
-                due: now,
+                box_: 0,
+                due,
                 ts: now,
+                review: Some(r),
             },
         );
         if state.misses.len() > MISS_CAP {
@@ -69,15 +79,28 @@ pub fn add_miss_at(state: &mut AppState, word: &str, lang: &str, tier: &str, now
     save(state);
 }
 
-/// Returns true if this promotion cleared the word out of the misses list entirely.
-pub fn promote_miss(state: &mut AppState, word: &str, lang: &str) -> bool {
+/// A correct answer on a queued word, graded Hard or Good (L0 D3), through
+/// `review.rs`. Returns true if the word graduated and the list is now empty.
+pub fn promote_miss(state: &mut AppState, word: &str, lang: &str, grade: crate::review::Grade) -> bool {
+    promote_miss_at(state, word, lang, grade, now_ms())
+}
+
+/// `promote_miss` with an injected clock (host tests have no JS clock).
+pub fn promote_miss_at(state: &mut AppState, word: &str, lang: &str, grade: crate::review::Grade, now: f64) -> bool {
     let key = miss_key(word, lang);
     let Some(idx) = state.misses.iter().position(|x| miss_key(&x.word, &x.lang) == key) else {
         return false;
     };
-    state.misses[idx].box_ += 1;
+    let outcome = {
+        let e = &mut state.misses[idx];
+        let r = e.review.get_or_insert_with(|| crate::review::carry_over(e.box_, e.due));
+        crate::review::on_correct(r, grade, now)
+    };
     let cleared;
-    if state.misses[idx].box_ > SR_MAXBOX {
+    if let crate::review::Outcome::Due(due) = outcome {
+        state.misses[idx].due = due;
+        cleared = false;
+    } else {
         // CC-REPORTS: graduation IS the redemption moment — record it
         // before the entry vanishes (3+ misses = a conquered boss).
         if state.misses[idx].misses >= 3 {
@@ -87,7 +110,7 @@ pub fn promote_miss(state: &mut AppState, word: &str, lang: &str) -> bool {
                 word: state.misses[idx].word.clone(),
                 lang: state.misses[idx].lang.clone(),
                 misses: state.misses[idx].misses,
-                mastered_ts: now_ms(),
+                mastered_ts: now,
             });
             while reds.len() > crate::reports::REDEMPTION_CAP {
                 reds.remove(0);
@@ -95,7 +118,7 @@ pub fn promote_miss(state: &mut AppState, word: &str, lang: &str) -> bool {
             crate::storage::set_json(crate::reports::REDEMPTION_KEY, &reds);
         }
         {
-            let (y, m, d) = crate::yearbook::ymd_pub((now_ms() / 86_400_000.0) as u32);
+            let (y, m, d) = crate::yearbook::ymd_pub((now / 86_400_000.0) as u32);
             let date = format!("{y:04}-{m:02}-{d:02}");
             let w = state.misses[idx].word.clone();
             let lang = state.misses[idx].lang.clone();
@@ -103,10 +126,6 @@ pub fn promote_miss(state: &mut AppState, word: &str, lang: &str) -> bool {
         }
         state.misses.remove(idx);
         cleared = state.misses.is_empty();
-    } else {
-        let box_ = state.misses[idx].box_ as usize;
-        state.misses[idx].due = now_ms() + SR_INT.get(box_).copied().unwrap_or(0) as f64;
-        cleared = false;
     }
     save(state);
     cleared

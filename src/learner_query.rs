@@ -338,6 +338,7 @@ const ALLOWED: &[(&str, &str)] = &[
     ("learner.rs", "the implementation"),
     ("learner_query.rs", "the contract and its live implementation"),
     ("game.rs", "the engine: records attempts and selects within the band (writer side, not a consumer)"),
+    ("review.rs", "the one review rule (R2): schedules queued words with the crate's FSRS"),
 ];
 
 /// Violations in one file's source. Comment lines are skipped: naming a
@@ -369,7 +370,7 @@ mod tests {
     use crate::model::MissEntry;
 
     fn miss(word: &str, lang: &str, due: f64) -> MissEntry {
-        MissEntry { word: word.into(), lang: lang.into(), tier: "easy".into(), misses: 1, box_: 1, due, ts: 0.0 }
+        MissEntry { word: word.into(), lang: lang.into(), tier: "easy".into(), misses: 1, box_: 1, due, ts: 0.0, review: None }
     }
 
     // -- the live implementation ---------------------------------------------

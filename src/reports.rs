@@ -220,7 +220,7 @@ mod tests {
         for (w, n) in [("gnome", 30u32), ("knee", 2)] {
             st.misses.push(crate::model::MissEntry {
                 word: w.into(), lang: "en".into(), tier: "easy".into(),
-                misses: n, box_: 1, due: 0.0, ts: 0.0,
+                misses: n, box_: 1, due: 0.0, ts: 0.0, review: None,
             });
         }
         let v = words_to_conquer(&st, "en", 10);

@@ -110,9 +110,17 @@ pub struct MissEntry {
     pub lang: String,
     pub tier: String,
     pub misses: u32,
+    /// LEGACY Leitner box (1..=5). Read only by the one-time carry-over into
+    /// `review` (L0 R2); entries created since hold 0.
     pub box_: u32,
+    /// When the word is next due (ms since the epoch). Set only from
+    /// `review.rs`, the one review rule (L0 I5).
     pub due: f64,
     pub ts: f64,
+    /// The word's schedule under `review.rs`. `None` only on entries stored
+    /// by a pre-R2 build, which `misses::load` / `tone_drill::load` carry over.
+    #[serde(default)]
+    pub review: Option<crate::review::ReviewState>,
 }
 
 #[derive(Serialize, Deserialize, Clone)]

@@ -21,6 +21,13 @@ safely to TTS while a wrongly verified one plays the wrong word to a child.
               verdict but "accept" catches it. More than one accepted decoy
               rejects the sheet (one blink is tolerated; two is a pattern).
 
+Two recorded exceptions, both Eric's call and never the tool's default
+(2026-09-19): --rows LO-HI ingests part of a sheet whose other rows were redone
+on a fresh sheet (STAMP and AGREEMENT still cover the whole file), and
+--decoy-override REASON accepts a sheet past the decoy tolerance, writing the
+miss count and the reason onto every verdict it records. --skip-blank leaves
+rows with no verdict unverified rather than rejecting the sheet.
+
 On success, verdicts go to assets/human-audio/<lang>/verdicts.json, keyed by
 entry, with the clip's sha256, the sheet id and the auditor. Decoy rows are
 never written. A rejected sheet writes NOTHING.
@@ -55,8 +62,14 @@ def read_sheet(path):
     return (parts[2], parts[4]), rows, None
 
 
-def check(sheet_path, folder, key_path):
-    """Returns (verdict rows to write, list of problems). Any problem = reject."""
+def check(sheet_path, folder, key_path, rows_range=None, decoy_override=None, skip_blank=False):
+    """Returns (verdict rows to write, list of problems). Any problem = reject.
+
+    rows_range (lo, hi): judge and write only these rows; the rest of the sheet
+    is ignored (it was redone on another sheet). STAMP and AGREEMENT still cover
+    the WHOLE sheet, so the file is still proven to be the one the auditor saw.
+    decoy_override: a recorded reason to accept a sheet past the decoy tolerance
+    (Eric's call, not the tool's); every verdict written carries it."""
     key = json.loads(pathlib.Path(key_path).read_text())
     head, rows, err = read_sheet(sheet_path)
     if err:
@@ -83,6 +96,8 @@ def check(sheet_path, folder, key_path):
     missed, out = [], []
     for r in rows:
         k = by_row.get((r.get("row") or "").strip())
+        if k is not None and rows_range and not rows_range[0] <= k["row"] <= rows_range[1]:
+            continue  # outside the range being ingested
         if k is None:
             problems.append(f"AGREEMENT: unknown row {r.get('row')!r}")
             continue
@@ -91,6 +106,8 @@ def check(sheet_path, folder, key_path):
                             f"({r.get('entry')!r}/{r.get('clip')!r})")
             continue
         v = (r.get("verdict") or "").strip().lower()
+        if v == "" and skip_blank:
+            continue  # no verdict given: nothing is written, the clip stays unverified
         if v not in VERDICTS:
             problems.append(f"COMPLETE: row {k['row']} ({k['entry']}) verdict {v!r} "
                             f"is not one of {VERDICTS}")
@@ -102,7 +119,10 @@ def check(sheet_path, folder, key_path):
         out.append({"entry": k["entry"], "verdict": v, "clip_sha256": k["clip_sha256"],
                     "commons_sha1": k["commons_sha1"], "speaker": k["speaker"],
                     "license": k["license"], "note": (r.get("note") or "").strip()})
-    if len(missed) > DECOY_TOLERANCE:
+    if len(missed) > DECOY_TOLERANCE and decoy_override:
+        for o in out:
+            o["decoy_override"] = f"{len(missed)} decoys missed; accepted anyway: {decoy_override}"
+    elif len(missed) > DECOY_TOLERANCE:
         problems.append(f"DECOY: {len(missed)} decoys accepted (tolerance {DECOY_TOLERANCE}): rows "
                         + ", ".join(str(m["row"]) for m in missed))
     return out, problems
@@ -115,9 +135,15 @@ def main():
     ap.add_argument("--key", required=True)
     ap.add_argument("--auditor", required=True)
     ap.add_argument("--write", action="store_true")
+    ap.add_argument("--rows", help="ingest only rows LO-HI (the rest was redone elsewhere)")
+    ap.add_argument("--skip-blank", action="store_true",
+                    help="rows with no verdict are skipped (left unverified) instead of rejecting the sheet")
+    ap.add_argument("--decoy-override", metavar="REASON",
+                    help="accept past the decoy tolerance; the reason is recorded on every verdict")
     a = ap.parse_args()
     key = json.loads(pathlib.Path(a.key).read_text())
-    out, problems = check(a.sheet, a.folder, a.key)
+    rng = tuple(int(x) for x in a.rows.split("-")) if a.rows else None
+    out, problems = check(a.sheet, a.folder, a.key, rng, a.decoy_override, a.skip_blank)
     if problems:
         print(f"REJECTED {key['sheet_id']}: nothing written")
         for p in problems[:40]:
@@ -139,7 +165,8 @@ def main():
     for r in out:
         store["entries"].setdefault(r["entry"], []).append(
             {**{k: v for k, v in r.items() if k != "entry"},
-             "sheet": key["sheet_id"], "auditor": a.auditor, "ingested": when})
+             "sheet": key["sheet_id"] + (f" rows {a.rows}" if a.rows else ""),
+             "auditor": a.auditor, "ingested": when})
     store["entries"] = dict(sorted(store["entries"].items()))
     dest.write_text(json.dumps(store, ensure_ascii=False, indent=1) + "\n")
     print(f"wrote {dest}")

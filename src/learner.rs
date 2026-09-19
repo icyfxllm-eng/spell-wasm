@@ -235,33 +235,64 @@ pub fn interval_days(s: f64) -> u32 {
     t.round().max(1.0) as u32
 }
 
-/// One review. Grades collapse to pass/fail: the game has no "hard/easy"
-/// buttons and inventing them would be engagement furniture.
+/// An FSRS rating, as the game can earn one (L0 D3, signed 2026-09-19).
+/// There is no Easy: intervals never balloon for kids.
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+pub enum Grade {
+    /// A miss, including a word rescued by the retry (CC-ATTEMPTS-SHIELDS I2).
+    Again,
+    /// Correct on the first submission, after replaying the audio.
+    Hard,
+    /// Correct on the first submission with no replay.
+    Good,
+}
+
+impl Grade {
+    fn g(self) -> f64 {
+        match self {
+            Grade::Again => 1.0,
+            Grade::Hard => 2.0,
+            Grade::Good => 3.0,
+        }
+    }
+}
+
+/// One review of the skill model. Skills see pass/fail only: an attempt
+/// exercises several skills, and a replay is evidence about the word, not
+/// about each skill it contains.
 pub fn fsrs_review(f: &mut FsrsState, correct: bool, day: u32) {
+    fsrs_review_graded(f, if correct { Grade::Good } else { Grade::Again }, day)
+}
+
+/// One FSRS-4.5 review at `grade` on `day`. The single FSRS implementation
+/// in the crate (C3): the skill model and the per-word review queue
+/// (`review.rs`) both call it.
+pub fn fsrs_review_graded(f: &mut FsrsState, grade: Grade, day: u32) {
     let w = &FSRS_W;
+    let g = grade.g();
     if f.reps == 0 {
-        // First exposure: initial stability from the grade (w0 = again,
-        // w3 = easy; pass uses "good" = w2).
-        f.stability = if correct { w[2] } else { w[0] };
-        // FSRS-4.5 D0(G) = w4 − (G−3)·w5. The exponential form
+        // First exposure: initial stability is w[G−1] (w0 again, w1 hard,
+        // w2 good). FSRS-4.5 D0(G) = w4 − (G−3)·w5. The exponential form
         // w4 − e^(w5·(G−1)) + 1 is FSRS-5's and needs FSRS-5's weights: fed
         // these 4.5 weights it gave a pass −5.5, clamped to 1.0 (the floor).
-        let g = if correct { 3.0 } else { 1.0 };
+        f.stability = w[g as usize - 1];
         f.difficulty = (w[4] - (g - 3.0) * w[5]).clamp(1.0, 10.0);
     } else {
         let elapsed = (day.saturating_sub(f.due_day.saturating_sub(interval_days(f.stability)))) as f64;
         let r = retrievability(elapsed.max(0.0), f.stability);
-        let g = if correct { 3.0 } else { 1.0 };
         // difficulty update with mean reversion (w7 toward D0(3) = w4, the
         // FSRS-4.5 target; FSRS-5 moved it to D0(4))
         let d = f.difficulty - w[6] * (g - 3.0);
         f.difficulty = (w[7] * w[4] + (1.0 - w[7]) * d).clamp(1.0, 10.0);
-        if correct {
-            // S' = S · (1 + e^w8 · (11−D) · S^−w9 · (e^(w10·(1−R)) − 1))
+        if grade != Grade::Again {
+            // S' = S · (1 + e^w8 · (11−D) · S^−w9 · (e^(w10·(1−R)) − 1) · hard)
+            // where hard = w15 for a Hard rating, else 1.
+            let hard = if grade == Grade::Hard { w[15] } else { 1.0 };
             let inc = det_exp(w[8])
                 * (11.0 - f.difficulty)
                 * det_pow(f.stability, -w[9])
-                * (det_exp(w[10] * (1.0 - r)) - 1.0);
+                * (det_exp(w[10] * (1.0 - r)) - 1.0)
+                * hard;
             f.stability *= 1.0 + inc;
         } else {
             // S'_forget = w11 · D^−w12 · ((S+1)^w13 − 1) · e^(w14·(1−R))
