@@ -1,5 +1,6 @@
 import Foundation
 import AVFoundation
+import MetricKit
 import Speech
 import Capacitor
 import NativeLanguageKitCore
@@ -59,6 +60,7 @@ public class NativeLanguageKitPlugin: CAPPlugin, CAPBridgedPlugin {
         CAPPluginMethod(name: "pvStatus", returnType: CAPPluginReturnPromise),
         CAPPluginMethod(name: "pvRequestAuth", returnType: CAPPluginReturnPromise),
         CAPPluginMethod(name: "pvCalibrate", returnType: CAPPluginReturnPromise),
+        CAPPluginMethod(name: "metricKitDrain", returnType: CAPPluginReturnPromise),
     ]
 
     private let speaker = Speaker()
@@ -1223,6 +1225,81 @@ final class SpeechListener {
         let cb = completion
         completion = nil
         cb?(result)
+    }
+}
+
+// MARK: - CC-TELEMETRY-FOUNDATION F1: MetricKit
+
+extension NativeLanguageKitPlugin {
+    /// Hand the web layer every crash/hang diagnostic MetricKit delivered since
+    /// the last drain, then forget them. The Rust core decides whether any of
+    /// it is sent (route, kill switch, Jr) and maps kinds to its error codes;
+    /// nothing here defines an event (I9).
+    @objc func metricKitDrain(_ call: CAPPluginCall) {
+        call.resolve(["items": SpellMetricKitSink.shared.drain()])
+    }
+}
+
+/// Subscribes to MetricKit at launch and keeps, per diagnostic, only its kind
+/// ("crash" or "hang") and a 64-bit FNV-1a signature of where it happened:
+/// exception type, signal, and the attributed thread's top frames as
+/// binary name + offset into its text segment. Offsets are stable per build
+/// and carry no user data. At most 20 are held; the oldest are dropped.
+final class SpellMetricKitSink: NSObject, MXMetricManagerSubscriber {
+    static let shared = SpellMetricKitSink()
+    private let key = "spell_metrickit_pending_v1"
+    private let cap = 20
+    private let lock = NSLock()
+
+    func start() {
+        MXMetricManager.shared.add(self)
+    }
+
+    func didReceive(_ payloads: [MXDiagnosticPayload]) {
+        var items: [[String: String]] = []
+        for p in payloads {
+            for c in p.crashDiagnostics ?? [] {
+                items.append(["kind": "crash", "sig": Self.signature(
+                    exception: c.exceptionType?.stringValue, signal: c.signal?.stringValue, tree: c.callStackTree)])
+            }
+            for h in p.hangDiagnostics ?? [] {
+                items.append(["kind": "hang", "sig": Self.signature(exception: nil, signal: nil, tree: h.callStackTree)])
+            }
+        }
+        guard !items.isEmpty else { return }
+        lock.lock()
+        defer { lock.unlock() }
+        let pending = (UserDefaults.standard.array(forKey: key) as? [[String: String]]) ?? []
+        UserDefaults.standard.set(Array((pending + items).suffix(cap)), forKey: key)
+    }
+
+    func drain() -> [[String: String]] {
+        lock.lock()
+        defer { lock.unlock() }
+        let pending = (UserDefaults.standard.array(forKey: key) as? [[String: String]]) ?? []
+        UserDefaults.standard.removeObject(forKey: key)
+        return pending
+    }
+
+    static func signature(exception: String?, signal: String?, tree: MXCallStackTree) -> String {
+        var parts = [exception ?? "-", signal ?? "-"]
+        if let json = try? JSONSerialization.jsonObject(with: tree.jsonRepresentation()) as? [String: Any],
+           let stacks = json["callStacks"] as? [[String: Any]] {
+            let stack = stacks.first(where: { ($0["threadAttributed"] as? Bool) == true }) ?? stacks.first
+            var frame = (stack?["callStackRootFrames"] as? [[String: Any]])?.first
+            var depth = 0
+            while let f = frame, depth < 8 {
+                parts.append("\(f["binaryName"] ?? "?")+\(f["offsetIntoBinaryTextSegment"] ?? "?")")
+                frame = (f["subFrames"] as? [[String: Any]])?.first
+                depth += 1
+            }
+        }
+        var h: UInt64 = 0xcbf2_9ce4_8422_2325
+        for b in parts.joined(separator: "|").utf8 {
+            h ^= UInt64(b)
+            h = h &* 0x0000_0100_0000_01b3
+        }
+        return String(format: "%016llx", h)
     }
 }
 

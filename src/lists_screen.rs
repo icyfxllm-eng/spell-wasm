@@ -372,6 +372,7 @@ fn delete_list(app: &App, id: &str) {
 }
 
 pub fn open(app: &App) {
+    crate::telemetry::set_mode(crate::telemetry::schema::Mode::MyLists);
     OPEN_LIST.with(|c| *c.borrow_mut() = None);
     EDITING.with(|c| c.set(None));
     RENAMING.with(|c| c.set(false));

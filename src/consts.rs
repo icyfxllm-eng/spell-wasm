@@ -113,6 +113,22 @@ pub fn leaderboard_available() -> bool {
     EDITION == Edition::Consumer
 }
 
+/// Whether "Help improve SpellGame" starts on (CC-TELEMETRY-FOUNDATION D3, D7).
+///
+/// On for consumer players; off in a school's binary until the school turns it
+/// on. Only the default: the player's toggle and the remote kill switch decide.
+pub fn telemetry_default_on() -> bool {
+    EDITION == Edition::Consumer
+}
+
+/// Whether telemetry may ever leave as individual events (CC-TELEMETRY-FOUNDATION).
+///
+/// False in education: a school's binary sends aggregates only, whatever the
+/// player's audience. The telemetry router reads this instead of the edition.
+pub fn telemetry_events_available() -> bool {
+    EDITION == Edition::Consumer
+}
+
 /// Whether the app can render, input, and mirror right-to-left scripts.
 ///
 /// CC-LINEUP-SWAP D2: this is the ONLY switch that can ever un-gate an

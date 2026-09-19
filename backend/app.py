@@ -15,6 +15,7 @@ import re
 import json
 import html
 import threading
+import time
 import hashlib
 import unicodedata
 import urllib.error
@@ -142,6 +143,7 @@ import db  # noqa: E402
 import climb  # noqa: E402
 import matches  # noqa: E402
 import entitlements  # noqa: E402
+import speak_metrics  # noqa: E402  (R8)
 
 db.init()
 app.register_blueprint(climb.bp)
@@ -506,6 +508,16 @@ def speak():
     `variant=normal` (default) speaks the word twice with a pause;
     `variant=slow` is a single slower utterance for careful listening.
     """
+    # CC-TELEMETRY-FOUNDATION R8: one metrics line per request (lang, variant,
+    # cache hit/miss, status, ms). No IP and no word; see speak_metrics.py.
+    t0 = time.perf_counter()
+    meta = {"lang": "other", "variant": "normal", "cache": "miss"}
+    resp, status = _speak(meta)
+    speak_metrics.record(meta["lang"], meta["variant"], meta["cache"], status, (time.perf_counter() - t0) * 1000)
+    return resp, status
+
+
+def _speak(meta):
     word = validate_word(request.args.get("word", ""))
     if word is None:
         return jsonify({"error": "invalid word"}), 400
@@ -513,6 +525,7 @@ def speak():
     lang = request.args.get("lang", DEFAULT_LANG)
     if lang not in LANG_VOICES and lang not in AZURE_VOICES:
         lang = DEFAULT_LANG
+    meta["lang"], meta["variant"] = lang, variant
 
     # F6: Mandarin must name its reading. No reading, no audio -- guessing is
     # what this feature exists to stop.
@@ -522,7 +535,9 @@ def speak():
 
     path = cache_path_for(word, variant, lang, zh_cache_key(py) if py else None)
 
-    if not os.path.exists(path):
+    if os.path.exists(path):
+        meta["cache"] = "hit"
+    else:
         try:
             synthesize_to_cache(word, variant, path, lang, py)
         except Exception as e:
@@ -534,7 +549,7 @@ def speak():
     # CDN/tunnel edge in front of us) can cache it indefinitely — this is
     # also what makes next-word preloading actually pay off.
     resp.headers["Cache-Control"] = "public, max-age=31536000, immutable"
-    return resp
+    return resp, 200
 
 
 @app.route("/api/check", methods=["POST"])
@@ -683,7 +698,7 @@ STT_LANGS = {
     "en": "en-US", "es": "es-ES", "fr": "fr-FR", "de": "de-DE",
     "pt": "pt-BR", "pl": "pl-PL", "ru": "ru-RU", "vi": "vi-VN",
     "ko": "ko-KR", "ja": "ja-JP", "fil": "fil-PH", "zh": "cmn-Hans-CN",
-    "ar": "ar-SA", "hi": "hi-IN", "sw": "sw-KE",
+    "ar": "ar-SA", "hi": "hi-IN", "sw": "sw-TZ",  # matches the sw-TZ voice (Eric, 2026-09-18)
 }
 STT_MAX_AUDIO_B64 = 1_400_000  # ~1MB PCM ≈ 30s @16k mono — letters are ~2s
 

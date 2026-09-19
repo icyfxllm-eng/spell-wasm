@@ -312,6 +312,7 @@ pub fn reflect_screen(app: &App) {
 }
 
 pub fn open_screen(app: &App) {
+    crate::telemetry::set_mode(crate::telemetry::schema::Mode::GhostRacing);
     reflect_screen(app);
     dom::add_class("ghostScreen", "show");
 }

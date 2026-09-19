@@ -78,6 +78,7 @@ pub fn wire(app: &App) {
 }
 
 pub fn open(app: &App) {
+    crate::telemetry::set_mode(crate::telemetry::schema::Mode::Impostor);
     let (lang, kid) = {
         let s = app.borrow();
         (s.lang.clone(), s.kid)

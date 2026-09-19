@@ -101,6 +101,7 @@ fn experience() -> crate::experience::Experience {
 }
 
 pub fn open(app: &App) {
+    crate::telemetry::set_mode(crate::telemetry::schema::Mode::WordChains);
     let lang = app.borrow().lang.clone();
     LANG.with(|l| *l.borrow_mut() = lang.clone());
     reflect_direction(&lang);

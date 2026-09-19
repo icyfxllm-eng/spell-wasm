@@ -50,6 +50,7 @@ fn slot_key(kind: SlotKind) -> &'static str {
 }
 
 pub fn open(app: &App) {
+    crate::telemetry::set_mode(crate::telemetry::schema::Mode::Racing);
     reflect(app);
     dom::add_class("spellRacing", "show");
 }

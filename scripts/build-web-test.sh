@@ -45,7 +45,7 @@ STRIP
 else
   cp index.html "$DIST/"
 fi
-cp audio-native.js native-language-kit.js manifest.json sw.js "$DIST/"
+cp audio-native.js native-language-kit.js telemetry-schema.js manifest.json sw.js "$DIST/"
 cp -r icons "$DIST/icons"
 cp -r fonts "$DIST/fonts"
 cp -r pkg-test "$DIST/pkg"

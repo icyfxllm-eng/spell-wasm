@@ -238,6 +238,10 @@ pub fn apply_settings(app: &App) {
     // a test, which is what `suppressed_by` in the manifest asserts.
     set_suppressed("remindToggle", s.kid);
     dom::input("remindTime").set_value(&s.remind_time);
+    // CC-TELEMETRY-FOUNDATION F7: the player's choice; rendered overridden when
+    // the server's kill switch is off, since nothing is sent either way.
+    dom::input("telemetryToggle").set_checked(crate::telemetry::switch_on() && !crate::telemetry::switch_overridden());
+    set_suppressed("telemetryToggle", crate::telemetry::switch_overridden());
     dom::input("volumeSlider").set_value(&s.volume.to_string());
     audio_boost::set_gain(s.volume);
     drop(s);

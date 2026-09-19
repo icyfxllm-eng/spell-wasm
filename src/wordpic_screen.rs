@@ -988,6 +988,7 @@ thread_local! {
 }
 
 pub fn open_picker(app: &App) {
+    crate::telemetry::set_mode(crate::telemetry::schema::Mode::WordPicture);
     let lang = app.borrow().lang.clone();
     LANG.with(|l| *l.borrow_mut() = lang.clone());
     // -1 means "fresh entry": reset. Anything else is a return from a round.

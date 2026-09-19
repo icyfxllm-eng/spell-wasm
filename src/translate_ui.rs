@@ -84,6 +84,7 @@ fn set_audio(id: &str, state: &str) {
 }
 
 pub fn open(app: &App) {
+    crate::telemetry::set_mode(crate::telemetry::schema::Mode::Translate);
     if !dom::exists("trScreen") {
         return;
     }

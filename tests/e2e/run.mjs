@@ -43,6 +43,7 @@ import * as spellDoku from './specs/spelldoku.mjs';
 import * as spellSearch from './specs/spell-search.mjs';
 import * as translateScreen from './specs/translate-screen.mjs';
 import * as settingsEffects from './specs/settings-effects.mjs';
+import * as telemetry from './specs/telemetry.mjs';
 
 const SPECS = [
   ['playhub', playHub, placement],
@@ -52,6 +53,7 @@ const SPECS = [
   ['modes', modes],
   ['menu', menu],
   ['settings-effects', settingsEffects],
+  ['telemetry', telemetry],
   ['front-door', frontDoor],
   ['jr-climb', jrClimb],
   ['mywords-lists', myWordsLists],
