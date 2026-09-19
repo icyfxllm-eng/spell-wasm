@@ -2,7 +2,7 @@
 
 [stashed verbatim from Eric 2026-09-18. §0 census: docs/census/learning_l0_census.md]
 
-**Status:** REVIEW-GATED. Phase 0 (§0 census) is executable now and ends in a stop-and-report. Phases 1–4 are blocked until Eric reviews the census and signs the open decisions below.
+**Status:** REVIEW-GATED. Phase 0 census DONE (`docs/census/learning_l0_census.md`). **Census rulings C1–C9 SIGNED as drafted (Eric, 2026-09-19)**; where this file and a ruling differ, the ruling governs. L0 is a retrofit over the shipped engine (C1). **Phase 1 UNBLOCKED (Eric, 2026-09-19): "Phase 1 may start; D3–D8 gate only the phases they name."** D3/D4 gate Phase 2, D5/D6 gate Phase 3, D8 gates CC-REPORTS' surface; D7 (deadline) gates no code.
 **Relationship to CC-LEARNING-ENGINE:** this file **supersedes its scope**, not its decisions. The signed decisions there (D1 BKT+FSRS chosen over IRT/DKT, D5 all on-device zero telemetry, D7 learner state may touch word choice and feedback text only) carry forward unchanged. Everything in the original file that is not listed under **In scope** below moves to a named successor file (see Successors) and is explicitly **out of L0's scope**.
 **Blast radius:** one new read-only interface + one scheduler + a dev-only inspector. No gameplay, scoring, layout, or bank changes.
 
@@ -49,11 +49,11 @@ Placement stays owned by **CC-PLACEMENT-IDEMPOTENCE** (already written). L0 does
 
 | Concern | Owner | L0's role |
 |---|---|---|
-| Placement probe, PlacementRecord | CC-PLACEMENT-IDEMPOTENCE | Reads the record. Never writes it, never re-probes. |
+| Placement probe, PlacementRecord | CC-PLACEMENT-IDEMPOTENCE | **Amended by C7:** L0 stores `placed` (it lives inside the learner state); CC-PLACEMENT-IDEMPOTENCE owns what it means. Only placement code writes it (I6 scan). L0 never re-probes. |
 | Reports surfaces (kid tab + Guardian Dash) | CC-REPORTS | Becomes a consumer of `LearnerQuery`. L0 builds no UI for it. |
 | Planned days, due set display | CC-CALENDAR | Consumer. L0 supplies the due queue, not the calendar. |
 | Word selection legality (bands, tiers) | existing selection code | L0 supplies *ordering within legal candidates* only (D7). |
-| Freshness / no-repeat windows | CC-PERSIAN-FOUNDATION F6 exposure ledger | L0 is a consumer, never a parallel path. |
+| Freshness / no-repeat windows | CC-PERSIAN-FOUNDATION F6 exposure ledger | **Amended by C5:** F6 is unbuilt, so this is a recorded dependency, not an L0 requirement. Until F6 lands, freshness stays with the existing deck and selection exclusion. L0 adds no freshness mechanism of its own. |
 | Entry identity | CC-RUSSIAN-STRESS v3 | Scheduler keys on it (I4). |
 | Language scoping of stores | CC-LANG-SCOPE F5 | The scheduler store registers as `languageScoped`. |
 | Telemetry | CC-TELEMETRY-FOUNDATION v1.1 | **Nothing here is ever transmitted** (D5, I2). |
@@ -129,7 +129,7 @@ Produce `learning_l0_census.md`:
 | # | Decision | Status |
 |---|---|---|
 | D1 | Split CC-LEARNING-ENGINE into L0 + five named successors | **Signed** (Eric, 2026-09-18, option 1) |
-| D2 | Defer BKT; ship FSRS alone in L0 | **Signed** (implied by option 1; flag if this misreads) |
+| D2 | Defer BKT; ship FSRS alone in L0 | **WITHDRAWN by C1 (2026-09-19).** BKT already ships and feeds Reports, Guardian Dash and Trap Boss; it stays as shipped, and CC-LEARNING-SKILL checks that shipped BKT is correct rather than building it. |
 | D3 | Outcome → FSRS rating mapping. Rec: correct first try = Good; correct after replay or extra attempt = Hard; miss = Again; no Easy rating in v1 (avoids over-long intervals for kids) | **OPEN** |
 | D4 | FSRS parameter optimization from player history | **OPEN** — rec: out of scope for L0, defaults only |
 | D5 | Simulator tolerances (how close is close enough) | **OPEN** — rec: report-only in Phase 3, frozen after Eric reads the first report (v7.5 trust pattern) |
@@ -153,12 +153,12 @@ Produce `learning_l0_census.md`:
 
 1. **Contract freeze:** every consumer imports only `LearnerQuery`; a symbol scan finds zero direct learner-storage access outside the implementation module (I6).
 2. **Fake parity:** all four consumers' test suites pass against the deterministic fake with no reference to the real implementation.
-3. **FSRS reference vectors:** the implementation reproduces the pinned FSRS version's published test vectors exactly.
+3. **FSRS reference vectors:** the implementation reproduces the pinned FSRS version's published test vectors exactly. *(C3: the pinned version is FSRS-4.5; the vectors are reference outputs from a published FSRS-4.5 implementation, vendored as a fixture.)*
 4. **One rule:** a scan confirms exactly one review-scheduling code path exists; a deliberately reintroduced second path fails the build (I5).
 5. **Ordering only:** a fixed-seed replay shows the scheduler never serves a word that band/tier/freshness/language-scope rules excluded (I3).
 6. **Identity keying:** за́мок and замо́к schedule independently; рука and ру́ку schedule independently (I4).
-7. **Language scope:** the scheduler store is registered `languageScoped` and passes CC-LANG-SCOPE F5's classification CI.
-8. **Telemetry isolation:** the telemetry schema lint fails on a deliberately added learner field (I2).
+7. ~~**Language scope:** the scheduler store is registered `languageScoped` and passes CC-LANG-SCOPE F5's classification CI.~~ *Dropped by C5: CC-LANG-SCOPE F5 is unbuilt. It's a recorded dependency, and the store is keyed per language by construction.*
+8. **Telemetry isolation:** the telemetry schema lint fails on a deliberately added learner field (I2). *(C6: Phase 1 adds the learner terms to `schema_lint`'s forbidden list; the planted field is `mastery`.)*
 9. **Determinism:** same profile state + same simulated date produces a byte-identical queue (I7).
 10. **Cold start:** a new profile with zero learner state produces a valid queue with no error (I8).
 11. **Simulator:** `reports/simulator.md` exists, covers all four adversarial populations, and states the synthetic-player limitation verbatim.
