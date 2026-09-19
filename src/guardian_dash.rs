@@ -23,8 +23,10 @@ fn render_body(app: &crate::App) {
     let mut html = String::new();
 
     // Placement summary + mastery map, parent-grouped from the learner report.
-    let st = crate::learner::load_for(&lang);
-    let r = crate::learner::guardian_report(&st, crate::learner::current_day());
+    // Every learner read goes through LearnerQuery (L0 I6).
+    let q = crate::learner_query::live(&s);
+    let r = crate::learner_query::LearnerQuery::review_stats(&q, crate::learner_query::DEVICE, &lang);
+    let skills = crate::learner_query::LearnerQuery::skill_states(&q, crate::learner_query::DEVICE, &lang);
     html.push_str(&section("gdash.placement", &format!(
         "<div class=\"gd-row\">{}</div>",
         crate::i18n::tp("gdash.attempts", &[("c", &r.correct.to_string()), ("n", &r.attempts.to_string())])
@@ -32,9 +34,9 @@ fn render_body(app: &crate::App) {
     let group = |ids: &[String]| -> String {
         ids.iter().take(6).map(|id| format!("<span class=\"gd-chip\">{}</span>", t(&format!("skill.{id}")))).collect()
     };
-    let dev: Vec<String> = r.skills.iter()
-        .filter(|(id, m, _)| *m >= 0.45 && *m < 0.8 && !r.strengths.contains(id))
-        .map(|(id, _, _)| id.clone()).collect();
+    let dev: Vec<String> = skills.iter()
+        .filter(|k| k.reps > 0 && k.mastery >= 0.45 && k.mastery < 0.8 && !r.strengths.contains(&k.id))
+        .map(|k| k.id.clone()).collect();
     html.push_str(&section("gdash.mastery", &format!(
         "<div class=\"gd-row\"><b>{}</b> {}</div><div class=\"gd-row\"><b>{}</b> {}</div><div class=\"gd-row\"><b>{}</b> {}</div>",
         t("gdash.strong"), group(&r.strengths),
@@ -43,7 +45,7 @@ fn render_body(app: &crate::App) {
     )));
 
     // Trouble spots: the classifier's confusion pairs, most frequent first.
-    let pairs = crate::reports::confusion_pairs(&lang);
+    let pairs = crate::reports::confusion_pairs(&q, &lang);
     if !pairs.is_empty() {
         let rows: String = pairs.iter().take(5).map(|((a, b), _, n)| {
             format!("<div class=\"gd-row\">{}</div>",
@@ -62,7 +64,7 @@ fn render_body(app: &crate::App) {
     }
 
     // What's next: the due set, framed as the plan.
-    let due = crate::reports::rematch_set(&s, &lang, js_sys::Date::now(), 36.0 * 3600.0 * 1000.0);
+    let due = crate::learner_query::LearnerQuery::at_risk_set(&crate::learner_query::live(&s), crate::learner_query::DEVICE, &lang, 1.5);
     html.push_str(&section("gdash.next", &format!(
         "<div class=\"gd-row\">{}</div>",
         crate::i18n::tp("gdash.nextRematch", &[("n", &due.len().to_string())])
@@ -124,8 +126,11 @@ async fn export_pdf(app: crate::App) {
     let langs: Vec<String> = {
         let s = app.borrow();
         let mut v = vec![s.lang.clone()];
+        let q = crate::learner_query::live(&s);
         for (code, _) in crate::words::LANGUAGES.iter() {
-            if *code != s.lang && crate::learner::load_for(code).log.len() > 0 {
+            if *code != s.lang
+                && !crate::learner_query::LearnerQuery::attempt_log(&q, crate::learner_query::DEVICE, code).is_empty()
+            {
                 v.push(code.to_string());
             }
         }
@@ -134,7 +139,10 @@ async fn export_pdf(app: crate::App) {
     let today = (js_sys::Date::now() / 86_400_000.0) as u32;
     let mut pages = Vec::new();
     for lang in langs {
-        let svg = report_page_svg(&lang, today);
+        let svg = {
+            let s = app.borrow();
+            report_page_svg(&crate::learner_query::live(&s), &lang, today)
+        };
         if let Some(p) = crate::yearbook_ui::rasterize(&svg, 1240, 1754).await {
             pages.push(p);
         }
@@ -148,7 +156,7 @@ async fn export_pdf(app: crate::App) {
     }
 }
 
-fn report_page_svg(lang: &str, today: u32) -> String {
+fn report_page_svg(q: &dyn crate::learner_query::LearnerQuery, lang: &str, today: u32) -> String {
     let t = |k: &str| crate::i18n::t(k);
     let mut svg = String::from(
         "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"1240\" height=\"1754\"          viewBox=\"0 0 1240 1754\"><rect width=\"1240\" height=\"1754\" fill=\"#ffffff\"/>",
@@ -164,8 +172,7 @@ fn report_page_svg(lang: &str, today: u32) -> String {
     }
     let line = |svg: &mut String, y: &mut u32, s: &str, size: u32| text_line(svg, y, s, size);
     line(&mut svg, &mut y, &format!("{} — {lang}", t("gdash.title")), 48);
-    let st = crate::learner::load_for(lang);
-    let r = crate::learner::guardian_report(&st, crate::learner::current_day());
+    let r = q.review_stats(crate::learner_query::DEVICE, lang);
     line(&mut svg, &mut y, &crate::i18n::tp("gdash.attempts", &[("c", &r.correct.to_string()), ("n", &r.attempts.to_string())]), 30);
     y += 20;
     line(&mut svg, &mut y, &t("gdash.mastery"), 38);
@@ -176,7 +183,7 @@ fn report_page_svg(lang: &str, today: u32) -> String {
         }
     }
     y += 20;
-    let pairs = crate::reports::confusion_pairs(lang);
+    let pairs = crate::reports::confusion_pairs(q, lang);
     if !pairs.is_empty() {
         line(&mut svg, &mut y, &t("gdash.trouble"), 38);
         for ((a, b), _, n) in pairs.iter().take(5) {

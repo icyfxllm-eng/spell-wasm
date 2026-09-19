@@ -39,8 +39,8 @@ pub fn render(state: &AppState) {
     // CC-LEARNING-ENGINE L2 — the guardian section, view-only (sharing
     // would be an explicit affordance; v1 has none). Dark by default.
     if crate::dom::exists("statsGuardian") && crate::flags::learner_surfaces() {
-        let st = crate::learner::load_for(&state.lang);
-        let r = crate::learner::guardian_report(&st, crate::learner::current_day());
+        let q = crate::learner_query::live(state);
+        let r = crate::learner_query::LearnerQuery::review_stats(&q, crate::learner_query::DEVICE, &state.lang);
         dom::set_html("statsGuardian", &crate::learner::guardian_report_html(&r, &state.lang));
         dom::remove_class("statsGuardian", "btn-hide");
     } else if crate::dom::exists("statsGuardian") {

@@ -70,7 +70,7 @@ fn render(app: &crate::App) {
         // an unmet last-week goal simply gets re-dealt — no residue.
         let s = app.borrow();
         let conquer = crate::reports::words_to_conquer(&s, &lang, 12).len();
-        let due = crate::reports::rematch_set(&s, &lang, js_sys::Date::now(), 36.0 * 3600.0 * 1000.0).len();
+        let due = crate::learner_query::LearnerQuery::at_risk_set(&crate::learner_query::live(&s), crate::learner_query::DEVICE, &lang, 1.5).len();
         drop(s);
         html.push_str(&format!("<div class=\"cal-goal\">{}</div><div class=\"cal-hand\">", t("cal.pick")));
         for (kind, target) in week_hand(conquer, due) {
@@ -214,7 +214,7 @@ fn render_detail(app: &crate::App, day: u32) {
             }
             // Sources: the kid's own pools only (no free text anywhere).
             let s = app.borrow();
-            let mut sources: Vec<String> = crate::reports::rematch_set(&s, &lang, js_sys::Date::now(), 36.0 * 3600.0 * 1000.0);
+            let mut sources: Vec<String> = crate::learner_query::LearnerQuery::at_risk_set(&crate::learner_query::live(&s), crate::learner_query::DEVICE, &lang, 1.5);
             sources.extend(crate::reports::words_to_conquer(&s, &lang, 12).into_iter().map(|(w, _)| w));
             drop(s);
             sources.dedup();

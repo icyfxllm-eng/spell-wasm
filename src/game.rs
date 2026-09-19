@@ -1324,6 +1324,7 @@ pub fn next_word(app: &App) {
             s.daily.idx += 1;
             s.cur_lang = s.daily.locale.clone();
             s.cur_tier = length_tier(&w).to_string();
+            crate::learner_query::note_serve(&w, crate::learner_query::NextWordReason::Daily);
             s.word = w;
         } else if s.review {
             let due = misses::due_misses(&s);
@@ -1342,6 +1343,7 @@ pub fn next_word(app: &App) {
                 s.cur_lang = e.lang.clone();
                 s.word = e.word.clone();
                 s.cur_tier = e.tier.clone();
+                crate::learner_query::note_serve(&e.word, crate::learner_query::NextWordReason::ToneDrill);
             } else {
             // Deck-select over the due misses (keyed by the same lang::word
             // identity misses.rs already uses) so review turns don't repeat
@@ -1357,6 +1359,7 @@ pub fn next_word(app: &App) {
             s.cur_lang = m.lang.clone();
             s.word = m.word.clone();
             s.cur_tier = m.tier.clone();
+            crate::learner_query::note_serve(&m.word, crate::learner_query::NextWordReason::DueReview);
             }
         } else if PLACEMENT_QUEUE.with(|q| !q.borrow().is_empty()) {
             // Placement run: serve the fixed set through the normal flow.
@@ -1364,6 +1367,7 @@ pub fn next_word(app: &App) {
             PLACEMENT_LIVE.with(|c| c.set(true));
             s.cur_lang = s.lang.clone();
             s.cur_tier = length_tier(&w).to_string();
+            crate::learner_query::note_serve(&w, crate::learner_query::NextWordReason::Placement);
             s.word = w;
         } else if let Some((w, lang)) = REQUESTED_WORD.with(|c| c.borrow_mut().take()) {
             // zh entries are "pinyin|hanzi": tier from the TYPED side; the
@@ -1371,6 +1375,7 @@ pub fn next_word(app: &App) {
             let typed = w.split_once('|').map(|(p, _)| p.to_string()).unwrap_or_else(|| w.clone());
             s.cur_lang = if crate::consts::is_builtin_lang(&lang) { lang } else { s.lang.clone() };
             s.cur_tier = length_tier(&typed).to_string();
+            crate::learner_query::note_serve(&w, crate::learner_query::NextWordReason::Requested);
             s.word = w;
         } else {
             PLACEMENT_LIVE.with(|c| c.set(false)); // redundant now; harmless
@@ -1415,25 +1420,43 @@ pub fn next_word(app: &App) {
                 // the band); the deck itself filters out recent words, so
                 // the no-repeat invariant is untouched. OFF = this whole
                 // block is skipped and the draw is byte-identical to today.
+                // The word the promote chose and which rule chose it, so the
+                // serve can report its reason (L0 nextWordReason).
+                let promoted: std::cell::RefCell<Option<(String, crate::learner_query::NextWordReason)>> = std::cell::RefCell::new(None);
                 if crate::flags::learner_select() {
                     let st = crate::learner::load_for(&s.cur_lang);
                     let day = crate::learner::current_day();
                     let lang = s.cur_lang.clone();
+                    // The planner reads skill due-ness through the contract (L0 I6).
+                    let skills = crate::learner_query::LearnerQuery::skill_states(
+                        &crate::learner_query::live(&s), crate::learner_query::DEVICE, &lang);
                     s.decks.entry(key.clone()).or_default().promote(&pool, 8, &mut |win| {
-                        crate::calendar::planned_pick(&st, win, &lang, day)
-                            .or_else(|| crate::learner::select_within(&st, win, &lang, day, &[], day as u64))
+                        if let Some(i) = crate::calendar::planned_pick(&skills, win, &lang, day) {
+                            *promoted.borrow_mut() = Some((win[i].clone(), crate::learner_query::NextWordReason::Planned));
+                            return Some(i);
+                        }
+                        let i = crate::learner::select_within(&st, win, &lang, day, &[], day as u64)?;
+                        *promoted.borrow_mut() = Some((win[i].clone(), crate::learner_query::NextWordReason::LearnerPick));
+                        Some(i)
                     });
                 }
                 // D3: "In my order" serves the list as it stands, starred words
                 // first, one after another. Everything else keeps the no-repeat
                 // deck it has always used.
-                let w = if s.lang == MINE && s.list_sequential {
+                let in_order = s.lang == MINE && s.list_sequential;
+                let w = if in_order {
                     let i = s.list_cursor % pool.len();
                     s.list_cursor = s.list_cursor.wrapping_add(1);
                     pool[i].clone()
                 } else {
                     s.decks.entry(key.clone()).or_default().next(&pool)
                 };
+                let reason = match promoted.into_inner() {
+                    _ if in_order => crate::learner_query::NextWordReason::InOrder,
+                    Some((pw, r)) if pw == w => r,
+                    _ => crate::learner_query::NextWordReason::Deck,
+                };
+                crate::learner_query::note_serve(&w, reason);
                 s.word = w;
                 // Warm the browser's audio cache for whatever this same
                 // pool will hand out next time, so that turn's playback is

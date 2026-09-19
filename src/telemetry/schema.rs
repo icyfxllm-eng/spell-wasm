@@ -401,17 +401,28 @@ mod tests {
     /// Acceptance 1 — no unbounded string, no learning-data field (I2, I3).
     /// `FieldType` cannot express a string, so the string half is proven by
     /// construction; this pins it and checks names against the I3 list.
+
+    const FORBIDDEN: &[&str] = &[
+        "word", "answer", "typed", "attempt", "miss", "hint", "outcome", "verdict",
+        "score", "start", "complete", "abandon", "funnel", "email", "account", "user",
+        "install", "ip", "text", "audio", "photo", "ocr", "list_", "custom",
+        // CC-LEARNING-ENGINE-L0 C6 (signed 2026-09-19; this file's consent):
+        // learner-model state never leaves the device (L0 I1/I2).
+        "learner", "mastery", "fsrs", "bkt", "skill", "stability", "difficulty",
+        "lapse", "reps", "due", "review", "placement",
+    ];
+
+    /// The name half of the lint, split out so a planted field can be tested.
+    fn forbidden_in(name: &str) -> Option<&'static str> {
+        FORBIDDEN.iter().copied().find(|bad| name.contains(bad))
+    }
+
     #[test]
     fn schema_lint() {
-        const FORBIDDEN: &[&str] = &[
-            "word", "answer", "typed", "attempt", "miss", "hint", "outcome", "verdict",
-            "score", "start", "complete", "abandon", "funnel", "email", "account", "user",
-            "install", "ip", "text", "audio", "photo", "ocr", "list_", "custom",
-        ];
         for r in RECORDS {
             for fd in r.fields {
-                for bad in FORBIDDEN {
-                    assert!(!fd.name.contains(bad), "{}.{} looks like forbidden data ({bad})", r.name, fd.name);
+                if let Some(bad) = forbidden_in(fd.name) {
+                    panic!("{}.{} looks like forbidden data ({bad})", r.name, fd.name);
                 }
                 if let FieldType::List { of, .. } = fd.ty {
                     assert!(record(of).is_some(), "{}.{} lists unknown record {of}", r.name, fd.name);
@@ -539,6 +550,20 @@ mod tests {
             }
             let have = std::fs::read_to_string(&path).unwrap_or_default();
             assert_eq!(have, want, "{path} is stale: TELEMETRY_BLESS=1 cargo test --lib telemetry");
+        }
+    }
+
+    /// L0 acceptance 8: a learner field planted in the schema must fail.
+    #[test]
+    fn schema_lint_rejects_a_planted_learner_field() {
+        for planted in ["mastery", "skill_mastery", "fsrs_due_day", "bkt_prior", "review_lapses", "placement_done", "learner_state"] {
+            assert!(forbidden_in(planted).is_some(), "the lint let a learner field through: {planted}");
+        }
+        // No current field trips the new terms (checked again on every run).
+        for r in RECORDS {
+            for fd in r.fields {
+                assert!(forbidden_in(fd.name).is_none(), "{}.{}", r.name, fd.name);
+            }
         }
     }
 }

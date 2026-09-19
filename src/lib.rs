@@ -23,6 +23,7 @@ mod bee; // CC-BEE-SIM F2/F3 (bee engine + contestant table)
 mod wordpic; // CC-WORD-PICTURE core (calligrams)
 mod input_provenance;
 mod learner; // CC-LEARNING-ENGINE L0 (BKT + FSRS core; selection arrives with L1)
+mod learner_query; // CC-LEARNING-ENGINE-L0 R1: the frozen read contract (I6)
 mod surface_hooks;
 #[cfg(not(feature = "web"))]
 mod translate; // TR D5 STRONG (Eric 2026-08-05: "for the app not the website")

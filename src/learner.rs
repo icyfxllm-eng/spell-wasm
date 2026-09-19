@@ -804,7 +804,7 @@ pub fn guardian_report(state: &LearnerState, day: u32) -> GuardianReport {
 /// rides i18n (the audit gate); skill ids map through `skill.<id>` keys.
 /// No share affordance lives here — sharing is the SURFACE's explicit
 /// button, never the renderer's initiative.
-pub fn guardian_report_html(r: &GuardianReport, _lang: &str) -> String {
+pub fn guardian_report_html(r: &crate::learner_query::ReviewStats, _lang: &str) -> String {
     use crate::i18n;
     let mut h = String::from("<div class=\"guardian\">");
     h.push_str(&format!("<h3>{}</h3>", i18n::t("guardian.title")));
