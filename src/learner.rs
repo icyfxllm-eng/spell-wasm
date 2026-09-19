@@ -32,7 +32,9 @@ use std::collections::VecDeque;
 
 use serde::{Deserialize, Serialize};
 
-pub const SCHEMA_VERSION: u32 = 1;
+/// v2 (2026-09-18): same shape as v1; the v1→v2 migration resets every
+/// reviewed skill's FSRS difficulty (see `migrate`).
+pub const SCHEMA_VERSION: u32 = 2;
 /// The attempt log is a ring: enough history for diagnosis surfaces,
 /// bounded so the state stays kilobytes forever (the contract's own
 /// promise).
@@ -170,10 +172,28 @@ pub fn load_state(json: &str) -> Result<LearnerState, String> {
 }
 
 fn migrate(json: &str, from: u32) -> Result<LearnerState, String> {
-    // No v0 ever shipped, so there is nothing to translate yet — but the
-    // dispatch, the error shape, and the test harness are load-bearing.
-    let _ = json;
-    Err(format!("no migration path from schema v{from}"))
+    match from {
+        // v1 stored difficulty from an FSRS version mix (FSRS-5's D0 formula
+        // over FSRS-4.5 weights): every skill first answered correctly sat at
+        // the 1.0 floor, and a first miss got w4 instead of w4 + 2·w5. The
+        // log is a 512-entry ring, so history cannot be replayed for every
+        // player; Eric's call was a reset. Every REVIEWED skill restarts at
+        // D0(good) = w4 = 5.1618. Unreviewed skills keep their placeholder
+        // (the first review overwrites it). Mastery, stability, due dates,
+        // counts, the log and `placed` are untouched.
+        1 => {
+            let mut st: LearnerState = serde_json::from_str(json).map_err(|e| e.to_string())?;
+            for s in &mut st.skills {
+                if s.fsrs.reps > 0 {
+                    s.fsrs.difficulty = FSRS_W[4];
+                }
+            }
+            st.version = 2;
+            Ok(st)
+        }
+        // No v0 ever shipped.
+        _ => Err(format!("no migration path from schema v{from}")),
+    }
 }
 
 // ------------------------------------------------------------------- BKT
@@ -1078,6 +1098,33 @@ mod tests {
             }
             assert!(resolve_load(Some(bad), "en").writable(), "{bad:?}: must recover, not stall forever");
         }
+    }
+
+    #[test]
+    fn v1_to_v2_resets_reviewed_difficulty_and_keeps_everything_else() {
+        // A real-shaped v1 blob: a skill stuck at the 1.0 floor, one at the
+        // buggy miss value, one never reviewed, a log entry with typed text
+        // (serde default field), and a completed placement.
+        let v1 = r#"{"version":1,"lang":"en","skills":[
+            {"id":"silent_letters","mastery":0.7,"fsrs":{"stability":12.5,"difficulty":1.0,"due_day":20400,"reps":6,"lapses":1}},
+            {"id":"doubled_consonant","mastery":0.2,"fsrs":{"stability":0.4872,"difficulty":5.1618,"due_day":20391,"reps":1,"lapses":0}},
+            {"id":"loanword_spelling","mastery":0.25,"fsrs":{"stability":0.0,"difficulty":5.0,"due_day":0,"reps":0,"lapses":0}}],
+            "log":[{"day":20390,"word":"knight","skills":["silent_letters"],"correct":false,"channel":"typed","typed":"nite"}],
+            "placed":true}"#;
+        let st = load_state(v1).expect("v1 must migrate, never fail: a failed load wipes the player");
+        assert_eq!(st.version, 2);
+        assert_eq!(st.skills[0].fsrs.difficulty, FSRS_W[4]);
+        assert_eq!(st.skills[1].fsrs.difficulty, FSRS_W[4]);
+        assert_eq!(st.skills[2].fsrs.difficulty, 5.0, "unreviewed placeholder untouched");
+        // Everything but difficulty survives byte-for-byte.
+        let s = &st.skills[0];
+        assert_eq!((s.mastery, s.fsrs.stability, s.fsrs.due_day, s.fsrs.reps, s.fsrs.lapses), (0.7, 12.5, 20400, 6, 1));
+        assert_eq!(st.log.len(), 1);
+        assert_eq!(st.log[0].typed.as_deref(), Some("nite"));
+        assert_eq!(st.placed, Some(true));
+        // Migrated state saves as v2 and reloads without migrating again.
+        let again = load_state(&serde_json::to_string(&st).unwrap()).unwrap();
+        assert_eq!(again, st);
     }
 
     #[test]
