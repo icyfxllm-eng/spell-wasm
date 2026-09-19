@@ -30,7 +30,35 @@ The spec text Eric sent follows the rulings, unchanged.
   glyph (`Symbols::aimed`); Number Mode keeps Phase A's search.
 - **I12 guard.** A board is redrawn if any fragment would spell another
   symbol's whole word.
-- **Not in A2:** 12×12 (Phase A3), definition-card legend (D15 gate).
+- **Not in A2:** 12×12 (Phase A3, below), definition-card legend (D15 gate).
+
+## Phase A3 — built (Eric, 2026-09-19: "start phase A3")
+
+- **12×12 Expert**, 3×4 boxes, Word Mode only (D19), 8 expert + 4 hard
+  words (F12), for standard players; Spell Jr never sees it (F7).
+- **R2 revised by measurement.** On-device generation was the ruling, but a
+  12×12 that grades exactly Expert takes about twenty digs; even after the
+  speed-up below that is ~1.4 s on a Mac per board, several seconds on a
+  phone. So D18's seed pack comes back, built ahead of time instead of on a
+  server: `assets/spelldoku/pack12.json` lists 1,000 `(seed, attempt)` pairs
+  whose grid grades Expert, with each grid's canonical hash. A device
+  rebuilds its grid with one dig (I5), binds its own twelve words and a
+  necessary fragment, and skips grids it met within the window (I6). The
+  pack holds no symbol, word or language, so one pack serves all 15. A
+  12×12 board is ready in ~100 ms in desktop WebAssembly. Rebuild with
+  `cargo test --release --lib --features audit_preview build_pack12 -- --ignored`.
+- **Speed-up, every size.** Digging checked uniqueness with the exhaustive
+  counter and then graded with the technique ladder. A board the ladder
+  finishes already has exactly one solution, so the counter added nothing
+  but 99% of the cost on a 12×12 (6.9 s to 68 ms per dig). It is gone from
+  the dig; the Phase A golden digest is unchanged, so no board moved.
+- **D17:** chips unlock after 3 spellings at 12×12 Expert only; 9×9 Expert
+  still spells every commit. Every pack grid leaves each symbol at least three
+  empty cells, so a 12×12 board asks for exactly 36 full spellings (Done #21).
+- **Done #19:** every language builds 12×12 boards (host test; 1,000 per
+  language in the ignored sweep). **Done #20:** pack grids rebuild unique and
+  Expert on the host, and the WebAssembly build reproduces the pinned pack
+  digest.
 
 ## Census rulings (Eric, 2026-09-19: "use your recommendations")
 

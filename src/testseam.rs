@@ -192,6 +192,9 @@ pub fn install(app: &App) {
         set(&obj, "spelldokuBoard", cb.into_js_value());
         let cb = Closure::<dyn Fn() -> String>::new(move || crate::spelldoku_ui::seam_golden());
         set(&obj, "spelldokuGolden", cb.into_js_value());
+        // CC-SPELLDOKU v1.2 D18: the 12x12 seed pack, rebuilt in this build.
+        let cb = Closure::<dyn Fn() -> String>::new(move || format!("{:#x}", crate::spelldoku::pack::pack_digest()));
+        set(&obj, "spelldokuPack12Digest", cb.into_js_value());
 
         // CC-WORDGRID Phase A: the wasm grid digest (test 2), the served
         // puzzle (so a test can drag to a real word), and list build time (test 11).

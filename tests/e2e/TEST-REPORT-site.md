@@ -1,6 +1,6 @@
 # TEST-REPORT — Web E2E (site build)
 
-**11/11 passed** across 3 areas.
+**15/15 passed** across 4 areas.
 
 ## coming — 5/5
 - ✅ coming[std]: selecting Korean gates play + shows Notify Me
@@ -8,6 +8,12 @@
 - ✅ coming: Spanish is now gated (English-only launch)
 - ✅ coming: English is playable (not gated)
 - ✅ coming: Notify Me tap confirms and survives reload
+
+## human-audio — 4/4
+- ✅ human audio: a verified clip heads the router (D2)
+- ✅ human audio: switch off plays no human clip (F6)
+- ✅ human audio: a clip that fails to load falls through to TTS (I6)
+- ✅ human audio: slow replay is the same clip at 0.7x, pitch kept (D8)
 
 ## platform — 3/3
 - ✅ platform[site]: English always plays

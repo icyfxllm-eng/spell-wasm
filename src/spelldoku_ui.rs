@@ -94,7 +94,16 @@ pub fn playable(lang: &str) -> bool {
 }
 
 fn configs(kid: bool, lang: &str) -> Vec<(usize, Tier)> {
-    let all = [(4, Tier::Easy), (6, Tier::Easy), (6, Tier::Medium), (9, Tier::Easy), (9, Tier::Medium), (9, Tier::Hard), (9, Tier::Expert)];
+    let all = [
+        (4, Tier::Easy),
+        (6, Tier::Easy),
+        (6, Tier::Medium),
+        (9, Tier::Easy),
+        (9, Tier::Medium),
+        (9, Tier::Hard),
+        (9, Tier::Expert),
+        (12, Tier::Expert),
+    ];
     let frag = table::load(lang).is_some_and(|t| crate::spelldoku::bind::number_symbols(&t, 9).0.fragments_possible());
     all.into_iter()
         .filter(|&(n, tier)| play::allowed(kid, n, tier))
@@ -140,7 +149,10 @@ fn serve(app: &App, n: usize, tier: Tier, daily: bool) -> bool {
     // drawn serves Number Mode instead, never a partial board.
     let personal = if daily { Personal::default() } else { personal(app, &lang) };
     let mut board = None;
-    for k in 0..64u64 {
+    if n == 12 {
+        board = from_pack(&lang, &mut seen, now, base, &personal);
+    }
+    for k in 0..(if n == 12 { 0 } else { 64u64 }) {
         let seed = base.wrapping_add(k);
         let Some(b) = wordmode::board_or_number(&lang, kid, &cfg, seed, &personal, Some(&tbl)) else { continue };
         let h = canon::hash(&b.puzzle);
@@ -164,7 +176,7 @@ fn serve(app: &App, n: usize, tier: Tier, daily: bool) -> bool {
         .collect();
     GAME.with(|g| {
         *g.borrow_mut() = Some(Game {
-            unlocks: Unlocks::new(tier),
+            unlocks: Unlocks::for_board(n, tier),
             board,
             entries,
             pencil: vec![0; cells],
@@ -183,6 +195,33 @@ fn serve(app: &App, n: usize, tier: Tier, daily: bool) -> bool {
     dom::set_text("sdNote", "");
     render();
     true
+}
+
+/// Phase A3: a 12×12 Expert board from the seed pack (D18). An entry this
+/// player has not met within the window (I6) is preferred; when every one has
+/// been met, the one met longest ago. The pack grid's hash is what the ledger
+/// records, so the same grid with other words still counts as met.
+fn from_pack(lang: &str, seen: &mut Seen, now: u32, base: u64, personal: &Personal) -> Option<Board> {
+    use crate::spelldoku::pack::{entries, Entry};
+    let last = |e: &Entry| seen.boards.iter().filter(|(h, _)| *h == e.hash).map(|(_, d)| *d).max();
+    let mut pool: Vec<&Entry> = entries().iter().filter(|e| last(e).is_none()).collect();
+    if pool.is_empty() {
+        let mut all: Vec<&Entry> = entries().iter().collect();
+        all.sort_by_key(|e| last(e));
+        pool = all.into_iter().take(8).collect();
+    }
+    if pool.is_empty() {
+        return None;
+    }
+    let start = (base % pool.len() as u64) as usize;
+    for k in 0..pool.len().min(8) {
+        let e = pool[(start + k) % pool.len()];
+        if let Some(b) = wordmode::board_from_pack(lang, e, base.wrapping_add(k as u64), personal) {
+            seen.boards.push((e.hash, now));
+            return Some(b);
+        }
+    }
+    None
 }
 
 /// F11: the player's own words in this language -- My Words, then the

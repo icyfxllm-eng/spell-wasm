@@ -154,13 +154,23 @@ if (SELFTEST) {
       (s) => s.replace(/if s == "none"/, "if s == \"server-cache\"")],
     ["a dead <audio> element is replayed",
       (s) => s.replace(/&& a\.error\(\)\.is_none\(\)/, "")],
+    // These two laws are scoped to play_word_html, so their lesions must land
+    // there too. src/api.rs now has a second player (the human-audio path,
+    // CC-HUMAN-AUDIO Phase C) with the same code, earlier in the file; a lesion
+    // on the first match would mutate a function the law never reads.
     ["play()'s promise discarded",
-      (s) => s.replace(/match audio\.play\(\) \{/, "let _ = audio.play();\n    match audio.play() {")],
+      (s) => inRouter(s, (r) => r.replace(/match audio\.play\(\) \{/, "let _ = audio.play();\n    match audio.play() {"))],
     ["AbortError treated as a source failure",
-      (s) => s.replace(/"AbortError"/, '"SomeOtherError"')],
+      (s) => inRouter(s, (r) => r.replace(/"AbortError"/, '"SomeOtherError"'))],
     ["onerror is a Closure::once",
       (s) => s.replace(/let err_cb = Closure::wrap/, "let err_cb = Closure::once")],
   ]
+
+  // Apply a lesion inside fn play_word_html only.
+  function inRouter(src, f) {
+    const m = src.match(/fn play_word_html\([\s\S]*?\n\}/);
+    return m ? src.replace(m[0], f(m[0])) : src;
+  }
 
   const JS_LESIONS = [
     ["configure latch never cleared on failure",

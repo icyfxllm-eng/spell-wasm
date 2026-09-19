@@ -1,6 +1,6 @@
 # TEST-REPORT — Web E2E (app build)
 
-**180/180 passed** across 31 areas.
+**186/186 passed** across 32 areas.
 
 ## playhub — 16/16
 - ✅ hub: opens from the meta corner and renders registry tiles
@@ -118,7 +118,7 @@
 - ✅ mywords_play_falls_back_when_the_chosen_list_is_deleted
 - ✅ mywords_in_my_order_serves_the_players_order
 
-## spelldoku — 13/13
+## spelldoku — 15/15
 - ✅ spelldoku_every_language_opens_a_board
 - ✅ spelldoku_mandarin_needs_its_tone
 - ✅ spelldoku_vietnamese_uses_the_tone_row
@@ -132,6 +132,8 @@
 - ✅ spelldoku_word_mode_never_shows_a_spelling
 - ✅ spelldoku_word_mode_spells_to_commit_and_feeds_missed_words
 - ✅ spelldoku_word_mode_draws_my_words_first
+- ✅ spelldoku_twelve_by_twelve_expert
+- ✅ spelldoku_spell_jr_never_sees_twelve
 
 ## spell-search — 10/10
 - ✅ spell_search_opens_in_every_launch_language
@@ -215,6 +217,12 @@
 - ✅ audio gate: starter keeps Replay AND the slow voice
 - ✅ audio gate: advanced keeps Replay but loses Slow
 - ✅ audio gate: expert SHOWS Replay — F5 supersedes the listening ladder
+
+## human-audio — 4/4
+- ✅ human audio: a verified clip heads the router (D2)
+- ✅ human audio: switch off plays no human clip (F6)
+- ✅ human audio: a clip that fails to load falls through to TTS (I6)
+- ✅ human audio: slow replay is the same clip at 0.7x, pitch kept (D8)
 
 ## finale-relaunch — 1/1
 - ✅ finale: layer 1 of orion survives the kill — layer 2 unlocked on relaunch

@@ -44,6 +44,16 @@ pub fn unlock_after(tier: Tier) -> Option<u32> {
     }
 }
 
+/// D1 with v1.2 D17: a 12×12 Expert board unlocks at the Hard threshold, 3.
+/// This exception is scoped to that size; a 9×9 Expert board always spells.
+pub fn unlock_after_on(n: usize, tier: Tier) -> Option<u32> {
+    if n == 12 && tier == Tier::Expert {
+        Some(3)
+    } else {
+        unlock_after(tier)
+    }
+}
+
 /// Per board, per value: how many times it has been spelled correctly.
 #[derive(Clone, Debug)]
 pub struct Unlocks {
@@ -54,6 +64,10 @@ pub struct Unlocks {
 impl Unlocks {
     pub fn new(tier: Tier) -> Self {
         Unlocks { need: unlock_after(tier), counts: [0; 16] }
+    }
+
+    pub fn for_board(n: usize, tier: Tier) -> Self {
+        Unlocks { need: unlock_after_on(n, tier), counts: [0; 16] }
     }
 
     pub fn record_correct(&mut self, v: u8) {

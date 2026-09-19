@@ -302,4 +302,41 @@ export async function run(browser, base, suite) {
       assert((await page.$eval('#sdBadge', (e) => e.textContent)).includes(String(fromMine)), 'the badge names how many');
     } finally { await ctx.close(); }
   });
+
+  // v1.2 Phase A3 — 12x12 Expert: Word Mode only, twelve glyphs, from the
+  // seed pack (D18), rebuilt here exactly as on the host.
+  await suite.test('spelldoku_twelve_by_twelve_expert', async () => {
+    const { ctx, page } = await openApp(browser, base, { lang: 'en' });
+    try {
+      assertEq(await page.evaluate(() => window.__spelltest.spelldokuPack12Digest()), '0x14cc1f163b6e7dec',
+        'Done #20: the pack rebuilds here as on the host (src/spelldoku/pack_tests.rs PACK_GOLDEN)');
+      await openSpellDoku(page);
+      const opts = await page.$$eval('#sdPick option', (o) => o.map((x) => x.value));
+      assert(opts.includes('12-expert'), '12x12 Expert is offered');
+      const ms = await page.evaluate(async () => {
+        const t = performance.now();
+        const s = document.getElementById('sdPick');
+        s.value = '12-expert';
+        s.dispatchEvent(new Event('change', { bubbles: true }));
+        return performance.now() - t;
+      });
+      const b = await board(page);
+      assertEq(b.n, 12, 'a 12x12 board');
+      assert(b.words && b.words.length === 12, 'D19: Word Mode, twelve words');
+      assertEq(await page.$$eval('#sdGrid .sd-cell', (c) => c.length), 144, '144 cells');
+      assertEq(await page.$$eval('#sdLegend .sd-say', (c) => c.length), 12, 'twelve legend orbs');
+      assert(b.clues.some((c) => c.Fragment), 'a fragment clue');
+      assert(ms < 3000, `the board is ready in ${ms.toFixed(0)} ms`);
+      console.log(`    12x12 Expert served in ${ms.toFixed(0)} ms (desktop WebAssembly)`);
+    } finally { await ctx.close(); }
+  });
+
+  await suite.test('spelldoku_spell_jr_never_sees_twelve', async () => {
+    const { ctx, page } = await openApp(browser, base, { lang: 'en', age: KID });
+    try {
+      await openSpellDoku(page);
+      const opts = await page.$$eval('#sdPick option', (o) => o.map((x) => x.value));
+      assert(!opts.includes('12-expert'), 'Jr: no 12x12');
+    } finally { await ctx.close(); }
+  });
 }
