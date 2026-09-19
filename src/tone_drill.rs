@@ -14,7 +14,6 @@
 //! app already does: box 1 on a fresh miss, promote on a clean answer, and the
 //! word leaves the queue at the top box.
 
-use crate::consts::{SR_INT, SR_MAXBOX};
 use crate::model::{AppState, MissEntry};
 use crate::storage;
 
@@ -36,6 +35,9 @@ pub fn key_of(word: &str, lang: &str) -> String {
 
 pub fn load(state: &mut AppState) {
     state.tone_drill = storage::get_json::<Vec<MissEntry>>(TONE_DRILL_KEY).unwrap_or_default();
+    // L0 R2: pre-R2 entries carry over from their Leitner box (C2: the drill
+    // schedules through the same one rule as the misses queue).
+    crate::misses::carry_over_all(&mut state.tone_drill);
 }
 
 fn save(state: &AppState) {
@@ -92,10 +94,11 @@ pub fn add_into(list: &mut Vec<MissEntry>, word: &str, lang: &str, tier: &str, n
     let k = key_of(word, lang);
     if let Some(e) = list.iter_mut().find(|x| key_of(&x.word, &x.lang) == k) {
         e.misses += 1;
-        e.box_ = 1;
-        e.due = now;
         e.ts = now;
+        let r = e.review.get_or_insert_with(|| crate::review::carry_over(e.box_, e.due));
+        e.due = crate::review::on_miss(r, now);
     } else {
+        let (r, due) = crate::review::start(now);
         list.insert(
             0,
             MissEntry {
@@ -103,9 +106,10 @@ pub fn add_into(list: &mut Vec<MissEntry>, word: &str, lang: &str, tier: &str, n
                 lang: lang.to_string(),
                 tier: tier.to_string(),
                 misses: 1,
-                box_: 1,
-                due: now,
+                box_: 0,
+                due,
                 ts: now,
+                review: Some(r),
             },
         );
         if list.len() > TONE_DRILL_CAP {
@@ -114,27 +118,34 @@ pub fn add_into(list: &mut Vec<MissEntry>, word: &str, lang: &str, tier: &str, n
     }
 }
 
-/// A clean answer promotes the word a box. Returns true when that cleared it
-/// out of the drill entirely.
-pub fn promote(state: &mut AppState, word: &str, lang: &str) -> bool {
-    promote_at(state, word, lang, now_ms())
+/// A correct answer, graded Hard or Good, reschedules the word through
+/// `review.rs`. Returns true when it graduated out of the drill.
+pub fn promote(state: &mut AppState, word: &str, lang: &str, grade: crate::review::Grade) -> bool {
+    promote_at(state, word, lang, grade, now_ms())
 }
 
-pub fn promote_at(state: &mut AppState, word: &str, lang: &str, now: f64) -> bool {
+pub fn promote_at(state: &mut AppState, word: &str, lang: &str, grade: crate::review::Grade, now: f64) -> bool {
     let k = key_of(word, lang);
     let Some(i) = state.tone_drill.iter().position(|x| key_of(&x.word, &x.lang) == k) else {
         return false;
     };
-    let b = state.tone_drill[i].box_ + 1;
-    if b > SR_MAXBOX {
-        state.tone_drill.remove(i);
-        save(state);
-        return true;
-    }
-    state.tone_drill[i].box_ = b;
-    state.tone_drill[i].due = now + SR_INT[b as usize] as f64;
+    let outcome = {
+        let e = &mut state.tone_drill[i];
+        let r = e.review.get_or_insert_with(|| crate::review::carry_over(e.box_, e.due));
+        crate::review::on_correct(r, grade, now)
+    };
+    let graduated = match outcome {
+        crate::review::Outcome::Due(due) => {
+            state.tone_drill[i].due = due;
+            false
+        }
+        crate::review::Outcome::Graduated => {
+            state.tone_drill.remove(i);
+            true
+        }
+    };
     save(state);
-    false
+    graduated
 }
 
 /// Moving a word OUT of the drill when it stops being a tone-only problem.
@@ -193,7 +204,7 @@ mod tests {
             match route(&v(&segged, w)) {
                 Queue::ToneDrill => drill.push(MissEntry {
                     word: w.to_string(), lang: "zh".into(), tier: "medium".into(),
-                    misses: 1, box_: 1, due: 0.0, ts: 0.0,
+                    misses: 1, box_: 1, due: 0.0, ts: 0.0, review: None,
                 }),
                 Queue::General => general.push(*w),
             }
@@ -215,13 +226,15 @@ mod tests {
     }
 
     #[test]
-    fn repeat_misses_reset_the_box_rather_than_duplicating() {
+    fn repeat_misses_reset_the_schedule_rather_than_duplicating() {
         let mut list = Vec::new();
         add_into(&mut list, "ma3", "zh", "easy", 0.0);
         add_into(&mut list, "ma3", "zh", "easy", 100.0);
         assert_eq!(list.len(), 1, "one entry per word");
         assert_eq!(list[0].misses, 2);
-        assert_eq!(list[0].box_, 1, "a fresh miss drops it back to box 1");
+        // L0 R2: a repeat miss sends it back to the first learning step, due now.
+        assert_eq!(list[0].review.as_ref().map(|r| r.step), Some(0));
+        assert_eq!(list[0].due, 100.0, "a fresh miss is due immediately");
     }
 
     #[test]

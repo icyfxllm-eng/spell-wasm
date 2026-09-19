@@ -48,10 +48,12 @@ import * as telemetry from './specs/telemetry.mjs';
 import * as statsSheet from './specs/stats-sheet.mjs';
 import * as learnerSurfaces from './specs/learner-surfaces.mjs';
 import * as learnerReset from './specs/learner-reset.mjs';
+import * as reviewQueue from './specs/review-queue.mjs';
 
 const SPECS = [
   ['playhub', playHub, placement, learnerSurfaces, learnerReset],
   ['stats-sheet', statsSheet],
+  ['review-queue', reviewQueue],
   ['hub-row', hubRow],
   ['keyboard', keyboard],
   ['gameplay', gameplay],

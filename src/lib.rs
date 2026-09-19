@@ -24,6 +24,7 @@ mod wordpic; // CC-WORD-PICTURE core (calligrams)
 mod input_provenance;
 mod learner; // CC-LEARNING-ENGINE L0 (BKT + FSRS core; selection arrives with L1)
 mod learner_query; // CC-LEARNING-ENGINE-L0 R1: the frozen read contract (I6)
+mod review; // CC-LEARNING-ENGINE-L0 R2: the one rule for when a missed word returns (I5)
 mod surface_hooks;
 #[cfg(not(feature = "web"))]
 mod translate; // TR D5 STRONG (Eric 2026-08-05: "for the app not the website")
@@ -549,6 +550,7 @@ fn wire_orb_and_answer(app: &App) {
             if !active || answered {
                 game::next_word(&a);
             } else {
+                game::note_replay(&a);
                 game::speak_current(&a);
             }
         });
@@ -566,6 +568,7 @@ fn wire_orb_and_answer(app: &App) {
                 if !active || answered {
                     game::next_word(&a);
                 } else {
+                    game::note_replay(&a);
                     game::speak_current(&a);
                 }
             }
@@ -573,11 +576,17 @@ fn wire_orb_and_answer(app: &App) {
     }
     {
         let a = app.clone();
-        dom::on_click("replayBtn", move || game::speak_current(&a));
+        dom::on_click("replayBtn", move || {
+            game::note_replay(&a);
+            game::speak_current(&a);
+        });
     }
     {
         let a = app.clone();
-        dom::on_click("slowBtn", move || game::replay_slow(&a));
+        dom::on_click("slowBtn", move || {
+            game::note_replay(&a);
+            game::replay_slow(&a);
+        });
     }
     {
         let a = app.clone();
