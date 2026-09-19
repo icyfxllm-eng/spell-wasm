@@ -1,6 +1,6 @@
 # TEST-REPORT — Web E2E (app build)
 
-**161/161 passed** across 29 areas.
+**172/172 passed** across 30 areas.
 
 ## playhub — 12/12
 - ✅ hub: opens from the meta corner and renders registry tiles
@@ -65,6 +65,19 @@
 - ✅ photo_split_proposes_and_never_auto_applies
 - ✅ spell_jr_shows_no_prices
 - ✅ spellit_guide_shows_once_and_can_be_replayed
+
+## telemetry — 11/11
+- ✅ standard_player_sends_valid_batches_with_perf_and_no_text
+- ✅ jr_sends_only_one_daily_aggregate
+- ✅ unknown_age_sends_only_one_daily_aggregate
+- ✅ kill_switch_sends_nothing_and_clears_the_queue
+- ✅ endpoint_down_is_invisible_and_keeps_the_queue
+- ✅ observe_never_act_replay_is_identical_on_and_off
+- ✅ endpoint_down_costs_no_round_latency
+- ✅ settings_effect_telemetry
+- ✅ settings_effect_telemetry_jr_needs_a_grown_up
+- ✅ settings_effect_telemetry_kill_switch_overrides
+- ✅ personal_data_never_reaches_a_payload
 
 ## front-door — 8/8
 - ✅ front_door_no_credential_field_before_a_verdict

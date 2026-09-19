@@ -1589,7 +1589,7 @@
          once, only for languages with NO on-device speech model, never in Kid
          Mode / education builds. -->
     <div class="voice-spell-perm btn-hide" id="voiceSpellNet" role="alertdialog">
-      <p data-i18n="voiceSpell.netAsk">This language needs the internet for voice. Your audio goes to the Spell server only to be recognized, then it's gone — never stored.</p>
+      <p data-i18n="voiceSpell.netAsk">This language needs the internet for voice. Short clips of what you say go to the Spell server, which uses Google's speech service to turn them into text. Spell never saves your audio.</p>
       <button class="btn btn-check" id="voiceSpellNetOk" data-i18n="voiceSpell.netOk" style="width:100%;margin-bottom:6px">Use the internet</button>
       <button class="btn" id="voiceSpellNetNo" data-i18n="voiceSpell.netNo" style="width:100%">No thanks</button>
     </div>
@@ -2594,6 +2594,9 @@
            phone and a dead router is invisible from outside the debugger. -->
       <div class="set-row" id="audioSourceRow"><span class="lbl2"><span>Audio source (debug)</span><small id="audioSourceNote" style="word-break:break-word;opacity:.75">nothing played yet</small></span></div>
       <label class="set-row"><span class="lbl2"><span data-i18n="settings.remind">Daily reminder</span><small data-i18n="settings.remindSmall">One gentle nudge a day to practice</small></span><input type="checkbox" class="switch" id="remindToggle" /></label>
+      <!-- CC-TELEMETRY-FOUNDATION F7 (D11). A Jr or not-yet-answered player can
+           only change it through the parent gate (lib.rs). -->
+      <label class="set-row" id="telemetryRow"><span class="lbl2"><span data-i18n="settings.telemetry">Help improve SpellGame</span><small data-i18n="settings.telemetrySmall">Sends crash and speed reports. Never your words, answers, or anything about you.</small></span><input type="checkbox" class="switch" id="telemetryToggle" /></label>
       <label class="set-row" id="remindTimeRow"><span class="lbl2"><span data-i18n="settings.remindTime">Reminder time</span><small data-i18n="settings.remindTimeSmall">When to send the daily nudge</small></span><input type="time" id="remindTime" value="17:00" aria-label="Daily reminder time" /></label>
       <div class="set-row">
         <span class="lbl2"><span data-i18n="settings.volume">Volume boost</span><small data-i18n="settings.volumeSmall">Louder than 100% for quiet speakers</small></span>
@@ -2635,6 +2638,76 @@
     // `backend/app.py` is running instead (e.g. http://127.0.0.1:5000).
     // No rebuild needed; this is read at runtime by the compiled app.
     window.SPELL_API_BASE = "https://spellgame.net";
+    // Dist content stamp (build-web.sh replaces DEV). Telemetry's build field.
+    window.SPELL_BUILD = "DEV";
+  </script>
+  <!-- CC-TELEMETRY-FOUNDATION v1.1 F1. The schema constants are GENERATED from
+       src/telemetry/schema.rs; this hook runs before the WASM so a failed boot
+       is still counted. It only BUFFERS an error code and a hash of function
+       names (never a message, URL, or line) in localStorage; the Rust core
+       decides whether and how anything is sent. -->
+  <script src="./telemetry-schema.js"></script>
+  <script>
+    (function () {
+      var S = window.SpellTelemetrySchema;
+      if (!S || typeof BigInt !== 'function') return;
+      var M64 = (BigInt(1) << BigInt(64)) - BigInt(1);
+      function fnv64(str) {
+        var h = BigInt('0xcbf29ce484222325'), p = BigInt('0x100000001b3');
+        var b = new TextEncoder().encode(str);
+        for (var i = 0; i < b.length; i++) { h = ((h ^ BigInt(b[i])) * p) & M64; }
+        return h.toString(16).padStart(16, '0');
+      }
+      // Function names only: V8 "at name (url:1:2)", JSC "name@url:1:2".
+      function normalizedStack(err) {
+        var names = [];
+        String((err && err.stack) || '').split('\n').forEach(function (line) {
+          var m = line.match(/^\s*at\s+(?:async\s+)?([^\s(]+)\s*\(/) || line.match(/^\s*([^@\s]+)@/);
+          if (m && names.length < 12) names.push(m[1].replace(/https?:\/\/\S+/g, ''));
+        });
+        return ((err && err.name) || 'Error') + '|' + names.join('|');
+      }
+      function buffer(code, err) {
+        try {
+          if (S.errorCodes.indexOf(code) < 0) return;
+          var q = JSON.parse(localStorage.getItem(S.jsBufferKey) || '[]');
+          if (!Array.isArray(q)) q = [];
+          q.push({ c: code, h: fnv64(normalizedStack(err)) });
+          while (q.length > S.jsBufferMax) q.shift();
+          localStorage.setItem(S.jsBufferKey, JSON.stringify(q));
+        } catch (e) { /* I1: never in the way */ }
+      }
+      // A WASM panic reaches JS as a RuntimeError; the Rust hook already
+      // recorded it by source location, so don't count it twice.
+      function isWasmTrap(err) {
+        return typeof WebAssembly !== 'undefined' && err instanceof WebAssembly.RuntimeError;
+      }
+      window.addEventListener('error', function (ev) {
+        if (ev.error && !isWasmTrap(ev.error)) buffer('js_uncaught', ev.error);
+      });
+      window.addEventListener('unhandledrejection', function (ev) {
+        if (!isWasmTrap(ev.reason)) buffer('js_unhandled_rejection', ev.reason);
+      });
+      window.SpellTelemetryBuffer = buffer;
+      // Transport for the Rust core: gzip when the platform can, plain JSON
+      // otherwise. Resolves true when the batch is finished with, never rejects.
+      window.SpellTelemetryPost = function (url, body) {
+        var headers = { 'Content-Type': 'application/json' };
+        var ready = Promise.resolve(body);
+        if (typeof CompressionStream === 'function') {
+          headers['Content-Encoding'] = 'gzip';
+          ready = new Response(new Blob([body]).stream().pipeThrough(new CompressionStream('gzip'))).arrayBuffer();
+        }
+        return ready
+          .then(function (b) {
+            var size = typeof b === 'string' ? b.length : b.byteLength;
+            return fetch(url, { method: 'POST', headers: headers, body: b, credentials: 'omit', keepalive: size < 60000 });
+          })
+          // Delivered, or refused for good (4xx: invalid, gone): either way done.
+          // Only a network failure or a 5xx keeps the batch for a retry.
+          .then(function (r) { return r.ok || (r.status >= 400 && r.status < 500); }, function () { return false; });
+      };
+    })();
   </script>
   <!-- Native-audio bridge (Capacitor build only; a no-op stub on the web).
        Classic script so window.SpellAudio is defined before the WASM module
@@ -2692,12 +2765,14 @@
     }
 
     async function bootWithRetry() {
+      let lastErr = null;
       for (let attempt = 1; attempt <= MAX_ATTEMPTS; attempt++) {
         try {
           await attemptBoot();
           setGlyph('tap to<br/>hear a word');
           return;
         } catch (err) {
+          lastErr = err;
           console.error(`Spell failed to load (attempt ${attempt}/${MAX_ATTEMPTS}):`, err);
           if (attempt < MAX_ATTEMPTS) {
             setGlyph(`loading… (retry ${attempt}/${MAX_ATTEMPTS - 1})`);
@@ -2705,6 +2780,7 @@
           }
         }
       }
+      if (window.SpellTelemetryBuffer) window.SpellTelemetryBuffer('wasm_init_failed', lastErr);
       setGlyph('couldn’t load —<br/>tap to retry');
       document.getElementById('orbWrap')?.addEventListener(
         'click',

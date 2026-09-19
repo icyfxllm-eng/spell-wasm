@@ -19,15 +19,18 @@ pub const SCHEMA_VERSION: u32 = 1;
 /// A closed string enum: the Rust type, its wire values, and `ALL` for the
 /// schema, from one declaration.
 macro_rules! wire_enum {
-    ($(#[$m:meta])* $name:ident { $($var:ident => $wire:literal),+ $(,)? }) => {
+    // A variant may carry its own attributes: `#[cfg(not(feature = "web"))]`
+    // keeps an app-only mode's name out of the site build (CC-PICTURE-PLATFORM
+    // I1), in the enum, its wire list and both matches.
+    ($(#[$m:meta])* $name:ident { $($(#[$vm:meta])* $var:ident => $wire:literal),+ $(,)? }) => {
         $(#[$m])*
         #[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
-        pub enum $name { $($var),+ }
+        pub enum $name { $($(#[$vm])* $var),+ }
         impl $name {
-            pub const ALL: &'static [&'static str] = &[$($wire),+];
-            pub fn as_str(self) -> &'static str { match self { $($name::$var => $wire),+ } }
+            pub const ALL: &'static [&'static str] = &[$($(#[$vm])* $wire),+];
+            pub fn as_str(self) -> &'static str { match self { $($(#[$vm])* $name::$var => $wire),+ } }
             #[allow(dead_code)] // not every enum is parsed back
-            pub fn from_wire(s: &str) -> Option<Self> { match s { $($wire => Some($name::$var),)+ _ => None } }
+            pub fn from_wire(s: &str) -> Option<Self> { match s { $($(#[$vm])* $wire => Some($name::$var),)+ _ => None } }
         }
         impl Serialize for $name {
             fn serialize<S: serde::Serializer>(&self, s: S) -> Result<S::Ok, S::Error> { s.serialize_str(self.as_str()) }
@@ -106,7 +109,10 @@ wire_enum!(
         Versus => "versus", Practice => "practice", GhostRacing => "ghost_racing",
         Racing => "racing", SayIt => "say_it", DefMatch => "def_match",
         LetterForge => "letter_forge", WordChains => "word_chains", Impostor => "impostor",
-        BeeSim => "bee_sim", WordPicture => "word_picture", Translate => "translate",
+        BeeSim => "bee_sim",
+        #[cfg(not(feature = "web"))]
+        WordPicture => "word_picture",
+        Translate => "translate",
         OnlineSpelloff => "online_spelloff", MyLists => "my_lists",
     }
 );
@@ -517,6 +523,9 @@ mod tests {
     }
 
     /// I9 — the generated bindings on disk equal what this schema produces.
+    /// They are generated from the app build, whose modes are a superset of
+    /// the site's, so the site configuration does not compare them.
+    #[cfg(not(feature = "web"))]
     #[test]
     fn bindings_are_current() {
         let root = env!("CARGO_MANIFEST_DIR");
