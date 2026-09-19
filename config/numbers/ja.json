@@ -1,0 +1,128 @@
+{
+  "lang": "ja",
+  "authority": "Wiktionary",
+  "note": "Sourced by tools/numbers/source_numbers.py from English Wiktionary's cardinal-number translation tables, each row verified against its own entry. status stays 'sourced' until the Fiverr audit ingest.",
+  "rows": [
+    {
+      "n": 0,
+      "spellings": [
+        "れい"
+      ],
+      "status": "sourced",
+      "source": "Wiktionary",
+      "locator": "https://en.wiktionary.org/wiki/zero ; https://en.wiktionary.org/wiki/%E9%9B%B6#Japanese"
+    },
+    {
+      "n": 1,
+      "spellings": [
+        "いち"
+      ],
+      "status": "sourced",
+      "source": "Wiktionary",
+      "locator": "https://en.wiktionary.org/wiki/one/translations ; https://en.wiktionary.org/wiki/%E4%B8%80#Japanese"
+    },
+    {
+      "n": 2,
+      "spellings": [
+        "に"
+      ],
+      "status": "sourced",
+      "source": "Wiktionary",
+      "locator": "https://en.wiktionary.org/wiki/two ; https://en.wiktionary.org/wiki/%E4%BA%8C#Japanese"
+    },
+    {
+      "n": 3,
+      "spellings": [
+        "さん"
+      ],
+      "status": "sourced",
+      "source": "Wiktionary",
+      "locator": "https://en.wiktionary.org/wiki/three ; https://en.wiktionary.org/wiki/%E4%B8%89#Japanese"
+    },
+    {
+      "n": 4,
+      "spellings": [
+        "よん",
+        "し"
+      ],
+      "status": "sourced",
+      "source": "Wiktionary",
+      "locator": "https://en.wiktionary.org/wiki/four ; https://en.wiktionary.org/wiki/%E5%9B%9B#Japanese"
+    },
+    {
+      "n": 5,
+      "spellings": [
+        "ご"
+      ],
+      "status": "sourced",
+      "source": "Wiktionary",
+      "locator": "https://en.wiktionary.org/wiki/five ; https://en.wiktionary.org/wiki/%E4%BA%94#Japanese"
+    },
+    {
+      "n": 6,
+      "spellings": [
+        "ろく"
+      ],
+      "status": "sourced",
+      "source": "Wiktionary",
+      "locator": "https://en.wiktionary.org/wiki/six ; https://en.wiktionary.org/wiki/%E5%85%AD#Japanese"
+    },
+    {
+      "n": 7,
+      "spellings": [
+        "なな",
+        "しち"
+      ],
+      "status": "sourced",
+      "source": "Wiktionary",
+      "locator": "https://en.wiktionary.org/wiki/seven/translations ; https://en.wiktionary.org/wiki/%E4%B8%83#Japanese"
+    },
+    {
+      "n": 8,
+      "spellings": [
+        "はち"
+      ],
+      "status": "sourced",
+      "source": "Wiktionary",
+      "locator": "https://en.wiktionary.org/wiki/eight ; https://en.wiktionary.org/wiki/%E5%85%AB#Japanese"
+    },
+    {
+      "n": 9,
+      "spellings": [
+        "きゅう",
+        "く"
+      ],
+      "status": "sourced",
+      "source": "Wiktionary",
+      "locator": "https://en.wiktionary.org/wiki/nine ; https://en.wiktionary.org/wiki/%E4%B9%9D#Japanese"
+    },
+    {
+      "n": 10,
+      "spellings": [
+        "とお",
+        "じゅう"
+      ],
+      "status": "sourced",
+      "source": "Wiktionary",
+      "locator": "https://en.wiktionary.org/wiki/ten/translations ; https://en.wiktionary.org/wiki/%E5%8D%81#Japanese"
+    },
+    {
+      "n": 11,
+      "spellings": [
+        "じゅういち"
+      ],
+      "status": "sourced",
+      "source": "Wiktionary",
+      "locator": "https://en.wiktionary.org/wiki/eleven ; https://en.wiktionary.org/wiki/%E5%8D%81%E4%B8%80#Japanese"
+    },
+    {
+      "n": 12,
+      "spellings": [
+        "じゅうに"
+      ],
+      "status": "sourced",
+      "source": "Wiktionary",
+      "locator": "https://en.wiktionary.org/wiki/twelve ; https://en.wiktionary.org/wiki/%E5%8D%81%E4%BA%8C#Japanese"
+    }
+  ]
+}

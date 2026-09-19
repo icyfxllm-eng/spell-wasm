@@ -1,0 +1,124 @@
+{
+  "lang": "ar",
+  "authority": "Wiktionary",
+  "note": "Sourced by tools/numbers/source_numbers.py from English Wiktionary's cardinal-number translation tables, each row verified against its own entry. status stays 'sourced' until the Fiverr audit ingest.",
+  "rows": [
+    {
+      "n": 0,
+      "spellings": [
+        "صفر"
+      ],
+      "status": "sourced",
+      "source": "Wiktionary",
+      "locator": "https://en.wiktionary.org/wiki/zero ; https://en.wiktionary.org/wiki/%D8%B5%D9%81%D8%B1#Arabic"
+    },
+    {
+      "n": 1,
+      "spellings": [
+        "واحد"
+      ],
+      "status": "sourced",
+      "source": "Wiktionary",
+      "locator": "https://en.wiktionary.org/wiki/one/translations ; https://en.wiktionary.org/wiki/%D9%88%D8%A7%D8%AD%D8%AF#Arabic"
+    },
+    {
+      "n": 2,
+      "spellings": [
+        "اثنان"
+      ],
+      "status": "sourced",
+      "source": "Wiktionary",
+      "locator": "https://en.wiktionary.org/wiki/two ; https://en.wiktionary.org/wiki/%D8%A7%D8%AB%D9%86%D8%A7%D9%86#Arabic"
+    },
+    {
+      "n": 3,
+      "spellings": [
+        "ثلاثة"
+      ],
+      "status": "sourced",
+      "source": "Wiktionary",
+      "locator": "https://en.wiktionary.org/wiki/three ; https://en.wiktionary.org/wiki/%D8%AB%D9%84%D8%A7%D8%AB%D8%A9#Arabic"
+    },
+    {
+      "n": 4,
+      "spellings": [
+        "أربعة"
+      ],
+      "status": "sourced",
+      "source": "Wiktionary",
+      "locator": "https://en.wiktionary.org/wiki/four ; https://en.wiktionary.org/wiki/%D8%A3%D8%B1%D8%A8%D8%B9%D8%A9#Arabic"
+    },
+    {
+      "n": 5,
+      "spellings": [
+        "خمسة"
+      ],
+      "status": "sourced",
+      "source": "Wiktionary",
+      "locator": "https://en.wiktionary.org/wiki/five ; https://en.wiktionary.org/wiki/%D8%AE%D9%85%D8%B3%D8%A9#Arabic"
+    },
+    {
+      "n": 6,
+      "spellings": [
+        "ستة"
+      ],
+      "status": "sourced",
+      "source": "Wiktionary",
+      "locator": "https://en.wiktionary.org/wiki/six ; https://en.wiktionary.org/wiki/%D8%B3%D8%AA%D8%A9#Arabic"
+    },
+    {
+      "n": 7,
+      "spellings": [
+        "سبعة"
+      ],
+      "status": "sourced",
+      "source": "Wiktionary",
+      "locator": "https://en.wiktionary.org/wiki/seven/translations ; https://en.wiktionary.org/wiki/%D8%B3%D8%A8%D8%B9%D8%A9#Arabic"
+    },
+    {
+      "n": 8,
+      "spellings": [
+        "ثمانية"
+      ],
+      "status": "sourced",
+      "source": "Wiktionary",
+      "locator": "https://en.wiktionary.org/wiki/eight ; https://en.wiktionary.org/wiki/%D8%AB%D9%85%D8%A7%D9%86%D9%8A%D8%A9#Arabic"
+    },
+    {
+      "n": 9,
+      "spellings": [
+        "تسعة"
+      ],
+      "status": "sourced",
+      "source": "Wiktionary",
+      "locator": "https://en.wiktionary.org/wiki/nine ; https://en.wiktionary.org/wiki/%D8%AA%D8%B3%D8%B9%D8%A9#Arabic"
+    },
+    {
+      "n": 10,
+      "spellings": [
+        "عشرة"
+      ],
+      "status": "sourced",
+      "source": "Wiktionary",
+      "locator": "https://en.wiktionary.org/wiki/ten/translations ; https://en.wiktionary.org/wiki/%D8%B9%D8%B4%D8%B1%D8%A9#Arabic"
+    },
+    {
+      "n": 11,
+      "spellings": [
+        "أحد عشر"
+      ],
+      "status": "sourced",
+      "source": "Wiktionary",
+      "locator": "https://en.wiktionary.org/wiki/eleven ; https://en.wiktionary.org/wiki/%D8%A3%D8%AD%D8%AF%20%D8%B9%D8%B4%D8%B1#Arabic"
+    },
+    {
+      "n": 12,
+      "spellings": [
+        "اثنا عشر"
+      ],
+      "status": "sourced",
+      "source": "Wiktionary",
+      "locator": "https://en.wiktionary.org/wiki/twelve ; https://en.wiktionary.org/wiki/%D8%A7%D8%AB%D9%86%D8%A7%20%D8%B9%D8%B4%D8%B1#Arabic"
+    }
+  ]
+}

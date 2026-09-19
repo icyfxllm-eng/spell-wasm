@@ -209,6 +209,14 @@ pub fn translate() -> bool {
     resolve(stored("translate").as_deref(), false)
 }
 
+/// CC-SPELLDOKU v1 — the standard runtime kill-switch. Default ON: whether a
+/// language actually plays is decided by its number-word table (D3), not here.
+/// App only (D9).
+#[cfg(not(feature = "web"))]
+pub fn spelldoku() -> bool {
+    resolve(stored("spelldoku").as_deref(), true)
+}
+
 /// CC-PRACTICE — the guided first-contact mode. Default ON (failure-proof,
 /// writes nothing outside its own record); per-language gate is consts::practice.
 pub fn practice() -> bool {
@@ -289,6 +297,8 @@ pub fn is_on(name: &str) -> bool {
         "calendar" => calendar(),
         #[cfg(not(feature = "web"))]
         "translate" => translate(),
+        #[cfg(not(feature = "web"))]
+        "spelldoku" => spelldoku(),
         _ => false,
     }
 }

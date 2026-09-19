@@ -38,7 +38,7 @@ use crate::App;
 /// is what lets the same file describe a mode for a future surface that has no
 /// such element. `None` = an in-round aid with no destination.
 #[cfg(not(feature = "web"))]
-const N_LAUNCH: usize = 17;
+const N_LAUNCH: usize = 18; // + spelldoku (CC-SPELLDOKU, app only)
 #[cfg(feature = "web")]
 const N_LAUNCH: usize = 9;
 const LAUNCH: [(&str, Option<&str>); N_LAUNCH] = [
@@ -83,6 +83,8 @@ const LAUNCH: [(&str, Option<&str>); N_LAUNCH] = [
     ("calendar", Some("calOpenBtn")),
     #[cfg(not(feature = "web"))]
     ("translate", Some("trOpenBtn")),
+    #[cfg(not(feature = "web"))]
+    ("spelldoku", Some("sdOpenBtn")),
 ];
 
 fn launch_for(id: &str) -> Option<&'static str> {
@@ -138,6 +140,16 @@ fn ctx(app: &App) -> modes::HubCtx {
     }
 }
 
+#[cfg(not(feature = "web"))]
+fn spelldoku_playable(lang: &str) -> bool {
+    crate::spelldoku_ui::playable(lang)
+}
+
+#[cfg(feature = "web")]
+fn spelldoku_playable(_lang: &str) -> bool {
+    false
+}
+
 /// A mode's availability for the CURRENT language. `spell_aloud` is voice-spell-gated:
 /// live only where the language registry's `voice_spell` flag holds (en/es); elsewhere
 /// it renders as an "unavailable / coming soon" tile — shown, not hidden (A7).
@@ -147,6 +159,10 @@ fn unavailable_reason(m: &Mode, lang: &str) -> Option<&'static str> {
     } else if m.id == "practice" && !crate::consts::practice(lang) {
         // D7: curriculum drafted but not yet cleared for this language.
         Some("tools.practice.avail")
+    } else if m.id == "spelldoku" && !spelldoku_playable(lang) {
+        // CC-SPELLDOKU D3: no servable number-word table for this language in
+        // this build -- the tile says so instead of opening onto nothing.
+        Some("sd.avail")
     } else if m.id == "def_match" && !crate::consts::def_match(lang) {
         // Pool not landed/pinned for this language yet (Invariant 8) — a
         // non-tappable teaser, never a dead button.

@@ -1,0 +1,137 @@
+{
+  "lang": "ko",
+  "authority": "Wiktionary",
+  "note": "Sourced by tools/numbers/source_numbers.py from English Wiktionary's cardinal-number translation tables, each row verified against its own entry. status stays 'sourced' until the Fiverr audit ingest.",
+  "rows": [
+    {
+      "n": 0,
+      "spellings": [
+        "제로",
+        "영"
+      ],
+      "status": "sourced",
+      "source": "Wiktionary",
+      "locator": "https://en.wiktionary.org/wiki/zero ; https://en.wiktionary.org/wiki/%EC%A0%9C%EB%A1%9C#Korean"
+    },
+    {
+      "n": 1,
+      "spellings": [
+        "하나",
+        "일"
+      ],
+      "status": "sourced",
+      "source": "Wiktionary",
+      "locator": "https://en.wiktionary.org/wiki/one/translations ; https://en.wiktionary.org/wiki/%ED%95%98%EB%82%98#Korean"
+    },
+    {
+      "n": 2,
+      "spellings": [
+        "둘",
+        "이"
+      ],
+      "status": "sourced",
+      "source": "Wiktionary",
+      "locator": "https://en.wiktionary.org/wiki/two ; https://en.wiktionary.org/wiki/%EB%91%98#Korean"
+    },
+    {
+      "n": 3,
+      "spellings": [
+        "셋",
+        "삼"
+      ],
+      "status": "sourced",
+      "source": "Wiktionary",
+      "locator": "https://en.wiktionary.org/wiki/three ; https://en.wiktionary.org/wiki/%EC%85%8B#Korean"
+    },
+    {
+      "n": 4,
+      "spellings": [
+        "넷",
+        "사"
+      ],
+      "status": "sourced",
+      "source": "Wiktionary",
+      "locator": "https://en.wiktionary.org/wiki/four ; https://en.wiktionary.org/wiki/%EB%84%B7#Korean"
+    },
+    {
+      "n": 5,
+      "spellings": [
+        "다섯",
+        "오"
+      ],
+      "status": "sourced",
+      "source": "Wiktionary",
+      "locator": "https://en.wiktionary.org/wiki/five ; https://en.wiktionary.org/wiki/%EB%8B%A4%EC%84%AF#Korean"
+    },
+    {
+      "n": 6,
+      "spellings": [
+        "여섯",
+        "육"
+      ],
+      "status": "sourced",
+      "source": "Wiktionary",
+      "locator": "https://en.wiktionary.org/wiki/six ; https://en.wiktionary.org/wiki/%EC%97%AC%EC%84%AF#Korean"
+    },
+    {
+      "n": 7,
+      "spellings": [
+        "일곱",
+        "칠"
+      ],
+      "status": "sourced",
+      "source": "Wiktionary",
+      "locator": "https://en.wiktionary.org/wiki/seven/translations ; https://en.wiktionary.org/wiki/%EC%9D%BC%EA%B3%B1#Korean"
+    },
+    {
+      "n": 8,
+      "spellings": [
+        "여덟",
+        "팔"
+      ],
+      "status": "sourced",
+      "source": "Wiktionary",
+      "locator": "https://en.wiktionary.org/wiki/eight ; https://en.wiktionary.org/wiki/%EC%97%AC%EB%8D%9F#Korean"
+    },
+    {
+      "n": 9,
+      "spellings": [
+        "아홉",
+        "구"
+      ],
+      "status": "sourced",
+      "source": "Wiktionary",
+      "locator": "https://en.wiktionary.org/wiki/nine ; https://en.wiktionary.org/wiki/%EC%95%84%ED%99%89#Korean"
+    },
+    {
+      "n": 10,
+      "spellings": [
+        "열",
+        "십"
+      ],
+      "status": "sourced",
+      "source": "Wiktionary",
+      "locator": "https://en.wiktionary.org/wiki/ten/translations ; https://en.wiktionary.org/wiki/%EC%97%B4#Korean"
+    },
+    {
+      "n": 11,
+      "spellings": [
+        "열하나",
+        "십일"
+      ],
+      "status": "sourced",
+      "source": "Wiktionary",
+      "locator": "https://en.wiktionary.org/wiki/eleven ; https://en.wiktionary.org/wiki/%EC%97%B4%ED%95%98%EB%82%98#Korean"
+    },
+    {
+      "n": 12,
+      "spellings": [
+        "열둘",
+        "십이"
+      ],
+      "status": "sourced",
+      "source": "Wiktionary",
+      "locator": "https://en.wiktionary.org/wiki/twelve ; https://en.wiktionary.org/wiki/%EC%97%B4%EB%91%98#Korean"
+    }
+  ]
+}

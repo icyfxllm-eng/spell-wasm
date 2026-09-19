@@ -1,0 +1,124 @@
+{
+  "lang": "zh",
+  "authority": "Wiktionary",
+  "note": "Sourced by tools/numbers/source_numbers.py from English Wiktionary's cardinal-number translation tables, each row verified against its own entry. status stays 'sourced' until the Fiverr audit ingest.",
+  "rows": [
+    {
+      "n": 0,
+      "spellings": [
+        "líng"
+      ],
+      "status": "sourced",
+      "source": "Wiktionary",
+      "locator": "https://en.wiktionary.org/wiki/zero ; https://en.wiktionary.org/wiki/%E9%9B%B6#Chinese"
+    },
+    {
+      "n": 1,
+      "spellings": [
+        "yī"
+      ],
+      "status": "sourced",
+      "source": "Wiktionary",
+      "locator": "https://en.wiktionary.org/wiki/one/translations ; https://en.wiktionary.org/wiki/%E4%B8%80#Chinese"
+    },
+    {
+      "n": 2,
+      "spellings": [
+        "èr"
+      ],
+      "status": "sourced",
+      "source": "Wiktionary",
+      "locator": "https://en.wiktionary.org/wiki/two ; https://en.wiktionary.org/wiki/%E4%BA%8C#Chinese"
+    },
+    {
+      "n": 3,
+      "spellings": [
+        "sān"
+      ],
+      "status": "sourced",
+      "source": "Wiktionary",
+      "locator": "https://en.wiktionary.org/wiki/three ; https://en.wiktionary.org/wiki/%E4%B8%89#Chinese"
+    },
+    {
+      "n": 4,
+      "spellings": [
+        "sì"
+      ],
+      "status": "sourced",
+      "source": "Wiktionary",
+      "locator": "https://en.wiktionary.org/wiki/four ; https://en.wiktionary.org/wiki/%E5%9B%9B#Chinese"
+    },
+    {
+      "n": 5,
+      "spellings": [
+        "wǔ"
+      ],
+      "status": "sourced",
+      "source": "Wiktionary",
+      "locator": "https://en.wiktionary.org/wiki/five ; https://en.wiktionary.org/wiki/%E4%BA%94#Chinese"
+    },
+    {
+      "n": 6,
+      "spellings": [
+        "liù"
+      ],
+      "status": "sourced",
+      "source": "Wiktionary",
+      "locator": "https://en.wiktionary.org/wiki/six ; https://en.wiktionary.org/wiki/%E5%85%AD#Chinese"
+    },
+    {
+      "n": 7,
+      "spellings": [
+        "qī"
+      ],
+      "status": "sourced",
+      "source": "Wiktionary",
+      "locator": "https://en.wiktionary.org/wiki/seven/translations ; https://en.wiktionary.org/wiki/%E4%B8%83#Chinese"
+    },
+    {
+      "n": 8,
+      "spellings": [
+        "bā"
+      ],
+      "status": "sourced",
+      "source": "Wiktionary",
+      "locator": "https://en.wiktionary.org/wiki/eight ; https://en.wiktionary.org/wiki/%E5%85%AB#Chinese"
+    },
+    {
+      "n": 9,
+      "spellings": [
+        "jiǔ"
+      ],
+      "status": "sourced",
+      "source": "Wiktionary",
+      "locator": "https://en.wiktionary.org/wiki/nine ; https://en.wiktionary.org/wiki/%E4%B9%9D#Chinese"
+    },
+    {
+      "n": 10,
+      "spellings": [
+        "shí"
+      ],
+      "status": "sourced",
+      "source": "Wiktionary",
+      "locator": "https://en.wiktionary.org/wiki/ten/translations ; https://en.wiktionary.org/wiki/%E5%8D%81#Chinese"
+    },
+    {
+      "n": 11,
+      "spellings": [
+        "shíyī"
+      ],
+      "status": "sourced",
+      "source": "Wiktionary",
+      "locator": "https://en.wiktionary.org/wiki/eleven ; https://en.wiktionary.org/wiki/%E5%8D%81%E4%B8%80#Chinese"
+    },
+    {
+      "n": 12,
+      "spellings": [
+        "shí'èr"
+      ],
+      "status": "sourced",
+      "source": "Wiktionary",
+      "locator": "https://en.wiktionary.org/wiki/twelve ; https://en.wiktionary.org/wiki/%E5%8D%81%E4%BA%8C#Chinese"
+    }
+  ]
+}

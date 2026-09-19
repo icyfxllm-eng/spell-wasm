@@ -39,6 +39,7 @@ import * as pickerContinue from './specs/picker-continue.mjs';
 import * as frontDoor from './specs/front-door.mjs';
 import * as jrClimb from './specs/jr-climb.mjs';
 import * as myWordsLists from './specs/mywords-lists.mjs';
+import * as spellDoku from './specs/spelldoku.mjs';
 import * as translateScreen from './specs/translate-screen.mjs';
 import * as settingsEffects from './specs/settings-effects.mjs';
 
@@ -53,6 +54,7 @@ const SPECS = [
   ['front-door', frontDoor],
   ['jr-climb', jrClimb],
   ['mywords-lists', myWordsLists],
+  ['spelldoku', spellDoku],
   ['translate-screen', translateScreen],
   ['coming', coming],
   ['sayit', sayit],
