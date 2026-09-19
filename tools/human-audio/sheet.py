@@ -99,7 +99,7 @@ button{font:inherit;padding:8px 14px;border-radius:8px;border:1px solid var(--li
 <textarea id="out" readonly style="display:none;width:100%;height:9em;font:12px ui-monospace,monospace;margin:8px 0;background:var(--row);color:var(--fg);border:1px solid var(--line);border-radius:8px"></textarea>
 <div id="rows"></div></main>
 <script>
-const ID="__ID__",ROWS=__ROWS__,VERDICTS=__VERDICTS__,KEY="audit-"+ID;
+const ID="__ID__",ROWS=__ROWS__,VERDICTS=__VERDICTS__,KEY="audit-v2-"+ID;
 let saved={};try{saved=JSON.parse(localStorage.getItem(KEY)||"{}")}catch(e){}
 const box=document.getElementById("rows");let cur=0;
 ROWS.forEach((r,i)=>{const d=document.createElement("div");d.className="r";d.id="row"+i;
