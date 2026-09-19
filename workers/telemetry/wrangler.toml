@@ -16,9 +16,10 @@ preview_urls = false
 # queues and stop sending on their next launch. Flip with:
 #   npx wrangler deploy --var TELEMETRY_ENABLED:false
 [vars]
-# OFF at first deploy (Eric, 2026-09-18): the Worker is live but clients are
-# told telemetry is off until the privacy policy (R7 + the F7 draft) is live.
-TELEMETRY_ENABLED = "false"
+# ON since ~22:54 2026-09-18 (Eric's request, deployed by the privacy.html
+# session as version f970d079): the privacy section went live first
+# (origin/main 8023f662, spellgame.net/privacy). It was OFF at first deploy.
+TELEMETRY_ENABLED = "true"
 
 # Raw events (90 days) + per-day counts (kept). database_id is filled in by
 # `wrangler d1 create spell-telemetry` at first deploy (2026-09-18).

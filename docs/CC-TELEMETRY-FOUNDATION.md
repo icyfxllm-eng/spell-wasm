@@ -1,6 +1,6 @@
 # CC-TELEMETRY-FOUNDATION v1.1
 
-**Status:** Phases A, B and C BUILT and merged to `main` (2026-09-18). The **Worker is DEPLOYED with the kill switch OFF** (`TELEMETRY_ENABLED=false`, 2026-09-18): `spellgame.net/telemetry/v1/flags` answers false, so clients send nothing and clear their queues. It gets turned on once the privacy policy (R7 + the F7 draft) is live. Still to do: the R8 server change needs `deploy.sh`. Raw-event retention (D6) runs on the Mac mini as the `net.spellgame.telemetry-purge` LaunchAgent, because Cloudflare refused the Worker cron (see the Worker README).
+**Status:** Phases A, B and C BUILT and merged to `main` (2026-09-18). The **Worker is DEPLOYED and ON** (`TELEMETRY_ENABLED=true` since ~22:54 2026-09-18). It was deployed off, and turned on after the R7 fix and the telemetry privacy section went live (origin/main 8023f662). Build 228, the first build that sends, is in TestFlight external review. Still to do: the R8 server change needs `deploy.sh`. Raw-event retention (D6) runs on the Mac mini as the `net.spellgame.telemetry-purge` LaunchAgent, because Cloudflare refused the Worker cron (see the Worker README).
 **Supersedes v1.** v1.1 covers **crash reporting (F1) and performance (F5) only**, per Eric's D-TEL sign-off (2026-09-18, "add with the recommendations").
 **Blast radius:** one new network endpoint plus error and performance hooks. Zero gameplay behavior change. Must not delay the next TestFlight build (R10b: the v1.1 draft said "build 56"; TestFlight was at build 226).
 

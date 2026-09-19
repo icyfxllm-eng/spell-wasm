@@ -34,7 +34,7 @@ never reads or stores an IP. Check the zone as well:
 
 - Account "Icyfxllm@gmail.com's Account"; D1 `spell-telemetry` (`88eeaf34-…`, ENAM), migrations 0001 and 0002 applied.
 - Route `spellgame.net/telemetry/*` only. `workers_dev = false`, `preview_urls = false`.
-- **Kill switch OFF** (`TELEMETRY_ENABLED = "false"` in wrangler.toml) until the privacy policy is live. To turn it on, set it to `"true"` in wrangler.toml and `npx wrangler deploy`, so the file stays the record.
+- **Kill switch ON** since ~22:54 2026-09-18 (`TELEMETRY_ENABLED = "true"`, version f970d079), after the privacy section went live (origin/main 8023f662). Build 228 is the first build that sends. To turn it off, set `"false"` in wrangler.toml and `npx wrangler deploy`; clients stop and clear on their next launch.
 - IP rule: Eric accepted Cloudflare's standing Security Analytics sampling (it can't be switched off per path).
 - **Retention (D6) runs on the Mac mini, not a Worker cron.** Cloudflare kept refusing cron triggers on this account (code 10063, "needs a workers.dev subdomain", even after one was set), so the cron was removed. The LaunchAgent `net.spellgame.telemetry-purge` (installed by `scripts/mac-server/install-telemetry-purge.sh`) runs daily at 04:17. It deletes raw events older than 90 days and prunes R8 speak-metric files. It logs to `~/spellgame-server/logs/net.spellgame.telemetry-purge.log`. It was verified through launchd on 2026-09-18: a row dated 2000-01-01 was deleted and today's was kept. It depends on the Mac mini being up and on the Wrangler OAuth login (`~/Library/Preferences/.wrangler`). If that login lapses, the log shows "D1 purge FAILED".
 
