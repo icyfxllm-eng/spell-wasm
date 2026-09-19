@@ -127,6 +127,8 @@ mod wordgrid_census; // CC-WORDGRID §3: measurement only
 mod spelldoku; // CC-SPELLDOKU v1 — app only (D9)
 #[cfg(not(feature = "web"))]
 mod spelldoku_ui; // CC-SPELLDOKU v1 — the screen (app only)
+#[cfg(test)]
+mod human_audio_census; // CC-HUMAN-AUDIO Phase A: bank dump for the census
 #[cfg(not(feature = "web"))]
 mod lists_ui; // CC-MYWORDS-LISTS F1 — the save sheet's destination (app only)
 #[cfg(not(feature = "web"))]
