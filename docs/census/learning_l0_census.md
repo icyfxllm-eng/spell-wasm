@@ -179,3 +179,100 @@ schema to lint.
 
 The L0 file's own open decisions (D3–D8) still stand and are unaffected, except
 that D3's grade table now also governs rule C if C3 unifies FSRS.
+
+---
+
+## Rulings SIGNED (Eric, 2026-09-19): "sign C1–C9 as drafted"
+
+These are the drafted rulings, rechecked against `origin/main` on 2026-09-18
+before signing. The table above holds the census's first-pass
+recommendations; where the two differ, **these rulings govern**. C3 and C6
+changed after the census: the FSRS formulas were fixed on main (b94dc712,
+build 227), and the telemetry lint landed.
+
+**C1: re-scope L0 as a retrofit.** L0 retrofits the engine that shipped in
+builds 122–134. It does not build a new one. **L0 D2 ("defer BKT") is
+withdrawn.** BKT stays as shipped, feeding Reports, Guardian Dash and the Trap
+Boss bars. CC-LEARNING-SKILL's job becomes checking that shipped BKT is correct,
+not building it. R1–R4 keep their intent, with "build" read as "retrofit".
+
+**C2: three review rules become one.** R2 replaces rule A (the Leitner misses
+queue, `misses.rs`) with per-word FSRS. Rule B (the tone drill) runs on the
+same scheduler code with its own queue: one rule and one code path (I5),
+while staying the separate study CC-ZH-TONE F3 requires. Rule C (per-skill
+FSRS in `learner.rs`) is not a review rule. It stays as the skill-level signal
+for ordering fresh words, renamed to skill due-ness. The I5 scan counts rules
+that decide when a missed word returns, and C doesn't count.
+
+**C3: one FSRS version.** Pin FSRS-4.5 (17 weights, as pinned today). This
+ratifies the formula fix on main (b94dc712) and the stored-difficulty reset
+(schema v2, PR 6). Word-level scheduling (R2) and the skill signal (C) share
+one implementation. Acceptance 3 is met by vendoring reference outputs from a
+published FSRS-4.5 implementation as a fixture. Moving to FSRS-5 later is a
+reviewed change of its own.
+
+**C4: profile key.** The device counts as profile 0 until multi-profile ships.
+The `LearnerQuery` contract takes a profile id from day one, so the key shape
+(profile, language, entry identity) is fixed now, and multi-profile becomes a
+change to the stored data, not to the contract.
+
+**C5: unbuilt dependencies.** Acceptance 7 (the language-scope check) and the
+exposure-ledger clause are dropped from L0 and recorded as dependencies on
+CC-LANG-SCOPE F5 and CC-PERSIAN-FOUNDATION F6. L0 builds neither. R2's new
+store is scoped by language by construction: one key per language, unlike
+today's single global misses key. It registers with F5 when F5 exists.
+Freshness keeps using the existing deck and selection exclusion until F6
+lands.
+
+**C6: telemetry isolation.** `schema_lint` (`src/telemetry/schema.rs`) rejects
+gameplay-data field names but no learner terms. L0 Phase 1 adds `learner`,
+`mastery`, `fsrs`, `bkt`, `skill`, `stability`, `difficulty`, `lapse`,
+`reps`, `due`, `review` and `placement` to its forbidden list. On 2026-09-18
+none of these collided with a current field. Acceptance 8 stays as written:
+its planted `mastery` field must fail the lint. Because this touches a file
+CC-TELEMETRY-FOUNDATION owns, this signature is that file's consent.
+
+**C7: the placement flag.** Not split out. The ownership row now reads: "L0
+stores `placed`; CC-PLACEMENT-IDEMPOTENCE owns what it means." Only placement
+code writes it, enforced by the I6 scan. Splitting it would need another schema
+migration right after v2.
+
+**C8: the "FSRS due" labels.** Correct the doc comment on
+`reports::rematch_set`, and CC-CALENDAR's "FSRS due forecast" wording, now:
+both read the Leitner misses queue. The wiring corrects itself in R2, when the
+rematch set reads the per-word FSRS queue through `LearnerQuery`.
+
+**C9: missing specs.** CC-TELEMETRY-FOUNDATION is now in `docs/`.
+CC-PLACEMENT-IDEMPOTENCE and CC-LANG-SCOPE are still missing. Save both into
+`docs/` from the session transcripts before Phase 1, each marked as saved
+verbatim. L0 doesn't cite them as owners until they're there.
+
+**C10 (found after the census): a failed load overwrites learner data.**
+Acted on, not formally signed. Eric (2026-09-18): "hold PR #6 and do C10
+first". Implemented in PR 7:
+- a newer build's state is never written;
+- unreadable bytes are backed up to `spell_learner_{lang}_unreadable`, then
+  play continues fresh.
+
+It must reach players before schema v2 does.
+
+**Also recorded (2026-09-18/19, Eric):**
+- Stored FSRS difficulty resets to 5.1618 for existing players: schema v2,
+  PR 6, held behind C10.
+- "Reset this language" erases that language's learner state (Done #8 gap,
+  branch `learner-reset`).
+- "Reset this language" leaves the missed-words queue as is.
+
+### Actions these rulings create
+
+| When | Action | Ruling |
+|---|---|---|
+| now | Correct the `rematch_set` doc comment and CC-CALENDAR's "FSRS due forecast" wording | C8 |
+| before Phase 1 | Save CC-PLACEMENT-IDEMPOTENCE and CC-LANG-SCOPE into `docs/` | C9 |
+| Phase 1 | Add the learner terms to `schema_lint`; the `LearnerQuery` signature carries the profile id | C6, C4 |
+| Phase 2 | Per-word FSRS replaces `misses.rs`; the tone drill moves onto it; rule C renamed to skill due-ness | C2 |
+| Phase 2 | Vendor FSRS-4.5 reference outputs as the acceptance 3 fixture | C3 |
+
+L0's own D3–D8 remain open. D3's grade table now also covers rule C (C3).
+Today the game grades only pass or fail, so D3's recommended Hard rating is
+new signal the game doesn't record yet.
