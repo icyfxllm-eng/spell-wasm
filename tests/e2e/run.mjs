@@ -43,9 +43,11 @@ import * as spellDoku from './specs/spelldoku.mjs';
 import * as translateScreen from './specs/translate-screen.mjs';
 import * as settingsEffects from './specs/settings-effects.mjs';
 import * as telemetry from './specs/telemetry.mjs';
+import * as statsSheet from './specs/stats-sheet.mjs';
 
 const SPECS = [
   ['playhub', playHub, placement],
+  ['stats-sheet', statsSheet],
   ['hub-row', hubRow],
   ['keyboard', keyboard],
   ['gameplay', gameplay],
