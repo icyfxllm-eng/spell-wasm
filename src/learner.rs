@@ -369,6 +369,103 @@ fn today_day() -> u32 {
 }
 
 const STORE_PREFIX: &str = "spell_learner_";
+/// Where unreadable bytes go before anything overwrites them (census C10).
+/// Same prefix, so every audit that polices `spell_learner_` covers it too.
+const BACKUP_SUFFIX: &str = "_unreadable";
+
+// ------------------------------------------- C10: a failed load never wipes
+//
+// Before C10, every door did `load_state(..).ok().unwrap_or_else(new)` and
+// then saved: ANY load failure silently replaced the player's state with an
+// empty one. Two failures need opposite handling:
+//
+//   * NEWER schema — a player on build N+1 reinstalled build N. The bytes
+//     are fine; this build just can't read them. Never write: run on an
+//     in-memory state so the data is intact when they update again. The
+//     `placed` flag is read leniently (every schema carries it) so the
+//     placement offer doesn't nag a player who already answered it.
+//   * UNREADABLE — corrupt JSON or a failed migration. Waiting cannot fix
+//     it, so copy the bytes to the backup key (never clobbering an earlier
+//     backup), then continue fresh and save normally, or the player would
+//     never record again.
+
+#[derive(Debug, PartialEq)]
+pub enum Loaded {
+    /// Nothing stored: a fresh state, saved normally.
+    Empty(LearnerState),
+    /// Stored and read (migrated if it was older).
+    Stored(LearnerState),
+    /// Stored by a newer build: fresh in memory, NEVER written.
+    Newer(LearnerState),
+    /// Unreadable: back up `raw`, then continue fresh.
+    Unreadable { fresh: LearnerState, raw: String },
+}
+
+impl Loaded {
+    pub fn state(self) -> LearnerState {
+        match self {
+            Loaded::Empty(s) | Loaded::Stored(s) | Loaded::Newer(s) => s,
+            Loaded::Unreadable { fresh, .. } => fresh,
+        }
+    }
+    pub fn writable(&self) -> bool {
+        !matches!(self, Loaded::Newer(_))
+    }
+}
+
+/// Pure: what to do with the stored bytes. No storage access, so every
+/// branch is unit-testable on the host.
+pub fn resolve_load(raw: Option<&str>, lang: &str) -> Loaded {
+    let Some(raw) = raw else { return Loaded::Empty(LearnerState::new(lang)) };
+    match load_state(raw) {
+        Ok(st) => Loaded::Stored(st),
+        Err(_) => {
+            #[derive(Deserialize)]
+            struct Lenient {
+                version: u32,
+                #[serde(default)]
+                placed: Option<bool>,
+            }
+            match serde_json::from_str::<Lenient>(raw) {
+                Ok(p) if p.version > SCHEMA_VERSION => {
+                    let mut st = LearnerState::new(lang);
+                    st.placed = p.placed;
+                    Loaded::Newer(st)
+                }
+                _ => Loaded::Unreadable { fresh: LearnerState::new(lang), raw: raw.to_string() },
+            }
+        }
+    }
+}
+
+fn store_key(lang: &str) -> String {
+    format!("{STORE_PREFIX}{lang}")
+}
+
+/// Load for a language, backing up unreadable bytes first. Returns the
+/// state and whether it may be written back.
+fn open(lang: &str) -> (LearnerState, bool) {
+    let key = store_key(lang);
+    let loaded = resolve_load(crate::storage::get_raw(&key).as_deref(), lang);
+    if let Loaded::Unreadable { raw, .. } = &loaded {
+        let bak = format!("{key}{BACKUP_SUFFIX}");
+        if crate::storage::get_raw(&bak).is_none() {
+            crate::storage::set_raw(&bak, raw);
+        }
+    }
+    let writable = loaded.writable();
+    (loaded.state(), writable)
+}
+
+/// The one save. A state loaded over a newer build's bytes is never written.
+fn save(lang: &str, st: &LearnerState, writable: bool) {
+    if !writable {
+        return;
+    }
+    if let Ok(json) = serde_json::to_string(st) {
+        crate::storage::set_raw(&store_key(lang), &json);
+    }
+}
 
 /// The one gameplay door: load-or-new, record, save. Every submit path
 /// calls this and nothing else — the speech exclusion lives inside
@@ -383,23 +480,18 @@ pub fn note_attempt(lang: &str, word: &str, correct: bool, channel: Channel) {
 /// grapheme diagnosis has its material. Correct answers pass None — the
 /// log never stores what didn't diverge.
 pub fn note_attempt_typed(lang: &str, word: &str, correct: bool, channel: Channel, typed: Option<&str>) {
-    let key = format!("{STORE_PREFIX}{lang}");
-    let mut st = crate::storage::get_raw(&key)
-        .and_then(|j| load_state(&j).ok())
-        .unwrap_or_else(|| LearnerState::new(lang));
+    let (mut st, writable) = open(lang);
     st.record(attempt(lang, word, correct, channel, typed, today_day()));
-    crate::storage::set_json(&key, &st);
+    save(lang, &st, writable);
 }
 
 /// Record an attempt another mode built with `attempt` (CC-WORDGRID F-X6):
-/// the same load, record and save as every base-game answer.
+/// the same door as every base-game answer, C10's `open` and `save`
+/// included, so an unreadable store is never overwritten from here either.
 pub fn note_built(lang: &str, a: Attempt) {
-    let key = format!("{STORE_PREFIX}{lang}");
-    let mut st = crate::storage::get_raw(&key)
-        .and_then(|j| load_state(&j).ok())
-        .unwrap_or_else(|| LearnerState::new(lang));
+    let (mut st, writable) = open(lang);
     st.record(a);
-    crate::storage::set_json(&key, &st);
+    save(lang, &st, writable);
 }
 
 /// Today's day index, as the log stores it.
@@ -490,10 +582,7 @@ pub fn select_within(
 /// Load-or-new for a language — the same door `note_attempt` uses,
 /// exposed so the selection hook reads the identical state.
 pub fn load_for(lang: &str) -> LearnerState {
-    let key = format!("{STORE_PREFIX}{lang}");
-    crate::storage::get_raw(&key)
-        .and_then(|j| load_state(&j).ok())
-        .unwrap_or_else(|| LearnerState::new(lang))
+    open(lang).0
 }
 
 /// Public wrapper for the day index (the hook needs the same epoch).
@@ -658,22 +747,16 @@ pub fn apply_placement(state: &mut LearnerState, lang: &str, word: &str, correct
 /// the `placed` flag — the eval's "defaults intact" clause, by
 /// construction and by test.
 pub fn note_placement(lang: &str, word: &str, correct: bool) {
-    let mut st = load_for(lang);
+    let (mut st, writable) = open(lang);
     let day = today_day();
     apply_placement(&mut st, lang, word, correct, day);
-    let key = format!("{STORE_PREFIX}{lang}");
-    if let Ok(json) = serde_json::to_string(&st) {
-        crate::storage::set_raw(&key, &json);
-    }
+    save(lang, &st, writable);
 }
 
 pub fn finish_placement(lang: &str, took: bool) {
-    let mut st = load_for(lang);
+    let (mut st, writable) = open(lang);
     st.placed = Some(took);
-    let key = format!("{STORE_PREFIX}{lang}");
-    if let Ok(json) = serde_json::to_string(&st) {
-        crate::storage::set_raw(&key, &json);
-    }
+    save(lang, &st, writable);
 }
 
 // ------------------------------------------- L2: the guardian report
@@ -970,6 +1053,56 @@ mod tests {
         assert!(load_state(newer).unwrap_err().contains("NEWER"));
         let ancient = r#"{"version": 0, "lang": "en", "skills": [], "log": [], "placed": null}"#;
         assert!(load_state(ancient).unwrap_err().contains("no migration path from schema v0"));
+    }
+
+    // -- C10: a failed load never wipes ------------------------------------
+
+    #[test]
+    fn c10_nothing_stored_is_empty_and_writable() {
+        let l = resolve_load(None, "en");
+        assert!(l.writable());
+        assert_eq!(l, Loaded::Empty(LearnerState::new("en")));
+    }
+
+    #[test]
+    fn c10_a_readable_state_is_stored_and_writable() {
+        let mut st = LearnerState::new("en");
+        st.placed = Some(false);
+        let json = serde_json::to_string(&st).unwrap();
+        let l = resolve_load(Some(&json), "en");
+        assert!(l.writable());
+        assert_eq!(l, Loaded::Stored(st));
+    }
+
+    #[test]
+    fn c10_a_newer_schema_is_never_written_and_keeps_placed() {
+        // A later build's state, with fields this build has never heard of.
+        let newer = r#"{"version": 99, "lang": "en", "skills": [], "log": [],
+                        "placed": true, "profile": 3, "something_new": {"x": 1}}"#;
+        let l = resolve_load(Some(newer), "en");
+        assert!(!l.writable(), "a newer build's bytes must never be overwritten");
+        let st = l.state();
+        assert_eq!(st.placed, Some(true), "placed is read leniently so the offer doesn't nag");
+        assert!(st.skills.is_empty() && st.log.is_empty(), "runs on a fresh in-memory state");
+    }
+
+    #[test]
+    fn c10_unreadable_bytes_are_handed_back_for_backup() {
+        for bad in [
+            "not json at all",
+            r#"{"version": 1, "lang": "en", "skills": "oops"}"#, // right version, wrong shape
+            r#"{"version": 0, "lang": "en", "skills": [], "log": [], "placed": null}"#, // no migration path
+            r#"{"lang": "en"}"#, // no version at all
+        ] {
+            match resolve_load(Some(bad), "en") {
+                Loaded::Unreadable { fresh, raw } => {
+                    assert_eq!(raw, bad, "the backup must be the exact bytes");
+                    assert_eq!(fresh, LearnerState::new("en"));
+                }
+                other => panic!("{bad:?} resolved to {other:?}, expected Unreadable"),
+            }
+            assert!(resolve_load(Some(bad), "en").writable(), "{bad:?}: must recover, not stall forever");
+        }
     }
 
     #[test]
