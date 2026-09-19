@@ -46,9 +46,10 @@ import * as settingsEffects from './specs/settings-effects.mjs';
 import * as telemetry from './specs/telemetry.mjs';
 import * as statsSheet from './specs/stats-sheet.mjs';
 import * as learnerSurfaces from './specs/learner-surfaces.mjs';
+import * as learnerReset from './specs/learner-reset.mjs';
 
 const SPECS = [
-  ['playhub', playHub, placement, learnerSurfaces],
+  ['playhub', playHub, placement, learnerSurfaces, learnerReset],
   ['stats-sheet', statsSheet],
   ['hub-row', hubRow],
   ['keyboard', keyboard],

@@ -467,6 +467,16 @@ fn save(lang: &str, st: &LearnerState, writable: bool) {
     }
 }
 
+/// Progress-reset for one language (CC-LEARNING-ENGINE Done #8, D5): the
+/// learner state AND its C10 backup go, so nothing learned about this
+/// language survives a reset. Other languages are untouched. Placement is
+/// offered again, which is right after a reset.
+pub fn reset(lang: &str) {
+    let key = store_key(lang);
+    crate::storage::remove(&key);
+    crate::storage::remove(&format!("{key}{BACKUP_SUFFIX}"));
+}
+
 /// The one gameplay door: load-or-new, record, save. Every submit path
 /// calls this and nothing else — the speech exclusion lives inside
 /// `record()`, not in callers remembering to skip it. Storage failures
