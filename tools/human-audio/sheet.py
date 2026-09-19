@@ -61,6 +61,21 @@ def stamp(sheet_id, rows):
     return h.hexdigest()
 
 
+def rows_json(folder, public):
+    """The page's rows, each clip EMBEDDED as a data: URI. WebKit browsers
+    (Safari, DuckDuckGo) refuse to load a sibling file from a page opened as a
+    file, so a page that referenced clips/rNNNN.m4a showed "Error" on every row.
+    Embedded, the page plays anywhere with no server. The clips folder stays:
+    it is what the stamp and the ingest verify."""
+    import base64
+    out = []
+    for r in public:
+        data = base64.b64encode((pathlib.Path(folder) / "clips" / r["clip"]).read_bytes()).decode()
+        out.append({"row": r["row"], "entry": r["entry"], "clip": r["clip"],
+                    "data": "data:audio/mp4;base64," + data})
+    return json.dumps(out, ensure_ascii=False)
+
+
 LISTEN = """<!doctype html><html lang="en"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Audio audit __ID__</title>
@@ -88,7 +103,7 @@ const ID="__ID__",ROWS=__ROWS__,VERDICTS=__VERDICTS__,KEY="audit-"+ID;
 let saved={};try{saved=JSON.parse(localStorage.getItem(KEY)||"{}")}catch(e){}
 const box=document.getElementById("rows");let cur=0;
 ROWS.forEach((r,i)=>{const d=document.createElement("div");d.className="r";d.id="row"+i;
-d.innerHTML=`<span class="n">${r.row}</span><span><span class="w"></span><br><audio preload="none" controls src="clips/${r.clip}"></audio></span>`;
+d.innerHTML=`<span class="n">${r.row}</span><span><span class="w"></span><br><audio preload="none" controls src="${r.data||("clips/"+r.clip)}"></audio></span>`;
 d.querySelector(".w").textContent=r.entry;
 const s=document.createElement("select");s.innerHTML='<option value="">verdict…</option>'+VERDICTS.map(v=>`<option>${v}</option>`).join("");
 s.value=saved[r.row]||"";s.onchange=()=>{saved[r.row]=s.value;store()};d.appendChild(s);
@@ -228,8 +243,7 @@ def main():
                 w.writerow([r["row"], r["entry"], r["clip"], "", ""])
         page = (LISTEN.replace("__ID__", html.escape(sheet_id)).replace("__STAMP__", st)
                 .replace("__VERDICTS__", json.dumps(VERDICTS))
-                .replace("__ROWS__", json.dumps([{k: r[k] for k in ("row", "entry", "clip")}
-                                                 for r in public], ensure_ascii=False)))
+                .replace("__ROWS__", rows_json(folder, public)))
         (folder / "listen.html").write_text(page, encoding="utf-8")
         (audit_root / f"{sheet_id}-DECOY-KEY.json").write_text(json.dumps({
             "sheet_id": sheet_id, "lang": lang, "tier": tier, "stamp": st,
