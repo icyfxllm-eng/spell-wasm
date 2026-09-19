@@ -683,7 +683,7 @@ STT_LANGS = {
     "en": "en-US", "es": "es-ES", "fr": "fr-FR", "de": "de-DE",
     "pt": "pt-BR", "pl": "pl-PL", "ru": "ru-RU", "vi": "vi-VN",
     "ko": "ko-KR", "ja": "ja-JP", "fil": "fil-PH", "zh": "cmn-Hans-CN",
-    "ar": "ar-SA", "hi": "hi-IN", "sw": "sw-KE",
+    "ar": "ar-SA", "hi": "hi-IN", "sw": "sw-TZ",  # matches the sw-TZ voice (Eric, 2026-09-18)
 }
 STT_MAX_AUDIO_B64 = 1_400_000  # ~1MB PCM ≈ 30s @16k mono — letters are ~2s
 
