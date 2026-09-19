@@ -28,9 +28,10 @@ database_name = "spell-telemetry"
 database_id = "88eeaf34-9310-4696-a542-3d701ff2a7f4"
 migrations_dir = "migrations"
 
-# D6 — daily purge of raw events older than 90 days.
-[triggers]
-crons = ["17 4 * * *"]
+# D6 — raw events older than 90 days are purged by the Mac mini's daily
+# net.spellgame.telemetry-purge LaunchAgent (scripts/mac-server/), not a cron
+# here: Cloudflare refused cron triggers on this account (10063, 2026-09-18).
+# The Worker's scheduled() handler stays, so a cron can be re-added later.
 
 # No request logs, no Workers Logs, no tail consumers: nothing that could hold
 # a client IP (Transport: "must not store client IP addresses").

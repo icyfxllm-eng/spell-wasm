@@ -36,7 +36,7 @@ never reads or stores an IP. Check the zone as well:
 - Route `spellgame.net/telemetry/*` only. `workers_dev = false`, `preview_urls = false`.
 - **Kill switch OFF** (`TELEMETRY_ENABLED = "false"` in wrangler.toml) until the privacy policy is live. To turn it on, set it to `"true"` in wrangler.toml and `npx wrangler deploy`, so the file stays the record.
 - IP rule: Eric accepted Cloudflare's standing Security Analytics sampling (it can't be switched off per path).
-- **Open: the daily purge cron is NOT registered.** Cloudflare refuses cron triggers (code 10063) until the account has a workers.dev subdomain, which is created the first time the Workers page is opened in the dashboard. After that, run `npx wrangler deploy` again. Nothing is stored while the kill switch is off, so nothing ages past 90 days meanwhile.
+- **Retention (D6) runs on the Mac mini, not a Worker cron.** Cloudflare kept refusing cron triggers on this account (code 10063, "needs a workers.dev subdomain", even after one was set), so the cron was removed. The LaunchAgent `net.spellgame.telemetry-purge` (installed by `scripts/mac-server/install-telemetry-purge.sh`) runs daily at 04:17. It deletes raw events older than 90 days and prunes R8 speak-metric files. It logs to `~/spellgame-server/logs/net.spellgame.telemetry-purge.log`. It was verified through launchd on 2026-09-18: a row dated 2000-01-01 was deleted and today's was kept. It depends on the Mac mini being up and on the Wrangler OAuth login (`~/Library/Preferences/.wrangler`). If that login lapses, the log shows "D1 purge FAILED".
 
 ## First deploy (reference)
 
