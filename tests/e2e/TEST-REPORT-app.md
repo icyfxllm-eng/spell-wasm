@@ -1,6 +1,6 @@
 # TEST-REPORT — Web E2E (app build)
 
-**186/186 passed** across 32 areas.
+**189/189 passed** across 33 areas.
 
 ## playhub — 16/16
 - ✅ hub: opens from the meta corner and renders registry tiles
@@ -22,6 +22,11 @@
 
 ## stats-sheet — 1/1
 - ✅ stats: the guardian section and Guardian Dash door survive boot and a stats render
+
+## review-queue — 3/3
+- ✅ review: a miss enters the queue on the review rule, due now
+- ✅ review: a pre-R2 queue entry carries over and keeps its due time
+- ✅ review: a correct answer after a replay grades Hard and comes back sooner than a clean one
 
 ## hub-row — 2/2
 - ✅ hub row: The Climb is out, the rest stay
