@@ -200,6 +200,26 @@ pub fn draw_from(
     rng: &mut Rng,
     used: &[String],
 ) -> Option<(String, Option<String>)> {
+    draw_from_if(lang, band, rng, used, &|_| true)
+}
+
+/// Every spelling a band can serve, for tests and tools that need the pool
+/// itself rather than a draw from it.
+#[cfg(test)]
+pub fn bank_words(lang: &str, band: &'static str) -> Vec<String> {
+    bank(lang, band).iter().map(|c| c.spelling.clone()).collect()
+}
+
+/// The same draw, with one more thing the word has to be. v1.3 uses it to skip
+/// words still inside their CC-WORDGRID D9 repeat window without copying the
+/// window into a list first.
+pub fn draw_from_if(
+    lang: &str,
+    band: &'static str,
+    rng: &mut Rng,
+    used: &[String],
+    keep: &dyn Fn(&str) -> bool,
+) -> Option<(String, Option<String>)> {
     let pool = bank(lang, band);
     if pool.is_empty() {
         return None;
@@ -207,7 +227,7 @@ pub fn draw_from(
     let start = rng.below(pool.len());
     (0..pool.len())
         .map(|k| &pool[(start + k) % pool.len()])
-        .find(|c| !used.contains(&c.spelling))
+        .find(|c| !used.contains(&c.spelling) && keep(&c.spelling))
         .map(|c| (c.spelling.clone(), c.display.clone()))
 }
 

@@ -13,6 +13,7 @@
 
 use super::gen::Tier;
 use super::wordmode;
+use crate::wordsearch::ledger::Ledger;
 
 /// F5: a (language, board tier) pair is offered only when every tier of its
 /// span holds at least this many eligible rows. 27 cells x 1.25.
@@ -102,8 +103,11 @@ pub struct Draw {
 /// The Tier Mode state of ONE board: which words it has served (I-T4) and which
 /// (cell, digit) pairs have already been earned (F8).
 ///
-/// It reads the audited bank and nothing else: no LearnerQuery, no missed-words
-/// queue, no My Words (I-T5). It is created per board and dropped with it.
+/// It reads the audited bank, and of the player's own data only the D9 repeat
+/// window that I-T4 requires — never LearnerQuery, the missed-words queue or My
+/// Words (I-T5). The window says which words were served lately, in any mode;
+/// it says nothing about how the player did with them, so board content still
+/// is not a mirror of their failures.
 pub struct Session {
     lang: String,
     board: Tier,
@@ -112,11 +116,38 @@ pub struct Session {
     rng: super::rng::Rng,
     used: Vec<String>,
     satisfied: Vec<(usize, u8)>,
+    /// I-T4's other half: the player's CC-WORDGRID D9 window, shared with
+    /// Spell Cross and Word Search, so a word served there does not come
+    /// straight back here. A board is one puzzle, however many bands it spans.
+    ledger: Ledger,
+    day: u32,
+    /// `(lang:band, word)` for every word this board served, and how many of
+    /// them had to come out of the window because the band had nothing fresh.
+    served: Vec<(String, String)>,
+    relaxed: usize,
 }
 
 impl Session {
     pub fn new(lang: &str, board: Tier, jr: bool, symbols: bool, seed: u64) -> Self {
+        Self::with_ledger(lang, board, jr, symbols, seed, Ledger::default(), 0)
+    }
+
+    /// The same, carrying the player's repeat window (I-T4). The caller owns
+    /// storage; this module only reads the window and reports what it served.
+    pub fn with_ledger(
+        lang: &str,
+        board: Tier,
+        jr: bool,
+        symbols: bool,
+        seed: u64,
+        ledger: Ledger,
+        day: u32,
+    ) -> Self {
         Session {
+            ledger,
+            day,
+            served: Vec::new(),
+            relaxed: 0,
             lang: lang.to_string(),
             board,
             jr,
@@ -151,7 +182,21 @@ impl Session {
     /// by a different word of the same tier.
     pub fn draw(&mut self, digit: u8) -> Option<Draw> {
         let band = self.band_of(digit)?;
-        let (spelling, display) = match wordmode::draw_from(&self.lang, band, &mut self.rng, &self.used) {
+        let key = format!("{}:{band}", self.lang);
+        // I-T4: prefer a word outside the player's D9 window. When the band has
+        // nothing fresh left, take a word from inside it and count the
+        // relaxation, exactly as the ledger's own selector does (F-X3: relax,
+        // never error).
+        let fresh = {
+            let (ledger, day, k) = (&self.ledger, self.day, key.as_str());
+            wordmode::draw_from_if(&self.lang, band, &mut self.rng, &self.used, &|w| {
+                !ledger.holds(k, w, day)
+            })
+        };
+        let (spelling, display) = match fresh.or_else(|| {
+            self.relaxed += 1;
+            wordmode::draw_from(&self.lang, band, &mut self.rng, &self.used)
+        }) {
             Some(w) => w,
             // The band is exhausted -- only reachable after failing hundreds of
             // spellings on one board, since the shallowest band any language
@@ -161,7 +206,23 @@ impl Session {
             None => wordmode::draw_from(&self.lang, band, &mut self.rng, &[])?,
         };
         self.used.push(spelling.clone());
+        self.served.push((key, spelling.clone()));
         Some(Draw { spelling, display, band })
+    }
+
+    /// The board is over (finished, replaced or abandoned): fold what it served
+    /// into the window and hand the ledger back to be stored. One puzzle, so
+    /// the counter moves once, and a second call with nothing new served writes
+    /// nothing — the session stays usable either way, because a solved board is
+    /// still on the screen and still has to render its own badges.
+    pub fn flush(&mut self) -> Option<Ledger> {
+        if self.served.is_empty() {
+            return None;
+        }
+        let served = std::mem::take(&mut self.served);
+        let relaxed = std::mem::take(&mut self.relaxed);
+        self.ledger.record_many(&served, self.day, relaxed);
+        Some(self.ledger.clone())
     }
 
     /// F8: has this (cell, digit) already been spelled on this board?
@@ -279,6 +340,46 @@ mod tests {
         let mut s = Session::new("en", Tier::Easy, false, false, 21);
         for k in 0..depth + 5 {
             let d = s.draw(1).unwrap_or_else(|| panic!("digit 1 stopped drawing at attempt {k}"));
+            assert_eq!(d.band, "easy");
+        }
+    }
+
+    /// I-T4's other half: a word served on one board stays out of the next one
+    /// while it is inside the CC-WORDGRID D9 window.
+    #[test]
+    fn d9_window_holds_across_boards() {
+        let mut first = Session::with_ledger("en", Tier::Easy, false, false, 31, Ledger::default(), 100);
+        let mut served = Vec::new();
+        for cell in 0..81usize {
+            served.push(first.draw((cell % 9 + 1) as u8).expect("a full board").spelling);
+        }
+        let led = first.flush().expect("a board that served words records them");
+        assert_eq!(led.counter, 1, "one board is one puzzle, not one per band");
+
+        let mut next = Session::with_ledger("en", Tier::Easy, false, false, 77, led.clone(), 100);
+        for cell in 0..81usize {
+            let d = next.draw((cell % 9 + 1) as u8).expect("a full board");
+            assert!(!served.contains(&d.spelling), "{} came straight back", d.spelling);
+        }
+        // And the window is shared, not SpellDoku's own: Word Search would see
+        // the same words held under the same key.
+        assert!(led.holds("en:easy", served.iter().find(|_| true).unwrap(), 100));
+    }
+
+    /// F-X3: relax, never error. When a band has nothing outside the window
+    /// left, it serves a held word rather than stop drawing (I-T2 again).
+    #[test]
+    fn an_exhausted_window_relaxes() {
+        let mut led = Ledger::default();
+        let all: Vec<(String, String)> = wordmode::bank_words("en", "easy")
+            .into_iter()
+            .map(|w| ("en:easy".to_string(), w))
+            .collect();
+        assert!(!all.is_empty());
+        led.record_many(&all, 100, 0);
+        let mut s = Session::with_ledger("en", Tier::Easy, false, false, 5, led, 100);
+        for k in 0..20 {
+            let d = s.draw(1).unwrap_or_else(|| panic!("digit 1 stopped drawing at {k}"));
             assert_eq!(d.band, "easy");
         }
     }

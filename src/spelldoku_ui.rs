@@ -104,6 +104,12 @@ struct Seen {
     boards: Vec<(u64, u32)>,
 }
 
+/// The player's shared seen-word ledger (CC-WORDGRID D9), as Word Search and
+/// Spell Cross store it.
+fn window() -> crate::wordsearch::ledger::Ledger {
+    crate::storage::get_json(crate::wordsearch_ui::LEDGER_KEY).unwrap_or_default()
+}
+
 fn today() -> u32 {
     (js_sys::Date::now() / DAY_MS) as u32
 }
@@ -149,10 +155,22 @@ fn record_stat(f: impl FnOnce(&mut Stats)) {
     crate::storage::set_json(STATS_KEY, &s);
 }
 
+/// v1.3 I-T4: fold the OUTGOING board's served words into the player's D9
+/// repeat window — the same ledger Word Search and Spell Cross keep, so a word
+/// served in any of them stays out of the others for 20 puzzles or 14 days.
+/// Called when a board ends: solved, or replaced by the next one.
+fn close_tier_session() {
+    let led = GAME.with(|c| c.borrow_mut().as_mut().and_then(|g| g.tier.as_mut()?.flush()));
+    if let Some(led) = led {
+        crate::storage::set_json(crate::wordsearch_ui::LEDGER_KEY, &led);
+    }
+}
+
 /// Serve a board for `(n, tier)`. A Daily board is the same for everyone and is
 /// only recorded in the ledger; any other board skips what this player has seen
 /// within the window (I6).
 fn serve(app: &App, n: usize, tier: Tier, daily: bool) -> bool {
+    close_tier_session(); // the board being replaced enters the window (I-T4)
     let lang = app.borrow().lang.clone();
     let kid = app.borrow().kid;
     if !configs(kid, &lang).contains(&(n, tier)) {
@@ -208,10 +226,10 @@ fn serve(app: &App, n: usize, tier: Tier, daily: bool) -> bool {
         // other size, or on a Jr board (D-T5, enforced in Session::new), the
         // setting degrades to Reading A rather than refusing to deal.
         (Reading::Symbols, _) if n == 4 && !kid && tiermode::symbols_available(&lang) => {
-            Some(tiermode::Session::new(&lang, tier, kid, true, base))
+            Some(tiermode::Session::with_ledger(&lang, tier, kid, true, base, window(), today()))
         }
         (Reading::Numbers, _) | (Reading::Symbols, _) if tiermode::available(&lang, tier) => {
-            Some(tiermode::Session::new(&lang, tier, kid, false, base))
+            Some(tiermode::Session::with_ledger(&lang, tier, kid, false, base, window(), today()))
         }
         _ => None,
     };
@@ -605,6 +623,7 @@ fn commit_value(v: u8, spelled: bool, verdict: Verdict) {
     if solved_now {
         record_stat(|s| s.solved += 1);
         note("sd.solved");
+        close_tier_session(); // a finished board's words enter the window (I-T4)
     }
     render();
 }

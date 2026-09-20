@@ -85,6 +85,45 @@ export async function run(browser, base, suite) {
     } finally { await ctx.close(); }
   });
 
+  // I-T4: the words a board served enter the player's D9 repeat window, in the
+  // ledger Word Search and Spell Cross share, and the next board skips them.
+  // Only the browser can see this: the window lives in localStorage.
+  await suite.test('spelldoku_tier_served_words_enter_the_repeat_window', async () => {
+    const { ctx, page } = await openApp(browser, base, { lang: 'en' });
+    try {
+      await openTier(page, 'numbersIndexed', '9-easy');
+      const b = await board(page);
+      const drawn = [];
+      for (const i of empties(b).slice(0, 3)) {
+        await page.click(`[data-sd-cell="${i}"]`);
+        await page.click(`#sdTiers [data-sd-tier="${b.solution[i]}"]`);
+        await page.waitForTimeout(120);
+        const p = await prompt(page);
+        if (p) drawn.push(p.spelling);
+      }
+      assert(drawn.length === 3, 'three words were drawn');
+      const before = await page.evaluate(() => localStorage.getItem('spell_wordgrid_seen_v1'));
+      assertEq(before, null, 'nothing is recorded while the board is still being played');
+      // A new board ends the old one, so its words enter the window.
+      await page.click('#sdNew');
+      await page.waitForTimeout(400);
+      const led = await page.evaluate(() => JSON.parse(localStorage.getItem('spell_wordgrid_seen_v1') || 'null'));
+      assert(led, 'the window was written');
+      assertEq(led.counter, 1, 'one board counted as one puzzle');
+      const held = led.seen.filter((s) => drawn.includes(s.w));
+      assertEq(held.length, drawn.length, `all three words are held: ${JSON.stringify(led.seen)}`);
+      assert(led.seen.every((s) => s.k.startsWith('en:')), 'keyed by language and band');
+      // And the next board does not serve them back.
+      const b2 = await board(page);
+      const i = empties(b2)[0];
+      await page.click(`[data-sd-cell="${i}"]`);
+      await page.click(`#sdTiers [data-sd-tier="${b2.solution[i]}"]`);
+      await page.waitForTimeout(120);
+      const next = await prompt(page);
+      assert(next && !drawn.includes(next.spelling), `${next && next.spelling} came straight back`);
+    } finally { await ctx.close(); }
+  });
+
   // I-T7: a pencil mark never fires a gate.
   await suite.test('spelldoku_tier_pencil_marks_are_free', async () => {
     const { ctx, page } = await openApp(browser, base, { lang: 'en' });
