@@ -9,7 +9,15 @@ use web_sys::{AudioContext, GainNode, HtmlAudioElement};
 
 const MIN_GAIN: f32 = 0.5;
 const MAX_GAIN: f32 = 2.0;
+/// Unity: the level the clip was mastered at. Not the default the player gets.
 const DEFAULT_GAIN: f32 = 1.0;
+/// What a player hears without touching the slider (Eric, 2026-09-20: the app
+/// was too quiet on a phone at a comfortable system volume). Both sources are
+/// mastered near -19.5 LUFS with ~1.5 dB of headroom, so this rides on the
+/// limiter below rather than clipping the loudest words. The cost is that the
+/// AudioContext below is now created for every player, not only for someone who
+/// moved the slider.
+pub const DEFAULT_VOLUME: f32 = 1.35;
 
 thread_local! {
     static CTX: RefCell<Option<(AudioContext, GainNode)>> = RefCell::new(None);
@@ -38,7 +46,23 @@ fn ensure_ctx() -> Option<(AudioContext, GainNode)> {
             let ctx = AudioContext::new().ok()?;
             let gain = ctx.create_gain().ok()?;
             gain.gain().set_value(PENDING_GAIN.with(|g| *g.borrow()));
-            let _ = gain.connect_with_audio_node(&ctx.destination());
+            // gain -> limiter -> out. Word audio leaves ~1.5 dB of headroom, so
+            // any gain above unity would clip the loudest consonants; the
+            // limiter holds those back instead of letting them distort.
+            match ctx.create_dynamics_compressor() {
+                Ok(limiter) => {
+                    limiter.threshold().set_value(-3.0);
+                    limiter.knee().set_value(0.0);
+                    limiter.ratio().set_value(20.0);
+                    limiter.attack().set_value(0.003);
+                    limiter.release().set_value(0.12);
+                    let _ = gain.connect_with_audio_node(&limiter);
+                    let _ = limiter.connect_with_audio_node(&ctx.destination());
+                }
+                Err(_) => {
+                    let _ = gain.connect_with_audio_node(&ctx.destination());
+                }
+            }
             *slot = Some((ctx, gain));
         }
         slot.clone()

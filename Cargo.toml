@@ -80,6 +80,7 @@ features = [
   "SvgElement", "SvgGraphicsElement", "SvgTextContentElement", "SvgRect",
   "Performance",
   "AudioContext", "AudioContextState", "GainNode", "AudioNode", "AudioParam", "MediaElementAudioSourceNode",
+  "DynamicsCompressorNode",
   "AudioDestinationNode", "OscillatorNode", "OscillatorType",
 ]
 

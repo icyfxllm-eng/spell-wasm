@@ -328,6 +328,12 @@ fn play_human(word: &str, variant: &str, rate: f64, lang: &str, on_fail: Box<dyn
     };
     // preservesPitch is the default in current engines; set it anyway, because
     // a slowed clip that also drops in pitch is a different-sounding word.
+    // The player's volume boost (Settings) is a Web Audio gain graph on the
+    // element; without this the slider moved TTS but not a human clip.
+    if audio_boost::boost_requested() {
+        audio.set_cross_origin(Some("anonymous"));
+    }
+    audio_boost::wire(&audio);
     let _ = js_sys::Reflect::set(&audio, &JsValue::from_str("preservesPitch"), &JsValue::TRUE);
     let _ = js_sys::Reflect::set(&audio, &JsValue::from_str("webkitPreservesPitch"), &JsValue::TRUE);
     audio.set_playback_rate(crate::human_audio::playback_rate(variant, rate));

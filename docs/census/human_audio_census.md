@@ -46,6 +46,16 @@ exists: it holds 34,359 Russian files where Lingua Libre's query service knows
 - **Arabic speech-to-text stays ar-SA.** Google's v1 recognizer (what the
   backend calls) has no MSA code; ar-XA exists only on v2 Chirp 3. Changing the
   map to ar-XA would break the Arabic mic. Do not "fix" it.
+- **D3 lowered to 75% for the English pilot** (Eric, 2026-09-20), after hearing
+  the mix on a phone. Easy (77.1%) and Medium (76.4%) switch on now; about one
+  word in four is still TTS. Raising it back to 80% is a one-flag change
+  (`bundle.py --gate`), and recording the ~52 missing words would do it.
+- **App volume default raised to 1.4x with a limiter** (Eric, 2026-09-20): both
+  sources sit near -19.5 LUFS with ~1.5 dB of headroom, too quiet on a phone at
+  a comfortable system volume. The limiter keeps the loudest words from
+  clipping. Cost: the AudioContext is now created for every player, not only
+  for one who moved the slider (it had been withheld as a fingerprinting
+  surface).
 - **D13. The pilot's clips ship bundled in the app, not from a server.**
   This amends F8, which said clips are "served from SpellGame's own backend".
   For the pilot language, the verified clips are built into the app binary and
