@@ -287,12 +287,9 @@ export async function run(browser, base, suite) {
         `boot alone changed the stored v1 state: ${JSON.stringify(booted)}`);
 
       // One real answer through the game: the save path writes v2.
-      await page.click('#orbWrap');
-      await page.waitForTimeout(500);
-      const w = await page.evaluate(() => window.__spelltest.currentWord());
-      assert(w, 'no word served');
-      await typeOnKeyboard(page, w.toLowerCase());
-      await page.click('#checkBtn');
+      // answerAndAdvance, so a missing key or an answer the game ignores fails
+      // here instead of looking like a migration that didn't run.
+      await answerOneWord(page);
       await page.waitForFunction(() => {
         const s = JSON.parse(localStorage.getItem('spell_learner_en') || 'null');
         return s && s.log && s.log.length === 2;
