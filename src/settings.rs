@@ -22,7 +22,7 @@ pub fn load_prefs(state: &mut AppState) {
     // 0.9 -> 0.7 is only a 1.29x duration change — technically over
     // the 1.25x bar and still imperceptible. 0.55 gives ~1.64x.
     state.rate = if state.slow { 0.55 } else { 0.9 };
-    state.volume = audio_boost::clamp_gain(p.volume.unwrap_or(1.0));
+    state.volume = audio_boost::clamp_gain(p.volume.unwrap_or(audio_boost::DEFAULT_VOLUME));
     state.remind = p.remind;
     state.remind_time = p.remind_time.filter(|t| !t.is_empty()).unwrap_or_else(|| "17:00".to_string());
     // D8: a device ALREADY in Kid Mode from a build where the read-time

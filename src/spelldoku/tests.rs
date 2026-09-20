@@ -214,17 +214,41 @@ fn chips_unlock_at_the_signed_thresholds_and_never_on_expert() {
         let mut u = Unlocks::new(tier);
         for k in 0..need {
             assert!(!u.chip(5), "{tier:?}: no chip after {k}");
-            u.record_correct(5);
+            u.record_correct(k as usize, 5); // a different cell each time
         }
         assert!(u.chip(5), "{tier:?}: chip after {need}");
     }
     let mut u = Unlocks::new(Tier::Expert);
-    for _ in 0..50 {
-        u.record_correct(5);
+    for cell in 0..50 {
+        u.record_correct(cell, 5);
     }
     assert!(!u.chip(5), "Expert never shows a chip");
     // Easy 9x9: one spelling per value, so at most nine full spellings.
     assert_eq!(play::unlock_after(Tier::Easy), Some(1));
+}
+
+/// CC-SPELLDOKU v1.3 census C5: the chip counter counts cells, not attempts.
+/// Re-spelling a cell that is already right earned a second credit, so three
+/// spellings of one easy word unlocked its chip on Hard.
+#[test]
+fn respelling_one_cell_never_farms_its_chip() {
+    let mut u = Unlocks::new(Tier::Hard); // needs 3
+    for _ in 0..10 {
+        u.record_correct(40, 5);
+    }
+    assert!(!u.chip(5), "ten spellings of ONE cell must not unlock the chip");
+
+    u.record_correct(41, 5);
+    u.record_correct(42, 5);
+    assert!(u.chip(5), "three different cells unlock it");
+
+    // A correction in a cell already credited for another value still counts.
+    let mut v = Unlocks::new(Tier::Easy); // needs 1
+    v.record_correct(7, 3);
+    assert!(v.chip(3));
+    assert!(!v.chip(4), "a different value has its own count");
+    v.record_correct(7, 4);
+    assert!(v.chip(4), "same cell, different value, is a real spelling");
 }
 
 /// Done #12 / F7.

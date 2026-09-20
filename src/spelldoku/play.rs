@@ -54,26 +54,38 @@ pub fn unlock_after_on(n: usize, tier: Tier) -> Option<u32> {
     }
 }
 
-/// Per board, per value: how many times it has been spelled correctly.
+/// Per board, per value: how many CELLS have been spelled correctly for it.
+///
+/// Cells, not attempts. Until 2026-09-20 this counted every correct spelling,
+/// and nothing stops a player re-selecting a cell that is already right and
+/// spelling it again — so one easy word, spelled three times, unlocked its chip
+/// on Hard (found by the CC-SPELLDOKU v1.3 census, C5). A (cell, value) is
+/// credited once; a different value in the same cell, or the same value in
+/// another cell, still counts. The set lives and dies with the board.
 #[derive(Clone, Debug)]
 pub struct Unlocks {
     need: Option<u32>,
     counts: [u32; 16],
+    credited: Vec<(usize, u8)>,
 }
 
 impl Unlocks {
     pub fn new(tier: Tier) -> Self {
-        Unlocks { need: unlock_after(tier), counts: [0; 16] }
+        Unlocks { need: unlock_after(tier), counts: [0; 16], credited: Vec::new() }
     }
 
     pub fn for_board(n: usize, tier: Tier) -> Self {
-        Unlocks { need: unlock_after_on(n, tier), counts: [0; 16] }
+        Unlocks { need: unlock_after_on(n, tier), counts: [0; 16], credited: Vec::new() }
     }
 
-    pub fn record_correct(&mut self, v: u8) {
-        if (v as usize) < self.counts.len() {
-            self.counts[v as usize] += 1;
+    /// Credit one correctly spelled CELL toward `v`'s chip. Re-spelling a cell
+    /// that already earned its credit does nothing.
+    pub fn record_correct(&mut self, cell: usize, v: u8) {
+        if (v as usize) >= self.counts.len() || self.credited.contains(&(cell, v)) {
+            return;
         }
+        self.credited.push((cell, v));
+        self.counts[v as usize] += 1;
     }
 
     pub fn chip(&self, v: u8) -> bool {

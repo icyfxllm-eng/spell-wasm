@@ -31,7 +31,7 @@ import sys
 
 ROOT = pathlib.Path(__file__).resolve().parents[2]
 ASSETS = ROOT / "assets" / "human-audio"
-GATE = 0.80                       # D3
+GATE = 0.80                       # D3 (default; --gate overrides for a trial)
 ATTRIBUTION = {"CC BY", "CC BY-SA"}
 TIERS = ["easy", "medium", "hard", "expert"]
 
@@ -54,6 +54,8 @@ def main(argv=None):
     ap.add_argument("--bank", required=True, help="bank.tsv from the census dump")
     ap.add_argument("--write", action="store_true")
     ap.add_argument("--assets", default=str(ASSETS), help="output root (tests point this elsewhere)")
+    ap.add_argument("--gate", type=float, default=GATE,
+                    help="coverage a tier needs to switch on (D3 is 0.80; lowering it is Eric's call)")
     a = ap.parse_args(argv)
     lang, work = a.lang, pathlib.Path(a.work).expanduser()
     assets = pathlib.Path(a.assets)
@@ -70,17 +72,18 @@ def main(argv=None):
         if lg == lang:
             pools[tier].append(entry)
 
+    gate = a.gate
     enabled, report = [], []
     for tier in TIERS:
         n = len(pools[tier])
         v = sum(1 for e in pools[tier] if e in ok)
-        on = n > 0 and v / n >= GATE
+        on = n > 0 and v / n >= gate
         report.append((tier, n, v, on))
         if on:
             enabled.append(tier)
     for tier, n, v, on in report:
         print(f"{lang} {tier:6} verified {v:4}/{n:4} = {100 * v / max(n, 1):5.1f}%  "
-              f"{'ENABLED' if on else f'stays on TTS (needs {max(0, math.ceil(GATE * n) - v)} more)'}")
+              f"{'ENABLED' if on else f'stays on TTS (needs {max(0, math.ceil(gate * n) - v)} more)'}")
 
     ship = []
     problems = []
@@ -130,7 +133,7 @@ def main(argv=None):
         if not dst.exists():
             shutil.copyfile(s["src"], dst)
     (d / "bundle.json").write_text(json.dumps({
-        "lang": lang, "gate": GATE, "enabled_tiers": enabled,
+        "lang": lang, "gate": gate, "enabled_tiers": enabled,
         "coverage": {t: {"pool": n, "verified": v} for t, n, v, _ in report},
         "clips": [{k: v for k, v in s.items() if k != "src"} for s in ship],
     }, ensure_ascii=False, indent=1) + "\n")

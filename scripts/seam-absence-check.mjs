@@ -9,7 +9,9 @@ import { fileURLToPath } from 'node:url';
 import { dirname, join } from 'node:path';
 
 const dist = join(dirname(fileURLToPath(import.meta.url)), '..', process.argv[2] || 'dist');
-const NEEDLES = ['__spelltest', 'testseam'];
+// CC-LEARNING-ENGINE-L0 R4 (acceptance 12): the dev-only learner inspector is
+// never in a player's build either. Its marker is the panel id it creates.
+const NEEDLES = ['__spelltest', 'testseam', 'spellLearnerInspector', 'dev_preview'];
 
 function walk(dir) {
   const out = [];

@@ -50,11 +50,13 @@ import * as statsSheet from './specs/stats-sheet.mjs';
 import * as learnerSurfaces from './specs/learner-surfaces.mjs';
 import * as learnerReset from './specs/learner-reset.mjs';
 import * as reviewQueue from './specs/review-queue.mjs';
+import * as inspector from './specs/inspector.mjs';
 
 const SPECS = [
   ['playhub', playHub, placement, learnerSurfaces, learnerReset],
   ['stats-sheet', statsSheet],
   ['review-queue', reviewQueue],
+  ['inspector', inspector],
   ['hub-row', hubRow],
   ['keyboard', keyboard],
   ['gameplay', gameplay],

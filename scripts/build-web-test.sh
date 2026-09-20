@@ -18,9 +18,9 @@ else
   EXTRA=""
 fi
 
-echo "==> cargo build (release, wasm32, --features testseam $EXTRA)"
+echo "==> cargo build (release, wasm32, --features \"testseam dev_preview\" $EXTRA)"
 # shellcheck disable=SC2086
-cargo build --release --target wasm32-unknown-unknown --features testseam $EXTRA
+cargo build --release --target wasm32-unknown-unknown --features "testseam dev_preview" $EXTRA
 
 echo "==> wasm-bindgen -> pkg-test/"
 wasm-bindgen target/wasm32-unknown-unknown/release/spell_wasm.wasm \

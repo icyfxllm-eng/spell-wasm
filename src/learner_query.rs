@@ -94,6 +94,23 @@ pub struct AttemptView {
 }
 
 #[cfg_attr(not(test), allow(dead_code))] // frozen surface: the R4 inspector and later phases call these
+/// A queued word with when it comes back (R4's inspector shows these).
+#[derive(Clone, Debug, PartialEq)]
+pub struct Scheduled {
+    pub word: String,
+    /// When it is next due, ms since the epoch.
+    pub due_ms: f64,
+    /// Whole days from now until due; negative when overdue.
+    pub in_days: i64,
+    /// Times missed, and FSRS reviews and lapses so far.
+    pub misses: u32,
+    pub reps: u32,
+    pub lapses: u32,
+    /// False while the word is still in the same-day learning steps.
+    pub on_fsrs: bool,
+}
+
+#[cfg_attr(not(test), allow(dead_code))]
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
 pub enum PlacementStatus {
     NotOffered,
@@ -118,6 +135,10 @@ pub trait LearnerQuery {
     /// Logged attempts, oldest first.
     fn attempt_log(&self, p: ProfileId, lang: &str) -> Vec<AttemptView>;
     fn placement_status(&self, p: ProfileId, lang: &str) -> PlacementStatus;
+    /// The queue with each word's next review, soonest first (added after the
+    /// freeze for R4's inspector; adding a method is allowed, changing one is
+    /// a stop-and-ask).
+    fn review_schedule(&self, p: ProfileId, lang: &str, limit: usize) -> Vec<Scheduled>;
 }
 
 // ------------------------------------------------------------ serve reasons
@@ -216,6 +237,26 @@ impl LearnerQuery for Live<'_> {
             .map(|a| AttemptView { word: a.word.clone(), day: a.day, correct: a.correct })
             .collect()
     }
+    fn review_schedule(&self, _p: ProfileId, lang: &str, limit: usize) -> Vec<Scheduled> {
+        let mut v: Vec<Scheduled> = self
+            .misses
+            .iter()
+            .filter(|m| m.lang == lang)
+            .map(|m| Scheduled {
+                word: m.word.clone(),
+                due_ms: m.due,
+                // Rounded, not floored: a card due 2.0001 days ago is "2 d overdue".
+                in_days: ((m.due - self.now_ms) / 86_400_000.0).round() as i64,
+                misses: m.misses,
+                reps: m.review.as_ref().map(|r| r.fsrs.reps).unwrap_or(0),
+                lapses: m.review.as_ref().map(|r| r.fsrs.lapses).unwrap_or(0),
+                on_fsrs: m.review.as_ref().is_some_and(|r| r.step as usize >= crate::review::LEARN_STEPS_MS.len()),
+            })
+            .collect();
+        v.sort_by(|a, b| a.due_ms.partial_cmp(&b.due_ms).unwrap_or(std::cmp::Ordering::Equal).then_with(|| a.word.cmp(&b.word)));
+        v.truncate(limit);
+        v
+    }
     fn placement_status(&self, _p: ProfileId, lang: &str) -> PlacementStatus {
         match crate::learner::load_for(lang).placed {
             None => PlacementStatus::NotOffered,
@@ -262,6 +303,7 @@ pub struct Fake {
     pub misses: Vec<MissView>,
     pub attempts: Vec<AttemptView>,
     pub placement: Option<PlacementStatus>,
+    pub schedule: Vec<Scheduled>,
 }
 
 #[cfg_attr(not(test), allow(dead_code))]
@@ -289,6 +331,10 @@ impl Fake {
                 AttemptView { word: "knight".into(), day: 20401, correct: false },
             ],
             placement: Some(PlacementStatus::Completed),
+            schedule: vec![
+                Scheduled { word: "receive".into(), due_ms: 0.0, in_days: -2, misses: 3, reps: 2, lapses: 1, on_fsrs: true },
+                Scheduled { word: "knight".into(), due_ms: 86_400_000.0, in_days: 1, misses: 1, reps: 0, lapses: 0, on_fsrs: false },
+            ],
         }
     }
 }
@@ -317,6 +363,9 @@ impl LearnerQuery for Fake {
     }
     fn placement_status(&self, _p: ProfileId, _lang: &str) -> PlacementStatus {
         self.placement.unwrap_or(PlacementStatus::NotOffered)
+    }
+    fn review_schedule(&self, _p: ProfileId, _lang: &str, limit: usize) -> Vec<Scheduled> {
+        self.schedule.iter().take(limit).cloned().collect()
     }
 }
 

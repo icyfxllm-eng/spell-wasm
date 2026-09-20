@@ -27,6 +27,14 @@ testseam = []
 # leaderboard_available) and adds the education grant to the resolver.
 # Ships under a separate bundle ID / distribution artifact.
 education = []
+
+# CC-LEARNING-ENGINE-L0 R4 — the dev-only learner inspector (src/inspector.rs):
+# the review queue with next-review dates, and why the word on screen was
+# served. Build-time only, like `testseam`: with the feature off the module is
+# not compiled, it adds no markup or CSS to index.html, and
+# scripts/seam-absence-check.mjs greps the shipped bundle for its marker so a
+# release, auditor or education build cannot contain it (acceptance 12).
+dev_preview = []
 # AUDIT PREVIEW — a build that un-gates the ComingSoon languages (ar/fa/ur/ru) and
 # loads their unverified DRAFT word banks (assets/words-draft/, CC BY-SA, see its
 # README) so native speakers can PLAY and review them. Build-time only, and NEVER
@@ -72,6 +80,7 @@ features = [
   "SvgElement", "SvgGraphicsElement", "SvgTextContentElement", "SvgRect",
   "Performance",
   "AudioContext", "AudioContextState", "GainNode", "AudioNode", "AudioParam", "MediaElementAudioSourceNode",
+  "DynamicsCompressorNode",
   "AudioDestinationNode", "OscillatorNode", "OscillatorType",
 ]
 
