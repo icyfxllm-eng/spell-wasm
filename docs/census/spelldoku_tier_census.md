@@ -208,3 +208,27 @@ shape for the ladder; the Jr ceiling already has it.
 
 Nothing in F1–F9 was built. No generator, solver, grader or v1.0 test was touched.
 The census test is `#[ignore]`d and reads only.
+
+---
+
+## Built on two ASSUMED readings — both still need Eric (2026-09-20)
+
+Phase A4 was built on "build tier mode" without the HALTs being answered, so
+the two readings below are the tool's, NOT Eric's. Both are one-line reversals
+if he reads them the other way:
+
+- **C1 — assumed yes:** the ladder indexes a tier by bank list identity, so no
+  per-row tier field is required. Reversing it makes Tier Mode wait on a
+  bank-data project.
+- **C4 — assumed "nothing interpretable":** the opaque glyph ids that reach
+  the generator today may stay, and the I14 scan is widened instead (it now
+  also covers
+  `pack.rs` and `play.rs`, for the ladder's own vocabulary; `band` stays legal
+  because `canon.rs` means Sudoku row bands by it). Reversing it means
+  unpicking fragment clues, which touches the generator.
+
+**C5**'s chip-farming defect was fixed first, on its own, and F8 builds on the fix.
+
+Phase A4 is in `docs/CC-SPELLDOKU-v1.3.md` ("As built"), with the F1 Easy-row
+contradiction flagged there for Eric.
+

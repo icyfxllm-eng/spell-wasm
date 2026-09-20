@@ -1,6 +1,6 @@
 # Unaudited UI strings — review queue
 
-13 keys x 14 locales = 182 strings, drafted by tooling (7 during the Aug 6
+19 keys x 14 locales = 266 strings, drafted by tooling (7 during the Aug 6
 audit, 6 for CC-HUMAN-AUDIO F6/F7 on 2026-09-19) and never reviewed by a speaker. None is load-bearing
 for correctness; all are user-facing.
 
@@ -241,3 +241,111 @@ language and the English above it.
 - **ar** — جميع تسجيلات الأصوات الحقيقية في هذا الإصدار ملك عام، لذا لا يحتاج أيّ منها إلى إسناد. ومع ذلك، شكرًا لمن سجّلوها.
 - **sw** — Rekodi zote za sauti halisi katika toleo hili ziko katika uwanja wa umma, kwa hiyo hakuna inayohitaji kutajwa kwa mwandishi. Hata hivyo, asante kwa waliorekodi.
 - **hi** — इस संस्करण की सभी असली आवाज़ वाली रिकॉर्डिंग सार्वजनिक डोमेन में हैं, इसलिए किसी के लिए श्रेय देना ज़रूरी नहीं। फिर भी रिकॉर्ड करने वालों का धन्यवाद।
+
+### `sd.tier.off`
+**en** — Numbers
+
+- **es** — Números
+- **fr** — Chiffres
+- **de** — Zahlen
+- **pt** — Números
+- **pl** — Cyfry
+- **vi** — Chữ số
+- **ko** — 숫자
+- **ja** — 数字
+- **fil** — Mga numero
+- **zh** — 数字
+- **ru** — Цифры
+- **ar** — الأرقام
+- **sw** — Namba
+- **hi** — अंक
+
+### `sd.tier.numbers`
+**en** — Tier Mode
+
+- **es** — Modo niveles
+- **fr** — Mode niveaux
+- **de** — Stufenmodus
+- **pt** — Modo níveis
+- **pl** — Tryb poziomów
+- **vi** — Chế độ bậc
+- **ko** — 단계 모드
+- **ja** — レベルモード
+- **fil** — Tier Mode
+- **zh** — 分级模式
+- **ru** — Режим уровней
+- **ar** — وضع المستويات
+- **sw** — Hali ya viwango
+- **hi** — स्तर मोड
+
+### `sd.tier.symbols`
+**en** — Tier symbols (4×4)
+
+- **es** — Símbolos de nivel (4×4)
+- **fr** — Symboles de niveau (4×4)
+- **de** — Stufensymbole (4×4)
+- **pt** — Símbolos de nível (4×4)
+- **pl** — Symbole poziomów (4×4)
+- **vi** — Ký hiệu bậc (4×4)
+- **ko** — 단계 기호 (4×4)
+- **ja** — レベル記号（4×4）
+- **fil** — Mga simbolo ng tier (4×4)
+- **zh** — 分级符号（4×4）
+- **ru** — Символы уровней (4×4)
+- **ar** — رموز المستويات (4×4)
+- **sw** — Alama za viwango (4×4)
+- **hi** — स्तर चिह्न (4×4)
+
+### `sd.tierSpell`
+**en** — Listen, then spell the word
+
+- **es** — Escucha y escribe la palabra
+- **fr** — Écoute, puis écris le mot
+- **de** — Hör zu und schreib das Wort
+- **pt** — Ouça e escreva a palavra
+- **pl** — Posłuchaj i zapisz słowo
+- **vi** — Nghe rồi viết từ đó
+- **ko** — 듣고 그 단어를 써요
+- **ja** — 聞いてから、その単語を書いてね
+- **fil** — Makinig, tapos baybayin ang salita
+- **zh** — 听一听，然后拼出这个词
+- **ru** — Послушай и напиши слово
+- **ar** — استمع ثم اكتب الكلمة
+- **sw** — Sikiliza, kisha andika neno
+- **hi** — सुनो, फिर वह शब्द लिखो
+
+### `sd.tierPick`
+**en** — Pick a digit — its tier is on the badge
+
+- **es** — Elige un dígito: su nivel está en la insignia
+- **fr** — Choisis un chiffre — son niveau est sur le badge
+- **de** — Wähle eine Ziffer — ihre Stufe steht auf dem Abzeichen
+- **pt** — Escolha um dígito — o nível está no emblema
+- **pl** — Wybierz cyfrę — jej poziom jest na odznace
+- **vi** — Chọn một chữ số — bậc của nó ghi trên huy hiệu
+- **ko** — 숫자를 골라요 — 단계는 배지에 있어요
+- **ja** — 数字を選んでね — レベルはバッジに出てるよ
+- **fil** — Pumili ng digit — nasa badge ang tier nito
+- **zh** — 选一个数字 — 徽章上是它的级别
+- **ru** — Выбери цифру — её уровень на значке
+- **ar** — اختر رقمًا — مستواه على الشارة
+- **sw** — Chagua tarakimu — kiwango chake kiko kwenye beji
+- **hi** — एक अंक चुनो — उसका स्तर बैज पर है
+
+### `sd.tierMissed`
+**en** — Not that word — here's another of the same tier
+
+- **es** — Esa no era — aquí va otra del mismo nivel
+- **fr** — Ce n'était pas le mot — en voici un autre du même niveau
+- **de** — Nicht dieses Wort — hier ist ein anderes derselben Stufe
+- **pt** — Não era essa — aqui vai outra do mesmo nível
+- **pl** — Nie to słowo — oto inne z tego samego poziomu
+- **vi** — Không phải từ đó — đây là một từ khác cùng bậc
+- **ko** — 그 단어가 아니에요 — 같은 단계의 다른 단어예요
+- **ja** — その単語じゃないよ — 同じレベルの別の単語だよ
+- **fil** — Hindi iyon — heto ang isa pa sa parehong tier
+- **zh** — 不是这个词 — 换一个同级别的
+- **ru** — Не то слово — вот другое того же уровня
+- **ar** — ليست تلك الكلمة — إليك أخرى من المستوى نفسه
+- **sw** — Si neno hilo — hili hapa lingine la kiwango kile kile
+- **hi** — वह शब्द नहीं — यह लो उसी स्तर का दूसरा

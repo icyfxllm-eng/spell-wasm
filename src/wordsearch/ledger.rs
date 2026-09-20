@@ -90,11 +90,27 @@ impl Ledger {
         relaxed
     }
 
+    /// Is this word inside its window for `key` right now? (CC-SPELLDOKU v1.3
+    /// I-T4 draws one word at a time, so it asks per word rather than through
+    /// `select`.)
+    pub fn holds(&self, key: &str, word: &str, day: u32) -> bool {
+        self.held(key, word, day).is_some()
+    }
+
     /// A puzzle was served: its words enter the window and the counter moves on.
     pub fn record(&mut self, key: &str, words: &[String], day: u32, relaxed: usize) {
-        for w in words {
-            self.seen.retain(|s| !(s.k == key && s.w == *w));
-            self.seen.push(Seen { k: key.to_string(), w: w.clone(), n: self.counter, d: day });
+        let entries: Vec<(String, String)> =
+            words.iter().map(|w| (key.to_string(), w.clone())).collect();
+        self.record_many(&entries, day, relaxed);
+    }
+
+    /// The same, for ONE puzzle whose words come from several keys — a Tier
+    /// Mode board spans up to four bands. The counter moves once, because the
+    /// player was served one puzzle, not four.
+    pub fn record_many(&mut self, entries: &[(String, String)], day: u32, relaxed: usize) {
+        for (key, w) in entries {
+            self.seen.retain(|s| !(s.k == *key && s.w == *w));
+            self.seen.push(Seen { k: key.clone(), w: w.clone(), n: self.counter, d: day });
         }
         self.counter += 1;
         self.relaxations += relaxed as u64;

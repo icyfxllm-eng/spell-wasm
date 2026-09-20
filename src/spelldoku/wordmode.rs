@@ -186,6 +186,51 @@ fn bank(lang: &str, band: &'static str) -> &'static [Cand] {
     leaked
 }
 
+/// How many eligible rows a band holds for this language. Tier Mode's F5 gate
+/// reads this so there is one definition of "servable row" (I-T8).
+pub fn depth(lang: &str, band: &'static str) -> usize {
+    bank(lang, band).len()
+}
+
+/// Draw one eligible row of `band`, skipping anything already drawn on this
+/// board (I-T4). Returns (what the player types, the bank's own form for audio).
+pub fn draw_from(
+    lang: &str,
+    band: &'static str,
+    rng: &mut Rng,
+    used: &[String],
+) -> Option<(String, Option<String>)> {
+    draw_from_if(lang, band, rng, used, &|_| true)
+}
+
+/// Every spelling a band can serve, for tests and tools that need the pool
+/// itself rather than a draw from it.
+#[cfg(test)]
+pub fn bank_words(lang: &str, band: &'static str) -> Vec<String> {
+    bank(lang, band).iter().map(|c| c.spelling.clone()).collect()
+}
+
+/// The same draw, with one more thing the word has to be. v1.3 uses it to skip
+/// words still inside their CC-WORDGRID D9 repeat window without copying the
+/// window into a list first.
+pub fn draw_from_if(
+    lang: &str,
+    band: &'static str,
+    rng: &mut Rng,
+    used: &[String],
+    keep: &dyn Fn(&str) -> bool,
+) -> Option<(String, Option<String>)> {
+    let pool = bank(lang, band);
+    if pool.is_empty() {
+        return None;
+    }
+    let start = rng.below(pool.len());
+    (0..pool.len())
+        .map(|k| &pool[(start + k) % pool.len()])
+        .find(|c| !used.contains(&c.spelling) && keep(&c.spelling))
+        .map(|c| (c.spelling.clone(), c.display.clone()))
+}
+
 fn candidate(lang: &str, spelling: &str, display: Option<&str>, band: &'static str) -> Option<Cand> {
     let len = spelling.graphemes(true).count();
     if !(2..=MAX_GRAPHEMES).contains(&len) || !typeable(lang, spelling) || crate::profanity::is_blocked(spelling) {

@@ -131,10 +131,17 @@ mod word_lists; // CC-MYWORDS-LISTS v1 — dated word lists
 mod wordgrid_census; // CC-WORDGRID §3: measurement only
 #[cfg(not(feature = "web"))]
 mod spelldoku; // CC-SPELLDOKU v1 — app only (D9)
-// The census measures Word Mode's own draw gates, which are app-only, so it
-// compiles with the app and not with the site (whose tests would not find them).
+// Measurement only — and it measures Word Mode, which is app-only (D9), so it
+// follows `spelldoku`'s gate as well as being test-only. Without the second
+// gate `cargo test --features web` cannot compile: the census calls
+// crate::spelldoku, which is configured out of the web build (it broke the
+// ship lane's web check, 2026-09-20).
 #[cfg(all(test, not(feature = "web")))]
 mod spelldoku_tier_census; // CC-SPELLDOKU v1.3 §0: measurement only
+// Same two gates as the census above, and for the same reason: it draws through
+// Word Mode, which the web build does not compile.
+#[cfg(all(test, not(feature = "web")))]
+mod spelldoku_tier_preview; // CC-SPELLDOKU v1.3 Done #11: the Gig B audit sheet
 #[cfg(not(feature = "web"))]
 mod spelldoku_ui; // CC-SPELLDOKU v1 — the screen (app only)
 #[cfg(test)]

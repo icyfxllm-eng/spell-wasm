@@ -277,4 +277,25 @@ fn the_core_is_symbol_agnostic() {
             assert!(!parts.contains(banned), "I14: {name} mentions {banned}");
         }
     }
+
+    // v1.3 I-T1: the ladder is a Tier Mode idea, so it must not grow in the
+    // pack or the play rules either. They are not symbol-free the way the five
+    // files above are -- play.rs seeds the Daily from a language tag -- so only
+    // the ladder's own vocabulary is banned here. "band" is deliberately absent:
+    // canon.rs means Sudoku row bands by it, which is the core's own word.
+    for (name, src) in [
+        ("pack.rs", include_str!("pack.rs")),
+        ("play.rs", include_str!("play.rs")),
+    ] {
+        let code: String = src
+            .lines()
+            .filter(|l| !l.trim_start().starts_with("//"))
+            .collect::<Vec<_>>()
+            .join("\n")
+            .to_lowercase();
+        let parts: HashSet<&str> = code.split(|c: char| !c.is_ascii_alphanumeric()).filter(|p| !p.is_empty()).collect();
+        for banned in ["tiermode", "ladder", "tiers", "wordmode", "bind"] {
+            assert!(!parts.contains(banned), "I-T1: {name} mentions {banned}");
+        }
+    }
 }

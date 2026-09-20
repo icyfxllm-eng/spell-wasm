@@ -192,6 +192,9 @@ pub fn install(app: &App) {
         set(&obj, "spelldokuBoard", cb.into_js_value());
         let cb = Closure::<dyn Fn() -> String>::new(move || crate::spelldoku_ui::seam_golden());
         set(&obj, "spelldokuGolden", cb.into_js_value());
+        // v1.3 Tier Mode: the word the ladder just drew, so a test can spell it.
+        let cb = Closure::<dyn Fn() -> String>::new(move || crate::spelldoku_ui::seam_prompt());
+        set(&obj, "spelldokuPrompt", cb.into_js_value());
         // CC-SPELLDOKU v1.2 D18: the 12x12 seed pack, rebuilt in this build.
         let cb = Closure::<dyn Fn() -> String>::new(move || format!("{:#x}", crate::spelldoku::pack::pack_digest()));
         set(&obj, "spelldokuPack12Digest", cb.into_js_value());
