@@ -1,6 +1,6 @@
 # TEST-REPORT — Web E2E (app build)
 
-**196/196 passed** across 34 areas.
+**198/198 passed** across 35 areas.
 
 ## playhub — 16/16
 - ✅ hub: opens from the meta corner and renders registry tiles
@@ -27,6 +27,9 @@
 - ✅ review: a miss enters the queue on the review rule, due now
 - ✅ review: a pre-R2 queue entry carries over and keeps its due time
 - ✅ review: a correct answer after a replay grades Hard and comes back sooner than a clean one
+
+## inspector — 1/1
+- ✅ inspector: shows the review queue, next-review dates and why the word was served
 
 ## hub-row — 2/2
 - ✅ hub row: The Climb is out, the rest stay
@@ -123,7 +126,7 @@
 - ✅ mywords_play_falls_back_when_the_chosen_list_is_deleted
 - ✅ mywords_in_my_order_serves_the_players_order
 
-## spelldoku — 15/15
+## spelldoku — 16/16
 - ✅ spelldoku_every_language_opens_a_board
 - ✅ spelldoku_mandarin_needs_its_tone
 - ✅ spelldoku_vietnamese_uses_the_tone_row
@@ -139,6 +142,7 @@
 - ✅ spelldoku_word_mode_draws_my_words_first
 - ✅ spelldoku_twelve_by_twelve_expert
 - ✅ spelldoku_spell_jr_never_sees_twelve
+- ✅ spelldoku_word_mode_definition_card_never_spells_it
 
 ## spell-search — 10/10
 - ✅ spell_search_opens_in_every_launch_language

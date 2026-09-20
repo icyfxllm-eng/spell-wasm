@@ -30,7 +30,12 @@ The spec text Eric sent follows the rulings, unchanged.
   glyph (`Symbols::aimed`); Number Mode keeps Phase A's search.
 - **I12 guard.** A board is redrawn if any fragment would spell another
   symbol's whole word.
-- **Not in A2:** 12×12 (Phase A3, below), definition-card legend (D15 gate).
+- **Definition cards (D15), added 2026-09-20:** the legend's audio orb now has
+  a card button beside it wherever the language's definition pool is live
+  (`consts::def_match`, all 15) and the server can mask a definition. The card
+  passes the same give-away filter Spell Search uses before it is shown, so it
+  never spells the symbol (I12); a definition that fails is not rewritten, and
+  that symbol simply has no card.
 
 ## Phase A3 — built (Eric, 2026-09-19: "start phase A3")
 

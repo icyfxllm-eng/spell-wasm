@@ -1154,6 +1154,11 @@
   .sd-legend{display:flex;flex-wrap:wrap;gap:6px;justify-content:center;max-width:520px;margin:8px auto 0;min-height:0}
   .sd-say{min-width:48px;padding:6px 10px;border-radius:999px;background:var(--panel-2);color:var(--ink);border:1px solid var(--edge);font-size:15px}
   .sd-say b{font-size:18px}
+  .sd-sym{display:inline-flex;align-items:center}
+  .sd-sym .sd-say{border-start-end-radius:0;border-end-end-radius:0}
+  .sd-def{min-width:32px;padding:6px 8px;border-radius:0 999px 999px 0;background:var(--panel);color:var(--muted-2);
+    border:1px solid var(--edge);border-inline-start:0;font-size:14px}
+  :dir(rtl) .sd-def{border-radius:999px 0 0 999px}
   .sd-badge{max-width:520px;margin:4px auto 0;text-align:center;color:var(--muted-2);font-size:.85em;min-height:0}
   .sd-badge:empty{display:none}
   /* CC-WORDGRID v1 Phase A — Spell Search (app only). A slot is the word's

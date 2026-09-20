@@ -339,4 +339,34 @@ export async function run(browser, base, suite) {
       assert(!opts.includes('12-expert'), 'Jr: no 12x12');
     } finally { await ctx.close(); }
   });
+
+  // v1.2 D15 / I12 — the legend offers a definition card where the language's
+  // definition pool is live, and a definition that would spell the symbol is
+  // not shown at all.
+  await suite.test('spelldoku_word_mode_definition_card_never_spells_it', async () => {
+    const { ctx, page } = await openApp(browser, base, { lang: 'en' });
+    try {
+      await openSpellDoku(page);
+      await pick(page, '9-medium');
+      const b = await board(page);
+      assertEq(await page.$$eval('#sdLegend .sd-def', (e) => e.length), 9, 'a card per symbol');
+      const w = b.words[0];
+      await ctx.route('**/api/meaning**', (r) => r.fulfill({
+        status: 200, contentType: 'application/json',
+        body: JSON.stringify({ pos: 'noun', definition: `a kind of ${w} you can see`, example: '' }),
+      }));
+      await page.click('#sdLegend [data-sd-def="1"]');
+      await page.waitForFunction(() => !/^\s*$/.test(document.getElementById('sdBadge').textContent), null, { timeout: 4000 });
+      await page.waitForTimeout(300);
+      const shown = await page.$eval('#sdBadge', (e) => e.textContent);
+      assert(!shown.toLowerCase().includes(w), `the card must not spell "${w}" (showed "${shown}")`);
+      await ctx.unroute('**/api/meaning**');
+      await ctx.route('**/api/meaning**', (r) => r.fulfill({
+        status: 200, contentType: 'application/json',
+        body: JSON.stringify({ pos: 'noun', definition: 'something you might find at home', example: '' }),
+      }));
+      await page.click('#sdLegend [data-sd-def="1"]');
+      await page.waitForFunction(() => /home/.test(document.getElementById('sdBadge').textContent), null, { timeout: 4000 });
+    } finally { await ctx.close(); }
+  });
 }

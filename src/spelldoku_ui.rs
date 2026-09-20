@@ -238,6 +238,27 @@ fn personal(app: &App, lang: &str) -> Personal {
     Personal { mine, missed }
 }
 
+/// D15: the definition card for a symbol, masked by the server and filtered
+/// here so it cannot spell the word (I12, the same filter Spell Search uses).
+/// A definition that fails is not rewritten: that symbol simply has no card.
+fn show_definition(v: u8) {
+    let Some((word, lang)) = GAME.with(|c| {
+        let gb = c.borrow();
+        let g = gb.as_ref()?;
+        Some((g.board.spelling(v)?, g.board.lang.clone()))
+    }) else {
+        return;
+    };
+    dom::set_text("sdBadge", &t("ws.meaning"));
+    wasm_bindgen_futures::spawn_local(async move {
+        let text = match crate::api::fetch_meaning(&word, true, &lang).await {
+            Ok((_, def, _)) if !def.is_empty() && crate::wordsearch::hint::passes(&word, &def) => def,
+            _ => t("ws.noMeaning"),
+        };
+        dom::set_text("sdBadge", &text);
+    });
+}
+
 /// Play a symbol's word through the one audio resolver. Chinese is spoken from
 /// its characters with the reading forced (CC-ZH-TONE F6).
 fn speak(board: &Board, v: u8, on_fail: impl FnOnce() + 'static) {
@@ -460,13 +481,26 @@ fn render() {
 
         // F10: in Word Mode the legend names each symbol by its glyph and an
         // audio orb -- never its spelling (I12). D14: a quiet source badge.
+        // D15: the audio orb everywhere, and a definition card where the
+        // language's definition pool is live (consts::def_match) and the
+        // server can serve a masked one. The card is filtered before it is
+        // shown, so it never spells the symbol (I12).
+        let cards = crate::consts::def_match(&g.board.lang) && crate::api::meaning_supported(&g.board.lang);
         let legend: String = if g.board.is_words() {
             (1..=n as u8)
                 .map(|v| {
                     format!(
-                        "<button type=\"button\" class=\"sd-say\" data-sd-say=\"{v}\" aria-label=\"{}\"><b>{}</b> \u{25B6}</button>",
+                        "<span class=\"sd-sym\"><button type=\"button\" class=\"sd-say\" data-sd-say=\"{v}\" aria-label=\"{}\"><b>{}</b> \u{25B6}</button>{}</span>",
                         dom::escape_html(&t("sd.sayAria")),
-                        dom::escape_html(&g.board.label(v))
+                        dom::escape_html(&g.board.label(v)),
+                        if cards {
+                            format!(
+                                "<button type=\"button\" class=\"sd-def\" data-sd-def=\"{v}\" aria-label=\"{}\">?</button>",
+                                dom::escape_html(&t("ws.meaning"))
+                            )
+                        } else {
+                            String::new()
+                        }
                     )
                 })
                 .collect()
@@ -736,13 +770,15 @@ pub fn wire(app: &App) {
         use wasm_bindgen::JsCast;
         let Some(target) = ev.target().and_then(|t| t.dyn_into::<web_sys::Element>().ok()) else { return };
         let Some(el) = target
-            .closest("[data-sd-cell],[data-sd-key],[data-sd-back],[data-sd-go],[data-sd-chip],[data-sd-pen],[data-sd-say]")
+            .closest("[data-sd-cell],[data-sd-key],[data-sd-back],[data-sd-go],[data-sd-chip],[data-sd-pen],[data-sd-say],[data-sd-def]")
             .ok()
             .flatten()
         else {
             return;
         };
-        if let Some(v) = el.get_attribute("data-sd-say").and_then(|v| v.parse::<u8>().ok()) {
+        if let Some(v) = el.get_attribute("data-sd-def").and_then(|v| v.parse::<u8>().ok()) {
+            show_definition(v);
+        } else if let Some(v) = el.get_attribute("data-sd-say").and_then(|v| v.parse::<u8>().ok()) {
             GAME.with(|c| {
                 if let Some(g) = c.borrow().as_ref() {
                     speak(&g.board, v, || dom::set_text("sdNote", &t("sd.audioOff")));
