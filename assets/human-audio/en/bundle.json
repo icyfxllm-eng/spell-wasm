@@ -1,10 +1,7 @@
 {
  "lang": "en",
  "gate": 0.75,
- "enabled_tiers": [
-  "easy",
-  "medium"
- ],
+ "enabled_tiers": [],
  "coverage": {
   "easy": {
    "pool": 768,
@@ -15676,5 +15673,6 @@
    "sheet": "en-medium-20260919",
    "auditor": "eric"
   }
- ]
+ ],
+ "_comment": "Switched off 2026-09-20 (Eric): pilot clips too fast to follow in play. The clip list below is the record of what was verified; re-running bundle.py re-ships them."
 }
