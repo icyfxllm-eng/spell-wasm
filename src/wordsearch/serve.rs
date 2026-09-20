@@ -5,7 +5,7 @@
 use super::confusion::{decoys, has_decoys};
 use super::gen::{generate, Input, Puzzle, Tier};
 use super::ledger::{daily_pick, fits, seed, Ledger};
-use super::lexicon::{eligible, fold, graphemes, playable_word, pool, Lexicon};
+use super::lexicon::{daily_pool, eligible, fold, graphemes, playable_word, pool, Lexicon};
 use crate::spelldoku::rng::Rng;
 
 pub struct Served {
@@ -78,7 +78,7 @@ pub fn daily(lang: &str, tier: Tier, ymd: u32, day: u32) -> Option<Served> {
     let k = key(lang, tier);
     let size = tier.size();
     let fit = |p: &[String], w: &str| fits(lang, size, p, w);
-    let picked = daily_pick(&pool(lang, tier), tier.targets(), day, &k, &fit);
+    let picked = daily_pick(&daily_pool(lang, tier), tier.targets(), day, &k, &fit);
     let base = seed(&format!("daily:{k}"), 0, ymd);
     // A word set that will not lay out cleanly loses one word at a time, the
     // same way on every device, rather than leaving the day without a Daily.

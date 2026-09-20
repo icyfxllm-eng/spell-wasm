@@ -5,7 +5,7 @@
 use std::collections::HashSet;
 
 use super::layout::MAX_SIDE;
-use super::serve::{bank, from_list, lay, params, usable, Cross, MIN_WORDS};
+use super::serve::{bank, daily, from_list, lay, params, usable, Cross, MIN_WORDS};
 use super::traps::{distinguishing, trap_positions};
 use crate::spelldoku::rng::Rng;
 use crate::wordsearch::gen::Tier;
@@ -204,4 +204,30 @@ fn tier_table() {
     assert!(!params(Tier::Hard).on_traps && !params(Tier::Expert).on_traps);
     assert!(!params(Tier::Hard).letter_check && !params(Tier::Expert).letter_check, "F-C5: no letter-by-letter at Hard or Expert");
     assert!(params(Tier::Easy).letter_check);
+}
+
+/// Phase C: the Daily Spell Cross -- one crossword per language per date, with
+/// the same 90-day window as Spell Search (D9).
+#[test]
+fn the_daily_crossword_is_shared_and_spaced() {
+    use crate::wordsearch::ledger::DAILY_WINDOW_DAYS;
+    for lang in ["en", "es", "ru", "de"] {
+        let a = daily(lang, Tier::Easy, 20260405, 20_910).unwrap_or_else(|| panic!("{lang}: a Daily crossword"));
+        check(&a);
+        let b = daily(lang, Tier::Easy, 20260405, 20_910).unwrap();
+        assert_eq!(a.grid, b.grid, "{lang}: two players, one Daily");
+        assert_ne!(a.grid, daily(lang, Tier::Easy, 20260406, 20_911).unwrap().grid, "{lang}: a new day, a new one");
+
+        let mut seen: Vec<(String, u32)> = Vec::new();
+        for day in 0..200u32 {
+            let c = daily(lang, Tier::Easy, 20260101 + day, day).unwrap();
+            for p in &c.grid.words {
+                if let Some((_, was)) = seen.iter().find(|(w, _)| *w == p.word) {
+                    assert!(day - was >= DAILY_WINDOW_DAYS, "{lang}: {} came back after {} days", p.word, day - was);
+                }
+                seen.retain(|(w, _)| *w != p.word);
+                seen.push((p.word.clone(), day));
+            }
+        }
+    }
 }

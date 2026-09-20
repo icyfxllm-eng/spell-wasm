@@ -158,4 +158,21 @@ export async function run(browser, base, suite) {
       assertEq((await board(page)).tier, 'jr');
     } finally { await ctx.close(); }
   });
+
+  // Phase C: the Daily crossword is one puzzle per language per date.
+  await suite.test('spell_cross_daily_is_the_same_for_everyone', async () => {
+    const seen = [];
+    for (let k = 0; k < 2; k++) {
+      const { ctx, page } = await openApp(browser, base, { lang: 'en' });
+      try {
+        await openCross(page);
+        await page.click('#xwDaily');
+        await page.waitForTimeout(400);
+        const b = await board(page);
+        assert(b.daily, 'the Daily is marked');
+        seen.push(JSON.stringify(b.words.map((w) => w.word)));
+      } finally { await ctx.close(); }
+    }
+    assertEq(seen[0], seen[1], 'two players, one Daily crossword');
+  });
 }

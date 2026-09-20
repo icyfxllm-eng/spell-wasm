@@ -38,6 +38,31 @@ changed.
 
 ---
 
+## Phase C — built (Eric, 2026-09-19), and what it turned out to be
+
+Phase C was written as "Daily Puzzle server generation and the global 90-day
+window" (D8). Measured first, the window turned out to be a property of the
+**pool**, not of who generates the puzzle or how it is delivered: at eight
+words a day, Spanish Easy's 262-word tier slice can only keep a word away for
+32 days. No server, and no bundled schedule, can do better from that pool.
+
+- **The Daily now draws from the language's whole bank**, with only the tier's
+  length limit applied (`lexicon::daily_pool`). Every launch language has 299
+  days or more of words, so the date-seeded schedule holds D9's 90 days by
+  construction. A test walks a year of Dailies in every language and holds
+  every word to it.
+- **Spell Cross has a Daily too** (F-X1 asks for one per mode). Same date, same
+  crossword, everywhere; a word set that will not interlock is rearranged from
+  that date's own words, never from another day's, so the window still holds.
+- **No server, and no bundled schedule.** Both were on the table; neither is
+  needed, and the app carries no new asset. If a Daily ever has to change
+  without an app update, the server path in D8 is still open.
+- **Known consequence:** the Daily's vocabulary is now the whole bank rather
+  than one tier, so a Daily can ask for a word from a harder band than the
+  grid's tier suggests. The grid shape, directions and decoys are unchanged.
+
+---
+
 ## Phase B — built (Eric, 2026-09-19)
 
 Spell Cross, reusing Phase A's F-X engine (ledger, seeds, hint filter, stats).

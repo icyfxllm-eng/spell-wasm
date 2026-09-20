@@ -120,6 +120,24 @@ pub fn pool(lang: &str, tier: Tier) -> Vec<String> {
         .collect()
 }
 
+/// The Daily draws from the language's WHOLE bank, not one tier's slice, with
+/// only the tier's length limit applied (CC-WORDGRID Phase C).
+///
+/// The 90-day window (D9) is a property of the pool, not of who generates the
+/// puzzle: at eight words a day a tier pool of 262 Spanish words can only keep
+/// a word away for 32 days, however the schedule is built or delivered. The
+/// whole bank gives every language 299 days or more, and the date-seeded
+/// schedule then holds the window by construction.
+pub fn daily_pool(lang: &str, tier: Tier) -> Vec<String> {
+    let mut seen = HashSet::new();
+    [Tier::Jr, Tier::Easy, Tier::Medium, Tier::Hard, Tier::Expert]
+        .iter()
+        .flat_map(|t| pool(lang, *t))
+        .filter(|w| graphemes(w).len() <= tier.max_word())
+        .filter(|w| seen.insert(w.clone()))
+        .collect()
+}
+
 /// E4 (signed): the pool a tier needs for the no-repeat window to hold.
 pub fn pool_floor(tier: Tier) -> usize {
     tier.targets() * super::ledger::WINDOW_PUZZLES as usize * 3 / 2

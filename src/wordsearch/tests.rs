@@ -416,3 +416,45 @@ fn seeds_follow_their_inputs() {
     assert_eq!(seed("bank:en:easy", 3, 0), fnv(b"bank:en:easy|3|0"));
     assert_ne!(seed("bank:en:easy", 3, 0), seed("bank:en:easy", 4, 0));
 }
+
+/// Phase C / D9: the Daily keeps a word away for 90 days, in every language
+/// and both modes, and is the same puzzle for everyone on a date. The window
+/// is a property of the pool: one tier's slice could only manage 32 days in
+/// Spanish, so the Daily draws from the whole bank.
+#[test]
+fn the_daily_holds_a_ninety_day_window() {
+    use super::lexicon::daily_pool;
+    const WINDOW: u32 = super::ledger::DAILY_WINDOW_DAYS;
+    for lang in LANGS {
+        for tier in [Tier::Jr, Tier::Easy] {
+            let pool_len = daily_pool(lang, tier).len();
+            let gap = daily_gap(pool_len, tier.targets());
+            assert!(gap as u32 >= WINDOW, "{lang} {}: a word returns after {gap} days", tier.id());
+
+            // Walk a year of Spell Search Dailies and hold every word to it.
+            let mut seen: Vec<(String, u32)> = Vec::new();
+            for day in 0..365u32 {
+                let s = daily(lang, tier, 20260101 + day, day).unwrap_or_else(|| panic!("{lang} {} day {day}", tier.id()));
+                for t in &s.puzzle.targets {
+                    if let Some((_, was)) = seen.iter().find(|(w, _)| *w == t.word) {
+                        assert!(day - was >= WINDOW, "{lang} {}: {} came back after {} days", tier.id(), t.word, day - was);
+                    }
+                    seen.retain(|(w, _)| *w != t.word);
+                    seen.push((t.word.clone(), day));
+                }
+            }
+        }
+    }
+}
+
+/// The same date gives every player the same Daily, in both modes.
+#[test]
+fn the_daily_is_one_puzzle_for_everyone() {
+    for lang in ["en", "es", "ru"] {
+        let a = daily(lang, Tier::Easy, 20260405, 20_910).unwrap();
+        let b = daily(lang, Tier::Easy, 20260405, 20_910).unwrap();
+        assert_eq!(hash(&a.puzzle), hash(&b.puzzle), "{lang}: two players, one Spell Search Daily");
+        let c = daily(lang, Tier::Easy, 20260406, 20_911).unwrap();
+        assert_ne!(hash(&a.puzzle), hash(&c.puzzle), "{lang}: a new day, a new puzzle");
+    }
+}

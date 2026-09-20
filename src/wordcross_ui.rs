@@ -32,6 +32,7 @@ enum Phase {
 
 struct Game {
     lang: String,
+    daily: bool,
     tier: Tier,
     grid: Grid,
     /// What the player has typed in each cell.
@@ -93,6 +94,10 @@ fn picked_tier(kid: bool, lang: &str) -> Tier {
 }
 
 fn start(app: &App, c: Cross, source: Option<String>) {
+    start_as(app, c, source, false)
+}
+
+fn start_as(app: &App, c: Cross, source: Option<String>, daily: bool) {
     let cells = c.grid.cells.len();
     let mut led = ledger();
     let mut words: Vec<String> = c.grid.words.iter().map(|p| p.word.clone()).collect();
@@ -103,11 +108,13 @@ fn start(app: &App, c: Cross, source: Option<String>) {
         Some(_) => led.counter += 1,
         None => led.record(&c.key, &words, today(), 0),
     }
+    let _ = daily;
     crate::storage::set_json(LEDGER_KEY, &led);
     let first = c.grid.words.first().map(|p| (p.cells[0], p.across)).unwrap_or((0, true));
     GAME.with(|g| {
         *g.borrow_mut() = Some(Game {
             lang: app.borrow().lang.clone(),
+            daily,
             tier: c.tier,
             grid: c.grid,
             entries: vec![None; cells],
@@ -139,6 +146,24 @@ fn offer_search(app: &App, list: Option<String>) {
 
 thread_local! {
     static LIST: RefCell<Option<String>> = const { RefCell::new(None) };
+}
+
+/// Phase C: the Daily Spell Cross, the same for everyone on this date.
+fn serve_daily(app: &App) -> bool {
+    let (lang, kid) = {
+        let s = app.borrow();
+        (s.lang.clone(), s.kid)
+    };
+    let tier = if kid { Tier::Jr } else { Tier::Easy };
+    let d = js_sys::Date::new_0();
+    let ymd = d.get_full_year() * 10_000 + (d.get_month() + 1) * 100 + d.get_date();
+    match serve::daily(&lang, tier, ymd, today()) {
+        Some(c) => {
+            start_as(app, c, None, true);
+            true
+        }
+        None => false,
+    }
 }
 
 fn serve_bank(app: &App, tier: Tier) -> bool {
@@ -207,6 +232,7 @@ fn render() {
         dom::toggle_class("xwKey", "btn-hide", !matches!(g.phase, Phase::Keystone { .. }));
         dom::toggle_class("xwDone", "btn-hide", !matches!(g.phase, Phase::Done { .. }));
         dom::toggle_class("xwKeys", "btn-hide", matches!(g.phase, Phase::Done { .. }));
+        dom::toggle_class("xwDaily", "on", g.daily);
 
         let here = word_at(g, g.cell, g.across);
         let lit: Vec<usize> = here.map(|i| word_cells(g, i)).unwrap_or_default();
@@ -492,6 +518,12 @@ pub fn wire(app: &App) {
     }
     {
         let a = app.clone();
+        dom::on_click("xwDaily", move || {
+            serve_daily(&a);
+        });
+    }
+    {
+        let a = app.clone();
         dom::on_click("xwNext", move || again(&a));
     }
     {
@@ -575,6 +607,7 @@ pub fn seam_board() -> String {
                     "h": g.grid.h,
                     "lang": g.lang,
                     "tier": g.tier.id(),
+                    "daily": g.daily,
                     "keystone": g.grid.keystone,
                     "shaded": g.grid.shaded,
                     "words": g.grid.words.iter().map(|p| serde_json::json!({
