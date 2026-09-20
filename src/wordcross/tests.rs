@@ -231,3 +231,39 @@ fn the_daily_crossword_is_shared_and_spaced() {
         }
     }
 }
+
+#[test]
+#[ignore]
+fn probe_weights() {
+    use super::layout::{Weights, TUNE};
+    for (area, crossing, trap) in [(1, 30, 20), (3, 30, 40), (6, 40, 80)] {
+        TUNE.with(|w| w.set(Weights { area, crossing, trap, unanswered: 900 }));
+        let mut out = vec![];
+        for tier in [Tier::Easy, Tier::Hard] {
+            let (mut on, mut all, mut area_sum, mut n) = (0.0, 0.0, 0.0, 0.0);
+            for s in 0..25u64 {
+                let ledger = Ledger { counter: s, ..Default::default() };
+                let Some(c) = bank("en", tier, &ledger, 0) else { continue };
+                n += 1.0;
+                area_sum += (c.grid.w * c.grid.h) as f64;
+                for (cell, a, b) in c.grid.crossings() {
+                    all += 1.0;
+                    if [a, b].iter().any(|&w| c.grid.index_in(w, cell).is_some_and(|k| trap_positions("en", &c.grid.words[w].word).contains(&k))) { on += 1.0; }
+                }
+            }
+            out.push(format!("{} trap {:.0}% area {:.0}", tier.id(), on / all * 100.0, area_sum / n));
+        }
+        // Yield across the launch set at these weights.
+        let mut ok = 0;
+        let words = pool("en", Tier::Easy);
+        for s in 0..25u64 {
+            let mut rng = Rng::new(s * 7919 + 11);
+            let mut draw: Vec<String> = words.clone();
+            rng.shuffle(&mut draw);
+            let spare = draw[8..12].to_vec();
+            if lay("en", Tier::Easy, &draw[..8], &spare, &mut rng).is_some() { ok += 1; }
+        }
+        println!("area {area} crossing {crossing} trap {trap}: {} | yield {ok}/25", out.join(" | "));
+    }
+    TUNE.with(|w| w.set(super::layout::WEIGHTS));
+}

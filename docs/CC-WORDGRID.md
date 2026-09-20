@@ -98,10 +98,16 @@ Spell Cross, reusing Phase A's F-X engine (ledger, seeds, hint filter, stats).
   language and tier), trap crossings (test 8, English: Easy at or above 60%,
   Hard at or below 10%), homophones (test 9), plus the invariants above, and
   six browser tests.
-- **Known rough edge:** aiming crossings at trap positions spreads a grid into
-  a staircase, which wastes screen. Weighing compactness higher fixes the look
-  but drops Hard below its 10% ceiling, so the spec's rule wins for now; a
-  smarter layout search would get both.
+- **Layout tightness, revisited 2026-09-20.** The first screenshot showed a
+  staircase, so the scoring weights were measured rather than guessed: area,
+  crossings and the trap preference were swept together. Tightening the weights
+  (area 6, crossings 40, trap 80) and varying the word order between attempts
+  holds Easy at 64-66% of crossings on trap positions and Hard at 6-7%, with
+  the average English Easy grid at 56-58 cells instead of 61. A local pass that
+  lifted each word and put it back scored one cell better for ten times the
+  work, so it is not in. Hard grids stay large (about 130 cells) because Hard
+  words are long. The greedy layout is near its limit; a real optimizer is the
+  next step if the shape matters more later.
 
 ---
 

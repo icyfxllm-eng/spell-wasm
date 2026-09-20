@@ -126,11 +126,28 @@ pub fn build(
     traps: &dyn Fn(&str) -> Vec<usize>,
     tells: &dyn Fn(&str) -> Option<Vec<usize>>,
 ) -> Option<(Grid, Vec<String>)> {
+    lay_out(words, rng, on_traps, traps, tells)
+}
+
+fn lay_out(
+    words: &[String],
+    rng: &mut Rng,
+    on_traps: bool,
+    traps: &dyn Fn(&str) -> Vec<usize>,
+    tells: &dyn Fn(&str) -> Option<Vec<usize>>,
+) -> Option<(Grid, Vec<String>)> {
     // Longest first -- they have the fewest places to go -- with the order
     // shuffled among words of equal length, so repeated attempts differ.
     let mut order: Vec<&String> = words.iter().collect();
-    rng.shuffle(&mut order);
-    order.sort_by_key(|w| std::cmp::Reverse(graphemes(w).len()));
+    {
+        rng.shuffle(&mut order);
+        // Mostly longest-first, since long words have the fewest places to go,
+        // but sometimes straight shuffled: a different order finds a different
+        // shape, and the best of many attempts is what gets served.
+        if rng.below(4) > 0 {
+            order.sort_by_key(|w| std::cmp::Reverse(graphemes(w).len()));
+        }
+    }
     let first = order.first().copied()?;
     let mut filled: HashMap<(i32, i32), String> = HashMap::new();
     let mut placed: Vec<Lay> = Vec::new();
@@ -283,21 +300,48 @@ pub fn shade_keystone(grid: &Grid, word: &str) -> Option<Vec<usize>> {
 
 /// How well a finished grid matches the tier's crossing preference (F-C2):
 /// words interlocked first, then crossings on (or off) trap positions.
+/// Scoring weights, so the trade-off between a tight grid and the tier's
+/// crossing preference can be measured rather than guessed.
+#[derive(Clone, Copy, Debug)]
+pub struct Weights {
+    pub area: i64,
+    pub crossing: i64,
+    pub trap: i64,
+    pub unanswered: i64,
+}
+
+pub const WEIGHTS: Weights = Weights { area: 6, crossing: 40, trap: 80, unanswered: 900 };
+
+#[cfg(test)]
+thread_local! {
+    pub static TUNE: std::cell::Cell<Weights> = const { std::cell::Cell::new(WEIGHTS) };
+}
+
+fn weights() -> Weights {
+    #[cfg(test)]
+    {
+        return TUNE.with(|w| w.get());
+    }
+    #[allow(unreachable_code)]
+    WEIGHTS
+}
+
 pub fn score(
     grid: &Grid,
     on_traps: bool,
     traps: &dyn Fn(&str) -> Vec<usize>,
     tells: &dyn Fn(&str) -> Option<Vec<usize>>,
 ) -> i64 {
+    let w = weights();
     let mut s = grid.words.len() as i64 * 1000;
     // Among layouts that hold the same words, the tightest one wins: a
     // crossword that walks off in a staircase wastes the screen.
-    s -= (grid.w * grid.h) as i64;
+    s -= (grid.w * grid.h) as i64 * w.area;
     let crossings = grid.crossings();
-    s += crossings.len() as i64 * 30;
+    s += crossings.len() as i64 * w.crossing;
     for &(cell, a, b) in &crossings {
         let hit = [a, b].iter().any(|&w| grid.index_in(w, cell).is_some_and(|k| traps(&grid.words[w].word).contains(&k)));
-        s += if hit == on_traps { 20 } else { -20 };
+        s += if hit == on_traps { w.trap } else { -w.trap };
     }
     // F-C3: a collision word that no crossing tells apart has to leave the
     // grid, which costs more than any crossing preference.
@@ -308,7 +352,7 @@ pub fn score(
             .filter(|(_, a, b)| *a == i || *b == i)
             .any(|&(cell, _, _)| grid.index_in(i, cell).is_some_and(|k| pos.contains(&k)));
         if !answered {
-            s -= 900;
+            s -= w.unanswered;
         }
     }
     s
