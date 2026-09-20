@@ -75,7 +75,7 @@ pub fn lay(lang: &str, tier: Tier, words: &[String], spare: &[String], rng: &mut
     let tells = |w: &str| if cues_on { None } else { distinguishing(lang, w) };
     let mut input: Vec<String> = words.to_vec();
     for _ in 0..4 {
-        let (mut grid, left) = build_best(&input, rng, p.on_traps, &traps, &tells, 64)?;
+        let (mut grid, left) = build_best(&input, rng, p.on_traps, &traps, &tells, 200)?;
         let bad = unanswerable(lang, &grid);
         if !bad.is_empty() && input.len() - bad.len() >= MIN_WORDS {
             input.retain(|w| !bad.contains(w));
