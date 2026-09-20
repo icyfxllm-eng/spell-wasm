@@ -131,6 +131,8 @@ mod word_lists; // CC-MYWORDS-LISTS v1 — dated word lists
 mod wordgrid_census; // CC-WORDGRID §3: measurement only
 #[cfg(not(feature = "web"))]
 mod spelldoku; // CC-SPELLDOKU v1 — app only (D9)
+#[cfg(test)]
+mod spelldoku_tier_census; // CC-SPELLDOKU v1.3 §0: measurement only
 #[cfg(not(feature = "web"))]
 mod spelldoku_ui; // CC-SPELLDOKU v1 — the screen (app only)
 #[cfg(test)]
