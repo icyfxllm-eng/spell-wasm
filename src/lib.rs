@@ -131,7 +131,9 @@ mod word_lists; // CC-MYWORDS-LISTS v1 — dated word lists
 mod wordgrid_census; // CC-WORDGRID §3: measurement only
 #[cfg(not(feature = "web"))]
 mod spelldoku; // CC-SPELLDOKU v1 — app only (D9)
-#[cfg(test)]
+// The census measures Word Mode's own draw gates, which are app-only, so it
+// compiles with the app and not with the site (whose tests would not find them).
+#[cfg(all(test, not(feature = "web")))]
 mod spelldoku_tier_census; // CC-SPELLDOKU v1.3 §0: measurement only
 #[cfg(not(feature = "web"))]
 mod spelldoku_ui; // CC-SPELLDOKU v1 — the screen (app only)

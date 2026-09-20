@@ -30,6 +30,7 @@ const EXEMPT = new Set(['src/word_data.rs', 'src/experience.rs']);
 const TIER = /"(easy|medium|hard|expert)"/g;
 
 export const ALLOW = [
+  { file: 'src/spelldoku_tier_census.rs', has: '&["', why: 'CC-SPELLDOKU v1.3 section 0: an ignored measurement test reading the tier spans F5 proposes; it serves nothing and decides no access' },
   { file: 'src/consts.rs', has: 'TIER_ORDER', why: 'ladder order for sorting and display; decides no access' },
   { file: 'src/climb.rs', has: 'DIFFICULTIES', why: 'ranked leaderboard difficulties; Jr Climb never submits (experience::leaderboard_allowed)' },
   { file: 'src/bee.rs', has: 'const LADDER', why: 'round-to-tier ladder; tier_for_round clamps Spell Jr through experience::serve_tier' },
