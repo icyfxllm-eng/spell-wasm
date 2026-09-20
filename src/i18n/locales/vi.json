@@ -790,5 +790,18 @@
   "ws.audioOff": "Hiện chưa có âm thanh",
   "sd.sayAria": "Nghe từ này",
   "sd.badge": "{n} từ của bạn",
-  "sd.misspelledWord": "Đó không phải từ nào trên bảng — kiểm tra chính tả"
+  "sd.misspelledWord": "Đó không phải từ nào trên bảng — kiểm tra chính tả",
+  "xw.name": "Spell Cross",
+  "xw.avail": "Sắp có ở ngôn ngữ này",
+  "xw.desc": "Nghe các từ và điền vào ô chữ",
+  "xw.new": "Ô chữ mới",
+  "xw.next": "Ô chữ tiếp theo",
+  "xw.across": "Hàng ngang",
+  "xw.down": "Hàng dọc",
+  "xw.better": "Danh sách này hợp với Spell Search hơn",
+  "xw.toSearch": "Chơi Spell Search",
+  "xw.notQuite": "Gần đúng — các chữ nhấp nháy bị sai",
+  "xw.keystone": "Giờ đến từ ẩn: nghe và đánh vần",
+  "xw.keystoneTitle": "Từ ẩn",
+  "xw.makeCross": "Tạo ô chữ"
 }

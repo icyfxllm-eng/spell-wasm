@@ -790,5 +790,18 @@
   "ws.audioOff": "目前无法播放音频",
   "sd.sayAria": "听这个词",
   "sd.badge": "你的词语 {n} 个",
-  "sd.misspelledWord": "这不是棋盘上的词，检查一下拼写"
+  "sd.misspelledWord": "这不是棋盘上的词，检查一下拼写",
+  "xw.name": "Spell Cross",
+  "xw.avail": "此语言即将推出",
+  "xw.desc": "听单词，填十字格",
+  "xw.new": "新的十字格",
+  "xw.next": "下一个十字格",
+  "xw.across": "横向",
+  "xw.down": "纵向",
+  "xw.better": "这个列表更适合 Spell Search",
+  "xw.toSearch": "玩 Spell Search",
+  "xw.notQuite": "差一点——闪烁的字母不对",
+  "xw.keystone": "现在是隐藏词：听一听并拼出来",
+  "xw.keystoneTitle": "隐藏词",
+  "xw.makeCross": "生成十字格"
 }

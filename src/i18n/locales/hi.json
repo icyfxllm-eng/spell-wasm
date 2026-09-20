@@ -790,5 +790,18 @@
   "ws.audioOff": "अभी ऑडियो उपलब्ध नहीं है",
   "sd.sayAria": "यह शब्द सुनें",
   "sd.badge": "आपके {n} शब्द",
-  "sd.misspelledWord": "यह इस बोर्ड का कोई शब्द नहीं है — वर्तनी जाँचें"
+  "sd.misspelledWord": "यह इस बोर्ड का कोई शब्द नहीं है — वर्तनी जाँचें",
+  "xw.name": "Spell Cross",
+  "xw.avail": "इस भाषा में जल्द आ रहा है",
+  "xw.desc": "शब्द सुनें और वर्ग पहेली भरें",
+  "xw.new": "नई वर्ग पहेली",
+  "xw.next": "अगली वर्ग पहेली",
+  "xw.across": "आड़े",
+  "xw.down": "खड़े",
+  "xw.better": "यह सूची Spell Search के लिए बेहतर है",
+  "xw.toSearch": "Spell Search खेलें",
+  "xw.notQuite": "लगभग — चमकते अक्षर गलत हैं",
+  "xw.keystone": "अब छिपा शब्द: सुनें और लिखें",
+  "xw.keystoneTitle": "छिपा शब्द",
+  "xw.makeCross": "वर्ग पहेली बनाएँ"
 }

@@ -42,6 +42,7 @@ import * as jrClimb from './specs/jr-climb.mjs';
 import * as myWordsLists from './specs/mywords-lists.mjs';
 import * as spellDoku from './specs/spelldoku.mjs';
 import * as spellSearch from './specs/spell-search.mjs';
+import * as spellCross from './specs/spell-cross.mjs';
 import * as translateScreen from './specs/translate-screen.mjs';
 import * as settingsEffects from './specs/settings-effects.mjs';
 import * as telemetry from './specs/telemetry.mjs';
@@ -66,6 +67,7 @@ const SPECS = [
   ['mywords-lists', myWordsLists],
   ['spelldoku', spellDoku],
   ['spell-search', spellSearch],
+  ['spell-cross', spellCross],
   ['translate-screen', translateScreen],
   ['coming', coming],
   ['sayit', sayit],

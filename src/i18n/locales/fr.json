@@ -790,5 +790,18 @@
   "ws.audioOff": "L'audio n'est pas disponible pour l'instant",
   "sd.sayAria": "Écouter ce mot",
   "sd.badge": "{n} de tes mots",
-  "sd.misspelledWord": "Ce n'est pas un des mots de la grille — vérifie l'orthographe"
+  "sd.misspelledWord": "Ce n'est pas un des mots de la grille — vérifie l'orthographe",
+  "xw.name": "Spell Cross",
+  "xw.avail": "Bientôt dans cette langue",
+  "xw.desc": "Écoute les mots et remplis la grille",
+  "xw.new": "Nouvelle grille",
+  "xw.next": "Grille suivante",
+  "xw.across": "Horizontal",
+  "xw.down": "Vertical",
+  "xw.better": "Cette liste fera un meilleur Spell Search",
+  "xw.toSearch": "Jouer à Spell Search",
+  "xw.notQuite": "Presque — les lettres qui clignotent sont fausses",
+  "xw.keystone": "Maintenant le mot caché : écoute et écris-le",
+  "xw.keystoneTitle": "Le mot caché",
+  "xw.makeCross": "Créer une grille"
 }

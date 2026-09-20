@@ -1187,6 +1187,24 @@
   .ws-lock h3{margin:0;text-align:center}
   .ws-stars{font-size:40px;text-align:center;color:var(--amber)}
   @media (prefers-reduced-motion:no-preference){.ws-cell.trap{transition:background .2s}}
+  /* CC-WORDGRID v1 Phase B — Spell Cross. A clue is a number, a length and a
+     play button: the word itself is never written down (D1, F-C1). */
+  .xw-grid{--xw-w:9;display:grid;grid-template-columns:repeat(var(--xw-w),1fr);gap:1px;max-width:520px;margin:0 auto;touch-action:manipulation}
+  .xw-cell{position:relative;aspect-ratio:1;display:flex;align-items:center;justify-content:center;background:var(--panel);
+    border:1px solid var(--edge);border-radius:2px;color:var(--ink);font-family:var(--mono);font-size:clamp(11px,3.6vw,20px);text-transform:lowercase}
+  .xw-cell.blank{background:transparent;border-color:transparent}
+  .xw-cell small{position:absolute;top:0;inset-inline-start:1px;font-size:8px;color:var(--muted-2);font-family:var(--body)}
+  .xw-cell.shaded{background:rgba(255,190,90,.16)}
+  .xw-cell.lit{background:rgba(70,214,184,.14)}
+  .xw-cell.here{outline:2px solid var(--amber);outline-offset:-2px}
+  .xw-cell.wrong{color:var(--coral);background:rgba(255,107,122,.24)}
+  .xw-clues{display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:4px;margin-top:8px}
+  .xw-head{grid-column:1/-1;color:var(--muted-2);font-size:.8em;margin-top:4px}
+  .xw-clue{display:flex;align-items:center;gap:6px;background:var(--panel-2);border:1px solid var(--edge);border-radius:10px;padding:3px 6px}
+  .xw-clue.at{border-color:var(--amber)}
+  .xw-clue.done{border-color:var(--teal);opacity:.6}
+  .xw-clue b{min-width:1.4em;color:var(--muted-2);font-size:.85em}
+  .xw-len{font-family:var(--mono);letter-spacing:.1em;color:var(--muted-2);font-size:13px;overflow:hidden}
 
   /* CC-MYWORDS-LISTS F3 — the My Words screen. Cards, an opened list, and the
      way back from a delete. Same full-screen shape as Translate. */
@@ -2545,6 +2563,40 @@
       <div id="wsDone" class="ws-lock btn-hide">
         <div class="ws-stars" id="wsStars" aria-live="polite"></div>
         <div class="sd-actions"><button class="btn btn-check" id="wsNext" data-i18n="ws.next">Next puzzle</button></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- CC-WORDGRID v1 Phase B: Spell Cross (app only). -->
+  <button id="xwOpenBtn" hidden aria-hidden="true"></button>
+  <div class="ws-screen" id="xwScreen" role="dialog" aria-modal="true" aria-labelledby="xwTitle">
+    <div class="sd-top">
+      <button class="ghost mode-exit" id="xwExit" aria-label="Exit">✕</button>
+      <h2 id="xwTitle" data-i18n="xw.name">Spell Cross</h2>
+      <select id="xwPick" aria-label="Level"></select>
+      <button class="ghost" id="xwNew" data-i18n="xw.new">New crossword</button>
+    </div>
+    <div class="ws-wrap">
+      <div class="ws-note" id="xwNote" aria-live="polite"></div>
+      <div id="xwSolve">
+        <div class="xw-grid" id="xwGrid"></div>
+        <div class="xw-clues" id="xwClues"></div>
+      </div>
+      <div id="xwKey" class="ws-lock btn-hide">
+        <h3 data-i18n="xw.keystoneTitle">The hidden word</h3>
+        <div class="sd-actions">
+          <button class="btn btn-check" id="xwKeyPlay" aria-label="Play">▶</button>
+          <button class="ghost" id="xwKeyGo">✓</button>
+        </div>
+        <div class="sd-typed" id="xwTyped" dir="auto" aria-live="polite"></div>
+      </div>
+      <div class="sd-keys" id="xwKeys"></div>
+      <div id="xwFallback" class="ws-lock btn-hide">
+        <div class="sd-actions"><button class="btn btn-check" id="xwToSearch" data-i18n="xw.toSearch">Play Spell Search</button></div>
+      </div>
+      <div id="xwDone" class="ws-lock btn-hide">
+        <div class="ws-stars" id="xwStars" aria-live="polite"></div>
+        <div class="sd-actions"><button class="btn btn-check" id="xwNext" data-i18n="xw.next">Next crossword</button></div>
       </div>
     </div>
   </div>

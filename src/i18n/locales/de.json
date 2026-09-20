@@ -790,5 +790,18 @@
   "ws.audioOff": "Audio ist gerade nicht verfügbar",
   "sd.sayAria": "Dieses Wort anhören",
   "sd.badge": "{n} deiner Wörter",
-  "sd.misspelledWord": "Das ist keins der Wörter dieses Rätsels – prüf die Schreibweise"
+  "sd.misspelledWord": "Das ist keins der Wörter dieses Rätsels – prüf die Schreibweise",
+  "xw.name": "Spell Cross",
+  "xw.avail": "Bald in dieser Sprache",
+  "xw.desc": "Hör die Wörter und füll das Kreuzgitter",
+  "xw.new": "Neues Kreuzgitter",
+  "xw.next": "Nächstes Kreuzgitter",
+  "xw.across": "Waagerecht",
+  "xw.down": "Senkrecht",
+  "xw.better": "Diese Liste wird ein besseres Spell Search",
+  "xw.toSearch": "Spell Search spielen",
+  "xw.notQuite": "Fast – die blinkenden Buchstaben stimmen nicht",
+  "xw.keystone": "Jetzt das versteckte Wort: hören und schreiben",
+  "xw.keystoneTitle": "Das versteckte Wort",
+  "xw.makeCross": "Kreuzgitter erstellen"
 }

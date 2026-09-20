@@ -790,5 +790,18 @@
   "ws.audioOff": "지금은 오디오를 쓸 수 없어요",
   "sd.sayAria": "이 단어 듣기",
   "sd.badge": "내 단어 {n}개",
-  "sd.misspelledWord": "이 판의 단어가 아니에요 — 철자를 확인하세요"
+  "sd.misspelledWord": "이 판의 단어가 아니에요 — 철자를 확인하세요",
+  "xw.name": "Spell Cross",
+  "xw.avail": "이 언어는 곧 지원돼요",
+  "xw.desc": "단어를 듣고 십자말을 채우세요",
+  "xw.new": "새 십자말",
+  "xw.next": "다음 십자말",
+  "xw.across": "가로",
+  "xw.down": "세로",
+  "xw.better": "이 목록은 Spell Search가 더 잘 어울려요",
+  "xw.toSearch": "Spell Search 하기",
+  "xw.notQuite": "거의 맞아요 — 깜빡이는 글자가 틀렸어요",
+  "xw.keystone": "이제 숨은 단어예요: 듣고 써 보세요",
+  "xw.keystoneTitle": "숨은 단어",
+  "xw.makeCross": "십자말 만들기"
 }

@@ -138,6 +138,10 @@ mod wordsearch; // CC-WORDGRID v1 Phase A — Spell Search engine (app only)
 #[cfg(not(feature = "web"))]
 mod wordsearch_ui; // CC-WORDGRID v1 Phase A — the Spell Search screen (app only)
 #[cfg(not(feature = "web"))]
+mod wordcross; // CC-WORDGRID v1 Phase B — Spell Cross engine (app only)
+#[cfg(not(feature = "web"))]
+mod wordcross_ui; // CC-WORDGRID v1 Phase B — the Spell Cross screen (app only)
+#[cfg(not(feature = "web"))]
 mod lists_ui; // CC-MYWORDS-LISTS F1 — the save sheet's destination (app only)
 #[cfg(not(feature = "web"))]
 mod lists_screen; // CC-MYWORDS-LISTS F3 — the My Words screen (app only)
@@ -252,6 +256,7 @@ pub fn start() -> Result<(), JsValue> {
         lists_ui::refresh_pool(&app); // F4: the remembered list is what play serves
         spelldoku_ui::wire(&app); // CC-SPELLDOKU v1
         wordsearch_ui::wire(&app); // CC-WORDGRID v1 Phase A: Spell Search
+        wordcross_ui::wire(&app); // CC-WORDGRID v1 Phase B: Spell Cross
     }
     // CC-IOS-SURFACES (BD-1): widget/intent deep links arrive as location
     // hashes (#daily / #practice). Consume on boot and on change; a no-op

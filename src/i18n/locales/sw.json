@@ -790,5 +790,18 @@
   "ws.audioOff": "Sauti haipatikani sasa",
   "sd.sayAria": "Sikiliza neno hili",
   "sd.badge": "Maneno yako {n}",
-  "sd.misspelledWord": "Hilo si mojawapo ya maneno ya ubao huu — kagua tahajia"
+  "sd.misspelledWord": "Hilo si mojawapo ya maneno ya ubao huu — kagua tahajia",
+  "xw.name": "Spell Cross",
+  "xw.avail": "Inakuja hivi karibuni kwa lugha hii",
+  "xw.desc": "Sikiliza maneno na ujaze chemsha bongo",
+  "xw.new": "Chemsha bongo mpya",
+  "xw.next": "Chemsha bongo inayofuata",
+  "xw.across": "Mlalo",
+  "xw.down": "Wima",
+  "xw.better": "Orodha hii inafaa zaidi kwa Spell Search",
+  "xw.toSearch": "Cheza Spell Search",
+  "xw.notQuite": "Karibu — herufi zinazomulika si sahihi",
+  "xw.keystone": "Sasa neno lililofichwa: sikiliza na uandike",
+  "xw.keystoneTitle": "Neno lililofichwa",
+  "xw.makeCross": "Tengeneza chemsha bongo"
 }

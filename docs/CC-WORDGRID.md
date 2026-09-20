@@ -38,6 +38,48 @@ changed.
 
 ---
 
+## Phase B — built (Eric, 2026-09-19)
+
+Spell Cross, reusing Phase A's F-X engine (ledger, seeds, hint filter, stats).
+
+- **Layout (D1, I5, I7):** a freeform criss-cross of the list's own words, no
+  filler. Each word after the first must cross one already placed, so a served
+  grid is always one connected component; a crossing cell holds one grapheme
+  both words share, so an accented letter never crosses its bare form (F-C4).
+  Grids are capped at 13 cells a side so a phone can show them.
+- **F-C2 needed word choice, not just layout.** In English Easy only 12% of
+  letter positions are trap positions and most words have none, so no layout of
+  a random draw can put 60% of crossings on them. The bank draw for the tiers
+  that want trap crossings now prefers words that have them, the way Spell
+  Search prefers words with decoys; the layout then aims crossings there (and
+  away from them at Hard and Expert). Russian's `ambiguous_positions` still
+  does not exist, and per the spec we did not wait for it: a language without a
+  confusion list simply has unweighted crossings.
+- **F-C3:** a clue word in a collision group needs a crossing that tells the
+  spellings apart; the layout aims for one, and a word it cannot answer leaves
+  the grid. Sense cues are the spec's second choice, but every language's cue
+  mode is Off (CC-SENSE-CUE D9 voids a claim with no named auditor), so that
+  step cannot run yet.
+- **Screen:** a clue is a number, a length and a play button -- never text
+  (F-C1). A word checks when its last cell is filled; only the wrong cells
+  flash, and below Hard a wrong letter flashes as it is typed (F-C5). The
+  keystone is spelled with the grid hidden (F-C6), and it obeys the no-repeat
+  ledger like any other word. Wrong answers reach the base game's learner log
+  and missed-words queue, a trap spelling on the trap channel (F-X6). Stars
+  only; no shield is read or written (D3).
+- **F-C7:** a list that will not interlock five words shows "This list makes a
+  better Spell Search" with one button, and never a disconnected grid.
+- **Tests:** yield (test 7, 80% of random eight-word draws in every launch
+  language and tier), trap crossings (test 8, English: Easy at or above 60%,
+  Hard at or below 10%), homophones (test 9), plus the invariants above, and
+  six browser tests.
+- **Known rough edge:** aiming crossings at trap positions spreads a grid into
+  a staircase, which wastes screen. Weighing compactness higher fixes the look
+  but drops Hard below its 10% ceiling, so the spec's rule wins for now; a
+  smarter layout search would get both.
+
+---
+
 ## 0. Intent (read first)
 
 A normal crossword or word search is a **reading** game. SpellGame is a **hearing → writing** game. If we copy the classics, players can finish by matching shapes on screen without spelling anything.

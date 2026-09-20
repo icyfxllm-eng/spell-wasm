@@ -1,6 +1,6 @@
 # TEST-REPORT — Web E2E (app build)
 
-**189/189 passed** across 33 areas.
+**195/195 passed** across 34 areas.
 
 ## playhub — 16/16
 - ✅ hub: opens from the meta corner and renders registry tiles
@@ -151,6 +151,14 @@
 - ✅ spell_search_make_a_puzzle_from_my_words
 - ✅ spell_search_meaning_never_gives_the_word_away
 - ✅ spell_search_twelve_word_list_builds_fast
+
+## spell-cross — 6/6
+- ✅ spell_cross_clues_are_heard_never_read
+- ✅ spell_cross_checks_on_the_last_letter
+- ✅ spell_cross_finishes_on_the_hidden_word
+- ✅ spell_cross_offers_spell_search_when_a_list_will_not_interlock
+- ✅ spell_cross_launch_set
+- ✅ spell_cross_spell_jr_gets_jr_only
 
 ## translate-screen — 10/10
 - ✅ translate_state_matrix_holds_the_action_row_still

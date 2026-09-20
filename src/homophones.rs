@@ -65,6 +65,19 @@ fn table(lang: &str) -> &'static HashMap<String, usize> {
     leaked
 }
 
+/// The other spellings that sound like `word` (CC-WORDGRID F-C3 needs them to
+/// tell whether a crossing can distinguish the two). Empty when the word is in
+/// no collision group.
+pub fn group_members(lang: &str, word: &str) -> Vec<String> {
+    let key = fold_strict(word);
+    let Some(&gid) = table(lang).get(&key) else { return Vec::new() };
+    source(lang)
+        .lines()
+        .nth(gid)
+        .map(|line| line.split_whitespace().filter(|m| fold_strict(m) != key).map(str::to_string).collect())
+        .unwrap_or_default()
+}
+
 /// True if `typed` is an accepted homophone of the prompt `word` in `lang`
 /// (both fall in the same equivalence group). Case/accent-normalized via
 /// `fold_strict`, so it composes with the normal comparison.

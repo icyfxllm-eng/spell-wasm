@@ -1,5 +1,5 @@
 {
-  "$doc": "CC-ONBOARD-JR Done 1 — allowed_tiers for every registered mode x {junior, standard}. Derived from config/modes.json by an implementation separate from src/experience.rs, so a change to either shows up as a failing test. Regenerate deliberately when a policy changes.",
+  "$doc": "CC-ONBOARD-JR Done 1 \u2014 allowed_tiers for every registered mode x {junior, standard}. Derived from config/modes.json by an implementation separate from src/experience.rs, so a change to either shows up as a failing test. Regenerate deliberately when a policy changes.",
   "modes": {
     "practice": {
       "junior": [
@@ -233,6 +233,17 @@
       ]
     },
     "spell_search": {
+      "junior": [
+        "easy"
+      ],
+      "standard": [
+        "easy",
+        "medium",
+        "hard",
+        "expert"
+      ]
+    },
+    "spell_cross": {
       "junior": [
         "easy"
       ],

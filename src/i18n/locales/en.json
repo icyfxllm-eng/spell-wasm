@@ -790,5 +790,18 @@
   "ws.audioOff": "Audio isn't available right now",
   "sd.sayAria": "Hear this word",
   "sd.badge": "{n} of your words",
-  "sd.misspelledWord": "That isn't one of this board's words — check the spelling"
+  "sd.misspelledWord": "That isn't one of this board's words — check the spelling",
+  "xw.name": "Spell Cross",
+  "xw.avail": "Coming soon in this language",
+  "xw.desc": "Hear the words and fill the crossing grid",
+  "xw.new": "New crossword",
+  "xw.next": "Next crossword",
+  "xw.across": "Across",
+  "xw.down": "Down",
+  "xw.better": "This list makes a better Spell Search",
+  "xw.toSearch": "Play Spell Search",
+  "xw.notQuite": "Not quite — the flashing letters are wrong",
+  "xw.keystone": "Now the hidden word: listen and spell it",
+  "xw.keystoneTitle": "The hidden word",
+  "xw.makeCross": "Make a crossword"
 }

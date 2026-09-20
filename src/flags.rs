@@ -225,6 +225,13 @@ pub fn spell_search() -> bool {
     resolve(stored("spell_search").as_deref(), true)
 }
 
+/// CC-WORDGRID v1 Phase B — Spell Cross's runtime kill-switch. Default ON;
+/// which languages play is the launch set in `wordsearch::lexicon`. App only.
+#[cfg(not(feature = "web"))]
+pub fn spell_cross() -> bool {
+    resolve(stored("spell_cross").as_deref(), true)
+}
+
 /// CC-PRACTICE — the guided first-contact mode. Default ON (failure-proof,
 /// writes nothing outside its own record); per-language gate is consts::practice.
 pub fn practice() -> bool {
@@ -309,6 +316,8 @@ pub fn is_on(name: &str) -> bool {
         "spelldoku" => spelldoku(),
         #[cfg(not(feature = "web"))]
         "spell_search" => spell_search(),
+        #[cfg(not(feature = "web"))]
+        "spell_cross" => spell_cross(),
         _ => false,
     }
 }

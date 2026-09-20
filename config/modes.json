@@ -359,6 +359,23 @@
       "juniorPolicy": "ceiling:easy"
     },
     {
+      "id": "spell_cross",
+      "nameKey": "xw.name",
+      "descKey": "xw.desc",
+      "icon": "\u271a",
+      "status": "live",
+      "kidSafe": true,
+      "platforms": [
+        "ios"
+      ],
+      "entitlementLevel": "preview",
+      "requiresPremium": null,
+      "languages": null,
+      "$note": "CC-WORDGRID v1 Phase B: a criss-cross of the list's own words, every clue heard and never read (D1, F-C1). App only. Same launch set as Spell Search; crossings are weighted onto trap positions at Jr, Easy and Medium and off them at Hard and Expert (F-C2), and a list that will not interlock five words is offered as a Spell Search instead (D2, F-C7).",
+      "exitStyle": "instant",
+      "juniorPolicy": "ceiling:easy"
+    },
+    {
       "id": "standard",
       "nameKey": "brand.tag",
       "descKey": "share.tagline",

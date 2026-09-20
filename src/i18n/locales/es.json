@@ -790,5 +790,18 @@
   "ws.audioOff": "El audio no está disponible ahora",
   "sd.sayAria": "Escuchar esta palabra",
   "sd.badge": "{n} de tus palabras",
-  "sd.misspelledWord": "Esa no es una de las palabras del tablero; revisa la ortografía"
+  "sd.misspelledWord": "Esa no es una de las palabras del tablero; revisa la ortografía",
+  "xw.name": "Spell Cross",
+  "xw.avail": "Pronto en este idioma",
+  "xw.desc": "Escucha las palabras y completa el crucigrama",
+  "xw.new": "Nuevo crucigrama",
+  "xw.next": "Siguiente crucigrama",
+  "xw.across": "Horizontales",
+  "xw.down": "Verticales",
+  "xw.better": "Esta lista funciona mejor como Spell Search",
+  "xw.toSearch": "Jugar a Spell Search",
+  "xw.notQuite": "Casi: las letras que parpadean están mal",
+  "xw.keystone": "Ahora la palabra oculta: escucha y escríbela",
+  "xw.keystoneTitle": "La palabra oculta",
+  "xw.makeCross": "Crear un crucigrama"
 }

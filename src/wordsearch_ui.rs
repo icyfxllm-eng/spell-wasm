@@ -20,7 +20,7 @@ use crate::spelldoku::rng::Rng;
 use crate::{dom, i18n::t, App};
 
 /// The seen-word ledger (F-X3). Spell Cross will share it.
-const LEDGER_KEY: &str = "spell_wordgrid_seen_v1";
+pub const LEDGER_KEY: &str = "spell_wordgrid_seen_v1";
 const DAY_MS: f64 = 86_400_000.0;
 const STARS: u32 = 3;
 
@@ -103,7 +103,7 @@ fn picked_tier(kid: bool, lang: &str) -> Tier {
 }
 
 /// Keys from the in-app keyboard's own layout file, as SpellDoku reads them.
-fn layout(lang: &str) -> Vec<Vec<String>> {
+pub fn layout(lang: &str) -> Vec<Vec<String>> {
     let raw = match lang {
         "es" => include_str!("../assets/keyboards/es.json"),
         "fr" => include_str!("../assets/keyboards/fr.json"),

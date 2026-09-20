@@ -790,5 +790,18 @@
   "ws.audioOff": "Walang audio sa ngayon",
   "sd.sayAria": "Pakinggan ang salitang ito",
   "sd.badge": "{n} sa iyong mga salita",
-  "sd.misspelledWord": "Hindi iyan isa sa mga salita ng board — suriin ang baybay"
+  "sd.misspelledWord": "Hindi iyan isa sa mga salita ng board — suriin ang baybay",
+  "xw.name": "Spell Cross",
+  "xw.avail": "Malapit na sa wikang ito",
+  "xw.desc": "Pakinggan ang mga salita at punan ang krosword",
+  "xw.new": "Bagong krosword",
+  "xw.next": "Susunod na krosword",
+  "xw.across": "Pahalang",
+  "xw.down": "Pababa",
+  "xw.better": "Mas bagay ang listahang ito sa Spell Search",
+  "xw.toSearch": "Maglaro ng Spell Search",
+  "xw.notQuite": "Muntik na — mali ang kumukurap na mga letra",
+  "xw.keystone": "Ngayon ang nakatagong salita: pakinggan at baybayin",
+  "xw.keystoneTitle": "Ang nakatagong salita",
+  "xw.makeCross": "Gumawa ng krosword"
 }

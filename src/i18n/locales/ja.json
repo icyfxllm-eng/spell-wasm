@@ -790,5 +790,18 @@
   "ws.audioOff": "今は音声を使えません",
   "sd.sayAria": "この単語を聞く",
   "sd.badge": "あなたの単語 {n} 個",
-  "sd.misspelledWord": "この盤面の単語ではありません。つづりを確認しよう"
+  "sd.misspelledWord": "この盤面の単語ではありません。つづりを確認しよう",
+  "xw.name": "Spell Cross",
+  "xw.avail": "この言語はもうすぐ対応",
+  "xw.desc": "単語を聞いてクロスワードを埋めよう",
+  "xw.new": "新しいクロスワード",
+  "xw.next": "次のクロスワード",
+  "xw.across": "よこ",
+  "xw.down": "たて",
+  "xw.better": "このリストは Spell Search 向きです",
+  "xw.toSearch": "Spell Search をあそぶ",
+  "xw.notQuite": "おしい — 点滅している文字が違います",
+  "xw.keystone": "かくれた単語です。聞いてつづろう",
+  "xw.keystoneTitle": "かくれた単語",
+  "xw.makeCross": "クロスワードを作る"
 }

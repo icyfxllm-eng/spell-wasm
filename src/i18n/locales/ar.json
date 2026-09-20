@@ -790,5 +790,18 @@
   "ws.audioOff": "الصوت غير متاح الآن",
   "sd.sayAria": "استمع إلى هذه الكلمة",
   "sd.badge": "{n} من كلماتك",
-  "sd.misspelledWord": "هذه ليست من كلمات هذه اللوحة — تحقّق من التهجئة"
+  "sd.misspelledWord": "هذه ليست من كلمات هذه اللوحة — تحقّق من التهجئة",
+  "xw.name": "Spell Cross",
+  "xw.avail": "قريبًا بهذه اللغة",
+  "xw.desc": "استمع إلى الكلمات واملأ الشبكة المتقاطعة",
+  "xw.new": "شبكة جديدة",
+  "xw.next": "الشبكة التالية",
+  "xw.across": "أفقي",
+  "xw.down": "رأسي",
+  "xw.better": "هذه القائمة أنسب للعبة Spell Search",
+  "xw.toSearch": "العب Spell Search",
+  "xw.notQuite": "قريب — الحروف الوامضة خطأ",
+  "xw.keystone": "الآن الكلمة المخفية: استمع واكتبها",
+  "xw.keystoneTitle": "الكلمة المخفية",
+  "xw.makeCross": "اصنع شبكة متقاطعة"
 }

@@ -38,7 +38,7 @@ use crate::App;
 /// is what lets the same file describe a mode for a future surface that has no
 /// such element. `None` = an in-round aid with no destination.
 #[cfg(not(feature = "web"))]
-const N_LAUNCH: usize = 19; // + spell_search (CC-WORDGRID Phase A, app only)
+const N_LAUNCH: usize = 20; // + spell_cross (CC-WORDGRID Phase B, app only)
 #[cfg(feature = "web")]
 const N_LAUNCH: usize = 9;
 const LAUNCH: [(&str, Option<&str>); N_LAUNCH] = [
@@ -87,6 +87,8 @@ const LAUNCH: [(&str, Option<&str>); N_LAUNCH] = [
     ("spelldoku", Some("sdOpenBtn")),
     #[cfg(not(feature = "web"))]
     ("spell_search", Some("wsOpenBtn")),
+    #[cfg(not(feature = "web"))]
+    ("spell_cross", Some("xwOpenBtn")),
 ];
 
 fn launch_for(id: &str) -> Option<&'static str> {
@@ -162,6 +164,16 @@ fn spell_search_playable(_lang: &str) -> bool {
     false
 }
 
+#[cfg(not(feature = "web"))]
+fn spell_cross_playable(lang: &str) -> bool {
+    crate::wordcross_ui::playable(lang)
+}
+
+#[cfg(feature = "web")]
+fn spell_cross_playable(_lang: &str) -> bool {
+    false
+}
+
 /// A mode's availability for the CURRENT language. `spell_aloud` is voice-spell-gated:
 /// live only where the language registry's `voice_spell` flag holds (en/es); elsewhere
 /// it renders as an "unavailable / coming soon" tile — shown, not hidden (A7).
@@ -178,6 +190,9 @@ fn unavailable_reason(m: &Mode, lang: &str) -> Option<&'static str> {
     } else if m.id == "spell_search" && !spell_search_playable(lang) {
         // CC-WORDGRID v1: outside the launch set (ko and zh never, D4).
         Some("ws.avail")
+    } else if m.id == "spell_cross" && !spell_cross_playable(lang) {
+        // CC-WORDGRID v1: outside the launch set (ko and zh never, D4).
+        Some("xw.avail")
     } else if m.id == "def_match" && !crate::consts::def_match(lang) {
         // Pool not landed/pinned for this language yet (Invariant 8) — a
         // non-tappable teaser, never a dead button.
