@@ -138,8 +138,11 @@ today, re-spelling a cell that is already correct:
 - re-fires the spell gate, and
 - **increments the unlock counter again** (`:498-500`).
 
-A player can therefore farm chips by spelling the same easy cell repeatedly. That
-is live in build 233, independent of Tier Mode. F8 assumes this hole is closed;
+A player could therefore farm chips by spelling the same easy cell repeatedly.
+**Fixed 2026-09-20** (Eric): `Unlocks` now credits a (cell, value) once, so
+re-spelling a cell that is already right earns nothing, while a different value
+in the same cell or the same value elsewhere still counts. Build 233 and earlier
+carry the defect. F8 assumes this hole is closed;
 it is not, and D-T7 should be decided knowing F8 is a **fix**, not a refinement.
 
 There is no per-cell "already spelled" memory to build on: `Unlocks`

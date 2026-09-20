@@ -496,7 +496,7 @@ fn commit_value(v: u8, spelled: bool, verdict: Verdict) {
                 g.wrong[i] = false;
                 g.pencil[i] = 0;
                 if spelled {
-                    g.unlocks.record_correct(v);
+                    g.unlocks.record_correct(i, v);
                 }
                 record_stat(|s| s.correct += 1);
                 dom::set_text("sdNote", "");
