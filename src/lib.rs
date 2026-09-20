@@ -138,6 +138,10 @@ mod spelldoku; // CC-SPELLDOKU v1 — app only (D9)
 // ship lane's web check, 2026-09-20).
 #[cfg(all(test, not(feature = "web")))]
 mod spelldoku_tier_census; // CC-SPELLDOKU v1.3 §0: measurement only
+// Same two gates as the census above, and for the same reason: it draws through
+// Word Mode, which the web build does not compile.
+#[cfg(all(test, not(feature = "web")))]
+mod spelldoku_tier_preview; // CC-SPELLDOKU v1.3 Done #11: the Gig B audit sheet
 #[cfg(not(feature = "web"))]
 mod spelldoku_ui; // CC-SPELLDOKU v1 — the screen (app only)
 #[cfg(test)]

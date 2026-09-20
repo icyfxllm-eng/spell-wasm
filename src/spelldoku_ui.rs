@@ -9,6 +9,7 @@ use std::cell::RefCell;
 
 use serde::{Deserialize, Serialize};
 
+use crate::spelldoku::tier::{self as tiermode};
 use crate::spelldoku::canon;
 use crate::spelldoku::geo::{size_of, Geo};
 use crate::spelldoku::bind::{Board, Mode};
@@ -37,6 +38,25 @@ pub fn seam_preview(on: bool) {
     PREVIEW.with(|c| c.set(on));
 }
 
+/// F9: `off | numbersIndexed | tierSymbols`, a setting inside SpellDoku (D-T1),
+/// remembered per device. Default off: SpellDoku is unchanged unless chosen.
+const TIER_KEY: &str = "spell_sd_tier";
+
+#[derive(Clone, Copy, PartialEq, Debug)]
+enum Reading {
+    Off,
+    Numbers,
+    Symbols,
+}
+
+fn reading() -> Reading {
+    match crate::storage::get_raw(TIER_KEY).as_deref() {
+        Some("numbersIndexed") => Reading::Numbers,
+        Some("tierSymbols") => Reading::Symbols,
+        _ => Reading::Off,
+    }
+}
+
 fn build() -> Build {
     #[cfg(feature = "testseam")]
     if PREVIEW.with(|c| c.get()) {
@@ -61,6 +81,11 @@ struct Game {
     daily: bool,
     solved: bool,
     audio_ok: bool,
+    /// CC-SPELLDOKU v1.3: the tier ladder for THIS board, when Tier Mode is on.
+    tier: Option<tiermode::Session>,
+    /// The word drawn for the digit the player is committing, if any (F2).
+    prompt: Option<tiermode::Draw>,
+    prompt_digit: u8,
 }
 
 /// I4: the three verdicts are counted apart, on this device only.
@@ -174,9 +199,28 @@ fn serve(app: &App, n: usize, tier: Tier, daily: bool) -> bool {
             _ => 0,
         })
         .collect();
+    // v1.3 F9/D-T4: Tier Mode indexes DIGITS, so it rides Number Mode only, and
+    // only where F5's depth rule holds. Anything else serves the board as before.
+    let want = reading();
+    let session = match (want, &board.mode) {
+        (Reading::Off, _) | (_, Mode::Words(_)) => None,
+        // F6: Reading B IS a 4x4 board of four tier badges. Asked for on any
+        // other size, or on a Jr board (D-T5, enforced in Session::new), the
+        // setting degrades to Reading A rather than refusing to deal.
+        (Reading::Symbols, _) if n == 4 && !kid && tiermode::symbols_available(&lang) => {
+            Some(tiermode::Session::new(&lang, tier, kid, true, base))
+        }
+        (Reading::Numbers, _) | (Reading::Symbols, _) if tiermode::available(&lang, tier) => {
+            Some(tiermode::Session::new(&lang, tier, kid, false, base))
+        }
+        _ => None,
+    };
     GAME.with(|g| {
         *g.borrow_mut() = Some(Game {
             unlocks: Unlocks::for_board(n, tier),
+            tier: session,
+            prompt: None,
+            prompt_digit: 0,
             board,
             entries,
             pencil: vec![0; cells],
@@ -236,6 +280,15 @@ fn personal(app: &App, lang: &str) -> Personal {
         .collect();
     let missed = app.borrow().misses.iter().filter(|m| m.lang == lang).map(|m| (m.word.clone(), m.tier.clone())).collect();
     Personal { mine, missed }
+}
+
+/// What a cell shows for value `v`: the board's own label, or in Reading B the
+/// tier badge that IS the symbol (F6).
+fn cell_label(g: &Game, v: u8) -> String {
+    match g.tier.as_ref().filter(|ts| ts.symbols()).and_then(|ts| ts.band_of(v)) {
+        Some(band) => t(tiermode::label_key(band)).chars().next().unwrap_or('?').to_string(),
+        None => g.board.label(v),
+    }
 }
 
 /// Play a symbol's word through the one audio resolver. Chinese is spoken from
@@ -395,19 +448,40 @@ fn render() {
         dom::set_html("sdGrid", &html);
         let _ = dom::el("sdGrid").set_attribute("style", &format!("--sd-n:{n}"));
 
+        // F3: the ladder is legible from board load — every digit carries its
+        // tier, before any cell is attempted (I-T3). Earned digits say so.
+        let mut strip = String::new();
+        if let Some(ts) = g.tier.as_ref() {
+            for v in 1..=n as u8 {
+                let Some(band) = ts.band_of(v) else { continue };
+                let earned = g.sel.is_some_and(|i| ts.satisfied(i, v));
+                strip.push_str(&format!(
+                    "<button type=\"button\" class=\"sd-tierkey band-{band}{}\" data-sd-tier=\"{v}\"><b>{}</b><small>{}</small></button>",
+                    if earned { " earned" } else { "" },
+                    dom::escape_html(&cell_label(g, v)),
+                    dom::escape_html(&t(tiermode::label_key(band)))
+                ));
+            }
+        }
+        dom::set_html("sdTiers", &strip);
+
         // The tray: chips earned by spelling (D1), then the letters or digits.
         let mut chips = String::new();
         for v in 1..=n as u8 {
             if g.unlocks.chip(v) {
                 chips.push_str(&format!(
                     "<button type=\"button\" class=\"sd-chip\" data-sd-chip=\"{v}\">{}</button>",
-                    dom::escape_html(&g.board.label(v))
+                    dom::escape_html(&cell_label(g, v))
                 ));
             }
         }
         dom::set_html("sdChips", &chips);
         let typed = if g.typed.is_empty() && !g.pencil_mode {
-            if g.sel.is_some() { t("sd.spell") } else { t("sd.pick") }
+            if g.tier.is_some() && g.prompt.is_some() {
+                t("sd.tierSpell")
+            } else if g.tier.is_some() {
+                if g.sel.is_some() { t("sd.tierPick") } else { t("sd.pick") }
+            } else if g.sel.is_some() { t("sd.spell") } else { t("sd.pick") }
         } else {
             g.typed.clone()
         };
@@ -415,7 +489,7 @@ fn render() {
         let keys = if g.pencil_mode {
             // F1: pencil marks are digits and never open the keyboard.
             (1..=n as u8)
-                .map(|v| format!("<button type=\"button\" class=\"kb-key\" data-sd-pen=\"{v}\">{}</button>", dom::escape_html(&g.board.label(v))))
+                .map(|v| format!("<button type=\"button\" class=\"kb-key\" data-sd-pen=\"{v}\">{}</button>", dom::escape_html(&cell_label(g, v))))
                 .collect::<String>()
         } else {
             let mut k = String::new();
@@ -466,7 +540,7 @@ fn render() {
                     format!(
                         "<button type=\"button\" class=\"sd-say\" data-sd-say=\"{v}\" aria-label=\"{}\"><b>{}</b> \u{25B6}</button>",
                         dom::escape_html(&t("sd.sayAria")),
-                        dom::escape_html(&g.board.label(v))
+                        dom::escape_html(&cell_label(g, v))
                     )
                 })
                 .collect()
@@ -535,7 +609,141 @@ fn commit_value(v: u8, spelled: bool, verdict: Verdict) {
     render();
 }
 
+/// F2: the player picked a digit. If this cell already earned that digit (F8),
+/// it goes straight in. Otherwise a word is drawn from the digit's tier and
+/// spoken, and the player spells it.
+fn tier_digit(v: u8) {
+    enum Next {
+        Nothing,
+        Commit(u8, Verdict),
+        Speak,
+    }
+    let next = GAME.with(|cell| {
+        let mut gb = cell.borrow_mut();
+        let Some(g) = gb.as_mut() else { return Next::Nothing };
+        let Some(i) = g.sel else {
+            return Next::Nothing; // the prompt line already says "pick a cell"
+        };
+        if g.pencil_mode || g.entries[i] != 0 && g.board.puzzle.clues[i] != Clue::Empty {
+            return Next::Nothing;
+        }
+        let Some(ts) = g.tier.as_mut() else { return Next::Nothing };
+        if ts.satisfied(i, v) {
+            let expected = g.board.puzzle.solution[i];
+            let verdict = if v == expected { Verdict::Correct } else { Verdict::WrongValue };
+            return Next::Commit(v, verdict);
+        }
+        match ts.draw(v) {
+            Some(d) => {
+                g.prompt = Some(d);
+                g.prompt_digit = v;
+                g.typed.clear();
+                Next::Speak
+            }
+            None => Next::Nothing, // the band ran dry: the digit stays available
+        }
+    });
+    match next {
+        Next::Commit(v, verdict) => commit_value(v, false, verdict),
+        Next::Speak => {
+            speak_prompt();
+            render();
+        }
+        Next::Nothing => render(),
+    }
+}
+
+/// The drawn word, through the one audio resolver (I1). zh speaks its characters
+/// with the reading forced, as everywhere else.
+fn speak_prompt() {
+    let said = GAME.with(|cell| {
+        let gb = cell.borrow();
+        let g = gb.as_ref()?;
+        let d = g.prompt.as_ref()?;
+        Some((d.spelling.clone(), d.display.clone(), g.board.lang.clone()))
+    });
+    if let Some((spelling, display, lang)) = said {
+        match display {
+            Some(hanzi) if lang == "zh" => {
+                crate::api::play_word_with(&hanzi, Some(&spelling), "normal", 1.0, &lang, || {})
+            }
+            _ => crate::api::play_word(&spelling, "normal", 1.0, &lang, || {}),
+        }
+    }
+}
+
 fn submit_typed() {
+    // v1.3 F2: in Tier Mode the typed word is judged against the word THIS cell
+    // was served, and the digit is the one whose badge the player tapped. A
+    // misspelling draws a new word of the same tier and never fills the cell (F4).
+    let tier_turn = GAME.with(|cell| {
+        let gb = cell.borrow();
+        let g = gb.as_ref()?;
+        let d = g.prompt.as_ref()?;
+        let i = g.sel?;
+        if g.typed.trim().is_empty() {
+            return None;
+        }
+        let spelled_right = crate::spelldoku::table::norm(&g.typed) == d.spelling;
+        Some((i, g.prompt_digit, spelled_right, d.spelling.clone(), d.band, g.board.lang.clone(), g.board.puzzle.solution[i]))
+    });
+    if let Some((i, v, spelled_right, word, band, lang, expected)) = tier_turn {
+        if spelled_right {
+            GAME.with(|c| {
+                if let Some(g) = c.borrow_mut().as_mut() {
+                    if let Some(ts) = g.tier.as_mut() {
+                        ts.record(i, v);
+                    }
+                    g.prompt = None;
+                }
+            });
+            let verdict = if v == expected { Verdict::Correct } else { Verdict::WrongValue };
+            commit_value(v, true, verdict);
+        } else {
+            // D13: the miss joins the existing missed-words queue, as in Word Mode.
+            APP.with(|a| {
+                if let Some(app) = a.borrow().as_ref() {
+                    crate::misses::add_miss(&mut app.borrow_mut(), &word, &lang, band);
+                }
+            });
+            record_stat(|s| s.misspelled += 1);
+            note("sd.tierMissed");
+            let redrawn = GAME.with(|c| {
+                let mut gb = c.borrow_mut();
+                let Some(g) = gb.as_mut() else { return false };
+                g.typed.clear();
+                let v = g.prompt_digit;
+                match g.tier.as_mut().and_then(|ts| ts.draw(v)) {
+                    Some(d) => {
+                        g.prompt = Some(d);
+                        true
+                    }
+                    None => {
+                        g.prompt = None;
+                        false
+                    }
+                }
+            });
+            if redrawn {
+                speak_prompt();
+            }
+            render();
+        }
+        return;
+    }
+    // F2: with a ladder on the board, the number word for a digit is no longer
+    // the price of that digit. Typing one commits nothing -- the player taps the
+    // digit's badge, hears its word, and spells that.
+    if GAME.with(|c| c.borrow().as_ref().is_some_and(|g| g.tier.is_some())) {
+        GAME.with(|c| {
+            if let Some(g) = c.borrow_mut().as_mut() {
+                g.typed.clear();
+            }
+        });
+        note("sd.tierPick");
+        render();
+        return;
+    }
     let res = GAME.with(|cell| {
         let gb = cell.borrow();
         let g = gb.as_ref()?;
@@ -663,6 +871,11 @@ fn fill_picker(kid: bool, lang: &str) {
         })
         .collect();
     dom::set_html("sdPick", &opts);
+    dom::select("sdTier").set_value(match reading() {
+        Reading::Numbers => "numbersIndexed",
+        Reading::Symbols => "tierSymbols",
+        Reading::Off => "off",
+    });
 }
 
 fn picked() -> Option<(usize, Tier)> {
@@ -704,6 +917,16 @@ pub fn wire(app: &App) {
         });
     }
     {
+        // F9: switching reading starts a fresh board — the symbols change.
+        let a = app.clone();
+        dom::on::<web_sys::Event, _>("sdTier", "change", move |_| {
+            crate::storage::set_raw(TIER_KEY, &dom::select("sdTier").value());
+            if let Some((n, tier)) = picked() {
+                serve(&a, n, tier, false);
+            }
+        });
+    }
+    {
         let a = app.clone();
         dom::on_click("sdNew", move || {
             if let Some((n, tier)) = picked() {
@@ -736,7 +959,7 @@ pub fn wire(app: &App) {
         use wasm_bindgen::JsCast;
         let Some(target) = ev.target().and_then(|t| t.dyn_into::<web_sys::Element>().ok()) else { return };
         let Some(el) = target
-            .closest("[data-sd-cell],[data-sd-key],[data-sd-back],[data-sd-go],[data-sd-chip],[data-sd-pen],[data-sd-say]")
+            .closest("[data-sd-cell],[data-sd-key],[data-sd-back],[data-sd-go],[data-sd-chip],[data-sd-pen],[data-sd-say],[data-sd-tier]")
             .ok()
             .flatten()
         else {
@@ -767,6 +990,8 @@ pub fn wire(app: &App) {
                 }
             });
             render();
+        } else if let Some(v) = el.get_attribute("data-sd-tier").and_then(|v| v.parse::<u8>().ok()) {
+            tier_digit(v);
         } else if el.get_attribute("data-sd-back").is_some() {
             GAME.with(|c| {
                 if let Some(g) = c.borrow_mut().as_mut() {
@@ -826,6 +1051,23 @@ pub fn seam_board() -> String {
                 }
                 v["lang"] = g.board.lang.clone().into();
                 v.to_string()
+            })
+            .unwrap_or_default()
+    })
+}
+
+/// Test builds only: the word Tier Mode is asking for right now, and the band
+/// its badge promised, so a browser test can spell it (v1.3 F2/F4).
+#[cfg(feature = "testseam")]
+pub fn seam_prompt() -> String {
+    GAME.with(|c| {
+        c.borrow()
+            .as_ref()
+            .and_then(|g| {
+                let d = g.prompt.as_ref()?;
+                Some(serde_json::json!({
+                    "spelling": d.spelling, "band": d.band, "digit": g.prompt_digit,
+                }).to_string())
             })
             .unwrap_or_default()
     })

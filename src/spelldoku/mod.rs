@@ -16,6 +16,7 @@ pub mod rng;
 pub mod solve;
 pub mod symbols;
 pub mod table;
+pub mod tier; // CC-SPELLDOKU v1.3 — Tier Mode ladder (I-T9)
 pub mod wordmode;
 
 #[cfg(test)]

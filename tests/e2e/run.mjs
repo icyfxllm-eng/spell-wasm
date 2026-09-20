@@ -41,6 +41,7 @@ import * as frontDoor from './specs/front-door.mjs';
 import * as jrClimb from './specs/jr-climb.mjs';
 import * as myWordsLists from './specs/mywords-lists.mjs';
 import * as spellDoku from './specs/spelldoku.mjs';
+import * as spellDokuTier from './specs/spelldoku-tier.mjs';
 import * as spellSearch from './specs/spell-search.mjs';
 import * as spellCross from './specs/spell-cross.mjs';
 import * as translateScreen from './specs/translate-screen.mjs';
@@ -67,7 +68,7 @@ const SPECS = [
   ['front-door', frontDoor],
   ['jr-climb', jrClimb],
   ['mywords-lists', myWordsLists],
-  ['spelldoku', spellDoku],
+  ['spelldoku', spellDoku, spellDokuTier],
   ['spell-search', spellSearch],
   ['spell-cross', spellCross],
   ['translate-screen', translateScreen],
