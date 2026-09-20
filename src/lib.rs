@@ -131,7 +131,12 @@ mod word_lists; // CC-MYWORDS-LISTS v1 — dated word lists
 mod wordgrid_census; // CC-WORDGRID §3: measurement only
 #[cfg(not(feature = "web"))]
 mod spelldoku; // CC-SPELLDOKU v1 — app only (D9)
-#[cfg(test)]
+// Measurement only — and it measures Word Mode, which is app-only (D9), so it
+// follows `spelldoku`'s gate as well as being test-only. Without the second
+// gate `cargo test --features web` cannot compile: the census calls
+// crate::spelldoku, which is configured out of the web build (it broke the
+// ship lane's web check, 2026-09-20).
+#[cfg(all(test, not(feature = "web")))]
 mod spelldoku_tier_census; // CC-SPELLDOKU v1.3 §0: measurement only
 #[cfg(not(feature = "web"))]
 mod spelldoku_ui; // CC-SPELLDOKU v1 — the screen (app only)
