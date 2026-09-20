@@ -8,6 +8,8 @@
     "viewport:check": "node scripts/viewport-check.mjs",
     "seam:check": "node scripts/seam-absence-check.mjs dist",
     "build:test": "bash scripts/build-web-test.sh",
+    "build:dev": "bash scripts/build-web-dev.sh",
+    "dev:inspector": "bash scripts/build-web-dev.sh && python3 -m http.server 8141 --directory dist-dev",
     "e2e": "bash scripts/build-web-test.sh && node tests/e2e/run.mjs; A=$?; npm run e2e:web; B=$?; exit $((A|B))",
     "e2e:web": "SPELL_WEB=1 bash scripts/build-web-test.sh && SPELL_WEB=1 node tests/e2e/run.mjs",
     "words:build": "python3 scripts/build-wordlists.py",

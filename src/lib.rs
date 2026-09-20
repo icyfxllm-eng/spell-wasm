@@ -25,6 +25,8 @@ mod input_provenance;
 mod learner; // CC-LEARNING-ENGINE L0 (BKT + FSRS core; selection arrives with L1)
 mod learner_query; // CC-LEARNING-ENGINE-L0 R1: the frozen read contract (I6)
 mod review; // CC-LEARNING-ENGINE-L0 R2: the one rule for when a missed word returns (I5)
+#[cfg(feature = "dev_preview")]
+mod inspector; // CC-LEARNING-ENGINE-L0 R4: dev-only learner inspector (never in a player's build)
 mod surface_hooks;
 #[cfg(not(feature = "web"))]
 mod translate; // TR D5 STRONG (Eric 2026-08-05: "for the app not the website")
@@ -394,6 +396,8 @@ fn wire(app: &App) {
         wordpic_screen::install_surface_hooks(); // I3: the picture registers itself
     }
     dev::wire(app); // TEMP dev door: 5-tap logo → menu for the hidden racing/aloud screens
+    #[cfg(feature = "dev_preview")]
+    inspector::wire(app); // L0 R4: the learner inspector joins the dev menu
     ink_probe::wire(app); // CC-CJK-INK F1 — dev-only ink gate
     {
         // F4: the pad opens on the CHARACTERS -- s.spoken holds the hanzi for

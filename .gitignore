@@ -63,6 +63,11 @@ tools/*/out/
 dist-audit/
 pkg-audit/
 
+# CC-LEARNING-ENGINE-L0 R4: the local dev build that carries the learner
+# inspector (scripts/build-web-dev.sh). Never shipped.
+dist-dev/
+pkg-dev/
+
 # Machine-local Claude Code settings
 .claude/settings.local.json
 tools/*/review-packet/

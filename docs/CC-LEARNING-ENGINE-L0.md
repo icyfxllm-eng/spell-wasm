@@ -121,6 +121,15 @@ Produce `learning_l0_census.md`:
 - **Identity-keyed** (I4) on the existing `word_id0` key: за́мок and замо́к, and рука and ру́ку, are independent cards (unit test).
 - **Not yet:** acceptance 3's vendored FSRS-4.5 reference vectors. The formulas are checked against their published form in-test, and per-word scheduling is checked end to end in `review-queue.mjs`.
 
+### R4 as built (2026-09-19)
+
+- **`src/inspector.rs`, behind the `dev_preview` cargo feature.** Not a runtime flag: with the feature off the module isn't compiled, so release, auditor and education builds cannot contain it (acceptance 12, checked by building all four and grepping the wasm: the marker `spellLearnerInspector` appears only in the dev build). `scripts/seam-absence-check.mjs` greps the shipped bundle for it too, beside the test seam.
+- **No markup or CSS in `index.html`.** The module creates its own dev-menu entry and panel at runtime and styles them inline, so nothing for the inspector exists in a player's build.
+- **Shows, per language:** the review queue with each word's next-review date, its interval (overdue or days away), whether it is in learning or on FSRS, and its miss/review/lapse history; the tracked skills weakest first; attempts, correct and placement status; and **why the word on screen was served** (`nextWordReason`).
+- **Read-only, contract-only:** every number comes from `LearnerQuery` (I6), and a test fails the build if the module ever names a write door. `review_schedule` was added to the contract for it (additive after the freeze, which the freeze allows).
+- **Opening it:** `npm run dev:inspector` builds `dist-dev/` and serves it; five taps on the SPELL logo opens the dev menu, which now has "Learner inspector". TestFlight builds are release builds, so the inspector is deliberately absent there.
+- **Acceptance 13 is Eric's**: play a session in that build, see why each word was served, and say whether review timing improved.
+
 ## Invariants
 
 - **I1 — On-device only.** No learner data leaves the device, ever (CC-LEARNING-ENGINE D5). Not to telemetry, not to the Pi, not to reports.
