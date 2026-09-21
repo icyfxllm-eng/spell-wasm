@@ -31,9 +31,9 @@ use super::table::norm;
 /// R6: the longest word a symbol may be, in graphemes.
 pub const MAX_GRAPHEMES: usize = 12;
 
-/// D12 / D16: Word Mode is 9×9 Medium and up, and 12×12; Spell Jr never.
+/// D12 / D16: Word Mode is 9×9 Medium and up; Spell Jr never.
 pub fn is_word_mode(kid: bool, n: usize, tier: Tier) -> bool {
-    !kid && ((n == 9 && tier != Tier::Easy) || n == 12)
+    !kid && n == 9 && tier != Tier::Easy
 }
 
 /// F12: the band mix of a Word Mode board.
@@ -42,7 +42,6 @@ pub fn band_mix(n: usize, tier: Tier) -> Option<&'static [(&'static str, usize)]
         (9, Tier::Medium) => Some(&[("medium", 3), ("easy", 6)]),
         (9, Tier::Hard) => Some(&[("hard", 5), ("medium", 4)]),
         (9, Tier::Expert) => Some(&[("expert", 6), ("hard", 3)]),
-        (12, Tier::Expert) => Some(&[("expert", 8), ("hard", 4)]),
         _ => None,
     }
 }
@@ -343,27 +342,6 @@ pub fn board(lang: &str, cfg: &Config, seed: u64, personal: &Personal) -> Option
     None
 }
 
-/// A 12×12 Expert board (Phase A3) from a seed-pack entry (D18): the grid is
-/// rebuilt with one dig; this device binds twelve words and a fragment. A
-/// word set that cannot make a necessary fragment on this grid is redrawn.
-pub fn board_from_pack(lang: &str, entry: &super::pack::Entry, seed: u64, personal: &Personal) -> Option<Board> {
-    let cfg = super::pack::config12();
-    for k in 0..24u64 {
-        let words = choose(lang, 12, Tier::Expert, mix(seed, k), personal)?;
-        let (symbols, glyphs) = word_symbols(&words);
-        if !symbols.fragments_possible() {
-            continue;
-        }
-        let Some(puzzle) = super::gen::generate_at(entry.seed, entry.attempt, &cfg, &symbols) else { continue };
-        let b = Board { lang: lang.to_string(), puzzle, glyphs, mode: Mode::Words(words) };
-        if b.spells_a_symbol() {
-            continue;
-        }
-        return Some(b);
-    }
-    None
-}
-
 /// What the screen serves for a configuration: Word Mode where D12 says so and
 /// a set can be drawn, otherwise Number Mode -- never a partial board (F13).
 pub fn board_or_number(
@@ -374,9 +352,6 @@ pub fn board_or_number(
     personal: &Personal,
     numbers: Option<&super::table::Table>,
 ) -> Option<Board> {
-    if cfg.size.n == 12 {
-        return None; // 12x12 comes from the seed pack only, and never as numbers (D18, D19)
-    }
     let words = if is_word_mode(kid, cfg.size.n, cfg.tier) { board(lang, cfg, seed, personal) } else { None };
     words.or_else(|| numbers.and_then(|t| Board::number(t, seed, cfg)))
 }

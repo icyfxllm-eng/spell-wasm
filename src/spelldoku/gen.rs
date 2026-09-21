@@ -90,7 +90,7 @@ impl Puzzle {
 pub fn standard_allowed(n: usize, tier: Tier) -> bool {
     matches!(
         (n, tier),
-        (4, Tier::Easy) | (6, Tier::Easy) | (6, Tier::Medium) | (9, _) | (12, Tier::Expert)
+        (4, Tier::Easy) | (6, Tier::Easy) | (6, Tier::Medium) | (9, _)
     )
 }
 

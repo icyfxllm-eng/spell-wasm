@@ -303,41 +303,18 @@ export async function run(browser, base, suite) {
     } finally { await ctx.close(); }
   });
 
-  // v1.2 Phase A3 — 12x12 Expert: Word Mode only, twelve glyphs, from the
-  // seed pack (D18), rebuilt here exactly as on the host.
-  await suite.test('spelldoku_twelve_by_twelve_expert', async () => {
-    const { ctx, page } = await openApp(browser, base, { lang: 'en' });
-    try {
-      assertEq(await page.evaluate(() => window.__spelltest.spelldokuPack12Digest()), '0x14cc1f163b6e7dec',
-        'Done #20: the pack rebuilds here as on the host (src/spelldoku/pack_tests.rs PACK_GOLDEN)');
-      await openSpellDoku(page);
-      const opts = await page.$$eval('#sdPick option', (o) => o.map((x) => x.value));
-      assert(opts.includes('12-expert'), '12x12 Expert is offered');
-      const ms = await page.evaluate(async () => {
-        const t = performance.now();
-        const s = document.getElementById('sdPick');
-        s.value = '12-expert';
-        s.dispatchEvent(new Event('change', { bubbles: true }));
-        return performance.now() - t;
-      });
-      const b = await board(page);
-      assertEq(b.n, 12, 'a 12x12 board');
-      assert(b.words && b.words.length === 12, 'D19: Word Mode, twelve words');
-      assertEq(await page.$$eval('#sdGrid .sd-cell', (c) => c.length), 144, '144 cells');
-      assertEq(await page.$$eval('#sdLegend .sd-say', (c) => c.length), 12, 'twelve legend orbs');
-      assert(b.clues.some((c) => c.Fragment), 'a fragment clue');
-      assert(ms < 3000, `the board is ready in ${ms.toFixed(0)} ms`);
-      console.log(`    12x12 Expert served in ${ms.toFixed(0)} ms (desktop WebAssembly)`);
-    } finally { await ctx.close(); }
-  });
-
-  await suite.test('spelldoku_spell_jr_never_sees_twelve', async () => {
-    const { ctx, page } = await openApp(browser, base, { lang: 'en', age: KID });
-    try {
-      await openSpellDoku(page);
-      const opts = await page.$$eval('#sdPick option', (o) => o.map((x) => x.value));
-      assert(!opts.includes('12-expert'), 'Jr: no 12x12');
-    } finally { await ctx.close(); }
+  // Eric's ruling, 2026-09-21: 12x12 is cut. It was measured at a 29 px cell
+  // with a 16.9 px glyph on an iPhone SE, under the 17 px floor, and the
+  // screen scrolled 258 px. No size but 4, 6 and 9 is ever offered.
+  await suite.test('spelldoku_no_twelve_by_twelve', async () => {
+    for (const age of [null, KID]) {
+      const { ctx, page } = await openApp(browser, base, age === KID ? { lang: 'en', age: KID } : { lang: 'en' });
+      try {
+        await openSpellDoku(page);
+        const opts = await page.$$eval('#sdPick option', (o) => o.map((x) => x.value));
+        assert(!opts.some((v) => v.startsWith('12-')), `no 12x12 offered (got ${opts.join(',')})`);
+      } finally { await ctx.close(); }
+    }
   });
 
   // v1.2 D15 / I12 — the legend offers a definition card where the language's

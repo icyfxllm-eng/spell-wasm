@@ -257,7 +257,7 @@ fn spell_jr_only_ever_gets_its_own_column() {
     let mut rng = Rng::new(99);
     let tiers = [Tier::Easy, Tier::Medium, Tier::Hard, Tier::Expert];
     for _ in 0..10_000 {
-        let n = [4usize, 6, 9, 12][rng.below(4)];
+        let n = [4usize, 6, 9][rng.below(3)];
         let tier = tiers[rng.below(4)];
         if play::allowed(true, n, tier) {
             assert!(matches!((n, tier), (4, Tier::Easy) | (6, Tier::Medium)), "Jr got {n}x{n} {tier:?}");

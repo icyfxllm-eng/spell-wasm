@@ -140,6 +140,10 @@
     /* Streak warmth: --glow nudges warmer in pre-designed steps (D5); accent only. */
     --glow-streak-1:#ffb14d; --glow-streak-2:#ff9a3f; --glow-streak-3:#ff8330;
     --orb-text:#3a230a;
+    /* CC-SPELLDOKU v1.3 F3: the four tier badges. One hue per band, global like
+       the feedback tokens above, so a badge means the same thing in every
+       language and both Kid modes. All four clear 3:1 on --panel-2. */
+    --band-easy:#5ec98c; --band-medium:#e0b93c; --band-hard:#f0884a; --band-expert:#f0708c;
     --display:'Bricolage Grotesque',sans-serif;
     --body:'Instrument Sans',system-ui,sans-serif;
     --mono:'Space Mono',ui-monospace,monospace;
@@ -1140,6 +1144,15 @@
   .sd-pen{font-size:clamp(7px,2vw,10px);color:var(--muted-2);line-height:1.1;text-align:center}
   .sd-note{min-height:1.5em;max-width:520px;margin:8px auto;text-align:center;color:var(--muted-2)}
   .sd-tray{max-width:520px;margin:0 auto;display:flex;flex-direction:column;gap:8px}
+  .sd-tiers{display:flex;flex-wrap:wrap;gap:6px;justify-content:center;margin:4px 0}
+  .sd-tiers:empty{display:none}
+  .sd-tierkey{display:flex;flex-direction:column;align-items:center;gap:1px;min-width:46px;padding:6px 8px;border-radius:10px;background:var(--panel-2);color:var(--ink);border:1px solid var(--edge);font-size:18px;line-height:1.1}
+  .sd-tierkey small{font-size:10px;font-weight:600;letter-spacing:.04em;color:var(--muted)}
+  .sd-tierkey.earned{opacity:.55}
+  .sd-tierkey.band-easy{border-color:var(--band-easy)}
+  .sd-tierkey.band-medium{border-color:var(--band-medium)}
+  .sd-tierkey.band-hard{border-color:var(--band-hard)}
+  .sd-tierkey.band-expert{border-color:var(--band-expert)}
   .sd-chips{display:flex;flex-wrap:wrap;gap:6px;justify-content:center;min-height:0}
   .sd-chip{min-width:40px;padding:8px 12px;border-radius:10px;background:var(--panel-2);color:var(--ink);border:1px solid var(--teal);font-size:18px}
   .sd-typed{min-height:1.6em;text-align:center;font-size:20px;font-family:var(--mono);color:var(--ink)}
@@ -2516,12 +2529,19 @@
       <button class="ghost mode-exit" id="sdExit" aria-label="Exit">✕</button>
       <h2 id="sdTitle" data-i18n="sd.name">SpellDoku</h2>
       <select id="sdPick" aria-label="Board"></select>
+      <select id="sdTier" aria-label="Tier Mode">
+        <option value="off" data-i18n="sd.tier.off">Numbers</option>
+        <option value="numbersIndexed" data-i18n="sd.tier.numbers">Tier Mode</option>
+        <option value="tierSymbols" data-i18n="sd.tier.symbols">Tier symbols (4x4)</option>
+      </select>
       <button class="ghost" id="sdDaily" data-i18n="sd.daily">Daily</button>
     </div>
     <div class="sd-grid" id="sdGrid"></div>
     <div class="sd-legend" id="sdLegend"></div>
     <div class="sd-badge" id="sdBadge"></div>
     <div class="sd-note" id="sdNote" aria-live="polite"></div>
+    <!-- CC-SPELLDOKU v1.3 F3/I-T3: every digit's tier, legible from board load. -->
+    <div class="sd-tiers" id="sdTiers"></div>
     <div class="sd-tray">
       <div class="sd-chips" id="sdChips"></div>
       <div class="sd-typed" id="sdTyped" dir="auto" aria-live="polite"></div>

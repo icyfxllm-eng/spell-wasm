@@ -51,8 +51,8 @@ say; flagged, not decided silently.
   word can fit two numbers. The tiers a language offers are computed from its
   own table.
 - **11 and 12 contain spaces or hyphens** in Vietnamese, Swahili, Filipino and
-  Mandarin, which the keyboards cannot type. They are needed only for 12×12,
-  which is Phase B.
+  Mandarin, which the keyboards cannot type. They were needed only for 12×12,
+  which is cut (2026-09-21), so nothing asks a player to type them.
 - **The Daily is 9×9 Medium, and 6×6 Medium for Spell Jr.** The spec leaves the
   size open.
 - **Repeat detection is an invariant, not a full canonical form.** Every
@@ -198,9 +198,9 @@ If anything below appears to contradict a decision above, the decision wins. If 
 | 4×4 | 2×2 | Easy | Easy | 1–4 |
 | 6×6 | 2×3 | Medium | Easy, Medium | 1–6 |
 | 9×9 | 3×3 | — | Easy, Medium, Hard, Expert | 1–9 (0–45 with F4) |
-| 12×12 | 3×4 | — | Expert | 1–12 |
+| ~~12×12~~ | 3×4 | — | — | — | *Cut 2026-09-21: it does not fit a phone. See CC-SPELLDOKU-v1.2.md.* |
 
-**Behavior:** Jr profiles (resolved via the Jr resolver) see only the Jr column. No 16×16.
+**Behavior:** Jr profiles (resolved via the Jr resolver) see only the Jr column. No 16×16, and no 12×12 (Eric, 2026-09-21).
 **Acceptance:** A Jr profile is never served a board outside the Jr column (test across 10,000 requests).
 
 ### F8 Generator, grader, and Daily
@@ -253,7 +253,7 @@ If anything below appears to contradict a decision above, the decision wins. If 
 - Spelled Sums (F4)
 - Echo givens (F3)
 - Twin Systems (F5)
-- 12×12 Expert (F7)
+- ~~12×12 Expert (F7)~~ — cut 2026-09-21, measured too small on a phone
 
 ---
 

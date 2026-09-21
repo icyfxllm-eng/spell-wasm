@@ -9,7 +9,6 @@
 pub mod bind;
 pub mod canon;
 pub mod geo;
-pub mod pack;
 pub mod gen;
 pub mod play;
 pub mod rng;
@@ -23,5 +22,3 @@ pub mod wordmode;
 mod tests;
 #[cfg(test)]
 mod wordmode_tests;
-#[cfg(test)]
-mod pack_tests;

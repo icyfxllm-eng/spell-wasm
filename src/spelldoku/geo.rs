@@ -4,7 +4,7 @@ use serde::{Deserialize, Serialize};
 
 #[derive(Clone, Copy, Debug, PartialEq, Eq, Serialize, Deserialize)]
 pub struct Size {
-    /// Side length: 4, 6, 9 or 12.
+    /// Side length: 4, 6 or 9.
     pub n: usize,
     /// Box height and width.
     pub br: usize,
@@ -14,15 +14,12 @@ pub struct Size {
 pub const S4: Size = Size { n: 4, br: 2, bc: 2 };
 pub const S6: Size = Size { n: 6, br: 2, bc: 3 };
 pub const S9: Size = Size { n: 9, br: 3, bc: 3 };
-/// v1.2 F7: 12×12, 3×4 boxes, Word Mode Expert only (D19).
-pub const S12: Size = Size { n: 12, br: 3, bc: 4 };
 
 pub fn size_of(n: usize) -> Option<Size> {
     match n {
         4 => Some(S4),
         6 => Some(S6),
         9 => Some(S9),
-        12 => Some(S12),
         _ => None,
     }
 }

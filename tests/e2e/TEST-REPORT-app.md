@@ -1,8 +1,8 @@
 # TEST-REPORT — Web E2E (app build)
 
-**198/198 passed** across 35 areas.
+**203/203 passed** across 35 areas.
 
-## playhub — 16/16
+## playhub — 17/17
 - ✅ hub: opens from the meta corner and renders registry tiles
 - ✅ hub: word_stories is never rendered (F8 hard gate)
 - ✅ hub: coming_soon renders as a non-tappable teaser
@@ -17,6 +17,7 @@
 - ✅ placement: a COMPLETED probe never re-offers, across a reload
 - ✅ learner: a NEWER build's stored state survives an older build, byte for byte
 - ✅ learner: unreadable stored bytes are backed up exactly, then play recovers
+- ✅ learner: a stored v1 state migrates to v2 on the next write, losing nothing
 - ✅ learner surfaces render through LearnerQuery: Reports, Stats, Guardian Dash, Calendar
 - ✅ learner: "reset this language" deletes its learner state and backup, only for that language
 
@@ -126,7 +127,7 @@
 - ✅ mywords_play_falls_back_when_the_chosen_list_is_deleted
 - ✅ mywords_in_my_order_serves_the_players_order
 
-## spelldoku — 16/16
+## spelldoku — 20/20
 - ✅ spelldoku_every_language_opens_a_board
 - ✅ spelldoku_mandarin_needs_its_tone
 - ✅ spelldoku_vietnamese_uses_the_tone_row
@@ -140,9 +141,13 @@
 - ✅ spelldoku_word_mode_never_shows_a_spelling
 - ✅ spelldoku_word_mode_spells_to_commit_and_feeds_missed_words
 - ✅ spelldoku_word_mode_draws_my_words_first
-- ✅ spelldoku_twelve_by_twelve_expert
-- ✅ spelldoku_spell_jr_never_sees_twelve
+- ✅ spelldoku_no_twelve_by_twelve
 - ✅ spelldoku_word_mode_definition_card_never_spells_it
+- ✅ spelldoku_tier_ladder_is_legible_from_load
+- ✅ spelldoku_tier_word_commits_and_recommit_is_free
+- ✅ spelldoku_tier_served_words_enter_the_repeat_window
+- ✅ spelldoku_tier_pencil_marks_are_free
+- ✅ spelldoku_tier_jr_never_leaves_easy_medium
 
 ## spell-search — 10/10
 - ✅ spell_search_opens_in_every_launch_language

@@ -37,7 +37,28 @@ The spec text Eric sent follows the rulings, unchanged.
   never spells the symbol (I12); a definition that fails is not rewritten, and
   that symbol simply has no card.
 
-## Phase A3 — built (Eric, 2026-09-19: "start phase A3")
+## Phase A3 — CUT (Eric, 2026-09-21: "12x12 cut entirly changed my mind wont work on smart phones")
+
+**12×12 is gone from the app.** It shipped in build 231 and is removed in the
+next build. The geometry census measured it: on an iPhone SE (375×667) a 12×12
+board renders at a 29 px cell pitch with a ~16.9 px glyph — under the 17 px
+board floor — and the screen already scrolls 258 px past the viewport before
+the keyboard is counted. The `.sd-grid` rule caps the board at 520 px, so a
+larger window does not rescue the size either. Eric's ruling stands over the
+v1.2 width gate: no phone-size compromise was worth shipping.
+
+What came out: the `(12, Expert)` configuration, `geo::S12`, `spelldoku/pack.rs`
+and its tests, `assets/spelldoku/pack12.json`, `wordmode::board_from_pack`,
+`play::unlock_after_on` (D17's scoped exception had no other caller), the pack
+test seam and the two 12×12 e2e tests. One e2e test replaces them and asserts
+no `12-*` configuration is ever offered, to Jr or to anyone else. **D17, D18 and
+D19 are void**; they only ever described this size. The dig speed-up found while
+building it (below) is kept — it made every size faster and moved no board.
+
+What stays true: 4×4, 6×6 and 9×9, all on-device. Word Mode is now 9×9 Medium
+and up (D12/D16), and Expert always spells (D1).
+
+## Phase A3 — built, then cut (Eric, 2026-09-19: "start phase A3")
 
 - **12×12 Expert**, 3×4 boxes, Word Mode only (D19), 8 expert + 4 hard
   words (F12), for standard players; Spell Jr never sees it (F7).
@@ -352,16 +373,15 @@ Eligibility is F13. The board shows a quiet source badge naming how many symbols
 - F11 sourcing ladder, F12 band mixes, F13 eligibility gate and Number Mode fallback
 - 9×9 Medium/Hard/Expert switch to Word Mode (D12)
 
-**Phase A3 — 12×12 Expert (executable after A2)**
-- Server-side generation and seed-pack delivery (D18), reusing CC-WORDGRID D8's path
-- N=3 unlock threshold at this size only (D17)
-- Word Mode only; no 12×12 Number Mode (D19)
+**Phase A3 — 12×12 Expert — CUT 2026-09-21 (built in build 231, removed after)**
+- ~~Seed-pack delivery (D18); N=3 unlock threshold at this size (D17); Word Mode only (D19)~~
+- Cut on measurement: 29 px cells and a 16.9 px glyph on an iPhone SE. D17/D18/D19 are void.
 
 **Phase B — Depth (buildable after Phase A; production release per language follows D3)**
 - Spelled Sums (F4)
 - Echo givens (F3)
 - Twin Systems (F5)
-- 12×12 Expert (F7)
+- ~~12×12 Expert (F7)~~ — cut 2026-09-21
 
 ---
 
