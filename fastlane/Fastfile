@@ -372,11 +372,15 @@ platform :ios do
       build_number: build.to_s,
       distribute_external: true,
       groups: ["Spell"],
-      # Default false: the public link is the invitation, so a first submission
-      # should not mail people who have not joined yet. Pass notify:true when
-      # the group ALREADY has testers who need to be told a build is waiting --
-      # they are not prompted otherwise, and will sit on an old build forever.
-      notify_external_testers: options[:notify].to_s == "true",
+      # Default TRUE since 2026-09-22 (Eric). It was false from 2026-08-26 on
+      # the reasoning that the public link is the invitation and nobody should
+      # be mailed about a build they did not ask for. The cost of that was
+      # builds 230-240 sitting at BETA_APPROVED, approved and unannounced,
+      # while testers stayed on 229 -- and the flag only bites at the moment a
+      # build is DISTRIBUTED, so it could not be fixed after the fact by
+      # re-running this lane. Now a build reaches testers as part of shipping
+      # it. Pass notify:false for a build they should not be told about.
+      notify_external_testers: options[:notify].to_s != "false",
       beta_app_feedback_email: "icyfxllm@gmail.com",
       beta_app_description: "Spell is a spelling game you play by ear. Tap the glowing orb to hear a word, then spell it on the on-screen keyboard and press Check. Replay or slow the word, use Definition/Sentence hints, and grow your chain. Fully playable offline after first load.",
       changelog: notes || "Tap the orb to hear a word and spell it on the on-screen keyboard. Try Replay and Slow, the Definition and Sentence hints, head-to-head mode, and Kid Mode / Big Text in Settings. Everything works offline after the first load.",
