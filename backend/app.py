@@ -89,6 +89,15 @@ DEFAULT_LANG = "en"
 SPEAKING_RATE_NORMAL = 0.85  # slower, clearer enunciation
 SPEAKING_RATE_SLOW = 0.6
 VOLUME_GAIN_DB = 4.0  # louder baseline; stay well under the 16 max to avoid clipping
+# CC-AUDIO-CLARITY v1.1 F1 step 2 — digital silence around every clip, so a
+# word's first and last sounds cannot be eaten by playback start-up or by a
+# player's hardware. "half" is the reported case: /h/ and /f/ are the two
+# lowest-energy sounds in English and there is no context to recover them from.
+# Synthesized as SSML breaks rather than added afterwards, so the clip is still
+# exactly what the provider produced -- F1 step 1 and I2 stay true.
+# These two values are the only place padding is defined.
+PAD_LEAD_MS = 200
+PAD_TRAIL_MS = 150
 MAX_WORD_LENGTH = 45  # longest word in major dictionaries
 
 # Azure Speech (for AZURE_VOICES langs, e.g. Swahili). Optional: only needed if a
@@ -102,7 +111,10 @@ AZURE_RATE = {"normal": "-15%", "slow": "-40%"}
 # Bumped whenever synthesis settings change, so old cached clips (made with
 # the previous rate/volume/SSML) are simply orphaned rather than reused —
 # no need to delete anything on disk.
-CACHE_VERSION = "v3"
+# v4: CC-AUDIO-CLARITY F1 -- every clip gains lead/trail silence and Swahili
+# moves to 96 kbps, so no v3 clip may be served. Bumping this is what makes the
+# re-cache total rather than gradual.
+CACHE_VERSION = "v4"
 
 DICTIONARY_API = "https://api.dictionaryapi.dev/api/v2/entries/en/{}"
 
@@ -223,6 +235,20 @@ def cache_path_for(word: str, variant: str, lang: str = "en", key_override: str 
     return os.path.join(CACHE_DIR, f"{CACHE_VERSION}_{digest}_{variant}.mp3")
 
 
+def _breaks() -> tuple:
+    """The lead and trail silence, as SSML. One definition, three call sites."""
+    return (
+        f'<break time="{PAD_LEAD_MS}ms"/>',
+        f'<break time="{PAD_TRAIL_MS}ms"/>',
+    )
+
+
+def _padded_ssml(body: str) -> str:
+    """Wrap already-escaped SSML body in <speak> with F1's padding."""
+    lead, trail = _breaks()
+    return f"<speak>{lead}{body}{trail}</speak>"
+
+
 def _audio_config(speaking_rate: float) -> texttospeech.AudioConfig:
     return texttospeech.AudioConfig(
         audio_encoding=texttospeech.AudioEncoding.MP3,
@@ -253,7 +279,7 @@ def _synthesize_azure(word: str, variant: str, path: str, lang: str) -> None:
         f"<speak version='1.0' xml:lang='{language_code}'>"
         f"<voice xml:lang='{language_code}' name='{voice_name}'>"
         f"<prosody rate='{rate}' volume='+{volume_pct}%'>"
-        f"{html.escape(word, quote=False)}"
+        f"{_breaks()[0]}{html.escape(word, quote=False)}{_breaks()[1]}"
         f"</prosody></voice></speak>"
     )
     url = f"https://{AZURE_SPEECH_REGION}.tts.speech.microsoft.com/cognitiveservices/v1"
@@ -264,7 +290,7 @@ def _synthesize_azure(word: str, variant: str, path: str, lang: str) -> None:
         headers={
             "Ocp-Apim-Subscription-Key": AZURE_SPEECH_KEY,
             "Content-Type": "application/ssml+xml",
-            "X-Microsoft-OutputFormat": "audio-24khz-48kbitrate-mono-mp3",
+            "X-Microsoft-OutputFormat": "audio-24khz-96kbitrate-mono-mp3",
             "User-Agent": "SpellGame",  # Azure rejects requests with no User-Agent
         },
     )
@@ -287,8 +313,8 @@ def _synthesize_zh(word: str, py: str, variant: str, path: str) -> None:
     """
     language_code, voice_name = LANG_VOICES["zh"]
     rate = SPEAKING_RATE_SLOW if variant == "slow" else SPEAKING_RATE_NORMAL
-    ssml = (
-        "<speak><phoneme alphabet=\"pinyin\" ph=\"{}\">{}</phoneme></speak>".format(
+    ssml = _padded_ssml(
+        "<phoneme alphabet=\"pinyin\" ph=\"{}\">{}</phoneme>".format(
             html.escape(py, quote=True), html.escape(word, quote=False)
         )
     )
@@ -321,7 +347,7 @@ def synthesize_to_cache(word: str, variant: str, path: str, lang: str = "en", py
         _synthesize_azure(word, variant, path, lang)
         return
 
-    synthesis_input = texttospeech.SynthesisInput(text=word)
+    synthesis_input = texttospeech.SynthesisInput(ssml=_padded_ssml(html.escape(word, quote=False)))
     rate = SPEAKING_RATE_SLOW if variant == "slow" else SPEAKING_RATE_NORMAL
     language_code, voice_name = LANG_VOICES.get(lang, LANG_VOICES[DEFAULT_LANG])
 

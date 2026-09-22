@@ -146,6 +146,8 @@ mod spelldoku_tier_preview; // CC-SPELLDOKU v1.3 Done #11: the Gig B audit sheet
 mod spelldoku_ui; // CC-SPELLDOKU v1 — the screen (app only)
 #[cfg(test)]
 mod human_audio_census; // CC-HUMAN-AUDIO Phase A: bank dump for the census
+#[cfg(all(test, not(feature = "web")))]
+mod typeable_sweep; // every served word is enterable on its own keyboard
 #[cfg(not(feature = "web"))]
 mod wordsearch; // CC-WORDGRID v1 Phase A — Spell Search engine (app only)
 #[cfg(not(feature = "web"))]

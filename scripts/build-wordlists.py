@@ -183,6 +183,18 @@ def build():
                 if bad:
                     problems.append(f"{where} — chars not on {code} keyboard: {''.join(bad)}")
                     continue
+                # ko: reachable is not the same as typeable. Every jamo IS a key
+                # on the Dubeolsik layout, so a word of BARE jamo passed the
+                # gate above — and then no player could enter it, because the
+                # Hangul automaton composes those keys into a syllable. That is
+                # how "ㅡㅇㅡ모양에서" (a kaomoji face glued to a word) reached
+                # the Korean Hard bank and its Daily pool. A Korean word is made
+                # of precomposed syllables; anything else is not a word.
+                if code == "ko":
+                    loose = [c for c in strict_fold(w) if "\u3130" <= c <= "\u318f" or "\u1100" <= c <= "\u11ff"]
+                    if loose:
+                        problems.append(f"{where} — bare jamo cannot be typed as written: {''.join(loose)}")
+                        continue
                 if is_excluded(w, roots, exact):
                     problems.append(f"{where} — matches exclusion list")
                     continue
