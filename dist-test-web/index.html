@@ -2577,7 +2577,8 @@
       <h2 id="sdTitle" data-i18n="sd.name">SpellDoku</h2>
       <select id="sdPick" aria-label="Board"></select>
       <select id="sdTier" aria-label="Tier Mode">
-        <option value="off" data-i18n="sd.tier.off">Numbers</option>
+        <!-- C5: the label is set per board (Numbers / Letters), so no data-i18n. -->
+        <option value="off" id="sdTierOff">Numbers</option>
         <option value="numbersIndexed" data-i18n="sd.tier.numbers">Tier Mode</option>
         <option value="tierSymbols" data-i18n="sd.tier.symbols">Tier symbols (4x4)</option>
       </select>

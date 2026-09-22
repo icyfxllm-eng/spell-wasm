@@ -303,6 +303,24 @@ export async function run(browser, base, suite) {
     } finally { await ctx.close(); }
   });
 
+  // C5, closed by Eric on 2026-09-21 from a screenshot: a board of letters
+  // whose chip read "Numbers". The chip names the symbols on screen, and it
+  // has to keep up as the player cycles through the boards.
+  await suite.test('spelldoku_mode_chip_names_the_symbols', async () => {
+    const { ctx, page } = await openApp(browser, base, { lang: 'en' });
+    try {
+      await openSpellDoku(page);
+      const chip = () => page.$eval('#sdTierOff', (e) => e.textContent.trim());
+      for (const [cfg, want] of [['9-easy', 'Numbers'], ['9-medium', 'Letters'], ['4-easy', 'Numbers'], ['9-expert', 'Letters']]) {
+        await pick(page, cfg);
+        const b = await board(page);
+        const isWords = !!(b.words && b.words.length);
+        assertEq(isWords, want === 'Letters', `${cfg}: the board really is ${want.toLowerCase()}`);
+        assertEq(await chip(), want, `${cfg}: the chip says ${want}`);
+      }
+    } finally { await ctx.close(); }
+  });
+
   // Eric, 2026-09-21: "fix the keyboard and legend so 9x9 fits". The whole
   // screen must be reachable on the smallest phone the harness models without
   // scrolling -- board, legend, typed line, keyboard and actions at once -- in

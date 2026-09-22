@@ -383,12 +383,31 @@ fn is_clue(g: &Game, i: usize) -> bool {
     matches!(g.board.puzzle.clues[i], Clue::Given(_) | Clue::Spelled(_))
 }
 
+/// C5, closed by Eric on 2026-09-21 from a screenshot of a letters board whose
+/// chip read "Numbers": the chip names the SYMBOLS the player is looking at, so
+/// cycling boards says which kind each one is. It is the Tier Mode picker's
+/// "off" entry, which is why it was hardcoded to the one reading -- and why,
+/// with Tier Mode ON, it names the ordinary board for this size and tier
+/// instead of the ladder board on screen, since that is what switching off
+/// would serve.
+fn mode_chip(g: &Game) {
+    let letters = match &g.tier {
+        None => matches!(g.board.mode, Mode::Words(_)),
+        Some(_) => {
+            let kid = APP.with(|a| a.borrow().as_ref().is_some_and(|app| app.borrow().kid));
+            wordmode::is_word_mode(kid, g.board.puzzle.n, g.board.puzzle.tier)
+        }
+    };
+    dom::set_text("sdTierOff", &t(if letters { "sd.tier.letters" } else { "sd.tier.off" }));
+}
+
 fn render() {
     GAME.with(|cell| {
         let gb = cell.borrow();
         let Some(g) = gb.as_ref() else { return };
         let n = g.board.puzzle.n;
         let size = size_of(n).expect("size");
+        mode_chip(g);
         let mut html = String::new();
         for i in 0..n * n {
             let (r, c) = (i / n, i % n);

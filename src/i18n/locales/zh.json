@@ -753,6 +753,7 @@
   "sd.spell": "拼出数字，再点 ✓",
   "sd.pick": "选一个格子",
   "sd.tier.off": "数字",
+  "sd.tier.letters": "汉字",
   "sd.tier.numbers": "分级模式",
   "sd.tier.symbols": "分级符号（4×4）",
   "sd.tierSpell": "听一听，然后拼出这个词",

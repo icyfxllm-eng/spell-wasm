@@ -753,6 +753,7 @@
   "sd.spell": "Épelle le nombre, puis ✓",
   "sd.pick": "Choisis une case",
   "sd.tier.off": "Chiffres",
+  "sd.tier.letters": "Lettres",
   "sd.tier.numbers": "Mode niveaux",
   "sd.tier.symbols": "Symboles de niveau (4×4)",
   "sd.tierSpell": "Écoute, puis écris le mot",

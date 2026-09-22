@@ -753,6 +753,7 @@
   "sd.spell": "数をつづって ✓",
   "sd.pick": "マスを選んで",
   "sd.tier.off": "数字",
+  "sd.tier.letters": "文字",
   "sd.tier.numbers": "レベルモード",
   "sd.tier.symbols": "レベル記号（4×4）",
   "sd.tierSpell": "聞いてから、その単語を書いてね",

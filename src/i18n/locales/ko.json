@@ -753,6 +753,7 @@
   "sd.spell": "숫자를 쓰고 ✓",
   "sd.pick": "칸을 고르세요",
   "sd.tier.off": "숫자",
+  "sd.tier.letters": "글자",
   "sd.tier.numbers": "단계 모드",
   "sd.tier.symbols": "단계 기호 (4×4)",
   "sd.tierSpell": "듣고 그 단어를 써요",

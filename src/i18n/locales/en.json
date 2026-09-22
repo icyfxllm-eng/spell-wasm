@@ -753,6 +753,7 @@
   "sd.spell": "Spell the number, then ✓",
   "sd.pick": "Pick a cell",
   "sd.tier.off": "Numbers",
+  "sd.tier.letters": "Letters",
   "sd.tier.numbers": "Tier Mode",
   "sd.tier.symbols": "Tier symbols (4×4)",
   "sd.tierSpell": "Listen, then spell the word",

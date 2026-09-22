@@ -1,7 +1,8 @@
 # Unaudited UI strings — review queue
 
-19 keys x 14 locales = 266 strings, drafted by tooling (7 during the Aug 6
-audit, 6 for CC-HUMAN-AUDIO F6/F7 on 2026-09-19) and never reviewed by a speaker. None is load-bearing
+20 keys x 14 locales = 280 strings, drafted by tooling (7 during the Aug 6
+audit, 6 for CC-HUMAN-AUDIO F6/F7 on 2026-09-19, 1 for SpellDoku C5 on
+2026-09-21) and never reviewed by a speaker. None is load-bearing
 for correctness; all are user-facing.
 
 Each locale's block below is self-contained — a reviewer needs only their own
@@ -349,3 +350,28 @@ language and the English above it.
 - **ar** — ليست تلك الكلمة — إليك أخرى من المستوى نفسه
 - **sw** — Si neno hilo — hili hapa lingine la kiwango kile kile
 - **hi** — वह शब्द नहीं — यह लो उसी स्तर का दूसरा
+
+### `sd.tier.letters`
+
+The SpellDoku mode chip when the board's symbols are words rather than numbers
+(C5). It sits beside `sd.tier.off`, that language's word for "Numbers", so the
+two should read as a matched pair. For a language whose Word Mode glyphs are
+not alphabet letters, the natural word for a written character is the right one
+— zh and ja are drafted that way.
+
+**en** — Letters
+
+- **es** — Letras
+- **fr** — Lettres
+- **de** — Buchstaben
+- **pt** — Letras
+- **pl** — Litery
+- **vi** — Chữ cái
+- **ko** — 글자
+- **ja** — 文字
+- **fil** — Mga letra
+- **zh** — 汉字
+- **ru** — Буквы
+- **ar** — الحروف
+- **sw** — Herufi
+- **hi** — अक्षर
