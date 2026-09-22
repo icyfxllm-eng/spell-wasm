@@ -1298,6 +1298,160 @@ pub fn request_word(entry: String, lang: String) {
     REQUESTED_WORD.with(|c| *c.borrow_mut() = Some((entry, lang)));
 }
 
+/// CC-AUDIO-CLARITY v1.1 F6a — the rescue for a player who cannot hear the word.
+///
+/// The census (C11) counted eight places a round's outcome can be written and
+/// warned that a void added to each of them is how a leak happens. It does not
+/// need eight: `submit_guess` is the single root, `answered` is already the
+/// universal "this round is over" flag that submit, timeout and give up all
+/// honour, and every outcome converges on two sinks -- `on_correct` and
+/// `finalize_incorrect_ex`. So a void is exactly what §9 calls it, an ABSENCE
+/// of an outcome: the reveal ends the round without calling an outcome path at
+/// all, and this flag is the guard the two sinks consult so nothing arriving
+/// late -- a timer, or a path someone adds next year -- can write anything.
+pub fn round_voided(app: &App) -> bool {
+    app.borrow().voided
+}
+
+/// D13: how many voids this context allows. Practice is unlimited.
+fn void_cap(s: &AppState) -> Option<u32> {
+    if s.daily.active {
+        Some(2)
+    } else if s.level == "climb" && !s.versus.enabled && !s.review {
+        Some(1)
+    } else {
+        None
+    }
+}
+
+/// Whether "Show me the word" is still offered, or the cap has replaced it
+/// with "Skip this word" (F6a step 5).
+pub fn can_void(app: &App) -> bool {
+    let s = app.borrow();
+    match void_cap(&s) {
+        Some(cap) => s.voids_used < cap,
+        None => true,
+    }
+}
+
+/// D9 (signed): show the word, read-only, and void the round.
+///
+/// The word is never placed in the answer field and can never be submitted
+/// (I11) -- the input is locked before it is shown, and `answered` is set, so
+/// the submit path returns before it validates anything.
+pub fn reveal_word(app: &App) {
+    let (answered, word, lang) = {
+        let s = app.borrow();
+        (s.answered, s.word.clone(), s.cur_lang.clone())
+    };
+    if answered || word.is_empty() {
+        return;
+    }
+    {
+        let mut s = app.borrow_mut();
+        s.answered = true; // submit, timeout and give up all stand down
+        s.voided = true;
+        s.voids_used += 1;
+        // D15: this word stays out of the player's draws until its clip
+        // changes. Local only (I12) -- it is a list of words, kept on device.
+        let key = format!("{lang}|{word}");
+        let mut held: Vec<String> = crate::storage::get_json(VOIDED_WORDS_KEY).unwrap_or_default();
+        if !held.contains(&key) {
+            held.push(key);
+            held.truncate(500);
+            crate::storage::set_json(VOIDED_WORDS_KEY, &held);
+        }
+    }
+    stop_timer(true);
+    lock_inputs();
+    // Shown, never entered (I11): the word goes to the feedback line, and the
+    // answer box is left empty and disabled.
+    set_answer(app, ""); // the box is emptied, and stays empty (I11)
+    let shown = format!("{} {}", crate::i18n::t("fb.wordWas"), word);
+    dom::set_text("feedback", &shown);
+    // D12: a substitute keeps the run the length it was. In the Daily the word
+    // list is fixed, so the entry is REPLACED rather than advanced past.
+    schedule(app, 1600, |app| {
+        let daily_swap = {
+            let s = app.borrow();
+            s.daily.active && s.daily.idx < s.daily.words.len()
+        };
+        if daily_swap {
+            let idx = app.borrow().daily.idx;
+            if let Some(sub) = substitute_word(app) {
+                app.borrow_mut().daily.words[idx] = sub;
+            }
+        }
+        {
+            let mut s = app.borrow_mut();
+            s.voided = false; // the NEXT round is an ordinary round
+        }
+        next_word(app);
+    });
+}
+
+/// A replacement drawn from the same language and tier as the word that could
+/// not be heard, so a run is not shortened by the rescue (D12).
+fn substitute_word(app: &App) -> Option<String> {
+    let (lang, tier) = {
+        let s = app.borrow();
+        (s.cur_lang.clone(), s.cur_tier.clone())
+    };
+    let pool = crate::words::tier_for(&lang, &tier);
+    if pool.is_empty() {
+        return None;
+    }
+    let held: Vec<String> = crate::storage::get_json(VOIDED_WORDS_KEY).unwrap_or_default();
+    let n = (js_sys::Math::random() * pool.len() as f64) as usize;
+    for k in 0..pool.len() {
+        let w = pool[(n + k) % pool.len()];
+        let bare = w.split('|').next().unwrap_or(w).to_string();
+        if !held.contains(&format!("{lang}|{bare}")) {
+            return Some(w.to_string());
+        }
+    }
+    None
+}
+
+/// F6a step 5 at the cap: a skip ends the round the way that mode's own miss
+/// does. This file decides nothing about scoring -- it calls give up, which is
+/// the existing miss.
+pub fn skip_word(app: &App) {
+    give_up(app);
+}
+
+/// F6a step 5: at the cap, "Show me the word" becomes "Skip this word", which
+/// ends the round the way that mode's own miss does. Steps i-iii stay.
+pub fn refresh_rescue(app: &App) {
+    let allowed = can_void(app);
+    dom::set_text("rescueShow", &crate::i18n::t(if allowed { "rescue.show" } else { "rescue.skip" }));
+}
+
+pub fn open_rescue(app: &App) {
+    refresh_rescue(app);
+    dom::set_hidden("rescuePanel", false);
+}
+
+pub fn close_rescue() {
+    dom::set_hidden("rescuePanel", true);
+}
+
+/// The rescue's fourth step. Which of the two it is depends on the cap, and
+/// only this function decides -- the button's label follows it, never the
+/// other way round.
+pub fn rescue_reveal_or_skip(app: &App) {
+    close_rescue();
+    if can_void(app) {
+        reveal_word(app);
+    } else {
+        skip_word(app);
+    }
+}
+
+/// D15: words this player could not hear, held out of their draws until the
+/// clip changes. Device-local; the rescue sends nothing (I12).
+const VOIDED_WORDS_KEY: &str = "spell_voided_words_v1";
+
 pub fn next_word(app: &App) {
     clear_meaning();
     // D3: gaps never span words — an abandoned word's times must not
@@ -1536,6 +1690,10 @@ pub fn next_word(app: &App) {
     dom::set_disabled("giveupBtn", false);
     dom::set_disabled("replayBtn", false);
     dom::set_disabled("slowBtn", false);
+    // F6a step 1: the rescue is offered exactly when audio is (a word you
+    // cannot play is not a word you failed to hear).
+    dom::set_disabled("cantHearBtn", false);
+    refresh_rescue(app);
     // Definition/Sentence hints route through our backend's masking proxy —
     // English via dictionaryapi.dev, other languages via en.wiktionary
     // (api::meaning_supported is the gate; zh has no source, so no button).
@@ -1576,6 +1734,8 @@ fn lock_inputs() {
     dom::set_disabled("giveupBtn", true);
     dom::set_disabled("defBtn", true);
     dom::set_disabled("sentenceBtn", true);
+    dom::set_disabled("cantHearBtn", true);
+    close_rescue();
 }
 
 pub fn submit_guess(app: &App) {
@@ -1797,6 +1957,10 @@ fn zh_sandhi_note(app: &App) -> Option<String> {
 }
 
 fn on_correct(app: &App) {
+    // F6a/I10: a voided round records nothing. One of the two sinks.
+    if round_voided(app) {
+        return;
+    }
     if app.borrow().versus.enabled {
         versus_on_correct(app);
         return;
@@ -1949,6 +2113,10 @@ fn finalize_incorrect(app: &App, glyph: &str, prefix: &str, feedback_class: &str
 /// a retry (extra attempt or shield) changes session flow, not the learning
 /// record, so the outcome must never be double-counted (I2 / A2 / A9).
 fn finalize_incorrect_ex(app: &App, glyph: &str, prefix: &str, feedback_class: &str, record: bool) {
+    // F6a/I10: a voided round records nothing. The other sink.
+    if round_voided(app) {
+        return;
+    }
     let (versus_on, cur_lang, cur_tier, word, typed) = {
         let s = app.borrow();
         (s.versus.enabled, s.cur_lang.clone(), s.cur_tier.clone(), s.word.clone(), s.answer.trim().to_string())

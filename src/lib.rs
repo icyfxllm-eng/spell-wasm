@@ -146,6 +146,8 @@ mod spelldoku_tier_preview; // CC-SPELLDOKU v1.3 Done #11: the Gig B audit sheet
 mod spelldoku_ui; // CC-SPELLDOKU v1 — the screen (app only)
 #[cfg(test)]
 mod human_audio_census; // CC-HUMAN-AUDIO Phase A: bank dump for the census
+#[cfg(test)]
+mod void_round; // CC-AUDIO-CLARITY F6a — a void records nothing
 #[cfg(all(test, not(feature = "web")))]
 mod typeable_sweep; // every served word is enterable on its own keyboard
 #[cfg(not(feature = "web"))]
@@ -610,6 +612,23 @@ fn wire_orb_and_answer(app: &App) {
             game::replay_slow(&a);
         });
     }
+    // CC-AUDIO-CLARITY F6a — the rescue. Every step is local and silent (I12).
+    {
+        let a = app.clone();
+        dom::on_click("cantHearBtn", move || game::open_rescue(&a));
+    }
+    {
+        let a = app.clone();
+        dom::on_click("rescueSlow", move || {
+            game::note_replay(&a);
+            game::replay_slow(&a);
+        });
+    }
+    {
+        let a = app.clone();
+        dom::on_click("rescueShow", move || game::rescue_reveal_or_skip(&a));
+    }
+    dom::on_click("rescueClose", game::close_rescue);
     {
         let a = app.clone();
         dom::on_click("shareBtn", move || {

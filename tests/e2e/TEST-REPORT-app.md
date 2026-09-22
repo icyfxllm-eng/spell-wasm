@@ -1,6 +1,6 @@
 # TEST-REPORT — Web E2E (app build)
 
-**218/218 passed** across 35 areas.
+**222/222 passed** across 36 areas.
 
 ## playhub — 17/17
 - ✅ hub: opens from the meta corner and renders registry tiles
@@ -31,6 +31,12 @@
 
 ## inspector — 1/1
 - ✅ inspector: shows the review queue, next-review dates and why the word was served
+
+## audio-rescue — 4/4
+- ✅ rescue: offers only the steps that exist
+- ✅ rescue: showing the word voids the round and leaves nothing behind
+- ✅ rescue: sends nothing
+- ✅ rescue: revealing everything scores nothing and hits its cap
 
 ## hub-row — 2/2
 - ✅ hub row: The Climb is out, the rest stay

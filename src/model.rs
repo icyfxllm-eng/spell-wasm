@@ -199,6 +199,20 @@ pub struct AppState {
     /// leaves it a no-op instead of replacing the next word mid-typing.
     pub word_serial: u64,
     pub answered: bool,
+    /// CC-AUDIO-CLARITY v1.1 F6a/D11 — this round was VOIDED: the player could
+    /// not hear the word and asked to see it. A void is the absence of an
+    /// outcome, not a new one (§9): nothing is scored, no shield is spent, the
+    /// streak is kept, and nothing reaches the missed-words queue, the
+    /// confusion matrix, the learner record or a leaderboard (I10).
+    ///
+    /// It is set with `answered`, so the three round-ending entry points
+    /// (submit, timeout, give up) already refuse to record anything; this flag
+    /// is what the two outcome SINKS consult, so a late timer or a path added
+    /// later cannot slip a write through.
+    pub voided: bool,
+    /// Voids used in the current Climb run or Daily play (F6a step 5 / D13).
+    /// Session-only; reset where the run or play is.
+    pub voids_used: u32,
     /// True while an IME composition is open (compositionstart seen, no matching
     /// compositionend yet). Guards the shared submit/advance path so we never
     /// validate or auto-advance mid-composition — one flag on the input path, not
@@ -281,6 +295,8 @@ impl Default for AppState {
             list_cursor: 0,
             word_serial: 0,
             answered: false,
+            voided: false,
+            voids_used: 0,
             composing: false,
             rate: 0.9,
             glow: "#ffb14d".into(),

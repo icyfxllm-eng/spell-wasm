@@ -52,12 +52,14 @@ import * as learnerSurfaces from './specs/learner-surfaces.mjs';
 import * as learnerReset from './specs/learner-reset.mjs';
 import * as reviewQueue from './specs/review-queue.mjs';
 import * as inspector from './specs/inspector.mjs';
+import * as audioRescue from './specs/audio-rescue.mjs';
 
 const SPECS = [
   ['playhub', playHub, placement, learnerSurfaces, learnerReset],
   ['stats-sheet', statsSheet],
   ['review-queue', reviewQueue],
   ['inspector', inspector],
+  ['audio-rescue', audioRescue],
   ['hub-row', hubRow],
   ['keyboard', keyboard],
   ['gameplay', gameplay],
