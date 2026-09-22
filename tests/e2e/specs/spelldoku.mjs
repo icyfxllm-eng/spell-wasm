@@ -28,6 +28,64 @@ async function spell(page, word) {
   await page.waitForTimeout(80);
 }
 
+// CC-SPELLDOKU-RULES C2 (Eric, 2026-09-22): a symbol is PICKED and only then
+// spelled, so every placement goes pick -> spell -> commit. The conflict check
+// fires on the pick, which is the whole point of the inversion.
+async function pickSym(page, v) {
+  await page.click(`[data-sd-sym="${v}"]`);
+  await page.waitForTimeout(80);
+}
+
+async function place(page, v, word) {
+  await pickSym(page, v);
+  await spell(page, word);
+}
+
+const BOX = { 4: [2, 2], 6: [2, 3], 9: [3, 3] };
+
+/// The cells that share a row, column or box with `i`.
+function peersOf(b, i) {
+  const n = b.n;
+  const [br, bc] = BOX[n];
+  const r = Math.floor(i / n);
+  const c = i % n;
+  const r0 = Math.floor(r / br) * br;
+  const c0 = Math.floor(c / bc) * bc;
+  const out = new Set();
+  for (let k = 0; k < n; k++) { out.add(r * n + k); out.add(k * n + c); }
+  for (let rr = r0; rr < r0 + br; rr++) for (let cc = c0; cc < c0 + bc; cc++) out.add(rr * n + cc);
+  out.delete(i);
+  return [...out];
+}
+
+/// The value a clue already puts on the board, or 0. Given AND Spelled both
+/// seed a cell -- missing Spelled is what made the first draft of these helpers
+/// pick "legal" values that were already in the row.
+const givenAt = (b, i) => {
+  const c = b.clues[i];
+  if (typeof c !== 'object') return 0;
+  return c.Given || c.Spelled || 0;
+};
+
+/// A value that is WRONG for this cell but breaks no rule, so it tests D2's
+/// surviving half rather than F1.
+function legalWrong(b, i) {
+  const taken = new Set(peersOf(b, i).map((j) => givenAt(b, j)));
+  for (let v = 1; v <= b.n; v++) {
+    if (v !== b.solution[i] && !taken.has(v)) return v;
+  }
+  return null;
+}
+
+/// A value already placed in this cell's row, column or box: the F1 case.
+function conflicting(b, i) {
+  for (const j of peersOf(b, i)) {
+    const v = givenAt(b, j);
+    if (v) return { value: v, at: j };
+  }
+  return null;
+}
+
 const WORDS = ['', 'one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight', 'nine'];
 
 /// The empty cells, in order.
@@ -65,9 +123,9 @@ export async function run(browser, base, suite) {
       const PY = ['', 'yi', 'er', 'san', 'si', 'wu', 'liu', 'qi', 'ba', 'jiu'];
       const TONE = ['', '1', '4', '1', '4', '3', '4', '1', '1', '3'];
       await page.click(`[data-sd-cell="${i}"]`);
-      await spell(page, PY[b.solution[i]]);
+      await place(page, b.solution[i], PY[b.solution[i]]);
       assert(/spelling|拼写/i.test(await page.$eval('#sdNote', (e) => e.textContent)), 'untoned: MISSPELLED');
-      await spell(page, PY[b.solution[i]] + TONE[b.solution[i]]);
+      await spell(page, PY[b.solution[i]] + TONE[b.solution[i]]);  // still picked after a misspelling
       assertEq(await page.$eval(`[data-sd-cell="${i}"]`, (e) => e.textContent.trim()), String(b.solution[i]), 'toned: placed');
     } finally { await ctx.close(); }
   });
@@ -85,8 +143,9 @@ export async function run(browser, base, suite) {
       const v = b.solution[target];
       await page.click(`[data-sd-cell="${target}"]`);
       if (v === 2) {
-        await spell(page, 'hai');
+        await place(page, v, 'hai');
       } else {
+        await pickSym(page, v);
         for (const ch of 'bay') await page.click(`#sdKeys [data-sd-key="${ch}"]`);
         await page.click('#sdKeys [data-sd-key="\u0309"]');
         await page.click('#sdKeys [data-sd-go]');
@@ -107,23 +166,25 @@ export async function run(browser, base, suite) {
       const [first, second] = empties(b);
       await page.click(`[data-sd-cell="${first}"]`);
       // A misspelling is a spelling error, shown at once, and places nothing.
-      await spell(page, 'fuor');
+      await place(page, b.solution[first], 'fuor');
       assert(/spelling/i.test(await page.$eval('#sdNote', (e) => e.textContent)), 'MISSPELLED says so');
       assertEq(await page.$eval(`[data-sd-cell="${first}"]`, (e) => e.textContent.trim()), '', 'nothing placed');
       // A real number word for the wrong value is a logic error (Easy shows it).
-      const wrongV = b.solution[first] === 1 ? 2 : 1;
-      await spell(page, WORDS[wrongV]);
-      assert(/doesn't go here/i.test(await page.$eval('#sdNote', (e) => e.textContent)), 'WRONG_VALUE says so');
+      const wrongV = legalWrong(b, first);
+      if (wrongV) {
+        await place(page, wrongV, WORDS[wrongV]);
+        assert(/doesn't go here/i.test(await page.$eval('#sdNote', (e) => e.textContent)), 'WRONG_VALUE says so');
+      }
       // The right word lands.
       const v = b.solution[first];
-      await spell(page, WORDS[v]);
+      await place(page, v, WORDS[v]);
       assertEq(await page.$eval(`[data-sd-cell="${first}"]`, (e) => e.textContent.trim()), String(v), 'the value is placed');
       // Easy: one correct spelling turns that value into a chip (D1).
-      assert(await page.$(`[data-sd-chip="${v}"]`), `a chip for ${v} appears after one spelling`);
+      assert(await page.$(`[data-sd-sym="${v}"].free`), `${v} is earned after one spelling (D1)`);
       // A chip commits without spelling -- but only where it is right.
       if (second !== undefined && b.solution[second] === v) {
         await page.click(`[data-sd-cell="${second}"]`);
-        await page.click(`[data-sd-chip="${v}"]`);
+        await page.click(`[data-sd-sym="${v}"]`);
         assertEq(await page.$eval(`[data-sd-cell="${second}"]`, (e) => e.textContent.trim()), String(v));
       }
     } finally { await ctx.close(); }
@@ -147,10 +208,10 @@ export async function run(browser, base, suite) {
       for (const i of cells) {
         const v = b.solution[i];
         await page.click(`[data-sd-cell="${i}"]`);
-        if (await page.$(`[data-sd-chip="${v}"]`)) {
-          await page.click(`[data-sd-chip="${v}"]`);
+        if (await page.$(`[data-sd-sym="${v}"].free`)) {
+          await pickSym(page, v); // D1: an earned symbol goes in without spelling
         } else {
-          await spell(page, WORDS[v]);
+          await place(page, v, WORDS[v]);
           spellings++;
         }
       }
@@ -168,10 +229,11 @@ export async function run(browser, base, suite) {
       const b = await board(page);
       assert(b.clues.some((c) => c.Fragment), 'Hard carries a fragment clue (F2)');
       const i = empties(b).find((k) => !b.clues[k].Fragment);
-      const wrongV = b.solution[i] === 1 ? 2 : 1;
+      const wrongV = legalWrong(b, i);
+      assert(wrongV, 'the fixture offers a wrong-but-legal value');
       assert(b.words, 'v1.2 D12: a 9x9 Hard board is Word Mode');
       await page.click(`[data-sd-cell="${i}"]`);
-      await spell(page, b.words[wrongV - 1]);
+      await place(page, wrongV, b.words[wrongV - 1]);
       assertEq(await page.$eval('#sdNote', (e) => e.textContent.trim()), '', 'no logic feedback yet');
       assertEq(await page.$eval(`[data-sd-cell="${i}"]`, (e) => e.textContent.trim()), b.glyphs[wrongV - 1], 'placed as entered, shown as its glyph');
       assert(!(await page.$eval('#sdCheck', (e) => e.classList.contains('btn-hide'))), 'Check Board is offered');
@@ -256,7 +318,7 @@ export async function run(browser, base, suite) {
       const shown = await page.evaluate(() => ['sdGrid', 'sdLegend', 'sdChips', 'sdBadge', 'sdNote']
         .map((id) => document.getElementById(id).innerText.toLowerCase()).join(' | '));
       for (const w of b.words) assert(!shown.includes(w), `I12: "${w}" is not spelled anywhere on the board`);
-      await page.click('#sdLegend [data-sd-say="1"]'); // the orb plays; nothing breaks
+      await page.click('#sdLegend [data-sd-sym="1"]'); // the glyph plays its word; nothing breaks
     } finally { await ctx.close(); }
   });
 
@@ -271,11 +333,11 @@ export async function run(browser, base, suite) {
       const i = empties(b).find((k) => !b.clues[k].Fragment);
       const want = b.words[b.solution[i] - 1];
       await page.click(`[data-sd-cell="${i}"]`);
-      await spell(page, 'qqzx');
+      await place(page, b.solution[i], 'qqzx');
       assert(/spell/i.test(await page.$eval('#sdNote', (e) => e.textContent)), 'MISSPELLED');
       const misses = await page.evaluate(() => JSON.parse(localStorage.getItem('byear_misses_v1') || '[]'));
       assert(misses.some((m) => m.word === want && m.lang === 'en'), `D13: "${want}" joined the missed-words queue`);
-      await spell(page, want);
+      await spell(page, want);  // the symbol is still picked
       assertEq(await page.$eval(`[data-sd-cell="${i}"]`, (e) => e.textContent.trim()), b.glyphs[b.solution[i] - 1], 'committed, shown as its glyph');
     } finally { await ctx.close(); }
   });
@@ -303,6 +365,126 @@ export async function run(browser, base, suite) {
     } finally { await ctx.close(); }
   });
 
+  // CC-SPELLDOKU-RULES v1 Phase A. Done #1, #4, #5, #7, #8 on the real screen.
+  // D-R1 (Eric, 2026-09-22) amends v1.0 D2: a duplicate is refused at EVERY
+  // tier, immediately — build 219 accepted three B's in one box on Hard.
+  for (const cfg of ['4-easy', '9-easy', '9-medium', '9-hard', '9-expert']) {
+    await suite.test(`spelldoku_conflict_is_refused_${cfg.replace('-', '_')}`, async () => {
+      const { ctx, page } = await openApp(browser, base, { lang: 'en' });
+      try {
+        await openSpellDoku(page);
+        await pick(page, cfg);
+        const b = await board(page);
+        const i = empties(b).find((k) => conflicting(b, k));
+        assert(i !== undefined, 'the fixture has an empty cell with a filled peer');
+        const { value, at } = conflicting(b, i);
+        await page.click(`[data-sd-cell="${i}"]`);
+        const before = await page.evaluate(() => ({
+          cells: [...document.querySelectorAll('[data-sd-cell]')].map((e) => e.textContent.trim()),
+          check: document.getElementById('sdCheck').textContent,
+          note: document.getElementById('sdNote').textContent,
+        }));
+        await pickSym(page, value);
+        const after = await page.evaluate(() => ({
+          cells: [...document.querySelectorAll('[data-sd-cell]')].map((e) => e.textContent.trim()),
+          check: document.getElementById('sdCheck').textContent,
+          note: document.getElementById('sdNote').textContent,
+          shaken: document.querySelectorAll('.sd-cell.shake').length,
+          flashed: [...document.querySelectorAll('.sd-cell.flash')].map((e) => +e.dataset.sdCell),
+          typedLine: document.getElementById('sdTyped').textContent,
+          picked: document.querySelectorAll('[data-sd-sym].picked').length,
+        }));
+        // Done #1: refused, and the board is untouched.
+        assertEq(JSON.stringify(after.cells), JSON.stringify(before.cells), `${cfg}: the board is unchanged`);
+        assert(/already in this (row|column|box)/i.test(after.note), `${cfg}: it says why — got ${JSON.stringify(after.note)}`);
+        assertEq(after.shaken, 1, `${cfg}: the target cell shakes`);
+        assert(after.flashed.includes(at), `${cfg}: the cell that explains it flashes`);
+        // Done #5: nothing is consumed — the Check counter is where it was.
+        assertEq(after.check, before.check, `${cfg}: no Check was spent`);
+        // Done #4: no symbol is on the hook, so the composer never opened and
+        // the player was never asked to spell a word that could not be placed.
+        // (Not a string test — the Number Mode PICK prompt contains the word
+        // "spell" itself, which is what the first draft of this tripped over.)
+        assertEq(after.picked, 0, `${cfg}: nothing is picked, so spelling never opened`);
+        // Typing after a refusal does nothing, because nothing is picked.
+        await page.click('#sdKeys [data-sd-key="o"]').catch(() => {});
+        await page.waitForTimeout(60);
+        assertEq(await page.$eval('#sdTyped', (e) => e.textContent), after.typedLine, `${cfg}: the keyboard is inert`);
+      } finally { await ctx.close(); }
+    });
+  }
+
+  // Done #7 (F2) and #8 (F3) — the count on every symbol, and dimming that is
+  // on for Easy and Medium and off above them (D-R2).
+  await suite.test('spelldoku_counts_and_dimming', async () => {
+    const { ctx, page } = await openApp(browser, base, { lang: 'en' });
+    try {
+      await openSpellDoku(page);
+      for (const [cfg, dims] of [['9-easy', true], ['9-medium', true], ['9-hard', false], ['9-expert', false]]) {
+        await pick(page, cfg);
+        const b = await board(page);
+        const counts = await page.$$eval('[data-sd-sym] .sd-n', (e) => e.map((x) => +x.textContent));
+        assertEq(counts.length, b.n, `${cfg}: every symbol carries a count`);
+        // F2: remaining = n - already on the board, derived not stored (I-R4).
+        const placed = b.clues.map((c, k) => givenAt(b, k)).filter(Boolean);
+        for (let v = 1; v <= b.n; v++) {
+          const want = b.n - placed.filter((x) => x === v).length;
+          assertEq(counts[v - 1], want, `${cfg}: ${v} has ${want} left`);
+        }
+        const i = empties(b).find((k) => conflicting(b, k));
+        await page.click(`[data-sd-cell="${i}"]`);
+        await page.waitForTimeout(120);
+        const dimmed = await page.$$eval('[data-sd-sym].dim', (e) => e.length);
+        if (dims) {
+          assert(dimmed > 0, `${cfg}: ruled-out symbols dim`);
+          // A dimmed chip still answers: the tap runs F1 and is refused.
+          const { value } = conflicting(b, i);
+          await pickSym(page, value);
+          assert(/already in this/i.test(await page.$eval('#sdNote', (e) => e.textContent)), `${cfg}: a dimmed chip still validates`);
+        } else {
+          assertEq(dimmed, 0, `${cfg}: nothing dims above Medium`);
+        }
+      }
+    } finally { await ctx.close(); }
+  });
+
+  // Done #3, the paths a symbol can reach a cell by — every one refuses a
+  // conflict. Hints never write at all, and undo/redo and saved-board restore
+  // do not exist (census C1), so this is the whole list.
+  await suite.test('spelldoku_every_path_refuses_a_conflict', async () => {
+    const { ctx, page } = await openApp(browser, base, { lang: 'en' });
+    try {
+      await openSpellDoku(page);
+      await pick(page, '4-easy');
+      let b = await board(page);
+      // Earn a symbol so the D1 tap-to-place path exists, then aim it at a cell
+      // that already has it as a peer.
+      const first = empties(b).find((k) => !b.clues[k].Fragment);
+      const v = b.solution[first];
+      await page.click(`[data-sd-cell="${first}"]`);
+      await place(page, v, WORDS[v]);
+      assert(await page.$(`[data-sd-sym="${v}"].free`), 'the symbol is earned (D1)');
+      b = await board(page);
+      const target = empties(b).find((k) => k !== first && peersOf(b, k).includes(first));
+      if (target !== undefined) {
+        await page.click(`[data-sd-cell="${target}"]`);
+        const before = await page.$eval(`[data-sd-cell="${target}"]`, (e) => e.textContent.trim());
+        await pickSym(page, v);
+        assertEq(await page.$eval(`[data-sd-cell="${target}"]`, (e) => e.textContent.trim()), before,
+          'an EARNED symbol is refused too — being free of spelling is not being free of the rules');
+        assert(/already in this/i.test(await page.$eval('#sdNote', (e) => e.textContent)), 'and it says why');
+      }
+      // Pencil marks stay free (D-R6): a mark that duplicates a peer is fine.
+      await page.click('#sdPencil');
+      const pen = empties(b).find((k) => k !== first);
+      await page.click(`[data-sd-cell="${pen}"]`);
+      await page.click(`#sdKeys [data-sd-pen="${v}"]`);
+      await page.waitForTimeout(100);
+      assert((await page.$eval(`[data-sd-cell="${pen}"]`, (e) => e.textContent)).includes(String(v)),
+        'D-R6: a pencil mark is a note, not a placement');
+    } finally { await ctx.close(); }
+  });
+
   // C5, closed by Eric on 2026-09-21 from a screenshot: a board of letters
   // whose chip read "Numbers". The chip names the symbols on screen, and it
   // has to keep up as the player cycles through the boards.
@@ -327,6 +509,11 @@ export async function run(browser, base, suite) {
   // BOTH modes, because Word Mode carries a legend that Number Mode does not.
   // The pitch floor is what stops a future change from "fitting" the screen by
   // shrinking the board into nothing.
+  // Pick-then-spell (CC-SPELLDOKU-RULES C2) gave Number Mode a row of symbols
+  // to pick from, which it never had before — its chip tray used to be empty
+  // until D1 unlocked something. Nine digits wrapped to two rows and took the
+  // cell down to 30.8 px, so the chips are tighter on phones and the board is
+  // back over its floor. This test is what caught that.
   for (const [mode, cfg, floor] of [['numbers', '9-easy', 36], ['words', '9-medium', 30]]) {
     await suite.test(`spelldoku_nine_fits_a_small_phone_${mode}`, async () => {
       const { ctx, page } = await openApp(browser, base, { lang: 'en' }); // 375x667

@@ -137,7 +137,7 @@ export async function run(browser, base, suite) {
       await page.waitForTimeout(120);
       assertEq(await prompt(page), null, 'no word was drawn for a mark');
       assertEq(await page.$eval(`[data-sd-cell="${i}"]`, (e) => e.textContent.trim()), '3', 'the mark is on the cell');
-      assertEq(await page.$$eval('#sdChips .sd-chip', (c) => c.length), 0, 'and nothing was unlocked');
+      assertEq(await page.$$eval('#sdChips .sd-chip.free', (c) => c.length), 0, 'and nothing was unlocked');
     } finally { await ctx.close(); }
   });
 

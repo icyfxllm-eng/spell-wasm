@@ -248,6 +248,15 @@ pub fn show_toast(msg: &str) {
     closure.forget();
 }
 
+/// Run `f` once, `ms` from now. Used where a piece of feedback has to clear
+/// itself (CC-SPELLDOKU-RULES F1: the conflict flash lasts 600 ms).
+pub fn after_ms<F: FnOnce() + 'static>(ms: i32, f: F) {
+    use wasm_bindgen::JsCast;
+    let closure = wasm_bindgen::closure::Closure::once(f);
+    let _ = window().set_timeout_with_callback_and_timeout_and_arguments_0(closure.as_ref().unchecked_ref(), ms);
+    closure.forget();
+}
+
 /// v7 F7 — beforeinput listener carrying (inputType, data length) so the
 /// submit path can tell typing from dictation (input provenance, D8).
 pub fn on_before_input<F: Fn(String, u32) + 'static>(id: &str, f: F) {

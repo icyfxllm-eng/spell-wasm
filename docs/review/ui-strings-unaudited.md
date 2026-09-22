@@ -1,8 +1,9 @@
 # Unaudited UI strings — review queue
 
-20 keys x 14 locales = 280 strings, drafted by tooling (7 during the Aug 6
+29 keys x 14 locales = 406 strings, drafted by tooling (7 during the Aug 6
 audit, 6 for CC-HUMAN-AUDIO F6/F7 on 2026-09-19, 1 for SpellDoku C5 on
-2026-09-21) and never reviewed by a speaker. None is load-bearing
+2026-09-21, 9 for CC-SPELLDOKU-RULES F1/F4 on 2026-09-22) and never reviewed
+by a speaker. None is load-bearing
 for correctness; all are user-facing.
 
 Each locale's block below is self-contained — a reviewer needs only their own
@@ -375,3 +376,35 @@ not alphabet letters, the natural word for a written character is the right one
 - **ar** — الحروف
 - **sw** — Herufi
 - **hi** — अक्षर
+
+### CC-SPELLDOKU-RULES v1 — nine keys (F1 refusals, F4 prompts)
+
+Drafted 2026-09-22 for the pick-then-spell flow. The translations are in
+`src/i18n/locales/<lang>.json`; English is below, and a reviewer needs only
+their own file beside it. `{sym}` is the symbol as the board draws it, `{n}`
+the board's side length.
+
+| Key | English | Where it shows |
+|---|---|---|
+| `sd.pickSymbol` | Tap a number, then spell it | Numbers board, cell chosen |
+| `sd.pickSymbolWord` | Tap a letter to hear its word | Letters board, cell chosen |
+| `sd.spellWord` | Tap ▶ to hear the word, spell it, then ✓ | Letters board, symbol chosen |
+| `sd.conflictRow` | {sym} is already in this row | a refused placement |
+| `sd.conflictCol` | {sym} is already in this column | a refused placement |
+| `sd.conflictBox` | {sym} is already in this box | a refused placement |
+| `sd.allPlaced` | All {n} {sym}s are placed | every copy of a symbol is down |
+| `sd.hintBlockedNum` | A placed number is wrong — use Check board | hint has nowhere legal to point |
+| `sd.hintBlockedWord` | A placed letter is wrong — use Check board | the same, on a Letters board |
+
+Two existing strings were corrected at the same time, and both are worth a
+speaker's eye because the fix was mine, not a translator's:
+
+- **sw `sd.spell`** said "Andika namba kwa **herufi**" — write the number *in
+  letters* — on a board whose whole point is that it is not letters. Now
+  "Andika namba kwa **maneno**" (in words).
+- **ar `sd.pickSymbol`** was drafted as "اكتبه **بالحروف**" (write it in
+  letters) and is now "اكتبه **كلمةً**" (write it as a word).
+
+Both were caught by `spelldoku::copy`'s test that no string may contain its
+own language's word for the other kind of symbol (I-R6, Done #10) — which is
+the test to run after touching any of these.

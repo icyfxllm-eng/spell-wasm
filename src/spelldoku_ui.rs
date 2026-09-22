@@ -11,7 +11,9 @@ use serde::{Deserialize, Serialize};
 
 use crate::spelldoku::tier::{self as tiermode};
 use crate::spelldoku::canon;
-use crate::spelldoku::geo::{size_of, Geo};
+use crate::spelldoku::geo::{self, size_of, Geo};
+use crate::spelldoku::rules;
+use crate::spelldoku::copy::{self, Kind};
 use crate::spelldoku::bind::{Board, Mode};
 use crate::spelldoku::gen::{Clue, Config, Tier};
 use crate::spelldoku::play::{self, Unlocks, Verdict};
@@ -86,6 +88,14 @@ struct Game {
     /// The word drawn for the digit the player is committing, if any (F2).
     prompt: Option<tiermode::Draw>,
     prompt_digit: u8,
+    /// CC-SPELLDOKU-RULES C2 (Eric, 2026-09-22): the player picks the symbol
+    /// FIRST and then spells it, so a rule conflict is refused before anyone is
+    /// asked to spell anything (I-R2). This is the symbol being spelled toward.
+    picked: Option<u8>,
+    /// F1 feedback, cleared on a timer: the cell that refused a placement, and
+    /// the already-placed cells that explain why.
+    shake: Option<usize>,
+    flash: Vec<usize>,
 }
 
 /// I4: the three verdicts are counted apart, on this device only.
@@ -235,6 +245,9 @@ fn serve(app: &App, n: usize, tier: Tier, daily: bool) -> bool {
             tier: session,
             prompt: None,
             prompt_digit: 0,
+            picked: None,
+            shake: None,
+            flash: Vec::new(),
             board,
             entries,
             pencil: vec![0; cells],
@@ -296,6 +309,131 @@ fn cell_label(g: &Game, v: u8) -> String {
     match g.tier.as_ref().filter(|ts| ts.symbols()).and_then(|ts| ts.band_of(v)) {
         Some(band) => t(tiermode::label_key(band)).chars().next().unwrap_or('?').to_string(),
         None => g.board.label(v),
+    }
+}
+
+/// F4: what THIS board is, so every string the player reads comes from the one
+/// table keyed by it. Nothing else in this file chooses a composer key.
+fn board_copy(g: &Game) -> copy::Copy {
+    copy::copy(Kind::of(g.board.is_words(), g.tier.is_some()))
+}
+
+/// F3 applies on the gentler tiers only (D-R2). Spell Jr plays Easy and Medium
+/// spans, so it is covered without naming it (D-R7).
+fn dimming(g: &Game) -> bool {
+    matches!(g.board.puzzle.tier, Tier::Easy | Tier::Medium)
+}
+
+/// One pickable symbol: its glyph, how many are still to place (F2), and
+/// whether the visible board already rules it out here (F3). Tapping it is now
+/// the only way a symbol reaches a cell (C2), so this button carries the state
+/// that used to be spread between the legend and the unlock tray.
+fn symbol_button(g: &Game, v: u8, base: &str, aria: &str, ruled: u16) -> String {
+    let left = rules::remaining(g.board.puzzle.n, &g.entries, v);
+    let mut cls = vec![base];
+    if left == 0 {
+        cls.push("spent");
+    }
+    if g.picked == Some(v) {
+        cls.push("picked");
+    }
+    if g.unlocks.chip(v) {
+        cls.push("free"); // D1: earned -- it goes in without spelling
+    }
+    // A dimmed chip still responds; the tap runs F1 and is refused, so dimming
+    // never stands in for validation.
+    if ruled & geo::bit(v) != 0 {
+        cls.push("dim");
+    }
+    format!(
+        "<button type=\"button\" class=\"{}\" data-sd-sym=\"{v}\"{}><b>{}</b><i class=\"sd-n\">{left}</i>{}</button>",
+        cls.join(" "),
+        if aria.is_empty() { String::new() } else { format!(" aria-label=\"{}\"", dom::escape_html(aria)) },
+        dom::escape_html(&cell_label(g, v)),
+        if g.picked == Some(v) { " \u{25B6}" } else { "" },
+    )
+}
+
+/// F1's refusal: nothing is written and nothing is consumed (I-R3). The cell
+/// shakes, the cells that explain it flash, a warning haptic plays, and the
+/// message names the first unit in row -> column -> box order.
+fn refuse(cell: Option<usize>, cells: Vec<usize>, msg: String) {
+    let kid = APP.with(|a| a.borrow().as_ref().is_some_and(|app| app.borrow().kid));
+    GAME.with(|c| {
+        if let Some(g) = c.borrow_mut().as_mut() {
+            g.shake = cell;
+            g.flash = cells;
+        }
+    });
+    dom::set_text("sdNote", &msg);
+    crate::haptics::incorrect(kid);
+    render();
+    // 600 ms per F1, then the board goes quiet again. The message stays a
+    // little longer so it can be read.
+    dom::after_ms(600, || {
+        GAME.with(|c| {
+            if let Some(g) = c.borrow_mut().as_mut() {
+                g.shake = None;
+                g.flash.clear();
+            }
+        });
+        render();
+    });
+}
+
+/// C2: the player picks the symbol, and THAT is where a rule conflict is
+/// caught -- before anyone is asked to spell a word (I-R2). An earned symbol
+/// (D1) goes straight in; any other opens the spelling.
+fn pick_symbol(v: u8) {
+    enum Next {
+        Nothing,
+        Say,
+        Speak,
+        Commit(u8, Verdict),
+        Refuse(Option<usize>, Vec<usize>, String),
+    }
+    let next = GAME.with(|cell| {
+        let mut gb = cell.borrow_mut();
+        let Some(g) = gb.as_mut() else { return Next::Nothing };
+        if g.solved || g.pencil_mode {
+            return Next::Nothing;
+        }
+        // No cell chosen yet: the row is still the key to the board, so a tap
+        // just says the word.
+        let Some(i) = g.sel else { return Next::Say };
+        if g.board.puzzle.clues[i] != Clue::Empty && g.entries[i] > 0 {
+            return Next::Nothing; // a given: not the player's to fill
+        }
+        // F2 first: "they are all placed" is a truer thing to say than "it is
+        // already in this row", when both are true.
+        if rules::remaining(g.board.puzzle.n, &g.entries, v) == 0 {
+            let msg = i18n::tp("sd.allPlaced", &[("n", &g.board.puzzle.n.to_string()), ("sym", &cell_label(g, v))]);
+            return Next::Refuse(Some(i), Vec::new(), msg);
+        }
+        let geo = Geo::new(size_of(g.board.puzzle.n).expect("size"));
+        if let Err(c) = rules::validate(&geo, &g.entries, i, v) {
+            let msg = i18n::tp(c.unit.key(), &[("sym", &cell_label(g, v))]);
+            return Next::Refuse(Some(i), c.cells, msg);
+        }
+        if g.unlocks.chip(v) {
+            let expected = g.board.puzzle.solution[i];
+            return Next::Commit(v, if v == expected { Verdict::Correct } else { Verdict::WrongValue });
+        }
+        g.picked = Some(v);
+        g.typed.clear();
+        Next::Speak
+    });
+    match next {
+        Next::Nothing => {}
+        Next::Refuse(cell, cells, msg) => refuse(cell, cells, msg),
+        Next::Commit(v, verdict) => commit_value(v, false, verdict),
+        Next::Say | Next::Speak => {
+            let board = GAME.with(|c| c.borrow().as_ref().map(|g| g.board.clone()));
+            if let Some(b) = board {
+                speak(&b, v, || {});
+            }
+            render();
+        }
     }
 }
 
@@ -412,6 +550,13 @@ fn render() {
         for i in 0..n * n {
             let (r, c) = (i / n, i % n);
             let mut cls = vec!["sd-cell"];
+            // F1: the refused cell shakes, the cells that explain the refusal flash.
+            if g.shake == Some(i) {
+                cls.push("shake");
+            }
+            if g.flash.contains(&i) {
+                cls.push("flash");
+            }
             if (c + 1) % size.bc == 0 && c + 1 < n {
                 cls.push("bx-r");
             }
@@ -483,32 +628,55 @@ fn render() {
                 let Some(band) = ts.band_of(v) else { continue };
                 let earned = g.sel.is_some_and(|i| ts.satisfied(i, v));
                 strip.push_str(&format!(
-                    "<button type=\"button\" class=\"sd-tierkey band-{band}{}\" data-sd-tier=\"{v}\"><b>{}</b><small>{}</small></button>",
+                    "<button type=\"button\" class=\"sd-tierkey band-{band}{}\" data-sd-tier=\"{v}\"><b>{}</b><small>{}</small></button>{}",
                     if earned { " earned" } else { "" },
                     dom::escape_html(&cell_label(g, v)),
-                    dom::escape_html(&t(tiermode::label_key(band)))
+                    dom::escape_html(&t(tiermode::label_key(band))),
+                    // C7 (Eric, 2026-09-22): the digit being spelled carries a
+                    // replay. Tapping the digit again would DRAW ANOTHER WORD,
+                    // so without this a player who missed the audio could never
+                    // hear that word again.
+                    if g.prompt.is_some() && g.prompt_digit == v {
+                        format!(
+                            "<button type=\"button\" class=\"sd-replay\" data-sd-replay aria-label=\"{}\">\u{25B6}</button>",
+                            dom::escape_html(&t("sd.sayAria"))
+                        )
+                    } else {
+                        String::new()
+                    }
                 ));
             }
         }
         dom::set_html("sdTiers", &strip);
 
-        // The tray: chips earned by spelling (D1), then the letters or digits.
-        let mut chips = String::new();
-        for v in 1..=n as u8 {
-            if g.unlocks.chip(v) {
-                chips.push_str(&format!(
-                    "<button type=\"button\" class=\"sd-chip\" data-sd-chip=\"{v}\">{}</button>",
-                    dom::escape_html(&cell_label(g, v))
-                ));
-            }
-        }
+        // CC-SPELLDOKU-RULES: ONE row of symbols the player picks from, in every
+        // mode. It carries F2's count, F3's dimming and D1's unlock state, so a
+        // symbol that cannot legally go anywhere reads as unavailable BEFORE the
+        // player spells anything. Word Mode draws its own richer row into the
+        // legend below (it owns the audio and the definition card), so the two
+        // never both render.
+        let ruled = match (dimming(g), g.sel) {
+            (true, Some(i)) => rules::ruled_out(&Geo::new(size), &g.entries, i),
+            _ => 0,
+        };
+        let chips: String = if g.board.is_words() || g.tier.is_some() {
+            // Word Mode picks from the legend; Tier Mode picks from the ladder
+            // strip. Neither wants a second row of the same symbols.
+            String::new()
+        } else {
+            (1..=n as u8).map(|v| symbol_button(g, v, "sd-chip", "", ruled)).collect()
+        };
         dom::set_html("sdChips", &chips);
         let typed = if g.typed.is_empty() && !g.pencil_mode {
-            if g.tier.is_some() && g.prompt.is_some() {
-                t("sd.tierSpell")
-            } else if g.tier.is_some() {
-                if g.sel.is_some() { t("sd.tierPick") } else { t("sd.pick") }
-            } else if g.sel.is_some() { t("sd.spell") } else { t("sd.pick") }
+            let c = board_copy(g);
+            let spelling = g.picked.is_some() || g.prompt.is_some();
+            if g.sel.is_none() {
+                t(c.pick_cell)
+            } else if spelling {
+                t(c.spell)
+            } else {
+                t(c.pick_symbol)
+            }
         } else {
             g.typed.clone()
         };
@@ -585,9 +753,8 @@ fn render() {
             (1..=n as u8)
                 .map(|v| {
                     format!(
-                        "<span class=\"sd-sym\"><button type=\"button\" class=\"sd-say\" data-sd-say=\"{v}\" aria-label=\"{}\"><b>{}</b> \u{25B6}</button>{}</span>",
-                        dom::escape_html(&t("sd.sayAria")),
-                        dom::escape_html(&cell_label(g, v)),
+                        "<span class=\"sd-sym\">{}{}</span>",
+                        symbol_button(g, v, "sd-say", &t("sd.sayAria"), ruled),
                         if cards {
                             format!(
                                 "<button type=\"button\" class=\"sd-def\" data-sd-def=\"{v}\" aria-label=\"{}\">?</button>",
@@ -614,6 +781,26 @@ fn note(key: &str) {
 
 /// A commit of value `v` into the selected cell, however it was entered.
 fn commit_value(v: u8, spelled: bool, verdict: Verdict) {
+    // F1 belt and braces: every path that reaches a cell passes here, so the
+    // validator sits here too. pick_symbol already refused a conflict before
+    // any spelling (I-R2); this makes I-R1 true of the write itself, whatever
+    // new path a future change adds.
+    let blocked = GAME.with(|cell| {
+        let gb = cell.borrow();
+        let g = gb.as_ref()?;
+        let i = g.sel?;
+        if !matches!(verdict, Verdict::Correct | Verdict::WrongValue) {
+            return None;
+        }
+        let geo = Geo::new(size_of(g.board.puzzle.n).expect("size"));
+        rules::validate(&geo, &g.entries, i, v)
+            .err()
+            .map(|c| (i, c.cells, i18n::tp(c.unit.key(), &[("sym", &cell_label(g, v))])))
+    });
+    if let Some((i, cells, msg)) = blocked {
+        refuse(Some(i), cells, msg);
+        return;
+    }
     let mut solved_now = false;
     GAME.with(|cell| {
         let mut gb = cell.borrow_mut();
@@ -643,13 +830,16 @@ fn commit_value(v: u8, spelled: bool, verdict: Verdict) {
             }
             Verdict::Misspelled => {
                 record_stat(|s| s.misspelled += 1);
-                dom::set_text("sdNote", &t(if g.board.is_words() { "sd.misspelledWord" } else { "sd.misspelled" }));
+                dom::set_text("sdNote", &t(board_copy(g).misspelled));
             }
             Verdict::WrongSystem => {
                 record_stat(|s| s.wrong_system += 1);
             }
         }
         g.typed.clear();
+        if matches!(verdict, Verdict::Correct | Verdict::WrongValue) {
+            g.picked = None; // placed: the next cell starts from its own pick
+        }
         g.hint_cell = None;
         g.hint_level = 0;
         if !g.solved && g.entries == g.board.puzzle.solution {
@@ -673,6 +863,7 @@ fn tier_digit(v: u8) {
         Nothing,
         Commit(u8, Verdict),
         Speak,
+        Refuse(usize, Vec<usize>, String),
     }
     let next = GAME.with(|cell| {
         let mut gb = cell.borrow_mut();
@@ -682,6 +873,17 @@ fn tier_digit(v: u8) {
         };
         if g.pencil_mode || g.entries[i] != 0 && g.board.puzzle.clues[i] != Clue::Empty {
             return Next::Nothing;
+        }
+        // F1 reaches Tier Mode too: the ladder picks the digit first, so the
+        // conflict is caught here, before a word is drawn and spoken (I-R2).
+        if rules::remaining(g.board.puzzle.n, &g.entries, v) == 0 {
+            let msg = i18n::tp("sd.allPlaced", &[("n", &g.board.puzzle.n.to_string()), ("sym", &cell_label(g, v))]);
+            return Next::Refuse(i, Vec::new(), msg);
+        }
+        let geo = Geo::new(size_of(g.board.puzzle.n).expect("size"));
+        if let Err(c) = rules::validate(&geo, &g.entries, i, v) {
+            let msg = i18n::tp(c.unit.key(), &[("sym", &cell_label(g, v))]);
+            return Next::Refuse(i, c.cells, msg);
         }
         let Some(ts) = g.tier.as_mut() else { return Next::Nothing };
         if ts.satisfied(i, v) {
@@ -701,6 +903,7 @@ fn tier_digit(v: u8) {
     });
     match next {
         Next::Commit(v, verdict) => commit_value(v, false, verdict),
+        Next::Refuse(cell, cells, msg) => refuse(Some(cell), cells, msg),
         Next::Speak => {
             speak_prompt();
             render();
@@ -763,7 +966,7 @@ fn submit_typed() {
                 }
             });
             record_stat(|s| s.misspelled += 1);
-            note("sd.tierMissed");
+            note(copy::copy(Kind::Tier).misspelled);
             let redrawn = GAME.with(|c| {
                 let mut gb = c.borrow_mut();
                 let Some(g) = gb.as_mut() else { return false };
@@ -796,29 +999,36 @@ fn submit_typed() {
                 g.typed.clear();
             }
         });
-        note("sd.tierPick");
+        note(copy::copy(Kind::Tier).pick_symbol);
         render();
         return;
     }
+    // C2: the symbol was chosen before the spelling began, so the typed word is
+    // judged against THAT symbol's word. A misspelling never places anything
+    // and never changes which symbol is on the hook.
     let res = GAME.with(|cell| {
         let gb = cell.borrow();
         let g = gb.as_ref()?;
         let i = g.sel?;
+        let v = g.picked?;
         if g.typed.trim().is_empty() {
             return None;
         }
+        // The one matcher, so Mandarin's tone rule and Vietnamese's tone row
+        // keep working: does what was typed name the symbol that was picked?
+        let right = g.board.values_for(&g.typed).contains(&v);
         let expected = g.board.puzzle.solution[i];
-        let values = g.board.values_for(&g.typed);
-        let verdict = play::verdict(&values, expected);
-        let v = match verdict {
-            Verdict::Correct => expected,
-            Verdict::WrongValue => values.first().copied().unwrap_or(0),
-            _ => 0,
+        let verdict = if !right {
+            Verdict::Misspelled
+        } else if v == expected {
+            Verdict::Correct
+        } else {
+            Verdict::WrongValue
         };
         // D13: a Word Mode misspelling joins the existing missed-words queue,
         // through its existing path, with the band the word came from.
-        let missed = match (&g.board.mode, verdict) {
-            (Mode::Words(w), Verdict::Misspelled) => w.get(expected as usize - 1).map(|s| (s.spelling.clone(), s.band, g.board.lang.clone())),
+        let missed = match (&g.board.mode, right) {
+            (Mode::Words(w), false) => w.get((v as usize).checked_sub(1)?).map(|s| (s.spelling.clone(), s.band, g.board.lang.clone())),
             _ => None,
         };
         Some((v, verdict, missed))
@@ -851,7 +1061,13 @@ fn hint() {
                 fixed[i] = g.entries[i];
             }
         }
-        let Some((cell_i, tech)) = next_step(&geo, &fixed, &restrict) else { return };
+        let Some((cell_i, tech)) = next_step(&geo, &fixed, &restrict) else {
+            // F1: the ladder cannot move because something already placed is
+            // wrong. Say which kind of thing, and point at the one tool that
+            // can find it.
+            dom::set_text("sdNote", &t(board_copy(g).hint_blocked));
+            return;
+        };
         g.hint_level = if g.hint_cell == Some(cell_i) { g.hint_level + 1 } else { 1 };
         g.hint_cell = Some(cell_i);
         g.sel = Some(cell_i);
@@ -1015,7 +1231,7 @@ pub fn wire(app: &App) {
         use wasm_bindgen::JsCast;
         let Some(target) = ev.target().and_then(|t| t.dyn_into::<web_sys::Element>().ok()) else { return };
         let Some(el) = target
-            .closest("[data-sd-cell],[data-sd-key],[data-sd-back],[data-sd-go],[data-sd-chip],[data-sd-pen],[data-sd-say],[data-sd-def],[data-sd-tier]")
+            .closest("[data-sd-cell],[data-sd-key],[data-sd-back],[data-sd-go],[data-sd-sym],[data-sd-pen],[data-sd-def],[data-sd-tier],[data-sd-replay]")
             .ok()
             .flatten()
         else {
@@ -1023,12 +1239,6 @@ pub fn wire(app: &App) {
         };
         if let Some(v) = el.get_attribute("data-sd-def").and_then(|v| v.parse::<u8>().ok()) {
             show_definition(v);
-        } else if let Some(v) = el.get_attribute("data-sd-say").and_then(|v| v.parse::<u8>().ok()) {
-            GAME.with(|c| {
-                if let Some(g) = c.borrow().as_ref() {
-                    speak(&g.board, v, || dom::set_text("sdNote", &t("sd.audioOff")));
-                }
-            });
         } else if let Some(i) = el.get_attribute("data-sd-cell").and_then(|v| v.parse::<usize>().ok()) {
             GAME.with(|c| {
                 if let Some(g) = c.borrow_mut().as_mut() {
@@ -1042,7 +1252,10 @@ pub fn wire(app: &App) {
         } else if let Some(k) = el.get_attribute("data-sd-key") {
             GAME.with(|c| {
                 if let Some(g) = c.borrow_mut().as_mut() {
-                    if g.sel.is_some() && g.typed.chars().count() < 24 {
+                    // Nothing to spell until a symbol is picked (C2). Tier
+                    // Mode's own draw counts as the pick.
+                    let armed = g.picked.is_some() || g.prompt.is_some();
+                    if g.sel.is_some() && armed && g.typed.chars().count() < 24 {
                         g.typed = type_key(&g.board.lang, &g.typed, &k);
                     }
                 }
@@ -1059,19 +1272,10 @@ pub fn wire(app: &App) {
             render();
         } else if el.get_attribute("data-sd-go").is_some() {
             submit_typed();
-        } else if let Some(v) = el.get_attribute("data-sd-chip").and_then(|v| v.parse::<u8>().ok()) {
-            let verdict = GAME.with(|c| {
-                let gb = c.borrow();
-                let g = gb.as_ref()?;
-                let i = g.sel?;
-                if !g.unlocks.chip(v) {
-                    return None;
-                }
-                Some(if g.board.puzzle.solution[i] == v { Verdict::Correct } else { Verdict::WrongValue })
-            });
-            if let Some(verdict) = verdict {
-                commit_value(v, false, verdict);
-            }
+        } else if let Some(v) = el.get_attribute("data-sd-sym").and_then(|v| v.parse::<u8>().ok()) {
+            pick_symbol(v);
+        } else if el.get_attribute("data-sd-replay").is_some() {
+            speak_prompt(); // C7: hear the pending word again, without redrawing
         } else if let Some(v) = el.get_attribute("data-sd-pen").and_then(|v| v.parse::<u8>().ok()) {
             GAME.with(|c| {
                 if let Some(g) = c.borrow_mut().as_mut() {

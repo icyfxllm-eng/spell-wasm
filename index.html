@@ -1361,6 +1361,25 @@
   .sd-cell.sel{background:rgba(255,190,90,.18);outline:2px solid var(--amber);outline-offset:-2px}
   .sd-cell.hint{box-shadow:inset 0 0 0 3px var(--teal)}
   .sd-cell.wrong{color:#ff6b6b}
+  /* CC-SPELLDOKU-RULES v1. F1: a refused placement shakes the cell it was aimed
+     at and flashes the cells that explain the refusal, in the existing error
+     token (D-R8 -- no new colour). F2: the count rides inside the chip, so chip
+     geometry is unchanged (GEOMETRY owns layout). F3: a ruled-out chip dims but
+     stays live, because dimming never stands in for validation. */
+  @keyframes sd-shake{0%,100%{transform:translateX(0)}20%{transform:translateX(-3px)}40%{transform:translateX(3px)}60%{transform:translateX(-2px)}80%{transform:translateX(2px)}}
+  @keyframes sd-flash{0%,100%{background:var(--panel)}45%{background:color-mix(in srgb,var(--bad,#e0564f) 32%,transparent)}}
+  .sd-cell.shake{animation:sd-shake .3s}
+  .sd-cell.flash{animation:sd-flash .6s}
+  .sd-n{font-style:normal;font-size:10px;font-weight:600;opacity:.6;margin-inline-start:3px;font-variant-numeric:tabular-nums}
+  .sd-chip.dim,.sd-say.dim{opacity:.4}
+  .sd-chip.spent,.sd-say.spent{opacity:.35;border-style:dashed}
+  .sd-chip.spent .sd-n,.sd-say.spent .sd-n{opacity:1}
+  .sd-chip.picked,.sd-say.picked{border-color:var(--amber);background:rgba(255,190,90,.14)}
+  .sd-chip.free,.sd-say.free{border-color:var(--teal)}
+  .sd-replay{min-width:32px;padding:6px 8px;border-radius:0 999px 999px 0;background:var(--panel);color:var(--ink);
+    border:1px solid var(--edge);border-inline-start:0;font-size:13px}
+  @media (prefers-reduced-motion:reduce){.sd-cell.shake,.sd-cell.flash{animation:none}
+    .sd-cell.flash{background:color-mix(in srgb,var(--bad,#e0564f) 32%,transparent)}}
   .sd-pen{font-size:clamp(7px,2vw,10px);color:var(--muted-2);line-height:1.1;text-align:center}
   .sd-note{min-height:1.5em;max-width:520px;margin:8px auto;text-align:center;color:var(--muted-2)}
   .sd-tray{max-width:520px;margin:0 auto;display:flex;flex-direction:column;gap:8px}
@@ -1421,6 +1440,11 @@
     .sd-keys .kb-key{padding:6px 2px;font-size:16px;min-height:40px}
     .sd-keys .kb-key.wide{max-width:72px}
     .sd-actions{gap:6px}
+    /* Pick-then-spell gave Number Mode a row of digits to pick from. At this
+       width nine of them wrap to two rows and the board pays for it, so they
+       get tighter here — one row, and the cell keeps its size. */
+    .sd-chips{gap:4px}
+    .sd-chip{min-width:0;padding:7px 6px;font-size:16px}
   }
   /* CC-WORDGRID v1 Phase A — Spell Search (app only). A slot is the word's
      length and a play button (F-S1); the grid takes drags, so it never scrolls. */
