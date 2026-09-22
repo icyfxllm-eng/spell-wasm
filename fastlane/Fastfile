@@ -306,6 +306,50 @@ platform :ios do
   # notify_external_testers is FALSE by design (Eric, 2026-08-26): the public
   # link is the invitation, so testers arrive on their own and nobody gets
   # mailed about a build they did not ask for.
+  # Tell the external testers a build is waiting.
+  #
+  #   bundle exec fastlane notify build:240
+  #
+  # submit_external_review's notify:true only works at the moment it DISTRIBUTES
+  # a build. Once a build is already with the group -- which it is as soon as it
+  # has been submitted for review -- re-running the lane is a no-op, which is
+  # why builds 237-240 sat at BETA_APPROVED with auto_notify false however many
+  # times it was run (2026-09-22).
+  #
+  # This is the API behind App Store Connect's own "Notify Testers" button. It
+  # moves the build from BETA_APPROVED to IN_BETA_TESTING within seconds, and it
+  # MAILS EVERY EXTERNAL TESTER, so it is deliberately its own lane.
+  desc "Notify external testers about an approved build"
+  lane :notify do |options|
+    build = options[:build] or UI.user_error!("pass build:NNN")
+    key = Spaceship::ConnectAPI::Token.from_json_file(File.expand_path("api_key.json", __dir__))
+    Spaceship::ConnectAPI.token = key
+    app = Spaceship::ConnectAPI::App.find("net.spellgame.app")
+    found = app.get_builds(includes: "buildBetaDetail", limit: 20).find { |b| b.version == build.to_s }
+    UI.user_error!("build #{build} is not on App Store Connect") unless found
+    before = found.build_beta_detail&.external_build_state
+    UI.important("Build #{build} is #{before}")
+    if before == "IN_BETA_TESTING"
+      UI.success("Testers already have build #{build}. Nothing to send.")
+      next
+    end
+    UI.user_error!("build #{build} is #{before}, not BETA_APPROVED -- it has not cleared review") unless before == "BETA_APPROVED"
+    resp = Spaceship::ConnectAPI.post(
+      path: "buildBetaNotifications",
+      body: { data: { type: "buildBetaNotifications",
+                      relationships: { build: { data: { type: "builds", id: found.id } } } } }
+    )
+    UI.important("POST buildBetaNotifications -> #{resp.status}")
+    sleep(5)
+    after = Spaceship::ConnectAPI::App.find("net.spellgame.app")
+                                      .get_builds(includes: "buildBetaDetail", limit: 20)
+                                      .find { |b| b.version == build.to_s }
+                                      &.build_beta_detail
+                                      &.external_build_state
+    UI.success("Build #{build} is now #{after}")
+    UI.error("Still #{after} -- the notification did not take") unless after == "IN_BETA_TESTING"
+  end
+
   desc "Submit an already-uploaded build for external Beta App Review"
   lane :submit_external_review do |options|
     build = options[:build] or UI.user_error!("pass build:NNN")
