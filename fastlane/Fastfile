@@ -309,6 +309,14 @@ platform :ios do
   desc "Submit an already-uploaded build for external Beta App Review"
   lane :submit_external_review do |options|
     build = options[:build] or UI.user_error!("pass build:NNN")
+    # What testers read in TestFlight. A build can carry its own note at
+    # fastlane/changelog/<build>.md; without one the generic description below
+    # goes out, so a forgotten file can never mail people last build's news.
+    per_build = File.expand_path("changelog/#{build}.md", __dir__)
+    # Explicit UTF-8: the note has em dashes and curly quotes, and a run
+    # without LANG/LC_ALL set reads it as US-ASCII and dies on .strip.
+    notes = File.exist?(per_build) ? File.read(per_build, encoding: "UTF-8").strip : nil
+    UI.important(notes ? "Changelog: fastlane/changelog/#{build}.md" : "Changelog: the generic one (no per-build file)")
     pilot(
       api_key_path: File.expand_path("api_key.json", __dir__),
       app_identifier: "net.spellgame.app",
@@ -327,7 +335,7 @@ platform :ios do
       notify_external_testers: options[:notify].to_s == "true",
       beta_app_feedback_email: "icyfxllm@gmail.com",
       beta_app_description: "Spell is a spelling game you play by ear. Tap the glowing orb to hear a word, then spell it on the on-screen keyboard and press Check. Replay or slow the word, use Definition/Sentence hints, and grow your chain. Fully playable offline after first load.",
-      changelog: "Tap the orb to hear a word and spell it on the on-screen keyboard. Try Replay and Slow, the Definition and Sentence hints, head-to-head mode, and Kid Mode / Big Text in Settings. Everything works offline after the first load.",
+      changelog: notes || "Tap the orb to hear a word and spell it on the on-screen keyboard. Try Replay and Slow, the Definition and Sentence hints, head-to-head mode, and Kid Mode / Big Text in Settings. Everything works offline after the first load.",
       beta_app_review_info: {
         contact_email: "icyfxllm@gmail.com",
         contact_first_name: "Eric",
