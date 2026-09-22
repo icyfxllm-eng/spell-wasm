@@ -1,0 +1,6 @@
+{
+  "_comment": "CC-AUDIO-CLARITY v1.1 F2. Written by scripts/audio-verdicts.mjs, which transcribes every served clip with two recognizers and compares against the census C8 key for that language. Never edited by hand: a verdict is evidence, and hand-editing it would make I1 a claim instead of a fact. `measured` lists the languages whose clip set has been measured end to end; F7's CI gate is strict about those and reports the rest as unmeasured.",
+  "version": 1,
+  "measured": [],
+  "clips": {}
+}

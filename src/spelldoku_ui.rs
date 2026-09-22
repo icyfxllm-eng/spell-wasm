@@ -445,6 +445,37 @@ fn board_copy(g: &Game) -> copy::Copy {
     copy::copy(Kind::of(g.board.is_words(), g.tier.is_some()))
 }
 
+/// CC-AUDIO-CLARITY v1.1 F6a in SpellDoku.
+///
+/// Eric, 2026-09-22: no reveal here. A glyph stands for a word, and no surface
+/// on the board ever spells it (v1.2 I12) -- showing the word behind one symbol
+/// would solve every cell carrying that glyph, for the rest of the board. So
+/// the rescue offers what helps without giving the board away: the word again,
+/// slowly. Being genuinely stuck is what Hint is for.
+pub fn rescue_slow() {
+    let target = GAME.with(|c| {
+        let gb = c.borrow();
+        let g = gb.as_ref()?;
+        // Whatever the player is being asked for right now: the symbol they
+        // picked, or the word Tier Mode drew.
+        g.picked.map(|v| (g.board.clone(), v))
+    });
+    if let Some((board, v)) = target {
+        speak_at(&board, v, "slow", || {});
+        return;
+    }
+    // Tier Mode's pending draw is spoken through its own path.
+    speak_prompt_at("slow");
+}
+
+pub fn open_rescue() {
+    dom::set_hidden("sdRescue", false);
+}
+
+pub fn close_rescue() {
+    dom::set_hidden("sdRescue", true);
+}
+
 /// F3 applies on the gentler tiers only (D-R2). Spell Jr plays Easy and Medium
 /// spans, so it is covered without naming it (D-R7).
 fn dimming(g: &Game) -> bool {
@@ -567,13 +598,20 @@ fn pick_symbol(v: u8) {
 /// Play a symbol's word through the one audio resolver. Chinese is spoken from
 /// its characters with the reading forced (CC-ZH-TONE F6).
 fn speak(board: &Board, v: u8, on_fail: impl FnOnce() + 'static) {
+    speak_at(board, v, "normal", on_fail);
+}
+
+/// CC-AUDIO-CLARITY F6a: the same word, at the variant the rescue asks for.
+/// SpellDoku spoke only at "normal" before this -- a player who could not make
+/// a word out had nothing to try.
+fn speak_at(board: &Board, v: u8, variant: &str, on_fail: impl FnOnce() + 'static) {
     let Some(spelling) = board.spelling(v) else { return };
     match &board.mode {
         Mode::Words(w) if board.lang == "zh" => {
             let hanzi = w.get(v as usize - 1).and_then(|s| s.display.clone()).unwrap_or_default();
-            crate::api::play_word_with(&hanzi, Some(&spelling), "normal", 1.0, &board.lang, on_fail);
+            crate::api::play_word_with(&hanzi, Some(&spelling), variant, 1.0, &board.lang, on_fail);
         }
-        _ => crate::api::play_word(&spelling, "normal", 1.0, &board.lang, on_fail),
+        _ => crate::api::play_word(&spelling, variant, 1.0, &board.lang, on_fail),
     }
 }
 
@@ -1079,6 +1117,10 @@ fn tier_digit(v: u8) {
 /// The drawn word, through the one audio resolver (I1). zh speaks its characters
 /// with the reading forced, as everywhere else.
 fn speak_prompt() {
+    speak_prompt_at("normal");
+}
+
+fn speak_prompt_at(variant: &str) {
     let said = GAME.with(|cell| {
         let gb = cell.borrow();
         let g = gb.as_ref()?;
@@ -1088,9 +1130,9 @@ fn speak_prompt() {
     if let Some((spelling, display, lang)) = said {
         match display {
             Some(hanzi) if lang == "zh" => {
-                crate::api::play_word_with(&hanzi, Some(&spelling), "normal", 1.0, &lang, || {})
+                crate::api::play_word_with(&hanzi, Some(&spelling), variant, 1.0, &lang, || {})
             }
-            _ => crate::api::play_word(&spelling, "normal", 1.0, &lang, || {}),
+            _ => crate::api::play_word(&spelling, variant, 1.0, &lang, || {}),
         }
     }
 }
@@ -1345,6 +1387,11 @@ pub fn wire(app: &App) {
     }
     dom::on_click("sdExit", close);
     dom::on_click("sdHowOk", || dom::set_hidden("sdHow", true));
+    // CC-AUDIO-CLARITY F6a — slow replay, the one rescue step this board can
+    // offer without giving itself away.
+    dom::on_click("sdCantHear", open_rescue);
+    dom::on_click("sdRescueClose", close_rescue);
+    dom::on_click("sdRescueSlow", rescue_slow);
     {
         // F7: reopened from How to play, never from the legend's "?" -- that
         // stays the definition card (D15).

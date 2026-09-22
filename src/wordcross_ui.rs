@@ -315,7 +315,11 @@ fn render() {
             ));
         }
         dom::set_html("xwGrid", &html);
-        let _ = dom::el("xwGrid").set_attribute("style", &format!("--xw-w:{}", grid.w));
+        // Both dimensions, because a crossword is not square and its height
+        // varies puzzle to puzzle: the CSS sizes a cell from whichever of the
+        // two runs out first, so a tall grid shrinks instead of pushing the
+        // keyboard off a phone.
+        let _ = dom::el("xwGrid").set_attribute("style", &format!("--xw-w:{};--xw-h:{}", grid.w, grid.h));
 
         // F-C1: a clue is a number, a length and a play button. Never text.
         let mut clues = String::new();
@@ -337,17 +341,24 @@ fn render() {
         }
         dom::set_html("xwClues", &clues);
 
-        let keys: String = crate::wordsearch_ui::layout(&g.lang)
+        // Backspace rides the LAST letter row rather than claiming one of its
+        // own: a row is ~44 px, and a crossword on a small phone does not have
+        // it to spare (the grid, the clue list and the keyboard ran 205 px past
+        // an iPhone SE). Same fix SpellDoku had on 2026-09-21.
+        let mut lines: Vec<String> = crate::wordsearch_ui::layout(&g.lang)
             .into_iter()
             .map(|row| {
-                let ks: String = row
-                    .iter()
+                row.iter()
                     .map(|k| format!("<button type=\"button\" class=\"kb-key\" data-xw-key=\"{0}\">{0}</button>", dom::escape_html(k)))
-                    .collect();
-                format!("<div class=\"sd-row\">{ks}</div>")
+                    .collect::<String>()
             })
-            .collect::<String>()
-            + "<div class=\"sd-row\"><button type=\"button\" class=\"kb-key wide\" data-xw-back>\u{232B}</button></div>";
+            .collect();
+        const BACK: &str = "<button type=\"button\" class=\"kb-key wide\" data-xw-back>\u{232B}</button>";
+        match lines.last_mut() {
+            Some(last) => last.push_str(BACK),
+            None => lines.push(BACK.to_string()),
+        }
+        let keys: String = lines.into_iter().map(|l| format!("<div class=\"sd-row\">{l}</div>")).collect();
         dom::set_html("xwKeys", &keys);
 
         match &g.phase {
@@ -363,6 +374,28 @@ fn render() {
 
 fn speak_word(lang: &str, word: &str) {
     crate::api::play_word(word, "normal", 1.0, lang, || note(&t("ws.audioOff")));
+}
+
+/// CC-AUDIO-CLARITY v1.1 F6a — the clue again, slowly. Spell Cross only ever
+/// spoke at normal speed before this.
+pub fn rescue_slow() {
+    let said = GAME.with(|c| {
+        let gb = c.borrow();
+        let g = gb.as_ref()?;
+        // `at` is the clue being answered.
+        Some((g.lang.clone(), g.grid.words.get(g.at)?.word.clone()))
+    });
+    if let Some((lang, word)) = said {
+        crate::api::play_word(&word, "slow", 1.0, &lang, || note(&t("ws.audioOff")));
+    }
+}
+
+pub fn open_rescue() {
+    dom::set_hidden("xwRescue", false);
+}
+
+pub fn close_rescue() {
+    dom::set_hidden("xwRescue", true);
 }
 
 fn say(i: usize) {
@@ -566,6 +599,11 @@ pub fn wire(app: &App) {
     {
         let a = app.clone();
         dom::on_click("xwNew", move || again(&a));
+    }
+    {
+        dom::on_click("xwCantHear", open_rescue);
+        dom::on_click("xwRescueClose", close_rescue);
+        dom::on_click("xwRescueSlow", rescue_slow);
     }
     {
         let a = app.clone();

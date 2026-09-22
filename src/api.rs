@@ -279,6 +279,22 @@ fn play_chain(
     let (w, v, l, pyc) = (word.clone(), variant.clone(), lang.clone(), py.clone());
     let next: Box<dyn FnOnce()> =
         Box::new(move || play_chain(order, i + 1, w, pyc, v, rate, l, on_fail));
+    // CC-AUDIO-CLARITY v1.1 F2 step 5 / I1 — a clip whose verdict is FAIL is
+    // never heard. Both recognizers failed to hear the word in it, and a clip a
+    // machine cannot make out is not one a learner should be graded on.
+    //
+    // It is a PRECONDITION, not a fallback: the source is skipped and the
+    // existing router moves on exactly as it would for a clip that failed to
+    // load. Nothing here chooses what plays instead (I5).
+    //
+    // The rendered sources carry a verdict; the device's own voice cannot (C1
+    // HALT -- there is no clip to transcribe and no hash to key one on), which
+    // is the hole this file cannot close by itself.
+    let checked = matches!(src, Source::Human | Source::Pack | Source::ServerCache);
+    if checked && !crate::audio_verdict::servable(&lang, &word, &variant) {
+        next();
+        return;
+    }
     match src {
         Source::Human => play_human(&word, &variant, rate, &lang, next),
         Source::Pack => play_pack(&word, &variant, rate, &lang, next),

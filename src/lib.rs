@@ -146,6 +146,7 @@ mod spelldoku_tier_preview; // CC-SPELLDOKU v1.3 Done #11: the Gig B audit sheet
 mod spelldoku_ui; // CC-SPELLDOKU v1 — the screen (app only)
 #[cfg(test)]
 mod human_audio_census; // CC-HUMAN-AUDIO Phase A: bank dump for the census
+mod audio_verdict; // CC-AUDIO-CLARITY F2 — a FAIL clip is never served
 #[cfg(test)]
 mod void_round; // CC-AUDIO-CLARITY F6a — a void records nothing
 #[cfg(all(test, not(feature = "web")))]

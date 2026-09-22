@@ -335,21 +335,30 @@ fn render() {
                 dom::set_text("wsLockCount", &format!("{} / {}", at + 1, order.len()));
                 dom::set_text("wsTyped", typed);
                 dom::toggle_class("wsSkip", "btn-hide", p.tier.lock_in_required());
-                let mut k = String::new();
-                for row in layout(&g.lang) {
-                    k.push_str("<div class=\"sd-row\">");
-                    for c in row {
-                        k.push_str(&format!(
-                            "<button type=\"button\" class=\"kb-key\" data-ws-key=\"{0}\">{0}</button>",
-                            dom::escape_html(&c)
-                        ));
-                    }
-                    k.push_str("</div>");
+                // Backspace and Lock It In ride the LAST letter row instead of
+                // claiming one of their own -- the same ~44 px that SpellDoku
+                // and Spell Cross got back, and the reason this screen now fits
+                // an iPhone SE.
+                let mut lines: Vec<String> = layout(&g.lang)
+                    .into_iter()
+                    .map(|row| {
+                        row.iter()
+                            .map(|c| {
+                                format!(
+                                    "<button type=\"button\" class=\"kb-key\" data-ws-key=\"{0}\">{0}</button>",
+                                    dom::escape_html(c)
+                                )
+                            })
+                            .collect::<String>()
+                    })
+                    .collect();
+                const COMMIT: &str = "<button type=\"button\" class=\"kb-key wide\" data-ws-back>\u{232B}</button>\
+                                      <button type=\"button\" class=\"kb-key wide go\" data-ws-go>\u{2713}</button>";
+                match lines.last_mut() {
+                    Some(last) => last.push_str(COMMIT),
+                    None => lines.push(COMMIT.to_string()),
                 }
-                k.push_str(
-                    "<div class=\"sd-row\"><button type=\"button\" class=\"kb-key wide\" data-ws-back>\u{232B}</button>\
-                     <button type=\"button\" class=\"kb-key wide go\" data-ws-go>\u{2713}</button></div>",
-                );
+                let k: String = lines.into_iter().map(|l| format!("<div class=\"sd-row\">{l}</div>")).collect();
                 dom::set_html("wsKeys", &k);
             }
             Phase::Done { stars } => {
@@ -373,6 +382,30 @@ fn play(i: usize, slow: bool) {
     dom::set_html("wsMeaning", "");
     render();
     crate::api::play_word(&word, if slow { "slow" } else { "normal" }, 1.0, &lang, || note(&t("ws.audioOff")));
+}
+
+/// CC-AUDIO-CLARITY v1.1 F6a — the word again, slowly, whatever the tier.
+/// Spell Search had a slow clip already, but only where the TIER granted it: a
+/// player on a harder tier who could not make a word out had nothing to try.
+pub fn rescue_slow() {
+    let Some((word, lang)) = GAME.with(|c| {
+        let gb = c.borrow();
+        let g = gb.as_ref()?;
+        let i = g.active?;
+        Some((g.puzzle.targets.get(i)?.word.clone(), g.lang.clone()))
+    }) else {
+        note(&t("ws.pickSlot"));
+        return;
+    };
+    crate::api::play_word(&word, "slow", 1.0, &lang, || note(&t("ws.audioOff")));
+}
+
+pub fn open_rescue() {
+    dom::set_hidden("wsRescue", false);
+}
+
+pub fn close_rescue() {
+    dom::set_hidden("wsRescue", true);
 }
 
 fn play_lock_in_word() {
@@ -636,6 +669,11 @@ pub fn wire(app: &App) {
     {
         let a = app.clone();
         dom::on_click("wsNext", move || again(&a));
+    }
+    {
+        dom::on_click("wsCantHear", open_rescue);
+        dom::on_click("wsRescueClose", close_rescue);
+        dom::on_click("wsRescueSlow", rescue_slow);
     }
     {
         let a = app.clone();

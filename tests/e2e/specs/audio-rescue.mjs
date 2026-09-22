@@ -31,7 +31,9 @@ export async function run(browser, base, suite) {
       assert(!(await page.$eval('#cantHearBtn', (e) => e.disabled)), 'the rescue is offered once audio is');
       await page.click('#cantHearBtn');
       assert(await page.$eval('#rescuePanel', (e) => !e.hasAttribute('hidden')), 'the panel opens');
-      const steps = await page.$$eval('.rescue-steps button', (b) => b.map((x) => x.id));
+      // Scoped to THIS panel: every mode has a rescue now, and an unscoped
+      // selector matches all four.
+      const steps = await page.$$eval('#rescuePanel .rescue-steps button', (b) => b.map((x) => x.id));
       assertEq(JSON.stringify(steps), JSON.stringify(['rescueSlow', 'rescueShow']), 'exactly the built steps');
     } finally { await ctx.close(); }
   });

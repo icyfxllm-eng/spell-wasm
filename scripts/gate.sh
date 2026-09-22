@@ -161,6 +161,10 @@ node scripts/spell-jr-name-check.mjs || { echo "GATE FAIL: a retired name for Sp
 node scripts/spell-jr-name-check.mjs --selftest || { echo "GATE FAIL: spell-jr-name selftest — the gate no longer bites"; exit 1; }
 # CC-ONBOARD-JR I3: src/experience.rs is the one tier authority. A new tier list
 # elsewhere in production Rust fails unless allowlisted with its reason.
+# CC-AUDIO-CLARITY v1.1 F7: no clip that would be served may carry verdict
+# Fail, and no voice may differ in variety from the bank it is graded against.
+# Strict about measured languages; the report names the unmeasured ones.
+node scripts/audio-clarity-check.mjs || { echo "GATE FAIL: audio clarity (F7)"; exit 1; }
 node scripts/tier-list-check.mjs || { echo "GATE FAIL: a tier list outside the resolver"; exit 1; }
 node scripts/tier-list-check.mjs --selftest || { echo "GATE FAIL: tier-list selftest — the gate no longer bites"; exit 1; }
 

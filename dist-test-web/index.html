@@ -1171,7 +1171,12 @@
   .sd-cell.flash{animation:sd-flash .6s}
   /* CC-AUDIO-CLARITY F6a. The rescue is a panel, not a screen: it opens over
      the play surface and every step it offers is one the player can act on. */
-  .rescue{max-width:520px;margin:8px auto 0;padding:12px;border-radius:12px;background:var(--panel-2);
+  /* The rescue OVERLAYS the screen it belongs to. In flow it pushed Spell
+     Cross 590 px past the viewport on a phone, which is the same mistake the
+     How-to-play card made: a panel that explains a screen must not shove the
+     screen out of the way. Fixed, so it anchors the same in all four modes. */
+  .rescue{position:fixed;left:12px;right:12px;top:22%;z-index:70;max-width:496px;margin-inline:auto;
+    padding:14px;border-radius:14px;background:var(--panel-2);box-shadow:0 8px 30px rgba(0,0,0,.45);
     border:1px solid var(--edge);color:var(--ink);text-align:center}
   .rescue[hidden]{display:none}
   .rescue p{margin:0 0 8px;font-weight:600}
@@ -1260,6 +1265,32 @@
        get tighter here — one row, and the cell keeps its size. */
     .sd-chips{gap:4px}
     .sd-chip{min-width:0;padding:7px 6px;font-size:16px}
+    /* CC-WORDGRID Spell Cross on a phone. Measured at 375x667: the stack ran
+       205 px past the screen -- grid 351, clue list 226, keyboard 172. The
+       board is what has to stay visible, so the CLUE LIST gets a box of its own
+       and scrolls inside it, the way a crossword's clues always have. */
+    .ws-screen{padding:max(8px,env(safe-area-inset-top)) 10px max(10px,env(safe-area-inset-bottom))}
+    .ws-wrap{gap:5px}
+    /* Spell Search on a phone: the word list is a checklist, so it scrolls in
+       its own box rather than pushing the grid off the screen (measured 48 px
+       over at 375x667, with the list alone taking 186). */
+    /* min-height:0 is load-bearing: as a flex child the default min-height:auto
+       refuses to shrink below the content, so overflow-y never engages and the
+       list spills instead of scrolling (the scroll law, AUDITPASS F4). */
+    .ws-slots{max-height:126px;overflow-y:auto;min-height:0;scrollbar-width:thin;gap:4px}
+    .ws-slot{padding:2px 4px}
+    /* A cell is sized by whichever runs out first, the width or the height
+       budget. A crossword is not square and its shape changes every puzzle, so
+       a width cap alone left tall grids pushing the keyboard off the screen.
+       43vh is what is left once the header, note, clue box and keyboard have
+       taken theirs. */
+    .xw-grid{aspect-ratio:var(--xw-w)/var(--xw-h);grid-template-rows:repeat(var(--xw-h),1fr);
+      max-height:43vh;max-width:min(520px,100%);width:auto;align-self:center;margin-inline:auto}
+    .xw-clues{grid-template-columns:repeat(auto-fill,minmax(104px,1fr));gap:3px;max-height:118px;overflow-y:auto;
+      min-height:0;scrollbar-width:thin;margin-top:5px}
+    .xw-clue{padding:2px 5px}
+    .xw-len{font-size:12px}
+    .ws-note{min-height:1.1em}
   }
   /* CC-WORDGRID v1 Phase A — Spell Search (app only). A slot is the word's
      length and a play button (F-S1); the grid takes drags, so it never scrolls. */
@@ -1294,8 +1325,8 @@
   @media (prefers-reduced-motion:no-preference){.ws-cell.trap{transition:background .2s}}
   /* CC-WORDGRID v1 Phase B — Spell Cross. A clue is a number, a length and a
      play button: the word itself is never written down (D1, F-C1). */
-  .xw-grid{--xw-w:9;display:grid;grid-template-columns:repeat(var(--xw-w),1fr);gap:1px;max-width:520px;margin:0 auto;touch-action:manipulation}
-  .xw-cell{position:relative;aspect-ratio:1;display:flex;align-items:center;justify-content:center;background:var(--panel);
+  .xw-grid{--xw-w:9;--xw-h:9;display:grid;grid-template-columns:repeat(var(--xw-w),1fr);gap:1px;max-width:520px;margin:0 auto;touch-action:manipulation}
+  .xw-cell{position:relative;aspect-ratio:1;min-width:0;min-height:0;display:flex;align-items:center;justify-content:center;background:var(--panel);
     border:1px solid var(--edge);border-radius:2px;color:var(--ink);font-family:var(--mono);font-size:clamp(11px,3.6vw,20px);text-transform:lowercase}
   .xw-cell.blank{background:transparent;border-color:transparent}
   .xw-cell small{position:absolute;top:0;inset-inline-start:1px;font-size:8px;color:var(--muted-2);font-family:var(--body)}
@@ -2637,9 +2668,20 @@
       <select id="sdTier" aria-label="Symbols"></select>
       <button class="ghost" id="sdDaily" data-i18n="sd.daily">Daily</button>
       <button class="ghost" id="sdHowBtn" data-i18n="sd.howToPlay" aria-label="How to play">?</button>
+      <button class="ghost" id="sdCantHear" data-i18n="btn.cantHear">Can't hear it</button>
     </div>
     <div class="sd-grid" id="sdGrid"></div>
     <div class="sd-legend" id="sdLegend"></div>
+    <!-- CC-AUDIO-CLARITY F6a. No reveal here: a glyph stands for a word and no
+         surface on the board may spell it (v1.2 I12), so showing one would
+         solve every cell carrying that glyph. -->
+    <div class="rescue" id="sdRescue" hidden role="group">
+      <p data-i18n="rescue.title">Can't hear it?</p>
+      <div class="rescue-steps">
+        <button class="ghost" id="sdRescueSlow" data-i18n="rescue.slow">Hear it slowly</button>
+      </div>
+      <button class="ghost" id="sdRescueClose" data-i18n="rescue.close">Back</button>
+    </div>
     <!-- F7: shown once per profile on the first letters board, and reopenable
          from How to play. It sits over the legend, which is what it explains. -->
     <div class="sd-how" id="sdHow" hidden role="note">
@@ -2671,6 +2713,7 @@
       <h2 id="wsTitle" data-i18n="ws.name">Spell Search</h2>
       <select id="wsPick" aria-label="Level"></select>
       <button class="ghost" id="wsDaily" data-i18n="ws.daily">Daily</button>
+      <button class="ghost" id="wsCantHear" data-i18n="btn.cantHear">Can't hear it</button>
     </div>
     <div class="ws-wrap">
       <div class="ws-note" id="wsNote" aria-live="polite"></div>
@@ -2691,6 +2734,15 @@
         </div>
         <div class="sd-typed" id="wsTyped" dir="auto" aria-live="polite"></div>
         <div class="sd-keys" id="wsKeys"></div>
+    <!-- CC-AUDIO-CLARITY F6a: the word again, slowly, on demand. -->
+    <div class="rescue" id="wsRescue" hidden role="group">
+      <p data-i18n="rescue.title">Can't hear it?</p>
+      <div class="rescue-steps">
+        <button class="ghost" id="wsRescueSlow" data-i18n="rescue.slow">Hear it slowly</button>
+      </div>
+      <button class="ghost" id="wsRescueClose" data-i18n="rescue.close">Back</button>
+    </div>
+
         <div class="sd-actions"><button class="ghost" id="wsSkip" data-i18n="ws.skip">Skip</button></div>
       </div>
       <div id="wsDone" class="ws-lock btn-hide">
@@ -2709,6 +2761,7 @@
       <select id="xwPick" aria-label="Level"></select>
       <button class="ghost" id="xwNew" data-i18n="xw.new">New crossword</button>
       <button class="ghost" id="xwDaily" data-i18n="ws.daily">Daily</button>
+      <button class="ghost" id="xwCantHear" data-i18n="btn.cantHear">Can't hear it</button>
     </div>
     <div class="ws-wrap">
       <div class="ws-note" id="xwNote" aria-live="polite"></div>
@@ -2725,6 +2778,15 @@
         <div class="sd-typed" id="xwTyped" dir="auto" aria-live="polite"></div>
       </div>
       <div class="sd-keys" id="xwKeys"></div>
+    <!-- CC-AUDIO-CLARITY F6a: the word again, slowly, on demand. -->
+    <div class="rescue" id="xwRescue" hidden role="group">
+      <p data-i18n="rescue.title">Can't hear it?</p>
+      <div class="rescue-steps">
+        <button class="ghost" id="xwRescueSlow" data-i18n="rescue.slow">Hear it slowly</button>
+      </div>
+      <button class="ghost" id="xwRescueClose" data-i18n="rescue.close">Back</button>
+    </div>
+
       <div id="xwFallback" class="ws-lock btn-hide">
         <div class="sd-actions"><button class="btn btn-check" id="xwToSearch" data-i18n="xw.toSearch">Play Spell Search</button></div>
       </div>
