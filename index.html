@@ -1324,15 +1324,34 @@
   /* CC-SPELLDOKU v1 — Sudoku committed by spelling (app only). */
   .sd-screen{position:fixed;inset:0;background:var(--bg,#0e1420);z-index:60;display:none;overflow:auto;min-height:0;
     padding:max(12px,env(safe-area-inset-top)) 12px max(16px,env(safe-area-inset-bottom))}
-  .sd-screen.show{display:block}
+  /* The screen is a column and the BOARD is the part that gives way: the
+     legend, the typed line and the keyboard keep their natural height and the
+     grid shrinks into whatever is left, so a 9x9 fits a small phone without
+     scrolling. If even the shrunk board would be too small the column
+     overflows and the screen scrolls, exactly as it used to. */
+  .sd-screen.show{display:flex;flex-direction:column}
+  /* Each block under the screen carries max-width:520px;margin:0 auto, which
+     centred it fine as a block but, as a FLEX item, auto margins switch off
+     stretching -- every block would shrink-wrap its content and the widest one
+     would push the screen sideways. Hand them back the content width; the grid
+     sizes itself (below) and is the one exception. */
+  .sd-screen.show > :not(.sd-grid){flex:0 0 auto;width:min(520px,100%);align-self:center}
   .sd-top{display:flex;align-items:center;gap:8px;max-width:520px;margin:0 auto 10px;flex-wrap:wrap}
   .sd-top h2{margin:0;font-size:18px;flex:1}
   .sd-top select{background:var(--panel-2);color:var(--ink);border:1px solid var(--edge);border-radius:10px;padding:8px;font-size:16px}
-  .sd-grid{--sd-n:9;display:grid;grid-template-columns:repeat(var(--sd-n),1fr);max-width:520px;margin:0 auto;
-    border:2px solid var(--ink);border-radius:6px;overflow:hidden;min-height:0}
-  .sd-cell{aspect-ratio:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1px;
+  .sd-grid{container-type:size;--sd-n:9;display:grid;grid-template-columns:repeat(var(--sd-n),1fr);grid-template-rows:repeat(var(--sd-n),1fr);
+    aspect-ratio:1;flex:1 1 auto;align-self:center;width:auto;max-width:min(520px,100%);
+    max-height:min(520px,calc(100vw - 24px));min-height:150px;
+    border:2px solid var(--ink);border-radius:6px;overflow:hidden}
+  .sd-cell{min-width:0;min-height:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1px;
     background:var(--panel);color:var(--ink);border:0;border-inline-end:1px solid var(--edge);border-bottom:1px solid var(--edge);
-    font-family:var(--mono);font-size:clamp(14px,4.5vw,22px);padding:0;cursor:pointer}
+    font-family:var(--mono);padding:0;cursor:pointer;
+    /* Two declarations on purpose: the deployment target is iOS 15, which has
+       no container queries, so it keeps the width-based size. iOS 16+ takes
+       the second and sizes the glyph from the CELL, which matters now that a
+       short screen can shrink the board. */
+    font-size:clamp(13px,4.5vw,22px);
+    font-size:clamp(13px,min(4.5vw,calc(100cqmin/var(--sd-n)*.46)),22px)}
   .sd-cell.bx-r{border-inline-end:2px solid var(--ink)}
   .sd-cell.bx-b{border-bottom:2px solid var(--ink)}
   .sd-cell.given{font-weight:700;cursor:default;background:var(--panel-2)}
@@ -1375,6 +1394,34 @@
   :dir(rtl) .sd-def{border-radius:999px 0 0 999px}
   .sd-badge{max-width:520px;margin:4px auto 0;text-align:center;color:var(--muted-2);font-size:.85em;min-height:0}
   .sd-badge:empty{display:none}
+  /* Phone fit (CC-SPELLDOKU-GEOMETRY census C4): on a 375x667 screen the stack
+     ran 263 px past the viewport. The keyboard was 202 px of that and the
+     legend 117 px, so both get tighter here -- and only here, since a tablet
+     has the room and should keep the larger targets. */
+  @media (max-width:480px){
+    .sd-screen{padding:max(8px,env(safe-area-inset-top)) 10px max(10px,env(safe-area-inset-bottom))}
+    .sd-top{margin-bottom:6px;gap:6px;flex-wrap:nowrap;overflow-x:auto;scrollbar-width:none}
+    .sd-top::-webkit-scrollbar{display:none}
+    /* The dialog still needs its title for aria-labelledby, but on a phone the
+       screen you just opened does not need to name itself in 18px. Zero-sized
+       and in flow -- absolutely positioned, it landed past the right edge of
+       the nowrap header and gave the whole screen a horizontal scrollbar. */
+    .sd-top h2{flex:0 0 0;width:0;height:0;margin:0;padding:0;overflow:hidden}
+    .sd-top select{padding:6px;flex:0 1 auto;min-width:0}
+    .sd-top button{flex:0 0 auto}
+    .sd-legend{gap:4px;margin-top:6px}
+    .sd-say{min-width:34px;padding:4px 7px;font-size:14px}
+    .sd-say b{font-size:16px}
+    .sd-def{min-width:24px;padding:4px 6px;font-size:13px}
+    .sd-note{min-height:1.3em;margin:5px auto}
+    .sd-typed{min-height:1.4em;font-size:18px}
+    .sd-tray{gap:5px}
+    .sd-keys{gap:4px}
+    .sd-row{gap:3px}
+    .sd-keys .kb-key{padding:6px 2px;font-size:16px;min-height:40px}
+    .sd-keys .kb-key.wide{max-width:72px}
+    .sd-actions{gap:6px}
+  }
   /* CC-WORDGRID v1 Phase A — Spell Search (app only). A slot is the word's
      length and a play button (F-S1); the grid takes drags, so it never scrolls. */
   .ws-screen{position:fixed;inset:0;background:var(--bg,#0e1420);z-index:60;display:none;overflow:auto;min-height:0;

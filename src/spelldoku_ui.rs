@@ -508,27 +508,42 @@ fn render() {
                     dom::escape_html(c)
                 )
             };
-            for row in rows.iter().chain(std::iter::once(&extras)).filter(|r| !r.is_empty()) {
-                k.push_str("<div class=\"sd-row\">");
-                for c in row {
-                    k.push_str(&key(c));
-                }
-                k.push_str("</div>");
-            }
+            // Every row this language types: its letters, then its extras, then
+            // Vietnamese tone marks. Backspace and Lock It In ride along on the
+            // LAST of them rather than claiming a row of their own -- a row is
+            // ~52 px, which a 9x9 board on a small phone does not have to spare
+            // (the geometry census measured a 263 px overrun). This is also how
+            // a phone keyboard normally places its backspace.
+            let mut lines: Vec<String> = rows
+                .iter()
+                .chain(std::iter::once(&extras))
+                .filter(|r| !r.is_empty())
+                .map(|row| row.iter().map(|c| key(c)).collect::<String>())
+                .collect();
             if g.board.lang == "vi" {
+                lines.push(
+                    VI_TONE_KEYS
+                        .iter()
+                        .map(|t| {
+                            format!(
+                                "<button type=\"button\" class=\"kb-key\" data-sd-key=\"{0}\" aria-label=\"tone mark\">a{0}</button>",
+                                t
+                            )
+                        })
+                        .collect::<String>(),
+                );
+            }
+            const COMMIT: &str = "<button type=\"button\" class=\"kb-key wide\" data-sd-back>\u{232B}</button>\
+                                  <button type=\"button\" class=\"kb-key wide go\" data-sd-go>\u{2713}</button>";
+            match lines.last_mut() {
+                Some(last) => last.push_str(COMMIT),
+                None => lines.push(COMMIT.to_string()),
+            }
+            for line in lines {
                 k.push_str("<div class=\"sd-row\">");
-                for t in VI_TONE_KEYS {
-                    k.push_str(&format!(
-                        "<button type=\"button\" class=\"kb-key\" data-sd-key=\"{0}\" aria-label=\"tone mark\">a{0}</button>",
-                        t
-                    ));
-                }
+                k.push_str(&line);
                 k.push_str("</div>");
             }
-            k.push_str(
-                "<div class=\"sd-row\"><button type=\"button\" class=\"kb-key wide\" data-sd-back>\u{232B}</button>\
-                 <button type=\"button\" class=\"kb-key wide go\" data-sd-go>\u{2713}</button></div>",
-            );
             k
         };
         dom::set_html("sdKeys", &keys);

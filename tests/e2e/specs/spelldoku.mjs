@@ -303,6 +303,40 @@ export async function run(browser, base, suite) {
     } finally { await ctx.close(); }
   });
 
+  // Eric, 2026-09-21: "fix the keyboard and legend so 9x9 fits". The whole
+  // screen must be reachable on the smallest phone the harness models without
+  // scrolling -- board, legend, typed line, keyboard and actions at once -- in
+  // BOTH modes, because Word Mode carries a legend that Number Mode does not.
+  // The pitch floor is what stops a future change from "fitting" the screen by
+  // shrinking the board into nothing.
+  for (const [mode, cfg, floor] of [['numbers', '9-easy', 36], ['words', '9-medium', 30]]) {
+    await suite.test(`spelldoku_nine_fits_a_small_phone_${mode}`, async () => {
+      const { ctx, page } = await openApp(browser, base, { lang: 'en' }); // 375x667
+      try {
+        await openSpellDoku(page);
+        await pick(page, cfg);
+        const m = await page.evaluate(() => {
+          const s = document.getElementById('sdScreen');
+          const c = document.querySelector('.sd-cell');
+          return {
+            vOver: s.scrollHeight - s.clientHeight,
+            hOver: s.scrollWidth - s.clientWidth,
+            pitch: c.getBoundingClientRect().width,
+            keysVisible: document.querySelectorAll('#sdKeys .kb-key').length,
+            commit: !!document.querySelector('#sdKeys [data-sd-go]'),
+            back: !!document.querySelector('#sdKeys [data-sd-back]'),
+            rows: document.querySelectorAll('#sdKeys .sd-row').length,
+          };
+        });
+        assert(m.vOver <= 0, `${mode}: the stack fits 667 px (overruns by ${m.vOver})`);
+        assert(m.hOver <= 0, `${mode}: nothing scrolls sideways (over by ${m.hOver})`);
+        assert(m.pitch >= floor, `${mode}: the board keeps a ${floor} px cell (got ${m.pitch.toFixed(1)})`);
+        assert(m.commit && m.back, `${mode}: backspace and lock-it-in are both reachable`);
+        assertEq(m.rows, 3, `${mode}: three key rows -- the commit keys ride on the last one`);
+      } finally { await ctx.close(); }
+    });
+  }
+
   // Eric's ruling, 2026-09-21: 12x12 is cut. It was measured at a 29 px cell
   // with a 16.9 px glyph on an iPhone SE, under the 17 px floor, and the
   // screen scrolled 258 px. No size but 4, 6 and 9 is ever offered.
