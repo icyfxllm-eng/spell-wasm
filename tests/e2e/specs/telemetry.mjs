@@ -17,6 +17,9 @@ const KID = JSON.stringify({ verdict: 'kid', checkedAt: 1700000000 });
 function endpoint({ on = true, down = false } = {}) {
   const posts = [];
   const flagGets = [];
+  // Switchable so one session can alternate healthy and refused rounds; see
+  // endpoint_down_costs_no_round_latency.
+  let refusing = down;
   const handler = (route) => {
     const req = route.request();
     const url = req.url();
@@ -24,13 +27,13 @@ function endpoint({ on = true, down = false } = {}) {
       flagGets.push(url);
       return route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify({ telemetry_enabled: on }) });
     }
-    if (down) return route.abort('connectionrefused');
+    if (refusing) return route.abort('connectionrefused');
     let raw = req.postDataBuffer() || Buffer.alloc(0);
     if ((req.headers()['content-encoding'] || '') === 'gzip') raw = gunzipSync(raw);
     posts.push({ path: new URL(url).pathname, text: raw.toString('utf8'), headers: req.headers() });
     return route.fulfill({ status: 204, body: '' });
   };
-  return { handler, posts, flagGets };
+  return { handler, posts, flagGets, setDown: (v) => { refusing = v; } };
 }
 
 // An uncaught error carrying text that must never leave the device.
@@ -74,7 +77,7 @@ const feedbackPainted = (page) => page.waitForFunction(() => {
 // Play `rounds` words: every third answer wrong, an error raised and a flush
 // forced every round so telemetry is busy the whole time. Returns what the
 // player saw, and how long each check took to paint its verdict.
-async function playRounds(page, rounds) {
+async function playRounds(page, rounds, beforeRound = null) {
   const seen = [];
   const latencies = [];
   // Telemetry busy BEFORE the first word too: the deck is shuffled at the
@@ -84,12 +87,24 @@ async function playRounds(page, rounds) {
   await hide(page);
   await page.waitForTimeout(250);
   for (let i = 0; i < rounds; i++) {
+    if (beforeRound) await beforeRound(i);
     await page.click('#orbWrap');
     await page.waitForTimeout(350);
     const word = await page.evaluate(() => window.__spelltest.currentWord());
     const answer = i % 3 === 2 ? 'zzzz' : word.toLowerCase();
     await typeOnKeyboard(page, answer);
+    // Telemetry is sending WHILE the round is timed below. It used to flush at
+    // the end of the round, which left the measured window (check -> verdict)
+    // idle: a client that blocked on a failed send was invisible to the timing
+    // test. Proven by mutation -- a 40 ms block in the failure path changed
+    // the old numbers by 0.3 ms.
+    // Timed from before the flush: the send, its failure handling and the
+    // verdict paint are all inside the window, so a client that blocks on a
+    // dead endpoint shows up here. Both conditions pay the same fixed cost for
+    // raise + hide, so the comparison is still only about the endpoint.
     const t0 = Date.now();
+    await raise(page, `round ${i}`);
+    await hide(page);
     await page.click('#checkBtn');
     await feedbackPainted(page);
     latencies.push(Date.now() - t0);
@@ -102,8 +117,6 @@ async function playRounds(page, rounds) {
       && (await page.waitForSelector('#scrim.show', { timeout: 4000 }).then(() => true, () => false));
     if (chainBroken) await page.click('#skipSave');
     seen.push({ word, verdict, streak, chainBroken });
-    await raise(page, `round ${i}`);
-    await hide(page); // flushes: the app sees itself backgrounded
     await page.waitForTimeout(250);
   }
   return { seen, latencies };
@@ -124,6 +137,14 @@ const openSettingsSheet = async (page) => {
 const eventCount = (ep) => ep.posts.reduce((n, p) => n + (JSON.parse(p.text).events || []).length, 0);
 
 const median = (xs) => { const s = [...xs].sort((a, b) => a - b); return s[Math.floor(s.length / 2)]; };
+
+// Mean without the fastest and slowest samples: one descheduled round (a GC
+// pause, another suite's cargo build) moves a median of ten by more than the
+// tolerance, and that is what made this test flaky.
+const trimmedMean = (xs) => {
+  const s = [...xs].sort((a, b) => a - b).slice(1, -1);
+  return s.reduce((a, b) => a + b, 0) / s.length;
+};
 
 export async function run(browser, base, suite) {
   await suite.test('standard_player_sends_valid_batches_with_perf_and_no_text', async () => {
@@ -268,27 +289,54 @@ export async function run(browser, base, suite) {
     assert(new Set(withT.seen.map((r) => r.word)).size > 1, 'the replay served one word: seed not applied');
   });
 
-  // Acceptance 5, timing half: with the endpoint refusing every connection,
-  // a round's verdict paints as fast as with a healthy endpoint. Tolerance is
-  // the larger of 5% and one 60 Hz frame: medians here are tens of ms, where
-  // 5% is below what a browser can measure.
+  // Acceptance 5, timing half: a refused telemetry endpoint must not slow a
+  // round down (I1).
+  //
+  // Measured INTERLEAVED inside ONE session: the endpoint flips between
+  // refusing and healthy on alternate rounds, so both conditions meet the same
+  // machine, the same page and the same moment. The first version played ten
+  // rounds in one session and ten in another, minutes apart, and compared
+  // medians: it failed 4 of ~8 full-suite runs on 2026-09-21/22, with the
+  // direction flipping between runs ("down 44 vs up 64", then "down 59 vs up
+  // 41"), which is machine load between sessions, not a regression.
+  //
+  // The comparison is ONE-SIDED, because the claim is one-sided: "down" being
+  // faster is not a failure. It compares trimmed means over 12 samples per
+  // side, and re-measures once before failing, so a single stalled round
+  // cannot fail the suite on its own.
   await suite.test('endpoint_down_costs_no_round_latency', async () => {
-    const med = {};
-    for (const down of [false, true]) {
-      const ep = endpoint({ down });
-      const { ctx, page } = await openApp(browser, base, { lang: 'en', telemetry: ep.handler, init: SEEDED });
-      try {
-        assert(await until(async () => (await store(page, 'spell_flag_telemetry_enabled')) === 'on'), 'kill switch never cached');
-        const { latencies } = await playRounds(page, 10);
-        med[down ? 'down' : 'up'] = median(latencies);
-        const q = JSON.parse((await store(page, 'spell_tel_queue_v1')) || '[]');
-        if (down) assert(q.length > 0 && q.length <= 200, `queue ${q.length}`);
-      } finally { await ctx.close(); }
-    }
-    const tol = Math.max(0.05 * med.up, 16.7);
-    process.stdout.write(`    round latency median: up ${med.up} ms, down ${med.down} ms (tolerance ${tol.toFixed(1)} ms)\n`);
-    assert(Math.abs(med.down - med.up) <= tol, `down ${med.down} ms vs up ${med.up} ms`);
+    const ROUNDS = 24; // 12 per side, alternating
+    const ep = endpoint();
+    const { ctx, page } = await openApp(browser, base, { lang: 'en', telemetry: ep.handler, init: SEEDED });
+    try {
+      assert(await until(async () => (await store(page, 'spell_flag_telemetry_enabled')) === 'on'), 'kill switch never cached');
+      const measure = async () => {
+        const { latencies } = await playRounds(page, ROUNDS, (i) => ep.setDown(i % 2 === 1));
+        const up = latencies.filter((_, i) => i % 2 === 0);
+        const down = latencies.filter((_, i) => i % 2 === 1);
+        return { up: trimmedMean(up), down: trimmedMean(down), n: down.length };
+      };
+      const tolerance = (up) => Math.max(0.05 * up, 16.7); // 5%, or one 60 Hz frame
+      let m = await measure();
+      let cost = m.down - m.up;
+      if (cost > tolerance(m.up)) {
+        process.stdout.write(`    round latency: re-measuring (first pass cost ${cost.toFixed(1)} ms)\n`);
+        m = await measure();
+        cost = m.down - m.up;
+      }
+      const tol = tolerance(m.up);
+      process.stdout.write(`    round latency trimmed mean over ${m.n} rounds each: up ${m.up.toFixed(1)} ms, down ${m.down.toFixed(1)} ms, cost ${cost.toFixed(1)} ms (tolerance ${tol.toFixed(1)} ms)\n`);
+      assert(cost <= tol, `a refused endpoint cost ${cost.toFixed(1)} ms per round (up ${m.up.toFixed(1)}, down ${m.down.toFixed(1)}, tolerance ${tol.toFixed(1)})`);
+      // The refused posts are still queued for a later flush, and still capped.
+      ep.setDown(true);
+      await raise(page, 'queue check');
+      await hide(page);
+      await page.waitForTimeout(500);
+      const q = JSON.parse((await store(page, 'spell_tel_queue_v1')) || '[]');
+      assert(q.length > 0 && q.length <= 200, `queue ${q.length}`);
+    } finally { await ctx.close(); }
   });
+
   // F7 — "Help improve SpellGame". Off: nothing leaves and nothing held
   // survives; on: sending resumes.
   await suite.test('settings_effect_telemetry', async () => {
