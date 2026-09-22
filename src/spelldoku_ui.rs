@@ -13,6 +13,7 @@ use crate::spelldoku::tier::{self as tiermode};
 use crate::spelldoku::canon;
 use crate::spelldoku::geo::{self, size_of, Geo};
 use crate::spelldoku::rules;
+use crate::spelldoku::pref::{self, Pref};
 use crate::spelldoku::copy::{self, Kind};
 use crate::spelldoku::bind::{Board, Mode};
 use crate::spelldoku::gen::{Clue, Config, Tier};
@@ -43,6 +44,16 @@ pub fn seam_preview(on: bool) {
 /// F9: `off | numbersIndexed | tierSymbols`, a setting inside SpellDoku (D-T1),
 /// remembered per device. Default off: SpellDoku is unchanged unless chosen.
 const TIER_KEY: &str = "spell_sd_tier";
+/// F5: the player's symbol choice, per difficulty. One profile per device, so
+/// the map is keyed by tier alone.
+const PREF_KEY: &str = "spell_sd_symbols_v1";
+/// The kinds this tier's last two boards used, newest first, so Mix can keep
+/// its promise never to serve three of a kind in a row (D-R12).
+const RECENT_KEY: &str = "spell_sd_recent_kind_v1";
+/// The previous letters board's words, per tier (F8 word rotation).
+const WORDS_KEY: &str = "spell_sd_last_words_v1";
+/// F7: which explainer cards this profile has already dismissed.
+const CARDS_KEY: &str = "spell_sd_cards_v1";
 
 #[derive(Clone, Copy, PartialEq, Debug)]
 enum Reading {
@@ -150,7 +161,7 @@ fn configs(kid: bool, lang: &str) -> Vec<(usize, Tier)> {
         // Hard and Expert need a necessary fragment. Their boards are Word
         // Mode (D12), where bank words make fragments; a language whose number
         // words cannot make one still falls back no further than Medium.
-        .filter(|&(n, tier)| frag || matches!(tier, Tier::Easy | Tier::Medium) || wordmode::is_word_mode(kid, n, tier))
+        .filter(|&(n, tier)| frag || matches!(tier, Tier::Easy | Tier::Medium) || wordmode::letters_possible(kid, n, tier))
         .collect()
 }
 
@@ -190,28 +201,78 @@ fn serve(app: &App, n: usize, tier: Tier, daily: bool) -> bool {
     let cfg = Config { size, tier };
     let mut seen: Seen = crate::storage::get_json(SEEN_KEY).unwrap_or_default();
     let now = today();
-    seen.boards.retain(|(_, d)| now.saturating_sub(*d) < play::REPEAT_WINDOW_DAYS);
-    let base = if daily {
-        play::daily_seed(ymd(), &lang)
-    } else {
-        (js_sys::Date::now() as u64) ^ ((js_sys::Math::random() * 4_294_967_296.0) as u64) << 20
-    };
-    // D12: 9x9 Medium and up are Word Mode; the Daily draws from the bank
-    // alone, so it is the same for everyone (F8). F13: a set that cannot be
-    // drawn serves Number Mode instead, never a partial board.
+    // F8 (D-R14): the last 500 boards this device built, by canonical hash, so
+    // a board cannot come back -- not even relabelled, because the hash is
+    // canonical. It replaces the old 14-day window, which let a board return
+    // once it aged out.
+    if seen.boards.len() > play::NO_REPEAT_BOARDS {
+        let drop = seen.boards.len() - play::NO_REPEAT_BOARDS;
+        seen.boards.drain(0..drop);
+    }
+    // D-R4 (Eric, 2026-09-22): the Daily is fresh and personal. Every play
+    // builds a new board from a random seed, so two players on the same day get
+    // different puzzles and a replay is never the same board. The old
+    // date-and-language seed made it shared, which Eric no longer wants. What
+    // still makes it "daily" is the once-a-day intent, not a shared puzzle.
+    let base = (js_sys::Date::now() as u64) ^ ((js_sys::Math::random() * 4_294_967_296.0) as u64) << 20;
+    // F13: a set that cannot be drawn serves Number Mode instead, never a
+    // partial board. The Daily draws from the bank alone, not My Words.
     let personal = if daily { Personal::default() } else { personal(app, &lang) };
+    // F5: which symbols this difficulty uses is the player's choice now, not a
+    // tier rule. Mix resolves to one kind HERE, so the generator never sees it
+    // (D-R12), and the Daily honours the choice like any other board (D-R4).
+    let want_letters = pref::resolve(
+        pref_for(tier),
+        wordmode::letters_possible(kid, n, tier),
+        &recent_kinds(tier),
+        base,
+    );
+    // F8 word rotation: at most 3 words shared with the previous letters board
+    // at this tier. A thin bank must never fail to produce a board, so this is
+    // a preference across the attempts, not a gate: the first board that clears
+    // it wins, and if none does, the first board built wins anyway.
+    let previous = last_words(tier);
+    let mut fallback: Option<Board> = None;
     let mut board = None;
     for k in 0..64u64 {
         let seed = base.wrapping_add(k);
-        let Some(b) = wordmode::board_or_number(&lang, kid, &cfg, seed, &personal, Some(&tbl)) else { continue };
+        let Some(b) = wordmode::board_or_number(&lang, kid, &cfg, seed, &personal, Some(&tbl), want_letters) else { continue };
         let h = canon::hash(&b.puzzle);
-        if daily || !seen.boards.iter().any(|(s, _)| *s == h) {
-            seen.boards.push((h, now));
+        if seen.boards.iter().any(|(s, _)| *s == h) {
+            continue;
+        }
+        let shared = b.words().iter().filter(|w| previous.contains(w)).count();
+        if shared > play::MAX_SHARED_WORDS && fallback.is_none() {
+            fallback = Some(b);
+            continue;
+        }
+        if shared > play::MAX_SHARED_WORDS {
+            continue;
+        }
+        seen.boards.push((h, now));
+        board = Some(b);
+        break;
+    }
+    if board.is_none() {
+        if let Some(b) = fallback {
+            seen.boards.push((canon::hash(&b.puzzle), now));
             board = Some(b);
-            break;
         }
     }
     let Some(board) = board else { return false };
+    remember_kind(tier, board.is_words()); // what Mix must not repeat a third time
+    // F7: letters explain themselves once; numbers only do so for Spell Jr,
+    // whose players may be new to Sudoku itself.
+    if board.is_words() {
+        show_how("letters", false);
+    } else if kid {
+        show_how("numbers", false);
+    } else {
+        dom::set_hidden("sdHow", true);
+    }
+    if board.is_words() {
+        set_last_words(tier, &board.words());
+    }
     let puzzle = &board.puzzle;
     crate::storage::set_json(SEEN_KEY, &seen);
     let cells = puzzle.clues.len();
@@ -310,6 +371,72 @@ fn cell_label(g: &Game, v: u8) -> String {
         Some(band) => t(tiermode::label_key(band)).chars().next().unwrap_or('?').to_string(),
         None => g.board.label(v),
     }
+}
+
+/// F5: the stored choice for a difficulty, or D-R3's default.
+fn pref_for(tier: Tier) -> Pref {
+    crate::storage::get_json::<std::collections::HashMap<String, String>>(PREF_KEY)
+        .unwrap_or_default()
+        .get(tier.id())
+        .and_then(|s| Pref::parse(s))
+        .unwrap_or_else(|| pref::default_for(tier))
+}
+
+fn set_pref(tier: Tier, p: Pref) {
+    let mut m: std::collections::HashMap<String, String> =
+        crate::storage::get_json(PREF_KEY).unwrap_or_default();
+    m.insert(tier.id().to_string(), p.id().to_string());
+    crate::storage::set_json(PREF_KEY, &m);
+}
+
+/// F8: the words the last letters board at this tier served, so the next one
+/// can avoid repeating more than a few of them.
+fn last_words(tier: Tier) -> Vec<String> {
+    crate::storage::get_json::<std::collections::HashMap<String, Vec<String>>>(WORDS_KEY)
+        .unwrap_or_default()
+        .get(tier.id())
+        .cloned()
+        .unwrap_or_default()
+}
+
+fn set_last_words(tier: Tier, words: &[String]) {
+    let mut m: std::collections::HashMap<String, Vec<String>> =
+        crate::storage::get_json(WORDS_KEY).unwrap_or_default();
+    m.insert(tier.id().to_string(), words.to_vec());
+    crate::storage::set_json(WORDS_KEY, &m);
+}
+
+/// F7 (D-R13): the first letters board a profile ever opens explains itself,
+/// once. Eric could not tell what a letters board wanted; a first-time player
+/// must not be left to guess either. `force` reopens it from How to play.
+fn show_how(kind: &str, force: bool) {
+    let mut seen: std::collections::HashMap<String, bool> =
+        crate::storage::get_json(CARDS_KEY).unwrap_or_default();
+    if !force && seen.get(kind).copied().unwrap_or(false) {
+        dom::set_hidden("sdHow", true);
+        return;
+    }
+    dom::set_text("sdHowText", &t(if kind == "letters" { "sd.howLetters" } else { "sd.howNumbers" }));
+    dom::set_hidden("sdHow", false);
+    seen.insert(kind.to_string(), true);
+    crate::storage::set_json(CARDS_KEY, &seen);
+}
+
+fn recent_kinds(tier: Tier) -> Vec<bool> {
+    crate::storage::get_json::<std::collections::HashMap<String, Vec<bool>>>(RECENT_KEY)
+        .unwrap_or_default()
+        .get(tier.id())
+        .cloned()
+        .unwrap_or_default()
+}
+
+fn remember_kind(tier: Tier, letters: bool) {
+    let mut m: std::collections::HashMap<String, Vec<bool>> =
+        crate::storage::get_json(RECENT_KEY).unwrap_or_default();
+    let e = m.entry(tier.id().to_string()).or_default();
+    e.insert(0, letters);
+    e.truncate(2);
+    crate::storage::set_json(RECENT_KEY, &m);
 }
 
 /// F4: what THIS board is, so every string the player reads comes from the one
@@ -529,14 +656,51 @@ fn is_clue(g: &Game, i: usize) -> bool {
 /// instead of the ladder board on screen, since that is what switching off
 /// would serve.
 fn mode_chip(g: &Game) {
-    let letters = match &g.tier {
-        None => matches!(g.board.mode, Mode::Words(_)),
-        Some(_) => {
-            let kid = APP.with(|a| a.borrow().as_ref().is_some_and(|app| app.borrow().kid));
-            wordmode::is_word_mode(kid, g.board.puzzle.n, g.board.puzzle.tier)
-        }
+    let kid = APP.with(|a| a.borrow().as_ref().is_some_and(|app| app.borrow().kid));
+    let n = g.board.puzzle.n;
+    let tier = g.board.puzzle.tier;
+    let letters_ok = wordmode::letters_possible(kid, n, tier);
+    let served_letters = matches!(g.board.mode, Mode::Words(_));
+    let chosen = pref_for(tier);
+    let mut html = String::new();
+    let opt = |value: &str, label: &str| {
+        format!("<option value=\"{}\">{}</option>", value, dom::escape_html(label))
     };
-    dom::set_text("sdTierOff", &t(if letters { "sd.tier.letters" } else { "sd.tier.off" }));
+    if letters_ok {
+        for p in [Pref::Numbers, Pref::Letters, Pref::Mix] {
+            // D-R12: a Mix board still has to read truthfully, so the option
+            // names the kind on screen while it is the one selected.
+            let label = if p == Pref::Mix && chosen == Pref::Mix {
+                format!(
+                    "{} \u{00B7} {}",
+                    t(p.key()),
+                    t(if served_letters { "sd.tier.letters" } else { "sd.tier.off" })
+                )
+            } else {
+                t(p.key())
+            };
+            html.push_str(&opt(p.id(), &label));
+        }
+    } else {
+        // F5 "absent, not locked": where only one kind is valid -- Spell Jr
+        // (D16), or a language whose bank cannot fill this board (F13) -- the
+        // chip states the forced value and offers nothing else. The stored
+        // preference is left alone, so it returns if eligibility does.
+        html.push_str(&opt(Pref::Numbers.id(), &t("sd.tier.off")));
+    }
+    // Tier Mode is not part of this picker (F5). It is reachable only with its
+    // own flag on, which is where F5 assumed it already lived.
+    if crate::flags::sd_tier_mode() {
+        html.push_str(&opt("numbersIndexed", &t("sd.tier.numbers")));
+        html.push_str(&opt("tierSymbols", &t("sd.tier.symbols")));
+    }
+    dom::set_html("sdTier", &html);
+    let value = match (reading(), g.tier.is_some()) {
+        (Reading::Numbers, true) => "numbersIndexed".to_string(),
+        (Reading::Symbols, true) => "tierSymbols".to_string(),
+        _ => if letters_ok { chosen.id().to_string() } else { Pref::Numbers.id().to_string() },
+    };
+    dom::select("sdTier").set_value(&value);
 }
 
 fn render() {
@@ -1180,6 +1344,15 @@ pub fn wire(app: &App) {
         dom::on_click("sdOpenBtn", move || open(&a));
     }
     dom::on_click("sdExit", close);
+    dom::on_click("sdHowOk", || dom::set_hidden("sdHow", true));
+    {
+        // F7: reopened from How to play, never from the legend's "?" -- that
+        // stays the definition card (D15).
+        dom::on_click("sdHowBtn", || {
+            let words = GAME.with(|c| c.borrow().as_ref().map(|g| g.board.is_words()));
+            show_how(if words == Some(true) { "letters" } else { "numbers" }, true);
+        });
+    }
     {
         let a = app.clone();
         dom::on::<web_sys::Event, _>("sdPick", "change", move |_| {
@@ -1192,9 +1365,28 @@ pub fn wire(app: &App) {
         // F9: switching reading starts a fresh board — the symbols change.
         let a = app.clone();
         dom::on::<web_sys::Event, _>("sdTier", "change", move |_| {
-            crate::storage::set_raw(TIER_KEY, &dom::select("sdTier").value());
-            if let Some((n, tier)) = picked() {
-                serve(&a, n, tier, false);
+            let v = dom::select("sdTier").value();
+            match Pref::parse(&v) {
+                // F5 / I-R8: a symbol choice applies to the NEXT board. The one
+                // on screen is never regenerated or modified, so nothing the
+                // player has done is thrown away; the note says how to start a
+                // new one, which the New board button already does.
+                Some(p) => {
+                    let Some((_, tier)) = picked() else { return };
+                    set_pref(tier, p);
+                    crate::storage::set_raw(TIER_KEY, "off");
+                    let next_letters = pref::resolve(p, true, &recent_kinds(tier), 1);
+                    let kind = t(if next_letters { "sd.tier.letters" } else { "sd.tier.off" });
+                    dom::set_text("sdNote", &i18n::tp("sd.nextBoard", &[("kind", &kind)]));
+                    render();
+                }
+                // F9: switching READING starts a fresh board -- the symbols change.
+                None => {
+                    crate::storage::set_raw(TIER_KEY, &v);
+                    if let Some((n, tier)) = picked() {
+                        serve(&a, n, tier, false);
+                    }
+                }
             }
         });
     }

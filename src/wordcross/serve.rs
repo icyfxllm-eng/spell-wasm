@@ -145,35 +145,6 @@ pub fn bank(lang: &str, tier: Tier, ledger: &Ledger, day: u32) -> Option<Cross> 
 
 /// F-X1 / Phase C: the Daily Spell Cross -- the same crossword for everyone
 /// playing this language on this date. It draws from the whole bank, so a word
-/// stays away for the 90 days D9 asks (`daily_gap`), and `ymd` seeds the layout.
-pub fn daily(lang: &str, tier: Tier, ymd: u32, day: u32) -> Option<Cross> {
-    if !eligible(lang) {
-        return None;
-    }
-    let k = format!("{lang}:{}", tier.id());
-    let fit = |p: &[String], w: &str| fits(lang, MAX_SIDE, p, w);
-    // A word set that will not interlock is redrawn, the same way on every
-    // device, so a date always has its crossword.
-    // One draw from this date's block, so the 90-day window holds; the retries
-    // rearrange those same words rather than reaching into another day's.
-    let words = daily_pick(&daily_pool(lang, tier), params(tier).words + 6, day, &format!("cross:{k}"), &fit);
-    if words.len() < MIN_WORDS + 1 {
-        return None;
-    }
-    for r in 0..8u64 {
-        let mut rng = Rng::new(seed(&format!("cross-daily:{k}"), r, ymd));
-        let mut order = words.clone();
-        if r > 0 {
-            rng.shuffle(&mut order);
-        }
-        let (picked, spare) = order.split_at(params(tier).words.min(order.len() - 1));
-        if let Some(c) = lay(lang, tier, picked, spare, &mut rng) {
-            return Some(c);
-        }
-    }
-    None
-}
-
 /// F-X1: "Make a puzzle" on a My Words list, as a crossword.
 pub fn from_list(lang: &str, tier: Tier, list_id: &str, words: &[String], counter: u64) -> Option<Cross> {
     if !eligible(lang) {

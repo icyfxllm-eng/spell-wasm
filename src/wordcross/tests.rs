@@ -5,7 +5,7 @@
 use std::collections::HashSet;
 
 use super::layout::MAX_SIDE;
-use super::serve::{bank, daily, from_list, lay, params, usable, Cross, MIN_WORDS};
+use super::serve::{bank, from_list, lay, params, usable, Cross, MIN_WORDS};
 use super::traps::{distinguishing, trap_positions};
 use crate::spelldoku::rng::Rng;
 use crate::wordsearch::gen::Tier;
@@ -207,63 +207,33 @@ fn tier_table() {
 }
 
 /// Phase C: the Daily Spell Cross -- one crossword per language per date, with
-/// the same 90-day window as Spell Search (D9).
+/// D-W1 and D-W4: the Daily crossword is a personal draw now -- fresh for each
+/// player and each play, its words rotating by the player's ledger -- and every
+/// one of them interlocks at least MIN_WORDS words (F5 / I-W5).
 #[test]
-fn the_daily_crossword_is_shared_and_spaced() {
-    use crate::wordsearch::ledger::DAILY_WINDOW_DAYS;
+fn the_daily_crossword_is_a_personal_draw() {
+    use crate::wordsearch::ledger::Ledger;
     for lang in ["en", "es", "ru", "de"] {
-        let a = daily(lang, Tier::Easy, 20260405, 20_910).unwrap_or_else(|| panic!("{lang}: a Daily crossword"));
-        check(&a);
-        let b = daily(lang, Tier::Easy, 20260405, 20_910).unwrap();
-        assert_eq!(a.grid, b.grid, "{lang}: two players, one Daily");
-        assert_ne!(a.grid, daily(lang, Tier::Easy, 20260406, 20_911).unwrap().grid, "{lang}: a new day, a new one");
-
-        let mut seen: Vec<(String, u32)> = Vec::new();
-        for day in 0..200u32 {
-            let c = daily(lang, Tier::Easy, 20260101 + day, day).unwrap();
-            for p in &c.grid.words {
-                if let Some((_, was)) = seen.iter().find(|(w, _)| *w == p.word) {
-                    assert!(day - was >= DAILY_WINDOW_DAYS, "{lang}: {} came back after {} days", p.word, day - was);
-                }
-                seen.retain(|(w, _)| *w != p.word);
-                seen.push((p.word.clone(), day));
+        let mut led = Ledger::default();
+        let mut grids = Vec::new();
+        let mut previous: Vec<String> = Vec::new();
+        for play in 0..6u32 {
+            let c = bank(lang, Tier::Easy, &led, play)
+                .unwrap_or_else(|| panic!("{lang}: play {play} has a crossword"));
+            check(&c);
+            assert!(c.grid.words.len() >= MIN_WORDS, "{lang}: never fewer than {MIN_WORDS} interlocks");
+            let words: Vec<String> = c.grid.words.iter().map(|p| p.word.clone()).collect();
+            if play > 0 {
+                let cap = (words.len() / 4).max(2);
+                let shared = words.iter().filter(|w| previous.contains(w)).count();
+                assert!(shared <= cap, "{lang}: play {play} shares {shared} words, cap {cap}");
             }
+            led.record(&format!("{lang}:{}", Tier::Easy.id()), &words, play, 0);
+            grids.push(c.grid.clone());
+            previous = words;
+        }
+        for i in 1..grids.len() {
+            assert_ne!(grids[i - 1], grids[i], "{lang}: consecutive plays differ");
         }
     }
-}
-
-#[test]
-#[ignore]
-fn probe_weights() {
-    use super::layout::{Weights, TUNE};
-    for (area, crossing, trap) in [(1, 30, 20), (3, 30, 40), (6, 40, 80)] {
-        TUNE.with(|w| w.set(Weights { area, crossing, trap, unanswered: 900 }));
-        let mut out = vec![];
-        for tier in [Tier::Easy, Tier::Hard] {
-            let (mut on, mut all, mut area_sum, mut n) = (0.0, 0.0, 0.0, 0.0);
-            for s in 0..25u64 {
-                let ledger = Ledger { counter: s, ..Default::default() };
-                let Some(c) = bank("en", tier, &ledger, 0) else { continue };
-                n += 1.0;
-                area_sum += (c.grid.w * c.grid.h) as f64;
-                for (cell, a, b) in c.grid.crossings() {
-                    all += 1.0;
-                    if [a, b].iter().any(|&w| c.grid.index_in(w, cell).is_some_and(|k| trap_positions("en", &c.grid.words[w].word).contains(&k))) { on += 1.0; }
-                }
-            }
-            out.push(format!("{} trap {:.0}% area {:.0}", tier.id(), on / all * 100.0, area_sum / n));
-        }
-        // Yield across the launch set at these weights.
-        let mut ok = 0;
-        let words = pool("en", Tier::Easy);
-        for s in 0..25u64 {
-            let mut rng = Rng::new(s * 7919 + 11);
-            let mut draw: Vec<String> = words.clone();
-            rng.shuffle(&mut draw);
-            let spare = draw[8..12].to_vec();
-            if lay("en", Tier::Easy, &draw[..8], &spare, &mut rng).is_some() { ok += 1; }
-        }
-        println!("area {area} crossing {crossing} trap {trap}: {} | yield {ok}/25", out.join(" | "));
-    }
-    TUNE.with(|w| w.set(super::layout::WEIGHTS));
 }

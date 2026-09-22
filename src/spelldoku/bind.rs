@@ -106,6 +106,15 @@ impl Board {
     }
 
     /// The spelling a symbol's audio says and a hint plays (F9 level 3).
+    /// Every word this board serves, empty on a numbers board. F8 compares two
+    /// consecutive letters boards with it.
+    pub fn words(&self) -> Vec<String> {
+        match &self.mode {
+            Mode::Number(_) => Vec::new(),
+            Mode::Words(w) => w.iter().map(|s| s.spelling.clone()).collect(),
+        }
+    }
+
     pub fn spelling(&self, v: u8) -> Option<String> {
         match &self.mode {
             Mode::Number(t) => t.word(v).map(str::to_string),

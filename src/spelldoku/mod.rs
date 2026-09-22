@@ -12,6 +12,7 @@ pub mod copy; // CC-SPELLDOKU-RULES v1 F4 — the one source of composer copy
 pub mod geo;
 pub mod gen;
 pub mod play;
+pub mod pref; // CC-SPELLDOKU-RULES v1 F5 — Numbers / Letters / Mix per difficulty
 pub mod rng;
 pub mod rules; // CC-SPELLDOKU-RULES v1 — placement legality (F1-F3)
 pub mod solve;

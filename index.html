@@ -1370,6 +1370,11 @@
   @keyframes sd-flash{0%,100%{background:var(--panel)}45%{background:color-mix(in srgb,var(--bad,#e0564f) 32%,transparent)}}
   .sd-cell.shake{animation:sd-shake .3s}
   .sd-cell.flash{animation:sd-flash .6s}
+  .sd-how{position:absolute;inset-inline:12px;top:18%;z-index:3;max-width:496px;margin-inline:auto;
+    padding:14px;border-radius:14px;background:var(--panel-2);box-shadow:0 8px 30px rgba(0,0,0,.45);
+    border:1px solid var(--edge);color:var(--ink);text-align:center}
+  .sd-how[hidden]{display:none}
+  .sd-how p{margin:0 0 10px}
   .sd-n{font-style:normal;font-size:10px;font-weight:600;opacity:.6;margin-inline-start:3px;font-variant-numeric:tabular-nums}
   .sd-chip.dim,.sd-say.dim{opacity:.4}
   .sd-chip.spent,.sd-say.spent{opacity:.35;border-style:dashed}
@@ -1428,6 +1433,10 @@
     .sd-top h2{flex:0 0 0;width:0;height:0;margin:0;padding:0;overflow:hidden}
     .sd-top select{padding:6px;flex:0 1 auto;min-width:0}
     .sd-top button{flex:0 0 auto}
+    /* The header is one line on a phone; How to play rides it as a "?" so the
+       action row keeps its single line and the board keeps its size. */
+    #sdHowBtn{font-size:0}
+    #sdHowBtn::after{content:"?";font-size:17px}
     .sd-legend{gap:4px;margin-top:6px}
     .sd-say{min-width:34px;padding:4px 7px;font-size:14px}
     .sd-say b{font-size:16px}
@@ -2912,16 +2921,21 @@
       <button class="ghost mode-exit" id="sdExit" aria-label="Exit">✕</button>
       <h2 id="sdTitle" data-i18n="sd.name">SpellDoku</h2>
       <select id="sdPick" aria-label="Board"></select>
-      <select id="sdTier" aria-label="Tier Mode">
-        <!-- C5: the label is set per board (Numbers / Letters), so no data-i18n. -->
-        <option value="off" id="sdTierOff">Numbers</option>
-        <option value="numbersIndexed" data-i18n="sd.tier.numbers">Tier Mode</option>
-        <option value="tierSymbols" data-i18n="sd.tier.symbols">Tier symbols (4x4)</option>
-      </select>
+      <!-- CC-SPELLDOKU-RULES F5: the symbol picker. Its options are rendered per
+           board (Numbers / Letters / Mix, and Tier Mode's readings only behind
+           its flag), so there is nothing static to translate here. -->
+      <select id="sdTier" aria-label="Symbols"></select>
       <button class="ghost" id="sdDaily" data-i18n="sd.daily">Daily</button>
+      <button class="ghost" id="sdHowBtn" data-i18n="sd.howToPlay" aria-label="How to play">?</button>
     </div>
     <div class="sd-grid" id="sdGrid"></div>
     <div class="sd-legend" id="sdLegend"></div>
+    <!-- F7: shown once per profile on the first letters board, and reopenable
+         from How to play. It sits over the legend, which is what it explains. -->
+    <div class="sd-how" id="sdHow" hidden role="note">
+      <p id="sdHowText"></p>
+      <button class="ghost" id="sdHowOk" data-i18n="sd.gotIt">Got it</button>
+    </div>
     <div class="sd-badge" id="sdBadge"></div>
     <div class="sd-note" id="sdNote" aria-live="polite"></div>
     <!-- CC-SPELLDOKU v1.3 F3/I-T3: every digit's tier, legible from board load. -->

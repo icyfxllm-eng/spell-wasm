@@ -31,14 +31,22 @@ use super::table::norm;
 /// R6: the longest word a symbol may be, in graphemes.
 pub const MAX_GRAPHEMES: usize = 12;
 
-/// D12 / D16: Word Mode is 9×9 Medium and up; Spell Jr never.
-pub fn is_word_mode(kid: bool, n: usize, tier: Tier) -> bool {
-    !kid && n == 9 && tier != Tier::Easy
+/// Where letters CAN be served. D-R5 (Eric, 2026-09-22) resolves v1.2 D12,
+/// which was never signed, in favour of all four standard tiers: Easy included.
+/// Spell Jr never sees letters (D16), and no size but 9×9 has a bank shaped for
+/// them. Which of the two a board actually gets is the player's choice now
+/// (F5), so this says "possible", not "is".
+pub fn letters_possible(kid: bool, n: usize, _tier: Tier) -> bool {
+    !kid && n == 9
 }
 
 /// F12: the band mix of a Word Mode board.
 pub fn band_mix(n: usize, tier: Tier) -> Option<&'static [(&'static str, usize)]> {
     match (n, tier) {
+        // D-R9: an Easy letters board draws easy-band words only. If a
+        // language cannot fill one, F13 finds nothing and letters are simply
+        // ineligible at Easy there.
+        (9, Tier::Easy) => Some(&[("easy", 9)]),
         (9, Tier::Medium) => Some(&[("medium", 3), ("easy", 6)]),
         (9, Tier::Hard) => Some(&[("hard", 5), ("medium", 4)]),
         (9, Tier::Expert) => Some(&[("expert", 6), ("hard", 3)]),
@@ -351,7 +359,15 @@ pub fn board_or_number(
     seed: u64,
     personal: &Personal,
     numbers: Option<&super::table::Table>,
+    // F5 `want_letters`: the player's choice for this difficulty, already
+    // resolved (Mix never reaches here). A board that cannot be drawn in
+    // letters still falls back to numbers, never a partial board (F13).
+    want_letters: bool,
 ) -> Option<Board> {
-    let words = if is_word_mode(kid, cfg.size.n, cfg.tier) { board(lang, cfg, seed, personal) } else { None };
+    let words = if want_letters && letters_possible(kid, cfg.size.n, cfg.tier) {
+        board(lang, cfg, seed, personal)
+    } else {
+        None
+    };
     words.or_else(|| numbers.and_then(|t| Board::number(t, seed, cfg)))
 }

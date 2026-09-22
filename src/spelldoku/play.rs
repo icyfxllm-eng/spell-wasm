@@ -34,6 +34,14 @@ pub fn verdict(values: &[u8], expected: u8) -> Verdict {
     }
 }
 
+/// CC-SPELLDOKU-RULES F8 / D-R14: how many boards a device remembers, so none
+/// of them can come back. Canonical hashes, so a relabelled repeat is a repeat.
+pub const NO_REPEAT_BOARDS: usize = 500;
+
+/// F8: how many words a new letters board may share with the previous one at
+/// the same tier. Three of nine.
+pub const MAX_SHARED_WORDS: usize = 3;
+
 /// D1: correct full spellings before a value becomes a tap chip. Never on Expert.
 pub fn unlock_after(tier: Tier) -> Option<u32> {
     match tier {
@@ -89,16 +97,13 @@ pub fn logic_errors_shown_at_once(tier: Tier) -> bool {
 pub const CHECK_BOARD_USES: u32 = 3;
 
 /// I6: the repeat window, one config value.
+/// Retired with the shared Daily (D-R4): kept only as the horizon the
+/// no-repeat sweep simulates. Repeats are stopped by NO_REPEAT_BOARDS now.
 pub const REPEAT_WINDOW_DAYS: u32 = 365;
 
 /// D11 (OPEN, default applied): Spell Jr players also need tone marks. One
 /// value, so it can be reversed without code changes.
 pub const JR_TONE_MARKS_REQUIRED: bool = true;
-
-/// F8: the Daily seed -- the same date and language give everyone the same board.
-pub fn daily_seed(ymd: u32, lang: &str) -> u64 {
-    fnv(format!("spelldoku-daily|{ymd}|{lang}").as_bytes())
-}
 
 /// F7: the configurations a player may be served.
 pub fn allowed(kid: bool, n: usize, tier: Tier) -> bool {

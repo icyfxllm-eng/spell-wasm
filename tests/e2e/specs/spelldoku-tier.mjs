@@ -14,6 +14,11 @@ const prompt = (page) => page.evaluate(() => JSON.parse(window.__spelltest.spell
 const note = (page) => page.$eval('#sdNote', (e) => e.textContent);
 const empties = (b) => b.clues.map((c, i) => [c, i]).filter(([c]) => c === 'Empty' || c.Fragment).map(([, i]) => i);
 
+// CC-SPELLDOKU-RULES F5: the header chip is the Numbers/Letters/Mix picker and
+// does not expose Tier Mode. Tier Mode keeps its readings there only with its
+// own flag on, so every test here turns it on.
+const TIER_FLAG = () => localStorage.setItem('spell_flag_sd_tier_mode', 'on');
+
 async function openTier(page, reading, pick) {
   await page.evaluate(() => {
     window.__spelltest.spelldokuPreview(true);
@@ -36,7 +41,7 @@ export async function run(browser, base, suite) {
   // F3 / I-T3: the strip is there from board load, one badge per digit, and it
   // is the F1 Easy row -- Medium on 4, 8, 9 and Easy everywhere else.
   await suite.test('spelldoku_tier_ladder_is_legible_from_load', async () => {
-    const { ctx, page } = await openApp(browser, base, { lang: 'en' });
+    const { ctx, page } = await openApp(browser, base, { lang: 'en', init: TIER_FLAG });
     try {
       await openTier(page, 'numbersIndexed', '9-easy');
       const bands = await page.$$eval('#sdTiers .sd-tierkey', (ks) =>
@@ -52,7 +57,7 @@ export async function run(browser, base, suite) {
   // F2 / F4 / F8: the drawn word commits the digit; a miss redraws the same
   // tier and leaves the cell empty; the same digit in that cell is then free.
   await suite.test('spelldoku_tier_word_commits_and_recommit_is_free', async () => {
-    const { ctx, page } = await openApp(browser, base, { lang: 'en' });
+    const { ctx, page } = await openApp(browser, base, { lang: 'en', init: TIER_FLAG });
     try {
       await openTier(page, 'numbersIndexed', '9-easy');
       const b = await board(page);
@@ -89,7 +94,7 @@ export async function run(browser, base, suite) {
   // ledger Word Search and Spell Cross share, and the next board skips them.
   // Only the browser can see this: the window lives in localStorage.
   await suite.test('spelldoku_tier_served_words_enter_the_repeat_window', async () => {
-    const { ctx, page } = await openApp(browser, base, { lang: 'en' });
+    const { ctx, page } = await openApp(browser, base, { lang: 'en', init: TIER_FLAG });
     try {
       await openTier(page, 'numbersIndexed', '9-easy');
       const b = await board(page);
@@ -126,7 +131,7 @@ export async function run(browser, base, suite) {
 
   // I-T7: a pencil mark never fires a gate.
   await suite.test('spelldoku_tier_pencil_marks_are_free', async () => {
-    const { ctx, page } = await openApp(browser, base, { lang: 'en' });
+    const { ctx, page } = await openApp(browser, base, { lang: 'en', init: TIER_FLAG });
     try {
       await openTier(page, 'numbersIndexed', '9-easy');
       const b = await board(page);
@@ -144,7 +149,7 @@ export async function run(browser, base, suite) {
   // D-T5 / F7: Jr asks for tier symbols and gets Reading A, never a Hard or
   // Expert word. The whole Easy row on a Jr board is Easy or Medium.
   await suite.test('spelldoku_tier_jr_never_leaves_easy_medium', async () => {
-    const { ctx, page } = await openApp(browser, base, { lang: 'en', age: KID });
+    const { ctx, page } = await openApp(browser, base, { lang: 'en', age: KID, init: TIER_FLAG });
     try {
       await openTier(page, 'tierSymbols', '4-easy');
       const bands = await page.$$eval('#sdTiers .sd-tierkey', (ks) =>

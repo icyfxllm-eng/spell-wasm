@@ -149,6 +149,29 @@ thread_local! {
 }
 
 /// Phase C: the Daily Spell Cross, the same for everyone on this date.
+/// F3 / I-W2: this device's recent Spell Cross Dailies, by grid hash.
+const XW_SEEN: &str = "spell_xw_daily_seen_v1";
+/// The previous Daily's words, for F3's overlap cap.
+const XW_WORDS: &str = "spell_xw_daily_words_v1";
+
+fn fresh_nonce() -> u64 {
+    (js_sys::Date::now() as u64) ^ ((js_sys::Math::random() * 4_294_967_296.0) as u64) << 20
+}
+
+fn recent_puzzles() -> Vec<u64> {
+    crate::storage::get_json::<Vec<u64>>(XW_SEEN).unwrap_or_default()
+}
+
+fn remember_puzzle(h: u64) {
+    let mut v = recent_puzzles();
+    v.push(h);
+    if v.len() > 500 {
+        let drop = v.len() - 500;
+        v.drain(0..drop);
+    }
+    crate::storage::set_json(XW_SEEN, &v);
+}
+
 fn serve_daily(app: &App) -> bool {
     let (lang, kid) = {
         let s = app.borrow();
@@ -157,8 +180,36 @@ fn serve_daily(app: &App) -> bool {
     let tier = if kid { Tier::Jr } else { Tier::Easy };
     let d = js_sys::Date::new_0();
     let ymd = d.get_full_year() * 10_000 + (d.get_month() + 1) * 100 + d.get_date();
-    match serve::daily(&lang, tier, ymd, today()) {
-        Some(c) => {
+    // D-W1: a personal Daily is a personal draw, through the player's ledger,
+    // so it is fresh per player and per play and still works offline.
+    let _ = ymd;
+    let seen = recent_puzzles();
+    let previous: Vec<String> = crate::storage::get_json(XW_WORDS).unwrap_or_default();
+    let mut fallback = None;
+    for _ in 0..8 {
+        let Some(c) = serve::bank(&lang, tier, &ledger(), today()) else { continue };
+        // F5 / I-W5: a Daily Cross never presents fewer than 5 interlocks.
+        if c.grid.words.len() < crate::wordcross::serve::MIN_WORDS {
+            continue;
+        }
+        let h = crate::wordcross::layout::grid_hash(&c.grid);
+        let words: Vec<String> = c.grid.words.iter().map(|p| p.word.clone()).collect();
+        let cap = (words.len() / 4).max(2);
+        let shared = words.iter().filter(|w| previous.contains(w)).count();
+        if !seen.contains(&h) && shared <= cap {
+            remember_puzzle(h);
+            crate::storage::set_json(XW_WORDS, &words);
+            start_as(app, c, None, true);
+            return true;
+        }
+        if fallback.is_none() {
+            fallback = Some((c, h, words));
+        }
+    }
+    match fallback {
+        Some((c, h, words)) => {
+            remember_puzzle(h);
+            crate::storage::set_json(XW_WORDS, &words);
             start_as(app, c, None, true);
             true
         }

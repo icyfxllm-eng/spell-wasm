@@ -1,6 +1,6 @@
 # TEST-REPORT — Web E2E (app build)
 
-**213/213 passed** across 35 areas.
+**218/218 passed** across 35 areas.
 
 ## playhub — 17/17
 - ✅ hub: opens from the meta corner and renders registry tiles
@@ -127,7 +127,7 @@
 - ✅ mywords_play_falls_back_when_the_chosen_list_is_deleted
 - ✅ mywords_in_my_order_serves_the_players_order
 
-## spelldoku — 30/30
+## spelldoku — 35/35
 - ✅ spelldoku_every_language_opens_a_board
 - ✅ spelldoku_mandarin_needs_its_tone
 - ✅ spelldoku_vietnamese_uses_the_tone_row
@@ -137,7 +137,7 @@
 - ✅ spelldoku_hints_never_show_a_letter
 - ✅ spelldoku_spell_jr_sees_only_its_column
 - ✅ spelldoku_wasm_matches_the_pinned_golden_digest
-- ✅ spelldoku_daily_is_the_same_for_everyone
+- ✅ spelldoku_daily_is_personal
 - ✅ spelldoku_word_mode_never_shows_a_spelling
 - ✅ spelldoku_word_mode_spells_to_commit_and_feeds_missed_words
 - ✅ spelldoku_word_mode_draws_my_words_first
@@ -148,6 +148,11 @@
 - ✅ spelldoku_conflict_is_refused_9_expert
 - ✅ spelldoku_counts_and_dimming
 - ✅ spelldoku_every_path_refuses_a_conflict
+- ✅ spelldoku_symbol_pref_is_per_difficulty
+- ✅ spelldoku_picker_absent_cases
+- ✅ spelldoku_switching_never_disturbs_the_current_board
+- ✅ spelldoku_first_letters_board_explains_itself
+- ✅ spelldoku_boards_are_fresh
 - ✅ spelldoku_mode_chip_names_the_symbols
 - ✅ spelldoku_nine_fits_a_small_phone_numbers
 - ✅ spelldoku_nine_fits_a_small_phone_words

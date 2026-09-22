@@ -276,6 +276,16 @@ pub fn learner_surfaces() -> bool {
     resolve(stored("learner_surfaces").as_deref(), true)
 }
 
+/// CC-SPELLDOKU-RULES v1 F5: the header chip is the Numbers / Letters / Mix
+/// picker now, and that picker does not expose Tier Mode. Tier Mode (v1.3) was
+/// only ever reachable FROM that chip, so rather than stranding a shipped
+/// feature it moves behind its own flag, which is where F5 already assumed it
+/// lived. On, and the chip offers its two readings again below the three
+/// symbol choices. Storage key `spell_flag_sd_tier_mode`. Default off.
+pub fn sd_tier_mode() -> bool {
+    resolve(stored("sd_tier_mode").as_deref(), false)
+}
+
 pub fn is_on(name: &str) -> bool {
     match name {
         "ghost_racing" => ghost_racing(),

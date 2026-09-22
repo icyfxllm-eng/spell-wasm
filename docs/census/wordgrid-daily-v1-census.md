@@ -74,3 +74,42 @@ No web Daily exists. All three modes are `"platforms": ["ios"]` in
 `config/modes.json`; `build.rs` strips non-web modes from the site build, and
 the gate's web-wall scan proves there is no trace of them in `dist`. D-W5 is
 moot unless spellgame.net gains these modes.
+
+---
+
+## What Phase B actually needed, 2026-09-22
+
+Implementing F1+F3 hit a conflict the census did not predict, and it is worth
+recording because it changed the shape of the fix.
+
+**The date block and per-play freshness cannot both hold.** The old Daily
+picked its words from a block chosen by the date — that block schedule is
+exactly what guaranteed a word could not return for 90 days (D9). Making the
+Daily fresh per play (D-W1) while keeping the block means every replay draws
+from the SAME small block, so two plays on one date shared 3 of 7 words and
+blew F3's 25% cap. Measured, not guessed: the first attempt put a per-play
+nonce into the word draw and the gap test failed with "day 19 repeats day 0
+inside the 92-day gap", because salting the pool's global shuffle destroys the
+partition the blocks are cut from.
+
+**Resolution, and it is what D-W4 already signed.** A personal Daily is a
+personal draw: both modes now serve the Daily through `serve::bank` at the
+Daily's tier, using the player's own ledger — the same path every non-Daily
+puzzle has always used. That gives fresh-per-player and fresh-per-play for
+free, keeps it offline, and rotates words by the ledger's window. D-W4 says the
+Daily's word guarantee is the 25% overlap cap rather than D9's 90 days, so the
+weaker-but-personal guarantee is the one that was asked for. The F3 cap is
+enforced on top, as a preference across attempts that relaxes rather than
+fails.
+
+**Removed:** `wordsearch::serve::daily` and `wordcross::serve::daily`, the two
+date-seeded entry points, so the retired design cannot be served by accident
+(D-W1: "Stop and ask if any code or test encodes the old reading"). The block
+helpers stay — `daily_gap` still measures whether the bank is deep enough, and
+that is worth holding regardless of who draws from it.
+
+**Also settled here:** the streak. D-W6 matches SpellDoku's D-R11, which Eric
+dropped on 2026-09-22 because SpellDoku has no streak to count toward. Neither
+does Spell Cross or Spell Search, so F4's streak clause is dropped for the same
+reason and the Daily simply has no gate: there was never an "already played
+today" check to remove (census C1).

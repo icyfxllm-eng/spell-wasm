@@ -22,6 +22,16 @@ async function pick(page, value) {
   await page.waitForTimeout(250);
 }
 
+// D-R3 made Numbers the default on Easy and Medium, so a test that wants a
+// letters board now has to ask for one -- which is the point of F5.
+async function pickLetters(page, value) {
+  await pick(page, value);
+  await page.selectOption('#sdTier', 'letters');
+  await page.waitForTimeout(150);
+  await page.click('#sdNew');
+  await page.waitForTimeout(400);
+}
+
 async function spell(page, word) {
   for (const ch of word) await page.click(`#sdKeys [data-sd-key="${ch}"]`);
   await page.click('#sdKeys [data-sd-go]');
@@ -290,7 +300,10 @@ export async function run(browser, base, suite) {
   });
 
   // F8 — the Daily is the same board for everyone on the same day.
-  await suite.test('spelldoku_daily_is_the_same_for_everyone', async () => {
+  // D-R4 (Eric, 2026-09-22) reverses this: the Daily used to be one puzzle a
+  // date and a language produced for everybody. It is fresh and personal now,
+  // so what used to be the promise is now the thing that must NOT happen.
+  await suite.test('spelldoku_daily_is_personal', async () => {
     const boards = [];
     for (let k = 0; k < 2; k++) {
       const { ctx, page } = await openApp(browser, base, { lang: 'en' });
@@ -301,7 +314,7 @@ export async function run(browser, base, suite) {
         boards.push(JSON.stringify(await board(page)));
       } finally { await ctx.close(); }
     }
-    assertEq(boards[0], boards[1], 'two players, one Daily');
+    assert(boards[0] !== boards[1], 'two players, two different Dailies');
   });
 
   // v1.2 F10 / I12 — a Word Mode board: nine bank words, one glyph each, a
@@ -310,7 +323,7 @@ export async function run(browser, base, suite) {
     const { ctx, page } = await openApp(browser, base, { lang: 'en' });
     try {
       await openSpellDoku(page);
-      await pick(page, '9-medium');
+      await pickLetters(page, '9-medium');
       const b = await board(page);
       assert(b.words && b.words.length === 9, 'nine words');
       assertEq(new Set(b.glyphs.map((g) => g.toLowerCase())).size, 9, 'I11: nine distinct glyphs');
@@ -328,7 +341,7 @@ export async function run(browser, base, suite) {
     const { ctx, page } = await openApp(browser, base, { lang: 'en' });
     try {
       await openSpellDoku(page);
-      await pick(page, '9-medium');
+      await pickLetters(page, '9-medium');
       const b = await board(page);
       const i = empties(b).find((k) => !b.clues[k].Fragment);
       const want = b.words[b.solution[i] - 1];
@@ -356,7 +369,7 @@ export async function run(browser, base, suite) {
       await page.reload({ waitUntil: 'load' });
       await page.waitForFunction(() => window.__spelltest && window.__spelltest.build() === 'testseam', null, { timeout: 30000 });
       await openSpellDoku(page);
-      await pick(page, '9-medium');
+      await pickLetters(page, '9-medium');
       const b = await board(page);
       const fromMine = b.words.filter((w) => mine.includes(w)).length;
       assert(fromMine >= 6, `at least 6 of 9 from My Words (got ${fromMine})`);
@@ -485,6 +498,147 @@ export async function run(browser, base, suite) {
     } finally { await ctx.close(); }
   });
 
+  // CC-SPELLDOKU-RULES v1 Phase C — F5 picker, F7 card, F8 freshness.
+  const sig = (b) => JSON.stringify(b.clues) + '|' + JSON.stringify(b.solution);
+  const chipText = (page) => page.$eval('#sdTier', (e) => e.selectedOptions[0].textContent.trim());
+
+  // Done #16 (D-R3 defaults) and #13 (a choice is per difficulty and survives
+  // a relaunch).
+  await suite.test('spelldoku_symbol_pref_is_per_difficulty', async () => {
+    const { ctx, page } = await openApp(browser, base, { lang: 'en' });
+    try {
+      await openSpellDoku(page);
+      for (const [cfg, want] of [['9-easy', false], ['9-medium', false], ['9-hard', true], ['9-expert', true]]) {
+        await pick(page, cfg);
+        const b = await board(page);
+        assertEq(!!b.words, want, `${cfg}: D-R3 default is ${want ? 'letters' : 'numbers'}`);
+      }
+      // Choose the opposite of the default at two tiers.
+      await pick(page, '9-easy');
+      await page.selectOption('#sdTier', 'letters');
+      await page.waitForTimeout(150);
+      await pick(page, '9-hard');
+      await page.selectOption('#sdTier', 'numbers');
+      await page.waitForTimeout(150);
+      await page.reload({ waitUntil: 'load' });
+      await page.waitForFunction(() => window.__spelltest && window.__spelltest.build() === 'testseam', null, { timeout: 30000 });
+      await openSpellDoku(page);
+      await pick(page, '9-easy');
+      assert((await board(page)).words, 'Easy kept Letters across a relaunch');
+      await pick(page, '9-hard');
+      assert(!(await board(page)).words, 'Hard kept Numbers across a relaunch, independently');
+    } finally { await ctx.close(); }
+  });
+
+  // Done #14: where only one kind is possible the chip states it and offers
+  // nothing else. Nothing is ever rendered disabled.
+  await suite.test('spelldoku_picker_absent_cases', async () => {
+    for (const [who, age, cfg] of [['standard on 4x4', null, '4-easy'], ['Spell Jr', KID, '4-easy']]) {
+      const { ctx, page } = await openApp(browser, base, age === KID ? { lang: 'en', age: KID } : { lang: 'en' });
+      try {
+        await openSpellDoku(page);
+        await pick(page, cfg);
+        const opts = await page.$$eval('#sdTier option', (o) => o.map((x) => x.value));
+        assertEq(JSON.stringify(opts), JSON.stringify(['numbers']), `${who}: only the one valid option`);
+        assertEq(await page.$$eval('#sdTier option[disabled]', (o) => o.length), 0, `${who}: nothing is shown locked`);
+        assert(!(await board(page)).words, `${who}: and the board really is numbers`);
+      } finally { await ctx.close(); }
+    }
+  });
+
+  // Done #15 / I-R8: changing the picker never touches the board in front of
+  // the player. The next one honours it.
+  await suite.test('spelldoku_switching_never_disturbs_the_current_board', async () => {
+    const { ctx, page } = await openApp(browser, base, { lang: 'en' });
+    try {
+      await openSpellDoku(page);
+      await pick(page, '9-easy');
+      const before = await board(page);
+      assert(!before.words, 'starts on numbers');
+      await page.selectOption('#sdTier', 'letters');
+      await page.waitForTimeout(200);
+      const after = await board(page);
+      assertEq(sig(after), sig(before), 'the board is untouched');
+      assert(!after.words, 'and it is still a numbers board');
+      assert(/letters/i.test(await page.$eval('#sdNote', (e) => e.textContent)), 'the note says what comes next');
+      await page.click('#sdNew');
+      await page.waitForTimeout(400);
+      assert((await board(page)).words, 'the NEXT board is letters');
+    } finally { await ctx.close(); }
+  });
+
+  // Done #16b (D-R13): the card shows on a profile's first letters board only,
+  // and How to play brings it back.
+  await suite.test('spelldoku_first_letters_board_explains_itself', async () => {
+    const { ctx, page } = await openApp(browser, base, { lang: 'en' });
+    try {
+      await openSpellDoku(page);
+      await pick(page, '9-expert');
+      const up = () => page.$eval('#sdHow', (e) => !e.hasAttribute('hidden'));
+      assert(await up(), 'the first letters board explains itself');
+      assert(/each letter stands for a word/i.test(await page.$eval('#sdHowText', (e) => e.textContent)), 'and says what a letter is');
+      await page.click('#sdHowOk');
+      assert(!(await up()), 'Got it dismisses it');
+      await page.click('#sdNew');
+      await page.waitForTimeout(400);
+      assert(!(await up()), 'the second letters board does not repeat it');
+      await page.click('#sdHowBtn');
+      assert(await up(), 'How to play brings it back');
+    } finally { await ctx.close(); }
+    // A second profile meets it fresh.
+    const { ctx: ctx2, page: page2 } = await openApp(browser, base, { lang: 'en' });
+    try {
+      await openSpellDoku(page2);
+      await pick(page2, '9-expert');
+      assert(await page2.$eval('#sdHow', (e) => !e.hasAttribute('hidden')), 'a fresh profile sees it');
+    } finally { await ctx2.close(); }
+  });
+
+  // Done #14a (D-R4) and #16c/#16d (F8): the Daily is fresh and personal, no
+  // board repeats, and consecutive letters boards rotate their words.
+  await suite.test('spelldoku_boards_are_fresh', async () => {
+    const seen = new Set();
+    const { ctx, page } = await openApp(browser, base, { lang: 'en' });
+    try {
+      await openSpellDoku(page);
+      await pick(page, '9-expert');
+      let previous = null;
+      for (let i = 0; i < 8; i++) {
+        const b = await board(page);
+        assert(!seen.has(sig(b)), `board ${i} is one this device has not built before`);
+        seen.add(sig(b));
+        if (previous && b.words) {
+          const shared = b.words.filter((w) => previous.includes(w)).length;
+          assert(shared <= 3, `F8: at most 3 words shared with the previous letters board (got ${shared})`);
+        }
+        if (b.words) previous = b.words;
+        await page.click('#sdNew');
+        await page.waitForTimeout(350);
+      }
+      // The Daily is a board like any other now: replaying gives a new one.
+      const dailies = new Set();
+      for (let i = 0; i < 4; i++) {
+        await page.click('#sdDaily');
+        await page.waitForTimeout(400);
+        dailies.add(sig(await board(page)));
+      }
+      assertEq(dailies.size, 4, 'D-R4: four plays of the Daily are four different boards');
+    } finally { await ctx.close(); }
+    // Two players on the same day do not share a Daily.
+    const one = await openApp(browser, base, { lang: 'en' });
+    const two = await openApp(browser, base, { lang: 'en' });
+    try {
+      for (const p of [one.page, two.page]) {
+        await openSpellDoku(p);
+        await p.click('#sdDaily');
+        await p.waitForTimeout(400);
+      }
+      const a = sig(await board(one.page));
+      const b = sig(await board(two.page));
+      assert(a !== b, 'D-R4: two players get different Dailies');
+    } finally { await one.ctx.close(); await two.ctx.close(); }
+  });
+
   // C5, closed by Eric on 2026-09-21 from a screenshot: a board of letters
   // whose chip read "Numbers". The chip names the symbols on screen, and it
   // has to keep up as the player cycles through the boards.
@@ -492,8 +646,12 @@ export async function run(browser, base, suite) {
     const { ctx, page } = await openApp(browser, base, { lang: 'en' });
     try {
       await openSpellDoku(page);
-      const chip = () => page.$eval('#sdTierOff', (e) => e.textContent.trim());
-      for (const [cfg, want] of [['9-easy', 'Numbers'], ['9-medium', 'Letters'], ['4-easy', 'Numbers'], ['9-expert', 'Letters']]) {
+      // F5 turned the chip into the picker, so the truth it tells is the
+      // option it is showing.
+      const chip = () => page.$eval('#sdTier', (e) => e.selectedOptions[0].textContent.trim());
+      // D-R3's defaults: Numbers on Easy and Medium, Letters on Hard and
+      // Expert, and Numbers wherever letters are impossible (4x4).
+      for (const [cfg, want] of [['9-easy', 'Numbers'], ['9-medium', 'Numbers'], ['4-easy', 'Numbers'], ['9-expert', 'Letters']]) {
         await pick(page, cfg);
         const b = await board(page);
         const isWords = !!(b.words && b.words.length);
@@ -563,7 +721,7 @@ export async function run(browser, base, suite) {
     const { ctx, page } = await openApp(browser, base, { lang: 'en' });
     try {
       await openSpellDoku(page);
-      await pick(page, '9-medium');
+      await pickLetters(page, '9-medium');
       const b = await board(page);
       assertEq(await page.$$eval('#sdLegend .sd-def', (e) => e.length), 9, 'a card per symbol');
       const w = b.words[0];

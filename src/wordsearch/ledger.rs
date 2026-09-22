@@ -149,7 +149,18 @@ pub fn daily_gap(len: usize, n: usize) -> usize {
 /// The Daily Puzzle's words for `day`: the same for every player. The pool is
 /// shuffled once, cut into blocks, and each day plays the next block, so a word
 /// returns only after every other block has had its day (`daily_gap`).
-pub fn daily_pick(pool: &[String], n: usize, day: u32, salt: &str, fits: &dyn Fn(&[String], &str) -> bool) -> Vec<String> {
+/// `nonce` varies the choice WITHIN the day's block (CC-WORDGRID-DAILY D-W1,
+/// fresh per play). It must never reach the global shuffle: that ordering is
+/// what cuts the pool into blocks, and a per-play ordering would let two days
+/// draw the same word and break the 90-day gap. Found by the gap test.
+pub fn daily_pick(
+    pool: &[String],
+    n: usize,
+    day: u32,
+    salt: &str,
+    nonce: u64,
+    fits: &dyn Fn(&[String], &str) -> bool,
+) -> Vec<String> {
     if pool.is_empty() || n == 0 {
         return Vec::new();
     }
@@ -159,7 +170,7 @@ pub fn daily_pick(pool: &[String], n: usize, day: u32, salt: &str, fits: &dyn Fn
     let blocks = (order.len() / block).max(1);
     let b = day as usize % blocks;
     let mut mine = order[b * block..((b + 1) * block).min(order.len())].to_vec();
-    Rng::new(fnv(format!("daily-day|{salt}|{day}").as_bytes())).shuffle(&mut mine);
+    Rng::new(fnv(format!("daily-day|{salt}|{day}|{nonce}").as_bytes())).shuffle(&mut mine);
     let mut picked: Vec<String> = Vec::new();
     for w in mine {
         if picked.len() == n {

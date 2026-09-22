@@ -160,6 +160,17 @@ pub fn toggle_class(id: &str, class: &str, on: bool) {
 /// Works for any form control (input/select/textarea/button) since the
 /// `disabled` boolean attribute reflects to the `.disabled` IDL property
 /// on all of them.
+/// Show or hide an element through the `hidden` attribute, so it leaves the
+/// layout entirely rather than merely going invisible.
+pub fn set_hidden(id: &str, hidden: bool) {
+    let el = el(id);
+    if hidden {
+        let _ = el.set_attribute("hidden", "");
+    } else {
+        let _ = el.remove_attribute("hidden");
+    }
+}
+
 pub fn set_disabled(id: &str, disabled: bool) {
     let e = el(id);
     if disabled {

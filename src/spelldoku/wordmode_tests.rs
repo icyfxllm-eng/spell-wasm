@@ -12,7 +12,7 @@ use super::geo::{Geo, S9};
 use super::play::{verdict, Verdict};
 use super::solve::{count_solutions, grade};
 use super::table::{self, norm};
-use super::wordmode::{band_mix, board, board_or_number, choose, is_word_mode, typeable, Personal, MAX_GRAPHEMES};
+use super::wordmode::{band_mix, board, board_or_number, choose, letters_possible, typeable, Personal, MAX_GRAPHEMES};
 
 const LANGS: &[&str] = &["en", "es", "fr", "de", "pt", "pl", "ru", "vi", "ko", "ja", "zh", "fil", "sw", "ar", "hi"];
 const TIERS: [Tier; 3] = [Tier::Medium, Tier::Hard, Tier::Expert];
@@ -228,17 +228,23 @@ fn a_set_that_cannot_be_drawn_falls_back_to_number_mode() {
     // An empty bank cannot draw a set.
     super::wordmode::EMPTY_BANK.with(|e| e.set(true));
     let none = choose("en", 9, Tier::Medium, 1, &Personal::default()).is_none();
-    let fallback = board_or_number("en", false, &cfg(Tier::Medium), 1, &Personal::default(), Some(&en));
-    let nothing = board_or_number("en", false, &cfg(Tier::Medium), 1, &Personal::default(), None);
+    let fallback = board_or_number("en", false, &cfg(Tier::Medium), 1, &Personal::default(), Some(&en), true);
+    let nothing = board_or_number("en", false, &cfg(Tier::Medium), 1, &Personal::default(), None, true);
     super::wordmode::EMPTY_BANK.with(|e| e.set(false));
     assert!(none, "no set from an empty bank");
     assert!(!fallback.expect("Number Mode").is_words(), "the fallback is a whole Number Mode board");
     // No number table either: nothing is served, rather than something partial.
     assert!(nothing.is_none());
-    // D12 / D16.
-    assert!(!is_word_mode(false, 9, Tier::Easy) && !is_word_mode(true, 9, Tier::Medium) && !is_word_mode(false, 6, Tier::Medium));
-    assert!(board_or_number("en", false, &cfg(Tier::Medium), 1, &Personal::default(), Some(&en)).unwrap().is_words());
-    assert!(!board_or_number("en", true, &cfg(Tier::Medium), 1, &Personal::default(), Some(&en)).unwrap().is_words());
+    // D16, and D-R5: Easy is eligible for letters now, Jr never is, and no
+    // size but 9x9 has a bank shaped for them.
+    assert!(letters_possible(false, 9, Tier::Easy), "D-R5: Easy may serve letters");
+    assert!(!letters_possible(true, 9, Tier::Medium) && !letters_possible(false, 6, Tier::Medium));
+    // F5: asking for numbers on a letters-capable board serves numbers.
+    assert!(!board_or_number("en", false, &cfg(Tier::Medium), 1, &Personal::default(), Some(&en), false)
+        .unwrap()
+        .is_words());
+    assert!(board_or_number("en", false, &cfg(Tier::Medium), 1, &Personal::default(), Some(&en), true).unwrap().is_words());
+    assert!(!board_or_number("en", true, &cfg(Tier::Medium), 1, &Personal::default(), Some(&en), true).unwrap().is_words());
 }
 
 /// I4 in Word Mode: the board's own words are the vocabulary.

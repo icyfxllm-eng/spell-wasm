@@ -188,6 +188,36 @@ fn serve_bank(app: &App, tier: Tier) -> bool {
     }
 }
 
+/// CC-WORDGRID-DAILY F3 / I-W2: the last puzzles this device built for this
+/// mode, by hash. A fresh Daily that matches one is discarded and redrawn. The
+/// history never leaves the device and is not learner data (I3 stands).
+fn fresh_nonce() -> u64 {
+    (js_sys::Date::now() as u64) ^ ((js_sys::Math::random() * 4_294_967_296.0) as u64) << 20
+}
+
+fn recent_puzzles(key: &str) -> Vec<u64> {
+    crate::storage::get_json::<Vec<u64>>(key).unwrap_or_default()
+}
+
+fn remember_puzzle(key: &str, h: u64) {
+    let mut v = recent_puzzles(key);
+    v.push(h);
+    let cap = 500;
+    if v.len() > cap {
+        let drop = v.len() - cap;
+        v.drain(0..drop);
+    }
+    crate::storage::set_json(key, &v);
+}
+
+const WS_SEEN: &str = "spell_ws_daily_seen_v1";
+/// The previous Daily's words, for F3's overlap cap.
+const WS_WORDS: &str = "spell_ws_daily_words_v1";
+
+fn recent_words(key: &str) -> Vec<String> {
+    crate::storage::get_json::<Vec<String>>(key).unwrap_or_default()
+}
+
 fn serve_daily(app: &App) -> bool {
     let (lang, kid) = {
         let s = app.borrow();
@@ -195,8 +225,37 @@ fn serve_daily(app: &App) -> bool {
     };
     // The Daily is Easy, or Jr for an under-13 player (F-X5).
     let tier = if kid { Tier::Jr } else { Tier::Easy };
-    match serve::daily(&lang, tier, ymd(), today()) {
-        Some(s) => {
+    // D-W1 (Eric, 2026-09-22): the shared, date-seeded Daily is retired. A
+    // personal Daily is a personal draw -- through the player's own ledger,
+    // like every other puzzle -- so it is fresh for each player and each play,
+    // works offline, and needs no server. D-W4 replaces the old date-block's
+    // 90-day word window with F3's overlap cap for the Daily only.
+    let seen = recent_puzzles(WS_SEEN);
+    let previous = recent_words(WS_WORDS);
+    let mut fallback = None;
+    for _ in 0..8 {
+        let Some(s) = serve::bank(&lang, tier, &ledger(), today()) else { continue };
+        let h = crate::wordsearch::gen::hash(&s.puzzle);
+        let words: Vec<String> = s.puzzle.targets.iter().map(|t| t.word.clone()).collect();
+        // F3: at most a quarter of the previous Daily's words, minimum two.
+        let cap = (words.len() / 4).max(2);
+        let shared = words.iter().filter(|w| previous.contains(w)).count();
+        if !seen.contains(&h) && shared <= cap {
+            remember_puzzle(WS_SEEN, h);
+            crate::storage::set_json(WS_WORDS, &words);
+            start(app, s, Source::Daily);
+            return true;
+        }
+        if fallback.is_none() {
+            fallback = Some((s, h, words));
+        }
+    }
+    // Nothing cleared both bars: serve the first draw rather than leave the
+    // player without a Daily. F3 relaxes, it never fails.
+    match fallback {
+        Some((s, h, words)) => {
+            remember_puzzle(WS_SEEN, h);
+            crate::storage::set_json(WS_WORDS, &words);
             start(app, s, Source::Daily);
             true
         }

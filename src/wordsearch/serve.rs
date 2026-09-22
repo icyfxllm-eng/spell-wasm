@@ -69,34 +69,6 @@ pub fn bank(lang: &str, tier: Tier, ledger: &Ledger, day: u32) -> Option<Served>
 }
 
 /// The Daily Puzzle: the same grid for every player of this language and tier
-/// on this date (F-X1). `ymd` seeds the layout; `day` picks the words.
-pub fn daily(lang: &str, tier: Tier, ymd: u32, day: u32) -> Option<Served> {
-    if !eligible(lang) {
-        return None;
-    }
-    let lex = Lexicon::get(lang);
-    let k = key(lang, tier);
-    let size = tier.size();
-    let fit = |p: &[String], w: &str| fits(lang, size, p, w);
-    let picked = daily_pick(&daily_pool(lang, tier), tier.targets(), day, &k, &fit);
-    let base = seed(&format!("daily:{k}"), 0, ymd);
-    // A word set that will not lay out cleanly loses one word at a time, the
-    // same way on every device, rather than leaving the day without a Daily.
-    for r in 0..picked.len() as u64 {
-        let mut words = picked.clone();
-        if r > 0 {
-            words.remove(r as usize - 1);
-        }
-        if words.len() < 3 {
-            break;
-        }
-        if let Some(puzzle) = generate(base.wrapping_add(r), &input(lang, tier, size, words, lex)) {
-            return Some(Served { puzzle, key: k, relaxed: 0 });
-        }
-    }
-    None
-}
-
 /// The words of a My Words list that a grid can hold, folded, in list order.
 pub fn list_words(lang: &str, words: &[String]) -> Vec<String> {
     let lex = Lexicon::get(lang);

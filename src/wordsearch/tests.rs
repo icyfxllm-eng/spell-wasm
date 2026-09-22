@@ -11,7 +11,7 @@ use super::gen::{hash, judge, path, Hit, Puzzle, Tier, DIRS};
 use super::hint::passes;
 use super::ledger::{daily_gap, fits, Ledger, WINDOW_DAYS, WINDOW_PUZZLES};
 use super::lexicon::{eligible, graphemes, pool, pool_floor, tiers_for, Lexicon, LANGS};
-use super::serve::{self, bank, daily, from_list};
+use super::serve::{self, bank, from_list, key};
 use crate::spelldoku::rng::{fnv, Rng};
 
 /// Every configuration a player can be offered, Jr included.
@@ -374,23 +374,33 @@ fn pools_meet_e4() {
     }
 }
 
-/// The Daily is the same for everyone on a date, differs day to day, and its
-/// words stay away for as long as the pool allows.
+/// D-W1 and D-W4 (Eric, 2026-09-22) retired the shared, date-seeded Daily. A
+/// Daily is now an ordinary personal draw at the Daily's tier, through the
+/// player's own ledger, so it is different for every player and every play and
+/// its words rotate by the ledger's window rather than a date block.
 #[test]
-fn daily_is_shared_and_spaced() {
+fn the_daily_is_a_personal_draw() {
     for (lang, tier) in [("en", Tier::Easy), ("es", Tier::Easy), ("en", Tier::Jr)] {
-        let a = daily(lang, tier, 20260918, 20_714).unwrap();
-        let b = daily(lang, tier, 20260918, 20_714).unwrap();
-        assert_eq!(hash(&a.puzzle), hash(&b.puzzle));
-        let c = daily(lang, tier, 20260919, 20_715).unwrap();
-        assert_ne!(hash(&a.puzzle), hash(&c.puzzle));
-        check(&a.puzzle, lang, false).unwrap();
-        let gap = daily_gap(pool(lang, tier).len(), tier.targets());
-        let words = |d: u32| daily(lang, tier, d, d).unwrap().puzzle.targets.into_iter().map(|t| t.word).collect::<HashSet<_>>();
-        let first = words(0);
-        for d in 1..gap.min(40) as u32 {
-            assert!(first.is_disjoint(&words(d)), "{lang} {}: day {d} repeats day 0 inside the {gap}-day gap", tier.id());
+        let mut led = Ledger::default();
+        let mut hashes = HashSet::new();
+        let mut previous: HashSet<String> = HashSet::new();
+        for play in 0..10u32 {
+            let s = bank(lang, tier, &led, play)
+                .unwrap_or_else(|| panic!("{lang} {}: play {play} has a puzzle", tier.id()));
+            check(&s.puzzle, lang, false).unwrap();
+            hashes.insert(hash(&s.puzzle));
+            let words: HashSet<String> = s.puzzle.targets.iter().map(|t| t.word.clone()).collect();
+            if play > 0 {
+                // F3 / D-W4: at most a quarter of the previous one's words,
+                // minimum two.
+                let cap = (words.len() / 4).max(2);
+                let shared = words.intersection(&previous).count();
+                assert!(shared <= cap, "{lang} {}: play {play} shares {shared} words, cap {cap}", tier.id());
+            }
+            led.record(&key(lang, tier), &s.puzzle.targets.iter().map(|t| t.word.clone()).collect::<Vec<_>>(), play, 0);
+            previous = words;
         }
+        assert_eq!(hashes.len(), 10, "{lang} {}: ten plays, ten puzzles", tier.id());
     }
 }
 
@@ -417,44 +427,44 @@ fn seeds_follow_their_inputs() {
     assert_ne!(seed("bank:en:easy", 3, 0), seed("bank:en:easy", 4, 0));
 }
 
-/// Phase C / D9: the Daily keeps a word away for 90 days, in every language
-/// and both modes, and is the same puzzle for everyone on a date. The window
-/// is a property of the pool: one tier's slice could only manage 32 days in
-/// Spanish, so the Daily draws from the whole bank.
+/// D9: the bank is deep enough that a Daily word does not come back for a long
+/// time. The 90-day figure was a property of the date-block schedule, which
+/// D-W4 retired for the Daily; the pool depth it measured is still worth
+/// holding, so the assertion stays and the walk uses the personal draw that
+/// actually ships.
 #[test]
-fn the_daily_holds_a_ninety_day_window() {
+fn the_daily_pool_is_deep_enough_that_words_do_not_come_back() {
     use super::lexicon::daily_pool;
     const WINDOW: u32 = super::ledger::DAILY_WINDOW_DAYS;
     for lang in LANGS {
         for tier in [Tier::Jr, Tier::Easy] {
             let pool_len = daily_pool(lang, tier).len();
             let gap = daily_gap(pool_len, tier.targets());
-            assert!(gap as u32 >= WINDOW, "{lang} {}: a word returns after {gap} days", tier.id());
+            assert!(gap as u32 >= WINDOW, "{lang} {}: the pool only spaces words {gap} days", tier.id());
 
-            // Walk a year of Spell Search Dailies and hold every word to it.
+            // Walk a year of personal Dailies and hold every word to the
+            // ledger's own window, which is what governs them now.
+            let mut led = Ledger::default();
+            let k = key(lang, tier);
             let mut seen: Vec<(String, u32)> = Vec::new();
             for day in 0..365u32 {
-                let s = daily(lang, tier, 20260101 + day, day).unwrap_or_else(|| panic!("{lang} {} day {day}", tier.id()));
-                for t in &s.puzzle.targets {
-                    if let Some((_, was)) = seen.iter().find(|(w, _)| *w == t.word) {
-                        assert!(day - was >= WINDOW, "{lang} {}: {} came back after {} days", tier.id(), t.word, day - was);
+                let s = bank(lang, tier, &led, day).unwrap_or_else(|| panic!("{lang} {} day {day}", tier.id()));
+                let words: Vec<String> = s.puzzle.targets.iter().map(|t| t.word.clone()).collect();
+                for w in &words {
+                    if let Some((_, was)) = seen.iter().find(|(x, _)| x == w) {
+                        assert!(
+                            day - was >= WINDOW_DAYS,
+                            "{lang} {}: {w} came back after {} days",
+                            tier.id(),
+                            day - was
+                        );
                     }
-                    seen.retain(|(w, _)| *w != t.word);
-                    seen.push((t.word.clone(), day));
+                    seen.retain(|(x, _)| x != w);
+                    seen.push((w.clone(), day));
                 }
+                led.record(&k, &words, day, 0);
             }
         }
     }
 }
 
-/// The same date gives every player the same Daily, in both modes.
-#[test]
-fn the_daily_is_one_puzzle_for_everyone() {
-    for lang in ["en", "es", "ru"] {
-        let a = daily(lang, Tier::Easy, 20260405, 20_910).unwrap();
-        let b = daily(lang, Tier::Easy, 20260405, 20_910).unwrap();
-        assert_eq!(hash(&a.puzzle), hash(&b.puzzle), "{lang}: two players, one Spell Search Daily");
-        let c = daily(lang, Tier::Easy, 20260406, 20_911).unwrap();
-        assert_ne!(hash(&a.puzzle), hash(&c.puzzle), "{lang}: a new day, a new puzzle");
-    }
-}

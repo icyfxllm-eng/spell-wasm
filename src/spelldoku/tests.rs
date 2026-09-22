@@ -181,13 +181,17 @@ fn isomorphic_copies_share_a_hash_and_a_year_never_repeats() {
             assert_eq!(canon::hash(&p), canon::hash(&scramble(&p, s)), "{n}x{n}: a scrambled copy must hash equal");
         }
     }
-    // A simulated year of Dailies with the served-hash ledger.
+    // D-R4 retired the date-seeded Daily: every board, Daily included, now
+    // comes from a fresh random seed and is checked against the device's last
+    // NO_REPEAT_BOARDS hashes (F8). A year of play must still find a year of
+    // distinct boards -- and, unlike the old window, they stay distinct.
     let cfg = Config { size: S6, tier: Tier::Medium };
     let mut seen = std::collections::HashSet::new();
-    for day in 0..play::REPEAT_WINDOW_DAYS {
+    let mut rng = Rng::new(0x5EED_5EED);
+    for _ in 0..play::REPEAT_WINDOW_DAYS {
         let mut k = 0u64;
         loop {
-            let p = generate(play::daily_seed(20260101 + day, "en").wrapping_add(k), &cfg, &t).unwrap();
+            let p = generate(rng.next_u64().wrapping_add(k), &cfg, &t).unwrap();
             if seen.insert(canon::hash(&p)) {
                 break;
             }

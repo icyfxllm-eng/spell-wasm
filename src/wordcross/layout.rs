@@ -39,6 +39,28 @@ pub struct Grid {
     pub keystone: Option<String>,
 }
 
+/// CC-WORDGRID-DAILY F3: a grid's identity, for the device's no-repeat
+/// history. Same words in the same places is the same puzzle.
+pub fn grid_hash(g: &Grid) -> u64 {
+    let mut h: u64 = 0xcbf2_9ce4_8422_2325;
+    let mut bump = |b: u8| {
+        h ^= b as u64;
+        h = h.wrapping_mul(0x1000_0000_01b3);
+    };
+    for w in &g.words {
+        for b in w.word.as_bytes() {
+            bump(*b);
+        }
+        for c in &w.cells {
+            bump(*c as u8);
+            bump((*c >> 8) as u8);
+        }
+        bump(u8::from(w.across));
+    }
+    h
+}
+
+
 impl Grid {
     /// The crossings: (cell, the two words that share it).
     pub fn crossings(&self) -> Vec<(usize, usize, usize)> {
