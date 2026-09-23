@@ -326,3 +326,75 @@ refuses rather than guesses, and `audio_clarity/bakeoff/` is empty.
 **What the run should answer:** whether `half` -> "have" and `leaf` -> "leave"
 follow the voice. If another en-US voice passes both, the fix is one signed
 switch rather than a lexicon row per word, forever.
+
+## A hypothesis, tested and rejected, 2026-09-23 — G2P cannot predict audibility
+
+Recorded so nobody proposes it a third time. It is an attractive idea and it is
+wrong, and the reason it is wrong is more useful than the result.
+
+**The claim.** Words get misheard because they have a near-neighbour one
+phoneme away — `half`/`have`, `leaf`/`leave`, `hiss`/`his`. So run a
+grapheme-to-phoneme pass over the bank, find every word within one phoneme of
+another English word, weight by how fragile that particular contrast is, and
+you get a build-time risk list. No recognizer, no auditor labels, no model.
+I argued this as a deterministic replacement for the audibility classifier in
+CC-AUDIBILITY-TRIAGE.
+
+**The test.** CMUdict for pronunciations, and the 60-word Phase B pilot as the
+labelled set — 3 FAIL (`leaf`, `for`, `its`), 5 WEAK (`ship`, `hill`, `sock`,
+`his`, `duck`), 1 EXEMPT_HOMOPHONE, 51 PASS. Substitution weights were fixed in
+advance from phonetics, not tuned against the answer: word-final voicing on a
+fricative worst (the contrast rides on preceding vowel length, which low-bitrate
+coding smears), initial consonants best (release burst plus formant
+transitions), vowels and medial positions in between.
+
+**The result.** AUC 0.576 against 0.5 for a coin flip. Precision at the top 12
+was 2/12. Restricting neighbours to common words — which removes junk like
+`hors`, `wass` and `bothe` — made it *worse*, 0.543, because it also deletes
+real confusion targets that are not bank words, `hiss` among them. `leaf` ranks
+1st, but `its` ranks 41st of 60.
+
+**Why it fails, which is the part worth keeping:**
+
+| word | phonemes | one-flip neighbour | verdict |
+|---|---|---|---|
+| his | HH IH Z | hiss | **WEAK** |
+| has | HH AE Z | hass | PASS |
+| was | W AA Z | wuss | PASS |
+| as | AE Z | ass | PASS |
+| have | HH AE V | half | PASS |
+| with | W IH DH | withe | PASS |
+| both | B OW TH | bothe | PASS |
+
+Seven words, one structure — word-final voiced fricative with a genuine
+voicing-flip neighbour. One is WEAK and six PASS. If the phoneme string decided
+the outcome they would all go the same way, so it does not. **What makes a
+particular clip hard to hear is a property of that recording, not of the word's
+map from letters to sounds.** Audibility is a measurement question, and F2
+already measures it — F2 is what caught `leaf`, `for` and `its`.
+
+Honest limit in the other direction: 8 positives cannot exclude a weak effect.
+What is excluded is a strong one, and a strong one is what would have been
+needed to replace measurement.
+
+**What this does not touch.** The other G2P uses are about identity, not
+prediction — two spellings producing the same sound is a fact, not a risk
+estimate:
+
+- homophone collision sets (currently hand-curated per language)
+- sound-alike trap classes, ष/श and ة/ه, which `config/trap-registry.json`
+  marks `manual` or `assisted` precisely because nothing computes them
+- draft IPA rows for the F3 lexicon, so an auditor checks a row instead of
+  authoring it
+- phoneme input to a synthesizer that accepts it
+
+None of those rest on the rejected claim, and the probe demonstrated the
+machinery works: it found leaf/leave, his/hiss and have/half correctly. It just
+cannot say which member the encoder will mangle.
+
+**Tooling note for whoever picks this up.** This machine has no G2P engine:
+no espeak, no espeak-ng, no phonemizer, no nltk, no cmudict package, and
+`NSSpeechSynthesizer.phonemes(from:)` returns Error -50 on every input under
+macOS 15 — the legacy engine behind that API is gone. CMUdict covers English
+only. Anything multilingual needs a real dependency, and that is a licensing
+question for `data/LICENSES.md` before it is an engineering one.
