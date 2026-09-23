@@ -353,6 +353,7 @@ fn mix(seed: u64) -> u64 {
 /// Returns `None` when three fair distractors cannot be found — D3's excluded
 /// word. Measured, that is 0.0% of words in fourteen languages and 0.2% in ja.
 pub fn round(lang: &str, word: &str, index: u64, tier: Tier) -> Option<Round> {
+    // zh-ok(grading): builds the three wrong-answer cards; Impostor is a choice, not typing
     let real = fold_strict(word.split('|').next().unwrap_or(word));
     if real.chars().count() < min_units(lang) {
         return None;

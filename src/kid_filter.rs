@@ -52,6 +52,7 @@ fn lists() -> &'static HashMap<&'static str, HashSet<String>> {
 /// match on the hanzi (what the word actually *is*); everything else matches the
 /// word itself.
 fn key(word: &str) -> String {
+    // zh-ok(grading): matches the hanzi half against the kid-safety list; never a verdict
     fold_lenient(word.rsplit('|').next().unwrap_or(word))
 }
 

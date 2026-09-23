@@ -1017,6 +1017,8 @@ pub fn show_meaning(app: &App, word: String, lang_key: String) {
         if !example.is_empty() {
             if let Ok(el) = dom::el("spkEx").dyn_into::<web_sys::HtmlElement>() {
                 let rate = app.borrow().rate.min(0.92);
+                // zh-ok(audio): the meaning panel's English example sentence at en-US; never a
+                // bank word
                 let cb = Closure::<dyn FnMut()>::new(move || speech_out::speak(&example, rate, "en-US"));
                 el.add_event_listener_with_callback("click", cb.as_ref().unchecked_ref()).ok();
                 cb.forget();
@@ -1175,6 +1177,9 @@ fn speak_word(app: &App, variant: &str, rate: f32) {
         let fb_word = word.clone();
         let fb_code = code.clone();
         api::play_device_tts(&word, variant, rate as f64, &primary, move || {
+            // zh-ok(audio): My Words out-of-dictionary import: every built-in language
+            // including zh returned above, and this text is on-device only by
+            // COPPA
             speech_out::speak(&fb_word, browser_rate, &fb_code)
         });
         return;
@@ -1187,11 +1192,15 @@ fn speak_word(app: &App, variant: &str, rate: f32) {
         drop(s);
         let fallback_word = word.clone();
         let fallback_rate = if variant == "slow" { 0.55 } else { rate };
+        // zh-ok(audio): My Words with a Speak-in language: every built-in language including zh
+        // returned above
         api::play_word(&word, variant, rate as f64, lang, move || speech_out::speak(&fallback_word, fallback_rate, &code));
         return;
     }
     drop(s);
     let browser_rate = if variant == "slow" { 0.55 } else { rate };
+    // zh-ok(audio): the last resort for My Words only: every built-in language including zh
+    // returned above
     speech_out::speak(&word, browser_rate, &code);
 }
 
@@ -2318,6 +2327,7 @@ fn play_syllables(app: &App, sylls: &[String]) {
 /// the browser voice (syllables joined by spaces so it separates them audibly)
 /// and drive the reveal highlight from char-count-weighted time estimates.
 fn web_syllable_fallback(sylls: &[String], _rate: f64) {
+    // zh-ok(audio): the Spanish syllable reveal on web, hardcoded es-ES; never reached for zh
     speech_out::speak(&sylls.join(" "), 0.55, "es-ES");
     let Some(win) = web_sys::window() else { return };
     let mut acc = 0.0f64;

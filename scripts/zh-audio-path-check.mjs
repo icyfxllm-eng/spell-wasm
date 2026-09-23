@@ -48,43 +48,68 @@ if (!/&py=/.test(api))
 
 // ---- no zh word may be handed to the browser voice ----
 // speech_out::speak is the on-device path. Any file that both speaks through it
-// and knows about zh has to prove it excludes zh first.
-for (const f of fs.readdirSync(`${ROOT}/src`).filter((n) => n.endsWith(".rs"))) {
-  const src = fs.readFileSync(`${ROOT}/src/${f}`, "utf8");
-  if (!/speech_out::speak\s*\(/.test(src)) continue;
-  const knowsZh = /consts::ZH|"zh"/.test(src);
-  if (!knowsZh) continue;
-  // Compliant shape: the zh case routes to the forced-reading clip before it
-  // can reach the device voice.
-  //
-  // Proximity is measured on CODE, with line comments stripped first. F5 added
-  // a sandhi lookup and four lines explaining it between the guard and the
-  // call, which pushed them past the window and failed this check on a change
-  // that was entirely correct. A gate that fires on comment length is a gate
-  // people learn to route around.
-  const code = src.replace(/^\s*\/\/.*$/gm, "");
-  // Two compliant shapes, because there are two correct ways to keep zh off the
-  // device voice, and only one of them is zh-specific:
-  //
-  //   1. the zh case routes to the forced-reading clip;
-  //   2. EVERY built-in language does, and returns, before any device-voice
-  //      path is reachable — which is what game.rs does. That is strictly
-  //      stronger than (1): it covers all fifteen rather than one, and zh is a
-  //      built-in (consts::BUILTIN_LANGS).
-  //
-  // Shape 2 was failing this scan. The proximity window has now mis-fired twice
-  // on correct code — F5's sandhi lookup was the first — so the fix is to teach
-  // it the other shape rather than to widen the window again and wait for the
-  // third.
-  const guarded =
-    /==\s*crate::consts::ZH[\s\S]{0,600}?play_word_with/.test(code) ||
-    /is_builtin_lang\([\s\S]{0,900}?play_word_with[\s\S]{0,200}?return;/.test(code);
-  if (!guarded)
-    problems.push(
-      `src/${f} can reach speech_out::speak for zh — the device voice cannot be ` +
-        `given a reading, so it would guess the polyphone (F6, Invariant 4)`,
-    );
+// and knows about zh must justify EACH call site, at the site:
+//
+//     // zh-ok(audio): the zh branch above returns through play_word_with
+//
+// This replaced a proximity heuristic on 2026-09-23. The old scan asked "is
+// there a zh guard somewhere within N characters of a play_word_with?", which
+// is not a question about the call site being checked. It was wrong in both
+// directions: it failed twice on correct code (F5's sandhi lookup, then a
+// refactor that moved the guard past the window), and because one matching
+// pair anywhere in a file cleared the WHOLE file, it would have passed an
+// unguarded call that happened to share a file with a guarded one. Widening
+// the window would only have made the second problem worse.
+//
+// An annotation is a weaker guarantee than a proof and a stronger one than a
+// guess: it cannot be satisfied by accident, it is visible in review, it dies
+// with the code, and a stale one fails the build. The invariant itself is still
+// enforced structurally by the api.rs and backend checks above -- that zh drops
+// the native rescue and that the server refuses a reading-less zh clip.
+const ANNOT = /\/\/\s*zh-ok\(audio\):\s*(\S.*?)\s*$/;
+const ANNOT_ANY = /\/\/\s*zh-ok\(audio\)/;
+const SPEAK = /speech_out::speak\s*\(/;
+const MIN_REASON = 12;
+
+function scanSpeak(name, text, acc) {
+  const lines = text.split("\n");
+  lines.forEach((l, i) => { if (ANNOT_ANY.test(l)) acc.all.add(`${name}:${i + 1}`); });
+  if (!SPEAK.test(text)) return;
+  if (!/consts::ZH|"zh"/.test(text)) return;   // the file cannot route a zh word
+  for (let i = 0; i < lines.length; i++) {
+    if (!SPEAK.test(lines[i]) || ANNOT_ANY.test(lines[i])) continue;
+    acc.sites++;
+    // An annotation applies to the next line of CODE, so the search walks up
+    // through contiguous comment lines and stops at the first one that is not a
+    // comment. An earlier version looked back a fixed three lines, which meant a
+    // reason long enough to wrap onto a fourth silently stopped applying -- the
+    // same class of magic-number bug this whole change exists to remove.
+    let ok = false;
+    for (let k = i; k >= 0; k--) {
+      if (k !== i && !/^\s*\/\//.test(lines[k])) break;
+      const m = lines[k].match(ANNOT);
+      if (!m) continue;
+      acc.used.add(`${name}:${k + 1}`);
+      if (m[1].length < MIN_REASON)
+        acc.problems.push(`${name}:${k + 1} zh-ok(audio) needs a real reason, not ${JSON.stringify(m[1])}`);
+      ok = true;
+      break;
+    }
+    if (!ok)
+      acc.problems.push(
+        `${name}:${i + 1} can hand a zh word to the on-device voice — it cannot be ` +
+          `given a reading, so it would guess the polyphone (F6, Invariant 4). If zh ` +
+          `cannot reach this line, say why at the site: // zh-ok(audio): <reason>`,
+      );
+  }
 }
+
+const acc = { problems: [], sites: 0, used: new Set(), all: new Set() };
+for (const f of fs.readdirSync(`${ROOT}/src`).filter((n) => n.endsWith(".rs")))
+  scanSpeak(f, fs.readFileSync(`${ROOT}/src/${f}`, "utf8"), acc);
+for (const a of acc.all)
+  if (!acc.used.has(a)) acc.problems.push(`${a} zh-ok(audio) matches no call site — stale exemption, delete it`);
+problems.push(...acc.problems);
 
 if (problems.length) {
   console.error(`zh-audio-path-check: FAILED — ${problems.length} problem(s):`);
@@ -92,26 +117,44 @@ if (problems.length) {
   process.exit(1);
 }
 console.log(
-  "zh-audio-path-check: OK — zh synthesizes only through <phoneme alphabet=\"pinyin\">, " +
-    "keyed on reading + voice, and never reaches an on-device voice.",
+  `zh-audio-path-check: OK — zh synthesizes only through <phoneme alphabet="pinyin">, ` +
+    `keyed on reading + voice, and never reaches an on-device voice ` +
+    `(${acc.sites} device-voice call site(s) justified at the site).`,
 );
 
-// Selftest: the scan must catch the thing it exists to catch. Feed it the shape
-// Bee had before F6 — a zh-aware file speaking through the device voice with no
-// forced reading — and confirm it fires.
+// Selftest: the scan must catch what it exists to catch, and the exemption must
+// be harder to abuse than the window it replaced.
 {
-  const VIOLATION = `
-fn speak(w: &str, lang: &str) {
-    if lang == crate::consts::ZH {
-        speech_out::speak(w.split('|').next().unwrap_or(w), 1.0, lang);
-    }
-}`;
-  const knowsZh = /consts::ZH|"zh"/.test(VIOLATION);
-  const guarded = /==\s*crate::consts::ZH[\s\S]{0,600}?play_word_with/.test(VIOLATION);
-  if (!(knowsZh && /speech_out::speak\s*\(/.test(VIOLATION) && !guarded)) {
-    console.error("zh-audio-path-check: SELFTEST FAILED — the scan no longer detects a");
-    console.error("  zh word handed to the on-device voice. It is not protecting anything.");
+  const SPEAKS = `fn say(w: &str, lang: &str) {\n    if lang == crate::consts::ZH {\n        speech_out::speak(w, 1.0, lang);\n    }\n}`;
+  const cases = [
+    ["a zh-aware file speaking through the device voice", SPEAKS, true],
+    ["the same call justified at the site",
+      SPEAKS.replace("        speech_out::speak", "        // zh-ok(audio): fixture, zh cannot reach this line at all\n        speech_out::speak"), false],
+    ["a justification with no real reason",
+      SPEAKS.replace("        speech_out::speak", "        // zh-ok(audio): fine\n        speech_out::speak"), true],
+    ["a stale justification matching no call site",
+      `// zh-ok(audio): this points at nothing any more\nfn f(lang: &str) { let _ = crate::consts::ZH; }`, true],
+    ["a reason long enough to wrap over several comment lines",
+      SPEAKS.replace("        speech_out::speak",
+        "        // zh-ok(audio): a reason long enough that it wraps, which used to push\n" +
+        "        // the marker past a fixed three-line lookback and silently stop\n" +
+        "        // applying to the call below it. Four continuation lines,\n" +
+        "        // deliberately: three still landed inside the old window\n        speech_out::speak"), false],
+    ["a file that speaks but knows nothing of zh",
+      `fn say(w: &str) {\n    speech_out::speak(w, 1.0, "en-US");\n}`, false],
+  ];
+  const bad = [];
+  for (const [label, text, shouldFail] of cases) {
+    const a = { problems: [], sites: 0, used: new Set(), all: new Set() };
+    scanSpeak("fixture.rs", text, a);
+    for (const x of a.all) if (!a.used.has(x)) a.problems.push("stale");
+    if (a.problems.length > 0 !== shouldFail)
+      bad.push(`${label}: expected ${shouldFail ? "a failure" : "a pass"}, got ${a.problems.length} problem(s)`);
+  }
+  if (bad.length) {
+    console.error("zh-audio-path-check: SELFTEST FAILED — it is not protecting anything:");
+    for (const b of bad) console.error("  ✗ " + b);
     process.exit(1);
   }
-  console.log("zh-audio-path-check: selftest OK — a bare-Hanzi zh path fails the build.");
+  console.log(`zh-audio-path-check: selftest OK — ${cases.length} fixtures, including a stale exemption.`);
 }

@@ -13,17 +13,30 @@
 // through pinyin:: -- otherwise it is grading Mandarin without canonicalizing
 // tone.
 //
-// Sites that split the pipe for reasons other than grading (speaking it,
-// indexing it, building a pool) are legitimate and listed in ALLOW with the
-// reason, so the exemption is a decision on the record rather than a silence.
+// EXEMPTIONS LIVE IN THE SOURCE, NOT HERE (changed 2026-09-23). This file used
+// to carry a per-FILE ALLOW map. Two things were wrong with it:
+//
+//   * Per file is far too coarse. The only way to exempt one line in norm.rs --
+//     which a new test needed -- was to exempt the entire grading file, which
+//     is the worst possible thing to blind.
+//   * It rotted silently. When it was replaced it held 15 entries for 10 files
+//     that actually had sites; a third of it had been dead for some time and
+//     nothing said so.
+//
+// A site is now exempted by a comment AT the site:
+//
+//     // zh-ok(grading): builds the sorted bank index; never sees typed input
+//
+// which is visible in review, dies when the code dies, and -- the part the old
+// list could not do -- FAILS THE BUILD IF IT STOPS MATCHING A SITE. An
+// exemption that no longer applies to anything is an error, not a silence.
 import fs from "node:fs";
 import path from "node:path";
 
 const ROOT = path.dirname(new URL(import.meta.url).pathname) + "/..";
 const SRC = `${ROOT}/src`;
 
-// Comparison primitives that decide correctness. Reaching for one of these
-// near a pipe split is the shape this lint is looking for.
+const SPLIT = /split(_once)?\s*\(\s*['"]\|['"]\s*\)/;
 const COMPARISONS = [
   /\bnorm::fold_strict\b/,
   /\bfold_strict\s*\(/,
@@ -31,55 +44,110 @@ const COMPARISONS = [
   /\banswer_matches\s*\(/,
   /\bfold_lenient\s*\(/,
 ];
-// The canonicalizer. A grading site that calls one of these is compliant.
 const CANONICAL = /\bpinyin::(grade\w*|matches|matches_with|canonicalize_\w+)\b/;
-// How far from the split a comparison still counts as the same logic.
 const WINDOW = 12;
+const ANNOT = /\/\/\s*zh-ok\(grading\):\s*(\S.*?)\s*$/;
+const ANNOT_ANY = /\/\/\s*zh-ok\(grading\)/;
+const MIN_REASON = 12;
 
-// Pipe splits that are NOT grading. Each needs a reason; an unexplained
-// entry here would defeat the lint.
-const ALLOW = {
-  "pinyin.rs": "the canonicalizer itself",
-  "word_index.rs": "builds the sorted bank index; never sees typed input",
-  "forge.rs": "composes the letter pool for Forge; not a spelling verdict",
-  "forge_screen.rs": "renders that pool",
-  "spellpic.rs": "chooses pictures by render width",
-  "wordpic_layout.rs": "lays words onto a picture",
-  "chains_screen.rs": "displays the chain; hooks are validity, not spelling",
-  "kid_filter.rs": "reads the hanzi half for the kid-safety list",
-  "photo_import.rs": "dictionary membership for an imported photo, not grading",
-  "game.rs": "the canonical submission path; verified separately below",
-  "bee_screen.rs": "graded via pinyin::matches_with — verified separately below",
-  "chains.rs": "chain identity and hooks; a link is not a spelling verdict",
-  "impostor.rs": "builds the wrong-answer cards; Impostor is a choice, not typing",
-  "keyboard.rs": "a test asserting every answer char is reachable on the keyboard",
-  "translate.rs": "camera OCR lookup against the word list, not a graded answer",
-};
-
-// The exemption is per FILE, which is coarser than it looks: a genuine grading
-// path added to an allowlisted file would inherit the pass. The two real
-// grading surfaces are therefore also checked by name below, and any NEW file
-// that grades zh trips the scan on its first commit.
-
-const problems = [];
-const files = fs.readdirSync(SRC).filter((f) => f.endsWith(".rs"));
-
-for (const f of files) {
-  const lines = fs.readFileSync(`${SRC}/${f}`, "utf8").split("\n");
+// Line indices inside a #[cfg(test)] module. Test code does not ship, so a test
+// that splits a pipe and folds it is not a grading path the app can take --
+// it is a test asserting something about the bank. Counted by BRACES rather
+// than "everything after the first #[cfg(test)]", because that shortcut would
+// silently stop scanning any production code that followed a test module.
+function testLines(lines) {
+  // Brace counting has one dangerous failure and one harmless one, so it is
+  // built to fail the harmless way. Ending the region EARLY over-scans, which
+  // at worst costs a visible false positive. Ending it LATE would swallow
+  // production code and blind the lint silently. Hence both guards below.
+  const bare = (l) => l.replace(/"(\\.|[^"\\])*"/g, '""').replace(/'(\\.|[^'\\])*'/g, "''");
+  const out = new Set();
   for (let i = 0; i < lines.length; i++) {
-    if (!/split(_once)?\s*\(\s*['"]\|['"]\s*\)/.test(lines[i])) continue;
-    const from = Math.max(0, i - WINDOW);
-    const to = Math.min(lines.length, i + WINDOW + 1);
-    const window = lines.slice(from, to).join("\n");
+    if (!/#\[cfg\(test\)\]/.test(lines[i])) continue;
+    // Guard 1: an attribute on a brace-less item (#[cfg(test)] use foo;) never
+    // opens a scope of its own. Without this the loop below would attach the
+    // attribute to whatever came next and swallow it. An earlier version looked
+    // ahead a fixed four lines for a brace, which just found the NEXT item's
+    // brace and had the same bug -- the selftest fixture caught it. The item is
+    // brace-less exactly when a ';' arrives before any '{'.
+    let braceless = false;
+    outer: for (let j = i; j < lines.length; j++) {
+      for (const ch of bare(lines[j]).replace(/#\[[^\]]*\]/g, "")) {
+        if (ch === "{") break outer;
+        if (ch === ";") { braceless = true; break outer; }
+      }
+    }
+    if (braceless) { out.add(i); continue; }
+    let depth = 0, opened = false;
+    for (let j = i; j < lines.length; j++) {
+      for (const ch of bare(lines[j])) {   // Guard 2: braces inside literals do not count
+        if (ch === "{") { depth++; opened = true; }
+        else if (ch === "}") depth--;
+      }
+      out.add(j);
+      if (opened && depth <= 0) break;
+    }
+  }
+  return out;
+}
+
+// One scan, used for the real tree and for the selftest fixtures, so the
+// selftest exercises the code that actually runs rather than a copy of it.
+function scan(name, text, acc) {
+  const lines = text.split("\n");
+  const inTest = testLines(lines);
+  lines.forEach((l, i) => { if (ANNOT_ANY.test(l)) acc.allAnnot.add(`${name}:${i + 1}`); });
+
+  for (let i = 0; i < lines.length; i++) {
+    if (!SPLIT.test(lines[i]) || inTest.has(i)) continue;
+    const window = lines.slice(Math.max(0, i - WINDOW), Math.min(lines.length, i + WINDOW + 1)).join("\n");
     if (!COMPARISONS.some((re) => re.test(window))) continue;
-    if (CANONICAL.test(window)) continue;
-    if (ALLOW[f]) continue;
-    problems.push(
-      `${f}:${i + 1} compares a zh bank entry without the canonicalizer — ` +
-        `tone is silently dropped here (F2, Invariant 5)`,
-    );
+    acc.sites++;
+    if (CANONICAL.test(window)) continue; // compliant: it routes through the canonicalizer
+
+    // An annotation applies to the next line of CODE, so the search walks up
+    // through contiguous comment lines and stops at the first one that is not a
+    // comment. An earlier version looked back a fixed three lines, which meant a
+    // reason long enough to wrap onto a fourth silently stopped applying -- the
+    // same class of magic-number bug this whole change exists to remove.
+    let ok = false;
+    for (let k = i; k >= 0; k--) {
+      if (k !== i && !/^\s*\/\//.test(lines[k])) break;
+      const m = lines[k].match(ANNOT);
+      if (!m) continue;
+      acc.usedAnnot.add(`${name}:${k + 1}`);
+      if (m[1].length < MIN_REASON)
+        acc.problems.push(`${name}:${k + 1} zh-ok(grading) needs a real reason, not ${JSON.stringify(m[1])}`);
+      ok = true;
+      acc.exempted++;
+      break;
+    }
+    if (!ok)
+      acc.problems.push(
+        `${name}:${i + 1} compares a zh bank entry without the canonicalizer — ` +
+          `tone is silently dropped here (F2, Invariant 5). If this is not a ` +
+          `grading path, say so at the site with: // zh-ok(grading): <reason>`,
+      );
   }
 }
+
+function newAcc() {
+  return { problems: [], sites: 0, exempted: 0, usedAnnot: new Set(), allAnnot: new Set() };
+}
+
+// The anti-rot rule the old ALLOW map could not enforce: an exemption that
+// stopped matching a site is an error, not a silence.
+function checkStale(acc) {
+  for (const a of acc.allAnnot)
+    if (!acc.usedAnnot.has(a))
+      acc.problems.push(`${a} zh-ok(grading) matches no site — stale exemption, delete it`);
+}
+
+const acc = newAcc();
+const files = fs.readdirSync(SRC).filter((f) => f.endsWith(".rs"));
+for (const f of files) scan(f, fs.readFileSync(`${SRC}/${f}`, "utf8"), acc);
+checkStale(acc);
+const problems = acc.problems;
 
 // The two real grading sites are checked by name rather than by heuristic, so
 // that renaming or gutting one is a failure instead of a quiet pass.
@@ -109,31 +177,47 @@ if (problems.length) {
   process.exit(1);
 }
 console.log(
-  `zh-grading-path-check: OK — ${files.length} sources scanned, one zh grading ` +
-    `path (pinyin::grade / matches_with), tone-blindness is a flag.`,
+  `zh-grading-path-check: OK — ${files.length} sources scanned, ${acc.sites} pipe site(s), ` +
+    `${acc.exempted} exempted at the site, one zh grading path, tone-blindness is a flag.`,
 );
 
-// Selftest: the scan has to actually catch the thing it exists to catch. Feed
-// it the exact shape Bee had before F2 -- a pipe split graded by fold_strict,
-// in a file nobody exempted -- and confirm it fires.
+// Selftest: the scan has to catch what it exists to catch, and the exemption
+// mechanism has to be harder to abuse than the list it replaced. Each fixture
+// names the failure it proves.
 {
-  const VIOLATION = `
-fn submit(target: &str, typed: &str) -> bool {
-    let want = crate::norm::fold_strict(target.split('|').next().unwrap_or(target));
-    let got = crate::norm::fold_strict(typed);
-    got == want
-}`;
-  const lines = VIOLATION.split("\n");
-  let caught = false;
-  for (let i = 0; i < lines.length; i++) {
-    if (!/split(_once)?\s*\(\s*['"]\|['"]\s*\)/.test(lines[i])) continue;
-    const w = lines.slice(Math.max(0, i - WINDOW), i + WINDOW + 1).join("\n");
-    if (COMPARISONS.some((re) => re.test(w)) && !CANONICAL.test(w)) caught = true;
+  const GRADE = (body) => `fn submit(t: &str, typed: &str) -> bool {\n${body}\n}`;
+  const VIOLATION = GRADE(`    let want = crate::norm::fold_strict(t.split('|').next().unwrap_or(t));\n    crate::norm::fold_strict(typed) == want`);
+  const cases = [
+    ["an unexempted second grading path", VIOLATION, true],
+    ["a site exempted with a real reason",
+      VIOLATION.replace("    let want", "    // zh-ok(grading): fixture, not a real grading path at all\n    let want"), false],
+    ["an exemption with no real reason",
+      VIOLATION.replace("    let want", "    // zh-ok(grading): ok\n    let want"), true],
+    ["a stale exemption matching no site",
+      "// zh-ok(grading): this one points at nothing any more\nfn f() {}", true],
+    ["the same violation inside a test module",
+      `#[cfg(test)]\nmod tests {\n${VIOLATION}\n}`, false],
+    ["production code after a brace-less #[cfg(test)] item",
+      `#[cfg(test)]\nuse crate::fixture;\n${VIOLATION}`, true],
+    ["a reason long enough to wrap over several comment lines",
+      VIOLATION.replace("    let want",
+        "    // zh-ok(grading): a reason long enough that it wraps, which used to push the\n" +
+        "    // marker past a fixed three-line lookback and silently stop applying to the\n" +
+        "    // site below it. Four continuation lines, deliberately: with three the\n" +
+        "    // marker still landed inside the old window and proved nothing\n    let want"), false],
+  ];
+  const bad = [];
+  for (const [label, text, shouldFail] of cases) {
+    const a = newAcc();
+    scan("fixture.rs", text, a);
+    checkStale(a);
+    if (a.problems.length > 0 !== shouldFail)
+      bad.push(`${label}: expected ${shouldFail ? "a failure" : "a pass"}, got ${a.problems.length} problem(s)`);
   }
-  if (!caught) {
-    console.error("zh-grading-path-check: SELFTEST FAILED — the scan no longer detects");
-    console.error("  a fold_strict-graded pipe split. The lint is not protecting anything.");
+  if (bad.length) {
+    console.error("zh-grading-path-check: SELFTEST FAILED — the lint is not protecting anything:");
+    for (const b of bad) console.error("  ✗ " + b);
     process.exit(1);
   }
-  console.log("zh-grading-path-check: selftest OK — a second grading path fails the build.");
+  console.log(`zh-grading-path-check: selftest OK — ${cases.length} fixtures, including a stale exemption and a brace-less cfg(test).`);
 }

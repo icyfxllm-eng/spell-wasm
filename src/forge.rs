@@ -66,6 +66,8 @@ fn decomposed_in(lang: &str, tiers: &[&str], kid_only: bool) -> Decomposed {
             if kid_only && !crate::kid_filter::kid_allowed(lang, w) {
                 continue;
             }
+            // zh-ok(grading): indexes the bank to build Forge's letter pool; no typed input
+            // here
             let folded = fold_strict(w.split('|').next().unwrap_or(w));
             let seq = units_of(lang, w);
             let n = seq.len();
@@ -93,6 +95,7 @@ pub fn forge_min_units(lang: &str) -> usize {
 
 /// Split a word into the units a player of `lang` composes.
 pub fn units_of(lang: &str, word: &str) -> Vec<String> {
+    // zh-ok(grading): splits a word into the units a player composes; not a spelling verdict
     let w = fold_strict(word.split('|').next().unwrap_or(word));
     match lang {
         // Korean: the honeycomb holds jamo and the player assembles blocks,

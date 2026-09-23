@@ -408,6 +408,7 @@ pub fn camera_lookup(lang: &str, tier: &str, recognized: &str) -> CameraResult {
         return CameraResult::NotInWordList;
     }
     for w in crate::words::tier_for(lang, tier) {
+        // zh-ok(grading): camera OCR lookup against the word list, not a graded answer
         let word = w.split('|').next().unwrap_or(w);
         if crate::norm::fold_lenient(word) == needle {
             return CameraResult::Word(word.to_string());

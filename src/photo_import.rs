@@ -119,6 +119,8 @@ fn in_banks(lang: &str, word: &str) -> bool {
         for entry in crate::words::tier_for(lang, tier) {
             // Mandarin entries are "pinyin|hanzi" — a photographed page may
             // carry either form, so both halves count as membership.
+            // zh-ok(grading): dictionary membership for a photographed page; both halves count,
+            // nothing is graded
             match entry.split_once('|') {
                 Some((typed, spoken)) => {
                     if norm::fold_strict(typed) == folded || norm::fold_strict(spoken) == folded {
@@ -165,6 +167,8 @@ fn bank_set(lang: &str) -> std::collections::HashSet<String> {
     let mut set = std::collections::HashSet::new();
     for tier in ["easy", "medium", "hard", "expert"] {
         for entry in crate::words::tier_for(lang, tier) {
+            // zh-ok(grading): dictionary membership for a photographed page; both halves count,
+            // nothing is graded
             match entry.split_once('|') {
                 Some((typed, spoken)) => {
                     set.insert(norm::fold_strict(typed));

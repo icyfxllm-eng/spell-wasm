@@ -276,6 +276,8 @@ fn speak(app: &App, rate: f32) {
     let word = w.split('|').next().unwrap_or(&w).to_string();
     let (fallback, code, r) = (word.clone(), lang.clone(), rate);
     crate::api::play_word(&word, variant_for(rate), rate as f64, &lang, move || {
+        // zh-ok(audio): the zh branch above returns through play_word_with with a forced
+        // reading, so this is unreachable for Mandarin
         speech_out::speak(&fallback, r, &code)
     });
 }

@@ -2382,6 +2382,8 @@ fn replay_at(app: &App, force_slow: bool) {
         return;
     }
     api::play_word(&w.clone(), variant, 1.0, &lang, move || {
+        // zh-ok(audio): the zh branch above returns through play_word_with with a forced
+        // reading, so this is unreachable for Mandarin
         crate::speech_out::speak(&w, rate, &code)
     });
 }

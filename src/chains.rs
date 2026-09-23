@@ -225,6 +225,8 @@ fn defold(s: &str) -> String {
 /// The typed form of a bank entry — zh stores `pinyin|hanzi` and the chain is
 /// played in pinyin.
 fn typed(word: &str) -> String {
+    // zh-ok(grading): Word Chains is played in pinyin; this is the chain's own key, never a
+    // verdict
     fold_strict(word.split('|').next().unwrap_or(word))
 }
 
@@ -402,6 +404,8 @@ fn junior_set(lang: &str) -> std::rc::Rc<std::collections::HashSet<String>> {
             .iter()
             .flat_map(|t| crate::words::tier_for(lang, t).iter().copied())
             .filter(|w| crate::kid_filter::kid_allowed(lang, w))
+            // zh-ok(grading): builds the Junior word set for chain lookup; no typed input
+            // reaches it
             .map(|w| crate::norm::fold_strict(w.split('|').next().unwrap_or(w)))
             .collect();
     let rc = std::rc::Rc::new(set);

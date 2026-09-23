@@ -53,6 +53,7 @@ thread_local! {
 /// gloss keys on the full pair precisely because it must NOT collapse them;
 /// the two structures answer different questions.)
 fn comparable(entry: &str) -> String {
+    // zh-ok(grading): builds the sorted bank index for Forge; never sees typed input
     fold_strict(entry.split('|').next().unwrap_or(entry))
 }
 

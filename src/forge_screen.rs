@@ -93,6 +93,8 @@ fn save_key(lang: &str) -> String {
 /// built the pool — `fold_strict` over the typed half of a `pinyin|hanzi` entry
 /// — so the board and the answer set can never disagree about a word.
 fn key(w: &str) -> String {
+    // zh-ok(grading): mirrors the generator's pool key so board and answers agree; Forge is
+    // composition, not spelling
     fold_strict(w.split('|').next().unwrap_or(w))
 }
 
