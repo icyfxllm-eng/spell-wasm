@@ -1,0 +1,21 @@
+{
+  "_comment": "CC-AUDIO-CLARITY v1.1 C10/D17. Which variety each language's bank GRADES. Census C10 (2026-09-22) found no bank declared one and at least two contained more than one: English shipped center AND centre, gray AND grey, behavior AND behaviour, and Portuguese shipped desporto AND esporte. A player hears the word, both spellings are in the bank as separate entries, only one is the answer for that round, and nothing on screen says which. This file is the answer to 'which one', and scripts/bank-variety-check.mjs holds the bank to it. Each variety matches the voice the language is already served in (C5), because D17 requires the two to agree and re-recording every clip to match a bank instead would cost more than it is worth.",
+  "version": 1,
+  "varieties": {
+    "en": "en-US",
+    "es": "es-ES",
+    "fr": "fr-FR",
+    "de": "de-DE",
+    "pt": "pt-BR",
+    "pl": "pl-PL",
+    "ru": "ru-RU",
+    "vi": "vi-VN",
+    "ko": "ko-KR",
+    "ja": "ja-JP",
+    "fil": "fil-PH",
+    "zh": "cmn-CN",
+    "ar": "ar-XA",
+    "hi": "hi-IN",
+    "sw": "sw-TZ"
+  }
+}

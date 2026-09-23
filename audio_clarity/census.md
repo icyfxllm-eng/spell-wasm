@@ -97,34 +97,60 @@ Per-language counts are not derivable: the filename is
 `{version}_{md5(key)}_{variant}.mp3` and the language lives inside the hashed
 key. Getting them needs a pass over the bank, re-deriving each key.
 
-## C10 — Bank variety — HALT, and the premise is wrong
+## C10 — Bank variety — HALT (corrected 2026-09-22)
 
 The census asks which variety each bank grades. **No bank declares one, and at
-least two banks contain more than one.**
+least two contain more than one.** That part stands.
 
-English (3,412 words), voice en-US:
-- US-only spellings present: color, favor, labor, center, defense, license,
-  gray, program, jewelry
-- GB-only spellings present: centre, theatre, grey, travelled
-- **Both variants of the same word in the same bank: center/centre, gray/grey**
+English (3,170 tier words), voice en-US, before the fix:
+- US: color, favor, labor, center, defense, license, gray, program, jewelry,
+  behavior, neighbor
+- GB: centre, theatre, grey, travelled, behaviour
+- Both members of the same pair: center/centre, gray/grey, behavior/behaviour
 
-Portuguese (6,112 words), voice pt-BR:
-- Brazilian: trem, ônibus, bonde, esporte
-- European: comboio, equipa, elétrico, desporto
+Portuguese (6,112), voice pt-BR: esporte beside **desporto**, and **equipa**
+where Brazil says equipe.
 
-The player-facing consequence is not the accent — it is the grading. A player
-hears /ˈsɛntər/ and must produce "center" or "centre". Both are in the bank as
-separate entries; only one is the answer for that round; nothing on screen says
-which. That is unwinnable by knowledge, and it is live today.
+### What I got wrong, and the correction
 
-This breaks F4 step 2, D17 and F7's CI variety gate as written: they all
-compare a voice's variety against a bank variety that does not exist. Before
-any of them can mean anything, someone has to decide, per language, which
-variety the bank grades — and then the banks have to be filtered to it. The
-banks are corpus-derived (Leipzig and similar), which is exactly why they mix.
+I first reported this as a live fairness bug: "a player hears /ˈsɛntər/, both
+spellings are in the bank, only one is the answer, and nothing says which."
+**That is not true, and I repeated it several times before checking.**
 
-That is a decision for Eric, and it is bigger than this file: it changes bank
-contents, which CC-MASTER-PARITY owns.
+Every one of those English pairs is already in the collision table as an
+accept-all set — `center centre`, `gray grey`, `behavior behaviour`,
+`theater theatre`, `traveled travelled` — and `game.rs` runs
+`homophones::accepts` on every English answer (CC-SENSE-CUE F2(a)). A player
+typing either spelling was already accepted. The layer built for this was
+already doing its job.
+
+The Portuguese case was never ambiguous either: desporto and esporte do not
+sound alike, so a player hears one word and types that word.
+
+### What the real problem is
+
+Not ambiguity. **Variety drift**: a US voice asking for "theatre", and a
+Brazilian player being taught "desporto". That breaks D17, which requires a
+voice's variety to match the variety its bank grades, and it is a teaching
+quality issue rather than an unwinnable item. Worth fixing; not the emergency I
+called it.
+
+### What was done
+
+`config/bank-variety.json` declares one variety per language, each matching the
+voice already shipping (C5), because D17 requires them to agree and re-recording
+every clip to match a bank instead would cost more than it is worth.
+`scripts/bank-variety-check.mjs` holds the banks to it in the gate, with a
+CURATED pair list — a first draft derived pairs from suffix rules and "proved"
+that absence should be spelled absense.
+
+Removed: en centre, theatre, grey, travelled, behaviour; pt desporto, equipa.
+Their collision sets stay, so typing the other spelling is still accepted; the
+bank simply no longer asks for the wrong variety.
+
+Two words the check does NOT treat as European, though a marker list would:
+**comboio** is ordinary Brazilian for a convoy and **elétrico** is the everyday
+adjective. A first draft of the list would have deleted both.
 
 ## C11 — Round lifecycle — HALT
 

@@ -23,15 +23,10 @@ const VOICE_VARIETY = {
   ar: 'ar-XA', hi: 'hi-IN', sw: 'sw-TZ',
 };
 
-/// Census C10, and the reason this table is mostly null: the banks do not
-/// declare a variety, and English and Portuguese demonstrably contain more than
-/// one (color AND colour's cousins; trem AND comboio). D17 cannot be enforced
-/// against a variety that does not exist, so the gate reports the gap rather
-/// than inventing an answer. Fill a row in only when Eric has ruled on it.
-const BANK_VARIETY = {
-  en: null, es: null, fr: null, de: null, pt: null, pl: null, ru: null,
-  vi: null, ko: null, ja: null, fil: null, zh: null, ar: null, hi: null, sw: null,
-};
+/// Census C10, closed 2026-09-22: the banks declare a variety now, in
+/// config/bank-variety.json, and scripts/bank-variety-check.mjs holds them to
+/// it. Read it rather than restate it, so the two can never disagree.
+const BANK_VARIETY = JSON.parse(readFileSync('config/bank-variety.json', 'utf8')).varieties;
 
 const counts = {};
 const fails = [];
@@ -75,7 +70,8 @@ for (const lang of Object.keys(VOICE_VARIETY)) {
 lines.push('', '## Variety (C10 / D17)', '');
 lines.push('| Language | Voice | Bank grades |', '|---|---|---|');
 for (const [lang, v] of Object.entries(VOICE_VARIETY)) {
-  lines.push(`| ${lang} | ${v} | ${BANK_VARIETY[lang] || '**undeclared** — census C10 HALT' } |`);
+  const want = BANK_VARIETY[lang];
+  lines.push(`| ${lang} | ${v} | ${want || '**undeclared**'} |${want === v ? '' : ' mismatch'}`);
 }
 if (fails.length) lines.push('', '## Withheld (Fail)', '', ...fails.map((f) => `- ${f}`));
 mkdirSync('audio_clarity', { recursive: true });

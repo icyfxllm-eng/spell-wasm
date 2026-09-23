@@ -165,6 +165,8 @@ node scripts/spell-jr-name-check.mjs --selftest || { echo "GATE FAIL: spell-jr-n
 # Fail, and no voice may differ in variety from the bank it is graded against.
 # Strict about measured languages; the report names the unmeasured ones.
 node scripts/audio-clarity-check.mjs || { echo "GATE FAIL: audio clarity (F7)"; exit 1; }
+# CC-AUDIO-CLARITY C10/D17: one spelling variety per bank, matching the voice.
+node scripts/bank-variety-check.mjs || { echo "GATE FAIL: a bank mixes spelling varieties"; exit 1; }
 node scripts/tier-list-check.mjs || { echo "GATE FAIL: a tier list outside the resolver"; exit 1; }
 node scripts/tier-list-check.mjs --selftest || { echo "GATE FAIL: tier-list selftest — the gate no longer bites"; exit 1; }
 

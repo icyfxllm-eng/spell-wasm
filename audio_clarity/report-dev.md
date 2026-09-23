@@ -29,18 +29,18 @@ out loud rather than leave implied.
 
 | Language | Voice | Bank grades |
 |---|---|---|
-| en | en-US | **undeclared** — census C10 HALT |
-| es | es-ES | **undeclared** — census C10 HALT |
-| fr | fr-FR | **undeclared** — census C10 HALT |
-| de | de-DE | **undeclared** — census C10 HALT |
-| pt | pt-BR | **undeclared** — census C10 HALT |
-| pl | pl-PL | **undeclared** — census C10 HALT |
-| ru | ru-RU | **undeclared** — census C10 HALT |
-| vi | vi-VN | **undeclared** — census C10 HALT |
-| ko | ko-KR | **undeclared** — census C10 HALT |
-| ja | ja-JP | **undeclared** — census C10 HALT |
-| fil | fil-PH | **undeclared** — census C10 HALT |
-| zh | cmn-CN | **undeclared** — census C10 HALT |
-| ar | ar-XA | **undeclared** — census C10 HALT |
-| hi | hi-IN | **undeclared** — census C10 HALT |
-| sw | sw-TZ | **undeclared** — census C10 HALT |
+| en | en-US | en-US |
+| es | es-ES | es-ES |
+| fr | fr-FR | fr-FR |
+| de | de-DE | de-DE |
+| pt | pt-BR | pt-BR |
+| pl | pl-PL | pl-PL |
+| ru | ru-RU | ru-RU |
+| vi | vi-VN | vi-VN |
+| ko | ko-KR | ko-KR |
+| ja | ja-JP | ja-JP |
+| fil | fil-PH | fil-PH |
+| zh | cmn-CN | cmn-CN |
+| ar | ar-XA | ar-XA |
+| hi | hi-IN | hi-IN |
+| sw | sw-TZ | sw-TZ |

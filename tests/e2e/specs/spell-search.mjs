@@ -8,7 +8,10 @@ import { openApp, assert, assertEq } from '../harness.mjs';
 const KID = JSON.stringify({ verdict: 'kid', checkedAt: 1700000000 });
 const LAUNCH = ['en', 'es', 'ru', 'fr', 'de', 'pt', 'pl', 'fil'];
 // src/wordsearch/tests.rs GOLDEN: the host's 500-seed grid digest.
-const GOLDEN = '0x262e089cc61b94ff';
+// Re-pinned 2026-09-22 with src/wordsearch/tests.rs, which carries the
+// reason: CC-AUDIO-CLARITY C10 took five other-variety words out of the
+// English bank, so the pool those 500 seeds draw from is a different pool.
+const GOLDEN = '0xcc9d3e40658b6357';
 
 const board = (page) => page.evaluate(() => JSON.parse(window.__spelltest.spellSearchBoard() || 'null'));
 

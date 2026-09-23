@@ -169,7 +169,14 @@ fn wordgrid_property_10k() {
 
 /// Test 2. The host computes this digest; the e2e computes it again in the
 /// app's WebAssembly (`__spelltest.spellSearchGolden`) and compares.
-pub const GOLDEN: u64 = 0x262e089cc61b94ff;
+///
+/// Re-pinned 2026-09-22, from 0x262e089cc61b94ff. CC-AUDIO-CLARITY C10 removed
+/// five English words whose spelling belonged to the other variety -- centre,
+/// theatre, grey, travelled, behaviour -- so the pool those 500 seeds draw from
+/// is a different pool and every grid after the first divergence moves with it.
+/// A moved digest is only ever acceptable with a reason like this one beside
+/// it: the whole point of the pin is that nobody re-pins it casually.
+pub const GOLDEN: u64 = 0xcc9d_3e40_658b_6357;
 
 #[test]
 fn wordgrid_determinism() {
