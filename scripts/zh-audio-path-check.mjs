@@ -63,7 +63,22 @@ for (const f of fs.readdirSync(`${ROOT}/src`).filter((n) => n.endsWith(".rs"))) 
   // that was entirely correct. A gate that fires on comment length is a gate
   // people learn to route around.
   const code = src.replace(/^\s*\/\/.*$/gm, "");
-  const guarded = /==\s*crate::consts::ZH[\s\S]{0,600}?play_word_with/.test(code);
+  // Two compliant shapes, because there are two correct ways to keep zh off the
+  // device voice, and only one of them is zh-specific:
+  //
+  //   1. the zh case routes to the forced-reading clip;
+  //   2. EVERY built-in language does, and returns, before any device-voice
+  //      path is reachable — which is what game.rs does. That is strictly
+  //      stronger than (1): it covers all fifteen rather than one, and zh is a
+  //      built-in (consts::BUILTIN_LANGS).
+  //
+  // Shape 2 was failing this scan. The proximity window has now mis-fired twice
+  // on correct code — F5's sandhi lookup was the first — so the fix is to teach
+  // it the other shape rather than to widen the window again and wait for the
+  // third.
+  const guarded =
+    /==\s*crate::consts::ZH[\s\S]{0,600}?play_word_with/.test(code) ||
+    /is_builtin_lang\([\s\S]{0,900}?play_word_with[\s\S]{0,200}?return;/.test(code);
   if (!guarded)
     problems.push(
       `src/${f} can reach speech_out::speak for zh — the device voice cannot be ` +

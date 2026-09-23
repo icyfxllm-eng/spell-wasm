@@ -135,3 +135,124 @@ class CacheVersion(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+class PronunciationOverrides(unittest.TestCase):
+    """CC-AUDIO-CLARITY F3. The mechanism, not the entries: a row is a native
+    speaker's judgement and none ship."""
+
+    def setUp(self):
+        self.dir = tempfile.mkdtemp()
+        app.LEXICON_DIR = self.dir
+        app._LEXICON.clear()
+
+    def write(self, lang, rows):
+        with open(os.path.join(self.dir, f"{lang}.tsv"), "w", encoding="utf-8") as f:
+            f.write("word\tipa\tprovider\tauditor\tsigned_at\n")
+            for r in rows:
+                f.write("\t".join(r) + "\n")
+
+    def test_a_signed_row_loads(self):
+        self.write("en", [("half", "hæf", "google", "A. Speaker", "2026-09-23")])
+        e = app.lexicon_entry("en", "half")
+        self.assertIsNotNone(e)
+        self.assertEqual(e[0], "hæf")
+
+    def test_an_unsigned_row_does_not_load(self):
+        """F3 step 2: no auditor, no entry. A guess about how a language sounds
+        is what this file exists to prevent."""
+        self.write("en", [("half", "hæf", "google", "", "")])
+        self.assertIsNone(app.lexicon_entry("en", "half"))
+
+    def test_no_rows_ship(self):
+        """The real lexicon carries a header and nothing else until an auditor
+        signs something."""
+        app.LEXICON_DIR = os.path.join(os.path.dirname(os.path.abspath(app.__file__)), "..", "audio", "lexicon")
+        app._LEXICON.clear()
+        self.assertEqual(app._load_lexicon("en"), {})
+
+    def test_an_override_changes_only_its_own_clip(self):
+        """F3 step 3 / I8: editing one row regenerates exactly that clip."""
+        self.write("en", [("half", "hæf", "google", "A. Speaker", "2026-09-23")])
+        app._LEXICON.clear()
+        with_override = app.cache_path_for("half", "normal", "en")
+        other = app.cache_path_for("thief", "normal", "en")
+        self.write("en", [("half", "hɑːf", "google", "A. Speaker", "2026-09-23")])
+        app._LEXICON.clear()
+        self.assertNotEqual(with_override, app.cache_path_for("half", "normal", "en"), "the edited word regenerates")
+        self.assertEqual(other, app.cache_path_for("thief", "normal", "en"), "every other word stays cached")
+
+    def test_the_override_reaches_the_provider_as_ipa(self):
+        self.write("en", [("half", "hæf", "google", "A. Speaker", "2026-09-23")])
+        app._LEXICON.clear()
+        sent = {}
+
+        class Client:
+            def synthesize_speech(self, input=None, voice=None, audio_config=None):
+                sent["ssml"] = getattr(input, "ssml", "") or ""
+                return FakeResponse()
+
+        with mock.patch.object(app, "tts_client", Client()):
+            app.synthesize_to_cache("half", "normal", os.path.join(self.dir, "o.mp3"), "en")
+        self.assertIn('alphabet="ipa"', sent["ssml"])
+        self.assertIn("hæf", sent["ssml"])
+        # And it is still padded: an override must not cost the clip its edges.
+        lead, trail = app._breaks()
+        self.assertIn(lead, sent["ssml"])
+        self.assertIn(trail, sent["ssml"])
+
+    def test_a_word_without_a_row_is_untouched(self):
+        self.write("en", [("half", "hæf", "google", "A. Speaker", "2026-09-23")])
+        app._LEXICON.clear()
+        sent = {}
+
+        class Client:
+            def synthesize_speech(self, input=None, voice=None, audio_config=None):
+                sent["ssml"] = getattr(input, "ssml", "") or ""
+                return FakeResponse()
+
+        with mock.patch.object(app, "tts_client", Client()):
+            app.synthesize_to_cache("thief", "normal", os.path.join(self.dir, "t.mp3"), "en")
+        self.assertNotIn("phoneme", sent["ssml"])
+
+
+class BakeOffIsolation(unittest.TestCase):
+    """CC-AUDIO-CLARITY F4. A bake-off must never reach a player: its clips are
+    a different voice, and if they landed in the ordinary cache every listener
+    would quietly get the candidate."""
+
+    def test_a_candidate_clip_is_cached_somewhere_else(self):
+        normal = app.cache_path_for("half", "normal", "en")
+        cand = app.cache_path_for("half", "normal", "en", "bakeoff:en-US-Neural2-F:en:half")
+        self.assertNotEqual(normal, cand)
+
+    def test_two_candidates_do_not_share_a_clip(self):
+        a = app.cache_path_for("half", "normal", "en", "bakeoff:en-US-Neural2-F:en:half")
+        b = app.cache_path_for("half", "normal", "en", "bakeoff:en-US-Studio-O:en:half")
+        self.assertNotEqual(a, b, "each candidate is judged on its own audio")
+
+    def test_the_override_names_its_own_language(self):
+        """en-US-Neural2-F implies en-US: a candidate cannot be handed to the
+        wrong language's synthesis by accident."""
+        sent = {}
+
+        class Client:
+            def synthesize_speech(self, input=None, voice=None, audio_config=None):
+                sent["name"] = voice.name
+                sent["code"] = voice.language_code
+                return FakeResponse()
+
+        with mock.patch.object(app, "tts_client", Client()):
+            app.synthesize_to_cache("half", "normal", os.path.join(_TMP, "b.mp3"), "en",
+                                    voice_override="en-US-Neural2-F")
+        self.assertEqual(sent["name"], "en-US-Neural2-F")
+        self.assertEqual(sent["code"], "en-US")
+
+    def test_production_ignores_the_parameter(self):
+        """The guard is an env flag, off by default, so a stray ?voice= on the
+        live server changes nothing."""
+        src = Path(app.__file__).with_name("app.py").read_text(encoding="utf-8")
+        self.assertIn('os.environ.get("BAKEOFF") == "1"', src)
+        i = src.index('os.environ.get("BAKEOFF")')
+        j = src.index('request.args.get("voice"')
+        self.assertLess(i, j, "the voice parameter is only read inside the guard")

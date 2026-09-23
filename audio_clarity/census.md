@@ -285,3 +285,44 @@ records what each recognizer heard beside every verdict, which is what makes a
 verdict arguable instead of merely authoritative. The measurement is worth
 re-running once that is in hand, over a fair sample rather than a
 fricative-heavy one.
+
+---
+
+## Phase C, 2026-09-23 — the mechanisms, and what still blocks the run
+
+**F3, pronunciation overrides.** `audio/lexicon/<lang>.tsv`, emitted as an SSML
+`<phoneme>` — the same mechanism Mandarin already uses for its forced reading,
+so there is one way to tell a provider how a word sounds rather than two. The
+entry's hash joins the clip's cache key, so editing one row regenerates exactly
+that clip and leaves every other cached (F3 step 3 / I8). A row without an
+auditor and a date does not load at all: F3 step 2 says an entry comes only
+from a native speaker, and an unsigned row is a guess about how a language
+sounds, which is what this file exists to prevent.
+
+**No rows ship.** `half` and `leaf` are the two candidates the Phase B pilot
+found, and both wait on an auditor. I am not one, and neither is a G2P tool.
+
+**F4, the bake-off.** `scripts/audio-bakeoff.mjs` runs every candidate voice
+through the same two recognizers and ranks them, writing
+`audio_clarity/bakeoff/<lang>.md`. It recommends only: a default switch needs
+Eric's signature per language (D6), and the switch itself is atomic (F4 step 5,
+D16). A candidate whose variety does not match the bank is excluded BEFORE
+scoring rather than scored badly — a voice that speaks the wrong variety is not
+a worse option, it is not an option (D17).
+
+Running it needed a way to synthesize with a candidate voice, which did not
+exist. `/api/speak` now takes one, with two guards that matter:
+
+- it is read only when `BAKEOFF=1` is set in the server's environment, so
+  production ignores the parameter entirely;
+- candidate clips are cached under a key naming the voice. Without that a
+  bake-off would write other-voice clips into the cache players are served
+  from, and every listener would quietly get the candidate.
+
+**What blocks the actual run:** the live server has to come up once with
+`BAKEOFF=1`, which is a deploy, and deploys are Eric's. Until then the harness
+refuses rather than guesses, and `audio_clarity/bakeoff/` is empty.
+
+**What the run should answer:** whether `half` -> "have" and `leaf` -> "leave"
+follow the voice. If another en-US voice passes both, the fix is one signed
+switch rather than a lexicon row per word, forever.

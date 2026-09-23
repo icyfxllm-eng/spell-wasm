@@ -98,6 +98,46 @@ VOLUME_GAIN_DB = 4.0  # louder baseline; stay well under the 16 max to avoid cli
 # These two values are the only place padding is defined.
 PAD_LEAD_MS = 200
 PAD_TRAIL_MS = 150
+
+# CC-AUDIO-CLARITY v1.1 F3 — pronunciation overrides, one row per word, signed
+# by a native-speaker auditor (see audio/lexicon/README.md). Emitted as an SSML
+# <phoneme>, the same mechanism Mandarin already uses for its forced reading, so
+# there is one way to tell the provider how a word sounds rather than two.
+LEXICON_DIR = os.environ.get("AUDIO_LEXICON_DIR", os.path.join(os.path.dirname(__file__), "..", "audio", "lexicon"))
+
+
+def _load_lexicon(lang: str) -> dict:
+    """{word: (ipa, entry_hash)} for one language. Missing file is not an error:
+    most languages will never need a row."""
+    path = os.path.join(LEXICON_DIR, f"{lang}.tsv")
+    out = {}
+    try:
+        with open(path, encoding="utf-8") as f:
+            for line in f:
+                line = line.rstrip("\n")
+                if not line or line.startswith("#") or line.startswith("word\t"):
+                    continue
+                parts = line.split("\t")
+                if len(parts) < 5:
+                    continue
+                word, ipa, provider, auditor, signed_at = (p.strip() for p in parts[:5])
+                # F3 step 2: an unsigned row is a guess. It does not load.
+                if not (word and ipa and auditor and signed_at):
+                    continue
+                out[word.lower()] = (ipa, hashlib.md5(line.encode("utf-8")).hexdigest()[:8])
+    except OSError:
+        pass
+    return out
+
+
+_LEXICON: dict = {}
+
+
+def lexicon_entry(lang: str, word: str):
+    """The signed override for this word, or None."""
+    if lang not in _LEXICON:
+        _LEXICON[lang] = _load_lexicon(lang)
+    return _LEXICON[lang].get(word.lower())
 MAX_WORD_LENGTH = 45  # longest word in major dictionaries
 
 # Azure Speech (for AZURE_VOICES langs, e.g. Swahili). Optional: only needed if a
@@ -231,6 +271,12 @@ def cache_path_for(word: str, variant: str, lang: str = "en", key_override: str 
     # `lang` is part of the key so e.g. Spanish "casa" and English "casa" don't
     # share a clip. Existing English clips (no lang prefix) stay valid via "en".
     key = key_override or (word if lang == "en" else f"{lang}:{word}")
+    # F3 step 3 / I8: a clip made with an override is a different clip. Editing
+    # the row changes this hash, so exactly that one clip regenerates and every
+    # other stays cached.
+    entry = lexicon_entry(lang, word)
+    if entry and not key_override:
+        key = f"{key}|ipa:{entry[1]}"
     digest = hashlib.md5(key.encode()).hexdigest()
     return os.path.join(CACHE_DIR, f"{CACHE_VERSION}_{digest}_{variant}.mp3")
 
@@ -327,7 +373,7 @@ def _synthesize_zh(word: str, py: str, variant: str, path: str) -> None:
         f.write(response.audio_content)
 
 
-def synthesize_to_cache(word: str, variant: str, path: str, lang: str = "en", py: str = None) -> None:
+def synthesize_to_cache(word: str, variant: str, path: str, lang: str = "en", py: str = None, voice_override: str = None) -> None:
     """Synthesize a word once and store the MP3 permanently. Routes to Azure for
     AZURE_VOICES languages, otherwise Google.
 
@@ -347,10 +393,19 @@ def synthesize_to_cache(word: str, variant: str, path: str, lang: str = "en", py
         _synthesize_azure(word, variant, path, lang)
         return
 
-    synthesis_input = texttospeech.SynthesisInput(ssml=_padded_ssml(html.escape(word, quote=False)))
+    entry = lexicon_entry(lang, word)
+    spoken = html.escape(word, quote=False)
+    if entry:
+        spoken = f'<phoneme alphabet="ipa" ph="{html.escape(entry[0], quote=True)}">{spoken}</phoneme>'
+    synthesis_input = texttospeech.SynthesisInput(ssml=_padded_ssml(spoken))
     rate = SPEAKING_RATE_SLOW if variant == "slow" else SPEAKING_RATE_NORMAL
     language_code, voice_name = LANG_VOICES.get(lang, LANG_VOICES[DEFAULT_LANG])
-
+    if voice_override:
+        # A candidate's language code is the prefix of its name, by Google's own
+        # convention (en-US-Neural2-F -> en-US), so a bake-off cannot ask for a
+        # voice from the wrong language by accident.
+        voice_name = voice_override
+        language_code = "-".join(voice_override.split("-")[:2]) or language_code
     response = tts_client.synthesize_speech(
         input=synthesis_input,
         voice=texttospeech.VoiceSelectionParams(
@@ -559,13 +614,28 @@ def _speak(meta):
     if lang == "zh" and py is None:
         return jsonify({"error": "zh requires a valid pinyin reading"}), 400
 
-    path = cache_path_for(word, variant, lang, zh_cache_key(py) if py else None)
+    # CC-AUDIO-CLARITY v1.1 F4 — the bake-off path. A candidate voice can only
+    # be requested when BAKEOFF is set in the server's env, so production
+    # ignores the parameter entirely, and its clips are cached under a key that
+    # names the voice. That second part is the important one: without it a
+    # bake-off would write other-voice clips into the cache players are served
+    # from, and every listener would quietly get the candidate.
+    bakeoff_voice = None
+    if os.environ.get("BAKEOFF") == "1":
+        v = request.args.get("voice", "")
+        if v and re.fullmatch(r"[A-Za-z0-9-]{1,64}", v):
+            bakeoff_voice = v
+
+    if bakeoff_voice:
+        path = cache_path_for(word, variant, lang, f"bakeoff:{bakeoff_voice}:{lang}:{word}")
+    else:
+        path = cache_path_for(word, variant, lang, zh_cache_key(py) if py else None)
 
     if os.path.exists(path):
         meta["cache"] = "hit"
     else:
         try:
-            synthesize_to_cache(word, variant, path, lang, py)
+            synthesize_to_cache(word, variant, path, lang, py, voice_override=bakeoff_voice)
         except Exception as e:
             app.logger.error(f"TTS failed for '{word}' ({variant}): {e}")
             return jsonify({"error": "speech synthesis failed"}), 502
