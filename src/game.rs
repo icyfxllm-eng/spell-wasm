@@ -1670,11 +1670,12 @@ pub fn next_word(app: &App) {
                 // instant instead of waiting on a fresh TTS fetch.
                 if is_builtin_lang(&s.cur_lang) {
                     if let Some(next_up) = s.decks.get(&key).and_then(|d| d.peek()) {
-                        match crate::pinyin::phoneme_reading(&next_up)
-                            .filter(|_| s.cur_lang == crate::consts::ZH)
-                        {
-                            Some(py) => api::preload_word_with(&next_up, Some(&py), &s.cur_lang),
-                            None => api::preload_word(&next_up, &s.cur_lang),
+                        // Through warm_target like the launch warm-up: a deck
+                        // entry is the raw bank entry, "pinyin|hanzi" in
+                        // Mandarin, and asking for that whole string is what
+                        // the server rejects.
+                        if let Some((text, py)) = warm_target(&s.cur_lang, &next_up) {
+                            api::preload_word_with(&text, py.as_deref(), &s.cur_lang);
                         }
                     }
                 }
@@ -4213,6 +4214,33 @@ mod warm_up_tests {
                 "{entry}: reading {py:?} is not the pinyin shape the server accepts"
             );
         }
+    }
+
+    /// Every audio warm-up goes through warm_target. The launch warm-up was
+    /// fixed first and the per-round prefetch was missed, so Mandarin still
+    /// sent a raw "pinyin|hanzi" entry once per round and the server still
+    /// rejected it (seen in the simulator, 2026-09-23). This fails on a third
+    /// call site that decides for itself.
+    #[test]
+    fn every_warm_up_call_goes_through_warm_target() {
+        let src = include_str!("game.rs");
+        let calls: Vec<&str> = src
+            .lines()
+            .map(str::trim)
+            .filter(|l| l.starts_with("api::preload_word"))
+            .collect();
+        assert_eq!(calls.len(), 2, "warm-up call sites changed: {calls:?}");
+        for c in &calls {
+            assert!(
+                c.contains("(&text, py.as_deref()"),
+                "a warm-up call builds its own arguments instead of using warm_target: {c}"
+            );
+        }
+        // And only voice_target may derive a reading.
+        // Built at runtime so this needle does not match itself.
+        let needle = format!("crate::pinyin::{}(", "phoneme_reading");
+        let readings = src.matches(needle.as_str()).count();
+        assert_eq!(readings, 1, "phoneme_reading is called outside voice_target");
     }
 
     /// Every other language voices the word itself and names no reading.
