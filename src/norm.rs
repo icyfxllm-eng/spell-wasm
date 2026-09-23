@@ -15,13 +15,47 @@
 
 use unicode_normalization::UnicodeNormalization;
 
-/// NFC + Unicode lowercase, whitespace removed. Accent-strict.
+/// Marks that are never part of a stored answer, and so must never decide a
+/// verdict.
+///
+/// Arabic tashkeel and tatweel: the banks hold the unvocalized standard
+/// (CC-LINEUP-SWAP D5), and the ar bank carries zero harakat at any tier today.
+/// But writing the marks is correct Arabic and the Arabic keyboard reaches them
+/// in one long-press, so a player who spelled the word and then vocalized it was
+/// being told the word was wrong. Dropping these from BOTH sides cannot flip a
+/// verdict that exists today -- no canonical answer contains one, which
+/// `no_shipping_answer_depends_on_a_silent_mark` checks rather than assumes --
+/// so the only reachable change is a correct spelling that used to be refused
+/// now being accepted.
+///
+/// ZWNJ is orthography, not a keystroke. `fa_canon` settled this for Persian
+/// (F2, Eric 2026-08-09): the stored form keeps its ZWNJ, the comparison
+/// ignores it, because a player cannot be held to an invisible character.
+/// Devanagari half-forms are the same question.
+///
+/// ZWJ (U+200D) is deliberately absent: My Words takes arbitrary text and emoji
+/// sequences are joined with it, so folding it away would merge distinct
+/// entries in the one place a player supplies their own words.
+///
+/// NFC runs before this, so أ إ آ ؤ ئ have already composed out of their
+/// letter + hamza pairs. Hamza seats are spelling and survive; ة/ه and ى/ي are
+/// letters and were never in reach of this filter.
+fn is_silent_mark(c: char) -> bool {
+    matches!(c,
+        '\u{064B}'..='\u{065F}'  // tashkeel: fathatan .. wavy hamza below
+        | '\u{0670}'             // superscript (dagger) alef
+        | '\u{0640}'             // tatweel: decorative elongation
+        | '\u{200C}'             // ZWNJ
+    )
+}
+
+/// NFC + Unicode lowercase, whitespace and silent marks removed. Accent-strict.
 pub fn fold_strict(s: &str) -> String {
     s.nfc()
         .collect::<String>()
         .to_lowercase()
         .chars()
-        .filter(|c| !c.is_whitespace())
+        .filter(|c| !c.is_whitespace() && !is_silent_mark(*c))
         .collect()
 }
 
@@ -29,6 +63,11 @@ pub fn fold_strict(s: &str) -> String {
 /// that have no NFD decomposition down to A–Z-ish equivalents.
 pub fn fold_lenient(s: &str) -> String {
     let lowered: String = s.nfc().collect::<String>().to_lowercase();
+    // Silent marks go BEFORE the NFD pass, not after: NFD would decompose أ into
+    // ا + U+0654, which sits inside the tashkeel range, and stripping it there
+    // would quietly make Kid Mode hamza-blind -- gutting Arabic's main trap
+    // class for exactly the players least able to notice.
+    let lowered: String = lowered.chars().filter(|c| !is_silent_mark(*c)).collect();
     let stripped: String = lowered.nfd().filter(|c| !('\u{0300}'..='\u{036f}').contains(c)).collect();
     stripped
         .replace('\u{df}', "ss") // ß
@@ -234,5 +273,95 @@ mod tests {
     fn spoken_keeps_internal_apostrophe_and_hyphen() {
         assert!(spoken_matches("say don't now", "don't"));
         assert!(spoken_matches("it is mag-aral", "mag-aral"));
+    }
+
+    /// CC-AR-HI-PREAUDIT acceptance test 5, first half. Arabic is written
+    /// without short-vowel marks and the bank stores the unvocalized standard
+    /// (CC-LINEUP-SWAP D5), but typing the marks is correct Arabic and the
+    /// iOS Arabic keyboard reaches them in one long-press. A player who spells
+    /// the word and decorates it was being told the word was wrong.
+    #[test]
+    fn typed_harakat_are_accepted_never_penalized() {
+        // مدرسة, then the same word fully vocalized: مَدْرَسَة
+        let bare = "\u{645}\u{62f}\u{631}\u{633}\u{629}";
+        let marked = "\u{645}\u{64e}\u{62f}\u{652}\u{631}\u{64e}\u{633}\u{64e}\u{629}";
+        assert_ne!(bare, marked, "inputs must differ before normalization");
+        assert!(answer_matches(marked, bare, false), "vocalized spelling is the same spelling");
+        assert!(answer_matches(marked, bare, true), "and in Kid Mode too");
+    }
+
+    /// The other half of acceptance test 5: the marks are noise, the letters
+    /// are not. ة and ه are different letters (trap class taa-marbuta-vs-haa),
+    /// and stripping marks must not start folding them together.
+    #[test]
+    fn stripping_marks_does_not_fold_letters() {
+        let madrasa_ta = "\u{645}\u{62f}\u{631}\u{633}\u{629}"; // مدرسة
+        let madrasa_ha = "\u{645}\u{62f}\u{631}\u{633}\u{647}"; // مدرسه
+        assert!(!answer_matches(madrasa_ha, madrasa_ta, false), "ة vs ه stays a miss");
+
+        // Hamza seats are spelling (F2/I1) and survive the fold in both modes.
+        let with_hamza = "\u{623}\u{646}"; // أن
+        let bare_alif = "\u{627}\u{646}"; // ان
+        assert!(!answer_matches(bare_alif, with_hamza, false), "hamza seat stays graded");
+        assert!(!answer_matches(bare_alif, with_hamza, true), "including in Kid Mode");
+
+        // ى vs ي likewise (trap class alif-maqsura-vs-yaa).
+        assert!(!answer_matches("\u{639}\u{644}\u{64a}", "\u{639}\u{644}\u{649}", false));
+    }
+
+    /// Tatweel is decorative elongation with no meaning -- fa_canon says so for
+    /// Persian and it is the same character in Arabic.
+    #[test]
+    fn tatweel_is_decoration_not_spelling() {
+        let plain = "\u{628}\u{628}";
+        let stretched = "\u{628}\u{640}\u{640}\u{628}";
+        assert!(answer_matches(stretched, plain, false));
+    }
+
+    /// ZWNJ is orthography, not a keystroke a player can be held to. fa_canon
+    /// F2 (Eric, 2026-08-09) settled this for Persian: the stored form keeps
+    /// its ZWNJ, the comparison ignores it. Devanagari half-forms are the same
+    /// question, and the hi bank stores no ZWNJ at any tier.
+    #[test]
+    fn zwnj_never_decides_a_verdict() {
+        let hindi = "\u{939}\u{93f}\u{928}\u{94d}\u{926}\u{940}"; // हिन्दी
+        let with_zwnj = "\u{939}\u{93f}\u{928}\u{94d}\u{200c}\u{926}\u{940}";
+        assert_ne!(hindi, with_zwnj);
+        assert!(answer_matches(with_zwnj, hindi, false));
+    }
+
+    /// ZWJ is deliberately NOT stripped. My Words takes arbitrary text and
+    /// emoji sequences are joined with U+200D; folding it away would merge
+    /// distinct entries in the one place a player supplies their own words.
+    #[test]
+    fn zwj_survives_because_my_words_takes_emoji() {
+        let family = "\u{1f468}\u{200d}\u{1f469}\u{200d}\u{1f467}";
+        let three = "\u{1f468}\u{1f469}\u{1f467}";
+        assert!(!answer_matches(three, family, false), "ZWJ still distinguishes emoji sequences");
+    }
+
+    /// The whole change is only safe because no canonical answer carries one of
+    /// these marks: removing them from both sides can then never flip a verdict
+    /// that exists today, it can only accept a correct spelling that used to be
+    /// refused. This test is that premise, checked against the shipping banks
+    /// rather than assumed.
+    #[test]
+    fn no_shipping_answer_depends_on_a_silent_mark() {
+        for (code, _, _, _) in crate::consts::BUILTIN_LANGS {
+            for tier in ["easy", "medium", "hard", "expert"] {
+                for w in crate::words::tier_for(code, tier) {
+                    // The whole entry, Mandarin's "pinyin|hanzi" included: no
+                    // split, because none is needed. Nothing here grades -- it
+                    // counts characters -- and checking both halves is the
+                    // stronger claim anyway.
+                    assert_eq!(
+                        fold_strict(w).chars().count(),
+                        w.nfc().collect::<String>().to_lowercase()
+                            .chars().filter(|c| !c.is_whitespace()).count(),
+                        "locale {code}: {w:?} loses a character to the silent-mark fold",
+                    );
+                }
+            }
+        }
     }
 }
