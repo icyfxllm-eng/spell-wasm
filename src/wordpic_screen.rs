@@ -132,6 +132,15 @@ pub fn wire(app: &App) {
     });
     let a = app.clone();
     dom::on_click("wpExit", move || close_play(&a));
+    // CC-AUDIO-CLARITY F6a — the rescue. Local, and it sends nothing (I12).
+    // Note it is NOT behind audio_gate: the whole point is that a player on a
+    // subject the gate would silence still has a way to hear the word.
+    dom::on_click("wpCantHear", open_rescue);
+    dom::on_click("wpRescueClose", close_rescue);
+    {
+        let a = app.clone();
+        dom::on_click("wpRescueSlow", move || rescue_slow(&a));
+    }
     let a = app.clone();
     dom::on_click("wpReplay", move || {
         // Hidden at expert, but the handler guards too: a gate that only
@@ -2332,11 +2341,32 @@ fn zh_hanzi_for(pinyin: &str) -> Option<String> {
 }
 
 fn replay(app: &App) {
+    replay_at(app, false);
+}
+
+/// CC-AUDIO-CLARITY v1.1 F6a — the word again, slowly, whatever the tier.
+/// Spell Picture had a slow clip already, but only where the TIER granted it
+/// (`audio_gate`), so a player on a harder subject who could not make a word
+/// out had nothing to try. `force_slow` is the rescue asking for it anyway.
+pub fn rescue_slow(app: &App) {
+    replay_at(app, true);
+}
+
+pub fn open_rescue() {
+    dom::set_hidden("wpRescue", false);
+}
+
+pub fn close_rescue() {
+    dom::set_hidden("wpRescue", true);
+}
+
+fn replay_at(app: &App, force_slow: bool) {
     let lang = LANG.with(|l| l.borrow().clone());
     let Some(w) = current_word() else { return };
     let code = format!("{}-{}", lang, lang.to_uppercase());
     let _ = app;
-    let (_, slow) = audio_gate(&current_tier());
+    let (_, tier_slow) = audio_gate(&current_tier());
+    let slow = tier_slow || force_slow;
     let variant = if slow { "slow" } else { "normal" };
     let rate = if slow { 0.55 } else { 0.9 };
     // CC-ZH-TONE F6. This path sent the PINYIN as the word, which the server

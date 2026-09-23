@@ -227,3 +227,61 @@ Confirming it per language means provider API calls, which belong with Phase C
    still unclear after padding and the EQ decision, the cause is the voice or
    the encode, not a lost edge — which makes the Phase B measurement the real
    diagnosis rather than Phase A.
+
+---
+
+## Phase B pilot, 2026-09-22 — the first real measurement
+
+A whisper.cpp model (`ggml-small.bin`, multilingual, 487 MB, at
+`~/.cache/whisper/`) plus the Google STT the backend already wires makes F2's
+two recognizers real. A 60-word English pilot ran: 40 words whose first or last
+sound is a low-energy fricative, where the reported failure lives, and 20
+ordinary controls.
+
+**51 Pass, 5 Weak, 1 exempt, 3 Fail.** The verdicts are NOT shipped — see the
+end of this section.
+
+### The finding: word-final /f/ is heard as /v/
+
+| word | whisper | Google STT |
+|---|---|---|
+| half | "Have" | "half" (second choice: "Haff") |
+| leaf | "Leave" | "leave" |
+
+`half` is the word the testers reported, and a machine hears it the same way.
+`leaf` fails identically and nobody reported it. Meanwhile `fifth`, `thief`,
+`hip`, `cat`, `dog` and `bridge` all pass, so this is not a weak recognizer and
+not the pipeline: the padding is on these clips, and `thief` carries the same
+fricative fine.
+
+It is word-specific in en-US-Neural2-D, which points at **F3's pronunciation
+override or F4's bake-off — Phase C**. Nothing Phase A could have done would
+have fixed it, and C3 had already shown there was no trimmer to blame.
+
+`hiss` deserves its own line: neither recognizer heard anything at all, Google
+returning an empty transcript at 0.0 confidence. Nobody reported it. That is
+what F2 is for.
+
+### Two bugs in the harness, found by running it
+
+1. **Digit forms.** Recognizers write "fifth" as `5th` and "seven" as `7`. That
+   is a transcription convention, not a mishearing; scoring it FAIL would
+   withhold clear clips. Normalisation now folds them.
+2. **No homophone exemption.** F2 step 4 exempts collision-table words, and the
+   harness did not implement it. Without it the gate withheld `for` (both
+   recognizers heard "four") and `some` ("sum") — common words, clear clips,
+   silenced by a test that did not know they were homophones.
+
+### Why the pilot's verdicts are not shipped
+
+After the exemption landed, `some` became exempt but **`for` stayed FAIL** —
+and `for` IS in the collision table (`fir for fore four fur`), so it should
+have been exempt too. The transcripts were not recorded, so the failure cannot
+be explained after the fact.
+
+A store containing a FAIL nobody can account for would withhold a common word
+on evidence that cannot be checked, so the store ships EMPTY. The harness now
+records what each recognizer heard beside every verdict, which is what makes a
+verdict arguable instead of merely authoritative. The measurement is worth
+re-running once that is in hand, over a fair sample rather than a
+fricative-heavy one.

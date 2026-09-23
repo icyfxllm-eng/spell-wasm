@@ -257,11 +257,37 @@ fn speak(app: &App, rate: f32) {
     if lang == crate::consts::ZH {
         let (pinyin, hanzi) = w.split_once('|').unwrap_or((w.as_str(), w.as_str()));
         if let Some(py) = crate::pinyin::phoneme_reading(pinyin) {
-            crate::api::play_word_with(hanzi, Some(&py), "normal", rate as f64, &lang, || {});
+            crate::api::play_word_with(hanzi, Some(&py), variant_for(rate), rate as f64, &lang, || {});
         }
         return;
     }
-    speech_out::speak(w.split('|').next().unwrap_or(&w), rate, &lang);
+    // CC-AUDIO-CLARITY (Eric, 2026-09-22: "route bee through the resolver").
+    // Every other language went straight to the device voice here, so the Bee
+    // — the one mode where hearing the word IS the task — was the only mode
+    // none of the clarity work reached: no padded clip (F1), no intelligibility
+    // verdict (F2, which has nothing to transcribe for a device voice), and a
+    // different voice on every phone and OS version. It takes the same resolver
+    // as everywhere else now, and keeps the device voice as its last resort,
+    // exactly as the resolver's own chain does.
+    //
+    // "Slower" was a synthesis RATE; through the resolver it becomes the
+    // server's slow VARIANT, which is a separately rendered clip rather than a
+    // stretched one. The device fallback still gets the rate.
+    let word = w.split('|').next().unwrap_or(&w).to_string();
+    let (fallback, code, r) = (word.clone(), lang.clone(), rate);
+    crate::api::play_word(&word, variant_for(rate), rate as f64, &lang, move || {
+        speech_out::speak(&fallback, r, &code)
+    });
+}
+
+/// The Bee asks for "Slower" by dropping the rate; the resolver asks for it by
+/// name. One place decides which is which.
+fn variant_for(rate: f32) -> &'static str {
+    if rate < 0.8 {
+        "slow"
+    } else {
+        "normal"
+    }
 }
 
 fn tap(e: web_sys::MouseEvent) {

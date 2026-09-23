@@ -1,0 +1,302 @@
+[
+ {
+  "word": "sun",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8000/api/speak?word=sun&lang=en&variant=normal"
+ },
+ {
+  "word": "hat",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8000/api/speak?word=hat&lang=en&variant=normal"
+ },
+ {
+  "word": "fish",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8000/api/speak?word=fish&lang=en&variant=normal"
+ },
+ {
+  "word": "star",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8000/api/speak?word=star&lang=en&variant=normal"
+ },
+ {
+  "word": "frog",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8000/api/speak?word=frog&lang=en&variant=normal"
+ },
+ {
+  "word": "hand",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8000/api/speak?word=hand&lang=en&variant=normal"
+ },
+ {
+  "word": "ship",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8000/api/speak?word=ship&lang=en&variant=normal"
+ },
+ {
+  "word": "leaf",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8000/api/speak?word=leaf&lang=en&variant=normal"
+ },
+ {
+  "word": "farm",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8000/api/speak?word=farm&lang=en&variant=normal"
+ },
+ {
+  "word": "fox",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8000/api/speak?word=fox&lang=en&variant=normal"
+ },
+ {
+  "word": "hill",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8000/api/speak?word=hill&lang=en&variant=normal"
+ },
+ {
+  "word": "horse",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8000/api/speak?word=horse&lang=en&variant=normal"
+ },
+ {
+  "word": "seed",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8000/api/speak?word=seed&lang=en&variant=normal"
+ },
+ {
+  "word": "snow",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8000/api/speak?word=snow&lang=en&variant=normal"
+ },
+ {
+  "word": "sock",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8000/api/speak?word=sock&lang=en&variant=normal"
+ },
+ {
+  "word": "swim",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8000/api/speak?word=swim&lang=en&variant=normal"
+ },
+ {
+  "word": "wolf",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8000/api/speak?word=wolf&lang=en&variant=normal"
+ },
+ {
+  "word": "of",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8000/api/speak?word=of&lang=en&variant=normal"
+ },
+ {
+  "word": "is",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8000/api/speak?word=is&lang=en&variant=normal"
+ },
+ {
+  "word": "was",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8000/api/speak?word=was&lang=en&variant=normal"
+ },
+ {
+  "word": "for",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8000/api/speak?word=for&lang=en&variant=normal"
+ },
+ {
+  "word": "as",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8000/api/speak?word=as&lang=en&variant=normal"
+ },
+ {
+  "word": "with",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8000/api/speak?word=with&lang=en&variant=normal"
+ },
+ {
+  "word": "from",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8000/api/speak?word=from&lang=en&variant=normal"
+ },
+ {
+  "word": "his",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8000/api/speak?word=his&lang=en&variant=normal"
+ },
+ {
+  "word": "have",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8000/api/speak?word=have&lang=en&variant=normal"
+ },
+ {
+  "word": "he",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8000/api/speak?word=he&lang=en&variant=normal"
+ },
+ {
+  "word": "had",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8000/api/speak?word=had&lang=en&variant=normal"
+ },
+ {
+  "word": "has",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8000/api/speak?word=has&lang=en&variant=normal"
+ },
+ {
+  "word": "this",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8000/api/speak?word=this&lang=en&variant=normal"
+ },
+ {
+  "word": "its",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8000/api/speak?word=its&lang=en&variant=normal"
+ },
+ {
+  "word": "some",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8000/api/speak?word=some&lang=en&variant=normal"
+ },
+ {
+  "word": "such",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8000/api/speak?word=such&lang=en&variant=normal"
+ },
+ {
+  "word": "her",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8000/api/speak?word=her&lang=en&variant=normal"
+ },
+ {
+  "word": "him",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8000/api/speak?word=him&lang=en&variant=normal"
+ },
+ {
+  "word": "both",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8000/api/speak?word=both&lang=en&variant=normal"
+ },
+ {
+  "word": "so",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8000/api/speak?word=so&lang=en&variant=normal"
+ },
+ {
+  "word": "if",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8000/api/speak?word=if&lang=en&variant=normal"
+ },
+ {
+  "word": "same",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8000/api/speak?word=same&lang=en&variant=normal"
+ },
+ {
+  "word": "very",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8000/api/speak?word=very&lang=en&variant=normal"
+ },
+ {
+  "word": "cat",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8000/api/speak?word=cat&lang=en&variant=normal"
+ },
+ {
+  "word": "dog",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8000/api/speak?word=dog&lang=en&variant=normal"
+ },
+ {
+  "word": "run",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8000/api/speak?word=run&lang=en&variant=normal"
+ },
+ {
+  "word": "bed",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8000/api/speak?word=bed&lang=en&variant=normal"
+ },
+ {
+  "word": "cup",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8000/api/speak?word=cup&lang=en&variant=normal"
+ },
+ {
+  "word": "milk",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8000/api/speak?word=milk&lang=en&variant=normal"
+ },
+ {
+  "word": "tree",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8000/api/speak?word=tree&lang=en&variant=normal"
+ },
+ {
+  "word": "book",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8000/api/speak?word=book&lang=en&variant=normal"
+ },
+ {
+  "word": "jump",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8000/api/speak?word=jump&lang=en&variant=normal"
+ },
+ {
+  "word": "rain",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8000/api/speak?word=rain&lang=en&variant=normal"
+ },
+ {
+  "word": "gold",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8000/api/speak?word=gold&lang=en&variant=normal"
+ },
+ {
+  "word": "nest",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8000/api/speak?word=nest&lang=en&variant=normal"
+ },
+ {
+  "word": "bird",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8000/api/speak?word=bird&lang=en&variant=normal"
+ },
+ {
+  "word": "corn",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8000/api/speak?word=corn&lang=en&variant=normal"
+ },
+ {
+  "word": "desk",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8000/api/speak?word=desk&lang=en&variant=normal"
+ },
+ {
+  "word": "door",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8000/api/speak?word=door&lang=en&variant=normal"
+ },
+ {
+  "word": "duck",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8000/api/speak?word=duck&lang=en&variant=normal"
+ },
+ {
+  "word": "gift",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8000/api/speak?word=gift&lang=en&variant=normal"
+ },
+ {
+  "word": "girl",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8000/api/speak?word=girl&lang=en&variant=normal"
+ },
+ {
+  "word": "kite",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8000/api/speak?word=kite&lang=en&variant=normal"
+ }
+]

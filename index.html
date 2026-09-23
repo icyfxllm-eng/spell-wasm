@@ -1486,7 +1486,13 @@
        43vh is what is left once the header, note, clue box and keyboard have
        taken theirs. */
     .xw-grid{aspect-ratio:var(--xw-w)/var(--xw-h);grid-template-rows:repeat(var(--xw-h),1fr);
-      max-height:43vh;max-width:min(520px,100%);width:auto;align-self:center;margin-inline:auto}
+      max-height:43vh;max-width:min(520px,100%);width:auto;align-self:center;margin-inline:auto;
+      /* A floor on the cell. Fitting the screen is worth shrinking the board
+         for, but not past the point where the board is hard to tap: a 13x13
+         Expert puzzle on the smallest phone was landing at 21 px. Below 28 px
+         the grid stops shrinking and the screen scrolls instead, which is the
+         honest trade rather than a board nobody can play. */
+      min-width:calc(var(--xw-w)*28px);min-height:calc(var(--xw-h)*28px)}
     .xw-clues{grid-template-columns:repeat(auto-fill,minmax(104px,1fr));gap:3px;max-height:118px;overflow-y:auto;
       min-height:0;scrollbar-width:thin;margin-top:5px}
     .xw-clue{padding:2px 5px}
@@ -2334,6 +2340,15 @@
     <div class="wp-row">
       <input class="wp-input" id="wpInput" type="text" inputmode="none" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" />
       <button class="btn btn-check wp-replay" id="wpReplay" aria-label="Replay">🔊</button>
+      <button class="ghost" id="wpCantHear" data-i18n="btn.cantHear">Can't hear it</button>
+    </div>
+    <!-- CC-AUDIO-CLARITY F6a: the word again, slowly, whatever the subject. -->
+    <div class="rescue" id="wpRescue" hidden role="group">
+      <p data-i18n="rescue.title">Can't hear it?</p>
+      <div class="rescue-steps">
+        <button class="ghost" id="wpRescueSlow" data-i18n="rescue.slow">Hear it slowly</button>
+      </div>
+      <button class="ghost" id="wpRescueClose" data-i18n="rescue.close">Back</button>
     </div>
     <!-- F7: the app's own per-language keyboard is lent here while the
          picture is open, so no system keyboard (and no dictation key) -->

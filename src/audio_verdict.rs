@@ -42,6 +42,11 @@ impl Verdict {
 #[derive(Deserialize)]
 struct Entry {
     v: Verdict,
+    /// What each recognizer heard, kept so a verdict can be argued with. The
+    /// app never reads it; the report and a human do.
+    #[serde(default)]
+    #[allow(dead_code)]
+    heard: Vec<String>,
 }
 
 #[derive(Deserialize, Default)]

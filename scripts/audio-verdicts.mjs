@@ -42,6 +42,16 @@ const KEY = {
   ja: 'unscorable',
 };
 
+/// Recognizers write numbers as digits: "fifth" comes back "5th", "seven"
+/// comes back "7". That is a transcription convention, not a mishearing, and
+/// scoring it FAIL would withhold a perfectly clear clip.
+const DIGIT_WORDS = {
+  '0': 'zero', '1': 'one', '2': 'two', '3': 'three', '4': 'four', '5': 'five',
+  '6': 'six', '7': 'seven', '8': 'eight', '9': 'nine', '10': 'ten',
+  '1st': 'first', '2nd': 'second', '3rd': 'third', '4th': 'fourth', '5th': 'fifth',
+  '6th': 'sixth', '7th': 'seventh', '8th': 'eighth', '9th': 'ninth', '10th': 'tenth',
+};
+
 /// I9: every comparison runs on NFC, case-folded, punctuation stripped.
 function normalize(s, key) {
   let out = String(s).normalize('NFC').toLowerCase().replace(/[.,!?;:"'`()\[\]{}…—–-]/g, '').trim();
@@ -60,12 +70,36 @@ function whisper(wav, lang) {
   return (existsSync(`${wav}.txt`) ? readFileSync(`${wav}.txt`, 'utf8') : out).trim();
 }
 
-function verdictFor(word, key, heard) {
+/// F2 step 4: a word in the collision table is not recognizable by design, so a
+/// recognizer returning a different member of its set proves nothing about the
+/// clip. Without this the gate withholds "for" because both recognizers heard
+/// "four", and "some" because they heard "sum" -- clear clips of common words,
+/// silenced by a test that did not know they were homophones.
+function collisionSets(lang) {
+  const p = `assets/words/${lang}/homophones.txt`;
+  if (!existsSync(p)) return [];
+  return readFileSync(p, 'utf8')
+    .split('\n')
+    .filter((l) => l.trim() && !l.startsWith('#'))
+    .map((l) => l.trim().split(/\s+/));
+}
+
+function verdictFor(word, key, heard, sets) {
   if (key === 'unscorable') return 'Unscorable';
   const want = normalize(word, key);
   const hits = heard.filter((h) => normalize(h, key) === want).length;
   if (hits >= 2) return 'Pass';
   if (hits === 1) return 'Weak';
+  // Nothing matched. Before calling it FAIL, ask whether what WAS heard is a
+  // member of this word's collision set.
+  const mine = sets.find((set) => set.some((w) => normalize(w, key) === want));
+  if (mine) {
+    const heardMember = heard.some((h) => {
+      const n = normalize(h, key);
+      return n && mine.some((w) => normalize(w, key) === n);
+    });
+    if (heardMember) return 'ExemptHomophone';
+  }
   return 'Fail';
 }
 
@@ -90,6 +124,7 @@ async function main() {
   if (!process.env.STT_ENDPOINT) throw new Error('STT_ENDPOINT unset — F2 needs two independent recognizers (D2)');
 
   const words = JSON.parse(readFileSync(args.words || `audio_clarity/words-${lang}.json`, 'utf8'));
+  const sets = collisionSets(lang);
   const tmp = mkdtempSync(join(tmpdir(), 'clarity-'));
   let done = 0;
   for (const { word, variant = 'normal', url } of words.slice(0, Number(args.limit) || words.length)) {
@@ -98,12 +133,23 @@ async function main() {
     execFileSync('curl', ['-s', '-o', mp3, url]);
     execFileSync('afconvert', ['-f', 'WAVE', '-d', 'LEI16@16000', mp3, wav]);
     const heard = [whisper(wav, lang), await secondRecognizer(wav, lang)];
-    store.clips[`${lang}|${word}|${variant}`] = { v: verdictFor(word, key, heard) };
+    // Record WHAT WAS HEARD beside the verdict. A pilot run produced a FAIL
+    // for "for" that could not be explained afterwards -- "for" is in the
+    // collision table, so it should have been exempt -- and the transcripts
+    // were gone. A verdict nobody can account for is not evidence.
+    store.clips[`${lang}|${word}|${variant}`] = { v: verdictFor(word, key, heard, sets), heard };
     done += 1;
   }
-  if (!store.measured.includes(lang)) store.measured.push(lang);
+  // Only a run that covered the whole servable set may call a language
+  // measured: F7's gate is strict about measured languages, and a sample that
+  // claimed the title would make the gate lie about everything it did not look
+  // at. A partial run still writes its verdicts -- they are evidence either way.
+  if (args.complete && !store.measured.includes(lang)) store.measured.push(lang);
   writeFileSync(OUT, `${JSON.stringify(store, null, 2)}\n`);
-  console.log(`audio-verdicts: ${done} clips measured for ${lang}`);
+  console.log(
+    `audio-verdicts: ${done} clips measured for ${lang}` +
+      (args.complete ? ' (marked complete)' : ' (partial — the language is not marked measured)'),
+  );
 }
 
 async function secondRecognizer(wav, lang) {
