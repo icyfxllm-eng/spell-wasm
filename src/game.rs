@@ -163,11 +163,12 @@ pub fn preload_pool(app: &App) {
     let pool = active_word_list(&s, &tier);
     let lang = s.lang.clone();
     drop(s);
-    for word in pool.into_iter().take(PRELOAD_AT_OPEN) {
+    for entry in pool.into_iter().take(PRELOAD_AT_OPEN) {
         // F6: warm the SAME url the real play will request, reading included.
-        match crate::pinyin::phoneme_reading(&word).filter(|_| lang == crate::consts::ZH) {
-            Some(py) => api::preload_word_with(&word, Some(&py), &lang),
-            None => api::preload_word(&word, &lang),
+        // Mandarin stores "pinyin|hanzi", so the entry is split exactly as
+        // next_word splits it before voice_target sees it.
+        if let Some((text, py)) = warm_target(&lang, &entry) {
+            api::preload_word_with(&text, py.as_deref(), &lang);
         }
     }
 }
@@ -1097,6 +1098,52 @@ pub fn replay_slow(app: &App) {
     speak_word(app, "slow", 1.0);
 }
 
+/// What the launch warm-up should request for one BANK ENTRY, or None when it
+/// must request nothing. The entry is what the bank stores ("pinyin|hanzi" in
+/// Mandarin, the word itself elsewhere); play sees the two halves already
+/// split by `next_word`, so this splits them the same way and then asks
+/// `voice_target`, which is the only thing that decides. `warm_matches_play`
+/// pins the two paths together.
+pub(crate) fn warm_target(lang: &str, entry: &str) -> Option<(String, Option<String>)> {
+    let (word, spoken) = match entry.split_once('|') {
+        Some((py, hanzi)) => (py, hanzi),
+        None => (entry, entry),
+    };
+    let (text, py) = voice_target(lang, word, spoken);
+    // Invariant 4: Mandarin with no readable pinyin gets no audio, warm or not.
+    if lang == crate::consts::ZH && py.is_none() {
+        return None;
+    }
+    Some((text, py))
+}
+
+/// CC-ZH-TONE F6 — what the audio router is given for one bank entry: the text
+/// to voice, and its reading where the language has one.
+///
+/// `word` is what the player types (the pinyin in Mandarin) and `spoken` what
+/// is voiced (the hanzi); everywhere else they are the same string. THE ONE
+/// DECISION: play and the launch warm-up both call this, so the URL warmed is
+/// the URL played. They used to decide separately, and the warm-up sent
+/// Mandarin's raw "pinyin|hanzi" bank entry as the word: the server rejected
+/// all 20 of them on every launch (40 such rejects showed up in the first
+/// telemetry report), and Mandarin was the one language that never warmed.
+///
+/// A Mandarin entry with no readable pinyin returns None for the reading, and
+/// the caller must not request audio at all — Invariant 4: no polyphone guess.
+pub(crate) fn voice_target(lang: &str, word: &str, spoken: &str) -> (String, Option<String>) {
+    let text = if spoken.is_empty() { word.to_string() } else { spoken.to_string() };
+    if lang != crate::consts::ZH {
+        return (text, None);
+    }
+    // F5: TTS speaks the SURFACE form (你好 is spoken ni2 hao3 though it is
+    // written ni3 hao3); the citation is what grading compares.
+    let entry = format!("{word}|{spoken}");
+    let spoken_form = crate::zh_sandhi::lookup(&entry)
+        .map(|(surface, _)| surface.to_string())
+        .unwrap_or_else(|| word.to_string());
+    (text, crate::pinyin::phoneme_reading(&spoken_form))
+}
+
 fn speak_word(app: &App, variant: &str, rate: f32) {
     let s = app.borrow();
     if s.word.is_empty() {
@@ -1111,19 +1158,7 @@ fn speak_word(app: &App, variant: &str, rate: f32) {
         // CC-ZH-TONE F6: Mandarin names its reading. `s.word` holds the pinyin
         // and `s.spoken` the hanzi, so the clip is the character voiced by the
         // reading the bank actually stores — no polyphone guess.
-        let py = if lang == crate::consts::ZH {
-            // F5: TTS speaks the SURFACE form. Grading compares the citation,
-            // but the player must HEAR natural speech -- 你好 is spoken
-            // ni2 hao3 even though it is written ni3 hao3, and synthesizing the
-            // citation would teach an accent nobody uses.
-            let entry = format!("{}|{}", s.word, s.spoken);
-            let spoken_form = crate::zh_sandhi::lookup(&entry)
-                .map(|(surface, _)| surface.to_string())
-                .unwrap_or_else(|| s.word.clone());
-            crate::pinyin::phoneme_reading(&spoken_form)
-        } else {
-            None
-        };
+        let (_, py) = voice_target(&lang, &s.word, &s.spoken);
         drop(s);
         api::play_word_with(&word, py.as_deref(), variant, rate as f64, &lang, || {});
         return;
@@ -4135,5 +4170,50 @@ mod jr_climb_tests {
         assert!(!crate::experience::leaderboard_allowed(crate::experience::of_kid(true)));
         assert!(!racing_allowed(true));
         assert!(racing_allowed(false));
+    }
+}
+
+#[cfg(test)]
+mod warm_up_tests {
+    use super::*;
+
+    /// The warm-up sends what play sends. Mandarin's bank entries are
+    /// "pinyin|hanzi"; the launch warm-up used to pass that whole string as the
+    /// word, so the server rejected every one (400: not a word) and Mandarin
+    /// never warmed. Both paths now go through voice_target.
+    #[test]
+    fn warm_matches_play_for_mandarin() {
+        let pool = crate::words::tier_for(crate::consts::ZH, "easy");
+        assert!(pool.len() > 20, "no zh pool to check");
+        for entry in pool.iter().take(PRELOAD_AT_OPEN) {
+            // The warm-up starts from the raw bank entry ...
+            let warm = warm_target(crate::consts::ZH, entry).expect("a bank entry with a reading warms");
+            // ... play starts from the halves next_word has already split.
+            let (word, spoken) = entry.split_once('|').expect("a zh entry is pinyin|hanzi");
+            let played = voice_target(crate::consts::ZH, word, spoken);
+            assert_eq!(warm, played, "{entry}: the warm-up would request a different url than play");
+            let (text, py) = warm;
+            assert_eq!(text, spoken, "{entry}: the hanzi is what is voiced");
+            assert!(!text.contains('|'), "{entry}: the raw entry reached the url");
+            assert!(!text.chars().any(|c| c.is_ascii_digit()), "{entry}: a tone digit reached the url");
+            assert!(py.is_some(), "{entry}: no reading, so nothing may be requested");
+            let py = py.unwrap();
+            assert!(
+                py.chars().all(|c| c.is_ascii_lowercase() || c.is_ascii_digit() || c == ' ' || c == 'ü'),
+                "{entry}: reading {py:?} is not the pinyin shape the server accepts"
+            );
+        }
+    }
+
+    /// Every other language voices the word itself and names no reading.
+    #[test]
+    fn other_languages_are_unchanged() {
+        for lang in ["en", "fil", "sw"] {
+            let word = crate::words::tier_for(lang, "easy")[0];
+            assert_eq!(voice_target(lang, word, word), (word.to_string(), None));
+            // An empty `spoken`, as My Words and the warm-up produce.
+            assert_eq!(voice_target(lang, word, ""), (word.to_string(), None));
+            assert_eq!(warm_target(lang, word), Some((word.to_string(), None)));
+        }
     }
 }
