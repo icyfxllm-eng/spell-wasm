@@ -204,18 +204,20 @@ fi
 grep bundled "$LOG.build" || true
 
 echo "== gate: e2e (app + site)"
-if ! npm run e2e > "$LOG" 2>&1; then
-  # SHIP 135: the three tolerated hub reds are GONE — they were stale
-  # tests asserting a pre-D5 world, not app bugs. With the board clean
-  # the tolerance clause retires too: it let any NEW hub failure hide
-  # behind "just the known three", which is the whole cost of a
-  # tolerated red. Zero means zero now.
-  REDS=$(grep -c "✗" "$LOG" || true)
-  if [ "${REDS:-99}" -ne 0 ]; then
-    echo "GATE FAIL: e2e has reds"; grep "✗" "$LOG"; exit 1
-  fi
-  echo "e2e: clean board (zero reds)"
-fi
+# SHIP 135: the three tolerated hub reds are GONE — they were stale tests
+# asserting a pre-D5 world, not app bugs. Zero means zero now.
+#
+# But "zero reds" was always the wrong test, and on 2026-09-23 it cost us: a
+# suite that dies before running anything has zero reds too, so a port conflict
+# printed "clean board" and the gate walked on. The authority is now the suites'
+# own summary lines — see scripts/e2e-summary-check.mjs. The runner's exit code
+# is kept only as a note, because it can be non-zero for teardown reasons while
+# both suites genuinely finished green.
+E2E_RC=0
+npm run e2e > "$LOG" 2>&1 || E2E_RC=$?
+node scripts/e2e-summary-check.mjs "$LOG" || { echo "GATE FAIL: e2e did not finish green"; exit 1; }
+node scripts/e2e-summary-check.mjs --selftest || { echo "GATE FAIL: e2e-summary selftest — the gate no longer bites"; exit 1; }
+[ "$E2E_RC" -eq 0 ] || echo "e2e: both suites green, but the runner exited $E2E_RC (teardown, not tests)"
 grep -E "E2E:" "$LOG"
 
 echo "== gate: web wall scan"

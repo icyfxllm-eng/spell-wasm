@@ -19,7 +19,19 @@ export const IS_WEB_BUILD = process.env.SPELL_WEB === '1';
 const AGE = JSON.stringify({ verdict: 'full', checkedAt: 1700000000 });
 const MIME = { '.html': 'text/html', '.js': 'text/javascript', '.wasm': 'application/wasm', '.json': 'application/json', '.png': 'image/png', '.mjs': 'text/javascript' };
 
-export function startServer(port = 8129) {
+// Port 0 asks the OS for a free port, and `base` is built from whatever it
+// actually bound to rather than from what we asked for.
+//
+// This used to be a hardcoded 8129. Two sessions gating at once -- which is
+// normal here -- meant the second one died with EADDRINUSE, and because a
+// crashed suite has no failures, gate.sh read that as a clean board for a long
+// time (fixed in scripts/e2e-summary-check.mjs). Failing loudly on a port
+// collision is better than passing quietly, but not colliding is better still,
+// and the suite never needed a fixed port: the /api/check allowlist deliberately
+// excludes whatever we serve on, so nothing outside can be pointed at it.
+//
+// SPELL_E2E_PORT pins it when you want a predictable URL to open by hand.
+export function startServer(port = Number(process.env.SPELL_E2E_PORT ?? 0)) {
   const server = createServer((req, res) => {
     let p = decodeURIComponent(req.url.split('?')[0]);
 
@@ -65,7 +77,13 @@ export function startServer(port = 8129) {
     res.writeHead(200, { 'Content-Type': MIME[extname(file)] || 'application/octet-stream' });
     res.end(readFileSync(file));
   });
-  return new Promise((resolve) => server.listen(port, () => resolve({ server, base: `http://localhost:${port}/` })));
+  return new Promise((resolve) =>
+    server.listen(port, () => {
+      // The bound port, not the requested one -- they differ whenever port is 0.
+      const bound = server.address().port;
+      resolve({ server, base: `http://localhost:${bound}/` });
+    }),
+  );
 }
 
 // Devices per the harness contract: iPhone SE (375×667) and a large phone.
