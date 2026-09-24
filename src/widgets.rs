@@ -75,5 +75,18 @@ fn call_native(json: &str) {
     let Ok(f) = f.dyn_into::<js_sys::Function>() else { return };
     let arg = js_sys::Object::new();
     let _ = js_sys::Reflect::set(&arg, &JsValue::from_str("json"), &JsValue::from_str(json));
-    let _ = f.call1(&kit, &arg);
+    let Ok(promise) = f.call1(&kit, &arg) else { return };
+    // The snapshot is fire-and-forget (D2: state flows one way), but the
+    // promise was DROPPED, so a rejection had no handler and became an
+    // unhandled rejection. writeWidgetSnapshot rejects wherever the app group
+    // container is missing -- the simulator, or a build without the
+    // entitlement -- once per snapshot, so a Mandarin session logged five in
+    // five rounds. Telemetry counted six before this was found (stack hash
+    // 1c43291052885d44, first seen 2026-09-19). Awaiting and discarding the
+    // result keeps the failure as harmless as it always was, and silent.
+    if let Ok(promise) = promise.dyn_into::<js_sys::Promise>() {
+        wasm_bindgen_futures::spawn_local(async move {
+            let _ = wasm_bindgen_futures::JsFuture::from(promise).await;
+        });
+    }
 }
