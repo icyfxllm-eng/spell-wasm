@@ -1932,12 +1932,12 @@
         <button class="voice-spell-mic btn-hide" id="voiceSpellMic" aria-label="Spell out loud" data-i18n-aria="voiceSpell.mic"><span aria-hidden="true">🎤</span></button>
       </span>
       <span class="glow-pick" id="glowPick">
-        <span class="gl">glow</span>
-        <button class="swatch" style="--s:#ffb14d" data-c="#ffb14d" aria-label="Amber glow"></button>
-        <button class="swatch" style="--s:#46d6b8" data-c="#46d6b8" aria-label="Teal glow"></button>
-        <button class="swatch" style="--s:#ff6b7a" data-c="#ff6b7a" aria-label="Coral glow"></button>
-        <button class="swatch" style="--s:#7aa2ff" data-c="#7aa2ff" aria-label="Blue glow"></button>
-        <label class="swatch custom" aria-label="Pick a custom glow color"><input type="color" id="glowColor" value="#ffb14d" /></label>
+        <span class="gl" data-i18n="label.glow">glow</span>
+        <button class="swatch" style="--s:#ffb14d" data-c="#ffb14d" aria-label="Amber glow" data-i18n-aria="aria.glowAmber"></button>
+        <button class="swatch" style="--s:#46d6b8" data-c="#46d6b8" aria-label="Teal glow" data-i18n-aria="aria.glowTeal"></button>
+        <button class="swatch" style="--s:#ff6b7a" data-c="#ff6b7a" aria-label="Coral glow" data-i18n-aria="aria.glowCoral"></button>
+        <button class="swatch" style="--s:#7aa2ff" data-c="#7aa2ff" aria-label="Blue glow" data-i18n-aria="aria.glowBlue"></button>
+        <label class="swatch custom" aria-label="Pick a custom glow color" data-i18n-aria="aria.glowCustom"><input type="color" id="glowColor" value="#ffb14d" /></label>
       </span>
     </div>
 
@@ -1954,7 +1954,7 @@
          second way to answer it. Absent for every language without characters,
          rather than present and disabled. -->
     <div class="ink-offer" id="inkOffer" hidden>
-      <button type="button" class="ghost" id="inkWriteBtn">✎ Write it</button>
+      <button type="button" class="ghost" id="inkWriteBtn" data-i18n="ink.write">✎ Write it</button>
     </div>
     <div class="tone-row" id="toneRow" role="group" aria-label="Tone" hidden>
       <button type="button" class="tone-btn" id="toneBtn1" data-tone="1">&#175;<sub>1</sub></button>
