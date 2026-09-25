@@ -114,6 +114,9 @@ node scripts/audio-router-check.mjs --selftest || { echo "GATE FAIL: audio route
 echo "== gate: element IDs are unique (CC-SPELLPIC F0)"
 node scripts/dom-id-check.mjs || { echo "GATE FAIL: duplicate element ID"; exit 1; }
 
+echo "== gate: no Japanese row starts with a small kana (segmenter fragments)"
+python3 scripts/build-wordlists.py --selftest || { echo "GATE FAIL: build-wordlists selftest — the small-kana gate no longer bites"; exit 1; }
+
 echo "== gate: every word in exactly one tier (BD-G4)"
 node scripts/tier-partition-check.mjs || { echo "GATE FAIL: a word is in two tiers"; exit 1; }
 
