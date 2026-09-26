@@ -962,6 +962,7 @@
      than the UI locale — without that attribute this rule never matches. */
   .fg-word:lang(ar), .fg-word:lang(fa), .fg-word:lang(ur), .fg-word:lang(hi),
   .ghost-pace:lang(ar), .ghost-pace:lang(fa), .ghost-pace:lang(ur), .ghost-pace:lang(hi),
+  .glow-pick .gl:lang(ar), .glow-pick .gl:lang(fa), .glow-pick .gl:lang(ur), .glow-pick .gl:lang(hi),
   .hint-line:lang(ar), .hint-line:lang(fa), .hint-line:lang(ur), .hint-line:lang(hi),
   .orb-glyph:lang(ar), .orb-glyph:lang(fa), .orb-glyph:lang(ur), .orb-glyph:lang(hi),
   .pack-head:lang(ar), .pack-head:lang(fa), .pack-head:lang(ur), .pack-head:lang(hi),
@@ -1608,14 +1609,14 @@
          The only "meta" family; never borrows config/launcher/data treatments.
          accountBtn's signed-in state (aria-label + .signed-in) is set in climb.rs. -->
     <div class="meta-corner">
-      <button class="meta-icon" id="accountBtn" aria-label="Sign in">👤</button>
+      <button class="meta-icon" id="accountBtn" aria-label="Sign in" data-i18n-aria="aria.signIn">👤</button>
       <!-- Play hub (CC-MODE-HUB F2). Joins the meta-corner family — icon-only by
            that family's rule, which is also why it needs no new localized label:
            hub CHROME (title/subtitle) would mean new strings in 12 locales, and
            the tiles themselves reuse the shipped tools.* catalog. aria-label is a
            static English literal, matching accountBtn/setBtn above. -->
-      <button class="meta-icon" id="playHubBtn" aria-label="Ways to play">🎮</button>
-      <button class="meta-icon" id="setBtn" aria-label="Settings">⚙</button>
+      <button class="meta-icon" id="playHubBtn" aria-label="Ways to play" data-i18n-aria="aria.waysToPlay">🎮</button>
+      <button class="meta-icon" id="setBtn" aria-label="Settings" data-i18n-aria="settings.title">⚙</button>
     </div>
   </div>
   <!-- head-to-head scoreboard (hidden outside a match) -->
@@ -1647,7 +1648,7 @@
            .setup-chip = config (muted, chevroned)     — Setup strip (F3)
          Kid Mode hides climbBtn + accountBtn via btn-hide (climb.rs); the flex
          rows reflow with no gaps, so Little Speller gets the same families. -->
-    <div class="home-group data-group" role="group" aria-label="Your words">
+    <div class="home-group data-group" role="group" aria-label="Your words" data-i18n-aria="aria.yourWords">
       <button class="data-chip" id="importBtn" data-i18n="top.myWords">＋ My words</button>
       <!-- F1 photo-to-word-list. Hidden by default (btn-hide); Rust reveals it
            only when the feature flag is on AND the native VisionKit recognizer is
@@ -1657,7 +1658,7 @@
            game::refresh_mode_buttons so the live due-count stays authoritative. -->
       <button class="data-chip" id="missesBtn"></button>
     </div>
-    <div class="home-group modes-row" role="group" aria-label="Ways to play">
+    <div class="home-group modes-row" role="group" aria-label="Ways to play" data-i18n-aria="aria.waysToPlay">
       <!-- Launchers keep their existing label sources: vsBtn's icon is static
            (the shared mode-name string stays icon-free for prose reuse); climbBtn
            uses top.theClimb (emoji in string); dailyBtn text is set by
@@ -1675,7 +1676,7 @@
            player is signed in, and it isn't Kid Mode (COPPA — accounts only). -->
       <button class="launch btn-hide" id="soBtn" data-i18n="so.entry">🌍 Challenge a friend</button>
     </div>
-    <button class="setup-chip" id="setupChip" aria-haspopup="dialog" aria-label="Round setup">
+    <button class="setup-chip" id="setupChip" aria-haspopup="dialog" aria-label="Round setup" data-i18n-aria="aria.roundSetup">
       <span class="setup-chip-text" id="setupChipText">English · Climb · Untimed</span>
       <span class="setup-chip-chev" aria-hidden="true">⚙</span>
     </button>
@@ -1690,7 +1691,7 @@
       <button class="btn btn-check coming-notify" id="notifyBtn"></button>
     </div>
 
-    <div class="orb-wrap" id="orbWrap" role="button" tabindex="0" aria-label="Play the word">
+    <div class="orb-wrap" id="orbWrap" role="button" tabindex="0" aria-label="Play the word" data-i18n-aria="aria.playWord">
       <svg class="timer-ring" id="timerRing" viewBox="0 0 230 230" aria-hidden="true">
         <circle class="t-track" cx="115" cy="115" r="108"></circle>
         <circle class="t-prog" id="tProg" cx="115" cy="115" r="108"></circle>
@@ -1716,16 +1717,16 @@
         <button class="voice-spell-mic btn-hide" id="voiceSpellMic" aria-label="Spell out loud" data-i18n-aria="voiceSpell.mic"><span aria-hidden="true">🎤</span></button>
       </span>
       <span class="glow-pick" id="glowPick">
-        <span class="gl">glow</span>
-        <button class="swatch" style="--s:#ffb14d" data-c="#ffb14d" aria-label="Amber glow"></button>
-        <button class="swatch" style="--s:#46d6b8" data-c="#46d6b8" aria-label="Teal glow"></button>
-        <button class="swatch" style="--s:#ff6b7a" data-c="#ff6b7a" aria-label="Coral glow"></button>
-        <button class="swatch" style="--s:#7aa2ff" data-c="#7aa2ff" aria-label="Blue glow"></button>
-        <label class="swatch custom" aria-label="Pick a custom glow color"><input type="color" id="glowColor" value="#ffb14d" /></label>
+        <span class="gl" data-i18n="label.glow">glow</span>
+        <button class="swatch" style="--s:#ffb14d" data-c="#ffb14d" aria-label="Amber glow" data-i18n-aria="aria.glowAmber"></button>
+        <button class="swatch" style="--s:#46d6b8" data-c="#46d6b8" aria-label="Teal glow" data-i18n-aria="aria.glowTeal"></button>
+        <button class="swatch" style="--s:#ff6b7a" data-c="#ff6b7a" aria-label="Coral glow" data-i18n-aria="aria.glowCoral"></button>
+        <button class="swatch" style="--s:#7aa2ff" data-c="#7aa2ff" aria-label="Blue glow" data-i18n-aria="aria.glowBlue"></button>
+        <label class="swatch custom" aria-label="Pick a custom glow color" data-i18n-aria="aria.glowCustom"><input type="color" id="glowColor" value="#ffb14d" /></label>
       </span>
     </div>
 
-    <div class="spellbox" id="spellbox" role="group" aria-label="Your spelling">
+    <div class="spellbox" id="spellbox" role="group" aria-label="Your spelling" data-i18n-aria="label.yourSpelling">
       <div class="letters" id="letters"></div>
     </div>
     <!-- CC-ZH-TONE F4 — one deliberate tap per tone, instead of a long-press
@@ -1738,9 +1739,9 @@
          second way to answer it. Absent for every language without characters,
          rather than present and disabled. -->
     <div class="ink-offer" id="inkOffer" hidden>
-      <button type="button" class="ghost" id="inkWriteBtn">✎ Write it</button>
+      <button type="button" class="ghost" id="inkWriteBtn" data-i18n="ink.write">✎ Write it</button>
     </div>
-    <div class="tone-row" id="toneRow" role="group" aria-label="Tone" hidden>
+    <div class="tone-row" id="toneRow" role="group" aria-label="Tone" data-i18n-aria="aria.tone" hidden>
       <button type="button" class="tone-btn" id="toneBtn1" data-tone="1">&#175;<sub>1</sub></button>
       <button type="button" class="tone-btn" id="toneBtn2" data-tone="2">&#180;<sub>2</sub></button>
       <button type="button" class="tone-btn" id="toneBtn3" data-tone="3">&#711;<sub>3</sub></button>
@@ -1769,7 +1770,7 @@
     <!-- Custom on-screen keyboard. The answer is never a real <input>, so the
          iOS system keyboard — with its dictation key and autocorrect — can't
          open during a round. Letter keys are built + wired in keyboard.rs. -->
-    <div id="kbHome"><div class="game-kb locked" id="gameKeyboard" role="group" aria-label="On-screen keyboard">
+    <div id="kbHome"><div class="game-kb locked" id="gameKeyboard" role="group" aria-label="On-screen keyboard" data-i18n-aria="aria.keyboard">
       <!-- Letter rows are generated per language (3 for QWERTY, 5 for the kana
            grid) into this container by keyboard.rs. -->
       <div id="kbLetters"></div>
@@ -1777,7 +1778,7 @@
       <div class="kb-row kb-tones btn-hide" id="kbToneRow"></div>
       <div class="kb-row kb-actions">
         <button class="kb-submit btn-hide" id="kbSubmit" data-i18n="kb.enter">Enter</button>
-        <button class="kb-back" id="kbBackspace" aria-label="Delete last letter">⌫</button>
+        <button class="kb-back" id="kbBackspace" aria-label="Delete last letter" data-i18n-aria="aria.backspace">⌫</button>
       </div>
     </div></div>
 
@@ -1888,11 +1889,11 @@
       <p data-i18n="import.blurb">Practice the exact words you keep getting wrong — paste text or type a list.</p>
       <textarea id="importText" placeholder="Paste any text or a list of words here…" data-i18n-ph="ph.importText" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"></textarea>
       <div class="imp-foot">
-        <label class="imp-lang"><span data-i18n="import.speakIn">Speak in</span> <select id="importLang" aria-label="Pronunciation language"></select></label>
+        <label class="imp-lang"><span data-i18n="import.speakIn">Speak in</span> <select id="importLang" aria-label="Pronunciation language" data-i18n-aria="aria.pronLang"></select></label>
         <span class="imp-count" id="importCount">0 words</span>
       </div>
       <label class="imp-lang" style="margin-bottom:8px"><span data-i18n="lists.saveTo">Save to</span>
-        <select id="importDest" aria-label="Save to"></select></label>
+        <select id="importDest" aria-label="Save to" data-i18n-aria="lists.saveTo"></select></label>
       <button class="btn btn-check" id="saveWords" data-i18n="lists.saveNew" style="width:100%">Save as new list</button>
       <div class="row" style="margin-top:8px">
         <button class="ghost danger" id="clearWords" data-i18n="import.clear">Clear my words</button>
@@ -1919,8 +1920,8 @@
   <div class="scrim" id="playHubScrim"></div>
   <div class="scrim" id="playHub">
     <div class="modal wide">
-      <button class="ghost hub-x" id="playHubClose" aria-label="Close">✕</button>
-      <div class="mode-grid" id="playHubGrid" role="group" aria-label="Ways to play"></div>
+      <button class="ghost hub-x" id="playHubClose" aria-label="Close" data-i18n-aria="aria.close">✕</button>
+      <div class="mode-grid" id="playHubGrid" role="group" aria-label="Ways to play" data-i18n-aria="aria.waysToPlay"></div>
     </div>
   </div>
 
@@ -1930,7 +1931,7 @@
        language, so the numbers are real, never placeholder copy. -->
   <div class="scrim" id="ghostScreen">
     <div class="modal">
-      <button class="ghost hub-x" id="ghostClose" aria-label="Close">✕</button>
+      <button class="ghost hub-x" id="ghostClose" aria-label="Close" data-i18n-aria="aria.close">✕</button>
       <h3><span aria-hidden="true">👻</span> <span id="ghostTitle"></span></h3>
       <p id="ghostDesc"></p>
       <div class="ghost-stat" id="ghostStat"></div>
@@ -1947,7 +1948,7 @@
        garage + track data. -->
   <div class="scrim" id="spellRacing">
     <div class="modal wide">
-      <button class="ghost hub-x" id="srClose" aria-label="Close">✕</button>
+      <button class="ghost hub-x" id="srClose" aria-label="Close" data-i18n-aria="aria.close">✕</button>
       <h3><span aria-hidden="true">🏁</span> <span id="srTitle"></span></h3>
       <p class="sr-label" id="srCircuitLabel"></p>
       <div class="sr-circuits" id="srCircuits"></div>
@@ -1976,12 +1977,12 @@
        the only human step is the hand. -->
   <div class="scrim" id="inkPad">
     <div class="modal ink-modal">
-      <button class="ghost hub-x" id="inkClose" aria-label="Close">✕</button>
+      <button class="ghost hub-x" id="inkClose" aria-label="Close" data-i18n-aria="aria.close">✕</button>
       <p class="ink-progress" id="inkProgress"></p>
       <p class="ink-prompt" id="inkPrompt" lang="zh"></p>
       <div class="ink-wrap" id="inkCanvasWrap"><canvas id="canvas"></canvas></div>
       <p class="ink-result" id="inkResult" aria-live="polite"></p>
-      <div class="ink-cands" id="inkCands" role="group" aria-label="What was read"></div>
+      <div class="ink-cands" id="inkCands" role="group" aria-label="What was read" data-i18n-aria="aria.whatWasRead"></div>
       <img class="ink-sent" id="inkSent" alt="What the recognizer was given" hidden />
       <div class="ink-row">
         <button type="button" class="ghost" id="inkUndo">Undo</button>
@@ -1994,7 +1995,7 @@
 
   <div class="scrim" id="devMenu">
     <div class="modal">
-      <button class="ghost hub-x" id="devMenuClose" aria-label="Close">✕</button>
+      <button class="ghost hub-x" id="devMenuClose" aria-label="Close" data-i18n-aria="aria.close">✕</button>
       <h3><span aria-hidden="true">🛠️</span> Dev preview</h3>
       <div class="dev-list">
         <button type="button" class="dev-item" id="devOpenRacing">🏁 Spell Racing</button>
@@ -2011,7 +2012,7 @@
   <!-- CC-PRACTICE: the front porch — guided first 20 + 5 difficult words. -->
   <div class="pr-screen" id="practiceScreen">
     <div class="pr-top">
-      <button class="ghost mode-exit" id="prExit" aria-label="Exit">✕</button>
+      <button class="ghost mode-exit" id="prExit" aria-label="Exit" data-i18n-aria="aria.exit">✕</button>
       <div class="pr-path" id="prPath"></div>
       <button class="ghost" id="prRestart" data-i18n="practice.restart">↺</button>
     </div>
@@ -2069,7 +2070,7 @@
        have no element bound to it. -->
   <div class="fg-screen" id="forge">
     <div class="fg-top">
-      <button class="ghost mode-exit" id="fgExit" aria-label="Exit">✕</button>
+      <button class="ghost mode-exit" id="fgExit" aria-label="Exit" data-i18n-aria="aria.exit">✕</button>
       <span class="fg-rank" id="fgRank" aria-live="polite"></span>
       <span class="fg-score" id="fgScore">0</span>
     </div>
@@ -2097,7 +2098,7 @@
        scrolled to its end, so the live word is always the visible one. -->
   <div class="cn-screen" id="chains">
     <div class="cn-top">
-      <button class="ghost mode-exit" id="cnExit" aria-label="Exit">✕</button>
+      <button class="ghost mode-exit" id="cnExit" aria-label="Exit" data-i18n-aria="aria.exit">✕</button>
       <span class="cn-meta"><b id="cnScore">0</b> <span data-i18n="chains.best">best</span> <b id="cnBest">0</b></span>
     </div>
     <div class="cn-hooklbl" data-i18n="chains.hook">Next word starts with</div>
@@ -2131,8 +2132,8 @@
        cost anything. -->
   <div class="imp-screen" id="impostor">
     <div class="imp-top">
-      <button class="ghost mode-exit" id="impExit" aria-label="Exit">✕</button>
-      <button type="button" class="imp-orb" id="impOrb" aria-label="Replay word">🔊</button>
+      <button class="ghost mode-exit" id="impExit" aria-label="Exit" data-i18n-aria="aria.exit">✕</button>
+      <button type="button" class="imp-orb" id="impOrb" aria-label="Replay word" data-i18n-aria="aria.replayWord">🔊</button>
       <span class="imp-streak" id="impStreak" aria-live="polite">0</span>
       <span class="imp-prog" id="impProgress"></span>
     </div>
@@ -2158,10 +2159,10 @@
        makes this mode offline, so I1's gate renders nothing. -->
   <div class="bee-screen" id="bee">
     <div class="bee-top">
-      <button class="ghost mode-exit" id="beeExit" aria-label="Exit">✕</button>
+      <button class="ghost mode-exit" id="beeExit" aria-label="Exit" data-i18n-aria="aria.exit">✕</button>
       <span class="bee-round" id="beeRound"></span>
       <button type="button" class="ghost bee-rules" id="beeOfficial"
-              aria-label="Official rules" style="margin-inline-start:auto">—</button>
+              aria-label="Official rules" data-i18n-aria="bee.official" style="margin-inline-start:auto">—</button>
     </div>
     <div class="bee-strip" id="beeStrip"></div>
     <div class="bee-announce" id="beeAnnounce" aria-live="polite"></div>
@@ -2191,10 +2192,10 @@
        lanes; the orb speaks the word and replays on tap. No visible timer (D2). -->
   <div class="dm-screen" id="defMatch">
     <div class="dm-top">
-      <button class="ghost mode-exit" id="dmExit" aria-label="Exit">✕</button>
-      <button type="button" class="dm-orb" id="dmOrb" aria-label="Replay word">🔊</button>
+      <button class="ghost mode-exit" id="dmExit" aria-label="Exit" data-i18n-aria="aria.exit">✕</button>
+      <button type="button" class="dm-orb" id="dmOrb" aria-label="Replay word" data-i18n-aria="aria.replayWord">🔊</button>
       <span class="dm-streak" id="dmStreak" aria-live="polite"></span>
-      <button type="button" class="ghost mode-exit" id="dmSpeed" aria-label="Card speed" style="margin-inline-start:auto">🐢</button>
+      <button type="button" class="ghost mode-exit" id="dmSpeed" aria-label="Card speed" data-i18n-aria="aria.cardSpeed" style="margin-inline-start:auto">🐢</button>
     </div>
     <div class="dm-status" id="dmStatus" aria-live="polite"></div>
     <!-- D8 Reverse Rounds: the definition to match; hidden on forward rounds. -->
@@ -2235,10 +2236,10 @@
       <p data-i18n="photo.review">Check these words, fix any misreads, then save.</p>
       <div class="pchips" id="photoChips"></div>
       <div class="imp-foot">
-        <label class="imp-lang"><span data-i18n="import.speakIn">Speak in</span> <select id="photoLang" aria-label="Pronunciation language"></select></label>
+        <label class="imp-lang"><span data-i18n="import.speakIn">Speak in</span> <select id="photoLang" aria-label="Pronunciation language" data-i18n-aria="aria.pronLang"></select></label>
       </div>
       <label class="imp-lang" style="margin-top:8px"><span data-i18n="lists.saveTo">Save to</span>
-        <select id="photoDest" aria-label="Save to"></select></label>
+        <select id="photoDest" aria-label="Save to" data-i18n-aria="lists.saveTo"></select></label>
       <button class="btn btn-check" id="photoConfirm" data-i18n="lists.saveNew" style="width:100%">Save as new list</button>
       <div class="row" style="margin-top:8px">
         <button class="ghost" id="photoCancel" data-i18n="import.close" style="margin-inline-start:auto">Close</button>
@@ -2276,7 +2277,7 @@
       <div class="fd-step fd-code">
         <h3 data-i18n="fd.codeTitle">Check your email</h3>
         <p class="fd-help" id="fdCodeHelp"></p>
-        <input id="fdCode" type="text" inputmode="numeric" maxlength="6" autocomplete="one-time-code" placeholder="000000" aria-label="Six-digit code" />
+        <input id="fdCode" type="text" inputmode="numeric" maxlength="6" autocomplete="one-time-code" placeholder="000000" aria-label="Six-digit code" data-i18n-aria="aria.code" />
         <button class="btn btn-check" id="fdCodeSubmit" data-i18n="age.continue" style="width:100%">Continue</button>
         <button class="ghost fd-link" id="fdResend" data-i18n="fd.resend">Send a new code</button>
         <button class="ghost fd-link" id="fdBack" data-i18n="fd.back">Back</button>
@@ -2317,9 +2318,9 @@
       <h3 data-i18n="age.title">When's your birthday?</h3>
       <p data-i18n="age.blurb">We ask so we can show the right experience.</p>
       <div class="dob-row">
-        <select id="ageMonth" aria-label="Birth month"></select>
-        <select id="ageDay" aria-label="Birth day"></select>
-        <select id="ageYear" aria-label="Birth year"></select>
+        <select id="ageMonth" aria-label="Birth month" data-i18n-aria="aria.birthMonth"></select>
+        <select id="ageDay" aria-label="Birth day" data-i18n-aria="aria.birthDay"></select>
+        <select id="ageYear" aria-label="Birth year" data-i18n-aria="aria.birthYear"></select>
       </div>
       <div class="dob-err" id="ageErr"></div>
       <button class="btn btn-check" id="ageSubmit" data-i18n="age.continue" style="width:100%">Continue</button>
@@ -2418,7 +2419,7 @@
       <div id="sayItPlay" class="btn-hide">
         <div class="sayit-score" aria-hidden="true">✓ <span id="sayItRight">0</span> · ✗ <span id="sayItWrong">0</span></div>
         <div class="sayit-word" id="sayItWord">—</div>
-        <button class="sayit-mic" id="sayItMic" aria-label="Say the word"><span aria-hidden="true">🎤</span></button>
+        <button class="sayit-mic" id="sayItMic" aria-label="Say the word" data-i18n-aria="aria.sayWord"><span aria-hidden="true">🎤</span></button>
         <div class="sayit-status" id="sayItStatus" aria-live="polite"></div>
         <button class="ghost" id="spellItGuideAgain" data-i18n="spellit.guide.again" style="font-size:12px">How this works</button>
         <div class="row">
@@ -2572,14 +2573,14 @@
   <div class="scrim" id="setupScrim">
     <div class="modal setup-card">
       <label class="setup-field"><span class="setup-field-ico" aria-hidden="true">🌐</span>
-        <select id="langSel" aria-label="Word source"></select></label>
+        <select id="langSel" aria-label="Word source" data-i18n-aria="aria.wordSource"></select></label>
       <label class="setup-field"><span class="setup-field-ico" aria-hidden="true">🎚</span>
-        <select id="levelSel" aria-label="Difficulty"></select></label>
+        <select id="levelSel" aria-label="Difficulty" data-i18n-aria="aria.difficulty"></select></label>
       <!-- Per-difficulty explanation, filled by game::update_setup_chip from
            level.<v>.desc for whatever level is selected. -->
       <small class="setup-field-desc" id="levelDesc" aria-live="polite"></small>
       <label class="setup-field"><span class="setup-field-ico" aria-hidden="true">⏱</span>
-        <select id="modeSel" aria-label="Timer">
+        <select id="modeSel" aria-label="Timer" data-i18n-aria="aria.timer">
           <option value="off" data-i18n="mode.untimed">Untimed</option>
           <option value="on" data-i18n="mode.timed">Quick Spell</option>
         </select></label>
@@ -2608,7 +2609,7 @@
        instead of pushing it, and every state is inline -- no modal, no toast. -->
   <div class="tr-screen" id="trScreen" role="dialog" aria-modal="true" aria-labelledby="trTitle">
     <div class="tr-top">
-      <button class="ghost mode-exit" id="trExit" aria-label="Exit">✕</button>
+      <button class="ghost mode-exit" id="trExit" aria-label="Exit" data-i18n-aria="aria.exit">✕</button>
       <h2 id="trTitle" data-i18n="tr.name">Spell Translator</h2>
     </div>
     <div class="tr-spine" id="trSpine">
@@ -2619,11 +2620,11 @@
         </div>
         <div class="tr-card-body">
           <input class="tr-word tr-input" id="trSrcInput" type="text" autocomplete="off" autocorrect="off" autocapitalize="none" spellcheck="false" placeholder="Type a word" data-i18n-ph="tr.search" />
-          <button type="button" class="tr-audio" id="trSrcAudio" data-state="ready" aria-label="Hear it">🔊</button>
+          <button type="button" class="tr-audio" id="trSrcAudio" data-state="ready" aria-label="Hear it" data-i18n-aria="tr.hear">🔊</button>
         </div>
         <div class="tr-sub" id="trSrcSub" aria-live="polite"></div>
       </section>
-      <button type="button" class="tr-swap" id="trSwap" aria-label="Swap languages">⇅</button>
+      <button type="button" class="tr-swap" id="trSwap" aria-label="Swap languages" data-i18n-aria="tr.swap">⇅</button>
       <section class="tr-card" id="trTgtCard" data-role="target">
         <div class="tr-card-head">
           <button type="button" class="tr-chip" id="trTgtLang" aria-haspopup="listbox"></button>
@@ -2631,7 +2632,7 @@
         </div>
         <div class="tr-card-body">
           <div class="tr-word" id="trTgtWord"></div>
-          <button type="button" class="tr-audio" id="trTgtAudio" data-state="ready" aria-label="Hear it">🔊</button>
+          <button type="button" class="tr-audio" id="trTgtAudio" data-state="ready" aria-label="Hear it" data-i18n-aria="tr.hear">🔊</button>
         </div>
         <div class="tr-sub" id="trTgtSub" aria-live="polite">
           <span class="tr-translit" id="trTgtTranslit"></span>
@@ -2652,7 +2653,7 @@
     </div>
     <div class="tr-save" id="trSaveRow" hidden>
       <label class="imp-lang"><span data-i18n="lists.saveTo">Save to</span>
-        <select id="trDest" aria-label="Save to"></select></label>
+        <select id="trDest" aria-label="Save to" data-i18n-aria="lists.saveTo"></select></label>
       <div class="lists-row">
         <button type="button" class="btn btn-check" id="trSaveGo" data-i18n="lists.saveNew">Save as new list</button>
         <button type="button" class="ghost" id="trSaveCancel" data-i18n="parent.cancel">Cancel</button>
@@ -2665,15 +2666,15 @@
   <button id="sdOpenBtn" hidden aria-hidden="true"></button>
   <div class="sd-screen" id="sdScreen" role="dialog" aria-modal="true" aria-labelledby="sdTitle">
     <div class="sd-top">
-      <button class="ghost mode-exit" id="sdExit" aria-label="Exit">✕</button>
+      <button class="ghost mode-exit" id="sdExit" aria-label="Exit" data-i18n-aria="aria.exit">✕</button>
       <h2 id="sdTitle" data-i18n="sd.name">SpellDoku</h2>
-      <select id="sdPick" aria-label="Board"></select>
+      <select id="sdPick" aria-label="Board" data-i18n-aria="aria.board"></select>
       <!-- CC-SPELLDOKU-RULES F5: the symbol picker. Its options are rendered per
            board (Numbers / Letters / Mix, and Tier Mode's readings only behind
            its flag), so there is nothing static to translate here. -->
-      <select id="sdTier" aria-label="Symbols"></select>
+      <select id="sdTier" aria-label="Symbols" data-i18n-aria="aria.symbols"></select>
       <button class="ghost" id="sdDaily" data-i18n="sd.daily">Daily</button>
-      <button class="ghost" id="sdHowBtn" data-i18n="sd.howToPlay" aria-label="How to play">?</button>
+      <button class="ghost" id="sdHowBtn" data-i18n="sd.howToPlay" aria-label="How to play" data-i18n-aria="sd.howToPlay">?</button>
       <button class="ghost" id="sdCantHear" data-i18n="btn.cantHear">Can't hear it</button>
     </div>
     <div class="sd-grid" id="sdGrid"></div>
@@ -2715,9 +2716,9 @@
   <button id="wsOpenBtn" hidden aria-hidden="true"></button>
   <div class="ws-screen" id="wsScreen" role="dialog" aria-modal="true" aria-labelledby="wsTitle">
     <div class="sd-top">
-      <button class="ghost mode-exit" id="wsExit" aria-label="Exit">✕</button>
+      <button class="ghost mode-exit" id="wsExit" aria-label="Exit" data-i18n-aria="aria.exit">✕</button>
       <h2 id="wsTitle" data-i18n="ws.name">Spell Search</h2>
-      <select id="wsPick" aria-label="Level"></select>
+      <select id="wsPick" aria-label="Level" data-i18n-aria="aria.level"></select>
       <button class="ghost" id="wsDaily" data-i18n="ws.daily">Daily</button>
       <button class="ghost" id="wsCantHear" data-i18n="btn.cantHear">Can't hear it</button>
     </div>
@@ -2735,7 +2736,7 @@
       <div id="wsLock" class="ws-lock btn-hide">
         <h3 data-i18n="ws.lockTitle">Lock it in</h3>
         <div class="sd-actions">
-          <button class="btn btn-check" id="wsLockPlay" aria-label="Play">▶</button>
+          <button class="btn btn-check" id="wsLockPlay" aria-label="Play" data-i18n-aria="aria.play">▶</button>
           <span id="wsLockCount"></span>
         </div>
         <div class="sd-typed" id="wsTyped" dir="auto" aria-live="polite"></div>
@@ -2762,9 +2763,9 @@
   <button id="xwOpenBtn" hidden aria-hidden="true"></button>
   <div class="ws-screen" id="xwScreen" role="dialog" aria-modal="true" aria-labelledby="xwTitle">
     <div class="sd-top">
-      <button class="ghost mode-exit" id="xwExit" aria-label="Exit">✕</button>
+      <button class="ghost mode-exit" id="xwExit" aria-label="Exit" data-i18n-aria="aria.exit">✕</button>
       <h2 id="xwTitle" data-i18n="xw.name">Spell Cross</h2>
-      <select id="xwPick" aria-label="Level"></select>
+      <select id="xwPick" aria-label="Level" data-i18n-aria="aria.level"></select>
       <button class="ghost" id="xwNew" data-i18n="xw.new">New crossword</button>
       <button class="ghost" id="xwDaily" data-i18n="ws.daily">Daily</button>
       <button class="ghost" id="xwCantHear" data-i18n="btn.cantHear">Can't hear it</button>
@@ -2778,7 +2779,7 @@
       <div id="xwKey" class="ws-lock btn-hide">
         <h3 data-i18n="xw.keystoneTitle">The hidden word</h3>
         <div class="sd-actions">
-          <button class="btn btn-check" id="xwKeyPlay" aria-label="Play">▶</button>
+          <button class="btn btn-check" id="xwKeyPlay" aria-label="Play" data-i18n-aria="aria.play">▶</button>
           <button class="ghost" id="xwKeyGo">✓</button>
         </div>
         <div class="sd-typed" id="xwTyped" dir="auto" aria-live="polite"></div>
@@ -2806,7 +2807,7 @@
   <!-- CC-MYWORDS-LISTS F3: the My Words screen (app only). -->
   <div class="lists-screen" id="listsScreen" role="dialog" aria-modal="true" aria-labelledby="listsTitle">
     <div class="lists-top">
-      <button class="ghost" id="listsClose" aria-label="Close">✕</button>
+      <button class="ghost" id="listsClose" aria-label="Close" data-i18n-aria="aria.close">✕</button>
       <h2 id="listsTitle" data-i18n="lists.title">My words</h2>
     </div>
     <div class="lists-wrap" id="listsBody"></div>
@@ -2877,31 +2878,31 @@
       <!-- CC-TELEMETRY-FOUNDATION F7 (D11). A Jr or not-yet-answered player can
            only change it through the parent gate (lib.rs). -->
       <label class="set-row" id="telemetryRow"><span class="lbl2"><span data-i18n="settings.telemetry">Help improve SpellGame</span><small data-i18n="settings.telemetrySmall">Sends crash and speed reports. Never your words, answers, or anything about you.</small></span><input type="checkbox" class="switch" id="telemetryToggle" /></label>
-      <label class="set-row" id="remindTimeRow"><span class="lbl2"><span data-i18n="settings.remindTime">Reminder time</span><small data-i18n="settings.remindTimeSmall">When to send the daily nudge</small></span><input type="time" id="remindTime" value="17:00" aria-label="Daily reminder time" /></label>
+      <label class="set-row" id="remindTimeRow"><span class="lbl2"><span data-i18n="settings.remindTime">Reminder time</span><small data-i18n="settings.remindTimeSmall">When to send the daily nudge</small></span><input type="time" id="remindTime" value="17:00" aria-label="Daily reminder time" data-i18n-aria="aria.reminderTime" /></label>
       <div class="set-row">
         <span class="lbl2"><span data-i18n="settings.volume">Volume boost</span><small data-i18n="settings.volumeSmall">Louder than 100% for quiet speakers</small></span>
-        <input type="range" id="volumeSlider" min="0.5" max="2" step="0.1" value="1" aria-label="Volume boost" />
+        <input type="range" id="volumeSlider" min="0.5" max="2" step="0.1" value="1" aria-label="Volume boost" data-i18n-aria="settings.volume" />
       </div>
       <div class="set-row">
         <span class="lbl2"><span data-i18n="settings.background">Background</span><small data-i18n="settings.backgroundSmall">Page background color</small></span>
         <span class="theme-pick" id="bgPick">
-          <button class="theme-swatch" style="--s:#1c1830" data-c="#1c1830" aria-label="Violet background"></button>
-          <button class="theme-swatch" style="--s:#151d2e" data-c="#151d2e" aria-label="Navy background"></button>
-          <button class="theme-swatch" style="--s:#132018" data-c="#132018" aria-label="Forest background"></button>
-          <button class="theme-swatch" style="--s:#241318" data-c="#241318" aria-label="Maroon background"></button>
-          <button class="theme-swatch" style="--s:#181818" data-c="#181818" aria-label="Charcoal background"></button>
-          <label class="theme-swatch custom" aria-label="Pick a custom background color"><input type="color" id="bgColorInput" value="#1c1830" /></label>
+          <button class="theme-swatch" style="--s:#1c1830" data-c="#1c1830" aria-label="Violet background" data-i18n-aria="aria.bgViolet"></button>
+          <button class="theme-swatch" style="--s:#151d2e" data-c="#151d2e" aria-label="Navy background" data-i18n-aria="aria.bgNavy"></button>
+          <button class="theme-swatch" style="--s:#132018" data-c="#132018" aria-label="Forest background" data-i18n-aria="aria.bgForest"></button>
+          <button class="theme-swatch" style="--s:#241318" data-c="#241318" aria-label="Maroon background" data-i18n-aria="aria.bgMaroon"></button>
+          <button class="theme-swatch" style="--s:#181818" data-c="#181818" aria-label="Charcoal background" data-i18n-aria="aria.bgCharcoal"></button>
+          <label class="theme-swatch custom" aria-label="Pick a custom background color" data-i18n-aria="aria.bgCustom"><input type="color" id="bgColorInput" value="#1c1830" /></label>
         </span>
       </div>
       <div class="set-row">
         <span class="lbl2"><span data-i18n="settings.orb">Orb color</span><small data-i18n="settings.orbSmall">Color of the spelling orb</small></span>
         <span class="theme-pick" id="orbPick">
-          <button class="theme-swatch" style="--s:#ffb14d" data-c="#ffb14d" aria-label="Amber orb"></button>
-          <button class="theme-swatch" style="--s:#46d6b8" data-c="#46d6b8" aria-label="Teal orb"></button>
-          <button class="theme-swatch" style="--s:#ff6b7a" data-c="#ff6b7a" aria-label="Coral orb"></button>
-          <button class="theme-swatch" style="--s:#7aa2ff" data-c="#7aa2ff" aria-label="Blue orb"></button>
-          <button class="theme-swatch" style="--s:#b18cff" data-c="#b18cff" aria-label="Violet orb"></button>
-          <label class="theme-swatch custom" aria-label="Pick a custom orb color"><input type="color" id="orbColorInput" value="#ffb14d" /></label>
+          <button class="theme-swatch" style="--s:#ffb14d" data-c="#ffb14d" aria-label="Amber orb" data-i18n-aria="aria.orbAmber"></button>
+          <button class="theme-swatch" style="--s:#46d6b8" data-c="#46d6b8" aria-label="Teal orb" data-i18n-aria="aria.orbTeal"></button>
+          <button class="theme-swatch" style="--s:#ff6b7a" data-c="#ff6b7a" aria-label="Coral orb" data-i18n-aria="aria.orbCoral"></button>
+          <button class="theme-swatch" style="--s:#7aa2ff" data-c="#7aa2ff" aria-label="Blue orb" data-i18n-aria="aria.orbBlue"></button>
+          <button class="theme-swatch" style="--s:#b18cff" data-c="#b18cff" aria-label="Violet orb" data-i18n-aria="aria.orbViolet"></button>
+          <label class="theme-swatch custom" aria-label="Pick a custom orb color" data-i18n-aria="aria.orbCustom"><input type="color" id="orbColorInput" value="#ffb14d" /></label>
         </span>
       </div>
       <button class="btn btn-check" id="setDone" data-i18n="settings.done" style="width:100%;margin-top:16px">Done</button>
