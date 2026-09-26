@@ -1,55 +1,91 @@
 # CC-HUB-NAV §0 census
 
-Run 2026-09-26 against `cc-sd-fit`. Phase A only: nothing built, nothing moved.
+Run 2026-09-26 against `cc-sd-fit`.
 
-**C1 HALTs.** Everything else is a finding, and most of them are good news.
+**C1 halted, and has since been resolved** in the same branch — the two
+registries are now one. Eric asked for that reconciliation directly; it is its
+own amendment, as §0 requires, not something folded into a later phase. The C1
+section below records both the finding and what was done, including two facts
+the first draft of this census got wrong.
+
+Everything else is a finding, and most of them are good news.
 
 ---
 
-## C1 — Mode registry — **HALT**
+## C1 — Mode registry — HALT, now **RESOLVED**
 
 > HALT if tiles and sheet are hand-maintained separately — reconcile to one
 > registry first (own amendment, do not silently merge here).
 
-They are separate, and further apart than "separate" suggests: the two sources
-do not share an id vocabulary.
+**The halt was correct; two of the details I first wrote were not.** Corrected
+here because Phase B reads this file.
 
-| | source | ids | count |
-|---|---|---|---|
-| Gamepad sheet (`src/play_hub.rs`, CC-MODE-HUB F2) | `config/modes.json` | mode ids: `practice`, `spelldoku`, `def_match` … | 23 |
-| Hub tile row (`src/hub_tiles.rs`, CC-BUILD219-FIXES F1) | `config/hub-tiles.json` | **DOM button ids**: `vsBtn`, `climbBtn`, `dailyBtn`, `sayItBtn`, `soBtn` | 5 |
+What was true: two registries with no join. The Play hub sheet rendered from
+`config/modes.json`, keyed by MODE id. The home row was gated by
+`config/hub-tiles.json`, keyed by DOM ELEMENT id. No shared vocabulary, so
+"resolve tiles and sheet through the registry" had no single registry to mean.
 
-**Overlap: zero.** Not "some tiles missing from the registry" — no tile id is a
-registry id at all, because one file names modes and the other names buttons.
+What I got wrong:
 
-And the row is not rendered from its file either. `hub_tiles.rs` says so in its
-own header: *"The 'Ways to play' row is static markup: six launchers, each with
-its own id, i18n key and feature gate. This module does not render it."* It only
-suppresses members by toggling a class. So the tile row is hand-written HTML in
-`index.html`, gated by a five-row JSON of element ids.
+* I wrote that the registry has no route field and therefore no destinations.
+  A mode → element table already existed: `LAUNCH` in `src/play_hub.rs`. It is
+  a Rust const rather than a JSON field, and deliberately so (below).
+* I wrote that `climbBtn` and `dailyBtn` had no registry entry. They do. The
+  registry carries `climb` and `daily` with `status: "core"`, which its own
+  `$fields` defines as a surface the registry governs but the SHEET never
+  tiles — CC-ONBOARD-JR option (a), signed 2026-09-11. The home row showing
+  Daily and the sheet not showing it is that decision working, not a gap.
 
-**What this blocks.** I2 ("Drawer rows and hub tiles both resolve through the C1
-registry. No second list.") has no single registry to resolve through. A3 ("for
-every hub tile route `r`: `r ∈ drawerRoutes`") is not merely failing — it is
-unsatisfiable, because tiles have no routes anywhere and the registry has no
-route field (see C2).
+**The resolution.** The row's membership AND its launcher id are one field on
+the mode entry — `hubTile: { element, member }`. `config/hub-tiles.json` is
+deleted. One registry, and a tile is described in the same place as everything
+else about its mode.
 
-Per §0 this reconciliation is its own amendment. I have not merged them.
+**The first attempt was wrong and an existing test caught it.** I initially
+resolved mode → element through `play_hub::launch_for`, adding `climb` and
+`daily` rows to its `LAUNCH` table. `launch_table_covers_every_registered_mode`
+failed, and its doc comment says why: core modes are *"excluded rather than
+bound to None, which would claim they are in-round aids."* `LAUNCH` answers
+where a SHEET tile goes, and the Climb and the Daily have no sheet tile and a
+home-row launcher each. Making my join work by reversing that decision was the
+wrong direction, so the element moved onto the row's own field instead and
+`play_hub` is untouched.
+
+The registry is compiled into the SITE build, so no `hubTile` may name an
+app-only launcher — its symbols would reach the site bundle and breach the
+picture wall (CC-PICTURE-BANK I1), which is how the first cut of F1 broke.
+That rule is carried over as a test rather than left as a comment.
+
+`vsBtn` (Challenge a friend) has no registry entry and does not need one: the
+old file's own `$wall` note states the registry **only ever suppresses**, so
+absence costs nothing and behaviour is unchanged. Head-to-Head stays out of the
+catalog until it has a reviewed spec, exactly as the file requires.
+
+Carried over from the deleted file, now keyed by mode: an element id that is
+not real markup fails the build, so a typo cannot silently suppress nothing and
+leave the tile looking like the feature broke.
+
+**Not bundled: the `group` field.** My first read of this census recommended
+doing `route`, `group` and the row in one amendment. That was wrong, and the
+data says so: D-N6 names 14 modes, but **11 of the 23 registry entries have no
+D-N6 group**, and two D-N6 names (`spell_it`, `spell_off`) are not registry ids
+at all. Adding a required field would have meant inventing 13 assignments.
+`group` belongs to Phase B, where the drawer that reads it is decided.
 
 ## C2 — Route table
 
-`config/modes.json` entries carry: `id`, `nameKey`, `descKey`, `icon`, `status`,
-`kidSafe`, `platforms`, `entitlementLevel`, `requiresPremium`, `languages`,
-`exitStyle`, `juniorPolicy`.
+Corrected: destinations exist, as `LAUNCH` in `src/play_hub.rs` — a
+`(mode id, Option<element id>)` table where `None` marks an in-round aid with
+no destination. The registry entry itself carries no route, and after this
+amendment it still should not, for the picture-wall reason in C1.
 
-**There is no `route` field.** `play_hub.rs` resolves a mode to a destination by
-kind — a *launcher* renders a button that clicks an existing DOM button
-(`sayItBtn`, `soBtn`), an *info* mode has no destination at all. So F3's "tapping
-navigates to the mode's route" has nothing to read today; routes would be added
-alongside C1's `group` field, which makes that one amendment rather than two.
+Registry fields: `id`, `nameKey`, `descKey`, `icon`, `status`, `kidSafe`,
+`platforms`, `entitlementLevel`, `requiresPremium`, `languages`, `exitStyle`,
+`juniorPolicy`, and now `hubTile`.
 
-Note the registry already has `descKey` — D-N3 moves that string to the mode's
-start screen, so no translation surface is added or lost, exactly as F3 says.
+F3's "tapping navigates to the mode's route" resolves through `launch_for`
+today. Note `descKey` already exists, so D-N3's move of the tagline to the mode
+start screen adds no translation surface, as the file says.
 
 ## C3 — Auth state
 
@@ -143,13 +179,13 @@ No Maestro flows or onboarding coach marks reference `+ My words` or
 
 ## What I would decide before Phase B
 
-1. **C1 is the whole gate.** The reconciliation wants three things in one
-   amendment, not three: a `route` per entry (C2), a `group` per entry (F3),
-   and the tile row rendering from the registry instead of static markup. Doing
-   them separately means touching the same file three times.
-2. **The tile row is static HTML.** F6's "quick-play row = fixed four" is
-   currently five hand-written launchers gated by a JSON of button ids. Deciding
-   whether the row becomes registry-rendered, or stays static and simply drops a
-   member, changes how much of C1 has to be solved now.
+1. **The `group` field**, which this amendment deliberately left out: D-N6
+   covers 12 of 23 entries, so 11 need a decision and two D-N6 names are not
+   registry ids. That is Phase B's first task and it needs Eric, not a guess.
+2. **The tile row is still static HTML.** The registry now decides membership,
+   but the row itself is hand-written launchers. F6's "quick-play row = fixed
+   four" can be met by a data edit today; making the row registry-RENDERED is a
+   separate question nobody has asked yet.
 3. Everything else is buildable as written. C4 is merged, C6 has double the
-   headroom A5 needs, C7's hook is small, and C9 is a move rather than a build.
+   headroom A5 needs, C7's hook is five lines, and C9 is a move rather than a
+   build.

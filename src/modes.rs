@@ -71,6 +71,35 @@ pub struct Mode {
     /// so it cannot ship. Read only by `experience::allowed_tiers`.
     #[serde(rename = "juniorPolicy")]
     pub junior_policy: String,
+
+    /// CC-HUB-NAV C1 — the mode's place in the static "Ways to play" row.
+    /// `None` = not a member of that row, which is most modes and costs
+    /// nothing: the row is markup and this field only ever SUPPRESSES.
+    ///
+    /// Membership and momentary visibility stay different questions: a member
+    /// may still be hidden by its own feature gate (the Climb button by Kid
+    /// Mode, Challenge a friend by the online flag).
+    #[serde(rename = "hubTile", default)]
+    pub hub_tile: Option<HubTile>,
+}
+
+/// CC-HUB-NAV C1 — a mode's launcher in the home row.
+///
+/// The element id lives HERE rather than in `play_hub`'s `LAUNCH`, because
+/// `LAUNCH` answers a different question -- where a SHEET tile goes -- and
+/// deliberately excludes `core` modes rather than binding them to `None`,
+/// which would claim they are in-round aids. The Climb and the Daily have no
+/// sheet tile and a home-row launcher each, so the row's element belongs to
+/// the row's own field.
+#[derive(Deserialize, Debug, Clone)]
+pub struct HubTile {
+    /// The id of the launcher in `index.html`.
+    pub element: String,
+    /// False takes it out of the row. The element stays in the DOM: `climbBtn`
+    /// owns the leaderboard scrim handler and `ghost.rs` reaches the board by
+    /// synthesising a click on it, so deleting the markup would break a second
+    /// feature.
+    pub member: bool,
 }
 
 /// The registry's spelling of [`AccessLevel`]. Separate so the JSON schema and

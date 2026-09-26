@@ -82,6 +82,7 @@
     },
     {
       "id": "say_it",
+      "hubTile": { "element": "sayItBtn", "member": true },
       "nameKey": "tools.sayit.name",
       "descKey": "tools.sayit.desc",
       "icon": "🎤",
@@ -154,6 +155,7 @@
     },
     {
       "id": "online_spelloff",
+      "hubTile": { "element": "soBtn", "member": true },
       "nameKey": "tools.spelloff.name",
       "descKey": "tools.spelloff.desc",
       "icon": "⚔️",
@@ -395,6 +397,8 @@
     },
     {
       "id": "climb",
+      "hubTile": { "element": "climbBtn", "member": false },
+      "$hubTileNote": "D1 SIGNED (Eric, 2026-09-02): out of the home row. The MODE is untouched -- Climb stays a LEVEL_OPTS entry and is selectable from the setup chip; shields, leaderboard and scoring are unchanged. The climbBtn element STAYS IN THE DOM, hidden: it owns the leaderboard scrim handler (climb.rs open_leaderboard) and ghost.rs reaches the board by synthesising a click on it, so deleting the markup would break a second feature. Suppressed, not removed.",
       "nameKey": "top.theClimb",
       "descKey": "level.climb.desc",
       "icon": "🏔",
@@ -413,6 +417,7 @@
     },
     {
       "id": "daily",
+      "hubTile": { "element": "dailyBtn", "member": true },
       "nameKey": "widget.daily.name",
       "descKey": "widget.daily.desc",
       "icon": "🗓",

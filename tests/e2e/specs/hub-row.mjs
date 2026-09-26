@@ -1,6 +1,9 @@
 // hub-row.spec — CC-BUILD219-FIXES F1. The home "Ways to play" row is
-// registry-decided (config/hub-tiles.json). This covers the part unit tests
-// cannot: that the flag reaches the DOM, and STAYS applied.
+// registry-decided: a `hubTile` flag on the mode's entry in config/modes.json,
+// resolved to its element through play_hub::launch_for (CC-HUB-NAV C1 folded
+// the old element-keyed config/hub-tiles.json into the one mode registry).
+// This covers the part unit tests cannot: that the flag reaches the DOM, and
+// STAYS applied.
 //
 // Staying applied is the whole reason this file exists. climb::reflect_auth
 // toggles `btn-hide` on #climbBtn on every auth change, so a registry sharing
