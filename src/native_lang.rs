@@ -286,6 +286,19 @@ pub fn start_listening(lang: &str) -> Option<Promise> {
     f.call1(&obj, &opts).ok()?.dyn_into::<Promise>().ok()
 }
 
+/// CC-FEEDBACK C3 probe. Set the process-wide audio session category and
+/// resolve with what the session reports AFTERWARDS, so a refused change reads
+/// as "asked for ambient, got playback" instead of becoming a wrong conclusion.
+///
+/// Dev builds only. Nothing a player runs calls this: AppDelegate sets
+/// .playback at launch and the speech paths re-assert it.
+#[cfg(feature = "dev_preview")]
+pub fn set_audio_category(category: &str) -> Option<Promise> {
+    let obj = bridge()?;
+    let f = method(&obj, "setAudioCategory")?;
+    f.call1(&obj, &JsValue::from_str(category)).ok()?.dyn_into::<Promise>().ok()
+}
+
 /// Outcome of an on-device listen attempt.
 pub enum ListenOutcome {
     /// The recognizer's final on-device transcription.

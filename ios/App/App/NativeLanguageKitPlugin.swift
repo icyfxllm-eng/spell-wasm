@@ -15,6 +15,12 @@ public class NativeLanguageKitPlugin: CAPPlugin, CAPBridgedPlugin {
     public let jsName = "NativeLanguageKit"
     public let pluginMethods: [CAPPluginMethod] = [
         CAPPluginMethod(name: "capabilities", returnType: CAPPluginReturnPromise),
+        // CC-FEEDBACK C3 probe. AVAudioSession is ONE object per process, so
+        // the app cannot hold two categories at once -- feedback on ambient and
+        // word audio on playback is not assignable, only switchable. This
+        // method exists so the dev probe can measure whether switching around
+        // each sound actually works, instead of the census guessing.
+        CAPPluginMethod(name: "setAudioCategory", returnType: CAPPluginReturnPromise),
         // CC-FINALE feature 3 (add-only Photos). Declaring the method is not
         // optional bookkeeping: without this row the bridge has no route for
         // it, the JS call rejects, and Save fails in a way that looks exactly
@@ -74,6 +80,41 @@ public class NativeLanguageKitPlugin: CAPPlugin, CAPBridgedPlugin {
     // Vision language correction for the photo path (Phase 2): ON for languages
     // Vision models natively; OFF for the English-recognizer fallback languages.
     var recognitionCorrection = true
+
+    /// CC-FEEDBACK C3 — set the process-wide audio session category and report
+    /// what actually took effect.
+    ///
+    /// Reports rather than assumes: the resulting category is read back off the
+    /// session, so a silent failure shows up as "asked for ambient, got
+    /// playback" rather than as a wrong conclusion in a census.
+    ///
+    /// Nothing in the shipping app calls this. `AppDelegate` sets .playback at
+    /// launch and the speech paths re-assert it, so the probe's last word wins
+    /// only until the next utterance.
+    @objc func setAudioCategory(_ call: CAPPluginCall) {
+        let want = call.getString("category") ?? "playback"
+        let session = AVAudioSession.sharedInstance()
+        var failure: String? = nil
+        do {
+            switch want {
+            case "ambient":
+                try session.setCategory(.ambient, mode: .default)
+            case "playback":
+                try session.setCategory(.playback, mode: .default)
+            default:
+                call.reject("unknown category: \(want)")
+                return
+            }
+            try session.setActive(true)
+        } catch let e {
+            failure = "\(e)"
+        }
+        call.resolve([
+            "requested": want,
+            "category": session.category.rawValue,
+            "error": failure ?? ""
+        ])
+    }
 
     @objc func capabilities(_ call: CAPPluginCall) {
         let report = Capabilities.report(lang: call.getString("lang") ?? "")

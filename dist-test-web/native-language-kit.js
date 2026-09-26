@@ -270,6 +270,26 @@
     },
 
     /**
+     * CC-FEEDBACK C3 probe — set the process-wide audio session category.
+     *
+     * There is one AVAudioSession per process, so feedback sounds and word
+     * audio cannot hold different categories at the same time; the only
+     * question the probe can answer is whether SWITCHING around each sound
+     * behaves. Resolves with what the session reports AFTER the attempt, so a
+     * refused change is visible rather than assumed.
+     *
+     * @param {'ambient'|'playback'} category
+     * @returns {Promise<{requested:string, category:string, error:string}>}
+     *   Off iOS: resolves with category 'unavailable'.
+     */
+    setAudioCategory: function (category) {
+      if (!available()) {
+        return Promise.resolve({ requested: category, category: 'unavailable', error: '' });
+      }
+      return plugin().setAudioCategory({ category: category });
+    },
+
+    /**
      * True only where the on-device VisionKit text recognizer is available
      * (iOS + the NativeLanguageKit plugin). The photo-list camera affordance is
      * shown off this capability check (Feature F1). @returns {boolean}
