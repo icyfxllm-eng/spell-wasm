@@ -2148,8 +2148,67 @@ fn set_streak_tier(streak: u32) {
 }
 
 /// Record the miss and reveal the word.
-fn finalize_incorrect(app: &App, glyph: &str, prefix: &str, feedback_class: &str) {
-    finalize_incorrect_ex(app, glyph, prefix, feedback_class, true);
+/// CC-FEEDBACK C1 — the base game's outcome, named.
+///
+/// Before this it was three loose strings threaded into one sink: an orb glyph,
+/// an i18n prefix key, and a CSS class. That triple WAS the outcome -- (✗,
+/// fb.itWas, feedback bad) is a miss and nothing else -- it simply could not be
+/// matched on, which is why the §0 census recorded the base game as having no
+/// outcome type at all while every other mode had one.
+///
+/// Naming it is a presentation refactor. No verdict moved, and
+/// `feedback::tests::the_rendered_class_is_unchanged` pins the strings.
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+pub enum Outcome {
+    Correct,
+    /// A genuine other sense of the prompt, accepted: a homophone or a member
+    /// of the collision set the audio cannot distinguish.
+    OtherSense,
+    Misspelled,
+    TimedOut,
+    GaveUp,
+    /// "Can't hear it" — the round is void and records nothing (AUDIO-CLARITY D9).
+    Voided,
+}
+
+impl Outcome {
+    /// The class the renderer sets today, unchanged. F2 will replace this with
+    /// a lookup on `feedback::State`, and that is the change that finally makes
+    /// an other-sense answer look different from a plain success.
+    pub fn css_class(self) -> &'static str {
+        match self {
+            Outcome::Correct | Outcome::OtherSense => "feedback good",
+            Outcome::Misspelled | Outcome::TimedOut => "feedback bad",
+            Outcome::GaveUp | Outcome::Voided => "feedback",
+        }
+    }
+
+    /// The glyph on the orb.
+    fn orb_glyph(self) -> &'static str {
+        match self {
+            Outcome::Correct | Outcome::OtherSense => "\u{2713}",
+            Outcome::Misspelled => "\u{2717}",
+            Outcome::TimedOut => "\u{23f1}",
+            Outcome::GaveUp | Outcome::Voided => "\u{2013}",
+        }
+    }
+
+    /// The i18n key for the line under the orb.
+    ///
+    /// Correct and OtherSense never reach this sink -- the success path writes
+    /// `pick_praise` rather than a fixed string -- so they share the neutral
+    /// key instead of inventing an `fb.correct` that no locale defines.
+    fn prefix_key(self) -> &'static str {
+        match self {
+            Outcome::Misspelled => "fb.itWas",
+            Outcome::TimedOut => "fb.timesUp",
+            Outcome::Correct | Outcome::OtherSense | Outcome::GaveUp | Outcome::Voided => "fb.wordWas",
+        }
+    }
+}
+
+fn finalize_incorrect(app: &App, outcome: Outcome) {
+    finalize_incorrect_ex(app, outcome, true);
 }
 
 /// As `finalize_incorrect`, but `record` controls whether the learning outcome
@@ -2157,7 +2216,11 @@ fn finalize_incorrect(app: &App, glyph: &str, prefix: &str, feedback_class: &str
 /// passes `record = false` when the first submission already recorded the miss —
 /// a retry (extra attempt or shield) changes session flow, not the learning
 /// record, so the outcome must never be double-counted (I2 / A2 / A9).
-fn finalize_incorrect_ex(app: &App, glyph: &str, prefix: &str, feedback_class: &str, record: bool) {
+fn finalize_incorrect_ex(app: &App, outcome: Outcome, record: bool) {
+    let glyph = outcome.orb_glyph();
+    let prefix = crate::i18n::t(outcome.prefix_key());
+    let prefix = prefix.as_str();
+    let feedback_class = outcome.css_class();
     // F6a/I10: a voided round records nothing. The other sink.
     if round_voided(app) {
         return;
@@ -2654,7 +2717,7 @@ fn on_wrong_extra_attempt(app: &App) {
         return;
     }
     // Retry was also wrong -> normal miss consequence; miss already recorded.
-    finalize_incorrect_ex(app, "\u{2717}", &crate::i18n::t("fb.itWas"), "feedback bad", false);
+    finalize_incorrect_ex(app, Outcome::Misspelled, false);
 }
 
 /// Feature 2 (The Climb) — a validated-incorrect during a run. Any miss resets
@@ -2671,7 +2734,7 @@ fn on_wrong_climb(app: &App) {
         return;
     }
     // No shield to spend (or already used one on this word) -> normal miss.
-    finalize_incorrect(app, "\u{2717}", &crate::i18n::t("fb.itWas"), "feedback bad");
+    finalize_incorrect(app, Outcome::Misspelled);
 }
 
 /// Show the localized "Use a shield?" prompt (player choice, not auto-spend).
@@ -2699,7 +2762,7 @@ pub fn shield_accept(app: &App) {
 /// kept. The first miss was already recorded when the prompt appeared.
 pub fn shield_decline(app: &App) {
     hide_shield_prompt();
-    finalize_incorrect_ex(app, "\u{2717}", &crate::i18n::t("fb.itWas"), "feedback bad", false);
+    finalize_incorrect_ex(app, Outcome::Misspelled, false);
 }
 
 /// Sync the shield-count HUD. Visible only while the flag is on and this is a
@@ -2787,7 +2850,7 @@ fn on_wrong(app: &App) {
     // above. The Korean per-jamo hint still shows once alongside the reveal.
     crate::haptics::incorrect(app.borrow().kid);
     korean_coaching(app);
-    finalize_incorrect(app, "\u{2717}", &crate::i18n::t("fb.itWas"), "feedback bad");
+    finalize_incorrect(app, Outcome::Misspelled);
 }
 
 fn on_timeout(app: &App) {
@@ -2806,7 +2869,7 @@ fn on_timeout(app: &App) {
     if shield_ctx(&app.borrow()) || extra_attempt_ctx(&app.borrow()) {
         crate::attempts::shield_note_miss(&mut app.borrow_mut());
     }
-    finalize_incorrect(app, "\u{23f1}", &crate::i18n::t("fb.timesUp"), "feedback bad");
+    finalize_incorrect(app, Outcome::TimedOut);
 }
 
 pub fn give_up(app: &App) {
@@ -2824,7 +2887,7 @@ pub fn give_up(app: &App) {
 
     // build-54: no tries to zero out — a give-up is the single miss.
     render_tries(app);
-    finalize_incorrect(app, "\u{2013}", &crate::i18n::t("fb.wordWas"), "feedback");
+    finalize_incorrect(app, Outcome::GaveUp);
 }
 
 fn end_chain(app: &App) {

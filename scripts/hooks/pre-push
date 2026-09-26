@@ -1,0 +1,70 @@
+#!/bin/sh
+# Static checks before a push. Roughly one second; catches the class of
+# regression that reached main twice in three days.
+#
+# WHY THIS EXISTS. Two real breakages, both of which a second of checking would
+# have stopped:
+#
+#   * A string on the play screen was localized into fifteen languages without
+#     adding the joining-script letter-spacing reset, so Arabic rendered as
+#     loose disconnected letters. tracking-check catches it. Pushed anyway,
+#     and main failed its own gate until someone merged and noticed.
+#   * The "Can't hear it" overlay shipped with left/right instead of
+#     inset-inline, so it did not mirror for Arabic. css-logical-check catches
+#     it -- but css-logical-check runs ONLY in GitHub Actions, never in
+#     scripts/gate.sh, so a clean local gate said nothing and the workflow went
+#     red on main.
+#
+# That second one is why this hook runs the CI-only checks too. A check that
+# exists somewhere the author does not look is a check the author does not get.
+#
+# This is NOT the gate. No build, no cargo, no e2e -- those stay in gate.sh
+# before a ship. This is only the part that is nearly free.
+#
+# Escape hatch: git push --no-verify. Use it when you mean to.
+set -e
+cd "$(git rev-parse --show-toplevel)"
+
+command -v node >/dev/null 2>&1 || {
+  echo "pre-push: node not found — refusing to pass checks that did not run" >&2
+  exit 1
+}
+
+# Every static check that any gate or workflow runs, minus the two that need
+# arguments or artifacts (e2e-summary-check wants a log, edu-no-purchase-check
+# wants a built dist).
+CHECKS="ar-hi-ortho-check audio-clarity-check audio-router-check bank-variety-check
+dom-id-check human-audio-check modes-check picture-artifact-parity pinyin-display-check
+pinyin-inventory-check ru-identity-check ru-stress-ingest-check scroll-check
+settings-truth-check spell-jr-name-check tier-list-check tier-partition-check
+tracking-check wordpic-export-parity zh-audio-path-check zh-bank-sandhi-check
+zh-grading-path-check css-logical-check entitlement-map-check"
+
+# Checks that also expose a --selftest. A neutered check is worse than no check,
+# because it reports OK, so the selftests ride along here too.
+SELFTESTS="audio-router-check human-audio-check pinyin-display-check css-logical-check
+modes-check ru-stress-ingest-check settings-truth-check ru-identity-check
+spell-jr-name-check tier-list-check wordpic-export-parity"
+
+failed=""
+for c in $CHECKS; do
+  node "scripts/$c.mjs" >/dev/null 2>&1 || failed="$failed $c"
+done
+for c in $SELFTESTS; do
+  node "scripts/$c.mjs" --selftest >/dev/null 2>&1 || failed="$failed $c(selftest)"
+done
+
+if [ -n "$failed" ]; then
+  echo "" >&2
+  echo "pre-push BLOCKED —$failed" >&2
+  echo "" >&2
+  for c in $failed; do
+    case "$c" in *"(selftest)"*) continue;; esac
+    echo "--- $c ---" >&2
+    node "scripts/$c.mjs" 2>&1 | head -12 >&2
+    echo "" >&2
+  done
+  echo "Fix, or push with --no-verify if you mean to." >&2
+  exit 1
+fi
+echo "pre-push: $(echo $CHECKS | wc -w | tr -d ' ') static checks OK"

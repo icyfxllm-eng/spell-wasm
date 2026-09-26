@@ -9,6 +9,7 @@ mod consts;
 mod daily;
 mod deck;
 mod defmatch; // CC-DEF-MATCH core engine (REVIEW-GATED)
+mod feedback; // CC-FEEDBACK F1 (outcome -> state; the single mapping)
 mod practice; // CC-PRACTICE core (curriculum/phases/progress)
 #[cfg(not(feature = "web"))]
 mod forge; // CC-LETTER-FORGE D2 (puzzle generator)
