@@ -17,3 +17,59 @@ behavior behaviour
 center centre
 theater theatre
 traveled travelled
+
+# Added 2026-09-27 on Eric's "for favorite shouldn't both versions be
+# accepted". They should. These are in the bank with ONE spelling, their other
+# national spelling is attested by CMUdict, and CMUdict gives the two the SAME
+# pronunciation — so the audio cannot tell a player which one is wanted, and
+# marking the other wrong is an unfair item rather than a hard one.
+#
+# Every row is dictionary-attested, not rule-derived. The rules that generate
+# candidates cannot be trusted alone: `-er` -> `-re` proposed "beer" -> "bere",
+# and CMUdict does list "bere" (a barley) with the same sound. It is a rare
+# homophone, not a spelling variety, so it is NOT here — which is exactly the
+# failure bank-variety-check.mjs warns about when it says rules of that shape
+# do not know which words are words.
+color colour
+colors colours
+favor favour
+favorite favourite
+license licence
+neighbor neighbour
+recognize recognise
+recognized recognised
+traveling travelling
+
+# Added 2026-09-27 from Eric's list of -or/-our pairs: "words like this should
+# count as correct for spelling."
+#
+# Most are not in the bank today, so they change nothing yet — they are here so
+# that adding any of these words later cannot silently reintroduce the unfair
+# item, which is the whole job of a seed file.
+#
+# humorous/humourous is DELIBERATELY ABSENT from this list. It was on Eric's,
+# and it is the one entry that is not a spelling variety: British English drops
+# the u before -ous, so the word is "humorous" everywhere and "humourous" is a
+# misspelling. CMUdict does not list it, which is how it was caught. Accepting
+# it would teach a wrong spelling, which is worse than the bug this file fixes.
+neighborhood neighbourhood
+honor honour
+honorable honourable
+humor humour
+rumor rumour
+clamor clamour
+demeanor demeanour
+endeavor endeavour
+glamor glamour
+harbor harbour
+odor odour
+# The six below are ordinary British spellings that CMUdict simply does not
+# carry, so the identical-pronunciation check cannot confirm them mechanically
+# the way it did for the rest. They follow the same -or/-our correspondence and
+# Eric listed them; none is in the bank, so nothing is graded on them today.
+savor savour
+valor valour
+vigor vigour
+ardor ardour
+fervor fervour
+harbors harbours

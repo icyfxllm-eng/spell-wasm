@@ -40,12 +40,13 @@ if not API_KEY:
 CACHE_DIR = os.environ.get("AUDIO_CACHE_DIR", "audio_cache")
 os.makedirs(CACHE_DIR, exist_ok=True)
 
-VOICE_NAME = "en-US-Neural2-D"
+VOICE_NAME = "en-US-Neural2-E"
 LANGUAGE_CODE = "en-US"
 
 # Backend Google-TTS voice per built-in language. To add a language: add an
 # entry here + its word bank on the client (words.rs) — audio + spelling then
-# work end-to-end. (`en-US-Neural2-D` above stays the default / sentence voice.)
+# work end-to-end. (`en-US-Neural2-E` above is the fallback for a language with
+# no row here; line 751 is its only use.)
 # GOOGLE-synthesized languages. Keyed on the 2-letter study-language code the
 # frontend sends. Reconciled with the active lineup (CC-MASTER-PARITY):
 # it/nl/sv/nb/tr/th were cut and removed here; Russian added (ru-RU-Wavenet-D).
@@ -57,7 +58,7 @@ LANGUAGE_CODE = "en-US"
 #   Wavenet-B is the male MSA voice with the clearest isolated-word enunciation.
 # A lang in neither map falls back to the English voice (see the DEFAULT_LANG guard).
 LANG_VOICES = {
-    "en": ("en-US", "en-US-Neural2-D"),
+    "en": ("en-US", "en-US-Neural2-E"),
     "es": ("es-ES", "es-ES-Neural2-B"),
     "fr": ("fr-FR", "fr-FR-Neural2-A"),
     "de": ("de-DE", "de-DE-Neural2-B"),
@@ -155,6 +156,14 @@ AZURE_RATE = {"normal": "-15%", "slow": "-40%"}
 # moves to 96 kbps, so no v3 clip may be served. Bumping this is what makes the
 # re-cache total rather than gradual.
 CACHE_VERSION = "v4"
+
+# Languages whose cache key carries the voice name. English joined on
+# 2026-09-27 when Eric signed the switch from en-US-Neural2-D to -E (D6): the
+# bake-off had D mis-heard on half, leaf and safe -- word-final /f/ read as /v/
+# -- and E heard correctly on all three. Without this, the switch would have
+# served a MIX: cached D clips for every word already synthesized, E only for
+# the rest, which is exactly what D16's "never mid-session" forbids.
+VOICE_IN_KEY = {"en"}
 
 DICTIONARY_API = "https://api.dictionaryapi.dev/api/v2/entries/en/{}"
 
@@ -277,6 +286,14 @@ def cache_path_for(word: str, variant: str, lang: str = "en", key_override: str 
     entry = lexicon_entry(lang, word)
     if entry and not key_override:
         key = f"{key}|ipa:{entry[1]}"
+    # CC-AUDIO-CLARITY F4/D6 — a clip made by a different voice IS a different
+    # clip, the same reasoning as the IPA hash above. Carried only for the
+    # languages listed in VOICE_IN_KEY rather than for all of them: the cache
+    # holds ~90k clips across fifteen languages, and keying every one on its
+    # voice would invalidate the lot to change one. A language joins the set
+    # when its voice is switched, and from then on its switches are clean.
+    if lang in VOICE_IN_KEY and not key_override:
+        key = f"{key}|voice:{LANG_VOICES.get(lang, (LANGUAGE_CODE, VOICE_NAME))[1]}"
     digest = hashlib.md5(key.encode()).hexdigest()
     return os.path.join(CACHE_DIR, f"{CACHE_VERSION}_{digest}_{variant}.mp3")
 
