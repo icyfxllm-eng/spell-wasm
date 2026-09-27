@@ -30,6 +30,9 @@ mod review; // CC-LEARNING-ENGINE-L0 R2: the one rule for when a missed word ret
 mod inspector; // CC-LEARNING-ENGINE-L0 R4: dev-only learner inspector (never in a player's build)
 #[cfg(feature = "dev_preview")]
 mod c3_probe; // CC-FEEDBACK C3: dev-only audio-session probe (never in a player's build)
+mod drawer; // CC-HUB-NAV F1/F3 Phase B: the nav drawer. The MODULE is ungated so
+            // its row-building is covered by the ordinary gate; only `wire` is
+            // dev_preview, so nothing creates the burger in a player build.
 mod surface_hooks;
 #[cfg(not(feature = "web"))]
 mod translate; // TR D5 STRONG (Eric 2026-08-05: "for the app not the website")
@@ -419,6 +422,8 @@ fn wire(app: &App) {
     inspector::wire(app); // L0 R4: the learner inspector joins the dev menu
     #[cfg(feature = "dev_preview")]
     c3_probe::wire(app); // CC-FEEDBACK C3: the audio-session probe joins the dev menu
+    #[cfg(feature = "dev_preview")]
+    drawer::wire(app); // CC-HUB-NAV Phase B: the drawer and its burger
     ink_probe::wire(app); // CC-CJK-INK F1 — dev-only ink gate
     {
         // F4: the pad opens on the CHARACTERS -- s.spoken holds the hanzi for

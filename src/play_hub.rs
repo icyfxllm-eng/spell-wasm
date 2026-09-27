@@ -91,7 +91,11 @@ const LAUNCH: [(&str, Option<&str>); N_LAUNCH] = [
     ("spell_cross", Some("xwOpenBtn")),
 ];
 
-fn launch_for(id: &str) -> Option<&'static str> {
+/// The mode -> entry-point join. `pub(crate)` so the CC-HUB-NAV drawer routes
+/// to the same destination the sheet does rather than keeping a second table.
+/// The ids themselves stay behind this file's cfg split, which is what keeps
+/// app-only launchers out of the site bundle (CC-PICTURE-BANK I1).
+pub(crate) fn launch_for(id: &str) -> Option<&'static str> {
     LAUNCH.iter().find(|(k, _)| *k == id).and_then(|(_, v)| *v)
 }
 
@@ -108,7 +112,10 @@ pub fn live_entitlements() -> entitlements::EntitlementSet {
 }
 
 /// Gather the live context the pure rule needs. The only impure part of the hub.
-fn ctx(app: &App) -> modes::HubCtx {
+/// `pub(crate)` so the CC-HUB-NAV drawer gates its rows through the SAME
+/// context the sheet does. A2 compares the two counts; sharing this makes them
+/// equal by construction rather than by coincidence.
+pub(crate) fn ctx(app: &App) -> modes::HubCtx {
     let (kid, lang) = {
         let s = app.borrow();
         (s.kid, s.lang.clone())

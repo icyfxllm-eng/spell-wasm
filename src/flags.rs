@@ -288,6 +288,14 @@ pub fn sd_tier_mode() -> bool {
 
 pub fn is_on(name: &str) -> bool {
     match name {
+        // The `core` surfaces have no flag because there is nothing to flip:
+        // the base game, The Climb and the Daily cannot be "off". They had no
+        // arm at all until CC-HUB-NAV Phase B, which did not matter while the
+        // only caller was the hub sheet -- core never tiles there anyway -- but
+        // the drawer gates on `enabled` too, and D-N6 puts all three at the top
+        // of Spell it. Without these they were on paper only, exactly as the
+        // note below describes for calendar, translate and reports.
+        "standard" | "climb" | "daily" => true,
         "ghost_racing" => ghost_racing(),
         "syllable_replay" => syllable_replay(),
         "say_it" => say_it(),
@@ -335,6 +343,29 @@ pub fn is_on(name: &str) -> bool {
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    /// The bug class this file's own comment warns about, made a test: a
+    /// registry mode that falls through to `_ => false` is invisible to every
+    /// surface gating on `enabled`, however live the registry says it is. It
+    /// cost calendar, translate and reports a release, and it hid the three
+    /// core surfaces from the drawer until CC-HUB-NAV Phase B.
+    ///
+    /// Asked of the SOURCE, not of behaviour: an arm may legitimately return a
+    /// constant false (word_stories ships dark), which is indistinguishable at
+    /// runtime from having no arm at all. Storage is also a no-op in a host
+    /// test, so there is nothing to flip. The question is whether the dispatcher
+    /// mentions the mode — falling through is the bug.
+    #[test]
+    fn every_registry_mode_has_an_arm() {
+        let src = include_str!("flags.rs");
+        let dispatcher = &src[src.find("pub fn is_on").expect("is_on exists")..];
+        let dispatcher = &dispatcher[..dispatcher.find("\n}").expect("is_on closes")];
+        for m in crate::modes::all() {
+            assert!(dispatcher.contains(&format!("\"{}\"", m.id)),
+                    "{} is in the registry but is_on has no arm for it, so it falls through to \
+                     `_ => false` and is on paper only", m.id);
+        }
+    }
 
     #[test]
     fn resolve_semantics() {

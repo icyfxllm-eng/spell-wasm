@@ -878,5 +878,9 @@
   "xw.notQuite": "거의 맞아요 — 깜빡이는 글자가 틀렸어요",
   "xw.keystone": "이제 숨은 단어예요: 듣고 써 보세요",
   "xw.keystoneTitle": "숨은 단어",
-  "xw.makeCross": "십자말 만들기"
+  "xw.makeCross": "십자말 만들기",
+  "nav.menu": "Menu",
+  "nav.spellIt": "Spell it",
+  "nav.wordPuzzles": "Word puzzles",
+  "nav.meaning": "Meaning"
 }

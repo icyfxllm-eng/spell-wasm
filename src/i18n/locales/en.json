@@ -878,5 +878,9 @@
   "xw.notQuite": "Not quite — the flashing letters are wrong",
   "xw.keystone": "Now the hidden word: listen and spell it",
   "xw.keystoneTitle": "The hidden word",
-  "xw.makeCross": "Make a crossword"
+  "xw.makeCross": "Make a crossword",
+  "nav.menu": "Menu",
+  "nav.spellIt": "Spell it",
+  "nav.wordPuzzles": "Word puzzles",
+  "nav.meaning": "Meaning"
 }

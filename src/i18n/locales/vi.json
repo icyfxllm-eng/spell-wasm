@@ -878,5 +878,9 @@
   "xw.notQuite": "Gần đúng — các chữ nhấp nháy bị sai",
   "xw.keystone": "Giờ đến từ ẩn: nghe và đánh vần",
   "xw.keystoneTitle": "Từ ẩn",
-  "xw.makeCross": "Tạo ô chữ"
+  "xw.makeCross": "Tạo ô chữ",
+  "nav.menu": "Menu",
+  "nav.spellIt": "Spell it",
+  "nav.wordPuzzles": "Word puzzles",
+  "nav.meaning": "Meaning"
 }

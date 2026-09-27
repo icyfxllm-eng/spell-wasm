@@ -878,5 +878,9 @@
   "xw.notQuite": "差一点——闪烁的字母不对",
   "xw.keystone": "现在是隐藏词：听一听并拼出来",
   "xw.keystoneTitle": "隐藏词",
-  "xw.makeCross": "生成十字格"
+  "xw.makeCross": "生成十字格",
+  "nav.menu": "Menu",
+  "nav.spellIt": "Spell it",
+  "nav.wordPuzzles": "Word puzzles",
+  "nav.meaning": "Meaning"
 }

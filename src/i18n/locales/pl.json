@@ -878,5 +878,9 @@
   "xw.notQuite": "Prawie — migające litery są błędne",
   "xw.keystone": "Teraz ukryte słowo: posłuchaj i napisz",
   "xw.keystoneTitle": "Ukryte słowo",
-  "xw.makeCross": "Utwórz krzyżówkę"
+  "xw.makeCross": "Utwórz krzyżówkę",
+  "nav.menu": "Menu",
+  "nav.spellIt": "Spell it",
+  "nav.wordPuzzles": "Word puzzles",
+  "nav.meaning": "Meaning"
 }

@@ -878,5 +878,9 @@
   "xw.notQuite": "Fast – die blinkenden Buchstaben stimmen nicht",
   "xw.keystone": "Jetzt das versteckte Wort: hören und schreiben",
   "xw.keystoneTitle": "Das versteckte Wort",
-  "xw.makeCross": "Kreuzgitter erstellen"
+  "xw.makeCross": "Kreuzgitter erstellen",
+  "nav.menu": "Menu",
+  "nav.spellIt": "Spell it",
+  "nav.wordPuzzles": "Word puzzles",
+  "nav.meaning": "Meaning"
 }

@@ -878,5 +878,9 @@
   "xw.notQuite": "Presque — les lettres qui clignotent sont fausses",
   "xw.keystone": "Maintenant le mot caché : écoute et écris-le",
   "xw.keystoneTitle": "Le mot caché",
-  "xw.makeCross": "Créer une grille"
+  "xw.makeCross": "Créer une grille",
+  "nav.menu": "Menu",
+  "nav.spellIt": "Spell it",
+  "nav.wordPuzzles": "Word puzzles",
+  "nav.meaning": "Meaning"
 }

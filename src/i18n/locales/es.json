@@ -878,5 +878,9 @@
   "xw.notQuite": "Casi: las letras que parpadean están mal",
   "xw.keystone": "Ahora la palabra oculta: escucha y escríbela",
   "xw.keystoneTitle": "La palabra oculta",
-  "xw.makeCross": "Crear un crucigrama"
+  "xw.makeCross": "Crear un crucigrama",
+  "nav.menu": "Menu",
+  "nav.spellIt": "Spell it",
+  "nav.wordPuzzles": "Word puzzles",
+  "nav.meaning": "Meaning"
 }

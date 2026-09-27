@@ -878,5 +878,9 @@
   "xw.notQuite": "Quase — as letras piscando estão erradas",
   "xw.keystone": "Agora a palavra escondida: ouça e escreva",
   "xw.keystoneTitle": "A palavra escondida",
-  "xw.makeCross": "Criar cruzadas"
+  "xw.makeCross": "Criar cruzadas",
+  "nav.menu": "Menu",
+  "nav.spellIt": "Spell it",
+  "nav.wordPuzzles": "Word puzzles",
+  "nav.meaning": "Meaning"
 }

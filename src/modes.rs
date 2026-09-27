@@ -192,15 +192,32 @@ pub struct HubCtx {
     pub enabled: Vec<String>,
 }
 
+/// Which surface is asking. The rules are identical but for one line, so they
+/// stay one function rather than two that can drift.
+///
+/// A `core` entry never becomes a hub TILE — the base game, The Climb and the
+/// Daily are governed by the registry and rendered elsewhere (CC-ONBOARD-JR
+/// option (a), signed 2026-09-11). But they ARE in the drawer's catalog: D-N6
+/// lists all three under "Spell it", and F3 has the Daily appearing once there
+/// with the hub tile as a shortcut to the same route (I5).
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum Surface {
+    /// The Play hub sheet and the home row.
+    HubTiles,
+    /// The CC-HUB-NAV drawer: a catalog, not a tile grid.
+    Catalog,
+}
+
 /// Whether `m` may be seen at all in `ctx` — the whole rule, in one place.
-fn permitted(m: &Mode, ctx: &HubCtx) -> bool {
+fn permitted(m: &Mode, ctx: &HubCtx, surface: Surface) -> bool {
     // Hidden means hidden. Checked first so nothing below can resurrect it.
     if m.status == Status::Hidden {
         return false;
     }
-    // Core entries are governed here and rendered elsewhere (the base game,
-    // the Climb, the Daily). They never become hub tiles.
-    if m.status == Status::Core {
+    // Core entries are governed here and rendered elsewhere. They never become
+    // hub tiles; the catalog lists them, because a player looking for the
+    // Daily should find it in the map of the app (D-N6).
+    if m.status == Status::Core && surface == Surface::HubTiles {
         return false;
     }
     // The runtime flag is off -> the feature does not run, so it must not tile.
@@ -243,7 +260,12 @@ fn permitted(m: &Mode, ctx: &HubCtx) -> bool {
 /// tappable; `ComingSoon` entries are teasers the caller must NOT wire a tap to.
 /// Nothing here is ever "locked" — an unusable mode is simply absent.
 pub fn visible(modes: &[Mode], ctx: &HubCtx) -> Vec<Mode> {
-    modes.iter().filter(|m| permitted(m, ctx)).cloned().collect()
+    modes.iter().filter(|m| permitted(m, ctx, Surface::HubTiles)).cloned().collect()
+}
+
+/// As [`visible`], for the drawer: the same gate, plus the `core` surfaces.
+pub fn catalog(modes: &[Mode], ctx: &HubCtx) -> Vec<Mode> {
+    modes.iter().filter(|m| permitted(m, ctx, Surface::Catalog)).cloned().collect()
 }
 
 // The site build deletes app-only modes from the registry (D1: absent, not
@@ -559,6 +581,38 @@ mod tests {
                            "{} is in the home row but has no drawer row (A3)", m.id);
             }
         }
+    }
+
+    /// The one line that differs between the two surfaces, asserted from both
+    /// sides. A core mode is in the drawer's map of the app and never a hub
+    /// tile — CC-ONBOARD-JR option (a) on one side, D-N6 on the other.
+    #[test]
+    fn core_modes_are_catalogued_but_never_tiled() {
+        let all = all();
+        let c = ctx();
+        let tiles: Vec<String> = visible(&all, &c).iter().map(|m| m.id.clone()).collect();
+        let cat: Vec<String> = catalog(&all, &c).iter().map(|m| m.id.clone()).collect();
+        for core in ["standard", "climb", "daily"] {
+            assert!(!tiles.iter().any(|t| t == core), "{core} is core and must never be a hub tile");
+            assert!(cat.iter().any(|t| t == core), "{core} is in D-N6's Spell it and must be in the catalog");
+        }
+    }
+
+    /// The split must not have loosened anything else: apart from core, the two
+    /// surfaces see exactly the same modes.
+    #[test]
+    fn the_surfaces_differ_only_by_core() {
+        let all = all();
+        let c = ctx();
+        let mut tiles: Vec<String> = visible(&all, &c).iter().map(|m| m.id.clone()).collect();
+        let mut cat: Vec<String> = catalog(&all, &c)
+            .iter()
+            .filter(|m| m.status != Status::Core)
+            .map(|m| m.id.clone())
+            .collect();
+        tiles.sort();
+        cat.sort();
+        assert_eq!(tiles, cat);
     }
 
     /// Nothing is unlisted by accident: every one is either held back by D-N6

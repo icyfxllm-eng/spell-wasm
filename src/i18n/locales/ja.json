@@ -878,5 +878,9 @@
   "xw.notQuite": "おしい — 点滅している文字が違います",
   "xw.keystone": "かくれた単語です。聞いてつづろう",
   "xw.keystoneTitle": "かくれた単語",
-  "xw.makeCross": "クロスワードを作る"
+  "xw.makeCross": "クロスワードを作る",
+  "nav.menu": "Menu",
+  "nav.spellIt": "Spell it",
+  "nav.wordPuzzles": "Word puzzles",
+  "nav.meaning": "Meaning"
 }

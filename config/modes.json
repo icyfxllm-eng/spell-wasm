@@ -401,7 +401,7 @@
     {
       "id": "standard",
       "group": "spell_it",
-      "nameKey": "brand.tag",
+      "nameKey": "top.spellIt",
       "descKey": "share.tagline",
       "icon": "🔊",
       "status": "core",

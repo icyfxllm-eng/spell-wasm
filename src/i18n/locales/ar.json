@@ -878,5 +878,9 @@
   "xw.notQuite": "قريب — الحروف الوامضة خطأ",
   "xw.keystone": "الآن الكلمة المخفية: استمع واكتبها",
   "xw.keystoneTitle": "الكلمة المخفية",
-  "xw.makeCross": "اصنع شبكة متقاطعة"
+  "xw.makeCross": "اصنع شبكة متقاطعة",
+  "nav.menu": "Menu",
+  "nav.spellIt": "Spell it",
+  "nav.wordPuzzles": "Word puzzles",
+  "nav.meaning": "Meaning"
 }

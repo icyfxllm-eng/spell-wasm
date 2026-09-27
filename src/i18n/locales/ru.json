@@ -878,5 +878,9 @@
   "xw.notQuite": "Почти — мигающие буквы неверны",
   "xw.keystone": "Теперь скрытое слово: послушай и напиши",
   "xw.keystoneTitle": "Скрытое слово",
-  "xw.makeCross": "Сделать кроссворд"
+  "xw.makeCross": "Сделать кроссворд",
+  "nav.menu": "Menu",
+  "nav.spellIt": "Spell it",
+  "nav.wordPuzzles": "Word puzzles",
+  "nav.meaning": "Meaning"
 }
