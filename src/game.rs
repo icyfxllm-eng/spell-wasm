@@ -3438,6 +3438,7 @@ pub fn start_timer(app: &App, tier: &str) {
         t.total = total;
         t.deadline = now_ms() + total;
     });
+    reflect_nav_burger();
     dom::remove_class("tProg", "low");
     dom::remove_class("timerBadge", "low");
     tick(app);
@@ -3471,6 +3472,28 @@ fn tick(app: &App) {
     }
 }
 
+/// Is a timed round counting down right now?
+///
+/// CC-HUB-NAV D-N7. F1 wants the drawer to pause a live timer, and the phase
+/// table puts that hook in Phase D behind a decision that is still open. The
+/// cut-over cannot wait for it: removing the icons makes the drawer the only
+/// way to navigate, so a player could open it mid-round and watch the clock
+/// run. D-N7's own fallback for that case is to disable the burger for the
+/// duration, which needs no signature and no pause semantics — it just makes
+/// the failure impossible. When the real hook lands it replaces this.
+pub fn timer_is_live() -> bool {
+    TIMER.with(|t| t.borrow().interval_id.is_some())
+}
+
+/// Show the drawer's burger as unavailable while a timed round runs (D-N7).
+/// A no-op in a build that has no burger, which is every player build until
+/// the CC-HUB-NAV cut-over.
+pub fn reflect_nav_burger() {
+    if dom::exists("navBurger") {
+        dom::set_disabled("navBurger", timer_is_live());
+    }
+}
+
 pub fn stop_timer(reset: bool) {
     TIMER.with(|t| {
         let mut t = t.borrow_mut();
@@ -3484,6 +3507,8 @@ pub fn stop_timer(reset: bool) {
             dom::set_text("timerBadge", "");
         }
     });
+    // The interval is gone, so the round is no longer eating a clock.
+    reflect_nav_burger();
 }
 
 // ---------- delayed callback helpers ----------

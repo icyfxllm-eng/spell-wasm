@@ -262,8 +262,6 @@ pub fn redraw_all() {
         }
     });
 
-    let has = STATE.with(|s| !s.borrow().strokes.is_empty());
-    dom::toggle_class("drawHint", "gone", has);
 }
 
 fn pt_from(canvas: &HtmlCanvasElement, e: &PointerEvent) -> (f64, f64) {
@@ -305,7 +303,6 @@ pub fn start_stroke(e: &PointerEvent) {
         st.strokes.push(Stroke { color, width, erase, pts: vec![p, p], pressures: vec![pressure, pressure] });
         st.drawing_now = true;
     });
-    dom::add_class("drawHint", "gone");
     e.prevent_default();
 }
 
@@ -388,6 +385,11 @@ pub fn undo_stroke() {
     redraw_all();
 }
 
+/// There is no "draw here" hint element. Three call sites used to toggle a
+/// `.gone` class on `#drawHint`, an id that exists in no markup, so
+/// `dom::el` panicked the moment the ink pad opened — zh and ja players hit
+/// it on every tap. Removed rather than invented: adding a hint is a design
+/// call, and a crash is not a placeholder for one.
 pub fn clear_canvas() {
     STATE.with(|s| s.borrow_mut().strokes.clear());
     let canvas = dom::canvas("canvas");
@@ -395,7 +397,6 @@ pub fn clear_canvas() {
         let ctx = ctx_2d(&canvas);
         ctx.clear_rect(0.0, 0.0, canvas.width() as f64, canvas.height() as f64);
     }
-    dom::remove_class("drawHint", "gone");
 }
 
 /// Renders the strokes onto a tight, high-contrast off-screen canvas

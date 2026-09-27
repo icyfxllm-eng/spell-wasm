@@ -1,7 +1,7 @@
 // mywords-lists.spec — CC-MYWORDS-LISTS v1, Phase 1: the migration, where it
 // actually runs. Host tests cannot see localStorage, so the only honest proof
 // that an existing player's words survive is a real browser boot.
-import { openApp, assert, assertEq } from '../harness.mjs';
+import { openApp, assert, assertEq, openMyWords } from '../harness.mjs';
 
 const KID = JSON.stringify({ verdict: 'kid', checkedAt: 1700000000 });
 const CUSTOM_KEY = 'byear_custom_v1';
@@ -35,7 +35,14 @@ const listNames = (page) => page.evaluate((k) => {
 }, LISTS_KEY);
 
 async function openScreen(page) {
-  await page.click('#importBtn');
+  // Already there is already open. This used to click the utility row's
+  // #importBtn, which sat in the home header behind whatever was on screen;
+  // now it goes through the drawer, and a drawer that opens OVER the lists
+  // screen puts its own scrim between Playwright and the row. A player never
+  // does this — the burger lives on home, behind the screen — so the fix is
+  // to stop asking, not to force the click through.
+  if (await page.$('#listsScreen.show')) return;
+  await openMyWords(page);
   await page.waitForSelector('#listsScreen.show', { timeout: 4000 });
 }
 

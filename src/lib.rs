@@ -380,7 +380,6 @@ fn wire(app: &App) {
     spell_aloud::reflect(app);
     // Pillar 3 — the "Tools & Features" hub in Settings: wire every tool switch,
     // then reflect current state so the panel is correct before it first opens.
-    play_hub::wire(app);
     ghost::wire_screen(app);
     racing::screen::wire(app); // CC-SPELL-RACING Phase 5 screen (hidden until activation)
     defmatch_screen::wire(app); // CC-DEF-MATCH P3 loop (live tile where consts::def_match holds)
@@ -422,8 +421,7 @@ fn wire(app: &App) {
     inspector::wire(app); // L0 R4: the learner inspector joins the dev menu
     #[cfg(feature = "dev_preview")]
     c3_probe::wire(app); // CC-FEEDBACK C3: the audio-session probe joins the dev menu
-    #[cfg(feature = "dev_preview")]
-    drawer::wire(app); // CC-HUB-NAV Phase B: the drawer and its burger
+    drawer::wire(app); // CC-HUB-NAV Phase C: the drawer IS the navigation now
     ink_probe::wire(app); // CC-CJK-INK F1 — dev-only ink gate
     {
         // F4: the pad opens on the CHARACTERS -- s.spoken holds the hanzi for

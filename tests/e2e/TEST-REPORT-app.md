@@ -1,16 +1,17 @@
 # TEST-REPORT — Web E2E (app build)
 
-**222/222 passed** across 36 areas.
+**223/223 passed** across 36 areas.
 
-## playhub — 17/17
-- ✅ hub: opens from the meta corner and renders registry tiles
-- ✅ hub: word_stories is never rendered (F8 hard gate)
-- ✅ hub: coming_soon renders as a non-tappable teaser
+## drawer — 18/18
+- ✅ drawer: opens from the meta corner and renders registry rows
+- ✅ drawer: every mode row has a destination that exists
+- ✅ drawer: word_stories is never rendered (F8 hard gate)
+- ✅ drawer: a hidden mode cannot be flagged back on
 - ✅ home: the empty chains line reads as a sentence, not a column
-- ✅ hub: tiles are localized with no new copy (es)
-- ✅ hub: scrolling the hub never scrolls the page behind it
-- ✅ hub: A2.3 — Full-only gating (UNPROVABLE while no live mode is Full-tier)
-- ✅ hub: A2.2 — Little Speller sees only kidSafe tiles, zero upsell
+- ✅ drawer: rows are localized with no new copy (es)
+- ✅ drawer: scrolling the panel never scrolls the page behind it
+- ✅ drawer: A2.3 — no locks, no upsell (Full-tier gating still UNPROVABLE)
+- ✅ drawer: A2.2 — Little Speller sees only kidSafe rows, zero upsell
 - ✅ placement: offered once, skip stands, no re-offer
 - ✅ placement: Try serves the set through the real session
 - ✅ placement: the offer never interrupts a live run

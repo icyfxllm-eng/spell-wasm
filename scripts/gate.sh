@@ -114,6 +114,10 @@ node scripts/audio-router-check.mjs --selftest || { echo "GATE FAIL: audio route
 echo "== gate: element IDs are unique (CC-SPELLPIC F0)"
 node scripts/dom-id-check.mjs || { echo "GATE FAIL: duplicate element ID"; exit 1; }
 
+echo "== gate: no dead element IDs (the wpDone/drawHint law)"
+node scripts/dom-id-live-check.mjs || { echo "GATE FAIL: a dom:: call names an element that does not exist"; exit 1; }
+node scripts/dom-id-live-check.mjs --selftest || { echo "GATE FAIL: dead-id selftest"; exit 1; }
+
 echo "== gate: every word in exactly one tier (BD-G4)"
 node scripts/tier-partition-check.mjs || { echo "GATE FAIL: a word is in two tiers"; exit 1; }
 

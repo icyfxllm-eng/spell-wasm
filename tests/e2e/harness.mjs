@@ -193,6 +193,27 @@ export async function openApp(browser, base, { lang = null, device = 'se', viewp
 }
 
 /** Type `answer` on the on-screen keyboard via real key clicks (per language). */
+/// Open a surface the way a player reaches it now: through the drawer.
+///
+/// CC-HUB-NAV Phase C retired the gear, the account icon and the utility row,
+/// so `page.click('#setBtn')` waits forever on a display:none element. The
+/// elements stay in the DOM because the drawer proxies clicks to them, which
+/// makes "click the hidden element directly" a tempting one-line fix — and a
+/// bad one: it would keep every one of these specs passing on the day the
+/// drawer row stopped reaching that element, which is the only thing a player
+/// can do. Going through the drawer means each of these tests now also proves
+/// its own door.
+export async function openViaDrawer(page, mode) {
+  await page.click('#navBurger');
+  await page.waitForSelector('#navDrawer.show', { timeout: 4000 });
+  await page.click(`.nav-row[data-mode="${mode}"]`);
+  await page.waitForTimeout(350);
+}
+
+export const openSettings = (page) => openViaDrawer(page, 'help_settings.title');
+export const openMyWords = (page) => openViaDrawer(page, 'my_words');
+export const openAccount = (page) => openViaDrawer(page, 'acct');
+
 export async function typeOnKeyboard(page, answer) {
   for (const ch of answer) {
     const sel = `#gameKeyboard .kb-key[data-k="${ch}"]`;

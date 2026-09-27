@@ -9,7 +9,7 @@
 // page -- and flushed the way the app flushes on a phone: the page going
 // hidden. No seam, no private entry point.
 import { gunzipSync } from 'node:zlib';
-import { openApp, typeOnKeyboard, assert, assertEq } from '../harness.mjs';
+import { openApp, typeOnKeyboard, assert, assertEq, openSettings } from '../harness.mjs';
 import { validate } from '../../../workers/telemetry/src/index.js';
 
 const KID = JSON.stringify({ verdict: 'kid', checkedAt: 1700000000 });
@@ -130,7 +130,8 @@ const flip = (page, id, on) => page.evaluate(([i, v]) => {
 }, [id, on]);
 
 const openSettingsSheet = async (page) => {
-  await page.click('#setBtn');
+  if (await page.$('#setScrim.show')) return;
+  await openSettings(page);
   await page.waitForSelector('#setScrim.show', { timeout: 4000 });
 };
 

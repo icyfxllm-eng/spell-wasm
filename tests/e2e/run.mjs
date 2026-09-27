@@ -27,7 +27,7 @@ import * as spellaloud from './specs/spellaloud.mjs';
 import * as submitAdvance from './specs/submit-advance.mjs';
 import * as attemptsShields from './specs/attempts_shields.mjs';
 import * as toolsHub from './specs/tools-hub.mjs';
-import * as playHub from './specs/playhub.mjs';
+import * as drawerNav from './specs/drawer.mjs';
 import * as hubRow from './specs/hub-row.mjs';
 import * as economics from './specs/economics.mjs';
 import * as finalePixels from './specs/finale-pixels.mjs';
@@ -55,7 +55,7 @@ import * as inspector from './specs/inspector.mjs';
 import * as audioRescue from './specs/audio-rescue.mjs';
 
 const SPECS = [
-  ['playhub', playHub, placement, learnerSurfaces, learnerReset],
+  ['drawer', drawerNav, placement, learnerSurfaces, learnerReset],
   ['stats-sheet', statsSheet],
   ['review-queue', reviewQueue],
   ['inspector', inspector],

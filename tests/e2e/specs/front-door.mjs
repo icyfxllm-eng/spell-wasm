@@ -10,7 +10,7 @@
 // gating. The server's own rules (code expiry, attempt limits, non-enumeration,
 // the password blocklist) are proved in backend/test_auth_codes.py, against the
 // real Flask app.
-import { openApp, assert } from '../harness.mjs';
+import { openApp, assert, openAccount } from '../harness.mjs';
 
 const ADULT = { y: 1990, m: 1, d: 1 };
 const CHILD = { y: new Date().getFullYear() - 8, m: 1, d: 1 };
@@ -114,7 +114,16 @@ export async function run(browser, base, suite) {
       assert(await page.evaluate(() => document.body.classList.contains('kid')), 'in Spell Jr');
       const visible = await visibleAuthFields(page);
       assert(visible.length === 0, `I2: no email/password field for a child, found ${JSON.stringify(visible)}`);
-      assert(!(await shown(page, 'accountBtn')), 'no account entry point');
+      // Phase C hides accountBtn from EVERYONE, so asserting on the icon
+      // would pass for the wrong reason. The child's account surface is now
+      // the drawer row, and there must not be one.
+      await page.click('#navBurger');
+      await page.waitForSelector('#navDrawer.show', { timeout: 4000 });
+      assert(!(await page.$('#navDrawerPanel .nav-row[data-mode="acct"]')),
+        'no account entry point in the drawer');
+      const drawerText = await page.$eval('#navDrawerPanel', (e) => e.textContent.toLowerCase());
+      assert(!/sign in|log ?out/.test(drawerText), `a child's drawer offers no account action: ${drawerText}`);
+      await page.click('#navDrawerClose');
       assert(!(await shown(page, 'climbBtn')), 'no leaderboard entry point');
     } finally { await ctx.close(); }
   });
@@ -184,7 +193,7 @@ export async function run(browser, base, suite) {
     try {
       assert(!(await page.evaluate(() => !!document.getElementById('authScrim'))),
         'the retired signup modal must not exist at all');
-      await page.click('#accountBtn');
+      await openAccount(page);
       await page.waitForSelector('#frontDoor.show', { timeout: 5000 });
       assert(await shown(page, 'fdEmail'), 'a signed-out account tap opens the front door');
     } finally { await ctx.close(); }

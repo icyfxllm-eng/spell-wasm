@@ -21,14 +21,17 @@
 //! under "Spell it" and a catalog that omitted them would not be a map of the
 //! app. There is no second filter to fall out of step.
 //!
-//! # Why a row does not navigate yet
+//! # Where a row goes
 //!
-//! Phase B is render only: A4, the tap-goes-to-the-route test, is Phase C's.
-//! That boundary earns its keep here. The Climb has no start route to wire —
-//! `climbBtn` opens the LEADERBOARD, and the Climb itself is a `LEVEL_OPTS`
-//! entry chosen from the setup chip — so wiring "the obvious destination"
-//! would have sent a player somewhere the row did not promise. Rows close the
-//! drawer; Phase C decides where each one goes, with a test to hold it.
+//! Every row routes (A4), and it has to: Phase C retires the gamepad sheet,
+//! so for most modes this row is the only remaining door. Three shapes, in
+//! [`Route`] — press the mode's launcher, pick a level, or arrive by closing.
+//! The Climb is the reason that enum exists rather than a bare element id.
+//! `climbBtn` is what the registry names for its hub TILE, and it opens the
+//! LEADERBOARD; the Climb itself is a `LEVEL_OPTS` entry chosen from the setup
+//! chip. Resolving the row "the obvious way" would have sent the player to a
+//! scoreboard instead of a run, so the row sets the level and lets the one
+//! change handler in lib.rs do everything that follows.
 
 use crate::{dom, i18n::t, modes, App};
 use wasm_bindgen::JsCast;
@@ -65,13 +68,20 @@ pub struct Section {
 /// The Play group, grouped and ordered by D-N6. Pure, so A2 can be checked
 /// without a browser. An empty section is dropped rather than rendered as a
 /// bare header with nothing under it.
-pub fn play_sections(shown: &[modes::Mode]) -> Vec<Section> {
+pub fn play_sections(shown: &[modes::Mode], lang: &str) -> Vec<Section> {
     PLAY.iter()
         .map(|(group, header_key)| Section {
             header_key,
             rows: shown
                 .iter()
                 .filter(|m| m.group == *group)
+                // A mode with no board, pool or curriculum in THIS language is
+                // absent, not greyed (I3). The retired sheet showed it as a
+                // dashed teaser explaining why; a drawer row has no second line
+                // to explain anything in (D-N3), so an unavailable mode would
+                // be a row that opens onto nothing. Same predicate the sheet
+                // used, so the two can never disagree about availability.
+                .filter(|m| crate::play_hub::unavailable_reason(m, lang).is_none())
                 .map(|m| Row {
                     id: m.id.clone(),
                     icon: m.icon.clone(),
@@ -115,6 +125,16 @@ pub struct Account {
 }
 
 pub fn account(signed_in: bool, jr: bool, name: Option<String>) -> Account {
+    if jr {
+        // "Kid Mode / age-locked: no accounts or leaderboard at all"
+        // (climb::reflect_auth, which hides accountBtn on exactly this
+        // condition). Before the drawer that rule was enforced by hiding the
+        // icon; a drawer row would have walked straight around it and put a
+        // Sign in door in front of a child, which CC-ONBOARD-JR I1/I2 forbid.
+        // A signed-in grown-up's username still shows -- it is a username,
+        // never an email (D2) -- but nothing on this row acts on the account.
+        return Account { identity: if signed_in { name } else { None }, action: None };
+    }
     if !signed_in {
         // D1: never a prerequisite for anything else in the drawer.
         return Account { identity: None, action: Some(("top.signIn", "accountBtn")) };
@@ -125,8 +145,28 @@ pub fn account(signed_in: bool, jr: bool, name: Option<String>) -> Account {
         // `acct.logout` = "Log out". Renaming it is a 15-locale edit rather
         // than a new key, so the existing string is used and the rename is
         // flagged for the next round instead of inventing a seventh new key.
-        action: if jr { None } else { Some(("acct.logout", "acctLogout")) },
+        action: Some(("acct.logout", "acctLogout")),
     }
+}
+
+/// F5 — the things a player looks for when stuck, in the last place they
+/// scroll to.
+///
+/// Rows are (i18n key, element to click), and a row whose screen has not
+/// shipped is ABSENT rather than a placeholder, which is F5's own rule for
+/// Credits. "How to play" is absent for exactly that reason: it wants a
+/// per-mode index that does not exist yet — only SpellDoku has its own
+/// explainer — so offering the row would promise a screen nobody built.
+///
+/// Settings is here because Phase C retires the gear icon. Without this row
+/// the cut-over would strand app settings entirely, which is why F5 could not
+/// wait for Phase D the way the phase table implies.
+pub fn help_rows() -> Vec<(&'static str, &'static str, &'static str)> {
+    let mut v = vec![("settings.title", "\u{2699}", "setBtn")];
+    if dom::doc().get_element_by_id("creditsBtn").is_some() {
+        v.push(("credits.title", "\u{1F399}", "creditsBtn"));
+    }
+    v
 }
 
 /// Where a row goes. The surface's own element when the registry names one,
@@ -139,6 +179,55 @@ fn target_for(m: &modes::Mode) -> Option<String> {
         .as_ref()
         .map(|t| t.element.clone())
         .or_else(|| crate::play_hub::launch_for(&m.id).map(str::to_string))
+}
+
+/// What a Play row actually does. Two of them are not a button press, and
+/// pretending otherwise is how the drawer would lie about where it goes.
+#[derive(Debug, PartialEq, Eq)]
+pub enum Route {
+    /// Proxy a click to the mode's launcher — every real screen.
+    Press(String),
+    /// Already there. The base game IS the surface the drawer opens over, and
+    /// the burger only exists on it, so closing the drawer has arrived.
+    Home,
+    /// Pick a level. The Climb is not a screen: it is `LEVEL_OPTS[0]`, chosen
+    /// in the setup sheet. `climbBtn` — the element the registry names for its
+    /// hub TILE — opens the LEADERBOARD, which is a different place entirely,
+    /// so a Play row that pressed it would take the player somewhere the row
+    /// did not say. The row sets the level instead and lets the one change
+    /// handler in lib.rs do the rest.
+    Level(&'static str),
+}
+
+pub fn route_for(m: &modes::Mode) -> Route {
+    if m.id == "climb" {
+        return Route::Level("climb");
+    }
+    match target_for(m) {
+        Some(el) => Route::Press(el),
+        None => Route::Home,
+    }
+}
+
+fn follow(r: &Route) {
+    match r {
+        Route::Press(el) => dom::click(el),
+        Route::Home => {}
+        Route::Level(v) => {
+            // Only if the selector really offers it: offered_levels filters by
+            // the Jr resolver, and forcing a value the select does not hold
+            // would put app state and the control out of step.
+            let offered = dom::doc()
+                .query_selector(&format!("#levelSel option[value=\"{v}\"]"))
+                .ok()
+                .flatten()
+                .is_some();
+            if offered {
+                dom::select("levelSel").set_value(v);
+                dom::change("levelSel");
+            }
+        }
+    }
 }
 
 /// One row. Shared by every group so a Your Words row cannot drift from a
@@ -185,6 +274,15 @@ fn body(sections: &[Section]) -> String {
     h
 }
 
+/// Whether an element is disabled right now. A DOM read, deliberately: it is
+/// how the drawer honours I3 without touching the learner store (I8).
+fn element_is_disabled(id: &str) -> bool {
+    dom::doc()
+        .get_element_by_id(id)
+        .map(|e| e.has_attribute("disabled"))
+        .unwrap_or(false)
+}
+
 fn is_open() -> bool {
     dom::doc()
         .get_element_by_id(MARKER)
@@ -217,10 +315,16 @@ pub fn open(app: &App) {
 
 fn render(app: &App) {
     let all = modes::all();
-    let shown = modes::catalog(&all, &crate::play_hub::ctx(app));
+    let ctx = crate::play_hub::ctx(app);
+    let shown = modes::catalog(&all, &ctx);
     let (jr, signed_in) = (app.borrow().kid, crate::climb::is_logged_in());
     let acct = account(signed_in, jr, crate::climb::username());
-    let play = play_sections(&shown);
+    // The context's language, never app.lang: ctx has already resolved the
+    // word-SOURCE pseudo-codes (__mine, __review) to a real language, and
+    // handing the raw one to the availability filter would drop every
+    // language-gated mode the instant a player opened their own word list --
+    // the same bug one layer down.
+    let play = play_sections(&shown, &ctx.lang);
     let yours = your_words_rows(&shown);
 
     let mut h = format!(
@@ -242,6 +346,18 @@ fn render(app: &App) {
         h.push_str(&row_html("acct", "\u{1F464}", dedupe_icon("\u{1F464}", &label)));
     }
     h.push_str(&body(&play));
+    // I3 wants absent, never greyed; I8 forbids the drawer any learner read.
+    // Both hold at once by asking the DOM rather than the queue: game.rs
+    // already disables missesBtn when nothing is due, so a disabled element is
+    // the learner's answer, second-hand and read-only. Without this the row
+    // rendered and did nothing, because a disabled button fires no click.
+    let yours: Vec<Row> = yours
+        .into_iter()
+        .filter(|r| match target_for(shown.iter().find(|m| m.id == r.id).unwrap()) {
+            Some(el) => !element_is_disabled(&el),
+            None => true,
+        })
+        .collect();
     if !yours.is_empty() {
         h.push_str(&format!(
             "<h3 class=\"nav-group\" role=\"heading\" aria-level=\"2\">{}</h3>",
@@ -249,6 +365,17 @@ fn render(app: &App) {
         ));
         for r in &yours {
             h.push_str(&row_html(&r.id, &r.icon, dedupe_icon(&r.icon, &t(&r.name_key))));
+        }
+    }
+    let help = help_rows();
+    if !help.is_empty() {
+        h.push_str(&format!(
+            "<h3 class=\"nav-group\" role=\"heading\" aria-level=\"2\">{}</h3>",
+            dom::escape_html(&t("settings.title"))
+        ));
+        for (key, icon, _) in &help {
+            let label = t(key);
+            h.push_str(&row_html(&format!("help_{key}"), icon, dedupe_icon(icon, &label)));
         }
     }
     dom::set_html(
@@ -267,12 +394,16 @@ fn render(app: &App) {
             dom::click(&el);
         });
     }
-    // Play rows still go nowhere: A4 is Phase C's test and the routes are not
-    // all decided (The Climb has none). Your Words rows DO route, because the
-    // cut-over removes their only other door.
+    // A4: every Play row routes. It has to now — Phase C retires the gamepad
+    // sheet, so for most of these modes this row is the only door left.
     for sct in &play {
         for r in &sct.rows {
-            dom::on_click(&format!("navRow_{}", r.id), close);
+            let Some(m) = shown.iter().find(|m| m.id == r.id) else { continue };
+            let route = route_for(m);
+            dom::on_click(&format!("navRow_{}", r.id), move || {
+                close();
+                follow(&route);
+            });
         }
     }
     for r in &yours {
@@ -285,16 +416,21 @@ fn render(app: &App) {
             }
         });
     }
+    for (key, _, element) in help {
+        let el = element.to_string();
+        dom::on_click(&format!("navRow_help_{key}"), move || {
+            close();
+            dom::click(&el);
+        });
+    }
 }
 
 /// Build the drawer and its burger once at startup.
 ///
-/// `dev_preview` only in Phase B: this is the single thing that makes the
-/// drawer reachable, so with it compiled out no player build has a burger to
-/// press and nothing that exists today moves. The module around it is NOT
-/// gated, so `play_sections` is covered by the ordinary gate rather than by a
-/// feature nobody runs tests with.
-#[cfg(feature = "dev_preview")]
+/// Ungated as of Phase C: the three round icons and the utility row are
+/// retired, so this IS the navigation. It stayed behind `dev_preview` for all
+/// of Phase B precisely so the replacement could be built and proven before
+/// anything was taken away.
 pub fn wire(app: &App) {
     let doc = dom::doc();
 
@@ -348,7 +484,20 @@ pub fn wire(app: &App) {
         }
     }
     let a = app.clone();
-    dom::on_click(BURGER, move || open(&a));
+    dom::on_click(BURGER, move || {
+        // D-N7 fallback: never open over a running clock. The pause hook is
+        // Phase D and its decision is still open, so rather than ship a drawer
+        // that can silently burn a timed round, the door is simply shut while
+        // one is live. Replacing this with the real pause is a strictly
+        // smaller change than undoing a lost round.
+        // Belt as well as braces: the burger is disabled while a timer runs
+        // (game::reflect_nav_burger), and a disabled button fires no click —
+        // but a synthesised click would, so the guard is also checked here.
+        if crate::game::timer_is_live() {
+            return;
+        }
+        open(&a)
+    });
 
     // Escape closes (F1, web). Tab is trapped inside the panel while open.
     dom::on_window::<web_sys::KeyboardEvent, _>("keydown", move |e| {
@@ -416,7 +565,7 @@ mod tests {
     fn every_permitted_play_mode_appears_exactly_once() {
         let all = modes::all();
         let shown = modes::catalog(&all, &ctx());
-        let sections = play_sections(&shown);
+        let sections = play_sections(&shown, "en");
 
         let mut got: Vec<String> = sections.iter().flat_map(|s| s.rows.iter().map(|r| r.id.clone())).collect();
         let mut want: Vec<String> = shown
@@ -435,13 +584,72 @@ mod tests {
     fn your_words_and_unlisted_never_appear() {
         let all = modes::all();
         let shown = modes::catalog(&all, &ctx());
-        for s in play_sections(&shown) {
+        for s in play_sections(&shown, "en") {
             for r in s.rows {
                 let m = shown.iter().find(|m| m.id == r.id).unwrap();
                 assert!(matches!(m.group, Group::SpellIt | Group::WordPuzzles | Group::Meaning),
                         "{} is {:?} and must not be in the Play group", m.id, m.group);
             }
         }
+    }
+
+    /// The second half of the same bug. ctx resolves __mine to a real
+    /// language for the MODE gate; the availability filter has to read that
+    /// resolved language too, or a player with their own word list open keeps
+    /// Account and My Words but loses Practice and Definition Match -- every
+    /// mode whose availability is per-language.
+    #[test]
+    fn a_word_source_never_reaches_the_availability_filter() {
+        let all = modes::all();
+        let shown = modes::catalog(&all, &ctx());
+        let real = play_sections(&shown, "en");
+        let source = play_sections(&shown, crate::consts::MINE);
+        let names = |v: &Vec<Section>| -> Vec<String> {
+            v.iter().flat_map(|s| s.rows.iter().map(|r| r.id.clone())).collect()
+        };
+        assert!(!names(&real).is_empty(), "the en menu must not be empty, or this proves nothing");
+        assert_ne!(names(&real), names(&source),
+            "play_sections is language-sensitive, so passing a pseudo-code straight in\n               must look different from a real language -- render therefore has to pass\n               ctx.lang, which is what the source-scan below checks");
+        let src = include_str!("drawer.rs");
+        let render = &src[src.find("fn render(app: &App)").unwrap()..];
+        assert!(render.contains("play_sections(&shown, &ctx.lang)"),
+                "render must hand play_sections the RESOLVED language from ctx");
+        assert!(!render[..render.find("fn wire").unwrap_or(render.len())]
+                    .contains("app.borrow().lang"),
+                "render must not read the raw study language for gating");
+    }
+
+    /// A4, on the pure half. Phase C retires the gamepad sheet, so a Play row
+    /// with nowhere to go is a mode that has become unreachable.
+    #[test]
+    fn every_play_row_routes_somewhere_real() {
+        let all = modes::all();
+        let shown = modes::catalog(&all, &ctx());
+        for s in play_sections(&shown, "en") {
+            for r in &s.rows {
+                let m = shown.iter().find(|m| m.id == r.id).unwrap();
+                match route_for(m) {
+                    Route::Press(el) => assert!(!el.is_empty(), "{} routes to an empty element", m.id),
+                    // Only the base game is allowed to route nowhere, because
+                    // "nowhere" is the screen the drawer is already over.
+                    Route::Home => assert_eq!(m.id, "standard",
+                        "{} has no route; retiring the sheet would strand it", m.id),
+                    Route::Level(v) => assert_eq!(v, "climb"),
+                }
+            }
+        }
+    }
+
+    /// The bug this route exists to avoid. `climbBtn` is the registry's hub
+    /// TILE element and it opens the leaderboard, so resolving the Climb row
+    /// the ordinary way sends the player to a scoreboard instead of a run.
+    #[test]
+    fn the_climb_row_does_not_press_the_leaderboard() {
+        let all = modes::all();
+        let climb = all.iter().find(|m| m.id == "climb").expect("climb is in the registry");
+        assert_eq!(target_for(climb).as_deref(), Some("climbBtn"),
+                   "if the registry stops naming climbBtn, re-check what this test is guarding");
+        assert_eq!(route_for(climb), Route::Level("climb"));
     }
 
     #[test]
@@ -473,6 +681,20 @@ mod tests {
         assert!(!jr.identity.unwrap_or_default().contains('@'));
     }
 
+    /// "Kid Mode: no accounts at all" — the rule climb::reflect_auth enforces
+    /// by hiding the icon. A Sign in ROW would have walked around that hiding
+    /// and put an account door in front of a child (CC-ONBOARD-JR I1/I2), and
+    /// the e2e that guarded it was about to start passing for the wrong
+    /// reason: accountBtn is display:none for EVERYONE now.
+    #[test]
+    fn a_signed_out_child_is_offered_no_account_door() {
+        let jr = account(false, true, None);
+        assert!(jr.action.is_none(), "a child must not be offered Sign in");
+        assert!(jr.identity.is_none());
+        // and the grown-up in the same state still is
+        assert!(account(false, false, None).action.is_some());
+    }
+
     /// F4 renders the player's own surfaces, including the two that are
     /// surfaces rather than modes and exist in the registry only so a drawer
     /// row can resolve through it (I2).
@@ -501,12 +723,31 @@ mod tests {
         }
     }
 
+    /// D-N7: the burger must be shut while a clock runs, and reflected at BOTH
+    /// ends — disabling on start without re-enabling on stop would lock a
+    /// player out of the only navigation they have after the cut-over.
+    #[test]
+    fn the_burger_is_reflected_when_a_timer_starts_and_stops() {
+        let game = include_str!("game.rs");
+        let starts = &game[game.find("pub fn start_timer").unwrap()..];
+        let starts = &starts[..starts.find("\npub fn").unwrap_or(starts.len())];
+        assert!(starts.contains("reflect_nav_burger()"), "start_timer must shut the burger");
+
+        let stops = &game[game.find("pub fn stop_timer").unwrap()..];
+        let stops = &stops[..stops.find("\n// ").unwrap_or(stops.len())];
+        assert!(stops.contains("reflect_nav_burger()"), "stop_timer must reopen it");
+
+        // And the click path checks too, because a synthesised click ignores
+        // the disabled attribute.
+        assert!(include_str!("drawer.rs").contains("crate::game::timer_is_live()"));
+    }
+
     /// D-N6's order, which is the order a player reads.
     #[test]
     fn sections_are_in_the_signed_order() {
         let all = modes::all();
         let shown = modes::catalog(&all, &ctx());
-        let keys: Vec<&str> = play_sections(&shown).iter().map(|s| s.header_key).collect();
+        let keys: Vec<&str> = play_sections(&shown, "en").iter().map(|s| s.header_key).collect();
         assert_eq!(keys, ["nav.spellIt", "nav.wordPuzzles", "nav.meaning"]);
     }
 
@@ -516,7 +757,7 @@ mod tests {
     fn an_empty_section_is_dropped_not_rendered() {
         let all = modes::all();
         let none = HubCtx { enabled: vec![], ..ctx() };
-        assert!(play_sections(&modes::catalog(&all, &none)).is_empty());
+        assert!(play_sections(&modes::catalog(&all, &none), "en").is_empty());
     }
 
     /// D-N3: emoji + name, and nothing else. The tagline moved to the mode's
@@ -526,7 +767,7 @@ mod tests {
     fn a_row_carries_no_secondary_text() {
         let all = modes::all();
         let shown = modes::catalog(&all, &ctx());
-        let html = body(&play_sections(&shown));
+        let html = body(&play_sections(&shown, "en"));
         assert!(!html.contains("mt-desc") && !html.contains("nav-desc"),
                 "a drawer row must not render a description (D-N3)");
         // Every row is pinned to the fixed height in the markup itself, so the

@@ -9,7 +9,15 @@
 //     OFF via the hub hides the live #ghostPace marker in a Climb run; turned
 //     back ON, the marker reappears (deterministic seeded best run);
 //   * Kid Mode simplifies the list (owner/dark rows hidden, play aids kept).
-import { openApp, typeOnKeyboard, assert } from '../harness.mjs';
+import { openApp, typeOnKeyboard, assert, openSettings } from '../harness.mjs';
+
+// The drawer opens OVER an open sheet, and its scrim then covers the row,
+// so reopening a sheet that is already up would hang. A player cannot do it
+// either: the burger lives on home, behind the sheet.
+const openSettingsSheet = async (page) => {
+  if (await page.$('#setScrim.show')) return;
+  await openSettings(page);
+};
 
 const GHOST_KEY = 'spell_ghost_v1';
 // A slow ghost (first correct at 8s) so a quick real answer lands clearly, and
@@ -40,7 +48,7 @@ export async function run(browser, base, suite) {
   await suite.test('renders: Tools section + all six rows + populated hints', async () => {
     const { ctx, page } = await openApp(browser, base, {});
     try {
-      await page.click('#setBtn');
+      await openSettingsSheet(page);
       await page.waitForTimeout(150);
       assert(!(await hidden(page, '#toolsHub')), 'tools hub should be visible');
       for (const row of ROWS) {
@@ -62,7 +70,7 @@ export async function run(browser, base, suite) {
   await suite.test('toggle flips localStorage flag and persists across reload', async () => {
     const { ctx, page } = await openApp(browser, base, {});
     try {
-      await page.click('#setBtn');
+      await openSettingsSheet(page);
       await page.waitForTimeout(150);
       assert((await ls(page, 'spell_flag_word_stories')) === null, 'flag unset before toggle');
       await page.click('#toolStoriesToggle');
@@ -70,7 +78,7 @@ export async function run(browser, base, suite) {
       await page.reload({ waitUntil: 'load' });
       await boot(page);
       assert((await ls(page, 'spell_flag_word_stories')) === 'on', 'flag persists across reload');
-      await page.click('#setBtn');
+      await openSettingsSheet(page);
       await page.waitForTimeout(150);
       assert(await page.$eval('#toolStoriesToggle', (e) => e.checked), 'switch reflects the persisted flag');
       // Flip back off and confirm the write.
@@ -112,7 +120,7 @@ export async function run(browser, base, suite) {
   await suite.test('Kid Mode simplifies the hub: dark/owner rows hidden, play aids kept', async () => {
     const { ctx, page } = await openApp(browser, base, {});
     try {
-      await page.click('#setBtn');
+      await openSettingsSheet(page);
       await page.waitForTimeout(150);
       await page.click('#kidToggle'); // enter Kid Mode
       await page.waitForTimeout(150);

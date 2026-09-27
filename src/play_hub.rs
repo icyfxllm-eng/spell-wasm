@@ -115,10 +115,34 @@ pub fn live_entitlements() -> entitlements::EntitlementSet {
 /// `pub(crate)` so the CC-HUB-NAV drawer gates its rows through the SAME
 /// context the sheet does. A2 compares the two counts; sharing this makes them
 /// equal by construction rather than by coincidence.
+/// The language the MODE GATE should read, given the study language.
+///
+/// Pure so it can be tested without an App; see ctx for why it exists.
+pub(crate) fn hub_lang(app_lang: &str, mine: Option<&'static str>) -> String {
+    if app_lang == crate::consts::MINE {
+        return mine.unwrap_or(crate::consts::EN).to_string();
+    }
+    if crate::consts::is_active_lang(app_lang) {
+        return app_lang.to_string();
+    }
+    crate::consts::EN.to_string()
+}
+
 pub(crate) fn ctx(app: &App) -> modes::HubCtx {
     let (kid, lang) = {
         let s = app.borrow();
-        (s.kid, s.lang.clone())
+        // MINE and REVIEW are word SOURCES wearing a language code, and no
+        // registry row lists either, so passing one straight through filters
+        // EVERY mode out. The sheet merely rendered its "nothing here" panel
+        // and nobody looked twice; the drawer is the navigation, so the same
+        // bug empties a player's entire menu the moment they save a word list
+        // or open their misses. Resolve to the real language behind the
+        // source. My Words has one -- the speak language those words are read
+        // in. The review queue mixes languages and has none, so it falls back
+        // to the boot default like any unrecognised code; that is a guess
+        // about mode AVAILABILITY only, and a wrong-but-populated menu beats
+        // no menu.
+        (s.kid, hub_lang(&s.lang, crate::game::mine_lang(&s)))
     };
     // When the purchase adapters land they feed the same call — the hub does
     // not re-derive entitlement, it asks.
@@ -184,7 +208,7 @@ fn spell_cross_playable(_lang: &str) -> bool {
 /// A mode's availability for the CURRENT language. `spell_aloud` is voice-spell-gated:
 /// live only where the language registry's `voice_spell` flag holds (en/es); elsewhere
 /// it renders as an "unavailable / coming soon" tile — shown, not hidden (A7).
-fn unavailable_reason(m: &Mode, lang: &str) -> Option<&'static str> {
+pub fn unavailable_reason(m: &Mode, lang: &str) -> Option<&'static str> {
     if m.id == "spell_aloud" && !crate::consts::voice_spell(lang) {
         Some("tools.spellaloud.avail") // "iPhone · English or Spanish"
     } else if m.id == "practice" && !crate::consts::practice(lang) {
@@ -209,108 +233,19 @@ fn unavailable_reason(m: &Mode, lang: &str) -> Option<&'static str> {
     }
 }
 
-fn tile_html(m: &Mode, lang: &str) -> String {
-    let name = t(&m.name_key);
-    let ico = &m.icon;
-    // An unavailable (language-gated) mode shows a one-line reason instead of the desc.
-    let desc = match unavailable_reason(m, lang) {
-        Some(reason_key) => t(reason_key),
-        None => t(&m.desc_key),
-    };
-    let body = format!(
-        "<span class=\"mt-ico\" aria-hidden=\"true\">{ico}</span>\
-         <span class=\"mt-name\">{name}</span>\
-         <small class=\"mt-desc\">{desc}</small>"
-    );
-    // Voice-spell unavailable for this language → a non-interactive teaser, never the
-    // dead-end screen and never a live button (A7).
-    if unavailable_reason(m, lang).is_some() {
-        return format!("<div class=\"mode-tile teaser\" data-mode=\"{}\">{body}</div>", m.id);
-    }
-    match (m.status, launch_for(&m.id)) {
-        // A teaser is never interactive, and carries no notify-me hook (D7).
-        (Status::ComingSoon, _) => format!("<div class=\"mode-tile teaser\" data-mode=\"{}\">{body}</div>", m.id),
-        // A real destination: a button that routes to the existing entry point.
-        (Status::Live, Some(_)) => format!(
-            "<button type=\"button\" class=\"mode-tile\" id=\"modeTile_{0}\" data-mode=\"{0}\">{body}</button>",
-            m.id
-        ),
-        // An aid: informational, deliberately not a button.
-        (Status::Live, None) => format!("<div class=\"mode-tile info\" data-mode=\"{}\">{body}</div>", m.id),
-        (Status::Hidden, _) => String::new(), // unreachable: `visible` filtered it
-        (Status::Core, _) => String::new(), // unreachable: core surfaces never tile
-    }
-}
+// A13 — the gamepad sheet is DELETED here, not merely hidden.
+//
+// `tile_html`, `reflect`, `open`, `close`, `body_scroll_lock` and `wire`
+// rendered and drove the "Ways to play" sheet behind the gamepad icon. The
+// drawer replaced every one of those jobs, and a second surface that resolves
+// modes is the exact thing CC-HUB-NAV I2 forbids ("no second list"). Its
+// markup goes with it.
+//
+// What stays is everything that was never about the sheet: the LAUNCH table
+// (the drawer routes through `launch_for`), `ctx`, `live_entitlements`, and
+// `unavailable_reason` -- which the drawer now consults for the same reason
+// the sheet did, so a language with no board for a mode shows no row for it.
 
-/// Render the hub and wire each launcher tile. Idempotent — safe to call on any
-/// state change (Kid Mode, language, flags), which is how the hub stays correct
-/// without anyone remembering to refresh it.
-pub fn reflect(app: &App) {
-    let all = modes::all();
-    let shown = modes::visible(&all, &ctx(app));
-    // Never render an empty box. Every mode can legitimately filter out at once —
-    // e.g. a Preview language on web: ghost_racing/online_spelloff need `full`,
-    // syllable_replay is es-only, and say_it/photo_list/spell_aloud are iOS-only.
-    // Without this the hub opened as a blank panel with no explanation.
-    let lang = app.borrow().lang.clone();
-    let html: String = if shown.is_empty() {
-        format!("<p class=\"hub-empty\">{}</p>", t("hub.empty"))
-    } else {
-        shown.iter().map(|m| tile_html(m, &lang)).collect()
-    };
-    dom::set_html("playHubGrid", &html);
-
-    // Tapping a tile routes to the mode's OWN entry point rather than
-    // reimplementing it — the hub is discovery, not a second copy of each mode.
-    for m in &shown {
-        if m.status != Status::Live {
-            continue;
-        }
-        // A language-unavailable mode is a teaser, not a live button — don't wire it.
-        if unavailable_reason(m, &lang).is_some() {
-            continue;
-        }
-        if let Some(target) = launch_for(&m.id) {
-            let tile = format!("modeTile_{}", m.id);
-            let target = target.to_string();
-            dom::on_click(&tile, move || {
-                close();
-                dom::click(&target);
-            });
-        }
-    }
-}
-
-/// Lock or release the page behind the hub. `body` carries the class because the
-/// hub's own element cannot stop the page from scrolling under it.
-fn body_scroll_lock(on: bool) {
-    if let Some(body) = dom::doc().body() {
-        let _ = body.class_list().toggle_with_force("hub-open", on);
-    }
-}
-
-pub fn open(app: &App) {
-    reflect(app);
-    dom::add_class("playHub", "show");
-    // The hub is taller than a phone screen, and without this the wheel/drag
-    // went to the PAGE behind it: the hub stayed put while home scrolled to its
-    // bottom, which is where the player landed after closing. Locking the body
-    // makes the hub itself the scroller for as long as it is open.
-    body_scroll_lock(true);
-}
-
-pub fn close() {
-    dom::remove_class("playHub", "show");
-    body_scroll_lock(false);
-}
-
-/// Wire the hub's entry + dismiss once at startup.
-pub fn wire(app: &App) {
-    let a = app.clone();
-    dom::on_click("playHubBtn", move || open(&a));
-    dom::on_click("playHubClose", close);
-    dom::on_click("playHubScrim", close);
-}
 
 // The site build deletes app-only modes from the registry (D1: absent, not
 // filtered), so these assertions about registry CONTENTS are app-config
@@ -365,16 +300,38 @@ mod tests {
         modes::all().into_iter().find(|m| m.id == "spell_aloud").expect("spell_aloud in registry")
     }
 
-    /// A7 (rewritten for CC-HUB-CLEANUP): Spell It left the game menu — its
-    /// front door is the home tile (sayItBtn, D1) — so its hub tile renders as
-    /// NOTHING for every language. The per-language availability logic stays
-    /// intact behind it (mic-everywhere: all registered languages supported).
+    /// The bug that emptied the drawer. Saving a word list sets the study
+    /// language to __mine, and no registry row lists __mine, so every mode
+    /// filtered out and the menu rendered nothing but Account and Settings.
+    /// Found by routing the My Words e2e through the drawer, which is exactly
+    /// what routing them through it was for.
     #[test]
-    fn a7_spell_aloud_tile_is_hidden_from_the_hub_for_everyone() {
+    fn a_word_source_is_not_a_language() {
+        // My Words resolves to the language those words are read in.
+        assert_eq!(hub_lang(crate::consts::MINE, Some("es")), "es");
+        // ...and to the default when the speak language is one we do not ship.
+        assert_eq!(hub_lang(crate::consts::MINE, None), crate::consts::EN);
+        // The review queue mixes languages: populated menu over an empty one.
+        assert_eq!(hub_lang(crate::consts::REVIEW, None), crate::consts::EN);
+        // A real language is passed straight through, untouched.
+        assert_eq!(hub_lang("en", None), "en");
+        // and neither pseudo-code can ever reach the gate.
+        for src in [crate::consts::MINE, crate::consts::REVIEW] {
+            assert!(!hub_lang(src, Some("fr")).starts_with("__"), "{src} leaked to the mode gate");
+        }
+    }
+
+    /// A7 (rewritten for CC-HUB-CLEANUP, then again for CC-HUB-NAV A13):
+    /// Spell It left the game menu — its front door is the home tile (sayItBtn,
+    /// D1). The surface half of that law now belongs to the drawer, which
+    /// renders no row for it because the registry marks it `unlisted`; what
+    /// stays here is the per-language availability logic behind it
+    /// (mic-everywhere: all registered languages supported).
+    #[test]
+    fn a7_spell_aloud_is_available_in_every_registered_language() {
         let m = spell_aloud_mode();
         for lang in ["en", "es", "fr", "de", "ja", "ar", "hi", "zh"] {
             assert!(unavailable_reason(&m, lang).is_none(), "{lang} supports voice spell");
-            assert!(tile_html(&m, lang).is_empty(), "{lang}: no hub tile (home-tile front door)");
         }
         // An unregistered code still reports unavailable (defensive), and still
         // renders no hub tile either way.

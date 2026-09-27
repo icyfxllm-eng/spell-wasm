@@ -145,6 +145,21 @@ pub fn click(id: &str) {
     }
 }
 
+/// Fire a `change` on a control after setting its value programmatically.
+///
+/// A script-set `value` fires nothing, so a caller that sets one and stops has
+/// quietly forked the behaviour: the select says one thing and the app state
+/// says another. Dispatching lets the control's ONE registered handler do the
+/// work, which is the same reason [`click`] exists. Tolerant of an absent
+/// element for the same reason too.
+pub fn change(id: &str) {
+    if let Some(e) = doc().get_element_by_id(id) {
+        if let Ok(ev) = web_sys::Event::new("change") {
+            let _ = e.dispatch_event(&ev);
+        }
+    }
+}
+
 pub fn add_class(id: &str, class: &str) {
     let _ = el(id).class_list().add_1(class);
 }

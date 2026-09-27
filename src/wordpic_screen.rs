@@ -1312,9 +1312,15 @@ fn close_play(app: &App) {
     }
     OPEN.with(|c| c.set(false));
     dom::remove_class("wpPlay", "show");
-    for id in ["wpHow", "wpConfirm", "wpDone"] {
+    // wpReveal, NOT wpDone: the reveal card was renamed in the FINALE commit
+    // and this loop kept the dead id, so every exit from Spell Pic panicked in
+    // dom::el and took the whole app down. It also carries "rest" (the state
+    // wpContinue clears), which an exit has to clear too or the card comes back
+    // mid-rest next time.
+    for id in ["wpHow", "wpConfirm", "wpReveal"] {
         dom::remove_class(id, "show");
     }
+    dom::remove_class("wpReveal", "rest");
     CARD_UP.with(|c| c.set(false));
     api::stop();
     borrow_keyboard(false);

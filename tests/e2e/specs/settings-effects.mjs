@@ -11,7 +11,7 @@
 // So nothing here asserts "the control is connected". That check would
 // have gone green on all seventeen while every symptom stayed broken.
 // Each test flips a control and asserts the OBSERVABLE CONSEQUENCE.
-import { openApp, assert } from '../harness.mjs';
+import { openApp, assert, openSettings as openAppSettings } from '../harness.mjs';
 
 const PREFS = 'byear_prefs_v1'; // NOT spell_prefs — a wrong key here reads
                                 // undefined and the assertion passes vacuously
@@ -146,9 +146,11 @@ export async function run(browser, base, suite) {
       const levels = () => page.evaluate(() =>
         [...document.querySelectorAll('#levelSel option')].map((o) => o.value));
       // The Spell Jr row lives in the SETTINGS sheet (#setScrim), not the
-      // round-setup sheet openSettings opens. Every other test in this file
-      // dispatches change events, so no test had ever needed the sheet open.
-      await page.click('#setBtn');
+      // round-setup sheet this file's local openSettings opens. Every other
+      // test here dispatches change events, so no test had ever needed the
+      // sheet open. Phase C retired the gear icon, so it opens the way a
+      // player opens it: through the drawer.
+      await openAppSettings(page);
       await page.waitForSelector('#setScrim.show', { timeout: 4000 });
       assert(await bodyHas(page, 'kid'), 'an under-13 verdict boots into Spell Jr');
       assert(!(await shown('kidToggle')), 'a locked Spell Jr player sees no Spell Jr switch');

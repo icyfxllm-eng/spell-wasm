@@ -14,7 +14,7 @@
 //   * extra-attempts ON   -> one wrong submission grants exactly one clean retry.
 //   * language matrix (en / es / ja) reruns identical assertions — zero
 //     per-language behavior.
-import { openApp, typeOnKeyboard, assert, pinBaseline } from '../harness.mjs';
+import { openApp, typeOnKeyboard, assert, pinBaseline, openSettings } from '../harness.mjs';
 
 const AGE = JSON.stringify({ verdict: 'full', checkedAt: 1700000000 });
 const FLAG = 'spell_flag_attempts_shields';
@@ -113,7 +113,7 @@ export async function run(browser, base, suite) {
       await page.click('#setupDone').catch(() => {});
       await page.waitForTimeout(150);
       // Enable the per-player toggle, then miss once.
-      await page.click('#setBtn').catch(() => {});
+      await openSettings(page).catch(() => {});
       await page.click('#extraAttemptsToggle');
       await page.click('#setDone').catch(() => {});
       await missOnce(page);
@@ -131,7 +131,7 @@ export async function run(browser, base, suite) {
   await suite.test('flag ON: extra-attempts toggle persists across reload (single-source pref)', async () => {
     const { ctx, page } = await openApp(browser, base, {});
     try {
-      await page.click('#setBtn').catch(() => {});
+      await openSettings(page).catch(() => {});
       await page.click('#extraAttemptsToggle');
       assert(await page.$eval('#extraAttemptsToggle', (e) => e.checked), 'toggle should be on after click');
       await page.reload({ waitUntil: 'load' });
