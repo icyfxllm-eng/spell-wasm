@@ -398,3 +398,56 @@ no espeak, no espeak-ng, no phonemizer, no nltk, no cmudict package, and
 macOS 15 — the legacy engine behind that API is gone. CMUdict covers English
 only. Anything multilingual needs a real dependency, and that is a licensing
 question for `data/LICENSES.md` before it is an engineering one.
+
+## F4 bake-off, run 2026-09-26 — a voice fixes the class
+
+Eric deployed the backend and asked for one run with `BAKEOFF=1`. It was run
+against a SEPARATE instance on :8199 with its own cache and a throwaway
+database, never the live service: production was verified before and after to
+still ignore `?voice=`, byte for byte, and the live `climb.db` was never
+written. Nine `en-US-Neural2` voices, 68 words, both recognizers, blind.
+
+| Voice | Pass | Weak | Fail |
+|---|---|---|---|
+| **en-US-Neural2-E** | **61** | 4 | 3 |
+| en-US-Neural2-G | 57 | 8 | 3 |
+| en-US-Neural2-J | 57 | 8 | 3 |
+| en-US-Neural2-H | 56 | 8 | 4 |
+| en-US-Neural2-C | 55 | 11 | 2 |
+| **en-US-Neural2-D (current)** | **54** | 8 | 6 |
+| en-US-Neural2-I | 53 | 9 | 6 |
+| en-US-Neural2-F | 49 | 12 | 7 |
+| en-US-Neural2-A | 47 | 11 | 10 |
+
+**The answer F4 was built to give: the /f/ class is a property of the voice,
+and E does not have it.**
+
+| word | D (current) | E |
+|---|---|---|
+| half | "Have." / "half" — the tester report, reproduced | both hear it |
+| leaf | "Leave." / "leave" — missed by both | both hear it |
+| safe | "Save." / "save" — missed by both | both hear it |
+
+Three words in the table discriminate nothing and should be discounted when
+reading the raw counts: `for` is heard as "4" by every voice, `fifth` as "5th",
+and `some` as "sum" — two digit-form artifacts of the scorer and one true
+homophone that F2 already exempts. Setting those aside, D has a problem with
+nine words and E with four, of which only `hiss` is a real failure.
+
+**The report hid its own headline until it was fixed.** The first run listed
+only words both recognizers missed, and `half` is not one of those — whisper
+hears "Have", Google hears "half", so it scores WEAK. The word this entire
+feature exists for was absent from the output. The harness now reports split
+decisions too, and the re-run produced an identical table, so the ranking is
+reproducible.
+
+One methodological note for whoever repeats this: recognizer choice changes the
+verdict on `half`. `ggml-small` hears "Have"; `ggml-base.en` hears "half". The
+pilot's finding stands with the model the gate uses, and the tester report is
+human evidence independent of either.
+
+**This recommends and decides nothing.** Switching English to en-US-Neural2-E
+needs Eric's signature (D6), and the switch is atomic when it happens: every
+clip regenerates and passes F1 and F2 before a player hears one (F4 step 5).
+The alternative remains a signed F3 row per word, which fixes `half` and leaves
+`leaf` and `safe` to be found one complaint at a time.

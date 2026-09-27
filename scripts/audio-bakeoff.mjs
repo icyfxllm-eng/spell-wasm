@@ -64,6 +64,10 @@ async function main() {
     }
     let pass = 0; let weak = 0; let fail = 0;
     const misheard = [];
+    // Weak is where the interesting cases live: one recognizer right and one
+    // wrong is exactly the "half" shape -- whisper hears "Have", Google hears
+    // "half". Reporting only fails hid the word this whole feature exists for.
+    const split = [];
     for (const { word } of words) {
       const mp3 = join(tmp, 'c.mp3');
       const wav = join(tmp, 'c.wav');
@@ -72,10 +76,10 @@ async function main() {
       const heard = heardBoth(wav);
       const hits = heard.filter((h) => norm(h) === norm(word)).length;
       if (hits >= 2) pass += 1;
-      else if (hits === 1) weak += 1;
+      else if (hits === 1) { weak += 1; split.push(`${word} -> ${heard.map((h) => JSON.stringify(h)).join(' / ')}`); }
       else { fail += 1; misheard.push(`${word} -> ${heard.map((h) => JSON.stringify(h)).join(' / ')}`); }
     }
-    rows.push({ voice, pass, weak, fail, misheard });
+    rows.push({ voice, pass, weak, fail, misheard, split });
   }
 
   rows.sort((a, b) => (b.pass ?? -1) - (a.pass ?? -1) || (a.weak ?? 0) - (b.weak ?? 0));
@@ -84,9 +88,16 @@ async function main() {
   for (const r of rows) {
     out.push(r.excluded ? `| ${r.voice} | — | — | — | excluded: ${r.excluded}` : `| ${r.voice} | ${r.pass} | ${r.weak} | ${r.fail} |`);
   }
-  out.push('', '## What each voice was misheard on', '');
+  out.push('', '## Missed by both recognizers', '');
   for (const r of rows.filter((x) => x.misheard?.length)) {
     out.push(`### ${r.voice}`, '', ...r.misheard.map((m) => `- ${m}`), '');
+  }
+  out.push('', '## Split decisions — one recognizer heard it, one did not', '',
+    'The `half` case lives here, not above: a word only one machine gets is the',
+    'one a listener is most likely to find ambiguous, and a report that showed',
+    'only total failures left it out entirely.', '');
+  for (const r of rows.filter((x) => x.split?.length)) {
+    out.push(`### ${r.voice}`, '', ...r.split.map((m) => `- ${m}`), '');
   }
   out.push('', '**Recommendation only.** Switching a language\'s default voice needs',
     'Eric\'s signature for that language (D6), and the switch itself is atomic:',

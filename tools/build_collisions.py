@@ -270,6 +270,17 @@ def check():
     """
     import io, contextlib
     bad = []
+    # A missing source silently turns this check into a no-op, which is worse
+    # than no check: key_en() returns None without cmudict, build() then writes
+    # nothing, before == after, and the gate reports OK. tools/wordpipe/sources
+    # is GITIGNORED, so every fresh worktree lacks it -- meaning the English
+    # table went stale (the bank-variety cleanup removed four pairs) and no
+    # gate run in a worktree could see it. Absence of the input is now a
+    # failure, not a pass.
+    if not CMU.exists():
+        bad.append(f"en: {CMU.relative_to(ROOT)} is missing, so the English table cannot be "
+                   f"checked at all. That path is gitignored, so a fresh worktree never has "
+                   f"it -- fetch it before trusting this gate.")
     src = (ROOT / "src/homophones.rs").read_text()
     for lang in ("en", "es", "ru"):
         path = OUT / lang / "homophones.txt"

@@ -1,0 +1,19 @@
+# CC-SENSE-CUE F2 seed — English spelling varieties that must keep grading
+# correct even though only ONE of them is in the bank.
+#
+# These four were DERIVED sets until the CC-AUDIO-CLARITY D17 variety cleanup
+# removed the second spelling from the bank. The generator works over bank
+# words, so losing the word lost the fairness with it: a player typing
+# "behaviour" for a prompt of "behavior" started being marked wrong, which is
+# the exact narrowing this file's own comment in build_collisions.py warns
+# about. Seeded so the bank keeps one variety (D17) and the grader still
+# accepts both spellings.
+#
+# Only pairs the generator itself had derived are here — i.e. pairs CMU gives
+# the SAME pronunciation. The bank-variety check curates 54 en pairs in total;
+# whether the rest should be accepted as answers too is Eric's call, not a
+# thing to infer from four.
+behavior behaviour
+center centre
+theater theatre
+traveled travelled
