@@ -293,9 +293,11 @@ pub fn is_on(name: &str) -> bool {
         // arm at all until CC-HUB-NAV Phase B, which did not matter while the
         // only caller was the hub sheet -- core never tiles there anyway -- but
         // the drawer gates on `enabled` too, and D-N6 puts all three at the top
-        // of Spell it. Without these they were on paper only, exactly as the
-        // note below describes for calendar, translate and reports.
-        "standard" | "climb" | "daily" => true,
+        // of Spell it. my_words and misses joined them in Phase C for the same
+        // reason: surfaces, not modes, with nothing to flip. Without these they
+        // were on paper only, exactly as the note below describes for
+        // calendar, translate and reports.
+        "standard" | "climb" | "daily" | "my_words" | "misses" => true,
         "ghost_racing" => ghost_racing(),
         "syllable_replay" => syllable_replay(),
         "say_it" => say_it(),

@@ -56,7 +56,11 @@ pub fn bearer() -> Option<String> {
     token()
 }
 
-fn username() -> Option<String> {
+/// The signed-in display name. `pub(crate)` for the CC-HUB-NAV drawer's
+/// identity row. It is a USERNAME, never an email, which is how F2's identity
+/// row satisfies CC-ONBOARD-JR D2 (no child email) by construction rather than
+/// by filtering.
+pub(crate) fn username() -> Option<String> {
     USER.with(|c| c.borrow().as_ref().map(|u| u.username.clone()))
 }
 

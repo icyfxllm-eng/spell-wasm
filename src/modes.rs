@@ -296,14 +296,17 @@ mod tests {
     #[test]
     fn registry_parses_and_holds_the_shipped_modes() {
         let all = all();
-        assert_eq!(all.len(), 23, "20 modes + 3 core surfaces registered (Spell Cross, CC-WORDGRID Phase B)");
+        // 20 modes + 5 core surfaces. The two newest are my_words and misses:
+        // surfaces rather than modes, registered so the CC-HUB-NAV drawer can
+        // resolve their rows through this registry and not a second list (I2).
+        assert_eq!(all.len(), 25, "20 modes + 5 core surfaces registered");
         // File order IS tile order (D6); practice leads (CC-PRACTICE D9).
         // letter_forge (CC-LETTER-FORGE F1) sits after def_match, where its
         // registry row was inserted. It is `hidden`, so it appears here — this
         // pin covers all() — and in none of the visible() expectations below.
         assert_eq!(
             ids(&all),
-            vec!["practice", "ghost_racing", "syllable_replay", "say_it", "photo_list", "spell_aloud", "word_stories", "online_spelloff", "def_match", "letter_forge", "word_chains", "impostor", "bee_sim", "word_picture", "reports", "calendar", "translate", "spelldoku", "spell_search", "spell_cross", "standard", "climb", "daily"],
+            vec!["practice", "ghost_racing", "syllable_replay", "say_it", "photo_list", "spell_aloud", "word_stories", "online_spelloff", "def_match", "letter_forge", "word_chains", "impostor", "bee_sim", "word_picture", "my_words", "misses", "reports", "calendar", "translate", "spelldoku", "spell_search", "spell_cross", "standard", "climb", "daily"],
         );
     }
 

@@ -94,6 +94,67 @@ fn dedupe_icon<'a>(icon: &str, name: &'a str) -> &'a str {
     }
 }
 
+/// F4 — the player's own material and progress, off the play surface. Same
+/// registry, same gate; only the group differs from Play.
+pub fn your_words_rows(shown: &[modes::Mode]) -> Vec<Row> {
+    shown
+        .iter()
+        .filter(|m| m.group == modes::Group::YourWords)
+        .map(|m| Row { id: m.id.clone(), icon: m.icon.clone(), name_key: m.name_key.clone() })
+        .collect()
+}
+
+/// F2 — exactly one account state, never both (I1).
+///
+/// The identity row is a username, never an email, so CC-ONBOARD-JR D2 holds
+/// by construction. A Jr profile gets no Sign out row at all (I7): a child
+/// cannot sign themselves out of a parent's account.
+pub struct Account {
+    pub identity: Option<String>,
+    pub action: Option<(&'static str, &'static str)>, // (i18n key, element to click)
+}
+
+pub fn account(signed_in: bool, jr: bool, name: Option<String>) -> Account {
+    if !signed_in {
+        // D1: never a prerequisite for anything else in the drawer.
+        return Account { identity: None, action: Some(("top.signIn", "accountBtn")) };
+    }
+    Account {
+        identity: name,
+        // F2 wants this labelled Sign out, and the shipped string is
+        // `acct.logout` = "Log out". Renaming it is a 15-locale edit rather
+        // than a new key, so the existing string is used and the rename is
+        // flagged for the next round instead of inventing a seventh new key.
+        action: if jr { None } else { Some(("acct.logout", "acctLogout")) },
+    }
+}
+
+/// Where a row goes. The surface's own element when the registry names one,
+/// else the sheet's entry point. Clicks are PROXIED to that element rather
+/// than calling a handler, because every handler here is an inline closure
+/// registered on its button; `climbBtn` already sets the precedent of an
+/// element kept in the DOM purely so something else can click it.
+fn target_for(m: &modes::Mode) -> Option<String> {
+    m.hub_tile
+        .as_ref()
+        .map(|t| t.element.clone())
+        .or_else(|| crate::play_hub::launch_for(&m.id).map(str::to_string))
+}
+
+/// One row. Shared by every group so a Your Words row cannot drift from a
+/// Play row — same height, same shape, same absence of secondary text (D-N3).
+fn row_html(id: &str, icon: &str, name: &str) -> String {
+    format!(
+        "<button type=\"button\" class=\"nav-row\" id=\"navRow_{0}\" data-mode=\"{0}\" \
+         style=\"height:{1}px;min-height:{1}px;max-height:{1}px;\
+         display:flex;align-items:center;gap:10px;width:100%;\
+         padding:0 14px;margin:0 0 2px;text-align:start\">\
+         <span class=\"nav-ico\" aria-hidden=\"true\">{2}</span>\
+         <span class=\"nav-name\">{3}</span></button>",
+        dom::escape_html(id), ROW_PX, dom::escape_html(icon), dom::escape_html(name),
+    )
+}
+
 fn body(sections: &[Section]) -> String {
     let mut h = String::new();
     for s in sections {
@@ -157,23 +218,72 @@ pub fn open(app: &App) {
 fn render(app: &App) {
     let all = modes::all();
     let shown = modes::catalog(&all, &crate::play_hub::ctx(app));
-    let sections = play_sections(&shown);
+    let (jr, signed_in) = (app.borrow().kid, crate::climb::is_logged_in());
+    let acct = account(signed_in, jr, crate::climb::username());
+    let play = play_sections(&shown);
+    let yours = your_words_rows(&shown);
+
+    let mut h = format!(
+        "<div class=\"nav-head\"><button type=\"button\" class=\"ghost hub-x\" id=\"{CLOSE}\" \
+         aria-label=\"{}\">\u{2715}</button></div>",
+        dom::escape_html(&t("aria.close"))
+    );
+    // Account first (F2), then Play, then Your Words. Help & Settings is F5,
+    // which is Phase D.
+    if let Some(name) = &acct.identity {
+        h.push_str(&format!(
+            "<p class=\"nav-identity\" style=\"padding:0 14px;opacity:.8\">{}</p>",
+            dom::escape_html(name)
+        ));
+    }
+    if let Some((key, _)) = acct.action {
+        // Same dedupe as a mode row: top.signIn already carries its own glyph.
+        let label = t(key);
+        h.push_str(&row_html("acct", "\u{1F464}", dedupe_icon("\u{1F464}", &label)));
+    }
+    h.push_str(&body(&play));
+    if !yours.is_empty() {
+        h.push_str(&format!(
+            "<h3 class=\"nav-group\" role=\"heading\" aria-level=\"2\">{}</h3>",
+            dom::escape_html(&t("aria.yourWords"))
+        ));
+        for r in &yours {
+            h.push_str(&row_html(&r.id, &r.icon, dedupe_icon(&r.icon, &t(&r.name_key))));
+        }
+    }
     dom::set_html(
         PANEL,
         &format!(
-            "<div class=\"nav-head\"><button type=\"button\" class=\"ghost hub-x\" id=\"{CLOSE}\" \
-             aria-label=\"{}\">\u{2715}</button></div>{}",
-            dom::escape_html(&t("aria.close")),
-            body(&sections)
+            "<div style=\"max-height:100%;padding:14px 0\">{h}</div>"
         ),
     );
     dom::on_click(CLOSE, close);
-    // Phase B: a row closes the drawer and goes nowhere. See the module header
-    // for why the destinations wait for Phase C.
-    for s in &sections {
-        for r in &s.rows {
+
+    // Account action proxies to its existing control.
+    if let Some((_, element)) = acct.action {
+        let el = element.to_string();
+        dom::on_click(&format!("navRow_acct"), move || {
+            close();
+            dom::click(&el);
+        });
+    }
+    // Play rows still go nowhere: A4 is Phase C's test and the routes are not
+    // all decided (The Climb has none). Your Words rows DO route, because the
+    // cut-over removes their only other door.
+    for sct in &play {
+        for r in &sct.rows {
             dom::on_click(&format!("navRow_{}", r.id), close);
         }
+    }
+    for r in &yours {
+        let Some(m) = shown.iter().find(|m| m.id == r.id) else { continue };
+        let target = target_for(m);
+        dom::on_click(&format!("navRow_{}", r.id), move || {
+            close();
+            if let Some(t) = &target {
+                dom::click(t);
+            }
+        });
     }
 }
 
@@ -340,6 +450,55 @@ mod tests {
         // Untouched when the glyph is not the icon, or is part of the phrase.
         assert_eq!(dedupe_icon("\u{1F4F7}", "Photo \u{2192} word list"), "Photo \u{2192} word list");
         assert_eq!(dedupe_icon("\u{1F331}", "Practice"), "Practice");
+    }
+
+    /// I1: the two account states never coexist.
+    #[test]
+    fn exactly_one_account_state_renders() {
+        let out = account(false, false, None);
+        assert_eq!(out.action.map(|a| a.0), Some("top.signIn"));
+        assert!(out.identity.is_none(), "signed out shows no identity");
+
+        let inn = account(true, false, Some("ada".into()));
+        assert_eq!(inn.identity.as_deref(), Some("ada"));
+        assert_eq!(inn.action.map(|a| a.0), Some("acct.logout"));
+    }
+
+    /// I7 / CC-ONBOARD-JR D2: a Jr profile gets no Sign out, and the identity
+    /// it shows is a username, so it can never be an email.
+    #[test]
+    fn a_jr_profile_has_no_sign_out_and_no_email() {
+        let jr = account(true, true, Some("Sam".into()));
+        assert!(jr.action.is_none(), "a child cannot sign out of a parent's account");
+        assert!(!jr.identity.unwrap_or_default().contains('@'));
+    }
+
+    /// F4 renders the player's own surfaces, including the two that are
+    /// surfaces rather than modes and exist in the registry only so a drawer
+    /// row can resolve through it (I2).
+    #[test]
+    fn your_words_holds_the_players_own_surfaces() {
+        let all = modes::all();
+        let shown = modes::catalog(&all, &ctx());
+        let ids: Vec<String> = your_words_rows(&shown).iter().map(|r| r.id.clone()).collect();
+        for want in ["my_words", "misses", "translate", "calendar"] {
+            assert!(ids.iter().any(|i| i == want), "{want} belongs in Your Words; got {ids:?}");
+        }
+        // Play modes must not leak into it.
+        assert!(!ids.iter().any(|i| i == "practice"));
+    }
+
+    /// Every Your Words row must have somewhere to go, or the cut-over would
+    /// strand the surface it replaced — My Words has no other door once the
+    /// utility row is gone.
+    #[test]
+    fn every_your_words_row_resolves_to_a_target() {
+        let all = modes::all();
+        let shown = modes::catalog(&all, &ctx());
+        for r in your_words_rows(&shown) {
+            let m = shown.iter().find(|m| m.id == r.id).unwrap();
+            assert!(target_for(m).is_some(), "{} has no target; its row would go nowhere", r.id);
+        }
     }
 
     /// D-N6's order, which is the order a player reads.
