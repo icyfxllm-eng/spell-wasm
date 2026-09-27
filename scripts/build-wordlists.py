@@ -24,6 +24,10 @@ Mechanical gates — any violation fails the build (non-zero exit):
 Also enforced per word: NFC form, all-alphabetic (no spaces/digits/punctuation),
 length 3..=16 (the 16-char cap covers de/nl/sv compounds, §3.3), and dedup
 within a language (first tier wins).
+
+Japanese: no row (nor either side of a word|reading row) may begin with a small
+kana. No Japanese word does; such a row is a segmenter fragment (see
+JA_SMALL_KANA). ``--selftest`` proves this gate still fails the build.
 """
 import sys
 import json
@@ -59,6 +63,26 @@ def max_for(code, tier_idx):
     # never below the legacy 840: pre-expansion banks (hi design-ahead,
     # the thin trio's old 800s) must not become violations retroactively
     return max(int(row["poolFloors"][tier_idx] * 1.25), 840)
+
+
+# Small kana (ぁ っ ゃ ゎ ヵ …) only ever follow another kana, so no Japanese word
+# begins with one. Leipzig's jpn_wikipedia segmenter nonetheless cuts before
+# them -- 中央警察大学（ちゅうおうけいさつだいがく） becomes ち + ゅうおうけい...
+# -- and build-bigbank.py took 331 such tails verbatim (census 2026-09-19).
+# The lost head is not recoverable from the token list, so these are dropped at
+# the source and this gate keeps them out. Katakana and the Ainu extensions are
+# listed too: the keyboard gate rejects katakana today, but that is a separate
+# rule and should not be what stands between the bank and a fragment.
+JA_SMALL_KANA = frozenset(
+    "ぁぃぅぇぉっゃゅょゎゕゖ"
+    "ァィゥェォッャュョヮヵヶ"
+    "ㇰㇱㇲㇳㇴㇵㇶㇷㇸㇹㇺㇻㇼㇽㇾㇿ"
+)
+
+
+def ja_starts_with_small_kana(row: str) -> bool:
+    """True if the row, or either half of a word|reading row, begins with a small kana."""
+    return any(part[:1] in JA_SMALL_KANA for part in nfc(row).split("|"))
 
 
 def nfc(s: str) -> str:
@@ -103,8 +127,8 @@ def reachable_chars(code: str) -> set:
     return chars
 
 
-def load_exclusions(code: str):
-    exdir = ROOT / "assets" / "words" / "exclusions"
+def load_exclusions(code: str, words_dir: Path = ROOT / "assets" / "words"):
+    exdir = words_dir / "exclusions"
     roots, exact = [], set()
     roots_file = exdir / "_roots.txt"
     if roots_file.exists():
@@ -126,18 +150,19 @@ def is_excluded(word: str, roots, exact) -> bool:
     return lf in exact or any(r and r in lf for r in roots)
 
 
-def build():
+def gather(words_dir: Path = ROOT / "assets" / "words"):
+    """Read and gate every source list. Returns (banks, problems, warnings)."""
     problems = []  # fail the build (§3.4 gates)
     warnings = []  # curation filters — dropped words, reported but not fatal
     banks = {}  # (code, tier) -> [words]
     for code in LANGS:
         reach = reachable_chars(code)
-        roots, exact = load_exclusions(code)
+        roots, exact = load_exclusions(code, words_dir)
         # CJK scripts: one character is a whole word, so allow length 1.
         min_len = 1 if code in ("ko", "ja", "zh") else MIN_LEN
         seen = set()
         for tier in TIERS:
-            src = ROOT / "assets" / "words" / code / f"{tier}.txt"
+            src = words_dir / code / f"{tier}.txt"
             if not src.exists() and code == "sw" and tier == "expert":
                 continue  # sw is structurally 3-tier (CC-BANK-COMPLETE, signed)
             out = []
@@ -146,6 +171,11 @@ def build():
                 if not w or w.startswith("#"):
                     continue
                 where = f"{code}/{tier}: {w!r}"
+                # Before the curation filters: a fragment must fail the build,
+                # never be quietly dropped by a later filter it happens to trip.
+                if code == "ja" and ja_starts_with_small_kana(w):
+                    problems.append(f"{where} — starts with a small kana (segmenter fragment, not a word)")
+                    continue
                 # Curation filters (drop + warn): non-letters (fr apostrophe/hyphen
                 # forms, §3.3) and the length cap (de/nl/sv compounds, §3.3).
                 # Filipino keeps the hyphen. Combining marks (Mn/Mc) are letters
@@ -215,7 +245,11 @@ def build():
             hi_cap = max_for(code, TIERS.index(tier))
             if not (MIN_PER_TIER <= n <= hi_cap):
                 problems.append(f"size: {code}/{tier} has {n} words, outside [{MIN_PER_TIER},{hi_cap}]")
+    return banks, problems, warnings
 
+
+def build():
+    banks, problems, warnings = gather()
     if warnings:
         print(f"build-wordlists: {len(warnings)} word(s) dropped by curation filters:", file=sys.stderr)
         for w in warnings:
@@ -306,10 +340,88 @@ def render(banks) -> str:
     return "\n".join(lines) + "\n"
 
 
+WORDPIC_POOLS = ROOT / "content-pipeline" / "wordpic" / "pools"
+
+
+def ja_pool_problems(pool_dir: Path = WORDPIC_POOLS):
+    """The Spell Picture pools are a separate snapshot of the bank (they size
+    each picture's word bands), and they carried the same segmenter fragments."""
+    problems = []
+    for f in sorted(pool_dir.glob("ja-*.json")):
+        for w in json.loads(f.read_text(encoding="utf-8")):
+            if ja_starts_with_small_kana(w):
+                problems.append(f"{f.name}: {w!r} — starts with a small kana (segmenter fragment, not a word)")
+    return problems
+
+
+def selftest():
+    """Prove the small-kana gate bites, through the real gather() path.
+
+    Copies the live sources, plants fragments in ja/hard, and requires every
+    planted row -- and only those -- to be reported as a violation. Also pins
+    the predicate on words whose small kana sit mid-word, which must pass.
+    """
+    import shutil
+    import tempfile
+
+    fails = []
+    for good in ["がっこう", "きゃく", "ちゅうおう", "きっぷ", "しゃしん", "んじゃ", "がっこう|がっこう"]:
+        if ja_starts_with_small_kana(good):
+            fails.append(f"predicate flagged a real word: {good!r}")
+    for bad in ["ゃん", "っと", "ゅうおうけいさつだいがく", "ァイ", "ヵ", "きゃく|ゃく", "ゃん"]:
+        if not ja_starts_with_small_kana(bad):
+            fails.append(f"predicate missed a fragment: {bad!r}")
+
+    _, live_problems, _ = gather()
+    if live_problems:
+        fails.append(f"live sources are not clean ({len(live_problems)} violation(s)); fixture needs a clean base")
+
+    planted = ["ゃんきゅう", "ぃむしちゅ", "っぽ"]
+    with tempfile.TemporaryDirectory() as tmp:
+        words = Path(tmp) / "words"
+        shutil.copytree(ROOT / "assets" / "words", words)
+        hard = words / "ja" / "hard.txt"
+        hard.write_text(hard.read_text(encoding="utf-8") + "\n".join(planted) + "\n", encoding="utf-8")
+        banks, problems, _ = gather(words)
+        pools = Path(tmp) / "pools"
+        shutil.copytree(WORDPIC_POOLS, pools)
+        pool = pools / "ja-expert.json"
+        pool.write_text(json.dumps(json.loads(pool.read_text(encoding="utf-8")) + planted, ensure_ascii=False), encoding="utf-8")
+        pool_flagged = ja_pool_problems(pools)
+    flagged = [p for p in problems if "small kana" in p]
+    for w in planted:
+        if not any(repr(w) in p for p in flagged):
+            fails.append(f"gate did not fail the build on planted fragment {w!r}")
+        if w in banks.get(("ja", "hard"), []):
+            fails.append(f"planted fragment {w!r} reached the bank")
+    if len(flagged) != len(planted):
+        fails.append(f"expected {len(planted)} small-kana violation(s), got {len(flagged)}: {flagged}")
+    if ja_pool_problems():
+        fails.append("live Spell Picture ja pools are not clean; fixture needs a clean base")
+    if len(pool_flagged) != len(planted):
+        fails.append(f"pool check: expected {len(planted)} violation(s), got {len(pool_flagged)}: {pool_flagged}")
+
+    if fails:
+        print("build-wordlists selftest: FAIL", file=sys.stderr)
+        for f in fails:
+            print("  " + f, file=sys.stderr)
+        sys.exit(1)
+    print(f"build-wordlists selftest: OK — small-kana gate rejected {len(planted)} planted fragment(s) in the bank and the picture pools, passed real words.")
+
+
 def main():
+    if "--selftest" in sys.argv:
+        selftest()
+        return
     check_only = "--check" in sys.argv
     banks = build()
     if banks is None:
+        sys.exit(1)
+    pool_problems = ja_pool_problems()
+    if pool_problems:
+        print(f"build-wordlists: {len(pool_problems)} Spell Picture pool violation(s):", file=sys.stderr)
+        for p in pool_problems:
+            print("  " + p, file=sys.stderr)
         sys.exit(1)
     id_problems = check_id_collisions(banks)
     if id_problems:

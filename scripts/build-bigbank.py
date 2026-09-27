@@ -56,6 +56,7 @@ try:
 except SystemExit:
     pass
 reachable_chars = _bw.reachable_chars
+ja_starts_with_small_kana = _bw.ja_starts_with_small_kana
 
 
 def corpus_words(name):
@@ -116,6 +117,10 @@ def build(lang, target):
             w = unicodedata.normalize("NFC", w0)  # de + caseless scripts keep case
         key = strict_fold(w)
         if not w or key in seen or any(c not in reach for c in w):
+            continue
+        # Leipzig's jpn segmenter cuts before small kana (ち|ゅうおう...); the
+        # tail is a fragment, and build-wordlists.py fails the build on it.
+        if lang == "ja" and ja_starts_with_small_kana(w):
             continue
         n = sum(1 for c in w if unicodedata.category(c) not in ("Mn", "Mc"))
         tier = next((t for t, (lo, hi) in TIER_LEN.items() if lo <= n <= hi), None)

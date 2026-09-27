@@ -45,81 +45,83 @@
     0,
     1,
     2,
-    4
+    4,
+    5,
+    6
    ],
    "per_language": {
     "ar": {
-     "words": 4,
+     "words": 6,
      "band": 0,
      "band_size": 371
     },
     "de": {
-     "words": 4,
+     "words": 6,
      "band": 0,
      "band_size": 802
     },
     "en": {
-     "words": 4,
+     "words": 6,
      "band": 0,
      "band_size": 763
     },
     "es": {
-     "words": 4,
+     "words": 6,
      "band": 0,
      "band_size": 607
     },
     "fil": {
-     "words": 4,
+     "words": 6,
      "band": 0,
      "band_size": 762
     },
     "fr": {
-     "words": 4,
+     "words": 6,
      "band": 0,
      "band_size": 724
     },
     "hi": {
-     "words": 4,
+     "words": 6,
      "band": 0,
      "band_size": 548
     },
     "ja": {
-     "words": 4,
+     "words": 6,
      "band": 0,
-     "band_size": 720
+     "band_size": 719
     },
     "ko": {
-     "words": 4,
+     "words": 6,
      "band": 0,
      "band_size": 452
     },
     "pl": {
-     "words": 4,
+     "words": 6,
      "band": 0,
      "band_size": 739
     },
     "pt": {
-     "words": 4,
+     "words": 6,
      "band": 0,
      "band_size": 772
     },
     "ru": {
-     "words": 4,
+     "words": 6,
      "band": 0,
      "band_size": 806
     },
     "sw": {
-     "words": 4,
+     "words": 6,
      "band": 0,
      "band_size": 801
     },
     "vi": {
-     "words": 4,
+     "words": 6,
      "band": 0,
      "band_size": 551
     },
     "zh": {
-     "words": 4,
+     "words": 6,
      "band": 0,
      "band_size": 55
     }
@@ -128,91 +130,7 @@
   {
    "name": "features",
    "path_ids": [
-    5,
-    6,
-    7
-   ],
-   "per_language": {
-    "ar": {
-     "words": 3,
-     "band": 1,
-     "band_size": 989
-    },
-    "de": {
-     "words": 3,
-     "band": 1,
-     "band_size": 391
-    },
-    "en": {
-     "words": 3,
-     "band": 1,
-     "band_size": 236
-    },
-    "es": {
-     "words": 3,
-     "band": 1,
-     "band_size": 431
-    },
-    "fil": {
-     "words": 3,
-     "band": 1,
-     "band_size": 369
-    },
-    "fr": {
-     "words": 3,
-     "band": 1,
-     "band_size": 346
-    },
-    "hi": {
-     "words": 3,
-     "band": 1,
-     "band_size": 286
-    },
-    "ja": {
-     "words": 3,
-     "band": 1,
-     "band_size": 130
-    },
-    "ko": {
-     "words": 3,
-     "band": 1,
-     "band_size": 404
-    },
-    "pl": {
-     "words": 3,
-     "band": 1,
-     "band_size": 376
-    },
-    "pt": {
-     "words": 3,
-     "band": 1,
-     "band_size": 479
-    },
-    "ru": {
-     "words": 3,
-     "band": 1,
-     "band_size": 289
-    },
-    "sw": {
-     "words": 3,
-     "band": 1,
-     "band_size": 331
-    },
-    "vi": {
-     "words": 3,
-     "band": 1,
-     "band_size": 497
-    },
-    "zh": {
-     "words": 3,
-     "band": 1,
-     "band_size": 428
-    }
-   }
-  },
-  {
-   "name": "texture",
-   "path_ids": [
+    7,
     3,
     16,
     17,
@@ -220,84 +138,84 @@
    ],
    "per_language": {
     "ar": {
-     "words": 4,
-     "band": 2,
-     "band_size": 242
+     "words": 5,
+     "band": 1,
+     "band_size": 989
     },
     "de": {
-     "words": 4,
-     "band": 2,
-     "band_size": 356
+     "words": 5,
+     "band": 1,
+     "band_size": 391
     },
     "en": {
-     "words": 4,
-     "band": 2,
-     "band_size": 463
+     "words": 5,
+     "band": 1,
+     "band_size": 236
     },
     "es": {
-     "words": 4,
-     "band": 2,
-     "band_size": 499
+     "words": 5,
+     "band": 1,
+     "band_size": 431
     },
     "fil": {
-     "words": 4,
-     "band": 2,
-     "band_size": 417
+     "words": 5,
+     "band": 1,
+     "band_size": 369
     },
     "fr": {
-     "words": 4,
-     "band": 2,
-     "band_size": 470
+     "words": 5,
+     "band": 1,
+     "band_size": 346
     },
     "hi": {
-     "words": 4,
-     "band": 2,
-     "band_size": 295
+     "words": 5,
+     "band": 1,
+     "band_size": 286
     },
     "ja": {
-     "words": 4,
-     "band": 2,
-     "band_size": 127
+     "words": 5,
+     "band": 1,
+     "band_size": 128
     },
     "ko": {
-     "words": 4,
-     "band": 2,
-     "band_size": 683
+     "words": 5,
+     "band": 1,
+     "band_size": 404
     },
     "pl": {
-     "words": 4,
-     "band": 2,
-     "band_size": 464
+     "words": 5,
+     "band": 1,
+     "band_size": 376
     },
     "pt": {
-     "words": 4,
-     "band": 2,
-     "band_size": 238
+     "words": 5,
+     "band": 1,
+     "band_size": 479
     },
     "ru": {
-     "words": 4,
-     "band": 2,
-     "band_size": 443
+     "words": 5,
+     "band": 1,
+     "band_size": 289
     },
     "sw": {
-     "words": 4,
-     "band": 2,
-     "band_size": 437
+     "words": 5,
+     "band": 1,
+     "band_size": 331
     },
     "vi": {
-     "words": 4,
-     "band": 2,
-     "band_size": 453
+     "words": 5,
+     "band": 1,
+     "band_size": 497
     },
     "zh": {
-     "words": 4,
-     "band": 2,
-     "band_size": 123
+     "words": 5,
+     "band": 1,
+     "band_size": 428
     }
    }
   },
   {
-   "name": "shading",
+   "name": "texture",
    "path_ids": [
     8,
     9,
@@ -319,78 +237,78 @@
    "per_language": {
     "ar": {
      "words": 16,
-     "band": 3,
-     "band_size": 23
+     "band": 2,
+     "band_size": 242
     },
     "de": {
      "words": 16,
-     "band": 3,
-     "band_size": 60
+     "band": 2,
+     "band_size": 356
     },
     "en": {
      "words": 16,
-     "band": 3,
-     "band_size": 144
+     "band": 2,
+     "band_size": 463
     },
     "es": {
      "words": 16,
-     "band": 3,
-     "band_size": 63
+     "band": 2,
+     "band_size": 499
     },
     "fil": {
      "words": 16,
-     "band": 3,
-     "band_size": 52
+     "band": 2,
+     "band_size": 417
     },
     "fr": {
      "words": 16,
-     "band": 3,
-     "band_size": 69
+     "band": 2,
+     "band_size": 470
     },
     "hi": {
      "words": 16,
-     "band": 3,
-     "band_size": 500
+     "band": 2,
+     "band_size": 295
     },
     "ja": {
      "words": 16,
-     "band": 3,
-     "band_size": 76
+     "band": 2,
+     "band_size": 34
     },
     "ko": {
      "words": 16,
-     "band": 3,
-     "band_size": 73
+     "band": 2,
+     "band_size": 683
     },
     "pl": {
      "words": 16,
-     "band": 3,
-     "band_size": 34
+     "band": 2,
+     "band_size": 464
     },
     "pt": {
      "words": 16,
-     "band": 3,
-     "band_size": 117
+     "band": 2,
+     "band_size": 238
     },
     "ru": {
      "words": 16,
-     "band": 3,
-     "band_size": 82
+     "band": 2,
+     "band_size": 443
     },
     "sw": {
      "words": 16,
-     "band": 3,
-     "band_size": 35
+     "band": 2,
+     "band_size": 437
     },
     "vi": {
      "words": 16,
-     "band": 3,
-     "band_size": 100
+     "band": 2,
+     "band_size": 453
     },
     "zh": {
      "words": 16,
-     "band": 3,
-     "band_size": 28
+     "band": 2,
+     "band_size": 123
     }
    }
   }
