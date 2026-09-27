@@ -21,44 +21,22 @@ import { execFileSync } from 'node:child_process';
 import { existsSync, readFileSync, writeFileSync, mkdtempSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
+import { KEY, normalize } from './lib/audio-norm.mjs';
 
 const OUT = 'config/audio-verdicts.json';
+// The transcripts live BESIDE the verdicts, not in them. config/ is compiled
+// into the wasm with include_str!, and `heard` is the one field the app
+// explicitly never reads -- audio_verdict.rs says so in its own comment. At
+// 3,165 English clips it was 250 KB of the 364 KB blob, in an offline-first
+// bundle, for data only a report looks at; fifteen measured languages would
+// have been megabytes. Same write, two files.
+const TRANSCRIPTS = 'audio_clarity/transcripts.json';
 const args = Object.fromEntries(
   process.argv.slice(2).flatMap((a, i, all) => (a.startsWith('--') ? [[a.slice(2), all[i + 1]?.startsWith('--') === false ? all[i + 1] : true]] : [])),
 );
 
-/// Census C8: what a recognizer's output is compared against, per language.
-/// zh is the odd one — the player types pinyin, but a recognizer hears and
-/// returns hanzi, so hanzi is the key. ja is unresolved: a recognizer may
-/// return kanji for a kana entry, which would read as a false FAIL, so it is
-/// UNSCORABLE until Eric decides (the spec's own mechanism for exactly this).
-const KEY = {
-  en: 'surface', es: 'surface', fr: 'surface', de: 'surface', pt: 'surface',
-  pl: 'surface', sw: 'surface', fil: 'surface', vi: 'surface',
-  ru: 'surface-yo',      // ё/е equivalence, per CC-PLAYER-CONTRACT D1
-  hi: 'surface', ko: 'surface',
-  ar: 'surface-bare',    // diacritics stripped from the recognizer side
-  zh: 'hanzi',
-  ja: 'unscorable',
-};
 
-/// Recognizers write numbers as digits: "fifth" comes back "5th", "seven"
-/// comes back "7". That is a transcription convention, not a mishearing, and
-/// scoring it FAIL would withhold a perfectly clear clip.
-const DIGIT_WORDS = {
-  '0': 'zero', '1': 'one', '2': 'two', '3': 'three', '4': 'four', '5': 'five',
-  '6': 'six', '7': 'seven', '8': 'eight', '9': 'nine', '10': 'ten',
-  '1st': 'first', '2nd': 'second', '3rd': 'third', '4th': 'fourth', '5th': 'fifth',
-  '6th': 'sixth', '7th': 'seventh', '8th': 'eighth', '9th': 'ninth', '10th': 'tenth',
-};
 
-/// I9: every comparison runs on NFC, case-folded, punctuation stripped.
-function normalize(s, key) {
-  let out = String(s).normalize('NFC').toLowerCase().replace(/[.,!?;:"'`()\[\]{}…—–-]/g, '').trim();
-  if (key === 'surface-yo') out = out.replace(/ё/g, 'е');
-  if (key === 'surface-bare') out = out.replace(/[ً-ْٰ]/g, '');
-  return out;
-}
 
 function whisper(wav, lang) {
   const model = process.env.WHISPER_MODEL;
@@ -84,19 +62,19 @@ function collisionSets(lang) {
     .map((l) => l.trim().split(/\s+/));
 }
 
-function verdictFor(word, key, heard, sets) {
+function verdictFor(word, key, heard, sets, lang) {
   if (key === 'unscorable') return 'Unscorable';
-  const want = normalize(word, key);
-  const hits = heard.filter((h) => normalize(h, key) === want).length;
+  const want = normalize(word, key, lang);
+  const hits = heard.filter((h) => normalize(h, key, lang) === want).length;
   if (hits >= 2) return 'Pass';
   if (hits === 1) return 'Weak';
   // Nothing matched. Before calling it FAIL, ask whether what WAS heard is a
   // member of this word's collision set.
-  const mine = sets.find((set) => set.some((w) => normalize(w, key) === want));
+  const mine = sets.find((set) => set.some((w) => normalize(w, key, lang) === want));
   if (mine) {
     const heardMember = heard.some((h) => {
-      const n = normalize(h, key);
-      return n && mine.some((w) => normalize(w, key) === n);
+      const n = normalize(h, key, lang);
+      return n && mine.some((w) => normalize(w, key, lang) === n);
     });
     if (heardMember) return 'ExemptHomophone';
   }
@@ -108,6 +86,36 @@ async function main() {
   const key = KEY[lang];
   if (!key) throw new Error(`census C8 names no comparison key for ${lang}`);
   const store = existsSync(OUT) ? JSON.parse(readFileSync(OUT, 'utf8')) : { version: 1, measured: [], clips: {} };
+  const heardBy = existsSync(TRANSCRIPTS) ? JSON.parse(readFileSync(TRANSCRIPTS, 'utf8')) : {};
+  // A store written before the split carries its transcripts inline; lift them
+  // out once rather than leaving two shapes in circulation.
+  for (const [k, e] of Object.entries(store.clips)) {
+    if (e.heard) { heardBy[k] = e.heard; delete e.heard; }
+  }
+  const save = (st, tr) => {
+    writeFileSync(OUT, `${JSON.stringify(st, null, 2)}\n`);
+    writeFileSync(TRANSCRIPTS, `${JSON.stringify(tr, null, 1)}\n`);
+  };
+
+  // Re-score from the transcripts already stored, touching no network and no
+  // recognizer. A change to the normaliser is a change to the VERDICT, not to
+  // what was heard, and re-measuring 3,165 clips to apply one is both slow and
+  // a bill. `heard` is recorded for exactly this reason.
+  if (args.rescore) {
+    const sets = collisionSets(lang);
+    let changed = 0;
+    for (const [k, e] of Object.entries(store.clips)) {
+      const [l, word] = k.split('|');
+      if (l !== lang) continue;
+      const heard = heardBy[k];
+      if (!heard?.length) continue; // measured before transcripts were recorded
+      const v = verdictFor(word, key, heard, sets, lang);
+      if (v !== e.v) { changed += 1; e.v = v; }
+    }
+    save(store, heardBy);
+    console.log(`audio-verdicts: re-scored ${lang} from stored transcripts — ${changed} verdict(s) changed`);
+    return;
+  }
 
   if (args['dry-run']) {
     console.log(`lang=${lang} key=${key}`);
@@ -137,7 +145,9 @@ async function main() {
     // for "for" that could not be explained afterwards -- "for" is in the
     // collision table, so it should have been exempt -- and the transcripts
     // were gone. A verdict nobody can account for is not evidence.
-    store.clips[`${lang}|${word}|${variant}`] = { v: verdictFor(word, key, heard, sets), heard };
+    const k = `${lang}|${word}|${variant}`;
+    store.clips[k] = { v: verdictFor(word, key, heard, sets, lang) };
+    heardBy[k] = heard;
     done += 1;
   }
   // Only a run that covered the whole servable set may call a language
@@ -145,7 +155,7 @@ async function main() {
   // claimed the title would make the gate lie about everything it did not look
   // at. A partial run still writes its verdicts -- they are evidence either way.
   if (args.complete && !store.measured.includes(lang)) store.measured.push(lang);
-  writeFileSync(OUT, `${JSON.stringify(store, null, 2)}\n`);
+  save(store, heardBy);
   console.log(
     `audio-verdicts: ${done} clips measured for ${lang}` +
       (args.complete ? ' (marked complete)' : ' (partial — the language is not marked measured)'),

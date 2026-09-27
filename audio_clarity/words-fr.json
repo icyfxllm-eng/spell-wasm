@@ -1,0 +1,302 @@
+[
+ {
+  "word": "espoir",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8199/api/speak?word=espoir&lang=fr&variant=normal"
+ },
+ {
+  "word": "deux",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8199/api/speak?word=deux&lang=fr&variant=normal"
+ },
+ {
+  "word": "ciel",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8199/api/speak?word=ciel&lang=fr&variant=normal"
+ },
+ {
+  "word": "faire",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8199/api/speak?word=faire&lang=fr&variant=normal"
+ },
+ {
+  "word": "poème",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8199/api/speak?word=poème&lang=fr&variant=normal"
+ },
+ {
+  "word": "bon",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8199/api/speak?word=bon&lang=fr&variant=normal"
+ },
+ {
+  "word": "terre",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8199/api/speak?word=terre&lang=fr&variant=normal"
+ },
+ {
+  "word": "lire",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8199/api/speak?word=lire&lang=fr&variant=normal"
+ },
+ {
+  "word": "sept",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8199/api/speak?word=sept&lang=fr&variant=normal"
+ },
+ {
+  "word": "neuf",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8199/api/speak?word=neuf&lang=fr&variant=normal"
+ },
+ {
+  "word": "oiseau",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8199/api/speak?word=oiseau&lang=fr&variant=normal"
+ },
+ {
+  "word": "classe",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8199/api/speak?word=classe&lang=fr&variant=normal"
+ },
+ {
+  "word": "soleil",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8199/api/speak?word=soleil&lang=fr&variant=normal"
+ },
+ {
+  "word": "homme",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8199/api/speak?word=homme&lang=fr&variant=normal"
+ },
+ {
+  "word": "frère",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8199/api/speak?word=frère&lang=fr&variant=normal"
+ },
+ {
+  "word": "moteur",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8199/api/speak?word=moteur&lang=fr&variant=normal"
+ },
+ {
+  "word": "secret",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8199/api/speak?word=secret&lang=fr&variant=normal"
+ },
+ {
+  "word": "baisse",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8199/api/speak?word=baisse&lang=fr&variant=normal"
+ },
+ {
+  "word": "lancé",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8199/api/speak?word=lancé&lang=fr&variant=normal"
+ },
+ {
+  "word": "fruits",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8199/api/speak?word=fruits&lang=fr&variant=normal"
+ },
+ {
+  "word": "noter",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8199/api/speak?word=noter&lang=fr&variant=normal"
+ },
+ {
+  "word": "formé",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8199/api/speak?word=formé&lang=fr&variant=normal"
+ },
+ {
+  "word": "grâce",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8199/api/speak?word=grâce&lang=fr&variant=normal"
+ },
+ {
+  "word": "chacun",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8199/api/speak?word=chacun&lang=fr&variant=normal"
+ },
+ {
+  "word": "apparemment",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8199/api/speak?word=apparemment&lang=fr&variant=normal"
+ },
+ {
+  "word": "succès",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8199/api/speak?word=succès&lang=fr&variant=normal"
+ },
+ {
+  "word": "types",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8199/api/speak?word=types&lang=fr&variant=normal"
+ },
+ {
+  "word": "offre",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8199/api/speak?word=offre&lang=fr&variant=normal"
+ },
+ {
+  "word": "royal",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8199/api/speak?word=royal&lang=fr&variant=normal"
+ },
+ {
+  "word": "option",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8199/api/speak?word=option&lang=fr&variant=normal"
+ },
+ {
+  "word": "basses",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8199/api/speak?word=basses&lang=fr&variant=normal"
+ },
+ {
+  "word": "jolies",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8199/api/speak?word=jolies&lang=fr&variant=normal"
+ },
+ {
+  "word": "traitant",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8199/api/speak?word=traitant&lang=fr&variant=normal"
+ },
+ {
+  "word": "liberté",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8199/api/speak?word=liberté&lang=fr&variant=normal"
+ },
+ {
+  "word": "divine",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8199/api/speak?word=divine&lang=fr&variant=normal"
+ },
+ {
+  "word": "autochtones",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8199/api/speak?word=autochtones&lang=fr&variant=normal"
+ },
+ {
+  "word": "largeur",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8199/api/speak?word=largeur&lang=fr&variant=normal"
+ },
+ {
+  "word": "attaque",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8199/api/speak?word=attaque&lang=fr&variant=normal"
+ },
+ {
+  "word": "solitaire",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8199/api/speak?word=solitaire&lang=fr&variant=normal"
+ },
+ {
+  "word": "monument",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8199/api/speak?word=monument&lang=fr&variant=normal"
+ },
+ {
+  "word": "ordonne",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8199/api/speak?word=ordonne&lang=fr&variant=normal"
+ },
+ {
+  "word": "devient",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8199/api/speak?word=devient&lang=fr&variant=normal"
+ },
+ {
+  "word": "faciles",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8199/api/speak?word=faciles&lang=fr&variant=normal"
+ },
+ {
+  "word": "intégrale",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8199/api/speak?word=intégrale&lang=fr&variant=normal"
+ },
+ {
+  "word": "fiers",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8199/api/speak?word=fiers&lang=fr&variant=normal"
+ },
+ {
+  "word": "cultivées",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8199/api/speak?word=cultivées&lang=fr&variant=normal"
+ },
+ {
+  "word": "résidences",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8199/api/speak?word=résidences&lang=fr&variant=normal"
+ },
+ {
+  "word": "déluge",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8199/api/speak?word=déluge&lang=fr&variant=normal"
+ },
+ {
+  "word": "odyssée",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8199/api/speak?word=odyssée&lang=fr&variant=normal"
+ },
+ {
+  "word": "bologne",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8199/api/speak?word=bologne&lang=fr&variant=normal"
+ },
+ {
+  "word": "tardivement",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8199/api/speak?word=tardivement&lang=fr&variant=normal"
+ },
+ {
+  "word": "arrivaient",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8199/api/speak?word=arrivaient&lang=fr&variant=normal"
+ },
+ {
+  "word": "dosage",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8199/api/speak?word=dosage&lang=fr&variant=normal"
+ },
+ {
+  "word": "retrouvons",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8199/api/speak?word=retrouvons&lang=fr&variant=normal"
+ },
+ {
+  "word": "contempler",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8199/api/speak?word=contempler&lang=fr&variant=normal"
+ },
+ {
+  "word": "angelo",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8199/api/speak?word=angelo&lang=fr&variant=normal"
+ },
+ {
+  "word": "brutalité",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8199/api/speak?word=brutalité&lang=fr&variant=normal"
+ },
+ {
+  "word": "gore",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8199/api/speak?word=gore&lang=fr&variant=normal"
+ },
+ {
+  "word": "snow",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8199/api/speak?word=snow&lang=fr&variant=normal"
+ },
+ {
+  "word": "embouchure",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8199/api/speak?word=embouchure&lang=fr&variant=normal"
+ }
+]

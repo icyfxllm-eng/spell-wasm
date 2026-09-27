@@ -1,0 +1,302 @@
+[
+ {
+  "word": "vòng",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8199/api/speak?word=vòng&lang=vi&variant=normal"
+ },
+ {
+  "word": "dễ",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8199/api/speak?word=dễ&lang=vi&variant=normal"
+ },
+ {
+  "word": "chó",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8199/api/speak?word=chó&lang=vi&variant=normal"
+ },
+ {
+  "word": "tiệm",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8199/api/speak?word=tiệm&lang=vi&variant=normal"
+ },
+ {
+  "word": "biết",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8199/api/speak?word=biết&lang=vi&variant=normal"
+ },
+ {
+  "word": "tốt",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8199/api/speak?word=tốt&lang=vi&variant=normal"
+ },
+ {
+  "word": "bốn",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8199/api/speak?word=bốn&lang=vi&variant=normal"
+ },
+ {
+  "word": "thuyền",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8199/api/speak?word=thuyền&lang=vi&variant=normal"
+ },
+ {
+  "word": "biển",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8199/api/speak?word=biển&lang=vi&variant=normal"
+ },
+ {
+  "word": "xương",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8199/api/speak?word=xương&lang=vi&variant=normal"
+ },
+ {
+  "word": "đây",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8199/api/speak?word=đây&lang=vi&variant=normal"
+ },
+ {
+  "word": "khói",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8199/api/speak?word=khói&lang=vi&variant=normal"
+ },
+ {
+  "word": "nhà",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8199/api/speak?word=nhà&lang=vi&variant=normal"
+ },
+ {
+  "word": "bạn",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8199/api/speak?word=bạn&lang=vi&variant=normal"
+ },
+ {
+  "word": "xây",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8199/api/speak?word=xây&lang=vi&variant=normal"
+ },
+ {
+  "word": "boong",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8199/api/speak?word=boong&lang=vi&variant=normal"
+ },
+ {
+  "word": "khách",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8199/api/speak?word=khách&lang=vi&variant=normal"
+ },
+ {
+  "word": "huyết",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8199/api/speak?word=huyết&lang=vi&variant=normal"
+ },
+ {
+  "word": "hiđrô",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8199/api/speak?word=hiđrô&lang=vi&variant=normal"
+ },
+ {
+  "word": "remix",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8199/api/speak?word=remix&lang=vi&variant=normal"
+ },
+ {
+  "word": "triệu",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8199/api/speak?word=triệu&lang=vi&variant=normal"
+ },
+ {
+  "word": "truyền",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8199/api/speak?word=truyền&lang=vi&variant=normal"
+ },
+ {
+  "word": "salon",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8199/api/speak?word=salon&lang=vi&variant=normal"
+ },
+ {
+  "word": "duyệt",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8199/api/speak?word=duyệt&lang=vi&variant=normal"
+ },
+ {
+  "word": "viếng",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8199/api/speak?word=viếng&lang=vi&variant=normal"
+ },
+ {
+  "word": "thịnh",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8199/api/speak?word=thịnh&lang=vi&variant=normal"
+ },
+ {
+  "word": "whisky",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8199/api/speak?word=whisky&lang=vi&variant=normal"
+ },
+ {
+  "word": "click",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8199/api/speak?word=click&lang=vi&variant=normal"
+ },
+ {
+  "word": "chuộng",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8199/api/speak?word=chuộng&lang=vi&variant=normal"
+ },
+ {
+  "word": "ngươi",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8199/api/speak?word=ngươi&lang=vi&variant=normal"
+ },
+ {
+  "word": "stanley",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8199/api/speak?word=stanley&lang=vi&variant=normal"
+ },
+ {
+  "word": "district",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8199/api/speak?word=district&lang=vi&variant=normal"
+ },
+ {
+  "word": "lily",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8199/api/speak?word=lily&lang=vi&variant=normal"
+ },
+ {
+  "word": "bitegmic",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8199/api/speak?word=bitegmic&lang=vi&variant=normal"
+ },
+ {
+  "word": "toạ",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8199/api/speak?word=toạ&lang=vi&variant=normal"
+ },
+ {
+  "word": "baroque",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8199/api/speak?word=baroque&lang=vi&variant=normal"
+ },
+ {
+  "word": "adenine",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8199/api/speak?word=adenine&lang=vi&variant=normal"
+ },
+ {
+  "word": "applies",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8199/api/speak?word=applies&lang=vi&variant=normal"
+ },
+ {
+  "word": "dilatus",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8199/api/speak?word=dilatus&lang=vi&variant=normal"
+ },
+ {
+  "word": "niệu",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8199/api/speak?word=niệu&lang=vi&variant=normal"
+ },
+ {
+  "word": "rìu",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8199/api/speak?word=rìu&lang=vi&variant=normal"
+ },
+ {
+  "word": "mascara",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8199/api/speak?word=mascara&lang=vi&variant=normal"
+ },
+ {
+  "word": "alkaloid",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8199/api/speak?word=alkaloid&lang=vi&variant=normal"
+ },
+ {
+  "word": "facebook",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8199/api/speak?word=facebook&lang=vi&variant=normal"
+ },
+ {
+  "word": "kền",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8199/api/speak?word=kền&lang=vi&variant=normal"
+ },
+ {
+  "word": "serial",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8199/api/speak?word=serial&lang=vi&variant=normal"
+ },
+ {
+  "word": "biserialis",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8199/api/speak?word=biserialis&lang=vi&variant=normal"
+ },
+ {
+  "word": "wants",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8199/api/speak?word=wants&lang=vi&variant=normal"
+ },
+ {
+  "word": "sama",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8199/api/speak?word=sama&lang=vi&variant=normal"
+ },
+ {
+  "word": "nagoya",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8199/api/speak?word=nagoya&lang=vi&variant=normal"
+ },
+ {
+  "word": "diversion",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8199/api/speak?word=diversion&lang=vi&variant=normal"
+ },
+ {
+  "word": "marine",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8199/api/speak?word=marine&lang=vi&variant=normal"
+ },
+ {
+  "word": "dolores",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8199/api/speak?word=dolores&lang=vi&variant=normal"
+ },
+ {
+  "word": "gallagher",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8199/api/speak?word=gallagher&lang=vi&variant=normal"
+ },
+ {
+  "word": "ira",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8199/api/speak?word=ira&lang=vi&variant=normal"
+ },
+ {
+  "word": "chingsang",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8199/api/speak?word=chingsang&lang=vi&variant=normal"
+ },
+ {
+  "word": "canariensis",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8199/api/speak?word=canariensis&lang=vi&variant=normal"
+ },
+ {
+  "word": "pham",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8199/api/speak?word=pham&lang=vi&variant=normal"
+ },
+ {
+  "word": "katrina",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8199/api/speak?word=katrina&lang=vi&variant=normal"
+ },
+ {
+  "word": "rama",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8199/api/speak?word=rama&lang=vi&variant=normal"
+ }
+]

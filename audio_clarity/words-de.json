@@ -1,0 +1,302 @@
+[
+ {
+  "word": "kreis",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8199/api/speak?word=kreis&lang=de&variant=normal"
+ },
+ {
+  "word": "osten",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8199/api/speak?word=osten&lang=de&variant=normal"
+ },
+ {
+  "word": "schauen",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8199/api/speak?word=schauen&lang=de&variant=normal"
+ },
+ {
+  "word": "boden",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8199/api/speak?word=boden&lang=de&variant=normal"
+ },
+ {
+  "word": "reise",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8199/api/speak?word=reise&lang=de&variant=normal"
+ },
+ {
+  "word": "stark",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8199/api/speak?word=stark&lang=de&variant=normal"
+ },
+ {
+  "word": "metall",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8199/api/speak?word=metall&lang=de&variant=normal"
+ },
+ {
+  "word": "tee",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8199/api/speak?word=tee&lang=de&variant=normal"
+ },
+ {
+  "word": "lang",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8199/api/speak?word=lang&lang=de&variant=normal"
+ },
+ {
+  "word": "Nacht",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8199/api/speak?word=Nacht&lang=de&variant=normal"
+ },
+ {
+  "word": "kette",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8199/api/speak?word=kette&lang=de&variant=normal"
+ },
+ {
+  "word": "denken",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8199/api/speak?word=denken&lang=de&variant=normal"
+ },
+ {
+  "word": "schmerz",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8199/api/speak?word=schmerz&lang=de&variant=normal"
+ },
+ {
+  "word": "Fenster",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8199/api/speak?word=Fenster&lang=de&variant=normal"
+ },
+ {
+  "word": "Blatt",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8199/api/speak?word=Blatt&lang=de&variant=normal"
+ },
+ {
+  "word": "endete",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8199/api/speak?word=endete&lang=de&variant=normal"
+ },
+ {
+  "word": "sehen",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8199/api/speak?word=sehen&lang=de&variant=normal"
+ },
+ {
+  "word": "besten",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8199/api/speak?word=besten&lang=de&variant=normal"
+ },
+ {
+  "word": "ersten",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8199/api/speak?word=ersten&lang=de&variant=normal"
+ },
+ {
+  "word": "kurzen",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8199/api/speak?word=kurzen&lang=de&variant=normal"
+ },
+ {
+  "word": "fanden",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8199/api/speak?word=fanden&lang=de&variant=normal"
+ },
+ {
+  "word": "üblich",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8199/api/speak?word=üblich&lang=de&variant=normal"
+ },
+ {
+  "word": "sagte",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8199/api/speak?word=sagte&lang=de&variant=normal"
+ },
+ {
+  "word": "trieb",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8199/api/speak?word=trieb&lang=de&variant=normal"
+ },
+ {
+  "word": "lagen",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8199/api/speak?word=lagen&lang=de&variant=normal"
+ },
+ {
+  "word": "republik",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8199/api/speak?word=republik&lang=de&variant=normal"
+ },
+ {
+  "word": "einem",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8199/api/speak?word=einem&lang=de&variant=normal"
+ },
+ {
+  "word": "sammlung",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8199/api/speak?word=sammlung&lang=de&variant=normal"
+ },
+ {
+  "word": "begab",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8199/api/speak?word=begab&lang=de&variant=normal"
+ },
+ {
+  "word": "große",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8199/api/speak?word=große&lang=de&variant=normal"
+ },
+ {
+  "word": "forschungen",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8199/api/speak?word=forschungen&lang=de&variant=normal"
+ },
+ {
+  "word": "sinnvoll",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8199/api/speak?word=sinnvoll&lang=de&variant=normal"
+ },
+ {
+  "word": "mitteilen",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8199/api/speak?word=mitteilen&lang=de&variant=normal"
+ },
+ {
+  "word": "übliche",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8199/api/speak?word=übliche&lang=de&variant=normal"
+ },
+ {
+  "word": "unentschieden",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8199/api/speak?word=unentschieden&lang=de&variant=normal"
+ },
+ {
+  "word": "aufzeichnungen",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8199/api/speak?word=aufzeichnungen&lang=de&variant=normal"
+ },
+ {
+  "word": "verlegen",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8199/api/speak?word=verlegen&lang=de&variant=normal"
+ },
+ {
+  "word": "grundgesetz",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8199/api/speak?word=grundgesetz&lang=de&variant=normal"
+ },
+ {
+  "word": "gewählten",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8199/api/speak?word=gewählten&lang=de&variant=normal"
+ },
+ {
+  "word": "diebstahl",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8199/api/speak?word=diebstahl&lang=de&variant=normal"
+ },
+ {
+  "word": "direkten",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8199/api/speak?word=direkten&lang=de&variant=normal"
+ },
+ {
+  "word": "ueber",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8199/api/speak?word=ueber&lang=de&variant=normal"
+ },
+ {
+  "word": "einfallen",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8199/api/speak?word=einfallen&lang=de&variant=normal"
+ },
+ {
+  "word": "orientiert",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8199/api/speak?word=orientiert&lang=de&variant=normal"
+ },
+ {
+  "word": "stich",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8199/api/speak?word=stich&lang=de&variant=normal"
+ },
+ {
+  "word": "rechtswidrig",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8199/api/speak?word=rechtswidrig&lang=de&variant=normal"
+ },
+ {
+  "word": "zuordnen",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8199/api/speak?word=zuordnen&lang=de&variant=normal"
+ },
+ {
+  "word": "wiege",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8199/api/speak?word=wiege&lang=de&variant=normal"
+ },
+ {
+  "word": "jahrzehntelang",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8199/api/speak?word=jahrzehntelang&lang=de&variant=normal"
+ },
+ {
+  "word": "polnischen",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8199/api/speak?word=polnischen&lang=de&variant=normal"
+ },
+ {
+  "word": "optimismus",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8199/api/speak?word=optimismus&lang=de&variant=normal"
+ },
+ {
+  "word": "financial",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8199/api/speak?word=financial&lang=de&variant=normal"
+ },
+ {
+  "word": "wacker",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8199/api/speak?word=wacker&lang=de&variant=normal"
+ },
+ {
+  "word": "orientierte",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8199/api/speak?word=orientierte&lang=de&variant=normal"
+ },
+ {
+  "word": "automatisch",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8199/api/speak?word=automatisch&lang=de&variant=normal"
+ },
+ {
+  "word": "frohes",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8199/api/speak?word=frohes&lang=de&variant=normal"
+ },
+ {
+  "word": "ökonomisch",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8199/api/speak?word=ökonomisch&lang=de&variant=normal"
+ },
+ {
+  "word": "sogenannten",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8199/api/speak?word=sogenannten&lang=de&variant=normal"
+ },
+ {
+  "word": "beispielsweise",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8199/api/speak?word=beispielsweise&lang=de&variant=normal"
+ },
+ {
+  "word": "diplomatie",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8199/api/speak?word=diplomatie&lang=de&variant=normal"
+ }
+]

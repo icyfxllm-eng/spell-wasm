@@ -2,5 +2,9501 @@
   "_comment": "CC-AUDIO-CLARITY v1.1 F2. Written by scripts/audio-verdicts.mjs, which transcribes every served clip with two recognizers and compares against the census C8 key for that language. Never edited by hand: a verdict is evidence, and hand-editing it would make I1 a claim instead of a fact. `measured` lists the languages whose clip set has been measured end to end; F7's CI gate is strict about those and reports the rest as unmeasured.",
   "version": 1,
   "measured": [],
-  "clips": {}
+  "clips": {
+    "en|cat|normal": {
+      "v": "Pass"
+    },
+    "en|dog|normal": {
+      "v": "Pass"
+    },
+    "en|sun|normal": {
+      "v": "Pass"
+    },
+    "en|run|normal": {
+      "v": "Pass"
+    },
+    "en|hat|normal": {
+      "v": "Pass"
+    },
+    "en|bed|normal": {
+      "v": "Pass"
+    },
+    "en|cup|normal": {
+      "v": "Pass"
+    },
+    "en|fish|normal": {
+      "v": "Pass"
+    },
+    "en|milk|normal": {
+      "v": "Pass"
+    },
+    "en|tree|normal": {
+      "v": "Pass"
+    },
+    "en|book|normal": {
+      "v": "Pass"
+    },
+    "en|star|normal": {
+      "v": "Pass"
+    },
+    "en|frog|normal": {
+      "v": "Pass"
+    },
+    "en|jump|normal": {
+      "v": "Pass"
+    },
+    "en|rain|normal": {
+      "v": "Pass"
+    },
+    "en|gold|normal": {
+      "v": "Pass"
+    },
+    "en|hand|normal": {
+      "v": "Pass"
+    },
+    "en|ship|normal": {
+      "v": "Pass"
+    },
+    "en|leaf|normal": {
+      "v": "Pass"
+    },
+    "en|nest|normal": {
+      "v": "Pass"
+    },
+    "en|bird|normal": {
+      "v": "Pass"
+    },
+    "en|corn|normal": {
+      "v": "Pass"
+    },
+    "en|desk|normal": {
+      "v": "Pass"
+    },
+    "en|door|normal": {
+      "v": "Pass"
+    },
+    "en|duck|normal": {
+      "v": "Pass"
+    },
+    "en|farm|normal": {
+      "v": "Pass"
+    },
+    "en|fox|normal": {
+      "v": "Pass"
+    },
+    "en|gift|normal": {
+      "v": "Pass"
+    },
+    "en|girl|normal": {
+      "v": "Pass"
+    },
+    "en|hill|normal": {
+      "v": "Pass"
+    },
+    "en|horse|normal": {
+      "v": "Pass"
+    },
+    "en|kite|normal": {
+      "v": "Pass"
+    },
+    "en|lamp|normal": {
+      "v": "Pass"
+    },
+    "en|lion|normal": {
+      "v": "Pass"
+    },
+    "en|map|normal": {
+      "v": "Pass"
+    },
+    "en|moon|normal": {
+      "v": "Pass"
+    },
+    "en|mouse|normal": {
+      "v": "Pass"
+    },
+    "en|nose|normal": {
+      "v": "Pass"
+    },
+    "en|pig|normal": {
+      "v": "Pass"
+    },
+    "en|rock|normal": {
+      "v": "Pass"
+    },
+    "en|rose|normal": {
+      "v": "Pass"
+    },
+    "en|seed|normal": {
+      "v": "Pass"
+    },
+    "en|snow|normal": {
+      "v": "Pass"
+    },
+    "en|sock|normal": {
+      "v": "Pass"
+    },
+    "en|swim|normal": {
+      "v": "Pass"
+    },
+    "en|tent|normal": {
+      "v": "Pass"
+    },
+    "en|wind|normal": {
+      "v": "Pass"
+    },
+    "en|wolf|normal": {
+      "v": "Pass"
+    },
+    "en|worm|normal": {
+      "v": "Weak"
+    },
+    "en|zoo|normal": {
+      "v": "Pass"
+    },
+    "en|the|normal": {
+      "v": "Pass"
+    },
+    "en|of|normal": {
+      "v": "Pass"
+    },
+    "en|and|normal": {
+      "v": "Fail"
+    },
+    "en|to|normal": {
+      "v": "ExemptHomophone"
+    },
+    "en|in|normal": {
+      "v": "Pass"
+    },
+    "en|is|normal": {
+      "v": "Pass"
+    },
+    "en|was|normal": {
+      "v": "Pass"
+    },
+    "en|that|normal": {
+      "v": "Pass"
+    },
+    "en|for|normal": {
+      "v": "ExemptHomophone"
+    },
+    "en|as|normal": {
+      "v": "Pass"
+    },
+    "en|with|normal": {
+      "v": "Pass"
+    },
+    "en|by|normal": {
+      "v": "ExemptHomophone"
+    },
+    "en|on|normal": {
+      "v": "Pass"
+    },
+    "en|are|normal": {
+      "v": "ExemptHomophone"
+    },
+    "en|from|normal": {
+      "v": "Pass"
+    },
+    "en|be|normal": {
+      "v": "ExemptHomophone"
+    },
+    "en|or|normal": {
+      "v": "Pass"
+    },
+    "en|his|normal": {
+      "v": "Pass"
+    },
+    "en|were|normal": {
+      "v": "Weak"
+    },
+    "en|it|normal": {
+      "v": "Pass"
+    },
+    "en|an|normal": {
+      "v": "Fail"
+    },
+    "en|at|normal": {
+      "v": "Pass"
+    },
+    "en|not|normal": {
+      "v": "Weak"
+    },
+    "en|have|normal": {
+      "v": "Pass"
+    },
+    "en|he|normal": {
+      "v": "Weak"
+    },
+    "en|had|normal": {
+      "v": "Pass"
+    },
+    "en|also|normal": {
+      "v": "Pass"
+    },
+    "en|has|normal": {
+      "v": "Pass"
+    },
+    "en|this|normal": {
+      "v": "Pass"
+    },
+    "en|but|normal": {
+      "v": "Pass"
+    },
+    "en|one|normal": {
+      "v": "Pass"
+    },
+    "en|its|normal": {
+      "v": "Pass"
+    },
+    "en|can|normal": {
+      "v": "Pass"
+    },
+    "en|been|normal": {
+      "v": "ExemptHomophone"
+    },
+    "en|more|normal": {
+      "v": "Pass"
+    },
+    "en|they|normal": {
+      "v": "Pass"
+    },
+    "en|used|normal": {
+      "v": "Pass"
+    },
+    "en|all|normal": {
+      "v": "Pass"
+    },
+    "en|into|normal": {
+      "v": "Weak"
+    },
+    "en|two|normal": {
+      "v": "Pass"
+    },
+    "en|than|normal": {
+      "v": "Fail"
+    },
+    "en|only|normal": {
+      "v": "Pass"
+    },
+    "en|time|normal": {
+      "v": "Pass"
+    },
+    "en|most|normal": {
+      "v": "Pass"
+    },
+    "en|who|normal": {
+      "v": "Pass"
+    },
+    "en|some|normal": {
+      "v": "ExemptHomophone"
+    },
+    "en|such|normal": {
+      "v": "Pass"
+    },
+    "en|may|normal": {
+      "v": "Pass"
+    },
+    "en|when|normal": {
+      "v": "Pass"
+    },
+    "en|many|normal": {
+      "v": "Pass"
+    },
+    "en|her|normal": {
+      "v": "Weak"
+    },
+    "en|over|normal": {
+      "v": "Pass"
+    },
+    "en|use|normal": {
+      "v": "Pass"
+    },
+    "en|no|normal": {
+      "v": "Pass"
+    },
+    "en|new|normal": {
+      "v": "Pass"
+    },
+    "en|will|normal": {
+      "v": "Weak"
+    },
+    "en|him|normal": {
+      "v": "Pass"
+    },
+    "en|them|normal": {
+      "v": "Pass"
+    },
+    "en|made|normal": {
+      "v": "Pass"
+    },
+    "en|out|normal": {
+      "v": "Pass"
+    },
+    "en|up|normal": {
+      "v": "Pass"
+    },
+    "en|both|normal": {
+      "v": "Pass"
+    },
+    "en|then|normal": {
+      "v": "Pass"
+    },
+    "en|so|normal": {
+      "v": "Pass"
+    },
+    "en|any|normal": {
+      "v": "Pass"
+    },
+    "en|main|normal": {
+      "v": "Weak"
+    },
+    "en|each|normal": {
+      "v": "Pass"
+    },
+    "en|if|normal": {
+      "v": "Pass"
+    },
+    "en|well|normal": {
+      "v": "Pass"
+    },
+    "en|same|normal": {
+      "v": "Pass"
+    },
+    "en|work|normal": {
+      "v": "Pass"
+    },
+    "en|part|normal": {
+      "v": "Pass"
+    },
+    "en|very|normal": {
+      "v": "Pass"
+    },
+    "en|year|normal": {
+      "v": "Pass"
+    },
+    "en|did|normal": {
+      "v": "Pass"
+    },
+    "en|much|normal": {
+      "v": "Pass"
+    },
+    "en|city|normal": {
+      "v": "Pass"
+    },
+    "en|she|normal": {
+      "v": "Pass"
+    },
+    "en|do|normal": {
+      "v": "Pass"
+    },
+    "en|own|normal": {
+      "v": "Pass"
+    },
+    "en|even|normal": {
+      "v": "Pass"
+    },
+    "en|form|normal": {
+      "v": "Pass"
+    },
+    "en|high|normal": {
+      "v": "ExemptHomophone"
+    },
+    "en|life|normal": {
+      "v": "Pass"
+    },
+    "en|set|normal": {
+      "v": "Pass"
+    },
+    "en|now|normal": {
+      "v": "Pass"
+    },
+    "en|name|normal": {
+      "v": "Pass"
+    },
+    "en|end|normal": {
+      "v": "Pass"
+    },
+    "en|what|normal": {
+      "v": "Pass"
+    },
+    "en|make|normal": {
+      "v": "Pass"
+    },
+    "en|like|normal": {
+      "v": "Pass"
+    },
+    "en|area|normal": {
+      "v": "Pass"
+    },
+    "en|long|normal": {
+      "v": "Pass"
+    },
+    "en|four|normal": {
+      "v": "Pass"
+    },
+    "en|due|normal": {
+      "v": "ExemptHomophone"
+    },
+    "en|must|normal": {
+      "v": "Pass"
+    },
+    "en|said|normal": {
+      "v": "Pass"
+    },
+    "en|few|normal": {
+      "v": "Pass"
+    },
+    "en|way|normal": {
+      "v": "Pass"
+    },
+    "en|film|normal": {
+      "v": "Pass"
+    },
+    "en|less|normal": {
+      "v": "Weak"
+    },
+    "en|does|normal": {
+      "v": "Pass"
+    },
+    "en|left|normal": {
+      "v": "Pass"
+    },
+    "en|back|normal": {
+      "v": "Pass"
+    },
+    "en|war|normal": {
+      "v": "Weak"
+    },
+    "en|took|normal": {
+      "v": "Weak"
+    },
+    "en|see|normal": {
+      "v": "ExemptHomophone"
+    },
+    "en|game|normal": {
+      "v": "Pass"
+    },
+    "en|last|normal": {
+      "v": "Pass"
+    },
+    "en|line|normal": {
+      "v": "Pass"
+    },
+    "en|day|normal": {
+      "v": "Weak"
+    },
+    "en|term|normal": {
+      "v": "Pass"
+    },
+    "en|case|normal": {
+      "v": "Pass"
+    },
+    "en|down|normal": {
+      "v": "Pass"
+    },
+    "en|off|normal": {
+      "v": "Pass"
+    },
+    "en|just|normal": {
+      "v": "Pass"
+    },
+    "en|we|normal": {
+      "v": "Weak"
+    },
+    "en|data|normal": {
+      "v": "Pass"
+    },
+    "en|led|normal": {
+      "v": "ExemptHomophone"
+    },
+    "en|held|normal": {
+      "v": "Pass"
+    },
+    "en|law|normal": {
+      "v": "Pass"
+    },
+    "en|body|normal": {
+      "v": "Pass"
+    },
+    "en|late|normal": {
+      "v": "Pass"
+    },
+    "en|take|normal": {
+      "v": "Pass"
+    },
+    "en|how|normal": {
+      "v": "Pass"
+    },
+    "en|word|normal": {
+      "v": "Pass"
+    },
+    "en|home|normal": {
+      "v": "Pass"
+    },
+    "en|men|normal": {
+      "v": "Pass"
+    },
+    "en|per|normal": {
+      "v": "Weak"
+    },
+    "en|you|normal": {
+      "v": "Weak"
+    },
+    "en|show|normal": {
+      "v": "Pass"
+    },
+    "en|next|normal": {
+      "v": "Pass"
+    },
+    "en|died|normal": {
+      "v": "Pass"
+    },
+    "en|age|normal": {
+      "v": "Pass"
+    },
+    "en|came|normal": {
+      "v": "Pass"
+    },
+    "en|play|normal": {
+      "v": "Pass"
+    },
+    "en|seen|normal": {
+      "v": "Weak"
+    },
+    "en|five|normal": {
+      "v": "Pass"
+    },
+    "en|old|normal": {
+      "v": "Pass"
+    },
+    "en|low|normal": {
+      "v": "Pass"
+    },
+    "en|land|normal": {
+      "v": "Pass"
+    },
+    "en|days|normal": {
+      "v": "Pass"
+    },
+    "en|able|normal": {
+      "v": "Pass"
+    },
+    "en|free|normal": {
+      "v": "Pass"
+    },
+    "en|air|normal": {
+      "v": "Weak"
+    },
+    "en|role|normal": {
+      "v": "ExemptHomophone"
+    },
+    "en|good|normal": {
+      "v": "Pass"
+    },
+    "en|man|normal": {
+      "v": "Pass"
+    },
+    "en|size|normal": {
+      "v": "Pass"
+    },
+    "en|side|normal": {
+      "v": "Pass"
+    },
+    "en|team|normal": {
+      "v": "Pass"
+    },
+    "en|once|normal": {
+      "v": "Pass"
+    },
+    "en|thus|normal": {
+      "v": "Pass"
+    },
+    "en|type|normal": {
+      "v": "Pass"
+    },
+    "en|rate|normal": {
+      "v": "Fail"
+    },
+    "en|too|normal": {
+      "v": "ExemptHomophone"
+    },
+    "en|upon|normal": {
+      "v": "Pass"
+    },
+    "en|band|normal": {
+      "v": "Pass"
+    },
+    "en|best|normal": {
+      "v": "Pass"
+    },
+    "en|need|normal": {
+      "v": "Pass"
+    },
+    "en|full|normal": {
+      "v": "Pass"
+    },
+    "en|us|normal": {
+      "v": "Pass"
+    },
+    "en|far|normal": {
+      "v": "Pass"
+    },
+    "en|went|normal": {
+      "v": "Pass"
+    },
+    "en|lost|normal": {
+      "v": "Pass"
+    },
+    "en|king|normal": {
+      "v": "Pass"
+    },
+    "en|away|normal": {
+      "v": "Pass"
+    },
+    "en|fact|normal": {
+      "v": "Pass"
+    },
+    "en|uses|normal": {
+      "v": "Weak"
+    },
+    "en|art|normal": {
+      "v": "Pass"
+    },
+    "en|god|normal": {
+      "v": "Pass"
+    },
+    "en|six|normal": {
+      "v": "Pass"
+    },
+    "en|food|normal": {
+      "v": "Pass"
+    },
+    "en|army|normal": {
+      "v": "Pass"
+    },
+    "en|come|normal": {
+      "v": "Weak"
+    },
+    "en|half|normal": {
+      "v": "Pass"
+    },
+    "en|help|normal": {
+      "v": "Pass"
+    },
+    "en|open|normal": {
+      "v": "Pass"
+    },
+    "en|gave|normal": {
+      "v": "Pass"
+    },
+    "en|true|normal": {
+      "v": "Pass"
+    },
+    "en|top|normal": {
+      "v": "Pass"
+    },
+    "en|head|normal": {
+      "v": "Pass"
+    },
+    "en|west|normal": {
+      "v": "Pass"
+    },
+    "en|give|normal": {
+      "v": "Pass"
+    },
+    "en|near|normal": {
+      "v": "Pass"
+    },
+    "en|won|normal": {
+      "v": "ExemptHomophone"
+    },
+    "en|move|normal": {
+      "v": "Pass"
+    },
+    "en|get|normal": {
+      "v": "Pass"
+    },
+    "en|key|normal": {
+      "v": "Pass"
+    },
+    "en|lead|normal": {
+      "v": "Pass"
+    },
+    "en|put|normal": {
+      "v": "Weak"
+    },
+    "en|live|normal": {
+      "v": "Pass"
+    },
+    "en|fire|normal": {
+      "v": "Pass"
+    },
+    "en|east|normal": {
+      "v": "Pass"
+    },
+    "en|view|normal": {
+      "v": "Pass"
+    },
+    "en|real|normal": {
+      "v": "Pass"
+    },
+    "en|my|normal": {
+      "v": "Weak"
+    },
+    "en|sent|normal": {
+      "v": "Weak"
+    },
+    "en|son|normal": {
+      "v": "ExemptHomophone"
+    },
+    "en|past|normal": {
+      "v": "Pass"
+    },
+    "en|idea|normal": {
+      "v": "Pass"
+    },
+    "en|rule|normal": {
+      "v": "Pass"
+    },
+    "en|our|normal": {
+      "v": "ExemptHomophone"
+    },
+    "en|code|normal": {
+      "v": "Pass"
+    },
+    "en|soon|normal": {
+      "v": "Pass"
+    },
+    "en|find|normal": {
+      "v": "Pass"
+    },
+    "en|saw|normal": {
+      "v": "Pass"
+    },
+    "en|town|normal": {
+      "v": "Pass"
+    },
+    "en|me|normal": {
+      "v": "Pass"
+    },
+    "en|done|normal": {
+      "v": "Pass"
+    },
+    "en|cost|normal": {
+      "v": "Pass"
+    },
+    "en|base|normal": {
+      "v": "Weak"
+    },
+    "en|ever|normal": {
+      "v": "Pass"
+    },
+    "en|rest|normal": {
+      "v": "Pass"
+    },
+    "en|text|normal": {
+      "v": "Pass"
+    },
+    "en|mass|normal": {
+      "v": "Pass"
+    },
+    "en|sea|normal": {
+      "v": "ExemptHomophone"
+    },
+    "en|go|normal": {
+      "v": "Pass"
+    },
+    "en|sold|normal": {
+      "v": "Pass"
+    },
+    "en|song|normal": {
+      "v": "Pass"
+    },
+    "en|wide|normal": {
+      "v": "Pass"
+    },
+    "en|loss|normal": {
+      "v": "Pass"
+    },
+    "en|lack|normal": {
+      "v": "Pass"
+    },
+    "en|oil|normal": {
+      "v": "Pass"
+    },
+    "en|keep|normal": {
+      "v": "Pass"
+    },
+    "en|wife|normal": {
+      "v": "Pass"
+    },
+    "en|cell|normal": {
+      "v": "Pass"
+    },
+    "en|love|normal": {
+      "v": "Pass"
+    },
+    "en|gas|normal": {
+      "v": "Pass"
+    },
+    "en|turn|normal": {
+      "v": "Pass"
+    },
+    "en|yet|normal": {
+      "v": "Pass"
+    },
+    "en|say|normal": {
+      "v": "Pass"
+    },
+    "en|site|normal": {
+      "v": "Pass"
+    },
+    "en|act|normal": {
+      "v": "Pass"
+    },
+    "en|cut|normal": {
+      "v": "Pass"
+    },
+    "en|list|normal": {
+      "v": "Pass"
+    },
+    "en|born|normal": {
+      "v": "Pass"
+    },
+    "en|read|normal": {
+      "v": "Pass"
+    },
+    "en|know|normal": {
+      "v": "ExemptHomophone"
+    },
+    "en|ten|normal": {
+      "v": "Pass"
+    },
+    "en|flow|normal": {
+      "v": "Pass"
+    },
+    "en|met|normal": {
+      "v": "Pass"
+    },
+    "en|laws|normal": {
+      "v": "Pass"
+    },
+    "en|red|normal": {
+      "v": "Pass"
+    },
+    "en|heat|normal": {
+      "v": "Pass"
+    },
+    "en|test|normal": {
+      "v": "Pass"
+    },
+    "en|call|normal": {
+      "v": "Pass"
+    },
+    "en|male|normal": {
+      "v": "ExemptHomophone"
+    },
+    "en|ways|normal": {
+      "v": "Weak"
+    },
+    "en|hold|normal": {
+      "v": "Pass"
+    },
+    "en|date|normal": {
+      "v": "Pass"
+    },
+    "en|sets|normal": {
+      "v": "Pass"
+    },
+    "en|face|normal": {
+      "v": "Pass"
+    },
+    "en|here|normal": {
+      "v": "Pass"
+    },
+    "en|hard|normal": {
+      "v": "Pass"
+    },
+    "en|poor|normal": {
+      "v": "Pass"
+    },
+    "en|told|normal": {
+      "v": "Pass"
+    },
+    "en|via|normal": {
+      "v": "Pass"
+    },
+    "en|plan|normal": {
+      "v": "Pass"
+    },
+    "en|kept|normal": {
+      "v": "Pass"
+    },
+    "en|hit|normal": {
+      "v": "Pass"
+    },
+    "en|tax|normal": {
+      "v": "Pass"
+    },
+    "en|fall|normal": {
+      "v": "Pass"
+    },
+    "en|whom|normal": {
+      "v": "Pass"
+    },
+    "en|era|normal": {
+      "v": "Pass"
+    },
+    "en|deal|normal": {
+      "v": "Pass"
+    },
+    "en|unit|normal": {
+      "v": "Weak"
+    },
+    "en|page|normal": {
+      "v": "Pass"
+    },
+    "en|vote|normal": {
+      "v": "Pass"
+    },
+    "en|race|normal": {
+      "v": "Pass"
+    },
+    "en|mean|normal": {
+      "v": "Pass"
+    },
+    "en|fuel|normal": {
+      "v": "Pass"
+    },
+    "en|felt|normal": {
+      "v": "Pass"
+    },
+    "en|rise|normal": {
+      "v": "Pass"
+    },
+    "en|road|normal": {
+      "v": "Pass"
+    },
+    "en|room|normal": {
+      "v": "Pass"
+    },
+    "en|park|normal": {
+      "v": "Pass"
+    },
+    "en|care|normal": {
+      "v": "Pass"
+    },
+    "en|cast|normal": {
+      "v": "Pass"
+    },
+    "en|goal|normal": {
+      "v": "Pass"
+    },
+    "en|shot|normal": {
+      "v": "Pass"
+    },
+    "en|tour|normal": {
+      "v": "Pass"
+    },
+    "en|says|normal": {
+      "v": "Pass"
+    },
+    "en|tend|normal": {
+      "v": "Fail"
+    },
+    "en|wave|normal": {
+      "v": "Pass"
+    },
+    "en|risk|normal": {
+      "v": "Pass"
+    },
+    "en|win|normal": {
+      "v": "Weak"
+    },
+    "en|meet|normal": {
+      "v": "Pass"
+    },
+    "en|user|normal": {
+      "v": "Pass"
+    },
+    "en|vary|normal": {
+      "v": "ExemptHomophone"
+    },
+    "en|crew|normal": {
+      "v": "Pass"
+    },
+    "en|dead|normal": {
+      "v": "Pass"
+    },
+    "en|kind|normal": {
+      "v": "Pass"
+    },
+    "en|pay|normal": {
+      "v": "Pass"
+    },
+    "en|ball|normal": {
+      "v": "Pass"
+    },
+    "en|car|normal": {
+      "v": "Pass"
+    },
+    "en|nor|normal": {
+      "v": "Pass"
+    },
+    "en|lord|normal": {
+      "v": "Pass"
+    },
+    "en|acid|normal": {
+      "v": "Pass"
+    },
+    "en|stop|normal": {
+      "v": "Pass"
+    },
+    "en|your|normal": {
+      "v": "Weak"
+    },
+    "en|grew|normal": {
+      "v": "Pass"
+    },
+    "en|pass|normal": {
+      "v": "Pass"
+    },
+    "en|week|normal": {
+      "v": "Pass"
+    },
+    "en|gain|normal": {
+      "v": "Pass"
+    },
+    "en|blue|normal": {
+      "v": "Pass"
+    },
+    "en|aid|normal": {
+      "v": "Weak"
+    },
+    "en|hall|normal": {
+      "v": "Pass"
+    },
+    "en|ones|normal": {
+      "v": "Fail"
+    },
+    "en|pope|normal": {
+      "v": "Pass"
+    },
+    "en|look|normal": {
+      "v": "Pass"
+    },
+    "en|paid|normal": {
+      "v": "Pass"
+    },
+    "en|runs|normal": {
+      "v": "Pass"
+    },
+    "en|why|normal": {
+      "v": "Weak"
+    },
+    "en|step|normal": {
+      "v": "Pass"
+    },
+    "en|zero|normal": {
+      "v": "Pass"
+    },
+    "en|core|normal": {
+      "v": "Pass"
+    },
+    "en|ice|normal": {
+      "v": "Pass"
+    },
+    "en|fell|normal": {
+      "v": "Weak"
+    },
+    "en|cars|normal": {
+      "v": "Pass"
+    },
+    "en|file|normal": {
+      "v": "Pass"
+    },
+    "en|host|normal": {
+      "v": "Pass"
+    },
+    "en|navy|normal": {
+      "v": "Pass"
+    },
+    "en|mind|normal": {
+      "v": "Pass"
+    },
+    "en|pair|normal": {
+      "v": "Pass"
+    },
+    "en|skin|normal": {
+      "v": "Pass"
+    },
+    "en|wall|normal": {
+      "v": "Pass"
+    },
+    "en|mode|normal": {
+      "v": "Pass"
+    },
+    "en|rare|normal": {
+      "v": "Pass"
+    },
+    "en|sign|normal": {
+      "v": "Pass"
+    },
+    "en|arms|normal": {
+      "v": "Pass"
+    },
+    "en|onto|normal": {
+      "v": "Weak"
+    },
+    "en|lake|normal": {
+      "v": "Pass"
+    },
+    "en|nine|normal": {
+      "v": "Pass"
+    },
+    "en|bus|normal": {
+      "v": "Pass"
+    },
+    "en|card|normal": {
+      "v": "Pass"
+    },
+    "en|dry|normal": {
+      "v": "Pass"
+    },
+    "en|sex|normal": {
+      "v": "Weak"
+    },
+    "en|dark|normal": {
+      "v": "Pass"
+    },
+    "en|feet|normal": {
+      "v": "Pass"
+    },
+    "en|got|normal": {
+      "v": "Pass"
+    },
+    "en|acts|normal": {
+      "v": "Pass"
+    },
+    "en|soil|normal": {
+      "v": "Pass"
+    },
+    "en|want|normal": {
+      "v": "Pass"
+    },
+    "en|port|normal": {
+      "v": "Pass"
+    },
+    "en|ran|normal": {
+      "v": "Weak"
+    },
+    "en|fast|normal": {
+      "v": "Pass"
+    },
+    "en|news|normal": {
+      "v": "Pass"
+    },
+    "en|note|normal": {
+      "v": "Pass"
+    },
+    "en|path|normal": {
+      "v": "Pass"
+    },
+    "en|deep|normal": {
+      "v": "Pass"
+    },
+    "en|job|normal": {
+      "v": "Pass"
+    },
+    "en|bank|normal": {
+      "v": "Pass"
+    },
+    "en|club|normal": {
+      "v": "Pass"
+    },
+    "en|goes|normal": {
+      "v": "Pass"
+    },
+    "en|join|normal": {
+      "v": "Pass"
+    },
+    "en|die|normal": {
+      "v": "Pass"
+    },
+    "en|link|normal": {
+      "v": "Pass"
+    },
+    "en|ring|normal": {
+      "v": "Pass"
+    },
+    "en|big|normal": {
+      "v": "Pass"
+    },
+    "en|ends|normal": {
+      "v": "Pass"
+    },
+    "en|post|normal": {
+      "v": "Pass"
+    },
+    "en|hot|normal": {
+      "v": "Pass"
+    },
+    "en|bit|normal": {
+      "v": "Pass"
+    },
+    "en|let|normal": {
+      "v": "Pass"
+    },
+    "en|edge|normal": {
+      "v": "Pass"
+    },
+    "en|vast|normal": {
+      "v": "Pass"
+    },
+    "en|box|normal": {
+      "v": "Pass"
+    },
+    "en|rank|normal": {
+      "v": "Pass"
+    },
+    "en|seem|normal": {
+      "v": "ExemptHomophone"
+    },
+    "en|slow|normal": {
+      "v": "Pass"
+    },
+    "en|bay|normal": {
+      "v": "Fail"
+    },
+    "en|am|normal": {
+      "v": "Fail"
+    },
+    "en|kill|normal": {
+      "v": "Pass"
+    },
+    "en|try|normal": {
+      "v": "Pass"
+    },
+    "en|cold|normal": {
+      "v": "Pass"
+    },
+    "en|grow|normal": {
+      "v": "Pass"
+    },
+    "en|mark|normal": {
+      "v": "Pass"
+    },
+    "en|task|normal": {
+      "v": "Pass"
+    },
+    "en|root|normal": {
+      "v": "Weak"
+    },
+    "en|iron|normal": {
+      "v": "Pass"
+    },
+    "en|bass|normal": {
+      "v": "ExemptHomophone"
+    },
+    "en|disk|normal": {
+      "v": "ExemptHomophone"
+    },
+    "en|eye|normal": {
+      "v": "ExemptHomophone"
+    },
+    "en|meat|normal": {
+      "v": "ExemptHomophone"
+    },
+    "en|wear|normal": {
+      "v": "ExemptHomophone"
+    },
+    "en|la|normal": {
+      "v": "Weak"
+    },
+    "en|bits|normal": {
+      "v": "Pass"
+    },
+    "en|feel|normal": {
+      "v": "Pass"
+    },
+    "en|fine|normal": {
+      "v": "Pass"
+    },
+    "en|wood|normal": {
+      "v": "Weak"
+    },
+    "en|fit|normal": {
+      "v": "Pass"
+    },
+    "en|drug|normal": {
+      "v": "Pass"
+    },
+    "en|pure|normal": {
+      "v": "Pass"
+    },
+    "en|save|normal": {
+      "v": "Pass"
+    },
+    "en|easy|normal": {
+      "v": "Pass"
+    },
+    "en|fans|normal": {
+      "v": "Pass"
+    },
+    "en|pain|normal": {
+      "v": "Pass"
+    },
+    "en|stay|normal": {
+      "v": "Pass"
+    },
+    "en|ad|normal": {
+      "v": "ExemptHomophone"
+    },
+    "en|flat|normal": {
+      "v": "Pass"
+    },
+    "en|hair|normal": {
+      "v": "Pass"
+    },
+    "en|add|normal": {
+      "v": "Pass"
+    },
+    "en|ago|normal": {
+      "v": "Weak"
+    },
+    "en|else|normal": {
+      "v": "Pass"
+    },
+    "en|foot|normal": {
+      "v": "Pass"
+    },
+    "en|send|normal": {
+      "v": "Pass"
+    },
+    "en|tube|normal": {
+      "v": "Pass"
+    },
+    "en|arts|normal": {
+      "v": "Pass"
+    },
+    "en|bad|normal": {
+      "v": "Pass"
+    },
+    "en|weak|normal": {
+      "v": "ExemptHomophone"
+    },
+    "en|eyes|normal": {
+      "v": "Pass"
+    },
+    "en|seat|normal": {
+      "v": "Pass"
+    },
+    "en|draw|normal": {
+      "v": "Pass"
+    },
+    "en|guns|normal": {
+      "v": "Pass"
+    },
+    "en|sort|normal": {
+      "v": "Weak"
+    },
+    "en|lee|normal": {
+      "v": "Pass"
+    },
+    "en|knew|normal": {
+      "v": "ExemptHomophone"
+    },
+    "en|rich|normal": {
+      "v": "Pass"
+    },
+    "en|seek|normal": {
+      "v": "Pass"
+    },
+    "en|copy|normal": {
+      "v": "Pass"
+    },
+    "en|evil|normal": {
+      "v": "Pass"
+    },
+    "en|fear|normal": {
+      "v": "Pass"
+    },
+    "en|tone|normal": {
+      "v": "Pass"
+    },
+    "en|lies|normal": {
+      "v": "Pass"
+    },
+    "en|debt|normal": {
+      "v": "Pass"
+    },
+    "en|none|normal": {
+      "v": "Pass"
+    },
+    "en|zone|normal": {
+      "v": "Pass"
+    },
+    "en|tell|normal": {
+      "v": "Pass"
+    },
+    "en|sir|normal": {
+      "v": "Pass"
+    },
+    "en|wild|normal": {
+      "v": "Pass"
+    },
+    "en|huge|normal": {
+      "v": "Pass"
+    },
+    "en|plot|normal": {
+      "v": "Pass"
+    },
+    "en|suit|normal": {
+      "v": "Pass"
+    },
+    "en|holy|normal": {
+      "v": "Pass"
+    },
+    "en|bill|normal": {
+      "v": "Pass"
+    },
+    "en|drop|normal": {
+      "v": "Pass"
+    },
+    "en|duty|normal": {
+      "v": "Pass"
+    },
+    "en|folk|normal": {
+      "v": "Pass"
+    },
+    "en|peak|normal": {
+      "v": "Pass"
+    },
+    "en|sell|normal": {
+      "v": "ExemptHomophone"
+    },
+    "en|bowl|normal": {
+      "v": "Weak"
+    },
+    "en|safe|normal": {
+      "v": "Pass"
+    },
+    "en|boat|normal": {
+      "v": "Weak"
+    },
+    "en|jazz|normal": {
+      "v": "Pass"
+    },
+    "en|plus|normal": {
+      "v": "Weak"
+    },
+    "en|tool|normal": {
+      "v": "Pass"
+    },
+    "en|bar|normal": {
+      "v": "Pass"
+    },
+    "en|hope|normal": {
+      "v": "Pass"
+    },
+    "en|net|normal": {
+      "v": "Pass"
+    },
+    "en|duke|normal": {
+      "v": "Weak"
+    },
+    "en|hole|normal": {
+      "v": "ExemptHomophone"
+    },
+    "en|lot|normal": {
+      "v": "Pass"
+    },
+    "en|poem|normal": {
+      "v": "Pass"
+    },
+    "en|boy|normal": {
+      "v": "Pass"
+    },
+    "en|jobs|normal": {
+      "v": "Pass"
+    },
+    "en|soul|normal": {
+      "v": "Pass"
+    },
+    "en|wire|normal": {
+      "v": "Pass"
+    },
+    "en|thin|normal": {
+      "v": "Pass"
+    },
+    "en|camp|normal": {
+      "v": "Pass"
+    },
+    "en|logo|normal": {
+      "v": "Pass"
+    },
+    "en|sale|normal": {
+      "v": "Pass"
+    },
+    "en|trip|normal": {
+      "v": "Pass"
+    },
+    "en|rail|normal": {
+      "v": "Pass"
+    },
+    "en|tail|normal": {
+      "v": "Pass"
+    },
+    "en|disc|normal": {
+      "v": "Pass"
+    },
+    "en|web|normal": {
+      "v": "Pass"
+    },
+    "en|eggs|normal": {
+      "v": "Pass"
+    },
+    "en|fan|normal": {
+      "v": "Pass"
+    },
+    "en|lay|normal": {
+      "v": "Weak"
+    },
+    "en|diet|normal": {
+      "v": "Pass"
+    },
+    "en|laid|normal": {
+      "v": "Pass"
+    },
+    "en|legs|normal": {
+      "v": "Pass"
+    },
+    "en|load|normal": {
+      "v": "Pass"
+    },
+    "en|lose|normal": {
+      "v": "Pass"
+    },
+    "en|row|normal": {
+      "v": "Fail"
+    },
+    "en|jack|normal": {
+      "v": "Pass"
+    },
+    "en|gods|normal": {
+      "v": "Pass"
+    },
+    "en|loop|normal": {
+      "v": "Pass"
+    },
+    "en|rear|normal": {
+      "v": "Fail"
+    },
+    "en|tape|normal": {
+      "v": "Pass"
+    },
+    "en|buy|normal": {
+      "v": "ExemptHomophone"
+    },
+    "en|rely|normal": {
+      "v": "Pass"
+    },
+    "en|axis|normal": {
+      "v": "Fail"
+    },
+    "en|bear|normal": {
+      "v": "Fail"
+    },
+    "en|bulk|normal": {
+      "v": "Weak"
+    },
+    "en|firm|normal": {
+      "v": "Pass"
+    },
+    "en|soft|normal": {
+      "v": "Pass"
+    },
+    "en|sons|normal": {
+      "v": "Pass"
+    },
+    "en|worn|normal": {
+      "v": "ExemptHomophone"
+    },
+    "en|bell|normal": {
+      "v": "Weak"
+    },
+    "en|van|normal": {
+      "v": "Pass"
+    },
+    "en|wars|normal": {
+      "v": "Pass"
+    },
+    "en|arm|normal": {
+      "v": "Pass"
+    },
+    "en|beat|normal": {
+      "v": "Pass"
+    },
+    "en|gene|normal": {
+      "v": "Pass"
+    },
+    "en|gone|normal": {
+      "v": "Pass"
+    },
+    "en|hour|normal": {
+      "v": "Weak"
+    },
+    "en|roll|normal": {
+      "v": "Pass"
+    },
+    "en|wing|normal": {
+      "v": "Pass"
+    },
+    "en|gun|normal": {
+      "v": "Weak"
+    },
+    "en|beam|normal": {
+      "v": "Pass"
+    },
+    "en|drew|normal": {
+      "v": "Pass"
+    },
+    "en|ions|normal": {
+      "v": "Pass"
+    },
+    "en|lady|normal": {
+      "v": "Pass"
+    },
+    "en|aim|normal": {
+      "v": "Pass"
+    },
+    "en|bond|normal": {
+      "v": "Pass"
+    },
+    "en|cash|normal": {
+      "v": "Pass"
+    },
+    "en|gets|normal": {
+      "v": "Pass"
+    },
+    "en|keys|normal": {
+      "v": "Pass"
+    },
+    "en|solo|normal": {
+      "v": "Pass"
+    },
+    "en|sum|normal": {
+      "v": "Weak"
+    },
+    "en|warm|normal": {
+      "v": "Pass"
+    },
+    "en|wine|normal": {
+      "v": "Pass"
+    },
+    "en|bob|normal": {
+      "v": "Pass"
+    },
+    "en|fly|normal": {
+      "v": "Pass"
+    },
+    "en|tank|normal": {
+      "v": "Pass"
+    },
+    "en|ties|normal": {
+      "v": "Pass"
+    },
+    "en|talk|normal": {
+      "v": "Pass"
+    },
+    "en|tom|normal": {
+      "v": "Pass"
+    },
+    "en|boys|normal": {
+      "v": "Pass"
+    },
+    "en|fill|normal": {
+      "v": "Weak"
+    },
+    "en|node|normal": {
+      "v": "Pass"
+    },
+    "en|rice|normal": {
+      "v": "Pass"
+    },
+    "en|sky|normal": {
+      "v": "Pass"
+    },
+    "en|vice|normal": {
+      "v": "Pass"
+    },
+    "en|wish|normal": {
+      "v": "Pass"
+    },
+    "en|bone|normal": {
+      "v": "Pass"
+    },
+    "en|salt|normal": {
+      "v": "Pass"
+    },
+    "en|spin|normal": {
+      "v": "Pass"
+    },
+    "en|bomb|normal": {
+      "v": "Pass"
+    },
+    "en|feed|normal": {
+      "v": "Pass"
+    },
+    "en|hear|normal": {
+      "v": "ExemptHomophone"
+    },
+    "en|mix|normal": {
+      "v": "Pass"
+    },
+    "en|tied|normal": {
+      "v": "ExemptHomophone"
+    },
+    "en|wins|normal": {
+      "v": "Pass"
+    },
+    "en|drum|normal": {
+      "v": "Pass"
+    },
+    "en|eat|normal": {
+      "v": "Pass"
+    },
+    "en|ask|normal": {
+      "v": "Pass"
+    },
+    "en|cool|normal": {
+      "v": "Pass"
+    },
+    "en|leg|normal": {
+      "v": "Pass"
+    },
+    "en|mail|normal": {
+      "v": "Pass"
+    },
+    "en|atom|normal": {
+      "v": "Pass"
+    },
+    "en|noun|normal": {
+      "v": "Pass"
+    },
+    "en|prey|normal": {
+      "v": "ExemptHomophone"
+    },
+    "en|sole|normal": {
+      "v": "ExemptHomophone"
+    },
+    "en|fair|normal": {
+      "v": "Pass"
+    },
+    "en|flag|normal": {
+      "v": "Pass"
+    },
+    "en|neck|normal": {
+      "v": "Weak"
+    },
+    "en|odd|normal": {
+      "v": "Pass"
+    },
+    "en|adds|normal": {
+      "v": "Fail"
+    },
+    "en|jet|normal": {
+      "v": "Pass"
+    },
+    "en|mere|normal": {
+      "v": "Weak"
+    },
+    "en|sure|normal": {
+      "v": "Pass"
+    },
+    "en|fort|normal": {
+      "v": "Pass"
+    },
+    "en|bid|normal": {
+      "v": "Pass"
+    },
+    "en|spot|normal": {
+      "v": "Pass"
+    },
+    "en|tons|normal": {
+      "v": "Pass"
+    },
+    "en|chip|normal": {
+      "v": "Fail"
+    },
+    "en|lift|normal": {
+      "v": "Weak"
+    },
+    "en|raw|normal": {
+      "v": "Pass"
+    },
+    "en|sees|normal": {
+      "v": "Fail"
+    },
+    "en|coal|normal": {
+      "v": "Weak"
+    },
+    "en|ages|normal": {
+      "v": "Pass"
+    },
+    "en|beer|normal": {
+      "v": "Pass"
+    },
+    "en|belt|normal": {
+      "v": "Weak"
+    },
+    "en|cuts|normal": {
+      "v": "Pass"
+    },
+    "en|fate|normal": {
+      "v": "Pass"
+    },
+    "en|flew|normal": {
+      "v": "ExemptHomophone"
+    },
+    "en|grid|normal": {
+      "v": "Pass"
+    },
+    "en|lie|normal": {
+      "v": "Weak"
+    },
+    "en|poet|normal": {
+      "v": "Pass"
+    },
+    "en|tall|normal": {
+      "v": "Pass"
+    },
+    "en|el|normal": {
+      "v": "ExemptHomophone"
+    },
+    "en|asks|normal": {
+      "v": "Pass"
+    },
+    "en|fail|normal": {
+      "v": "Pass"
+    },
+    "en|gap|normal": {
+      "v": "Pass"
+    },
+    "en|pop|normal": {
+      "v": "Pass"
+    },
+    "en|sand|normal": {
+      "v": "Pass"
+    },
+    "en|bars|normal": {
+      "v": "Pass"
+    },
+    "en|bet|normal": {
+      "v": "Weak"
+    },
+    "en|deck|normal": {
+      "v": "Pass"
+    },
+    "en|pump|normal": {
+      "v": "Pass"
+    },
+    "en|push|normal": {
+      "v": "Pass"
+    },
+    "en|tea|normal": {
+      "v": "ExemptHomophone"
+    },
+    "en|ban|normal": {
+      "v": "Fail"
+    },
+    "en|ill|normal": {
+      "v": "Pass"
+    },
+    "en|lens|normal": {
+      "v": "Pass"
+    },
+    "en|pool|normal": {
+      "v": "Weak"
+    },
+    "en|verb|normal": {
+      "v": "Pass"
+    },
+    "en|burn|normal": {
+      "v": "Pass"
+    },
+    "en|fat|normal": {
+      "v": "Pass"
+    },
+    "en|harm|normal": {
+      "v": "Pass"
+    },
+    "en|hits|normal": {
+      "v": "Pass"
+    },
+    "en|oral|normal": {
+      "v": "Pass"
+    },
+    "en|self|normal": {
+      "v": "Pass"
+    },
+    "en|bush|normal": {
+      "v": "Pass"
+    },
+    "en|gulf|normal": {
+      "v": "Pass"
+    },
+    "en|khan|normal": {
+      "v": "Weak"
+    },
+    "en|crop|normal": {
+      "v": "Pass"
+    },
+    "en|fame|normal": {
+      "v": "Pass"
+    },
+    "en|fled|normal": {
+      "v": "Pass"
+    },
+    "en|oath|normal": {
+      "v": "Pass"
+    },
+    "en|shut|normal": {
+      "v": "Pass"
+    },
+    "en|java|normal": {
+      "v": "Pass"
+    },
+    "en|os|normal": {
+      "v": "Pass"
+    },
+    "en|baby|normal": {
+      "v": "Pass"
+    },
+    "en|dust|normal": {
+      "v": "Pass"
+    },
+    "en|ion|normal": {
+      "v": "Pass"
+    },
+    "en|wage|normal": {
+      "v": "Pass"
+    },
+    "en|wet|normal": {
+      "v": "Pass"
+    },
+    "en|item|normal": {
+      "v": "Pass"
+    },
+    "en|jury|normal": {
+      "v": "Pass"
+    },
+    "en|tip|normal": {
+      "v": "Pass"
+    },
+    "en|walk|normal": {
+      "v": "Pass"
+    },
+    "en|trek|normal": {
+      "v": "Pass"
+    },
+    "en|coup|normal": {
+      "v": "Fail"
+    },
+    "en|en|normal": {
+      "v": "ExemptHomophone"
+    },
+    "en|gay|normal": {
+      "v": "Pass"
+    },
+    "en|maps|normal": {
+      "v": "Pass"
+    },
+    "en|sing|normal": {
+      "v": "Pass"
+    },
+    "en|sit|normal": {
+      "v": "Pass"
+    },
+    "en|wore|normal": {
+      "v": "ExemptHomophone"
+    },
+    "en|cape|normal": {
+      "v": "Pass"
+    },
+    "en|aged|normal": {
+      "v": "Pass"
+    },
+    "en|clay|normal": {
+      "v": "Weak"
+    },
+    "en|fed|normal": {
+      "v": "Pass"
+    },
+    "en|fee|normal": {
+      "v": "Weak"
+    },
+    "en|mild|normal": {
+      "v": "Pass"
+    },
+    "en|punk|normal": {
+      "v": "Pass"
+    },
+    "en|seal|normal": {
+      "v": "Pass"
+    },
+    "en|mac|normal": {
+      "v": "Pass"
+    },
+    "en|dose|normal": {
+      "v": "Weak"
+    },
+    "en|fund|normal": {
+      "v": "Pass"
+    },
+    "en|ride|normal": {
+      "v": "Pass"
+    },
+    "en|wait|normal": {
+      "v": "Pass"
+    },
+    "en|ram|normal": {
+      "v": "Pass"
+    },
+    "en|blow|normal": {
+      "v": "Pass"
+    },
+    "en|ease|normal": {
+      "v": "Weak"
+    },
+    "en|horn|normal": {
+      "v": "Pass"
+    },
+    "en|hull|normal": {
+      "v": "Pass"
+    },
+    "en|myth|normal": {
+      "v": "Pass"
+    },
+    "en|pipe|normal": {
+      "v": "Pass"
+    },
+    "en|roof|normal": {
+      "v": "Pass"
+    },
+    "en|sail|normal": {
+      "v": "ExemptHomophone"
+    },
+    "en|don|normal": {
+      "v": "Weak"
+    },
+    "en|bias|normal": {
+      "v": "Pass"
+    },
+    "en|boom|normal": {
+      "v": "Pass"
+    },
+    "en|dual|normal": {
+      "v": "Weak"
+    },
+    "en|gate|normal": {
+      "v": "Pass"
+    },
+    "en|pull|normal": {
+      "v": "Pass"
+    },
+    "en|sake|normal": {
+      "v": "Pass"
+    },
+    "en|slot|normal": {
+      "v": "Pass"
+    },
+    "en|bow|normal": {
+      "v": "Pass"
+    },
+    "en|ink|normal": {
+      "v": "Weak"
+    },
+    "en|bind|normal": {
+      "v": "Pass"
+    },
+    "en|dogs|normal": {
+      "v": "Pass"
+    },
+    "en|ear|normal": {
+      "v": "Pass"
+    },
+    "en|rays|normal": {
+      "v": "ExemptHomophone"
+    },
+    "en|tale|normal": {
+      "v": "ExemptHomophone"
+    },
+    "en|tie|normal": {
+      "v": "Pass"
+    },
+    "en|coat|normal": {
+      "v": "Fail"
+    },
+    "en|drag|normal": {
+      "v": "Pass"
+    },
+    "en|gear|normal": {
+      "v": "Pass"
+    },
+    "en|hunt|normal": {
+      "v": "Pass"
+    },
+    "en|span|normal": {
+      "v": "Pass"
+    },
+    "en|leo|normal": {
+      "v": "Pass"
+    },
+    "en|aims|normal": {
+      "v": "Fail"
+    },
+    "en|cult|normal": {
+      "v": "Pass"
+    },
+    "en|heir|normal": {
+      "v": "ExemptHomophone"
+    },
+    "en|mile|normal": {
+      "v": "Pass"
+    },
+    "en|mine|normal": {
+      "v": "Pass"
+    },
+    "en|pick|normal": {
+      "v": "Pass"
+    },
+    "en|stem|normal": {
+      "v": "Pass"
+    },
+    "en|tiny|normal": {
+      "v": "Pass"
+    },
+    "en|earl|normal": {
+      "v": "Pass"
+    },
+    "en|eve|normal": {
+      "v": "Pass"
+    },
+    "en|coin|normal": {
+      "v": "Pass"
+    },
+    "en|shop|normal": {
+      "v": "Pass"
+    },
+    "en|wake|normal": {
+      "v": "Weak"
+    },
+    "en|hide|normal": {
+      "v": "Pass"
+    },
+    "en|lit|normal": {
+      "v": "Pass"
+    },
+    "en|rows|normal": {
+      "v": "ExemptHomophone"
+    },
+    "en|arc|normal": {
+      "v": "ExemptHomophone"
+    },
+    "en|dish|normal": {
+      "v": "Pass"
+    },
+    "en|inch|normal": {
+      "v": "Pass"
+    },
+    "en|pot|normal": {
+      "v": "Pass"
+    },
+    "en|sin|normal": {
+      "v": "Pass"
+    },
+    "en|ski|normal": {
+      "v": "Pass"
+    },
+    "en|ben|normal": {
+      "v": "Fail"
+    },
+    "en|cook|normal": {
+      "v": "Pass"
+    },
+    "en|max|normal": {
+      "v": "Pass"
+    },
+    "en|coil|normal": {
+      "v": "Pass"
+    },
+    "en|dies|normal": {
+      "v": "Weak"
+    },
+    "en|egg|normal": {
+      "v": "Pass"
+    },
+    "en|gray|normal": {
+      "v": "Pass"
+    },
+    "en|hip|normal": {
+      "v": "Pass"
+    },
+    "en|loan|normal": {
+      "v": "Weak"
+    },
+    "en|meal|normal": {
+      "v": "Pass"
+    },
+    "en|odds|normal": {
+      "v": "Pass"
+    },
+    "en|pace|normal": {
+      "v": "Pass"
+    },
+    "en|pole|normal": {
+      "v": "Weak"
+    },
+    "en|fees|normal": {
+      "v": "Pass"
+    },
+    "en|beta|normal": {
+      "v": "Pass"
+    },
+    "en|dot|normal": {
+      "v": "Fail"
+    },
+    "en|flee|normal": {
+      "v": "Weak"
+    },
+    "en|fun|normal": {
+      "v": "Pass"
+    },
+    "en|golf|normal": {
+      "v": "Pass"
+    },
+    "en|hop|normal": {
+      "v": "Pass"
+    },
+    "en|log|normal": {
+      "v": "Pass"
+    },
+    "en|cloud|normal": {
+      "v": "Pass"
+    },
+    "en|flower|normal": {
+      "v": "Pass"
+    },
+    "en|grass|normal": {
+      "v": "Pass"
+    },
+    "en|mouth|normal": {
+      "v": "Pass"
+    },
+    "en|smoke|normal": {
+      "v": "Pass"
+    },
+    "en|window|normal": {
+      "v": "Pass"
+    },
+    "en|pear|normal": {
+      "v": "ExemptHomophone"
+    },
+    "en|bicycle|normal": {
+      "v": "Pass"
+    },
+    "en|kitchen|normal": {
+      "v": "Pass"
+    },
+    "en|monster|normal": {
+      "v": "Pass"
+    },
+    "en|picture|normal": {
+      "v": "Pass"
+    },
+    "en|brother|normal": {
+      "v": "Pass"
+    },
+    "en|holiday|normal": {
+      "v": "Pass"
+    },
+    "en|library|normal": {
+      "v": "Pass"
+    },
+    "en|machine|normal": {
+      "v": "Pass"
+    },
+    "en|balloon|normal": {
+      "v": "Pass"
+    },
+    "en|diamond|normal": {
+      "v": "Pass"
+    },
+    "en|journey|normal": {
+      "v": "Pass"
+    },
+    "en|mountain|normal": {
+      "v": "Pass"
+    },
+    "en|calendar|normal": {
+      "v": "Pass"
+    },
+    "en|elephant|normal": {
+      "v": "Pass"
+    },
+    "en|sandwich|normal": {
+      "v": "Pass"
+    },
+    "en|chocolate|normal": {
+      "v": "Pass"
+    },
+    "en|umbrella|normal": {
+      "v": "Pass"
+    },
+    "en|treasure|normal": {
+      "v": "Pass"
+    },
+    "en|hospital|normal": {
+      "v": "Pass"
+    },
+    "en|festival|normal": {
+      "v": "Pass"
+    },
+    "en|adventure|normal": {
+      "v": "Pass"
+    },
+    "en|afternoon|normal": {
+      "v": "Pass"
+    },
+    "en|building|normal": {
+      "v": "Pass"
+    },
+    "en|business|normal": {
+      "v": "Pass"
+    },
+    "en|children|normal": {
+      "v": "Pass"
+    },
+    "en|computer|normal": {
+      "v": "Pass"
+    },
+    "en|dinosaur|normal": {
+      "v": "Pass"
+    },
+    "en|envelope|normal": {
+      "v": "Pass"
+    },
+    "en|exercise|normal": {
+      "v": "Pass"
+    },
+    "en|favorite|normal": {
+      "v": "Pass"
+    },
+    "en|furniture|normal": {
+      "v": "Pass"
+    },
+    "en|grocery|normal": {
+      "v": "Pass"
+    },
+    "en|hamburger|normal": {
+      "v": "Pass"
+    },
+    "en|important|normal": {
+      "v": "Pass"
+    },
+    "en|keyboard|normal": {
+      "v": "Pass"
+    },
+    "en|language|normal": {
+      "v": "Pass"
+    },
+    "en|mushroom|normal": {
+      "v": "Pass"
+    },
+    "en|notebook|normal": {
+      "v": "Pass"
+    },
+    "en|orchestra|normal": {
+      "v": "Pass"
+    },
+    "en|painting|normal": {
+      "v": "Pass"
+    },
+    "en|pancake|normal": {
+      "v": "Pass"
+    },
+    "en|pumpkin|normal": {
+      "v": "Pass"
+    },
+    "en|question|normal": {
+      "v": "Pass"
+    },
+    "en|rainbow|normal": {
+      "v": "Pass"
+    },
+    "en|sausage|normal": {
+      "v": "Pass"
+    },
+    "en|sculpture|normal": {
+      "v": "Pass"
+    },
+    "en|sneakers|normal": {
+      "v": "Pass"
+    },
+    "en|stadium|normal": {
+      "v": "Pass"
+    },
+    "en|suitcase|normal": {
+      "v": "Pass"
+    },
+    "en|telephone|normal": {
+      "v": "Pass"
+    },
+    "en|which|normal": {
+      "v": "Pass"
+    },
+    "en|their|normal": {
+      "v": "ExemptHomophone"
+    },
+    "en|other|normal": {
+      "v": "Pass"
+    },
+    "en|first|normal": {
+      "v": "Pass"
+    },
+    "en|would|normal": {
+      "v": "Weak"
+    },
+    "en|after|normal": {
+      "v": "Pass"
+    },
+    "en|there|normal": {
+      "v": "Pass"
+    },
+    "en|years|normal": {
+      "v": "Pass"
+    },
+    "en|about|normal": {
+      "v": "Pass"
+    },
+    "en|these|normal": {
+      "v": "Pass"
+    },
+    "en|during|normal": {
+      "v": "Pass"
+    },
+    "en|often|normal": {
+      "v": "Pass"
+    },
+    "en|where|normal": {
+      "v": "Pass"
+    },
+    "en|being|normal": {
+      "v": "Pass"
+    },
+    "en|number|normal": {
+      "v": "Pass"
+    },
+    "en|system|normal": {
+      "v": "Pass"
+    },
+    "en|could|normal": {
+      "v": "Pass"
+    },
+    "en|people|normal": {
+      "v": "Pass"
+    },
+    "en|known|normal": {
+      "v": "Pass"
+    },
+    "en|while|normal": {
+      "v": "Pass"
+    },
+    "en|called|normal": {
+      "v": "Pass"
+    },
+    "en|before|normal": {
+      "v": "Pass"
+    },
+    "en|later|normal": {
+      "v": "Pass"
+    },
+    "en|three|normal": {
+      "v": "Pass"
+    },
+    "en|under|normal": {
+      "v": "Pass"
+    },
+    "en|became|normal": {
+      "v": "Pass"
+    },
+    "en|united|normal": {
+      "v": "Pass"
+    },
+    "en|large|normal": {
+      "v": "Pass"
+    },
+    "en|found|normal": {
+      "v": "Pass"
+    },
+    "en|until|normal": {
+      "v": "Pass"
+    },
+    "en|early|normal": {
+      "v": "Pass"
+    },
+    "en|those|normal": {
+      "v": "Pass"
+    },
+    "en|around|normal": {
+      "v": "Pass"
+    },
+    "en|since|normal": {
+      "v": "Pass"
+    },
+    "en|power|normal": {
+      "v": "Pass"
+    },
+    "en|state|normal": {
+      "v": "Pass"
+    },
+    "en|second|normal": {
+      "v": "Pass"
+    },
+    "en|using|normal": {
+      "v": "Pass"
+    },
+    "en|small|normal": {
+      "v": "Pass"
+    },
+    "en|within|normal": {
+      "v": "Pass"
+    },
+    "en|states|normal": {
+      "v": "Pass"
+    },
+    "en|world|normal": {
+      "v": "Pass"
+    },
+    "en|water|normal": {
+      "v": "Pass"
+    },
+    "en|still|normal": {
+      "v": "Pass"
+    },
+    "en|common|normal": {
+      "v": "Pass"
+    },
+    "en|began|normal": {
+      "v": "Pass"
+    },
+    "en|series|normal": {
+      "v": "Pass"
+    },
+    "en|order|normal": {
+      "v": "Pass"
+    },
+    "en|death|normal": {
+      "v": "Pass"
+    },
+    "en|major|normal": {
+      "v": "Pass"
+    },
+    "en|based|normal": {
+      "v": "Pass"
+    },
+    "en|public|normal": {
+      "v": "Pass"
+    },
+    "en|become|normal": {
+      "v": "Pass"
+    },
+    "en|among|normal": {
+      "v": "Pass"
+    },
+    "en|place|normal": {
+      "v": "Pass"
+    },
+    "en|period|normal": {
+      "v": "Pass"
+    },
+    "en|music|normal": {
+      "v": "Pass"
+    },
+    "en|group|normal": {
+      "v": "Pass"
+    },
+    "en|should|normal": {
+      "v": "Pass"
+    },
+    "en|given|normal": {
+      "v": "Pass"
+    },
+    "en|result|normal": {
+      "v": "Pass"
+    },
+    "en|point|normal": {
+      "v": "Pass"
+    },
+    "en|family|normal": {
+      "v": "Pass"
+    },
+    "en|french|normal": {
+      "v": "Pass"
+    },
+    "en|single|normal": {
+      "v": "Pass"
+    },
+    "en|never|normal": {
+      "v": "Pass"
+    },
+    "en|right|normal": {
+      "v": "Pass"
+    },
+    "en|modern|normal": {
+      "v": "Pass"
+    },
+    "en|times|normal": {
+      "v": "Pass"
+    },
+    "en|along|normal": {
+      "v": "Pass"
+    },
+    "en|every|normal": {
+      "v": "Pass"
+    },
+    "en|local|normal": {
+      "v": "Pass"
+    },
+    "en|areas|normal": {
+      "v": "Pass"
+    },
+    "en|either|normal": {
+      "v": "Pass"
+    },
+    "en|though|normal": {
+      "v": "Pass"
+    },
+    "en|rather|normal": {
+      "v": "Pass"
+    },
+    "en|field|normal": {
+      "v": "Pass"
+    },
+    "en|human|normal": {
+      "v": "Pass"
+    },
+    "en|above|normal": {
+      "v": "Pass"
+    },
+    "en|others|normal": {
+      "v": "Pass"
+    },
+    "en|having|normal": {
+      "v": "Pass"
+    },
+    "en|great|normal": {
+      "v": "Pass"
+    },
+    "en|wrote|normal": {
+      "v": "Pass"
+    },
+    "en|means|normal": {
+      "v": "Pass"
+    },
+    "en|higher|normal": {
+      "v": "Pass"
+    },
+    "en|light|normal": {
+      "v": "Pass"
+    },
+    "en|again|normal": {
+      "v": "Pass"
+    },
+    "en|design|normal": {
+      "v": "Pass"
+    },
+    "en|level|normal": {
+      "v": "Pass"
+    },
+    "en|almost|normal": {
+      "v": "Pass"
+    },
+    "en|works|normal": {
+      "v": "Pass"
+    },
+    "en|south|normal": {
+      "v": "Pass"
+    },
+    "en|range|normal": {
+      "v": "Pass"
+    },
+    "en|theory|normal": {
+      "v": "Pass"
+    },
+    "en|little|normal": {
+      "v": "Pass"
+    },
+    "en|social|normal": {
+      "v": "Pass"
+    },
+    "en|built|normal": {
+      "v": "Pass"
+    },
+    "en|energy|normal": {
+      "v": "Pass"
+    },
+    "en|force|normal": {
+      "v": "Pass"
+    },
+    "en|total|normal": {
+      "v": "Pass"
+    },
+    "en|least|normal": {
+      "v": "Pass"
+    },
+    "en|change|normal": {
+      "v": "Pass"
+    },
+    "en|making|normal": {
+      "v": "Pass"
+    },
+    "en|season|normal": {
+      "v": "Pass"
+    },
+    "en|groups|normal": {
+      "v": "Pass"
+    },
+    "en|effect|normal": {
+      "v": "Pass"
+    },
+    "en|taken|normal": {
+      "v": "Pass"
+    },
+    "en|lower|normal": {
+      "v": "Pass"
+    },
+    "en|space|normal": {
+      "v": "Pass"
+    },
+    "en|itself|normal": {
+      "v": "Pass"
+    },
+    "en|third|normal": {
+      "v": "Pass"
+    },
+    "en|north|normal": {
+      "v": "Pass"
+    },
+    "en|final|normal": {
+      "v": "Pass"
+    },
+    "en|terms|normal": {
+      "v": "Pass"
+    },
+    "en|might|normal": {
+      "v": "Pass"
+    },
+    "en|played|normal": {
+      "v": "Pass"
+    },
+    "en|words|normal": {
+      "v": "Pass"
+    },
+    "en|cases|normal": {
+      "v": "Pass"
+    },
+    "en|school|normal": {
+      "v": "Pass"
+    },
+    "en|march|normal": {
+      "v": "Pass"
+    },
+    "en|women|normal": {
+      "v": "Pass"
+    },
+    "en|across|normal": {
+      "v": "Pass"
+    },
+    "en|source|normal": {
+      "v": "Pass"
+    },
+    "en|cause|normal": {
+      "v": "Pass"
+    },
+    "en|short|normal": {
+      "v": "Pass"
+    },
+    "en|party|normal": {
+      "v": "Pass"
+    },
+    "en|region|normal": {
+      "v": "Pass"
+    },
+    "en|always|normal": {
+      "v": "Pass"
+    },
+    "en|return|normal": {
+      "v": "Pass"
+    },
+    "en|parts|normal": {
+      "v": "Pass"
+    },
+    "en|forces|normal": {
+      "v": "Pass"
+    },
+    "en|value|normal": {
+      "v": "Pass"
+    },
+    "en|months|normal": {
+      "v": "Pass"
+    },
+    "en|larger|normal": {
+      "v": "Pass"
+    },
+    "en|named|normal": {
+      "v": "Pass"
+    },
+    "en|father|normal": {
+      "v": "Pass"
+    },
+    "en|cannot|normal": {
+      "v": "Pass"
+    },
+    "en|forms|normal": {
+      "v": "Pass"
+    },
+    "en|longer|normal": {
+      "v": "Pass"
+    },
+    "en|types|normal": {
+      "v": "Pass"
+    },
+    "en|games|normal": {
+      "v": "Pass"
+    },
+    "en|events|normal": {
+      "v": "Pass"
+    },
+    "en|moved|normal": {
+      "v": "Pass"
+    },
+    "en|below|normal": {
+      "v": "Pass"
+    },
+    "en|person|normal": {
+      "v": "Pass"
+    },
+    "en|record|normal": {
+      "v": "Pass"
+    },
+    "en|market|normal": {
+      "v": "Pass"
+    },
+    "en|study|normal": {
+      "v": "Pass"
+    },
+    "en|player|normal": {
+      "v": "Pass"
+    },
+    "en|style|normal": {
+      "v": "Pass"
+    },
+    "en|close|normal": {
+      "v": "Pass"
+    },
+    "en|nature|normal": {
+      "v": "Pass"
+    },
+    "en|added|normal": {
+      "v": "Pass"
+    },
+    "en|former|normal": {
+      "v": "Pass"
+    },
+    "en|black|normal": {
+      "v": "Pass"
+    },
+    "en|method|normal": {
+      "v": "Pass"
+    },
+    "en|strong|normal": {
+      "v": "Pass"
+    },
+    "en|model|normal": {
+      "v": "Pass"
+    },
+    "en|allow|normal": {
+      "v": "Pass"
+    },
+    "en|roman|normal": {
+      "v": "Pass"
+    },
+    "en|create|normal": {
+      "v": "Pass"
+    },
+    "en|attack|normal": {
+      "v": "Pass"
+    },
+    "en|points|normal": {
+      "v": "Pass"
+    },
+    "en|amount|normal": {
+      "v": "Pass"
+    },
+    "en|lines|normal": {
+      "v": "Pass"
+    },
+    "en|enough|normal": {
+      "v": "Pass"
+    },
+    "en|class|normal": {
+      "v": "Pass"
+    },
+    "en|names|normal": {
+      "v": "Pass"
+    },
+    "en|story|normal": {
+      "v": "Pass"
+    },
+    "en|entire|normal": {
+      "v": "Pass"
+    },
+    "en|sound|normal": {
+      "v": "Pass"
+    },
+    "en|china|normal": {
+      "v": "Pass"
+    },
+    "en|money|normal": {
+      "v": "Pass"
+    },
+    "en|trade|normal": {
+      "v": "Pass"
+    },
+    "en|living|normal": {
+      "v": "Pass"
+    },
+    "en|better|normal": {
+      "v": "Pass"
+    },
+    "en|young|normal": {
+      "v": "Pass"
+    },
+    "en|church|normal": {
+      "v": "Pass"
+    },
+    "en|access|normal": {
+      "v": "Pass"
+    },
+    "en|ground|normal": {
+      "v": "Pass"
+    },
+    "en|caused|normal": {
+      "v": "Pass"
+    },
+    "en|album|normal": {
+      "v": "Pass"
+    },
+    "en|court|normal": {
+      "v": "Pass"
+    },
+    "en|member|normal": {
+      "v": "Pass"
+    },
+    "en|forced|normal": {
+      "v": "Pass"
+    },
+    "en|house|normal": {
+      "v": "Pass"
+    },
+    "en|length|normal": {
+      "v": "Pass"
+    },
+    "en|killed|normal": {
+      "v": "Pass"
+    },
+    "en|mostly|normal": {
+      "v": "Pass"
+    },
+    "en|white|normal": {
+      "v": "Pass"
+    },
+    "en|india|normal": {
+      "v": "Pass"
+    },
+    "en|stated|normal": {
+      "v": "Pass"
+    },
+    "en|whose|normal": {
+      "v": "Fail"
+    },
+    "en|widely|normal": {
+      "v": "Pass"
+    },
+    "en|action|normal": {
+      "v": "Pass"
+    },
+    "en|formed|normal": {
+      "v": "Pass"
+    },
+    "en|office|normal": {
+      "v": "Pass"
+    },
+    "en|radio|normal": {
+      "v": "Pass"
+    },
+    "en|makes|normal": {
+      "v": "Pass"
+    },
+    "en|needed|normal": {
+      "v": "Pass"
+    },
+    "en|cities|normal": {
+      "v": "Pass"
+    },
+    "en|stage|normal": {
+      "v": "Pass"
+    },
+    "en|rights|normal": {
+      "v": "Pass"
+    },
+    "en|today|normal": {
+      "v": "Pass"
+    },
+    "en|future|normal": {
+      "v": "Pass"
+    },
+    "en|allows|normal": {
+      "v": "Pass"
+    },
+    "en|event|normal": {
+      "v": "Pass"
+    },
+    "en|levels|normal": {
+      "v": "Pass"
+    },
+    "en|shows|normal": {
+      "v": "Pass"
+    },
+    "en|books|normal": {
+      "v": "Pass"
+    },
+    "en|speed|normal": {
+      "v": "Pass"
+    },
+    "en|policy|normal": {
+      "v": "Pass"
+    },
+    "en|rules|normal": {
+      "v": "Pass"
+    },
+    "en|appear|normal": {
+      "v": "Pass"
+    },
+    "en|recent|normal": {
+      "v": "Pass"
+    },
+    "en|heavy|normal": {
+      "v": "Pass"
+    },
+    "en|highly|normal": {
+      "v": "Pass"
+    },
+    "en|served|normal": {
+      "v": "Pass"
+    },
+    "en|memory|normal": {
+      "v": "Pass"
+    },
+    "en|title|normal": {
+      "v": "Pass"
+    },
+    "en|simply|normal": {
+      "v": "Pass"
+    },
+    "en|whole|normal": {
+      "v": "Weak"
+    },
+    "en|issues|normal": {
+      "v": "Pass"
+    },
+    "en|cells|normal": {
+      "v": "Pass"
+    },
+    "en|career|normal": {
+      "v": "Weak"
+    },
+    "en|units|normal": {
+      "v": "Pass"
+    },
+    "en|direct|normal": {
+      "v": "Pass"
+    },
+    "en|worked|normal": {
+      "v": "Pass"
+    },
+    "en|union|normal": {
+      "v": "Pass"
+    },
+    "en|likely|normal": {
+      "v": "Pass"
+    },
+    "en|active|normal": {
+      "v": "Pass"
+    },
+    "en|behind|normal": {
+      "v": "Pass"
+    },
+    "en|placed|normal": {
+      "v": "Pass"
+    },
+    "en|eight|normal": {
+      "v": "Pass"
+    },
+    "en|sense|normal": {
+      "v": "Pass"
+    },
+    "en|growth|normal": {
+      "v": "Pass"
+    },
+    "en|issue|normal": {
+      "v": "Pass"
+    },
+    "en|shown|normal": {
+      "v": "Pass"
+    },
+    "en|simple|normal": {
+      "v": "Pass"
+    },
+    "en|mother|normal": {
+      "v": "Pass"
+    },
+    "en|seven|normal": {
+      "v": "Pass"
+    },
+    "en|night|normal": {
+      "v": "Pass"
+    },
+    "en|battle|normal": {
+      "v": "Pass"
+    },
+    "en|older|normal": {
+      "v": "Pass"
+    },
+    "en|color|normal": {
+      "v": "Pass"
+    },
+    "en|start|normal": {
+      "v": "Pass"
+    },
+    "en|ended|normal": {
+      "v": "Pass"
+    },
+    "en|films|normal": {
+      "v": "Pass"
+    },
+    "en|press|normal": {
+      "v": "Pass"
+    },
+    "en|image|normal": {
+      "v": "Pass"
+    },
+    "en|nearly|normal": {
+      "v": "Pass"
+    },
+    "en|occur|normal": {
+      "v": "Pass"
+    },
+    "en|remain|normal": {
+      "v": "Pass"
+    },
+    "en|earth|normal": {
+      "v": "Pass"
+    },
+    "en|blood|normal": {
+      "v": "Pass"
+    },
+    "en|normal|normal": {
+      "v": "Pass"
+    },
+    "en|takes|normal": {
+      "v": "Pass"
+    },
+    "en|income|normal": {
+      "v": "Pass"
+    },
+    "en|island|normal": {
+      "v": "Pass"
+    },
+    "en|summer|normal": {
+      "v": "Pass"
+    },
+    "en|passed|normal": {
+      "v": "ExemptHomophone"
+    },
+    "en|exist|normal": {
+      "v": "Pass"
+    },
+    "en|health|normal": {
+      "v": "Pass"
+    },
+    "en|ships|normal": {
+      "v": "Pass"
+    },
+    "en|hours|normal": {
+      "v": "Pass"
+    },
+    "en|occurs|normal": {
+      "v": "Pass"
+    },
+    "en|clear|normal": {
+      "v": "Pass"
+    },
+    "en|letter|normal": {
+      "v": "Pass"
+    },
+    "en|reason|normal": {
+      "v": "Pass"
+    },
+    "en|signal|normal": {
+      "v": "Pass"
+    },
+    "en|wanted|normal": {
+      "v": "Pass"
+    },
+    "en|legal|normal": {
+      "v": "Pass"
+    },
+    "en|mainly|normal": {
+      "v": "Pass"
+    },
+    "en|songs|normal": {
+      "v": "Pass"
+    },
+    "en|soviet|normal": {
+      "v": "Pass"
+    },
+    "en|reduce|normal": {
+      "v": "Pass"
+    },
+    "en|video|normal": {
+      "v": "Pass"
+    },
+    "en|female|normal": {
+      "v": "Pass"
+    },
+    "en|matter|normal": {
+      "v": "Pass"
+    },
+    "en|taking|normal": {
+      "v": "Pass"
+    },
+    "en|table|normal": {
+      "v": "Pass"
+    },
+    "en|child|normal": {
+      "v": "Pass"
+    },
+    "en|status|normal": {
+      "v": "Pass"
+    },
+    "en|turned|normal": {
+      "v": "Pass"
+    },
+    "en|engine|normal": {
+      "v": "Pass"
+    },
+    "en|media|normal": {
+      "v": "Pass"
+    },
+    "en|board|normal": {
+      "v": "Pass"
+    },
+    "en|charge|normal": {
+      "v": "Pass"
+    },
+    "en|metal|normal": {
+      "v": "Pass"
+    },
+    "en|course|normal": {
+      "v": "Pass"
+    },
+    "en|values|normal": {
+      "v": "Pass"
+    },
+    "en|things|normal": {
+      "v": "Pass"
+    },
+    "en|failed|normal": {
+      "v": "Pass"
+    },
+    "en|troops|normal": {
+      "v": "Pass"
+    },
+    "en|going|normal": {
+      "v": "Pass"
+    },
+    "en|supply|normal": {
+      "v": "Pass"
+    },
+    "en|paris|normal": {
+      "v": "Pass"
+    },
+    "en|famous|normal": {
+      "v": "Pass"
+    },
+    "en|plants|normal": {
+      "v": "Pass"
+    },
+    "en|police|normal": {
+      "v": "Pass"
+    },
+    "en|river|normal": {
+      "v": "Pass"
+    },
+    "en|moving|normal": {
+      "v": "Pass"
+    },
+    "en|opened|normal": {
+      "v": "Pass"
+    },
+    "en|serve|normal": {
+      "v": "Pass"
+    },
+    "en|basic|normal": {
+      "v": "Pass"
+    },
+    "en|basis|normal": {
+      "v": "Pass"
+    },
+    "en|inside|normal": {
+      "v": "Pass"
+    },
+    "en|agreed|normal": {
+      "v": "Pass"
+    },
+    "en|object|normal": {
+      "v": "Pass"
+    },
+    "en|except|normal": {
+      "v": "Weak"
+    },
+    "en|output|normal": {
+      "v": "Pass"
+    },
+    "en|degree|normal": {
+      "v": "Pass"
+    },
+    "en|models|normal": {
+      "v": "Pass"
+    },
+    "en|noted|normal": {
+      "v": "Pass"
+    },
+    "en|center|normal": {
+      "v": "Pass"
+    },
+    "en|giving|normal": {
+      "v": "Pass"
+    },
+    "en|claim|normal": {
+      "v": "Weak"
+    },
+    "en|meant|normal": {
+      "v": "Weak"
+    },
+    "en|beyond|normal": {
+      "v": "Pass"
+    },
+    "en|phase|normal": {
+      "v": "Pass"
+    },
+    "en|scale|normal": {
+      "v": "Pass"
+    },
+    "en|damage|normal": {
+      "v": "Pass"
+    },
+    "en|novel|normal": {
+      "v": "Pass"
+    },
+    "en|reach|normal": {
+      "v": "Pass"
+    },
+    "en|offer|normal": {
+      "v": "Pass"
+    },
+    "en|quite|normal": {
+      "v": "Pass"
+    },
+    "en|civil|normal": {
+      "v": "Pass"
+    },
+    "en|weight|normal": {
+      "v": "ExemptHomophone"
+    },
+    "en|front|normal": {
+      "v": "Pass"
+    },
+    "en|leave|normal": {
+      "v": "Pass"
+    },
+    "en|fields|normal": {
+      "v": "Pass"
+    },
+    "en|plant|normal": {
+      "v": "Pass"
+    },
+    "en|causes|normal": {
+      "v": "Pass"
+    },
+    "en|ideas|normal": {
+      "v": "Pass"
+    },
+    "en|places|normal": {
+      "v": "Pass"
+    },
+    "en|powers|normal": {
+      "v": "Pass"
+    },
+    "en|unique|normal": {
+      "v": "Pass"
+    },
+    "en|origin|normal": {
+      "v": "Pass"
+    },
+    "en|paper|normal": {
+      "v": "Pass"
+    },
+    "en|device|normal": {
+      "v": "Pass"
+    },
+    "en|fully|normal": {
+      "v": "Pass"
+    },
+    "en|track|normal": {
+      "v": "Pass"
+    },
+    "en|travel|normal": {
+      "v": "Pass"
+    },
+    "en|birth|normal": {
+      "v": "Pass"
+    },
+    "en|fixed|normal": {
+      "v": "Pass"
+    },
+    "en|pieces|normal": {
+      "v": "Pass"
+    },
+    "en|easily|normal": {
+      "v": "Pass"
+    },
+    "en|flight|normal": {
+      "v": "Pass"
+    },
+    "en|spread|normal": {
+      "v": "Pass"
+    },
+    "en|write|normal": {
+      "v": "ExemptHomophone"
+    },
+    "en|latter|normal": {
+      "v": "Weak"
+    },
+    "en|sides|normal": {
+      "v": "Pass"
+    },
+    "en|raised|normal": {
+      "v": "Pass"
+    },
+    "en|report|normal": {
+      "v": "Pass"
+    },
+    "en|shape|normal": {
+      "v": "Pass"
+    },
+    "en|spent|normal": {
+      "v": "Pass"
+    },
+    "en|weeks|normal": {
+      "v": "Pass"
+    },
+    "en|cover|normal": {
+      "v": "Pass"
+    },
+    "en|rates|normal": {
+      "v": "Pass"
+    },
+    "en|volume|normal": {
+      "v": "Pass"
+    },
+    "en|gives|normal": {
+      "v": "Pass"
+    },
+    "en|goods|normal": {
+      "v": "Pass"
+    },
+    "en|refers|normal": {
+      "v": "Pass"
+    },
+    "en|comes|normal": {
+      "v": "Pass"
+    },
+    "en|county|normal": {
+      "v": "Pass"
+    },
+    "en|follow|normal": {
+      "v": "Pass"
+    },
+    "en|middle|normal": {
+      "v": "Pass"
+    },
+    "en|teams|normal": {
+      "v": "Pass"
+    },
+    "en|carry|normal": {
+      "v": "Weak"
+    },
+    "en|peace|normal": {
+      "v": "Pass"
+    },
+    "en|annual|normal": {
+      "v": "Pass"
+    },
+    "en|fourth|normal": {
+      "v": "Pass"
+    },
+    "en|humans|normal": {
+      "v": "Pass"
+    },
+    "en|proved|normal": {
+      "v": "Pass"
+    },
+    "en|prior|normal": {
+      "v": "Pass"
+    },
+    "en|street|normal": {
+      "v": "Pass"
+    },
+    "en|bridge|normal": {
+      "v": "Pass"
+    },
+    "en|toward|normal": {
+      "v": "Weak"
+    },
+    "en|asked|normal": {
+      "v": "Pass"
+    },
+    "en|formal|normal": {
+      "v": "Pass"
+    },
+    "en|tried|normal": {
+      "v": "Pass"
+    },
+    "en|focus|normal": {
+      "v": "Pass"
+    },
+    "en|round|normal": {
+      "v": "Pass"
+    },
+    "en|speech|normal": {
+      "v": "Pass"
+    },
+    "en|unable|normal": {
+      "v": "Pass"
+    },
+    "en|cards|normal": {
+      "v": "Pass"
+    },
+    "en|drive|normal": {
+      "v": "Pass"
+    },
+    "en|equal|normal": {
+      "v": "Pass"
+    },
+    "en|plays|normal": {
+      "v": "Fail"
+    },
+    "en|sexual|normal": {
+      "v": "Pass"
+    },
+    "en|stars|normal": {
+      "v": "Pass"
+    },
+    "en|useful|normal": {
+      "v": "Pass"
+    },
+    "en|joined|normal": {
+      "v": "Pass"
+    },
+    "en|signed|normal": {
+      "v": "Pass"
+    },
+    "en|figure|normal": {
+      "v": "Pass"
+    },
+    "en|limit|normal": {
+      "v": "Pass"
+    },
+    "en|share|normal": {
+      "v": "Pass"
+    },
+    "en|users|normal": {
+      "v": "Pass"
+    },
+    "en|closed|normal": {
+      "v": "Pass"
+    },
+    "en|layer|normal": {
+      "v": "Pass"
+    },
+    "en|square|normal": {
+      "v": "Pass"
+    },
+    "en|avoid|normal": {
+      "v": "Pass"
+    },
+    "en|showed|normal": {
+      "v": "Pass"
+    },
+    "en|actual|normal": {
+      "v": "Pass"
+    },
+    "en|helped|normal": {
+      "v": "Pass"
+    },
+    "en|month|normal": {
+      "v": "Pass"
+    },
+    "en|argued|normal": {
+      "v": "Pass"
+    },
+    "en|images|normal": {
+      "v": "Pass"
+    },
+    "en|impact|normal": {
+      "v": "Pass"
+    },
+    "en|winter|normal": {
+      "v": "Pass"
+    },
+    "en|price|normal": {
+      "v": "Pass"
+    },
+    "en|target|normal": {
+      "v": "Pass"
+    },
+    "en|lived|normal": {
+      "v": "Pass"
+    },
+    "en|costs|normal": {
+      "v": "Pass"
+    },
+    "en|effort|normal": {
+      "v": "Pass"
+    },
+    "en|piece|normal": {
+      "v": "ExemptHomophone"
+    },
+    "en|woman|normal": {
+      "v": "Pass"
+    },
+    "en|alone|normal": {
+      "v": "Pass"
+    },
+    "en|animal|normal": {
+      "v": "Pass"
+    },
+    "en|chosen|normal": {
+      "v": "Pass"
+    },
+    "en|choice|normal": {
+      "v": "Pass"
+    },
+    "en|demand|normal": {
+      "v": "Pass"
+    },
+    "en|factor|normal": {
+      "v": "Pass"
+    },
+    "en|houses|normal": {
+      "v": "Pass"
+    },
+    "en|notes|normal": {
+      "v": "Pass"
+    },
+    "en|scene|normal": {
+      "v": "Weak"
+    },
+    "en|think|normal": {
+      "v": "Pass"
+    },
+    "en|royal|normal": {
+      "v": "Pass"
+    },
+    "en|format|normal": {
+      "v": "Pass"
+    },
+    "en|seems|normal": {
+      "v": "Pass"
+    },
+    "en|staff|normal": {
+      "v": "Pass"
+    },
+    "en|gained|normal": {
+      "v": "Pass"
+    },
+    "en|heart|normal": {
+      "v": "Pass"
+    },
+    "en|leader|normal": {
+      "v": "Pass"
+    },
+    "en|saying|normal": {
+      "v": "Pass"
+    },
+    "en|search|normal": {
+      "v": "Fail"
+    },
+    "en|marked|normal": {
+      "v": "Pass"
+    },
+    "en|native|normal": {
+      "v": "Pass"
+    },
+    "en|plans|normal": {
+      "v": "Pass"
+    },
+    "en|input|normal": {
+      "v": "Pass"
+    },
+    "en|match|normal": {
+      "v": "Pass"
+    },
+    "en|cycle|normal": {
+      "v": "Pass"
+    },
+    "en|friend|normal": {
+      "v": "Pass"
+    },
+    "en|motion|normal": {
+      "v": "Pass"
+    },
+    "en|visit|normal": {
+      "v": "Pass"
+    },
+    "en|needs|normal": {
+      "v": "Pass"
+    },
+    "en|refer|normal": {
+      "v": "Pass"
+    },
+    "en|bodies|normal": {
+      "v": "Pass"
+    },
+    "en|issued|normal": {
+      "v": "Pass"
+    },
+    "en|voice|normal": {
+      "v": "Pass"
+    },
+    "en|claims|normal": {
+      "v": "Pass"
+    },
+    "en|leaves|normal": {
+      "v": "Pass"
+    },
+    "en|minor|normal": {
+      "v": "Pass"
+    },
+    "en|owned|normal": {
+      "v": "Pass"
+    },
+    "en|upper|normal": {
+      "v": "Pass"
+    },
+    "en|urban|normal": {
+      "v": "Pass"
+    },
+    "en|league|normal": {
+      "v": "Pass"
+    },
+    "en|break|normal": {
+      "v": "Pass"
+    },
+    "en|lives|normal": {
+      "v": "Pass"
+    },
+    "en|green|normal": {
+      "v": "Pass"
+    },
+    "en|hands|normal": {
+      "v": "Pass"
+    },
+    "en|double|normal": {
+      "v": "Pass"
+    },
+    "en|empire|normal": {
+      "v": "Pass"
+    },
+    "en|spring|normal": {
+      "v": "Pass"
+    },
+    "en|bring|normal": {
+      "v": "Pass"
+    },
+    "en|daily|normal": {
+      "v": "Pass"
+    },
+    "en|block|normal": {
+      "v": "Pass"
+    },
+    "en|coast|normal": {
+      "v": "Weak"
+    },
+    "en|sites|normal": {
+      "v": "Pass"
+    },
+    "en|string|normal": {
+      "v": "Pass"
+    },
+    "en|manner|normal": {
+      "v": "Weak"
+    },
+    "en|movie|normal": {
+      "v": "Pass"
+    },
+    "en|sector|normal": {
+      "v": "Pass"
+    },
+    "en|fight|normal": {
+      "v": "Pass"
+    },
+    "en|sales|normal": {
+      "v": "Pass"
+    },
+    "en|walls|normal": {
+      "v": "Pass"
+    },
+    "en|heard|normal": {
+      "v": "Pass"
+    },
+    "en|sought|normal": {
+      "v": "Weak"
+    },
+    "en|symbol|normal": {
+      "v": "Pass"
+    },
+    "en|nation|normal": {
+      "v": "Pass"
+    },
+    "en|build|normal": {
+      "v": "Pass"
+    },
+    "en|dance|normal": {
+      "v": "Pass"
+    },
+    "en|exists|normal": {
+      "v": "Pass"
+    },
+    "en|faith|normal": {
+      "v": "Pass"
+    },
+    "en|global|normal": {
+      "v": "Pass"
+    },
+    "en|route|normal": {
+      "v": "Weak"
+    },
+    "en|labor|normal": {
+      "v": "Pass"
+    },
+    "en|taught|normal": {
+      "v": "Weak"
+    },
+    "en|usage|normal": {
+      "v": "Pass"
+    },
+    "en|views|normal": {
+      "v": "Pass"
+    },
+    "en|score|normal": {
+      "v": "Pass"
+    },
+    "en|secret|normal": {
+      "v": "Pass"
+    },
+    "en|brain|normal": {
+      "v": "Pass"
+    },
+    "en|pages|normal": {
+      "v": "Pass"
+    },
+    "en|safety|normal": {
+      "v": "Pass"
+    },
+    "en|oldest|normal": {
+      "v": "Pass"
+    },
+    "en|shared|normal": {
+      "v": "Pass"
+    },
+    "en|plane|normal": {
+      "v": "Pass"
+    },
+    "en|bands|normal": {
+      "v": "Weak"
+    },
+    "en|males|normal": {
+      "v": "Pass"
+    },
+    "en|author|normal": {
+      "v": "Pass"
+    },
+    "en|begin|normal": {
+      "v": "Pass"
+    },
+    "en|begins|normal": {
+      "v": "Pass"
+    },
+    "en|carbon|normal": {
+      "v": "Pass"
+    },
+    "en|twice|normal": {
+      "v": "Pass"
+    },
+    "en|unlike|normal": {
+      "v": "Pass"
+    },
+    "en|error|normal": {
+      "v": "Pass"
+    },
+    "en|limits|normal": {
+      "v": "Pass"
+    },
+    "en|oxygen|normal": {
+      "v": "Pass"
+    },
+    "en|roles|normal": {
+      "v": "Pass"
+    },
+    "en|split|normal": {
+      "v": "Pass"
+    },
+    "en|truth|normal": {
+      "v": "Pass"
+    },
+    "en|angle|normal": {
+      "v": "Pass"
+    },
+    "en|ensure|normal": {
+      "v": "Pass"
+    },
+    "en|really|normal": {
+      "v": "Pass"
+    },
+    "en|viewed|normal": {
+      "v": "Pass"
+    },
+    "en|atoms|normal": {
+      "v": "Pass"
+    },
+    "en|coming|normal": {
+      "v": "Pass"
+    },
+    "en|stable|normal": {
+      "v": "Pass"
+    },
+    "en|calls|normal": {
+      "v": "Pass"
+    },
+    "en|steel|normal": {
+      "v": "Pass"
+    },
+    "en|threat|normal": {
+      "v": "Weak"
+    },
+    "en|trial|normal": {
+      "v": "Pass"
+    },
+    "en|museum|normal": {
+      "v": "Pass"
+    },
+    "en|border|normal": {
+      "v": "Pass"
+    },
+    "en|decade|normal": {
+      "v": "Pass"
+    },
+    "en|height|normal": {
+      "v": "Pass"
+    },
+    "en|screen|normal": {
+      "v": "Pass"
+    },
+    "en|stone|normal": {
+      "v": "Pass"
+    },
+    "en|studio|normal": {
+      "v": "Pass"
+    },
+    "en|affect|normal": {
+      "v": "Pass"
+    },
+    "en|combat|normal": {
+      "v": "Pass"
+    },
+    "en|debate|normal": {
+      "v": "Pass"
+    },
+    "en|fleet|normal": {
+      "v": "Pass"
+    },
+    "en|holds|normal": {
+      "v": "Pass"
+    },
+    "en|leads|normal": {
+      "v": "Pass"
+    },
+    "en|proper|normal": {
+      "v": "Pass"
+    },
+    "en|severe|normal": {
+      "v": "Pass"
+    },
+    "en|adding|normal": {
+      "v": "Pass"
+    },
+    "en|cable|normal": {
+      "v": "Pass"
+    },
+    "en|enemy|normal": {
+      "v": "Pass"
+    },
+    "en|extra|normal": {
+      "v": "Pass"
+    },
+    "en|floor|normal": {
+      "v": "Pass"
+    },
+    "en|glass|normal": {
+      "v": "Weak"
+    },
+    "en|super|normal": {
+      "v": "Pass"
+    },
+    "en|accept|normal": {
+      "v": "Weak"
+    },
+    "en|dates|normal": {
+      "v": "Pass"
+    },
+    "en|launch|normal": {
+      "v": "Pass"
+    },
+    "en|rarely|normal": {
+      "v": "Pass"
+    },
+    "en|trees|normal": {
+      "v": "Pass"
+    },
+    "en|waves|normal": {
+      "v": "Pass"
+    },
+    "en|grand|normal": {
+      "v": "Pass"
+    },
+    "en|queen|normal": {
+      "v": "Pass"
+    },
+    "en|offers|normal": {
+      "v": "Pass"
+    },
+    "en|apply|normal": {
+      "v": "Pass"
+    },
+    "en|drawn|normal": {
+      "v": "Pass"
+    },
+    "en|orders|normal": {
+      "v": "Pass"
+    },
+    "en|rural|normal": {
+      "v": "Pass"
+    },
+    "en|doing|normal": {
+      "v": "Pass"
+    },
+    "en|slaves|normal": {
+      "v": "Pass"
+    },
+    "en|theme|normal": {
+      "v": "Pass"
+    },
+    "en|trying|normal": {
+      "v": "Pass"
+    },
+    "en|exact|normal": {
+      "v": "Pass"
+    },
+    "en|domain|normal": {
+      "v": "Pass"
+    },
+    "en|escape|normal": {
+      "v": "Pass"
+    },
+    "en|seats|normal": {
+      "v": "Weak"
+    },
+    "en|stored|normal": {
+      "v": "Pass"
+    },
+    "en|tests|normal": {
+      "v": "Pass"
+    },
+    "en|broke|normal": {
+      "v": "Pass"
+    },
+    "en|courts|normal": {
+      "v": "Pass"
+    },
+    "en|enter|normal": {
+      "v": "Pass"
+    },
+    "en|solid|normal": {
+      "v": "Pass"
+    },
+    "en|stand|normal": {
+      "v": "Pass"
+    },
+    "en|visual|normal": {
+      "v": "Pass"
+    },
+    "en|belief|normal": {
+      "v": "Pass"
+    },
+    "en|prices|normal": {
+      "v": "Pass"
+    },
+    "en|ratio|normal": {
+      "v": "Pass"
+    },
+    "en|towns|normal": {
+      "v": "Pass"
+    },
+    "en|acting|normal": {
+      "v": "Pass"
+    },
+    "en|grown|normal": {
+      "v": "Pass"
+    },
+    "en|medium|normal": {
+      "v": "Pass"
+    },
+    "en|mixed|normal": {
+      "v": "Weak"
+    },
+    "en|nearby|normal": {
+      "v": "Pass"
+    },
+    "en|prison|normal": {
+      "v": "Pass"
+    },
+    "en|prince|normal": {
+      "v": "Weak"
+    },
+    "en|audio|normal": {
+      "v": "Pass"
+    },
+    "en|crime|normal": {
+      "v": "Pass"
+    },
+    "en|online|normal": {
+      "v": "Pass"
+    },
+    "en|strike|normal": {
+      "v": "Pass"
+    },
+    "en|styles|normal": {
+      "v": "Pass"
+    },
+    "en|tools|normal": {
+      "v": "Pass"
+    },
+    "en|unless|normal": {
+      "v": "Pass"
+    },
+    "en|obtain|normal": {
+      "v": "Pass"
+    },
+    "en|train|normal": {
+      "v": "Pass"
+    },
+    "en|varies|normal": {
+      "v": "Pass"
+    },
+    "en|budget|normal": {
+      "v": "Pass"
+    },
+    "en|chain|normal": {
+      "v": "Weak"
+    },
+    "en|ending|normal": {
+      "v": "Pass"
+    },
+    "en|review|normal": {
+      "v": "Pass"
+    },
+    "en|solar|normal": {
+      "v": "Pass"
+    },
+    "en|spirit|normal": {
+      "v": "Pass"
+    },
+    "en|thing|normal": {
+      "v": "Pass"
+    },
+    "en|yards|normal": {
+      "v": "Pass"
+    },
+    "en|apart|normal": {
+      "v": "Pass"
+    },
+    "en|artist|normal": {
+      "v": "Pass"
+    },
+    "en|copies|normal": {
+      "v": "Pass"
+    },
+    "en|cross|normal": {
+      "v": "Pass"
+    },
+    "en|logic|normal": {
+      "v": "Pass"
+    },
+    "en|script|normal": {
+      "v": "Pass"
+    },
+    "en|sports|normal": {
+      "v": "Pass"
+    },
+    "en|prime|normal": {
+      "v": "Pass"
+    },
+    "en|award|normal": {
+      "v": "Pass"
+    },
+    "en|bottom|normal": {
+      "v": "Pass"
+    },
+    "en|extent|normal": {
+      "v": "Pass"
+    },
+    "en|poetry|normal": {
+      "v": "Pass"
+    },
+    "en|adult|normal": {
+      "v": "Pass"
+    },
+    "en|armed|normal": {
+      "v": "Pass"
+    },
+    "en|brief|normal": {
+      "v": "Pass"
+    },
+    "en|chance|normal": {
+      "v": "Pass"
+    },
+    "en|false|normal": {
+      "v": "Pass"
+    },
+    "en|faster|normal": {
+      "v": "Pass"
+    },
+    "en|mobile|normal": {
+      "v": "Pass"
+    },
+    "en|store|normal": {
+      "v": "Pass"
+    },
+    "en|sugar|normal": {
+      "v": "Pass"
+    },
+    "en|desire|normal": {
+      "v": "Pass"
+    },
+    "en|moment|normal": {
+      "v": "Pass"
+    },
+    "en|moral|normal": {
+      "v": "Pass"
+    },
+    "en|moves|normal": {
+      "v": "Pass"
+    },
+    "en|outer|normal": {
+      "v": "Pass"
+    },
+    "en|scenes|normal": {
+      "v": "Pass"
+    },
+    "en|stages|normal": {
+      "v": "Pass"
+    },
+    "en|favor|normal": {
+      "v": "Weak"
+    },
+    "en|items|normal": {
+      "v": "Pass"
+    },
+    "en|liquid|normal": {
+      "v": "Pass"
+    },
+    "en|shift|normal": {
+      "v": "Pass"
+    },
+    "en|defeat|normal": {
+      "v": "Pass"
+    },
+    "en|scheme|normal": {
+      "v": "Pass"
+    },
+    "en|losses|normal": {
+      "v": "Pass"
+    },
+    "en|merely|normal": {
+      "v": "Weak"
+    },
+    "en|votes|normal": {
+      "v": "Pass"
+    },
+    "en|branch|normal": {
+      "v": "Pass"
+    },
+    "en|deaths|normal": {
+      "v": "Pass"
+    },
+    "en|frame|normal": {
+      "v": "Pass"
+    },
+    "en|saint|normal": {
+      "v": "Pass"
+    },
+    "en|birds|normal": {
+      "v": "Pass"
+    },
+    "en|camera|normal": {
+      "v": "Pass"
+    },
+    "en|extend|normal": {
+      "v": "Pass"
+    },
+    "en|fluid|normal": {
+      "v": "Pass"
+    },
+    "en|linear|normal": {
+      "v": "Pass"
+    },
+    "en|median|normal": {
+      "v": "Pass"
+    },
+    "en|pilot|normal": {
+      "v": "Pass"
+    },
+    "en|silver|normal": {
+      "v": "Pass"
+    },
+    "en|tells|normal": {
+      "v": "Pass"
+    },
+    "en|colors|normal": {
+      "v": "Pass"
+    },
+    "en|guitar|normal": {
+      "v": "Pass"
+    },
+    "en|linked|normal": {
+      "v": "Pass"
+    },
+    "en|mental|normal": {
+      "v": "Pass"
+    },
+    "en|skills|normal": {
+      "v": "Pass"
+    },
+    "en|speak|normal": {
+      "v": "Pass"
+    },
+    "en|taxes|normal": {
+      "v": "Pass"
+    },
+    "en|clubs|normal": {
+      "v": "Pass"
+    },
+    "en|funds|normal": {
+      "v": "Pass"
+    },
+    "en|newly|normal": {
+      "v": "Pass"
+    },
+    "en|sample|normal": {
+      "v": "Pass"
+    },
+    "en|stock|normal": {
+      "v": "Pass"
+    },
+    "en|titles|normal": {
+      "v": "Pass"
+    },
+    "en|chose|normal": {
+      "v": "Fail"
+    },
+    "en|ideal|normal": {
+      "v": "Pass"
+    },
+    "en|listed|normal": {
+      "v": "Pass"
+    },
+    "en|lowest|normal": {
+      "v": "Pass"
+    },
+    "en|partly|normal": {
+      "v": "Pass"
+    },
+    "en|plate|normal": {
+      "v": "Pass"
+    },
+    "en|serves|normal": {
+      "v": "Pass"
+    },
+    "en|senate|normal": {
+      "v": "Pass"
+    },
+    "en|crisis|normal": {
+      "v": "Pass"
+    },
+    "en|filled|normal": {
+      "v": "Pass"
+    },
+    "en|inner|normal": {
+      "v": "Pass"
+    },
+    "en|remove|normal": {
+      "v": "Pass"
+    },
+    "en|corps|normal": {
+      "v": "ExemptHomophone"
+    },
+    "en|valley|normal": {
+      "v": "Pass"
+    },
+    "en|anyone|normal": {
+      "v": "Pass"
+    },
+    "en|define|normal": {
+      "v": "Pass"
+    },
+    "en|depth|normal": {
+      "v": "Pass"
+    },
+    "en|option|normal": {
+      "v": "Pass"
+    },
+    "en|secure|normal": {
+      "v": "Pass"
+    },
+    "en|texts|normal": {
+      "v": "Pass"
+    },
+    "en|usual|normal": {
+      "v": "Pass"
+    },
+    "en|weapon|normal": {
+      "v": "Pass"
+    },
+    "en|writer|normal": {
+      "v": "Pass"
+    },
+    "en|writes|normal": {
+      "v": "ExemptHomophone"
+    },
+    "en|bound|normal": {
+      "v": "Pass"
+    },
+    "en|chief|normal": {
+      "v": "Pass"
+    },
+    "en|goals|normal": {
+      "v": "Pass"
+    },
+    "en|rapid|normal": {
+      "v": "Pass"
+    },
+    "en|seemed|normal": {
+      "v": "Pass"
+    },
+    "en|yellow|normal": {
+      "v": "Pass"
+    },
+    "en|finite|normal": {
+      "v": "Pass"
+    },
+    "en|proof|normal": {
+      "v": "Pass"
+    },
+    "en|roads|normal": {
+      "v": "Pass"
+    },
+    "en|roots|normal": {
+      "v": "Pass"
+    },
+    "en|themes|normal": {
+      "v": "Pass"
+    },
+    "en|vision|normal": {
+      "v": "Pass"
+    },
+    "en|begun|normal": {
+      "v": "Pass"
+    },
+    "en|broken|normal": {
+      "v": "Pass"
+    },
+    "en|cancer|normal": {
+      "v": "Pass"
+    },
+    "en|circle|normal": {
+      "v": "Pass"
+    },
+    "en|couple|normal": {
+      "v": "Pass"
+    },
+    "en|empty|normal": {
+      "v": "Pass"
+    },
+    "en|gender|normal": {
+      "v": "Pass"
+    },
+    "en|sister|normal": {
+      "v": "Pass"
+    },
+    "en|vector|normal": {
+      "v": "Pass"
+    },
+    "en|easier|normal": {
+      "v": "Pass"
+    },
+    "en|ethnic|normal": {
+      "v": "Pass"
+    },
+    "en|print|normal": {
+      "v": "Pass"
+    },
+    "en|sport|normal": {
+      "v": "Pass"
+    },
+    "en|twelve|normal": {
+      "v": "Pass"
+    },
+    "en|appeal|normal": {
+      "v": "Pass"
+    },
+    "en|choose|normal": {
+      "v": "Fail"
+    },
+    "en|joint|normal": {
+      "v": "Weak"
+    },
+    "en|losing|normal": {
+      "v": "Pass"
+    },
+    "en|senior|normal": {
+      "v": "Pass"
+    },
+    "en|tracks|normal": {
+      "v": "Pass"
+    },
+    "en|treaty|normal": {
+      "v": "Pass"
+    },
+    "en|agents|normal": {
+      "v": "Pass"
+    },
+    "en|answer|normal": {
+      "v": "Pass"
+    },
+    "en|boats|normal": {
+      "v": "Pass"
+    },
+    "en|broad|normal": {
+      "v": "Pass"
+    },
+    "en|credit|normal": {
+      "v": "Pass"
+    },
+    "en|entry|normal": {
+      "v": "Pass"
+    },
+    "en|fired|normal": {
+      "v": "Pass"
+    },
+    "en|horses|normal": {
+      "v": "Pass"
+    },
+    "en|links|normal": {
+      "v": "Pass"
+    },
+    "en|narrow|normal": {
+      "v": "Pass"
+    },
+    "en|passes|normal": {
+      "v": "Pass"
+    },
+    "en|spoken|normal": {
+      "v": "Pass"
+    },
+    "en|campus|normal": {
+      "v": "Weak"
+    },
+    "en|duties|normal": {
+      "v": "Pass"
+    },
+    "en|finds|normal": {
+      "v": "Weak"
+    },
+    "en|notion|normal": {
+      "v": "Pass"
+    },
+    "en|opera|normal": {
+      "v": "Pass"
+    },
+    "en|papers|normal": {
+      "v": "Pass"
+    },
+    "en|random|normal": {
+      "v": "Pass"
+    },
+    "en|routes|normal": {
+      "v": "ExemptHomophone"
+    },
+    "en|steps|normal": {
+      "v": "Pass"
+    },
+    "en|strict|normal": {
+      "v": "Pass"
+    },
+    "en|tasks|normal": {
+      "v": "Pass"
+    },
+    "en|varied|normal": {
+      "v": "Pass"
+    },
+    "en|genre|normal": {
+      "v": "Pass"
+    },
+    "en|noise|normal": {
+      "v": "Pass"
+    },
+    "en|rite|normal": {
+      "v": "ExemptHomophone"
+    },
+    "en|accommodate|normal": {
+      "v": "Pass"
+    },
+    "en|acquaintance|normal": {
+      "v": "Weak"
+    },
+    "en|acquire|normal": {
+      "v": "Pass"
+    },
+    "en|apparent|normal": {
+      "v": "Weak"
+    },
+    "en|archipelago|normal": {
+      "v": "Pass"
+    },
+    "en|arctic|normal": {
+      "v": "Pass"
+    },
+    "en|awkward|normal": {
+      "v": "Pass"
+    },
+    "en|believe|normal": {
+      "v": "Pass"
+    },
+    "en|bureaucracy|normal": {
+      "v": "Pass"
+    },
+    "en|catastrophe|normal": {
+      "v": "Pass"
+    },
+    "en|cemetery|normal": {
+      "v": "Pass"
+    },
+    "en|circumlocution|normal": {
+      "v": "Pass"
+    },
+    "en|committee|normal": {
+      "v": "Pass"
+    },
+    "en|conscience|normal": {
+      "v": "Pass"
+    },
+    "en|controversy|normal": {
+      "v": "Pass"
+    },
+    "en|definite|normal": {
+      "v": "Pass"
+    },
+    "en|definitely|normal": {
+      "v": "Pass"
+    },
+    "en|dilemma|normal": {
+      "v": "Pass"
+    },
+    "en|embarrass|normal": {
+      "v": "Pass"
+    },
+    "en|entrepreneur|normal": {
+      "v": "Pass"
+    },
+    "en|exaggerate|normal": {
+      "v": "Pass"
+    },
+    "en|fluorescent|normal": {
+      "v": "Pass"
+    },
+    "en|foreign|normal": {
+      "v": "Pass"
+    },
+    "en|fulfill|normal": {
+      "v": "Pass"
+    },
+    "en|guarantee|normal": {
+      "v": "Pass"
+    },
+    "en|harass|normal": {
+      "v": "Pass"
+    },
+    "en|hierarchy|normal": {
+      "v": "Pass"
+    },
+    "en|humorous|normal": {
+      "v": "Pass"
+    },
+    "en|immediately|normal": {
+      "v": "Pass"
+    },
+    "en|independent|normal": {
+      "v": "Pass"
+    },
+    "en|irresistible|normal": {
+      "v": "Pass"
+    },
+    "en|jewelry|normal": {
+      "v": "Pass"
+    },
+    "en|judgment|normal": {
+      "v": "Pass"
+    },
+    "en|juxtaposition|normal": {
+      "v": "Pass"
+    },
+    "en|leisure|normal": {
+      "v": "Pass"
+    },
+    "en|license|normal": {
+      "v": "Pass"
+    },
+    "en|maintenance|normal": {
+      "v": "Pass"
+    },
+    "en|millennium|normal": {
+      "v": "Pass"
+    },
+    "en|mischievous|normal": {
+      "v": "Weak"
+    },
+    "en|necessary|normal": {
+      "v": "Pass"
+    },
+    "en|neighbor|normal": {
+      "v": "Pass"
+    },
+    "en|occurrence|normal": {
+      "v": "Pass"
+    },
+    "en|phenomenon|normal": {
+      "v": "Pass"
+    },
+    "en|privilege|normal": {
+      "v": "Pass"
+    },
+    "en|protagonist|normal": {
+      "v": "Pass"
+    },
+    "en|questionnaire|normal": {
+      "v": "Pass"
+    },
+    "en|restaurant|normal": {
+      "v": "Pass"
+    },
+    "en|rhythm|normal": {
+      "v": "Pass"
+    },
+    "en|separate|normal": {
+      "v": "Pass"
+    },
+    "en|vacuum|normal": {
+      "v": "Pass"
+    },
+    "en|citation|normal": {
+      "v": "Pass"
+    },
+    "en|between|normal": {
+      "v": "Pass"
+    },
+    "en|through|normal": {
+      "v": "Pass"
+    },
+    "en|however|normal": {
+      "v": "Pass"
+    },
+    "en|convert|normal": {
+      "v": "Pass"
+    },
+    "en|because|normal": {
+      "v": "Pass"
+    },
+    "en|several|normal": {
+      "v": "Pass"
+    },
+    "en|example|normal": {
+      "v": "Pass"
+    },
+    "en|century|normal": {
+      "v": "Pass"
+    },
+    "en|against|normal": {
+      "v": "Weak"
+    },
+    "en|usually|normal": {
+      "v": "Pass"
+    },
+    "en|without|normal": {
+      "v": "Pass"
+    },
+    "en|another|normal": {
+      "v": "Pass"
+    },
+    "en|support|normal": {
+      "v": "Pass"
+    },
+    "en|members|normal": {
+      "v": "Pass"
+    },
+    "en|country|normal": {
+      "v": "Pass"
+    },
+    "en|control|normal": {
+      "v": "Pass"
+    },
+    "en|systems|normal": {
+      "v": "Pass"
+    },
+    "en|process|normal": {
+      "v": "Pass"
+    },
+    "en|include|normal": {
+      "v": "Pass"
+    },
+    "en|various|normal": {
+      "v": "Pass"
+    },
+    "en|although|normal": {
+      "v": "Pass"
+    },
+    "en|original|normal": {
+      "v": "Pass"
+    },
+    "en|similar|normal": {
+      "v": "Pass"
+    },
+    "en|general|normal": {
+      "v": "Pass"
+    },
+    "en|popular|normal": {
+      "v": "Pass"
+    },
+    "en|further|normal": {
+      "v": "Pass"
+    },
+    "en|million|normal": {
+      "v": "Pass"
+    },
+    "en|military|normal": {
+      "v": "Pass"
+    },
+    "en|possible|normal": {
+      "v": "Pass"
+    },
+    "en|history|normal": {
+      "v": "Pass"
+    },
+    "en|created|normal": {
+      "v": "Pass"
+    },
+    "en|released|normal": {
+      "v": "Pass"
+    },
+    "en|himself|normal": {
+      "v": "Pass"
+    },
+    "en|service|normal": {
+      "v": "Pass"
+    },
+    "en|addition|normal": {
+      "v": "Weak"
+    },
+    "en|written|normal": {
+      "v": "Pass"
+    },
+    "en|produced|normal": {
+      "v": "Pass"
+    },
+    "en|national|normal": {
+      "v": "Pass"
+    },
+    "en|largest|normal": {
+      "v": "Pass"
+    },
+    "en|required|normal": {
+      "v": "Pass"
+    },
+    "en|species|normal": {
+      "v": "Pass"
+    },
+    "en|included|normal": {
+      "v": "Pass"
+    },
+    "en|version|normal": {
+      "v": "Pass"
+    },
+    "en|standard|normal": {
+      "v": "Pass"
+    },
+    "en|position|normal": {
+      "v": "Pass"
+    },
+    "en|provide|normal": {
+      "v": "Pass"
+    },
+    "en|average|normal": {
+      "v": "Pass"
+    },
+    "en|together|normal": {
+      "v": "Pass"
+    },
+    "en|certain|normal": {
+      "v": "Pass"
+    },
+    "en|present|normal": {
+      "v": "Pass"
+    },
+    "en|surface|normal": {
+      "v": "Pass"
+    },
+    "en|numbers|normal": {
+      "v": "Pass"
+    },
+    "en|received|normal": {
+      "v": "Pass"
+    },
+    "en|allowed|normal": {
+      "v": "Pass"
+    },
+    "en|thought|normal": {
+      "v": "Pass"
+    },
+    "en|natural|normal": {
+      "v": "Pass"
+    },
+    "en|provided|normal": {
+      "v": "Pass"
+    },
+    "en|economic|normal": {
+      "v": "Pass"
+    },
+    "en|company|normal": {
+      "v": "Pass"
+    },
+    "en|instead|normal": {
+      "v": "Pass"
+    },
+    "en|current|normal": {
+      "v": "Pass"
+    },
+    "en|aircraft|normal": {
+      "v": "Pass"
+    },
+    "en|program|normal": {
+      "v": "Pass"
+    },
+    "en|changes|normal": {
+      "v": "Pass"
+    },
+    "en|special|normal": {
+      "v": "Pass"
+    },
+    "en|outside|normal": {
+      "v": "Pass"
+    },
+    "en|followed|normal": {
+      "v": "Pass"
+    },
+    "en|function|normal": {
+      "v": "Pass"
+    },
+    "en|increase|normal": {
+      "v": "Weak"
+    },
+    "en|material|normal": {
+      "v": "Pass"
+    },
+    "en|designed|normal": {
+      "v": "Pass"
+    },
+    "en|problems|normal": {
+      "v": "Pass"
+    },
+    "en|produce|normal": {
+      "v": "Pass"
+    },
+    "en|services|normal": {
+      "v": "Pass"
+    },
+    "en|research|normal": {
+      "v": "Pass"
+    },
+    "en|started|normal": {
+      "v": "Pass"
+    },
+    "en|pressure|normal": {
+      "v": "Pass"
+    },
+    "en|returned|normal": {
+      "v": "Pass"
+    },
+    "en|leading|normal": {
+      "v": "Pass"
+    },
+    "en|results|normal": {
+      "v": "Pass"
+    },
+    "en|meaning|normal": {
+      "v": "Pass"
+    },
+    "en|problem|normal": {
+      "v": "Pass"
+    },
+    "en|practice|normal": {
+      "v": "Pass"
+    },
+    "en|limited|normal": {
+      "v": "Pass"
+    },
+    "en|movement|normal": {
+      "v": "Pass"
+    },
+    "en|official|normal": {
+      "v": "Pass"
+    },
+    "en|referred|normal": {
+      "v": "Pass"
+    },
+    "en|believed|normal": {
+      "v": "Pass"
+    },
+    "en|network|normal": {
+      "v": "Pass"
+    },
+    "en|students|normal": {
+      "v": "Pass"
+    },
+    "en|specific|normal": {
+      "v": "Pass"
+    },
+    "en|subject|normal": {
+      "v": "Pass"
+    },
+    "en|remained|normal": {
+      "v": "Pass"
+    },
+    "en|directly|normal": {
+      "v": "Pass"
+    },
+    "en|evidence|normal": {
+      "v": "Pass"
+    },
+    "en|culture|normal": {
+      "v": "Pass"
+    },
+    "en|elements|normal": {
+      "v": "Pass"
+    },
+    "en|features|normal": {
+      "v": "Pass"
+    },
+    "en|working|normal": {
+      "v": "Pass"
+    },
+    "en|already|normal": {
+      "v": "Pass"
+    },
+    "en|complex|normal": {
+      "v": "Pass"
+    },
+    "en|commonly|normal": {
+      "v": "Pass"
+    },
+    "en|includes|normal": {
+      "v": "Pass"
+    },
+    "en|located|normal": {
+      "v": "Pass"
+    },
+    "en|whether|normal": {
+      "v": "ExemptHomophone"
+    },
+    "en|success|normal": {
+      "v": "Pass"
+    },
+    "en|interest|normal": {
+      "v": "Pass"
+    },
+    "en|decided|normal": {
+      "v": "Pass"
+    },
+    "en|appeared|normal": {
+      "v": "Pass"
+    },
+    "en|writing|normal": {
+      "v": "Pass"
+    },
+    "en|brought|normal": {
+      "v": "Pass"
+    },
+    "en|smaller|normal": {
+      "v": "Pass"
+    },
+    "en|effects|normal": {
+      "v": "Pass"
+    },
+    "en|private|normal": {
+      "v": "Pass"
+    },
+    "en|earlier|normal": {
+      "v": "Pass"
+    },
+    "en|players|normal": {
+      "v": "Pass"
+    },
+    "en|involved|normal": {
+      "v": "Pass"
+    },
+    "en|majority|normal": {
+      "v": "Pass"
+    },
+    "en|physical|normal": {
+      "v": "Pass"
+    },
+    "en|variety|normal": {
+      "v": "Pass"
+    },
+    "en|central|normal": {
+      "v": "Pass"
+    },
+    "en|complete|normal": {
+      "v": "Pass"
+    },
+    "en|related|normal": {
+      "v": "Pass"
+    },
+    "en|industry|normal": {
+      "v": "Pass"
+    },
+    "en|percent|normal": {
+      "v": "Weak"
+    },
+    "en|changed|normal": {
+      "v": "Pass"
+    },
+    "en|remains|normal": {
+      "v": "Pass"
+    },
+    "en|primary|normal": {
+      "v": "Pass"
+    },
+    "en|society|normal": {
+      "v": "Pass"
+    },
+    "en|recorded|normal": {
+      "v": "Pass"
+    },
+    "en|council|normal": {
+      "v": "Pass"
+    },
+    "en|science|normal": {
+      "v": "Pass"
+    },
+    "en|multiple|normal": {
+      "v": "Pass"
+    },
+    "en|schools|normal": {
+      "v": "Pass"
+    },
+    "en|greater|normal": {
+      "v": "Pass"
+    },
+    "en|products|normal": {
+      "v": "Pass"
+    },
+    "en|reported|normal": {
+      "v": "Pass"
+    },
+    "en|software|normal": {
+      "v": "Pass"
+    },
+    "en|western|normal": {
+      "v": "Pass"
+    },
+    "en|previous|normal": {
+      "v": "Pass"
+    },
+    "en|attempt|normal": {
+      "v": "Pass"
+    },
+    "en|provides|normal": {
+      "v": "Pass"
+    },
+    "en|regular|normal": {
+      "v": "Pass"
+    },
+    "en|release|normal": {
+      "v": "Pass"
+    },
+    "en|methods|normal": {
+      "v": "Pass"
+    },
+    "en|towards|normal": {
+      "v": "Pass"
+    },
+    "en|contains|normal": {
+      "v": "Pass"
+    },
+    "en|sources|normal": {
+      "v": "Pass"
+    },
+    "en|capital|normal": {
+      "v": "Pass"
+    },
+    "en|replaced|normal": {
+      "v": "Pass"
+    },
+    "en|elected|normal": {
+      "v": "Pass"
+    },
+    "en|applied|normal": {
+      "v": "Pass"
+    },
+    "en|defined|normal": {
+      "v": "Pass"
+    },
+    "en|personal|normal": {
+      "v": "Pass"
+    },
+    "en|response|normal": {
+      "v": "Pass"
+    },
+    "en|highest|normal": {
+      "v": "Pass"
+    },
+    "en|property|normal": {
+      "v": "Pass"
+    },
+    "en|actually|normal": {
+      "v": "Pass"
+    },
+    "en|distance|normal": {
+      "v": "Pass"
+    },
+    "en|quickly|normal": {
+      "v": "Pass"
+    },
+    "en|ancient|normal": {
+      "v": "Pass"
+    },
+    "en|continue|normal": {
+      "v": "Pass"
+    },
+    "en|project|normal": {
+      "v": "Pass"
+    },
+    "en|carried|normal": {
+      "v": "Pass"
+    },
+    "en|edition|normal": {
+      "v": "Weak"
+    },
+    "en|product|normal": {
+      "v": "Pass"
+    },
+    "en|quality|normal": {
+      "v": "Pass"
+    },
+    "en|programs|normal": {
+      "v": "Pass"
+    },
+    "en|intended|normal": {
+      "v": "Pass"
+    },
+    "en|appears|normal": {
+      "v": "Pass"
+    },
+    "en|objects|normal": {
+      "v": "Pass"
+    },
+    "en|campaign|normal": {
+      "v": "Pass"
+    },
+    "en|despite|normal": {
+      "v": "Pass"
+    },
+    "en|economy|normal": {
+      "v": "Pass"
+    },
+    "en|expected|normal": {
+      "v": "Pass"
+    },
+    "en|founded|normal": {
+      "v": "Pass"
+    },
+    "en|playing|normal": {
+      "v": "Pass"
+    },
+    "en|northern|normal": {
+      "v": "Pass"
+    },
+    "en|ability|normal": {
+      "v": "Pass"
+    },
+    "en|analysis|normal": {
+      "v": "Pass"
+    },
+    "en|numerous|normal": {
+      "v": "Pass"
+    },
+    "en|prevent|normal": {
+      "v": "Pass"
+    },
+    "en|approach|normal": {
+      "v": "Pass"
+    },
+    "en|reduced|normal": {
+      "v": "Pass"
+    },
+    "en|concept|normal": {
+      "v": "Pass"
+    },
+    "en|studies|normal": {
+      "v": "Pass"
+    },
+    "en|require|normal": {
+      "v": "Pass"
+    },
+    "en|training|normal": {
+      "v": "Pass"
+    },
+    "en|adopted|normal": {
+      "v": "Pass"
+    },
+    "en|contrast|normal": {
+      "v": "Pass"
+    },
+    "en|offered|normal": {
+      "v": "Pass"
+    },
+    "en|probably|normal": {
+      "v": "Pass"
+    },
+    "en|becomes|normal": {
+      "v": "Pass"
+    },
+    "en|reached|normal": {
+      "v": "Pass"
+    },
+    "en|compared|normal": {
+      "v": "Pass"
+    },
+    "en|divided|normal": {
+      "v": "Pass"
+    },
+    "en|parties|normal": {
+      "v": "Pass"
+    },
+    "en|southern|normal": {
+      "v": "Pass"
+    },
+    "en|largely|normal": {
+      "v": "Pass"
+    },
+    "en|married|normal": {
+      "v": "Pass"
+    },
+    "en|proposed|normal": {
+      "v": "Pass"
+    },
+    "en|account|normal": {
+      "v": "Pass"
+    },
+    "en|decision|normal": {
+      "v": "Pass"
+    },
+    "en|activity|normal": {
+      "v": "Pass"
+    },
+    "en|section|normal": {
+      "v": "Pass"
+    },
+    "en|accepted|normal": {
+      "v": "Pass"
+    },
+    "en|marriage|normal": {
+      "v": "Pass"
+    },
+    "en|content|normal": {
+      "v": "Pass"
+    },
+    "en|internal|normal": {
+      "v": "Pass"
+    },
+    "en|letters|normal": {
+      "v": "Pass"
+    },
+    "en|regions|normal": {
+      "v": "Pass"
+    },
+    "en|running|normal": {
+      "v": "Pass"
+    },
+    "en|stories|normal": {
+      "v": "Pass"
+    },
+    "en|kingdom|normal": {
+      "v": "Pass"
+    },
+    "en|versions|normal": {
+      "v": "Pass"
+    },
+    "en|soldiers|normal": {
+      "v": "Pass"
+    },
+    "en|location|normal": {
+      "v": "Pass"
+    },
+    "en|element|normal": {
+      "v": "Pass"
+    },
+    "en|initial|normal": {
+      "v": "Pass"
+    },
+    "en|nuclear|normal": {
+      "v": "Pass"
+    },
+    "en|animals|normal": {
+      "v": "Pass"
+    },
+    "en|workers|normal": {
+      "v": "Pass"
+    },
+    "en|billion|normal": {
+      "v": "Weak"
+    },
+    "en|cultural|normal": {
+      "v": "Pass"
+    },
+    "en|devices|normal": {
+      "v": "Pass"
+    },
+    "en|instance|normal": {
+      "v": "Pass"
+    },
+    "en|daughter|normal": {
+      "v": "Pass"
+    },
+    "en|growing|normal": {
+      "v": "Pass"
+    },
+    "en|extended|normal": {
+      "v": "Pass"
+    },
+    "en|feature|normal": {
+      "v": "Pass"
+    },
+    "en|musical|normal": {
+      "v": "Pass"
+    },
+    "en|negative|normal": {
+      "v": "Pass"
+    },
+    "en|refused|normal": {
+      "v": "Pass"
+    },
+    "en|removed|normal": {
+      "v": "Pass"
+    },
+    "en|medical|normal": {
+      "v": "Pass"
+    },
+    "en|observed|normal": {
+      "v": "Pass"
+    },
+    "en|requires|normal": {
+      "v": "Pass"
+    },
+    "en|claimed|normal": {
+      "v": "Pass"
+    },
+    "en|positive|normal": {
+      "v": "Pass"
+    },
+    "en|congress|normal": {
+      "v": "Pass"
+    },
+    "en|critical|normal": {
+      "v": "Pass"
+    },
+    "en|article|normal": {
+      "v": "Pass"
+    },
+    "en|security|normal": {
+      "v": "Pass"
+    },
+    "en|address|normal": {
+      "v": "Pass"
+    },
+    "en|becoming|normal": {
+      "v": "Weak"
+    },
+    "en|efforts|normal": {
+      "v": "Pass"
+    },
+    "en|contact|normal": {
+      "v": "Pass"
+    },
+    "en|station|normal": {
+      "v": "Pass"
+    },
+    "en|allowing|normal": {
+      "v": "Pass"
+    },
+    "en|finally|normal": {
+      "v": "Pass"
+    },
+    "en|ordered|normal": {
+      "v": "Pass"
+    },
+    "en|combined|normal": {
+      "v": "Pass"
+    },
+    "en|recently|normal": {
+      "v": "Pass"
+    },
+    "en|internet|normal": {
+      "v": "Pass"
+    },
+    "en|contain|normal": {
+      "v": "Pass"
+    },
+    "en|serious|normal": {
+      "v": "Pass"
+    },
+    "en|powerful|normal": {
+      "v": "Pass"
+    },
+    "en|disease|normal": {
+      "v": "Pass"
+    },
+    "en|election|normal": {
+      "v": "Pass"
+    },
+    "en|resulted|normal": {
+      "v": "Pass"
+    },
+    "en|friends|normal": {
+      "v": "Pass"
+    },
+    "en|maximum|normal": {
+      "v": "Pass"
+    },
+    "en|develop|normal": {
+      "v": "Pass"
+    },
+    "en|leaving|normal": {
+      "v": "Pass"
+    },
+    "en|behavior|normal": {
+      "v": "Pass"
+    },
+    "en|conflict|normal": {
+      "v": "Pass"
+    },
+    "en|purpose|normal": {
+      "v": "Pass"
+    },
+    "en|reading|normal": {
+      "v": "Pass"
+    },
+    "en|weapons|normal": {
+      "v": "Pass"
+    },
+    "en|families|normal": {
+      "v": "Pass"
+    },
+    "en|featured|normal": {
+      "v": "Pass"
+    },
+    "en|meeting|normal": {
+      "v": "Pass"
+    },
+    "en|relative|normal": {
+      "v": "Pass"
+    },
+    "en|minutes|normal": {
+      "v": "Pass"
+    },
+    "en|attempts|normal": {
+      "v": "Pass"
+    },
+    "en|presence|normal": {
+      "v": "Pass"
+    },
+    "en|slightly|normal": {
+      "v": "Pass"
+    },
+    "en|electric|normal": {
+      "v": "Pass"
+    },
+    "en|episode|normal": {
+      "v": "Pass"
+    },
+    "en|federal|normal": {
+      "v": "Pass"
+    },
+    "en|parents|normal": {
+      "v": "Pass"
+    },
+    "en|somewhat|normal": {
+      "v": "Pass"
+    },
+    "en|constant|normal": {
+      "v": "Pass"
+    },
+    "en|existing|normal": {
+      "v": "Pass"
+    },
+    "en|perform|normal": {
+      "v": "Pass"
+    },
+    "en|strength|normal": {
+      "v": "Pass"
+    },
+    "en|officers|normal": {
+      "v": "Pass"
+    },
+    "en|opening|normal": {
+      "v": "Pass"
+    },
+    "en|projects|normal": {
+      "v": "Pass"
+    },
+    "en|capacity|normal": {
+      "v": "Pass"
+    },
+    "en|external|normal": {
+      "v": "Pass"
+    },
+    "en|reaction|normal": {
+      "v": "Pass"
+    },
+    "en|receive|normal": {
+      "v": "Pass"
+    },
+    "en|composed|normal": {
+      "v": "Pass"
+    },
+    "en|solution|normal": {
+      "v": "Pass"
+    },
+    "en|entirely|normal": {
+      "v": "Pass"
+    },
+    "en|failure|normal": {
+      "v": "Pass"
+    },
+    "en|reasons|normal": {
+      "v": "Pass"
+    },
+    "en|sequence|normal": {
+      "v": "Pass"
+    },
+    "en|stations|normal": {
+      "v": "Pass"
+    },
+    "en|attacks|normal": {
+      "v": "Pass"
+    },
+    "en|classes|normal": {
+      "v": "Pass"
+    },
+    "en|domestic|normal": {
+      "v": "Pass"
+    },
+    "en|leaders|normal": {
+      "v": "Pass"
+    },
+    "en|perhaps|normal": {
+      "v": "Pass"
+    },
+    "en|consists|normal": {
+      "v": "Pass"
+    },
+    "en|exchange|normal": {
+      "v": "Pass"
+    },
+    "en|nothing|normal": {
+      "v": "Pass"
+    },
+    "en|citizens|normal": {
+      "v": "Pass"
+    },
+    "en|command|normal": {
+      "v": "Pass"
+    },
+    "en|mission|normal": {
+      "v": "Pass"
+    },
+    "en|records|normal": {
+      "v": "Pass"
+    },
+    "en|digital|normal": {
+      "v": "Pass"
+    },
+    "en|factors|normal": {
+      "v": "Pass"
+    },
+    "en|magnetic|normal": {
+      "v": "Pass"
+    },
+    "en|starting|normal": {
+      "v": "Pass"
+    },
+    "en|examples|normal": {
+      "v": "Pass"
+    },
+    "en|occurred|normal": {
+      "v": "Pass"
+    },
+    "en|college|normal": {
+      "v": "Pass"
+    },
+    "en|rapidly|normal": {
+      "v": "Pass"
+    },
+    "en|unknown|normal": {
+      "v": "Pass"
+    },
+    "en|advanced|normal": {
+      "v": "Pass"
+    },
+    "en|display|normal": {
+      "v": "Pass"
+    },
+    "en|distinct|normal": {
+      "v": "Pass"
+    },
+    "en|overall|normal": {
+      "v": "Pass"
+    },
+    "en|measure|normal": {
+      "v": "Pass"
+    },
+    "en|measured|normal": {
+      "v": "Pass"
+    },
+    "en|protect|normal": {
+      "v": "Pass"
+    },
+    "en|eastern|normal": {
+      "v": "Pass"
+    },
+    "en|expanded|normal": {
+      "v": "Pass"
+    },
+    "en|normally|normal": {
+      "v": "Pass"
+    },
+    "en|engines|normal": {
+      "v": "Pass"
+    },
+    "en|entered|normal": {
+      "v": "Pass"
+    },
+    "en|actions|normal": {
+      "v": "Pass"
+    },
+    "en|typical|normal": {
+      "v": "Pass"
+    },
+    "en|chemical|normal": {
+      "v": "Pass"
+    },
+    "en|creating|normal": {
+      "v": "Pass"
+    },
+    "en|creation|normal": {
+      "v": "Pass"
+    },
+    "en|derived|normal": {
+      "v": "Pass"
+    },
+    "en|fighting|normal": {
+      "v": "Pass"
+    },
+    "en|operate|normal": {
+      "v": "Pass"
+    },
+    "en|reality|normal": {
+      "v": "Pass"
+    },
+    "en|causing|normal": {
+      "v": "Pass"
+    },
+    "en|contract|normal": {
+      "v": "Pass"
+    },
+    "en|managed|normal": {
+      "v": "Fail"
+    },
+    "en|audience|normal": {
+      "v": "Pass"
+    },
+    "en|covered|normal": {
+      "v": "Pass"
+    },
+    "en|decades|normal": {
+      "v": "Pass"
+    },
+    "en|division|normal": {
+      "v": "Pass"
+    },
+    "en|greatly|normal": {
+      "v": "Pass"
+    },
+    "en|regarded|normal": {
+      "v": "Pass"
+    },
+    "en|journal|normal": {
+      "v": "Pass"
+    },
+    "en|context|normal": {
+      "v": "Pass"
+    },
+    "en|opposed|normal": {
+      "v": "Pass"
+    },
+    "en|republic|normal": {
+      "v": "Pass"
+    },
+    "en|designs|normal": {
+      "v": "Pass"
+    },
+    "en|maintain|normal": {
+      "v": "Pass"
+    },
+    "en|forward|normal": {
+      "v": "Pass"
+    },
+    "en|planned|normal": {
+      "v": "Pass"
+    },
+    "en|student|normal": {
+      "v": "Pass"
+    },
+    "en|catholic|normal": {
+      "v": "Pass"
+    },
+    "en|affected|normal": {
+      "v": "Pass"
+    },
+    "en|captured|normal": {
+      "v": "Pass"
+    },
+    "en|showing|normal": {
+      "v": "Pass"
+    },
+    "en|granted|normal": {
+      "v": "Pass"
+    },
+    "en|islands|normal": {
+      "v": "Pass"
+    },
+    "en|machines|normal": {
+      "v": "Pass"
+    },
+    "en|directed|normal": {
+      "v": "Pass"
+    },
+    "en|finished|normal": {
+      "v": "Pass"
+    },
+    "en|pattern|normal": {
+      "v": "Pass"
+    },
+    "en|purposes|normal": {
+      "v": "Pass"
+    },
+    "en|rejected|normal": {
+      "v": "Pass"
+    },
+    "en|artists|normal": {
+      "v": "Pass"
+    },
+    "en|declared|normal": {
+      "v": "Pass"
+    },
+    "en|magazine|normal": {
+      "v": "Pass"
+    },
+    "en|religion|normal": {
+      "v": "Pass"
+    },
+    "en|visited|normal": {
+      "v": "Pass"
+    },
+    "en|achieved|normal": {
+      "v": "Pass"
+    },
+    "en|defense|normal": {
+      "v": "Pass"
+    },
+    "en|identity|normal": {
+      "v": "Pass"
+    },
+    "en|patterns|normal": {
+      "v": "Pass"
+    },
+    "en|signals|normal": {
+      "v": "Pass"
+    },
+    "en|arrived|normal": {
+      "v": "Pass"
+    },
+    "en|consider|normal": {
+      "v": "Pass"
+    },
+    "en|capable|normal": {
+      "v": "Pass"
+    },
+    "en|figures|normal": {
+      "v": "Pass"
+    },
+    "en|hardware|normal": {
+      "v": "Pass"
+    },
+    "en|message|normal": {
+      "v": "Pass"
+    },
+    "en|minister|normal": {
+      "v": "Pass"
+    },
+    "en|freedom|normal": {
+      "v": "Pass"
+    },
+    "en|improved|normal": {
+      "v": "Pass"
+    },
+    "en|aspects|normal": {
+      "v": "Pass"
+    },
+    "en|details|normal": {
+      "v": "Pass"
+    },
+    "en|setting|normal": {
+      "v": "Pass"
+    },
+    "en|depends|normal": {
+      "v": "Pass"
+    },
+    "en|indicate|normal": {
+      "v": "Pass"
+    },
+    "en|launched|normal": {
+      "v": "Pass"
+    },
+    "en|possibly|normal": {
+      "v": "Pass"
+    },
+    "en|traffic|normal": {
+      "v": "Pass"
+    },
+    "en|describe|normal": {
+      "v": "Pass"
+    },
+    "en|fiction|normal": {
+      "v": "Pass"
+    },
+    "en|heavily|normal": {
+      "v": "Pass"
+    },
+    "en|visible|normal": {
+      "v": "Pass"
+    },
+    "en|closely|normal": {
+      "v": "Pass"
+    },
+    "en|employed|normal": {
+      "v": "Pass"
+    },
+    "en|follows|normal": {
+      "v": "Pass"
+    },
+    "en|improve|normal": {
+      "v": "Pass"
+    },
+    "en|neither|normal": {
+      "v": "Pass"
+    },
+    "en|suggests|normal": {
+      "v": "Pass"
+    },
+    "en|attached|normal": {
+      "v": "Pass"
+    },
+    "en|critics|normal": {
+      "v": "Pass"
+    },
+    "en|dropped|normal": {
+      "v": "Pass"
+    },
+    "en|scholars|normal": {
+      "v": "Pass"
+    },
+    "en|vehicles|normal": {
+      "v": "Pass"
+    },
+    "en|greatest|normal": {
+      "v": "Pass"
+    },
+    "en|channel|normal": {
+      "v": "Pass"
+    },
+    "en|focused|normal": {
+      "v": "Pass"
+    },
+    "en|operated|normal": {
+      "v": "Pass"
+    },
+    "en|inspired|normal": {
+      "v": "Pass"
+    },
+    "en|periods|normal": {
+      "v": "Pass"
+    },
+    "en|regional|normal": {
+      "v": "Pass"
+    },
+    "en|winning|normal": {
+      "v": "Pass"
+    },
+    "en|suffered|normal": {
+      "v": "Pass"
+    },
+    "en|accounts|normal": {
+      "v": "Pass"
+    },
+    "en|awarded|normal": {
+      "v": "Pass"
+    },
+    "en|correct|normal": {
+      "v": "Pass"
+    },
+    "en|measures|normal": {
+      "v": "Pass"
+    },
+    "en|printed|normal": {
+      "v": "Pass"
+    },
+    "en|selected|normal": {
+      "v": "Pass"
+    },
+    "en|treated|normal": {
+      "v": "Pass"
+    },
+    "en|authors|normal": {
+      "v": "Pass"
+    },
+    "en|involves|normal": {
+      "v": "Pass"
+    },
+    "en|storage|normal": {
+      "v": "Pass"
+    },
+    "en|theories|normal": {
+      "v": "Pass"
+    },
+    "en|markets|normal": {
+      "v": "Pass"
+    },
+    "en|opposite|normal": {
+      "v": "Pass"
+    },
+    "en|violence|normal": {
+      "v": "Pass"
+    },
+    "en|director|normal": {
+      "v": "Pass"
+    },
+    "en|prepared|normal": {
+      "v": "Pass"
+    },
+    "en|transfer|normal": {
+      "v": "Pass"
+    },
+    "en|achieve|normal": {
+      "v": "Pass"
+    },
+    "en|nations|normal": {
+      "v": "Pass"
+    },
+    "en|strongly|normal": {
+      "v": "Pass"
+    },
+    "en|academy|normal": {
+      "v": "Pass"
+    },
+    "en|benefit|normal": {
+      "v": "Pass"
+    },
+    "en|climate|normal": {
+      "v": "Pass"
+    },
+    "en|policies|normal": {
+      "v": "Pass"
+    },
+    "en|quantum|normal": {
+      "v": "Pass"
+    },
+    "en|reports|normal": {
+      "v": "Pass"
+    },
+    "en|standing|normal": {
+      "v": "Pass"
+    },
+    "en|testing|normal": {
+      "v": "Pass"
+    },
+    "en|episodes|normal": {
+      "v": "Pass"
+    },
+    "en|argument|normal": {
+      "v": "Pass"
+    },
+    "en|modified|normal": {
+      "v": "Pass"
+    },
+    "en|respect|normal": {
+      "v": "Pass"
+    },
+    "en|strategy|normal": {
+      "v": "Pass"
+    },
+    "en|anything|normal": {
+      "v": "Pass"
+    },
+    "en|churches|normal": {
+      "v": "Pass"
+    },
+    "en|notable|normal": {
+      "v": "Pass"
+    },
+    "en|obtained|normal": {
+      "v": "Pass"
+    },
+    "en|victory|normal": {
+      "v": "Pass"
+    },
+    "en|circuit|normal": {
+      "v": "Pass"
+    },
+    "en|degrees|normal": {
+      "v": "Pass"
+    },
+    "en|hundred|normal": {
+      "v": "Weak"
+    },
+    "en|concepts|normal": {
+      "v": "Pass"
+    },
+    "en|detailed|normal": {
+      "v": "Pass"
+    },
+    "en|politics|normal": {
+      "v": "Pass"
+    },
+    "en|assigned|normal": {
+      "v": "Pass"
+    },
+    "en|balance|normal": {
+      "v": "Weak"
+    },
+    "en|minimum|normal": {
+      "v": "Pass"
+    },
+    "en|parallel|normal": {
+      "v": "Pass"
+    },
+    "en|request|normal": {
+      "v": "Pass"
+    },
+    "en|academic|normal": {
+      "v": "Pass"
+    },
+    "en|patients|normal": {
+      "v": "Fail"
+    },
+    "en|opinion|normal": {
+      "v": "Pass"
+    },
+    "en|windows|normal": {
+      "v": "Pass"
+    },
+    "en|changing|normal": {
+      "v": "Pass"
+    },
+    "en|cultures|normal": {
+      "v": "Pass"
+    },
+    "en|football|normal": {
+      "v": "Pass"
+    },
+    "en|protein|normal": {
+      "v": "Pass"
+    },
+    "en|voltage|normal": {
+      "v": "Pass"
+    },
+    "en|whereas|normal": {
+      "v": "Pass"
+    },
+    "en|exactly|normal": {
+      "v": "Pass"
+    },
+    "en|portion|normal": {
+      "v": "Pass"
+    },
+    "en|vehicle|normal": {
+      "v": "Pass"
+    },
+    "en|accused|normal": {
+      "v": "Pass"
+    },
+    "en|earliest|normal": {
+      "v": "Pass"
+    },
+    "en|existed|normal": {
+      "v": "Pass"
+    },
+    "en|networks|normal": {
+      "v": "Pass"
+    },
+    "en|teaching|normal": {
+      "v": "Pass"
+    },
+    "en|emperor|normal": {
+      "v": "Pass"
+    },
+    "en|concern|normal": {
+      "v": "Pass"
+    },
+    "en|decline|normal": {
+      "v": "Pass"
+    },
+    "en|defeated|normal": {
+      "v": "Pass"
+    },
+    "en|hundreds|normal": {
+      "v": "Pass"
+    },
+    "en|younger|normal": {
+      "v": "Pass"
+    },
+    "en|acquired|normal": {
+      "v": "Pass"
+    },
+    "en|formula|normal": {
+      "v": "Pass"
+    },
+    "en|learned|normal": {
+      "v": "Pass"
+    },
+    "en|learning|normal": {
+      "v": "Pass"
+    },
+    "en|literary|normal": {
+      "v": "Pass"
+    },
+    "en|speaking|normal": {
+      "v": "Pass"
+    },
+    "en|accurate|normal": {
+      "v": "Pass"
+    },
+    "en|amounts|normal": {
+      "v": "Pass"
+    },
+    "en|progress|normal": {
+      "v": "Pass"
+    },
+    "en|adapted|normal": {
+      "v": "Pass"
+    },
+    "en|articles|normal": {
+      "v": "Pass"
+    },
+    "en|housing|normal": {
+      "v": "Pass"
+    },
+    "en|looking|normal": {
+      "v": "Pass"
+    },
+    "en|sections|normal": {
+      "v": "Pass"
+    },
+    "en|shortly|normal": {
+      "v": "Pass"
+    },
+    "en|weather|normal": {
+      "v": "Pass"
+    },
+    "en|arranged|normal": {
+      "v": "Weak"
+    },
+    "en|attended|normal": {
+      "v": "Pass"
+    },
+    "en|extreme|normal": {
+      "v": "Pass"
+    },
+    "en|holding|normal": {
+      "v": "Pass"
+    },
+    "en|identify|normal": {
+      "v": "Pass"
+    },
+    "en|morning|normal": {
+      "v": "Pass"
+    },
+    "en|passing|normal": {
+      "v": "Pass"
+    },
+    "en|theorem|normal": {
+      "v": "Pass"
+    },
+    "en|thousand|normal": {
+      "v": "Weak"
+    },
+    "en|universe|normal": {
+      "v": "Pass"
+    },
+    "en|assumed|normal": {
+      "v": "Pass"
+    },
+    "en|district|normal": {
+      "v": "Pass"
+    },
+    "en|electron|normal": {
+      "v": "Pass"
+    },
+    "en|hydrogen|normal": {
+      "v": "Pass"
+    },
+    "en|seasons|normal": {
+      "v": "Pass"
+    },
+    "en|straight|normal": {
+      "v": "Pass"
+    },
+    "en|studied|normal": {
+      "v": "Pass"
+    },
+    "en|concerns|normal": {
+      "v": "Pass"
+    },
+    "en|evolved|normal": {
+      "v": "Pass"
+    },
+    "en|mounted|normal": {
+      "v": "Pass"
+    },
+    "en|produces|normal": {
+      "v": "Pass"
+    },
+    "en|repeated|normal": {
+      "v": "Pass"
+    },
+    "en|replace|normal": {
+      "v": "Pass"
+    },
+    "en|trading|normal": {
+      "v": "Pass"
+    },
+    "en|document|normal": {
+      "v": "Pass"
+    },
+    "en|matters|normal": {
+      "v": "Pass"
+    },
+    "en|proteins|normal": {
+      "v": "Pass"
+    },
+    "en|reducing|normal": {
+      "v": "Pass"
+    },
+    "en|revealed|normal": {
+      "v": "Pass"
+    },
+    "en|roughly|normal": {
+      "v": "Pass"
+    },
+    "en|seconds|normal": {
+      "v": "Pass"
+    },
+    "en|writings|normal": {
+      "v": "Pass"
+    },
+    "en|suitable|normal": {
+      "v": "Pass"
+    },
+    "en|husband|normal": {
+      "v": "Pass"
+    },
+    "en|planning|normal": {
+      "v": "Pass"
+    },
+    "en|serving|normal": {
+      "v": "Pass"
+    },
+    "en|symptoms|normal": {
+      "v": "Pass"
+    },
+    "en|advance|normal": {
+      "v": "Weak"
+    },
+    "en|supplies|normal": {
+      "v": "Pass"
+    },
+    "en|writers|normal": {
+      "v": "Pass"
+    },
+    "en|charged|normal": {
+      "v": "Pass"
+    },
+    "en|criminal|normal": {
+      "v": "Pass"
+    },
+    "en|landing|normal": {
+      "v": "Pass"
+    },
+    "en|capture|normal": {
+      "v": "Pass"
+    },
+    "en|interior|normal": {
+      "v": "Pass"
+    },
+    "en|persons|normal": {
+      "v": "Pass"
+    },
+    "en|someone|normal": {
+      "v": "Pass"
+    },
+    "en|concrete|normal": {
+      "v": "Pass"
+    },
+    "en|density|normal": {
+      "v": "Pass"
+    },
+    "en|officer|normal": {
+      "v": "Pass"
+    },
+    "en|platform|normal": {
+      "v": "Pass"
+    },
+    "en|boundary|normal": {
+      "v": "Pass"
+    },
+    "en|carrying|normal": {
+      "v": "Pass"
+    },
+    "en|category|normal": {
+      "v": "Pass"
+    },
+    "en|declined|normal": {
+      "v": "Pass"
+    },
+    "en|illegal|normal": {
+      "v": "Pass"
+    },
+    "en|perfect|normal": {
+      "v": "Pass"
+    },
+    "en|promote|normal": {
+      "v": "Pass"
+    },
+    "en|survive|normal": {
+      "v": "Pass"
+    },
+    "en|assembly|normal": {
+      "v": "Pass"
+    },
+    "en|benefits|normal": {
+      "v": "Pass"
+    },
+    "en|sentence|normal": {
+      "v": "Pass"
+    },
+    "en|subjects|normal": {
+      "v": "Pass"
+    },
+    "en|approved|normal": {
+      "v": "Pass"
+    },
+    "en|brothers|normal": {
+      "v": "Pass"
+    },
+    "en|executed|normal": {
+      "v": "Pass"
+    },
+    "en|getting|normal": {
+      "v": "Pass"
+    },
+    "en|relation|normal": {
+      "v": "Pass"
+    },
+    "en|uniform|normal": {
+      "v": "Pass"
+    },
+    "en|vessels|normal": {
+      "v": "Pass"
+    },
+    "en|females|normal": {
+      "v": "Pass"
+    },
+    "en|suggest|normal": {
+      "v": "Pass"
+    },
+    "en|symbols|normal": {
+      "v": "Pass"
+    },
+    "en|vertical|normal": {
+      "v": "Pass"
+    },
+    "en|village|normal": {
+      "v": "Pass"
+    },
+    "en|absence|normal": {
+      "v": "Pass"
+    },
+    "en|affairs|normal": {
+      "v": "Pass"
+    },
+    "en|ceremony|normal": {
+      "v": "Pass"
+    },
+    "en|equipped|normal": {
+      "v": "Pass"
+    },
+    "en|explain|normal": {
+      "v": "Pass"
+    },
+    "en|historic|normal": {
+      "v": "Pass"
+    },
+    "en|missile|normal": {
+      "v": "Pass"
+    },
+    "en|absolute|normal": {
+      "v": "Pass"
+    },
+    "en|channels|normal": {
+      "v": "Pass"
+    },
+    "en|clearly|normal": {
+      "v": "Pass"
+    },
+    "en|finding|normal": {
+      "v": "Pass"
+    },
+    "en|herself|normal": {
+      "v": "Pass"
+    },
+    "en|killing|normal": {
+      "v": "Pass"
+    },
+    "en|reaching|normal": {
+      "v": "Pass"
+    },
+    "en|rotation|normal": {
+      "v": "Pass"
+    },
+    "en|strings|normal": {
+      "v": "Weak"
+    },
+    "en|supports|normal": {
+      "v": "Pass"
+    },
+    "en|quarter|normal": {
+      "v": "Pass"
+    },
+    "en|attacked|normal": {
+      "v": "Pass"
+    },
+    "en|genetic|normal": {
+      "v": "Pass"
+    },
+    "en|invasion|normal": {
+      "v": "Pass"
+    },
+    "en|printing|normal": {
+      "v": "Pass"
+    },
+    "en|speakers|normal": {
+      "v": "Pass"
+    },
+    "en|velocity|normal": {
+      "v": "Pass"
+    },
+    "en|arrested|normal": {
+      "v": "Pass"
+    },
+    "en|concert|normal": {
+      "v": "Pass"
+    },
+    "en|downtown|normal": {
+      "v": "Pass"
+    },
+    "en|entitled|normal": {
+      "v": "Pass"
+    },
+    "en|infantry|normal": {
+      "v": "Pass"
+    },
+    "en|massive|normal": {
+      "v": "Pass"
+    },
+    "en|meetings|normal": {
+      "v": "Pass"
+    },
+    "en|missions|normal": {
+      "v": "Pass"
+    },
+    "en|reforms|normal": {
+      "v": "Pass"
+    },
+    "en|survived|normal": {
+      "v": "Pass"
+    },
+    "en|thereby|normal": {
+      "v": "Pass"
+    },
+    "en|thermal|normal": {
+      "v": "Pass"
+    },
+    "en|victims|normal": {
+      "v": "Pass"
+    },
+    "en|beliefs|normal": {
+      "v": "Pass"
+    },
+    "en|classic|normal": {
+      "v": "Pass"
+    },
+    "en|doctrine|normal": {
+      "v": "Pass"
+    },
+    "en|forming|normal": {
+      "v": "Pass"
+    },
+    "en|moreover|normal": {
+      "v": "Pass"
+    },
+    "en|engaged|normal": {
+      "v": "Pass"
+    },
+    "en|equation|normal": {
+      "v": "Pass"
+    },
+    "en|retained|normal": {
+      "v": "Pass"
+    },
+    "en|fashion|normal": {
+      "v": "Pass"
+    },
+    "en|fishing|normal": {
+      "v": "Pass"
+    },
+    "en|invited|normal": {
+      "v": "Pass"
+    },
+    "en|supreme|normal": {
+      "v": "Pass"
+    },
+    "en|charges|normal": {
+      "v": "Pass"
+    },
+    "en|compact|normal": {
+      "v": "Pass"
+    },
+    "en|damaged|normal": {
+      "v": "Pass"
+    },
+    "en|demands|normal": {
+      "v": "Pass"
+    },
+    "en|desired|normal": {
+      "v": "Pass"
+    },
+    "en|diameter|normal": {
+      "v": "Pass"
+    },
+    "en|exposed|normal": {
+      "v": "Pass"
+    },
+    "en|exposure|normal": {
+      "v": "Pass"
+    },
+    "en|frequent|normal": {
+      "v": "Pass"
+    },
+    "en|hunting|normal": {
+      "v": "Pass"
+    },
+    "en|particle|normal": {
+      "v": "Pass"
+    },
+    "en|physics|normal": {
+      "v": "Pass"
+    },
+    "en|producer|normal": {
+      "v": "Pass"
+    },
+    "en|unusual|normal": {
+      "v": "Pass"
+    },
+    "en|calling|normal": {
+      "v": "Pass"
+    },
+    "en|invented|normal": {
+      "v": "Pass"
+    },
+    "en|ordinary|normal": {
+      "v": "Pass"
+    },
+    "en|passage|normal": {
+      "v": "Pass"
+    },
+    "en|purchase|normal": {
+      "v": "Pass"
+    },
+    "en|railway|normal": {
+      "v": "Pass"
+    },
+    "en|entering|normal": {
+      "v": "Pass"
+    },
+    "en|exports|normal": {
+      "v": "Pass"
+    },
+    "en|funding|normal": {
+      "v": "Pass"
+    },
+    "en|hearing|normal": {
+      "v": "Pass"
+    },
+    "en|involve|normal": {
+      "v": "Pass"
+    },
+    "en|lifetime|normal": {
+      "v": "Pass"
+    },
+    "en|organic|normal": {
+      "v": "Pass"
+    },
+    "en|retired|normal": {
+      "v": "Pass"
+    },
+    "en|variable|normal": {
+      "v": "Pass"
+    },
+    "en|drawing|normal": {
+      "v": "Pass"
+    },
+    "en|enjoyed|normal": {
+      "v": "Pass"
+    },
+    "en|farmers|normal": {
+      "v": "Pass"
+    },
+    "en|generate|normal": {
+      "v": "Pass"
+    },
+    "en|mixture|normal": {
+      "v": "Pass"
+    },
+    "en|offices|normal": {
+      "v": "Pass"
+    },
+    "en|proposal|normal": {
+      "v": "Pass"
+    },
+    "en|orthodox|normal": {
+      "v": "Pass"
+    },
+    "en|alcohol|normal": {
+      "v": "Pass"
+    },
+    "en|graphics|normal": {
+      "v": "Pass"
+    },
+    "en|grounds|normal": {
+      "v": "Pass"
+    },
+    "en|manager|normal": {
+      "v": "Pass"
+    },
+    "en|applies|normal": {
+      "v": "Pass"
+    },
+    "en|approval|normal": {
+      "v": "Pass"
+    },
+    "en|controls|normal": {
+      "v": "Pass"
+    },
+    "en|depicted|normal": {
+      "v": "Pass"
+    },
+    "en|driving|normal": {
+      "v": "Pass"
+    },
+    "en|plastic|normal": {
+      "v": "Pass"
+    },
+    "en|surfaces|normal": {
+      "v": "Pass"
+    },
+    "en|targets|normal": {
+      "v": "Pass"
+    },
+    "en|thinking|normal": {
+      "v": "Pass"
+    },
+    "en|chapter|normal": {
+      "v": "Pass"
+    },
+    "en|circuits|normal": {
+      "v": "Pass"
+    },
+    "en|covering|normal": {
+      "v": "Pass"
+    },
+    "en|medicine|normal": {
+      "v": "Pass"
+    },
+    "en|notably|normal": {
+      "v": "Pass"
+    },
+    "en|poverty|normal": {
+      "v": "Pass"
+    },
+    "en|shorter|normal": {
+      "v": "Pass"
+    },
+    "en|spectrum|normal": {
+      "v": "Pass"
+    },
+    "en|stopped|normal": {
+      "v": "Pass"
+    },
+    "en|turning|normal": {
+      "v": "Pass"
+    },
+    "en|accuracy|normal": {
+      "v": "Pass"
+    },
+    "en|bacteria|normal": {
+      "v": "Weak"
+    },
+    "en|columns|normal": {
+      "v": "Pass"
+    },
+    "en|conduct|normal": {
+      "v": "Pass"
+    },
+    "en|creates|normal": {
+      "v": "Pass"
+    },
+    "en|delivery|normal": {
+      "v": "Pass"
+    },
+    "en|demanded|normal": {
+      "v": "Pass"
+    },
+    "en|dominant|normal": {
+      "v": "Pass"
+    },
+    "en|keeping|normal": {
+      "v": "Pass"
+    },
+    "en|occupied|normal": {
+      "v": "Pass"
+    },
+    "en|slavery|normal": {
+      "v": "Pass"
+    },
+    "en|teacher|normal": {
+      "v": "Pass"
+    },
+    "en|volumes|normal": {
+      "v": "Pass"
+    },
+    "en|airport|normal": {
+      "v": "Pass"
+    },
+    "en|annually|normal": {
+      "v": "Pass"
+    },
+    "en|decrease|normal": {
+      "v": "Pass"
+    },
+    "en|destroy|normal": {
+      "v": "Pass"
+    },
+    "en|dispute|normal": {
+      "v": "Pass"
+    },
+    "en|enemies|normal": {
+      "v": "Pass"
+    },
+    "en|happened|normal": {
+      "v": "Pass"
+    },
+    "en|partial|normal": {
+      "v": "Pass"
+    },
+    "en|patient|normal": {
+      "v": "Pass"
+    },
+    "en|protocol|normal": {
+      "v": "Pass"
+    },
+    "en|quantity|normal": {
+      "v": "Pass"
+    },
+    "en|radical|normal": {
+      "v": "Pass"
+    },
+    "en|recovery|normal": {
+      "v": "Pass"
+    },
+    "en|revenue|normal": {
+      "v": "Pass"
+    },
+    "en|settled|normal": {
+      "v": "Pass"
+    },
+    "en|drinking|normal": {
+      "v": "Pass"
+    },
+    "en|illness|normal": {
+      "v": "Pass"
+    },
+    "en|millions|normal": {
+      "v": "Pass"
+    },
+    "en|reflect|normal": {
+      "v": "Pass"
+    },
+    "en|seeking|normal": {
+      "v": "Pass"
+    },
+    "en|bringing|normal": {
+      "v": "Pass"
+    },
+    "en|database|normal": {
+      "v": "Pass"
+    },
+    "en|dollars|normal": {
+      "v": "Weak"
+    },
+    "en|messages|normal": {
+      "v": "Pass"
+    },
+    "en|reverse|normal": {
+      "v": "Pass"
+    },
+    "en|superior|normal": {
+      "v": "Pass"
+    },
+    "en|villages|normal": {
+      "v": "Pass"
+    },
+    "en|visitors|normal": {
+      "v": "Pass"
+    },
+    "en|warning|normal": {
+      "v": "Pass"
+    },
+    "en|creative|normal": {
+      "v": "Pass"
+    },
+    "en|diverse|normal": {
+      "v": "Pass"
+    },
+    "en|equally|normal": {
+      "v": "Pass"
+    },
+    "en|express|normal": {
+      "v": "Pass"
+    },
+    "en|formally|normal": {
+      "v": "Pass"
+    },
+    "en|formerly|normal": {
+      "v": "Pass"
+    },
+    "en|incident|normal": {
+      "v": "Pass"
+    },
+    "en|missiles|normal": {
+      "v": "Pass"
+    },
+    "en|offering|normal": {
+      "v": "Pass"
+    },
+    "en|pare|normal": {
+      "v": "ExemptHomophone"
+    },
+    "en|wright|normal": {
+      "v": "ExemptHomophone"
+    },
+    "en|aberration|normal": {
+      "v": "Pass"
+    },
+    "en|amanuensis|normal": {
+      "v": "Weak"
+    },
+    "en|anachronism|normal": {
+      "v": "Weak"
+    },
+    "en|apotheosis|normal": {
+      "v": "Pass"
+    },
+    "en|bourgeoisie|normal": {
+      "v": "Weak"
+    },
+    "en|brouhaha|normal": {
+      "v": "Weak"
+    },
+    "en|cacophony|normal": {
+      "v": "Pass"
+    },
+    "en|chiaroscuro|normal": {
+      "v": "Fail"
+    },
+    "en|chrysanthemum|normal": {
+      "v": "Weak"
+    },
+    "en|colonel|normal": {
+      "v": "Pass"
+    },
+    "en|connoisseur|normal": {
+      "v": "Fail"
+    },
+    "en|conscientious|normal": {
+      "v": "Pass"
+    },
+    "en|ebullient|normal": {
+      "v": "Fail"
+    },
+    "en|ecclesiastical|normal": {
+      "v": "Pass"
+    },
+    "en|ephemeral|normal": {
+      "v": "Pass"
+    },
+    "en|epitome|normal": {
+      "v": "Weak"
+    },
+    "en|esoteric|normal": {
+      "v": "Pass"
+    },
+    "en|fuchsia|normal": {
+      "v": "Pass"
+    },
+    "en|gauge|normal": {
+      "v": "Pass"
+    },
+    "en|gregarious|normal": {
+      "v": "Weak"
+    },
+    "en|hyperbole|normal": {
+      "v": "Pass"
+    },
+    "en|idiosyncrasy|normal": {
+      "v": "Weak"
+    },
+    "en|inchoate|normal": {
+      "v": "Fail"
+    },
+    "en|insouciant|normal": {
+      "v": "Weak"
+    },
+    "en|isthmus|normal": {
+      "v": "Weak"
+    },
+    "en|kaleidoscope|normal": {
+      "v": "Pass"
+    },
+    "en|kowtow|normal": {
+      "v": "Pass"
+    },
+    "en|labyrinth|normal": {
+      "v": "Pass"
+    },
+    "en|liaison|normal": {
+      "v": "Pass"
+    },
+    "en|lieutenant|normal": {
+      "v": "Pass"
+    },
+    "en|machiavellian|normal": {
+      "v": "Weak"
+    },
+    "en|maneuver|normal": {
+      "v": "Pass"
+    },
+    "en|mnemonic|normal": {
+      "v": "Fail"
+    },
+    "en|obfuscate|normal": {
+      "v": "Weak"
+    },
+    "en|onomatopoeia|normal": {
+      "v": "Fail"
+    },
+    "en|paradigm|normal": {
+      "v": "Pass"
+    },
+    "en|perspicacious|normal": {
+      "v": "Pass"
+    },
+    "en|pneumonia|normal": {
+      "v": "Pass"
+    },
+    "en|prestidigitation|normal": {
+      "v": "Weak"
+    },
+    "en|quinoa|normal": {
+      "v": "Weak"
+    },
+    "en|quintessential|normal": {
+      "v": "Pass"
+    },
+    "en|rendezvous|normal": {
+      "v": "Weak"
+    },
+    "en|sacrilegious|normal": {
+      "v": "Pass"
+    },
+    "en|schadenfreude|normal": {
+      "v": "Weak"
+    },
+    "en|silhouette|normal": {
+      "v": "Pass"
+    },
+    "en|soliloquy|normal": {
+      "v": "Weak"
+    },
+    "en|succinct|normal": {
+      "v": "Weak"
+    },
+    "en|surveillance|normal": {
+      "v": "Pass"
+    },
+    "en|yacht|normal": {
+      "v": "Pass"
+    },
+    "en|zephyr|normal": {
+      "v": "Weak"
+    },
+    "en|different|normal": {
+      "v": "Pass"
+    },
+    "en|government|normal": {
+      "v": "Pass"
+    },
+    "en|including|normal": {
+      "v": "Pass"
+    },
+    "en|considered|normal": {
+      "v": "Pass"
+    },
+    "en|political|normal": {
+      "v": "Pass"
+    },
+    "en|following|normal": {
+      "v": "Pass"
+    },
+    "en|published|normal": {
+      "v": "Pass"
+    },
+    "en|countries|normal": {
+      "v": "Pass"
+    },
+    "en|university|normal": {
+      "v": "Pass"
+    },
+    "en|development|normal": {
+      "v": "Pass"
+    },
+    "en|developed|normal": {
+      "v": "Pass"
+    },
+    "en|population|normal": {
+      "v": "Pass"
+    },
+    "en|production|normal": {
+      "v": "Pass"
+    },
+    "en|sometimes|normal": {
+      "v": "Pass"
+    },
+    "en|generally|normal": {
+      "v": "Pass"
+    },
+    "en|continued|normal": {
+      "v": "Pass"
+    },
+    "en|available|normal": {
+      "v": "Pass"
+    },
+    "en|information|normal": {
+      "v": "Pass"
+    },
+    "en|especially|normal": {
+      "v": "Pass"
+    },
+    "en|typically|normal": {
+      "v": "Pass"
+    },
+    "en|throughout|normal": {
+      "v": "Pass"
+    },
+    "en|international|normal": {
+      "v": "Pass"
+    },
+    "en|particular|normal": {
+      "v": "Pass"
+    },
+    "en|described|normal": {
+      "v": "Pass"
+    },
+    "en|according|normal": {
+      "v": "Pass"
+    },
+    "en|significant|normal": {
+      "v": "Pass"
+    },
+    "en|traditional|normal": {
+      "v": "Pass"
+    },
+    "en|established|normal": {
+      "v": "Pass"
+    },
+    "en|structure|normal": {
+      "v": "Pass"
+    },
+    "en|increased|normal": {
+      "v": "Pass"
+    },
+    "en|character|normal": {
+      "v": "Pass"
+    },
+    "en|languages|normal": {
+      "v": "Pass"
+    },
+    "en|president|normal": {
+      "v": "Pass"
+    },
+    "en|introduced|normal": {
+      "v": "Pass"
+    },
+    "en|temperature|normal": {
+      "v": "Pass"
+    },
+    "en|themselves|normal": {
+      "v": "Pass"
+    },
+    "en|influence|normal": {
+      "v": "Pass"
+    },
+    "en|television|normal": {
+      "v": "Pass"
+    },
+    "en|performance|normal": {
+      "v": "Pass"
+    },
+    "en|particularly|normal": {
+      "v": "Pass"
+    },
+    "en|religious|normal": {
+      "v": "Pass"
+    },
+    "en|characters|normal": {
+      "v": "Pass"
+    },
+    "en|individual|normal": {
+      "v": "Pass"
+    },
+    "en|education|normal": {
+      "v": "Pass"
+    },
+    "en|difficult|normal": {
+      "v": "Pass"
+    },
+    "en|conditions|normal": {
+      "v": "Pass"
+    },
+    "en|community|normal": {
+      "v": "Pass"
+    },
+    "en|eventually|normal": {
+      "v": "Pass"
+    },
+    "en|associated|normal": {
+      "v": "Pass"
+    },
+    "en|beginning|normal": {
+      "v": "Pass"
+    },
+    "en|successful|normal": {
+      "v": "Pass"
+    },
+    "en|relatively|normal": {
+      "v": "Pass"
+    },
+    "en|construction|normal": {
+      "v": "Pass"
+    },
+    "en|relationship|normal": {
+      "v": "Pass"
+    },
+    "en|technology|normal": {
+      "v": "Pass"
+    },
+    "en|therefore|normal": {
+      "v": "Pass"
+    },
+    "en|additional|normal": {
+      "v": "Pass"
+    },
+    "en|performed|normal": {
+      "v": "Pass"
+    },
+    "en|companies|normal": {
+      "v": "Pass"
+    },
+    "en|operations|normal": {
+      "v": "Pass"
+    },
+    "en|commercial|normal": {
+      "v": "Pass"
+    },
+    "en|direction|normal": {
+      "v": "Pass"
+    },
+    "en|approximately|normal": {
+      "v": "Pass"
+    },
+    "en|frequently|normal": {
+      "v": "Pass"
+    },
+    "en|originally|normal": {
+      "v": "Pass"
+    },
+    "en|completed|normal": {
+      "v": "Pass"
+    },
+    "en|supported|normal": {
+      "v": "Pass"
+    },
+    "en|functions|normal": {
+      "v": "Pass"
+    },
+    "en|materials|normal": {
+      "v": "Pass"
+    },
+    "en|individuals|normal": {
+      "v": "Pass"
+    },
+    "en|knowledge|normal": {
+      "v": "Pass"
+    },
+    "en|potential|normal": {
+      "v": "Pass"
+    },
+    "en|equipment|normal": {
+      "v": "Pass"
+    },
+    "en|experience|normal": {
+      "v": "Pass"
+    },
+    "en|estimated|normal": {
+      "v": "Pass"
+    },
+    "en|financial|normal": {
+      "v": "Pass"
+    },
+    "en|resulting|normal": {
+      "v": "Pass"
+    },
+    "en|activities|normal": {
+      "v": "Pass"
+    },
+    "en|announced|normal": {
+      "v": "Pass"
+    },
+    "en|scientific|normal": {
+      "v": "Pass"
+    },
+    "en|increasing|normal": {
+      "v": "Pass"
+    },
+    "en|operating|normal": {
+      "v": "Pass"
+    },
+    "en|discovered|normal": {
+      "v": "Pass"
+    },
+    "en|operation|normal": {
+      "v": "Pass"
+    },
+    "en|techniques|normal": {
+      "v": "Pass"
+    },
+    "en|remaining|normal": {
+      "v": "Pass"
+    },
+    "en|historical|normal": {
+      "v": "Pass"
+    },
+    "en|relations|normal": {
+      "v": "Pass"
+    },
+    "en|treatment|normal": {
+      "v": "Pass"
+    },
+    "en|applications|normal": {
+      "v": "Pass"
+    },
+    "en|buildings|normal": {
+      "v": "Pass"
+    },
+    "en|completely|normal": {
+      "v": "Pass"
+    },
+    "en|connected|normal": {
+      "v": "Pass"
+    },
+    "en|primarily|normal": {
+      "v": "Pass"
+    },
+    "en|tradition|normal": {
+      "v": "Pass"
+    },
+    "en|appointed|normal": {
+      "v": "Pass"
+    },
+    "en|definition|normal": {
+      "v": "Pass"
+    },
+    "en|properties|normal": {
+      "v": "Pass"
+    },
+    "en|reference|normal": {
+      "v": "Pass"
+    },
+    "en|frequency|normal": {
+      "v": "Pass"
+    },
+    "en|centuries|normal": {
+      "v": "Pass"
+    },
+    "en|effective|normal": {
+      "v": "Pass"
+    },
+    "en|management|normal": {
+      "v": "Pass"
+    },
+    "en|positions|normal": {
+      "v": "Pass"
+    },
+    "en|distribution|normal": {
+      "v": "Pass"
+    },
+    "en|determined|normal": {
+      "v": "Pass"
+    },
+    "en|responsible|normal": {
+      "v": "Pass"
+    },
+    "en|something|normal": {
+      "v": "Pass"
+    },
+    "en|currently|normal": {
+      "v": "Pass"
+    },
+    "en|suggested|normal": {
+      "v": "Pass"
+    },
+    "en|agreement|normal": {
+      "v": "Pass"
+    },
+    "en|organization|normal": {
+      "v": "Pass"
+    },
+    "en|presented|normal": {
+      "v": "Pass"
+    },
+    "en|structures|normal": {
+      "v": "Pass"
+    },
+    "en|application|normal": {
+      "v": "Pass"
+    },
+    "en|differences|normal": {
+      "v": "Pass"
+    },
+    "en|environment|normal": {
+      "v": "Pass"
+    },
+    "en|initially|normal": {
+      "v": "Pass"
+    },
+    "en|represented|normal": {
+      "v": "Pass"
+    },
+    "en|resources|normal": {
+      "v": "Pass"
+    },
+    "en|previously|normal": {
+      "v": "Pass"
+    },
+    "en|authority|normal": {
+      "v": "Pass"
+    },
+    "en|technique|normal": {
+      "v": "Pass"
+    },
+    "en|appearance|normal": {
+      "v": "Pass"
+    },
+    "en|determine|normal": {
+      "v": "Pass"
+    },
+    "en|significantly|normal": {
+      "v": "Pass"
+    },
+    "en|collection|normal": {
+      "v": "Pass"
+    },
+    "en|existence|normal": {
+      "v": "Pass"
+    },
+    "en|extremely|normal": {
+      "v": "Pass"
+    },
+    "en|components|normal": {
+      "v": "Pass"
+    },
+    "en|protection|normal": {
+      "v": "Pass"
+    },
+    "en|situation|normal": {
+      "v": "Pass"
+    },
+    "en|difference|normal": {
+      "v": "Pass"
+    },
+    "en|equivalent|normal": {
+      "v": "Pass"
+    },
+    "en|advantage|normal": {
+      "v": "Pass"
+    },
+    "en|professional|normal": {
+      "v": "Pass"
+    },
+    "en|literature|normal": {
+      "v": "Pass"
+    },
+    "en|recognized|normal": {
+      "v": "Pass"
+    },
+    "en|standards|normal": {
+      "v": "Pass"
+    },
+    "en|transport|normal": {
+      "v": "Pass"
+    },
+    "en|condition|normal": {
+      "v": "Pass"
+    },
+    "en|philosophy|normal": {
+      "v": "Pass"
+    },
+    "en|attempted|normal": {
+      "v": "Pass"
+    },
+    "en|temperatures|normal": {
+      "v": "Pass"
+    },
+    "en|alternative|normal": {
+      "v": "Pass"
+    },
+    "en|identified|normal": {
+      "v": "Pass"
+    },
+    "en|processes|normal": {
+      "v": "Pass"
+    },
+    "en|resistance|normal": {
+      "v": "Pass"
+    },
+    "en|attention|normal": {
+      "v": "Pass"
+    },
+    "en|constructed|normal": {
+      "v": "Pass"
+    },
+    "en|expressed|normal": {
+      "v": "Pass"
+    },
+    "en|increases|normal": {
+      "v": "Pass"
+    },
+    "en|communication|normal": {
+      "v": "Pass"
+    },
+    "en|depending|normal": {
+      "v": "Pass"
+    },
+    "en|increasingly|normal": {
+      "v": "Pass"
+    },
+    "en|maintained|normal": {
+      "v": "Pass"
+    },
+    "en|combination|normal": {
+      "v": "Pass"
+    },
+    "en|communities|normal": {
+      "v": "Pass"
+    },
+    "en|competition|normal": {
+      "v": "Pass"
+    },
+    "en|organizations|normal": {
+      "v": "Pass"
+    },
+    "en|radiation|normal": {
+      "v": "Pass"
+    },
+    "en|officials|normal": {
+      "v": "Pass"
+    },
+    "en|particles|normal": {
+      "v": "Pass"
+    },
+    "en|providing|normal": {
+      "v": "Pass"
+    },
+    "en|thousands|normal": {
+      "v": "Pass"
+    },
+    "en|understanding|normal": {
+      "v": "Pass"
+    },
+    "en|department|normal": {
+      "v": "Pass"
+    },
+    "en|developing|normal": {
+      "v": "Pass"
+    },
+    "en|organized|normal": {
+      "v": "Pass"
+    },
+    "en|regarding|normal": {
+      "v": "Pass"
+    },
+    "en|controlled|normal": {
+      "v": "Pass"
+    },
+    "en|surrounding|normal": {
+      "v": "Pass"
+    },
+    "en|worldwide|normal": {
+      "v": "Pass"
+    },
+    "en|architecture|normal": {
+      "v": "Pass"
+    },
+    "en|territory|normal": {
+      "v": "Pass"
+    },
+    "en|continues|normal": {
+      "v": "Pass"
+    },
+    "en|recording|normal": {
+      "v": "Pass"
+    },
+    "en|represent|normal": {
+      "v": "Pass"
+    },
+    "en|translation|normal": {
+      "v": "Pass"
+    },
+    "en|influenced|normal": {
+      "v": "Pass"
+    },
+    "en|mentioned|normal": {
+      "v": "Pass"
+    },
+    "en|extensive|normal": {
+      "v": "Pass"
+    },
+    "en|expansion|normal": {
+      "v": "Pass"
+    },
+    "en|secondary|normal": {
+      "v": "Pass"
+    },
+    "en|otherwise|normal": {
+      "v": "Pass"
+    },
+    "en|effectively|normal": {
+      "v": "Pass"
+    },
+    "en|formation|normal": {
+      "v": "Pass"
+    },
+    "en|conducted|normal": {
+      "v": "Pass"
+    },
+    "en|statement|normal": {
+      "v": "Pass"
+    },
+    "en|classical|normal": {
+      "v": "Pass"
+    },
+    "en|practical|normal": {
+      "v": "Pass"
+    },
+    "en|elections|normal": {
+      "v": "Pass"
+    },
+    "en|importance|normal": {
+      "v": "Pass"
+    },
+    "en|principle|normal": {
+      "v": "ExemptHomophone"
+    },
+    "en|specifically|normal": {
+      "v": "Pass"
+    },
+    "en|containing|normal": {
+      "v": "Pass"
+    },
+    "en|destroyed|normal": {
+      "v": "Pass"
+    },
+    "en|engineering|normal": {
+      "v": "Pass"
+    },
+    "en|popularity|normal": {
+      "v": "Pass"
+    },
+    "en|publication|normal": {
+      "v": "Pass"
+    },
+    "en|connection|normal": {
+      "v": "Pass"
+    },
+    "en|subsequent|normal": {
+      "v": "Pass"
+    },
+    "en|association|normal": {
+      "v": "Pass"
+    },
+    "en|generation|normal": {
+      "v": "Pass"
+    },
+    "en|broadcast|normal": {
+      "v": "Pass"
+    },
+    "en|institute|normal": {
+      "v": "Pass"
+    },
+    "en|composition|normal": {
+      "v": "Pass"
+    },
+    "en|officially|normal": {
+      "v": "Pass"
+    },
+    "en|administration|normal": {
+      "v": "Pass"
+    },
+    "en|characteristics|normal": {
+      "v": "Pass"
+    },
+    "en|incorporated|normal": {
+      "v": "Pass"
+    },
+    "en|industrial|normal": {
+      "v": "Pass"
+    },
+    "en|institutions|normal": {
+      "v": "Pass"
+    },
+    "en|instruments|normal": {
+      "v": "Pass"
+    },
+    "en|describes|normal": {
+      "v": "Pass"
+    },
+    "en|residents|normal": {
+      "v": "Pass"
+    },
+    "en|contemporary|normal": {
+      "v": "Pass"
+    },
+    "en|practices|normal": {
+      "v": "Pass"
+    },
+    "en|establish|normal": {
+      "v": "Pass"
+    },
+    "en|leadership|normal": {
+      "v": "Pass"
+    },
+    "en|computers|normal": {
+      "v": "Pass"
+    },
+    "en|expression|normal": {
+      "v": "Pass"
+    },
+    "en|interests|normal": {
+      "v": "Pass"
+    },
+    "en|producing|normal": {
+      "v": "Pass"
+    },
+    "en|opposition|normal": {
+      "v": "Pass"
+    },
+    "en|processing|normal": {
+      "v": "Pass"
+    },
+    "en|technical|normal": {
+      "v": "Pass"
+    },
+    "en|transmission|normal": {
+      "v": "Pass"
+    },
+    "en|environmental|normal": {
+      "v": "Pass"
+    },
+    "en|instrument|normal": {
+      "v": "Pass"
+    },
+    "en|translated|normal": {
+      "v": "Pass"
+    },
+    "en|contained|normal": {
+      "v": "Pass"
+    },
+    "en|facilities|normal": {
+      "v": "Pass"
+    },
+    "en|requirements|normal": {
+      "v": "Pass"
+    },
+    "en|background|normal": {
+      "v": "Pass"
+    },
+    "en|dedicated|normal": {
+      "v": "Pass"
+    },
+    "en|impossible|normal": {
+      "v": "Pass"
+    },
+    "en|introduction|normal": {
+      "v": "Pass"
+    },
+    "en|component|normal": {
+      "v": "Pass"
+    },
+    "en|expensive|normal": {
+      "v": "Pass"
+    },
+    "en|explained|normal": {
+      "v": "Pass"
+    },
+    "en|questions|normal": {
+      "v": "Pass"
+    },
+    "en|represents|normal": {
+      "v": "Pass"
+    },
+    "en|movements|normal": {
+      "v": "Pass"
+    },
+    "en|continuous|normal": {
+      "v": "Pass"
+    },
+    "en|criticism|normal": {
+      "v": "Pass"
+    },
+    "en|relationships|normal": {
+      "v": "Pass"
+    },
+    "en|atmosphere|normal": {
+      "v": "Pass"
+    },
+    "en|electronic|normal": {
+      "v": "Pass"
+    },
+    "en|reputation|normal": {
+      "v": "Pass"
+    },
+    "en|variations|normal": {
+      "v": "Pass"
+    },
+    "en|programming|normal": {
+      "v": "Pass"
+    },
+    "en|substantial|normal": {
+      "v": "Pass"
+    },
+    "en|successfully|normal": {
+      "v": "Pass"
+    },
+    "en|electrical|normal": {
+      "v": "Pass"
+    },
+    "en|gradually|normal": {
+      "v": "Pass"
+    },
+    "en|independence|normal": {
+      "v": "Pass"
+    },
+    "en|investment|normal": {
+      "v": "Pass"
+    },
+    "en|molecules|normal": {
+      "v": "Pass"
+    },
+    "en|abandoned|normal": {
+      "v": "Pass"
+    },
+    "en|generated|normal": {
+      "v": "Pass"
+    },
+    "en|documents|normal": {
+      "v": "Pass"
+    },
+    "en|personnel|normal": {
+      "v": "Pass"
+    },
+    "en|resolution|normal": {
+      "v": "Pass"
+    },
+    "en|experienced|normal": {
+      "v": "Pass"
+    },
+    "en|opportunity|normal": {
+      "v": "Pass"
+    },
+    "en|algorithm|normal": {
+      "v": "Pass"
+    },
+    "en|household|normal": {
+      "v": "Pass"
+    },
+    "en|understand|normal": {
+      "v": "Pass"
+    },
+    "en|essential|normal": {
+      "v": "Pass"
+    },
+    "en|everything|normal": {
+      "v": "Pass"
+    },
+    "en|instructions|normal": {
+      "v": "Pass"
+    },
+    "en|permanent|normal": {
+      "v": "Pass"
+    },
+    "en|succeeded|normal": {
+      "v": "Pass"
+    },
+    "en|appropriate|normal": {
+      "v": "Pass"
+    },
+    "en|categories|normal": {
+      "v": "Pass"
+    },
+    "en|compounds|normal": {
+      "v": "Pass"
+    },
+    "en|distributed|normal": {
+      "v": "Pass"
+    },
+    "en|intelligence|normal": {
+      "v": "Pass"
+    },
+    "en|ultimately|normal": {
+      "v": "Pass"
+    },
+    "en|description|normal": {
+      "v": "Pass"
+    },
+    "en|preferred|normal": {
+      "v": "Pass"
+    },
+    "en|principles|normal": {
+      "v": "Pass"
+    },
+    "en|implemented|normal": {
+      "v": "Pass"
+    },
+    "en|integrated|normal": {
+      "v": "Pass"
+    },
+    "en|occasionally|normal": {
+      "v": "Pass"
+    },
+    "en|references|normal": {
+      "v": "Pass"
+    },
+    "en|representation|normal": {
+      "v": "Pass"
+    },
+    "en|widespread|normal": {
+      "v": "Pass"
+    },
+    "en|contributed|normal": {
+      "v": "Pass"
+    },
+    "en|conventional|normal": {
+      "v": "Pass"
+    },
+    "en|exception|normal": {
+      "v": "Pass"
+    },
+    "en|governments|normal": {
+      "v": "Pass"
+    },
+    "en|performances|normal": {
+      "v": "Pass"
+    },
+    "en|separated|normal": {
+      "v": "Pass"
+    },
+    "en|subsequently|normal": {
+      "v": "Pass"
+    },
+    "en|efficient|normal": {
+      "v": "Pass"
+    },
+    "en|understood|normal": {
+      "v": "Pass"
+    },
+    "en|additionally|normal": {
+      "v": "Pass"
+    },
+    "en|authorities|normal": {
+      "v": "Pass"
+    },
+    "en|mechanical|normal": {
+      "v": "Pass"
+    },
+    "en|receiving|normal": {
+      "v": "Pass"
+    },
+    "en|locations|normal": {
+      "v": "Pass"
+    },
+    "en|converted|normal": {
+      "v": "Pass"
+    },
+    "en|experiments|normal": {
+      "v": "Pass"
+    },
+    "en|immediate|normal": {
+      "v": "Pass"
+    },
+    "en|legislation|normal": {
+      "v": "Pass"
+    },
+    "en|reduction|normal": {
+      "v": "Pass"
+    },
+    "en|transition|normal": {
+      "v": "Pass"
+    },
+    "en|considerable|normal": {
+      "v": "Pass"
+    },
+    "en|decisions|normal": {
+      "v": "Pass"
+    },
+    "en|designated|normal": {
+      "v": "Pass"
+    },
+    "en|electrons|normal": {
+      "v": "Pass"
+    },
+    "en|involving|normal": {
+      "v": "Pass"
+    },
+    "en|solutions|normal": {
+      "v": "Pass"
+    },
+    "en|sufficient|normal": {
+      "v": "Pass"
+    },
+    "en|traditions|normal": {
+      "v": "Pass"
+    },
+    "en|concluded|normal": {
+      "v": "Pass"
+    },
+    "en|prominent|normal": {
+      "v": "Pass"
+    },
+    "en|spiritual|normal": {
+      "v": "Pass"
+    },
+    "en|nevertheless|normal": {
+      "v": "Pass"
+    },
+    "en|executive|normal": {
+      "v": "Pass"
+    },
+    "en|fundamental|normal": {
+      "v": "Pass"
+    },
+    "en|performing|normal": {
+      "v": "Pass"
+    },
+    "en|returning|normal": {
+      "v": "Pass"
+    },
+    "en|selection|normal": {
+      "v": "Pass"
+    },
+    "en|parliament|normal": {
+      "v": "Pass"
+    },
+    "en|circumstances|normal": {
+      "v": "Pass"
+    },
+    "en|dependent|normal": {
+      "v": "Pass"
+    },
+    "en|mechanism|normal": {
+      "v": "Pass"
+    },
+    "en|mountains|normal": {
+      "v": "Pass"
+    },
+    "en|discussion|normal": {
+      "v": "Pass"
+    },
+    "en|conference|normal": {
+      "v": "Pass"
+    },
+    "en|delivered|normal": {
+      "v": "Pass"
+    },
+    "en|installed|normal": {
+      "v": "Pass"
+    },
+    "en|necessarily|normal": {
+      "v": "Pass"
+    },
+    "en|concerned|normal": {
+      "v": "Pass"
+    },
+    "en|implementation|normal": {
+      "v": "Pass"
+    },
+    "en|interpretation|normal": {
+      "v": "Pass"
+    },
+    "en|interview|normal": {
+      "v": "Pass"
+    },
+    "en|manufacturing|normal": {
+      "v": "Pass"
+    },
+    "en|candidates|normal": {
+      "v": "Pass"
+    },
+    "en|experiment|normal": {
+      "v": "Pass"
+    },
+    "en|populations|normal": {
+      "v": "Pass"
+    },
+    "en|respectively|normal": {
+      "v": "Pass"
+    },
+    "en|restricted|normal": {
+      "v": "Pass"
+    },
+    "en|specified|normal": {
+      "v": "Pass"
+    },
+    "en|classified|normal": {
+      "v": "Pass"
+    },
+    "en|confirmed|normal": {
+      "v": "Pass"
+    },
+    "en|mathematical|normal": {
+      "v": "Pass"
+    },
+    "en|supporting|normal": {
+      "v": "Pass"
+    },
+    "en|corresponding|normal": {
+      "v": "Pass"
+    },
+    "en|dangerous|normal": {
+      "v": "Pass"
+    },
+    "en|efficiency|normal": {
+      "v": "Pass"
+    },
+    "en|membership|normal": {
+      "v": "Pass"
+    },
+    "en|possibility|normal": {
+      "v": "Pass"
+    },
+    "en|purchased|normal": {
+      "v": "Pass"
+    },
+    "en|commission|normal": {
+      "v": "Pass"
+    },
+    "en|attributed|normal": {
+      "v": "Pass"
+    },
+    "en|committed|normal": {
+      "v": "Pass"
+    },
+    "en|communications|normal": {
+      "v": "Pass"
+    },
+    "en|discussed|normal": {
+      "v": "Fail"
+    },
+    "en|distinction|normal": {
+      "v": "Pass"
+    },
+    "en|divisions|normal": {
+      "v": "Pass"
+    },
+    "en|identical|normal": {
+      "v": "Pass"
+    },
+    "en|infrastructure|normal": {
+      "v": "Pass"
+    },
+    "en|organisms|normal": {
+      "v": "Pass"
+    },
+    "en|administrative|normal": {
+      "v": "Pass"
+    },
+    "en|agricultural|normal": {
+      "v": "Pass"
+    },
+    "en|convention|normal": {
+      "v": "Pass"
+    },
+    "en|evolution|normal": {
+      "v": "Pass"
+    },
+    "en|historians|normal": {
+      "v": "Pass"
+    },
+    "en|interested|normal": {
+      "v": "Pass"
+    },
+    "en|interface|normal": {
+      "v": "Pass"
+    },
+    "en|paintings|normal": {
+      "v": "Pass"
+    },
+    "en|transportation|normal": {
+      "v": "Pass"
+    },
+    "en|furthermore|normal": {
+      "v": "Pass"
+    },
+    "en|collected|normal": {
+      "v": "Pass"
+    },
+    "en|concentration|normal": {
+      "v": "Pass"
+    },
+    "en|consistent|normal": {
+      "v": "Pass"
+    },
+    "en|consumption|normal": {
+      "v": "Pass"
+    },
+    "en|conversion|normal": {
+      "v": "Pass"
+    },
+    "en|participation|normal": {
+      "v": "Pass"
+    },
+    "en|recommended|normal": {
+      "v": "Pass"
+    },
+    "en|stability|normal": {
+      "v": "Pass"
+    },
+    "en|apparently|normal": {
+      "v": "Pass"
+    },
+    "en|artillery|normal": {
+      "v": "Pass"
+    },
+    "en|businesses|normal": {
+      "v": "Pass"
+    },
+    "en|electricity|normal": {
+      "v": "Pass"
+    },
+    "en|encouraged|normal": {
+      "v": "Weak"
+    },
+    "en|experimental|normal": {
+      "v": "Pass"
+    },
+    "en|instruction|normal": {
+      "v": "Pass"
+    },
+    "en|interaction|normal": {
+      "v": "Pass"
+    },
+    "en|permitted|normal": {
+      "v": "Pass"
+    },
+    "en|settlement|normal": {
+      "v": "Pass"
+    },
+    "en|challenge|normal": {
+      "v": "Pass"
+    },
+    "en|configuration|normal": {
+      "v": "Pass"
+    },
+    "en|essentially|normal": {
+      "v": "Pass"
+    },
+    "en|indicated|normal": {
+      "v": "Pass"
+    },
+    "en|participate|normal": {
+      "v": "Pass"
+    },
+    "en|probability|normal": {
+      "v": "Pass"
+    },
+    "en|comparison|normal": {
+      "v": "Pass"
+    },
+    "en|criticized|normal": {
+      "v": "Pass"
+    },
+    "en|influential|normal": {
+      "v": "Pass"
+    },
+    "en|observation|normal": {
+      "v": "Pass"
+    },
+    "en|principal|normal": {
+      "v": "Pass"
+    },
+    "en|recognition|normal": {
+      "v": "Pass"
+    },
+    "en|researchers|normal": {
+      "v": "Pass"
+    },
+    "en|scientists|normal": {
+      "v": "Pass"
+    },
+    "en|surviving|normal": {
+      "v": "Pass"
+    },
+    "en|assistance|normal": {
+      "v": "Pass"
+    },
+    "en|consisting|normal": {
+      "v": "Pass"
+    },
+    "en|constitution|normal": {
+      "v": "Pass"
+    },
+    "en|distinguished|normal": {
+      "v": "Pass"
+    },
+    "en|extension|normal": {
+      "v": "Pass"
+    },
+    "en|featuring|normal": {
+      "v": "Pass"
+    },
+    "en|newspaper|normal": {
+      "v": "Pass"
+    },
+    "en|universal|normal": {
+      "v": "Pass"
+    },
+    "en|boundaries|normal": {
+      "v": "Pass"
+    },
+    "en|demonstrated|normal": {
+      "v": "Pass"
+    },
+    "en|specialized|normal": {
+      "v": "Pass"
+    },
+    "en|biological|normal": {
+      "v": "Pass"
+    },
+    "en|characteristic|normal": {
+      "v": "Pass"
+    },
+    "en|foundation|normal": {
+      "v": "Pass"
+    },
+    "en|hypothesis|normal": {
+      "v": "Pass"
+    },
+    "en|procedure|normal": {
+      "v": "Pass"
+    },
+    "en|protected|normal": {
+      "v": "Pass"
+    },
+    "en|reflected|normal": {
+      "v": "Pass"
+    },
+    "en|responded|normal": {
+      "v": "Pass"
+    },
+    "en|suffering|normal": {
+      "v": "Pass"
+    },
+    "en|temporary|normal": {
+      "v": "Pass"
+    },
+    "en|similarly|normal": {
+      "v": "Pass"
+    },
+    "en|elsewhere|normal": {
+      "v": "Pass"
+    },
+    "en|objective|normal": {
+      "v": "Pass"
+    },
+    "en|partially|normal": {
+      "v": "Pass"
+    },
+    "en|percentage|normal": {
+      "v": "Weak"
+    },
+    "en|representing|normal": {
+      "v": "Pass"
+    },
+    "en|responsibility|normal": {
+      "v": "Pass"
+    },
+    "en|substance|normal": {
+      "v": "Pass"
+    },
+    "en|revolution|normal": {
+      "v": "Pass"
+    },
+    "en|approaches|normal": {
+      "v": "Pass"
+    },
+    "en|beautiful|normal": {
+      "v": "Pass"
+    },
+    "en|connections|normal": {
+      "v": "Pass"
+    },
+    "en|continuing|normal": {
+      "v": "Pass"
+    },
+    "en|destruction|normal": {
+      "v": "Pass"
+    },
+    "en|discovery|normal": {
+      "v": "Pass"
+    },
+    "en|expedition|normal": {
+      "v": "Pass"
+    },
+    "en|musicians|normal": {
+      "v": "Pass"
+    },
+    "en|satellite|normal": {
+      "v": "Pass"
+    },
+    "en|strategic|normal": {
+      "v": "Pass"
+    },
+    "en|transferred|normal": {
+      "v": "Pass"
+    },
+    "en|candidate|normal": {
+      "v": "Pass"
+    },
+    "en|distinguish|normal": {
+      "v": "Pass"
+    },
+    "en|experiences|normal": {
+      "v": "Pass"
+    },
+    "en|manufacturers|normal": {
+      "v": "Pass"
+    },
+    "en|operational|normal": {
+      "v": "Pass"
+    },
+    "en|restaurants|normal": {
+      "v": "Pass"
+    },
+    "en|complexity|normal": {
+      "v": "Pass"
+    },
+    "en|regularly|normal": {
+      "v": "Pass"
+    },
+    "en|statements|normal": {
+      "v": "Pass"
+    },
+    "en|accompanied|normal": {
+      "v": "Pass"
+    },
+    "en|celebrated|normal": {
+      "v": "Pass"
+    },
+    "en|convinced|normal": {
+      "v": "Pass"
+    },
+    "en|employees|normal": {
+      "v": "Pass"
+    },
+    "en|industries|normal": {
+      "v": "Pass"
+    },
+    "en|mathematics|normal": {
+      "v": "Pass"
+    },
+    "en|ownership|normal": {
+      "v": "Pass"
+    },
+    "en|passenger|normal": {
+      "v": "Pass"
+    },
+    "en|perspective|normal": {
+      "v": "Pass"
+    },
+    "en|traditionally|normal": {
+      "v": "Pass"
+    },
+    "en|agriculture|normal": {
+      "v": "Pass"
+    },
+    "en|attracted|normal": {
+      "v": "Pass"
+    },
+    "en|frequencies|normal": {
+      "v": "Pass"
+    },
+    "en|investigation|normal": {
+      "v": "Pass"
+    },
+    "en|producers|normal": {
+      "v": "Pass"
+    },
+    "en|surrounded|normal": {
+      "v": "Pass"
+    },
+    "en|virtually|normal": {
+      "v": "Pass"
+    },
+    "en|educational|normal": {
+      "v": "Pass"
+    },
+    "en|quantities|normal": {
+      "v": "Pass"
+    },
+    "en|simultaneously|normal": {
+      "v": "Pass"
+    },
+    "en|situations|normal": {
+      "v": "Pass"
+    },
+    "en|variation|normal": {
+      "v": "Pass"
+    },
+    "en|arrangement|normal": {
+      "v": "Pass"
+    },
+    "en|contribution|normal": {
+      "v": "Pass"
+    },
+    "en|exclusively|normal": {
+      "v": "Pass"
+    },
+    "en|inflation|normal": {
+      "v": "Pass"
+    },
+    "en|measurement|normal": {
+      "v": "Pass"
+    },
+    "en|proportion|normal": {
+      "v": "Pass"
+    },
+    "en|structural|normal": {
+      "v": "Pass"
+    },
+    "en|advertising|normal": {
+      "v": "Pass"
+    },
+    "en|arguments|normal": {
+      "v": "Pass"
+    },
+    "en|defensive|normal": {
+      "v": "Pass"
+    },
+    "en|difficulty|normal": {
+      "v": "Pass"
+    },
+    "en|explanation|normal": {
+      "v": "Pass"
+    },
+    "en|reactions|normal": {
+      "v": "Pass"
+    },
+    "en|scheduled|normal": {
+      "v": "Pass"
+    },
+    "en|societies|normal": {
+      "v": "Pass"
+    },
+    "en|theoretical|normal": {
+      "v": "Pass"
+    },
+    "en|underlying|normal": {
+      "v": "Pass"
+    },
+    "en|characterized|normal": {
+      "v": "Pass"
+    },
+    "en|distances|normal": {
+      "v": "Pass"
+    },
+    "en|molecular|normal": {
+      "v": "Pass"
+    },
+    "en|observations|normal": {
+      "v": "Pass"
+    },
+    "en|permission|normal": {
+      "v": "Pass"
+    },
+    "en|artificial|normal": {
+      "v": "Pass"
+    },
+    "en|certainly|normal": {
+      "v": "Pass"
+    },
+    "en|classification|normal": {
+      "v": "Pass"
+    },
+    "en|collections|normal": {
+      "v": "Pass"
+    },
+    "en|describing|normal": {
+      "v": "Pass"
+    },
+    "en|independently|normal": {
+      "v": "Pass"
+    },
+    "en|mechanics|normal": {
+      "v": "Pass"
+    },
+    "en|philosophical|normal": {
+      "v": "Pass"
+    },
+    "en|possession|normal": {
+      "v": "Pass"
+    },
+    "en|transformation|normal": {
+      "v": "Pass"
+    },
+    "en|meanwhile|normal": {
+      "v": "Pass"
+    },
+    "en|controversial|normal": {
+      "v": "Pass"
+    },
+    "en|cooperation|normal": {
+      "v": "Pass"
+    },
+    "en|magnitude|normal": {
+      "v": "Pass"
+    },
+    "en|passengers|normal": {
+      "v": "Pass"
+    },
+    "en|perceived|normal": {
+      "v": "Pass"
+    },
+    "en|referring|normal": {
+      "v": "Pass"
+    },
+    "en|separation|normal": {
+      "v": "Pass"
+    },
+    "en|territories|normal": {
+      "v": "Pass"
+    },
+    "en|distinctive|normal": {
+      "v": "Pass"
+    },
+    "en|equations|normal": {
+      "v": "Pass"
+    },
+    "en|execution|normal": {
+      "v": "Pass"
+    },
+    "en|operators|normal": {
+      "v": "Pass"
+    },
+    "en|presidential|normal": {
+      "v": "Pass"
+    },
+    "en|replacement|normal": {
+      "v": "Pass"
+    },
+    "en|spacecraft|normal": {
+      "v": "Pass"
+    },
+    "en|threatened|normal": {
+      "v": "Pass"
+    },
+    "en|republican|normal": {
+      "v": "Pass"
+    },
+    "en|afterwards|normal": {
+      "v": "Pass"
+    },
+    "en|confusion|normal": {
+      "v": "Pass"
+    },
+    "en|customers|normal": {
+      "v": "Pass"
+    },
+    "en|definitions|normal": {
+      "v": "Pass"
+    },
+    "en|diplomatic|normal": {
+      "v": "Pass"
+    },
+    "en|dominated|normal": {
+      "v": "Pass"
+    },
+    "en|establishment|normal": {
+      "v": "Pass"
+    },
+    "en|interpreted|normal": {
+      "v": "Pass"
+    },
+    "en|processor|normal": {
+      "v": "Pass"
+    },
+    "en|restrictions|normal": {
+      "v": "Pass"
+    },
+    "en|technologies|normal": {
+      "v": "Pass"
+    },
+    "en|vulnerable|normal": {
+      "v": "Pass"
+    },
+    "en|concerning|normal": {
+      "v": "Pass"
+    },
+    "en|newspapers|normal": {
+      "v": "Pass"
+    },
+    "en|procedures|normal": {
+      "v": "Pass"
+    },
+    "en|alongside|normal": {
+      "v": "Pass"
+    },
+    "en|attempting|normal": {
+      "v": "Pass"
+    },
+    "en|contribute|normal": {
+      "v": "Pass"
+    },
+    "en|destination|normal": {
+      "v": "Pass"
+    },
+    "en|districts|normal": {
+      "v": "Pass"
+    },
+    "en|implement|normal": {
+      "v": "Pass"
+    },
+    "en|improvements|normal": {
+      "v": "Pass"
+    },
+    "en|manufactured|normal": {
+      "v": "Pass"
+    },
+    "en|regardless|normal": {
+      "v": "Pass"
+    },
+    "en|representative|normal": {
+      "v": "Pass"
+    },
+    "en|supporters|normal": {
+      "v": "Pass"
+    },
+    "en|suspended|normal": {
+      "v": "Pass"
+    },
+    "en|addresses|normal": {
+      "v": "Weak"
+    },
+    "en|algorithms|normal": {
+      "v": "Pass"
+    },
+    "en|consequences|normal": {
+      "v": "Pass"
+    },
+    "en|contributions|normal": {
+      "v": "Pass"
+    },
+    "en|employment|normal": {
+      "v": "Pass"
+    },
+    "en|functional|normal": {
+      "v": "Pass"
+    },
+    "en|measurements|normal": {
+      "v": "Pass"
+    },
+    "en|naturally|normal": {
+      "v": "Pass"
+    },
+    "en|occasions|normal": {
+      "v": "Pass"
+    },
+    "en|opponents|normal": {
+      "v": "Pass"
+    },
+    "en|publishing|normal": {
+      "v": "Pass"
+    },
+    "en|compatible|normal": {
+      "v": "Pass"
+    },
+    "en|complicated|normal": {
+      "v": "Pass"
+    },
+    "en|consisted|normal": {
+      "v": "Pass"
+    },
+    "en|entertainment|normal": {
+      "v": "Pass"
+    },
+    "en|explicitly|normal": {
+      "v": "Pass"
+    },
+    "en|literally|normal": {
+      "v": "Pass"
+    },
+    "en|potentially|normal": {
+      "v": "Pass"
+    },
+    "en|preserved|normal": {
+      "v": "Pass"
+    },
+    "en|psychological|normal": {
+      "v": "Pass"
+    },
+    "en|recognize|normal": {
+      "v": "Pass"
+    },
+    "en|requested|normal": {
+      "v": "Pass"
+    },
+    "en|democrats|normal": {
+      "v": "Pass"
+    },
+    "en|addressed|normal": {
+      "v": "Pass"
+    },
+    "en|advantages|normal": {
+      "v": "Pass"
+    },
+    "en|concentrated|normal": {
+      "v": "Pass"
+    },
+    "en|displayed|normal": {
+      "v": "Pass"
+    },
+    "en|followers|normal": {
+      "v": "Pass"
+    },
+    "en|influences|normal": {
+      "v": "Pass"
+    },
+    "en|jurisdiction|normal": {
+      "v": "Pass"
+    },
+    "en|nomination|normal": {
+      "v": "Pass"
+    },
+    "en|punishment|normal": {
+      "v": "Pass"
+    },
+    "en|retirement|normal": {
+      "v": "Pass"
+    },
+    "en|completion|normal": {
+      "v": "Pass"
+    },
+    "en|consequence|normal": {
+      "v": "Pass"
+    },
+    "en|electromagnetic|normal": {
+      "v": "Pass"
+    },
+    "en|historically|normal": {
+      "v": "Pass"
+    },
+    "en|nominated|normal": {
+      "v": "Pass"
+    },
+    "en|offensive|normal": {
+      "v": "Pass"
+    },
+    "en|prevented|normal": {
+      "v": "Pass"
+    },
+    "en|prisoners|normal": {
+      "v": "Pass"
+    },
+    "en|significance|normal": {
+      "v": "Pass"
+    },
+    "en|sufficiently|normal": {
+      "v": "Pass"
+    },
+    "en|underground|normal": {
+      "v": "Pass"
+    },
+    "en|acceptance|normal": {
+      "v": "Pass"
+    },
+    "en|considerably|normal": {
+      "v": "Pass"
+    },
+    "en|constantly|normal": {
+      "v": "Pass"
+    },
+    "en|democratic|normal": {
+      "v": "Pass"
+    },
+    "en|dimensions|normal": {
+      "v": "Pass"
+    },
+    "en|directions|normal": {
+      "v": "Pass"
+    },
+    "en|generations|normal": {
+      "v": "Pass"
+    },
+    "en|indicates|normal": {
+      "v": "Pass"
+    },
+    "en|indigenous|normal": {
+      "v": "Pass"
+    },
+    "en|insurance|normal": {
+      "v": "Pass"
+    },
+    "en|interference|normal": {
+      "v": "Pass"
+    },
+    "en|maintaining|normal": {
+      "v": "Pass"
+    },
+    "en|regulations|normal": {
+      "v": "Pass"
+    },
+    "en|unemployment|normal": {
+      "v": "Pass"
+    },
+    "en|varieties|normal": {
+      "v": "Pass"
+    },
+    "en|correspondence|normal": {
+      "v": "Pass"
+    },
+    "en|difficulties|normal": {
+      "v": "Pass"
+    },
+    "en|elaborate|normal": {
+      "v": "Pass"
+    },
+    "en|environments|normal": {
+      "v": "Pass"
+    },
+    "en|personality|normal": {
+      "v": "Pass"
+    },
+    "en|phenomena|normal": {
+      "v": "Pass"
+    },
+    "en|psychology|normal": {
+      "v": "Pass"
+    },
+    "en|repeatedly|normal": {
+      "v": "Pass"
+    },
+    "en|residential|normal": {
+      "v": "Pass"
+    },
+    "en|appearances|normal": {
+      "v": "Pass"
+    },
+    "en|capabilities|normal": {
+      "v": "Pass"
+    },
+    "en|childhood|normal": {
+      "v": "Pass"
+    },
+    "en|competing|normal": {
+      "v": "Pass"
+    },
+    "en|constitutional|normal": {
+      "v": "Pass"
+    },
+    "en|equilibrium|normal": {
+      "v": "Pass"
+    },
+    "en|headquarters|normal": {
+      "v": "Pass"
+    },
+    "en|indicating|normal": {
+      "v": "Pass"
+    },
+    "en|ministers|normal": {
+      "v": "Pass"
+    },
+    "en|primitive|normal": {
+      "v": "Pass"
+    },
+    "en|recordings|normal": {
+      "v": "Pass"
+    },
+    "en|wavelength|normal": {
+      "v": "Pass"
+    },
+    "en|retrieved|normal": {
+      "v": "Pass"
+    },
+    "en|architectural|normal": {
+      "v": "Pass"
+    },
+    "en|capability|normal": {
+      "v": "Pass"
+    },
+    "en|challenges|normal": {
+      "v": "Pass"
+    },
+    "en|coalition|normal": {
+      "v": "Pass"
+    },
+    "en|decreased|normal": {
+      "v": "Pass"
+    },
+    "en|developments|normal": {
+      "v": "Pass"
+    },
+    "en|friendship|normal": {
+      "v": "Pass"
+    },
+    "en|identification|normal": {
+      "v": "Pass"
+    },
+    "en|intellectual|normal": {
+      "v": "Pass"
+    },
+    "en|opportunities|normal": {
+      "v": "Pass"
+    },
+    "en|variables|normal": {
+      "v": "Pass"
+    },
+    "en|calculated|normal": {
+      "v": "Pass"
+    },
+    "en|exclusive|normal": {
+      "v": "Pass"
+    },
+    "en|immigrants|normal": {
+      "v": "Pass"
+    },
+    "en|involvement|normal": {
+      "v": "Pass"
+    },
+    "en|limitations|normal": {
+      "v": "Pass"
+    },
+    "en|maintains|normal": {
+      "v": "Pass"
+    },
+    "en|participants|normal": {
+      "v": "Pass"
+    },
+    "en|requirement|normal": {
+      "v": "Pass"
+    },
+    "en|anniversary|normal": {
+      "v": "Pass"
+    },
+    "en|commissioned|normal": {
+      "v": "Pass"
+    },
+    "en|conclusion|normal": {
+      "v": "Pass"
+    },
+    "en|developers|normal": {
+      "v": "Pass"
+    },
+    "en|emergency|normal": {
+      "v": "Pass"
+    },
+    "en|horizontal|normal": {
+      "v": "Pass"
+    },
+    "en|infection|normal": {
+      "v": "Pass"
+    },
+    "en|intention|normal": {
+      "v": "Pass"
+    },
+    "en|originated|normal": {
+      "v": "Pass"
+    },
+    "en|preparation|normal": {
+      "v": "Pass"
+    },
+    "en|representatives|normal": {
+      "v": "Pass"
+    },
+    "en|requiring|normal": {
+      "v": "Pass"
+    },
+    "en|statistical|normal": {
+      "v": "Pass"
+    },
+    "en|substances|normal": {
+      "v": "Pass"
+    },
+    "en|traveling|normal": {
+      "v": "Pass"
+    },
+    "en|abilities|normal": {
+      "v": "Pass"
+    },
+    "en|automatically|normal": {
+      "v": "Pass"
+    },
+    "en|consecutive|normal": {
+      "v": "Pass"
+    },
+    "en|corruption|normal": {
+      "v": "Pass"
+    },
+    "en|discipline|normal": {
+      "v": "Pass"
+    },
+    "en|expanding|normal": {
+      "v": "Pass"
+    },
+    "en|invention|normal": {
+      "v": "Pass"
+    },
+    "en|mainstream|normal": {
+      "v": "Pass"
+    },
+    "en|portrayed|normal": {
+      "v": "Weak"
+    },
+    "en|precision|normal": {
+      "v": "Pass"
+    },
+    "en|publications|normal": {
+      "v": "Pass"
+    },
+    "en|statistics|normal": {
+      "v": "Pass"
+    },
+    "en|submitted|normal": {
+      "v": "Pass"
+    },
+    "en|accomplished|normal": {
+      "v": "Pass"
+    },
+    "en|alternate|normal": {
+      "v": "Pass"
+    },
+    "en|appointment|normal": {
+      "v": "Pass"
+    },
+    "en|availability|normal": {
+      "v": "Pass"
+    },
+    "en|campaigns|normal": {
+      "v": "Pass"
+    },
+    "en|conceived|normal": {
+      "v": "Pass"
+    },
+    "en|improvement|normal": {
+      "v": "Pass"
+    },
+    "en|inherited|normal": {
+      "v": "Pass"
+    },
+    "en|initiated|normal": {
+      "v": "Pass"
+    },
+    "en|instances|normal": {
+      "v": "Pass"
+    },
+    "en|integration|normal": {
+      "v": "Pass"
+    },
+    "en|intervals|normal": {
+      "v": "Pass"
+    },
+    "en|mechanisms|normal": {
+      "v": "Pass"
+    },
+    "en|oxidation|normal": {
+      "v": "Pass"
+    },
+    "en|remainder|normal": {
+      "v": "Pass"
+    },
+    "en|succession|normal": {
+      "v": "Pass"
+    },
+    "en|universities|normal": {
+      "v": "Pass"
+    },
+    "en|casualties|normal": {
+      "v": "Pass"
+    },
+    "en|chemicals|normal": {
+      "v": "Pass"
+    },
+    "en|combinations|normal": {
+      "v": "Pass"
+    },
+    "en|competitive|normal": {
+      "v": "Pass"
+    },
+    "en|computing|normal": {
+      "v": "Pass"
+    },
+    "en|consideration|normal": {
+      "v": "Pass"
+    },
+    "en|considering|normal": {
+      "v": "Pass"
+    },
+    "en|departure|normal": {
+      "v": "Pass"
+    },
+    "en|historian|normal": {
+      "v": "Pass"
+    },
+    "en|instrumental|normal": {
+      "v": "Pass"
+    },
+    "en|legislature|normal": {
+      "v": "Pass"
+    },
+    "en|manufacture|normal": {
+      "v": "Weak"
+    },
+    "en|manuscript|normal": {
+      "v": "Pass"
+    },
+    "en|neighborhood|normal": {
+      "v": "Pass"
+    },
+    "en|reportedly|normal": {
+      "v": "Pass"
+    },
+    "en|sequences|normal": {
+      "v": "Pass"
+    },
+    "en|acceptable|normal": {
+      "v": "Pass"
+    },
+    "en|appearing|normal": {
+      "v": "Pass"
+    },
+    "en|communicate|normal": {
+      "v": "Pass"
+    },
+    "en|conservative|normal": {
+      "v": "Pass"
+    },
+    "en|democracy|normal": {
+      "v": "Pass"
+    },
+    "en|economics|normal": {
+      "v": "Pass"
+    },
+    "en|extending|normal": {
+      "v": "Pass"
+    },
+    "en|marketing|normal": {
+      "v": "Pass"
+    },
+    "en|negotiations|normal": {
+      "v": "Pass"
+    },
+    "en|sensitive|normal": {
+      "v": "Pass"
+    },
+    "en|corporation|normal": {
+      "v": "Pass"
+    },
+    "en|agreements|normal": {
+      "v": "Pass"
+    },
+    "en|audiences|normal": {
+      "v": "Pass"
+    },
+    "en|civilians|normal": {
+      "v": "Pass"
+    },
+    "en|commanded|normal": {
+      "v": "Pass"
+    },
+    "en|documentary|normal": {
+      "v": "Pass"
+    },
+    "en|effectiveness|normal": {
+      "v": "Pass"
+    },
+    "en|expressions|normal": {
+      "v": "Pass"
+    },
+    "en|extensively|normal": {
+      "v": "Pass"
+    },
+    "en|fragments|normal": {
+      "v": "Pass"
+    },
+    "en|interactions|normal": {
+      "v": "Pass"
+    },
+    "en|introduce|normal": {
+      "v": "Weak"
+    },
+    "en|presentation|normal": {
+      "v": "Pass"
+    },
+    "en|commercially|normal": {
+      "v": "Pass"
+    },
+    "en|continuously|normal": {
+      "v": "Pass"
+    },
+    "en|corporate|normal": {
+      "v": "Pass"
+    },
+    "en|depression|normal": {
+      "v": "Pass"
+    },
+    "en|dismissed|normal": {
+      "v": "Pass"
+    }
+  }
 }

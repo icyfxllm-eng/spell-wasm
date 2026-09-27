@@ -19,6 +19,7 @@ import { execFileSync } from 'node:child_process';
 import { existsSync, readFileSync, writeFileSync, mkdirSync, mkdtempSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
+import { KEY, normalize } from './lib/audio-norm.mjs';
 
 const args = Object.fromEntries(
   process.argv.slice(2).flatMap((a, i, all) => (a.startsWith('--') ? [[a.slice(2), all[i + 1]?.startsWith('--') === false ? all[i + 1] : true]] : [])),
@@ -45,7 +46,9 @@ function heardBoth(wav) {
   return [w, g];
 }
 
-const norm = (s) => String(s).normalize('NFC').toLowerCase().replace(/[.,!?;:"'`()\[\]{}…—–-]/g, '').trim();
+// The bake-off compares through the SAME normaliser F2 does; see
+// scripts/lib/audio-norm.mjs for what the two local copies disagreed about.
+const norm = (s) => normalize(s, KEY[lang] || 'surface', lang);
 
 async function main() {
   for (const need of ['WHISPER_MODEL', 'STT_ENDPOINT']) {
@@ -84,9 +87,18 @@ async function main() {
 
   rows.sort((a, b) => (b.pass ?? -1) - (a.pass ?? -1) || (a.weak ?? 0) - (b.weak ?? 0));
   const out = [`# Bake-off — ${lang}`, '', `${words.length} words per voice, both recognizers, blind (I3).`, ''];
+  // Mark the incumbent. Without it a reader has to go and look up
+  // LANG_VOICES to answer the only question the table is really asked --
+  // is the voice we ship already the best one -- and a ranking whose
+  // baseline is off-page invites the wrong conclusion either way.
+  const current = args.current || '';
   out.push('| Voice | Pass | Weak | Fail |', '|---|---|---|---|');
   for (const r of rows) {
-    out.push(r.excluded ? `| ${r.voice} | — | — | — | excluded: ${r.excluded}` : `| ${r.voice} | ${r.pass} | ${r.weak} | ${r.fail} |`);
+    const name = r.voice === current ? `${r.voice} **(current)**` : r.voice;
+    out.push(r.excluded ? `| ${name} | — | — | — | excluded: ${r.excluded}` : `| ${name} | ${r.pass} | ${r.weak} | ${r.fail} |`);
+  }
+  if (current && !rows.some((r) => r.voice === current)) {
+    out.push('', `The shipped voice, \`${current}\`, was not among the candidates measured here.`);
   }
   out.push('', '## Missed by both recognizers', '');
   for (const r of rows.filter((x) => x.misheard?.length)) {

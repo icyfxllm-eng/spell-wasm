@@ -1,0 +1,302 @@
+[
+ {
+  "word": "ziemia",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8199/api/speak?word=ziemia&lang=pl&variant=normal"
+ },
+ {
+  "word": "nos",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8199/api/speak?word=nos&lang=pl&variant=normal"
+ },
+ {
+  "word": "pchać",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8199/api/speak?word=pchać&lang=pl&variant=normal"
+ },
+ {
+  "word": "cena",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8199/api/speak?word=cena&lang=pl&variant=normal"
+ },
+ {
+  "word": "wieś",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8199/api/speak?word=wieś&lang=pl&variant=normal"
+ },
+ {
+  "word": "noc",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8199/api/speak?word=noc&lang=pl&variant=normal"
+ },
+ {
+  "word": "środek",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8199/api/speak?word=środek&lang=pl&variant=normal"
+ },
+ {
+  "word": "rok",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8199/api/speak?word=rok&lang=pl&variant=normal"
+ },
+ {
+  "word": "chmura",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8199/api/speak?word=chmura&lang=pl&variant=normal"
+ },
+ {
+  "word": "biały",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8199/api/speak?word=biały&lang=pl&variant=normal"
+ },
+ {
+  "word": "dom",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8199/api/speak?word=dom&lang=pl&variant=normal"
+ },
+ {
+  "word": "łódź",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8199/api/speak?word=łódź&lang=pl&variant=normal"
+ },
+ {
+  "word": "skóra",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8199/api/speak?word=skóra&lang=pl&variant=normal"
+ },
+ {
+  "word": "mówić",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8199/api/speak?word=mówić&lang=pl&variant=normal"
+ },
+ {
+  "word": "żelazo",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8199/api/speak?word=żelazo&lang=pl&variant=normal"
+ },
+ {
+  "word": "lipcu",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8199/api/speak?word=lipcu&lang=pl&variant=normal"
+ },
+ {
+  "word": "zakupy",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8199/api/speak?word=zakupy&lang=pl&variant=normal"
+ },
+ {
+  "word": "świata",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8199/api/speak?word=świata&lang=pl&variant=normal"
+ },
+ {
+  "word": "pełna",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8199/api/speak?word=pełna&lang=pl&variant=normal"
+ },
+ {
+  "word": "długie",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8199/api/speak?word=długie&lang=pl&variant=normal"
+ },
+ {
+  "word": "urząd",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8199/api/speak?word=urząd&lang=pl&variant=normal"
+ },
+ {
+  "word": "spraw",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8199/api/speak?word=spraw&lang=pl&variant=normal"
+ },
+ {
+  "word": "wrocław",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8199/api/speak?word=wrocław&lang=pl&variant=normal"
+ },
+ {
+  "word": "lidze",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8199/api/speak?word=lidze&lang=pl&variant=normal"
+ },
+ {
+  "word": "kobiet",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8199/api/speak?word=kobiet&lang=pl&variant=normal"
+ },
+ {
+  "word": "czego",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8199/api/speak?word=czego&lang=pl&variant=normal"
+ },
+ {
+  "word": "kilku",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8199/api/speak?word=kilku&lang=pl&variant=normal"
+ },
+ {
+  "word": "zespół",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8199/api/speak?word=zespół&lang=pl&variant=normal"
+ },
+ {
+  "word": "zmarł",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8199/api/speak?word=zmarł&lang=pl&variant=normal"
+ },
+ {
+  "word": "dajcie",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8199/api/speak?word=dajcie&lang=pl&variant=normal"
+ },
+ {
+  "word": "rowerze",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8199/api/speak?word=rowerze&lang=pl&variant=normal"
+ },
+ {
+  "word": "fantasy",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8199/api/speak?word=fantasy&lang=pl&variant=normal"
+ },
+ {
+  "word": "truskawka",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8199/api/speak?word=truskawka&lang=pl&variant=normal"
+ },
+ {
+  "word": "systemów",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8199/api/speak?word=systemów&lang=pl&variant=normal"
+ },
+ {
+  "word": "istnieją",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8199/api/speak?word=istnieją&lang=pl&variant=normal"
+ },
+ {
+  "word": "oddział",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8199/api/speak?word=oddział&lang=pl&variant=normal"
+ },
+ {
+  "word": "członkami",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8199/api/speak?word=członkami&lang=pl&variant=normal"
+ },
+ {
+  "word": "właśnie",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8199/api/speak?word=właśnie&lang=pl&variant=normal"
+ },
+ {
+  "word": "widelec",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8199/api/speak?word=widelec&lang=pl&variant=normal"
+ },
+ {
+  "word": "czekolada",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8199/api/speak?word=czekolada&lang=pl&variant=normal"
+ },
+ {
+  "word": "wartości",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8199/api/speak?word=wartości&lang=pl&variant=normal"
+ },
+ {
+  "word": "strat",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8199/api/speak?word=strat&lang=pl&variant=normal"
+ },
+ {
+  "word": "odkryć",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8199/api/speak?word=odkryć&lang=pl&variant=normal"
+ },
+ {
+  "word": "dekady",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8199/api/speak?word=dekady&lang=pl&variant=normal"
+ },
+ {
+  "word": "zniknie",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8199/api/speak?word=zniknie&lang=pl&variant=normal"
+ },
+ {
+  "word": "względami",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8199/api/speak?word=względami&lang=pl&variant=normal"
+ },
+ {
+  "word": "apetyt",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8199/api/speak?word=apetyt&lang=pl&variant=normal"
+ },
+ {
+  "word": "zmieniono",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8199/api/speak?word=zmieniono&lang=pl&variant=normal"
+ },
+ {
+  "word": "operacyjnego",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8199/api/speak?word=operacyjnego&lang=pl&variant=normal"
+ },
+ {
+  "word": "dokładny",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8199/api/speak?word=dokładny&lang=pl&variant=normal"
+ },
+ {
+  "word": "etnicznych",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8199/api/speak?word=etnicznych&lang=pl&variant=normal"
+ },
+ {
+  "word": "zdecydowaliśmy",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8199/api/speak?word=zdecydowaliśmy&lang=pl&variant=normal"
+ },
+ {
+  "word": "białek",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8199/api/speak?word=białek&lang=pl&variant=normal"
+ },
+ {
+  "word": "województwa",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8199/api/speak?word=województwa&lang=pl&variant=normal"
+ },
+ {
+  "word": "blokada",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8199/api/speak?word=blokada&lang=pl&variant=normal"
+ },
+ {
+  "word": "zestawieniu",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8199/api/speak?word=zestawieniu&lang=pl&variant=normal"
+ },
+ {
+  "word": "wielkiego",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8199/api/speak?word=wielkiego&lang=pl&variant=normal"
+ },
+ {
+  "word": "wdzięczni",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8199/api/speak?word=wdzięczni&lang=pl&variant=normal"
+ },
+ {
+  "word": "rosyjskiego",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8199/api/speak?word=rosyjskiego&lang=pl&variant=normal"
+ },
+ {
+  "word": "zamieszczone",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8199/api/speak?word=zamieszczone&lang=pl&variant=normal"
+ }
+]

@@ -1,0 +1,302 @@
+[
+ {
+  "word": "आकार",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8199/api/speak?word=आकार&lang=hi&variant=normal"
+ },
+ {
+  "word": "दो",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8199/api/speak?word=दो&lang=hi&variant=normal"
+ },
+ {
+  "word": "वृत्त",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8199/api/speak?word=वृत्त&lang=hi&variant=normal"
+ },
+ {
+  "word": "बीच",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8199/api/speak?word=बीच&lang=hi&variant=normal"
+ },
+ {
+  "word": "गाना",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8199/api/speak?word=गाना&lang=hi&variant=normal"
+ },
+ {
+  "word": "अँधेरा",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8199/api/speak?word=अँधेरा&lang=hi&variant=normal"
+ },
+ {
+  "word": "लोमड़ी",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8199/api/speak?word=लोमड़ी&lang=hi&variant=normal"
+ },
+ {
+  "word": "टाँग",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8199/api/speak?word=टाँग&lang=hi&variant=normal"
+ },
+ {
+  "word": "टोपी",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8199/api/speak?word=टोपी&lang=hi&variant=normal"
+ },
+ {
+  "word": "बच्चा",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8199/api/speak?word=बच्चा&lang=hi&variant=normal"
+ },
+ {
+  "word": "तारा",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8199/api/speak?word=तारा&lang=hi&variant=normal"
+ },
+ {
+  "word": "छत",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8199/api/speak?word=छत&lang=hi&variant=normal"
+ },
+ {
+  "word": "राष्ट्र",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8199/api/speak?word=राष्ट्र&lang=hi&variant=normal"
+ },
+ {
+  "word": "बर्फ़",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8199/api/speak?word=बर्फ़&lang=hi&variant=normal"
+ },
+ {
+  "word": "गुनगुना",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8199/api/speak?word=गुनगुना&lang=hi&variant=normal"
+ },
+ {
+  "word": "संभावित",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8199/api/speak?word=संभावित&lang=hi&variant=normal"
+ },
+ {
+  "word": "समुदायों",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8199/api/speak?word=समुदायों&lang=hi&variant=normal"
+ },
+ {
+  "word": "व्यवहार",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8199/api/speak?word=व्यवहार&lang=hi&variant=normal"
+ },
+ {
+  "word": "सम्मान",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8199/api/speak?word=सम्मान&lang=hi&variant=normal"
+ },
+ {
+  "word": "आलोचकों",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8199/api/speak?word=आलोचकों&lang=hi&variant=normal"
+ },
+ {
+  "word": "तकनीक",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8199/api/speak?word=तकनीक&lang=hi&variant=normal"
+ },
+ {
+  "word": "बल्लेबाजी",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8199/api/speak?word=बल्लेबाजी&lang=hi&variant=normal"
+ },
+ {
+  "word": "सक्रिय",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8199/api/speak?word=सक्रिय&lang=hi&variant=normal"
+ },
+ {
+  "word": "अवधारणा",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8199/api/speak?word=अवधारणा&lang=hi&variant=normal"
+ },
+ {
+  "word": "कल्पना",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8199/api/speak?word=कल्पना&lang=hi&variant=normal"
+ },
+ {
+  "word": "बिल्कुल",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8199/api/speak?word=बिल्कुल&lang=hi&variant=normal"
+ },
+ {
+  "word": "माध्यमिक",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8199/api/speak?word=माध्यमिक&lang=hi&variant=normal"
+ },
+ {
+  "word": "इन्होंने",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8199/api/speak?word=इन्होंने&lang=hi&variant=normal"
+ },
+ {
+  "word": "सामाजिक",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8199/api/speak?word=सामाजिक&lang=hi&variant=normal"
+ },
+ {
+  "word": "समुदाय",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8199/api/speak?word=समुदाय&lang=hi&variant=normal"
+ },
+ {
+  "word": "रामचन्द्र",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8199/api/speak?word=रामचन्द्र&lang=hi&variant=normal"
+ },
+ {
+  "word": "सकारात्मक",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8199/api/speak?word=सकारात्मक&lang=hi&variant=normal"
+ },
+ {
+  "word": "लेम्बोर्गिनी",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8199/api/speak?word=लेम्बोर्गिनी&lang=hi&variant=normal"
+ },
+ {
+  "word": "अहमदाबाद",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8199/api/speak?word=अहमदाबाद&lang=hi&variant=normal"
+ },
+ {
+  "word": "अनिवार्यता",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8199/api/speak?word=अनिवार्यता&lang=hi&variant=normal"
+ },
+ {
+  "word": "संज्ञानात्मक",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8199/api/speak?word=संज्ञानात्मक&lang=hi&variant=normal"
+ },
+ {
+  "word": "विनचेस्टर",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8199/api/speak?word=विनचेस्टर&lang=hi&variant=normal"
+ },
+ {
+  "word": "संकटग्रस्त",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8199/api/speak?word=संकटग्रस्त&lang=hi&variant=normal"
+ },
+ {
+  "word": "क्वालीफायर",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8199/api/speak?word=क्वालीफायर&lang=hi&variant=normal"
+ },
+ {
+  "word": "एथलेटिक्स",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8199/api/speak?word=एथलेटिक्स&lang=hi&variant=normal"
+ },
+ {
+  "word": "एंटरटेनमेंट",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8199/api/speak?word=एंटरटेनमेंट&lang=hi&variant=normal"
+ },
+ {
+  "word": "प्रतिनिधियों",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8199/api/speak?word=प्रतिनिधियों&lang=hi&variant=normal"
+ },
+ {
+  "word": "परिवर्तनीय",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8199/api/speak?word=परिवर्तनीय&lang=hi&variant=normal"
+ },
+ {
+  "word": "राज्याभिषेक",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8199/api/speak?word=राज्याभिषेक&lang=hi&variant=normal"
+ },
+ {
+  "word": "बहुपक्षीय",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8199/api/speak?word=बहुपक्षीय&lang=hi&variant=normal"
+ },
+ {
+  "word": "एअरक्राफ्ट्स",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8199/api/speak?word=एअरक्राफ्ट्स&lang=hi&variant=normal"
+ },
+ {
+  "word": "व्यवसायीकरण",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8199/api/speak?word=व्यवसायीकरण&lang=hi&variant=normal"
+ },
+ {
+  "word": "अहस्ताक्षरित",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8199/api/speak?word=अहस्ताक्षरित&lang=hi&variant=normal"
+ },
+ {
+  "word": "आफ्टरमार्केट",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8199/api/speak?word=आफ्टरमार्केट&lang=hi&variant=normal"
+ },
+ {
+  "word": "स्वतंत्रतावाद",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8199/api/speak?word=स्वतंत्रतावाद&lang=hi&variant=normal"
+ },
+ {
+  "word": "अंतर्जनपदीय",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8199/api/speak?word=अंतर्जनपदीय&lang=hi&variant=normal"
+ },
+ {
+  "word": "आर्गेनाइज़ेशन्स",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8199/api/speak?word=आर्गेनाइज़ेशन्स&lang=hi&variant=normal"
+ },
+ {
+  "word": "हाइड्रोजनीकरण",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8199/api/speak?word=हाइड्रोजनीकरण&lang=hi&variant=normal"
+ },
+ {
+  "word": "अन्डरवर्ल्ड",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8199/api/speak?word=अन्डरवर्ल्ड&lang=hi&variant=normal"
+ },
+ {
+  "word": "सिद्धार्थनगर",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8199/api/speak?word=सिद्धार्थनगर&lang=hi&variant=normal"
+ },
+ {
+  "word": "श्रीसर्वेश्वर",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8199/api/speak?word=श्रीसर्वेश्वर&lang=hi&variant=normal"
+ },
+ {
+  "word": "लीसेस्टरशायर",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8199/api/speak?word=लीसेस्टरशायर&lang=hi&variant=normal"
+ },
+ {
+  "word": "पथप्रदर्शक",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8199/api/speak?word=पथप्रदर्शक&lang=hi&variant=normal"
+ },
+ {
+  "word": "आर्किप्लास्टिडे",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8199/api/speak?word=आर्किप्लास्टिडे&lang=hi&variant=normal"
+ },
+ {
+  "word": "सफलतापूर्वक",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8199/api/speak?word=सफलतापूर्वक&lang=hi&variant=normal"
+ }
+]

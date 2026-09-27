@@ -1,0 +1,302 @@
+[
+ {
+  "word": "andar",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8199/api/speak?word=andar&lang=pt&variant=normal"
+ },
+ {
+  "word": "escola",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8199/api/speak?word=escola&lang=pt&variant=normal"
+ },
+ {
+  "word": "azul",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8199/api/speak?word=azul&lang=pt&variant=normal"
+ },
+ {
+  "word": "medo",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8199/api/speak?word=medo&lang=pt&variant=normal"
+ },
+ {
+  "word": "luz",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8199/api/speak?word=luz&lang=pt&variant=normal"
+ },
+ {
+  "word": "saúde",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8199/api/speak?word=saúde&lang=pt&variant=normal"
+ },
+ {
+  "word": "porco",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8199/api/speak?word=porco&lang=pt&variant=normal"
+ },
+ {
+  "word": "pensar",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8199/api/speak?word=pensar&lang=pt&variant=normal"
+ },
+ {
+  "word": "parede",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8199/api/speak?word=parede&lang=pt&variant=normal"
+ },
+ {
+  "word": "trazer",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8199/api/speak?word=trazer&lang=pt&variant=normal"
+ },
+ {
+  "word": "sete",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8199/api/speak?word=sete&lang=pt&variant=normal"
+ },
+ {
+  "word": "igreja",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8199/api/speak?word=igreja&lang=pt&variant=normal"
+ },
+ {
+  "word": "forte",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8199/api/speak?word=forte&lang=pt&variant=normal"
+ },
+ {
+  "word": "cozinha",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8199/api/speak?word=cozinha&lang=pt&variant=normal"
+ },
+ {
+  "word": "meia",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8199/api/speak?word=meia&lang=pt&variant=normal"
+ },
+ {
+  "word": "folhas",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8199/api/speak?word=folhas&lang=pt&variant=normal"
+ },
+ {
+  "word": "carregar",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8199/api/speak?word=carregar&lang=pt&variant=normal"
+ },
+ {
+  "word": "levar",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8199/api/speak?word=levar&lang=pt&variant=normal"
+ },
+ {
+  "word": "favor",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8199/api/speak?word=favor&lang=pt&variant=normal"
+ },
+ {
+  "word": "começa",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8199/api/speak?word=começa&lang=pt&variant=normal"
+ },
+ {
+  "word": "vendas",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8199/api/speak?word=vendas&lang=pt&variant=normal"
+ },
+ {
+  "word": "gênero",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8199/api/speak?word=gênero&lang=pt&variant=normal"
+ },
+ {
+  "word": "felizes",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8199/api/speak?word=felizes&lang=pt&variant=normal"
+ },
+ {
+  "word": "garrafa",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8199/api/speak?word=garrafa&lang=pt&variant=normal"
+ },
+ {
+  "word": "seguiu",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8199/api/speak?word=seguiu&lang=pt&variant=normal"
+ },
+ {
+  "word": "visão",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8199/api/speak?word=visão&lang=pt&variant=normal"
+ },
+ {
+  "word": "alunos",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8199/api/speak?word=alunos&lang=pt&variant=normal"
+ },
+ {
+  "word": "fêmeas",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8199/api/speak?word=fêmeas&lang=pt&variant=normal"
+ },
+ {
+  "word": "viveu",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8199/api/speak?word=viveu&lang=pt&variant=normal"
+ },
+ {
+  "word": "advogados",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8199/api/speak?word=advogados&lang=pt&variant=normal"
+ },
+ {
+  "word": "envolvidas",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8199/api/speak?word=envolvidas&lang=pt&variant=normal"
+ },
+ {
+  "word": "outono",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8199/api/speak?word=outono&lang=pt&variant=normal"
+ },
+ {
+  "word": "deveria",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8199/api/speak?word=deveria&lang=pt&variant=normal"
+ },
+ {
+  "word": "esportes",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8199/api/speak?word=esportes&lang=pt&variant=normal"
+ },
+ {
+  "word": "tradução",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8199/api/speak?word=tradução&lang=pt&variant=normal"
+ },
+ {
+  "word": "chamada",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8199/api/speak?word=chamada&lang=pt&variant=normal"
+ },
+ {
+  "word": "dylan",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8199/api/speak?word=dylan&lang=pt&variant=normal"
+ },
+ {
+  "word": "parecida",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8199/api/speak?word=parecida&lang=pt&variant=normal"
+ },
+ {
+  "word": "oxigênio",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8199/api/speak?word=oxigênio&lang=pt&variant=normal"
+ },
+ {
+  "word": "expulso",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8199/api/speak?word=expulso&lang=pt&variant=normal"
+ },
+ {
+  "word": "saudita",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8199/api/speak?word=saudita&lang=pt&variant=normal"
+ },
+ {
+  "word": "over",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8199/api/speak?word=over&lang=pt&variant=normal"
+ },
+ {
+  "word": "high",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8199/api/speak?word=high&lang=pt&variant=normal"
+ },
+ {
+  "word": "destruída",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8199/api/speak?word=destruída&lang=pt&variant=normal"
+ },
+ {
+  "word": "vestido",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8199/api/speak?word=vestido&lang=pt&variant=normal"
+ },
+ {
+  "word": "possíveis",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8199/api/speak?word=possíveis&lang=pt&variant=normal"
+ },
+ {
+  "word": "coordenada",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8199/api/speak?word=coordenada&lang=pt&variant=normal"
+ },
+ {
+  "word": "portáteis",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8199/api/speak?word=portáteis&lang=pt&variant=normal"
+ },
+ {
+  "word": "educadora",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8199/api/speak?word=educadora&lang=pt&variant=normal"
+ },
+ {
+  "word": "jornalístico",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8199/api/speak?word=jornalístico&lang=pt&variant=normal"
+ },
+ {
+  "word": "permanecer",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8199/api/speak?word=permanecer&lang=pt&variant=normal"
+ },
+ {
+  "word": "emergência",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8199/api/speak?word=emergência&lang=pt&variant=normal"
+ },
+ {
+  "word": "bebem",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8199/api/speak?word=bebem&lang=pt&variant=normal"
+ },
+ {
+  "word": "wikipedia",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8199/api/speak?word=wikipedia&lang=pt&variant=normal"
+ },
+ {
+  "word": "represa",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8199/api/speak?word=represa&lang=pt&variant=normal"
+ },
+ {
+  "word": "exagerada",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8199/api/speak?word=exagerada&lang=pt&variant=normal"
+ },
+ {
+  "word": "ligeiramente",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8199/api/speak?word=ligeiramente&lang=pt&variant=normal"
+ },
+ {
+  "word": "leoa",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8199/api/speak?word=leoa&lang=pt&variant=normal"
+ },
+ {
+  "word": "tecla",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8199/api/speak?word=tecla&lang=pt&variant=normal"
+ },
+ {
+  "word": "soltos",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8199/api/speak?word=soltos&lang=pt&variant=normal"
+ }
+]

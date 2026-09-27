@@ -1,0 +1,302 @@
+[
+ {
+  "word": "bituin",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8199/api/speak?word=bituin&lang=fil&variant=normal"
+ },
+ {
+  "word": "kama",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8199/api/speak?word=kama&lang=fil&variant=normal"
+ },
+ {
+  "word": "yelo",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8199/api/speak?word=yelo&lang=fil&variant=normal"
+ },
+ {
+  "word": "larawan",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8199/api/speak?word=larawan&lang=fil&variant=normal"
+ },
+ {
+  "word": "ginto",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8199/api/speak?word=ginto&lang=fil&variant=normal"
+ },
+ {
+  "word": "luma",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8199/api/speak?word=luma&lang=fil&variant=normal"
+ },
+ {
+  "word": "kamera",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8199/api/speak?word=kamera&lang=fil&variant=normal"
+ },
+ {
+  "word": "buwan",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8199/api/speak?word=buwan&lang=fil&variant=normal"
+ },
+ {
+  "word": "harap",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8199/api/speak?word=harap&lang=fil&variant=normal"
+ },
+ {
+  "word": "ibenta",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8199/api/speak?word=ibenta&lang=fil&variant=normal"
+ },
+ {
+  "word": "klase",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8199/api/speak?word=klase&lang=fil&variant=normal"
+ },
+ {
+  "word": "berde",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8199/api/speak?word=berde&lang=fil&variant=normal"
+ },
+ {
+  "word": "gabi",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8199/api/speak?word=gabi&lang=fil&variant=normal"
+ },
+ {
+  "word": "alon",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8199/api/speak?word=alon&lang=fil&variant=normal"
+ },
+ {
+  "word": "maliit",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8199/api/speak?word=maliit&lang=fil&variant=normal"
+ },
+ {
+  "word": "natin",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8199/api/speak?word=natin&lang=fil&variant=normal"
+ },
+ {
+  "word": "sibil",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8199/api/speak?word=sibil&lang=fil&variant=normal"
+ },
+ {
+  "word": "karera",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8199/api/speak?word=karera&lang=fil&variant=normal"
+ },
+ {
+  "word": "signal",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8199/api/speak?word=signal&lang=fil&variant=normal"
+ },
+ {
+  "word": "malayo",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8199/api/speak?word=malayo&lang=fil&variant=normal"
+ },
+ {
+  "word": "taglay",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8199/api/speak?word=taglay&lang=fil&variant=normal"
+ },
+ {
+  "word": "amang",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8199/api/speak?word=amang&lang=fil&variant=normal"
+ },
+ {
+  "word": "bakit",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8199/api/speak?word=bakit&lang=fil&variant=normal"
+ },
+ {
+  "word": "power",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8199/api/speak?word=power&lang=fil&variant=normal"
+ },
+ {
+  "word": "tugon",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8199/api/speak?word=tugon&lang=fil&variant=normal"
+ },
+ {
+  "word": "tanong",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8199/api/speak?word=tanong&lang=fil&variant=normal"
+ },
+ {
+  "word": "etniko",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8199/api/speak?word=etniko&lang=fil&variant=normal"
+ },
+ {
+  "word": "kaagad",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8199/api/speak?word=kaagad&lang=fil&variant=normal"
+ },
+ {
+  "word": "tungo",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8199/api/speak?word=tungo&lang=fil&variant=normal"
+ },
+ {
+  "word": "hinati",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8199/api/speak?word=hinati&lang=fil&variant=normal"
+ },
+ {
+  "word": "estadong",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8199/api/speak?word=estadong&lang=fil&variant=normal"
+ },
+ {
+  "word": "hukbong",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8199/api/speak?word=hukbong&lang=fil&variant=normal"
+ },
+ {
+  "word": "gerilya",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8199/api/speak?word=gerilya&lang=fil&variant=normal"
+ },
+ {
+  "word": "katulad",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8199/api/speak?word=katulad&lang=fil&variant=normal"
+ },
+ {
+  "word": "mamatay",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8199/api/speak?word=mamatay&lang=fil&variant=normal"
+ },
+ {
+  "word": "ipasa",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8199/api/speak?word=ipasa&lang=fil&variant=normal"
+ },
+ {
+  "word": "pumatay",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8199/api/speak?word=pumatay&lang=fil&variant=normal"
+ },
+ {
+  "word": "pinatay",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8199/api/speak?word=pinatay&lang=fil&variant=normal"
+ },
+ {
+  "word": "average",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8199/api/speak?word=average&lang=fil&variant=normal"
+ },
+ {
+  "word": "okasyon",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8199/api/speak?word=okasyon&lang=fil&variant=normal"
+ },
+ {
+  "word": "alkalde",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8199/api/speak?word=alkalde&lang=fil&variant=normal"
+ },
+ {
+  "word": "football",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8199/api/speak?word=football&lang=fil&variant=normal"
+ },
+ {
+  "word": "batayan",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8199/api/speak?word=batayan&lang=fil&variant=normal"
+ },
+ {
+  "word": "tirahan",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8199/api/speak?word=tirahan&lang=fil&variant=normal"
+ },
+ {
+  "word": "parangal",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8199/api/speak?word=parangal&lang=fil&variant=normal"
+ },
+ {
+  "word": "teknolohiya",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8199/api/speak?word=teknolohiya&lang=fil&variant=normal"
+ },
+ {
+  "word": "partikular",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8199/api/speak?word=partikular&lang=fil&variant=normal"
+ },
+ {
+  "word": "kongresista",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8199/api/speak?word=kongresista&lang=fil&variant=normal"
+ },
+ {
+  "word": "impeksiyon",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8199/api/speak?word=impeksiyon&lang=fil&variant=normal"
+ },
+ {
+  "word": "pinalitan",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8199/api/speak?word=pinalitan&lang=fil&variant=normal"
+ },
+ {
+  "word": "petisyon",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8199/api/speak?word=petisyon&lang=fil&variant=normal"
+ },
+ {
+  "word": "sadya",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8199/api/speak?word=sadya&lang=fil&variant=normal"
+ },
+ {
+  "word": "nagsilbing",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8199/api/speak?word=nagsilbing&lang=fil&variant=normal"
+ },
+ {
+  "word": "pangkaraniwan",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8199/api/speak?word=pangkaraniwan&lang=fil&variant=normal"
+ },
+ {
+  "word": "pamahalaan",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8199/api/speak?word=pamahalaan&lang=fil&variant=normal"
+ },
+ {
+  "word": "pinapakita",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8199/api/speak?word=pinapakita&lang=fil&variant=normal"
+ },
+ {
+  "word": "fairness",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8199/api/speak?word=fairness&lang=fil&variant=normal"
+ },
+ {
+  "word": "mapabuti",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8199/api/speak?word=mapabuti&lang=fil&variant=normal"
+ },
+ {
+  "word": "tradisyunal",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8199/api/speak?word=tradisyunal&lang=fil&variant=normal"
+ },
+ {
+  "word": "selfie",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8199/api/speak?word=selfie&lang=fil&variant=normal"
+ }
+]

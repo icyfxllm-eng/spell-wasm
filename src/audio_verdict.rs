@@ -42,11 +42,12 @@ impl Verdict {
 #[derive(Deserialize)]
 struct Entry {
     v: Verdict,
-    /// What each recognizer heard, kept so a verdict can be argued with. The
-    /// app never reads it; the report and a human do.
-    #[serde(default)]
-    #[allow(dead_code)]
-    heard: Vec<String>,
+    // What each recognizer HEARD used to live here too, so a verdict could be
+    // argued with. It moved to audio_clarity/transcripts.json when the first
+    // full English bank was measured: this file is compiled in with
+    // include_str!, and 3,165 clips of transcripts the app never reads were
+    // 250 KB of an offline-first bundle. The tools and the reports read the
+    // sidecar; nothing was lost but the weight.
 }
 
 #[derive(Deserialize, Default)]

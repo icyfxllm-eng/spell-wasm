@@ -1,0 +1,302 @@
+[
+ {
+  "word": "ذهب",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8199/api/speak?word=ذهب&lang=ar&variant=normal"
+ },
+ {
+  "word": "ستة",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8199/api/speak?word=ستة&lang=ar&variant=normal"
+ },
+ {
+  "word": "صندوق",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8199/api/speak?word=صندوق&lang=ar&variant=normal"
+ },
+ {
+  "word": "طريق",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8199/api/speak?word=طريق&lang=ar&variant=normal"
+ },
+ {
+  "word": "بذرة",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8199/api/speak?word=بذرة&lang=ar&variant=normal"
+ },
+ {
+  "word": "فن",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8199/api/speak?word=فن&lang=ar&variant=normal"
+ },
+ {
+  "word": "مئة",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8199/api/speak?word=مئة&lang=ar&variant=normal"
+ },
+ {
+  "word": "معطف",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8199/api/speak?word=معطف&lang=ar&variant=normal"
+ },
+ {
+  "word": "كرة",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8199/api/speak?word=كرة&lang=ar&variant=normal"
+ },
+ {
+  "word": "قديم",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8199/api/speak?word=قديم&lang=ar&variant=normal"
+ },
+ {
+  "word": "قبعة",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8199/api/speak?word=قبعة&lang=ar&variant=normal"
+ },
+ {
+  "word": "عمل",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8199/api/speak?word=عمل&lang=ar&variant=normal"
+ },
+ {
+  "word": "موجة",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8199/api/speak?word=موجة&lang=ar&variant=normal"
+ },
+ {
+  "word": "طويل",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8199/api/speak?word=طويل&lang=ar&variant=normal"
+ },
+ {
+  "word": "قصة",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8199/api/speak?word=قصة&lang=ar&variant=normal"
+ },
+ {
+  "word": "المبنى",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8199/api/speak?word=المبنى&lang=ar&variant=normal"
+ },
+ {
+  "word": "القصر",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8199/api/speak?word=القصر&lang=ar&variant=normal"
+ },
+ {
+  "word": "قمة",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8199/api/speak?word=قمة&lang=ar&variant=normal"
+ },
+ {
+  "word": "وزارة",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8199/api/speak?word=وزارة&lang=ar&variant=normal"
+ },
+ {
+  "word": "الآثار",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8199/api/speak?word=الآثار&lang=ar&variant=normal"
+ },
+ {
+  "word": "يتطلب",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8199/api/speak?word=يتطلب&lang=ar&variant=normal"
+ },
+ {
+  "word": "حالات",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8199/api/speak?word=حالات&lang=ar&variant=normal"
+ },
+ {
+  "word": "الطبقة",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8199/api/speak?word=الطبقة&lang=ar&variant=normal"
+ },
+ {
+  "word": "الفصل",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8199/api/speak?word=الفصل&lang=ar&variant=normal"
+ },
+ {
+  "word": "الأقل",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8199/api/speak?word=الأقل&lang=ar&variant=normal"
+ },
+ {
+  "word": "موجودة",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8199/api/speak?word=موجودة&lang=ar&variant=normal"
+ },
+ {
+  "word": "المطاف",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8199/api/speak?word=المطاف&lang=ar&variant=normal"
+ },
+ {
+  "word": "موجود",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8199/api/speak?word=موجود&lang=ar&variant=normal"
+ },
+ {
+  "word": "اليمنية",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8199/api/speak?word=اليمنية&lang=ar&variant=normal"
+ },
+ {
+  "word": "العظمى",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8199/api/speak?word=العظمى&lang=ar&variant=normal"
+ },
+ {
+  "word": "المؤسسات",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8199/api/speak?word=المؤسسات&lang=ar&variant=normal"
+ },
+ {
+  "word": "المسلسل",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8199/api/speak?word=المسلسل&lang=ar&variant=normal"
+ },
+ {
+  "word": "بالحياة",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8199/api/speak?word=بالحياة&lang=ar&variant=normal"
+ },
+ {
+  "word": "استمرار",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8199/api/speak?word=استمرار&lang=ar&variant=normal"
+ },
+ {
+  "word": "سرعان",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8199/api/speak?word=سرعان&lang=ar&variant=normal"
+ },
+ {
+  "word": "عائشة",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8199/api/speak?word=عائشة&lang=ar&variant=normal"
+ },
+ {
+  "word": "الصحيحة",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8199/api/speak?word=الصحيحة&lang=ar&variant=normal"
+ },
+ {
+  "word": "استجابة",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8199/api/speak?word=استجابة&lang=ar&variant=normal"
+ },
+ {
+  "word": "عوض",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8199/api/speak?word=عوض&lang=ar&variant=normal"
+ },
+ {
+  "word": "المباشرة",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8199/api/speak?word=المباشرة&lang=ar&variant=normal"
+ },
+ {
+  "word": "المستشفى",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8199/api/speak?word=المستشفى&lang=ar&variant=normal"
+ },
+ {
+  "word": "تأخر",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8199/api/speak?word=تأخر&lang=ar&variant=normal"
+ },
+ {
+  "word": "سراح",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8199/api/speak?word=سراح&lang=ar&variant=normal"
+ },
+ {
+  "word": "مقاعد",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8199/api/speak?word=مقاعد&lang=ar&variant=normal"
+ },
+ {
+  "word": "النسائية",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8199/api/speak?word=النسائية&lang=ar&variant=normal"
+ },
+ {
+  "word": "اقترب",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8199/api/speak?word=اقترب&lang=ar&variant=normal"
+ },
+ {
+  "word": "ضواحي",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8199/api/speak?word=ضواحي&lang=ar&variant=normal"
+ },
+ {
+  "word": "البكالوريوس",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8199/api/speak?word=البكالوريوس&lang=ar&variant=normal"
+ },
+ {
+  "word": "جهاد",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8199/api/speak?word=جهاد&lang=ar&variant=normal"
+ },
+ {
+  "word": "مراكش",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8199/api/speak?word=مراكش&lang=ar&variant=normal"
+ },
+ {
+  "word": "اللبن",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8199/api/speak?word=اللبن&lang=ar&variant=normal"
+ },
+ {
+  "word": "طاب",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8199/api/speak?word=طاب&lang=ar&variant=normal"
+ },
+ {
+  "word": "حصلوا",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8199/api/speak?word=حصلوا&lang=ar&variant=normal"
+ },
+ {
+  "word": "اختارت",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8199/api/speak?word=اختارت&lang=ar&variant=normal"
+ },
+ {
+  "word": "الثمانينيات",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8199/api/speak?word=الثمانينيات&lang=ar&variant=normal"
+ },
+ {
+  "word": "المخاوف",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8199/api/speak?word=المخاوف&lang=ar&variant=normal"
+ },
+ {
+  "word": "ابنتي",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8199/api/speak?word=ابنتي&lang=ar&variant=normal"
+ },
+ {
+  "word": "العشوائية",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8199/api/speak?word=العشوائية&lang=ar&variant=normal"
+ },
+ {
+  "word": "البرازيلية",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8199/api/speak?word=البرازيلية&lang=ar&variant=normal"
+ },
+ {
+  "word": "المناقشات",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8199/api/speak?word=المناقشات&lang=ar&variant=normal"
+ }
+]

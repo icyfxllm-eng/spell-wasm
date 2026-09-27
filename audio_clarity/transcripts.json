@@ -1,0 +1,12662 @@
+{
+ "en|cat|normal": [
+  "Cat",
+  "cat"
+ ],
+ "en|dog|normal": [
+  "dog",
+  "dog"
+ ],
+ "en|sun|normal": [
+  "Sun",
+  "Sun"
+ ],
+ "en|run|normal": [
+  "Run.",
+  "run"
+ ],
+ "en|hat|normal": [
+  "hat",
+  "hat"
+ ],
+ "en|bed|normal": [
+  "bed",
+  "bed"
+ ],
+ "en|cup|normal": [
+  "Cup",
+  "cup"
+ ],
+ "en|fish|normal": [
+  "Fish",
+  "fish"
+ ],
+ "en|milk|normal": [
+  "Milk",
+  "milk"
+ ],
+ "en|tree|normal": [
+  "Tree",
+  "tree"
+ ],
+ "en|book|normal": [
+  "book",
+  "book"
+ ],
+ "en|star|normal": [
+  "Star",
+  "star"
+ ],
+ "en|frog|normal": [
+  "Frog",
+  "frog"
+ ],
+ "en|jump|normal": [
+  "Jump.",
+  "jump"
+ ],
+ "en|rain|normal": [
+  "Rain.",
+  "rain"
+ ],
+ "en|gold|normal": [
+  "gold",
+  "gold"
+ ],
+ "en|hand|normal": [
+  "Hand",
+  "hand"
+ ],
+ "en|ship|normal": [
+  "Ship",
+  "ship"
+ ],
+ "en|leaf|normal": [
+  "leaf",
+  "leaf"
+ ],
+ "en|nest|normal": [
+  "Nest",
+  "nest"
+ ],
+ "en|bird|normal": [
+  "bird",
+  "bird"
+ ],
+ "en|corn|normal": [
+  "corn",
+  "corn"
+ ],
+ "en|desk|normal": [
+  "desk",
+  "desk"
+ ],
+ "en|door|normal": [
+  "Door",
+  "door"
+ ],
+ "en|duck|normal": [
+  "Duck",
+  "duck"
+ ],
+ "en|farm|normal": [
+  "Farm",
+  "Farm"
+ ],
+ "en|fox|normal": [
+  "== Fox",
+  "Fox"
+ ],
+ "en|gift|normal": [
+  "gift",
+  "gift"
+ ],
+ "en|girl|normal": [
+  "Girl",
+  "girl"
+ ],
+ "en|hill|normal": [
+  "Hill",
+  "Hill"
+ ],
+ "en|horse|normal": [
+  "Horse",
+  "horse"
+ ],
+ "en|kite|normal": [
+  "kite",
+  "kite"
+ ],
+ "en|lamp|normal": [
+  "Lamp",
+  "lamp"
+ ],
+ "en|lion|normal": [
+  "lion",
+  "lion"
+ ],
+ "en|map|normal": [
+  "Map",
+  "map"
+ ],
+ "en|moon|normal": [
+  "Moon",
+  "Moon"
+ ],
+ "en|mouse|normal": [
+  "Mouse",
+  "Mouse"
+ ],
+ "en|nose|normal": [
+  "nose",
+  "nose"
+ ],
+ "en|pig|normal": [
+  "pig",
+  "Pig"
+ ],
+ "en|rock|normal": [
+  "Rock",
+  "Rock"
+ ],
+ "en|rose|normal": [
+  "Rose",
+  "Rose"
+ ],
+ "en|seed|normal": [
+  "Seed",
+  "seed"
+ ],
+ "en|snow|normal": [
+  "Snow",
+  "snow"
+ ],
+ "en|sock|normal": [
+  "sock",
+  "sock"
+ ],
+ "en|swim|normal": [
+  "swim",
+  "swim"
+ ],
+ "en|tent|normal": [
+  "Tent",
+  "tent"
+ ],
+ "en|wind|normal": [
+  "wind",
+  "wind"
+ ],
+ "en|wolf|normal": [
+  "Wolf",
+  "wolf"
+ ],
+ "en|worm|normal": [
+  "worm",
+  "warm"
+ ],
+ "en|zoo|normal": [
+  "Zoo",
+  "Zoo"
+ ],
+ "en|the|normal": [
+  "the",
+  "the"
+ ],
+ "en|of|normal": [
+  "of",
+  "of"
+ ],
+ "en|and|normal": [
+  "End.",
+  ""
+ ],
+ "en|to|normal": [
+  "2.",
+  "2"
+ ],
+ "en|in|normal": [
+  "in",
+  "in"
+ ],
+ "en|is|normal": [
+  "is",
+  "is"
+ ],
+ "en|was|normal": [
+  "was",
+  "was"
+ ],
+ "en|that|normal": [
+  "that",
+  "that"
+ ],
+ "en|for|normal": [
+  "4.",
+  "4"
+ ],
+ "en|as|normal": [
+  "as",
+  "as"
+ ],
+ "en|with|normal": [
+  "with",
+  "with"
+ ],
+ "en|by|normal": [
+  "Bye.",
+  "bye"
+ ],
+ "en|on|normal": [
+  "on",
+  "on"
+ ],
+ "en|are|normal": [
+  "R",
+  "r"
+ ],
+ "en|from|normal": [
+  "from",
+  "from"
+ ],
+ "en|be|normal": [
+  "B",
+  ""
+ ],
+ "en|or|normal": [
+  "or",
+  "or"
+ ],
+ "en|his|normal": [
+  "His",
+  "his"
+ ],
+ "en|were|normal": [
+  "were",
+  ""
+ ],
+ "en|it|normal": [
+  "it",
+  "it"
+ ],
+ "en|an|normal": [
+  "N",
+  "n"
+ ],
+ "en|at|normal": [
+  "at",
+  "at"
+ ],
+ "en|not|normal": [
+  "Not.",
+  "0"
+ ],
+ "en|have|normal": [
+  "Have!",
+  "have"
+ ],
+ "en|he|normal": [
+  "he",
+  ""
+ ],
+ "en|had|normal": [
+  "had",
+  "had"
+ ],
+ "en|also|normal": [
+  "Also",
+  "also"
+ ],
+ "en|has|normal": [
+  "has.",
+  "has"
+ ],
+ "en|this|normal": [
+  "This",
+  "this"
+ ],
+ "en|but|normal": [
+  "But...",
+  "but"
+ ],
+ "en|one|normal": [
+  "1",
+  "1"
+ ],
+ "en|its|normal": [
+  "It's",
+  "it's"
+ ],
+ "en|can|normal": [
+  "can",
+  "can"
+ ],
+ "en|been|normal": [
+  "bin",
+  "bin"
+ ],
+ "en|more|normal": [
+  "More",
+  "more"
+ ],
+ "en|they|normal": [
+  "They",
+  "they"
+ ],
+ "en|used|normal": [
+  "used",
+  "used"
+ ],
+ "en|all|normal": [
+  "All.",
+  "all"
+ ],
+ "en|into|normal": [
+  "into",
+  "in"
+ ],
+ "en|two|normal": [
+  "2.",
+  "2"
+ ],
+ "en|than|normal": [
+  "Then,",
+  "then"
+ ],
+ "en|only|normal": [
+  "only.",
+  "only"
+ ],
+ "en|time|normal": [
+  "Time.",
+  "time"
+ ],
+ "en|most|normal": [
+  "most",
+  "most"
+ ],
+ "en|who|normal": [
+  "Who?",
+  "who"
+ ],
+ "en|some|normal": [
+  "Sum",
+  ""
+ ],
+ "en|such|normal": [
+  "Such",
+  "such"
+ ],
+ "en|may|normal": [
+  "May",
+  "May"
+ ],
+ "en|when|normal": [
+  "when",
+  "when"
+ ],
+ "en|many|normal": [
+  "Many",
+  "many"
+ ],
+ "en|her|normal": [
+  "Huh.",
+  "her"
+ ],
+ "en|over|normal": [
+  "over.",
+  "over"
+ ],
+ "en|use|normal": [
+  "Use",
+  "use"
+ ],
+ "en|no|normal": [
+  "No.",
+  "no"
+ ],
+ "en|new|normal": [
+  "New",
+  "new"
+ ],
+ "en|will|normal": [
+  "Will",
+  ""
+ ],
+ "en|him|normal": [
+  "him",
+  "him"
+ ],
+ "en|them|normal": [
+  "them",
+  "them"
+ ],
+ "en|made|normal": [
+  "made",
+  "made"
+ ],
+ "en|out|normal": [
+  "Out.",
+  "out"
+ ],
+ "en|up|normal": [
+  "Up.",
+  "up"
+ ],
+ "en|both|normal": [
+  "Both.",
+  "both"
+ ],
+ "en|then|normal": [
+  "Then,",
+  "then"
+ ],
+ "en|so|normal": [
+  "So",
+  "so"
+ ],
+ "en|any|normal": [
+  "Any.",
+  "any"
+ ],
+ "en|main|normal": [
+  "Main",
+  "Maine"
+ ],
+ "en|each|normal": [
+  "each.",
+  "each"
+ ],
+ "en|if|normal": [
+  "If",
+  "if"
+ ],
+ "en|well|normal": [
+  "Well.",
+  "well"
+ ],
+ "en|same|normal": [
+  "Same.",
+  "same"
+ ],
+ "en|work|normal": [
+  "Work",
+  "work"
+ ],
+ "en|part|normal": [
+  "Part",
+  "part"
+ ],
+ "en|very|normal": [
+  "Very.",
+  "very"
+ ],
+ "en|year|normal": [
+  "Year",
+  "year"
+ ],
+ "en|did|normal": [
+  "did",
+  "did"
+ ],
+ "en|much|normal": [
+  "Much.",
+  "much"
+ ],
+ "en|city|normal": [
+  "City",
+  "City"
+ ],
+ "en|she|normal": [
+  "She",
+  "she"
+ ],
+ "en|do|normal": [
+  "do",
+  "do"
+ ],
+ "en|own|normal": [
+  "Own.",
+  "own"
+ ],
+ "en|even|normal": [
+  "Even.",
+  "even"
+ ],
+ "en|form|normal": [
+  "Form",
+  "form"
+ ],
+ "en|high|normal": [
+  "Hi!",
+  "hi"
+ ],
+ "en|life|normal": [
+  "Life.",
+  "life"
+ ],
+ "en|set|normal": [
+  "Set",
+  "set"
+ ],
+ "en|now|normal": [
+  "Now.",
+  "now"
+ ],
+ "en|name|normal": [
+  "Name",
+  "name"
+ ],
+ "en|end|normal": [
+  "End.",
+  "end"
+ ],
+ "en|what|normal": [
+  "What?",
+  "what"
+ ],
+ "en|make|normal": [
+  "Make",
+  "make"
+ ],
+ "en|like|normal": [
+  "Like",
+  "like"
+ ],
+ "en|area|normal": [
+  "Area",
+  "area"
+ ],
+ "en|long|normal": [
+  "long",
+  "long"
+ ],
+ "en|four|normal": [
+  "4.",
+  "4"
+ ],
+ "en|due|normal": [
+  "do",
+  "do"
+ ],
+ "en|must|normal": [
+  "must",
+  "must"
+ ],
+ "en|said|normal": [
+  "said",
+  "said"
+ ],
+ "en|few|normal": [
+  "few",
+  "few"
+ ],
+ "en|way|normal": [
+  "way",
+  "way"
+ ],
+ "en|film|normal": [
+  "Film",
+  "film"
+ ],
+ "en|less|normal": [
+  "Less",
+  ""
+ ],
+ "en|does|normal": [
+  "does",
+  "does"
+ ],
+ "en|left|normal": [
+  "Left.",
+  "left"
+ ],
+ "en|back|normal": [
+  "Back.",
+  "back"
+ ],
+ "en|war|normal": [
+  "War",
+  ""
+ ],
+ "en|took|normal": [
+  "took",
+  "to"
+ ],
+ "en|see|normal": [
+  "C",
+  ""
+ ],
+ "en|game|normal": [
+  "Game.",
+  "game"
+ ],
+ "en|last|normal": [
+  "Last.",
+  "last"
+ ],
+ "en|line|normal": [
+  "Line",
+  "line"
+ ],
+ "en|day|normal": [
+  "Day",
+  ""
+ ],
+ "en|term|normal": [
+  "Term",
+  "term"
+ ],
+ "en|case|normal": [
+  "Case",
+  "case"
+ ],
+ "en|down|normal": [
+  "Down.",
+  "down"
+ ],
+ "en|off|normal": [
+  "Off.",
+  "off"
+ ],
+ "en|just|normal": [
+  "Just",
+  "just"
+ ],
+ "en|we|normal": [
+  "Oui.",
+  "we"
+ ],
+ "en|data|normal": [
+  "Data",
+  "data"
+ ],
+ "en|led|normal": [
+  "Lead",
+  "lead"
+ ],
+ "en|held|normal": [
+  "Held",
+  "held"
+ ],
+ "en|law|normal": [
+  "Law",
+  "law"
+ ],
+ "en|body|normal": [
+  "body",
+  "body"
+ ],
+ "en|late|normal": [
+  "Late.",
+  "late"
+ ],
+ "en|take|normal": [
+  "Take",
+  "take"
+ ],
+ "en|how|normal": [
+  "How?",
+  "how"
+ ],
+ "en|word|normal": [
+  "word",
+  "word"
+ ],
+ "en|home|normal": [
+  "home",
+  "home"
+ ],
+ "en|men|normal": [
+  "men",
+  "men"
+ ],
+ "en|per|normal": [
+  "per",
+  "her"
+ ],
+ "en|you|normal": [
+  "you",
+  ""
+ ],
+ "en|show|normal": [
+  "Show",
+  "show"
+ ],
+ "en|next|normal": [
+  "Next.",
+  "next"
+ ],
+ "en|died|normal": [
+  "died",
+  "died"
+ ],
+ "en|age|normal": [
+  "Age.",
+  "age"
+ ],
+ "en|came|normal": [
+  "came",
+  "came"
+ ],
+ "en|play|normal": [
+  "Play",
+  "play"
+ ],
+ "en|seen|normal": [
+  "Scene",
+  "seen"
+ ],
+ "en|five|normal": [
+  "5.",
+  "5"
+ ],
+ "en|old|normal": [
+  "old",
+  "old"
+ ],
+ "en|low|normal": [
+  "Low",
+  "low"
+ ],
+ "en|land|normal": [
+  "land",
+  "land"
+ ],
+ "en|days|normal": [
+  "days",
+  "days"
+ ],
+ "en|able|normal": [
+  "Able",
+  "able"
+ ],
+ "en|free|normal": [
+  "Free",
+  "free"
+ ],
+ "en|air|normal": [
+  "Air",
+  "are"
+ ],
+ "en|role|normal": [
+  "Roll.",
+  "roll"
+ ],
+ "en|good|normal": [
+  "Good.",
+  "good"
+ ],
+ "en|man|normal": [
+  "Man",
+  "man"
+ ],
+ "en|size|normal": [
+  "Size",
+  "size"
+ ],
+ "en|side|normal": [
+  "Side",
+  "side"
+ ],
+ "en|team|normal": [
+  "team",
+  "team"
+ ],
+ "en|once|normal": [
+  "ONCE",
+  "once"
+ ],
+ "en|thus|normal": [
+  "Thus",
+  "thus"
+ ],
+ "en|type|normal": [
+  "Type.",
+  "type"
+ ],
+ "en|rate|normal": [
+  "Great.",
+  "great"
+ ],
+ "en|too|normal": [
+  "2.",
+  "2"
+ ],
+ "en|upon|normal": [
+  "upon",
+  "upon"
+ ],
+ "en|band|normal": [
+  "band",
+  "band"
+ ],
+ "en|best|normal": [
+  "Best.",
+  "best"
+ ],
+ "en|need|normal": [
+  "need",
+  "need"
+ ],
+ "en|full|normal": [
+  "Full",
+  "full"
+ ],
+ "en|us|normal": [
+  "us",
+  "us"
+ ],
+ "en|far|normal": [
+  "far",
+  "far"
+ ],
+ "en|went|normal": [
+  "went",
+  "went"
+ ],
+ "en|lost|normal": [
+  "Lost.",
+  "lost"
+ ],
+ "en|king|normal": [
+  "King",
+  "King"
+ ],
+ "en|away|normal": [
+  "away",
+  "away"
+ ],
+ "en|fact|normal": [
+  "Fact",
+  "fact"
+ ],
+ "en|uses|normal": [
+  "Users",
+  "uses"
+ ],
+ "en|art|normal": [
+  "Art",
+  "art"
+ ],
+ "en|god|normal": [
+  "God",
+  "God"
+ ],
+ "en|six|normal": [
+  "6",
+  "6"
+ ],
+ "en|food|normal": [
+  "Food",
+  "food"
+ ],
+ "en|army|normal": [
+  "Army",
+  "Army"
+ ],
+ "en|come|normal": [
+  "Come!",
+  ""
+ ],
+ "en|half|normal": [
+  "Half.",
+  "half"
+ ],
+ "en|help|normal": [
+  "Help",
+  "help"
+ ],
+ "en|open|normal": [
+  "Open.",
+  "open"
+ ],
+ "en|gave|normal": [
+  "Gave",
+  "gave"
+ ],
+ "en|true|normal": [
+  "True.",
+  "true"
+ ],
+ "en|top|normal": [
+  "Top.",
+  "top"
+ ],
+ "en|head|normal": [
+  "Head",
+  "head"
+ ],
+ "en|west|normal": [
+  "West",
+  "West"
+ ],
+ "en|give|normal": [
+  "Give",
+  "give"
+ ],
+ "en|near|normal": [
+  "Near",
+  "near"
+ ],
+ "en|won|normal": [
+  "1",
+  "1"
+ ],
+ "en|move|normal": [
+  "Move.",
+  "move"
+ ],
+ "en|get|normal": [
+  "Get",
+  "get"
+ ],
+ "en|key|normal": [
+  "key",
+  "key"
+ ],
+ "en|lead|normal": [
+  "Lead",
+  "lead"
+ ],
+ "en|put|normal": [
+  "Put.",
+  ""
+ ],
+ "en|live|normal": [
+  "Live!",
+  "live"
+ ],
+ "en|fire|normal": [
+  "Fire",
+  "fire"
+ ],
+ "en|east|normal": [
+  "East",
+  "East"
+ ],
+ "en|view|normal": [
+  "View",
+  "View"
+ ],
+ "en|real|normal": [
+  "Real",
+  "real"
+ ],
+ "en|my|normal": [
+  "My",
+  ""
+ ],
+ "en|sent|normal": [
+  "Send",
+  "sent"
+ ],
+ "en|son|normal": [
+  "Sun",
+  "Sun"
+ ],
+ "en|past|normal": [
+  "past",
+  "past"
+ ],
+ "en|idea|normal": [
+  "Idea",
+  "idea"
+ ],
+ "en|rule|normal": [
+  "Rule.",
+  "rule"
+ ],
+ "en|our|normal": [
+  "R",
+  "r"
+ ],
+ "en|code|normal": [
+  "Code",
+  "code"
+ ],
+ "en|soon|normal": [
+  "soon.",
+  "soon"
+ ],
+ "en|find|normal": [
+  "Find.",
+  "find"
+ ],
+ "en|saw|normal": [
+  "Saw",
+  "saw"
+ ],
+ "en|town|normal": [
+  "Town",
+  "town"
+ ],
+ "en|me|normal": [
+  "me",
+  "me"
+ ],
+ "en|done|normal": [
+  "Done!",
+  "done"
+ ],
+ "en|cost|normal": [
+  "cost",
+  "cost"
+ ],
+ "en|base|normal": [
+  "days",
+  "base"
+ ],
+ "en|ever|normal": [
+  "ever",
+  "ever"
+ ],
+ "en|rest|normal": [
+  "Rest.",
+  "rest"
+ ],
+ "en|text|normal": [
+  "Text",
+  "text"
+ ],
+ "en|mass|normal": [
+  "Mass",
+  "Mass"
+ ],
+ "en|sea|normal": [
+  "C",
+  ""
+ ],
+ "en|go|normal": [
+  "Go!",
+  "go"
+ ],
+ "en|sold|normal": [
+  "Sold.",
+  "sold"
+ ],
+ "en|song|normal": [
+  "Song",
+  "song"
+ ],
+ "en|wide|normal": [
+  "Wide",
+  "wide"
+ ],
+ "en|loss|normal": [
+  "Loss",
+  "loss"
+ ],
+ "en|lack|normal": [
+  "Lack",
+  "lack"
+ ],
+ "en|oil|normal": [
+  "Oil.",
+  "oil"
+ ],
+ "en|keep|normal": [
+  "Keep",
+  "keep"
+ ],
+ "en|wife|normal": [
+  "Wife",
+  "wife"
+ ],
+ "en|cell|normal": [
+  "Cell",
+  "cell"
+ ],
+ "en|love|normal": [
+  "Love.",
+  "love"
+ ],
+ "en|gas|normal": [
+  "Gas",
+  "gas"
+ ],
+ "en|turn|normal": [
+  "Turn.",
+  "turn"
+ ],
+ "en|yet|normal": [
+  "yet",
+  "yet"
+ ],
+ "en|say|normal": [
+  "Say",
+  "say"
+ ],
+ "en|site|normal": [
+  "Site",
+  "site"
+ ],
+ "en|act|normal": [
+  "Act.",
+  "Act"
+ ],
+ "en|cut|normal": [
+  "Cut.",
+  "cut"
+ ],
+ "en|list|normal": [
+  "List",
+  "list"
+ ],
+ "en|born|normal": [
+  "born",
+  "born"
+ ],
+ "en|read|normal": [
+  "Read.",
+  "read"
+ ],
+ "en|know|normal": [
+  "No.",
+  "no"
+ ],
+ "en|ten|normal": [
+  "10.",
+  "10"
+ ],
+ "en|flow|normal": [
+  "Flow",
+  "flow"
+ ],
+ "en|met|normal": [
+  "Met",
+  "met"
+ ],
+ "en|laws|normal": [
+  "Laws",
+  "laws"
+ ],
+ "en|red|normal": [
+  "Red",
+  "red"
+ ],
+ "en|heat|normal": [
+  "Heat.",
+  "Heat"
+ ],
+ "en|test|normal": [
+  "Test",
+  "test"
+ ],
+ "en|call|normal": [
+  "call",
+  "call"
+ ],
+ "en|male|normal": [
+  "Mail",
+  "mail"
+ ],
+ "en|ways|normal": [
+  "ways",
+  "Waze"
+ ],
+ "en|hold|normal": [
+  "Hold.",
+  "hold"
+ ],
+ "en|date|normal": [
+  "date",
+  "date"
+ ],
+ "en|sets|normal": [
+  "== Sets ==",
+  "sets"
+ ],
+ "en|face|normal": [
+  "Face",
+  "face"
+ ],
+ "en|here|normal": [
+  "Here.",
+  "here"
+ ],
+ "en|hard|normal": [
+  "Hard.",
+  "hard"
+ ],
+ "en|poor|normal": [
+  "Poor.",
+  "poor"
+ ],
+ "en|told|normal": [
+  "told",
+  "told"
+ ],
+ "en|via|normal": [
+  "via",
+  "via"
+ ],
+ "en|plan|normal": [
+  "Plan",
+  "plan"
+ ],
+ "en|kept|normal": [
+  "Kept.",
+  "kept"
+ ],
+ "en|hit|normal": [
+  "Hit.",
+  "hit"
+ ],
+ "en|tax|normal": [
+  "Tax",
+  "tax"
+ ],
+ "en|fall|normal": [
+  "Fall",
+  "fall"
+ ],
+ "en|whom|normal": [
+  "Whom",
+  "whom"
+ ],
+ "en|era|normal": [
+  "Era",
+  "era"
+ ],
+ "en|deal|normal": [
+  "Deal.",
+  "deal"
+ ],
+ "en|unit|normal": [
+  "UNED",
+  "unit"
+ ],
+ "en|page|normal": [
+  "Page",
+  "page"
+ ],
+ "en|vote|normal": [
+  "Vote.",
+  "vote"
+ ],
+ "en|race|normal": [
+  "Race",
+  "race"
+ ],
+ "en|mean|normal": [
+  "mean",
+  "mean"
+ ],
+ "en|fuel|normal": [
+  "Fuel",
+  "fuel"
+ ],
+ "en|felt|normal": [
+  "Felt",
+  "felt"
+ ],
+ "en|rise|normal": [
+  "Rise.",
+  "rise"
+ ],
+ "en|road|normal": [
+  "road",
+  "Road"
+ ],
+ "en|room|normal": [
+  "room",
+  "room"
+ ],
+ "en|park|normal": [
+  "Park",
+  "Park"
+ ],
+ "en|care|normal": [
+  "Care.",
+  "care"
+ ],
+ "en|cast|normal": [
+  "Cast",
+  "cast"
+ ],
+ "en|goal|normal": [
+  "Goal",
+  "goal"
+ ],
+ "en|shot|normal": [
+  "Shot",
+  "shot"
+ ],
+ "en|tour|normal": [
+  "tour",
+  "tour"
+ ],
+ "en|says|normal": [
+  "says",
+  "says"
+ ],
+ "en|tend|normal": [
+  "10.",
+  "10"
+ ],
+ "en|wave|normal": [
+  "Wave",
+  "wave"
+ ],
+ "en|risk|normal": [
+  "Risk",
+  "risk"
+ ],
+ "en|win|normal": [
+  "win",
+  "when"
+ ],
+ "en|meet|normal": [
+  "Meet",
+  "meet"
+ ],
+ "en|user|normal": [
+  "user",
+  "user"
+ ],
+ "en|vary|normal": [
+  "Very.",
+  "very"
+ ],
+ "en|crew|normal": [
+  "Crew",
+  "crew"
+ ],
+ "en|dead|normal": [
+  "Dead.",
+  "dead"
+ ],
+ "en|kind|normal": [
+  "Kind.",
+  "kind"
+ ],
+ "en|pay|normal": [
+  "Pay.",
+  "pay"
+ ],
+ "en|ball|normal": [
+  "ball",
+  "ball"
+ ],
+ "en|car|normal": [
+  "car",
+  "car"
+ ],
+ "en|nor|normal": [
+  "nor",
+  "nor"
+ ],
+ "en|lord|normal": [
+  "Lord.",
+  "Lord"
+ ],
+ "en|acid|normal": [
+  "Acid",
+  "acid"
+ ],
+ "en|stop|normal": [
+  "Stop.",
+  "stop"
+ ],
+ "en|your|normal": [
+  "Your",
+  ""
+ ],
+ "en|grew|normal": [
+  "grew",
+  "grew"
+ ],
+ "en|pass|normal": [
+  "Pass",
+  "pass"
+ ],
+ "en|week|normal": [
+  "week",
+  "week"
+ ],
+ "en|gain|normal": [
+  "Gain",
+  "gain"
+ ],
+ "en|blue|normal": [
+  "blue",
+  "blue"
+ ],
+ "en|aid|normal": [
+  "Aid",
+  "8"
+ ],
+ "en|hall|normal": [
+  "Hall.",
+  "Hall"
+ ],
+ "en|ones|normal": [
+  "1s",
+  "on"
+ ],
+ "en|pope|normal": [
+  "Pope",
+  "Pope"
+ ],
+ "en|look|normal": [
+  "Look.",
+  "look"
+ ],
+ "en|paid|normal": [
+  "Paid",
+  "paid"
+ ],
+ "en|runs|normal": [
+  "runs",
+  "runs"
+ ],
+ "en|why|normal": [
+  "Why?",
+  ""
+ ],
+ "en|step|normal": [
+  "Step",
+  "step"
+ ],
+ "en|zero|normal": [
+  "0",
+  "0"
+ ],
+ "en|core|normal": [
+  "Core",
+  "core"
+ ],
+ "en|ice|normal": [
+  "Ice",
+  "ice"
+ ],
+ "en|fell|normal": [
+  "fell",
+  "Phil"
+ ],
+ "en|cars|normal": [
+  "Cars",
+  "cars"
+ ],
+ "en|file|normal": [
+  "File",
+  "file"
+ ],
+ "en|host|normal": [
+  "Host",
+  "host"
+ ],
+ "en|navy|normal": [
+  "Navy",
+  "Navy"
+ ],
+ "en|mind|normal": [
+  "Mind",
+  "mind"
+ ],
+ "en|pair|normal": [
+  "pair",
+  "pair"
+ ],
+ "en|skin|normal": [
+  "Skin",
+  "skin"
+ ],
+ "en|wall|normal": [
+  "wall",
+  "wall"
+ ],
+ "en|mode|normal": [
+  "Mode",
+  "mode"
+ ],
+ "en|rare|normal": [
+  "Rare",
+  "rare"
+ ],
+ "en|sign|normal": [
+  "Sign",
+  "sign"
+ ],
+ "en|arms|normal": [
+  "Arms",
+  "arms"
+ ],
+ "en|onto|normal": [
+  "onto",
+  "on to"
+ ],
+ "en|lake|normal": [
+  "Lake",
+  "Lake"
+ ],
+ "en|nine|normal": [
+  "9.",
+  "9"
+ ],
+ "en|bus|normal": [
+  "bus",
+  "bus"
+ ],
+ "en|card|normal": [
+  "card",
+  "card"
+ ],
+ "en|dry|normal": [
+  "dry",
+  "dry"
+ ],
+ "en|sex|normal": [
+  "Sex",
+  "6"
+ ],
+ "en|dark|normal": [
+  "dark",
+  "dark"
+ ],
+ "en|feet|normal": [
+  "Feet",
+  "feet"
+ ],
+ "en|got|normal": [
+  "Got.",
+  "got"
+ ],
+ "en|acts|normal": [
+  "Acts",
+  "Acts"
+ ],
+ "en|soil|normal": [
+  "Soil",
+  "soil"
+ ],
+ "en|want|normal": [
+  "Want",
+  "want"
+ ],
+ "en|port|normal": [
+  "port",
+  "port"
+ ],
+ "en|ran|normal": [
+  "ran",
+  "Ren"
+ ],
+ "en|fast|normal": [
+  "Fast.",
+  "fast"
+ ],
+ "en|news|normal": [
+  "news",
+  "news"
+ ],
+ "en|note|normal": [
+  "Note",
+  "note"
+ ],
+ "en|path|normal": [
+  "path",
+  "path"
+ ],
+ "en|deep|normal": [
+  "deep",
+  "deep"
+ ],
+ "en|job|normal": [
+  "Job",
+  "job"
+ ],
+ "en|bank|normal": [
+  "Bank",
+  "Bank"
+ ],
+ "en|club|normal": [
+  "Club",
+  "Club"
+ ],
+ "en|goes|normal": [
+  "goes",
+  "goes"
+ ],
+ "en|join|normal": [
+  "Join.",
+  "join"
+ ],
+ "en|die|normal": [
+  "Die.",
+  "die"
+ ],
+ "en|link|normal": [
+  "Link",
+  "link"
+ ],
+ "en|ring|normal": [
+  "ring",
+  "ring"
+ ],
+ "en|big|normal": [
+  "Big.",
+  "big"
+ ],
+ "en|ends|normal": [
+  "ends",
+  "ends"
+ ],
+ "en|post|normal": [
+  "Post",
+  "post"
+ ],
+ "en|hot|normal": [
+  "Hot.",
+  "hot"
+ ],
+ "en|bit|normal": [
+  "bit",
+  "bit"
+ ],
+ "en|let|normal": [
+  "Let",
+  "let"
+ ],
+ "en|edge|normal": [
+  "Edge",
+  "Edge"
+ ],
+ "en|vast|normal": [
+  "Vast.",
+  "vast"
+ ],
+ "en|box|normal": [
+  "Box",
+  "box"
+ ],
+ "en|rank|normal": [
+  "Rank",
+  "rank"
+ ],
+ "en|seem|normal": [
+  "Seam",
+  "seam"
+ ],
+ "en|slow|normal": [
+  "Slow.",
+  "slow"
+ ],
+ "en|bay|normal": [
+  "They",
+  ""
+ ],
+ "en|am|normal": [
+  "M",
+  "m"
+ ],
+ "en|kill|normal": [
+  "Kill",
+  "kill"
+ ],
+ "en|try|normal": [
+  "Try.",
+  "try"
+ ],
+ "en|cold|normal": [
+  "cold",
+  "cold"
+ ],
+ "en|grow|normal": [
+  "grow",
+  "grow"
+ ],
+ "en|mark|normal": [
+  "Mark.",
+  "mark"
+ ],
+ "en|task|normal": [
+  "Task",
+  "task"
+ ],
+ "en|root|normal": [
+  "Root",
+  "route"
+ ],
+ "en|iron|normal": [
+  "Iron.",
+  "iron"
+ ],
+ "en|bass|normal": [
+  "base",
+  "base"
+ ],
+ "en|disk|normal": [
+  "Disc",
+  "disc"
+ ],
+ "en|eye|normal": [
+  "I",
+  "I"
+ ],
+ "en|meat|normal": [
+  "Meet",
+  "meet"
+ ],
+ "en|wear|normal": [
+  "Where?",
+  "where"
+ ],
+ "en|la|normal": [
+  "la",
+  ""
+ ],
+ "en|bits|normal": [
+  "bits",
+  "bits"
+ ],
+ "en|feel|normal": [
+  "Feel",
+  "feel"
+ ],
+ "en|fine|normal": [
+  "Fine.",
+  "fine"
+ ],
+ "en|wood|normal": [
+  "wood",
+  "would"
+ ],
+ "en|fit|normal": [
+  "Fit.",
+  "fit"
+ ],
+ "en|drug|normal": [
+  "Drug",
+  "drug"
+ ],
+ "en|pure|normal": [
+  "pure",
+  "pure"
+ ],
+ "en|save|normal": [
+  "Save.",
+  "save"
+ ],
+ "en|easy|normal": [
+  "easy",
+  "easy"
+ ],
+ "en|fans|normal": [
+  "Fans",
+  "fans"
+ ],
+ "en|pain|normal": [
+  "Pain",
+  "pain"
+ ],
+ "en|stay|normal": [
+  "Stay.",
+  "stay"
+ ],
+ "en|ad|normal": [
+  "Add",
+  "add"
+ ],
+ "en|flat|normal": [
+  "Flat.",
+  "flat"
+ ],
+ "en|hair|normal": [
+  "Hair",
+  "hair"
+ ],
+ "en|add|normal": [
+  "Add",
+  "add"
+ ],
+ "en|ago|normal": [
+  "A go.",
+  "ago"
+ ],
+ "en|else|normal": [
+  "Else.",
+  "else"
+ ],
+ "en|foot|normal": [
+  "Foot",
+  "foot"
+ ],
+ "en|send|normal": [
+  "Send",
+  "send"
+ ],
+ "en|tube|normal": [
+  "tube",
+  "tube"
+ ],
+ "en|arts|normal": [
+  "Arts",
+  "Arts"
+ ],
+ "en|bad|normal": [
+  "Bad.",
+  "bad"
+ ],
+ "en|weak|normal": [
+  "Week",
+  "we"
+ ],
+ "en|eyes|normal": [
+  "eyes",
+  "eyes"
+ ],
+ "en|seat|normal": [
+  "seat",
+  "seat"
+ ],
+ "en|draw|normal": [
+  "Draw.",
+  "draw"
+ ],
+ "en|guns|normal": [
+  "Guns",
+  "guns"
+ ],
+ "en|sort|normal": [
+  "Sword",
+  "sort"
+ ],
+ "en|lee|normal": [
+  "Lee",
+  "Lee"
+ ],
+ "en|knew|normal": [
+  "new",
+  "new"
+ ],
+ "en|rich|normal": [
+  "rich",
+  "rich"
+ ],
+ "en|seek|normal": [
+  "Seek",
+  "seek"
+ ],
+ "en|copy|normal": [
+  "Copy.",
+  "copy"
+ ],
+ "en|evil|normal": [
+  "Evil.",
+  "evil"
+ ],
+ "en|fear|normal": [
+  "Fear",
+  "fear"
+ ],
+ "en|tone|normal": [
+  "Tone",
+  "tone"
+ ],
+ "en|lies|normal": [
+  "Lies",
+  "lies"
+ ],
+ "en|debt|normal": [
+  "debt",
+  "debt"
+ ],
+ "en|none|normal": [
+  "None.",
+  "none"
+ ],
+ "en|zone|normal": [
+  "Zone.",
+  "Zone"
+ ],
+ "en|tell|normal": [
+  "Tell",
+  "tell"
+ ],
+ "en|sir|normal": [
+  "Sir.",
+  "sir"
+ ],
+ "en|wild|normal": [
+  "wild",
+  "Wild"
+ ],
+ "en|huge|normal": [
+  "Huge",
+  "huge"
+ ],
+ "en|plot|normal": [
+  "plot",
+  "plot"
+ ],
+ "en|suit|normal": [
+  "suit",
+  "suit"
+ ],
+ "en|holy|normal": [
+  "Holy!",
+  "holy"
+ ],
+ "en|bill|normal": [
+  "Bill",
+  "bill"
+ ],
+ "en|drop|normal": [
+  "Drop.",
+  "drop"
+ ],
+ "en|duty|normal": [
+  "duty",
+  "Duty"
+ ],
+ "en|folk|normal": [
+  "Folk",
+  "Folk"
+ ],
+ "en|peak|normal": [
+  "Peak",
+  "Peak"
+ ],
+ "en|sell|normal": [
+  "Cell",
+  ""
+ ],
+ "en|bowl|normal": [
+  "Bull",
+  "Bowl"
+ ],
+ "en|safe|normal": [
+  "Safe.",
+  "safe"
+ ],
+ "en|boat|normal": [
+  "boat",
+  "vote"
+ ],
+ "en|jazz|normal": [
+  "Jazz",
+  "jazz"
+ ],
+ "en|plus|normal": [
+  "+ 1 + 1 + 1 + 1 + 1 + 1 + 1 + 1 + 1 + 1 + 1 + 1 +",
+  "Plus"
+ ],
+ "en|tool|normal": [
+  "Tool",
+  "tool"
+ ],
+ "en|bar|normal": [
+  "Bar",
+  "bar"
+ ],
+ "en|hope|normal": [
+  "Hope",
+  "hope"
+ ],
+ "en|net|normal": [
+  "Net",
+  "net"
+ ],
+ "en|duke|normal": [
+  "D.U.B.",
+  "Duke"
+ ],
+ "en|hole|normal": [
+  "whole",
+  "whole"
+ ],
+ "en|lot|normal": [
+  "Lot.",
+  "lot"
+ ],
+ "en|poem|normal": [
+  "Poem",
+  "poem"
+ ],
+ "en|boy|normal": [
+  "boy",
+  "boy"
+ ],
+ "en|jobs|normal": [
+  "Jobs",
+  "jobs"
+ ],
+ "en|soul|normal": [
+  "Soul",
+  "soul"
+ ],
+ "en|wire|normal": [
+  "wire",
+  "wire"
+ ],
+ "en|thin|normal": [
+  "thin",
+  "thin"
+ ],
+ "en|camp|normal": [
+  "Camp",
+  "camp"
+ ],
+ "en|logo|normal": [
+  "Logo",
+  "logo"
+ ],
+ "en|sale|normal": [
+  "Sale.",
+  "sale"
+ ],
+ "en|trip|normal": [
+  "Trip",
+  "trip"
+ ],
+ "en|rail|normal": [
+  "Rail",
+  "rail"
+ ],
+ "en|tail|normal": [
+  "Tail",
+  "tail"
+ ],
+ "en|disc|normal": [
+  "Disc",
+  "disc"
+ ],
+ "en|web|normal": [
+  "Web",
+  "web"
+ ],
+ "en|eggs|normal": [
+  "Eggs",
+  "eggs"
+ ],
+ "en|fan|normal": [
+  "Fan",
+  "fan"
+ ],
+ "en|lay|normal": [
+  "Lay.",
+  "Le"
+ ],
+ "en|diet|normal": [
+  "Diet",
+  "diet"
+ ],
+ "en|laid|normal": [
+  "Laid",
+  "laid"
+ ],
+ "en|legs|normal": [
+  "Legs",
+  "legs"
+ ],
+ "en|load|normal": [
+  "Load",
+  "load"
+ ],
+ "en|lose|normal": [
+  "Lose.",
+  "lose"
+ ],
+ "en|row|normal": [
+  "Bro.",
+  ""
+ ],
+ "en|jack|normal": [
+  "Jack",
+  "Jack"
+ ],
+ "en|gods|normal": [
+  "Gods",
+  "gods"
+ ],
+ "en|loop|normal": [
+  "loop",
+  "Loop"
+ ],
+ "en|rear|normal": [
+  "ROOR-R-E-R",
+  "Maria"
+ ],
+ "en|tape|normal": [
+  "Tape",
+  "tape"
+ ],
+ "en|buy|normal": [
+  "Bye.",
+  "bye"
+ ],
+ "en|rely|normal": [
+  "Rely.",
+  "rely"
+ ],
+ "en|axis|normal": [
+  "Access",
+  "access"
+ ],
+ "en|bear|normal": [
+  "There.",
+  "there"
+ ],
+ "en|bulk|normal": [
+  "Bolt.",
+  "bulk"
+ ],
+ "en|firm|normal": [
+  "Firm.",
+  "firm"
+ ],
+ "en|soft|normal": [
+  "Soft.",
+  "soft"
+ ],
+ "en|sons|normal": [
+  "Sons",
+  "Sons"
+ ],
+ "en|worn|normal": [
+  "Warn",
+  "warn"
+ ],
+ "en|bell|normal": [
+  "Bell",
+  ""
+ ],
+ "en|van|normal": [
+  "Van",
+  "van"
+ ],
+ "en|wars|normal": [
+  "Wars",
+  "Wars"
+ ],
+ "en|arm|normal": [
+  "arm",
+  "arm"
+ ],
+ "en|beat|normal": [
+  "Beat",
+  "beat"
+ ],
+ "en|gene|normal": [
+  "Gene",
+  "Gene"
+ ],
+ "en|gone|normal": [
+  "Gone.",
+  "gone"
+ ],
+ "en|hour|normal": [
+  "hour",
+  ""
+ ],
+ "en|roll|normal": [
+  "Roll.",
+  "roll"
+ ],
+ "en|wing|normal": [
+  "wing",
+  "wing"
+ ],
+ "en|gun|normal": [
+  "Done.",
+  "gun"
+ ],
+ "en|beam|normal": [
+  "Beam",
+  "beam"
+ ],
+ "en|drew|normal": [
+  "Drew",
+  "Drew"
+ ],
+ "en|ions|normal": [
+  "IONS",
+  "ions"
+ ],
+ "en|lady|normal": [
+  "Lady",
+  "lady"
+ ],
+ "en|aim|normal": [
+  "Aim.",
+  "aim"
+ ],
+ "en|bond|normal": [
+  "Bond",
+  "Bond"
+ ],
+ "en|cash|normal": [
+  "Cash",
+  "cash"
+ ],
+ "en|gets|normal": [
+  "gets",
+  "gets"
+ ],
+ "en|keys|normal": [
+  "Keys",
+  "keys"
+ ],
+ "en|solo|normal": [
+  "solo",
+  "solo"
+ ],
+ "en|sum|normal": [
+  "Sum",
+  ""
+ ],
+ "en|warm|normal": [
+  "Warm.",
+  "warm"
+ ],
+ "en|wine|normal": [
+  "Wine",
+  "wine"
+ ],
+ "en|bob|normal": [
+  "Bob",
+  "Bob"
+ ],
+ "en|fly|normal": [
+  "Fly.",
+  "fly"
+ ],
+ "en|tank|normal": [
+  "Tank",
+  "tank"
+ ],
+ "en|ties|normal": [
+  "Ties",
+  "ties"
+ ],
+ "en|talk|normal": [
+  "Talk.",
+  "talk"
+ ],
+ "en|tom|normal": [
+  "Tom",
+  "Tom"
+ ],
+ "en|boys|normal": [
+  "Boys",
+  "boys"
+ ],
+ "en|fill|normal": [
+  "Fill",
+  "Phil"
+ ],
+ "en|node|normal": [
+  "Node",
+  "node"
+ ],
+ "en|rice|normal": [
+  "Rice",
+  "rice"
+ ],
+ "en|sky|normal": [
+  "Sky",
+  "sky"
+ ],
+ "en|vice|normal": [
+  "Vice",
+  "Vice"
+ ],
+ "en|wish|normal": [
+  "Wish.",
+  "wish"
+ ],
+ "en|bone|normal": [
+  "Bone",
+  "bone"
+ ],
+ "en|salt|normal": [
+  "Salt",
+  "salt"
+ ],
+ "en|spin|normal": [
+  "Spin",
+  "spin"
+ ],
+ "en|bomb|normal": [
+  "bomb",
+  "bomb"
+ ],
+ "en|feed|normal": [
+  "Feed",
+  "feed"
+ ],
+ "en|hear|normal": [
+  "Here.",
+  "here"
+ ],
+ "en|mix|normal": [
+  "Mix.",
+  "mix"
+ ],
+ "en|tied|normal": [
+  "Tide",
+  "tide"
+ ],
+ "en|wins|normal": [
+  "wins",
+  "wins"
+ ],
+ "en|drum|normal": [
+  "drum",
+  "drum"
+ ],
+ "en|eat|normal": [
+  "Eat.",
+  "eat"
+ ],
+ "en|ask|normal": [
+  "Ask",
+  "ask"
+ ],
+ "en|cool|normal": [
+  "Cool.",
+  "cool"
+ ],
+ "en|leg|normal": [
+  "leg",
+  "leg"
+ ],
+ "en|mail|normal": [
+  "Mail",
+  "mail"
+ ],
+ "en|atom|normal": [
+  "Atom",
+  "atom"
+ ],
+ "en|noun|normal": [
+  "Noun",
+  "noun"
+ ],
+ "en|prey|normal": [
+  "Pray",
+  "pray"
+ ],
+ "en|sole|normal": [
+  "Soul",
+  "soul"
+ ],
+ "en|fair|normal": [
+  "Fair.",
+  "Fair"
+ ],
+ "en|flag|normal": [
+  "Flag",
+  "flag"
+ ],
+ "en|neck|normal": [
+  "Net",
+  "neck"
+ ],
+ "en|odd|normal": [
+  "Odd.",
+  "odd"
+ ],
+ "en|adds|normal": [
+  "ads",
+  "ads"
+ ],
+ "en|jet|normal": [
+  "Jet",
+  "jet"
+ ],
+ "en|mere|normal": [
+  "Mirror",
+  "mere"
+ ],
+ "en|sure|normal": [
+  "Sure.",
+  "sure"
+ ],
+ "en|fort|normal": [
+  "Fort",
+  "fort"
+ ],
+ "en|bid|normal": [
+  "bid",
+  "bid"
+ ],
+ "en|spot|normal": [
+  "Spot",
+  "spot"
+ ],
+ "en|tons|normal": [
+  "Tons",
+  "tons"
+ ],
+ "en|chip|normal": [
+  "Ship",
+  "ship"
+ ],
+ "en|lift|normal": [
+  "Lift.",
+  "Lyft"
+ ],
+ "en|raw|normal": [
+  "Raw.",
+  "Raw"
+ ],
+ "en|sees|normal": [
+  "C's",
+  "C"
+ ],
+ "en|coal|normal": [
+  "coal",
+  "Cole"
+ ],
+ "en|ages|normal": [
+  "Ages",
+  "ages"
+ ],
+ "en|beer|normal": [
+  "beer",
+  "beer"
+ ],
+ "en|belt|normal": [
+  "Built.",
+  "belt"
+ ],
+ "en|cuts|normal": [
+  "Cuts",
+  "cuts"
+ ],
+ "en|fate|normal": [
+  "Fate.",
+  "fate"
+ ],
+ "en|flew|normal": [
+  "flu",
+  "flu"
+ ],
+ "en|grid|normal": [
+  "Grid",
+  "grid"
+ ],
+ "en|lie|normal": [
+  "Lie.",
+  "Li"
+ ],
+ "en|poet|normal": [
+  "Poet",
+  "poet"
+ ],
+ "en|tall|normal": [
+  "Tall",
+  "tall"
+ ],
+ "en|el|normal": [
+  "L",
+  "l"
+ ],
+ "en|asks|normal": [
+  "asks",
+  "asks"
+ ],
+ "en|fail|normal": [
+  "Fail.",
+  "fail"
+ ],
+ "en|gap|normal": [
+  "Gap",
+  "Gap"
+ ],
+ "en|pop|normal": [
+  "Pop!",
+  "pop"
+ ],
+ "en|sand|normal": [
+  "Sand",
+  "sand"
+ ],
+ "en|bars|normal": [
+  "Bars",
+  "bars"
+ ],
+ "en|bet|normal": [
+  "Bet.",
+  ""
+ ],
+ "en|deck|normal": [
+  "Deck",
+  "deck"
+ ],
+ "en|pump|normal": [
+  "pump",
+  "pump"
+ ],
+ "en|push|normal": [
+  "Push.",
+  "push"
+ ],
+ "en|tea|normal": [
+  "T.",
+  "t"
+ ],
+ "en|ban|normal": [
+  "then",
+  "then"
+ ],
+ "en|ill|normal": [
+  "ill",
+  "ill"
+ ],
+ "en|lens|normal": [
+  "Lens",
+  "lens"
+ ],
+ "en|pool|normal": [
+  "pool",
+  "cool"
+ ],
+ "en|verb|normal": [
+  "Verb",
+  "verb"
+ ],
+ "en|burn|normal": [
+  "Burn.",
+  "burn"
+ ],
+ "en|fat|normal": [
+  "Fat",
+  "fat"
+ ],
+ "en|harm|normal": [
+  "harm",
+  "harm"
+ ],
+ "en|hits|normal": [
+  "Hits",
+  "hits"
+ ],
+ "en|oral|normal": [
+  "Oral",
+  "oral"
+ ],
+ "en|self|normal": [
+  "Self",
+  "self"
+ ],
+ "en|bush|normal": [
+  "Bush",
+  "bush"
+ ],
+ "en|gulf|normal": [
+  "Gulf",
+  "Gulf"
+ ],
+ "en|khan|normal": [
+  "con",
+  "Khan"
+ ],
+ "en|crop|normal": [
+  "Crop",
+  "crop"
+ ],
+ "en|fame|normal": [
+  "Fame.",
+  "Fame"
+ ],
+ "en|fled|normal": [
+  "fled",
+  "fled"
+ ],
+ "en|oath|normal": [
+  "oath",
+  "oath"
+ ],
+ "en|shut|normal": [
+  "Shut.",
+  "shut"
+ ],
+ "en|java|normal": [
+  "Java",
+  "Java"
+ ],
+ "en|os|normal": [
+  "OS",
+  "OS"
+ ],
+ "en|baby|normal": [
+  "Baby",
+  "baby"
+ ],
+ "en|dust|normal": [
+  "Dust",
+  "dust"
+ ],
+ "en|ion|normal": [
+  "ION",
+  "ion"
+ ],
+ "en|wage|normal": [
+  "wage",
+  "wage"
+ ],
+ "en|wet|normal": [
+  "wet",
+  "wet"
+ ],
+ "en|item|normal": [
+  "Item",
+  "item"
+ ],
+ "en|jury|normal": [
+  "Jury",
+  "jury"
+ ],
+ "en|tip|normal": [
+  "Tip",
+  "tip"
+ ],
+ "en|walk|normal": [
+  "Walk",
+  "walk"
+ ],
+ "en|trek|normal": [
+  "Trek",
+  "Trek"
+ ],
+ "en|coup|normal": [
+  "Who?",
+  "who"
+ ],
+ "en|en|normal": [
+  "N",
+  "n"
+ ],
+ "en|gay|normal": [
+  "Gay.",
+  "gay"
+ ],
+ "en|maps|normal": [
+  "Maps",
+  "Maps"
+ ],
+ "en|sing|normal": [
+  "Sing!",
+  "sing"
+ ],
+ "en|sit|normal": [
+  "Sit.",
+  "sit"
+ ],
+ "en|wore|normal": [
+  "War",
+  ""
+ ],
+ "en|cape|normal": [
+  "Cape",
+  "cape"
+ ],
+ "en|aged|normal": [
+  "Aged",
+  "aged"
+ ],
+ "en|clay|normal": [
+  "Play",
+  "clay"
+ ],
+ "en|fed|normal": [
+  "Fed",
+  "fed"
+ ],
+ "en|fee|normal": [
+  "Fee",
+  ""
+ ],
+ "en|mild|normal": [
+  "Mild",
+  "mild"
+ ],
+ "en|punk|normal": [
+  "Punk",
+  "Punk"
+ ],
+ "en|seal|normal": [
+  "Seal",
+  "seal"
+ ],
+ "en|mac|normal": [
+  "Mac",
+  "Mac"
+ ],
+ "en|dose|normal": [
+  "Dose.",
+  "do"
+ ],
+ "en|fund|normal": [
+  "Fund",
+  "fund"
+ ],
+ "en|ride|normal": [
+  "Ride",
+  "ride"
+ ],
+ "en|wait|normal": [
+  "Wait.",
+  "wait"
+ ],
+ "en|ram|normal": [
+  "Ram",
+  "Ram"
+ ],
+ "en|blow|normal": [
+  "Blow",
+  "blow"
+ ],
+ "en|ease|normal": [
+  "ease",
+  "e"
+ ],
+ "en|horn|normal": [
+  "Horn.",
+  "horn"
+ ],
+ "en|hull|normal": [
+  "Hull",
+  "Hull"
+ ],
+ "en|myth|normal": [
+  "Myth",
+  "myth"
+ ],
+ "en|pipe|normal": [
+  "Pipe.",
+  "pipe"
+ ],
+ "en|roof|normal": [
+  "Roof.",
+  "roof"
+ ],
+ "en|sail|normal": [
+  "Sale.",
+  "sale"
+ ],
+ "en|don|normal": [
+  "Don.",
+  "Dawn"
+ ],
+ "en|bias|normal": [
+  "Bias",
+  "bias"
+ ],
+ "en|boom|normal": [
+  "Boom!",
+  "boom"
+ ],
+ "en|dual|normal": [
+  "Dual",
+  "duel"
+ ],
+ "en|gate|normal": [
+  "gate",
+  "gate"
+ ],
+ "en|pull|normal": [
+  "Pull.",
+  "pull"
+ ],
+ "en|sake|normal": [
+  "Sake",
+  "sake"
+ ],
+ "en|slot|normal": [
+  "Slot",
+  "slot"
+ ],
+ "en|bow|normal": [
+  "bow",
+  "bow"
+ ],
+ "en|ink|normal": [
+  "Inc.",
+  "ink"
+ ],
+ "en|bind|normal": [
+  "Bind.",
+  "bind"
+ ],
+ "en|dogs|normal": [
+  "Dogs",
+  "dogs"
+ ],
+ "en|ear|normal": [
+  "ear",
+  "ear"
+ ],
+ "en|rays|normal": [
+  "Raise.",
+  "raise"
+ ],
+ "en|tale|normal": [
+  "Tail",
+  "tail"
+ ],
+ "en|tie|normal": [
+  "Tie.",
+  "tie"
+ ],
+ "en|coat|normal": [
+  "Code",
+  "code"
+ ],
+ "en|drag|normal": [
+  "Drag",
+  "drag"
+ ],
+ "en|gear|normal": [
+  "gear",
+  "gear"
+ ],
+ "en|hunt|normal": [
+  "Hunt",
+  "hunt"
+ ],
+ "en|span|normal": [
+  "Span",
+  "span"
+ ],
+ "en|leo|normal": [
+  "Leo",
+  "Leo"
+ ],
+ "en|aims|normal": [
+  "Ames",
+  "as"
+ ],
+ "en|cult|normal": [
+  "Cult",
+  "cult"
+ ],
+ "en|heir|normal": [
+  "Air",
+  "are"
+ ],
+ "en|mile|normal": [
+  "Mile.",
+  "mile"
+ ],
+ "en|mine|normal": [
+  "Mine.",
+  "mine"
+ ],
+ "en|pick|normal": [
+  "Pick.",
+  "pick"
+ ],
+ "en|stem|normal": [
+  "Stem",
+  "stem"
+ ],
+ "en|tiny|normal": [
+  "Tiny.",
+  "tiny"
+ ],
+ "en|earl|normal": [
+  "Earl.",
+  "Earl"
+ ],
+ "en|eve|normal": [
+  "Eve",
+  "Eve"
+ ],
+ "en|coin|normal": [
+  "Coin",
+  "coin"
+ ],
+ "en|shop|normal": [
+  "Shop",
+  "shop"
+ ],
+ "en|wake|normal": [
+  "Wake.",
+  "wait"
+ ],
+ "en|hide|normal": [
+  "Hide.",
+  "hide"
+ ],
+ "en|lit|normal": [
+  "lit",
+  "lit"
+ ],
+ "en|rows|normal": [
+  "Rose",
+  "Rose"
+ ],
+ "en|arc|normal": [
+  "Art.",
+  "Ark"
+ ],
+ "en|dish|normal": [
+  "dish",
+  "dish"
+ ],
+ "en|inch|normal": [
+  "inch",
+  "inch"
+ ],
+ "en|pot|normal": [
+  "Pot",
+  "pot"
+ ],
+ "en|sin|normal": [
+  "Sin",
+  "sin"
+ ],
+ "en|ski|normal": [
+  "ski",
+  "ski"
+ ],
+ "en|ben|normal": [
+  "Then,",
+  "then"
+ ],
+ "en|cook|normal": [
+  "Cook",
+  "cook"
+ ],
+ "en|max|normal": [
+  "Max",
+  "Max"
+ ],
+ "en|coil|normal": [
+  "coil",
+  "coil"
+ ],
+ "en|dies|normal": [
+  "dies",
+  "dyes"
+ ],
+ "en|egg|normal": [
+  "Egg",
+  "egg"
+ ],
+ "en|gray|normal": [
+  "Gray",
+  "Gray"
+ ],
+ "en|hip|normal": [
+  "Hip.",
+  "hip"
+ ],
+ "en|loan|normal": [
+  "Lone",
+  "loan"
+ ],
+ "en|meal|normal": [
+  "meal",
+  "meal"
+ ],
+ "en|odds|normal": [
+  "odds",
+  "odds"
+ ],
+ "en|pace|normal": [
+  "PACE",
+  "pace"
+ ],
+ "en|pole|normal": [
+  "poll",
+  "Pole"
+ ],
+ "en|fees|normal": [
+  "fees",
+  "fees"
+ ],
+ "en|beta|normal": [
+  "beta",
+  "beta"
+ ],
+ "en|dot|normal": [
+  ".",
+  "do"
+ ],
+ "en|flee|normal": [
+  "Flee",
+  "flea"
+ ],
+ "en|fun|normal": [
+  "Fun!",
+  "fun"
+ ],
+ "en|golf|normal": [
+  "Golf",
+  "golf"
+ ],
+ "en|hop|normal": [
+  "Hop!",
+  "hop"
+ ],
+ "en|log|normal": [
+  "log",
+  "log"
+ ],
+ "en|cloud|normal": [
+  "Cloud",
+  "cloud"
+ ],
+ "en|flower|normal": [
+  "flower",
+  "flower"
+ ],
+ "en|grass|normal": [
+  "== Grass ==",
+  "grass"
+ ],
+ "en|mouth|normal": [
+  "mouth",
+  "mouth"
+ ],
+ "en|smoke|normal": [
+  "Smoke",
+  "smoke"
+ ],
+ "en|window|normal": [
+  "Window",
+  "window"
+ ],
+ "en|pear|normal": [
+  "pair",
+  "pair"
+ ],
+ "en|bicycle|normal": [
+  "Bicycle",
+  "bicycle"
+ ],
+ "en|kitchen|normal": [
+  "Kitchen",
+  "kitchen"
+ ],
+ "en|monster|normal": [
+  "Monster",
+  "monster"
+ ],
+ "en|picture|normal": [
+  "Picture",
+  "picture"
+ ],
+ "en|brother|normal": [
+  "Brother",
+  "brother"
+ ],
+ "en|holiday|normal": [
+  "Holiday",
+  "holiday"
+ ],
+ "en|library|normal": [
+  "Library",
+  "Library"
+ ],
+ "en|machine|normal": [
+  "Machine",
+  "machine"
+ ],
+ "en|balloon|normal": [
+  "balloon",
+  "balloon"
+ ],
+ "en|diamond|normal": [
+  "Diamond.",
+  "diamond"
+ ],
+ "en|journey|normal": [
+  "Journey",
+  "Journey"
+ ],
+ "en|mountain|normal": [
+  "Mountain",
+  "Mountain"
+ ],
+ "en|calendar|normal": [
+  "calendar",
+  "calendar"
+ ],
+ "en|elephant|normal": [
+  "Elephant",
+  "elephant"
+ ],
+ "en|sandwich|normal": [
+  "sandwich",
+  "sandwich"
+ ],
+ "en|chocolate|normal": [
+  "Chocolate",
+  "chocolate"
+ ],
+ "en|umbrella|normal": [
+  "umbrella",
+  "umbrella"
+ ],
+ "en|treasure|normal": [
+  "Treasure",
+  "treasure"
+ ],
+ "en|hospital|normal": [
+  "Hospital",
+  "Hospital"
+ ],
+ "en|festival|normal": [
+  "Festival",
+  "Festival"
+ ],
+ "en|adventure|normal": [
+  "Adventure",
+  "Adventure"
+ ],
+ "en|afternoon|normal": [
+  "Afternoon.",
+  "afternoon"
+ ],
+ "en|building|normal": [
+  "Building",
+  "building"
+ ],
+ "en|business|normal": [
+  "Business",
+  "business"
+ ],
+ "en|children|normal": [
+  "Children",
+  "children"
+ ],
+ "en|computer|normal": [
+  "computer",
+  "computer"
+ ],
+ "en|dinosaur|normal": [
+  "Dinosaur",
+  "dinosaur"
+ ],
+ "en|envelope|normal": [
+  "Envelope",
+  "envelope"
+ ],
+ "en|exercise|normal": [
+  "Exercise",
+  "exercise"
+ ],
+ "en|favorite|normal": [
+  "Favorite",
+  "favorite"
+ ],
+ "en|furniture|normal": [
+  "Furniture",
+  "furniture"
+ ],
+ "en|grocery|normal": [
+  "Grocery",
+  "grocery"
+ ],
+ "en|hamburger|normal": [
+  "hamburger",
+  "hamburger"
+ ],
+ "en|important|normal": [
+  "Important.",
+  "important"
+ ],
+ "en|keyboard|normal": [
+  "Keyboard",
+  "keyboard"
+ ],
+ "en|language|normal": [
+  "Language.",
+  "language"
+ ],
+ "en|mushroom|normal": [
+  "Mushroom",
+  "mushroom"
+ ],
+ "en|notebook|normal": [
+  "notebook",
+  "notebook"
+ ],
+ "en|orchestra|normal": [
+  "Orchestra",
+  "Orchestra"
+ ],
+ "en|painting|normal": [
+  "Painting",
+  "painting"
+ ],
+ "en|pancake|normal": [
+  "Pancake",
+  "pancake"
+ ],
+ "en|pumpkin|normal": [
+  "Pumpkin",
+  "pumpkin"
+ ],
+ "en|question|normal": [
+  "Question",
+  "question"
+ ],
+ "en|rainbow|normal": [
+  "Rainbow",
+  "rainbow"
+ ],
+ "en|sausage|normal": [
+  "Sausage",
+  "sausage"
+ ],
+ "en|sculpture|normal": [
+  "Sculpture",
+  "sculpture"
+ ],
+ "en|sneakers|normal": [
+  "Sneakers",
+  "sneakers"
+ ],
+ "en|stadium|normal": [
+  "Stadium",
+  "Stadium"
+ ],
+ "en|suitcase|normal": [
+  "Suitcase",
+  "suitcase"
+ ],
+ "en|telephone|normal": [
+  "telephone",
+  "telephone"
+ ],
+ "en|which|normal": [
+  "which",
+  "which"
+ ],
+ "en|their|normal": [
+  "There.",
+  "there"
+ ],
+ "en|other|normal": [
+  "Other",
+  "other"
+ ],
+ "en|first|normal": [
+  "First.",
+  "first"
+ ],
+ "en|would|normal": [
+  "wood",
+  "would"
+ ],
+ "en|after|normal": [
+  "after",
+  "after"
+ ],
+ "en|there|normal": [
+  "There.",
+  "there"
+ ],
+ "en|years|normal": [
+  "Years",
+  "years"
+ ],
+ "en|about|normal": [
+  "About",
+  "about"
+ ],
+ "en|these|normal": [
+  "these",
+  "these"
+ ],
+ "en|during|normal": [
+  "during",
+  "during"
+ ],
+ "en|often|normal": [
+  "often",
+  "often"
+ ],
+ "en|where|normal": [
+  "Where?",
+  "where"
+ ],
+ "en|being|normal": [
+  "Being",
+  "being"
+ ],
+ "en|number|normal": [
+  "number",
+  "number"
+ ],
+ "en|system|normal": [
+  "System",
+  "system"
+ ],
+ "en|could|normal": [
+  "could",
+  "could"
+ ],
+ "en|people|normal": [
+  "People.",
+  "people"
+ ],
+ "en|known|normal": [
+  "known",
+  "known"
+ ],
+ "en|while|normal": [
+  "while",
+  "while"
+ ],
+ "en|called|normal": [
+  "called",
+  "called"
+ ],
+ "en|before|normal": [
+  "before",
+  "before"
+ ],
+ "en|later|normal": [
+  "later",
+  "later"
+ ],
+ "en|three|normal": [
+  "3.",
+  "3"
+ ],
+ "en|under|normal": [
+  "under",
+  "under"
+ ],
+ "en|became|normal": [
+  "became",
+  "became"
+ ],
+ "en|united|normal": [
+  "United.",
+  "United"
+ ],
+ "en|large|normal": [
+  "large",
+  "large"
+ ],
+ "en|found|normal": [
+  "found.",
+  "found"
+ ],
+ "en|until|normal": [
+  "Until",
+  "until"
+ ],
+ "en|early|normal": [
+  "Early",
+  "early"
+ ],
+ "en|those|normal": [
+  "those",
+  "those"
+ ],
+ "en|around|normal": [
+  "around",
+  "around"
+ ],
+ "en|since|normal": [
+  "Since",
+  "since"
+ ],
+ "en|power|normal": [
+  "Power",
+  "power"
+ ],
+ "en|state|normal": [
+  "State",
+  "state"
+ ],
+ "en|second|normal": [
+  "2nd",
+  "second"
+ ],
+ "en|using|normal": [
+  "using",
+  "using"
+ ],
+ "en|small|normal": [
+  "Small",
+  "small"
+ ],
+ "en|within|normal": [
+  "within",
+  "Within"
+ ],
+ "en|states|normal": [
+  "States",
+  "States"
+ ],
+ "en|world|normal": [
+  "world",
+  "world"
+ ],
+ "en|water|normal": [
+  "Water",
+  "water"
+ ],
+ "en|still|normal": [
+  "Still.",
+  "still"
+ ],
+ "en|common|normal": [
+  "common",
+  "common"
+ ],
+ "en|began|normal": [
+  "began.",
+  "began"
+ ],
+ "en|series|normal": [
+  "Series",
+  "series"
+ ],
+ "en|order|normal": [
+  "Order",
+  "order"
+ ],
+ "en|death|normal": [
+  "Death",
+  "death"
+ ],
+ "en|major|normal": [
+  "Major",
+  "major"
+ ],
+ "en|based|normal": [
+  "based",
+  "based"
+ ],
+ "en|public|normal": [
+  "public",
+  "public"
+ ],
+ "en|become|normal": [
+  "Become",
+  "become"
+ ],
+ "en|among|normal": [
+  "among",
+  "among"
+ ],
+ "en|place|normal": [
+  "Place",
+  "place"
+ ],
+ "en|period|normal": [
+  "Period.",
+  "period"
+ ],
+ "en|music|normal": [
+  "Music",
+  "music"
+ ],
+ "en|group|normal": [
+  "group",
+  "group"
+ ],
+ "en|should|normal": [
+  "should",
+  "should"
+ ],
+ "en|given|normal": [
+  "Given",
+  "given"
+ ],
+ "en|result|normal": [
+  "Result",
+  "result"
+ ],
+ "en|point|normal": [
+  "Point.",
+  "point"
+ ],
+ "en|family|normal": [
+  "Family",
+  "family"
+ ],
+ "en|french|normal": [
+  "French",
+  "French"
+ ],
+ "en|single|normal": [
+  "Single.",
+  "single"
+ ],
+ "en|never|normal": [
+  "Never",
+  "never"
+ ],
+ "en|right|normal": [
+  "Right.",
+  "right"
+ ],
+ "en|modern|normal": [
+  "Modern",
+  "modern"
+ ],
+ "en|times|normal": [
+  "Times",
+  "times"
+ ],
+ "en|along|normal": [
+  "Along",
+  "along"
+ ],
+ "en|every|normal": [
+  "Every.",
+  "every"
+ ],
+ "en|local|normal": [
+  "Local",
+  "local"
+ ],
+ "en|areas|normal": [
+  "== Areas ==",
+  "areas"
+ ],
+ "en|either|normal": [
+  "either.",
+  "either"
+ ],
+ "en|though|normal": [
+  "though.",
+  "though"
+ ],
+ "en|rather|normal": [
+  "rather",
+  "rather"
+ ],
+ "en|field|normal": [
+  "Field",
+  "field"
+ ],
+ "en|human|normal": [
+  "Human.",
+  "human"
+ ],
+ "en|above|normal": [
+  "above",
+  "above"
+ ],
+ "en|others|normal": [
+  "Others",
+  "others"
+ ],
+ "en|having|normal": [
+  "Having",
+  "having"
+ ],
+ "en|great|normal": [
+  "Great!",
+  "great"
+ ],
+ "en|wrote|normal": [
+  "wrote",
+  "wrote"
+ ],
+ "en|means|normal": [
+  "means",
+  "means"
+ ],
+ "en|higher|normal": [
+  "Higher.",
+  "higher"
+ ],
+ "en|light|normal": [
+  "light",
+  "light"
+ ],
+ "en|again|normal": [
+  "Again.",
+  "again"
+ ],
+ "en|design|normal": [
+  "Design",
+  "design"
+ ],
+ "en|level|normal": [
+  "Level",
+  "level"
+ ],
+ "en|almost|normal": [
+  "Almost.",
+  "almost"
+ ],
+ "en|works|normal": [
+  "Works",
+  "works"
+ ],
+ "en|south|normal": [
+  "South",
+  "South"
+ ],
+ "en|range|normal": [
+  "Range",
+  "range"
+ ],
+ "en|theory|normal": [
+  "theory",
+  "Theory"
+ ],
+ "en|little|normal": [
+  "Little",
+  "little"
+ ],
+ "en|social|normal": [
+  "Social",
+  "social"
+ ],
+ "en|built|normal": [
+  "Built",
+  "built"
+ ],
+ "en|energy|normal": [
+  "Energy.",
+  "energy"
+ ],
+ "en|force|normal": [
+  "== Force ==",
+  "Force"
+ ],
+ "en|total|normal": [
+  "Total",
+  "total"
+ ],
+ "en|least|normal": [
+  "Least.",
+  "least"
+ ],
+ "en|change|normal": [
+  "Change.",
+  "change"
+ ],
+ "en|making|normal": [
+  "making",
+  "making"
+ ],
+ "en|season|normal": [
+  "Season",
+  "season"
+ ],
+ "en|groups|normal": [
+  "Groups",
+  "groups"
+ ],
+ "en|effect|normal": [
+  "Effect",
+  "effect"
+ ],
+ "en|taken|normal": [
+  "Taken",
+  "taken"
+ ],
+ "en|lower|normal": [
+  "Lower.",
+  "lower"
+ ],
+ "en|space|normal": [
+  "Space",
+  "space"
+ ],
+ "en|itself|normal": [
+  "itself.",
+  "itself"
+ ],
+ "en|third|normal": [
+  "Third.",
+  "third"
+ ],
+ "en|north|normal": [
+  "North",
+  "North"
+ ],
+ "en|final|normal": [
+  "Final.",
+  "final"
+ ],
+ "en|terms|normal": [
+  "== Terms ==",
+  "terms"
+ ],
+ "en|might|normal": [
+  "Might",
+  "might"
+ ],
+ "en|played|normal": [
+  "played",
+  "played"
+ ],
+ "en|words|normal": [
+  "Words",
+  "words"
+ ],
+ "en|cases|normal": [
+  "Cases",
+  "cases"
+ ],
+ "en|school|normal": [
+  "School",
+  "School"
+ ],
+ "en|march|normal": [
+  "March",
+  "March"
+ ],
+ "en|women|normal": [
+  "Women",
+  "women"
+ ],
+ "en|across|normal": [
+  "Across",
+  "across"
+ ],
+ "en|source|normal": [
+  "Source",
+  "source"
+ ],
+ "en|cause|normal": [
+  "Cause",
+  "cause"
+ ],
+ "en|short|normal": [
+  "Short.",
+  "short"
+ ],
+ "en|party|normal": [
+  "Party!",
+  "party"
+ ],
+ "en|region|normal": [
+  "Region",
+  "region"
+ ],
+ "en|always|normal": [
+  "Always.",
+  "always"
+ ],
+ "en|return|normal": [
+  "Return",
+  "return"
+ ],
+ "en|parts|normal": [
+  "Parts",
+  "parts"
+ ],
+ "en|forces|normal": [
+  "== Forces ==",
+  "forces"
+ ],
+ "en|value|normal": [
+  "Value",
+  "value"
+ ],
+ "en|months|normal": [
+  "Months",
+  "months"
+ ],
+ "en|larger|normal": [
+  "larger",
+  "larger"
+ ],
+ "en|named|normal": [
+  "Named.",
+  "named"
+ ],
+ "en|father|normal": [
+  "Father",
+  "father"
+ ],
+ "en|cannot|normal": [
+  "Cannot",
+  "cannot"
+ ],
+ "en|forms|normal": [
+  "Forms",
+  "forms"
+ ],
+ "en|longer|normal": [
+  "longer",
+  "longer"
+ ],
+ "en|types|normal": [
+  "Types",
+  "types"
+ ],
+ "en|games|normal": [
+  "Games.",
+  "games"
+ ],
+ "en|events|normal": [
+  "Events",
+  "events"
+ ],
+ "en|moved|normal": [
+  "moved",
+  "moved"
+ ],
+ "en|below|normal": [
+  "below",
+  "below"
+ ],
+ "en|person|normal": [
+  "Person",
+  "person"
+ ],
+ "en|record|normal": [
+  "Record",
+  "record"
+ ],
+ "en|market|normal": [
+  "Market",
+  "Market"
+ ],
+ "en|study|normal": [
+  "Study",
+  "study"
+ ],
+ "en|player|normal": [
+  "Player",
+  "player"
+ ],
+ "en|style|normal": [
+  "Style",
+  "Style"
+ ],
+ "en|close|normal": [
+  "Close.",
+  "close"
+ ],
+ "en|nature|normal": [
+  "Nature",
+  "nature"
+ ],
+ "en|added|normal": [
+  "added",
+  "added"
+ ],
+ "en|former|normal": [
+  "Former",
+  "former"
+ ],
+ "en|black|normal": [
+  "Black",
+  "black"
+ ],
+ "en|method|normal": [
+  "Method",
+  "method"
+ ],
+ "en|strong|normal": [
+  "Strong.",
+  "strong"
+ ],
+ "en|model|normal": [
+  "Model",
+  "model"
+ ],
+ "en|allow|normal": [
+  "Allow",
+  "allow"
+ ],
+ "en|roman|normal": [
+  "Roman",
+  "Roman"
+ ],
+ "en|create|normal": [
+  "Create.",
+  "create"
+ ],
+ "en|attack|normal": [
+  "Attack!",
+  "attack"
+ ],
+ "en|points|normal": [
+  "== Points ==",
+  "points"
+ ],
+ "en|amount|normal": [
+  "Amount",
+  "amount"
+ ],
+ "en|lines|normal": [
+  "Lines",
+  "lines"
+ ],
+ "en|enough|normal": [
+  "Enough.",
+  "enough"
+ ],
+ "en|class|normal": [
+  "Class",
+  "class"
+ ],
+ "en|names|normal": [
+  "Names",
+  "names"
+ ],
+ "en|story|normal": [
+  "Story",
+  "story"
+ ],
+ "en|entire|normal": [
+  "Entire",
+  "entire"
+ ],
+ "en|sound|normal": [
+  "Sound",
+  "sound"
+ ],
+ "en|china|normal": [
+  "China",
+  "China"
+ ],
+ "en|money|normal": [
+  "Money",
+  "money"
+ ],
+ "en|trade|normal": [
+  "Trade",
+  "trade"
+ ],
+ "en|living|normal": [
+  "Living",
+  "living"
+ ],
+ "en|better|normal": [
+  "Better",
+  "better"
+ ],
+ "en|young|normal": [
+  "Young",
+  "Young"
+ ],
+ "en|church|normal": [
+  "Church",
+  "Church"
+ ],
+ "en|access|normal": [
+  "Access",
+  "access"
+ ],
+ "en|ground|normal": [
+  "ground",
+  "ground"
+ ],
+ "en|caused|normal": [
+  "caused",
+  "caused"
+ ],
+ "en|album|normal": [
+  "Album",
+  "album"
+ ],
+ "en|court|normal": [
+  "Court",
+  "Court"
+ ],
+ "en|member|normal": [
+  "member",
+  "member"
+ ],
+ "en|forced|normal": [
+  "Forced",
+  "forced"
+ ],
+ "en|house|normal": [
+  "House",
+  "house"
+ ],
+ "en|length|normal": [
+  "Length",
+  "length"
+ ],
+ "en|killed|normal": [
+  "Killed",
+  "killed"
+ ],
+ "en|mostly|normal": [
+  "Mostly.",
+  "mostly"
+ ],
+ "en|white|normal": [
+  "White.",
+  "White"
+ ],
+ "en|india|normal": [
+  "India",
+  "India"
+ ],
+ "en|stated|normal": [
+  "Stated",
+  "stated"
+ ],
+ "en|whose|normal": [
+  "Who's?",
+  "who's"
+ ],
+ "en|widely|normal": [
+  "Widely.",
+  "widely"
+ ],
+ "en|action|normal": [
+  "Action.",
+  "action"
+ ],
+ "en|formed|normal": [
+  "formed",
+  "formed"
+ ],
+ "en|office|normal": [
+  "Office",
+  "office"
+ ],
+ "en|radio|normal": [
+  "Radio",
+  "radio"
+ ],
+ "en|makes|normal": [
+  "makes",
+  "makes"
+ ],
+ "en|needed|normal": [
+  "needed",
+  "needed"
+ ],
+ "en|cities|normal": [
+  "Cities",
+  "cities"
+ ],
+ "en|stage|normal": [
+  "Stage",
+  "stage"
+ ],
+ "en|rights|normal": [
+  "Rights",
+  "rights"
+ ],
+ "en|today|normal": [
+  "Today!",
+  "today"
+ ],
+ "en|future|normal": [
+  "future",
+  "future"
+ ],
+ "en|allows|normal": [
+  "allows.",
+  "allows"
+ ],
+ "en|event|normal": [
+  "Event",
+  "event"
+ ],
+ "en|levels|normal": [
+  "Levels",
+  "levels"
+ ],
+ "en|shows|normal": [
+  "Shows",
+  "shows"
+ ],
+ "en|books|normal": [
+  "Books",
+  "books"
+ ],
+ "en|speed|normal": [
+  "Speed",
+  "speed"
+ ],
+ "en|policy|normal": [
+  "Policy",
+  "policy"
+ ],
+ "en|rules|normal": [
+  "Rules",
+  "rules"
+ ],
+ "en|appear|normal": [
+  "appear",
+  "appear"
+ ],
+ "en|recent|normal": [
+  "Recent",
+  "recent"
+ ],
+ "en|heavy|normal": [
+  "Heavy",
+  "heavy"
+ ],
+ "en|highly|normal": [
+  "Highly",
+  "highly"
+ ],
+ "en|served|normal": [
+  "served",
+  "served"
+ ],
+ "en|memory|normal": [
+  "memory",
+  "memory"
+ ],
+ "en|title|normal": [
+  "Title",
+  "title"
+ ],
+ "en|simply|normal": [
+  "Simply.",
+  "simply"
+ ],
+ "en|whole|normal": [
+  "whole",
+  ""
+ ],
+ "en|issues|normal": [
+  "Issues",
+  "issues"
+ ],
+ "en|cells|normal": [
+  "cells",
+  "cells"
+ ],
+ "en|career|normal": [
+  "Career",
+  "Courier"
+ ],
+ "en|units|normal": [
+  "Units",
+  "units"
+ ],
+ "en|direct|normal": [
+  "Direct",
+  "Direct"
+ ],
+ "en|worked|normal": [
+  "worked",
+  "worked"
+ ],
+ "en|union|normal": [
+  "Union",
+  "Union"
+ ],
+ "en|likely|normal": [
+  "likely",
+  "likely"
+ ],
+ "en|active|normal": [
+  "Active.",
+  "active"
+ ],
+ "en|behind|normal": [
+  "behind",
+  "behind"
+ ],
+ "en|placed|normal": [
+  "Placed",
+  "placed"
+ ],
+ "en|eight|normal": [
+  "8.",
+  "8"
+ ],
+ "en|sense|normal": [
+  "sense",
+  "sense"
+ ],
+ "en|growth|normal": [
+  "growth",
+  "growth"
+ ],
+ "en|issue|normal": [
+  "Issue",
+  "issue"
+ ],
+ "en|shown|normal": [
+  "Shown",
+  "shown"
+ ],
+ "en|simple|normal": [
+  "Simple.",
+  "simple"
+ ],
+ "en|mother|normal": [
+  "mother",
+  "mother"
+ ],
+ "en|seven|normal": [
+  "7",
+  "7"
+ ],
+ "en|night|normal": [
+  "Night.",
+  "night"
+ ],
+ "en|battle|normal": [
+  "Battle",
+  "battle"
+ ],
+ "en|older|normal": [
+  "older",
+  "older"
+ ],
+ "en|color|normal": [
+  "color",
+  "color"
+ ],
+ "en|start|normal": [
+  "Start.",
+  "start"
+ ],
+ "en|ended|normal": [
+  "Ended.",
+  "ended"
+ ],
+ "en|films|normal": [
+  "Films",
+  "films"
+ ],
+ "en|press|normal": [
+  "Press",
+  "press"
+ ],
+ "en|image|normal": [
+  "Image",
+  "image"
+ ],
+ "en|nearly|normal": [
+  "Nearly.",
+  "nearly"
+ ],
+ "en|occur|normal": [
+  "occur",
+  "occur"
+ ],
+ "en|remain|normal": [
+  "Remain",
+  "remain"
+ ],
+ "en|earth|normal": [
+  "Earth.",
+  "Earth"
+ ],
+ "en|blood|normal": [
+  "Blood",
+  "blood"
+ ],
+ "en|normal|normal": [
+  "Normal",
+  "normal"
+ ],
+ "en|takes|normal": [
+  "takes",
+  "takes"
+ ],
+ "en|income|normal": [
+  "Income",
+  "income"
+ ],
+ "en|island|normal": [
+  "Island",
+  "Island"
+ ],
+ "en|summer|normal": [
+  "Summer",
+  "summer"
+ ],
+ "en|passed|normal": [
+  "past",
+  "past"
+ ],
+ "en|exist|normal": [
+  "exist.",
+  "exist"
+ ],
+ "en|health|normal": [
+  "Health",
+  "health"
+ ],
+ "en|ships|normal": [
+  "== Ships ==",
+  "ships"
+ ],
+ "en|hours|normal": [
+  "hours",
+  "hours"
+ ],
+ "en|occurs|normal": [
+  "== Occurs ==",
+  "occurs"
+ ],
+ "en|clear|normal": [
+  "Clear.",
+  "clear"
+ ],
+ "en|letter|normal": [
+  "letter",
+  "letter"
+ ],
+ "en|reason|normal": [
+  "Reason",
+  "reason"
+ ],
+ "en|signal|normal": [
+  "Signal",
+  "signal"
+ ],
+ "en|wanted|normal": [
+  "Wanted",
+  "wanted"
+ ],
+ "en|legal|normal": [
+  "Legal.",
+  "legal"
+ ],
+ "en|mainly|normal": [
+  "Mainly.",
+  "mainly"
+ ],
+ "en|songs|normal": [
+  "Songs",
+  "songs"
+ ],
+ "en|soviet|normal": [
+  "Soviet",
+  "Soviet"
+ ],
+ "en|reduce|normal": [
+  "Reduce",
+  "reduce"
+ ],
+ "en|video|normal": [
+  "Video",
+  "video"
+ ],
+ "en|female|normal": [
+  "Female",
+  "female"
+ ],
+ "en|matter|normal": [
+  "matter",
+  "matter"
+ ],
+ "en|taking|normal": [
+  "Taking",
+  "taking"
+ ],
+ "en|table|normal": [
+  "Table",
+  "table"
+ ],
+ "en|child|normal": [
+  "Child.",
+  "child"
+ ],
+ "en|status|normal": [
+  "Status",
+  "status"
+ ],
+ "en|turned|normal": [
+  "Turned.",
+  "turned"
+ ],
+ "en|engine|normal": [
+  "Engine",
+  "engine"
+ ],
+ "en|media|normal": [
+  "media",
+  "media"
+ ],
+ "en|board|normal": [
+  "Board",
+  "board"
+ ],
+ "en|charge|normal": [
+  "Charge",
+  "charge"
+ ],
+ "en|metal|normal": [
+  "Metal",
+  "metal"
+ ],
+ "en|course|normal": [
+  "Course",
+  "course"
+ ],
+ "en|values|normal": [
+  "Values",
+  "values"
+ ],
+ "en|things|normal": [
+  "Things.",
+  "things"
+ ],
+ "en|failed|normal": [
+  "Failed.",
+  "failed"
+ ],
+ "en|troops|normal": [
+  "troops",
+  "troops"
+ ],
+ "en|going|normal": [
+  "Going.",
+  "going"
+ ],
+ "en|supply|normal": [
+  "Supply",
+  "Supply"
+ ],
+ "en|paris|normal": [
+  "Paris",
+  "Paris"
+ ],
+ "en|famous|normal": [
+  "Famous",
+  "famous"
+ ],
+ "en|plants|normal": [
+  "Plants",
+  "plants"
+ ],
+ "en|police|normal": [
+  "Police",
+  "police"
+ ],
+ "en|river|normal": [
+  "River",
+  "River"
+ ],
+ "en|moving|normal": [
+  "Moving",
+  "moving"
+ ],
+ "en|opened|normal": [
+  "opened",
+  "opened"
+ ],
+ "en|serve|normal": [
+  "Serve",
+  "serve"
+ ],
+ "en|basic|normal": [
+  "Basic.",
+  "basic"
+ ],
+ "en|basis|normal": [
+  "Basis",
+  "basis"
+ ],
+ "en|inside|normal": [
+  "Inside",
+  "inside"
+ ],
+ "en|agreed|normal": [
+  "Agreed.",
+  "agreed"
+ ],
+ "en|object|normal": [
+  "Object",
+  "object"
+ ],
+ "en|except|normal": [
+  "Accept.",
+  "except"
+ ],
+ "en|output|normal": [
+  "Output",
+  "output"
+ ],
+ "en|degree|normal": [
+  "Degree",
+  "degree"
+ ],
+ "en|models|normal": [
+  "Models",
+  "models"
+ ],
+ "en|noted|normal": [
+  "noted",
+  "noted"
+ ],
+ "en|center|normal": [
+  "Center",
+  "Center"
+ ],
+ "en|giving|normal": [
+  "Giving",
+  "giving"
+ ],
+ "en|claim|normal": [
+  "Flame",
+  "claim"
+ ],
+ "en|meant|normal": [
+  "meant",
+  "mint"
+ ],
+ "en|beyond|normal": [
+  "beyond",
+  "Beyond"
+ ],
+ "en|phase|normal": [
+  "Phase",
+  "phase"
+ ],
+ "en|scale|normal": [
+  "Scale",
+  "scale"
+ ],
+ "en|damage|normal": [
+  "Damage.",
+  "damage"
+ ],
+ "en|novel|normal": [
+  "novel",
+  "novel"
+ ],
+ "en|reach|normal": [
+  "Reach",
+  "reach"
+ ],
+ "en|offer|normal": [
+  "Offer",
+  "offer"
+ ],
+ "en|quite|normal": [
+  "Quite.",
+  "quite"
+ ],
+ "en|civil|normal": [
+  "Civil",
+  "civil"
+ ],
+ "en|weight|normal": [
+  "Wait.",
+  "wait"
+ ],
+ "en|front|normal": [
+  "Front",
+  "front"
+ ],
+ "en|leave|normal": [
+  "Leave.",
+  "leave"
+ ],
+ "en|fields|normal": [
+  "Fields",
+  "fields"
+ ],
+ "en|plant|normal": [
+  "Plant.",
+  "plant"
+ ],
+ "en|causes|normal": [
+  "Causes",
+  "causes"
+ ],
+ "en|ideas|normal": [
+  "Ideas",
+  "ideas"
+ ],
+ "en|places|normal": [
+  "Places",
+  "places"
+ ],
+ "en|powers|normal": [
+  "Powers",
+  "powers"
+ ],
+ "en|unique|normal": [
+  "Unique",
+  "unique"
+ ],
+ "en|origin|normal": [
+  "Origin",
+  "origin"
+ ],
+ "en|paper|normal": [
+  "Paper",
+  "paper"
+ ],
+ "en|device|normal": [
+  "Device",
+  "device"
+ ],
+ "en|fully|normal": [
+  "Fully",
+  "fully"
+ ],
+ "en|track|normal": [
+  "Track",
+  "track"
+ ],
+ "en|travel|normal": [
+  "Travel",
+  "travel"
+ ],
+ "en|birth|normal": [
+  "Birth",
+  "birth"
+ ],
+ "en|fixed|normal": [
+  "Fixed.",
+  "fixed"
+ ],
+ "en|pieces|normal": [
+  "Pieces",
+  "pieces"
+ ],
+ "en|easily|normal": [
+  "easily",
+  "easily"
+ ],
+ "en|flight|normal": [
+  "Flight",
+  "flight"
+ ],
+ "en|spread|normal": [
+  "Spread",
+  "spread"
+ ],
+ "en|write|normal": [
+  "Right.",
+  "right"
+ ],
+ "en|latter|normal": [
+  "latter",
+  "ladder"
+ ],
+ "en|sides|normal": [
+  "Sides",
+  "sides"
+ ],
+ "en|raised|normal": [
+  "raised",
+  "raised"
+ ],
+ "en|report|normal": [
+  "Report",
+  "report"
+ ],
+ "en|shape|normal": [
+  "Shape.",
+  "shape"
+ ],
+ "en|spent|normal": [
+  "Spent",
+  "spent"
+ ],
+ "en|weeks|normal": [
+  "Weeks",
+  "weeks"
+ ],
+ "en|cover|normal": [
+  "Cover",
+  "cover"
+ ],
+ "en|rates|normal": [
+  "Rates",
+  "rates"
+ ],
+ "en|volume|normal": [
+  "Volume.",
+  "volume"
+ ],
+ "en|gives|normal": [
+  "Gives",
+  "gives"
+ ],
+ "en|goods|normal": [
+  "Goods",
+  "Goods"
+ ],
+ "en|refers|normal": [
+  "refers",
+  "refers"
+ ],
+ "en|comes|normal": [
+  "Comes.",
+  "comes"
+ ],
+ "en|county|normal": [
+  "County",
+  "County"
+ ],
+ "en|follow|normal": [
+  "Follow",
+  "follow"
+ ],
+ "en|middle|normal": [
+  "middle",
+  "middle"
+ ],
+ "en|teams|normal": [
+  "Teams",
+  "teams"
+ ],
+ "en|carry|normal": [
+  "Carry.",
+  "Carrie"
+ ],
+ "en|peace|normal": [
+  "Peace!",
+  "peace"
+ ],
+ "en|annual|normal": [
+  "Annual",
+  "annual"
+ ],
+ "en|fourth|normal": [
+  "Fourth.",
+  "fourth"
+ ],
+ "en|humans|normal": [
+  "humans",
+  "humans"
+ ],
+ "en|proved|normal": [
+  "proved",
+  "proved"
+ ],
+ "en|prior|normal": [
+  "prior",
+  "prior"
+ ],
+ "en|street|normal": [
+  "Street",
+  "Street"
+ ],
+ "en|bridge|normal": [
+  "Bridge",
+  "Bridge"
+ ],
+ "en|toward|normal": [
+  "T.O.R.D.",
+  "toward"
+ ],
+ "en|asked|normal": [
+  "Asked",
+  "asked"
+ ],
+ "en|formal|normal": [
+  "Formal",
+  "formal"
+ ],
+ "en|tried|normal": [
+  "Tried.",
+  "tried"
+ ],
+ "en|focus|normal": [
+  "Focus",
+  "Focus"
+ ],
+ "en|round|normal": [
+  "Round.",
+  "round"
+ ],
+ "en|speech|normal": [
+  "Speech",
+  "speech"
+ ],
+ "en|unable|normal": [
+  "Unable",
+  "unable"
+ ],
+ "en|cards|normal": [
+  "Cards",
+  "cards"
+ ],
+ "en|drive|normal": [
+  "Drive",
+  "Drive"
+ ],
+ "en|equal|normal": [
+  "Equal.",
+  "equal"
+ ],
+ "en|plays|normal": [
+  "Please.",
+  "please"
+ ],
+ "en|sexual|normal": [
+  "Sexual",
+  "sexual"
+ ],
+ "en|stars|normal": [
+  "Stars",
+  "Stars"
+ ],
+ "en|useful|normal": [
+  "Useful",
+  "useful"
+ ],
+ "en|joined|normal": [
+  "Joined.",
+  "joined"
+ ],
+ "en|signed|normal": [
+  "Signed.",
+  "signed"
+ ],
+ "en|figure|normal": [
+  "Figure",
+  "figure"
+ ],
+ "en|limit|normal": [
+  "Limit",
+  "limit"
+ ],
+ "en|share|normal": [
+  "Share",
+  "share"
+ ],
+ "en|users|normal": [
+  "Users",
+  "users"
+ ],
+ "en|closed|normal": [
+  "Closed.",
+  "closed"
+ ],
+ "en|layer|normal": [
+  "Layer",
+  "layer"
+ ],
+ "en|square|normal": [
+  "Square",
+  "Square"
+ ],
+ "en|avoid|normal": [
+  "Avoid",
+  "avoid"
+ ],
+ "en|showed|normal": [
+  "showed",
+  "showed"
+ ],
+ "en|actual|normal": [
+  "Actual",
+  "actual"
+ ],
+ "en|helped|normal": [
+  "Helped",
+  "helped"
+ ],
+ "en|month|normal": [
+  "Month",
+  "month"
+ ],
+ "en|argued|normal": [
+  "argued",
+  "argued"
+ ],
+ "en|images|normal": [
+  "Images",
+  "images"
+ ],
+ "en|impact|normal": [
+  "Impact",
+  "impact"
+ ],
+ "en|winter|normal": [
+  "Winter",
+  "winter"
+ ],
+ "en|price|normal": [
+  "Price",
+  "price"
+ ],
+ "en|target|normal": [
+  "Target",
+  "Target"
+ ],
+ "en|lived|normal": [
+  "lived",
+  "lived"
+ ],
+ "en|costs|normal": [
+  "costs",
+  "costs"
+ ],
+ "en|effort|normal": [
+  "Effort",
+  "effort"
+ ],
+ "en|piece|normal": [
+  "Peace!",
+  "peace"
+ ],
+ "en|woman|normal": [
+  "Woman",
+  "woman"
+ ],
+ "en|alone|normal": [
+  "Alone.",
+  "alone"
+ ],
+ "en|animal|normal": [
+  "Animal",
+  "animal"
+ ],
+ "en|chosen|normal": [
+  "Chosen",
+  "chosen"
+ ],
+ "en|choice|normal": [
+  "Choice",
+  "choice"
+ ],
+ "en|demand|normal": [
+  "Demand",
+  "demand"
+ ],
+ "en|factor|normal": [
+  "Factor",
+  "Factor"
+ ],
+ "en|houses|normal": [
+  "Houses",
+  "houses"
+ ],
+ "en|notes|normal": [
+  "Notes.",
+  "notes"
+ ],
+ "en|scene|normal": [
+  "Scene",
+  "seen"
+ ],
+ "en|think|normal": [
+  "Think.",
+  "think"
+ ],
+ "en|royal|normal": [
+  "Royal",
+  "Royal"
+ ],
+ "en|format|normal": [
+  "Format.",
+  "format"
+ ],
+ "en|seems|normal": [
+  "seems",
+  "seems"
+ ],
+ "en|staff|normal": [
+  "Staff",
+  "staff"
+ ],
+ "en|gained|normal": [
+  "Gained.",
+  "gained"
+ ],
+ "en|heart|normal": [
+  "Heart.",
+  "heart"
+ ],
+ "en|leader|normal": [
+  "leader",
+  "leader"
+ ],
+ "en|saying|normal": [
+  "Saying",
+  "saying"
+ ],
+ "en|search|normal": [
+  "Surge",
+  "surge"
+ ],
+ "en|marked|normal": [
+  "marked",
+  "marked"
+ ],
+ "en|native|normal": [
+  "Native",
+  "native"
+ ],
+ "en|plans|normal": [
+  "Plans",
+  "plans"
+ ],
+ "en|input|normal": [
+  "Input",
+  "input"
+ ],
+ "en|match|normal": [
+  "Match.",
+  "match"
+ ],
+ "en|cycle|normal": [
+  "== Cycle ==",
+  "cycle"
+ ],
+ "en|friend|normal": [
+  "Friend",
+  "friend"
+ ],
+ "en|motion|normal": [
+  "Motion.",
+  "motion"
+ ],
+ "en|visit|normal": [
+  "Visit",
+  "visit"
+ ],
+ "en|needs|normal": [
+  "Needs",
+  "needs"
+ ],
+ "en|refer|normal": [
+  "refer",
+  "refer"
+ ],
+ "en|bodies|normal": [
+  "Bodies",
+  "bodies"
+ ],
+ "en|issued|normal": [
+  "issued",
+  "issued"
+ ],
+ "en|voice|normal": [
+  "Voice",
+  "voice"
+ ],
+ "en|claims|normal": [
+  "Claims",
+  "claims"
+ ],
+ "en|leaves|normal": [
+  "leaves",
+  "leaves"
+ ],
+ "en|minor|normal": [
+  "minor",
+  "minor"
+ ],
+ "en|owned|normal": [
+  "owned",
+  "owned"
+ ],
+ "en|upper|normal": [
+  "upper",
+  "upper"
+ ],
+ "en|urban|normal": [
+  "urban",
+  "Urban"
+ ],
+ "en|league|normal": [
+  "League",
+  "League"
+ ],
+ "en|break|normal": [
+  "Break",
+  "break"
+ ],
+ "en|lives|normal": [
+  "lives",
+  "lives"
+ ],
+ "en|green|normal": [
+  "green",
+  "green"
+ ],
+ "en|hands|normal": [
+  "Hands",
+  "hands"
+ ],
+ "en|double|normal": [
+  "Double.",
+  "double"
+ ],
+ "en|empire|normal": [
+  "Empire",
+  "Empire"
+ ],
+ "en|spring|normal": [
+  "Spring",
+  "spring"
+ ],
+ "en|bring|normal": [
+  "Bring",
+  "bring"
+ ],
+ "en|daily|normal": [
+  "Daily",
+  "daily"
+ ],
+ "en|block|normal": [
+  "Block",
+  "block"
+ ],
+ "en|coast|normal": [
+  "Coast",
+  "host"
+ ],
+ "en|sites|normal": [
+  "Sites",
+  "sites"
+ ],
+ "en|string|normal": [
+  "String",
+  "string"
+ ],
+ "en|manner|normal": [
+  "Manor",
+  "manner"
+ ],
+ "en|movie|normal": [
+  "movie",
+  "movie"
+ ],
+ "en|sector|normal": [
+  "Sector",
+  "sector"
+ ],
+ "en|fight|normal": [
+  "Fight!",
+  "fight"
+ ],
+ "en|sales|normal": [
+  "Sales",
+  "sales"
+ ],
+ "en|walls|normal": [
+  "Walls",
+  "walls"
+ ],
+ "en|heard|normal": [
+  "Heard.",
+  "heard"
+ ],
+ "en|sought|normal": [
+  "Sot",
+  "sought"
+ ],
+ "en|symbol|normal": [
+  "Symbol",
+  "symbol"
+ ],
+ "en|nation|normal": [
+  "Nation",
+  "Nation"
+ ],
+ "en|build|normal": [
+  "Build",
+  "build"
+ ],
+ "en|dance|normal": [
+  "Dance",
+  "dance"
+ ],
+ "en|exists|normal": [
+  "exists.",
+  "exists"
+ ],
+ "en|faith|normal": [
+  "Faith.",
+  "faith"
+ ],
+ "en|global|normal": [
+  "Global",
+  "global"
+ ],
+ "en|route|normal": [
+  "root",
+  "route"
+ ],
+ "en|labor|normal": [
+  "labor",
+  "labor"
+ ],
+ "en|taught|normal": [
+  "T.A.T.",
+  "taught"
+ ],
+ "en|usage|normal": [
+  "Usage",
+  "usage"
+ ],
+ "en|views|normal": [
+  "Views",
+  "views"
+ ],
+ "en|score|normal": [
+  "Score",
+  "score"
+ ],
+ "en|secret|normal": [
+  "Secret",
+  "Secret"
+ ],
+ "en|brain|normal": [
+  "Brain",
+  "brain"
+ ],
+ "en|pages|normal": [
+  "Pages",
+  "pages"
+ ],
+ "en|safety|normal": [
+  "Safety",
+  "safety"
+ ],
+ "en|oldest|normal": [
+  "Oldest",
+  "oldest"
+ ],
+ "en|shared|normal": [
+  "shared",
+  "shared"
+ ],
+ "en|plane|normal": [
+  "plane",
+  "plane"
+ ],
+ "en|bands|normal": [
+  "Bands",
+  "Bens"
+ ],
+ "en|males|normal": [
+  "Males",
+  "males"
+ ],
+ "en|author|normal": [
+  "Author",
+  "author"
+ ],
+ "en|begin|normal": [
+  "Begin.",
+  "begin"
+ ],
+ "en|begins|normal": [
+  "begins.",
+  "begins"
+ ],
+ "en|carbon|normal": [
+  "Carbon",
+  "carbon"
+ ],
+ "en|twice|normal": [
+  "Twice.",
+  "twice"
+ ],
+ "en|unlike|normal": [
+  "Unlike",
+  "unlike"
+ ],
+ "en|error|normal": [
+  "Error.",
+  "error"
+ ],
+ "en|limits|normal": [
+  "Limits",
+  "limits"
+ ],
+ "en|oxygen|normal": [
+  "Oxygen",
+  "oxygen"
+ ],
+ "en|roles|normal": [
+  "== Roles ==",
+  "roles"
+ ],
+ "en|split|normal": [
+  "Split",
+  "split"
+ ],
+ "en|truth|normal": [
+  "Truth",
+  "truth"
+ ],
+ "en|angle|normal": [
+  "Angle",
+  "angle"
+ ],
+ "en|ensure|normal": [
+  "Ensure.",
+  "Ensure"
+ ],
+ "en|really|normal": [
+  "Really.",
+  "really"
+ ],
+ "en|viewed|normal": [
+  "viewed",
+  "viewed"
+ ],
+ "en|atoms|normal": [
+  "Atoms",
+  "atoms"
+ ],
+ "en|coming|normal": [
+  "Coming",
+  "coming"
+ ],
+ "en|stable|normal": [
+  "Stable",
+  "stable"
+ ],
+ "en|calls|normal": [
+  "Calls",
+  "calls"
+ ],
+ "en|steel|normal": [
+  "Steel",
+  "Steel"
+ ],
+ "en|threat|normal": [
+  "Threat",
+  "fret"
+ ],
+ "en|trial|normal": [
+  "Trial",
+  "trial"
+ ],
+ "en|museum|normal": [
+  "Museum",
+  "Museum"
+ ],
+ "en|border|normal": [
+  "border",
+  "border"
+ ],
+ "en|decade|normal": [
+  "Decade",
+  "decade"
+ ],
+ "en|height|normal": [
+  "Height.",
+  "height"
+ ],
+ "en|screen|normal": [
+  "Screen",
+  "screen"
+ ],
+ "en|stone|normal": [
+  "Stone",
+  "Stone"
+ ],
+ "en|studio|normal": [
+  "Studio",
+  "Studio"
+ ],
+ "en|affect|normal": [
+  "affect",
+  "affect"
+ ],
+ "en|combat|normal": [
+  "combat",
+  "combat"
+ ],
+ "en|debate|normal": [
+  "Debate",
+  "debate"
+ ],
+ "en|fleet|normal": [
+  "Fleet",
+  "Fleet"
+ ],
+ "en|holds|normal": [
+  "holds",
+  "holds"
+ ],
+ "en|leads|normal": [
+  "Leads",
+  "leads"
+ ],
+ "en|proper|normal": [
+  "proper",
+  "proper"
+ ],
+ "en|severe|normal": [
+  "severe",
+  "severe"
+ ],
+ "en|adding|normal": [
+  "Adding",
+  "adding"
+ ],
+ "en|cable|normal": [
+  "Cable",
+  "cable"
+ ],
+ "en|enemy|normal": [
+  "Enemy",
+  "enemy"
+ ],
+ "en|extra|normal": [
+  "Extra",
+  "extra"
+ ],
+ "en|floor|normal": [
+  "Floor",
+  "floor"
+ ],
+ "en|glass|normal": [
+  "== Class ==",
+  "glass"
+ ],
+ "en|super|normal": [
+  "Super!",
+  "super"
+ ],
+ "en|accept|normal": [
+  "Accept.",
+  "except"
+ ],
+ "en|dates|normal": [
+  "Dates",
+  "dates"
+ ],
+ "en|launch|normal": [
+  "Launch.",
+  "launch"
+ ],
+ "en|rarely|normal": [
+  "Rarely.",
+  "rarely"
+ ],
+ "en|trees|normal": [
+  "Trees",
+  "trees"
+ ],
+ "en|waves|normal": [
+  "waves",
+  "waves"
+ ],
+ "en|grand|normal": [
+  "grand",
+  "Grand"
+ ],
+ "en|queen|normal": [
+  "Queen",
+  "Queen"
+ ],
+ "en|offers|normal": [
+  "== Offers ==",
+  "offers"
+ ],
+ "en|apply|normal": [
+  "Apply.",
+  "apply"
+ ],
+ "en|drawn|normal": [
+  "drawn",
+  "drawn"
+ ],
+ "en|orders|normal": [
+  "Orders",
+  "orders"
+ ],
+ "en|rural|normal": [
+  "rural",
+  "rural"
+ ],
+ "en|doing|normal": [
+  "Doing",
+  "doing"
+ ],
+ "en|slaves|normal": [
+  "Slaves",
+  "slaves"
+ ],
+ "en|theme|normal": [
+  "Theme",
+  "theme"
+ ],
+ "en|trying|normal": [
+  "trying",
+  "trying"
+ ],
+ "en|exact|normal": [
+  "Exact.",
+  "exact"
+ ],
+ "en|domain|normal": [
+  "Domain",
+  "domain"
+ ],
+ "en|escape|normal": [
+  "Escape",
+  "Escape"
+ ],
+ "en|seats|normal": [
+  "Seeds",
+  "seats"
+ ],
+ "en|stored|normal": [
+  "stored",
+  "stored"
+ ],
+ "en|tests|normal": [
+  "Tests",
+  "tests"
+ ],
+ "en|broke|normal": [
+  "broke",
+  "broke"
+ ],
+ "en|courts|normal": [
+  "== Courts ==",
+  "courts"
+ ],
+ "en|enter|normal": [
+  "Enter",
+  "enter"
+ ],
+ "en|solid|normal": [
+  "Solid.",
+  "solid"
+ ],
+ "en|stand|normal": [
+  "Stand.",
+  "stand"
+ ],
+ "en|visual|normal": [
+  "Visual",
+  "visual"
+ ],
+ "en|belief|normal": [
+  "Belief",
+  "belief"
+ ],
+ "en|prices|normal": [
+  "Prices",
+  "prices"
+ ],
+ "en|ratio|normal": [
+  "Ratio",
+  "ratio"
+ ],
+ "en|towns|normal": [
+  "Towns",
+  "towns"
+ ],
+ "en|acting|normal": [
+  "Acting.",
+  "acting"
+ ],
+ "en|grown|normal": [
+  "grown",
+  "grown"
+ ],
+ "en|medium|normal": [
+  "Medium",
+  "medium"
+ ],
+ "en|mixed|normal": [
+  "Next.",
+  "mixed"
+ ],
+ "en|nearby|normal": [
+  "Nearby.",
+  "nearby"
+ ],
+ "en|prison|normal": [
+  "Prison",
+  "prison"
+ ],
+ "en|prince|normal": [
+  "== Prins ==",
+  "Prince"
+ ],
+ "en|audio|normal": [
+  "Audio.",
+  "audio"
+ ],
+ "en|crime|normal": [
+  "Crime.",
+  "crime"
+ ],
+ "en|online|normal": [
+  "online",
+  "online"
+ ],
+ "en|strike|normal": [
+  "Strike",
+  "strike"
+ ],
+ "en|styles|normal": [
+  "Styles",
+  "styles"
+ ],
+ "en|tools|normal": [
+  "Tools",
+  "tools"
+ ],
+ "en|unless|normal": [
+  "unless",
+  "unless"
+ ],
+ "en|obtain|normal": [
+  "Obtain.",
+  "obtain"
+ ],
+ "en|train|normal": [
+  "train",
+  "train"
+ ],
+ "en|varies|normal": [
+  "varies",
+  "varies"
+ ],
+ "en|budget|normal": [
+  "Budget",
+  "budget"
+ ],
+ "en|chain|normal": [
+  "Shane.",
+  "chain"
+ ],
+ "en|ending|normal": [
+  "Ending",
+  "ending"
+ ],
+ "en|review|normal": [
+  "Review",
+  "review"
+ ],
+ "en|solar|normal": [
+  "Solar",
+  "solar"
+ ],
+ "en|spirit|normal": [
+  "Spirit",
+  "spirit"
+ ],
+ "en|thing|normal": [
+  "thing",
+  "thing"
+ ],
+ "en|yards|normal": [
+  "Yards",
+  "yards"
+ ],
+ "en|apart|normal": [
+  "Apart.",
+  "apart"
+ ],
+ "en|artist|normal": [
+  "Artist",
+  "artist"
+ ],
+ "en|copies|normal": [
+  "copies",
+  "copies"
+ ],
+ "en|cross|normal": [
+  "Cross",
+  "cross"
+ ],
+ "en|logic|normal": [
+  "Logic",
+  "logic"
+ ],
+ "en|script|normal": [
+  "Script",
+  "script"
+ ],
+ "en|sports|normal": [
+  "Sports",
+  "Sports"
+ ],
+ "en|prime|normal": [
+  "Prime",
+  "Prime"
+ ],
+ "en|award|normal": [
+  "Award",
+  "award"
+ ],
+ "en|bottom|normal": [
+  "Bottom",
+  "bottom"
+ ],
+ "en|extent|normal": [
+  "Extent",
+  "extent"
+ ],
+ "en|poetry|normal": [
+  "Poetry",
+  "poetry"
+ ],
+ "en|adult|normal": [
+  "Adult",
+  "adult"
+ ],
+ "en|armed|normal": [
+  "armed",
+  "armed"
+ ],
+ "en|brief|normal": [
+  "Brief",
+  "brief"
+ ],
+ "en|chance|normal": [
+  "Chance",
+  "chance"
+ ],
+ "en|false|normal": [
+  "False",
+  "false"
+ ],
+ "en|faster|normal": [
+  "Faster",
+  "faster"
+ ],
+ "en|mobile|normal": [
+  "Mobile",
+  "mobile"
+ ],
+ "en|store|normal": [
+  "Store",
+  "store"
+ ],
+ "en|sugar|normal": [
+  "sugar",
+  "sugar"
+ ],
+ "en|desire|normal": [
+  "Desire",
+  "desire"
+ ],
+ "en|moment|normal": [
+  "Moment.",
+  "moment"
+ ],
+ "en|moral|normal": [
+  "Moral",
+  "moral"
+ ],
+ "en|moves|normal": [
+  "Moves",
+  "moves"
+ ],
+ "en|outer|normal": [
+  "outer",
+  "outer"
+ ],
+ "en|scenes|normal": [
+  "Scenes",
+  "scenes"
+ ],
+ "en|stages|normal": [
+  "Stages",
+  "stages"
+ ],
+ "en|favor|normal": [
+  "Favour",
+  "favor"
+ ],
+ "en|items|normal": [
+  "Items",
+  "items"
+ ],
+ "en|liquid|normal": [
+  "Liquid",
+  "liquid"
+ ],
+ "en|shift|normal": [
+  "Shift",
+  "shift"
+ ],
+ "en|defeat|normal": [
+  "Defeat",
+  "defeat"
+ ],
+ "en|scheme|normal": [
+  "Scheme",
+  "scheme"
+ ],
+ "en|losses|normal": [
+  "== Losses ==",
+  "losses"
+ ],
+ "en|merely|normal": [
+  "MIRRORLY",
+  "merely"
+ ],
+ "en|votes|normal": [
+  "Votes",
+  "votes"
+ ],
+ "en|branch|normal": [
+  "Branch",
+  "branch"
+ ],
+ "en|deaths|normal": [
+  "Deaths",
+  "deaths"
+ ],
+ "en|frame|normal": [
+  "Frame",
+  "frame"
+ ],
+ "en|saint|normal": [
+  "Saint",
+  "saint"
+ ],
+ "en|birds|normal": [
+  "Birds",
+  "Birds"
+ ],
+ "en|camera|normal": [
+  "Camera",
+  "camera"
+ ],
+ "en|extend|normal": [
+  "Extend",
+  "extend"
+ ],
+ "en|fluid|normal": [
+  "Fluid",
+  "fluid"
+ ],
+ "en|linear|normal": [
+  "Linear",
+  "linear"
+ ],
+ "en|median|normal": [
+  "median",
+  "median"
+ ],
+ "en|pilot|normal": [
+  "Pilot",
+  "pilot"
+ ],
+ "en|silver|normal": [
+  "Silver",
+  "silver"
+ ],
+ "en|tells|normal": [
+  "Tells",
+  "tells"
+ ],
+ "en|colors|normal": [
+  "== Colors ==",
+  "colors"
+ ],
+ "en|guitar|normal": [
+  "Guitar",
+  "guitar"
+ ],
+ "en|linked|normal": [
+  "linked",
+  "linked"
+ ],
+ "en|mental|normal": [
+  "Mental",
+  "mental"
+ ],
+ "en|skills|normal": [
+  "Skills",
+  "skills"
+ ],
+ "en|speak|normal": [
+  "Speak",
+  "speak"
+ ],
+ "en|taxes|normal": [
+  "Taxes",
+  "taxes"
+ ],
+ "en|clubs|normal": [
+  "Clubs",
+  "clubs"
+ ],
+ "en|funds|normal": [
+  "Funds",
+  "funds"
+ ],
+ "en|newly|normal": [
+  "Newly",
+  "newly"
+ ],
+ "en|sample|normal": [
+  "Sample",
+  "sample"
+ ],
+ "en|stock|normal": [
+  "Stock",
+  "stock"
+ ],
+ "en|titles|normal": [
+  "Titles",
+  "titles"
+ ],
+ "en|chose|normal": [
+  "Shows",
+  "shows"
+ ],
+ "en|ideal|normal": [
+  "Ideal.",
+  "ideal"
+ ],
+ "en|listed|normal": [
+  "Listed",
+  "listed"
+ ],
+ "en|lowest|normal": [
+  "lowest",
+  "lowest"
+ ],
+ "en|partly|normal": [
+  "Partly.",
+  "partly"
+ ],
+ "en|plate|normal": [
+  "Plate",
+  "plate"
+ ],
+ "en|serves|normal": [
+  "Serves",
+  "serves"
+ ],
+ "en|senate|normal": [
+  "Senate",
+  "Senate"
+ ],
+ "en|crisis|normal": [
+  "Crisis",
+  "crisis"
+ ],
+ "en|filled|normal": [
+  "filled",
+  "filled"
+ ],
+ "en|inner|normal": [
+  "Inner",
+  "inner"
+ ],
+ "en|remove|normal": [
+  "Remove.",
+  "remove"
+ ],
+ "en|corps|normal": [
+  "Core",
+  "core"
+ ],
+ "en|valley|normal": [
+  "Valley",
+  "Valley"
+ ],
+ "en|anyone|normal": [
+  "Anyone.",
+  "anyone"
+ ],
+ "en|define|normal": [
+  "Define",
+  "Define"
+ ],
+ "en|depth|normal": [
+  "depth",
+  "depth"
+ ],
+ "en|option|normal": [
+  "Option.",
+  "option"
+ ],
+ "en|secure|normal": [
+  "Secure",
+  "secure"
+ ],
+ "en|texts|normal": [
+  "Texts",
+  "texts"
+ ],
+ "en|usual|normal": [
+  "usual",
+  "usual"
+ ],
+ "en|weapon|normal": [
+  "Weapon",
+  "weapon"
+ ],
+ "en|writer|normal": [
+  "Writer",
+  "writer"
+ ],
+ "en|writes|normal": [
+  "Rights",
+  "rights"
+ ],
+ "en|bound|normal": [
+  "bound",
+  "bound"
+ ],
+ "en|chief|normal": [
+  "Chief",
+  "chief"
+ ],
+ "en|goals|normal": [
+  "Goals",
+  "goals"
+ ],
+ "en|rapid|normal": [
+  "Rapid",
+  "rapid"
+ ],
+ "en|seemed|normal": [
+  "Seemed",
+  "seemed"
+ ],
+ "en|yellow|normal": [
+  "Yellow",
+  "yellow"
+ ],
+ "en|finite|normal": [
+  "finite",
+  "finite"
+ ],
+ "en|proof|normal": [
+  "proof",
+  "proof"
+ ],
+ "en|roads|normal": [
+  "Roads",
+  "roads"
+ ],
+ "en|roots|normal": [
+  "Roots",
+  "roots"
+ ],
+ "en|themes|normal": [
+  "Themes",
+  "themes"
+ ],
+ "en|vision|normal": [
+  "Vision",
+  "vision"
+ ],
+ "en|begun|normal": [
+  "begun",
+  "begun"
+ ],
+ "en|broken|normal": [
+  "broken",
+  "broken"
+ ],
+ "en|cancer|normal": [
+  "Cancer",
+  "cancer"
+ ],
+ "en|circle|normal": [
+  "Circle",
+  "Circle"
+ ],
+ "en|couple|normal": [
+  "Couple",
+  "couple"
+ ],
+ "en|empty|normal": [
+  "Empty.",
+  "empty"
+ ],
+ "en|gender|normal": [
+  "Gender",
+  "gender"
+ ],
+ "en|sister|normal": [
+  "Sister",
+  "sister"
+ ],
+ "en|vector|normal": [
+  "Vector",
+  "vector"
+ ],
+ "en|easier|normal": [
+  "easier",
+  "easier"
+ ],
+ "en|ethnic|normal": [
+  "Ethnic",
+  "ethnic"
+ ],
+ "en|print|normal": [
+  "Print",
+  "print"
+ ],
+ "en|sport|normal": [
+  "Sport",
+  "sport"
+ ],
+ "en|twelve|normal": [
+  "12.",
+  "12"
+ ],
+ "en|appeal|normal": [
+  "Appeal",
+  "appeal"
+ ],
+ "en|choose|normal": [
+  "Shoes",
+  "shoes"
+ ],
+ "en|joint|normal": [
+  "Joined.",
+  "joint"
+ ],
+ "en|losing|normal": [
+  "Losing",
+  "losing"
+ ],
+ "en|senior|normal": [
+  "Senior",
+  "senior"
+ ],
+ "en|tracks|normal": [
+  "Tracks",
+  "tracks"
+ ],
+ "en|treaty|normal": [
+  "Treaty",
+  "treaty"
+ ],
+ "en|agents|normal": [
+  "Agents",
+  "agents"
+ ],
+ "en|answer|normal": [
+  "Answer",
+  "answer"
+ ],
+ "en|boats|normal": [
+  "Boats",
+  "boats"
+ ],
+ "en|broad|normal": [
+  "Broad",
+  "Broad"
+ ],
+ "en|credit|normal": [
+  "Credit",
+  "credit"
+ ],
+ "en|entry|normal": [
+  "Entry",
+  "entry"
+ ],
+ "en|fired|normal": [
+  "Fired.",
+  "fired"
+ ],
+ "en|horses|normal": [
+  "== Horses",
+  "horses"
+ ],
+ "en|links|normal": [
+  "Links",
+  "links"
+ ],
+ "en|narrow|normal": [
+  "narrow",
+  "narrow"
+ ],
+ "en|passes|normal": [
+  "Passes",
+  "passes"
+ ],
+ "en|spoken|normal": [
+  "Spoken",
+  "spoken"
+ ],
+ "en|campus|normal": [
+  "Campus",
+  "compass"
+ ],
+ "en|duties|normal": [
+  "duties",
+  "duties"
+ ],
+ "en|finds|normal": [
+  "Fines",
+  "finds"
+ ],
+ "en|notion|normal": [
+  "Notion",
+  "notion"
+ ],
+ "en|opera|normal": [
+  "Opera",
+  "Opera"
+ ],
+ "en|papers|normal": [
+  "Papers",
+  "papers"
+ ],
+ "en|random|normal": [
+  "Random.",
+  "random"
+ ],
+ "en|routes|normal": [
+  "Roots",
+  "roots"
+ ],
+ "en|steps|normal": [
+  "Steps",
+  "steps"
+ ],
+ "en|strict|normal": [
+  "strict",
+  "strict"
+ ],
+ "en|tasks|normal": [
+  "Tasks",
+  "tasks"
+ ],
+ "en|varied|normal": [
+  "Varied",
+  "varied"
+ ],
+ "en|genre|normal": [
+  "Genre",
+  "genre"
+ ],
+ "en|noise|normal": [
+  "Noise",
+  "noise"
+ ],
+ "en|rite|normal": [
+  "Right.",
+  "right"
+ ],
+ "en|accommodate|normal": [
+  "accommodate",
+  "accommodate"
+ ],
+ "en|acquaintance|normal": [
+  "Aquaintance",
+  "acquaintance"
+ ],
+ "en|acquire|normal": [
+  "Acquire",
+  "acquire"
+ ],
+ "en|apparent|normal": [
+  "Apparent",
+  "a parent"
+ ],
+ "en|archipelago|normal": [
+  "Archipelago",
+  "archipelago"
+ ],
+ "en|arctic|normal": [
+  "Arctic",
+  "Arctic"
+ ],
+ "en|awkward|normal": [
+  "Awkward.",
+  "awkward"
+ ],
+ "en|believe|normal": [
+  "Believe.",
+  "believe"
+ ],
+ "en|bureaucracy|normal": [
+  "Bureaucracy",
+  "bureaucracy"
+ ],
+ "en|catastrophe|normal": [
+  "Catastrophe",
+  "catastrophe"
+ ],
+ "en|cemetery|normal": [
+  "Cemetery",
+  "Cemetery"
+ ],
+ "en|circumlocution|normal": [
+  "Circumlocution",
+  "circumlocution"
+ ],
+ "en|committee|normal": [
+  "Committee",
+  "committee"
+ ],
+ "en|conscience|normal": [
+  "Conscience",
+  "conscience"
+ ],
+ "en|controversy|normal": [
+  "Controversy",
+  "controversy"
+ ],
+ "en|definite|normal": [
+  "Definite",
+  "definite"
+ ],
+ "en|definitely|normal": [
+  "Definitely.",
+  "definitely"
+ ],
+ "en|dilemma|normal": [
+  "Dilemma",
+  "dilemma"
+ ],
+ "en|embarrass|normal": [
+  "Embarrass",
+  "embarrass"
+ ],
+ "en|entrepreneur|normal": [
+  "Entrepreneur",
+  "entrepreneur"
+ ],
+ "en|exaggerate|normal": [
+  "Exaggerate",
+  "exaggerate"
+ ],
+ "en|fluorescent|normal": [
+  "fluorescent",
+  "fluorescent"
+ ],
+ "en|foreign|normal": [
+  "Foreign",
+  "foreign"
+ ],
+ "en|fulfill|normal": [
+  "Fulfill",
+  "fulfill"
+ ],
+ "en|guarantee|normal": [
+  "Guarantee.",
+  "guarantee"
+ ],
+ "en|harass|normal": [
+  "Harass",
+  "harass"
+ ],
+ "en|hierarchy|normal": [
+  "Hierarchy",
+  "hierarchy"
+ ],
+ "en|humorous|normal": [
+  "Humorous.",
+  "humorous"
+ ],
+ "en|immediately|normal": [
+  "Immediately.",
+  "immediately"
+ ],
+ "en|independent|normal": [
+  "Independent.",
+  "independent"
+ ],
+ "en|irresistible|normal": [
+  "Irresistible",
+  "irresistible"
+ ],
+ "en|jewelry|normal": [
+  "Jewelry",
+  "jewelry"
+ ],
+ "en|judgment|normal": [
+  "Judgment",
+  "judgment"
+ ],
+ "en|juxtaposition|normal": [
+  "juxtaposition",
+  "juxtaposition"
+ ],
+ "en|leisure|normal": [
+  "Leisure",
+  "leisure"
+ ],
+ "en|license|normal": [
+  "License",
+  "license"
+ ],
+ "en|maintenance|normal": [
+  "Maintenance",
+  "maintenance"
+ ],
+ "en|millennium|normal": [
+  "Millennium",
+  "millennium"
+ ],
+ "en|mischievous|normal": [
+  "Ms. Chavez",
+  "mischievous"
+ ],
+ "en|necessary|normal": [
+  "Necessary",
+  "necessary"
+ ],
+ "en|neighbor|normal": [
+  "neighbor",
+  "neighbor"
+ ],
+ "en|occurrence|normal": [
+  "Occurrence",
+  "occurrence"
+ ],
+ "en|phenomenon|normal": [
+  "Phenomenon",
+  "phenomenon"
+ ],
+ "en|privilege|normal": [
+  "Privilege",
+  "privilege"
+ ],
+ "en|protagonist|normal": [
+  "Protagonist",
+  "protagonist"
+ ],
+ "en|questionnaire|normal": [
+  "Questionnaire",
+  "questionnaire"
+ ],
+ "en|restaurant|normal": [
+  "Restaurant",
+  "restaurant"
+ ],
+ "en|rhythm|normal": [
+  "Rhythm",
+  "rhythm"
+ ],
+ "en|separate|normal": [
+  "Separate.",
+  "separate"
+ ],
+ "en|vacuum|normal": [
+  "Vacuum",
+  "vacuum"
+ ],
+ "en|citation|normal": [
+  "Citation",
+  "citation"
+ ],
+ "en|between|normal": [
+  "between",
+  "between"
+ ],
+ "en|through|normal": [
+  "through",
+  "through"
+ ],
+ "en|however|normal": [
+  "However...",
+  "however"
+ ],
+ "en|convert|normal": [
+  "Convert",
+  "convert"
+ ],
+ "en|because|normal": [
+  "Because",
+  "because"
+ ],
+ "en|several|normal": [
+  "Several.",
+  "several"
+ ],
+ "en|example|normal": [
+  "Example.",
+  "example"
+ ],
+ "en|century|normal": [
+  "Century",
+  "century"
+ ],
+ "en|against|normal": [
+  "Against",
+  "again against"
+ ],
+ "en|usually|normal": [
+  "Usually.",
+  "usually"
+ ],
+ "en|without|normal": [
+  "without",
+  "without"
+ ],
+ "en|another|normal": [
+  "Another",
+  "another"
+ ],
+ "en|support|normal": [
+  "Support",
+  "support"
+ ],
+ "en|members|normal": [
+  "Members",
+  "members"
+ ],
+ "en|country|normal": [
+  "country",
+  "country"
+ ],
+ "en|control|normal": [
+  "Control",
+  "control"
+ ],
+ "en|systems|normal": [
+  "Systems",
+  "systems"
+ ],
+ "en|process|normal": [
+  "== Process ==",
+  "process"
+ ],
+ "en|include|normal": [
+  "include",
+  "include"
+ ],
+ "en|various|normal": [
+  "Various",
+  "various"
+ ],
+ "en|although|normal": [
+  "although",
+  "although"
+ ],
+ "en|original|normal": [
+  "Original",
+  "original"
+ ],
+ "en|similar|normal": [
+  "Similar.",
+  "similar"
+ ],
+ "en|general|normal": [
+  "General",
+  "General"
+ ],
+ "en|popular|normal": [
+  "Popular",
+  "popular"
+ ],
+ "en|further|normal": [
+  "Further",
+  "further"
+ ],
+ "en|million|normal": [
+  "Million.",
+  "million"
+ ],
+ "en|military|normal": [
+  "Military",
+  "military"
+ ],
+ "en|possible|normal": [
+  "Possible.",
+  "possible"
+ ],
+ "en|history|normal": [
+  "History",
+  "history"
+ ],
+ "en|created|normal": [
+  "Created",
+  "created"
+ ],
+ "en|released|normal": [
+  "Released.",
+  "released"
+ ],
+ "en|himself|normal": [
+  "himself.",
+  "himself"
+ ],
+ "en|service|normal": [
+  "== Service ==",
+  "service"
+ ],
+ "en|addition|normal": [
+  "Addition.",
+  "Edition"
+ ],
+ "en|written|normal": [
+  "written",
+  "written"
+ ],
+ "en|produced|normal": [
+  "Produced.",
+  "produced"
+ ],
+ "en|national|normal": [
+  "National",
+  "National"
+ ],
+ "en|largest|normal": [
+  "Largest",
+  "largest"
+ ],
+ "en|required|normal": [
+  "Required",
+  "required"
+ ],
+ "en|species|normal": [
+  "Species",
+  "species"
+ ],
+ "en|included|normal": [
+  "included",
+  "included"
+ ],
+ "en|version|normal": [
+  "Version",
+  "version"
+ ],
+ "en|standard|normal": [
+  "Standard",
+  "standard"
+ ],
+ "en|position|normal": [
+  "Position",
+  "position"
+ ],
+ "en|provide|normal": [
+  "Provide",
+  "provide"
+ ],
+ "en|average|normal": [
+  "Average",
+  "average"
+ ],
+ "en|together|normal": [
+  "Together.",
+  "together"
+ ],
+ "en|certain|normal": [
+  "Certain",
+  "certain"
+ ],
+ "en|present|normal": [
+  "Present",
+  "present"
+ ],
+ "en|surface|normal": [
+  "Surface",
+  "surface"
+ ],
+ "en|numbers|normal": [
+  "Numbers",
+  "numbers"
+ ],
+ "en|received|normal": [
+  "Received.",
+  "received"
+ ],
+ "en|allowed|normal": [
+  "Allowed",
+  "allowed"
+ ],
+ "en|thought|normal": [
+  "Thought",
+  "thought"
+ ],
+ "en|natural|normal": [
+  "Natural.",
+  "natural"
+ ],
+ "en|provided|normal": [
+  "provided",
+  "provided"
+ ],
+ "en|economic|normal": [
+  "Economic.",
+  "economic"
+ ],
+ "en|company|normal": [
+  "Company",
+  "company"
+ ],
+ "en|instead|normal": [
+  "instead.",
+  "instead"
+ ],
+ "en|current|normal": [
+  "Current",
+  "current"
+ ],
+ "en|aircraft|normal": [
+  "Aircraft",
+  "aircraft"
+ ],
+ "en|program|normal": [
+  "Program",
+  "program"
+ ],
+ "en|changes|normal": [
+  "changes",
+  "changes"
+ ],
+ "en|special|normal": [
+  "Special",
+  "special"
+ ],
+ "en|outside|normal": [
+  "== Outside ==",
+  "outside"
+ ],
+ "en|followed|normal": [
+  "followed",
+  "followed"
+ ],
+ "en|function|normal": [
+  "Function",
+  "function"
+ ],
+ "en|increase|normal": [
+  "In preese.",
+  "increase"
+ ],
+ "en|material|normal": [
+  "Material",
+  "material"
+ ],
+ "en|designed|normal": [
+  "Designed.",
+  "designed"
+ ],
+ "en|problems|normal": [
+  "Problems",
+  "problems"
+ ],
+ "en|produce|normal": [
+  "Produce",
+  "produce"
+ ],
+ "en|services|normal": [
+  "Services",
+  "services"
+ ],
+ "en|research|normal": [
+  "Research",
+  "research"
+ ],
+ "en|started|normal": [
+  "Started.",
+  "started"
+ ],
+ "en|pressure|normal": [
+  "Pressure",
+  "pressure"
+ ],
+ "en|returned|normal": [
+  "Returned",
+  "returned"
+ ],
+ "en|leading|normal": [
+  "Leading",
+  "leading"
+ ],
+ "en|results|normal": [
+  "Results",
+  "results"
+ ],
+ "en|meaning|normal": [
+  "Meaning",
+  "meaning"
+ ],
+ "en|problem|normal": [
+  "Problem",
+  "problem"
+ ],
+ "en|practice|normal": [
+  "Practice",
+  "practice"
+ ],
+ "en|limited|normal": [
+  "Limited",
+  "Limited"
+ ],
+ "en|movement|normal": [
+  "Movement",
+  "movement"
+ ],
+ "en|official|normal": [
+  "Official",
+  "official"
+ ],
+ "en|referred|normal": [
+  "referred",
+  "referred"
+ ],
+ "en|believed|normal": [
+  "believed",
+  "believed"
+ ],
+ "en|network|normal": [
+  "Network",
+  "Network"
+ ],
+ "en|students|normal": [
+  "Students",
+  "students"
+ ],
+ "en|specific|normal": [
+  "Specific",
+  "specific"
+ ],
+ "en|subject|normal": [
+  "Subject",
+  "subject"
+ ],
+ "en|remained|normal": [
+  "Remained",
+  "remained"
+ ],
+ "en|directly|normal": [
+  "Directly",
+  "directly"
+ ],
+ "en|evidence|normal": [
+  "Evidence",
+  "evidence"
+ ],
+ "en|culture|normal": [
+  "Culture",
+  "culture"
+ ],
+ "en|elements|normal": [
+  "Elements",
+  "elements"
+ ],
+ "en|features|normal": [
+  "Features",
+  "features"
+ ],
+ "en|working|normal": [
+  "Working",
+  "working"
+ ],
+ "en|already|normal": [
+  "Already.",
+  "already"
+ ],
+ "en|complex|normal": [
+  "Complex",
+  "complex"
+ ],
+ "en|commonly|normal": [
+  "Commonly.",
+  "commonly"
+ ],
+ "en|includes|normal": [
+  "includes",
+  "includes"
+ ],
+ "en|located|normal": [
+  "Located",
+  "located"
+ ],
+ "en|whether|normal": [
+  "weather",
+  "weather"
+ ],
+ "en|success|normal": [
+  "Success",
+  "success"
+ ],
+ "en|interest|normal": [
+  "Interest",
+  "interest"
+ ],
+ "en|decided|normal": [
+  "Decided",
+  "decided"
+ ],
+ "en|appeared|normal": [
+  "appeared.",
+  "appeared"
+ ],
+ "en|writing|normal": [
+  "Writing",
+  "writing"
+ ],
+ "en|brought|normal": [
+  "Brought.",
+  "brought"
+ ],
+ "en|smaller|normal": [
+  "Smaller",
+  "smaller"
+ ],
+ "en|effects|normal": [
+  "== Effects ==",
+  "effects"
+ ],
+ "en|private|normal": [
+  "Private",
+  "private"
+ ],
+ "en|earlier|normal": [
+  "earlier.",
+  "earlier"
+ ],
+ "en|players|normal": [
+  "== Players ==",
+  "players"
+ ],
+ "en|involved|normal": [
+  "Involved.",
+  "involved"
+ ],
+ "en|majority|normal": [
+  "Majority",
+  "majority"
+ ],
+ "en|physical|normal": [
+  "Physical",
+  "physical"
+ ],
+ "en|variety|normal": [
+  "Variety",
+  "variety"
+ ],
+ "en|central|normal": [
+  "Central",
+  "Central"
+ ],
+ "en|complete|normal": [
+  "Complete.",
+  "complete"
+ ],
+ "en|related|normal": [
+  "Related",
+  "related"
+ ],
+ "en|industry|normal": [
+  "Industry",
+  "industry"
+ ],
+ "en|percent|normal": [
+  "%",
+  "percent"
+ ],
+ "en|changed|normal": [
+  "changed",
+  "changed"
+ ],
+ "en|remains|normal": [
+  "remains",
+  "remains"
+ ],
+ "en|primary|normal": [
+  "Primary",
+  "primary"
+ ],
+ "en|society|normal": [
+  "Society",
+  "Society"
+ ],
+ "en|recorded|normal": [
+  "Recorded",
+  "recorded"
+ ],
+ "en|council|normal": [
+  "Council",
+  "Council"
+ ],
+ "en|science|normal": [
+  "Science",
+  "science"
+ ],
+ "en|multiple|normal": [
+  "multiple",
+  "multiple"
+ ],
+ "en|schools|normal": [
+  "Schools",
+  "schools"
+ ],
+ "en|greater|normal": [
+  "greater",
+  "greater"
+ ],
+ "en|products|normal": [
+  "Products",
+  "products"
+ ],
+ "en|reported|normal": [
+  "reported",
+  "reported"
+ ],
+ "en|software|normal": [
+  "Software",
+  "software"
+ ],
+ "en|western|normal": [
+  "Western",
+  "Western"
+ ],
+ "en|previous|normal": [
+  "Previous",
+  "previous"
+ ],
+ "en|attempt|normal": [
+  "Attempt",
+  "attempt"
+ ],
+ "en|provides|normal": [
+  "Provides",
+  "provides"
+ ],
+ "en|regular|normal": [
+  "Regular",
+  "regular"
+ ],
+ "en|release|normal": [
+  "Release.",
+  "release"
+ ],
+ "en|methods|normal": [
+  "Methods",
+  "methods"
+ ],
+ "en|towards|normal": [
+  "Towards",
+  "towards"
+ ],
+ "en|contains|normal": [
+  "contains",
+  "contains"
+ ],
+ "en|sources|normal": [
+  "Sources",
+  "sources"
+ ],
+ "en|capital|normal": [
+  "Capital",
+  "capital"
+ ],
+ "en|replaced|normal": [
+  "Replaced.",
+  "replaced"
+ ],
+ "en|elected|normal": [
+  "Elected",
+  "elected"
+ ],
+ "en|applied|normal": [
+  "applied",
+  "applied"
+ ],
+ "en|defined|normal": [
+  "Defined.",
+  "defined"
+ ],
+ "en|personal|normal": [
+  "Personal",
+  "personal"
+ ],
+ "en|response|normal": [
+  "== Response ==",
+  "response"
+ ],
+ "en|highest|normal": [
+  "Highest",
+  "highest"
+ ],
+ "en|property|normal": [
+  "Property",
+  "property"
+ ],
+ "en|actually|normal": [
+  "Actually.",
+  "actually"
+ ],
+ "en|distance|normal": [
+  "Distance",
+  "distance"
+ ],
+ "en|quickly|normal": [
+  "Quickly.",
+  "quickly"
+ ],
+ "en|ancient|normal": [
+  "Ancient.",
+  "ancient"
+ ],
+ "en|continue|normal": [
+  "Continue.",
+  "continue"
+ ],
+ "en|project|normal": [
+  "Project",
+  "project"
+ ],
+ "en|carried|normal": [
+  "Carried.",
+  "carried"
+ ],
+ "en|edition|normal": [
+  "Addition",
+  "Edition"
+ ],
+ "en|product|normal": [
+  "Product",
+  "product"
+ ],
+ "en|quality|normal": [
+  "Quality",
+  "quality"
+ ],
+ "en|programs|normal": [
+  "Programs",
+  "programs"
+ ],
+ "en|intended|normal": [
+  "Intended",
+  "intended"
+ ],
+ "en|appears|normal": [
+  "appears.",
+  "appears"
+ ],
+ "en|objects|normal": [
+  "Objects",
+  "objects"
+ ],
+ "en|campaign|normal": [
+  "Campaign",
+  "campaign"
+ ],
+ "en|despite|normal": [
+  "Despite",
+  "despite"
+ ],
+ "en|economy|normal": [
+  "Economy",
+  "economy"
+ ],
+ "en|expected|normal": [
+  "Expected",
+  "expected"
+ ],
+ "en|founded|normal": [
+  "founded",
+  "founded"
+ ],
+ "en|playing|normal": [
+  "playing",
+  "playing"
+ ],
+ "en|northern|normal": [
+  "Northern",
+  "Northern"
+ ],
+ "en|ability|normal": [
+  "Ability",
+  "ability"
+ ],
+ "en|analysis|normal": [
+  "Analysis",
+  "analysis"
+ ],
+ "en|numerous|normal": [
+  "Numerous",
+  "numerous"
+ ],
+ "en|prevent|normal": [
+  "Prevent",
+  "prevent"
+ ],
+ "en|approach|normal": [
+  "Approach",
+  "approach"
+ ],
+ "en|reduced|normal": [
+  "Reduced",
+  "reduced"
+ ],
+ "en|concept|normal": [
+  "Concept",
+  "concept"
+ ],
+ "en|studies|normal": [
+  "Studies",
+  "studies"
+ ],
+ "en|require|normal": [
+  "Require",
+  "require"
+ ],
+ "en|training|normal": [
+  "Training",
+  "training"
+ ],
+ "en|adopted|normal": [
+  "adopted",
+  "adopted"
+ ],
+ "en|contrast|normal": [
+  "Contrast",
+  "contrast"
+ ],
+ "en|offered|normal": [
+  "Offered.",
+  "offered"
+ ],
+ "en|probably|normal": [
+  "Probably.",
+  "probably"
+ ],
+ "en|becomes|normal": [
+  "becomes",
+  "becomes"
+ ],
+ "en|reached|normal": [
+  "Reached.",
+  "reached"
+ ],
+ "en|compared|normal": [
+  "Compared",
+  "compared"
+ ],
+ "en|divided|normal": [
+  "divided",
+  "divided"
+ ],
+ "en|parties|normal": [
+  "Parties",
+  "parties"
+ ],
+ "en|southern|normal": [
+  "Southern",
+  "Southern"
+ ],
+ "en|largely|normal": [
+  "Largely.",
+  "largely"
+ ],
+ "en|married|normal": [
+  "married",
+  "married"
+ ],
+ "en|proposed|normal": [
+  "Proposed.",
+  "proposed"
+ ],
+ "en|account|normal": [
+  "Account",
+  "account"
+ ],
+ "en|decision|normal": [
+  "Decision",
+  "decision"
+ ],
+ "en|activity|normal": [
+  "Activity",
+  "activity"
+ ],
+ "en|section|normal": [
+  "Section",
+  "section"
+ ],
+ "en|accepted|normal": [
+  "accepted",
+  "accepted"
+ ],
+ "en|marriage|normal": [
+  "Marriage",
+  "marriage"
+ ],
+ "en|content|normal": [
+  "Content",
+  "content"
+ ],
+ "en|internal|normal": [
+  "Internal.",
+  "internal"
+ ],
+ "en|letters|normal": [
+  "Letters",
+  "letters"
+ ],
+ "en|regions|normal": [
+  "regions",
+  "regions"
+ ],
+ "en|running|normal": [
+  "Running",
+  "running"
+ ],
+ "en|stories|normal": [
+  "Stories",
+  "stories"
+ ],
+ "en|kingdom|normal": [
+  "Kingdom",
+  "Kingdom"
+ ],
+ "en|versions|normal": [
+  "Versions",
+  "versions"
+ ],
+ "en|soldiers|normal": [
+  "Soldiers",
+  "soldiers"
+ ],
+ "en|location|normal": [
+  "Location",
+  "location"
+ ],
+ "en|element|normal": [
+  "Element.",
+  "element"
+ ],
+ "en|initial|normal": [
+  "Initial",
+  "initial"
+ ],
+ "en|nuclear|normal": [
+  "Nuclear",
+  "nuclear"
+ ],
+ "en|animals|normal": [
+  "Animals",
+  "animals"
+ ],
+ "en|workers|normal": [
+  "== Workers ==",
+  "workers"
+ ],
+ "en|billion|normal": [
+  "Billion",
+  "bill"
+ ],
+ "en|cultural|normal": [
+  "Cultural",
+  "cultural"
+ ],
+ "en|devices|normal": [
+  "Devices",
+  "devices"
+ ],
+ "en|instance|normal": [
+  "instance",
+  "instance"
+ ],
+ "en|daughter|normal": [
+  "Daughter",
+  "daughter"
+ ],
+ "en|growing|normal": [
+  "Growing.",
+  "growing"
+ ],
+ "en|extended|normal": [
+  "Extended",
+  "extended"
+ ],
+ "en|feature|normal": [
+  "Feature",
+  "feature"
+ ],
+ "en|musical|normal": [
+  "Musical",
+  "Musical"
+ ],
+ "en|negative|normal": [
+  "negative",
+  "negative"
+ ],
+ "en|refused|normal": [
+  "Refused",
+  "refused"
+ ],
+ "en|removed|normal": [
+  "Removed",
+  "removed"
+ ],
+ "en|medical|normal": [
+  "Medical",
+  "Medical"
+ ],
+ "en|observed|normal": [
+  "Observed.",
+  "observed"
+ ],
+ "en|requires|normal": [
+  "== Requires ==",
+  "requires"
+ ],
+ "en|claimed|normal": [
+  "Claimed.",
+  "claimed"
+ ],
+ "en|positive|normal": [
+  "Positive",
+  "positive"
+ ],
+ "en|congress|normal": [
+  "Congress",
+  "Congress"
+ ],
+ "en|critical|normal": [
+  "Critical",
+  "critical"
+ ],
+ "en|article|normal": [
+  "Article",
+  "article"
+ ],
+ "en|security|normal": [
+  "Security",
+  "security"
+ ],
+ "en|address|normal": [
+  "== Address ==",
+  "address"
+ ],
+ "en|becoming|normal": [
+  "Becoming",
+  "we're coming"
+ ],
+ "en|efforts|normal": [
+  "== Efforts ==",
+  "efforts"
+ ],
+ "en|contact|normal": [
+  "Contact.",
+  "contact"
+ ],
+ "en|station|normal": [
+  "Station",
+  "station"
+ ],
+ "en|allowing|normal": [
+  "Allowing",
+  "allowing"
+ ],
+ "en|finally|normal": [
+  "Finally.",
+  "finally"
+ ],
+ "en|ordered|normal": [
+  "ordered",
+  "ordered"
+ ],
+ "en|combined|normal": [
+  "Combined.",
+  "combined"
+ ],
+ "en|recently|normal": [
+  "Recently",
+  "recently"
+ ],
+ "en|internet|normal": [
+  "Internet",
+  "internet"
+ ],
+ "en|contain|normal": [
+  "Contain.",
+  "contain"
+ ],
+ "en|serious|normal": [
+  "Serious",
+  "serious"
+ ],
+ "en|powerful|normal": [
+  "Powerful.",
+  "powerful"
+ ],
+ "en|disease|normal": [
+  "Disease.",
+  "disease"
+ ],
+ "en|election|normal": [
+  "Election",
+  "election"
+ ],
+ "en|resulted|normal": [
+  "Resulted",
+  "resulted"
+ ],
+ "en|friends|normal": [
+  "Friends",
+  "friends"
+ ],
+ "en|maximum|normal": [
+  "Maximum",
+  "maximum"
+ ],
+ "en|develop|normal": [
+  "Develop",
+  "develop"
+ ],
+ "en|leaving|normal": [
+  "Leaving.",
+  "leaving"
+ ],
+ "en|behavior|normal": [
+  "Behavior",
+  "Behavior"
+ ],
+ "en|conflict|normal": [
+  "Conflict",
+  "conflict"
+ ],
+ "en|purpose|normal": [
+  "Purpose",
+  "purpose"
+ ],
+ "en|reading|normal": [
+  "Reading",
+  "reading"
+ ],
+ "en|weapons|normal": [
+  "Weapons",
+  "weapons"
+ ],
+ "en|families|normal": [
+  "Families",
+  "families"
+ ],
+ "en|featured|normal": [
+  "Featured",
+  "featured"
+ ],
+ "en|meeting|normal": [
+  "Meeting",
+  "meeting"
+ ],
+ "en|relative|normal": [
+  "relative",
+  "relative"
+ ],
+ "en|minutes|normal": [
+  "Minutes",
+  "minutes"
+ ],
+ "en|attempts|normal": [
+  "Attempts",
+  "attempts"
+ ],
+ "en|presence|normal": [
+  "== Presence ==",
+  "presence"
+ ],
+ "en|slightly|normal": [
+  "Slightly.",
+  "slightly"
+ ],
+ "en|electric|normal": [
+  "Electric",
+  "Electric"
+ ],
+ "en|episode|normal": [
+  "Episode",
+  "episode"
+ ],
+ "en|federal|normal": [
+  "Federal",
+  "Federal"
+ ],
+ "en|parents|normal": [
+  "Parents",
+  "parents"
+ ],
+ "en|somewhat|normal": [
+  "somewhat",
+  "somewhat"
+ ],
+ "en|constant|normal": [
+  "constant",
+  "constant"
+ ],
+ "en|existing|normal": [
+  "existing",
+  "existing"
+ ],
+ "en|perform|normal": [
+  "perform",
+  "perform"
+ ],
+ "en|strength|normal": [
+  "Strength",
+  "strength"
+ ],
+ "en|officers|normal": [
+  "== Officers ==",
+  "officers"
+ ],
+ "en|opening|normal": [
+  "Opening.",
+  "opening"
+ ],
+ "en|projects|normal": [
+  "Projects",
+  "projects"
+ ],
+ "en|capacity|normal": [
+  "Capacity.",
+  "capacity"
+ ],
+ "en|external|normal": [
+  "External",
+  "external"
+ ],
+ "en|reaction|normal": [
+  "Reaction",
+  "reaction"
+ ],
+ "en|receive|normal": [
+  "Receive",
+  "receive"
+ ],
+ "en|composed|normal": [
+  "composed",
+  "composed"
+ ],
+ "en|solution|normal": [
+  "Solution",
+  "solution"
+ ],
+ "en|entirely|normal": [
+  "Entirely.",
+  "entirely"
+ ],
+ "en|failure|normal": [
+  "Failure",
+  "failure"
+ ],
+ "en|reasons|normal": [
+  "Reasons",
+  "reasons"
+ ],
+ "en|sequence|normal": [
+  "Sequence",
+  "sequence"
+ ],
+ "en|stations|normal": [
+  "stations",
+  "stations"
+ ],
+ "en|attacks|normal": [
+  "Attacks",
+  "attacks"
+ ],
+ "en|classes|normal": [
+  "Classes",
+  "classes"
+ ],
+ "en|domestic|normal": [
+  "Domestic",
+  "domestic"
+ ],
+ "en|leaders|normal": [
+  "Leaders",
+  "leaders"
+ ],
+ "en|perhaps|normal": [
+  "Perhaps",
+  "perhaps"
+ ],
+ "en|consists|normal": [
+  "Consists",
+  "consists"
+ ],
+ "en|exchange|normal": [
+  "Exchange",
+  "Exchange"
+ ],
+ "en|nothing|normal": [
+  "Nothing.",
+  "nothing"
+ ],
+ "en|citizens|normal": [
+  "Citizens",
+  "citizens"
+ ],
+ "en|command|normal": [
+  "Command",
+  "command"
+ ],
+ "en|mission|normal": [
+  "Mission",
+  "mission"
+ ],
+ "en|records|normal": [
+  "== Records ==",
+  "records"
+ ],
+ "en|digital|normal": [
+  "Digital",
+  "digital"
+ ],
+ "en|factors|normal": [
+  "factors",
+  "factors"
+ ],
+ "en|magnetic|normal": [
+  "Magnetic",
+  "magnetic"
+ ],
+ "en|starting|normal": [
+  "Starting.",
+  "starting"
+ ],
+ "en|examples|normal": [
+  "Examples",
+  "examples"
+ ],
+ "en|occurred|normal": [
+  "occurred",
+  "occurred"
+ ],
+ "en|college|normal": [
+  "College",
+  "College"
+ ],
+ "en|rapidly|normal": [
+  "Rapidly.",
+  "rapidly"
+ ],
+ "en|unknown|normal": [
+  "Unknown",
+  "unknown"
+ ],
+ "en|advanced|normal": [
+  "Advanced.",
+  "advanced"
+ ],
+ "en|display|normal": [
+  "Display",
+  "display"
+ ],
+ "en|distinct|normal": [
+  "distinct",
+  "distinct"
+ ],
+ "en|overall|normal": [
+  "Overall",
+  "overall"
+ ],
+ "en|measure|normal": [
+  "Measure",
+  "measure"
+ ],
+ "en|measured|normal": [
+  "measured",
+  "measured"
+ ],
+ "en|protect|normal": [
+  "Protect",
+  "protect"
+ ],
+ "en|eastern|normal": [
+  "Eastern",
+  "Eastern"
+ ],
+ "en|expanded|normal": [
+  "Expanded",
+  "expanded"
+ ],
+ "en|normally|normal": [
+  "Normally.",
+  "normally"
+ ],
+ "en|engines|normal": [
+  "Engines",
+  "engines"
+ ],
+ "en|entered|normal": [
+  "Entered.",
+  "entered"
+ ],
+ "en|actions|normal": [
+  "Actions",
+  "actions"
+ ],
+ "en|typical|normal": [
+  "Typical",
+  "typical"
+ ],
+ "en|chemical|normal": [
+  "Chemical",
+  "chemical"
+ ],
+ "en|creating|normal": [
+  "Creating",
+  "creating"
+ ],
+ "en|creation|normal": [
+  "Creation.",
+  "creation"
+ ],
+ "en|derived|normal": [
+  "derived",
+  "derived"
+ ],
+ "en|fighting|normal": [
+  "Fighting.",
+  "fighting"
+ ],
+ "en|operate|normal": [
+  "Operate.",
+  "operate"
+ ],
+ "en|reality|normal": [
+  "Reality",
+  "reality"
+ ],
+ "en|causing|normal": [
+  "Causing",
+  "causing"
+ ],
+ "en|contract|normal": [
+  "Contract",
+  "contract"
+ ],
+ "en|managed|normal": [
+  "Manage.",
+  "manage"
+ ],
+ "en|audience|normal": [
+  "Audience",
+  "audience"
+ ],
+ "en|covered|normal": [
+  "covered",
+  "covered"
+ ],
+ "en|decades|normal": [
+  "Decades",
+  "decades"
+ ],
+ "en|division|normal": [
+  "Division",
+  "division"
+ ],
+ "en|greatly|normal": [
+  "Greatly.",
+  "greatly"
+ ],
+ "en|regarded|normal": [
+  "Regarded",
+  "regarded"
+ ],
+ "en|journal|normal": [
+  "Journal",
+  "Journal"
+ ],
+ "en|context|normal": [
+  "Context",
+  "context"
+ ],
+ "en|opposed|normal": [
+  "Opposed",
+  "opposed"
+ ],
+ "en|republic|normal": [
+  "Republic",
+  "Republic"
+ ],
+ "en|designs|normal": [
+  "Designs",
+  "designs"
+ ],
+ "en|maintain|normal": [
+  "Maintain.",
+  "maintain"
+ ],
+ "en|forward|normal": [
+  "forward",
+  "forward"
+ ],
+ "en|planned|normal": [
+  "planned",
+  "planned"
+ ],
+ "en|student|normal": [
+  "student",
+  "student"
+ ],
+ "en|catholic|normal": [
+  "Catholic",
+  "Catholic"
+ ],
+ "en|affected|normal": [
+  "affected",
+  "affected"
+ ],
+ "en|captured|normal": [
+  "Captured",
+  "captured"
+ ],
+ "en|showing|normal": [
+  "showing",
+  "showing"
+ ],
+ "en|granted|normal": [
+  "Granted.",
+  "granted"
+ ],
+ "en|islands|normal": [
+  "Islands",
+  "Islands"
+ ],
+ "en|machines|normal": [
+  "Machines",
+  "machines"
+ ],
+ "en|directed|normal": [
+  "Directed",
+  "directed"
+ ],
+ "en|finished|normal": [
+  "Finished.",
+  "finished"
+ ],
+ "en|pattern|normal": [
+  "Pattern",
+  "pattern"
+ ],
+ "en|purposes|normal": [
+  "== Purposes ==",
+  "purposes"
+ ],
+ "en|rejected|normal": [
+  "rejected",
+  "rejected"
+ ],
+ "en|artists|normal": [
+  "Artists",
+  "artists"
+ ],
+ "en|declared|normal": [
+  "declared",
+  "declared"
+ ],
+ "en|magazine|normal": [
+  "magazine",
+  "magazine"
+ ],
+ "en|religion|normal": [
+  "Religion",
+  "religion"
+ ],
+ "en|visited|normal": [
+  "Visited",
+  "visited"
+ ],
+ "en|achieved|normal": [
+  "achieved",
+  "achieved"
+ ],
+ "en|defense|normal": [
+  "Defense",
+  "defense"
+ ],
+ "en|identity|normal": [
+  "Identity",
+  "identity"
+ ],
+ "en|patterns|normal": [
+  "Patterns",
+  "patterns"
+ ],
+ "en|signals|normal": [
+  "Signals",
+  "signals"
+ ],
+ "en|arrived|normal": [
+  "Arrived.",
+  "arrived"
+ ],
+ "en|consider|normal": [
+  "Consider",
+  "consider"
+ ],
+ "en|capable|normal": [
+  "Capable.",
+  "capable"
+ ],
+ "en|figures|normal": [
+  "Figures",
+  "figures"
+ ],
+ "en|hardware|normal": [
+  "Hardware",
+  "Hardware"
+ ],
+ "en|message|normal": [
+  "Message",
+  "message"
+ ],
+ "en|minister|normal": [
+  "Minister",
+  "minister"
+ ],
+ "en|freedom|normal": [
+  "Freedom",
+  "freedom"
+ ],
+ "en|improved|normal": [
+  "Improved",
+  "improved"
+ ],
+ "en|aspects|normal": [
+  "Aspects",
+  "aspects"
+ ],
+ "en|details|normal": [
+  "Details",
+  "details"
+ ],
+ "en|setting|normal": [
+  "Setting",
+  "setting"
+ ],
+ "en|depends|normal": [
+  "Depends.",
+  "depends"
+ ],
+ "en|indicate|normal": [
+  "Indicate.",
+  "indicate"
+ ],
+ "en|launched|normal": [
+  "Launched.",
+  "launched"
+ ],
+ "en|possibly|normal": [
+  "Possibly.",
+  "possibly"
+ ],
+ "en|traffic|normal": [
+  "Traffic",
+  "traffic"
+ ],
+ "en|describe|normal": [
+  "Describe",
+  "describe"
+ ],
+ "en|fiction|normal": [
+  "Fiction",
+  "fiction"
+ ],
+ "en|heavily|normal": [
+  "heavily",
+  "heavily"
+ ],
+ "en|visible|normal": [
+  "visible",
+  "visible"
+ ],
+ "en|closely|normal": [
+  "closely",
+  "closely"
+ ],
+ "en|employed|normal": [
+  "Employed",
+  "employed"
+ ],
+ "en|follows|normal": [
+  "Follows",
+  "follows"
+ ],
+ "en|improve|normal": [
+  "Improve",
+  "improve"
+ ],
+ "en|neither|normal": [
+  "Neither.",
+  "neither"
+ ],
+ "en|suggests|normal": [
+  "suggests",
+  "suggests"
+ ],
+ "en|attached|normal": [
+  "Attached.",
+  "attached"
+ ],
+ "en|critics|normal": [
+  "Critics",
+  "critics"
+ ],
+ "en|dropped|normal": [
+  "Dropped.",
+  "dropped"
+ ],
+ "en|scholars|normal": [
+  "== Scholars ==",
+  "Scholars"
+ ],
+ "en|vehicles|normal": [
+  "Vehicles",
+  "vehicles"
+ ],
+ "en|greatest|normal": [
+  "Greatest",
+  "greatest"
+ ],
+ "en|channel|normal": [
+  "channel",
+  "Channel"
+ ],
+ "en|focused|normal": [
+  "Focused",
+  "focused"
+ ],
+ "en|operated|normal": [
+  "operated",
+  "operated"
+ ],
+ "en|inspired|normal": [
+  "Inspired.",
+  "inspired"
+ ],
+ "en|periods|normal": [
+  "Periods.",
+  "periods"
+ ],
+ "en|regional|normal": [
+  "Regional",
+  "Regional"
+ ],
+ "en|winning|normal": [
+  "Winning",
+  "winning"
+ ],
+ "en|suffered|normal": [
+  "suffered",
+  "suffered"
+ ],
+ "en|accounts|normal": [
+  "Accounts",
+  "accounts"
+ ],
+ "en|awarded|normal": [
+  "awarded",
+  "awarded"
+ ],
+ "en|correct|normal": [
+  "Correct.",
+  "correct"
+ ],
+ "en|measures|normal": [
+  "Measures",
+  "measures"
+ ],
+ "en|printed|normal": [
+  "Printed",
+  "printed"
+ ],
+ "en|selected|normal": [
+  "Selected.",
+  "selected"
+ ],
+ "en|treated|normal": [
+  "Treated",
+  "treated"
+ ],
+ "en|authors|normal": [
+  "Authors",
+  "authors"
+ ],
+ "en|involves|normal": [
+  "involves.",
+  "involves"
+ ],
+ "en|storage|normal": [
+  "Storage",
+  "storage"
+ ],
+ "en|theories|normal": [
+  "Theories",
+  "theories"
+ ],
+ "en|markets|normal": [
+  "Markets",
+  "markets"
+ ],
+ "en|opposite|normal": [
+  "Opposite",
+  "opposite"
+ ],
+ "en|violence|normal": [
+  "Violence",
+  "violence"
+ ],
+ "en|director|normal": [
+  "Director",
+  "director"
+ ],
+ "en|prepared|normal": [
+  "Prepared",
+  "prepared"
+ ],
+ "en|transfer|normal": [
+  "Transfer",
+  "transfer"
+ ],
+ "en|achieve|normal": [
+  "Achieve",
+  "achieve"
+ ],
+ "en|nations|normal": [
+  "Nations",
+  "Nations"
+ ],
+ "en|strongly|normal": [
+  "Strongly.",
+  "strongly"
+ ],
+ "en|academy|normal": [
+  "Academy",
+  "Academy"
+ ],
+ "en|benefit|normal": [
+  "Benefit",
+  "benefit"
+ ],
+ "en|climate|normal": [
+  "Climate",
+  "climate"
+ ],
+ "en|policies|normal": [
+  "Policies",
+  "policies"
+ ],
+ "en|quantum|normal": [
+  "Quantum",
+  "quantum"
+ ],
+ "en|reports|normal": [
+  "Reports",
+  "reports"
+ ],
+ "en|standing|normal": [
+  "Standing",
+  "standing"
+ ],
+ "en|testing|normal": [
+  "Testing.",
+  "testing"
+ ],
+ "en|episodes|normal": [
+  "Episodes",
+  "episodes"
+ ],
+ "en|argument|normal": [
+  "Argument",
+  "argument"
+ ],
+ "en|modified|normal": [
+  "modified",
+  "modified"
+ ],
+ "en|respect|normal": [
+  "Respect",
+  "respect"
+ ],
+ "en|strategy|normal": [
+  "Strategy",
+  "strategy"
+ ],
+ "en|anything|normal": [
+  "Anything.",
+  "anything"
+ ],
+ "en|churches|normal": [
+  "Churches",
+  "churches"
+ ],
+ "en|notable|normal": [
+  "Notable",
+  "notable"
+ ],
+ "en|obtained|normal": [
+  "Obtained.",
+  "obtained"
+ ],
+ "en|victory|normal": [
+  "Victory",
+  "victory"
+ ],
+ "en|circuit|normal": [
+  "Circuit",
+  "circuit"
+ ],
+ "en|degrees|normal": [
+  "degrees",
+  "degrees"
+ ],
+ "en|hundred|normal": [
+  "100",
+  "00"
+ ],
+ "en|concepts|normal": [
+  "Concepts",
+  "Concepts"
+ ],
+ "en|detailed|normal": [
+  "Detailed",
+  "detailed"
+ ],
+ "en|politics|normal": [
+  "== Politics ==",
+  "politics"
+ ],
+ "en|assigned|normal": [
+  "Assigned",
+  "assigned"
+ ],
+ "en|balance|normal": [
+  "Valence",
+  "balance"
+ ],
+ "en|minimum|normal": [
+  "Minimum",
+  "minimum"
+ ],
+ "en|parallel|normal": [
+  "Parallel",
+  "parallel"
+ ],
+ "en|request|normal": [
+  "Request",
+  "request"
+ ],
+ "en|academic|normal": [
+  "Academic.",
+  "academic"
+ ],
+ "en|patients|normal": [
+  "Patience",
+  "patience"
+ ],
+ "en|opinion|normal": [
+  "Opinion",
+  "opinion"
+ ],
+ "en|windows|normal": [
+  "Windows",
+  "windows"
+ ],
+ "en|changing|normal": [
+  "Changing.",
+  "changing"
+ ],
+ "en|cultures|normal": [
+  "== Cultures ==",
+  "cultures"
+ ],
+ "en|football|normal": [
+  "Football",
+  "football"
+ ],
+ "en|protein|normal": [
+  "Protein",
+  "protein"
+ ],
+ "en|voltage|normal": [
+  "Voltage.",
+  "voltage"
+ ],
+ "en|whereas|normal": [
+  "Whereas",
+  "whereas"
+ ],
+ "en|exactly|normal": [
+  "Exactly.",
+  "exactly"
+ ],
+ "en|portion|normal": [
+  "portion",
+  "portion"
+ ],
+ "en|vehicle|normal": [
+  "Vehicle",
+  "vehicle"
+ ],
+ "en|accused|normal": [
+  "Accused.",
+  "accused"
+ ],
+ "en|earliest|normal": [
+  "earliest",
+  "earliest"
+ ],
+ "en|existed|normal": [
+  "Existed",
+  "existed"
+ ],
+ "en|networks|normal": [
+  "Networks",
+  "Networks"
+ ],
+ "en|teaching|normal": [
+  "Teaching",
+  "teaching"
+ ],
+ "en|emperor|normal": [
+  "Emperor",
+  "emperor"
+ ],
+ "en|concern|normal": [
+  "Concern",
+  "concern"
+ ],
+ "en|decline|normal": [
+  "Decline",
+  "decline"
+ ],
+ "en|defeated|normal": [
+  "Defeated",
+  "defeated"
+ ],
+ "en|hundreds|normal": [
+  "Hundreds",
+  "hundreds"
+ ],
+ "en|younger|normal": [
+  "Younger",
+  "younger"
+ ],
+ "en|acquired|normal": [
+  "Acquired",
+  "acquired"
+ ],
+ "en|formula|normal": [
+  "Formula",
+  "formula"
+ ],
+ "en|learned|normal": [
+  "learned",
+  "learned"
+ ],
+ "en|learning|normal": [
+  "Learning",
+  "learning"
+ ],
+ "en|literary|normal": [
+  "Literary",
+  "literary"
+ ],
+ "en|speaking|normal": [
+  "Speaking.",
+  "speaking"
+ ],
+ "en|accurate|normal": [
+  "Accurate.",
+  "accurate"
+ ],
+ "en|amounts|normal": [
+  "Amounts",
+  "amounts"
+ ],
+ "en|progress|normal": [
+  "Progress",
+  "progress"
+ ],
+ "en|adapted|normal": [
+  "adapted",
+  "adapted"
+ ],
+ "en|articles|normal": [
+  "== Articles ==",
+  "articles"
+ ],
+ "en|housing|normal": [
+  "Housing",
+  "housing"
+ ],
+ "en|looking|normal": [
+  "looking",
+  "looking"
+ ],
+ "en|sections|normal": [
+  "Sections",
+  "sections"
+ ],
+ "en|shortly|normal": [
+  "Shortly.",
+  "shortly"
+ ],
+ "en|weather|normal": [
+  "weather",
+  "weather"
+ ],
+ "en|arranged|normal": [
+  "Arrange.",
+  "arranged"
+ ],
+ "en|attended|normal": [
+  "attended",
+  "attended"
+ ],
+ "en|extreme|normal": [
+  "Extreme.",
+  "extreme"
+ ],
+ "en|holding|normal": [
+  "Holding",
+  "holding"
+ ],
+ "en|identify|normal": [
+  "Identify",
+  "identify"
+ ],
+ "en|morning|normal": [
+  "Morning.",
+  "morning"
+ ],
+ "en|passing|normal": [
+  "Passing",
+  "passing"
+ ],
+ "en|theorem|normal": [
+  "theorem",
+  "theorem"
+ ],
+ "en|thousand|normal": [
+  "thousand",
+  ""
+ ],
+ "en|universe|normal": [
+  "Universe",
+  "universe"
+ ],
+ "en|assumed|normal": [
+  "Assumed.",
+  "assumed"
+ ],
+ "en|district|normal": [
+  "District",
+  "District"
+ ],
+ "en|electron|normal": [
+  "Electron",
+  "electron"
+ ],
+ "en|hydrogen|normal": [
+  "Hydrogen",
+  "hydrogen"
+ ],
+ "en|seasons|normal": [
+  "Seasons",
+  "seasons"
+ ],
+ "en|straight|normal": [
+  "Straight.",
+  "straight"
+ ],
+ "en|studied|normal": [
+  "studied",
+  "studied"
+ ],
+ "en|concerns|normal": [
+  "Concerns",
+  "concerns"
+ ],
+ "en|evolved|normal": [
+  "Evolved.",
+  "evolved"
+ ],
+ "en|mounted|normal": [
+  "Mounted.",
+  "mounted"
+ ],
+ "en|produces|normal": [
+  "Produces",
+  "produces"
+ ],
+ "en|repeated|normal": [
+  "Repeated.",
+  "repeated"
+ ],
+ "en|replace|normal": [
+  "== Replace ==",
+  "replace"
+ ],
+ "en|trading|normal": [
+  "Trading",
+  "Trading"
+ ],
+ "en|document|normal": [
+  "Document",
+  "document"
+ ],
+ "en|matters|normal": [
+  "Matters",
+  "matters"
+ ],
+ "en|proteins|normal": [
+  "Proteins",
+  "proteins"
+ ],
+ "en|reducing|normal": [
+  "Reducing",
+  "reducing"
+ ],
+ "en|revealed|normal": [
+  "Revealed",
+  "revealed"
+ ],
+ "en|roughly|normal": [
+  "Roughly.",
+  "roughly"
+ ],
+ "en|seconds|normal": [
+  "== Seconds ==",
+  "seconds"
+ ],
+ "en|writings|normal": [
+  "Writings",
+  "writings"
+ ],
+ "en|suitable|normal": [
+  "Suitable.",
+  "suitable"
+ ],
+ "en|husband|normal": [
+  "Husband",
+  "husband"
+ ],
+ "en|planning|normal": [
+  "Planning",
+  "planning"
+ ],
+ "en|serving|normal": [
+  "Serving",
+  "serving"
+ ],
+ "en|symptoms|normal": [
+  "Symptoms",
+  "symptoms"
+ ],
+ "en|advance|normal": [
+  "Advance.",
+  "advanced"
+ ],
+ "en|supplies|normal": [
+  "Supplies",
+  "supplies"
+ ],
+ "en|writers|normal": [
+  "== Writers ==",
+  "writers"
+ ],
+ "en|charged|normal": [
+  "Charged",
+  "charged"
+ ],
+ "en|criminal|normal": [
+  "Criminal",
+  "Criminal"
+ ],
+ "en|landing|normal": [
+  "Landing",
+  "Landing"
+ ],
+ "en|capture|normal": [
+  "Capture",
+  "capture"
+ ],
+ "en|interior|normal": [
+  "Interior",
+  "interior"
+ ],
+ "en|persons|normal": [
+  "Persons",
+  "persons"
+ ],
+ "en|someone|normal": [
+  "Someone",
+  "someone"
+ ],
+ "en|concrete|normal": [
+  "Concrete",
+  "concrete"
+ ],
+ "en|density|normal": [
+  "density",
+  "density"
+ ],
+ "en|officer|normal": [
+  "Officer",
+  "officer"
+ ],
+ "en|platform|normal": [
+  "Platform",
+  "platform"
+ ],
+ "en|boundary|normal": [
+  "Boundary",
+  "boundary"
+ ],
+ "en|carrying|normal": [
+  "Carrying",
+  "carrying"
+ ],
+ "en|category|normal": [
+  "Category",
+  "category"
+ ],
+ "en|declined|normal": [
+  "Declined.",
+  "declined"
+ ],
+ "en|illegal|normal": [
+  "Illegal.",
+  "illegal"
+ ],
+ "en|perfect|normal": [
+  "Perfect.",
+  "perfect"
+ ],
+ "en|promote|normal": [
+  "Promote",
+  "promote"
+ ],
+ "en|survive|normal": [
+  "Survive",
+  "survive"
+ ],
+ "en|assembly|normal": [
+  "Assembly",
+  "assembly"
+ ],
+ "en|benefits|normal": [
+  "Benefits",
+  "benefits"
+ ],
+ "en|sentence|normal": [
+  "Sentence",
+  "sentence"
+ ],
+ "en|subjects|normal": [
+  "Subjects",
+  "subjects"
+ ],
+ "en|approved|normal": [
+  "Approved.",
+  "approved"
+ ],
+ "en|brothers|normal": [
+  "Brothers",
+  "Brothers"
+ ],
+ "en|executed|normal": [
+  "Executed.",
+  "executed"
+ ],
+ "en|getting|normal": [
+  "Getting",
+  "getting"
+ ],
+ "en|relation|normal": [
+  "Relation",
+  "relation"
+ ],
+ "en|uniform|normal": [
+  "Uniform",
+  "uniform"
+ ],
+ "en|vessels|normal": [
+  "Vessels",
+  "vessels"
+ ],
+ "en|females|normal": [
+  "Females",
+  "females"
+ ],
+ "en|suggest|normal": [
+  "Suggest",
+  "suggest"
+ ],
+ "en|symbols|normal": [
+  "Symbols",
+  "symbols"
+ ],
+ "en|vertical|normal": [
+  "Vertical",
+  "vertical"
+ ],
+ "en|village|normal": [
+  "Village",
+  "Village"
+ ],
+ "en|absence|normal": [
+  "Absence",
+  "absence"
+ ],
+ "en|affairs|normal": [
+  "Affairs",
+  "affairs"
+ ],
+ "en|ceremony|normal": [
+  "Ceremony",
+  "ceremony"
+ ],
+ "en|equipped|normal": [
+  "Equipped",
+  "equipped"
+ ],
+ "en|explain|normal": [
+  "Explain",
+  "explain"
+ ],
+ "en|historic|normal": [
+  "Historic",
+  "historic"
+ ],
+ "en|missile|normal": [
+  "Missile",
+  "missile"
+ ],
+ "en|absolute|normal": [
+  "Absolute.",
+  "absolute"
+ ],
+ "en|channels|normal": [
+  "Channels",
+  "channels"
+ ],
+ "en|clearly|normal": [
+  "Clearly.",
+  "clearly"
+ ],
+ "en|finding|normal": [
+  "Finding.",
+  "finding"
+ ],
+ "en|herself|normal": [
+  "== Herself ==",
+  "herself"
+ ],
+ "en|killing|normal": [
+  "Killing",
+  "killing"
+ ],
+ "en|reaching|normal": [
+  "Reaching",
+  "reaching"
+ ],
+ "en|rotation|normal": [
+  "Rotation.",
+  "rotation"
+ ],
+ "en|strings|normal": [
+  "Stringes",
+  "strings"
+ ],
+ "en|supports|normal": [
+  "Supports",
+  "supports"
+ ],
+ "en|quarter|normal": [
+  "quarter",
+  "quarter"
+ ],
+ "en|attacked|normal": [
+  "Attacked",
+  "attacked"
+ ],
+ "en|genetic|normal": [
+  "Genetic",
+  "genetic"
+ ],
+ "en|invasion|normal": [
+  "Invasion",
+  "invasion"
+ ],
+ "en|printing|normal": [
+  "Printing",
+  "printing"
+ ],
+ "en|speakers|normal": [
+  "== Speakers ==",
+  "speakers"
+ ],
+ "en|velocity|normal": [
+  "Velocity",
+  "velocity"
+ ],
+ "en|arrested|normal": [
+  "Arrested",
+  "arrested"
+ ],
+ "en|concert|normal": [
+  "Concert",
+  "concert"
+ ],
+ "en|downtown|normal": [
+  "Downtown",
+  "downtown"
+ ],
+ "en|entitled|normal": [
+  "Entitled.",
+  "entitled"
+ ],
+ "en|infantry|normal": [
+  "Infantry",
+  "Infantry"
+ ],
+ "en|massive|normal": [
+  "Massive",
+  "massive"
+ ],
+ "en|meetings|normal": [
+  "Meetings",
+  "meetings"
+ ],
+ "en|missions|normal": [
+  "Missions",
+  "missions"
+ ],
+ "en|reforms|normal": [
+  "Reforms",
+  "reforms"
+ ],
+ "en|survived|normal": [
+  "survived",
+  "survived"
+ ],
+ "en|thereby|normal": [
+  "Thereby.",
+  "thereby"
+ ],
+ "en|thermal|normal": [
+  "Thermal",
+  "thermal"
+ ],
+ "en|victims|normal": [
+  "Victims",
+  "victims"
+ ],
+ "en|beliefs|normal": [
+  "Beliefs",
+  "beliefs"
+ ],
+ "en|classic|normal": [
+  "Classic",
+  "classic"
+ ],
+ "en|doctrine|normal": [
+  "Doctrine",
+  "Doctrine"
+ ],
+ "en|forming|normal": [
+  "forming",
+  "forming"
+ ],
+ "en|moreover|normal": [
+  "Moreover...",
+  "moreover"
+ ],
+ "en|engaged|normal": [
+  "Engaged.",
+  "engaged"
+ ],
+ "en|equation|normal": [
+  "Equation",
+  "equation"
+ ],
+ "en|retained|normal": [
+  "Retained.",
+  "retained"
+ ],
+ "en|fashion|normal": [
+  "Fashion",
+  "fashion"
+ ],
+ "en|fishing|normal": [
+  "Fishing",
+  "fishing"
+ ],
+ "en|invited|normal": [
+  "Invited.",
+  "invited"
+ ],
+ "en|supreme|normal": [
+  "Supreme",
+  "Supreme"
+ ],
+ "en|charges|normal": [
+  "Charges",
+  "charges"
+ ],
+ "en|compact|normal": [
+  "Compact",
+  "compact"
+ ],
+ "en|damaged|normal": [
+  "Damaged.",
+  "damaged"
+ ],
+ "en|demands|normal": [
+  "Demands",
+  "demands"
+ ],
+ "en|desired|normal": [
+  "Desired",
+  "desired"
+ ],
+ "en|diameter|normal": [
+  "Diameter",
+  "diameter"
+ ],
+ "en|exposed|normal": [
+  "Exposed",
+  "exposed"
+ ],
+ "en|exposure|normal": [
+  "Exposure",
+  "exposure"
+ ],
+ "en|frequent|normal": [
+  "Frequent",
+  "frequent"
+ ],
+ "en|hunting|normal": [
+  "Hunting.",
+  "hunting"
+ ],
+ "en|particle|normal": [
+  "Particle",
+  "particle"
+ ],
+ "en|physics|normal": [
+  "Physics",
+  "physics"
+ ],
+ "en|producer|normal": [
+  "Producer",
+  "producer"
+ ],
+ "en|unusual|normal": [
+  "Unusual.",
+  "unusual"
+ ],
+ "en|calling|normal": [
+  "Calling.",
+  "calling"
+ ],
+ "en|invented|normal": [
+  "Invented",
+  "invented"
+ ],
+ "en|ordinary|normal": [
+  "Ordinary",
+  "ordinary"
+ ],
+ "en|passage|normal": [
+  "Passage",
+  "Passage"
+ ],
+ "en|purchase|normal": [
+  "Purchase",
+  "purchase"
+ ],
+ "en|railway|normal": [
+  "Railway",
+  "Railway"
+ ],
+ "en|entering|normal": [
+  "Entering",
+  "entering"
+ ],
+ "en|exports|normal": [
+  "== Exports ==",
+  "exports"
+ ],
+ "en|funding|normal": [
+  "Funding",
+  "funding"
+ ],
+ "en|hearing|normal": [
+  "Hearing.",
+  "hearing"
+ ],
+ "en|involve|normal": [
+  "Involve.",
+  "involve"
+ ],
+ "en|lifetime|normal": [
+  "Lifetime",
+  "lifetime"
+ ],
+ "en|organic|normal": [
+  "Organic",
+  "organic"
+ ],
+ "en|retired|normal": [
+  "Retired",
+  "retired"
+ ],
+ "en|variable|normal": [
+  "Variable.",
+  "variable"
+ ],
+ "en|drawing|normal": [
+  "drawing",
+  "drawing"
+ ],
+ "en|enjoyed|normal": [
+  "Enjoyed!",
+  "enjoyed"
+ ],
+ "en|farmers|normal": [
+  "Farmers",
+  "farmers"
+ ],
+ "en|generate|normal": [
+  "Generate.",
+  "generate"
+ ],
+ "en|mixture|normal": [
+  "Mixture.",
+  "mixture"
+ ],
+ "en|offices|normal": [
+  "Offices",
+  "offices"
+ ],
+ "en|proposal|normal": [
+  "Proposal",
+  "proposal"
+ ],
+ "en|orthodox|normal": [
+  "Orthodox",
+  "orthodox"
+ ],
+ "en|alcohol|normal": [
+  "Alcohol",
+  "alcohol"
+ ],
+ "en|graphics|normal": [
+  "Graphics",
+  "graphics"
+ ],
+ "en|grounds|normal": [
+  "Grounds",
+  "grounds"
+ ],
+ "en|manager|normal": [
+  "Manager",
+  "manager"
+ ],
+ "en|applies|normal": [
+  "applies",
+  "applies"
+ ],
+ "en|approval|normal": [
+  "Approval",
+  "approval"
+ ],
+ "en|controls|normal": [
+  "Controls",
+  "controls"
+ ],
+ "en|depicted|normal": [
+  "depicted",
+  "depicted"
+ ],
+ "en|driving|normal": [
+  "Driving",
+  "driving"
+ ],
+ "en|plastic|normal": [
+  "plastic",
+  "plastic"
+ ],
+ "en|surfaces|normal": [
+  "Surfaces",
+  "surfaces"
+ ],
+ "en|targets|normal": [
+  "Targets",
+  "targets"
+ ],
+ "en|thinking|normal": [
+  "Thinking.",
+  "thinking"
+ ],
+ "en|chapter|normal": [
+  "Chapter",
+  "chapter"
+ ],
+ "en|circuits|normal": [
+  "== Circuits ==",
+  "circuits"
+ ],
+ "en|covering|normal": [
+  "Covering",
+  "covering"
+ ],
+ "en|medicine|normal": [
+  "Medicine",
+  "medicine"
+ ],
+ "en|notably|normal": [
+  "Notably.",
+  "notably"
+ ],
+ "en|poverty|normal": [
+  "Poverty",
+  "poverty"
+ ],
+ "en|shorter|normal": [
+  "Shorter",
+  "shorter"
+ ],
+ "en|spectrum|normal": [
+  "Spectrum",
+  "Spectrum"
+ ],
+ "en|stopped|normal": [
+  "Stopped",
+  "stopped"
+ ],
+ "en|turning|normal": [
+  "Turning",
+  "turning"
+ ],
+ "en|accuracy|normal": [
+  "Accuracy",
+  "accuracy"
+ ],
+ "en|bacteria|normal": [
+  "Vacteria",
+  "bacteria"
+ ],
+ "en|columns|normal": [
+  "Columns",
+  "columns"
+ ],
+ "en|conduct|normal": [
+  "Conduct",
+  "conduct"
+ ],
+ "en|creates|normal": [
+  "Creates.",
+  "creates"
+ ],
+ "en|delivery|normal": [
+  "Delivery",
+  "delivery"
+ ],
+ "en|demanded|normal": [
+  "Demanded",
+  "demanded"
+ ],
+ "en|dominant|normal": [
+  "dominant",
+  "dominant"
+ ],
+ "en|keeping|normal": [
+  "Keeping",
+  "keeping"
+ ],
+ "en|occupied|normal": [
+  "Occupied",
+  "occupied"
+ ],
+ "en|slavery|normal": [
+  "Slavery",
+  "slavery"
+ ],
+ "en|teacher|normal": [
+  "Teacher",
+  "teacher"
+ ],
+ "en|volumes|normal": [
+  "Volumes",
+  "volumes"
+ ],
+ "en|airport|normal": [
+  "Airport",
+  "Airport"
+ ],
+ "en|annually|normal": [
+  "annually",
+  "annually"
+ ],
+ "en|decrease|normal": [
+  "Decrease",
+  "decrease"
+ ],
+ "en|destroy|normal": [
+  "Destroy",
+  "destroy"
+ ],
+ "en|dispute|normal": [
+  "Dispute",
+  "dispute"
+ ],
+ "en|enemies|normal": [
+  "Enemies",
+  "enemies"
+ ],
+ "en|happened|normal": [
+  "Happened.",
+  "happened"
+ ],
+ "en|partial|normal": [
+  "Partial",
+  "partial"
+ ],
+ "en|patient|normal": [
+  "Patient.",
+  "patient"
+ ],
+ "en|protocol|normal": [
+  "Protocol",
+  "protocol"
+ ],
+ "en|quantity|normal": [
+  "Quantity",
+  "quantity"
+ ],
+ "en|radical|normal": [
+  "Radical",
+  "radical"
+ ],
+ "en|recovery|normal": [
+  "Recovery",
+  "recovery"
+ ],
+ "en|revenue|normal": [
+  "Revenue",
+  "Revenue"
+ ],
+ "en|settled|normal": [
+  "Settled.",
+  "settled"
+ ],
+ "en|drinking|normal": [
+  "Drinking",
+  "drinking"
+ ],
+ "en|illness|normal": [
+  "Illness",
+  "illness"
+ ],
+ "en|millions|normal": [
+  "Millions",
+  "Millions"
+ ],
+ "en|reflect|normal": [
+  "Reflect",
+  "reflect"
+ ],
+ "en|seeking|normal": [
+  "Seeking",
+  "seeking"
+ ],
+ "en|bringing|normal": [
+  "Bringing.",
+  "bringing"
+ ],
+ "en|database|normal": [
+  "Database",
+  "database"
+ ],
+ "en|dollars|normal": [
+  "== Dollars ==",
+  "dollar"
+ ],
+ "en|messages|normal": [
+  "Messages",
+  "messages"
+ ],
+ "en|reverse|normal": [
+  "== Reverse ==",
+  "reverse"
+ ],
+ "en|superior|normal": [
+  "Superior",
+  "Superior"
+ ],
+ "en|villages|normal": [
+  "Villages",
+  "villages"
+ ],
+ "en|visitors|normal": [
+  "Visitors",
+  "visitors"
+ ],
+ "en|warning|normal": [
+  "Warning!",
+  "warning"
+ ],
+ "en|creative|normal": [
+  "Creative",
+  "creative"
+ ],
+ "en|diverse|normal": [
+  "== Diverse ==",
+  "diverse"
+ ],
+ "en|equally|normal": [
+  "Equally.",
+  "equally"
+ ],
+ "en|express|normal": [
+  "== Express ==",
+  "Express"
+ ],
+ "en|formally|normal": [
+  "formally",
+  "formally"
+ ],
+ "en|formerly|normal": [
+  "Formerly",
+  "formerly"
+ ],
+ "en|incident|normal": [
+  "Incident",
+  "incident"
+ ],
+ "en|missiles|normal": [
+  "Missiles",
+  "missiles"
+ ],
+ "en|offering|normal": [
+  "Offering",
+  "offering"
+ ],
+ "en|pare|normal": [
+  "pair",
+  "pair"
+ ],
+ "en|wright|normal": [
+  "Right.",
+  "right"
+ ],
+ "en|aberration|normal": [
+  "Aberration",
+  "aberration"
+ ],
+ "en|amanuensis|normal": [
+  "Immanuensis",
+  "amanuensis"
+ ],
+ "en|anachronism|normal": [
+  "Anachronism",
+  "an acronym"
+ ],
+ "en|apotheosis|normal": [
+  "Apotheosis",
+  "apotheosis"
+ ],
+ "en|bourgeoisie|normal": [
+  "Bourgeoisie",
+  "bourgeois"
+ ],
+ "en|brouhaha|normal": [
+  "Bruhaha.",
+  "brouhaha"
+ ],
+ "en|cacophony|normal": [
+  "Cacophony",
+  "cacophony"
+ ],
+ "en|chiaroscuro|normal": [
+  "Kiara Skuro",
+  "Kiara skurow"
+ ],
+ "en|chrysanthemum|normal": [
+  "Crisanthemum",
+  "chrysanthemum"
+ ],
+ "en|colonel|normal": [
+  "Colonel",
+  "colonel"
+ ],
+ "en|connoisseur|normal": [
+  "Kana Sir",
+  "Kana sir"
+ ],
+ "en|conscientious|normal": [
+  "Conscientious",
+  "conscientious"
+ ],
+ "en|ebullient|normal": [
+  "Abolient",
+  "a byant"
+ ],
+ "en|ecclesiastical|normal": [
+  "Ecclesiastical",
+  "ecclesiastical"
+ ],
+ "en|ephemeral|normal": [
+  "ephemeral",
+  "ephemeral"
+ ],
+ "en|epitome|normal": [
+  "Epidemi",
+  "epitome"
+ ],
+ "en|esoteric|normal": [
+  "Esoteric",
+  "esoteric"
+ ],
+ "en|fuchsia|normal": [
+  "Fuchsia",
+  "fuchsia"
+ ],
+ "en|gauge|normal": [
+  "Gauge",
+  "gauge"
+ ],
+ "en|gregarious|normal": [
+  "Grigarius",
+  "gregarious"
+ ],
+ "en|hyperbole|normal": [
+  "Hyperbole",
+  "hyperbole"
+ ],
+ "en|idiosyncrasy|normal": [
+  "Idiocyncrasy",
+  "idiosyncrasy"
+ ],
+ "en|inchoate|normal": [
+  "In Poet",
+  "in poet"
+ ],
+ "en|insouciant|normal": [
+  "Insouciant",
+  "in Susan"
+ ],
+ "en|isthmus|normal": [
+  "Isthmus",
+  "isms"
+ ],
+ "en|kaleidoscope|normal": [
+  "Kaleidoscope",
+  "kaleidoscope"
+ ],
+ "en|kowtow|normal": [
+  "kowtow",
+  "kowtow"
+ ],
+ "en|labyrinth|normal": [
+  "labyrinth",
+  "Labyrinth"
+ ],
+ "en|liaison|normal": [
+  "Liaison",
+  "liaison"
+ ],
+ "en|lieutenant|normal": [
+  "Lieutenant.",
+  "lieutenant"
+ ],
+ "en|machiavellian|normal": [
+  "Machiavellian",
+  "Makaveli"
+ ],
+ "en|maneuver|normal": [
+  "maneuver",
+  "maneuver"
+ ],
+ "en|mnemonic|normal": [
+  "Nemanik",
+  "pneumonic"
+ ],
+ "en|obfuscate|normal": [
+  "Opfersgate",
+  "obfuscate"
+ ],
+ "en|onomatopoeia|normal": [
+  "Anamata Pia",
+  "anamata Pia"
+ ],
+ "en|paradigm|normal": [
+  "Paradigm",
+  "paradigm"
+ ],
+ "en|perspicacious|normal": [
+  "Perspicacious",
+  "perspicacious"
+ ],
+ "en|pneumonia|normal": [
+  "pneumonia",
+  "pneumonia"
+ ],
+ "en|prestidigitation|normal": [
+  "Prestidigitation",
+  "press to digitation"
+ ],
+ "en|quinoa|normal": [
+  "Keen Wah.",
+  "quinoa"
+ ],
+ "en|quintessential|normal": [
+  "Quintessential",
+  "quintessential"
+ ],
+ "en|rendezvous|normal": [
+  "Rendezvous",
+  "Rendevous"
+ ],
+ "en|sacrilegious|normal": [
+  "Sacrilegious",
+  "sacrilegious"
+ ],
+ "en|schadenfreude|normal": [
+  "Schadenfreude",
+  "shot in Florida"
+ ],
+ "en|silhouette|normal": [
+  "Silhouette",
+  "silhouette"
+ ],
+ "en|soliloquy|normal": [
+  "soliloquy",
+  "siluku"
+ ],
+ "en|succinct|normal": [
+  "6. Synced",
+  "succinct"
+ ],
+ "en|surveillance|normal": [
+  "Surveillance",
+  "surveillance"
+ ],
+ "en|yacht|normal": [
+  "Yacht",
+  "yacht"
+ ],
+ "en|zephyr|normal": [
+  "Zephyr",
+  "zefr"
+ ],
+ "en|different|normal": [
+  "Different.",
+  "different"
+ ],
+ "en|government|normal": [
+  "Government",
+  "government"
+ ],
+ "en|including|normal": [
+  "including",
+  "including"
+ ],
+ "en|considered|normal": [
+  "Considered.",
+  "considered"
+ ],
+ "en|political|normal": [
+  "Political",
+  "political"
+ ],
+ "en|following|normal": [
+  "Following.",
+  "following"
+ ],
+ "en|published|normal": [
+  "Published",
+  "published"
+ ],
+ "en|countries|normal": [
+  "countries",
+  "countries"
+ ],
+ "en|university|normal": [
+  "University",
+  "University"
+ ],
+ "en|development|normal": [
+  "Development",
+  "development"
+ ],
+ "en|developed|normal": [
+  "Developed",
+  "developed"
+ ],
+ "en|population|normal": [
+  "Population",
+  "population"
+ ],
+ "en|production|normal": [
+  "Production",
+  "production"
+ ],
+ "en|sometimes|normal": [
+  "Sometimes",
+  "sometimes"
+ ],
+ "en|generally|normal": [
+  "Generally.",
+  "generally"
+ ],
+ "en|continued|normal": [
+  "continued",
+  "continued"
+ ],
+ "en|available|normal": [
+  "Available",
+  "available"
+ ],
+ "en|information|normal": [
+  "Information",
+  "information"
+ ],
+ "en|especially|normal": [
+  "especially",
+  "especially"
+ ],
+ "en|typically|normal": [
+  "Typically.",
+  "typically"
+ ],
+ "en|throughout|normal": [
+  "Throughout",
+  "throughout"
+ ],
+ "en|international|normal": [
+  "International",
+  "International"
+ ],
+ "en|particular|normal": [
+  "particular",
+  "particular"
+ ],
+ "en|described|normal": [
+  "Described",
+  "described"
+ ],
+ "en|according|normal": [
+  "According",
+  "according"
+ ],
+ "en|significant|normal": [
+  "Significant",
+  "significant"
+ ],
+ "en|traditional|normal": [
+  "Traditional",
+  "traditional"
+ ],
+ "en|established|normal": [
+  "Established",
+  "established"
+ ],
+ "en|structure|normal": [
+  "Structure",
+  "structure"
+ ],
+ "en|increased|normal": [
+  "Increased.",
+  "increased"
+ ],
+ "en|character|normal": [
+  "Character",
+  "character"
+ ],
+ "en|languages|normal": [
+  "Languages",
+  "languages"
+ ],
+ "en|president|normal": [
+  "President",
+  "president"
+ ],
+ "en|introduced|normal": [
+  "Introduced.",
+  "introduced"
+ ],
+ "en|temperature|normal": [
+  "Temperature",
+  "temperature"
+ ],
+ "en|themselves|normal": [
+  "themselves.",
+  "themselves"
+ ],
+ "en|influence|normal": [
+  "Influence",
+  "influence"
+ ],
+ "en|television|normal": [
+  "Television",
+  "television"
+ ],
+ "en|performance|normal": [
+  "Performance",
+  "performance"
+ ],
+ "en|particularly|normal": [
+  "Particularly.",
+  "particularly"
+ ],
+ "en|religious|normal": [
+  "Religious",
+  "religious"
+ ],
+ "en|characters|normal": [
+  "== Characters ==",
+  "characters"
+ ],
+ "en|individual|normal": [
+  "Individual.",
+  "individual"
+ ],
+ "en|education|normal": [
+  "Education",
+  "education"
+ ],
+ "en|difficult|normal": [
+  "Difficult.",
+  "difficult"
+ ],
+ "en|conditions|normal": [
+  "Conditions",
+  "conditions"
+ ],
+ "en|community|normal": [
+  "Community",
+  "community"
+ ],
+ "en|eventually|normal": [
+  "eventually.",
+  "eventually"
+ ],
+ "en|associated|normal": [
+  "Associated",
+  "associated"
+ ],
+ "en|beginning|normal": [
+  "Beginning",
+  "beginning"
+ ],
+ "en|successful|normal": [
+  "Successful!",
+  "successful"
+ ],
+ "en|relatively|normal": [
+  "Relatively",
+  "relatively"
+ ],
+ "en|construction|normal": [
+  "Construction",
+  "Construction"
+ ],
+ "en|relationship|normal": [
+  "Relationship",
+  "relationship"
+ ],
+ "en|technology|normal": [
+  "Technology.",
+  "technology"
+ ],
+ "en|therefore|normal": [
+  "Therefore,",
+  "therefore"
+ ],
+ "en|additional|normal": [
+  "Additional",
+  "additional"
+ ],
+ "en|performed|normal": [
+  "performed",
+  "performed"
+ ],
+ "en|companies|normal": [
+  "Companies",
+  "companies"
+ ],
+ "en|operations|normal": [
+  "== Operations ==",
+  "operations"
+ ],
+ "en|commercial|normal": [
+  "Commercial",
+  "commercial"
+ ],
+ "en|direction|normal": [
+  "Direction",
+  "Direction"
+ ],
+ "en|approximately|normal": [
+  "Approximately.",
+  "approximately"
+ ],
+ "en|frequently|normal": [
+  "Frequently",
+  "frequently"
+ ],
+ "en|originally|normal": [
+  "Originally.",
+  "originally"
+ ],
+ "en|completed|normal": [
+  "Completed",
+  "completed"
+ ],
+ "en|supported|normal": [
+  "Supported",
+  "supported"
+ ],
+ "en|functions|normal": [
+  "Functions",
+  "functions"
+ ],
+ "en|materials|normal": [
+  "Materials",
+  "materials"
+ ],
+ "en|individuals|normal": [
+  "Individuals",
+  "individuals"
+ ],
+ "en|knowledge|normal": [
+  "Knowledge",
+  "knowledge"
+ ],
+ "en|potential|normal": [
+  "Potential",
+  "potential"
+ ],
+ "en|equipment|normal": [
+  "Equipment",
+  "equipment"
+ ],
+ "en|experience|normal": [
+  "Experience",
+  "experience"
+ ],
+ "en|estimated|normal": [
+  "Estimated.",
+  "estimated"
+ ],
+ "en|financial|normal": [
+  "Financial.",
+  "Financial"
+ ],
+ "en|resulting|normal": [
+  "Resulting",
+  "resulting"
+ ],
+ "en|activities|normal": [
+  "Activities",
+  "activities"
+ ],
+ "en|announced|normal": [
+  "announced",
+  "announced"
+ ],
+ "en|scientific|normal": [
+  "Scientific",
+  "scientific"
+ ],
+ "en|increasing|normal": [
+  "increasing",
+  "increasing"
+ ],
+ "en|operating|normal": [
+  "Operating",
+  "operating"
+ ],
+ "en|discovered|normal": [
+  "Discovered",
+  "discovered"
+ ],
+ "en|operation|normal": [
+  "Operation",
+  "operation"
+ ],
+ "en|techniques|normal": [
+  "Techniques",
+  "techniques"
+ ],
+ "en|remaining|normal": [
+  "Remaining",
+  "remaining"
+ ],
+ "en|historical|normal": [
+  "Historical",
+  "historical"
+ ],
+ "en|relations|normal": [
+  "Relations",
+  "relations"
+ ],
+ "en|treatment|normal": [
+  "Treatment",
+  "treatment"
+ ],
+ "en|applications|normal": [
+  "Applications",
+  "applications"
+ ],
+ "en|buildings|normal": [
+  "Buildings",
+  "buildings"
+ ],
+ "en|completely|normal": [
+  "Completely.",
+  "completely"
+ ],
+ "en|connected|normal": [
+  "Connected",
+  "connected"
+ ],
+ "en|primarily|normal": [
+  "Primarily.",
+  "primarily"
+ ],
+ "en|tradition|normal": [
+  "Tradition",
+  "tradition"
+ ],
+ "en|appointed|normal": [
+  "Appointed.",
+  "appointed"
+ ],
+ "en|definition|normal": [
+  "Definition",
+  "definition"
+ ],
+ "en|properties|normal": [
+  "Properties",
+  "properties"
+ ],
+ "en|reference|normal": [
+  "Reference",
+  "reference"
+ ],
+ "en|frequency|normal": [
+  "Frequency",
+  "frequency"
+ ],
+ "en|centuries|normal": [
+  "Centuries",
+  "centuries"
+ ],
+ "en|effective|normal": [
+  "Effective",
+  "effective"
+ ],
+ "en|management|normal": [
+  "Management",
+  "management"
+ ],
+ "en|positions|normal": [
+  "Positions",
+  "positions"
+ ],
+ "en|distribution|normal": [
+  "Distribution",
+  "distribution"
+ ],
+ "en|determined|normal": [
+  "Determined.",
+  "determined"
+ ],
+ "en|responsible|normal": [
+  "Responsible.",
+  "responsible"
+ ],
+ "en|something|normal": [
+  "Something.",
+  "something"
+ ],
+ "en|currently|normal": [
+  "Currently",
+  "currently"
+ ],
+ "en|suggested|normal": [
+  "Suggested",
+  "suggested"
+ ],
+ "en|agreement|normal": [
+  "Agreement",
+  "agreement"
+ ],
+ "en|organization|normal": [
+  "Organization",
+  "organization"
+ ],
+ "en|presented|normal": [
+  "presented",
+  "presented"
+ ],
+ "en|structures|normal": [
+  "Structures",
+  "structures"
+ ],
+ "en|application|normal": [
+  "Application",
+  "application"
+ ],
+ "en|differences|normal": [
+  "differences",
+  "differences"
+ ],
+ "en|environment|normal": [
+  "Environment.",
+  "environment"
+ ],
+ "en|initially|normal": [
+  "Initially.",
+  "initially"
+ ],
+ "en|represented|normal": [
+  "Represented",
+  "represented"
+ ],
+ "en|resources|normal": [
+  "Resources",
+  "resources"
+ ],
+ "en|previously|normal": [
+  "Previously",
+  "previously"
+ ],
+ "en|authority|normal": [
+  "Authority",
+  "Authority"
+ ],
+ "en|technique|normal": [
+  "Technique",
+  "technique"
+ ],
+ "en|appearance|normal": [
+  "Appearance",
+  "appearance"
+ ],
+ "en|determine|normal": [
+  "Determine.",
+  "determine"
+ ],
+ "en|significantly|normal": [
+  "Significantly.",
+  "significantly"
+ ],
+ "en|collection|normal": [
+  "Collection",
+  "collection"
+ ],
+ "en|existence|normal": [
+  "Existence",
+  "existence"
+ ],
+ "en|extremely|normal": [
+  "Extremely.",
+  "extremely"
+ ],
+ "en|components|normal": [
+  "Components",
+  "components"
+ ],
+ "en|protection|normal": [
+  "Protection",
+  "protection"
+ ],
+ "en|situation|normal": [
+  "Situation",
+  "situation"
+ ],
+ "en|difference|normal": [
+  "Difference",
+  "difference"
+ ],
+ "en|equivalent|normal": [
+  "Equivalent",
+  "equivalent"
+ ],
+ "en|advantage|normal": [
+  "Advantage",
+  "advantage"
+ ],
+ "en|professional|normal": [
+  "Professional",
+  "professional"
+ ],
+ "en|literature|normal": [
+  "Literature",
+  "literature"
+ ],
+ "en|recognized|normal": [
+  "Recognized.",
+  "recognized"
+ ],
+ "en|standards|normal": [
+  "Standards",
+  "standards"
+ ],
+ "en|transport|normal": [
+  "Transport",
+  "transport"
+ ],
+ "en|condition|normal": [
+  "Condition",
+  "condition"
+ ],
+ "en|philosophy|normal": [
+  "Philosophy",
+  "philosophy"
+ ],
+ "en|attempted|normal": [
+  "Attempted",
+  "attempted"
+ ],
+ "en|temperatures|normal": [
+  "Temperatures",
+  "temperatures"
+ ],
+ "en|alternative|normal": [
+  "Alternative",
+  "alternative"
+ ],
+ "en|identified|normal": [
+  "identified",
+  "identified"
+ ],
+ "en|processes|normal": [
+  "== Processes ==",
+  "processes"
+ ],
+ "en|resistance|normal": [
+  "Resistance",
+  "resistance"
+ ],
+ "en|attention|normal": [
+  "Attention!",
+  "attention"
+ ],
+ "en|constructed|normal": [
+  "constructed",
+  "constructed"
+ ],
+ "en|expressed|normal": [
+  "Expressed",
+  "expressed"
+ ],
+ "en|increases|normal": [
+  "Increases",
+  "increases"
+ ],
+ "en|communication|normal": [
+  "Communication",
+  "communication"
+ ],
+ "en|depending|normal": [
+  "depending.",
+  "depending"
+ ],
+ "en|increasingly|normal": [
+  "Increasingly.",
+  "increasingly"
+ ],
+ "en|maintained|normal": [
+  "Maintained",
+  "maintained"
+ ],
+ "en|combination|normal": [
+  "Combination",
+  "combination"
+ ],
+ "en|communities|normal": [
+  "Communities",
+  "communities"
+ ],
+ "en|competition|normal": [
+  "Competition",
+  "competition"
+ ],
+ "en|organizations|normal": [
+  "Organizations",
+  "organizations"
+ ],
+ "en|radiation|normal": [
+  "Radiation",
+  "radiation"
+ ],
+ "en|officials|normal": [
+  "Officials",
+  "officials"
+ ],
+ "en|particles|normal": [
+  "Particles",
+  "particles"
+ ],
+ "en|providing|normal": [
+  "Providing",
+  "providing"
+ ],
+ "en|thousands|normal": [
+  "Thousands",
+  "thousands"
+ ],
+ "en|understanding|normal": [
+  "Understanding.",
+  "understanding"
+ ],
+ "en|department|normal": [
+  "Department",
+  "Department"
+ ],
+ "en|developing|normal": [
+  "Developing",
+  "developing"
+ ],
+ "en|organized|normal": [
+  "Organized",
+  "organized"
+ ],
+ "en|regarding|normal": [
+  "Regarding",
+  "regarding"
+ ],
+ "en|controlled|normal": [
+  "Controlled.",
+  "controlled"
+ ],
+ "en|surrounding|normal": [
+  "Surrounding",
+  "surrounding"
+ ],
+ "en|worldwide|normal": [
+  "Worldwide",
+  "worldwide"
+ ],
+ "en|architecture|normal": [
+  "Architecture",
+  "architecture"
+ ],
+ "en|territory|normal": [
+  "Territory",
+  "territory"
+ ],
+ "en|continues|normal": [
+  "continues",
+  "continues"
+ ],
+ "en|recording|normal": [
+  "Recording",
+  "recording"
+ ],
+ "en|represent|normal": [
+  "Represent",
+  "represent"
+ ],
+ "en|translation|normal": [
+  "Translation",
+  "translation"
+ ],
+ "en|influenced|normal": [
+  "Influenced",
+  "influenced"
+ ],
+ "en|mentioned|normal": [
+  "Mentioned.",
+  "mentioned"
+ ],
+ "en|extensive|normal": [
+  "Extensive",
+  "extensive"
+ ],
+ "en|expansion|normal": [
+  "Expansion",
+  "expansion"
+ ],
+ "en|secondary|normal": [
+  "Secondary",
+  "secondary"
+ ],
+ "en|otherwise|normal": [
+  "Otherwise",
+  "otherwise"
+ ],
+ "en|effectively|normal": [
+  "Effectively.",
+  "effectively"
+ ],
+ "en|formation|normal": [
+  "Formation",
+  "formation"
+ ],
+ "en|conducted|normal": [
+  "Conducted",
+  "conducted"
+ ],
+ "en|statement|normal": [
+  "Statement",
+  "statement"
+ ],
+ "en|classical|normal": [
+  "Classical",
+  "classical"
+ ],
+ "en|practical|normal": [
+  "practical",
+  "practical"
+ ],
+ "en|elections|normal": [
+  "Elections",
+  "elections"
+ ],
+ "en|importance|normal": [
+  "Importance",
+  "importance"
+ ],
+ "en|principle|normal": [
+  "Principal",
+  "principal"
+ ],
+ "en|specifically|normal": [
+  "Specifically",
+  "specifically"
+ ],
+ "en|containing|normal": [
+  "containing",
+  "containing"
+ ],
+ "en|destroyed|normal": [
+  "destroyed",
+  "destroyed"
+ ],
+ "en|engineering|normal": [
+  "Engineering",
+  "engineering"
+ ],
+ "en|popularity|normal": [
+  "Popularity",
+  "popularity"
+ ],
+ "en|publication|normal": [
+  "Publication",
+  "publication"
+ ],
+ "en|connection|normal": [
+  "Connection",
+  "connection"
+ ],
+ "en|subsequent|normal": [
+  "Subsequent",
+  "subsequent"
+ ],
+ "en|association|normal": [
+  "Association",
+  "Association"
+ ],
+ "en|generation|normal": [
+  "Generation",
+  "generation"
+ ],
+ "en|broadcast|normal": [
+  "Broadcast",
+  "broadcast"
+ ],
+ "en|institute|normal": [
+  "Institute",
+  "Institute"
+ ],
+ "en|composition|normal": [
+  "composition",
+  "composition"
+ ],
+ "en|officially|normal": [
+  "officially",
+  "officially"
+ ],
+ "en|administration|normal": [
+  "Administration",
+  "Administration"
+ ],
+ "en|characteristics|normal": [
+  "Characteristics",
+  "characteristics"
+ ],
+ "en|incorporated|normal": [
+  "Incorporated.",
+  "Incorporated"
+ ],
+ "en|industrial|normal": [
+  "Industrial.",
+  "Industrial"
+ ],
+ "en|institutions|normal": [
+  "Institutions",
+  "institutions"
+ ],
+ "en|instruments|normal": [
+  "Instruments",
+  "instruments"
+ ],
+ "en|describes|normal": [
+  "Describes",
+  "describes"
+ ],
+ "en|residents|normal": [
+  "Residents",
+  "residents"
+ ],
+ "en|contemporary|normal": [
+  "Contemporary",
+  "contemporary"
+ ],
+ "en|practices|normal": [
+  "Practices",
+  "practices"
+ ],
+ "en|establish|normal": [
+  "Establish",
+  "establish"
+ ],
+ "en|leadership|normal": [
+  "Leadership",
+  "leadership"
+ ],
+ "en|computers|normal": [
+  "Computers",
+  "computers"
+ ],
+ "en|expression|normal": [
+  "Expression",
+  "expression"
+ ],
+ "en|interests|normal": [
+  "Interests",
+  "interests"
+ ],
+ "en|producing|normal": [
+  "Producing",
+  "producing"
+ ],
+ "en|opposition|normal": [
+  "Opposition",
+  "opposition"
+ ],
+ "en|processing|normal": [
+  "Processing",
+  "processing"
+ ],
+ "en|technical|normal": [
+  "Technical",
+  "technical"
+ ],
+ "en|transmission|normal": [
+  "Transmission",
+  "transmission"
+ ],
+ "en|environmental|normal": [
+  "Environmental",
+  "Environmental"
+ ],
+ "en|instrument|normal": [
+  "Instrument",
+  "instrument"
+ ],
+ "en|translated|normal": [
+  "translated",
+  "translated"
+ ],
+ "en|contained|normal": [
+  "Contained.",
+  "contained"
+ ],
+ "en|facilities|normal": [
+  "Facilities",
+  "facilities"
+ ],
+ "en|requirements|normal": [
+  "== Requirements ==",
+  "requirements"
+ ],
+ "en|background|normal": [
+  "Background",
+  "background"
+ ],
+ "en|dedicated|normal": [
+  "dedicated",
+  "dedicated"
+ ],
+ "en|impossible|normal": [
+  "Impossible.",
+  "impossible"
+ ],
+ "en|introduction|normal": [
+  "Introduction",
+  "introduction"
+ ],
+ "en|component|normal": [
+  "Component",
+  "component"
+ ],
+ "en|expensive|normal": [
+  "Expensive",
+  "expensive"
+ ],
+ "en|explained|normal": [
+  "Explained.",
+  "explained"
+ ],
+ "en|questions|normal": [
+  "Questions",
+  "questions"
+ ],
+ "en|represents|normal": [
+  "== Represents ==",
+  "represents"
+ ],
+ "en|movements|normal": [
+  "Movements",
+  "movements"
+ ],
+ "en|continuous|normal": [
+  "Continuous",
+  "continuous"
+ ],
+ "en|criticism|normal": [
+  "Criticism",
+  "criticism"
+ ],
+ "en|relationships|normal": [
+  "Relationships",
+  "relationships"
+ ],
+ "en|atmosphere|normal": [
+  "Atmosphere",
+  "atmosphere"
+ ],
+ "en|electronic|normal": [
+  "Electronic.",
+  "electronic"
+ ],
+ "en|reputation|normal": [
+  "Reputation",
+  "reputation"
+ ],
+ "en|variations|normal": [
+  "Variations",
+  "variations"
+ ],
+ "en|programming|normal": [
+  "Programming",
+  "programming"
+ ],
+ "en|substantial|normal": [
+  "Substantial",
+  "substantial"
+ ],
+ "en|successfully|normal": [
+  "Successfully.",
+  "successfully"
+ ],
+ "en|electrical|normal": [
+  "Electrical",
+  "electrical"
+ ],
+ "en|gradually|normal": [
+  "Gradually.",
+  "gradually"
+ ],
+ "en|independence|normal": [
+  "Independence",
+  "Independence"
+ ],
+ "en|investment|normal": [
+  "Investment.",
+  "investment"
+ ],
+ "en|molecules|normal": [
+  "Molecules",
+  "molecules"
+ ],
+ "en|abandoned|normal": [
+  "Abandoned.",
+  "abandoned"
+ ],
+ "en|generated|normal": [
+  "Generated.",
+  "generated"
+ ],
+ "en|documents|normal": [
+  "Documents",
+  "documents"
+ ],
+ "en|personnel|normal": [
+  "Personnel",
+  "personnel"
+ ],
+ "en|resolution|normal": [
+  "Resolution",
+  "resolution"
+ ],
+ "en|experienced|normal": [
+  "Experienced",
+  "experienced"
+ ],
+ "en|opportunity|normal": [
+  "Opportunity",
+  "opportunity"
+ ],
+ "en|algorithm|normal": [
+  "Algorithm",
+  "algorithm"
+ ],
+ "en|household|normal": [
+  "Household",
+  "household"
+ ],
+ "en|understand|normal": [
+  "Understand.",
+  "understand"
+ ],
+ "en|essential|normal": [
+  "Essential",
+  "essential"
+ ],
+ "en|everything|normal": [
+  "Everything.",
+  "everything"
+ ],
+ "en|instructions|normal": [
+  "Instructions",
+  "instructions"
+ ],
+ "en|permanent|normal": [
+  "Permanent",
+  "permanent"
+ ],
+ "en|succeeded|normal": [
+  "Succeeded.",
+  "succeeded"
+ ],
+ "en|appropriate|normal": [
+  "Appropriate.",
+  "appropriate"
+ ],
+ "en|categories|normal": [
+  "Categories",
+  "categories"
+ ],
+ "en|compounds|normal": [
+  "Compounds",
+  "compounds"
+ ],
+ "en|distributed|normal": [
+  "Distributed",
+  "distributed"
+ ],
+ "en|intelligence|normal": [
+  "Intelligence",
+  "intelligence"
+ ],
+ "en|ultimately|normal": [
+  "Ultimately.",
+  "ultimately"
+ ],
+ "en|description|normal": [
+  "Description",
+  "description"
+ ],
+ "en|preferred|normal": [
+  "preferred",
+  "preferred"
+ ],
+ "en|principles|normal": [
+  "Principles",
+  "principles"
+ ],
+ "en|implemented|normal": [
+  "Implemented",
+  "implemented"
+ ],
+ "en|integrated|normal": [
+  "Integrated",
+  "integrated"
+ ],
+ "en|occasionally|normal": [
+  "Occasionally.",
+  "occasionally"
+ ],
+ "en|references|normal": [
+  "References",
+  "references"
+ ],
+ "en|representation|normal": [
+  "== Representation ==",
+  "representation"
+ ],
+ "en|widespread|normal": [
+  "Widespread",
+  "widespread"
+ ],
+ "en|contributed|normal": [
+  "contributed",
+  "contributed"
+ ],
+ "en|conventional|normal": [
+  "conventional",
+  "conventional"
+ ],
+ "en|exception|normal": [
+  "exception",
+  "exception"
+ ],
+ "en|governments|normal": [
+  "Governments",
+  "governments"
+ ],
+ "en|performances|normal": [
+  "Performances",
+  "performances"
+ ],
+ "en|separated|normal": [
+  "Separated.",
+  "separated"
+ ],
+ "en|subsequently|normal": [
+  "Subsequently",
+  "subsequently"
+ ],
+ "en|efficient|normal": [
+  "Efficient.",
+  "efficient"
+ ],
+ "en|understood|normal": [
+  "Understood.",
+  "understood"
+ ],
+ "en|additionally|normal": [
+  "Additionally,",
+  "additionally"
+ ],
+ "en|authorities|normal": [
+  "Authorities",
+  "authorities"
+ ],
+ "en|mechanical|normal": [
+  "Mechanical",
+  "mechanical"
+ ],
+ "en|receiving|normal": [
+  "Receiving",
+  "receiving"
+ ],
+ "en|locations|normal": [
+  "Locations",
+  "locations"
+ ],
+ "en|converted|normal": [
+  "converted",
+  "converted"
+ ],
+ "en|experiments|normal": [
+  "== Experiments ==",
+  "experiments"
+ ],
+ "en|immediate|normal": [
+  "immediate",
+  "immediate"
+ ],
+ "en|legislation|normal": [
+  "Legislation",
+  "legislation"
+ ],
+ "en|reduction|normal": [
+  "Reduction",
+  "reduction"
+ ],
+ "en|transition|normal": [
+  "Transition",
+  "transition"
+ ],
+ "en|considerable|normal": [
+  "Considerable.",
+  "considerable"
+ ],
+ "en|decisions|normal": [
+  "Decisions",
+  "decisions"
+ ],
+ "en|designated|normal": [
+  "Designated",
+  "designated"
+ ],
+ "en|electrons|normal": [
+  "Electrons",
+  "electrons"
+ ],
+ "en|involving|normal": [
+  "involving",
+  "involving"
+ ],
+ "en|solutions|normal": [
+  "Solutions",
+  "Solutions"
+ ],
+ "en|sufficient|normal": [
+  "sufficient",
+  "sufficient"
+ ],
+ "en|traditions|normal": [
+  "Traditions",
+  "traditions"
+ ],
+ "en|concluded|normal": [
+  "concluded.",
+  "concluded"
+ ],
+ "en|prominent|normal": [
+  "Prominent.",
+  "prominent"
+ ],
+ "en|spiritual|normal": [
+  "Spiritual",
+  "spiritual"
+ ],
+ "en|nevertheless|normal": [
+  "Nevertheless",
+  "nevertheless"
+ ],
+ "en|executive|normal": [
+  "Executive",
+  "executive"
+ ],
+ "en|fundamental|normal": [
+  "Fundamental",
+  "fundamental"
+ ],
+ "en|performing|normal": [
+  "performing",
+  "performing"
+ ],
+ "en|returning|normal": [
+  "Returning",
+  "returning"
+ ],
+ "en|selection|normal": [
+  "Selection.",
+  "selection"
+ ],
+ "en|parliament|normal": [
+  "Parliament",
+  "Parliament"
+ ],
+ "en|circumstances|normal": [
+  "Circumstances",
+  "circumstances"
+ ],
+ "en|dependent|normal": [
+  "dependent",
+  "dependent"
+ ],
+ "en|mechanism|normal": [
+  "Mechanism",
+  "mechanism"
+ ],
+ "en|mountains|normal": [
+  "Mountains",
+  "mountains"
+ ],
+ "en|discussion|normal": [
+  "Discussion",
+  "discussion"
+ ],
+ "en|conference|normal": [
+  "Conference",
+  "conference"
+ ],
+ "en|delivered|normal": [
+  "delivered",
+  "delivered"
+ ],
+ "en|installed|normal": [
+  "Installed.",
+  "installed"
+ ],
+ "en|necessarily|normal": [
+  "necessarily.",
+  "necessarily"
+ ],
+ "en|concerned|normal": [
+  "Concerned",
+  "concerned"
+ ],
+ "en|implementation|normal": [
+  "Implementation",
+  "implementation"
+ ],
+ "en|interpretation|normal": [
+  "Interpretation",
+  "interpretation"
+ ],
+ "en|interview|normal": [
+  "Interview",
+  "interview"
+ ],
+ "en|manufacturing|normal": [
+  "Manufacturing",
+  "Manufacturing"
+ ],
+ "en|candidates|normal": [
+  "Candidates",
+  "candidates"
+ ],
+ "en|experiment|normal": [
+  "Experiment.",
+  "experiment"
+ ],
+ "en|populations|normal": [
+  "Populations",
+  "populations"
+ ],
+ "en|respectively|normal": [
+  "Respectively.",
+  "respectively"
+ ],
+ "en|restricted|normal": [
+  "Restricted",
+  "restricted"
+ ],
+ "en|specified|normal": [
+  "Specified",
+  "specified"
+ ],
+ "en|classified|normal": [
+  "Classified",
+  "classified"
+ ],
+ "en|confirmed|normal": [
+  "confirmed",
+  "confirmed"
+ ],
+ "en|mathematical|normal": [
+  "Mathematical",
+  "mathematical"
+ ],
+ "en|supporting|normal": [
+  "Supporting",
+  "supporting"
+ ],
+ "en|corresponding|normal": [
+  "Corresponding",
+  "corresponding"
+ ],
+ "en|dangerous|normal": [
+  "Dangerous",
+  "dangerous"
+ ],
+ "en|efficiency|normal": [
+  "Efficiency",
+  "efficiency"
+ ],
+ "en|membership|normal": [
+  "Membership",
+  "membership"
+ ],
+ "en|possibility|normal": [
+  "Possibility",
+  "possibility"
+ ],
+ "en|purchased|normal": [
+  "Purchased",
+  "purchased"
+ ],
+ "en|commission|normal": [
+  "Commission",
+  "Commission"
+ ],
+ "en|attributed|normal": [
+  "Attributed",
+  "attributed"
+ ],
+ "en|committed|normal": [
+  "Committed",
+  "committed"
+ ],
+ "en|communications|normal": [
+  "Communications",
+  "Communications"
+ ],
+ "en|discussed|normal": [
+  "Disgust",
+  "disgust"
+ ],
+ "en|distinction|normal": [
+  "Distinction",
+  "distinction"
+ ],
+ "en|divisions|normal": [
+  "Divisions",
+  "divisions"
+ ],
+ "en|identical|normal": [
+  "identical",
+  "identical"
+ ],
+ "en|infrastructure|normal": [
+  "Infrastructure",
+  "infrastructure"
+ ],
+ "en|organisms|normal": [
+  "Organisms",
+  "organisms"
+ ],
+ "en|administrative|normal": [
+  "Administrative",
+  "administrative"
+ ],
+ "en|agricultural|normal": [
+  "Agricultural",
+  "agricultural"
+ ],
+ "en|convention|normal": [
+  "Convention",
+  "convention"
+ ],
+ "en|evolution|normal": [
+  "Evolution",
+  "evolution"
+ ],
+ "en|historians|normal": [
+  "Historians",
+  "historians"
+ ],
+ "en|interested|normal": [
+  "Interested?",
+  "interested"
+ ],
+ "en|interface|normal": [
+  "Interface",
+  "interface"
+ ],
+ "en|paintings|normal": [
+  "Paintings",
+  "paintings"
+ ],
+ "en|transportation|normal": [
+  "Transportation",
+  "transportation"
+ ],
+ "en|furthermore|normal": [
+  "Furthermore,",
+  "furthermore"
+ ],
+ "en|collected|normal": [
+  "Collected",
+  "collected"
+ ],
+ "en|concentration|normal": [
+  "Concentration",
+  "concentration"
+ ],
+ "en|consistent|normal": [
+  "Consistent.",
+  "consistent"
+ ],
+ "en|consumption|normal": [
+  "Consumption",
+  "consumption"
+ ],
+ "en|conversion|normal": [
+  "Conversion",
+  "conversion"
+ ],
+ "en|participation|normal": [
+  "Participation",
+  "participation"
+ ],
+ "en|recommended|normal": [
+  "Recommended",
+  "recommended"
+ ],
+ "en|stability|normal": [
+  "Stability",
+  "stability"
+ ],
+ "en|apparently|normal": [
+  "Apparently.",
+  "apparently"
+ ],
+ "en|artillery|normal": [
+  "Artillery",
+  "artillery"
+ ],
+ "en|businesses|normal": [
+  "Businesses",
+  "businesses"
+ ],
+ "en|electricity|normal": [
+  "Electricity",
+  "electricity"
+ ],
+ "en|encouraged|normal": [
+  "Empourage.",
+  "encouraged"
+ ],
+ "en|experimental|normal": [
+  "Experimental",
+  "experimental"
+ ],
+ "en|instruction|normal": [
+  "Instruction",
+  "instruction"
+ ],
+ "en|interaction|normal": [
+  "Interaction",
+  "interaction"
+ ],
+ "en|permitted|normal": [
+  "Permitted.",
+  "permitted"
+ ],
+ "en|settlement|normal": [
+  "Settlement",
+  "settlement"
+ ],
+ "en|challenge|normal": [
+  "Challenge",
+  "challenge"
+ ],
+ "en|configuration|normal": [
+  "Configuration",
+  "configuration"
+ ],
+ "en|essentially|normal": [
+  "Essentially.",
+  "essentially"
+ ],
+ "en|indicated|normal": [
+  "indicated",
+  "indicated"
+ ],
+ "en|participate|normal": [
+  "Participate.",
+  "participate"
+ ],
+ "en|probability|normal": [
+  "Probability",
+  "probability"
+ ],
+ "en|comparison|normal": [
+  "Comparison",
+  "comparison"
+ ],
+ "en|criticized|normal": [
+  "Criticized",
+  "criticized"
+ ],
+ "en|influential|normal": [
+  "Influential",
+  "influential"
+ ],
+ "en|observation|normal": [
+  "Observation",
+  "observation"
+ ],
+ "en|principal|normal": [
+  "Principal",
+  "principal"
+ ],
+ "en|recognition|normal": [
+  "Recognition",
+  "recognition"
+ ],
+ "en|researchers|normal": [
+  "Researchers",
+  "researchers"
+ ],
+ "en|scientists|normal": [
+  "Scientists",
+  "scientists"
+ ],
+ "en|surviving|normal": [
+  "Surviving",
+  "surviving"
+ ],
+ "en|assistance|normal": [
+  "Assistance",
+  "assistance"
+ ],
+ "en|consisting|normal": [
+  "Consisting",
+  "consisting"
+ ],
+ "en|constitution|normal": [
+  "Constitution",
+  "Constitution"
+ ],
+ "en|distinguished|normal": [
+  "Distinguished",
+  "distinguished"
+ ],
+ "en|extension|normal": [
+  "Extension",
+  "extension"
+ ],
+ "en|featuring|normal": [
+  "Featuring",
+  "featuring"
+ ],
+ "en|newspaper|normal": [
+  "Newspaper",
+  "newspaper"
+ ],
+ "en|universal|normal": [
+  "Universal",
+  "Universal"
+ ],
+ "en|boundaries|normal": [
+  "Boundaries",
+  "boundaries"
+ ],
+ "en|demonstrated|normal": [
+  "Demonstrated.",
+  "demonstrated"
+ ],
+ "en|specialized|normal": [
+  "Specialized",
+  "specialized"
+ ],
+ "en|biological|normal": [
+  "Biological",
+  "biological"
+ ],
+ "en|characteristic|normal": [
+  "Characteristic",
+  "characteristic"
+ ],
+ "en|foundation|normal": [
+  "Foundation",
+  "Foundation"
+ ],
+ "en|hypothesis|normal": [
+  "Hypothesis",
+  "hypothesis"
+ ],
+ "en|procedure|normal": [
+  "Procedure",
+  "procedure"
+ ],
+ "en|protected|normal": [
+  "Protected",
+  "protected"
+ ],
+ "en|reflected|normal": [
+  "Reflected",
+  "reflected"
+ ],
+ "en|responded|normal": [
+  "responded.",
+  "responded"
+ ],
+ "en|suffering|normal": [
+  "Suffering",
+  "suffering"
+ ],
+ "en|temporary|normal": [
+  "Temporary",
+  "temporary"
+ ],
+ "en|similarly|normal": [
+  "Similarly,",
+  "similarly"
+ ],
+ "en|elsewhere|normal": [
+  "Elsewhere",
+  "elsewhere"
+ ],
+ "en|objective|normal": [
+  "Objective",
+  "objective"
+ ],
+ "en|partially|normal": [
+  "Partially.",
+  "partially"
+ ],
+ "en|percentage|normal": [
+  "%",
+  "percentage"
+ ],
+ "en|representing|normal": [
+  "Representing",
+  "representing"
+ ],
+ "en|responsibility|normal": [
+  "Responsibility",
+  "responsibility"
+ ],
+ "en|substance|normal": [
+  "Substance",
+  "substance"
+ ],
+ "en|revolution|normal": [
+  "Revolution",
+  "Revolution"
+ ],
+ "en|approaches|normal": [
+  "Approaches",
+  "approaches"
+ ],
+ "en|beautiful|normal": [
+  "Beautiful.",
+  "beautiful"
+ ],
+ "en|connections|normal": [
+  "Connections",
+  "connections"
+ ],
+ "en|continuing|normal": [
+  "Continuing.",
+  "continuing"
+ ],
+ "en|destruction|normal": [
+  "Destruction",
+  "destruction"
+ ],
+ "en|discovery|normal": [
+  "Discovery.",
+  "discovery"
+ ],
+ "en|expedition|normal": [
+  "Expedition",
+  "Expedition"
+ ],
+ "en|musicians|normal": [
+  "Musicians",
+  "musicians"
+ ],
+ "en|satellite|normal": [
+  "Satellite",
+  "satellite"
+ ],
+ "en|strategic|normal": [
+  "Strategic",
+  "strategic"
+ ],
+ "en|transferred|normal": [
+  "Transferred",
+  "transferred"
+ ],
+ "en|candidate|normal": [
+  "Candidate",
+  "candidate"
+ ],
+ "en|distinguish|normal": [
+  "Distinguish",
+  "distinguish"
+ ],
+ "en|experiences|normal": [
+  "Experiences",
+  "experiences"
+ ],
+ "en|manufacturers|normal": [
+  "Manufacturers",
+  "manufacturers"
+ ],
+ "en|operational|normal": [
+  "Operational",
+  "operational"
+ ],
+ "en|restaurants|normal": [
+  "Restaurants",
+  "restaurants"
+ ],
+ "en|complexity|normal": [
+  "Complexity",
+  "complexity"
+ ],
+ "en|regularly|normal": [
+  "Regularly",
+  "regularly"
+ ],
+ "en|statements|normal": [
+  "Statements",
+  "statements"
+ ],
+ "en|accompanied|normal": [
+  "Accompanied",
+  "accompanied"
+ ],
+ "en|celebrated|normal": [
+  "Celebrated",
+  "celebrated"
+ ],
+ "en|convinced|normal": [
+  "Convinced",
+  "convinced"
+ ],
+ "en|employees|normal": [
+  "Employees",
+  "employees"
+ ],
+ "en|industries|normal": [
+  "Industries",
+  "Industries"
+ ],
+ "en|mathematics|normal": [
+  "Mathematics",
+  "mathematics"
+ ],
+ "en|ownership|normal": [
+  "Ownership",
+  "ownership"
+ ],
+ "en|passenger|normal": [
+  "Passenger",
+  "passenger"
+ ],
+ "en|perspective|normal": [
+  "== Perspective ==",
+  "perspective"
+ ],
+ "en|traditionally|normal": [
+  "Traditionally.",
+  "traditionally"
+ ],
+ "en|agriculture|normal": [
+  "Agriculture",
+  "agriculture"
+ ],
+ "en|attracted|normal": [
+  "Attracted",
+  "attracted"
+ ],
+ "en|frequencies|normal": [
+  "Frequencies",
+  "frequencies"
+ ],
+ "en|investigation|normal": [
+  "Investigation",
+  "investigation"
+ ],
+ "en|producers|normal": [
+  "Producers",
+  "producers"
+ ],
+ "en|surrounded|normal": [
+  "Surrounded",
+  "surrounded"
+ ],
+ "en|virtually|normal": [
+  "Virtually.",
+  "virtually"
+ ],
+ "en|educational|normal": [
+  "Educational",
+  "educational"
+ ],
+ "en|quantities|normal": [
+  "Quantities",
+  "quantities"
+ ],
+ "en|simultaneously|normal": [
+  "Simultaneously",
+  "simultaneously"
+ ],
+ "en|situations|normal": [
+  "Situations",
+  "situations"
+ ],
+ "en|variation|normal": [
+  "Variation.",
+  "variation"
+ ],
+ "en|arrangement|normal": [
+  "Arrangement",
+  "arrangement"
+ ],
+ "en|contribution|normal": [
+  "Contribution",
+  "contribution"
+ ],
+ "en|exclusively|normal": [
+  "exclusively",
+  "exclusively"
+ ],
+ "en|inflation|normal": [
+  "Inflation",
+  "inflation"
+ ],
+ "en|measurement|normal": [
+  "Measurement",
+  "measurement"
+ ],
+ "en|proportion|normal": [
+  "Proportion",
+  "proportion"
+ ],
+ "en|structural|normal": [
+  "Structural",
+  "structural"
+ ],
+ "en|advertising|normal": [
+  "Advertising",
+  "advertising"
+ ],
+ "en|arguments|normal": [
+  "Arguments",
+  "arguments"
+ ],
+ "en|defensive|normal": [
+  "Defensive",
+  "defensive"
+ ],
+ "en|difficulty|normal": [
+  "difficulty",
+  "difficulty"
+ ],
+ "en|explanation|normal": [
+  "Explanation",
+  "explanation"
+ ],
+ "en|reactions|normal": [
+  "Reactions",
+  "reactions"
+ ],
+ "en|scheduled|normal": [
+  "Scheduled",
+  "scheduled"
+ ],
+ "en|societies|normal": [
+  "Societies",
+  "societies"
+ ],
+ "en|theoretical|normal": [
+  "theoretical",
+  "theoretical"
+ ],
+ "en|underlying|normal": [
+  "underlying",
+  "underlying"
+ ],
+ "en|characterized|normal": [
+  "Characterized",
+  "characterized"
+ ],
+ "en|distances|normal": [
+  "distances",
+  "distances"
+ ],
+ "en|molecular|normal": [
+  "Molecular",
+  "molecular"
+ ],
+ "en|observations|normal": [
+  "Observations",
+  "observations"
+ ],
+ "en|permission|normal": [
+  "Permission.",
+  "permission"
+ ],
+ "en|artificial|normal": [
+  "Artificial",
+  "artificial"
+ ],
+ "en|certainly|normal": [
+  "Certainly.",
+  "certainly"
+ ],
+ "en|classification|normal": [
+  "Classification",
+  "classification"
+ ],
+ "en|collections|normal": [
+  "Collections",
+  "collections"
+ ],
+ "en|describing|normal": [
+  "Describing",
+  "describing"
+ ],
+ "en|independently|normal": [
+  "independently",
+  "independently"
+ ],
+ "en|mechanics|normal": [
+  "Mechanics",
+  "mechanics"
+ ],
+ "en|philosophical|normal": [
+  "Philosophical",
+  "philosophical"
+ ],
+ "en|possession|normal": [
+  "Possession",
+  "possession"
+ ],
+ "en|transformation|normal": [
+  "Transformation",
+  "transformation"
+ ],
+ "en|meanwhile|normal": [
+  "Meanwhile...",
+  "meanwhile"
+ ],
+ "en|controversial|normal": [
+  "Controversial",
+  "controversial"
+ ],
+ "en|cooperation|normal": [
+  "Cooperation",
+  "cooperation"
+ ],
+ "en|magnitude|normal": [
+  "Magnitude",
+  "magnitude"
+ ],
+ "en|passengers|normal": [
+  "Passengers",
+  "passengers"
+ ],
+ "en|perceived|normal": [
+  "Perceived",
+  "perceived"
+ ],
+ "en|referring|normal": [
+  "referring",
+  "referring"
+ ],
+ "en|separation|normal": [
+  "Separation",
+  "separation"
+ ],
+ "en|territories|normal": [
+  "Territories",
+  "territories"
+ ],
+ "en|distinctive|normal": [
+  "distinctive",
+  "distinctive"
+ ],
+ "en|equations|normal": [
+  "Equations",
+  "equations"
+ ],
+ "en|execution|normal": [
+  "Execution",
+  "execution"
+ ],
+ "en|operators|normal": [
+  "== Operators ==",
+  "operators"
+ ],
+ "en|presidential|normal": [
+  "Presidential",
+  "presidential"
+ ],
+ "en|replacement|normal": [
+  "Replacement",
+  "replacement"
+ ],
+ "en|spacecraft|normal": [
+  "spacecraft.",
+  "spacecraft"
+ ],
+ "en|threatened|normal": [
+  "Threatened",
+  "threatened"
+ ],
+ "en|republican|normal": [
+  "Republican",
+  "Republican"
+ ],
+ "en|afterwards|normal": [
+  "Afterwards",
+  "afterwards"
+ ],
+ "en|confusion|normal": [
+  "confusion",
+  "confusion"
+ ],
+ "en|customers|normal": [
+  "Customers",
+  "customers"
+ ],
+ "en|definitions|normal": [
+  "Definitions",
+  "definitions"
+ ],
+ "en|diplomatic|normal": [
+  "diplomatic",
+  "diplomatic"
+ ],
+ "en|dominated|normal": [
+  "dominated",
+  "dominated"
+ ],
+ "en|establishment|normal": [
+  "Establishment",
+  "establishment"
+ ],
+ "en|interpreted|normal": [
+  "interpreted",
+  "interpreted"
+ ],
+ "en|processor|normal": [
+  "== Processor ==",
+  "processor"
+ ],
+ "en|restrictions|normal": [
+  "== Restrictions ==",
+  "restrictions"
+ ],
+ "en|technologies|normal": [
+  "Technologies.",
+  "Technologies"
+ ],
+ "en|vulnerable|normal": [
+  "Vulnerable",
+  "vulnerable"
+ ],
+ "en|concerning|normal": [
+  "Concerning",
+  "concerning"
+ ],
+ "en|newspapers|normal": [
+  "Newspapers",
+  "newspapers"
+ ],
+ "en|procedures|normal": [
+  "Procedures",
+  "procedures"
+ ],
+ "en|alongside|normal": [
+  "Alongside",
+  "alongside"
+ ],
+ "en|attempting|normal": [
+  "Attempting",
+  "attempting"
+ ],
+ "en|contribute|normal": [
+  "Contribute.",
+  "contribute"
+ ],
+ "en|destination|normal": [
+  "Destination",
+  "destination"
+ ],
+ "en|districts|normal": [
+  "Districts",
+  "districts"
+ ],
+ "en|implement|normal": [
+  "Implement",
+  "implement"
+ ],
+ "en|improvements|normal": [
+  "Improvements",
+  "improvements"
+ ],
+ "en|manufactured|normal": [
+  "Manufactured",
+  "manufactured"
+ ],
+ "en|regardless|normal": [
+  "Regardless",
+  "regardless"
+ ],
+ "en|representative|normal": [
+  "Representative",
+  "representative"
+ ],
+ "en|supporters|normal": [
+  "Supporters",
+  "supporters"
+ ],
+ "en|suspended|normal": [
+  "Suspended.",
+  "suspended"
+ ],
+ "en|addresses|normal": [
+  "== Adresses ==",
+  "addresses"
+ ],
+ "en|algorithms|normal": [
+  "== Algorithms ==",
+  "algorithms"
+ ],
+ "en|consequences|normal": [
+  "Consequences",
+  "consequences"
+ ],
+ "en|contributions|normal": [
+  "Contributions",
+  "contributions"
+ ],
+ "en|employment|normal": [
+  "Employment",
+  "employment"
+ ],
+ "en|functional|normal": [
+  "functional",
+  "functional"
+ ],
+ "en|measurements|normal": [
+  "Measurements",
+  "measurements"
+ ],
+ "en|naturally|normal": [
+  "Naturally.",
+  "naturally"
+ ],
+ "en|occasions|normal": [
+  "Occasions",
+  "occasions"
+ ],
+ "en|opponents|normal": [
+  "Opponents",
+  "opponents"
+ ],
+ "en|publishing|normal": [
+  "Publishing",
+  "publishing"
+ ],
+ "en|compatible|normal": [
+  "Compatible",
+  "compatible"
+ ],
+ "en|complicated|normal": [
+  "complicated",
+  "complicated"
+ ],
+ "en|consisted|normal": [
+  "Consisted",
+  "consisted"
+ ],
+ "en|entertainment|normal": [
+  "Entertainment",
+  "entertainment"
+ ],
+ "en|explicitly|normal": [
+  "explicitly",
+  "explicitly"
+ ],
+ "en|literally|normal": [
+  "Literally.",
+  "literally"
+ ],
+ "en|potentially|normal": [
+  "Potentially.",
+  "potentially"
+ ],
+ "en|preserved|normal": [
+  "Preserved",
+  "preserved"
+ ],
+ "en|psychological|normal": [
+  "Psychological",
+  "psychological"
+ ],
+ "en|recognize|normal": [
+  "Recognize",
+  "recognize"
+ ],
+ "en|requested|normal": [
+  "Requested",
+  "requested"
+ ],
+ "en|democrats|normal": [
+  "Democrats",
+  "Democrats"
+ ],
+ "en|addressed|normal": [
+  "Addressed",
+  "addressed"
+ ],
+ "en|advantages|normal": [
+  "Advantages",
+  "advantages"
+ ],
+ "en|concentrated|normal": [
+  "Concentrated",
+  "concentrated"
+ ],
+ "en|displayed|normal": [
+  "Displayed",
+  "displayed"
+ ],
+ "en|followers|normal": [
+  "Followers",
+  "followers"
+ ],
+ "en|influences|normal": [
+  "Influences",
+  "influences"
+ ],
+ "en|jurisdiction|normal": [
+  "Jurisdiction",
+  "jurisdiction"
+ ],
+ "en|nomination|normal": [
+  "nomination",
+  "nomination"
+ ],
+ "en|punishment|normal": [
+  "Punishment",
+  "punishment"
+ ],
+ "en|retirement|normal": [
+  "Retirement",
+  "retirement"
+ ],
+ "en|completion|normal": [
+  "Completion",
+  "completion"
+ ],
+ "en|consequence|normal": [
+  "Consequence",
+  "consequence"
+ ],
+ "en|electromagnetic|normal": [
+  "Electromagnetic",
+  "electromagnetic"
+ ],
+ "en|historically|normal": [
+  "Historically",
+  "historically"
+ ],
+ "en|nominated|normal": [
+  "nominated",
+  "nominated"
+ ],
+ "en|offensive|normal": [
+  "Offensive",
+  "offensive"
+ ],
+ "en|prevented|normal": [
+  "Prevented",
+  "prevented"
+ ],
+ "en|prisoners|normal": [
+  "Prisoners",
+  "prisoners"
+ ],
+ "en|significance|normal": [
+  "Significance",
+  "significance"
+ ],
+ "en|sufficiently|normal": [
+  "sufficiently.",
+  "sufficiently"
+ ],
+ "en|underground|normal": [
+  "underground",
+  "Underground"
+ ],
+ "en|acceptance|normal": [
+  "Acceptance",
+  "acceptance"
+ ],
+ "en|considerably|normal": [
+  "Considerably.",
+  "considerably"
+ ],
+ "en|constantly|normal": [
+  "Constantly.",
+  "constantly"
+ ],
+ "en|democratic|normal": [
+  "Democratic",
+  "democratic"
+ ],
+ "en|dimensions|normal": [
+  "Dimensions",
+  "dimensions"
+ ],
+ "en|directions|normal": [
+  "Directions",
+  "directions"
+ ],
+ "en|generations|normal": [
+  "Generations",
+  "Generations"
+ ],
+ "en|indicates|normal": [
+  "indicates.",
+  "indicates"
+ ],
+ "en|indigenous|normal": [
+  "Indigenous",
+  "indigenous"
+ ],
+ "en|insurance|normal": [
+  "Insurance",
+  "insurance"
+ ],
+ "en|interference|normal": [
+  "Interference",
+  "interference"
+ ],
+ "en|maintaining|normal": [
+  "Maintaining",
+  "maintaining"
+ ],
+ "en|regulations|normal": [
+  "Regulations",
+  "regulations"
+ ],
+ "en|unemployment|normal": [
+  "unemployment",
+  "unemployment"
+ ],
+ "en|varieties|normal": [
+  "Varieties",
+  "varieties"
+ ],
+ "en|correspondence|normal": [
+  "== Correspondence ==",
+  "correspondence"
+ ],
+ "en|difficulties|normal": [
+  "Difficulties",
+  "difficulties"
+ ],
+ "en|elaborate|normal": [
+  "elaborate",
+  "elaborate"
+ ],
+ "en|environments|normal": [
+  "Environments",
+  "environments"
+ ],
+ "en|personality|normal": [
+  "Personality",
+  "personality"
+ ],
+ "en|phenomena|normal": [
+  "Phenomena",
+  "phenomena"
+ ],
+ "en|psychology|normal": [
+  "Psychology",
+  "psychology"
+ ],
+ "en|repeatedly|normal": [
+  "Repeatedly.",
+  "repeatedly"
+ ],
+ "en|residential|normal": [
+  "Residential",
+  "residential"
+ ],
+ "en|appearances|normal": [
+  "Appearances",
+  "appearances"
+ ],
+ "en|capabilities|normal": [
+  "Capabilities",
+  "capabilities"
+ ],
+ "en|childhood|normal": [
+  "Childhood",
+  "childhood"
+ ],
+ "en|competing|normal": [
+  "competing",
+  "competing"
+ ],
+ "en|constitutional|normal": [
+  "Constitutional",
+  "constitutional"
+ ],
+ "en|equilibrium|normal": [
+  "Equilibrium",
+  "equilibrium"
+ ],
+ "en|headquarters|normal": [
+  "Headquarters",
+  "headquarters"
+ ],
+ "en|indicating|normal": [
+  "indicating",
+  "indicating"
+ ],
+ "en|ministers|normal": [
+  "Ministers",
+  "ministers"
+ ],
+ "en|primitive|normal": [
+  "Primitive",
+  "primitive"
+ ],
+ "en|recordings|normal": [
+  "Recordings",
+  "recordings"
+ ],
+ "en|wavelength|normal": [
+  "wavelength",
+  "wavelength"
+ ],
+ "en|retrieved|normal": [
+  "Retrieved.",
+  "retrieved"
+ ],
+ "en|architectural|normal": [
+  "Architectural",
+  "architectural"
+ ],
+ "en|capability|normal": [
+  "Capability",
+  "capability"
+ ],
+ "en|challenges|normal": [
+  "Challenges",
+  "challenges"
+ ],
+ "en|coalition|normal": [
+  "Coalition",
+  "coalition"
+ ],
+ "en|decreased|normal": [
+  "Decreased.",
+  "decreased"
+ ],
+ "en|developments|normal": [
+  "== Developments ==",
+  "developments"
+ ],
+ "en|friendship|normal": [
+  "Friendship",
+  "friendship"
+ ],
+ "en|identification|normal": [
+  "Identification",
+  "identification"
+ ],
+ "en|intellectual|normal": [
+  "Intellectual",
+  "intellectual"
+ ],
+ "en|opportunities|normal": [
+  "Opportunities",
+  "opportunities"
+ ],
+ "en|variables|normal": [
+  "Variables",
+  "variables"
+ ],
+ "en|calculated|normal": [
+  "Calculated",
+  "calculated"
+ ],
+ "en|exclusive|normal": [
+  "Exclusive",
+  "exclusive"
+ ],
+ "en|immigrants|normal": [
+  "Immigrants",
+  "immigrants"
+ ],
+ "en|involvement|normal": [
+  "Involvement",
+  "involvement"
+ ],
+ "en|limitations|normal": [
+  "Limitations",
+  "limitations"
+ ],
+ "en|maintains|normal": [
+  "Maintains",
+  "maintains"
+ ],
+ "en|participants|normal": [
+  "Participants",
+  "participants"
+ ],
+ "en|requirement|normal": [
+  "Requirement",
+  "requirement"
+ ],
+ "en|anniversary|normal": [
+  "Anniversary",
+  "anniversary"
+ ],
+ "en|commissioned|normal": [
+  "Commissioned.",
+  "commissioned"
+ ],
+ "en|conclusion|normal": [
+  "Conclusion",
+  "conclusion"
+ ],
+ "en|developers|normal": [
+  "== Developers ==",
+  "Developers"
+ ],
+ "en|emergency|normal": [
+  "Emergency",
+  "emergency"
+ ],
+ "en|horizontal|normal": [
+  "Horizontal",
+  "horizontal"
+ ],
+ "en|infection|normal": [
+  "Infection",
+  "infection"
+ ],
+ "en|intention|normal": [
+  "Intention",
+  "intention"
+ ],
+ "en|originated|normal": [
+  "Originated",
+  "originated"
+ ],
+ "en|preparation|normal": [
+  "Preparation",
+  "preparation"
+ ],
+ "en|representatives|normal": [
+  "Representatives",
+  "Representatives"
+ ],
+ "en|requiring|normal": [
+  "Requiring",
+  "requiring"
+ ],
+ "en|statistical|normal": [
+  "Statistical",
+  "statistical"
+ ],
+ "en|substances|normal": [
+  "Substances",
+  "substances"
+ ],
+ "en|traveling|normal": [
+  "Traveling",
+  "traveling"
+ ],
+ "en|abilities|normal": [
+  "abilities",
+  "abilities"
+ ],
+ "en|automatically|normal": [
+  "Automatically.",
+  "automatically"
+ ],
+ "en|consecutive|normal": [
+  "Consecutive",
+  "consecutive"
+ ],
+ "en|corruption|normal": [
+  "Corruption.",
+  "corruption"
+ ],
+ "en|discipline|normal": [
+  "Discipline",
+  "discipline"
+ ],
+ "en|expanding|normal": [
+  "Expanding.",
+  "expanding"
+ ],
+ "en|invention|normal": [
+  "Invention",
+  "invention"
+ ],
+ "en|mainstream|normal": [
+  "Mainstream",
+  "mainstream"
+ ],
+ "en|portrayed|normal": [
+  "portrayed",
+  "per trade"
+ ],
+ "en|precision|normal": [
+  "Precision",
+  "precision"
+ ],
+ "en|publications|normal": [
+  "Publications",
+  "Publications"
+ ],
+ "en|statistics|normal": [
+  "Statistics",
+  "statistics"
+ ],
+ "en|submitted|normal": [
+  "Submitted",
+  "submitted"
+ ],
+ "en|accomplished|normal": [
+  "Accomplished",
+  "accomplished"
+ ],
+ "en|alternate|normal": [
+  "Alternate.",
+  "alternate"
+ ],
+ "en|appointment|normal": [
+  "Appointment",
+  "appointment"
+ ],
+ "en|availability|normal": [
+  "Availability",
+  "availability"
+ ],
+ "en|campaigns|normal": [
+  "Campaigns",
+  "campaigns"
+ ],
+ "en|conceived|normal": [
+  "Conceived",
+  "conceived"
+ ],
+ "en|improvement|normal": [
+  "Improvement",
+  "Improvement"
+ ],
+ "en|inherited|normal": [
+  "Inherited",
+  "inherited"
+ ],
+ "en|initiated|normal": [
+  "initiated",
+  "initiated"
+ ],
+ "en|instances|normal": [
+  "instances",
+  "instances"
+ ],
+ "en|integration|normal": [
+  "integration",
+  "integration"
+ ],
+ "en|intervals|normal": [
+  "Intervals",
+  "intervals"
+ ],
+ "en|mechanisms|normal": [
+  "Mechanisms",
+  "mechanisms"
+ ],
+ "en|oxidation|normal": [
+  "oxidation",
+  "oxidation"
+ ],
+ "en|remainder|normal": [
+  "Remainder",
+  "remainder"
+ ],
+ "en|succession|normal": [
+  "Succession",
+  "succession"
+ ],
+ "en|universities|normal": [
+  "Universities",
+  "universities"
+ ],
+ "en|casualties|normal": [
+  "Casualties",
+  "casualties"
+ ],
+ "en|chemicals|normal": [
+  "Chemicals",
+  "chemicals"
+ ],
+ "en|combinations|normal": [
+  "Combinations",
+  "combinations"
+ ],
+ "en|competitive|normal": [
+  "Competitive",
+  "competitive"
+ ],
+ "en|computing|normal": [
+  "computing",
+  "computing"
+ ],
+ "en|consideration|normal": [
+  "Consideration",
+  "consideration"
+ ],
+ "en|considering|normal": [
+  "Considering",
+  "considering"
+ ],
+ "en|departure|normal": [
+  "Departure",
+  "departure"
+ ],
+ "en|historian|normal": [
+  "Historian",
+  "historian"
+ ],
+ "en|instrumental|normal": [
+  "Instrumental",
+  "instrumental"
+ ],
+ "en|legislature|normal": [
+  "Legislature",
+  "legislature"
+ ],
+ "en|manufacture|normal": [
+  "Manufacture",
+  "manufacturer"
+ ],
+ "en|manuscript|normal": [
+  "Manuscript",
+  "manuscript"
+ ],
+ "en|neighborhood|normal": [
+  "neighborhood",
+  "neighborhood"
+ ],
+ "en|reportedly|normal": [
+  "Reportedly",
+  "reportedly"
+ ],
+ "en|sequences|normal": [
+  "Sequences",
+  "sequences"
+ ],
+ "en|acceptable|normal": [
+  "Acceptable.",
+  "acceptable"
+ ],
+ "en|appearing|normal": [
+  "appearing.",
+  "appearing"
+ ],
+ "en|communicate|normal": [
+  "Communicate",
+  "communicate"
+ ],
+ "en|conservative|normal": [
+  "Conservative",
+  "conservative"
+ ],
+ "en|democracy|normal": [
+  "Democracy.",
+  "democracy"
+ ],
+ "en|economics|normal": [
+  "Economics",
+  "economics"
+ ],
+ "en|extending|normal": [
+  "Extending",
+  "extending"
+ ],
+ "en|marketing|normal": [
+  "Marketing",
+  "marketing"
+ ],
+ "en|negotiations|normal": [
+  "Negotiations",
+  "negotiations"
+ ],
+ "en|sensitive|normal": [
+  "Sensitive",
+  "sensitive"
+ ],
+ "en|corporation|normal": [
+  "Corporation",
+  "Corporation"
+ ],
+ "en|agreements|normal": [
+  "Agreements",
+  "agreements"
+ ],
+ "en|audiences|normal": [
+  "Audiences",
+  "audiences"
+ ],
+ "en|civilians|normal": [
+  "Civilians",
+  "civilians"
+ ],
+ "en|commanded|normal": [
+  "Commanded",
+  "commanded"
+ ],
+ "en|documentary|normal": [
+  "Documentary",
+  "documentary"
+ ],
+ "en|effectiveness|normal": [
+  "== Effectiveness ==",
+  "effectiveness"
+ ],
+ "en|expressions|normal": [
+  "Expressions",
+  "expressions"
+ ],
+ "en|extensively|normal": [
+  "Extensively",
+  "extensively"
+ ],
+ "en|fragments|normal": [
+  "Fragments",
+  "fragments"
+ ],
+ "en|interactions|normal": [
+  "Interactions",
+  "interactions"
+ ],
+ "en|introduce|normal": [
+  "Introduce.",
+  "introduced"
+ ],
+ "en|presentation|normal": [
+  "Presentation",
+  "presentation"
+ ],
+ "en|commercially|normal": [
+  "commercially",
+  "commercially"
+ ],
+ "en|continuously|normal": [
+  "Continuously.",
+  "continuously"
+ ],
+ "en|corporate|normal": [
+  "Corporate",
+  "corporate"
+ ],
+ "en|depression|normal": [
+  "Depression",
+  "depression"
+ ],
+ "en|dismissed|normal": [
+  "dismissed",
+  "dismissed"
+ ]
+}
