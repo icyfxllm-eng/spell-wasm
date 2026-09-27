@@ -81,6 +81,32 @@ pub struct Mode {
     /// Mode, Challenge a friend by the online flag).
     #[serde(rename = "hubTile", default)]
     pub hub_tile: Option<HubTile>,
+
+    /// CC-HUB-NAV F3 — the drawer group. Required; see [`Group`].
+    pub group: Group,
+}
+
+/// CC-HUB-NAV F3/D-N6 — which drawer group a mode belongs to.
+///
+/// A closed set, and REQUIRED with no serde default, for the same reason
+/// `juniorPolicy` is: a new mode must not be able to ship without somebody
+/// deciding where a player would look for it. An entry with no group does not
+/// parse, so it cannot reach a build (A12).
+#[derive(Deserialize, Debug, Clone, Copy, PartialEq, Eq)]
+#[serde(rename_all = "snake_case")]
+pub enum Group {
+    /// D-N6: Spell It, Spell Off, Daily, The Climb, Practice, Spelling Bee.
+    SpellIt,
+    /// D-N6: Spell Search, Spell Cross, SpellDoku, Letter Forge, Word Chains.
+    WordPuzzles,
+    /// D-N6: Definition Match, The Impostor, Spell Picture.
+    Meaning,
+    /// F4: the player's own material and progress, off the play surface.
+    YourWords,
+    /// Deliberately not in the drawer. In-round aids with no destination, and
+    /// the modes CC-HUB-NAV holds back until each has a reviewed spec. Spelled
+    /// out rather than left absent so the omission is a decision on the record.
+    Unlisted,
 }
 
 /// CC-HUB-NAV C1 — a mode's launcher in the home row.
@@ -484,6 +510,66 @@ mod tests {
             }
         }
     }
+
+    // ── CC-HUB-NAV F3/D-N6: drawer groups ───────────────────────────────────
+
+    /// A12, with a message worth reading. Serde already refuses an entry with
+    /// no `group` -- that is the real gate -- but its error names a line, not a
+    /// mode, so this names the mode.
+    #[test]
+    fn every_entry_has_a_group() {
+        let raw: serde_json::Value = serde_json::from_str(MODES_JSON).unwrap();
+        for m in raw["modes"].as_array().unwrap() {
+            assert!(m.get("group").is_some(),
+                    "registry entry {} has no group -- decide where a player would look for it",
+                    m["id"].as_str().unwrap_or("?"));
+        }
+    }
+
+    /// D-N6's membership, pinned exactly as Eric signed it. Two of the names in
+    /// that decision are not registry ids: "Spell It" is the base game,
+    /// `standard`, and "Spell Off" is `online_spelloff`. Recorded here so the
+    /// mapping is a fact in the tree rather than a reading someone has to redo.
+    #[test]
+    fn d_n6_membership_is_what_was_signed() {
+        let of = |g: Group| {
+            let mut v: Vec<String> =
+                all().iter().filter(|m| m.group == g).map(|m| m.id.clone()).collect();
+            v.sort();
+            v
+        };
+        assert_eq!(of(Group::WordPuzzles),
+                   ["letter_forge", "spell_cross", "spell_search", "spelldoku", "word_chains"]);
+        assert_eq!(of(Group::Meaning), ["def_match", "impostor", "word_picture"]);
+        // say_it is the one addition to D-N6's six, and not a preference: it
+        // owns a live hub tile, and A3 requires every tile route to exist as a
+        // drawer row, so it cannot be unlisted.
+        assert_eq!(of(Group::SpellIt),
+                   ["bee_sim", "climb", "daily", "online_spelloff", "practice", "say_it", "standard"]);
+    }
+
+    /// A3's precondition. A tile whose mode is unlisted would be reachable from
+    /// the home row and absent from the catalog, which is exactly the "every
+    /// mode has one home" promise failing.
+    #[test]
+    fn a_hub_tile_member_is_never_unlisted() {
+        for m in all().iter() {
+            if m.hub_tile.as_ref().is_some_and(|t| t.member) {
+                assert_ne!(m.group, Group::Unlisted,
+                           "{} is in the home row but has no drawer row (A3)", m.id);
+            }
+        }
+    }
+
+    /// Nothing is unlisted by accident: every one is either held back by D-N6
+    /// until it has a reviewed spec, or an in-round aid with no destination.
+    #[test]
+    fn unlisted_is_a_short_and_deliberate_list() {
+        let mut v: Vec<String> =
+            all().iter().filter(|m| m.group == Group::Unlisted).map(|m| m.id.clone()).collect();
+        v.sort();
+        assert_eq!(v, ["ghost_racing", "spell_aloud", "syllable_replay", "word_stories"]);
+    }
 }
 
 /// CC-PICTURE-PLATFORM D1/I1 in the web build: an app-only mode is not hidden,
@@ -513,4 +599,5 @@ mod web_wall_tests {
                     "{} survived the strip without declaring web", m.id);
         }
     }
+
 }

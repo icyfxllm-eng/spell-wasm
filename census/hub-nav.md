@@ -179,9 +179,9 @@ No Maestro flows or onboarding coach marks reference `+ My words` or
 
 ## What I would decide before Phase B
 
-1. **The `group` field**, which this amendment deliberately left out: D-N6
-   covers 12 of 23 entries, so 11 need a decision and two D-N6 names are not
-   registry ids. That is Phase B's first task and it needs Eric, not a guess.
+1. ~~The `group` field.~~ **Done** — see the section below. Eric delegated the
+   11 undecided entries; 9 of them turned out to be determined by other signed
+   text or by A3, leaving 2 to judgement.
 2. **The tile row is still static HTML.** The registry now decides membership,
    but the row itself is hand-written launchers. F6's "quick-play row = fixed
    four" can be met by a data edit today; making the row registry-RENDERED is a
@@ -189,3 +189,48 @@ No Maestro flows or onboarding coach marks reference `+ My words` or
 3. Everything else is buildable as written. C4 is merged, C6 has double the
    headroom A5 needs, C7's hook is five lines, and C9 is a move rather than a
    build.
+
+
+---
+
+# Addendum — drawer groups (F3 / D-N6), assigned 2026-09-26
+
+`group` is now a required closed-set field on every registry entry. Required in
+the serde sense: an entry without one **does not parse**, so it cannot reach a
+build, which is A12 in the strongest available form. The same pattern
+`juniorPolicy` already uses, for the same reason.
+
+Eric delegated the undecided entries. Of the 11 I flagged, 9 were settled by
+text that already exists rather than by preference:
+
+| group | modes | authority |
+|---|---|---|
+| `spell_it` | standard, online_spelloff, daily, climb, practice, bee_sim | **D-N6 signed** |
+| `spell_it` | say_it | **derived from A3** — see below |
+| `word_puzzles` | spell_search, spell_cross, spelldoku, letter_forge, word_chains | **D-N6 signed** |
+| `meaning` | def_match, impostor, word_picture | **D-N6 signed** |
+| `your_words` | translate, calendar, reports, photo_list | **F4 signed** (translate also resolves CC-TRANSLATE-SCREEN D8) |
+| `unlisted` | ghost_racing, word_stories | **D-N6 signed** — held back until each has a reviewed spec |
+| `unlisted` | syllable_replay, spell_aloud | **Claude's judgement** |
+
+**The two name mismatches resolve.** D-N6's "Spell It" is the base game, whose
+registry id is `standard`; "Spell Off" is `online_spelloff`. Both are now pinned
+in a test so nobody has to re-derive the mapping.
+
+**`say_it` is not a preference.** It owns a live hub tile (`sayItBtn`), and A3
+requires every tile route to exist as a drawer row — a mode reachable from the
+home row but absent from the catalog is exactly the "every mode has one home"
+promise failing. A test enforces that no tile member is `unlisted`.
+
+**The two judgement calls**, both the conservative choice, both one word to
+reverse: `syllable_replay` fires on a miss and has no destination at all
+(`None` in `LAUNCH`); `spell_aloud` is `hidden`, owns no tile, and D-N6 does not
+name it. Neither is in the drawer until someone says so.
+
+## One finding Phase B needs
+
+**F4 lists six rows; only four are registry modes.** My Words, Misses and Quest
+Log have no entry — they are surfaces, not modes. So the Your Words group cannot
+be rendered from the registry alone the way F3's Play group can, and I2's "no
+second list" needs an answer for them: either they become registry entries, or
+that group is explicitly part-static and the invariant says so.

@@ -25,6 +25,8 @@
   "modes": [
     {
       "id": "practice",
+      "group": "spell_it",
+      
       "nameKey": "tools.practice.name",
       "descKey": "tools.practice.desc",
       "icon": "🌱",
@@ -43,6 +45,7 @@
     },
     {
       "id": "ghost_racing",
+      "group": "unlisted",
       "nameKey": "tools.racing.name",
       "descKey": "tools.racing.desc",
       "icon": "👻",
@@ -62,6 +65,7 @@
     },
     {
       "id": "syllable_replay",
+      "group": "unlisted",
       "nameKey": "tools.syllable.name",
       "descKey": "tools.syllable.desc",
       "icon": "🔉",
@@ -82,6 +86,7 @@
     },
     {
       "id": "say_it",
+      "group": "spell_it",
       "hubTile": { "element": "sayItBtn", "member": true },
       "nameKey": "tools.sayit.name",
       "descKey": "tools.sayit.desc",
@@ -100,6 +105,7 @@
     },
     {
       "id": "photo_list",
+      "group": "your_words",
       "nameKey": "tools.photo.name",
       "descKey": "tools.photo.desc",
       "icon": "📷",
@@ -117,6 +123,7 @@
     },
     {
       "id": "spell_aloud",
+      "group": "unlisted",
       "nameKey": "tools.spellaloud.name",
       "descKey": "tools.spellaloud.desc",
       "icon": "🗣",
@@ -134,6 +141,7 @@
     },
     {
       "id": "word_stories",
+      "group": "unlisted",
       "nameKey": "tools.stories.name",
       "descKey": "tools.stories.desc",
       "icon": "📖",
@@ -155,6 +163,7 @@
     },
     {
       "id": "online_spelloff",
+      "group": "spell_it",
       "hubTile": { "element": "soBtn", "member": true },
       "nameKey": "tools.spelloff.name",
       "descKey": "tools.spelloff.desc",
@@ -174,6 +183,7 @@
     },
     {
       "id": "def_match",
+      "group": "meaning",
       "nameKey": "tools.defmatch.name",
       "descKey": "tools.defmatch.desc",
       "icon": "🎴",
@@ -192,6 +202,7 @@
     },
     {
       "id": "letter_forge",
+      "group": "word_puzzles",
       "nameKey": "tools.forge.name",
       "descKey": "tools.forge.desc",
       "icon": "🐝",
@@ -209,6 +220,7 @@
     },
     {
       "id": "word_chains",
+      "group": "word_puzzles",
       "nameKey": "tools.chains.name",
       "descKey": "tools.chains.desc",
       "icon": "🔗",
@@ -226,6 +238,7 @@
     },
     {
       "id": "impostor",
+      "group": "meaning",
       "nameKey": "tools.impostor.name",
       "descKey": "tools.impostor.desc",
       "icon": "🕵",
@@ -243,6 +256,7 @@
     },
     {
       "id": "bee_sim",
+      "group": "spell_it",
       "nameKey": "tools.bee.name",
       "descKey": "tools.bee.desc",
       "icon": "🐝",
@@ -260,6 +274,7 @@
     },
     {
       "id": "word_picture",
+      "group": "meaning",
       "nameKey": "tools.wordpic.name",
       "descKey": "tools.wordpic.desc",
       "icon": "🖼️",
@@ -277,6 +292,7 @@
     },
     {
       "id": "reports",
+      "group": "your_words",
       "nameKey": "reports.name",
       "descKey": "reports.desc",
       "icon": "🗺️",
@@ -294,6 +310,7 @@
     },
     {
       "id": "calendar",
+      "group": "your_words",
       "nameKey": "cal.name",
       "descKey": "cal.desc",
       "icon": "🗓️",
@@ -311,6 +328,7 @@
     },
     {
       "id": "translate",
+      "group": "your_words",
       "nameKey": "tr.name",
       "descKey": "tr.desc",
       "icon": "🌐",
@@ -328,6 +346,7 @@
     },
     {
       "id": "spelldoku",
+      "group": "word_puzzles",
       "nameKey": "sd.name",
       "descKey": "sd.desc",
       "icon": "🔢",
@@ -345,6 +364,7 @@
     },
     {
       "id": "spell_search",
+      "group": "word_puzzles",
       "nameKey": "ws.name",
       "descKey": "ws.desc",
       "icon": "🔎",
@@ -362,6 +382,7 @@
     },
     {
       "id": "spell_cross",
+      "group": "word_puzzles",
       "nameKey": "xw.name",
       "descKey": "xw.desc",
       "icon": "\u271a",
@@ -379,6 +400,7 @@
     },
     {
       "id": "standard",
+      "group": "spell_it",
       "nameKey": "brand.tag",
       "descKey": "share.tagline",
       "icon": "🔊",
@@ -397,6 +419,7 @@
     },
     {
       "id": "climb",
+      "group": "spell_it",
       "hubTile": { "element": "climbBtn", "member": false },
       "$hubTileNote": "D1 SIGNED (Eric, 2026-09-02): out of the home row. The MODE is untouched -- Climb stays a LEVEL_OPTS entry and is selectable from the setup chip; shields, leaderboard and scoring are unchanged. The climbBtn element STAYS IN THE DOM, hidden: it owns the leaderboard scrim handler (climb.rs open_leaderboard) and ghost.rs reaches the board by synthesising a click on it, so deleting the markup would break a second feature. Suppressed, not removed.",
       "nameKey": "top.theClimb",
@@ -417,6 +440,7 @@
     },
     {
       "id": "daily",
+      "group": "spell_it",
       "hubTile": { "element": "dailyBtn", "member": true },
       "nameKey": "widget.daily.name",
       "descKey": "widget.daily.desc",
