@@ -1,6 +1,6 @@
 # TEST-REPORT — Web E2E (app build)
 
-**226/226 passed** across 36 areas.
+**238/238 passed** across 37 areas.
 
 ## drawer — 18/18
 - ✅ drawer: opens from the meta corner and renders registry rows
@@ -45,6 +45,20 @@
 - ✅ hub: A3 — the burger is 88x44, top-trailing, centred on the wordmark
 - ✅ hub: A7 — the burger frame does not move with the Misses count
 - ✅ hub: A12 — Spell Jr is never nudged, at any miss count
+
+## drawer-close — 12/12
+- ✅ close: T1 — the bottom X dismisses at every scroll offset (SE)
+- ✅ close: T1 — the bottom X dismisses at every scroll offset (16)
+- ✅ close: T1 — the bottom X dismisses at every scroll offset (ProMax)
+- ✅ close: T2 — nothing closes the drawer from its top half
+- ✅ close: T4 — a scrim tap dismisses
+- ✅ close: T5 — 56x56, 16pt inside the trailing edge (SE)
+- ✅ close: T5 — 56x56, 16pt inside the trailing edge (16)
+- ✅ close: T5 — 56x56, 16pt inside the trailing edge (ProMax)
+- ✅ close: T6 — the last row scrolls clear of the footer
+- ✅ close: T7 — no row draws outside the panel at the top
+- ✅ close: T8 — every close path leaves the nudge watermark identical
+- ✅ close: T9 — named for a screen reader, and focus goes back to the burger
 
 ## keyboard — 6/6
 - ✅ keyboard[en]: keys visible with hit area at SE

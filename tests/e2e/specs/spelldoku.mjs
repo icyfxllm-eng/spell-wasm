@@ -733,7 +733,19 @@ export async function run(browser, base, suite) {
       await page.waitForFunction(() => !/^\s*$/.test(document.getElementById('sdBadge').textContent), null, { timeout: 4000 });
       await page.waitForTimeout(300);
       const shown = await page.$eval('#sdBadge', (e) => e.textContent);
-      assert(!shown.toLowerCase().includes(w), `the card must not spell "${w}" (showed "${shown}")`);
+      // The mocked definition deliberately SPELLS the word, and the app is
+      // supposed to reject it (spelldoku_ui.rs only shows a definition that
+      // wordsearch::hint::passes), falling back to ws.noMeaning. So the check
+      // is that the LEAKING TEXT never arrives -- keyed on the mock's own
+      // tail, which nothing else in the app says.
+      //
+      // It used to be `!shown.includes(w)`, and that was one unlucky draw
+      // away from failing from the day it was written: the board is built
+      // from a random seed (spelldoku_ui.rs D-R4), the fallback reads "No
+      // meaning hint FOR this word", and a board whose first word is `for`
+      // makes the assertion fail on the string that proves the app got it
+      // right. That draw finally came up.
+      assert(!/you can see/i.test(shown), `a definition that spells "${w}" reached the card: "${shown}"`);
       await ctx.unroute('**/api/meaning**');
       await ctx.route('**/api/meaning**', (r) => r.fulfill({
         status: 200, contentType: 'application/json',

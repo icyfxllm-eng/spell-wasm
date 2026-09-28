@@ -29,6 +29,7 @@ import * as attemptsShields from './specs/attempts_shields.mjs';
 import * as toolsHub from './specs/tools-hub.mjs';
 import * as drawerNav from './specs/drawer.mjs';
 import * as hubInventory from './specs/hub-inventory.mjs';
+import * as drawerClose from './specs/drawer-close.mjs';
 import * as economics from './specs/economics.mjs';
 import * as finalePixels from './specs/finale-pixels.mjs';
 import * as audioGate from './specs/audio-gate.mjs';
@@ -61,6 +62,7 @@ const SPECS = [
   ['inspector', inspector],
   ['audio-rescue', audioRescue],
   ['hub-inventory', hubInventory],
+  ['drawer-close', drawerClose],
   ['keyboard', keyboard],
   ['gameplay', gameplay],
   ['modes', modes],

@@ -40,6 +40,10 @@ const MARKER: &str = "navDrawer";
 const PANEL: &str = "navDrawerPanel";
 const BURGER: &str = "navBurger";
 const CLOSE: &str = "navDrawerClose";
+/// v1.3.2 F1: the panel is the frame, this is the part that scrolls.
+const SCROLL: &str = "navDrawerScroll";
+/// The pinned footer band that carries the close button (D-C6).
+const FOOT: &str = "navDrawerFoot";
 
 /// F2 asks for a fixed row height in every uiLang, because secondary text wraps
 /// differently across fifteen languages and ragged rows look broken (D-N3).
@@ -437,6 +441,15 @@ pub fn close() {
     if let Some(b) = dom::doc().body() {
         let _ = b.class_list().toggle_with_force("hub-open", false);
     }
+    // F4: focus returns to the burger, whichever path closed the drawer.
+    // Every path lands here -- that is I1 -- so this is the one place it can
+    // be said once. Without it a screen-reader user is dropped at the top of
+    // the document with no idea where the menu went.
+    if let Some(b) = dom::doc().get_element_by_id(BURGER) {
+        if let Ok(h) = b.dyn_into::<web_sys::HtmlElement>() {
+            let _ = h.focus();
+        }
+    }
 }
 
 pub fn open(app: &App) {
@@ -448,12 +461,57 @@ pub fn open(app: &App) {
     if let Some(b) = dom::doc().body() {
         let _ = b.class_list().toggle_with_force("hub-open", true);
     }
-    // First focus lands on the X (F1).
-    if let Some(x) = dom::doc().get_element_by_id(CLOSE) {
+    // First focus lands on the PANEL, not on the close button. v1.1 F1 put it
+    // on the ✕ when the ✕ was the first thing in the drawer; v1.3.2 moves the
+    // ✕ to the bottom, and focusing it now would scroll a screen-reader user
+    // straight past every row to the exit.
+    if let Some(x) = dom::doc().get_element_by_id(PANEL) {
         if let Ok(h) = x.dyn_into::<web_sys::HtmlElement>() {
+            let _ = h.set_attribute("tabindex", "-1");
             let _ = h.focus();
         }
     }
+}
+
+/// The footer band's height. The button is 56x56 (I4) and the band gives it
+/// 12pt of air below, above the home-indicator inset.
+const FOOT_PX: u32 = 68;
+
+/// F1 — the close control, bottom-trailing, pinned outside the scroll view.
+///
+/// D-C1 put it here rather than bottom-leading (rev 2's placement) for
+/// right-thumb reach, directly below where the burger opened the menu. It is
+/// icon-only (D-C4) and reuses `aria.close`, the string the app's four other
+/// ✕ buttons already carry in all 15 locales, so the VoiceOver name costs no
+/// new copy. Secondary styling (D-C5): a circle with an outline, never the
+/// row card treatment, so it cannot read as a menu destination.
+fn render_footer() {
+    let doc = dom::doc();
+    let Some(panel) = doc.get_element_by_id(PANEL) else { return };
+    if doc.get_element_by_id(FOOT).is_some() {
+        return; // built once; render() only repaints the scroller
+    }
+    let Ok(foot) = doc.create_element("div") else { return };
+    foot.set_id(FOOT);
+    // D-C6: the band carries the drawer's own background, so scrolled rows
+    // pass BEHIND it instead of showing through around the button.
+    let _ = foot.set_attribute(
+        "style",
+        &format!(
+            "flex:0 0 auto;height:{FOOT_PX}px;background:var(--panel);\
+             padding-bottom:env(safe-area-inset-bottom,0px);\
+             display:flex;align-items:center;justify-content:flex-end;\
+             padding-inline-end:16px"
+        ),
+    );
+    let Ok(btn) = doc.create_element("button") else { return };
+    btn.set_id(CLOSE);
+    let _ = btn.set_attribute("type", "button");
+    let _ = btn.set_attribute("class", "nav-close");
+    let _ = btn.set_attribute("aria-label", &t("aria.close"));
+    btn.set_text_content(Some("\u{2715}"));
+    let _ = foot.append_child(&btn);
+    let _ = panel.append_child(&foot);
 }
 
 fn render(app: &App) {
@@ -470,11 +528,11 @@ fn render(app: &App) {
     let play = play_sections(&shown, &ctx.lang);
     let yours = your_words_rows(&shown);
 
-    let mut h = format!(
-        "<div class=\"nav-head\"><button type=\"button\" class=\"ghost hub-x\" id=\"{CLOSE}\" \
-         aria-label=\"{}\">\u{2715}</button></div>",
-        dom::escape_html(&t("aria.close"))
-    );
+    // v1.3.2 F2: the top-right ✕ is gone, view and all. It rendered inside the
+    // status bar next to the battery icon — the hardest point on the screen to
+    // reach and the easiest to mis-tap. The close control is the pinned footer
+    // now (F1), and this corner stays empty.
+    let mut h = String::new();
     // Account first (F2), then Play, then Your Words. Help & Settings is F5,
     // which is Phase D.
     if let Some(name) = &acct.identity {
@@ -529,12 +587,16 @@ fn render(app: &App) {
             h.push_str(&row_html(&format!("help_{key}"), icon, dedupe_icon(icon, &label)));
         }
     }
+    // I5/F1: the last row has to clear the footer, so the scroll content ends
+    // with the band's height plus 8pt of air. Without it Credits sits under
+    // the close button at the bottom of the scroll and cannot be read.
     dom::set_html(
-        PANEL,
+        SCROLL,
         &format!(
-            "<div style=\"max-height:100%;padding:14px 0\">{h}</div>"
+            "<div style=\"padding:14px 0 calc({FOOT_PX}px + 8px)\">{h}</div>"
         ),
     );
+    render_footer();
     dom::on_click(CLOSE, close);
 
     // Account action proxies to its existing control.
@@ -600,12 +662,30 @@ pub fn wire(app: &App) {
                 let _ = panel.set_attribute("aria-modal", "true");
                 let _ = panel.set_attribute(
                     "style",
-                    // D-N2: slides from the right edge. Its own scroller, so
-                    // the page behind never becomes the one that moves.
+                    // D-N2: slides from the right edge.
+                    //
+                    // v1.3.2: the PANEL no longer scrolls — it is a column of
+                    // two, a scroller and a pinned footer, which is what lets
+                    // the close button sit outside the scroll view (F1) and be
+                    // reachable at every offset (I2). Its padding carries the
+                    // safe-area insets, so no row can draw under the clock or
+                    // the home indicator (F3/I3); before this the panel was
+                    // height:100% with no inset at all, which is exactly why a
+                    // row showed through behind the status bar.
                     "width:min(320px,85vw);max-width:min(320px,85vw);height:100%;\
-                     margin:0;border-radius:0;overflow-y:auto;overflow-x:hidden;\
-                     display:block;text-align:start",
+                     margin:0;border-radius:0;overflow:hidden;\
+                     padding:env(safe-area-inset-top,0px) 0 0 0;\
+                     display:flex;flex-direction:column;text-align:start",
                 );
+                // The scroller. Everything that was in the panel goes here.
+                if let Ok(scroll) = doc.create_element("div") {
+                    scroll.set_id(SCROLL);
+                    let _ = scroll.set_attribute(
+                        "style",
+                        "flex:1 1 auto;min-height:0;overflow-y:auto;overflow-x:hidden",
+                    );
+                    let _ = panel.append_child(&scroll);
+                }
                 let _ = scrim.append_child(&panel);
             }
             let _ = body_el.append_child(&scrim);

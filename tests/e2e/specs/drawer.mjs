@@ -137,7 +137,9 @@ export async function run(browser, base, suite) {
       await page.click('#navBurger');
       await page.waitForSelector('#navDrawer.show', { timeout: 4000 });
       const overflows = await page.evaluate(() => {
-        const p = document.getElementById('navDrawerPanel');
+        // v1.3.2 F1: the PANEL is a frame now — a scroller plus a pinned
+        // footer — so the element that moves is the scroller inside it.
+        const p = document.getElementById('navDrawerScroll');
         return p.scrollHeight > p.clientHeight;
       });
       assert(overflows, 'this viewport must make the panel overflow, or the test proves nothing');
@@ -145,7 +147,7 @@ export async function run(browser, base, suite) {
       for (let i = 0; i < 6; i++) { await page.mouse.wheel(0, 200); await page.waitForTimeout(40); }
       await page.waitForTimeout(250);
       const after = await page.evaluate(() => ({
-        panel: Math.round(document.getElementById('navDrawerPanel').scrollTop),
+        panel: Math.round(document.getElementById('navDrawerScroll').scrollTop),
         page: Math.round(window.scrollY),
       }));
       assert(after.panel > 0, 'the panel itself scrolls');

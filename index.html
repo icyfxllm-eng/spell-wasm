@@ -1675,6 +1675,20 @@
   /* While the drawer is open it owns scrolling; the page behind must not move. */
   body.hub-open{overflow:hidden}
   .hub-x{position:absolute;top:10px;inset-inline-end:12px}
+  /* CC-HUB-NAV v1.3.2 F1 — the drawer's close button, bottom-trailing.
+     The 56x56 hit rect is the whole point (I4): the ✕ it replaces was an
+     18pt glyph in the top-right corner, which on a tall phone renders beside
+     the battery icon. The glyph is 28pt inside it. Secondary styling per
+     D-C5 — an outlined circle, never the row card, so it does not read as a
+     place to go. `.hub-x` is deliberately NOT reused: four other screens
+     share it, and they still want the top corner. */
+  .nav-close{width:56px;height:56px;border-radius:50%;background:transparent;
+    border:1px solid var(--edge);color:var(--muted);font-size:28px;line-height:1;
+    display:grid;place-items:center;cursor:pointer;padding:0;font-family:inherit;
+    transition:border-color .15s,color .15s,transform .1s}
+  .nav-close:hover{border-color:var(--amber);color:var(--ink)}
+  .nav-close:active{transform:translateY(1px)}
+  @media (prefers-reduced-motion:reduce){.nav-close{transition:none}.nav-close:active{transform:none}}
   /* Spell Racing screen (CC-SPELL-RACING Phase 5). */
   #spellRacing .modal{position:relative}
   .sr-label{font-size:12px;font-weight:700;color:var(--muted);text-align:start;margin:16px 0 8px;letter-spacing:.02em}
