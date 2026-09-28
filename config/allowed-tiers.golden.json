@@ -277,6 +277,18 @@
         "hard",
         "expert"
       ]
+    },
+    "versus": {
+      "junior": [
+        "easy",
+        "medium"
+      ],
+      "standard": [
+        "easy",
+        "medium",
+        "hard",
+        "expert"
+      ]
     }
   }
 }

@@ -275,7 +275,33 @@
      behaviour lives only in the media queries below — no per-component forks. */
 
   /* Meta corner (F2): icon-only, ≥44pt, top-right, persistent across breakpoints */
+  /* F5: wordmark and burger on one line, tagline under both. `align-items:
+     center` is what satisfies A3's "within 2pt of the wordmark centre" — it
+     is measured from the wordmark's own box, so no offset needs maintaining
+     when the wordmark's size or the tagline's wrapping changes. */
+  .brand{flex:1 1 auto;min-width:0}
+  .brand-line{display:flex;align-items:center;justify-content:space-between;gap:14px}
   .meta-corner{display:flex;gap:10px;flex:0 0 auto}
+  /* CC-HUB-NAV v1.3.1 F4 — the burger, and the only door off the hub.
+     It asked for `.icon-btn` from the day it was written and this stylesheet
+     has never had such a rule, so until now it rendered as a bare 16pt-wide
+     button: no shape, no border, and a tap target well under the 44pt
+     minimum. Double width (88) because it is the sole navigation control;
+     44 tall because that is the floor, and the same one .meta-icon uses. */
+  .burger{width:88px;height:44px;border-radius:22px;background:var(--panel);
+    border:1px solid var(--edge);color:var(--ink);font-size:22px;line-height:1;
+    display:grid;place-items:center;cursor:pointer;padding:0;position:relative;
+    transition:border-color .15s,color .15s,transform .1s}
+  .burger:hover{border-color:var(--amber)}
+  .burger:active{transform:translateY(1px)}
+  .burger:disabled{opacity:.45;cursor:default}
+  /* F6 — the nudge dot. Absolutely positioned so it overlays the burger and
+     cannot change its frame (I-N4/A13). An accent colour, never red: this is
+     "there is something new", not "you got something wrong" (CC-FEEDBACK D2
+     spirit). It never animates. */
+  .burger .nudge{position:absolute;top:7px;inset-inline-end:11px;width:9px;height:9px;
+    border-radius:50%;background:var(--teal);pointer-events:none}
+  @media (prefers-reduced-motion:reduce){.burger{transition:none}.burger:active{transform:none}}
   /* CC-HUB-NAV F6 — chrome the drawer replaced. Its OWN class, deliberately:
      climb::reflect_auth toggles btn-hide on accountBtn on every auth change,
      so sharing that class would un-retire the icon the moment someone signed
@@ -1583,20 +1609,30 @@
 
   <div class="topbar">
     <div class="brand">
-      <div class="mark" id="brandMark">SPELL</div>
+      <!-- F5's header row: wordmark leading, burger trailing, tagline beneath
+           both. The burger lives INSIDE this row rather than beside the whole
+           brand block so that centring it is the flexbox's job and not a magic
+           offset — A3 wants its centre within 2pt of the WORDMARK's, and a
+           tagline underneath would drag a block-level alignment low.
+           The meta corner keeps its name and its class: the three controls it
+           used to hold are still in it, retired, because the drawer routes by
+           proxying a click to each surface's existing element. Nothing but the
+           burger renders (F4). -->
+      <div class="brand-line">
+        <div class="mark" id="brandMark">SPELL</div>
+        <div class="meta-corner">
+          <!-- F1 — the Misses chip left the hub for the drawer's Your Words
+               group. Retired rather than deleted: game::refresh_mode_buttons
+               writes its content and disabled state, and both the drawer row's
+               badge and its tap still read this element, so the live due-count
+               stays authoritative and the drawer never reads the learner
+               store itself (I8). -->
+          <button class="data-chip misses-chip retired" id="missesBtn"></button>
+          <button class="meta-icon retired" id="accountBtn" aria-label="Sign in" data-i18n-aria="aria.signIn">👤</button>
+          <button class="meta-icon retired" id="setBtn" aria-label="Settings" data-i18n-aria="settings.title">⚙</button>
+        </div>
+      </div>
       <div class="tag" id="brandTag">hear it · spell it · keep the chain</div>
-    </div>
-    <!-- Meta corner: account + settings as icon-only affordances (Feature 2).
-         The only "meta" family; never borrows config/launcher/data treatments.
-         accountBtn's signed-in state (aria-label + .signed-in) is set in climb.rs. -->
-    <div class="meta-corner">
-      <!-- CC-HUB-NAV F4a — the Misses chip. Moved here from the retired
-           utility row; game::refresh_mode_buttons still renders its content, so
-           the live due-count stays authoritative and the drawer never reads the
-           learner store itself (I8). -->
-      <button class="data-chip misses-chip" id="missesBtn"></button>
-      <button class="meta-icon retired" id="accountBtn" aria-label="Sign in" data-i18n-aria="aria.signIn">👤</button>
-      <button class="meta-icon retired" id="setBtn" aria-label="Settings" data-i18n-aria="settings.title">⚙</button>
     </div>
   </div>
   <!-- head-to-head scoreboard (hidden outside a match) -->
@@ -1635,7 +1671,14 @@
            supported AND not in Kid Mode (photo_list::reflect_visibility). -->
       <button class="data-chip btn-hide" id="photoBtn" data-i18n="photo.button">📷 From a photo</button>
     </div>
-    <div class="home-group modes-row" role="group" aria-label="Ways to play" data-i18n-aria="aria.waysToPlay">
+    <!-- CC-HUB-NAV v1.3.1 F2 — the quick-play row. Retired, not deleted, and
+         that is not timidity: every button here is the element a drawer row
+         proxies its tap to. climbBtn is the strongest case — it owns
+         open_leaderboard, ghost.rs reaches the board by synthesising a click
+         on it, and climb.rs has a test saying so. Deleting the markup would
+         take six modes and the leaderboard with it. I-N2's inventory test
+         therefore counts RENDERED children. -->
+    <div class="home-group modes-row retired" role="group" aria-label="Ways to play" data-i18n-aria="aria.waysToPlay">
       <!-- Launchers keep their existing label sources: vsBtn's icon is static
            (the shared mode-name string stays icon-free for prose reuse); climbBtn
            uses top.theClimb (emoji in string); dailyBtn text is set by

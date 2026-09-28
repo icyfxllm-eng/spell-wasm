@@ -296,17 +296,19 @@ mod tests {
     #[test]
     fn registry_parses_and_holds_the_shipped_modes() {
         let all = all();
-        // 20 modes + 5 core surfaces. The two newest are my_words and misses:
-        // surfaces rather than modes, registered so the CC-HUB-NAV drawer can
-        // resolve their rows through this registry and not a second list (I2).
-        assert_eq!(all.len(), 25, "20 modes + 5 core surfaces registered");
+        // 20 modes + 6 core surfaces. my_words and misses are surfaces rather
+        // than modes, registered so the CC-HUB-NAV drawer can resolve their
+        // rows through this registry and not a second list (I2); `versus` is
+        // the newest, and it is here because v1.3.1 F2 deletes the quick-play
+        // row that was the local Spell Off's only door (H1).
+        assert_eq!(all.len(), 26, "20 modes + 6 core surfaces registered");
         // File order IS tile order (D6); practice leads (CC-PRACTICE D9).
         // letter_forge (CC-LETTER-FORGE F1) sits after def_match, where its
         // registry row was inserted. It is `hidden`, so it appears here — this
         // pin covers all() — and in none of the visible() expectations below.
         assert_eq!(
             ids(&all),
-            vec!["practice", "ghost_racing", "syllable_replay", "say_it", "photo_list", "spell_aloud", "word_stories", "online_spelloff", "def_match", "letter_forge", "word_chains", "impostor", "bee_sim", "word_picture", "my_words", "misses", "reports", "calendar", "translate", "spelldoku", "spell_search", "spell_cross", "standard", "climb", "daily"],
+            vec!["practice", "ghost_racing", "syllable_replay", "say_it", "photo_list", "spell_aloud", "word_stories", "online_spelloff", "def_match", "letter_forge", "word_chains", "impostor", "bee_sim", "word_picture", "my_words", "misses", "reports", "calendar", "translate", "spelldoku", "spell_search", "spell_cross", "standard", "climb", "daily", "versus"],
         );
     }
 
@@ -472,11 +474,23 @@ mod tests {
     #[test]
     fn premium_gated_mode_is_absent_without_the_entitlement() {
         let all = all();
-        // CC-HUB-CLEANUP D2: photo_list is hidden from the hub (Photo lives on
-        // the home word-source row); hidden must beat the entitlement too.
+        // Without photo_ocr the mode is absent everywhere, tiles and catalog
+        // alike — that is the entitlement doing its job.
         let c = HubCtx { premium: vec![], ..ctx() };
         assert!(!ids(&visible(&all, &c)).contains(&"photo_list".to_string()), "photo_list needs photo_ocr");
-        assert!(!ids(&visible(&all, &ctx())).contains(&"photo_list".to_string()), "...and stays hidden even with it (D2)");
+        assert!(!ids(&catalog(&all, &c)).contains(&"photo_list".to_string()), "...in the catalog too");
+        // WITH it, the catalog carries it and the tile row still does not.
+        // CC-HUB-CLEANUP D2 used to express that as status:hidden, which also
+        // kept it out of the CATALOG and left it reachable from nowhere once
+        // the utility row was retired (v1.3.1 H3). It is a `your_words` entry
+        // now: no hub tile because it has no hubTile field, a drawer row
+        // because the catalog admits it.
+        assert!(ids(&catalog(&all, &ctx())).contains(&"photo_list".to_string()), "photo_list has a drawer row");
+        // ...and still no hub tile, which is now a property of the ENTRY rather
+        // than of its status: a tile exists only where hubTile names an element,
+        // and photo_list has no hubTile field at all.
+        let m = all.iter().find(|m| m.id == "photo_list").unwrap();
+        assert!(m.hub_tile.is_none(), "photo_list must never acquire a hub tile");
     }
 
     #[test]
@@ -566,11 +580,11 @@ mod tests {
         assert_eq!(of(Group::WordPuzzles),
                    ["letter_forge", "spell_cross", "spell_search", "spelldoku", "word_chains"]);
         assert_eq!(of(Group::Meaning), ["def_match", "impostor", "word_picture"]);
-        // say_it is the one addition to D-N6's six, and not a preference: it
-        // owns a live hub tile, and A3 requires every tile route to exist as a
-        // drawer row, so it cannot be unlisted.
+        // say_it and versus are the two additions to D-N6's six, and neither is
+        // a preference. Each owned a quick-play tile that v1.3.1 F2 deletes, and
+        // I-N3 requires both to reach a drawer row, so neither can be unlisted.
         assert_eq!(of(Group::SpellIt),
-                   ["bee_sim", "climb", "daily", "online_spelloff", "practice", "say_it", "standard"]);
+                   ["bee_sim", "climb", "daily", "online_spelloff", "practice", "say_it", "standard", "versus"]);
     }
 
     /// A3's precondition. A tile whose mode is unlisted would be reachable from

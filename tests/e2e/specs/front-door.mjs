@@ -123,8 +123,12 @@ export async function run(browser, base, suite) {
         'no account entry point in the drawer');
       const drawerText = await page.$eval('#navDrawerPanel', (e) => e.textContent.toLowerCase());
       assert(!/sign in|log ?out/.test(drawerText), `a child's drawer offers no account action: ${drawerText}`);
+      // The leaderboard's own entry point is acctClimb, inside the account
+      // sheet — and a child has no account row at all, which the two
+      // assertions above just proved. climbBtn is display:none for everyone
+      // since v1.3.1 F2, so asserting on it would pass for the wrong reason.
       await page.click('#navDrawerClose');
-      assert(!(await shown(page, 'climbBtn')), 'no leaderboard entry point');
+      assert(!(await page.$('#accountScrim.show')), 'and no account sheet to reach the board through');
     } finally { await ctx.close(); }
   });
 

@@ -28,7 +28,7 @@ import * as submitAdvance from './specs/submit-advance.mjs';
 import * as attemptsShields from './specs/attempts_shields.mjs';
 import * as toolsHub from './specs/tools-hub.mjs';
 import * as drawerNav from './specs/drawer.mjs';
-import * as hubRow from './specs/hub-row.mjs';
+import * as hubInventory from './specs/hub-inventory.mjs';
 import * as economics from './specs/economics.mjs';
 import * as finalePixels from './specs/finale-pixels.mjs';
 import * as audioGate from './specs/audio-gate.mjs';
@@ -60,7 +60,7 @@ const SPECS = [
   ['review-queue', reviewQueue],
   ['inspector', inspector],
   ['audio-rescue', audioRescue],
-  ['hub-row', hubRow],
+  ['hub-inventory', hubInventory],
   ['keyboard', keyboard],
   ['gameplay', gameplay],
   ['modes', modes],

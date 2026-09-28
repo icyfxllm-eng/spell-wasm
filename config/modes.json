@@ -26,7 +26,6 @@
     {
       "id": "practice",
       "group": "spell_it",
-      
       "nameKey": "tools.practice.name",
       "descKey": "tools.practice.desc",
       "icon": "🌱",
@@ -87,11 +86,14 @@
     {
       "id": "say_it",
       "group": "spell_it",
-      "hubTile": { "element": "sayItBtn", "member": true },
+      "hubTile": {
+        "element": "sayItBtn",
+        "member": true
+      },
       "nameKey": "tools.sayit.name",
       "descKey": "tools.sayit.desc",
       "icon": "🎤",
-      "status": "hidden",
+      "status": "live",
       "kidSafe": false,
       "platforms": [
         "ios"
@@ -99,7 +101,7 @@
       "entitlementLevel": "preview",
       "requiresPremium": null,
       "languages": null,
-      "$note": "CC-HUB-CLEANUP D3: DORMANT, not deleted — zero entry points (home tile rerouted to Spell It, hub hidden, tools row hidden). Code/assets retained; may return renamed.",
+      "$note": "CC-HUB-NAV v1.3.1 H2: was DORMANT with zero entry points (CC-HUB-CLEANUP D3). v1.3.1 F2 deletes the quick-play row, which was its last one, so it is live again and reachable as a drawer row. Every other gate is unchanged: the say_it flag still governs it, iOS still governs it, and juniorPolicy hidden keeps it away from Spell Jr. Code/assets were retained for exactly this.",
       "exitStyle": "instant",
       "juniorPolicy": "hidden"
     },
@@ -109,7 +111,7 @@
       "nameKey": "tools.photo.name",
       "descKey": "tools.photo.desc",
       "icon": "📷",
-      "status": "hidden",
+      "status": "live",
       "kidSafe": false,
       "platforms": [
         "ios"
@@ -117,7 +119,7 @@
       "entitlementLevel": "preview",
       "requiresPremium": "photo_ocr",
       "languages": null,
-      "$note": "The mode CC-MODE-HUB calls 'ocrMode'/'Photo/OCR' is `photo_list` in this codebase. Gated by the photo_ocr parent-premium entitlement — see $deviations.entitlementLevel.",
+      "$note": "The mode CC-MODE-HUB calls 'ocrMode'/'Photo/OCR' is `photo_list` here. Gated by the photo_ocr parent-premium entitlement — see $deviations.entitlementLevel. CC-HUB-NAV v1.3.1 H3: status was `hidden`, which permitted() rejects first, so it had no drawer row -- and the Phase C cut-over had already retired the utility row its button lived in. It was reachable from nowhere in build 252.",
       "exitStyle": "instant",
       "juniorPolicy": "hidden"
     },
@@ -164,7 +166,10 @@
     {
       "id": "online_spelloff",
       "group": "spell_it",
-      "hubTile": { "element": "soBtn", "member": true },
+      "hubTile": {
+        "element": "soBtn",
+        "member": true
+      },
       "nameKey": "tools.spelloff.name",
       "descKey": "tools.spelloff.desc",
       "icon": "⚔️",
@@ -293,13 +298,19 @@
     {
       "id": "my_words",
       "group": "your_words",
-      "hubTile": { "element": "importBtn", "member": true },
+      "hubTile": {
+        "element": "importBtn",
+        "member": true
+      },
       "nameKey": "top.myWords",
       "descKey": "top.myWords",
-      "icon": "\uff0b",
+      "icon": "＋",
       "status": "core",
       "kidSafe": true,
-      "platforms": ["ios", "web"],
+      "platforms": [
+        "ios",
+        "web"
+      ],
       "entitlementLevel": "preview",
       "requiresPremium": null,
       "languages": null,
@@ -310,13 +321,19 @@
     {
       "id": "misses",
       "group": "your_words",
-      "hubTile": { "element": "missesBtn", "member": true },
+      "hubTile": {
+        "element": "missesBtn",
+        "member": true
+      },
       "nameKey": "top.misses",
       "descKey": "top.misses",
-      "icon": "\u21bb",
+      "icon": "↻",
       "status": "core",
       "kidSafe": true,
-      "platforms": ["ios", "web"],
+      "platforms": [
+        "ios",
+        "web"
+      ],
       "entitlementLevel": "preview",
       "requiresPremium": null,
       "languages": null,
@@ -419,7 +436,7 @@
       "group": "word_puzzles",
       "nameKey": "xw.name",
       "descKey": "xw.desc",
-      "icon": "\u271a",
+      "icon": "✚",
       "status": "live",
       "kidSafe": true,
       "platforms": [
@@ -454,7 +471,10 @@
     {
       "id": "climb",
       "group": "spell_it",
-      "hubTile": { "element": "climbBtn", "member": false },
+      "hubTile": {
+        "element": "climbBtn",
+        "member": false
+      },
       "$hubTileNote": "D1 SIGNED (Eric, 2026-09-02): out of the home row. The MODE is untouched -- Climb stays a LEVEL_OPTS entry and is selectable from the setup chip; shields, leaderboard and scoring are unchanged. The climbBtn element STAYS IN THE DOM, hidden: it owns the leaderboard scrim handler (climb.rs open_leaderboard) and ghost.rs reaches the board by synthesising a click on it, so deleting the markup would break a second feature. Suppressed, not removed.",
       "nameKey": "top.theClimb",
       "descKey": "level.climb.desc",
@@ -475,7 +495,10 @@
     {
       "id": "daily",
       "group": "spell_it",
-      "hubTile": { "element": "dailyBtn", "member": true },
+      "hubTile": {
+        "element": "dailyBtn",
+        "member": true
+      },
       "nameKey": "widget.daily.name",
       "descKey": "widget.daily.desc",
       "icon": "🗓",
@@ -491,6 +514,29 @@
       "$note": "CC-ONBOARD-JR F4: junior plays Jr Daily — Easy + Medium, its own seed namespace. Core: never a hub tile.",
       "exitStyle": "instant",
       "juniorPolicy": "variant:jr-daily"
+    },
+    {
+      "id": "versus",
+      "group": "spell_it",
+      "hubTile": {
+        "element": "vsBtn",
+        "member": true
+      },
+      "nameKey": "top.headToHead",
+      "descKey": "vs.blurb",
+      "icon": "⚡",
+      "status": "core",
+      "kidSafe": true,
+      "platforms": [
+        "ios",
+        "web"
+      ],
+      "entitlementLevel": "preview",
+      "requiresPremium": null,
+      "languages": null,
+      "$note": "CC-HUB-NAV v1.3.1 H1. Two players, one device -- no network, no chat, which is why it is kidSafe and ungated, matching what vsBtn already does in Kid Mode today. `core` like the base game, the Climb and the Daily: it always runs and has no flag, so it is governed here and rendered elsewhere. It had no registry entry at all until F2 deleted the tile that was its only door.",
+      "exitStyle": "instant",
+      "juniorPolicy": "ungated"
     }
   ]
 }

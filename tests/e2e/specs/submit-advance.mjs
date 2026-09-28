@@ -42,7 +42,8 @@ async function waitAnswered(page, timeout = 3500) {
 
 // Enter Daily and serve the first word (orb tap). Returns nothing.
 async function startDaily(page) {
-  await page.click('#dailyBtn'); await page.waitForTimeout(300);
+  // The tile is retired (v1.3.1 F2); press the element, as the drawer does.
+  await page.evaluate(() => document.getElementById('dailyBtn').click()); await page.waitForTimeout(300);
   await page.click('#orbWrap'); await page.waitForTimeout(350);
 }
 

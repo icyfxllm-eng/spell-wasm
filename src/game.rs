@@ -786,6 +786,10 @@ pub fn refresh_mode_buttons(app: &App) {
     dom::el("missesBtn").set_attribute("title", &tip).ok();
     dom::toggle_class("missesBtn", "on", s.review);
     dom::set_disabled("missesBtn", !s.review && total == 0 && tone_total == 0);
+    // CC-HUB-NAV v1.3.1 F6. The nudge is told the total from here rather than
+    // reading the learner store itself: this function already runs on every
+    // change to it, and I8 keeps the drawer out of that store.
+    crate::drawer::reflect_nudge(total, s.kid);
 }
 
 /// Keep the setup chip's summary in lock-step with the three round-parameter

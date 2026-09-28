@@ -6,7 +6,11 @@ export async function run(browser, base, suite) {
   await suite.test('daily: entering shows progress bar + locks language', async () => {
     const { ctx, page } = await openApp(browser, base, { lang: 'en' });
     try {
-      await page.click('#dailyBtn'); await page.waitForTimeout(400);
+      // v1.3.1 F2 retired the quick-play row, so the tile is display:none and
+      // a real click would wait out its timeout. This spec is about what the
+      // mode DOES once entered, not about how it is reached — drawer.mjs owns
+      // that — so it presses the element the drawer would press.
+      await page.evaluate(() => document.getElementById('dailyBtn').click()); await page.waitForTimeout(400);
       const barHidden = await page.$eval('#dailyBar', (e) => e.classList.contains('btn-hide'));
       const langDisabled = await page.$eval('#langSel', (e) => e.disabled);
       assert(!barHidden, 'daily progress bar not shown');
@@ -27,7 +31,7 @@ export async function run(browser, base, suite) {
   await suite.test('h2h: start then quit mid-game returns to clean solo state', async () => {
     const { ctx, page } = await openApp(browser, base, { lang: 'en' });
     try {
-      await page.click('#vsBtn'); await page.waitForTimeout(300);
+      await page.evaluate(() => document.getElementById('vsBtn').click()); await page.waitForTimeout(300);
       await page.click('#vsStart').catch(() => {});
       await page.waitForTimeout(300);
       // Quit mid-match.

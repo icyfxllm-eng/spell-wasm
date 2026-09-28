@@ -106,12 +106,36 @@ fn dedupe_icon<'a>(icon: &str, name: &'a str) -> &'a str {
 
 /// F4 — the player's own material and progress, off the play surface. Same
 /// registry, same gate; only the group differs from Play.
+///
+/// v1.3.1 F3 puts Misses first. It is the only row here whose contents change
+/// on their own, and it is the one the burger's nudge dot is about, so it
+/// leads rather than sitting wherever the registry file happens to list it.
 pub fn your_words_rows(shown: &[modes::Mode]) -> Vec<Row> {
-    shown
+    let mut rows: Vec<Row> = shown
         .iter()
         .filter(|m| m.group == modes::Group::YourWords)
         .map(|m| Row { id: m.id.clone(), icon: m.icon.clone(), name_key: m.name_key.clone() })
-        .collect()
+        .collect();
+    if let Some(i) = rows.iter().position(|r| r.id == "misses") {
+        let misses = rows.remove(i);
+        rows.insert(0, misses);
+    }
+    rows
+}
+
+/// F3's badge, as text. `999+` above the cap, and nothing at all at zero --
+/// a badge reading 0 is noise on a row that is already telling you there is
+/// nothing to do.
+///
+/// The number is the DUE count (Eric, 2026-09-27), the same one the retired
+/// chip showed and the same one tapping the row will actually serve. A badge
+/// showing the total saved would offer 181 and hand you three.
+pub fn badge_text(due: usize) -> Option<String> {
+    match due {
+        0 => None,
+        n if n > 999 => Some("999+".to_string()),
+        n => Some(n.to_string()),
+    }
 }
 
 /// F2 — exactly one account state, never both (I1).
@@ -167,6 +191,95 @@ pub fn help_rows() -> Vec<(&'static str, &'static str, &'static str)> {
         v.push(("credits.title", "\u{1F399}", "creditsBtn"));
     }
     v
+}
+
+// ---------------------------------------------------------------- F6, the nudge
+
+/// The watermark: the miss total as of the last time the drawer was opened.
+/// Local, per profile, never transmitted, and it adds no telemetry event
+/// (CC-TELEMETRY-FOUNDATION v1.1 I3).
+const NUDGE_KEY: &str = "spell_nav_nudge_v1";
+
+thread_local! {
+    /// The last miss total the app told us about. `open()` needs it to set the
+    /// watermark, and the drawer must not read the learner store itself (I8),
+    /// so it is pushed in by `reflect_nudge` rather than pulled.
+    static LAST_TOTAL: std::cell::Cell<Option<usize>> = const { std::cell::Cell::new(None) };
+}
+
+/// I-N7, as a pure function so the property test can enumerate every resolver
+/// output instead of trusting a hand-picked pair.
+///
+/// Unknown age counts as Junior. That is the whole reason this takes
+/// `age_known` rather than just an `Experience`: a player who has not answered
+/// the gate resolves to Standard by the toggle, and nudging them would be
+/// nudging a child we have simply not identified yet.
+pub fn nudge_allowed(exp: crate::experience::Experience, age_known: bool) -> bool {
+    age_known && exp == crate::experience::Experience::Standard
+}
+
+/// True when there are misses the player has not seen the drawer since.
+///
+/// The watermark defaults to the CURRENT total the first time it is asked,
+/// never to zero: D-N17 says a player sitting on 181 old misses sees no dot,
+/// and a fresh install of this feature on an old profile is exactly that
+/// player. Zero would have lit the dot for everyone with a backlog, once, for
+/// no reason.
+pub fn nudge_due(total: usize, watermark: Option<usize>) -> bool {
+    match watermark {
+        Some(w) => total > w,
+        None => false,
+    }
+}
+
+fn watermark() -> Option<usize> {
+    crate::storage::get_raw(NUDGE_KEY).and_then(|v| v.parse::<usize>().ok())
+}
+
+fn set_watermark(total: usize) {
+    crate::storage::set_raw(NUDGE_KEY, &total.to_string());
+}
+
+/// Paint or remove the dot. Called by `game::refresh_mode_buttons`, which is
+/// where the miss total already lives — the drawer is TOLD the number rather
+/// than reading the learner store for it (I8).
+pub fn reflect_nudge(total: usize, kid: bool) {
+    LAST_TOTAL.with(|c| c.set(Some(total)));
+    if watermark().is_none() {
+        set_watermark(total); // first sight of this profile: everything is old
+    }
+    let exp = crate::experience::resolve(kid, crate::agegate::is_kid_locked()).experience;
+    let allowed = nudge_allowed(exp, crate::agegate::stored().is_some());
+    let show = allowed && nudge_due(total, watermark());
+    let Some(b) = dom::doc().get_element_by_id(BURGER) else { return };
+    let existing = b.query_selector(".nudge").ok().flatten();
+    match (show, existing) {
+        // I-N7: in Spell Jr the view does not EXIST, which is stronger than
+        // hidden and is what the property test looks for.
+        (false, Some(node)) => { let _ = node.remove(); }
+        (true, None) => {
+            if let Ok(d) = dom::doc().create_element("span") {
+                let _ = d.set_attribute("class", "nudge");
+                let _ = d.set_attribute("aria-hidden", "true");
+                let _ = b.append_child(&d);
+            }
+        }
+        _ => {}
+    }
+}
+
+/// Opening the drawer is what clears it (D-N18) — visiting Misses is not
+/// required, because the dot exists to get the drawer opened, not to force a
+/// review.
+fn clear_nudge() {
+    if let Some(t) = LAST_TOTAL.with(|c| c.get()) {
+        set_watermark(t);
+    }
+    if let Some(b) = dom::doc().get_element_by_id(BURGER) {
+        if let Some(node) = b.query_selector(".nudge").ok().flatten() {
+            let _ = node.remove();
+        }
+    }
 }
 
 /// Where a row goes. The surface's own element when the registry names one,
@@ -233,14 +346,29 @@ fn follow(r: &Route) {
 /// One row. Shared by every group so a Your Words row cannot drift from a
 /// Play row — same height, same shape, same absence of secondary text (D-N3).
 fn row_html(id: &str, icon: &str, name: &str) -> String {
+    row_html_with_badge(id, icon, name, None)
+}
+
+/// The badge is fixed-width (F3) so a row does not reflow between 9 and 10 due
+/// words, and `margin-inline-start:auto` pins it to the trailing edge in both
+/// writing directions.
+fn row_html_with_badge(id: &str, icon: &str, name: &str, badge: Option<&str>) -> String {
+    let badge_html = match badge {
+        Some(b) => format!(
+            "<b class=\"nav-badge\" style=\"margin-inline-start:auto;min-width:34px;\
+             text-align:center;font-variant-numeric:tabular-nums\">{}</b>",
+            dom::escape_html(b)
+        ),
+        None => String::new(),
+    };
     format!(
         "<button type=\"button\" class=\"nav-row\" id=\"navRow_{0}\" data-mode=\"{0}\" \
          style=\"height:{1}px;min-height:{1}px;max-height:{1}px;\
          display:flex;align-items:center;gap:10px;width:100%;\
          padding:0 14px;margin:0 0 2px;text-align:start\">\
          <span class=\"nav-ico\" aria-hidden=\"true\">{2}</span>\
-         <span class=\"nav-name\">{3}</span></button>",
-        dom::escape_html(id), ROW_PX, dom::escape_html(icon), dom::escape_html(name),
+         <span class=\"nav-name\">{3}</span>{4}</button>",
+        dom::escape_html(id), ROW_PX, dom::escape_html(icon), dom::escape_html(name), badge_html,
     )
 }
 
@@ -276,6 +404,20 @@ fn body(sections: &[Section]) -> String {
 
 /// Whether an element is disabled right now. A DOM read, deliberately: it is
 /// how the drawer honours I3 without touching the learner store (I8).
+/// F3's badge text, taken from the chip the hub retired.
+fn misses_badge_from_dom() -> Option<String> {
+    let n = dom::doc()
+        .get_element_by_id("missesBtn")?
+        .query_selector(".dc-badge")
+        .ok()
+        .flatten()?
+        .text_content()?
+        .trim()
+        .parse::<usize>()
+        .ok()?;
+    badge_text(n)
+}
+
 fn element_is_disabled(id: &str) -> bool {
     dom::doc()
         .get_element_by_id(id)
@@ -298,6 +440,7 @@ pub fn close() {
 }
 
 pub fn open(app: &App) {
+    clear_nudge();
     render(app);
     dom::add_class(MARKER, "show");
     // The page behind must not scroll under the drawer (F1). Same body class
@@ -364,7 +507,15 @@ fn render(app: &App) {
             dom::escape_html(&t("aria.yourWords"))
         ));
         for r in &yours {
-            h.push_str(&row_html(&r.id, &r.icon, dedupe_icon(&r.icon, &t(&r.name_key))));
+            let name = t(&r.name_key);
+            let label = dedupe_icon(&r.icon, &name);
+            // F3/I-N5: one count, and the drawer does not compute it. The
+            // retired chip is still rendered by game::refresh_mode_buttons, so
+            // reading its badge is reading the same number the same store
+            // produced -- second-hand and read-only, which is how I8 and a
+            // live count hold at once.
+            let badge = if r.id == "misses" { misses_badge_from_dom() } else { None };
+            h.push_str(&row_html_with_badge(&r.id, &r.icon, label, badge.as_deref()));
         }
     }
     let help = help_rows();
@@ -476,7 +627,10 @@ pub fn wire(app: &App) {
             if let Ok(b) = doc.create_element("button") {
                 b.set_id(BURGER);
                 let _ = b.set_attribute("type", "button");
-                let _ = b.set_attribute("class", "icon-btn");
+                // v1.3.1 F4. It asked for `icon-btn` for its whole life and
+                // no such rule exists in the stylesheet, so it rendered as a
+                // bare 16pt button with a sub-minimum tap target.
+                let _ = b.set_attribute("class", "burger");
                 let _ = b.set_attribute("aria-label", &t("nav.menu"));
                 b.set_text_content(Some("\u{2630}"));
                 let _ = corner.append_child(&b);
@@ -498,6 +652,15 @@ pub fn wire(app: &App) {
         }
         open(&a)
     });
+
+    // F6: the burger is created here, and `refresh_mode_buttons` has already
+    // run by now (lib.rs boots the hub before it wires the drawer), so its
+    // reflect_nudge call found no burger to paint. Replay it with the total it
+    // recorded, or a cold launch with new misses waiting would show no dot
+    // until the next miss -- which is precisely the launch the dot is for.
+    if let Some(total) = LAST_TOTAL.with(|c| c.get()) {
+        reflect_nudge(total, app.borrow().kid);
+    }
 
     // Escape closes (F1, web). Tab is trapped inside the panel while open.
     dom::on_window::<web_sys::KeyboardEvent, _>("keydown", move |e| {
@@ -617,6 +780,92 @@ mod tests {
         assert!(!render[..render.find("fn wire").unwrap_or(render.len())]
                     .contains("app.borrow().lang"),
                 "render must not read the raw study language for gating");
+    }
+
+    /// A6's arithmetic, on the pure half.
+    #[test]
+    fn the_badge_caps_and_disappears() {
+        assert_eq!(badge_text(0), None, "a badge reading 0 is noise");
+        assert_eq!(badge_text(1).as_deref(), Some("1"));
+        assert_eq!(badge_text(181).as_deref(), Some("181"));
+        assert_eq!(badge_text(999).as_deref(), Some("999"));
+        assert_eq!(badge_text(1000).as_deref(), Some("999+"));
+        assert_eq!(badge_text(1203).as_deref(), Some("999+"));
+    }
+
+    /// F3: Misses leads its group whatever order the registry file is in.
+    #[test]
+    fn misses_is_the_first_your_words_row() {
+        let all = modes::all();
+        let shown = modes::catalog(&all, &ctx());
+        let rows = your_words_rows(&shown);
+        assert_eq!(rows.first().map(|r| r.id.as_str()), Some("misses"),
+                   "got {:?}", rows.iter().map(|r| &r.id).collect::<Vec<_>>());
+    }
+
+    /// I-N3. The three surfaces and the four quick-play modes all have to
+    /// resolve to a row, because v1.3.1 F1 and F2 take away every other door.
+    /// Two of these had no row at all until the census went looking.
+    #[test]
+    fn every_door_the_hub_gave_up_exists_in_the_drawer() {
+        let all = modes::all();
+        // The app context: iOS, every flag on, full entitlement, photo premium.
+        let c = HubCtx { native: true, ..ctx() };
+        let shown = modes::catalog(&all, &c);
+        let play: Vec<String> = play_sections(&shown, "en")
+            .iter().flat_map(|s| s.rows.iter().map(|r| r.id.clone())).collect();
+        let yours: Vec<String> = your_words_rows(&shown).iter().map(|r| r.id.clone()).collect();
+        for id in ["versus", "daily", "word_picture", "say_it"] {
+            assert!(play.contains(&id.to_string()),
+                    "{id} lost its hub tile and has no Play row: {play:?}");
+        }
+        for id in ["misses", "my_words", "photo_list"] {
+            assert!(yours.contains(&id.to_string()),
+                    "{id} has no Your Words row: {yours:?}");
+        }
+        // ...and each one resolves to an element to proxy to, or the row is a
+        // button that does nothing.
+        for id in ["versus", "daily", "word_picture", "say_it", "misses", "my_words", "photo_list"] {
+            let m = shown.iter().find(|m| m.id == id).unwrap();
+            assert!(matches!(route_for(m), Route::Press(_) | Route::Level(_)),
+                    "{id} routes nowhere");
+        }
+    }
+
+    /// I-N7, over every output the Jr resolver can produce. A child is never
+    /// nudged, and neither is a player whose age we have not established.
+    #[test]
+    fn a_child_is_never_nudged() {
+        use crate::experience::{resolve, Experience};
+        for kid in [false, true] {
+            for locked in [false, true] {
+                for age_known in [false, true] {
+                    let exp = resolve(kid, locked).experience;
+                    let allowed = nudge_allowed(exp, age_known);
+                    if exp == Experience::Junior {
+                        assert!(!allowed, "Jr was nudged (kid={kid} locked={locked})");
+                    }
+                    if !age_known {
+                        assert!(!allowed, "an unknown age must count as Jr (kid={kid} locked={locked})");
+                    }
+                }
+            }
+        }
+        // ...and the one case that IS allowed, so this cannot pass by refusing
+        // everything.
+        assert!(nudge_allowed(Experience::Standard, true));
+    }
+
+    /// D-N17: the dot means NEW misses, not any misses.
+    #[test]
+    fn the_dot_is_about_new_misses_only() {
+        assert!(!nudge_due(181, Some(181)), "a backlog is not news");
+        assert!(nudge_due(182, Some(181)), "one new miss is");
+        assert!(!nudge_due(182, Some(182)), "and opening the drawer settles it");
+        // A profile this feature has never seen starts level, never at zero:
+        // otherwise everyone with a backlog gets one pointless dot on upgrade.
+        assert!(!nudge_due(181, None));
+        assert!(!nudge_due(0, None));
     }
 
     /// A4, on the pure half. Phase C retires the gamepad sheet, so a Play row

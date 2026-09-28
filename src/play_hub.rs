@@ -48,7 +48,11 @@ const LAUNCH: [(&str, Option<&str>); N_LAUNCH] = [
     ("ghost_racing", Some("ghostOpenBtn")),
     ("syllable_replay", None),    // fires on a miss, on the reveal surface
     ("say_it", Some("sayItBtn")), // a real session mode
-    ("photo_list", None),         // a camera button on My Words
+    // CC-HUB-NAV v1.3.1 H3: it HAS a door -- photoBtn, on the utility row the
+    // Phase C cut-over retired. Naming it here is what gives the drawer row
+    // something to proxy to; a your_words row with no target renders and then
+    // does nothing when tapped.
+    ("photo_list", Some("photoBtn")),
     ("spell_aloud", Some("spellAloudEnter")), // promoted to a real mode (G-INT-1): enters play with the voice mic
     ("word_stories", None),       // after-answer flourish; hidden anyway
     ("online_spelloff", Some("soBtn")),
@@ -291,7 +295,13 @@ mod tests {
         // Spell Aloud is now a real mode (CC-SPELL-ALOUD-INTEGRATION G-INT-1): tapping
         // it enters play with the voice mic. It is no longer an in-round aid.
         assert_eq!(launch_for("spell_aloud"), Some("spellAloudEnter"));
-        for aid in ["syllable_replay", "photo_list", "word_stories"] {
+        // From a photo is not an in-round aid and never was one -- it opens the
+        // camera and builds a word list. It sat in this list because it was
+        // `hidden`, so its lack of a destination cost nothing; v1.3.1 H3 found
+        // it reachable from nowhere at all once the utility row was retired,
+        // and a your_words row with no target renders and then does nothing.
+        assert_eq!(launch_for("photo_list"), Some("photoBtn"));
+        for aid in ["syllable_replay", "word_stories"] {
             assert_eq!(launch_for(aid), None, "{aid} is an in-round aid with no destination");
         }
     }

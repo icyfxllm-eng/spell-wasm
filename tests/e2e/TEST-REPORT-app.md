@@ -1,6 +1,6 @@
 # TEST-REPORT — Web E2E (app build)
 
-**223/223 passed** across 36 areas.
+**226/226 passed** across 36 areas.
 
 ## drawer — 18/18
 - ✅ drawer: opens from the meta corner and renders registry rows
@@ -39,9 +39,12 @@
 - ✅ rescue: sends nothing
 - ✅ rescue: revealing everything scores nothing and hits its cap
 
-## hub-row — 2/2
-- ✅ hub row: The Climb is out, the rest stay
-- ✅ hub row: the mode is untouched and the board still routes
+## hub-inventory — 5/5
+- ✅ hub: nothing above the orb but the brand, the burger and the session pill
+- ✅ hub: A2 — no quick-play tile and no Misses chip renders
+- ✅ hub: A3 — the burger is 88x44, top-trailing, centred on the wordmark
+- ✅ hub: A7 — the burger frame does not move with the Misses count
+- ✅ hub: A12 — Spell Jr is never nudged, at any miss count
 
 ## keyboard — 6/6
 - ✅ keyboard[en]: keys visible with hit area at SE

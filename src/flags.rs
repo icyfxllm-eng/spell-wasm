@@ -297,7 +297,7 @@ pub fn is_on(name: &str) -> bool {
         // reason: surfaces, not modes, with nothing to flip. Without these they
         // were on paper only, exactly as the note below describes for
         // calendar, translate and reports.
-        "standard" | "climb" | "daily" | "my_words" | "misses" => true,
+        "standard" | "climb" | "daily" | "my_words" | "misses" | "versus" => true,
         "ghost_racing" => ghost_racing(),
         "syllable_replay" => syllable_replay(),
         "say_it" => say_it(),
