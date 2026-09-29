@@ -1,0 +1,116 @@
+{
+  "$doc": "CC-HUB-GROUP-L10N v1.1. Metadata BESIDE the locale tables, never inside them: src/i18n/locales/*.json stay a flat map of key to string, which is what the Rust loader deserializes, so status lives here instead of changing the value shape.\n\n`translated` names the keys that must differ from English in every non-English locale. It exists because the bug this file fixes passed the parity gate: all fifteen locales HAD nav.spellIt, and all fifteen held the English string. Presence is not translation. The list is explicit rather than global because plenty of strings are legitimately identical across languages -- OK, emoji, proper nouns -- and a gate that cried wolf on those would be switched off within a week. Add keys as they are audited.\n\n`do_not_translate` is the opposite promise: one value, every language. The completeness gate treats these as complete (F6), and the auditor sheet lists them as brand names rather than rows to translate.\n\n`needs_audit` records which drafts are unaudited (D3). It fails nothing; it is what the auditor sheet is built from.",
+  "translated": [
+    "hub.group.spell_it",
+    "hub.group.word_puzzles",
+    "hub.group.meaning",
+    "top.theClimb",
+    "settings.kid",
+    "ws.jr"
+  ],
+  "do_not_translate": {
+    "sd.name": "SpellDoku — brand name (D5, signed). Do not re-propose.",
+    "ws.name": "Spell Search — brand name (D5, signed). Do not re-propose.",
+    "xw.name": "Spell Cross — brand name (D5, signed). Do not re-propose."
+  },
+  "needs_audit": {
+    "es": [
+      "hub.group.spell_it",
+      "hub.group.word_puzzles",
+      "hub.group.meaning",
+      "settings.kid",
+      "ws.jr"
+    ],
+    "fr": [
+      "hub.group.spell_it",
+      "hub.group.word_puzzles",
+      "hub.group.meaning",
+      "settings.kid",
+      "ws.jr"
+    ],
+    "de": [
+      "hub.group.spell_it",
+      "hub.group.word_puzzles",
+      "hub.group.meaning",
+      "settings.kid",
+      "ws.jr"
+    ],
+    "pt": [
+      "hub.group.spell_it",
+      "hub.group.word_puzzles",
+      "hub.group.meaning",
+      "settings.kid",
+      "ws.jr"
+    ],
+    "pl": [
+      "hub.group.spell_it",
+      "hub.group.word_puzzles",
+      "hub.group.meaning",
+      "settings.kid",
+      "ws.jr"
+    ],
+    "ru": [
+      "hub.group.spell_it",
+      "hub.group.word_puzzles",
+      "hub.group.meaning",
+      "settings.kid",
+      "ws.jr"
+    ],
+    "vi": [
+      "hub.group.spell_it",
+      "hub.group.word_puzzles",
+      "hub.group.meaning",
+      "settings.kid",
+      "ws.jr"
+    ],
+    "ko": [
+      "hub.group.spell_it",
+      "hub.group.word_puzzles",
+      "hub.group.meaning",
+      "settings.kid",
+      "ws.jr"
+    ],
+    "ja": [
+      "hub.group.spell_it",
+      "hub.group.word_puzzles",
+      "hub.group.meaning",
+      "settings.kid",
+      "ws.jr"
+    ],
+    "zh": [
+      "hub.group.spell_it",
+      "hub.group.word_puzzles",
+      "hub.group.meaning",
+      "settings.kid",
+      "ws.jr"
+    ],
+    "ar": [
+      "hub.group.spell_it",
+      "hub.group.word_puzzles",
+      "hub.group.meaning",
+      "settings.kid",
+      "ws.jr"
+    ],
+    "hi": [
+      "hub.group.spell_it",
+      "hub.group.word_puzzles",
+      "hub.group.meaning",
+      "settings.kid",
+      "ws.jr"
+    ],
+    "sw": [
+      "hub.group.spell_it",
+      "hub.group.word_puzzles",
+      "hub.group.meaning",
+      "settings.kid",
+      "ws.jr"
+    ],
+    "fil": [
+      "hub.group.spell_it",
+      "hub.group.word_puzzles",
+      "hub.group.meaning",
+      "settings.kid",
+      "ws.jr"
+    ]
+  }
+}

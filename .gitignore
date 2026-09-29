@@ -100,3 +100,4 @@ tools/wordpipe/out/
 # absolute paths, which is how they turned up when the repo moved.
 ios/NativeLanguageKit/.build/
 content-pipeline/wordpic/.tone-probe/
+contact-sheet/

@@ -114,6 +114,10 @@ node scripts/audio-router-check.mjs --selftest || { echo "GATE FAIL: audio route
 echo "== gate: element IDs are unique (CC-SPELLPIC F0)"
 node scripts/dom-id-check.mjs || { echo "GATE FAIL: duplicate element ID"; exit 1; }
 
+echo "== gate: UI strings are actually translated (CC-HUB-GROUP-L10N F3)"
+node scripts/i18n-translated-check.mjs || { echo "GATE FAIL: a tracked UI string is untranslated"; exit 1; }
+node scripts/i18n-translated-check.mjs --selftest || { echo "GATE FAIL: translated-string selftest"; exit 1; }
+
 echo "== gate: no dead element IDs (the wpDone/drawHint law)"
 node scripts/dom-id-live-check.mjs || { echo "GATE FAIL: a dom:: call names an element that does not exist"; exit 1; }
 node scripts/dom-id-live-check.mjs --selftest || { echo "GATE FAIL: dead-id selftest"; exit 1; }

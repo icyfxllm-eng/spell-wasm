@@ -875,7 +875,7 @@ pub fn offered_levels(exp: crate::experience::Experience) -> Vec<&'static str> {
     let climb = !crate::experience::allowed_tiers(exp, "climb").is_empty();
     LEVEL_OPTS
         .iter()
-        .map(|(v, _)| *v)
+        .copied()
         .filter(|v| if *v == "climb" { climb } else { tiers.contains(v) })
         .collect()
 }

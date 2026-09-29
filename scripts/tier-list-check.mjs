@@ -33,6 +33,7 @@ export const ALLOW = [
   { file: 'src/spelldoku/tier.rs', has: '(Tier::', why: 'CC-SPELLDOKU v1.3 F1: which difficulty band each digit of a Tier Mode board draws its word from -- vocabulary, not access; the boards a player may play still come from play::allowed and experience' },
   { file: 'src/spelldoku_tier_census.rs', has: '&["', why: 'CC-SPELLDOKU v1.3 section 0: an ignored measurement test reading the tier spans F5 proposes; it serves nothing and decides no access' },
   { file: 'src/consts.rs', has: 'TIER_ORDER', why: 'ladder order for sorting and display; decides no access' },
+  { file: 'src/consts.rs', has: 'LEVEL_OPTS', why: 'the level SELECTOR\'s ids in display order; which of them a player is offered comes from game::offered_levels, which asks experience::allowed_tiers. It only became visible to this scan when CC-HUB-GROUP-L10N I8 stripped its dead English labels, turning (id, label) tuples into bare ids' },
   { file: 'src/climb.rs', has: 'DIFFICULTIES', why: 'ranked leaderboard difficulties; Jr Climb never submits (experience::leaderboard_allowed)' },
   { file: 'src/bee.rs', has: 'const LADDER', why: 'round-to-tier ladder; tier_for_round clamps Spell Jr through experience::serve_tier' },
   { file: 'src/daily.rs', has: 'const ARC:', why: 'the standard Daily arc' },

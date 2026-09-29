@@ -1481,6 +1481,23 @@
      D-C5 — an outlined circle, never the row card, so it does not read as a
      place to go. `.hub-x` is deliberately NOT reused: four other screens
      share it, and they still want the top corner. */
+  /* CC-HUB-GROUP-L10N F4 — the drawer's group headers.
+     Never truncated and never ellipsised: there is deliberately no
+     text-overflow and no fixed height here, so a long translation
+     ("Словесные головоломки", "Quebra-cabeças de palavras") wraps rather
+     than being cut. drawer.rs shrinks to 0.75x first and only then lets it
+     wrap; this rule is what makes wrapping the safe fallback rather than a
+     clip. text-align:start, so right-to-left aligns without a special case. */
+  /* Scoped to .nav-panel deliberately: the drawer's panel also carries
+     `.modal`, and `.modal h3{font-size:22px}` outranks a bare `.nav-group`.
+     A bare class rule silently lost, and `body.big-text .modal h3` would have
+     taken it to 33px -- a size at which the longest translation
+     ("Словесные головоломки") has nowhere to go in a 320pt drawer. */
+  .nav-panel .nav-group{margin:0;padding:14px 14px 6px;font-size:15px;font-weight:700;
+    color:var(--muted);letter-spacing:.02em;text-align:start;
+    overflow-wrap:break-word;hyphens:none;line-height:1.25}
+  body.big-text .nav-panel .nav-group{font-size:18px}
+  .nav-badge{color:var(--muted);font-size:13px;font-weight:700}
   .nav-close{width:56px;height:56px;border-radius:50%;background:transparent;
     border:1px solid var(--edge);color:var(--muted);font-size:28px;line-height:1;
     display:grid;place-items:center;cursor:pointer;padding:0;font-family:inherit;

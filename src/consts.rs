@@ -10,13 +10,16 @@ pub fn tier_time(tier: &str) -> u32 {
     }
 }
 
-pub const LEVEL_OPTS: [(&str, &str); 5] = [
-    ("climb", "Climb \u{2192}"),
-    ("easy", "Easy"),
-    ("medium", "Medium"),
-    ("hard", "Hard"),
-    ("expert", "Expert"),
-];
+/// The level ids, easiest-first after the Climb.
+///
+/// This used to be `(id, label)` pairs. The labels were dead: the selector is
+/// built by `game::build_level_options`, which renders `t("level.{id}")`, and
+/// `offered_levels` destructured them away. They survived as English literals
+/// -- "Climb →", "Easy" -- that nothing rendered, and CC-HUB-GROUP-L10N I8's
+/// scan for the Climb's name outside the string table found the first of them.
+/// Deleted rather than translated: a string nothing draws cannot be localized
+/// wrongly, but it can mislead the next person who greps for it.
+pub const LEVEL_OPTS: [&str; 5] = ["climb", "easy", "medium", "hard", "expert"];
 
 pub const MINE: &str = "__mine";
 pub const REVIEW: &str = "__review";

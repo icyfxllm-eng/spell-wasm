@@ -50,10 +50,18 @@ const FOOT: &str = "navDrawerFoot";
 const ROW_PX: u32 = 52;
 
 /// D-N6's Play sub-headers, in the order the decision lists them.
+/// CC-HUB-GROUP-L10N F1. The key mirrors the registry's `group` value, so a
+/// header and its enum variant cannot drift apart silently.
+///
+/// These were already keys, resolved through the same `t()` the rows use --
+/// the bug was never the call path. All fifteen locales HELD these keys and
+/// all fifteen held the English string, which the parity gate cannot see
+/// because presence is not translation. scripts/i18n-translated-check.mjs is
+/// the gate that can.
 const PLAY: [(modes::Group, &str); 3] = [
-    (modes::Group::SpellIt, "nav.spellIt"),
-    (modes::Group::WordPuzzles, "nav.wordPuzzles"),
-    (modes::Group::Meaning, "nav.meaning"),
+    (modes::Group::SpellIt, "hub.group.spell_it"),
+    (modes::Group::WordPuzzles, "hub.group.word_puzzles"),
+    (modes::Group::Meaning, "hub.group.meaning"),
 ];
 
 /// One drawer row. Emoji + name only (D-N3) — the tagline moved to the mode's
@@ -473,6 +481,48 @@ pub fn open(app: &App) {
     }
 }
 
+/// F4 — a header fits on one line, or shrinks to 0.75x, or wraps. Never
+/// truncates.
+///
+/// There is no CSS for "shrink to fit, then wrap": `clamp()` cannot measure
+/// text. So the measurement happens here, once per render, in the order F4
+/// asks for. Nothing sets `text-overflow` or `overflow:hidden` anywhere in
+/// this path, which is what makes the worst case a second line rather than a
+/// cut word -- the English headers are short and the risk is entirely in the
+/// translations ("Словесные головоломки" is 21 characters against "Word
+/// puzzles" at 12).
+fn fit_headers() {
+    let Ok(list) = dom::doc().query_selector_all(&format!("#{SCROLL} .nav-group")) else { return };
+    for i in 0..list.length() {
+        let Some(node) = list.item(i) else { continue };
+        let Ok(el) = node.dyn_into::<web_sys::HtmlElement>() else { continue };
+        let style = el.style();
+        // Measure on one line first. scroll_width exceeds client_width only
+        // when the text does not fit.
+        let _ = style.set_property("white-space", "nowrap");
+        let _ = style.remove_property("font-size");
+        if el.scroll_width() <= el.client_width() {
+            let _ = style.remove_property("white-space");
+            continue;
+        }
+        // Step down, never below 0.75x (D6).
+        let mut fitted = false;
+        for pct in [92u32, 84, 75] {
+            let _ = style.set_property("font-size", &format!("{}%", pct));
+            if el.scroll_width() <= el.client_width() {
+                fitted = true;
+                break;
+            }
+        }
+        // Still too wide at 0.75x: wrap. The font stays at 0.75x so the
+        // second line is as short as it can be.
+        if !fitted {
+            let _ = style.set_property("font-size", "75%");
+        }
+        let _ = style.remove_property("white-space");
+    }
+}
+
 /// The footer band's height. The button is 56x56 (I4) and the band gives it
 /// 12pt of air below, above the home-indicator inset.
 const FOOT_PX: u32 = 68;
@@ -596,6 +646,7 @@ fn render(app: &App) {
             "<div style=\"padding:14px 0 calc({FOOT_PX}px + 8px)\">{h}</div>"
         ),
     );
+    fit_headers();
     render_footer();
     dom::on_click(CLOSE, close);
 
@@ -862,6 +913,75 @@ mod tests {
                 "render must not read the raw study language for gating");
     }
 
+    /// Comments and the test module, stripped. A scan that judged those would
+    /// fail on the very test asserting the law -- the dedupe test has to name
+    /// "🏔 The Climb" to prove the icon is not doubled -- and on the comments
+    /// explaining why the law exists.
+    fn shipped_code(src: &str) -> String {
+        let body = match src.find("\n#[cfg(test)]") {
+            Some(i) => &src[..i],
+            None => src,
+        };
+        body.lines()
+            .filter(|l| !l.trim_start().starts_with("//"))
+            .collect::<Vec<_>>()
+            .join("\n")
+    }
+
+    /// I1 — no English header literal survives outside the en string table.
+    /// A source scan, because the failure mode is someone "helpfully"
+    /// hardcoding the text back into a format! when a key looks empty.
+    #[test]
+    fn no_header_literal_outside_the_string_table() {
+        for src in [include_str!("drawer.rs"), include_str!("modes.rs"), include_str!("hub_tiles.rs")] {
+            for lit in ["\"Spell it\"", "\"Word puzzles\"", "\"Meaning\""] {
+                let code = shipped_code(src);
+                assert!(!code.contains(lit), "{lit} is hardcoded; it belongs in the en locale only");
+            }
+        }
+    }
+
+    /// I8 — the same, for The Climb. Its id is `climb` and stays `climb`;
+    /// only the displayed name is localized, so a literal here would be a
+    /// name that fourteen languages never see translated.
+    #[test]
+    fn the_climb_is_named_only_by_its_key() {
+        for src in [include_str!("drawer.rs"), include_str!("consts.rs"), include_str!("modes.rs")] {
+            let code = shipped_code(src);
+            assert!(!code.contains("\"The Climb\""), "The Climb is hardcoded; it belongs in the en locale only");
+            assert!(!code.contains("\"Climb \\u{2192}\""), "the dead LEVEL_OPTS label is back");
+        }
+        // ...and the id itself is untouched, which is what keeps saved data
+        // and leaderboard keys working.
+        assert!(crate::consts::LEVEL_OPTS.contains(&"climb"));
+        let all = modes::all();
+        assert!(all.iter().any(|m| m.id == "climb"), "the mode id must stay `climb`");
+    }
+
+    /// I3 — a header never reads the same as a row beneath it. This is why
+    /// D2 chose category nouns: a literal Spanish "Spell it" is
+    /// "Deletréalo", which is already a row in the group it would head.
+    ///
+    /// No exemptions. The English header read "Spell it" until 2026-09-28 and
+    /// collided with the base game's row, "Spell It" -- the group is named
+    /// after the mode. That is the collision D2 predicted for Spanish,
+    /// landed in English, and v1.3.1 created it by giving the base game a
+    /// row. Eric's answer was to apply D2's own rule to the language D2 had
+    /// exempted: the header is the category noun "Spelling", and no mode was
+    /// renamed.
+    #[test]
+    fn a_header_never_duplicates_a_row_in_its_group() {
+        let all = modes::all();
+        let shown = modes::catalog(&all, &ctx());
+        for section in play_sections(&shown, "en") {
+            let header = t(section.header_key).to_lowercase();
+            for r in &section.rows {
+                assert_ne!(header, t(&r.name_key).to_lowercase(),
+                    "the {} header reads the same as its {} row", section.header_key, r.id);
+            }
+        }
+    }
+
     /// A6's arithmetic, on the pure half.
     #[test]
     fn the_badge_caps_and_disappears() {
@@ -1077,7 +1197,7 @@ mod tests {
         let all = modes::all();
         let shown = modes::catalog(&all, &ctx());
         let keys: Vec<&str> = play_sections(&shown, "en").iter().map(|s| s.header_key).collect();
-        assert_eq!(keys, ["nav.spellIt", "nav.wordPuzzles", "nav.meaning"]);
+        assert_eq!(keys, ["hub.group.spell_it", "hub.group.word_puzzles", "hub.group.meaning"]);
     }
 
     /// A header with nothing under it is a promise the drawer cannot keep. A

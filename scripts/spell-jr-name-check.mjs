@@ -1,5 +1,21 @@
 #!/usr/bin/env node
-// CC-ONBOARD-JR F0 / I11 — the junior experience has ONE player-facing name: Spell Jr.
+// CC-ONBOARD-JR F0 / I11 — the junior experience has ONE player-facing name
+// per language, and no retired name anywhere.
+//
+// AMENDED 2026-09-28 (Eric): "Spell Jr" is TRANSLATED in all fifteen locales
+// (CC-HUB-GROUP-L10N). I11 originally read as one literal name everywhere and
+// this gate asserted `settings.kid === "Spell Jr"` in every catalog, which is
+// why translating it turned this file red. What I11 was protecting is not the
+// English words: it is that a child's experience is never called two things,
+// and never called a RETIRED thing. Both survive translation.
+//
+// So the positive check is now per-language:
+//   * every locale has a non-empty settings.kid, and
+//   * ENGLISH is still exactly "Spell Jr", because the App Store listing and
+//     privacy.html are English-only and must agree with the English app.
+// "One name per language" — no locale silently reverting to English, no two
+// spellings of it — is held by scripts/i18n-translated-check.mjs, which tracks
+// settings.kid and ws.jr on its `translated` list.
 //
 //   node scripts/spell-jr-name-check.mjs            # check locales, web pages, store metadata
 //   node scripts/spell-jr-name-check.mjs --selftest # prove planted lesions FAIL
@@ -39,8 +55,13 @@ const renderable = (html) => html
 export function check({ locales, pages = {}, store = {} }) {
   const problems = [];
   for (const [code, cat] of Object.entries(locales)) {
-    if (cat['settings.kid'] !== NAME) {
-      problems.push(`${code}: settings.kid is ${JSON.stringify(cat['settings.kid'])}, not "${NAME}"`);
+    const kid = cat['settings.kid'];
+    if (typeof kid !== 'string' || kid.trim() === '') {
+      problems.push(`${code}: settings.kid is missing or empty — the junior experience must be named`);
+    } else if (code === 'en' && kid !== NAME) {
+      // English is load-bearing beyond the app: the store listing and
+      // privacy.html are English-only and say "Spell Jr".
+      problems.push(`${code}: settings.kid is ${JSON.stringify(kid)}, not "${NAME}" — the store listing says "${NAME}"`);
     }
     for (const [k, v] of Object.entries(cat)) {
       if (RETIRED_KEY.test(k)) problems.push(`${code}: key "${k}" carries a retired name`);
@@ -91,8 +112,9 @@ if (process.argv.includes('--selftest')) {
   const cases = [
     ['retired name in a locale value', (f) => { f.locales.en['home.hint'] = 'Turn on Kid Mode for friendlier words'; }],
     ['retired name in a locale key', (f) => { f.locales.en['littleSpeller.title'] = 'Spell Jr'; }],
-    ['settings.kid renamed', (f) => { f.locales.en['settings.kid'] = 'Kids'; }],
+    ['the ENGLISH name renamed, which the store listing still says', (f) => { f.locales.en['settings.kid'] = 'Kids'; }],
     ['settings.kid missing in a second locale', (f) => { f.locales.es = { 'other.key': 'Hola' }; }],
+    ['a locale left with an empty junior name', (f) => { f.locales.es = { 'settings.kid': '  ' }; }],
     ['retired name in visible html', (f) => { f.pages['index.html'] += '<p>Little Speller</p>'; }],
     ['retired name in an aria-label', (f) => { f.pages['index.html'] += '<button aria-label="Kid mode on"></button>'; }],
     ['retired name on the privacy page', (f) => { f.pages['privacy.html'] = '<p>Children playing in Kid Mode</p>'; }],
@@ -120,5 +142,5 @@ if (problems.length) {
   for (const p of problems) console.error(`  ✗ ${p}`);
   process.exit(1);
 }
-console.log(`spell-jr-name-check: OK — ${Object.keys(real.locales).length} locales name it "${NAME}"; ` +
+console.log(`spell-jr-name-check: OK — ${Object.keys(real.locales).length} locales name it (en = "${NAME}"); ` +
   `${Object.keys(real.pages).length} web pages and ${Object.keys(real.store).length} store texts carry no retired name.`);
