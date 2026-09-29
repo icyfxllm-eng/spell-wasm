@@ -107,7 +107,7 @@
  {
   "word": "üblich",
   "variant": "normal",
-  "url": "http://127.0.0.1:8199/api/speak?word=üblich&lang=de&variant=normal"
+  "url": "http://127.0.0.1:8199/api/speak?word=%C3%BCblich&lang=de&variant=normal"
  },
  {
   "word": "sagte",
@@ -147,7 +147,7 @@
  {
   "word": "große",
   "variant": "normal",
-  "url": "http://127.0.0.1:8199/api/speak?word=große&lang=de&variant=normal"
+  "url": "http://127.0.0.1:8199/api/speak?word=gro%C3%9Fe&lang=de&variant=normal"
  },
  {
   "word": "forschungen",
@@ -167,7 +167,7 @@
  {
   "word": "übliche",
   "variant": "normal",
-  "url": "http://127.0.0.1:8199/api/speak?word=übliche&lang=de&variant=normal"
+  "url": "http://127.0.0.1:8199/api/speak?word=%C3%BCbliche&lang=de&variant=normal"
  },
  {
   "word": "unentschieden",
@@ -192,7 +192,7 @@
  {
   "word": "gewählten",
   "variant": "normal",
-  "url": "http://127.0.0.1:8199/api/speak?word=gewählten&lang=de&variant=normal"
+  "url": "http://127.0.0.1:8199/api/speak?word=gew%C3%A4hlten&lang=de&variant=normal"
  },
  {
   "word": "diebstahl",
@@ -282,7 +282,7 @@
  {
   "word": "ökonomisch",
   "variant": "normal",
-  "url": "http://127.0.0.1:8199/api/speak?word=ökonomisch&lang=de&variant=normal"
+  "url": "http://127.0.0.1:8199/api/speak?word=%C3%B6konomisch&lang=de&variant=normal"
  },
  {
   "word": "sogenannten",

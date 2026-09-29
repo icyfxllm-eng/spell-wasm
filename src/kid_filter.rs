@@ -4,10 +4,16 @@
 //! pools. This is the age-appropriateness layer on top of the global profanity
 //! filter (`profanity.rs`), which screens everyone.
 //!
-//! Lists live in `assets/words/kid-exclude/{lang}.txt`, auditor-extensible; the
-//! current curated pools are already largely clean (English has only `cemetery`),
-//! so most lists are seeds — the real value is the gate: any future word (e.g.
+//! Lists live in `assets/words/kid-exclude/{lang}.txt`, auditor-extensible.
+//! Most lists are seeds and the real value is the gate: any future word (e.g.
 //! the Layer-2 East-Asian expansion) is age-filtered before it can reach a kid.
+//!
+//! English is no longer nearly-clean. Eric added the death verbs on
+//! 2026-09-28 — dead, death, deaths, die, died, dies, kill, killed, killing —
+//! and every one of them IS in the bank, across easy, medium and hard, so
+//! these nine actually change what a child is served rather than seeding a
+//! list. They stay in the bank for adult play; this filter is serve-time
+//! only, the same mechanism `blood` and `grave` already used.
 //!
 //! Matching is case/accent-insensitive (lenient fold), so list entries catch
 //! their diacritic/case variants.
@@ -80,6 +86,24 @@ pub fn filter_kid(lang: &str, pool: Vec<String>) -> Vec<String> {
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    /// The nine death verbs Eric added on 2026-09-28. Pinned by name because
+    /// each one is a real bank word -- `die` and `kill` are in easy.txt, which
+    /// is where Spell Jr plays -- so a silent regression here puts them back
+    /// in front of a child.
+    #[test]
+    fn the_death_verbs_never_reach_a_child() {
+        for w in ["dead", "death", "deaths", "die", "died", "dies", "kill", "killed", "killing"] {
+            assert!(!kid_allowed("en", w), "{w} must not be served in Kid Mode");
+            assert!(!kid_allowed("en", &w.to_uppercase()), "{w} must be caught case-insensitively");
+        }
+        // Words that merely contain them are untouched: this is a whole-word
+        // list, not a substring ban, or `diet`, `skilled` and `deadline` would
+        // vanish with them.
+        for w in ["diet", "skilled", "deadline", "diesel"] {
+            assert!(kid_allowed("en", w), "{w} is benign and must stay");
+        }
+    }
 
     #[test]
     fn cemetery_is_excluded_for_english() {

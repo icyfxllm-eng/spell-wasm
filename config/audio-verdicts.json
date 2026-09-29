@@ -9497,6 +9497,546 @@
     },
     "en|dismissed|normal": {
       "v": "Pass"
+    },
+    "de|kreis|normal": {
+      "v": "Pass"
+    },
+    "de|osten|normal": {
+      "v": "Fail"
+    },
+    "de|schauen|normal": {
+      "v": "Pass"
+    },
+    "de|boden|normal": {
+      "v": "Pass"
+    },
+    "de|reise|normal": {
+      "v": "Pass"
+    },
+    "de|stark|normal": {
+      "v": "Pass"
+    },
+    "de|metall|normal": {
+      "v": "Pass"
+    },
+    "de|tee|normal": {
+      "v": "Fail"
+    },
+    "de|lang|normal": {
+      "v": "Weak"
+    },
+    "de|Nacht|normal": {
+      "v": "Pass"
+    },
+    "de|kette|normal": {
+      "v": "Pass"
+    },
+    "de|denken|normal": {
+      "v": "Pass"
+    },
+    "de|schmerz|normal": {
+      "v": "Pass"
+    },
+    "de|Fenster|normal": {
+      "v": "Pass"
+    },
+    "de|Blatt|normal": {
+      "v": "Weak"
+    },
+    "de|endete|normal": {
+      "v": "Fail"
+    },
+    "de|sehen|normal": {
+      "v": "Weak"
+    },
+    "de|besten|normal": {
+      "v": "Weak"
+    },
+    "de|ersten|normal": {
+      "v": "Pass"
+    },
+    "de|kurzen|normal": {
+      "v": "Fail"
+    },
+    "de|fanden|normal": {
+      "v": "Weak"
+    },
+    "de|üblich|normal": {
+      "v": "Pass"
+    },
+    "de|sagte|normal": {
+      "v": "Weak"
+    },
+    "de|trieb|normal": {
+      "v": "Fail"
+    },
+    "de|lagen|normal": {
+      "v": "Pass"
+    },
+    "de|republik|normal": {
+      "v": "Pass"
+    },
+    "de|einem|normal": {
+      "v": "Weak"
+    },
+    "de|sammlung|normal": {
+      "v": "Pass"
+    },
+    "de|begab|normal": {
+      "v": "Weak"
+    },
+    "de|große|normal": {
+      "v": "Pass"
+    },
+    "de|forschungen|normal": {
+      "v": "Pass"
+    },
+    "de|sinnvoll|normal": {
+      "v": "Pass"
+    },
+    "de|mitteilen|normal": {
+      "v": "Pass"
+    },
+    "de|übliche|normal": {
+      "v": "Pass"
+    },
+    "de|unentschieden|normal": {
+      "v": "Pass"
+    },
+    "de|aufzeichnungen|normal": {
+      "v": "Pass"
+    },
+    "de|verlegen|normal": {
+      "v": "Pass"
+    },
+    "de|grundgesetz|normal": {
+      "v": "Pass"
+    },
+    "de|gewählten|normal": {
+      "v": "Pass"
+    },
+    "de|diebstahl|normal": {
+      "v": "Weak"
+    },
+    "de|direkten|normal": {
+      "v": "Pass"
+    },
+    "de|ueber|normal": {
+      "v": "Fail"
+    },
+    "de|einfallen|normal": {
+      "v": "Weak"
+    },
+    "de|orientiert|normal": {
+      "v": "Pass"
+    },
+    "de|stich|normal": {
+      "v": "Pass"
+    },
+    "de|rechtswidrig|normal": {
+      "v": "Pass"
+    },
+    "de|zuordnen|normal": {
+      "v": "Pass"
+    },
+    "de|wiege|normal": {
+      "v": "Weak"
+    },
+    "de|jahrzehntelang|normal": {
+      "v": "Weak"
+    },
+    "de|polnischen|normal": {
+      "v": "Weak"
+    },
+    "de|optimismus|normal": {
+      "v": "Pass"
+    },
+    "de|financial|normal": {
+      "v": "Pass"
+    },
+    "de|wacker|normal": {
+      "v": "Weak"
+    },
+    "de|orientierte|normal": {
+      "v": "Pass"
+    },
+    "de|automatisch|normal": {
+      "v": "Pass"
+    },
+    "de|frohes|normal": {
+      "v": "Weak"
+    },
+    "de|ökonomisch|normal": {
+      "v": "Pass"
+    },
+    "de|sogenannten|normal": {
+      "v": "Pass"
+    },
+    "de|beispielsweise|normal": {
+      "v": "Pass"
+    },
+    "de|diplomatie|normal": {
+      "v": "Fail"
+    },
+    "ru|послать|normal": {
+      "v": "Pass"
+    },
+    "ru|круг|normal": {
+      "v": "Pass"
+    },
+    "ru|подарок|normal": {
+      "v": "Pass"
+    },
+    "ru|левый|normal": {
+      "v": "Pass"
+    },
+    "ru|играть|normal": {
+      "v": "Pass"
+    },
+    "ru|коробка|normal": {
+      "v": "Pass"
+    },
+    "ru|лёгкий|normal": {
+      "v": "Weak"
+    },
+    "ru|сегодня|normal": {
+      "v": "Pass"
+    },
+    "ru|ступня|normal": {
+      "v": "Pass"
+    },
+    "ru|сердце|normal": {
+      "v": "Pass"
+    },
+    "ru|восемь|normal": {
+      "v": "Fail"
+    },
+    "ru|писать|normal": {
+      "v": "Pass"
+    },
+    "ru|читать|normal": {
+      "v": "Pass"
+    },
+    "ru|миска|normal": {
+      "v": "Pass"
+    },
+    "ru|тарелка|normal": {
+      "v": "Pass"
+    },
+    "ru|текст|normal": {
+      "v": "Pass"
+    },
+    "ru|позже|normal": {
+      "v": "Pass"
+    },
+    "ru|студии|normal": {
+      "v": "Weak"
+    },
+    "ru|водой|normal": {
+      "v": "Pass"
+    },
+    "ru|имена|normal": {
+      "v": "Weak"
+    },
+    "ru|языки|normal": {
+      "v": "Pass"
+    },
+    "ru|метра|normal": {
+      "v": "Weak"
+    },
+    "ru|помочь|normal": {
+      "v": "Pass"
+    },
+    "ru|линию|normal": {
+      "v": "Fail"
+    },
+    "ru|групп|normal": {
+      "v": "Weak"
+    },
+    "ru|армия|normal": {
+      "v": "Pass"
+    },
+    "ru|уходит|normal": {
+      "v": "Pass"
+    },
+    "ru|попал|normal": {
+      "v": "Weak"
+    },
+    "ru|музыки|normal": {
+      "v": "Pass"
+    },
+    "ru|растение|normal": {
+      "v": "Pass"
+    },
+    "ru|десятков|normal": {
+      "v": "Pass"
+    },
+    "ru|началась|normal": {
+      "v": "Weak"
+    },
+    "ru|причинам|normal": {
+      "v": "Weak"
+    },
+    "ru|горжусь|normal": {
+      "v": "Pass"
+    },
+    "ru|сделали|normal": {
+      "v": "Pass"
+    },
+    "ru|погоды|normal": {
+      "v": "Weak"
+    },
+    "ru|пришлось|normal": {
+      "v": "Pass"
+    },
+    "ru|сделано|normal": {
+      "v": "Pass"
+    },
+    "ru|проекту|normal": {
+      "v": "Weak"
+    },
+    "ru|благодарность|normal": {
+      "v": "Pass"
+    },
+    "ru|вложений|normal": {
+      "v": "Weak"
+    },
+    "ru|включая|normal": {
+      "v": "Weak"
+    },
+    "ru|местные|normal": {
+      "v": "Weak"
+    },
+    "ru|лучшем|normal": {
+      "v": "Fail"
+    },
+    "ru|применять|normal": {
+      "v": "Pass"
+    },
+    "ru|послания|normal": {
+      "v": "Fail"
+    },
+    "ru|недостатка|normal": {
+      "v": "Pass"
+    },
+    "ru|культурой|normal": {
+      "v": "Weak"
+    },
+    "ru|проводилось|normal": {
+      "v": "Weak"
+    },
+    "ru|немногие|normal": {
+      "v": "Pass"
+    },
+    "ru|пишешь|normal": {
+      "v": "Pass"
+    },
+    "ru|исследователей|normal": {
+      "v": "Weak"
+    },
+    "ru|собираешься|normal": {
+      "v": "Pass"
+    },
+    "ru|поет|normal": {
+      "v": "Fail"
+    },
+    "ru|университета|normal": {
+      "v": "Weak"
+    },
+    "ru|исчезают|normal": {
+      "v": "Pass"
+    },
+    "ru|настоящее|normal": {
+      "v": "Weak"
+    },
+    "ru|вежливо|normal": {
+      "v": "Pass"
+    },
+    "ru|переехала|normal": {
+      "v": "Pass"
+    },
+    "ru|грань|normal": {
+      "v": "Pass"
+    },
+    "ko|양말|normal": {
+      "v": "Pass"
+    },
+    "ko|여섯|normal": {
+      "v": "Fail"
+    },
+    "ko|늙은|normal": {
+      "v": "Pass"
+    },
+    "ko|병원|normal": {
+      "v": "Pass"
+    },
+    "ko|좋아하다|normal": {
+      "v": "Weak"
+    },
+    "ko|동전|normal": {
+      "v": "Pass"
+    },
+    "ko|힘|normal": {
+      "v": "Weak"
+    },
+    "ko|학생|normal": {
+      "v": "Pass"
+    },
+    "ko|파도|normal": {
+      "v": "Pass"
+    },
+    "ko|보내다|normal": {
+      "v": "Weak"
+    },
+    "ko|여자|normal": {
+      "v": "Pass"
+    },
+    "ko|여기|normal": {
+      "v": "Pass"
+    },
+    "ko|언덕|normal": {
+      "v": "Fail"
+    },
+    "ko|섬|normal": {
+      "v": "Weak"
+    },
+    "ko|회색|normal": {
+      "v": "Weak"
+    },
+    "ko|줄어들었다|normal": {
+      "v": "Pass"
+    },
+    "ko|것으로부터|normal": {
+      "v": "Weak"
+    },
+    "ko|승강장으로|normal": {
+      "v": "Pass"
+    },
+    "ko|폐지되었다|normal": {
+      "v": "Pass"
+    },
+    "ko|나타나는데|normal": {
+      "v": "Pass"
+    },
+    "ko|돌아다니며|normal": {
+      "v": "Pass"
+    },
+    "ko|구성원들이|normal": {
+      "v": "Weak"
+    },
+    "ko|애플리케이션|normal": {
+      "v": "Pass"
+    },
+    "ko|투입되었다|normal": {
+      "v": "Pass"
+    },
+    "ko|울산|normal": {
+      "v": "Pass"
+    },
+    "ko|지정되었다|normal": {
+      "v": "Pass"
+    },
+    "ko|추가되었다|normal": {
+      "v": "Pass"
+    },
+    "ko|만들어졌으며|normal": {
+      "v": "Weak"
+    },
+    "ko|솔직히|normal": {
+      "v": "Pass"
+    },
+    "ko|발사|normal": {
+      "v": "Pass"
+    },
+    "ko|받아들여지면서|normal": {
+      "v": "Pass"
+    },
+    "ko|제프|normal": {
+      "v": "Weak"
+    },
+    "ko|상임위원회에서|normal": {
+      "v": "Pass"
+    },
+    "ko|말레이시아에서는|normal": {
+      "v": "Pass"
+    },
+    "ko|사당|normal": {
+      "v": "Pass"
+    },
+    "ko|하드리아누스의|normal": {
+      "v": "Fail"
+    },
+    "ko|딱히|normal": {
+      "v": "Fail"
+    },
+    "ko|에스페란티스토|normal": {
+      "v": "Weak"
+    },
+    "ko|정답|normal": {
+      "v": "Pass"
+    },
+    "ko|풀리|normal": {
+      "v": "Pass"
+    },
+    "ko|케빈|normal": {
+      "v": "Fail"
+    },
+    "ko|비유|normal": {
+      "v": "Fail"
+    },
+    "ko|아랍에미리트의|normal": {
+      "v": "Fail"
+    },
+    "ko|중화인민공화국에|normal": {
+      "v": "Weak"
+    },
+    "ko|재직|normal": {
+      "v": "Weak"
+    },
+    "ko|면세점|normal": {
+      "v": "Pass"
+    },
+    "ko|륜|normal": {
+      "v": "Fail"
+    },
+    "ko|국외|normal": {
+      "v": "Fail"
+    },
+    "ko|달팽이|normal": {
+      "v": "Pass"
+    },
+    "ko|스트라이크아웃에서|normal": {
+      "v": "Fail"
+    },
+    "ko|성범죄|normal": {
+      "v": "Pass"
+    },
+    "ko|세계가치조사협회에|normal": {
+      "v": "Fail"
+    },
+    "ko|삼전사체십이행법륜|normal": {
+      "v": "Fail"
+    },
+    "ko|마리오|normal": {
+      "v": "Pass"
+    },
+    "ko|오디|normal": {
+      "v": "Weak"
+    },
+    "ko|자질|normal": {
+      "v": "Weak"
+    },
+    "ko|운세|normal": {
+      "v": "Pass"
+    },
+    "ko|직장인|normal": {
+      "v": "Pass"
+    },
+    "ko|알릴|normal": {
+      "v": "Weak"
+    },
+    "ko|잘난|normal": {
+      "v": "Pass"
     }
   }
 }

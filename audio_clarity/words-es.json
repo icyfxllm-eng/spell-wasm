@@ -22,12 +22,12 @@
  {
   "word": "té",
   "variant": "normal",
-  "url": "http://127.0.0.1:8199/api/speak?word=té&lang=es&variant=normal"
+  "url": "http://127.0.0.1:8199/api/speak?word=t%C3%A9&lang=es&variant=normal"
  },
  {
   "word": "raíz",
   "variant": "normal",
-  "url": "http://127.0.0.1:8199/api/speak?word=raíz&lang=es&variant=normal"
+  "url": "http://127.0.0.1:8199/api/speak?word=ra%C3%ADz&lang=es&variant=normal"
  },
  {
   "word": "zorro",
@@ -52,7 +52,7 @@
  {
   "word": "nación",
   "variant": "normal",
-  "url": "http://127.0.0.1:8199/api/speak?word=nación&lang=es&variant=normal"
+  "url": "http://127.0.0.1:8199/api/speak?word=naci%C3%B3n&lang=es&variant=normal"
  },
  {
   "word": "caminar",
@@ -62,7 +62,7 @@
  {
   "word": "cálido",
   "variant": "normal",
-  "url": "http://127.0.0.1:8199/api/speak?word=cálido&lang=es&variant=normal"
+  "url": "http://127.0.0.1:8199/api/speak?word=c%C3%A1lido&lang=es&variant=normal"
  },
  {
   "word": "brazo",
@@ -122,7 +122,7 @@
  {
   "word": "dueño",
   "variant": "normal",
-  "url": "http://127.0.0.1:8199/api/speak?word=dueño&lang=es&variant=normal"
+  "url": "http://127.0.0.1:8199/api/speak?word=due%C3%B1o&lang=es&variant=normal"
  },
  {
   "word": "elegir",
@@ -162,7 +162,7 @@
  {
   "word": "julián",
   "variant": "normal",
-  "url": "http://127.0.0.1:8199/api/speak?word=julián&lang=es&variant=normal"
+  "url": "http://127.0.0.1:8199/api/speak?word=juli%C3%A1n&lang=es&variant=normal"
  },
  {
   "word": "estuvieran",
@@ -187,7 +187,7 @@
  {
   "word": "físicos",
   "variant": "normal",
-  "url": "http://127.0.0.1:8199/api/speak?word=físicos&lang=es&variant=normal"
+  "url": "http://127.0.0.1:8199/api/speak?word=f%C3%ADsicos&lang=es&variant=normal"
  },
  {
   "word": "europeos",
@@ -222,7 +222,7 @@
  {
   "word": "bélgica",
   "variant": "normal",
-  "url": "http://127.0.0.1:8199/api/speak?word=bélgica&lang=es&variant=normal"
+  "url": "http://127.0.0.1:8199/api/speak?word=b%C3%A9lgica&lang=es&variant=normal"
  },
  {
   "word": "sufra",
@@ -237,7 +237,7 @@
  {
   "word": "comparación",
   "variant": "normal",
-  "url": "http://127.0.0.1:8199/api/speak?word=comparación&lang=es&variant=normal"
+  "url": "http://127.0.0.1:8199/api/speak?word=comparaci%C3%B3n&lang=es&variant=normal"
  },
  {
   "word": "igualar",
@@ -247,7 +247,7 @@
  {
   "word": "económico",
   "variant": "normal",
-  "url": "http://127.0.0.1:8199/api/speak?word=económico&lang=es&variant=normal"
+  "url": "http://127.0.0.1:8199/api/speak?word=econ%C3%B3mico&lang=es&variant=normal"
  },
  {
   "word": "azufre",
@@ -292,11 +292,11 @@
  {
   "word": "estadísticos",
   "variant": "normal",
-  "url": "http://127.0.0.1:8199/api/speak?word=estadísticos&lang=es&variant=normal"
+  "url": "http://127.0.0.1:8199/api/speak?word=estad%C3%ADsticos&lang=es&variant=normal"
  },
  {
   "word": "desnutrición",
   "variant": "normal",
-  "url": "http://127.0.0.1:8199/api/speak?word=desnutrición&lang=es&variant=normal"
+  "url": "http://127.0.0.1:8199/api/speak?word=desnutrici%C3%B3n&lang=es&variant=normal"
  }
 ]

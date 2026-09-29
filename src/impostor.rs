@@ -384,6 +384,21 @@ pub fn round(lang: &str, word: &str, index: u64, tier: Tier) -> Option<Round> {
                 v.push(n);
             }
             v.extend(take(&pool, index + 1, 3 - v.len(), |c| !near(&c.0) || v.is_empty()));
+            // Easy asks for two cards that are NOT near-misses, and the
+            // generators produce overwhelmingly 1-edit variants -- so on most
+            // words that filter matches nothing, Easy ended with a single card
+            // and round() returned None. Measured before this line: across
+            // fifteen languages and three seeds, Easy dealt SIX cards in total,
+            // all of them English, where Medium and Hard deal 150 each on one
+            // seed. Spell Jr plays Easy, so Impostor dealt a child nothing.
+            //
+            // Hard and Expert already fall back to the whole pool when their
+            // preferred shape cannot be filled; Easy was the one tier that did
+            // not, and its preference is the hardest to satisfy. Same fallback,
+            // so the near-miss stays a preference rather than a precondition.
+            if v.len() < 3 {
+                v = take(&pool, index, 3, |_| true);
+            }
             v
         }
         Tier::Medium => {
@@ -586,7 +601,29 @@ mod tests {
                 }
             }
         }
-        assert!(dealt > 0, "no Spell Jr set dealt a single card — the check proved nothing");
+        // `dealt > 0` is what this used to say, and it was the reason a broken
+        // Easy tier sat here unnoticed: across fifteen languages and three
+        // seeds it was satisfied by THREE cards, all English, out of a
+        // possible 450. A guard that one language limping can satisfy is not
+        // a guard. Every language must deal a full set.
+        assert_eq!(dealt, LANGS.len() * 3 * 10,
+            "Spell Jr dealt {dealt} cards, not {} — some language deals short",
+            LANGS.len() * 3 * 10);
+    }
+
+    /// The regression the line above could not see. Easy is the tier Spell Jr
+    /// plays, and it was the one tier whose preferred card shape had no
+    /// fallback, so round() returned None for almost every word.
+    #[test]
+    fn every_tier_deals_a_full_set_in_every_language() {
+        for tier in [Tier::Easy, Tier::Medium, Tier::Hard, Tier::Expert] {
+            for lang in LANGS {
+                for seed in 0..2u64 {
+                    let n = set_of_ten(lang, seed, tier).len();
+                    assert_eq!(n, 10, "{lang} {tier:?} seed {seed} dealt {n} cards, not 10");
+                }
+            }
+        }
     }
 
     /// I1 — the fairness invariant. Not one rendered distractor may be a real

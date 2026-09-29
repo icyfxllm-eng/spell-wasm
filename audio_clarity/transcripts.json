@@ -12658,5 +12658,725 @@
  "en|dismissed|normal": [
   "dismissed",
   "dismissed"
+ ],
+ "de|kreis|normal": [
+  "Kreis",
+  "Kreis"
+ ],
+ "de|osten|normal": [
+  "Austin",
+  "Austin"
+ ],
+ "de|schauen|normal": [
+  "Schauen!",
+  "schauen"
+ ],
+ "de|boden|normal": [
+  "Boden",
+  "Boden"
+ ],
+ "de|reise|normal": [
+  "Reise",
+  "Reise"
+ ],
+ "de|stark|normal": [
+  "Stark",
+  "stark"
+ ],
+ "de|metall|normal": [
+  "Metall",
+  "Metall"
+ ],
+ "de|tee|normal": [
+  "T",
+  ""
+ ],
+ "de|lang|normal": [
+  "lang",
+  ""
+ ],
+ "de|Nacht|normal": [
+  "Nacht",
+  "Nacht"
+ ],
+ "de|kette|normal": [
+  "Kette",
+  "Kette"
+ ],
+ "de|denken|normal": [
+  "Denken",
+  "denken"
+ ],
+ "de|schmerz|normal": [
+  "Schmerz",
+  "Schmerz"
+ ],
+ "de|Fenster|normal": [
+  "Fenster",
+  "Fenster"
+ ],
+ "de|Blatt|normal": [
+  "Blatt",
+  "Bl"
+ ],
+ "de|endete|normal": [
+  "Ende",
+  "Ende"
+ ],
+ "de|sehen|normal": [
+  "Sehen!",
+  ""
+ ],
+ "de|besten|normal": [
+  "besten",
+  "Westen"
+ ],
+ "de|ersten|normal": [
+  "ersten",
+  "ersten"
+ ],
+ "de|kurzen|normal": [
+  "Quarzen",
+  "kurz"
+ ],
+ "de|fanden|normal": [
+  "Fandnen",
+  "fanden"
+ ],
+ "de|üblich|normal": [
+  "üblich",
+  "üblich"
+ ],
+ "de|sagte|normal": [
+  "zackte",
+  "sagte"
+ ],
+ "de|trieb|normal": [
+  "Trip",
+  "Tri"
+ ],
+ "de|lagen|normal": [
+  "Lagen",
+  "lagen"
+ ],
+ "de|republik|normal": [
+  "Republik",
+  "Republik"
+ ],
+ "de|einem|normal": [
+  "einem",
+  ""
+ ],
+ "de|sammlung|normal": [
+  "Sammlung",
+  "Sammlung"
+ ],
+ "de|begab|normal": [
+  "Wicke Up!",
+  "begab"
+ ],
+ "de|große|normal": [
+  "große",
+  "große"
+ ],
+ "de|forschungen|normal": [
+  "Forschungen",
+  "Forschungen"
+ ],
+ "de|sinnvoll|normal": [
+  "sinnvoll",
+  "sinnvoll"
+ ],
+ "de|mitteilen|normal": [
+  "mitteilen",
+  "mitteilen"
+ ],
+ "de|übliche|normal": [
+  "übliche",
+  "übliche"
+ ],
+ "de|unentschieden|normal": [
+  "Unentschieden",
+  "Unentschieden"
+ ],
+ "de|aufzeichnungen|normal": [
+  "Aufzeichnungen",
+  "Aufzeichnungen"
+ ],
+ "de|verlegen|normal": [
+  "verlegen",
+  "verlegen"
+ ],
+ "de|grundgesetz|normal": [
+  "Grundgesetz",
+  "Grundgesetz"
+ ],
+ "de|gewählten|normal": [
+  "gewählten",
+  "gewählten"
+ ],
+ "de|diebstahl|normal": [
+  "Diebstahl",
+  "diepst"
+ ],
+ "de|direkten|normal": [
+  "Direkten",
+  "direkten"
+ ],
+ "de|ueber|normal": [
+  "Über",
+  "über"
+ ],
+ "de|einfallen|normal": [
+  "Einfallen",
+  "Einfall"
+ ],
+ "de|orientiert|normal": [
+  "orientiert",
+  "orientiert"
+ ],
+ "de|stich|normal": [
+  "Stich",
+  "Stich"
+ ],
+ "de|rechtswidrig|normal": [
+  "rechtswidrig",
+  "rechtswidrig"
+ ],
+ "de|zuordnen|normal": [
+  "Zuordnen!",
+  "zuordnen"
+ ],
+ "de|wiege|normal": [
+  "Wiege",
+  "wie"
+ ],
+ "de|jahrzehntelang|normal": [
+  "Jahrzehnte lang",
+  "jahrzehntelang"
+ ],
+ "de|polnischen|normal": [
+  "\"Ponition\"",
+  "polnischen"
+ ],
+ "de|optimismus|normal": [
+  "Optimismus",
+  "Optimismus"
+ ],
+ "de|financial|normal": [
+  "Financial",
+  "financial"
+ ],
+ "de|wacker|normal": [
+  "Wacker",
+  "wack"
+ ],
+ "de|orientierte|normal": [
+  "Orientierte",
+  "orientierte"
+ ],
+ "de|automatisch|normal": [
+  "Automatisch",
+  "automatisch"
+ ],
+ "de|frohes|normal": [
+  "Frohes!",
+  "fro"
+ ],
+ "de|ökonomisch|normal": [
+  "Ökonomisch",
+  "ökonomisch"
+ ],
+ "de|sogenannten|normal": [
+  "sogenannten",
+  "sogenannten"
+ ],
+ "de|beispielsweise|normal": [
+  "Beispielsweise",
+  "beispielsweise"
+ ],
+ "de|diplomatie|normal": [
+  "Diplomati",
+  "diplomat"
+ ],
+ "ru|послать|normal": [
+  "Послать",
+  "послать"
+ ],
+ "ru|круг|normal": [
+  "Круг",
+  "Круг"
+ ],
+ "ru|подарок|normal": [
+  "Подарок",
+  "подарок"
+ ],
+ "ru|левый|normal": [
+  "Левый.",
+  "левый"
+ ],
+ "ru|играть|normal": [
+  "играть",
+  "играть"
+ ],
+ "ru|коробка|normal": [
+  "Коробка",
+  "коробка"
+ ],
+ "ru|лёгкий|normal": [
+  "Львики.",
+  "лёгкий"
+ ],
+ "ru|сегодня|normal": [
+  "Сегодня.",
+  "сегодня"
+ ],
+ "ru|ступня|normal": [
+  "Ступня",
+  "ступня"
+ ],
+ "ru|сердце|normal": [
+  "Сердце",
+  "сердце"
+ ],
+ "ru|восемь|normal": [
+  "8",
+  "8"
+ ],
+ "ru|писать|normal": [
+  "Писать",
+  "писать"
+ ],
+ "ru|читать|normal": [
+  "Читать",
+  "читать"
+ ],
+ "ru|миска|normal": [
+  "Миска.",
+  "миска"
+ ],
+ "ru|тарелка|normal": [
+  "Тарелка",
+  "тарелка"
+ ],
+ "ru|текст|normal": [
+  "Текст",
+  "текст"
+ ],
+ "ru|позже|normal": [
+  "Позже!",
+  "позже"
+ ],
+ "ru|студии|normal": [
+  "студии",
+  "суди"
+ ],
+ "ru|водой|normal": [
+  "Водой.",
+  "водой"
+ ],
+ "ru|имена|normal": [
+  "Именно!",
+  "имена"
+ ],
+ "ru|языки|normal": [
+  "языки",
+  "языки"
+ ],
+ "ru|метра|normal": [
+  "метра",
+  ""
+ ],
+ "ru|помочь|normal": [
+  "Помочь!",
+  "помочь"
+ ],
+ "ru|линию|normal": [
+  "линии",
+  "линии"
+ ],
+ "ru|групп|normal": [
+  "Групп",
+  "Group"
+ ],
+ "ru|армия|normal": [
+  "Армия",
+  "армия"
+ ],
+ "ru|уходит|normal": [
+  "Уходит.",
+  "уходит"
+ ],
+ "ru|попал|normal": [
+  "Попал.",
+  "папа"
+ ],
+ "ru|музыки|normal": [
+  "Музыки",
+  "музыки"
+ ],
+ "ru|растение|normal": [
+  "Растение",
+  "растение"
+ ],
+ "ru|десятков|normal": [
+  "десятков",
+  "десятков"
+ ],
+ "ru|началась|normal": [
+  "Матчалайс",
+  "началась"
+ ],
+ "ru|причинам|normal": [
+  "Причинам",
+  "причина"
+ ],
+ "ru|горжусь|normal": [
+  "Горжусь!",
+  "горжусь"
+ ],
+ "ru|сделали|normal": [
+  "Сделали.",
+  "сделали"
+ ],
+ "ru|погоды|normal": [
+  "Погоды",
+  "погода"
+ ],
+ "ru|пришлось|normal": [
+  "Пришлось.",
+  "пришлось"
+ ],
+ "ru|сделано|normal": [
+  "Сделано.",
+  "сделано"
+ ],
+ "ru|проекту|normal": [
+  "Проекту",
+  "проект"
+ ],
+ "ru|благодарность|normal": [
+  "Благодарность.",
+  "благодарность"
+ ],
+ "ru|вложений|normal": [
+  "Вложений.",
+  "вложение"
+ ],
+ "ru|включая|normal": [
+  "Включая.",
+  "включай"
+ ],
+ "ru|местные|normal": [
+  "Местные.",
+  ""
+ ],
+ "ru|лучшем|normal": [
+  "лучшим",
+  "лучше"
+ ],
+ "ru|применять|normal": [
+  "применять",
+  "применять"
+ ],
+ "ru|послания|normal": [
+  "Послание",
+  "послание"
+ ],
+ "ru|недостатка|normal": [
+  "Недостатка.",
+  "недостатка"
+ ],
+ "ru|культурой|normal": [
+  "культурой",
+  "культура"
+ ],
+ "ru|проводилось|normal": [
+  "Проводилось.",
+  "проводилась"
+ ],
+ "ru|немногие|normal": [
+  "Немногие.",
+  "немногие"
+ ],
+ "ru|пишешь|normal": [
+  "Пишешь.",
+  "пишешь"
+ ],
+ "ru|исследователей|normal": [
+  "Исследователей",
+  "исследователи"
+ ],
+ "ru|собираешься|normal": [
+  "Собираешься?",
+  "собираешься"
+ ],
+ "ru|поет|normal": [
+  "Пайот",
+  ""
+ ],
+ "ru|университета|normal": [
+  "Университета",
+  "университет"
+ ],
+ "ru|исчезают|normal": [
+  "исчезают.",
+  "исчезают"
+ ],
+ "ru|настоящее|normal": [
+  "Настоящее.",
+  "настоящая"
+ ],
+ "ru|вежливо|normal": [
+  "Вежливо!",
+  "вежливо"
+ ],
+ "ru|переехала|normal": [
+  "Переехала.",
+  "переехала"
+ ],
+ "ru|грань|normal": [
+  "Грань",
+  "Грань"
+ ],
+ "ko|양말|normal": [
+  "양말",
+  "양말"
+ ],
+ "ko|여섯|normal": [
+  "여성",
+  "6"
+ ],
+ "ko|늙은|normal": [
+  "늙은",
+  "늙은"
+ ],
+ "ko|병원|normal": [
+  "병원",
+  "병원"
+ ],
+ "ko|좋아하다|normal": [
+  "좋아하다.",
+  "조아라"
+ ],
+ "ko|동전|normal": [
+  "동전",
+  "동전"
+ ],
+ "ko|힘|normal": [
+  "힘",
+  "심"
+ ],
+ "ko|학생|normal": [
+  "학생",
+  "학생"
+ ],
+ "ko|파도|normal": [
+  "파도",
+  "파도"
+ ],
+ "ko|보내다|normal": [
+  "보내다.",
+  "보내 줘"
+ ],
+ "ko|여자|normal": [
+  "여자",
+  "여자"
+ ],
+ "ko|여기|normal": [
+  "여기",
+  "여기"
+ ],
+ "ko|언덕|normal": [
+  "완도",
+  "원동"
+ ],
+ "ko|섬|normal": [
+  "3",
+  "섬"
+ ],
+ "ko|회색|normal": [
+  "회색",
+  "폐쇄"
+ ],
+ "ko|줄어들었다|normal": [
+  "줄어들었다",
+  "줄어들었다"
+ ],
+ "ko|것으로부터|normal": [
+  "거스로부터",
+  "것으로부터"
+ ],
+ "ko|승강장으로|normal": [
+  "승강장으로",
+  "승강장으로"
+ ],
+ "ko|폐지되었다|normal": [
+  "폐지되었다.",
+  "폐지되었다"
+ ],
+ "ko|나타나는데|normal": [
+  "나타나는데",
+  "나타나는데"
+ ],
+ "ko|돌아다니며|normal": [
+  "돌아다니며",
+  "돌아다니며"
+ ],
+ "ko|구성원들이|normal": [
+  "고성원들이",
+  "구성원들이"
+ ],
+ "ko|애플리케이션|normal": [
+  "애플리케이션",
+  "애플리케이션"
+ ],
+ "ko|투입되었다|normal": [
+  "투입되었다.",
+  "투입되었다"
+ ],
+ "ko|울산|normal": [
+  "울산",
+  "울산"
+ ],
+ "ko|지정되었다|normal": [
+  "지정되었다.",
+  "지정되었다"
+ ],
+ "ko|추가되었다|normal": [
+  "추가되었다.",
+  "추가되었다"
+ ],
+ "ko|만들어졌으며|normal": [
+  "만들어 줬으며",
+  "만들어졌으며"
+ ],
+ "ko|솔직히|normal": [
+  "솔직히",
+  "솔직히"
+ ],
+ "ko|발사|normal": [
+  "발사",
+  "발사"
+ ],
+ "ko|받아들여지면서|normal": [
+  "받아들여지면서",
+  "받아들여지면서"
+ ],
+ "ko|제프|normal": [
+  "제품",
+  "제프"
+ ],
+ "ko|상임위원회에서|normal": [
+  "상임위원회에서",
+  "상임위원회에서"
+ ],
+ "ko|말레이시아에서는|normal": [
+  "말레이시아에서는",
+  "말레이시아에서는"
+ ],
+ "ko|사당|normal": [
+  "사당",
+  "사당"
+ ],
+ "ko|하드리아누스의|normal": [
+  "하드리안우스에",
+  "하드리아누스"
+ ],
+ "ko|딱히|normal": [
+  "다치",
+  "까치"
+ ],
+ "ko|에스페란티스토|normal": [
+  "에스페란티스톤",
+  "에스페란티스토"
+ ],
+ "ko|정답|normal": [
+  "정답",
+  "정답"
+ ],
+ "ko|풀리|normal": [
+  "풀리",
+  "풀리"
+ ],
+ "ko|케빈|normal": [
+  "태빈",
+  "캐빈"
+ ],
+ "ko|비유|normal": [
+  "P.O.",
+  "디오"
+ ],
+ "ko|아랍에미리트의|normal": [
+  "아랍의 미리티에",
+  "아랍에미리트"
+ ],
+ "ko|중화인민공화국에|normal": [
+  "중화인민공화국에",
+  "중화인민공화국"
+ ],
+ "ko|재직|normal": [
+  "재직",
+  "돼지"
+ ],
+ "ko|면세점|normal": [
+  "면세점",
+  "면세점"
+ ],
+ "ko|륜|normal": [
+  "윤",
+  "윤"
+ ],
+ "ko|국외|normal": [
+  "구교에",
+  "구글"
+ ],
+ "ko|달팽이|normal": [
+  "달팽이",
+  "달팽이"
+ ],
+ "ko|스트라이크아웃에서|normal": [
+  "스트라이크 하우스에서",
+  "스트라이크 아우 재생"
+ ],
+ "ko|성범죄|normal": [
+  "성범죄",
+  "성범죄"
+ ],
+ "ko|세계가치조사협회에|normal": [
+  "세계가 치조사 옆에",
+  "세계가치조사 협회"
+ ],
+ "ko|삼전사체십이행법륜|normal": [
+  "3전사체 12행범융",
+  "3전사 7시 비행 법률"
+ ],
+ "ko|마리오|normal": [
+  "마리오",
+  "마리오"
+ ],
+ "ko|오디|normal": [
+  "O.D.",
+  "오디"
+ ],
+ "ko|자질|normal": [
+  "자지",
+  "자질"
+ ],
+ "ko|운세|normal": [
+  "운세",
+  "운세"
+ ],
+ "ko|직장인|normal": [
+  "직장인",
+  "직장인"
+ ],
+ "ko|알릴|normal": [
+  "알리",
+  "알릴"
+ ],
+ "ko|잘난|normal": [
+  "잘난!",
+  "잘난"
  ]
 }

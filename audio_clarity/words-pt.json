@@ -27,7 +27,7 @@
  {
   "word": "saúde",
   "variant": "normal",
-  "url": "http://127.0.0.1:8199/api/speak?word=saúde&lang=pt&variant=normal"
+  "url": "http://127.0.0.1:8199/api/speak?word=sa%C3%BAde&lang=pt&variant=normal"
  },
  {
   "word": "porco",
@@ -97,7 +97,7 @@
  {
   "word": "começa",
   "variant": "normal",
-  "url": "http://127.0.0.1:8199/api/speak?word=começa&lang=pt&variant=normal"
+  "url": "http://127.0.0.1:8199/api/speak?word=come%C3%A7a&lang=pt&variant=normal"
  },
  {
   "word": "vendas",
@@ -107,7 +107,7 @@
  {
   "word": "gênero",
   "variant": "normal",
-  "url": "http://127.0.0.1:8199/api/speak?word=gênero&lang=pt&variant=normal"
+  "url": "http://127.0.0.1:8199/api/speak?word=g%C3%AAnero&lang=pt&variant=normal"
  },
  {
   "word": "felizes",
@@ -127,7 +127,7 @@
  {
   "word": "visão",
   "variant": "normal",
-  "url": "http://127.0.0.1:8199/api/speak?word=visão&lang=pt&variant=normal"
+  "url": "http://127.0.0.1:8199/api/speak?word=vis%C3%A3o&lang=pt&variant=normal"
  },
  {
   "word": "alunos",
@@ -137,7 +137,7 @@
  {
   "word": "fêmeas",
   "variant": "normal",
-  "url": "http://127.0.0.1:8199/api/speak?word=fêmeas&lang=pt&variant=normal"
+  "url": "http://127.0.0.1:8199/api/speak?word=f%C3%AAmeas&lang=pt&variant=normal"
  },
  {
   "word": "viveu",
@@ -172,7 +172,7 @@
  {
   "word": "tradução",
   "variant": "normal",
-  "url": "http://127.0.0.1:8199/api/speak?word=tradução&lang=pt&variant=normal"
+  "url": "http://127.0.0.1:8199/api/speak?word=tradu%C3%A7%C3%A3o&lang=pt&variant=normal"
  },
  {
   "word": "chamada",
@@ -192,7 +192,7 @@
  {
   "word": "oxigênio",
   "variant": "normal",
-  "url": "http://127.0.0.1:8199/api/speak?word=oxigênio&lang=pt&variant=normal"
+  "url": "http://127.0.0.1:8199/api/speak?word=oxig%C3%AAnio&lang=pt&variant=normal"
  },
  {
   "word": "expulso",
@@ -217,7 +217,7 @@
  {
   "word": "destruída",
   "variant": "normal",
-  "url": "http://127.0.0.1:8199/api/speak?word=destruída&lang=pt&variant=normal"
+  "url": "http://127.0.0.1:8199/api/speak?word=destru%C3%ADda&lang=pt&variant=normal"
  },
  {
   "word": "vestido",
@@ -227,7 +227,7 @@
  {
   "word": "possíveis",
   "variant": "normal",
-  "url": "http://127.0.0.1:8199/api/speak?word=possíveis&lang=pt&variant=normal"
+  "url": "http://127.0.0.1:8199/api/speak?word=poss%C3%ADveis&lang=pt&variant=normal"
  },
  {
   "word": "coordenada",
@@ -237,7 +237,7 @@
  {
   "word": "portáteis",
   "variant": "normal",
-  "url": "http://127.0.0.1:8199/api/speak?word=portáteis&lang=pt&variant=normal"
+  "url": "http://127.0.0.1:8199/api/speak?word=port%C3%A1teis&lang=pt&variant=normal"
  },
  {
   "word": "educadora",
@@ -247,7 +247,7 @@
  {
   "word": "jornalístico",
   "variant": "normal",
-  "url": "http://127.0.0.1:8199/api/speak?word=jornalístico&lang=pt&variant=normal"
+  "url": "http://127.0.0.1:8199/api/speak?word=jornal%C3%ADstico&lang=pt&variant=normal"
  },
  {
   "word": "permanecer",
@@ -257,7 +257,7 @@
  {
   "word": "emergência",
   "variant": "normal",
-  "url": "http://127.0.0.1:8199/api/speak?word=emergência&lang=pt&variant=normal"
+  "url": "http://127.0.0.1:8199/api/speak?word=emerg%C3%AAncia&lang=pt&variant=normal"
  },
  {
   "word": "bebem",

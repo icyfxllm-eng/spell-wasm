@@ -61,12 +61,19 @@ LANG_VOICES = {
     "en": ("en-US", "en-US-Neural2-E"),
     "es": ("es-ES", "es-ES-Neural2-B"),
     "fr": ("fr-FR", "fr-FR-Neural2-A"),
-    "de": ("de-DE", "de-DE-Neural2-B"),
+    # CC-AUDIO-CLARITY F4, signed 2026-09-28. de-DE-Neural2-A over -B: +5
+    # clips of 60, with both recognizers competent on German (whisper 49/60,
+    # Google 34/60), so the lead is the voice and not the harness.
+    "de": ("de-DE", "de-DE-Neural2-A"),
     "pt": ("pt-BR", "pt-BR-Neural2-B"),
     "pl": ("pl-PL", "pl-PL-Wavenet-B"),
-    "ru": ("ru-RU", "ru-RU-Wavenet-D"),
+    # Signed 2026-09-28. ru-RU-Wavenet-A over -D: +10 of 60, the second
+    # largest lead in the eleven-language run, both recognizers competent.
+    "ru": ("ru-RU", "ru-RU-Wavenet-A"),
     "vi": ("vi-VN", "vi-VN-Wavenet-A"),
-    "ko": ("ko-KR", "ko-KR-Wavenet-A"),
+    # Signed 2026-09-28. ko-KR-Wavenet-D over -A: +14 of 60, the largest
+    # lead in the whole run.
+    "ko": ("ko-KR", "ko-KR-Wavenet-D"),
     "ja": ("ja-JP", "ja-JP-Wavenet-B"),
     "fil": ("fil-PH", "fil-PH-Wavenet-A"),
     "zh": ("cmn-CN", "cmn-CN-Wavenet-A"),
@@ -163,7 +170,15 @@ CACHE_VERSION = "v4"
 # -- and E heard correctly on all three. Without this, the switch would have
 # served a MIX: cached D clips for every word already synthesized, E only for
 # the rest, which is exactly what D16's "never mid-session" forbids.
-VOICE_IN_KEY = {"en"}
+#
+# de, ru and ko joined on 2026-09-28 with their own signed switches, for the
+# same reason and with the same consequence: adding a language here changes
+# the cache key for every one of its clips, so the old voice's cache is
+# orphaned rather than overwritten and the first request per word re--
+# synthesizes. That is the point -- it is what makes the switch atomic per
+# word instead of a mix -- but it means the switch is not free: those clips
+# must be warmed before players meet them (F4 step 5).
+VOICE_IN_KEY = {"en", "de", "ru", "ko"}
 
 DICTIONARY_API = "https://api.dictionaryapi.dev/api/v2/entries/en/{}"
 

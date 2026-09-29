@@ -2,301 +2,301 @@
  {
   "word": "양말",
   "variant": "normal",
-  "url": "http://127.0.0.1:8199/api/speak?word=양말&lang=ko&variant=normal"
+  "url": "http://127.0.0.1:8199/api/speak?word=%EC%96%91%EB%A7%90&lang=ko&variant=normal"
  },
  {
   "word": "여섯",
   "variant": "normal",
-  "url": "http://127.0.0.1:8199/api/speak?word=여섯&lang=ko&variant=normal"
+  "url": "http://127.0.0.1:8199/api/speak?word=%EC%97%AC%EC%84%AF&lang=ko&variant=normal"
  },
  {
   "word": "늙은",
   "variant": "normal",
-  "url": "http://127.0.0.1:8199/api/speak?word=늙은&lang=ko&variant=normal"
+  "url": "http://127.0.0.1:8199/api/speak?word=%EB%8A%99%EC%9D%80&lang=ko&variant=normal"
  },
  {
   "word": "병원",
   "variant": "normal",
-  "url": "http://127.0.0.1:8199/api/speak?word=병원&lang=ko&variant=normal"
+  "url": "http://127.0.0.1:8199/api/speak?word=%EB%B3%91%EC%9B%90&lang=ko&variant=normal"
  },
  {
   "word": "좋아하다",
   "variant": "normal",
-  "url": "http://127.0.0.1:8199/api/speak?word=좋아하다&lang=ko&variant=normal"
+  "url": "http://127.0.0.1:8199/api/speak?word=%EC%A2%8B%EC%95%84%ED%95%98%EB%8B%A4&lang=ko&variant=normal"
  },
  {
   "word": "동전",
   "variant": "normal",
-  "url": "http://127.0.0.1:8199/api/speak?word=동전&lang=ko&variant=normal"
+  "url": "http://127.0.0.1:8199/api/speak?word=%EB%8F%99%EC%A0%84&lang=ko&variant=normal"
  },
  {
   "word": "힘",
   "variant": "normal",
-  "url": "http://127.0.0.1:8199/api/speak?word=힘&lang=ko&variant=normal"
+  "url": "http://127.0.0.1:8199/api/speak?word=%ED%9E%98&lang=ko&variant=normal"
  },
  {
   "word": "학생",
   "variant": "normal",
-  "url": "http://127.0.0.1:8199/api/speak?word=학생&lang=ko&variant=normal"
+  "url": "http://127.0.0.1:8199/api/speak?word=%ED%95%99%EC%83%9D&lang=ko&variant=normal"
  },
  {
   "word": "파도",
   "variant": "normal",
-  "url": "http://127.0.0.1:8199/api/speak?word=파도&lang=ko&variant=normal"
+  "url": "http://127.0.0.1:8199/api/speak?word=%ED%8C%8C%EB%8F%84&lang=ko&variant=normal"
  },
  {
   "word": "보내다",
   "variant": "normal",
-  "url": "http://127.0.0.1:8199/api/speak?word=보내다&lang=ko&variant=normal"
+  "url": "http://127.0.0.1:8199/api/speak?word=%EB%B3%B4%EB%82%B4%EB%8B%A4&lang=ko&variant=normal"
  },
  {
   "word": "여자",
   "variant": "normal",
-  "url": "http://127.0.0.1:8199/api/speak?word=여자&lang=ko&variant=normal"
+  "url": "http://127.0.0.1:8199/api/speak?word=%EC%97%AC%EC%9E%90&lang=ko&variant=normal"
  },
  {
   "word": "여기",
   "variant": "normal",
-  "url": "http://127.0.0.1:8199/api/speak?word=여기&lang=ko&variant=normal"
+  "url": "http://127.0.0.1:8199/api/speak?word=%EC%97%AC%EA%B8%B0&lang=ko&variant=normal"
  },
  {
   "word": "언덕",
   "variant": "normal",
-  "url": "http://127.0.0.1:8199/api/speak?word=언덕&lang=ko&variant=normal"
+  "url": "http://127.0.0.1:8199/api/speak?word=%EC%96%B8%EB%8D%95&lang=ko&variant=normal"
  },
  {
   "word": "섬",
   "variant": "normal",
-  "url": "http://127.0.0.1:8199/api/speak?word=섬&lang=ko&variant=normal"
+  "url": "http://127.0.0.1:8199/api/speak?word=%EC%84%AC&lang=ko&variant=normal"
  },
  {
   "word": "회색",
   "variant": "normal",
-  "url": "http://127.0.0.1:8199/api/speak?word=회색&lang=ko&variant=normal"
+  "url": "http://127.0.0.1:8199/api/speak?word=%ED%9A%8C%EC%83%89&lang=ko&variant=normal"
  },
  {
   "word": "줄어들었다",
   "variant": "normal",
-  "url": "http://127.0.0.1:8199/api/speak?word=줄어들었다&lang=ko&variant=normal"
+  "url": "http://127.0.0.1:8199/api/speak?word=%EC%A4%84%EC%96%B4%EB%93%A4%EC%97%88%EB%8B%A4&lang=ko&variant=normal"
  },
  {
   "word": "것으로부터",
   "variant": "normal",
-  "url": "http://127.0.0.1:8199/api/speak?word=것으로부터&lang=ko&variant=normal"
+  "url": "http://127.0.0.1:8199/api/speak?word=%EA%B2%83%EC%9C%BC%EB%A1%9C%EB%B6%80%ED%84%B0&lang=ko&variant=normal"
  },
  {
   "word": "승강장으로",
   "variant": "normal",
-  "url": "http://127.0.0.1:8199/api/speak?word=승강장으로&lang=ko&variant=normal"
+  "url": "http://127.0.0.1:8199/api/speak?word=%EC%8A%B9%EA%B0%95%EC%9E%A5%EC%9C%BC%EB%A1%9C&lang=ko&variant=normal"
  },
  {
   "word": "폐지되었다",
   "variant": "normal",
-  "url": "http://127.0.0.1:8199/api/speak?word=폐지되었다&lang=ko&variant=normal"
+  "url": "http://127.0.0.1:8199/api/speak?word=%ED%8F%90%EC%A7%80%EB%90%98%EC%97%88%EB%8B%A4&lang=ko&variant=normal"
  },
  {
   "word": "나타나는데",
   "variant": "normal",
-  "url": "http://127.0.0.1:8199/api/speak?word=나타나는데&lang=ko&variant=normal"
+  "url": "http://127.0.0.1:8199/api/speak?word=%EB%82%98%ED%83%80%EB%82%98%EB%8A%94%EB%8D%B0&lang=ko&variant=normal"
  },
  {
   "word": "돌아다니며",
   "variant": "normal",
-  "url": "http://127.0.0.1:8199/api/speak?word=돌아다니며&lang=ko&variant=normal"
+  "url": "http://127.0.0.1:8199/api/speak?word=%EB%8F%8C%EC%95%84%EB%8B%A4%EB%8B%88%EB%A9%B0&lang=ko&variant=normal"
  },
  {
   "word": "구성원들이",
   "variant": "normal",
-  "url": "http://127.0.0.1:8199/api/speak?word=구성원들이&lang=ko&variant=normal"
+  "url": "http://127.0.0.1:8199/api/speak?word=%EA%B5%AC%EC%84%B1%EC%9B%90%EB%93%A4%EC%9D%B4&lang=ko&variant=normal"
  },
  {
   "word": "애플리케이션",
   "variant": "normal",
-  "url": "http://127.0.0.1:8199/api/speak?word=애플리케이션&lang=ko&variant=normal"
+  "url": "http://127.0.0.1:8199/api/speak?word=%EC%95%A0%ED%94%8C%EB%A6%AC%EC%BC%80%EC%9D%B4%EC%85%98&lang=ko&variant=normal"
  },
  {
   "word": "투입되었다",
   "variant": "normal",
-  "url": "http://127.0.0.1:8199/api/speak?word=투입되었다&lang=ko&variant=normal"
+  "url": "http://127.0.0.1:8199/api/speak?word=%ED%88%AC%EC%9E%85%EB%90%98%EC%97%88%EB%8B%A4&lang=ko&variant=normal"
  },
  {
   "word": "울산",
   "variant": "normal",
-  "url": "http://127.0.0.1:8199/api/speak?word=울산&lang=ko&variant=normal"
+  "url": "http://127.0.0.1:8199/api/speak?word=%EC%9A%B8%EC%82%B0&lang=ko&variant=normal"
  },
  {
   "word": "지정되었다",
   "variant": "normal",
-  "url": "http://127.0.0.1:8199/api/speak?word=지정되었다&lang=ko&variant=normal"
+  "url": "http://127.0.0.1:8199/api/speak?word=%EC%A7%80%EC%A0%95%EB%90%98%EC%97%88%EB%8B%A4&lang=ko&variant=normal"
  },
  {
   "word": "추가되었다",
   "variant": "normal",
-  "url": "http://127.0.0.1:8199/api/speak?word=추가되었다&lang=ko&variant=normal"
+  "url": "http://127.0.0.1:8199/api/speak?word=%EC%B6%94%EA%B0%80%EB%90%98%EC%97%88%EB%8B%A4&lang=ko&variant=normal"
  },
  {
   "word": "만들어졌으며",
   "variant": "normal",
-  "url": "http://127.0.0.1:8199/api/speak?word=만들어졌으며&lang=ko&variant=normal"
+  "url": "http://127.0.0.1:8199/api/speak?word=%EB%A7%8C%EB%93%A4%EC%96%B4%EC%A1%8C%EC%9C%BC%EB%A9%B0&lang=ko&variant=normal"
  },
  {
   "word": "솔직히",
   "variant": "normal",
-  "url": "http://127.0.0.1:8199/api/speak?word=솔직히&lang=ko&variant=normal"
+  "url": "http://127.0.0.1:8199/api/speak?word=%EC%86%94%EC%A7%81%ED%9E%88&lang=ko&variant=normal"
  },
  {
   "word": "발사",
   "variant": "normal",
-  "url": "http://127.0.0.1:8199/api/speak?word=발사&lang=ko&variant=normal"
+  "url": "http://127.0.0.1:8199/api/speak?word=%EB%B0%9C%EC%82%AC&lang=ko&variant=normal"
  },
  {
   "word": "받아들여지면서",
   "variant": "normal",
-  "url": "http://127.0.0.1:8199/api/speak?word=받아들여지면서&lang=ko&variant=normal"
+  "url": "http://127.0.0.1:8199/api/speak?word=%EB%B0%9B%EC%95%84%EB%93%A4%EC%97%AC%EC%A7%80%EB%A9%B4%EC%84%9C&lang=ko&variant=normal"
  },
  {
   "word": "제프",
   "variant": "normal",
-  "url": "http://127.0.0.1:8199/api/speak?word=제프&lang=ko&variant=normal"
+  "url": "http://127.0.0.1:8199/api/speak?word=%EC%A0%9C%ED%94%84&lang=ko&variant=normal"
  },
  {
   "word": "상임위원회에서",
   "variant": "normal",
-  "url": "http://127.0.0.1:8199/api/speak?word=상임위원회에서&lang=ko&variant=normal"
+  "url": "http://127.0.0.1:8199/api/speak?word=%EC%83%81%EC%9E%84%EC%9C%84%EC%9B%90%ED%9A%8C%EC%97%90%EC%84%9C&lang=ko&variant=normal"
  },
  {
   "word": "말레이시아에서는",
   "variant": "normal",
-  "url": "http://127.0.0.1:8199/api/speak?word=말레이시아에서는&lang=ko&variant=normal"
+  "url": "http://127.0.0.1:8199/api/speak?word=%EB%A7%90%EB%A0%88%EC%9D%B4%EC%8B%9C%EC%95%84%EC%97%90%EC%84%9C%EB%8A%94&lang=ko&variant=normal"
  },
  {
   "word": "사당",
   "variant": "normal",
-  "url": "http://127.0.0.1:8199/api/speak?word=사당&lang=ko&variant=normal"
+  "url": "http://127.0.0.1:8199/api/speak?word=%EC%82%AC%EB%8B%B9&lang=ko&variant=normal"
  },
  {
   "word": "하드리아누스의",
   "variant": "normal",
-  "url": "http://127.0.0.1:8199/api/speak?word=하드리아누스의&lang=ko&variant=normal"
+  "url": "http://127.0.0.1:8199/api/speak?word=%ED%95%98%EB%93%9C%EB%A6%AC%EC%95%84%EB%88%84%EC%8A%A4%EC%9D%98&lang=ko&variant=normal"
  },
  {
   "word": "딱히",
   "variant": "normal",
-  "url": "http://127.0.0.1:8199/api/speak?word=딱히&lang=ko&variant=normal"
+  "url": "http://127.0.0.1:8199/api/speak?word=%EB%94%B1%ED%9E%88&lang=ko&variant=normal"
  },
  {
   "word": "에스페란티스토",
   "variant": "normal",
-  "url": "http://127.0.0.1:8199/api/speak?word=에스페란티스토&lang=ko&variant=normal"
+  "url": "http://127.0.0.1:8199/api/speak?word=%EC%97%90%EC%8A%A4%ED%8E%98%EB%9E%80%ED%8B%B0%EC%8A%A4%ED%86%A0&lang=ko&variant=normal"
  },
  {
   "word": "정답",
   "variant": "normal",
-  "url": "http://127.0.0.1:8199/api/speak?word=정답&lang=ko&variant=normal"
+  "url": "http://127.0.0.1:8199/api/speak?word=%EC%A0%95%EB%8B%B5&lang=ko&variant=normal"
  },
  {
   "word": "풀리",
   "variant": "normal",
-  "url": "http://127.0.0.1:8199/api/speak?word=풀리&lang=ko&variant=normal"
+  "url": "http://127.0.0.1:8199/api/speak?word=%ED%92%80%EB%A6%AC&lang=ko&variant=normal"
  },
  {
   "word": "케빈",
   "variant": "normal",
-  "url": "http://127.0.0.1:8199/api/speak?word=케빈&lang=ko&variant=normal"
+  "url": "http://127.0.0.1:8199/api/speak?word=%EC%BC%80%EB%B9%88&lang=ko&variant=normal"
  },
  {
   "word": "비유",
   "variant": "normal",
-  "url": "http://127.0.0.1:8199/api/speak?word=비유&lang=ko&variant=normal"
+  "url": "http://127.0.0.1:8199/api/speak?word=%EB%B9%84%EC%9C%A0&lang=ko&variant=normal"
  },
  {
   "word": "아랍에미리트의",
   "variant": "normal",
-  "url": "http://127.0.0.1:8199/api/speak?word=아랍에미리트의&lang=ko&variant=normal"
+  "url": "http://127.0.0.1:8199/api/speak?word=%EC%95%84%EB%9E%8D%EC%97%90%EB%AF%B8%EB%A6%AC%ED%8A%B8%EC%9D%98&lang=ko&variant=normal"
  },
  {
   "word": "중화인민공화국에",
   "variant": "normal",
-  "url": "http://127.0.0.1:8199/api/speak?word=중화인민공화국에&lang=ko&variant=normal"
+  "url": "http://127.0.0.1:8199/api/speak?word=%EC%A4%91%ED%99%94%EC%9D%B8%EB%AF%BC%EA%B3%B5%ED%99%94%EA%B5%AD%EC%97%90&lang=ko&variant=normal"
  },
  {
   "word": "재직",
   "variant": "normal",
-  "url": "http://127.0.0.1:8199/api/speak?word=재직&lang=ko&variant=normal"
+  "url": "http://127.0.0.1:8199/api/speak?word=%EC%9E%AC%EC%A7%81&lang=ko&variant=normal"
  },
  {
   "word": "면세점",
   "variant": "normal",
-  "url": "http://127.0.0.1:8199/api/speak?word=면세점&lang=ko&variant=normal"
+  "url": "http://127.0.0.1:8199/api/speak?word=%EB%A9%B4%EC%84%B8%EC%A0%90&lang=ko&variant=normal"
  },
  {
   "word": "륜",
   "variant": "normal",
-  "url": "http://127.0.0.1:8199/api/speak?word=륜&lang=ko&variant=normal"
+  "url": "http://127.0.0.1:8199/api/speak?word=%EB%A5%9C&lang=ko&variant=normal"
  },
  {
   "word": "국외",
   "variant": "normal",
-  "url": "http://127.0.0.1:8199/api/speak?word=국외&lang=ko&variant=normal"
+  "url": "http://127.0.0.1:8199/api/speak?word=%EA%B5%AD%EC%99%B8&lang=ko&variant=normal"
  },
  {
   "word": "달팽이",
   "variant": "normal",
-  "url": "http://127.0.0.1:8199/api/speak?word=달팽이&lang=ko&variant=normal"
+  "url": "http://127.0.0.1:8199/api/speak?word=%EB%8B%AC%ED%8C%BD%EC%9D%B4&lang=ko&variant=normal"
  },
  {
   "word": "스트라이크아웃에서",
   "variant": "normal",
-  "url": "http://127.0.0.1:8199/api/speak?word=스트라이크아웃에서&lang=ko&variant=normal"
+  "url": "http://127.0.0.1:8199/api/speak?word=%EC%8A%A4%ED%8A%B8%EB%9D%BC%EC%9D%B4%ED%81%AC%EC%95%84%EC%9B%83%EC%97%90%EC%84%9C&lang=ko&variant=normal"
  },
  {
   "word": "성범죄",
   "variant": "normal",
-  "url": "http://127.0.0.1:8199/api/speak?word=성범죄&lang=ko&variant=normal"
+  "url": "http://127.0.0.1:8199/api/speak?word=%EC%84%B1%EB%B2%94%EC%A3%84&lang=ko&variant=normal"
  },
  {
   "word": "세계가치조사협회에",
   "variant": "normal",
-  "url": "http://127.0.0.1:8199/api/speak?word=세계가치조사협회에&lang=ko&variant=normal"
+  "url": "http://127.0.0.1:8199/api/speak?word=%EC%84%B8%EA%B3%84%EA%B0%80%EC%B9%98%EC%A1%B0%EC%82%AC%ED%98%91%ED%9A%8C%EC%97%90&lang=ko&variant=normal"
  },
  {
   "word": "삼전사체십이행법륜",
   "variant": "normal",
-  "url": "http://127.0.0.1:8199/api/speak?word=삼전사체십이행법륜&lang=ko&variant=normal"
+  "url": "http://127.0.0.1:8199/api/speak?word=%EC%82%BC%EC%A0%84%EC%82%AC%EC%B2%B4%EC%8B%AD%EC%9D%B4%ED%96%89%EB%B2%95%EB%A5%9C&lang=ko&variant=normal"
  },
  {
   "word": "마리오",
   "variant": "normal",
-  "url": "http://127.0.0.1:8199/api/speak?word=마리오&lang=ko&variant=normal"
+  "url": "http://127.0.0.1:8199/api/speak?word=%EB%A7%88%EB%A6%AC%EC%98%A4&lang=ko&variant=normal"
  },
  {
   "word": "오디",
   "variant": "normal",
-  "url": "http://127.0.0.1:8199/api/speak?word=오디&lang=ko&variant=normal"
+  "url": "http://127.0.0.1:8199/api/speak?word=%EC%98%A4%EB%94%94&lang=ko&variant=normal"
  },
  {
   "word": "자질",
   "variant": "normal",
-  "url": "http://127.0.0.1:8199/api/speak?word=자질&lang=ko&variant=normal"
+  "url": "http://127.0.0.1:8199/api/speak?word=%EC%9E%90%EC%A7%88&lang=ko&variant=normal"
  },
  {
   "word": "운세",
   "variant": "normal",
-  "url": "http://127.0.0.1:8199/api/speak?word=운세&lang=ko&variant=normal"
+  "url": "http://127.0.0.1:8199/api/speak?word=%EC%9A%B4%EC%84%B8&lang=ko&variant=normal"
  },
  {
   "word": "직장인",
   "variant": "normal",
-  "url": "http://127.0.0.1:8199/api/speak?word=직장인&lang=ko&variant=normal"
+  "url": "http://127.0.0.1:8199/api/speak?word=%EC%A7%81%EC%9E%A5%EC%9D%B8&lang=ko&variant=normal"
  },
  {
   "word": "알릴",
   "variant": "normal",
-  "url": "http://127.0.0.1:8199/api/speak?word=알릴&lang=ko&variant=normal"
+  "url": "http://127.0.0.1:8199/api/speak?word=%EC%95%8C%EB%A6%B4&lang=ko&variant=normal"
  },
  {
   "word": "잘난",
   "variant": "normal",
-  "url": "http://127.0.0.1:8199/api/speak?word=잘난&lang=ko&variant=normal"
+  "url": "http://127.0.0.1:8199/api/speak?word=%EC%9E%98%EB%82%9C&lang=ko&variant=normal"
  }
 ]

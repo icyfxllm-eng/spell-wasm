@@ -12,7 +12,7 @@
  {
   "word": "pchać",
   "variant": "normal",
-  "url": "http://127.0.0.1:8199/api/speak?word=pchać&lang=pl&variant=normal"
+  "url": "http://127.0.0.1:8199/api/speak?word=pcha%C4%87&lang=pl&variant=normal"
  },
  {
   "word": "cena",
@@ -22,7 +22,7 @@
  {
   "word": "wieś",
   "variant": "normal",
-  "url": "http://127.0.0.1:8199/api/speak?word=wieś&lang=pl&variant=normal"
+  "url": "http://127.0.0.1:8199/api/speak?word=wie%C5%9B&lang=pl&variant=normal"
  },
  {
   "word": "noc",
@@ -32,7 +32,7 @@
  {
   "word": "środek",
   "variant": "normal",
-  "url": "http://127.0.0.1:8199/api/speak?word=środek&lang=pl&variant=normal"
+  "url": "http://127.0.0.1:8199/api/speak?word=%C5%9Brodek&lang=pl&variant=normal"
  },
  {
   "word": "rok",
@@ -47,7 +47,7 @@
  {
   "word": "biały",
   "variant": "normal",
-  "url": "http://127.0.0.1:8199/api/speak?word=biały&lang=pl&variant=normal"
+  "url": "http://127.0.0.1:8199/api/speak?word=bia%C5%82y&lang=pl&variant=normal"
  },
  {
   "word": "dom",
@@ -57,22 +57,22 @@
  {
   "word": "łódź",
   "variant": "normal",
-  "url": "http://127.0.0.1:8199/api/speak?word=łódź&lang=pl&variant=normal"
+  "url": "http://127.0.0.1:8199/api/speak?word=%C5%82%C3%B3d%C5%BA&lang=pl&variant=normal"
  },
  {
   "word": "skóra",
   "variant": "normal",
-  "url": "http://127.0.0.1:8199/api/speak?word=skóra&lang=pl&variant=normal"
+  "url": "http://127.0.0.1:8199/api/speak?word=sk%C3%B3ra&lang=pl&variant=normal"
  },
  {
   "word": "mówić",
   "variant": "normal",
-  "url": "http://127.0.0.1:8199/api/speak?word=mówić&lang=pl&variant=normal"
+  "url": "http://127.0.0.1:8199/api/speak?word=m%C3%B3wi%C4%87&lang=pl&variant=normal"
  },
  {
   "word": "żelazo",
   "variant": "normal",
-  "url": "http://127.0.0.1:8199/api/speak?word=żelazo&lang=pl&variant=normal"
+  "url": "http://127.0.0.1:8199/api/speak?word=%C5%BCelazo&lang=pl&variant=normal"
  },
  {
   "word": "lipcu",
@@ -87,22 +87,22 @@
  {
   "word": "świata",
   "variant": "normal",
-  "url": "http://127.0.0.1:8199/api/speak?word=świata&lang=pl&variant=normal"
+  "url": "http://127.0.0.1:8199/api/speak?word=%C5%9Bwiata&lang=pl&variant=normal"
  },
  {
   "word": "pełna",
   "variant": "normal",
-  "url": "http://127.0.0.1:8199/api/speak?word=pełna&lang=pl&variant=normal"
+  "url": "http://127.0.0.1:8199/api/speak?word=pe%C5%82na&lang=pl&variant=normal"
  },
  {
   "word": "długie",
   "variant": "normal",
-  "url": "http://127.0.0.1:8199/api/speak?word=długie&lang=pl&variant=normal"
+  "url": "http://127.0.0.1:8199/api/speak?word=d%C5%82ugie&lang=pl&variant=normal"
  },
  {
   "word": "urząd",
   "variant": "normal",
-  "url": "http://127.0.0.1:8199/api/speak?word=urząd&lang=pl&variant=normal"
+  "url": "http://127.0.0.1:8199/api/speak?word=urz%C4%85d&lang=pl&variant=normal"
  },
  {
   "word": "spraw",
@@ -112,7 +112,7 @@
  {
   "word": "wrocław",
   "variant": "normal",
-  "url": "http://127.0.0.1:8199/api/speak?word=wrocław&lang=pl&variant=normal"
+  "url": "http://127.0.0.1:8199/api/speak?word=wroc%C5%82aw&lang=pl&variant=normal"
  },
  {
   "word": "lidze",
@@ -137,12 +137,12 @@
  {
   "word": "zespół",
   "variant": "normal",
-  "url": "http://127.0.0.1:8199/api/speak?word=zespół&lang=pl&variant=normal"
+  "url": "http://127.0.0.1:8199/api/speak?word=zesp%C3%B3%C5%82&lang=pl&variant=normal"
  },
  {
   "word": "zmarł",
   "variant": "normal",
-  "url": "http://127.0.0.1:8199/api/speak?word=zmarł&lang=pl&variant=normal"
+  "url": "http://127.0.0.1:8199/api/speak?word=zmar%C5%82&lang=pl&variant=normal"
  },
  {
   "word": "dajcie",
@@ -167,27 +167,27 @@
  {
   "word": "systemów",
   "variant": "normal",
-  "url": "http://127.0.0.1:8199/api/speak?word=systemów&lang=pl&variant=normal"
+  "url": "http://127.0.0.1:8199/api/speak?word=system%C3%B3w&lang=pl&variant=normal"
  },
  {
   "word": "istnieją",
   "variant": "normal",
-  "url": "http://127.0.0.1:8199/api/speak?word=istnieją&lang=pl&variant=normal"
+  "url": "http://127.0.0.1:8199/api/speak?word=istniej%C4%85&lang=pl&variant=normal"
  },
  {
   "word": "oddział",
   "variant": "normal",
-  "url": "http://127.0.0.1:8199/api/speak?word=oddział&lang=pl&variant=normal"
+  "url": "http://127.0.0.1:8199/api/speak?word=oddzia%C5%82&lang=pl&variant=normal"
  },
  {
   "word": "członkami",
   "variant": "normal",
-  "url": "http://127.0.0.1:8199/api/speak?word=członkami&lang=pl&variant=normal"
+  "url": "http://127.0.0.1:8199/api/speak?word=cz%C5%82onkami&lang=pl&variant=normal"
  },
  {
   "word": "właśnie",
   "variant": "normal",
-  "url": "http://127.0.0.1:8199/api/speak?word=właśnie&lang=pl&variant=normal"
+  "url": "http://127.0.0.1:8199/api/speak?word=w%C5%82a%C5%9Bnie&lang=pl&variant=normal"
  },
  {
   "word": "widelec",
@@ -202,7 +202,7 @@
  {
   "word": "wartości",
   "variant": "normal",
-  "url": "http://127.0.0.1:8199/api/speak?word=wartości&lang=pl&variant=normal"
+  "url": "http://127.0.0.1:8199/api/speak?word=warto%C5%9Bci&lang=pl&variant=normal"
  },
  {
   "word": "strat",
@@ -212,7 +212,7 @@
  {
   "word": "odkryć",
   "variant": "normal",
-  "url": "http://127.0.0.1:8199/api/speak?word=odkryć&lang=pl&variant=normal"
+  "url": "http://127.0.0.1:8199/api/speak?word=odkry%C4%87&lang=pl&variant=normal"
  },
  {
   "word": "dekady",
@@ -227,7 +227,7 @@
  {
   "word": "względami",
   "variant": "normal",
-  "url": "http://127.0.0.1:8199/api/speak?word=względami&lang=pl&variant=normal"
+  "url": "http://127.0.0.1:8199/api/speak?word=wzgl%C4%99dami&lang=pl&variant=normal"
  },
  {
   "word": "apetyt",
@@ -247,7 +247,7 @@
  {
   "word": "dokładny",
   "variant": "normal",
-  "url": "http://127.0.0.1:8199/api/speak?word=dokładny&lang=pl&variant=normal"
+  "url": "http://127.0.0.1:8199/api/speak?word=dok%C5%82adny&lang=pl&variant=normal"
  },
  {
   "word": "etnicznych",
@@ -257,17 +257,17 @@
  {
   "word": "zdecydowaliśmy",
   "variant": "normal",
-  "url": "http://127.0.0.1:8199/api/speak?word=zdecydowaliśmy&lang=pl&variant=normal"
+  "url": "http://127.0.0.1:8199/api/speak?word=zdecydowali%C5%9Bmy&lang=pl&variant=normal"
  },
  {
   "word": "białek",
   "variant": "normal",
-  "url": "http://127.0.0.1:8199/api/speak?word=białek&lang=pl&variant=normal"
+  "url": "http://127.0.0.1:8199/api/speak?word=bia%C5%82ek&lang=pl&variant=normal"
  },
  {
   "word": "województwa",
   "variant": "normal",
-  "url": "http://127.0.0.1:8199/api/speak?word=województwa&lang=pl&variant=normal"
+  "url": "http://127.0.0.1:8199/api/speak?word=wojew%C3%B3dztwa&lang=pl&variant=normal"
  },
  {
   "word": "blokada",
@@ -287,7 +287,7 @@
  {
   "word": "wdzięczni",
   "variant": "normal",
-  "url": "http://127.0.0.1:8199/api/speak?word=wdzięczni&lang=pl&variant=normal"
+  "url": "http://127.0.0.1:8199/api/speak?word=wdzi%C4%99czni&lang=pl&variant=normal"
  },
  {
   "word": "rosyjskiego",

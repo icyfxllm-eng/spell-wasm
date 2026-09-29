@@ -60,7 +60,15 @@ class RouteTest(unittest.TestCase):
         self.client = app_module.app.test_client()
         self.calls = 0
 
-        def fake_synth(word, variant, path, lang="en", py=None):
+        # The signature has to track synthesize_to_cache's. It did not when
+        # CC-AUDIO-CLARITY F4 added voice_override: the route calls
+        # `synthesize_to_cache(..., voice_override=...)`, this double rejected
+        # the keyword, the TypeError was caught by the route's own
+        # `except Exception` and every request became a 502. The test kept
+        # running and kept asserting -- on the error path, not the one it was
+        # written for. **kwargs rather than the one parameter, so the next
+        # addition does not repeat it.
+        def fake_synth(word, variant, path, lang="en", py=None, **_kw):
             self.calls += 1
             if word == "broken":
                 raise RuntimeError("tts down")

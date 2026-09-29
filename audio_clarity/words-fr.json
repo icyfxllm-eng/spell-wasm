@@ -22,7 +22,7 @@
  {
   "word": "poème",
   "variant": "normal",
-  "url": "http://127.0.0.1:8199/api/speak?word=poème&lang=fr&variant=normal"
+  "url": "http://127.0.0.1:8199/api/speak?word=po%C3%A8me&lang=fr&variant=normal"
  },
  {
   "word": "bon",
@@ -72,7 +72,7 @@
  {
   "word": "frère",
   "variant": "normal",
-  "url": "http://127.0.0.1:8199/api/speak?word=frère&lang=fr&variant=normal"
+  "url": "http://127.0.0.1:8199/api/speak?word=fr%C3%A8re&lang=fr&variant=normal"
  },
  {
   "word": "moteur",
@@ -92,7 +92,7 @@
  {
   "word": "lancé",
   "variant": "normal",
-  "url": "http://127.0.0.1:8199/api/speak?word=lancé&lang=fr&variant=normal"
+  "url": "http://127.0.0.1:8199/api/speak?word=lanc%C3%A9&lang=fr&variant=normal"
  },
  {
   "word": "fruits",
@@ -107,12 +107,12 @@
  {
   "word": "formé",
   "variant": "normal",
-  "url": "http://127.0.0.1:8199/api/speak?word=formé&lang=fr&variant=normal"
+  "url": "http://127.0.0.1:8199/api/speak?word=form%C3%A9&lang=fr&variant=normal"
  },
  {
   "word": "grâce",
   "variant": "normal",
-  "url": "http://127.0.0.1:8199/api/speak?word=grâce&lang=fr&variant=normal"
+  "url": "http://127.0.0.1:8199/api/speak?word=gr%C3%A2ce&lang=fr&variant=normal"
  },
  {
   "word": "chacun",
@@ -127,7 +127,7 @@
  {
   "word": "succès",
   "variant": "normal",
-  "url": "http://127.0.0.1:8199/api/speak?word=succès&lang=fr&variant=normal"
+  "url": "http://127.0.0.1:8199/api/speak?word=succ%C3%A8s&lang=fr&variant=normal"
  },
  {
   "word": "types",
@@ -167,7 +167,7 @@
  {
   "word": "liberté",
   "variant": "normal",
-  "url": "http://127.0.0.1:8199/api/speak?word=liberté&lang=fr&variant=normal"
+  "url": "http://127.0.0.1:8199/api/speak?word=libert%C3%A9&lang=fr&variant=normal"
  },
  {
   "word": "divine",
@@ -217,7 +217,7 @@
  {
   "word": "intégrale",
   "variant": "normal",
-  "url": "http://127.0.0.1:8199/api/speak?word=intégrale&lang=fr&variant=normal"
+  "url": "http://127.0.0.1:8199/api/speak?word=int%C3%A9grale&lang=fr&variant=normal"
  },
  {
   "word": "fiers",
@@ -227,22 +227,22 @@
  {
   "word": "cultivées",
   "variant": "normal",
-  "url": "http://127.0.0.1:8199/api/speak?word=cultivées&lang=fr&variant=normal"
+  "url": "http://127.0.0.1:8199/api/speak?word=cultiv%C3%A9es&lang=fr&variant=normal"
  },
  {
   "word": "résidences",
   "variant": "normal",
-  "url": "http://127.0.0.1:8199/api/speak?word=résidences&lang=fr&variant=normal"
+  "url": "http://127.0.0.1:8199/api/speak?word=r%C3%A9sidences&lang=fr&variant=normal"
  },
  {
   "word": "déluge",
   "variant": "normal",
-  "url": "http://127.0.0.1:8199/api/speak?word=déluge&lang=fr&variant=normal"
+  "url": "http://127.0.0.1:8199/api/speak?word=d%C3%A9luge&lang=fr&variant=normal"
  },
  {
   "word": "odyssée",
   "variant": "normal",
-  "url": "http://127.0.0.1:8199/api/speak?word=odyssée&lang=fr&variant=normal"
+  "url": "http://127.0.0.1:8199/api/speak?word=odyss%C3%A9e&lang=fr&variant=normal"
  },
  {
   "word": "bologne",
@@ -282,7 +282,7 @@
  {
   "word": "brutalité",
   "variant": "normal",
-  "url": "http://127.0.0.1:8199/api/speak?word=brutalité&lang=fr&variant=normal"
+  "url": "http://127.0.0.1:8199/api/speak?word=brutalit%C3%A9&lang=fr&variant=normal"
  },
  {
   "word": "gore",
