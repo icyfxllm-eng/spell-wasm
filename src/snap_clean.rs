@@ -32,12 +32,25 @@ use unicode_normalization::UnicodeNormalization;
 // ------------------------------------------------------------------ types
 
 /// One recognized line, as the platform hands it over.
-#[derive(Clone, Debug)]
+#[derive(Clone, Debug, Default)]
 pub struct OcrLine {
     pub text: String,
     pub confidence: f32,
     /// The page's study language. Not per line — see the module note.
     pub lang: String,
+    /// CC-SNAP-CLEAN v1.1 U1 — the per-word boxes the OCR engine already
+    /// produced for this line, left-to-right. EMPTY is the normal state
+    /// today: CC-SNAP-LIST does not yet pass them (v1.1 census C1 HALTs on
+    /// exactly that), so every box-gap path below is dormant until it does.
+    /// Carrying the field now means the plumbing lands as data, not as a
+    /// change to this file.
+    pub boxes: Vec<WordBox>,
+    /// CC-SNAP-HIGHLIGHT F2 — set when this line's word sits on a
+    /// highlighter mark. Dormant for the same reason as `boxes`: it needs
+    /// pixels the core is not handed yet.
+    pub highlighted: bool,
+    /// The dominant hue of the mark, quantized to 12 buckets (HIGHLIGHT F5).
+    pub hue_bucket: Option<u8>,
 }
 
 /// Why a candidate is or is not pre-checked. Flags are additive and never
@@ -79,6 +92,12 @@ pub struct Candidate {
     /// A trailing bracketed group F3 removed, such as the `(n.)` of
     /// `cat (n.)`. Kept so the screen can show what went.
     pub removed_suffix: Option<String>,
+    /// CC-SNAP-CLEAN v1.1 U3 — the unbunching offer for this candidate.
+    ///
+    /// Named `unbunch`, not `split`: `flags.split` already means "this line
+    /// was divided on a separator" from v1 F4, and two fields called split
+    /// meaning different things is a bug waiting to be written.
+    pub unbunch: Option<SplitSuggestion>,
 }
 
 /// D8. One platform: the census found `android/` carries no text recognition
@@ -431,6 +450,219 @@ fn fold_apostrophes(s: &str) -> String {
     s.replace('\u{2019}', "'").replace('\u{02BC}', "'")
 }
 
+
+/// CC-SNAP-CLEAN v1.1 U1 — one word box, as the OCR engine reported it.
+///
+/// `x0`/`x1` are the horizontal edges in the cropped image's own pixel space.
+/// Only the horizontal axis is carried: unbunching asks whether two boxes on
+/// one line are separated, and nothing here needs their height.
+#[derive(Clone, Debug, Default, PartialEq)]
+pub struct WordBox {
+    pub text: String,
+    pub x0: f32,
+    pub x1: f32,
+    pub confidence: f32,
+}
+
+/// CC-SNAP-CLEAN v1.1 U3 — the pieces a merged token would become.
+///
+/// `applied` distinguishes the two surfaces the review screen owes the
+/// reader: `true` means the split already happened and the first piece needs
+/// a Rejoin control; `false` means the merged token is still intact and wants
+/// a "Split into a / b / c?" chip. This file only guarantees the field.
+#[derive(Clone, Debug, PartialEq)]
+pub struct SplitSuggestion {
+    pub pieces: Vec<String>,
+    pub applied: bool,
+}
+
+/// What a language permits the dictionary splitter to do (v1.1 D-U1).
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+pub enum SplitPolicy {
+    /// Split without asking, and offer Rejoin.
+    Auto,
+    /// Never split on dictionary evidence alone; offer a chip.
+    Suggest,
+    /// No dictionary splitting at all. Box gaps are still honoured.
+    Never,
+}
+
+/// D-U1's table, written out rather than defaulted.
+///
+/// An unknown language returns `Never`, not `Auto`. C5 says a language
+/// missing from this table HALTs; in code the equivalent is to do the
+/// least possible, because a new language silently inheriting auto-split
+/// is exactly the failure C5 is guarding against.
+pub fn split_policy(lang: &str) -> SplitPolicy {
+    match lang {
+        "en" | "es" | "fr" | "pt" | "pl" | "ru" | "fil" | "sw" | "hi" | "ar" => SplitPolicy::Auto,
+        // Compounds and spacing conventions here are real words even when the
+        // bank has never heard of them.
+        "de" | "ko" | "vi" => SplitPolicy::Suggest,
+        // No inter-word space to recover; a box gap is still a gap.
+        "zh" | "ja" => SplitPolicy::Never,
+        _ => SplitPolicy::Never,
+    }
+}
+
+
+/// Is auto-split allowed to act, or only to offer?
+///
+/// FALSE, and deliberately, pending Eric's decision. Every D-U decision in
+/// v1.1 is "Signed: none yet", so shipping auto-split would ship an unsigned
+/// behaviour -- and measurement says that behaviour is not safe at the bank's
+/// current size.
+///
+/// Measured 2026-10-01 against the 36,000-word frequency list in
+/// tools/wordpipe/sources/freq_en.txt: of the 33,068 real English words the
+/// 3,165-word bank does NOT contain, **2,218 (6.71%) have a unique
+/// segmentation into bank words** and would therefore be split without being
+/// asked. Not edge cases:
+///
+/// ```text
+/// maybe    -> may + be        tomorrow -> tom + or + row
+/// listen   -> list + en       asking   -> as + king
+/// yourself -> your + self     ladies   -> la + dies
+/// everyone -> every + one     nobody   -> no + body
+/// ```
+///
+/// D-U5 does not help: it suspends the split on a TIE, and every one of these
+/// is unambiguous. The cause is not the ranking, it is that a 3,165-word bank
+/// is 2% of English and makes a poor dictionary.
+///
+/// With this false the whole stage still runs and still attaches its
+/// `SplitSuggestion` -- the reader is offered the split and can take it in one
+/// tap, which is what the file's own Intent asks for ("a one-tap suggestion
+/// over a silent change"). Flipping this to true activates D-U1 exactly as
+/// written, and is a one-line change once Eric has ruled.
+const AUTO_SPLIT_ENABLED: bool = false;
+
+/// D-U4. A gap at least this fraction of the median glyph width is a space
+/// the OCR engine dropped. Starting value; the census may move it.
+const GAP_RATIO: f32 = 0.35;
+
+/// D-U3. Pieces shorter than this are not considered, except for a language's
+/// own one-letter bank entries.
+const MIN_PIECE_LEN: usize = 2;
+
+/// Longest token the dictionary splitter will consider.
+///
+/// The search is O(n^2) bank probes and each probe is a binary search, so the
+/// real cost is small -- but a 45-character token (MAX_WORD_LENGTH) is not a
+/// merged phrase, it is OCR noise, and running a segmentation search over it
+/// buys nothing.
+const UNBUNCH_MAX_LEN: usize = 24;
+
+/// U1 — split one line's boxes wherever the page shows a gap.
+///
+/// This is reading the page, not guessing at it, which is why it runs for
+/// every language including zh/ja (D-U1 governs only the dictionary path).
+/// The median glyph width is estimated per line from the boxes themselves:
+/// box width over character count, which is crude but scale-free, and the
+/// comparison is a ratio so it survives any resolution.
+///
+/// Returns one string per gap-separated run, or a single element when the
+/// line has no usable boxes -- so a caller can always use the result.
+pub fn split_on_box_gaps(line: &OcrLine) -> Vec<String> {
+    let boxes: Vec<&WordBox> = line.boxes.iter().filter(|b| !b.text.trim().is_empty()).collect();
+    if boxes.len() < 2 {
+        return vec![line.text.clone()];
+    }
+    let mut widths: Vec<f32> = boxes
+        .iter()
+        .filter(|b| b.text.chars().count() > 0 && b.x1 > b.x0)
+        .map(|b| (b.x1 - b.x0) / b.text.chars().count() as f32)
+        .collect();
+    if widths.is_empty() {
+        return vec![line.text.clone()];
+    }
+    widths.sort_by(|a, b| a.partial_cmp(b).unwrap_or(std::cmp::Ordering::Equal));
+    let glyph = widths[widths.len() / 2];
+    let threshold = GAP_RATIO * glyph;
+
+    let mut runs: Vec<String> = vec![boxes[0].text.clone()];
+    for pair in boxes.windows(2) {
+        let (prev, next) = (pair[0], pair[1]);
+        if next.x0 - prev.x1 >= threshold {
+            runs.push(next.text.clone());
+        } else {
+            // No gap on the page: the engine split a word that is printed
+            // solid. Rejoining here is what stops U2 being asked to re-merge.
+            runs.last_mut().expect("seeded above").push_str(&next.text);
+        }
+    }
+    runs
+}
+
+/// Is `w` usable as a piece of a split?
+fn piece_ok(lang: &str, w: &str) -> bool {
+    let n = w.chars().count();
+    if n == 0 {
+        return false;
+    }
+    // A one-letter piece is allowed only where the bank itself holds that
+    // word. The whitelist is the bank, never a hand-typed list -- and note
+    // that as of 2026-10-01 no bank holds a one-letter entry in any of the
+    // fifteen, so in practice this clause admits nothing yet.
+    if n < MIN_PIECE_LEN {
+        return bank_lookup(lang, w).is_some();
+    }
+    bank_lookup(lang, w).is_some()
+}
+
+/// U2 — the dictionary split.
+///
+/// Returns the best segmentation and whether it is unambiguous. "Best" is
+/// fewest pieces; "unambiguous" means exactly one segmentation achieves that
+/// minimum. Both come out of one dynamic program over suffix positions, which
+/// matters: the spec asks to "compute every segmentation", and enumerating
+/// them is exponential in the worst case, while the only facts the ranking
+/// needs are the minimum piece count and whether more than one way reaches it.
+///
+/// `None` means no segmentation into bank words exists, which is the common
+/// answer and the safe one.
+fn dictionary_split(token: &str, lang: &str) -> Option<(Vec<String>, bool)> {
+    let chars: Vec<char> = token.chars().collect();
+    let n = chars.len();
+    if n < MIN_PIECE_LEN * 2 || n > UNBUNCH_MAX_LEN {
+        return None;
+    }
+    // best[i] = (min pieces for chars[i..], ways achieving it, first cut)
+    // ways saturates at 2: "one way" and "more than one" is the whole question.
+    let mut best: Vec<Option<(usize, u8, usize)>> = vec![None; n + 1];
+    best[n] = Some((0, 1, n));
+    for i in (0..n).rev() {
+        let mut found: Option<(usize, u8, usize)> = None;
+        for j in (i + 1)..=n {
+            let piece: String = chars[i..j].iter().collect();
+            if !piece_ok(lang, &piece) {
+                continue;
+            }
+            let Some((rest_count, rest_ways, _)) = best[j] else { continue };
+            let count = rest_count + 1;
+            found = Some(match found {
+                None => (count, rest_ways, j),
+                Some((bc, _, _)) if count < bc => (count, rest_ways, j),
+                Some((bc, bw, bj)) if count == bc => (bc, bw.saturating_add(rest_ways).min(2), bj),
+                Some(prev) => prev,
+            });
+        }
+        best[i] = found;
+    }
+    let (count, ways, _) = best[0]?;
+    if count < 2 {
+        return None; // the whole token is one bank word; I-U2 handles that
+    }
+    let mut pieces = Vec::new();
+    let mut i = 0usize;
+    while i < n {
+        let (_, _, cut) = best[i].expect("reachable by construction");
+        pieces.push(chars[i..cut].iter().collect::<String>());
+        i = cut;
+    }
+    Some((pieces, ways == 1))
+}
+
 /// The one entry point. Pure: no I/O, no clock, no randomness (I5).
 pub fn clean_ocr_lines(lines: &[OcrLine]) -> Vec<Candidate> {
     // One unit of work: a piece of text on its way to becoming a candidate,
@@ -444,15 +676,25 @@ pub fn clean_ocr_lines(lines: &[OcrLine]) -> Vec<Candidate> {
         suffix: Option<String>,
     }
 
+    // U1 runs HERE, before the fixed point, rather than at the position v1.1
+    // F4 names (after the marker strip). The effect is the same and the code
+    // is honest: a marker attaches to the first box, so splitting first leaves
+    // it on the first unit, where the loop strips it exactly as before. Doing
+    // it inside the loop would mean re-splitting text that no longer has
+    // boxes attached to it.
+    //
+    // With no boxes -- which is every caller today -- this is the identity.
     let mut units: Vec<Unit> = lines
         .iter()
         .enumerate()
-        .map(|(line_ix, l)| Unit {
-            text: l.text.nfc().collect(),
-            line_ix,
-            split: false,
-            blank: false,
-            suffix: None,
+        .flat_map(|(line_ix, l)| {
+            split_on_box_gaps(l).into_iter().map(move |t| Unit {
+                text: t.nfc().collect(),
+                line_ix,
+                split: false,
+                blank: false,
+                suffix: None,
+            })
         })
         .collect();
 
@@ -547,6 +789,20 @@ pub fn clean_ocr_lines(lines: &[OcrLine]) -> Vec<Candidate> {
         }
         seen.push(key);
 
+        // U2 runs here: after the fixed point has settled the text, before
+        // the bank canonicalization below, so each piece is canonicalized on
+        // its own. I-U2 is structural -- a token the bank already knows took
+        // the `bank.is_some()` branch and is never offered a split.
+        let policy = split_policy(&line.lang);
+        let unbunch = if bank.is_some() || policy == SplitPolicy::Never {
+            None
+        } else {
+            dictionary_split(&text, &line.lang).map(|(pieces, unambiguous)| SplitSuggestion {
+                applied: AUTO_SPLIT_ENABLED && policy == SplitPolicy::Auto && unambiguous,
+                pieces,
+            })
+        };
+
         let cjk = matches!(line.lang.as_str(), "zh" | "ja");
         let flags = FlagSet {
             multi_word: !cjk && bank.is_none() && text.split_whitespace().count() >= 3,
@@ -556,6 +812,26 @@ pub fn clean_ocr_lines(lines: &[OcrLine]) -> Vec<Candidate> {
             not_in_bank: bank.is_none(),
             split: u.split,
         };
+        // An applied split emits its pieces as separate candidates; the
+        // merged token does not survive, which is what makes Rejoin a real
+        // control rather than a second row to delete.
+        if let Some(sug) = unbunch.as_ref().filter(|s| s.applied) {
+            for (n, piece) in sug.pieces.iter().enumerate() {
+                let canon = bank_lookup(&line.lang, piece).unwrap_or_else(|| piece.clone());
+                out.push(Candidate {
+                    text: canon,
+                    original_line: line.text.clone(),
+                    lang: line.lang.clone(),
+                    checked: !flags.blocks_check(),
+                    flags: FlagSet { not_in_bank: false, ..flags },
+                    removed_suffix: u.suffix.clone(),
+                    // Only the first piece carries the offer, so the review
+                    // screen has one Rejoin per split and not one per piece.
+                    unbunch: (n == 0).then(|| sug.clone()),
+                });
+            }
+            continue;
+        }
         out.push(Candidate {
             text,
             original_line: line.text.clone(),
@@ -563,7 +839,9 @@ pub fn clean_ocr_lines(lines: &[OcrLine]) -> Vec<Candidate> {
             checked: !flags.blocks_check(),
             flags,
             removed_suffix: u.suffix,
+            unbunch,
         });
     }
     out
 }
+

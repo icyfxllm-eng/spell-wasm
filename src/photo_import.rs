@@ -79,6 +79,10 @@ pub fn extract_classified(lang: &str, lines: &[(String, f32)]) -> Vec<Candidate>
             text: text.clone(),
             confidence: *confidence,
             lang: lang.to_string(),
+            // v1.1 / HIGHLIGHT: the platform does not hand us boxes or
+            // pixels yet (v1.1 census C1), so these stay at their defaults
+            // and every path that reads them is inert.
+            ..Default::default()
         })
         .collect();
     crate::snap_clean::clean_ocr_lines(&ocr)

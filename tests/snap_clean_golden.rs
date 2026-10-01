@@ -10,7 +10,7 @@ use unicode_normalization::UnicodeNormalization;
 use spell_wasm::snap_clean::{clean_ocr_lines, Candidate, OcrLine};
 
 fn line(text: &str, lang: &str) -> OcrLine {
-    OcrLine { text: text.to_string(), confidence: 1.0, lang: lang.to_string() }
+    OcrLine { text: text.to_string(), confidence: 1.0, lang: lang.to_string(), ..Default::default() }
 }
 
 fn clean(pairs: &[(&str, &str)]) -> Vec<Candidate> {
@@ -249,7 +249,7 @@ fn line_strategy() -> impl Strategy<Value = String> {
 
 fn as_lines(v: &[String], lang: &str) -> Vec<OcrLine> {
     v.iter()
-        .map(|t| OcrLine { text: t.clone(), confidence: 1.0, lang: lang.to_string() })
+        .map(|t| OcrLine { text: t.clone(), confidence: 1.0, lang: lang.to_string(), ..Default::default() })
         .collect()
 }
 
