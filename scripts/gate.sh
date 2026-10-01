@@ -190,6 +190,10 @@ node scripts/settings-truth-check.mjs --selftest || { echo "GATE FAIL: settings-
 node scripts/human-audio-check.mjs || { echo "GATE FAIL: human audio (CC-HUMAN-AUDIO I2/I7/F7)"; exit 1; }
 node scripts/human-audio-check.mjs --selftest || { echo "GATE FAIL: human-audio selftest — the gate no longer bites"; exit 1; }
 
+echo "== gate: definition pools (the only content that ships without a release)"
+node scripts/def-pool-check.mjs || { echo "GATE FAIL: definition pools"; exit 1; }
+node scripts/def-pool-check.mjs --selftest || { echo "GATE FAIL: def-pool selftest — the gate no longer bites"; exit 1; }
+
 echo "== gate: cargo test"
 # Keep the OUTPUT, then judge it. The old form re-ran cargo and grepped
 # only FAILED|panicked, so a test-profile compile error printed nothing at
