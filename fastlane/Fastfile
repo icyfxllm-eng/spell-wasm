@@ -87,7 +87,7 @@ platform :ios do
   end
 
   desc "Build, upload, and submit to external TestFlight (Beta App Review)"
-  lane :beta_external do
+  lane :beta_external do |options|
     match(type: "appstore", readonly: is_ci)
     profile_name = ENV["sigh_net.spellgame.app_appstore_profile-name"]
     update_code_signing_settings(
@@ -114,7 +114,8 @@ platform :ios do
     pilot(
       distribute_external: true,
       groups: ["Spell"],
-      notify_external_testers: true,
+      # Opt-in, as in submit_external_review: pass notify:true to mail testers.
+      notify_external_testers: options[:notify].to_s == "true",
       beta_app_feedback_email: "icyfxllm@gmail.com",
       beta_app_description: "Spell is a spelling game you play by ear. Tap the glowing orb to hear a word, then spell it on the on-screen keyboard and press Check. Replay or slow the word, use Definition/Sentence hints, and grow your chain. Fully playable offline after first load.",
       changelog: "Please try: tapping the orb to hear words, spelling on the on-screen keyboard, Replay/Slow, Definition/Sentence hints, head-to-head mode, and Kid Mode / Big Text in Settings.",
@@ -372,15 +373,15 @@ platform :ios do
       build_number: build.to_s,
       distribute_external: true,
       groups: ["Spell"],
-      # Default TRUE since 2026-09-22 (Eric). It was false from 2026-08-26 on
-      # the reasoning that the public link is the invitation and nobody should
-      # be mailed about a build they did not ask for. The cost of that was
-      # builds 230-240 sitting at BETA_APPROVED, approved and unannounced,
-      # while testers stayed on 229 -- and the flag only bites at the moment a
-      # build is DISTRIBUTED, so it could not be fixed after the fact by
-      # re-running this lane. Now a build reaches testers as part of shipping
-      # it. Pass notify:false for a build they should not be told about.
-      notify_external_testers: options[:notify].to_s != "false",
+      # Default FALSE again since 2026-09-30 (Eric). It was true from
+      # 2026-09-22, which released build 258 to testers the moment review
+      # approved it, with generic notes because 258.md did not exist yet.
+      # Now an approved build waits at BETA_APPROVED until someone releases
+      # it: "fastlane notify build:NNN" or App Store Connect's Notify Testers.
+      # Pass notify:true to release it as part of the submission. The flag
+      # only bites at the moment a build is DISTRIBUTED; re-running this lane
+      # later cannot change it, so use the notify lane after the fact.
+      notify_external_testers: options[:notify].to_s == "true",
       beta_app_feedback_email: "icyfxllm@gmail.com",
       beta_app_description: "Spell is a spelling game you play by ear. Tap the glowing orb to hear a word, then spell it on the on-screen keyboard and press Check. Replay or slow the word, use Definition/Sentence hints, and grow your chain. Fully playable offline after first load.",
       changelog: notes || "Tap the orb to hear a word and spell it on the on-screen keyboard. Try Replay and Slow, the Definition and Sentence hints, head-to-head mode, and Kid Mode / Big Text in Settings. Everything works offline after the first load.",
