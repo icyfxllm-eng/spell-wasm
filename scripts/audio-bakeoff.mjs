@@ -19,7 +19,7 @@ import { execFileSync } from 'node:child_process';
 import { existsSync, readFileSync, writeFileSync, mkdirSync, mkdtempSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
-import { KEY, normalize } from './lib/audio-norm.mjs';
+import { KEY, normalize, whisperLang } from './lib/audio-norm.mjs';
 
 const args = Object.fromEntries(
   process.argv.slice(2).flatMap((a, i, all) => (a.startsWith('--') ? [[a.slice(2), all[i + 1]?.startsWith('--') === false ? all[i + 1] : true]] : [])),
@@ -37,7 +37,7 @@ function eligible(voice) {
 
 function heardBoth(wav) {
   const model = process.env.WHISPER_MODEL;
-  const w = execFileSync('whisper-cli', ['-m', model, '-l', lang, '-nt', wav], { encoding: 'utf8' }).trim();
+  const w = execFileSync('whisper-cli', ['-m', model, '-l', whisperLang(lang), '-nt', wav], { encoding: 'utf8' }).trim();
   const b64 = readFileSync(wav).toString('base64');
   const r = execFileSync('curl', ['-s', '-X', 'POST', process.env.STT_ENDPOINT, '-H', 'Content-Type: application/json',
     '-d', JSON.stringify({ lang, sampleRate: 16000, audio: b64 })], { encoding: 'utf8', maxBuffer: 64 * 1024 * 1024 });

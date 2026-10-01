@@ -1,6 +1,6 @@
 # CC-AUDIO-CLARITY report — build dev
 
-Verdicts: 3345. Measured languages: none yet.
+Verdicts: 3525. Measured languages: none yet.
 
 No language has been measured yet. F2 needs two recognizers and a clip set;
 `scripts/audio-verdicts.mjs --dry-run` says what is missing. Until a language
@@ -16,13 +16,13 @@ out loud rather than leave implied.
 | pt | 0 | 0 | 0 | 0 | 0 | no |
 | pl | 0 | 0 | 0 | 0 | 0 | no |
 | ru | 37 | 18 | 5 | 0 | 0 | no |
-| vi | 0 | 0 | 0 | 0 | 0 | no |
+| vi | 6 | 19 | 35 | 0 | 0 | no |
 | ko | 33 | 15 | 12 | 0 | 0 | no |
 | ja | 0 | 0 | 0 | 0 | 0 | no |
-| fil | 0 | 0 | 0 | 0 | 0 | no |
+| fil | 41 | 14 | 5 | 0 | 0 | no |
 | zh | 0 | 0 | 0 | 0 | 0 | no |
 | ar | 0 | 0 | 0 | 0 | 0 | no |
-| hi | 0 | 0 | 0 | 0 | 0 | no |
+| hi | 13 | 28 | 19 | 0 | 0 | no |
 | sw | 0 | 0 | 0 | 0 | 0 | no |
 
 ## Variety (C10 / D17)
@@ -106,3 +106,62 @@ out loud rather than leave implied.
 - ko|스트라이크아웃에서|normal (normal)
 - ko|세계가치조사협회에|normal (normal)
 - ko|삼전사체십이행법륜|normal (normal)
+- fil|yelo|normal (normal)
+- fil|berde|normal (normal)
+- fil|alon|normal (normal)
+- fil|alkalde|normal (normal)
+- fil|impeksiyon|normal (normal)
+- hi|दो|normal (normal)
+- hi|वृत्त|normal (normal)
+- hi|अँधेरा|normal (normal)
+- hi|टाँग|normal (normal)
+- hi|छत|normal (normal)
+- hi|बर्फ़|normal (normal)
+- hi|गुनगुना|normal (normal)
+- hi|सक्रिय|normal (normal)
+- hi|रामचन्द्र|normal (normal)
+- hi|लेम्बोर्गिनी|normal (normal)
+- hi|विनचेस्टर|normal (normal)
+- hi|एअरक्राफ्ट्स|normal (normal)
+- hi|अहस्ताक्षरित|normal (normal)
+- hi|आफ्टरमार्केट|normal (normal)
+- hi|आर्गेनाइज़ेशन्स|normal (normal)
+- hi|अन्डरवर्ल्ड|normal (normal)
+- hi|श्रीसर्वेश्वर|normal (normal)
+- hi|पथप्रदर्शक|normal (normal)
+- hi|आर्किप्लास्टिडे|normal (normal)
+- vi|dễ|normal (normal)
+- vi|tiệm|normal (normal)
+- vi|bốn|normal (normal)
+- vi|boong|normal (normal)
+- vi|khách|normal (normal)
+- vi|huyết|normal (normal)
+- vi|hiđrô|normal (normal)
+- vi|triệu|normal (normal)
+- vi|truyền|normal (normal)
+- vi|salon|normal (normal)
+- vi|duyệt|normal (normal)
+- vi|click|normal (normal)
+- vi|chuộng|normal (normal)
+- vi|district|normal (normal)
+- vi|lily|normal (normal)
+- vi|bitegmic|normal (normal)
+- vi|toạ|normal (normal)
+- vi|baroque|normal (normal)
+- vi|adenine|normal (normal)
+- vi|applies|normal (normal)
+- vi|dilatus|normal (normal)
+- vi|niệu|normal (normal)
+- vi|rìu|normal (normal)
+- vi|alkaloid|normal (normal)
+- vi|kền|normal (normal)
+- vi|serial|normal (normal)
+- vi|biserialis|normal (normal)
+- vi|wants|normal (normal)
+- vi|nagoya|normal (normal)
+- vi|dolores|normal (normal)
+- vi|ira|normal (normal)
+- vi|chingsang|normal (normal)
+- vi|canariensis|normal (normal)
+- vi|pham|normal (normal)
+- vi|katrina|normal (normal)

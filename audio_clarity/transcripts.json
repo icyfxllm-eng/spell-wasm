@@ -13378,5 +13378,725 @@
  "ko|잘난|normal": [
   "잘난!",
   "잘난"
+ ],
+ "fil|bituin|normal": [
+  "Bitoin!",
+  "bituin"
+ ],
+ "fil|kama|normal": [
+  "Kama.",
+  "tama"
+ ],
+ "fil|yelo|normal": [
+  "Yellow",
+  "yellow"
+ ],
+ "fil|larawan|normal": [
+  "Larawan",
+  "larawan"
+ ],
+ "fil|ginto|normal": [
+  "Ginto",
+  "ginto"
+ ],
+ "fil|luma|normal": [
+  "Luma",
+  "luma"
+ ],
+ "fil|kamera|normal": [
+  "Kamera",
+  "camera"
+ ],
+ "fil|buwan|normal": [
+  "Buwan",
+  "buwan"
+ ],
+ "fil|harap|normal": [
+  "Harap.",
+  "harap"
+ ],
+ "fil|ibenta|normal": [
+  "Ibenta.",
+  "ibenta"
+ ],
+ "fil|klase|normal": [
+  "Class A",
+  "klase"
+ ],
+ "fil|berde|normal": [
+  "Verde",
+  "Verde"
+ ],
+ "fil|gabi|normal": [
+  "Gabi.",
+  "gabi"
+ ],
+ "fil|alon|normal": [
+  "Halun!",
+  "Allen"
+ ],
+ "fil|maliit|normal": [
+  "Maliit.",
+  "maliit"
+ ],
+ "fil|natin|normal": [
+  "Natin.",
+  "natin"
+ ],
+ "fil|sibil|normal": [
+  "Sibyl",
+  "sibil"
+ ],
+ "fil|karera|normal": [
+  "Karera",
+  "karera"
+ ],
+ "fil|signal|normal": [
+  "Signal",
+  "Cignal"
+ ],
+ "fil|malayo|normal": [
+  "Malayo",
+  "malayo"
+ ],
+ "fil|taglay|normal": [
+  "Taglay!",
+  "taglay"
+ ],
+ "fil|amang|normal": [
+  "Amang",
+  "amang"
+ ],
+ "fil|bakit|normal": [
+  "Bakit?",
+  "bakit"
+ ],
+ "fil|power|normal": [
+  "Power!",
+  "power"
+ ],
+ "fil|tugon|normal": [
+  "Tugon",
+  "tugon"
+ ],
+ "fil|tanong|normal": [
+  "Tanong.",
+  "tanong"
+ ],
+ "fil|etniko|normal": [
+  "Ethnico",
+  "etniko"
+ ],
+ "fil|kaagad|normal": [
+  "Kaagad!",
+  "kaagad"
+ ],
+ "fil|tungo|normal": [
+  "Tungo!",
+  "tubo"
+ ],
+ "fil|hinati|normal": [
+  "Hinati",
+  "hinati"
+ ],
+ "fil|estadong|normal": [
+  "Estadong",
+  "estadong"
+ ],
+ "fil|hukbong|normal": [
+  "Hook Bung",
+  "hukbong"
+ ],
+ "fil|gerilya|normal": [
+  "Merilya",
+  "gerilya"
+ ],
+ "fil|katulad|normal": [
+  "Katulad,",
+  "katulad"
+ ],
+ "fil|mamatay|normal": [
+  "Mematay.",
+  "mamatay"
+ ],
+ "fil|ipasa|normal": [
+  "Ipasah.",
+  "ipasa"
+ ],
+ "fil|pumatay|normal": [
+  "Pumatay.",
+  "pumatay"
+ ],
+ "fil|pinatay|normal": [
+  "Pinatay.",
+  "pinatay"
+ ],
+ "fil|average|normal": [
+  "Average",
+  "average"
+ ],
+ "fil|okasyon|normal": [
+  "O kasyon!",
+  "okasyon"
+ ],
+ "fil|alkalde|normal": [
+  "Alkao D.",
+  "Alcalde"
+ ],
+ "fil|football|normal": [
+  "Football",
+  "football"
+ ],
+ "fil|batayan|normal": [
+  "Batayan",
+  "batayan"
+ ],
+ "fil|tirahan|normal": [
+  "Tirahan",
+  "tirahan"
+ ],
+ "fil|parangal|normal": [
+  "Parangal",
+  "parangal"
+ ],
+ "fil|teknolohiya|normal": [
+  "Teknolohiya",
+  "teknolohiya"
+ ],
+ "fil|partikular|normal": [
+  "Partikular",
+  "partikular"
+ ],
+ "fil|kongresista|normal": [
+  "Kongresista",
+  "kongresista"
+ ],
+ "fil|impeksiyon|normal": [
+  "Impeksyon",
+  "impeksyon"
+ ],
+ "fil|pinalitan|normal": [
+  "Pinalitan",
+  "pinalitan"
+ ],
+ "fil|petisyon|normal": [
+  "Petisyon",
+  "petisyon"
+ ],
+ "fil|sadya|normal": [
+  "Sadya.",
+  "sadya"
+ ],
+ "fil|nagsilbing|normal": [
+  "Nagsilbing",
+  "nagsilbing"
+ ],
+ "fil|pangkaraniwan|normal": [
+  "Pangkaraniwan",
+  "pangkaraniwan"
+ ],
+ "fil|pamahalaan|normal": [
+  "Pamahalaan",
+  "pamahalaan"
+ ],
+ "fil|pinapakita|normal": [
+  "Pinapakita",
+  "pinapakita"
+ ],
+ "fil|fairness|normal": [
+  "Fairness",
+  "fairness"
+ ],
+ "fil|mapabuti|normal": [
+  "Mapabuti.",
+  "mapabuti"
+ ],
+ "fil|tradisyunal|normal": [
+  "Tradisyonal",
+  "tradisyunal"
+ ],
+ "fil|selfie|normal": [
+  "Selfie",
+  "selfie"
+ ],
+ "hi|आकार|normal": [
+  "आकार",
+  "आकार"
+ ],
+ "hi|दो|normal": [
+  "2.",
+  "लो"
+ ],
+ "hi|वृत्त|normal": [
+  "वृद्ध",
+  ""
+ ],
+ "hi|बीच|normal": [
+  "बीच",
+  "बीच"
+ ],
+ "hi|गाना|normal": [
+  "गाना",
+  "गाना"
+ ],
+ "hi|अँधेरा|normal": [
+  "अन्धीरा",
+  "अंजीरा"
+ ],
+ "hi|लोमड़ी|normal": [
+  "लो मड़ी",
+  "लोमड़ी"
+ ],
+ "hi|टाँग|normal": [
+  "डांग",
+  "जान"
+ ],
+ "hi|टोपी|normal": [
+  "टोपी",
+  "टोपी"
+ ],
+ "hi|बच्चा|normal": [
+  "बच्चा",
+  "बच्चा"
+ ],
+ "hi|तारा|normal": [
+  "तारा",
+  "तारा"
+ ],
+ "hi|छत|normal": [
+  "चात",
+  "चार्ट"
+ ],
+ "hi|राष्ट्र|normal": [
+  "राष्ट्र",
+  "राष्ट्र"
+ ],
+ "hi|बर्फ़|normal": [
+  "बार्फ",
+  "मार्क"
+ ],
+ "hi|गुनगुना|normal": [
+  "गुन गुना",
+  "मुन्ना"
+ ],
+ "hi|संभावित|normal": [
+  "संभावित",
+  "संभावित"
+ ],
+ "hi|समुदायों|normal": [
+  "समुदायों",
+  "समुदायों"
+ ],
+ "hi|व्यवहार|normal": [
+  "व्यावहार",
+  "व्यवहार"
+ ],
+ "hi|सम्मान|normal": [
+  "सम्मान",
+  "सम्मान"
+ ],
+ "hi|आलोचकों|normal": [
+  "आलो चको",
+  "आलोचकों"
+ ],
+ "hi|तकनीक|normal": [
+  "टक्नीक",
+  "तकनीक"
+ ],
+ "hi|बल्लेबाजी|normal": [
+  "बल्ले बाजी",
+  "बल्लेबाजी"
+ ],
+ "hi|सक्रिय|normal": [
+  "सक्रिया",
+  "सखियां"
+ ],
+ "hi|अवधारणा|normal": [
+  "अवधारना",
+  "अवधारणा"
+ ],
+ "hi|कल्पना|normal": [
+  "कल्पना",
+  "कल्पना"
+ ],
+ "hi|बिल्कुल|normal": [
+  "बिल्कुल",
+  "बिल्कुल"
+ ],
+ "hi|माध्यमिक|normal": [
+  "माध्यमेक",
+  "माध्यमिक"
+ ],
+ "hi|इन्होंने|normal": [
+  "इन होने",
+  "इन्होंने"
+ ],
+ "hi|सामाजिक|normal": [
+  "सामाज़ेक",
+  "सामाजिक"
+ ],
+ "hi|समुदाय|normal": [
+  "समुदाई",
+  "समुदाय"
+ ],
+ "hi|रामचन्द्र|normal": [
+  "राम चंद्र",
+  "रामचंद्र"
+ ],
+ "hi|सकारात्मक|normal": [
+  "सकारातमक",
+  "सकारात्मक"
+ ],
+ "hi|लेम्बोर्गिनी|normal": [
+  "लंबॉगिनी",
+  "लैंबॉर्गिनी"
+ ],
+ "hi|अहमदाबाद|normal": [
+  "अहमदाबाद",
+  "अहमदाबाद"
+ ],
+ "hi|अनिवार्यता|normal": [
+  "अन्निवार्यता",
+  "अनिवार्यता"
+ ],
+ "hi|संज्ञानात्मक|normal": [
+  "संग्यान आत्मक",
+  "संज्ञानात्मक"
+ ],
+ "hi|विनचेस्टर|normal": [
+  "विंचेस्टर",
+  "विंचेस्टर"
+ ],
+ "hi|संकटग्रस्त|normal": [
+  "संकट ग्रस्ट",
+  "संकटग्रस्त"
+ ],
+ "hi|क्वालीफायर|normal": [
+  "Qualifier",
+  "क्वालीफायर"
+ ],
+ "hi|एथलेटिक्स|normal": [
+  "Athletics",
+  "एथलेटिक्स"
+ ],
+ "hi|एंटरटेनमेंट|normal": [
+  "Entertainment",
+  "एंटरटेनमेंट"
+ ],
+ "hi|प्रतिनिधियों|normal": [
+  "प्रतिने दियों",
+  "प्रतिनिधियों"
+ ],
+ "hi|परिवर्तनीय|normal": [
+  "परिवर्तनिय",
+  "परिवर्तनीय"
+ ],
+ "hi|राज्याभिषेक|normal": [
+  "राज या भिशेक",
+  "राज्याभिषेक"
+ ],
+ "hi|बहुपक्षीय|normal": [
+  "बहुपक्षिय",
+  "बहुपक्षीय"
+ ],
+ "hi|एअरक्राफ्ट्स|normal": [
+  "Aircraft",
+  "इकराम"
+ ],
+ "hi|व्यवसायीकरण|normal": [
+  "वेल साइटरन",
+  "व्यवसायीकरण"
+ ],
+ "hi|अहस्ताक्षरित|normal": [
+  "अहस्ताक शरीत",
+  "हस्ताक्षरित"
+ ],
+ "hi|आफ्टरमार्केट|normal": [
+  "Aftermarket",
+  "आपके मार्केट"
+ ],
+ "hi|स्वतंत्रतावाद|normal": [
+  "स्वतंत्रतावाद",
+  "स्वतंत्रता वाद"
+ ],
+ "hi|अंतर्जनपदीय|normal": [
+  "अंतर जनपदिय",
+  "अंतर्जनपदीय"
+ ],
+ "hi|आर्गेनाइज़ेशन्स|normal": [
+  "ओर्गनाइजेशन्स",
+  "आर्गेनाइजेशन"
+ ],
+ "hi|हाइड्रोजनीकरण|normal": [
+  "हाइड्रोजनी करण",
+  "हाइड्रोजनीकरण"
+ ],
+ "hi|अन्डरवर्ल्ड|normal": [
+  "Underworld",
+  "अंडवर्ल्ड"
+ ],
+ "hi|सिद्धार्थनगर|normal": [
+  "सिधार्थ नगर",
+  "सिद्धार्थनगर"
+ ],
+ "hi|श्रीसर्वेश्वर|normal": [
+  "श्री सवेश्वर",
+  "श्री सोमेश्वर"
+ ],
+ "hi|लीसेस्टरशायर|normal": [
+  "ली सेस्टर शायर",
+  "लीसेस्टरशायर"
+ ],
+ "hi|पथप्रदर्शक|normal": [
+  "पत प्रदर्शक",
+  "पथ प्रदर्शक"
+ ],
+ "hi|आर्किप्लास्टिडे|normal": [
+  "आर्किप्लास्ट दे",
+  "आरके प्लास्टर डे"
+ ],
+ "hi|सफलतापूर्वक|normal": [
+  "सफलता पूर्वक",
+  "सफलतापूर्वक"
+ ],
+ "vi|vòng|normal": [
+  "Vâng.",
+  "vòng"
+ ],
+ "vi|dễ|normal": [
+  "D.",
+  "rễ"
+ ],
+ "vi|chó|normal": [
+  "Chào!",
+  "chó"
+ ],
+ "vi|tiệm|normal": [
+  "Điểm",
+  ""
+ ],
+ "vi|biết|normal": [
+  "Biết.",
+  ""
+ ],
+ "vi|tốt|normal": [
+  "Tốt.",
+  ""
+ ],
+ "vi|bốn|normal": [
+  "4.",
+  "bún"
+ ],
+ "vi|thuyền|normal": [
+  "Thuyền",
+  "thuyền"
+ ],
+ "vi|biển|normal": [
+  "Biển",
+  "biển"
+ ],
+ "vi|xương|normal": [
+  "Sương",
+  "xương"
+ ],
+ "vi|đây|normal": [
+  "Đây.",
+  "đi"
+ ],
+ "vi|khói|normal": [
+  "Khói.",
+  "khóa"
+ ],
+ "vi|nhà|normal": [
+  "Nhà",
+  "nhà"
+ ],
+ "vi|bạn|normal": [
+  "Bạn",
+  "bạn"
+ ],
+ "vi|xây|normal": [
+  "Xây.",
+  ""
+ ],
+ "vi|boong|normal": [
+  "Bông.",
+  "bye"
+ ],
+ "vi|khách|normal": [
+  "Hãy subscribe cho kênh Ghiền Mì Gõ Để không bỏ lỡ những video hấp dẫn",
+  ""
+ ],
+ "vi|huyết|normal": [
+  "Hãy subscribe cho kênh Ghiền Mì Gõ Để không bỏ lỡ những video hấp dẫn",
+  "Huy"
+ ],
+ "vi|hiđrô|normal": [
+  "Hãy đăng ký kênh để ủng hộ kênh của mình nhé.",
+  "haivl"
+ ],
+ "vi|remix|normal": [
+  "Remix",
+  "remix"
+ ],
+ "vi|triệu|normal": [
+  "Chiều.",
+  "Kim"
+ ],
+ "vi|truyền|normal": [
+  "Chuyện",
+  "truyện"
+ ],
+ "vi|salon|normal": [
+  "Sa lông.",
+  "Zalo"
+ ],
+ "vi|duyệt|normal": [
+  "Diệt.",
+  ""
+ ],
+ "vi|viếng|normal": [
+  "Viếng",
+  "viết"
+ ],
+ "vi|thịnh|normal": [
+  "Thịnh",
+  ""
+ ],
+ "vi|whisky|normal": [
+  "Whisky",
+  "Whisky"
+ ],
+ "vi|click|normal": [
+  "Phụ đề được thực hiện bởi cộng đồng Amara.org",
+  ""
+ ],
+ "vi|chuộng|normal": [
+  "Chỗ ứng",
+  ""
+ ],
+ "vi|ngươi|normal": [
+  "Ngươi.",
+  "người"
+ ],
+ "vi|stanley|normal": [
+  "Stanley",
+  "dantri"
+ ],
+ "vi|district|normal": [
+  "Đi xích.",
+  "disc"
+ ],
+ "vi|lily|normal": [
+  "Lý Lý",
+  "lyric"
+ ],
+ "vi|bitegmic|normal": [
+  "Biết thích miết.",
+  "Biti's"
+ ],
+ "vi|toạ|normal": [
+  "Thu Hà",
+  "tàu hỏa"
+ ],
+ "vi|baroque|normal": [
+  "Bà Rốc",
+  "Bào Ngư"
+ ],
+ "vi|adenine|normal": [
+  "A-Đơ-Nhiên.",
+  "adult"
+ ],
+ "vi|applies|normal": [
+  "Apply",
+  "offline"
+ ],
+ "vi|dilatus|normal": [
+  "Dilators",
+  "writer"
+ ],
+ "vi|niệu|normal": [
+  "Nhiều.",
+  "nhiều"
+ ],
+ "vi|rìu|normal": [
+  "Ziu",
+  "gì"
+ ],
+ "vi|mascara|normal": [
+  "Máscara",
+  "mascara"
+ ],
+ "vi|alkaloid|normal": [
+  "A-ô-v-r-a-l-o-i",
+  "outlaw"
+ ],
+ "vi|facebook|normal": [
+  "Facebook",
+  "face"
+ ],
+ "vi|kền|normal": [
+  "Kênh",
+  "phim"
+ ],
+ "vi|serial|normal": [
+  "C.R.I.O.",
+  "Syria"
+ ],
+ "vi|biserialis|normal": [
+  "Bị serialis?",
+  "Michelin"
+ ],
+ "vi|wants|normal": [
+  "1",
+  ""
+ ],
+ "vi|sama|normal": [
+  "Sama.",
+  "tamo"
+ ],
+ "vi|nagoya|normal": [
+  "Nào gói à!",
+  "nettruyen"
+ ],
+ "vi|diversion|normal": [
+  "Diversion",
+  "driver version"
+ ],
+ "vi|marine|normal": [
+  "Marine",
+  "mazii"
+ ],
+ "vi|dolores|normal": [
+  "Đô lo",
+  "dollar"
+ ],
+ "vi|gallagher|normal": [
+  "Hãy subscribe cho kênh Ghiền Mì Gõ Để không bỏ lỡ những video hấp dẫn",
+  "gallagher"
+ ],
+ "vi|ira|normal": [
+  "Y-Ra",
+  "ila"
+ ],
+ "vi|chingsang|normal": [
+  "Chính xác.",
+  "sinh sản"
+ ],
+ "vi|canariensis|normal": [
+  "Cơ nề rin xích",
+  "kiehl's"
+ ],
+ "vi|pham|normal": [
+  "Phạm",
+  "Phan"
+ ],
+ "vi|katrina|normal": [
+  "Gà chì nà.",
+  "Garena"
+ ],
+ "vi|rama|normal": [
+  "Rama",
+  "Drama"
  ]
 }

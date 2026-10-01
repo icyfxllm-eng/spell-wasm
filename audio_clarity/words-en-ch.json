@@ -1,0 +1,317 @@
+[
+ {
+  "word": "chain",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8197/api/speak?word=chain&lang=en&variant=normal"
+ },
+ {
+  "word": "challenge",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8197/api/speak?word=challenge&lang=en&variant=normal"
+ },
+ {
+  "word": "challenges",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8197/api/speak?word=challenges&lang=en&variant=normal"
+ },
+ {
+  "word": "chance",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8197/api/speak?word=chance&lang=en&variant=normal"
+ },
+ {
+  "word": "change",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8197/api/speak?word=change&lang=en&variant=normal"
+ },
+ {
+  "word": "changed",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8197/api/speak?word=changed&lang=en&variant=normal"
+ },
+ {
+  "word": "changes",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8197/api/speak?word=changes&lang=en&variant=normal"
+ },
+ {
+  "word": "changing",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8197/api/speak?word=changing&lang=en&variant=normal"
+ },
+ {
+  "word": "channel",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8197/api/speak?word=channel&lang=en&variant=normal"
+ },
+ {
+  "word": "channels",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8197/api/speak?word=channels&lang=en&variant=normal"
+ },
+ {
+  "word": "chapter",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8197/api/speak?word=chapter&lang=en&variant=normal"
+ },
+ {
+  "word": "character",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8197/api/speak?word=character&lang=en&variant=normal"
+ },
+ {
+  "word": "characteristic",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8197/api/speak?word=characteristic&lang=en&variant=normal"
+ },
+ {
+  "word": "characteristics",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8197/api/speak?word=characteristics&lang=en&variant=normal"
+ },
+ {
+  "word": "characterized",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8197/api/speak?word=characterized&lang=en&variant=normal"
+ },
+ {
+  "word": "characters",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8197/api/speak?word=characters&lang=en&variant=normal"
+ },
+ {
+  "word": "charge",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8197/api/speak?word=charge&lang=en&variant=normal"
+ },
+ {
+  "word": "charged",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8197/api/speak?word=charged&lang=en&variant=normal"
+ },
+ {
+  "word": "charges",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8197/api/speak?word=charges&lang=en&variant=normal"
+ },
+ {
+  "word": "chemical",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8197/api/speak?word=chemical&lang=en&variant=normal"
+ },
+ {
+  "word": "chemicals",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8197/api/speak?word=chemicals&lang=en&variant=normal"
+ },
+ {
+  "word": "chiaroscuro",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8197/api/speak?word=chiaroscuro&lang=en&variant=normal"
+ },
+ {
+  "word": "chief",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8197/api/speak?word=chief&lang=en&variant=normal"
+ },
+ {
+  "word": "child",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8197/api/speak?word=child&lang=en&variant=normal"
+ },
+ {
+  "word": "childhood",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8197/api/speak?word=childhood&lang=en&variant=normal"
+ },
+ {
+  "word": "children",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8197/api/speak?word=children&lang=en&variant=normal"
+ },
+ {
+  "word": "china",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8197/api/speak?word=china&lang=en&variant=normal"
+ },
+ {
+  "word": "chip",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8197/api/speak?word=chip&lang=en&variant=normal"
+ },
+ {
+  "word": "chocolate",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8197/api/speak?word=chocolate&lang=en&variant=normal"
+ },
+ {
+  "word": "choice",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8197/api/speak?word=choice&lang=en&variant=normal"
+ },
+ {
+  "word": "choose",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8197/api/speak?word=choose&lang=en&variant=normal"
+ },
+ {
+  "word": "chose",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8197/api/speak?word=chose&lang=en&variant=normal"
+ },
+ {
+  "word": "chosen",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8197/api/speak?word=chosen&lang=en&variant=normal"
+ },
+ {
+  "word": "chrysanthemum",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8197/api/speak?word=chrysanthemum&lang=en&variant=normal"
+ },
+ {
+  "word": "church",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8197/api/speak?word=church&lang=en&variant=normal"
+ },
+ {
+  "word": "churches",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8197/api/speak?word=churches&lang=en&variant=normal"
+ },
+ {
+  "word": "approach",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8197/api/speak?word=approach&lang=en&variant=normal"
+ },
+ {
+  "word": "branch",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8197/api/speak?word=branch&lang=en&variant=normal"
+ },
+ {
+  "word": "each",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8197/api/speak?word=each&lang=en&variant=normal"
+ },
+ {
+  "word": "french",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8197/api/speak?word=french&lang=en&variant=normal"
+ },
+ {
+  "word": "inch",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8197/api/speak?word=inch&lang=en&variant=normal"
+ },
+ {
+  "word": "kitchen",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8197/api/speak?word=kitchen&lang=en&variant=normal"
+ },
+ {
+  "word": "launch",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8197/api/speak?word=launch&lang=en&variant=normal"
+ },
+ {
+  "word": "march",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8197/api/speak?word=march&lang=en&variant=normal"
+ },
+ {
+  "word": "match",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8197/api/speak?word=match&lang=en&variant=normal"
+ },
+ {
+  "word": "much",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8197/api/speak?word=much&lang=en&variant=normal"
+ },
+ {
+  "word": "reach",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8197/api/speak?word=reach&lang=en&variant=normal"
+ },
+ {
+  "word": "research",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8197/api/speak?word=research&lang=en&variant=normal"
+ },
+ {
+  "word": "rich",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8197/api/speak?word=rich&lang=en&variant=normal"
+ },
+ {
+  "word": "sandwich",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8197/api/speak?word=sandwich&lang=en&variant=normal"
+ },
+ {
+  "word": "search",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8197/api/speak?word=search&lang=en&variant=normal"
+ },
+ {
+  "word": "speech",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8197/api/speak?word=speech&lang=en&variant=normal"
+ },
+ {
+  "word": "such",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8197/api/speak?word=such&lang=en&variant=normal"
+ },
+ {
+  "word": "which",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8197/api/speak?word=which&lang=en&variant=normal"
+ },
+ {
+  "word": "cat",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8197/api/speak?word=cat&lang=en&variant=normal"
+ },
+ {
+  "word": "dog",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8197/api/speak?word=dog&lang=en&variant=normal"
+ },
+ {
+  "word": "bridge",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8197/api/speak?word=bridge&lang=en&variant=normal"
+ },
+ {
+  "word": "jump",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8197/api/speak?word=jump&lang=en&variant=normal"
+ },
+ {
+  "word": "shop",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8197/api/speak?word=shop&lang=en&variant=normal"
+ },
+ {
+  "word": "ship",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8197/api/speak?word=ship&lang=en&variant=normal"
+ },
+ {
+  "word": "safe",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8197/api/speak?word=safe&lang=en&variant=normal"
+ },
+ {
+  "word": "leaf",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8197/api/speak?word=leaf&lang=en&variant=normal"
+ },
+ {
+  "word": "half",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8197/api/speak?word=half&lang=en&variant=normal"
+ }
+]

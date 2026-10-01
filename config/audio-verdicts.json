@@ -10037,6 +10037,546 @@
     },
     "ko|잘난|normal": {
       "v": "Pass"
+    },
+    "fil|bituin|normal": {
+      "v": "Weak"
+    },
+    "fil|kama|normal": {
+      "v": "Weak"
+    },
+    "fil|yelo|normal": {
+      "v": "Fail"
+    },
+    "fil|larawan|normal": {
+      "v": "Pass"
+    },
+    "fil|ginto|normal": {
+      "v": "Pass"
+    },
+    "fil|luma|normal": {
+      "v": "Pass"
+    },
+    "fil|kamera|normal": {
+      "v": "Weak"
+    },
+    "fil|buwan|normal": {
+      "v": "Pass"
+    },
+    "fil|harap|normal": {
+      "v": "Pass"
+    },
+    "fil|ibenta|normal": {
+      "v": "Pass"
+    },
+    "fil|klase|normal": {
+      "v": "Weak"
+    },
+    "fil|berde|normal": {
+      "v": "Fail"
+    },
+    "fil|gabi|normal": {
+      "v": "Pass"
+    },
+    "fil|alon|normal": {
+      "v": "Fail"
+    },
+    "fil|maliit|normal": {
+      "v": "Pass"
+    },
+    "fil|natin|normal": {
+      "v": "Pass"
+    },
+    "fil|sibil|normal": {
+      "v": "Weak"
+    },
+    "fil|karera|normal": {
+      "v": "Pass"
+    },
+    "fil|signal|normal": {
+      "v": "Weak"
+    },
+    "fil|malayo|normal": {
+      "v": "Pass"
+    },
+    "fil|taglay|normal": {
+      "v": "Pass"
+    },
+    "fil|amang|normal": {
+      "v": "Pass"
+    },
+    "fil|bakit|normal": {
+      "v": "Pass"
+    },
+    "fil|power|normal": {
+      "v": "Pass"
+    },
+    "fil|tugon|normal": {
+      "v": "Pass"
+    },
+    "fil|tanong|normal": {
+      "v": "Pass"
+    },
+    "fil|etniko|normal": {
+      "v": "Weak"
+    },
+    "fil|kaagad|normal": {
+      "v": "Pass"
+    },
+    "fil|tungo|normal": {
+      "v": "Weak"
+    },
+    "fil|hinati|normal": {
+      "v": "Pass"
+    },
+    "fil|estadong|normal": {
+      "v": "Pass"
+    },
+    "fil|hukbong|normal": {
+      "v": "Weak"
+    },
+    "fil|gerilya|normal": {
+      "v": "Weak"
+    },
+    "fil|katulad|normal": {
+      "v": "Pass"
+    },
+    "fil|mamatay|normal": {
+      "v": "Weak"
+    },
+    "fil|ipasa|normal": {
+      "v": "Weak"
+    },
+    "fil|pumatay|normal": {
+      "v": "Pass"
+    },
+    "fil|pinatay|normal": {
+      "v": "Pass"
+    },
+    "fil|average|normal": {
+      "v": "Pass"
+    },
+    "fil|okasyon|normal": {
+      "v": "Weak"
+    },
+    "fil|alkalde|normal": {
+      "v": "Fail"
+    },
+    "fil|football|normal": {
+      "v": "Pass"
+    },
+    "fil|batayan|normal": {
+      "v": "Pass"
+    },
+    "fil|tirahan|normal": {
+      "v": "Pass"
+    },
+    "fil|parangal|normal": {
+      "v": "Pass"
+    },
+    "fil|teknolohiya|normal": {
+      "v": "Pass"
+    },
+    "fil|partikular|normal": {
+      "v": "Pass"
+    },
+    "fil|kongresista|normal": {
+      "v": "Pass"
+    },
+    "fil|impeksiyon|normal": {
+      "v": "Fail"
+    },
+    "fil|pinalitan|normal": {
+      "v": "Pass"
+    },
+    "fil|petisyon|normal": {
+      "v": "Pass"
+    },
+    "fil|sadya|normal": {
+      "v": "Pass"
+    },
+    "fil|nagsilbing|normal": {
+      "v": "Pass"
+    },
+    "fil|pangkaraniwan|normal": {
+      "v": "Pass"
+    },
+    "fil|pamahalaan|normal": {
+      "v": "Pass"
+    },
+    "fil|pinapakita|normal": {
+      "v": "Pass"
+    },
+    "fil|fairness|normal": {
+      "v": "Pass"
+    },
+    "fil|mapabuti|normal": {
+      "v": "Pass"
+    },
+    "fil|tradisyunal|normal": {
+      "v": "Weak"
+    },
+    "fil|selfie|normal": {
+      "v": "Pass"
+    },
+    "hi|आकार|normal": {
+      "v": "Pass"
+    },
+    "hi|दो|normal": {
+      "v": "Fail"
+    },
+    "hi|वृत्त|normal": {
+      "v": "Fail"
+    },
+    "hi|बीच|normal": {
+      "v": "Pass"
+    },
+    "hi|गाना|normal": {
+      "v": "Pass"
+    },
+    "hi|अँधेरा|normal": {
+      "v": "Fail"
+    },
+    "hi|लोमड़ी|normal": {
+      "v": "Weak"
+    },
+    "hi|टाँग|normal": {
+      "v": "Fail"
+    },
+    "hi|टोपी|normal": {
+      "v": "Pass"
+    },
+    "hi|बच्चा|normal": {
+      "v": "Pass"
+    },
+    "hi|तारा|normal": {
+      "v": "Pass"
+    },
+    "hi|छत|normal": {
+      "v": "Fail"
+    },
+    "hi|राष्ट्र|normal": {
+      "v": "Pass"
+    },
+    "hi|बर्फ़|normal": {
+      "v": "Fail"
+    },
+    "hi|गुनगुना|normal": {
+      "v": "Fail"
+    },
+    "hi|संभावित|normal": {
+      "v": "Pass"
+    },
+    "hi|समुदायों|normal": {
+      "v": "Pass"
+    },
+    "hi|व्यवहार|normal": {
+      "v": "Weak"
+    },
+    "hi|सम्मान|normal": {
+      "v": "Pass"
+    },
+    "hi|आलोचकों|normal": {
+      "v": "Weak"
+    },
+    "hi|तकनीक|normal": {
+      "v": "Weak"
+    },
+    "hi|बल्लेबाजी|normal": {
+      "v": "Weak"
+    },
+    "hi|सक्रिय|normal": {
+      "v": "Fail"
+    },
+    "hi|अवधारणा|normal": {
+      "v": "Weak"
+    },
+    "hi|कल्पना|normal": {
+      "v": "Pass"
+    },
+    "hi|बिल्कुल|normal": {
+      "v": "Pass"
+    },
+    "hi|माध्यमिक|normal": {
+      "v": "Weak"
+    },
+    "hi|इन्होंने|normal": {
+      "v": "Weak"
+    },
+    "hi|सामाजिक|normal": {
+      "v": "Weak"
+    },
+    "hi|समुदाय|normal": {
+      "v": "Weak"
+    },
+    "hi|रामचन्द्र|normal": {
+      "v": "Fail"
+    },
+    "hi|सकारात्मक|normal": {
+      "v": "Weak"
+    },
+    "hi|लेम्बोर्गिनी|normal": {
+      "v": "Fail"
+    },
+    "hi|अहमदाबाद|normal": {
+      "v": "Pass"
+    },
+    "hi|अनिवार्यता|normal": {
+      "v": "Weak"
+    },
+    "hi|संज्ञानात्मक|normal": {
+      "v": "Weak"
+    },
+    "hi|विनचेस्टर|normal": {
+      "v": "Fail"
+    },
+    "hi|संकटग्रस्त|normal": {
+      "v": "Weak"
+    },
+    "hi|क्वालीफायर|normal": {
+      "v": "Weak"
+    },
+    "hi|एथलेटिक्स|normal": {
+      "v": "Weak"
+    },
+    "hi|एंटरटेनमेंट|normal": {
+      "v": "Weak"
+    },
+    "hi|प्रतिनिधियों|normal": {
+      "v": "Weak"
+    },
+    "hi|परिवर्तनीय|normal": {
+      "v": "Weak"
+    },
+    "hi|राज्याभिषेक|normal": {
+      "v": "Weak"
+    },
+    "hi|बहुपक्षीय|normal": {
+      "v": "Weak"
+    },
+    "hi|एअरक्राफ्ट्स|normal": {
+      "v": "Fail"
+    },
+    "hi|व्यवसायीकरण|normal": {
+      "v": "Weak"
+    },
+    "hi|अहस्ताक्षरित|normal": {
+      "v": "Fail"
+    },
+    "hi|आफ्टरमार्केट|normal": {
+      "v": "Fail"
+    },
+    "hi|स्वतंत्रतावाद|normal": {
+      "v": "Weak"
+    },
+    "hi|अंतर्जनपदीय|normal": {
+      "v": "Weak"
+    },
+    "hi|आर्गेनाइज़ेशन्स|normal": {
+      "v": "Fail"
+    },
+    "hi|हाइड्रोजनीकरण|normal": {
+      "v": "Weak"
+    },
+    "hi|अन्डरवर्ल्ड|normal": {
+      "v": "Fail"
+    },
+    "hi|सिद्धार्थनगर|normal": {
+      "v": "Weak"
+    },
+    "hi|श्रीसर्वेश्वर|normal": {
+      "v": "Fail"
+    },
+    "hi|लीसेस्टरशायर|normal": {
+      "v": "Weak"
+    },
+    "hi|पथप्रदर्शक|normal": {
+      "v": "Fail"
+    },
+    "hi|आर्किप्लास्टिडे|normal": {
+      "v": "Fail"
+    },
+    "hi|सफलतापूर्वक|normal": {
+      "v": "Weak"
+    },
+    "vi|vòng|normal": {
+      "v": "Weak"
+    },
+    "vi|dễ|normal": {
+      "v": "Fail"
+    },
+    "vi|chó|normal": {
+      "v": "Weak"
+    },
+    "vi|tiệm|normal": {
+      "v": "Fail"
+    },
+    "vi|biết|normal": {
+      "v": "Weak"
+    },
+    "vi|tốt|normal": {
+      "v": "Weak"
+    },
+    "vi|bốn|normal": {
+      "v": "Fail"
+    },
+    "vi|thuyền|normal": {
+      "v": "Pass"
+    },
+    "vi|biển|normal": {
+      "v": "Pass"
+    },
+    "vi|xương|normal": {
+      "v": "Weak"
+    },
+    "vi|đây|normal": {
+      "v": "Weak"
+    },
+    "vi|khói|normal": {
+      "v": "Weak"
+    },
+    "vi|nhà|normal": {
+      "v": "Pass"
+    },
+    "vi|bạn|normal": {
+      "v": "Pass"
+    },
+    "vi|xây|normal": {
+      "v": "Weak"
+    },
+    "vi|boong|normal": {
+      "v": "Fail"
+    },
+    "vi|khách|normal": {
+      "v": "Fail"
+    },
+    "vi|huyết|normal": {
+      "v": "Fail"
+    },
+    "vi|hiđrô|normal": {
+      "v": "Fail"
+    },
+    "vi|remix|normal": {
+      "v": "Pass"
+    },
+    "vi|triệu|normal": {
+      "v": "Fail"
+    },
+    "vi|truyền|normal": {
+      "v": "Fail"
+    },
+    "vi|salon|normal": {
+      "v": "Fail"
+    },
+    "vi|duyệt|normal": {
+      "v": "Fail"
+    },
+    "vi|viếng|normal": {
+      "v": "Weak"
+    },
+    "vi|thịnh|normal": {
+      "v": "Weak"
+    },
+    "vi|whisky|normal": {
+      "v": "Pass"
+    },
+    "vi|click|normal": {
+      "v": "Fail"
+    },
+    "vi|chuộng|normal": {
+      "v": "Fail"
+    },
+    "vi|ngươi|normal": {
+      "v": "Weak"
+    },
+    "vi|stanley|normal": {
+      "v": "Weak"
+    },
+    "vi|district|normal": {
+      "v": "Fail"
+    },
+    "vi|lily|normal": {
+      "v": "Fail"
+    },
+    "vi|bitegmic|normal": {
+      "v": "Fail"
+    },
+    "vi|toạ|normal": {
+      "v": "Fail"
+    },
+    "vi|baroque|normal": {
+      "v": "Fail"
+    },
+    "vi|adenine|normal": {
+      "v": "Fail"
+    },
+    "vi|applies|normal": {
+      "v": "Fail"
+    },
+    "vi|dilatus|normal": {
+      "v": "Fail"
+    },
+    "vi|niệu|normal": {
+      "v": "Fail"
+    },
+    "vi|rìu|normal": {
+      "v": "Fail"
+    },
+    "vi|mascara|normal": {
+      "v": "Weak"
+    },
+    "vi|alkaloid|normal": {
+      "v": "Fail"
+    },
+    "vi|facebook|normal": {
+      "v": "Weak"
+    },
+    "vi|kền|normal": {
+      "v": "Fail"
+    },
+    "vi|serial|normal": {
+      "v": "Fail"
+    },
+    "vi|biserialis|normal": {
+      "v": "Fail"
+    },
+    "vi|wants|normal": {
+      "v": "Fail"
+    },
+    "vi|sama|normal": {
+      "v": "Weak"
+    },
+    "vi|nagoya|normal": {
+      "v": "Fail"
+    },
+    "vi|diversion|normal": {
+      "v": "Weak"
+    },
+    "vi|marine|normal": {
+      "v": "Weak"
+    },
+    "vi|dolores|normal": {
+      "v": "Fail"
+    },
+    "vi|gallagher|normal": {
+      "v": "Weak"
+    },
+    "vi|ira|normal": {
+      "v": "Fail"
+    },
+    "vi|chingsang|normal": {
+      "v": "Fail"
+    },
+    "vi|canariensis|normal": {
+      "v": "Fail"
+    },
+    "vi|pham|normal": {
+      "v": "Fail"
+    },
+    "vi|katrina|normal": {
+      "v": "Fail"
+    },
+    "vi|rama|normal": {
+      "v": "Weak"
     }
   }
 }

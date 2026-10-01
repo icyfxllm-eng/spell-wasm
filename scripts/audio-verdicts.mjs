@@ -21,7 +21,7 @@ import { execFileSync } from 'node:child_process';
 import { existsSync, readFileSync, writeFileSync, mkdtempSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
-import { KEY, normalize } from './lib/audio-norm.mjs';
+import { KEY, normalize, whisperLang } from './lib/audio-norm.mjs';
 
 const OUT = 'config/audio-verdicts.json';
 // The transcripts live BESIDE the verdicts, not in them. config/ is compiled
@@ -44,7 +44,7 @@ function whisper(wav, lang) {
     throw new Error('WHISPER_MODEL is not set to a model file. A verdict without a recognizer is not a verdict.');
   }
   // --no-prompt and no initial text: the recognizer must never see bank text (I3).
-  const out = execFileSync('whisper-cli', ['-m', model, '-l', lang, '-nt', '-otxt', '-of', wav, wav], { encoding: 'utf8' });
+  const out = execFileSync('whisper-cli', ['-m', model, '-l', whisperLang(lang), '-nt', '-otxt', '-of', wav, wav], { encoding: 'utf8' });
   return (existsSync(`${wav}.txt`) ? readFileSync(`${wav}.txt`, 'utf8') : out).trim();
 }
 

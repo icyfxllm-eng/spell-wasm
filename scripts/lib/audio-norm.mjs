@@ -69,3 +69,21 @@ export const KEY = {
   zh: 'hanzi',
   ja: 'unscorable',
 };
+
+// CC-AUDIO-CLARITY — whisper.cpp's language code is not always ours.
+//
+// whisper-cli rejects an unknown code outright ("error: unknown language
+// 'fil'") and writes nothing, and both harnesses record that silence as a
+// transcript the normaliser then scores as a miss. So a wrong code does not
+// fail loudly, it fails as a perfect zero -- which is exactly what fil scored
+// in every run before 2026-10-01, and why "whisper cannot do Tagalog" looked
+// like a finding instead of a bug. Tagalog is `tl` to whisper.
+//
+// Checked 2026-10-01: of our fifteen, fil is the only mismatch. Every other
+// code is accepted as-is, so this map stays a one-entry exception rather than
+// a full table that would drift from LANG_VOICES.
+export const WHISPER_LANG = { fil: 'tl' };
+
+export function whisperLang(lang) {
+  return WHISPER_LANG[lang] || lang;
+}
