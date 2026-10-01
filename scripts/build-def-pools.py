@@ -24,7 +24,7 @@ only fetch words not yet cached. ~10 concurrent requests, polite UA.
 
 Usage: python3 scripts/build-def-pools.py [langs...]   (default: all)
 """
-import json, os, re, sys, threading, unicodedata, urllib.parse, urllib.request
+import html, json, os, re, sys, threading, unicodedata, urllib.parse, urllib.request
 from concurrent.futures import ThreadPoolExecutor
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -51,6 +51,20 @@ FORM_OF = re.compile(
     re.IGNORECASE,
 )
 TAG = re.compile(r"<[^>]+>")
+# Wiktionary wraps a topical label around the real senses ("Terms relating to
+# animals." before the Felidae gloss) and inlines CSS for its date/usage tags.
+# Both reach the player as definition text if they are not removed — 883 rows
+# shipped that way, caught by the CC-CONTRIBUTE census 2026-09-30.
+STYLE = re.compile(r"<style\b.*?</style>", re.S | re.I)
+LABEL = re.compile(r'<span[^>]*class="[^"]*use-with-mention[^"]*"[^>]*>.*?</span>', re.S | re.I)
+# A bank word that doubles as an ISO code, an SI symbol or an affix has that
+# sense listed FIRST in the en section, so first-sense-wins picked it: "cat"
+# came out as the language code for Catalan, "sun" for Sundanese, and 185 more
+# of the commonest words in the game. Never the sense a speller means — these
+# are a fallback, used only when the word has no lexical sense at all.
+NON_LEXICAL = {"symbol", "letter", "abbreviation", "initialism", "acronym",
+               "punctuation mark", "romanization", "syllable", "prefix",
+               "suffix", "infix", "interfix", "character", "number"}
 DEF_URL = "https://en.wiktionary.org/api/rest_v1/page/definition/{}"
 
 _print_lock = threading.Lock()
@@ -72,8 +86,28 @@ def bank_words(lang):
 
 
 def strip_html(t):
-    import html
     return html.unescape(TAG.sub("", t or "")).strip()
+
+
+def sense_text(raw):
+    """The first real sense: topical label and inline CSS removed, sub-senses
+    left behind. A few function words keep their whole gloss inside the label,
+    so if stripping it leaves nothing with a letter in it, take the label back."""
+    for candidate in (LABEL.sub("", STYLE.sub("", raw or "")), STYLE.sub("", raw or "")):
+        for line in html.unescape(TAG.sub("", candidate)).split("\n"):
+            line = " ".join(line.split())
+            if any(ch.isalpha() for ch in line):
+                return line
+    return ""
+
+
+def stale(r):
+    """Cached before the label/CSS/symbol fixes (2026-09-30) — re-fetch it."""
+    if not r.get("found"):
+        return False
+    d = r.get("definition", "")
+    return ("\n" in d or "mw-parser-output" in d
+            or (r.get("pos") or "").lower() in NON_LEXICAL)
 
 
 def fetch_one(lang, word):
@@ -101,11 +135,12 @@ def fetch_one(lang, word):
     for entry in data.get(section, []):
         pos = (entry.get("partOfSpeech") or "").lower()
         for d in entry.get("definitions", []):
-            definition = strip_html(d.get("definition", ""))
+            definition = sense_text(d.get("definition", ""))
             if not definition:
                 continue
-            if FORM_OF.match(definition):
-                fallback = fallback or {"word": word, "found": True, "pos": pos, "definition": definition, "form_of": True}
+            if FORM_OF.match(definition) or pos in NON_LEXICAL:
+                fallback = fallback or {"word": word, "found": True, "pos": pos, "definition": definition,
+                                        "form_of": FORM_OF.match(definition) is not None}
                 continue
             return {"word": word, "found": True, "pos": pos, "definition": definition, "form_of": False}
     return fallback or {"word": word, "found": False}
@@ -136,7 +171,8 @@ def build_lang(lang):
                      if w in glosses else {"word": w, "found": False}) for w in all_words}
     else:
         cache = load_cache(lang)
-        todo = [w for w in dict.fromkeys(all_words) if w not in cache]
+        todo = [w for w in dict.fromkeys(all_words)
+                if w not in cache or stale(cache[w])]
         if todo:
             path = os.path.join(CACHE, f"{lang}.jsonl")
             failed = 0

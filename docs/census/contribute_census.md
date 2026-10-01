@@ -269,3 +269,58 @@ the dead bank files are worth cleaning up separately.
 7. **Size the ask against C8.** Consider a first pass targeting the kid-register subset or the most-served words per language rather than every matched row — and treat ja/ko/ar as a candidate-generation problem first.
 
 Phases A–C stay blocked until Eric rules on these.
+
+---
+
+## Addendum, 2026-09-30 evening: the pools were rebuilt
+
+Eric asked for the cat/sun definitions to be fixed. The root cause was in the
+builder, not the data, so fixing it meant a rebuild — which changes the C8
+numbers above. The table in C8 is the state this census found; the numbers
+below are the state as of the rebuild. **Rule on these.**
+
+Two builder bugs, both in `scripts/build-def-pools.py`:
+
+1. **First-sense-wins ignored part of speech.** Wiktionary lists a word's Symbol sense first inside the `en` section, so any bank word that doubles as an ISO code, SI symbol or affix took that sense: `cat` as the code for Catalan, `sun` for Sundanese, and 185 more — `run hat bed cup fox map pig zoo the and to in is was for are be or it an not he`. Easy tier, kid-register, in front of children. Non-lexical parts of speech are now a fallback, used only when a word has no lexical sense at all.
+2. **Topical labels and inlined CSS were kept as definition text.** Wiktionary wraps a label around the real senses ("Terms relating to animals." before the Felidae gloss) and inlines CSS for its date/usage tags. Both shipped verbatim — `ar كان` read "to be .mw-parser-output .object-usage-tag{font-style:italic}". Stripped now, with a fallback for the function words whose whole gloss lives inside the label.
+
+**883 artifact rows across all 15 languages are now 0.** 469 were English.
+
+The rebuild also re-fetched every bank word the Jul-2026 gloss cache never
+covered, and emits only current-bank words, so it resolved census
+recommendation 2 at the same time. Net effect on C8:
+
+| lang | bank | pool rows (was) | bank coverage (was) |
+|---|--:|--:|--:|
+| en | 3165 | 2706 (2731) | 85.5% (85.2%) |
+| ru | 6208 | 5195 (2971) | **83.7% (36.5%)** |
+| es | 6099 | 4813 (2705) | **78.9% (35.2%)** |
+| pt | 6110 | 4572 (2595) | **74.8% (34.3%)** |
+| fr | 6109 | 4518 (2592) | **74.0% (33.8%)** |
+| pl | 6176 | 3825 (2305) | **61.9% (27.7%)** |
+| de | 6148 | 3785 (2729) | **61.6% (38.1%)** |
+| sw | 2845 | 1746 (1975) | 61.4% (53.6%) |
+| hi | 2674 | 1408 (1892) | 52.7% (46.1%) |
+| fil | 4083 | 1834 (1703) | 44.9% (33.9%) |
+| ko | 6233 | 2315 (531) | **37.1% (3.8%)** |
+| ar | 6238 | 2274 (1041) | **36.5% (7.7%)** |
+| vi | 4094 | 974 (1274) | 23.8% (16.0%) |
+| ja | 6160 | 1010 (484) | **16.4% (2.4%)** |
+| zh | 6181 | 916 (1170) | 14.8% (14.8%) |
+| **total** | **78,523** | **41,891 (28,698)** | **53.3% (27.9%)** |
+
+Every pool row is now in the current bank, so the 6,804 stale rows the census
+counted are gone; the languages whose pools shrank (hi, sw, vi, zh) lost rows
+for words the bank no longer contains, not candidates.
+
+What this changes for the rulings:
+
+- **Recommendation 2 is done.** Any count the spec quotes should come from this rebuild.
+- **Recommendation 7 narrows.** ko and ar are no longer candidate-starved (3.8% → 37.1%, 7.7% → 36.5%). **ja (16.4%) and zh (14.8%) remain candidate-generation problems that voting cannot fix** — zh is unchanged because it comes from the bundled CC-CEDICT extract, not Wiktionary.
+- **The workload grew.** 41,891 rows with a candidate, 38,997 of them prompt-grade. At 3 Good votes each this is well over 100,000 judgments, so the coverage arithmetic in C8 gets worse, not better. Coverage thresholds should be set against a chosen subset, not the whole pool.
+- **C1's asymmetry is now demonstrated.** This content fix reached production by copying JSON onto the server: no app release, no store review, no flag. The gates that bear the audit claim are compiled constants; the content a child reads is a file on a disk.
+
+Nothing else in this report changed. C1, C2, C5 and C7 still HALT, and
+`audit_pass` is still hardcoded `true` by the only production producer — these
+definitions are corrected, not audited, and still nothing carries a human
+verdict.
