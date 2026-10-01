@@ -20,6 +20,12 @@
 // makes the fix stay fixed: it reads the shipped artifact, not the builder, so
 // a hand-edited pool or a future scraper change is caught the same way.
 //
+// Freshness is a law here too, on Eric's call: a row whose word has left the
+// bank fails the check. That means editing a word list makes the pools stale
+// by definition and blocks the next push until they are rebuilt — which is a
+// rate-limited fetch measured in hours. Start it in the background early. The
+// 6,804 such rows the CC-CONTRIBUTE census counted are what this prevents.
+//
 //   node scripts/def-pool-check.mjs              # check the real pools
 //   node scripts/def-pool-check.mjs --selftest   # prove it bites
 import fs from "node:fs";
@@ -41,7 +47,7 @@ const JUNK = [
   [/^\s*$/, "empty"],
 ];
 
-export function check(dir) {
+export function check(dir, bankDir) {
   const bad = [];
   let rows = 0, files = 0, offBank = 0;
   const files_ = fs.existsSync(dir)
@@ -60,6 +66,12 @@ export function check(dir) {
       continue;
     }
     if (doc.lang !== lang) bad.push(`${f}: lang field '${doc.lang}' does not match the filename`);
+    // Freshness is a law, not a note (Eric, 2026-09-30): a row for a word the
+    // bank no longer serves is a row no player can be shown and no contributor
+    // should be asked to judge. A missing bank FAILS rather than skips —
+    // a check that cannot verify must not report OK.
+    const bank = bankDir === undefined ? null : bankWords(bankDir, lang);
+    if (bank && !bank.size) bad.push(`${f}: no word bank at ${path.join(bankDir, lang)} — cannot verify freshness`);
     if (!doc.tiers || typeof doc.tiers !== "object") {
       bad.push(`${f}: no tiers object`);
       continue;
@@ -76,6 +88,10 @@ export function check(dir) {
         const where = `${lang}/${tier} '${r && r.word}'`;
         if (!r || typeof r.word !== "string" || !r.word) { bad.push(`${where}: missing word`); continue; }
         if (typeof r.definition !== "string") { bad.push(`${where}: missing definition`); continue; }
+        if (bank && bank.size && !bank.has(r.word)) {
+          offBank++;
+          if (offBank <= 12) bad.push(`${where}: not in the ${lang} bank any more — rebuild to drop it`);
+        }
         if (typeof r.prompt_grade !== "boolean") bad.push(`${where}: prompt_grade is not a boolean`);
         if (typeof r.kid_register !== "boolean") bad.push(`${where}: kid_register is not a boolean`);
 
@@ -118,63 +134,86 @@ export function check(dir) {
   return { bad, rows, files, offBank };
 }
 
-// Freshness is reported, never enforced: a bank edit must not block an
-// unrelated push behind a two-and-a-half-hour refetch. Correctness of the text
-// that ships is enforced above, and that never depends on the bank.
-function staleRows(poolDir, bankDir) {
-  if (!fs.existsSync(bankDir)) return null;
-  let off = 0, total = 0;
-  for (const f of fs.readdirSync(poolDir).filter((x) => x.endsWith(".json"))) {
-    const lang = f.replace(/\.json$/, "");
-    const bank = new Set();
-    for (const tier of TIERS) {
-      const p = path.join(bankDir, lang, `${tier}.txt`);
-      if (!fs.existsSync(p)) continue;
-      for (const line of fs.readFileSync(p, "utf8").split("\n")) {
-        const w = line.trim();
-        if (!w || w.startsWith("#")) continue;
-        bank.add(w.includes("|") ? w.slice(w.lastIndexOf("|") + 1) : w);
-      }
-    }
-    if (!bank.size) continue;
-    const doc = JSON.parse(fs.readFileSync(path.join(poolDir, f), "utf8"));
-    for (const tier of TIERS) {
-      for (const r of doc.tiers?.[tier] || []) {
-        total++;
-        if (!bank.has(r.word)) off++;
-      }
+// The bank as the pools must key on it. Chinese stores `pinyin|hanzi` pairs
+// and the pools key on the hanzi alone, so take the half after the pipe —
+// without this every zh row reads as off-bank.
+function bankWords(bankDir, lang) {
+  const out = new Set();
+  for (const tier of TIERS) {
+    const p = path.join(bankDir, lang, `${tier}.txt`);
+    if (!fs.existsSync(p)) continue;
+    for (const line of fs.readFileSync(p, "utf8").split("\n")) {
+      const w = line.trim();
+      if (!w || w.startsWith("#")) continue;
+      out.add(w.includes("|") ? w.slice(w.lastIndexOf("|") + 1) : w);
     }
   }
-  return { off, total };
+  return out;
 }
 
 if (process.argv.includes("--selftest")) {
   const row = (o = {}) => ({ word: "apple", definition: "A round fruit.", pos: "noun", prompt_grade: true, kid_register: true, ...o });
+  // Each case asserts the law it is ABOUT, not merely that something failed.
+  // Without that, every case here would pass on the freshness law alone the
+  // moment its word was missing from the fixture bank, and a broken ISO regex
+  // would still report "caught".
   const cases = {
-    clean: [row()],
-    iso_code: [row({ word: "cat", definition: "ISO 639-2 & ISO 639-3 language code for Catalan." })],
-    iso_former: [row({ word: "in", definition: "Former ISO 639-1 language code for Indonesian." })],
-    symbol_for: [row({ word: "as", definition: "Symbol for attosecond, an SI unit of time." })],
-    inlined_css: [row({ word: "kana", definition: "to be .mw-parser-output .object-usage-tag{font-style:italic}" })],
-    topical_label: [row({ word: "cat", definition: "Terms relating to animals." })],
-    two_lines: [row({ definition: "shirt\n dress shirt" })],
-    empty_def: [row({ definition: "" })],
-    long_prompt_grade: [row({ definition: "A".repeat(91) })],
-    self_leak: [row({ definition: "An apple is a fruit." })],
-    kid_too_long: [row({ definition: "A round fruit that grows on a tree and is eaten raw or cooked." })],
-    bad_flag_type: [row({ prompt_grade: "yes" })],
-    duplicate_def: [row({ word: "apple" }), row({ word: "pear" })],
+    clean: { rows: [row()], want: null },
+    iso_code: { rows: [row({ word: "cat", definition: "ISO 639-2 & ISO 639-3 language code for Catalan." })], want: /an ISO code/ },
+    iso_former: { rows: [row({ word: "in", definition: "Former ISO 639-1 language code for Indonesian." })], want: /an ISO code/ },
+    symbol_for: { rows: [row({ word: "as", definition: "Symbol for attosecond, an SI unit of time." })], want: /a symbol gloss/ },
+    inlined_css: { rows: [row({ word: "kana", definition: "to be .mw-parser-output .object-usage-tag{font-style:italic}" })], want: /inlined Wiktionary CSS/ },
+    topical_label: { rows: [row({ word: "cat", definition: "Terms relating to animals." })], want: /topical label/ },
+    two_lines: { rows: [row({ definition: "shirt\n dress shirt" })], want: /more than one line/ },
+    empty_def: { rows: [row({ definition: "" })], want: /empty/ },
+    long_prompt_grade: { rows: [row({ definition: "A".repeat(91) })], want: /prompt_grade but 91 chars/ },
+    self_leak: { rows: [row({ definition: "An apple is a fruit." })], want: /contains the word/ },
+    kid_too_long: { rows: [row({ definition: "A round fruit that grows on a tree and is eaten raw or cooked." })], want: /kid_register but 62 chars/ },
+    bad_flag_type: { rows: [row({ prompt_grade: "yes" })], want: /prompt_grade is not a boolean/ },
+    duplicate_def: { rows: [row({ word: "apple" }), row({ word: "pear" })], want: /share one definition/ },
+    off_bank: { rows: [row({ word: "quince", definition: "A hard yellow fruit." })], want: /not in the en bank/ },
+    missing_bank: { rows: [row()], want: /cannot verify freshness/ },
   };
   let failed = 0;
-  for (const [name, rows] of Object.entries(cases)) {
+  for (const [name, c] of Object.entries(cases)) {
     const d = fs.mkdtempSync(path.join(os.tmpdir(), "defpool-check-"));
-    // kid_too_long must fail on length alone, not on tier.
-    fs.writeFileSync(path.join(d, "en.json"), JSON.stringify({ lang: "en", tiers: { easy: rows }, exclusions: {} }));
-    const { bad } = check(d);
-    const want = name === "clean" ? 0 : 1;
-    const ok = want === 0 ? bad.length === 0 : bad.length > 0;
-    console.log(`  ${ok ? (want ? "caught " : "clean  ") : "MISSED "} ${name}${bad.length ? " — " + bad[0].slice(0, 76) : ""}`);
+    fs.writeFileSync(path.join(d, "en.json"), JSON.stringify({ lang: "en", tiers: { easy: c.rows }, exclusions: {} }));
+    const bankDir = path.join(d, "bank");
+    if (name === "missing_bank") {
+      fs.mkdirSync(bankDir, { recursive: true });
+    } else {
+      // Every word used by a case EXCEPT the off-bank one, so each case fails
+      // on its own law and not on freshness.
+      fs.mkdirSync(path.join(bankDir, "en"), { recursive: true });
+      fs.writeFileSync(path.join(bankDir, "en", "easy.txt"), "# a comment\napple\npear\ncat\nin\nas\nkana\n");
+    }
+    const { bad } = check(d, bankDir);
+    let ok, why = "";
+    if (c.want === null) {
+      ok = bad.length === 0;
+      why = bad[0] || "";
+    } else {
+      ok = bad.some((b) => c.want.test(b));
+      why = ok ? bad.find((b) => c.want.test(b)) : `wanted ${c.want}, got ${bad.length ? bad.join(" | ") : "nothing"}`;
+    }
+    console.log(`  ${ok ? (c.want ? "caught " : "clean  ") : "MISSED "} ${name}${why ? " — " + why.slice(0, 74) : ""}`);
     if (!ok) failed++;
+    fs.rmSync(d, { recursive: true });
+  }
+  // zh keys on the hanzi while the bank stores `pinyin|hanzi`. Splitting wrong
+  // would mark every Chinese row off-bank, so prove both directions.
+  {
+    const d = fs.mkdtempSync(path.join(os.tmpdir(), "defpool-check-zh-"));
+    fs.mkdirSync(path.join(d, "bank", "zh"), { recursive: true });
+    fs.writeFileSync(path.join(d, "bank", "zh", "easy.txt"), "ai4|\u7231\nba1|\u516b\n");
+    const mk = (w) => JSON.stringify({ lang: "zh", tiers: { easy: [{ word: w, definition: "love", pos: "noun", prompt_grade: true, kid_register: true }] }, exclusions: {} });
+    fs.writeFileSync(path.join(d, "zh.json"), mk("\u7231"));
+    const hanzi = check(d, path.join(d, "bank")).bad.length === 0;
+    fs.writeFileSync(path.join(d, "zh.json"), mk("ai4|\u7231"));
+    const pair = check(d, path.join(d, "bank")).bad.some((b) => /not in the zh bank/.test(b));
+    console.log(`  ${hanzi ? "clean  " : "MISSED "} zh_hanzi_key_accepted`);
+    console.log(`  ${pair ? "caught " : "MISSED "} zh_pipe_key_rejected`);
+    if (!hanzi || !pair) failed++;
     fs.rmSync(d, { recursive: true });
   }
   if (failed) { console.error(`def-pool-check selftest: ${failed} case(s) wrong`); process.exit(1); }
@@ -183,17 +222,18 @@ if (process.argv.includes("--selftest")) {
 }
 
 const POOLS = `${ROOT}/backend/def_pools`;
-const { bad, rows, files } = check(POOLS);
+const { bad, rows, files, offBank } = check(POOLS, `${ROOT}/assets/words`);
 if (bad.length) {
   console.error("def-pool-check: FAILED");
   for (const b of bad.slice(0, 40)) console.error("  " + b);
   if (bad.length > 40) console.error(`  ...and ${bad.length - 40} more`);
+  if (offBank) {
+    console.error(`\n  ${offBank} row(s) name words the bank no longer serves.`);
+    console.error("  Editing a word list makes the pools stale by definition — the rebuild");
+    console.error("  is a rate-limited fetch and takes hours, so start it before you need it:");
+    console.error("    python3 scripts/build-def-pools.py <lang>   # backgrounded");
+  }
   console.error("\n  Rebuild with: python3 scripts/build-def-pools.py <lang>");
   process.exit(1);
 }
-const fresh = staleRows(POOLS, `${ROOT}/assets/words`);
-let note = "";
-if (fresh && fresh.off) {
-  note = ` — NOTE ${fresh.off} row(s) name words no longer in the bank; rebuild to clear (not a failure)`;
-}
-console.log(`def-pool-check: OK — ${rows} rows in ${files} language(s), every definition a meaning${note}`);
+console.log(`def-pool-check: OK — ${rows} rows in ${files} language(s), every definition a meaning, every word still in the bank`);
