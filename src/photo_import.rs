@@ -1,6 +1,8 @@
 //! CC-PHOTO-IMPORT Phase 1 — candidate classification, ALL in the core (Rust).
 //!
-//! Raw OCR lines are shaped by `native_lang::parse_candidates` (tokenize, NFC,
+//! Raw OCR lines are shaped by `snap_clean::clean_ocr_lines` (CC-SNAP-CLEAN:
+//! list markers, edge punctuation, splits, bank casing — one line in, one
+//! candidate out unless a delimiter splits it,
 //! dedupe — the existing seed); this module adds the spec-F3 classification:
 //! every candidate is exactly one of {in-dictionary, custom, filtered}, decided
 //! deterministically and offline:
@@ -48,31 +50,47 @@ pub struct Candidate {
     pub confidence_low: bool,
 }
 
-/// PROVISIONAL low-confidence threshold (Vision line confidence 0..1) — chips
-/// at or below render dimmed-but-editable, never dropped. To be CALIBRATED
-/// against the Phase 7 handwriting fixtures and signed off by Eric (plan: the
-/// number is brought to him, not buried); until then it errs low so few chips
-/// dim. Vision's .accurate path reports ~1.0 for clean print and commonly
-/// 0.3–0.5 for shaky handwriting.
-pub const LOW_CONFIDENCE: f32 = 0.4;
+/// Low-confidence threshold, re-exported from the one place that owns it.
+///
+/// CC-SNAP-CLEAN D8 made `snap_clean::LOW_CONFIDENCE` the single constant
+/// ("per platform and in one config constant, not scattered"), and the census
+/// found there is only one platform to hold a number for: `android/` carries
+/// no text recognition at all. Eric left the value at 0.4 on 2026-09-30
+/// rather than measure a distribution, so the number is unchanged and only
+/// its home moved.
+pub use crate::snap_clean::LOW_CONFIDENCE;
 
 /// Phase 2 entry: recognized `(line, confidence)` pairs → parsed, deduped,
 /// classified candidates. Each token inherits its LINE's Vision confidence
 /// (Vision reports per line, not per word); dedupe is case-insensitive across
 /// the whole page set, first occurrence wins (keeping its confidence bit).
 pub fn extract_classified(lang: &str, lines: &[(String, f32)]) -> Vec<Candidate> {
-    use std::collections::HashSet;
-    let mut seen: HashSet<String> = HashSet::new();
-    let mut tokens: Vec<(String, bool)> = Vec::new();
-    for (line, confidence) in lines {
-        let low = *confidence <= LOW_CONFIDENCE;
-        for word in crate::native_lang::parse_candidates(&[line.clone()]) {
-            if seen.insert(word.to_lowercase()) {
-                tokens.push((word, low));
-            }
-        }
-    }
-    classify(lang, &tokens)
+    // CC-SNAP-CLEAN I8 — one implementation. This used to call
+    // `native_lang::parse_candidates`, which tokenized each LINE into words
+    // and dropped anything carrying a digit. Both were reasonable before
+    // there was a spec and both are wrong under this one: a header like
+    // "Week 3 Spelling List" became three candidates and a discarded `3`,
+    // where the acceptance table wants one candidate flagged and left for
+    // the parent to judge, and `3D` vanished where the table wants it kept
+    // and flagged. Flag, never delete.
+    let ocr: Vec<crate::snap_clean::OcrLine> = lines
+        .iter()
+        .map(|(text, confidence)| crate::snap_clean::OcrLine {
+            text: text.clone(),
+            confidence: *confidence,
+            lang: lang.to_string(),
+        })
+        .collect();
+    crate::snap_clean::clean_ocr_lines(&ocr)
+        .into_iter()
+        .map(|c| Candidate {
+            class: classify_one(lang, &c.text),
+            // The cleaner's own flag, so the two cannot disagree about where
+            // the threshold is.
+            confidence_low: c.flags.low_confidence,
+            word: c.text,
+        })
+        .collect()
 }
 
 /// Classify parsed tokens for the study language `lang`. `tokens` pairs each
@@ -318,10 +336,9 @@ mod tests {
     fn a3_spanish_diacritics_roundtrip_nfc_byte_identical() {
         // "niño" typed as n-i-n-combining tilde-o (what OCR can emit).
         let nfd = "nin\u{0303}o";
-        // The parser NFC-normalizes upstream; mirror that here.
-        let parsed = crate::native_lang::parse_candidates(&[nfd.to_string()]);
-        assert_eq!(parsed, vec!["niño".to_string()], "parser composes to NFC");
-        let out = classify("es", &words(&[&parsed[0]]));
+        // The cleaner NFC-normalizes upstream; go through it, as the app does.
+        let out = extract_classified("es", &[(nfd.to_string(), 1.0)]);
+        assert_eq!(out[0].word, "niño", "the cleaner composes to NFC");
         assert_eq!(out[0].class, WordClass::InDictionary, "NFD form found in the es bank");
         assert_eq!(out[0].word.as_bytes(), "niño".as_bytes(), "byte-identical NFC round-trip");
     }
@@ -348,18 +365,45 @@ mod tests {
     /// spans lines (first occurrence wins) and junk lines contribute nothing.
     #[test]
     fn extract_classified_maps_line_confidence_and_dedupes() {
+        // A real numbered list: two lines carry the scheme, so D4's floor is
+        // met and the markers go.
         let lines = vec![
-            ("1. horse  mouse".to_string(), 0.95_f32),
-            ("tree".to_string(), 0.2),
-            ("HORSE".to_string(), 0.2),  // dup of line-1 horse — dropped
-            ("###".to_string(), 0.9),    // junk line — no tokens
+            ("1. horse".to_string(), 0.95_f32),
+            ("2. tree".to_string(), 0.2),
+            ("HORSE".to_string(), 0.2), // dup of line 1 after bank casing
+            ("###".to_string(), 0.9),   // no letters at all
         ];
         let out = extract_classified("en", &lines);
         let words: Vec<&str> = out.iter().map(|c| c.word.as_str()).collect();
-        assert_eq!(words, vec!["horse", "mouse", "tree"]);
-        assert!(!out[0].confidence_low && !out[1].confidence_low, "clean line is not low");
-        assert!(out[2].confidence_low, "0.2 line is below LOW_CONFIDENCE");
+        assert_eq!(words, vec!["horse", "tree"], "markers stripped, dup dropped, junk dropped");
+        assert!(!out[0].confidence_low, "0.95 is not low");
+        assert!(out[1].confidence_low, "0.2 is below LOW_CONFIDENCE");
         assert!(out.iter().all(|c| c.class == WordClass::InDictionary));
+    }
+
+    /// CC-SNAP-CLEAN I8 changed this path, and the change is visible here.
+    ///
+    /// The old `parse_candidates` split every line on whitespace, so
+    /// "1. horse  mouse" became two words and the marker went even though
+    /// only one line on the page was numbered. The cleaner is line-shaped: a
+    /// line is one candidate unless a delimiter splits it, and D4 will not
+    /// strip a marker that only one line carries. A parent sees the line as
+    /// photographed and can edit it, rather than two words the app inferred.
+    #[test]
+    fn a_line_is_one_candidate_and_a_lone_marker_is_not_a_list() {
+        let out = extract_classified("en", &[("1. horse  mouse".to_string(), 0.95)]);
+        let words: Vec<&str> = out.iter().map(|c| c.word.as_str()).collect();
+        assert_eq!(words, vec!["1. horse  mouse"]);
+        assert_eq!(out[0].class, WordClass::Custom, "not a bank word, so the parent's own");
+    }
+
+    /// The other half of the change: a digit-bearing word used to be dropped
+    /// before anything could flag it. It survives now.
+    #[test]
+    fn a_digit_bearing_word_survives_to_be_flagged() {
+        let out = extract_classified("en", &[("1. 3D".to_string(), 1.0), ("2. cube".to_string(), 1.0)]);
+        let words: Vec<&str> = out.iter().map(|c| c.word.as_str()).collect();
+        assert_eq!(words, vec!["3D", "cube"], "flag, never delete");
     }
 
     /// Mandarin "pinyin|hanzi" entries match from either side of the bar.

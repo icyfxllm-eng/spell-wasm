@@ -114,6 +114,10 @@ node scripts/audio-router-check.mjs --selftest || { echo "GATE FAIL: audio route
 echo "== gate: element IDs are unique (CC-SPELLPIC F0)"
 node scripts/dom-id-check.mjs || { echo "GATE FAIL: duplicate element ID"; exit 1; }
 
+echo "== gate: OCR cleanup has ONE implementation (CC-SNAP-CLEAN I8)"
+node scripts/snap-clean-one-impl-check.mjs || { echo "GATE FAIL: OCR cleanup outside snap_clean"; exit 1; }
+node scripts/snap-clean-one-impl-check.mjs --selftest || { echo "GATE FAIL: one-impl selftest"; exit 1; }
+
 echo "== gate: UI strings are actually translated (CC-HUB-GROUP-L10N F3)"
 node scripts/i18n-translated-check.mjs || { echo "GATE FAIL: a tracked UI string is untranslated"; exit 1; }
 node scripts/i18n-translated-check.mjs --selftest || { echo "GATE FAIL: translated-string selftest"; exit 1; }

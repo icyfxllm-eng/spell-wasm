@@ -106,6 +106,7 @@ mod settings;
 mod share;
 mod speech_out;
 mod stats;
+pub mod snap_clean; // CC-SNAP-CLEAN v1 — OCR lines to word candidates (tests/snap_clean_golden.rs)
 mod storage;
 mod syllable;
 mod experience; // CC-ONBOARD-JR F1/F2

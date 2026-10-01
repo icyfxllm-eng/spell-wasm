@@ -5,7 +5,7 @@
 //! editable review screen before ANY of them are saved.
 //!
 //! Trust model: OCR output is never saved directly. Recognized text is parsed
-//! for shape only (`native_lang::parse_candidates`), pre-flagged against the
+//! for shape only (`snap_clean::clean_ocr_lines`), pre-flagged against the
 //! standard gate for the review UI (`native_lang::gate_reason`), and the
 //! confirmed set is pushed through the *exact* typed-importer save path
 //! (`importer::extract_words` charset gate -> `profanity` screen -> `save_words`)

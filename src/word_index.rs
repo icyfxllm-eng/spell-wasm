@@ -38,9 +38,18 @@ use std::rc::Rc;
 use crate::norm::fold_strict;
 
 thread_local! {
-    /// lang -> its folded, sorted vocabulary. `Rc` so a lookup can hold the
-    /// list without keeping the map borrowed across the search.
-    static INDEX: RefCell<HashMap<String, Rc<Vec<String>>>> =
+    /// lang -> its vocabulary as `(folded, bank form)`, sorted by the folded
+    /// half. `Rc` so a lookup can hold the list without keeping the map
+    /// borrowed across the search.
+    ///
+    /// CC-SNAP-CLEAN C4 added the second half. The index used to store the
+    /// folded form alone, which answers "is this a word?" but throws away the
+    /// bank's own casing at build time — so nothing could tell a photographed
+    /// "CAT" that the bank writes it "cat", or that German "Hund" keeps its
+    /// capital. One index still, per Eric's choice (a) of three: the
+    /// alternative was a scan, and a second structure is the bug class this
+    /// module exists to prevent.
+    static INDEX: RefCell<HashMap<String, Rc<Vec<(String, String)>>>> =
         RefCell::new(HashMap::new());
 }
 
@@ -57,17 +66,29 @@ fn comparable(entry: &str) -> String {
     fold_strict(entry.split('|').next().unwrap_or(entry))
 }
 
-/// Build (once) and borrow the folded, sorted vocabulary for `lang`.
-fn index_for(lang: &str) -> Rc<Vec<String>> {
+/// The form a player reads and types: the bank entry, minus zh's `|hanzi`
+/// half, with its own casing intact.
+fn bank_form(entry: &str) -> String {
+    // zh-ok(grading): the same left-hand split comparable() makes, unfolded
+    entry.split('|').next().unwrap_or(entry).to_string()
+}
+
+/// Build (once) and borrow the sorted vocabulary for `lang`.
+fn index_for(lang: &str) -> Rc<Vec<(String, String)>> {
     if let Some(hit) = INDEX.with(|m| m.borrow().get(lang).cloned()) {
         return hit;
     }
-    let mut words: Vec<String> = Vec::new();
+    let mut words: Vec<(String, String)> = Vec::new();
     for tier in ["easy", "medium", "hard", "expert"] {
-        words.extend(crate::words::tier_for(lang, tier).iter().map(|w| comparable(w)));
+        words.extend(
+            crate::words::tier_for(lang, tier).iter().map(|w| (comparable(w), bank_form(w))),
+        );
     }
     words.sort_unstable();
-    words.dedup();
+    // Dedupe on the FOLDED half only: two bank entries that fold together are
+    // one word to every caller here, and keeping both would make `word_at`
+    // return the same word twice under different casings.
+    words.dedup_by(|a, b| a.0 == b.0);
     let rc = Rc::new(words);
     INDEX.with(|m| m.borrow_mut().insert(lang.to_string(), rc.clone()));
     rc
@@ -82,7 +103,22 @@ pub fn is_valid(lang: &str, word: &str) -> bool {
     if needle.is_empty() {
         return false;
     }
-    index_for(lang).binary_search(&needle).is_ok()
+    index_for(lang).binary_search_by(|e| e.0.as_str().cmp(needle.as_str())).is_ok()
+}
+
+/// The bank's own form of `word`, or `None` when the bank does not have it.
+///
+/// CC-SNAP-CLEAN F5/D2: a photographed word that the bank knows is rewritten
+/// in the bank's casing, because worksheet title-casing is layout rather than
+/// spelling. A word the bank does not know keeps whatever the camera saw —
+/// which is why this returns an Option and not a lossy String.
+pub fn canonical(lang: &str, word: &str) -> Option<String> {
+    let needle = comparable(word);
+    if needle.is_empty() {
+        return None;
+    }
+    let idx = index_for(lang);
+    idx.binary_search_by(|e| e.0.as_str().cmp(needle.as_str())).ok().map(|i| idx[i].1.clone())
 }
 
 /// How many distinct words `lang` offers. The forge's D2 acceptance gate
@@ -104,7 +140,7 @@ pub fn word_at(lang: &str, i: usize) -> Option<String> {
     if idx.is_empty() {
         return None;
     }
-    idx.get(i % idx.len()).cloned()
+    idx.get(i % idx.len()).map(|e| e.0.clone())
 }
 
 /// Every word whose comparable form starts with `prefix`.
@@ -120,11 +156,11 @@ pub fn starting_with(lang: &str, prefix: &str) -> Vec<String> {
         return Vec::new();
     }
     let idx = index_for(lang);
-    let from = idx.partition_point(|w| w.as_str() < p.as_str());
+    let from = idx.partition_point(|e| e.0.as_str() < p.as_str());
     idx[from..]
         .iter()
-        .take_while(|w| w.starts_with(&p))
-        .cloned()
+        .take_while(|e| e.0.starts_with(&p))
+        .map(|e| e.0.clone())
         .collect()
 }
 
@@ -221,14 +257,44 @@ mod tests {
         let sw = index_for("sw");
         for foreign in ["the", "and", "because", "hello"] {
             assert!(
-                !sw.contains(&foreign.to_string()),
+                !sw.iter().any(|e| e.0 == *foreign),
                 "sw index contains the English word {foreign:?}"
             );
         }
         assert!(vocabulary_size("sw") > 500, "sw still has a real vocabulary");
         // and the reverse direction
         let en = index_for("en");
-        assert!(!en.contains(&"kufuatana".to_string()), "en index contains a Swahili word");
+        assert!(!en.iter().any(|e| e.0 == "kufuatana"), "en index contains a Swahili word");
+    }
+
+    /// C4/F5: the bank's own form comes back, not the folded key. The whole
+    /// point of storing the pair.
+    #[test]
+    fn canonical_returns_the_banks_casing() {
+        // A word the bank holds, asked for in the casing a worksheet uses.
+        let Some(form) = canonical("en", "CAT") else {
+            panic!("`cat` should be in the en bank");
+        };
+        assert_eq!(form, "cat", "the bank's casing wins over the photograph's");
+        assert_eq!(canonical("en", "cat").as_deref(), Some("cat"));
+        // ...and a word it does not hold gets no opinion at all, which is what
+        // lets F5 keep the scanned casing instead of inventing one.
+        assert_eq!(canonical("en", "zzzznotaword"), None);
+        assert_eq!(canonical("en", ""), None);
+    }
+
+    /// The pair must not change what every existing caller sees: word_at and
+    /// starting_with still speak in FOLDED forms, and is_valid still answers
+    /// exactly what it did.
+    #[test]
+    fn the_pair_did_not_change_the_old_answers() {
+        assert!(is_valid("en", "cat") && is_valid("en", "CAT"));
+        assert!(!is_valid("en", "zzzznotaword"));
+        let w = word_at("en", 0).expect("en has words");
+        assert_eq!(w, w.to_lowercase(), "word_at still returns the folded form");
+        for s in starting_with("en", "ca").iter().take(5) {
+            assert!(s.starts_with("ca"), "starting_with still matches folded prefixes");
+        }
     }
 
     #[test]
