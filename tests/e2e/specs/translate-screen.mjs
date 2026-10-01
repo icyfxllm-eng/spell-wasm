@@ -169,6 +169,11 @@ export async function run(browser, base, suite) {
       await commitFirst(page, 'a');
       const target = await page.$eval('#trTgtWord', (e) => e.textContent);
       const y0 = await actionsY(page);
+      // Rendered, not just attributed: .tr-save sets display:flex, which beat
+      // the hidden attribute and left this row on screen from the moment the
+      // screen opened (Simulator, 2026-09-30).
+      const shown = () => page.$eval('#trSaveRow', (e) => getComputedStyle(e).display !== 'none');
+      assert(!(await shown()), 'the destination row is not on screen before Save');
       // D5 (signed): Save opens the same destination control the other sheets
       // use, below the action row, and nothing is saved until it is confirmed.
       await page.click('#trSave');
@@ -183,6 +188,7 @@ export async function run(browser, base, suite) {
       await page.waitForTimeout(200);
       assert((await page.$eval('#trNote', (e) => e.textContent)).length > 0, 'an inline confirmation naming the list');
       assert(await page.$eval('#trSaveRow', (e) => e.hasAttribute('hidden')), 'the destination row closes');
+      assert(!(await shown()), 'and is gone from the screen');
       assert(await page.$eval('#trScreen', (e) => e.classList.contains('show')), 'no navigation away');
       saved = await page.evaluate(() => JSON.parse(localStorage.getItem('byear_custom_v1') || '{}'));
       assert((saved.words || []).includes(target), `the TARGET word is saved (D10): ${JSON.stringify(saved.words)}`);
