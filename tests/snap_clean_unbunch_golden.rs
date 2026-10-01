@@ -15,7 +15,8 @@
 use proptest::prelude::*;
 use unicode_normalization::UnicodeNormalization;
 use spell_wasm::snap_clean::{
-    clean_ocr_lines, split_on_box_gaps, split_policy, Candidate, OcrLine, SplitPolicy, WordBox,
+    clean_ocr_lines, split_on_box_gaps, split_policy, CharGap, Candidate, OcrLine, SplitPolicy,
+    WordBox,
 };
 
 fn line(text: &str, lang: &str) -> OcrLine {
@@ -30,15 +31,25 @@ fn texts(c: &[Candidate]) -> Vec<String> {
     c.iter().map(|x| x.text.clone()).collect()
 }
 
-/// A line whose boxes sit at the given x-ranges, with no text-level spaces.
+/// A line whose boxes sit at the given x-ranges, NORMALIZED 0..1.
+///
+/// CC-SNAP-BOXES D-B2 fixed the coordinate space and I-B4 enforces it, so a
+/// fixture in pixels is now rejected outright rather than silently scaled.
+///
+/// The line text is the boxes joined by spaces, and that is not a detail:
+/// CC-SNAP-BOXES I-B5 rejects geometry that does not describe the line it
+/// came with, and C1 explains why a payload could never look otherwise --
+/// Vision derives its boxes FROM the string's own whitespace tokens, so three
+/// boxes and a spaceless string cannot both come off the same page. The old
+/// fixture here modelled exactly that impossible payload.
 fn boxed(parts: &[(&str, f32, f32)], lang: &str) -> OcrLine {
     OcrLine {
-        text: parts.iter().map(|p| p.0).collect::<String>(),
+        text: parts.iter().map(|p| p.0).collect::<Vec<_>>().join(" "),
         confidence: 1.0,
         lang: lang.to_string(),
         boxes: parts
             .iter()
-            .map(|(t, x0, x1)| WordBox { text: t.to_string(), x0: *x0, x1: *x1, confidence: 1.0 })
+            .map(|(t, x0, x1)| WordBox { text: t.to_string(), x0: *x0, x1: *x1, confidence: 1.0, ..Default::default() })
             .collect(),
         ..Default::default()
     }
@@ -60,9 +71,33 @@ fn row1_merged_three_words_splits() {
 #[test]
 fn row2_box_gaps_split_without_a_suggestion() {
     // U1 did the work, so U2 is never asked and no offer is attached.
-    let out = clean_ocr_lines(&[boxed(&[("big", 0.0, 30.0), ("red", 45.0, 75.0), ("dog", 90.0, 120.0)], "en")]);
+    let out = clean_ocr_lines(&[boxed(&[("big", 0.10, 0.20), ("red", 0.26, 0.36), ("dog", 0.42, 0.52)], "en")]);
     assert_eq!(texts(&out), ["big", "red", "dog"]);
     assert!(out.iter().all(|c| c.unbunch.is_none()), "box evidence needs no suggestion");
+}
+
+#[test]
+fn row2b_a_merged_token_splits_on_interior_gaps() {
+    // What row 2 was reaching for, in the shape the page can actually
+    // produce: ONE box, no spaces in the string, and the per-character probe
+    // (CC-SNAP-BOXES F1) finding the boundaries inside it.
+    let line = OcrLine {
+        text: "bigreddog".into(),
+        confidence: 1.0,
+        lang: "en".into(),
+        boxes: vec![WordBox {
+            text: "bigreddog".into(),
+            x0: 0.1,
+            x1: 0.4,
+            confidence: 1.0,
+            gaps: vec![CharGap { at: 3, w: 0.02 }, CharGap { at: 6, w: 0.02 }],
+        }],
+        glyph: Some(0.033),
+        ..Default::default()
+    };
+    let out = clean_ocr_lines(&[line]);
+    assert_eq!(texts(&out), ["big", "red", "dog"]);
+    assert!(out.iter().all(|c| c.unbunch.is_none()));
 }
 
 #[test]
@@ -233,10 +268,12 @@ fn i_u3_box_gap_is_authoritative() {
     // Two boxes with a gap stay two candidates even though `catdog` would
     // have been a legal single-token split, and even though `cat` and `dog`
     // would re-merge into a bank-legal whole under a naive implementation.
-    let out = clean_ocr_lines(&[boxed(&[("cat", 0.0, 30.0), ("dog", 50.0, 80.0)], "en")]);
+    let out = clean_ocr_lines(&[boxed(&[("cat", 0.10, 0.20), ("dog", 0.30, 0.40)], "en")]);
     assert_eq!(texts(&out), ["cat", "dog"]);
     // And with no gap, the boxes rejoin and U2 decides.
-    let tight = clean_ocr_lines(&[boxed(&[("cat", 0.0, 30.0), ("dog", 31.0, 61.0)], "en")]);
+    // And with no gap the two boxes rejoin into one token, which U2 may then
+    // offer to split but -- with AUTO_SPLIT_ENABLED false -- will not apply.
+    let tight = clean_ocr_lines(&[boxed(&[("cat", 0.10, 0.20), ("dog", 0.205, 0.305)], "en")]);
     assert_eq!(texts(&tight), ["catdog"], "no gap: rejoined, and U2 only offers");
 }
 

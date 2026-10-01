@@ -65,6 +65,24 @@ pub use crate::snap_clean::LOW_CONFIDENCE;
 /// (Vision reports per line, not per word); dedupe is case-insensitive across
 /// the whole page set, first occurrence wins (keeping its confidence bit).
 pub fn extract_classified(lang: &str, lines: &[(String, f32)]) -> Vec<Candidate> {
+    // CC-SNAP-BOXES I-B1: the text-only path is the geometry path with no
+    // geometry. One implementation, so the two cannot drift.
+    let ocr: Vec<crate::snap_clean::OcrLine> = lines
+        .iter()
+        .map(|(text, confidence)| crate::snap_clean::OcrLine {
+            text: text.clone(),
+            confidence: *confidence,
+            lang: lang.to_string(),
+            ..Default::default()
+        })
+        .collect();
+    extract_classified_geo(lang, &ocr)
+}
+
+/// CC-SNAP-BOXES — the same pipeline, with whatever geometry the platform
+/// sent. A line whose geometry fails validation is handled as text, so a bad
+/// payload costs nothing but the geometry.
+pub fn extract_classified_geo(lang: &str, ocr: &[crate::snap_clean::OcrLine]) -> Vec<Candidate> {
     // CC-SNAP-CLEAN I8 — one implementation. This used to call
     // `native_lang::parse_candidates`, which tokenized each LINE into words
     // and dropped anything carrying a digit. Both were reasonable before
@@ -73,19 +91,8 @@ pub fn extract_classified(lang: &str, lines: &[(String, f32)]) -> Vec<Candidate>
     // where the acceptance table wants one candidate flagged and left for
     // the parent to judge, and `3D` vanished where the table wants it kept
     // and flagged. Flag, never delete.
-    let ocr: Vec<crate::snap_clean::OcrLine> = lines
-        .iter()
-        .map(|(text, confidence)| crate::snap_clean::OcrLine {
-            text: text.clone(),
-            confidence: *confidence,
-            lang: lang.to_string(),
-            // v1.1 / HIGHLIGHT: the platform does not hand us boxes or
-            // pixels yet (v1.1 census C1), so these stay at their defaults
-            // and every path that reads them is inert.
-            ..Default::default()
-        })
-        .collect();
-    crate::snap_clean::clean_ocr_lines(&ocr)
+    let _ = lang;
+    crate::snap_clean::clean_ocr_lines(ocr)
         .into_iter()
         .map(|c| Candidate {
             class: classify_one(lang, &c.text),

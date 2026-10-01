@@ -120,18 +120,137 @@ extension NativeLanguageKitPlugin {
             DispatchQueue.main.async {
                 let lang = self.recognitionLanguages.first
                 let chinese = lang.map { ChineseScript.isChineseTag($0) } ?? false
-                let lines = collected.map { (cand, conf) -> (text: String, confidence: Float) in
+                let lines = collected.map { (cand, conf) -> RecognizedLine in
                     var text = Self.healSplitWords(cand, language: lang)
                     if chinese {
                         // Normalize script ON-DEVICE so a Traditional page
                         // practices against the app's Simplified banks.
                         text = ChineseScript.toSimplified(text)
                     }
-                    return (text, conf)
+                    // CC-SNAP-BOXES: geometry is measured against the RAW
+                    // candidate, because healSplitWords and toSimplified both
+                    // rewrite the string and the ranges would no longer point
+                    // at the characters Vision measured. A line whose healed
+                    // text differs from the raw text therefore ships no
+                    // geometry -- the core's I-B5 would reject the mismatch
+                    // anyway, and saying so here is cheaper than sending it.
+                    let raw = cand.string
+                    guard text == raw else { return RecognizedLine(text: text, confidence: conf) }
+                    let geo = Self.geometry(for: cand, tokens: Self.tokenize(raw))
+                    return RecognizedLine(text: text, confidence: conf,
+                                          boxes: geo.boxes, glyph: geo.glyph)
                 }
                 self.finish(resolve: lines)
             }
         }
+    }
+
+
+    // MARK: - CC-SNAP-BOXES — geometry for the core
+
+    /// D-B7.
+    fileprivate static let minProbeLen = 8
+    fileprivate static let maxProbesPerLine = 120
+
+    /// One token's geometry, in CC-SNAP-BOXES coordinates: normalized, origin
+    /// TOP-left. Vision's origin is bottom-left; D-B2 flips it exactly once,
+    /// here, so the core never has to remember a convention.
+    struct TokenGeometry {
+        let text: String
+        let x0: CGFloat
+        let x1: CGFloat
+        /// (character index, gap width) for every probed interior boundary.
+        var gaps: [(at: Int, w: CGFloat)]
+    }
+
+    /// F1 — per-token boxes plus the gaps measured INSIDE each token.
+    ///
+    /// The second half is the mechanism. Vision's token boxes are derived from
+    /// the line string's own whitespace, so a word that arrived merged has one
+    /// token and one box and no gap to find. But `boundingBox(for:)` accepts
+    /// ANY range, including a single character, so the boundaries inside a
+    /// token can be measured directly.
+    ///
+    /// Cost is bounded by D-B7: longest tokens first, at most
+    /// `maxProbesPerLine` boundary queries. A line that exhausts the budget
+    /// returns boxes with no interior gaps, which is exactly the state the app
+    /// shipped in before this file -- degraded, never wrong.
+    fileprivate static func geometry(for candidate: VNRecognizedText,
+                                     tokens: [(text: String, range: Range<String.Index>)])
+        -> (boxes: [TokenGeometry], glyph: CGFloat?) {
+        var boxes: [TokenGeometry] = []
+        var charWidths: [CGFloat] = []
+
+        for t in tokens {
+            guard let obs = (try? candidate.boundingBox(for: t.range)) ?? nil else {
+                // One missing box makes the line's geometry untrustworthy as a
+                // whole; the core would reject it anyway (I-B3), so say so by
+                // returning nothing rather than a partial answer.
+                return ([], nil)
+            }
+            let r = obs.boundingBox
+            boxes.append(TokenGeometry(text: t.text, x0: r.minX, x1: r.maxX, gaps: []))
+            let n = t.text.count
+            if n > 0, r.width > 0 { charWidths.append(r.width / CGFloat(n)) }
+        }
+
+        // Probe budget: spend it on the tokens most likely to be merged words.
+        var order = boxes.indices.filter { boxes[$0].text.count >= minProbeLen }
+        order.sort { boxes[$0].text.count > boxes[$1].text.count }
+        var budget = maxProbesPerLine
+
+        for i in order {
+            let token = tokens[i]
+            let chars = Array(token.text.indices)
+            guard chars.count > 1 else { continue }
+            var perChar: [CGFloat] = []
+            var rects: [CGRect] = []
+            var ok = true
+            for c in chars {
+                if budget <= 0 { ok = false; break }
+                budget -= 1
+                let abs = token.range.lowerBound
+                let lo = token.text.distance(from: token.text.startIndex, to: c)
+                guard let s0 = candidate.string.index(abs, offsetBy: lo, limitedBy: candidate.string.endIndex),
+                      let s1 = candidate.string.index(s0, offsetBy: 1, limitedBy: candidate.string.endIndex),
+                      let obs = (try? candidate.boundingBox(for: s0..<s1)) ?? nil else { ok = false; break }
+                rects.append(obs.boundingBox)
+                if obs.boundingBox.width > 0 { perChar.append(obs.boundingBox.width) }
+            }
+            guard ok, rects.count == chars.count else { continue }
+            var gaps: [(at: Int, w: CGFloat)] = []
+            for k in 1..<rects.count {
+                let w = rects[k].minX - rects[k - 1].maxX
+                if w > 0 { gaps.append((at: k, w: w)) }
+            }
+            boxes[i].gaps = gaps
+            charWidths.append(contentsOf: perChar)
+        }
+
+        // D-B3 — the median glyph width, measured where the per-character
+        // boxes are rather than estimated from text length in the core.
+        var glyph: CGFloat?
+        if !charWidths.isEmpty {
+            charWidths.sort()
+            glyph = charWidths[charWidths.count / 2]
+        }
+        return (boxes, glyph)
+    }
+
+    /// The whitespace tokens of a candidate, with their ranges. One definition,
+    /// shared by healSplitWords and by geometry(for:).
+    fileprivate static func tokenize(_ text: String)
+        -> [(text: String, range: Range<String.Index>)] {
+        var tokens: [(text: String, range: Range<String.Index>)] = []
+        var idx = text.startIndex
+        while idx < text.endIndex {
+            if text[idx].isWhitespace { idx = text.index(after: idx); continue }
+            var end = idx
+            while end < text.endIndex, !text[end].isWhitespace { end = text.index(after: end) }
+            tokens.append((String(text[idx..<end]), idx..<end))
+            idx = end
+        }
+        return tokens
     }
 
     // MARK: - Split-word healing
@@ -145,16 +264,10 @@ extension NativeLanguageKitPlugin {
     /// in any language Vision reads; geometry needs no dictionary at all.
     fileprivate static func healSplitWords(_ candidate: VNRecognizedText, language: String?) -> String {
         let text = candidate.string
-        // Whitespace-separated tokens with their ranges in the line.
-        var tokens: [(text: String, range: Range<String.Index>)] = []
-        var idx = text.startIndex
-        while idx < text.endIndex {
-            if text[idx].isWhitespace { idx = text.index(after: idx); continue }
-            var end = idx
-            while end < text.endIndex, !text[end].isWhitespace { end = text.index(after: end) }
-            tokens.append((String(text[idx..<end]), idx..<end))
-            idx = end
-        }
+        // One tokenizer, shared with geometry(for:) — I-B5 compares the boxes
+        // against the line text, so two tokenizers would eventually disagree
+        // and silently cost the page its geometry.
+        let tokens = tokenize(text)
         guard tokens.count > 1 else { return text }
 
         // Normalized bounding box per token; if geometry is unavailable for any
@@ -231,12 +344,37 @@ extension NativeLanguageKitPlugin {
 
     // MARK: - Completion
 
-    fileprivate func finish(resolve lines: [(text: String, confidence: Float)]) {
+    /// One recognized line on its way to the core. Geometry is optional and
+    /// absent by default, so every path that cannot measure it stays correct.
+    struct RecognizedLine {
+        let text: String
+        let confidence: Float
+        var boxes: [TokenGeometry] = []
+        var glyph: CGFloat?
+    }
+
+
+    fileprivate func finish(resolve lines: [RecognizedLine]) {
         DispatchQueue.main.async { [weak self] in
             guard let self = self, let call = self.pendingCall else { return }
             // Per-line confidence rides along (Phase 2) — the core decides what
             // counts as "low", the plugin just reports Vision's number.
-            let payload = lines.map { ["text": $0.text, "confidence": $0.confidence] as [String: Any] }
+            //
+            // CC-SNAP-BOXES F2: boxes, gaps and glyph are added only when the
+            // line has them. Their absence is the shape every build before
+            // this one sent, and the core must behave identically (I-B1).
+            let payload: [[String: Any]] = lines.map { l in
+                var d: [String: Any] = ["text": l.text, "confidence": l.confidence]
+                guard !l.boxes.isEmpty else { return d }
+                d["boxes"] = l.boxes.map { ["text": $0.text, "x0": $0.x0, "x1": $0.x1] }
+                var gaps: [[String: Any]] = []
+                for (i, b) in l.boxes.enumerated() {
+                    for g in b.gaps { gaps.append(["box": i, "at": g.at, "w": g.w]) }
+                }
+                if !gaps.isEmpty { d["gaps"] = gaps }
+                if let glyph = l.glyph { d["glyph"] = glyph }
+                return d
+            }
             call.resolve(["supported": true, "lines": payload])
             self.pendingCall = nil
         }

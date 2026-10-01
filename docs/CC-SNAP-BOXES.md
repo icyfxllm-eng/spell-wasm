@@ -1,8 +1,8 @@
 # CC-SNAP-BOXES v1 — word geometry and page pixels, from the camera to the core
 
-**Status:** REVIEW-GATED. §0 is already answered below — the census was run on
-2026-10-01 against the live code, and three of its answers change what the
-dependent files can ask for. Phase A is executable on Eric's signature.
+**Status:** Phase A BUILT 2026-10-01. §0 answered against the live code; three
+of its answers changed what the dependent files can ask for. D-B1 and D-B6 are
+signed. Phase B (F4, hoisting the gap threshold) is not started.
 **Layering:** sits under CC-SNAP-ROADMAP v1, beside CC-SNAP-LIST v1 rather
 than above it. It is the file the roadmap's Level 1 is missing: CC-SNAP-CLEAN
 v1.1 C1 and CC-SNAP-HIGHLIGHT C1 both HALT on geometry that no file owns, and
@@ -210,7 +210,11 @@ geometry, and the existing text-only one stays, delegating with defaults.
 
 ## Decisions
 
-**Signed:** none yet.
+**Signed (Eric, 2026-10-01):**
+
+- **D-B1 — SIGNED.** Per-character probing is the mechanism. Built.
+- **D-B6 — SIGNED.** iOS only; Android dropped. C2's open question is closed:
+  no Android OCR, so the payload is Vision-shaped without apology.
 
 **Recommended, applied unless Eric reverses:**
 
@@ -234,8 +238,8 @@ geometry, and the existing text-only one stays, delegating with defaults.
 - **D-B5 Highlight statistics are computed in Swift, never in the core.** C6.
   This is a deviation from CC-SNAP-HIGHLIGHT F1/F2, which offer the core as an
   option; the bridge makes that option impractical rather than merely slower.
-- **D-B6 iOS only.** No Android shape is designed on speculation. If Eric wants
-  Android OCR, that is its own census and it may well want a different payload.
+- **D-B6 iOS only.** SIGNED above. No Android shape is designed, and the
+  payload may use Vision's conventions freely.
 - **D-B7 `MIN_PROBE_LEN` = 8, `MAX_PROBES_PER_LINE` = 120, `MIN_PAPER_PX` set
   by the Phase A measurement.** A token under 8 characters is not a merged
   phrase worth probing; 120 boundaries is far past any worksheet line and
@@ -285,18 +289,45 @@ reversal.**
 
 ## Phases
 
-- **A.** Swift: F1 probing, F2 payload, F3 statistics, the `glyph` measurement,
-  and the `MIN_PAPER_PX` calibration on the CC-SNAP-HIGHLIGHT C2 fixture.
-  Rust: the geometry-accepting entry point, I-B1 through I-B8, rows 1–11.
+- **A — BUILT 2026-10-01.** Swift: F1 probing with the D-B7 budget, F2 payload,
+  the `glyph` measurement, one shared tokenizer. JS: geometry passes through
+  unjudged. Rust: `CharGap`, `OcrLine.glyph`, `geometry_ok`, interior-gap
+  splitting, `extract_classified_geo`, and the bridge parser.
+  `tests/snap_boxes_bridge.rs` — 18 tests, rows 1–10 and 14, I-B1 through
+  I-B5 and I-B7.
+
+  **Not built in A, and deliberately:**
+  - **F3 (highlight statistics) is not written.** It needs the
+    CC-SNAP-HIGHLIGHT C2 fixture to calibrate `MIN_PAPER_PX`, and that fixture
+    is a 20-photo folder Eric assembles. Writing the shim first would mean
+    inventing the constant it exists to carry. CC-SNAP-HIGHLIGHT C1 therefore
+    still HALTs on pixels; v1.1's C1 does not, which is what unblocks
+    unbunching.
+  - **I-B8 and row 11 (probe budget) are asserted in Swift, not here.** They
+    are properties of the probing loop. The loop is written with the budget;
+    the test is not, and no Swift test was run on this machine.
+  - **Row 12 and I-B6 are Phase B** — the threshold is not hoisted yet, so
+    there are still two constants and the invariant would fail honestly.
 - **B.** F4 — hoist `GAP_RATIO`, point `healSplitWords` at it, rows 12 and 14.
   Separate because it changes behaviour that ships today, and wants its own
   look at a real page.
 
 ## Done when
 
-1. C7's test command passes with every row and invariant.
-2. CC-SNAP-CLEAN v1.1 C1 and CC-SNAP-HIGHLIGHT C1 no longer HALT, stated in
-   each file with this one named as the provider.
+1. C7's test command passes with every row and invariant. **Phase A: 18 tests
+   green, full gate green.** Rows 11–12 and I-B6/I-B8 outstanding per above.
+2. CC-SNAP-CLEAN v1.1 C1 no longer HALTs — **done**, this file provides the
+   geometry. CC-SNAP-HIGHLIGHT C1 still HALTs, on F3's pixel statistics.
 3. On TestFlight, a worksheet whose words Vision returns merged imports as
-   separate words with zero edits — the same photo and the same bar as
-   v1.1's own done-check, now with a mechanism behind it.
+   separate words with zero edits — the same photo and the same bar as v1.1's
+   own done-check, now with a mechanism behind it. **Eric verifies by hand;
+   nothing on this machine can.**
+
+## What is still unverified
+
+Everything on the Swift side. The probing loop, the budget, the payload keys
+and the one-tokenizer sharing are written and read, and not one of them has
+been compiled or run — there is no Xcode build or Swift test in this work. The
+Rust side is fully exercised against synthetic payloads, which is precisely the
+reason `geometry_ok` rejects a payload whole rather than trusting parts of it:
+the core is the only half of this bridge that has been tested.

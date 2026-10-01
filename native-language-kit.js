@@ -351,10 +351,17 @@
         var raw = (res && Array.isArray(res.lines)) ? res.lines : [];
         var lines = raw.map(function (l) {
           if (typeof l === 'string') return { text: l, confidence: 1 };
-          return {
+          // CC-SNAP-BOXES F2 — geometry rides along untouched when present.
+          // The core validates it (geometry_ok) and falls back to text-only on
+          // anything it does not like, so this layer does not judge it.
+          var out = {
             text: (l && l.text) || '',
             confidence: (l && typeof l.confidence === 'number') ? l.confidence : 1,
           };
+          if (l && Array.isArray(l.boxes)) out.boxes = l.boxes;
+          if (l && Array.isArray(l.gaps)) out.gaps = l.gaps;
+          if (l && typeof l.glyph === 'number') out.glyph = l.glyph;
+          return out;
         });
         return { supported: true, lines: lines };
       });

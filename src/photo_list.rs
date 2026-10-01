@@ -237,7 +237,6 @@ fn start_capture(app: &App, source: &str) {
 /// Read `{ supported, lines }` off the resolved JS value, run the core
 /// extract→classify pipeline for the STUDY language, and open the review screen.
 fn on_recognized(app: &App, val: &wasm_bindgen::JsValue) {
-    let lines = read_lines(val);
     // Classification language = the current study language (single source of
     // truth), NEVER a recognizer guess. "mine" (My Words) classifies under the
     // saved speak-lang's primary subtag instead — the list being extended.
@@ -249,7 +248,10 @@ fn on_recognized(app: &App, val: &wasm_bindgen::JsValue) {
             s.lang.clone()
         }
     };
-    let candidates = crate::photo_import::extract_classified(&study, &lines);
+    // The study language has to be known before the lines are built, because
+    // each OcrLine carries it (the cleaner reads it per line).
+    let ocr = read_ocr_lines(val, &study);
+    let candidates = crate::photo_import::extract_classified_geo(&study, &ocr);
     STUDY_LANG.with(|l| *l.borrow_mut() = study);
     if candidates.is_empty() {
         dom::set_text("feedback", &i18n::t("photo.empty"));
@@ -298,30 +300,80 @@ pub fn seam_review_sheet(app: &App, words: Vec<String>) {
 /// Extract the `lines: {text, confidence}[]` field from the recognizer result
 /// (legacy plain-string entries read as confidence 1). Anything missing or
 /// mistyped yields an empty list (treated as "no words found").
-fn read_lines(val: &wasm_bindgen::JsValue) -> Vec<(String, f32)> {
+/// CC-SNAP-BOXES F2 — read the recognizer payload, geometry included.
+///
+/// Every geometry field is optional and every one of them is validated in the
+/// core before it is believed (`snap_clean::geometry_ok`). A payload missing
+/// them entirely is the shape every build before CC-SNAP-BOXES produced, and
+/// must stay byte-identical in effect (I-B1).
+fn read_ocr_lines(val: &wasm_bindgen::JsValue, lang: &str) -> Vec<crate::snap_clean::OcrLine> {
+    use wasm_bindgen::JsValue;
+    let get = |o: &JsValue, k: &str| js_sys::Reflect::get(o, &JsValue::from_str(k)).ok();
+    let num = |o: &JsValue, k: &str| get(o, k).and_then(|v| v.as_f64());
+
     let mut out = Vec::new();
-    let lines = match js_sys::Reflect::get(val, &wasm_bindgen::JsValue::from_str("lines")) {
-        Ok(l) => l,
-        Err(_) => return out,
-    };
-    if let Ok(arr) = lines.dyn_into::<js_sys::Array>() {
-        for i in 0..arr.length() {
-            let item = arr.get(i);
-            if let Some(s) = item.as_string() {
-                out.push((s, 1.0));
-            } else {
-                let text = js_sys::Reflect::get(&item, &wasm_bindgen::JsValue::from_str("text"))
-                    .ok()
-                    .and_then(|t| t.as_string());
-                if let Some(text) = text {
-                    let confidence = js_sys::Reflect::get(&item, &wasm_bindgen::JsValue::from_str("confidence"))
-                        .ok()
-                        .and_then(|c| c.as_f64())
-                        .unwrap_or(1.0) as f32;
-                    out.push((text, confidence));
-                }
+    let Some(lines) = get(val, "lines") else { return out };
+    let Ok(arr) = lines.dyn_into::<js_sys::Array>() else { return out };
+
+    for i in 0..arr.length() {
+        let item = arr.get(i);
+        // A bare string is the oldest shape the bridge ever sent.
+        if let Some(text) = item.as_string() {
+            out.push(crate::snap_clean::OcrLine {
+                text,
+                confidence: 1.0,
+                lang: lang.to_string(),
+                ..Default::default()
+            });
+            continue;
+        }
+        let Some(text) = get(&item, "text").and_then(|t| t.as_string()) else { continue };
+        let confidence = num(&item, "confidence").unwrap_or(1.0) as f32;
+
+        // boxes[] -> WordBox, then gaps[] folded into the box they name. The
+        // wire format keeps them separate (F2); the core wants them attached,
+        // so the indirection is resolved exactly once, here.
+        let mut boxes: Vec<crate::snap_clean::WordBox> = Vec::new();
+        if let Some(bs) = get(&item, "boxes").and_then(|b| b.dyn_into::<js_sys::Array>().ok()) {
+            for j in 0..bs.length() {
+                let b = bs.get(j);
+                let Some(bt) = get(&b, "text").and_then(|t| t.as_string()) else { continue };
+                boxes.push(crate::snap_clean::WordBox {
+                    text: bt,
+                    x0: num(&b, "x0").unwrap_or(f32::NAN as f64) as f32,
+                    x1: num(&b, "x1").unwrap_or(f32::NAN as f64) as f32,
+                    confidence,
+                    gaps: Vec::new(),
+                });
             }
         }
+        if let Some(gs) = get(&item, "gaps").and_then(|g| g.dyn_into::<js_sys::Array>().ok()) {
+            for j in 0..gs.length() {
+                let g = gs.get(j);
+                let bi = num(&g, "box").unwrap_or(-1.0);
+                let at = num(&g, "at").unwrap_or(-1.0);
+                let w = num(&g, "w").unwrap_or(f32::NAN as f64) as f32;
+                if bi < 0.0 || at < 1.0 {
+                    continue;
+                }
+                if let Some(target) = boxes.get_mut(bi as usize) {
+                    target.gaps.push(crate::snap_clean::CharGap { at: at as usize, w });
+                }
+            }
+            for b in boxes.iter_mut() {
+                b.gaps.sort_by_key(|g| g.at);
+            }
+        }
+
+        out.push(crate::snap_clean::OcrLine {
+            text,
+            confidence,
+            lang: lang.to_string(),
+            boxes,
+            highlighted: get(&item, "highlighted").and_then(|h| h.as_bool()).unwrap_or(false),
+            hue_bucket: num(&item, "hue").map(|h| h as u8),
+            glyph: num(&item, "glyph").map(|g| g as f32),
+        });
     }
     out
 }

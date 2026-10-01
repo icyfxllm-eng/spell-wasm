@@ -1,0 +1,247 @@
+//! CC-SNAP-BOXES v1 Phase A — the bridge acceptance table and invariants.
+//!
+//! Rows 11 and 12 and invariants I-B6 and I-B8 are NOT here, and that is not an
+//! omission:
+//!
+//! - I-B8 (probe budget) and row 11 (a 400-character line) are properties of
+//!   the Swift probing loop. They belong in the Swift unit test the spec's
+//!   Phase A also names, and they are not asserted by this file.
+//! - I-B6 (one gap threshold) and row 12 (healSplitWords must not re-split)
+//!   are Phase B. The threshold has not been hoisted yet, so there are still
+//!   two constants and the invariant would fail honestly.
+//!
+//! What is here: every rule the core is responsible for, which is all of the
+//! validation. The core's job is to be unfoolable by a bad payload, because
+//! the payload comes from a platform this test cannot run.
+
+use spell_wasm::snap_clean::{
+    clean_ocr_lines, geometry_ok, split_on_box_gaps, CharGap, Candidate, OcrLine, WordBox,
+};
+
+fn text_only(text: &str) -> OcrLine {
+    OcrLine { text: text.into(), confidence: 1.0, lang: "en".into(), ..Default::default() }
+}
+
+/// A box with no interior probing.
+fn b(text: &str, x0: f32, x1: f32) -> WordBox {
+    WordBox { text: text.into(), x0, x1, confidence: 1.0, gaps: Vec::new() }
+}
+
+/// A box with interior gaps, as F1 would report them.
+fn bg(text: &str, x0: f32, x1: f32, gaps: &[(usize, f32)]) -> WordBox {
+    WordBox {
+        text: text.into(),
+        x0,
+        x1,
+        confidence: 1.0,
+        gaps: gaps.iter().map(|(at, w)| CharGap { at: *at, w: *w }).collect(),
+    }
+}
+
+fn line(text: &str, boxes: Vec<WordBox>, glyph: Option<f32>) -> OcrLine {
+    OcrLine { text: text.into(), confidence: 1.0, lang: "en".into(), boxes, glyph, ..Default::default() }
+}
+
+fn texts(c: &[Candidate]) -> Vec<String> {
+    c.iter().map(|x| x.text.clone()).collect()
+}
+
+// ------------------------------------------------------------------ the table
+
+#[test]
+fn row1_no_geometry_is_the_identity() {
+    // I-B1. The shape every build before CC-SNAP-BOXES sent.
+    for t in ["cat", "1. horse", "big red dog", "Name: ______", "3D"] {
+        let with = clean_ocr_lines(&[text_only(t)]);
+        let bare = clean_ocr_lines(&[OcrLine {
+            text: t.into(),
+            confidence: 1.0,
+            lang: "en".into(),
+            ..Default::default()
+        }]);
+        assert_eq!(texts(&with), texts(&bare), "{t}");
+    }
+}
+
+#[test]
+fn row2_three_boxes_with_real_gaps() {
+    // Already-spaced text: the boxes agree with the string, nothing changes.
+    let l = line(
+        "big red dog",
+        vec![b("big", 0.10, 0.20), b("red", 0.26, 0.36), b("dog", 0.42, 0.52)],
+        Some(0.033),
+    );
+    assert_eq!(split_on_box_gaps(&l), ["big", "red", "dog"]);
+    let out = clean_ocr_lines(&[l]);
+    assert_eq!(texts(&out), ["big", "red", "dog"]);
+    assert!(out.iter().all(|c| c.unbunch.is_none()), "box evidence needs no suggestion");
+}
+
+#[test]
+fn row3_interior_gaps_split_a_merged_token() {
+    // THE point of the file. One box, one token, no space in the string --
+    // and the per-character probe found the boundaries anyway.
+    let l = line("bigreddog", vec![bg("bigreddog", 0.10, 0.40, &[(3, 0.02), (6, 0.02)])], Some(0.033));
+    assert_eq!(split_on_box_gaps(&l), ["big", "red", "dog"]);
+    assert_eq!(texts(&clean_ocr_lines(&[l])), ["big", "red", "dog"]);
+}
+
+#[test]
+fn row4_no_interior_profile_leaves_the_token_whole() {
+    // Budget spent, or token too short to probe. One candidate, and the
+    // dictionary path may offer a split -- which is where it is currently
+    // switched off (CC-SNAP-CLEAN v1.1 AUTO_SPLIT_ENABLED).
+    let l = line("bigreddog", vec![b("bigreddog", 0.10, 0.40)], Some(0.033));
+    assert_eq!(split_on_box_gaps(&l), ["bigreddog"]);
+    let out = clean_ocr_lines(&[l]);
+    assert_eq!(texts(&out), ["bigreddog"]);
+}
+
+#[test]
+fn row5_boxes_out_of_order_are_rejected_whole() {
+    let l = line("big red", vec![b("big", 0.30, 0.40), b("red", 0.10, 0.20)], Some(0.033));
+    assert!(!geometry_ok(&l));
+    assert_eq!(split_on_box_gaps(&l), ["big red"], "falls back to text");
+}
+
+#[test]
+fn row6_inverted_box_is_rejected() {
+    let l = line("big", vec![b("big", 0.40, 0.10)], Some(0.033));
+    assert!(!geometry_ok(&l));
+    assert_eq!(split_on_box_gaps(&l), ["big"]);
+}
+
+#[test]
+fn row7_out_of_range_coordinate_is_rejected() {
+    let l = line("big", vec![b("big", 0.10, 1.4)], Some(0.033));
+    assert!(!geometry_ok(&l));
+}
+
+#[test]
+fn row8_nan_is_rejected() {
+    // Written so that a range check phrased the other way round would let it
+    // through: NaN fails every comparison, including against itself.
+    let l = line("big", vec![b("big", f32::NAN, 0.4)], Some(0.033));
+    assert!(!geometry_ok(&l));
+    let g = line("big", vec![bg("bigred", 0.1, 0.4, &[(3, f32::NAN)])], Some(0.033));
+    assert!(!geometry_ok(&g));
+    let y = line("big", vec![b("big", 0.1, 0.4)], Some(f32::NAN));
+    assert!(!geometry_ok(&y));
+}
+
+#[test]
+fn row9_boxes_that_rejoin_to_the_line_are_accepted() {
+    // I-B5, the passing direction.
+    let l = line("big red", vec![b("big", 0.10, 0.20), b("red", 0.26, 0.36)], Some(0.033));
+    assert!(geometry_ok(&l));
+}
+
+#[test]
+fn row10_boxes_that_disagree_with_the_line_are_rejected() {
+    // I-B5, the catching direction: a tokenizer that drifts from the geometry
+    // it describes. This is why the Swift side shares ONE tokenizer.
+    let l = line("big red", vec![b("big", 0.10, 0.20), b("blue", 0.26, 0.36)], Some(0.033));
+    assert!(!geometry_ok(&l));
+    assert_eq!(split_on_box_gaps(&l), ["big red"]);
+}
+
+// ------------------------------------------------------------- the invariants
+
+#[test]
+fn i_b2_geometry_never_removes_a_line() {
+    // It may change where a line divides; the page keeps all its content.
+    let l = line("bigreddog", vec![bg("bigreddog", 0.1, 0.4, &[(3, 0.02), (6, 0.02)])], Some(0.033));
+    let split = clean_ocr_lines(&[l]);
+    let whole = clean_ocr_lines(&[text_only("bigreddog")]);
+    assert!(split.len() >= whole.len());
+    assert_eq!(split.concat_text(), "bigreddog");
+}
+
+trait ConcatText {
+    fn concat_text(&self) -> String;
+}
+impl ConcatText for Vec<Candidate> {
+    fn concat_text(&self) -> String {
+        self.iter().map(|c| c.text.as_str()).collect()
+    }
+}
+
+#[test]
+fn i_b3_gaps_must_sit_inside_their_token() {
+    // at == 0 would mean "before the first character", which is not a
+    // boundary; at >= len would point past the end.
+    for bad in [0usize, 9, 12] {
+        let l = line("bigreddog", vec![bg("bigreddog", 0.1, 0.4, &[(bad, 0.02)])], Some(0.033));
+        assert!(!geometry_ok(&l), "gap at {bad} must be rejected");
+    }
+}
+
+#[test]
+fn i_b3_gaps_must_ascend() {
+    let l = line("bigreddog", vec![bg("bigreddog", 0.1, 0.4, &[(6, 0.02), (3, 0.02)])], Some(0.033));
+    assert!(!geometry_ok(&l), "unordered gaps make the split order payload-dependent");
+    let dup = line("bigreddog", vec![bg("bigreddog", 0.1, 0.4, &[(3, 0.02), (3, 0.02)])], Some(0.033));
+    assert!(!geometry_ok(&dup));
+}
+
+#[test]
+fn i_b4_empty_geometry_is_not_geometry() {
+    assert!(!geometry_ok(&text_only("cat")));
+}
+
+#[test]
+fn gap_below_the_threshold_does_not_split() {
+    // 0.35 x glyph is the bar (D-U4). A hair under it is a solid word.
+    let glyph = 0.033_f32;
+    let under = glyph * 0.34;
+    let l = line("bigred", vec![bg("bigred", 0.1, 0.3, &[(3, under)])], Some(glyph));
+    assert_eq!(split_on_box_gaps(&l), ["bigred"]);
+    let over = glyph * 0.36;
+    let m = line("bigred", vec![bg("bigred", 0.1, 0.3, &[(3, over)])], Some(glyph));
+    assert_eq!(split_on_box_gaps(&m), ["big", "red"]);
+}
+
+#[test]
+fn measured_glyph_beats_the_estimate() {
+    // D-B3. Same boxes, same gap; only the carried glyph width differs, and
+    // it decides. Without the measurement the core divides box width by
+    // character count, which a proportional font makes a guess.
+    let gaps = &[(3usize, 0.010_f32)];
+    let tight = line("bigred", vec![bg("bigred", 0.1, 0.3, gaps)], Some(0.100));
+    assert_eq!(split_on_box_gaps(&tight), ["bigred"], "huge glyph: 0.010 is not a space");
+    let loose = line("bigred", vec![bg("bigred", 0.1, 0.3, gaps)], Some(0.010));
+    assert_eq!(split_on_box_gaps(&loose), ["big", "red"], "small glyph: 0.010 is a space");
+}
+
+#[test]
+fn zh_splits_on_box_evidence() {
+    // Row 14. D-U1's `never` governs the DICTIONARY path only; a gap on the
+    // page is a gap in any script.
+    let l = OcrLine {
+        text: "一样朋友".into(),
+        confidence: 1.0,
+        lang: "zh".into(),
+        boxes: vec![bg("一样朋友", 0.1, 0.5, &[(2, 0.05)])],
+        glyph: Some(0.100),
+        ..Default::default()
+    };
+    assert_eq!(split_on_box_gaps(&l), ["一样", "朋友"]);
+}
+
+#[test]
+fn i_b7_no_pixels_in_the_bridge_payload() {
+    // The payload schema must admit no image. Asserted against the Swift
+    // source because that is where the payload is built; a Rust test cannot
+    // run the plugin, but it can read it.
+    let src = std::fs::read_to_string("ios/App/App/NativeLanguageKitPlugin+PhotoList.swift")
+        .expect("the plugin source is part of this repo");
+    let start = src.find("func finish(resolve").expect("the resolve path exists");
+    // Stop at the next declaration, or the window runs into neighbours that
+    // legitimately mention image types (cgOrientation takes a CGImage).
+    let rest = &src[start..];
+    let end = rest[1..].find("    fileprivate func").map(|i| i + 1).unwrap_or(rest.len());
+    let body = &rest[..end];
+    for banned in ["base64", "jpegData", "pngData", "data:image", "CGImage", "UIImage"] {
+        assert!(!body.contains(banned), "the resolve payload must not carry pixels: {banned}");
+    }
+}

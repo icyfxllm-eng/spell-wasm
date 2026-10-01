@@ -51,6 +51,11 @@ pub struct OcrLine {
     pub highlighted: bool,
     /// The dominant hue of the mark, quantized to 12 buckets (HIGHLIGHT F5).
     pub hue_bucket: Option<u8>,
+    /// CC-SNAP-BOXES F2 / D-B3 — this line's median glyph width, measured on
+    /// the platform where per-character geometry exists. `None` falls back to
+    /// the crude estimate (box width over character count), which is all the
+    /// core can do alone.
+    pub glyph: Option<f32>,
 }
 
 /// Why a candidate is or is not pre-checked. Flags are additive and never
@@ -461,7 +466,29 @@ pub struct WordBox {
     pub text: String,
     pub x0: f32,
     pub x1: f32,
+    /// CC-SNAP-BOXES C3 / D-B4: this is the LINE's confidence, duplicated.
+    /// Vision reports per candidate, never per word.
     pub confidence: f32,
+    /// CC-SNAP-BOXES F1 — the gaps measured INSIDE this token, between
+    /// adjacent characters. This is the whole mechanism: Vision's token
+    /// boxes come from the line string's own whitespace, so a token that
+    /// arrived merged has exactly one box and reading boxes can never
+    /// recover the missing space. Probing character ranges can.
+    ///
+    /// Empty means not probed (too short, or the line's probe budget was
+    /// spent), which is indistinguishable from a solid word -- degraded,
+    /// never wrong.
+    pub gaps: Vec<CharGap>,
+}
+
+/// One measured gap between two adjacent characters inside a token.
+#[derive(Clone, Debug, Default, PartialEq)]
+pub struct CharGap {
+    /// Character index the gap sits BEFORE: `at: 3` in "bigreddog" is the
+    /// boundary between "big" and "reddog".
+    pub at: usize,
+    /// Gap width, in the same normalized units as `x0`/`x1`.
+    pub w: f32,
 }
 
 /// CC-SNAP-CLEAN v1.1 U3 — the pieces a merged token would become.
@@ -553,6 +580,81 @@ const MIN_PIECE_LEN: usize = 2;
 /// buys nothing.
 const UNBUNCH_MAX_LEN: usize = 24;
 
+/// CC-SNAP-BOXES I-B3/I-B4/I-B5 — is this line's geometry trustworthy?
+///
+/// A payload is taken whole or not at all. Half-trusting it is worse than
+/// ignoring it: the splitter would act on some boxes and not others, and a
+/// page would be divided in a way no one could reproduce from the photo.
+/// Every rejection falls back to the text-only path, which is exactly what
+/// every caller does today.
+pub fn geometry_ok(line: &OcrLine) -> bool {
+    let boxes = &line.boxes;
+    if boxes.is_empty() {
+        return false;
+    }
+    let mut prev_x1 = f32::NEG_INFINITY;
+    for b in boxes {
+        // I-B4: normalized and finite. NaN fails every comparison, including
+        // against itself, so it cannot sneak through a range check written
+        // the other way round.
+        if !(b.x0.is_finite() && b.x1.is_finite()) {
+            return false;
+        }
+        if !(0.0..=1.0).contains(&b.x0) || !(0.0..=1.0).contains(&b.x1) {
+            return false;
+        }
+        // I-B3: ordered and non-overlapping.
+        if b.x0 >= b.x1 || b.x0 < prev_x1 {
+            return false;
+        }
+        prev_x1 = b.x1;
+        let n = b.text.chars().count();
+        for g in &b.gaps {
+            if !g.w.is_finite() || g.w < 0.0 || g.w > 1.0 {
+                return false;
+            }
+            // A gap must sit strictly inside the token it belongs to.
+            if g.at == 0 || g.at >= n {
+                return false;
+            }
+        }
+        // Gaps ascending, no duplicates -- otherwise the split order below
+        // depends on payload order, which I-B3's spirit forbids.
+        if b.gaps.windows(2).any(|w| w[0].at >= w[1].at) {
+            return false;
+        }
+    }
+    if let Some(g) = line.glyph {
+        if !g.is_finite() || g <= 0.0 || g > 1.0 {
+            return false;
+        }
+    }
+    // I-B5: the boxes must describe the line they came with. A tokenizer that
+    // drifts from the geometry it reports is the failure this catches.
+    let rejoined = boxes.iter().map(|b| b.text.as_str()).collect::<Vec<_>>().join(" ");
+    let norm = |s: &str| s.split_whitespace().collect::<Vec<_>>().join(" ");
+    norm(&rejoined) == norm(&line.text)
+}
+
+/// The line's glyph width: measured if the platform sent one (D-B3), else
+/// estimated from the boxes themselves.
+fn glyph_width(line: &OcrLine) -> Option<f32> {
+    if let Some(g) = line.glyph {
+        return Some(g);
+    }
+    let mut widths: Vec<f32> = line
+        .boxes
+        .iter()
+        .filter(|b| b.text.chars().count() > 0 && b.x1 > b.x0)
+        .map(|b| (b.x1 - b.x0) / b.text.chars().count() as f32)
+        .collect();
+    if widths.is_empty() {
+        return None;
+    }
+    widths.sort_by(|a, b| a.partial_cmp(b).unwrap_or(std::cmp::Ordering::Equal));
+    Some(widths[widths.len() / 2])
+}
+
 /// U1 — split one line's boxes wherever the page shows a gap.
 ///
 /// This is reading the page, not guessing at it, which is why it runs for
@@ -564,32 +666,35 @@ const UNBUNCH_MAX_LEN: usize = 24;
 /// Returns one string per gap-separated run, or a single element when the
 /// line has no usable boxes -- so a caller can always use the result.
 pub fn split_on_box_gaps(line: &OcrLine) -> Vec<String> {
-    let boxes: Vec<&WordBox> = line.boxes.iter().filter(|b| !b.text.trim().is_empty()).collect();
-    if boxes.len() < 2 {
+    if !geometry_ok(line) {
         return vec![line.text.clone()];
     }
-    let mut widths: Vec<f32> = boxes
-        .iter()
-        .filter(|b| b.text.chars().count() > 0 && b.x1 > b.x0)
-        .map(|b| (b.x1 - b.x0) / b.text.chars().count() as f32)
-        .collect();
-    if widths.is_empty() {
-        return vec![line.text.clone()];
-    }
-    widths.sort_by(|a, b| a.partial_cmp(b).unwrap_or(std::cmp::Ordering::Equal));
-    let glyph = widths[widths.len() / 2];
+    let Some(glyph) = glyph_width(line) else { return vec![line.text.clone()] };
     let threshold = GAP_RATIO * glyph;
 
-    let mut runs: Vec<String> = vec![boxes[0].text.clone()];
-    for pair in boxes.windows(2) {
-        let (prev, next) = (pair[0], pair[1]);
-        if next.x0 - prev.x1 >= threshold {
-            runs.push(next.text.clone());
-        } else {
-            // No gap on the page: the engine split a word that is printed
-            // solid. Rejoining here is what stops U2 being asked to re-merge.
-            runs.last_mut().expect("seeded above").push_str(&next.text);
+    let mut runs: Vec<String> = Vec::new();
+    for (i, b) in line.boxes.iter().enumerate() {
+        // Between boxes: a gap the recognizer already turned into a space, or
+        // one it did not. Either way the page shows it.
+        let joined_to_prev = i > 0 && b.x0 - line.boxes[i - 1].x1 < threshold;
+        if i == 0 || !joined_to_prev {
+            runs.push(String::new());
         }
+        // Inside the box: F1's whole point. Split at every probed boundary
+        // whose measured gap clears the same threshold, so "merge" and
+        // "split" are two sides of one comparison (F4).
+        let chars: Vec<char> = b.text.chars().collect();
+        let mut cut = 0usize;
+        for g in b.gaps.iter().filter(|g| g.w >= threshold) {
+            runs.last_mut().expect("seeded above").extend(&chars[cut..g.at]);
+            runs.push(String::new());
+            cut = g.at;
+        }
+        runs.last_mut().expect("seeded above").extend(&chars[cut..]);
+    }
+    runs.retain(|r| !r.is_empty());
+    if runs.is_empty() {
+        return vec![line.text.clone()];
     }
     runs
 }
