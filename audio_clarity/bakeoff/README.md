@@ -26,9 +26,31 @@ That was found on 2026-10-01 in `fil`, where two scored candidates were
 with a **lowercase region** — the only language of the fifteen where it does
 this. Both wrong-case names returned 200, and the audio was a substitute.
 
-**The other reports' candidate lists have not been re-verified.** Cross-checking
-them against the live catalogue is cheap and has not been done; until it is,
-treat any row in them as possibly describing a voice that was never asked for.
+**Cross-checked 2026-10-02, and four reports were affected.** `ar`, `en`,
+`fil`, `hi`, `ko`, `pt`, `ru` and `vi` are clean: every scored candidate is a
+distinct voice. The other four were scoring one voice under several labels —
+
+| report | rows | actual voices |
+|---|---|---|
+| de | 11 | 5 |
+| fr | 12 | 4 |
+| es | 11 | 8 |
+| pl | 6 | 4 |
+
+— and each now carries the measured alias groups in its header. The giveaway
+was already visible in the tables: aliased rows score identically to the
+digit, six German rows at exactly 38/15/7.
+
+`scripts/audio-bakeoff.mjs` now catches this during the run, by hashing each
+candidate's FIRST clip and reporting a duplicate as an alias instead of
+scoring it a second time. That costs one clip per phantom rather than sixty.
+It is a hash check rather than a catalogue lookup on purpose: the harness
+holds no Google credential and reaches the API only through the server, and a
+name can be perfectly listed and still be an alias.
+
+**The German voice switch signed on 2026-09-28 is unaffected** —
+`de-DE-Neural2-B` to `-A` was 33 to 38 Pass, and those two are different
+audio, not two labels for one voice.
 A related trap found at the same time: four SHIPPED voices (`de-DE-Neural2-A`,
 `es-ES-Neural2-B`, `fr-FR-Neural2-A`, `pl-PL-Wavenet-B`) are no longer in
 Google's catalogue at all, yet still synthesize. Delisted is not withdrawn —

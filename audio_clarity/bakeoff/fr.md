@@ -2,6 +2,29 @@
 
 60 words per voice, both recognizers, blind (I3).
 
+**12 rows below, 4 actual voices. Measured 2026-10-02.**
+
+Google answers a voice name it does not have by serving a different voice,
+with a 200 and real audio. These candidate lists were built by keeping the
+names that answered 200, so several names here are one voice wearing several
+labels. The giveaway is in the table itself: aliased rows score identically to
+the digit.
+
+Confirmed by synthesizing one word per name straight against the API, under
+the SSML the server actually sends, and comparing SHA-256. Same audio:
+
+- `fr-FR-Wavenet-F` = `fr-FR-Wavenet-E`
+- `fr-FR-Wavenet-A` = `fr-FR-Wavenet-C` = `fr-FR-Neural2-A` = `fr-FR-Neural2-C` = `fr-FR-Neural2-E` = `fr-FR-Neural2-F`
+- `fr-FR-Neural2-B` = `fr-FR-Neural2-D`
+- `fr-FR-Wavenet-B` = `fr-FR-Wavenet-D`
+
+The SHIPPED voice `fr-FR-Neural2-A` is one of these labels — it is the same audio as `fr-FR-Wavenet-A`, `fr-FR-Wavenet-C`, `fr-FR-Neural2-C`, `fr-FR-Neural2-E`, `fr-FR-Neural2-F`.
+
+The Pass numbers are still real measurements of real audio — but this table
+offers 12 choices where 4 exist, and the differences between rows in one
+group above are not differences at all. `scripts/audio-bakeoff.mjs` now
+detects this during the run and reports an alias instead of scoring it twice.
+
 | Voice | Pass | Weak | Fail |
 |---|---|---|---|
 | fr-FR-Wavenet-F | 29 | 9 | 22 |

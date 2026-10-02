@@ -17,6 +17,7 @@
 // fixes the class. This measures the second.
 import { execFileSync } from 'node:child_process';
 import { existsSync, readFileSync, writeFileSync, mkdirSync, mkdtempSync } from 'node:fs';
+import { createHash } from 'node:crypto';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { KEY, normalize, whisperLang } from './lib/audio-norm.mjs';
@@ -66,6 +67,28 @@ async function main() {
   const tmp = mkdtempSync(join(tmpdir(), 'bakeoff-'));
   const rows = [];
 
+  // CC-AUDIO-CLARITY F4 — the alias guard.
+  //
+  // Google answers a voice name it does not have by serving a DIFFERENT voice,
+  // with a 200 and real audio. The original candidate lists were built by
+  // keeping the names that answered 200, so several languages were scoring one
+  // voice under as many as six labels: de showed eleven rows for five voices,
+  // fr twelve rows for four. The duplicates score identically to the digit,
+  // which is how it was finally noticed on 2026-10-01 -- six German rows at
+  // exactly 38/15/7.
+  //
+  // The check is the first clip's hash. Two names returning byte-identical
+  // audio are one voice, and the second is not scored, it is reported as an
+  // alias. That costs ONE clip per phantom instead of sixty, so the guard
+  // makes a run with phantoms cheaper rather than dearer.
+  //
+  // Deliberately NOT a catalogue lookup. Enumerating /v1/voices would put a
+  // Google API key inside this harness, which today reaches Google only
+  // through the server and holds no credential of its own. Hashes also catch
+  // strictly more: a name can be perfectly listed and still be an alias, and
+  // the catalogue cannot tell you that.
+  const firstClip = new Map();
+
   for (const voice of voices) {
     if (!eligible(voice)) {
       rows.push({ voice, excluded: 'variety does not match the bank (D17)' });
@@ -77,10 +100,17 @@ async function main() {
     // wrong is exactly the "half" shape -- whisper hears "Have", Google hears
     // "half". Reporting only fails hid the word this whole feature exists for.
     const split = [];
-    for (const { word } of words) {
+    let alias = null;
+    for (const [i, { word }] of words.entries()) {
       const mp3 = join(tmp, 'c.mp3');
       const wav = join(tmp, 'c.wav');
       execFileSync('curl', ['-s', '-o', mp3, `${SPEAK}?word=${encodeURIComponent(word)}&lang=${lang}&variant=normal&voice=${encodeURIComponent(voice)}`]);
+      if (i === 0) {
+        const h = createHash('sha256').update(readFileSync(mp3)).digest('hex');
+        const owner = firstClip.get(h);
+        if (owner) { alias = owner; break; }
+        firstClip.set(h, voice);
+      }
       execFileSync('afconvert', ['-f', 'WAVE', '-d', 'LEI16@16000', mp3, wav]);
       const heard = heardBoth(wav);
       const hits = heard.filter((h) => norm(h) === norm(word)).length;
@@ -88,11 +118,25 @@ async function main() {
       else if (hits === 1) { weak += 1; split.push(`${word} -> ${heard.map((h) => JSON.stringify(h)).join(' / ')}`); }
       else { fail += 1; misheard.push(`${word} -> ${heard.map((h) => JSON.stringify(h)).join(' / ')}`); }
     }
+    if (alias) {
+      rows.push({ voice, excluded: `the same audio as ${alias} -- Google serves one voice for both names` });
+      continue;
+    }
     rows.push({ voice, pass, weak, fail, misheard, split });
   }
 
   rows.sort((a, b) => (b.pass ?? -1) - (a.pass ?? -1) || (a.weak ?? 0) - (b.weak ?? 0));
-  const out = [`# Bake-off — ${lang}`, '', `${words.length} words per voice, both recognizers, blind (I3).`, ''];
+  const scored = rows.filter((r) => !r.excluded).length;
+  const aliased = rows.filter((r) => r.excluded?.startsWith('the same audio')).length;
+  const out = [
+    `# Bake-off — ${lang}`,
+    '',
+    `${words.length} words per voice, both recognizers, blind (I3).`,
+    '',
+    `${scored} distinct voice(s) scored from ${voices.length} candidate name(s)` +
+      (aliased ? `; ${aliased} name(s) proved to be the same voice under another label.` : '.'),
+    '',
+  ];
   // Mark the incumbent. Without it a reader has to go and look up
   // LANG_VOICES to answer the only question the table is really asked --
   // is the voice we ship already the best one -- and a ranking whose
