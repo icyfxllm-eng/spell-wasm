@@ -32,7 +32,13 @@ const SPEAK = process.env.SPEAK_ENDPOINT || 'http://127.0.0.1:8000/api/speak';
 /// is not a worse option, it is not an option (D17).
 function eligible(voice) {
   const want = JSON.parse(readFileSync('config/bank-variety.json', 'utf8')).varieties[lang];
-  return want ? voice.startsWith(`${want}-`) : true;
+  // Case-INSENSITIVE, because Google's own naming is not consistent: Filipino
+  // Neural2 voices ship as `fil-ph-Neural2-D` with a lowercase region while
+  // every Wavenet one is `fil-PH-...`. A case-sensitive prefix test threw out
+  // a real, distinct, correctly-varietied voice as if it spoke the wrong
+  // variety -- which is the one thing D17 exists to say, and it was saying it
+  // about a spelling difference.
+  return want ? voice.toLowerCase().startsWith(`${want.toLowerCase()}-`) : true;
 }
 
 function heardBoth(wav) {
