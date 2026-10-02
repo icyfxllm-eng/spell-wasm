@@ -1,0 +1,7 @@
+{
+  "_comment": "CC-SNAP-BOXES F4 / I-B6 — the ONE source for every gap threshold in the From a photo pipeline. Each is a multiple of the line's median glyph width. Rust bakes this in with include_str!; the Swift plugin mirrors it and scripts/snap-geometry-check.mjs fails the build if they drift. Change a number here, nowhere else.",
+  "split_gap": 0.35,
+  "merge_moderate": 1.1,
+  "merge_tight": 0.45,
+  "merge_nodict": 0.25
+}

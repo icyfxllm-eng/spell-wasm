@@ -228,6 +228,45 @@ fn zh_splits_on_box_evidence() {
     assert_eq!(split_on_box_gaps(&l), ["一样", "朋友"]);
 }
 
+
+#[test]
+fn row12_a_tight_gap_merges_and_is_not_re_split() {
+    // Phase B. "soft ware" is the case healSplitWords exists for: Vision
+    // splits a solid word on a small handwriting gap. The core joins boxes
+    // below the threshold, so the same comparison that splits a wide gap
+    // closes a narrow one -- one rule, not two that can both fire.
+    let glyph = 0.030_f32;
+    let gap = glyph * 0.20; // well under split_gap (0.35)
+    let l = line(
+        "soft ware",
+        vec![b("soft", 0.10, 0.22), b("ware", 0.22 + gap, 0.34 + gap)],
+        Some(glyph),
+    );
+    assert_eq!(split_on_box_gaps(&l), ["software"], "a tight gap is not a space");
+    // And it stays merged: nothing downstream re-divides it.
+    assert_eq!(texts(&clean_ocr_lines(&[l])), ["software"], "and nothing downstream re-divides it");
+}
+
+#[test]
+fn the_threshold_comes_from_the_one_config_file() {
+    // I-B6 from the Rust side: the value the splitter uses must be the value
+    // config/snap-geometry.json carries. scripts/snap-geometry-check.mjs
+    // covers the Swift half, which this test cannot reach.
+    let cfg = std::fs::read_to_string("config/snap-geometry.json").expect("the one source");
+    let want: f32 = cfg
+        .split("\"split_gap\"")
+        .nth(1)
+        .and_then(|r| r.trim_start().trim_start_matches(':').trim().split(',').next())
+        .and_then(|v| v.trim().parse().ok())
+        .expect("split_gap is a number");
+    // Drive the splitter either side of the configured ratio.
+    let glyph = 0.030_f32;
+    let under = line("ab", vec![bg("ab", 0.1, 0.2, &[(1, glyph * (want - 0.01))])], Some(glyph));
+    let over = line("ab", vec![bg("ab", 0.1, 0.2, &[(1, glyph * (want + 0.01))])], Some(glyph));
+    assert_eq!(split_on_box_gaps(&under), ["ab"], "just under the configured ratio");
+    assert_eq!(split_on_box_gaps(&over), ["a", "b"], "just over it");
+}
+
 #[test]
 fn i_b7_no_pixels_in_the_bridge_payload() {
     // The payload schema must admit no image. Asserted against the Swift

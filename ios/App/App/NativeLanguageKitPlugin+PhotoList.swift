@@ -146,6 +146,25 @@ extension NativeLanguageKitPlugin {
     }
 
 
+
+    // MARK: - CC-SNAP-BOXES F4 — the gap thresholds, mirrored
+
+    /// These four numbers MUST equal config/snap-geometry.json, which is the
+    /// one source. Swift cannot read that file without adding it to the Xcode
+    /// target, so the agreement is enforced instead:
+    /// scripts/snap-geometry-check.mjs fails the build on any drift, and is
+    /// wired into gate.sh and the pre-push hook.
+    ///
+    /// All four are multiples of the line's median glyph width. They were four
+    /// unrelated literals in two languages until Phase B; the split threshold
+    /// lives beside them now so the relationship is visible — the core splits
+    /// at or above `splitGap`, and this file merges at or below `mergeTight`,
+    /// which are NOT complements and never were.
+    fileprivate static let splitGap: CGFloat = 0.35       // config: split_gap
+    fileprivate static let mergeModerate: CGFloat = 1.1   // config: merge_moderate
+    fileprivate static let mergeTight: CGFloat = 0.45     // config: merge_tight
+    fileprivate static let mergeNoDict: CGFloat = 0.25    // config: merge_nodict
+
     // MARK: - CC-SNAP-BOXES — geometry for the core
 
     /// D-B7.
@@ -296,19 +315,19 @@ extension NativeLanguageKitPlugin {
         var prevBox = boxes[0]
         for i in 1..<tokens.count {
             let gap = boxes[i].minX - prevBox.maxX
-            let moderate = gap <= 1.1 * avgChar
+            let moderate = gap <= Self.mergeModerate * avgChar
             let left = outTokens[outTokens.count - 1]
             let right = tokens[i].text
             let joined = left + right
             let merge: Bool
             if hasDict {
-                let tight = gap <= 0.45 * avgChar
+                let tight = gap <= Self.mergeTight * avgChar
                 let bothReal = isDictionaryWord(left, language: language)
                     && isDictionaryWord(right, language: language)
                 merge = (moderate && isDictionaryWord(joined, language: language))
                     || (tight && !bothReal)
             } else {
-                merge = gap <= 0.25 * avgChar
+                merge = gap <= Self.mergeNoDict * avgChar
             }
             if merge {
                 outTokens[outTokens.count - 1] = joined

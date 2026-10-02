@@ -96,6 +96,9 @@ echo "== gate: ru entry identity — one spelling, one entry (CC-RUSSIAN-STRESS 
 node scripts/ru-identity-check.mjs || { echo "GATE FAIL: ru entry identity"; exit 1; }
 node scripts/ru-identity-check.mjs --selftest || { echo "GATE FAIL: ru identity selftest"; exit 1; }
 
+echo "== gate: one gap threshold, one source (CC-SNAP-BOXES I-B6)"
+node scripts/snap-geometry-check.mjs || { echo "GATE FAIL: snap geometry"; exit 1; }
+
 echo "== gate: collision tables current and wired (CC-SENSE-CUE F2)"
 python3 tools/build_collisions.py --check || { echo "GATE FAIL: collision tables"; exit 1; }
 

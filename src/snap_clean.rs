@@ -564,9 +564,47 @@ pub fn split_policy(lang: &str) -> SplitPolicy {
 /// written, and is a one-line change once Eric has ruled.
 const AUTO_SPLIT_ENABLED: bool = false;
 
-/// D-U4. A gap at least this fraction of the median glyph width is a space
-/// the OCR engine dropped. Starting value; the census may move it.
-const GAP_RATIO: f32 = 0.35;
+/// CC-SNAP-BOXES F4 / I-B6 — every gap threshold in this pipeline, from the
+/// one file that holds them.
+///
+/// Before Phase B there were FOUR of these for one measurement, in two
+/// languages: 0.35 here, and 1.1 / 0.45 / 0.25 inside `healSplitWords` on the
+/// Swift side. They are not complements — the plugin merged at or below 0.45
+/// while the core split at or above 0.35 — so a gap between the two was both
+/// a space and not a space depending on which half of the bridge you asked.
+///
+/// Nothing broke, for a reason worth writing down rather than relying on:
+/// Phase A drops a line's geometry whenever healing rewrote its text, so the
+/// two rules could never both fire on one line. That guard also means a healed
+/// line loses probing for ITS OTHER tokens, which is a real cost and the
+/// argument for eventually moving the merge into the core. That is not this
+/// phase; see the note in docs/CC-SNAP-BOXES.md.
+///
+/// Baked in with `include_str!`, so there is no runtime file read and I5's
+/// purity is untouched. `scripts/snap-geometry-check.mjs` fails the build if
+/// the Swift mirror drifts from this file.
+const GEOMETRY_JSON: &str = include_str!("../config/snap-geometry.json");
+
+fn geometry_ratio(key: &str) -> f32 {
+    // A deliberately small parse: the file is ours, flat, and numbers-only.
+    // Pulling in a JSON dependency for four floats would be the larger risk.
+    let needle = format!("\"{key}\"");
+    let Some(at) = GEOMETRY_JSON.find(&needle) else {
+        panic!("config/snap-geometry.json has no {key} — the one source is incomplete");
+    };
+    let rest = &GEOMETRY_JSON[at + needle.len()..];
+    let rest = rest.trim_start().trim_start_matches(':').trim_start();
+    let end = rest.find(|c: char| !(c.is_ascii_digit() || c == '.')).unwrap_or(rest.len());
+    rest[..end]
+        .parse::<f32>()
+        .unwrap_or_else(|_| panic!("config/snap-geometry.json: {key} is not a number"))
+}
+
+/// D-U4. A gap at least this fraction of the median glyph width is a space the
+/// OCR engine dropped.
+fn gap_ratio() -> f32 {
+    geometry_ratio("split_gap")
+}
 
 /// D-U3. Pieces shorter than this are not considered, except for a language's
 /// own one-letter bank entries.
@@ -670,7 +708,7 @@ pub fn split_on_box_gaps(line: &OcrLine) -> Vec<String> {
         return vec![line.text.clone()];
     }
     let Some(glyph) = glyph_width(line) else { return vec![line.text.clone()] };
-    let threshold = GAP_RATIO * glyph;
+    let threshold = gap_ratio() * glyph;
 
     let mut runs: Vec<String> = Vec::new();
     for (i, b) in line.boxes.iter().enumerate() {

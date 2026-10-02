@@ -1,8 +1,8 @@
 # CC-SNAP-BOXES v1 — word geometry and page pixels, from the camera to the core
 
-**Status:** Phase A BUILT 2026-10-01. §0 answered against the live code; three
-of its answers changed what the dependent files can ask for. D-B1 and D-B6 are
-signed. Phase B (F4, hoisting the gap threshold) is not started.
+**Status:** Phases A and B BUILT 2026-10-01. §0 answered against the live
+code; three of its answers changed what the dependent files can ask for. D-B1
+and D-B6 are signed.
 **Layering:** sits under CC-SNAP-ROADMAP v1, beside CC-SNAP-LIST v1 rather
 than above it. It is the file the roadmap's Level 1 is missing: CC-SNAP-CLEAN
 v1.1 C1 and CC-SNAP-HIGHLIGHT C1 both HALT on geometry that no file owns, and
@@ -308,14 +308,40 @@ reversal.**
     the test is not, and no Swift test was run on this machine.
   - **Row 12 and I-B6 are Phase B** — the threshold is not hoisted yet, so
     there are still two constants and the invariant would fail honestly.
-- **B.** F4 — hoist `GAP_RATIO`, point `healSplitWords` at it, rows 12 and 14.
-  Separate because it changes behaviour that ships today, and wants its own
-  look at a real page.
+- **B — BUILT 2026-10-01.** `config/snap-geometry.json` is the one source for
+  every gap threshold. Rust bakes it in with `include_str!`, so the core
+  cannot drift. Swift cannot read it — the file is not in the Xcode target and
+  adding it would mean touching the pbxproj — so the agreement is enforced by
+  `scripts/snap-geometry-check.mjs`, in `gate.sh` and the pre-push hook (29
+  checks now), lesion-tested four ways. Rows 12 and 14 and the Rust half of
+  I-B6 are tested; 20 tests in `snap_boxes_bridge.rs`.
+
+  **What the hoist exposed.** There were FOUR thresholds for one measurement,
+  not two: `0.35` in the core, and `1.1` / `0.45` / `0.25` inside
+  `healSplitWords`. They are not complements — the plugin merged at or below
+  `0.45` while the core split at or above `0.35` — so a gap between the two
+  was both a space and not a space depending on which half of the bridge you
+  asked. Phase B puts all four in one file and forbids a fifth; it does not
+  reconcile them, because changing a merge rule with a device bug report
+  attached ("five words written close together imported as ONE entry") is not
+  something to do blind.
+
+  **The open consequence, for Eric.** Phase A skips a line's geometry whenever
+  healing rewrote its text. That is what kept the two rules from ever firing
+  on one line — and it also means a healed line loses probing for *its other
+  tokens*: a page reading `soft ware bigreddog` heals to `software bigreddog`
+  and `bigreddog` is then never probed. The fix is to move the merge into the
+  core, with Swift reporting the three dictionary verdicts per boundary
+  (`left`, `right`, `joined`) instead of deciding. One pass, one rule, and the
+  line keeps its geometry. That is a Phase C and it needs a real page in front
+  of it, so it is written down rather than done.
 
 ## Done when
 
-1. C7's test command passes with every row and invariant. **Phase A: 18 tests
-   green, full gate green.** Rows 11–12 and I-B6/I-B8 outstanding per above.
+1. C7's test command passes with every row and invariant. **Phases A and B:
+   20 tests green, full gate green.** Row 11 and I-B8 (the Swift probe budget)
+   remain untested, and the Swift half of I-B6 is enforced by
+   `snap-geometry-check.mjs` rather than by a Swift test.
 2. CC-SNAP-CLEAN v1.1 C1 no longer HALTs — **done**, this file provides the
    geometry. CC-SNAP-HIGHLIGHT C1 still HALTs, on F3's pixel statistics.
 3. On TestFlight, a worksheet whose words Vision returns merged imports as
