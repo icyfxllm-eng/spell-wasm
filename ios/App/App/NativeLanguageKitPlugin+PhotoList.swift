@@ -115,30 +115,39 @@ extension NativeLanguageKitPlugin {
                     }
                 }
             }
-            // Merge on main: UITextChecker (the dictionary tiebreaker inside
-            // healSplitWords) isn't documented thread-safe.
+            // On main: UITextChecker (the dictionary judgement inside
+            // boundaryVerdicts) isn't documented thread-safe.
             DispatchQueue.main.async {
                 let lang = self.recognitionLanguages.first
                 let chinese = lang.map { ChineseScript.isChineseTag($0) } ?? false
                 let lines = collected.map { (cand, conf) -> RecognizedLine in
-                    var text = Self.healSplitWords(cand, language: lang)
+                    // Phase C: no healing here. The merge is the core's now,
+                    // so the text we send is the raw candidate and the line
+                    // KEEPS its geometry -- which is the whole gain: a line
+                    // with one word to merge no longer loses probing for its
+                    // other tokens.
+                    let raw = cand.string
+                    let tokens = Self.tokenize(raw)
+                    var geo = Self.geometry(for: cand, tokens: tokens)
+                    let avg = Self.averageCharWidth(geo.boxes, tokens)
+                    let bounds = Self.boundaryVerdicts(tokens, language: lang)
+                    var text = raw
                     if chinese {
                         // Normalize script ON-DEVICE so a Traditional page
-                        // practices against the app's Simplified banks.
+                        // practices against the app's Simplified banks. The
+                        // box texts convert too, or I-B5 would reject the line
+                        // for describing a string it no longer matches.
                         text = ChineseScript.toSimplified(text)
+                        geo.boxes = geo.boxes.map {
+                            TokenGeometry(text: ChineseScript.toSimplified($0.text),
+                                          x0: $0.x0, x1: $0.x1, gaps: $0.gaps)
+                        }
                     }
-                    // CC-SNAP-BOXES: geometry is measured against the RAW
-                    // candidate, because healSplitWords and toSimplified both
-                    // rewrite the string and the ranges would no longer point
-                    // at the characters Vision measured. A line whose healed
-                    // text differs from the raw text therefore ships no
-                    // geometry -- the core's I-B5 would reject the mismatch
-                    // anyway, and saying so here is cheaper than sending it.
-                    let raw = cand.string
-                    guard text == raw else { return RecognizedLine(text: text, confidence: conf) }
-                    let geo = Self.geometry(for: cand, tokens: Self.tokenize(raw))
                     return RecognizedLine(text: text, confidence: conf,
-                                          boxes: geo.boxes, glyph: geo.glyph)
+                                          boxes: geo.boxes, glyph: geo.glyph,
+                                          avgChar: avg,
+                                          hasDict: Self.hasDictionary(lang),
+                                          bounds: bounds)
                 }
                 self.finish(resolve: lines)
             }
@@ -147,23 +156,15 @@ extension NativeLanguageKitPlugin {
 
 
 
-    // MARK: - CC-SNAP-BOXES F4 — the gap thresholds, mirrored
-
-    /// These four numbers MUST equal config/snap-geometry.json, which is the
-    /// one source. Swift cannot read that file without adding it to the Xcode
-    /// target, so the agreement is enforced instead:
-    /// scripts/snap-geometry-check.mjs fails the build on any drift, and is
-    /// wired into gate.sh and the pre-push hook.
-    ///
-    /// All four are multiples of the line's median glyph width. They were four
-    /// unrelated literals in two languages until Phase B; the split threshold
-    /// lives beside them now so the relationship is visible — the core splits
-    /// at or above `splitGap`, and this file merges at or below `mergeTight`,
-    /// which are NOT complements and never were.
-    fileprivate static let splitGap: CGFloat = 0.35       // config: split_gap
-    fileprivate static let mergeModerate: CGFloat = 1.1   // config: merge_moderate
-    fileprivate static let mergeTight: CGFloat = 0.45     // config: merge_tight
-    fileprivate static let mergeNoDict: CGFloat = 0.25    // config: merge_nodict
+    // CC-SNAP-BOXES Phase C — this file no longer holds a gap threshold.
+    //
+    // Phase B mirrored four of them here and had a check keep the copy honest.
+    // Phase C moved the rule that used them into the core, so the mirror
+    // became dead code and the cross-language contract became a single-language
+    // one. config/snap-geometry.json is still the one source;
+    // scripts/snap-geometry-check.mjs still fails the build on a bare
+    // multiplier appearing in either language, which is what would start the
+    // drift again.
 
     // MARK: - CC-SNAP-BOXES — geometry for the core
 
@@ -257,7 +258,9 @@ extension NativeLanguageKitPlugin {
     }
 
     /// The whitespace tokens of a candidate, with their ranges. One definition,
-    /// shared by healSplitWords and by geometry(for:).
+    /// shared by boundaryVerdicts and by geometry(for:) -- I-B5 compares the
+    /// boxes against the line text, so two tokenizers would drift and the page
+    /// would silently lose its geometry.
     fileprivate static func tokenize(_ text: String)
         -> [(text: String, range: Range<String.Index>)] {
         var tokens: [(text: String, range: Range<String.Index>)] = []
@@ -281,63 +284,52 @@ extension NativeLanguageKitPlugin {
     /// against this line's own average character width), or when the gap is
     /// moderate but the joined text is a dictionary word (UITextChecker). Works
     /// in any language Vision reads; geometry needs no dictionary at all.
-    fileprivate static func healSplitWords(_ candidate: VNRecognizedText, language: String?) -> String {
-        let text = candidate.string
-        // One tokenizer, shared with geometry(for:) — I-B5 compares the boxes
-        // against the line text, so two tokenizers would eventually disagree
-        // and silently cost the page its geometry.
-        let tokens = tokenize(text)
-        guard tokens.count > 1 else { return text }
-
-        // Normalized bounding box per token; if geometry is unavailable for any
-        // token, return the line untouched rather than guessing.
-        var boxes: [CGRect] = []
-        for t in tokens {
-            guard let obs = (try? candidate.boundingBox(for: t.range)) ?? nil else { return text }
-            boxes.append(obs.boundingBox)
-        }
-        let totalChars = tokens.reduce(0) { $0 + $1.text.count }
-        let totalWidth = boxes.reduce(CGFloat(0)) { $0 + $1.width }
-        guard totalChars > 0, totalWidth > 0 else { return text }
-        let avgChar = totalWidth / CGFloat(totalChars)
-
-        // Left-to-right greedy merge so "so ft ware" can chain into one word.
-        //
-        // OVER-MERGE GUARD (device report: five words written close together
-        // imported as ONE entry): a tight gap alone no longer merges when BOTH
-        // sides are real dictionary words — "cat dog" stays two words no matter
-        // how cramped the handwriting, while "soft ware" (join is a word) and
-        // "sof tware" (a side is a non-word fragment) still heal. For languages
-        // the OS spell-checker can't judge, geometry stands alone but with a
-        // much stricter gap so cramped neighbours don't fuse.
-        let hasDict = hasDictionary(language)
-        var outTokens: [String] = [tokens[0].text]
-        var prevBox = boxes[0]
+    /// CC-SNAP-BOXES Phase C — report what the spell-checker thinks, and let
+    /// the core decide.
+    ///
+    /// This used to be `healSplitWords`, which merged here and returned a
+    /// rewritten string. That cost the line its geometry: the core skips
+    /// geometry whenever the healed text differs from the raw candidate, so a
+    /// page reading "soft ware bigreddog" healed to "software bigreddog" and
+    /// `bigreddog` was then never probed — the exact case per-character
+    /// probing exists for.
+    ///
+    /// The rule itself did not move an inch; it lives in
+    /// `snap_clean::merges_with_previous` now, denominator included. Only the
+    /// three judgements UITextChecker can make, and this file cannot delegate,
+    /// stay here.
+    ///
+    /// Why it was here at all: handwriting leaves a small gap INSIDE a word
+    /// and Vision renders it as a space — "software" comes back as
+    /// "soft ware".
+    fileprivate static func boundaryVerdicts(
+        _ tokens: [(text: String, range: Range<String.Index>)],
+        language: String?
+    ) -> [[String: Any]] {
+        guard tokens.count > 1, hasDictionary(language) else { return [] }
+        var out: [[String: Any]] = []
         for i in 1..<tokens.count {
-            let gap = boxes[i].minX - prevBox.maxX
-            let moderate = gap <= Self.mergeModerate * avgChar
-            let left = outTokens[outTokens.count - 1]
+            let left = tokens[i - 1].text
             let right = tokens[i].text
-            let joined = left + right
-            let merge: Bool
-            if hasDict {
-                let tight = gap <= Self.mergeTight * avgChar
-                let bothReal = isDictionaryWord(left, language: language)
-                    && isDictionaryWord(right, language: language)
-                merge = (moderate && isDictionaryWord(joined, language: language))
-                    || (tight && !bothReal)
-            } else {
-                merge = gap <= Self.mergeNoDict * avgChar
-            }
-            if merge {
-                outTokens[outTokens.count - 1] = joined
-                prevBox = prevBox.union(boxes[i])
-            } else {
-                outTokens.append(right)
-                prevBox = boxes[i]
-            }
+            out.append([
+                "at": i - 1,
+                "left": isDictionaryWord(left, language: language),
+                "right": isDictionaryWord(right, language: language),
+                "joined": isDictionaryWord(left + right, language: language),
+            ])
         }
-        return outTokens.joined(separator: " ")
+        return out
+    }
+
+    /// The mean character width over a line's token boxes — the quantity the
+    /// merge rule has always divided by. Carried alongside the median glyph
+    /// width rather than replaced by it: see `OcrLine::avg_char`.
+    fileprivate static func averageCharWidth(_ boxes: [TokenGeometry],
+                                             _ tokens: [(text: String, range: Range<String.Index>)]) -> CGFloat? {
+        let totalChars = tokens.reduce(0) { $0 + $1.text.count }
+        let totalWidth = boxes.reduce(CGFloat(0)) { $0 + ($1.x1 - $1.x0) }
+        guard totalChars > 0, totalWidth > 0 else { return nil }
+        return totalWidth / CGFloat(totalChars)
     }
 
     /// Does UITextChecker have a dictionary for this language at all? Decides
@@ -370,6 +362,9 @@ extension NativeLanguageKitPlugin {
         let confidence: Float
         var boxes: [TokenGeometry] = []
         var glyph: CGFloat?
+        var avgChar: CGFloat?
+        var hasDict: Bool = false
+        var bounds: [[String: Any]] = []
     }
 
 
@@ -392,6 +387,9 @@ extension NativeLanguageKitPlugin {
                 }
                 if !gaps.isEmpty { d["gaps"] = gaps }
                 if let glyph = l.glyph { d["glyph"] = glyph }
+                if let avg = l.avgChar { d["avgChar"] = avg }
+                d["hasDict"] = l.hasDict
+                if !l.bounds.isEmpty { d["bounds"] = l.bounds }
                 return d
             }
             call.resolve(["supported": true, "lines": payload])

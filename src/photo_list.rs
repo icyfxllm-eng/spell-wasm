@@ -365,6 +365,24 @@ fn read_ocr_lines(val: &wasm_bindgen::JsValue, lang: &str) -> Vec<crate::snap_cl
             }
         }
 
+        // Phase C — the platform's dictionary verdicts, one per boundary.
+        let mut bounds: Vec<crate::snap_clean::Boundary> = Vec::new();
+        if let Some(bd) = get(&item, "bounds").and_then(|b| b.dyn_into::<js_sys::Array>().ok()) {
+            for j in 0..bd.length() {
+                let v = bd.get(j);
+                let Some(at) = num(&v, "at") else { continue };
+                if at < 0.0 {
+                    continue;
+                }
+                bounds.push(crate::snap_clean::Boundary {
+                    at: at as usize,
+                    left: get(&v, "left").and_then(|x| x.as_bool()).unwrap_or(false),
+                    right: get(&v, "right").and_then(|x| x.as_bool()).unwrap_or(false),
+                    joined: get(&v, "joined").and_then(|x| x.as_bool()).unwrap_or(false),
+                });
+            }
+        }
+
         out.push(crate::snap_clean::OcrLine {
             text,
             confidence,
@@ -373,6 +391,9 @@ fn read_ocr_lines(val: &wasm_bindgen::JsValue, lang: &str) -> Vec<crate::snap_cl
             highlighted: get(&item, "highlighted").and_then(|h| h.as_bool()).unwrap_or(false),
             hue_bucket: num(&item, "hue").map(|h| h as u8),
             glyph: num(&item, "glyph").map(|g| g as f32),
+            avg_char: num(&item, "avgChar").map(|g| g as f32),
+            has_dict: get(&item, "hasDict").and_then(|h| h.as_bool()).unwrap_or(false),
+            bounds,
         });
     }
     out

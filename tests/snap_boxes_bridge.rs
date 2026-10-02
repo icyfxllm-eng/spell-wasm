@@ -15,7 +15,8 @@
 //! the payload comes from a platform this test cannot run.
 
 use spell_wasm::snap_clean::{
-    clean_ocr_lines, geometry_ok, split_on_box_gaps, CharGap, Candidate, OcrLine, WordBox,
+    clean_ocr_lines, geometry_ok, split_on_box_gaps, Boundary, CharGap, Candidate, OcrLine,
+    WordBox,
 };
 
 fn text_only(text: &str) -> OcrLine {
@@ -265,6 +266,114 @@ fn the_threshold_comes_from_the_one_config_file() {
     let over = line("ab", vec![bg("ab", 0.1, 0.2, &[(1, glyph * (want + 0.01))])], Some(glyph));
     assert_eq!(split_on_box_gaps(&under), ["ab"], "just under the configured ratio");
     assert_eq!(split_on_box_gaps(&over), ["a", "b"], "just over it");
+}
+
+
+// ------------------------------------------------- Phase C: the merge, moved
+
+/// Two tokens separated by `gap`, with the platform's three verdicts.
+fn pair(left: &str, right: &str, gap: f32, avg: f32, v: (bool, bool, bool)) -> OcrLine {
+    let w = 0.12_f32;
+    OcrLine {
+        text: format!("{left} {right}"),
+        confidence: 1.0,
+        lang: "en".into(),
+        boxes: vec![b(left, 0.10, 0.10 + w), b(right, 0.10 + w + gap, 0.10 + 2.0 * w + gap)],
+        glyph: Some(avg),
+        avg_char: Some(avg),
+        has_dict: true,
+        bounds: vec![Boundary { at: 0, left: v.0, right: v.1, joined: v.2 }],
+        ..Default::default()
+    }
+}
+
+#[test]
+fn phase_c_software_still_heals() {
+    // The case healSplitWords was written for: Vision splits a solid word on
+    // a small handwriting gap. Moderate gap, and the join is a real word.
+    let avg = 0.030_f32;
+    let l = pair("soft", "ware", avg * 0.9, avg, (false, true, true));
+    assert_eq!(split_on_box_gaps(&l), ["software"]);
+}
+
+#[test]
+fn phase_c_cat_dog_still_stays_two_words() {
+    // The OVER-MERGE GUARD, from a device report: five words written close
+    // together imported as ONE entry. Both sides real, join is not a word --
+    // no gap, however cramped, may merge them.
+    let avg = 0.030_f32;
+    for ratio in [0.9_f32, 0.4, 0.1, 0.01] {
+        let l = pair("cat", "dog", avg * ratio, avg, (true, true, false));
+        assert_eq!(split_on_box_gaps(&l), ["cat", "dog"], "gap ratio {ratio}");
+    }
+}
+
+#[test]
+fn phase_c_a_fragment_side_heals_on_a_tight_gap() {
+    // "sof tware": one side is not a word, so a TIGHT gap merges even though
+    // the join was not looked up favourably.
+    let avg = 0.030_f32;
+    let tight = pair("sof", "tware", avg * 0.4, avg, (false, false, false));
+    assert_eq!(split_on_box_gaps(&tight), ["software"]);
+    // ... but a merely moderate gap does not.
+    let moderate = pair("sof", "tware", avg * 0.9, avg, (false, false, false));
+    assert_eq!(split_on_box_gaps(&moderate), ["sof", "tware"]);
+}
+
+#[test]
+fn phase_c_without_a_dictionary_geometry_stands_alone() {
+    let avg = 0.030_f32;
+    let mut l = pair("一样", "朋友", avg * 0.2, avg, (false, false, false));
+    l.lang = "zh".into();
+    l.has_dict = false;
+    l.bounds.clear();
+    assert_eq!(split_on_box_gaps(&l), ["一样朋友"], "0.2 is under merge_nodict (0.25)");
+    let mut wide = pair("一样", "朋友", avg * 0.3, avg, (false, false, false));
+    wide.lang = "zh".into();
+    wide.has_dict = false;
+    wide.bounds.clear();
+    assert_eq!(split_on_box_gaps(&wide), ["一样", "朋友"], "0.3 is over it");
+}
+
+#[test]
+fn phase_c_a_healed_line_keeps_probing_its_other_tokens() {
+    // THE point of Phase C. Before it, a line needing one merge was healed on
+    // the platform, its text no longer matched the raw candidate, and the core
+    // dropped the whole line's geometry -- so the merged word was fixed and
+    // every other token on the line went unprobed.
+    let avg = 0.030_f32;
+    let w = 0.12_f32;
+    let l = OcrLine {
+        text: "soft ware bigreddog".into(),
+        confidence: 1.0,
+        lang: "en".into(),
+        boxes: vec![
+            b("soft", 0.10, 0.10 + w),
+            b("ware", 0.10 + w + avg * 0.9, 0.10 + 2.0 * w + avg * 0.9),
+            bg("bigreddog", 0.50, 0.80, &[(3, avg * 0.5), (6, avg * 0.5)]),
+        ],
+        glyph: Some(avg),
+        avg_char: Some(avg),
+        has_dict: true,
+        bounds: vec![
+            Boundary { at: 0, left: false, right: true, joined: true },
+            Boundary { at: 1, left: true, right: false, joined: false },
+        ],
+        ..Default::default()
+    };
+    // The merge happened AND the third token was still probed.
+    assert_eq!(split_on_box_gaps(&l), ["software", "big", "red", "dog"]);
+}
+
+#[test]
+fn phase_c_merge_uses_avg_char_not_the_median_glyph() {
+    // The two denominators are different quantities and the merge keeps the
+    // one it has always used. Same gap, same boxes; only which measure the
+    // line carries changes the verdict.
+    let gap = 0.030_f32 * 0.8;
+    let mut narrow = pair("soft", "ware", gap, 0.030, (false, true, true));
+    narrow.glyph = Some(0.001); // a median that would make the gap enormous
+    assert_eq!(split_on_box_gaps(&narrow), ["software"], "avg_char decides the merge");
 }
 
 #[test]

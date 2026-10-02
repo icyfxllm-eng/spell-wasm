@@ -6,12 +6,15 @@
 // healSplitWords on the Swift side. They were not complements, nobody owned
 // them together, and a page could in principle be both merged and split.
 //
-// config/snap-geometry.json is now the one source. Rust bakes it in with
-// include_str!, so it cannot drift. Swift CANNOT read it -- the file is not in
-// the Xcode target and adding it would mean touching the pbxproj -- so the
-// agreement is enforced here instead: the plugin declares named constants with
-// a `// config: <key>` marker, and this script fails the build if any of them
-// stops matching the JSON.
+// config/snap-geometry.json is the one source. Rust bakes it in with
+// include_str!, so the core cannot drift.
+//
+// Phase C then moved the merge rule out of Swift and into the core, so the
+// plugin no longer holds a threshold at all and this became a single-language
+// contract. The Swift half of the check is kept anyway, and costs nothing: if
+// anyone ever mirrors a constant back into the plugin, it must carry a
+// `// config: <key>` marker and match the JSON. Absent mirrors are fine;
+// WRONG ones are not.
 //
 // It also refuses a SECOND threshold appearing anywhere: a bare `* avgChar`
 // or `* glyph` multiplier that is not one of the named constants is exactly
@@ -52,13 +55,8 @@ for (const key of keys) {
     `static let (\\w+)\\s*:\\s*CGFloat\\s*=\\s*([0-9.]+)\\s*//\\s*config:\\s*${key}\\b`,
   );
   const m = swift.match(re);
-  if (!m) {
-    bad.push(
-      `${SWIFT}: no constant carries the marker "// config: ${key}". ` +
-        `Every key in ${CONFIG} needs a mirrored Swift constant, or the two can drift unseen.`,
-    );
-    continue;
-  }
+  // Phase C: no mirror is the expected state. Only a WRONG mirror fails.
+  if (!m) continue;
   if (Number(m[2]) !== Number(cfg[key])) {
     bad.push(
       `${key}: ${CONFIG} says ${cfg[key]}, ${SWIFT} says ${m[2]} (as ${m[1]}). ` +
@@ -105,6 +103,10 @@ if (bad.length) {
   for (const b of bad) console.error(`  ${b}`);
   process.exit(1);
 }
+const mirrored = keys.filter((k) =>
+  new RegExp(`//\\s*config:\\s*${k}\\b`).test(swift),
+).length;
 console.log(
-  `snap-geometry-check: OK — ${keys.length} threshold(s), one source, Rust and Swift agree`,
+  `snap-geometry-check: OK — ${keys.length} threshold(s) in one source, ` +
+    `read by the core; ${mirrored} mirrored in Swift`,
 );

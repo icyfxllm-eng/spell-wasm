@@ -56,6 +56,22 @@ pub struct OcrLine {
     /// the crude estimate (box width over character count), which is all the
     /// core can do alone.
     pub glyph: Option<f32>,
+    /// CC-SNAP-BOXES Phase C — the MEAN character width over this line's token
+    /// boxes, which is what `healSplitWords` has always divided by.
+    ///
+    /// Deliberately not the same quantity as `glyph`, and deliberately kept.
+    /// Phase C moves the merge rule into the core without changing it; using
+    /// the median here instead would quietly alter every merge decision on
+    /// every page, which is a measurable change with a device bug report
+    /// attached ("five words written close together imported as ONE entry")
+    /// and has no business riding along inside a refactor. Unifying the two
+    /// denominators is its own change, with its own evidence.
+    pub avg_char: Option<f32>,
+    /// Whether the platform spell-checker can judge this line's language.
+    /// False selects the geometry-only merge rule, as it always has.
+    pub has_dict: bool,
+    /// One entry per boundary between adjacent boxes, platform-judged.
+    pub bounds: Vec<Boundary>,
 }
 
 /// Why a candidate is or is not pre-checked. Flags are additive and never
@@ -481,6 +497,23 @@ pub struct WordBox {
     pub gaps: Vec<CharGap>,
 }
 
+/// CC-SNAP-BOXES Phase C — the platform's dictionary verdicts for one
+/// boundary between adjacent tokens.
+///
+/// The merge rule needs to know whether the two sides and their join are real
+/// words. That judgement is UITextChecker's and cannot leave the platform, so
+/// the platform reports the three answers and the core makes the decision.
+/// Before Phase C the platform did both, which is why a healed line lost its
+/// geometry and every other token on it went unprobed.
+#[derive(Clone, Debug, Default, PartialEq)]
+pub struct Boundary {
+    /// Index of the box on the LEFT of this boundary.
+    pub at: usize,
+    pub left: bool,
+    pub right: bool,
+    pub joined: bool,
+}
+
 /// One measured gap between two adjacent characters inside a token.
 #[derive(Clone, Debug, Default, PartialEq)]
 pub struct CharGap {
@@ -693,6 +726,36 @@ fn glyph_width(line: &OcrLine) -> Option<f32> {
     Some(widths[widths.len() / 2])
 }
 
+/// Phase C — should box `i` join the one before it?
+///
+/// Transcribed from `healSplitWords`, including its asymmetries:
+///
+/// - with a dictionary, a MODERATE gap merges only when the join is a real
+///   word, and a TIGHT gap merges only when at least one side is not —
+///   which is the over-merge guard that keeps "cat dog" two words however
+///   cramped the handwriting;
+/// - without one, geometry stands alone at a much stricter ratio.
+///
+/// The denominator is `avg_char` when the platform sent one, because that is
+/// what the rule has always divided by. `glyph` is the split side's measure
+/// and is only the fallback here.
+fn merges_with_previous(line: &OcrLine, i: usize, glyph: f32) -> bool {
+    let gap = line.boxes[i].x0 - line.boxes[i - 1].x1;
+    let unit = line.avg_char.filter(|u| *u > 0.0).unwrap_or(glyph);
+    let v = line.bounds.iter().find(|b| b.at == i - 1);
+    if !line.has_dict || v.is_none() {
+        // No dictionary for this language, or the platform sent no verdict
+        // for this boundary. Either way the rule has only geometry, and the
+        // stricter ratio is the one that has always applied.
+        return gap <= geometry_ratio("merge_nodict") * unit;
+    }
+    let v = v.expect("checked");
+    let moderate = gap <= geometry_ratio("merge_moderate") * unit;
+    let tight = gap <= geometry_ratio("merge_tight") * unit;
+    let both_real = v.left && v.right;
+    (moderate && v.joined) || (tight && !both_real)
+}
+
 /// U1 — split one line's boxes wherever the page shows a gap.
 ///
 /// This is reading the page, not guessing at it, which is why it runs for
@@ -712,9 +775,12 @@ pub fn split_on_box_gaps(line: &OcrLine) -> Vec<String> {
 
     let mut runs: Vec<String> = Vec::new();
     for (i, b) in line.boxes.iter().enumerate() {
-        // Between boxes: a gap the recognizer already turned into a space, or
-        // one it did not. Either way the page shows it.
-        let joined_to_prev = i > 0 && b.x0 - line.boxes[i - 1].x1 < threshold;
+        // Between boxes. Phase C: this is `healSplitWords`' rule, moved here
+        // unchanged, so one pass decides both directions -- merge a gap the
+        // recognizer wrongly turned into a space, split one it wrongly did
+        // not. The platform still supplies the dictionary verdicts; it no
+        // longer supplies the decision.
+        let joined_to_prev = i > 0 && merges_with_previous(line, i, glyph);
         if i == 0 || !joined_to_prev {
             runs.push(String::new());
         }

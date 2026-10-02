@@ -361,6 +361,9 @@
           if (l && Array.isArray(l.boxes)) out.boxes = l.boxes;
           if (l && Array.isArray(l.gaps)) out.gaps = l.gaps;
           if (l && typeof l.glyph === 'number') out.glyph = l.glyph;
+          if (l && typeof l.avgChar === 'number') out.avgChar = l.avgChar;
+          if (l && typeof l.hasDict === 'boolean') out.hasDict = l.hasDict;
+          if (l && Array.isArray(l.bounds)) out.bounds = l.bounds;
           return out;
         });
         return { supported: true, lines: lines };

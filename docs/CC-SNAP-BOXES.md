@@ -1,6 +1,6 @@
 # CC-SNAP-BOXES v1 — word geometry and page pixels, from the camera to the core
 
-**Status:** Phases A and B BUILT 2026-10-01. §0 answered against the live
+**Status:** Phases A, B and C BUILT 2026-10-01. §0 answered against the live
 code; three of its answers changed what the dependent files can ask for. D-B1
 and D-B6 are signed.
 **Layering:** sits under CC-SNAP-ROADMAP v1, beside CC-SNAP-LIST v1 rather
@@ -326,20 +326,47 @@ reversal.**
   attached ("five words written close together imported as ONE entry") is not
   something to do blind.
 
-  **The open consequence, for Eric.** Phase A skips a line's geometry whenever
-  healing rewrote its text. That is what kept the two rules from ever firing
-  on one line — and it also means a healed line loses probing for *its other
-  tokens*: a page reading `soft ware bigreddog` heals to `software bigreddog`
-  and `bigreddog` is then never probed. The fix is to move the merge into the
-  core, with Swift reporting the three dictionary verdicts per boundary
-  (`left`, `right`, `joined`) instead of deciding. One pass, one rule, and the
-  line keeps its geometry. That is a Phase C and it needs a real page in front
-  of it, so it is written down rather than done.
+  **The consequence Phase C then fixed.** Phase A skipped a line's geometry
+  whenever healing rewrote its text, which is what kept the two rules from
+  ever firing on one line — and also meant a healed line lost probing for
+  *its other tokens*.
+
+- **C — BUILT 2026-10-01.** The merge moved into the core.
+
+  `healSplitWords` is gone. In its place the plugin reports, per boundary, the
+  three judgements UITextChecker can make and this file cannot delegate
+  (`left`, `right`, `joined`), plus `avgChar` and whether the language has a
+  dictionary at all. `snap_clean::merges_with_previous` makes the decision.
+
+  **The rule did not change.** It is transcribed with its asymmetries intact:
+  a moderate gap merges only when the join is a real word, a tight gap merges
+  only when at least one side is not — the over-merge guard that keeps
+  "cat dog" two words however cramped the handwriting — and a language with no
+  dictionary gets geometry alone at the stricter ratio. The denominator is
+  still `avgChar`, the mean the rule has always divided by, NOT the median
+  glyph width the split side uses. Unifying those two is a measurable change
+  with a device bug report attached and is not smuggled into a move.
+
+  **The gain.** No heal means no rewritten text, so the line keeps its
+  geometry: `soft ware bigreddog` now merges the first two tokens *and* probes
+  the third. That is tested.
+
+  **A consequence worth noting.** With the rule in the core, the Swift
+  threshold mirror Phase B introduced became dead code and is removed — the
+  cross-language contract is a single-language one now.
+  `snap-geometry-check.mjs` stays, because a bare multiplier reappearing in
+  either language is what would start the drift again, and because a mirror
+  added back must still match.
+
+  Six new tests hold the moved rule to the cases it was written for:
+  `software` heals, `cat dog` never merges at any gap, `sof tware` heals only
+  on a tight gap, a dictionary-less language falls to geometry, a healed line
+  keeps probing, and the merge still divides by `avgChar`.
 
 ## Done when
 
-1. C7's test command passes with every row and invariant. **Phases A and B:
-   20 tests green, full gate green.** Row 11 and I-B8 (the Swift probe budget)
+1. C7's test command passes with every row and invariant. **Phases A, B and
+   C: 26 tests green, full gate green.** Row 11 and I-B8 (the Swift probe budget)
    remain untested, and the Swift half of I-B6 is enforced by
    `snap-geometry-check.mjs` rather than by a Swift test.
 2. CC-SNAP-CLEAN v1.1 C1 no longer HALTs — **done**, this file provides the
