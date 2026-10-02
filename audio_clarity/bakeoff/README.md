@@ -41,12 +41,38 @@ distinct voice. The other four were scoring one voice under several labels —
 was already visible in the tables: aliased rows score identically to the
 digit, six German rows at exactly 38/15/7.
 
-`scripts/audio-bakeoff.mjs` now catches this during the run, by hashing each
-candidate's FIRST clip and reporting a duplicate as an alias instead of
-scoring it a second time. That costs one clip per phantom rather than sixty.
+`scripts/audio-bakeoff.mjs` catches this during the run, by hashing the first
+three clips of each candidate and reporting a duplicate as an alias instead of
+scoring it again. Those clips are scored anyway, so the check is free.
+
+**It can prove sameness, never difference.** Google synthesis is not
+deterministic — the same name, word and SSML returned three byte patterns over
+six calls on 2026-10-02, all of identical length. Byte-identical audio from two
+names therefore means one voice; a non-match means nothing, because two samples
+of one voice can differ. Rows the guard does not flag are unconfirmed.
+
+The first version of this check compared ONE clip and treated the absence of a
+match as distinctness. It produced a false negative within the hour:
+`fr-FR-Neural2-A` and `fr-FR-Wavenet-F` looked identical in one run and
+different in the next. Three clips is better, not sufficient — the honest
+method is comparing SETS of renderings across repeated samples, which the
+harness cannot do through the server because the cache freezes the first
+rendering per (voice, word).
+
 It is a hash check rather than a catalogue lookup on purpose: the harness
 holds no Google credential and reaches the API only through the server, and a
 name can be perfectly listed and still be an alias.
+
+**Two delisted shipped voices have a stable listed twin**, found 2026-10-02 by
+sampling each five times directly against the API:
+
+- `es-ES-Neural2-B` (shipped, delisted) = `es-ES-Neural2-G` (listed)
+- `fr-FR-Neural2-A` (shipped, delisted) = `fr-FR-Neural2-F` (listed)
+
+Both pairs were byte-stable across every sample. Renaming onto the listed twin
+changes no audio, and neither language is in `VOICE_IN_KEY`, so the cache key
+does not move and nothing re-warms. `pl-PL-Wavenet-B` has no such twin: the
+listed Polish voices are genuinely different, so that one is a real choice.
 
 **The German voice switch signed on 2026-09-28 is unaffected** —
 `de-DE-Neural2-B` to `-A` was 33 to 38 Pass, and those two are different

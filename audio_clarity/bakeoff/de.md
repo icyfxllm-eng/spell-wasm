@@ -2,7 +2,7 @@
 
 60 words per voice, both recognizers, blind (I3).
 
-**11 rows below, 5 actual voices. Measured 2026-10-02.**
+**11 rows below, at most 5 actual voices. Measured 2026-10-02, corrected the same day.**
 
 Google answers a voice name it does not have by serving a different voice,
 with a 200 and real audio. These candidate lists were built by keeping the
@@ -20,10 +20,24 @@ the SSML the server actually sends, and comparing SHA-256. Same audio:
 
 The SHIPPED voice `de-DE-Neural2-A` is one of these labels — it is the same audio as `de-DE-Neural2-C`, `de-DE-Neural2-F`.
 
-The Pass numbers are still real measurements of real audio — but this table
-offers 11 choices where 5 exist, and the differences between rows in one
-group above are not differences at all. `scripts/audio-bakeoff.mjs` now
-detects this during the run and reports an alias instead of scoring it twice.
+**What the groups above do and do not prove.** Google synthesis is NOT
+deterministic: the same name, word and SSML returned three different byte
+patterns over six calls, all of exactly the same length — one voice, varying
+encoding. So byte-identical audio from two names proves they are the same
+voice (two non-deterministic streams do not coincide by chance), but a
+*non*-match proves nothing at all. The groups listed above are confirmed. The
+names NOT grouped are **unconfirmed, not confirmed distinct**, and the true
+voice count may be lower than 5.
+
+The Pass numbers are still real measurements of real audio — each row scored a
+fixed set of clips, frozen by the server's cache. But this table offers 11
+choices where at most 5 exist, and the differences between rows inside one
+group above are not differences at all.
+
+`scripts/audio-bakeoff.mjs` now samples the first three clips of each
+candidate rather than one, and says in its own header that unflagged rows are
+unconfirmed. The single-clip version of that check gave a false negative the
+day it was written.
 
 | Voice | Pass | Weak | Fail |
 |---|---|---|---|

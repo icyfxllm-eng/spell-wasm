@@ -74,20 +74,39 @@ async function main() {
   // keeping the names that answered 200, so several languages were scoring one
   // voice under as many as six labels: de showed eleven rows for five voices,
   // fr twelve rows for four. The duplicates score identically to the digit,
-  // which is how it was finally noticed on 2026-10-01 -- six German rows at
-  // exactly 38/15/7.
+  // which is how it was noticed on 2026-10-01 -- six German rows at 38/15/7.
   //
-  // The check is the first clip's hash. Two names returning byte-identical
-  // audio are one voice, and the second is not scored, it is reported as an
-  // alias. That costs ONE clip per phantom instead of sixty, so the guard
-  // makes a run with phantoms cheaper rather than dearer.
+  // WHAT THIS CAN AND CANNOT PROVE. Google's synthesis is NOT deterministic:
+  // the same name, word and SSML returned three different byte patterns over
+  // six calls on 2026-10-02, all of exactly the same length -- one voice,
+  // non-deterministic encoding. So:
+  //
+  //   byte-identical audio from two names  =>  the same voice. Reliable:
+  //       two non-deterministic streams do not coincide by chance.
+  //   no match found                       =>  PROVES NOTHING. Two samples of
+  //       one voice can easily land on different renderings.
+  //
+  // An earlier version of this guard compared ONE clip and reported the
+  // absence of a match as distinctness. That is a false negative waiting to
+  // happen, and it did: fr-FR-Neural2-A and fr-FR-Wavenet-F looked identical
+  // in one run and different in the next.
+  //
+  // So the guard samples the first PROBE_CLIPS words rather than one, and the
+  // report says plainly that unflagged rows are unconfirmed, not confirmed
+  // distinct. Those clips are scored anyway, so the check costs nothing.
+  //
+  // Repeating a single word would not work: the bake-off reaches Google
+  // through the server, which caches per (voice, word), so the first
+  // rendering is frozen and every repeat returns it. Different words are what
+  // give independent samples.
   //
   // Deliberately NOT a catalogue lookup. Enumerating /v1/voices would put a
   // Google API key inside this harness, which today reaches Google only
   // through the server and holds no credential of its own. Hashes also catch
   // strictly more: a name can be perfectly listed and still be an alias, and
   // the catalogue cannot tell you that.
-  const firstClip = new Map();
+  const PROBE_CLIPS = 3;
+  const seenClip = new Map();
 
   for (const voice of voices) {
     if (!eligible(voice)) {
@@ -105,11 +124,11 @@ async function main() {
       const mp3 = join(tmp, 'c.mp3');
       const wav = join(tmp, 'c.wav');
       execFileSync('curl', ['-s', '-o', mp3, `${SPEAK}?word=${encodeURIComponent(word)}&lang=${lang}&variant=normal&voice=${encodeURIComponent(voice)}`]);
-      if (i === 0) {
+      if (i < PROBE_CLIPS) {
         const h = createHash('sha256').update(readFileSync(mp3)).digest('hex');
-        const owner = firstClip.get(h);
-        if (owner) { alias = owner; break; }
-        firstClip.set(h, voice);
+        const owner = seenClip.get(h);
+        if (owner && owner !== voice) { alias = owner; break; }
+        seenClip.set(h, voice);
       }
       execFileSync('afconvert', ['-f', 'WAVE', '-d', 'LEI16@16000', mp3, wav]);
       const heard = heardBoth(wav);
@@ -133,8 +152,12 @@ async function main() {
     '',
     `${words.length} words per voice, both recognizers, blind (I3).`,
     '',
-    `${scored} distinct voice(s) scored from ${voices.length} candidate name(s)` +
-      (aliased ? `; ${aliased} name(s) proved to be the same voice under another label.` : '.'),
+    `${scored} voice(s) scored from ${voices.length} candidate name(s)` +
+      (aliased ? `; ${aliased} proved to be another name for a voice already scored.` : '.'),
+    '',
+    'Rows that were NOT flagged as aliases are **unconfirmed, not confirmed',
+    'distinct**. Google synthesis is non-deterministic, so two samples of one',
+    'voice can differ; a match proves sameness, a non-match proves nothing.',
     '',
   ];
   // Mark the incumbent. Without it a reader has to go and look up
