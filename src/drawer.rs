@@ -1015,7 +1015,7 @@ mod tests {
         let play: Vec<String> = play_sections(&shown, "en")
             .iter().flat_map(|s| s.rows.iter().map(|r| r.id.clone())).collect();
         let yours: Vec<String> = your_words_rows(&shown).iter().map(|r| r.id.clone()).collect();
-        for id in ["versus", "daily", "word_picture", "say_it"] {
+        for id in ["versus", "daily", "word_picture"] {
             assert!(play.contains(&id.to_string()),
                     "{id} lost its hub tile and has no Play row: {play:?}");
         }
@@ -1025,7 +1025,7 @@ mod tests {
         }
         // ...and each one resolves to an element to proxy to, or the row is a
         // button that does nothing.
-        for id in ["versus", "daily", "word_picture", "say_it", "misses", "my_words", "photo_list"] {
+        for id in ["versus", "daily", "word_picture", "misses", "my_words", "photo_list"] {
             let m = shown.iter().find(|m| m.id == id).unwrap();
             assert!(matches!(route_for(m), Route::Press(_) | Route::Level(_)),
                     "{id} routes nowhere");

@@ -252,9 +252,9 @@ pub fn apply_settings(app: &App) {
     drop(s);
     // Kid Mode hides the account/leaderboard entry points entirely.
     crate::climb::reflect_auth();
-    // Kid Mode also hard-disables Say It (COPPA D5); re-hide the launcher on any
-    // Kid-Mode change. No-op when the feature flag is off.
-    crate::say_it::reflect_gating(app);
+    // The Spell It front door follows the same settings pass. No-op when the
+    // feature flag is off.
+    crate::spell_aloud::reflect_tile(app);
     // ...and the photo-list camera affordance (a parent-only list surface,
     // hidden in Kid Mode). No-op when the feature flag is off.
     crate::photo_list::reflect_visibility(app);

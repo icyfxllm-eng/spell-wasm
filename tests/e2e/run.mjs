@@ -21,7 +21,6 @@ import * as placement from './specs/placement.mjs';
 import * as modes from './specs/modes.mjs';
 import * as menu from './specs/menu.mjs';
 import * as coming from './specs/coming.mjs';
-import * as sayit from './specs/sayit.mjs';
 import * as ghost from './specs/ghost.mjs';
 import * as spellaloud from './specs/spellaloud.mjs';
 import * as submitAdvance from './specs/submit-advance.mjs';
@@ -77,7 +76,6 @@ const SPECS = [
   ['spell-cross', spellCross],
   ['translate-screen', translateScreen],
   ['coming', coming],
-  ['sayit', sayit],
   ['ghost', ghost],
   ['spellaloud', spellaloud],
   ['submit-advance', submitAdvance],

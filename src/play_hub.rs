@@ -5,7 +5,7 @@
 //! Three kinds, because the six things CC-MODE-HUB calls "modes" are not the
 //! same kind of thing:
 //!
-//!   * **launcher** — the mode has a real entry point (Say It's `sayItBtn`,
+//!   * **launcher** — the mode has a real entry point (Spell It's `spellItBtn`,
 //!     Spell-Off's `soBtn`). Renders as a `<button>` that clicks it.
 //!   * **info** — the mode is an in-round AID with no destination. Spell Racing
 //!     happens inside The Climb; syllable replay fires when you miss a word;
@@ -38,7 +38,7 @@ use crate::App;
 /// is what lets the same file describe a mode for a future surface that has no
 /// such element. `None` = an in-round aid with no destination.
 #[cfg(not(feature = "web"))]
-const N_LAUNCH: usize = 20; // + spell_cross (CC-WORDGRID Phase B, app only)
+const N_LAUNCH: usize = 19; // + spell_cross (CC-WORDGRID Phase B, app only)
 #[cfg(feature = "web")]
 const N_LAUNCH: usize = 9;
 const LAUNCH: [(&str, Option<&str>); N_LAUNCH] = [
@@ -47,7 +47,6 @@ const LAUNCH: [(&str, Option<&str>); N_LAUNCH] = [
     // racing (your best run for this language) and starts a Climb run.
     ("ghost_racing", Some("ghostOpenBtn")),
     ("syllable_replay", None),    // fires on a miss, on the reveal surface
-    ("say_it", Some("sayItBtn")), // a real session mode
     // CC-HUB-NAV v1.3.1 H3: it HAS a door -- photoBtn, on the utility row the
     // Phase C cut-over retired. Naming it here is what gives the drawer row
     // something to proxy to; a your_words row with no target renders and then
@@ -285,7 +284,6 @@ mod tests {
     /// and what happens?", not a silent edit.
     #[test]
     fn only_session_modes_have_a_destination() {
-        assert_eq!(launch_for("say_it"), Some("sayItBtn"));
         assert_eq!(launch_for("online_spelloff"), Some("soBtn"));
         // Spell Racing got a real destination deliberately: tapping it opens the
         // ghost screen (ghost::wire_screen), which shows the best run you're
@@ -332,7 +330,7 @@ mod tests {
     }
 
     /// A7 (rewritten for CC-HUB-CLEANUP, then again for CC-HUB-NAV A13):
-    /// Spell It left the game menu — its front door is the home tile (sayItBtn,
+    /// Spell It left the game menu — its front door is the home tile (spellItBtn,
     /// D1). The surface half of that law now belongs to the drawer, which
     /// renders no row for it because the registry marks it `unlisted`; what
     /// stays here is the per-language availability logic behind it

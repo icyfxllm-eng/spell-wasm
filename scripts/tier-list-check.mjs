@@ -47,7 +47,6 @@ export const ALLOW = [
   { file: 'src/defmatch_screen.rs', has: 'let sway = matches!', why: 'animation timing per tier, not access' },
   { file: 'src/pinyin.rs', has: 'matches!(tier, "easy" | "medium")', why: 'D4 grading rule (surface tones accepted), not access' },
   { file: 'src/learner.rs', has: 'for tier in ["easy", "medium"]', why: 'placement set, already inside the Spell Jr tiers' },
-  { file: 'src/say_it.rs', has: 'for tier in ["easy", "medium"]', why: 'Say It pool; Say It is hidden from Spell Jr by juniorPolicy' },
   { file: 'src/online_spelloff.rs', has: '=> s.level.clone()', why: 'match tier from level; Online Spell-Off is hidden from Spell Jr' },
   { file: 'src/word_index.rs', has: 'for tier in [', why: 'whole-bank lookup index for answer checking; serves nothing' },
   { file: 'src/spelldoku/wordmode.rs', has: '=> Some(&[("', why: 'F12 vocabulary band mix of a Word Mode board; which boards a player may play comes from play::allowed and experience' },

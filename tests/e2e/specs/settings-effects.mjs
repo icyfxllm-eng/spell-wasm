@@ -406,7 +406,7 @@ export async function run(browser, base, suite) {
       // child should not re-read four steps, but showing it once must not
       // make it unfindable, so the mic surface can replay it.
       const shown = await page.evaluate(() => {
-        document.getElementById('sayItBtn')?.click();
+        document.getElementById('spellItBtn')?.click();
         return document.getElementById('spellItGuide')?.classList.contains('show');
       });
       assert(shown, 'the guide appears on first entry');
@@ -417,7 +417,7 @@ export async function run(browser, base, suite) {
 
       await page.evaluate(() => document.getElementById('spellItGuideGo')?.click());
       const again = await page.evaluate(() => {
-        document.getElementById('sayItBtn')?.click();
+        document.getElementById('spellItBtn')?.click();
         return document.getElementById('spellItGuide')?.classList.contains('show');
       });
       assert(!again, 'a second entry goes straight to play — shown ONCE');

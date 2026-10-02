@@ -84,28 +84,6 @@
       "juniorPolicy": "hidden"
     },
     {
-      "id": "say_it",
-      "group": "spell_it",
-      "hubTile": {
-        "element": "sayItBtn",
-        "member": true
-      },
-      "nameKey": "tools.sayit.name",
-      "descKey": "tools.sayit.desc",
-      "icon": "🎤",
-      "status": "live",
-      "kidSafe": false,
-      "platforms": [
-        "ios"
-      ],
-      "entitlementLevel": "preview",
-      "requiresPremium": null,
-      "languages": null,
-      "$note": "CC-HUB-NAV v1.3.1 H2: was DORMANT with zero entry points (CC-HUB-CLEANUP D3). v1.3.1 F2 deletes the quick-play row, which was its last one, so it is live again and reachable as a drawer row. Every other gate is unchanged: the say_it flag still governs it, iOS still governs it, and juniorPolicy hidden keeps it away from Spell Jr. Code/assets were retained for exactly this.",
-      "exitStyle": "instant",
-      "juniorPolicy": "hidden"
-    },
-    {
       "id": "photo_list",
       "group": "your_words",
       "nameKey": "tools.photo.name",

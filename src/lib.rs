@@ -98,7 +98,6 @@ mod pinyin_inventory; // GENERATED — tools/build-pinyin-inventory.py (CC-ZH-TO
 mod notifications;
 mod notify;
 mod profanity;
-mod say_it;
 mod selection;
 pub mod spell_aloud; // pub: the loopback CLI bridge (examples/spell_aloud_parse.rs) links the parser
 mod dev; // TEMP dev door (5-tap logo → hidden racing/aloud screens); remove at activation
@@ -369,9 +368,6 @@ fn wire(app: &App) {
     wire_age_gate(app);
     keyboard::setup(app);
     climb::setup(app);
-    // Feature F2 "Say It" — wires nothing unless the flag is on (ships dark).
-    say_it::wire(app);
-    say_it::reflect_gating(app);
     // Online Spell Off (async 1v1) — no entry unless flag on + signed in + not kid.
     online_spelloff::setup(app);
     // "Spell It Out Loud" — voice spelling INPUT. Wires nothing unless the flag
@@ -379,6 +375,10 @@ fn wire(app: &App) {
     // + on-device availability both hold (Invariant I3).
     spell_aloud::wire(app);
     spell_aloud::reflect(app);
+    // The front door on the play screen. Its gate is spell_aloud's own (flag +
+    // native bridge); it lived in the retired pronunciation mode until
+    // CC-HUB-DEADROWS.
+    spell_aloud::reflect_tile(app);
     // Pillar 3 — the "Tools & Features" hub in Settings: wire every tool switch,
     // then reflect current state so the panel is correct before it first opens.
     ghost::wire_screen(app);

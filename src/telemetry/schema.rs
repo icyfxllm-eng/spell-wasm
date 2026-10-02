@@ -107,7 +107,7 @@ wire_enum!(
     Mode {
         Home => "home", Standard => "standard", Daily => "daily", Review => "review",
         Versus => "versus", Practice => "practice", GhostRacing => "ghost_racing",
-        Racing => "racing", SayIt => "say_it", DefMatch => "def_match",
+        Racing => "racing", DefMatch => "def_match",
         LetterForge => "letter_forge", WordChains => "word_chains", Impostor => "impostor",
         BeeSim => "bee_sim",
         #[cfg(not(feature = "web"))]

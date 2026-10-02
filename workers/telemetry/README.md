@@ -70,3 +70,20 @@ npx wrangler d1 execute spell-telemetry --remote --command \
 
 Raw `events` rows are deleted after 90 days by the daily cron (D6). The
 `daily_counts` table is kept.
+
+## Ship order: do not deploy this schema until builds ≤258 have aged out
+
+`validate()` checks the WHOLE batch and a single bad field returns 400, so
+`storeEvents` never runs. CC-HUB-DEADROWS removed Say It and with it the
+`say_it` value from the `mode` enum (2026-10-02), but builds 257 and 258 are
+live on TestFlight with Say It compiled in and can still send it.
+
+Deploying this schema before those builds age out would therefore drop **entire
+batches** from those testers — the crash and perf events in the same POST, not
+just the one field. The schema `version` did not change, so the currently
+deployed Worker accepts everything new builds send; there is no hurry.
+
+Check the oldest build still reporting before deploying. If you need to deploy
+sooner for an unrelated reason, re-add `"say_it"` to the `mode` enum in this
+file by hand, deploy, and take it out on the next pass — the Rust schema has
+already stopped emitting it, so nothing new will ever carry the value.

@@ -131,7 +131,7 @@ pub fn append_html(id: &str, html: &str) {
 /// Programmatically click an element, if it exists.
 ///
 /// Lets one surface route to another's EXISTING entry point instead of copying
-/// its handler — the Play hub taps `sayItBtn` rather than reimplementing Say It's
+/// its handler — the Play hub taps `spellItBtn` rather than reimplementing Spell It's
 /// open flow, so there is still exactly one place that knows how a mode starts.
 /// Silently does nothing when the target is absent (unlike [`el`], which panics):
 /// a hub tile may outlive a hidden or unwired button, and a missing destination

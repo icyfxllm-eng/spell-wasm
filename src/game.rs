@@ -402,7 +402,7 @@ fn reflect_play_direction(app: &App) {
     // function keys off `cur_lang` (the word on the PLAY surface) while Say It
     // picks its own word from `lang` (the picker), and Misses makes those two
     // diverge. Stamping this direction there would put one word's direction on a
-    // different word — F1's own mistake, one surface over. say_it sets its own.
+    // different word — F1's own mistake, one surface over.
     for id in ["letters", "feedback", "meaning", "hintLine"] {
         let el = dom::el(id);
         let _ = el.set_attribute("lang", &code);

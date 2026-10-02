@@ -106,8 +106,8 @@ export async function launch() {
  *  `viewport: {width,height}` overrides the named device's dimensions (used by
  *  the submit-control-per-width sweep); DPR/mobile flags come from `device`.
  *  Feature flags are set by each spec via its own `ctx.addInitScript`
- *  (`localStorage['spell_flag_<name>']`), mirroring the FP2 specs (sayit /
- *  spellaloud / ghost) — the harness stays flag-agnostic. */
+ *  (`localStorage['spell_flag_<name>']`), mirroring the FP2 specs
+ *  (spellaloud / ghost) — the harness stays flag-agnostic. */
 /// Every context — openApp's and the specs that build their own — gets
 /// the same BASELINE: learner surfaces off (the placement card would
 /// pause a first serve), and speechSynthesis muted. A spec that is

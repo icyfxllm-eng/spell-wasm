@@ -49,9 +49,9 @@ struct Tool {
 // gone from Tools & Features, so their TOOLS entries must go too:
 // `reflect` calls `dom::input(tool.toggle)`, which PANICS on a missing
 // element, so a row deleted from the shell without its entry here would
-// crash the settings screen on open. say_it's row was also the one
-// genuinely dead switch the F8 effect tests found — it gated `wire()`
-// for a mode the code itself calls dormant, with no entry points.
+// crash the settings screen on open. Say It itself is gone outright
+// (CC-HUB-DEADROWS D1); its switch had been the one genuinely dead one
+// the F8 effect tests found, gating `wire()` for a dormant mode.
 const TOOLS: [Tool; 6] = [
     Tool { flag: "syllable_replay", toggle: "toolSyllableToggle", hint: "toolSyllableHint", row: "toolSyllableRow", avail_key: "tools.syllable.avail", avail: Avail::Universal, next_round: true, kid_ok: true },
     Tool { flag: "photo_list", toggle: "toolPhotoToggle", hint: "toolPhotoHint", row: "toolPhotoRow", avail_key: "tools.photo.avail", avail: Avail::Native, next_round: false, kid_ok: false },
@@ -118,7 +118,6 @@ pub fn wire(app: &App) {
 /// nothing to reflect here — they read the flag when the next word/round renders.
 fn apply_reflect(app: &App, flag: &str) {
     match flag {
-        "say_it" => crate::say_it::reflect_gating(app),
         "photo_list" => crate::photo_list::reflect_visibility(app),
         "spell_aloud" => crate::spell_aloud::reflect(app),
         "online_spelloff" => crate::online_spelloff::reflect_gate(),

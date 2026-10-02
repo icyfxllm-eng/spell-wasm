@@ -296,19 +296,19 @@ mod tests {
     #[test]
     fn registry_parses_and_holds_the_shipped_modes() {
         let all = all();
-        // 20 modes + 6 core surfaces. my_words and misses are surfaces rather
+        // 19 modes + 6 core surfaces. my_words and misses are surfaces rather
         // than modes, registered so the CC-HUB-NAV drawer can resolve their
         // rows through this registry and not a second list (I2); `versus` is
         // the newest, and it is here because v1.3.1 F2 deletes the quick-play
         // row that was the local Spell Off's only door (H1).
-        assert_eq!(all.len(), 26, "20 modes + 6 core surfaces registered");
+        assert_eq!(all.len(), 25, "19 modes + 6 core surfaces registered");
         // File order IS tile order (D6); practice leads (CC-PRACTICE D9).
         // letter_forge (CC-LETTER-FORGE F1) sits after def_match, where its
         // registry row was inserted. It is `hidden`, so it appears here — this
         // pin covers all() — and in none of the visible() expectations below.
         assert_eq!(
             ids(&all),
-            vec!["practice", "ghost_racing", "syllable_replay", "say_it", "photo_list", "spell_aloud", "word_stories", "online_spelloff", "def_match", "letter_forge", "word_chains", "impostor", "bee_sim", "word_picture", "my_words", "misses", "reports", "calendar", "translate", "spelldoku", "spell_search", "spell_cross", "standard", "climb", "daily", "versus"],
+            vec!["practice", "ghost_racing", "syllable_replay", "photo_list", "spell_aloud", "word_stories", "online_spelloff", "def_match", "letter_forge", "word_chains", "impostor", "bee_sim", "word_picture", "my_words", "misses", "reports", "calendar", "translate", "spelldoku", "spell_search", "spell_cross", "standard", "climb", "daily", "versus"],
         );
     }
 
@@ -349,7 +349,6 @@ mod tests {
             vec!["practice", "def_match", "letter_forge", "word_chains", "impostor", "bee_sim", "word_picture", "reports", "calendar", "translate", "spelldoku", "spell_search", "spell_cross"],
             "en Kid: practice, then the six companion tiles (D2: kid gets the full translator core)"
         );
-        assert!(!got.contains(&"say_it".to_string()), "say_it is never kid-visible (COPPA)");
         assert!(!got.contains(&"photo_list".to_string()));
     }
 
@@ -372,7 +371,7 @@ mod tests {
         // — the point is that a non-iOS mode still tiles on web, not that
         // any particular mode does.
         assert!(got.contains(&"def_match".to_string()), "an all-platform mode still tiles on web");
-        for ios_only in ["say_it", "photo_list", "spell_aloud", "reports", "calendar", "translate", "spelldoku", "spell_search", "spell_cross"] {
+        for ios_only in ["photo_list", "spell_aloud", "reports", "calendar", "translate", "spelldoku", "spell_search", "spell_cross"] {
             assert!(!got.contains(&ios_only.to_string()), "{ios_only} is iOS-only");
         }
     }
@@ -580,11 +579,12 @@ mod tests {
         assert_eq!(of(Group::WordPuzzles),
                    ["letter_forge", "spell_cross", "spell_search", "spelldoku", "word_chains"]);
         assert_eq!(of(Group::Meaning), ["def_match", "impostor", "word_picture"]);
-        // say_it and versus are the two additions to D-N6's six, and neither is
-        // a preference. Each owned a quick-play tile that v1.3.1 F2 deletes, and
-        // I-N3 requires both to reach a drawer row, so neither can be unlisted.
+        // versus was an addition to D-N6's six, and not a preference: it owned a
+        // quick-play tile that v1.3.1 F2 deletes, and I-N3 requires it to reach a
+        // drawer row, so it cannot be unlisted. The pronunciation mode was the
+        // other addition; CC-HUB-DEADROWS D1 removed it outright.
         assert_eq!(of(Group::SpellIt),
-                   ["bee_sim", "climb", "daily", "online_spelloff", "practice", "say_it", "standard", "versus"]);
+                   ["bee_sim", "climb", "daily", "online_spelloff", "practice", "standard", "versus"]);
     }
 
     /// A3's precondition. A tile whose mode is unlisted would be reachable from
@@ -655,7 +655,7 @@ mod web_wall_tests {
         let ids: Vec<String> = all().iter().map(|m| m.id.clone()).collect();
         // CC-SPELLDOKU Done #11: SpellDoku never registers on the site.
         // CC-WORDGRID Phase A: nor does Spell Search.
-        for app_only in ["word_picture", "say_it", "photo_list", "spell_aloud", "spelldoku", "spell_search", "spell_cross"] {
+        for app_only in ["word_picture", "photo_list", "spell_aloud", "spelldoku", "spell_search", "spell_cross"] {
             assert!(!ids.contains(&app_only.to_string()),
                     "{app_only} is still in the site registry — hiding is not removing");
         }

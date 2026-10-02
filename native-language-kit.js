@@ -187,12 +187,12 @@
         .catch(function () { return { supported: false, lang: '', confidence: 0 }; });
     },
 
-    // ---- Say It (Feature F2): ON-DEVICE speech recognition ONLY ----
+    // ---- ON-DEVICE speech recognition ONLY ----
 
     /**
      * Can `lang` be recognized entirely ON-DEVICE on this platform? The privacy
      * contract lives in the shape: `available` is NEVER true unless on-device
-     * recognition is supported. Treat `available:false` as "the Say-It mode is
+     * recognition is supported. Treat `available:false` as "spoken input is
      * UNAVAILABLE for this language" — it must NEVER be read as permission to use
      * server-based recognition (a child's voice never leaves the phone).
      * @param {string} lang bare app language code, e.g. "en"
@@ -371,7 +371,7 @@
     },
     // ---- Spell It Out Loud (voice spelling INPUT): letter-capture profile ----
     //
-    // The SAME on-device recognizer as Say-It, a DIFFERENT profile: the recognizer
+    // The SAME on-device recognizer, a DIFFERENT profile: the recognizer
     // is biased with `contextualStrings` (the language's spoken letter names) and
     // streams RAW transcript tokens (partials included) live via callbacks, so the
     // Rust letter-parser can echo "C… CA… CAT" as the child speaks. The plugin does

@@ -61,12 +61,6 @@ pub fn syllable_replay() -> bool {
     resolve(stored("syllable_replay").as_deref(), true)
 }
 
-/// F2 "Say It" — on-device pronunciation practice; iOS-only at runtime, and
-/// hard-disabled in Kid Mode regardless of this flag (COPPA).
-pub fn say_it() -> bool {
-    resolve(stored("say_it").as_deref(), true)
-}
-
 /// F1 "Photo-to-word-list" — VisionKit OCR of a handout; iOS-only, hidden in Kid Mode.
 pub fn photo_list() -> bool {
     resolve(stored("photo_list").as_deref(), true)
@@ -300,7 +294,6 @@ pub fn is_on(name: &str) -> bool {
         "standard" | "climb" | "daily" | "my_words" | "misses" | "versus" => true,
         "ghost_racing" => ghost_racing(),
         "syllable_replay" => syllable_replay(),
-        "say_it" => say_it(),
         "photo_list" => photo_list(),
         "word_stories" => word_stories(),
         "online_spelloff" => online_spelloff(),
@@ -383,7 +376,7 @@ mod tests {
     #[test]
     fn defaults_match_the_integration_build() {
         set_test_override(None);
-        assert!(ghost_racing() && syllable_replay() && say_it() && photo_list());
+        assert!(ghost_racing() && syllable_replay() && photo_list());
         assert!(!word_stories(), "F5 ships dark");
         assert!(!translate(), "Translate Phase A ships dark until Phase B");
         set_test_override(Some("on"));
@@ -397,7 +390,7 @@ mod tests {
     fn is_on_honors_each_flag_default() {
         set_test_override(None);
         // Same defaults the Tools hub renders each switch from.
-        assert!(is_on("ghost_racing") && is_on("syllable_replay") && is_on("say_it"));
+        assert!(is_on("ghost_racing") && is_on("syllable_replay"));
         assert!(is_on("photo_list") && is_on("spell_aloud") && is_on("attempts_shields"));
         assert!(!is_on("word_stories") && !is_on("online_spelloff"));
         assert!(!is_on("unknown_flag"), "unknown names read as off");

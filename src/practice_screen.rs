@@ -409,7 +409,7 @@ fn start_word(app: &App) {
     // <html lang>, the UI locale, which would strip tracking for an Arabic
     // speaker practising English and leave it on for an English speaker
     // practising Arabic — the inversion game.rs warns about. The element has to
-    // declare its own language, so it does, the way say_it.rs already does.
+    // declare its own language, so it does.
     //
     // `lang` here is Practice's own session language, not `cur_lang`: Practice
     // picks its word from its own curriculum, so keying off the play surface's

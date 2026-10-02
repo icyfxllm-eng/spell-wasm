@@ -601,7 +601,7 @@ pub fn apply_events(buffer: &mut Vec<Slot>, evs: &[Event]) -> Applied {
 }
 
 // ===========================================================================
-// UI wiring (wasm-only; not host-unit-tested — mirrors say_it.rs's DOM layer)
+// UI wiring (wasm-only; not host-unit-tested)
 // ===========================================================================
 
 use crate::native_lang;
@@ -635,6 +635,20 @@ thread_local! {
     static CAP_STATE: RefCell<String> = const { RefCell::new(String::new()) };
     /// A voice-pack download is in flight (taps are ignored until it settles).
     static DOWNLOADING: Cell<bool> = const { Cell::new(false) };
+}
+
+/// Show or hide the play-screen front door (`spellItBtn`). Offered when the
+/// flag is on AND the native bridge is present, so off-iOS it stays hidden.
+/// Safe to call on every settings change.
+///
+/// This lived in the pronunciation mode's module until CC-HUB-DEADROWS removed
+/// that mode. The element carried its name, because it owned the button first;
+/// CC-HUB-CLEANUP D1 handed the button here and left the old name, which is how
+/// a drawer row reading one thing came to launch another. The name is honest now.
+pub fn reflect_tile(app: &App) {
+    let _ = app;
+    let offered = crate::flags::spell_aloud() && native_lang::available();
+    crate::dom::toggle_class("spellItBtn", "btn-hide", !offered);
 }
 
 /// The master gate: the whole feature is dark unless the flag is on (Invariant I6).
@@ -731,8 +745,8 @@ pub fn wire(app: &App) {
     // the mode by ensuring a round is active — serve a word if there's none/answered,
     // else replay it — so the player hears what to spell. The voice mic is already
     // shown for voice-spell languages. Mirrors the orb; scoring stays the typed path.
-    // CC-HUB-CLEANUP D1: the home quick tile (sayItBtn, renamed Spell It) is
-    // the mode's single front door — same behavior as the hub entry.
+    // CC-HUB-CLEANUP D1: the home quick tile (spellItBtn) is the mode's single
+    // front door — same behavior as the hub entry.
     //
     // AUDITPASS F13: it now routes through the guide screen the note here
     // has been waiting for. ONCE (Eric, 2026-08-08) — a returning child
@@ -740,7 +754,7 @@ pub fn wire(app: &App) {
     // works" on the mic surface to bring it back, so showing it once does
     // not make it unfindable, which was the point of the annotation.
     let a_tile = app.clone();
-    crate::dom::on_click("sayItBtn", move || {
+    crate::dom::on_click("spellItBtn", move || {
         if crate::storage::get_raw(GUIDE_SEEN).is_none() {
             crate::dom::add_class("spellItGuide", "show");
         } else {

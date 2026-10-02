@@ -41,7 +41,7 @@ export async function run(browser, base, suite) {
       assert(t.length > 0, 'drawer rendered no rows');
       assert(!t.some((x) => x.mode === 'ghost_racing'), 'ghost_racing is cut and must not appear');
       assert(t.some((x) => x.mode === 'def_match'), 'an all-platform mode still reaches the drawer');
-      for (const iosOnly of ['say_it', 'photo_list', 'spell_aloud']) {
+      for (const iosOnly of ['photo_list', 'spell_aloud']) {
         assert(!t.some((x) => x.mode === iosOnly), `${iosOnly} is iOS-only and must not appear on web`);
       }
     } finally { await ctx.close(); }
@@ -194,7 +194,7 @@ export async function run(browser, base, suite) {
       // owns the exact kid menu (a Rust test pins list and order); what e2e
       // must guarantee is the safety property that list exists to protect —
       // no adult-only mode is EVER kid-visible, whatever its flag says.
-      for (const banned of ['say_it', 'photo_list', 'online_spelloff', 'word_stories', 'spell_aloud']) {
+      for (const banned of ['photo_list', 'online_spelloff', 'word_stories', 'spell_aloud']) {
         assert(!t.some((x) => x.mode === banned), `${banned} must never appear in Kid Mode`);
       }
       const txt = await page.$eval('#navDrawerPanel', (e) => e.textContent.toLowerCase());
