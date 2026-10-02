@@ -41,7 +41,19 @@ const PREMIUM = new Set(['photo_ocr', 'multiple_profiles', 'progress_reports', '
 // to be unique among rows a player can see side by side.
 const DRAWER_GROUPS = new Set(['spell_it', 'word_puzzles', 'meaning', 'your_words']);
 
-function validate(reg, { locale, flags } = {}) {
+// CC-HUB-DEADROWS F3 (static half) — the mode -> entry-point table in
+// src/play_hub.rs, read as text for the same reason this file reads flags.rs:
+// the registry says what a mode IS, that table says how this frontend reaches
+// it, and a drawer row needs both.
+function launchTable(src) {
+  const out = new Map();
+  for (const m of src.matchAll(/\("([a-z_]+)",\s*(?:Some\("([A-Za-z]+)"\)|None)\)/g)) {
+    out.set(m[1], m[2] ?? null);
+  }
+  return out;
+}
+
+function validate(reg, { locale, flags, launch } = {}) {
   const problems = [];
   if (!Array.isArray(reg.modes) || reg.modes.length === 0) return ['registry has no `modes` array'];
 
@@ -98,6 +110,22 @@ function validate(reg, { locale, flags } = {}) {
     }
   }
 
+  // CC-HUB-DEADROWS F3 — a drawer row must have somewhere to go. Every row is
+  // rendered from this registry and proxies its tap to an element; a row with
+  // no element renders fine and then does nothing, which is how two of them
+  // reached a TestFlight build. This is the cheap floor, not the whole gate:
+  // it cannot see an element that exists but is hidden, which is what actually
+  // happened. The e2e dead-row sweep covers that.
+  if (launch) {
+    for (const m of reg.modes) {
+      if (!DRAWER_GROUPS.has(m.group)) continue;
+      const el = m.hubTile?.element ?? launch.get(m.id);
+      if (!el) {
+        problems.push(`mode "${m.id}" is a ${m.group} drawer row with no entry point — give it a hubTile.element or a src/play_hub.rs LAUNCH target, or move it out of the drawer`);
+      }
+    }
+  }
+
   // CC-HUB-DEADROWS F4 — two rows with one icon read as two versions of the
   // same mode. Letter Forge and Spelling Bee both carried the bee until
   // 2026-10-02, and nothing caught it because nothing was looking.
@@ -119,12 +147,13 @@ function loadReal() {
     reg: JSON.parse(readFileSync(join(ROOT, 'config', 'modes.json'), 'utf8')),
     locale: JSON.parse(readFileSync(join(ROOT, 'src', 'i18n', 'locales', 'en.json'), 'utf8')),
     flags: readFileSync(join(ROOT, 'src', 'flags.rs'), 'utf8'),
+    launch: launchTable(readFileSync(join(ROOT, 'src', 'play_hub.rs'), 'utf8')),
   };
 }
 
 if (process.argv.includes('--selftest')) {
   // A checker that cannot fail is decoration. Each fixture breaks ONE rule.
-  const { locale, flags } = loadReal();
+  const { locale, flags, launch } = loadReal();
   const base = () => ({
     id: 'ghost_racing', nameKey: 'tools.racing.name', descKey: 'tools.racing.desc', icon: '👻',
     status: 'live', kidSafe: true, platforms: ['web'], entitlementLevel: 'full', requiresPremium: null, languages: null,
@@ -155,6 +184,14 @@ if (process.argv.includes('--selftest')) {
     { ...base(), id: 'syllable_replay', group: 'spell_it', icon: b },
   ];
   const shared = (ms) => validate({ modes: ms }, { locale, flags }).some((p) => p.includes('shared by drawer rows'));
+  // F3: a drawer row with no entry point. ghost_racing HAS a LAUNCH target, so
+  // the fixture that must fail is a drawer row whose id has none.
+  const routeless = { ...base(), id: 'word_stories', group: 'spell_it', nameKey: 'tools.racing.name' };
+  const noRoute = (ms) => validate({ modes: ms }, { locale, flags, launch }).some((p) => p.includes('with no entry point'));
+  if (!noRoute([routeless])) missed.push('drawer row with no entry point');
+  if (noRoute([{ ...routeless, group: 'unlisted' }])) missed.push('unlisted routeless mode wrongly rejected');
+  if (noRoute([{ ...base(), id: 'ghost_racing', group: 'spell_it' }])) missed.push('routed drawer row wrongly rejected');
+  if (noRoute([{ ...routeless, hubTile: { element: 'someBtn', member: true } }])) missed.push('hubTile element not accepted as a route');
   if (!shared(pair('\u{1F41D}', '\u{1F41D}'))) missed.push('two drawer rows sharing an icon');
   if (shared(pair('\u{1F41D}', '\u{1F528}'))) missed.push('distinct icons wrongly rejected');
   // Unlisted modes never sit side by side, so they may share freely.
@@ -168,7 +205,7 @@ if (process.argv.includes('--selftest')) {
     if (!cleanOk) console.error('modes-check --selftest: FAILED — a valid entry was wrongly rejected');
     process.exit(1);
   }
-  console.log(`modes-check --selftest: OK — all ${cases.length} malformed fixtures rejected, the icon rule bites on a shared icon and spares distinct and unlisted ones, valid entry accepted.`);
+  console.log(`modes-check --selftest: OK — all ${cases.length} malformed fixtures rejected, the icon rule bites on a shared icon and spares distinct and unlisted ones, a drawer row with no entry point is refused, valid entry accepted.`);
   process.exit(0);
 }
 
@@ -176,8 +213,8 @@ if (!existsSync(join(ROOT, 'config', 'modes.json'))) {
   console.error('modes-check: config/modes.json not found');
   process.exit(1);
 }
-const { reg, locale, flags } = loadReal();
-const problems = validate(reg, { locale, flags });
+const { reg, locale, flags, launch } = loadReal();
+const problems = validate(reg, { locale, flags, launch });
 if (problems.length) {
   console.error(`modes-check: FAILED — ${problems.length} problem(s):`);
   for (const p of problems) console.error(`  ✗ ${p}`);

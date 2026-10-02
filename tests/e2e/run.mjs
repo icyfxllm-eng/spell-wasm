@@ -115,7 +115,12 @@ try {
   // used to destructure `[name, mod]`, so any module after the first was
   // registered, imported, and NEVER RUN. placement.mjs sat dead that way
   // while the orb it was meant to protect died on device.
+  // `node tests/e2e/run.mjs drawer` runs one area. No filter runs them all, so
+  // CI is unchanged; this exists so a single spec can be verified in seconds
+  // instead of rebuilding and running every area to check one of them.
+  const only = process.argv.slice(2).filter((a) => !a.startsWith('-'));
   for (const [name, ...mods] of SPECS) {
+    if (only.length && !only.includes(name)) continue;
     if (!BOTH_SPECS.has(name) && WEB_ONLY_SPECS.has(name) !== IS_WEB) {
       // Announced, never silent. A spec that vanishes without a word is how
       // the twelve-day language regression stayed invisible.

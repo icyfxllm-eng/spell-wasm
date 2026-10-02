@@ -40,7 +40,7 @@ use crate::App;
 #[cfg(not(feature = "web"))]
 const N_LAUNCH: usize = 19; // + spell_cross (CC-WORDGRID Phase B, app only)
 #[cfg(feature = "web")]
-const N_LAUNCH: usize = 9;
+const N_LAUNCH: usize = 8;
 const LAUNCH: [(&str, Option<&str>); N_LAUNCH] = [
     ("practice", Some("practiceOpen")), // CC-PRACTICE: the front porch, first (D9)
     // Races inside The Climb, but HAS its own screen: it shows the ghost you're

@@ -2746,6 +2746,12 @@
       <button class="btn btn-check" id="spellItGuideGo" data-i18n="spellit.guide.start" style="width:100%">Got it</button>
     </div>
   </div>
+  <!-- CC-HUB-DEADROWS F2: the way back into the guide, from Help & Settings.
+       Kept in the DOM purely so the drawer row has something to click (the
+       climbBtn idiom). spell_aloud.rs has wired this id since the guide
+       landed; until now nothing rendered it, so the guide was show-once and
+       then unreachable -- the opposite of what its own note promised. -->
+  <button class="launch btn-hide" id="spellItGuideAgain" data-i18n="spellit.guide.again">How this works</button>
   <!-- Online Spell Off: create / join modal (async 1v1 via a shared seed).
        Account-gated + friend-code only (no anonymous play, no strangers, no
        chat) — see online_spelloff.rs. -->

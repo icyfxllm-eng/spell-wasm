@@ -703,6 +703,15 @@ pub fn reflect(app: &App) {
 /// F13 — set once the guide has been read, so it shows exactly one time.
 const GUIDE_SEEN: &str = "spell_spellit_guide_seen";
 
+thread_local! {
+    /// True while the guide is open as HELP (from Help & Settings) rather than
+    /// as the door into play. "Got it" then just closes it: a player who opened
+    /// a help page did not ask to be put into a round. It also leaves
+    /// GUIDE_SEEN alone, so reading help early does not rob a first-time player
+    /// of the guide on their actual first entry.
+    static GUIDE_AS_HELP: Cell<bool> = const { Cell::new(false) };
+}
+
 /// Route into play through the SAME hidden entry every other launcher
 /// uses, so the guide adds a step in front of the flow rather than a
 /// second way in.
@@ -755,6 +764,7 @@ pub fn wire(app: &App) {
     // not make it unfindable, which was the point of the annotation.
     let a_tile = app.clone();
     crate::dom::on_click("spellItBtn", move || {
+        GUIDE_AS_HELP.with(|h| h.set(false));
         if crate::storage::get_raw(GUIDE_SEEN).is_none() {
             crate::dom::add_class("spellItGuide", "show");
         } else {
@@ -771,8 +781,11 @@ pub fn wire(app: &App) {
     // whole site down again. Same idiom as wire_placement's dom::exists.
     if crate::dom::exists("spellItGuideGo") {
         crate::dom::on_click("spellItGuideGo", || {
-            crate::storage::set_raw(GUIDE_SEEN, "1");
             crate::dom::remove_class("spellItGuide", "show");
+            if GUIDE_AS_HELP.with(|h| h.replace(false)) {
+                return;
+            }
+            crate::storage::set_raw(GUIDE_SEEN, "1");
             enter_play();
         });
     }
@@ -781,6 +794,7 @@ pub fn wire(app: &App) {
     // it, and clearing would re-show it unbidden on the next entry.
     if crate::dom::exists("spellItGuideAgain") {
         crate::dom::on_click("spellItGuideAgain", || {
+            GUIDE_AS_HELP.with(|h| h.set(true));
             crate::dom::add_class("spellItGuide", "show");
         });
     }

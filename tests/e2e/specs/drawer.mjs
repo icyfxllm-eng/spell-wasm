@@ -32,6 +32,40 @@ async function rows(page) {
 }
 
 export async function run(browser, base, suite) {
+  // CC-HUB-DEADROWS F3 — the dead-row sweep.
+  //
+  // Rows reached a TestFlight build doing nothing when tapped, and the existing
+  // destination test could not see it: that one checks the ROW is not disabled
+  // and taps exactly one of them. This checks what every row PRESSES.
+  //
+  // Deliberately NOT a btn-hide check. Hidden is not dead: a hidden button
+  // still fires its handler, and the drawer leans on exactly that — practiceOpen
+  // and defMatchOpen are kept in the DOM hidden, purely so a row can click them
+  // (the climbBtn idiom). The things that really swallow a tap are a target that
+  // is not in the DOM, a target that is `disabled` (the drawer says it itself:
+  // "a disabled button fires no click"), and a row with no target at all.
+  await suite.test('every drawer row presses something that can receive it', async () => {
+    const { ctx, page } = await openApp(browser, base, { lang: 'en' });
+    try {
+      await page.click('#navBurger');
+      await page.waitForTimeout(300);
+      const bad = await page.$$eval('#navDrawerPanel .nav-row', (els) =>
+        els.map((e) => {
+          const id = e.dataset.mode;
+          const target = e.dataset.target;
+          if (!target) return { id, why: 'no data-target — the row presses nothing' };
+          const el = document.getElementById(target);
+          if (!el) return { id, why: `target #${target} is not in the DOM` };
+          if (el.disabled) return { id, why: `target #${target} is disabled; a disabled button fires no click` };
+          return null;
+        }).filter(Boolean));
+      assert(bad.length === 0,
+        `rows that press nothing live: ${bad.map((b) => `${b.id} (${b.why})`).join('; ')}`);
+    } finally {
+      await ctx.close();
+    }
+  });
+
   await suite.test('drawer: opens from the meta corner and renders registry rows', async () => {
     const { ctx, page } = await openApp(browser, base, { lang: 'en' });
     try {

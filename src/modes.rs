@@ -583,8 +583,14 @@ mod tests {
         // quick-play tile that v1.3.1 F2 deletes, and I-N3 requires it to reach a
         // drawer row, so it cannot be unlisted. The pronunciation mode was the
         // other addition; CC-HUB-DEADROWS D1 removed it outright.
+        //
+        // `standard` is absent by CC-HUB-DEADROWS F2 (Eric, 2026-10-02), which
+        // amends D-N6 deliberately: v1.3.1 gave the base game a row, and the row
+        // could only ever close the drawer, because the base game is what the
+        // drawer opens over. Recorded here rather than quietly dropped, since
+        // this list is the form D-N6's signature takes in the tree.
         assert_eq!(of(Group::SpellIt),
-                   ["bee_sim", "climb", "daily", "online_spelloff", "practice", "standard", "versus"]);
+                   ["bee_sim", "climb", "daily", "online_spelloff", "practice", "versus"]);
     }
 
     /// A3's precondition. A tile whose mode is unlisted would be reachable from
@@ -632,14 +638,20 @@ mod tests {
         assert_eq!(tiles, cat);
     }
 
-    /// Nothing is unlisted by accident: every one is either held back by D-N6
-    /// until it has a reviewed spec, or an in-round aid with no destination.
+    /// Nothing is unlisted by accident: every one is held back by D-N6 until it
+    /// has a reviewed spec, or is an in-round aid with no destination -- or, in
+    /// exactly one case, IS the destination.
+    ///
+    /// `standard` is that case (CC-HUB-DEADROWS F2). The base game is the
+    /// surface the drawer opens over, so its row could only ever close the
+    /// drawer and arrive. It is unlisted because there is nowhere to send a
+    /// player who is already there, not because it is unfinished or an aid.
     #[test]
     fn unlisted_is_a_short_and_deliberate_list() {
         let mut v: Vec<String> =
             all().iter().filter(|m| m.group == Group::Unlisted).map(|m| m.id.clone()).collect();
         v.sort();
-        assert_eq!(v, ["ghost_racing", "spell_aloud", "syllable_replay", "word_stories"]);
+        assert_eq!(v, ["ghost_racing", "spell_aloud", "standard", "syllable_replay", "word_stories"]);
     }
 }
 

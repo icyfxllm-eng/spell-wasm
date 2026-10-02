@@ -429,7 +429,7 @@
     },
     {
       "id": "standard",
-      "group": "spell_it",
+      "group": "unlisted",
       "nameKey": "top.spellIt",
       "descKey": "share.tagline",
       "icon": "🔊",
@@ -442,7 +442,7 @@
       "entitlementLevel": "preview",
       "requiresPremium": null,
       "languages": null,
-      "$note": "CC-ONBOARD-JR option (a): the base game. Its difficulty selector is LEVEL_OPTS, now filtered through experience::allowed_tiers. Core: never a hub tile.",
+      "$note": "CC-ONBOARD-JR option (a): the base game. Its difficulty selector is LEVEL_OPTS, now filtered through experience::allowed_tiers. Core: never a hub tile. CC-HUB-DEADROWS F2 (Eric, 2026-10-02): unlisted, because its drawer row was the surface the drawer opens over -- tapping it closed the drawer and arrived, which reads as a dead row. Closing the drawer still arrives; there is simply no row claiming to take you somewhere.",
       "exitStyle": "instant",
       "juniorPolicy": "ceiling:medium"
     },

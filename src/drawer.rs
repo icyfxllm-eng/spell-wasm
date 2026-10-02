@@ -70,6 +70,14 @@ pub struct Row {
     pub id: String,
     pub icon: String,
     pub name_key: String,
+    /// The element this row proxies its tap to, rendered as `data-target`.
+    ///
+    /// CC-HUB-DEADROWS F3. The drawer knew this already; it just kept it to
+    /// itself, so nothing outside Rust could check that a row's destination was
+    /// actually reachable. Two rows shipped pressing an element that was
+    /// hidden, which renders and then does nothing. Saying it in the markup is
+    /// what lets the e2e sweep see it.
+    pub target: Option<String>,
 }
 
 pub struct Section {
@@ -98,6 +106,13 @@ pub fn play_sections(shown: &[modes::Mode], lang: &str) -> Vec<Section> {
                     id: m.id.clone(),
                     icon: m.icon.clone(),
                     name_key: m.name_key.clone(),
+                    target: match route_for(m) {
+                        Route::Press(el) => Some(el),
+                        // The Climb sets the level selector rather than pressing
+                        // a button, so that control IS its destination.
+                        Route::Level(_) => Some("levelSel".to_string()),
+                        Route::Home => None,
+                    },
                 })
                 .collect(),
         })
@@ -126,7 +141,12 @@ pub fn your_words_rows(shown: &[modes::Mode]) -> Vec<Row> {
     let mut rows: Vec<Row> = shown
         .iter()
         .filter(|m| m.group == modes::Group::YourWords)
-        .map(|m| Row { id: m.id.clone(), icon: m.icon.clone(), name_key: m.name_key.clone() })
+        .map(|m| Row {
+            id: m.id.clone(),
+            icon: m.icon.clone(),
+            name_key: m.name_key.clone(),
+            target: target_for(m),
+        })
         .collect();
     if let Some(i) = rows.iter().position(|r| r.id == "misses") {
         let misses = rows.remove(i);
@@ -199,6 +219,14 @@ pub fn account(signed_in: bool, jr: bool, name: Option<String>) -> Account {
 /// wait for Phase D the way the phase table implies.
 pub fn help_rows() -> Vec<(&'static str, &'static str, &'static str)> {
     let mut v = vec![("settings.title", "\u{2699}", "setBtn")];
+    // CC-HUB-DEADROWS F2 — Spell It's help, in the one place Eric wants it.
+    // Absent rather than a placeholder where the markup is stripped, which is
+    // this function's own rule for Credits. The label is the guide's existing
+    // "How this works", already translated in all fifteen languages: a help row
+    // is not worth a new string in fifteen locales that no speaker has read.
+    if dom::doc().get_element_by_id("spellItGuideAgain").is_some() {
+        v.push(("spellit.guide.again", "\u{1F3A4}", "spellItGuideAgain"));
+    }
     if dom::doc().get_element_by_id("creditsBtn").is_some() {
         v.push(("credits.title", "\u{1F399}", "creditsBtn"));
     }
@@ -357,14 +385,24 @@ fn follow(r: &Route) {
 
 /// One row. Shared by every group so a Your Words row cannot drift from a
 /// Play row — same height, same shape, same absence of secondary text (D-N3).
-fn row_html(id: &str, icon: &str, name: &str) -> String {
-    row_html_with_badge(id, icon, name, None)
+/// `data-target` when the row has somewhere to go, nothing when it does not.
+/// Rendered rather than inferred so a test can read a row's destination without
+/// reimplementing the routing table (CC-HUB-DEADROWS F3).
+fn target_attr(target: Option<&str>) -> String {
+    match target {
+        Some(el) => format!(" data-target=\"{}\"", dom::escape_html(el)),
+        None => String::new(),
+    }
+}
+
+fn row_html(id: &str, icon: &str, name: &str, target: Option<&str>) -> String {
+    row_html_with_badge(id, icon, name, None, target)
 }
 
 /// The badge is fixed-width (F3) so a row does not reflow between 9 and 10 due
 /// words, and `margin-inline-start:auto` pins it to the trailing edge in both
 /// writing directions.
-fn row_html_with_badge(id: &str, icon: &str, name: &str, badge: Option<&str>) -> String {
+fn row_html_with_badge(id: &str, icon: &str, name: &str, badge: Option<&str>, target: Option<&str>) -> String {
     let badge_html = match badge {
         Some(b) => format!(
             "<b class=\"nav-badge\" style=\"margin-inline-start:auto;min-width:34px;\
@@ -374,13 +412,14 @@ fn row_html_with_badge(id: &str, icon: &str, name: &str, badge: Option<&str>) ->
         None => String::new(),
     };
     format!(
-        "<button type=\"button\" class=\"nav-row\" id=\"navRow_{0}\" data-mode=\"{0}\" \
+        "<button type=\"button\" class=\"nav-row\" id=\"navRow_{0}\" data-mode=\"{0}\"{5} \
          style=\"height:{1}px;min-height:{1}px;max-height:{1}px;\
          display:flex;align-items:center;gap:10px;width:100%;\
          padding:0 14px;margin:0 0 2px;text-align:start\">\
          <span class=\"nav-ico\" aria-hidden=\"true\">{2}</span>\
          <span class=\"nav-name\">{3}</span>{4}</button>",
         dom::escape_html(id), ROW_PX, dom::escape_html(icon), dom::escape_html(name), badge_html,
+        target_attr(target),
     )
 }
 
@@ -398,7 +437,7 @@ fn body(sections: &[Section]) -> String {
                 // button styling makes them shrink-to-fit cards that flow side
                 // by side. Measuring height alone said the rows were fine and
                 // a screenshot said otherwise.
-                "<button type=\"button\" class=\"nav-row\" id=\"navRow_{0}\" data-mode=\"{0}\" \
+                "<button type=\"button\" class=\"nav-row\" id=\"navRow_{0}\" data-mode=\"{0}\"{4} \
                  style=\"height:{1}px;min-height:{1}px;max-height:{1}px;\
                  display:flex;align-items:center;gap:10px;width:100%;\
                  padding:0 14px;margin:0 0 2px;text-align:start\">\
@@ -408,6 +447,7 @@ fn body(sections: &[Section]) -> String {
                 ROW_PX,
                 dom::escape_html(&r.icon),
                 dom::escape_html(dedupe_icon(&r.icon, &t(&r.name_key))),
+                target_attr(r.target.as_deref()),
             ));
         }
     }
@@ -594,7 +634,7 @@ fn render(app: &App) {
     if let Some((key, _)) = acct.action {
         // Same dedupe as a mode row: top.signIn already carries its own glyph.
         let label = t(key);
-        h.push_str(&row_html("acct", "\u{1F464}", dedupe_icon("\u{1F464}", &label)));
+        h.push_str(&row_html("acct", "\u{1F464}", dedupe_icon("\u{1F464}", &label), acct.action.map(|(_, el)| el)));
     }
     h.push_str(&body(&play));
     // I3 wants absent, never greyed; I8 forbids the drawer any learner read.
@@ -623,7 +663,7 @@ fn render(app: &App) {
             // produced -- second-hand and read-only, which is how I8 and a
             // live count hold at once.
             let badge = if r.id == "misses" { misses_badge_from_dom() } else { None };
-            h.push_str(&row_html_with_badge(&r.id, &r.icon, label, badge.as_deref()));
+            h.push_str(&row_html_with_badge(&r.id, &r.icon, label, badge.as_deref(), r.target.as_deref()));
         }
     }
     let help = help_rows();
@@ -632,9 +672,9 @@ fn render(app: &App) {
             "<h3 class=\"nav-group\" role=\"heading\" aria-level=\"2\">{}</h3>",
             dom::escape_html(&t("settings.title"))
         ));
-        for (key, icon, _) in &help {
+        for (key, icon, element) in &help {
             let label = t(key);
-            h.push_str(&row_html(&format!("help_{key}"), icon, dedupe_icon(icon, &label)));
+            h.push_str(&row_html(&format!("help_{key}"), icon, dedupe_icon(icon, &label), Some(element)));
         }
     }
     // I5/F1: the last row has to clear the footer, so the scroll content ends
