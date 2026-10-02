@@ -2,6 +2,12 @@
 
 60 words per voice, both recognizers, blind (I3).
 
+**The `(current)` marker below is stale, and harmlessly so.** On 2026-10-02
+`es-ES-Neural2-B` was renamed to `es-ES-Neural2-G`, which Google still lists
+and which returns byte-identical audio — verified across four words. The row
+scored as current is the same voice under its old label, so every number here
+still describes what ships.
+
 **11 rows below, at most 8 actual voices. Measured 2026-10-02, corrected the same day.**
 
 Google answers a voice name it does not have by serving a different voice,

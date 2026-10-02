@@ -59,8 +59,21 @@ LANGUAGE_CODE = "en-US"
 # A lang in neither map falls back to the English voice (see the DEFAULT_LANG guard).
 LANG_VOICES = {
     "en": ("en-US", "en-US-Neural2-E"),
-    "es": ("es-ES", "es-ES-Neural2-B"),
-    "fr": ("fr-FR", "fr-FR-Neural2-A"),
+    # CC-AUDIO-CLARITY, 2026-10-02 — renamed onto LISTED names, NOT a voice
+    # change. Google no longer lists es-ES-Neural2-B or fr-FR-Neural2-A in its
+    # catalogue, yet both still synthesize; delisted is not withdrawn, but it
+    # is the warning before it. Each has a listed twin that returns
+    # BYTE-IDENTICAL audio -- verified across four different words per pair,
+    # and stable across repeated samples, which matters because Google's
+    # synthesis is not deterministic in general.
+    #
+    # So this swaps a name Google has stopped advertising for one it still
+    # does, and changes nothing a player hears. Neither language is in
+    # VOICE_IN_KEY, so the cache key does not move either: the 12,198 warmed
+    # Spanish clips keep serving untouched and no re-warm is owed. That is the
+    # whole reason to do it now rather than later.
+    "es": ("es-ES", "es-ES-Neural2-G"),
+    "fr": ("fr-FR", "fr-FR-Neural2-F"),
     # CC-AUDIO-CLARITY F4, signed 2026-09-28. de-DE-Neural2-A over -B: +5
     # clips of 60, with both recognizers competent on German (whisper 49/60,
     # Google 34/60), so the lead is the voice and not the harness.
