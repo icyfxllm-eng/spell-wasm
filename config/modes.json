@@ -210,7 +210,7 @@
       "group": "word_puzzles",
       "nameKey": "tools.forge.name",
       "descKey": "tools.forge.desc",
-      "icon": "🐝",
+      "icon": "🔨",
       "status": "live",
       "kidSafe": true,
       "platforms": [

@@ -37,6 +37,9 @@ const JUNIOR_MAX = 'medium';
 const PLATFORMS = new Set(['web', 'ios']);
 const LEVELS = new Set(['none', 'preview', 'full']);
 const PREMIUM = new Set(['photo_ocr', 'multiple_profiles', 'progress_reports', 'custom_lists_unlimited']);
+// CC-HUB-DEADROWS F4 — the groups that render as drawer rows. An icon only has
+// to be unique among rows a player can see side by side.
+const DRAWER_GROUPS = new Set(['spell_it', 'word_puzzles', 'meaning', 'your_words']);
 
 function validate(reg, { locale, flags } = {}) {
   const problems = [];
@@ -94,6 +97,20 @@ function validate(reg, { locale, flags } = {}) {
       problems.push(`${at}: no flag "pub fn ${m.id}()" in src/flags.rs — a registry entry with no implementation is a tile leading nowhere`);
     }
   }
+
+  // CC-HUB-DEADROWS F4 — two rows with one icon read as two versions of the
+  // same mode. Letter Forge and Spelling Bee both carried the bee until
+  // 2026-10-02, and nothing caught it because nothing was looking.
+  const byIcon = new Map();
+  for (const m of reg.modes) {
+    if (!DRAWER_GROUPS.has(m.group) || !m.icon) continue;
+    byIcon.set(m.icon, (byIcon.get(m.icon) ?? []).concat(m.id));
+  }
+  for (const [icon, ids] of byIcon) {
+    if (ids.length > 1) {
+      problems.push(`icon ${JSON.stringify(icon)} is shared by drawer rows ${ids.join(', ')} — a player sees them side by side`);
+    }
+  }
   return problems;
 }
 
@@ -132,6 +149,18 @@ if (process.argv.includes('--selftest')) {
     const m = base(); mutate(m);
     if (validate({ modes: [m] }, { locale, flags }).length === 0) missed.push(name);
   }
+  // F4 takes TWO rows to express, which the single-entry fixtures cannot do.
+  const pair = (a, b) => [
+    { ...base(), id: 'ghost_racing', group: 'spell_it', icon: a },
+    { ...base(), id: 'syllable_replay', group: 'spell_it', icon: b },
+  ];
+  const shared = (ms) => validate({ modes: ms }, { locale, flags }).some((p) => p.includes('shared by drawer rows'));
+  if (!shared(pair('\u{1F41D}', '\u{1F41D}'))) missed.push('two drawer rows sharing an icon');
+  if (shared(pair('\u{1F41D}', '\u{1F528}'))) missed.push('distinct icons wrongly rejected');
+  // Unlisted modes never sit side by side, so they may share freely.
+  const unlisted = pair('\u{1F41D}', '\u{1F41D}').map((m) => ({ ...m, group: 'unlisted' }));
+  if (shared(unlisted)) missed.push('unlisted modes wrongly held to the icon rule');
+
   // ...and a well-formed entry must PASS, or the checker is just noisy.
   const cleanOk = validate({ modes: [base()] }, { locale, flags }).length === 0;
   if (missed.length || !cleanOk) {
@@ -139,7 +168,7 @@ if (process.argv.includes('--selftest')) {
     if (!cleanOk) console.error('modes-check --selftest: FAILED — a valid entry was wrongly rejected');
     process.exit(1);
   }
-  console.log(`modes-check --selftest: OK — all ${cases.length} malformed fixtures rejected, valid entry accepted.`);
+  console.log(`modes-check --selftest: OK — all ${cases.length} malformed fixtures rejected, the icon rule bites on a shared icon and spares distinct and unlisted ones, valid entry accepted.`);
   process.exit(0);
 }
 
