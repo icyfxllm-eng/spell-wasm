@@ -44,26 +44,56 @@ export async function run(browser, base, suite) {
   // (the climbBtn idiom). The things that really swallow a tap are a target that
   // is not in the DOM, a target that is `disabled` (the drawer says it itself:
   // "a disabled button fires no click"), and a row with no target at all.
-  await suite.test('every drawer row presses something that can receive it', async () => {
-    const { ctx, page } = await openApp(browser, base, { lang: 'en' });
+  // Acceptance 5 wants this across uiLangs and both profiles, because the row
+  // SET differs per profile (juniorPolicy) and per language (availability), so
+  // English-standard alone would leave the Jr menu and the RTL layout unswept.
+  // ar is here for being right-to-left; Jr for having a different row set.
+  const sweepRows = (page) => page.$$eval('#navDrawerPanel .nav-row', (els) =>
+    els.map((e) => {
+      const id = e.dataset.mode;
+      const target = e.dataset.target;
+      if (!target) return { id, why: 'no data-target — the row presses nothing' };
+      const el = document.getElementById(target);
+      if (!el) return { id, why: `target #${target} is not in the DOM` };
+      if (el.disabled) return { id, why: `target #${target} is disabled; a disabled button fires no click` };
+      return null;
+    }).filter(Boolean));
+
+  const assertSweep = async (page) => {
+    await page.click('#navBurger');
+    await page.waitForTimeout(300);
+    const seen = await page.$$eval('#navDrawerPanel .nav-row', (els) => els.length);
+    assert(seen > 0, 'the drawer rendered no rows at all');
+    const bad = await sweepRows(page);
+    assert(bad.length === 0,
+      `rows that press nothing live: ${bad.map((b) => `${b.id} (${b.why})`).join('; ')}`);
+  };
+
+  for (const lang of ['en', 'ar']) {
+    await suite.test(`every drawer row presses something that can receive it (${lang})`, async () => {
+      // openApp, not a hand-built context: it answers the age gate, which
+      // otherwise sits over the burger and the click times out.
+      const { ctx, page } = await openApp(browser, base, { lang });
+      try {
+        await assertSweep(page);
+      } finally { await ctx.close(); }
+    });
+  }
+
+  await suite.test('every drawer row presses something that can receive it (Jr)', async () => {
+    const ctx = await browser.newContext({ viewport: { width: 390, height: 844 }, isMobile: true });
+    await pinBaseline(ctx);
     try {
-      await page.click('#navBurger');
-      await page.waitForTimeout(300);
-      const bad = await page.$$eval('#navDrawerPanel .nav-row', (els) =>
-        els.map((e) => {
-          const id = e.dataset.mode;
-          const target = e.dataset.target;
-          if (!target) return { id, why: 'no data-target — the row presses nothing' };
-          const el = document.getElementById(target);
-          if (!el) return { id, why: `target #${target} is not in the DOM` };
-          if (el.disabled) return { id, why: `target #${target} is disabled; a disabled button fires no click` };
-          return null;
-        }).filter(Boolean));
-      assert(bad.length === 0,
-        `rows that press nothing live: ${bad.map((b) => `${b.id} (${b.why})`).join('; ')}`);
-    } finally {
-      await ctx.close();
-    }
+      await ctx.addInitScript(([age]) => {
+        localStorage.setItem('byear_agegate_v1', age);
+        localStorage.setItem('spellgame.locale', 'en');
+      }, [AGE_KID]);
+      await ctx.route('**/api/speak**', (r) => r.fulfill({ status: 200, contentType: 'audio/mpeg', body: Buffer.from([]) }));
+      const page = await ctx.newPage();
+      await page.goto(base);
+      await page.waitForTimeout(800);
+      await assertSweep(page);
+    } finally { await ctx.close(); }
   });
 
   await suite.test('drawer: opens from the meta corner and renders registry rows', async () => {

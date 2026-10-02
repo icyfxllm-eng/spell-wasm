@@ -1,9 +1,11 @@
 # TEST-REPORT — Web E2E (app build)
 
-**19/19 passed** across 1 areas.
+**21/21 passed** across 1 areas.
 
-## drawer — 19/19
-- ✅ every drawer row presses something that can receive it
+## drawer — 21/21
+- ✅ every drawer row presses something that can receive it (en)
+- ✅ every drawer row presses something that can receive it (ar)
+- ✅ every drawer row presses something that can receive it (Jr)
 - ✅ drawer: opens from the meta corner and renders registry rows
 - ✅ drawer: every mode row has a destination that exists
 - ✅ drawer: word_stories is never rendered (F8 hard gate)
