@@ -17,6 +17,7 @@ import html
 import threading
 import time
 import hashlib
+import socket
 import unicodedata
 import urllib.error
 import urllib.parse
@@ -350,6 +351,46 @@ def _audio_config(speaking_rate: float) -> texttospeech.AudioConfig:
     )
 
 
+def _urlopen_retrying_dns(req, timeout, what):
+    """urlopen, but a NAME RESOLUTION failure is retried rather than raised.
+
+    This Mac's resolver drops out in bursts: during the Swahili warm on
+    2026-10-03 it failed six times in three hours, each burst under two
+    minutes, each recovering on its own. 144 synthesis attempts died on
+    "[Errno 8] nodename nor servname provided" against a host that resolves
+    perfectly either side of the burst.
+
+    Only the resolution failure is retried. An HTTP error is NOT: a 401 is a
+    bad key and a 429 is a rate limit, and hammering either is worse than
+    failing. Three tries over ~7 seconds covers a burst without turning a real
+    outage into a hang.
+
+    The tempting fix was pinning the IP in /etc/hosts. That host is a Traffic
+    Manager CNAME with a 233-second TTL -- Microsoft moves it deliberately for
+    failover and maintenance -- so pinning trades an intermittent, self-healing
+    failure for a silent permanent one, and disables the failover. Eric's call,
+    2026-10-03.
+    """
+    delays = (0.0, 2.0, 5.0)
+    last = None
+    for delay in delays:
+        if delay:
+            time.sleep(delay)
+        try:
+            return urllib.request.urlopen(req, timeout=timeout).read()
+        except urllib.error.URLError as e:
+            # socket.gaierror is what a name that will not resolve looks like
+            # here. Anything else -- HTTPError included, since it subclasses
+            # URLError -- is a real answer and belongs to the caller.
+            if isinstance(e, urllib.error.HTTPError) or not isinstance(
+                getattr(e, "reason", None), socket.gaierror
+            ):
+                raise
+            last = e
+            app.logger.warning(f"DNS retry for {what}: {e.reason}")
+    raise last
+
+
 def _synthesize_azure(word: str, variant: str, path: str, lang: str) -> None:
     """Synthesize via Azure Speech REST and store the MP3. Used for AZURE_VOICES
     languages (Swahili) that Google TTS lacks a solid voice for. Output format and
@@ -385,8 +426,7 @@ def _synthesize_azure(word: str, variant: str, path: str, lang: str) -> None:
             "User-Agent": "SpellGame",  # Azure rejects requests with no User-Agent
         },
     )
-    with urllib.request.urlopen(req, timeout=15) as resp:
-        audio = resp.read()
+    audio = _urlopen_retrying_dns(req, 15, f"azure tts {lang}")
     with open(path, "wb") as f:
         f.write(audio)
 
