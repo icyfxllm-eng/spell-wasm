@@ -445,6 +445,12 @@
         // Server STT rung (mic-everywhere): present ONLY after the explicit
         // internet-consent card, for languages with no on-device model.
         serverUrl: (opts && opts.serverUrl) || '',
+        // CC-SPELLIT-MIC-FIX D9: the recognizer's raw text joins the diag line
+        // only behind the dev door. Same key the rest of the dev door uses.
+        diag: (function () {
+          try { return localStorage.getItem('spell_dev_entitlements') === 'on'; }
+          catch (e) { return false; }
+        })(),
       }).catch(function (e) {
         if (onError) onError((e && e.message) || 'AUDIO_ERROR');
         cleanup();

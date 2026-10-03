@@ -13,7 +13,6 @@
 		4D22ABE92AF431CB00220026 /* CapApp-SPM in Frameworks */ = {isa = PBXBuildFile; productRef = 4D22ABE82AF431CB00220026 /* CapApp-SPM */; };
 		50379B232058CBB4000EE86E /* capacitor.config.json in Resources */ = {isa = PBXBuildFile; fileRef = 50379B222058CBB4000EE86E /* capacitor.config.json */; };
 		504EC3081FED79650016851F /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 504EC3071FED79650016851F /* AppDelegate.swift */; };
-		AD10SESSION0WNER0002 /* AudioSessionOwner.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD10SESSION0WNER0001 /* AudioSessionOwner.swift */; };
 		504EC30D1FED79650016851F /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 504EC30B1FED79650016851F /* Main.storyboard */; };
 		504EC30F1FED79650016851F /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 504EC30E1FED79650016851F /* Assets.xcassets */; };
 		504EC3121FED79650016851F /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 504EC3101FED79650016851F /* LaunchScreen.storyboard */; };
@@ -31,6 +30,7 @@
 		5B1DBD100000000000000D04 /* Previews.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B1DBD1000000000000000A7 /* Previews.swift */; };
 		5B1DBD100000000000000D90 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 5B1DBD1000000000000000B0 /* Localizable.strings */; };
 		A1F00E5C0B7D42C19E33AA01 /* NativeLanguageKitPlugin+SavePicture.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1F00E5C0B7D42C19E33AA02 /* NativeLanguageKitPlugin+SavePicture.swift */; };
+		AD10SESSION0WNER0002 /* AudioSessionOwner.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD10SESSION0WNER0001 /* AudioSessionOwner.swift */; };
 		CD429B8A6584E795B3BBA233 /* NativeLanguageKitCore in Frameworks */ = {isa = PBXBuildFile; productRef = B2335ADBAD7F5B5D76466705 /* NativeLanguageKitCore */; };
 		FADE0001000000000000EE20 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = FADE0001000000000000EE10 /* InfoPlist.strings */; };
 /* End PBXBuildFile section */
@@ -64,7 +64,6 @@
 		50379B222058CBB4000EE86E /* capacitor.config.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = capacitor.config.json; sourceTree = "<group>"; };
 		504EC3041FED79650016851F /* App.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = App.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		504EC3071FED79650016851F /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
-		AD10SESSION0WNER0001 /* AudioSessionOwner.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioSessionOwner.swift; sourceTree = "<group>"; };
 		504EC30C1FED79650016851F /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		504EC30E1FED79650016851F /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		504EC3111FED79650016851F /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
@@ -101,6 +100,7 @@
 		5B1DBD100000000000000C0E /* zh */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = zh; path = zh.lproj/Localizable.strings; sourceTree = "<group>"; };
 		958DCC722DB07C7200EA8C5F /* debug.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; name = debug.xcconfig; path = ../debug.xcconfig; sourceTree = SOURCE_ROOT; };
 		A1F00E5C0B7D42C19E33AA02 /* NativeLanguageKitPlugin+SavePicture.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = "NativeLanguageKitPlugin+SavePicture.swift"; sourceTree = "<group>"; };
+		AD10SESSION0WNER0001 /* AudioSessionOwner.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioSessionOwner.swift; sourceTree = "<group>"; };
 		D50A51C8A62BA80E2F6B0354 /* NativeLanguageKitPlugin+PhotoList.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = "NativeLanguageKitPlugin+PhotoList.swift"; sourceTree = "<group>"; };
 		F60E6967C62728C402EE9227 /* NativeLanguageKitPlugin.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = NativeLanguageKitPlugin.swift; sourceTree = "<group>"; };
 		FADE0001000000000000EE01 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = App/en.lproj/InfoPlist.strings; sourceTree = SOURCE_ROOT; };
@@ -525,7 +525,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_IDENTITY = "Apple Distribution";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 224;
+				CURRENT_PROJECT_VERSION = 262;
 				DEVELOPMENT_TEAM = WCH6H5NAWH;
 				INFOPLIST_FILE = App/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
@@ -550,7 +550,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_IDENTITY = "Apple Distribution";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 224;
+				CURRENT_PROJECT_VERSION = 262;
 				DEVELOPMENT_TEAM = WCH6H5NAWH;
 				INFOPLIST_FILE = App/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
@@ -574,7 +574,7 @@
 				CODE_SIGN_ENTITLEMENTS = SpellWidgets/SpellWidgets.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Distribution";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 224;
+				CURRENT_PROJECT_VERSION = 262;
 				DEVELOPMENT_TEAM = WCH6H5NAWH;
 				GENERATE_INFOPLIST_FILE = NO;
 				INFOPLIST_FILE = SpellWidgets/Info.plist;
@@ -602,7 +602,7 @@
 				CODE_SIGN_ENTITLEMENTS = SpellWidgets/SpellWidgets.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Distribution";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 224;
+				CURRENT_PROJECT_VERSION = 262;
 				DEVELOPMENT_TEAM = WCH6H5NAWH;
 				GENERATE_INFOPLIST_FILE = NO;
 				INFOPLIST_FILE = SpellWidgets/Info.plist;

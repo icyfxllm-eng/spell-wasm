@@ -290,7 +290,13 @@ public class NativeLanguageKitPlugin: CAPPlugin, CAPBridgedPlugin {
         let lang = call.getString("lang") ?? ""
         let contextual = (call.getArray("contextualStrings")?.compactMap { $0 as? String }) ?? []
         let serverUrl = call.getString("serverUrl") ?? ""
+        // D9: the recognizer's RAW text appears in the diag only behind the dev
+        // door. Transcripts are the player's speech; they do not belong on a
+        // normal build's status line, and the web layer only sets this when the
+        // dev flag is on.
+        let verbose = call.getBool("diag") ?? false
         DispatchQueue.main.async {
+            self.listener.diagVerbose = verbose
             self.listener.startLetters(
                 lang: lang,
                 contextualStrings: contextual,
@@ -417,6 +423,46 @@ final class SpeechListener {
     /// What the session reported when capture began (census C2), carried into
     /// the diag line so a future no-audio report is readable rather than guessed.
     private var lastRoute = ""
+
+    // CC-SPELLIT-MIC-FIX X3 — the recognizer's lifecycle, counted. Without these
+    // "no letters" cannot be told apart from "the recognizer never received
+    // anything" or "it received sound and returned nothing", which is three
+    // different bugs wearing one symptom.
+    /// Recognition requests created this capture (one per letter cycle).
+    private var reqCount = 0
+    /// Buffers actually handed to a live request. Zero with buf>0 means the
+    /// audio reached the tap and stopped there.
+    private var appendedCount = 0
+    /// Partial results seen, and whether a final ever arrived.
+    private var partialCount = 0
+    private var sawFinal = false
+    /// Total frames seen by the tap, and the most recent level.
+    private var frameCount: UInt64 = 0
+    private var lastRMS: Float = 0
+    /// Last recognizer error, domain and code.
+    private var lastErr = ""
+    /// The recognizer's own text before the parser (X4). Dev door only (D9).
+    private var lastRaw = ""
+    /// Set from the web layer's dev flag; keeps transcripts out of a normal build.
+    var diagVerbose = false
+
+    /// The one diag line, identical on every capture path (the analyzer path used
+    /// to print a thinner one, so whichever engine a device chose decided how much
+    /// you could see).
+    private func diagLine(format: AVAudioFormat?, onDev: Bool) -> String {
+        var s = lastRoute
+        if let f = format {
+            s += " ch=\(f.channelCount) fmt=\(f.commonFormat.rawValue)"
+        }
+        s += " engine=\(engineKind) buf=\(tapCount) frames=\(frameCount)"
+        s += " req=\(reqCount) appended=\(appendedCount)"
+        s += " partials=\(partialCount) final=\(sawFinal ? "y" : "n")"
+        s += " onDev=\(onDev) peak=\(String(format: "%.3f", peakRMS))"
+        s += " rms=\(String(format: "%.3f", lastRMS))"
+        if !lastErr.isEmpty { s += " err=\(lastErr)" }
+        if diagVerbose && !lastRaw.isEmpty { s += " raw=\"\(lastRaw)\"" }
+        return s
+    }
 
     // Highest RMS seen this session — reported in the diag line for VAD tuning.
     private var peakRMS: Float = 0
@@ -629,6 +675,15 @@ final class SpeechListener {
         // Defensive: clear any stale engine/tap state (e.g. an inputNode format cached
         // while the session was `.playback`) so the fresh tap gets real mic buffers.
         tapCount = 0
+        // One capture, one set of counters (X3).
+        frameCount = 0
+        appendedCount = 0
+        reqCount = 0
+        partialCount = 0
+        sawFinal = false
+        lastRMS = 0
+        lastErr = ""
+        lastRaw = ""
         audioEngine.stop()
         audioEngine.reset()
         sawSpeech = false
@@ -657,16 +712,24 @@ final class SpeechListener {
                 self.pendingBuffers.append(buffer)
                 if self.pendingBuffers.count > 256 { self.pendingBuffers.removeFirst() }
                 self.pendingLock.unlock()
-            } else {
-                self.request?.append(buffer)
+            } else if let req = self.request {
+                req.append(buffer)
+                self.appendedCount += 1
             }
             // VAD (letters only): a short silence after a letter is the boundary — end
             // this letter's recognition cycle (finalizing it); the session, engine, and
             // tap stay live, and a fresh cycle picks up the next letter.
+            // CC-SPELLIT-MIC-FIX X2 — measure BEFORE any mode guard. This used to
+            // sit inside the `continuous` check, so in any other mode `peak`
+            // reported 0.000 whatever the microphone was doing: a reading that
+            // could not be told apart from silence. The VAD below is still
+            // letters-only; the meter is not.
+            self.frameCount += UInt64(buffer.frameLength)
+            let level = Self.rms(buffer)
+            self.peakRMS = max(self.peakRMS, level)
+            self.lastRMS = level
             if self.continuous && sampleRate > 0 {
                 let secs = Double(buffer.frameLength) / sampleRate
-                let level = Self.rms(buffer)
-                self.peakRMS = max(self.peakRMS, level)
                 if level > self.speechRMS {
                     self.sawSpeech = true
                     self.silenceSecs = 0
@@ -689,6 +752,13 @@ final class SpeechListener {
                 }
             }
         }
+        // CC-SPELLIT-MIC-FIX F6.2 — the request must exist before the engine can
+        // deliver a buffer. It used to be created after `start()`, so everything
+        // captured in that window hit `request?.append` on a nil request and was
+        // dropped without trace. Milliseconds, but it is the first milliseconds —
+        // exactly where a player who taps and immediately says "C" lands.
+        startRecognitionCycle()
+
         audioEngine.prepare()
         do { try audioEngine.start() } catch { finish(.failure(.audio)); return }
 
@@ -703,11 +773,8 @@ final class SpeechListener {
             // itself, plus the format the peak is actually computed from. buf=0
             // with a healthy route means the session was taken away mid-session;
             // fmt not float32 means the peak reads 0.000 whatever the room does.
-            handler?("\(self.lastRoute) ch=\(format.channelCount) fmt=\(format.commonFormat.rawValue) "
-                + "buf=\(self.tapCount) onDev=\(onDev) peak=\(String(format: "%.3f", self.peakRMS))")
+            handler?(self.diagLine(format: format, onDev: onDev))
         }
-
-        startRecognitionCycle()
     }
 
     /// One recognition cycle = one letter in continuous (one-press) mode, or the whole
@@ -718,6 +785,7 @@ final class SpeechListener {
         guard let recognizer = recognizer, !finished else { return }
         cycleGen += 1
         let gen = cycleGen
+        reqCount += 1
         let req = SFSpeechAudioBufferRecognitionRequest()
         req.requiresOnDeviceRecognition = true   // HARD on-device — never the server.
         req.shouldReportPartialResults = true
@@ -749,6 +817,7 @@ final class SpeechListener {
                 self.best = result.bestTranscription.formattedString
                 // Letter profile streams every partial (the growing transcript) so
                 // the Rust parser can echo "C… CA… CAT" live.
+                self.partialCount += 1
                 self.partialHandler?(self.best)
                 if result.isFinal {
                     // Confusable surfacing (Phase 3): the least-confident segment and
@@ -810,12 +879,15 @@ final class SpeechListener {
             switch result {
             case .success(let text) where !text.isEmpty:
                 segmentHandler?(text, lastConfidence, lastAlt)
-                diagHandler?("seg='\(text)' peak=\(String(format: "%.3f", peakRMS))")
+                lastRaw = text
+                sawFinal = true
+                diagHandler?("seg='\(text)' peak=\(String(format: "%.3f", peakRMS)) appended=\(appendedCount)")
             case .success:
-                diagHandler?("seg=(empty) peak=\(String(format: "%.3f", peakRMS))")
+                diagHandler?("seg=(empty) peak=\(String(format: "%.3f", peakRMS)) rms=\(String(format: "%.3f", lastRMS)) appended=\(appendedCount) req=\(reqCount)")
             case .failure(let err):
                 // e.g. a no-speech segment from a false VAD boundary — keep listening.
-                diagHandler?("seg-err=\(err.rawValue) peak=\(String(format: "%.3f", peakRMS))")
+                lastErr = err.rawValue
+                diagHandler?("seg-err=\(err.rawValue) peak=\(String(format: "%.3f", peakRMS)) rms=\(String(format: "%.3f", lastRMS)) appended=\(appendedCount) req=\(reqCount)")
             }
             startRecognitionCycle()
         } else {
@@ -862,6 +934,15 @@ final class SpeechListener {
         lastRoute = route.diag
 
         tapCount = 0
+        // One capture, one set of counters (X3).
+        frameCount = 0
+        appendedCount = 0
+        reqCount = 0
+        partialCount = 0
+        sawFinal = false
+        lastRMS = 0
+        lastErr = ""
+        lastRaw = ""
         audioEngine.stop()
         audioEngine.reset()
         sawSpeech = false
@@ -940,10 +1021,17 @@ final class SpeechListener {
             guard let self = self else { return }
             self.tapCount += 1
             self.yieldToAnalyzer(buffer)
+            // CC-SPELLIT-MIC-FIX X2 — measure BEFORE any mode guard. This used to
+            // sit inside the `continuous` check, so in any other mode `peak`
+            // reported 0.000 whatever the microphone was doing: a reading that
+            // could not be told apart from silence. The VAD below is still
+            // letters-only; the meter is not.
+            self.frameCount += UInt64(buffer.frameLength)
+            let level = Self.rms(buffer)
+            self.peakRMS = max(self.peakRMS, level)
+            self.lastRMS = level
             if self.continuous && sampleRate > 0 {
                 let secs = Double(buffer.frameLength) / sampleRate
-                let level = Self.rms(buffer)
-                self.peakRMS = max(self.peakRMS, level)
                 if level > self.speechRMS {
                     self.sawSpeech = true
                     self.silenceSecs = 0
@@ -969,14 +1057,16 @@ final class SpeechListener {
         let handler = diagHandler
         DispatchQueue.main.asyncAfter(deadline: .now() + 1.2) { [weak self] in
             guard let self = self else { return }
-            handler?("engine=\(self.engineKind) sr=\(Int(format.sampleRate)) buf=\(self.tapCount) "
-                + "peak=\(String(format: "%.3f", self.peakRMS))")
+            handler?(self.diagLine(format: format, onDev: self.recognizer?.supportsOnDeviceRecognition ?? false))
         }
     }
 
     /// A result arrived from the analyzer: volatile results stream as partials;
     /// finalized text accumulates into the current letter segment.
     private func analyzerResult(text: String, isFinal: Bool) {
+        partialCount += 1
+        lastRaw = text
+        if isFinal { sawFinal = true }
         guard !finished else { return }
         if isFinal {
             analyzerSeg += text
@@ -1059,6 +1149,15 @@ final class SpeechListener {
         lastRoute = route.diag
 
         tapCount = 0
+        // One capture, one set of counters (X3).
+        frameCount = 0
+        appendedCount = 0
+        reqCount = 0
+        partialCount = 0
+        sawFinal = false
+        lastRMS = 0
+        lastErr = ""
+        lastRaw = ""
         audioEngine.stop()
         audioEngine.reset()
         sawSpeech = false
