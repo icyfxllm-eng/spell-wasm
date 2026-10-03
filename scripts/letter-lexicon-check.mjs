@@ -27,18 +27,18 @@ const ROOT = path.dirname(new URL(import.meta.url).pathname) + '/..';
 const TIERS = ['easy', 'medium', 'hard', 'expert'];
 const COMMAND_IDS = new Set(['delete', 'clear', 'done']);
 
+/// Languages where the mic is not offered at all. Their lexicon is not checked
+/// for coverage, because coverage is a question about a feature the player
+/// cannot reach — and more importantly they must not be sent to native review.
+export const WITHDRAWN = {
+  ko: 'Withdrawn by Eric 2026-10-03. Korean voice spelling could not produce a Korean word: compatibility jamo neither compose nor match, and the obvious swap to conjoining jamo fails too because the same letter is a different codepoint as onset and coda (norm.rs::ko_voice_spelling_needs_positional_jamo_not_a_lexicon_edit pins both). Needs an IME-style composition state machine. The lexicon stays on disk, with correct letter NAMES, ready for the day that lands. Do not pay a speaker to review it before then.',
+};
+
 export const KNOWN_GAPS = {
   ar: { chars: 'أؤإئ', why: 'hamza carriers; أ alone appears 586 times. A real hole — the review must add them.' },
   fr: { chars: 'œ', why: 'the oe ligature, 9 occurrences. Needs a spoken name ("o e lie" or similar) from a speaker.' },
   hi: { chars: 'ङञ', why: 'two nasals, 34 occurrences between them. Real, small.' },
   ja: { chars: 'ぁぃぅぇぉゎゔ', why: 'small kana and vu. Spoken as "small a" etc.; the draft has no convention for it.' },
-  ko: {
-    // Escapes, not literals: written as characters, the leading jamo U+1112
-    // and the vowel U+1161 compose into the syllable 하 and two genuine gaps
-    // vanish from the list. They did, once.
-    chars: '\u1100\u1101\u1102\u1103\u1104\u1105\u1106\u1107\u1108\u1109\u110A\u110B\u110C\u110D\u110E\u110F\u1110\u1111\u1112\u1161\u1162\u1163\u1164\u1165\u1166\u1167\u1168\u1169\u116A\u116B\u116C\u116D\u116E\u116F\u1170\u1171\u1172\u1173\u1174\u1175\u11A8\u11A9\u11AB\u11AC\u11AD\u11AE\u11AF\u11B0\u11B1\u11B2\u11B4\u11B6\u11B7\u11B8\u11B9\u11BA\u11BB\u11BC\u11BD\u11BE\u11BF\u11C0\u11C1\u11C2',
-    why: 'SETTLED 2026-10-03, and it is worse than a gap: Korean voice spelling produces NOTHING matchable today. The values here are compatibility jamo (U+3131 block), which neither compose nor match, so a player who speaks every letter of a word correctly is still marked wrong — see norm.rs::ko_voice_spelling_needs_positional_jamo_not_a_lexicon_edit. Swapping to conjoining jamo does not fix it either: the same letter is a different codepoint as onset (U+1100) and coda (U+11A8), and a speaker does not say which, so a position-blind mapping fails on every word with a final consonant. This needs an IME-style composition state machine, not a lexicon edit. Do NOT send ko to native review until that is built or the mic is withdrawn for ko — a speaker would be paid to check names that are already correct.',
-  },
   vi: {
     chars: 'fjwzàáãèéìíòóõùúýĩũạảấầẩẫậắằẳẵặẹẻẽếềểễệỉịọỏốồổỗộớờởỡợụủứừửữựỳỵỷ',
     why: 'the largest real hole. `diacritics` is EMPTY, so every toned vowel is unspeakable and a Vietnamese player can say base letters only. f/j/w/z are loanword letters the alphabet lacks. This one needs a scheme (letter + tone name), not just entries.',
@@ -99,13 +99,33 @@ export function producible(doc) {
   return { named, whole, chars };
 }
 
-export function check(lexDir, bankDir, known = KNOWN_GAPS) {
+/// The enabled set, read from consts.rs rather than duplicated here: that array
+/// IS the capability, and a second copy would be the scattered conditional its
+/// own doc comment forbids.
+export function enabledLangs(constsSrc) {
+  const m = constsSrc.match(/VOICE_SPELL_LANGS:\s*\[&str;\s*\d+\]\s*=\s*\[([^\]]*)\]/s);
+  if (!m) return null;
+  return new Set(m[1].split(',').map((x) => x.trim().toLowerCase()).filter(Boolean));
+}
+
+export function check(lexDir, bankDir, known = KNOWN_GAPS, enabled = null) {
   const bad = [];
   const langs = [];
   if (!fs.existsSync(lexDir)) return { bad: [`${lexDir}: no lexicon directory`], langs };
 
   for (const f of fs.readdirSync(lexDir).filter((x) => x.endsWith('.json')).sort()) {
     const lang = f.replace(/\.json$/, '');
+    if (enabled && !enabled.has(lang)) {
+      // Not offered: nothing to cover. Flagged only if it is silently off
+      // rather than deliberately withdrawn, because that is a mistake.
+      if (!WITHDRAWN[lang]) {
+        bad.push(`${lang}: has a lexicon but is not in VOICE_SPELL_LANGS, and is not recorded in WITHDRAWN — say which it is`);
+      }
+      continue;
+    }
+    if (WITHDRAWN[lang]) {
+      bad.push(`${lang}: recorded as WITHDRAWN but still in VOICE_SPELL_LANGS — the mic is being offered for a language this file says cannot use it`);
+    }
     langs.push(lang);
     let doc;
     try {
@@ -182,12 +202,12 @@ if (process.argv.includes('--selftest')) {
     fs.mkdirSync(path.join(dir, 'bank', lang), { recursive: true });
     fs.writeFileSync(path.join(dir, 'bank', lang, 'easy.txt'), `# header\n${words.join('\n')}\n`);
   };
-  const run = (doc, words, known = {}, lang = 'sw') => {
+  const run = (doc, words, known = {}, lang = 'sw', enabled = null) => {
     const d = fs.mkdtempSync(path.join(os.tmpdir(), 'lexcheck-'));
     fs.mkdirSync(path.join(d, 'lex'));
     fs.writeFileSync(path.join(d, 'lex', `${lang}.json`), JSON.stringify(doc));
     bank(d, lang, words);
-    const r = check(path.join(d, 'lex'), path.join(d, 'bank'), known);
+    const r = check(path.join(d, 'lex'), path.join(d, 'bank'), known, enabled);
     fs.rmSync(d, { recursive: true });
     return r.bad;
   };
@@ -205,6 +225,13 @@ if (process.argv.includes('--selftest')) {
     ambiguous_unknown_letter: { bad: run({ ...base(), ambiguous: { x: ['a', 'q'] } }, ['ab']), want: /no name in this lexicon can type/ },
     digraph_supplies_its_chars: { bad: run({ ...base(), multigraph: { 'en gee': 'ng' } }, ['ang']), want: null },
     zh_reads_the_pinyin_half: { bad: run({ ...base(), letterNames: { yi: 'a', er: 'i', san: '4' } }, ['ai4|爱'], {}, 'zh'), want: null },
+    // A language that is off must say WHY it is off. Silently disabled is the
+    // state ko was in for months while the mic was still being offered.
+    disabled_without_a_reason: { bad: run(base(), ['abc'], {}, 'sw', new Set(['en'])), want: /not recorded in WITHDRAWN/ },
+    // ...and a withdrawn language must not still be offered.
+    withdrawn_but_still_offered: { bad: run(base(), ['ab'], {}, 'ko', new Set(['ko'])), want: /still in VOICE_SPELL_LANGS/ },
+    // A withdrawn language that is properly off is simply skipped, holes and all.
+    withdrawn_and_off_is_skipped: { bad: run(base(), ['abc'], {}, 'ko', new Set(['en'])), want: null },
   };
   let failed = 0;
   for (const [name, c] of Object.entries(cases)) {
@@ -218,11 +245,17 @@ if (process.argv.includes('--selftest')) {
   process.exit(0);
 }
 
-const { bad, langs } = check(`${ROOT}/lexicons/letters`, `${ROOT}/assets/words`);
+const enabled = enabledLangs(fs.readFileSync(`${ROOT}/src/consts.rs`, 'utf8'));
+if (!enabled) {
+  console.error('letter-lexicon-check: FAILED — could not read VOICE_SPELL_LANGS from src/consts.rs');
+  process.exit(1);
+}
+const { bad, langs } = check(`${ROOT}/lexicons/letters`, `${ROOT}/assets/words`, KNOWN_GAPS, enabled);
 if (bad.length) {
   console.error('letter-lexicon-check: FAILED');
   for (const b of bad) console.error('  ✗ ' + b);
   process.exit(1);
 }
 const pending = Object.keys(KNOWN_GAPS).length;
-console.log(`letter-lexicon-check: OK — ${langs.length} lexicons, every letter their banks need is sayable except ${pending} recorded gap(s) awaiting the native review.`);
+const withdrawn = Object.keys(WITHDRAWN).join(', ');
+console.log(`letter-lexicon-check: OK — ${langs.length} lexicons offered, every letter their banks need is sayable except ${pending} recorded gap(s) awaiting the native review; withdrawn: ${withdrawn || 'none'}.`);

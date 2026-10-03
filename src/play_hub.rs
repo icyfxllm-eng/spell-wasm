@@ -209,8 +209,9 @@ fn spell_cross_playable(_lang: &str) -> bool {
 }
 
 /// A mode's availability for the CURRENT language. `spell_aloud` is voice-spell-gated:
-/// live where the language registry's `voice_spell` flag holds, which has been all
-/// fifteen registered languages since the mic-everywhere ruling (2026-07-27); elsewhere
+/// live where the language registry's `voice_spell` flag holds — every registered
+/// language since the mic-everywhere ruling (2026-07-27) except ko, withdrawn
+/// 2026-10-03 because Korean voice spelling cannot compose a syllable; elsewhere
 /// it renders as an "unavailable / coming soon" tile — shown, not hidden (A7).
 pub fn unavailable_reason(m: &Mode, lang: &str) -> Option<&'static str> {
     if m.id == "spell_aloud" && !crate::consts::voice_spell(lang) {
@@ -337,13 +338,17 @@ mod tests {
     /// D1). The surface half of that law now belongs to the drawer, which
     /// renders no row for it because the registry marks it `unlisted`; what
     /// stays here is the per-language availability logic behind it
-    /// (mic-everywhere: all registered languages supported).
+    /// (mic-everywhere: every registered language except the withdrawn ko).
     #[test]
     fn a7_spell_aloud_is_available_in_every_registered_language() {
         let m = spell_aloud_mode();
         for lang in ["en", "es", "fr", "de", "ja", "ar", "hi", "zh"] {
             assert!(unavailable_reason(&m, lang).is_none(), "{lang} supports voice spell");
         }
+        // ko is withdrawn (Eric, 2026-10-03): the mic must NOT be offered where
+        // spelling by voice cannot produce the word. Pinned so a future
+        // mic-everywhere sweep cannot quietly put it back.
+        assert!(unavailable_reason(&m, "ko").is_some(), "ko must not offer the mic");
         // An unregistered code still reports unavailable (defensive), and still
         // renders no hub tile either way.
         assert!(unavailable_reason(&m, "xx").is_some(), "xx does not support voice spell");

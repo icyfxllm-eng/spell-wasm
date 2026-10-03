@@ -369,15 +369,27 @@ pub fn is_builtin_lang(lang: &str) -> bool {
 /// THE single source of truth for the `voiceSpell` per-language capability: mic
 /// visibility flows from this set, plus the presence of a letter lexicon, plus the
 /// runtime on-device availability check — never from a scattered `lang == "es"`
-/// conditional. Confirmed by Eric: English + Spanish only (the on-device check
-/// auto-hides the mic where es on-device isn't available).
-/// Mic-everywhere (Eric's ruling, 2026-07-27): every registered language has a
-/// letter lexicon (machine-drafted for the new 13, pending native review), so
-/// the config gate opens for all. The mic still only RENDERS where the device
-/// has on-device speech recognition for the language (the capabilities gate in
-/// spell_aloud::reflect is unchanged).
-pub const VOICE_SPELL_LANGS: [&str; 15] =
-    [EN, ES, FR, DE, PT, PL, VI, KO, JA, FIL, ZH, RU, AR, SW, HI];
+/// conditional.
+///
+/// Mic-everywhere (Eric's ruling, 2026-07-27) opened the gate for every
+/// registered language: each has a letter lexicon, machine-drafted for the
+/// thirteen that were new and still pending native review. The mic still only
+/// RENDERS where the device has on-device speech recognition for the language
+/// (the capabilities gate in spell_aloud::reflect).
+///
+/// **ko is withdrawn (Eric, 2026-10-03) and it is the one exception.** Korean
+/// voice spelling could not produce a Korean word: the lexicon's values are
+/// compatibility jamo, which neither compose nor match, so a player who spoke
+/// every letter correctly was still marked wrong — see
+/// norm.rs::ko_voice_spelling_needs_positional_jamo_not_a_lexicon_edit, which
+/// also proves the obvious data fix does not work, because the same letter is a
+/// different codepoint as onset and coda and a speaker does not say which.
+/// Making it work needs an IME-style composition state machine over the jamo
+/// stream. Until that exists the mic is not offered for ko, because offering
+/// something that cannot work is worse than not offering it. Put KO back the
+/// moment the composer lands.
+pub const VOICE_SPELL_LANGS: [&str; 14] =
+    [EN, ES, FR, DE, PT, PL, VI, JA, FIL, ZH, RU, AR, SW, HI];
 
 /// Whether `lang` exposes the spoken-letter input method (data lookup, not a
 /// per-language conditional).
