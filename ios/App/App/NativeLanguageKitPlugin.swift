@@ -443,6 +443,9 @@ final class SpeechListener {
     private var lastErr = ""
     /// The recognizer's own text before the parser (X4). Dev door only (D9).
     private var lastRaw = ""
+    /// True once any buffer exceeded the adaptive threshold this capture.
+    private var everSawSpeech = false
+    private var liveTick = 0
     /// Set from the web layer's dev flag; keeps transcripts out of a normal build.
     var diagVerbose = false
 
@@ -457,7 +460,8 @@ final class SpeechListener {
         s += " engine=\(engineKind) buf=\(tapCount) frames=\(frameCount)"
         s += " req=\(reqCount) appended=\(appendedCount)"
         s += " partials=\(partialCount) final=\(sawFinal ? "y" : "n")"
-        s += " onDev=\(onDev) peak=\(String(format: "%.3f", peakRMS))"
+        s += " onDev=\(onDev) peak=\(String(format: "%.4f", peakRMS))"
+        s += " thr=\(String(format: "%.4f", speechRMSAdaptive)) spoke=\(everSawSpeech ? "y" : "n")"
         s += " rms=\(String(format: "%.3f", lastRMS))"
         if !lastErr.isEmpty { s += " err=\(lastErr)" }
         if diagVerbose && !lastRaw.isEmpty { s += " raw=\"\(lastRaw)\"" }
@@ -477,12 +481,49 @@ final class SpeechListener {
     private var sawSpeech = false
     private var silenceSecs = 0.0
     private var segmentSecs = 0.0
-    private let speechRMS: Float = 0.010   // RMS above this = speech (device-tunable;
+    /// Floor for the adaptive threshold. The old FIXED 0.010 is what stalled
+    /// Eric's build 263: `.measurement` mode disables input processing and gain,
+    /// his microphone delivered rms 0.002, and a threshold five times above the
+    /// signal meant `sawSpeech` never became true, no boundary ever fired and
+    /// nothing was ever finalized. A fixed threshold cannot be right for every
+    /// device and every room; the noise floor measured at the start of this very
+    /// capture can.
+    private let speechRMSFloor: Float = 0.0015
+    /// Measured from the first NOISE_WINDOW buffers, then speech is anything
+    /// NOISE_MULT above it.
+    private var noiseFloor: Float = 0
+    private var noiseSamples = 0
+    private var speechRMSAdaptive: Float = 0.010
+    private let noiseWindow = 5
+    private let noiseMult: Float = 3.0
+    private let speechRMS: Float = 0.010   // legacy fixed value, retained for reference (
                                            // low enough to catch soft sibilants: "ess")
     private let silenceCutoff = 0.35       // s of silence after a letter = boundary
     private let maxSegment = 2.5           // s: force a boundary (safety; never hang)
 
     /// RMS level of a mic buffer (mono) — the VAD speech/silence signal.
+    /// Adapt the speech threshold to this room and this device, and push a LIVE
+    /// reading out roughly five times a second so the number moves while someone
+    /// is speaking. Before this, the only readings were at 1.2 s and at a segment
+    /// boundary — and when the boundary never fires because the threshold is too
+    /// high, that is no reading at all.
+    private func observeLevel(_ level: Float) {
+        if noiseSamples < noiseWindow {
+            noiseFloor = max(noiseFloor, level)
+            noiseSamples += 1
+            if noiseSamples == noiseWindow {
+                speechRMSAdaptive = max(noiseFloor * noiseMult, speechRMSFloor)
+            }
+        }
+        if level > speechRMSAdaptive { everSawSpeech = true }
+        liveTick += 1
+        guard liveTick % 2 == 0, let h = diagHandler else { return }
+        let line = "live rms=\(String(format: "%.4f", level)) peak=\(String(format: "%.4f", peakRMS))"
+            + " thr=\(String(format: "%.4f", speechRMSAdaptive)) spoke=\(everSawSpeech ? "y" : "n")"
+            + " buf=\(tapCount) appended=\(appendedCount) partials=\(partialCount)"
+        DispatchQueue.main.async { h(line) }
+    }
+
     private static func rms(_ buffer: AVAudioPCMBuffer) -> Float {
         guard let ch = buffer.floatChannelData?[0] else { return 0 }
         let n = Int(buffer.frameLength)
@@ -684,6 +725,11 @@ final class SpeechListener {
         lastRMS = 0
         lastErr = ""
         lastRaw = ""
+        noiseFloor = 0
+        noiseSamples = 0
+        speechRMSAdaptive = 0.010
+        everSawSpeech = false
+        liveTick = 0
         audioEngine.stop()
         audioEngine.reset()
         sawSpeech = false
@@ -728,9 +774,10 @@ final class SpeechListener {
             let level = Self.rms(buffer)
             self.peakRMS = max(self.peakRMS, level)
             self.lastRMS = level
+            self.observeLevel(level)
             if self.continuous && sampleRate > 0 {
                 let secs = Double(buffer.frameLength) / sampleRate
-                if level > self.speechRMS {
+                if level > self.speechRMSAdaptive {
                     self.sawSpeech = true
                     self.silenceSecs = 0
                 } else if self.sawSpeech {
@@ -943,6 +990,11 @@ final class SpeechListener {
         lastRMS = 0
         lastErr = ""
         lastRaw = ""
+        noiseFloor = 0
+        noiseSamples = 0
+        speechRMSAdaptive = 0.010
+        everSawSpeech = false
+        liveTick = 0
         audioEngine.stop()
         audioEngine.reset()
         sawSpeech = false
@@ -1030,9 +1082,10 @@ final class SpeechListener {
             let level = Self.rms(buffer)
             self.peakRMS = max(self.peakRMS, level)
             self.lastRMS = level
+            self.observeLevel(level)
             if self.continuous && sampleRate > 0 {
                 let secs = Double(buffer.frameLength) / sampleRate
-                if level > self.speechRMS {
+                if level > self.speechRMSAdaptive {
                     self.sawSpeech = true
                     self.silenceSecs = 0
                 } else if self.sawSpeech {
@@ -1158,6 +1211,11 @@ final class SpeechListener {
         lastRMS = 0
         lastErr = ""
         lastRaw = ""
+        noiseFloor = 0
+        noiseSamples = 0
+        speechRMSAdaptive = 0.010
+        everSawSpeech = false
+        liveTick = 0
         audioEngine.stop()
         audioEngine.reset()
         sawSpeech = false

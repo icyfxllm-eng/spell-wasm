@@ -435,7 +435,10 @@
       sub('letterDiag', function (d) {
         if (!(d && d.info)) return;
         window.__lastLetterDiag = d.info;              // persisted for Settings readout
-        var el = document.getElementById('voiceSpellStatus');
+        // Its OWN element: the player-facing status owns #voiceSpellStatus and
+        // was overwriting this the moment listening began.
+        var el = document.getElementById('voiceSpellDiag')
+              || document.getElementById('voiceSpellStatus');
         if (el) el.textContent = 'diag: ' + d.info;
         if (window.__refreshNativeStatus) window.__refreshNativeStatus();
       });
