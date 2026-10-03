@@ -186,6 +186,47 @@ mod tests {
         assert!(!answer_matches("pina", "piña", false));
     }
 
+    /// CC-SPELL-ALOUD, settled 2026-10-03: Korean voice spelling cannot produce
+    /// a Korean word, and a data fix will not make it.
+    ///
+    /// `lexicons/letters/ko.json` names the letters correctly -- 기역 for ㄱ is
+    /// the real name -- but its VALUES are COMPATIBILITY jamo (U+3131 block),
+    /// and those neither compose nor match: a player who speaks every letter of
+    /// 가게 perfectly produces a string this function rejects. That is the state
+    /// shipped today, for every Korean word.
+    ///
+    /// Swapping the values to CONJOINING jamo (U+1100 block) is not enough
+    /// either, and this test is here to stop that being tried. The same letter
+    /// is a different codepoint by position: ㄱ is U+1100 as an onset and
+    /// U+11A8 as a coda, and a speaker saying 기역 does not say which. A
+    /// position-blind mapping therefore works only for syllables with no final
+    /// consonant, and fails on everything else -- which is most of Korean.
+    ///
+    /// Making it work needs an IME-style composition state machine over the
+    /// jamo stream. That is engineering, not a lexicon edit, and until it
+    /// exists the honest options are to build it or to stop offering the mic
+    /// for ko.
+    #[test]
+    fn ko_voice_spelling_needs_positional_jamo_not_a_lexicon_edit() {
+        let gage = "\u{ac00}\u{ac8c}";   // 가게, no final consonant
+        let hakgyo = "\u{d559}\u{ad50}"; // 학교, final consonant on the first syllable
+
+        // What the lexicon produces today: compatibility jamo. Neither matches.
+        assert!(!answer_matches("\u{3131}\u{314F}\u{3131}\u{3154}", gage, false),
+                "compatibility jamo must not be mistaken for working: this is the shipped state");
+        assert!(!answer_matches("\u{314E}\u{314F}\u{3131}\u{3131}\u{315B}", hakgyo, false));
+
+        // Conjoining jamo in the right positions do match, both with and
+        // without a coda -- so the matcher is not the problem.
+        assert!(answer_matches("\u{1100}\u{1161}\u{1100}\u{1166}", gage, false));
+        assert!(answer_matches("\u{1112}\u{1161}\u{11A8}\u{1100}\u{116D}", hakgyo, false));
+
+        // But the same coda spoken position-blind -- an onset codepoint where a
+        // coda belongs -- does not. This is the case a value swap would miss.
+        assert!(!answer_matches("\u{1112}\u{1161}\u{1100}\u{1100}\u{116D}", hakgyo, false),
+                "a position-blind jamo mapping must not appear to work on words with codas");
+    }
+
     #[test]
     fn korean_precomposed_matches_decomposed_jamo() {
         // Phase 0.1: the NFC chokepoint must make conjoining-jamo input match a
