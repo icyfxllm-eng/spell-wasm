@@ -3,7 +3,8 @@
 **Status:** Phases A, B and C BUILT 2026-10-01. §0 answered against the live
 code; three of its answers changed what the dependent files can ask for. D-B1
 and D-B6 are signed.
-**Layering:** sits under CC-SNAP-ROADMAP v1, beside CC-SNAP-LIST v1 rather
+**Layering:** sits under CC-SNAP-ROADMAP v1 (`docs/CC-SNAP-ROADMAP.md`),
+beside CC-SNAP-LIST v1 rather
 than above it. It is the file the roadmap's Level 1 is missing: CC-SNAP-CLEAN
 v1.1 C1 and CC-SNAP-HIGHLIGHT C1 both HALT on geometry that no file owns, and
 "CC-SNAP-LIST v1 (exists)" does not satisfy them because the plumbing is a

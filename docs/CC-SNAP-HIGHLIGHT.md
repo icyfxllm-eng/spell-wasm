@@ -1,0 +1,195 @@
+# CC-SNAP-HIGHLIGHT v1 — Highlighted words only
+
+> **Provenance and status, added when this was committed on 2026-10-03.**
+> Everything between the rules below is Eric's, verbatim. It had lived only in
+> a chat session since 2026-10-01. Nothing in it has been edited; the review
+> findings are kept separate, after the spec.
+>
+> **NOT BUILT. Census C1 still HALTs**, and will until the C2 fixture exists —
+> see "Where this is blocked" at the foot of this file. `docs/CC-SNAP-BOXES.md`
+> supplies the word boxes, but deliberately does not supply the pixel
+> statistics, because calibrating them needs the fixture only Eric can make.
+
+---
+
+**Status:** REVIEW-GATED. §0 census executable on Eric's signature. Phases A–B blocked on census review.
+**Layering:** new file under CC-SNAP-ROADMAP v1 (Level 1.3). Depends on CC-SNAP-LIST v1 (capture, crop/rotate, word boxes per CLEAN v1.1 C1) and CC-SNAP-CLEAN v1/v1.1 (all text goes through `clean_ocr_lines`).
+**Owns:** deciding which OCR'd words sit on a highlighter mark, and the "Highlighted (N)" default filter on the review screen. Nothing else.
+**Does not own:** OCR, cleanup, bank matching, the review screen's layout (only the filter state it opens in), My Words storage.
+
+---
+
+## Intent
+
+A reader working through a book marks the words they don't know with a highlighter. The page holds 300 words; they care about 5. Importing all 300 and asking the parent to delete 295 is the opposite of least editing.
+
+The feature should find the marked words with no model, no cloud, and no settings, and should fail toward **showing everything** (the v1 behaviour) rather than toward hiding a word the reader wanted.
+
+When this spec is incomplete, prefer: a false positive (one extra word shown as highlighted) over a false negative (a marked word hidden); the whole-page list always one tap away; heuristics the census can tune over any learned model.
+
+---
+
+## §0 Census (read-only; report before any code)
+
+**C1. Boxes + pixels.** Confirm CC-SNAP-LIST passes the cropped, rotation-corrected bitmap and per-word boxes (CLEAN v1.1 C1) to the core together. **HALT** if boxes are available only on the platform side with no pixel access, or vice versa — the two must meet in one place.
+
+**C2. Fixture.** Eric assembles a 20-photo folder: 10 worksheets (no highlights), 5 book pages with yellow highlights, 3 book pages with two colours, 2 e-reader screenshots with highlights. Each photo gets a sidecar `expected.json` listing the highlighted words. This file's acceptance tests run over the fixture; the census only confirms it exists and loads.
+
+**C3. Paper estimate.** Measure per-photo: median background colour of non-text pixels (text pixels = luminance below an Otsu threshold), its saturation (HSV S), and the saturation distribution of every word box's background. Report the two histograms (highlighted vs non-highlighted boxes, from `expected.json`). This sets D-H2.
+
+**C4. E-reader screenshots.** Confirm Apple Books / Kindle highlight colours in the two fixture screenshots. Report their S values; they are flatter than physical marker and may need their own threshold (D-H3).
+
+**C5. Hyphenation.** Confirm the OCR engine marks a trailing `-` at line end as part of the word box text. F3 relies on it.
+
+**C6. Test command.** Same as CLEAN v1 C7.
+
+---
+
+## Features
+
+### F1. Paper model
+- Convert the cropped bitmap to HSV (on-device, in the core or a thin platform shim that returns per-box statistics — census C1 decides which; either way the pixels never leave the device).
+- `paper_S` = median S over all pixels not classified as text and not inside any word box's dilated region.
+- `paper_V` similarly. Both are per photo, recomputed every capture; nothing is cached across photos.
+
+### F2. Per-word highlight score
+- For each word box, dilate by 15% of box height, mask out text pixels (luminance below Otsu), and take the remaining background pixels.
+- `frac_sat` = fraction of those pixels with `S − paper_S > ΔS` (D-H2) **and** `V ≥ V_min` (excludes shadows and pen ink).
+- A word is `Highlighted` when `frac_sat ≥ coverage` (D-H1, default 0.50).
+- Store per word: `highlighted: bool`, `hue_bucket: Option<u8>` (dominant hue of the saturated pixels, quantized to 12 buckets), `frac_sat` (for debug display in DEV_PREVIEW only).
+
+### F3. Line-break rejoin
+- When a highlighted word ends in `-` and the next line's first word is highlighted too, join them (`remem-` + `ber` → `remember`) **before** `clean_ocr_lines`. The join is recorded in `Candidate.flags` as `HyphenJoin` with the two originals, so the review screen can show the seam if tapped.
+- Only highlighted-to-highlighted joins. A hyphenated word with only one half marked is left as two entries with `Blank`-style unchecked state; the reader decides.
+
+### F4. Filter state on the review screen
+- If `N = count(highlighted) > 0`, the review screen opens on **Highlighted (N)** with **All words** as a visible one-tap toggle.
+- If `N = 0`, the screen opens exactly as CC-SNAP-LIST v1 does today. No empty "Highlighted (0)" tab.
+- Highlighted candidates are checked by default **unless** a CLEAN flag unchecks them (`LowConfidence`, `HasDigits`, `Blank`). `MultiWord` does not uncheck a highlighted phrase — a reader who marks "in spite of" wants it (D-H5).
+
+### F5. Colour chips
+- When highlighted words span ≥2 `hue_bucket`s, show one chip per bucket (named by nearest of yellow / green / pink / orange / blue; otherwise "Colour N"), all selected. Deselecting a chip hides that colour's words from the Highlighted filter only; All words is unaffected.
+- Single-colour pages show no chips.
+
+### F6. Pass-through
+- Every word, highlighted or not, still runs through `clean_ocr_lines` (DOC-5). This file adds `highlighted`, `hue_bucket` and `HyphenJoin` to `OcrLine`/`Candidate`; it adds no second text path.
+
+---
+
+## Invariants (each one is a test)
+
+- **I-H1 Nothing hidden from All words.** The All words list is byte-identical to what CC-SNAP-LIST v1 produced without this file. Golden on the 10 worksheet fixtures.
+- **I-H2 No highlights on plain paper.** The 10 worksheet fixtures and any synthetic page tinted uniformly warm (lamp) or aged yellow produce `N = 0`. The tint test is synthetic: take a fixture, apply a global hue/sat shift within the C3-observed lamp range, assert `N = 0`.
+- **I-H3 Partial counts.** A word with ≥50% box coverage counts (D-H1); a word with <50% does not. Synthetic test paints a controlled fraction.
+- **I-H4 Rejoin is exact.** `HyphenJoin` pieces concatenate (minus the `-`) to the joined text. Proptest.
+- **I-H5 Determinism.** Same bitmap + boxes → identical output. No randomness, no time.
+- **I-H6 On-device.** Symbol/egress scan finds no network call reachable from this module, and no bitmap persisted beyond the capture session.
+- **I-H7 Jr unreachable.** The Highlighted filter and chips are never constructed for a Jr profile (inherits ROADMAP DOC-4; the whole From a photo flow is already gated, this is a belt-and-braces assertion).
+
+---
+
+## Decisions
+
+**Signed:** none yet.
+
+**Recommended, applied unless Eric reverses:**
+- **D-H1 Coverage = 0.50.** A half-highlighted word counts. *Why:* readers overshoot and undershoot the word edges; 50% catches a sloppy stroke without catching a neighbour's stroke bleed.
+- **D-H2 ΔS and V_min from the census.** Starting values ΔS = 0.25, V_min = 0.35; C3 sets final values so the fixture scores 0 false negatives and ≤1 false positive per page.
+- **D-H3 E-reader screenshots** get their own ΔS if C4 shows they need it; the two thresholds live in one config struct, keyed by `source: Camera | Screenshot` (CC-SNAP-LIST already knows which).
+- **D-H4 Heuristic, not ML.** No classifier in v1. Revisit only if the fixture cannot be made to pass with D-H2 tuning. If a model is ever proposed, it is a new file and must still satisfy I-H6.
+- **D-H5 Highlighted phrases stay checked.** `MultiWord` does not uncheck a highlighted run. The reader marked it on purpose.
+- **D-H6 Pen underlines, circles, brackets, margin notes: out of v1.** Flag for a v2 file; do not partially implement.
+- **D-H7 Colour chips default all-on;** no persisted colour preference in v1.
+- **D-H8 DEV_PREVIEW overlay.** In DEV_PREVIEW and TestFlight only, a long-press on the review screen shows each box tinted by `frac_sat`. This is Eric's gradable artifact for tuning D-H2; it is compiled out of production.
+
+**If Claude Code disagrees with any decision, stop and ask. Never infer a reversal.**
+
+---
+
+## Non-goals
+
+- No ML model, no cloud vision, no photo upload.
+- No change to OCR, cleanup, bank matching or My Words.
+- No underline / circle / bracket detection.
+- No per-user colour preferences or highlight history.
+- No telemetry about highlights.
+- No change to the worksheet (N = 0) path — it must remain pixel-identical to v1.
+
+---
+
+## Acceptance table (`tests/snap_highlight_fixture.rs`, runs over the C2 folder)
+
+| # | Fixture | Expected |
+|---|---|---|
+| 1 | Book page, 5 yellow words among ~300 | `N = 5`, exactly those words, all checked; All words lists ~300 |
+| 2 | Worksheet, no highlights | `N = 0`, screen identical to v1 |
+| 3 | Book page under warm lamp, no highlights | `N = 0` |
+| 4 | Aged yellowed page, no highlights | `N = 0` |
+| 5 | One word 60% covered | counted |
+| 6 | One word 30% covered | not counted |
+| 7 | Highlight wraps two lines, 4 words | `N = 4`, one entry per word |
+| 8 | `remem-` / `ber` both highlighted | `remember`, `HyphenJoin` |
+| 9 | `remem-` highlighted, `ber` not | two entries, unchecked |
+| 10 | Page with yellow + pink | two chips; deselect pink → only yellow words in Highlighted |
+| 11 | Apple Books screenshot, 3 highlights | `N = 3` |
+| 12 | Kindle screenshot, 2 highlights | `N = 2` |
+| 13 | Highlighted phrase "in spite of" | one candidate, `MultiWord` set, **checked** |
+| 14 | Highlighted word with low OCR confidence | present in Highlighted, unchecked (CLEAN rule wins) |
+| 15 | Pen-underlined word, no highlighter | `N = 0` (D-H6; documents the limit) |
+
+---
+
+## Phases
+
+- **A.** Census → review → F1, F2, F4, I-H1–I-H3, I-H5–I-H7, fixture rows 1–7, 11–15, D-H8 overlay.
+- **B.** F3 rejoin, F5 chips, I-H4, fixture rows 8–10.
+
+## Done when
+
+1. C6 test command passes with every fixture row and invariant.
+2. On TestFlight, Eric photographs a book page he has highlighted himself and the review screen opens on exactly his words, with zero edits, and All words is one tap away.
+
+---
+
+## Where this is blocked
+
+Added 2026-10-03. The spec above is unedited; this is the review record.
+
+**C1 HALTs, and C2 is why it stays halted.** `docs/CC-SNAP-BOXES.md` now
+delivers word boxes to the core, so half of C1 is satisfied. The other half —
+pixels — is deliberately not built. CC-SNAP-BOXES F3 specifies the shim but
+leaves it unwritten, because `MIN_PAPER_PX` and D-H2's ΔS can only be
+calibrated against the C2 fixture, and writing the shim first would mean
+inventing the constants it exists to carry. **The 20-photo folder is the
+single thing blocking Level 1.3.**
+
+**C1's "either way" is already decided, and not the way F1 assumes.** F1
+offers "the core or a thin platform shim". The bridge is Capacitor JSON, and a
+12-megapixel page as base64 is tens of megabytes per capture. So the
+statistics are computed in Swift where the pixels already are, and only
+numbers cross — which also satisfies I-H6 by construction rather than by
+audit. That is CC-SNAP-BOXES D-B5.
+
+**Four findings from the review, each needing a decision or a wording fix:**
+
+- **F1's paper estimate can have almost nothing to measure.** `paper_S` samples
+  pixels "not inside any word box's dilated region". On a 300-word book page
+  with 15% dilation that is margins only, and on a cropped e-reader screenshot
+  it can be empty. CC-SNAP-BOXES carries `paper_sample_px` so a sample below
+  `MIN_PAPER_PX` scores nothing highlighted rather than scoring wrongly — but
+  the threshold itself is unset until the fixture exists.
+- **I-H1 contradicts F3.** "The All words list is byte-identical to v1" is
+  false on any page where `remem-`+`ber` joins, because the join happens before
+  cleanup. It passes only because it is golden'd on the 10 no-highlight
+  worksheets. Scope the invariant to `N = 0`, or state HyphenJoin as a
+  deliberate exception.
+- **D-H1 and rows 5/6 are in different units.** D-H1 thresholds `frac_sat`,
+  the fraction of *background pixels after masking text*; rows 5 and 6 describe
+  a word "60% covered" and "30% covered", which is box area. For a bold word
+  with many text pixels these are not the same number.
+- **D-H8 collides with the test-seam gate.** "DEV_PREVIEW and TestFlight only
+  … compiled out of production" — TestFlight ships the release binary, and
+  `scripts/seam-absence-check.mjs` greps the shipped bundle to prove seams are
+  absent. A long-press debug overlay present in TestFlight is either a runtime
+  flag in the production binary, which that gate exists to forbid, or it needs
+  a third build configuration. Eric's call which.
