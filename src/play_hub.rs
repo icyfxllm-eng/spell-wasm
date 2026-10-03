@@ -209,11 +209,14 @@ fn spell_cross_playable(_lang: &str) -> bool {
 }
 
 /// A mode's availability for the CURRENT language. `spell_aloud` is voice-spell-gated:
-/// live only where the language registry's `voice_spell` flag holds (en/es); elsewhere
+/// live where the language registry's `voice_spell` flag holds, which has been all
+/// fifteen registered languages since the mic-everywhere ruling (2026-07-27); elsewhere
 /// it renders as an "unavailable / coming soon" tile — shown, not hidden (A7).
 pub fn unavailable_reason(m: &Mode, lang: &str) -> Option<&'static str> {
     if m.id == "spell_aloud" && !crate::consts::voice_spell(lang) {
-        Some("tools.spellaloud.avail") // "iPhone · English or Spanish"
+        // Reachable only for an UNREGISTERED code now that voice_spell covers the
+        // whole lineup; the string is just "iPhone".
+        Some("tools.spellaloud.avail")
     } else if m.id == "practice" && !crate::consts::practice(lang) {
         // D7: curriculum drafted but not yet cleared for this language.
         Some("tools.practice.avail")

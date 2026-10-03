@@ -115,7 +115,7 @@
       "entitlementLevel": "preview",
       "requiresPremium": null,
       "languages": null,
-      "$note": "CC-SPELL-ALOUD-INTEGRATION Feature 6: shown on ALL platforms(ios) languages; per-language availability is the language registry's voiceSpell gate (consts::voice_spell / VOICE_SPELL_LANGS = en,es), rendered live vs a 'coming soon' unavailable tile by play_hub. languages:null (not [en,es]) so an unsupported language shows the unavailable tile rather than being filtered out (A7).",
+      "$note": "CC-SPELL-ALOUD-INTEGRATION Feature 6: shown on ALL platforms(ios) languages; per-language availability is the language registry's voiceSpell gate (consts::voice_spell / VOICE_SPELL_LANGS), which has held all FIFTEEN registered languages since Eric's mic-everywhere ruling 2026-07-27 -- it read en,es before that and this note said so until 2026-10-02. The unavailable tile therefore only appears for an UNREGISTERED code now (play_hub::a7_spell_aloud_is_available_in_every_registered_language pins that). What still varies per language is the runtime ladder in spell_aloud::reflect: on-device installed gives a live mic, downloadable gives a mic with a download badge, and a language with no on-device path falls to the server rung behind a consent card -- never in Kid Mode, never in education builds. Available is not the same as verified: thirteen of the fifteen letter lexicons are machine-drafted and still pending native review. languages:null (not a list) so an unsupported language shows the unavailable tile rather than being filtered out (A7).",
       "exitStyle": "instant",
       "juniorPolicy": "hidden"
     },
