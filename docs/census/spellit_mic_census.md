@@ -192,3 +192,60 @@ always, whatever rung the language is on.
 5. Add the one-line format diag with F1, so the next build answers C5 without the C9 playback button and its I5 exception.
 
 Phases A–C otherwise stay blocked.
+
+---
+
+## Addendum, 2026-10-03: `buf=0`, and the mechanism
+
+Eric read the diag: **`buf=0`**. No buffer ever reached the tap. Per the
+decision table that is the session branch — **F2**, not F3 — and the cause is
+visible in the tree.
+
+`.playback` is an **output-only** category: a session in `.playback` has no
+input route. Three independent paths assert it, each followed by
+`setActive(true)`, none of them aware of a live capture session:
+
+| path | file:line | when it fires |
+|---|---|---|
+| native TTS | `NativeLanguageKitPlugin.swift:134-135` | `speak()` — every spoken word |
+| syllable replay | `NativeLanguageKitPlugin.swift:158-159` | `speakSyllables()` |
+| **cached audio** | `ios/App/App/public/audio-native.js:83` | `configure({focus:true})` — the normal orb playback path, and its own comment says it sets `.playback` |
+
+AVAudioSession is one object per process — the plugin says so itself at line 18.
+So any of these firing while the mic is listening **switches the shared session
+out of `.playAndRecord`, the input route disappears, and the tap stops receiving
+buffers**. `buf=0`, then `NO_SPEECH`, which is the recognizer truthfully
+reporting that it was given nothing.
+
+`beginCapture` already handles the *other* direction: lines 614-624 deactivate,
+set `.playAndRecord`, reactivate, with a comment explaining that switching
+category on an already-active session does not reliably route the mic. What
+nothing handles is the reverse — a `.playback` assertion arriving *after* the
+mic is live. There is no guard, no ordering, and no owner.
+
+This is also why the earlier fix attempts passed the suite and changed nothing
+on the phone: the suite feeds synthesized audio to the parser, and the fault is
+two layers below that, in which category the OS session happens to be in.
+
+It matches the file's own unexplained observation — *"Orb reads 'listen…' while
+the mic ring is active"* — which C8 was written to confirm. The overlap is
+real, and the overlap is the bug.
+
+### What this means for F2
+
+F2's shape is right, and item 5 ("word audio and the mic are mutually
+exclusive") is the operative clause rather than item 2. The owner module has to
+intercept all three paths, not just the two in Swift — the cached-audio path
+goes through JS and is the one that plays most word audio.
+
+**Stop-and-ask 2 still stands and now has teeth.** The `.ambient` / `.playback`
+split at lines 101-103 is CC-FEEDBACK D4: ambient follows the silent switch,
+playback ignores it. A single owner must keep both categories and the rule for
+choosing, so "one owner" cannot mean "one category".
+
+The minimal change consistent with every signed decision looks like: one module
+owns category and activation; `speak`, `speakSyllables` and the JS `configure`
+route their requests through it; while the state is not `idle` those requests
+are **held, not applied** (F2 item 4), and a mic tap during word audio waits for
+the audio to end (D3a). None of that is written yet — F2 is Phase B and blocked
+on Eric's ruling.
