@@ -193,6 +193,10 @@ node scripts/settings-truth-check.mjs --selftest || { echo "GATE FAIL: settings-
 node scripts/human-audio-check.mjs || { echo "GATE FAIL: human audio (CC-HUMAN-AUDIO I2/I7/F7)"; exit 1; }
 node scripts/human-audio-check.mjs --selftest || { echo "GATE FAIL: human-audio selftest — the gate no longer bites"; exit 1; }
 
+echo "== gate: one audio-session owner (CC-SPELLIT-MIC-FIX A2/I-M5)"
+node scripts/audio-session-owner-check.mjs || { echo "GATE FAIL: audio session owner"; exit 1; }
+node scripts/audio-session-owner-check.mjs --selftest || { echo "GATE FAIL: audio-session-owner selftest — the gate no longer bites"; exit 1; }
+
 echo "== gate: voice spelling keeps its microphone (CC-SPELLIT-MIC-FIX G1)"
 node scripts/voice-spell-deps-check.mjs || { echo "GATE FAIL: voice spell deps"; exit 1; }
 node scripts/voice-spell-deps-check.mjs --selftest || { echo "GATE FAIL: voice-spell-deps selftest — the gate no longer bites"; exit 1; }

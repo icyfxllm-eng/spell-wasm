@@ -98,16 +98,13 @@ public class NativeLanguageKitPlugin: CAPPlugin, CAPBridgedPlugin {
         do {
             switch want {
             case "ambient":
-                try session.setCategory(.ambient, mode: .default)
+                AudioSessionOwner.shared.requestPlayback(.ambient)
             case "playback":
-                try session.setCategory(.playback, mode: .default)
+                AudioSessionOwner.shared.requestPlayback(.playback)
             default:
                 call.reject("unknown category: \(want)")
                 return
             }
-            try session.setActive(true)
-        } catch let e {
-            failure = "\(e)"
         }
         call.resolve([
             "requested": want,
@@ -131,8 +128,10 @@ public class NativeLanguageKitPlugin: CAPPlugin, CAPBridgedPlugin {
         // Match the cached-audio path: .playback so it respects the silent switch
         // exactly like audio-native.js configure({focus:true}) does. No regression
         // where the native path suddenly ignores the mute switch.
-        try? AVAudioSession.sharedInstance().setCategory(.playback, mode: .default)
-        try? AVAudioSession.sharedInstance().setActive(true)
+        // Through the owner: while the mic is listening this is HELD, not
+        // applied. Applying it would take the mic's input route away, which is
+        // the bug this whole feature file exists for (F2.5).
+        AudioSessionOwner.shared.requestPlayback(.playback)
         DispatchQueue.main.async {
             self.speaker.speak(text: text, voiceId: voiceId, gameRate: rate) { ok in
                 if ok {
@@ -155,8 +154,7 @@ public class NativeLanguageKitPlugin: CAPPlugin, CAPBridgedPlugin {
         let rate = Float(call.getDouble("rate") ?? Double(SpeechRate.gameNormal))
         // Same audio-session handling as `speak`: .playback so the offline
         // syllable replay respects the silent switch like the cached-audio path.
-        try? AVAudioSession.sharedInstance().setCategory(.playback, mode: .default)
-        try? AVAudioSession.sharedInstance().setActive(true)
+        AudioSessionOwner.shared.requestPlayback(.playback)
         DispatchQueue.main.async {
             self.syllableSpeaker.speak(
                 syllables: syllables, voiceId: voiceId, gameRate: rate,
@@ -416,6 +414,10 @@ final class SpeechListener {
     // Monotonic recognition-cycle id: callbacks from a superseded cycle's task are
     // ignored (a finalized/hung task can still call back after its replacement starts).
     private var cycleGen = 0
+    /// What the session reported when capture began (census C2), carried into
+    /// the diag line so a future no-audio report is readable rather than guessed.
+    private var lastRoute = ""
+
     // Highest RMS seen this session — reported in the diag line for VAD tuning.
     private var peakRMS: Float = 0
     // THE anti-letter-loss gap fix: finalizing a segment takes the recognizer up to
@@ -593,6 +595,10 @@ final class SpeechListener {
         teardownAnalyzer()
         audioEngine.inputNode.removeTap(onBus: 0)
         if audioEngine.isRunning { audioEngine.stop() }
+        // F2.3 — restore the category the mic borrowed. Without this the app
+        // stayed in .playAndRecord/.measurement, which attenuates output, so
+        // word audio came back quieter after any mic use.
+        AudioSessionOwner.shared.endRecording()
         pendingLock.lock()
         finalizing = false
         pendingBuffers.removeAll()
@@ -611,18 +617,14 @@ final class SpeechListener {
     private func beginCapture() {
         guard let recognizer = recognizer else { finish(.failure(.unavailable)); return }
 
-        do {
-            let session = AVAudioSession.sharedInstance()
-            // The app sets `.playback` (output-only) active at launch for word audio.
-            // Switching category on an already-active session doesn't reliably route
-            // the mic input, so deactivate first, then reconfigure for record + speaker
-            // and reactivate — otherwise the tap sees no audio ("Listening", nothing
-            // captured). `.allowBluetooth` picks up headset mics too.
-            try? session.setActive(false, options: .notifyOthersOnDeactivation)
-            try session.setCategory(.playAndRecord, mode: .measurement,
-                                    options: [.duckOthers, .defaultToSpeaker, .allowBluetooth])
-            try session.setActive(true, options: .notifyOthersOnDeactivation)
-        } catch { finish(.failure(.audio)); return }
+        // CC-SPELLIT-MIC-FIX F2.2: the owner reconfigures AND confirms the
+        // session can actually supply input before any tap is installed. nil
+        // means no usable sample rate or no input port — install a tap then and
+        // it can only ever receive silence, which is what shipped.
+        guard let route = AudioSessionOwner.shared.beginRecording() else {
+            finish(.failure(.audio)); return
+        }
+        lastRoute = route.diag
 
         // Defensive: clear any stale engine/tap state (e.g. an inputNode format cached
         // while the session was `.playback`) so the fresh tap gets real mic buffers.
@@ -697,8 +699,12 @@ final class SpeechListener {
         let onDev = recognizer.supportsOnDeviceRecognition
         DispatchQueue.main.asyncAfter(deadline: .now() + 1.2) { [weak self] in
             guard let self = self else { return }
-            handler?("sr=\(Int(format.sampleRate)) ch=\(format.channelCount) buf=\(self.tapCount) "
-                + "onDev=\(onDev) peak=\(String(format: "%.3f", self.peakRMS))")
+            // CC-SPELLIT-MIC-FIX census C2/C5: the session's own account of
+            // itself, plus the format the peak is actually computed from. buf=0
+            // with a healthy route means the session was taken away mid-session;
+            // fmt not float32 means the peak reads 0.000 whatever the room does.
+            handler?("\(self.lastRoute) ch=\(format.channelCount) fmt=\(format.commonFormat.rawValue) "
+                + "buf=\(self.tapCount) onDev=\(onDev) peak=\(String(format: "%.3f", self.peakRMS))")
         }
 
         startRecognitionCycle()
@@ -850,13 +856,10 @@ final class SpeechListener {
 
     @available(iOS 26.0, *)
     private func beginAnalyzerCapture(localeId: String, engine: String) {
-        do {
-            let session = AVAudioSession.sharedInstance()
-            try? session.setActive(false, options: .notifyOthersOnDeactivation)
-            try session.setCategory(.playAndRecord, mode: .measurement,
-                                    options: [.duckOthers, .defaultToSpeaker, .allowBluetooth])
-            try session.setActive(true, options: .notifyOthersOnDeactivation)
-        } catch { finish(.failure(.audio)); return }
+        guard let route = AudioSessionOwner.shared.beginRecording() else {
+            finish(.failure(.audio)); return
+        }
+        lastRoute = route.diag
 
         tapCount = 0
         audioEngine.stop()
@@ -1050,13 +1053,10 @@ final class SpeechListener {
     // MARK: server STT engine (mic-everywhere, consented internet rung).
 
     private func beginServerCapture() {
-        do {
-            let session = AVAudioSession.sharedInstance()
-            try? session.setActive(false, options: .notifyOthersOnDeactivation)
-            try session.setCategory(.playAndRecord, mode: .measurement,
-                                    options: [.duckOthers, .defaultToSpeaker, .allowBluetooth])
-            try session.setActive(true, options: .notifyOthersOnDeactivation)
-        } catch { finish(.failure(.audio)); return }
+        guard let route = AudioSessionOwner.shared.beginRecording() else {
+            finish(.failure(.audio)); return
+        }
+        lastRoute = route.diag
 
         tapCount = 0
         audioEngine.stop()
@@ -1260,9 +1260,10 @@ final class SpeechListener {
         pendingBuffers.removeAll()
         pendingLock.unlock()
         contextualStrings = []
-        // Restore the game's normal .playback session so word audio keeps working.
-        try? AVAudioSession.sharedInstance().setCategory(.playback, mode: .default)
-        try? AVAudioSession.sharedInstance().setActive(true)
+        // Restore the session so word audio keeps working. Through the owner,
+        // which also applies any playback request that was HELD while the mic
+        // was listening (F2.3/F2.4).
+        AudioSessionOwner.shared.endRecording()
         let cb = completion
         completion = nil
         cb?(result)

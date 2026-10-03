@@ -10,9 +10,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         // SPELL_AUDIO_SESSION: play word audio even with the ring/silent switch on (audio IS the game).
         do {
-            try AVAudioSession.sharedInstance().setCategory(.playback, mode: .default)
-            try AVAudioSession.sharedInstance().setActive(true)
-        } catch { print("AVAudioSession error: \(error)") }
+            // CC-SPELLIT-MIC-FIX F2/I-M5: the session has ONE owner.
+            AudioSessionOwner.shared.requestPlayback(.playback)
+        }
         // CC-TELEMETRY-FOUNDATION F1: collect MetricKit crash/hang diagnostics
         // (kind + stack signature only) for the web layer to route. Sends nothing.
         SpellMetricKitSink.shared.start()
