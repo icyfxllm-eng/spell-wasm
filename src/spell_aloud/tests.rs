@@ -796,3 +796,43 @@ fn f13_edit_commands_survive_the_word_rejection() {
         );
     }
 }
+
+/// CC-SPELLIT-MIC-FIX F1.2 / I-M1 — a tap while listening stops the mic on
+/// EVERY rung, including the two where the stop used to be unreachable.
+///
+/// The regression this pins: `listening` was tested fifth in `mic_tap`, behind
+/// the download and consent branches, both of which return. A player on the
+/// `downloadable` or `server` rung could start the mic and then not stop it by
+/// tapping, which is I-M1's one prohibition. It survived because English with
+/// the voice pack installed is on the `installed` rung, where the earlier
+/// branches do not fire.
+#[test]
+fn a_tap_while_listening_always_stops_whatever_the_rung() {
+    use crate::spell_aloud::{tap_action, Tap};
+    for cap in ["installed", "downloadable", "server", "unavailable", ""] {
+        for consented in [true, false] {
+            for downloading in [true, false] {
+                assert_eq!(
+                    tap_action(true, true, downloading, cap, consented),
+                    Tap::Stop,
+                    "listening + cap={cap} consented={consented} downloading={downloading} must stop"
+                );
+            }
+        }
+    }
+    // Even with the feature flag off: if something is listening, a tap stops it.
+    // Being unable to switch off a live mic is worse than an inconsistent flag.
+    assert_eq!(tap_action(true, false, false, "installed", true), Tap::Stop);
+}
+
+/// The rungs still behave, when nothing is listening.
+#[test]
+fn tap_rungs_when_idle() {
+    use crate::spell_aloud::{tap_action, Tap};
+    assert_eq!(tap_action(false, false, false, "installed", true), Tap::Ignore, "flag off");
+    assert_eq!(tap_action(false, true, true, "installed", true), Tap::Ignore, "mid-download");
+    assert_eq!(tap_action(false, true, false, "downloadable", true), Tap::Download);
+    assert_eq!(tap_action(false, true, false, "server", false), Tap::Consent, "first server use asks");
+    assert_eq!(tap_action(false, true, false, "server", true), Tap::Start, "consented server listens");
+    assert_eq!(tap_action(false, true, false, "installed", false), Tap::Start);
+}

@@ -193,6 +193,10 @@ node scripts/settings-truth-check.mjs --selftest || { echo "GATE FAIL: settings-
 node scripts/human-audio-check.mjs || { echo "GATE FAIL: human audio (CC-HUMAN-AUDIO I2/I7/F7)"; exit 1; }
 node scripts/human-audio-check.mjs --selftest || { echo "GATE FAIL: human-audio selftest — the gate no longer bites"; exit 1; }
 
+echo "== gate: voice spelling keeps its microphone (CC-SPELLIT-MIC-FIX G1)"
+node scripts/voice-spell-deps-check.mjs || { echo "GATE FAIL: voice spell deps"; exit 1; }
+node scripts/voice-spell-deps-check.mjs --selftest || { echo "GATE FAIL: voice-spell-deps selftest — the gate no longer bites"; exit 1; }
+
 echo "== gate: letter lexicons — every letter a bank needs is sayable"
 node scripts/letter-lexicon-check.mjs || { echo "GATE FAIL: letter lexicons"; exit 1; }
 node scripts/letter-lexicon-check.mjs --selftest || { echo "GATE FAIL: letter-lexicon selftest — the gate no longer bites"; exit 1; }

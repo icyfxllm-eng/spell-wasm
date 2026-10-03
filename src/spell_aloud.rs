@@ -908,28 +908,71 @@ fn surface_set(app: &App, text: &str) {
     }
 }
 
+/// What a tap on the mic should do. Pure, so the ORDER of these branches is
+/// testable on the host — `mic_tap` itself is DOM-bound and no host test can
+/// reach it, which is how the ordering below went unnoticed.
+#[derive(Debug, PartialEq, Eq)]
+pub enum Tap {
+    /// Stop a live session. CC-SPELLIT-MIC-FIX I-M1: always reachable.
+    Stop,
+    /// Nothing: the feature is off, or a voice pack is mid-download.
+    Ignore,
+    /// Fetch the on-device voice pack first.
+    Download,
+    /// Ask for consent before the server rung's first use.
+    Consent,
+    /// Begin listening.
+    Start,
+}
+
+/// CC-SPELLIT-MIC-FIX F1.2 — "a tap in starting or listening stops the mic.
+/// ALWAYS". `listening` is therefore tested FIRST, ahead of every capability
+/// branch.
+///
+/// It used to be tested fifth. On the `downloadable` and `server` rungs the tap
+/// took an earlier branch and returned, so the stop was unreachable and the
+/// player was left with a live microphone and no way to switch it off by
+/// tapping — exactly what I-M1 forbids. English with the pack installed sits on
+/// the `installed` rung, which is why it survived testing.
+pub fn tap_action(listening: bool, enabled: bool, downloading: bool, cap: &str, consented: bool) -> Tap {
+    if listening {
+        return Tap::Stop;
+    }
+    if !enabled || downloading {
+        return Tap::Ignore;
+    }
+    match cap {
+        "downloadable" => Tap::Download,
+        "server" if !consented => Tap::Consent,
+        _ => Tap::Start,
+    }
+}
+
 pub fn mic_tap(app: &App) {
-    if !enabled() {
-        return;
-    }
-    if DOWNLOADING.with(Cell::get) {
-        return; // voice pack still fetching — the status line is the feedback
-    }
-    if CAP_STATE.with(|c| c.borrow().clone()) == "downloadable" {
-        download_pack_then_reflect(app);
-        return;
-    }
-    if CAP_STATE.with(|c| c.borrow().clone()) == "server"
-        && crate::storage::get_raw("spell_stt_ok").as_deref() != Some("1")
-    {
-        // First use of the internet rung: the consent card, never a silent
-        // fallback. OK persists the choice; dismiss just closes.
-        crate::dom::remove_class("voiceSpellNet", "btn-hide");
-        return;
-    }
-    if LISTENING.with(Cell::get) {
-        stop_session();
-        return;
+    let action = tap_action(
+        LISTENING.with(Cell::get),
+        enabled(),
+        DOWNLOADING.with(Cell::get),
+        &CAP_STATE.with(|c| c.borrow().clone()),
+        crate::storage::get_raw("spell_stt_ok").as_deref() == Some("1"),
+    );
+    match action {
+        Tap::Stop => {
+            stop_session();
+            return;
+        }
+        Tap::Ignore => return,
+        Tap::Download => {
+            download_pack_then_reflect(app);
+            return;
+        }
+        Tap::Consent => {
+            // First use of the internet rung: the consent card, never a silent
+            // fallback. OK persists the choice; dismiss just closes.
+            crate::dom::remove_class("voiceSpellNet", "btn-hide");
+            return;
+        }
+        Tap::Start => {}
     }
     let (target, base, can) = surface_state(app);
     if !can {
