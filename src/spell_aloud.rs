@@ -1175,6 +1175,10 @@ fn on_error(app: &App, code: &str) {
         "UNAVAILABLE" => crate::dom::add_class("voiceSpellMic", "btn-hide"),
         // Server rung only: the backend was unreachable — keep the mic, say so.
         "NETWORK" => set_status("voiceSpell.netErr"),
+        // I-M3: the samples arrived carrying no signal. Saying "didn't catch
+        // that" here blames the player for a fault in the capture path, which
+        // is what hid this bug for four builds.
+        "MIC_SILENT" => set_status("voiceSpell.micSilent"),
         _ => set_status("voiceSpell.didntCatch"),
     }
 }

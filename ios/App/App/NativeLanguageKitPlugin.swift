@@ -355,6 +355,10 @@ final class SpeechListener {
         case audio = "AUDIO_ERROR"
         case noSpeech = "NO_SPEECH"
         case network = "NETWORK"
+        /// CC-SPELLIT-MIC-FIX I-M3: the samples arrived and carried no signal.
+        /// Distinct from NO_SPEECH, which blames the speaker for a fault in the
+        /// capture path — the exact confusion that cost four builds.
+        case micSilent = "MIC_SILENT"
     }
 
     private let audioEngine = AVAudioEngine()
@@ -445,6 +449,8 @@ final class SpeechListener {
     private var lastRaw = ""
     /// True once any buffer exceeded the adaptive threshold this capture.
     private var everSawSpeech = false
+    /// Guards the one-shot silence verdict below.
+    private var silenceVerdictDone = false
     private var liveTick = 0
     /// Set from the web layer's dev flag; keeps transcripts out of a normal build.
     var diagVerbose = false
@@ -494,7 +500,7 @@ final class SpeechListener {
     private var noiseFloor: Float = 0
     private var noiseSamples = 0
     private var speechRMSAdaptive: Float = 0.010
-    private let noiseWindow = 5
+    private let noiseWindow = 2
     private let noiseMult: Float = 3.0
     private let speechRMS: Float = 0.010   // legacy fixed value, retained for reference (
                                            // low enough to catch soft sibilants: "ess")
@@ -516,6 +522,13 @@ final class SpeechListener {
             }
         }
         if level > speechRMSAdaptive { everSawSpeech = true }
+        // I-M3 / F3.4. Digital silence is a capture fault and must say so.
+        // 0.0008 is below any real room and far below the 0.0004 Eric's device
+        // reported while the session looked perfectly healthy.
+        if !silenceVerdictDone, frameCount > UInt64(1.5 * 48000), peakRMS < 0.0008 {
+            silenceVerdictDone = true
+            DispatchQueue.main.async { [weak self] in self?.finish(.failure(.micSilent)) }
+        }
         liveTick += 1
         guard liveTick % 2 == 0, let h = diagHandler else { return }
         let line = "live rms=\(String(format: "%.4f", level)) peak=\(String(format: "%.4f", peakRMS))"
@@ -725,6 +738,7 @@ final class SpeechListener {
         lastRMS = 0
         lastErr = ""
         lastRaw = ""
+        silenceVerdictDone = false
         noiseFloor = 0
         noiseSamples = 0
         speechRMSAdaptive = 0.010

@@ -160,6 +160,12 @@
      causes are fixed at the source below; overflow-x:clip is only a safety net. */
   html,body{height:100%;max-width:100%;overflow-x:clip}
   img,svg,canvas{max-width:100%}
+  /* The gradient lives on <body>, so anything beyond it -- overscroll, or the
+     viewport shrinking when the keyboard opens -- showed the browser's WHITE
+     through <html>. Reported from the device, 2026-10-03: a white box below the
+     keyboard. A flat base colour behind the gradient costs nothing and the seam
+     cannot reappear. */
+  html{background:var(--bg-color)}
   body{
     font-family:var(--body); color:var(--ink-on-bg);
     background:radial-gradient(1200px 700px at 50% -10%, color-mix(in srgb, var(--bg-color) 55%, white 20%) 0%, transparent 60%), linear-gradient(180deg, var(--bg-color) 0%, color-mix(in srgb, var(--bg-color) 78%, black) 70%);
@@ -1793,6 +1799,13 @@
     <!-- Voice-spelling live status ("Listening…", "Spell it letter by letter!",
          "didn't catch that"). Empty unless a capture is in flight. -->
     <div class="voice-spell-status" id="voiceSpellStatus" aria-live="polite"></div>
+    <!-- CC-SPELLIT-MIC-FIX: the capture diagnostic had been sharing
+         #voiceSpellStatus with the player-facing status, so "Listening… say the
+         letters" wiped the readout at the exact moment it was needed. Its own
+         element, aria-hidden because it is instrumentation and not for a player
+         or a screen reader. Empty until the mic runs. -->
+    <div class="voice-spell-status" id="voiceSpellDiag" aria-hidden="true"
+         style="font-size:10px;line-height:1.35;opacity:.75;word-break:break-word"></div>
     <!-- One-time permission explainer if the mic is denied; typed input is never
          blocked, so this is dismissable and purely informational. -->
     <!-- Mic-everywhere server rung: the explicit internet-consent card. Shown

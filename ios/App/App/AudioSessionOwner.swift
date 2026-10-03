@@ -51,8 +51,11 @@ final class AudioSessionOwner {
         let inputPort: String
         let category: String
         let mode: String
+        let gain: Float
+        let gainSettable: Bool
         var diag: String {
             "cat=\(category) mode=\(mode) route=\(inputPort.isEmpty ? "(none)" : inputPort) sr=\(Int(sampleRate))"
+                + " gain=\(String(format: "%.2f", gain))\(gainSettable ? "" : "(fixed)")"
         }
     }
 
@@ -81,9 +84,28 @@ final class AudioSessionOwner {
         // does not reliably re-route the microphone.
         try? session.setActive(false, options: .notifyOthersOnDeactivation)
         do {
-            try session.setCategory(.playAndRecord, mode: .measurement,
-                                    options: [.duckOthers, .defaultToSpeaker, .allowBluetooth])
+            // CC-SPELLIT-MIC-FIX, 2026-10-03. This used to be
+            // `.measurement` with `.defaultToSpeaker`, and that pair is why the
+            // microphone delivered rms 0.0004 — about a hundred times too quiet
+            // to recognise anything — while every other signal said the session
+            // was healthy.
+            //
+            // `.measurement` exists to DISABLE input processing and automatic
+            // gain, for apps that want raw unprocessed samples. Apple's own
+            // speech sample does use it, but with `.record`; pairing it with
+            // `.playAndRecord` and `.defaultToSpeaker` forces the route to the
+            // speaker and leaves the input barely driven. `.default` restores
+            // the processing a speech recognizer actually wants, and dropping
+            // `.defaultToSpeaker` costs nothing now that word audio and the mic
+            // are mutually exclusive — nothing plays while capture is live.
+            try session.setCategory(.playAndRecord, mode: .default,
+                                    options: [.duckOthers, .allowBluetooth])
             try session.setActive(true, options: .notifyOthersOnDeactivation)
+            // Some routes expose a settable input gain; a device left at 0 is
+            // silent no matter how well everything else is configured.
+            if session.isInputGainSettable {
+                try? session.setInputGain(1.0)
+            }
         } catch {
             // Put the player back where they were rather than leaving a
             // half-configured session behind.
@@ -94,7 +116,9 @@ final class AudioSessionOwner {
         let route = Route(sampleRate: session.sampleRate,
                           inputPort: session.currentRoute.inputs.first?.portName ?? "",
                           category: session.category.rawValue,
-                          mode: session.mode.rawValue)
+                          mode: session.mode.rawValue,
+                          gain: session.inputGain,
+                          gainSettable: session.isInputGainSettable)
         guard route.sampleRate > 0, !route.inputPort.isEmpty else {
             try? session.setCategory(playbackCategory, mode: .default)
             try? session.setActive(true)

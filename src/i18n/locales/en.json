@@ -863,5 +863,6 @@
   "zh.rev.sandhi": "You wrote {heard} — that's what you hear. Written pinyin keeps the original tone: {written}.",
   "zh.rev.segmentMiss": "Syllable {n}: wrong syllable",
   "zh.rev.toneMiss": "Syllable {n}: right sound, wrong tone",
-  "zh.rev.toneRetry": "So close — right syllables, check the tones"
+  "zh.rev.toneRetry": "So close — right syllables, check the tones",
+  "voiceSpell.micSilent": "The microphone isn't sending sound."
 }

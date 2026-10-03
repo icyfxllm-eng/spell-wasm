@@ -863,5 +863,6 @@
   "zh.rev.sandhi": "Napisałeś {heard} — tak to brzmi. Zapisany pinyin zachowuje pierwotny ton: {written}.",
   "zh.rev.segmentMiss": "Sylaba {n}: zła sylaba",
   "zh.rev.toneMiss": "Sylaba {n}: dobry dźwięk, zły ton",
-  "zh.rev.toneRetry": "Blisko — sylaby dobre, sprawdź tony"
+  "zh.rev.toneRetry": "Blisko — sylaby dobre, sprawdź tony",
+  "voiceSpell.micSilent": "Mikrofon nie przesyła dźwięku."
 }

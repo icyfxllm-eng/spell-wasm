@@ -863,5 +863,6 @@
   "zh.rev.sandhi": "Vous avez écrit {heard}, ce qui s'entend. Le pinyin écrit garde le ton d'origine : {written}.",
   "zh.rev.segmentMiss": "Syllabe {n} : mauvaise syllabe",
   "zh.rev.toneMiss": "Syllabe {n} : bon son, mauvais ton",
-  "zh.rev.toneRetry": "Tout près — bonnes syllabes, vérifiez les tons"
+  "zh.rev.toneRetry": "Tout près — bonnes syllabes, vérifiez les tons",
+  "voiceSpell.micSilent": "Le microphone n'envoie aucun son."
 }

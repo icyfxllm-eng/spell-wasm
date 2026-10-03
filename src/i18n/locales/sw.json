@@ -863,5 +863,6 @@
   "zh.rev.sandhi": "Umeandika {heard} — ndivyo inavyosikika. Pinyin ya maandishi hubaki na toni asilia: {written}.",
   "zh.rev.segmentMiss": "Silabi {n}: silabi si sahihi",
   "zh.rev.toneMiss": "Silabi {n}: sauti sahihi, toni si sahihi",
-  "zh.rev.toneRetry": "Karibu — silabi sahihi, angalia toni"
+  "zh.rev.toneRetry": "Karibu — silabi sahihi, angalia toni",
+  "voiceSpell.micSilent": "Kipaza sauti hakitumi sauti."
 }

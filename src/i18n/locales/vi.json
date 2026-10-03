@@ -863,5 +863,6 @@
   "zh.rev.sandhi": "Bạn viết {heard} — đúng như nghe được. Pinyin viết giữ thanh gốc: {written}.",
   "zh.rev.segmentMiss": "Âm tiết {n}: sai âm tiết",
   "zh.rev.toneMiss": "Âm tiết {n}: đúng âm, sai thanh điệu",
-  "zh.rev.toneRetry": "Suýt rồi — đúng âm tiết, xem lại thanh điệu"
+  "zh.rev.toneRetry": "Suýt rồi — đúng âm tiết, xem lại thanh điệu",
+  "voiceSpell.micSilent": "Micrô không gửi âm thanh."
 }

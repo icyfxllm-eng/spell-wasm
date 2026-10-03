@@ -863,5 +863,6 @@
   "zh.rev.sandhi": "Isinulat mo ang {heard} — iyon ang naririnig. Ang nakasulat na pinyin ay nananatili sa orihinal na tono: {written}.",
   "zh.rev.segmentMiss": "Pantig {n}: maling pantig",
   "zh.rev.toneMiss": "Pantig {n}: tamang tunog, maling tono",
-  "zh.rev.toneRetry": "Malapit na — tamang pantig, tingnan ang tono"
+  "zh.rev.toneRetry": "Malapit na — tamang pantig, tingnan ang tono",
+  "voiceSpell.micSilent": "Walang tunog na ipinapadala ang mikropono."
 }
