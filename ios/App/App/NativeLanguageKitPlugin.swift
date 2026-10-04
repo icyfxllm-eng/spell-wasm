@@ -514,6 +514,19 @@ final class SpeechListener {
     /// is speaking. Before this, the only readings were at 1.2 s and at a segment
     /// boundary — and when the boundary never fires because the threshold is too
     /// high, that is no reading at all.
+    /// Called from the AVAudioEngine tap callback — a REAL-TIME AUDIO THREAD.
+    ///
+    /// Nothing here may block. Build 266 added `recognizer?.isAvailable` to the
+    /// line below; that property is backed by a daemon connection, it blocked
+    /// the render thread, and buffer delivery stalled at exactly four buffers,
+    /// repeatably, on Eric's phone. Build 265 had captured his voice properly
+    /// at peak=0.2893 — so the instrumentation destroyed the very thing it was
+    /// added to observe, and the next spec revision was written against the
+    /// damage. `avail=` belongs in the 1.2 s diag line, which runs on main.
+    ///
+    /// Arithmetic on local state and one DispatchQueue.main.async. Nothing else.
+    /// No Speech framework, no AVAudioSession, no locks, no allocation that can
+    /// wait on another thread.
     private func observeLevel(_ level: Float) {
         if noiseSamples < noiseWindow {
             noiseFloor = max(noiseFloor, level)
@@ -536,7 +549,6 @@ final class SpeechListener {
             + " thr=\(String(format: "%.4f", speechRMSAdaptive)) spoke=\(everSawSpeech ? "y" : "n")"
             + " buf=\(tapCount) appended=\(appendedCount) req=\(reqCount)"
             + " partials=\(partialCount) final=\(sawFinal ? "y" : "n")"
-            + " avail=\(recognizer?.isAvailable ?? false)"
             + (lastErr.isEmpty ? "" : " err=\(lastErr)")
         DispatchQueue.main.async { h(line) }
     }
@@ -928,20 +940,32 @@ final class SpeechListener {
             return
         }
         guard continuous, !stopping, !finished, task != nil else { return }
-        let gen = cycleGen
-        // From here until the next cycle's request exists, the tap stashes buffers
-        // (see installTap) so speech during finalization is replayed, not lost.
-        pendingLock.lock()
-        finalizing = true
-        pendingLock.unlock()
-        request?.endAudio()
-        // Safety net: if this cycle's task never delivers a final, force the next
-        // cycle anyway so one flaky finalize can't stall the one-press stream.
-        DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) { [weak self] in
-            guard let self = self, gen == self.cycleGen,
-                  !self.finished, self.continuous, !self.stopping else { return }
-            self.cycleEnded(self.best.isEmpty ? .failure(.noSpeech) : .success(self.best))
-        }
+
+        // CC-SPELLIT-MIC-FIX F6.3 — "end-of-audio is signalled only when the
+        // session ends (F1), never between letters".
+        //
+        // This used to call request?.endAudio() after 0.35 s of quiet, which for
+        // someone spelling "W… I… R… E" is after EVERY letter. Each recognition
+        // request therefore received about a third of a second of audio and was
+        // then closed, and on-device recognition needs more context than that to
+        // return anything. That produced Eric's build 265 reading exactly:
+        // peak=0.2893, appended=24, partials=0 — loud clean audio, every buffer
+        // delivered, and not one result, because each cycle was killed before it
+        // could produce one. The old seg-err=NO_SPEECH was a request closed with
+        // nothing recognised, reporting that accurately.
+        //
+        // ONE request now runs for the whole listening session, which is also
+        // what D3 asks for. Letters come from the growing partial transcript,
+        // which the Rust side already consumes that way: on_partial accumulates
+        // monotonically and on_final commits what accumulated — written that way
+        // "so spelled letters stick" without a forced finalization per letter.
+        //
+        // The VAD above still runs: it is what `spoke=` reports and what the
+        // silence timeout reads. It simply no longer closes the request.
+        //
+        // Legacy engine only, deliberately. The analyzer and server engines
+        // segment differently and Eric's device is on legacy — one variable at
+        // a time.
     }
 
     /// A cycle finished (letter finalized, error, or safety net). Mid-stream in
