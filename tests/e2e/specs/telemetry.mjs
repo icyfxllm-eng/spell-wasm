@@ -48,6 +48,25 @@ const hide = (page) => page.evaluate(() => {
 
 const store = (page, key) => page.evaluate((k) => localStorage.getItem(k), key);
 
+// raise() throws on a timer, so nothing has been recorded when it returns.
+// The local aggregate changing IS the record, so wait for that rather than
+// guessing how long a setTimeout(0) and a handler take on a loaded machine.
+// Only for the raises whose error is actually kept: with telemetry off or
+// killed, nothing is written and there is deliberately nothing to wait for.
+async function raiseRecorded(page, text = undefined) {
+  const before = await store(page, 'spell_tel_agg_v1');
+  await (text === undefined ? raise(page) : raise(page, text));
+  await page.waitForFunction((b) => localStorage.getItem('spell_tel_agg_v1') !== b,
+    before, { timeout: 4000 }).catch(() => {});
+}
+
+// A flush has reached the queue. Used where the claim is about what IS queued;
+// the exact count stays with the assertion that follows.
+const queued = (page) => page.waitForFunction(() => {
+  const q = JSON.parse(localStorage.getItem('spell_tel_queue_v1') || '[]');
+  return q.length > 0;
+}, null, { timeout: 5000 }).catch(() => {});
+
 async function until(fn, ms = 4000) {
   const t0 = Date.now();
   while (Date.now() - t0 < ms) {
@@ -82,14 +101,17 @@ async function playRounds(page, rounds, beforeRound = null) {
   const latencies = [];
   // Telemetry busy BEFORE the first word too: the deck is shuffled at the
   // first serve, so that is where a stolen random number would show.
-  await raise(page, 'before the first word');
-  await page.waitForTimeout(100);
+  await raiseRecorded(page, 'before the first word');
   await hide(page);
+  // sleep-ok: measurement spacing, not a wait for work. This harness compares
+  // trimmed means across interleaved rounds, and its history is of failing on
+  // machine load rather than on regressions; the fixed settle before the first
+  // timed round is part of what makes the two sides comparable.
   await page.waitForTimeout(250);
   for (let i = 0; i < rounds; i++) {
     if (beforeRound) await beforeRound(i);
     await page.click('#orbWrap');
-    await page.waitForTimeout(350);
+    await page.waitForFunction(() => !!window.__spelltest.currentWord(), null, { timeout: 5000 }).catch(() => {});
     const word = await page.evaluate(() => window.__spelltest.currentWord());
     const answer = i % 3 === 2 ? 'zzzz' : word.toLowerCase();
     await typeOnKeyboard(page, answer);
@@ -117,6 +139,9 @@ async function playRounds(page, rounds, beforeRound = null) {
       && (await page.waitForSelector('#scrim.show', { timeout: 4000 }).then(() => true, () => false));
     if (chainBroken) await page.click('#skipSave');
     seen.push({ word, verdict, streak, chainBroken });
+    // sleep-ok: fixed spacing between timed rounds, paid identically by both
+    // sides of the comparison. Making it adaptive would make the two sides
+    // differ by exactly the thing the test is trying to measure.
     await page.waitForTimeout(250);
   }
   return { seen, latencies };
@@ -155,9 +180,14 @@ export async function run(browser, base, suite) {
       assert(await until(async () => (await store(page, 'spell_flag_telemetry_enabled')) === 'on'), 'kill switch never cached');
       // Serve a word so the audio resolver runs (F5 tap_to_audio / resolution).
       await page.click('#orbWrap').catch(() => {});
-      await page.waitForTimeout(1500);
-      await raise(page);
-      await page.waitForTimeout(100);
+      // The audio router writes its outcome note for every source including
+      // "none", so a non-empty note means resolution has run and the F5 events
+      // exist. That is the thing the 1500ms was hoping for.
+      await page.waitForFunction(() => {
+        const el = document.getElementById('audioSourceNote');
+        return !!el && el.textContent.trim() !== '';
+      }, null, { timeout: 8000 }).catch(() => {});
+      await raiseRecorded(page);
       await hide(page);
       assert(await until(() => ep.posts.some((p) => JSON.parse(p.text).events.length > 0)), 'no error batch sent');
       const bodies = ep.posts.map((p) => {
@@ -186,9 +216,10 @@ export async function run(browser, base, suite) {
       const { ctx, page } = await openApp(browser, base, { lang: 'en', age, telemetry: ep.handler });
       try {
         assert(await until(async () => (await store(page, 'spell_flag_telemetry_enabled')) === 'on'), 'kill switch never cached');
-        await raise(page);
-        await page.waitForTimeout(100);
+        await raiseRecorded(page);
         await hide(page);
+        // sleep-ok: the claim is that NOTHING was posted before the day is
+        // due. A post that must never arrive has no signal to wait for.
         await page.waitForTimeout(800);
         assertEq(ep.posts.length, 0, 'posts before the day is due');
         const agg = JSON.parse(await store(page, 'spell_tel_agg_v1'));
@@ -201,12 +232,16 @@ export async function run(browser, base, suite) {
           a.due = 1;
           localStorage.setItem('spell_tel_agg_v1', JSON.stringify(a));
         });
-        await raise(page);
-        await page.waitForTimeout(100);
+        await raiseRecorded(page);
         await hide(page);
         assert(await until(() => ep.posts.length > 0), 'aggregate never sent');
+        // sleep-ok: both windows below exist to show a SECOND post never
+        // comes -- a second hide, then time for it to have been sent. The
+        // absence of a post is the claim, so there is nothing to wait on.
         await page.waitForTimeout(300);
         await hide(page);
+        // sleep-ok: the second half of that same window -- time for a second
+        // post to have arrived, so its absence means something.
         await page.waitForTimeout(800);
         assertEq(ep.posts.length, 1, 'aggregate posts');
         const p = ep.posts[0];
@@ -232,16 +267,26 @@ export async function run(browser, base, suite) {
       assert(await until(async () => (await store(page, 'spell_flag_telemetry_enabled')) === 'off'), 'kill switch never cached');
       // A queue left over from before the switch flipped.
       await page.evaluate(() => localStorage.setItem('spell_tel_queue_v1', JSON.stringify([{ c: 'wasm_panic', l: 'en', m: 'home', h: '0123456789abcdef' }])));
+      // sleep-ok: with the switch killed nothing is written locally and
+      // nothing is sent, so neither the raise nor the flush has any signal to
+      // wait for. The claim is the silence itself.
       await raise(page);
+      // sleep-ok: nothing is recorded with the switch killed, so the raise has
+      // no local trace to wait for.
       await page.waitForTimeout(100);
       await hide(page);
+      // sleep-ok: and nothing is sent, so only a quiet window shows it.
       await page.waitForTimeout(800);
       assertEq(ep.posts.length, 0, 'posts this launch');
       await page.reload({ waitUntil: 'load' });
       await page.waitForFunction(() => window.__spelltest && window.__spelltest.build() === 'testseam', null, { timeout: 30000 });
+      // sleep-ok: as above, across a relaunch -- a killed switch records and
+      // sends nothing, so only a quiet window can show it.
       await raise(page);
+      // sleep-ok: as above, across a relaunch -- no local trace to wait for.
       await page.waitForTimeout(100);
       await hide(page);
+      // sleep-ok: and still nothing sent; the silence is the claim.
       await page.waitForTimeout(800);
       assertEq(ep.posts.length, 0, 'posts next launch');
       for (const k of ['spell_tel_queue_v1', 'spell_tel_agg_v1', 'spell_tel_jsbuf_v1']) {
@@ -258,9 +303,13 @@ export async function run(browser, base, suite) {
     try {
       assert(await until(async () => (await store(page, 'spell_flag_telemetry_enabled')) === 'on'), 'kill switch never cached');
       for (let i = 0; i < 3; i++) await raise(page, `e${i}`);
-      await page.waitForTimeout(100);
+      // All three are recorded locally before the flush; wait for the third.
+      await page.waitForFunction(() => {
+        const a = JSON.parse(localStorage.getItem('spell_tel_agg_v1') || 'null');
+        return !!a && a.counts && (a.counts.js_uncaught || 0) >= 3;
+      }, null, { timeout: 5000 }).catch(() => {});
       await hide(page);
-      await page.waitForTimeout(1000);
+      await queued(page);
       const q = JSON.parse((await store(page, 'spell_tel_queue_v1')) || '[]');
       assertEq(q.length, 3, 'queued for retry');
       const toast = await page.evaluate(() => {
@@ -330,9 +379,9 @@ export async function run(browser, base, suite) {
       assert(cost <= tol, `a refused endpoint cost ${cost.toFixed(1)} ms per round (up ${m.up.toFixed(1)}, down ${m.down.toFixed(1)}, tolerance ${tol.toFixed(1)})`);
       // The refused posts are still queued for a later flush, and still capped.
       ep.setDown(true);
-      await raise(page, 'queue check');
+      await raiseRecorded(page, 'queue check');
       await hide(page);
-      await page.waitForTimeout(500);
+      await queued(page);
       const q = JSON.parse((await store(page, 'spell_tel_queue_v1')) || '[]');
       assert(q.length > 0 && q.length <= 200, `queue ${q.length}`);
     } finally { await ctx.close(); }
@@ -352,15 +401,19 @@ export async function run(browser, base, suite) {
       assertEq(await store(page, 'spell_telemetry_opt_v1'), 'off', 'choice stored');
       assertEq(await store(page, 'spell_tel_queue_v1'), null, 'queue cleared when switched off');
       const before = eventCount(ep);
+      // sleep-ok: opted out, so nothing is recorded and nothing is sent. The
+      // claim is that the count did NOT move, which only a window can show.
       await raise(page);
+      // sleep-ok: opted out, so the error is never written down anywhere this
+      // test can watch.
       await page.waitForTimeout(100);
       await hide(page);
+      // sleep-ok: the claim is that the count did NOT move. A non-event.
       await page.waitForTimeout(800);
       assertEq(eventCount(ep), before, 'events sent while off');
 
       await flip(page, 'telemetryToggle', true);
-      await raise(page, 'again');
-      await page.waitForTimeout(100);
+      await raiseRecorded(page, 'again');
       await hide(page);
       assert(await until(() => eventCount(ep) > before), 'nothing sent after switching back on');
     } finally { await ctx.close(); }
@@ -414,10 +467,22 @@ export async function run(browser, base, suite) {
     const { ctx, page } = await openApp(browser, base, { age: '', telemetry: capture });
     // Seeded for the reload below (addInitScript applies to later navigations).
     await ctx.addInitScript((c) => { if (!localStorage.getItem('byear_custom_v1')) localStorage.setItem('byear_custom_v1', JSON.stringify(c)); }, custom);
-    await ctx.route('**/api/auth/**', (r) => r.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify({ ok: true }) }));
+    let authCalls = 0;
+    await ctx.route('**/api/auth/**', (r) => {
+      authCalls += 1;
+      return r.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify({ ok: true }) });
+    });
     try {
       assert(await until(async () => (await store(page, 'spell_flag_telemetry_enabled')) === 'on'), 'kill switch never cached');
-      const flushNow = async (label) => { await raise(page, `${label} ${SECRETS.join(' ')}`); await page.waitForTimeout(100); await hide(page); await page.waitForTimeout(400); };
+      // Flush and wait for the post to actually arrive. The payloads are what
+      // this test reads, so "a post landed" is both the right signal and the
+      // precondition for every assertion at the bottom.
+      const flushNow = async (label) => {
+        const n0 = ep.posts.length;
+        await raiseRecorded(page, `${label} ${SECRETS.join(' ')}`);
+        await hide(page);
+        await until(() => ep.posts.length > n0, 5000);
+      };
 
       // Sign-in: an adult birthday opens the front door; type an address and a password.
       await page.waitForSelector('#ageScrim.show', { timeout: 4000 });
@@ -429,10 +494,13 @@ export async function run(browser, base, suite) {
       await page.fill('#fdEmail', 'secret.parent@example.com');
       await page.fill('#fdPassword', 'Tr0ub4dorXyz9%');
       await page.click('#fdLogin').catch(() => {});
-      await page.waitForTimeout(400);
+      // The sign-in is done when the mocked auth endpoint has been called --
+      // the front door stays open either way, so its state is no signal.
+      await until(() => authCalls > 0, 5000);
       await flushNow('login');
       await page.click('#fdGuest').catch(() => {});
-      await page.waitForTimeout(300);
+      await page.waitForFunction(() => !document.querySelector('#frontDoor.show'),
+        null, { timeout: 5000 }).catch(() => {});
 
       // My Words: reload so the seeded words exist, play them.
       await page.reload({ waitUntil: 'load' });
@@ -441,16 +509,17 @@ export async function run(browser, base, suite) {
       await page.click('#setupChip').catch(() => {});
       await page.selectOption('#langSel', '__mine').catch(() => {});
       await page.click('#setupDone').catch(() => {});
-      await page.waitForTimeout(200);
+      await page.waitForFunction(() => !document.querySelector('#setupScrim.show'),
+        null, { timeout: 5000 }).catch(() => {});
       await page.click('#orbWrap');
-      await page.waitForTimeout(400);
+      await page.waitForFunction(() => !!window.__spelltest.currentWord(), null, { timeout: 5000 }).catch(() => {});
       const served = await page.evaluate(() => window.__spelltest.currentWord());
       assert(['quokkazebra', 'marmotflute'].includes(served), `My Words not served (got ${served})`);
       await flushNow('mywords');
 
       // Snap a List: the review sheet with a recognised word.
       await page.evaluate(() => window.__spelltest.photoReview(JSON.stringify(['snapwordalpha'])));
-      await page.waitForTimeout(300);
+      await page.waitForSelector('#photoScrim.show', { timeout: 5000 }).catch(() => {});
       await flushNow('photo');
 
       assert(ep.posts.length > 0, 'nothing was sent: the test proves nothing');

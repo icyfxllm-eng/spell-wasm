@@ -23,8 +23,42 @@ async function reload(page, base) {
   await page.reload({ waitUntil: 'load' });
   await page.evaluate((b) => { window.SPELL_API_BASE = b.replace(/\/$/, ''); }, base);
   await page.waitForFunction(() => window.__spelltest && window.__spelltest.build() === 'testseam', null, { timeout: 30000 });
-  await page.waitForTimeout(150);
+  // The seam lands before the first paint. Wait for the home screen to have
+  // laid out -- that is what the old 150ms was standing in for.
+  await page.waitForFunction(() => {
+    const o = document.getElementById('orbWrap');
+    return !!o && o.getBoundingClientRect().width > 0;
+  }, null, { timeout: 10000 }).catch(() => {});
 }
+
+// Every action on the lists screen rewrites #listsBody. Waiting for that text
+// to actually change is the signal the fixed 200ms waits were approximating,
+// and unlike a sleep it does not get shorter than the work on a loaded machine.
+// The catch is deliberate: when nothing redraws, the assertion that follows
+// says what was wrong far better than a wait timing out here would.
+async function actOnLists(page, act, { timeout = 4000 } = {}) {
+  const before = await page.$eval('#listsBody', (e) => e.innerText).catch(() => null);
+  await act();
+  await page.waitForFunction((b) => {
+    const el = document.getElementById('listsBody');
+    return !!el && el.innerText !== b;
+  }, before, { timeout }).catch(() => {});
+}
+
+// Same idea for a control that re-renders in place (the star's aria-pressed,
+// the order toggle's class) without necessarily changing the panel's text.
+async function actOnControl(page, sel, act, { timeout = 4000 } = {}) {
+  const before = await page.$eval(sel, (e) => e.outerHTML).catch(() => null);
+  await act();
+  await page.waitForFunction(([q, b]) => {
+    const el = document.querySelector(q);
+    return !!el && el.outerHTML !== b;
+  }, [sel, before], { timeout }).catch(() => {});
+}
+
+// Play started from a list: My Words is the source.
+const minePlaying = (page) =>
+  page.waitForFunction(() => window.__spelltest.currentLang() === '__mine', null, { timeout: 5000 }).catch(() => {});
 
 // Phase 2: the save sheet. The photo review sheet is rendered through the
 // observation seam (the camera itself cannot run in a browser); the paste sheet
@@ -55,10 +89,19 @@ async function openPasteSheet(page) {
 async function pasteSave(page, words, dest) {
   await openPasteSheet(page);
   await page.fill('#importText', words.join('\n'));
-  await page.waitForTimeout(120);
-  if (dest) await page.selectOption('#importDest', dest);
+  if (dest) {
+    // The sheet rebuilds the destination list from the typed text, so wait for
+    // the option to exist instead of guessing how long that takes.
+    await page.waitForFunction((d) => {
+      const sel = document.getElementById('importDest');
+      return !!sel && [...sel.options].some((o) => o.value === d);
+    }, dest, { timeout: 4000 }).catch(() => {});
+    await page.selectOption('#importDest', dest);
+  }
   await page.click('#saveWords');
-  await page.waitForTimeout(400);
+  // Saving closes the sheet; that is the observable, not 400ms.
+  await page.waitForFunction(() => !document.querySelector('#importScrim.show'),
+    null, { timeout: 5000 }).catch(() => {});
 }
 
 
@@ -75,7 +118,12 @@ async function advance(page) {
     if (key) await key.click();
   }
   await page.click('#checkBtn');
-  await page.waitForTimeout(250);
+  // Wait for the verdict, not for 250ms -- the orb tap below only advances
+  // once the current word has been answered.
+  await page.waitForFunction(() => {
+    const c = document.getElementById('feedback').className;
+    return c.includes('good') || c.includes('bad');
+  }, null, { timeout: 4000 }).catch(() => {});
   await page.click('#orbWrap');
   await page.waitForFunction((prev) => window.__spelltest.currentWord() !== prev, w, { timeout: 4000 })
     .catch(() => {});
@@ -188,7 +236,10 @@ export async function run(browser, base, suite) {
       const addLabel = await page.$eval('#saveWords', (e) => e.textContent.trim());
       assert(/^add to /i.test(addLabel), `today's list reads as an add (got "${addLabel}")`);
       await page.selectOption('#importDest', '__new');
-      await page.waitForTimeout(120);
+      await page.waitForFunction((b) => {
+        const el = document.getElementById('saveWords');
+        return !!el && el.textContent.trim() !== b;
+      }, addLabel, { timeout: 4000 }).catch(() => {});
       const newLabel = await page.$eval('#saveWords', (e) => e.textContent.trim());
       assert(/new list/i.test(newLabel), `choosing a new list says so (got "${newLabel}")`);
     } finally { await ctx.close(); }
@@ -241,23 +292,21 @@ export async function run(browser, base, suite) {
     try {
       await pasteSave(page, ['becuase', 'dog']);
       await openScreen(page);
-      await page.click('#listsBody [data-l-open]:nth-of-type(2)').catch(async () => {
-        const cards = await page.$$('#listsBody [data-l-open]');
-        await cards[1].click();
+      await actOnLists(page, async () => {
+        await page.click('#listsBody [data-l-open]:nth-of-type(2)').catch(async () => {
+          const cards = await page.$$('#listsBody [data-l-open]');
+          await cards[1].click();
+        });
       });
-      await page.waitForTimeout(200);
       await page.click('[data-e-edit="0"]');
       await page.fill('#listsEdit', 'because');
-      await page.click('[data-e-save="0"]');
-      await page.waitForTimeout(200);
+      await actOnLists(page, () => page.click('[data-e-save="0"]'));
       let words = await page.$$eval('#listsBody .le-word', (e) => e.map((x) => x.textContent));
       assertEq(words.join(','), 'because,dog', 'the misread is fixed');
-      await page.click('[data-e-remove="1"]');
-      await page.waitForTimeout(200);
+      await actOnLists(page, () => page.click('[data-e-remove="1"]'));
       words = await page.$$eval('#listsBody .le-word', (e) => e.map((x) => x.textContent));
       assertEq(words.join(','), 'because', 'and a word can be removed');
-      await page.click('#listsUndoBtn');
-      await page.waitForTimeout(200);
+      await actOnLists(page, () => page.click('#listsUndoBtn'));
       words = await page.$$eval('#listsBody .le-word', (e) => e.map((x) => x.textContent));
       assertEq(words.join(','), 'because,dog', 'Undo puts it back where it was');
     } finally { await ctx.close(); }
@@ -270,20 +319,16 @@ export async function run(browser, base, suite) {
       await pasteSave(page, ['cat', 'dog']);
       await openScreen(page);
       const cards = await page.$$('#listsBody [data-l-open]');
-      await cards[1].click();
-      await page.waitForTimeout(200);
-      await page.click('[data-l-del-ask]');
-      await page.waitForTimeout(150);
+      await actOnLists(page, () => cards[1].click());
+      await actOnLists(page, () => page.click('[data-l-del-ask]'));
       const ask = await page.$eval('#listsBody', (e) => e.innerText);
       assert(/delete .* and its 2 words\?/i.test(ask), `it asks, naming the list and the count (got "${ask}")`);
-      await page.click('[data-l-del]');
-      await page.waitForTimeout(300);
+      await actOnLists(page, () => page.click('[data-l-del]'));
       let body = await page.$eval('#listsBody', (e) => e.innerText);
       assert(/no word lists yet/i.test(body), `My Words says it is empty (got "${body}")`);
       assert(!/2 words/.test(body), 'and the deleted list is not among the cards (AT5.2)');
       assert(/recently deleted/i.test(body), 'it waits under Recently deleted instead');
-      await page.click('#listsUndoBtn');
-      await page.waitForTimeout(250);
+      await actOnLists(page, () => page.click('#listsUndoBtn'));
       body = await page.$eval('#listsBody', (e) => e.innerText);
       assert(/2 words/.test(body), `Undo brings it back whole (got "${body}")`);
     } finally { await ctx.close(); }
@@ -298,17 +343,17 @@ export async function run(browser, base, suite) {
       await pasteSave(page, ['cat', 'dog']);
       await openScreen(page);
       const cards = await page.$$('#listsBody [data-l-open]');
-      await cards[1].click();
-      await page.waitForTimeout(200);
+      await actOnLists(page, () => cards[1].click());
       await page.click('[data-l-del-ask]');
-      await page.waitForTimeout(250);
+      await page.waitForSelector('#parentScrim.show', { timeout: 4000 }).catch(() => {});
       assert(await page.$eval('#parentScrim', (e) => e.classList.contains('show')),
         'the parent gate opens instead of a confirm');
       const body = await page.$eval('#listsBody', (e) => e.innerText);
       assert(/2 words|cat/i.test(body), 'and nothing is deleted meanwhile');
       // Walking away from the gate leaves the list alone and disarms it.
       await page.click('#parentCancel');
-      await page.waitForTimeout(200);
+      await page.waitForFunction(() => !document.querySelector('#parentScrim.show'),
+        null, { timeout: 4000 }).catch(() => {});
       assert(!(await page.$eval('#parentScrim', (e) => e.classList.contains('show'))), 'the gate closes');
       const after = await page.evaluate((k) => JSON.parse(localStorage.getItem(k)).lists.filter((l) => !l.deletedAt).length, LISTS_KEY);
       assertEq(after, 1, 'the list is still there');
@@ -323,10 +368,9 @@ export async function run(browser, base, suite) {
       await pasteSave(page, ['zebra', 'walrus'], '__new');
       await openScreen(page);
       const cards = await page.$$('#listsBody [data-l-open]');
-      await cards[2].click();           // the older list: cat, dog, fox
-      await page.waitForTimeout(200);
+      await actOnLists(page, () => cards[2].click());  // the older list: cat, dog, fox
       await page.click('[data-l-play]');
-      await page.waitForTimeout(500);
+      await minePlaying(page);
       assertEq(await page.evaluate(() => window.__spelltest.currentLang()), '__mine', 'My Words is the source');
       const seen = new Set();
       for (let i = 0; i < 8; i++) {
@@ -348,26 +392,29 @@ export async function run(browser, base, suite) {
       await pasteSave(page, ['zebra'], '__new');
       await openScreen(page);
       let cards = await page.$$('#listsBody [data-l-open]');
-      await cards[2].click();           // older list
-      await page.waitForTimeout(200);
+      await actOnLists(page, () => cards[2].click());  // older list
       await page.click('[data-l-play]');
-      await page.waitForTimeout(400);
+      await minePlaying(page);
       // Delete the list that is being played.
       await openScreen(page);
       cards = await page.$$('#listsBody [data-l-open]');
-      await cards[2].click();
-      await page.waitForTimeout(200);
-      await page.click('[data-l-del-ask]');
-      await page.waitForTimeout(150);
+      await actOnLists(page, () => cards[2].click());
+      await actOnLists(page, () => page.click('[data-l-del-ask]'));
       await page.click('[data-l-del]');
-      await page.waitForTimeout(400);
+      // The delete is done when the blob carries a tombstone -- that is what
+      // the selection check below reads, so wait for it rather than for 400ms.
+      await page.waitForFunction((k) => {
+        const l = JSON.parse(localStorage.getItem(k) || '{"lists":[]}');
+        return l.lists.some((x) => x.deletedAt);
+      }, LISTS_KEY, { timeout: 5000 }).catch(() => {});
       const pool = await page.evaluate(() => {
         const l = JSON.parse(localStorage.getItem('byear_word_lists_v1'));
         return l.selection;
       });
       assert(!pool.length || pool.every((id) => id !== 'gone'), 'the selection dropped the deleted list');
       await page.click('#listsClose');
-      await page.waitForTimeout(200);
+      await page.waitForFunction(() => !document.querySelector('#listsScreen.show'),
+        null, { timeout: 4000 }).catch(() => {});
       // The word already on screen stays — it is the player's current turn. The
       // NEXT serves come from the list play fell back to.
       const after = [];
@@ -387,14 +434,11 @@ export async function run(browser, base, suite) {
       await pasteSave(page, ['alpha', 'bravo', 'charlie']);
       await openScreen(page);
       const cards = await page.$$('#listsBody [data-l-open]');
-      await cards[1].click();
-      await page.waitForTimeout(200);
-      await page.click('[data-l-order="mine"]');
-      await page.waitForTimeout(200);
-      await page.click('[data-e-star="2"]');        // charlie leads
-      await page.waitForTimeout(200);
+      await actOnLists(page, () => cards[1].click());
+      await actOnControl(page, '[data-l-order="mine"]', () => page.click('[data-l-order="mine"]'));
+      await actOnControl(page, '[data-e-star="2"]', () => page.click('[data-e-star="2"]')); // charlie leads
       await page.click('[data-l-play]');
-      await page.waitForTimeout(400);
+      await minePlaying(page);
       const served = [];
       for (let i = 0; i < 3; i++) {
         served.push(await advance(page));

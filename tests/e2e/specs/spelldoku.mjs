@@ -16,26 +16,50 @@ async function openSpellDoku(page) {
 }
 
 const board = (page) => page.evaluate(() => JSON.parse(window.__spelltest.spelldokuBoard() || 'null'));
+const rawBoard = (page) => page.evaluate(() => window.__spelltest.spelldokuBoard());
+
+// The screen rebuilds a control in place when its state changes -- a picked
+// symbol, a selected cell, a relabelled button. Waiting for that element's own
+// markup to change is the signal every 80-250ms sleep here was standing in for.
+// The catch is deliberate: when nothing redraws, the assertion that follows
+// reports the real problem better than a timeout at the wait would.
+async function settles(page, sel, act, { timeout = 4000 } = {}) {
+  const before = await page.$eval(sel, (e) => e.outerHTML).catch(() => null);
+  await act();
+  await page.waitForFunction(([q, b]) => {
+    const el = document.querySelector(q);
+    return !!el && el.outerHTML !== b;
+  }, [sel, before], { timeout }).catch(() => {});
+}
+
+// A fresh deal. #sdNew and #sdDaily both serve a new board, and the served
+// board is readable through the seam, so wait for it rather than for the deal
+// to have probably finished.
+async function dealt(page, act, { timeout = 6000 } = {}) {
+  const before = await rawBoard(page);
+  await act();
+  await page.waitForFunction((b) => {
+    const now = window.__spelltest.spelldokuBoard();
+    return !!now && now !== b;
+  }, before, { timeout }).catch(() => {});
+}
 
 async function pick(page, value) {
-  await page.selectOption('#sdPick', value);
-  await page.waitForTimeout(250);
+  await dealt(page, () => page.selectOption('#sdPick', value), { timeout: 5000 });
 }
 
 // D-R3 made Numbers the default on Easy and Medium, so a test that wants a
 // letters board now has to ask for one -- which is the point of F5.
 async function pickLetters(page, value) {
   await pick(page, value);
-  await page.selectOption('#sdTier', 'letters');
-  await page.waitForTimeout(150);
-  await page.click('#sdNew');
-  await page.waitForTimeout(400);
+  await settles(page, '#sdNote', () => page.selectOption('#sdTier', 'letters'));
+  await dealt(page, () => page.click('#sdNew'));
 }
 
 async function spell(page, word) {
   for (const ch of word) await page.click(`#sdKeys [data-sd-key="${ch}"]`);
-  await page.click('#sdKeys [data-sd-go]');
-  await page.waitForTimeout(80);
+  // Committing rewrites the typed line, whether the word lands or is refused.
+  await settles(page, '#sdTyped', () => page.click('#sdKeys [data-sd-go]'));
 }
 
 // CC-SPELLDOKU-RULES C2 (Eric, 2026-09-22): a symbol is PICKED and only then
@@ -43,7 +67,15 @@ async function spell(page, word) {
 // fires on the pick, which is the whole point of the inversion.
 async function pickSym(page, v) {
   await page.click(`[data-sd-sym="${v}"]`);
-  await page.waitForTimeout(80);
+  // Wait for the OUTCOME of the pick, not for the screen to settle. A pick
+  // either lands -- the symbol reads as picked and spelling opens -- or is
+  // refused, and refuse() shakes the target cell for exactly 600ms before the
+  // board goes quiet again (src/spelldoku_ui.rs). A settle-wait outlives that
+  // window, which is how the five conflict tests first went red here: the
+  // shake they read had already been cleared by the time the wait returned.
+  await page.waitForFunction((sym) => !!document.querySelector(`[data-sd-sym="${sym}"].picked`)
+    || !!document.querySelector('.sd-cell.shake'),
+    v, { timeout: 4000 }).catch(() => {});
 }
 
 async function place(page, v, word) {
@@ -158,8 +190,7 @@ export async function run(browser, base, suite) {
         await pickSym(page, v);
         for (const ch of 'bay') await page.click(`#sdKeys [data-sd-key="${ch}"]`);
         await page.click('#sdKeys [data-sd-key="\u0309"]');
-        await page.click('#sdKeys [data-sd-go]');
-        await page.waitForTimeout(80);
+        await settles(page, '#sdTyped', () => page.click('#sdKeys [data-sd-go]'));
       }
       assertEq(await page.$eval(`[data-sd-cell="${target}"]`, (e) => e.textContent.trim()), String(v), 'placed');
     } finally { await ctx.close(); }
@@ -247,8 +278,7 @@ export async function run(browser, base, suite) {
       assertEq(await page.$eval('#sdNote', (e) => e.textContent.trim()), '', 'no logic feedback yet');
       assertEq(await page.$eval(`[data-sd-cell="${i}"]`, (e) => e.textContent.trim()), b.glyphs[wrongV - 1], 'placed as entered, shown as its glyph');
       assert(!(await page.$eval('#sdCheck', (e) => e.classList.contains('btn-hide'))), 'Check Board is offered');
-      await page.click('#sdCheck');
-      await page.waitForTimeout(100);
+      await settles(page, '#sdNote', () => page.click('#sdCheck'));
       assert(/another look/i.test(await page.$eval('#sdNote', (e) => e.textContent)), 'Check Board reports it');
       assert(await page.$eval(`[data-sd-cell="${i}"]`, (e) => e.classList.contains('wrong')), 'and marks the cell');
       await page.click('#sdCheck');
@@ -265,7 +295,9 @@ export async function run(browser, base, suite) {
       await pick(page, '9-medium');
       for (let level = 1; level <= 2; level++) {
         await page.click('#sdHint');
-        await page.waitForTimeout(100);
+        // The hint has landed when the board shows one more hinted cell.
+        await page.waitForFunction((want) => document.querySelectorAll('.sd-cell.hint').length >= want,
+          level, { timeout: 4000 }).catch(() => {});
         const b = await board(page);
         const cell = await page.$eval('.sd-cell.hint', (e) => Number(e.dataset.sdCell));
         const word = b.words ? b.words[b.solution[cell] - 1] : WORDS[b.solution[cell]];
@@ -309,8 +341,7 @@ export async function run(browser, base, suite) {
       const { ctx, page } = await openApp(browser, base, { lang: 'en' });
       try {
         await openSpellDoku(page);
-        await page.click('#sdDaily');
-        await page.waitForTimeout(300);
+        await dealt(page, () => page.click('#sdDaily'));
         boards.push(JSON.stringify(await board(page)));
       } finally { await ctx.close(); }
     }
@@ -421,6 +452,8 @@ export async function run(browser, base, suite) {
         assertEq(after.picked, 0, `${cfg}: nothing is picked, so spelling never opened`);
         // Typing after a refusal does nothing, because nothing is picked.
         await page.click('#sdKeys [data-sd-key="o"]').catch(() => {});
+        // sleep-ok: the claim is that the key did NOTHING. There is no redraw
+        // to wait for -- an inert keyboard's only evidence is a quiet window.
         await page.waitForTimeout(60);
         assertEq(await page.$eval('#sdTyped', (e) => e.textContent), after.typedLine, `${cfg}: the keyboard is inert`);
       } finally { await ctx.close(); }
@@ -445,8 +478,7 @@ export async function run(browser, base, suite) {
           assertEq(counts[v - 1], want, `${cfg}: ${v} has ${want} left`);
         }
         const i = empties(b).find((k) => conflicting(b, k));
-        await page.click(`[data-sd-cell="${i}"]`);
-        await page.waitForTimeout(120);
+        await settles(page, `[data-sd-cell="${i}"]`, () => page.click(`[data-sd-cell="${i}"]`));
         const dimmed = await page.$$eval('[data-sd-sym].dim', (e) => e.length);
         if (dims) {
           assert(dimmed > 0, `${cfg}: ruled-out symbols dim`);
@@ -491,8 +523,7 @@ export async function run(browser, base, suite) {
       await page.click('#sdPencil');
       const pen = empties(b).find((k) => k !== first);
       await page.click(`[data-sd-cell="${pen}"]`);
-      await page.click(`#sdKeys [data-sd-pen="${v}"]`);
-      await page.waitForTimeout(100);
+      await settles(page, `[data-sd-cell="${pen}"]`, () => page.click(`#sdKeys [data-sd-pen="${v}"]`));
       assert((await page.$eval(`[data-sd-cell="${pen}"]`, (e) => e.textContent)).includes(String(v)),
         'D-R6: a pencil mark is a note, not a placement');
     } finally { await ctx.close(); }
@@ -515,11 +546,9 @@ export async function run(browser, base, suite) {
       }
       // Choose the opposite of the default at two tiers.
       await pick(page, '9-easy');
-      await page.selectOption('#sdTier', 'letters');
-      await page.waitForTimeout(150);
+      await settles(page, '#sdNote', () => page.selectOption('#sdTier', 'letters'));
       await pick(page, '9-hard');
-      await page.selectOption('#sdTier', 'numbers');
-      await page.waitForTimeout(150);
+      await settles(page, '#sdNote', () => page.selectOption('#sdTier', 'numbers'));
       await page.reload({ waitUntil: 'load' });
       await page.waitForFunction(() => window.__spelltest && window.__spelltest.build() === 'testseam', null, { timeout: 30000 });
       await openSpellDoku(page);
@@ -555,14 +584,14 @@ export async function run(browser, base, suite) {
       await pick(page, '9-easy');
       const before = await board(page);
       assert(!before.words, 'starts on numbers');
-      await page.selectOption('#sdTier', 'letters');
-      await page.waitForTimeout(200);
+      // The note updating is the positive signal; the claim under test is that
+      // the BOARD did not change, which the assertions below make.
+      await settles(page, '#sdNote', () => page.selectOption('#sdTier', 'letters'));
       const after = await board(page);
       assertEq(sig(after), sig(before), 'the board is untouched');
       assert(!after.words, 'and it is still a numbers board');
       assert(/letters/i.test(await page.$eval('#sdNote', (e) => e.textContent)), 'the note says what comes next');
-      await page.click('#sdNew');
-      await page.waitForTimeout(400);
+      await dealt(page, () => page.click('#sdNew'));
       assert((await board(page)).words, 'the NEXT board is letters');
     } finally { await ctx.close(); }
   });
@@ -579,8 +608,7 @@ export async function run(browser, base, suite) {
       assert(/each letter stands for a word/i.test(await page.$eval('#sdHowText', (e) => e.textContent)), 'and says what a letter is');
       await page.click('#sdHowOk');
       assert(!(await up()), 'Got it dismisses it');
-      await page.click('#sdNew');
-      await page.waitForTimeout(400);
+      await dealt(page, () => page.click('#sdNew'));
       assert(!(await up()), 'the second letters board does not repeat it');
       await page.click('#sdHowBtn');
       assert(await up(), 'How to play brings it back');
@@ -612,14 +640,12 @@ export async function run(browser, base, suite) {
           assert(shared <= 3, `F8: at most 3 words shared with the previous letters board (got ${shared})`);
         }
         if (b.words) previous = b.words;
-        await page.click('#sdNew');
-        await page.waitForTimeout(350);
+        await dealt(page, () => page.click('#sdNew'));
       }
       // The Daily is a board like any other now: replaying gives a new one.
       const dailies = new Set();
       for (let i = 0; i < 4; i++) {
-        await page.click('#sdDaily');
-        await page.waitForTimeout(400);
+        await dealt(page, () => page.click('#sdDaily'));
         dailies.add(sig(await board(page)));
       }
       assertEq(dailies.size, 4, 'D-R4: four plays of the Daily are four different boards');
@@ -630,8 +656,7 @@ export async function run(browser, base, suite) {
     try {
       for (const p of [one.page, two.page]) {
         await openSpellDoku(p);
-        await p.click('#sdDaily');
-        await p.waitForTimeout(400);
+        await dealt(p, () => p.click('#sdDaily'));
       }
       const a = sig(await board(one.page));
       const b = sig(await board(two.page));

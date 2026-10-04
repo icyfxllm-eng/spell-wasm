@@ -22,9 +22,10 @@
 //   node scripts/e2e-sleep-ratchet.mjs
 //   node scripts/e2e-sleep-ratchet.mjs --selftest
 //
-// To exempt a genuinely necessary sleep, put `sleep-ok:` and a reason in a
-// comment on the line above it. Exempt sleeps are not counted, so adding one
-// does not force the cap up -- but it does leave the reason in the diff.
+// To exempt a genuinely necessary sleep, put `sleep-ok:` and a reason in the
+// comment block directly above it -- anywhere in that block, so a reason may
+// run to several lines. Exempt sleeps are not counted, so adding one does not
+// force the cap up, but it does leave the reason in the diff.
 
 import { readdirSync, readFileSync, statSync, mkdtempSync, mkdirSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
@@ -35,6 +36,7 @@ const ROOT = 'tests/e2e';
 const BASELINE_FILE = 'config/e2e-sleep-baseline.json';
 const CALL = /\.waitForTimeout\s*\(/g;
 const EXEMPT = /sleep-ok:/;
+const COMMENT = /^\s*(\/\/|\*|\/\*)/;
 
 function walk(dir) {
   const out = [];
@@ -57,11 +59,17 @@ export function countSleeps(root = ROOT) {
     for (let i = 0; i < lines.length; i += 1) {
       const line = lines[i];
       // A mention inside a comment is prose, not a sleep.
-      if (/^\s*(\/\/|\*|\/\*)/.test(line)) continue;
+      if (COMMENT.test(line)) continue;
       const hits = (line.match(CALL) || []).length;
       if (!hits) continue;
-      const prev = lines[i - 1] || '';
-      if (EXEMPT.test(prev) || EXEMPT.test(line)) { exempt += hits; continue; }
+      // Scan up through the contiguous comment block above. A reason worth
+      // writing rarely fits on one line, and a checker that only reads the
+      // line directly above quietly ignores the second half of every one.
+      let marked = EXEMPT.test(line);
+      for (let j = i - 1; j >= 0 && !marked && COMMENT.test(lines[j]); j -= 1) {
+        if (EXEMPT.test(lines[j])) marked = true;
+      }
+      if (marked) { exempt += hits; continue; }
       n += hits;
     }
     if (n) per[file] = n;
@@ -77,6 +85,10 @@ function selftest() {
     ['a bare call counts', 'await page.waitForTimeout(400);', 1],
     ['a mention in a comment does not', '// we used to waitForTimeout(400) here', 0],
     ['an exempted call does not', '// sleep-ok: proving nothing renders\nawait page.waitForTimeout(400);', 0],
+    ['a reason may run to several lines',
+      '// sleep-ok: proving nothing renders --\n// there is no event to wait for.\nawait page.waitForTimeout(400);', 0],
+    ['the block must be contiguous with the call',
+      '// sleep-ok: stale reason\n\nawait page.waitForTimeout(400);', 1],
     ['two on one line count twice', 'await a.waitForTimeout(1); await b.waitForTimeout(2);', 2],
   ];
   let bad = 0;

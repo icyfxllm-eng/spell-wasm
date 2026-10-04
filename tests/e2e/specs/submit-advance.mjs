@@ -40,21 +40,55 @@ async function waitAnswered(page, timeout = 3500) {
   }, null, { timeout }).catch(() => {});
 }
 
+// A submit control has a box only once a served word has rendered the answer
+// form -- which is the state A1/A2 measure. Waiting for it beats waiting 300ms,
+// and the catch leaves the verdict to the assertions, which say what was wrong.
+async function formReady(page) {
+  await page.waitForFunction(() => !!window.__spelltest.currentWord()
+    && ['checkBtn', 'kbSubmit'].some((id) => {
+      const el = document.getElementById(id);
+      if (!el) return false;
+      const st = getComputedStyle(el);
+      if (st.display === 'none' || st.visibility === 'hidden') return false;
+      const r = el.getBoundingClientRect();
+      return r.width > 0 && r.height > 0;
+    }), null, { timeout: 5000 }).catch(() => {});
+}
+
+// A word is on screen and ready to type into.
+const wordServed = (page) =>
+  page.waitForFunction(() => !!window.__spelltest.currentWord(), null, { timeout: 5000 }).catch(() => {});
+
+// Daily has moved past word i0 -- the cursor advanced, or the run ended. On the
+// final word only the second is ever true, which is why both are here.
+const movedOn = (page, i0) =>
+  page.waitForFunction((i) => window.__spelltest.dailyIdx() > i
+    || !window.__spelltest.dailyActive()
+    || !!document.querySelector('#dailyResScrim.show'),
+    i0, { timeout: DELAY + 2500 }).catch(() => {});
+
 // Enter Daily and serve the first word (orb tap). Returns nothing.
 async function startDaily(page) {
   // The tile is retired (v1.3.1 F2); press the element, as the drawer does.
-  await page.evaluate(() => document.getElementById('dailyBtn').click()); await page.waitForTimeout(300);
-  await page.click('#orbWrap'); await page.waitForTimeout(350);
+  await page.evaluate(() => document.getElementById('dailyBtn').click());
+  await page.waitForFunction(() => window.__spelltest.dailyActive(), null, { timeout: 5000 });
+  await page.click('#orbWrap');
+  await wordServed(page);
 }
 
 // Advance past the current word by answering it wrong, then tapping the orb
 // (wrong never auto-advances, so the orb tap is the manual advance).
 async function skipWrong(page) {
   const w = await currentWord(page);
+  const i0 = await dailyIdx(page);
   await typeWord(page, w.toLowerCase() === 'zzzz' ? 'xxxx' : 'zzzz');
   await page.click('#checkBtn');
   await waitAnswered(page);
-  await page.click('#orbWrap'); await page.waitForTimeout(300);
+  await page.click('#orbWrap');
+  // The orb is the manual advance; wait for the cursor to move and the next
+  // word to be served rather than guessing 300ms.
+  await page.waitForFunction((i) => window.__spelltest.dailyIdx() > i && !!window.__spelltest.currentWord(),
+    i0, { timeout: 5000 }).catch(() => {});
 }
 
 // Serve daily words until the current one is base-typeable on the keyboard.
@@ -75,7 +109,7 @@ export async function run(browser, base, suite) {
     for (const [width, height] of WIDTHS) {
       const { ctx, page } = await openApp(browser, base, { lang: 'en', viewport: { width, height } });
       try {
-        await page.click('#orbWrap'); await page.waitForTimeout(300); // serve a word → form active
+        await page.click('#orbWrap'); await formReady(page); // serve a word → form active
         const n = await page.evaluate(() => {
           // A "submit control" = an element wired to submit the answer. The two
           // in the DOM are #checkBtn and #kbSubmit; count only the visible ones.
@@ -97,7 +131,7 @@ export async function run(browser, base, suite) {
     for (const [width, height] of WIDTHS) {
       const { ctx, page } = await openApp(browser, base, { lang: 'en', viewport: { width, height } });
       try {
-        await page.click('#orbWrap'); await page.waitForTimeout(300);
+        await page.click('#orbWrap'); await formReady(page);
         const r = await page.evaluate(() => {
           const btn = document.getElementById('checkBtn');
           btn.scrollIntoView({ block: 'center' });
@@ -121,7 +155,7 @@ export async function run(browser, base, suite) {
     for (const via of ['button', 'enter']) {
       const { ctx, page } = await openApp(browser, base, { lang: 'en' });
       try {
-        await page.click('#orbWrap'); await page.waitForTimeout(400);
+        await page.click('#orbWrap'); await wordServed(page);
         const w = await currentWord(page);
         assert(typeable(w), `A3 needs a base-typeable word, got "${w}"`);
         const before = await page.$eval('#streakNum', (e) => parseInt(e.textContent, 10) || 0);
@@ -129,6 +163,8 @@ export async function run(browser, base, suite) {
         if (via === 'button') await page.click('#checkBtn');
         else await page.evaluate(() => window.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter', bubbles: true })));
         await page.waitForFunction((b) => (parseInt(document.getElementById('streakNum').textContent, 10) || 0) !== b, before, { timeout: 3000 });
+        // sleep-ok: the claim is that the chain bumped ONCE. A second bump is a
+        // non-event, so there is nothing to wait for -- only a window to watch.
         await page.waitForTimeout(300);
         const after = await page.$eval('#streakNum', (e) => parseInt(e.textContent, 10) || 0);
         assertEq(after, before + 1, `chain delta for submit via ${via}`);
@@ -165,12 +201,16 @@ export async function run(browser, base, suite) {
       await typeWord(page, w);
       await page.click('#checkBtn');
       await page.waitForFunction(() => document.getElementById('feedback').className.includes('good'), null, { timeout: 3500 });
+      // sleep-ok: the scenario IS this delay. A5 taps the orb partway through
+      // the auto-advance window, per its own name; shortening it is a new test.
       await page.waitForTimeout(300);
       await page.click('#orbWrap'); // skip
       // Immediate: advanced well before the full delay would have.
       await page.waitForFunction((i) => window.__spelltest.dailyIdx() === i + 1, idx0, { timeout: 800 });
       assertEq(await dailyIdx(page), idx0 + 1, 'orb skip did not advance immediately');
       // And the pending auto-advance timer is a no-op — still exactly +1.
+      // sleep-ok: outliving the timer to prove it does NOT fire. The absence of
+      // a second advance has no signal; the window has to be waited out.
       await page.waitForTimeout(DELAY + 400);
       assertEq(await dailyIdx(page), idx0 + 1, 'skip + timer double-advanced');
     } finally { await ctx.close(); }
@@ -187,6 +227,8 @@ export async function run(browser, base, suite) {
       await page.click('#checkBtn');
       await page.waitForFunction(() => document.getElementById('feedback').className.includes('good'), null, { timeout: 3500 });
       for (let i = 0; i < 5; i++) { await page.click('#orbWrap'); }
+      // sleep-ok: proving four of the five clicks advanced NOTHING. Waiting out
+      // the timer is the only way to see a double-skip that never comes.
       await page.waitForTimeout(DELAY + 400);
       assertEq(await dailyIdx(page), idx0 + 1, 'rapid orb-clicks skipped more than one word');
     } finally { await ctx.close(); }
@@ -202,6 +244,8 @@ export async function run(browser, base, suite) {
       await typeWord(page, w.toLowerCase() === 'zzzz' ? 'xxxx' : 'zzzz'); // wrong
       await page.click('#checkBtn');
       await page.waitForFunction(() => document.getElementById('feedback').className.includes('bad'), null, { timeout: 3500 });
+      // sleep-ok: the test name is the reason -- sit out three full delays and
+      // show a wrong answer still has not advanced. A non-event, deliberately.
       await page.waitForTimeout(DELAY * 3);
       assertEq(await dailyIdx(page), idx0, 'wrong answer auto-advanced');
     } finally { await ctx.close(); }
@@ -222,15 +266,16 @@ export async function run(browser, base, suite) {
           if (!(await dailyActive(page))) break;
           const w = await currentWord(page);
           if (!w) break;
+          const i0 = await dailyIdx(page);
           const correct = typeable(w);
           await typeWord(page, correct ? w : (w.toLowerCase() === 'zzzz' ? 'xxxx' : 'zzzz'));
           await page.click('#checkBtn');
           await waitAnswered(page);
           const good = (await feedbackClass(page)).includes('good');
           if (good && mode === 'auto') {
-            await page.waitForTimeout(DELAY + 400); // let auto-advance fire
+            await movedOn(page, i0); // let auto-advance fire
           } else {
-            await page.click('#orbWrap'); await page.waitForTimeout(250); // wrong or skip → manual
+            await page.click('#orbWrap'); await movedOn(page, i0); // wrong or skip → manual
           }
         }
         assert(await scrimShown(page), `${mode}: results screen never appeared`);
@@ -293,13 +338,15 @@ export async function run(browser, base, suite) {
   await suite.test('A10: open IME composition blocks validation until compositionend', async () => {
     const { ctx, page } = await openApp(browser, base, { lang: 'en' });
     try {
-      await page.click('#orbWrap'); await page.waitForTimeout(400);
+      await page.click('#orbWrap'); await wordServed(page);
       const w = await currentWord(page);
       assert(typeable(w), `A10 needs a base-typeable word, got "${w}"`);
       await typeWord(page, w);
       // Open a composition, then try to submit — must NOT validate.
       await page.evaluate(() => window.dispatchEvent(new CompositionEvent('compositionstart', { bubbles: true })));
       await page.click('#checkBtn');
+      // sleep-ok: the claim is that submit did NOT validate. Waiting for a
+      // verdict that must never arrive would hang; watching a window is the test.
       await page.waitForTimeout(800);
       assert(!(await feedbackClass(page)).includes('good'), 'validated while a composition was open');
       // Close the composition — now the same submit validates.
@@ -349,6 +396,8 @@ export async function run(browser, base, suite) {
       await page.waitForFunction(() => !document.getElementById('gameKeyboard').classList.contains('locked'), null, { timeout: 3000 });
       const first = w2.toLowerCase()[0];
       await page.click(`#gameKeyboard .kb-key[data-k="${first}"]`);
+      // sleep-ok: outlasting the stale timer on purpose -- the claim is that it
+      // does NOT replace the word or wipe the letter when it fires.
       await page.waitForTimeout(DELAY + 600);
       assertEq(await currentWord(page), w2, 'the old timer replaced the word skipped to');
       const box = await page.$eval('#spellbox', (e) => e.textContent.trim());
