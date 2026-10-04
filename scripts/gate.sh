@@ -99,6 +99,10 @@ node scripts/ru-identity-check.mjs --selftest || { echo "GATE FAIL: ru identity 
 echo "== gate: one gap threshold, one source (CC-SNAP-BOXES I-B6)"
 node scripts/snap-geometry-check.mjs || { echo "GATE FAIL: snap geometry"; exit 1; }
 
+echo "== gate: fixed sleeps in e2e may only go down"
+node scripts/e2e-sleep-ratchet.mjs || { echo "GATE FAIL: e2e sleep ratchet"; exit 1; }
+node scripts/e2e-sleep-ratchet.mjs --selftest || { echo "GATE FAIL: e2e sleep ratchet selftest"; exit 1; }
+
 echo "== gate: collision tables current and wired (CC-SENSE-CUE F2)"
 python3 tools/build_collisions.py --check || { echo "GATE FAIL: collision tables"; exit 1; }
 
