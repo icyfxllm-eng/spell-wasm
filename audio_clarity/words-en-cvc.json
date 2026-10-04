@@ -1,0 +1,777 @@
+[
+ {
+  "word": "as",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8197/api/speak?word=as&lang=en&variant=normal"
+ },
+ {
+  "word": "bad",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8197/api/speak?word=bad&lang=en&variant=normal"
+ },
+ {
+  "word": "ban",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8197/api/speak?word=ban&lang=en&variant=normal"
+ },
+ {
+  "word": "bar",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8197/api/speak?word=bar&lang=en&variant=normal"
+ },
+ {
+  "word": "bay",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8197/api/speak?word=bay&lang=en&variant=normal"
+ },
+ {
+  "word": "bed",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8197/api/speak?word=bed&lang=en&variant=normal"
+ },
+ {
+  "word": "ben",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8197/api/speak?word=ben&lang=en&variant=normal"
+ },
+ {
+  "word": "bet",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8197/api/speak?word=bet&lang=en&variant=normal"
+ },
+ {
+  "word": "bid",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8197/api/speak?word=bid&lang=en&variant=normal"
+ },
+ {
+  "word": "big",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8197/api/speak?word=big&lang=en&variant=normal"
+ },
+ {
+  "word": "bird",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8197/api/speak?word=bird&lang=en&variant=normal"
+ },
+ {
+  "word": "bit",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8197/api/speak?word=bit&lang=en&variant=normal"
+ },
+ {
+  "word": "bob",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8197/api/speak?word=bob&lang=en&variant=normal"
+ },
+ {
+  "word": "book",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8197/api/speak?word=book&lang=en&variant=normal"
+ },
+ {
+  "word": "both",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8197/api/speak?word=both&lang=en&variant=normal"
+ },
+ {
+  "word": "bow",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8197/api/speak?word=bow&lang=en&variant=normal"
+ },
+ {
+  "word": "box",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8197/api/speak?word=box&lang=en&variant=normal"
+ },
+ {
+  "word": "boy",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8197/api/speak?word=boy&lang=en&variant=normal"
+ },
+ {
+  "word": "bus",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8197/api/speak?word=bus&lang=en&variant=normal"
+ },
+ {
+  "word": "but",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8197/api/speak?word=but&lang=en&variant=normal"
+ },
+ {
+  "word": "buy",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8197/api/speak?word=buy&lang=en&variant=normal"
+ },
+ {
+  "word": "can",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8197/api/speak?word=can&lang=en&variant=normal"
+ },
+ {
+  "word": "car",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8197/api/speak?word=car&lang=en&variant=normal"
+ },
+ {
+  "word": "corn",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8197/api/speak?word=corn&lang=en&variant=normal"
+ },
+ {
+  "word": "cup",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8197/api/speak?word=cup&lang=en&variant=normal"
+ },
+ {
+  "word": "cut",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8197/api/speak?word=cut&lang=en&variant=normal"
+ },
+ {
+  "word": "day",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8197/api/speak?word=day&lang=en&variant=normal"
+ },
+ {
+  "word": "desk",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8197/api/speak?word=desk&lang=en&variant=normal"
+ },
+ {
+  "word": "did",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8197/api/speak?word=did&lang=en&variant=normal"
+ },
+ {
+  "word": "don",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8197/api/speak?word=don&lang=en&variant=normal"
+ },
+ {
+  "word": "door",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8197/api/speak?word=door&lang=en&variant=normal"
+ },
+ {
+  "word": "dot",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8197/api/speak?word=dot&lang=en&variant=normal"
+ },
+ {
+  "word": "duck",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8197/api/speak?word=duck&lang=en&variant=normal"
+ },
+ {
+  "word": "fan",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8197/api/speak?word=fan&lang=en&variant=normal"
+ },
+ {
+  "word": "far",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8197/api/speak?word=far&lang=en&variant=normal"
+ },
+ {
+  "word": "farm",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8197/api/speak?word=farm&lang=en&variant=normal"
+ },
+ {
+  "word": "fat",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8197/api/speak?word=fat&lang=en&variant=normal"
+ },
+ {
+  "word": "fed",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8197/api/speak?word=fed&lang=en&variant=normal"
+ },
+ {
+  "word": "few",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8197/api/speak?word=few&lang=en&variant=normal"
+ },
+ {
+  "word": "fish",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8197/api/speak?word=fish&lang=en&variant=normal"
+ },
+ {
+  "word": "fit",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8197/api/speak?word=fit&lang=en&variant=normal"
+ },
+ {
+  "word": "for",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8197/api/speak?word=for&lang=en&variant=normal"
+ },
+ {
+  "word": "fox",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8197/api/speak?word=fox&lang=en&variant=normal"
+ },
+ {
+  "word": "frog",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8197/api/speak?word=frog&lang=en&variant=normal"
+ },
+ {
+  "word": "from",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8197/api/speak?word=from&lang=en&variant=normal"
+ },
+ {
+  "word": "fun",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8197/api/speak?word=fun&lang=en&variant=normal"
+ },
+ {
+  "word": "gap",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8197/api/speak?word=gap&lang=en&variant=normal"
+ },
+ {
+  "word": "gas",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8197/api/speak?word=gas&lang=en&variant=normal"
+ },
+ {
+  "word": "gay",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8197/api/speak?word=gay&lang=en&variant=normal"
+ },
+ {
+  "word": "get",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8197/api/speak?word=get&lang=en&variant=normal"
+ },
+ {
+  "word": "gift",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8197/api/speak?word=gift&lang=en&variant=normal"
+ },
+ {
+  "word": "girl",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8197/api/speak?word=girl&lang=en&variant=normal"
+ },
+ {
+  "word": "god",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8197/api/speak?word=god&lang=en&variant=normal"
+ },
+ {
+  "word": "gold",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8197/api/speak?word=gold&lang=en&variant=normal"
+ },
+ {
+  "word": "got",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8197/api/speak?word=got&lang=en&variant=normal"
+ },
+ {
+  "word": "gun",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8197/api/speak?word=gun&lang=en&variant=normal"
+ },
+ {
+  "word": "had",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8197/api/speak?word=had&lang=en&variant=normal"
+ },
+ {
+  "word": "hand",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8197/api/speak?word=hand&lang=en&variant=normal"
+ },
+ {
+  "word": "has",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8197/api/speak?word=has&lang=en&variant=normal"
+ },
+ {
+  "word": "hat",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8197/api/speak?word=hat&lang=en&variant=normal"
+ },
+ {
+  "word": "have",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8197/api/speak?word=have&lang=en&variant=normal"
+ },
+ {
+  "word": "he",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8197/api/speak?word=he&lang=en&variant=normal"
+ },
+ {
+  "word": "her",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8197/api/speak?word=her&lang=en&variant=normal"
+ },
+ {
+  "word": "hill",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8197/api/speak?word=hill&lang=en&variant=normal"
+ },
+ {
+  "word": "him",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8197/api/speak?word=him&lang=en&variant=normal"
+ },
+ {
+  "word": "hip",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8197/api/speak?word=hip&lang=en&variant=normal"
+ },
+ {
+  "word": "his",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8197/api/speak?word=his&lang=en&variant=normal"
+ },
+ {
+  "word": "hit",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8197/api/speak?word=hit&lang=en&variant=normal"
+ },
+ {
+  "word": "hop",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8197/api/speak?word=hop&lang=en&variant=normal"
+ },
+ {
+  "word": "horse",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8197/api/speak?word=horse&lang=en&variant=normal"
+ },
+ {
+  "word": "hot",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8197/api/speak?word=hot&lang=en&variant=normal"
+ },
+ {
+  "word": "how",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8197/api/speak?word=how&lang=en&variant=normal"
+ },
+ {
+  "word": "if",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8197/api/speak?word=if&lang=en&variant=normal"
+ },
+ {
+  "word": "is",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8197/api/speak?word=is&lang=en&variant=normal"
+ },
+ {
+  "word": "its",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8197/api/speak?word=its&lang=en&variant=normal"
+ },
+ {
+  "word": "jet",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8197/api/speak?word=jet&lang=en&variant=normal"
+ },
+ {
+  "word": "job",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8197/api/speak?word=job&lang=en&variant=normal"
+ },
+ {
+  "word": "key",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8197/api/speak?word=key&lang=en&variant=normal"
+ },
+ {
+  "word": "kite",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8197/api/speak?word=kite&lang=en&variant=normal"
+ },
+ {
+  "word": "law",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8197/api/speak?word=law&lang=en&variant=normal"
+ },
+ {
+  "word": "lay",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8197/api/speak?word=lay&lang=en&variant=normal"
+ },
+ {
+  "word": "led",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8197/api/speak?word=led&lang=en&variant=normal"
+ },
+ {
+  "word": "leg",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8197/api/speak?word=leg&lang=en&variant=normal"
+ },
+ {
+  "word": "let",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8197/api/speak?word=let&lang=en&variant=normal"
+ },
+ {
+  "word": "lit",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8197/api/speak?word=lit&lang=en&variant=normal"
+ },
+ {
+  "word": "log",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8197/api/speak?word=log&lang=en&variant=normal"
+ },
+ {
+  "word": "lot",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8197/api/speak?word=lot&lang=en&variant=normal"
+ },
+ {
+  "word": "low",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8197/api/speak?word=low&lang=en&variant=normal"
+ },
+ {
+  "word": "mac",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8197/api/speak?word=mac&lang=en&variant=normal"
+ },
+ {
+  "word": "man",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8197/api/speak?word=man&lang=en&variant=normal"
+ },
+ {
+  "word": "map",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8197/api/speak?word=map&lang=en&variant=normal"
+ },
+ {
+  "word": "max",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8197/api/speak?word=max&lang=en&variant=normal"
+ },
+ {
+  "word": "may",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8197/api/speak?word=may&lang=en&variant=normal"
+ },
+ {
+  "word": "men",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8197/api/speak?word=men&lang=en&variant=normal"
+ },
+ {
+  "word": "met",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8197/api/speak?word=met&lang=en&variant=normal"
+ },
+ {
+  "word": "milk",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8197/api/speak?word=milk&lang=en&variant=normal"
+ },
+ {
+  "word": "mix",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8197/api/speak?word=mix&lang=en&variant=normal"
+ },
+ {
+  "word": "nest",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8197/api/speak?word=nest&lang=en&variant=normal"
+ },
+ {
+  "word": "net",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8197/api/speak?word=net&lang=en&variant=normal"
+ },
+ {
+  "word": "new",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8197/api/speak?word=new&lang=en&variant=normal"
+ },
+ {
+  "word": "nor",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8197/api/speak?word=nor&lang=en&variant=normal"
+ },
+ {
+  "word": "not",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8197/api/speak?word=not&lang=en&variant=normal"
+ },
+ {
+  "word": "now",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8197/api/speak?word=now&lang=en&variant=normal"
+ },
+ {
+  "word": "of",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8197/api/speak?word=of&lang=en&variant=normal"
+ },
+ {
+  "word": "pay",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8197/api/speak?word=pay&lang=en&variant=normal"
+ },
+ {
+  "word": "per",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8197/api/speak?word=per&lang=en&variant=normal"
+ },
+ {
+  "word": "pig",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8197/api/speak?word=pig&lang=en&variant=normal"
+ },
+ {
+  "word": "pop",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8197/api/speak?word=pop&lang=en&variant=normal"
+ },
+ {
+  "word": "pot",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8197/api/speak?word=pot&lang=en&variant=normal"
+ },
+ {
+  "word": "put",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8197/api/speak?word=put&lang=en&variant=normal"
+ },
+ {
+  "word": "rain",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8197/api/speak?word=rain&lang=en&variant=normal"
+ },
+ {
+  "word": "ram",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8197/api/speak?word=ram&lang=en&variant=normal"
+ },
+ {
+  "word": "ran",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8197/api/speak?word=ran&lang=en&variant=normal"
+ },
+ {
+  "word": "raw",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8197/api/speak?word=raw&lang=en&variant=normal"
+ },
+ {
+  "word": "red",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8197/api/speak?word=red&lang=en&variant=normal"
+ },
+ {
+  "word": "row",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8197/api/speak?word=row&lang=en&variant=normal"
+ },
+ {
+  "word": "run",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8197/api/speak?word=run&lang=en&variant=normal"
+ },
+ {
+  "word": "same",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8197/api/speak?word=same&lang=en&variant=normal"
+ },
+ {
+  "word": "saw",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8197/api/speak?word=saw&lang=en&variant=normal"
+ },
+ {
+  "word": "say",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8197/api/speak?word=say&lang=en&variant=normal"
+ },
+ {
+  "word": "seed",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8197/api/speak?word=seed&lang=en&variant=normal"
+ },
+ {
+  "word": "set",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8197/api/speak?word=set&lang=en&variant=normal"
+ },
+ {
+  "word": "sex",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8197/api/speak?word=sex&lang=en&variant=normal"
+ },
+ {
+  "word": "sin",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8197/api/speak?word=sin&lang=en&variant=normal"
+ },
+ {
+  "word": "sir",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8197/api/speak?word=sir&lang=en&variant=normal"
+ },
+ {
+  "word": "sit",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8197/api/speak?word=sit&lang=en&variant=normal"
+ },
+ {
+  "word": "six",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8197/api/speak?word=six&lang=en&variant=normal"
+ },
+ {
+  "word": "snow",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8197/api/speak?word=snow&lang=en&variant=normal"
+ },
+ {
+  "word": "so",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8197/api/speak?word=so&lang=en&variant=normal"
+ },
+ {
+  "word": "sock",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8197/api/speak?word=sock&lang=en&variant=normal"
+ },
+ {
+  "word": "some",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8197/api/speak?word=some&lang=en&variant=normal"
+ },
+ {
+  "word": "son",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8197/api/speak?word=son&lang=en&variant=normal"
+ },
+ {
+  "word": "star",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8197/api/speak?word=star&lang=en&variant=normal"
+ },
+ {
+  "word": "sum",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8197/api/speak?word=sum&lang=en&variant=normal"
+ },
+ {
+  "word": "sun",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8197/api/speak?word=sun&lang=en&variant=normal"
+ },
+ {
+  "word": "swim",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8197/api/speak?word=swim&lang=en&variant=normal"
+ },
+ {
+  "word": "tax",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8197/api/speak?word=tax&lang=en&variant=normal"
+ },
+ {
+  "word": "ten",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8197/api/speak?word=ten&lang=en&variant=normal"
+ },
+ {
+  "word": "this",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8197/api/speak?word=this&lang=en&variant=normal"
+ },
+ {
+  "word": "tip",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8197/api/speak?word=tip&lang=en&variant=normal"
+ },
+ {
+  "word": "tom",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8197/api/speak?word=tom&lang=en&variant=normal"
+ },
+ {
+  "word": "top",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8197/api/speak?word=top&lang=en&variant=normal"
+ },
+ {
+  "word": "tree",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8197/api/speak?word=tree&lang=en&variant=normal"
+ },
+ {
+  "word": "van",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8197/api/speak?word=van&lang=en&variant=normal"
+ },
+ {
+  "word": "very",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8197/api/speak?word=very&lang=en&variant=normal"
+ },
+ {
+  "word": "war",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8197/api/speak?word=war&lang=en&variant=normal"
+ },
+ {
+  "word": "was",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8197/api/speak?word=was&lang=en&variant=normal"
+ },
+ {
+  "word": "way",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8197/api/speak?word=way&lang=en&variant=normal"
+ },
+ {
+  "word": "web",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8197/api/speak?word=web&lang=en&variant=normal"
+ },
+ {
+  "word": "wet",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8197/api/speak?word=wet&lang=en&variant=normal"
+ },
+ {
+  "word": "win",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8197/api/speak?word=win&lang=en&variant=normal"
+ },
+ {
+  "word": "with",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8197/api/speak?word=with&lang=en&variant=normal"
+ },
+ {
+  "word": "wolf",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8197/api/speak?word=wolf&lang=en&variant=normal"
+ },
+ {
+  "word": "won",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8197/api/speak?word=won&lang=en&variant=normal"
+ },
+ {
+  "word": "yet",
+  "variant": "normal",
+  "url": "http://127.0.0.1:8197/api/speak?word=yet&lang=en&variant=normal"
+ }
+]
