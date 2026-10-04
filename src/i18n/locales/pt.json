@@ -864,5 +864,6 @@
   "zh.rev.segmentMiss": "Sílaba {n}: sílaba errada",
   "zh.rev.toneMiss": "Sílaba {n}: som certo, tom errado",
   "zh.rev.toneRetry": "Quase — sílabas certas, confira os tons",
-  "voiceSpell.micSilent": "O microfone não está enviando som."
+  "voiceSpell.micSilent": "O microfone não está enviando som.",
+  "spellit.guide.clarify": "Letra difícil? Diga \"B de bola\"."
 }

@@ -864,5 +864,6 @@
   "zh.rev.segmentMiss": "第 {n} 个音节：拼错了",
   "zh.rev.toneMiss": "第 {n} 个音节：拼对了，声调错了",
   "zh.rev.toneRetry": "就差一点 — 拼音对了，检查声调",
-  "voiceSpell.micSilent": "麦克风没有传入声音。"
+  "voiceSpell.micSilent": "麦克风没有传入声音。",
+  "spellit.guide.clarify": "字母不好辨认？可以说\"B，boy 的 B\"。"
 }

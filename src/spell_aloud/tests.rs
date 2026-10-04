@@ -836,3 +836,52 @@ fn tap_rungs_when_idle() {
     assert_eq!(tap_action(false, true, false, "server", true), Tap::Start, "consented server listens");
     assert_eq!(tap_action(false, true, false, "installed", false), Tap::Start);
 }
+
+/// CC-SPELLIT-MIC-FIX: the NATO alphabet, accepted as letter names.
+///
+/// The E-set — b c d e g p t v z — is acoustically near-identical, and Eric's
+/// phone returned "See" for C, so general dictation is at its worst on exactly
+/// the letters a speller needs most. "Bravo" and "Delta" are multi-syllable and
+/// distinct; the alphabet exists because of this problem. Pure lexicon data, and
+/// the words also join `contextualStrings`, so the recognizer is biased toward
+/// them as well as able to parse them.
+#[test]
+fn nato_alphabet_spells() {
+    let cases = [
+        ("bravo", "b"), ("charlie", "c"), ("delta", "d"), ("echo", "e"),
+        ("papa", "p"), ("tango", "t"), ("victor", "v"), ("zulu", "z"),
+        ("x-ray", "x"), ("whiskey", "w"), ("alfa", "a"), ("juliet", "j"),
+    ];
+    for (said, want) in cases {
+        assert_eq!(crate::spell_aloud::parse("en", said).letters, want, "{said}");
+    }
+    // A whole word spelled the hard way still comes out right.
+    assert_eq!(crate::spell_aloud::parse("en", "charlie alfa tango").letters, "cat");
+    // And it interleaves with ordinary letter names in one breath.
+    assert_eq!(crate::spell_aloud::parse("en", "see alfa tango").letters, "cat");
+}
+
+/// The clarifier tip is advice about phrasing, so it may only appear where the
+/// phrasing is VERIFIED to parse — which is not the same as the lexicon merely
+/// listing connectors.
+#[test]
+fn clarifier_tip_only_where_the_phrasing_works() {
+    use crate::spell_aloud::{clarifier_tip_ok, has_clarifiers, parse};
+    // English: data AND behaviour.
+    assert!(clarifier_tip_ok("en"));
+    assert_eq!(parse("en", "b as in boy").letters, "b");
+    assert_eq!(parse("en", "d as in dog").letters, "d");
+    assert_eq!(parse("en", "m as in mother").letters, "m");
+
+    // Spanish HAS clarifier data and the phrasing does not work: `de` is the
+    // name of the letter D, so the connector eats the letter. Pinned so the tip
+    // cannot be switched on there by looking only at the lexicon.
+    assert!(has_clarifiers("es"), "es does carry connectors");
+    assert!(!clarifier_tip_ok("es"), "...and must still not be taught");
+    assert_eq!(parse("es", "b de burro").letters, "d", "the b is lost today");
+
+    // The thirteen with no clarifier data at all.
+    for lang in ["fr", "de", "pt", "pl", "vi", "ja", "zh", "ru", "ar", "hi", "sw", "fil"] {
+        assert!(!clarifier_tip_ok(lang), "{lang}");
+    }
+}

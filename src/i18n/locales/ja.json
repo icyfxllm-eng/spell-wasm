@@ -864,5 +864,6 @@
   "zh.rev.segmentMiss": "{n}番目の音節：音節が違います",
   "zh.rev.toneMiss": "{n}番目の音節：音は正しく、声調が違います",
   "zh.rev.toneRetry": "惜しい — 音節は正解、声調を確認",
-  "voiceSpell.micSilent": "マイクから音が届いていません。"
+  "voiceSpell.micSilent": "マイクから音が届いていません。",
+  "spellit.guide.clarify": "聞き取りにくい文字は「ビー、boy のビー」のように言ってください。"
 }

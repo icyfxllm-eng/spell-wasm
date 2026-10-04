@@ -523,6 +523,28 @@ fn confusable_group<'a>(lex: &'a Lexicon, letter: &str) -> Option<&'a [String]> 
     lex.confusable.iter().find(|g| g.iter().any(|l| l == letter)).map(Vec::as_slice)
 }
 
+/// Does this language's lexicon carry clarifier connectors at all? en and es
+/// today; the other thirteen have none until the native review supplies them.
+pub fn has_clarifiers(lang: &str) -> bool {
+    lexicon(lang).map(|lex| !lex.clarifiers.is_empty()).unwrap_or(false)
+}
+
+/// Languages where "<letter> as in <word>" is VERIFIED to parse, which is not
+/// the same as having clarifier data.
+///
+/// Spanish has the data and does not work: its connector `de` IS the name of
+/// the letter D, so "b de burro" parses as the single letter d and the b is
+/// lost, "b como en burro" yields nothing at all, and "be de burro" gives "bd".
+/// Teaching that phrasing would be teaching a failure, so the tip stays hidden
+/// there until the parser can tell a connector from a letter name — which is
+/// CC-SPELL-ALOUD's parser to change, not this file's.
+const CLARIFIER_VERIFIED: [&str; 1] = [crate::consts::EN];
+
+/// Whether to offer the "<letter> as in <word>" tip for this language.
+pub fn clarifier_tip_ok(lang: &str) -> bool {
+    has_clarifiers(lang) && CLARIFIER_VERIFIED.contains(&lang)
+}
+
 /// True if `a` and `b` are distinct letters in the same confusable class for `lang`.
 pub fn are_confusable(lang: &str, a: &str, b: &str) -> bool {
     if a == b {
@@ -665,6 +687,11 @@ pub fn reflect(app: &App) {
         return;
     }
     let lang = app.borrow().lang.clone();
+    // The guide's clarifier line follows the lexicon, not the mic: it is advice
+    // about phrasing, and it is wrong to show it where it would not parse.
+    if crate::dom::exists("spellItGuideClarify") {
+        crate::dom::toggle_class("spellItGuideClarify", "btn-hide", !clarifier_tip_ok(&lang));
+    }
     // First condition: the per-language config flag (single source of truth).
     // Also require the native bridge to even be present (off-iOS it never is).
     if !crate::consts::voice_spell(&lang) || !native_lang::available() {

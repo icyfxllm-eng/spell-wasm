@@ -864,5 +864,6 @@
   "zh.rev.segmentMiss": "Pantig {n}: maling pantig",
   "zh.rev.toneMiss": "Pantig {n}: tamang tunog, maling tono",
   "zh.rev.toneRetry": "Malapit na — tamang pantig, tingnan ang tono",
-  "voiceSpell.micSilent": "Walang tunog na ipinapadala ang mikropono."
+  "voiceSpell.micSilent": "Walang tunog na ipinapadala ang mikropono.",
+  "spellit.guide.clarify": "Mahirap na letra? Sabihin \"B na parang bola\"."
 }

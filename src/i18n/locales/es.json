@@ -864,5 +864,6 @@
   "zh.rev.segmentMiss": "Sílaba {n}: sílaba incorrecta",
   "zh.rev.toneMiss": "Sílaba {n}: sonido correcto, tono incorrecto",
   "zh.rev.toneRetry": "Casi — sílabas correctas, revisa los tonos",
-  "voiceSpell.micSilent": "El micrófono no está enviando sonido."
+  "voiceSpell.micSilent": "El micrófono no está enviando sonido.",
+  "spellit.guide.clarify": "¿Letra difícil? Di \"B de burro\"."
 }

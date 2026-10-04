@@ -864,5 +864,6 @@
   "zh.rev.segmentMiss": "Syllabe {n} : mauvaise syllabe",
   "zh.rev.toneMiss": "Syllabe {n} : bon son, mauvais ton",
   "zh.rev.toneRetry": "Tout près — bonnes syllabes, vérifiez les tons",
-  "voiceSpell.micSilent": "Le microphone n'envoie aucun son."
+  "voiceSpell.micSilent": "Le microphone n'envoie aucun son.",
+  "spellit.guide.clarify": "Lettre difficile ? Dites « B comme Bernard »."
 }

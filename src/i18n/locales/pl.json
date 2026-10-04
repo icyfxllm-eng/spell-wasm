@@ -864,5 +864,6 @@
   "zh.rev.segmentMiss": "Sylaba {n}: zła sylaba",
   "zh.rev.toneMiss": "Sylaba {n}: dobry dźwięk, zły ton",
   "zh.rev.toneRetry": "Blisko — sylaby dobre, sprawdź tony",
-  "voiceSpell.micSilent": "Mikrofon nie przesyła dźwięku."
+  "voiceSpell.micSilent": "Mikrofon nie przesyła dźwięku.",
+  "spellit.guide.clarify": "Trudna litera? Powiedz „B jak Barbara\"."
 }

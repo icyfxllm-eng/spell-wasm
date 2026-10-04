@@ -864,5 +864,6 @@
   "zh.rev.segmentMiss": "{n}번째 음절: 음절이 틀림",
   "zh.rev.toneMiss": "{n}번째 음절: 소리는 맞고 성조가 틀림",
   "zh.rev.toneRetry": "거의 맞았어요 — 음절은 정확, 성조를 확인",
-  "voiceSpell.micSilent": "마이크에서 소리가 들어오지 않습니다."
+  "voiceSpell.micSilent": "마이크에서 소리가 들어오지 않습니다.",
+  "spellit.guide.clarify": "어려운 글자는 \"B, banana의 B\"처럼 말하세요."
 }

@@ -864,5 +864,6 @@
   "zh.rev.segmentMiss": "المقطع {n}: مقطع خاطئ",
   "zh.rev.toneMiss": "المقطع {n}: الصوت صحيح والنبرة خاطئة",
   "zh.rev.toneRetry": "اقتربت — المقاطع صحيحة، راجع النبرات",
-  "voiceSpell.micSilent": "الميكروفون لا يرسل أي صوت."
+  "voiceSpell.micSilent": "الميكروفون لا يرسل أي صوت.",
+  "spellit.guide.clarify": "حرف صعب؟ قل \"ب مثل بيت\"."
 }

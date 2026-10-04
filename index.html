@@ -2755,6 +2755,12 @@
         <li data-i18n="voiceSpell.listening">Listening… say the letters</li>
         <li data-i18n="voiceSpell.spellItOut">Spell it letter by letter!</li>
         <li data-i18n="spellit.guide.check">Tap ✓ when your word looks right.</li>
+        <!-- CC-SPELLIT-MIC-FIX: the clarifier has worked since the parser was
+             written and no guide ever mentioned it, so nobody used the one
+             thing that fixes the letters that actually fail. Hidden by default
+             and shown only where the language HAS clarifiers (en, es today), so
+             it never promises a phrasing that would not parse. -->
+        <li id="spellItGuideClarify" class="btn-hide" data-i18n="spellit.guide.clarify">Hard letter? Say "B as in boy".</li>
       </ol>
       <button class="btn btn-check" id="spellItGuideGo" data-i18n="spellit.guide.start" style="width:100%">Got it</button>
     </div>

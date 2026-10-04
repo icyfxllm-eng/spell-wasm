@@ -864,5 +864,6 @@
   "zh.rev.segmentMiss": "Слог {n}: неверный слог",
   "zh.rev.toneMiss": "Слог {n}: звук верный, тон неверный",
   "zh.rev.toneRetry": "Почти — слоги верные, проверьте тоны",
-  "voiceSpell.micSilent": "Микрофон не передаёт звук."
+  "voiceSpell.micSilent": "Микрофон не передаёт звук.",
+  "spellit.guide.clarify": "Трудная буква? Скажите «Б как Борис»."
 }

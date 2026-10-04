@@ -864,5 +864,6 @@
   "zh.rev.segmentMiss": "Silbe {n}: falsche Silbe",
   "zh.rev.toneMiss": "Silbe {n}: richtiger Laut, falscher Ton",
   "zh.rev.toneRetry": "Fast — Silben stimmen, prüfe die Töne",
-  "voiceSpell.micSilent": "Das Mikrofon sendet keinen Ton."
+  "voiceSpell.micSilent": "Das Mikrofon sendet keinen Ton.",
+  "spellit.guide.clarify": "Schwieriger Buchstabe? Sag „B wie Berta\"."
 }
