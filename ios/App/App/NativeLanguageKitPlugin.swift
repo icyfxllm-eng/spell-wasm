@@ -452,6 +452,21 @@ final class SpeechListener {
     private var everSawSpeech = false
     /// Guards the one-shot silence verdict below.
     private var silenceVerdictDone = false
+
+    // CC-SPELLIT-MIC-FIX F1.6 / F1.10 / D4. Neither exit existed: Eric's cable
+    // trace ran past buf=430 -- over forty seconds -- with the mic live, no
+    // speech for most of it, and nothing ending the session. A microphone the
+    // player cannot get rid of is I-M1's one prohibition.
+    /// Seconds of audio seen this session. Never resets within a session, unlike
+    /// the VAD's counters, which reset at every segment boundary.
+    private var sessionSecs = 0.0
+    /// Seconds since anything crossed the speech threshold.
+    private var quietSecs = 0.0
+    /// One-shot: the session ended itself, so it is not asked twice.
+    private var selfEnded = false
+    /// D4, signed: no speech for 6s ends it; 30s is the hard cap.
+    private let noSpeechTimeout = 6.0
+    private let sessionCap = 30.0
     private var liveTick = 0
     /// Set from the web layer's dev flag; keeps transcripts out of a normal build.
     var diagVerbose = false
@@ -534,7 +549,8 @@ final class SpeechListener {
     /// lossy by design, this one is every event in order.
     static let mlog = Logger(subsystem: "net.spellgame.mic", category: "capture")
 
-    private func observeLevel(_ level: Float) {
+    private func observeLevel(_ level: Float, seconds: Double) {
+        sessionSecs += seconds
         if noiseSamples < noiseWindow {
             noiseFloor = max(noiseFloor, level)
             noiseSamples += 1
@@ -542,7 +558,29 @@ final class SpeechListener {
                 speechRMSAdaptive = max(noiseFloor * noiseMult, speechRMSFloor)
             }
         }
-        if level > speechRMSAdaptive { everSawSpeech = true }
+        if level > speechRMSAdaptive {
+            everSawSpeech = true
+            quietSecs = 0
+        } else {
+            quietSecs += seconds
+        }
+        // D4's exits. stop() is the USER-stop path, so the session finalizes
+        // normally and letters already heard are committed rather than thrown
+        // away -- F1.6 is explicit that they stay.
+        if !selfEnded {
+            let why = sessionSecs >= sessionCap ? "CAP"
+                : (quietSecs >= noSpeechTimeout ? "QUIET" : "")
+            if !why.isEmpty {
+                selfEnded = true
+                let line = "MIC session-end \(why) secs=\(String(format: "%.1f", sessionSecs))"
+                    + " quiet=\(String(format: "%.1f", quietSecs)) partials=\(partialCount)"
+                DispatchQueue.main.async { [weak self] in
+                    if self?.diagVerbose == true { print(line) }
+                    self?.diagHandler?(line)
+                    self?.stop()
+                }
+            }
+        }
         // I-M3 / F3.4. Digital silence is a capture fault and must say so.
         // 0.0008 is below any real room and far below the 0.0004 Eric's device
         // reported while the session looked perfectly healthy.
@@ -765,6 +803,9 @@ final class SpeechListener {
         lastRMS = 0
         lastErr = ""
         lastRaw = ""
+        sessionSecs = 0
+        quietSecs = 0
+        selfEnded = false
         silenceVerdictDone = false
         noiseFloor = 0
         noiseSamples = 0
@@ -815,7 +856,7 @@ final class SpeechListener {
             let level = Self.rms(buffer)
             self.peakRMS = max(self.peakRMS, level)
             self.lastRMS = level
-            self.observeLevel(level)
+            self.observeLevel(level, seconds: sampleRate > 0 ? Double(buffer.frameLength) / sampleRate : 0)
             if self.continuous && sampleRate > 0 {
                 let secs = Double(buffer.frameLength) / sampleRate
                 if level > self.speechRMSAdaptive {
@@ -1060,6 +1101,10 @@ final class SpeechListener {
         lastRMS = 0
         lastErr = ""
         lastRaw = ""
+        sessionSecs = 0
+        quietSecs = 0
+        selfEnded = false
+        silenceVerdictDone = false
         noiseFloor = 0
         noiseSamples = 0
         speechRMSAdaptive = 0.010
@@ -1152,7 +1197,7 @@ final class SpeechListener {
             let level = Self.rms(buffer)
             self.peakRMS = max(self.peakRMS, level)
             self.lastRMS = level
-            self.observeLevel(level)
+            self.observeLevel(level, seconds: sampleRate > 0 ? Double(buffer.frameLength) / sampleRate : 0)
             if self.continuous && sampleRate > 0 {
                 let secs = Double(buffer.frameLength) / sampleRate
                 if level > self.speechRMSAdaptive {
@@ -1281,6 +1326,10 @@ final class SpeechListener {
         lastRMS = 0
         lastErr = ""
         lastRaw = ""
+        sessionSecs = 0
+        quietSecs = 0
+        selfEnded = false
+        silenceVerdictDone = false
         noiseFloor = 0
         noiseSamples = 0
         speechRMSAdaptive = 0.010
