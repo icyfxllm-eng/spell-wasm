@@ -410,10 +410,20 @@ export async function run(browser, base, suite) {
         return document.getElementById('spellItGuide')?.classList.contains('show');
       });
       assert(shown, 'the guide appears on first entry');
+      // The four core steps are the lesson and the ORDER is the lesson, so they
+      // are counted as VISIBLE steps. A fifth line was added (CC-SPELLIT-MIC-FIX):
+      // the "<letter> as in <word>" tip, which is hidden except where that
+      // phrasing is verified to parse — English today. Counting every <li> in the
+      // DOM would count it even when hidden, which is what broke this test.
       const steps = await page.evaluate(() =>
-        [...document.querySelectorAll('#spellItGuide .sig-steps li')].map((l) => l.textContent.trim()));
-      assert(steps.length === 4, `four steps, got ${steps.length}`);
+        [...document.querySelectorAll('#spellItGuide .sig-steps li')]
+          .filter((l) => !l.classList.contains('btn-hide'))
+          .map((l) => l.textContent.trim()));
+      assert(steps.length === 5, `four steps plus the English clarifier tip, got ${steps.length}`);
       assert(/letter/i.test(steps.join(' ')), 'the letters rule is taught, not just implied');
+      // The tip is the thing that fixes the acoustically identical letters, and
+      // it was invisible to every player until it was put here.
+      assert(/as in/i.test(steps.join(' ')), 'the clarifier phrasing is taught in English');
 
       await page.evaluate(() => document.getElementById('spellItGuideGo')?.click());
       const again = await page.evaluate(() => {
