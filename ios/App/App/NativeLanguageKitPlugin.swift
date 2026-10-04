@@ -466,6 +466,7 @@ final class SpeechListener {
         s += " engine=\(engineKind) buf=\(tapCount) frames=\(frameCount)"
         s += " req=\(reqCount) appended=\(appendedCount)"
         s += " partials=\(partialCount) final=\(sawFinal ? "y" : "n")"
+        s += " avail=\(recognizer?.isAvailable ?? false) locale=\(recognizer?.locale.identifier ?? "?")"
         s += " onDev=\(onDev) peak=\(String(format: "%.4f", peakRMS))"
         s += " thr=\(String(format: "%.4f", speechRMSAdaptive)) spoke=\(everSawSpeech ? "y" : "n")"
         s += " rms=\(String(format: "%.3f", lastRMS))"
@@ -533,7 +534,10 @@ final class SpeechListener {
         guard liveTick % 2 == 0, let h = diagHandler else { return }
         let line = "live rms=\(String(format: "%.4f", level)) peak=\(String(format: "%.4f", peakRMS))"
             + " thr=\(String(format: "%.4f", speechRMSAdaptive)) spoke=\(everSawSpeech ? "y" : "n")"
-            + " buf=\(tapCount) appended=\(appendedCount) partials=\(partialCount)"
+            + " buf=\(tapCount) appended=\(appendedCount) req=\(reqCount)"
+            + " partials=\(partialCount) final=\(sawFinal ? "y" : "n")"
+            + " avail=\(recognizer?.isAvailable ?? false)"
+            + (lastErr.isEmpty ? "" : " err=\(lastErr)")
         DispatchQueue.main.async { h(line) }
     }
 
@@ -895,7 +899,18 @@ final class SpeechListener {
                     return
                 }
             }
-            if error != nil {
+            if let error = error {
+                // CC-SPELLIT-MIC-FIX: the error used to be DISCARDED and
+                // relabelled NO_SPEECH. With peak=0.29 reaching the request and
+                // partials=0 coming back, the recognizer is certainly saying
+                // something, and this is the first build that lets it be heard.
+                // kAFAssistantErrorDomain:1101 is the on-device model missing;
+                // 203 is "no speech"; 1700 is Siri/Dictation disabled.
+                let e = error as NSError
+                self.lastErr = "\(e.domain):\(e.code)"
+                self.diagHandler?("task-err=\(self.lastErr) best='\(self.best)'"
+                    + " appended=\(self.appendedCount) peak=\(String(format: "%.4f", self.peakRMS))"
+                    + " req=\(self.reqCount) partials=\(self.partialCount)")
                 self.cycleEnded(self.best.isEmpty ? .failure(.noSpeech) : .success(self.best))
             }
         }
