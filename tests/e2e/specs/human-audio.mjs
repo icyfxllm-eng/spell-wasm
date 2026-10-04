@@ -26,10 +26,47 @@ const ARM = () => {
 const humanPlays = (page) =>
   page.evaluate(() => (window.__playLog || []).filter((p) => p.src.includes('/human-audio/en/')));
 
+// Wait for the ROUTER to settle, not for a play to be logged.
+//
+// This used to wait for `__playLog.length > 0` and then sleep 400ms, and it
+// was the flakiest thing in the suite -- three different tests in this file
+// and the next failed on it across six gate runs on 2026-10-03, each passing
+// on an immediate retry.
+//
+// Two faults, one in each half. The log wait is the wrong CONDITION: only an
+// HTMLMediaElement play is logged, so when the chain falls through to
+// native-tts -- which is exactly what the switch-off test forces -- nothing
+// is ever logged and the wait burns its five seconds. And the 400ms sleep is
+// the wrong KIND of wait: it is a guess about how long the router takes, and
+// a guess that was being made on a machine also running a cache warm and a
+// gate.
+//
+// `set_source` in src/api.rs is called for every outcome including "none",
+// and writes #audioSourceNote. So a non-empty note means the router has
+// finished, whichever source won and even if none did. It is also strictly
+// LATER than the play log: set_source("human") runs after audio.play()'s
+// promise resolves, while the log records at call time. Waiting on the note
+// therefore guarantees any play has already been logged -- which is the
+// ordering the assertions below quietly depended on and never had.
 async function serveWord(page) {
+  // CLEAR the note first. It is not reset between playbacks, so a word the app
+  // played on load leaves it set and "wait until non-empty" is satisfied by
+  // stale state before this click's chain has run at all. That mistake was
+  // made here and caught by the I6 test, which then saw no /api/speak request
+  // because the assertion ran before the router reached the server source.
+  await page.evaluate(() => {
+    const n = document.getElementById('audioSourceNote');
+    if (n) n.textContent = '';
+  });
   await page.click('#orbWrap');
-  await page.waitForFunction(() => (window.__playLog || []).length > 0, null, { timeout: 5000 });
-  await page.waitForTimeout(400);
+  await page.waitForFunction(
+    () => {
+      const n = document.getElementById('audioSourceNote');
+      return !!n && n.textContent.trim() !== '';
+    },
+    null,
+    { timeout: 10000 },
+  );
 }
 
 export async function run(browser, base, suite) {
@@ -85,7 +122,14 @@ export async function run(browser, base, suite) {
       const slowVisible = await page.$eval('#slowBtn', (e) => !e.classList.contains('btn-hide') && !e.disabled);
       if (!slowVisible) return; // the tier hides Slow; the Rust test covers the rate
       await page.click('#slowBtn');
-      await page.waitForTimeout(400);
+      // Wait for the SECOND play rather than for 400ms. The assertion below is
+      // about plays.length >= 2, so that is the condition to wait on; sleeping
+      // instead just guesses how long a replay takes on a loaded machine.
+      await page.waitForFunction(
+        () => (window.__playLog || []).filter((p) => p.src.includes('/human-audio/en/')).length >= 2,
+        null,
+        { timeout: 10000 },
+      );
       const plays = await humanPlays(page);
       const slow = plays[plays.length - 1];
       assert(plays.length >= 2 && slow.src === first.src, `slow replay played a different clip: ${slow && slow.src}`);

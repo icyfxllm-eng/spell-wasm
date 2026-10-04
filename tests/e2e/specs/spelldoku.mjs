@@ -731,8 +731,28 @@ export async function run(browser, base, suite) {
       }));
       await page.click('#sdLegend [data-sd-def="1"]');
       await page.waitForFunction(() => !/^\s*$/.test(document.getElementById('sdBadge').textContent), null, { timeout: 4000 });
-      await page.waitForTimeout(300);
-      const shown = await page.$eval('#sdBadge', (e) => e.textContent);
+      // Wait for the badge to SETTLE, not for 300ms. Non-blank is not the same
+      // as finished: the card can show an interim string while the meaning
+      // fetch is in flight, and reading during that window reads the wrong
+      // text. For a NEGATIVE assertion that is the dangerous direction --
+      // reading too early passes whatever the app later does.
+      //
+      // This is the same class of fault as the one fixed in human-audio.mjs
+      // the same day, though unlike those three this one is not a confirmed
+      // cause: the gate log kept only the summary and the retry overwrote the
+      // report, so the failure message was gone before it could be read.
+      // Replacing a guess with a condition is an improvement either way --
+      // it can only wait longer, never shorter.
+      const shown = await page.waitForFunction(
+        () => {
+          const t = document.getElementById('sdBadge').textContent;
+          const last = window.__sdBadgeLast;
+          window.__sdBadgeLast = t;
+          return last === t ? t : false;
+        },
+        null,
+        { timeout: 4000, polling: 150 },
+      ).then((h) => h.jsonValue());
       // The mocked definition deliberately SPELLS the word, and the app is
       // supposed to reject it (spelldoku_ui.rs only shows a definition that
       // wordsearch::hint::passes), falling back to ws.noMeaning. So the check
