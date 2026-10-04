@@ -899,7 +899,15 @@ fn surface_state(app: &App) -> (String, String, bool) {
 /// Write the assembled letters back to the active surface.
 fn surface_set(app: &App, text: &str) {
     match surface() {
-        Surface::Game => surface_set(app, text),
+        // CC-SPELLIT-MIC-FIX: this called ITSELF. On the play surface every
+        // write recursed until the wasm stack was exhausted and the instance
+        // trapped, so no letter ever reached the box — while the on-screen diag
+        // kept updating, because that is written by JavaScript and never enters
+        // Rust at all. The app looked alive and was not.
+        //
+        // game::set_answer is the Game surface's setter, and its own doc says
+        // it exists "by Spell It Out Loud to append parsed letters".
+        Surface::Game => crate::game::set_answer(app, text),
         Surface::SpellPicture => {
             if let Some(f) = crate::surface_hooks::get().voice_set {
                 f(text);
@@ -1065,8 +1073,24 @@ fn on_partial(app: &App, lang: &str, transcript: &str) {
     let base = BASE.with(|b| b.borrow().clone());
     let shown = SESSION_LETTERS.with(|s| {
         let mut cur = s.borrow_mut();
-        if parsed.chars().count() > cur.chars().count() {
-            *cur = parsed; // grow only
+        // Two shapes of partial, and the recognizer picks without telling us.
+        //
+        // A GROWING transcript ("See", "See A", "See A T") parses to "c", "ca",
+        // "cat" — each parse contains the last, so the new one replaces it.
+        //
+        // SEPARATE results ("See", then "A", then "T") each parse to ONE letter.
+        // This is what Eric's phone actually produces once the recognizer is
+        // left to run for a whole session, and "grow only" threw all but the
+        // first away: "c" landed, then "a" was not longer than "c" so it was
+        // discarded, and so was "t".
+        //
+        // A new parse that EXTENDS what we have replaces it; one that does not
+        // is a fresh fragment and is appended. Both shapes end with "cat", and
+        // neither double-counts.
+        if parsed.starts_with(cur.as_str()) {
+            *cur = parsed;
+        } else if !parsed.is_empty() {
+            cur.push_str(&parsed);
         }
         cur.clone()
     });
