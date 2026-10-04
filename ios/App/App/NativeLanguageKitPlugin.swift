@@ -1,4 +1,5 @@
 import Foundation
+import os
 import AVFoundation
 import MetricKit
 import Speech
@@ -527,6 +528,12 @@ final class SpeechListener {
     /// Arithmetic on local state and one DispatchQueue.main.async. Nothing else.
     /// No Speech framework, no AVAudioSession, no locks, no allocation that can
     /// wait on another thread.
+    /// CC-SPELLIT-MIC-FIX X1 — the cable console. `log stream --predicate
+    /// 'subsystem == "net.spellgame.mic"'` while the phone is plugged in.
+    /// Deliberately separate from the on-screen diag: that one is throttled and
+    /// lossy by design, this one is every event in order.
+    static let mlog = Logger(subsystem: "net.spellgame.mic", category: "capture")
+
     private func observeLevel(_ level: Float) {
         if noiseSamples < noiseWindow {
             noiseFloor = max(noiseFloor, level)
@@ -542,6 +549,9 @@ final class SpeechListener {
         if !silenceVerdictDone, frameCount > UInt64(1.5 * 48000), peakRMS < 0.0008 {
             silenceVerdictDone = true
             DispatchQueue.main.async { [weak self] in self?.finish(.failure(.micSilent)) }
+        }
+        if tapCount <= 30 || tapCount % 10 == 0 {
+            Self.mlog.info("buf \(self.tapCount, privacy: .public) rms=\(level, privacy: .public) appended=\(self.appendedCount, privacy: .public) req=\(self.reqCount, privacy: .public) partials=\(self.partialCount, privacy: .public)")
         }
         liveTick += 1
         guard liveTick % 2 == 0, let h = diagHandler else { return }
@@ -741,6 +751,7 @@ final class SpeechListener {
             finish(.failure(.audio)); return
         }
         lastRoute = route.diag
+        Self.mlog.info("beginCapture \(route.diag, privacy: .public) engine=\(self.engineKind, privacy: .public)")
 
         // Defensive: clear any stale engine/tap state (e.g. an inputNode format cached
         // while the session was `.playback`) so the fresh tap gets real mic buffers.
@@ -859,7 +870,11 @@ final class SpeechListener {
     /// RUNNING engine/session — cycling requests is what finalizes each letter fast
     /// without the per-letter session teardown that made one-press unreliable.
     private func startRecognitionCycle() {
-        guard let recognizer = recognizer, !finished else { return }
+        guard let recognizer = recognizer, !finished else {
+            Self.mlog.error("startRecognitionCycle REFUSED recognizer=\(self.recognizer != nil, privacy: .public) finished=\(self.finished, privacy: .public)")
+            return
+        }
+        Self.mlog.info("cycle start avail=\(recognizer.isAvailable, privacy: .public) onDev=\(recognizer.supportsOnDeviceRecognition, privacy: .public) locale=\(recognizer.locale.identifier, privacy: .public)")
         cycleGen += 1
         let gen = cycleGen
         reqCount += 1
@@ -891,6 +906,7 @@ final class SpeechListener {
         task = recognizer.recognitionTask(with: req) { [weak self] result, error in
             guard let self = self, gen == self.cycleGen, !self.finished else { return }
             if let result = result {
+                Self.mlog.info("result '\(result.bestTranscription.formattedString, privacy: .public)' final=\(result.isFinal, privacy: .public)")
                 self.best = result.bestTranscription.formattedString
                 // Letter profile streams every partial (the growing transcript) so
                 // the Rust parser can echo "C… CA… CAT" live.
@@ -919,6 +935,7 @@ final class SpeechListener {
                 // kAFAssistantErrorDomain:1101 is the on-device model missing;
                 // 203 is "no speech"; 1700 is Siri/Dictation disabled.
                 let e = error as NSError
+                Self.mlog.error("task error \(e.domain, privacy: .public):\(e.code, privacy: .public) \(e.localizedDescription, privacy: .public)")
                 self.lastErr = "\(e.domain):\(e.code)"
                 self.diagHandler?("task-err=\(self.lastErr) best='\(self.best)'"
                     + " appended=\(self.appendedCount) peak=\(String(format: "%.4f", self.peakRMS))"
