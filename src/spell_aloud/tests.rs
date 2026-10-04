@@ -885,3 +885,103 @@ fn clarifier_tip_only_where_the_phrasing_works() {
         assert!(!clarifier_tip_ok(lang), "{lang}");
     }
 }
+
+/// CC-SPELLIT-MIC-FIX — a surface dispatcher must never re-enter itself.
+///
+/// `surface_set` was written as:
+///
+///     Surface::Game => surface_set(app, text),
+///
+/// It called itself. On the play surface every write recursed until the wasm
+/// stack was exhausted and the instance trapped, so no spoken letter ever
+/// reached the answer box — through ten TestFlight builds, while four genuine
+/// repairs upstream were made invisible by it.
+///
+/// Nothing caught it. These dispatchers take `&App` and touch the DOM, and no
+/// `App` can be constructed in a host test, so the suite cannot call them at
+/// all. That is the blind spot, and it is not closing soon — so this test reads
+/// the source instead. Crude, and it would have saved ten builds.
+///
+/// The rule is narrow and true: a function that dispatches on `surface()` sends
+/// the work somewhere, so it has no business calling itself.
+#[test]
+fn a_surface_dispatcher_never_calls_itself() {
+    let src = include_str!("../spell_aloud.rs");
+    let mut checked = 0;
+
+    for (idx, _) in src.match_indices("fn ") {
+        // The name, then the body between its matching braces.
+        let after = &src[idx + 3..];
+        let Some(paren) = after.find('(') else { continue };
+        let name = after[..paren].trim();
+        if name.is_empty() || !name.chars().all(|c| c.is_alphanumeric() || c == '_') {
+            continue;
+        }
+        let Some(open_rel) = after.find('{') else { continue };
+        let body_start = idx + 3 + open_rel;
+        let mut depth = 0usize;
+        let mut end = body_start;
+        for (i, c) in src[body_start..].char_indices() {
+            match c {
+                '{' => depth += 1,
+                '}' => {
+                    depth -= 1;
+                    if depth == 0 {
+                        end = body_start + i;
+                        break;
+                    }
+                }
+                _ => {}
+            }
+        }
+        let body = &src[body_start..end];
+        if !body.contains("match surface()") {
+            continue;
+        }
+        checked += 1;
+        let call = format!("{name}(");
+        assert!(
+            !body.contains(&call),
+            "{name} dispatches on surface() and calls itself — that is the bug that \
+             made every spoken letter vanish for ten builds"
+        );
+    }
+
+    assert!(checked >= 2, "expected to find the surface dispatchers, found {checked}");
+}
+
+/// ...and the dispatcher reaches the two real destinations, so "no self-call"
+/// cannot be satisfied by it doing nothing at all.
+///
+/// Reads the brace-matched body with COMMENT LINES STRIPPED. The first version
+/// of this test scanned a fixed window and passed while the bug was reinstated,
+/// because the comment above the fix names `game::set_answer` — a test that a
+/// comment can satisfy is worth less than no test.
+#[test]
+fn surface_set_reaches_both_surfaces() {
+    let src = include_str!("../spell_aloud.rs");
+    let at = src.find("fn surface_set(").expect("surface_set exists");
+    let open = at + src[at..].find('{').expect("a body");
+    let mut depth = 0usize;
+    let mut end = open;
+    for (i, c) in src[open..].char_indices() {
+        match c {
+            '{' => depth += 1,
+            '}' => {
+                depth -= 1;
+                if depth == 0 {
+                    end = open + i;
+                    break;
+                }
+            }
+            _ => {}
+        }
+    }
+    let code: String = src[open..end]
+        .lines()
+        .filter(|l| !l.trim_start().starts_with("//"))
+        .collect::<Vec<_>>()
+        .join("\n");
+    assert!(code.contains("game::set_answer"), "the Game surface writes the answer box");
+    assert!(code.contains("voice_set"), "Spell Picture goes through its hook");
+}
