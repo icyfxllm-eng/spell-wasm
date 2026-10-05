@@ -39,16 +39,32 @@ const num = (src, name) => {
 export function check(src) {
   const bad = [];
   const legacy = num(src, 'speechRMS');          // the fixed value, kept for reference
-  const ceiling = num(src, 'speechRMSCeiling');
+  const quiet = num(src, 'speechRMSCeilingQuiet');
+  const frac = num(src, 'speechPeakFraction');
+  const ceiling = quiet;   // the floor of the ceiling: what a quiet room gets
   const floor = num(src, 'speechRMSFloor');
 
-  if (ceiling === null) {
-    bad.push('speechRMSCeiling is gone — nothing stops the adaptive gate climbing above the fixed value');
-  } else if (legacy !== null && ceiling > legacy) {
-    bad.push(`speechRMSCeiling ${ceiling} is above the legacy fixed ${legacy} — adaptation must only ever make the gate MORE sensitive`);
+  // The ceiling is RELATIVE: the quiet-room value, or a small fraction of the
+  // speech actually heard, whichever is larger. A fixed ceiling was the limiter
+  // in a loud room (thr pinned at 0.0100 against noise of 0.0086), and no
+  // ceiling at all is the shouting bug. Both halves are checked.
+  if (quiet === null) {
+    bad.push('speechRMSCeilingQuiet is gone — nothing bounds the gate in a quiet room, which is the shouting bug');
+  } else if (legacy !== null && quiet > legacy) {
+    bad.push(`speechRMSCeilingQuiet ${quiet} is above the legacy fixed ${legacy} — in a quiet room the gate must be at least as sensitive as the value it replaced`);
   }
-  if (floor !== null && ceiling !== null && floor > ceiling) {
-    bad.push(`speechRMSFloor ${floor} is above speechRMSCeiling ${ceiling} — the clamp is inverted`);
+  if (frac === null) {
+    bad.push('speechPeakFraction is gone — the gate can no longer rise to clear a noisy room, which is the bumped trace');
+  } else if (frac > 0.2) {
+    bad.push(`speechPeakFraction ${frac} lets the gate reach ${Math.round(frac * 100)}% of speech — the player would have to raise their voice (keep it <= 0.2)`);
+  } else if (frac <= 0) {
+    bad.push(`speechPeakFraction ${frac} disables the relative ceiling entirely`);
+  }
+  if (!/max\(speechRMSCeilingQuiet, *peakRMS \* speechPeakFraction\)/.test(src)) {
+    bad.push('the ceiling is no longer the larger of the quiet value and the speech-relative one');
+  }
+  if (floor !== null && quiet !== null && floor > quiet) {
+    bad.push(`speechRMSFloor ${floor} is above speechRMSCeilingQuiet ${quiet} — the clamp is inverted`);
   }
 
   // Every assignment of the live threshold must be clamped by the ceiling.
@@ -108,7 +124,11 @@ export function check(src) {
 
 const GOOD = `
     private let speechRMSFloor: Float = 0.0015
-    private let speechRMSCeiling: Float = 0.010
+    private let speechRMSCeilingQuiet: Float = 0.010
+    private let speechPeakFraction: Float = 0.08
+    private var speechRMSCeiling: Float {
+        max(speechRMSCeilingQuiet, peakRMS * speechPeakFraction)
+    }
     private let speechRMS: Float = 0.010
     private var speechRMSAdaptive: Float = 0.010
     private let maxSegment = 1.4
@@ -128,8 +148,12 @@ const GOOD = `
 if (process.argv.includes('--selftest')) {
   const cases = {
     clean: { r: check(GOOD), want: null },
-    ceiling_removed: { r: check(GOOD.replace(/private let speechRMSCeiling.*\n/, '').replace(/, speechRMSCeiling\)/, ')')), want: /speechRMSCeiling is gone/ },
-    ceiling_above_legacy: { r: check(GOOD.replace('speechRMSCeiling: Float = 0.010', 'speechRMSCeiling: Float = 0.050')), want: /above the legacy fixed/ },
+    quiet_ceiling_removed: { r: check(GOOD.replace(/ *private let speechRMSCeilingQuiet.*\n/, '')), want: /speechRMSCeilingQuiet is gone/ },
+    quiet_ceiling_above_legacy: { r: check(GOOD.replace('speechRMSCeilingQuiet: Float = 0.010', 'speechRMSCeilingQuiet: Float = 0.050')), want: /above the legacy fixed/ },
+    // The "bumped" regression: a gate that cannot rise to clear a loud room.
+    relative_ceiling_removed: { r: check(GOOD.replace(/ *private let speechPeakFraction.*\n/, '')), want: /no longer rise to clear a noisy room/ },
+    gate_allowed_too_close_to_speech: { r: check(GOOD.replace('speechPeakFraction: Float = 0.08', 'speechPeakFraction: Float = 0.5')), want: /raise their voice/ },
+    ceiling_no_longer_relative: { r: check(GOOD.replace('max(speechRMSCeilingQuiet, peakRMS * speechPeakFraction)', 'speechRMSCeilingQuiet')), want: /no longer the larger of/ },
     // The exact mic10 regression: the clamp dropped from the assignment.
     unclamped_assign: { r: check(GOOD.replace('min(max(noiseFloor * noiseMult, speechRMSFloor), speechRMSCeiling)', 'max(noiseFloor * noiseMult, speechRMSFloor)')), want: /without clamping to speechRMSCeiling/ },
     floor_frozen_after_window: { r: check(GOOD.replace(/ } else \{\n            noiseFloor = min\(noiseFloor \* noiseLeak, max\(level, speechRMSFloor\)\)\n        \}/, ' }')), want: /poison the whole session/ },
@@ -162,4 +186,4 @@ if (bad.length) {
   for (const b of bad) console.error('  ✗ ' + b);
   process.exit(1);
 }
-console.log('mic-gate-check: OK — the speech gate is clamped at or below the fixed value, the floor keeps adapting, and the safety boundary stays short.');
+console.log('mic-gate-check: OK — the gate stays far below the player\'s voice while still free to clear the room, the floor keeps adapting, and the request closes only on measured silence with enough context.');

@@ -551,13 +551,28 @@ final class SpeechListener {
     private var speechRMSAdaptive: Float = 0.010
     private let noiseWindow = 4
     private let noiseMult: Float = 3.0
-    /// The adaptive threshold may never climb ABOVE the legacy fixed value.
-    /// 0.010 was chosen because it is low enough to catch a soft sibilant
-    /// ("ess"); a gate above it cannot be right for any room. Eric's mic10
-    /// trace measured thr=0.0166 — 66% over — and he had to scream at the
-    /// phone. Adaptation is allowed to make the gate MORE sensitive than the
-    /// fixed value, never less.
-    private let speechRMSCeiling: Float = 0.010
+    /// The gate may never sit so high that ordinary speech cannot cross it.
+    ///
+    /// This started as a FIXED 0.010, which was right in a quiet room and became
+    /// the limiter in a loud one. Eric's "bumped" trace: thr pinned at exactly
+    /// 0.0100 with the room's own noise at 0.0086, so the gate sat 16% above the
+    /// noise, the silence VAD fired once in twelve boundaries, requests stopped
+    /// closing, and the recognizer went back to merging letters (BU, TED).
+    ///
+    /// So the ceiling is RELATIVE to the speech this session has actually heard:
+    /// a quiet room keeps the old 0.010, and a loud one may raise the gate up to
+    /// a small fraction of the measured speech peak. The guarantee is unchanged
+    /// and better expressed — the gate stays far below the player's voice, so no
+    /// one ever has to shout, while still being allowed to clear the room.
+    private let speechRMSCeilingQuiet: Float = 0.010
+    /// Speech must clear the gate by this much: the ceiling never exceeds this
+    /// fraction of the loudest speech heard. At 0.08 a player's voice is more
+    /// than twelve times the gate.
+    private let speechPeakFraction: Float = 0.08
+    /// The ceiling in force right now, given what this session has heard.
+    private var speechRMSCeiling: Float {
+        max(speechRMSCeilingQuiet, peakRMS * speechPeakFraction)
+    }
     /// Per-buffer upward leak on the floor (~+0.5%/s at 85 ms buffers), so one
     /// anomalously quiet buffer cannot pin the floor near zero for the whole
     /// session while a genuinely noisier room can still raise it.

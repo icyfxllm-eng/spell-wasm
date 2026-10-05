@@ -319,6 +319,53 @@ pub fn parse(lang: &str, transcript: &str) -> Parsed {
     Parsed { letters, slots, matched_words: matched, total_words: n }
 }
 
+/// A token the recognizer wrote as one short WORD when it was really two letter
+/// names run together — "UM" for U then M, "OK" for the letter K after an O,
+/// "TED" for T-E-D. Returns the letters if EVERY character of the token is a
+/// letter name in this language, and the token itself is not a known spoken
+/// form (so "oh" stays the letter O and never becomes O-H).
+fn expand_merged(lang: &str, token: &str) -> Option<String> {
+    let lex = lexicon(lang)?;
+    let w = norm_word(token);
+    if w.chars().count() < 2 || lex.table.contains_key(&w) {
+        return None;
+    }
+    let mut out = String::new();
+    for c in w.chars() {
+        out.push_str(lex.table.get(&c.to_string())?.as_str());
+    }
+    Some(out)
+}
+
+/// Parse an utterance, recovering a merged token when — and only when — it
+/// EXTENDS the letter already in flight.
+///
+/// The unconditional version of this is a trap, and Eric's own traces contain
+/// both sides of it. "UM" arriving while U is in flight is the recognizer
+/// hearing U and M and writing them as a word; expanding it recovers a letter
+/// that is otherwise discarded whole. But "BO" arriving while B is in flight
+/// can equally be the recognizer REVISING its guess for a single spoken B as it
+/// starts to hear the next sound, and expanding that one turned "boo" into
+/// "boook". Requiring the expansion to begin with what is already in flight
+/// does not separate those two cases — nothing at parse time does — but it does
+/// confine the damage to tokens that continue the current letter, which is the
+/// shape that has actually been losing letters.
+pub fn parse_or_expand(lang: &str, transcript: &str, in_flight: &str) -> String {
+    let parsed = parse(lang, transcript).letters;
+    if !parsed.is_empty() || in_flight.is_empty() {
+        return parsed;
+    }
+    // One token only: a multi-word utterance already parses word by word.
+    let mut words = transcript.split_whitespace();
+    let (Some(one), None) = (words.next(), words.next()) else {
+        return parsed;
+    };
+    match expand_merged(lang, one) {
+        Some(exp) if exp.starts_with(in_flight) && exp.chars().count() > in_flight.chars().count() => exp,
+        _ => parsed,
+    }
+}
+
 /// The spoken forms to hand the recognizer as `contextualStrings` for `lang`
 /// (letter names + phrases). Biasing lives in the lexicon, not in Swift.
 pub fn contextual_strings(lang: &str) -> Vec<String> {
@@ -1333,7 +1380,12 @@ fn on_partial(app: &App, lang: &str, transcript: &str) {
     if !CAPTURING.with(Cell::get) || MANUAL_EDIT.with(Cell::get) {
         return;
     }
-    let parsed = parse(lang, transcript).letters;
+    // Recover a merged token ("UM" while U is in flight) that would otherwise be
+    // discarded whole, costing a letter.
+    let parsed = {
+        let cur = CURRENT_UTTER.with(|u| u.borrow().clone());
+        parse_or_expand(lang, transcript, &cur)
+    };
     let base = BASE.with(|b| b.borrow().clone());
     let shown = SESSION_LETTERS.with(|s| CURRENT_UTTER.with(|u| {
         let mut done = s.borrow_mut();
@@ -1442,7 +1494,7 @@ fn on_final(app: &App, lang: &str, transcript: &str, confidence: f32, alt: &str,
         set_status("voiceSpell.spellItOut");
     } else {
         // Commit the accumulated letters (or the final parse if it's somehow longer).
-        let final_letters = parse(lang, transcript).letters;
+        let final_letters = parse_or_expand(lang, transcript, &accumulated);
         let committed = if final_letters.chars().count() > accumulated.chars().count() {
             final_letters
         } else {

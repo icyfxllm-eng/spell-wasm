@@ -1202,3 +1202,42 @@ fn a_chip_never_costs_a_letter() {
         );
     }
 }
+
+/// A merged token is recovered when it continues the letter in flight.
+///
+/// Eric spelling "bumped" got "buped": the recognizer wrote his U and M as the
+/// single token "UM", which is not a letter name, so the parser discarded it
+/// whole and the M was gone. Same shape as the "OK" that ate the K of "book".
+#[test]
+fn a_merged_token_that_extends_the_letter_in_flight_is_recovered() {
+    use crate::spell_aloud::parse_or_expand as pe;
+    // The "bumped" failure, recovered.
+    assert_eq!(pe("en", "UM", "u"), "um");
+    // The "book" failure: K written as the word OK, while O is in flight.
+    assert_eq!(pe("en", "OK", "o"), "ok");
+    // Three letters run together.
+    assert_eq!(pe("en", "TED", "t"), "ted");
+
+    // NOT recovered when nothing is in flight: with no letter to continue, the
+    // token is as likely to be a stray word as a spelling.
+    assert_eq!(pe("en", "UM", ""), "");
+    // NOT recovered when it does not continue what is in flight.
+    assert_eq!(pe("en", "UM", "b"), "");
+    // A token that IS a spoken form keeps its own meaning: "oh" is the letter O,
+    // never O-H.
+    assert_eq!(pe("en", "Oh", "o"), "o");
+    // A normal parse is untouched by any of this.
+    assert_eq!(pe("en", "Bee Oh Oh Kay", ""), "book");
+    assert_eq!(pe("en", "Kay", "o"), "k");
+    // Nonsense stays nothing: "qzx" has no letter-name reading per character…
+    assert_eq!(pe("en", "zzz", "z"), "zzz");
+    // …but a token with a character that is not a letter name at all expands to
+    // nothing rather than partially.
+    assert_eq!(pe("en", "u7m", "u"), "");
+
+    // KNOWN LIMIT, pinned so it is a decision and not a surprise: this cannot
+    // tell "U then M" from the recognizer revising a single spoken B into "BO".
+    // It expands both. The gate on "extends what is in flight" confines the
+    // damage; it does not remove it.
+    assert_eq!(pe("en", "BO", "b"), "bo");
+}
