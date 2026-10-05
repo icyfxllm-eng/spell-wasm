@@ -618,7 +618,7 @@ const AUTO_SPLIT_ENABLED: bool = false;
 /// the Swift mirror drifts from this file.
 const GEOMETRY_JSON: &str = include_str!("../config/snap-geometry.json");
 
-fn geometry_ratio(key: &str) -> f32 {
+pub(crate) fn geometry_ratio(key: &str) -> f32 {
     // A deliberately small parse: the file is ours, flat, and numbers-only.
     // Pulling in a JSON dependency for four floats would be the larger risk.
     let needle = format!("\"{key}\"");
@@ -709,7 +709,7 @@ pub fn geometry_ok(line: &OcrLine) -> bool {
 
 /// The line's glyph width: measured if the platform sent one (D-B3), else
 /// estimated from the boxes themselves.
-fn glyph_width(line: &OcrLine) -> Option<f32> {
+pub(crate) fn glyph_width(line: &OcrLine) -> Option<f32> {
     if let Some(g) = line.glyph {
         return Some(g);
     }

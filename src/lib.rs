@@ -107,6 +107,7 @@ mod speech_out;
 mod stats;
 pub mod snap_clean; // CC-SNAP-CLEAN v1 — OCR lines to word candidates (tests/snap_clean_golden.rs)
 pub mod snap_highlight; // CC-SNAP-HIGHLIGHT v1 — which words sit on a highlighter mark (tests/snap_highlight_core.rs)
+pub mod snap_layout; // CC-SNAP-LAYOUT 2.1 — worksheet shape, so only the words import (tests/snap_layout_core.rs)
 mod storage;
 mod syllable;
 mod experience; // CC-ONBOARD-JR F1/F2

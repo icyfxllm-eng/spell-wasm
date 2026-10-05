@@ -3,5 +3,7 @@
   "split_gap": 0.35,
   "merge_moderate": 1.1,
   "merge_tight": 0.45,
-  "merge_nodict": 0.25
+  "merge_nodict": 0.25,
+  "_column_gap": "CC-SNAP-LAYOUT 2.1 — a gutter between two columns, in the same units as the rest of this file (multiples of the line's median glyph width). Far larger than split_gap because a column gutter is nothing like a dropped space. PROVISIONAL: the 15-page Level 2 fixture that would calibrate it does not exist, and snap_layout refuses to detect anything while LayoutConfig::baked() is disabled.",
+  "column_gap": 3.0
 }
