@@ -204,6 +204,8 @@ node scripts/human-audio-check.mjs --selftest || { echo "GATE FAIL: human-audio 
 echo "== gate: one audio-session owner (CC-SPELLIT-MIC-FIX A2/I-M5)"
 node scripts/audio-session-owner-check.mjs || { echo "GATE FAIL: audio session owner"; exit 1; }
 node scripts/audio-session-owner-check.mjs --selftest || { echo "GATE FAIL: audio-session-owner selftest — the gate no longer bites"; exit 1; }
+node scripts/mic-gate-check.mjs || { echo "GATE FAIL: mic speech gate"; exit 1; }
+node scripts/mic-gate-check.mjs --selftest || { echo "GATE FAIL: mic-gate selftest — the gate no longer bites"; exit 1; }
 
 echo "== gate: voice spelling keeps its microphone (CC-SPELLIT-MIC-FIX G1)"
 node scripts/voice-spell-deps-check.mjs || { echo "GATE FAIL: voice spell deps"; exit 1; }

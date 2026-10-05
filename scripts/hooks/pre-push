@@ -34,7 +34,7 @@ command -v node >/dev/null 2>&1 || {
 # arguments or artifacts (e2e-summary-check wants a log, edu-no-purchase-check
 # wants a built dist).
 CHECKS="ar-hi-ortho-check audio-clarity-check audio-router-check bank-variety-check
-def-pool-check letter-lexicon-check lexicon-load-check voice-spell-deps-check audio-session-owner-check dom-id-check dom-id-live-check i18n-translated-check snap-clean-one-impl-check snap-geometry-check e2e-sleep-ratchet human-audio-check modes-check picture-artifact-parity pinyin-display-check
+def-pool-check letter-lexicon-check lexicon-load-check voice-spell-deps-check audio-session-owner-check mic-gate-check dom-id-check dom-id-live-check i18n-translated-check snap-clean-one-impl-check snap-geometry-check e2e-sleep-ratchet human-audio-check modes-check picture-artifact-parity pinyin-display-check
 pinyin-inventory-check ru-identity-check ru-stress-ingest-check scroll-check
 settings-truth-check spell-jr-name-check tier-list-check tier-partition-check
 tracking-check wordpic-export-parity zh-audio-path-check zh-bank-sandhi-check

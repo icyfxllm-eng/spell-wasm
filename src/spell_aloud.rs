@@ -634,6 +634,26 @@ use wasm_bindgen_futures::spawn_local;
 thread_local! {
     /// True while ONE VAD segment (one letter) is in flight with the native recognizer.
     static CAPTURING: Cell<bool> = const { Cell::new(false) };
+    /// The player edited the box by hand during a session, so voice may no
+    /// longer write to it. Stopping the session is NOT enough on its own:
+    /// stop_letter_capture is asynchronous and the in-flight final still
+    /// arrives, still holding the letters it heard, and still writes them back
+    /// over the edit. That is how Eric deleted a stray "t" and watched it
+    /// return. Cleared when a new session starts.
+    static MANUAL_EDIT: Cell<bool> = const { Cell::new(false) };
+    /// Letters from the utterance still in flight, kept apart from the ones
+    /// already finished (SESSION_LETTERS). The recognizer emits SEVERAL results
+    /// for one spoken letter as it refines -- "M", then "M" again -- and it
+    /// emits each letter as its own result rather than a growing transcript.
+    /// Without this split a repeat looked like a new letter and Eric's single
+    /// "M" landed twice.
+    static CURRENT_UTTER: RefCell<String> = const { RefCell::new(String::new()) };
+    /// When the in-flight utterance last changed, in ms. A repeat arriving
+    /// quickly is the recognizer refining ONE letter; the same letter arriving
+    /// after a gap is the player saying it twice, which "book" and "letter"
+    /// depend on. Nothing else distinguishes them: the recognizer sends no
+    /// boundary and both look like the identical parse arriving again.
+    static LAST_PARTIAL_MS: Cell<f64> = const { Cell::new(0.0) };
     /// True from the FIRST mic tap until the user taps again to stop (or an error). While
     /// set, each finalized letter auto-restarts capture for the next — one press, spell
     /// the whole word letter by letter with a beat between letters (native VAD segments).
@@ -983,6 +1003,30 @@ pub fn tap_action(listening: bool, enabled: bool, downloading: bool, cap: &str, 
     }
 }
 
+/// The player touched the answer box with their hands — a key, a jamo, or
+/// backspace — while a voice session was live.
+///
+/// Their edit wins and the session ends. Before this, `on_partial` rewrote the
+/// box from BASE + SESSION_LETTERS on every partial, so a deleted letter came
+/// straight back on the next one and the box fought anyone trying to correct
+/// it: Eric spelled "eyes", deleted a letter, watched it reappear, and then
+/// could not get a correct answer to stay long enough to check it.
+///
+/// Stopping is the honest resolution rather than merging. The recognizer's
+/// transcript for the session still contains the deleted letter, so the next
+/// partial would re-add it however the two were reconciled; only ending voice
+/// input makes the box the player's again. Tapping the mic starts a fresh
+/// session that appends to whatever they left, which is F1.7 exactly.
+pub fn note_manual_edit() {
+    if LISTENING.with(Cell::get) || CAPTURING.with(Cell::get) {
+        // Mark BEFORE stopping: the final can land as soon as capture ends.
+        MANUAL_EDIT.with(|m| m.set(true));
+        SESSION_LETTERS.with(|s| s.borrow_mut().clear());
+        CURRENT_UTTER.with(|u| u.borrow_mut().clear());
+        stop_session();
+    }
+}
+
 pub fn mic_tap(app: &App) {
     let action = tap_action(
         LISTENING.with(Cell::get),
@@ -1055,7 +1099,9 @@ fn stop_session() {
 /// listening; `is_end == true` arrives when the user stops. BASE/TARGET are set by
 /// `mic_tap` and persist across segments; SESSION_LETTERS resets per segment.
 fn begin_session(app: &App) {
+    MANUAL_EDIT.with(|m| m.set(false));
     SESSION_LETTERS.with(|s| s.borrow_mut().clear());
+    CURRENT_UTTER.with(|u| u.borrow_mut().clear());
     CAPTURING.with(|c| c.set(true));
     let lang = app.borrow().lang.clone();
     let ctx = contextual_strings(&lang);
@@ -1081,6 +1127,7 @@ fn begin_session(app: &App) {
             }
         },
         move |code| on_error(&a_error, &code),
+        on_boundary,
     );
     if !ok {
         // Bridge missing/uncallable — treat as unavailable, revert cleanly.
@@ -1092,35 +1139,125 @@ fn begin_session(app: &App) {
 /// Live echo: preview `base + accumulated letters`. MONOTONIC — the shown letters only
 /// grow; a partial that the recognizer later revises to FEWER letters does not shrink
 /// them, so a spelled letter never appears then vanishes as the hypothesis jitters.
+/// The VAD heard the pause after a letter: bank the utterance in flight so the
+/// next parse starts a new one. This is the EXACT signal the clock below only
+/// estimates — with it, a letter said twice quickly still counts twice.
+fn on_boundary() {
+    CURRENT_UTTER.with(|u| {
+        let mut cur = u.borrow_mut();
+        if cur.is_empty() {
+            return;
+        }
+        SESSION_LETTERS.with(|s| s.borrow_mut().push_str(&cur));
+        cur.clear();
+    });
+    // The clock rule is the fallback for engines that send no boundary (the
+    // iOS 26 analyzer, the server rung). Reset it so it cannot double-bank
+    // what this just banked.
+    LAST_PARTIAL_MS.with(|t| t.set(0.0));
+}
+
+/// A repeat arriving sooner than this is the recognizer refining one letter;
+/// later, it is the player saying the letter again. Generous, because the gap
+/// between two deliberately spoken letters is most of a second and a refinement
+/// lands in a few hundred milliseconds.
+pub const REPEAT_IS_NEW_UTTERANCE_MS: f64 = 900.0;
+
+/// One step of the accumulator, pure so the rule can be tested against what a
+/// real device sends. `on_partial` is DOM-bound and no host test can reach it —
+/// the same blind spot that hid surface_set calling itself.
+pub fn accumulate_step(done: &mut String, cur: &mut String, parsed: String, gap_ms: f64) {
+    if parsed.is_empty() {
+        return;
+    }
+    // CUMULATIVE TRANSCRIPT. Since F6.3 stopped closing the request at each letter
+    // boundary, the legacy recognizer runs ONE request for the whole session and
+    // every partial carries the whole transcript so far: "b", "bo", "boo",
+    // "book". Banking the in-flight text at a boundary then re-banks everything
+    // already said -- thirteen boundaries turned "book" into "bbooooo" on Eric's
+    // phone (req=1, bnd=4/9 in that trace).
+    //
+    // So: when the new parse contains everything accumulated so far as a prefix,
+    // it SUPERSEDES it rather than extending it. This is self-correcting -- a
+    // spurious boundary is undone by the very next partial -- and it leaves the
+    // per-letter-request engines untouched, because there a fresh transcript
+    // never starts with what came before.
+    let whole = format!("{done}{cur}");
+    if !whole.is_empty() && parsed.starts_with(whole.as_str()) {
+        done.clear();
+        *cur = parsed;
+        return;
+    }
+    if parsed == *cur {
+        // The identical parse again. Fast = the recognizer settling on one
+        // letter. Slow = the player really said it twice, and "book" needs it.
+        if gap_ms >= REPEAT_IS_NEW_UTTERANCE_MS {
+            done.push_str(cur);
+        }
+        return;
+    }
+    if parsed.starts_with(cur.as_str()) {
+        *cur = parsed;
+    } else {
+        done.push_str(cur);
+        *cur = parsed;
+    }
+}
+
+/// `"|"` is a VAD boundary — the pause after a letter — rather than a parse.
+#[cfg(test)]
+pub fn accumulate_partial_for_test(parses: &[(&str, f64)]) -> String {
+    let (mut done, mut cur) = (String::new(), String::new());
+    for (p, gap) in parses {
+        if *p == "|" {
+            done.push_str(&cur);
+            cur.clear();
+            continue;
+        }
+        accumulate_step(&mut done, &mut cur, parse("en", p).letters, *gap);
+    }
+    format!("{done}{cur}")
+}
+
 fn on_partial(app: &App, lang: &str, transcript: &str) {
-    if !CAPTURING.with(Cell::get) {
+    if !CAPTURING.with(Cell::get) || MANUAL_EDIT.with(Cell::get) {
         return;
     }
     let parsed = parse(lang, transcript).letters;
     let base = BASE.with(|b| b.borrow().clone());
-    let shown = SESSION_LETTERS.with(|s| {
-        let mut cur = s.borrow_mut();
-        // Two shapes of partial, and the recognizer picks without telling us.
+    let shown = SESSION_LETTERS.with(|s| CURRENT_UTTER.with(|u| {
+        let mut done = s.borrow_mut();
+        let mut cur = u.borrow_mut();
+        // Where one letter ends and the next begins. Two facts, both learned
+        // from Eric's device:
         //
-        // A GROWING transcript ("See", "See A", "See A T") parses to "c", "ca",
-        // "cat" — each parse contains the last, so the new one replaces it.
+        //   * each spoken letter arrives as its OWN result, not as a growing
+        //     transcript — "See", then "A", then "T";
+        //   * the SAME letter arrives several times while the recognizer
+        //     refines it — "M", then "M" again.
         //
-        // SEPARATE results ("See", then "A", then "T") each parse to ONE letter.
-        // This is what Eric's phone actually produces once the recognizer is
-        // left to run for a whole session, and "grow only" threw all but the
-        // first away: "c" landed, then "a" was not longer than "c" so it was
-        // discarded, and so was "t".
+        // So: a parse that EXTENDS the utterance in flight replaces it (the
+        // refinement case, and the growing-transcript case if a device ever
+        // does that). A parse that does NOT extend it means the previous
+        // utterance is over — bank it and start a new one.
         //
-        // A new parse that EXTENDS what we have replaces it; one that does not
-        // is a fresh fragment and is appended. Both shapes end with "cat", and
-        // neither double-counts.
-        if parsed.starts_with(cur.as_str()) {
-            *cur = parsed;
-        } else if !parsed.is_empty() {
-            cur.push_str(&parsed);
-        }
-        cur.clone()
-    });
+        // "grow only" lost every letter after the first; appending every
+        // non-extending parse doubled repeats. This does neither.
+        //
+        // That leaves one case shape alone cannot call: the SAME letter twice,
+        // which is either a refinement or a real repeat. `on_boundary` settles
+        // it when the engine reports the pause it measured (the iOS legacy
+        // recognizer does); `gap_ms` against REPEAT_IS_NEW_UTTERANCE_MS is the
+        // fallback for engines that report none.
+        let now = js_sys::Date::now();
+        let gap = LAST_PARTIAL_MS.with(|t| {
+            let prev = t.get();
+            t.set(now);
+            if prev == 0.0 { 0.0 } else { now - prev }
+        });
+        accumulate_step(&mut done, &mut cur, parsed, gap);
+        format!("{}{}", done, cur)
+    }));
     surface_set(app, &format!("{}{}", base, shown));
 }
 
@@ -1132,14 +1269,25 @@ fn on_final(app: &App, lang: &str, transcript: &str, is_end: bool) {
     if !CAPTURING.with(Cell::get) {
         return;
     }
+    // The player's hands won while this was in flight. Tear the session down
+    // and write NOTHING: the box is theirs.
+    if MANUAL_EDIT.with(Cell::get) {
+        SESSION_LETTERS.with(|s| s.borrow_mut().clear());
+        CURRENT_UTTER.with(|u| u.borrow_mut().clear());
+        end_capture_ui();
+        set_status("");
+        return;
+    }
     let still = !is_end && LISTENING.with(Cell::get);
     let base = BASE.with(|b| b.borrow().clone());
     let target = TARGET.with(|t| t.borrow().clone());
     // Letters accumulated (monotonically) during this segment — the ones already shown.
     // Committing THIS (not a re-parse of the final transcript, which the recognizer may
     // have shrunk) is what makes spelled letters stick.
-    let accumulated = SESSION_LETTERS.with(|s| s.borrow().clone());
+    let accumulated = SESSION_LETTERS.with(|s| s.borrow().clone())
+        + &CURRENT_UTTER.with(|u| u.borrow().clone());
     SESSION_LETTERS.with(|s| s.borrow_mut().clear());
+    CURRENT_UTTER.with(|u| u.borrow_mut().clear());
     // D3 (Feature 4): the utterance SAYS THE TARGET WORD (whole or embedded) → discard
     // it, nudge to spell it out. Zero letters, never a miss. BASE is unchanged. (D2)
     if says_target(transcript, &target) {

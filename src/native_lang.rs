@@ -450,7 +450,7 @@ mod tests {
 thread_local! {
     // Keep the JS-facing closures alive for the duration of a capture session.
     // Replaced on each start; dropped on stop, ending the subscriptions.
-    static LETTER_CBS: RefCell<Option<[Closure<dyn FnMut(JsValue)>; 3]>> = const { RefCell::new(None) };
+    static LETTER_CBS: RefCell<Option<[Closure<dyn FnMut(JsValue)>; 4]>> = const { RefCell::new(None) };
 }
 
 /// Start on-device letter capture for `lang`, biasing the recognizer with
@@ -473,6 +473,10 @@ pub fn start_letter_capture(
     // `is_end == true` when the whole capture session ends.
     mut on_final: impl FnMut(String, f32, Option<String>, bool) + 'static,
     mut on_error: impl FnMut(String) + 'static,
+    // CC-SPELLIT-MIC-FIX: the VAD saw the pause after a letter. Carries no
+    // payload — it says only "the letter in flight is finished", which is what
+    // the accumulator needs to tell a repeat apart from a letter said twice.
+    mut on_boundary: impl FnMut() + 'static,
 ) -> bool {
     let Some(obj) = bridge() else { return false };
     let Some(f) = method(&obj, "startLetterCapture") else { return false };
@@ -508,17 +512,22 @@ pub fn start_letter_capture(
         on_error(v.as_string().unwrap_or_else(|| "AUDIO_ERROR".into()));
     }) as Box<dyn FnMut(JsValue)>);
 
-    // startLetterCapture(opts, onToken, onFinal, onError)
-    let args = js_sys::Array::of4(
+    let bnd_cb = Closure::wrap(Box::new(move |_v: JsValue| {
+        on_boundary();
+    }) as Box<dyn FnMut(JsValue)>);
+
+    // startLetterCapture(opts, onToken, onFinal, onError, onBoundary)
+    let args = js_sys::Array::of5(
         &opts,
         tok_cb.as_ref().unchecked_ref(),
         fin_cb.as_ref().unchecked_ref(),
         err_cb.as_ref().unchecked_ref(),
+        bnd_cb.as_ref().unchecked_ref(),
     );
     if f.apply(&obj, &args).is_err() {
         return false;
     }
-    LETTER_CBS.with(|c| *c.borrow_mut() = Some([tok_cb, fin_cb, err_cb]));
+    LETTER_CBS.with(|c| *c.borrow_mut() = Some([tok_cb, fin_cb, err_cb, bnd_cb]));
     true
 }
 

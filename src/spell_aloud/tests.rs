@@ -985,3 +985,160 @@ fn surface_set_reaches_both_surfaces() {
     assert!(code.contains("game::set_answer"), "the Game surface writes the answer box");
     assert!(code.contains("voice_set"), "Spell Picture goes through its hook");
 }
+
+/// CC-SPELLIT-MIC-FIX: every manual input path ends a live voice session.
+///
+/// Eric, spelling "eyes" over the cable: the recognizer heard him, he deleted a
+/// letter to correct it, the letter came back, and he could not get a correct
+/// answer to stay long enough to check it. `on_partial` rewrites the box from
+/// BASE + SESSION_LETTERS on every partial, so anything done by hand was undone
+/// by the next one.
+///
+/// Source-level, for the same reason as the surface_set test: these take &App
+/// and touch the DOM, and no App can be built in a host test.
+#[test]
+fn manual_input_ends_a_live_voice_session() {
+    let src = include_str!("../game.rs");
+    for f in ["pub fn type_char(", "pub fn type_jamo(", "pub fn backspace("] {
+        let at = src.find(f).unwrap_or_else(|| panic!("{f} exists"));
+        let open = at + src[at..].find('{').expect("a body");
+        let mut depth = 0usize;
+        let mut end = open;
+        for (i, c) in src[open..].char_indices() {
+            match c {
+                '{' => depth += 1,
+                '}' => {
+                    depth -= 1;
+                    if depth == 0 {
+                        end = open + i;
+                        break;
+                    }
+                }
+                _ => {}
+            }
+        }
+        let body: String = src[open..end]
+            .lines()
+            .filter(|l| !l.trim_start().starts_with("//"))
+            .collect::<Vec<_>>()
+            .join("\n");
+        assert!(
+            body.contains("note_manual_edit()"),
+            "{f} must end a live voice session — without it a deleted letter returns"
+        );
+    }
+}
+
+/// CC-SPELLIT-MIC-FIX: a voice-spelled answer must be submittable.
+///
+/// submit_guess refuses a DICTATED answer, and is_dictated calls it dictation
+/// when there are more characters than keystrokes. Voice spelling wrote the
+/// answer and recorded no keystrokes, so every correct spoken word was silently
+/// unsubmittable — the button looked broken and was enforcing an anti-cheat
+/// rule against the app's own input method.
+#[test]
+fn voice_letters_count_as_keystrokes_so_the_answer_can_be_checked() {
+    use crate::input_provenance::{is_dictated, note_insert, reset};
+    // What set_answer now does for a four-letter voiced word.
+    reset("answerField");
+    for _ in 0..4 {
+        note_insert("answerField", "insertText", 1);
+    }
+    assert!(!is_dictated("answerField", 4), "voiced letters must be submittable");
+
+    // ...and the protection still holds: a whole word arriving with no
+    // keystrokes at all is still dictation and still refused.
+    reset("answerField");
+    assert!(is_dictated("answerField", 4), "a word from nowhere is still dictation");
+}
+
+/// CC-SPELLIT-MIC-FIX: the accumulator, against what Eric's phone really sends.
+///
+/// Two facts from the cable console: each spoken letter arrives as its OWN
+/// result rather than a growing transcript, and the SAME letter arrives several
+/// times while the recognizer refines it. "grow only" lost every letter after
+/// the first; appending every non-extending parse doubled the repeats and his
+/// single "M" landed twice.
+#[test]
+fn partial_accumulation_handles_repeats_and_separate_results() {
+    use crate::spell_aloud::accumulate_partial_for_test as acc;
+    // Each entry is (what the recognizer said, ms since the previous partial).
+    //
+    // One letter reported three times in quick succession while the recognizer
+    // settles on it. ONE letter.
+    assert_eq!(acc(&[("M", 0.0), ("M", 120.0), ("M", 90.0)]), "m");
+    // Separate results, one per letter — the shape Eric's device sends.
+    assert_eq!(acc(&[("See", 0.0), ("A", 800.0), ("T", 700.0)]), "cat");
+    // Refinements interleaved with real letters.
+    assert_eq!(
+        acc(&[("See", 0.0), ("See", 110.0), ("A", 900.0), ("A", 100.0), ("T", 850.0)]),
+        "cat"
+    );
+    // A growing transcript still works, if a device ever sends one.
+    assert_eq!(acc(&[("See", 0.0), ("See A", 400.0), ("See A T", 400.0)]), "cat");
+    // A letter said twice with another between it — always two letters.
+    assert_eq!(acc(&[("A", 0.0), ("B", 700.0), ("A", 700.0)]), "aba");
+    // "book": the player says O twice, deliberately, with a gap between. BOTH
+    // count. Collapsing them was the price of the first repeat fix; this is it
+    // paid back, and it is why the rule needs the clock and not just the text.
+    assert_eq!(acc(&[("Bee", 0.0), ("Oh", 800.0), ("Oh", 1100.0), ("Kay", 800.0)]), "book");
+}
+
+
+/// With the VAD's boundary plumbed through, the accumulator stops guessing.
+///
+/// The clock rule can only estimate where one letter ends and the next begins;
+/// the voice detector KNOWS, because it measured the pause. These are the cases
+/// the clock gets wrong on its own.
+#[test]
+fn a_vad_boundary_beats_the_clock() {
+    use crate::spell_aloud::accumulate_partial_for_test as acc;
+    // "book" said FAST — both O's inside the clock's 0.9s window, so the clock
+    // alone would collapse them. The boundary keeps both.
+    assert_eq!(
+        acc(&[("Bee", 0.0), ("|", 0.0), ("Oh", 200.0), ("|", 0.0), ("Oh", 200.0),
+              ("|", 0.0), ("Kay", 200.0)]),
+        "book"
+    );
+    // ...and a refinement WITHIN one letter still collapses, because no
+    // boundary separates the repeats.
+    assert_eq!(acc(&[("M", 0.0), ("M", 80.0), ("M", 70.0)]), "m");
+    // A boundary with nothing in flight banks nothing.
+    assert_eq!(acc(&[("|", 0.0), ("|", 0.0), ("A", 0.0)]), "a");
+}
+
+/// Eric's "bbooooo", reproduced exactly.
+///
+/// The legacy recognizer runs ONE request for the whole session (req=1 in his
+/// trace), so each partial carries the whole transcript so far. Thirteen VAD
+/// boundaries fired during one four-letter word (bnd=4/9), and each one banked
+/// the in-flight text -- so every partial was added on top of the one before it.
+#[test]
+fn a_cumulative_transcript_is_not_accumulated() {
+    use crate::spell_aloud::accumulate_partial_for_test as acc;
+    // The exact shape of the failure: growing transcript, boundary after each.
+    assert_eq!(
+        acc(&[("Bee", 0.0), ("|", 0.0),
+              ("Bee Oh", 120.0), ("|", 0.0),
+              ("Bee Oh Oh", 120.0), ("|", 0.0),
+              ("Bee Oh Oh Kay", 120.0)]),
+        "book"
+    );
+    // Boundaries firing on SILENCE, with no new speech between them, must not
+    // multiply what is already there -- that is the bnd=0/9 half of his trace.
+    assert_eq!(
+        acc(&[("Bee Oh Oh Kay", 0.0), ("|", 0.0), ("|", 0.0), ("|", 0.0), ("|", 0.0)]),
+        "book"
+    );
+    // A growing transcript with NO boundaries at all still lands once.
+    assert_eq!(
+        acc(&[("Bee", 0.0), ("Bee Oh", 100.0), ("Bee Oh Oh", 100.0), ("Bee Oh Oh Kay", 100.0)]),
+        "book"
+    );
+    // And the per-letter-request engines are untouched: there each transcript is
+    // fresh, so it never starts with what came before and still appends.
+    assert_eq!(
+        acc(&[("Cee", 0.0), ("|", 0.0), ("A", 0.0), ("|", 0.0), ("Tee", 0.0)]),
+        "cat"
+    );
+}

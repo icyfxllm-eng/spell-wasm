@@ -321,6 +321,9 @@ public class NativeLanguageKitPlugin: CAPPlugin, CAPBridgedPlugin {
                 },
                 onDiag: { [weak self] info in
                     self?.notifyListeners("letterDiag", data: ["info": info])
+                },
+                onBoundary: { [weak self] in
+                    self?.notifyListeners("letterBoundary", data: [:])
                 }
             )
             call.resolve()
@@ -420,6 +423,13 @@ final class SpeechListener {
     // Mid-stream per-letter emission (letters profile only); the pending `completion`
     // still fires exactly once, at the true end of the whole session.
     private var segmentHandler: ((String, Double, String) -> Void)?
+    /// CC-SPELLIT-MIC-FIX: "the player finished a letter". The VAD has computed
+    /// this all along — 0.35s of quiet after speech — and since F6.3 stopped it
+    /// closing the recognizer the signal was simply discarded. Reporting it is
+    /// what lets the accumulator tell a recognizer repeating itself from a
+    /// player saying a letter twice, which "book" and "letter" depend on,
+    /// WITHOUT guessing from a clock.
+    private var boundaryHandler: (() -> Void)?
     // Set by user stop: the NEXT finalization ends the session instead of cycling.
     private var stopping = false
     // Monotonic recognition-cycle id: callbacks from a superseded cycle's task are
@@ -464,8 +474,27 @@ final class SpeechListener {
     private var quietSecs = 0.0
     /// One-shot: the session ended itself, so it is not asked twice.
     private var selfEnded = false
-    /// D4, signed: no speech for 6s ends it; 30s is the hard cap.
+    /// D4 signs "no speech for 6 seconds". Eric, testing on device: spelling
+    /// "cat" takes longer than that. His own trace shows it -- eleven letters
+    /// heard and the session STILL ended on QUIET, so the timer was expiring
+    /// between letters while he was actively spelling. With about a second of
+    /// recognizer latency per letter, a player waits to see each one land before
+    /// saying the next, and a moment's thought about the next letter puts six
+    /// seconds of continuous quiet in the middle of a word.
+    ///
+    /// The timeout is really serving two different situations, and one number
+    /// cannot do both:
+    ///
+    ///   * NOTHING heard yet -- the mic is on and not working, or the player
+    ///     tapped by accident. Six seconds is right; this is F1.6's "didn't
+    ///     catch that" case, and waiting longer just leaves a hot mic.
+    ///   * Letters ARE landing -- the player is plainly using it, and a pause
+    ///     is thinking, not absence. Cutting them off mid-word is the failure.
+    ///
+    /// This is a DEVIATION from a signed number and needs Eric's sign-off. The
+    /// thinking budget is twelve seconds; the 30s cap still backstops both.
     private let noSpeechTimeout = 6.0
+    private let pauseTimeout = 12.0
     private let sessionCap = 30.0
     private var liveTick = 0
     /// Set from the web layer's dev flag; keeps transcripts out of a normal build.
@@ -485,6 +514,9 @@ final class SpeechListener {
         s += " avail=\(recognizer?.isAvailable ?? false) locale=\(recognizer?.locale.identifier ?? "?")"
         s += " onDev=\(onDev) peak=\(String(format: "%.4f", peakRMS))"
         s += " thr=\(String(format: "%.4f", speechRMSAdaptive)) spoke=\(everSawSpeech ? "y" : "n")"
+        // bnd=<silence>/<cap>: a healthy session is nearly all silence boundaries.
+        // All cap means the gate is too high and letters are being lumped together.
+        s += " bnd=\(bndSilence)/\(bndCap)"
         s += " rms=\(String(format: "%.3f", lastRMS))"
         if !lastErr.isEmpty { s += " err=\(lastErr)" }
         if diagVerbose && !lastRaw.isEmpty { s += " raw=\"\(lastRaw)\"" }
@@ -517,12 +549,33 @@ final class SpeechListener {
     private var noiseFloor: Float = 0
     private var noiseSamples = 0
     private var speechRMSAdaptive: Float = 0.010
-    private let noiseWindow = 2
+    private let noiseWindow = 4
     private let noiseMult: Float = 3.0
+    /// The adaptive threshold may never climb ABOVE the legacy fixed value.
+    /// 0.010 was chosen because it is low enough to catch a soft sibilant
+    /// ("ess"); a gate above it cannot be right for any room. Eric's mic10
+    /// trace measured thr=0.0166 — 66% over — and he had to scream at the
+    /// phone. Adaptation is allowed to make the gate MORE sensitive than the
+    /// fixed value, never less.
+    private let speechRMSCeiling: Float = 0.010
+    /// Per-buffer upward leak on the floor (~+0.5%/s at 85 ms buffers), so one
+    /// anomalously quiet buffer cannot pin the floor near zero for the whole
+    /// session while a genuinely noisier room can still raise it.
+    private let noiseLeak: Float = 1.0004
     private let speechRMS: Float = 0.010   // legacy fixed value, retained for reference (
                                            // low enough to catch soft sibilants: "ess")
     private let silenceCutoff = 0.35       // s of silence after a letter = boundary
-    private let maxSegment = 2.5           // s: force a boundary (safety; never hang)
+    // s: force a boundary (safety; never hang). 2.5 was long enough to swallow
+    // FOUR letters into one recognition cycle whenever the gate was
+    // miscalibrated. A spoken letter name is ~0.3-0.5 s ("double-u" the longest
+    // at ~0.7 s), so 1.4 cannot cut a letter in half, and it only ever fires
+    // when the silence VAD has already failed to.
+    private let maxSegment = 1.4
+    /// Boundaries by cause, so a device trace says whether the silence VAD is
+    /// working or whether the safety timer is carrying the whole session.
+    /// Plain Int increments — safe to touch from the tap.
+    private var bndSilence = 0
+    private var bndCap = 0
 
     /// RMS level of a mic buffer (mono) — the VAD speech/silence signal.
     /// Adapt the speech threshold to this room and this device, and push a LIVE
@@ -551,13 +604,30 @@ final class SpeechListener {
 
     private func observeLevel(_ level: Float, seconds: Double) {
         sessionSecs += seconds
+        // The opening window SEEDS the floor; it does not decide it for good.
+        //
+        // Four buffers is about 0.34 s, which is about the length of one spoken
+        // letter -- so a player who taps the mic and says "B" straight away
+        // calibrates the gate against their own voice. Taking the quietest of
+        // the four (rather than the loudest) reduced that but did not cure it:
+        // Eric's mic10 trace still came out at thr=0.0166 from a floor near
+        // 0.0055, the 0.35 s silence boundary then almost never fired, and
+        // several letters landed in ONE recognition cycle -- which is what a
+        // dropped letter and a misheard letter both look like from outside.
+        //
+        // So the floor keeps adapting for the whole session: downward to the
+        // quietest buffer seen (a real gap between letters corrects a poisoned
+        // opening window within about a second), with a slow upward leak so a
+        // single dropout cannot pin it at zero, and never below the fixed
+        // floor. The threshold is recomputed every buffer and CLAMPED into
+        // [speechRMSFloor, speechRMSCeiling] -- plain arithmetic, safe here.
         if noiseSamples < noiseWindow {
-            noiseFloor = max(noiseFloor, level)
+            noiseFloor = noiseSamples == 0 ? level : min(noiseFloor, level)
             noiseSamples += 1
-            if noiseSamples == noiseWindow {
-                speechRMSAdaptive = max(noiseFloor * noiseMult, speechRMSFloor)
-            }
+        } else {
+            noiseFloor = min(noiseFloor * noiseLeak, max(level, speechRMSFloor))
         }
+        speechRMSAdaptive = min(max(noiseFloor * noiseMult, speechRMSFloor), speechRMSCeiling)
         if level > speechRMSAdaptive {
             everSawSpeech = true
             quietSecs = 0
@@ -568,8 +638,11 @@ final class SpeechListener {
         // normally and letters already heard are committed rather than thrown
         // away -- F1.6 is explicit that they stay.
         if !selfEnded {
+            // Heard something? Then a pause is thinking. Heard nothing? Then
+            // the mic is on for no reason and six seconds is plenty.
+            let quietLimit = partialCount > 0 ? pauseTimeout : noSpeechTimeout
             let why = sessionSecs >= sessionCap ? "CAP"
-                : (quietSecs >= noSpeechTimeout ? "QUIET" : "")
+                : (quietSecs >= quietLimit ? "QUIET" : "")
             if !why.isEmpty {
                 selfEnded = true
                 let line = "MIC session-end \(why) secs=\(String(format: "%.1f", sessionSecs))"
@@ -592,9 +665,12 @@ final class SpeechListener {
             Self.mlog.info("buf \(self.tapCount, privacy: .public) rms=\(level, privacy: .public) appended=\(self.appendedCount, privacy: .public) req=\(self.reqCount, privacy: .public) partials=\(self.partialCount, privacy: .public)")
         }
         liveTick += 1
-        guard liveTick % 2 == 0, let h = diagHandler else { return }
+        // Once a second. Five a second crossed the bridge and rewrote the DOM
+        // while the player was trying to spell.
+        guard liveTick % 10 == 0, let h = diagHandler else { return }
         let line = "live rms=\(String(format: "%.4f", level)) peak=\(String(format: "%.4f", peakRMS))"
             + " thr=\(String(format: "%.4f", speechRMSAdaptive)) spoke=\(everSawSpeech ? "y" : "n")"
+            + " bnd=\(bndSilence)/\(bndCap)"
             + " buf=\(tapCount) appended=\(appendedCount) req=\(reqCount)"
             + " partials=\(partialCount) final=\(sawFinal ? "y" : "n")"
             + (lastErr.isEmpty ? "" : " err=\(lastErr)")
@@ -632,9 +708,11 @@ final class SpeechListener {
         onSegment: @escaping (String, Double, String) -> Void,
         onFinal: @escaping (String, Double, String) -> Void,
         onError: @escaping (ListenError) -> Void,
-        onDiag: @escaping (String) -> Void
+        onDiag: @escaping (String) -> Void,
+        onBoundary: @escaping () -> Void
     ) {
         diagHandler = onDiag
+        boundaryHandler = onBoundary
         continuous = true // letters: VAD auto-segments each letter (one-press)
         segmentHandler = onSegment
         self.serverUrl = serverUrl
@@ -811,6 +889,8 @@ final class SpeechListener {
         noiseSamples = 0
         speechRMSAdaptive = 0.010
         everSawSpeech = false
+        bndSilence = 0
+        bndCap = 0
         liveTick = 0
         audioEngine.stop()
         audioEngine.reset()
@@ -870,8 +950,13 @@ final class SpeechListener {
                 // DON'T reset the counters — if a whole letter lands in the gap, its
                 // boundary fires on the first buffer after the next cycle starts.
                 if !self.finalizing {
-                    let boundary = (self.sawSpeech && self.silenceSecs >= self.silenceCutoff)
-                        || self.segmentSecs >= self.maxSegment
+                    // The safety timer bounds a LETTER, so it only applies once something
+                    // has been said in this segment. Without that guard it fired every
+                    // 1.4 s into an open, silent microphone: Eric's trace showed nine
+                    // such boundaries during one four-letter word.
+                    let bySilence = self.sawSpeech && self.silenceSecs >= self.silenceCutoff
+                    let boundary = bySilence || (self.sawSpeech && self.segmentSecs >= self.maxSegment)
+                    if boundary { if bySilence { self.bndSilence += 1 } else { self.bndCap += 1 } }
                     if boundary {
                         self.sawSpeech = false
                         self.silenceSecs = 0
@@ -1024,6 +1109,11 @@ final class SpeechListener {
         // Legacy engine only, deliberately. The analyzer and server engines
         // segment differently and Eric's device is on legacy — one variable at
         // a time.
+        //
+        // The boundary is REPORTED, never acted on: no endAudio, no new cycle.
+        // One request still runs for the whole session (F6.3); the web layer
+        // just learns where one letter ended and the next began.
+        boundaryHandler?()
     }
 
     /// A cycle finished (letter finalized, error, or safety net). Mid-stream in
@@ -1109,6 +1199,8 @@ final class SpeechListener {
         noiseSamples = 0
         speechRMSAdaptive = 0.010
         everSawSpeech = false
+        bndSilence = 0
+        bndCap = 0
         liveTick = 0
         audioEngine.stop()
         audioEngine.reset()
@@ -1208,8 +1300,13 @@ final class SpeechListener {
                 }
                 self.segmentSecs += secs
                 if !self.finalizing {
-                    let boundary = (self.sawSpeech && self.silenceSecs >= self.silenceCutoff)
-                        || self.segmentSecs >= self.maxSegment
+                    // The safety timer bounds a LETTER, so it only applies once something
+                    // has been said in this segment. Without that guard it fired every
+                    // 1.4 s into an open, silent microphone: Eric's trace showed nine
+                    // such boundaries during one four-letter word.
+                    let bySilence = self.sawSpeech && self.silenceSecs >= self.silenceCutoff
+                    let boundary = bySilence || (self.sawSpeech && self.segmentSecs >= self.maxSegment)
+                    if boundary { if bySilence { self.bndSilence += 1 } else { self.bndCap += 1 } }
                     if boundary {
                         self.sawSpeech = false
                         self.silenceSecs = 0
@@ -1334,6 +1431,8 @@ final class SpeechListener {
         noiseSamples = 0
         speechRMSAdaptive = 0.010
         everSawSpeech = false
+        bndSilence = 0
+        bndCap = 0
         liveTick = 0
         audioEngine.stop()
         audioEngine.reset()
@@ -1362,8 +1461,13 @@ final class SpeechListener {
                     self.silenceSecs += secs
                 }
                 self.segmentSecs += secs
-                let boundary = (self.sawSpeech && self.silenceSecs >= self.silenceCutoff)
-                    || self.segmentSecs >= self.maxSegment
+                // The safety timer bounds a LETTER, so it only applies once something
+                // has been said in this segment. Without that guard it fired every
+                // 1.4 s into an open, silent microphone: Eric's trace showed nine
+                // such boundaries during one four-letter word.
+                let bySilence = self.sawSpeech && self.silenceSecs >= self.silenceCutoff
+                let boundary = bySilence || (self.sawSpeech && self.segmentSecs >= self.maxSegment)
+                if boundary { if bySilence { self.bndSilence += 1 } else { self.bndCap += 1 } }
                 if boundary {
                     self.sawSpeech = false
                     self.silenceSecs = 0

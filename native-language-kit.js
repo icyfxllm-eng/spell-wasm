@@ -391,7 +391,7 @@
      *   | "BUSY" | "AUDIO_ERROR" | "NO_SPEECH". Off iOS: fires "UNAVAILABLE".
      * @returns {void}
      */
-    startLetterCapture: function (opts, onToken, onFinal, onError) {
+    startLetterCapture: function (opts, onToken, onFinal, onError, onBoundary) {
       if (!available()) { if (onError) onError('UNAVAILABLE'); return; }
       var p = plugin();
       // Rapid re-tap: a previous capture's listeners may still be live (its end event
@@ -415,6 +415,10 @@
         }
       }
       sub('letterToken', function (d) { if (onToken) onToken((d && d.token) || ''); });
+      // CC-SPELLIT-MIC-FIX: the VAD saw 0.35s of quiet after speech, so the
+      // letter in flight is finished. Carries no payload — it is only a
+      // boundary, and the accumulator needs nothing else.
+      sub('letterBoundary', function () { if (onBoundary) onBoundary(); });
       sub('letterFinal', function (d) {
         // ONE-PRESS: `end:false` is a mid-stream letter (VAD segment) — the native
         // session keeps listening, so keep the listeners. `end:true` (or a payload
