@@ -416,6 +416,19 @@ pub fn interpret(lang: &str, transcript: &str) -> SpellOutcome {
 /// here, NEVER to resolve or disambiguate letters (G-A's anti-leak intent holds for
 /// letter mapping — G-INT-2). Matches a single token, not a joined one, so genuine
 /// single-letter ASR ("c a t") spelling the word is never mistaken for saying it.
+/// D3 — does this utterance void the attempt by SAYING the answer?
+///
+/// Pure, because the rule has to be exercised against what a fast speller's
+/// device actually sends, and the surrounding commit path is DOM-bound.
+///
+/// `accumulated` is what the partials parsed to during the segment. It is the
+/// only thing that separates a cheat from a brisk speller: both can produce a
+/// final transcript containing the target word, but only the speller got there
+/// by way of letter names.
+pub fn voids_attempt(transcript: &str, target: &str, accumulated: &str) -> bool {
+    accumulated.is_empty() && says_target(transcript, target)
+}
+
 pub fn says_target(transcript: &str, target: &str) -> bool {
     let t = norm_word(target);
     if t.is_empty() {
@@ -1456,7 +1469,25 @@ fn on_final(app: &App, lang: &str, transcript: &str, confidence: f32, alt: &str,
     CURRENT_UTTER.with(|u| u.borrow_mut().clear());
     // D3 (Feature 4): the utterance SAYS THE TARGET WORD (whole or embedded) → discard
     // it, nudge to spell it out. Zero letters, never a miss. BASE is unchanged. (D2)
-    if says_target(transcript, &target) {
+    // D3 — saying the ANSWER voids the attempt. Guarded by `accumulated`, and
+    // the guard is what makes it safe for someone spelling quickly.
+    //
+    // Spell fast and the gaps between letters shrink below the VAD's threshold,
+    // so a request holds several letters and the recognizer writes them as the
+    // word: spell b-o-o-k briskly and the transcript can come back "book". That
+    // is indistinguishable from saying the answer, by transcript alone -- and
+    // wiping a correct spelling and telling that player to "spell it letter by
+    // letter" is the worst thing this mode can do to them.
+    //
+    // What separates the two is what the PARTIALS parsed to. Someone who merely
+    // says the word produces partials that are not letter names, so nothing
+    // accumulates and they are still voided, exactly as D3 intends. Someone who
+    // spelled it accumulated letters on the way, so the word in the final
+    // transcript is the recognizer's rendering of their spelling, not a cheat.
+    // The whole-word branch below already draws the line in the same place, for
+    // the same stated reason: letters spelled during a segment are on screen and
+    // a stray word must not take them.
+    if voids_attempt(transcript, &target, &accumulated) {
         surface_set(app, &base);
         set_status("voiceSpell.spellItOut");
     } else if let Some(cmd) = edit_command(lang, transcript) {

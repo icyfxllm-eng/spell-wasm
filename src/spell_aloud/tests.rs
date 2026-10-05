@@ -1241,3 +1241,29 @@ fn a_merged_token_that_extends_the_letter_in_flight_is_recovered() {
     // damage; it does not remove it.
     assert_eq!(pe("en", "BO", "b"), "bo");
 }
+
+/// D3 voids an attempt for SAYING the answer — and must not mistake a fast
+/// speller for someone cheating.
+///
+/// Spell briskly and the gaps between letters fall below the VAD threshold, so
+/// one request holds several letters and the recognizer renders them as the
+/// word: "book" rather than "bee oh oh kay". By transcript alone that is
+/// identical to saying the answer. Wiping a correct spelling and telling that
+/// player to spell it letter by letter is the worst thing this mode can do.
+#[test]
+fn saying_the_answer_voids_it_but_spelling_it_quickly_does_not() {
+    use crate::spell_aloud::voids_attempt as voids;
+    // Said the answer: nothing accumulated, because "book" is not a letter name.
+    assert!(voids("book", "book", ""));
+    // Spelled it, and the recognizer rendered the spelling AS the word. The
+    // letters are on screen; they are not a cheat.
+    assert!(!voids("book", "book", "book"));
+    // Even a partial accumulation protects what is already on screen.
+    assert!(!voids("book", "book", "bo"));
+    // Embedded in a sentence still voids when nothing was spelled.
+    assert!(voids("the word is book", "book", ""));
+    // A different word never voids.
+    assert!(!voids("cat", "book", ""));
+    // No target, nothing to void.
+    assert!(!voids("book", "", ""));
+}
