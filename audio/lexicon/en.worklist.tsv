@@ -1,36 +1,25 @@
 word	ipa	provider	auditor	signed_at	# verdict	# heard	# triage (heuristic)
-adds		google			Fail	"ads" / "ads"	
 aims		google			Fail	"Ames" / "as"	
-am		google			Fail	"M" / "m"	guess: recognizer wrote a letter name
-an		google			Fail	"N" / "n"	guess: recognizer wrote a letter name
 and		google			Fail	"End." / ""	guess: onset heard as a different consonant
 axis		google			Fail	"Access" / "access"	
 ban		google			Fail	"then" / "then"	guess: onset heard as a different consonant
 bay		google			Fail	"They" / ""	guess: onset heard as a different consonant
 bear		google			Fail	"There." / "there"	guess: onset heard as a different consonant
 ben		google			Fail	"Then," / "then"	guess: onset heard as a different consonant
-chiaroscuro		google			Fail	"Kiara Skuro" / "Kiara skurow"	guess: rare word, may be outside the recognizer vocabulary
 chip		google			Fail	"Ship" / "ship"	guess: onset heard as a different consonant
 choose		google			Fail	"Shoes" / "shoes"	guess: onset heard as a different consonant
 chose		google			Fail	"Shows" / "shows"	guess: onset heard as a different consonant
 coat		google			Fail	"Code" / "code"	
-connoisseur		google			Fail	"Kana Sir" / "Kana sir"	guess: rare word, may be outside the recognizer vocabulary
 coup		google			Fail	"Who?" / "who"	guess: onset heard as a different consonant
 discussed		google			Fail	"Disgust" / "disgust"	
 dot		google			Fail	"." / "do"	
-ebullient		google			Fail	"Abolient" / "a byant"	guess: rare word, may be outside the recognizer vocabulary
 inchoate		google			Fail	"In Poet" / "in poet"	
 managed		google			Fail	"Manage." / "manage"	
 mnemonic		google			Fail	"Nemanik" / "pneumonic"	guess: onset heard as a different consonant
-ones		google			Fail	"1s" / "on"	guess: onset heard as a different consonant
-onomatopoeia		google			Fail	"Anamata Pia" / "anamata Pia"	guess: rare word, may be outside the recognizer vocabulary
 patients		google			Fail	"Patience" / "patience"	
 plays		google			Fail	"Please." / "please"	
 rate		google			Fail	"Great." / "great"	guess: onset heard as a different consonant
 rear		google			Fail	"ROOR-R-E-R" / "Maria"	guess: onset heard as a different consonant
 row		google			Fail	"Bro." / ""	guess: onset heard as a different consonant
 search		google			Fail	"Surge" / "surge"	
-sees		google			Fail	"C's" / "C"	guess: recognizer wrote a letter name
-tend		google			Fail	"10." / "10"	guess: number form, not a mishearing
 than		google			Fail	"Then," / "then"	
-whose		google			Fail	"Who's?" / "who's"	

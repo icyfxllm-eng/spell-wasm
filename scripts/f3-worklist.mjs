@@ -36,7 +36,9 @@ const heardBy = existsSync(TRANSCRIPTS) ? JSON.parse(readFileSync(TRANSCRIPTS, '
 /// as a guess to check, never as a verdict.
 function guessWhy(word, heard) {
   const h = heard.map((x) => String(x).toLowerCase().replace(/[^a-z0-9']/g, ''));
-  if (h.some((x) => /^\d+$/.test(x))) return 'guess: number form, not a mishearing';
+  // Not just a bare numeral: `ones` comes back as "1s" and `tend` as "10.",
+  // and an inflected or punctuated digit form is the same convention.
+  if (h.some((x) => /^\d+'?s?$/.test(x))) return 'guess: number form, not a mishearing';
   // A LETTER name is one letter, optionally possessive -- "M", "C's". Not
   // "as", which is a word; an earlier version matched it and mislabelled
   // `aims`.
@@ -55,6 +57,55 @@ function guessWhy(word, heard) {
   return '';
 }
 
+/// Is this a question an auditor can answer at all?
+///
+/// A signed IPA row changes how the clip is SPOKEN. It cannot change how a
+/// recognizer chooses to WRITE what it heard. When a machine renders `for` as
+/// "4", `am` as "M" or `patients` as "patience", the audio may be perfect --
+/// the transcript is a convention or a homophone, and no pronunciation an
+/// auditor writes will ever make that row pass F2. Those rows sat in the
+/// worklist looking like outstanding work, and the first thing an auditor
+/// would have done is waste an hour on them.
+///
+/// Splitting them out is triage, not a verdict, and the reason travels with
+/// the row so a person can overrule it.
+///
+/// cmudict is used ONLY to recognise that two spellings sound identical. It
+/// is never a source of IPA: F3 rows come from a native-speaker auditor and
+/// from nobody else, this script has never written one, and it still does not.
+const CMUDICT = 'tools/wordpipe/sources/cmudict.dict';
+let homophones = null;   // null = unavailable, so the test is skipped, not failed
+if (existsSync(CMUDICT)) {
+  homophones = new Map();
+  for (const line of readFileSync(CMUDICT, 'utf8').split('\n')) {
+    if (!line || line.startsWith(';;;')) continue;
+    const sp = line.indexOf(' ');
+    if (sp < 1) continue;
+    const w = line.slice(0, sp).replace(/\(\d+\)$/, '').toLowerCase();
+    const phones = line.slice(sp + 1).trim().replace(/\d/g, '');
+    if (!homophones.has(w)) homophones.set(w, new Set());
+    homophones.get(w).add(phones);
+  }
+}
+const soundsTheSame = (a, b) => {
+  if (!homophones) return false;
+  const A = homophones.get(a); const B = homophones.get(b);
+  if (!A || !B) return false;
+  for (const x of A) if (B.has(x)) return true;
+  return false;
+};
+
+function auditable(word, heard, guess) {
+  const h = heard.map((x) => String(x).toLowerCase().replace(/[^a-z0-9']/g, '')).filter(Boolean);
+  if (guess.includes('number form')) return [false, 'a transcription convention: the machine wrote a numeral'];
+  if (guess.includes('letter name')) return [false, 'a transcription convention: the machine wrote a letter name'];
+  if (guess.includes('outside the recognizer vocabulary')) return [false, 'vocabulary, not audio: the word is not one the recognizer knows'];
+  if (h.length && h.every((x) => x === word || soundsTheSame(word, x))) {
+    return [false, 'a true homophone by cmudict: the clip is right and the spelling is the machine\'s choice'];
+  }
+  return [true, ''];
+}
+
 const rows = [];
 for (const [k, e] of Object.entries(store.clips)) {
   const [l, word, variant] = k.split('|');
@@ -71,20 +122,37 @@ for (const [k, e] of Object.entries(store.clips)) {
   if (e.v === 'Weak' && !args['include-weak']) continue;
   if (e.v !== 'Fail' && e.v !== 'Weak') continue;
   const heard = heardBy[k] || e.heard || [];
-  rows.push({ word, variant, verdict: e.v, heard, guess: guessWhy(word, heard) });
+  const guess = guessWhy(word, heard);
+  const [ask, why] = auditable(word, heard, guess);
+  rows.push({ word, variant, verdict: e.v, heard, guess, ask, why });
 }
 rows.sort((a, b) => (a.verdict === b.verdict ? a.word.localeCompare(b.word) : a.verdict === 'Fail' ? -1 : 1));
 
+const ask = rows.filter((r) => r.ask);
+const skip = rows.filter((r) => !r.ask);
+
 const tsv = ['word\tipa\tprovider\tauditor\tsigned_at\t# verdict\t# heard\t# triage (heuristic)'];
-for (const r of rows) {
+for (const r of ask) {
   tsv.push(`${r.word}\t\tgoogle\t\t\t${r.verdict}\t${r.heard.map((h) => JSON.stringify(h)).join(' / ')}\t${r.guess}`);
 }
 const out = `audio/lexicon/${lang}.worklist.tsv`;
 writeFileSync(out, `${tsv.join('\n')}\n`);
 
-const fails = rows.filter((r) => r.verdict === 'Fail').length;
+// Deliberately NOT in audio/lexicon/: that directory is for files the server
+// loads, and this one must never be mistaken for a lexicon awaiting signature.
+const skipped = ['word\t# verdict\t# heard\t# why no IPA will fix this'];
+for (const r of skip) {
+  skipped.push(`${r.word}\t${r.verdict}\t${r.heard.map((h) => JSON.stringify(h)).join(' / ')}\t${r.why}`);
+}
+const skipOut = `audio_clarity/f3-not-auditable-${lang}.tsv`;
+writeFileSync(skipOut, `${skipped.join('\n')}\n`);
+
+const fails = ask.filter((r) => r.verdict === 'Fail').length;
 console.log(
-  `f3-worklist: ${rows.length} words for ${lang} (${fails} Fail, ${rows.length - fails} Weak) -> ${out}\n` +
+  `f3-worklist: ${rows.length} failing clip(s) for ${lang}; ${ask.length} are worth an auditor's time ` +
+  `(${fails} Fail, ${ask.length - fails} Weak) -> ${out}\n` +
+  `  ${skip.length} set aside as unfixable by any IPA -> ${skipOut}\n` +
+  (homophones ? '' : `  (cmudict absent at ${CMUDICT}, so the homophone test was SKIPPED and some\n   unfixable rows may still be in the worklist)\n`) +
   '  The ipa, auditor and signed_at columns are empty on purpose. An unsigned\n' +
   '  row is a guess about how a language sounds, and guesses are what broke the\n' +
   '  audio in the first place.',

@@ -1,0 +1,12 @@
+word	# verdict	# heard	# why no IPA will fix this
+adds	Fail	"ads" / "ads"	a true homophone by cmudict: the clip is right and the spelling is the machine's choice
+am	Fail	"M" / "m"	a transcription convention: the machine wrote a letter name
+an	Fail	"N" / "n"	a transcription convention: the machine wrote a letter name
+chiaroscuro	Fail	"Kiara Skuro" / "Kiara skurow"	vocabulary, not audio: the word is not one the recognizer knows
+connoisseur	Fail	"Kana Sir" / "Kana sir"	vocabulary, not audio: the word is not one the recognizer knows
+ebullient	Fail	"Abolient" / "a byant"	vocabulary, not audio: the word is not one the recognizer knows
+ones	Fail	"1s" / "on"	a transcription convention: the machine wrote a numeral
+onomatopoeia	Fail	"Anamata Pia" / "anamata Pia"	vocabulary, not audio: the word is not one the recognizer knows
+sees	Fail	"C's" / "C"	a transcription convention: the machine wrote a letter name
+tend	Fail	"10." / "10"	a transcription convention: the machine wrote a numeral
+whose	Fail	"Who's?" / "who's"	a true homophone by cmudict: the clip is right and the spelling is the machine's choice
