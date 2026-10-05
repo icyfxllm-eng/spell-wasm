@@ -1142,3 +1142,63 @@ fn a_cumulative_transcript_is_not_accumulated() {
         "cat"
     );
 }
+
+/// F4 — the confusable chip asks only when asking is worth it.
+///
+/// The nine English E-set letters are one plosive plus the same vowel, and a
+/// phone cannot reliably separate them: Eric's device returned P for a clearly
+/// spoken B twice running. When the recognizer is unsure AND its own second
+/// choice is a same-class letter, the player picks. Every other case commits
+/// unchanged, because a chip after a confident letter is just an obstacle.
+#[test]
+fn a_chip_is_offered_only_for_a_doubtful_confusable_letter() {
+    use crate::spell_aloud::{split_for_chip, CONFUSABLE_CONFIDENCE as T};
+    let low = T - 0.05;
+    let high = T + 0.05;
+
+    // Unsure, and the alternative is a same-class letter: ask.
+    assert_eq!(
+        split_for_chip("en", "b", low, "p"),
+        ("".to_string(), Some(("b".to_string(), "p".to_string())))
+    );
+    // The letters already settled this segment still commit; only the last is held.
+    assert_eq!(
+        split_for_chip("en", "cab", low, "p"),
+        ("ca".to_string(), Some(("b".to_string(), "p".to_string())))
+    );
+    // Confident: never interrupt, even inside the E-set.
+    assert_eq!(split_for_chip("en", "b", high, "p"), ("b".to_string(), None));
+    // Unsure, but the alternative is not confusable with it — no useful question
+    // to ask, so take the best guess rather than offer a nonsense pair.
+    assert_eq!(split_for_chip("en", "b", low, "w"), ("b".to_string(), None));
+    // Unsure with no alternative at all.
+    assert_eq!(split_for_chip("en", "b", low, ""), ("b".to_string(), None));
+    // The other English class.
+    assert_eq!(
+        split_for_chip("en", "m", low, "n"),
+        ("".to_string(), Some(("m".to_string(), "n".to_string())))
+    );
+    // A letter in no class at all is never chipped, however unsure.
+    assert_eq!(split_for_chip("en", "w", 0.0, "r"), ("w".to_string(), None));
+    // Nothing in, nothing out.
+    assert_eq!(split_for_chip("en", "", low, "p"), ("".to_string(), None));
+}
+
+/// A chip must never LOSE a letter. Whatever the player does next, the
+/// recognizer's best guess is what they would have had with no chip at all --
+/// so the feature can only improve on the old behaviour, never subtract.
+#[test]
+fn a_chip_never_costs_a_letter() {
+    use crate::spell_aloud::{split_for_chip, CONFUSABLE_CONFIDENCE as T};
+    for (letters, alt) in [("b", "p"), ("cab", "p"), ("m", "n"), ("book", "p")] {
+        let (committed, chip) = split_for_chip("en", letters, T - 0.1, alt);
+        let restored = match &chip {
+            Some((best, _)) => format!("{committed}{best}"),
+            None => committed.clone(),
+        };
+        assert_eq!(
+            restored, letters,
+            "committed + the chip's best guess must reconstruct the segment exactly"
+        );
+    }
+}

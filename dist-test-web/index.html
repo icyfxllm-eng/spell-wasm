@@ -920,11 +920,11 @@
   .ink-row{display:flex;gap:.5rem;justify-content:center;flex-wrap:wrap}
   .tone-row{display:flex;gap:.5rem;justify-content:center;margin:.5rem 0 .25rem}
   .tone-row[hidden]{display:none}
-  .tone-btn{min-width:2.75rem;min-height:2.75rem;border-radius:.6rem;
+  .tone-btn,.chip-btn{min-width:2.75rem;min-height:2.75rem;border-radius:.6rem;
     border:1px solid var(--line);background:var(--card);font-size:1.15rem;
     line-height:1;cursor:pointer}
   .tone-btn sub{font-size:.62em;opacity:.8;margin-inline-start:.1em}
-  .tone-btn:active{transform:translateY(1px)}
+  .tone-btn:active,.chip-btn:active{transform:translateY(1px)}
   .tone-btn#toneBtn1{color:#d0342c}
   .tone-btn#toneBtn2{color:#2e9e4f}
   .tone-btn#toneBtn3{color:#2f6fd0}
@@ -1799,13 +1799,35 @@
     <!-- Voice-spelling live status ("Listening…", "Spell it letter by letter!",
          "didn't catch that"). Empty unless a capture is in flight. -->
     <div class="voice-spell-status" id="voiceSpellStatus" aria-live="polite"></div>
+    <!-- CC-SPELL-ALOUD F4 — the confusable chip. B, C, D, E, G, P, T, V and Z
+         are one plosive plus the same vowel, and m/n differ by less; a phone
+         cannot reliably tell them apart, and Eric's device returned P for a
+         clearly spoken B repeatedly. When the recognizer is UNSURE and its own
+         second choice is a same-class letter, the player picks instead of the
+         app guessing.
+         No text, deliberately: the two letters ARE the question, so this works
+         in all fifteen languages without a string to translate, and each
+         button's accessible name is the letter it offers. It shares the tone
+         button's LOOK but not its class: the settings-truth gate collects
+         .tone-btn as a settings control, and a chip is not one. -->
+    <div class="tone-row" id="voiceSpellChips" hidden>
+      <button type="button" class="chip-btn" id="voiceSpellChipA"></button>
+      <button type="button" class="chip-btn" id="voiceSpellChipB"></button>
+    </div>
     <!-- CC-SPELLIT-MIC-FIX: the capture diagnostic had been sharing
          #voiceSpellStatus with the player-facing status, so "Listening… say the
          letters" wiped the readout at the exact moment it was needed. Its own
          element, aria-hidden because it is instrumentation and not for a player
          or a screen reader. Empty until the mic runs. -->
+    <!-- OVERLAID, never in flow. In flow it wrapped to two lines directly above
+         the keyboard and pushed "Check spelling" out of reach -- the button was
+         never disabled, it was buried, which survived every logic fix because it
+         was never a logic bug. Instrumentation must not move a player's
+         controls. pointer-events:none so it cannot swallow a tap either. -->
     <div class="voice-spell-status" id="voiceSpellDiag" aria-hidden="true"
-         style="font-size:10px;line-height:1.35;opacity:.75;word-break:break-word"></div>
+         style="position:fixed;inset-inline:0;top:env(safe-area-inset-top);z-index:9999;pointer-events:none;
+                font-size:10px;line-height:1.3;opacity:.8;word-break:break-word;
+                background:rgba(0,0,0,.72);padding:2px 6px"></div>
     <!-- One-time permission explainer if the mic is denied; typed input is never
          blocked, so this is dismissable and purely informational. -->
     <!-- Mic-everywhere server rung: the explicit internet-consent card. Shown

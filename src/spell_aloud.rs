@@ -513,10 +513,12 @@ fn clarifier_after<'a>(lex: &Lexicon, rest: &'a [String]) -> Option<(usize, &'a 
 /// English letters that rhyme (the "E-set") and m/n are acoustically confusable; a
 /// low-confidence letter in a class is worth confirming rather than guessing (F4).
 ///
-/// PROPOSED confidence threshold — below it, a confusable letter offers a two-choice
-/// chip. This is a CALIBRATION value (like the racing pace bands): it ships as a
-/// proposal and is tuned against the Phase-5 loopback suite; the final value needs
-/// Eric's sign-off before the confusable chips go live.
+/// Below this, a confusable letter offers a two-choice chip instead of a guess.
+///
+/// SIGNED OFF by Eric on 2026-10-04 at 0.55, after a device pass where a clearly
+/// spoken B came back as P twice running. It remains a CALIBRATION value: too
+/// high and the chip interrupts confident spelling, too low and the letters it
+/// exists for slip through. Tune it against real device traces, not by taste.
 pub const CONFUSABLE_CONFIDENCE: f32 = 0.55;
 
 fn confusable_group<'a>(lex: &'a Lexicon, letter: &str) -> Option<&'a [String]> {
@@ -654,6 +656,10 @@ thread_local! {
     /// depend on. Nothing else distinguishes them: the recognizer sends no
     /// boundary and both look like the identical parse arriving again.
     static LAST_PARTIAL_MS: Cell<f64> = const { Cell::new(0.0) };
+    /// The letter a confusable chip is offering as its BEST guess, held while
+    /// the player decides. It is not lost if they ignore the chip and simply
+    /// carry on spelling: the next finalized letter commits it first.
+    static PENDING_CHIP: RefCell<String> = const { RefCell::new(String::new()) };
     /// True from the FIRST mic tap until the user taps again to stop (or an error). While
     /// set, each finalized letter auto-restarts capture for the next — one press, spell
     /// the whole word letter by letter with a beat between letters (native VAD segments).
@@ -768,6 +774,85 @@ fn enter_play() {
     }
 }
 
+/// Split one segment's letters into what commits now and what (if anything) is
+/// held back for a chip.
+///
+/// Pure on purpose. The surrounding commit path is DOM-bound and no host test
+/// can reach it — which is exactly how `surface_set` came to call itself for ten
+/// builds without a single test noticing.
+pub fn split_for_chip(
+    lang: &str,
+    committed: &str,
+    confidence: f32,
+    alt: &str,
+) -> (String, Option<(String, String)>) {
+    let Some(last) = committed.chars().last() else {
+        return (String::new(), None);
+    };
+    let last = last.to_string();
+    let head: String = {
+        let mut it = committed.chars();
+        it.next_back();
+        it.collect()
+    };
+    let alt_opt = if alt.is_empty() { None } else { Some(alt) };
+    match decide_letter(lang, &last, confidence, alt_opt) {
+        LetterDecision::Accept(_) => (committed.to_string(), None),
+        LetterDecision::Chip(best, other) => (head, Some((best, other))),
+    }
+}
+
+/// Offer the two-choice confusable chip. `best` is the recognizer's own first
+/// choice and is what gets committed if the player ignores the chip and keeps
+/// spelling — never nothing, so a chip can only ever IMPROVE on the guess.
+fn show_chip(best: &str, alt: &str) {
+    PENDING_CHIP.with(|c| *c.borrow_mut() = best.to_string());
+    crate::dom::set_text("voiceSpellChipA", &best.to_uppercase());
+    crate::dom::set_text("voiceSpellChipB", &alt.to_uppercase());
+    crate::dom::set_hidden("voiceSpellChips", false);
+}
+
+fn hide_chip() {
+    PENDING_CHIP.with(|c| c.borrow_mut().clear());
+    crate::dom::set_hidden("voiceSpellChips", true);
+}
+
+/// Append one letter to the answer exactly as a finalized letter does, and keep
+/// BASE in step so the next letter lands after it.
+///
+/// Deliberately NOT routed through game::type_char: that marks a MANUAL EDIT,
+/// which tears the capture session down on the grounds that the player's hands
+/// won. A chip tap is part of the voice flow, not a hand overriding it.
+fn append_letter(app: &App, letter: &str) {
+    let base = BASE.with(|b| b.borrow().clone());
+    let updated = format!("{base}{letter}");
+    BASE.with(|b| *b.borrow_mut() = updated.clone());
+    surface_set(app, &updated);
+    crate::haptics::key_tap();
+}
+
+/// The player picked one of the two offered letters.
+fn pick_chip(app: &App, letter: &str) {
+    if PENDING_CHIP.with(|c| c.borrow().is_empty()) {
+        return; // no chip in flight; a stray tap commits nothing
+    }
+    hide_chip();
+    append_letter(app, letter);
+    set_status(if LISTENING.with(Cell::get) { "voiceSpell.listening" } else { "" });
+}
+
+/// A chip was showing and something else finalized. The player did not choose,
+/// so the recognizer's own best guess stands — the same letter they would have
+/// got with no chip at all.
+fn settle_pending_chip(app: &App) {
+    let pending = PENDING_CHIP.with(|c| c.borrow().clone());
+    if pending.is_empty() {
+        return;
+    }
+    hide_chip();
+    append_letter(app, &pending);
+}
+
 pub fn wire(app: &App) {
     if !enabled() {
         return;
@@ -778,6 +863,18 @@ pub fn wire(app: &App) {
     // next — so the whole word is spelled from a single tap. Tap again to stop.
     let a_tap = app.clone();
     crate::dom::on_click("voiceSpellMic", move || mic_tap(&a_tap));
+    // The two confusable chips. Their LABELS change per offer; which letter each
+    // one carries is read from the DOM at tap time rather than captured here.
+    let a_chip_a = app.clone();
+    crate::dom::on_click("voiceSpellChipA", move || {
+        let l = crate::dom::text("voiceSpellChipA").to_lowercase();
+        pick_chip(&a_chip_a, &l);
+    });
+    let a_chip_b = app.clone();
+    crate::dom::on_click("voiceSpellChipB", move || {
+        let l = crate::dom::text("voiceSpellChipB").to_lowercase();
+        pick_chip(&a_chip_b, &l);
+    });
     // A9 / Feature 8: "Type instead" — dismiss the permission-denied fallback. Typing
     // is captured by the window keydown, so dismissing lands the player in typed
     // standard mode HOLDING THE SAME WORD (the mode is standard-mode-with-voice; the
@@ -898,6 +995,9 @@ fn end_capture_ui() {
     CAPTURING.with(|c| c.set(false));
     LISTENING.with(|l| l.set(false));
     crate::dom::remove_class("voiceSpellMic", "listening");
+    // A chip belongs to a live capture. Left showing after the session ends it
+    // would hang over a finished round offering a letter nothing is waiting for.
+    hide_chip();
 }
 
 /// Mic TAP: toggle one-press continuous capture. First tap starts listening (and the
@@ -1023,6 +1123,8 @@ pub fn note_manual_edit() {
         MANUAL_EDIT.with(|m| m.set(true));
         SESSION_LETTERS.with(|s| s.borrow_mut().clear());
         CURRENT_UTTER.with(|u| u.borrow_mut().clear());
+        // The hands won, so a letter the chip was holding is void with the rest.
+        hide_chip();
         stop_session();
     }
 }
@@ -1120,10 +1222,18 @@ fn begin_session(app: &App) {
         server_url.as_deref(),
         move |transcript| on_partial(&a_partial, &lang_c, &transcript),
         {
-            // The input method appends to the field; it ignores confidence/alt.
+            // F4: confidence and the recognizer's own second choice decide whether
+            // the last letter is committed or offered as a chip.
             let lang_f = lang.clone();
-            move |transcript, _confidence, _alt, is_end| {
-                on_final(&a_final, &lang_f, &transcript, is_end)
+            move |transcript, confidence, alt, is_end| {
+                on_final(
+                    &a_final,
+                    &lang_f,
+                    &transcript,
+                    confidence as f32,
+                    alt.as_deref().unwrap_or(""),
+                    is_end,
+                )
             }
         },
         move |code| on_error(&a_error, &code),
@@ -1265,7 +1375,7 @@ fn on_partial(app: &App, lang: &str, transcript: &str) {
 /// listening between segments (`is_end == false`) — nothing to restart here; the
 /// session lands when `is_end` arrives (user stop, or an old-payload single-shot).
 /// Never counts an attempt; never submits.
-fn on_final(app: &App, lang: &str, transcript: &str, is_end: bool) {
+fn on_final(app: &App, lang: &str, transcript: &str, confidence: f32, alt: &str, is_end: bool) {
     if !CAPTURING.with(Cell::get) {
         return;
     }
@@ -1279,6 +1389,10 @@ fn on_final(app: &App, lang: &str, transcript: &str, is_end: bool) {
         return;
     }
     let still = !is_end && LISTENING.with(Cell::get);
+    // A chip was offered and the player kept spelling instead of choosing. Their
+    // silence is not a rejection of the letter, only of the question: commit the
+    // recognizer's best guess, which is what they would have had with no chip.
+    settle_pending_chip(app);
     let base = BASE.with(|b| b.borrow().clone());
     let target = TARGET.with(|t| t.borrow().clone());
     // Letters accumulated (monotonically) during this segment — the ones already shown.
@@ -1344,11 +1458,21 @@ fn on_final(app: &App, lang: &str, transcript: &str, is_end: bool) {
                 "voiceSpell.didntCatch"
             });
         } else {
-            let updated = format!("{}{}", base, committed);
+            // F4 — the confusable chip. The LAST letter of the segment is the one
+            // in question; anything before it was settled by earlier utterances.
+            // A confident letter, or one whose alternative is not a same-class
+            // letter, commits exactly as before: the chip never interrupts
+            // spelling the recognizer was sure about.
+            let (to_commit, chip) = split_for_chip(lang, &committed, confidence, alt);
+            let updated = format!("{}{}", base, to_commit);
             // Persist across segments so the next letter appends after this one.
             BASE.with(|b| *b.borrow_mut() = updated.clone());
             surface_set(app, &updated);
             crate::haptics::key_tap();
+            match chip {
+                Some((best, other)) => show_chip(&best, &other),
+                None => hide_chip(),
+            }
             set_status(if still { "voiceSpell.listening" } else { "" });
         }
     }
