@@ -5,10 +5,15 @@
 > a chat session since 2026-10-01. Nothing in it has been edited; the review
 > findings are kept separate, after the spec.
 >
-> **NOT BUILT. Census C1 still HALTs**, and will until the C2 fixture exists —
-> see "Where this is blocked" at the foot of this file. `docs/CC-SNAP-BOXES.md`
-> supplies the word boxes, but deliberately does not supply the pixel
-> statistics, because calibrating them needs the fixture only Eric can make.
+> **Scoring core built 2026-10-04; still not reachable, and C1 still HALTs.**
+> `src/snap_highlight.rs` implements F1/F2 scoring and F3 rejoin, with
+> `tests/snap_highlight_core.rs` covering I-H2, I-H3, I-H4 and I-H5. What the
+> C2 fixture blocks is CALIBRATION, not the arithmetic, so the arithmetic is
+> written and the thresholds are honest about not being calibrated:
+> `min_paper_px` is null in `config/snap-highlight.json`, and while it is null
+> the detector scores NOTHING, which is the Intent's own fall-back. Nothing is
+> wired to the review screen and no Swift shim exists.
+> **The 20-photo folder is still the single thing blocking Level 1.3.**
 
 ---
 
@@ -154,6 +159,28 @@ When this spec is incomplete, prefer: a false positive (one extra word shown as 
 ## Where this is blocked
 
 Added 2026-10-03. The spec above is unedited; this is the review record.
+
+**Built since this review, 2026-10-04.** `src/snap_highlight.rs` (F1/F2
+scoring, F3 rejoin), `config/snap-highlight.json` (the one source for every
+threshold), `scripts/snap-highlight-check.mjs` (in gate.sh and pre-push) and
+`tests/snap_highlight_core.rs` (14 tests incl. two proptests). Three notes on
+how it treats the findings below:
+
+- **D-H1 vs rows 5/6 is resolved in favour of D-H1.** The code thresholds
+  `frac_sat` — background pixels after text masking — because that is what the
+  signed-style decision says. Rows 5 and 6 describe box AREA, which for a bold
+  word is a different number. The acceptance rows need rewording, not the code.
+- **I-H1 vs F3 is left open, and nothing depends on it.** The core does not
+  decide whether a HyphenJoin is an exception to "byte-identical to v1"; it
+  just reports the join with both originals.
+- **D-H8's overlay is NOT built.** It collides with `seam-absence-check.mjs`
+  and the review record says that is Eric's call. `frac_sat` is computed and
+  returned regardless, so the overlay is a UI job when he rules.
+
+The histogram-across-the-bridge choice is new and is argued in the module's
+own header: if Swift applied ΔS, every re-tune after the fixture would need an
+app build and the two copies would drift. Swift sends the distribution; every
+threshold stays on the Rust side in one file.
 
 **C1 HALTs, and C2 is why it stays halted.** `docs/CC-SNAP-BOXES.md` now
 delivers word boxes to the core, so half of C1 is satisfied. The other half —

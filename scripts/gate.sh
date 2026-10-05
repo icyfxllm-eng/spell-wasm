@@ -99,6 +99,10 @@ node scripts/ru-identity-check.mjs --selftest || { echo "GATE FAIL: ru identity 
 echo "== gate: one gap threshold, one source (CC-SNAP-BOXES I-B6)"
 node scripts/snap-geometry-check.mjs || { echo "GATE FAIL: snap geometry"; exit 1; }
 
+echo "== gate: one source for the highlight thresholds, honestly uncalibrated (CC-SNAP-HIGHLIGHT)"
+node scripts/snap-highlight-check.mjs || { echo "GATE FAIL: snap highlight config"; exit 1; }
+node scripts/snap-highlight-check.mjs --selftest || { echo "GATE FAIL: snap-highlight selftest"; exit 1; }
+
 echo "== gate: every pronunciation lexicon row actually loads (CC-AUDIO-CLARITY F3)"
 node scripts/lexicon-load-check.mjs || { echo "GATE FAIL: lexicon rows that do not load"; exit 1; }
 node scripts/lexicon-load-check.mjs --selftest || { echo "GATE FAIL: lexicon-load selftest"; exit 1; }
