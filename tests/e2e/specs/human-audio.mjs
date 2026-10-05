@@ -49,15 +49,52 @@ const humanPlays = (page) =>
 // therefore guarantees any play has already been logged -- which is the
 // ordering the assertions below quietly depended on and never had.
 async function serveWord(page) {
-  // CLEAR the note first. It is not reset between playbacks, so a word the app
-  // played on load leaves it set and "wait until non-empty" is satisfied by
-  // stale state before this click's chain has run at all. That mistake was
-  // made here and caught by the I6 test, which then saw no /api/speak request
-  // because the assertion ran before the router reached the server source.
+  // Three steps, and the first one is the subtle one.
+  //
+  // SETTLE FIRST -- and read the next paragraph before trusting this.
+  //
+  // The app plays a word on load, and that chain writes the note when it
+  // finishes. Clearing the note while that write is still in flight lets it
+  // land a moment later and satisfy "wait until non-empty" before this
+  // click's chain has run at all: the same stale-note bug as below, entered
+  // from the other side. Waiting for the page to go quiet first closes that
+  // window, because once the load-time playback has written its note there
+  // is no pending write left to mistake for ours.
+  //
+  // HONESTY NOTE. That race is real in the code, but it is NOT established
+  // as the cause of the failure that prompted this. D2 failed on one gate
+  // run (app and site both) with an empty play log while two other test
+  // suites had the CPU, and passed three times alone on the same commit --
+  // and an attempt to reproduce it under synthetic load failed: the OLD
+  // helper passed four for four. So this is a mitigation for a theory that
+  // fits the symptom, not a fix with a reproduction behind it. If D2 flakes
+  // again, this comment is the first thing to disbelieve: capture the note's
+  // value and the play log at the moment of failure rather than assuming
+  // this closed it.
+  //
+  // It is tolerant because there may be nothing pending.
+  await page
+    .waitForFunction(
+      () => {
+        const n = document.getElementById('audioSourceNote');
+        return !!n && n.textContent.trim() !== '';
+      },
+      null,
+      { timeout: 10000 },
+    )
+    .catch(() => {});
+
+  // CLEAR the note. It is not reset between playbacks, so a note left set by
+  // the playback above would satisfy the wait below before this click's chain
+  // has run. That mistake was made here and caught by the I6 test, which saw
+  // no /api/speak request because the assertion ran before the router reached
+  // the server source.
   await page.evaluate(() => {
     const n = document.getElementById('audioSourceNote');
     if (n) n.textContent = '';
   });
+
+  // Now the note can only be written by the chain this click starts.
   await page.click('#orbWrap');
   await page.waitForFunction(
     () => {
