@@ -414,12 +414,54 @@
           handles.push(pr);
         }
       }
-      sub('letterToken', function (d) { if (onToken) onToken((d && d.token) || ''); });
+      sub('letterToken', function (d) { if (onToken) onToken((d && d.token) || ''); trail('T', d && d.token); });
+      // What the RECOGNIZER actually returned, as a trail of partials, rendered
+      // from JS on the MAIN thread. The native diag line is assembled inside the
+      // audio tap callback, where reading the transcript would race the
+      // recognizer's own writes -- and where instrumentation has already stalled
+      // capture once (build 266). Behind the dev door, because a transcript is
+      // the player's speech (D9).
+      function trail(kind, text) {
+        if (!devDoorOpen()) return;
+        var t = window.__tokTrail || (window.__tokTrail = []);
+        // What the player SEES after this event. The question the trail has to
+        // answer is which event doubled a letter, and that is only visible by
+        // reading the box after each one.
+        var box = '';
+        try { box = (document.getElementById('spellbox') || {}).textContent || ''; } catch (e) {}
+        box = box.replace(/\s+/g, '');
+        var label = kind === 'BND' ? 'B' : kind + ':' + text;
+        var last = t[t.length - 1];
+        // Boundaries fire on a 1.4s timer and flooded all eight slots, pushing
+        // the partials -- the actual evidence -- off the end. Collapse a run.
+        if (kind === 'BND' && last && last.n && last.label === 'B' && last.box === box) {
+          last.n += 1;
+          render(t);
+          return;
+        }
+        t.push({ label: label, box: box, n: 1 });
+        if (t.length > 10) t.shift();
+        render(t);
+      }
+      function render(t) {
+        var el = document.getElementById('voiceSpellDiag');
+        if (!el) return;
+        var parts = t.map(function (e) {
+          return e.label + (e.n > 1 ? 'x' + e.n : '') + '>' + (e.box || '-');
+        });
+        el.textContent = (window.__lastLetterDiag ? 'diag: ' + window.__lastLetterDiag + '\n' : '')
+          + parts.join('  ');
+      }
+      function devDoorOpen() {
+        try { return localStorage.getItem('spell_dev_entitlements') === 'on'; }
+        catch (e) { return false; }
+      }
       // CC-SPELLIT-MIC-FIX: the VAD saw 0.35s of quiet after speech, so the
       // letter in flight is finished. Carries no payload — it is only a
       // boundary, and the accumulator needs nothing else.
-      sub('letterBoundary', function () { if (onBoundary) onBoundary(); });
+      sub('letterBoundary', function () { if (onBoundary) onBoundary(); trail('BND', '|'); });
       sub('letterFinal', function (d) {
+        trail('F', ((d && d.token) || '') + (d && d.end ? '/end' : ''));
         // ONE-PRESS: `end:false` is a mid-stream letter (VAD segment) — the native
         // session keeps listening, so keep the listeners. `end:true` (or a payload
         // without `end`, for safety) is the true end of the capture session.
@@ -443,7 +485,10 @@
         // was overwriting this the moment listening began.
         var el = document.getElementById('voiceSpellDiag')
               || document.getElementById('voiceSpellStatus');
-        if (el) el.textContent = 'diag: ' + d.info;
+        if (el) {
+          var t = window.__tokTrail;
+          if (t && t.length) { render(t); } else { el.textContent = 'diag: ' + d.info; }
+        }
         if (window.__refreshNativeStatus) window.__refreshNativeStatus();
       });
       p.startLetterCapture({

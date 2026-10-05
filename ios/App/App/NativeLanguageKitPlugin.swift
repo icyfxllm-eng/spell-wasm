@@ -576,6 +576,21 @@ final class SpeechListener {
     /// Plain Int increments — safe to touch from the tap.
     private var bndSilence = 0
     private var bndCap = 0
+    /// Why the last boundary fired. A SILENCE boundary is a measurement: the
+    /// VAD heard speech and then 0.35 s of quiet, so a letter really ended. The
+    /// cap is a TIMER -- it fires precisely when the VAD has failed to detect
+    /// anything, and Eric's trace shows it firing twelve times in seventeen
+    /// seconds while he spelled four letters. Telling the accumulator that a
+    /// letter ended, twelve times, is how letters get banked twice.
+    private var boundaryBySilence = false
+    /// Audio seconds fed to the CURRENT request. On-device recognition needs
+    /// context: build 265 closed a request after every 0.35 s pause and came
+    /// back with partials=0 on loud, clean audio -- every cycle was killed
+    /// before it could produce anything. A request is therefore only closed at
+    /// a boundary once it has had a letter's worth of audio; below that the
+    /// boundary is merely reported, as it was before.
+    private var reqSecs = 0.0
+    private let minRequestSecs = 0.7
 
     /// RMS level of a mic buffer (mono) — the VAD speech/silence signal.
     /// Adapt the speech threshold to this room and this device, and push a LIVE
@@ -604,6 +619,7 @@ final class SpeechListener {
 
     private func observeLevel(_ level: Float, seconds: Double) {
         sessionSecs += seconds
+        reqSecs += seconds
         // The opening window SEEDS the floor; it does not decide it for good.
         //
         // Four buffers is about 0.34 s, which is about the length of one spoken
@@ -956,7 +972,10 @@ final class SpeechListener {
                     // such boundaries during one four-letter word.
                     let bySilence = self.sawSpeech && self.silenceSecs >= self.silenceCutoff
                     let boundary = bySilence || (self.sawSpeech && self.segmentSecs >= self.maxSegment)
-                    if boundary { if bySilence { self.bndSilence += 1 } else { self.bndCap += 1 } }
+                    if boundary {
+                        if bySilence { self.bndSilence += 1 } else { self.bndCap += 1 }
+                        self.boundaryBySilence = bySilence
+                    }
                     if boundary {
                         self.sawSpeech = false
                         self.silenceSecs = 0
@@ -1021,6 +1040,7 @@ final class SpeechListener {
         }
         request = req
         best = ""
+        reqSecs = 0
         // Replay audio captured while the PREVIOUS segment was finalizing — a letter
         // spoken during that gap reaches this cycle instead of being dropped.
         pendingLock.lock()
@@ -1113,7 +1133,40 @@ final class SpeechListener {
         // The boundary is REPORTED, never acted on: no endAudio, no new cycle.
         // One request still runs for the whole session (F6.3); the web layer
         // just learns where one letter ended and the next began.
-        boundaryHandler?()
+        // ONLY a silence boundary acts. The cap is a safety timer whose whole
+        // job is to run when detection failed, so it carries no evidence that a
+        // letter ended -- acting on it made the accumulator bank the same letter
+        // again and again (boookk).
+        guard boundaryBySilence else { return }
+
+        // ONE REQUEST PER LETTER, restored deliberately and narrowly.
+        //
+        // F6.3 (above) was right that closing a request after every 0.35 s pause
+        // starves the recognizer. But leaving ONE request open for the whole
+        // session has its own failure, and Eric's trace shows it plainly: the
+        // recognizer's guesses straddle letter boundaries. Spelling "book" it
+        // returned "BO" for the first letter and "OK" for the last, because a
+        // single request is transcribing a continuous stream of speech, not four
+        // separate letters. "OK" is not a letter name, so the K was discarded and
+        // the word came out "boo". Expanding "OK" into O+K is not available as a
+        // fix: the same trace has "BO", which is the SAME shape but is a revision
+        // of one letter, and expanding both yields "boook".
+        //
+        // So the request is closed here, at a MEASURED silence boundary -- never
+        // on the safety timer, and never before the request has had
+        // minRequestSecs of audio, which is what keeps build 265 from returning.
+        // The engine, tap and audio session all stay live; cycleEnded() starts
+        // the next request and replays anything captured during the gap.
+        guard reqSecs >= minRequestSecs else {
+            // Too little audio to recognize. Report the boundary instead, so the
+            // accumulator still learns where the letter ended.
+            boundaryHandler?()
+            return
+        }
+        pendingLock.lock()
+        finalizing = true
+        pendingLock.unlock()
+        request?.endAudio()
     }
 
     /// A cycle finished (letter finalized, error, or safety net). Mid-stream in
@@ -1306,7 +1359,10 @@ final class SpeechListener {
                     // such boundaries during one four-letter word.
                     let bySilence = self.sawSpeech && self.silenceSecs >= self.silenceCutoff
                     let boundary = bySilence || (self.sawSpeech && self.segmentSecs >= self.maxSegment)
-                    if boundary { if bySilence { self.bndSilence += 1 } else { self.bndCap += 1 } }
+                    if boundary {
+                        if bySilence { self.bndSilence += 1 } else { self.bndCap += 1 }
+                        self.boundaryBySilence = bySilence
+                    }
                     if boundary {
                         self.sawSpeech = false
                         self.silenceSecs = 0
@@ -1467,7 +1523,10 @@ final class SpeechListener {
                 // such boundaries during one four-letter word.
                 let bySilence = self.sawSpeech && self.silenceSecs >= self.silenceCutoff
                 let boundary = bySilence || (self.sawSpeech && self.segmentSecs >= self.maxSegment)
-                if boundary { if bySilence { self.bndSilence += 1 } else { self.bndCap += 1 } }
+                if boundary {
+                        if bySilence { self.bndSilence += 1 } else { self.bndCap += 1 }
+                        self.boundaryBySilence = bySilence
+                    }
                 if boundary {
                     self.sawSpeech = false
                     self.silenceSecs = 0

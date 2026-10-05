@@ -79,6 +79,25 @@ export function check(src) {
     bad.push('noiseFloor is seeded from the opening window with no else branch — a window polluted by speech would poison the whole session');
   }
 
+  // Closing the recognition request per letter is what keeps the recognizer
+  // from straddling letter boundaries ("OK" for a spoken K). But closing it too
+  // eagerly is build 265: partials=0 on loud, clean audio, because every cycle
+  // was killed before it could produce a result. Both halves are load-bearing.
+  if (/endAudio\(\)/.test(src)) {
+    const minReq = num(src, 'minRequestSecs');
+    if (minReq === null) {
+      bad.push('the request is closed with no minRequestSecs guard — this is build 265, where every cycle was killed before it could recognize anything');
+    } else if (minReq < 0.5) {
+      bad.push(`minRequestSecs ${minReq}s is too little context for on-device recognition (keep it >= 0.5)`);
+    }
+    if (!/guard reqSecs >= minRequestSecs/.test(src)) {
+      bad.push('minRequestSecs exists but nothing guards on it — the request can still be closed with too little audio');
+    }
+    if (!/guard boundaryBySilence else/.test(src)) {
+      bad.push('the request is closed without first requiring a SILENCE boundary — the safety timer would close it too');
+    }
+  }
+
   // The safety boundary must stay short enough that it cannot swallow letters.
   const maxSeg = num(src, 'maxSegment');
   if (maxSeg === null) bad.push('maxSegment is gone — nothing forces a boundary when the VAD fails');
@@ -93,6 +112,10 @@ const GOOD = `
     private let speechRMS: Float = 0.010
     private var speechRMSAdaptive: Float = 0.010
     private let maxSegment = 1.4
+    private let minRequestSecs = 0.7
+        guard boundaryBySilence else { return }
+        guard reqSecs >= minRequestSecs else { boundaryHandler?(); return }
+        request?.endAudio()
         if noiseSamples < noiseWindow {
             noiseFloor = noiseSamples == 0 ? level : min(noiseFloor, level)
             noiseSamples += 1
@@ -114,6 +137,10 @@ if (process.argv.includes('--selftest')) {
     long_safety_boundary: { r: check(GOOD.replace('maxSegment = 1.4', 'maxSegment = 2.5')), want: /swallow several letters/ },
     reset_to_literal_is_fine: { r: check(GOOD + '\n        speechRMSAdaptive = 0.010\n'), want: null },
     reset_above_ceiling: { r: check(GOOD + '\n        speechRMSAdaptive = 0.030\n'), want: /above the ceiling/ },
+    close_without_min_guard: { r: check(GOOD.replace(/ *private let minRequestSecs = 0\.7\n/, '')), want: /this is build 265/ },
+    close_with_too_little_context: { r: check(GOOD.replace('minRequestSecs = 0.7', 'minRequestSecs = 0.2')), want: /too little context/ },
+    close_on_the_safety_timer: { r: check(GOOD.replace(/ *guard boundaryBySilence else \{ return \}\n/, '')), want: /requiring a SILENCE boundary/ },
+    guard_constant_but_unused: { r: check(GOOD.replace('guard reqSecs >= minRequestSecs else { boundaryHandler?(); return }', 'if true { }')), want: /nothing guards on it/ },
     adaptive_removed: { r: check(GOOD.replace(/speechRMSAdaptive.*\n/g, '')), want: /never assigned/ },
   };
   let failed = 0;

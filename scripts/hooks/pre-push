@@ -42,9 +42,7 @@ zh-grading-path-check css-logical-check entitlement-map-check"
 
 # Checks that also expose a --selftest. A neutered check is worse than no check,
 # because it reports OK, so the selftests ride along here too.
-SELFTESTS="audio-router-check def-pool-check letter-lexicon-check voice-spell-deps-check human-audio-check pinyin-display-check css-logical-check
-modes-check ru-stress-ingest-check settings-truth-check ru-identity-check
-spell-jr-name-check tier-list-check wordpic-export-parity dom-id-live-check i18n-translated-check snap-clean-one-impl-check e2e-sleep-ratchet lexicon-load-check"
+SELFTESTS="audio-router-check def-pool-check letter-lexicon-check voice-spell-deps-check human-audio-check pinyin-display-check css-logical-check modes-check ru-stress-ingest-check settings-truth-check ru-identity-check spell-jr-name-check tier-list-check wordpic-export-parity dom-id-live-check i18n-translated-check snap-clean-one-impl-check e2e-sleep-ratchet lexicon-load-check mic-gate-check"
 
 failed=""
 for c in $CHECKS; do
