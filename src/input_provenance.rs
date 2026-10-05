@@ -87,6 +87,35 @@ mod tests {
         assert!(!is_dictated("t1", 5));
     }
 
+    /// The Spell It MIC is not dictation, and the submit path must not treat
+    /// it as such. Eric hit this on four device passes in a row: the letters
+    /// landed in the box and Check Spelling then silently refused, because
+    /// voice-spelled text reached the field with NO provenance record at all
+    /// and `is_dictated`'s `None` arm reads that as "appeared without a
+    /// keystroke". `game::set_answer` now records one insertion per character,
+    /// exactly as the on-screen keyboard would. This pins that contract: if
+    /// anyone writes the answer field without recording it, this test fails
+    /// instead of the player's Check button.
+    #[test]
+    fn voice_spelled_letters_can_be_submitted() {
+        // What game::set_answer does for "cat" spoken into the mic.
+        fresh("answerField");
+        reset("answerField");
+        for _ in 0.."cat".chars().count() {
+            note_insert("answerField", "insertText", 1);
+        }
+        assert!(
+            !is_dictated("answerField", 3),
+            "voice-spelled letters must reach the Check button"
+        );
+
+        // And the guard still bites on the thing it exists for: a whole word
+        // dropped in by the system keyboard's dictation mic.
+        fresh("answerField");
+        note_insert("answerField", "insertFromDictation", 3);
+        assert!(is_dictated("answerField", 3));
+    }
+
     #[test]
     fn dictated_chunk_is_rejected() {
         fresh("t2");

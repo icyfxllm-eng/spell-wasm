@@ -600,6 +600,10 @@ pub fn tap_tone(app: &App, tone: u8) {
 }
 
 pub fn type_char(app: &App, ch: char) {
+    // CC-SPELLIT-MIC-FIX: hands beat voice. A live voice session rewrites the
+    // box from its own accumulator on every partial, so without this a deleted
+    // letter reappears and a corrected answer will not stay put.
+    crate::spell_aloud::note_manual_edit();
     // F7: Spell Picture borrows this same keyboard (per-language layouts,
     // Korean composition, Vietnamese tones) instead of a system field.
     // I3: the borrowed surface registers itself; shared code does not know
@@ -634,6 +638,10 @@ pub fn emit_key(app: &App, ch: char) {
 /// Korean: feed one jamo through the Hangul composition automaton and replace
 /// the answer with the recomposed buffer.
 pub fn type_jamo(app: &App, jamo: char) {
+    // CC-SPELLIT-MIC-FIX: hands beat voice. A live voice session rewrites the
+    // box from its own accumulator on every partial, so without this a deleted
+    // letter reappears and a corrected answer will not stay put.
+    crate::spell_aloud::note_manual_edit();
     if let Some(f) = crate::surface_hooks::get().type_jamo {
         if crate::spell_aloud::surface() != crate::spell_aloud::Surface::Game {
             f(jamo);
@@ -686,11 +694,34 @@ pub fn set_answer(app: &App, text: &str) {
         return;
     }
     app.borrow_mut().answer = text.to_string();
+    // CC-SPELLIT-MIC-FIX: declare these letters as KEYSTROKES.
+    //
+    // submit_guess refuses a dictated answer (CC-WORDPICTURE v7 F7 / D8: a
+    // spoken whole word is never a spelling), and is_dictated spots dictation by
+    // finding more characters than keystrokes. Voice spelling wrote the answer
+    // straight through here and recorded nothing, so a perfectly spelled word
+    // looked like four letters from zero keys -- identical to system dictation
+    // -- and Check returned SILENTLY. Eric spelled correct answers and the
+    // button did nothing, through four wrong theories of mine.
+    //
+    // Spell It Out Loud is an input METHOD, not dictation: its I1 says the
+    // output is byte-for-byte what typing those letters produces, so it should
+    // account for them the same way. One single-character insert per letter.
+    // A system-dictated whole word still arrives with no keystrokes at all and
+    // is still refused, which is the protection that guard is for.
+    crate::input_provenance::reset("answerField");
+    for _ in 0..text.chars().count() {
+        crate::input_provenance::note_insert("answerField", "insertText", 1);
+    }
     render_letters(app, false);
 }
 
 /// Delete the last character of the answer.
 pub fn backspace(app: &App) {
+    // CC-SPELLIT-MIC-FIX: hands beat voice. A live voice session rewrites the
+    // box from its own accumulator on every partial, so without this a deleted
+    // letter reappears and a corrected answer will not stay put.
+    crate::spell_aloud::note_manual_edit();
     if let Some(f) = crate::surface_hooks::get().backspace {
         if crate::spell_aloud::surface() != crate::spell_aloud::Surface::Game {
             f();
