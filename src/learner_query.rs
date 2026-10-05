@@ -18,9 +18,13 @@
 //! **Read-only.** Nothing here writes. Writes stay on the engine's own
 //! doors in `learner.rs` / `misses.rs` (record, placement, reset).
 //!
-//! **Until R2.** The due queue and the at-risk set read the Leitner misses
-//! queue (`misses.rs`), as `reports::rematch_set` did. R2 swaps that for
-//! per-word FSRS behind these same methods; consumers don't change.
+//! **Since R2 (2026-09-19).** The due queue and the at-risk set read the
+//! misses queue (`misses.rs`), as `reports::rematch_set` did — but that
+//! queue is no longer Leitner. `review.rs` is R2's single rule (I5) and
+//! schedules it with FSRS-4.5; `misses.rs` only stores the due time that
+//! rule returns. Consumers did not change, which is why this comment went
+//! on saying "until R2" after R2 had landed, and why a reader checking
+//! L0's status here would have got the wrong answer.
 
 use std::cell::RefCell;
 
