@@ -204,13 +204,29 @@ pub fn min_pool(lang: &str) -> usize {
         // Reduced to what the bank can actually sustain, each a few below its
         // measured ceiling so a bank edit does not make the mode ungenerable
         // overnight. Ceilings were vi 17, zh 15, ja 15, ru 12, pl 10.
-        "vi" => 15,
         "ja" | "zh" => 12,
         "ru" => 10,
         "pl" => 8,
         // hi's ceiling is FIVE. A five-word puzzle is not a puzzle; hi is
         // flagged not-ready rather than shipped degraded — see forge_ready.
         "hi" => 4,
+        // vi's ceiling is ZERO, re-measured 2026-10-06 after the bank was
+        // cleaned: there is no gate, not even four, that yields a puzzle every
+        // day of a year.
+        //
+        // Its old ceiling of 17 was borrowed. The vi bank was 73% not
+        // Vietnamese — English, brand names, place names — and those words
+        // share the bare Latin alphabet freely, which is exactly what a
+        // honeycomb needs. Vietnamese words are short syllables carrying tone
+        // and vowel-quality marks, so few of them fit inside any seven
+        // characters. The Vietnamese Daily was generable because it was being
+        // built out of English.
+        //
+        // So vi joins hi: not offered, rather than offered thin. The fix is a
+        // real Vietnamese corpus, not a lower gate — `junior_min_pool` already
+        // recorded that vi "has no Easy + Medium pangram at all", which was the
+        // same finding reaching the junior board first.
+        "vi" => 0,
         _ => 20,
     }
 }
@@ -478,7 +494,7 @@ mod tests {
     /// makes; hi is excluded because it cannot keep it.
     #[test]
     fn every_ready_language_generates_a_full_year() {
-        for lang in ["en","es","fr","de","pt","pl","vi","ko","ja","fil","ru","sw","ar","zh"] {
+        for lang in ["en","es","fr","de","pt","pl","ko","ja","fil","ru","sw","ar","zh"] {
             assert!(forge_ready(lang), "{lang} should be offered");
             for day in [0u64, 90, 180, 364] {
                 assert!(
@@ -488,6 +504,10 @@ mod tests {
             }
         }
         assert!(!forge_ready("hi"), "hi cannot sustain a playable pool and must not be offered");
+        // vi measures a ceiling of ZERO once the bank holds only Vietnamese: no
+        // gate at all yields a puzzle every day. It was generable before only
+        // because 73% of its bank was English.
+        assert!(!forge_ready("vi"), "vi cannot sustain a playable pool and must not be offered");
     }
 
     /// F3's generability report: of 365 seeds (a year of Daily Forges), how
