@@ -9,7 +9,7 @@
 // long-press, so F3 took its only entry point; per Eric (2026-08-10) the
 // tile long-press is now contextual — a tile with a live run opens
 // housekeeping, anything else stars.
-import { openApp, assert, assertEq } from '../harness.mjs';
+import { openApp, assert, assertEq, clickSettled } from '../harness.mjs';
 import { pickTile } from './finale.mjs';
 
 async function openPicker(page) {
@@ -34,16 +34,15 @@ async function startAndLeave(page, pic, words) {
   await page.waitForSelector('#wpPlay.show', { timeout: 5000 });
   await page.waitForTimeout(500);
   for (let i = 0; i < 6 && (await page.$('#wpHow.show')); i++) {
-    await page.click('#wpHowNext');
-    await page.waitForTimeout(150);
+    await clickSettled(page, '#wpHowNext');
   }
+  await page.waitForFunction(() => !!window.__spelltest.picWord(), null, { timeout: 5000 }).catch(() => {});
   for (let k = 0; k < words; k++) {
     const word = await page.evaluate(() => window.__spelltest.picWord());
     for (const ch of word) await page.click(`#gameKeyboard .kb-key[data-k="${ch}"]`, { delay: 0 });
     await page.waitForTimeout(200);
   }
-  await page.click('#wpExit');
-  await page.waitForTimeout(300);
+  await clickSettled(page, '#wpExit');
 }
 
 export async function run(browser, base, suite) {
@@ -71,8 +70,7 @@ export async function run(browser, base, suite) {
       await page.waitForTimeout(400);
       assertEq(await page.evaluate(() => window.__spelltest.picWord()), expected,
         'resume lands on the exact next word');
-      await page.click('#wpExit');
-      await page.waitForTimeout(300);
+      await clickSettled(page, '#wpExit');
     } finally { await ctx.close(); }
   });
 
@@ -115,12 +113,10 @@ export async function run(browser, base, suite) {
       assert(cards.includes('learn'), 'the learn card is on the hub');
       // v3 hub: Learn opens to script FOLDER cards; the player's own
       // script leads. Then the folder opens to its letters.
-      await page.click('[data-cat="learn"]');
-      await page.waitForTimeout(200);
+      await clickSettled(page, '[data-cat="learn"]');
       const firstFolder = await page.$eval('#wpGrid .wp-catcard', (el) => el.getAttribute('data-folder'));
       assert(firstFolder === 'cyrillic', `ru learner sees Cyrillic first (saw ${firstFolder})`);
-      await page.click('#wpGrid [data-folder="cyrillic"]');
-      await page.waitForTimeout(200);
+      await clickSettled(page, '#wpGrid [data-folder="cyrillic"]');
       const firstLearn = await page.$eval('#wpGrid [data-pic]', (el) => el.getAttribute('data-pic'));
       assert(firstLearn && firstLearn.startsWith('cyr'),
         `folder holds Cyrillic letters (saw ${firstLearn})`);

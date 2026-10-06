@@ -2,7 +2,7 @@
 //
 // A player who cannot hear the word must neither lose a turn over it nor get a
 // free answer from it (§1's rescue principle). These are A-12 to A-16.
-import { openApp, assert, assertEq } from '../harness.mjs';
+import { openApp, assert, assertEq, clickSettled } from '../harness.mjs';
 
 /// Everything a void must leave exactly as it found it (I10).
 const SNAPSHOT = () => ({
@@ -16,7 +16,9 @@ const SNAPSHOT = () => ({
 
 async function startRound(page) {
   await page.click('#orbWrap');
-  await page.waitForTimeout(600);
+  // The next read is the SEAM, not the screen, and a redraw-settle can
+  // beat a serve. Wait for the word itself.
+  await page.waitForFunction(() => !!window.__spelltest.currentWord(), null, { timeout: 5000 }).catch(() => {});
   return page.evaluate(() => window.__spelltest.currentWord());
 }
 
@@ -46,8 +48,7 @@ export async function run(browser, base, suite) {
       const word = await startRound(page);
       const before = await page.evaluate(SNAPSHOT);
       await page.click('#cantHearBtn');
-      await page.click('#rescueShow');
-      await page.waitForTimeout(300);
+      await clickSettled(page, '#rescueShow');
       // A-14: the word is shown, and the answer field is empty and locked.
       const shown = await page.$eval('#feedback', (e) => e.textContent);
       assert(shown.includes(word), `the word is shown (got ${JSON.stringify(shown)})`);
@@ -73,11 +74,9 @@ export async function run(browser, base, suite) {
       const seen = [];
       page.on('request', (r) => seen.push(r.url()));
       await page.click('#cantHearBtn');
-      await page.click('#rescueSlow');
-      await page.waitForTimeout(200);
+      await clickSettled(page, '#rescueSlow');
       await page.click('#cantHearBtn');
-      await page.click('#rescueShow');
-      await page.waitForTimeout(400);
+      await clickSettled(page, '#rescueShow');
       // Audio playback itself may fetch a clip; nothing ELSE may leave.
       const nonAudio = seen.filter((u) => !/\/api\/speak|\.mp3|\.wav/.test(u));
       assertEq(JSON.stringify(nonAudio), '[]', `the rescue sent ${JSON.stringify(nonAudio)}`);
@@ -94,8 +93,7 @@ export async function run(browser, base, suite) {
       for (let i = 0; i < 3; i++) {
         if (await page.$eval('#cantHearBtn', (e) => e.disabled)) break;
         await page.click('#cantHearBtn');
-        await page.click('#rescueShow');
-        await page.waitForTimeout(500);
+        await clickSettled(page, '#rescueShow');
       }
       const after = await page.evaluate(SNAPSHOT);
       assertEq(after.stats, before.stats, 'A-12: revealing every word scores nothing');

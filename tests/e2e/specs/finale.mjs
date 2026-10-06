@@ -9,7 +9,7 @@
 // Reaching the reveal means actually finishing a picture, so this drives the
 // real loop -- read the waiting word from the seam, type it on the real
 // keyboard -- rather than forcing state. `star` is the shortest piece.
-import { openApp, assert, assertEq } from '../harness.mjs';
+import { openApp, assert, assertEq, clickSettled } from '../harness.mjs';
 
 const CLASSES = [[320, 568], [375, 667], [390, 844], [428, 926]];
 
@@ -44,8 +44,12 @@ export async function completePicture(page, pic) {
   // mysteriously unclickable keyboard.
   await page.waitForTimeout(500);
   for (let i = 0; i < 6 && (await page.$('#wpHow.show')); i++) {
+    const before = await page.$eval('#wpHow', (e) => e.textContent).catch(() => '');
     await page.click('#wpHowNext');   // three pages, then it closes
-    await page.waitForTimeout(150);
+    await page.waitForFunction((b) => {
+      const c = document.querySelector('#wpHow.show');
+      return !c || c.textContent !== b;
+    }, before, { timeout: 4000 }).catch(() => {});
   }
   assert(!(await page.$('#wpHow.show')), 'the how-to card never closed');
 
@@ -82,8 +86,7 @@ export async function run(browser, base, suite) {
         assert(hudHidden, 'the HUD is not covered by the reveal');
 
         // A tap on the piece skips the build; it must not also advance.
-        await page.click('#wpRevealStage');
-        await page.waitForTimeout(120);
+        await clickSettled(page, '#wpRevealStage');
         assert(await page.$('#wpReveal.show.rest'), 'tap did not skip to the rest state');
         assert(await page.$('#wpPlay.show'), 'skipping advanced past the picture');
 
@@ -123,8 +126,7 @@ export async function run(browser, base, suite) {
       await page.clock.install();
       await completePicture(page, 'star');
       await page.waitForSelector('#wpReveal.show', { timeout: 8000 });
-      await page.click('#wpRevealStage');
-      await page.waitForTimeout(120);
+      await clickSettled(page, '#wpRevealStage');
       assert(await page.$('#wpReveal.show.rest'), 'not at rest before the jump');
       await page.clock.fastForward('01:05');
       await page.waitForTimeout(200);
@@ -141,8 +143,7 @@ export async function run(browser, base, suite) {
     try {
       await completePicture(page, 'star');
       await page.waitForSelector('#wpReveal.show', { timeout: 8000 });
-      await page.click('#wpRevealStage');
-      await page.waitForTimeout(120);
+      await clickSettled(page, '#wpRevealStage');
       assert(await page.$('#wpReveal.rest'), 'not at rest before replay');
       await page.click('#wpReplayBuild');
       await page.waitForTimeout(120);

@@ -3,7 +3,7 @@
 // #wpShare at the stylesheet level, so there is no code path to leak it).
 // The other half of Done #6 — Eric personally reviewing the Kid Mode
 // reveal screen — cannot live in CI and is tracked in the session notes.
-import { openApp, assert, pinBaseline } from '../harness.mjs';
+import { openApp, assert, pinBaseline, clickSettled } from '../harness.mjs';
 import { completePicture } from './finale.mjs';
 
 const AGE_KID = JSON.stringify({ verdict: 'kid', checkedAt: 1700000000 });
@@ -29,8 +29,7 @@ export async function run(browser, base, suite) {
 
       await completePicture(page, 'star');
       await page.waitForSelector('#wpReveal.show', { timeout: 8000 });
-      await page.click('#wpRevealStage'); // settle to rest
-      await page.waitForTimeout(120);
+      await clickSettled(page, '#wpRevealStage'); // settle to rest
 
       const vis = await page.evaluate(() => ({
         share: getComputedStyle(document.getElementById('wpShare')).display,
@@ -46,8 +45,7 @@ export async function run(browser, base, suite) {
     try {
       await completePicture(page, 'star');
       await page.waitForSelector('#wpReveal.show', { timeout: 8000 });
-      await page.click('#wpRevealStage');
-      await page.waitForTimeout(120);
+      await clickSettled(page, '#wpRevealStage');
       const vis = await page.evaluate(() => ({
         share: getComputedStyle(document.getElementById('wpShare')).display,
         save: getComputedStyle(document.getElementById('wpSave')).display,

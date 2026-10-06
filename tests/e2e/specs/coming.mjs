@@ -1,7 +1,7 @@
 // coming.spec — language availability: en/es are playable; the other 15 are
 // gated ("coming soon" + Notify Me) in BOTH Standard and Little Speller, and
 // tapping a coming-soon language never starts a round. Notify Me persists.
-import { openApp, assert } from '../harness.mjs';
+import { openApp, assert, clickSettled } from '../harness.mjs';
 
 // Both modes exercised: Standard (full age verdict) + Little Speller (kid).
 const MODES = [
@@ -19,8 +19,7 @@ async function openMode(browser, base, age, lang) {
   if (lang) {
     await page.click('#setupChip').catch(() => {});
     await page.selectOption('#langSel', lang).catch(() => {});
-    await page.click('#setupDone').catch(() => {});
-    await page.waitForTimeout(250);
+    await clickSettled(page, '#setupDone').catch(() => {}).catch(() => {});
   }
   return { ctx, page };
 }
@@ -68,7 +67,7 @@ export async function run(browser, base, suite) {
     try {
       await page.waitForTimeout(150);
       await page.click('#notifyBtn');
-      await page.waitForTimeout(150);
+      await page.waitForSelector('#notifyBtn.confirmed', { timeout: 4000 }).catch(() => {});
       const confirmed = await page.$eval('#notifyBtn', (e) => e.classList.contains('confirmed'));
       assert(confirmed, 'Notify Me did not flip to confirmed');
       // reload: confirmed state persists (localStorage), and ko is still gated

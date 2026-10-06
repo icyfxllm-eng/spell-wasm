@@ -5,7 +5,7 @@
 // a miss enters the queue due now; a pre-R2 entry carries over keeping its due
 // time; and a correct answer after replaying the audio grades Hard (comes back
 // sooner) where a clean one grades Good.
-import { openApp, assert } from '../harness.mjs';
+import { openApp, assert, clickSettled } from '../harness.mjs';
 
 const KEY = 'byear_misses_v1';
 const DAY = 86400000;
@@ -38,9 +38,17 @@ async function serveFresh(page) {
 
 // A deliberate miss: a wrong answer the keyboard can type.
 async function missCurrent(page, w) {
+  const before = await page.evaluate((k) => localStorage.getItem(k), KEY);
   await type(page, w.toLowerCase() === 'zzz' ? 'qqq' : 'zzz');
   await page.click('#checkBtn');
-  await page.waitForTimeout(400);
+  // Wait for the QUEUE, not for the screen. Every assertion in this file
+  // reads localStorage, and the write lands after the DOM has gone quiet --
+  // so a redraw-settle returns too early and the entry reads undefined.
+  await page.waitForFunction(
+    ([k, b]) => localStorage.getItem(k) !== b,
+    [KEY, before],
+    { timeout: 5000 },
+  ).catch(() => {});
 }
 
 export async function run(browser, base, suite) {

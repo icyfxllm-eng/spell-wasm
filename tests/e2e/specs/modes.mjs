@@ -1,6 +1,6 @@
 // modes.spec — Daily Challenge start; Head-to-Head start + quit-mid-game clean
 // state; menu/agegate integrity.
-import { openApp, assert, pinBaseline } from '../harness.mjs';
+import { openApp, assert, pinBaseline, clickSettled } from '../harness.mjs';
 
 export async function run(browser, base, suite) {
   await suite.test('daily: entering shows progress bar + locks language', async () => {
@@ -32,13 +32,10 @@ export async function run(browser, base, suite) {
     const { ctx, page } = await openApp(browser, base, { lang: 'en' });
     try {
       await page.evaluate(() => document.getElementById('vsBtn').click()); await page.waitForTimeout(300);
-      await page.click('#vsStart').catch(() => {});
-      await page.waitForTimeout(300);
+      await clickSettled(page, '#vsStart').catch(() => {}).catch(() => {});
       // Quit mid-match.
-      await page.click('#vsExit').catch(() => {});
-      await page.waitForTimeout(200);
-      await page.click('#vsQuitConfirm').catch(() => {});
-      await page.waitForTimeout(300);
+      await clickSettled(page, '#vsExit').catch(() => {}).catch(() => {});
+      await clickSettled(page, '#vsQuitConfirm').catch(() => {}).catch(() => {});
       const vsBarHidden = await page.$eval('#vsBar', (e) => e.classList.contains('btn-hide'));
       const langEnabled = await page.$eval('#langSel', (e) => !e.disabled);
       assert(vsBarHidden, 'versus bar still visible after quit');

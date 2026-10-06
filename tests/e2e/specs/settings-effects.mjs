@@ -163,6 +163,7 @@ export async function run(browser, base, suite) {
       await page.waitForSelector('#parentScrim.show', { timeout: 4000 });
       await page.fill('#parentAnswer', '0');
       await page.click('#parentSubmit');
+      // sleep-ok: the claim is that the birthday prompt does NOT open.
       await page.waitForTimeout(150);
       assert(!(await scrimUp('ageScrim')), 'a wrong answer does not open the birthday prompt');
 

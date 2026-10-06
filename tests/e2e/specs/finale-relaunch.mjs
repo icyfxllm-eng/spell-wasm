@@ -16,8 +16,12 @@ async function openPicture(page, pic) {
   await page.waitForSelector('#wpPlay.show', { timeout: 5000 });
   await page.waitForTimeout(500);
   for (let i = 0; i < 6 && (await page.$('#wpHow.show')); i++) {
+    const before = await page.$eval('#wpHow', (e) => e.textContent).catch(() => '');
     await page.click('#wpHowNext');
-    await page.waitForTimeout(150);
+    await page.waitForFunction((b) => {
+      const c = document.querySelector('#wpHow.show');
+      return !c || c.textContent !== b;
+    }, before, { timeout: 4000 }).catch(() => {});
   }
   assert(!(await page.$('#wpHow.show')), 'the how-to card never closed');
 }

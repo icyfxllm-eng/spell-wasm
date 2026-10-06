@@ -9,12 +9,11 @@
 // This spec therefore asserts the data-level truth — store cleared → shelf
 // empty — and the missing user-facing flow is flagged in the session notes
 // rather than quietly invented here.
-import { openApp, assert, assertEq } from '../harness.mjs';
+import { openApp, assert, assertEq, clickSettled } from '../harness.mjs';
 import { completePicture, pickTile } from './finale.mjs';
 
 async function backToPicker(page) {
-  await page.click('#wpContinue');
-  await page.waitForTimeout(400);
+  await clickSettled(page, '#wpContinue');
   await page.evaluate(() => document.getElementById('wordPicOpen').click());
   await page.waitForSelector('#wpPicker.show', { timeout: 5000 });
 }
@@ -60,7 +59,7 @@ export async function run(browser, base, suite) {
       for (const ch of w) await page.click(`#gameKeyboard .kb-key[data-k="${ch}"]`, { delay: 0 });
       await page.waitForTimeout(300);
       await page.click('#wpExit');
-      await page.waitForTimeout(300);
+      await page.waitForFunction(() => !document.querySelector('#wpPlay.show'), null, { timeout: 4000 }).catch(() => {});
       await page.evaluate(() => document.getElementById('wordPicOpen').click());
       await page.waitForSelector('#wpPicker.show');
       shelf = await page.$$eval('#wpGallery [data-gallery]', (els) => els.map((e) => e.getAttribute('data-gallery')));

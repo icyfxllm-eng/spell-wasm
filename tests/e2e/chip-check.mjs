@@ -5,7 +5,7 @@
 // screenshot of the chip region.
 import { mkdirSync } from 'node:fs';
 import { join } from 'node:path';
-import { startServer, launch } from './harness.mjs';
+import { startServer, launch, clickSettled } from './harness.mjs';
 
 const OUT = join('tests/e2e/shots', 'chip');
 mkdirSync(OUT, { recursive: true });
@@ -30,8 +30,7 @@ for (const lang of LOCALES) {
   await page.selectOption('#langSel', lang).catch(() => {});      // native endonym (often longer than "English")
   await page.selectOption('#levelSel', 'expert').catch(() => {}); // longest difficulty label
   await page.selectOption('#modeSel', 'on').catch(() => {});      // timed (Quick Spell label)
-  await page.click('#setupDone').catch(() => {});
-  await page.waitForTimeout(200);
+  await clickSettled(page, '#setupDone').catch(() => {}).catch(() => {});
   const info = await page.evaluate(() => {
     const chip = document.querySelector('#setupChip');
     const txt = document.querySelector('#setupChipText');

@@ -14,7 +14,7 @@
 //   every iOS-only mode in a browser whatever the flag says, so an absence check
 //   would pass vacuously. It is proven in modes::tests against the live flag
 //   default, and on the iOS Simulator.
-import { openApp, assert, assertEq } from '../harness.mjs';
+import { openApp, assert, assertEq, clickSettled } from '../harness.mjs';
 
 const actionsY = (page) => page.evaluate(() =>
   Math.round(document.getElementById('trActions').getBoundingClientRect().top));
@@ -209,7 +209,10 @@ export async function run(browser, base, suite) {
       await commitFirst(page, 'a');
       const target = await page.$eval('#trTgtWord', (e) => e.textContent);
       await page.click('#trSpell');
-      await page.waitForTimeout(300);
+      // Either the screen closes and a word is served, or it stays open;
+      // both branches are handled below, so wait for whichever happens.
+      await page.waitForFunction(() => !document.querySelector('#trScreen.show')
+        || !!window.__spelltest.currentWord(), null, { timeout: 5000 }).catch(() => {});
       const closed = await page.$eval('#trScreen', (e) => !e.classList.contains('show'));
       if (closed) {
         const word = await page.evaluate(() => window.__spelltest.currentWord());

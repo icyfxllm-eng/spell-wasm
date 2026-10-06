@@ -5,7 +5,7 @@
 // skippable (skip leaves language-default priors standing and never
 // re-offers), and Try serves the deterministic placement set through
 // the REAL session path — no placement-specific scoring exists.
-import { openApp, assert } from '../harness.mjs';
+import { openApp, assert, clickSettled } from '../harness.mjs';
 
 // Reload and wait for the wasm app to be up, not a fixed delay: on a slow
 // boot the keyboard isn't built yet, and a test that types then presses
@@ -79,6 +79,7 @@ export async function run(browser, base, suite) {
       assert(!(await page.$('#plcCard.show')), 'card dismissed on skip');
       // a second serve never re-offers — skipped IS an answer
       await page.click('#orbWrap');
+      // sleep-ok: the claim is that the card does NOT come back after a skip.
       await page.waitForTimeout(600);
       assert(!(await page.$('#plcCard.show')), 'no re-offer after skip');
     } finally { await ctx.close(); }
@@ -91,7 +92,9 @@ export async function run(browser, base, suite) {
       await page.click('#orbWrap');
       await page.waitForSelector('#plcCard.show', { timeout: 5000 });
       await page.click('#plcTry');
-      await page.waitForTimeout(500);
+      // The seam, not the screen: a placement word is a real serve and a
+      // redraw-settle can beat it.
+      await page.waitForFunction(() => !!window.__spelltest.currentWord(), null, { timeout: 5000 }).catch(() => {});
       // D6: 10-14 words, served by the normal engine (the visible word
       // is a real serve; spelling it advances normally).
       const first = await page.evaluate(() => window.__spelltest.currentWord());
@@ -112,8 +115,7 @@ export async function run(browser, base, suite) {
       await surfacesOn(page);
       await page.click('#orbWrap');
       await page.waitForSelector('#plcCard.show', { timeout: 5000 });
-      await page.click('#plcSkip');
-      await page.waitForTimeout(300);
+      await clickSettled(page, '#plcSkip');
 
       // Build a real chain: answer words correctly until the streak is up.
       let streak = 0;
@@ -153,7 +155,9 @@ export async function run(browser, base, suite) {
       await page.click('#orbWrap');
       await page.waitForSelector('#plcCard.show', { timeout: 5000 });
       await page.click('#plcTry');
-      await page.waitForTimeout(400);
+      // The seam, not the screen: a placement word is a real serve and a
+      // redraw-settle can beat it.
+      await page.waitForFunction(() => !!window.__spelltest.currentWord(), null, { timeout: 5000 }).catch(() => {});
 
       // Answer the whole set. The set is 10-14 words (D6); the cap is a
       // guard against a runaway loop, not an expectation.
@@ -191,6 +195,7 @@ export async function run(browser, base, suite) {
         `a completed probe must write placed=true; localStorage says ${JSON.stringify(placed)}`);
       await reloadBooted(page);
       await page.click('#orbWrap');
+      // sleep-ok: the claim is that a completed placement is NOT re-offered after a reload.
       await page.waitForTimeout(700);
       assert(!(await page.$('#plcCard.show')),
         'RE-OFFERED after a reload — a completed placement was not recorded durably');

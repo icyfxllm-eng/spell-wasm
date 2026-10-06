@@ -1,5 +1,5 @@
 // Repro: does switching fixed difficulty change the served zh word?
-import { startServer, launch } from './harness.mjs';
+import { startServer, launch, clickSettled } from './harness.mjs';
 const AGE = JSON.stringify({ verdict: 'full', checkedAt: 1700000000 });
 
 const { server, base } = await startServer(8133);
@@ -14,15 +14,16 @@ await page.waitForFunction(() => window.__spelltest && window.__spelltest.build(
 // select Chinese via the setup sheet
 await page.click('#setupChip').catch(() => {});
 await page.selectOption('#langSel', 'zh').catch(() => {});
-await page.click('#setupDone').catch(() => {});
-await page.waitForTimeout(200);
+await clickSettled(page, '#setupDone').catch(() => {}).catch(() => {});
 
 const seen = [];
 for (const tier of ['easy', 'medium', 'hard', 'expert']) {
   await page.click('#setupChip').catch(() => {});
   await page.selectOption('#levelSel', tier).catch(() => {});
   await page.click('#setupDone').catch(() => {});
-  await page.waitForTimeout(250);
+  // The seam, not the screen. (This line also carried a doubled .catch the
+  // codemod left behind; one is enough.)
+  await page.waitForFunction(() => !!window.__spelltest.currentWord(), null, { timeout: 5000 }).catch(() => {});
   const info = await page.evaluate(() => ({
     word: window.__spelltest.currentWord(),
     spoken: window.__spelltest.currentSpoken(),

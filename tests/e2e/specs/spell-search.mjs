@@ -3,7 +3,7 @@
 // The grids are the real generator's, from the real banks and the shipped
 // decoy table; the test hook only READS the served puzzle so a test knows where
 // to drag. Audio is stubbed by the harness, as for every spec.
-import { openApp, assert, assertEq } from '../harness.mjs';
+import { openApp, assert, assertEq, clickSettled } from '../harness.mjs';
 
 const KID = JSON.stringify({ verdict: 'kid', checkedAt: 1700000000 });
 const LAUNCH = ['en', 'es', 'ru', 'fr', 'de', 'pt', 'pl', 'fil'];
@@ -42,7 +42,12 @@ async function drag(page, cells) {
 async function typeWord(page, word) {
   for (const ch of word) await page.click(`#wsKeys [data-ws-key="${ch}"]`);
   await page.click('#wsKeys [data-ws-go]');
-  await page.waitForTimeout(60);
+  // Callers read the learner log, which is written after the commit; a
+  // redraw-settle returns before it lands.
+  await page.waitForFunction(
+    () => localStorage.getItem('spell_wordgrid_seen_v1') !== null,
+    null, { timeout: 4000 },
+  ).catch(() => {});
 }
 
 const learnerLog = (page, lang) => page.evaluate((l) => {
@@ -152,8 +157,7 @@ export async function run(browser, base, suite) {
           const step = t.cells[1] - t.cells[0];
           assert(step === 1 || step === b.size, `${t.word} runs → or ↓`);
         }
-        await page.click('#wsNew');
-        await page.waitForTimeout(150);
+        await clickSettled(page, '#wsNew');
       }
       await page.click('#wsDaily');
       assertEq((await board(page)).tier, 'jr', 'the Daily is Jr too');
@@ -175,8 +179,7 @@ export async function run(browser, base, suite) {
       const { ctx, page } = await openApp(browser, base, { lang: 'en' });
       try {
         await openSearch(page);
-        await page.click('#wsDaily');
-        await page.waitForTimeout(150);
+        await clickSettled(page, '#wsDaily');
         hashes.push((await board(page)).hash);
       } finally { await ctx.close(); }
     }

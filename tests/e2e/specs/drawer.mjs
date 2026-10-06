@@ -12,14 +12,13 @@
 // because the drawer renders neither. An aid is `unlisted` in the registry and
 // never becomes a row at all, which is the stronger version of the law the
 // sheet expressed with element type.
-import { openApp, assert, assertEq, pinBaseline } from '../harness.mjs';
+import { openApp, assert, assertEq, pinBaseline, clickSettled } from '../harness.mjs';
 
 const AGE_KID = JSON.stringify({ verdict: 'kid', checkedAt: 1700000000 });
 
 /** Open the drawer and describe every MODE row (not account, not help). */
 async function rows(page) {
-  await page.click('#navBurger');
-  await page.waitForTimeout(300);
+  await clickSettled(page, '#navBurger');
   return page.$$eval('#navDrawerPanel .nav-row', (els) =>
     els
       .map((e) => ({
@@ -60,8 +59,7 @@ export async function run(browser, base, suite) {
     }).filter(Boolean));
 
   const assertSweep = async (page) => {
-    await page.click('#navBurger');
-    await page.waitForTimeout(300);
+    await clickSettled(page, '#navBurger');
     const seen = await page.$$eval('#navDrawerPanel .nav-row', (els) => els.length);
     assert(seen > 0, 'the drawer rendered no rows at all');
     const bad = await sweepRows(page);
@@ -129,8 +127,7 @@ export async function run(browser, base, suite) {
       // And one end to end, chosen because it is a full screen with its own
       // exit: tapping the row must actually land there.
       if (t.some((x) => x.mode === 'spelldoku')) {
-        await page.click('.nav-row[data-mode="spelldoku"]');
-        await page.waitForTimeout(700);
+        await clickSettled(page, '.nav-row[data-mode="spelldoku"]');
         const closed = await page.$eval('#navDrawer', (e) => !e.classList.contains('show'));
         assert(closed, 'the drawer must close behind a row that navigates');
         const arrived = await page.evaluate(() =>
@@ -217,7 +214,7 @@ export async function run(browser, base, suite) {
       assert(after.panel > 0, 'the panel itself scrolls');
       assertEq(after.page, before, 'the page behind the drawer stays where the player left it');
       await page.click('#navDrawerClose');
-      await page.waitForTimeout(250);
+      await page.waitForFunction(() => !document.querySelector('#drawer.show'), null, { timeout: 4000 }).catch(() => {});
       assertEq(await pageY(), before, 'and closing lands back there, not at the bottom of home');
       assert(!(await page.evaluate(() => document.body.classList.contains('hub-open'))),
         'the scroll lock is released on close');

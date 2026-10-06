@@ -231,5 +231,62 @@ export class Suite {
     catch (e) { this.results.push({ title, ok: false, err: e.message }); }
   }
 }
+/// Wait for the DOM to stop changing, instead of guessing how long it takes.
+///
+/// Most of the fixed sleeps in this suite were not waiting for a particular
+/// thing; they were waiting for the screen to finish redrawing after a tap,
+/// with no single observable to name. A fixed 400ms is a bet that the redraw
+/// takes less than 400ms, and that bet loses on a machine that is also
+/// running a cache warm -- which is exactly how six gate runs failed in one
+/// afternoon.
+///
+/// This watches for mutations and returns once there have been none for
+/// `quietMs`, capped at `timeout`. Under load it waits longer, which is the
+/// whole point; idle, it returns in about a frame.
+///
+/// BE HONEST ABOUT WHAT THIS IS. A quiet window is weaker evidence than
+/// waiting for the specific thing you are about to assert on, and it is still
+/// a duration at heart -- it just measures the right thing with it. Where a
+/// real observable exists (a class appearing, a count changing, a seam going
+/// true), wait for THAT instead; this is for the residue where none does.
+/// It is also not a substitute for the sleeps that prove a NON-event: a page
+/// that correctly does nothing is quiet immediately, so `domSettled` would
+/// return at once and prove nothing. Those stay as sleeps, marked sleep-ok.
+export async function domSettled(page, { quietMs = 120, timeout = 5000 } = {}) {
+  await page
+    .evaluate(
+      ([quiet, cap]) =>
+        new Promise((resolve) => {
+          let idle;
+          const stop = () => {
+            obs.disconnect();
+            clearTimeout(idle);
+            clearTimeout(ceiling);
+            resolve();
+          };
+          const obs = new MutationObserver(() => {
+            clearTimeout(idle);
+            idle = setTimeout(stop, quiet);
+          });
+          obs.observe(document.documentElement, {
+            subtree: true, childList: true, characterData: true, attributes: true,
+          });
+          idle = setTimeout(stop, quiet);
+          const ceiling = setTimeout(stop, cap);
+        }),
+      [quietMs, timeout],
+    )
+    // A navigation mid-wait tears down the context; the next step will say so
+    // far more clearly than a thrown observer would.
+    .catch(() => {});
+}
+
+/// Click, then wait for the redraw it caused. The replacement for the
+/// `click(...)` / `waitForTimeout(...)` pair that this suite was built on.
+export async function clickSettled(page, selector, opts = {}) {
+  await page.click(selector, opts.click || {});
+  await domSettled(page, opts);
+}
+
 export function assert(cond, msg) { if (!cond) throw new Error(msg); }
 export function assertEq(a, b, msg) { if (a !== b) throw new Error(`${msg}: expected ${JSON.stringify(b)}, got ${JSON.stringify(a)}`); }

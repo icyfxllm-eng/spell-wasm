@@ -5,7 +5,7 @@
 // word comes from the tier its badge promised (F2), a misspelling costs the
 // word and not the cell (F4/I-T2), and the same digit in the same cell is
 // charged once (F8).
-import { openApp, assert, assertEq } from '../harness.mjs';
+import { openApp, assert, assertEq, clickSettled } from '../harness.mjs';
 
 const KID = JSON.stringify({ verdict: 'kid', checkedAt: 1700000000 });
 
@@ -33,8 +33,7 @@ async function openTier(page, reading, pick) {
 
 async function spell(page, word) {
   for (const ch of word) await page.click(`#sdKeys [data-sd-key="${ch}"]`);
-  await page.click('#sdKeys [data-sd-go]');
-  await page.waitForTimeout(120);
+  await clickSettled(page, '#sdKeys [data-sd-go]');
 }
 
 export async function run(browser, base, suite) {
@@ -67,8 +66,7 @@ export async function run(browser, base, suite) {
       // Typing the number word commits nothing now: the ladder sets the price.
       await spell(page, 'one');
       assertEq(await page.$eval(`[data-sd-cell="${i}"]`, (e) => e.textContent.trim()), '', 'the number word places nothing');
-      await page.click(`#sdTiers [data-sd-tier="${v}"]`);
-      await page.waitForTimeout(150);
+      await clickSettled(page, `#sdTiers [data-sd-tier="${v}"]`);
       const first = await prompt(page);
       assert(first && first.spelling, 'a word was drawn');
       assertEq(String(first.digit), String(v), 'drawn for the digit that was tapped');
@@ -83,8 +81,7 @@ export async function run(browser, base, suite) {
       assertEq(await page.$eval(`[data-sd-cell="${i}"]`, (e) => e.textContent.trim()), String(v), 'the digit is placed');
       // F8: that (cell, digit) is paid for -- tapping it again asks nothing.
       await page.click(`[data-sd-cell="${i}"]`);
-      await page.click(`#sdTiers [data-sd-tier="${v}"]`);
-      await page.waitForTimeout(150);
+      await clickSettled(page, `#sdTiers [data-sd-tier="${v}"]`);
       assertEq(await prompt(page), null, 'the same digit in the same cell is free');
       assertEq(await page.$eval(`[data-sd-cell="${i}"]`, (e) => e.textContent.trim()), String(v), 'and it stays placed');
     } finally { await ctx.close(); }
@@ -101,8 +98,7 @@ export async function run(browser, base, suite) {
       const drawn = [];
       for (const i of empties(b).slice(0, 3)) {
         await page.click(`[data-sd-cell="${i}"]`);
-        await page.click(`#sdTiers [data-sd-tier="${b.solution[i]}"]`);
-        await page.waitForTimeout(120);
+        await clickSettled(page, `#sdTiers [data-sd-tier="${b.solution[i]}"]`);
         const p = await prompt(page);
         if (p) drawn.push(p.spelling);
       }
@@ -110,8 +106,13 @@ export async function run(browser, base, suite) {
       const before = await page.evaluate(() => localStorage.getItem('spell_wordgrid_seen_v1'));
       assertEq(before, null, 'nothing is recorded while the board is still being played');
       // A new board ends the old one, so its words enter the window.
+      const seenBefore = await page.evaluate(() => localStorage.getItem('spell_wordgrid_seen_v1'));
       await page.click('#sdNew');
-      await page.waitForTimeout(400);
+      // The window write, not the redraw: the very next line reads it.
+      await page.waitForFunction(
+        (b) => localStorage.getItem('spell_wordgrid_seen_v1') !== b,
+        seenBefore, { timeout: 5000 },
+      ).catch(() => {});
       const led = await page.evaluate(() => JSON.parse(localStorage.getItem('spell_wordgrid_seen_v1') || 'null'));
       assert(led, 'the window was written');
       assertEq(led.counter, 1, 'one board counted as one puzzle');
@@ -122,8 +123,7 @@ export async function run(browser, base, suite) {
       const b2 = await board(page);
       const i = empties(b2)[0];
       await page.click(`[data-sd-cell="${i}"]`);
-      await page.click(`#sdTiers [data-sd-tier="${b2.solution[i]}"]`);
-      await page.waitForTimeout(120);
+      await clickSettled(page, `#sdTiers [data-sd-tier="${b2.solution[i]}"]`);
       const next = await prompt(page);
       assert(next && !drawn.includes(next.spelling), `${next && next.spelling} came straight back`);
     } finally { await ctx.close(); }
@@ -138,8 +138,7 @@ export async function run(browser, base, suite) {
       const i = empties(b)[0];
       await page.click(`[data-sd-cell="${i}"]`);
       await page.click('#sdPencil');
-      await page.click('#sdKeys [data-sd-pen="3"]');
-      await page.waitForTimeout(120);
+      await clickSettled(page, '#sdKeys [data-sd-pen="3"]');
       assertEq(await prompt(page), null, 'no word was drawn for a mark');
       assertEq(await page.$eval(`[data-sd-cell="${i}"]`, (e) => e.textContent.trim()), '3', 'the mark is on the cell');
       assertEq(await page.$$eval('#sdChips .sd-chip.free', (c) => c.length), 0, 'and nothing was unlocked');

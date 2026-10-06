@@ -27,8 +27,12 @@ async function openPicture(page, pic) {
   await page.waitForSelector('#wpPlay.show', { timeout: 5000 });
   await page.waitForTimeout(500);
   for (let i = 0; i < 6 && (await page.$('#wpHow.show')); i++) {
+    const before = await page.$eval('#wpHow', (e) => e.textContent).catch(() => '');
     await page.click('#wpHowNext');
-    await page.waitForTimeout(150);
+    await page.waitForFunction((b) => {
+      const c = document.querySelector('#wpHow.show');
+      return !c || c.textContent !== b;
+    }, before, { timeout: 4000 }).catch(() => {});
   }
   assert(!(await page.$('#wpHow.show')), 'the how-to card never closed');
 }
@@ -118,6 +122,7 @@ export async function run(browser, base, suite) {
       // Slow still climbs — F5 changed replay only, and defers slow-rate
       // escalation to CC-AUDIO-REPLAY.
       await page.click('#wpReplay');
+      // sleep-ok: a mixed claim: normal must be heard and slow must NOT be, so waiting only for normal would let a late slow escape the window.
       await page.waitForTimeout(600);
       const seen = await variantsSeen(page);
       assert(seen.includes('normal'), `replay plays the word (saw ${seen})`);

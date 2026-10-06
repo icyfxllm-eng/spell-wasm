@@ -14,7 +14,7 @@
 //   * extra-attempts ON   -> one wrong submission grants exactly one clean retry.
 //   * language matrix (en / es / ja) reruns identical assertions — zero
 //     per-language behavior.
-import { openApp, typeOnKeyboard, assert, pinBaseline, openSettings } from '../harness.mjs';
+import { openApp, typeOnKeyboard, assert, pinBaseline, openSettings, clickSettled } from '../harness.mjs';
 
 const AGE = JSON.stringify({ verdict: 'full', checkedAt: 1700000000 });
 const FLAG = 'spell_flag_attempts_shields';
@@ -38,15 +38,16 @@ async function openWithFlag(browser, base, value, lang = null) {
   if (lang) {
     await page.click('#setupChip').catch(() => {});
     await page.selectOption('#langSel', lang).catch(() => {});
-    await page.click('#setupDone').catch(() => {});
-    await page.waitForTimeout(200);
+    await clickSettled(page, '#setupDone').catch(() => {}).catch(() => {});
   }
   return { ctx, page };
 }
 
 async function missOnce(page) {
   await page.click('#orbWrap');
-  await page.waitForTimeout(500);
+  // The next read is the SEAM, not the screen, and a redraw-settle can
+  // beat a serve. Wait for the word itself.
+  await page.waitForFunction(() => !!window.__spelltest.currentWord(), null, { timeout: 5000 }).catch(() => {});
   const word = await page.evaluate(() => window.__spelltest.currentWord());
   const wrong = word === 'zzzz' ? 'xxxx' : 'zzzz';
   await typeOnKeyboard(page, wrong);
@@ -110,8 +111,7 @@ export async function run(browser, base, suite) {
       // Climb, where shields own retries). Pick Medium via the setup chip first.
       await page.click('#setupChip').catch(() => {});
       await page.selectOption('#levelSel', 'medium').catch(() => {});
-      await page.click('#setupDone').catch(() => {});
-      await page.waitForTimeout(150);
+      await clickSettled(page, '#setupDone').catch(() => {}).catch(() => {});
       // Enable the per-player toggle, then miss once.
       await openSettings(page).catch(() => {});
       await page.click('#extraAttemptsToggle');

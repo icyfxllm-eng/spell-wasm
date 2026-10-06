@@ -1,7 +1,7 @@
 // menu.spec — the language selector shows each language's endonym in its own
 // script, and selecting a language switches the whole UI to match (menu
 // integrity: selector is generated from the language registry, no drift).
-import { openApp, assert, pinBaseline } from '../harness.mjs';
+import { openApp, assert, pinBaseline, clickSettled } from '../harness.mjs';
 import { readFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import { dirname, join } from 'node:path';
@@ -124,8 +124,7 @@ export async function run(browser, base, suite) {
     // picker. That is why reflect_play_direction reads `cur_lang`, not `lang`.
     const { ctx, page } = await openApp(browser, base, { lang: 'es' });
     try {
-      await page.click('#orbWrap').catch(() => {});
-      await page.waitForTimeout(400);
+      await clickSettled(page, '#orbWrap').catch(() => {}).catch(() => {});
       const got = await page.evaluate(() => {
         const q = (id) => {
           const e = document.getElementById(id);
@@ -149,10 +148,8 @@ export async function run(browser, base, suite) {
     // the element, which is the half no unit test can see.
     const { ctx, page } = await openApp(browser, base, { lang: 'en' });
     try {
-      await page.click('#orbWrap').catch(() => {});
-      await page.waitForTimeout(400);
-      await page.click('#hintBtn').catch(() => {});
-      await page.waitForTimeout(250);
+      await clickSettled(page, '#orbWrap').catch(() => {}).catch(() => {});
+      await clickSettled(page, '#hintBtn').catch(() => {}).catch(() => {});
       const got = await page.evaluate(() => {
         const e = document.getElementById('hintLine');
         return { lang: e.getAttribute('lang'), dir: e.getAttribute('dir'), text: e.textContent };
@@ -202,10 +199,10 @@ export async function run(browser, base, suite) {
       await page.goto(base, { waitUntil: 'load' });
       await page.waitForFunction(() => window.__spelltest && window.__spelltest.build() === 'testseam', null, { timeout: 30000 });
       await page.waitForTimeout(400);
-      await page.click('#orbWrap').catch(() => {});
-      await page.waitForTimeout(400);
+      await clickSettled(page, '#orbWrap').catch(() => {}).catch(() => {});
       await page.click('#hintBtn').catch(() => {});
-      await page.waitForTimeout(250);
+      await page.waitForFunction(() => /letras\)/.test(document.getElementById('hintLine')?.textContent || ''),
+        null, { timeout: 4000 }).catch(() => {});
       const text = await page.$eval('#hintLine', (e) => e.textContent);
       assert(/letras\)/.test(text), `Spanish hint should read "letras", got ${JSON.stringify(text)}`);
       assert(!/letters/.test(text), `Spanish hint still contains the English "letters": ${JSON.stringify(text)}`);

@@ -2,7 +2,7 @@
 //
 // The grids are the real generator's, from the real banks. The test hook only
 // READS the served crossword, so a test knows which letters to type.
-import { openApp, assert, assertEq } from '../harness.mjs';
+import { openApp, assert, assertEq, clickSettled } from '../harness.mjs';
 
 const KID = JSON.stringify({ verdict: 'kid', checkedAt: 1700000000 });
 
@@ -85,8 +85,7 @@ export async function run(browser, base, suite) {
       let b = await board(page);
       // A crossword with a keystone: take a new one until it has a hidden word.
       for (let k = 0; k < 6 && !b.keystone; k++) {
-        await page.click('#xwNew');
-        await page.waitForTimeout(200);
+        await clickSettled(page, '#xwNew');
         b = await board(page);
       }
       assert(b.keystone, 'a crossword with a hidden word');
@@ -166,8 +165,7 @@ export async function run(browser, base, suite) {
       const { ctx, page } = await openApp(browser, base, { lang: 'en' });
       try {
         await openCross(page);
-        await page.click('#xwDaily');
-        await page.waitForTimeout(400);
+        await clickSettled(page, '#xwDaily');
         const b = await board(page);
         assert(b.daily, 'the Daily is marked');
         seen.push(JSON.stringify(b.words.map((w) => w.word)));

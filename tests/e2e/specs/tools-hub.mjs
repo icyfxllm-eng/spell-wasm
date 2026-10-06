@@ -9,7 +9,7 @@
 //     OFF via the hub hides the live #ghostPace marker in a Climb run; turned
 //     back ON, the marker reappears (deterministic seeded best run);
 //   * Kid Mode simplifies the list (owner/dark rows hidden, play aids kept).
-import { openApp, typeOnKeyboard, assert, openSettings } from '../harness.mjs';
+import { openApp, typeOnKeyboard, assert, openSettings, clickSettled } from '../harness.mjs';
 
 // The drawer opens OVER an open sheet, and its scrim then covers the row,
 // so reopening a sheet that is already up would hang. A player cannot do it
@@ -33,14 +33,21 @@ const ROWS = ['toolSyllableRow', 'toolPhotoRow', 'toolSpellAloudRow', 'toolStori
 
 async function playOneCorrect(page) {
   await page.click('#orbWrap');
-  await page.waitForTimeout(500);
+  // The seam, not the screen: the next line reads currentWord(), which a
+  // redraw-settle can beat.
+  await page.waitForFunction(() => !!window.__spelltest.currentWord(), null, { timeout: 5000 }).catch(() => {});
   const word = await page.evaluate(() => window.__spelltest.currentWord());
   if (!word) return false;
   const baseOnly = [...word.toLowerCase()].every((c) => /[a-z'-]/.test(c));
   if (!baseOnly) return false;
   await typeOnKeyboard(page, word.toLowerCase());
   await page.click('#checkBtn');
-  await page.waitForTimeout(400);
+  // The caller asserts on #ghostPace, which appears as part of grading. Wait
+  // for the verdict, which is grading's own observable.
+  await page.waitForFunction(() => {
+    const c = document.getElementById('feedback').className;
+    return c.includes('good') || c.includes('bad');
+  }, null, { timeout: 5000 }).catch(() => {});
   return true;
 }
 

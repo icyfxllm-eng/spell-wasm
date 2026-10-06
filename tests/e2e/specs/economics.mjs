@@ -11,7 +11,7 @@
 //
 // And the iron rule at every tier: no mechanic ever touches a different
 // correct stroke — placed-word counts are checked around every miss.
-import { openApp, assert, assertEq } from '../harness.mjs';
+import { openApp, assert, assertEq, clickSettled } from '../harness.mjs';
 import { pickTile } from './finale.mjs';
 
 /** Open picture `pic` and dismiss the how-to card if it appears. */
@@ -22,8 +22,12 @@ async function openPicture(page, pic) {
   await page.waitForSelector('#wpPlay.show', { timeout: 5000 });
   await page.waitForTimeout(500);
   for (let i = 0; i < 6 && (await page.$('#wpHow.show')); i++) {
+    const before = await page.$eval('#wpHow', (e) => e.textContent).catch(() => '');
     await page.click('#wpHowNext');
-    await page.waitForTimeout(150);
+    await page.waitForFunction((b) => {
+      const c = document.querySelector('#wpHow.show');
+      return !c || c.textContent !== b;
+    }, before, { timeout: 4000 }).catch(() => {});
   }
   assert(!(await page.$('#wpHow.show')), 'the how-to card never closed');
 }
@@ -50,7 +54,8 @@ export async function run(browser, base, suite) {
       // Three misses in a row — unlimited means unlimited.
       for (let i = 0; i < 3; i++) {
         await page.click(`#gameKeyboard .kb-key[data-k="${wrongFirst(word)}"]`);
-        await page.waitForTimeout(120);
+        await page.waitForFunction(() => (document.getElementById('spellbox')?.textContent || '').trim() === '',
+          null, { timeout: 4000 }).catch(() => {});
         assertEq(await inputValue(page), '', `miss ${i + 1}: repaired free`);
       }
       assert(!(await page.$('#wpStage .miss-dim')), 'starter never dims');
@@ -70,14 +75,14 @@ export async function run(browser, base, suite) {
       const word = await page.evaluate(() => window.__spelltest.picWord());
       const before = await placedCount(page);
       await page.click(`#gameKeyboard .kb-key[data-k="${wrongFirst(word)}"]`);
-      await page.waitForTimeout(120);
+      await page.waitForFunction(() => (document.getElementById('spellbox')?.textContent || '').trim() === '',
+        null, { timeout: 4000 }).catch(() => {});
       assertEq(await inputValue(page), '', 'advanced still repairs the input');
       assert(await page.$('#wpStage .wp-outline.next.miss-dim'), 'the earned stroke dims');
       assert(!(await page.$('#wpStage .miss-charged')), 'dimmed, never charged');
       assertEq(await placedCount(page), before, 'no other stroke was touched');
       // The dim survives the repair (until corrected = until the word lands)...
-      await page.click(`#gameKeyboard .kb-key[data-k="${word[0]}"]`);
-      await page.waitForTimeout(120);
+      await clickSettled(page, `#gameKeyboard .kb-key[data-k="${word[0]}"]`);
       assert(await page.$('#wpStage .wp-outline.next.miss-dim'), 'dim holds until the word lands');
       // ...and landing the word clears it.
       for (const ch of word.slice(1)) await page.click(`#gameKeyboard .kb-key[data-k="${ch}"]`);
@@ -98,6 +103,7 @@ export async function run(browser, base, suite) {
       const before = await placedCount(page);
       const bad = wrongFirst(word);
       await page.click(`#gameKeyboard .kb-key[data-k="${bad}"]`);
+      // sleep-ok: the claim is that the field is NOT repaired, so nothing happens to wait for.
       await page.waitForTimeout(120);
       // No repair: the damage stays in the field.
       assertEq(await inputValue(page), bad, 'expert does NOT repair the input');
@@ -105,7 +111,8 @@ export async function run(browser, base, suite) {
       assertEq(await placedCount(page), before, 'no other stroke was touched');
       // Erase-to-recover: backspacing out the damage lifts the charge.
       await page.click('#kbBackspace');
-      await page.waitForTimeout(120);
+      await page.waitForFunction(() => (document.getElementById('spellbox')?.textContent || '').trim() === '',
+        null, { timeout: 4000 }).catch(() => {});
       assertEq(await inputValue(page), '', 'the erase removed the damage');
       assert(!(await page.$('#wpStage .miss-charged')), 'erase-to-recover restored the stroke');
       // And the recovered player can still land the word.

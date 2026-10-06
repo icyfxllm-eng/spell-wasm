@@ -11,7 +11,7 @@
 // A test written against behaviour that has never existed cannot be a
 // regression guard, and stubbing one that passes vacuously would be worse
 // than not having it. Adding the gesture is a feature, and unasked for.
-import { openApp, assert, assertEq } from '../harness.mjs';
+import { openApp, assert, assertEq, clickSettled } from '../harness.mjs';
 
 const DEVICES = [
   ['SE', { width: 375, height: 667 }],
@@ -52,7 +52,7 @@ export async function run(browser, base, suite) {
           });
           assert(onScreen, `${name}/${where}: the close button is not fully on screen`);
           await page.click('#navDrawerClose');
-          await page.waitForTimeout(250);
+          await page.waitForFunction(() => !document.querySelector('#drawer.show'), null, { timeout: 4000 }).catch(() => {});
           assert(!(await isOpen(page)), `${name}/${where}: the drawer did not close`);
         }
       } finally { await ctx.close(); }
@@ -83,7 +83,7 @@ export async function run(browser, base, suite) {
     try {
       await openDrawer(page);
       await page.mouse.click(20, 300);           // the dimmed area, left of the panel
-      await page.waitForTimeout(250);
+      await page.waitForFunction(() => !document.querySelector('#drawer.show'), null, { timeout: 4000 }).catch(() => {});
       assert(!(await isOpen(page)), 'a scrim tap must dismiss the drawer');
     } finally { await ctx.close(); }
   });
@@ -108,7 +108,7 @@ export async function run(browser, base, suite) {
           s.scrollTo({ top: s.scrollHeight, behavior: 'smooth' });
         });
         await page.click('#navDrawerClose');
-        await page.waitForTimeout(250);
+        await page.waitForFunction(() => !document.querySelector('#drawer.show'), null, { timeout: 4000 }).catch(() => {});
         assert(!(await isOpen(page)), `${name}: a tap during a scroll must still close`);
       } finally { await ctx.close(); }
     });
@@ -198,8 +198,7 @@ export async function run(browser, base, suite) {
       assert(label && label.trim().length > 0, 'the close button has no accessible name');
       assertEq(await page.$eval('#navDrawerClose', (e) => e.tagName.toLowerCase()), 'button',
         'it must be a real button, so it is announced as one');
-      await page.click('#navDrawerClose');
-      await page.waitForTimeout(250);
+      await clickSettled(page, '#navDrawerClose');
       assertEq(await page.evaluate(() => document.activeElement && document.activeElement.id), 'navBurger',
         'focus must return to the burger after a close');
     } finally { await ctx.close(); }

@@ -11,7 +11,7 @@
 // The wordmark/attribution SVG-level guarantees are pinned by unit tests
 // in spellpic_export.rs (the_wordmark_lives_on_the_card_and_never_the_
 // keepsake, masterpiece_cards_carry_the_attribution_and_others_do_not).
-import { openApp, assert } from '../harness.mjs';
+import { openApp, assert, clickSettled } from '../harness.mjs';
 import { pickTile } from './finale.mjs';
 
 async function openPicture(page, pic) {
@@ -21,8 +21,7 @@ async function openPicture(page, pic) {
   await page.waitForSelector('#wpPlay.show', { timeout: 5000 });
   await page.waitForTimeout(500);
   for (let i = 0; i < 6 && (await page.$('#wpHow.show')); i++) {
-    await page.click('#wpHowNext');
-    await page.waitForTimeout(150);
+    await clickSettled(page, '#wpHowNext');
   }
 }
 

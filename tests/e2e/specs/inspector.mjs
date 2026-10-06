@@ -4,15 +4,14 @@
 // a `dev_preview` build, which the e2e bundle is. Its absence from release,
 // auditor and education builds is a build-level claim, proved by the cargo
 // feature and scripts/seam-absence-check.mjs, not here.
-import { openApp, assert } from '../harness.mjs';
+import { openApp, assert, clickSettled } from '../harness.mjs';
 
 const PANEL = '#spellLearnerInspector';
 
 async function openInspector(page) {
   // Five taps on the logo within 1.2 s of each other opens the dev menu.
   for (let i = 0; i < 5; i++) {
-    await page.click('#brandMark');
-    await page.waitForTimeout(80);
+    await clickSettled(page, '#brandMark');
   }
   await page.waitForSelector('#devMenu.show', { timeout: 5000 });
   await page.click('#spellLearnerInspectorOpen');
