@@ -1,284 +1,32 @@
-sợ
-sục
-sủi
-thiu
-thơ
-thư
-thỏ
-toạ
-trai
-tran
-tron
-trà
-trê
-trĩ
-trơ
-trả
-trỏ
-tuý
-tàu
-tám
-táo
-tây
-tên
-tìm
-tím
-tít
-tóc
-túi
-túp
-tăn
-tủi
-từ
-vung
-vãi
-vèo
-vít
-vói
-vại
-vẹt
-vể
-vịt
-vỏn
-vở
-vỡ
-xang
-xanh
-xào
-xám
-xán
-xát
-xây
-xèo
-xém
-xép
-xôn
-xõa
-xơi
-xẹp
-xệ
-xổ
-yêu
-ách
-đanh
-đinh
-đung
-đáy
-đây
-đèn
-đéo
-đêm
-đói
-đúp
-đĩa
-đũa
-đản
-đảo
-đẹp
-đẽo
-đọc
-ấm
-ập
-ắp
-ốc
-ối
-ồn
-ừm
 boong
-bánh
-bóng
-bĩnh
-bảng
-bấn
-bần
-bẩy
-bập
-bắc
-bằm
-bết
-bỉnh
-bịch
-bịnh
-bốn
-bời
-bợm
 chain
 chanh
 chinh
 chung
-chàm
-chân
-chín
-chóc
-chóp
-chơi
-chạy
-chảo
-chợ
-cóng
-cần
-cầu
-cằm
-cốc
-cứt
-cửa
-diêu
 doanh
-dấy
-dẫu
-dậm
-dặt
-dốt
-dừa
-dực
-ghế
 giang
-giàu
-giày
-giãy
-giúp
-giờ
-giở
-giữ
-gấu
-gập
-gắp
-gột
-gờm
-gửi
 hoang
 huynh
-huề
 hyang
-hàng
-hình
-hích
-hẵn
-hến
-hển
-họat
-hồn
-hộp
-hỡi
-hựu
 khanh
 khinh
 khoai
 khoan
 khung
-khóa
-khóc
-khói
-khăn
-khưu
-khạc
-khảm
-khản
-khế
-khỏe
-kính
-kền
 loang
-loát
-loét
-loẹt
-luôn
-làng
-lạnh
-lấy
-lẩn
-lặc
-lớn
-lớp
-lợm
-lợn
-lợp
-lửa
-máng
-mãng
-mạnh
-mất
-mẫm
-mắt
-mềm
-mệt
-mốt
-mội
-một
-mới
 ngang
-nghè
-nghĩ
 ngoan
-ngày
-ngáo
-ngát
-ngáy
-ngọa
-ngố
 nhang
 nhanh
 nhung
-nhàu
-nhìn
-nhòa
-nhõm
-nhạc
-nhảy
-nhẹn
-nhẹt
-nhớ
-nóng
-nập
-nết
-nịnh
-nồi
-nới
-nớt
-nức
-nực
 phang
 phanh
 phong
-phải
-phố
 quang
 quanh
-quên
-quại
-quệ
-ráng
-rình
-rích
-rùng
-răng
-rầy
-rẩy
-rắn
-rặn
-rết
-rốc
-rồi
-rộp
-rợn
-sành
-sách
-sáng
-sóng
-sông
-sũng
-sạch
-sắn
-sắt
-sến
-sởi
-sữa
 thang
 thanh
 thong
-thuỳ
-thào
-thân
 toang
 toanh
 train
@@ -293,3 +41,800 @@ xoong
 khoang
 khoanh
 nghinh
+buông
+chiêm
+chiên
+chiêu
+choán
+chuôi
+chàng
+chánh
+chênh
+chình
+chích
+chính
+chông
+chùng
+chúng
+chăng
+chưng
+chỉnh
+chủng
+duyên
+giành
+giáng
+giông
+giăng
+giảng
+giọng
+hoàng
+hoành
+hoạch
+huyên
+khiêm
+khiên
+khoác
+khoái
+khoán
+khoét
+khoản
+khuôn
+khách
+kháng
+khánh
+không
+khăng
+khủng
+kiêng
+loãng
+muông
+nghèo
+nghêu
+nghìn
+nghĩa
+nghẹt
+nghẽn
+ngoài
+ngoại
+nguôi
+ngành
+ngòai
+ngưng
+ngạch
+ngạnh
+nhiêm
+nhiên
+nhiêu
+nhành
+nhánh
+nhãng
+nhích
+nhông
+nhúng
+nhũng
+nhưng
+nhỉnh
+nuông
+phiên
+phiêu
+phách
+phình
+phích
+phòng
+phóng
+phông
+phùng
+phăng
+phỏng
+phụng
+quyên
+quách
+quáng
+quãng
+quăng
+quảng
+riêng
+thiêm
+thiên
+thiêu
+thoái
+thoát
+thoại
+thoạt
+thuôn
+thành
+thách
+tháng
+thánh
+thình
+thích
+thính
+thòng
+thông
+thùng
+thăng
+thạch
+thỉnh
+thịnh
+thủng
+truân
+tràng
+trách
+tráng
+tránh
+trình
+trích
+tròng
+trông
+trùng
+trúng
+trăng
+trũng
+trưng
+trạch
+trạng
+trọng
+tuyên
+viêng
+vuông
+xuyên
+đuông
+buồng
+chiêng
+chiếc
+chiếm
+chiến
+chiết
+chiếu
+chiều
+chiểu
+choáng
+chuyên
+chuông
+chuẩn
+chuối
+chuốt
+chuồn
+chuỗi
+chuộc
+chuột
+chẳng
+chặng
+chếch
+chệch
+chống
+chồng
+chứng
+chừng
+chững
+cuống
+cuồng
+cương
+duyện
+duyệt
+dương
+giếng
+giống
+guồng
+gương
+huyết
+huyền
+huyễn
+huyện
+huyệt
+hương
+khiêng
+khiến
+khiết
+khiển
+khoáng
+khoảng
+khuyên
+khuông
+khuất
+khuấy
+khuẩn
+khổng
+luyến
+luyện
+luống
+luồng
+lương
+miếng
+miệng
+muống
+muỗng
+mương
+nghiêm
+nghiên
+nghành
+nghênh
+nghịch
+ngoảnh
+nguyên
+nguốn
+nguồn
+nguội
+ngươi
+ngẩng
+ngỗng
+ngừng
+nhiếp
+nhiều
+nhiễm
+nhiễu
+nhiệm
+nhiệt
+nhuận
+nhuốm
+nhuộm
+nhộng
+những
+niễng
+nương
+phiến
+phiếu
+phiện
+phẳng
+phồng
+phỗng
+phộng
+quyết
+quyền
+quyển
+quyện
+quầng
+quẳng
+quặng
+riềng
+ruồng
+ruộng
+rương
+sương
+thiêng
+thiếc
+thiến
+thiếp
+thiết
+thiếu
+thiền
+thiều
+thiểm
+thiểu
+thiện
+thiệp
+thiệu
+thoáng
+thoắt
+thuyên
+thuần
+thuận
+thuật
+thuốc
+thuộc
+thắng
+thằng
+thẳng
+thống
+thừng
+tiếng
+triền
+triều
+triển
+triện
+triệt
+triệu
+truất
+trắng
+trệch
+trống
+trồng
+trứng
+tuyến
+tuyết
+tuyền
+tuyển
+tuyệt
+tuồng
+tương
+viếng
+vương
+xiềng
+xuống
+xuồng
+xương
+đương
+chuyến
+chuyền
+chuyển
+chuyện
+chuồng
+chuộng
+chương
+chườm
+chượp
+cường
+dường
+dưỡng
+dượng
+giương
+hướng
+hường
+hưởng
+khuyết
+khương
+lường
+lưỡng
+lượng
+mường
+nghiến
+nghiền
+nghiệm
+nghiện
+nghiệp
+nguyền
+nguyện
+nguyệt
+ngước
+người
+ngược
+nhuyễn
+nhược
+nướng
+phương
+phước
+sướng
+thuyết
+thuyền
+thương
+thước
+truyền
+truyện
+trương
+trước
+trườn
+trượt
+tướng
+tường
+tưởng
+tượng
+vướng
+vượng
+xướng
+xưởng
+đường
+chướng
+chưởng
+giường
+ngưỡng
+ngượng
+nhường
+nhượng
+phường
+phượng
+thường
+thưởng
+thượng
+trướng
+trường
+trưởng
+trượng
+có thể
+mô tả
+dân số
+sau đó
+gọi là
+tất cả
+vị trí
+tạo ra
+mật độ
+xã hội
+vấn đề
+một số
+thế kỷ
+xảy ra
+bảo vệ
+đơn vị
+phụ nữ
+hỗ trợ
+mặc dù
+cơ sở
+ra mắt
+đưa ra
+cả hai
+đô thị
+trở về
+dự án
+anh ta
+ủng hộ
+cơ thể
+gây ra
+bất kỳ
+tự do
+tốc độ
+kể từ
+thứ ba
+sở hữu
+chế độ
+vũ khí
+do đó
+ví dụ
+yếu tố
+bầu cử
+tỷ lệ
+ông ta
+lý do
+đầu tư
+nỗ lực
+tế bào
+chủ đề
+cơ bản
+trẻ em
+xử lý
+chỉ là
+cụ thể
+cô gái
+chú ý
+bề mặt
+tối đa
+đầy đủ
+đề cập
+mức độ
+vì vậy
+quy mô
+đô la
+có lẽ
+ca sĩ
+đồng ý
+cơ hội
+ở đây
+từ đó
+đe dọa
+bị bắt
+bí mật
+ở lại
+căn cứ
+anh em
+có mặt
+ý kiến
+cô ấy
+thế hệ
+dân cư
+bất cứ
+cư dân
+thứ tư
+độ cao
+vì thế
+màu đỏ
+cha mẹ
+từ khi
+lúc đó
+kẻ thù
+để lại
+bác sĩ
+tỏ ra
+địa lý
+ra đời
+hâm mộ
+cá thể
+đa số
+con số
+đề cử
+di cư
+như là
+bởi vì
+thị xã
+vũ trụ
+về sau
+kể cả
+kỷ lục
+trụ sở
+từ bỏ
+anh ấy
+đổ bộ
+bố trí
+nào đó
+lễ hội
+tức là
+cư trú
+thủ đô
+đi qua
+kế vị
+các vị
+bạn bè
+cơ chế
+vật lý
+phá vỡ
+có vẻ
+em gái
+đi vào
+tìm ra
+bày tỏ
+bộ lạc
+nội bộ
+cán bộ
+nhà ở
+tờ báo
+tâm lý
+cực kỳ
+món ăn
+cơ cấu
+vốn là
+ám sát
+dân sự
+hồ sơ
+nô lệ
+năm đó
+cổ đại
+tỉ lệ
+chu kỳ
+cố vấn
+họa sĩ
+vụ án
+ít hơn
+bản đồ
+dự bị
+hư hại
+mở ra
+âm mưu
+đặt ra
+bí ẩn
+bộ nhớ
+vĩ đại
+bỏ qua
+to lớn
+trợ lý
+đi bộ
+lật đổ
+tỉ số
+uy tín
+ức chế
+địa vị
+ưu thế
+hủy bỏ
+đối xử
+mở đầu
+chỉ số
+áp lực
+ý định
+cà phê
+lưu ý
+khi đó
+kỹ sư
+sợ hãi
+tần số
+chị em
+dữ dội
+thứ tự
+để trở
+đồ họa
+sụp đổ
+tự sát
+để cho
+bán lẻ
+bãi bỏ
+hữu cơ
+kể lại
+san hô
+tự trị
+tan rã
+tín đồ
+vui vẻ
+xử tử
+đi kèm
+đàn áp
+di sản
+dự trữ
+gặp gỡ
+tư vấn
+gợi ý
+cậu bé
+hẹn hò
+kết án
+sự cố
+về nhà
+đam mê
+đi học
+bỏ đi
+nhà ga
+đề tài
+rủi ro
+độ dài
+bộ tộc
+bức xạ
+cận vệ
+lập ra
+sư tử
+bác bỏ
+xe hơi
+xét xử
+căn hộ
+cửa sổ
+do vậy
+tòa án
+ý thức
+hợp lý
+làm gì
+nổ ra
+xấp xỉ
+độ sâu
+bộ máy
+mã hóa
+trị vì
+vĩ độ
+cơ học
+ra đi
+vị thế
+xe tải
+cô lập
+gia vị
+ký kết
+lái xe
+nhà tù
+nếu có
+tồi tệ
+tỷ số
+vô số
+xe đạp
+ẩm ướt
+ở nhà
+ca hát
+dạ dày
+cao độ
+cử tri
+đi lại
+gần đó
+ký tự
+thú vị
+trở đi
+tu sĩ
+đế chế
+hôm đó
+lá thư
+rõ rệt
+sa mạc
+thư ký
+tị nạn
+bán ra
+ám chỉ
+đắc cử
+bố mẹ
+chữ số
+hư cấu
+số nhà
+số ít
+sử gia
+tội ác
+cao su
+cá sấu
+có số
+nhờ đó
+rời đi
+thơ ấu
+y học
+ông ấy
+đại sứ
+ấn bản
+gắn bó
+kỳ thi
+làm lễ
+rời bỏ
+sứ giả
+tọa độ
+xen kẽ
+dự báo
+ghi âm
+giá cả
+hội tụ
+lo sợ
+ra sức
+rút về
+từ đầu
+xa lộ
+ám ảnh
+áp đảo
+đệ tử
+bảo hộ
+cho dù
+tổ hợp
+đi làm
+có khi
+cô bé
+cổ xưa
+hợp lệ
+ly dị
+mồ côi
+mở màn
+tư bản
+tự tử
+ứng cử
+cá voi
+ký ức
+lá cờ
+võ sĩ
+ai đó
+bị cáo
+lá cây
+ma túy
+mở cửa
+tại đó
+bắn hạ
+bỏ rơi
+cố thủ
+cụm từ
+hơn cả
+lên án
+một ít
+sơ tán
+tư thế
+tự tin
+ông bà
+đưa về
+đầu ra
+đồ vật
+bỏ lại
+hạ lưu
+phi vụ
+rực rỡ
+tối ưu
+tự vệ
+vì sao
+xe lửa
+bộc lộ
+bộ ba
+cơ bắp
+cự ly
+dầu mỏ
+thứ sử
+vẻ đẹp
+đo đạc
+đổ nát
+đứa bé
+bữa ăn
+có tài
+dị ứng
+gì đó
+hô hấp
+hệ số
+ly hôn
+nhà sư
+nấu ăn
+sơ bộ
+tố cáo
+tự hào
+vô tội
+xóa bỏ
+đại lý
+bất kể
+cái gì
+cục bộ
+dấu ấn
+hậu vệ
+kỳ lạ
+là vì
+ngụ ý
+phi cơ
+trú ẩn
+tụ tập
+đá vôi
+đồ thị
+ước mơ
+bà ta
+bản in
+bỏ tù
+bộ lọc
+cá mập
+cơ khí
+cư ngụ
+cứu hộ
+rút ra
+ít khi
+đô vật
+bà ấy
+cô ta
+du học
+sự vật
+tan vỡ
+từ ngữ
+đồ sộ
+bỏ lỡ

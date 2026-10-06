@@ -67,8 +67,14 @@ const RU: Layout = Layout {
 // Vietnamese: QWERTY + long-press for the letter-modified vowels (ă â ê ô ơ ư)
 // and đ; the five tones are applied post-fix via a dedicated tone row (see
 // build_keys / crate::viet). Every vowel form is thus reachable in ≤2 taps.
+// The trailing SPACE in the last row is deliberate and load-bearing: a
+// Vietnamese word is space-separated syllables (học sinh, thành phố), so without
+// a space key a player cannot type what they are shown. Placed in the row the
+// same way fil places its hyphen. `a_vietnamese_player_can_type_a_space` guards
+// it, because an invisible character at the end of a string literal is exactly
+// the kind of thing a tidy-up deletes.
 const VI: Layout = Layout {
-    rows: &["qwertyuiop", "asdfghjkl", "zxcvbnm"],
+    rows: &["qwertyuiop", "asdfghjkl", "zxcvbnm "],
     long_press: &[('a', "ăâ"), ('e', "ê"), ('o', "ôơ"), ('u', "ư"), ('d', "đ")],
 };
 // Korean Dubeolsik (2-set): consonants left, vowels right. Keys emit jamo; the
@@ -251,11 +257,16 @@ fn key_button(ch: char, punct: bool, accents: &str) -> String {
     let label = match ch {
         '\'' => "apostrophe".to_string(),
         '-' => "hyphen".to_string(),
+        ' ' => "space".to_string(),
         c => c.to_string(),
     };
     // Combining marks would render invisibly on a bare keycap, so show them on a
     // dotted-circle placeholder (◌ + mark), e.g. ◌́ ◌̀.
-    let face = if is_combining(ch) {
+    let face = if ch == ' ' {
+        // A blank keycap is not a key. U+2423 OPEN BOX is the conventional
+        // visible stand-in for a space.
+        "\u{2423}".to_string()
+    } else if is_combining(ch) {
         format!("\u{25cc}{ch}")
     } else if ch.is_alphabetic() {
         ch.to_uppercase().to_string()
@@ -734,4 +745,33 @@ mod tests {
             }
         }
     }
+    /// Vietnamese needs a space key, and the character that provides it is
+    /// invisible at the end of a string literal.
+    ///
+    /// A Vietnamese word is space-separated syllables -- học sinh, thành phố,
+    /// cà phê. Without this key a player is shown a word they cannot type.
+    /// 86% of the Vietnamese vocabulary in the corpus is multi-syllable, and the
+    /// single syllables that remain are 2-6 characters, so hard and expert
+    /// cannot be filled from any source without it.
+    ///
+    /// Grading does not require the space -- `fold_strict` drops whitespace, so
+    /// `họcsinh` already matches `học sinh` -- which is what makes the key an
+    /// affordance rather than a new way to be wrong. It still has to EXIST.
+    #[test]
+    fn a_vietnamese_player_can_type_a_space() {
+        let vi = layout_for(crate::consts::VI);
+        assert!(
+            vi.rows.iter().any(|r| r.contains(' ')),
+            "the vi layout lost its space key; a Vietnamese word cannot be typed without one"
+        );
+        // And nobody else grew one by accident: a space on an English keyboard
+        // would let a player submit two words as one answer.
+        for code in [crate::consts::EN, crate::consts::ES, crate::consts::FR, crate::consts::DE] {
+            assert!(
+                !layout_for(code).rows.iter().any(|r| r.contains(' ')),
+                "{code} has a space key and should not"
+            );
+        }
+    }
+
 }

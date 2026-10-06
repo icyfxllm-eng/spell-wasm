@@ -20,30 +20,46 @@ syllable SHAPES).
 
 ## Why length, not frequency
 
-With the junk gone, the frequency ranks that had defined these tiers described
-nothing — hard measured EASIER than medium (4.87 against 6.52), and
-`words.rs::every_tier_ladder_climbs` rightly refuses a ladder that does not
-climb. Re-deriving by length uses the same measure that test uses. Means now
-climb 3.50 / 4.72 / 5.77 / 7.23.
+The frequency ranks that had defined these tiers were computed over the polluted
+corpus and described nothing once the junk was gone — hard measured EASIER than
+medium — so tiers are derived by length, the same measure
+`words.rs::every_tier_ladder_climbs` uses.
 
-Unmarked words stay in easy and medium, where they are genuinely the common ones
-(anh, ba, cho, con, nhanh); hard and expert are entirely diacritic-bearing.
+## The space key — why hard and expert exist at all
 
-## What this cost
+A Vietnamese word is space-separated syllables: học sinh, thành phố, cà phê. The
+bank format was one token with no spaces, so 86% of the vocabulary was
+unrepresentable — 27,003 multi-syllable entries in the corpus against 4,541
+single ones. And a single Vietnamese syllable is two to six characters, so hard
+(7–8) and expert (9–15) could not be filled from any source at any size. That is
+why the bank was padded with English in the first place: the format wanted long
+tokens sharing bare Latin letters, which is what English supplies and Vietnamese
+does not.
 
-The Daily (letter forge) is no longer offered for Vietnamese. Its measured
-ceiling fell from 17 to ZERO: no gate, not even four, yields a puzzle every day
-of a year. The honeycomb needs many words sharing seven characters, and the
-English contamination was supplying exactly that. Vietnamese words are short
-syllables carrying tone and vowel-quality marks, so few fit inside any seven
-characters. See `forge.rs::min_pool`.
+`build-wordlists.py` now allows a space for vi, the same shape as the fil hyphen
+and fa ZWNJ exceptions beside it, and the vi keyboard carries a space key. The
+bank is 5,680 words, and hard and expert are real Vietnamese words rather than
+fragments.
 
-The Spell It mic is withdrawn for Vietnamese as well, for a separate reason —
-the lexicon cannot produce a tone mark. See `consts.rs::VOICE_SPELL_LANGS`.
+Grading never required the space: `fold_strict` drops whitespace, so `họcsinh`
+already matched `học sinh`. The key lets a player type what they are shown.
 
-## What would fix it
+## State
 
-A real Vietnamese frequency corpus, replacing all four files. That restores
-meaningful ranks, and it is the only thing that can bring the Daily back. The
-dropped words are still recoverable from this repository's history, and
-`build-wordlists.py` reports every drop with its reason when it runs.
+    easy      840   single syllables
+    medium    840   419 multi-syllable
+    hard     1500   1499 multi-syllable
+    expert   2500   all multi-syllable
+
+Means climb 4.44 / 7.50 / 10.12 / 12.89. The Daily is offered again at a gate of
+8, the same puzzle size Polish ships, with zero margin against its measured
+ceiling — see `forge.rs::min_pool`.
+
+The Spell It mic stays withdrawn for Vietnamese: it cannot produce a tone mark.
+See `consts.rs::VOICE_SPELL_LANGS`.
+
+## What is still owed
+
+The bank is capped at 5,680 by `poolFloors` in `config/bank_floors.json`. Raising
+those caps would let it grow and give the Daily real margin. The corpus has far
+more to give: 31,544 filtered Vietnamese entries, of which only 5,680 are used.

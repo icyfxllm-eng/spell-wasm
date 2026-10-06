@@ -210,23 +210,27 @@ pub fn min_pool(lang: &str) -> usize {
         // hi's ceiling is FIVE. A five-word puzzle is not a puzzle; hi is
         // flagged not-ready rather than shipped degraded — see forge_ready.
         "hi" => 4,
-        // vi's ceiling is ZERO, re-measured 2026-10-06 after the bank was
-        // cleaned: there is no gate, not even four, that yields a puzzle every
-        // day of a year.
+        // vi sits EXACTLY on its measured ceiling, which is deliberate and is
+        // the one place this table breaks its own rule about leaving margin.
         //
-        // Its old ceiling of 17 was borrowed. The vi bank was 73% not
-        // Vietnamese — English, brand names, place names — and those words
-        // share the bare Latin alphabet freely, which is exactly what a
-        // honeycomb needs. Vietnamese words are short syllables carrying tone
-        // and vowel-quality marks, so few of them fit inside any seven
-        // characters. The Vietnamese Daily was generable because it was being
-        // built out of English.
+        // The history is worth keeping. The old ceiling of 17 was borrowed: the
+        // bank was 73% not Vietnamese, and English words share the bare Latin
+        // alphabet freely, which is exactly what a honeycomb needs. Cleaning the
+        // bank dropped the ceiling to ZERO — no gate at all, not even four,
+        // yielded a puzzle every day — because Vietnamese words are short
+        // syllables carrying tone and vowel-quality marks and few fit inside any
+        // seven characters. The Vietnamese Daily had been built out of English.
         //
-        // So vi joins hi: not offered, rather than offered thin. The fix is a
-        // real Vietnamese corpus, not a lower gate — `junior_min_pool` already
-        // recorded that vi "has no Easy + Medium pangram at all", which was the
-        // same finding reaching the junior board first.
-        "vi" => 0,
+        // What changed is that Vietnamese words can now be in the bank at all.
+        // A Vietnamese word is space-separated syllables, the bank format was
+        // one token, and 86% of the vocabulary was therefore unrepresentable.
+        // With the space allowed the bank holds real multi-syllable words and
+        // the ceiling measured back up to 8 — the same puzzle size pl ships.
+        //
+        // Zero margin, by Eric's call 2026-10-06: a bank edit CAN drop this
+        // below 8 and un-ready the mode. That fails loudly rather than quietly,
+        // because every_ready_language_generates_a_full_year asserts it.
+        "vi" => 8,
         _ => 20,
     }
 }
@@ -494,7 +498,7 @@ mod tests {
     /// makes; hi is excluded because it cannot keep it.
     #[test]
     fn every_ready_language_generates_a_full_year() {
-        for lang in ["en","es","fr","de","pt","pl","ko","ja","fil","ru","sw","ar","zh"] {
+        for lang in ["en","es","fr","de","pt","pl","vi","ko","ja","fil","ru","sw","ar","zh"] {
             assert!(forge_ready(lang), "{lang} should be offered");
             for day in [0u64, 90, 180, 364] {
                 assert!(
@@ -504,10 +508,7 @@ mod tests {
             }
         }
         assert!(!forge_ready("hi"), "hi cannot sustain a playable pool and must not be offered");
-        // vi measures a ceiling of ZERO once the bank holds only Vietnamese: no
-        // gate at all yields a puzzle every day. It was generable before only
-        // because 73% of its bank was English.
-        assert!(!forge_ready("vi"), "vi cannot sustain a playable pool and must not be offered");
+
     }
 
     /// F3's generability report: of 365 seeds (a year of Daily Forges), how

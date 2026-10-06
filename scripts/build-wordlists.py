@@ -257,6 +257,17 @@ def build():
                 # orthographic character, not a loophole.
                 if not all(c.isalpha() or _ud.category(c) in ("Mn", "Mc")
                            or (code == "fil" and c == "-")
+                           # vi: Vietnamese writes a WORD as space-separated
+                           # syllables -- học sinh, thành phố, cà phê. Rejecting
+                           # the space does not reject a stray character, it
+                           # rejects 86% of the vocabulary and leaves a bank of
+                           # syllables that cannot fill a tier: the corpus has
+                           # 27,003 multi-syllable entries against 4,541 single
+                           # ones, and single syllables are 2-6 characters so
+                           # hard and expert cannot be filled from any source.
+                           # Same shape as the fil hyphen beside it: a
+                           # per-language orthographic character, not a loophole.
+                           or (code == "vi" and c == " ")
                            or (code == "fa" and c == "‌") for c in w):
                     warnings.append(f"{where} — dropped (non-alphabetic)")
                     continue

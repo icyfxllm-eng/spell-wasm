@@ -1012,6 +1012,10 @@
     -webkit-tap-highlight-color:transparent;touch-action:manipulation}
   .kb-key{flex:0 0 auto;width:var(--kb-key)}
   .kb-key:active,.kb-back:active{background:var(--amber);color:#36210a;border-color:var(--amber);transform:translateY(1px)}
+  /* The Vietnamese space key. Wide like a space bar so it reads as one, and
+     muted so it does not compete with the letters. Vietnamese is the only
+     layout carrying one -- a word there is space-separated syllables. */
+  .kb-key[data-k=" "]{flex:0 0 auto;min-width:5.5rem;opacity:.72;letter-spacing:.1em}
   .kb-key.kb-punct{display:none}
   .game-kb.show-punct .kb-key.kb-punct{display:inline-flex}
   .kb-actions{gap:8px;margin-top:2px}
