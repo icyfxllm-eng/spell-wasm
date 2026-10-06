@@ -4,10 +4,10 @@
 Downscales to 1600px on the long edge, files each photo under the acceptance
 row it is meant to satisfy, and writes a sidecar for the ground truth.
 
-Why 1600px: OCR needs resolution, git does not need 100 MB of phone JPEGs
-forever. tests/fixtures is 36 KB today. A 12-megapixel photo is 2-4 MB; at
-1600px it is 200-400 KB and still far above what Vision needs to read body
-text. Eric's call, 2026-10-03.
+Pairing, downscaling and sidecars live in tools/fixture_shoot.py, shared
+with the Level 2 layout shoot. Note the pairing rule it documents: a photo
+whose filename starts with a row number claims that row, so a skipped scene
+no longer silently misfiles every photo after it.
 
 Why it nags about rows: C2 asks for "20 photos" in four buckets, but the
 acceptance table asks for specific SCENES -- a warm lamp, an aged page, a
@@ -24,14 +24,13 @@ and nothing can derive it from the pixels -- that is the whole point of it.
 """
 
 import argparse
-import json
 import pathlib
-import shutil
-import subprocess
 import sys
 
+sys.path.insert(0, str(pathlib.Path(__file__).resolve().parent))
+import fixture_shoot as fs  # noqa: E402
+
 DEST = pathlib.Path("tests/fixtures/snap-highlight")
-LONG_EDGE = 1600
 
 # The acceptance table, as a shot list. `needs` is what must be in the frame.
 ROWS = [
@@ -57,78 +56,30 @@ FILLER = [(f"16-worksheet-plain-{i}", None, "another plain worksheet") for i in 
 PLAN = ROWS + FILLER
 
 
-def long_edge(path):
-    out = subprocess.run(
-        ["sips", "-g", "pixelWidth", "-g", "pixelHeight", str(path)],
-        capture_output=True, text=True,
-    ).stdout
-    dims = [int(l.split(":")[1]) for l in out.splitlines() if ":" in l and l.split(":")[1].strip().isdigit()]
-    return max(dims) if dims else 0
+
+def sidecar(row, needs):
+    return {
+        "_row": row,
+        "_needs": needs,
+        "_fill_this_in": "list the words you actually marked, then delete this key",
+        "highlighted": [],
+        "colours": [],
+    }
 
 
 def main():
     ap = argparse.ArgumentParser(description=__doc__,
                                  formatter_class=argparse.RawDescriptionHelpFormatter)
-    ap.add_argument("source", help="folder of photos, in the order of the shot list")
+    ap.add_argument("source", help="folder of photos; a name starting with a row number claims that row")
     ap.add_argument("--write", action="store_true", help="actually convert and write")
     args = ap.parse_args()
 
-    if not shutil.which("sips"):
-        sys.exit("FATAL: sips not found. It ships with macOS; this script assumes it.")
-
-    src = pathlib.Path(args.source).expanduser()
-    photos = sorted(
-        p for p in src.iterdir()
-        if p.suffix.lower() in (".jpg", ".jpeg", ".png", ".heic") and not p.name.startswith(".")
-    )
-    if not photos:
-        sys.exit(f"FATAL: no photos in {src}")
-
-    print(f"  {len(photos)} photo(s) in {src}")
-    print(f"  the shot list wants {len(PLAN)}\n")
-
-    paired = list(zip(photos, PLAN))
-    for photo, (name, row, needs) in paired:
-        size_mb = photo.stat().st_size / 1e6
-        edge = long_edge(photo)
-        print(f"  {photo.name:22} -> {name}.jpg   {edge}px {size_mb:.1f}MB"
-              + (f"   [row {row}]" if row else ""))
-        print(f"      needs: {needs}")
-
-    missing = PLAN[len(photos):]
-    if missing:
-        print(f"\n  NOT COVERED — {len(missing)} shot(s) still needed:")
-        for name, row, needs in missing:
-            print(f"    {('row ' + str(row)) if row else 'filler':9} {needs}")
-    extra = photos[len(PLAN):]
-    if extra:
-        print(f"\n  {len(extra)} photo(s) beyond the shot list, ignored.")
-
+    paired, leftover = fs.pair(fs.photos_in(args.source), PLAN)
+    fs.report(paired, leftover, DEST)
     if not args.write:
         print("\n  (dry run. add --write to convert)")
         return
-
-    DEST.mkdir(parents=True, exist_ok=True)
-    total = 0
-    for photo, (name, row, needs) in paired:
-        out = DEST / f"{name}.jpg"
-        subprocess.run(
-            ["sips", "-s", "format", "jpeg", "-Z", str(LONG_EDGE), str(photo), "--out", str(out)],
-            capture_output=True, check=True,
-        )
-        total += out.stat().st_size
-        side = DEST / f"{name}.expected.json"
-        if side.exists():
-            print(f"  kept existing {side.name} (not overwriting your ground truth)")
-            continue
-        side.write_text(json.dumps({
-            "_row": row,
-            "_needs": needs,
-            "_fill_this_in": "list the words you actually marked, then delete this key",
-            "highlighted": [],
-            "colours": [],
-        }, indent=2) + "\n")
-    print(f"\n  wrote {len(paired)} photo(s), {total/1e6:.1f} MB total, to {DEST}")
+    fs.write(paired, DEST, sidecar)
     print("  now fill in `highlighted` in each .expected.json — nothing can infer it.")
 
 
