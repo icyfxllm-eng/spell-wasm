@@ -19,6 +19,35 @@
 //! bitmap -- which is how I-H6 is satisfied by construction rather than by
 //! audit.
 //!
+//! # The fill test, and why F2's text mask was not enough
+//!
+//! F2 masks text by "luminance below an Otsu threshold" and then treats what
+//! survives as background. On the first real fixture page that let a blue
+//! section heading through: the Otsu cut fell at L=143, mid-tone coloured
+//! type is brighter than that, and the heading is strongly saturated. It
+//! looked exactly like a highlight. On a technical book, every section title
+//! would have imported.
+//!
+//! A better luminance number does not fix it, for the same reason an absolute
+//! saturation threshold could not survive aged paper. The fix is relative: a
+//! highlighter is a FILL and keeps most of the paper's brightness; coloured
+//! type and pen ink are STROKES and are far darker than the page they sit on.
+//!
+//! Measured across five real pages -- Apple Books highlight 0.00 below paper,
+//! Kindle highlight 0.05, a yellow highlighter photographed on cream book
+//! paper 0.08, a cyan marker on a photographed form 0.35, Kindle's blue
+//! heading 0.53, a red pen strikethrough 0.59, a deep gutter shadow 0.77.
+//! Highlights 0.00-0.35, type and ink and shadow 0.53-0.77. `max_v_drop` is
+//! 0.45, between them.
+//!
+//! The book-paper number is the load-bearing one. A real highlighter under
+//! room light, on cream paper whose own V is 0.800, sits 0.08 below its page
+//! -- the same place a screen highlight sits. The rule is not an artefact of
+//! pixel-perfect screenshots.
+//!
+//! It also keeps pen strikethrough out without a special case, which D-H6
+//! wanted anyway.
+//!
 //! # Why a histogram crosses the bridge
 //!
 //! CC-SNAP-BOXES D-B5 settled that the pixels stay in Swift and only numbers
@@ -61,8 +90,12 @@ pub struct HighlightConfig {
     pub coverage: f32,
     pub delta_s_camera: f32,
     pub delta_s_screenshot: f32,
-    /// Applied in the shim, mirrored here so the check can compare them.
-    pub v_min: f32,
+    /// How far below the page's own brightness a saturated pixel may sit and
+    /// still be a highlighter mark rather than type.
+    ///
+    /// This replaces F2's absolute `v_min`, and the replacement is the whole
+    /// of the coloured-heading fix. See the module header.
+    pub max_v_drop: f32,
     pub hue_buckets: u8,
     pub sat_buckets: usize,
 }
@@ -88,6 +121,10 @@ impl HighlightConfig {
 pub struct PageStats {
     /// Median saturation of non-text pixels outside every dilated word box.
     pub paper_s: f32,
+    /// The same pixels' median VALUE. F1 always specified this ("paper_V
+    /// similarly"); the first cut of this module dropped it, which is what
+    /// left nothing to measure a coloured heading against.
+    pub paper_v: f32,
     /// How many pixels that median was taken from. On a dense book page this
     /// is margins only, and on a cropped e-reader screenshot it can be close
     /// to nothing -- which is the whole reason `min_paper_px` exists.
@@ -106,11 +143,22 @@ pub struct BoxStats {
     /// Dominant hue of the saturated pixels, in degrees. None when there are
     /// none.
     pub hue_deg: Option<u16>,
+    /// How far below `paper_v` those saturated pixels sit, as a fraction.
+    ///
+    /// One number per box, and it is what tells a highlighter from a heading.
+    /// The shim measures it; the THRESHOLD stays here, so the fixture can
+    /// retune it without an app build -- the same reason ΔS lives on this
+    /// side. `None` means the shim did not report it, and an unmeasured box
+    /// is judged on saturation alone, as it was before.
+    pub mark_v_drop: Option<f32>,
 }
 
 #[derive(Clone, Copy, PartialEq, Debug)]
 pub struct WordScore {
     pub highlighted: bool,
+    /// Set when saturation alone would have said yes and something else said
+    /// no. Worth surfacing: a silent rejection is the hardest kind to debug.
+    pub rejected: Option<Rejected>,
     /// Fraction of background pixels reading as marked. DEV_PREVIEW only in
     /// the UI (D-H8), but always computed -- it is what a tuning run reads.
     pub frac_sat: f32,
@@ -119,6 +167,14 @@ pub struct WordScore {
 }
 
 /// Why a page scored nothing, when it scored nothing.
+/// Why a box with plenty of saturated background was not a highlight.
+#[derive(Clone, Copy, PartialEq, Eq, Debug)]
+pub enum Rejected {
+    /// Its saturated pixels are far darker than the page: type or ink, not a
+    /// fill laid over the paper.
+    TooDarkForAMark,
+}
+
 #[derive(Clone, Copy, PartialEq, Eq, Debug)]
 pub enum NotScored {
     /// `min_paper_px` is still null: the C2 fixture has not been made.
@@ -147,7 +203,7 @@ pub fn score_page(cfg: &HighlightConfig, page: &PageStats, boxes: &[BoxStats]) -
     let unscored = |why: NotScored| PageScore {
         words: boxes
             .iter()
-            .map(|_| WordScore { highlighted: false, frac_sat: 0.0, hue_bucket: None })
+            .map(|_| WordScore { highlighted: false, rejected: None, frac_sat: 0.0, hue_bucket: None })
             .collect(),
         not_scored: Some(why),
     };
@@ -172,7 +228,7 @@ pub fn score_page(cfg: &HighlightConfig, page: &PageStats, boxes: &[BoxStats]) -
 
 fn score_box(cfg: &HighlightConfig, b: &BoxStats, cut: f32) -> WordScore {
     if b.bg_px == 0 {
-        return WordScore { highlighted: false, frac_sat: 0.0, hue_bucket: None };
+        return WordScore { highlighted: false, rejected: None, frac_sat: 0.0, hue_bucket: None };
     }
     let n = cfg.sat_buckets.max(1);
     // A bucket counts when ANY of its saturations clears the cut -- that is,
@@ -187,9 +243,18 @@ fn score_box(cfg: &HighlightConfig, b: &BoxStats, cut: f32) -> WordScore {
         .map(|(_, c)| *c)
         .sum();
     let frac_sat = sat_px as f32 / b.bg_px as f32;
-    let highlighted = frac_sat >= cfg.coverage;
+    let enough = frac_sat >= cfg.coverage;
+
+    // The fill test. A highlighter sits ON the paper and keeps most of its
+    // brightness; coloured type and pen ink are strokes and are far darker.
+    // Without this, a blue section heading is indistinguishable from a yellow
+    // highlight -- both are "saturated background" once an absolute luminance
+    // mask has let the heading through.
+    let too_dark = b.mark_v_drop.is_some_and(|d| d > cfg.max_v_drop);
+    let highlighted = enough && !too_dark;
     WordScore {
         highlighted,
+        rejected: if enough && too_dark { Some(Rejected::TooDarkForAMark) } else { None },
         frac_sat,
         hue_bucket: if highlighted { b.hue_deg.map(|h| hue_bucket(h, cfg.hue_buckets)) } else { None },
     }

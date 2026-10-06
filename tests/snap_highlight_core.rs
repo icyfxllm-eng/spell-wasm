@@ -9,7 +9,7 @@
 use proptest::prelude::*;
 use spell_wasm::snap_highlight::{
     hue_bucket, rejoin_hyphens, score_page, BoxStats, HighlightConfig, Joined, NotScored,
-    PageStats, Source, Word,
+    PageStats, Rejected, Source, Word,
 };
 
 const N: usize = 32;
@@ -26,17 +26,23 @@ fn cfg() -> HighlightConfig {
 /// A box whose background is `frac` marked, at saturation `sat`, the rest at
 /// saturation 0.
 fn boxed(frac: f32, sat: f32, hue: Option<u16>) -> BoxStats {
+    boxed_v(frac, sat, hue, Some(0.05))
+}
+
+/// The same, with an explicit "how far below the paper the marked pixels sit".
+/// 0.05 is a real highlighter; 0.53 is the blue heading that started this.
+fn boxed_v(frac: f32, sat: f32, hue: Option<u16>, v_drop: Option<f32>) -> BoxStats {
     let total = 1000u32;
     let marked = (total as f32 * frac).round() as u32;
     let mut hist = vec![0u32; N];
     let bucket = ((sat * N as f32) as usize).min(N - 1);
     hist[bucket] += marked;
     hist[0] += total - marked;
-    BoxStats { bg_px: total, sat_hist: hist, hue_deg: hue }
+    BoxStats { bg_px: total, sat_hist: hist, hue_deg: hue, mark_v_drop: v_drop }
 }
 
 fn page(paper_s: f32, source: Source) -> PageStats {
-    PageStats { paper_s, paper_sample_px: 5_000, source }
+    PageStats { paper_s, paper_v: 1.0, paper_sample_px: 5_000, source }
 }
 
 #[test]
@@ -96,7 +102,7 @@ fn too_little_paper_scores_nothing() {
 
 #[test]
 fn an_empty_box_is_not_highlighted() {
-    let b = BoxStats { bg_px: 0, sat_hist: vec![0; N], hue_deg: Some(55) };
+    let b = BoxStats { bg_px: 0, sat_hist: vec![0; N], hue_deg: Some(55), mark_v_drop: Some(0.05) };
     let s = score_page(&cfg(), &page(0.05, Source::Camera), &[b]);
     assert_eq!(s.count(), 0, "a box with no background pixels cannot be marked");
     assert_eq!(s.words[0].frac_sat, 0.0);
@@ -146,6 +152,53 @@ fn ih5_scoring_is_deterministic() {
         let again = score_page(&cfg(), &p, &boxes);
         assert_eq!(first.words, again.words, "scoring is not deterministic");
     }
+}
+
+/// The coloured-heading false positive, which a real fixture page carried.
+/// Saturation alone says yes; the pixels are far darker than the paper, so it
+/// is type, not a mark.
+#[test]
+fn a_coloured_heading_is_not_a_highlight() {
+    let heading = boxed_v(1.0, 0.8, Some(200), Some(0.53));
+    let s = score_page(&cfg(), &page(0.0, Source::Screenshot), &[heading]);
+    assert_eq!(s.count(), 0, "a blue section heading must not import as a highlight");
+    assert_eq!(s.words[0].rejected, Some(Rejected::TooDarkForAMark));
+    assert!(s.words[0].frac_sat >= 0.5, "and it was rejected DESPITE the coverage, not for lack of it");
+}
+
+/// A deep gutter shadow in a photo of an open book is saturated and very
+/// dark; it must not read as a mark either.
+#[test]
+fn a_gutter_shadow_is_not_a_highlight() {
+    let shadow = boxed_v(1.0, 0.8, Some(200), Some(0.77));
+    assert_eq!(score_page(&cfg(), &page(0.09, Source::Camera), &[shadow]).count(), 0);
+}
+
+/// Pen strikethrough falls out of the same rule, which is what D-H6 wanted.
+#[test]
+fn pen_ink_is_not_a_highlight_either() {
+    let ink = boxed_v(1.0, 0.8, Some(5), Some(0.59));
+    assert_eq!(score_page(&cfg(), &page(0.15, Source::Camera), &[ink]).count(), 0);
+}
+
+/// The four real marks measured on 2026-10-06 must all still read as marks.
+/// Apple Books 0.00, Kindle 0.05, a cyan marker photographed on a form 0.35.
+#[test]
+fn every_measured_real_mark_survives_the_fill_test() {
+    for (who, drop) in [("apple books", 0.00f32), ("kindle", 0.05),
+                        ("yellow highlighter on cream book paper", 0.08),
+                        ("cyan marker on a photo", 0.35)] {
+        let m = boxed_v(0.9, 0.8, Some(53), Some(drop));
+        assert_eq!(score_page(&cfg(), &page(0.04, Source::Camera), &[m]).count(), 1,
+            "{who} (V drop {drop}) stopped being a highlight");
+    }
+}
+
+/// A shim that does not report the drop must not silently lose every mark.
+#[test]
+fn an_unmeasured_box_is_judged_on_saturation_alone() {
+    let b = boxed_v(0.9, 0.8, Some(53), None);
+    assert_eq!(score_page(&cfg(), &page(0.0, Source::Camera), &[b]).count(), 1);
 }
 
 // ------------------------------------------------------------------- F3

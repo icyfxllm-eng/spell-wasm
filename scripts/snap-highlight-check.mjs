@@ -35,9 +35,11 @@ const CONFIG = 'config/snap-highlight.json';
 const RUST = 'src/snap_highlight.rs';
 const SWIFT = 'ios/App/App/NativeLanguageKitPlugin+PhotoList.swift';
 const KEYS = ['calibrated', 'min_paper_px', 'coverage', 'delta_s_camera',
-  'delta_s_screenshot', 'v_min', 'hue_buckets', 'sat_buckets'];
+  'delta_s_screenshot', 'max_v_drop', 'hue_buckets', 'sat_buckets'];
 // Mirrored into Swift because the shim applies them where the pixels are.
-const MIRRORED = ['v_min', 'sat_buckets'];
+// The shim measures the V drop per box; the THRESHOLD is Rust's, so only
+// the bucket count still has to match on both sides.
+const MIRRORED = ['sat_buckets'];
 
 export function problems(configPath = CONFIG, rustPath = RUST, swiftPath = SWIFT) {
   const out = [];
@@ -63,7 +65,7 @@ export function problems(configPath = CONFIG, rustPath = RUST, swiftPath = SWIFT
   }
 
   // Ranges. A saturation threshold outside 0..1 is a typo, not a choice.
-  for (const k of ['coverage', 'delta_s_camera', 'delta_s_screenshot', 'v_min']) {
+  for (const k of ['coverage', 'delta_s_camera', 'delta_s_screenshot', 'max_v_drop']) {
     const v = cfg[k];
     if (typeof v !== 'number' || !(v >= 0 && v <= 1)) {
       out.push(`${k} is ${JSON.stringify(v)}; it is a 0..1 fraction`);
@@ -79,7 +81,7 @@ export function problems(configPath = CONFIG, rustPath = RUST, swiftPath = SWIFT
     if (!rust.includes(`include_str!("../${configPath}")`)) {
       out.push(`${rustPath} does not include_str! ${configPath} — it must read the one source`);
     }
-    for (const k of ['coverage', 'delta_s_camera', 'delta_s_screenshot', 'v_min']) {
+    for (const k of ['coverage', 'delta_s_camera', 'delta_s_screenshot', 'max_v_drop']) {
       // A literal of the config's own value, assigned to something named like
       // the key, is the shape of a second copy.
       const re = new RegExp(`${k}\\s*[:=]\\s*${String(cfg[k]).replace('.', '\\.')}\\b`);
@@ -106,7 +108,7 @@ export function problems(configPath = CONFIG, rustPath = RUST, swiftPath = SWIFT
 function selftest() {
   const good = {
     calibrated: false, min_paper_px: null, coverage: 0.5, delta_s_camera: 0.25,
-    delta_s_screenshot: 0.25, v_min: 0.35, hue_buckets: 12, sat_buckets: 32,
+    delta_s_screenshot: 0.25, max_v_drop: 0.45, hue_buckets: 12, sat_buckets: 32,
   };
   const rust = 'const CONFIG_JSON: &str = include_str!("../config/snap-highlight.json");';
   const cases = [
@@ -115,7 +117,7 @@ function selftest() {
     ['an invented min_paper_px is caught', { ...good, min_paper_px: 500 }, rust, 1],
     ['claiming calibration with no number is caught', { ...good, calibrated: true }, rust, 1],
     ['a coverage above 1 is caught', { ...good, coverage: 50 }, rust, 1],
-    ['a missing key is caught', (() => { const c = { ...good }; delete c.v_min; return c; })(), rust, 2],
+    ['a missing key is caught', (() => { const c = { ...good }; delete c.max_v_drop; return c; })(), rust, 2],
     ['a Rust copy of a threshold is caught', good, `${rust}\nlet coverage = 0.5;`, 1],
     ['Rust not reading the one source is caught', good, 'let x = 1;', 1],
   ];

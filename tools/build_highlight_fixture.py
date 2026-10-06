@@ -74,10 +74,15 @@ ROWS = [
                                  "(a technical book, blue or red section titles)"),
     ("17-form-other-colour", 17, "a printed FORM marked with a NON-YELLOW highlighter "
                                  "(cyan, pink or green), photographed not screenshotted"),
+    # Added 2026-10-06 from a photo Eric sent. The facing page is the point:
+    # it is in frame and readable, so OCR returns words from a page nobody
+    # meant to import, and no other row has a second page in it at all.
+    ("18-open-book-facing-page", 18, "an OPEN BOOK with the FACING PAGE in frame, "
+                                     "highlights on one side only (FILED 2026-10-06)"),
 ]
 # C2 also asks for bulk: 10 plain worksheets and 5 yellow book pages in total.
 # The named rows cover some of those; these are the filler.
-FILLER = [(f"18-worksheet-plain-{i}", None, "another plain worksheet") for i in range(2, 8)]
+FILLER = [(f"19-worksheet-plain-{i}", None, "another plain worksheet") for i in range(2, 8)]
 PLAN = ROWS + FILLER
 
 

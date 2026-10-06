@@ -240,6 +240,41 @@ plausibly lands under D-H1's 0.50 — untested. The semantic question matters
 more than the geometry: a struck-through word usually means *done*, which is
 the opposite of *teach me this*.
 
+**F2's text mask is fixed, 2026-10-06, and F2's wording no longer matches
+the code.** The absolute `v_min` is replaced by a paper-relative
+`max_v_drop` of 0.45. A highlighter is a FILL and keeps most of the page's
+brightness; coloured type, pen ink and shadow are strokes and are far darker
+than the page they sit on. Measured V drop below paper, across six real
+pages:
+
+| | V drop |
+|---|---|
+| Apple Books highlight | 0.00 |
+| Kindle highlight | 0.05 |
+| yellow highlighter on cream book paper (row 18) | 0.08 |
+| cyan marker on a photographed form | 0.35 |
+| **Kindle's blue section heading — type** | **0.53** |
+| red pen strikethrough — ink | 0.59 |
+| gutter shadow of an open book | 0.77 |
+
+Marks 0.00–0.35, everything else 0.53–0.77. Row 18 is the load-bearing
+measurement: it is the only physical highlighter on physical paper, and
+without it the rule rested entirely on pixel-perfect screenshots.
+
+The shim reports one number per box (`mark_v_drop`); the threshold stays in
+the core so the fixture can retune it without an app build. A box that trips
+it reports `Rejected::TooDarkForAMark` rather than scoring zero in silence.
+It also keeps pen strikethrough out with no special case, which D-H6 wanted.
+
+**This changes F2, which is Eric's text.** The spec above still says "mask
+out text pixels (luminance below Otsu)" and `V >= V_min`; the code no longer
+does either. The wording needs his edit, not mine.
+
+**Row 18 filed**: an open book with the facing page in frame. The facing
+page is the row's point — it is readable, so OCR returns words from a page
+nobody meant to import, and `must_not_import` is the interesting half of its
+ground truth.
+
 **C1 HALTs, and C2 is why it stays halted.** `docs/CC-SNAP-BOXES.md` now
 delivers word boxes to the core, so half of C1 is satisfied. The other half —
 pixels — is deliberately not built. CC-SNAP-BOXES F3 specifies the shim but

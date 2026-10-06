@@ -1,12 +1,13 @@
 {
-  "_comment": "CC-SNAP-HIGHLIGHT v1 F1/F2 — the ONE source for every highlight threshold. Rust bakes this in with include_str!; the Swift shim mirrors v_min and sat_buckets (the only two it needs, because it applies the V cut and buckets the saturations where the pixels are); scripts/snap-highlight-check.mjs fails the build if they drift. Change a number here, nowhere else.",
+  "_comment": "CC-SNAP-HIGHLIGHT v1 F1/F2 \u2014 the ONE source for every highlight threshold. Rust bakes this in with include_str!; the Swift shim mirrors v_min and sat_buckets (the only two it needs, because it applies the V cut and buckets the saturations where the pixels are); scripts/snap-highlight-check.mjs fails the build if they drift. Change a number here, nowhere else.",
   "_calibration": "min_paper_px is null ON PURPOSE. CC-SNAP-HIGHLIGHT's review record says it can only be calibrated against the C2 20-photo fixture, which does not exist yet, and inventing it would mean making up the number the constant exists to carry. While it is null the detector scores NOTHING highlighted, which is exactly the v1 fall-back the Intent asks for: fail toward showing every word. Set it, flip calibrated to true, and the detector starts.",
   "calibrated": false,
   "min_paper_px": null,
   "coverage": 0.5,
   "delta_s_camera": 0.25,
   "delta_s_screenshot": 0.25,
-  "v_min": 0.35,
+  "_v_rule": "max_v_drop replaces F2's absolute v_min, and the reason is measured. A highlighter is a FILL: its pixels stay near the paper's own brightness. Coloured TYPE and pen ink are strokes: they are far darker than the paper. Measured V drop from paper across four real pages -- Apple Books highlight 0.00, Kindle highlight 0.05, YELLOW HIGHLIGHTER ON CREAM BOOK PAPER PHOTOGRAPHED 0.08, cyan marker on a photographed form 0.35, Kindle's blue section heading 0.53, red pen strikethrough 0.59, and a deep gutter shadow 0.77. Highlights 0.00-0.35, type and ink 0.53-0.59, so 0.45 sits between them with about 0.1 either side. An ABSOLUTE v_min cannot do this: 0.35 absolute kept a mid-tone heading on a white screen and would have dropped a real highlight in a dim photo. Same lesson as paper-relative saturation. The book-paper figure is the one that mattered most: a physical highlighter under room light, on cream paper at paper V 0.800, behaves like a screen highlight -- 0.08 below its own page -- so the rule is not an artefact of pixel-perfect screenshots.",
+  "max_v_drop": 0.45,
   "hue_buckets": 12,
   "sat_buckets": 32
 }

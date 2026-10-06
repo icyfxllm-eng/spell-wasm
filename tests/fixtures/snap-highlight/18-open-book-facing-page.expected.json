@@ -1,0 +1,23 @@
+{
+  "_row": 18,
+  "_needs": "an OPEN BOOK photographed with the FACING PAGE in frame, highlights on one side only",
+  "_source": "Death Poems of Samurai, p.49. Eric, 2026-10-06.",
+  "highlighted": [
+    "Kamakura",
+    "influenced",
+    "adventure"
+  ],
+  "_confirmed": "read off the photo by Claude; confirm before this row scores anything",
+  "colours": [
+    "yellow"
+  ],
+  "measured": {
+    "paper_s": 0.094,
+    "paper_v": 0.8,
+    "mark_v_drop": 0.08,
+    "mark_hue_deg": 53,
+    "gutter_shadow_v_drop": 0.77
+  },
+  "notes": "The row's point is the FACING PAGE: it is in frame, angled, and readable, so OCR will return words from a page nobody meant to import. must_not_import is therefore the interesting half of this row's ground truth and is deliberately left for a person -- it is every word the camera caught from the left-hand page.\n\nThis photo is also the evidence behind max_v_drop. It is the only real highlighter on real paper measured so far: paper V 0.800, mark 0.08 below it, which is where the e-reader marks sit on a pure white screen. Without it the fill rule rested entirely on screenshots. Its gutter shadow at 0.77 is a second gift -- saturated, very dark, and correctly rejected by the same rule.",
+  "must_not_import": []
+}
