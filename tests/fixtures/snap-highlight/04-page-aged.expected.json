@@ -1,0 +1,15 @@
+{
+  "_row": 4,
+  "_needs": "aged or cream paper, NO highlighter",
+  "_source": "a Java reference, Chapter 6 opening page. Eric, 2026-10-06.",
+  "highlighted": [],
+  "_why_empty": "No highlighter on this page. N must be 0. This is I-H2's control.",
+  "colours": [],
+  "measured": {
+    "paper_s": 0.141,
+    "paper_v": 0.824,
+    "most_saturated_cluster_v_drop": 0.66,
+    "mark_like_pixels_after_fill_rule": 0
+  },
+  "notes": "A better control than a blank sheet, because the page is busy. Warm cream paper at S 0.141 -- the same range as the Liber page at 0.145 and the Life of Reason page at 0.137 -- shot at an angle with a gutter shadow and the facing page partly in frame, and carrying a decorative display-font heading, a drop cap, checkmark bullet glyphs, inline monospace code and a margin illustration. Plenty for a detector to trip over.\n\nNothing survives. Every pixel that clears paper+0.25 on saturation sits 0.65-0.70 below paper -- it is the dark text carrying the page's warm cast -- and the fill rule rejects all of it. So this page exercises BOTH filters in the direction that matters for a control: saturation alone would flag 0.8% of the page, and the fill rule takes it to zero.\n\nWorth contrasting with row 16, where the same fill rule fails. There the saturated thing was LIGHT coloured type at 0.29; here it is DARK text at 0.66. The rule separates marks from dark things, and cannot separate marks from light things. These two rows are the pair that shows exactly where its edge is."
+}
