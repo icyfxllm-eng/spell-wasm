@@ -1,0 +1,15 @@
+{
+  "_row": 16,
+  "_needs": "a page with COLOURED HEADING TEXT and NO highlighter",
+  "_source": "Kindle screenshot of a Python book. Eric, 2026-10-06.",
+  "highlighted": [],
+  "_why_empty": "No highlighter on this page. N must be 0.",
+  "colours": [],
+  "measured": {
+    "paper_s": 0.0,
+    "paper_v": 1.0,
+    "heading_v_drop": 0.29,
+    "heading_share": 0.043
+  },
+  "notes": "THIS ROW CURRENTLY FAILS, and that is why it was wanted.\n\nIts blue headings drop only 0.29 below paper -- under max_v_drop of 0.45 -- so the fill rule does NOT reject them, and they cover 4.3% of the page in large type, so coverage will not save it either the way it saves thin pen ink. This page should import every section title.\n\nIt also kills the threshold. Row 11's heading measured 0.53 and this one is 0.29, so coloured headings span 0.29-0.53 while real marks span 0.00-0.35. They OVERLAP. No value of max_v_drop separates them, and lowering it to 0.29 would reject the cyan marker at 0.34.\n\nThe difference is structural, not chromatic. A highlight is a FILL: its saturated pixels sit in the gaps BETWEEN glyphs and the strokes stay dark inside it. Coloured type is the opposite: the saturated pixels ARE the strokes and the gaps are paper. A text mask that asked 'is this pixel a stroke' rather than 'is this pixel dark' would remove the heading entirely and leave the highlight untouched. That is platform image work and a deeper change to F2 than the one already made."
+}

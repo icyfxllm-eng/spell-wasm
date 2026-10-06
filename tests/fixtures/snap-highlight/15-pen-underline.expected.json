@@ -1,0 +1,13 @@
+{
+  "_row": 15,
+  "_needs": "a word underlined in PEN, no highlighter",
+  "_source": "The Rust Programming Language, Memory and Allocation. Eric, 2026-10-06.",
+  "highlighted": [],
+  "_why_empty": "No highlighter. N must be 0 (D-H6: underlines are out of v1).",
+  "colours": [],
+  "measured": {
+    "paper_s": 0.129,
+    "paper_v": 0.733
+  },
+  "notes": "Several words underlined in pen: namespacing, hardcoded, immutability, allocator, memory. D-H6 puts underlines out of v1, so this row documents the limit rather than asking for detection. Also carries show-through from the reverse side, which is a free extra hazard."
+}

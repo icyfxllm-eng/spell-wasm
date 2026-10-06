@@ -1,0 +1,22 @@
+{
+  "_row": 1,
+  "_needs": "a book page of ~300 words with yellow highlights",
+  "_source": "The Life of Reason, p.326. Eric, 2026-10-06.",
+  "highlighted": [
+    "mechanical",
+    "calculable",
+    "cobweb",
+    "conflict",
+    "fancied",
+    "contrary"
+  ],
+  "_confirmed": "read off the photo by Claude; confirm before this row scores anything",
+  "colours": [
+    "yellow"
+  ],
+  "measured": {
+    "paper_s": 0.137,
+    "paper_v": 0.812
+  },
+  "notes": "SIX marks, not the five the row text asks for; the test is the same shape and the count is whatever this page actually has. 'fancied' looks only partly covered -- the stroke appears to stop around 'fanci' -- which makes it an accidental partial-coverage case worth checking against rows 5 and 6 when those exist."
+}

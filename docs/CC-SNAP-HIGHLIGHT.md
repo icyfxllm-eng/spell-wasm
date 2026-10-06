@@ -300,6 +300,37 @@ three words are genuinely hyphenated, `mother-in-law` twice over, and the
 hyphens are mid-line rather than line-break ones — F3's rejoin must not
 touch them and CLEAN must not split on them.
 
+**The F2 fix is NOT sufficient, and row 16 proves it. 2026-10-06.**
+`max_v_drop` was set from one heading sample at 0.53. A second real page —
+fixture row 16, a Kindle screenshot of a Python book — has blue headings at
+**0.29**, under the threshold. Its section titles would import, and coverage
+will not save it: they are 4.3% of the page in large type, not thin ink.
+
+**No threshold fixes this.** Coloured headings now span 0.29–0.53; real
+marks span 0.00–0.35, the dimmest being a cyan marker at 0.34. They overlap.
+Lowering `max_v_drop` to 0.29 would reject that marker.
+
+The difference is structural rather than chromatic, which is what F2's mask
+was always for. A highlight is a FILL: its saturated pixels sit in the gaps
+BETWEEN glyphs and the strokes stay dark inside it. Coloured type is the
+inverse — the saturated pixels ARE the strokes, and the gaps are paper. A
+mask that asked "is this pixel part of a stroke" rather than "is this pixel
+dark" removes the heading entirely and leaves the highlight untouched.
+
+So the standing position: `max_v_drop` stays, because it does reject pen ink
+(0.55–0.59) and gutter shadow (0.70–0.77) that coverage alone would pass. It
+is necessary and not sufficient. The sufficient fix is a stroke-aware text
+mask, which is platform image work and a deeper change to F2 than the one
+already made. Eric's call, and it is now evidenced rather than argued.
+
+`known_gap_a_light_coloured_heading_still_reads_as_a_highlight` pins the
+wrong answer on purpose so it cannot be forgotten.
+
+**Four more rows filed**: 1 (six marks on a dense page, one of them only
+partly covered), 8 (Bud-/dhist across a line break, with `fifty-two`
+mid-line on the same page as F3's own negative), 15 (pen underlines,
+documenting D-H6), 16 (the above). Eight of twenty-five.
+
 **C1 HALTs, and C2 is why it stays halted.** `docs/CC-SNAP-BOXES.md` now
 delivers word boxes to the core, so half of C1 is satisfied. The other half —
 pixels — is deliberately not built. CC-SNAP-BOXES F3 specifies the shim but

@@ -1,0 +1,20 @@
+{
+  "_row": 8,
+  "_needs": "a word hyphenated at a line break, BOTH halves highlighted",
+  "_source": "Japanese Death Poems, Saikaku. Eric, 2026-10-06.",
+  "highlighted": [
+    "fifty-two",
+    "sue ni-nen",
+    "Oriental",
+    "Buddhist"
+  ],
+  "_confirmed": "read off the photo by Claude; confirm before this row scores anything",
+  "colours": [
+    "yellow"
+  ],
+  "measured": {
+    "paper_s": 0.149,
+    "paper_v": 0.808
+  },
+  "notes": "'Bud-' and 'dhist' are highlighted across a line break and must rejoin to 'Buddhist' -- the first real test of F3, which until now had only proptests.\n\nThe same page carries F3's NEGATIVE for free: 'fifty-two' is highlighted and genuinely hyphenated MID-LINE, so the rejoin must leave it alone. One page, the rule and its exception.\n\n'sue ni-nen' is a highlighted multi-word phrase, so this page partly covers row 13 too, and the facing page is in frame as in row 18."
+}

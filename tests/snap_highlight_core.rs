@@ -174,6 +174,33 @@ fn a_gutter_shadow_is_not_a_highlight() {
     assert_eq!(score_page(&cfg(), &page(0.09, Source::Camera), &[shadow]).count(), 0);
 }
 
+/// KNOWN GAP, pinned so it cannot be forgotten or silently "fixed".
+///
+/// Fixture row 16 is a Kindle page whose blue headings drop only 0.29 below
+/// paper. That is UNDER max_v_drop, so the fill rule passes them, and they
+/// cover 4.3% of the page in large type, so coverage will not save it the
+/// way it saves thin ink. This page imports its section titles today.
+///
+/// No threshold fixes it. Row 11's heading measured 0.53 and row 16's is
+/// 0.29, so coloured headings span 0.29-0.53 while real marks span
+/// 0.00-0.35 (the dimmest being a cyan marker at 0.34). They OVERLAP.
+/// Lowering max_v_drop to catch 0.29 would reject that marker.
+///
+/// The real difference is structural: a highlight's saturated pixels sit in
+/// the gaps BETWEEN glyphs, while coloured type IS the glyphs. A stroke-aware
+/// text mask removes the heading and leaves the highlight; a brightness
+/// threshold cannot tell them apart. That is platform image work.
+///
+/// This test asserts the WRONG answer on purpose. When the mask is fixed it
+/// will fail, and whoever fixes it should flip it then.
+#[test]
+fn known_gap_a_light_coloured_heading_still_reads_as_a_highlight() {
+    let heading = boxed_v(1.0, 0.8, Some(210), Some(0.29));
+    let s = score_page(&cfg(), &page(0.0, Source::Screenshot), &[heading]);
+    assert_eq!(s.count(), 1,
+        "if this now passes, the mask has been fixed -- flip this test and delete the gap note");
+}
+
 /// Thin ink in a DIM photo is the case the fill rule does NOT catch, and it
 /// is coverage that saves the page. Measured on fixture row 19: blue biro on
 /// ruled paper, paper V 0.580, ink 0.38 below it -- under max_v_drop, so the
