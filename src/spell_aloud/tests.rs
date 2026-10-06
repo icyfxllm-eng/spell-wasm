@@ -1267,3 +1267,36 @@ fn saying_the_answer_voids_it_but_spelling_it_quickly_does_not() {
     // No target, nothing to void.
     assert!(!voids("book", "", ""));
 }
+
+/// Spanish names the letter W several ways, and all of them must land.
+///
+/// `uve doble`, `doble ve`, `doble u`, `ve doble` and `doble uve` are all
+/// current regional names. Naming a letter is not a difficulty axis, so
+/// accepting every legitimate name leaks nothing and gates nothing — a player
+/// must be understood however they were taught.
+///
+/// The W names were already in the es lexicon and already worked; what was
+/// missing was this test. `doble ele` and `doble erre` were pinned and the W
+/// family was not, so an edit to the multigraph table could have dropped a
+/// regional name with nothing to notice. The risk is real because W begins with
+/// the same sounds as U and V, so a half-matched phrase is a plausible failure.
+#[test]
+fn every_spanish_name_for_w_lands_as_w() {
+    for name in ["uve doble", "doble ve", "doble u", "ve doble", "doble uve"] {
+        assert_eq!(spell(ES, name), "w", "{name} must be the letter W");
+    }
+    // ...and the parts keep their own meanings. Longest-match decides, so
+    // `doble ve` is one W and never a stray `doble` followed by a V.
+    assert_eq!(spell(ES, "ve"), "v", "ve alone is still V");
+    assert_eq!(spell(ES, "u"), "u");
+    assert_eq!(spell(ES, "uve"), "v");
+    // A bare `doble` with no completion is an ignored non-letter token: never a
+    // letter, never a rejection.
+    assert_eq!(spell(ES, "doble"), "");
+    assert_eq!(spell(ES, "a doble e"), "ae");
+    // A W name followed by another letter yields W then that letter.
+    assert_eq!(spell(ES, "uve doble a"), "wa");
+    assert_eq!(spell(ES, "doble ve u"), "wu");
+    // And a whole bank word with a W in it.
+    assert_eq!(spell(ES, "ka i uve doble i"), "kiwi");
+}
