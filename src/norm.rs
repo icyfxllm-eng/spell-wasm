@@ -186,6 +186,45 @@ mod tests {
         assert!(!answer_matches("pina", "piña", false));
     }
 
+    /// Vietnamese voice spelling cannot produce a tone mark, so the mic is not
+    /// offered for vi (consts.rs::VOICE_SPELL_LANGS).
+    ///
+    /// Vietnamese writes five tones as combining marks, and they are part of
+    /// the spelling: `ma`, `má`, `mà`, `mả`, `mã` and `mạ` are six different
+    /// words. The vi letter lexicon reaches none of the 30 toned vowels and its
+    /// `diacritics` table is empty, so a player speaking every letter correctly
+    /// gets the skeleton and is marked wrong -- the same shape as the Korean
+    /// failure below, in a different script.
+    ///
+    /// Russian is the instructive contrast and the reason this is not a general
+    /// rule about marks: Russian stress IS a mark, but it is stored as a
+    /// character INDEX and marked strings are derived only for the audio, so
+    /// the answer key never carries one and voice spelling never has to produce
+    /// one. A Vietnamese tone is in the answer key itself.
+    ///
+    /// This test pins the premise rather than asserting it: every vowel below
+    /// differs from its base ONLY by a tone mark, so none can be reached by
+    /// naming letters. Fixing it is the five-mark fold (CC-SPELLIT-MIC-FIX v1.2
+    /// F5), not a lexicon edit -- adding toned vowels as letter names would
+    /// require the player to SAY the tone, which is the thing the fold exists to
+    /// avoid.
+    #[test]
+    fn vi_voice_spelling_cannot_produce_a_tone_mark() {
+        use unicode_normalization::UnicodeNormalization;
+        const TONES: [char; 5] = ['\u{300}', '\u{301}', '\u{309}', '\u{303}', '\u{323}'];
+        // Six words that differ only by tone: a voice that cannot say the mark
+        // cannot tell them apart.
+        for w in ["ma", "m\u{e1}", "m\u{e0}", "m\u{1ea3}", "m\u{e3}", "m\u{1ea1}"] {
+            let bare: String = w.nfd().filter(|c| !TONES.contains(c)).collect::<String>().nfc().collect();
+            assert_eq!(bare, "ma", "{w} differs from ma only by a tone mark");
+        }
+        // And the mic must not be offered while that is true.
+        assert!(
+            !crate::consts::voice_spell(crate::consts::VI),
+            "vi voice spelling is offered but cannot produce a tone mark"
+        );
+    }
+
     /// CC-SPELL-ALOUD, settled 2026-10-03: Korean voice spelling cannot produce
     /// a Korean word, and a data fix will not make it.
     ///

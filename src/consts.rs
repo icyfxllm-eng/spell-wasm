@@ -388,8 +388,26 @@ pub fn is_builtin_lang(lang: &str) -> bool {
 /// stream. Until that exists the mic is not offered for ko, because offering
 /// something that cannot work is worse than not offering it. Put KO back the
 /// moment the composer lands.
-pub const VOICE_SPELL_LANGS: [&str; 14] =
-    [EN, ES, FR, DE, PT, PL, VI, JA, FIL, ZH, RU, AR, SW, HI];
+///
+/// **vi is withdrawn too (Eric, 2026-10-05), for the same reason in a different
+/// script.** Vietnamese voice spelling cannot produce a tone mark: the vi letter
+/// lexicon reaches 0 of the 30 toned vowels and its `diacritics` table is empty,
+/// so a player can spell the skeleton of a word and never the word. Unlike
+/// Russian — where stress is stored as an INDEX and never reaches the answer
+/// key, so voice spelling never has to produce a mark — a Vietnamese tone is
+/// part of the spelling being graded.
+///
+/// Withdrawing it became unambiguous once the bank was cleaned: every surviving
+/// word in vi hard and expert carries a diacritic BY CONSTRUCTION, so voice
+/// spelling at those tiers is guaranteed to fail, and 76% of the easy tier is
+/// tone-marked as well. See
+/// norm.rs::vi_voice_spelling_cannot_produce_a_tone_mark.
+///
+/// Put VI back when the lexicon declares the five tone marks and the verdict
+/// folds them (CC-SPELLIT-MIC-FIX v1.2 F5) — not before, because the mic was
+/// enabled for vi all along and could never once spell a toned word.
+pub const VOICE_SPELL_LANGS: [&str; 13] =
+    [EN, ES, FR, DE, PT, PL, JA, FIL, ZH, RU, AR, SW, HI];
 
 /// Whether `lang` exposes the spoken-letter input method (data lookup, not a
 /// per-language conditional).
