@@ -2,12 +2,12 @@
   "_row": 11,
   "_needs": "e-reader SCREENSHOT with highlights, pale rendering",
   "_source_app": "",
-  "_check_me": "highlighted[] was read off the screenshot by Claude, not typed by Eric. Confirm it.",
   "highlighted": [
     "command",
     "algorithms",
     "Jupyter"
   ],
+  "_confirmed": "Eric, 2026-10-06: these are the right words.",
   "colours": [
     "yellow"
   ],

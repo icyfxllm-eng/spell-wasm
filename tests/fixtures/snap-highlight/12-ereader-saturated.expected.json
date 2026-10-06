@@ -2,12 +2,12 @@
   "_row": 12,
   "_needs": "e-reader SCREENSHOT with highlights, saturated rendering",
   "_source_app": "",
-  "_check_me": "highlighted[] was read off the screenshot by Claude, not typed by Eric. Confirm it.",
   "highlighted": [
     "Hoonie",
     "complexion",
     "misshapen"
   ],
+  "_confirmed": "Eric, 2026-10-06: these are the right words.",
   "colours": [
     "yellow"
   ],
