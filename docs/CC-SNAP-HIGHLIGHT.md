@@ -275,6 +275,31 @@ page is the row's point — it is readable, so OCR returns words from a page
 nobody meant to import, and `must_not_import` is the interesting half of its
 ground truth.
 
+**Row 19 filed, and it changes how the two rules should be read.** A
+handwritten list in biro on ruled paper, shot in poor light: paper V 0.580,
+ink 0.38 below it — **under** `max_v_drop`, so the fill rule does not reject
+it. The page is still safe because the ink is 0.03% of the page and no box
+comes near D-H1's 0.50 coverage.
+
+So the two filters divide the work, and neither is redundant:
+
+- **Coverage** catches THIN marks. Pen strokes and handwriting never fill a
+  word box, whatever colour they are.
+- **The fill rule** catches DARK things that DO fill one — a coloured
+  heading, a gutter shadow — which coverage alone would wave through.
+
+**Do not tighten `max_v_drop` to catch row 19's ink.** Real marks top out at
+0.34 (a cyan marker on a form) and that ink is 0.38; a threshold in the
+0.04 between them would start rejecting markers in dim light. Normalising
+the drop by the page's paper-to-text range was tested as the alternative and
+is worse — it puts the cyan marker at 1.13 above the blue heading at 0.60,
+so nothing separates them. Recorded so it is not re-tried.
+
+Row 19 also carries a question for CC-SNAP-CLEAN rather than this file: all
+three words are genuinely hyphenated, `mother-in-law` twice over, and the
+hyphens are mid-line rather than line-break ones — F3's rejoin must not
+touch them and CLEAN must not split on them.
+
 **C1 HALTs, and C2 is why it stays halted.** `docs/CC-SNAP-BOXES.md` now
 delivers word boxes to the core, so half of C1 is satisfied. The other half —
 pixels — is deliberately not built. CC-SNAP-BOXES F3 specifies the shim but

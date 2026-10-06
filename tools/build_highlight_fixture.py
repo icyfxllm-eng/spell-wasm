@@ -79,10 +79,14 @@ ROWS = [
     # meant to import, and no other row has a second page in it at all.
     ("18-open-book-facing-page", 18, "an OPEN BOOK with the FACING PAGE in frame, "
                                      "highlights on one side only (FILED 2026-10-06)"),
+    # A no-highlighter control, and the only one shot in poor light. Pen on
+    # ruled paper is the shape most likely to be mistaken for a mark.
+    ("19-handwritten-ruled", 19, "a HANDWRITTEN word list in pen on RULED paper, "
+                                 "no highlighter (FILED 2026-10-06)"),
 ]
 # C2 also asks for bulk: 10 plain worksheets and 5 yellow book pages in total.
 # The named rows cover some of those; these are the filler.
-FILLER = [(f"19-worksheet-plain-{i}", None, "another plain worksheet") for i in range(2, 8)]
+FILLER = [(f"20-worksheet-plain-{i}", None, "another plain worksheet") for i in range(2, 8)]
 PLAN = ROWS + FILLER
 
 

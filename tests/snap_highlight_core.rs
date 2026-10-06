@@ -174,6 +174,23 @@ fn a_gutter_shadow_is_not_a_highlight() {
     assert_eq!(score_page(&cfg(), &page(0.09, Source::Camera), &[shadow]).count(), 0);
 }
 
+/// Thin ink in a DIM photo is the case the fill rule does NOT catch, and it
+/// is coverage that saves the page. Measured on fixture row 19: blue biro on
+/// ruled paper, paper V 0.580, ink 0.38 below it -- under max_v_drop, so the
+/// fill test passes it -- but 0.03% of the page, so no box comes near D-H1.
+///
+/// Pinned because the temptation on reading row 19 is to tighten
+/// max_v_drop, and that would reject real markers: the dimmest real mark
+/// measured is a cyan marker at 0.34, four hundredths away.
+#[test]
+fn thin_ink_in_a_dim_photo_fails_on_coverage_not_on_the_fill_test() {
+    let ink = boxed_v(0.04, 0.8, Some(220), Some(0.38));
+    let s = score_page(&cfg(), &page(0.17, Source::Camera), &[ink]);
+    assert_eq!(s.count(), 0, "thin ink must not import");
+    assert_eq!(s.words[0].rejected, None,
+        "and it must be coverage that refused it, not the fill test");
+}
+
 /// Pen strikethrough falls out of the same rule, which is what D-H6 wanted.
 #[test]
 fn pen_ink_is_not_a_highlight_either() {

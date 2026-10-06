@@ -1,0 +1,15 @@
+{
+  "_row": 19,
+  "_needs": "a HANDWRITTEN word list in pen on RULED paper, no highlighter anywhere",
+  "_source": "Eric, 2026-10-06. twenty-one / mother-in-law / well-known.",
+  "highlighted": [],
+  "_why_empty": "No highlighter is on this page. N must be 0. That is the whole row.",
+  "colours": [],
+  "measured": {
+    "paper_s": 0.165,
+    "paper_v": 0.58,
+    "ink_v_drop": 0.38,
+    "ink_share_of_page": 0.0003
+  },
+  "notes": "A dim photo, and the most informative no-highlighter control in the set.\n\nIts blue ink drops only 0.38 below paper, UNDER max_v_drop of 0.45, so the fill rule does NOT reject it. The page is still safe, and the reason matters: the ink is 0.03% of the page, so frac_sat in any word box is nowhere near D-H1's 0.50 coverage. Coverage is what saves this page, not the fill rule.\n\nThat is the division of labour and it is worth stating. COVERAGE catches thin marks -- pen strokes and handwriting never fill a box. The FILL RULE catches dark things that DO fill one -- a coloured heading, a gutter shadow. Each misses what the other catches.\n\nDo NOT tighten max_v_drop to catch this ink. Marks measured so far top out at 0.34 (a cyan marker on a form) and this ink is 0.38; a threshold in that 0.04 window would start rejecting real markers in dim light. Normalising the drop by the page's paper-to-text range was tested as an alternative and is WORSE: it puts the cyan marker at 1.13 above the blue heading at 0.60, so nothing separates them.\n\nThis page also carries a question for CC-SNAP-CLEAN, not for this file: all three words are genuinely hyphenated (mother-in-law has two), and the hyphens are mid-line rather than line-break hyphens, so F3's rejoin must not touch them and CLEAN must not split on them."
+}
