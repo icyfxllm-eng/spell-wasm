@@ -212,6 +212,8 @@ node scripts/mic-gate-check.mjs || { echo "GATE FAIL: mic speech gate"; exit 1; 
 node scripts/mic-gate-check.mjs --selftest || { echo "GATE FAIL: mic-gate selftest — the gate no longer bites"; exit 1; }
 node scripts/diag-dev-door-check.mjs || { echo "GATE FAIL: capture diagnostic is visible to players"; exit 1; }
 node scripts/diag-dev-door-check.mjs --selftest || { echo "GATE FAIL: diag-dev-door selftest — the gate no longer bites"; exit 1; }
+node scripts/audio-thread-check.mjs || { echo "GATE FAIL: blocking work on the audio render thread"; exit 1; }
+node scripts/audio-thread-check.mjs --selftest || { echo "GATE FAIL: audio-thread selftest — the gate no longer bites"; exit 1; }
 
 echo "== gate: voice spelling keeps its microphone (CC-SPELLIT-MIC-FIX G1)"
 node scripts/voice-spell-deps-check.mjs || { echo "GATE FAIL: voice spell deps"; exit 1; }
