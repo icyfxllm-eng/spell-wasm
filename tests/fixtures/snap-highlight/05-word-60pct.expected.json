@@ -1,0 +1,20 @@
+{
+  "_row": 5,
+  "_needs": "one word about 60% covered by the stroke -- it COUNTS",
+  "_source": "The Rust Programming Language, close crop. Eric, 2026-10-06.",
+  "_this_row_is_about": "returning",
+  "highlighted": [
+    "returning"
+  ],
+  "_confirmed": "read off the photo by Claude; confirm before this row scores anything",
+  "colours": [
+    "yellow"
+  ],
+  "measured": {
+    "paper_s": 0.122,
+    "paper_v": 0.8,
+    "letters_covered": "retur of returning, 5 of 9",
+    "approx_coverage": 0.56
+  },
+  "notes": "ONE photograph serves rows 5 and 6: it carries the positive and the negative side by side, which is better evidence than two pages shot separately because the paper, the lighting, the pen and the marker are identical. The same pixels are filed under both names so each row stays self-contained for the tool and the tests; the sidecars differ, and that difference IS the test.\n\nCoverage by LETTER COUNT, which is what can be read reliably: the stroke covers 'retur' of 'returning' (5 of 9, about 56%) and 'se' of 'second' (2 of 6, about 33%).\n\nAn automated width measurement was attempted and is NOT recorded, because it could not find word boundaries on this page: at this crop the kerning gaps inside a word are close to the word spaces, and show-through from the reverse side fills some of them, so the denominator came out as two or three words every time. Real percentages need the OCR boxes the core does not have yet. That is fine -- the ground truth these rows score against is WHICH WORD COUNTS, not the percentage.\n\nNote also that D-H1 thresholds frac_sat, the fraction of BACKGROUND PIXELS after text masking, while rows 5 and 6 describe box width. For a dense word those differ. The review record already flags that mismatch and it is Eric's to resolve; these photos do not settle it."
+}

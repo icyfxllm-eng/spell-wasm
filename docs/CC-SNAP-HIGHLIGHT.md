@@ -331,6 +331,26 @@ partly covered), 8 (Bud-/dhist across a line break, with `fifty-two`
 mid-line on the same page as F3's own negative), 15 (pen underlines,
 documenting D-H6), 16 (the above). Eight of twenty-five.
 
+**Rows 5 and 6 filed from one frame, 2026-10-06.** A close crop carrying
+both the positive and the negative: `retur` of "returning" (5 of 9 letters,
+~56%, COUNTS) and `se` of "second" (2 of 6, ~33%, does NOT). Same paper,
+same light, same marker — better evidence than two pages shot apart, which
+is why the same pixels are filed under both row names with different
+sidecars. The difference between those sidecars is the test.
+
+Coverage is recorded by LETTER COUNT. An automated width measurement was
+tried and deliberately not recorded: at this crop the kerning gaps inside a
+word are close to the word spaces, and show-through from the reverse side
+fills some of them, so every denominator came out as two or three words.
+Real percentages need OCR boxes the core does not have. It does not matter
+here — what these rows score against is WHICH WORD COUNTS, not a number.
+
+It does, though, sharpen the open D-H1 question. D-H1 thresholds `frac_sat`,
+the fraction of background pixels after text masking; rows 5 and 6 describe
+box width. These photos are described in width because that is what a person
+can see. For a dense word the two differ, and a detector could pass the row
+text while failing D-H1 or the reverse. Still Eric's to resolve.
+
 **C1 HALTs, and C2 is why it stays halted.** `docs/CC-SNAP-BOXES.md` now
 delivers word boxes to the core, so half of C1 is satisfied. The other half —
 pixels — is deliberately not built. CC-SNAP-BOXES F3 specifies the shim but
