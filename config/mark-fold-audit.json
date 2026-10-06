@@ -1,0 +1,154 @@
+{
+  "$doc": "CC-SPELLIT-MIC-FIX v1.2 F1 — the human audit claim for the per-language mark fold tables. NO TOOL SETS `audited`; it follows ru-stress-audit's rule. Collision counts below were measured against the shipping bank and are evidence, not a verdict: a mark that collides with nothing may still be a letter. While a language is unaudited its table is not applied and Spell It remains accent-strict for it.",
+  "languages": {
+    "es": {
+      "marks": {
+        "U+0301": {
+          "shown": "◌́",
+          "name": "COMBINING ACUTE ACCENT",
+          "bankCollisions": 78,
+          "fold": null
+        },
+        "U+0303": {
+          "shown": "◌̃",
+          "name": "COMBINING TILDE",
+          "bankCollisions": 0,
+          "fold": null
+        },
+        "U+0308": {
+          "shown": "◌̈",
+          "name": "COMBINING DIAERESIS",
+          "bankCollisions": 0,
+          "fold": null
+        }
+      },
+      "audited": false,
+      "by": null,
+      "date": null
+    },
+    "fr": {
+      "marks": {
+        "U+0301": {
+          "shown": "◌́",
+          "name": "COMBINING ACUTE ACCENT",
+          "bankCollisions": 111,
+          "fold": null
+        },
+        "U+0300": {
+          "shown": "◌̀",
+          "name": "COMBINING GRAVE ACCENT",
+          "bankCollisions": 4,
+          "fold": null
+        },
+        "U+0302": {
+          "shown": "◌̂",
+          "name": "COMBINING CIRCUMFLEX ACCENT",
+          "bankCollisions": 9,
+          "fold": null
+        },
+        "U+0327": {
+          "shown": "◌̧",
+          "name": "COMBINING CEDILLA",
+          "bankCollisions": 2,
+          "fold": null
+        },
+        "U+0308": {
+          "shown": "◌̈",
+          "name": "COMBINING DIAERESIS",
+          "bankCollisions": 0,
+          "fold": null
+        },
+        "U+0153": {
+          "shown": "œ",
+          "name": "LATIN SMALL LIGATURE OE",
+          "bankCollisions": 3,
+          "fold": null
+        }
+      },
+      "audited": false,
+      "by": null,
+      "date": null
+    },
+    "pt": {
+      "marks": {
+        "U+0301": {
+          "shown": "◌́",
+          "name": "COMBINING ACUTE ACCENT",
+          "bankCollisions": 22,
+          "fold": null
+        },
+        "U+0303": {
+          "shown": "◌̃",
+          "name": "COMBINING TILDE",
+          "bankCollisions": 0,
+          "fold": null
+        },
+        "U+0327": {
+          "shown": "◌̧",
+          "name": "COMBINING CEDILLA",
+          "bankCollisions": 1,
+          "fold": null
+        },
+        "U+0302": {
+          "shown": "◌̂",
+          "name": "COMBINING CIRCUMFLEX ACCENT",
+          "bankCollisions": 6,
+          "fold": null
+        }
+      },
+      "audited": false,
+      "by": null,
+      "date": null
+    },
+    "de": {
+      "marks": {
+        "U+0308": {
+          "shown": "◌̈",
+          "name": "COMBINING DIAERESIS",
+          "bankCollisions": 42,
+          "fold": null
+        },
+        "U+00DF": {
+          "shown": "ß",
+          "name": "LATIN SMALL LETTER SHARP S",
+          "bankCollisions": 0,
+          "fold": null
+        }
+      },
+      "audited": false,
+      "by": null,
+      "date": null
+    },
+    "pl": {
+      "marks": {
+        "U+0301": {
+          "shown": "◌́",
+          "name": "COMBINING ACUTE ACCENT",
+          "bankCollisions": 9,
+          "fold": null
+        },
+        "U+0142": {
+          "shown": "ł",
+          "name": "LATIN SMALL LETTER L WITH STROKE",
+          "bankCollisions": 2,
+          "fold": null
+        },
+        "U+0328": {
+          "shown": "◌̨",
+          "name": "COMBINING OGONEK",
+          "bankCollisions": 65,
+          "fold": null
+        },
+        "U+0307": {
+          "shown": "◌̇",
+          "name": "COMBINING DOT ABOVE",
+          "bankCollisions": 9,
+          "fold": null
+        }
+      },
+      "audited": false,
+      "by": null,
+      "date": null
+    }
+  }
+}
