@@ -188,8 +188,18 @@ and `12-ereader-saturated`. Measured at the fixture's own 1600px:
 
 | | paper S | mark S median | mark S range | hue |
 |---|---|---|---|---|
-| 11, pale | 0.000 | 0.549 | 0.27 – 0.60 | 53° |
-| 12, saturated | 0.000 | 1.000 | 0.49 – 1.00 | 50° |
+| 11, **Kindle** | 0.000 | 0.549 | 0.27 – 0.60 | 53° |
+| 12, **Apple Books** | 0.000 | 1.000 | 0.49 – 1.00 | 50° |
+
+Eric confirmed the pair are Apple Books and Kindle (2026-10-06) but not
+which is which; the assignment above is read off the chrome — Kindle's
+"Learning reading speed" indicator on one, Apple Books' "Sample" and page
+number on the other — and is the one claim here that is an inference.
+Note it inverts the original row names, which had 11 as Apple Books.
+
+**Kindle is the tight one.** Its palest highlight pixels sit at S=0.27
+against a ΔS of 0.25, so the two hundredths of margin belong to the reader
+with the larger installed base, not to an edge case.
 
 So C4's question — do screen highlights need their own ΔS — has a provisional
 answer of **no**: D-H2's starting 0.25 separates both. But row 11's palest

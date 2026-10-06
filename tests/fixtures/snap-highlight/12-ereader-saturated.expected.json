@@ -1,7 +1,8 @@
 {
   "_row": 12,
   "_needs": "e-reader SCREENSHOT with highlights, saturated rendering",
-  "_source_app": "",
+  "_source_app": "Apple Books",
+  "_source_app_basis": "Inferred from the chrome, not stated: 'Sample' and a page number is Apple Books' sample reader. Same confirmation, same caveat.",
   "highlighted": [
     "Hoonie",
     "complexion",
