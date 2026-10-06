@@ -34,24 +34,24 @@
 // A pass means nothing unless the gate can fail: introduce a one-character typo
 // (margin-inline-strt) and confirm it reports a moved box. It should show
 // #cancelImport shifting 145px.
-import { startServer, launch, typeOnKeyboard, openSettings, openMyWords, openAccount } from './harness.mjs';
+import { startServer, launch, typeOnKeyboard, openSettings, openMyWords, openAccount, painted, domSettled} from './harness.mjs';
 const out = process.argv[2];
 const { server, base } = await startServer(8212);
 const browser = await launch();
 const all = {};
 for (const [name, fn] of [
   ['home', async (p) => {}],
-  ['round', async (p) => { await p.click('#orbWrap').catch(()=>{}); await p.waitForTimeout(400); await typeOnKeyboard(p, 'cat'); }],
+  ['round', async (p) => { await p.click('#orbWrap').catch(()=>{}); await domSettled(p); await typeOnKeyboard(p, 'cat'); }],
   // Phase C retired the gear/account icons and the utility row: a direct
   // click on any of them now waits out its timeout and the surface is never
   // opened, so the scan would grade a blank home screen three times over
   // and report nothing wrong. Each goes through the drawer, as a player does.
-  ['settings', async (p) => { await openSettings(p).catch(()=>{}); await p.waitForTimeout(300); }],
+  ['settings', async (p) => { await openSettings(p).catch(()=>{}); await domSettled(p); }],
   // The dialogs. Added after a negative control proved the first three screens
   // never render ANY of the four inline margin edits — the sweep's least
   // certain sites were being graded by a gate that couldn't see them.
-  ['import',  async (p) => { await openMyWords(p).catch(()=>{}); await p.waitForTimeout(400); }],
-  ['account', async (p) => { await openAccount(p).catch(()=>{}); await p.waitForTimeout(400); }],
+  ['import',  async (p) => { await openMyWords(p).catch(()=>{}); await domSettled(p); }],
+  ['account', async (p) => { await openAccount(p).catch(()=>{}); await domSettled(p); }],
 ]) {
   const ctx = await browser.newContext({ viewport: { width: 390, height: 844 }, isMobile: true, deviceScaleFactor: 2 });
   await ctx.addInitScript(() => {
@@ -68,9 +68,9 @@ for (const [name, fn] of [
   await p.goto(base);
   await p.addStyleTag({ content: '*,*::before,*::after{animation:none!important;transition:none!important}' });
   await p.waitForFunction(() => window.__spelltest?.build() === 'testseam', null, { timeout: 30000 });
-  await p.waitForTimeout(600);
+  await painted(p);
   await fn(p);
-  await p.waitForTimeout(500);
+  await domSettled(p);
   all[name] = await p.evaluate(() => {
     const path = (e) => { const b=[]; for(let n=e;n&&n.nodeType===1;n=n.parentElement){ b.unshift(n.id?`#${n.id}`:`${n.tagName.toLowerCase()}${n.className&&typeof n.className==='string'?'.'+n.className.trim().split(/\s+/).join('.'):''}:nth-child(${[...n.parentElement?.children||[]].indexOf(n)+1})`); if(n.id) break; } return b.join('>'); };
     const r = {};

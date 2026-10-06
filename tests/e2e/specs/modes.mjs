@@ -1,6 +1,6 @@
 // modes.spec — Daily Challenge start; Head-to-Head start + quit-mid-game clean
 // state; menu/agegate integrity.
-import { openApp, assert, pinBaseline, clickSettled } from '../harness.mjs';
+import { openApp, assert, pinBaseline, clickSettled, domSettled} from '../harness.mjs';
 
 export async function run(browser, base, suite) {
   await suite.test('daily: entering shows progress bar + locks language', async () => {
@@ -10,7 +10,8 @@ export async function run(browser, base, suite) {
       // a real click would wait out its timeout. This spec is about what the
       // mode DOES once entered, not about how it is reached — drawer.mjs owns
       // that — so it presses the element the drawer would press.
-      await page.evaluate(() => document.getElementById('dailyBtn').click()); await page.waitForTimeout(400);
+      await page.evaluate(() => document.getElementById('dailyBtn').click());
+      await domSettled(page);
       const barHidden = await page.$eval('#dailyBar', (e) => e.classList.contains('btn-hide'));
       const langDisabled = await page.$eval('#langSel', (e) => e.disabled);
       assert(!barHidden, 'daily progress bar not shown');
@@ -31,7 +32,7 @@ export async function run(browser, base, suite) {
   await suite.test('h2h: start then quit mid-game returns to clean solo state', async () => {
     const { ctx, page } = await openApp(browser, base, { lang: 'en' });
     try {
-      await page.evaluate(() => document.getElementById('vsBtn').click()); await page.waitForTimeout(300);
+      await page.evaluate(() => document.getElementById('vsBtn').click()); await domSettled(page);
       await clickSettled(page, '#vsStart').catch(() => {}).catch(() => {});
       // Quit mid-match.
       await clickSettled(page, '#vsExit').catch(() => {}).catch(() => {});
@@ -51,7 +52,7 @@ export async function run(browser, base, suite) {
     try {
       await page.goto(base, { waitUntil: 'load' });
       await page.waitForFunction(() => window.__spelltest, null, { timeout: 30000 }).catch(() => {});
-      await page.waitForTimeout(500);
+      await domSettled(page);
       const gateShown = await page.$eval('#ageScrim', (e) => e.classList.contains('show'));
       assert(gateShown, 'age gate not shown on a fresh install');
     } finally { await ctx.close(); }

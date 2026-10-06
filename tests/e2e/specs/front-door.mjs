@@ -10,7 +10,7 @@
 // gating. The server's own rules (code expiry, attempt limits, non-enumeration,
 // the password blocklist) are proved in backend/test_auth_codes.py, against the
 // real Flask app.
-import { openApp, assert, openAccount } from '../harness.mjs';
+import { openApp, assert, openAccount, domSettled} from '../harness.mjs';
 
 const ADULT = { y: 1990, m: 1, d: 1 };
 const CHILD = { y: new Date().getFullYear() - 8, m: 1, d: 1 };
@@ -137,6 +137,7 @@ export async function run(browser, base, suite) {
     const { ctx, page } = await openApp(browser, base, { lang: 'en' });
     try {
       // An existing install must never open the door; give it real time to fail.
+      // sleep-ok: absence needs time to fail in: an existing install must never open the door, and a door that never opens has no event.
       await page.waitForTimeout(1200);
       assert(!(await shown(page, 'frontDoor')), 'an update must not drop a guest on a login screen');
       assert(!(await shown(page, 'ageScrim')), 'nor ask the birthday again');
@@ -181,11 +182,11 @@ export async function run(browser, base, suite) {
       const met = () => page.evaluate(() => ['fdRuleLen', 'fdRuleDigit', 'fdRuleSymbol']
         .filter((i) => document.getElementById(i).classList.contains('met')));
       await page.fill('#fdNewPassword', 'Example5');
-      await page.waitForTimeout(120);
+      await domSettled(page);
       assert(JSON.stringify(await met()) === JSON.stringify(['fdRuleLen', 'fdRuleDigit']),
         `length and digit met, symbol not: got ${JSON.stringify(await met())}`);
       await page.fill('#fdNewPassword', 'Example5%');
-      await page.waitForTimeout(120);
+      await domSettled(page);
       assert((await met()).length === 3, `all three rules met, got ${JSON.stringify(await met())}`);
     } finally { await ctx.close(); }
   });
@@ -214,6 +215,7 @@ export async function run(browser, base, suite) {
         document.getElementById('accountBtn').click();
       });
       // Absence needs time to fail in.
+      // sleep-ok: as above -- the front door must never open for a Spell Jr player.
       await page.waitForTimeout(800);
       assert(!(await page.evaluate(() => document.getElementById('frontDoor').classList.contains('show'))),
         'the front door must never open for a Spell Jr player');

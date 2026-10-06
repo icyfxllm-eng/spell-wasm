@@ -5,7 +5,7 @@
 // a miss enters the queue due now; a pre-R2 entry carries over keeping its due
 // time; and a correct answer after replaying the audio grades Hard (comes back
 // sooner) where a clean one grades Good.
-import { openApp, assert, clickSettled } from '../harness.mjs';
+import { openApp, assert, clickSettled, painted, domSettled} from '../harness.mjs';
 
 const KEY = 'byear_misses_v1';
 const DAY = 86400000;
@@ -13,7 +13,7 @@ const DAY = 86400000;
 async function reloadBooted(page) {
   await page.reload();
   await page.waitForFunction(() => window.__spelltest && window.__spelltest.build() === 'testseam', null, { timeout: 30000 });
-  await page.waitForTimeout(300);
+  await painted(page);
 }
 
 const queue = (page) => page.evaluate((k) => JSON.parse(localStorage.getItem(k) || '[]'), KEY);
@@ -98,7 +98,7 @@ export async function run(browser, base, suite) {
       }, [KEY]);
       await reloadBooted(page);
       await page.evaluate(() => document.getElementById('missesBtn').click());
-      await page.waitForTimeout(300);
+      await domSettled(page);
       await page.click('#orbWrap'); // review serves on the orb, like normal play
       await page.waitForFunction(() => window.__spelltest.currentWord(), null, { timeout: 5000 });
       const answered = {};
@@ -107,13 +107,13 @@ export async function run(browser, base, suite) {
         assert(w === 'rabbit' || w === 'carrot', `review served ${JSON.stringify(w)}, expected a queued word`);
         if (w === 'rabbit') {
           await page.evaluate(() => document.getElementById('replayBtn').click());
-          await page.waitForTimeout(200);
+          await domSettled(page);
         }
         await type(page, w);
         await page.click('#checkBtn');
         answered[w] = true;
         await page.waitForFunction((p) => window.__spelltest.currentWord() !== p, w, { timeout: 6000 }).catch(() => {});
-        await page.waitForTimeout(300);
+        await domSettled(page);
       }
       assert(answered.rabbit && answered.carrot, `review didn't serve both words: ${JSON.stringify(answered)}`);
       const q = await queue(page);

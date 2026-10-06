@@ -31,7 +31,7 @@ export async function run(browser, base, suite) {
   await suite.test('keyboard[en]: rapid-fire 15 keys drops nothing', async () => {
     const { ctx, page } = await openApp(browser, base, { lang: 'en', device: 'se' });
     try {
-      await page.click('#orbWrap'); await page.waitForTimeout(400); // start a word so typing is enabled
+      await page.click('#orbWrap'); await page.waitForFunction(() => !!window.__spelltest.currentWord(), null, { timeout: 5000 }).catch(() => {}); // start a word so typing is enabled
       const seq = 'abcdefghijklmno';
       for (const ch of seq) await page.click(`#gameKeyboard .kb-key[data-k="${ch}"]`, { delay: 0 });
       const typed = await page.$eval('#letters', (e) => e.textContent.replace(/\s/g, ''));

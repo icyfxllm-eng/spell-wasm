@@ -3,7 +3,7 @@
 // The grids are the real generator's, from the real banks and the shipped
 // decoy table; the test hook only READS the served puzzle so a test knows where
 // to drag. Audio is stubbed by the harness, as for every spec.
-import { openApp, assert, assertEq, clickSettled } from '../harness.mjs';
+import { openApp, assert, assertEq, clickSettled, domSettled} from '../harness.mjs';
 
 const KID = JSON.stringify({ verdict: 'kid', checkedAt: 1700000000 });
 const LAUNCH = ['en', 'es', 'ru', 'fr', 'de', 'pt', 'pl', 'fil'];
@@ -36,7 +36,7 @@ async function drag(page, cells) {
   await page.mouse.down();
   await page.mouse.move(b.x, b.y, { steps: 6 });
   await page.mouse.up();
-  await page.waitForTimeout(60);
+  await domSettled(page);
 }
 
 async function typeWord(page, word) {
@@ -81,7 +81,7 @@ export async function run(browser, base, suite) {
       const { ctx, page } = await openApp(browser, base, { lang });
       try {
         await page.evaluate(() => document.getElementById('wsOpenBtn').click());
-        await page.waitForTimeout(400);
+        await domSettled(page);
         assert(!(await page.$eval('#wsScreen', (e) => e.classList.contains('show'))), `${lang}: no Spell Search`);
       } finally { await ctx.close(); }
     }

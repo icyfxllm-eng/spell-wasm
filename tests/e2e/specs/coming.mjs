@@ -1,7 +1,7 @@
 // coming.spec — language availability: en/es are playable; the other 15 are
 // gated ("coming soon" + Notify Me) in BOTH Standard and Little Speller, and
 // tapping a coming-soon language never starts a round. Notify Me persists.
-import { openApp, assert, clickSettled } from '../harness.mjs';
+import { openApp, assert, clickSettled, painted, domSettled} from '../harness.mjs';
 
 // Both modes exercised: Standard (full age verdict) + Little Speller (kid).
 const MODES = [
@@ -65,7 +65,7 @@ export async function run(browser, base, suite) {
   await suite.test('coming: Notify Me tap confirms and survives reload', async () => {
     const { ctx, page } = await openApp(browser, base, { lang: 'ko' });
     try {
-      await page.waitForTimeout(150);
+      await domSettled(page);
       await page.click('#notifyBtn');
       await page.waitForSelector('#notifyBtn.confirmed', { timeout: 4000 }).catch(() => {});
       const confirmed = await page.$eval('#notifyBtn', (e) => e.classList.contains('confirmed'));
@@ -73,7 +73,7 @@ export async function run(browser, base, suite) {
       // reload: confirmed state persists (localStorage), and ko is still gated
       await page.reload({ waitUntil: 'load' });
       await page.waitForFunction(() => window.__spelltest && window.__spelltest.build() === 'testseam', null, { timeout: 30000 });
-      await page.waitForTimeout(200);
+      await painted(page);
       const stillConfirmed = await page.$eval('#notifyBtn', (e) => e.classList.contains('confirmed'));
       assert(stillConfirmed, 'confirmed Notify Me did not survive reload');
     } finally { await ctx.close(); }

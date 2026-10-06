@@ -4,7 +4,7 @@
 //   node tests/e2e/appstore-shots.mjs
 import { mkdirSync } from 'node:fs';
 import { join } from 'node:path';
-import { startServer, launch } from './harness.mjs';
+import { startServer, launch, painted, domSettled} from './harness.mjs';
 
 const OUT = 'tests/e2e/shots/appstore';
 const AGE = JSON.stringify({ verdict: 'full', checkedAt: 1700000000 });
@@ -37,10 +37,10 @@ for (const [loc, dir] of Object.entries(LOCALES)) {
       const page = await ctx.newPage();
       await page.goto(base, { waitUntil: 'load' });
       await page.waitForFunction(() => window.__spelltest && window.__spelltest.build() === 'testseam', null, { timeout: 30000 });
-      await page.waitForTimeout(300);
+      await painted(page);
       if (screen === 'settings') {
         await page.click('#setBtn').catch(() => {});
-        await page.waitForTimeout(350); // scrim fade
+        await domSettled(page);
       }
       await page.screenshot({ path: join(OUT, dir, `${dev}-${idx}-${screen}.png`) }); // viewport = exact required px
       await ctx.close();

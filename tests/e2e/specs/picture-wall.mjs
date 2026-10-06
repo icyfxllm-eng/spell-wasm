@@ -10,7 +10,7 @@
 // translation cannot dodge the sweep.
 import { readFileSync, readdirSync } from 'node:fs';
 import { join } from 'node:path';
-import { openApp, assert, assertEq, IS_WEB_BUILD } from '../harness.mjs';
+import { openApp, assert, assertEq, IS_WEB_BUILD, domSettled} from '../harness.mjs';
 
 const LOCALES = join(process.cwd(), 'src', 'i18n', 'locales');
 
@@ -51,7 +51,7 @@ export async function run(browser, base, suite) {
           location.reload();
         }, ui);
         await page.waitForLoadState('load');
-        await page.waitForTimeout(700);
+        await domSettled(page);
 
         const found = await page.evaluate((needles) => {
           const text = document.body.innerText;

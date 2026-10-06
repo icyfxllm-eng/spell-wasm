@@ -9,7 +9,7 @@
 // Reaching the reveal means actually finishing a picture, so this drives the
 // real loop -- read the waiting word from the seam, type it on the real
 // keyboard -- rather than forcing state. `star` is the shortest piece.
-import { openApp, assert, assertEq, clickSettled } from '../harness.mjs';
+import { openApp, assert, assertEq, clickSettled, domSettled} from '../harness.mjs';
 
 const CLASSES = [[320, 568], [375, 667], [390, 844], [428, 926]];
 
@@ -42,7 +42,7 @@ export async function completePicture(page, pic) {
   // keyboard, swallowing every key tap. Wait for it rather than sampling
   // once -- checking immediately races it and the failure looks like a
   // mysteriously unclickable keyboard.
-  await page.waitForTimeout(500);
+  await page.waitForSelector('#wpHow.show', { timeout: 4000 }).catch(() => {});
   for (let i = 0; i < 6 && (await page.$('#wpHow.show')); i++) {
     const before = await page.$eval('#wpHow', (e) => e.textContent).catch(() => '');
     await page.click('#wpHowNext');   // three pages, then it closes
@@ -61,7 +61,7 @@ export async function completePicture(page, pic) {
       await page.click(`#gameKeyboard .kb-key[data-k="${ch}"]`, { delay: 0 });
     }
     typed++;
-    await page.waitForTimeout(90);
+    await domSettled(page);
     if (await page.$('#wpReveal.show')) break;
   }
   return typed;
@@ -91,6 +91,7 @@ export async function run(browser, base, suite) {
         assert(await page.$('#wpPlay.show'), 'skipping advanced past the picture');
 
         // Rest is indefinite. Nothing may advance on its own.
+        // sleep-ok: the claim is that rest is INDEFINITE -- nothing may advance on its own, and a non-event has nothing to wait for.
         await page.waitForTimeout(3000);
         assert(await page.$('#wpReveal.show'), 'the reveal auto-advanced -- rest must be indefinite');
 
@@ -108,7 +109,7 @@ export async function run(browser, base, suite) {
 
         // Continue is the one thing that advances.
         await page.click('#wpContinue');
-        await page.waitForTimeout(400);
+        await page.waitForFunction(() => !document.querySelector('#wpReveal.show'), null, { timeout: 4000 }).catch(() => {});
         assert(!(await page.$('#wpReveal.show')), 'Continue left the reveal up');
       } finally { await ctx.close(); }
     });
@@ -129,11 +130,12 @@ export async function run(browser, base, suite) {
       await clickSettled(page, '#wpRevealStage');
       assert(await page.$('#wpReveal.show.rest'), 'not at rest before the jump');
       await page.clock.fastForward('01:05');
+      // sleep-ok: the claim is that rest SURVIVED 65 virtual seconds, so the window after the clock jump is the test.
       await page.waitForTimeout(200);
       assert(await page.$('#wpReveal.show.rest'), 'rest did not survive 65 virtual seconds');
       assert(await page.$('#wpPlay.show'), 'something advanced past the picture');
       await page.click('#wpContinue');
-      await page.waitForTimeout(400);
+      await page.waitForFunction(() => !document.querySelector('#wpReveal.show'), null, { timeout: 4000 }).catch(() => {});
       assert(!(await page.$('#wpReveal.show')), 'Continue still advances after the jump');
     } finally { await ctx.close(); }
   });
@@ -146,7 +148,7 @@ export async function run(browser, base, suite) {
       await clickSettled(page, '#wpRevealStage');
       assert(await page.$('#wpReveal.rest'), 'not at rest before replay');
       await page.click('#wpReplayBuild');
-      await page.waitForTimeout(120);
+      await page.waitForFunction(() => !document.querySelector('#wpReveal.rest'), null, { timeout: 4000 }).catch(() => {});
       // Replay leaves rest and staggers the words again.
       assert(!(await page.$('#wpReveal.rest')), 'replay did not restart the build');
       const delays = await page.$$eval('#wpRevealStage .wp-word',

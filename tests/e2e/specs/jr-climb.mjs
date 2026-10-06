@@ -90,6 +90,7 @@ async function missToEnd(page) {
     if (await chainOver(page)) break;
     if (await shieldOffered(page)) {
       await page.click('#shieldDecline');
+      // sleep-ok: declining ends the chain and the sheet MAY open; the outcome is conditional, so there is no single thing to wait for.
       await page.waitForTimeout(1300); // declining ends the chain, then the sheet may open
       continue;
     }
@@ -102,8 +103,10 @@ async function missToEnd(page) {
     await typeWord(page, w === 'zzzz' ? 'xxxx' : 'zzzz');
     await page.click('#checkBtn');
     await waitAnswered(page).catch(() => {});
+    // sleep-ok: end_chain decides, posts to the server, then may open the sheet -- a round trip with no local observable.
     await page.waitForTimeout(1300); // end_chain decides, then posts, then opens the sheet
   }
+  // sleep-ok: the tail of the same server round trip.
   await page.waitForTimeout(800);
 }
 
@@ -132,6 +135,7 @@ async function signedIn(browser, base, age) {
   await page.reload({ waitUntil: 'load' });
   await page.evaluate((b) => { window.SPELL_API_BASE = b.replace(/\/$/, ''); }, base);
   await page.waitForFunction(() => window.__spelltest && window.__spelltest.build() === 'testseam', null, { timeout: 30000 });
+  // sleep-ok: waits for /api/auth/me to resolve and the session to restore. The best candidate here for a real wait, if the app ever exposes a session-restored signal the test can see.
   await page.waitForTimeout(500); // /api/auth/me resolves and the session is restored
   return { ctx, page, requests };
 }
@@ -157,6 +161,7 @@ export async function run(browser, base, suite) {
             UP, { timeout: 1200 }).then(() => true).catch(() => false);
           if (shown) {
             beats.push(n);
+            // sleep-ok: the measurement IS the duration: whether the message cleared within 1.7s is the claim.
             await page.waitForTimeout(1700);
             clearedInTime = !(await feedbackText(page)).includes(UP);
           }

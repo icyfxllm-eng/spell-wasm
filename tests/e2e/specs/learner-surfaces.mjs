@@ -5,7 +5,7 @@
 //
 // One seeded learner, every surface, the content each must show, and zero
 // page errors (a wasm panic in a render path surfaces as a pageerror).
-import { openApp, assert } from '../harness.mjs';
+import { openApp, assert, painted, domSettled} from '../harness.mjs';
 
 export async function run(browser, base, suite) {
   await suite.test('learner surfaces render through LearnerQuery: Reports, Stats, Guardian Dash, Calendar', async () => {
@@ -35,7 +35,7 @@ export async function run(browser, base, suite) {
       });
       await page.reload();
       await page.waitForFunction(() => window.__spelltest && window.__spelltest.build() === 'testseam', null, { timeout: 30000 });
-      await page.waitForTimeout(500);
+      await painted(page);
       const html = (id) => page.evaluate((i) => (document.getElementById(i) || {}).innerHTML || '', id);
 
       // Stats guardian section: review_stats -> totals and skill groups.
@@ -46,7 +46,7 @@ export async function run(browser, base, suite) {
       // Reports: at_risk_set -> the due miss is ready for a rematch; the
       // far-future one is not.
       await page.evaluate(() => document.getElementById('repOpenBtn').click());
-      await page.waitForTimeout(300);
+      await domSettled(page);
       const rematch = await html('repRematch');
       assert(rematch.includes('rhythm'), `Reports rematch missing the due word: ${rematch}`);
       assert(!rematch.includes('faraway'), 'Reports rematch showed a word not due for 10 days');
@@ -59,7 +59,7 @@ export async function run(browser, base, suite) {
       assert(a && b, `could not read the gate question: ${qtext}`);
       await page.fill('#gdashAnswer', String(a * b));
       await page.evaluate(() => document.getElementById('gdashGo').click());
-      await page.waitForTimeout(400);
+      await domSettled(page);
       const gd = await html('gdashBody');
       assert(/2\b/.test(gd) && gd.includes('gd-chip'), `Guardian Dash mastery groups did not render: ${gd.slice(0, 300)}`);
       assert(/1 words? due for review/.test(gd), `Guardian "What's next" should count the one due miss: ${gd.slice(0, 600)}`);
@@ -67,7 +67,7 @@ export async function run(browser, base, suite) {
 
       // Calendar: opens and renders its forecast from at_risk_set.
       await page.evaluate(() => document.getElementById('calOpenBtn').click());
-      await page.waitForTimeout(400);
+      await domSettled(page);
       assert(await page.evaluate(() => document.getElementById('calScrim').classList.contains('show')), 'Calendar did not open');
       assert((await html('calScrim')).length > 200, 'Calendar rendered nothing');
 

@@ -9,7 +9,7 @@
 //     OFF via the hub hides the live #ghostPace marker in a Climb run; turned
 //     back ON, the marker reappears (deterministic seeded best run);
 //   * Kid Mode simplifies the list (owner/dark rows hidden, play aids kept).
-import { openApp, typeOnKeyboard, assert, openSettings, clickSettled } from '../harness.mjs';
+import { openApp, typeOnKeyboard, assert, openSettings, clickSettled, domSettled} from '../harness.mjs';
 
 // The drawer opens OVER an open sheet, and its scrim then covers the row,
 // so reopening a sheet that is already up would hang. A player cannot do it
@@ -56,7 +56,7 @@ export async function run(browser, base, suite) {
     const { ctx, page } = await openApp(browser, base, {});
     try {
       await openSettingsSheet(page);
-      await page.waitForTimeout(150);
+      await page.waitForFunction(() => { const e = document.getElementById('toolsHub'); return !!e && e.getBoundingClientRect().height > 0; }, null, { timeout: 4000 }).catch(() => {});
       assert(!(await hidden(page, '#toolsHub')), 'tools hub should be visible');
       for (const row of ROWS) {
         assert(!!(await page.$('#' + row)), `row ${row} present in DOM`);
@@ -78,7 +78,7 @@ export async function run(browser, base, suite) {
     const { ctx, page } = await openApp(browser, base, {});
     try {
       await openSettingsSheet(page);
-      await page.waitForTimeout(150);
+      await domSettled(page);
       assert((await ls(page, 'spell_flag_word_stories')) === null, 'flag unset before toggle');
       await page.click('#toolStoriesToggle');
       assert((await ls(page, 'spell_flag_word_stories')) === 'on', 'flipping the row writes the on flag');
@@ -86,7 +86,7 @@ export async function run(browser, base, suite) {
       await boot(page);
       assert((await ls(page, 'spell_flag_word_stories')) === 'on', 'flag persists across reload');
       await openSettingsSheet(page);
-      await page.waitForTimeout(150);
+      await page.waitForFunction(() => document.getElementById('toolStoriesToggle')?.checked, null, { timeout: 4000 }).catch(() => {});
       assert(await page.$eval('#toolStoriesToggle', (e) => e.checked), 'switch reflects the persisted flag');
       // Flip back off and confirm the write.
       await page.click('#toolStoriesToggle');
@@ -128,9 +128,9 @@ export async function run(browser, base, suite) {
     const { ctx, page } = await openApp(browser, base, {});
     try {
       await openSettingsSheet(page);
-      await page.waitForTimeout(150);
+      await domSettled(page);
       await page.click('#kidToggle'); // enter Kid Mode
-      await page.waitForTimeout(150);
+      await page.waitForFunction(() => document.body.classList.contains('kid'), null, { timeout: 4000 }).catch(() => {});
       // F7 cut the ghost and say-it rows, so Kid Mode's kid_ok split is
       // now shown by syllable (a play aid, kept) against stories and
       // spell-off (dark/owner, hidden).

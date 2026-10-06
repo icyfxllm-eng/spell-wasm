@@ -5,7 +5,7 @@
 // reset, so a parent who reset a language still had its mastery, attempt log
 // (with typed misses) and placement on the device. A browser test, because the
 // claim is about stored bytes and host tests have no localStorage.
-import { openApp, assert } from '../harness.mjs';
+import { openApp, assert, painted, domSettled} from '../harness.mjs';
 
 export async function run(browser, base, suite) {
   await suite.test('learner: "reset this language" deletes its learner state and backup, only for that language', async () => {
@@ -23,11 +23,17 @@ export async function run(browser, base, suite) {
       }, [state('en'), state('es')]);
       await page.reload();
       await page.waitForFunction(() => window.__spelltest && window.__spelltest.build() === 'testseam', null, { timeout: 30000 });
-      await page.waitForTimeout(400);
+      await painted(page);
 
       // The real button's handler (it lives in the stats sheet).
+      const before = await page.evaluate(() => localStorage.getItem('spell_learner_en'));
       await page.evaluate(() => document.getElementById('resetStats').click());
-      await page.waitForTimeout(300);
+      // The reset writes STORAGE, which the read below inspects; the screen
+      // goes quiet before the write lands.
+      await page.waitForFunction(
+        (b) => localStorage.getItem('spell_learner_en') !== b,
+        before, { timeout: 5000 },
+      ).catch(() => {});
 
       const got = await page.evaluate(() => ({
         en: localStorage.getItem('spell_learner_en'),

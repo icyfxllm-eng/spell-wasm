@@ -9,7 +9,7 @@
 // This spec therefore asserts the data-level truth — store cleared → shelf
 // empty — and the missing user-facing flow is flagged in the session notes
 // rather than quietly invented here.
-import { openApp, assert, assertEq, clickSettled } from '../harness.mjs';
+import { openApp, assert, assertEq, clickSettled, domSettled, painted } from '../harness.mjs';
 import { completePicture, pickTile } from './finale.mjs';
 
 async function backToPicker(page) {
@@ -51,13 +51,15 @@ export async function run(browser, base, suite) {
       // Start a second picture and leave it mid-flight: it must NOT shelve.
       await pickTile(page, 'eiffel');
       await page.waitForSelector('#wpPlay.show');
-      await page.waitForTimeout(500);
+      await page.waitForSelector('#wpHow.show', { timeout: 4000 }).catch(() => {});
       for (let i = 0; i < 6 && (await page.$('#wpHow.show')); i++) {
-        await page.click('#wpHowNext'); await page.waitForTimeout(150);
+        await clickSettled(page, '#wpHowNext');
       }
+      // The picture word comes from the seam, which a redraw-settle can beat.
+      await page.waitForFunction(() => !!window.__spelltest.picWord(), null, { timeout: 5000 }).catch(() => {});
       const w = await page.evaluate(() => window.__spelltest.picWord());
       for (const ch of w) await page.click(`#gameKeyboard .kb-key[data-k="${ch}"]`, { delay: 0 });
-      await page.waitForTimeout(300);
+      await domSettled(page);
       await page.click('#wpExit');
       await page.waitForFunction(() => !document.querySelector('#wpPlay.show'), null, { timeout: 4000 }).catch(() => {});
       await page.evaluate(() => document.getElementById('wordPicOpen').click());
@@ -90,7 +92,11 @@ export async function run(browser, base, suite) {
       // Clearing the piece store empties the shelf (data-level reset).
       await page.evaluate(() => { localStorage.removeItem('spell_wordpic'); location.reload(); });
       await page.waitForLoadState('load');
-      await page.waitForTimeout(1500);
+      // A reload, so wait for the app to come back, not for the DOM to go
+      // quiet -- an unbooted page is very quiet indeed, and the picker click
+      // below then does nothing and times out thirty seconds later.
+      await page.waitForFunction(() => window.__spelltest && window.__spelltest.build() === 'testseam', null, { timeout: 30000 });
+      await painted(page);
       await page.evaluate(() => document.getElementById('wordPicOpen').click());
       await page.waitForSelector('#wpPicker.show');
       const after = await page.$$eval('#wpGallery [data-gallery]', (els) => els.length);

@@ -5,7 +5,7 @@
 // skippable (skip leaves language-default priors standing and never
 // re-offers), and Try serves the deterministic placement set through
 // the REAL session path — no placement-specific scoring exists.
-import { openApp, assert, clickSettled } from '../harness.mjs';
+import { openApp, assert, clickSettled, painted} from '../harness.mjs';
 
 // Reload and wait for the wasm app to be up, not a fixed delay: on a slow
 // boot the keyboard isn't built yet, and a test that types then presses
@@ -14,7 +14,7 @@ import { openApp, assert, clickSettled } from '../harness.mjs';
 async function reloadBooted(page) {
   await page.reload();
   await page.waitForFunction(() => window.__spelltest && window.__spelltest.build() === 'testseam', null, { timeout: 30000 });
-  await page.waitForTimeout(300);
+  await painted(page);
 }
 
 async function surfacesOn(page) {
@@ -75,7 +75,7 @@ export async function run(browser, base, suite) {
       await page.click('#orbWrap');
       await page.waitForSelector('#plcCard.show', { timeout: 5000 });
       await page.click('#plcSkip');
-      await page.waitForTimeout(300);
+      await page.waitForFunction(() => !document.querySelector('#plcCard.show'), null, { timeout: 4000 }).catch(() => {});
       assert(!(await page.$('#plcCard.show')), 'card dismissed on skip');
       // a second serve never re-offers — skipped IS an answer
       await page.click('#orbWrap');
@@ -121,7 +121,7 @@ export async function run(browser, base, suite) {
       let streak = 0;
       for (let i = 0; i < 6 && streak < 3; i++) {
         const w = await page.evaluate(() => window.__spelltest.currentWord());
-        if (!w || !/^[a-z]+$/i.test(w)) { await page.click('#orbWrap'); await page.waitForTimeout(350); continue; }
+        if (!w || !/^[a-z]+$/i.test(w)) { await page.click('#orbWrap'); await page.waitForFunction((p0) => { const c = window.__spelltest.currentWord(); return !!c && c !== p0; }, w, { timeout: 5000 }).catch(() => {}); continue; }
         await answerAndAdvance(page, w, `live-run chain, word ${i + 1}`);
         streak = await page.evaluate(() => window.__spelltest.streak());
       }
@@ -132,6 +132,7 @@ export async function run(browser, base, suite) {
       const w2 = await page.evaluate(() => window.__spelltest.currentWord());
       assert(w2, 'no live word to answer mid-run');
       await answerAndAdvance(page, w2, 'the mid-run answer after clearing the record');
+      // sleep-ok: the claim is that the offer does NOT render over a live run.
       await page.waitForTimeout(600);
       assert(!(await page.$('#plcCard.show')),
         'the offer rendered OVER a live run — F4 violated');

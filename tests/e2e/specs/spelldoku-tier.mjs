@@ -5,7 +5,7 @@
 // word comes from the tier its badge promised (F2), a misspelling costs the
 // word and not the cell (F4/I-T2), and the same digit in the same cell is
 // charged once (F8).
-import { openApp, assert, assertEq, clickSettled } from '../harness.mjs';
+import { openApp, assert, assertEq, clickSettled, domSettled} from '../harness.mjs';
 
 const KID = JSON.stringify({ verdict: 'kid', checkedAt: 1700000000 });
 
@@ -26,9 +26,9 @@ async function openTier(page, reading, pick) {
   });
   await page.waitForSelector('#sdScreen.show', { timeout: 5000 });
   await page.selectOption('#sdTier', reading);
-  await page.waitForTimeout(150);
+  await domSettled(page);
   await page.selectOption('#sdPick', pick);
-  await page.waitForTimeout(300);
+  await domSettled(page);
 }
 
 async function spell(page, word) {

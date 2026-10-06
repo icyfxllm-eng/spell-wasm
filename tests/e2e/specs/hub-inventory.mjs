@@ -11,7 +11,7 @@
 // element a drawer row proxies its tap to. A hidden button still dispatches
 // click; a deleted one does not. So the inventory is counted over RENDERED
 // children — `offsetParent === null` is the test, not `querySelector`.
-import { openApp, assert, assertEq } from '../harness.mjs';
+import { openApp, assert, assertEq, painted} from '../harness.mjs';
 
 const AGE_KID = JSON.stringify({ verdict: 'kid', checkedAt: 1700000000 });
 
@@ -116,7 +116,8 @@ export async function run(browser, base, suite) {
           localStorage.setItem('byear_misses_v1', JSON.stringify(list));
         }, n);
         await page.reload({ waitUntil: 'load' });
-        await page.waitForTimeout(900);
+        await page.waitForFunction(() => window.__spelltest && window.__spelltest.build() === 'testseam', null, { timeout: 30000 });
+        await painted(page);
         frames.push(await page.evaluate(() => {
           const b = document.getElementById('navBurger').getBoundingClientRect();
           return [Math.round(b.x), Math.round(b.y), Math.round(b.width), Math.round(b.height)];
@@ -144,7 +145,9 @@ export async function run(browser, base, suite) {
         }, [AGE_KID, n]);
         await ctx.route('**/api/speak**', (r) => r.fulfill({ status: 200, contentType: 'audio/mpeg', body: Buffer.from([]) }));
         const page = await ctx.newPage();
-        await page.goto(base); await page.waitForTimeout(900);
+        await page.goto(base);
+        await page.waitForFunction(() => window.__spelltest && window.__spelltest.build() === 'testseam', null, { timeout: 30000 });
+        await painted(page);
         assert(await page.evaluate(() => document.body.classList.contains('kid')), 'this profile must be Spell Jr');
         // I-N7 says the view does not EXIST, which is stronger than hidden.
         assertEq(await page.$$eval('#navBurger .nudge', (e) => e.length), 0,

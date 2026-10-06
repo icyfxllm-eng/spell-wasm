@@ -5,7 +5,7 @@
 // stats::render rewrites #statsBody at boot, so both were deleted before any
 // player could see them: Guardian Dash never reached a shipped build. Nothing
 // opened those surfaces in a browser test, so nothing noticed.
-import { openApp, assert } from '../harness.mjs';
+import { openApp, assert, painted} from '../harness.mjs';
 
 export async function run(browser, base, suite) {
   await suite.test('stats: the guardian section and Guardian Dash door survive boot and a stats render', async () => {
@@ -18,7 +18,7 @@ export async function run(browser, base, suite) {
       });
       await page.reload();
       await page.waitForFunction(() => window.__spelltest && window.__spelltest.build() === 'testseam', null, { timeout: 30000 });
-      await page.waitForTimeout(500);
+      await painted(page);
       const dom = await page.evaluate(() => ({
         guardian: !!document.getElementById('statsGuardian'),
         guardianHtml: (document.getElementById('statsGuardian') || {}).innerHTML || '',

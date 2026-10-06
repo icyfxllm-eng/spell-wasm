@@ -5,7 +5,7 @@
 //   node tests/e2e/screenshots.mjs <outDir>
 import { mkdirSync } from 'node:fs';
 import { join } from 'node:path';
-import { startServer, launch } from './harness.mjs';
+import { startServer, launch, painted} from './harness.mjs';
 
 // Smallest iPhone, largest phone, and a tablet — the three deliverable widths.
 const SHOT_DEVICES = {
@@ -46,7 +46,7 @@ for (const device of Object.keys(SHOT_DEVICES)) {
       const page = await ctx.newPage();
       await page.goto(base, { waitUntil: 'load' });
       await page.waitForFunction(() => window.__spelltest && window.__spelltest.build() === 'testseam', null, { timeout: 30000 });
-      await page.waitForTimeout(350);
+      await painted(page);
       const name = `${device}_${lang}_${mode.key}.png`;
       // Clip to the top of the page (header + control groups + play zone) so the
       // grouping is the focus, not the keyboard/footer.

@@ -2,7 +2,7 @@
 //
 // The grids are the real generator's, from the real banks. The test hook only
 // READS the served crossword, so a test knows which letters to type.
-import { openApp, assert, assertEq, clickSettled } from '../harness.mjs';
+import { openApp, assert, assertEq, clickSettled, domSettled} from '../harness.mjs';
 
 const KID = JSON.stringify({ verdict: 'kid', checkedAt: 1700000000 });
 
@@ -23,7 +23,7 @@ async function solve(page, i, letters) {
     if (await page.$eval(`[data-xw-clue="${i}"]`, (e) => e.classList.contains('done'))) break;
     await page.click(`#xwKeys [data-xw-key="${ch}"]`);
   }
-  await page.waitForTimeout(60);
+  await domSettled(page);
 }
 
 const learnerLog = (page, lang) => page.evaluate((l) => {
@@ -142,7 +142,7 @@ export async function run(browser, base, suite) {
       const { ctx, page } = await openApp(browser, base, { lang });
       try {
         await page.evaluate(() => document.getElementById('xwOpenBtn').click());
-        await page.waitForTimeout(400);
+        await domSettled(page);
         assert(!(await page.$eval('#xwScreen', (e) => e.classList.contains('show'))), `${lang}: no Spell Cross`);
       } finally { await ctx.close(); }
     }

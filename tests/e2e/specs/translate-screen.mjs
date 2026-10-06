@@ -14,7 +14,7 @@
 //   every iOS-only mode in a browser whatever the flag says, so an absence check
 //   would pass vacuously. It is proven in modes::tests against the live flag
 //   default, and on the iOS Simulator.
-import { openApp, assert, assertEq, clickSettled } from '../harness.mjs';
+import { openApp, assert, assertEq, clickSettled, domSettled} from '../harness.mjs';
 
 const actionsY = (page) => page.evaluate(() =>
   Math.round(document.getElementById('trActions').getBoundingClientRect().top));
@@ -32,7 +32,7 @@ async function openTranslate(page, audit = []) {
 
 async function typeSource(page, text) {
   await page.fill('#trSrcInput', text);
-  await page.waitForTimeout(80);
+  await domSettled(page);
 }
 
 async function commitFirst(page, query) {
@@ -102,7 +102,7 @@ export async function run(browser, base, suite) {
       assert(state.shown && state.decline, 'the bound is announced in the suggestion area, before any commit');
       assert(state.buttons >= 1, 'with a live way forward (I6)');
       await page.press('#trSrcInput', 'Enter');
-      await page.waitForTimeout(150);
+      await page.waitForFunction(() => (document.getElementById('trTgtWord')?.textContent || '') === '', null, { timeout: 4000 }).catch(() => {});
       assert(await page.$eval('#trTgtWord', (e) => e.textContent === ''), 'Enter commits nothing (I2)');
     } finally { await ctx.close(); }
   });
@@ -154,7 +154,7 @@ export async function run(browser, base, suite) {
       assert(await page.$eval('#trTgtCard', (e) => e.getAttribute('dir') === 'rtl'), 'an RTL target mirrors its own card');
       assert(await page.$eval('#trSpine', (e) => getComputedStyle(e).direction === 'ltr'), 'the spine does not mirror');
       await page.evaluate(() => document.body.classList.add('big-text'));
-      await page.waitForTimeout(80);
+      await domSettled(page);
       const yFull = await actionsY(page);
       await page.click('#trClear');
       assert((await actionsY(page)) === yFull, 'at the largest text size the action row still holds still (I1)');
@@ -185,7 +185,7 @@ export async function run(browser, base, suite) {
       assert(dest.length >= 1 && /new list/i.test(dest[0]), `it offers a dated list (got ${JSON.stringify(dest)})`);
 
       await page.click('#trSaveGo');
-      await page.waitForTimeout(200);
+      await page.waitForFunction(() => (document.getElementById('trNote')?.textContent || '').length > 0, null, { timeout: 4000 }).catch(() => {});
       assert((await page.$eval('#trNote', (e) => e.textContent)).length > 0, 'an inline confirmation naming the list');
       assert(await page.$eval('#trSaveRow', (e) => e.hasAttribute('hidden')), 'the destination row closes');
       assert(!(await shown()), 'and is gone from the screen');
@@ -269,7 +269,7 @@ export async function run(browser, base, suite) {
       await page.click('#trSave');
       await page.waitForSelector('#trSaveRow:not([hidden])', { timeout: 4000 });
       await page.click('#trSaveCancel');
-      await page.waitForTimeout(150);
+      await page.waitForFunction(() => document.getElementById('trSaveRow')?.hasAttribute('hidden'), null, { timeout: 4000 }).catch(() => {});
       assert(await page.$eval('#trSaveRow', (e) => e.hasAttribute('hidden')), 'the row closes');
       const saved = await page.evaluate(() => JSON.parse(localStorage.getItem('byear_custom_v1') || '{}'));
       assert(!(saved.words || []).length, `My Words is untouched (got ${JSON.stringify(saved.words)})`);

@@ -2,7 +2,7 @@
 // __spelltest seam, type it on the on-screen keyboard, assert acceptance; then
 // type a wrong answer and assert rejection UX. Types via real key clicks (the
 // anti-dictation keyboard is under test), never input.fill.
-import { openApp, typeOnKeyboard, assert } from '../harness.mjs';
+import { openApp, typeOnKeyboard, assert, clickSettled} from '../harness.mjs';
 
 // Active study languages only — coming-soon languages are gated from play (the
 // orb + answer flow are hidden), so a round can't start in them by design. For
@@ -16,7 +16,9 @@ export async function run(browser, base, suite) {
     await suite.test(`gameplay[${lang}]: correct answer is accepted`, async () => {
       const { ctx, page } = await openApp(browser, base, { lang });
       try {
-        await page.click('#orbWrap'); await page.waitForTimeout(500);
+        await page.click('#orbWrap');
+        // The seam, not the screen: the next line reads the served word.
+        await page.waitForFunction(() => !!window.__spelltest.currentWord(), null, { timeout: 5000 }).catch(() => {});
         const word = await page.evaluate(() => window.__spelltest.currentWord());
         assert(word && word.length > 0, 'no current word from seam');
         // Only run the click-type path for words whose chars are base keys
@@ -41,7 +43,9 @@ export async function run(browser, base, suite) {
   await suite.test('gameplay[en]: wrong answer is rejected', async () => {
     const { ctx, page } = await openApp(browser, base, { lang: 'en' });
     try {
-      await page.click('#orbWrap'); await page.waitForTimeout(500);
+      await page.click('#orbWrap');
+      // The seam, not the screen: the next line reads the served word.
+      await page.waitForFunction(() => !!window.__spelltest.currentWord(), null, { timeout: 5000 }).catch(() => {});
       const word = await page.evaluate(() => window.__spelltest.currentWord());
       const wrong = word === 'zzzz' ? 'xxxx' : 'zzzz';
       await typeOnKeyboard(page, wrong);

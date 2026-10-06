@@ -1,7 +1,7 @@
 // menu.spec — the language selector shows each language's endonym in its own
 // script, and selecting a language switches the whole UI to match (menu
 // integrity: selector is generated from the language registry, no drift).
-import { openApp, assert, pinBaseline, clickSettled } from '../harness.mjs';
+import { openApp, assert, pinBaseline, clickSettled, painted} from '../harness.mjs';
 import { readFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import { dirname, join } from 'node:path';
@@ -198,7 +198,7 @@ export async function run(browser, base, suite) {
     try {
       await page.goto(base, { waitUntil: 'load' });
       await page.waitForFunction(() => window.__spelltest && window.__spelltest.build() === 'testseam', null, { timeout: 30000 });
-      await page.waitForTimeout(400);
+      await painted(page);
       await clickSettled(page, '#orbWrap').catch(() => {}).catch(() => {});
       await page.click('#hintBtn').catch(() => {});
       await page.waitForFunction(() => /letras\)/.test(document.getElementById('hintLine')?.textContent || ''),

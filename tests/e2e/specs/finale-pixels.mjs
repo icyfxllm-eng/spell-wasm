@@ -59,7 +59,7 @@ export async function run(browser, base, suite) {
         assert(typed > 0, 'never typed a word');
         await page.waitForSelector('#wpReveal.show', { timeout: 8000 });
         await page.click('#wpRevealStage'); // settle to rest before sampling
-        await page.waitForTimeout(200);
+        await page.waitForSelector('#wpReveal.rest', { timeout: 4000 }).catch(() => {});
         const r = await pixelDiff(page);
         assert(!r.error, r.error || '');
         assert(r.bytes === 512 * 512 * 4, `rasterized the full 1x frame (${r.bytes})`);

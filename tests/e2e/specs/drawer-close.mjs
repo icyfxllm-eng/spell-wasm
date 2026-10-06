@@ -11,7 +11,7 @@
 // A test written against behaviour that has never existed cannot be a
 // regression guard, and stubbing one that passes vacuously would be worse
 // than not having it. Adding the gesture is a feature, and unasked for.
-import { openApp, assert, assertEq, clickSettled } from '../harness.mjs';
+import { openApp, assert, assertEq, clickSettled, painted, domSettled} from '../harness.mjs';
 
 const DEVICES = [
   ['SE', { width: 375, height: 667 }],
@@ -33,7 +33,7 @@ async function scrollTo(page, where) {
     const max = s.scrollHeight - s.clientHeight;
     s.scrollTop = w === 'top' ? 0 : w === 'bottom' ? max : Math.round(max / 2);
   }, where);
-  await page.waitForTimeout(150);
+  await domSettled(page);
 }
 
 export async function run(browser, base, suite) {
@@ -174,12 +174,13 @@ export async function run(browser, base, suite) {
           localStorage.setItem('spell_nav_nudge_v1', '0');
         });
         await page.reload({ waitUntil: 'load' });
-        await page.waitForTimeout(900);
+        await page.waitForFunction(() => window.__spelltest && window.__spelltest.build() === 'testseam', null, { timeout: 30000 });
+        await painted(page);
         await openDrawer(page);
         if (how === 'button') await page.click('#navDrawerClose');
         if (how === 'scrim') await page.mouse.click(20, 300);
         if (how === 'escape') await page.keyboard.press('Escape');
-        await page.waitForTimeout(250);
+        await page.waitForFunction(() => !document.querySelector('#drawer.show'), null, { timeout: 4000 }).catch(() => {});
         assert(!(await isOpen(page)), `${how} did not close the drawer`);
         marks.push(await readMark(page));
       } finally { await ctx.close(); }

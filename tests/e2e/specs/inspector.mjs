@@ -4,7 +4,7 @@
 // a `dev_preview` build, which the e2e bundle is. Its absence from release,
 // auditor and education builds is a build-level claim, proved by the cargo
 // feature and scripts/seam-absence-check.mjs, not here.
-import { openApp, assert, clickSettled } from '../harness.mjs';
+import { openApp, assert, clickSettled, painted} from '../harness.mjs';
 
 const PANEL = '#spellLearnerInspector';
 
@@ -44,7 +44,7 @@ export async function run(browser, base, suite) {
       }, [now, day]);
       await page.reload();
       await page.waitForFunction(() => window.__spelltest && window.__spelltest.build() === 'testseam', null, { timeout: 30000 });
-      await page.waitForTimeout(400);
+      await painted(page);
 
       // Serve a word, so the inspector has a reason to report.
       await page.click('#orbWrap');

@@ -11,7 +11,7 @@
 // So nothing here asserts "the control is connected". That check would
 // have gone green on all seventeen while every symptom stayed broken.
 // Each test flips a control and asserts the OBSERVABLE CONSEQUENCE.
-import { openApp, assert, openSettings as openAppSettings } from '../harness.mjs';
+import { openApp, assert, openSettings as openAppSettings, painted, domSettled} from '../harness.mjs';
 
 const PREFS = 'byear_prefs_v1'; // NOT spell_prefs — a wrong key here reads
                                 // undefined and the assertion passes vacuously
@@ -30,7 +30,7 @@ async function flip(page, id, on) {
     el.checked = v;
     el.dispatchEvent(new Event('change', { bubbles: true }));
   }, [id, on]);
-  await page.waitForTimeout(150);
+  await domSettled(page);
 }
 
 const bodyHas = (page, cls) =>
@@ -109,7 +109,7 @@ export async function run(browser, base, suite) {
       assert(before.includes('hard') && before.includes('expert'),
         `standard offers Hard and Expert, got ${JSON.stringify(before)}`);
       await page.selectOption('#levelSel', 'expert');
-      await page.waitForTimeout(150);
+      await domSettled(page);
       await flip(page, 'kidToggle', true);
       const on = await levels();
       assert(!on.includes('hard') && !on.includes('expert'),
@@ -178,7 +178,7 @@ export async function run(browser, base, suite) {
       await page.selectOption('#ageMonth', '1');
       await page.selectOption('#ageDay', '1');
       await page.click('#ageSubmit');
-      await page.waitForTimeout(250);
+      await page.waitForFunction(() => !document.body.classList.contains('kid'), null, { timeout: 4000 }).catch(() => {});
       assert(!(await bodyHas(page, 'kid')), 'a grown-up birthday leaves Spell Jr');
       assert(await shown('kidToggle'), 'the switch returns for a standard player');
       assert(!(await shown('kidGrownups')), 'and the grown-up button leaves');
@@ -197,7 +197,8 @@ export async function run(browser, base, suite) {
       // now, so OFF must survive a reload with Kid Mode still on.
       await flip(page, 'extraAttemptsToggle', false);
       await page.reload();
-      await page.waitForTimeout(600);
+      await page.waitForFunction(() => window.__spelltest && window.__spelltest.build() === 'testseam', null, { timeout: 30000 });
+      await painted(page);
       const p = await prefs(page);
       assert(p.kid === true, 'still in Kid Mode');
       assert(p.extraAttempts === false,
@@ -230,7 +231,7 @@ export async function run(browser, base, suite) {
           el.value = String(x);
           el.dispatchEvent(new Event('input', { bubbles: true }));
         }, v);
-        await page.waitForTimeout(120);
+        await domSettled(page);
       };
       await set(0.5); const lo = (await prefs(page)).volume;
       await set(1.0); const mid = (await prefs(page)).volume;
@@ -265,7 +266,8 @@ export async function run(browser, base, suite) {
       // to be turned on or this proves nothing
       await page.evaluate(() => localStorage.setItem('spell_flag_word_stories', 'on'));
       await page.reload();
-      await page.waitForTimeout(600);
+      await page.waitForFunction(() => window.__spelltest && window.__spelltest.build() === 'testseam', null, { timeout: 30000 });
+      await painted(page);
       const on = await page.evaluate(() =>
         localStorage.getItem('spell_flag_word_stories'));
       assert(on === 'on', 'flag is live for this session');
@@ -327,7 +329,8 @@ export async function run(browser, base, suite) {
       // the OCR RESULT only — real classification, real renderer.
       await page.evaluate(() => localStorage.setItem('spell_flag_photo_list', 'on'));
       await page.reload();
-      await page.waitForTimeout(700);
+      await page.waitForFunction(() => window.__spelltest && window.__spelltest.build() === 'testseam', null, { timeout: 30000 });
+      await painted(page);
       await page.evaluate(() =>
         window.__spelltest.photoReview(['Thisisanexample', 'window', 'Sundeep']));
       await page.waitForSelector('#photoScrim.show', { timeout: 4000 });
@@ -353,7 +356,7 @@ export async function run(browser, base, suite) {
           .find((x) => x.textContent.includes('example'));
         b.click();
       });
-      await page.waitForTimeout(300);
+      await domSettled(page);
       const after = await page.evaluate(() =>
         [...document.querySelectorAll('#photoChips .pchip')].map((i) => i.value));
       for (const piece of ['this', 'is', 'an', 'example']) {
@@ -377,9 +380,9 @@ export async function run(browser, base, suite) {
       await openSettings(page);
       await flip(page, 'kidToggle', true);
       await page.evaluate(() => document.getElementById('setupDone')?.click());
-      await page.waitForTimeout(200);
+      await domSettled(page);
       await page.evaluate(() => document.getElementById('calOpenBtn')?.click());
-      await page.waitForTimeout(600);
+      await domSettled(page);
       const text = await page.evaluate(() => {
         const el = document.getElementById('calScrim');
         return el ? (el.textContent || '') : '';

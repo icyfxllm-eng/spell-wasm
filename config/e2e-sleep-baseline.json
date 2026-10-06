@@ -1,4 +1,4 @@
 {
-  "_comment": "Cap on fixed waitForTimeout sleeps in tests/e2e. This number may only go DOWN. scripts/e2e-sleep-ratchet.mjs fails the gate in either direction, so a cleanup must lower it in the same commit.",
-  "max_fixed_sleeps": 111
+  "_comment": "Cap on fixed waitForTimeout sleeps in tests/e2e. This number may only go DOWN. scripts/e2e-sleep-ratchet.mjs fails the gate in either direction, so a cleanup must lower it in the same commit. It is now ZERO: every remaining sleep carries a sleep-ok reason, so a new bare waitForTimeout fails the push. That is the point -- if you need one, say why on the line above it and it stops being invisible.",
+  "max_fixed_sleeps": 0
 }

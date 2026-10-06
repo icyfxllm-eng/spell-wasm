@@ -187,7 +187,7 @@ export async function openApp(browser, base, { lang = null, device = 'se', viewp
     await page.click('#setupChip').catch(() => {});
     await page.selectOption('#langSel', lang).catch(() => {});
     await page.click('#setupDone').catch(() => {});
-    await page.waitForTimeout(200);
+    await domSettled(page);
   }
   return { ctx, page };
 }
@@ -207,7 +207,7 @@ export async function openViaDrawer(page, mode) {
   await page.click('#navBurger');
   await page.waitForSelector('#navDrawer.show', { timeout: 4000 });
   await page.click(`.nav-row[data-mode="${mode}"]`);
-  await page.waitForTimeout(350);
+  await domSettled(page);
 }
 
 export const openSettings = (page) => openViaDrawer(page, 'help_settings.title');
@@ -280,6 +280,24 @@ export async function domSettled(page, { quietMs = 120, timeout = 5000 } = {}) {
     // far more clearly than a thrown observer would.
     .catch(() => {});
 }
+
+/// Wait for the app's first paint.
+///
+/// The test seam is installed before anything is drawn, so a test that boots
+/// and immediately reads geometry gets zeros, and the fix the suite reached
+/// for was a few hundred milliseconds of hope. The orb having a box is the
+/// app's own "I have drawn" signal, and it is true as soon as it is true.
+export const painted = (page) =>
+  page
+    .waitForFunction(
+      () => {
+        const o = document.getElementById('orbWrap');
+        return !!o && o.getBoundingClientRect().width > 0;
+      },
+      null,
+      { timeout: 15000 },
+    )
+    .catch(() => {});
 
 /// Click, then wait for the redraw it caused. The replacement for the
 /// `click(...)` / `waitForTimeout(...)` pair that this suite was built on.

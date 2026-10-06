@@ -9,7 +9,7 @@
 // long-press, so F3 took its only entry point; per Eric (2026-08-10) the
 // tile long-press is now contextual — a tile with a live run opens
 // housekeeping, anything else stars.
-import { openApp, assert, assertEq, clickSettled } from '../harness.mjs';
+import { openApp, assert, assertEq, clickSettled, domSettled} from '../harness.mjs';
 import { pickTile } from './finale.mjs';
 
 async function openPicker(page) {
@@ -32,7 +32,10 @@ async function findTile(page, pic) {
 async function startAndLeave(page, pic, words) {
   await pickTile(page, pic);
   await page.waitForSelector('#wpPlay.show', { timeout: 5000 });
-  await page.waitForTimeout(500);
+  // The how-to card arrives a beat after the play screen and swallows
+  // key taps. Wait for the card itself; the loop below handles its
+  // absence, so a timeout here is not a failure.
+  await page.waitForSelector('#wpHow.show', { timeout: 4000 }).catch(() => {});
   for (let i = 0; i < 6 && (await page.$('#wpHow.show')); i++) {
     await clickSettled(page, '#wpHowNext');
   }
@@ -40,7 +43,7 @@ async function startAndLeave(page, pic, words) {
   for (let k = 0; k < words; k++) {
     const word = await page.evaluate(() => window.__spelltest.picWord());
     for (const ch of word) await page.click(`#gameKeyboard .kb-key[data-k="${ch}"]`, { delay: 0 });
-    await page.waitForTimeout(200);
+    await domSettled(page);
   }
   await clickSettled(page, '#wpExit');
 }
@@ -67,7 +70,10 @@ export async function run(browser, base, suite) {
       // and tapping it resumes at the exact word the run was waiting on
       await page.click('#wpGrid [data-pic="star"]');
       await page.waitForSelector('#wpPlay.show', { timeout: 5000 });
-      await page.waitForTimeout(400);
+      // The how-to card arrives a beat after the play screen and swallows
+      // key taps. Wait for the card itself; the loop below handles its
+      // absence, so a timeout here is not a failure.
+      await page.waitForSelector('#wpHow.show', { timeout: 4000 }).catch(() => {});
       assertEq(await page.evaluate(() => window.__spelltest.picWord()), expected,
         'resume lands on the exact next word');
       await clickSettled(page, '#wpExit');
@@ -86,13 +92,14 @@ export async function run(browser, base, suite) {
       const box = await tile.boundingBox();
       await page.mouse.move(box.x + box.width / 2, box.y + box.height / 2);
       await page.mouse.down();
+      // sleep-ok: the gesture is the duration -- this is a long-press, and shortening it makes it a tap.
       await page.waitForTimeout(750);
       await page.mouse.up();
 
       // a tile WITH a run opens housekeeping rather than starring
       await page.waitForSelector('#wpHk.show', { timeout: 3000 });
       await page.click('#wpHkRemove');
-      await page.waitForTimeout(400);
+      await page.waitForFunction(() => !document.querySelector('#wpHk.show'), null, { timeout: 4000 }).catch(() => {});
       await findTile(page, 'star');
       assert(await page.$('#wpGrid [data-pic="star"]'), 'the PICTURE survives (only state died)');
       const badge = await page.$eval('#wpGrid [data-pic="star"]', (e) => e.textContent || '');

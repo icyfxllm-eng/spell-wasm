@@ -20,7 +20,10 @@ async function openPicture(page, pic) {
   await page.waitForSelector('#wpPicker.show', { timeout: 5000 });
   await pickTile(page, pic);
   await page.waitForSelector('#wpPlay.show', { timeout: 5000 });
-  await page.waitForTimeout(500);
+  // The how-to card arrives a beat after the play screen and swallows
+  // key taps. Wait for the card itself; the loop below handles its
+  // absence, so a timeout here is not a failure.
+  await page.waitForSelector('#wpHow.show', { timeout: 4000 }).catch(() => {});
   for (let i = 0; i < 6 && (await page.$('#wpHow.show')); i++) {
     const before = await page.$eval('#wpHow', (e) => e.textContent).catch(() => '');
     await page.click('#wpHowNext');
@@ -63,7 +66,8 @@ export async function run(browser, base, suite) {
       assertEq(await placedCount(page), before, 'no stroke lost to a miss');
       // And the retry still lands.
       for (const ch of word) await page.click(`#gameKeyboard .kb-key[data-k="${ch}"]`);
-      await page.waitForTimeout(200);
+      await page.waitForFunction((n) => document.querySelectorAll('#wpStage .wp-outline.placed').length >= n,
+        before + 1, { timeout: 4000 }).catch(() => {});
       assertEq(await placedCount(page), before + 1, 'the retried word landed');
     } finally { await ctx.close(); }
   });
@@ -86,7 +90,8 @@ export async function run(browser, base, suite) {
       assert(await page.$('#wpStage .wp-outline.next.miss-dim'), 'dim holds until the word lands');
       // ...and landing the word clears it.
       for (const ch of word.slice(1)) await page.click(`#gameKeyboard .kb-key[data-k="${ch}"]`);
-      await page.waitForTimeout(200);
+      await page.waitForFunction((n) => document.querySelectorAll('#wpStage .wp-outline.placed').length >= n,
+        before + 1, { timeout: 4000 }).catch(() => {});
       assertEq(await placedCount(page), before + 1, 'the corrected word landed');
       assert(!(await page.$('#wpStage .miss-dim')), 'landing the word lifts the dim');
     } finally { await ctx.close(); }
@@ -117,7 +122,8 @@ export async function run(browser, base, suite) {
       assert(!(await page.$('#wpStage .miss-charged')), 'erase-to-recover restored the stroke');
       // And the recovered player can still land the word.
       for (const ch of word) await page.click(`#gameKeyboard .kb-key[data-k="${ch}"]`);
-      await page.waitForTimeout(200);
+      await page.waitForFunction((n) => document.querySelectorAll('#wpStage .wp-outline.placed').length >= n,
+        before + 1, { timeout: 4000 }).catch(() => {});
       assertEq(await placedCount(page), before + 1, 'the recovered word landed');
     } finally { await ctx.close(); }
   });

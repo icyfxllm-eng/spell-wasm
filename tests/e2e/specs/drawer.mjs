@@ -12,7 +12,7 @@
 // because the drawer renders neither. An aid is `unlisted` in the registry and
 // never becomes a row at all, which is the stronger version of the law the
 // sheet expressed with element type.
-import { openApp, assert, assertEq, pinBaseline, clickSettled } from '../harness.mjs';
+import { openApp, assert, assertEq, pinBaseline, clickSettled, painted, domSettled} from '../harness.mjs';
 
 const AGE_KID = JSON.stringify({ verdict: 'kid', checkedAt: 1700000000 });
 
@@ -89,7 +89,7 @@ export async function run(browser, base, suite) {
       await ctx.route('**/api/speak**', (r) => r.fulfill({ status: 200, contentType: 'audio/mpeg', body: Buffer.from([]) }));
       const page = await ctx.newPage();
       await page.goto(base);
-      await page.waitForTimeout(800);
+      await domSettled(page);
       await assertSweep(page);
     } finally { await ctx.close(); }
   });
@@ -141,7 +141,9 @@ export async function run(browser, base, suite) {
     const { ctx, page } = await openApp(browser, base, { lang: 'en' });
     try {
       await page.evaluate(() => localStorage.setItem('spell_flag_word_stories', 'on'));
-      await page.reload(); await page.waitForTimeout(600);
+      await page.reload();
+      await page.waitForFunction(() => window.__spelltest && window.__spelltest.build() === 'testseam', null, { timeout: 30000 });
+      await painted(page);
       const t = await rows(page);
       assert(!t.some((x) => x.mode === 'word_stories'), 'word_stories appeared despite status:hidden');
     } finally { await ctx.close(); }
@@ -151,7 +153,9 @@ export async function run(browser, base, suite) {
     const { ctx, page } = await openApp(browser, base, { lang: 'en' });
     try {
       await page.evaluate(() => localStorage.setItem('spell_flag_online_spelloff', 'on'));
-      await page.reload(); await page.waitForTimeout(600);
+      await page.reload();
+      await page.waitForFunction(() => window.__spelltest && window.__spelltest.build() === 'testseam', null, { timeout: 30000 });
+      await painted(page);
       const t = await rows(page);
       assert(!t.some((x) => x.mode === 'online_spelloff'),
         'a hidden mode appeared because its flag was on — `hidden` must win');
@@ -205,8 +209,9 @@ export async function run(browser, base, suite) {
       });
       assert(overflows, 'this viewport must make the panel overflow, or the test proves nothing');
       await page.mouse.move(300, 200);
+      // sleep-ok: pacing a gesture, not waiting for work. Six wheel events delivered back-to-back are one fling to the browser; the spacing is what makes them a scroll.
       for (let i = 0; i < 6; i++) { await page.mouse.wheel(0, 200); await page.waitForTimeout(40); }
-      await page.waitForTimeout(250);
+      await domSettled(page);
       const after = await page.evaluate(() => ({
         panel: Math.round(document.getElementById('navDrawerScroll').scrollTop),
         page: Math.round(window.scrollY),
@@ -248,7 +253,9 @@ export async function run(browser, base, suite) {
       }, [AGE_KID]);
       await ctx.route('**/api/speak**', (r) => r.fulfill({ status: 200, contentType: 'audio/mpeg', body: Buffer.from([]) }));
       const page = await ctx.newPage();
-      await page.goto(base); await page.waitForTimeout(800);
+      await page.goto(base);
+      await page.waitForFunction(() => window.__spelltest && window.__spelltest.build() === 'testseam', null, { timeout: 30000 });
+      await painted(page);
       const t = await rows(page);
       assert(t.length > 0, 'kid drawer rendered nothing at all');
       // Derive the law from the REGISTRY, never a hardcoded list. modes.rs

@@ -2,7 +2,7 @@
 //   node tests/e2e/orb-shot.mjs <label>
 import { mkdirSync } from 'node:fs';
 import { join } from 'node:path';
-import { startServer, launch } from './harness.mjs';
+import { startServer, launch, painted} from './harness.mjs';
 
 const OUT = 'tests/e2e/shots/orb';
 mkdirSync(OUT, { recursive: true });
@@ -17,7 +17,7 @@ await ctx.route('**/api/speak**', (r) => r.fulfill({ status: 200, contentType: '
 const page = await ctx.newPage();
 await page.goto(base, { waitUntil: 'load' });
 await page.waitForFunction(() => window.__spelltest && window.__spelltest.build() === 'testseam', null, { timeout: 30000 });
-await page.waitForTimeout(400);
+await painted(page);
 const orb = await page.$('#orbWrap');
 await orb.screenshot({ path: join(OUT, `${label}.png`) });
 await browser.close();

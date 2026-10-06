@@ -19,7 +19,10 @@ async function openPicture(page, pic) {
   await page.waitForSelector('#wpPicker.show', { timeout: 5000 });
   await pickTile(page, pic);
   await page.waitForSelector('#wpPlay.show', { timeout: 5000 });
-  await page.waitForTimeout(500);
+  // The how-to card arrives a beat after the play screen and swallows
+  // key taps. Wait for the card itself; the loop below handles its
+  // absence, so a timeout here is not a failure.
+  await page.waitForSelector('#wpHow.show', { timeout: 4000 }).catch(() => {});
   for (let i = 0; i < 6 && (await page.$('#wpHow.show')); i++) {
     await clickSettled(page, '#wpHowNext');
   }

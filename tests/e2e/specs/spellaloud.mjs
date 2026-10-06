@@ -5,7 +5,7 @@
 // in the browser (Invariant I3 — voiceSpell config AND on-device availability).
 // The letter parser itself is exhaustively covered by the Rust unit tests; live
 // mic recognition needs a physical device and isn't covered here.
-import { openApp, assert, pinBaseline } from '../harness.mjs';
+import { openApp, assert, pinBaseline, painted} from '../harness.mjs';
 
 const AGE = JSON.stringify({ verdict: 'full', checkedAt: 1700000000 });
 
@@ -38,7 +38,7 @@ export async function run(browser, base, suite) {
     const page = await ctx.newPage();
     await page.goto(base, { waitUntil: 'load' });
     await page.waitForFunction(() => window.__spelltest && window.__spelltest.build() === 'testseam', null, { timeout: 30000 });
-    await page.waitForTimeout(200);
+    await painted(page);
     try {
       const hidden = await page.$eval('#voiceSpellMic', (e) => e.classList.contains('btn-hide'));
       assert(hidden, 'voiceSpellMic must stay hidden off-iOS even with the flag on (no on-device bridge)');
