@@ -85,17 +85,32 @@ def long_edge_px(path):
 
 
 def report(paired, leftover, dest):
-    have = sum(1 for p, _ in paired if p)
-    print(f"  {have} of {len(paired)} shots present -> {dest}\n")
+    """What is in the shoot, what is already filed, and what is still missing.
+
+    Filed shots are read from `dest`, not from the source folder. A shoot
+    happens over several sittings -- two screenshots on a phone today, the
+    book pages next week -- and a tool that only looked at today's folder
+    would keep telling you to re-take what is already in the repo.
+    """
+    filed = {s[0] for s in (sl for _, sl in paired) if (dest / f"{s[0]}.jpg").exists()} \
+        if dest.exists() else set()
+    have = sum(1 for p, sl in paired if p or sl[0] in filed)
+    print(f"  {have} of {len(paired)} shots present -> {dest}")
+    if filed:
+        print(f"  ({len(filed)} already filed from an earlier sitting)")
+    print()
     for photo, slot in paired:
         name, row, needs = slot
-        if photo:
+        if name in filed and not photo:
+            print(f"  {'(already filed)':24} -> {name}.jpg")
+        elif photo:
             print(f"  {photo.name:24} -> {name}.jpg   "
-                  f"{long_edge_px(photo)}px {photo.stat().st_size/1e6:.1f}MB")
+                  f"{long_edge_px(photo)}px {photo.stat().st_size/1e6:.1f}MB"
+                  + ("   REPLACES a filed shot" if name in filed else ""))
         else:
             print(f"  {'(missing)':24} -> {name}.jpg")
         print(f"      {'row ' + str(row) if row else 'filler':9} {needs}")
-    missing = [s for p, s in paired if not p]
+    missing = [sl for p, sl in paired if not p and sl[0] not in filed]
     if missing:
         print(f"\n  NOT COVERED — {len(missing)} shot(s) still needed:")
         for name, row, needs in missing:

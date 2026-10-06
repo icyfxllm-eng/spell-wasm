@@ -1,0 +1,24 @@
+{
+  "_row": 11,
+  "_needs": "e-reader SCREENSHOT with highlights, pale rendering",
+  "_source_app": "",
+  "_check_me": "highlighted[] was read off the screenshot by Claude, not typed by Eric. Confirm it.",
+  "highlighted": [
+    "command",
+    "algorithms",
+    "Jupyter"
+  ],
+  "colours": [
+    "yellow"
+  ],
+  "measured": {
+    "paper_s": 0.0,
+    "mark_s_median": 0.549,
+    "mark_s_range": [
+      0.27,
+      0.6
+    ],
+    "mark_hue_deg": 53
+  },
+  "notes": "Measured 2026-10-06. The palest highlight here reaches S=0.27, which clears the provisional delta_s of 0.25 by 0.02 -- the tightest margin in the set. ALSO CARRIES THE ROW 16 PROBLEM: the blue '1.2.2 Jupyter Notebook' heading is coloured TEXT at hue ~200deg, 15k px against the highlights' 28k, and F2's luminance-only text mask does not exclude it."
+}

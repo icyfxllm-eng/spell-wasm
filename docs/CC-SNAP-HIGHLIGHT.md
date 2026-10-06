@@ -182,6 +182,54 @@ own header: if Swift applied ΔS, every re-tune after the fixture would need an
 app build and the two copies would drift. Swift sends the distribution; every
 threshold stays on the Rust side in one file.
 
+**The first two fixture shots are filed, 2026-10-06, and C4 is answered.**
+Two e-reader screenshots, as `tests/fixtures/snap-highlight/11-ereader-pale`
+and `12-ereader-saturated`. Measured at the fixture's own 1600px:
+
+| | paper S | mark S median | mark S range | hue |
+|---|---|---|---|---|
+| 11, pale | 0.000 | 0.549 | 0.27 – 0.60 | 53° |
+| 12, saturated | 0.000 | 1.000 | 0.49 – 1.00 | 50° |
+
+So C4's question — do screen highlights need their own ΔS — has a provisional
+answer of **no**: D-H2's starting 0.25 separates both. But row 11's palest
+pixels sit at 0.27, which clears it by two hundredths, so D-H3's
+per-source threshold should stay available rather than be deleted as unused.
+
+Two physical pages were measured alongside them and are not filed (they are
+not fixture rows): a form marked in cyan, paper S 0.039, ink at hue 180-210°;
+and an aged book page with a red strikethrough, **paper S 0.153**, ink at hue
+0-15°. That second number is the one worth keeping: an ABSOLUTE saturation
+threshold would have called that entire page highlighted. F1's
+paper-relative cut is load-bearing, not a refinement.
+
+**F2's text mask is not sufficient, and the fixture caught it before any code
+ran.** Row 11 has two saturated clusters, not one: the yellow highlights at
+hue ~53° (28k px) and the blue "1.2.2 Jupyter Notebook" section heading at
+hue ~200° (15k px). F2 says to mask text pixels by "luminance below an Otsu
+threshold"; that cut fell at L=143 and mid-tone coloured type is brighter, so
+the heading survives as background and reads as strongly saturated. On a
+technical book with coloured section titles, every heading would import.
+A luminance-only mask cannot fix this — the mask has to know that saturated
+*strokes* are type. Eric's call how, and it changes F2.
+
+**Two scenes added to the shoot (rows 16 and 17), both false-positive hunts.**
+16 is a page of coloured headings with no highlighter, which must score zero;
+it is the scene that would have caught the above. 17 is a printed form marked
+in a non-yellow highlighter, because the shot list had assumed worksheets are
+unmarked and marked pages are books, and a form somebody highlighted at work
+is neither. **The acceptance table above is Eric's and still has 15 rows** —
+these two want rows 16 and 17 added to it, which is his to sign, not mine to
+edit.
+
+**Strikethrough is undefined in v1.** D-H6 excludes pen underlines, circles,
+brackets and margin notes; it does not mention a line drawn THROUGH a word.
+The red one measured above is cleanly separable by colour, but `frac_sat` is
+the fraction of a box's background that reads marked and a thin stroke
+plausibly lands under D-H1's 0.50 — untested. The semantic question matters
+more than the geometry: a struck-through word usually means *done*, which is
+the opposite of *teach me this*.
+
 **C1 HALTs, and C2 is why it stays halted.** `docs/CC-SNAP-BOXES.md` now
 delivers word boxes to the core, so half of C1 is satisfied. The other half —
 pixels — is deliberately not built. CC-SNAP-BOXES F3 specifies the shim but

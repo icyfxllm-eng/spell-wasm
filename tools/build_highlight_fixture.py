@@ -4,6 +4,24 @@
 Downscales to 1600px on the long edge, files each photo under the acceptance
 row it is meant to satisfy, and writes a sidecar for the ground truth.
 
+Rows 16 and 17 were added after the first two screenshots were filed and
+measured, and both are false-positive hunts rather than detection cases.
+
+Row 16 exists because measuring row 11 found TWO saturated clusters on it,
+not one: the yellow highlights at hue ~53deg, and the blue section heading at
+hue ~200deg, 15k pixels against the highlights' 28k. F2 masks text by
+"luminance below an Otsu threshold", that cut fell at L=143, and mid-tone
+coloured type is brighter than that -- so a heading survives the mask as
+"background" and reads as strongly saturated. On a technical book every
+section title would import. Row 16 is that page on its own, with no
+highlighter anywhere, so the answer has to be zero.
+
+Row 17 is a printed form marked in cyan. The list had quietly assumed
+worksheets are unmarked and marked pages are books, and neither is true of a
+form somebody highlighted at work. It also carries a page full of ruled
+fill-in lines, which is the environment any future underline detection would
+have to survive.
+
 Pairing, downscaling and sidecars live in tools/fixture_shoot.py, shared
 with the Level 2 layout shoot. Note the pairing rule it documents: a photo
 whose filename starts with a row number claims that row, so a skipped scene
@@ -44,15 +62,22 @@ ROWS = [
     ("08-hyphen-both", 8, "a word hyphenated at a line break, BOTH halves highlighted"),
     ("09-hyphen-first-only", 9, "the same shape, only the FIRST half highlighted"),
     ("10-two-colours", 10, "one page with yellow AND a second colour"),
-    ("11-apple-books", 11, "Apple Books SCREENSHOT with 3 highlights"),
-    ("12-kindle", 12, "Kindle SCREENSHOT with 2 highlights"),
+    ("11-ereader-pale", 11, "e-reader SCREENSHOT, PALE highlight rendering (FILED 2026-10-06)"),
+    ("12-ereader-saturated", 12, "e-reader SCREENSHOT, SATURATED highlight rendering (FILED 2026-10-06)"),
     ("13-phrase", 13, "a highlighted phrase of 3+ words"),
     ("14-low-confidence", 14, "a highlighted word OCR will read poorly -- blurred or skewed"),
     ("15-pen-underline", 15, "a word underlined in PEN, no highlighter"),
+    # Added 2026-10-06 after measuring the two filed screenshots. Both scenes
+    # are false-positive hunts: the first is one the fixture caught before any
+    # code ran, the second is a shape the list had assumed away.
+    ("16-coloured-headings", 16, "a page with COLOURED HEADING TEXT and NO highlighter "
+                                 "(a technical book, blue or red section titles)"),
+    ("17-form-other-colour", 17, "a printed FORM marked with a NON-YELLOW highlighter "
+                                 "(cyan, pink or green), photographed not screenshotted"),
 ]
 # C2 also asks for bulk: 10 plain worksheets and 5 yellow book pages in total.
 # The named rows cover some of those; these are the filler.
-FILLER = [(f"16-worksheet-plain-{i}", None, "another plain worksheet") for i in range(2, 8)]
+FILLER = [(f"18-worksheet-plain-{i}", None, "another plain worksheet") for i in range(2, 8)]
 PLAN = ROWS + FILLER
 
 
