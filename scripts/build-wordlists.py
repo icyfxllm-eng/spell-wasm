@@ -61,6 +61,101 @@ def max_for(code, tier_idx):
     return max(int(row["poolFloors"][tier_idx] * 1.25), 840)
 
 
+# --- Vietnamese orthography -------------------------------------------------
+# Vietnamese is written in SYLLABLES, and a syllable has a fixed shape: an
+# optional onset from a closed set, a vowel nucleus from a closed set, and an
+# optional coda from eight finals. Nothing else is a Vietnamese word.
+#
+# This is a curation filter and not a nicety. The vi bank reached 4,094 entries
+# of which 2,972 were not Vietnamese: English (dreadnought, marketing,
+# cholesterol), brand names (youtube, facebook, samsung, android), place names
+# (nigeria, jamaica, argentina), Italian (frazioni), and `retrieved`, which is a
+# Wikipedia citation artefact. 82% of the HARD tier and 84% of EXPERT. A
+# Vietnamese learner was mostly being asked to spell English.
+#
+# The frequency corpora behind the other languages are filtered by SCRIPT, which
+# is why every non-Latin bank is clean at 0% ASCII. Latin-script Vietnamese has
+# no such signal, so the structure of the language has to supply it.
+#
+# Validated three ways before being switched on: 100% of the hand-curated easy
+# tier survives (246/246); 22 deliberately awkward real words pass (nghiêng,
+# khuyên, người, được, trường, thuyền, quyển, nguyễn, việt nam, thành phố); and
+# 13 known foreign words are all rejected.
+VI_TONES = {"\u0300", "\u0301", "\u0309", "\u0303", "\u0323"}
+VI_ONSETS = sorted(["ngh", "ng", "nh", "ch", "gh", "gi", "kh", "ph", "th", "tr", "qu",
+                    "b", "c", "d", "đ", "g", "h", "k", "l", "m", "n", "p", "r", "s",
+                    "t", "v", "x"], key=len, reverse=True)
+VI_CODAS = sorted(["ch", "ng", "nh", "c", "m", "n", "p", "t"], key=len, reverse=True)
+VI_NUCLEI = sorted(["uyê", "uya", "oai", "oay", "oao", "uây", "iêu", "yêu", "uôi",
+                    "ươi", "ươu", "ưou", "ia", "iê", "ya", "yê", "ua", "uô", "ưa",
+                    "ươ", "ai", "ao", "au", "ay", "ây", "âu", "eo", "êu", "iu", "oi",
+                    "ôi", "ơi", "ui", "ưi", "ưu", "oa", "oă", "oe", "uâ", "uê", "uơ",
+                    "uy", "uo", "ue", "oo", "a", "ă", "â", "e", "ê", "i", "o", "ô",
+                    "ơ", "u", "ư", "y"], key=len, reverse=True)
+
+
+def _vi_strip_tones(s: str) -> str:
+    d = unicodedata.normalize("NFD", s)
+    return unicodedata.normalize("NFC", "".join(c for c in d if c not in VI_TONES))
+
+
+def _vi_syllable_ok(syl: str) -> bool:
+    s = _vi_strip_tones(syl).lower()
+    if not s:
+        return False
+    for onset in [""] + VI_ONSETS:
+        if onset and not s.startswith(onset):
+            continue
+        rest = s[len(onset):]
+        for nucleus in VI_NUCLEI:
+            if not rest.startswith(nucleus):
+                continue
+            tail = rest[len(nucleus):]
+            if tail == "" or tail in VI_CODAS:
+                return True
+    return False
+
+
+def is_vietnamese(word: str) -> bool:
+    """Every space- or hyphen-separated syllable must be a possible Vietnamese one."""
+    parts = [p for p in word.replace("-", " ").split() if p]
+    return bool(parts) and all(_vi_syllable_ok(p) for p in parts)
+
+
+VI_MARKS = {"\u0300", "\u0301", "\u0309", "\u0303", "\u0323",
+            "\u0306", "\u0302", "\u031b"}
+
+
+def vi_has_diacritic(word: str) -> bool:
+    d = unicodedata.normalize("NFD", word)
+    return any(c in VI_MARKS for c in d) or "đ" in word.lower()
+
+
+def vi_tier_ok(word: str, tier: str) -> bool:
+    """A SECOND filter, and only for the two hard tiers.
+
+    Syllable shape cannot reject a short foreign word that happens to fit
+    Vietnamese phonotactics: cat, bot, net, let, hop, boot, buy, doom, gem and
+    pit are all valid SHAPES. After the shape filter they were still ~20% of
+    what survived at hard and expert.
+
+    An unmarked Vietnamese word is real and common -- anh, ba, cho, con, chim,
+    nhanh -- which is exactly why they sit in EASY and MEDIUM, where this extra
+    rule does not apply. At the low-frequency end of the corpus an unmarked
+    ASCII token is overwhelmingly foreign, so hard and expert additionally
+    require a Vietnamese diacritic.
+
+    This is openly a heuristic and it costs a few real words (cang, ganh, noi).
+    Eric chose it over shipping `cat` and `bot` as hard Vietnamese spellings,
+    2026-10-05. It is a stopgap until the bank is refilled from a real
+    Vietnamese corpus: the tiers are still misordered, because their ranking was
+    computed over a corpus that was 73% not Vietnamese.
+    """
+    if tier in ("hard", "expert"):
+        return vi_has_diacritic(word)
+    return True
+# ----------------------------------------------------------------------------
+
 def nfc(s: str) -> str:
     return unicodedata.normalize("NFC", s)
 
@@ -167,6 +262,14 @@ def build():
                     continue
                 if not (min_len <= len(w) <= MAX_LEN):
                     warnings.append(f"{where} — dropped (length {len(w)} outside {MIN_LEN}..{MAX_LEN})")
+                    continue
+                # vi: not a possible Vietnamese syllable, so not a Vietnamese
+                # word. Drop + warn, the same class as the filters above.
+                if code == "vi" and not is_vietnamese(w):
+                    warnings.append(f"{where} — dropped (not a Vietnamese syllable)")
+                    continue
+                if code == "vi" and not vi_tier_ok(w, tier):
+                    warnings.append(f"{where} — dropped (unmarked at a hard tier)")
                     continue
                 # Hard gates (fail the build).
                 #
