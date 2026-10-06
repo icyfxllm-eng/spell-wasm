@@ -2039,8 +2039,11 @@
          the keyboard and pushed "Check spelling" out of reach -- the button was
          never disabled, it was buried, which survived every logic fix because it
          was never a logic bug. Instrumentation must not move a player's
-         controls. pointer-events:none so it cannot swallow a tap either. -->
-    <div class="voice-spell-status" id="voiceSpellDiag" aria-hidden="true"
+         controls. pointer-events:none so it cannot swallow a tap either.
+         HIDDEN by default and unhidden only behind the dev door: it carries its
+         own background and padding, so even EMPTY it drew a dark bar across the
+         title. It shipped that way in 270. -->
+    <div class="voice-spell-status" id="voiceSpellDiag" aria-hidden="true" hidden
          style="position:fixed;inset-inline:0;top:env(safe-area-inset-top);z-index:9999;pointer-events:none;
                 font-size:10px;line-height:1.3;opacity:.8;word-break:break-word;
                 background:rgba(0,0,0,.72);padding:2px 6px"></div>

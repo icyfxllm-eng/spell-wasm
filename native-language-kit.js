@@ -444,8 +444,13 @@
         render(t);
       }
       function render(t) {
+        // Checked HERE as well as at every call site: this function paints the
+        // overlay, so the door belongs with the painting, not only with the
+        // callers who happen to remember.
+        if (!devDoorOpen()) return;
         var el = document.getElementById('voiceSpellDiag');
         if (!el) return;
+        el.hidden = false;
         var parts = t.map(function (e) {
           return e.label + (e.n > 1 ? 'x' + e.n : '') + '>' + (e.box || '-');
         });
@@ -481,11 +486,20 @@
       sub('letterDiag', function (d) {
         if (!(d && d.info)) return;
         window.__lastLetterDiag = d.info;              // persisted for Settings readout
+        // BEHIND THE DEV DOOR. This readout is instrumentation: rms, thresholds,
+        // buffer counts. It was being painted over the app for EVERY player,
+        // because only the raw-transcript trail was gated and this line was not
+        // -- so it shipped to TestFlight in 270 and sat across the title
+        // whenever anyone used the mic. The value is kept on
+        // window.__lastLetterDiag either way, so the Settings readout and any
+        // later report still have it without it being on a player's screen.
+        if (!devDoorOpen()) return;
         // Its OWN element: the player-facing status owns #voiceSpellStatus and
         // was overwriting this the moment listening began.
         var el = document.getElementById('voiceSpellDiag')
               || document.getElementById('voiceSpellStatus');
         if (el) {
+          el.hidden = false;
           var t = window.__tokTrail;
           if (t && t.length) { render(t); } else { el.textContent = 'diag: ' + d.info; }
         }
