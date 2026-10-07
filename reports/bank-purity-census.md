@@ -188,10 +188,22 @@ English totals 3,158, exactly the spec's expected figure. Korean Medium is 217, 
 |---|---|
 | `build-wordlists.py` size gate (floor 30, ceiling from `bank_floors.json`) | **green**, 73,140 words (was 82,261) |
 | Definition Match `POOL_FLOOR` = 40, adult and Jr view, definitions re-keyed to corrected spellings | **green**; lowest tiers are hi Expert 50, ja Easy 58, zh Easy 73, de Easy 145; no tier crosses 40 |
-| Letter Forge `every_ready_language_generates_a_full_year` and Jr twin, wordgrid `pools_meet_e4`, SpellDoku Word Mode fill, `every_tier_ladder_climbs`, Daily arc fill | RUST_RESULT_PENDING |
+| Letter Forge `every_ready_language_generates_a_full_year` (and the rest of the forge tests), wordgrid `pools_meet_e4`, `every_tier_ladder_climbs`, Daily arc and kid-arc tests, wordsearch daily-pool depth | **green** |
+| SpellDoku Word Mode `every_language_plays_word_mode_from_a_cold_start` | **FAILS** (`ko Expert: no Word Mode board`); passes on the unswept banks. **HALT** (pool gate) |
+| wordsearch `wordgrid_determinism` (pinned 500-seed grid digest) | **FAILS** (digest moved 14744009201383334743 to 8772773888074032197); passes on the unswept banks. **HALT**: the pin can only be updated by editing a test's expected number, which I6 forbids without Eric |
+| `translate_screen::translate_traceability` | **FAILS** (`en->ar: بذرة is not a bank word of ar`); passes on the unswept banks. Cascade, not a pool gate: the translate/gloss row still points at a row the sweep removed. Pruning it (F3's cascade) fixes this test. The root cause is a C1 false positive: `بذرة` ("seed") is a real word that the Arabic prefix rule mistook for ب + ذرة |
+
+Full suite on the swept tree: 914 passed, 3 failed, 19 ignored (49 min). Baseline for the three on the unswept tree: 3 passed (clean separate build).
+
+**HALTs for Eric (C4):**
+1. **SpellDoku Word Mode, ko Expert.** Korean Expert goes from 2,992 to 1,455 rows. About 750 of the removed rows are the long glued forms (9 to 15 characters, nearly all `not_a_dictionary_headword` or particle/ending forms); what remains is 2 to 3 syllable words (1,006 two-character rows). Word Mode cannot build an Expert board from that. No floor was lowered. Resolving it is CC-BANK-REBUILD's job (rebuild Korean Expert from real headwords) and has to land before or with Phase A, or the Word Mode Korean Expert tier needs a decision from Eric.
+2. **`wordgrid_determinism` pin.** Any bank change moves this digest, so Phase A cannot be green while the pin stays. Re-pinning it changes a test's expected number, which the spec forbids me to do. Eric must either authorise the re-pin as part of the Phase A change set or say how else the pin should work.
+
+Method note, for the record: my first baseline reused the swept build because two worktrees shared one cargo target directory, so it falsely showed the failures as pre-existing. The result above is from a separate target directory.
+
 
 Notes:
-- Only hi Expert (287) and ko Medium (217) fall low enough to matter to ladder-style gates, and neither crosses the Definition Match floor. The `bank_floors.json` pool floors (for example 500/1000/2000/3000) are above many post-sweep tiers, but every language is `launched: false`, so F4's red-build rule does not apply yet. That is a CC-BANK-COMPLETE concern, not a gate failure today.
+- hi Expert (287), ko Medium (217) and ko Expert (1,455) are the thin tiers. None crosses the Definition Match floor, and ko Expert is the one that breaks Word Mode (HALT 1 below). The `bank_floors.json` pool floors (for example 500/1000/2000/3000) are above many post-sweep tiers, but every language is `launched: false`, so F4's red-build rule does not apply yet. That is a CC-BANK-COMPLETE concern, not a gate failure today.
 - zh traditional corrections were applied to `assets/words/zh` only. The zh bank's source of record for `practice-check` is `src/words.rs`, which I did not edit in the scratch tree.
 - A swept bank changes `TIER_HASHES` for every changed tier (see C3), so any pinned hash test needs the regenerated table; that is expected output of the Phase A regeneration step, not a gate failure.
 
