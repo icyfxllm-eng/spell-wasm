@@ -8,11 +8,11 @@ Run 2026-10-07 on `origin/main` da040556. Tooling: `tools/bank/purity_check.py` 
 | C1 recompute | **HALT** (5 languages beyond 5%), see below |
 | C2 dictionary registry | done, one source weaker than the spec assumed |
 | C3 consumers | done (provisional on C1) |
-| C4 pool gates | not started (needs C1 resolved) |
+| C4 pool gates | provisional: size gate and Definition Match done; Rust gates in the table below |
 | C5 Jr paths | done, report only |
 | C6 profanity sheet | done |
 | C7 residual proper nouns | done for ko ja ar hi sw ru (the languages with no proper-noun signal); report only |
-| C8 completeness conflict | not started |
+| C8 completeness conflict | done, provisional on C1; no `launched: true` language, so no HALT |
 
 ## C1 — recompute vs the evidence run
 
@@ -158,6 +158,70 @@ Full lists in the CSV. Samples (every nth row, up to 50 each, shown here shorten
 - ru: нато цска уильямс шевченко лукашенко путину марио пермь джеффри рогозин кира мэтт юнеско евровидение роскомнадзор шекспира алматы
 
 **Precision caveat (bold above).** Most hits are real countries, cities, months and given names. But the filter also flags common words whose only Wiktionary entry is a name: hi `सूरज` (sun), ja `たこ` (octopus), `はやぶさ` (falcon), `もも` (peach), `みなみ` (south), `まゆ`, ar `الأرض` (the earth), `الكتاب`, `الأمم`. Japanese kana rows are matched by reading, so a surname reading collides with a common noun. This list needs a native pass before it is applied; it should not be applied mechanically. Months and weekdays (sw `julai januari jumapili`, ar `يناير أبريل الاثنين`) are proper nouns in some languages but good game words in others, which is a policy question for Eric, not a data one.
+
+## C4 — pool gates after the sweep  (PROVISIONAL on C1)
+
+Method: `tools/bank/dryrun_sweep.py` applied the current Phase A rules to a **scratch worktree** (`spell-wasm-purity-dry`, never merged): quarantine classes, P11 duplicates and hi unconfirmed (P8) removed; misspelled rows corrected; German nouns capitalised. Then the real gates ran against that copy. No threshold, floor or test was edited (I6); the scratch tree's diff is bank data and the regenerated `src/word_data.rs` only.
+
+Rows per tier, before to after:
+
+| Lang | Easy | Medium | Hard | Expert |
+|---|---|---|---|---|
+| en | 767 to 763 | 800 to 798 | 800 to 800 | 798 to 797 |
+| es | 268 to 268 | 877 to 857 | 1,974 to 1,878 | 2,980 to 2,630 |
+| fr | 279 to 279 | 889 to 862 | 1,967 to 1,846 | 2,974 to 2,556 |
+| de | 272 to 272 | 954 to 950 | 1,967 to 1,897 | 2,955 to 2,746 |
+| pt | 272 to 272 | 907 to 887 | 1,965 to 1,799 | 2,966 to 2,567 |
+| pl | 267 to 267 | 961 to 949 | 1,969 to 1,876 | 2,979 to 2,802 |
+| ko | 292 to 291 | 970 to **217** | 1,979 to 933 | 2,992 to 1,455 |
+| ja | 253 to **209** | 967 to 947 | 1,970 to 1,531 | 2,970 to 2,380 |
+| fil | 247 to 247 | 701 to 579 | 1,159 to 927 | 1,976 to 1,472 |
+| zh | 296 to 296 | 944 to 944 | 1,958 to 1,958 | 2,984 to 2,984 |
+| ru | 267 to 267 | 970 to 949 | 1,977 to 1,900 | 2,994 to 2,884 |
+| ar | 290 to 288 | 968 to 898 | 1,987 to 1,806 | 2,993 to 2,511 |
+| hi | 293 to 292 | 781 to 776 | 800 to 740 | 800 to **287** |
+| sw | 262 to 262 | 703 to 673 | 1,180 to 1,105 | 700 to 683 |
+
+English totals 3,158, exactly the spec's expected figure. Korean Medium is 217, the case the spec predicted.
+
+| Gate | Result on the swept bank |
+|---|---|
+| `build-wordlists.py` size gate (floor 30, ceiling from `bank_floors.json`) | **green**, 73,140 words (was 82,261) |
+| Definition Match `POOL_FLOOR` = 40, adult and Jr view, definitions re-keyed to corrected spellings | **green**; lowest tiers are hi Expert 50, ja Easy 58, zh Easy 73, de Easy 145; no tier crosses 40 |
+| Letter Forge `every_ready_language_generates_a_full_year` and Jr twin, wordgrid `pools_meet_e4`, SpellDoku Word Mode fill, `every_tier_ladder_climbs`, Daily arc fill | RUST_RESULT_PENDING |
+
+Notes:
+- Only hi Expert (287) and ko Medium (217) fall low enough to matter to ladder-style gates, and neither crosses the Definition Match floor. The `bank_floors.json` pool floors (for example 500/1000/2000/3000) are above many post-sweep tiers, but every language is `launched: false`, so F4's red-build rule does not apply yet. That is a CC-BANK-COMPLETE concern, not a gate failure today.
+- zh traditional corrections were applied to `assets/words/zh` only. The zh bank's source of record for `practice-check` is `src/words.rs`, which I did not edit in the scratch tree.
+- A swept bank changes `TIER_HASHES` for every changed tier (see C3), so any pinned hash test needs the regenerated table; that is expected output of the Phase A regeneration step, not a gate failure.
+
+## C8 — U-engine conflict  (PROVISIONAL on C1; `tools/bank/census_c8.py`, `reports/bank-purity-c8.csv`)
+
+No language in `config/bank_floors.json` has `launched: true`, so the HALT does not fire and the red-build rule is dormant today.
+
+U is rebuilt with the engine's first three gates (rank at or below the T4 floor, orthographic, profanity) from the Leipzig lists the banks were built from. Gates 4 and 5 are Pending in the engine, so this is the provisional set.
+
+| Lang | T4 floor | U size (100K corpus ceiling) | Quarantine rows | In U |
+|---|---|---|---|---|
+| en | 30,000 | 16,734 | 7 | 2 |
+| es | 30,000 | 19,054 | 437 | 8 |
+| fr | 30,000 | 21,392 | 550 | 10 |
+| de | 25,000 | 8,227 | 282 | 1 |
+| pt | 25,000 | 16,027 | 580 | 17 |
+| pl | 25,000 | 18,452 | 259 | 0 |
+| ko | 15,000 | 14,242 | 3,337 | **771** |
+| ja | 18,000 | 16,885 | 1,093 | 67 |
+| fil | 8,000 | 5,297 | 858 | 158 |
+| ru | 25,000 | 19,222 | 208 | 0 |
+| ar | 15,000 | 13,913 | 735 | **526** |
+| hi | 10,000 | 9,306 | 0 | 0 |
+| sw | 10,000 | 6,152 | 122 | 8 |
+| **Total** | | | | **1,568** |
+
+Thirty examples (random draw, seed 1): ar `بالقيام بوقف فهذا لخلق وآخر والاهتمام والجماعات والحياة والعراق والمتوسطة والمملكة ولها`; es `ranking`; fil `debut district million species status`; ko `구성하였다 국가에서는 들어올 요구하였다 이탈리아와 일반적이다 일방적으로 조지 카운티 클라우드 통합되었다 프로듀서이다`.
+
+Reading: U is built from a frequency list with no "word of the language" gate, so once a language is marked `launched`, F4's red-build rule would require back the 1,568 rows above, almost all Korean particle and ending forms and Arabic attached-prefix forms. Both are frequent in text and are exactly what P4 and P7 remove. This is the P16 question: add a purity gate directly after the rank gate. Recommendation unchanged: yes. It needs a signature because gate order is asserted by tests.
+Two engine facts worth knowing: the orthography gate drops every capitalised token, so German nouns (all capitalised in corpus text) never enter U, which is why de has only 8,227 even before this file; and U here is capped by the 100K-line Leipzig corpus, so real U for languages whose T4 floor exceeds the corpus (es, fr, en) is bounded by corpus size, not by the floor.
 
 ## Open for Eric
 
