@@ -11,7 +11,7 @@ Run 2026-10-07 on `origin/main` da040556. Tooling: `tools/bank/purity_check.py` 
 | C4 pool gates | not started (needs C1 resolved) |
 | C5 Jr paths | done, report only |
 | C6 profanity sheet | done |
-| C7 residual proper nouns | blocked on a decision: needs about 6 GB of Wiktionary extracts |
+| C7 residual proper nouns | done for ko ja ar hi sw ru (the languages with no proper-noun signal); report only |
 | C8 completeness conflict | not started |
 
 ## C1 — recompute vs the evidence run
@@ -134,9 +134,34 @@ Every mode with a Jr policy in `config/modes.json`, and whether its words pass t
 
 Under-exclusion today, by language, is bounded by the lists: en 14 and es/fr/de/pt 4 each of the Easy+Medium rows are on a kid list. pl, ko, ja, fil and zh have empty kid lists, so nothing is excluded for them anywhere. This is CC-ONBOARD-JR and each mode's own file; Eric decides who fixes it.
 
+## C7 — residual proper nouns (Wiktionary part-of-speech filter)  (`tools/bank/census_c7.py`, `reports/bank-purity-c7.csv`)
+
+Report only; F3 applies nothing until Eric reads this. Extracts from kaikki.org (CC BY-SA), cached in `.corpus-cache/wikt/`.
+Run for the six languages where the dictionary gives no proper-noun signal. es, fr, de, pt and pl already classify names through capitalised dictionary entries (C1); en and zh were skipped on size (en has 7 rows; zh has no proper-noun class).
+A row counts when every Wiktionary entry yielding it (headword or form) has part of speech `name`, and C1 has not already quarantined it.
+
+| Lang | Rows | Name-only in Wiktionary | Would add to quarantine |
+|---|---|---|---|
+| ko | 6,233 | 147 | 92 |
+| ja | 6,160 | 52 | 48 |
+| ar | 6,238 | 171 | 171 |
+| hi | 2,674 | 67 | 67 |
+| sw | 2,845 | 45 | 15 |
+| ru | 6,208 | 92 | 24 |
+
+Full lists in the CSV. Samples (every nth row, up to 50 each, shown here shortened):
+- ko: 오스트리아 캘리포니아 스코틀랜드 아르헨티나 크리스마스 인도네시아 아프가니스탄 우크라이나 유고슬라비아 크로아티아 제주 울산 춘천 몽골 이슬람 히틀러 독도 광화문 보스턴 가톨릭
+- ja: しまね とうしば とくしま くまがや けんたろう こいずみ さいとう だいすけ しょうた にしむら やまざき **たこ はやぶさ みなみ もも まゆ**
+- ar: الأرض يناير أبريل الكتاب أوروبا فرنسا روسيا باريس المغرب إسرائيل نيويورك السعودية إبراهيم الاحتلال البحرين البرازيل اليونان سويسرا جنيف
+- hi: **सूरज** अमेरिका पाकिस्तान इंग्लैंड अफ्रीका ब्रिटेन राजस्थान जर्मनी मुहम्मद इस्लाम श्रीलंका गुजरात कश्मीर अर्जुन हिमालय कोलकाता
+- sw: kenya ulaya julai china kongo marekani tanzania januari zanzibar jumapili moroko nehemia uropa uswidi brazili
+- ru: нато цска уильямс шевченко лукашенко путину марио пермь джеффри рогозин кира мэтт юнеско евровидение роскомнадзор шекспира алматы
+
+**Precision caveat (bold above).** Most hits are real countries, cities, months and given names. But the filter also flags common words whose only Wiktionary entry is a name: hi `सूरज` (sun), ja `たこ` (octopus), `はやぶさ` (falcon), `もも` (peach), `みなみ` (south), `まゆ`, ar `الأرض` (the earth), `الكتاب`, `الأمم`. Japanese kana rows are matched by reading, so a surname reading collides with a common noun. This list needs a native pass before it is applied; it should not be applied mechanically. Months and weekdays (sw `julai januari jumapili`, ar `يناير أبريل الاثنين`) are proper nouns in some languages but good game words in others, which is a policy question for Eric, not a data one.
+
 ## Open for Eric
 
 1. C1 HALT: save the evidence CSV to `reports/bank-check-2026-10-07.csv` so the five differences can be settled row by row, or tell me which side to follow per language.
 2. Filipino second source (see C2).
-3. C7 download: the Wiktionary extracts are 11 GB in total (en 3.3, zh 1.2, es 1.1, de 1.1, ru 0.9, pl 0.8, fr 0.6, pt 0.6, ar 0.5, ja 0.4, ko 0.2, hi 0.2, sw 0.1). Skipping en and zh leaves about 6.2 GB.
+3. C7 policy: are months and weekdays (and country names that are also common words) out of the banks? The filter cannot decide that.
 4. Who owns the C5 gaps (practice, def_match, the three grid modes, the void-round rescue).
