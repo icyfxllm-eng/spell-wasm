@@ -49,6 +49,26 @@ const JUNK = [
 
 export function check(dir, bankDir) {
   const bad = [];
+  // Mirrors build-wordlists.py: accent-sensitive for the languages whose marks
+  // are lexical, lenient elsewhere. Kept in step by `exclusion_fold_parity`.
+  const ACCENT_SENSITIVE = new Set(["vi"]);
+  const foldFor = (lang) => (s) => {
+    const base = s.normalize("NFC").toLowerCase().trim();
+    return ACCENT_SENSITIVE.has(lang)
+      ? base.replace(/\s+/g, "")
+      : base.normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/\s+/g, "");
+  };
+  const exclusionSet = (lang) => {
+    const p = path.join("assets", "words", "exclusions", `${lang}.txt`);
+    if (!fs.existsSync(p)) return null;
+    const fold = foldFor(lang);
+    return new Set(
+      fs.readFileSync(p, "utf8").split("\n")
+        .map((l) => l.trim())
+        .filter((l) => l && !l.startsWith("#"))
+        .map(fold),
+    );
+  };
   let rows = 0, files = 0, offBank = 0;
   const files_ = fs.existsSync(dir)
     ? fs.readdirSync(dir).filter((f) => f.endsWith(".json")).sort()
@@ -72,6 +92,12 @@ export function check(dir, bankDir) {
     // a check that cannot verify must not report OK.
     const bank = bankDir === undefined ? null : bankWords(bankDir, lang);
     if (bank && !bank.size) bad.push(`${f}: no word bank at ${path.join(bankDir, lang)} — cannot verify freshness`);
+    // A word excluded from the BANK must not survive in the DEFINITIONS. They
+    // are separate files, so a word removed from one stayed in the other: when
+    // the vi exclusion seed was first filled it caught `đéo` in the Easy bank
+    // AND a medium definition reading "to have penetrative sex (with)", which
+    // nothing would have removed. The bank's exclusion list is the one list.
+    const excl = exclusionSet(lang);
     if (!doc.tiers || typeof doc.tiers !== "object") {
       bad.push(`${f}: no tiers object`);
       continue;
@@ -88,6 +114,9 @@ export function check(dir, bankDir) {
         const where = `${lang}/${tier} '${r && r.word}'`;
         if (!r || typeof r.word !== "string" || !r.word) { bad.push(`${where}: missing word`); continue; }
         if (typeof r.definition !== "string") { bad.push(`${where}: missing definition`); continue; }
+        if (excl && excl.has(foldFor(lang)(r.word))) {
+          bad.push(`${where}: on the ${lang} exclusion list — a word kept out of the bank must not keep a definition`);
+        }
         if (bank && bank.size && !bank.has(r.word)) {
           offBank++;
           if (offBank <= 12) bad.push(`${where}: not in the ${lang} bank any more — rebuild to drop it`);
@@ -214,6 +243,29 @@ if (process.argv.includes("--selftest")) {
     console.log(`  ${hanzi ? "clean  " : "MISSED "} zh_hanzi_key_accepted`);
     console.log(`  ${pair ? "caught " : "MISSED "} zh_pipe_key_rejected`);
     if (!hanzi || !pair) failed++;
+    fs.rmSync(d, { recursive: true });
+  }
+  // A word excluded from the bank must not keep a definition. The vi seed
+  // caught exactly this: `đéo` was gone from the bank and its medium definition
+  // -- "to have penetrative sex (with)" -- was still there, in a children's
+  // spelling game, with nothing to remove it.
+  {
+    const d = fs.mkdtempSync(path.join(os.tmpdir(), "defpool-check-excl-"));
+    fs.mkdirSync(path.join(d, "assets", "words", "exclusions"), { recursive: true });
+    const cwd = process.cwd();
+    process.chdir(d);
+    fs.writeFileSync(path.join("assets", "words", "exclusions", "vi.txt"), "# seed\n\u0111\u00e9o\n");
+    const row = (w) => JSON.stringify({ lang: "vi", tiers: { easy: [{ word: w, definition: "a meaning", pos: "noun", prompt_grade: true, kid_register: true }] }, exclusions: {} });
+    fs.writeFileSync(path.join(d, "vi.json"), row("\u0111\u00e9o"));
+    const caught = check(d, undefined).bad.some((b) => /on the vi exclusion list/.test(b));
+    fs.writeFileSync(path.join(d, "vi.json"), row("\u0111i"));
+    // vi matches ACCENT-SENSITIVELY: đi (to go) must survive a seed holding đĩ.
+    fs.writeFileSync(path.join("assets", "words", "exclusions", "vi.txt"), "\u0111\u0129\n");
+    const spared = check(d, undefined).bad.every((b) => !/exclusion list/.test(b));
+    process.chdir(cwd);
+    console.log(`  ${caught ? "caught " : "MISSED "} excluded_word_keeps_a_definition`);
+    console.log(`  ${spared ? "clean  " : "MISSED "} accent_sensitive_spares_di`);
+    if (!caught || !spared) failed++;
     fs.rmSync(d, { recursive: true });
   }
   if (failed) { console.error(`def-pool-check selftest: ${failed} case(s) wrong`); process.exit(1); }
