@@ -23,9 +23,9 @@ mod impostor; // CC-IMPOSTOR F2 (distractor generator)
 mod bee; // CC-BEE-SIM F2/F3 (bee engine + contestant table)
 mod wordpic; // CC-WORD-PICTURE core (calligrams)
 mod input_provenance;
-mod learner; // CC-LEARNING-ENGINE L0 (BKT + FSRS core; selection arrives with L1)
+pub mod learner; // CC-LEARNING-ENGINE L0 (BKT + FSRS core; selection arrives with L1) — pub for R3 (tests/learner_simulator.rs)
 mod learner_query; // CC-LEARNING-ENGINE-L0 R1: the frozen read contract (I6)
-mod review; // CC-LEARNING-ENGINE-L0 R2: the one rule for when a missed word returns (I5)
+pub mod review; // CC-LEARNING-ENGINE-L0 R2: the one rule for when a missed word returns (I5) — pub for R3 (tests/learner_simulator.rs)
 #[cfg(feature = "dev_preview")]
 mod inspector; // CC-LEARNING-ENGINE-L0 R4: dev-only learner inspector (never in a player's build)
 #[cfg(feature = "dev_preview")]
