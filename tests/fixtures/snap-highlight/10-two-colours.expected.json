@@ -18,6 +18,7 @@
   ],
   "expected_chips": 4,
   "measured": {
+    "_space": "Display P3 — the fixture is normalised to it; see tools/normalise_fixture_colour.py",
     "paper_s_by_mode": 0.141,
     "paper_v": 0.961,
     "cut_in_force": 0.391,

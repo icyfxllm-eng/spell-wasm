@@ -7,6 +7,7 @@
   "_why_empty": "No highlighter on this page. N must be 0. This is I-H2's control.",
   "colours": [],
   "measured": {
+    "_space": "Display P3 — the fixture is normalised to it; see tools/normalise_fixture_colour.py",
     "paper_s": 0.141,
     "paper_v": 0.824,
     "most_saturated_cluster_v_drop": 0.66,

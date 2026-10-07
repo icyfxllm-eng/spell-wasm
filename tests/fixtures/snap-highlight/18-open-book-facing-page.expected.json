@@ -13,6 +13,7 @@
     "yellow"
   ],
   "measured": {
+    "_space": "Display P3 — the fixture is normalised to it; see tools/normalise_fixture_colour.py",
     "paper_s": 0.094,
     "paper_v": 0.8,
     "mark_v_drop": 0.08,

@@ -11,12 +11,14 @@
     "pink"
   ],
   "measured": {
-    "paper_s": 0.118,
-    "paper_v": 0.78,
-    "mark_s": 0.565,
-    "delta": 0.447,
-    "mark_v_drop": -0.22,
-    "clears_cut_pct": 99.7,
+    "_space": "Display P3 — the fixture is normalised to it; see tools/normalise_fixture_colour.py",
+    "_was_before_normalising": "mark_s 0.573, delta 0.471, v_drop -0.259",
+    "paper_s": 0.102,
+    "paper_v": 0.741,
+    "mark_s": 0.486,
+    "delta": 0.384,
+    "mark_v_drop": -0.188,
+    "clears_cut_pct": 100.0,
     "found": true,
     "mark_vs_word_height": 1.43
   },

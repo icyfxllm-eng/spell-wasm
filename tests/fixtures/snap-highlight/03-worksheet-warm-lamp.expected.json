@@ -7,6 +7,7 @@
   "_why_empty": "No highlighter is on this page. N must be 0. That is the whole row.",
   "colours": [],
   "measured": {
+    "_space": "Display P3 — the fixture is normalised to it; see tools/normalise_fixture_colour.py",
     "paper_s": 0.075,
     "paper_v": 0.714,
     "paper_hue_deg": [

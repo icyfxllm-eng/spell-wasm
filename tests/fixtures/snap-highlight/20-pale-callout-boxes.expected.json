@@ -7,15 +7,22 @@
   "_why_empty": "No highlighter. N must be 0 -- and this is the hardest zero in the set.",
   "colours": [],
   "measured": {
+    "_space": "Display P3 — the fixture is normalised to it; see tools/normalise_fixture_colour.py",
+    "_was_before_normalising": "callout_fill_s median 0.196, blue 0.118, margin 0.054",
     "paper_s_by_mode": 0.0,
     "callout_fill_s": {
-      "p10": 0.165,
-      "median": 0.196,
-      "p90": 0.204
+      "p10": 0.125,
+      "median": 0.157,
+      "p90": 0.165
+    },
+    "blue_callout_s": {
+      "p10": 0.043,
+      "median": 0.09,
+      "p90": 0.094
     },
     "dark_ui_v_drop": 0.78,
     "delta_s_in_force": 0.25,
-    "margin_to_false_positive": 0.054
+    "margin_to_false_positive": 0.093
   },
   "_resolution_caveat": "409x414 native, below the 1600px the other rows use. Kept anyway because the finding is chromatic and colour survives downscaling; do not use this row to judge anything about OCR or geometry.",
   "notes": "THE ROW THAT BOUNDS delta_s FROM BELOW. Nothing else measured does.\n\nA pale callout box is structurally identical to a highlight: a bright saturated fill with dark text on it. The fill rule cannot reject it -- it IS bright. Coverage cannot reject it -- it IS fully covered. Even a stroke-aware text mask cannot reject it, because it really is a fill with glyphs on top. Nothing in the detector distinguishes it except saturation.\n\nIt escapes today by 0.054. The fill measures S 0.196 against a cut of paper+0.25 = 0.250. The palest REAL highlight measured, Kindle's at row 11, starts at 0.27. So:\n\n    delta_s must be ABOVE 0.196  (or this page imports its callout boxes)\n    delta_s must be BELOW 0.27   (or Kindle highlights stop being found)\n\nA window about 0.074 wide. 0.25 sits in it, with 0.054 below and only 0.02 above. Before this page there was no lower bound at all, and lowering delta_s to widen the Kindle margin would have looked free.\n\nNote the paper estimate matters here: the median S of bright pixels is 0.106 because the boxes are large enough to drag it, which would have moved the cut to 0.356 and hidden the problem. The MODE of near-white pixels gives 0.000, which is the truth. F1 says median; on a page like this that is the wrong statistic."

@@ -175,50 +175,57 @@ fn a_gutter_shadow_is_not_a_highlight() {
 }
 
 /// delta_s HAS NO VALID VALUE, and not because the window is narrow -- the
-/// ordering is INVERTED.
+/// ordering is INVERTED. Every number below is Display P3 (the fixture is
+/// normalised to it), and every one is the same statistic: the MEDIAN S of
+/// the mark box's brightest 40%, minus the MODE S of a paper box's.
 ///
-///     row 21  a REAL pink mark, e-reader    delta 0.125
-///     row 20  a callout box, NOT a mark     delta 0.196
-///     row 10  a REAL pink mark, cream paper delta 0.196
-///     row 11  a REAL yellow mark, Kindle    delta 0.270
-///     row 22  a REAL pink mark, vivid       delta 0.392
+///     0.125  FIND    row 21  pale pink mark        screenshot
+///     0.129  FIND    row 25  cyan marker           photo
+///     0.153  REFUSE  row 24  yellow callout        photo
+///     0.157  REFUSE  row 20  yellow callout        screenshot
+///     0.188  FIND    row 10  pink on cream         photo
+///     0.341  FIND    row 22  vivid pink            photo
+///     0.400  FIND    row 23  neon pink             photo
+///     0.471  FIND    row 11  Kindle yellow         screenshot
+///     0.698  FIND    row 12  Apple Books           screenshot
 ///
-/// A thing that must be REFUSED sits between two things that must be FOUND,
-/// and one real mark is less saturated than it. No threshold separates those
-/// sets, at any value, ever. Row 20 looked like a floor; row 10 made the
-/// window empty; row 21 shows there was never a window.
+/// Two real marks sit BELOW two things that must be refused, which sit below
+/// five more real marks. No threshold separates those sets at any value, and
+/// it is not an artefact of mixing sources -- it holds within each:
 ///
-/// The current 0.25 refuses the box and loses both pale pinks, and the
+///     camera:      0.129 find < 0.153 refuse < 0.188 find
+///     screenshot:  0.125 find < 0.157 refuse < 0.471 find
+///
+/// The current 0.25 refuses both boxes and loses four real marks, and the
 /// Intent says losing a mark is the wrong way to fail.
 ///
 /// What separates them is size, not colour -- a highlight is a word wide and
 /// a line tall, a callout box is a rectangle over many lines. Unbuilt, and
 /// it is new spec for F2.
 ///
-///   fixture row 20, a pale callout box behind dark text:  S 0.196
-///   fixture row 11, the palest real highlight (Kindle):   S 0.27
-///
-/// Below 0.196 an infographic imports its callout boxes; above 0.27 Kindle
-/// highlights stop being found. 0.25 sits between, 0.054 above the floor and
-/// 0.02 under the ceiling.
+/// HISTORY, because these numbers moved once. Before the fixture was
+/// normalised to one colour space these read 0.196 for row 20 and 0.27 for
+/// row 11, and rows in sRGB were being compared with rows in P3. The shape
+/// of the finding did not change; the figures did. Row 12 is the one that
+/// gained information: in sRGB it was CLIPPED at S 1.000 and is 0.698 here.
 #[test]
 fn delta_s_cannot_work_at_all_the_ordering_is_inverted() {
     let c = cfg();
-    // Row 20's callout box, on a white card. Correctly refused today.
-    assert_eq!(score_page(&c, &page(0.0, Source::Screenshot), &[boxed(1.0, 0.196, Some(55))]).count(), 0,
-        "a pale callout box imported -- delta_s has fallen below row 20's floor");
-    // Row 11's palest real highlight. Correctly found today.
-    assert_eq!(score_page(&c, &page(0.0, Source::Screenshot), &[boxed(1.0, 0.27, Some(55))]).count(), 1,
-        "the palest Kindle highlight was missed -- delta_s rose above row 11's ceiling");
-    // Row 10's pink on cream. WRONGLY missed, at the SAME delta as the box.
-    assert_eq!(score_page(&c, &page(0.141, Source::Camera), &[boxed(1.0, 0.337, Some(350))]).count(), 0,
-        "row 10's pink is now found; if the box is still refused, the collision is solved");
-    // Row 21's pale pink. WRONGLY missed, and LESS saturated than the box.
-    assert_eq!(score_page(&c, &page(0.0, Source::Screenshot), &[boxed(1.0, 0.125, Some(350))]).count(), 0,
-        "row 21's pale pink is now found -- saturation alone cannot have done it");
-    // Row 22, the same colour vivid, is found. Pink is not the problem.
-    assert_eq!(score_page(&c, &page(0.133, Source::Camera), &[boxed(1.0, 0.525, Some(350))]).count(), 1,
-        "row 22's vivid pink was lost -- that would be a regression, not a known gap");
+    let shot = |d: f32, hue: u16| score_page(&c, &page(0.0, Source::Screenshot), &[boxed(1.0, d, Some(hue))]).count();
+    let cam = |paper: f32, d: f32, hue: u16| score_page(&c, &page(paper, Source::Camera), &[boxed(1.0, paper + d, Some(hue))]).count();
+
+    // The two things that MUST be refused. Both are, today.
+    assert_eq!(shot(0.157, 55), 0, "row 20's callout imported -- delta_s fell below it");
+    assert_eq!(cam(0.0, 0.153, 50), 0, "row 24's photographed callout imported");
+
+    // Four real marks BELOW or NEAR them that must be found, and are not.
+    assert_eq!(shot(0.125, 350), 0, "row 21's pale pink is found -- saturation alone cannot have done it");
+    assert_eq!(cam(0.157, 0.129, 172), 0, "row 25's cyan is found -- the inversion would be solved");
+    assert_eq!(cam(0.145, 0.188, 352), 0, "row 10's pink on cream is found -- say how");
+
+    // And the vivid end, which is found. Colour is not the problem.
+    assert_eq!(shot(0.471, 53), 1, "row 11's Kindle yellow was lost -- a regression, not a known gap");
+    assert_eq!(cam(0.118, 0.341, 345), 1, "row 22's vivid pink was lost -- a regression");
 }
 
 /// Fixture row 3: a printed sheet under a warm lamp, no highlighter on it.
@@ -264,8 +271,13 @@ fn blank_warm_paper_lands_in_the_same_hue_chip_as_two_real_highlights() {
 /// Rows 20 and 24 are the same card, screen-captured and then photographed.
 /// The camera costs saturation, and not by a constant:
 ///
-///   yellow callout   screenshot 0.196 -> photo 0.153   (22% off)
-///   blue callout     screenshot 0.118 -> photo 0.016   (86% off)
+///   yellow callout   screenshot 0.157 -> photo 0.153   ( 5% off)
+///   blue callout     screenshot 0.090 -> photo 0.016   (83% off)
+///
+/// Those were 22% and 86% before the fixture was normalised to one colour
+/// space, with row 20 in a MONITOR profile and row 24 in P3. Most of the
+/// yellow "loss" was the colour space. The hue dependence is what survives,
+/// and as a ratio it is starker: 5% against 83%.
 ///
 /// D-H3's per-source delta_s was kept "available rather than deleted as
 /// unused". This is why it is needed -- and also why a per-source SCALAR is
@@ -279,7 +291,7 @@ fn blank_warm_paper_lands_in_the_same_hue_chip_as_two_real_highlights() {
 fn the_camera_path_costs_saturation_and_not_by_a_constant() {
     let c = cfg();
     // Both sources, both callouts, all four correctly refused at 0.25 today.
-    for (src, delta) in [(Source::Screenshot, 0.196), (Source::Camera, 0.153)] {
+    for (src, delta) in [(Source::Screenshot, 0.157), (Source::Camera, 0.153)] {
         assert_eq!(score_page(&c, &page(0.0, src), &[boxed(1.0, delta, Some(50))]).count(), 0,
             "the yellow callout imported at delta_s {delta}");
     }
@@ -294,13 +306,13 @@ fn the_camera_path_costs_saturation_and_not_by_a_constant() {
 ///
 /// An earlier version of this test asserted that a camera-only delta_s of
 /// 0.18 separated everything measured: refuse row 24's callout at 0.153,
-/// find row 10's pink at 0.196. Row 25 -- a real cyan marker, photographed
-/// -- lands at 0.129, BELOW the thing that must be refused. In one colour
-/// space (Display P3, see the review record on why the fixture needs one):
+/// find row 10's pink. Row 25 -- a real cyan marker, photographed -- lands
+/// at 0.129, BELOW the thing that must be refused. All Display P3, which
+/// the fixture is now normalised to:
 ///
 ///   0.129  row 25, cyan marker            FIND
 ///   0.153  row 24, yellow callout         REFUSE
-///   0.196  row 10, pink on cream          FIND
+///   0.188  row 10, pink on cream          FIND
 ///
 /// So the inversion is not a property of screenshots. It holds within each
 /// source separately, and no per-source scalar fixes it. This test exists to
@@ -325,15 +337,15 @@ fn no_camera_only_threshold_can_work_either() {
 
 /// KNOWN GAP, pinned so it cannot be forgotten or silently "fixed".
 ///
-/// Fixture row 16 is a Kindle page whose blue headings drop only 0.29 below
+/// Fixture row 16 is a Kindle page whose blue headings drop only 0.32 below
 /// paper. That is UNDER max_v_drop, so the fill rule passes them, and they
 /// cover 4.3% of the page in large type, so coverage will not save it the
 /// way it saves thin ink. This page imports its section titles today.
 ///
 /// No threshold fixes it. Row 11's heading measured 0.53 and row 16's is
-/// 0.29, so coloured headings span 0.29-0.53 while real marks span
+/// 0.32, so coloured headings span 0.32-0.53 while real marks span
 /// 0.00-0.35 (the dimmest being a cyan marker at 0.34). They OVERLAP.
-/// Lowering max_v_drop to catch 0.29 would reject that marker.
+/// Lowering max_v_drop to catch 0.32 would reject that marker.
 ///
 /// The real difference is structural: a highlight's saturated pixels sit in
 /// the gaps BETWEEN glyphs, while coloured type IS the glyphs. A stroke-aware
@@ -344,7 +356,7 @@ fn no_camera_only_threshold_can_work_either() {
 /// will fail, and whoever fixes it should flip it then.
 #[test]
 fn known_gap_a_light_coloured_heading_still_reads_as_a_highlight() {
-    let heading = boxed_v(1.0, 0.8, Some(210), Some(0.29));
+    let heading = boxed_v(1.0, 0.8, Some(210), Some(0.32));
     let s = score_page(&cfg(), &page(0.0, Source::Screenshot), &[heading]);
     assert_eq!(s.count(), 1,
         "if this now passes, the mask has been fixed -- flip this test and delete the gap note");

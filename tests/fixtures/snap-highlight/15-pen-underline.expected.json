@@ -7,6 +7,7 @@
   "_why_empty": "No highlighter. N must be 0 (D-H6: underlines are out of v1).",
   "colours": [],
   "measured": {
+    "_space": "Display P3 — the fixture is normalised to it; see tools/normalise_fixture_colour.py",
     "paper_s": 0.129,
     "paper_v": 0.733
   },

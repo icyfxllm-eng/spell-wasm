@@ -186,6 +186,11 @@ threshold stays on the Rust side in one file.
 Two e-reader screenshots, as `tests/fixtures/snap-highlight/11-ereader-pale`
 and `12-ereader-saturated`. Measured at the fixture's own 1600px:
 
+> **These two rows were re-measured on 2026-10-06** when the fixture was
+> normalised to Display P3: Kindle's median is **0.471** and Apple Books'
+> is **0.698**, not 1.000 — that 1.000 was *clipped* by sRGB. See the foot of
+> this file. The figures below are kept as the record of what was known then.
+
 | | paper S | mark S median | mark S range | hue |
 |---|---|---|---|---|
 | 11, **Kindle** | 0.000 | 0.549 | 0.27 – 0.60 | 53° |
@@ -601,41 +606,10 @@ which ignores the tag — so rows in different spaces were compared directly in
 the same tables. The error is the size of the gaps being argued about: the
 same row 25 file reads ΔS 0.129 as P3 and **0.204** converted to sRGB.
 
-Re-measured in one space — Display P3, chosen because it is what most rows
-already carry and because converting the vivid markers to sRGB **clips them
-at S = 1.000**, which sRGB therefore cannot serve as the common space:
-
-| row | source | ΔS in P3 | must |
-|---|---|---|---|
-| 21, pale pink | screenshot | **0.125** | FIND |
-| 25, cyan marker | photo | **0.129** | FIND |
-| 24, yellow callout | photo | **0.153** | REFUSE |
-| 20, callout box | screenshot | **0.161** | REFUSE |
-| 10, pink on cream | photo | **0.196** | FIND |
-| 11, Kindle yellow | screenshot | **0.471** | FIND |
-
-**The headline finding survives, and gets stronger.** Two real marks sit
-below two non-marks, which sit below two more real marks. It is not a near
-miss in one source: it holds within each source separately —
-
-- camera: 0.129 **find** < 0.153 **refuse** < 0.196 **find**
-- screenshot: 0.125 **find** < 0.161 **refuse** < 0.471 **find**
-
-**So row 24's remaining qualification is withdrawn.** It argued the camera
-path had not inverted and still had a window 0.043 wide. Row 25 sits inside
-it, on the wrong side. Saturation is not the primary test on *either* source,
-and there is no per-source number that rescues it.
-
-**What the corrected numbers change in the record above:** the ΔS floor
-quoted as 0.196 is 0.161 in a common space, the window described as "0.074
-wide" does not exist, and the camera-path window proposed under row 24 does
-not exist either. The prose above those tables still describes the right
-shape; the specific figures are superseded by this one.
-
-**A decision this leaves open.** The fixture should either be normalised to
-one colour space when shots are filed, or every quoted number should name its
-space. I have not changed any filed bytes — renormalising 19 shots is not a
-call to make while measuring them. Eric's.
+**Eric's call, 2026-10-06: normalise them all to P3.** Done — six shots
+converted, every figure in this record re-derived, and a gate added. The
+canonical table is **The fixture is normalised to Display P3** at the foot of
+this file, and that table supersedes every ΔS quoted above it.
 
 **The within-page spread is the quiet result.** Four marks, one pen, one
 page, one exposure: ΔS 0.125–0.137, a spread of 0.012, against 0.32 across
@@ -643,6 +617,81 @@ the pink rows. Almost all the variance that defeats a threshold comes from
 the page and the path, not from the stroke. Per-page normalisation is right
 and F1 already has it; what it cannot do is make one page comparable to
 another.
+
+**THE FIXTURE IS NORMALISED TO DISPLAY P3. 2026-10-06, Eric's call.**
+This is the canonical measurement section. **Every ΔS quoted above it was
+taken before normalisation and is superseded by the table here.**
+
+Six shots were converted: rows 11 and 12 (untagged, so sRGB by default), 16,
+22 and 23 (sRGB), and row 20 (a *monitor* profile, `PHL 241V8LB`). The other
+13 were already P3 and their bytes were not touched — spending a JPEG
+generation on correct files to make the pipeline uniform would trade real
+fidelity for tidiness, so the converted shots carry one extra generation and
+the rest do not. That asymmetry is deliberate.
+
+**P3 and not sRGB, because sRGB clips.** Converting row 10's orange and cyan
+to sRGB puts both at S = 1.000, and row 12 had been sitting clipped at 1.000
+all along. Normalising to P3 *recovered* that measurement: Apple Books'
+highlight is **0.698**, not "1.000 or more".
+
+**The canonical ΔS table.** One colour space and one statistic — the median
+S of the mark box's brightest 40%, minus the mode S of a paper box's
+brightest 40%:
+
+| ΔS | verdict | row | source |
+|---|---|---|---|
+| 0.125 | FIND | 21, pale pink | screenshot |
+| 0.129 | FIND | 25, cyan marker | photo |
+| **0.153** | **REFUSE** | 24, yellow callout | photo |
+| **0.157** | **REFUSE** | 20, yellow callout | screenshot |
+| 0.188 | FIND | 10, pink on cream | photo |
+| 0.341 | FIND | 22, vivid pink | photo |
+| 0.400 | FIND | 23, neon pink | photo |
+| 0.471 | FIND | 11, Kindle yellow | screenshot |
+| 0.698 | FIND | 12, Apple Books | screenshot |
+
+**Two real marks sit below two things that must be refused, which sit below
+five more real marks**, and it is not an artefact of mixing sources — it
+holds within each:
+
+- camera: 0.129 **find** < 0.153 **refuse** < 0.188 **find**
+- screenshot: 0.125 **find** < 0.157 **refuse** < 0.471 **find**
+
+**What moved, and by how much.** Same boxes, same statistic, only the colour
+space differs:
+
+| row | statistic | before | after |
+|---|---|---|---|
+| 11, Kindle | mark S median | 0.549 | 0.471 |
+| 12, Apple Books | mark S median | *1.000, clipped* | **0.698** |
+| 16, headings | V drop | 0.294 | 0.318 |
+| 20, yellow callout | ΔS | 0.196 | 0.157 |
+| 20, blue callout | ΔS | 0.118 | 0.090 |
+| 22, vivid pink | ΔS | 0.388 | 0.349 |
+| 23, neon pink | ΔS | 0.471 | 0.384 |
+
+**One earlier conclusion is substantially corrected by this.** The row 20 /
+row 24 pair was read as "the camera costs 22% of yellow and 86% of blue".
+With both files in one space it is **5% and 83%** — most of the yellow loss
+was row 20's monitor profile, not the camera. The hue dependence is what
+survives, and as a ratio it is starker than before.
+
+**Everything else survives.** The inversion, the refusal of the warm lamp,
+the fill rule's separation of marks from ink, row 19's coverage argument and
+row 16's known gap all hold at the new figures; `max_v_drop` 0.45 still sits
+clear of the headings at 0.32 and the marker at 0.35.
+
+**Held by two gates.** `scripts/snap-fixture-colour-check.mjs` reads the ICC
+description straight out of each file and fails the build on anything that
+is not Display P3; `tools/fixture_shoot.py` converts each shot as it is
+filed, so a fresh shoot never trips it. `tools/normalise_fixture_colour.py`
+is the one-off that did the conversion and can redo it.
+
+**A limit worth stating.** HSV saturation on gamma-encoded RGB is a crude
+colour metric whatever the space — it is what the detector uses, so it is
+what the fixture measures, but a perceptual chroma (Lab/LCh) would be the
+principled choice if these numbers ever have to be compared across devices
+rather than across rows. Not proposed, just noted.
 
 **C1 HALTs, and C2 is why it stays halted.** `docs/CC-SNAP-BOXES.md` now
 delivers word boxes to the core, so half of C1 is satisfied. The other half —

@@ -14,11 +14,13 @@
     "yellow"
   ],
   "measured": {
+    "_space": "Display P3 — the fixture is normalised to it; see tools/normalise_fixture_colour.py",
+    "_was_before_normalising": "mark_s_median 0.549, range to 0.616, hue 52",
     "paper_s": 0.0,
-    "mark_s_median": 0.549,
+    "mark_s_median": 0.471,
     "mark_s_range": [
-      0.27,
-      0.6
+      0.0,
+      0.537
     ],
     "mark_hue_deg": 53
   },

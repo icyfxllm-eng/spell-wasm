@@ -125,6 +125,43 @@ def report(paired, leftover, dest):
               + ", ".join(p.name for p in leftover))
 
 
+def to_display_p3(path):
+    """Tag/convert a just-filed shot into Display P3.
+
+    The fixture is normalised to one colour space because saturations from
+    different spaces are different units -- one file read delta_s 0.129 as P3
+    and 0.204 as sRGB, wider than the gaps the thresholds are argued over.
+    Doing it here means `scripts/snap-fixture-colour-check.mjs` never has a
+    reason to fail on a fresh shoot. Eric's call, 2026-10-06.
+    """
+    from PIL import Image, ImageCms  # noqa: PLC0415  (optional until needed)
+    import io
+
+    want = "Display P3"
+    im = Image.open(path)
+    icc = im.info.get("icc_profile")
+    if icc:
+        try:
+            if ImageCms.getProfileDescription(
+                    ImageCms.ImageCmsProfile(io.BytesIO(icc))).strip() == want:
+                return False
+        except Exception:                                  # noqa: BLE001
+            pass
+    p3_path = pathlib.Path("/System/Library/ColorSync/Profiles/Display P3.icc")
+    if not p3_path.exists():
+        print(f"  WARNING: no Display P3 profile on this Mac; {path.name} left as-is")
+        return False
+    p3 = ImageCms.ImageCmsProfile(str(p3_path))
+    src = (ImageCms.ImageCmsProfile(io.BytesIO(icc)) if icc
+           else ImageCms.createProfile("sRGB"))
+    out = ImageCms.profileToProfile(im.convert("RGB"), src, p3, outputMode="RGB")
+    if path.suffix.lower() == ".png":
+        out.save(path, icc_profile=p3.tobytes())
+    else:
+        out.save(path, "JPEG", icc_profile=p3.tobytes(), quality=95, subsampling=0)
+    return True
+
+
 def write(paired, dest, sidecar_for):
     """Downscale and write sidecars. Never overwrites a sidecar you have filled in."""
     if not shutil.which("sips"):
@@ -138,6 +175,8 @@ def write(paired, dest, sidecar_for):
         out = dest / f"{name}.jpg"
         subprocess.run(["sips", "-s", "format", "jpeg", "-Z", str(LONG_EDGE),
                         str(photo), "--out", str(out)], capture_output=True, check=True)
+        if to_display_p3(out):
+            print(f"  {out.name}: converted to Display P3")
         total += out.stat().st_size
         n += 1
         side = dest / f"{name}.expected.json"

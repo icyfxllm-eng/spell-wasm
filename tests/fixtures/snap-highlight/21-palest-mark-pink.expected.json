@@ -11,6 +11,7 @@
     "pink"
   ],
   "measured": {
+    "_space": "Display P3 — the fixture is normalised to it; see tools/normalise_fixture_colour.py",
     "paper_s": 0.0,
     "paper_v": 1.0,
     "mark_s": 0.125,

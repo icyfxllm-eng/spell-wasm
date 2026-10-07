@@ -11,12 +11,14 @@
     "pink"
   ],
   "measured": {
-    "paper_s": 0.133,
-    "paper_v": 0.682,
-    "mark_s": 0.525,
-    "delta": 0.392,
-    "mark_v_drop": -0.18,
-    "clears_cut_pct": 86.4,
+    "_space": "Display P3 — the fixture is normalised to it; see tools/normalise_fixture_colour.py",
+    "_was_before_normalising": "paper_s 0.141, mark_s 0.529, delta 0.388, v_drop -0.239",
+    "paper_s": 0.118,
+    "paper_v": 0.659,
+    "mark_s": 0.467,
+    "delta": 0.349,
+    "mark_v_drop": -0.184,
+    "clears_cut_pct": 99.6,
     "found": true
   },
   "notes": "Rows 21 and 22 are a PAIR and should be read together: the same colour family at the two ends of its range, which is what bounds the dynamic range a detector has to cover.\n\n    row 21  pale pink, e-reader screenshot : paper 0.000, mark 0.125, delta 0.125  MISSED\n    row 22  vivid pink, cream paper photo  : paper 0.133, mark 0.525, delta 0.392  found\n\nPink is not the problem. PALENESS is: the same hue is found at 0.392 and lost at 0.125.\n\nAnd row 21 breaks saturation as a test outright, not merely at the margin. Row 20's pale callout box -- which is NOT a mark and must be refused -- sits at delta 0.196. Row 21 IS a mark and sits at 0.125. A real mark is LESS saturated than a thing that must be rejected, so the ordering is inverted and no threshold exists. Row 10 showed the window was empty; this shows it was never a window.\n\nIts V drop is NEGATIVE (-0.18): a vivid highlighter under a camera light is BRIGHTER than the paper around it. The fill rule is a one-sided test and handles that fine, but it is worth knowing that 'drop from paper' is not always a drop."
