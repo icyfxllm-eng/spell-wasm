@@ -433,8 +433,25 @@ and one real mark is less saturated than it.** No value of ΔS separates
 those sets. Row 20 looked like a floor, row 10 emptied the window, row 21
 shows there was never a window to begin with.
 
-Pink itself is fine — row 22 is found at 0.392. **Paleness is the problem**,
-and the pale end of a real highlighter reaches below a printed panel.
+Pink itself is fine — rows 22 and 23 are found at 0.392 and 0.447.
+**Paleness is the problem**, and the pale end of a real highlighter reaches
+below a printed panel.
+
+Row 23 completes the range and gives the cleanest statement of the fault:
+
+    row 21  pale pink, e-reader       0.125   missed
+    row 10  pink on cream             0.196   missed
+    row 22  vivid pink on cream       0.392   found
+    row 23  neon pink on ruled paper  0.447   found
+
+**One colour of highlighter spans 0.125 to 0.447.** That 0.32 of range is
+wider than the entire gap between the palest real mark and a printed panel
+that must be refused. Saturation is not failing at the margin — the
+variation *within* one colour swamps the difference *between* the classes.
+
+Row 23 is also a caution against the size rule proposed above: its stroke is
+**1.43× the height** of the word it covers, because a real reader overshoots.
+A rule rejecting anything taller than a line would reject it.
 
 Row 22 also shows the V drop can be NEGATIVE (−0.18): a vivid highlighter
 under a camera light is brighter than the paper around it. The fill rule is

@@ -96,10 +96,15 @@ ROWS = [
                                 "(FILED 2026-10-06)"),
     ("22-vividest-mark-pink", 22, "the most VIVID real highlight, same colour family, on paper "
                                   "(FILED 2026-10-06)"),
+    # The top of the pink range, and the only page with handwriting UNDER a
+    # mark. Also the caution against row 10's size proposal: this stroke is
+    # 1.43x the height of the word it covers.
+    ("23-neon-over-handwriting", 23, "a NEON highlighter over HANDWRITING on ruled paper "
+                                     "(FILED 2026-10-06)"),
 ]
 # C2 also asks for bulk: 10 plain worksheets and 5 yellow book pages in total.
 # The named rows cover some of those; these are the filler.
-FILLER = [(f"23-worksheet-plain-{i}", None, "another plain worksheet") for i in range(2, 8)]
+FILLER = [(f"24-worksheet-plain-{i}", None, "another plain worksheet") for i in range(2, 8)]
 PLAN = ROWS + FILLER
 
 

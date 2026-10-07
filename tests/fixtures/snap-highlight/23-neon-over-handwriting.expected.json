@@ -1,0 +1,23 @@
+{
+  "_row": 23,
+  "_needs": "a NEON highlighter over HANDWRITING on ruled paper",
+  "_source": "Eric, 2026-10-06.",
+  "highlighted": [
+    "Pink"
+  ],
+  "_confirmed": "read off the photo by Claude; confirm before this row scores anything",
+  "colours": [
+    "pink"
+  ],
+  "measured": {
+    "paper_s": 0.118,
+    "paper_v": 0.78,
+    "mark_s": 0.565,
+    "delta": 0.447,
+    "mark_v_drop": -0.22,
+    "clears_cut_pct": 99.7,
+    "found": true,
+    "mark_vs_word_height": 1.43
+  },
+  "notes": "The top of the pink range, and it completes the number that matters:\n\n    row 21  pale pink, e-reader      delta 0.125  MISSED\n    row 10  pink on cream            delta 0.196  MISSED\n    row 22  vivid pink on cream      delta 0.392  found\n    row 23  neon pink on ruled paper delta 0.447  found\n\nONE COLOUR OF HIGHLIGHTER SPANS 0.125 TO 0.447. That 0.32 of range is larger than the whole gap between the palest real mark and a printed panel that must be refused. Saturation does not fail at the margin here; the within-colour variation swamps the between-class difference.\n\nTwo more things it carries that nothing else does.\n\nFIRST, handwriting UNDER a mark. Row 19 has handwriting with no highlighter; this has both, on the same ruled paper, so the ruled lines pass straight through the mark.\n\nSECOND, a caution against the size rule proposed under row 10. This stroke is 1.43x the HEIGHT of the word it covers -- a real reader is sloppy and overshoots. 'A mark is a word wide and a line tall' needs real tolerance, and a rule tuned to reject anything taller than a line would reject this. The width comparison came out 1.01x but should not be trusted: the ruled lines run edge to edge through the mark's bounding box and dominate the word's measured width.\n\nIts V drop is -0.22, negative again, for the same reason as row 22."
+}
