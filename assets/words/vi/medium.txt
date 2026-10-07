@@ -1,5 +1,4 @@
 boong
-chain
 chanh
 chinh
 chung
@@ -7,7 +6,6 @@ doanh
 giang
 hoang
 huynh
-hyang
 khanh
 khinh
 khoai
@@ -26,21 +24,16 @@ quang
 quanh
 thang
 thanh
-thong
 toang
-toanh
-train
 trang
 tranh
 trinh
 trong
 trung
-xiang
 xoang
 xoong
 khoang
 khoanh
-nghinh
 buông
 chiêm
 chiên
