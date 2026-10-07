@@ -1,6 +1,7 @@
 {
   "_row": 11,
   "_needs": "e-reader SCREENSHOT with highlights, pale rendering",
+  "_provenance": "screenshot -- a real screen capture, not a photograph",
   "_source_app": "Kindle",
   "_source_app_basis": "Eric, 2026-10-06: confirmed. Originally read off the chrome (Kindle's reading-speed indicator; Apple Books' Sample label), then confirmed correct, so this is no longer an inference.",
   "highlighted": [

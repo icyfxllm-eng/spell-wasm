@@ -39,6 +39,24 @@ reports coverage against the table rather than against the count.
 Then fill in the `highlighted` list in each sidecar: the words you actually
 marked. That list is the ground truth every acceptance row scores against,
 and nothing can derive it from the pixels -- that is the whole point of it.
+
+EVERY SHOT MUST BE CAMERA-ORIGINAL (or a real screen capture). This fixture
+exists to calibrate thresholds against what a phone sensor actually records,
+so a rendered or AI-generated picture of a page is not a weaker version of a
+photo -- it is a different measurement with no sensor noise, no demosaic, no
+real optics, and shadows that were painted rather than cast. Its numbers look
+exactly like the real ones and would silently move a threshold.
+
+This is not hypothetical. On 2026-10-06 a generated image of a worksheet on a
+wooden desk was measured and reported before anyone said where it came from;
+its "sunlit oak" read S 0.757, more saturated than every real highlighter in
+the set, and that number was briefly carried into an argument about F1
+alongside genuine camera measurements of rows 22 and 23. Nothing reached the
+repo, and `_provenance` exists so the next one is declared before it is
+measured rather than after.
+
+Nothing here can detect a generated image, and nothing tries to. The field is
+a place to state what a human knows and the tool cannot.
 """
 
 import argparse
@@ -115,6 +133,9 @@ def sidecar(row, needs):
     return {
         "_row": row,
         "_needs": needs,
+        # Provenance first, because it decides whether anything below is worth
+        # reading. See EVERY SHOT MUST BE CAMERA-ORIGINAL in the docstring.
+        "_provenance": "camera | screenshot | GENERATED -- say which, and say what device",
         "_fill_this_in": "list the words you actually marked, then delete this key",
         "highlighted": [],
         "colours": [],

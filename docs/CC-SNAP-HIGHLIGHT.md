@@ -505,6 +505,32 @@ and not a range, so a second warm shot at another colour temperature still
 has a job. **Row 2 also remains open** — the same sheet in daylight would
 make the pair and isolate the lamp as the only variable.
 
+**Every shot now declares its provenance, 2026-10-06, and the reason is a
+near miss.** A generated image of a worksheet on a wooden desk was measured
+and reported as row 2 before anyone said where it came from. Its "sunlit oak"
+read **S 0.757** — more saturated than every real highlighter in the set,
+row 23's neon pink at 0.565 included — and that figure was set beside genuine
+camera measurements of rows 22 and 23 in an argument about F1's paper sample.
+Nothing reached the repo, and the argument about F1 may still be right, but
+it has no evidence behind it until a real photo supplies some.
+
+The hazard is specific to what this fixture is for. Every threshold here is
+calibrated against what a phone sensor records, so a rendered page is not a
+weaker photo — it is a different measurement, with no sensor noise, no
+demosaic, no real optics, and shadows that were painted rather than cast. Its
+numbers are indistinguishable in form from real ones.
+
+So each sidecar carries `_provenance`, backfilled across all 17 filed shots,
+and `scripts/snap-fixture-provenance-check.mjs` fails the build on a missing,
+empty or unanswered one. Row 20 is marked **UNCONFIRMED** — it is a card
+image rather than a page anyone was photographed holding, and guessing is the
+thing that went wrong. Eric's to say.
+
+**The check cannot detect a generated image and does not try.** There is no
+reliable way to, and a check that claimed to would be worse than none,
+because it would launder the ones it missed. It enforces only that a human
+wrote down what they know in a field that cannot be left blank by accident.
+
 **C1 HALTs, and C2 is why it stays halted.** `docs/CC-SNAP-BOXES.md` now
 delivers word boxes to the core, so half of C1 is satisfied. The other half —
 pixels — is deliberately not built. CC-SNAP-BOXES F3 specifies the shim but
