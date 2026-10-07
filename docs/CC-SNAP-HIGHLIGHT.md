@@ -522,9 +522,15 @@ numbers are indistinguishable in form from real ones.
 
 So each sidecar carries `_provenance`, backfilled across all 17 filed shots,
 and `scripts/snap-fixture-provenance-check.mjs` fails the build on a missing,
-empty or unanswered one. Row 20 is marked **UNCONFIRMED** — it is a card
-image rather than a page anyone was photographed holding, and guessing is the
-thing that went wrong. Eric's to say.
+empty or unanswered one. Row 20 was the one shot nobody could place from the
+file alone — a card image rather than a page anyone photographed — and **Eric
+confirmed it a screenshot, 2026-10-06**. That one mattered more than the
+rest: row 20 is what bounds ΔS from below at 0.196, so if it had been
+rendered rather than captured, rows 21 and 22 would have lost their floor and
+the finding above would have needed re-running. It is a real capture and the
+floor stands. It is also already treated as `Source::Screenshot` everywhere
+it is scored, which now matches its declared provenance rather than merely
+happening to.
 
 **The check cannot detect a generated image and does not try.** There is no
 reliable way to, and a check that claimed to would be worse than none,
