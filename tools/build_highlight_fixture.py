@@ -88,10 +88,18 @@ ROWS = [
     # them apart, and this page is what bounds delta_s from below.
     ("20-pale-callout-boxes", 20, "an infographic with PALE COLOURED CALLOUT BOXES behind "
                                   "dark text, no highlighter (FILED 2026-10-06)"),
+    # 21 and 22 are a pair: the same colour at the two ends of its range, which
+    # is what bounds the dynamic range a detector has to cover. 21 is the one
+    # that shows saturation cannot work -- it is a REAL mark that is less
+    # saturated than row 20, which is not a mark at all.
+    ("21-palest-mark-pink", 21, "the PALEST real highlight available, pink on white "
+                                "(FILED 2026-10-06)"),
+    ("22-vividest-mark-pink", 22, "the most VIVID real highlight, same colour family, on paper "
+                                  "(FILED 2026-10-06)"),
 ]
 # C2 also asks for bulk: 10 plain worksheets and 5 yellow book pages in total.
 # The named rows cover some of those; these are the filler.
-FILLER = [(f"21-worksheet-plain-{i}", None, "another plain worksheet") for i in range(2, 8)]
+FILLER = [(f"23-worksheet-plain-{i}", None, "another plain worksheet") for i in range(2, 8)]
 PLAN = ROWS + FILLER
 
 

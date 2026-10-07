@@ -174,17 +174,22 @@ fn a_gutter_shadow_is_not_a_highlight() {
     assert_eq!(score_page(&cfg(), &page(0.09, Source::Camera), &[shadow]).count(), 0);
 }
 
-/// delta_s HAS NO VALID VALUE, and these two assertions are why.
+/// delta_s HAS NO VALID VALUE, and not because the window is narrow -- the
+/// ordering is INVERTED.
 ///
-/// Row 20, a pale callout box on a white card: S 0.196 over paper 0.000.
-/// Row 10, a pale pink highlighter on cream paper: S 0.337 over paper 0.141.
-/// Both are a delta of EXACTLY 0.196.
+///     row 21  a REAL pink mark, e-reader    delta 0.125
+///     row 20  a callout box, NOT a mark     delta 0.196
+///     row 10  a REAL pink mark, cream paper delta 0.196
+///     row 11  a REAL yellow mark, Kindle    delta 0.270
+///     row 22  a REAL pink mark, vivid       delta 0.392
 ///
-/// Reject the box and you lose the pink; find the pink and you import the
-/// box. Saturation cannot tell a pale highlighter from a pale printed panel
-/// because on this measure they are the same thing. The current 0.25 picks
-/// the first horn: the box is rejected, the pink is missed, and the Intent
-/// says that is the wrong horn to pick.
+/// A thing that must be REFUSED sits between two things that must be FOUND,
+/// and one real mark is less saturated than it. No threshold separates those
+/// sets, at any value, ever. Row 20 looked like a floor; row 10 made the
+/// window empty; row 21 shows there was never a window.
+///
+/// The current 0.25 refuses the box and loses both pale pinks, and the
+/// Intent says losing a mark is the wrong way to fail.
 ///
 /// What separates them is size, not colour -- a highlight is a word wide and
 /// a line tall, a callout box is a rectangle over many lines. Unbuilt, and
@@ -197,7 +202,7 @@ fn a_gutter_shadow_is_not_a_highlight() {
 /// highlights stop being found. 0.25 sits between, 0.054 above the floor and
 /// 0.02 under the ceiling.
 #[test]
-fn delta_s_cannot_satisfy_rows_10_and_20_at_once() {
+fn delta_s_cannot_work_at_all_the_ordering_is_inverted() {
     let c = cfg();
     // Row 20's callout box, on a white card. Correctly refused today.
     assert_eq!(score_page(&c, &page(0.0, Source::Screenshot), &[boxed(1.0, 0.196, Some(55))]).count(), 0,
@@ -205,11 +210,15 @@ fn delta_s_cannot_satisfy_rows_10_and_20_at_once() {
     // Row 11's palest real highlight. Correctly found today.
     assert_eq!(score_page(&c, &page(0.0, Source::Screenshot), &[boxed(1.0, 0.27, Some(55))]).count(), 1,
         "the palest Kindle highlight was missed -- delta_s rose above row 11's ceiling");
-    // Row 10's pink, on cream paper. WRONGLY missed today, at the very same
-    // delta as the callout box above. If this ever passes, something other
-    // than saturation has started doing the work -- update the note.
+    // Row 10's pink on cream. WRONGLY missed, at the SAME delta as the box.
     assert_eq!(score_page(&c, &page(0.141, Source::Camera), &[boxed(1.0, 0.337, Some(350))]).count(), 0,
-        "the pink is now found; if the callout box is still refused, the collision is solved");
+        "row 10's pink is now found; if the box is still refused, the collision is solved");
+    // Row 21's pale pink. WRONGLY missed, and LESS saturated than the box.
+    assert_eq!(score_page(&c, &page(0.0, Source::Screenshot), &[boxed(1.0, 0.125, Some(350))]).count(), 0,
+        "row 21's pale pink is now found -- saturation alone cannot have done it");
+    // Row 22, the same colour vivid, is found. Pink is not the problem.
+    assert_eq!(score_page(&c, &page(0.133, Source::Camera), &[boxed(1.0, 0.525, Some(350))]).count(), 1,
+        "row 22's vivid pink was lost -- that would be a regression, not a known gap");
 }
 
 /// KNOWN GAP, pinned so it cannot be forgotten or silently "fixed".

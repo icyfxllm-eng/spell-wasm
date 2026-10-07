@@ -417,6 +417,35 @@ buckets 1 and 2, so four colours would give four chips. The yellow/orange
 collision warned about earlier does not bite, because this page has no
 yellow.
 
+**Rows 21 and 22: saturation is not a tight test, it is the wrong test.
+2026-10-06.** The same pink at both ends of its range:
+
+| | paper S | mark S | delta | found |
+|---|---|---|---|---|
+| row 21, pale pink on an e-reader | 0.000 | 0.125 | **0.125** | **no** |
+| row 10, pink on cream | 0.141 | 0.337 | 0.196 | **no** |
+| *row 20, callout box — NOT a mark* | 0.000 | *0.196* | *0.196* | *refused* |
+| row 11, Kindle yellow | 0.000 | 0.270 | 0.270 | yes |
+| row 22, vivid pink on cream | 0.133 | 0.525 | 0.392 | yes |
+
+**A thing that must be refused sits between two things that must be found,
+and one real mark is less saturated than it.** No value of ΔS separates
+those sets. Row 20 looked like a floor, row 10 emptied the window, row 21
+shows there was never a window to begin with.
+
+Pink itself is fine — row 22 is found at 0.392. **Paleness is the problem**,
+and the pale end of a real highlighter reaches below a printed panel.
+
+Row 22 also shows the V drop can be NEGATIVE (−0.18): a vivid highlighter
+under a camera light is brighter than the paper around it. The fill rule is
+one-sided so it copes, but "drop from paper" is not always a drop.
+
+So F2's fourth unresolved item, and the largest: **saturation cannot be the
+primary test.** The size rule proposed under row 10 — a mark is a word wide
+and a line tall, a panel is not — now has to carry more weight than it was
+offered for, because it is the only proposed discriminator left that does
+not depend on how saturated the ink happens to be.
+
 **C1 HALTs, and C2 is why it stays halted.** `docs/CC-SNAP-BOXES.md` now
 delivers word boxes to the core, so half of C1 is satisfied. The other half —
 pixels — is deliberately not built. CC-SNAP-BOXES F3 specifies the shim but
