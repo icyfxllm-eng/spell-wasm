@@ -873,12 +873,20 @@ fn clarifier_tip_only_where_the_phrasing_works() {
     assert_eq!(parse("en", "d as in dog").letters, "d");
     assert_eq!(parse("en", "m as in mother").letters, "m");
 
-    // Spanish HAS clarifier data and the phrasing does not work: `de` is the
-    // name of the letter D, so the connector eats the letter. Pinned so the tip
-    // cannot be switched on there by looking only at the lexicon.
+    // Spanish: data AND behaviour, since 2026-10-06. The tip is taught here
+    // only because the phrasing now parses — the point of this test is that the
+    // two must agree, not that es is permanently excluded.
     assert!(has_clarifiers("es"), "es does carry connectors");
-    assert!(!clarifier_tip_ok("es"), "...and must still not be taught");
-    assert_eq!(parse("es", "b de burro").letters, "d", "the b is lost today");
+    assert!(clarifier_tip_ok("es"));
+    assert_eq!(parse("es", "be de burro").letters, "b", "was 'bd'");
+    assert_eq!(parse("es", "uve de vaca").letters, "v");
+    // ...and the collision that makes Spanish hard is still handled: `de` is
+    // also the letter D, so ordinary spelling must survive it.
+    assert_eq!(parse("es", "uve e ere de e").letters, "verde");
+
+    // Bare "b" is not a Spanish letter name (the name is "be"), so this stays
+    // what it always was — the clarifier work did not change it.
+    assert_eq!(parse("es", "b de burro").letters, "d");
 
     // The thirteen with no clarifier data at all.
     for lang in ["fr", "de", "pt", "pl", "vi", "ja", "zh", "ru", "ar", "hi", "sw", "fil"] {
@@ -1299,4 +1307,52 @@ fn every_spanish_name_for_w_lands_as_w() {
     assert_eq!(spell(ES, "doble ve u"), "wu");
     // And a whole bank word with a W in it.
     assert_eq!(spell(ES, "ka i uve doble i"), "kiwi");
+}
+
+/// "<letter> as in <word>" — the one technique that actually sidesteps the
+/// confusable letters — now works in Spanish, where it never had.
+///
+/// English worked by accident: `as`, `in` and `boy` are not letter names, so
+/// they were skipped as noise by a parser that knew nothing about clarifiers.
+/// Spanish got no such luck, because its connector `de` IS the name of the
+/// letter D: "b de burro" parsed as B, then D, then dropped burro, and handed
+/// back `bd`. A player using the technique correctly was punished for it.
+#[test]
+fn a_spanish_clarifier_confirms_a_letter_instead_of_adding_one() {
+    // The failure, fixed. All three Spanish connectors.
+    assert_eq!(spell(ES, "be de burro"), "b");
+    assert_eq!(spell(ES, "be como en burro"), "b");
+    assert_eq!(spell(ES, "be como burro"), "b");
+    // Mid-word, where losing a letter would be hardest to notice.
+    assert_eq!(spell(ES, "ce a be de burro"), "cab");
+    // English keeps working, now on purpose rather than by luck.
+    assert_eq!(spell(EN, "b as in boy"), "b");
+    assert_eq!(spell(EN, "c a t as in top"), "cat");
+
+    // Spanish `de` is ALSO the letter D, so a clarifier reading there requires
+    // an example that is not a letter — otherwise ordinary spelling collides
+    // with it. v-e-r-d-e is "uve e ere de e", and the naive rule turns verde
+    // into ver.
+    assert_eq!(spell(ES, "uve e ere de e"), "verde");
+    assert_eq!(spell(ES, "a de be"), "adb");
+    // English "as in" is not a letter name, so its example is consumed whatever
+    // it is — "you" is the letter U and must not become one.
+    assert_eq!(spell(EN, "b as in you"), "b");
+    // A connector with NOTHING after it is still just the letter D — a clarifier
+    // needs an example, so this cannot swallow a trailing letter.
+    assert_eq!(spell(ES, "a de"), "ad");
+}
+
+/// The three Spanish failures recorded in CLARIFIER_VERIFIED's comment, which
+/// said the tip stays hidden "until the parser can tell a connector from a
+/// letter name". Pinned here so turning the tip on is evidenced, not asserted.
+#[test]
+fn the_recorded_spanish_clarifier_failures_are_fixed() {
+    assert_eq!(spell(ES, "be de burro"), "b", "was 'bd' — the connector read as the letter D");
+    assert_eq!(spell(ES, "be como en burro"), "b", "yielded nothing at all");
+    assert_eq!(spell(ES, "be como burro"), "b");
+    // And the technique is worth having precisely for the confusable pair:
+    // b and v are indistinguishable in spoken Spanish.
+    assert_eq!(spell(ES, "uve de vaca"), "v");
+    assert_eq!(spell(ES, "be de burro uve de vaca"), "bv");
 }

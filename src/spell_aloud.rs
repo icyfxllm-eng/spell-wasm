@@ -311,6 +311,24 @@ pub fn parse(lang: &str, transcript: &str) -> Parsed {
                 slots.push(Slot { letters: v.to_string() }); // lexicon values are already NFC
                 matched += len;
                 i += len;
+                // "<letter> as in <word>" — consume the connector AND its example,
+                // so the example cannot be scavenged for letters.
+                //
+                // English worked here by ACCIDENT: `as`, `in` and `boy` are not
+                // letter names, so they fell through the `None` arm and were
+                // skipped as noise. Spanish does not get that luck — its
+                // connector `de` IS the name of the letter D — so "b de burro"
+                // parsed as B, then D, then skipped burro, and the player got
+                // `bd` for a technique that exists to make them understood.
+                //
+                // The richer event parser has handled this since Phase 3. This
+                // is the SAME rule, in the parser the Spell It mic actually
+                // calls; the two diverging is how a shipped language stayed
+                // broken without a failing test.
+                if let Some((skip, _example)) = clarifier_after(lex, &words[i..]) {
+                    matched += skip;
+                    i += skip;
+                }
             }
             None => i += 1,
         }
@@ -564,6 +582,25 @@ fn clarifier_after<'a>(lex: &Lexicon, rest: &'a [String]) -> Option<(usize, &'a 
     for conn in &lex.clarifiers {
         let clen = conn.len();
         if rest.len() > clen && rest[..clen] == conn[..] {
+            // Whether the example may itself be a letter name depends on whether
+            // the CONNECTOR is one.
+            //
+            // English "as in" is not a letter name, so the clarifier reading is
+            // unambiguous and the example is consumed whatever it is:
+            // `clarifier_confirms_a_letter_and_drops_the_example` pins "bee as
+            // in you" as the single letter B, because "you" is the letter U and
+            // scavenging it would add a letter nobody spelled.
+            //
+            // Spanish "de" IS the name of the letter D, so the same rule eats
+            // ordinary spelling: v-e-r-d-e is "uve e ere DE e", and reading
+            // "de e" as a clarifier turns verde into ver. When the connector is
+            // itself a letter name, the clarifier reading therefore requires an
+            // example that is NOT -- which is what distinguishes "be de burro"
+            // (burro is a word) from "ere de e" (e is a letter).
+            let connector_is_a_letter = conn.len() == 1 && lex.table.contains_key(&conn[0]);
+            if connector_is_a_letter && lex.table.contains_key(&rest[clen]) {
+                return None;
+            }
             return Some((clen + 1, rest[clen].as_str()));
         }
     }
@@ -594,13 +631,24 @@ pub fn has_clarifiers(lang: &str) -> bool {
 /// Languages where "<letter> as in <word>" is VERIFIED to parse, which is not
 /// the same as having clarifier data.
 ///
-/// Spanish has the data and does not work: its connector `de` IS the name of
-/// the letter D, so "b de burro" parses as the single letter d and the b is
-/// lost, "b como en burro" yields nothing at all, and "be de burro" gives "bd".
-/// Teaching that phrasing would be teaching a failure, so the tip stays hidden
-/// there until the parser can tell a connector from a letter name — which is
-/// CC-SPELL-ALOUD's parser to change, not this file's.
-const CLARIFIER_VERIFIED: [&str; 1] = [crate::consts::EN];
+/// Spanish was hidden here until 2026-10-06 for a reason this comment used to
+/// state: its connector `de` IS the name of the letter D, so "be de burro" gave
+/// "bd" and "be como en burro" yielded nothing. The condition it set — "until
+/// the parser can tell a connector from a letter name" — is now met, and
+/// `the_recorded_spanish_clarifier_failures_are_fixed` pins each of those exact
+/// strings rather than asserting the fix in prose.
+///
+/// Two parsers had to agree. The mic calls `parse`, which knew nothing about
+/// clarifiers; English only ever worked by accident there, because `as`, `in`
+/// and `boy` are not letter names and fell through as noise. The rule that
+/// settles both is that an AMBIGUOUS connector — one that is itself a letter
+/// name — needs an example that is not, which separates "be de burro" (burro is
+/// a word) from "ere de e" (e is a letter, and v-e-r-d-e must stay verde).
+///
+/// It matters most in Spanish of all languages: b and v are the same sound
+/// there, so "be de burro" / "uve de vaca" is how a Spanish speaker has always
+/// disambiguated them out loud.
+const CLARIFIER_VERIFIED: [&str; 2] = [crate::consts::EN, crate::consts::ES];
 
 /// Whether to offer the "<letter> as in <word>" tip for this language.
 pub fn clarifier_tip_ok(lang: &str) -> bool {
