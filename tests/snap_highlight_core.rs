@@ -221,6 +221,46 @@ fn delta_s_cannot_work_at_all_the_ordering_is_inverted() {
         "row 22's vivid pink was lost -- that would be a regression, not a known gap");
 }
 
+/// Fixture row 3: a printed sheet under a warm lamp, no highlighter on it.
+///
+/// Saturation survives the lamp easily. The page's paper sits at S 0.075 and
+/// the most saturated BRIGHT pixel anywhere on it reaches 0.20 -- six pixels
+/// of them -- so even a box entirely filled at the page's own worst colour is
+/// 0.125 above paper, half of delta_s. Warm light does not manufacture marks.
+///
+/// This is the MEASURED version of `ih2_a_uniformly_tinted_page_finds_nothing`
+/// above, which idealises the tint as perfectly uniform. A real lamp is not
+/// uniform, and the gap between the paper and the page's warmest pixel is the
+/// part that test assumes away.
+#[test]
+fn a_warm_lamp_does_not_manufacture_a_highlight() {
+    let c = cfg();
+    let lamp = page(0.075, Source::Camera);
+    assert_eq!(score_page(&c, &lamp, &[boxed(1.0, 0.20, Some(45))]).count(), 0,
+        "the warmest pixel on an unmarked lamp-lit page scored as a mark");
+}
+
+/// What the lamp DOES move is hue, and that is why hue cannot be promoted to
+/// the primary test now that saturation has been shown not to work.
+///
+///   fixture row 3, BLANK paper under a lamp:   43-50 deg
+///   fixture row 12, Apple Books highlight:        50 deg
+///   fixture row 11, Kindle highlight:             53 deg
+///
+/// Blank paper is nearer Apple Books' highlight hue than Apple Books is to
+/// Kindle's, and at 12 buckets all three are the same chip. Hue is for
+/// NAMING a mark under F5, never for finding one.
+#[test]
+fn blank_warm_paper_lands_in_the_same_hue_chip_as_two_real_highlights() {
+    let paper_lo = hue_bucket(43, 12);
+    let paper_hi = hue_bucket(50, 12);
+    let apple = hue_bucket(50, 12);
+    let kindle = hue_bucket(53, 12);
+    assert_eq!(paper_lo, paper_hi, "row 3's own tint spans two chips");
+    assert_eq!(paper_hi, apple, "blank lamp-lit paper is not Apple Books' chip -- re-measure");
+    assert_eq!(apple, kindle, "the two e-reader highlights are not one chip -- re-measure");
+}
+
 /// KNOWN GAP, pinned so it cannot be forgotten or silently "fixed".
 ///
 /// Fixture row 16 is a Kindle page whose blue headings drop only 0.29 below

@@ -463,6 +463,48 @@ and a line tall, a panel is not — now has to carry more weight than it was
 offered for, because it is the only proposed discriminator left that does
 not depend on how saturated the ink happens to be.
 
+**Row 3 filed, 2026-10-06, and hue is not the way out.** A printed sheet
+under a warm lamp, no highlighter. Saturation comes through it untouched:
+paper S 0.075, and the most saturated bright pixel anywhere on the page
+reaches 0.20 — six pixels of it. At ΔS 0.15 the page yields nothing at all,
+so the shipped 0.25 clears a real lamp by the width of the whole page. I-H2
+asked whether warm light manufactures highlights, and on a measured photo
+rather than a synthetic tint, it does not.
+
+**What the lamp moves is hue.** The paper sits at 43–50°, and coherently:
+755k of its 798k paper pixels fall in those two bins. Row 12's Apple Books
+highlight is at 50° and row 11's Kindle at 53°.
+
+| | hue |
+|---|---|
+| 3, blank paper under a lamp | **43–50°** |
+| 12, Apple Books highlight | 50° |
+| 11, Kindle highlight | 53° |
+
+Blank paper is nearer Apple Books' highlight hue than Apple Books is to
+Kindle's. Saturation was shown to be the wrong primary test two rows ago, and
+hue was the obvious thing to reach for next; this row closes that door before
+anyone builds on it. **Hue is for naming a mark (F5's chips), never for
+finding one.**
+
+**A smaller finding, in the fill rule's favour and against its statistic.**
+Over a 4×3 grid of this page the lamp gradient moves `paper_v` by 0.18
+(0.60–0.78) and `paper_s` by 0.019 (0.067–0.086). The darkest tile's paper
+sits **0.114 below the global `paper_v`** with nothing on it. `max_v_drop` is
+0.45, so this page is safe with 0.34 to spare and it is not a counter-example
+— but the config's own table already records a gutter shadow at 0.77, and
+ordinary desk lighting has now spent 0.114 of the gap between a mark and a
+shadow. **The fill rule wants a local paper estimate before it wants a
+different number**, which is the same conclusion row 20 reached about
+`paper_s` by a different route.
+
+Incidentally this is the first real number for I-H2's synthetic tint test,
+which says to shift a fixture "within the C3-observed lamp range". There was
+no observed range; the shift would have been invented. One lamp is a point
+and not a range, so a second warm shot at another colour temperature still
+has a job. **Row 2 also remains open** — the same sheet in daylight would
+make the pair and isolate the lamp as the only variable.
+
 **C1 HALTs, and C2 is why it stays halted.** `docs/CC-SNAP-BOXES.md` now
 delivers word boxes to the core, so half of C1 is satisfied. The other half —
 pixels — is deliberately not built. CC-SNAP-BOXES F3 specifies the shim but

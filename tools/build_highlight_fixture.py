@@ -54,7 +54,9 @@ DEST = pathlib.Path("tests/fixtures/snap-highlight")
 ROWS = [
     ("01-book-5-yellow", 1, "a book page of ~300 words with EXACTLY 5 highlighted in yellow"),
     ("02-worksheet-plain", 2, "an ordinary worksheet, no highlighter anywhere"),
-    ("03-worksheet-warm-lamp", 3, "a worksheet under a tungsten lamp, warm cast, NO highlighter"),
+    ("03-worksheet-warm-lamp", 3, "a worksheet under a tungsten lamp, warm cast, NO highlighter "
+                                  "(FILED 2026-10-06 -- the cast moves HUE onto the highlighters, "
+                                  "not saturation)"),
     ("04-page-aged", 4, "aged or cream paper, NO highlighter (FILED 2026-10-06)"),
     ("05-word-60pct", 5, "one word about 60% covered by the stroke (FILED 2026-10-06)"),
     ("06-word-30pct", 6, "one word about 30% covered -- a clipped edge (FILED 2026-10-06, same frame as row 5)"),

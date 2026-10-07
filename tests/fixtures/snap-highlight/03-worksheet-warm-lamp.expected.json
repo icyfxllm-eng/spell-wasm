@@ -1,0 +1,19 @@
+{
+  "_row": 3,
+  "_needs": "a worksheet under a tungsten lamp, warm cast, NO highlighter",
+  "_source": "Eric, 2026-10-06. A Target assembly instruction sheet, black print on white, shot under a warm lamp.",
+  "highlighted": [],
+  "_why_empty": "No highlighter is on this page. N must be 0. That is the whole row.",
+  "colours": [],
+  "measured": {
+    "paper_s": 0.075,
+    "paper_v": 0.714,
+    "paper_hue_deg": [43, 50],
+    "max_bright_s_anywhere": 0.20,
+    "px_above_delta_0_15": 0,
+    "tile_paper_s_range": [0.067, 0.086],
+    "tile_paper_v_range": [0.60, 0.78],
+    "shading_v_drop_worst_tile": 0.114
+  },
+  "notes": "The warm-cast control, and it answers a question the pink rows opened.\n\nSATURATION IS FINE HERE. The cast barely touches it: paper_s 0.075, and the brightest-and-most-saturated pixel anywhere on the page reaches only S=0.20, six pixels of it. At delta_s 0.15 the page yields ZERO pixels, and the shipped delta of 0.25 has the whole page of margin. I-H2 asked whether a lamp produces false positives; on a real lamp photo, measured rather than synthesised, it does not.\n\nHUE IS NOT FINE, AND THAT IS THE POINT OF THIS ROW. The cast moves the paper's HUE to 43-50deg -- 755k of the 798k paper pixels sit in those two bins, so it is a coherent tint and not noise. Row 12's Apple Books highlight is at 50deg and row 11's Kindle at 53deg. This BLANK PAPER is nearer Apple Books' highlight hue than Apple Books is to Kindle's. After the pink series (rows 10, 20, 21, 22, 23) showed saturation cannot be the primary test, hue was the obvious next candidate. It cannot be either. Whatever replaces delta_s, hue is available for NAMING a mark's colour (F5's chips) and not for FINDING one.\n\nONE GLOBAL PAPER_V IS A WEAKER STATISTIC THAN ONE GLOBAL PAPER_S. Across a 4x3 grid the lamp gradient moves paper_v by 0.18 (0.60 to 0.78) and paper_s by 0.019 (0.067 to 0.086). The darkest tile's paper sits 0.114 below the global paper_v -- on blank paper, with nothing on it. max_v_drop is 0.45, so the fill rule is safe here with 0.34 to spare, and this is NOT a counter-example to it. But the config's own measurements already record a gutter shadow at 0.77, and 0.114 of that gap is now spent on ordinary desk lighting. The fill rule wants a LOCAL paper estimate before it wants a different number.\n\nFOR I-H2's SYNTHETIC TINT TEST. That item says to shift a fixture 'within the C3-observed lamp range' and assert N=0. Until now there was no observed range and the shift would have been invented. This photo is one real point in it: hue 43-51deg, paper_s 0.067-0.086, paper_v 0.60-0.78. One lamp is a point and not a range, so a second warm shot at a different colour temperature would still earn its place.\n\nNot a highlight matter, but in frame and worth recording once: the reverse side of the sheet SHOWS THROUGH, legibly enough to read mirrored text in the upper right. Any OCR run on this page will return words nobody printed on this side of it. That belongs to CC-SNAP-BOXES or CC-SNAP-CLEAN, not here.\n\nROW 2 IS STILL OPEN. This sheet under ordinary daylight would fill it, and the pair would isolate the lamp as the only variable."
+}
