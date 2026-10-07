@@ -1,0 +1,22 @@
+{
+  "_row": 24,
+  "_needs": "a PHOTOGRAPH of a monitor showing row 20's card, same content, camera instead of screen capture",
+  "_provenance": "camera -- Eric's phone, original file, photographing a monitor. 2026-10-06.",
+  "_source": "the same Data/SQL and Java study card as row 20, which is the screenshot of it.",
+  "highlighted": [],
+  "_why_empty": "No highlighter is on this card. N must be 0, exactly as for row 20.",
+  "colours": [],
+  "measured": {
+    "paper_s": 0.008,
+    "paper_v": 0.78,
+    "yellow_callout_delta_s": 0.153,
+    "blue_callout_delta_s": 0.016,
+    "yellow_callout_v_drop": 0.02,
+    "blue_callout_v_drop": 0.09,
+    "row20_yellow_delta_s_screenshot": 0.196,
+    "row20_blue_delta_s_screenshot": 0.118,
+    "saturated_px_above_0_50": 2119,
+    "saturated_px_above_0_50_that_are_bright": 0
+  },
+  "notes": "THE ONLY MATCHED PAIR IN THE SET. Row 20 is this card screen-captured; this is the same card photographed off a monitor. Every other row differs in content as well as in source, so nothing else can measure what the CAMERA PATH costs.\n\nIt costs saturation, and not by a constant:\n\n    yellow callout   screenshot 0.196  ->  photo 0.153   (loses 0.043, 22%)\n    blue callout     screenshot 0.118  ->  photo 0.016   (loses 0.102, 86%)\n\nTHE FIRST HALF MATTERS FOR D-H3. The review record kept the per-source delta_s 'available rather than deleted as unused'. This is the evidence it was waiting for: identical content, 0.196 one way and 0.153 the other. One number cannot serve both sources.\n\nTHE SECOND HALF IS WORSE AND IS NEW. The loss is HUE-DEPENDENT. A per-source SCALAR, which is what D-H3 offers, cannot express 22% off yellow and 86% off blue. A camera delta_s calibrated on yellow would sit far above anything blue.\n\nThe likely mechanism is a warm veil: a screen reflects room light, which adds to pale yellow and cancels pale blue. That is a guess about cause. The measurement is not.\n\nWHAT IT IMPLIES FOR A REAL BLUE OR GREEN MARKER, and this is the part worth acting on. The blue callout arrives at delta_s 0.016 -- indistinguishable from paper. If a photographed blue or green HIGHLIGHTER loses saturation the same way, saturation cannot find it at all. Nothing in the fixture tests that: every photographed mark so far is yellow or pink, both warm. ROW 17 is exactly the missing shot -- a form marked in cyan, photographed not screenshotted -- and it is still unfiled. This row raises its priority above the remaining detection scenes.\n\nON THE CAMERA PATH ALONE THERE IS STILL NO INVERSION. Row 10's pink on cream, a camera row, is at 0.196 and must be FOUND; this card's yellow is at 0.153 and must be REFUSED. That is a window 0.043 wide, and the shipped 0.25 is above both, which is why row 10 is missed today. So the 'saturation is the wrong test' finding is established WITHIN THE SCREENSHOT SOURCE, where rows 21 (0.125, find), 20 (0.196, refuse) and 11 (0.27, find) genuinely invert. The camera source has a surviving window. It is two measurements wide and 0.043 across, so it is a lead and not a result.\n\nMOIRE DOES NOT PRODUCE FALSE POSITIVES. Photographing an LCD puts a visible grid over the whole frame, and 2119 pixels reach S 0.50 or above -- more saturated than any real highlighter measured. Every one of them is DARK (V below 0.55): colour fringing on glyph edges, which the V cut already excludes. Zero bright saturated speckle. A clean negative, and worth having before someone assumes screen photos are hopeless.\n\nA PHOTO OF A SCREEN IS ARGUABLY A THIRD SOURCE. The code has Source::Camera and Source::Screenshot. This frame is camera optics over screen content and would be classified Camera, which is right for the optics and is what makes the pair useful. Flagged, not proposed: adding a third source would need more than one photograph to justify."
+}

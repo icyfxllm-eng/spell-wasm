@@ -121,10 +121,17 @@ ROWS = [
     # 1.43x the height of the word it covers.
     ("23-neon-over-handwriting", 23, "a NEON highlighter over HANDWRITING on ruled paper "
                                      "(FILED 2026-10-06)"),
+    # The A/B control for row 20, and the only matched pair in the set: the
+    # SAME card, screenshotted once and photographed off a monitor once. It is
+    # what measures the camera path's cost in saturation, which nothing else
+    # can, because every other row differs in content as well as in source.
+    ("24-screen-photo-of-row-20", 24, "a PHOTOGRAPH of a monitor showing row 20's card, "
+                                      "same content, camera instead of screen capture "
+                                      "(FILED 2026-10-06)"),
 ]
 # C2 also asks for bulk: 10 plain worksheets and 5 yellow book pages in total.
 # The named rows cover some of those; these are the filler.
-FILLER = [(f"24-worksheet-plain-{i}", None, "another plain worksheet") for i in range(2, 8)]
+FILLER = [(f"25-worksheet-plain-{i}", None, "another plain worksheet") for i in range(2, 8)]
 PLAN = ROWS + FILLER
 
 

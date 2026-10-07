@@ -92,7 +92,12 @@ def report(paired, leftover, dest):
     book pages next week -- and a tool that only looked at today's folder
     would keep telling you to re-take what is already in the repo.
     """
-    filed = {s[0] for s in (sl for _, sl in paired) if (dest / f"{s[0]}.jpg").exists()} \
+    # Any filed extension counts, not just .jpg. Row 20 was filed as a .png
+    # and a jpg-only test silently called it missing, so the coverage line --
+    # the one thing this function exists to print -- was under by one from the
+    # day that row landed.
+    filed = {s[0] for s in (sl for _, sl in paired)
+             if any((dest / f"{s[0]}{e}").exists() for e in (".jpg", ".png"))} \
         if dest.exists() else set()
     have = sum(1 for p, sl in paired if p or sl[0] in filed)
     print(f"  {have} of {len(paired)} shots present -> {dest}")

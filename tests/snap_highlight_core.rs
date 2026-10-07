@@ -261,6 +261,56 @@ fn blank_warm_paper_lands_in_the_same_hue_chip_as_two_real_highlights() {
     assert_eq!(apple, kindle, "the two e-reader highlights are not one chip -- re-measure");
 }
 
+/// Rows 20 and 24 are the same card, screen-captured and then photographed.
+/// The camera costs saturation, and not by a constant:
+///
+///   yellow callout   screenshot 0.196 -> photo 0.153   (22% off)
+///   blue callout     screenshot 0.118 -> photo 0.016   (86% off)
+///
+/// D-H3's per-source delta_s was kept "available rather than deleted as
+/// unused". This is why it is needed -- and also why a per-source SCALAR is
+/// not enough, because one number cannot be 22% off yellow and 86% off blue.
+#[test]
+fn the_camera_path_costs_saturation_and_not_by_a_constant() {
+    let c = cfg();
+    // Both sources, both callouts, all four correctly refused at 0.25 today.
+    for (src, delta) in [(Source::Screenshot, 0.196), (Source::Camera, 0.153)] {
+        assert_eq!(score_page(&c, &page(0.0, src), &[boxed(1.0, delta, Some(50))]).count(), 0,
+            "the yellow callout imported at delta_s {delta}");
+    }
+    // The blue callout photographed is indistinguishable from paper. If a real
+    // blue marker loses saturation the same way, nothing finds it. Row 17 --
+    // a cyan marker PHOTOGRAPHED -- is the unfiled shot that would say.
+    assert_eq!(score_page(&c, &page(0.0, Source::Camera), &[boxed(1.0, 0.016, Some(192))]).count(), 0,
+        "a box 0.016 above paper scored as a mark");
+}
+
+/// The camera path has NOT inverted, and that qualifies the finding above.
+///
+/// Rows 21/20/11 cross each other, but all three are SCREENSHOTS. Among
+/// camera rows the ordering still holds: row 24's yellow callout at 0.153
+/// must be refused, row 10's pink on cream at 0.196 must be found. A window
+/// 0.043 wide, and the shipped 0.25 is above both -- which is exactly why
+/// row 10 is missed today.
+///
+/// Two measurements do not make a threshold. This pins that a candidate
+/// EXISTS on the camera path, so nobody concludes from the screenshot rows
+/// that every source is hopeless.
+#[test]
+fn a_camera_only_threshold_still_separates_what_is_measured() {
+    let mut c = cfg();
+    // As shipped: both refused, and row 10 is the one refused wrongly.
+    assert_eq!(score_page(&c, &page(0.0, Source::Camera), &[boxed(1.0, 0.153, Some(50))]).count(), 0);
+    assert_eq!(score_page(&c, &page(0.141, Source::Camera), &[boxed(1.0, 0.337, Some(350))]).count(), 0,
+        "row 10 is found at the shipped camera delta_s -- update this test and the record");
+    // Inside the window. Not a proposal: a demonstration that one exists.
+    c.delta_s_camera = 0.18;
+    assert_eq!(score_page(&c, &page(0.0, Source::Camera), &[boxed(1.0, 0.153, Some(50))]).count(), 0,
+        "row 24's callout imported at a camera delta_s of 0.18");
+    assert_eq!(score_page(&c, &page(0.141, Source::Camera), &[boxed(1.0, 0.337, Some(350))]).count(), 1,
+        "row 10's pink is still missed at a camera delta_s of 0.18");
+}
+
 /// KNOWN GAP, pinned so it cannot be forgotten or silently "fixed".
 ///
 /// Fixture row 16 is a Kindle page whose blue headings drop only 0.29 below

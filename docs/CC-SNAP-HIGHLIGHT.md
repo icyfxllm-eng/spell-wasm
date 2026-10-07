@@ -537,6 +537,50 @@ reliable way to, and a check that claimed to would be worse than none,
 because it would launder the ones it missed. It enforces only that a human
 wrote down what they know in a field that cannot be left blank by accident.
 
+**Row 24, the only matched pair in the set. 2026-10-06.** Row 20 is a study
+card screen-captured; row 24 is the same card photographed off a monitor.
+Every other row differs in content as well as in source, so this is the only
+thing that can measure what the camera path costs.
+
+| callout | screenshot (row 20) | photo (row 24) | camera loses |
+|---|---|---|---|
+| yellow | ΔS 0.196 | **ΔS 0.153** | 0.043 (22%) |
+| blue | ΔS 0.118 | **ΔS 0.016** | 0.102 (86%) |
+
+**D-H3 gets its evidence.** The per-source ΔS was kept "available rather than
+deleted as unused". Identical content measures 0.196 one way and 0.153 the
+other, so one number cannot serve both sources.
+
+**And then it gets a bigger problem.** The loss is **hue-dependent** — 22% off
+yellow, 86% off blue — and a per-source *scalar*, which is all D-H3 offers,
+cannot express that. A camera ΔS calibrated on yellow sits far above anything
+blue. The likely mechanism is a warm veil, since a screen reflects room light
+and that adds to pale yellow while cancelling pale blue; the mechanism is a
+guess, the measurement is not.
+
+**The actionable part concerns a real blue or green marker.** The blue callout
+lands at ΔS 0.016 — indistinguishable from paper. If a photographed blue or
+green *highlighter* loses saturation the same way, saturation cannot find it
+at all, and nothing in the fixture tests this: every photographed mark so far
+is yellow or pink, both warm. **Row 17 is exactly that shot** — a form marked
+in cyan, photographed rather than screenshotted — and it is still unfiled.
+It should now come before the remaining detection scenes.
+
+**On the camera path alone there is still no inversion**, which is a real
+qualification of the finding above. Row 10's pink on cream is a camera row at
+0.196 and must be found; row 24's yellow is at 0.153 and must be refused —
+a window 0.043 wide, with the shipped 0.25 above both, which is why row 10 is
+missed today. So the inversion is established **within the screenshot
+source**, where rows 21 (0.125, find), 20 (0.196, refuse) and 11 (0.27, find)
+genuinely cross. The camera source still has a window. It is two measurements
+wide and 0.043 across, so it is a lead, not a result.
+
+**Moiré does not produce false positives**, which is worth knowing before
+anyone writes off screen photos. The LCD grid puts 2119 pixels at S ≥ 0.50
+across the frame — more saturated than any real highlighter measured — and
+every one of them is dark (V < 0.55), colour fringing on glyph edges that the
+V cut already excludes. Zero bright saturated speckle.
+
 **C1 HALTs, and C2 is why it stays halted.** `docs/CC-SNAP-BOXES.md` now
 delivers word boxes to the core, so half of C1 is satisfied. The other half —
 pixels — is deliberately not built. CC-SNAP-BOXES F3 specifies the shim but
