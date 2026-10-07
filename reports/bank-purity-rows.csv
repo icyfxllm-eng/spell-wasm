@@ -9474,39 +9474,14 @@ ja,expert,わだかまっ,fragment,A,,
 ja,expert,わめきたて,not_in_reference_dictionary,C,,
 ja,expert,わらえ,not_in_reference_dictionary,C,,
 ja,expert,わらわせろ,not_in_reference_dictionary,C,,
-fil,easy,ama,proper_noun,B,,
-fil,easy,anak,proper_noun,B,,
-fil,easy,asin,proper_noun,B,,
-fil,easy,basa,proper_noun,B,,
-fil,easy,bato,proper_noun,B,,
-fil,easy,bayan,proper_noun,B,,
-fil,easy,bituin,proper_noun,B,,
-fil,easy,diyos,proper_noun,B,,
-fil,easy,hilaga,proper_noun,B,,
 fil,easy,hilahin,not_in_reference_dictionary,C,,
-fil,easy,isa,proper_noun,B,,
-fil,easy,isda,proper_noun,B,,
-fil,easy,isip,proper_noun,B,,
-fil,easy,isla,proper_noun,B,,
 fil,easy,itayo,not_in_reference_dictionary,C,,
-fil,easy,lima,proper_noun,B,,
-fil,easy,liwanag,proper_noun,B,,
-fil,easy,lobo,proper_noun,B,,
-fil,easy,lupa,proper_noun,B,,
-fil,easy,mainit,proper_noun,B,,
-fil,easy,malamig,proper_noun,B,,
-fil,easy,oras,proper_noun,B,,
-fil,easy,pag-asa,proper_noun,B,,
-fil,easy,puno,proper_noun,B,,
-fil,easy,sulat,proper_noun,B,,
-fil,easy,timog,proper_noun,B,,
 fil,medium,aabot,not_in_reference_dictionary,C,,
 fil,medium,abril,proper_noun,B,,
 fil,medium,agosto,proper_noun,B,,
 fil,medium,akdang,linker_attached_form,C,,-ng linker attached
 fil,medium,aking,linker_attached_form,C,,-ng linker attached
-fil,medium,alang,not_in_reference_dictionary,C,,
-fil,medium,aleman,proper_noun,B,,
+fil,medium,alang,linker_attached_form,C,,-ng linker attached
 fil,medium,aming,linker_attached_form,C,,-ng linker attached
 fil,medium,anyong,linker_attached_form,C,,-ng linker attached
 fil,medium,apple,wrong_language_english,A,,
@@ -9515,12 +9490,8 @@ fil,medium,avenue,wrong_language_english,A,,
 fil,medium,award,wrong_language_english,A,,
 fil,medium,awards,wrong_language_english,A,,
 fil,medium,bagong,linker_attached_form,C,,-ng linker attached
-fil,medium,balita,proper_noun,B,,
-fil,medium,banal,proper_noun,B,,
-fil,medium,banta,proper_noun,B,,
 fil,medium,batong,linker_attached_form,C,,-ng linker attached
 fil,medium,bayang,linker_attached_form,C,,-ng linker attached
-fil,medium,bayani,proper_noun,B,,
 fil,medium,baño,wrong_language_other,A,,es
 fil,medium,black,wrong_language_english,A,,
 fil,medium,brown,wrong_language_english,A,,
@@ -9534,8 +9505,6 @@ fil,medium,church,wrong_language_english,A,,
 fil,medium,coach,wrong_language_english,A,,
 fil,medium,county,wrong_language_english,A,,
 fil,medium,daang,linker_attached_form,C,,-ng linker attached
-fil,medium,dagdag,proper_noun,B,,
-fil,medium,dalaga,proper_noun,B,,
 fil,medium,dance,wrong_language_english,A,,
 fil,medium,davao,proper_noun,B,,
 fil,medium,debut,wrong_language_english,A,,
@@ -9554,7 +9523,6 @@ fil,medium,flight,wrong_language_english,A,,
 fil,medium,force,wrong_language_english,A,,
 fil,medium,format,wrong_language_english,A,,
 fil,medium,fossil,wrong_language_english,A,,
-fil,medium,gabay,proper_noun,B,,
 fil,medium,games,wrong_language_english,A,,
 fil,medium,gawang,linker_attached_form,C,,-ng linker attached
 fil,medium,gawing,linker_attached_form,C,,-ng linker attached
@@ -9566,66 +9534,48 @@ fil,medium,golden,wrong_language_english,A,,
 fil,medium,grand,wrong_language_english,A,,
 fil,medium,green,wrong_language_english,A,,
 fil,medium,group,wrong_language_english,A,,
-fil,medium,gubat,proper_noun,B,,
-fil,medium,hapon,proper_noun,B,,
 fil,medium,haring,linker_attached_form,C,,-ng linker attached
 fil,medium,health,wrong_language_english,A,,
-fil,medium,hebreo,proper_noun,B,,
 fil,medium,house,wrong_language_english,A,,
 fil,medium,huling,linker_attached_form,C,,-ng linker attached
 fil,medium,hulyo,proper_noun,B,,
 fil,medium,human,wrong_language_english,A,,
 fil,medium,hunyo,proper_noun,B,,
-fil,medium,ibang,not_in_reference_dictionary,C,,
+fil,medium,ibang,linker_attached_form,C,,-ng linker attached
 fil,medium,ibarra,proper_noun,B,,
 fil,medium,iilang,linker_attached_form,C,,-ng linker attached
 fil,medium,iisang,linker_attached_form,C,,-ng linker attached
 fil,medium,ilabas,not_in_reference_dictionary,C,,
 fil,medium,ilipat,not_in_reference_dictionary,C,,
-fil,medium,ingles,proper_noun,B,,
-fil,medium,intsik,proper_noun,B,,
 fil,medium,isang,proper_noun,B,,
-fil,medium,isdang,not_in_reference_dictionary,C,,
+fil,medium,isdang,linker_attached_form,C,,-ng linker attached
 fil,medium,islam,proper_noun,B,,
 fil,medium,island,wrong_language_english,A,,
 fil,medium,itong,linker_attached_form,C,,-ng linker attached
 fil,medium,james,proper_noun,B,,
-fil,medium,kambal,proper_noun,B,,
 fil,medium,kampo,wrong_language_other,A,,pl
 fil,medium,kampus,wrong_language_other,A,,pl
 fil,medium,kanang,linker_attached_form,C,,-ng linker attached
-fil,medium,kanser,proper_noun,B,,
 fil,medium,kasing,linker_attached_form,C,,-ng linker attached
 fil,medium,kasong,linker_attached_form,C,,-ng linker attached
 fil,medium,kripto,not_in_reference_dictionary,C,,
-fil,medium,kristo,proper_noun,B,,
 fil,medium,label,wrong_language_english,A,,
 fil,medium,laging,linker_attached_form,C,,-ng linker attached
 fil,medium,laguna,proper_noun,B,,
 fil,medium,lahing,linker_attached_form,C,,-ng linker attached
 fil,medium,lalong,linker_attached_form,C,,-ng linker attached
 fil,medium,larong,linker_attached_form,C,,-ng linker attached
-fil,medium,latin,proper_noun,B,,
 fil,medium,league,wrong_language_english,A,,
 fil,medium,libong,linker_attached_form,C,,-ng linker attached
-fil,medium,limang,not_in_reference_dictionary,C,,
+fil,medium,limang,linker_attached_form,C,,-ng linker attached
 fil,medium,linyar,not_in_reference_dictionary,C,,
 fil,medium,little,wrong_language_english,A,,
 fil,medium,lumang,linker_attached_form,C,,-ng linker attached
 fil,medium,lumaon,not_in_reference_dictionary,C,,
-fil,medium,lupang,not_in_reference_dictionary,C,,
-fil,medium,lupon,proper_noun,B,,
+fil,medium,lupang,linker_attached_form,C,,-ng linker attached
 fil,medium,luzon,proper_noun,B,,
 fil,medium,maabot,not_in_reference_dictionary,C,,
-fil,medium,madla,proper_noun,B,,
-fil,medium,makati,proper_noun,B,,
-fil,medium,makita,proper_noun,B,,
-fil,medium,malay,proper_noun,B,,
-fil,medium,malaya,proper_noun,B,,
-fil,medium,malayo,proper_noun,B,,
-fil,medium,maling,not_in_reference_dictionary,C,,
-fil,medium,manalo,proper_noun,B,,
-fil,medium,manila,proper_noun,B,,
+fil,medium,maling,linker_attached_form,C,,-ng linker attached
 fil,medium,marcos,proper_noun,B,,
 fil,medium,maria,proper_noun,B,,
 fil,medium,mario,proper_noun,B,,
@@ -9649,7 +9599,6 @@ fil,medium,nitong,linker_attached_form,C,,-ng linker attached
 fil,medium,niyang,linker_attached_form,C,,-ng linker attached
 fil,medium,niño,wrong_language_other,A,,es
 fil,medium,noong,linker_attached_form,C,,-ng linker attached
-fil,medium,norte,proper_noun,B,,
 fil,medium,north,wrong_language_english,A,,
 fil,medium,number,wrong_language_english,A,,
 fil,medium,office,wrong_language_english,A,,
@@ -9657,16 +9606,11 @@ fil,medium,online,wrong_language_english,A,,
 fil,medium,output,wrong_language_english,A,,
 fil,medium,pagasa,proper_noun,B,,
 fil,medium,pagbuo,not_in_reference_dictionary,C,,
-fil,medium,palad,proper_noun,B,,
 fil,medium,palaro,not_in_reference_dictionary,C,,
-fil,medium,pantig,proper_noun,B,,
 fil,medium,papuri,not_in_reference_dictionary,C,,
-fil,medium,parang,proper_noun,B,,
 fil,medium,paring,linker_attached_form,C,,-ng linker attached
 fil,medium,party,wrong_language_english,A,,
-fil,medium,pasko,proper_noun,B,,
 fil,medium,pataas,not_in_reference_dictionary,C,,
-fil,medium,patron,wrong_language_english,A,,
 fil,medium,pinaka,not_in_reference_dictionary,C,,
 fil,medium,pinili,proper_noun,B,,
 fil,medium,pitong,linker_attached_form,C,,-ng linker attached
@@ -9678,8 +9622,8 @@ fil,medium,press,wrong_language_english,A,,
 fil,medium,prince,wrong_language_english,A,,
 fil,medium,prize,wrong_language_english,A,,
 fil,medium,pulang,linker_attached_form,C,,-ng linker attached
-fil,medium,punong,not_in_reference_dictionary,C,,
-fil,medium,purong,not_in_reference_dictionary,C,,
+fil,medium,punong,linker_attached_form,C,,-ng linker attached
+fil,medium,purong,linker_attached_form,C,,-ng linker attached
 fil,medium,puting,linker_attached_form,C,,-ng linker attached
 fil,medium,queen,wrong_language_english,A,,
 fil,medium,radio,wrong_language_english,A,,
@@ -9689,17 +9633,14 @@ fil,medium,royal,wrong_language_english,A,,
 fil,medium,rural,wrong_language_english,A,,
 fil,medium,saang,linker_attached_form,C,,-ng linker attached
 fil,medium,saint,wrong_language_english,A,,
-fil,medium,santa,proper_noun,B,,
 fil,medium,santos,proper_noun,B,,
 fil,medium,school,wrong_language_english,A,,
 fil,medium,screen,wrong_language_english,A,,
 fil,medium,season,wrong_language_english,A,,
 fil,medium,sektor,wrong_language_other,A,,pl
-fil,medium,senado,proper_noun,B,,
 fil,medium,senso,wrong_language_other,A,,pt
 fil,medium,series,wrong_language_english,A,,
 fil,medium,signal,wrong_language_english,A,,
-fil,medium,silang,proper_noun,B,,
 fil,medium,single,wrong_language_english,A,,
 fil,medium,siyang,linker_attached_form,C,,-ng linker attached
 fil,medium,skolar,not_in_reference_dictionary,C,,
@@ -9718,15 +9659,11 @@ fil,medium,sumuko,not_in_reference_dictionary,C,,
 fil,medium,super,wrong_language_english,A,,
 fil,medium,system,wrong_language_english,A,,
 fil,medium,tamang,linker_attached_form,C,,-ng linker attached
-fil,medium,tanyag,proper_noun,B,,
 fil,medium,temang,linker_attached_form,C,,-ng linker attached
-fil,medium,tipan,proper_noun,B,,
 fil,medium,track,wrong_language_english,A,,
-fil,medium,tsina,proper_noun,B,,
-fil,medium,tubong,not_in_reference_dictionary,C,,
+fil,medium,tubong,linker_attached_form,C,,-ng linker attached
 fil,medium,tulang,linker_attached_form,C,,-ng linker attached
 fil,medium,tumaas,not_in_reference_dictionary,C,,
-fil,medium,tunay,proper_noun,B,,
 fil,medium,umabot,not_in_reference_dictionary,C,,
 fil,medium,umiral,not_in_reference_dictionary,C,,
 fil,medium,unang,linker_attached_form,C,,-ng linker attached
@@ -9757,7 +9694,6 @@ fil,hard,alemanya,proper_noun,B,,
 fil,hard,american,proper_noun,B,,
 fil,hard,andrea,proper_noun,B,,
 fil,hard,andres,proper_noun,B,,
-fil,hard,angat,proper_noun,B,,
 fil,hard,angkang,linker_attached_form,C,,-ng linker attached
 fil,hard,anumang,linker_attached_form,C,,-ng linker attached
 fil,hard,arena,wrong_language_english,A,,
@@ -9777,7 +9713,6 @@ fil,hard,bandang,linker_attached_form,C,,-ng linker attached
 fil,hard,bansang,linker_attached_form,C,,-ng linker attached
 fil,hard,barbie,wrong_language_english,A,,
 fil,hard,barkong,linker_attached_form,C,,-ng linker attached
-fil,hard,baybayin,proper_noun,B,,
 fil,hard,bibliya,proper_noun,B,,
 fil,hard,bihirang,linker_attached_form,C,,-ng linker attached
 fil,hard,bike,wrong_language_english,A,,
@@ -9808,8 +9743,7 @@ fil,hard,council,wrong_language_english,A,,
 fil,hard,country,wrong_language_english,A,,
 fil,hard,covid,wrong_language_other,A,,pl
 fil,hard,cup,wrong_language_english,A,,
-fil,hard,dakila,proper_noun,B,,
-fil,hard,dakilang,not_in_reference_dictionary,C,,
+fil,hard,dakilang,linker_attached_form,C,,-ng linker attached
 fil,hard,dakong,linker_attached_form,C,,-ng linker attached
 fil,hard,dalawang,linker_attached_form,C,,-ng linker attached
 fil,hard,darna,not_in_reference_dictionary,C,,
@@ -9834,8 +9768,6 @@ fil,hard,elias,proper_noun,B,,
 fil,hard,epektong,linker_attached_form,C,,-ng linker attached
 fil,hard,episode,wrong_language_english,A,,
 fil,hard,espanya,proper_noun,B,,
-fil,hard,espanyol,proper_noun,B,,
-fil,hard,espiritu,proper_noun,B,,
 fil,hard,estadong,linker_attached_form,C,,-ng linker attached
 fil,hard,estados,wrong_language_other,A,,es
 fil,hard,estilong,linker_attached_form,C,,-ng linker attached
@@ -9876,7 +9808,6 @@ fil,hard,gintong,linker_attached_form,C,,-ng linker attached
 fil,hard,gitnang,linker_attached_form,C,,-ng linker attached
 fil,hard,got,wrong_language_english,A,,
 fil,hard,graduate,wrong_language_english,A,,
-fil,hard,griyego,proper_noun,B,,
 fil,hard,grupong,linker_attached_form,C,,-ng linker attached
 fil,hard,guard,wrong_language_english,A,,
 fil,hard,gumana,not_in_reference_dictionary,C,,
@@ -9887,12 +9818,11 @@ fil,hard,halagang,linker_attached_form,C,,-ng linker attached
 fil,hard,halalang,linker_attached_form,C,,-ng linker attached
 fil,hard,halamang,linker_attached_form,C,,-ng linker attached
 fil,hard,halatang,linker_attached_form,C,,-ng linker attached
-fil,hard,halimaw,proper_noun,B,,
 fil,hard,hangang,linker_attached_form,C,,-ng linker attached
 fil,hard,hard,wrong_language_english,A,,
 fil,hard,harry,wrong_language_english,A,,
 fil,hard,has,wrong_language_english,A,,
-fil,hard,hilagang,not_in_reference_dictionary,C,,
+fil,hard,hilagang,linker_attached_form,C,,-ng linker attached
 fil,hard,him,wrong_language_english,A,,
 fil,hard,hinango,not_in_reference_dictionary,C,,
 fil,hard,hiniling,not_in_reference_dictionary,C,,
@@ -9918,7 +9848,6 @@ fil,hard,into,wrong_language_english,A,,
 fil,hard,ipasa,not_in_reference_dictionary,C,,
 fil,hard,ipinagkaloob,not_in_reference_dictionary,C,,
 fil,hard,isahang,linker_attached_form,C,,-ng linker attached
-fil,hard,italyano,proper_noun,B,,
 fil,hard,itinakda,not_in_reference_dictionary,C,,
 fil,hard,itinayo,not_in_reference_dictionary,C,,
 fil,hard,its,wrong_language_english,A,,
@@ -9936,22 +9865,17 @@ fil,hard,kaakibat,not_in_reference_dictionary,C,,
 fil,hard,kabilang,linker_attached_form,C,,-ng linker attached
 fil,hard,kabuuang,linker_attached_form,C,,-ng linker attached
 fil,hard,kalapit,not_in_reference_dictionary,C,,
-fil,hard,kalinga,proper_noun,B,,
 fil,hard,kaliwang,linker_attached_form,C,,-ng linker attached
-fil,hard,kambing,proper_noun,B,,
 fil,hard,kanilang,linker_attached_form,C,,-ng linker attached
 fil,hard,kaniyang,linker_attached_form,C,,-ng linker attached
-fil,hard,kanluran,proper_noun,B,,
 fil,hard,kantang,linker_attached_form,C,,-ng linker attached
 fil,hard,kanyang,linker_attached_form,C,,-ng linker attached
 fil,hard,kasabay,not_in_reference_dictionary,C,,
 fil,hard,kasamang,linker_attached_form,C,,-ng linker attached
-fil,hard,kastila,proper_noun,B,,
 fil,hard,kasunod,not_in_reference_dictionary,C,,
 fil,hard,katagang,linker_attached_form,C,,-ng linker attached
 fil,hard,katotohanang,linker_attached_form,C,,-ng linker attached
 fil,hard,kaugnay,not_in_reference_dictionary,C,,
-fil,hard,kaunlaran,proper_noun,B,,
 fil,hard,kaunting,linker_attached_form,C,,-ng linker attached
 fil,hard,kawalang,linker_attached_form,C,,-ng linker attached
 fil,hard,kilalang,linker_attached_form,C,,-ng linker attached
@@ -9963,7 +9887,6 @@ fil,hard,kinilala,not_in_reference_dictionary,C,,
 fil,hard,kiss,wrong_language_english,A,,
 fil,hard,klimang,linker_attached_form,C,,-ng linker attached
 fil,hard,kondado,not_in_reference_dictionary,C,,
-fil,hard,kongreso,proper_noun,B,,
 fil,hard,kontrol,not_in_reference_dictionary,C,,
 fil,hard,kris,proper_noun,B,,
 fil,hard,ku,wrong_language_other,A,,pl
@@ -9972,17 +9895,14 @@ fil,hard,kumpara,not_in_reference_dictionary,C,,
 fil,hard,kuponan,not_in_reference_dictionary,C,,
 fil,hard,kursong,linker_attached_form,C,,-ng linker attached
 fil,hard,kusang,linker_attached_form,C,,-ng linker attached
-fil,hard,labasan,proper_noun,B,,
 fil,hard,lalakeng,linker_attached_form,C,,-ng linker attached
 fil,hard,lalaking,linker_attached_form,C,,-ng linker attached
-fil,hard,langgam,proper_noun,B,,
 fil,hard,larawang,linker_attached_form,C,,-ng linker attached
 fil,hard,layuning,linker_attached_form,C,,-ng linker attached
 fil,hard,lee,wrong_language_english,A,,
 fil,hard,let,wrong_language_english,A,,
 fil,hard,letter,wrong_language_english,A,,
 fil,hard,libreng,linker_attached_form,C,,-ng linker attached
-fil,hard,ligaya,proper_noun,B,,
 fil,hard,lim,proper_noun,B,,
 fil,hard,linggong,linker_attached_form,C,,-ng linker attached
 fil,hard,linyang,linker_attached_form,C,,-ng linker attached
@@ -10002,7 +9922,6 @@ fil,hard,mababang,linker_attached_form,C,,-ng linker attached
 fil,hard,mabawasan,not_in_reference_dictionary,C,,
 fil,hard,mabuting,linker_attached_form,C,,-ng linker attached
 fil,hard,madaling,linker_attached_form,C,,-ng linker attached
-fil,hard,magaling,proper_noun,B,,
 fil,hard,magasin,wrong_language_other,A,,fr
 fil,hard,magazine,wrong_language_english,A,,
 fil,hard,magkaiba,not_in_reference_dictionary,C,,
@@ -10015,10 +9934,8 @@ fil,hard,maikling,linker_attached_form,C,,-ng linker attached
 fil,hard,maiwasan,not_in_reference_dictionary,C,,
 fil,hard,makamit,not_in_reference_dictionary,C,,
 fil,hard,makapaniwala,not_in_reference_dictionary,C,,
-fil,hard,makilala,proper_noun,B,,
 fil,hard,malaking,linker_attached_form,C,,-ng linker attached
-fil,hard,malapit,proper_noun,B,,
-fil,hard,malayang,not_in_reference_dictionary,C,,
+fil,hard,malayang,linker_attached_form,C,,-ng linker attached
 fil,hard,malaysia,proper_noun,B,,
 fil,hard,manager,wrong_language_english,A,,
 fil,hard,manny,proper_noun,B,,
@@ -10029,7 +9946,6 @@ fil,hard,maraming,linker_attached_form,C,,-ng linker attached
 fil,hard,mary,proper_noun,B,,
 fil,hard,masamang,linker_attached_form,C,,-ng linker attached
 fil,hard,masasabing,linker_attached_form,C,,-ng linker attached
-fil,hard,matatag,proper_noun,B,,
 fil,hard,matukoy,not_in_reference_dictionary,C,,
 fil,hard,matupad,not_in_reference_dictionary,C,,
 fil,hard,maunawaan,not_in_reference_dictionary,C,,
@@ -10078,7 +9994,6 @@ fil,hard,naitala,not_in_reference_dictionary,C,,
 fil,hard,naitatag,not_in_reference_dictionary,C,,
 fil,hard,naiulat,not_in_reference_dictionary,C,,
 fil,hard,nakabase,not_in_reference_dictionary,C,,
-fil,hard,nakagawa,proper_noun,B,,
 fil,hard,nakaharap,not_in_reference_dictionary,C,,
 fil,hard,nakakalungkot,not_in_reference_dictionary,C,,
 fil,hard,nakamit,not_in_reference_dictionary,C,,
@@ -10131,7 +10046,6 @@ fil,hard,paggawa,not_in_reference_dictionary,C,,
 fil,hard,paghahatid,not_in_reference_dictionary,C,,
 fil,hard,paghinga,not_in_reference_dictionary,C,,
 fil,hard,pagiging,not_in_reference_dictionary,C,,
-fil,hard,pagitan,proper_noun,B,,
 fil,hard,pagkaing,linker_attached_form,C,,-ng linker attached
 fil,hard,pagkilos,not_in_reference_dictionary,C,,
 fil,hard,pagkuha,not_in_reference_dictionary,C,,
@@ -10154,7 +10068,6 @@ fil,hard,pagsapit,not_in_reference_dictionary,C,,
 fil,hard,pagsubok,not_in_reference_dictionary,C,,
 fil,hard,pagtakbo,not_in_reference_dictionary,C,,
 fil,hard,pagtukoy,not_in_reference_dictionary,C,,
-fil,hard,pahayag,proper_noun,B,,
 fil,hard,paksang,linker_attached_form,C,,-ng linker attached
 fil,hard,palaging,linker_attached_form,C,,-ng linker attached
 fil,hard,palarong,linker_attached_form,C,,-ng linker attached
@@ -10179,7 +10092,6 @@ fil,hard,paunang,not_in_reference_dictionary,C,,
 fil,hard,pebrero,proper_noun,B,,
 fil,hard,perpektong,linker_attached_form,C,,-ng linker attached
 fil,hard,pigilan,not_in_reference_dictionary,C,,
-fil,hard,pilipino,proper_noun,B,,
 fil,hard,pina,wrong_language_other,A,,es
 fil,hard,pinayagan,not_in_reference_dictionary,C,,
 fil,hard,pinunong,linker_attached_form,C,,-ng linker attached
@@ -10189,7 +10101,6 @@ fil,hard,planong,linker_attached_form,C,,-ng linker attached
 fil,hard,platform,wrong_language_english,A,,
 fil,hard,portal,wrong_language_english,A,,
 fil,hard,posts,wrong_language_english,A,,
-fil,hard,pranses,proper_noun,B,,
 fil,hard,present,wrong_language_english,A,,
 fil,hard,presidential,wrong_language_english,A,,
 fil,hard,producer,wrong_language_english,A,,
@@ -10241,7 +10152,6 @@ fil,hard,seryeng,linker_attached_form,C,,-ng linker attached
 fil,hard,seryosong,linker_attached_form,C,,-ng linker attached
 fil,hard,shine,wrong_language_english,A,,
 fil,hard,shoot,wrong_language_english,A,,
-fil,hard,silangan,proper_noun,B,,
 fil,hard,simpleng,linker_attached_form,C,,-ng linker attached
 fil,hard,sinabing,linker_attached_form,C,,-ng linker attached
 fil,hard,sinakop,not_in_reference_dictionary,C,,
@@ -10258,10 +10168,7 @@ fil,hard,store,wrong_language_english,A,,
 fil,hard,sugatan,not_in_reference_dictionary,C,,
 fil,hard,sumigaw,not_in_reference_dictionary,C,,
 fil,hard,tagagawa,not_in_reference_dictionary,C,,
-fil,hard,tagalog,proper_noun,B,,
-fil,hard,tagumpay,proper_noun,B,,
 fil,hard,talagang,linker_attached_form,C,,-ng linker attached
-fil,hard,talento,proper_noun,B,,
 fil,hard,tanghalan,not_in_reference_dictionary,C,,
 fil,hard,tanging,linker_attached_form,C,,-ng linker attached
 fil,hard,target,wrong_language_english,A,,
@@ -10269,7 +10176,6 @@ fil,hard,tatlong,linker_attached_form,C,,-ng linker attached
 fil,hard,tauhang,linker_attached_form,C,,-ng linker attached
 fil,hard,taunang,linker_attached_form,C,,-ng linker attached
 fil,hard,tawagin,not_in_reference_dictionary,C,,
-fil,hard,te,proper_noun,B,,
 fil,hard,teknikal,not_in_reference_dictionary,C,,
 fil,hard,tekstong,linker_attached_form,C,,-ng linker attached
 fil,hard,thailand,proper_noun,B,,
@@ -10329,7 +10235,6 @@ fil,expert,aircon,not_in_reference_dictionary,C,,
 fil,expert,airline,wrong_language_english,A,,
 fil,expert,akademikong,linker_attached_form,C,,-ng linker attached
 fil,expert,akoy,not_in_reference_dictionary,C,,
-fil,expert,albay,proper_noun,B,,
 fil,expert,aldub,not_in_reference_dictionary,C,,
 fil,expert,alexander,proper_noun,B,,
 fil,expert,alfred,proper_noun,B,,
@@ -10342,7 +10247,6 @@ fil,expert,alternatibong,linker_attached_form,C,,-ng linker attached
 fil,expert,amanda,proper_noun,B,,
 fil,expert,amazing,wrong_language_english,A,,
 fil,expert,amerikanong,linker_attached_form,C,,-ng linker attached
-fil,expert,amihan,proper_noun,B,,
 fil,expert,amy,proper_noun,B,,
 fil,expert,anderson,proper_noun,B,,
 fil,expert,andy,proper_noun,B,,
@@ -10379,12 +10283,9 @@ fil,expert,awtomatikong,linker_attached_form,C,,-ng linker attached
 fil,expert,ayunan,wrong_language_other,A,,es
 fil,expert,babaing,linker_attached_form,C,,-ng linker attached
 fil,expert,bags,wrong_language_english,A,,
-fil,expert,bahaghari,proper_noun,B,,
 fil,expert,bahagyang,linker_attached_form,C,,-ng linker attached
-fil,expert,balagtas,proper_noun,B,,
 fil,expert,banana,wrong_language_english,A,,
 fil,expert,bangsamoro,not_in_reference_dictionary,C,,
-fil,expert,bantayan,proper_noun,B,,
 fil,expert,banyagang,linker_attached_form,C,,-ng linker attached
 fil,expert,basketball,wrong_language_english,A,,
 fil,expert,bayaning,linker_attached_form,C,,-ng linker attached
@@ -10393,7 +10294,6 @@ fil,expert,beautiful,wrong_language_english,A,,
 fil,expert,beijing,proper_noun,B,,
 fil,expert,believe,wrong_language_english,A,,
 fil,expert,benigno,proper_noun,B,,
-fil,expert,bihasa,proper_noun,B,,
 fil,expert,billboard,wrong_language_other,A,,pl
 fil,expert,binibigkas,not_in_reference_dictionary,C,,
 fil,expert,biology,wrong_language_english,A,,
@@ -10411,8 +10311,6 @@ fil,expert,broadway,proper_noun,B,,
 fil,expert,bryan,proper_noun,B,,
 fil,expert,bubble,wrong_language_english,A,,
 fil,expert,buddy,wrong_language_english,A,,
-fil,expert,bugtong,proper_noun,B,,
-fil,expert,bula,proper_noun,B,,
 fil,expert,cam,wrong_language_english,A,,
 fil,expert,candy,wrong_language_english,A,,
 fil,expert,caption,wrong_language_english,A,,
@@ -10451,9 +10349,7 @@ fil,expert,cultural,wrong_language_english,A,,
 fil,expert,culture,wrong_language_english,A,,
 fil,expert,curtis,proper_noun,B,,
 fil,expert,customer,wrong_language_english,A,,
-fil,expert,dalangin,proper_noun,B,,
-fil,expert,dalawampung,not_in_reference_dictionary,C,,
-fil,expert,dale,wrong_language_english,A,,
+fil,expert,dalawampung,linker_attached_form,C,,-ng linker attached
 fil,expert,damang,linker_attached_form,C,,-ng linker attached
 fil,expert,damdaming,linker_attached_form,C,,-ng linker attached
 fil,expert,dancer,wrong_language_english,A,,
@@ -10562,14 +10458,13 @@ fil,expert,gov,wrong_language_english,A,,
 fil,expert,gown,wrong_language_english,A,,
 fil,expert,graduation,wrong_language_english,A,,
 fil,expert,graham,wrong_language_english,A,,
-fil,expert,griyegong,not_in_reference_dictionary,C,,
+fil,expert,griyegong,linker_attached_form,C,,-ng linker attached
 fil,expert,ground,wrong_language_english,A,,
 fil,expert,guam,proper_noun,B,,
 fil,expert,gugustuhin,not_in_reference_dictionary,C,,
 fil,expert,guilty,wrong_language_english,A,,
 fil,expert,gumaan,not_in_reference_dictionary,C,,
 fil,expert,had,wrong_language_english,A,,
-fil,expert,halimbawa,proper_noun,B,,
 fil,expert,hands,wrong_language_english,A,,
 fil,expert,hangganang,linker_attached_form,C,,-ng linker attached
 fil,expert,hanging,wrong_language_english,A,,
@@ -10670,8 +10565,7 @@ fil,expert,joyce,proper_noun,B,,
 fil,expert,judy,proper_noun,B,,
 fil,expert,junior,wrong_language_english,A,,
 fil,expert,kaalamang,linker_attached_form,C,,-ng linker attached
-fil,expert,kababaihan,proper_noun,B,,
-fil,expert,kababaihang,not_in_reference_dictionary,C,,
+fil,expert,kababaihang,linker_attached_form,C,,-ng linker attached
 fil,expert,kabaitan,not_in_reference_dictionary,C,,
 fil,expert,kabilis,not_in_reference_dictionary,C,,
 fil,expert,kabundukan,not_in_reference_dictionary,C,,
@@ -10684,8 +10578,7 @@ fil,expert,kag,abbreviation_or_noise,A,,
 fil,expert,kagalang,not_in_reference_dictionary,C,,
 fil,expert,kagamitang,linker_attached_form,C,,-ng linker attached
 fil,expert,kahilingan,not_in_reference_dictionary,C,,
-fil,expert,kahulugan,proper_noun,B,,
-fil,expert,kahulugang,not_in_reference_dictionary,C,,
+fil,expert,kahulugang,linker_attached_form,C,,-ng linker attached
 fil,expert,kailangang,linker_attached_form,C,,-ng linker attached
 fil,expert,kakaibang,linker_attached_form,C,,-ng linker attached
 fil,expert,kakayahang,linker_attached_form,C,,-ng linker attached
@@ -10696,17 +10589,14 @@ fil,expert,kalakhang,linker_attached_form,C,,-ng linker attached
 fil,expert,kalaunang,linker_attached_form,C,,-ng linker attached
 fil,expert,kalayaang,linker_attached_form,C,,-ng linker attached
 fil,expert,kalendaryong,linker_attached_form,C,,-ng linker attached
-fil,expert,kaligayahan,proper_noun,B,,
 fil,expert,kaligtasan,not_in_reference_dictionary,C,,
 fil,expert,kalimitang,not_in_reference_dictionary,C,,
 fil,expert,kalipunan,not_in_reference_dictionary,C,,
-fil,expert,kalusugan,proper_noun,B,,
 fil,expert,kamakailang,linker_attached_form,C,,-ng linker attached
 fil,expert,kamangha,not_in_reference_dictionary,C,,
-fil,expert,kamatayan,proper_noun,B,,
 fil,expert,kan,proper_noun,B,,
 fil,expert,kani-kanilang,wrong_language_other,A,,es
-fil,expert,kanlurang,not_in_reference_dictionary,C,,
+fil,expert,kanlurang,linker_attached_form,C,,-ng linker attached
 fil,expert,kapaligiran,not_in_reference_dictionary,C,,
 fil,expert,kapangyarihang,linker_attached_form,C,,-ng linker attached
 fil,expert,kapantay,not_in_reference_dictionary,C,,
@@ -10719,7 +10609,6 @@ fil,expert,karagdagang,linker_attached_form,C,,-ng linker attached
 fil,expert,karamdaman,not_in_reference_dictionary,C,,
 fil,expert,karaniwang,linker_attached_form,C,,-ng linker attached
 fil,expert,karapatang,linker_attached_form,C,,-ng linker attached
-fil,expert,karunungan,proper_noun,B,,
 fil,expert,kasagsagan,not_in_reference_dictionary,C,,
 fil,expert,kasagutan,not_in_reference_dictionary,C,,
 fil,expert,kasalanang,linker_attached_form,C,,-ng linker attached
@@ -10728,7 +10617,7 @@ fil,expert,kasanayan,not_in_reference_dictionary,C,,
 fil,expert,kasangkapan,not_in_reference_dictionary,C,,
 fil,expert,kasangkapang,not_in_reference_dictionary,C,,
 fil,expert,kasangkot,not_in_reference_dictionary,C,,
-fil,expert,kastilang,not_in_reference_dictionary,C,,
+fil,expert,kastilang,linker_attached_form,C,,-ng linker attached
 fil,expert,kasunduang,linker_attached_form,C,,-ng linker attached
 fil,expert,katamtamang,not_in_reference_dictionary,C,,
 fil,expert,katangi,not_in_reference_dictionary,C,,
@@ -10739,7 +10628,6 @@ fil,expert,katawagan,not_in_reference_dictionary,C,,
 fil,expert,katawagang,not_in_reference_dictionary,C,,
 fil,expert,katayuang,linker_attached_form,C,,-ng linker attached
 fil,expert,katimugang,not_in_reference_dictionary,C,,
-fil,expert,katipunan,proper_noun,B,,
 fil,expert,katolikong,linker_attached_form,C,,-ng linker attached
 fil,expert,katutubong,linker_attached_form,C,,-ng linker attached
 fil,expert,kaugalian,not_in_reference_dictionary,C,,
@@ -10765,8 +10653,7 @@ fil,expert,komersyal,not_in_reference_dictionary,C,,
 fil,expert,kompanyang,linker_attached_form,C,,-ng linker attached
 fil,expert,konseptong,linker_attached_form,C,,-ng linker attached
 fil,expert,kontrolado,not_in_reference_dictionary,C,,
-fil,expert,koreano,proper_noun,B,,
-fil,expert,koreanong,not_in_reference_dictionary,C,,
+fil,expert,koreanong,linker_attached_form,C,,-ng linker attached
 fil,expert,kristine,proper_noun,B,,
 fil,expert,kulturang,linker_attached_form,C,,-ng linker attached
 fil,expert,kumpanyang,linker_attached_form,C,,-ng linker attached
@@ -10778,9 +10665,6 @@ fil,expert,kyle,proper_noun,B,,
 fil,expert,labindalawang,linker_attached_form,C,,-ng linker attached
 fil,expert,laboratory,wrong_language_english,A,,
 fil,expert,lake,wrong_language_english,A,,
-fil,expert,lansangan,proper_noun,B,,
-fil,expert,laos,proper_noun,B,,
-fil,expert,lapitan,proper_noun,B,,
 fil,expert,lapu,not_in_reference_dictionary,C,,
 fil,expert,larangang,linker_attached_form,C,,-ng linker attached
 fil,expert,laser,wrong_language_english,A,,
@@ -10801,8 +10685,6 @@ fil,expert,lily,wrong_language_english,A,,
 fil,expert,limitadong,linker_attached_form,C,,-ng linker attached
 fil,expert,lines,wrong_language_english,A,,
 fil,expert,lino,wrong_language_other,A,,es
-fil,expert,lipa,proper_noun,B,,
-fil,expert,liwayway,proper_noun,B,,
 fil,expert,location,wrong_language_english,A,,
 fil,expert,lot,wrong_language_english,A,,
 fil,expert,lower,wrong_language_english,A,,
@@ -10823,7 +10705,6 @@ fil,expert,magkasama,not_in_reference_dictionary,C,,
 fil,expert,magkatulad,not_in_reference_dictionary,C,,
 fil,expert,magkikita,not_in_reference_dictionary,C,,
 fil,expert,magnetic,wrong_language_english,A,,
-fil,expert,magsisi,proper_noun,B,,
 fil,expert,mahahalagang,not_in_reference_dictionary,C,,
 fil,expert,mahalagang,linker_attached_form,C,,-ng linker attached
 fil,expert,mail,wrong_language_english,A,,
@@ -10847,7 +10728,6 @@ fil,expert,malalang,linker_attached_form,C,,-ng linker attached
 fil,expert,malawakang,linker_attached_form,C,,-ng linker attached
 fil,expert,malikhaing,linker_attached_form,C,,-ng linker attached
 fil,expert,malilimutan,not_in_reference_dictionary,C,,
-fil,expert,maliwanag,proper_noun,B,,
 fil,expert,malolos,proper_noun,B,,
 fil,expert,malubhang,linker_attached_form,C,,-ng linker attached
 fil,expert,mananatiling,linker_attached_form,C,,-ng linker attached
@@ -10892,7 +10772,6 @@ fil,expert,milan,proper_noun,B,,
 fil,expert,mine,wrong_language_english,A,,
 fil,expert,minimum,wrong_language_english,A,,
 fil,expert,minister,wrong_language_english,A,,
-fil,expert,mirasol,proper_noun,B,,
 fil,expert,mission,wrong_language_english,A,,
 fil,expert,modernong,linker_attached_form,C,,-ng linker attached
 fil,expert,moment,wrong_language_english,A,,
@@ -11100,7 +10979,6 @@ fil,expert,pakikinig,not_in_reference_dictionary,C,,
 fil,expert,pakikipaglaban,not_in_reference_dictionary,C,,
 fil,expert,palayain,not_in_reference_dictionary,C,,
 fil,expert,palayo,not_in_reference_dictionary,C,,
-fil,expert,paligsahan,proper_noun,B,,
 fil,expert,pamahalaang,linker_attached_form,C,,-ng linker attached
 fil,expert,pamamaraan,not_in_reference_dictionary,C,,
 fil,expert,pamamaraang,not_in_reference_dictionary,C,,
@@ -11122,12 +11000,9 @@ fil,expert,pangalang,linker_attached_form,C,,-ng linker attached
 fil,expert,pangalawang,linker_attached_form,C,,-ng linker attached
 fil,expert,pangangalakal,not_in_reference_dictionary,C,,
 fil,expert,panganganak,not_in_reference_dictionary,C,,
-fil,expert,panganiban,proper_noun,B,,
 fil,expert,pangasiwaan,not_in_reference_dictionary,C,,
 fil,expert,pangatlong,not_in_reference_dictionary,C,,
-fil,expert,pangilinan,proper_noun,B,,
 fil,expert,pangingisda,not_in_reference_dictionary,C,,
-fil,expert,panginoon,proper_noun,B,,
 fil,expert,pangkalahatang,linker_attached_form,C,,-ng linker attached
 fil,expert,pangkalusugan,not_in_reference_dictionary,C,,
 fil,expert,pangkapayapaan,not_in_reference_dictionary,C,,
@@ -11154,7 +11029,6 @@ fil,expert,partidong,linker_attached_form,C,,-ng linker attached
 fil,expert,partikular,wrong_language_other,A,,de
 fil,expert,partikulo,not_in_reference_dictionary,C,,
 fil,expert,parusang,linker_attached_form,C,,-ng linker attached
-fil,expert,pasipiko,proper_noun,B,,
 fil,expert,patakarang,linker_attached_form,C,,-ng linker attached
 fil,expert,patayan,not_in_reference_dictionary,C,,
 fil,expert,patimpalak,not_in_reference_dictionary,C,,
@@ -11175,7 +11049,7 @@ fil,expert,phil,proper_noun,B,,
 fil,expert,physical,wrong_language_english,A,,
 fil,expert,piece,wrong_language_english,A,,
 fil,expert,pilipinas,proper_noun,B,,
-fil,expert,pilipinong,not_in_reference_dictionary,C,,
+fil,expert,pilipinong,linker_attached_form,C,,-ng linker attached
 fil,expert,pilot,wrong_language_english,A,,
 fil,expert,pinagbibidahan,not_in_reference_dictionary,C,,
 fil,expert,pinaghalong,not_in_reference_dictionary,C,,
@@ -11211,7 +11085,6 @@ fil,expert,planet,wrong_language_english,A,,
 fil,expert,planetang,linker_attached_form,C,,-ng linker attached
 fil,expert,plate,wrong_language_english,A,,
 fil,expert,plot,wrong_language_english,A,,
-fil,expert,pokemon,proper_noun,B,,
 fil,expert,pokus,wrong_language_other,A,,pl
 fil,expert,pope,wrong_language_english,A,,
 fil,expert,populasyong,linker_attached_form,C,,-ng linker attached
@@ -11236,10 +11109,8 @@ fil,expert,pumipigil,not_in_reference_dictionary,C,,
 fil,expert,purpose,wrong_language_english,A,,
 fil,expert,putang,linker_attached_form,C,,-ng linker attached
 fil,expert,puwersang,linker_attached_form,C,,-ng linker attached
-fil,expert,puyat,proper_noun,B,,
 fil,expert,quarterback,wrong_language_english,A,,
 fil,expert,questions,wrong_language_english,A,,
-fil,expert,quiapo,proper_noun,B,,
 fil,expert,quote,wrong_language_english,A,,
 fil,expert,race,wrong_language_english,A,,
 fil,expert,rain,wrong_language_english,A,,
@@ -11280,7 +11151,6 @@ fil,expert,samantalang,linker_attached_form,C,,-ng linker attached
 fil,expert,samson,proper_noun,B,,
 fil,expert,sanchez,proper_noun,B,,
 fil,expert,sandaling,linker_attached_form,C,,-ng linker attached
-fil,expert,sara,proper_noun,B,,
 fil,expert,sari-saring,linker_attached_form,C,,-ng linker attached
 fil,expert,sasakyang,linker_attached_form,C,,-ng linker attached
 fil,expert,satanas,proper_noun,B,,
@@ -11297,7 +11167,7 @@ fil,expert,shell,wrong_language_english,A,,
 fil,expert,shoes,wrong_language_english,A,,
 fil,expert,sigurong,linker_attached_form,C,,-ng linker attached
 fil,expert,sikolohikal,not_in_reference_dictionary,C,,
-fil,expert,silangang,not_in_reference_dictionary,C,,
+fil,expert,silangang,linker_attached_form,C,,-ng linker attached
 fil,expert,silent,wrong_language_english,A,,
 fil,expert,silver,wrong_language_english,A,,
 fil,expert,simbahang,linker_attached_form,C,,-ng linker attached
@@ -11352,7 +11222,6 @@ fil,expert,tagapagtatag,not_in_reference_dictionary,C,,
 fil,expert,tambalang,linker_attached_form,C,,-ng linker attached
 fil,expert,tandem,wrong_language_english,A,,
 fil,expert,tangere,wrong_language_other,A,,pl
-fil,expert,tarlac,proper_noun,B,,
 fil,expert,tatagal,not_in_reference_dictionary,C,,
 fil,expert,tatawagin,not_in_reference_dictionary,C,,
 fil,expert,tattoo,wrong_language_english,A,,
@@ -11388,7 +11257,6 @@ fil,expert,translation,wrong_language_english,A,,
 fil,expert,transport,wrong_language_english,A,,
 fil,expert,trend,wrong_language_english,A,,
 fil,expert,trial,wrong_language_english,A,,
-fil,expert,trinidad,proper_noun,B,,
 fil,expert,tropang,linker_attached_form,C,,-ng linker attached
 fil,expert,tu,proper_noun,B,,
 fil,expert,tuition,wrong_language_english,A,,
@@ -11410,7 +11278,6 @@ fil,expert,updated,wrong_language_english,A,,
 fil,expert,usaping,linker_attached_form,C,,-ng linker attached
 fil,expert,use,wrong_language_english,A,,
 fil,expert,uuri,not_in_reference_dictionary,C,,
-fil,expert,uy,proper_noun,B,,
 fil,expert,valenzuela,proper_noun,B,,
 fil,expert,value,wrong_language_english,A,,
 fil,expert,vegas,proper_noun,B,,

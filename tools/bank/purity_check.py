@@ -353,7 +353,7 @@ def load_kaikki():
             fw = f.get("form", "")
             if fw and " " not in fw and d.get("pos") != "name":
                 lower.add(fw.lower())
-    return lower - names, names
+    return lower, names
 
 def classify_fil(rows):
     words = sorted({w for _, w in rows})

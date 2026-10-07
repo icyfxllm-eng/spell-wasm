@@ -1,0 +1,70 @@
+consumer,lang,entries,to_quarantine,to_respell,to_recapitalise
+def_pools,en,2706,5,0,0
+practice,en,29,0,0,0
+def_pools,es,4813,60,3,0
+gloss,es,296,0,0,0
+practice,es,29,0,0,0
+def_pools,fr,4518,35,2,0
+gloss,fr,297,0,0,0
+practice,fr,29,0,0,0
+def_pools,de,3785,14,25,55
+gloss,de,299,0,0,109
+practice,de,29,0,0,0
+def_pools,pt,4572,63,0,0
+gloss,pt,297,0,0,0
+practice,pt,29,0,0,0
+def_pools,pl,3825,3,0,0
+gloss,pl,298,0,0,0
+practice,pl,29,0,0,0
+def_pools,ko,2315,205,0,0
+gloss,ko,292,1,0,0
+practice,ko,29,0,0,0
+def_pools,ja,1010,74,0,0
+gloss,ja,269,11,0,0
+practice,ja,29,0,0,0
+def_pools,fil,1834,1,0,0
+gloss,fil,285,0,0,0
+practice,fil,29,0,0,0
+def_pools,zh,916,0,0,0
+gloss,zh,296,0,0,0
+practice,zh,29,0,0,0
+def_pools,ru,5195,13,0,0
+gloss,ru,295,0,0,0
+practice,ru,29,0,0,0
+def_pools,ar,2274,43,0,0
+gloss,ar,297,2,0,0
+practice,ar,29,1,0,0
+def_pools,hi,1408,15,0,0
+gloss,hi,295,1,0,0
+practice,hi,29,0,0,0
+def_pools,sw,1746,3,0,0
+gloss,sw,280,0,0,0
+practice,sw,29,0,0,0
+audio_verdicts,de,60,1,1,14
+audio_verdicts,en,3165,7,0,0
+audio_verdicts,fil,60,7,0,0
+audio_verdicts,hi,60,12,0,0
+audio_verdicts,ko,60,26,0,0
+audio_verdicts,ru,60,0,0,0
+ru_stress_data.rs,ru,973,1,0,0
+human_audio:assets/human-audio/en/bundle.json,en,1205,0,0,0
+human_audio:assets/human-audio/en/verdicts.json,en,1966,0,0,0
+zh-sandhi-audit.json,zh,0,0,0,0
+zh-polyphone-set.json,zh,41,0,0,0
+zh-loopback-result.json,zh,53,0,0,0
+zh-tone-probe-words.json,zh,30,0,0,0
+zh-tone-probe-result.json,zh,8,0,0,0
+word_id_changes (ghosts/decks/daily key by id),en,3165,7,0,0
+word_id_changes (ghosts/decks/daily key by id),es,6099,466,23,0
+word_id_changes (ghosts/decks/daily key by id),fr,6109,565,8,0
+word_id_changes (ghosts/decks/daily key by id),de,6148,282,39,1824
+word_id_changes (ghosts/decks/daily key by id),pt,6110,585,10,0
+word_id_changes (ghosts/decks/daily key by id),pl,6176,282,29,0
+word_id_changes (ghosts/decks/daily key by id),ko,6233,3337,0,0
+word_id_changes (ghosts/decks/daily key by id),ja,6160,1093,0,0
+word_id_changes (ghosts/decks/daily key by id),fil,4083,858,0,0
+word_id_changes (ghosts/decks/daily key by id),zh,6181,0,3,0
+word_id_changes (ghosts/decks/daily key by id),ru,6208,208,0,0
+word_id_changes (ghosts/decks/daily key by id),ar,6238,735,0,0
+word_id_changes (ghosts/decks/daily key by id),hi,2674,579,0,0
+word_id_changes (ghosts/decks/daily key by id),sw,2845,122,0,0

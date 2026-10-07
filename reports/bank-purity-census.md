@@ -7,11 +7,11 @@ Run 2026-10-07 on `origin/main` da040556. Tooling: `tools/bank/purity_check.py` 
 |---|---|
 | C1 recompute | **HALT** (5 languages beyond 5%), see below |
 | C2 dictionary registry | done, one source weaker than the spec assumed |
-| C3 consumers | not started |
+| C3 consumers | done (provisional on C1) |
 | C4 pool gates | not started (needs C1 resolved) |
-| C5 Jr paths | not started |
+| C5 Jr paths | done, report only |
 | C6 profanity sheet | done |
-| C7 residual proper nouns | not started |
+| C7 residual proper nouns | blocked on a decision: needs about 6 GB of Wiktionary extracts |
 | C8 completeness conflict | not started |
 
 ## C1 — recompute vs the evidence run
@@ -32,7 +32,7 @@ The row-level evidence CSV exists only in chat. The comparison below is therefor
 | pl | 282 | 293 | −3.8% | |
 | ko | 3,337 | 3,337 | 0.0% | |
 | **ja** | 1,093 | 679 | **+61.0%** | HALT |
-| **fil** | 991 | 755 | **+31.3%** | HALT |
+| **fil** | 858 | 755 | **+13.6%** | HALT (was +31% before a bug fix: words that are also surnames were being dropped from the headword set) |
 | **zh** | 0 | 1 | n/a | 3 traditional rows found; evidence has 2 (`藉由`, `藉口`) |
 | ru | 208 | 216 | −3.7% | |
 | **ar** | 735 | 689 | **+6.7%** | HALT |
@@ -46,7 +46,7 @@ Bank sizes differ from the spec table only by a few rows (es +2, de +4, pl +1, z
 
 - **de −124.** The evidence removed about 124 more rows than the German dictionary check does. Likely first names and brand names the dictionary accepts capitalised (`carlos`, `petra`, `disney`); the evidence lists these as `noun_shown_lowercase`, which would not remove them, so the evidence's own removal count does not follow from its own classes. Cannot be settled without the evidence CSV row set.
 - **ja +414.** Mine uses JMdict readings and finds 560 `loanword_in_hiragana` rows (evidence: roughly 100 visible, from a weaker SKK dictionary). The spec itself says Japanese should move to JMdict (C2). Proper nouns (`あふがにすたん`, `なぽれおん`) are not detectable from JMdict, so those stay `not_in_reference_dictionary` (746 now, spec 318).
-- **fil +236.** Mine uses the Wiktionary extract plus a frequency test for English. Kaikki is richer than the evidence's scrape, so unconfirmed falls (577 vs 1,221) while `wrong_language_english` is 589 (evidence ~604 incl. names). Net removal is higher because my proper-noun count (331) comes from capitalised English-dictionary hits.
+- **fil +103.** Mine uses the Wiktionary extract plus a frequency test for English. Kaikki is richer than the evidence's scrape, so unconfirmed falls (556 vs 1,221) while `wrong_language_english` is 587 (evidence ~604 incl. names). Net removal is higher mainly through `proper_noun` (200), from capitalised English-dictionary hits.
 - **ar +46.** The prefix rule: single-letter prefixes count when the remainder is more frequent in Wikipedia; multi-letter ones (`بال لل وال كال`) when the remainder is a dictionary word. Evidence flagged `بذرة` (seed), a real word; the frequency test decides it the other way in some cases. Needs the Arabic auditor.
 - **zh.** Unihan alone over-flags `著 蒙 覆`; CC-CEDICT word-level is used instead. It finds `有著 接著 牠` and not `藉口 藉由`. Two different judgments of orthography, not a data gap; native check advised.
 
@@ -92,7 +92,51 @@ Per language: en 2, es 3, fr 7, de 5, pt 12, pl 4, ko 7, ja 4, fil 2, zh 13, ru/
 
 Note the spec says six empty and four missing Jr lists; the repo has five empty (`pl ko ja fil zh`; `vi` is out of scope) and four missing (`ru ar hi sw`).
 
+## C3 — consumers of a bank word  (`tools/bank/census_c3.py`, `reports/bank-purity-c3.csv`; provisional until C1 is settled)
+
+Counts of entries that reference a row the current run would quarantine (Q), respell (R) or re-capitalise (D).
+
+| Consumer | Entries | Q | R | D | Evidence run |
+|---|---|---|---|---|---|
+| definition pools `backend/def_pools/*.json` | 40,917 | 534 | 30 | 55 | 530 |
+| gloss `config/gloss/*.json` | 3,796 | 15 | 0 | **109** | 202 |
+| practice curricula `config/practice/*.json` | 406 | 1 | 0 | 0 | 8 |
+| audio verdicts `config/audio-verdicts.json` | 3,465 | 53 | 1 | 14 | not listed |
+| `src/ru_stress_data.rs` | 973 | 1 | 0 | 0 | not listed |
+| human-audio manifests (en only) | 3,171 | 0 | 0 | 0 | not listed |
+| zh sandhi / polyphone / tone-probe configs | 132 | 0 | 0 | 0 | not listed |
+
+- The practice hit is Arabic `والتي` (attached conjunction), a real curriculum word. Fil `isda` was a false hit from a checker bug, now fixed.
+- **German capitalisation is the big one (D):** 109 gloss keys and 55 definition-pool rows are keyed by the lowercase noun and must be re-keyed, not removed. Gloss keys are "the bank's EXACT stored form".
+- **Word IDs.** `word_id` is FNV-1a-64 of the NFC word (`src/wordid.rs`), so every respelled (109) or re-capitalised (1,824 de) word gets a new ID, and every changed tier gets a new `TIER_HASHES` entry. A Spell Racing ghost or saved deck that stores an old ID resolves to nothing, and the loader aborts rather than substituting. Those stores live on players' devices (`spell_decks_v1`, ghosts, the Daily pool hash), so I cannot count them from the repo. Racing is hidden today, which limits the exposure, but saved decks and the Daily are not.
+- No unknown consumer found in the repo that would break. HALT condition for C3 not met.
+
+## C5 — Spell Jr paths  (report only; nothing changed)
+
+Every mode with a Jr policy in `config/modes.json`, and whether its words pass the kid exclusion list (`kid_filter`).
+
+| Mode | Passes `kid_filter`? | Evidence |
+|---|---|---|
+| standard / climb (Jr) | yes | `game.rs:124` via `active_word_list` |
+| daily (Jr) | yes | `daily.rs:235` |
+| bee_sim | yes | `bee.rs:145` |
+| word_chains | yes | `chains.rs:406` |
+| letter_forge | yes | `forge.rs:66` (`kid_only`) |
+| impostor | yes | `impostor.rs:544` |
+| word_picture | yes | `wordpic.rs:417` |
+| translate | yes | `translate_screen.rs:97` |
+| **practice** | **no** | fixed curriculum `config/practice/*.json`; **en includes `die` and `died`**, both on the en kid list |
+| **def_match** | **no** | uses a `kid_register` flag in the definition pools, not the list; **en `dead die kill dies`, es `muerte sangre cuchillo`, fr `mort sang vin couteau`, de `wein Messer`, pt `morte sangue vinho cerveja` are flagged kid-register and sit on the kid list** |
+| **spelldoku, spell_search, spell_cross** | **no** | only the global profanity check (`profanity::is_blocked`); no kid list |
+| **void-round rescue** (`game.rs:1479`) | **no** | draws a replacement from the raw tier |
+| my_words, misses, reports, calendar | n/a | the family's own words; my_words is parent-curated |
+| ghost_racing, versus, spell_aloud, word_stories, syllable_replay, online_spelloff | hidden for Jr | not served |
+
+Under-exclusion today, by language, is bounded by the lists: en 14 and es/fr/de/pt 4 each of the Easy+Medium rows are on a kid list. pl, ko, ja, fil and zh have empty kid lists, so nothing is excluded for them anywhere. This is CC-ONBOARD-JR and each mode's own file; Eric decides who fixes it.
+
 ## Open for Eric
 
 1. C1 HALT: save the evidence CSV to `reports/bank-check-2026-10-07.csv` so the five differences can be settled row by row, or tell me which side to follow per language.
 2. Filipino second source (see C2).
+3. C7 download: the Wiktionary extracts are 11 GB in total (en 3.3, zh 1.2, es 1.1, de 1.1, ru 0.9, pl 0.8, fr 0.6, pt 0.6, ar 0.5, ja 0.4, ko 0.2, hi 0.2, sw 0.1). Skipping en and zh leaves about 6.2 GB.
+4. Who owns the C5 gaps (practice, def_match, the three grid modes, the void-round rescue).
