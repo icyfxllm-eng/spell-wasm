@@ -1,0 +1,20 @@
+{
+  "_row": 25,
+  "_needs": "a COOL-coloured highlighter on AGED CREAM book paper, photographed",
+  "_provenance": "screenshot OF a photograph -- the file's own EXIF says UserComment=Screenshot, it is 1179px wide (an iPhone screen width) at 144dpi, and it is tagged Display P3. So the optics are real and happened at capture; a display pipeline and a screen grab sit after them. A camera original would be better and Eric has it.",
+  "_source": "a philosophy book, cream paper, four words marked in one cyan highlighter. Eric, 2026-10-06.",
+  "highlighted": ["correspond", "eudaemonistic", "standpoint", "euphemism"],
+  "_note_on_the_words": "the second is set with an ae ligature on the page. Spelling of the ground truth is for CC-SNAP-CLEAN to reconcile, not for this file.",
+  "colours": ["cyan"],
+  "measured": {
+    "_space": "Display P3, the file's own profile, read as raw pixels. See _space_warning.",
+    "paper_s": 0.157,
+    "paper_v": 0.737,
+    "paper_hue_deg": 48,
+    "mark_delta_s": [0.125, 0.129, 0.133, 0.137],
+    "mark_hue_deg": [172, 172, 175, 175],
+    "mark_v_drop": [0.059, 0.063, 0.078, 0.086],
+    "_space_warning": "the same marks read delta_s 0.204 when the file is converted to sRGB. The number depends on the colour space and the fixture mixes spaces; see the review record."
+  },
+  "notes": "THE ROW THAT CLOSES THE LAST ESCAPE HATCH, and it closes one I opened a few hours earlier.\n\nRow 24 found that a photographed blue callout arrived at delta_s 0.016, and I wrote that IF a photographed blue or green highlighter lost saturation the same way, saturation could not find it at all. It does not. A real cyan marker photographed holds its colour: four marks at delta_s 0.125-0.137, hue 172-175, on cream paper whose own hue is 48. The 86% loss row 24 measured belongs to photographing a GLOWING SCREEN through room light, not to cool colours under a camera. That inference was too broad and this row corrects it.\n\nBUT IT ALSO BREAKS THE THING ROW 24 LEFT STANDING. Row 24 argued that the camera path had not inverted -- refuse at 0.153, find at 0.196, a window 0.043 wide. In a common colour space the camera rows now read:\n\n    0.129  row 25, cyan marker            FIND\n    0.153  row 24, yellow callout         REFUSE\n    0.196  row 10, pink on cream          FIND\n\nA real mark sits BELOW a thing that must be refused. The camera path is inverted too, and 'saturation is the wrong primary test' is no longer a statement about screenshots. It is both sources.\n\nTHE WITHIN-PAGE SPREAD IS THE OTHER HALF, AND IT IS SMALL. Four marks, one pen, one page, one exposure: delta_s 0.125 to 0.137, a spread of 0.012. The pink series spans 0.32 across rows. So nearly all the variance that defeats a threshold comes from the PAGE and the PATH, not from the stroke. A per-page normalisation is right and already in F1; what it cannot do is make one page's numbers comparable to another's.\n\nPAPER S IS 0.157 ON THIS PAGE, which is higher than row 24's entire yellow callout delta (0.153). Aged cream paper is more saturated than some things a detector has to refuse. The record already had an aged page at paper S 0.153 making the case against an absolute threshold; this is a second, and on this page the paper's saturation very nearly equals the marks' margin above it.\n\nHUE WOULD WORK BEAUTIFULLY HERE AND THAT PROVES NOTHING. Paper 48 degrees, marks 172-175: about 125 degrees apart, near the maximum possible separation. Row 3 is the other half of the lesson -- warm paper at 43-50 against yellow marks at 50-53, a collision. Hue separates a COOL mark from WARM paper and fails when both are warm. Still naming, not finding.\n\nTHE FILL RULE GETS ITS FIRST COOL MARKER. V drop 0.059-0.086, far under max_v_drop 0.45, and in the same band as every other real mark (0.00-0.35). The earlier cyan-on-a-form measurement sat at 0.35, the top of that band, so cyan spans 0.06-0.35 depending on the page. The rule holds; its margin is page-dependent."
+}

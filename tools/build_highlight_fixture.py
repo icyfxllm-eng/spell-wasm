@@ -128,10 +128,15 @@ ROWS = [
     ("24-screen-photo-of-row-20", 24, "a PHOTOGRAPH of a monitor showing row 20's card, "
                                       "same content, camera instead of screen capture "
                                       "(FILED 2026-10-06)"),
+    # The first COOL-coloured mark on paper, which row 24 made urgent: its
+    # photographed blue callout arrived at delta_s 0.016 and raised the
+    # question whether a cool marker survives a camera at all.
+    ("25-cyan-on-aged-paper", 25, "a COOL-coloured highlighter (cyan, blue or green) on AGED "
+                                  "CREAM book paper, photographed (FILED 2026-10-06)"),
 ]
 # C2 also asks for bulk: 10 plain worksheets and 5 yellow book pages in total.
 # The named rows cover some of those; these are the filler.
-FILLER = [(f"25-worksheet-plain-{i}", None, "another plain worksheet") for i in range(2, 8)]
+FILLER = [(f"26-worksheet-plain-{i}", None, "another plain worksheet") for i in range(2, 8)]
 PLAN = ROWS + FILLER
 
 

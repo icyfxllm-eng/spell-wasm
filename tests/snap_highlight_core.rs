@@ -270,6 +270,11 @@ fn blank_warm_paper_lands_in_the_same_hue_chip_as_two_real_highlights() {
 /// D-H3's per-source delta_s was kept "available rather than deleted as
 /// unused". This is why it is needed -- and also why a per-source SCALAR is
 /// not enough, because one number cannot be 22% off yellow and 86% off blue.
+///
+/// Row 25 later narrowed what this means: the 86% loss is specific to
+/// photographing a GLOWING SCREEN through room light. A real cyan marker
+/// photographed on paper keeps its colour (delta_s 0.125-0.137). So this
+/// pair measures the screen-photo path, not cameras in general.
 #[test]
 fn the_camera_path_costs_saturation_and_not_by_a_constant() {
     let c = cfg();
@@ -285,30 +290,37 @@ fn the_camera_path_costs_saturation_and_not_by_a_constant() {
         "a box 0.016 above paper scored as a mark");
 }
 
-/// The camera path has NOT inverted, and that qualifies the finding above.
+/// The camera path HAS inverted too. Row 25 refuted this test's predecessor.
 ///
-/// Rows 21/20/11 cross each other, but all three are SCREENSHOTS. Among
-/// camera rows the ordering still holds: row 24's yellow callout at 0.153
-/// must be refused, row 10's pink on cream at 0.196 must be found. A window
-/// 0.043 wide, and the shipped 0.25 is above both -- which is exactly why
-/// row 10 is missed today.
+/// An earlier version of this test asserted that a camera-only delta_s of
+/// 0.18 separated everything measured: refuse row 24's callout at 0.153,
+/// find row 10's pink at 0.196. Row 25 -- a real cyan marker, photographed
+/// -- lands at 0.129, BELOW the thing that must be refused. In one colour
+/// space (Display P3, see the review record on why the fixture needs one):
 ///
-/// Two measurements do not make a threshold. This pins that a candidate
-/// EXISTS on the camera path, so nobody concludes from the screenshot rows
-/// that every source is hopeless.
+///   0.129  row 25, cyan marker            FIND
+///   0.153  row 24, yellow callout         REFUSE
+///   0.196  row 10, pink on cream          FIND
+///
+/// So the inversion is not a property of screenshots. It holds within each
+/// source separately, and no per-source scalar fixes it. This test exists to
+/// stop the window being proposed a third time.
 #[test]
-fn a_camera_only_threshold_still_separates_what_is_measured() {
-    let mut c = cfg();
-    // As shipped: both refused, and row 10 is the one refused wrongly.
-    assert_eq!(score_page(&c, &page(0.0, Source::Camera), &[boxed(1.0, 0.153, Some(50))]).count(), 0);
-    assert_eq!(score_page(&c, &page(0.141, Source::Camera), &[boxed(1.0, 0.337, Some(350))]).count(), 0,
-        "row 10 is found at the shipped camera delta_s -- update this test and the record");
-    // Inside the window. Not a proposal: a demonstration that one exists.
-    c.delta_s_camera = 0.18;
-    assert_eq!(score_page(&c, &page(0.0, Source::Camera), &[boxed(1.0, 0.153, Some(50))]).count(), 0,
-        "row 24's callout imported at a camera delta_s of 0.18");
-    assert_eq!(score_page(&c, &page(0.141, Source::Camera), &[boxed(1.0, 0.337, Some(350))]).count(), 1,
-        "row 10's pink is still missed at a camera delta_s of 0.18");
+fn no_camera_only_threshold_can_work_either() {
+    let c = cfg();
+    let camera = |d: f32| score_page(&c, &page(0.0, Source::Camera), &[boxed(1.0, d, Some(170))]).count();
+    // Whatever the threshold, a cut that finds row 25 also imports row 24.
+    for cut in [0.10f32, 0.13, 0.15, 0.18, 0.20, 0.25] {
+        let mut c2 = cfg();
+        c2.delta_s_camera = cut;
+        let finds_cyan = score_page(&c2, &page(0.0, Source::Camera), &[boxed(1.0, 0.129, Some(170))]).count() == 1;
+        let refuses_callout = score_page(&c2, &page(0.0, Source::Camera), &[boxed(1.0, 0.153, Some(50))]).count() == 0;
+        assert!(!(finds_cyan && refuses_callout),
+            "a camera delta_s of {cut} both found row 25 and refused row 24 -- \
+             the inversion is solved and this test should be rewritten");
+    }
+    // And as shipped, at 0.25, the cyan marker is simply missed.
+    assert_eq!(camera(0.129), 0, "row 25's cyan is found at the shipped camera delta_s");
 }
 
 /// KNOWN GAP, pinned so it cannot be forgotten or silently "fixed".

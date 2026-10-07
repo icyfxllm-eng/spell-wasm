@@ -581,6 +581,69 @@ across the frame — more saturated than any real highlighter measured — and
 every one of them is dark (V < 0.55), colour fringing on glyph edges that the
 V cut already excludes. Zero bright saturated speckle.
 
+**Row 25, and a measurement defect found while filing it. 2026-10-06.**
+A cyan highlighter on aged cream book paper, four words in one pen. Two
+things came out of it, and the second one reaches back over everything above.
+
+**First, it corrects row 24's inference.** Row 24 found a photographed blue
+callout at ΔS 0.016 and I wrote that *if* a photographed blue or green
+highlighter lost saturation the same way, saturation could not find it at
+all. It does not. A real cyan marker photographed holds its colour — four
+marks at ΔS 0.125–0.137, hue 172–175, against paper at hue 48. The 86% loss
+row 24 measured belongs to photographing a **glowing screen through room
+light**, not to cool colours under a camera. That inference was too broad.
+
+**Second, the fixture mixes colour spaces, and the ΔS numbers above were
+never in a common one.** Of 19 filed shots, 13 are tagged Display P3, 3 are
+sRGB, 2 carry no profile, and row 20 carries a **monitor profile**
+(`PHL 241V8LB`). Every measurement in this record was read as raw pixels,
+which ignores the tag — so rows in different spaces were compared directly in
+the same tables. The error is the size of the gaps being argued about: the
+same row 25 file reads ΔS 0.129 as P3 and **0.204** converted to sRGB.
+
+Re-measured in one space — Display P3, chosen because it is what most rows
+already carry and because converting the vivid markers to sRGB **clips them
+at S = 1.000**, which sRGB therefore cannot serve as the common space:
+
+| row | source | ΔS in P3 | must |
+|---|---|---|---|
+| 21, pale pink | screenshot | **0.125** | FIND |
+| 25, cyan marker | photo | **0.129** | FIND |
+| 24, yellow callout | photo | **0.153** | REFUSE |
+| 20, callout box | screenshot | **0.161** | REFUSE |
+| 10, pink on cream | photo | **0.196** | FIND |
+| 11, Kindle yellow | screenshot | **0.471** | FIND |
+
+**The headline finding survives, and gets stronger.** Two real marks sit
+below two non-marks, which sit below two more real marks. It is not a near
+miss in one source: it holds within each source separately —
+
+- camera: 0.129 **find** < 0.153 **refuse** < 0.196 **find**
+- screenshot: 0.125 **find** < 0.161 **refuse** < 0.471 **find**
+
+**So row 24's remaining qualification is withdrawn.** It argued the camera
+path had not inverted and still had a window 0.043 wide. Row 25 sits inside
+it, on the wrong side. Saturation is not the primary test on *either* source,
+and there is no per-source number that rescues it.
+
+**What the corrected numbers change in the record above:** the ΔS floor
+quoted as 0.196 is 0.161 in a common space, the window described as "0.074
+wide" does not exist, and the camera-path window proposed under row 24 does
+not exist either. The prose above those tables still describes the right
+shape; the specific figures are superseded by this one.
+
+**A decision this leaves open.** The fixture should either be normalised to
+one colour space when shots are filed, or every quoted number should name its
+space. I have not changed any filed bytes — renormalising 19 shots is not a
+call to make while measuring them. Eric's.
+
+**The within-page spread is the quiet result.** Four marks, one pen, one
+page, one exposure: ΔS 0.125–0.137, a spread of 0.012, against 0.32 across
+the pink rows. Almost all the variance that defeats a threshold comes from
+the page and the path, not from the stroke. Per-page normalisation is right
+and F1 already has it; what it cannot do is make one page comparable to
+another.
+
 **C1 HALTs, and C2 is why it stays halted.** `docs/CC-SNAP-BOXES.md` now
 delivers word boxes to the core, so half of C1 is satisfied. The other half —
 pixels — is deliberately not built. CC-SNAP-BOXES F3 specifies the shim but
