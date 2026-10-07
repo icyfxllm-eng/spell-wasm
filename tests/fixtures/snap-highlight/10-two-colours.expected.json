@@ -1,0 +1,55 @@
+{
+  "_row": 10,
+  "_needs": "one page with yellow AND a second colour (this one has FOUR)",
+  "_source": "Japanese Death Poems, Saikaku, close crop. Eric, 2026-10-06.",
+  "highlighted": [
+    "central",
+    "mostly",
+    "dramatized",
+    "criticized"
+  ],
+  "_confirmed": "read off the photo by Claude; confirm before this row scores anything",
+  "colours": [
+    "pink",
+    "orange",
+    "cyan",
+    "green"
+  ],
+  "expected_chips": 4,
+  "measured": {
+    "paper_s_by_mode": 0.141,
+    "paper_v": 0.961,
+    "cut_in_force": 0.391,
+    "pink": {
+      "word": "central",
+      "hue": 350,
+      "s_median": 0.337,
+      "bucket": 11,
+      "clears_cut_pct": 28.4,
+      "found": false
+    },
+    "orange": {
+      "word": "mostly",
+      "hue": 38,
+      "s_median": 0.529,
+      "bucket": 1,
+      "clears_cut_pct": 66.4,
+      "found": true
+    },
+    "cyan": {
+      "word": "dramatized",
+      "hue": 183,
+      "s_median": 0.533,
+      "bucket": 6,
+      "found": true
+    },
+    "green": {
+      "word": "criticized",
+      "hue": 83,
+      "s_median": 0.435,
+      "bucket": 2,
+      "found": true
+    }
+  },
+  "notes": "FOUR colours, and the detector finds THREE. The pink is missed, and that is the failure the Intent cares about most: 'prefer a false positive over a false negative', because a marked word that is hidden is one the reader asked for and did not get.\n\nOnly 28% of the pink's pixels clear the cut, well under D-H1's 50% coverage, so the word does not count. Pale pink on cream paper is simply not very saturated: S 0.337 against a paper of 0.141.\n\nAND THAT CLOSES THE delta_s WINDOW ROW 20 OPENED. The two cases are at the SAME delta:\n\n    pink highlighter on cream paper : 0.337 - 0.141 = 0.196\n    pale callout box on white card  : 0.196 - 0.000 = 0.196\n\nTo find the pink, delta_s must be at or below 0.196. To reject row 20's callout box, it must be above 0.196. There is no value that does both. Saturation cannot separate a pale highlighter from a pale printed panel, because by this measure they are identical.\n\nWhat DOES differ is geometry. A highlight is about one word wide and one line tall. A callout box is a rectangle spanning many lines and many words. A rule that rejected saturated regions much taller than a line would drop the callout box and keep the pink, and it needs no colour judgement at all. That is a proposal, not a decision: it is new spec, it belongs to F2, and nothing has been built.\n\nAlso note the orange at hue 38 and the green at 83 land in buckets 1 and 2, so F5 would show four chips for four colours here -- the yellow/orange collision warned about earlier does not bite, because there is no yellow on this page."
+}

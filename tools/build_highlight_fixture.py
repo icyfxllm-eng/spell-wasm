@@ -61,7 +61,7 @@ ROWS = [
     ("07-highlight-wraps", 7, "a highlight running across a line break, 4 words"),
     ("08-hyphen-both", 8, "a word hyphenated at a line break, BOTH halves highlighted"),
     ("09-hyphen-first-only", 9, "the same shape, only the FIRST half highlighted"),
-    ("10-two-colours", 10, "one page with yellow AND a second colour"),
+    ("10-two-colours", 10, "one page with yellow AND a second colour (FILED 2026-10-06 with FOUR)"),
     ("11-ereader-pale", 11, "e-reader SCREENSHOT, PALE highlight -- Kindle (FILED 2026-10-06)"),
     ("12-ereader-saturated", 12, "e-reader SCREENSHOT, SATURATED highlight -- Apple Books (FILED 2026-10-06)"),
     ("13-phrase", 13, "a highlighted phrase of 3+ words"),

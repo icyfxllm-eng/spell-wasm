@@ -377,6 +377,46 @@ Filed at 409×414, below the 1600px the other rows use — kept because the
 finding is chromatic and colour survives downscaling. It should not be used
 to judge OCR or geometry.
 
+**Row 10 closes the ΔS window entirely. 2026-10-06. This is the finding
+that most wants Eric's attention.**
+
+A page with four highlighter colours. The detector finds three. The pink is
+missed — only 28% of its pixels clear the cut, against D-H1's 50% — and a
+missed mark is the failure the Intent singles out: *prefer a false positive
+over a false negative.*
+
+Pale pink on cream paper is simply not saturated: S 0.337 over a paper of
+0.141. And that is exactly where row 20's callout box sits:
+
+    pink highlighter on cream paper : 0.337 − 0.141 = **0.196**
+    pale callout box on white card  : 0.196 − 0.000 = **0.196**
+
+**Identical.** To find the pink, ΔS must be ≤ 0.196. To reject the callout
+box, it must be > 0.196. No value does both. Two commits ago row 20 gave ΔS
+a floor and it looked like a narrow window; row 10 shows the window is
+empty. Saturation cannot distinguish a pale highlighter from a pale printed
+panel, because on that measure they are the same thing.
+
+The current 0.25 picks a horn: the box is refused, the pink is lost. The
+Intent says that is the wrong horn.
+
+**What separates them is size, not colour.** A highlight is about a word
+wide and a line tall. A callout box is a rectangle spanning many lines and
+many words. A rule rejecting saturated regions much taller than a line drops
+the box and keeps the pink, and needs no colour judgement at all. That is a
+proposal and nothing is built: it is new spec and it belongs to F2, which is
+now carrying three unresolved changes — the stroke-aware mask (row 16), the
+paper statistic being a mode not a median (row 20), and this.
+
+`delta_s_cannot_satisfy_rows_10_and_20_at_once` asserts all three positions,
+including the pink's wrong one, so the day something other than saturation
+starts doing the work the test says so.
+
+Incidentally F5 is fine here: orange at hue 38 and green at 83 fall in
+buckets 1 and 2, so four colours would give four chips. The yellow/orange
+collision warned about earlier does not bite, because this page has no
+yellow.
+
 **C1 HALTs, and C2 is why it stays halted.** `docs/CC-SNAP-BOXES.md` now
 delivers word boxes to the core, so half of C1 is satisfied. The other half —
 pixels — is deliberately not built. CC-SNAP-BOXES F3 specifies the shim but
