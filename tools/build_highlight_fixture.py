@@ -83,10 +83,15 @@ ROWS = [
     # ruled paper is the shape most likely to be mistaken for a mark.
     ("19-handwritten-ruled", 19, "a HANDWRITTEN word list in pen on RULED paper, "
                                  "no highlighter (FILED 2026-10-06)"),
+    # Added 2026-10-06. A pale callout box is a bright saturated fill with dark
+    # text on it -- the same shape as a highlight -- so only saturation tells
+    # them apart, and this page is what bounds delta_s from below.
+    ("20-pale-callout-boxes", 20, "an infographic with PALE COLOURED CALLOUT BOXES behind "
+                                  "dark text, no highlighter (FILED 2026-10-06)"),
 ]
 # C2 also asks for bulk: 10 plain worksheets and 5 yellow book pages in total.
 # The named rows cover some of those; these are the filler.
-FILLER = [(f"20-worksheet-plain-{i}", None, "another plain worksheet") for i in range(2, 8)]
+FILLER = [(f"21-worksheet-plain-{i}", None, "another plain worksheet") for i in range(2, 8)]
 PLAN = ROWS + FILLER
 
 

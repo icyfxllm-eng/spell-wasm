@@ -351,6 +351,32 @@ box width. These photos are described in width because that is what a person
 can see. For a dense word the two differ, and a detector could pass the row
 text while failing D-H1 or the reverse. Still Eric's to resolve.
 
+**Row 20 bounds ΔS from below, which nothing did before. 2026-10-06.**
+A pale callout box is structurally identical to a highlight — a bright
+saturated fill with dark text on it. The fill rule cannot reject it, it is
+bright. Coverage cannot, it is fully covered. Even a stroke-aware mask
+cannot, because it really is a fill with glyphs on top. Only saturation
+separates them, and barely:
+
+    callout fill            S 0.196
+    cut in force            S 0.250   (paper 0.000 + ΔS 0.25)
+    palest real highlight   S 0.270   (Kindle, row 11)
+
+**ΔS must be above 0.196 and below 0.27.** A window ~0.074 wide, with 0.054
+of margin below and 0.02 above. Until this page there was no lower bound at
+all, and dropping ΔS to widen the Kindle margin would have looked free.
+
+A second thing this page shows: **F1's "median" is the wrong statistic for
+the paper estimate here.** The median S of bright pixels is 0.106, because
+the boxes are large enough to drag it, which would move the cut to 0.356 and
+hide the problem entirely. The MODE of near-white pixels gives 0.000, which
+is the truth. On a page that is mostly coloured panels, a median samples the
+panels.
+
+Filed at 409×414, below the 1600px the other rows use — kept because the
+finding is chromatic and colour survives downscaling. It should not be used
+to judge OCR or geometry.
+
 **C1 HALTs, and C2 is why it stays halted.** `docs/CC-SNAP-BOXES.md` now
 delivers word boxes to the core, so half of C1 is satisfied. The other half —
 pixels — is deliberately not built. CC-SNAP-BOXES F3 specifies the shim but

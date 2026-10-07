@@ -174,6 +174,28 @@ fn a_gutter_shadow_is_not_a_highlight() {
     assert_eq!(score_page(&cfg(), &page(0.09, Source::Camera), &[shadow]).count(), 0);
 }
 
+/// delta_s is boxed in from BOTH sides by measured pages, and the window is
+/// narrow. Pinned so a later tuning pass cannot widen one margin without
+/// seeing what it costs on the other.
+///
+///   fixture row 20, a pale callout box behind dark text:  S 0.196
+///   fixture row 11, the palest real highlight (Kindle):   S 0.27
+///
+/// Below 0.196 an infographic imports its callout boxes; above 0.27 Kindle
+/// highlights stop being found. 0.25 sits between, 0.054 above the floor and
+/// 0.02 under the ceiling.
+#[test]
+fn delta_s_sits_in_the_window_its_two_fixtures_leave() {
+    let c = cfg();
+    let p = page(0.0, Source::Screenshot);
+    // A pale callout fill must NOT read as a mark.
+    assert_eq!(score_page(&c, &p, &[boxed(1.0, 0.196, Some(55))]).count(), 0,
+        "a pale callout box imported -- delta_s has fallen below row 20's floor");
+    // The palest real highlight must still be found.
+    assert_eq!(score_page(&c, &p, &[boxed(1.0, 0.27, Some(55))]).count(), 1,
+        "the palest Kindle highlight was missed -- delta_s has risen above row 11's ceiling");
+}
+
 /// KNOWN GAP, pinned so it cannot be forgotten or silently "fixed".
 ///
 /// Fixture row 16 is a Kindle page whose blue headings drop only 0.29 below
