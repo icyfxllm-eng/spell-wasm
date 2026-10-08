@@ -42,7 +42,7 @@ The row-level evidence CSV exists only in chat. The comparison below is therefor
 Agreement elsewhere is close: 72 P11 duplicates (spec 69), 109 corrected in place (spec 106), German nouns to re-capitalise 1,824 (spec 1,721).
 Bank sizes differ from the spec table only by a few rows (es +2, de +4, pl +1, zh +0, en/ja/fil/ko/ar/hi/ru/sw/fr/pt equal).
 
-### Why the five differ (both lists not picked; Eric decides)
+### Why the differences arise (de, ja, fil, zh; ar is now within 5%) (both lists not picked; Eric decides)
 
 - **de −124.** The evidence removed about 124 more rows than the German dictionary check does. Likely first names and brand names the dictionary accepts capitalised (`carlos`, `petra`, `disney`); the evidence lists these as `noun_shown_lowercase`, which would not remove them, so the evidence's own removal count does not follow from its own classes. Cannot be settled without the evidence CSV row set.
 - **ja +414.** Mine uses JMdict readings and finds 560 `loanword_in_hiragana` rows (evidence: roughly 100 visible, from a weaker SKK dictionary). The spec itself says Japanese should move to JMdict (C2). Proper nouns (`あふがにすたん`, `なぽれおん`) are not detectable from JMdict, so those stay `not_in_reference_dictionary` (746 now, spec 318).
