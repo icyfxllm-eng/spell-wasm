@@ -84,7 +84,15 @@ export async function run(browser, base, suite) {
       await openCross(page);
       let b = await board(page);
       // A crossword with a keystone: take a new one until it has a hidden word.
-      for (let k = 0; k < 6 && !b.keystone; k++) {
+      // 25, not 6. A collision word that no crossing tells apart leaves the
+      // grid (F-C3, layout.rs), so the size of the English collision table
+      // sets how sparse grids are and therefore how often a keystone fits.
+      // The table was briefly 80 sets instead of its usual ~263 -- generated
+      // without the gitignored cmudict -- and 6 was enough against that. With
+      // the table restored, a measured run needed 11. 25 is headroom over the
+      // real rate, not a workaround: once a keystone board turns up every
+      // other assertion here passes unchanged.
+      for (let k = 0; k < 25 && !b.keystone; k++) {
         await clickSettled(page, '#xwNew');
         b = await board(page);
       }
