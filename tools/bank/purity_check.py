@@ -446,6 +446,15 @@ def classify(lang, rows):
         "hi": lambda: classify_hi(rows), "ar": lambda: classify_ar(rows), "fil": lambda: classify_fil(rows),
     }.get(lang, lambda: classify_hunspell(lang, rows))()
 
+def overrides(lang):
+    p = os.path.join(ROOT, "tools", "bank", "purity_overrides.csv")
+    out = {}
+    if os.path.exists(p):
+        for r in csv.DictReader(open(p, encoding="utf-8")):
+            if r["lang"] == lang and r["class"] in QUARANTINE and r["signed_by"]:
+                out[r["word"]] = (r["class"], "signed override: " + r["signed_by"])
+    return out
+
 def main(argv):
     out = os.path.join(ROOT, "reports", "bank-purity-rows.csv")
     args = [a for a in argv if not a.startswith("--out")]
@@ -458,6 +467,9 @@ def main(argv):
     for lang in langs:
         rows = load_bank(lang)
         res = classify(lang, rows)
+        for w, (c, e) in overrides(lang).items():   # signed C1 rulings; only ever move a row into a quarantine class
+            if w in res and res[w][0] not in QUARANTINE:
+                res[w] = (c, e)
         prof = load(f"{ROOT}/assets/words/profanity/{lang}.txt") or set()
         for t, w in rows:
             cls, ev = res[w]
