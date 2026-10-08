@@ -269,9 +269,20 @@ export async function run(browser, base, suite) {
       await pick(page, '9-hard');
       const b = await board(page);
       assert(b.clues.some((c) => c.Fragment), 'Hard carries a fragment clue (F2)');
-      const i = empties(b).find((k) => !b.clues[k].Fragment);
+      // Find a cell that HAS a wrong-but-legal value, rather than taking the
+      // first empty one and demanding it offer one. On a 9x9 Hard board a
+      // cell's peers can cover all eight other values, leaving only the
+      // solution legal -- so the old form failed on board DRAW, not on any
+      // behaviour. That is what left main red at f4301c6b and what looked
+      // like a flake across two gate runs before it was diagnosed. The intent
+      // is unchanged: place a wrong-but-legal value, prove Check Board
+      // reports it.
+      //
+      // `!== undefined` and not a truthiness test: cell 0 is a legitimate
+      // answer and would read as "none found".
+      const i = empties(b).find((k) => !b.clues[k].Fragment && legalWrong(b, k));
+      assert(i !== undefined, 'some empty non-fragment cell offers a wrong-but-legal value');
       const wrongV = legalWrong(b, i);
-      assert(wrongV, 'the fixture offers a wrong-but-legal value');
       assert(b.words, 'v1.2 D12: a 9x9 Hard board is Word Mode');
       await page.click(`[data-sd-cell="${i}"]`);
       await place(page, wrongV, b.words[wrongV - 1]);
