@@ -243,6 +243,7 @@ def classify_ko(rows):
 
 # ---------------------------------------------------------------- Japanese
 SMALL = set("ぁぃぅぇぉゃゅょゎ")
+SENTENCE_TAILS = ("とは", "という", "として", "ものなり", "について", "による", "なった", "ている", "でした", "ました", "は", "が", "を")
 def kata(s):
     return "".join(chr(ord(c) + 0x60) if "ぁ" <= c <= "ゖ" else c for c in s)
 
@@ -266,8 +267,12 @@ def classify_ja(rows):
             res[w] = ("fragment", ""); continue
         if w in rebs:
             res[w] = ("pass", ""); continue
+        if len(w) >= 5 and w.endswith(SENTENCE_TAILS):   # a run of Wikipedia text, not a word
+            res[w] = ("fragment", "sentence tail"); continue
         if kata(w) in rebs:
             res[w] = ("loanword_in_hiragana", kata(w)); continue
+        if len(w) >= 8:                                    # unknown and this long: a phrase, not a headword
+            res[w] = ("fragment", "long unknown run"); continue
         res[w] = ("not_in_reference_dictionary", "")
     return res
 

@@ -5,7 +5,7 @@ Run 2026-10-07 on `origin/main` da040556. Tooling: `tools/bank/purity_check.py` 
 
 | Item | Status |
 |---|---|
-| C1 recompute | **HALT** (4 languages beyond 5%: de, ja, fil, zh), see below |
+| C1 recompute | **HALT** (row level, beyond 5% symdiff: es 5.2, de 31.5, pl 15.4, ja 80.4, fil 24.8, ar 8.3, sw 5.9), see below |
 | C2 dictionary registry | done, one source weaker than the spec assumed |
 | C3 consumers | done (provisional on C1) |
 | C4 pool gates | provisional: size gate and Definition Match done; Rust gates in the table below |
@@ -16,9 +16,28 @@ Run 2026-10-07 on `origin/main` da040556. Tooling: `tools/bank/purity_check.py` 
 
 ## C1 — recompute vs the evidence run
 
-The row-level evidence CSV exists only in chat. The comparison below is therefore **by count against the spec table**
-(rows removed = rows − expected rows after Phase A). A set-level comparison needs the CSV saved at
-`reports/bank-check-2026-10-07.csv`.
+The evidence CSV is saved at `reports/bank-check-2026-10-07.csv` (12,685 rows; total and all 14 per-language counts match the spec table).
+**Row-level result** (`tools/bank/census_c1_compare.py`, detail in `reports/bank-purity-c1-diff.csv`). Both sides are reduced to the same removal set;
+symdiff = (evidence-only + now-only) / evidence removals.
+
+| Lang | Evidence | Now | Both | Evidence-only | Now-only | Symdiff |
+|---|---|---|---|---|---|---|
+| en | 7 | 7 | 7 | 0 | 0 | 0.0% |
+| es | 477 | 466 | 459 | 18 | 7 | 5.2% |
+| fr | 570 | 565 | 563 | 7 | 2 | 1.6% |
+| **de** | 406 | 282 | 280 | 126 | 2 | **31.5%** |
+| pt | 591 | 585 | 584 | 7 | 1 | 1.4% |
+| **pl** | 293 | 282 | 265 | 28 | 17 | **15.4%** |
+| ko | 3,337 | 3,337 | 3,337 | 0 | 0 | 0.0% |
+| **ja** | 679 | 1,181 | 657 | 22 | 524 | **80.4%** |
+| **fil** | 755 | 858 | 713 | 42 | 145 | **24.8%** |
+| zh | 0 | 0 | 0 | 0 | 0 | 0.0% |
+| ru | 216 | 208 | 208 | 8 | 0 | 3.7% |
+| **ar** | 689 | 712 | 672 | 17 | 40 | **8.3%** |
+| hi | 579 | 579 | 579 | 0 | 0 | 0.0% |
+| **sw** | 119 | 122 | 117 | 2 | 5 | 5.9% |
+
+Japanese note: two rules beyond JMdict lookup are in `classify_ja`: a 5+ character word ending in a sentence tail (`とは という として は が を` ...) and any unknown word of 8+ characters are `fragment`. They recover 49 of the 71 evidence fragments; 39 of the now-only fragments are Wikipedia headings of the form place/station+`は`, which are also not headwords. Eric may veto either rule.
 
 "Removed" = quarantine-class rows + P11 duplicates (misspelled rows whose corrected form is already a row) + hi unconfirmed (P8).
 
@@ -44,8 +63,10 @@ Bank sizes differ from the spec table only by a few rows (es +2, de +4, pl +1, z
 
 ### Why the differences arise (de, ja, fil, zh; ar is now within 5%) (both lists not picked; Eric decides)
 
-- **de −124.** The evidence removed about 124 more rows than the German dictionary check does. Likely first names and brand names the dictionary accepts capitalised (`carlos`, `petra`, `disney`); the evidence lists these as `noun_shown_lowercase`, which would not remove them, so the evidence's own removal count does not follow from its own classes. Cannot be settled without the evidence CSV row set.
+- **de −124.** The evidence removed about 124 more rows than the German dictionary check does. Likely first names and brand names the dictionary accepts capitalised (`carlos`, `petra`, `disney`); the evidence lists these as `noun_shown_lowercase`, which would not remove them, so the evidence's own removal count does not follow from its own classes. Row-level check: the 126 evidence-only rows are names/Anglicisms the German dictionary accepts as capitalised words; the evidence rejected them by a rule the spec does not name.
 - **ja +414.** Mine uses JMdict readings and finds 560 `loanword_in_hiragana` rows (evidence: roughly 100 visible, from a weaker SKK dictionary). The spec itself says Japanese should move to JMdict (C2). Proper nouns (`あふがにすたん`, `なぽれおん`) are not detectable from JMdict, so those stay `not_in_reference_dictionary` (746 now, spec 318).
+- **pl.** The LibreOffice `pl_PL` dictionary is permissive: `think`, `content`, `must` are real entries, so 28 evidence removals pass. A second Polish source is needed or the evidence's list ruled authoritative.
+- **es (−18/+7).** The evidence labelled real Spanish words as other-language; the 18 are listed in the diff CSV.
 - **fil +103.** Mine uses the Wiktionary extract plus a frequency test for English. Kaikki is richer than the evidence's scrape, so unconfirmed falls (556 vs 1,221) while `wrong_language_english` is 587 (evidence ~604 incl. names). Net removal is higher mainly through `proper_noun` (200), from capitalised English-dictionary hits.
 - **ar +23 (fixed).** The prefix rule first flagged real words whose first letter merely looks like a prefix (`بذرة` seed, `وطن` homeland, `لسان` tongue, `بريد` mail, `فأر` mouse). It now consults Wiktionary: a noun, adjective or verb lemma with no prefix analysis in its etymology is a real word and stays; function words (adverbs, prepositions, conjunctions) and anything Wiktionary itself analyses as prefix + word are still attached. 25 rows released (the full list is in the git diff of `purity_check.py`'s test output), 2 added (`بجوار`, `بموجب`), net 735 to 712. A few lexicalised words that Wiktionary lists as content lemmas are probably still wrongly released (`فذلك`, `كذا`, `كمان`, `ولدي`, `وهل`, `بطريق`, `فعلي`); the Arabic auditor settles those.
 - **zh.** Unihan alone over-flags `著 蒙 覆`; CC-CEDICT word-level is used instead. It finds `有著 接著 牠` and not `藉口 藉由`. Two different judgments of orthography, not a data gap; native check advised.
