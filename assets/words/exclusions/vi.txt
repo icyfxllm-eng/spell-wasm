@@ -1,1 +1,45 @@
-# Vietnamese exclusions (accent-lenient, lowercased match). Extend from LDNOOBW vi.
+# Vietnamese exclusions. EXACT match, ACCENT-SENSITIVE (see
+# ACCENT_SENSITIVE_EXCLUSIONS in scripts/build-wordlists.py).
+#
+# WHY ACCENT-SENSITIVE, AND WHY IT MATTERS MORE HERE THAN ANYWHERE
+# Every other language folds accents away before matching, which is right where
+# an accent is decoration. Vietnamese tone marks are the word. Matched
+# leniently, this short list would have culled twelve Easy rows, measured:
+#   cặc -> các (the plural marker) and cac    đĩ  -> đi (to go)
+#   lồn -> lớn (big), lợn (pig)               dái -> dài (long), dãi
+#   vãi -> vài (a few), vại                   đéo -> đẽo
+# Deleting "đi" and "các" from a children's Vietnamese spelling game would have
+# been the cost of filling this file without fixing the matcher first.
+#
+# PROVENANCE — READ BEFORE EXTENDING
+# The old comment here said "Extend from LDNOOBW vi". THAT FILE DOES NOT EXIST:
+# the LDNOOBW list covers 28 languages (ar cs da de en eo es fa fi fil fr hi hu
+# it ja kab ko nl no pl pt ru sv th tlh tr zh) and Vietnamese is not one of them.
+# Checked 2026-10-06.
+#
+# So this list is NOT sourced. It is a conservative core of unambiguous terms,
+# written to unblock CC-VI-BANK-GROWTH census item C10, which halts on an empty
+# seed with the correct reasoning that "a compound can be vulgar when its
+# syllables are not". It is deliberately short: a false positive here silently
+# deletes a word a child needs, and this file has no native speaker behind it.
+#
+# EXTENDING IT NEEDS A VIETNAMESE SPEAKER, or a licensed Vietnamese list
+# recorded in the source registry per D5. Do not grow it from a translation of
+# the English list — profanity does not map word for word, and the compounds
+# below are the proof: every syllable in them is innocent on its own.
+
+# Single-syllable, unambiguous
+lồn
+cặc
+buồi
+đụ
+địt
+đéo
+đĩ
+dái
+cứt
+
+# Compounds. Each syllable is harmless alone, which is the case C10 names:
+# chó = dog, đẻ = to give birth, mẹ = mother, kiếp = fate.
+chó đẻ
+mẹ kiếp

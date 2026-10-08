@@ -209,16 +209,38 @@ def load_exclusions(code: str):
                 roots.append(lenient_fold(line))
     per = exdir / f"{code}.txt"
     if per.exists():
+        # Folded the same way `is_excluded` will fold the candidate, or the two
+        # sides never meet: vi is accent-sensitive, everyone else is not.
+        fold = strict_fold if code in ACCENT_SENSITIVE_EXCLUSIONS else lenient_fold
         for line in per.read_text(encoding="utf-8").splitlines():
             line = line.strip()
             if line and not line.startswith("#"):
-                exact.add(lenient_fold(line))
+                exact.add(fold(line))
     return roots, exact
 
 
-def is_excluded(word: str, roots, exact) -> bool:
-    lf = lenient_fold(word)
-    return lf in exact or any(r and r in lf for r in roots)
+# Languages whose exclusion list must match ACCENT-SENSITIVELY.
+#
+# lenient_fold strips every diacritic, which is right where accents are
+# decoration and wrong where they are the word. Vietnamese tone marks are
+# lexical, so a lenient match turns a short vulgar list into a cull of ordinary
+# vocabulary: cặc folds onto các (the plural marker) and cac, đĩ onto đi (to
+# go), lồn onto lớn (big) and lợn (pig), dái onto dài (long), vãi onto vài (a
+# few). Twelve Easy rows, measured, including two of the most common words in
+# the language.
+#
+# The lenient default exists to catch someone EVADING the filter by dropping
+# accents. A bank built from a corpus has no evader, so the strict reading loses
+# nothing here and keeps đi in a children's spelling game.
+ACCENT_SENSITIVE_EXCLUSIONS = {"vi"}
+
+
+def is_excluded(word: str, roots, exact, code: str = "") -> bool:
+    fold = strict_fold if code in ACCENT_SENSITIVE_EXCLUSIONS else lenient_fold
+    lf = fold(word)
+    # Roots stay substring-matched; they are the shared profanity seed and are
+    # folded leniently on both sides by load_exclusions.
+    return lf in exact or any(r and r in lenient_fold(word) for r in roots)
 
 
 def build():
@@ -309,7 +331,7 @@ def build():
                     if loose:
                         problems.append(f"{where} — bare jamo cannot be typed as written: {''.join(loose)}")
                         continue
-                if is_excluded(w, roots, exact):
+                if is_excluded(w, roots, exact, code):
                     problems.append(f"{where} — matches exclusion list")
                     continue
                 key = strict_fold(w)
