@@ -304,43 +304,96 @@ pub fn fsrs_review_graded(f: &mut FsrsState, grade: Grade, day: u32) {
 /// and it always passes the pinned `FSRS_W` (D4: defaults only, no
 /// per-player fitting).
 pub fn fsrs_review_graded_with(w: &[f64; 17], f: &mut FsrsState, grade: Grade, day: u32) {
-    let g = grade.g();
     if f.reps == 0 {
-        // First exposure: initial stability is w[G−1] (w0 again, w1 hard,
-        // w2 good). FSRS-4.5 D0(G) = w4 − (G−3)·w5. The exponential form
-        // w4 − e^(w5·(G−1)) + 1 is FSRS-5's and needs FSRS-5's weights: fed
-        // these 4.5 weights it gave a pass −5.5, clamped to 1.0 (the floor).
-        f.stability = w[g as usize - 1];
-        f.difficulty = (w[4] - (g - 3.0) * w[5]).clamp(1.0, 10.0);
+        f.stability = fsrs_init_stability(w, grade);
+        f.difficulty = fsrs_init_difficulty(w, grade);
     } else {
         let elapsed = (day.saturating_sub(f.due_day.saturating_sub(interval_days(f.stability)))) as f64;
         let r = retrievability(elapsed.max(0.0), f.stability);
-        // difficulty update with mean reversion (w7 toward D0(3) = w4, the
-        // FSRS-4.5 target; FSRS-5 moved it to D0(4))
-        let d = f.difficulty - w[6] * (g - 3.0);
-        f.difficulty = (w[7] * w[4] + (1.0 - w[7]) * d).clamp(1.0, 10.0);
+        // Difficulty first: the stability update reads the NEW difficulty,
+        // which is what py-fsrs and ts-fsrs both do.
+        f.difficulty = fsrs_next_difficulty(w, f.difficulty, grade);
         if grade != Grade::Again {
-            // S' = S · (1 + e^w8 · (11−D) · S^−w9 · (e^(w10·(1−R)) − 1) · hard)
-            // where hard = w15 for a Hard rating, else 1.
-            let hard = if grade == Grade::Hard { w[15] } else { 1.0 };
-            let inc = det_exp(w[8])
-                * (11.0 - f.difficulty)
-                * det_pow(f.stability, -w[9])
-                * (det_exp(w[10] * (1.0 - r)) - 1.0)
-                * hard;
-            f.stability *= 1.0 + inc;
+            f.stability = fsrs_next_recall_stability(w, f.difficulty, f.stability, r, grade);
         } else {
-            // S'_forget = w11 · D^−w12 · ((S+1)^w13 − 1) · e^(w14·(1−R))
-            let s_new = w[11]
-                * det_pow(f.difficulty, -w[12])
-                * (det_pow(f.stability + 1.0, w[13]) - 1.0)
-                * det_exp(w[14] * (1.0 - r));
+            let s_new = fsrs_next_forget_stability(w, f.difficulty, f.stability, r);
+            // OURS, not FSRS-4.5's: a lapse may never RAISE stability, and
+            // 0.1 is the floor. Deliberately outside the component function
+            // so the component still matches the published one exactly.
             f.stability = s_new.min(f.stability).max(0.1);
             f.lapses += 1;
         }
     }
     f.reps += 1;
     f.due_day = day + interval_days(f.stability);
+}
+
+// ---------------------------------------------------------------------------
+// The four FSRS-4.5 component formulas, each on its own.
+//
+// They are split out because acceptance 3 checks them against values
+// published by OTHER FSRS-4.5 implementations, and those are published per
+// component. An end-to-end vector cannot reach all of them: no sequence of
+// whole-day reviews makes a first grade Again and a first grade Hard at
+// once, and the published values are computed at an exact retrievability
+// (r = 0.8) that an integer day count cannot produce -- the nearest day
+// gives 0.79987. Splitting them is what makes the comparison possible.
+//
+// Each is the published FSRS-4.5 form with no house additions. Where this
+// engine deviates -- the lapse clamp above -- the deviation lives in the
+// caller, so these stay comparable.
+// ---------------------------------------------------------------------------
+
+/// S0(G) = w[G−1]. Again w0, Hard w1, Good w2 (Easy w3 is unreachable: D3
+/// removed the grade).
+pub fn fsrs_init_stability(w: &[f64; 17], grade: Grade) -> f64 {
+    w[grade.g() as usize - 1]
+}
+
+/// D0(G) = w4 − (G−3)·w5, clamped to [1, 10].
+///
+/// The exponential form w4 − e^(w5·(G−1)) + 1 is FSRS-5's and needs FSRS-5's
+/// weights: fed these 4.5 weights it gave a pass −5.5, clamped to the floor.
+pub fn fsrs_init_difficulty(w: &[f64; 17], grade: Grade) -> f64 {
+    (w[4] - (grade.g() - 3.0) * w[5]).clamp(1.0, 10.0)
+}
+
+/// D' = w7·w4 + (1 − w7)·(D − w6·(G−3)), clamped to [1, 10].
+///
+/// Mean reversion toward D0(3) = w4, the FSRS-4.5 target; FSRS-5 moved it
+/// to D0(4).
+pub fn fsrs_next_difficulty(w: &[f64; 17], d: f64, grade: Grade) -> f64 {
+    let next = d - w[6] * (grade.g() - 3.0);
+    (w[7] * w[4] + (1.0 - w[7]) * next).clamp(1.0, 10.0)
+}
+
+/// S' = S · (1 + e^w8 · (11 − D) · S^−w9 · (e^(w10·(1−R)) − 1) · hard)
+///
+/// `hard` is w15 for a Hard rating and 1 otherwise. There is no easy bonus
+/// term (w16): D3 removed the Easy grade, so it can never apply.
+pub fn fsrs_next_recall_stability(
+    w: &[f64; 17],
+    d: f64,
+    s: f64,
+    r: f64,
+    grade: Grade,
+) -> f64 {
+    let hard = if grade == Grade::Hard { w[15] } else { 1.0 };
+    let inc = det_exp(w[8])
+        * (11.0 - d)
+        * det_pow(s, -w[9])
+        * (det_exp(w[10] * (1.0 - r)) - 1.0)
+        * hard;
+    s * (1.0 + inc)
+}
+
+/// S'_forget = w11 · D^−w12 · ((S+1)^w13 − 1) · e^(w14·(1−R))
+///
+/// The published form, unclamped. This engine additionally refuses to let a
+/// lapse raise stability; that clamp is in `fsrs_review_graded_with`, not
+/// here, so this stays comparable to other implementations.
+pub fn fsrs_next_forget_stability(w: &[f64; 17], d: f64, s: f64, r: f64) -> f64 {
+    w[11] * det_pow(d, -w[12]) * (det_pow(s + 1.0, w[13]) - 1.0) * det_exp(w[14] * (1.0 - r))
 }
 
 // -------------------------------------------- deterministic transcendentals

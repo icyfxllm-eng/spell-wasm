@@ -1,0 +1,38 @@
+{
+  "_what": "CC-LEARNING-ENGINE-L0 acceptance 3, second reference — the FSRS-4.5 COMPONENT formulas, from a different implementation than the py-fsrs trajectory.",
+  "_source": {
+    "project": "open-spaced-repetition/ts-fsrs",
+    "tag": "v3.5.6",
+    "file": "__tests__/algorithm.test.ts",
+    "tests": ["next_ds > next_difficulty", "next_ds > next_stability"],
+    "fetched": "2026-10-08"
+  },
+  "_why_this_version": "FSRS-4.5. The same test file opens by asserting FACTOR == 19/81 == 0.9^(1/DECAY) - 1 with DECAY = -0.5, which is the 4.5 forgetting curve, and its parameter vector is 17 long.",
+  "_why_a_second_source": "The py-fsrs trajectory cannot reach w0, w1, w5 or w15: no sequence of whole-day reviews opens with both Again and Hard, and a Hard never occurs in it. These are per-component values, so they reach what a trajectory cannot. The published numbers are also computed at EXACT retrievability (r = 0.8), which an integer day count cannot produce -- the nearest day gives 0.79987 -- so they can only be checked against component functions, never end to end.",
+  "weights": [0.5701, 1.4436, 4.1386, 10.9355, 5.1443, 1.2006, 0.8627, 0.0362,
+              1.629, 0.1342, 1.0166, 2.1174, 0.0839, 0.3204, 1.4676, 0.219, 2.8237],
+  "_grades_order": "ts-fsrs iterates Grades = [Again, Hard, Good, Easy]. This engine has no Easy (D3 removed it), so the fourth entry of each row is recorded but not asserted.",
+  "next_difficulty": {
+    "_call": "next_difficulty(d = 5.0, grade) for each grade",
+    "d_in": 5.0,
+    "expected": [6.66816418, 5.83669392, 5.00522366, 4.1737534]
+  },
+  "next_recall_stability": {
+    "_call": "next_recall_stability(d, s, r, grade), one (d, s, r) per grade",
+    "d_in": [1, 2, 3, 4],
+    "s_in": [5, 5, 5, 5],
+    "r_in": [0.9, 0.8, 0.7, 0.6],
+    "expected": [26.98093855, 14.12848781, 63.60068241, 208.72742276],
+    "_the_one_that_matters": "index 1 is the HARD rating, so it is the only published number anywhere in this fixture set that exercises w15, the hard penalty. Index 0 is recall-stability computed with an Again rating, which no scheduler calls (an Again takes the forget path) but which is well defined and still constrains w8, w9 and w10."
+  },
+  "next_forget_stability": {
+    "_call": "next_forget_stability(d, s, r), same (d, s, r) rows",
+    "d_in": [1, 2, 3, 4],
+    "s_in": [5, 5, 5, 5],
+    "r_in": [0.9, 0.8, 0.7, 0.6],
+    "expected": [1.9016012, 2.0777825, 2.3257503, 2.62916465],
+    "_note": "unclamped, as published. This engine additionally refuses to let a lapse raise stability; that clamp lives in fsrs_review_graded_with, not in the component, so the component stays comparable."
+  },
+  "_rounding": "ts-fsrs rounds each component to 8 decimal places with Decimal.toFixed(8) before asserting. Comparisons here allow 1e-7, which is that rounding and nothing more.",
+  "_what_is_still_NOT_covered": "w0, w1 and w5 remain formula conformance rather than independent reproduction, and no fixture can change that: both py-fsrs and ts-fsrs DEFINE initial stability as w[G-1] and initial difficulty as w4 - w5*(G-3), so there is no computed number to disagree about. What a test catches there is an index off-by-one or a sign error, which is worth having and is not the same claim."
+}

@@ -167,11 +167,8 @@ structurally unreachable by this vector; doubling them changes nothing:
 | w15 | the **Hard penalty** — no Hard |
 | w16 | the Easy bonus — no Easy, none exists here |
 
-**Four of those — w0, w1, w5 and w15 — are reachable in this engine**, so
-they are genuinely unverified against any reference. Closing that needs a
-second vector opening with Again or Hard; none is published, so it would
-have to come from another implementation's tests. Recorded rather than
-papered over.
+**Four of those — w0, w1, w5 and w15 — are reachable in this engine.** That
+gap was closed on 2026-10-08 by a second reference; see below.
 
 The remaining eleven are mutation-checked at 2×, not 1%: intervals are whole
 days and rounding swallows a 1% nudge to w7, w11, w12 or w14.
@@ -181,6 +178,49 @@ the vector.** Ours omits the `max(w[G−1], 0.1)` floor on initial stability
 (moot at every pinned weight, all well above 0.1), and ours additionally
 clamps post-lapse stability with `.min(current)` so a lapse can never raise
 it. Worth knowing if a future weight set goes near either.
+
+### The gap closed (2026-10-08) — a second reference, and the limit that remains
+
+**The blind spots were structural, not bad luck.** The core had one entry
+point, so a weight was covered only if some sequence of whole-day reviews
+happened to reach it, and for four weights no such sequence exists. Chasing
+a second trajectory would have treated the symptom. The FSRS-4.5 component
+formulas are now separate functions — `fsrs_init_stability`,
+`fsrs_init_difficulty`, `fsrs_next_difficulty`, `fsrs_next_recall_stability`
+and `fsrs_next_forget_stability` — each the published form with no house
+additions, so each can be checked directly.
+
+That also unblocked something no trajectory could do: the published values
+are computed at an **exact** retrievability (r = 0.8), and an integer day
+count cannot produce it — the nearest day gives 0.79987.
+
+**The second reference is ts-fsrs `v3.5.6`**, vendored at
+`tests/fixtures/fsrs/ts-fsrs-3.5.6-algorithm.json`. It is FSRS-4.5: its own
+test file asserts `FACTOR == 19/81 == 0.9^(1/DECAY) − 1` with `DECAY = −0.5`,
+and its parameter vector is 17 long. We reproduce its published values to
+1e-7, which is the 8-decimal rounding its tests apply and nothing more:
+
+| component | published | reaches |
+|---|---|---|
+| `next_difficulty(5.0, ·)` | 6.66816418, 5.83669392, 5.00522366 | w4, w6, w7 |
+| `next_recall_stability` | 26.98093855, **14.12848781**, 63.60068241 | w8, w9, w10, **w15** |
+| `next_forget_stability` | 1.9016012, 2.0777825, 2.3257503, 2.62916465 | w11, w12, w13, w14 |
+
+**The bolded one is the Hard rating, and it is the only published number in
+either fixture that exercises w15.** A mutation check sets w15 to 1 and
+asserts the Hard row breaks while Again and Good do not, so the coverage is
+demonstrated rather than asserted.
+
+**w0, w1 and w5 are formula conformance, not independent reproduction, and
+no fixture can change that.** Both py-fsrs and ts-fsrs *define* initial
+stability as `w[G−1]` and initial difficulty as `w4 − w5·(G−3)`; ts-fsrs's
+own tests assert those identities rather than any computed constant. There
+is no number out there to disagree with. What the test catches is an index
+off-by-one or a sign error — real mistakes, and the only ones available to
+make — and it is labelled as that rather than as a reproduction.
+
+**Easy (w3, w16) stays permanently uncovered and should.** D3 removed the
+grade, so this engine cannot produce it.
 
 ### R4 as built (2026-09-19)
 
@@ -233,7 +273,7 @@ it. Worth knowing if a future weight set goes near either.
 
 1. **Contract freeze:** every consumer imports only `LearnerQuery`; a symbol scan finds zero direct learner-storage access outside the implementation module (I6).
 2. **Fake parity:** all four consumers' test suites pass against the deterministic fake with no reference to the real implementation.
-3. ~~**FSRS reference vectors:** the implementation reproduces the pinned FSRS version's published test vectors exactly.~~ **MET 2026-10-07** — py-fsrs v2.1.0's `test_repeat`, vendored and reproduced exactly on all ten memory-state updates. Four reachable weights (w0, w1, w5, w15) are not covered by that one vector; see "Acceptance 3 as built".
+3. ~~**FSRS reference vectors:** the implementation reproduces the pinned FSRS version's published test vectors exactly.~~ **MET 2026-10-07** — py-fsrs v2.1.0's `test_repeat`, vendored and reproduced exactly on all ten memory-state updates. Extended 2026-10-08 with a second reference (ts-fsrs v3.5.6) covering the component formulas, which closes w15 numerically and w0/w1/w5 as formula conformance; see "The gap closed".
 4. **One rule:** a scan confirms exactly one review-scheduling code path exists; a deliberately reintroduced second path fails the build (I5).
 5. **Ordering only:** a fixed-seed replay shows the scheduler never serves a word that band/tier/freshness/language-scope rules excluded (I3).
 6. **Identity keying:** за́мок and замо́к schedule independently; рука and ру́ку schedule independently (I4).
