@@ -21,6 +21,16 @@ build inputs and are not redistributed.
   committed); only the filtered word lists ship. Attribution: © the respective
   Wikipedia contributors, via Leipzig, CC BY 4.0.
 
+## English (en)
+- **CMU Pronouncing Dictionary (cmudict)** — US-English pronunciations, used by
+  `tools/build_collisions.py` to compute which words the audio cannot tell
+  apart, so a learner is not marked wrong for a real homophone. © 1993-2015
+  Carnegie Mellon University, **BSD-style licence** — full text beside the data
+  in `tools/wordpipe/sources/cmudict.LICENSE`, which that licence requires to
+  travel with any redistribution of the source. https://github.com/cmusphinx/cmudict
+  Build input: only the derived collision tables
+  (`assets/words/<lang>/homophones.txt`) ship.
+
 ## Mandarin (zh)
 - **CC-CEDICT** — Chinese-English dictionary (definitions, pinyin).
   © MDBG, licensed **CC BY-SA 4.0**. https://www.mdbg.net/chinese/dictionary?page=cc-cedict

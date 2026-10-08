@@ -82,8 +82,20 @@ tools/langdata/out/
 spell-wasm/
 
 # wordpipe open corpora (large, regenerable)
-tools/wordpipe/sources/
+# NOTE the trailing /* : git cannot re-include a file whose PARENT DIRECTORY
+# is excluded, so the negations below only work against the contents.
+tools/wordpipe/sources/*
 tools/wordpipe/out/
+# ...except cmudict, which is NOT regenerable from anything in this repo and is
+# an INPUT TO A GATE. tools/build_collisions.py computes the English collision
+# table from it, and treats a missing cmudict as a failure on purpose. Ignoring
+# it meant every fresh worktree lacked it, so the table could be regenerated at
+# a third of its proper size and pushed: that happened in ebd6a673 (80 sets
+# instead of 263) and shipped a day of learners being marked wrong for real
+# homophones. Committed 2026-10-08 so the gate can run anywhere. BSD-style
+# licence, (C) 1993-2015 Carnegie Mellon University, text beside the data.
+!tools/wordpipe/sources/cmudict.dict
+!tools/wordpipe/sources/cmudict.LICENSE
 .claude/worktrees/
 .corpus-cache/
 

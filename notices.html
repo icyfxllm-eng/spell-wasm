@@ -32,6 +32,10 @@
 <li><strong>CC-CEDICT</strong> (mdbg.net) — Chinese-English glosses for the zh word bank, extracted by scripts/build-zh-glosses.py into backend/zh_glosses.json and served by /api/meaning. © CC-CEDICT contributors, <strong>CC BY-SA 4.0</strong>.</li>
 <li><strong>Leipzig Corpora Collection</strong> (wortschatz-leipzig.de) — monolingual, frequency-ranked word lists (Wikipedia/news editions), <strong>CC BY 4.0</strong>. Used by <code>scripts/build-bigbank.py</code> (production banks), <code>scripts/build-zh-bank.py</code> (the Mandarin <code>cmn_wikipedia_2021_100K</code> list), <code>scripts/build-hi-bank.py</code> (the Hindi production bank, <code>hin_wikipedia_2021_100K</code>), and <code>scripts/build-draft-banks.py</code> (the ar/fa/ur/ru audit drafts) to augment or build word banks from real, attested vocabulary. Build input only (cached under <code>.corpus-cache/</code>, not committed); only the filtered word lists ship. Attribution: © the respective Wikipedia contributors, via Leipzig, CC BY 4.0.</li>
 </ul>
+<h2>English (en)</h2>
+<ul>
+<li><strong>CMU Pronouncing Dictionary (cmudict)</strong> — US-English pronunciations, used by <code>tools/build_collisions.py</code> to compute which words the audio cannot tell apart, so a learner is not marked wrong for a real homophone. © 1993-2015 Carnegie Mellon University, <strong>BSD-style licence</strong> — full text beside the data in <code>tools/wordpipe/sources/cmudict.LICENSE</code>, which that licence requires to travel with any redistribution of the source. <a href="https://github.com/cmusphinx/cmudict" rel="noopener noreferrer">https://github.com/cmusphinx/cmudict</a> Build input: only the derived collision tables (<code>assets/words/&lt;lang&gt;/homophones.txt</code>) ship.</li>
+</ul>
 <h2>Mandarin (zh)</h2>
 <ul>
 <li><strong>CC-CEDICT</strong> — Chinese-English dictionary (definitions, pinyin). © MDBG, licensed <strong>CC BY-SA 4.0</strong>. <a href="https://www.mdbg.net/chinese/dictionary?page=cc-cedict" rel="noopener noreferrer">https://www.mdbg.net/chinese/dictionary?page=cc-cedict</a></li>
