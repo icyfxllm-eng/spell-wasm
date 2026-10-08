@@ -119,7 +119,68 @@ Produce `learning_l0_census.md`:
 - **Graduation:** a success whose next interval is over 7 days (the old ladder's top rung) leaves the queue, firing redemption and the journal's "mastered" as before. With the defaults that's about 5 successes over about 9 days (boxes: 5 over about 11).
 - **Carry-over (signed 2026-09-19):** entries stored by a pre-R2 build keep their due time. Boxes 1-2 become the learning steps, and boxes 3, 4 and 5 become FSRS stability 1, 3 and 7 days, with difficulty D0(Again).
 - **Identity-keyed** (I4) on the existing `word_id0` key: за́мок and замо́к, and рука and ру́ку, are independent cards (unit test).
-- **Not yet:** acceptance 3's vendored FSRS-4.5 reference vectors. The formulas are checked against their published form in-test, and per-word scheduling is checked end to end in `review-queue.mjs`.
+- **Acceptance 3 is DONE, 2026-10-07.** See "Acceptance 3 as built" below.
+
+### Acceptance 3 as built (2026-10-07) — the reference vectors
+
+**There is no official FSRS vector file.** The project ships none, so the
+reference is another implementation's own hardcoded expectations:
+**py-fsrs `v2.1.0`, `tests/test_fsrs.py::test_repeat`**, vendored at
+`tests/fixtures/fsrs/py-fsrs-2.1.0-test_repeat.json` and exercised by
+`tests/fsrs_reference_vectors.rs`.
+
+**The version was established from the source, not the version number.**
+py-fsrs v2.1.0 carries `DECAY = -0.5`, `FACTOR = 0.9^(1/DECAY) − 1` (= 19/81),
+the power forgetting curve, the *linear* initial difficulty `w4 − w5·(G−3)`
+and a 17-value parameter vector — FSRS-4.5 on every count. fsrs-rs `v1.3.1`
+was checked first and rejected: it already ships 19 parameters, so it is
+FSRS-5.
+
+**Two checks, failing for different reasons.** The constants are checked
+separately from the arithmetic, because one can be right while the other is
+wrong:
+
+1. `FSRS_W` equals the published FSRS-4.5 default set, all 17 values.
+2. Our formulas, run on **py-fsrs's** weights rather than ours, reproduce its
+   published trajectory. Running our weights through our own formulas would
+   only re-assert our own constants.
+
+**It reproduces exactly** — all ten memory-state updates, the lapse included:
+
+    5, 16, 43, 106, 236, 12, 25, 47, 85, 147
+
+(Thirteen reviews produce thirteen intervals, but three are same-day
+scheduler steps in py-fsrs's Learning/Relearning states that do not touch S
+or D. At the 0.9 target retention an FSRS interval reduces to `round(S)` —
+the interval formula and `FACTOR` cancel — so a published interval list *is*
+a published stability trajectory.)
+
+**WHAT ACCEPTANCE 3 DOES NOT COVER, found by mutating each weight.** Six are
+structurally unreachable by this vector; doubling them changes nothing:
+
+| | why |
+|---|---|
+| w0 | initial stability after **Again** — the sequence opens Good, and its one Again lands at `reps > 0`, taking the forget path |
+| w1 | initial stability after **Hard** — no Hard in the sequence |
+| w3 | initial stability after **Easy** — no Easy, and D3 removed the grade |
+| w5 | the D0 slope `w4 − w5·(G−3)` — zero for Good, never reached by the Again |
+| w15 | the **Hard penalty** — no Hard |
+| w16 | the Easy bonus — no Easy, none exists here |
+
+**Four of those — w0, w1, w5 and w15 — are reachable in this engine**, so
+they are genuinely unverified against any reference. Closing that needs a
+second vector opening with Again or Hard; none is published, so it would
+have to come from another implementation's tests. Recorded rather than
+papered over.
+
+The remaining eleven are mutation-checked at 2×, not 1%: intervals are whole
+days and rounding swallows a 1% nudge to w7, w11, w12 or w14.
+
+**Two deviations from py-fsrs v2.1.0, both deliberate and neither reached by
+the vector.** Ours omits the `max(w[G−1], 0.1)` floor on initial stability
+(moot at every pinned weight, all well above 0.1), and ours additionally
+clamps post-lapse stability with `.min(current)` so a lapse can never raise
+it. Worth knowing if a future weight set goes near either.
 
 ### R4 as built (2026-09-19)
 
@@ -172,7 +233,7 @@ Produce `learning_l0_census.md`:
 
 1. **Contract freeze:** every consumer imports only `LearnerQuery`; a symbol scan finds zero direct learner-storage access outside the implementation module (I6).
 2. **Fake parity:** all four consumers' test suites pass against the deterministic fake with no reference to the real implementation.
-3. **FSRS reference vectors:** the implementation reproduces the pinned FSRS version's published test vectors exactly. *(C3: the pinned version is FSRS-4.5; the vectors are reference outputs from a published FSRS-4.5 implementation, vendored as a fixture.)*
+3. ~~**FSRS reference vectors:** the implementation reproduces the pinned FSRS version's published test vectors exactly.~~ **MET 2026-10-07** — py-fsrs v2.1.0's `test_repeat`, vendored and reproduced exactly on all ten memory-state updates. Four reachable weights (w0, w1, w5, w15) are not covered by that one vector; see "Acceptance 3 as built".
 4. **One rule:** a scan confirms exactly one review-scheduling code path exists; a deliberately reintroduced second path fails the build (I5).
 5. **Ordering only:** a fixed-seed replay shows the scheduler never serves a word that band/tier/freshness/language-scope rules excluded (I3).
 6. **Identity keying:** за́мок and замо́к schedule independently; рука and ру́ку schedule independently (I4).

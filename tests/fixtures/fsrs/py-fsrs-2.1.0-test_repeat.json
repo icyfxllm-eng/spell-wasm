@@ -1,0 +1,32 @@
+{
+  "_what": "CC-LEARNING-ENGINE-L0 acceptance 3 — reference outputs from a published FSRS-4.5 implementation.",
+  "_source": {
+    "project": "open-spaced-repetition/py-fsrs",
+    "tag": "v2.1.0",
+    "file": "tests/test_fsrs.py",
+    "test": "test_repeat",
+    "fetched": "2026-10-07",
+    "url": "https://raw.githubusercontent.com/open-spaced-repetition/py-fsrs/v2.1.0/tests/test_fsrs.py"
+  },
+  "_why_this_version": "v2.1.0 is FSRS-4.5, which is what D3 pins. Verified from its own source rather than its version number: src/fsrs/fsrs.py has DECAY = -0.5 and FACTOR = 0.9**(1/DECAY) - 1 (= 19/81), the power forgetting curve (1 + FACTOR*t/S)**DECAY, the LINEAR initial difficulty w4 - w5*(r-3), and a 17-value parameter vector. FSRS-4 used an exponential curve and FSRS-5 uses 19 parameters and an exponential D0 -- neither matches. fsrs-rs v1.3.1 was checked first and rejected: it already ships 19 parameters, so it is FSRS-5.",
+  "_why_their_weights_and_not_ours": "These are the weights that test hardcodes, NOT the FSRS-4.5 defaults and NOT ours. That is the point. Running our formulas on their parameters tests the ARITHMETIC; running ours on ours would only re-assert our own constants. Our pinned FSRS_W is checked separately against the published 4.5 default set.",
+  "weights": [1.14, 1.01, 5.44, 14.67, 5.3024, 1.5662, 1.2503, 0.0028,
+              1.5489, 0.1763, 0.9953, 2.7473, 0.0179, 0.3105, 0.3976, 0.0, 2.0902],
+  "grades": ["Good", "Good", "Good", "Good", "Good", "Good",
+             "Again", "Again", "Good", "Good", "Good", "Good", "Good"],
+  "published_interval_history": [0, 5, 16, 43, 106, 236, 0, 0, 12, 25, 47, 85, 147],
+  "_reading_the_history": "Thirteen reviews, thirteen intervals, but only TEN are memory-state outputs. py-fsrs runs a card through New -> Learning -> Review -> Relearning, and the three zeros are same-day scheduler steps that do not touch S or D: review 1 (New, memory initialised but the card is held in Learning), and reviews 8 and 9 (Relearning steps). The remaining ten are the core trajectory this fixture tests.",
+  "_interval_equals_stability": "At the 0.9 target retention FSRS's interval reduces to round(S): interval = S/FACTOR * (0.9^(1/DECAY) - 1), and FACTOR is defined as exactly that same quantity, so the two cancel. The published interval list is therefore a published STABILITY trajectory, rounded, which is what makes it usable as a core vector at all.",
+  "core_updates": [
+    {"at_review": 1,  "grade": "Good",  "elapsed_days": null, "expect_interval": 5,   "_note": "initial stability = w[2]; reported at review 2 once the card leaves Learning"},
+    {"at_review": 3,  "grade": "Good",  "elapsed_days": 5,    "expect_interval": 16},
+    {"at_review": 4,  "grade": "Good",  "elapsed_days": 16,   "expect_interval": 43},
+    {"at_review": 5,  "grade": "Good",  "elapsed_days": 43,   "expect_interval": 106},
+    {"at_review": 6,  "grade": "Good",  "elapsed_days": 106,  "expect_interval": 236},
+    {"at_review": 7,  "grade": "Again", "elapsed_days": 236,  "expect_interval": 12,  "_note": "the lapse; reported at review 9 once the card leaves Relearning"},
+    {"at_review": 10, "grade": "Good",  "elapsed_days": 12,   "expect_interval": 25},
+    {"at_review": 11, "grade": "Good",  "elapsed_days": 25,   "expect_interval": 47},
+    {"at_review": 12, "grade": "Good",  "elapsed_days": 47,   "expect_interval": 85},
+    {"at_review": 13, "grade": "Good",  "elapsed_days": 85,   "expect_interval": 147}
+  ]
+}

@@ -288,7 +288,22 @@ pub fn fsrs_review(f: &mut FsrsState, correct: bool, day: u32) {
 /// in the crate (C3): the skill model and the per-word review queue
 /// (`review.rs`) both call it.
 pub fn fsrs_review_graded(f: &mut FsrsState, grade: Grade, day: u32) {
-    let w = &FSRS_W;
+    fsrs_review_graded_with(&FSRS_W, f, grade, day)
+}
+
+/// The same review, against an explicit parameter set.
+///
+/// Exists for one reason: CC-LEARNING-ENGINE-L0 acceptance 3 checks this
+/// implementation against reference outputs published by another FSRS-4.5
+/// implementation, and those outputs were produced with that project's own
+/// weights rather than ours. Comparing against them means running OUR
+/// formulas on THEIR parameters, which isolates the arithmetic from the
+/// choice of constants -- the only way the comparison says anything.
+///
+/// The game never calls this. `fsrs_review_graded` is the one entry point
+/// and it always passes the pinned `FSRS_W` (D4: defaults only, no
+/// per-player fitting).
+pub fn fsrs_review_graded_with(w: &[f64; 17], f: &mut FsrsState, grade: Grade, day: u32) {
     let g = grade.g();
     if f.reps == 0 {
         // First exposure: initial stability is w[G−1] (w0 again, w1 hard,
