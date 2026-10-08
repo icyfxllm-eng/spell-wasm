@@ -331,8 +331,14 @@ pub fn choose(lang: &str, n: usize, tier: Tier, seed: u64, personal: &Personal) 
 
 /// A Word Mode board, or None (serve Number Mode instead). Hard and Expert need
 /// a necessary fragment, so a word set that cannot make one is redrawn.
+/// How many symbol sets `board` draws before giving up. A set also has to be able to make a
+/// fragment at Hard and Expert; after the CC-BANK-PURITY sweep only about one Korean Expert set
+/// in twelve can (short real headwords share few letters), so 24 left a one-in-eight chance of
+/// no board at all for some seeds. Deterministic: draw k only ever depends on (seed, k).
+const BOARD_DRAWS: u64 = 160;
+
 pub fn board(lang: &str, cfg: &Config, seed: u64, personal: &Personal) -> Option<Board> {
-    for k in 0..24u64 {
+    for k in 0..BOARD_DRAWS {
         let words = choose(lang, cfg.size.n, cfg.tier, mix(seed, k), personal)?;
         let (symbols, glyphs) = word_symbols(&words);
         if matches!(cfg.tier, Tier::Hard | Tier::Expert) && !symbols.fragments_possible() {
