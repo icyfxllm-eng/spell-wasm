@@ -154,9 +154,11 @@ fn row8_haustuer_CONFLICT_no_chip() {
     //            "never split and never gets a suggestion". The chip the row
     //            asks for violates the invariant three lines above it.
     let out = one("Haustür", "de");
-    // Note the case: F5 canonicalizes to the bank's own form, which is
-    // lowercase in the de bank.
-    assert_eq!(texts(&out), ["haustür"]);
+    // Note the case: F5 canonicalizes to the bank's own form. That form was
+    // lowercase until CC-BANK-PURITY Phase A (3e54e8d6) capitalised 1,710
+    // German nouns -- German capitalises every noun, so the old `haustür` was
+    // simply misspelled. The rule under test did not change; the bank did.
+    assert_eq!(texts(&out), ["Haustür"]);
     assert!(out[0].unbunch.is_none(), "I-U2: a bank word gets no offer");
 }
 
