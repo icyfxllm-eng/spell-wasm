@@ -47,8 +47,9 @@ for r in rows:
 
 # a fix may land on a word another fix (or a kept row) also produces: first one wins, later ones are quarantined
 quar_lines = {}; manifest = []; corrections = []; recap = []; rekey = {l: {} for l in ALL}; gone = {l: set() for l in ALL}
+seen_l = {}
 for (l, t), ws in lines.items():
-    kept, seen = [], set()
+    kept = []; seen = seen_l.setdefault(l, set())   # tiers are visited easy..expert, so the earliest tier wins
     for i, w in enumerate(ws):
         a = act.get((l, nfc(w)))
         new = w

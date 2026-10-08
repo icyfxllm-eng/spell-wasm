@@ -38,8 +38,8 @@ export const WITHDRAWN = {
 export const KNOWN_GAPS = {
   ar: { chars: 'أؤإئ', why: 'hamza carriers; أ alone appears 586 times. A real hole — the review must add them.' },
   fr: { chars: 'œ', why: 'the oe ligature, 9 occurrences. Needs a spoken name ("o e lie" or similar) from a speaker.' },
-  hi: { chars: 'ङञ', why: 'two nasals, 34 occurrences between them. Real, small.' },
-  ja: { chars: 'ぁぃぅぇぉゎゔ', why: 'small kana and vu. Spoken as "small a" etc.; the draft has no convention for it.' },
+  hi: { chars: 'ञ', why: 'a nasal. Real, small. (ङ left the list when CC-BANK-PURITY Phase A quarantined the rows that needed it.)' },
+  ja: { chars: 'ぁぃぇゔ', why: 'small kana and vu (ぅ ぉ ゎ left the list when CC-BANK-PURITY Phase A quarantined the rows that needed them). Spoken as "small a" etc.; the draft has no convention for it.' },
   vi: {
     chars: 'fjwzàáãèéìíòóõùúýĩũạảấầẩẫậắằẳẵặẹẻẽếềểễệỉịọỏốồổỗộớờởỡợụủứừửữựỳỵỷ',
     why: 'the largest real hole. `diacritics` is EMPTY, so every toned vowel is unspeakable and a Vietnamese player can say base letters only. f/j/w/z are loanword letters the alphabet lacks. This one needs a scheme (letter + tone name), not just entries.',
