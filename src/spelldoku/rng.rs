@@ -1,6 +1,9 @@
 //! A tiny deterministic generator (splitmix64). Integer arithmetic only, so a
 //! seed gives the same sequence on iOS, Android, wasm and the test host (I5).
 
+/// Clone/Eq so a game state that owns a stream can be copied and compared
+/// (CC-BOARD-GAME I3); the stream itself is unchanged.
+#[derive(Clone, Debug, PartialEq, Eq)]
 pub struct Rng(u64);
 
 impl Rng {

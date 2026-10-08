@@ -1,0 +1,26 @@
+//! Includes the REAL engine sources by path (no copy), under the module names
+//! they expect: `crate::consts`, `crate::spelldoku::rng`, `crate::boardgame`.
+#![allow(dead_code)]
+
+#[path = "../../../src/consts.rs"]
+mod consts;
+
+#[path = "../../../src/spelldoku/rng.rs"]
+pub mod rng_impl;
+
+mod spelldoku {
+    pub use super::rng_impl as rng;
+}
+
+#[path = "../../../src/boardgame/mod.rs"]
+mod boardgame;
+
+#[no_mangle]
+pub extern "C" fn golden_rng_1000() -> u64 {
+    boardgame::golden::rng_1000()
+}
+
+#[no_mangle]
+pub extern "C" fn golden_game() -> u64 {
+    boardgame::golden::game()
+}

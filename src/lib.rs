@@ -21,6 +21,8 @@ mod chains; // CC-WORD-CHAINS F2/F3 (chain rules + per-language unit table)
 mod impostor; // CC-IMPOSTOR F2 (distractor generator)
 #[cfg(not(feature = "web"))]
 mod bee; // CC-BEE-SIM F2/F3 (bee engine + contestant table)
+#[cfg(not(feature = "web"))]
+mod boardgame; // CC-BOARD-GAME v1.1 F1 -- the pure engine (app only, I13)
 mod wordpic; // CC-WORD-PICTURE core (calligrams)
 mod input_provenance;
 pub mod learner; // CC-LEARNING-ENGINE L0 (BKT + FSRS core; selection arrives with L1) — pub for R3 (tests/learner_simulator.rs)

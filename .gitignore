@@ -113,3 +113,5 @@ tools/wordpipe/out/
 ios/NativeLanguageKit/.build/
 content-pipeline/wordpic/.tone-probe/
 contact-sheet/
+tools/boardgame-golden/target/
+tools/boardgame-golden/Cargo.lock

@@ -1,0 +1,17 @@
+# CC-BOARD-GAME A15: the engine compiled for wasm32, to prove it computes the
+# same numbers there as on the host. Its own workspace so it never joins the
+# app build; see scripts/boardgame-wasm-golden.mjs.
+[workspace]
+
+[package]
+name = "boardgame_golden"
+version = "0.0.0"
+edition = "2021"
+publish = false
+
+[lib]
+crate-type = ["cdylib"]
+path = "src/lib.rs"
+
+[features]
+education = []
