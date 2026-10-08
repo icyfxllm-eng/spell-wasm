@@ -865,5 +865,7 @@
   "zh.rev.toneMiss": "第 {n} 个音节：拼对了，声调错了",
   "zh.rev.toneRetry": "就差一点 — 拼音对了，检查声调",
   "voiceSpell.micSilent": "麦克风没有传入声音。",
-  "spellit.guide.clarify": "字母不好辨认？可以说\"B，boy 的 B\"。"
+  "spellit.guide.clarify": "字母不好辨认？可以说\"B，boy 的 B\"。",
+  "notices.title": "声明",
+  "notices.small": "本应用所使用的开放数据与字体"
 }

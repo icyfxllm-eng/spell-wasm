@@ -865,5 +865,7 @@
   "zh.rev.toneMiss": "Sylaba {n}: dobry dźwięk, zły ton",
   "zh.rev.toneRetry": "Blisko — sylaby dobre, sprawdź tony",
   "voiceSpell.micSilent": "Mikrofon nie przesyła dźwięku.",
-  "spellit.guide.clarify": "Trudna litera? Powiedz „B jak Barbara\"."
+  "spellit.guide.clarify": "Trudna litera? Powiedz „B jak Barbara\".",
+  "notices.title": "Informacje",
+  "notices.small": "Otwarte dane i kroje pisma, na których opiera się aplikacja"
 }

@@ -865,5 +865,7 @@
   "zh.rev.toneMiss": "अक्षर {n}: ध्वनि सही, स्वर ग़लत",
   "zh.rev.toneRetry": "बहुत क़रीब — अक्षर सही, स्वर देखिए",
   "voiceSpell.micSilent": "माइक्रोफ़ोन से आवाज़ नहीं आ रही है।",
-  "spellit.guide.clarify": "कठिन अक्षर? कहें \"बी जैसे बॉल में\"।"
+  "spellit.guide.clarify": "कठिन अक्षर? कहें \"बी जैसे बॉल में\"।",
+  "notices.title": "सूचनाएँ",
+  "notices.small": "खुला डेटा और फ़ॉन्ट जिन पर यह ऐप बना है"
 }

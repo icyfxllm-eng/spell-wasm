@@ -50,6 +50,119 @@ FORM_OF = re.compile(
     r"(?:\s*(?:,|and|or)\s*)?)+ of\b",
     re.IGNORECASE,
 )
+# A form-of gloss is a POINTER, and the two kinds of pointer are not alike.
+#
+#   INFLECTION -- "plural of ano", "simple past of take", "feminine of dois".
+#   The bank word is a DIFFERENT form of a different word. A player shown
+#   "plural: a year" who writes anos has shown real knowledge, and 2,029 bank
+#   rows across 8 languages had no definition at all while these were dropped.
+#
+#   VARIANT -- "alternative spelling of ki", "misspelling of", "romanization
+#   of". The bank word is the SAME word spelled another way, which in a
+#   SPELLING game means two correct spellings behind one meaning. Every
+#   Vietnamese form-of row is of this kind, which is why vi gains nothing here
+#   and must not: ky/ki is the hazard, not the opportunity.
+#
+# Order matters: VARIANT is tested first, so "alternative plural form of" is
+# rejected rather than read as a plural.
+FORM_OF_PARTS = re.compile(r"^(.*?)\s+of\s+(.+?)\s*$", re.S)
+VARIANT_REL = (
+    "alternative", "misspelling", "romanization", "pronunciation spelling",
+    "clipping", "contraction", "abbreviation", "initialism", "acronym",
+    "synonym", "apocopic", "obsolete form", "archaic form",
+)
+# The relation names a part-of-speech FAMILY, and the stem's gloss must belong
+# to it. The cache holds ONE gloss per word, so a stem can be cached under a
+# POS the relation cannot inflect: `used` ("simple past and past participle of
+# use") resolved against the cached NOUN sense of `use` and composed as
+# "simple past and past participle: The act of using." Caught in preview.
+# A verb relation demands a verb stem; everything else demands a non-verb one.
+VERB_REL = (
+    "past", "present", "participle", "gerund", "person", "infinitive",
+    "verbal noun", "imperative", "subjunctive", "indicative",
+)
+VERB_POS = {"verb", "participle"}
+# Adverbs, conjunctions and prepositions do not take a plural or a gender, so
+# a nominal relation pointing at one is a mis-keyed cache entry, not a form:
+# `cuales` is the plural of the relative pronoun cual ("which"), but cual was
+# cached as an ADVERB, and composing them read "plural: like, as, in the manner
+# of". Caught in preview.
+NOMINAL_POS = {
+    "noun", "proper noun", "pronoun", "numeral", "determiner", "adjective",
+}
+# A stem gloss can itself be PART cross-reference, in a shape FORM_OF does not
+# describe because the relation is not one it lists: `legen` glosses as
+# "causative of liegen: to lay; to put", which composed into the nested
+# "past participle: causative of liegen: to lay". One relation per row.
+# The shape is a pointer followed by a colon and the real gloss, which is how
+# Wiktionary writes a derived form. Anchoring on the COLON is what keeps an
+# ordinary definition safe: "a unit of length" has no colon and is a meaning.
+NESTED_REL = re.compile(r"^[^:]{0,60}\bof\b[^:]{0,60}:", re.I)
+INFLECT_REL = (
+    "plural", "singular", "verbal noun", "inflection", "feminine", "masculine",
+    "neuter", "diminutive", "augmentative", "past", "present", "gerund",
+    "participle", "person", "genitive", "nominative", "accusative", "dative",
+    "comparative", "superlative", "agent noun", "attributive",
+)
+# Mirrors the JUNK table in scripts/def-pool-check.mjs. The check re-derives it
+# from the shipped artifact on purpose (a hand-edit must not be able to promote
+# a bad row); this copy keeps the builder from emitting one in the first place.
+# It matters here because a composed definition inherits its STEM's gloss, and
+# a stem can carry the same junk a bank word can.
+JUNK = (
+    re.compile(r"^(?:Former )?ISO \d", re.I),
+    re.compile(r"\bISO 639\b", re.I),
+    re.compile(r"^Symbol for\b", re.I),
+    re.compile(r"mw-parser-output"),
+    re.compile(r"\{[^}]*:[^}]*\}"),
+    re.compile(r"^Terms relating to\b", re.I),
+)
+
+
+def junky(text):
+    return not text.strip() or "\n" in text or any(p.search(text) for p in JUNK)
+
+
+def resolve_form_of(gloss, real):
+    """An inflection whose STEM has a real definition becomes a definition.
+
+    Returns (relation, stem_definition) or None.
+
+    The stem's WORD is deliberately left OUT of what the caller composes.
+    `/api/defpool` feeds definition-match, where the definition is the PROMPT
+    and the word is the answer, so "plural of ano" would make the card
+    pickable by anyone who can spot a suffix without knowing any Spanish.
+    "plural: a year" still names the meaning and still separates the row from
+    its own stem's row, which is the whole job.
+    """
+    m = FORM_OF_PARTS.match(gloss)
+    if not m:
+        return None
+    rel = re.sub(r"\s+", " ", m.group(1).strip().lower())
+    stem = m.group(2).strip().strip(".")
+    if not rel or any(v in rel for v in VARIANT_REL):
+        return None
+    if not any(i in rel for i in INFLECT_REL):
+        return None
+    base = real.get(stem)
+    if not base:
+        return None
+    stem_pos = (base.get("pos") or "").lower()
+    if any(v in rel for v in VERB_REL):
+        # An unknown POS cannot be confirmed as a verb, so it is not one.
+        if stem_pos not in VERB_POS:
+            return None
+    elif stem_pos and stem_pos not in NOMINAL_POS:
+        return None
+    text = base.get("definition", "")
+    # A stem cached under the OLD looser regex carries form_of=False while its
+    # text is still a pointer. Composing against it would nest one cross-
+    # reference inside another ("genitive: plural of X").
+    if junky(text) or FORM_OF.match(text) or NESTED_REL.match(text):
+        return None
+    return rel, text
+
+
 TAG = re.compile(r"<[^>]+>")
 # Wiktionary wraps a topical label around the real senses ("Terms relating to
 # animals." before the Felidae gloss) and inlines CSS for its date/usage tags.
@@ -202,17 +315,35 @@ def build_lang(lang):
         toks = re.findall(r"[\w']+", text.lower())
         return any(t in block for t in toks)
 
+    # The stems an inflection can resolve against: every cached gloss that is
+    # a MEANING rather than a pointer. Keyed on the whole cache, not the bank,
+    # because a stem need not itself be a bank word (134 of them are not).
+    real = {w: r for w, r in cache.items()
+            if r.get("found") and not r.get("form_of") and r.get("definition")}
+
     pools, exclusions = {}, {}
     for tier in TIERS:
         rows = []
+        stems = {}
         for w in words[tier]:
             r = cache.get(w)
-            if not r or not r.get("found") or r.get("form_of"):
+            if not r or not r.get("found"):
                 continue
             d = unicodedata.normalize("NFC", r["definition"])
-            if FORM_OF.match(d):
-                continue  # cached under the old, looser regex — drop now
-            if blocked(d):
+            composed = False
+            # Keyed on the TEXT, not only the flag: rows cached under the old,
+            # looser regex carry form_of=False while still reading as pointers,
+            # and both kinds get the same treatment -- resolved, or dropped.
+            if r.get("form_of") or FORM_OF.match(d):
+                res = resolve_form_of(d, real)
+                if not res:
+                    continue  # an unresolvable pointer is not a definition
+                rel, base = res
+                d = f"{rel}: {unicodedata.normalize('NFC', base)}"
+                composed = True
+                stems[w] = FORM_OF_PARTS.match(
+                    unicodedata.normalize("NFC", r["definition"])).group(2).strip().strip(".")
+            if blocked(d) or junky(d):
                 continue
             wl = w.lower()
             leak = re.search(rf"(?<!\w){re.escape(wl)}(?!\w)", d.lower()) is not None
@@ -222,7 +353,11 @@ def build_lang(lang):
                 "definition": d,
                 "pos": r.get("pos", ""),
                 "prompt_grade": prompt,
-                "kid_register": tier in ("easy", "medium") and len(d) <= 60,
+                # Composed rows stay OUT of the kid register. The relation is
+                # the player's only clue to which form is wanted, and it is
+                # grammar jargon -- "third-person singular present" is not a
+                # prompt for a six-year-old in Spell Jr. Eric's to relax.
+                "kid_register": (not composed) and tier in ("easy", "medium") and len(d) <= 60,
             })
         # Ambiguity: identical definitions in one tier → none is prompt-grade,
         # and each excludes the others (they'd be two right answers).
@@ -243,6 +378,16 @@ def build_lang(lang):
                 if hit and hit != row["word"]:
                     exclusions.setdefault(row["word"], set()).add(hit)
                     exclusions.setdefault(hit, set()).add(row["word"])
+        # A composed inflection and its own stem are ONE meaning in two forms,
+        # and the near-miss rule above cannot see it: the stem's word is kept
+        # out of the composed text on purpose, so no token ever matches. Pair
+        # them here, or "a year" and "plural: a year" sit in one tier as two
+        # defensible answers to each other's card.
+        present = {row["word"] for row in rows}
+        for w, stem in stems.items():
+            if stem != w and stem in present:
+                exclusions.setdefault(w, set()).add(stem)
+                exclusions.setdefault(stem, set()).add(w)
         pools[tier] = rows
 
     out = {

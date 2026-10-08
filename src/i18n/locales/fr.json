@@ -865,5 +865,7 @@
   "zh.rev.toneMiss": "Syllabe {n} : bon son, mauvais ton",
   "zh.rev.toneRetry": "Tout près — bonnes syllabes, vérifiez les tons",
   "voiceSpell.micSilent": "Le microphone n'envoie aucun son.",
-  "spellit.guide.clarify": "Lettre difficile ? Dites « B comme Bernard »."
+  "spellit.guide.clarify": "Lettre difficile ? Dites « B comme Bernard ».",
+  "notices.title": "Mentions",
+  "notices.small": "Les données ouvertes et les polices sur lesquelles l'app repose"
 }

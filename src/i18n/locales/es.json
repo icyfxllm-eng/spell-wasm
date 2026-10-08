@@ -865,5 +865,7 @@
   "zh.rev.toneMiss": "Sílaba {n}: sonido correcto, tono incorrecto",
   "zh.rev.toneRetry": "Casi — sílabas correctas, revisa los tonos",
   "voiceSpell.micSilent": "El micrófono no está enviando sonido.",
-  "spellit.guide.clarify": "¿Letra difícil? Di \"B de burro\"."
+  "spellit.guide.clarify": "¿Letra difícil? Di \"B de burro\".",
+  "notices.title": "Avisos",
+  "notices.small": "Los datos abiertos y las tipografías en que se basa la app"
 }

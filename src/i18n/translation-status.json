@@ -6,7 +6,9 @@
     "hub.group.meaning",
     "top.theClimb",
     "settings.kid",
-    "ws.jr"
+    "ws.jr",
+    "notices.title",
+    "notices.small"
   ],
   "do_not_translate": {
     "sd.name": "SpellDoku — brand name (D5, signed). Do not re-propose.",

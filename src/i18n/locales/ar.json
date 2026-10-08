@@ -865,5 +865,7 @@
   "zh.rev.toneMiss": "المقطع {n}: الصوت صحيح والنبرة خاطئة",
   "zh.rev.toneRetry": "اقتربت — المقاطع صحيحة، راجع النبرات",
   "voiceSpell.micSilent": "الميكروفون لا يرسل أي صوت.",
-  "spellit.guide.clarify": "حرف صعب؟ قل \"ب مثل بيت\"."
+  "spellit.guide.clarify": "حرف صعب؟ قل \"ب مثل بيت\".",
+  "notices.title": "الإشعارات",
+  "notices.small": "البيانات المفتوحة والخطوط التي بُني عليها هذا التطبيق"
 }

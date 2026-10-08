@@ -865,5 +865,7 @@
   "zh.rev.toneMiss": "Silabi {n}: sauti sahihi, toni si sahihi",
   "zh.rev.toneRetry": "Karibu — silabi sahihi, angalia toni",
   "voiceSpell.micSilent": "Kipaza sauti hakitumi sauti.",
-  "spellit.guide.clarify": "Herufi ngumu? Sema \"B kama ya ball\"."
+  "spellit.guide.clarify": "Herufi ngumu? Sema \"B kama ya ball\".",
+  "notices.title": "Ilani",
+  "notices.small": "Data huria na fonti ambazo programu hii imejengwa juu yake"
 }

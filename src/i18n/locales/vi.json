@@ -865,5 +865,7 @@
   "zh.rev.toneMiss": "Âm tiết {n}: đúng âm, sai thanh điệu",
   "zh.rev.toneRetry": "Suýt rồi — đúng âm tiết, xem lại thanh điệu",
   "voiceSpell.micSilent": "Micrô không gửi âm thanh.",
-  "spellit.guide.clarify": "Chữ khó nghe? Hãy nói \"B như trong bóng\"."
+  "spellit.guide.clarify": "Chữ khó nghe? Hãy nói \"B như trong bóng\".",
+  "notices.title": "Thông báo",
+  "notices.small": "Dữ liệu mở và phông chữ mà ứng dụng này dựa vào"
 }

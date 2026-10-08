@@ -226,6 +226,8 @@ node scripts/letter-lexicon-check.mjs --selftest || { echo "GATE FAIL: letter-le
 echo "== gate: definition pools (the only content that ships without a release)"
 node scripts/def-pool-check.mjs || { echo "GATE FAIL: definition pools"; exit 1; }
 node scripts/def-pool-check.mjs --selftest || { echo "GATE FAIL: def-pool selftest — the gate no longer bites"; exit 1; }
+node scripts/notices-ship-check.mjs || { echo "GATE FAIL: third-party notices do not reach a player"; exit 1; }
+node scripts/notices-ship-check.mjs --selftest || { echo "GATE FAIL: notices-ship selftest — the gate no longer bites"; exit 1; }
 
 echo "== gate: cargo test"
 # Keep the OUTPUT, then judge it. The old form re-ran cargo and grepped

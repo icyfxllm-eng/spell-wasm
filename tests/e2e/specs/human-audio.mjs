@@ -114,7 +114,20 @@ export async function run(browser, base, suite) {
       page.on('request', (r) => { if (r.url().includes('/api/speak')) speak.push(r.url()); });
       await serveWord(page);
       const plays = await humanPlays(page);
-      assert(plays.length > 0, `no human clip played; log: ${JSON.stringify(await page.evaluate(() => window.__playLog))}`);
+      // The note's value is the thing that tells the two failures apart, and
+      // the comment above serveWord asked for it by name the last time this
+      // flaked. set_source writes the note for EVERY outcome and strictly
+      // after the play log, so:
+      //   note non-empty + empty log -> the router really chose another
+      //     source, which is an app behaviour and not a test race;
+      //   note EMPTY -> serveWord's 10s wait timed out and its .catch
+      //     swallowed it, so nothing had finished when we sampled.
+      // Without this, both read "no human clip played; log: []".
+      const note = await page.evaluate(() => {
+        const n = document.getElementById('audioSourceNote');
+        return n ? JSON.stringify(n.textContent) : 'NO #audioSourceNote';
+      });
+      assert(plays.length > 0, `no human clip played; note=${note}; log: ${JSON.stringify(await page.evaluate(() => window.__playLog))}`);
       await page.waitForFunction(() => document.getElementById('audioSourceNote').textContent === 'real voice',
         null, { timeout: 3000 });
       assert(speak.length === 0, `TTS was also requested: ${speak[0]}`);

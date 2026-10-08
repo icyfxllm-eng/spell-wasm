@@ -19,7 +19,12 @@ RUN cargo build --release --target wasm32-unknown-unknown --features web \
 # Stage 2: serve the static site with Caddy (automatic HTTPS included).
 FROM caddy:2-alpine
 COPY Caddyfile /etc/caddy/Caddyfile
-COPY index.html privacy.html audio-native.js telemetry-schema.js manifest.json sw.js /srv/
+# notices.html carries the third-party attributions (Leipzig CC BY 4.0,
+# CC-CEDICT and Wiktionary CC BY-SA 4.0, the fonts). It is generated from
+# NOTICES.md by scripts/build-notices.mjs and committed, because this serve
+# stage has no Node or Python to render it; notices-ship-check.mjs fails the
+# push if it drifts from its source or stops being copied here.
+COPY index.html privacy.html notices.html audio-native.js telemetry-schema.js manifest.json sw.js /srv/
 COPY icons /srv/icons
 # Self-hosted web fonts (FIX 1): index.html loads ./fonts/*.woff2 locally
 # instead of Google Fonts / jsdelivr, so the site makes zero external font

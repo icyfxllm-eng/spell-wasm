@@ -3206,6 +3206,15 @@
       <label class="set-row"><span class="lbl2"><span data-i18n="settings.slow">Slower voice</span><small data-i18n="settings.slowSmall">Speak each word more slowly</small></span><input type="checkbox" class="switch" id="slowToggle" /></label>
       <label class="set-row"><span class="lbl2"><span data-i18n="settings.realVoices">Real voices when available</span><small data-i18n="settings.realVoicesSmall">Hear a person say the word, where we have a checked recording</small></span><input type="checkbox" class="switch" id="realVoicesToggle" checked /></label>
       <div class="set-row" id="creditsRow"><span class="lbl2"><span data-i18n="credits.title">Credits</span><small data-i18n="credits.small">The people whose recordings you hear</small></span><button class="ghost" id="creditsBtn" data-i18n="lists.open" style="flex:none;border-radius:12px">Open</button></div>
+      <!-- Third-party notices. The Credits row above is about VOICES; this one
+           is the data and font attributions (Leipzig CC BY 4.0, CC-CEDICT and
+           Wiktionary CC BY-SA 4.0, the SIL OFL faces). notices.html is
+           generated from NOTICES.md by scripts/build-notices.mjs; until
+           2026-10-07 that file shipped nowhere and none of it reached a
+           player. A plain <a>, so no Rust id is involved and the dead-id law
+           has nothing to catch; target=_blank matches the outbound links
+           src/credits.rs already renders. -->
+      <div class="set-row" id="noticesRow"><span class="lbl2"><span data-i18n="notices.title">Notices</span><small data-i18n="notices.small">Open data and fonts this app is built on</small></span><a class="ghost" id="noticesLink" href="notices.html" target="_blank" rel="noopener noreferrer" data-i18n="lists.open" style="flex:none;border-radius:12px;text-decoration:none">Open</a></div>
       <!-- CC-ATTEMPTS-SHIELDS Feature 1 toggle. Row is hidden unless the dark
            feature flag is on (shown from Rust via flags::attempts_shields). -->
       <label class="set-row btn-hide" id="extraAttemptsRow"><span class="lbl2"><span data-i18n="settings.extraAttempts">Extra attempt on misses</span><small data-i18n="settings.extraAttemptsSmall">A second try when you miss a word</small></span><input type="checkbox" class="switch" id="extraAttemptsToggle" /></label>

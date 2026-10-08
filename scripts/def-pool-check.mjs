@@ -44,6 +44,17 @@ const JUNK = [
   [/mw-parser-output/, "inlined Wiktionary CSS"],
   [/\{[^}]*:[^}]*\}/, "a CSS rule"],
   [/^Terms relating to\b/i, "Wiktionary's topical label, not the gloss"],
+  // A grammar cross-reference is a POINTER, not a meaning: "plural of ano"
+  // tells a player nothing they can answer with. The builder used to drop
+  // every such row, which is why 2,029 bank rows across 8 languages carried no
+  // definition at all; it now RESOLVES the inflectional ones against their
+  // stem's gloss and composes "plural: year" instead. This law is what keeps
+  // the two apart -- a bare pointer must never reach the artifact, whether the
+  // builder stops resolving or a hand-edit puts one back. The shape is the
+  // same FORM_OF regex build-def-pools.py classifies with, deliberately: the
+  // builder decides, this re-decides on the shipped file.
+  [/^(?:(?:simple |archaic |dated |obsolete |informal |nonstandard )*(?:verbal noun|plural|singular|inflection|alternative(?: form| spelling)?|romanization|feminine|masculine|neuter|diminutive|augmentative|misspelling|past(?: tense)?|past participle|present(?: tense| participle)?|gerund|third-person singular|first-person singular|second-person singular|genitive|nominative|accusative|dative|comparative|superlative|agent noun|attributive form|clipping|contraction|abbreviation|initialism|acronym|synonym|apocopic form|pronunciation spelling)(?:\s*(?:,|and|or)\s*)?)+ of\b/i,
+   "a grammar cross-reference, not a meaning"],
   [/^\s*$/, "empty"],
 ];
 
@@ -202,6 +213,12 @@ if (process.argv.includes("--selftest")) {
     duplicate_def: { rows: [row({ word: "apple" }), row({ word: "pear" })], want: /share one definition/ },
     off_bank: { rows: [row({ word: "quince", definition: "A hard yellow fruit." })], want: /not in the en bank/ },
     missing_bank: { rows: [row()], want: /cannot verify freshness/ },
+    // The pointer law, both shapes the builder sees, and the composed row it
+    // now emits in their place -- which MUST stay clean, or the law would
+    // block the 2,029 rows it was written to make room for.
+    form_of_pointer: { rows: [row({ word: "pear", definition: "plural of apple" })], want: /grammar cross-reference/ },
+    form_of_compound: { rows: [row({ word: "pear", definition: "simple past and past participle of hold" })], want: /grammar cross-reference/ },
+    composed_inflection: { rows: [row({ word: "pear", definition: "plural: a round fruit" })], want: null },
   };
   let failed = 0;
   for (const [name, c] of Object.entries(cases)) {

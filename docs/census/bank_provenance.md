@@ -1,6 +1,9 @@
 # Word-bank provenance: the licence file no longer describes the banks
 
-**Status: DECISION REQUESTED. Nothing changed by this document.**
+**Status: PARTLY REMEDIED 2026-10-07 on Eric's "do the provenance remedy".**
+The paperwork corrections are applied to `assets/words/LICENSES.md`. One item
+from the proposed remedy below was DROPPED as misdiagnosed and replaced by a
+larger finding; see "What the remedy actually found", at the end.
 
 Found 2026-10-06 while cleaning the Vietnamese bank. The Vietnamese list turned
 out to be 73% not Vietnamese — English, brand names, place names, and the word
@@ -75,8 +78,16 @@ problem. Two things follow:
    screen for every shipped human-audio clip "whose license requires attribution
    (CC BY, CC BY-SA)". The word banks are not in it.
 
-This is a paperwork gap, not a rights problem: CC BY 4.0 content is shipping and
-being credited nowhere, while the licence file says none is shipping at all.
+This is a paperwork gap, not a rights problem: the licence file says no
+third-party lexicon ships, while CC BY 4.0 content does.
+
+**Correction 2026-10-07: "being credited nowhere" was wrong.** `NOTICES.md` at
+the repository root has recorded the Leipzig Corpora Collection at CC BY 4.0 all
+along, naming the scripts that use it and the attribution line. This document
+missed that file when it was written, and the error made the problem look like a
+missing attribution when it is really a CONTRADICTION between two files in one
+repository -- `LICENSES.md` denying what `NOTICES.md` records. The real
+attribution gap is a different one, below.
 
 ## Proposed remedy, NOT applied here
 
@@ -97,3 +108,44 @@ the third changes what a player sees, so none of it is applied here. Eric's call
 It does not say the banks are unlicensed, that anything must be removed, or that
 the hand-authored core is not original. The core is real; Leipzig was layered on
 top of it and the paperwork never caught up.
+
+
+## What the remedy actually found (2026-10-07)
+
+Applying this document's remedy turned up two things it had wrong and one thing
+it missed, so the record is here rather than in the commit alone.
+
+**Applied to `assets/words/LICENSES.md`:** Leipzig recorded as an actual source
+with its licence, the 14 pinned corpora and their retrieval spans; the "no
+third-party lexicon license to satisfy" claim struck; the length-tiering
+correction made; "11 locales" corrected to 16 bank directories; and two stale
+items fixed in passing (an "intended expansion" preamble that still said the
+pools had not grown, and a QA line naming nl/sv/nb/tr, cut from the registry).
+
+**DROPPED: "add the Leipzig attribution to the existing credits screen."** The
+diagnosis was wrong on two counts. `src/credits.rs` renders only the generated
+`assets/human-audio/credits.json`, whose `clips` array is currently EMPTY, and
+its player-facing copy is written about voice recordings: the settings subtitle
+is "The people whose recordings you hear", the intro names Lingua Libre, and
+the empty state reads "Every real-voice recording in this version is in the
+public domain". Adding corpora there would mean new player-facing strings in 15
+locales, to describe a list that exists for a different purpose.
+
+**MISSED, and it is the bigger one: `NOTICES.md` does not ship.** It is not in
+`dist/`, not in the iOS bundle, and not served by the web app; `index.html`
+mentions it only in a CSS comment. So every attribution it carries -- Leipzig
+CC BY 4.0, CC-CEDICT CC BY-SA 4.0, Wiktionary CC BY-SA 4.0, KANJIDIC2 CC BY-SA,
+JMdict-derived JLPT meanings, OpenDyslexic CC BY 3.0 -- reaches no user. The
+fonts are the one part already covered: `fonts/OFL.txt` IS copied into
+`dist/fonts/`, so the SIL OFL obligation to ship the licence alongside the font
+files is met.
+
+That reframes the player-facing item. It is not "put Leipzig in the voice
+credits"; it is "ship the notices file and reach it from the UI", which covers
+every data source at once instead of one of them. That is a product change with
+an i18n cost, so it is NOT applied here and remains Eric's call.
+
+Still open, unchanged by this pass: whether the Wikipedia CC BY-SA underlay
+matters for single-word extracts, and a human read of the Leipzig terms page --
+which could not be fetched on 2026-10-07 because the site is behind
+proof-of-work anti-bot protection, and the corpus archives carry no licence file.
