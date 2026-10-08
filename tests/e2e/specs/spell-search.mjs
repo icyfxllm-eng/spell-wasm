@@ -11,7 +11,8 @@ const LAUNCH = ['en', 'es', 'ru', 'fr', 'de', 'pt', 'pl', 'fil'];
 // Re-pinned 2026-09-22 with src/wordsearch/tests.rs, which carries the
 // reason: CC-AUDIO-CLARITY C10 took five other-variety words out of the
 // English bank, so the pool those 500 seeds draw from is a different pool.
-const GOLDEN = '0xcc9d3e40658b6357';
+// Re-pinned 2026-10-07 with src/wordsearch/tests.rs (CC-BANK-PURITY Phase A, on Eric's instruction).
+const GOLDEN = '0x79bf275efd79a445';
 
 const board = (page) => page.evaluate(() => JSON.parse(window.__spelltest.spellSearchBoard() || 'null'));
 

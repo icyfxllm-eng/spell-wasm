@@ -174,9 +174,14 @@ fn wordgrid_property_10k() {
 /// five English words whose spelling belonged to the other variety -- centre,
 /// theatre, grey, travelled, behaviour -- so the pool those 500 seeds draw from
 /// is a different pool and every grid after the first divergence moves with it.
+///
+/// Re-pinned 2026-10-07, from 0xcc9d3e40658b6357, on Eric's explicit instruction.
+/// CC-BANK-PURITY Phase A quarantined 9,341 non-word rows and respelled or
+/// capitalised 1,815 more, so the pools those 500 seeds draw from changed
+/// (reports/bank-purity-census.md, C4).
 /// A moved digest is only ever acceptable with a reason like this one beside
 /// it: the whole point of the pin is that nobody re-pins it casually.
-pub const GOLDEN: u64 = 0xcc9d_3e40_658b_6357;
+pub const GOLDEN: u64 = 0x79bf_275e_fd79_a445;
 
 #[test]
 fn wordgrid_determinism() {
