@@ -11595,8 +11595,6 @@ ru,expert,юнеско,not_in_reference_dictionary,C,,
 ru,expert,яковлев,proper_noun,B,,
 ru,expert,янг,abbreviation_or_noise,A,,
 ru,expert,японией,proper_noun,B,,
-ar,easy,بذرة,attached_conjunction_or_preposition,C,,prefix ب
-ar,easy,فأر,attached_conjunction_or_preposition,C,,prefix ف
 ar,medium,أى,not_in_reference_dictionary,C,,
 ar,medium,اخرى,not_in_reference_dictionary,C,,
 ar,medium,الاول,not_in_reference_dictionary,C,,
@@ -11619,6 +11617,7 @@ ar,medium,بقيادة,attached_conjunction_or_preposition,C,,prefix ب
 ar,medium,بكثير,attached_conjunction_or_preposition,C,,prefix ب
 ar,medium,بكم,attached_conjunction_or_preposition,C,,prefix ب
 ar,medium,بمدينة,attached_conjunction_or_preposition,C,,prefix ب
+ar,medium,بموجب,attached_conjunction_or_preposition,C,,prefix ب
 ar,medium,بنسبة,attached_conjunction_or_preposition,C,,prefix ب
 ar,medium,بنفسك,attached_conjunction_or_preposition,C,,prefix ب
 ar,medium,سكس,not_in_reference_dictionary,C,,
@@ -11669,7 +11668,6 @@ ar,medium,ولكنه,attached_conjunction_or_preposition,C,,prefix و
 ar,medium,ولكنها,attached_conjunction_or_preposition,C,,prefix و
 ar,medium,ومنها,attached_conjunction_or_preposition,C,,prefix و
 ar,medium,ونسبة,attached_conjunction_or_preposition,C,,prefix و
-ar,medium,وهل,attached_conjunction_or_preposition,C,,prefix و
 ar,medium,وهناك,attached_conjunction_or_preposition,C,,prefix و
 ar,medium,ويعتبر,attached_conjunction_or_preposition,C,,prefix و
 ar,medium,ويقول,attached_conjunction_or_preposition,C,,prefix و
@@ -11737,12 +11735,12 @@ ar,hard,بالكامل,attached_conjunction_or_preposition,C,,prefix بال
 ar,hard,بالنسبة,attached_conjunction_or_preposition,C,,prefix بال
 ar,hard,بالنظر,attached_conjunction_or_preposition,C,,prefix بال
 ar,hard,بجميع,attached_conjunction_or_preposition,C,,prefix ب
+ar,hard,بجوار,attached_conjunction_or_preposition,C,,prefix ب
 ar,hard,بحجم,attached_conjunction_or_preposition,C,,prefix ب
 ar,hard,بحد,attached_conjunction_or_preposition,C,,prefix ب
 ar,hard,بحكم,attached_conjunction_or_preposition,C,,prefix ب
 ar,hard,براون,not_in_reference_dictionary,C,,
 ar,hard,برعاية,attached_conjunction_or_preposition,C,,prefix ب
-ar,hard,بريد,attached_conjunction_or_preposition,C,,prefix ب
 ar,hard,بزيادة,attached_conjunction_or_preposition,C,,prefix ب
 ar,hard,بسعر,attached_conjunction_or_preposition,C,,prefix ب
 ar,hard,بعدة,attached_conjunction_or_preposition,C,,prefix ب
@@ -11769,14 +11767,11 @@ ar,hard,سوبر,not_in_reference_dictionary,C,,
 ar,hard,شىء,not_in_reference_dictionary,C,,
 ar,hard,عبدالرحمن,not_in_reference_dictionary,C,,
 ar,hard,فإني,attached_conjunction_or_preposition,C,,prefix ف
-ar,hard,فعالية,attached_conjunction_or_preposition,C,,prefix ف
 ar,hard,فعليا,attached_conjunction_or_preposition,C,,prefix ف
 ar,hard,فكل,attached_conjunction_or_preposition,C,,prefix ف
 ar,hard,فلماذا,attached_conjunction_or_preposition,C,,prefix ف
 ar,hard,فماذا,attached_conjunction_or_preposition,C,,prefix ف
 ar,hard,كأنها,attached_conjunction_or_preposition,C,,prefix ك
-ar,hard,كذا,attached_conjunction_or_preposition,C,,prefix ك
-ar,hard,كمان,attached_conjunction_or_preposition,C,,prefix ك
 ar,hard,كهذا,attached_conjunction_or_preposition,C,,prefix ك
 ar,hard,كهذه,attached_conjunction_or_preposition,C,,prefix ك
 ar,hard,لأفضل,attached_conjunction_or_preposition,C,,prefix ل
@@ -11795,10 +11790,8 @@ ar,hard,لحزب,attached_conjunction_or_preposition,C,,prefix ل
 ar,hard,لخدمة,attached_conjunction_or_preposition,C,,prefix ل
 ar,hard,لدولة,attached_conjunction_or_preposition,C,,prefix ل
 ar,hard,لرؤية,attached_conjunction_or_preposition,C,,prefix ل
-ar,hard,لسان,attached_conjunction_or_preposition,C,,prefix ل
 ar,hard,لسنوات,attached_conjunction_or_preposition,C,,prefix ل
 ar,hard,لشراء,attached_conjunction_or_preposition,C,,prefix ل
-ar,hard,لطيف,attached_conjunction_or_preposition,C,,prefix ل
 ar,hard,لعدد,attached_conjunction_or_preposition,C,,prefix ل
 ar,hard,لعلاج,attached_conjunction_or_preposition,C,,prefix ل
 ar,hard,لعمل,attached_conjunction_or_preposition,C,,prefix ل
@@ -11881,10 +11874,8 @@ ar,hard,وحين,attached_conjunction_or_preposition,C,,prefix و
 ar,hard,ورجال,attached_conjunction_or_preposition,C,,prefix و
 ar,hard,وسوريا,attached_conjunction_or_preposition,C,,prefix و
 ar,hard,وسيكون,attached_conjunction_or_preposition,C,,prefix و
-ar,hard,وشك,attached_conjunction_or_preposition,C,,prefix و
 ar,hard,وشمال,attached_conjunction_or_preposition,C,,prefix و
 ar,hard,وطلب,attached_conjunction_or_preposition,C,,prefix و
-ar,hard,وطن,attached_conjunction_or_preposition,C,,prefix و
 ar,hard,وعبد,attached_conjunction_or_preposition,C,,prefix و
 ar,hard,وعشرين,attached_conjunction_or_preposition,C,,prefix و
 ar,hard,وعلي,attached_conjunction_or_preposition,C,,prefix و
@@ -12067,7 +12058,6 @@ ar,expert,بسحب,attached_conjunction_or_preposition,C,,prefix ب
 ar,expert,بسوء,attached_conjunction_or_preposition,C,,prefix ب
 ar,expert,بصعوبة,attached_conjunction_or_preposition,C,,prefix ب
 ar,expert,بصمت,attached_conjunction_or_preposition,C,,prefix ب
-ar,expert,بطريق,attached_conjunction_or_preposition,C,,prefix ب
 ar,expert,بفترة,attached_conjunction_or_preposition,C,,prefix ب
 ar,expert,بفوز,attached_conjunction_or_preposition,C,,prefix ب
 ar,expert,بفيروس,attached_conjunction_or_preposition,C,,prefix ب
@@ -12107,24 +12097,19 @@ ar,expert,سانتوس,not_in_reference_dictionary,C,,
 ar,expert,سبورت,not_in_reference_dictionary,C,,
 ar,expert,ستيفان,not_in_reference_dictionary,C,,
 ar,expert,ستيوارت,not_in_reference_dictionary,C,,
-ar,expert,فخور,attached_conjunction_or_preposition,C,,prefix ف
-ar,expert,فذلك,attached_conjunction_or_preposition,C,,prefix ف
 ar,expert,فرانس,not_in_reference_dictionary,C,,
 ar,expert,فرانسيسكو,not_in_reference_dictionary,C,,
 ar,expert,فردا,attached_conjunction_or_preposition,C,,prefix ف
-ar,expert,فعلي,attached_conjunction_or_preposition,C,,prefix ف
 ar,expert,فعليك,attached_conjunction_or_preposition,C,,prefix ف
 ar,expert,فقام,attached_conjunction_or_preposition,C,,prefix ف
 ar,expert,فقلت,attached_conjunction_or_preposition,C,,prefix ف
 ar,expert,فلاديمير,not_in_reference_dictionary,C,,
-ar,expert,فلك,attached_conjunction_or_preposition,C,,prefix ف
 ar,expert,فيفا,not_in_reference_dictionary,C,,
 ar,expert,كا,not_in_reference_dictionary,C,,
 ar,expert,كابتن,not_in_reference_dictionary,C,,
 ar,expert,كاتالونيا,not_in_reference_dictionary,C,,
 ar,expert,كارول,not_in_reference_dictionary,C,,
 ar,expert,كاي,not_in_reference_dictionary,C,,
-ar,expert,كبر,attached_conjunction_or_preposition,C,,prefix ك
 ar,expert,كدة,not_in_reference_dictionary,C,,
 ar,expert,كذالك,attached_conjunction_or_preposition,C,,prefix ك
 ar,expert,كروز,attached_conjunction_or_preposition,C,,prefix ك
@@ -12163,7 +12148,6 @@ ar,expert,لجائزة,attached_conjunction_or_preposition,C,,prefix ل
 ar,expert,لجامعة,attached_conjunction_or_preposition,C,,prefix ل
 ar,expert,لجلب,attached_conjunction_or_preposition,C,,prefix ل
 ar,expert,لحظه,attached_conjunction_or_preposition,C,,prefix ل
-ar,expert,لحق,attached_conjunction_or_preposition,C,,prefix ل
 ar,expert,لحكم,attached_conjunction_or_preposition,C,,prefix ل
 ar,expert,لحكومة,attached_conjunction_or_preposition,C,,prefix ل
 ar,expert,لحين,attached_conjunction_or_preposition,C,,prefix ل
@@ -12182,7 +12166,6 @@ ar,expert,لفترات,attached_conjunction_or_preposition,C,,prefix ل
 ar,expert,لفهم,attached_conjunction_or_preposition,C,,prefix ل
 ar,expert,لقانون,attached_conjunction_or_preposition,C,,prefix ل
 ar,expert,لقتل,attached_conjunction_or_preposition,C,,prefix ل
-ar,expert,لقمة,attached_conjunction_or_preposition,C,,prefix ل
 ar,expert,لقيادة,attached_conjunction_or_preposition,C,,prefix ل
 ar,expert,لكافة,attached_conjunction_or_preposition,C,,prefix ل
 ar,expert,لكثير,attached_conjunction_or_preposition,C,,prefix ل
@@ -12465,12 +12448,10 @@ ar,expert,وتقع,attached_conjunction_or_preposition,C,,prefix و
 ar,expert,وتنفيذ,attached_conjunction_or_preposition,C,,prefix و
 ar,expert,وتوزيع,attached_conjunction_or_preposition,C,,prefix و
 ar,expert,وثلاثين,attached_conjunction_or_preposition,C,,prefix و
-ar,expert,وجودي,attached_conjunction_or_preposition,C,,prefix و
 ar,expert,وحب,attached_conjunction_or_preposition,C,,prefix و
 ar,expert,وحركة,attached_conjunction_or_preposition,C,,prefix و
 ar,expert,وحصلت,attached_conjunction_or_preposition,C,,prefix و
 ar,expert,وحقق,attached_conjunction_or_preposition,C,,prefix و
-ar,expert,وحل,attached_conjunction_or_preposition,C,,prefix و
 ar,expert,وحول,attached_conjunction_or_preposition,C,,prefix و
 ar,expert,وحي,attached_conjunction_or_preposition,C,,prefix و
 ar,expert,وحياة,attached_conjunction_or_preposition,C,,prefix و
@@ -12484,8 +12465,6 @@ ar,expert,ورفض,attached_conjunction_or_preposition,C,,prefix و
 ar,expert,وستكون,attached_conjunction_or_preposition,C,,prefix و
 ar,expert,وسرعان,attached_conjunction_or_preposition,C,,prefix و
 ar,expert,وصار,attached_conjunction_or_preposition,C,,prefix و
-ar,expert,وصفة,attached_conjunction_or_preposition,C,,prefix و
-ar,expert,وصلة,attached_conjunction_or_preposition,C,,prefix و
 ar,expert,وضرب,attached_conjunction_or_preposition,C,,prefix و
 ar,expert,وضعف,attached_conjunction_or_preposition,C,,prefix و
 ar,expert,وضمان,attached_conjunction_or_preposition,C,,prefix و
@@ -12496,7 +12475,6 @@ ar,expert,وعليك,attached_conjunction_or_preposition,C,,prefix و
 ar,expert,وعين,attached_conjunction_or_preposition,C,,prefix و
 ar,expert,وفتح,attached_conjunction_or_preposition,C,,prefix و
 ar,expert,وفجأة,attached_conjunction_or_preposition,C,,prefix و
-ar,expert,وفر,attached_conjunction_or_preposition,C,,prefix و
 ar,expert,وفلسطين,attached_conjunction_or_preposition,C,,prefix و
 ar,expert,وفوق,attached_conjunction_or_preposition,C,,prefix و
 ar,expert,وقاموا,attached_conjunction_or_preposition,C,,prefix و
@@ -12510,7 +12488,6 @@ ar,expert,وكلما,attached_conjunction_or_preposition,C,,prefix و
 ar,expert,وكلمة,attached_conjunction_or_preposition,C,,prefix و
 ar,expert,ولبنان,attached_conjunction_or_preposition,C,,prefix و
 ar,expert,ولدى,attached_conjunction_or_preposition,C,,prefix و
-ar,expert,ولدي,attached_conjunction_or_preposition,C,,prefix و
 ar,expert,ولديها,attached_conjunction_or_preposition,C,,prefix و
 ar,expert,ولست,attached_conjunction_or_preposition,C,,prefix و
 ar,expert,ولك,attached_conjunction_or_preposition,C,,prefix و

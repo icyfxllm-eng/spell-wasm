@@ -312,6 +312,55 @@ def classify_hi(rows):
     return {w: (("pass", "") if w in ok else ("not_in_reference_dictionary", "")) for w in words}
 
 AR_PREFIX = ["وال", "بال", "كال", "فال", "لل", "ولل", "و", "ف", "ب", "ل", "ك"]
+AR_MARKS = set(range(0x064B, 0x0660)) | {0x0670, 0x0640}
+AR_AFFIX_TEMPLATES = {"af", "affix", "prefix", "pre", "com", "compound", "suffix", "suf"}
+
+def ar_strip(w):
+    return "".join(c for c in w if ord(c) not in AR_MARKS)
+
+AR_PREFIX_LETTERS = {"و", "ف", "ب", "ل", "ك", "لل", "بال", "وال"}
+
+def ar_prefix_template(t):
+    """True when a Wiktionary etymology template analyses the word as <prefix letter> + <word>."""
+    name, args = t.get("name"), t.get("args", {})
+    vals = [str(v) for _, v in sorted(args.items(), key=lambda kv: str(kv[0]))]
+    if name == "ety" and any(v.lstrip(":") in AR_AFFIX_TEMPLATES for v in vals):
+        vals = [v for v in vals if v.lstrip(":") not in AR_AFFIX_TEMPLATES]
+    elif name not in AR_AFFIX_TEMPLATES:
+        return False
+    vals = [v for v in vals if v not in ("ar", "+", "") and not v.isdigit()]
+    if not vals:
+        return False
+    first = re.sub(r"<[^>]*>", "", ar_strip(vals[0])).replace("ـ", "").strip()
+    return first in AR_PREFIX_LETTERS
+
+def ar_wikt(words):
+    """For each candidate row: 'lemma' when Wiktionary lists it as a plain lemma with no affix etymology
+    (a real word whose first letter merely looks like a prefix, e.g. بذرة 'seed'), 'affixed' when Wiktionary
+    itself analyses it as prefix + word (بالفعل, كهذا), else absent.  Keys are compared without vowel marks."""
+    import json
+    path = None
+    for c in CACHES:
+        if os.path.exists(os.path.join(c, "wikt/Arabic.jsonl")):
+            path = os.path.join(c, "wikt/Arabic.jsonl")
+    if not path:
+        return {}
+    want = set(words)
+    out = {}
+    for line in open(path, encoding="utf-8"):
+        d = json.loads(line)
+        k = ar_strip(d.get("word", ""))
+        if k not in want:
+            continue
+        if any(f.get("form_of") for f in d.get("senses", [])) or d.get("pos") in ("name",):
+            continue
+        affixed = any(ar_prefix_template(t) for t in d.get("etymology_templates", []))
+        if affixed:
+            out[k] = "affixed"
+        elif out.get(k) != "affixed" and d.get("pos") in ("noun", "adj", "verb"):
+            out[k] = "lemma"                     # function words (adv/prep/conj/pron) keep the prefix analysis
+    return out
+
 def classify_ar(rows):
     words = sorted({w for _, w in rows})
     freq = leipzig_freq("ara_wikipedia_2021_100K")
@@ -319,15 +368,18 @@ def classify_ar(rows):
     rem = sorted({r for v in cands.values() for _, r in v} | {"ا" + r for v in cands.values() for _, r in v})
     ok_rem = hs_accepts("ar", rem)
     ok = hs_accepts("ar", words)
+    wk = ar_wikt([w for w in words if cands[w]])
     res = {}
     for w in words:
         hit = None
+        if wk.get(w) == "lemma":
+            cands[w] = []                        # a real lemma: the leading letter is part of the word
         for p, r in cands[w]:
             base = r if r in ok_rem else None
             if p in ("وال", "بال", "كال", "فال", "لل", "ولل"):
                 if base or ("ال" + r) in ok_rem or r in ok_rem:
                     hit = p
-            elif base and freq.get(r, 0) > freq.get(w, 0):
+            elif base and (freq.get(r, 0) > freq.get(w, 0) or wk.get(w) == "affixed"):
                 hit = p
             if hit:
                 break

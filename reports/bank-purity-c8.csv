@@ -1098,6 +1098,7 @@ ar,بتشكيل,attached_conjunction_or_preposition
 ar,بتوفير,attached_conjunction_or_preposition
 ar,بجانب,attached_conjunction_or_preposition
 ar,بجميع,attached_conjunction_or_preposition
+ar,بجوار,attached_conjunction_or_preposition
 ar,بجولة,attached_conjunction_or_preposition
 ar,بحجم,attached_conjunction_or_preposition
 ar,بحد,attached_conjunction_or_preposition
@@ -1107,12 +1108,10 @@ ar,بحماية,attached_conjunction_or_preposition
 ar,بحوالي,attached_conjunction_or_preposition
 ar,بدخول,attached_conjunction_or_preposition
 ar,برعاية,attached_conjunction_or_preposition
-ar,بريد,attached_conjunction_or_preposition
 ar,بزيادة,attached_conjunction_or_preposition
 ar,بسحب,attached_conjunction_or_preposition
 ar,بسعر,attached_conjunction_or_preposition
 ar,بصورة,attached_conjunction_or_preposition
-ar,بطريق,attached_conjunction_or_preposition
 ar,بطريقة,attached_conjunction_or_preposition
 ar,بعدة,attached_conjunction_or_preposition
 ar,بعرض,attached_conjunction_or_preposition
@@ -1133,10 +1132,10 @@ ar,بمختلف,attached_conjunction_or_preposition
 ar,بمدينة,attached_conjunction_or_preposition
 ar,بمساعدة,attached_conjunction_or_preposition
 ar,بمصر,attached_conjunction_or_preposition
+ar,بموجب,attached_conjunction_or_preposition
 ar,بنسبة,attached_conjunction_or_preposition
 ar,بنشر,attached_conjunction_or_preposition
 ar,بوقف,attached_conjunction_or_preposition
-ar,فعالية,attached_conjunction_or_preposition
 ar,فعليا,attached_conjunction_or_preposition
 ar,فقام,attached_conjunction_or_preposition
 ar,فقلت,attached_conjunction_or_preposition
@@ -1182,7 +1181,6 @@ ar,لجلب,attached_conjunction_or_preposition
 ar,لجميع,attached_conjunction_or_preposition
 ar,لحركة,attached_conjunction_or_preposition
 ar,لحزب,attached_conjunction_or_preposition
-ar,لحق,attached_conjunction_or_preposition
 ar,لحقوق,attached_conjunction_or_preposition
 ar,لحكومة,attached_conjunction_or_preposition
 ar,لحماية,attached_conjunction_or_preposition
@@ -1192,14 +1190,12 @@ ar,لدرجة,attached_conjunction_or_preposition
 ar,لدفع,attached_conjunction_or_preposition
 ar,لدولة,attached_conjunction_or_preposition
 ar,لرؤية,attached_conjunction_or_preposition
-ar,لسان,attached_conjunction_or_preposition
 ar,لسكان,attached_conjunction_or_preposition
 ar,لسنوات,attached_conjunction_or_preposition
 ar,لشؤون,attached_conjunction_or_preposition
 ar,لشراء,attached_conjunction_or_preposition
 ar,لشركة,attached_conjunction_or_preposition
 ar,لطلاب,attached_conjunction_or_preposition
-ar,لطيف,attached_conjunction_or_preposition
 ar,لعائلة,attached_conjunction_or_preposition
 ar,لعدد,attached_conjunction_or_preposition
 ar,لعلاج,attached_conjunction_or_preposition
@@ -1467,7 +1463,6 @@ ar,وجعل,attached_conjunction_or_preposition
 ar,وحركة,attached_conjunction_or_preposition
 ar,وحصلت,attached_conjunction_or_preposition
 ar,وحقق,attached_conjunction_or_preposition
-ar,وحل,attached_conjunction_or_preposition
 ar,وحماية,attached_conjunction_or_preposition
 ar,وحول,attached_conjunction_or_preposition
 ar,وحيث,attached_conjunction_or_preposition
@@ -1483,10 +1478,8 @@ ar,وستكون,attached_conjunction_or_preposition
 ar,وسرعان,attached_conjunction_or_preposition
 ar,وسوريا,attached_conjunction_or_preposition
 ar,وسيكون,attached_conjunction_or_preposition
-ar,وشك,attached_conjunction_or_preposition
 ar,وشمال,attached_conjunction_or_preposition
 ar,وصار,attached_conjunction_or_preposition
-ar,وصفة,attached_conjunction_or_preposition
 ar,وضعف,attached_conjunction_or_preposition
 ar,وضمان,attached_conjunction_or_preposition
 ar,وطرق,attached_conjunction_or_preposition
@@ -1501,7 +1494,6 @@ ar,وعندما,attached_conjunction_or_preposition
 ar,وعين,attached_conjunction_or_preposition
 ar,وغيره,attached_conjunction_or_preposition
 ar,وفتح,attached_conjunction_or_preposition
-ar,وفر,attached_conjunction_or_preposition
 ar,وفيما,attached_conjunction_or_preposition
 ar,وفيه,attached_conjunction_or_preposition
 ar,وفيها,attached_conjunction_or_preposition
@@ -1536,7 +1528,6 @@ ar,ومنهم,attached_conjunction_or_preposition
 ar,ونسبة,attached_conjunction_or_preposition
 ar,ونظرا,attached_conjunction_or_preposition
 ar,ونقل,attached_conjunction_or_preposition
-ar,وهل,attached_conjunction_or_preposition
 ar,وهناك,attached_conjunction_or_preposition
 ar,ووجدت,attached_conjunction_or_preposition
 ar,ووزارة,attached_conjunction_or_preposition

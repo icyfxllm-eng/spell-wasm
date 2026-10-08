@@ -5,7 +5,7 @@ Run 2026-10-07 on `origin/main` da040556. Tooling: `tools/bank/purity_check.py` 
 
 | Item | Status |
 |---|---|
-| C1 recompute | **HALT** (5 languages beyond 5%), see below |
+| C1 recompute | **HALT** (4 languages beyond 5%: de, ja, fil, zh), see below |
 | C2 dictionary registry | done, one source weaker than the spec assumed |
 | C3 consumers | done (provisional on C1) |
 | C4 pool gates | provisional: size gate and Definition Match done; Rust gates in the table below |
@@ -35,7 +35,7 @@ The row-level evidence CSV exists only in chat. The comparison below is therefor
 | **fil** | 858 | 755 | **+13.6%** | HALT (was +31% before a bug fix: words that are also surnames were being dropped from the headword set) |
 | **zh** | 0 | 1 | n/a | 3 traditional rows found; evidence has 2 (`藉由`, `藉口`) |
 | ru | 208 | 216 | −3.7% | |
-| **ar** | 735 | 689 | **+6.7%** | HALT |
+| ar | 712 | 689 | +3.3% | within 5% after the prefix fix below |
 | hi | 579 | 579 | 0.0% | |
 | sw | 122 | 119 | +2.5% | |
 
@@ -47,7 +47,7 @@ Bank sizes differ from the spec table only by a few rows (es +2, de +4, pl +1, z
 - **de −124.** The evidence removed about 124 more rows than the German dictionary check does. Likely first names and brand names the dictionary accepts capitalised (`carlos`, `petra`, `disney`); the evidence lists these as `noun_shown_lowercase`, which would not remove them, so the evidence's own removal count does not follow from its own classes. Cannot be settled without the evidence CSV row set.
 - **ja +414.** Mine uses JMdict readings and finds 560 `loanword_in_hiragana` rows (evidence: roughly 100 visible, from a weaker SKK dictionary). The spec itself says Japanese should move to JMdict (C2). Proper nouns (`あふがにすたん`, `なぽれおん`) are not detectable from JMdict, so those stay `not_in_reference_dictionary` (746 now, spec 318).
 - **fil +103.** Mine uses the Wiktionary extract plus a frequency test for English. Kaikki is richer than the evidence's scrape, so unconfirmed falls (556 vs 1,221) while `wrong_language_english` is 587 (evidence ~604 incl. names). Net removal is higher mainly through `proper_noun` (200), from capitalised English-dictionary hits.
-- **ar +46.** The prefix rule: single-letter prefixes count when the remainder is more frequent in Wikipedia; multi-letter ones (`بال لل وال كال`) when the remainder is a dictionary word. Evidence flagged `بذرة` (seed), a real word; the frequency test decides it the other way in some cases. Needs the Arabic auditor.
+- **ar +23 (fixed).** The prefix rule first flagged real words whose first letter merely looks like a prefix (`بذرة` seed, `وطن` homeland, `لسان` tongue, `بريد` mail, `فأر` mouse). It now consults Wiktionary: a noun, adjective or verb lemma with no prefix analysis in its etymology is a real word and stays; function words (adverbs, prepositions, conjunctions) and anything Wiktionary itself analyses as prefix + word are still attached. 25 rows released (the full list is in the git diff of `purity_check.py`'s test output), 2 added (`بجوار`, `بموجب`), net 735 to 712. A few lexicalised words that Wiktionary lists as content lemmas are probably still wrongly released (`فذلك`, `كذا`, `كمان`, `ولدي`, `وهل`, `بطريق`, `فعلي`); the Arabic auditor settles those.
 - **zh.** Unihan alone over-flags `著 蒙 覆`; CC-CEDICT word-level is used instead. It finds `有著 接著 牠` and not `藉口 藉由`. Two different judgments of orthography, not a data gap; native check advised.
 
 ## C2 — dictionary registry
@@ -98,8 +98,8 @@ Counts of entries that reference a row the current run would quarantine (Q), res
 
 | Consumer | Entries | Q | R | D | Evidence run |
 |---|---|---|---|---|---|
-| definition pools `backend/def_pools/*.json` | 40,917 | 534 | 30 | 55 | 530 |
-| gloss `config/gloss/*.json` | 3,796 | 15 | 0 | **109** | 202 |
+| definition pools `backend/def_pools/*.json` | 40,917 | 512 | 30 | 55 | 530 |
+| gloss `config/gloss/*.json` | 3,796 | 13 | 0 | **109** | 202 |
 | practice curricula `config/practice/*.json` | 406 | 1 | 0 | 0 | 8 |
 | audio verdicts `config/audio-verdicts.json` | 3,465 | 53 | 1 | 14 | not listed |
 | `src/ru_stress_data.rs` | 973 | 1 | 0 | 0 | not listed |
@@ -178,7 +178,7 @@ Rows per tier, before to after:
 | fil | 247 to 247 | 701 to 579 | 1,159 to 927 | 1,976 to 1,472 |
 | zh | 296 to 296 | 944 to 944 | 1,958 to 1,958 | 2,984 to 2,984 |
 | ru | 267 to 267 | 970 to 949 | 1,977 to 1,900 | 2,994 to 2,884 |
-| ar | 290 to 288 | 968 to 898 | 1,987 to 1,806 | 2,993 to 2,511 |
+| ar | 290 to 290 | 968 to 898 | 1,987 to 1,813 | 2,993 to 2,525 |
 | hi | 293 to 292 | 781 to 776 | 800 to 740 | 800 to **287** |
 | sw | 262 to 262 | 703 to 673 | 1,180 to 1,105 | 700 to 683 |
 
@@ -191,7 +191,7 @@ English totals 3,158, exactly the spec's expected figure. Korean Medium is 217, 
 | Letter Forge `every_ready_language_generates_a_full_year` (and the rest of the forge tests), wordgrid `pools_meet_e4`, `every_tier_ladder_climbs`, Daily arc and kid-arc tests, wordsearch daily-pool depth | **green** |
 | SpellDoku Word Mode `every_language_plays_word_mode_from_a_cold_start` | **FAILS** (`ko Expert: no Word Mode board`); passes on the unswept banks. **HALT** (pool gate) |
 | wordsearch `wordgrid_determinism` (pinned 500-seed grid digest) | **FAILS** (digest moved 14744009201383334743 to 8772773888074032197); passes on the unswept banks. **HALT**: the pin can only be updated by editing a test's expected number, which I6 forbids without Eric |
-| `translate_screen::translate_traceability` | **FAILS** (`en->ar: بذرة is not a bank word of ar`); passes on the unswept banks. Cascade, not a pool gate: the translate/gloss row still points at a row the sweep removed. Pruning it (F3's cascade) fixes this test. The root cause is a C1 false positive: `بذرة` ("seed") is a real word that the Arabic prefix rule mistook for ب + ذرة |
+| `translate_screen::translate_traceability` | **FAILS** until the cascade runs. Originally `en->ar: بذرة` (a C1 false positive, now fixed); the next failure is `ar->ja: え`, a single-kana row quarantined by P9 that the gloss data still references. With the gloss rows that left the bank pruned (122 rows in the scratch tree), the test **passes**. A cascade item, not a pool gate. |
 
 Full suite on the swept tree: 914 passed, 3 failed, 19 ignored (49 min). Baseline for the three on the unswept tree: 3 passed (clean separate build).
 
@@ -225,19 +225,19 @@ U is rebuilt with the engine's first three gates (rank at or below the T4 floor,
 | ja | 18,000 | 16,885 | 1,093 | 67 |
 | fil | 8,000 | 5,297 | 858 | 158 |
 | ru | 25,000 | 19,222 | 208 | 0 |
-| ar | 15,000 | 13,913 | 735 | **526** |
+| ar | 15,000 | 13,913 | 712 | **517** |
 | hi | 10,000 | 9,306 | 0 | 0 |
 | sw | 10,000 | 6,152 | 122 | 8 |
-| **Total** | | | | **1,568** |
+| **Total** | | | | **1,559** |
 
 Thirty examples (random draw, seed 1): ar `بالقيام بوقف فهذا لخلق وآخر والاهتمام والجماعات والحياة والعراق والمتوسطة والمملكة ولها`; es `ranking`; fil `debut district million species status`; ko `구성하였다 국가에서는 들어올 요구하였다 이탈리아와 일반적이다 일방적으로 조지 카운티 클라우드 통합되었다 프로듀서이다`.
 
-Reading: U is built from a frequency list with no "word of the language" gate, so once a language is marked `launched`, F4's red-build rule would require back the 1,568 rows above, almost all Korean particle and ending forms and Arabic attached-prefix forms. Both are frequent in text and are exactly what P4 and P7 remove. This is the P16 question: add a purity gate directly after the rank gate. Recommendation unchanged: yes. It needs a signature because gate order is asserted by tests.
+Reading: U is built from a frequency list with no "word of the language" gate, so once a language is marked `launched`, F4's red-build rule would require back the 1,559 rows above, almost all Korean particle and ending forms and Arabic attached-prefix forms (1,559 rows). Both are frequent in text and are exactly what P4 and P7 remove. This is the P16 question: add a purity gate directly after the rank gate. Recommendation unchanged: yes. It needs a signature because gate order is asserted by tests.
 Two engine facts worth knowing: the orthography gate drops every capitalised token, so German nouns (all capitalised in corpus text) never enter U, which is why de has only 8,227 even before this file; and U here is capped by the 100K-line Leipzig corpus, so real U for languages whose T4 floor exceeds the corpus (es, fr, en) is bounded by corpus size, not by the floor.
 
 ## Open for Eric
 
-1. C1 HALT: save the evidence CSV to `reports/bank-check-2026-10-07.csv` so the five differences can be settled row by row, or tell me which side to follow per language.
+1. C1 HALT: save the evidence CSV to `reports/bank-check-2026-10-07.csv` so the four remaining differences (de, ja, fil, zh) can be settled row by row, or tell me which side to follow per language.
 2. Filipino second source (see C2).
 3. C7 policy: are months and weekdays (and country names that are also common words) out of the banks? The filter cannot decide that.
 4. Who owns the C5 gaps (practice, def_match, the three grid modes, the void-round rescue).
