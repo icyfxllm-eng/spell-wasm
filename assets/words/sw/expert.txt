@@ -3,7 +3,6 @@ uainishaji
 imehesabiwa
 iliyofanyika
 mbalimbali
-uingereza
 kulingana
 wanaoishi
 kimataifa
@@ -15,7 +14,6 @@ mashariki
 wanafunzi
 kupunguza
 kaskazini
-ujerumani
 maambukizi
 mafanikio
 mfululizo
@@ -71,7 +69,6 @@ kuboresha
 kupatikana
 wanajeshi
 vipengele
-wajerumani
 kushindwa
 makampuni
 uharibifu
@@ -113,7 +110,6 @@ takribani
 kuhakikisha
 kuzingatia
 anajulikana
-kifaransa
 kibinadamu
 mtakatifu
 kujitegemea
@@ -136,7 +132,6 @@ kuanzishwa
 kuunganisha
 kadhalika
 kuchunguza
-international
 inaonyesha
 ikilinganishwa
 usambazaji
@@ -166,11 +161,9 @@ mabaharia
 mkurugenzi
 rasilimali
 unaonyesha
-wikipedia
 huonyesha
 kuwasaidia
 mazungumzo
-university
 antibiotiki
 hujumuisha
 waliendelea
@@ -263,7 +256,6 @@ kuhusiana
 linatokana
 uchambuzi
 inahitaji
-foundation
 wahispania
 kuthibitisha
 maandamano
@@ -295,7 +287,6 @@ kitaaluma
 kurudisha
 wanasiasa
 zinaonyesha
-kilimanjaro
 huendelea
 kurekebisha
 maandalizi
@@ -329,7 +320,6 @@ matumaini
 mwanadamu
 zinazofanana
 zinazohusiana
-association
 iliyoanzishwa
 kimapenzi
 kujumuisha
@@ -375,7 +365,6 @@ kitaalamu
 kuambukiza
 kushikilia
 kushindana
-wafaransa
 anayeitwa
 inatumika
 kuhamisha
@@ -440,7 +429,6 @@ unaojulikana
 unapatikana
 utakatifu
 zinazotumika
-johannesburg
 alihudhuria
 inayosababisha
 kuathiriwa
@@ -469,7 +457,6 @@ kuongozwa
 madhubuti
 walikutana
 walioambukizwa
-uhispania
 akajiunga
 alivyokuwa
 anayejulikana
@@ -541,7 +528,6 @@ vitongoji
 walijenga
 wanamigambo
 zilizotolewa
-television
 alijulikana
 aliyewahi
 ilichukuliwa
@@ -599,7 +585,6 @@ wasaidizi
 watumishi
 yanayotokana
 zinaendelea
-kihispania
 walipokea
 anatakiwa
 anayeweza
@@ -630,7 +615,6 @@ zilitolewa
 zilizopita
 zinajulikana
 zinaonekana
-secondary
 watanzania
 akiendelea
 alikimbia
@@ -695,6 +679,5 @@ watendaji
 wawindaji
 yafuatayo
 yanaonekana
-development
 akaanzisha
 alihusika

@@ -1301,7 +1301,7 @@ liu2wang2|流亡
 yuan2tou2|源头
 ji1qi3|激起
 re4chao2|热潮
-ta1|牠
+ta1|它
 shou4lie4|狩猎
 huan2jing4bao3hu4|环境保护
 zhu1hai3|珠海
@@ -2086,7 +2086,7 @@ xi1|息
 da3fa1|打发
 fu3yang3|抚养
 jie1shou3|接手
-jie1zhu4|接著
+jie1zhu4|接着
 cha1tu2|插图
 shan4zi4|擅自
 shou1ting1|收听

@@ -13,7 +13,7 @@ Reads reports/bank-purity-rows.csv (F1 output) and rewrites THIS checkout:
                                             rows keyed by a respelled / capitalised word are re-keyed
 Idempotent only against a fresh F1 run: run purity_check.py first, then this once.
 """
-import csv, json, os, sys, unicodedata
+import csv, json, os, re, sys, unicodedata
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from purity_check import QUARANTINE, ALL, TIERS, ROOT
 
@@ -56,11 +56,12 @@ for (l, t), ws in lines.items():
             quar_lines.setdefault((l, t), []).append(w); manifest.append((l, w, t, i, a[1], a[2], date)); gone[l].add(nfc(w).rsplit("|", 1)[-1]); continue
         if a and a[0] == "fix":
             new = a[1]
+        if nfc(new) in seen:
+            quar_lines.setdefault((l, t), []).append(w); manifest.append((l, w, t, i, "duplicate_after_fix", f"collides with {new}", date)); gone[l].add(nfc(w).rsplit("|", 1)[-1]); continue
+        if a and a[0] == "fix":
             if a[2] == "capital": recap.append((l, w, new, t))
             else: corrections.append((l, w, new, t, DICTNAME[l]))
             rekey[l][nfc(w).rsplit("|", 1)[-1]] = nfc(new).rsplit("|", 1)[-1]
-        if nfc(new) in seen:
-            quar_lines.setdefault((l, t), []).append(w); manifest.append((l, w, t, i, "duplicate_after_fix", f"collides with {new}", date)); gone[l].add(nfc(w).rsplit("|", 1)[-1]); continue
         seen.add(nfc(new)); kept.append(new)
     open(f"{ROOT}/assets/words/{l}/{t}.txt", "w", encoding="utf-8").write("\n".join(kept) + "\n")
 for (l, t), ws in quar_lines.items():
@@ -75,7 +76,7 @@ write(f"{ROOT}/reports/bank-corrections.csv", "lang,old,new,tier,dictionary".spl
 write(f"{ROOT}/reports/bank-recapitalised.csv", "lang,old,new,tier".split(","), sorted(recap, key=lambda r: (ALL.index(r[0]), r[3], r[1])))
 
 # cascade -------------------------------------------------------------------
-stats = []
+stats = []; pruned_leak = []
 for l in ALL:
     live = {nfc(w).rsplit("|", 1)[-1] for (ll, _), ws in lines.items() if ll == l for w in ws}   # old forms
     p = f"{ROOT}/config/gloss/{l}.json"
@@ -98,6 +99,11 @@ for l in ALL:
                 before += 1; n = nfc(e["word"])
                 if n in gone[l] and n not in rekey[l]:
                     continue
+                if n in rekey[l]:
+                    # the definition was written for the wrong spelling ("Swiss spelling of <new>"); if it now names its own
+                    # key it is a self-leak, so the row is pruned and the pool rebuild refills it
+                    if re.search(r"(?<!\w)" + re.escape(rekey[l][n]) + r"(?!\w)", e["definition"], re.I):
+                        pruned_leak.append((l, e["word"], rekey[l][n])); continue
                 e["word"] = rekey[l].get(n, e["word"])
                 if nfc(e["word"]) in seen: continue
                 seen.add(nfc(e["word"])); out.append(e)
@@ -105,4 +111,5 @@ for l in ALL:
         stats.append(("def_pools", l, before, after))
         open(p, "w", encoding="utf-8").write(json.dumps(d, ensure_ascii=False))
 print(f"quarantined {len(manifest)}, corrected {len(corrections)}, recapitalised {len(recap)}")
+print("def-pool rows pruned as self-leaks after respelling:", len(pruned_leak))
 for s in stats: print("%-10s %-4s %6d -> %6d" % s)

@@ -189,7 +189,6 @@ função
 ordem
 ambos
 esposa
-europa
 atual
 começa
 faixa
@@ -499,14 +498,12 @@ exceto
 podia
 tocar
 letra
-music
 invés
 presos
 salas
 tomou
 minas
 graças
-peter
 baixas
 corpos
 altos
@@ -532,7 +529,6 @@ online
 mortes
 passam
 renda
-méxico
 desejo
 judeus
 núcleo
@@ -558,7 +554,6 @@ ameaça
 tenham
 vocais
 vídeos
-school
 curta
 dança
 famoso
@@ -604,7 +599,6 @@ feliz
 ilhas
 moral
 servir
-disney
 casar
 filhas
 músico
@@ -643,7 +637,6 @@ clima
 lesão
 notas
 órgãos
-bahia
 bronze
 contar
 fundou
@@ -728,7 +721,6 @@ entendi
 falo
 fortaleza
 garoto
-henrique
 jantar
 rural
 senti
@@ -738,7 +730,6 @@ cheiro
 coloca
 dúvidas
 frase
-go
 grave
 honra
 humanidade
@@ -747,10 +738,8 @@ juro
 minuto
 novela
 parecem
-rafael
 rodrigo
 sabendo
-washington
 bolsa
 bruno
 corrupção
@@ -764,7 +753,6 @@ porquê
 rapaz
 use
 acompanhar
-andré
 aonde
 arquivo
 daqueles
@@ -778,19 +766,16 @@ justo
 latina
 levantar
 lucas
-oscar
 querida
 turismo
-voce
+você
 ceará
 cerveja
 colocou
 continue
 desculpas
-gabriel
 grosso
 ligado
-louis
 mendes
 mentira
 ouvido
@@ -813,7 +798,6 @@ cachorro
 cheguei
 cortar
 doente
-felipe
 gomes
 passe
 passos
@@ -839,7 +823,7 @@ gostam
 gostava
 lança
 legais
-luis
+luís
 paula
 pegou
 queira
@@ -849,7 +833,6 @@ sequer
 siga
 tirou
 volto
-alves
 aproveitar
 conheci
 deseja
@@ -868,7 +851,6 @@ turma
 virar
 acerca
 advogados
-alex
 atualização
 beijo
 cala
@@ -893,8 +875,6 @@ brincadeira
 corre
 entregar
 ferreira
-inglaterra
-iorque
 médica
 oferta
 paraná

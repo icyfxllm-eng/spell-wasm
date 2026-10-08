@@ -209,7 +209,6 @@ mniej
 system
 jedna
 meczu
-niemcy
 drugim
 drodze
 całym
@@ -575,7 +574,6 @@ seria
 trasie
 trasy
 zadań
-world
 autora
 dobre
 królem
@@ -663,7 +661,6 @@ pałac
 strefy
 tronu
 ściśle
-polacy
 edycja
 klubem
 myśli
@@ -772,7 +769,6 @@ gazeta
 internetowych
 jakiejś
 kompletnie
-mozna
 nadzieje
 pamiętać
 pracownicy
@@ -785,7 +781,6 @@ adres
 akcje
 darmo
 ej
-james
 komu
 lol
 mogłam
@@ -806,10 +801,8 @@ trzyma
 wakacje
 widzieć
 wieczór
-wrocław
 youtube
 zachodu
-anna
 dziennikarz
 godzinie
 głosu
@@ -836,13 +829,10 @@ termin
 ważny
 większy
 wstyd
-adam
 czekaj
 dajcie
 dniem
-francja
 info
-jezusa
 małym
 milion
 młodzi
@@ -917,13 +907,12 @@ dostanie
 dowodów
 dzieciom
 emocje
-europa
 festiwal
-jestes
+jesteś
 kobietę
 komentarzy
 ksiądz
-ktos
+ktoś
 kwiaty
 lepszego
 nieważne
@@ -932,7 +921,6 @@ poglądy
 przyjaciele
 radia
 widzimy
-wiecej
 wpływu
 właściciel
 znalazłem

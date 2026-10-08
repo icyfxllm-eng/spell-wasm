@@ -251,7 +251,6 @@ teatro
 áreas
 fines
 aires
-chile
 decide
 pronto
 objeto
@@ -626,7 +625,6 @@ puedan
 salvo
 tomado
 ubica
-world
 actuar
 ayudó
 cinta
@@ -700,7 +698,6 @@ agencia
 bajar
 ejemplos
 examen
-felipe
 impuesto
 juega
 malas
@@ -720,19 +717,14 @@ beneficio
 carajo
 dictadura
 martín
-michael
 niñas
 oye
 porqué
-pérez
 quedado
 reyes
 abuela
-ahi
-daniel
-fernández
+ahí
 hagas
-inglaterra
 malos
 opiniones
 periodistas
@@ -758,9 +750,7 @@ mexicanos
 negros
 panamá
 salga
-sub
 adentro
-ana
 caliente
 caracas
 cariño
@@ -771,7 +761,6 @@ coronel
 disfrutar
 enrique
 entero
-guatemala
 hiciste
 james
 millón
@@ -782,7 +771,6 @@ perfectamente
 salen
 toque
 alianza
-cataluña
 colectivo
 decirle
 divertido
@@ -790,11 +778,10 @@ escucha
 fueran
 leyendo
 linda
-paul
+paúl
 perfecta
 policías
 prefiero
-rafael
 salón
 señores
 tendrán
@@ -807,7 +794,6 @@ dejen
 denuncia
 europeo
 ilegal
-israel
 jornada
 maneras
 pido
@@ -821,9 +807,7 @@ efectivo
 enlace
 felicidad
 firme
-iv
 maduro
-martínez
 minas
 pierde
 publica
@@ -834,13 +818,11 @@ salido
 seguros
 alternativa
 bajos
-co
 consulta
 decidido
 demostrar
 dignidad
 generar
-mario
 mental
 orgullo
 oriente
@@ -848,8 +830,6 @@ pasión
 poniendo
 positivo
 quedo
-washington
-bogotá
 cabello
 dispuesto
 diálogo

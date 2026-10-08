@@ -28,7 +28,6 @@ kowtow
 labyrinth
 liaison
 lieutenant
-machiavellian
 maneuver
 mnemonic
 obfuscate

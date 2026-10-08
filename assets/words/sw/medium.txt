@@ -26,7 +26,6 @@ wengi
 mujibu
 mmoja
 kabisa
-afrika
 kadhaa
 nafasi
 ambapo
@@ -169,7 +168,6 @@ akawa
 miguu
 machi
 toleo
-aprili
 kuunda
 muundo
 nakala
@@ -182,13 +180,11 @@ gazeti
 baina
 lengo
 ujumla
-agosti
 mwendo
 lenye
 umoja
 kanuni
 vyombo
-oktoba
 mimea
 bwana
 makuu
@@ -223,10 +219,8 @@ tukio
 bunge
 msanii
 viungo
-united
 makao
 silaha
-misri
 ukuaji
 jirani
 kusoma
@@ -268,7 +262,6 @@ mikono
 waziri
 kuimba
 wowote
-italia
 watatu
 kuwepo
 ukweli
@@ -276,7 +269,6 @@ ndipo
 ulinzi
 kudumu
 mayai
-kristo
 milima
 juhudi
 redio
@@ -288,7 +280,6 @@ ikawa
 yangu
 kukua
 mauaji
-uchina
 mapato
 vituo
 china
@@ -329,13 +320,11 @@ misitu
 polisi
 vigumu
 wasio
-india
 mwingi
 herufi
 kabila
 kujiua
 mipaka
-sudan
 angani
 haina
 dhana
@@ -346,7 +335,6 @@ udongo
 kuzaa
 majani
 sayari
-single
 ilivyo
 majira
 ndefu
@@ -383,7 +371,6 @@ kadha
 sekta
 husika
 ujuzi
-school
 katiba
 kuitwa
 makosa
@@ -425,7 +412,6 @@ mazao
 mchana
 sigara
 upana
-james
 unene
 wajibu
 ajabu
@@ -454,7 +440,6 @@ huanza
 maelfu
 uwepo
 walimu
-africa
 adhabu
 ajali
 mateso
@@ -464,7 +449,6 @@ hesabu
 mitaa
 neema
 aidha
-world
 jeraha
 kifupi
 kigeni
@@ -483,7 +467,6 @@ kubeba
 magumu
 milele
 biblia
-rwanda
 chanya
 huishi
 meneja
@@ -500,7 +483,6 @@ ziara
 kifaa
 ripoti
 ufalme
-amino
 jumba
 kuruka
 matawi
@@ -522,7 +504,6 @@ mifupa
 mpenzi
 tabaka
 chembe
-dengi
 mikoa
 mkondo
 ukumbi
@@ -548,7 +529,6 @@ misimu
 ushuru
 vyanzo
 wanne
-black
 aliona
 ambamo
 gitaa
@@ -561,7 +541,6 @@ jamaa
 viatu
 wasomi
 zikiwa
-cross
 masoko
 mkopo
 akina
@@ -579,7 +558,6 @@ medali
 mifugo
 mvuke
 utumwa
-music
 ilitoa
 maadui
 manne
@@ -587,14 +565,12 @@ mizigo
 shaka
 usafi
 utalii
-house
 kipya
 ladha
 makini
 mavazi
 nafuu
 uteuzi
-times
 bonde
 hazina
 mabawa
@@ -649,8 +625,6 @@ kasoro
 nasaba
 swali
 watawa
-wavuti
-league
 babake
 leseni
 ndilo
@@ -661,8 +635,6 @@ cheche
 wizara
 lishe
 nyuzi
-google
-south
 hatia
 kuomba
 maili
@@ -678,7 +650,6 @@ gavana
 atomi
 jumuia
 kubuni
-group
 kurasa
 maiti
 miamba
@@ -691,7 +662,6 @@ athira
 mamia
 nguzo
 ufundi
-young
 jenasi
 kisasi
 madume
