@@ -87,6 +87,7 @@ fn build<R: Ruleset>(seed: u64, cfg: GameConfig, pools: TierPools) -> Result<Boa
         long_queue,
         used: BTreeSet::new(),
         recycled: 0,
+        drawn: Vec::new(),
         revealed: Vec::new(),
         events: Vec::new(),
         winner: None,
@@ -187,6 +188,16 @@ impl BoardGameState {
     /// runs dry is refilled and the draw may repeat a word; that is counted in
     /// `recycled`, which the bank gate keeps at zero.
     fn draw(&mut self, src: Src) -> String {
+        let tier = match src {
+            Src::Tier(t) => t,
+            Src::Long => Tier::Expert,
+        };
+        let w = self.draw_raw(src);
+        self.drawn.push((tier, w.clone()));
+        w
+    }
+
+    fn draw_raw(&mut self, src: Src) -> String {
         let pools = Arc::clone(&self.pools);
         let (list, qi) = match src {
             Src::Tier(t) => (&pools.tiers[t.ix()], Some(t.ix())),

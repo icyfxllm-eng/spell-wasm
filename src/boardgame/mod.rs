@@ -355,6 +355,9 @@ pub struct BoardGameState {
     /// Draws that had to reuse a word because a queue ran dry. Zero in every
     /// game the bank gate lets start; a test holds it there.
     pub recycled: u32,
+    /// Every word drawn, in order, with the tier it was drawn for (a Long Word
+    /// counts as Expert). What the ledger records (D19).
+    pub drawn: Vec<(Tier, String)>,
     /// Tiles whose trap has been triggered (F4: shown on the map from then on).
     pub revealed: Vec<u32>,
     pub events: Vec<Event>,

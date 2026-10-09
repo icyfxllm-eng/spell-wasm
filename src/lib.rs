@@ -23,6 +23,10 @@ mod impostor; // CC-IMPOSTOR F2 (distractor generator)
 mod bee; // CC-BEE-SIM F2/F3 (bee engine + contestant table)
 #[cfg(not(feature = "web"))]
 mod boardgame; // CC-BOARD-GAME v1.1 F1 -- the pure engine (app only, I13)
+#[cfg(not(feature = "web"))]
+mod boardgame_grade; // CC-BOARD-GAME F3/D21 -- the local answer check
+#[cfg(not(feature = "web"))]
+mod boardgame_pools; // CC-BOARD-GAME D19/D25/F9 -- word supply, ledger, bank gate
 mod wordpic; // CC-WORD-PICTURE core (calligrams)
 mod input_provenance;
 pub mod learner; // CC-LEARNING-ENGINE L0 (BKT + FSRS core; selection arrives with L1) — pub for R3 (tests/learner_simulator.rs)
