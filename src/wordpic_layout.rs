@@ -665,6 +665,41 @@ pub fn in_frame(p: &Placement) -> bool {
     x0 >= -2.0 && y0 >= -2.0 && x1 <= FRAME + 2.0 && y1 <= FRAME + 2.0
 }
 
+/// Per (lang, tier) pool entries as (typed form, unit_len, render_units).
+/// Both lengths run Unicode NFC normalisation, and the feed used to redo that
+/// for the WHOLE pool at every slot (and again per adjacent-tier retry): that
+/// was ~all of the render_ci_sweep time. The pools are 'static, so the result
+/// is computed once per thread and shared. Pure caching -- same values, same
+/// order, so layouts are byte-identical.
+fn pool_info(lang: &str, tier: &str) -> std::rc::Rc<Vec<(String, u32, u32)>> {
+    use std::cell::RefCell;
+    use std::collections::HashMap;
+    use std::rc::Rc;
+    thread_local! {
+        static CACHE: RefCell<HashMap<(String, String), Rc<Vec<(String, u32, u32)>>>> =
+            RefCell::new(HashMap::new());
+    }
+    CACHE.with(|c| {
+        let key = (lang.to_string(), tier.to_string());
+        if let Some(v) = c.borrow().get(&key) {
+            return v.clone();
+        }
+        let v: Rc<Vec<(String, u32, u32)>> = Rc::new(
+            crate::words::tier_for(lang, tier)
+                .iter()
+                .map(|w| {
+                    let t = w.split('|').next().unwrap_or(w).to_string();
+                    let n = crate::wordpic::unit_len(lang, &t);
+                    let r = render_units(&t);
+                    (t, n, r)
+                })
+                .collect(),
+        );
+        c.borrow_mut().insert(key, v.clone());
+        v
+    })
+}
+
 /// The v6 feed: budget-gated candidates ordered by |solved fill − 1| so the
 /// chosen word FILLS its slot; collision cascade tries further candidates.
 /// Deterministic (V2): candidate order derives only from the pool + seed.
@@ -700,7 +735,6 @@ pub fn layout_feed_opt(
     // short slots were nosolve, long ones were collide, outframe was zero
     // throughout. Pair it with WP_SWEEP_ONLY to scope the sweep to a subject.
     let dbg = std::env::var("WP_SLOT_DEBUG").is_ok();
-    let pool = crate::words::tier_for(lang, &p.tier);
     let mut st = seed ^ 0x57505F5636; // v6 salt
     let mut used: Vec<String> = Vec::new();
     let mut words = Vec::new();
@@ -709,13 +743,10 @@ pub fn layout_feed_opt(
         let q = &p.paths[slot.path_idx];
         let (blo, bhi) = q.budget;
         // Shuffle a candidate window deterministically, then order by fit.
-        let mut cands: Vec<(String, u32)> = pool
+        let mut cands: Vec<(String, u32)> = pool_info(lang, &p.tier)
             .iter()
-            .filter_map(|w| {
-                let t = w.split('|').next().unwrap_or(w).to_string();
-                let n = crate::wordpic::unit_len(lang, &t);
-                (n >= blo && n <= bhi && !used.contains(&t)).then_some((t.clone(), render_units(&t)))
-            })
+            .filter(|(t, n, _)| *n >= blo && *n <= bhi && !used.contains(t))
+            .map(|(t, _, r)| (t.clone(), *r))
             .collect();
         // Seeded rotation for variety, then stable sort by fill fitness.
         if !cands.is_empty() {
@@ -835,13 +866,10 @@ pub fn layout_feed_opt(
             for adjacent in chain {
             if best.is_some() { break; }
             let pool2 = crate::words::tier_for(lang, adjacent);
-            let mut cands2: Vec<(String, u32)> = pool2
+            let mut cands2: Vec<(String, u32)> = pool_info(lang, adjacent)
                 .iter()
-                .filter_map(|w| {
-                    let t = w.split('|').next().unwrap_or(w).to_string();
-                    let n = crate::wordpic::unit_len(lang, &t);
-                    (n >= 2 && n <= bhi && !used.contains(&t)).then_some((t.clone(), render_units(&t)))
-                })
+                .filter(|(t, n, _)| *n >= 2 && *n <= bhi && !used.contains(t))
+                .map(|(t, _, r)| (t.clone(), *r))
                 .collect();
             if !cands2.is_empty() {
                 let rot = (splitmix(&mut st) % cands2.len() as u64) as usize;
@@ -884,14 +912,10 @@ pub fn layout_feed_opt(
 /// budget eligibility is typing units (gameplay), but segments must size to
 /// what the glyphs occupy (ko: blocks, not jamo; zh: pinyin chars).
 fn pool_median_units(lang: &str, tier: &str, blo: u32, bhi: u32) -> f32 {
-    let pool = crate::words::tier_for(lang, tier);
-    let mut lens: Vec<u32> = pool
+    let mut lens: Vec<u32> = pool_info(lang, tier)
         .iter()
-        .filter_map(|w| {
-            let t = w.split('|').next().unwrap_or(w);
-            let n = crate::wordpic::unit_len(lang, t);
-            (n >= blo && n <= bhi).then_some(render_units(t))
-        })
+        .filter(|(_, n, _)| *n >= blo && *n <= bhi)
+        .map(|(_, _, r)| *r)
         .collect();
     if lens.is_empty() {
         return (blo + bhi) as f32 / 2.0;
