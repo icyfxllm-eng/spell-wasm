@@ -678,7 +678,7 @@ fn the_streak_counts_once_a_day_with_no_replay_gate() {
 fn saved_progress_resumes_only_for_the_same_board() {
     let lex = en();
     let b = board_of(lex, Tier::Easy, 6);
-    let p = Progress { seed: b.seed, gen_version: super::types::GEN_VERSION, hash: b.hash(), snapshot: Play::new(b.clone()).snapshot() };
+    let p = Progress { seed: b.seed, previous: vec![], gen_version: super::types::GEN_VERSION, hash: b.hash(), snapshot: Play::new(b.clone()).snapshot() };
     assert!(p.matches(b.hash()));
     assert!(!p.matches(b.hash() ^ 1));
     let json = serde_json::to_string(&p).unwrap();
@@ -713,7 +713,7 @@ fn a9_freshness_from_a_400_word_pool() {
         let mut prev: Vec<String> = Vec::new();
         let mut seed = 77u64;
         for i in 0..n {
-            let b = fresh_board(&lex, tier, &history, &prev, || {
+            let (b, _) = fresh_board(&lex, tier, &history, &prev, || {
                 seed += 1;
                 seed
             })

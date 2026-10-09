@@ -428,6 +428,22 @@
       "juniorPolicy": "ceiling:easy"
     },
     {
+      "id": "spelluzzle",
+      "group": "word_puzzles",
+      "nameKey": "spz.name",
+      "descKey": "spz.tagline",
+      "icon": "\ud83d\udddd\ufe0f",
+      "status": "live",
+      "kidSafe": true,
+      "platforms": ["ios"],
+      "entitlementLevel": "preview",
+      "requiresPremium": null,
+      "languages": ["en"],
+      "$note": "CC-SPELLUZZLE v1 Phase B: a rune cipher where the words on a board depend on each other. App only (O1). English only at launch (census, Eric 2026-10-09); Spell Jr and Easy are built, Medium to Expert wait for build-time seed verification. A Jr profile gets Spell Jr boards only. Dark behind the spelluzzle flag until the device pass (F13). Never ko, zh, ja, ar or hi (F12).",
+      "exitStyle": "instant",
+      "juniorPolicy": "ceiling:easy"
+    },
+    {
       "id": "boardgame",
       "group": "spell_it",
       "nameKey": "bg.name",

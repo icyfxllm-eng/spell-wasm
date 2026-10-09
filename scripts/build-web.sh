@@ -45,7 +45,10 @@ for pair in (("<!-- SPELL-PICTURE:BEGIN", "<!-- SPELL-PICTURE:END -->"),
              ("/* SPELL-PICTURE:BEGIN", "/* SPELL-PICTURE:END */"),
              # CC-BOARD-GAME I13: the same cut for the Board Game's markup and CSS.
              ("<!-- BOARDGAME:BEGIN", "<!-- BOARDGAME:END -->"),
-             ("/* BOARDGAME:BEGIN", "/* BOARDGAME:END */")):
+             ("/* BOARDGAME:BEGIN", "/* BOARDGAME:END */"),
+             # CC-SPELLUZZLE O1: the same cut for Spelluzzle's markup and CSS.
+             ("<!-- SPELLUZZLE:BEGIN", "<!-- SPELLUZZLE:END -->"),
+             ("/* SPELLUZZLE:BEGIN", "/* SPELLUZZLE:END */")):
     while pair[0] in src:
         a = src.index(pair[0]); b = src.index(pair[1], a) + len(pair[1])
         src = src[:a] + src[b:]

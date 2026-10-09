@@ -46,6 +46,7 @@ import * as spellSearch from './specs/spell-search.mjs';
 import * as spellCross from './specs/spell-cross.mjs';
 import * as boardgame from './specs/boardgame.mjs';
 import * as boardgameLayout from './specs/boardgame-layout.mjs';
+import * as spelluzzle from './specs/spelluzzle.mjs';
 import * as boardgamePolish from './specs/boardgame-polish.mjs';
 import * as boardgameSprint from './specs/boardgame-sprint.mjs';
 import * as boardgameStretch from './specs/boardgame-stretch.mjs';
@@ -81,6 +82,7 @@ const SPECS = [
   ['spell-search', spellSearch],
   ['spell-cross', spellCross],
   ['boardgame', boardgame, boardgameLayout, boardgamePolish, boardgameSprint, boardgameStretch],
+  ['spelluzzle', spelluzzle],
   ['translate-screen', translateScreen],
   ['coming', coming],
   ['ghost', ghost],

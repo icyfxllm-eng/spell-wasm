@@ -33,7 +33,7 @@ pub fn load(lang: &str, extra_validity: Vec<String>) -> Result<Lexicon, String> 
         }
         eligible.push((tier, words));
     }
-    for band in ["easy", "medium", "hard", "expert"] {
+    for band in crate::experience::TIERS {
         for row in crate::words::tier_for(lang, band) {
             let w = bare(row).to_lowercase();
             let mut set = crate::homophones::group_members(lang, &w);

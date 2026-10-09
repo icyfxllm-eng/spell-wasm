@@ -592,6 +592,56 @@ pub fn preload_word_with(word: &str, py: Option<&str>, lang: &str) {
     }
 }
 
+/// CC-SPELLUZZLE (Eric's named amendment, 2026-10-09): warm a SET of words and
+/// say, word by word, whether a clip is in hand. Everything else in this file is
+/// fire-and-forget, which cannot tell a board it may not show a word it cannot
+/// play (I10). `play_chain` and the source order are untouched; this only asks.
+///
+/// A word is in hand when its clip may be served (`audio_verdict::servable`) and
+/// is either a bundled human clip or a server clip that answered. The device's
+/// own voice cannot be checked ahead of time and does not count.
+pub fn prefetch_set(words: Vec<String>, lang: String, done: impl FnOnce(Vec<bool>) + 'static) {
+    let n = words.len();
+    if n == 0 {
+        done(Vec::new());
+        return;
+    }
+    let results: Rc<RefCell<Vec<Option<bool>>>> = Rc::new(RefCell::new(vec![None; n]));
+    let done: Rc<RefCell<Option<Box<dyn FnOnce(Vec<bool>)>>>> = Rc::new(RefCell::new(Some(Box::new(done))));
+    for (i, w) in words.into_iter().enumerate() {
+        let (results, done, lang) = (results.clone(), done.clone(), lang.clone());
+        spawn_local(async move {
+            let ok = clip_in_hand(&w, &lang).await;
+            results.borrow_mut()[i] = Some(ok);
+            if results.borrow().iter().all(|r| r.is_some()) {
+                if let Some(f) = done.borrow_mut().take() {
+                    f(results.borrow().iter().map(|r| r.unwrap_or(false)).collect());
+                }
+            }
+        });
+    }
+}
+
+async fn clip_in_hand(word: &str, lang: &str) -> bool {
+    if !crate::audio_verdict::servable(lang, word, "normal") {
+        return false;
+    }
+    if crate::human_audio::clip_url(lang, word).is_some() {
+        return true;
+    }
+    let url = speak_url(word, None, "normal", lang);
+    let opts = web_sys::RequestInit::new();
+    opts.set_method("GET");
+    let Ok(req) = web_sys::Request::new_with_str_and_init(&url, &opts) else { return false };
+    let Some(win) = web_sys::window() else { return false };
+    let Ok(resp) = JsFuture::from(win.fetch_with_request(&req)).await else { return false };
+    let ok = resp.dyn_into::<web_sys::Response>().map(|r| r.ok()).unwrap_or(false);
+    if ok && native_audio::available() {
+        native_audio::prefetch(&native_audio::asset_id(word, "normal", lang), &url);
+    }
+    ok
+}
+
 /// Double-checks a typed answer against the backend. Since the backend
 /// trusts whatever `word` it's given, this is only ever as strong as the
 /// client sending the real target word — callers should still be prepared

@@ -164,6 +164,8 @@ mod spelldoku_tier_census; // CC-SPELLDOKU v1.3 §0: measurement only
 #[cfg(all(test, not(feature = "web")))]
 mod spelldoku_tier_preview; // CC-SPELLDOKU v1.3 Done #11: the Gig B audit sheet
 #[cfg(not(feature = "web"))]
+mod spelluzzle_screen; // CC-SPELLUZZLE v1 Phase B — the screen (app only)
+#[cfg(not(feature = "web"))]
 mod spelluzzle; // CC-SPELLUZZLE v1 Phase A — rune cipher core (app only, O1)
 #[cfg(not(feature = "web"))]
 mod spelldoku_ui; // CC-SPELLDOKU v1 — the screen (app only)
@@ -297,6 +299,7 @@ pub fn start() -> Result<(), JsValue> {
         lists_ui::refresh_pool(&app); // F4: the remembered list is what play serves
         spelldoku_ui::wire(&app); // CC-SPELLDOKU v1
         wordsearch_ui::wire(&app); // CC-WORDGRID v1 Phase A: Spell Search
+        spelluzzle_screen::wire(&app); // CC-SPELLUZZLE v1
         wordcross_ui::wire(&app); // CC-WORDGRID v1 Phase B: Spell Cross
     }
     // CC-IOS-SURFACES (BD-1): widget/intent deep links arrive as location

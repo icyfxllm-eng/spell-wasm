@@ -44,6 +44,9 @@ pub const KEY_PREFIXES: [&str; 4] = ["spell_spz_progress_v1", "spell_spz_history
 #[derive(Clone, Debug, Default, Serialize, Deserialize, PartialEq, Eq)]
 pub struct History {
     pub hashes: Vec<u64>,
+    /// The words of the last board shown, so the next one shares at most two (F11).
+    #[serde(default)]
+    pub last_words: Vec<String>,
 }
 
 impl History {
@@ -65,6 +68,9 @@ impl History {
 #[derive(Clone, Debug, Serialize, Deserialize, PartialEq, Eq)]
 pub struct Progress {
     pub seed: u64,
+    /// The previous board's words when this one was drawn: regenerating needs them (F11 overlap rule).
+    #[serde(default)]
+    pub previous: Vec<String>,
     pub gen_version: u32,
     pub hash: u64,
     pub snapshot: Snapshot,

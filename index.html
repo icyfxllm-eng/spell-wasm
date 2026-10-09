@@ -628,6 +628,68 @@
   .bg-pod{display:flex;align-items:center;gap:10px;padding:8px 12px;border-radius:10px;background:#ffffff10;font-size:.95rem}
   .bg-pod b{margin-inline-start:auto;font-variant-numeric:tabular-nums}
   /* BOARDGAME:END */
+  /* SPELLUZZLE:BEGIN CC-SPELLUZZLE v1 -- stripped from the site build (O1). No red anywhere (I12, R5). */
+  .sz-screen{position:fixed;inset:0;z-index:60;background:var(--bg,#0e1420);color:inherit;
+    display:none;flex-direction:column;gap:8px;overflow:hidden;
+    --sz-inset-top:env(safe-area-inset-top,0px);--sz-inset-bottom:env(safe-area-inset-bottom,0px);
+    --sz-key-h:42px;--sz-gap:4px;
+    padding:calc(var(--sz-inset-top) + 4px) 12px max(8px,var(--sz-inset-bottom))}
+  .sz-screen.show{display:flex}
+  /* The exit is top-left on every screen of the mode, whichever way the text runs. */
+  .sz-hud{display:flex;align-items:center;gap:8px;min-height:48px;flex:none;direction:ltr}
+  .sz-hud h2{margin:0;font-size:1.05rem;flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .sz-hud .mode-exit{width:48px;height:48px;min-width:48px}
+  .sz-streak{font-size:.85rem;opacity:.85;white-space:nowrap}
+  .sz-startpane{display:flex;flex-direction:column;gap:14px;align-items:center;justify-content:center;flex:1;text-align:center;padding:12px}
+  .sz-startpane p{margin:0;opacity:.85}
+  .sz-opt{display:flex;gap:8px;flex-wrap:wrap;justify-content:center}
+  .sz-btn{min-height:44px;padding:0 18px;border:none;border-radius:12px;background:#ffffff1a;color:inherit;font:inherit}
+  .sz-btn.on{box-shadow:inset 0 0 0 2px var(--amber,#f2c14e)}
+  .sz-startpane .btn{min-width:200px;min-height:56px}
+  .sz-play{display:flex;flex-direction:column;gap:8px;flex:1;min-height:0}
+  .sz-play[hidden],.sz-startpane[hidden],.sz-card[hidden],.sz-kb[hidden],.sz-runekey[hidden]{display:none}
+  .sz-board{display:flex;flex-direction:column;gap:6px;flex:1;min-height:0;overflow-y:auto;padding:2px}
+  .sz-row{display:flex;flex-direction:column;gap:4px;padding:5px 6px;border-radius:12px;background:#ffffff0d;cursor:pointer}
+  .sz-row.sel{box-shadow:inset 0 0 0 2px var(--amber,#f2c14e)}
+  .sz-row.secret{background:#f2c14e14}
+  .sz-head{display:flex;gap:8px;align-items:center;flex-wrap:wrap;font-size:.8rem}
+  .sz-label{font-weight:700;color:var(--amber,#f2c14e)}
+  .sz-cost{opacity:.7}
+  .sz-listen,.sz-clear{min-height:32px;padding:0 12px;border:none;border-radius:10px;background:#ffffff1a;color:inherit;font:inherit;font-size:.8rem}
+  .sz-cells{display:flex;gap:3px;justify-content:center}
+  .sz-cell{flex:1 1 0;min-width:0;max-width:40px;aspect-ratio:1;display:grid;place-items:center;border-radius:8px;
+    background:#ffffff14;font-weight:700;font-size:1.2rem;text-transform:lowercase}
+  .sz-cell.decoded{opacity:.55}
+  .sz-cell.typed{background:#ffffff2b}
+  .sz-cell.amber{background:#f2c14e33;color:var(--amber,#f2c14e);box-shadow:inset 0 0 0 2px var(--amber,#f2c14e)}
+  .sz-rune{width:68%;height:68%;color:currentColor;display:block}
+  .sz-row.off .sz-cell{animation:szWobble .5s ease-in-out 2;box-shadow:inset 0 0 0 2px var(--amber,#f2c14e)}
+  @keyframes szWobble{0%,100%{transform:none}25%{transform:rotate(-4deg)}75%{transform:rotate(4deg)}}
+  .sz-msg{min-height:1.2em;text-align:center;font-weight:600;color:var(--amber,#f2c14e);flex:none}
+  .sz-runekey{display:flex;flex-wrap:wrap;gap:6px;justify-content:center;flex:none}
+  .sz-k{display:inline-flex;align-items:center;gap:3px;padding:3px 6px;border-radius:8px;background:#ffffff14;font-size:.85rem}
+  .sz-k .sz-rune{width:20px;height:20px}
+  .sz-k.decoded b{opacity:.7}
+  .sz-k.amber{background:#f2c14e33;color:var(--amber,#f2c14e)}
+  .sz-result{flex:none}
+  .sz-stars{display:flex;gap:14px;justify-content:center;list-style:none;margin:0;padding:0}
+  .sz-star{opacity:.45;font-size:.95rem}
+  .sz-star.on{opacity:1;color:var(--amber,#f2c14e)}
+  .sz-new{min-height:40px;padding:0 12px;font-size:.85rem}
+  .sz-new[hidden]{display:none}
+  .sz-screen.playing .sz-streak{display:none}
+  .sz-msg:empty,.sz-result:empty{display:none}
+  .sz-kb{display:flex;flex-direction:column;gap:var(--sz-gap);flex:none}
+  .sz-krow{display:flex;gap:var(--sz-gap);justify-content:center}
+  .sz-key{flex:1 1 0;min-width:0;max-width:40px;height:var(--sz-key-h);padding:0;border:none;border-radius:9px;
+    background:#ffffff1f;color:inherit;font:inherit;font-size:1.15rem;text-transform:lowercase}
+  .sz-key:active{background:var(--amber,#f2c14e);color:#36210a}
+  .sz-del{align-self:flex-end;min-width:56px;height:36px;border:none;border-radius:9px;background:#ffffff1f;color:inherit;font:inherit}
+  .sz-card{position:absolute;inset:0;z-index:5;display:flex;flex-direction:column;gap:14px;align-items:center;justify-content:center;
+    padding:calc(var(--sz-inset-top) + 16px) 24px 24px;background:var(--bg,#0e1420);text-align:center}
+  .sz-card p{margin:0;font-size:1.05rem}
+  @media (prefers-reduced-motion:reduce){.sz-row.off .sz-cell{animation:none}}
+  /* SPELLUZZLE:END */
 
   /* CC-IMPOSTOR F1 */
   .imp-screen{position:fixed;inset:0;background:var(--bg,#0e1420);z-index:60;
@@ -2817,6 +2879,68 @@
     </div>
   </div>
   <!-- BOARDGAME:END -->
+  <!-- SPELLUZZLE:BEGIN CC-SPELLUZZLE v1 (app only, O1) -- stripped from the site build -->
+  <button id="szOpenBtn" hidden aria-hidden="true"></button>
+  <div class="sz-screen" id="szScreen" role="dialog" aria-modal="true" aria-labelledby="szTitle">
+    <svg xmlns="http://www.w3.org/2000/svg" width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
+<symbol id="rune-0" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 12.5a1.5 1.5 0 0 1 2.5-1a3.5 3.5 0 0 1-4.5 4.5a6 6 0 0 1 3-10.5a8 8 0 0 1 6 2"/></g></symbol>
+<symbol id="rune-1" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 5L16 8L10 19"/><circle cx="6" cy="16" r="1.4" fill="currentColor"/></g></symbol>
+<symbol id="rune-2" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17.5 6.5A7.5 7.5 0 1 0 19 13"/><circle cx="12.5" cy="11" r="1.6" fill="currentColor"/></g></symbol>
+<symbol id="rune-3" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 21L12 14V4M12 14L19 9M12 9L6 5"/></g></symbol>
+<symbol id="rune-4" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 18L10 9L11 16L20 5"/><circle cx="17" cy="19" r="1.4" fill="currentColor"/></g></symbol>
+<symbol id="rune-5" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9L19 6M9 3L7 21M14 14L20 19"/></g></symbol>
+<symbol id="rune-6" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 6H11M9 12H19M5 18H9M14 18H20"/></g></symbol>
+<symbol id="rune-7" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 5.5A5 5 0 1 0 8.5 14"/><path d="M17 12.5A3.5 3.5 0 1 1 13.5 16"/></g></symbol>
+<symbol id="rune-8" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6L14 4L20 12L12 20"/><circle cx="8" cy="14" r="1.4" fill="currentColor"/></g></symbol>
+<symbol id="rune-9" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 13C6 5 11 5 12 11S18 17 21 8"/><circle cx="7" cy="19" r="1.4" fill="currentColor"/></g></symbol>
+<symbol id="rune-10" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 8Q5 19 14 19Q20 19 20 12"/><circle cx="19" cy="5.5" r="1.5" fill="currentColor"/></g></symbol>
+<symbol id="rune-11" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 18A8 8 0 0 1 19 18"/><path d="M8 18A3 3 0 0 1 14 18"/><circle cx="20" cy="7" r="1.4" fill="currentColor"/></g></symbol>
+<symbol id="rune-12" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 7A5.5 5.5 0 1 0 17.5 13"/><path d="M17.5 13L21 5"/></g></symbol>
+<symbol id="rune-13" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 13Q12 3 19 10"/><circle cx="5.5" cy="5.5" r="1.5" fill="currentColor"/><circle cx="18" cy="18" r="1.5" fill="currentColor"/></g></symbol>
+<symbol id="rune-14" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 19H8V14H13V9H21"/><circle cx="6" cy="7" r="1.4" fill="currentColor"/></g></symbol>
+<symbol id="rune-15" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 18L11 8L19 12L15 20"/><circle cx="5" cy="18" r="1.4" fill="currentColor"/><circle cx="19" cy="12" r="1.4" fill="currentColor"/></g></symbol>
+<symbol id="rune-16" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 17C5 5 19 5 19 13C19 20 8 20 9 13C10 9 15 9 15 13"/></g></symbol>
+<symbol id="rune-17" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20L10 4M9 20L15 8M15 21L20 14"/></g></symbol>
+<symbol id="rune-18" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="10" cy="15" r="4.5"/><path d="M4 6L20 4"/></g></symbol>
+<symbol id="rune-19" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3L20 12L12 21L5 14"/><path d="M9 11H13"/></g></symbol>
+<symbol id="rune-20" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9Q8 4 12 9T20 9"/><path d="M4 17H14"/></g></symbol>
+<symbol id="rune-21" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 6A6 6 0 1 0 9 17"/><path d="M9 17V21"/></g></symbol>
+<symbol id="rune-22" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 19A9 9 0 0 1 5 6"/><circle cx="10" cy="9" r="1.5" fill="currentColor"/><circle cx="17" cy="8" r="1.5" fill="currentColor"/><circle cx="13" cy="16" r="1.5" fill="currentColor"/></g></symbol>
+<symbol id="rune-23" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20Q4 8 20 6"/><circle cx="11" cy="15" r="1.5" fill="currentColor"/><circle cx="17" cy="17" r="1.5" fill="currentColor"/></g></symbol>
+<symbol id="rune-24" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20A10 10 0 0 1 14 5"/><circle cx="18" cy="16" r="1.5" fill="currentColor"/></g></symbol>
+<symbol id="rune-25" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 19Q4 6 13 6Q19 6 19 12L13 12"/><circle cx="17" cy="19" r="1.4" fill="currentColor"/></g></symbol>
+<symbol id="rune-26" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7A4 4 0 0 1 12 7M8 13A4 4 0 0 1 16 13M12 19A4 4 0 0 1 20 19"/></g></symbol>
+<symbol id="rune-27" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 9V16L12 21L19 16V7L12 3"/><circle cx="11" cy="12" r="1.5" fill="currentColor"/></g></symbol>
+</svg>
+    <div class="sz-hud">
+      <button type="button" class="ghost mode-exit" id="szExit" aria-label="Exit" data-i18n-aria="aria.exit">✕</button>
+      <h2 id="szTitle" data-i18n="spz.name">Spelluzzle</h2>
+      <span class="sz-streak" id="szStreak"></span>
+      <button type="button" class="sz-btn sz-new" id="szNew" data-i18n="spz.new" hidden>New board</button>
+      <button type="button" class="ghost mode-exit" id="szHowBtn" aria-label="How to play" data-i18n-aria="sd.howToPlay">?</button>
+    </div>
+    <div class="sz-startpane" id="szStartPane">
+      <p id="szTagline"></p>
+      <div class="sz-opt" id="szTiers"></div>
+      <div class="bg-note" id="szNote" aria-live="polite"></div>
+      <button class="btn btn-check" id="szStart" data-i18n="bg.start">Start</button>
+    </div>
+    <div class="sz-play" id="szPlay" hidden>
+      <div class="sz-board" id="szBoard"></div>
+      <div class="sz-msg" id="szMsg" aria-live="polite"></div>
+      <div class="sz-result" id="szResult"></div>
+      <div class="sz-runekey" id="szRunes"></div>
+      <div class="sz-kb" id="szKb" hidden>
+        <button type="button" class="sz-del" id="szDel" aria-label="Delete last letter" data-i18n-aria="aria.backspace">⌫</button>
+        <div id="szKbKeys"></div>
+      </div>
+    </div>
+    <div class="sz-card" id="szHow" hidden>
+      <div id="szHowText"></div>
+      <button class="btn btn-check" id="szHowOk" data-i18n="bg.ready">Ready</button>
+    </div>
+  </div>
+  <!-- SPELLUZZLE:END -->
 
   <!-- CC-DEF-MATCH P3: the Definition Match screen. Cards float bottom→top in
        lanes; the orb speaks the word and replays on tap. No visible timer (D2). -->

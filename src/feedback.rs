@@ -83,6 +83,21 @@ impl From<crate::spelldoku::play::Verdict> for State {
     }
 }
 
+// ── Spelluzzle ──────────────────────────────────────────────────────────────
+// F4: a commit with no clash is neutral, a commit that makes a clash is close,
+// a solved board is success. The mode never emits a miss.
+#[cfg(not(feature = "web"))]
+impl From<crate::spelluzzle::play::Outcome> for State {
+    fn from(o: crate::spelluzzle::play::Outcome) -> Self {
+        use crate::spelluzzle::play::Outcome as O;
+        match o {
+            O::Neutral => State::Neutral,
+            O::Close => State::Close,
+            O::Success => State::Success,
+        }
+    }
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;

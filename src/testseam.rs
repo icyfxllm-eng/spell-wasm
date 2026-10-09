@@ -68,6 +68,8 @@ pub fn install(app: &App) {
     // that named it would itself be a leak.
     #[cfg(not(feature = "web"))]
     {
+        let cb = Closure::<dyn Fn() -> String>::new(crate::spelluzzle_screen::seam_words);
+        set(&obj, "szWords", cb.into_js_value());
         let cb = Closure::<dyn Fn() -> String>::new(crate::wordpic_screen::seam_current_word);
         set(&obj, "picWord", cb.into_js_value());
         let cb = Closure::<dyn Fn() -> String>::new(crate::wordpic_screen::seam_ladder);

@@ -269,6 +269,17 @@
         "expert"
       ]
     },
+    "spelluzzle": {
+      "junior": [
+        "easy"
+      ],
+      "standard": [
+        "easy",
+        "medium",
+        "hard",
+        "expert"
+      ]
+    },
     "boardgame": {
       "junior": [
         "easy",

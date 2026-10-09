@@ -296,19 +296,19 @@ mod tests {
     #[test]
     fn registry_parses_and_holds_the_shipped_modes() {
         let all = all();
-        // 20 modes + 6 core surfaces. my_words and misses are surfaces rather
+        // 21 modes + 6 core surfaces (Spelluzzle is the newest mode). my_words and misses are surfaces rather
         // than modes, registered so the CC-HUB-NAV drawer can resolve their
         // rows through this registry and not a second list (I2); `versus` is
         // the newest, and it is here because v1.3.1 F2 deletes the quick-play
         // row that was the local Spell Off's only door (H1).
-        assert_eq!(all.len(), 26, "20 modes + 6 core surfaces registered");
+        assert_eq!(all.len(), 27, "21 modes + 6 core surfaces registered");
         // File order IS tile order (D6); practice leads (CC-PRACTICE D9).
         // letter_forge (CC-LETTER-FORGE F1) sits after def_match, where its
         // registry row was inserted. It is `hidden`, so it appears here — this
         // pin covers all() — and in none of the visible() expectations below.
         assert_eq!(
             ids(&all),
-            vec!["practice", "ghost_racing", "syllable_replay", "photo_list", "spell_aloud", "word_stories", "online_spelloff", "def_match", "letter_forge", "word_chains", "impostor", "bee_sim", "word_picture", "my_words", "misses", "reports", "calendar", "translate", "spelldoku", "spell_search", "spell_cross", "boardgame", "standard", "climb", "daily", "versus"],
+            vec!["practice", "ghost_racing", "syllable_replay", "photo_list", "spell_aloud", "word_stories", "online_spelloff", "def_match", "letter_forge", "word_chains", "impostor", "bee_sim", "word_picture", "my_words", "misses", "reports", "calendar", "translate", "spelldoku", "spell_search", "spell_cross", "spelluzzle", "boardgame", "standard", "climb", "daily", "versus"],
         );
     }
 
@@ -346,7 +346,7 @@ mod tests {
         // surface (D1: free, drives daily play), so it tiles here. FIVE now.
         assert_eq!(
             got,
-            vec!["practice", "def_match", "letter_forge", "word_chains", "impostor", "bee_sim", "word_picture", "reports", "calendar", "translate", "spelldoku", "spell_search", "spell_cross", "boardgame"],
+            vec!["practice", "def_match", "letter_forge", "word_chains", "impostor", "bee_sim", "word_picture", "reports", "calendar", "translate", "spelldoku", "spell_search", "spell_cross", "spelluzzle", "boardgame"],
             "en Kid: practice, then the six companion tiles (D2: kid gets the full translator core)"
         );
         assert!(!got.contains(&"photo_list".to_string()));
@@ -371,7 +371,7 @@ mod tests {
         // — the point is that a non-iOS mode still tiles on web, not that
         // any particular mode does.
         assert!(got.contains(&"def_match".to_string()), "an all-platform mode still tiles on web");
-        for ios_only in ["photo_list", "spell_aloud", "reports", "calendar", "translate", "spelldoku", "spell_search", "spell_cross", "boardgame"] {
+        for ios_only in ["photo_list", "spell_aloud", "reports", "calendar", "translate", "spelldoku", "spell_search", "spell_cross", "spelluzzle", "boardgame"] {
             assert!(!got.contains(&ios_only.to_string()), "{ios_only} is iOS-only");
         }
     }
@@ -411,6 +411,7 @@ mod tests {
     /// an entry here is the opposite, so it must name who decided and when.
     const DELIBERATELY_DARK: &[(&str, &str)] = &[
         ("translate", "Eric, 2026-09-14: Phase A ships behind its flag, off, until Phase B"),
+        ("spelluzzle", "CC-SPELLUZZLE F13 (spec signed by Eric, 2026-10-09): the flag defaults off until his device pass, E1 to E4"),
     ];
 
     /// A deliberately dark mode is dark by DEFAULT only: its flag has a real
@@ -577,7 +578,7 @@ mod tests {
             v
         };
         assert_eq!(of(Group::WordPuzzles),
-                   ["letter_forge", "spell_cross", "spell_search", "spelldoku", "word_chains"]);
+                   ["letter_forge", "spell_cross", "spell_search", "spelldoku", "spelluzzle", "word_chains"]);
         assert_eq!(of(Group::Meaning), ["def_match", "impostor", "word_picture"]);
         // versus was an addition to D-N6's six, and not a preference: it owned a
         // quick-play tile that v1.3.1 F2 deletes, and I-N3 requires it to reach a
@@ -667,7 +668,7 @@ mod web_wall_tests {
         let ids: Vec<String> = all().iter().map(|m| m.id.clone()).collect();
         // CC-SPELLDOKU Done #11: SpellDoku never registers on the site.
         // CC-WORDGRID Phase A: nor does Spell Search.
-        for app_only in ["word_picture", "photo_list", "spell_aloud", "spelldoku", "spell_search", "spell_cross", "boardgame"] {
+        for app_only in ["word_picture", "photo_list", "spell_aloud", "spelldoku", "spell_search", "spell_cross", "spelluzzle", "boardgame"] {
             assert!(!ids.contains(&app_only.to_string()),
                     "{app_only} is still in the site registry — hiding is not removing");
         }
