@@ -30,6 +30,20 @@ build inputs and are not redistributed.
   travel with any redistribution of the source. https://github.com/cmusphinx/cmudict
   Build input: only the derived collision tables
   (`assets/words/<lang>/homophones.txt`) ship.
+- **web2 (Webster's Second International, 1934)** — the 234,936-word list
+  shipped with BSD as `/usr/share/dict/web2`, vendored here as
+  `tools/wordpipe/sources/web2` so the collision table can be built on any
+  machine rather than only on a Mac. **Public domain**: its own README states
+  the 1934 copyright has lapsed, and that README travels with the data as
+  `web2.README`. Used with the frequency list below to decide which unbanked
+  homophones a learner could plausibly produce — web2 alone admits the archaic
+  tail (aer, eyre, adz).
+- **OpenSubtitles frequency list (English)** — `hermitdave/FrequencyWords`,
+  **CC BY-SA 4.0**, vendored as `tools/wordpipe/sources/freq_en.txt`. The
+  50,000-word frequency cut that keeps proper names (ahn, ann, ame) out of the
+  collision table; corpus frequency is not a dictionary, which is why both
+  filters are needed. https://github.com/hermitdave/FrequencyWords
+  Build input: only the derived collision tables ship.
 
 ## Mandarin (zh)
 - **CC-CEDICT** — Chinese-English dictionary (definitions, pinyin).

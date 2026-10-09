@@ -45,7 +45,11 @@ CMU = ROOT / "tools/wordpipe/sources/cmudict.dict"
 # does not make the table reproducible off a Mac (that needs the inputs
 # themselves, and is a separate decision); it makes the irreproducibility
 # impossible to miss.
-WEB2 = pathlib.Path("/usr/share/dict/web2")
+# The REPO copy, not /usr/share/dict/web2. Reading the system file meant the
+# table could only be reproduced on a Mac -- Linux has no web2 at all -- so
+# the gate could not run in CI and a rebuild anywhere else silently produced a
+# smaller table. Vendored 2026-10-09; public domain, see web2.README.
+WEB2 = ROOT / "tools/wordpipe/sources/web2"
 FREQ_EN = ROOT / "tools/wordpipe/sources/freq_en.txt"
 OUT = ROOT / "assets/words"
 TIERS = ("EASY", "MEDIUM", "HARD", "EXPERT")
@@ -69,8 +73,8 @@ def missing_en_inputs():
                    f"are no English pronunciations, so there is no table at all. "
                    f"It is committed as of f7399143; a clone should have it.")
     if not WEB2.exists():
-        out.append(f"{WEB2} is missing — it is a macOS system file and does not exist "
-                   f"on Linux, so this table cannot be built or verified there. "
+        out.append(f"{_shortpath(WEB2)} is missing — it is vendored in the repo as of "
+                   f"2026-10-09, so a clone should have it. "
                    f"Without it the unbanked-homophone expansion is skipped and the "
                    f"table comes out SMALLER, which reads as 'stale'.")
     if not FREQ_EN.exists():

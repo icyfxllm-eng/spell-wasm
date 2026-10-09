@@ -46,3 +46,17 @@ jobs:
 
       - name: Word-list pipeline gates (charset / exclusions / balance / determinism)
         run: python3 scripts/build-wordlists.py --check
+      # Collision tables are word data too, and this is the only check in the
+      # repository that could have caught ebd6a673: an English table
+      # regenerated at 80 sets where it had been 239 to 264, because the
+      # worktree lacked an input. A collision set is accept-all, so the 184
+      # missing sets marked learners WRONG for real words the audio cannot
+      # tell apart -- and E2E went GREEN on that commit, because a denser grid
+      # is not a failing grid.
+      #
+      # cc5c4470 added this step and had to be reverted the same day: the
+      # table has THREE inputs and only cmudict was committed. All three are
+      # vendored as of 2026-10-09, and the table is verified to regenerate
+      # byte-identically from them, so this can finally run on a runner.
+      - name: Collision tables are current
+        run: python3 tools/build_collisions.py --check

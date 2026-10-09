@@ -96,6 +96,17 @@ tools/wordpipe/out/
 # licence, (C) 1993-2015 Carnegie Mellon University, text beside the data.
 !tools/wordpipe/sources/cmudict.dict
 !tools/wordpipe/sources/cmudict.LICENSE
+# ...and the other two inputs to the SAME gate, for the same reason. The
+# English collision table is computed from cmudict AND web2 AND freq_en, and
+# until 2026-10-09 two of the three were invisible: web2 is a macOS system
+# file that does not exist on Linux, freq_en was ignored here. So the table
+# could only be built on one developer's Mac, the check could not run in CI at
+# all, and a build anywhere else silently produced a smaller table.
+# web2 is public domain (Webster's Second International, 1934 copyright
+# lapsed -- see web2.README). freq_en is CC BY-SA 4.0, already in NOTICES.
+!tools/wordpipe/sources/web2
+!tools/wordpipe/sources/web2.README
+!tools/wordpipe/sources/freq_en.txt
 .claude/worktrees/
 .corpus-cache/
 
