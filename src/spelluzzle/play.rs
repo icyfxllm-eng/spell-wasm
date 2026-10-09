@@ -42,6 +42,17 @@ impl Stars {
     }
 }
 
+/// A play, written down (F11).
+#[derive(Clone, Debug, Default, PartialEq, Eq, serde::Serialize, serde::Deserialize)]
+pub struct Snapshot {
+    pub entries: Vec<(usize, String)>,
+    pub drafts: Vec<(usize, String)>,
+    pub selected: Option<usize>,
+    pub listened: Vec<usize>,
+    pub first_commit: Vec<(usize, String)>,
+    pub secret_undecoded_at_first: Option<bool>,
+}
+
 #[derive(Clone, Debug)]
 pub struct Play {
     pub board: Board,
@@ -205,6 +216,34 @@ impl Play {
         let secret = self.board.slots.len() - 1;
         let earned_secret = first_right(secret) && (self.is_jr() || self.secret_undecoded_at_first == Some(true));
         Some(Stars { solved: true, sharp_ear, codebreaker: self.listened.is_empty() && earned_secret })
+    }
+
+    /// F11: everything needed to put this play back after a restart. The board
+    /// itself is regenerated from its seed.
+    pub fn snapshot(&self) -> Snapshot {
+        let s = |v: &Vec<char>| v.iter().collect::<String>();
+        Snapshot {
+            entries: self.entries.iter().map(|(i, v)| (*i, s(v))).collect(),
+            drafts: self.drafts.iter().map(|(i, v)| (*i, s(v))).collect(),
+            selected: self.selected,
+            listened: self.listened.iter().copied().collect(),
+            first_commit: self.first_commit.iter().map(|(i, v)| (*i, s(v))).collect(),
+            secret_undecoded_at_first: self.secret_undecoded_at_first,
+        }
+    }
+
+    /// Resume replaces: it never appends to a play that already has entries.
+    pub fn restore(board: Board, snap: &Snapshot) -> Play {
+        let n = board.slots.len();
+        let c = |m: &Vec<(usize, String)>| -> BTreeMap<usize, Vec<char>> { m.iter().filter(|(i, _)| *i < n).map(|(i, w)| (*i, w.chars().collect())).collect() };
+        let mut p = Play::new(board);
+        p.entries = c(&snap.entries);
+        p.drafts = c(&snap.drafts);
+        p.selected = snap.selected.filter(|i| *i < n);
+        p.listened = snap.listened.iter().copied().filter(|i| *i < n).collect();
+        p.first_commit = c(&snap.first_commit);
+        p.secret_undecoded_at_first = snap.secret_undecoded_at_first;
+        p
     }
 
     /// The word the orb says for the first time when the board is solved (F6).

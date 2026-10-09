@@ -42,6 +42,8 @@ pub fn generate(seed: u64, tier: Tier, lex: &Lexicon) -> Result<Generated, GenEr
 /// `previous` (F11). If that cannot be met within the attempt cap, relax the
 /// overlap rule first and try again; never a gate.
 pub fn generate_after(seed: u64, tier: Tier, lex: &Lexicon, previous: &[String]) -> Result<Generated, GenError> {
+    // F12: a script with hundreds of units cannot give runes that repeat across a board.
+    assert!(!super::offer::NEVER.contains(&lex.lang.as_str()), "Spelluzzle is never built for {}", lex.lang);
     let pool = lex.pool(tier);
     if pool.len() < tier.shape().slots() {
         return Err(GenError::EmptyPool);

@@ -12,10 +12,14 @@
 //!   every candidate to `gates::check_board` and serves only what that accepts.
 
 pub mod bank;
+pub mod fresh;
 pub mod gates;
 pub mod gen;
 pub mod lex;
+pub mod offer;
 pub mod play;
+pub mod render;
+pub mod store;
 pub mod types;
 pub mod view;
 

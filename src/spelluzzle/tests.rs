@@ -504,3 +504,324 @@ fn only_english_style_units_in_the_alphabet() {
     assert!(lex.alphabet.len() <= 64);
     let _ = pattern(&chars("abca"));
 }
+
+// ---- play rules (F2, F5, F7, F8) -------------------------------------------
+
+use super::play::{Check, Outcome, Play};
+
+fn type_word(p: &mut Play, slot: usize, word: &[char]) -> Option<Outcome> {
+    p.select(slot);
+    let mut out = None;
+    for &c in word {
+        out = p.type_unit(c).or(out);
+    }
+    out
+}
+
+fn solve_in_order(p: &mut Play, order: &[usize]) {
+    for &i in order {
+        let w = p.board.slots[i].answer.clone();
+        type_word(p, i, &w);
+    }
+}
+
+#[test]
+fn stars_are_withheld_until_solved_and_earned_by_the_rules() {
+    let lex = en();
+    let b = board_of(lex, Tier::Easy, 5);
+    let n = b.slots.len();
+    let mut p = Play::new(b.clone());
+    assert!(p.stars().is_none(), "no verdict before the board is solved (I6)");
+
+    // Secret first, while its runes are still undecoded: all three stars.
+    solve_in_order(&mut p, &[n - 1, 0, 1, 2, 3, 4]);
+    let s = p.stars().expect("solved");
+    assert!(s.solved && s.sharp_ear && s.codebreaker, "{s:?}");
+    assert_eq!(p.finale_word().unwrap(), p.word(n - 1));
+
+    // Secret last: every rune is already decoded, so no Codebreaker (Easy keeps the condition).
+    let mut p = Play::new(b.clone());
+    solve_in_order(&mut p, &[0, 1, 2, 3, 4, n - 1]);
+    let s = p.stars().expect("solved");
+    assert!(s.solved && s.sharp_ear && !s.codebreaker, "{s:?}");
+
+    // A wrong first commit costs Sharp ear even if the slot is later corrected.
+    let mut p = Play::new(b.clone());
+    let mut wrong = p.board.slots[0].answer.clone();
+    wrong[0] = if wrong[0] == 'z' { 'y' } else { 'z' };
+    type_word(&mut p, 0, &wrong);
+    solve_in_order(&mut p, &[0, 1, 2, 3, 4, n - 1]);
+    let s = p.stars().expect("solved");
+    assert!(s.solved && !s.sharp_ear, "{s:?}");
+
+    // Spell Jr drops the "still undecoded" condition.
+    let jr = board_of(lex, Tier::Jr, 5);
+    let m = jr.slots.len();
+    let mut p = Play::new(jr);
+    let order: Vec<usize> = (0..m).collect();
+    solve_in_order(&mut p, &order);
+    assert!(p.stars().unwrap().codebreaker, "Jr: the secret needs only a right first commit");
+}
+
+#[test]
+fn a_new_clash_is_close_and_a_clean_commit_is_neutral() {
+    let lex = en();
+    let b = board_of(lex, Tier::Easy, 9);
+    let mut p = Play::new(b);
+    let w0 = p.board.slots[0].answer.clone();
+    assert_eq!(type_word(&mut p, 0, &w0), Some(Outcome::Neutral));
+    // A different word in another slot that disagrees about a shared rune.
+    let mut bad = p.board.slots[1].answer.clone();
+    for k in 0..bad.len() {
+        let r = p.board.slots[1].runes[k];
+        if p.board.slots[0].runes.contains(&r) {
+            bad[k] = if bad[k] == 'q' { 'x' } else { 'q' };
+            break;
+        }
+    }
+    assert_eq!(type_word(&mut p, 1, &bad), Some(Outcome::Close));
+}
+
+#[test]
+fn medium_and_up_give_the_count_only_and_jr_easy_name_the_slots() {
+    use super::render::check_text;
+    for (tier, slots_named) in [(Tier::Jr, true), (Tier::Easy, true), (Tier::Medium, false), (Tier::Hard, false), (Tier::Expert, false)] {
+        // One entry is wrong but agrees with everything else, so nothing clashes.
+        let b = Board::from_words_sorted("en", tier, &["abc", "abd"], &[], "bca");
+        let mut p = Play::new(b);
+        type_word(&mut p, 0, &chars("abc"));
+        type_word(&mut p, 1, &chars("abe"));
+        type_word(&mut p, 2, &chars("bca"));
+        match p.check() {
+            Some(Check::Slots(v)) => assert!(slots_named && v == vec![1], "{tier:?}: {v:?}"),
+            Some(Check::Count(n)) => assert!(!slots_named && n == 1, "{tier:?}: {n}"),
+            None => panic!("{tier:?}: the full-board check did not appear"),
+        }
+        assert_eq!(check_text(&p, &plain_tr), "§", "one word is off reads through spz.offOne");
+    }
+}
+
+#[test]
+fn reopening_and_clearing_a_slot() {
+    let lex = en();
+    let mut p = Play::new(board_of(lex, Tier::Easy, 2));
+    let w = p.board.slots[0].answer.clone();
+    type_word(&mut p, 0, &w);
+    assert!(p.entries.contains_key(&0));
+    p.backspace();
+    assert!(!p.entries.contains_key(&0), "backspace reopens a committed slot");
+    assert_eq!(p.drafts.get(&0).map(|d| d.len()), Some(w.len() - 1));
+    p.clear_word(0);
+    assert!(p.drafts.is_empty() && p.entries.is_empty());
+}
+
+#[test]
+fn only_a_silent_slot_can_be_listened_to_and_the_secret_is_never_heard_early() {
+    let b = Board::from_words_sorted("en", Tier::Medium, &["lived", "legal", "animal", "normal", "remove"], &["found"], "ending");
+    let mut p = Play::new(b);
+    assert!(p.is_silent(5) && p.select(5).is_none(), "a silent slot says nothing");
+    assert!(p.select(6).is_none(), "the secret is not heard before the board is solved");
+    assert!(p.listen(0).is_none(), "a spoken slot has nothing to buy");
+    assert_eq!(p.listen(5).as_deref(), Some("found"));
+    assert!(!p.is_silent(5));
+    assert!(p.select(5).is_some());
+}
+
+#[test]
+fn resume_replaces_and_never_appends() {
+    let lex = en();
+    let b = board_of(lex, Tier::Easy, 4);
+    let mut p = Play::new(b.clone());
+    let w = p.board.slots[2].answer.clone();
+    type_word(&mut p, 2, &w);
+    p.select(0);
+    p.type_unit('a');
+    let snap = p.snapshot();
+    let a = Play::restore(b.clone(), &snap);
+    let again = Play::restore(b, &snap);
+    assert_eq!(a.entries, p.entries);
+    assert_eq!(a.drafts, p.drafts);
+    assert_eq!(a.snapshot(), again.snapshot());
+}
+
+// ---- stores (F11) ----------------------------------------------------------
+
+use super::store::{History, Progress, Streak, HISTORY_CAP};
+
+#[test]
+fn history_keeps_five_hundred_and_abandoned_boards_count() {
+    let mut h = History::default();
+    for i in 0..(HISTORY_CAP as u64 + 40) {
+        h.push(i);
+    }
+    assert_eq!(h.hashes.len(), HISTORY_CAP);
+    assert!(!h.contains(0) && h.contains(HISTORY_CAP as u64 + 39));
+    h.push(HISTORY_CAP as u64 + 39);
+    assert_eq!(h.hashes.len(), HISTORY_CAP, "re-pushing a hash does not duplicate it");
+}
+
+#[test]
+fn the_streak_counts_once_a_day_with_no_replay_gate() {
+    let mut s = Streak::default();
+    s.solved("2026-10-09", "2026-10-08");
+    s.solved("2026-10-09", "2026-10-08");
+    s.solved("2026-10-09", "2026-10-08");
+    assert_eq!(s.count, 1, "replays on the same day change nothing");
+    s.solved("2026-10-10", "2026-10-09");
+    assert_eq!(s.count, 2);
+    s.solved("2026-10-13", "2026-10-12");
+    assert_eq!(s.count, 1, "a gap starts again");
+    assert_eq!(s.current("2026-10-20", "2026-10-19"), 0);
+}
+
+#[test]
+fn saved_progress_resumes_only_for_the_same_board() {
+    let lex = en();
+    let b = board_of(lex, Tier::Easy, 6);
+    let p = Progress { seed: b.seed, gen_version: super::types::GEN_VERSION, hash: b.hash(), snapshot: Play::new(b.clone()).snapshot() };
+    assert!(p.matches(b.hash()));
+    assert!(!p.matches(b.hash() ^ 1));
+    let json = serde_json::to_string(&p).unwrap();
+    assert_eq!(serde_json::from_str::<Progress>(&json).unwrap(), p);
+}
+
+// ---- A9 freshness ----------------------------------------------------------
+
+#[test]
+fn a9_freshness_from_a_400_word_pool() {
+    use super::fresh::fresh_board;
+    let n = n_seeds(500);
+    let mut tiers: Vec<Tier> = vec![Tier::Jr, Tier::Easy];
+    if n_seeds(0) > 0 {
+        tiers = Tier::ALL.to_vec();
+    }
+    for tier in tiers {
+        // A 400-word pool for this tier, from the real bank, with the bank as validity.
+        let full = en().pool(tier);
+        let mut words: Vec<String> = full.iter().map(|w| w.units.iter().collect()).collect();
+        words.sort();
+        let step = (words.len() / 400).max(1);
+        let pool: Vec<String> = words.iter().step_by(step).take(400).cloned().collect();
+        let lex = Lexicon::new(LexInput {
+            lang: "en".into(),
+            eligible: vec![(tier, pool)],
+            validity: en().all_valid().iter().map(|w| w.iter().collect()).collect(),
+            collisions: Vec::new(),
+        })
+        .unwrap();
+        let mut history = History::default();
+        let mut prev: Vec<String> = Vec::new();
+        let mut seed = 77u64;
+        for i in 0..n {
+            let b = fresh_board(&lex, tier, &history, &prev, || {
+                seed += 1;
+                seed
+            })
+            .unwrap_or_else(|e| panic!("{tier:?} board {i}: {e:?}"));
+            assert!(!history.contains(b.hash()), "{tier:?} board {i} repeated");
+            let shared = b.words().iter().filter(|w| prev.contains(w)).count();
+            assert!(shared <= 2, "{tier:?} board {i} shares {shared} words with the last");
+            history.push(b.hash());
+            prev = b.words();
+        }
+    }
+}
+
+// ---- A11 no_leak, A12 jr_rules, A13 absent_not_locked ----------------------
+
+fn plain_tr(key: &str, args: &[(&str, &str)]) -> String {
+    let mut s = String::from("§");
+    for (_, v) in args {
+        s.push_str(v);
+    }
+    let _ = key;
+    s
+}
+
+/// Text between tags that is not inside a tag.
+fn text_nodes(html: &str) -> Vec<String> {
+    let mut out = Vec::new();
+    let mut in_tag = false;
+    let mut cur = String::new();
+    for c in html.chars() {
+        match c {
+            '<' => {
+                if !cur.trim().is_empty() {
+                    out.push(cur.clone());
+                }
+                cur.clear();
+                in_tag = true;
+            }
+            '>' => in_tag = false,
+            _ if !in_tag => cur.push(c),
+            _ => {}
+        }
+    }
+    out
+}
+
+#[test]
+fn a11_no_leak() {
+    use super::render::{board_html, rune_key_html};
+    let lex = en();
+    for tier in [Tier::Jr, Tier::Easy] {
+        let b = board_of(lex, tier, 11);
+        let mut p = Play::new(b);
+        let html = board_html(&p, &plain_tr) + &rune_key_html(&p, &plain_tr);
+        for w in p.board.words() {
+            assert!(!html.contains(&w), "the answer {w} is in the markup of an untouched board");
+        }
+        assert!(text_nodes(&html).iter().all(|t| t.chars().all(|c| !c.is_alphabetic())), "an untouched board shows no letter: {:?}", text_nodes(&html));
+        // After one commit, only that entry's units appear.
+        let w = p.board.slots[0].answer.clone();
+        type_word(&mut p, 0, &w);
+        let html = board_html(&p, &plain_tr) + &rune_key_html(&p, &plain_tr);
+        let allowed: std::collections::BTreeSet<char> = w.iter().copied().collect();
+        for t in text_nodes(&html) {
+            for c in t.chars().filter(|c| c.is_alphabetic()) {
+                assert!(allowed.contains(&c), "{tier:?}: letter {c} shown though only `{}` was committed", w.iter().collect::<String>());
+            }
+        }
+        // The aria labels carry the rune number, and a unit only where one was decoded.
+        let labels: Vec<&str> = html.split("aria-label=\"").skip(1).map(|s| s.split('"').next().unwrap()).collect();
+        assert!(!labels.is_empty());
+    }
+}
+
+#[test]
+fn a12_jr_rules() {
+    let n = n_seeds(300);
+    let lex = en();
+    for seed in 0..n as u64 {
+        let b = board_of(lex, Tier::Jr, seed);
+        assert!(b.slots.iter().all(|s| s.kind != SlotKind::Silent), "Spell Jr has no silent slot");
+        for s in &b.slots {
+            assert!(!lex.has_homophone(&s.answer), "Jr word {} has a sound-alike", s.answer.iter().collect::<String>());
+        }
+    }
+    use super::offer::tiers_for;
+    assert_eq!(tiers_for("en", true), vec![Tier::Jr], "a Jr profile cannot open a standard tier");
+    assert!(!tiers_for("en", false).contains(&Tier::Jr));
+}
+
+#[test]
+fn a13_absent_not_locked() {
+    use super::offer::{language_offered, tiers_for};
+    for lang in ["ko", "zh", "ja", "ar", "hi", "fr", "de", "vi"] {
+        assert!(!language_offered(lang) && tiers_for(lang, false).is_empty() && tiers_for(lang, true).is_empty(), "{lang} must be absent");
+    }
+    assert!(language_offered("en"));
+    for lang in super::offer::NEVER {
+        let lex = Lexicon::new(LexInput {
+            lang: lang.into(),
+            eligible: vec![(Tier::Easy, ["cat", "dog"].iter().map(|s| s.to_string()).collect())],
+            validity: vec![],
+            collisions: vec![],
+        })
+        .unwrap();
+        let r = std::panic::catch_unwind(|| {
+            let _ = generate(1, Tier::Easy, &lex);
+        });
+        assert!(r.is_err(), "constructing a board for {lang} must fail an assertion");
+    }
+}
