@@ -179,9 +179,20 @@ fn wordgrid_property_10k() {
 /// CC-BANK-PURITY Phase A quarantined 9,341 non-word rows and respelled or
 /// capitalised 1,815 more, so the pools those 500 seeds draw from changed
 /// (reports/bank-purity-census.md, C4).
+/// Re-pinned 2026-10-09, from 0x79bf_275e_fd79_a445, on Eric's explicit
+/// instruction ("repin it"). CC-BANK-PURITY left Korean and Russian one bank
+/// edit away from the failure Vietnamese actually hit -- measured Daily
+/// ceilings of 21 and 11 against gates of 20 and 10 -- so both were grown back
+/// from their pinned Leipzig corpora through tools/bank/purity_admit: ko easy
+/// 291 to 558, ru easy 267 to 833, every tier inside the caps in
+/// config/bank_floors.json. Ceilings moved to 24 and 15, margin 1 to 4 and 5.
+/// A bigger pool is a different pool, so these 500 seeds draw differently.
+///
+/// The spelldoku golden did NOT move on the same change and was left alone.
+///
 /// A moved digest is only ever acceptable with a reason like this one beside
 /// it: the whole point of the pin is that nobody re-pins it casually.
-pub const GOLDEN: u64 = 0x79bf_275e_fd79_a445;
+pub const GOLDEN: u64 = 0x72be_92b1_84b9_a468;
 
 #[test]
 fn wordgrid_determinism() {

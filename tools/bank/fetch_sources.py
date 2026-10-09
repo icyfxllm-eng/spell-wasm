@@ -20,7 +20,20 @@ for s in reg["sources"]:
         if not os.path.exists(dest) and "--verify" not in sys.argv:
             os.makedirs(os.path.dirname(dest), exist_ok=True)
             print(f"fetch {s['id']}: {url}")
-            urllib.request.urlretrieve(url, dest)
+            # Guarded, because one dead URL used to take the whole run with it.
+            # 2026-10-09: the pinned fr_FR/fr.dic 404s upstream, and the
+            # unguarded urlretrieve raised there -- so the THIRTEEN sources
+            # after French were never fetched and every language but en/es
+            # silently had no reference dictionary. purity_admit then fails
+            # closed on each of them, which reads as "the gate is broken"
+            # rather than "one URL moved". The `bad` counter below already
+            # existed for exactly this; it just never got the chance to run.
+            try:
+                urllib.request.urlretrieve(url, dest)
+            except Exception as e:
+                print(f"FETCH FAILED {s['id']}: {rel} — {e}")
+                bad += 1
+                continue
         if not os.path.exists(dest):
             print(f"MISSING {s['id']}: {rel}"); bad += 1; continue
         got = hashlib.sha256(open(dest, "rb").read()).hexdigest()
