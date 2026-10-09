@@ -82,10 +82,29 @@ export function problems(root = '.') {
     }
   }
 
-  // The placement rule, enforced where it can be: the top-bar exit must not
-  // be the only way out, and it must not be a bare X sitting first in the
-  // bar. We cannot judge pixels from here, so this checks the thing that is
-  // checkable — that the law is written down next to the markup.
+  // AND THE EXIT MUST BE A WORD, NOT A GLYPH. Eric, 2026-10-09: never an X
+  // in the top-left corner. Changing only the POSITION would not satisfy
+  // that — the top bar is a plain flex row, so its leading edge is
+  // top-left in the 14 LTR languages and top-right in Arabic, and any
+  // trailing placement simply moves the violation to Arabic. Changing WHAT
+  // the control is works in every direction, so that is what is enforced:
+  // every mode exit carries a translated text label and no bare glyph.
+  const GLYPHS = /[\u00d7\u2715\u2716\u274c\u2573xX]/;
+  for (const m of html.matchAll(/<button([^>]*\bmode-exit\b[^>]*)>([\s\S]*?)<\/button>/g)) {
+    const [, attrs, body] = m;
+    const id = (/id="([^"]+)"/.exec(attrs) || [, '(no id)'])[1];
+    const text = body.replace(/<[^>]+>/g, '').trim();
+    if (!/data-i18n="/.test(attrs)) {
+      out.push(`#${id} is a mode exit with no data-i18n label — it must say a `
+        + 'translated word, so it reads the same in every writing direction');
+    }
+    if (text.length <= 2 && GLYPHS.test(text)) {
+      out.push(`#${id} is a mode exit showing the glyph ${JSON.stringify(text)} — `
+        + 'it must be a word. An X is a convention a child has not learned, and '
+        + 'the corner it sits in flips between LTR and RTL.');
+    }
+  }
+
   return out;
 }
 

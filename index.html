@@ -409,7 +409,21 @@
      the exit control is 44x44, top-left, in-flow. */
   .dm-screen,.pr-screen{padding-top:calc(env(safe-area-inset-top,0px) + 8px);
     padding-bottom:calc(env(safe-area-inset-bottom,0px) + 8px)}
-  .mode-exit{position:static;width:44px;height:44px;min-width:44px;font-size:20px;
+  /* The way out of a game mode. A WORD, never a glyph: Eric, 2026-10-09.
+     An X in a corner is a convention a child has not learned yet, and the
+     corner it lands in is not even stable -- the bar is a plain flex row,
+     so the leading edge is top-left in the 14 LTR languages and top-right
+     in Arabic. A label reads the same whichever way the page runs.
+     Height stays at the 44px touch target; width grows with the word,
+     because "Beenden" and "Lumabas" do not fit in a square. */
+  /* A square glyph button in a mode's top bar. This is the STYLE half of
+     what .mode-exit used to carry; the exit itself is a word now, so the
+     two cannot share a rule. Used by controls that are not exits. */
+  .mode-btn{position:static;width:44px;height:44px;min-width:44px;font-size:20px;
+    border:1px solid var(--edge);border-radius:12px;background:var(--panel-2);
+    display:flex;align-items:center;justify-content:center;flex:none}
+  .mode-exit{position:static;min-height:44px;min-width:44px;font-size:15px;
+    font-weight:600;padding-inline:14px;white-space:nowrap;
     border:1px solid var(--edge);border-radius:12px;background:var(--panel-2);
     display:flex;align-items:center;justify-content:center;flex:none}
   /* btn-hide is per-surface in this stylesheet; the practice screen scopes
@@ -2463,7 +2477,7 @@
   <!-- CC-PRACTICE: the front porch — guided first 20 + 5 difficult words. -->
   <div class="pr-screen" id="practiceScreen">
     <div class="pr-top">
-      <button class="ghost mode-exit" id="prExit" aria-label="Exit" data-i18n-aria="aria.exit">✕</button>
+      <button class="ghost mode-exit" id="prExit" data-i18n="aria.exit">Exit</button>
       <div class="pr-path" id="prPath"></div>
       <button class="ghost" id="prRestart" data-i18n="practice.restart">↺</button>
     </div>
@@ -2522,7 +2536,7 @@
          hard-coded header height, and Big Text changes it. -->
     <div class="wp-stickyhead">
     <div class="wp-top">
-      <button class="ghost mode-exit" id="wpPickerExit" aria-label="Exit" data-i18n-aria="aria.exit">✕</button>
+      <button class="ghost mode-exit" id="wpPickerExit" data-i18n="aria.exit">Exit</button>
       <div class="wp-title" data-i18n="tools.wordpic.name">Spell Picture</div>
       <button class="ghost" id="wpGalleryBtn" data-i18n="finale.gallery">Gallery</button>
       <button class="btn btn-check" id="wpSurprise" data-i18n="wordpic.surprise">🎲</button>
@@ -2562,7 +2576,7 @@
   </div></div>
   <div class="wp-screen" id="wpPlay">
     <div class="wp-top">
-      <button class="ghost mode-exit" id="wpExit" aria-label="Exit" data-i18n-aria="aria.exit">✕</button>
+      <button class="ghost mode-exit" id="wpExit" data-i18n="aria.exit">Exit</button>
       <div class="wp-title" id="wpPlayTitle"></div>
       <div class="wp-count" id="wpCount"></div>
       <button class="ghost btn-hide" id="wpZoom" aria-label="Zoom" data-i18n-aria="aria.zoom">🔍</button>
@@ -2624,7 +2638,7 @@
        have no element bound to it. -->
   <div class="fg-screen" id="forge">
     <div class="fg-top">
-      <button class="ghost mode-exit" id="fgExit" aria-label="Exit" data-i18n-aria="aria.exit">✕</button>
+      <button class="ghost mode-exit" id="fgExit" data-i18n="aria.exit">Exit</button>
       <span class="fg-rank" id="fgRank" aria-live="polite"></span>
       <span class="fg-score" id="fgScore">0</span>
     </div>
@@ -2652,7 +2666,7 @@
        scrolled to its end, so the live word is always the visible one. -->
   <div class="cn-screen" id="chains">
     <div class="cn-top">
-      <button class="ghost mode-exit" id="cnExit" aria-label="Exit" data-i18n-aria="aria.exit">✕</button>
+      <button class="ghost mode-exit" id="cnExit" data-i18n="aria.exit">Exit</button>
       <span class="cn-meta"><b id="cnScore">0</b> <span data-i18n="chains.best">best</span> <b id="cnBest">0</b></span>
     </div>
     <div class="cn-hooklbl" data-i18n="chains.hook">Next word starts with</div>
@@ -2687,7 +2701,7 @@
        cost anything. -->
   <div class="imp-screen" id="impostor">
     <div class="imp-top">
-      <button class="ghost mode-exit" id="impExit" aria-label="Exit" data-i18n-aria="aria.exit">✕</button>
+      <button class="ghost mode-exit" id="impExit" data-i18n="aria.exit">Exit</button>
       <button type="button" class="imp-orb" id="impOrb" aria-label="Replay word" data-i18n-aria="aria.replayWord">🔊</button>
       <span class="imp-streak" id="impStreak" aria-live="polite">0</span>
       <span class="imp-prog" id="impProgress"></span>
@@ -2715,7 +2729,7 @@
        makes this mode offline, so I1's gate renders nothing. -->
   <div class="bee-screen" id="bee">
     <div class="bee-top">
-      <button class="ghost mode-exit" id="beeExit" aria-label="Exit" data-i18n-aria="aria.exit">✕</button>
+      <button class="ghost mode-exit" id="beeExit" data-i18n="aria.exit">Exit</button>
       <span class="bee-round" id="beeRound"></span>
       <button type="button" class="ghost bee-rules" id="beeOfficial"
               aria-label="Official rules" data-i18n-aria="bee.official" style="margin-inline-start:auto">—</button>
@@ -2749,7 +2763,7 @@
   <div class="bg-screen" id="bgScreen" role="dialog" aria-modal="true" aria-labelledby="bgTitle">
     <div class="bg-hud">
       <h2 id="bgTitle" data-i18n="bg.name">Board Game</h2>
-      <button type="button" class="ghost mode-exit bg-setup-exit" id="bgSetupExit" aria-label="Exit" data-i18n-aria="aria.exit">✕</button>
+      <button type="button" class="ghost mode-exit bg-setup-exit" id="bgSetupExit" data-i18n="aria.exit">Exit</button>
     </div>
     <div class="bg-setup" id="bgSetup">
       <div class="bg-opt" id="bgOptMode"><span data-i18n="bg.name">Board Game</span></div>
@@ -2772,7 +2786,7 @@
       <div class="bg-act" id="bgAct">
         <button type="button" class="bg-orb" id="bgOrb" data-state="roll" data-i18n="bg.roll">Roll</button>
         <div class="bg-results" id="bgResults"></div>
-        <button type="button" class="ghost mode-exit bg-exit" id="bgExit" aria-label="Exit" data-i18n-aria="aria.exit">✕</button>
+        <button type="button" class="ghost mode-exit bg-exit" id="bgExit" data-i18n="aria.exit">Exit</button>
       </div>
       <div class="bg-stretch" id="bgStretch" hidden></div>
       <div class="bg-swap" id="bgSwap" hidden></div>
@@ -2808,10 +2822,10 @@
        lanes; the orb speaks the word and replays on tap. No visible timer (D2). -->
   <div class="dm-screen" id="defMatch">
     <div class="dm-top">
-      <button class="ghost mode-exit" id="dmExit" aria-label="Exit" data-i18n-aria="aria.exit">✕</button>
+      <button class="ghost mode-exit" id="dmExit" data-i18n="aria.exit">Exit</button>
       <button type="button" class="dm-orb" id="dmOrb" aria-label="Replay word" data-i18n-aria="aria.replayWord">🔊</button>
       <span class="dm-streak" id="dmStreak" aria-live="polite"></span>
-      <button type="button" class="ghost mode-exit" id="dmSpeed" aria-label="Card speed" data-i18n-aria="aria.cardSpeed" style="margin-inline-start:auto">🐢</button>
+      <button type="button" class="ghost mode-btn" id="dmSpeed" aria-label="Card speed" data-i18n-aria="aria.cardSpeed" style="margin-inline-start:auto">🐢</button>
     </div>
     <div class="dm-status" id="dmStatus" aria-live="polite"></div>
     <!-- D8 Reverse Rounds: the definition to match; hidden on forward rounds. -->
@@ -3192,7 +3206,7 @@
        instead of pushing it, and every state is inline -- no modal, no toast. -->
   <div class="tr-screen" id="trScreen" role="dialog" aria-modal="true" aria-labelledby="trTitle">
     <div class="tr-top">
-      <button class="ghost mode-exit" id="trExit" aria-label="Exit" data-i18n-aria="aria.exit">✕</button>
+      <button class="ghost mode-exit" id="trExit" data-i18n="aria.exit">Exit</button>
       <h2 id="trTitle" data-i18n="tr.name">Spell Translator</h2>
     </div>
     <div class="tr-spine" id="trSpine">
@@ -3249,7 +3263,7 @@
   <button id="sdOpenBtn" hidden aria-hidden="true"></button>
   <div class="sd-screen" id="sdScreen" role="dialog" aria-modal="true" aria-labelledby="sdTitle">
     <div class="sd-top">
-      <button class="ghost mode-exit" id="sdExit" aria-label="Exit" data-i18n-aria="aria.exit">✕</button>
+      <button class="ghost mode-exit" id="sdExit" data-i18n="aria.exit">Exit</button>
       <h2 id="sdTitle" data-i18n="sd.name">SpellDoku</h2>
       <select id="sdPick" aria-label="Board" data-i18n-aria="aria.board"></select>
       <!-- CC-SPELLDOKU-RULES F5: the symbol picker. Its options are rendered per
@@ -3299,7 +3313,7 @@
   <button id="wsOpenBtn" hidden aria-hidden="true"></button>
   <div class="ws-screen" id="wsScreen" role="dialog" aria-modal="true" aria-labelledby="wsTitle">
     <div class="sd-top">
-      <button class="ghost mode-exit" id="wsExit" aria-label="Exit" data-i18n-aria="aria.exit">✕</button>
+      <button class="ghost mode-exit" id="wsExit" data-i18n="aria.exit">Exit</button>
       <h2 id="wsTitle" data-i18n="ws.name">Spell Search</h2>
       <select id="wsPick" aria-label="Level" data-i18n-aria="aria.level"></select>
       <button class="ghost" id="wsDaily" data-i18n="ws.daily">Daily</button>
@@ -3346,7 +3360,7 @@
   <button id="xwOpenBtn" hidden aria-hidden="true"></button>
   <div class="ws-screen" id="xwScreen" role="dialog" aria-modal="true" aria-labelledby="xwTitle">
     <div class="sd-top">
-      <button class="ghost mode-exit" id="xwExit" aria-label="Exit" data-i18n-aria="aria.exit">✕</button>
+      <button class="ghost mode-exit" id="xwExit" data-i18n="aria.exit">Exit</button>
       <h2 id="xwTitle" data-i18n="xw.name">Spell Cross</h2>
       <select id="xwPick" aria-label="Level" data-i18n-aria="aria.level"></select>
       <button class="ghost" id="xwNew" data-i18n="xw.new">New crossword</button>
