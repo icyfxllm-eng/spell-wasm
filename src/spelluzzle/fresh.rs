@@ -27,3 +27,37 @@ pub fn fresh_board(
     }
     Err(last.unwrap_or(GenError::EmptyPool))
 }
+
+/// A board for a tier that needs verified seeds (Medium to Expert): draw from the
+/// seeds the build step verified against the large validity list. The board for a
+/// seed is fixed, so the overlap rule is met by choosing among seeds, not by steering
+/// the generator. Prefers a board sharing at most `MAX_SHARED` words with `previous`;
+/// after enough tries it takes the one sharing fewest, and never fails for that.
+pub fn fresh_verified(
+    lex: &Lexicon,
+    tier: Tier,
+    seeds: &[u32],
+    history: &History,
+    previous: &[String],
+    mut pick: impl FnMut(usize) -> usize,
+) -> Option<(Board, u64)> {
+    if seeds.is_empty() {
+        return None;
+    }
+    let mut best: Option<(usize, Board, u64)> = None;
+    for _ in 0..200 {
+        let seed = seeds[pick(seeds.len()) % seeds.len()] as u64;
+        let Ok(g) = super::gen::generate(seed, tier, lex) else { continue };
+        if history.contains(g.board.hash()) {
+            continue;
+        }
+        let shared = g.board.words().iter().filter(|w| previous.contains(w)).count();
+        if shared <= super::gen::MAX_SHARED {
+            return Some((g.board, seed));
+        }
+        if best.as_ref().map_or(true, |(s, _, _)| shared < *s) {
+            best = Some((shared, g.board, seed));
+        }
+    }
+    best.map(|(_, b, s)| (b, s))
+}

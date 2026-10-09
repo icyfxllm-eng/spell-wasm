@@ -19,9 +19,12 @@ pub mod lex;
 pub mod offer;
 pub mod play;
 pub mod render;
+pub mod seeds;
 pub mod store;
 pub mod types;
 pub mod view;
 
+#[cfg(test)]
+mod seedgen;
 #[cfg(test)]
 mod tests;

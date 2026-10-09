@@ -7,10 +7,9 @@ use super::types::Tier;
 /// F12: never offered in v1, whatever any census says. The generator asserts it.
 pub const NEVER: [&str; 5] = ["ko", "zh", "ja", "ar", "hi"];
 
-/// The tiers that are built and verified. Phase B ships Spell Jr and Easy; Medium
-/// to Expert wait for the build-time seed verification (they have silent words,
-/// which need the validity list the device does not carry).
-pub const ENABLED: [Tier; 2] = [Tier::Jr, Tier::Easy];
+/// Every tier is built. Medium to Expert have silent words, so a tier is shown only
+/// while `seeds::usable` says its verified seeds match this bank (the screen asks).
+pub const ENABLED: [Tier; 5] = Tier::ALL;
 
 /// Census outcome (Eric, 2026-10-09): English only.
 pub fn language_offered(lang: &str) -> bool {

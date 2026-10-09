@@ -150,6 +150,26 @@ impl Lexicon {
         self.by_pattern.get(pat).into_iter().flatten().map(move |&i| &self.validity[i as usize])
     }
 
+    /// A fingerprint of everything a board depends on: the eligible words per tier, the
+    /// collision sets and the size of the validity list. A verified-seed file records
+    /// it, and is used only when the device's own bank gives the same one.
+    pub fn fingerprint(&self) -> u64 {
+        let mut s = String::new();
+        for t in super::types::Tier::ALL {
+            s.push_str(t.name());
+            for w in self.pool.get(&t).into_iter().flatten() {
+                s.push(' ');
+                s.extend(w.units.iter());
+            }
+            s.push('\n');
+        }
+        let mut groups: Vec<String> = self.groups.iter().map(|(k, g)| format!("{}:{}", k.iter().collect::<String>(), g.iter().map(|w| w.iter().collect::<String>()).collect::<Vec<_>>().join("+"))).collect();
+        groups.sort();
+        s.push_str(&groups.join(","));
+        s.push_str(&format!("|{}", self.validity.len()));
+        crate::spelldoku::rng::fnv(s.as_bytes())
+    }
+
     pub fn validity_len(&self) -> usize {
         self.validity.len()
     }

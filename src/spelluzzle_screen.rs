@@ -19,18 +19,20 @@ use wasm_bindgen::JsCast;
 use crate::boardgame_input::{self as input, Key};
 use crate::spelluzzle::{
     bank,
-    fresh::fresh_board,
+    fresh::{fresh_board, fresh_verified},
     gen::generate_after,
     lex::Lexicon,
     offer,
     play::{Outcome, Play},
-    render,
+    render, seeds,
     store::{self, BestStars, History, Progress, Streak},
     types::{Tier, GEN_VERSION},
 };
 use crate::{dom, feedback, haptics, i18n, speech_out, storage, App};
 
 const HOW_KEY: &str = "spell_spz_how_v1";
+/// F13: a second card on the first board that has a silent word.
+const HOW2_KEY: &str = "spell_spz_how2_v1";
 /// F11: discard a board and draw another this many times when a clip will not load.
 const AUDIO_TRIES: u32 = 3;
 
@@ -108,7 +110,6 @@ pub fn wire(app: &App) {
     dom::on_click("szExit", close);
     dom::on_click("szStart", begin_from_setup);
     dom::on_click("szNew", new_board);
-    dom::on_click("szDel", delete);
     dom::on_click("szHowBtn", || show_how(true));
     dom::on_click("szHowOk", || show_how(false));
     dom::on::<web_sys::MouseEvent, _>("szTiers", "click", tier_tap);
@@ -123,7 +124,8 @@ pub fn open(app: &App) {
     };
     bump();
     UI.with(|u| *u.borrow_mut() = None);
-    let tiers = offer::tiers_for(&lang, kid);
+    let lex = lexicon(&lang);
+    let tiers: Vec<Tier> = offer::tiers_for(&lang, kid).into_iter().filter(|t| lex.as_ref().is_some_and(|l| seeds::usable(l, *t))).collect();
     // I11: nothing for a language that is not offered. The registry already hides the row.
     let Some(&tier) = tiers.first() else { return };
     CTX.with(|c| *c.borrow_mut() = (lang.clone(), kid, tier));
@@ -161,7 +163,9 @@ fn streak_now(kid: bool) -> u32 {
 fn render_setup() {
     let (lang, kid, tier) = CTX.with(|c| c.borrow().clone());
     dom::set_text("szTagline", &tr("spz.tagline", &[]));
-    let tiers = offer::tiers_for(&lang, kid);
+    let lex = lexicon(&lang);
+    // I11: a tier whose verified seeds do not match this bank is absent, never shown locked.
+    let tiers: Vec<Tier> = offer::tiers_for(&lang, kid).into_iter().filter(|t| lex.as_ref().is_some_and(|l| seeds::usable(l, *t))).collect();
     // Spell Jr has one fixed shape and no picker; a standard player with one tier sees none either.
     let h: String = if kid || tiers.len() < 2 {
         String::new()
@@ -230,6 +234,18 @@ fn draw(lex: std::rc::Rc<Lexicon>, lang: String, kid: bool, tier: Tier, token: u
     let profile = store::profile(kid);
     let history = load_history(&lang, kid);
     let previous = history.last_words.clone();
+    // Medium to Expert: only boards whose single answer was proved at build time against the
+    // large word list (spelluzzle::seeds). A verified seed regenerates the same board from the
+    // bank alone, so it is stored with no `previous` and resumes by plain regeneration.
+    if seeds::needs_seeds(tier) {
+        let list = seeds::verified(&lex, tier);
+        let pick = |n: usize| (js_sys::Math::random() * n as f64) as usize;
+        match fresh_verified(&lex, tier, &list, &history, &previous, pick) {
+            Some((board, seed)) => ready(lex, lang, kid, tier, seed, Vec::new(), Some(Play::new(board)), token, attempt),
+            None => unavailable(),
+        }
+        return;
+    }
     match fresh_board(&lex, tier, &history, &previous, next_seed) {
         Ok((board, seed)) => {
             let mut play = Play::new(board);
@@ -282,9 +298,18 @@ fn show(play: Play, lang: String, kid: bool, tier: Tier, seed: u64, previous: Ve
     render_keys();
     save_progress();
     render();
+    let has_silent = with_ui(|u| u.play.board.slots.iter().any(|s| s.kind == crate::spelluzzle::types::SlotKind::Silent)).unwrap_or(false);
     if storage::get_raw(HOW_KEY).as_deref() != Some("1") {
         show_how(true);
+    } else if has_silent && storage::get_raw(HOW2_KEY).as_deref() != Some("1") {
+        show_how_silent();
     }
+}
+
+fn show_how_silent() {
+    dom::set_html("szHowText", &format!("<p>{}</p>", dom::escape_html(&tr("spz.how.silent", &[]))));
+    dom::set_hidden("szHow", false);
+    storage::set_raw(HOW2_KEY, "1");
 }
 
 fn new_board() {
@@ -360,6 +385,18 @@ fn render_keys() {
                     .collect();
                 format!("<div class=\"sz-krow\">{keys}</div>")
             })
+            .collect::<Vec<String>>()
+            .into_iter()
+            .enumerate()
+            .map(|(i, row)| {
+                // The delete key lives at the end of the last letter row, so the keyboard stays three rows tall.
+                if i + 1 == u.keys.len() {
+                    let del = format!("<button type=\"button\" class=\"sz-key sz-del\" data-del=\"1\" aria-label=\"{}\">\u{232b}</button>", dom::escape_html(&tr("aria.backspace", &[])));
+                    row.replacen("</div>", &format!("{del}</div>"), 1)
+                } else {
+                    row
+                }
+            })
             .collect()
     })
     .unwrap_or_default();
@@ -414,6 +451,10 @@ fn board_tap(e: web_sys::MouseEvent) {
 }
 
 fn key_tap(e: web_sys::MouseEvent) {
+    if e.target().and_then(|t| t.dyn_into::<web_sys::Element>().ok()).and_then(|t| t.closest("[data-del]").ok().flatten()).is_some() {
+        delete();
+        return;
+    }
     let Some(el) = e.target().and_then(|t| t.dyn_into::<web_sys::Element>().ok()).and_then(|t| t.closest("[data-k]").ok().flatten()) else { return };
     let Some(Key::Unit(u)) = el.get_attribute("data-k").and_then(|d| Key::parse(&d)) else { return };
     let Some(c) = u.chars().next() else { return };

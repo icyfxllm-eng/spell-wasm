@@ -216,4 +216,83 @@ export async function run(browser, base, suite) {
       assert(/audio/i.test(m.msg), `no unavailable state: ${m.msg}`);
     } finally { await ctx.close(); }
   });
+
+  // ---- Medium to Expert: silent words, Listen, verified seeds, and the 7-row layout -----
+  const openTier = async (tier, viewport = { width: 390, height: 844 }) => {
+    const o = await openApp(browser, base, { lang: 'en', viewport, init: BOTH });
+    await o.page.evaluate(() => document.getElementById('szOpenBtn').click());
+    await o.page.waitForSelector('#szScreen.show');
+    await o.page.click(`#szTiers [data-tier="${tier}"]`);
+    await o.page.click('#szStart');
+    await o.page.waitForSelector('#szBoard .sz-row', { timeout: 8000 });
+    // The first board shows the main explainer; the first silent board shows the second card.
+    for (let k = 0; k < 2; k++) {
+      if (await o.page.evaluate(() => !document.getElementById('szHow').hidden)) await o.page.click('#szHowOk');
+    }
+    return o;
+  };
+
+  for (const [tier, silent] of [['medium', 1], ['hard', 2], ['expert', 3]]) {
+    await suite.test(`spelluzzle_${tier}_has_${silent}_silent_words_and_listen_costs_the_star`, async () => {
+      const { ctx, page } = await openTier(tier);
+      try {
+        const m = await page.evaluate(() => ({
+          rows: document.querySelectorAll('#szBoard .sz-row').length,
+          silent: document.querySelectorAll('#szBoard .sz-row[data-kind="silent"]').length,
+          listen: document.querySelectorAll('#szBoard .sz-listen').length,
+          cost: document.querySelectorAll('#szBoard .sz-cost').length,
+        }));
+        assert(m.rows === 7 && m.silent === silent && m.listen === silent && m.cost === silent, JSON.stringify(m));
+        const ws = await words(page);
+        const kinds = await page.evaluate(() => [...document.querySelectorAll('#szBoard .sz-row')].map((r) => r.dataset.kind));
+        const si = kinds.indexOf('silent');
+        const heard = (w) => page.evaluate((x) => window.__plays.filter((u) => u.includes('word=' + x)).length, w);
+        // Tapping a silent slot says nothing; Listen plays it once.
+        const before = await heard(ws[si]);
+        await select(page, si);
+        assert((await heard(ws[si])) === before, 'a silent slot spoke on a tap');
+        await page.click(`#szBoard [data-listen="${si}"]`);
+        assert((await heard(ws[si])) === before + 1, 'Listen did not play the word');
+        // Solve it all: every star but Codebreaker is still reachable, and Codebreaker is gone.
+        for (let i = 0; i < ws.length; i++) { await select(page, i); await typeWord(page, ws[i]); }
+        await domSettled(page);
+        const stars = await page.evaluate(() => [...document.querySelectorAll('#szResult .sz-star')].map((x) => x.classList.contains('on')));
+        assert(stars.length === 3 && stars[0] === true && stars[2] === false, `stars ${JSON.stringify(stars)}: Listen should cost the Codebreaker star`);
+      } finally { await ctx.close(); }
+    });
+  }
+
+  await suite.test('spelluzzle_second_explainer_shows_once_on_the_first_silent_board', async () => {
+    const o = await openApp(browser, base, { lang: 'en', viewport: { width: 390, height: 844 }, init: BOTH });
+    const { ctx, page } = o;
+    try {
+      await page.evaluate(() => { localStorage.setItem('spell_spz_how_v1', '1'); document.getElementById('szOpenBtn').click(); });
+      await page.waitForSelector('#szScreen.show');
+      await page.click('#szTiers [data-tier="medium"]');
+      await page.click('#szStart');
+      await page.waitForSelector('#szBoard .sz-row');
+      assert(await page.evaluate(() => !document.getElementById('szHow').hidden && /silent|work them out/i.test(document.getElementById('szHowText').textContent)), 'no second card on the first silent board');
+      await page.click('#szHowOk');
+      await page.click('#szNew');
+      await page.waitForSelector('#szBoard .sz-row');
+      assert(await page.evaluate(() => document.getElementById('szHow').hidden), 'the second card came back');
+    } finally { await ctx.close(); }
+  });
+
+  await suite.test('spelluzzle_expert_layout_floor_at_375x667', async () => {
+    const { ctx, page } = await openTier('expert', { width: 375, height: 667 });
+    try {
+      const si = await page.evaluate(() => [...document.querySelectorAll('#szBoard .sz-row')].findIndex((r) => r.dataset.kind === 'spoken'));
+      await select(page, si);
+      const m = await page.evaluate(() => {
+        const cells = [...document.querySelectorAll('#szBoard .sz-cell')];
+        const board = document.getElementById('szBoard');
+        const kb = document.getElementById('szKb').getBoundingClientRect();
+        return { minW: Math.min(...cells.map((c) => c.getBoundingClientRect().width)), scrolls: board.scrollHeight - board.clientHeight, kbBottom: kb.bottom, H: innerHeight, over: document.documentElement.scrollWidth - innerWidth, rows: document.querySelectorAll('#szBoard .sz-row').length };
+      });
+      assert(m.minW >= 32, `cells shrank to ${m.minW}px`);
+      assert(m.over <= 0 && m.kbBottom <= m.H + 0.5, JSON.stringify(m));
+      assert(m.scrolls <= 1, `7 rows scroll by ${m.scrolls}px while composing at 375x667 (A15)`);
+    } finally { await ctx.close(); }
+  });
 }

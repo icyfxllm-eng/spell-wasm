@@ -45,6 +45,16 @@ Pure Rust core in `src/spelluzzle/` (app only): `types`, `view` (F3/F4 display),
 2. **The fixtures from the spec** (`fixture-easy-1`, `fixture-medium-1`) are used only by the view tests, since they fail G1 on the real bank (census C7). A14 needs replacement boards generated from the real bank.
 3. The generator's final-pick rule narrows how the secret is chosen. Variety is unaffected by the numbers above, but E6 ("ten boards in a row feel different") is a human check for Phase B.
 
+## Phase C: verified seeds (2026-10-09)
+
+Medium, Hard and Expert are now playable, using the build-time seed verification Eric approved.
+
+- `scripts/spelluzzle-seeds.sh /path/to/en_US.dic` generates boards against the bank, keeps the first 4,000 seeds per tier whose board still has exactly one answer under a 469,516-word list, and writes `assets/spelluzzle/seeds-en.json` (57 KB). The dictionary never ships.
+- Seeds tried to reach 4,000: Medium 6,000 (1,741 rejected by the large list), Hard 6,000 (904), Expert 6,000 (297). Nothing failed to generate.
+- The device regenerates each board from its seed with the bank alone and gets the same board. A seed file is trusted only while the bank, the collision sets and `GEN_VERSION` fingerprint the same as when it was built; otherwise the tier is absent (I11).
+- `cargo test spelluzzle::tests::seeds_are_current` fails when the file is stale. `audit_seeds` (ignored, needs the dictionary) re-checked 924 sampled seeds against the large list with the checker and the independent solver: all have one answer.
+- Browser tests: 15 of 15, including the Medium/Hard/Expert shapes (7 rows), Listen costing the Codebreaker star, the second explainer card, and Expert at 375x667 with 10-cell rows at 32 pt or more and no scrolling while composing.
+
 ## HALT summary
 
 | Item | Result | Detail |

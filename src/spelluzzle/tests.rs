@@ -825,3 +825,125 @@ fn a13_absent_not_locked() {
         assert!(r.is_err(), "constructing a board for {lang} must fail an assertion");
     }
 }
+
+// ---- verified seeds (Medium to Expert) -------------------------------------
+
+use super::fresh::fresh_verified;
+use super::seeds;
+
+#[test]
+fn seeds_are_current() {
+    let lex = en();
+    let f = seeds::file().expect("assets/spelluzzle/seeds-en.json parses");
+    assert_eq!(
+        f.fingerprint,
+        seeds::fingerprint_hex(lex),
+        "the English bank, a collision set or GEN_VERSION changed since the verified seeds were built: run scripts/spelluzzle-seeds.sh /path/to/en_US.dic"
+    );
+    assert_eq!(f.gen_version, super::types::GEN_VERSION);
+    let n = n_seeds(60);
+    for tier in [Tier::Medium, Tier::Hard, Tier::Expert] {
+        let list = seeds::verified(lex, tier);
+        assert!(list.len() >= 1000, "{tier:?} has only {} verified seeds", list.len());
+        assert!(list.windows(2).all(|w| w[0] < w[1]), "{tier:?}: seeds are sorted and unique");
+        // Every seed regenerates a board the bank-only checker accepts. (The large-list proof
+        // was done at build time and is recorded in the file; it cannot be redone without it.)
+        let step = (list.len() / n).max(1);
+        for &s in list.iter().step_by(step) {
+            let g = generate(s as u64, tier, lex).unwrap_or_else(|e| panic!("{tier:?} seed {s}: {e:?}"));
+            check_board(&g.board, lex).unwrap_or_else(|e| panic!("{tier:?} seed {s}: {e:?}"));
+        }
+        assert!(seeds::usable(lex, tier));
+    }
+    assert!(seeds::usable(lex, Tier::Jr) && seeds::usable(lex, Tier::Easy), "Jr and Easy never need seeds");
+}
+
+#[test]
+fn a_stale_seed_file_makes_the_tiers_absent_not_unverified() {
+    // A lexicon that is not the one the file was built from.
+    let other = toy(Tier::Medium, &["lived", "legal", "animal", "normal", "remove", "found", "ending"], &[], &[]);
+    for tier in [Tier::Medium, Tier::Hard, Tier::Expert] {
+        assert!(seeds::verified(&other, tier).is_empty());
+        assert!(!seeds::usable(&other, tier), "{tier:?} must be absent when the seeds do not match");
+    }
+    assert!(seeds::usable(&other, Tier::Easy));
+}
+
+#[test]
+fn verified_boards_are_fresh_and_share_at_most_two_words() {
+    let lex = en();
+    let mut state = 12345u64;
+    let mut rng = move |n: usize| {
+        state = state.wrapping_mul(6364136223846793005).wrapping_add(1442695040888963407);
+        ((state >> 33) as usize) % n
+    };
+    for tier in [Tier::Medium, Tier::Hard, Tier::Expert] {
+        let list = seeds::verified(lex, tier);
+        let mut history = History::default();
+        let mut prev: Vec<String> = Vec::new();
+        for i in 0..n_seeds(40) {
+            let (b, seed) = fresh_verified(lex, tier, &list, &history, &prev, &mut rng).unwrap_or_else(|| panic!("{tier:?} board {i}"));
+            assert!(list.contains(&(seed as u32)), "{tier:?}: a seed outside the verified list was served");
+            assert!(!history.contains(b.hash()), "{tier:?} board {i} repeated");
+            let shared = b.words().iter().filter(|w| prev.contains(w)).count();
+            assert!(shared <= 2, "{tier:?} board {i} shares {shared}");
+            // The board is the one the seed always gives.
+            assert_eq!(b.hash(), generate(seed, tier, lex).unwrap().board.hash());
+            history.push(b.hash());
+            prev = b.words();
+        }
+    }
+}
+
+#[test]
+fn medium_to_expert_boards_have_silent_slots_and_listen() {
+    let lex = en();
+    for (tier, silent) in [(Tier::Medium, 1), (Tier::Hard, 2), (Tier::Expert, 3)] {
+        let list = seeds::verified(lex, tier);
+        let b = generate(list[0] as u64, tier, lex).unwrap().board;
+        assert_eq!(b.slots.iter().filter(|s| s.kind == SlotKind::Silent).count(), silent, "{tier:?}");
+        let mut p = Play::new(b);
+        let i = p.board.slots.iter().position(|s| s.kind == SlotKind::Silent).unwrap();
+        assert!(p.select(i).is_none(), "a silent slot says nothing");
+        assert!(p.listen(i).is_some());
+    }
+}
+
+/// Build-time audit of the seed file, with the large list (not run by `cargo test`):
+///   SPZ_VALIDITY_FILE=/path/en_US.dic SPZ_N=200 cargo test --release spelluzzle::tests::audit_seeds -- --ignored --nocapture
+/// Every sampled seed's bank-generated board must have exactly one answer under the large
+/// list, by the checker and by the independent solver.
+#[test]
+#[ignore]
+fn audit_seeds() {
+    let path = std::env::var("SPZ_VALIDITY_FILE").expect("SPZ_VALIDITY_FILE");
+    let dic = std::fs::read_to_string(path).unwrap();
+    let st: std::collections::BTreeSet<String> = dic.lines().skip(1).filter_map(|l| {
+        let w = l.split('/').next()?.trim();
+        (!w.is_empty() && w.chars().all(|c| c.is_ascii_lowercase())).then(|| w.to_string())
+    }).collect();
+    let mut words: Vec<String> = st.iter().cloned().collect();
+    for w in &st {
+        for suf in ["s", "es", "ed", "d", "ing", "er", "ers", "est", "ly", "y", "ies"] {
+            words.push(format!("{w}{suf}"));
+        }
+    }
+    let small = bank::load("en", Vec::new()).unwrap();
+    let big = bank::load("en", words).unwrap();
+    let n = n_seeds(100);
+    for tier in [Tier::Medium, Tier::Hard, Tier::Expert] {
+        let list = seeds::verified(&small, tier);
+        let step = (list.len() / n).max(1);
+        let mut checked = 0;
+        for &s in list.iter().step_by(step) {
+            let b = generate(s as u64, tier, &small).unwrap().board;
+            check_board(&b, &big).unwrap_or_else(|e| panic!("{tier:?} seed {s}: {e:?}"));
+            assert_eq!(count_solutions(&b, &big, 2), 1, "{tier:?} seed {s}");
+            if checked < 5 {
+                assert_eq!(reference_count(&b, &big, 2), 1, "{tier:?} seed {s}: independent solver");
+            }
+            checked += 1;
+        }
+        println!("audit {tier:?}: {checked} sampled seeds all have one answer under the large list");
+    }
+}

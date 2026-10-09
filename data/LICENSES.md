@@ -89,3 +89,16 @@ Spell Jr and Easy need no list at all, because their boards have no silent word.
 Nothing derived from it ships except seed numbers. Record the exact licence
 text and version here when the seed-verification build is added. This is a
 build-time input in the same sense as wordfreq and EDICT2 above.
+
+### Built 2026-10-09
+
+`scripts/spelluzzle-seeds.sh` reads the Hunspell file and writes
+`assets/spelluzzle/seeds-en.json` (the verified seed numbers, the bank
+fingerprint, and the dictionary's name and sha256 for the record). The file
+read was `en_US.dic` (version 2020.12.07, sha256
+`f0b1a234bd178bdd01875b2a392a9647f888b8fe879f79c52aae62c2759b3647`): 38,406
+lowercase stems, expanded with regular endings to 469,516 words. Over-including
+only makes the check stricter. The dictionary is not in the repo and not in any
+build output; only seed numbers ship. Its packaged licence file is GPL v2; this
+posture treats it as a build input, in the same sense as wordfreq and EDICT2
+above. Confirming that reading is still Eric's call.
