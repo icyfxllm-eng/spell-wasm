@@ -1,0 +1,3 @@
+# bank rows on the repo's profanity list, awaiting Eric's C6 marks (P13); ratchet, see tools/bank/purity_gate.py
+puke
+tite

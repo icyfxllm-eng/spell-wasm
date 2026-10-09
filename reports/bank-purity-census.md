@@ -262,3 +262,17 @@ Two engine facts worth knowing: the orthography gate drops every capitalised tok
 2. Filipino second source (see C2).
 3. C7 policy: are months and weekdays (and country names that are also common words) out of the banks? The filter cannot decide that.
 4. Who owns the C5 gaps (practice, def_match, the three grid modes, the void-round rescue).
+
+## Phase B — F6 the purity gate (`cc-bank-purity-gate`)
+
+What now bites, offline (no dictionary needed; it reads the committed ledger):
+
+- `tools/bank/purity_gate.py`, run by `scripts/gate.sh` and by `build-wordlists.py --check` (so CI's wordlists workflow runs it too). A bank row fails unless its ledger verdict is `dictionary`, a signed `exception`, or `pending` AND frozen in `assets/words/purity/grandfathered/<lang>.txt` (2,164 rows today; the file only shrinks). Ledger/bank mismatches and stale tier hashes fail. A bank row on the language's profanity list fails unless cleared in `assets/words/purity/profanity-cleared/<lang>.txt`.
+- `--selftest` plants an English word, a proper noun and a fragment per language in a temp copy and asserts each is rejected; adds a profanity-list word where a list exists (not ar, hi, sw: they have none, so the gate cannot bite there until C6/F7 give them one); forges a new `pending` row and an unsigned `exception`. 56 plants rejected, 0 survive. The meta-check fails if `gate.sh` stops running the selftest or a bank-writing script stops calling F1.
+- `tools/bank/purity_admit.py`: `build-bigbank.py`, `build-hi-bank.py`, `build-zh-bank.py`, `grow-basic-nouns.py` and `build-draft-banks.py` now run every new row through F1 before writing and print what they dropped. They fail closed if the dictionaries are not in the cache; `tools/bank/fetch_sources.py` downloads them per `config/bank-purity-sources.json` and verifies the sha256.
+
+Decisions I made that need your eye:
+
+1. **Profanity rows awaiting C6.** 54 bank rows are on the repo's profanity lists. The spec's gate fails on those until your C6 marks create a cleared list, but that would leave the gate red today. I put them in `assets/words/purity/awaiting-c6/<lang>.txt`, a ratchet (a *new* match fails; a listed row that left the bank or was cleared fails until its line is deleted). They are not cleared. P13 (held out of Jr pools) is unchanged and still waits for the Jr lists in Phase C.
+2. **The selftest's English/noun/fragment plants are rejected for lacking a verdict, not by re-running F1.** Offline, the gate cannot tell a forged `dictionary` verdict from a real one; that is held by the writers calling F1 and by review of ledger diffs. A bank edited by hand without the ledger fails.
+3. **Draft banks for languages outside the 14** pass through `purity_admit` with a notice; there is no F1 for them.

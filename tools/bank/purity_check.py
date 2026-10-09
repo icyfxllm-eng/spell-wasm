@@ -15,7 +15,7 @@ from collections import defaultdict
 
 ROOT = os.path.normpath(os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", ".."))
 MAIN = os.path.expanduser("~/repos/spell-wasm")            # shared corpus cache lives here
-CACHES = [os.path.join(ROOT, ".corpus-cache"), os.path.join(MAIN, ".corpus-cache")]
+CACHES = [c for c in (os.environ.get("PURITY_CACHE"),) if c] + [os.path.join(ROOT, ".corpus-cache"), os.path.join(MAIN, ".corpus-cache")]
 HUNSPELL = "/opt/homebrew/bin/hunspell"
 ALL = "en es fr de pt pl ko ja fil zh ru ar hi sw".split()
 TIERS = "easy medium hard expert".split()

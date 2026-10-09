@@ -20,6 +20,8 @@ regenerate word_data.rs and re-check every gate.
 Usage:  python3 scripts/build-bigbank.py [--target N]   (default 200 per tier)
 """
 import os, sys, json, tarfile, unicodedata, urllib.request, importlib.util
+sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "tools", "bank"))
+from purity_admit import admit, admit_new  # CC-BANK-PURITY F6: F1 runs before any row is written
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 CACHE = os.path.join(ROOT, ".corpus-cache")
@@ -124,6 +126,7 @@ def build(lang, target):
         banks[tier].append(w)
         seen.add(key)
 
+    banks = admit_new(lang, banks)
     outdir = os.path.join(ROOT, "assets", "words", lang)
     os.makedirs(outdir, exist_ok=True)
     for tier in TIERS:

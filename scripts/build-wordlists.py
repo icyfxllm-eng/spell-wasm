@@ -461,6 +461,10 @@ def main():
         if current != rendered:
             print("build-wordlists: src/word_data.rs is stale — run without --check", file=sys.stderr)
             sys.exit(1)
+        # CC-BANK-PURITY F6: a bank row without a purity verdict (or an unchecked profanity-list row) fails CI
+        import subprocess
+        if subprocess.run([sys.executable, str(ROOT / "tools" / "bank" / "purity_gate.py")]).returncode != 0:
+            sys.exit(1)
         print(f"build-wordlists: OK (check) — {total} words across {len(LANGS)} locales, gates green.")
     else:
         out.write_text(rendered, encoding="utf-8")

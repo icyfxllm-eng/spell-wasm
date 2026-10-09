@@ -35,6 +35,8 @@ footing as the ar/fa/ur audit drafts.
 Usage:  python3 scripts/build-zh-bank.py [--target N]   (default 300 per tier)
 """
 import os, re, sys, tarfile, unicodedata, urllib.request, importlib.util
+sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "tools", "bank"))
+from purity_admit import admit, admit_new  # CC-BANK-PURITY F6: F1 runs before any row is written
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 CACHE = os.path.join(ROOT, ".corpus-cache")
@@ -126,6 +128,7 @@ def build(target):
         banks[tier] = list(seed[tier]) + additions[i:i + want]
         i += want
 
+    banks = admit_new("zh", banks)
     for tier in TIERS:
         open(os.path.join(ZH_DIR, f"{tier}.txt"), "w", encoding="utf-8").write("\n".join(banks[tier]) + "\n")
     regen_words_rs(banks)

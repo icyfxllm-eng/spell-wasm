@@ -111,6 +111,10 @@ echo "== gate: fixed sleeps in e2e may only go down"
 node scripts/e2e-sleep-ratchet.mjs || { echo "GATE FAIL: e2e sleep ratchet"; exit 1; }
 node scripts/e2e-sleep-ratchet.mjs --selftest || { echo "GATE FAIL: e2e sleep ratchet selftest"; exit 1; }
 
+echo "== gate: bank purity — every row has a verdict, no unchecked profanity (CC-BANK-PURITY F6)"
+python3 tools/bank/purity_gate.py || { echo "GATE FAIL: bank purity"; exit 1; }
+python3 tools/bank/purity_gate.py --selftest || { echo "GATE FAIL: purity-gate selftest — the gate no longer bites"; exit 1; }
+
 echo "== gate: collision tables current and wired (CC-SENSE-CUE F2)"
 python3 tools/build_collisions.py --check || { echo "GATE FAIL: collision tables"; exit 1; }
 

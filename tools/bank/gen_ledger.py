@@ -37,12 +37,19 @@ src = [
     {"id": "Unihan", "langs": ["zh"], "kind": "wordlist", "licence": "Unicode licence", "url": ["https://www.unicode.org/Public/UCD/latest/ucd/Unihan.zip"], "cache": ["zh/Unihan.zip"]},
     {"id": "kaikki-tagalog", "langs": ["fil"], "kind": "wiktionary-extract", "licence": "CC BY-SA", "url": ["https://kaikki.org/dictionary/Tagalog/kaikki.org-dictionary-Tagalog.jsonl"], "cache": ["fil/kaikki-tagalog.jsonl"]},
 ]
-for s in src:
-    s["sha256"] = [sha(f"{C}/{c}") for c in s["cache"]]
-reg = {"_comment": "CC-BANK-PURITY F2. Reference dictionaries are build inputs only: downloaded to the gitignored .corpus-cache, never committed or shipped (P3, I7). Only verdicts live in assets/words/purity/.",
+C = os.environ.get("PURITY_CACHE") or C
+regp = f"{ROOT}/config/bank-purity-sources.json"
+if os.path.exists(regp):          # the registry is written once; hashes change only by a deliberate re-census
+    reg = json.load(open(regp, encoding="utf-8"))
+    src = reg["sources"]
+else:
+    for s in src:
+        s["sha256"] = [sha(f"{C}/{c}") for c in s["cache"]]
+reg = reg if os.path.exists(regp) else {"_comment": "CC-BANK-PURITY F2. Reference dictionaries are build inputs only: downloaded to the gitignored .corpus-cache, never committed or shipped (P3, I7). Only verdicts live in assets/words/purity/.",
        "pinned_commit": "32b006a2c22a4ac7e8ed3f03346f7b3d85a970a4", "sources": src,
        "bank_source": {l: next(s["id"] for s in src if l in s["langs"]) for l in ALL}}
-open(f"{ROOT}/config/bank-purity-sources.json", "w", encoding="utf-8").write(json.dumps(reg, ensure_ascii=False, indent=2) + "\n")
+if not os.path.exists(regp):
+    open(regp, "w", encoding="utf-8").write(json.dumps(reg, ensure_ascii=False, indent=2) + "\n")
 
 pending = {(r["lang"], r["word"]) for r in csv.DictReader(open(sys.argv[1], encoding="utf-8"))
            if r["class"] in ("not_in_reference_dictionary", "linker_attached_form")}
@@ -58,7 +65,14 @@ for l in ALL:
     out = ["# CC-BANK-PURITY F2 ledger: word<TAB>verdict<TAB>source. One line per bank row, bank order.",
            "# verdicts: dictionary | exception (signed) | pending (auditor sheet). No new row may ever enter as pending."]
     out += [f"#tier\t{t}\t{th[(l, t)]}" for t in TIERS if (l, t) in th]
+    prev = {}   # signed `exception` lines survive a regeneration
+    pp = f"{ROOT}/assets/words/purity/{l}.tsv"
+    if os.path.exists(pp):
+        for x in open(pp, encoding="utf-8").read().split("\n"):
+            f = x.split("\t")
+            if len(f) > 1 and f[1] == "exception":
+                prev[f[0]] = x
     for t, w in load_bank(l):
-        out.append(f"{w}\t{'pending' if (l, w) in pending else 'dictionary'}\t{sid}")
+        out.append(prev.get(w) or f"{w}\t{'pending' if (l, w) in pending else 'dictionary'}\t{sid}")
     open(f"{ROOT}/assets/words/purity/{l}.tsv", "w", encoding="utf-8").write("\n".join(out) + "\n")
 print("ledger written:", {l: sum(1 for x in open(f'{ROOT}/assets/words/purity/{l}.tsv', encoding='utf-8') if x[0] != '#') for l in ALL})
