@@ -46,11 +46,10 @@ fn lists() -> &'static HashMap<&'static str, HashSet<String>> {
     static L: OnceLock<HashMap<&'static str, HashSet<String>>> = OnceLock::new();
     L.get_or_init(|| {
         // CC-LINEUP-SWAP: it/nl/sv/nb cut (lists archived under
-        // `archive/wordlists/kid-exclude/`). ru/ar/fa/ur have no kid-exclusion
-        // list yet — their word lists are CC-NEW-LANG-CONTENT's scope, and a
-        // language with no list simply has an empty set here (the gate still
-        // runs; it just has nothing to drop).
-        kid_lists!["en", "es", "fr", "de", "pt", "pl", "vi", "ko", "ja", "zh", "fil"]
+        // `archive/wordlists/kid-exclude/`). CC-BANK-PURITY F7: every language in
+        // `consts::BUILTIN_LANGS` has a list and is registered here; a missing file
+        // is a build failure (`include_str!`), and a test below walks the registry.
+        kid_lists!["en", "es", "fr", "de", "pt", "pl", "vi", "ko", "ja", "zh", "fil", "ru", "ar", "hi", "sw"]
     })
 }
 
@@ -142,5 +141,23 @@ mod tests {
     fn filter_drops_excluded_keeps_rest() {
         let pool = vec!["cat".to_string(), "cemetery".to_string(), "dog".to_string()];
         assert_eq!(filter_kid("en", pool), vec!["cat".to_string(), "dog".to_string()]);
+    }
+
+    /// CC-BANK-PURITY F7: every registered language has a kid list in this registry,
+    /// and each is non-empty (seeded from its profanity matches and gloss concepts).
+    #[test]
+    fn every_registered_language_has_a_kid_list() {
+        for (code, ..) in crate::consts::BUILTIN_LANGS {
+            let set = lists().get(code).unwrap_or_else(|| panic!("{code}: not in the kid_lists! registry"));
+            assert!(!set.is_empty(), "{code}: its kid list is empty and carries no signed 'reviewed, none needed' marker");
+        }
+    }
+
+    /// CC-BANK-PURITY F7 named test: Japanese Easy no longer serves `おっぱい` to a Spell Jr profile.
+    #[test]
+    fn ja_easy_does_not_serve_oppai_to_a_child() {
+        let easy: Vec<String> = crate::words::tier_for("ja", "easy").iter().map(|s| s.to_string()).collect();
+        assert!(easy.iter().any(|w| w == "おっぱい"), "the row is still in the adult bank (quarantine is not this fix)");
+        assert!(!filter_kid("ja", easy).iter().any(|w| w == "おっぱい"));
     }
 }
