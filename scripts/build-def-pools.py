@@ -24,7 +24,7 @@ only fetch words not yet cached. ~10 concurrent requests, polite UA.
 
 Usage: python3 scripts/build-def-pools.py [langs...]   (default: all)
 """
-import html, json, os, re, sys, threading, unicodedata, urllib.parse, urllib.request
+import datetime, html, json, os, re, sys, threading, unicodedata, urllib.parse, urllib.request
 from concurrent.futures import ThreadPoolExecutor
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -123,7 +123,29 @@ def junky(text):
     return not text.strip() or "\n" in text or any(p.search(text) for p in JUNK)
 
 
-def resolve_form_of(gloss, real):
+# Wiktionary writes an Arabic stem FULLY VOCALISED and follows it with a
+# romanisation: "plural of طِفْل (ṭifl)". The bank is undiacritised, so the stem
+# never matched its own cache key and Arabic resolved ZERO of its 81 pointers.
+#
+# The parenthetical is metadata in every language, so it always goes. Removing
+# VOWEL MARKS is per-language and deliberately narrow: Arabic writes them
+# optionally, Vietnamese does not -- a tone mark there IS the word, and
+# stripping it would collapse đi and đĩ, which is the exact trap the vi
+# exclusion seed hit. Only languages that write their vowels optionally belong
+# in this set.
+OPTIONAL_VOWELS = {"ar"}
+TASHKEEL = re.compile(r"[\u064B-\u065F\u0670\u0640]")
+
+
+def norm_stem(lang, s):
+    s = re.sub(r"\([^)]*\)", "", s)
+    if lang in OPTIONAL_VOWELS:
+        s = TASHKEEL.sub("", s)
+    # "plural of X and Y" names two lemmas; the first is the one to follow.
+    return s.split(" and ")[0].strip(" .,\u060C")
+
+
+def resolve_form_of(gloss, real, lang=""):
     """An inflection whose STEM has a real definition becomes a definition.
 
     Returns (relation, stem_definition) or None.
@@ -144,7 +166,7 @@ def resolve_form_of(gloss, real):
         return None
     if not any(i in rel for i in INFLECT_REL):
         return None
-    base = real.get(stem)
+    base = real.get(stem) or real.get(norm_stem(lang, stem))
     if not base:
         return None
     stem_pos = (base.get("pos") or "").lower()
@@ -214,10 +236,30 @@ def sense_text(raw):
     return ""
 
 
+# A 404 is a snapshot, not a fact. Wiktionary gains entries, and a transient
+# failure can be mis-read as definitive -- and once cached, nothing retried it,
+# because this function returned early for anything not found. Measured
+# 2026-10-09 on 30-word samples of the words cached as missing: 36% of Filipino
+# and 23% of Polish now return 200. Arabic is 3% and Hindi 0%, so those two
+# really are source gaps.
+#
+# So a negative result EXPIRES. A positive one does not need to: a definition
+# that exists does not stop existing, and re-fetching it would cost hours to
+# learn nothing.
+NEGATIVE_TTL_DAYS = 90
+
+
 def stale(r):
     """Cached before the label/CSS/symbol fixes (2026-09-30) — re-fetch it."""
     if not r.get("found"):
-        return False
+        checked = r.get("checked")
+        if not checked:
+            return True  # cached before this stamp existed: never re-checked
+        try:
+            age = (datetime.date.today() - datetime.date.fromisoformat(checked)).days
+        except ValueError:
+            return True
+        return age >= NEGATIVE_TTL_DAYS
     d = r.get("definition", "")
     return ("\n" in d or "mw-parser-output" in d
             or (r.get("pos") or "").lower() in NON_LEXICAL)
@@ -238,7 +280,7 @@ def fetch_one(lang, word):
             break
         except urllib.error.HTTPError as e:
             if e.code == 404:
-                return {"word": word, "found": False}
+                return {"word": word, "found": False, "checked": datetime.date.today().isoformat()}
             time.sleep(2 ** attempt)  # 429/5xx: back off 1..32s
         except Exception:
             time.sleep(2 ** attempt)
@@ -256,7 +298,10 @@ def fetch_one(lang, word):
                                         "form_of": FORM_OF.match(definition) is not None}
                 continue
             return {"word": word, "found": True, "pos": pos, "definition": definition, "form_of": False}
-    return fallback or {"word": word, "found": False}
+    # Stamped like the 404 above. Without it stale() would see no `checked`,
+    # call it expired, and re-fetch this word on EVERY run forever.
+    return fallback or {"word": word, "found": False,
+                        "checked": datetime.date.today().isoformat()}
 
 
 def load_cache(lang):
@@ -354,7 +399,7 @@ def build_lang(lang):
             # looser regex carry form_of=False while still reading as pointers,
             # and both kinds get the same treatment -- resolved, or dropped.
             if r.get("form_of") or FORM_OF.match(d):
-                res = resolve_form_of(d, real)
+                res = resolve_form_of(d, real, lang)
                 if not res:
                     continue  # an unresolvable pointer is not a definition
                 rel, base = res
