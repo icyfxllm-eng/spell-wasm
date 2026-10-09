@@ -230,6 +230,18 @@ pub fn min_pool(lang: &str) -> usize {
         // Zero margin, by Eric's call 2026-10-06: a bank edit CAN drop this
         // below 8 and un-ready the mode. That fails loudly rather than quietly,
         // because every_ready_language_generates_a_full_year asserts it.
+        // Still 8, and NOT 7, which is the trap here. forge_ready() is
+        // `min_pool(lang) >= 8`, so dropping this to 7 does not make the
+        // Vietnamese Daily safer -- it switches the mode OFF for all 365
+        // days. One unavailable day beats every day unavailable.
+        //
+        // There IS one. dbbfd081 cut 71 non-words from the vi bank AFTER this
+        // ceiling was measured in f4e594ce, and the ceiling fell 8 -> 7, so
+        // seed 164 of the year now yields nothing and the screen shows
+        // forge.unavailable. The note above says vi sits exactly on its
+        // ceiling with no margin; a 71-word cut was enough. Pinned in
+        // dead_days_never_increase below rather than hidden, and the way out
+        // is to GROW the bank back over the ceiling, not to lower the gate.
         "vi" => 8,
         _ => 20,
     }
@@ -642,6 +654,45 @@ mod diag {
             let (_, w64) = junior_floor(lang, 64);
             println!("JUNIOR_CEILING {lang:4} cands={cands:5} walk512={w512:3} walk64={w64:3} junior_gate={} standard_gate={}",
                      junior_min_pool(lang), min_pool(lang));
+        }
+    }
+
+    /// A bank edit can invalidate the gate table without touching this file,
+    /// and exactly that happened: dbbfd081 removed 71 Vietnamese words after
+    /// the ceiling of 8 was measured, and seed 164 stopped yielding a puzzle.
+    /// Nothing caught it, because the only thing that measures it is
+    /// `calibrate_min_pool`, which is #[ignore]d for being slow.
+    ///
+    /// A RATCHET, not a clean assertion, because vi is not clean. Pretending
+    /// every language has zero dead days would mean either deleting the one
+    /// real defect from the record or lowering vi's gate to 7 -- and 7 is
+    /// below forge_ready's threshold, which would take the Vietnamese Daily
+    /// from one bad day to none at all.
+    ///
+    /// Cheap on purpose: it does not SEARCH for each ceiling, which is what
+    /// costs (27 gates x 365 seeds x 15 languages). One pass at the shipped
+    /// gate, ~30s.
+    #[test]
+    fn dead_days_never_increase() {
+        // Measured 2026-10-09 against the post-CC-BANK-PURITY banks. Every
+        // entry here is a day a player opens the Daily and is told it is
+        // unavailable. The only acceptable direction is down.
+        let pinned = [("vi", 1usize)];
+        for lang in ["en","es","fr","de","pt","pl","vi","ko","ja","fil","ru","sw","ar","hi","zh"] {
+            let gate = super::min_pool(lang);
+            let dead: Vec<u64> = (0..365u64)
+                .filter(|d| generate_with(lang, d.wrapping_mul(0x9E3779B9), 64, gate).is_none())
+                .collect();
+            let allowed = pinned.iter().find(|(l, _)| *l == lang).map(|(_, n)| *n).unwrap_or(0);
+            assert!(dead.len() <= allowed,
+                "{lang}: {} day(s) of the year now yield no Daily at gate {gate}, up from \
+                 {allowed} (first: seed {}). The bank changed under the gate. Re-run \
+                 calibrate_min_pool; GROW the bank back over its ceiling rather than \
+                 lowering min_pool, because below 8 forge_ready turns the mode off.",
+                dead.len(), dead[0]);
+            if dead.len() < allowed {
+                println!("{lang}: dead days down to {} from {allowed} — tighten the pin", dead.len());
+            }
         }
     }
 
