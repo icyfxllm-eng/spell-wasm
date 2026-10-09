@@ -898,5 +898,9 @@
   "bg.soon": "यह भाषा अभी उपलब्ध नहीं है",
   "bg.share": "साझा करें",
   "bg.shareText": "मैं Spell Board Game में {n} नंबर पर आया",
-  "bg.continue": "आगे बढ़ें"
+  "bg.continue": "आगे बढ़ें",
+  "bg.tileOf": "{m} में से खाना {n}",
+  "bg.turnOf": "बारी: {piece} {n}",
+  "bg.rolled": "पासा: {n}",
+  "bg.toTile": "खाना {n} पर"
 }

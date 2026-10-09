@@ -898,5 +898,9 @@
   "bg.soon": "このことばではまだ使えません",
   "bg.share": "シェア",
   "bg.shareText": "Spell Board Gameで{n}位になった",
-  "bg.continue": "つづける"
+  "bg.continue": "つづける",
+  "bg.tileOf": "{m}マス中 {n}マス目",
+  "bg.turnOf": "{piece} {n}のばん",
+  "bg.rolled": "出た目: {n}",
+  "bg.toTile": "{n}マス目へ"
 }

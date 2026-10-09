@@ -898,5 +898,9 @@
   "bg.soon": "这种语言暂时还不能玩",
   "bg.share": "分享",
   "bg.shareText": "我在 Spell Board Game 里得了第{n}名",
-  "bg.continue": "继续"
+  "bg.continue": "继续",
+  "bg.tileOf": "第{n}格，共{m}格",
+  "bg.turnOf": "轮到：{piece} {n}",
+  "bg.rolled": "掷出 {n}",
+  "bg.toTile": "前往第{n}格"
 }

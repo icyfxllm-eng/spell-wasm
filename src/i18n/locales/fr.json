@@ -898,5 +898,9 @@
   "bg.soon": "Pas encore disponible dans cette langue",
   "bg.share": "Partager",
   "bg.shareText": "Je suis arrivé {n} à Spell Board Game",
-  "bg.continue": "Continuer"
+  "bg.continue": "Continuer",
+  "bg.tileOf": "Case {n} sur {m}",
+  "bg.turnOf": "Tour : {piece} {n}",
+  "bg.rolled": "Dé : {n}",
+  "bg.toTile": "Vers la case {n}"
 }

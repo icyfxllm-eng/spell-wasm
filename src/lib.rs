@@ -29,6 +29,8 @@ mod boardgame_grade; // CC-BOARD-GAME F3/D21 -- the local answer check
 mod boardgame_input; // CC-BOARD-GAME D20 -- answer keys and presses
 #[cfg(not(feature = "web"))]
 mod boardgame_pools; // CC-BOARD-GAME D19/D25/F9 -- word supply, ledger, bank gate
+#[cfg(not(feature = "web"))]
+mod boardgame_ring; // CC-BOARD-GAME-POLISH Phase A -- ring shapes, piece sizes (presentation only)
 mod wordpic; // CC-WORD-PICTURE core (calligrams)
 mod input_provenance;
 pub mod learner; // CC-LEARNING-ENGINE L0 (BKT + FSRS core; selection arrives with L1) — pub for R3 (tests/learner_simulator.rs)

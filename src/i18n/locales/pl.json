@@ -898,5 +898,9 @@
   "bg.soon": "Ta gra nie jest jeszcze dostępna w tym języku",
   "bg.share": "Udostępnij",
   "bg.shareText": "Zająłem miejsce {n} w Spell Board Game",
-  "bg.continue": "Dalej"
+  "bg.continue": "Dalej",
+  "bg.tileOf": "Pole {n} z {m}",
+  "bg.turnOf": "Tura: {piece} {n}",
+  "bg.rolled": "Wyrzucono {n}",
+  "bg.toTile": "Na pole {n}"
 }

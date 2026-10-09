@@ -189,8 +189,10 @@ export async function run(browser, base, suite) {
     } finally { await ctx.close(); }
   });
 
-  // v1.2 follow-up -- the landing callout: before a human types, the pill names the
-  // destination's tier (never the word); when a trap is triggered, the pill names the trap.
+  // v1.2 follow-up -- the landing callout: before a human types, the board names the
+  // destination's tier (never the word); when a trap is triggered, it names the trap. With the
+  // centre stage (Polish Feature 5) the callout lives in the stage when the ring is full-size,
+  // and in the old pill otherwise; the loop below reads whichever is on screen.
   await suite.test('boardgame_landing_callout_names_tier_and_trap', async () => {
     const TIERS = { easy: 'Easy', medium: 'Medium', hard: 'Hard', expert: 'Expert' };
     let sawTier = 0, sawTrap = null;
@@ -201,23 +203,36 @@ export async function run(browser, base, suite) {
         await page.evaluate(() => {
           window.__bgTrapPills = [];
           new MutationObserver(() => {
-            const t = document.querySelector('#bgLand [data-land="trap"]');
+            const t = document.querySelector('#bgView [data-land="trap"]');
             if (t) window.__bgTrapPills.push(t.textContent);
-          }).observe(document.getElementById('bgLand'), { childList: true, subtree: true, characterData: true });
+          }).observe(document.getElementById('bgView'), { childList: true, subtree: true, characterData: true });
         });
         for (let i = 0; i < 400; i++) {
           if (await page.isVisible('#bgOver')) break;
-          if (await page.isVisible('#bgHand')) { await page.click('#bgHandGo'); continue; }
+          // Deterministic hand-off handling: the engine already says the next seat owes a card
+          // (state.hand) a beat before the card is on screen, so wait for the card itself rather
+          // than race it (the old loop clicked the orb under a card that was about to appear).
+          const st0 = await state(page);
+          if (st0.hand) {
+            await page.waitForFunction(() => !document.getElementById('bgHand').hidden || !document.getElementById('bgMiss').hidden || !document.getElementById('bgOver').hidden, null, { timeout: 8000 });
+            if (await page.isVisible('#bgOver')) break;
+            if (await page.isVisible('#bgMiss')) await page.click('#bgMissGo');
+            else await page.click('#bgHandGo');
+            continue;
+          }
           if (await page.isVisible('#bgMiss')) { await page.click('#bgMissGo'); continue; }
           const before = await raw(page);
           const st = JSON.parse(before);
           if (st.phase === 'AwaitRoll') { await page.click('#bgOrb'); await moved(page, before); continue; }
           if (st.phase === 'AwaitSpelling') {
             if (st.kind === 'Landing') {
-              await page.waitForFunction((t) => document.getElementById('bgLand').textContent.trim() === t, TIERS[st.tier], { timeout: 3000 });
-              const sw = await page.$eval('#bgLand .bg-sw', (e) => e.className);
+              await page.waitForFunction((t) => {
+                const el = document.querySelector('#bgView [data-tier]');
+                return !!el && el.textContent.trim() === t;
+              }, TIERS[st.tier], { timeout: 3000 });
+              const sw = await page.$eval('#bgView [data-tier]', (e) => e.previousElementSibling.className);
               assert(sw.includes(`t-${st.tier}`), `the swatch matches the tier: ${sw}`);
-              const shown = await page.$eval('#bgLand', (e) => e.textContent);
+              const shown = await page.$eval('#bgView', (e) => e.textContent);
               assert(!shown.toLowerCase().includes(cite(st.word).toLowerCase()), 'the callout never shows the word');
               sawTier++;
             }
@@ -235,7 +250,7 @@ export async function run(browser, base, suite) {
       } finally { await ctx.close(); }
     }
     assert(sawTier > 0, 'a tier callout was seen before spelling');
-    assert(sawTrap !== null, 'a trap landing never showed its pill in four games');
-    assert(/(Back to Start|Long Word|Lose a Roll|Switch Tiles|Double Expert)/.test(sawTrap), `the trap pill names the trap: ${sawTrap}`);
+    assert(sawTrap !== null, 'a trap landing never showed its callout in four games');
+    assert(/(Back to Start|Long Word|Lose a Roll|Switch Tiles|Double Expert)/.test(sawTrap), `the trap callout names the trap: ${sawTrap}`);
   });
 }

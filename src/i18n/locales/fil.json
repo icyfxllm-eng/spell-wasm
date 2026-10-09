@@ -898,5 +898,9 @@
   "bg.soon": "Hindi pa magagamit sa wikang ito",
   "bg.share": "Ibahagi",
   "bg.shareText": "Pang-{n} ako sa Spell Board Game",
-  "bg.continue": "Magpatuloy"
+  "bg.continue": "Magpatuloy",
+  "bg.tileOf": "Parisukat {n} sa {m}",
+  "bg.turnOf": "Turn ni {piece} {n}",
+  "bg.rolled": "Lumabas ang {n}",
+  "bg.toTile": "Papunta sa parisukat {n}"
 }

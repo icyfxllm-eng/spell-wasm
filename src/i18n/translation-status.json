@@ -39,7 +39,11 @@
     "bg.soon",
     "bg.share",
     "bg.shareText",
-    "bg.continue"
+    "bg.continue",
+    "bg.tileOf",
+    "bg.turnOf",
+    "bg.rolled",
+    "bg.toTile"
   ],
   "do_not_translate": {
     "sd.name": "SpellDoku — brand name (D5, signed). Do not re-propose.",
@@ -83,7 +87,11 @@
       "bg.soon",
       "bg.share",
       "bg.shareText",
-      "bg.continue"
+      "bg.continue",
+      "bg.tileOf",
+      "bg.turnOf",
+      "bg.rolled",
+      "bg.toTile"
     ],
     "fr": [
       "hub.group.spell_it",
@@ -121,7 +129,11 @@
       "bg.soon",
       "bg.share",
       "bg.shareText",
-      "bg.continue"
+      "bg.continue",
+      "bg.tileOf",
+      "bg.turnOf",
+      "bg.rolled",
+      "bg.toTile"
     ],
     "de": [
       "hub.group.spell_it",
@@ -159,7 +171,11 @@
       "bg.soon",
       "bg.share",
       "bg.shareText",
-      "bg.continue"
+      "bg.continue",
+      "bg.tileOf",
+      "bg.turnOf",
+      "bg.rolled",
+      "bg.toTile"
     ],
     "pt": [
       "hub.group.spell_it",
@@ -197,7 +213,11 @@
       "bg.soon",
       "bg.share",
       "bg.shareText",
-      "bg.continue"
+      "bg.continue",
+      "bg.tileOf",
+      "bg.turnOf",
+      "bg.rolled",
+      "bg.toTile"
     ],
     "pl": [
       "hub.group.spell_it",
@@ -235,7 +255,11 @@
       "bg.soon",
       "bg.share",
       "bg.shareText",
-      "bg.continue"
+      "bg.continue",
+      "bg.tileOf",
+      "bg.turnOf",
+      "bg.rolled",
+      "bg.toTile"
     ],
     "ru": [
       "hub.group.spell_it",
@@ -273,7 +297,11 @@
       "bg.soon",
       "bg.share",
       "bg.shareText",
-      "bg.continue"
+      "bg.continue",
+      "bg.tileOf",
+      "bg.turnOf",
+      "bg.rolled",
+      "bg.toTile"
     ],
     "vi": [
       "hub.group.spell_it",
@@ -311,7 +339,11 @@
       "bg.soon",
       "bg.share",
       "bg.shareText",
-      "bg.continue"
+      "bg.continue",
+      "bg.tileOf",
+      "bg.turnOf",
+      "bg.rolled",
+      "bg.toTile"
     ],
     "ko": [
       "hub.group.spell_it",
@@ -349,7 +381,11 @@
       "bg.soon",
       "bg.share",
       "bg.shareText",
-      "bg.continue"
+      "bg.continue",
+      "bg.tileOf",
+      "bg.turnOf",
+      "bg.rolled",
+      "bg.toTile"
     ],
     "ja": [
       "hub.group.spell_it",
@@ -387,7 +423,11 @@
       "bg.soon",
       "bg.share",
       "bg.shareText",
-      "bg.continue"
+      "bg.continue",
+      "bg.tileOf",
+      "bg.turnOf",
+      "bg.rolled",
+      "bg.toTile"
     ],
     "zh": [
       "hub.group.spell_it",
@@ -425,7 +465,11 @@
       "bg.soon",
       "bg.share",
       "bg.shareText",
-      "bg.continue"
+      "bg.continue",
+      "bg.tileOf",
+      "bg.turnOf",
+      "bg.rolled",
+      "bg.toTile"
     ],
     "ar": [
       "hub.group.spell_it",
@@ -463,7 +507,11 @@
       "bg.soon",
       "bg.share",
       "bg.shareText",
-      "bg.continue"
+      "bg.continue",
+      "bg.tileOf",
+      "bg.turnOf",
+      "bg.rolled",
+      "bg.toTile"
     ],
     "hi": [
       "hub.group.spell_it",
@@ -501,7 +549,11 @@
       "bg.soon",
       "bg.share",
       "bg.shareText",
-      "bg.continue"
+      "bg.continue",
+      "bg.tileOf",
+      "bg.turnOf",
+      "bg.rolled",
+      "bg.toTile"
     ],
     "sw": [
       "hub.group.spell_it",
@@ -539,7 +591,11 @@
       "bg.soon",
       "bg.share",
       "bg.shareText",
-      "bg.continue"
+      "bg.continue",
+      "bg.tileOf",
+      "bg.turnOf",
+      "bg.rolled",
+      "bg.toTile"
     ],
     "fil": [
       "hub.group.spell_it",
@@ -577,7 +633,11 @@
       "bg.soon",
       "bg.share",
       "bg.shareText",
-      "bg.continue"
+      "bg.continue",
+      "bg.tileOf",
+      "bg.turnOf",
+      "bg.rolled",
+      "bg.toTile"
     ]
   }
 }

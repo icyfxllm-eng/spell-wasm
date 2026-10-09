@@ -214,6 +214,11 @@ pub fn install(app: &App) {
         // CC-BOARD-GAME: where the game stands, and the word a human owes.
         let cb = Closure::<dyn Fn() -> String>::new(move || crate::boardgame_screen::seam_state());
         set(&obj, "boardgameState", cb.into_js_value());
+        // CC-BOARD-GAME-POLISH Feature 6: walk a seat's piece n tiles (the real walk), returns its duration in ms.
+        let cb = Closure::<dyn Fn(u32, u32) -> i32>::new(move |seat: u32, n: u32| crate::boardgame_screen::seam_hop(seat as u8, n));
+        set(&obj, "boardgameHop", cb.into_js_value());
+        let cb = Closure::<dyn Fn(u32)>::new(move |tile: u32| crate::boardgame_screen::seam_mark(tile));
+        set(&obj, "boardgameMark", cb.into_js_value());
     }
     let _ = js_sys::Reflect::set(win.as_ref(), &JsValue::from_str("__spelltest"), obj.as_ref());
     web_sys::console::warn_1(&"[testseam] window.__spelltest installed (DEV build only)".into());

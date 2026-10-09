@@ -519,10 +519,61 @@
   .bg-t{fill:#ffffff1c}.bg-t.t-easy{fill:#3f8f6a}.bg-t.t-medium{fill:#4a79b8}
   .bg-t.t-hard{fill:#b8803a}.bg-t.t-expert{fill:#a24a5a}
   .bg-t.end{fill:#f2c14e}
+  .bg-t.start{fill:#d9d4f2}
   .bg-t.dest{stroke:#fff;stroke-width:.2}
   .bg-me{fill:#f2c14e55;stroke:#f2c14e;stroke-width:.1}
   .bg-p{font-size:.78px;text-anchor:middle;dominant-baseline:central}
-  .bg-trap{font-size:.62px;text-anchor:middle;dominant-baseline:central}
+  .bg-trap{font-size:.5px;text-anchor:middle;dominant-baseline:central}
+  /* Polish Feature 7: the tier read without colour (pips), the start arrow, the finish flag,
+     a number every tenth tile, a revealed trap on an amber disc. */
+  .bg-pip{fill:#fff;stroke:#000000a0;stroke-width:.04}
+  .bg-start{fill:#36210a}
+  .bg-flag{font-size:.62px;text-anchor:middle;dominant-baseline:central}
+  .bg-num{fill:#ffffffc8;text-anchor:middle;dominant-baseline:central;font-weight:600;font-variant-numeric:tabular-nums}
+  .bg-trapbg{fill:#f2c14e;stroke:#36210a;stroke-width:.04}
+  .bg-trap{fill:#36210a}
+  /* Polish Feature 6: pieces are persistent elements over the board (so a hop can animate),
+     1.6 x the tile on a coloured base disc per piece. Sizes and positions are set inline. */
+  .bg-pieces{position:absolute;inset:0;pointer-events:none;z-index:2;direction:ltr}
+  .bg-pieces[hidden]{display:none}
+  .bg-pc{position:absolute;inset-inline-start:0;inset-block-start:0;border-radius:50%;display:grid;place-items:center;line-height:1;
+    border:2px solid #fff;box-sizing:border-box;box-shadow:0 1px 4px #0009;will-change:transform}
+  .bg-pc>span{display:block;pointer-events:none}
+  .bg-pc.c0,.bg-disc.c0{background:#6d5cf0;fill:#6d5cf0}.bg-pc.c1,.bg-disc.c1{background:#ec5b9a;fill:#ec5b9a}
+  .bg-pc.c2,.bg-disc.c2{background:#12b5c9;fill:#12b5c9}.bg-pc.c3,.bg-disc.c3{background:#f1ecff;fill:#f1ecff}
+  .bg-pc.act{box-shadow:0 0 0 3px #f2c14e,0 2px 6px #000a}
+  .bg-disc{stroke:#fff;stroke-width:.06}.bg-disc.act{stroke:#f2c14e;stroke-width:.12}
+  .bg-pc[data-h="a"]>span{animation:bg-hop-a var(--hop,160ms) ease-out}
+  .bg-pc[data-h="b"]>span{animation:bg-hop-b var(--hop,160ms) ease-out}
+  .bg-pc[data-f="a"]{animation:bg-fade-a .3s ease-out}
+  .bg-pc[data-f="b"]{animation:bg-fade-b .3s ease-out}
+  @keyframes bg-hop-a{0%{transform:translateY(0)}50%{transform:translateY(-32%)}100%{transform:translateY(0)}}
+  @keyframes bg-hop-b{0%{transform:translateY(0)}50%{transform:translateY(-32%)}100%{transform:translateY(0)}}
+  @keyframes bg-fade-a{from{opacity:0}to{opacity:1}}
+  @keyframes bg-fade-b{from{opacity:0}to{opacity:1}}
+  /* Polish Feature 5: the centre stage, over the ring's interior (position and size set inline). */
+  .bg-stage{position:absolute;z-index:1;display:flex;flex-direction:column;align-items:center;justify-content:center;
+    gap:6px;pointer-events:none;text-align:center;overflow:hidden;--stpc:56px}
+  .bg-stage[hidden]{display:none}
+  .bg-stage .bg-pc.big{position:relative;width:var(--stpc);height:var(--stpc);font-size:calc(var(--stpc)*.62);transform:none;flex:none}
+  .bg-st-n{position:absolute;inset-inline-end:-6px;inset-block-start:-6px;min-width:20px;height:20px;border-radius:10px;background:#000000c0;color:#fff;
+    font-size:12px;font-style:normal;font-weight:700;display:grid;place-items:center;padding:0 5px;border:1px solid #fff}
+  .bg-st-tile{font-size:1rem;font-weight:700;font-variant-numeric:tabular-nums}
+  .bg-st-row{display:flex;align-items:center;justify-content:center;gap:12px;min-height:34px;flex-wrap:wrap}
+  .bg-st-die:empty,.bg-st-land:empty{display:none}
+  .bg-die{display:grid;place-items:center;width:34px;height:34px;border-radius:9px;background:#fff;color:#1b1730;font-size:1.2rem;
+    animation:bg-tumble .7s ease-out both}
+  .bg-st-land{display:inline-flex;align-items:center;gap:6px;font-size:.95rem;font-weight:600;animation:bg-land-in .25s ease-out both}
+  .bg-stage.compact{flex-direction:row;flex-wrap:wrap;gap:4px 12px;align-content:center}
+  .bg-stage.compact .bg-st-tile{font-size:.9rem}
+  @keyframes bg-tumble{0%{transform:rotate(0) scale(.6)}40%{transform:rotate(300deg) scale(1.12)}75%{transform:rotate(600deg) scale(.95)}100%{transform:rotate(720deg) scale(1)}}
+  @keyframes bg-land-in{from{opacity:0}to{opacity:1}}
+  @media (prefers-reduced-motion:reduce){
+    .bg-pc{transition:none!important}
+    .bg-pc[data-h]>span{animation:none!important}
+    .bg-die{animation:none}
+    .bg-st-land{animation:none}
+  }
   .bg-feed{flex:none;min-height:1.4em;font-size:.95rem;text-align:center}
   .bg-feed:empty{display:none}
   .bg-act{display:flex;align-items:center;justify-content:center;gap:10px;flex:none;min-height:88px}
@@ -2698,7 +2749,11 @@
       <button class="btn btn-check" id="bgStart" data-i18n="bg.start">Start</button>
     </div>
     <div class="bg-play" id="bgPlay" hidden>
-      <div class="bg-view" id="bgView"><svg id="bgBoard" viewBox="0 0 22 22" preserveAspectRatio="xMidYMid meet" role="img" aria-label="Board" data-i18n-aria="aria.board"></svg><div class="bg-land" id="bgLand" aria-live="polite"></div></div>
+      <div class="bg-view" id="bgView"><svg id="bgBoard" viewBox="0 0 22 22" preserveAspectRatio="xMidYMid meet" role="img" aria-label="Board" data-i18n-aria="aria.board"></svg><div class="bg-stage" id="bgStage" role="group" hidden>
+          <div class="bg-st-pc" id="bgStPc" aria-hidden="true"></div>
+          <div class="bg-st-tile" id="bgStTile" aria-hidden="true"></div>
+          <div class="bg-st-row" aria-hidden="true"><span class="bg-st-die" id="bgStDie"></span><span class="bg-st-land" id="bgStLand"></span></div>
+        </div><div class="bg-pieces" id="bgPieces"></div><div class="bg-land" id="bgLand" aria-live="polite"></div></div>
       <div class="bg-chips" id="bgChips"></div>
       <div class="bg-timer" id="bgTimer"></div>
       <div class="bg-feed" id="bgFeed" aria-live="polite"></div>

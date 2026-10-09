@@ -898,5 +898,9 @@
   "bg.soon": "Пока недоступно на этом языке",
   "bg.share": "Поделиться",
   "bg.shareText": "Я занял место {n} в Spell Board Game",
-  "bg.continue": "Дальше"
+  "bg.continue": "Дальше",
+  "bg.tileOf": "Клетка {n} из {m}",
+  "bg.turnOf": "Ход: {piece} {n}",
+  "bg.rolled": "Выпало {n}",
+  "bg.toTile": "На клетку {n}"
 }

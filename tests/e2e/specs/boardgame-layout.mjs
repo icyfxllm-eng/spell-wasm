@@ -285,13 +285,15 @@ async function runMore(browser, base, suite) {
   }
   await suite.test('boardgame_compact_strip_when_space_is_short', async () => {
     // Not a device name: a viewport too short for a legible ring (and the keys at full size) must fall back to the unrolled track, with nothing lost.
-    const { ctx, page } = await open({ width: 375, height: 600 });
+    // The ring-fit rule (Polish Feature 7) may turn the ring on its side, so a ring needs about 19 rows
+    // x 12 px of panel: 375x600 now keeps a 12 px ring, and the track starts below that (375x520).
+    const { ctx, page } = await open({ width: 375, height: 520 });
     try {
       await page.click('#bgOrb');
       await page.waitForFunction(() => JSON.parse(window.__spelltest.boardgameState() || 'null')?.phase === 'AwaitSpelling', null, { timeout: 5000 });
       await domSettled(page);
       const m = await page.evaluate(() => ({ strip: document.getElementById('bgView').classList.contains('strip'), tiles: document.querySelectorAll('#bgBoard .bg-t').length }));
-      assert(m.strip && m.tiles >= 8 && m.tiles <= 12, `expected the unrolled track at 375x600, got ${JSON.stringify(m)}`);
+      assert(m.strip && m.tiles >= 8 && m.tiles <= 12, `expected the unrolled track at 375x520, got ${JSON.stringify(m)}`);
     } finally { await ctx.close(); }
   });
 }

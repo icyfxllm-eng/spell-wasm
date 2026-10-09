@@ -898,5 +898,9 @@
   "bg.soon": "Bado haipatikani katika lugha hii",
   "bg.share": "Shiriki",
   "bg.shareText": "Nilikuwa nambari {n} katika Spell Board Game",
-  "bg.continue": "Endelea"
+  "bg.continue": "Endelea",
+  "bg.tileOf": "Kisanduku {n} kati ya {m}",
+  "bg.turnOf": "Zamu ya {piece} {n}",
+  "bg.rolled": "Umepata {n}",
+  "bg.toTile": "Hadi kisanduku {n}"
 }

@@ -898,5 +898,9 @@
   "bg.soon": "아직 이 언어에서는 쓸 수 없어요",
   "bg.share": "공유",
   "bg.shareText": "Spell Board Game에서 {n}등을 했어요",
-  "bg.continue": "계속"
+  "bg.continue": "계속",
+  "bg.tileOf": "{m}칸 중 {n}번째 칸",
+  "bg.turnOf": "차례: {piece} {n}",
+  "bg.rolled": "주사위 {n}",
+  "bg.toTile": "{n}번 칸으로"
 }

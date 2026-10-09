@@ -898,5 +898,9 @@
   "bg.soon": "Chưa có cho ngôn ngữ này",
   "bg.share": "Chia sẻ",
   "bg.shareText": "Tôi về thứ {n} trong Spell Board Game",
-  "bg.continue": "Tiếp tục"
+  "bg.continue": "Tiếp tục",
+  "bg.tileOf": "Ô {n} trên {m}",
+  "bg.turnOf": "Lượt của {piece} {n}",
+  "bg.rolled": "Tung được {n}",
+  "bg.toTile": "Đến ô {n}"
 }

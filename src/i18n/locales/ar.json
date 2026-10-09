@@ -898,5 +898,9 @@
   "bg.soon": "غير متاحة بهذه اللغة بعد",
   "bg.share": "مشاركة",
   "bg.shareText": "جئتُ في المركز {n} في Spell Board Game",
-  "bg.continue": "متابعة"
+  "bg.continue": "متابعة",
+  "bg.tileOf": "المربع {n} من {m}",
+  "bg.turnOf": "الدور: {piece} {n}",
+  "bg.rolled": "رمية {n}",
+  "bg.toTile": "إلى المربع {n}"
 }
