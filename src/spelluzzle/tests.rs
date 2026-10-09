@@ -200,11 +200,16 @@ fn a3_gates_hold() {
     let lex = en();
     for tier in Tier::ALL {
         let (mut ok, mut attempts, mut cap) = (0, Vec::new(), 0);
+        let (mut earned, mut cascade, mut runes, mut hashes) = (Vec::new(), Vec::new(), 0usize, std::collections::BTreeSet::new());
         for seed in 0..n as u64 {
             match generate(seed, tier, lex) {
                 Ok(g) => {
                     // Re-run the checker on the served board: acceptance is the checker's, not the generator's.
-                    check_board(&g.board, lex).unwrap_or_else(|e| panic!("{tier:?} seed {seed} served a board the checker rejects: {e:?}"));
+                    let m = check_board(&g.board, lex).unwrap_or_else(|e| panic!("{tier:?} seed {seed} served a board the checker rejects: {e:?}"));
+                    earned.push(m.earned.as_f64());
+                    cascade.push(m.cascade.as_f64());
+                    runes += m.runes;
+                    hashes.insert(g.board.hash());
                     assert!(g.attempts <= 2 * ATTEMPT_CAP);
                     attempts.push(g.attempts);
                     ok += 1;
@@ -215,6 +220,17 @@ fn a3_gates_hold() {
         attempts.sort_unstable();
         let q = |p: f64| attempts.get(((attempts.len() as f64 * p) as usize).min(attempts.len().saturating_sub(1))).copied().unwrap_or(0);
         println!("A3 {:>6}: {ok}/{n} ok, {cap} hit the cap, attempts p50 {} p95 {} max {}", tier.name(), q(0.5), q(0.95), attempts.last().copied().unwrap_or(0));
+        let pct = |v: &mut Vec<f64>, p: f64| {
+            v.sort_by(|a, b| a.partial_cmp(b).unwrap());
+            v.get(((v.len() as f64 * p) as usize).min(v.len().saturating_sub(1))).copied().unwrap_or(0.0)
+        };
+        println!(
+            "      runes avg {:.1}; earned p10/p50/p90 {:.3}/{:.3}/{:.3}; cascade {:.3}/{:.3}/{:.3}; {} distinct boards of {ok}",
+            runes as f64 / ok.max(1) as f64,
+            pct(&mut earned, 0.1), pct(&mut earned, 0.5), pct(&mut earned, 0.9),
+            pct(&mut cascade, 0.1), pct(&mut cascade, 0.5), pct(&mut cascade, 0.9),
+            hashes.len()
+        );
         assert_eq!(cap, 0, "{tier:?}: {cap} of {n} seeds hit the attempt cap");
     }
 }

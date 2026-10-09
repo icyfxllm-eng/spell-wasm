@@ -19,6 +19,32 @@ Compiled from three read-only surveys (appendices). C7 ran a Python prototype ge
 
 The offered set is therefore English Jr, Easy, Medium, Hard and Expert (6–10). The C4 and C7 HALTs are answered by items 2–4; C9 by item 5; C10 by item 6.
 
+## Phase A results (2026-10-09, branch `spelluzzle-phase-a`)
+
+Pure Rust core in `src/spelluzzle/` (app only): `types`, `view` (F3/F4 display), `gates` (the independent G1-G11 checker and its G8 solver), `gen` (generator), `lex`/`bank` (word data). No UI.
+
+**A1-A8 are green** (`cargo test spelluzzle`, 14 tests, 1.8 s in debug). The full-size run, with the 217,720-word stand-in validity list (`SPZ_N=10000 SPZ_VALIDITY_FILE=...`, release, 18 s for all five tiers):
+
+| Tier | success | attempts p50/p95/max | runes avg | earned p10/p50/p90 | cascade p10/p50/p90 |
+|---|---|---|---|---|---|
+| Jr | 10000/10000 | 13/53/242 | 9.9 | .475/.526/.579 | .314/.383/.475 |
+| Easy | 10000/10000 | 4/15/42 | 9.1 | .444/.491/.526 | .273/.334/.416 |
+| Medium | 10000/10000 | 5/20/74 | 14.1 | .435/.481/.531 | .292/.349/.417 |
+| Hard | 10000/10000 | 8/32/87 | 15.5 | .448/.500/.557 | .361/.424/.490 |
+| Expert (6-10) | 10000/10000 | 18/73/267 | 15.8 | .488/.550/.623 | .431/.503/.575 |
+
+- Every seed gave a distinct board (10,000 of 10,000 per tier). Cap hits: none. At about 0.4 ms per board on this Mac, the 1.5 s iPhone p95 limit has a wide margin, but it still has to be measured on a device.
+- The generator's fix for the Jr and Easy failures was structural, not a gate change: the last pick (the secret) must have every rune already on the board and must cover every spoken rune still held by one word. That removed the G5 rejections that were driving the earlier 2-5x attempt counts.
+- A4: the checker's solver and a separate linear-scan solver agree on exactly one solution (checked on 15 boards per tier at full validity size, 6 by default).
+- A5: 972,240 single-cell substitutions and adjacent swaps across 300 boards per tier; every one produced a clash.
+- A8: four frozen toy-lexicon fixtures are each rejected with their own gate: G3, G5, G6b, G8.
+- A6: 100 golden seeds per tier are pinned in `tests/fixtures/spelluzzle/golden-en.json` against a fingerprint of the English bank. When the bank changes, re-pin with `SPZ_BLESS=1 cargo test a6_deterministic_boards`. Cross-platform parity (WASM/iOS/Android/x86 CI) is not run here: only the host was exercised.
+
+**Open for Eric, found while building:**
+1. **The validity list for G8 does not ship to the device.** On the host the default list is the bank itself, so G8 is weaker than in the table above. A served board needs the same check on the device, which means shipping a dictionary-grade English list (or a precomputed, compact table) and a licence sign-off (`data/LICENSES.md`). Until then, device-side generation would use the bank-only list.
+2. **The fixtures from the spec** (`fixture-easy-1`, `fixture-medium-1`) are used only by the view tests, since they fail G1 on the real bank (census C7). A14 needs replacement boards generated from the real bank.
+3. The generator's final-pick rule narrows how the secret is chosen. Variety is unaffected by the numbers above, but E6 ("ten boards in a row feel different") is a human check for Phase B.
+
 ## HALT summary
 
 | Item | Result | Detail |
