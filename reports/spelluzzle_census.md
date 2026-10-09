@@ -5,6 +5,20 @@
 
 Compiled from three read-only surveys (appendices). C7 ran a Python prototype generator and an independent checker on the real English bank; it is a feasibility measurement, not the Rust implementation.
 
+## Decisions recorded (Eric, 2026-10-09)
+
+1. **Launch scope: English only, Easy through Expert** (plus Spell Jr). Every other language waits.
+2. **F10 amendment: Expert word length is 6–10 cells** (was 6–9). English Expert eligible words rise from 327 to 540, clearing the 400 floor. Check in Phase A: at 10 cells the C8 width limit falls to about 32.8 pt with no row gutter and about 30 pt with a 28 pt gutter, so A15 must be re-run at 10 cells and the layout may need a narrower gutter or tighter gaps.
+3. **C7:** fix the generator's search (Jr and Easy fail on G5) rather than any gate; re-run the full 10,000 seeds per tier; measure iPhone p95 on a device in Phase A. If Jr still cannot reach 10,000/10,000, use F9's word-overlap relaxation. Never relax a gate.
+4. **Fixtures:** replace with boards generated from the real bank. Do not add words to the bank for them.
+5. **History:** use the F11 `spelluzzle.history` store as written (per profile). Do not fold into the wordgrid ledger; register as a consumer of the CC-PERSIAN-FOUNDATION F6 ledger if it is built. Keep off the shared 20/14/90 word window (I8).
+6. **Audio amendment (narrow, named):** add one new function that prefetches a set of words and reports per-word success, built on `audio_verdict::servable` and `human_audio::clip_url`. `play_chain` is untouched. This is an exception to the "calls the resolver only" row in §2.
+7. **O1–O3:** defaults stand: app-only, no "can't hear it" rescue, 🗝️.
+8. **Missing spec files:** the Spelluzzle spec is authoritative; read the nearest existing docs.
+9. **Later languages (Phase D):** Spanish and Russian first (need C7 and an Easy bank large enough); French, German, Portuguese, Polish, Filipino and Swahili wait for collision tables and bank growth; Vietnamese never in v1.
+
+The offered set is therefore English Jr, Easy, Medium, Hard and Expert (6–10). The C4 and C7 HALTs are answered by items 2–4; C9 by item 5; C10 by item 6.
+
 ## HALT summary
 
 | Item | Result | Detail |
