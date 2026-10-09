@@ -34,6 +34,8 @@ pub mod golden;
 pub mod rules;
 
 #[cfg(test)]
+mod balance;
+#[cfg(test)]
 mod tests;
 
 use std::collections::BTreeSet;
