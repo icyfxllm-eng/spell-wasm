@@ -61,6 +61,20 @@ pub fn ledger_key(lang: &str, tier: Tier) -> String {
 /// The bank's unique entries for a tier, in bank order, with the Spell Jr
 /// filter applied. Entries (not citations) so zh keeps its hanzi.
 pub fn bank(lang: &str, tier: Tier, kid: bool) -> Vec<String> {
+    let raw = raw_bank(lang, tier, kid);
+    if !crate::boardgame_input::needs_check(lang) {
+        return raw;
+    }
+    // Korean only: drop words the composition automaton cannot take.
+    let mut all: Vec<String> = Vec::new();
+    for &t in tiers_of(variant_for(kid)) {
+        all.extend(raw_bank(lang, t, kid));
+    }
+    let rows = crate::boardgame_input::layout(lang, kid, &all);
+    raw.into_iter().filter(|w| crate::boardgame_input::answerable(lang, kid, &rows, w, tier)).collect()
+}
+
+fn raw_bank(lang: &str, tier: Tier, kid: bool) -> Vec<String> {
     let mut seen = BTreeSet::new();
     crate::words::tier_for(lang, tier.name())
         .iter()

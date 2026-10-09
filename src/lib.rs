@@ -26,6 +26,8 @@ mod boardgame; // CC-BOARD-GAME v1.1 F1 -- the pure engine (app only, I13)
 #[cfg(not(feature = "web"))]
 mod boardgame_grade; // CC-BOARD-GAME F3/D21 -- the local answer check
 #[cfg(not(feature = "web"))]
+mod boardgame_input; // CC-BOARD-GAME D20 -- answer keys and presses
+#[cfg(not(feature = "web"))]
 mod boardgame_pools; // CC-BOARD-GAME D19/D25/F9 -- word supply, ledger, bank gate
 mod wordpic; // CC-WORD-PICTURE core (calligrams)
 mod input_provenance;
