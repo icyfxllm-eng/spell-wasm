@@ -22,10 +22,12 @@ const measure = () => {
   const W = innerWidth, H = innerHeight;
   const leaves = [];
   const add = (name, el) => { if (el) leaves.push({ name, ...r(el) }); };
-  add('hud', document.querySelector('.bg-hud'));
   add('view', document.getElementById('bgView'));
   add('orb', document.getElementById('bgOrb'));
   add('field', document.getElementById('bgField'));
+  add('exit', document.getElementById('bgExit'));
+  document.querySelectorAll('#bgChips .bg-chip').forEach((c, i) => add(`chip${i}`, c));
+  document.querySelectorAll('#bgResults .bg-res').forEach((c, i) => add(`res${i}`, c));
   add('del', document.getElementById('bgDel'));
   add('go', document.getElementById('bgGo'));
   const keys = [...document.querySelectorAll('#bgKeys .bg-key')];
@@ -52,6 +54,24 @@ const measure = () => {
   return { problems, rows: document.querySelectorAll('#bgKeys .bg-row').length, keys: keys.length, kw: Math.round(kw) };
 };
 
+/// F6 (v1.2 follow-up): the board uses the leftover height, the keys dock to the bottom
+/// inside the safe area, the HUD clears the top inset, the exit is a 48pt+ tap target at
+/// the bottom-right. insetTop/insetBottom are the emulated notch and home indicator.
+const measureDock = (ins) => {
+  const r = (id) => document.getElementById(id).getBoundingClientRect();
+  const W = innerWidth, H = innerHeight;
+  const keys = r('bgKeys'), hud = document.querySelector('.bg-hud').getBoundingClientRect(), view = r('bgView'), ex = r('bgExit');
+  const problems = [];
+  if (hud.top < ins.top - 0.5) problems.push(`hud top ${hud.top} is inside the top inset ${ins.top}`);
+  const gap = (H - ins.bottom) - keys.bottom;
+  if (gap < -0.5 || gap > 70) problems.push(`keys are not docked: ${gap.toFixed(0)}px above the safe bottom`);
+  return { problems, viewH: view.height, viewW: view.width, vb: document.getElementById('bgBoard').getAttribute('viewBox'), exit: { w: ex.width, h: ex.height, r: W - ex.right, b: (H - ins.bottom) - ex.bottom, cx: ex.left + ex.width / 2, cy: ex.top + ex.height / 2 }, keysTop: keys.top, keysBottom: keys.bottom };
+};
+const setInsets = (page, top, bottom) => page.evaluate(([t, b]) => {
+  const el = document.getElementById('bgScreen');
+  el.style.setProperty('--bg-inset-top', t + 'px'); el.style.setProperty('--bg-inset-bottom', b + 'px');
+}, [top, bottom]);
+
 export async function run(browser, base, suite) {
   await suite.test('boardgame_layout_every_language_every_phone', async () => {
     const failed = [];
@@ -65,6 +85,7 @@ export async function run(browser, base, suite) {
           await page.waitForSelector('#bgScreen.show', { timeout: 8000 });
           if (await page.$eval('#bgStart', (b) => b.disabled)) { failed.push(`${lang}${kid ? '/jr' : ''}: Start is disabled (coming soon)`); continue; }
           await page.click('[data-bg="mode:pass"]');
+          await page.click('[data-bg="count:4"]'); // four chips must fit
           await page.click('#bgStart');
           await page.waitForSelector('#bgHand:not([hidden])', { timeout: 8000 });
           await page.click('#bgHandGo');
@@ -80,11 +101,84 @@ export async function run(browser, base, suite) {
             if (m.problems.length && !known) failed.push(`${id} (${m.rows} rows, ${m.keys} keys): ${m.problems.slice(0, 3).join('; ')}`);
             if (!m.problems.length && known) failed.push(`${id}: listed as not fitting but it fits now`);
             fitted.push(`${id}:${m.rows}r`);
+            // The same sweep again with a notch and a home indicator (tall phones).
+            if (h >= 844) {
+              await setInsets(page, 47, 34);
+              await domSettled(page);
+              const mi = await page.evaluate(measure);
+              const di = await page.evaluate(measureDock, { top: 47, bottom: 34 });
+              await setInsets(page, 0, 0);
+              checked++;
+              const rowsN = m.rows;
+              const bad = [...mi.problems, ...di.problems];
+              if (bad.length) failed.push(`${id}+insets: ${bad.slice(0, 3).join('; ')}`);
+              // Tall room means the whole ring, big: a full viewBox and a board far taller than the old strip.
+              if (rowsN <= 4 && !/^0 0 /.test(di.vb)) failed.push(`${id}: spell state fell back to the strip on a tall phone (${di.vb}, view ${Math.round(di.viewH)})`);
+              if (di.viewH < (/^0 0 /.test(di.vb) ? 112 : 0) || (rowsN <= 4 && di.viewH < 250)) failed.push(`${id}: board only ${Math.round(di.viewH)}pt tall in the spell state`);
+              if (di.exit.w < 48 || di.exit.h < 48 || di.exit.r > 24 || di.exit.b > 24 || di.exit.cx < w / 2 || di.exit.cy < h / 2) failed.push(`${id}: exit not a 48pt bottom-right target ${JSON.stringify(di.exit)}`);
+            }
           }
         } finally { await ctx.close(); }
       }
     }
     process.stdout.write(`  boardgame layout: ${checked} combinations measured\n`);
     assert(failed.length === 0, `${failed.length} layout problem(s):\n    ${failed.join('\n    ')}`);
+  });
+  await runMore(browser, base, suite);
+}
+
+async function runMore(browser, base, suite) {
+  const open = async (viewport) => {
+    const o = await openApp(browser, base, { lang: 'en', viewport, init: FLAG });
+    await o.page.evaluate(() => document.getElementById('bgOpenBtn').click());
+    await o.page.waitForSelector('#bgScreen.show', { timeout: 8000 });
+    await o.page.click('[data-bg="mode:pass"]');
+    await o.page.click('#bgStart');
+    await o.page.waitForSelector('#bgHand:not([hidden])', { timeout: 8000 });
+    await o.page.click('#bgHandGo');
+    return o;
+  };
+  const shown = (page) => page.evaluate(() => document.getElementById('bgScreen').classList.contains('show'));
+  await suite.test('boardgame_board_state_fills_height_and_exit_works', async () => {
+    const { ctx, page } = await open({ width: 430, height: 932 });
+    try {
+      await setInsets(page, 47, 34);
+      await domSettled(page);
+      const m = await page.evaluate(() => {
+        const v = document.getElementById('bgView').getBoundingClientRect(), a = document.getElementById('bgAct').getBoundingClientRect();
+        return { vh: v.height, vw: v.width, actBottom: a.bottom, H: innerHeight, hud: document.querySelector('.bg-hud').getBoundingClientRect().top, over: document.documentElement.scrollWidth - innerWidth, ex: document.getElementById('bgExit').getBoundingClientRect().toJSON() };
+      });
+      assert(m.vh > 450, `board state: ring panel only ${m.vh}pt tall`);
+      assert(m.hud >= 47, `HUD at ${m.hud} is under the top inset`);
+      assert(m.over <= 0, 'horizontal overflow');
+      assert(m.ex.width >= 48 && m.ex.height >= 48 && m.ex.left > 215 && m.ex.top > 466 && m.ex.bottom <= 932 - 34 + 0.5, `exit rect ${JSON.stringify(m.ex)}`);
+      const hit = await page.evaluate(() => { const b = document.getElementById('bgExit').getBoundingClientRect(); return document.elementFromPoint(b.left + b.width / 2, b.top + b.height / 2).closest('#bgExit') !== null; });
+      assert(hit, 'something covers the exit button');
+      await page.click('#bgExit');
+      assert(!(await shown(page)), 'exit from the board state did not leave the Board Game');
+    } finally { await ctx.close(); }
+  });
+  await suite.test('boardgame_spell_state_exit_works', async () => {
+    const { ctx, page } = await open({ width: 390, height: 844 });
+    try {
+      await page.click('#bgOrb');
+      await page.waitForFunction(() => JSON.parse(window.__spelltest.boardgameState() || 'null')?.phase === 'AwaitSpelling', null, { timeout: 5000 });
+      await domSettled(page);
+      const hit = await page.evaluate(() => { const b = document.getElementById('bgExit').getBoundingClientRect(); return document.elementFromPoint(b.left + b.width / 2, b.top + b.height / 2).closest('#bgExit') !== null; });
+      assert(hit, 'something covers the exit button in the spell state');
+      await page.click('#bgExit');
+      assert(!(await shown(page)), 'exit from the spell state did not leave the Board Game');
+    } finally { await ctx.close(); }
+  });
+  await suite.test('boardgame_compact_strip_when_space_is_short', async () => {
+    // Not a device name: a viewport too short for a legible ring (and the keys at full size) must fall back to the strip, with nothing lost.
+    const { ctx, page } = await open({ width: 375, height: 600 });
+    try {
+      await page.click('#bgOrb');
+      await page.waitForFunction(() => JSON.parse(window.__spelltest.boardgameState() || 'null')?.phase === 'AwaitSpelling', null, { timeout: 5000 });
+      await domSettled(page);
+      const m = await page.evaluate(() => ({ strip: document.getElementById('bgView').classList.contains('strip'), vb: document.getElementById('bgBoard').getAttribute('viewBox') }));
+      assert(m.strip && !/^0 0 /.test(m.vb), `expected the compact strip at 375x600, got ${JSON.stringify(m)}`);
+    } finally { await ctx.close(); }
   });
 }

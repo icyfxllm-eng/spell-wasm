@@ -458,14 +458,36 @@
 
   /* BOARDGAME:BEGIN CC-BOARD-GAME v1.2 -- stripped from the site build (I13) */
   .bg-screen{position:fixed;inset:0;z-index:60;background:var(--bg,#0e1420);color:inherit;
-    display:none;flex-direction:column;gap:6px;padding:8px 12px;overflow:hidden;
-    --bg-key-h:46px;--bg-gap:4px}
+    display:none;flex-direction:column;gap:6px;overflow:hidden;
+    --bg-key-h:46px;--bg-gap:4px;
+    /* The notch / status bar and the home indicator: content stays inside them. */
+    --bg-inset-top:env(safe-area-inset-top,0px);--bg-inset-bottom:env(safe-area-inset-bottom,0px);
+    padding:calc(var(--bg-inset-top) + 8px) 12px calc(var(--bg-inset-bottom) + 8px)}
   .bg-screen.show{display:flex}
   .bg-hud{display:flex;align-items:center;gap:8px;min-height:48px;flex:none}
-  .bg-hud h2{margin:0;font-size:1.05rem}
-  .bg-chips{margin-inline-start:auto;display:flex;gap:6px;overflow-x:auto;overflow-y:hidden;min-height:0}
-  .bg-chip{display:inline-flex;align-items:center;gap:4px;padding:3px 8px;border-radius:999px;
-    background:#ffffff12;font-size:.85rem;white-space:nowrap;border:2px solid transparent}
+  /* The exit lives in the bottom action row, at its physical right end (direction:ltr pins it
+     there for Arabic too), above the home-indicator inset. The top corner is under the iOS
+     status bar, which swallows taps (it did, on a real phone). In the spell state that row
+     sits under the key grid, so the keys stay at full size and nothing is added to the column. */
+  .bg-act{direction:ltr}
+  .bg-exit{width:56px;height:48px;min-width:56px;font-size:24px;position:relative;z-index:3}
+  .bg-screen.spelling .bg-act{order:9}
+  .bg-hud h2{margin:0;font-size:1.05rem;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  /* The four player chips sit under the board (the top row is under the status bar on a phone). */
+  .bg-chips{display:flex;gap:6px;flex:none;min-width:0;justify-content:center}
+  .bg-chips:empty{display:none}
+  /* The landing callout: a pill over the board naming the tile (tier swatch + name, or the trap). */
+  .bg-land{position:absolute;inset-block-start:6px;inset-inline:0;margin-inline:auto;width:max-content;max-width:calc(100% - 12px);
+    pointer-events:none;z-index:1}
+  .bg-land:empty{display:none}
+  .bg-pill{display:inline-flex;align-items:center;gap:6px;padding:4px 12px 4px 6px;border-radius:999px;background:#000000b0;
+    font-size:.9rem;font-weight:600;white-space:nowrap;max-width:100%;overflow:hidden;text-overflow:ellipsis}
+  .bg-sw{width:16px;height:16px;border-radius:5px;display:inline-grid;place-items:center;font-style:normal;font-size:.7rem;background:#ffffff40;flex:none}
+  .bg-sw.t-easy{background:#3f8f6a}.bg-sw.t-medium{background:#4a79b8}.bg-sw.t-hard{background:#b8803a}.bg-sw.t-expert{background:#a24a5a}
+  .bg-sw.trap{background:#f2c14e;color:#36210a}
+  .bg-chip{display:inline-flex;align-items:center;justify-content:center;gap:3px;padding:3px 6px;border-radius:999px;
+    flex:0 1 auto;min-width:0;max-width:25%;overflow:hidden;
+    background:#ffffff12;font-size:.8rem;white-space:nowrap;border:2px solid transparent}
   .bg-chip.on{border-color:var(--amber,#f2c14e);background:#ffffff22}
   .bg-chip b{font-variant-numeric:tabular-nums}
   .bg-setup{display:flex;flex-direction:column;gap:12px;align-items:stretch;flex:1 1 auto;min-height:0;overflow-y:auto}
@@ -478,32 +500,35 @@
   .bg-btn:disabled{opacity:.4}
   .bg-note{min-height:1.3em;font-size:.9rem;opacity:.85}
   .bg-play{display:flex;flex-direction:column;gap:6px;flex:1 1 auto;min-height:0}
-  .bg-view{flex:none;height:240px;background:#ffffff0a;border-radius:12px;overflow:hidden;cursor:pointer;touch-action:manipulation}
-  .bg-screen.spelling .bg-view{height:112px}
-  /* F6: on a short phone the viewport strip shrinks first (the keys never do). */
-  @media (max-height:700px){.bg-screen.spelling .bg-view{height:68px}}
-  .bg-view.big{height:min(100vw - 24px,60vh)}
-  .bg-view svg{display:block;width:100%;height:100%}
+  /* F6: the board takes every pixel the other rows leave (the keys dock to the bottom);
+     the whole ring is drawn as large as fits. When the measured space is too small to
+     draw a legible ring (boardgame_screen::fit_view), the view shows a zoomed window on the destination. */
+  .bg-view{position:relative;flex:1 1 auto;min-height:0;background:#ffffff0a;border-radius:12px;overflow:hidden}
+  .bg-screen.spelling .bg-view{min-height:112px}
+  @media (max-height:700px){.bg-screen.spelling .bg-view{min-height:44px}.bg-screen.spelling .bg-chip{padding-block:1px}.bg-hud{min-height:32px}}
+  .bg-view svg{position:absolute;inset:0;display:block;width:100%;height:100%}
   .bg-t{fill:#ffffff1c}.bg-t.t-easy{fill:#3f8f6a}.bg-t.t-medium{fill:#4a79b8}
   .bg-t.t-hard{fill:#b8803a}.bg-t.t-expert{fill:#a24a5a}
   .bg-t.end{fill:#f2c14e}
-  .bg-t.dest{stroke:#fff;stroke-width:.12}
+  .bg-t.dest{stroke:#fff;stroke-width:.2}
+  .bg-me{fill:#f2c14e55;stroke:#f2c14e;stroke-width:.1}
   .bg-p{font-size:.78px;text-anchor:middle;dominant-baseline:central}
   .bg-trap{font-size:.62px;text-anchor:middle;dominant-baseline:central}
   .bg-feed{flex:none;min-height:1.4em;font-size:.95rem;text-align:center}
   .bg-feed:empty{display:none}
-  .bg-act{display:flex;align-items:center;justify-content:center;gap:10px;flex:none;min-height:64px}
-  .bg-orb{width:64px;height:64px;border-radius:50%;border:none;background:var(--amber,#f2c14e);color:#36210a;
+  .bg-act{display:flex;align-items:center;justify-content:center;gap:10px;flex:none;min-height:88px}
+  .bg-orb{flex:none;width:88px;height:88px;border-radius:50%;border:none;background:var(--amber,#f2c14e);color:#36210a;
     font-size:1.1rem;font-weight:700;cursor:pointer;touch-action:manipulation;display:grid;place-items:center}
   .bg-orb[data-state="wait"]{opacity:.45}
   .bg-screen.spelling .bg-orb{width:48px;height:48px;font-size:.9rem}
   .bg-screen.spelling .bg-act{min-height:48px}
-  .bg-results{display:flex;gap:6px;overflow-x:auto;overflow-y:hidden;min-height:0;max-width:calc(100% - 80px)}
-  .bg-res{padding:4px 8px;border-radius:999px;background:#ffffff14;font-size:.85rem;white-space:nowrap}
+  .bg-results{display:flex;flex-wrap:wrap;align-content:flex-start;gap:6px;min-height:0;min-width:0;flex:1 1 0}
+  .bg-screen.spelling .bg-results{max-height:62px;overflow:hidden}
+  .bg-res{padding:4px 8px;max-width:100%;overflow:hidden;text-overflow:ellipsis;border-radius:999px;background:#ffffff14;font-size:.85rem;white-space:nowrap}
   .bg-timer{height:3px;border-radius:2px;background:var(--amber,#f2c14e);transform-origin:left;flex:none}
   .bg-timer.run{animation:bg-timer 30s linear forwards}
   @keyframes bg-timer{from{transform:scaleX(1)}to{transform:scaleX(0)}}
-  .bg-spell{display:flex;flex-direction:column;gap:6px;flex:1 1 auto;min-height:0}
+  .bg-spell{display:flex;flex-direction:column;gap:6px;flex:none;margin-top:auto}
   .bg-line{display:flex;gap:var(--bg-gap);align-items:stretch;flex:none}
   .bg-field{flex:1 1 auto;min-width:0;min-height:56px;display:flex;align-items:center;justify-content:center;
     font-size:1.5rem;font-weight:700;background:#ffffff10;border-radius:10px;padding:0 8px;overflow:hidden;
@@ -2651,9 +2676,7 @@
   <button id="bgOpenBtn" hidden aria-hidden="true"></button>
   <div class="bg-screen" id="bgScreen" role="dialog" aria-modal="true" aria-labelledby="bgTitle">
     <div class="bg-hud">
-      <button class="ghost mode-exit" id="bgExit" aria-label="Exit" data-i18n-aria="aria.exit">✕</button>
       <h2 id="bgTitle" data-i18n="bg.name">Board Game</h2>
-      <div class="bg-chips" id="bgChips"></div>
     </div>
     <div class="bg-setup" id="bgSetup">
       <div class="bg-opt" id="bgOptMode"><span data-i18n="bg.name">Board Game</span></div>
@@ -2664,12 +2687,14 @@
       <button class="btn btn-check" id="bgStart" data-i18n="bg.start">Start</button>
     </div>
     <div class="bg-play" id="bgPlay" hidden>
-      <div class="bg-view" id="bgView"><svg id="bgBoard" viewBox="0 0 22 22" preserveAspectRatio="xMidYMid meet" role="img" aria-label="Board" data-i18n-aria="aria.board"></svg></div>
+      <div class="bg-view" id="bgView"><svg id="bgBoard" viewBox="0 0 22 22" preserveAspectRatio="xMidYMid meet" role="img" aria-label="Board" data-i18n-aria="aria.board"></svg><div class="bg-land" id="bgLand" aria-live="polite"></div></div>
+      <div class="bg-chips" id="bgChips"></div>
       <div class="bg-timer" id="bgTimer"></div>
       <div class="bg-feed" id="bgFeed" aria-live="polite"></div>
       <div class="bg-act" id="bgAct">
         <button type="button" class="bg-orb" id="bgOrb" data-state="roll" data-i18n="bg.roll">Roll</button>
         <div class="bg-results" id="bgResults"></div>
+        <button type="button" class="ghost mode-exit bg-exit" id="bgExit" aria-label="Exit" data-i18n-aria="aria.exit">✕</button>
       </div>
       <div class="bg-swap" id="bgSwap" hidden></div>
       <div class="bg-spell" id="bgSpell" hidden>

@@ -69,6 +69,14 @@ struct Ui {
     /// The line under the board: a solo player's missed word, or the switch prompt.
     feed: String,
     recorded: bool,
+    /// What the last piece to land landed on (the callout over the board).
+    land: Option<Land>,
+}
+
+#[derive(Clone, Copy)]
+enum Land {
+    Tier(boardgame::Tier),
+    Trap(boardgame::Trap),
 }
 
 thread_local! {
@@ -118,7 +126,8 @@ pub fn wire(app: &App) {
     dom::on_click("bgMissGo", miss_go);
     dom::on_click("bgAgain", again);
     dom::on_click("bgShare", share);
-    dom::on_click("bgView", toggle_big);
+    // F6: the board re-fits whenever the space it has changes (rotation, window).
+    dom::on_window::<web_sys::Event, _>("resize", |_| fit_view());
     dom::on::<web_sys::MouseEvent, _>("bgSetup", "click", setup_tap);
     dom::on::<web_sys::MouseEvent, _>("bgKeys", "click", key_tap);
     dom::on::<web_sys::MouseEvent, _>("bgSwap", "click", swap_tap);
@@ -153,6 +162,7 @@ pub fn open(app: &App) {
     dom::set_disabled("bgStart", !ok);
     dom::set_hidden("bgSetup", false);
     dom::set_hidden("bgPlay", true);
+    dom::remove_class("bgScreen", "playing");
     for id in ["bgHand", "bgMiss", "bgOver"] {
         dom::set_hidden(id, true);
     }
@@ -283,11 +293,12 @@ fn start() {
     };
     let pass = !s.solo;
     UI.with(|u| {
-        *u.borrow_mut() = Some(Ui { game, lang, kid, relaxed: sup.relaxed, day: d, typed: String::new(), keys, pass, shown_seat: None, miss: None, seen: 0, chips: Vec::new(), feed: String::new(), recorded: false })
+        *u.borrow_mut() = Some(Ui { game, lang, kid, relaxed: sup.relaxed, day: d, typed: String::new(), keys, pass, shown_seat: None, miss: None, seen: 0, chips: Vec::new(), feed: String::new(), recorded: false, land: None })
     });
     render_keys();
     dom::set_hidden("bgSetup", true);
     dom::set_hidden("bgPlay", false);
+    dom::add_class("bgScreen", "playing");
     dom::set_hidden("bgOver", true);
     advance();
 }
@@ -298,6 +309,7 @@ fn again() {
     bump();
     dom::set_hidden("bgOver", true);
     dom::set_hidden("bgPlay", true);
+    dom::remove_class("bgScreen", "playing");
     dom::set_hidden("bgSetup", false);
     dom::remove_class("bgScreen", "spelling");
     dom::set_html("bgChips", "");
@@ -420,6 +432,12 @@ fn after_apply() {
         let new: Vec<Event> = u.game.events[u.seen..].to_vec();
         u.seen = u.game.events.len();
         for e in &new {
+            match e {
+                Event::Moved { to, .. } => u.land = u.game.board.tiers.get(*to as usize).copied().flatten().map(Land::Tier),
+                Event::TrapHit { trap, .. } => u.land = Some(Land::Trap(*trap)),
+                Event::Rolled { .. } | Event::Missed { .. } => u.land = None,
+                _ => {}
+            }
             if let Some(c) = chip_for(u, e) {
                 u.chips.push(c);
             }
@@ -464,12 +482,10 @@ fn render() {
         // Chips are built here from the event tail so they carry piece icons.
         let g = &u.game;
         dom::set_html("bgChips", &hud(u));
+        dom::set_html("bgLand", &land_pill(u));
         let spelling = g.phase == Phase::AwaitSpelling && !g.is_npc_turn();
         dom::toggle_class("bgScreen", "spelling", spelling);
         dom::set_html("bgBoard", &board_svg(u));
-        let vb = view_box(u, spelling);
-        let _ = dom::el("bgBoard").set_attribute("viewBox", &vb);
-        let _ = dom::el("bgBoard").set_attribute("preserveAspectRatio", if spelling { "xMidYMid slice" } else { "xMidYMid meet" });
         dom::set_html("bgResults", &u.chips.iter().map(|c| format!("<span class=\"bg-res\">{}</span>", dom::escape_html(c))).collect::<String>());
 
         let human_turn = !g.is_npc_turn() && g.phase != Phase::Finished;
@@ -519,6 +535,24 @@ fn render() {
         dom::remove_class("bgTimer", "run");
         dom::set_hidden("bgTimer", !timed);
     });
+    fit_view();
+}
+
+/// The callout over the board. A human about to spell sees the destination's tier before
+/// typing (never the word); otherwise the last landing. Trap names are shown only once a
+/// trap has been triggered (F4: hidden until then).
+fn land_pill(u: &Ui) -> String {
+    let spelling_dest = if u.game.phase == Phase::AwaitSpelling && !u.game.is_npc_turn() {
+        u.game.pending.as_ref().filter(|p| p.kind == SpellKind::Landing).and_then(|p| u.game.board.tiers.get(p.dest as usize).copied().flatten())
+    } else {
+        None
+    };
+    let land = spelling_dest.map(Land::Tier).or(u.land);
+    match land {
+        Some(Land::Tier(t)) => format!("<span class=\"bg-pill\"><i class=\"bg-sw t-{0}\"></i>{1}</span>", t.name(), dom::escape_html(&i18n::t(&format!("level.{}", t.name())))),
+        Some(Land::Trap(t)) => format!("<span class=\"bg-pill\" data-land=\"trap\"><i class=\"bg-sw trap\">\u{26a0}</i>{}</span>", dom::escape_html(&i18n::t(&format!("bg.trap.{}", t.key())))),
+        None => String::new(),
+    }
 }
 
 fn hud(u: &Ui) -> String {
@@ -538,18 +572,45 @@ fn hud(u: &Ui) -> String {
     h
 }
 
-fn view_box(u: &Ui, spelling: bool) -> String {
-    let g = u.game.board.grid as f64;
-    if spelling {
-        if let Some(sp) = &u.game.pending {
-            let (x, y) = tile_to_grid(sp.dest, u.game.board.grid);
-            let (w, h) = (12.0_f64.min(g), 4.0_f64.min(g));
-            let vx = (x as f64 + 0.5 - w / 2.0).clamp(0.0, g - w);
-            let vy = (y as f64 + 0.5 - h / 2.0).clamp(0.0, g - h);
-            return format!("{vx} {vy} {w} {h}");
-        }
+/// The smallest cell, in CSS px, at which the whole ring is worth showing in the
+/// spell state. Below it the board falls back to the compact strip around the
+/// destination tile (F6). The decision is made on the measured space, never on
+/// a device name.
+const MIN_FULL_CELL_PX: f64 = 12.0;
+
+/// One layout function for both states: give the board the height that is left,
+/// then show the whole ring if it fits at a legible size, else the strip.
+fn fit_view() {
+    let Some((g, spelling, dest)) = with_ui(|u| {
+        let spelling = u.game.phase == Phase::AwaitSpelling && !u.game.is_npc_turn();
+        let dest = u.game.pending.as_ref().map(|sp| tile_to_grid(sp.dest, u.game.board.grid));
+        (u.game.board.grid as f64, spelling, dest)
+    }) else {
+        return;
+    };
+    let view = dom::el("bgView");
+    let board = dom::el("bgBoard");
+    // Measure with the strip class off: the view then takes all the leftover height.
+    let _ = view.class_list().remove_1("strip");
+    let (w, h) = (view.client_width() as f64, view.client_height() as f64);
+    if w <= 0.0 || h <= 0.0 {
+        return; // screen not shown
     }
-    format!("0 0 {g} {g}")
+    let full = !spelling || w.min(h) / g >= MIN_FULL_CELL_PX;
+    if full {
+        let _ = board.set_attribute("viewBox", &format!("0 0 {g} {g}"));
+        let _ = board.set_attribute("preserveAspectRatio", "xMidYMid meet");
+        return;
+    }
+    let _ = view.class_list().add_1("strip");
+    let (x, y) = dest.unwrap_or(((g / 2.0) as u32, (g / 2.0) as u32));
+    // A window 12 cells wide, as tall as the leftover height allows (never under 4 cells).
+    let vw = 12.0_f64.min(g);
+    let vh = (h / w * vw).clamp(4.0, g);
+    let vx = (x as f64 + 0.5 - vw / 2.0).clamp(0.0, g - vw);
+    let vy = (y as f64 + 0.5 - vh / 2.0).clamp(0.0, g - vh);
+    let _ = board.set_attribute("viewBox", &format!("{vx} {vy} {vw} {vh}"));
+    let _ = board.set_attribute("preserveAspectRatio", "xMidYMid slice");
 }
 
 fn board_svg(u: &Ui) -> String {
@@ -571,6 +632,11 @@ fn board_svg(u: &Ui) -> String {
         let (x, y) = tile_to_grid(t, g);
         s.push_str(&format!("<text class=\"bg-trap\" x=\"{}\" y=\"{}\">\u{26a0}</text>", x as f64 + 0.5, y as f64 + 0.5));
     }
+    // The mover's piece sits on a ring so it is findable on a full-size board.
+    if u.game.phase != Phase::Finished {
+        let (x, y) = tile_to_grid(u.game.players[u.game.current_seat() as usize].pos, g);
+        s.push_str(&format!("<circle class=\"bg-me\" cx=\"{}\" cy=\"{}\" r=\"0.62\"/>", x as f64 + 0.5, y as f64 + 0.5));
+    }
     const OFF: [(f64, f64); 4] = [(-0.2, -0.2), (0.2, -0.2), (-0.2, 0.2), (0.2, 0.2)];
     for (i, p) in u.game.players.iter().enumerate() {
         let (x, y) = tile_to_grid(p.pos, g);
@@ -579,15 +645,6 @@ fn board_svg(u: &Ui) -> String {
         s.push_str(&format!("<text class=\"bg-p\" x=\"{}\" y=\"{}\">{}</text>", x as f64 + 0.5 + dx, y as f64 + 0.5 + dy, piece(p.seat.piece)));
     }
     s
-}
-
-fn toggle_big() {
-    // Tap the minimap to enlarge it (F6); not while spelling, when it is a strip.
-    let spelling = with_ui(|u| u.game.phase == Phase::AwaitSpelling).unwrap_or(false);
-    if !spelling {
-        let big = dom::el("bgView").class_list().contains("big");
-        dom::toggle_class("bgView", "big", !big);
-    }
 }
 
 fn render_keys() {

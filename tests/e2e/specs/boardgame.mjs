@@ -188,4 +188,54 @@ export async function run(browser, base, suite) {
       assert(!keysSeen, 'the key grid was visible during an NPC turn (I11)');
     } finally { await ctx.close(); }
   });
+
+  // v1.2 follow-up -- the landing callout: before a human types, the pill names the
+  // destination's tier (never the word); when a trap is triggered, the pill names the trap.
+  await suite.test('boardgame_landing_callout_names_tier_and_trap', async () => {
+    const TIERS = { easy: 'Easy', medium: 'Medium', hard: 'Hard', expert: 'Expert' };
+    let sawTier = 0, sawTrap = null;
+    for (let game = 0; game < 4 && !sawTrap; game++) {
+      const { ctx, page } = await openApp(browser, base, { lang: 'en', init: FLAG });
+      try {
+        await startGame(page, { mode: 'pass', count: 2 });
+        await page.evaluate(() => {
+          window.__bgTrapPills = [];
+          new MutationObserver(() => {
+            const t = document.querySelector('#bgLand [data-land="trap"]');
+            if (t) window.__bgTrapPills.push(t.textContent);
+          }).observe(document.getElementById('bgLand'), { childList: true, subtree: true, characterData: true });
+        });
+        for (let i = 0; i < 400; i++) {
+          if (await page.isVisible('#bgOver')) break;
+          if (await page.isVisible('#bgHand')) { await page.click('#bgHandGo'); continue; }
+          if (await page.isVisible('#bgMiss')) { await page.click('#bgMissGo'); continue; }
+          const before = await raw(page);
+          const st = JSON.parse(before);
+          if (st.phase === 'AwaitRoll') { await page.click('#bgOrb'); await moved(page, before); continue; }
+          if (st.phase === 'AwaitSpelling') {
+            if (st.kind === 'Landing') {
+              await page.waitForFunction((t) => document.getElementById('bgLand').textContent.trim() === t, TIERS[st.tier], { timeout: 3000 });
+              const sw = await page.$eval('#bgLand .bg-sw', (e) => e.className);
+              assert(sw.includes(`t-${st.tier}`), `the swatch matches the tier: ${sw}`);
+              const shown = await page.$eval('#bgLand', (e) => e.textContent);
+              assert(!shown.toLowerCase().includes(cite(st.word).toLowerCase()), 'the callout never shows the word');
+              sawTier++;
+            }
+            await typeIt(page, cite(st.word));
+            await page.click('#bgGo');
+            await moved(page, before);
+            continue;
+          }
+          if (st.phase === 'AwaitSwitchTarget') { await page.click('[data-sw="none"]'); await moved(page, before); continue; }
+          await page.waitForFunction(() => document.getElementById('bgHand')?.hidden === false || document.getElementById('bgOver')?.hidden === false
+            || JSON.parse(window.__spelltest.boardgameState()).phase === 'AwaitRoll', null, { timeout: 4000 }).catch(() => {});
+        }
+        const pills = await page.evaluate(() => window.__bgTrapPills);
+        if (pills.length) sawTrap = pills[0];
+      } finally { await ctx.close(); }
+    }
+    assert(sawTier > 0, 'a tier callout was seen before spelling');
+    assert(sawTrap !== null, 'a trap landing never showed its pill in four games');
+    assert(/(Back to Start|Long Word|Lose a Roll|Switch Tiles|Double Expert)/.test(sawTrap), `the trap pill names the trap: ${sawTrap}`);
+  });
 }
