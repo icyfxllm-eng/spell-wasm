@@ -668,9 +668,7 @@ fn i11_npc_turns_draw_no_word_and_show_none() {
 // ------------------------------------------------------------------ A6
 
 #[test]
-fn a6_fifty_perfect_games_finish_fast_and_npc_switch_never_looks_behind() {
-    let mut worst = 0;
-    let mut over = 0u32;
+fn a6_npc_switch_never_looks_behind() {
     for seed in 0..50u64 {
         let cfg = solo(Variant::Standard, Difficulty::Normal, 3);
         let mut s = new_game(seed + 1000, cfg, std_pools()).unwrap();
@@ -695,55 +693,52 @@ fn a6_fifty_perfect_games_finish_fast_and_npc_switch_never_looks_behind() {
                     }
                 }
             } else {
-                match s.phase {
-                    Phase::AwaitRoll => apply(&mut s, Action::Roll).unwrap(),
-                    Phase::AwaitSpelling => {
-                        let w = s.pending.as_ref().unwrap().word.clone();
-                        apply(&mut s, Action::SubmitSpelling(w)).unwrap()
-                    }
-                    _ => {
-                        let me = s.current_seat();
-                        let lead = (0..4u8).max_by_key(|&i| (s.players[i as usize].pos, std::cmp::Reverse(i))).unwrap();
-                        let pick = (lead != me && s.players[lead as usize].pos > s.players[me as usize].pos).then_some(lead);
-                        apply(&mut s, Action::ChooseSwitchTarget(pick)).unwrap()
-                    }
-                }
+                let a = valid_action(&s, &mut Rng::new(seed));
+                let a = match a {
+                    Action::SubmitSpelling(_) => Action::SubmitSpelling(s.pending.as_ref().unwrap().word.clone()),
+                    o => o,
+                };
+                apply(&mut s, a).unwrap();
             }
         }
-        let human = s.players.iter().find(|p| !p.seat.npc).unwrap();
-        worst = worst.max(human.rolls);
-        over += (human.rolls > 35) as u32;
-        assert!(human.rolls < 200, "seed {seed}: the perfect human took {} turns", human.rolls);
     }
-    eprintln!("A6: worst human turn count over 50 games = {worst}; games over 35 turns = {over}");
-    // The spec says each of the 50 finishes in <= 35 human turns. That is not a
-    // property of this game: a Back to Start trap resets a perfect human, and
-    // 129 of 2,000 seeds (6.5%) run past 35, so all-50 holds about 3% of the
-    // time. This asserts what IS stable (>= 90% within 35) and the report
-    // carries the discrepancy to Eric.
-    assert!(over <= 5, "{over} of 50 perfect games ran past 35 human turns");
+}
+
+/// A6 as D28 restates it: over 2,000 fixed-seed games, a 100% human vs 3 Normal
+/// NPCs finishes within 35 human turns at least 90% of the time, and never
+/// takes more than 200. (Back to Start resets a perfect player, so "every
+/// game within 35" is not achievable.)
+#[test]
+fn a6_perfect_human_finishes_within_35_turns_in_90_percent_of_games() {
+    let (mut within, mut worst) = (0u32, 0u32);
+    for seed in 0..2000u64 {
+        let s = play(seed, solo(Variant::Standard, Difficulty::Normal, 3), 1000);
+        let r = s.players.iter().find(|p| !p.seat.npc).unwrap().rolls;
+        within += (r <= 35) as u32;
+        worst = worst.max(r);
+    }
+    eprintln!("A6: {within}/2000 within 35 human turns ({:.1}%), worst {worst}", within as f64 / 20.0);
+    assert!(within >= 1800, "only {within}/2000 within 35 human turns");
+    assert!(worst <= 200, "a game took {worst} human turns");
 }
 
 #[test]
 fn d13_npc_accuracy_tracks_the_human_and_clamps() {
     let mut s = new_game(2, solo(Variant::Standard, Difficulty::Normal, 3), std_pools()).unwrap();
-    // Prior (3+0)/(5+0) = 600; Normal delta 200.
-    assert_eq!(s.human_acc_milli(), 600);
-    assert_eq!(s.npc_acc_milli(), 400);
+    // D27: (3+0)/(2+0) = 1.5; the NPC clamp holds it to 0.95.
+    assert_eq!(s.human_acc_milli(), 1500);
+    assert_eq!(s.npc_acc_milli(), 950);
     s.players[0].hits = 1000;
     s.players[0].attempts = 1000;
-    // The 0.95 ceiling is kept as D13 writes it, but no signed delta can reach
-    // it: the best human prior-adjusted accuracy is below 1.0, and the smallest
-    // delta is 0.10.
-    assert_eq!(s.npc_acc_milli(), 798);
+    assert_eq!(s.npc_acc_milli(), 800, "(1003/1002) less 0.20");
     s.players[0].hits = 0;
     s.players[0].attempts = 1000;
     assert_eq!(s.npc_acc_milli(), 300, "floor");
     // Jr is fixed at 0.25 whatever the difficulty field says.
     let mut j = new_game(2, solo(Variant::Jr, Difficulty::Tough, 3), jr_pools()).unwrap();
-    j.players[0].hits = 1;
-    j.players[0].attempts = 1;
-    assert_eq!(j.npc_acc_milli(), 4 * 1000 / 6 - 250);
+    j.players[0].hits = 8;
+    j.players[0].attempts = 10;
+    assert_eq!(j.npc_acc_milli(), 11 * 1000 / 12 - 250);
 }
 
 // ------------------------------------------------------------------ A15
@@ -752,7 +747,7 @@ fn d13_npc_accuracy_tracks_the_human_and_clamps() {
 /// (`tools/boardgame-golden`, run by `scripts/boardgame-wasm-golden.mjs`) must
 /// print the same two numbers.
 pub(crate) const GOLDEN_RNG_1000: u64 = 11818870969550119401;
-pub(crate) const GOLDEN_GAME: u64 = 11364410842318537710;
+pub(crate) const GOLDEN_GAME: u64 = 12092315625649832955;
 
 #[test]
 fn a15_golden_sequence_and_game_hash() {
@@ -787,16 +782,3 @@ fn i12_i14_the_engine_source_has_no_forbidden_tokens() {
     }
 }
 
-#[test]
-#[ignore]
-fn a6_distribution_probe() {
-    let mut over = 0;
-    let mut hist = std::collections::BTreeMap::new();
-    for seed in 0..2000u64 {
-        let s = play(seed, solo(Variant::Standard, Difficulty::Normal, 3), 1000);
-        let r = s.players.iter().find(|p| !p.seat.npc).unwrap().rolls;
-        *hist.entry(r).or_insert(0) += 1;
-        if r > 35 { over += 1; }
-    }
-    eprintln!("over 35: {over}/2000  hist {hist:?}");
-}

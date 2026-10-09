@@ -372,7 +372,8 @@ impl BoardGameState {
         self.phase != Phase::Finished && self.players[self.current_seat() as usize].seat.npc
     }
 
-    /// D13: `(3 + hits) / (5 + attempts)` of the human, in thousandths. In
+    /// D13/D27: `(3 + hits) / (2 + attempts)` of the human, in thousandths. It
+    /// starts at 1.5 and the NPC clamp holds it to 0.95 until attempts accumulate. In
     /// solo there is exactly one human; in pass-and-play nothing reads it.
     pub fn human_acc_milli(&self) -> i64 {
         let (h, a) = self
@@ -381,7 +382,7 @@ impl BoardGameState {
             .find(|p| !p.seat.npc)
             .map(|p| (p.hits as i64, p.attempts as i64))
             .unwrap_or((0, 0));
-        (3 + h) * 1000 / (5 + a)
+        (3 + h) * 1000 / (2 + a)
     }
 
     /// The seats from first to last: a finisher first, then by position

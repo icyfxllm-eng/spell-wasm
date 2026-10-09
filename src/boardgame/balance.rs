@@ -63,15 +63,8 @@ fn human_wins(variant: Variant, difficulty: Difficulty, npcs: u8, acc_milli: u64
     wins as f64 / GAMES as f64
 }
 
-// STOPPED, not tuned (D18). With the spec's formula (3 + hits) / (5 + attempts)
-// every Standard cell and Jr 100% land OUTSIDE D18 (human wins 41-73%). The
-// reference sim reaches D18 because its prior is `hits, attempts = (3, 2)`,
-// i.e. (3 + hits) / (2 + attempts), which starts at 1.5 and is clamped to 0.95.
-// The same Rust engine with that denominator passes every cell (Tough/100% is
-// 31.5% against the 32% ceiling). Which formula is intended is Eric's call;
-// remove the ignore once it is settled and the table is inside D18.
+// D27 (v1.2): the formula is (3 + hits) / (2 + attempts), as the sim has it.
 #[test]
-#[ignore = "A9 outside D18 with the spec formula (3+h)/(5+a); see comment, awaiting a ruling"]
 fn a9_balance_table_is_inside_d18() {
     let mut ok = true;
     let mut out = String::new();
