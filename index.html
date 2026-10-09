@@ -1932,14 +1932,18 @@
      scroll bug started. */
   /* While the drawer is open it owns scrolling; the page behind must not move. */
   body.hub-open{overflow:hidden}
-  .hub-x{position:absolute;top:10px;inset-inline-end:12px}
+    /* A panel's Close, pinned to the trailing top corner. Named for what it
+     does, not for a glyph: it says the word now (Eric, 2026-10-09). */
+.hub-close{position:absolute;top:10px;inset-inline-end:12px;min-height:44px;
+    padding-inline:12px;white-space:nowrap}
   /* CC-HUB-NAV v1.3.2 F1 — the drawer's close button, bottom-trailing.
      The 56x56 hit rect is the whole point (I4): the ✕ it replaces was an
      18pt glyph in the top-right corner, which on a tall phone renders beside
      the battery icon. The glyph is 28pt inside it. Secondary styling per
      D-C5 — an outlined circle, never the row card, so it does not read as a
-     place to go. `.hub-x` is deliberately NOT reused: four other screens
-     share it, and they still want the top corner. */
+     place to go. `.hub-close` is deliberately NOT reused: four other screens
+     share it, and they still want the top corner. (It was `.hub-x` until
+     2026-10-09; those four say the WORD now, so the name no longer fits.) */
   /* CC-HUB-GROUP-L10N F4 — the drawer's group headers.
      Never truncated and never ellipsised: there is deliberately no
      text-overflow and no fixed height here, so a long translation
@@ -2124,7 +2128,7 @@
     </div>
     <div class="vs-mid">
       <span class="vs-vs">vs</span>
-      <button class="ghost" id="vsExit" data-i18n-aria="vs.title" aria-label="Exit Spell Off">✕ Exit</button>
+      <button class="ghost" id="vsExit" data-i18n="aria.exit">Exit</button>
     </div>
     <div class="vs-side" id="vsP2">
       <div class="vs-name" id="vsP2Name">Player 2</div>
@@ -2463,7 +2467,7 @@
        language, so the numbers are real, never placeholder copy. -->
   <div class="scrim" id="ghostScreen">
     <div class="modal">
-      <button class="ghost hub-x" id="ghostClose" aria-label="Close" data-i18n-aria="aria.close">✕</button>
+      <button class="ghost hub-close" id="ghostClose" data-i18n="aria.close">Close</button>
       <h3><span aria-hidden="true">👻</span> <span id="ghostTitle"></span></h3>
       <p id="ghostDesc"></p>
       <div class="ghost-stat" id="ghostStat"></div>
@@ -2480,7 +2484,7 @@
        garage + track data. -->
   <div class="scrim" id="spellRacing">
     <div class="modal wide">
-      <button class="ghost hub-x" id="srClose" aria-label="Close" data-i18n-aria="aria.close">✕</button>
+      <button class="ghost hub-close" id="srClose" data-i18n="aria.close">Close</button>
       <h3><span aria-hidden="true">🏁</span> <span id="srTitle"></span></h3>
       <p class="sr-label" id="srCircuitLabel"></p>
       <div class="sr-circuits" id="srCircuits"></div>
@@ -2511,7 +2515,7 @@
        the only human step is the hand. -->
   <div class="scrim" id="inkPad">
     <div class="modal ink-modal">
-      <button class="ghost hub-x" id="inkClose" aria-label="Close" data-i18n-aria="aria.close">✕</button>
+      <button class="ghost hub-close" id="inkClose" data-i18n="aria.close">Close</button>
       <p class="ink-progress" id="inkProgress"></p>
       <p class="ink-prompt" id="inkPrompt" lang="zh"></p>
       <div class="ink-wrap" id="inkCanvasWrap"><canvas id="canvas"></canvas></div>
@@ -2529,7 +2533,7 @@
 
   <div class="scrim" id="devMenu">
     <div class="modal">
-      <button class="ghost hub-x" id="devMenuClose" aria-label="Close" data-i18n-aria="aria.close">✕</button>
+      <button class="ghost hub-close" id="devMenuClose" data-i18n="aria.close">Close</button>
       <h3><span aria-hidden="true">🛠️</span> Dev preview</h3>
       <div class="dev-list">
         <button type="button" class="dev-item" id="devOpenRacing">🏁 Spell Racing</button>
@@ -3288,7 +3292,7 @@
         <button class="pill climb-tab" id="climbTab-expert">Expert</button>
       </div>
       <div class="climb-list" id="climbList"></div>
-      <button class="ghost" id="climbClose" style="width:100%;margin-top:10px">Close</button>
+      <button class="ghost" id="climbClose" data-i18n="aria.close" style="width:100%;margin-top:10px">Close</button>
     </div>
   </div>
 
@@ -3534,7 +3538,7 @@
   <!-- CC-MYWORDS-LISTS F3: the My Words screen (app only). -->
   <div class="lists-screen" id="listsScreen" role="dialog" aria-modal="true" aria-labelledby="listsTitle">
     <div class="lists-top">
-      <button class="ghost" id="listsClose" aria-label="Close" data-i18n-aria="aria.close">✕</button>
+      <button class="ghost" id="listsClose" data-i18n="aria.close">Close</button>
       <h2 id="listsTitle" data-i18n="lists.title">My words</h2>
     </div>
     <div class="lists-wrap" id="listsBody"></div>

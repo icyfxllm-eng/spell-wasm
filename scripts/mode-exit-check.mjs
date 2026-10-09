@@ -89,17 +89,24 @@ export function problems(root = '.') {
   // trailing placement simply moves the violation to Arabic. Changing WHAT
   // the control is works in every direction, so that is what is enforced:
   // every mode exit carries a translated text label and no bare glyph.
+  // Both kinds: the exit that LEAVES A MODE and the close that dismisses a
+  // panel. Eric swept the second on 2026-10-09 after the first. The panel
+  // closes were `.hub-x`, pinned with inset-inline-end — top-right in the
+  // 14 LTR languages but top-left in Arabic — plus listsClose, which sat on
+  // the leading edge and so was top-left in English too.
   const GLYPHS = /[\u00d7\u2715\u2716\u274c\u2573xX]/;
-  for (const m of html.matchAll(/<button([^>]*\bmode-exit\b[^>]*)>([\s\S]*?)<\/button>/g)) {
+  const WAYS_OUT = /<button([^>]*(?:\bmode-exit\b|\bhub-close\b|id="\w*(?:Close|Exit)")[^>]*)>([\s\S]*?)<\/button>/g;
+  for (const m of html.matchAll(WAYS_OUT)) {
     const [, attrs, body] = m;
     const id = (/id="([^"]+)"/.exec(attrs) || [, '(no id)'])[1];
     const text = body.replace(/<[^>]+>/g, '').trim();
+    const kind = /\bmode-exit\b/.test(attrs) ? 'mode exit' : 'way out';
     if (!/data-i18n="/.test(attrs)) {
-      out.push(`#${id} is a mode exit with no data-i18n label — it must say a `
+      out.push(`#${id} is a ${kind} with no data-i18n label — it must say a `
         + 'translated word, so it reads the same in every writing direction');
     }
     if (text.length <= 2 && GLYPHS.test(text)) {
-      out.push(`#${id} is a mode exit showing the glyph ${JSON.stringify(text)} — `
+      out.push(`#${id} is a ${kind} showing the glyph ${JSON.stringify(text)} — `
         + 'it must be a word. An X is a convention a child has not learned, and '
         + 'the corner it sits in flips between LTR and RTL.');
     }
@@ -120,7 +127,9 @@ function selftest() {
     let h = '';
     const rs = {};
     for (const [panel, [f, id]] of Object.entries(PANELS)) {
-      h += `<div id="${panel}"><div><button id="${id}">Close</button></div></div>\n`;
+      // The fixtures must satisfy the label rule too, or the selftest is
+      // testing a world the real check would reject.
+      h += `<div id="${panel}"><div><button id="${id}" data-i18n="aria.close">Close</button></div></div>\n`;
       rs[f] = `dom::on_click("${id}", close);`;
     }
     return [h + extra, rs];
@@ -129,7 +138,7 @@ function selftest() {
     ['a panel with a wired exit passes', ...full(), 0],
     ['a panel missing its exit fails', (() => {
       const [h, rs] = full();
-      return [h.replace('<button id="impOverExit">Close</button>', ''), rs];
+      return [h.replace('<button id="impOverExit" data-i18n="aria.close">Close</button>', ''), rs];
     })(), 1],
     ['an exit nobody wired fails', (() => {
       const [h, rs] = full();
@@ -138,6 +147,14 @@ function selftest() {
     ['a deleted panel fails', (() => {
       const [h, rs] = full();
       return [h.replace(/<div id="cnOver">[\s\S]*?<\/div><\/div>\n/, ''), rs];
+    })(), 1],
+    ['a way out showing a bare glyph fails', (() => {
+      const [h, rs] = full();
+      return [`${h}<button class="mode-exit" id="someExit" data-i18n="aria.exit">\u2715</button>`, rs];
+    })(), 1],
+    ['a way out with no translated label fails', (() => {
+      const [h, rs] = full();
+      return [`${h}<button class="mode-exit" id="otherExit">Exit</button>`, rs];
     })(), 1],
   ];
   let bad = 0;
