@@ -36,6 +36,13 @@ async function typeIt(page, typed) {
 
 const cite = (w) => w.split('|')[0];
 
+/// Wait for the game to move on from `before` (a serialised state): a roll, a
+/// submit or a card changes it. No clock: the app is the signal.
+async function moved(page, before) {
+  await page.waitForFunction((b) => window.__spelltest.boardgameState() !== b, before, { timeout: 4000 }).catch(() => {});
+}
+const raw = (page) => page.evaluate(() => window.__spelltest.boardgameState());
+
 /// Roll and wait for the word (or the end of the game).
 async function roll(page) {
   await page.click('#bgOrb');
@@ -106,19 +113,18 @@ export async function run(browser, base, suite) {
         if (await page.isVisible('#bgOver')) break;
         if (await page.isVisible('#bgHand')) { await page.click('#bgHandGo'); continue; }
         if (await page.isVisible('#bgMiss')) { await page.click('#bgMissGo'); continue; }
-        const s = await state(page);
-        if (s.phase === 'AwaitRoll') { await page.click('#bgOrb'); await page.waitForTimeout(40); continue; }
+        const before = await raw(page);
+        const s = JSON.parse(before);
+        if (s.phase === 'AwaitRoll') { await page.click('#bgOrb'); await moved(page, before); continue; }
         if (s.phase === 'AwaitSpelling') {
           await typeIt(page, cite(s.word));
           await page.click('#bgGo');
-          await page.waitForFunction((w) => {
-            const t = JSON.parse(window.__spelltest.boardgameState());
-            return t.word !== w || t.phase !== 'AwaitSpelling';
-          }, s.word, { timeout: 4000 }).catch(() => {});
-          await page.waitForTimeout(60);
+          await moved(page, before);
           continue;
         }
-        await page.waitForTimeout(100);
+        // Between a submit and the next card: wait for the state or a card to change.
+        await page.waitForFunction(() => document.getElementById('bgHand')?.hidden === false || document.getElementById('bgOver')?.hidden === false
+          || JSON.parse(window.__spelltest.boardgameState()).phase === 'AwaitRoll', null, { timeout: 4000 }).catch(() => {});
       }
       await page.waitForSelector('#bgOver:not([hidden])', { timeout: 20000 });
       const rows = await page.$$eval('#bgPodium .bg-pod', (r) => r.length);
@@ -132,35 +138,49 @@ export async function run(browser, base, suite) {
     const { ctx, page } = await openApp(browser, base, { lang: 'en', init: FLAG });
     try {
       await startGame(page, { mode: 'solo', count: 3 });
+      // A frame-by-frame watcher: the key grid must never be visible while an
+      // NPC is playing. It samples every frame, so nothing is missed between polls.
+      await page.evaluate(() => {
+        window.__bgKeysSeenDuringNpc = false;
+        const tick = () => {
+          const k = document.getElementById('bgKeys');
+          const s = JSON.parse(window.__spelltest.boardgameState() || 'null');
+          if (s && s.npc && k && k.offsetParent !== null) window.__bgKeysSeenDuringNpc = true;
+          requestAnimationFrame(tick);
+        };
+        tick();
+      });
       let untouched = null;
       let tapped = null;
-      let keysSeen = false;
       for (let guard = 0; guard < 80 && (untouched === null || tapped === null); guard++) {
-        const s = await state(page);
+        const before = await raw(page);
+        const s = JSON.parse(before);
         if (s.phase === 'Finished') break;
         if (s.npc) {
-          const t0 = Date.now();
+          let t0 = Date.now();
           const wantTap = untouched !== null;
-          if (wantTap) { await page.waitForTimeout(350); await page.click('#bgTitle'); }
-          while (Date.now() - t0 < 12000) {
-            if (await page.isVisible('#bgKeys')) keysSeen = true;
-            const n = await state(page);
-            if (!n.npc) break;
-            await page.waitForTimeout(40);
+          if (wantTap) {
+            // Tap once the first NPC has actually moved (its chip is up).
+            const chips = await page.$eval('#bgResults', (e) => e.innerHTML);
+            await page.waitForFunction((c) => document.getElementById('bgResults').innerHTML !== c, chips, { timeout: 4000 });
+            t0 = Date.now(); // the budget runs from the tap
+            await page.click('#bgTitle');
           }
+          await page.waitForFunction(() => !JSON.parse(window.__spelltest.boardgameState()).npc, null, { timeout: 12000, polling: 'raf' });
           const dt = Date.now() - t0;
           if (wantTap) tapped = dt; else untouched = dt;
           continue;
         }
-        if (s.phase === 'AwaitRoll') { await page.click('#bgOrb'); await page.waitForTimeout(40); continue; }
+        if (s.phase === 'AwaitRoll') { await page.click('#bgOrb'); await moved(page, before); continue; }
         if (s.phase === 'AwaitSpelling') {
           await typeIt(page, cite(s.word));
           await page.click('#bgGo');
-          await page.waitForTimeout(120);
+          await moved(page, before);
           continue;
         }
-        if (s.phase === 'AwaitSwitchTarget') { await page.click('[data-sw="none"]'); continue; }
+        if (s.phase === 'AwaitSwitchTarget') { await page.click('[data-sw="none"]'); await moved(page, before); continue; }
       }
+      const keysSeen = await page.evaluate(() => window.__bgKeysSeenDuringNpc);
       assert(untouched !== null, 'an NPC run was observed');
       assert(untouched <= 7000, `three NPC turns untouched took ${untouched} ms (budget 7000)`);
       assert(tapped !== null, 'a second NPC run was observed');

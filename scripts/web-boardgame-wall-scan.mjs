@@ -30,9 +30,15 @@ add("locale key namespace", /"bg\.[a-z]+(\.[a-z]+)?"/g);
 if (existsSync(LOCALES)) {
   for (const f of readdirSync(LOCALES).filter((n) => n.endsWith(".json"))) {
     const t = JSON.parse(readFileSync(join(LOCALES, f), "utf8"));
+    // A bg. value that is word for word a string the site legitimately ships
+    // under another key (a shared phrase such as "not available in this
+    // language yet") cannot prove a leak, so only values unique to the mode
+    // are scanned. The KEYS are scanned regardless, below.
+    const shared = new Set(Object.entries(t).filter(([k]) => !k.startsWith("bg.")).map(([, v]) => String(v).trim()));
     for (const [k, v] of Object.entries(t)) {
       if (!k.startsWith("bg.")) continue;
       const s = String(v).trim();
+      if (shared.has(s)) continue;
       // Short values collide with ordinary copy; the long ones are what leaks.
       if (s.length < 14) continue;
       add(`${f} ${k}`, new RegExp(s.slice(0, 40).replace(/[.*+?^${}()|[\]\\]/g, "\\$&"), "g"));

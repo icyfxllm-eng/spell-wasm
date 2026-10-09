@@ -456,6 +456,8 @@
   .bee-stat b{font-size:1.7rem}
   .bee-stat span{font-size:.78rem;opacity:.7}
 
+  
+
   /* CC-IMPOSTOR F1 */
   .imp-screen{position:fixed;inset:0;background:var(--bg,#0e1420);z-index:60;
     display:none;flex-direction:column;gap:12px;padding:12px}
@@ -811,6 +813,10 @@
     -webkit-tap-highlight-color:transparent;touch-action:manipulation}
   .kb-key{flex:0 0 auto;width:var(--kb-key)}
   .kb-key:active,.kb-back:active{background:var(--amber);color:#36210a;border-color:var(--amber);transform:translateY(1px)}
+  /* The Vietnamese space key. Wide like a space bar so it reads as one, and
+     muted so it does not compete with the letters. Vietnamese is the only
+     layout carrying one -- a word there is space-separated syllables. */
+  .kb-key[data-k=" "]{flex:0 0 auto;min-width:5.5rem;opacity:.72;letter-spacing:.1em}
   .kb-key.kb-punct{display:none}
   .game-kb.show-punct .kb-key.kb-punct{display:inline-flex}
   .kb-actions{gap:8px;margin-top:2px}
@@ -1823,8 +1829,11 @@
          the keyboard and pushed "Check spelling" out of reach -- the button was
          never disabled, it was buried, which survived every logic fix because it
          was never a logic bug. Instrumentation must not move a player's
-         controls. pointer-events:none so it cannot swallow a tap either. -->
-    <div class="voice-spell-status" id="voiceSpellDiag" aria-hidden="true"
+         controls. pointer-events:none so it cannot swallow a tap either.
+         HIDDEN by default and unhidden only behind the dev door: it carries its
+         own background and padding, so even EMPTY it drew a dark bar across the
+         title. It shipped that way in 270. -->
+    <div class="voice-spell-status" id="voiceSpellDiag" aria-hidden="true" hidden
          style="position:fixed;inset-inline:0;top:env(safe-area-inset-top);z-index:9999;pointer-events:none;
                 font-size:10px;line-height:1.3;opacity:.8;word-break:break-word;
                 background:rgba(0,0,0,.72);padding:2px 6px"></div>
@@ -2249,6 +2258,7 @@
     </div>
   </div>
   <button id="beeOpen" class="btn-hide" aria-hidden="true" tabindex="-1"></button>
+  
 
   <!-- CC-DEF-MATCH P3: the Definition Match screen. Cards float bottom→top in
        lanes; the orb speaks the word and replays on tap. No visible timer (D2). -->
@@ -2878,6 +2888,15 @@
       <label class="set-row"><span class="lbl2"><span data-i18n="settings.slow">Slower voice</span><small data-i18n="settings.slowSmall">Speak each word more slowly</small></span><input type="checkbox" class="switch" id="slowToggle" /></label>
       <label class="set-row"><span class="lbl2"><span data-i18n="settings.realVoices">Real voices when available</span><small data-i18n="settings.realVoicesSmall">Hear a person say the word, where we have a checked recording</small></span><input type="checkbox" class="switch" id="realVoicesToggle" checked /></label>
       <div class="set-row" id="creditsRow"><span class="lbl2"><span data-i18n="credits.title">Credits</span><small data-i18n="credits.small">The people whose recordings you hear</small></span><button class="ghost" id="creditsBtn" data-i18n="lists.open" style="flex:none;border-radius:12px">Open</button></div>
+      <!-- Third-party notices. The Credits row above is about VOICES; this one
+           is the data and font attributions (Leipzig CC BY 4.0, CC-CEDICT and
+           Wiktionary CC BY-SA 4.0, the SIL OFL faces). notices.html is
+           generated from NOTICES.md by scripts/build-notices.mjs; until
+           2026-10-07 that file shipped nowhere and none of it reached a
+           player. A plain <a>, so no Rust id is involved and the dead-id law
+           has nothing to catch; target=_blank matches the outbound links
+           src/credits.rs already renders. -->
+      <div class="set-row" id="noticesRow"><span class="lbl2"><span data-i18n="notices.title">Notices</span><small data-i18n="notices.small">Open data and fonts this app is built on</small></span><a class="ghost" id="noticesLink" href="notices.html" target="_blank" rel="noopener noreferrer" data-i18n="lists.open" style="flex:none;border-radius:12px;text-decoration:none">Open</a></div>
       <!-- CC-ATTEMPTS-SHIELDS Feature 1 toggle. Row is hidden unless the dark
            feature flag is on (shown from Rust via flags::attempts_shields). -->
       <label class="set-row btn-hide" id="extraAttemptsRow"><span class="lbl2"><span data-i18n="settings.extraAttempts">Extra attempt on misses</span><small data-i18n="settings.extraAttemptsSmall">A second try when you miss a word</small></span><input type="checkbox" class="switch" id="extraAttemptsToggle" /></label>
