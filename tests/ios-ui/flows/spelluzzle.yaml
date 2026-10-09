@@ -7,8 +7,7 @@
 # PRECONDITIONS (the :ui_tests harness provides them; Maestro cannot write WKWebView
 # localStorage, same as offline-native-audio.yaml):
 #   * an adult profile (past the age gate),
-#   * localStorage['spell_flag_spelluzzle'] = 'on'  (the flag ships OFF until Eric's
-#     device pass; this flow is how that pass is repeated every build once it is on),
+#   * the spelluzzle flag not switched off (it defaults ON for TestFlight),
 #   * the app reaches the hub with English as the study language.
 #
 # WHAT THIS DOES NOT DO. Spec A14 asks for a scripted solve of a fixed board. A release

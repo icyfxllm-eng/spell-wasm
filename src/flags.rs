@@ -116,13 +116,13 @@ pub fn board_stretch() -> bool {
     resolve(stored("boardStretch").as_deref(), false)
 }
 
-/// CC-SPELLUZZLE v1 F13 -- the rune cipher puzzle. **Default OFF** until Eric's
-/// device pass (E1 to E4). Switch it on with
-/// `localStorage['spell_flag_spelluzzle'] = 'on'`. App only (O1), so it is compiled
+/// CC-SPELLUZZLE v1 F13 -- the rune cipher puzzle. **Default ON** (Eric, 2026-10-09:
+/// released to TestFlight, for his device pass E1 to E6). Kill-switch with
+/// `localStorage['spell_flag_spelluzzle'] = 'off'`. App only (O1), so it is compiled
 /// out with the mode on the site build.
 #[cfg(not(feature = "web"))]
 pub fn spelluzzle() -> bool {
-    resolve(stored("spelluzzle").as_deref(), false)
+    resolve(stored("spelluzzle").as_deref(), true)
 }
 
 /// F13: one flag per language, so a language can be pulled on its own. English is the

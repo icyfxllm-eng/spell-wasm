@@ -411,7 +411,6 @@ mod tests {
     /// an entry here is the opposite, so it must name who decided and when.
     const DELIBERATELY_DARK: &[(&str, &str)] = &[
         ("translate", "Eric, 2026-09-14: Phase A ships behind its flag, off, until Phase B"),
-        ("spelluzzle", "CC-SPELLUZZLE F13 (spec signed by Eric, 2026-10-09): the flag defaults off until his device pass, E1 to E4"),
     ];
 
     /// A deliberately dark mode is dark by DEFAULT only: its flag has a real

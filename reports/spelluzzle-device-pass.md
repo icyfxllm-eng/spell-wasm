@@ -1,6 +1,6 @@
 # Spelluzzle: your device pass (E1 to E4)
 
-Turn it on: set `localStorage['spell_flag_spelluzzle'] = 'on'` in a TestFlight build, then open **Spelluzzle** from the drawer (Word puzzles group). English only. The glyph sheet for E4 is `reports/spelluzzle-glyph-sheet.html`.
+It is on by default in the TestFlight build (kill-switch: `localStorage['spell_flag_spelluzzle'] = 'off'`). Open **Spelluzzle** from the drawer (Word puzzles group). English only. The glyph sheet for E4 is `reports/spelluzzle-glyph-sheet.html`.
 
 - **E1: spelling the first word makes letters appear in other words, and it reads as a reward.** Start an Easy board, tap a word, spell it. Dimmed letters should appear in the other rows wherever the same runes are.
 - **E2: a deliberate misspelling shows amber on the shared rune in both words, and nothing says which word is wrong.** Spell one word correctly, then another with a wrong letter on a shared rune. Both words' shared rune turns amber. No red, no cross, no message.
