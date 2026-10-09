@@ -924,5 +924,11 @@
   "spz.star.ear": "灵敏耳朵",
   "spz.star.code": "破译者",
   "spz.clear": "清除单词",
-  "spz.runeLabel": "符文 {k}"
+  "spz.runeLabel": "符文 {k}",
+  "bg.boost.tailwind": "顺风 +3",
+  "bg.boost.extra": "额外掷骰",
+  "bg.boost.ward": "获得守护",
+  "bg.wardBlocked": "守护挡住了：{trap}",
+  "bg.streak": "连对 {n}",
+  "bg.streakBonus": "下次掷骰 +1"
 }

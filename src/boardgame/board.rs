@@ -24,7 +24,7 @@ pub fn tile_to_grid(i: u32, grid: u32) -> (u32, u32) {
 }
 
 /// F2: tiers drawn from the variant's weights; traps from its own rules.
-pub fn generate(rng: &mut Rng, v: Variant) -> Board {
+pub fn generate(rng: &mut Rng, v: Variant, boosts: bool) -> Board {
     let c = v.cfg();
     let total: u64 = c.weights.iter().map(|w| w.1).sum();
     let mut tiers: Vec<Option<Tier>> = Vec::with_capacity(c.tiles);
@@ -42,5 +42,8 @@ pub fn generate(rng: &mut Rng, v: Variant) -> Board {
         tiers.push(Some(pick));
     }
     tiers.push(None);
-    Board { tiers, traps: c.place_traps(rng), grid: c.grid }
+    let traps = c.place_traps(rng);
+    // Boosts draw from the stream only when the game has them (A-P9).
+    let boosts = if boosts { c.place_boosts(rng, &traps) } else { Vec::new() };
+    Board { tiers, traps, boosts, grid: c.grid }
 }

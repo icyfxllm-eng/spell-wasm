@@ -8,7 +8,7 @@
 //! A variant with `trap_count == 0` (Jr) never reaches the trap table: its board
 //! has an empty `traps` vector, so there is nothing to index (I2).
 
-use super::{Difficulty, Tier, Trap};
+use super::{Boost, Difficulty, Tier, Trap};
 use crate::spelldoku::rng::Rng;
 
 /// D25: the Long Word band's floor.
@@ -60,6 +60,18 @@ pub struct VariantCfg {
     /// D-P10: how far an NPC's accuracy drops on a Stretch word, in thousandths. D-P21: an NPC
     /// whose `acc - penalty` would fall below the accuracy floor does not take Stretch at all.
     pub npc_stretch_penalty_milli: i64,
+    /// D-P2 as amended by D-P23/D-P24 (Oct 9 2026): boost tiles on the board. Full 3 (one of each
+    /// kind; was 4), Sprint 2 of different kinds, Jr 2 from Tailwind and Extra Roll.
+    pub boost_count: usize,
+    /// The kinds this variant places. `min(boost_count, len)` distinct kinds come first, the rest
+    /// are drawn at random from the same list.
+    pub boost_pool: &'static [Boost],
+    /// D-P2: tiles a Tailwind adds.
+    pub tailwind_tiles: u32,
+    /// D-P3 as amended by D-P23/D-P24: correct spellings in a row that earn the bonus (5, every
+    /// variant; was 3), and the bonus itself.
+    pub streak_length: u32,
+    pub streak_bonus: u32,
     /// D16: a soft 30 s ring on the screen while spelling (never an auto-fail).
     pub timed: bool,
 }
@@ -81,6 +93,11 @@ const FULL: VariantCfg = VariantCfg {
     npc_stretch_rate_base_milli: 75,
     npc_stretch_rate_slope_milli: 1200,
     npc_stretch_penalty_milli: 250,
+    boost_count: 3,
+    boost_pool: &[Boost::Tailwind, Boost::ExtraRoll, Boost::Ward],
+    tailwind_tiles: 3,
+    streak_length: 5,
+    streak_bonus: 1,
     timed: true,
 };
 
@@ -104,6 +121,11 @@ const SPRINT: VariantCfg = VariantCfg {
     npc_stretch_rate_base_milli: 75,
     npc_stretch_rate_slope_milli: 1200,
     npc_stretch_penalty_milli: 250,
+    boost_count: 2,
+    boost_pool: &[Boost::Tailwind, Boost::ExtraRoll, Boost::Ward],
+    tailwind_tiles: 3,
+    streak_length: 5,
+    streak_bonus: 1,
     timed: true,
 };
 
@@ -124,6 +146,11 @@ const JR: VariantCfg = VariantCfg {
     npc_stretch_rate_base_milli: 0,
     npc_stretch_rate_slope_milli: 0,
     npc_stretch_penalty_milli: 0,
+    boost_count: 2,
+    boost_pool: &[Boost::Tailwind, Boost::ExtraRoll],
+    tailwind_tiles: 3,
+    streak_length: 5,
+    streak_bonus: 1,
     timed: false,
 };
 
@@ -172,6 +199,35 @@ impl VariantCfg {
             return p;
         }
         (self.npc_stretch_rate_base_milli, self.npc_stretch_rate_slope_milli, self.npc_stretch_penalty_milli)
+    }
+
+    /// F2: the hidden boosts, as a `tiles`-long table (empty when the game has none). Called only
+    /// when boosts are on, after the traps, so a game without them draws nothing here. The first
+    /// `min(count, pool)` boosts are distinct kinds in random order, the rest random; each goes on a
+    /// free tile that is not tile 0, the finish or a trap tile (I-P5).
+    pub fn place_boosts(&self, rng: &mut Rng, traps: &[Option<Trap>]) -> Vec<Option<Boost>> {
+        let mut kinds: Vec<Boost> = self.boost_pool.to_vec();
+        let distinct = self.boost_count.min(kinds.len());
+        let mut picked: Vec<Boost> = Vec::new();
+        for _ in 0..distinct {
+            let k = rng.below(kinds.len());
+            picked.push(kinds.remove(k));
+        }
+        while picked.len() < self.boost_count {
+            picked.push(self.boost_pool[rng.below(self.boost_pool.len())]);
+        }
+        let mut table = vec![None; self.tiles];
+        for b in picked {
+            loop {
+                let t = 1 + (rng.next_u64() % (self.tiles as u64 - 2)) as usize;
+                let trap = traps.get(t).copied().flatten().is_some();
+                if table[t].is_none() && !trap {
+                    table[t] = Some(b);
+                    break;
+                }
+            }
+        }
+        table
     }
 
     pub fn delta(&self, d: Difficulty) -> i64 {

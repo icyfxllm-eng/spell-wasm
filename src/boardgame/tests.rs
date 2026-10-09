@@ -165,7 +165,7 @@ fn a1_ten_thousand_boards_per_variant_hold_i1_and_i2() {
         let pool: Vec<Tier> = c.tiers().collect();
         for k in 0..10_000u64 {
             let mut r = Rng::new(k.wrapping_mul(0x9E37_79B9) ^ (v as u64));
-            let b = generate(&mut r, v);
+            let b = generate(&mut r, v, false);
             let last = b.last() as usize;
             assert_eq!(b.len(), c.tiles);
             assert_eq!(b.grid, c.grid);
@@ -217,7 +217,7 @@ fn a1_tier_mix_is_near_its_weights() {
     for v in [Variant::Full, Variant::Sprint] {
         let (mut m, mut h, mut x, mut n) = (0u64, 0u64, 0u64, 0u64);
         for k in 0..4_000u64 {
-            let b = generate(&mut Rng::new(k), v);
+            let b = generate(&mut Rng::new(k), v, false);
             for t in b.tiers.iter().flatten() {
                 n += 1;
                 match t {
@@ -238,12 +238,13 @@ fn random_cfg(r: &mut Rng) -> GameConfig {
     let variant = Variant::ALL[(r.next_u64() % 3) as usize];
     let diff = Difficulty::ALL[(r.next_u64() % 3) as usize];
     let stretch = r.next_u64() % 2 == 0;
+    let (boosts, streak) = (r.next_u64() % 2 == 0, r.next_u64() % 2 == 0);
     if r.next_u64() % 2 == 0 {
         let npcs = 1 + (r.next_u64() % 3) as u8;
         let piece = (r.next_u64() % 4) as u8;
-        GameConfig::solo(variant, diff, npcs, piece, "en", false, exact).with_stretch(stretch)
+        GameConfig::solo(variant, diff, npcs, piece, "en", false, exact).with_stretch(stretch).with_boosts(boosts).with_streak(streak)
     } else {
-        GameConfig::pass_and_play(variant, 2 + (r.next_u64() % 3) as u8, "en", false, exact).with_stretch(stretch)
+        GameConfig::pass_and_play(variant, 2 + (r.next_u64() % 3) as u8, "en", false, exact).with_stretch(stretch).with_boosts(boosts).with_streak(streak)
     }
 }
 
@@ -864,13 +865,21 @@ pub(crate) const GOLDEN_GAME: u64 = 12092315625649832955;
 pub(crate) const GOLDEN_GAME_SPRINT: u64 = 10168540050936118820;
 /// Phase C: the Sprint game with Stretch ON. The three above are flag-off and did not move (A-P9).
 pub(crate) const GOLDEN_GAME_STRETCH: u64 = 2364432690874214226;
+/// Phase D: boosts only, streak only, and every flag on. The four above did not move (A-P9). Streak and all-flags
+/// were re-pinned once for D-P23/D-P24 (streak_length 5, Full boosts 3); boosts-only (Sprint) did not move.
+pub(crate) const GOLDEN_GAME_BOOSTS: u64 = 15709647789249096471;
+pub(crate) const GOLDEN_GAME_STREAK: u64 = 2864425970404907570;
+pub(crate) const GOLDEN_GAME_ALL: u64 = 10037390543112704137;
 
 #[test]
 fn a15_golden_sequence_and_game_hash() {
-    eprintln!("golden rng = {}, golden game = {}, golden sprint = {}, golden stretch = {}", super::golden::rng_1000(), super::golden::game(), super::golden::game_sprint(), super::golden::game_stretch());
+    eprintln!("golden rng = {}, golden game = {}, golden sprint = {}, golden stretch = {}, golden boosts = {}, golden streak = {}, golden all = {}", super::golden::rng_1000(), super::golden::game(), super::golden::game_sprint(), super::golden::game_stretch(), super::golden::game_boosts(), super::golden::game_streak(), super::golden::game_all());
     assert_eq!(super::golden::rng_1000(), GOLDEN_RNG_1000, "the splitmix stream changed");
     assert_eq!(super::golden::game(), GOLDEN_GAME, "the engine's outcome for the golden game changed (Full must stay bit-for-bit)");
     assert_eq!(super::golden::game_stretch(), GOLDEN_GAME_STRETCH, "the engine's outcome for the Stretch-on golden game changed");
+    assert_eq!(super::golden::game_boosts(), GOLDEN_GAME_BOOSTS, "boosts-on golden changed");
+    assert_eq!(super::golden::game_streak(), GOLDEN_GAME_STREAK, "streak-on golden changed");
+    assert_eq!(super::golden::game_all(), GOLDEN_GAME_ALL, "all-flags golden changed");
     assert_eq!(super::golden::game_sprint(), GOLDEN_GAME_SPRINT, "the engine's outcome for the Sprint golden game changed");
 }
 
@@ -1140,5 +1149,389 @@ fn a_p9_with_the_flag_off_there_is_no_stretch_anywhere() {
         assert!(s.players.iter().all(|p| p.stretch_offered == 0 && p.stretch_taken == 0 && p.stretch_hits == 0));
         assert!(!s.events.iter().any(|e| matches!(e, Event::Stretched { .. })));
         assert!(s.offer.is_none());
+    }
+}
+
+// ------------------------------------------------------------ Features 2 and 3
+
+fn fx_game(v: Variant, seed: u64, boosts: bool, streak: bool) -> BoardGameState {
+    let mut s = new_game(seed, solo(v, Difficulty::Normal, 3).with_boosts(boosts).with_streak(streak), pools_for(v)).unwrap();
+    for t in s.board.traps.iter_mut() {
+        *t = None;
+    }
+    if boosts {
+        for b in s.board.boosts.iter_mut() {
+            *b = None;
+        }
+    }
+    to_current(&mut s, false);
+    s
+}
+
+fn put_boost(s: &mut BoardGameState, tiles: std::ops::RangeInclusive<usize>, b: Boost) {
+    if s.board.boosts.is_empty() {
+        s.board.boosts = vec![None; s.board.len()];
+    }
+    for t in tiles {
+        s.board.boosts[t] = Some(b);
+    }
+}
+
+fn answer_right(s: &mut BoardGameState) {
+    let w = s.pending.as_ref().unwrap().word.clone();
+    apply(s, Action::SubmitSpelling(w)).unwrap();
+}
+
+fn answer_wrong(s: &mut BoardGameState) {
+    apply(s, Action::SubmitSpelling("nope".into())).unwrap();
+}
+
+/// Roll and, if offered, decline Stretch; leaves the state at the spelling.
+fn roll_to_spelling(s: &mut BoardGameState) {
+    apply(s, Action::Roll).unwrap();
+    if s.phase == Phase::AwaitStretch {
+        apply(s, Action::ChooseStretch(false)).unwrap();
+    }
+}
+
+fn count_effects(s: &BoardGameState) -> usize {
+    s.events.iter().filter(|e| matches!(e, Event::TrapHit { .. } | Event::BoostHit { .. } | Event::TrapBlocked { .. })).count()
+}
+
+/// A-P3: over 10,000 generated boards per variant with boosts on, the counts match the spec, none sits
+/// on tile 0, the finish or a trap tile, no tile holds two specials, Jr has no Ward and no traps; and
+/// with boosts off the board carries none and the stream is the one it always was.
+#[test]
+fn a_p3_ten_thousand_boards_per_variant_place_boosts_by_the_rules() {
+    for v in Variant::ALL {
+        let c = v.cfg();
+        for k in 0..10_000u64 {
+            let seed = k.wrapping_mul(0x9E37_79B9) ^ (v as u64);
+            let b = generate(&mut Rng::new(seed), v, true);
+            let off = generate(&mut Rng::new(seed), v, false);
+            assert!(off.boosts.is_empty(), "boosts off must place none");
+            assert_eq!(off.tiers, b.tiers, "boosts must not move the tiers");
+            assert_eq!(off.traps, b.traps, "boosts must not move the traps");
+            let last = b.last() as usize;
+            let at: Vec<(usize, Boost)> = b.boosts.iter().enumerate().filter_map(|(i, x)| x.map(|x| (i, x))).collect();
+            assert_eq!(at.len(), c.boost_count, "{v:?} board {k}: boost count");
+            for &(i, kind) in &at {
+                assert!(i != 0 && i != last, "{v:?} board {k}: a boost on start or finish");
+                assert!(b.trap_at(i as u32).is_none(), "{v:?} board {k}: a boost on a trap tile");
+                assert!(c.boost_pool.contains(&kind), "{v:?}: {kind:?} is not in the pool");
+            }
+            let mut kinds: Vec<Boost> = at.iter().map(|x| x.1).collect();
+            kinds.sort_by_key(|k| *k as u8);
+            kinds.dedup();
+            assert!(kinds.len() >= c.boost_count.min(c.boost_pool.len()), "{v:?} board {k}: kinds must be distinct up to the pool size");
+            if v == Variant::Jr {
+                assert!(!at.iter().any(|x| x.1 == Boost::Ward), "Jr has no Ward");
+                assert!(b.traps.is_empty());
+            }
+            if v == Variant::Full {
+                assert_eq!(kinds.len() >= 3, true, "Full has one of each kind");
+            }
+        }
+    }
+}
+
+/// A-P4: a Tailwind that lands on a trap, an Extra Roll whose second roll lands on a boost, and a Switch
+/// Tiles arrival each resolve exactly one effect, and the untriggered tile stays hidden.
+#[test]
+fn a_p4_one_tile_effect_per_turn() {
+    // Tailwind onto a trap.
+    let (mut seen, mut hidden) = (0, 0);
+    for seed in 0..80u64 {
+        let mut s = fx_game(Variant::Full, seed, true, false);
+        put_boost(&mut s, 1..=6, Boost::Tailwind);
+        for t in 7..=12 {
+            s.board.traps[t] = Some(Trap::BackToStart);
+        }
+        roll_to_spelling(&mut s);
+        let to = s.pending.as_ref().unwrap().dest;
+        answer_right(&mut s);
+        let me = s.players.iter().position(|p| !p.seat.npc).unwrap();
+        assert_eq!(count_effects(&s), 1, "seed {seed}: exactly one effect");
+        assert_eq!(s.players[me].pos, to + 3, "Tailwind moves three more");
+        if to + 3 >= 7 {
+            seen += 1;
+            assert!(!s.revealed.contains(&(to + 3)), "the trap Tailwind landed on must stay hidden");
+            assert_eq!(s.players[me].pos, to + 3, "and it did not trigger (no Back to Start)");
+            hidden += 1;
+        }
+    }
+    assert!(seen > 10 && hidden == seen);
+    // Extra Roll, then the second roll lands on a boost that must not trigger.
+    let mut seen = 0;
+    for seed in 0..120u64 {
+        let mut s = fx_game(Variant::Full, seed, true, false);
+        put_boost(&mut s, 1..=3, Boost::ExtraRoll);
+        put_boost(&mut s, 4..=12, Boost::Tailwind);
+        roll_to_spelling(&mut s);
+        let t1 = s.pending.as_ref().unwrap().dest;
+        answer_right(&mut s);
+        if t1 > 3 {
+            continue; // not an Extra Roll tile (it was a Tailwind tile)
+        }
+        assert_eq!(s.phase, Phase::AwaitRoll, "Extra Roll: the same seat rolls again");
+        assert!(!s.players[s.current_seat() as usize].seat.npc);
+        let turns = s.turns;
+        roll_to_spelling(&mut s);
+        let t2 = s.pending.as_ref().unwrap().dest;
+        answer_right(&mut s);
+        assert_eq!(count_effects(&s), 1, "seed {seed}: the second roll resolves no further effect");
+        assert!(s.revealed == vec![t1], "only the first tile is revealed; {t2} stays hidden");
+        assert!(s.turns > turns, "the turn passes after the second roll");
+        seen += 1;
+    }
+    assert!(seen > 10);
+    // A Switch Tiles arrival does not trigger the tile it arrives on.
+    for seed in 0..40u64 {
+        let mut s = fx_game(Variant::Full, seed, true, false);
+        for t in 1..=6 {
+            s.board.traps[t] = Some(Trap::SwitchTiles);
+        }
+        s.board.traps[20] = Some(Trap::BackToStart);
+        let me = s.current_seat() as usize;
+        let rival = (0..s.players.len()).find(|&i| i != me).unwrap();
+        s.players[rival].pos = 20;
+        roll_to_spelling(&mut s);
+        answer_right(&mut s);
+        assert_eq!(s.phase, Phase::AwaitSwitchTarget);
+        apply(&mut s, Action::ChooseSwitchTarget(Some(rival as u8))).unwrap();
+        assert_eq!(s.players[me].pos, 20, "swapped onto the rival's tile");
+        assert!(!s.revealed.contains(&20), "the arrival tile stays hidden");
+        assert_eq!(count_effects(&s), 1);
+    }
+}
+
+/// A-P5: Ward. A held charge cancels exactly one trap (revealed, no effect, charge spent); a second
+/// pickup while holding one leaves a single charge; Ward never blocks a boost.
+#[test]
+fn a_p5_ward_cancels_exactly_one_trap() {
+    let mut s = fx_game(Variant::Full, 5, true, false);
+    for t in 1..=12 {
+        s.board.traps[t] = Some(Trap::BackToStart);
+    }
+    let me = s.current_seat() as usize;
+    s.players[me].ward = true;
+    roll_to_spelling(&mut s);
+    let to = s.pending.as_ref().unwrap().dest;
+    answer_right(&mut s);
+    assert_eq!(s.players[me].pos, to, "the blocked trap does nothing");
+    assert!(!s.players[me].ward, "the charge is spent");
+    assert!(s.revealed.contains(&to), "the trap is revealed");
+    assert!(s.events.iter().any(|e| matches!(e, Event::TrapBlocked { tile, .. } if *tile == to)));
+    assert!(!s.events.iter().any(|e| matches!(e, Event::TrapHit { .. })));
+    // The next trap is not blocked.
+    to_current(&mut s, false);
+    roll_to_spelling(&mut s);
+    answer_right(&mut s);
+    assert_eq!(s.players[me].pos, 0, "the second trap bites");
+    // A second pickup while holding one leaves it at one charge.
+    let mut s = fx_game(Variant::Full, 6, true, false);
+    put_boost(&mut s, 1..=6, Boost::Ward);
+    let me = s.current_seat() as usize;
+    s.players[me].ward = true;
+    roll_to_spelling(&mut s);
+    answer_right(&mut s);
+    assert!(s.players[me].ward, "still exactly one charge");
+    assert!(s.events.iter().any(|e| matches!(e, Event::WardGained { .. })));
+}
+
+/// A-P6: streak. Right, right, right earns the bonus and zeroes the counter; a wrong spelling resets;
+/// the bonus survives a lost roll and is spent by the next roll actually taken, right or wrong.
+#[test]
+fn a_p6_streak_semantics() {
+    let mut s = fx_game(Variant::Full, 9, false, true);
+    let me = s.current_seat() as usize;
+    let len = Variant::Full.cfg().streak_length;
+    for round in 0..len {
+        roll_to_spelling(&mut s);
+        answer_right(&mut s);
+        to_current(&mut s, false);
+        assert_eq!(s.players[me].streak, if round < len - 1 { round + 1 } else { 0 });
+    }
+    assert!(s.players[me].bonus, "a full streak earns the bonus");
+    assert!(s.events.iter().any(|e| matches!(e, Event::StreakEarned { .. })));
+    // A wrong spelling resets the counter.
+    let mut t = fx_game(Variant::Full, 10, false, true);
+    roll_to_spelling(&mut t);
+    answer_right(&mut t);
+    to_current(&mut t, false);
+    roll_to_spelling(&mut t);
+    answer_wrong(&mut t);
+    assert_eq!(t.players[me].streak, 0);
+    assert!(!t.players[me].bonus);
+    // The bonus survives a lost roll.
+    let mut u = fx_game(Variant::Full, 11, false, true);
+    u.players[me].bonus = true;
+    u.players[me].skip = true;
+    u.turn = (u.turn + u.order.len() - 1) % u.order.len();
+    // Pass the turn onto the skipped human via the engine.
+    let mut guard = 0;
+    while u.is_npc_turn() || u.current_seat() as usize != me {
+        if u.is_npc_turn() {
+            apply(&mut u, Action::AdvanceNpc).unwrap();
+        } else {
+            break;
+        }
+        guard += 1;
+        assert!(guard < 50);
+    }
+    assert!(u.players[me].bonus, "a skipped turn takes no roll, so the bonus waits");
+    // The next roll taken spends it, and +1 is on the roll; a wrong spelling loses it with the move.
+    let mut w = fx_game(Variant::Full, 12, false, true);
+    w.players[me].bonus = true;
+    apply(&mut w, Action::Roll).unwrap();
+    let (roll, dest) = w.events.iter().rev().find_map(|e| if let Event::Rolled { roll, dest, .. } = e { Some((*roll, *dest)) } else { None }).unwrap();
+    assert_eq!(dest, roll as u32 + 1, "the bonus adds one tile to the roll");
+    assert!(!w.players[me].bonus, "spent by the roll itself");
+    assert!(w.events.iter().any(|e| matches!(e, Event::StreakBonusUsed { .. })));
+    answer_wrong(&mut w);
+    assert_eq!(w.players[me].pos, 0, "a wrong spelling loses the bonus with the move");
+    assert!(!w.players[me].bonus);
+    // Every graded spelling counts: a Long Word trap word and a Stretch word.
+    let mut x = new_game(13, solo(Variant::Full, Difficulty::Normal, 3).with_streak(true).with_stretch(true), pools_for(Variant::Full)).unwrap();
+    to_current(&mut x, false);
+    x.board.traps[1..=6].iter_mut().for_each(|t| *t = Some(Trap::LongWord));
+    apply(&mut x, Action::Roll).unwrap();
+    if x.phase == Phase::AwaitStretch {
+        apply(&mut x, Action::ChooseStretch(false)).unwrap();
+    }
+    answer_right(&mut x);
+    if x.phase == Phase::AwaitSpelling {
+        answer_right(&mut x);
+        assert_eq!(x.players[me].streak, 2, "the trap word counted too");
+    }
+}
+
+/// A Tailwind that would pass the finish clamps there and wins.
+#[test]
+fn tailwind_past_the_finish_clamps_and_finishes() {
+    let mut n = 0;
+    for seed in 0..120u64 {
+        let mut s = fx_game(Variant::Sprint, seed, true, false);
+        let last = s.board.last() as usize;
+        let me = s.current_seat() as usize;
+        s.players[me].pos = (last - 9) as u32;
+        put_boost(&mut s, (last - 8)..=(last - 3), Boost::Tailwind);
+        roll_to_spelling(&mut s);
+        let t = s.pending.as_ref().unwrap().dest as usize;
+        answer_right(&mut s);
+        if t + 3 >= last {
+            assert_eq!(s.phase, Phase::Finished);
+            assert_eq!(s.winner, Some(me as u8));
+            assert_eq!(s.players[me].pos as usize, last);
+            n += 1;
+        }
+    }
+    assert!(n > 5);
+}
+
+/// An NPC's Extra Roll is a second roll inside the same AdvanceNpc, and the turn counters move once.
+#[test]
+fn an_npc_extra_roll_rolls_twice_in_one_advance() {
+    let mut twice = 0;
+    for seed in 0..200u64 {
+        let mut s = fx_game(Variant::Full, seed, true, false);
+        put_boost(&mut s, 1..=3, Boost::ExtraRoll);
+        to_current(&mut s, true);
+        let (me, turns) = (s.current_seat(), s.turns);
+        s.players[me as usize].pos = 0;
+        apply(&mut s, Action::AdvanceNpc).unwrap();
+        let rolls = s.events.iter().filter(|e| matches!(e, Event::Rolled { seat, .. } if *seat == me)).count();
+        if s.events.iter().any(|e| matches!(e, Event::BoostHit { boost: Boost::ExtraRoll, .. })) {
+            assert_eq!(rolls, 2);
+            assert_eq!(s.turns, turns + 1, "an Extra Roll is not another turn");
+            twice += 1;
+        }
+    }
+    assert!(twice > 10);
+}
+
+/// Spell Jr: boosts and streak work, Stretch stays off, no Ward.
+#[test]
+fn jr_has_boosts_and_streak_but_no_stretch_or_ward() {
+    for seed in 0..100u64 {
+        let s = new_game(seed, solo(Variant::Jr, Difficulty::Normal, 3).with_boosts(true).with_streak(true).with_stretch(true), pools_for(Variant::Jr)).unwrap();
+        assert_eq!(s.board.boost_count(), 2);
+        assert!(s.board.boosts.iter().flatten().all(|b| *b != Boost::Ward));
+        assert!(s.board.traps.is_empty());
+    }
+    let s = play(7, solo(Variant::Jr, Difficulty::Normal, 3).with_boosts(true).with_streak(true).with_stretch(true), 800);
+    assert!(s.players.iter().all(|p| p.stretch_offered == 0));
+}
+
+/// A-P7 with every flag on, over 100,000 simulated rolls: one roll never moves a piece forward more than
+/// 6 + 1 streak + 2 Stretch + 3 Tailwind = 12, and a wrong spelling never moves forward.
+#[test]
+fn a_p7_no_forward_move_exceeds_twelve_with_every_flag_on() {
+    let mut r = Rng::new(0xA7_12);
+    let mut rolls = 0u64;
+    let mut g = 0u64;
+    while rolls < 100_000 {
+        let v = [Variant::Full, Variant::Sprint, Variant::Jr][(g % 3) as usize];
+        g += 1;
+        let mut s = new_game(g, solo(v, Difficulty::Normal, 3).with_stretch(true).with_boosts(true).with_streak(true), pools_for(v)).unwrap();
+        let mut acc = [0i64; 4];
+        let mut missed = [false; 4];
+        let mut guard = 0;
+        while s.phase != Phase::Finished {
+            guard += 1;
+            assert!(guard < 30_000);
+            let n0 = s.events.len();
+            let wrong = s.phase == Phase::AwaitSpelling && r.next_u64() % 3 == 0;
+            let a = if s.is_npc_turn() {
+                Action::AdvanceNpc
+            } else {
+                match s.phase {
+                    Phase::AwaitSpelling => Action::SubmitSpelling(if wrong { "nope".into() } else { s.pending.as_ref().unwrap().word.clone() }),
+                    _ => valid_action(&s, &mut r),
+                }
+            };
+            apply(&mut s, a).unwrap();
+            for e in &s.events[n0..] {
+                match e {
+                    Event::Rolled { seat, .. } => {
+                        acc[*seat as usize] = 0;
+                        missed[*seat as usize] = false;
+                        rolls += 1;
+                    }
+                    Event::Missed { seat, .. } => missed[*seat as usize] = true,
+                    Event::Moved { seat, from, to } if to > from => {
+                        acc[*seat as usize] += (*to - *from) as i64;
+                        assert!(acc[*seat as usize] <= 12, "{v:?}: one roll moved {}", acc[*seat as usize]);
+                        assert!(!missed[*seat as usize], "{v:?}: a wrong spelling moved forward");
+                    }
+                    _ => {}
+                }
+            }
+        }
+    }
+}
+
+/// A-P8: replaying a recorded game reproduces the same final positions, with every flag combination.
+#[test]
+fn a_p8_replay_reproduces_final_positions() {
+    let mut r = Rng::new(0xA8);
+    for g in 0..300u64 {
+        let cfg = random_cfg(&mut r);
+        let seed = r.next_u64();
+        let pl = pools_for(cfg.variant);
+        let mut s = new_game(seed, cfg.clone(), pl.clone()).unwrap();
+        let mut log = Vec::new();
+        while s.phase != Phase::Finished {
+            let a = valid_action(&s, &mut r);
+            apply(&mut s, a.clone()).unwrap();
+            log.push(a);
+        }
+        let mut t = new_game(seed, cfg, pl).unwrap();
+        for a in log {
+            apply(&mut t, a).unwrap();
+        }
+        let pos = |x: &BoardGameState| x.players.iter().map(|p| p.pos).collect::<Vec<_>>();
+        assert_eq!(pos(&t), pos(&s), "game {g}");
+        assert_eq!(t.digest(), s.digest());
     }
 }

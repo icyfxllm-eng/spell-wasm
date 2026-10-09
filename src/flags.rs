@@ -132,6 +132,20 @@ pub fn spelluzzle_lang(lang: &str) -> bool {
     resolve(stored(&format!("spelluzzle_{lang}")).as_deref(), lang == "en")
 }
 
+/// CC-BOARD-GAME-POLISH v1 Feature 2 (D-P16) -- boost tiles in the Board Game. **Default OFF**.
+/// `localStorage['spell_flag_boardBoosts'] = 'on'`. Compiled out with the mode.
+#[cfg(not(feature = "web"))]
+pub fn board_boosts() -> bool {
+    resolve(stored("boardBoosts").as_deref(), false)
+}
+
+/// CC-BOARD-GAME-POLISH v1 Feature 3 (D-P16) -- the hot streak. **Default OFF**.
+/// `localStorage['spell_flag_boardStreak'] = 'on'`. Compiled out with the mode.
+#[cfg(not(feature = "web"))]
+pub fn board_streak() -> bool {
+    resolve(stored("boardStreak").as_deref(), false)
+}
+
 /// F5 "Word stories" — etymology cards. **Default OFF**: dark until the CC BY-SA
 /// attribution approach is approved.
 pub fn word_stories() -> bool {

@@ -924,5 +924,11 @@
   "spz.star.ear": "أذن حادة",
   "spz.star.code": "فاكّ الشيفرة",
   "spz.clear": "مسح الكلمة",
-  "spz.runeLabel": "رمز {k}"
+  "spz.runeLabel": "رمز {k}",
+  "bg.boost.tailwind": "رياح مواتية +3",
+  "bg.boost.extra": "رمية إضافية",
+  "bg.boost.ward": "تم الحصول على الحماية",
+  "bg.wardBlocked": "الحماية صدّت: {trap}",
+  "bg.streak": "سلسلة {n}",
+  "bg.streakBonus": "+1 في الرمية التالية"
 }

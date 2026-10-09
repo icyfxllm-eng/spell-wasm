@@ -25,7 +25,7 @@ const tests = readFileSync(join(ROOT, 'src', 'boardgame', 'tests.rs'), 'utf8');
 const pinned = (name) => BigInt(tests.match(new RegExp(`${name}: u64 = (\\d+);`))[1]);
 
 let bad = 0;
-for (const [fn, konst] of [['golden_rng_1000', 'GOLDEN_RNG_1000'], ['golden_game', 'GOLDEN_GAME'], ['golden_game_sprint', 'GOLDEN_GAME_SPRINT'], ['golden_game_stretch', 'GOLDEN_GAME_STRETCH']]) {
+for (const [fn, konst] of [['golden_rng_1000', 'GOLDEN_RNG_1000'], ['golden_game', 'GOLDEN_GAME'], ['golden_game_sprint', 'GOLDEN_GAME_SPRINT'], ['golden_game_stretch', 'GOLDEN_GAME_STRETCH'], ['golden_game_boosts', 'GOLDEN_GAME_BOOSTS'], ['golden_game_streak', 'GOLDEN_GAME_STREAK'], ['golden_game_all', 'GOLDEN_GAME_ALL']]) {
   const got = BigInt.asUintN(64, instance.exports[fn]());
   const want = pinned(konst);
   console.log(`${fn}: wasm32 ${got}  host ${want}  ${got === want ? 'OK' : 'MISMATCH'}`);

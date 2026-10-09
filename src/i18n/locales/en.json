@@ -924,5 +924,11 @@
   "spz.star.ear": "Sharp ear",
   "spz.star.code": "Codebreaker",
   "spz.clear": "Clear word",
-  "spz.runeLabel": "Rune {k}"
+  "spz.runeLabel": "Rune {k}",
+  "bg.boost.tailwind": "Tailwind +3",
+  "bg.boost.extra": "Extra Roll",
+  "bg.boost.ward": "Ward gained",
+  "bg.wardBlocked": "Ward blocked {trap}",
+  "bg.streak": "Streak {n}",
+  "bg.streakBonus": "+1 on the next roll"
 }

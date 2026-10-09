@@ -924,5 +924,11 @@
   "spz.star.ear": "Feines Gehör",
   "spz.star.code": "Codeknacker",
   "spz.clear": "Wort löschen",
-  "spz.runeLabel": "Rune Nr. {k}"
+  "spz.runeLabel": "Rune Nr. {k}",
+  "bg.boost.tailwind": "Rückenwind +3",
+  "bg.boost.extra": "Extrawurf",
+  "bg.boost.ward": "Schutz erhalten",
+  "bg.wardBlocked": "Schutz blockte: {trap}",
+  "bg.streak": "Serie {n}",
+  "bg.streakBonus": "+1 beim nächsten Wurf"
 }

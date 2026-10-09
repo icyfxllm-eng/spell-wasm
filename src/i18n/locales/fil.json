@@ -924,5 +924,11 @@
   "spz.star.ear": "Matalas na tainga",
   "spz.star.code": "Tagapag-decode",
   "spz.clear": "Burahin ang salita",
-  "spz.runeLabel": "Runa {k}"
+  "spz.runeLabel": "Runa {k}",
+  "bg.boost.tailwind": "Hangin sa likod +3",
+  "bg.boost.extra": "Dagdag na Hagis",
+  "bg.boost.ward": "Nakuha ang Proteksyon",
+  "bg.wardBlocked": "Hinarang ng Proteksyon: {trap}",
+  "bg.streak": "Sunod-sunod {n}",
+  "bg.streakBonus": "+1 sa susunod na hagis"
 }

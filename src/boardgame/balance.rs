@@ -9,6 +9,8 @@
 //!
 //! If a cell falls outside its range the test fails and prints the table. It
 //! does not retune deltas (D18).
+//!
+//! D18 amended by D-P24 (Oct 9 2026): the Tough range for Full and Sprint is 21-33% (was 22-32%).
 
 use super::tests::{exact, pools};
 use super::*;
@@ -65,13 +67,25 @@ fn simulate(variant: Variant, difficulty: Difficulty, npcs: u8, acc_milli: u64, 
 }
 
 fn simulate_with(variant: Variant, difficulty: Difficulty, npcs: u8, acc_milli: u64, seed0: u64, games: u64, stretch: Option<Policy>) -> Cell {
+    simulate_fx(variant, difficulty, npcs, acc_milli, seed0, games, stretch, false)
+}
+
+/// `fx`: boost tiles and the hot streak on for every seat (Phase D).
+#[allow(clippy::too_many_arguments)]
+fn simulate_fx(variant: Variant, difficulty: Difficulty, npcs: u8, acc_milli: u64, seed0: u64, games: u64, stretch: Option<Policy>, fx: bool) -> Cell {
+    simulate_flags(variant, difficulty, npcs, acc_milli, seed0, games, stretch, fx, fx)
+}
+
+#[allow(clippy::too_many_arguments)]
+fn simulate_flags(variant: Variant, difficulty: Difficulty, npcs: u8, acc_milli: u64, seed0: u64, games: u64, stretch: Option<Policy>, boosts: bool, streak: bool) -> Cell {
+    let fx = boosts || streak;
     let mut wins = 0u64;
     let pl = pools_for(variant);
     let mut rounds = Vec::with_capacity(games as usize);
     let mut recycled = 0u64;
     let mut pr = Rng::new(seed0);
     for g in 0..games {
-        let cfg = GameConfig::solo(variant, difficulty, npcs, 0, "en", false, exact).with_stretch(stretch.is_some());
+        let cfg = GameConfig::solo(variant, difficulty, npcs, 0, "en", false, exact).with_stretch(stretch.is_some()).with_boosts(boosts).with_streak(streak);
         let mut s = new_game(seed0.wrapping_mul(0x9E37_79B9).wrapping_add(g), cfg, pl.clone()).unwrap();
         while s.phase != Phase::Finished {
             let a = if s.is_npc_turn() {
@@ -109,7 +123,7 @@ fn simulate_with(variant: Variant, difficulty: Difficulty, npcs: u8, acc_milli: 
             apply(&mut s, a).unwrap();
         }
         // (the prior search sweeps settings that can run games long enough to reuse a word)
-        assert!(s.recycled == 0 || super::rules::PRIOR_OVERRIDE.with(|c| c.get()).is_some() || stretch.is_some());
+        assert!(s.recycled == 0 || super::rules::PRIOR_OVERRIDE.with(|c| c.get()).is_some() || stretch.is_some() || fx);
         recycled += (s.recycled > 0) as u64;
         wins += (s.winner == Some(0)) as u64;
         rounds.push(s.turns / s.players.len() as u32 + 1);
@@ -121,7 +135,13 @@ fn human_wins(variant: Variant, difficulty: Difficulty, npcs: u8, acc_milli: u64
     simulate(variant, difficulty, npcs, acc_milli, seed0, games).win_rate
 }
 
-const D18: [(&str, Difficulty, f64, f64); 3] = [("easy", Difficulty::Easy, 0.50, 0.60), ("normal", Difficulty::Normal, 0.35, 0.45), ("tough", Difficulty::Tough, 0.22, 0.32)];
+/// D18 amended by D-P24 (Eric, Oct 9 2026): the Tough NPC setting's Standard range (Full and Sprint)
+/// is 21-33%, widened from 22-32%, so that boosts + streak fit. This is the ONE place the live range
+/// is written; every A9 test reads it. Easy, Normal, Jr limits, deltas and the Sprint prior are unchanged.
+const D18_TOUGH: (f64, f64) = (0.21, 0.33);
+const D18: [(&str, Difficulty, f64, f64); 3] = [("easy", Difficulty::Easy, 0.50, 0.60), ("normal", Difficulty::Normal, 0.35, 0.45), ("tough", Difficulty::Tough, D18_TOUGH.0, D18_TOUGH.1)];
+/// A-P13 / D-P17 read their limits off the ORIGINAL D18 numbers (Tough 22-32%); D-P24 did not amend them.
+const D18_ORIGINAL: [(&str, Difficulty, f64, f64); 3] = [("easy", Difficulty::Easy, 0.50, 0.60), ("normal", Difficulty::Normal, 0.35, 0.45), ("tough", Difficulty::Tough, 0.22, 0.32)];
 const HUMANS: [(&str, u64); 3] = [("100%", 1000), ("70%", 700), ("50%", 500)];
 
 // D27 (v1.2): the formula is (3 + hits) / (2 + attempts), as the sim has it.
@@ -261,7 +281,7 @@ fn a_p13_stretch_balance_both_reference_humans() {
     let mut out = format!("A-P13 (Stretch on for everyone, {GAMES_NEW} games per cell, seed {SEED}, 3 NPCs; D18 range, never >= lo-5, smart <= hi+15)\n");
     for v in [Variant::Sprint, Variant::Full] {
         out.push_str(&format!("{v:?}\n"));
-        for (name, d, lo, hi) in D18 {
+        for (name, d, lo, hi) in D18_ORIGINAL {
             for (label, acc) in HUMANS {
                 let never = simulate_with(v, d, 3, acc, SEED, GAMES_NEW, Some(Policy::Never));
                 let smart = simulate_with(v, d, 3, acc, SEED, GAMES_NEW, Some(Policy::Smart(STRETCH_DROP)));
@@ -286,6 +306,40 @@ fn a_p13_stretch_balance_both_reference_humans() {
     eprintln!("{out}");
     assert!(ok, "A-P13 FAIL (tune only the NPC Stretch rate and penalty, A-P14):\n{out}");
 }
+
+/// Phase D: A-P13 again with Stretch, boost tiles and the hot streak all on (they apply to every seat).
+#[test]
+fn a_p13_all_flags_balance_both_reference_humans() {
+    let mut ok = true;
+    let mut out = format!("A-P13 ALL FLAGS (Stretch, boosts and streak on for everyone, {GAMES_NEW} games per cell, seed {SEED}, 3 NPCs; D18 range, never >= lo-5, smart <= hi+15)\n");
+    for v in [Variant::Sprint, Variant::Full] {
+        out.push_str(&format!("{v:?}\n"));
+        for (name, d, lo, hi) in D18_ORIGINAL {
+            for (label, acc) in HUMANS {
+                let never = simulate_fx(v, d, 3, acc, SEED, GAMES_NEW, Some(Policy::Never), true);
+                let smart = simulate_fx(v, d, 3, acc, SEED, GAMES_NEW, Some(Policy::Smart(STRETCH_DROP)), true);
+                let bad_n = never.win_rate < lo - 0.05;
+                let bad_s = smart.win_rate > hi + 0.15;
+                ok &= !(bad_n || bad_s);
+                out.push_str(&format!(
+                    "  {name:6} human {label:>4}: never {:5.1}% [>= {:.0}%]{}  smart {:5.1}% [<= {:.0}%]{}  gap {:+.1}  reuse {}/{}\n",
+                    never.win_rate * 100.0,
+                    (lo - 0.05) * 100.0,
+                    if bad_n { " <-- LOW" } else { "" },
+                    smart.win_rate * 100.0,
+                    (hi + 0.15) * 100.0,
+                    if bad_s { " <-- HIGH" } else { "" },
+                    (smart.win_rate - never.win_rate) * 100.0,
+                    never.recycled_games,
+                    smart.recycled_games
+                ));
+            }
+        }
+    }
+    eprintln!("{out}");
+    assert!(ok, "A-P13 ALL FLAGS FAIL (tune only the NPC Stretch rate and penalty, A-P14):\n{out}");
+}
+
 
 /// A-P14 / D-P21 (run by hand: `cargo test --lib stretch_tuning_search -- --ignored --nocapture`):
 /// sweep ONLY the NPC Stretch rate base, rate slope and penalty, 20,000 games per cell, all 18 A-P13
@@ -313,10 +367,10 @@ fn stretch_tuning_search() {
                     let mut worst = f64::MAX;
                     let mut worst_at = String::new();
                     for v in [Variant::Sprint, Variant::Full] {
-                        for (name, d, lo, hi) in D18 {
+                        for (name, d, lo, hi) in D18_ORIGINAL {
                             for (label, acc) in HUMANS {
-                                let n = simulate_with(v, d, 3, acc, SEED, GAMES_NEW, Some(Policy::Never)).win_rate - (lo - 0.05);
-                                let s = (hi + 0.15) - simulate_with(v, d, 3, acc, SEED, GAMES_NEW, Some(Policy::Smart(STRETCH_DROP))).win_rate;
+                                let n = simulate_fx(v, d, 3, acc, SEED, GAMES_NEW, Some(Policy::Never), true).win_rate - (lo - 0.05);
+                                let s = (hi + 0.15) - simulate_fx(v, d, 3, acc, SEED, GAMES_NEW, Some(Policy::Smart(STRETCH_DROP)), true).win_rate;
                                 for (m, kind) in [(n, "never"), (s, "smart")] {
                                     if m < worst {
                                         worst = m;
@@ -362,4 +416,65 @@ fn a_p13_sensitivity_smart_human_at_a_035_drop() {
         }
     }
     eprintln!("{out}");
+}
+
+/// Phase D baseline: A9 with boost tiles and the hot streak on and Stretch off, 3 NPCs, 50,000 games
+/// per cell (D-P24). The ranges are D18 as amended by D-P24 for Full and Sprint (Tough 21-33%); Jr uses its
+/// own limits (60% kid at least 20%, a perfect kid at most 45%). Boost counts, Tailwind, the streak numbers,
+/// the deltas and the Sprint prior are signed and not tunable. The margin column is the distance to the
+/// nearer edge, in points.
+#[test]
+fn a9_baseline_with_boosts_and_streak_is_inside_d18() {
+    const GAMES_FX: u64 = 50_000;
+    let mut ok = true;
+    let mut out = format!("A9 with boosts + streak on, Stretch off ({GAMES_FX} games per cell, seed {SEED}, 3 NPCs)\n");
+    for v in [Variant::Sprint, Variant::Full] {
+        out.push_str(&format!("{v:?}\n"));
+        for (name, d, lo, hi) in D18 {
+            for (label, acc) in HUMANS {
+                let c = simulate_fx(v, d, 3, acc, SEED, GAMES_FX, None, true);
+                let r = c.win_rate;
+                let bad = r < lo || r > hi;
+                ok &= !bad;
+                out.push_str(&format!("  {name:6} human {label:>4}: {:5.1}%  [{:.0}%-{:.0}%]  margin {:+.1}  median {} rounds{}\n", r * 100.0, lo * 100.0, hi * 100.0, ((r - lo).min(hi - r)) * 100.0, c.median_rounds(), if bad { "  <-- OUT OF RANGE" } else { "" }));
+            }
+        }
+    }
+    out.push_str("Jr\n");
+    for (label, acc, lo, hi) in [("60%", 600u64, 0.20, 1.0), ("80%", 800, 0.0, 1.0), ("100%", 1000, 0.0, 0.45)] {
+        let r = simulate_fx(Variant::Jr, Difficulty::Normal, 3, acc, SEED, GAMES_FX, None, true).win_rate;
+        let bad = r < lo || r > hi;
+        ok &= !bad;
+        out.push_str(&format!("  kid {label:>4}: {:5.1}%  margin {:+.1}{}\n", r * 100.0, ((r - lo).min(hi - r)) * 100.0, if bad { "  <-- OUT OF LIMIT" } else { "" }));
+    }
+    eprintln!("{out}");
+    assert!(ok, "A9 with boosts and streak is outside D18/Jr limits (no signed number may be tuned; report):\n{out}");
+}
+
+/// A-P15 with every flag on: the median game (human 80%, 3 Normal NPCs) is at most 16 rounds in Sprint
+/// and 34 in Full. An Extra Roll is part of one turn, so it does not add a round.
+#[test]
+fn a_p15_median_game_length_with_every_flag_on() {
+    let mut out = String::from("A-P15 all flags, median rounds (3 NPCs Normal, 6,000 games per row)\n");
+    let mut ok = true;
+    for (v, cap) in [(Variant::Sprint, 16u32), (Variant::Full, 34)] {
+        for (label, acc) in [("100%", 1000u64), ("80%", 800), ("50%", 500)] {
+            let m = simulate_fx(v, Difficulty::Normal, 3, acc, SEED, 6_000, Some(Policy::Never), true).median_rounds();
+            let gated = acc == 800;
+            ok &= !(gated && m > cap);
+            out.push_str(&format!("  {v:?} human {label:>4}: median {m} rounds{}\n", if gated { format!("  (cap {cap})") } else { String::new() }));
+        }
+    }
+    eprintln!("{out}");
+    assert!(ok, "A-P15 (all flags) FAIL:\n{out}");
+}
+
+/// DIAGNOSTIC (run by hand): which of the two Phase D features moves the Full Tough cells.
+#[test]
+#[ignore]
+fn diag_full_tough_by_feature() {
+    for (name, b, st) in [("none", false, false), ("boosts only", true, false), ("streak only", false, true), ("both", true, true)] {
+        let row: Vec<String> = HUMANS.iter().map(|&(l, acc)| format!("{l} {:.1}%", simulate_flags(Variant::Full, Difficulty::Tough, 3, acc, SEED, GAMES_NEW, None, b, st).win_rate * 100.0)).collect();
+        eprintln!("DIAG Full Tough {name}: {}", row.join("  "));
+    }
 }

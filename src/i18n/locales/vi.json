@@ -924,5 +924,11 @@
   "spz.star.ear": "Tai thính",
   "spz.star.code": "Giải mã",
   "spz.clear": "Xóa từ",
-  "spz.runeLabel": "Chữ rune {k}"
+  "spz.runeLabel": "Chữ rune {k}",
+  "bg.boost.tailwind": "Thuận gió +3",
+  "bg.boost.extra": "Tung thêm",
+  "bg.boost.ward": "Nhận được hộ thân",
+  "bg.wardBlocked": "Hộ thân đã chặn: {trap}",
+  "bg.streak": "Chuỗi {n}",
+  "bg.streakBonus": "+1 ở lượt tung sau"
 }

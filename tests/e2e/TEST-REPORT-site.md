@@ -1,6 +1,6 @@
 # TEST-REPORT — Web E2E (site build)
 
-**15/15 passed** across 4 areas.
+**17/17 passed** across 5 areas.
 
 ## coming — 5/5
 - ✅ coming[std]: selecting Korean gates play + shows Notify Me
@@ -24,3 +24,7 @@
 - ✅ wall: no picture DOM, tile, or asset request in any of 15 languages
 - ✅ wall: direct picture routes are 404 by absence, not by guard
 - ✅ wall: the hub registry itself carries no app-only mode
+
+## boardgame-wall — 2/2
+- ✅ boardgame_wall: no screen, launcher, styles or strings on the site
+- ✅ boardgame_wall: the registry on the site has no boardgame entry

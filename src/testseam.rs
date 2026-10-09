@@ -219,6 +219,8 @@ pub fn install(app: &App) {
         // CC-BOARD-GAME-POLISH Feature 6: walk a seat's piece n tiles (the real walk), returns its duration in ms.
         let cb = Closure::<dyn Fn(u32, u32) -> i32>::new(move |seat: u32, n: u32| crate::boardgame_screen::seam_hop(seat as u8, n));
         set(&obj, "boardgameHop", cb.into_js_value());
+        let cb = Closure::<dyn Fn(String) -> bool>::new(move |spec: String| crate::boardgame_screen::seam_force(&spec));
+        set(&obj, "boardgameForce", cb.into_js_value());
         let cb = Closure::<dyn Fn(u32)>::new(move |tile: u32| crate::boardgame_screen::seam_mark(tile));
         set(&obj, "boardgameMark", cb.into_js_value());
     }

@@ -924,5 +924,11 @@
   "spz.star.ear": "Buen oído",
   "spz.star.code": "Descifrador",
   "spz.clear": "Borrar palabra",
-  "spz.runeLabel": "Runa {k}"
+  "spz.runeLabel": "Runa {k}",
+  "bg.boost.tailwind": "Viento a favor +3",
+  "bg.boost.extra": "Tirada extra",
+  "bg.boost.ward": "Protección obtenida",
+  "bg.wardBlocked": "La protección bloqueó: {trap}",
+  "bg.streak": "Racha {n}",
+  "bg.streakBonus": "+1 en la próxima tirada"
 }

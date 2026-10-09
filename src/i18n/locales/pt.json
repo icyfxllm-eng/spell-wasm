@@ -924,5 +924,11 @@
   "spz.star.ear": "Ouvido apurado",
   "spz.star.code": "Decifrador",
   "spz.clear": "Limpar palavra",
-  "spz.runeLabel": "Runa {k}"
+  "spz.runeLabel": "Runa {k}",
+  "bg.boost.tailwind": "Vento a favor +3",
+  "bg.boost.extra": "Jogada extra",
+  "bg.boost.ward": "Proteção obtida",
+  "bg.wardBlocked": "A proteção bloqueou: {trap}",
+  "bg.streak": "Sequência {n}",
+  "bg.streakBonus": "+1 na próxima jogada"
 }

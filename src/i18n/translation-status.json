@@ -64,7 +64,13 @@
     "spz.star.ear",
     "spz.star.code",
     "spz.clear",
-    "spz.runeLabel"
+    "spz.runeLabel",
+    "bg.boost.tailwind",
+    "bg.boost.extra",
+    "bg.boost.ward",
+    "bg.wardBlocked",
+    "bg.streak",
+    "bg.streakBonus"
   ],
   "do_not_translate": {
     "sd.name": "SpellDoku — brand name (D5, signed). Do not re-propose.",
@@ -134,7 +140,13 @@
       "spz.star.ear",
       "spz.star.code",
       "spz.clear",
-      "spz.runeLabel"
+      "spz.runeLabel",
+      "bg.boost.tailwind",
+      "bg.boost.extra",
+      "bg.boost.ward",
+      "bg.wardBlocked",
+      "bg.streak",
+      "bg.streakBonus"
     ],
     "fr": [
       "hub.group.spell_it",
@@ -197,7 +209,13 @@
       "spz.star.ear",
       "spz.star.code",
       "spz.clear",
-      "spz.runeLabel"
+      "spz.runeLabel",
+      "bg.boost.tailwind",
+      "bg.boost.extra",
+      "bg.boost.ward",
+      "bg.wardBlocked",
+      "bg.streak",
+      "bg.streakBonus"
     ],
     "de": [
       "hub.group.spell_it",
@@ -260,7 +278,13 @@
       "spz.star.ear",
       "spz.star.code",
       "spz.clear",
-      "spz.runeLabel"
+      "spz.runeLabel",
+      "bg.boost.tailwind",
+      "bg.boost.extra",
+      "bg.boost.ward",
+      "bg.wardBlocked",
+      "bg.streak",
+      "bg.streakBonus"
     ],
     "pt": [
       "hub.group.spell_it",
@@ -323,7 +347,13 @@
       "spz.star.ear",
       "spz.star.code",
       "spz.clear",
-      "spz.runeLabel"
+      "spz.runeLabel",
+      "bg.boost.tailwind",
+      "bg.boost.extra",
+      "bg.boost.ward",
+      "bg.wardBlocked",
+      "bg.streak",
+      "bg.streakBonus"
     ],
     "pl": [
       "hub.group.spell_it",
@@ -386,7 +416,13 @@
       "spz.star.ear",
       "spz.star.code",
       "spz.clear",
-      "spz.runeLabel"
+      "spz.runeLabel",
+      "bg.boost.tailwind",
+      "bg.boost.extra",
+      "bg.boost.ward",
+      "bg.wardBlocked",
+      "bg.streak",
+      "bg.streakBonus"
     ],
     "ru": [
       "hub.group.spell_it",
@@ -449,7 +485,13 @@
       "spz.star.ear",
       "spz.star.code",
       "spz.clear",
-      "spz.runeLabel"
+      "spz.runeLabel",
+      "bg.boost.tailwind",
+      "bg.boost.extra",
+      "bg.boost.ward",
+      "bg.wardBlocked",
+      "bg.streak",
+      "bg.streakBonus"
     ],
     "vi": [
       "hub.group.spell_it",
@@ -512,7 +554,13 @@
       "spz.star.ear",
       "spz.star.code",
       "spz.clear",
-      "spz.runeLabel"
+      "spz.runeLabel",
+      "bg.boost.tailwind",
+      "bg.boost.extra",
+      "bg.boost.ward",
+      "bg.wardBlocked",
+      "bg.streak",
+      "bg.streakBonus"
     ],
     "ko": [
       "hub.group.spell_it",
@@ -575,7 +623,13 @@
       "spz.star.ear",
       "spz.star.code",
       "spz.clear",
-      "spz.runeLabel"
+      "spz.runeLabel",
+      "bg.boost.tailwind",
+      "bg.boost.extra",
+      "bg.boost.ward",
+      "bg.wardBlocked",
+      "bg.streak",
+      "bg.streakBonus"
     ],
     "ja": [
       "hub.group.spell_it",
@@ -638,7 +692,13 @@
       "spz.star.ear",
       "spz.star.code",
       "spz.clear",
-      "spz.runeLabel"
+      "spz.runeLabel",
+      "bg.boost.tailwind",
+      "bg.boost.extra",
+      "bg.boost.ward",
+      "bg.wardBlocked",
+      "bg.streak",
+      "bg.streakBonus"
     ],
     "zh": [
       "hub.group.spell_it",
@@ -701,7 +761,13 @@
       "spz.star.ear",
       "spz.star.code",
       "spz.clear",
-      "spz.runeLabel"
+      "spz.runeLabel",
+      "bg.boost.tailwind",
+      "bg.boost.extra",
+      "bg.boost.ward",
+      "bg.wardBlocked",
+      "bg.streak",
+      "bg.streakBonus"
     ],
     "ar": [
       "hub.group.spell_it",
@@ -764,7 +830,13 @@
       "spz.star.ear",
       "spz.star.code",
       "spz.clear",
-      "spz.runeLabel"
+      "spz.runeLabel",
+      "bg.boost.tailwind",
+      "bg.boost.extra",
+      "bg.boost.ward",
+      "bg.wardBlocked",
+      "bg.streak",
+      "bg.streakBonus"
     ],
     "hi": [
       "hub.group.spell_it",
@@ -827,7 +899,13 @@
       "spz.star.ear",
       "spz.star.code",
       "spz.clear",
-      "spz.runeLabel"
+      "spz.runeLabel",
+      "bg.boost.tailwind",
+      "bg.boost.extra",
+      "bg.boost.ward",
+      "bg.wardBlocked",
+      "bg.streak",
+      "bg.streakBonus"
     ],
     "sw": [
       "hub.group.spell_it",
@@ -890,7 +968,13 @@
       "spz.star.ear",
       "spz.star.code",
       "spz.clear",
-      "spz.runeLabel"
+      "spz.runeLabel",
+      "bg.boost.tailwind",
+      "bg.boost.extra",
+      "bg.boost.ward",
+      "bg.wardBlocked",
+      "bg.streak",
+      "bg.streakBonus"
     ],
     "fil": [
       "hub.group.spell_it",
@@ -953,7 +1037,13 @@
       "spz.star.ear",
       "spz.star.code",
       "spz.clear",
-      "spz.runeLabel"
+      "spz.runeLabel",
+      "bg.boost.tailwind",
+      "bg.boost.extra",
+      "bg.boost.ward",
+      "bg.wardBlocked",
+      "bg.streak",
+      "bg.streakBonus"
     ]
   }
 }

@@ -924,5 +924,11 @@
   "spz.star.ear": "Oreille fine",
   "spz.star.code": "Décodeur",
   "spz.clear": "Effacer le mot",
-  "spz.runeLabel": "Rune n° {k}"
+  "spz.runeLabel": "Rune n° {k}",
+  "bg.boost.tailwind": "Vent arrière +3",
+  "bg.boost.extra": "Lancer bonus",
+  "bg.boost.ward": "Protection obtenue",
+  "bg.wardBlocked": "La protection a bloqué : {trap}",
+  "bg.streak": "Série {n}",
+  "bg.streakBonus": "+1 au prochain lancer"
 }

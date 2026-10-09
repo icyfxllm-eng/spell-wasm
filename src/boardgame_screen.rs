@@ -20,7 +20,7 @@ use std::collections::VecDeque;
 
 use wasm_bindgen::JsCast;
 
-use crate::boardgame::{self, Action, BoardGameState, Difficulty, Event, GameConfig, Phase, SpellKind};
+use crate::boardgame::{self, Action, Boost, BoardGameState, Difficulty, Event, GameConfig, Phase, SpellKind};
 use crate::boardgame_input::{self as input, Key};
 use crate::boardgame_ring as ring;
 use crate::boardgame_pools as pools;
@@ -106,6 +106,10 @@ struct Ui {
 enum Land {
     Tier(boardgame::Tier),
     Trap(boardgame::Trap),
+    /// Feature 2: a boost just triggered; the stage names the effect in words.
+    Boost(Boost),
+    /// Feature 2: a held Ward cancelled this trap.
+    Blocked(boardgame::Trap),
 }
 
 thread_local! {
@@ -412,7 +416,9 @@ fn start() {
         GameConfig::pass_and_play(variant, s.count, &lang, kid, crate::boardgame_grade::grade)
     }
     // Feature 1 / D-P16: the flag is read once, here, and travels in the config.
-    .with_stretch(crate::flags::board_stretch());
+    .with_stretch(crate::flags::board_stretch())
+    .with_boosts(crate::flags::board_boosts())
+    .with_streak(crate::flags::board_streak());
     // The keys come from every word that can be served this game.
     let mut entries: Vec<String> = sup.pools.tiers.iter().flatten().cloned().collect();
     entries.extend(sup.pools.long_word.iter().cloned());
@@ -602,15 +608,27 @@ fn after_apply(animate: bool) -> i32 {
         let new: Vec<Event> = u.game.events[u.seen..].to_vec();
         u.seen = u.game.events.len();
         let mut segs: Vec<Seg> = Vec::new();
+        // The centre stage names an effect until the next human action: a Tailwind's extra hops and an
+        // NPC's Extra Roll (which rolls again inside the same step) must not wipe it with a tier.
+        let mut keep_fx = false;
         for e in &new {
             match e {
                 Event::Moved { seat, from, to } => {
-                    u.land = u.game.board.tiers.get(*to as usize).copied().flatten().map(Land::Tier);
+                    if !keep_fx {
+                        u.land = u.game.board.tiers.get(*to as usize).copied().flatten().map(Land::Tier);
+                    }
                     segs.push(Seg::Walk(*seat, *from, *to));
                 }
                 Event::TrapHit { trap, .. } => u.land = Some(Land::Trap(*trap)),
+                Event::BoostHit { boost, .. } => {
+                    u.land = Some(Land::Boost(*boost));
+                    keep_fx = true;
+                }
+                Event::TrapBlocked { trap, .. } => u.land = Some(Land::Blocked(*trap)),
                 Event::Rolled { seat, roll, dest } => {
-                    u.land = None;
+                    if !keep_fx {
+                        u.land = None;
+                    }
                     u.act = *seat;
                     u.roll = Some((*roll, *dest));
                     u.roll_id = u.roll_id.wrapping_add(1);
@@ -670,6 +688,18 @@ fn after_apply(animate: bool) -> i32 {
     }
 }
 
+/// Feature 2/3 glyphs. Boost marks on the ring sit on a diamond and traps on a circle (I-P11).
+const WARD_GLYPH: &str = "\u{1f52e}";
+const STREAK_GLYPH: &str = "\u{1f525}";
+
+fn boost_glyph(b: Boost) -> &'static str {
+    match b {
+        Boost::Tailwind => "\u{1f4a8}",
+        Boost::ExtraRoll => "\u{1f3b2}",
+        Boost::Ward => WARD_GLYPH,
+    }
+}
+
 fn seat_piece(u: &Ui, seat: u8) -> &'static str {
     piece(u.game.players[seat as usize].seat.piece)
 }
@@ -679,7 +709,11 @@ fn chip_for(u: &Ui, e: &Event, star: bool) -> Option<String> {
     // Feature 1: a Stretch move reads "<piece> ★ ✓ 6→10".
     let st = if star { " \u{2605}" } else { "" };
     Some(match e {
-        Event::Stretched { .. } => return None,
+        Event::Stretched { .. } | Event::WardGained { .. } => return None,
+        Event::BoostHit { seat, boost, .. } => format!("{} {} {}", p(*seat), boost_glyph(*boost), i18n::t(&format!("bg.boost.{}", boost.key()))),
+        Event::TrapBlocked { seat, trap, .. } => format!("{} {} {}", p(*seat), WARD_GLYPH, i18n::tp("bg.wardBlocked", &[("trap", &i18n::t(&format!("bg.trap.{}", trap.key())))])),
+        Event::StreakEarned { seat } => format!("{} {}", p(*seat), STREAK_GLYPH),
+        Event::StreakBonusUsed { seat } => format!("{} {}+1", p(*seat), STREAK_GLYPH),
         Event::Rolled { seat, roll, .. } => format!("{} \u{1f3b2} {roll}", p(*seat)),
         Event::Moved { seat, from, to } => format!("{}{st} \u{2713} {from}\u{2192}{to}", p(*seat)),
         Event::Missed { seat, at, .. } => format!("{}{st} \u{2717} {at}", p(*seat)),
@@ -789,6 +823,10 @@ fn land_view(u: &Ui) -> Option<Land> {
     spelling_dest.map(Land::Tier).or(u.land)
 }
 
+fn blocked_text(t: boardgame::Trap) -> String {
+    i18n::tp("bg.wardBlocked", &[("trap", &i18n::t(&format!("bg.trap.{}", t.key())))])
+}
+
 fn tier_name(t: boardgame::Tier) -> String {
     i18n::t(&format!("level.{}", t.name()))
 }
@@ -799,6 +837,8 @@ fn land_pill(u: &Ui) -> String {
     match land_view(u) {
         Some(Land::Tier(t)) => format!("<span class=\"bg-pill\"><i class=\"bg-sw t-{0}\"></i><span data-tier>{1}</span></span>", t.name(), dom::escape_html(&tier_name(t))),
         Some(Land::Trap(t)) => format!("<span class=\"bg-pill\" data-land=\"trap\"><i class=\"bg-sw trap\">\u{26a0}</i>{}</span>", dom::escape_html(&i18n::t(&format!("bg.trap.{}", t.key())))),
+        Some(Land::Boost(b)) => format!("<span class=\"bg-pill\" data-land=\"boost\"><i class=\"bg-sw boost\">{}</i>{}</span>", boost_glyph(b), dom::escape_html(&i18n::t(&format!("bg.boost.{}", b.key())))),
+        Some(Land::Blocked(t)) => format!("<span class=\"bg-pill\" data-land=\"blocked\"><i class=\"bg-sw boost\">{}</i>{}</span>", WARD_GLYPH, dom::escape_html(&blocked_text(t))),
         None => String::new(),
     }
 }
@@ -808,13 +848,26 @@ fn hud(u: &Ui) -> String {
     let mut h = String::new();
     for (i, p) in u.game.players.iter().enumerate() {
         let on = i as u8 == cur && u.game.phase != Phase::Finished;
+        // Feature 3: the streak count (0 to streak_length-1) and a marker while the bonus is pending; Feature 2: a
+        // marker while a Ward charge is held.
+        let mut marks = String::new();
+        let mut label = format!("{} {}", piece(p.seat.piece), i + 1);
+        if u.game.cfg.streak {
+            let n = if p.bonus { i18n::t("bg.streakBonus") } else { i18n::tp("bg.streak", &[("n", &p.streak.to_string())]) };
+            marks.push_str(&format!("<em class=\"bg-sk{}\" data-streak=\"{}\">{}{}</em>", if p.bonus { " bonus" } else { "" }, p.streak, STREAK_GLYPH, if p.bonus { "+1".to_string() } else { p.streak.to_string() }));
+            label.push_str(&format!(", {n}"));
+        }
+        if p.ward {
+            marks.push_str(&format!("<em class=\"bg-wd\" data-ward>{WARD_GLYPH}</em>"));
+            label.push_str(&format!(", {}", i18n::t("bg.boost.ward")));
+        }
         h.push_str(&format!(
-            "<span class=\"bg-chip{}\" aria-label=\"{} {}\"><i style=\"font-style:normal\">{}</i><b>{}</b></span>",
+            "<span class=\"bg-chip{}\" aria-label=\"{}\"><i style=\"font-style:normal\">{}</i><b>{}</b>{}</span>",
             if on { " on" } else { "" },
+            dom::escape_html(&label),
             piece(p.seat.piece),
-            i + 1,
-            piece(p.seat.piece),
-            p.pos
+            p.pos,
+            marks
         ));
     }
     h
@@ -926,7 +979,11 @@ fn track_svg(u: &Ui, n: u32, vh: f64, unit_px: f64) -> String {
     }
     for &t in u.game.revealed.iter().chain(u.marks.iter()) {
         if let Some(k) = at(t) {
-            s.push_str(&format!("<text class=\"bg-trap\" style=\"font-size:{}px\" x=\"{}\" y=\"{}\">\u{26a0}</text>", th * 0.5, slot(k) + 0.5, cy - th * 0.12));
+            if let Some(b) = u.game.board.boost_at(t) {
+                s.push_str(&format!("<text class=\"bg-boost\" style=\"font-size:{}px\" x=\"{}\" y=\"{}\">{}</text>", th * 0.5, slot(k) + 0.5, cy - th * 0.12, boost_glyph(b)));
+            } else {
+                s.push_str(&format!("<text class=\"bg-trap\" style=\"font-size:{}px\" x=\"{}\" y=\"{}\">\u{26a0}</text>", th * 0.5, slot(k) + 0.5, cy - th * 0.12));
+            }
         }
     }
     // Pieces: 1.6 tiles on a coloured disc, clamped to 24-40 px, fanned out when they share a tile.
@@ -1001,11 +1058,24 @@ fn board_svg(u: &Ui, w: u32, h: u32, p: f64) -> String {
         let dcl = if dest == Some(i) { " dest" } else { "" };
         s.push_str(&format!("<rect class=\"{class}{dcl}\" x=\"{}\" y=\"{}\" width=\"0.9\" height=\"0.9\" rx=\"0.16\"/>", xf + 0.05, yf + 0.05));
         // A revealed trap stays on the map for the rest of the game (F4); its tile keeps its pips below the icon.
-        let trap = u.game.revealed.contains(&i) || u.marks.contains(&i);
+        let boost = if u.game.revealed.contains(&i) || u.marks.contains(&i) { u.game.board.boost_at(i) } else { None };
+        let trap = boost.is_none() && (u.game.revealed.contains(&i) || u.marks.contains(&i));
+        let marked = trap || boost.is_some();
         match tier {
-            Some(t) => extras.push_str(&pips_svg(ring::pips(t, &present), cx, if trap { cy + 0.3 } else { cy }, 0.1, 0.26)),
+            Some(t) => extras.push_str(&pips_svg(ring::pips(t, &present), cx, if marked { cy + 0.3 } else { cy }, 0.1, 0.26)),
             None if i == 0 => extras.push_str(&start_svg(cx, cy, 0.3)),
             None => extras.push_str(&format!("<text class=\"bg-flag\" x=\"{cx}\" y=\"{cy}\">\u{1f3c1}</text>")),
+        }
+        if let Some(b) = boost {
+            // A revealed boost is a diamond with its own glyph; a trap is a circle with a warning sign (I-P11).
+            extras.push_str(&format!(
+                "<rect class=\"bg-boostbg\" x=\"{}\" y=\"{}\" width=\"0.4\" height=\"0.4\" transform=\"rotate(45 {cx} {})\"/><text class=\"bg-boost\" x=\"{cx}\" y=\"{}\">{}</text>",
+                cx - 0.2,
+                cy - 0.12 - 0.2,
+                cy - 0.12,
+                cy - 0.12,
+                boost_glyph(b)
+            ));
         }
         if trap {
             extras.push_str(&format!("<circle class=\"bg-trapbg\" cx=\"{cx}\" cy=\"{}\" r=\"0.27\"/><text class=\"bg-trap\" x=\"{cx}\" y=\"{}\">\u{26a0}</text>", cy - 0.12, cy - 0.12));
@@ -1187,6 +1257,14 @@ fn paint_stage(g: Geom) -> bool {
         Some(Land::Trap(t)) => {
             let name = i18n::t(&format!("bg.trap.{}", t.key()));
             (format!("<i class=\"bg-sw trap\">\u{26a0}</i><span data-land=\"trap\">{}</span>", dom::escape_html(&name)), name, format!("x{}", t.key()))
+        }
+        Some(Land::Boost(b)) => {
+            let name = i18n::t(&format!("bg.boost.{}", b.key()));
+            (format!("<i class=\"bg-sw boost\">{}</i><span data-land=\"boost\">{}</span>", boost_glyph(b), dom::escape_html(&name)), name, format!("b{}", b.key()))
+        }
+        Some(Land::Blocked(t)) => {
+            let name = blocked_text(t);
+            (format!("<i class=\"bg-sw boost\">{}</i><span data-land=\"blocked\">{}</span>", WARD_GLYPH, dom::escape_html(&name)), name, format!("w{}", t.key()))
         }
         None => match dest {
             Some(d) if d == last => (format!("<span dir=\"ltr\">{arrow} {d} </span>\u{1f3c1}"), String::new(), "f".to_string()),
@@ -1374,6 +1452,51 @@ fn cancel_anim() {
 pub fn seam_mark(tile: u32) {
     with_ui(|u| u.marks.push(tile));
     fit_view();
+}
+
+/// Test seam (dev build only), CC-BOARD-GAME-POLISH Phase D: put the game into a state the dice would take
+/// minutes to reach. `ward:<seat>` and `bonus:<seat>` grant a held Ward / a pending streak bonus;
+/// `boost:<key>` and `trap:<key>` place that special on the tile the current spelling moves to (clearing
+/// the other kind there), so the real arrival, effect and centre-stage text can be watched.
+pub fn seam_force(spec: &str) -> bool {
+    let done = with_ui(|u| {
+        let (kind, arg) = spec.split_once(':').unwrap_or((spec, ""));
+        match kind {
+            "ward" | "bonus" => {
+                let Some(p) = arg.parse::<usize>().ok().and_then(|i| u.game.players.get_mut(i)) else { return false };
+                if kind == "ward" { p.ward = true } else { p.bonus = true }
+                true
+            }
+            "boost" | "trap" => {
+                let Some(dest) = u.game.pending.as_ref().map(|p| p.dest as usize) else { return false };
+                let n = u.game.board.len();
+                if dest == 0 || dest + 1 >= n {
+                    return false;
+                }
+                if u.game.board.boosts.len() != n {
+                    u.game.board.boosts = vec![None; n];
+                }
+                if u.game.board.traps.len() != n {
+                    return false;
+                }
+                u.game.board.boosts[dest] = None;
+                u.game.board.traps[dest] = None;
+                if kind == "boost" {
+                    u.game.board.boosts[dest] = Boost::ALL.into_iter().find(|b| b.key() == arg);
+                    u.game.board.boosts[dest].is_some()
+                } else {
+                    u.game.board.traps[dest] = crate::boardgame::Trap::ALL.into_iter().find(|t| t.key() == arg);
+                    u.game.board.traps[dest].is_some()
+                }
+            }
+            _ => false,
+        }
+    })
+    .unwrap_or(false);
+    if done {
+        render();
+    }
+    done
 }
 
 /// Test seam: walk a seat's piece `n` tiles forward from where it stands (the real walk, the
@@ -1706,6 +1829,12 @@ pub fn seam_state() -> String {
                     "variant": format!("{:?}", g.cfg.variant),
                     "traps": g.board.trap_count(),
                     "tiles": g.board.len(),
+                    "boosts": g.board.boosts.iter().enumerate().filter_map(|(i, b)| b.map(|b| (i, b.key()))).collect::<Vec<_>>(),
+                    "boostsOn": g.cfg.boosts,
+                    "streakOn": g.cfg.streak,
+                    "ward": g.players.iter().map(|p| p.ward).collect::<Vec<_>>(),
+                    "streak": g.players.iter().map(|p| p.streak).collect::<Vec<_>>(),
+                    "bonus": g.players.iter().map(|p| p.bonus).collect::<Vec<_>>(),
                     "offer": g.offer.map(|o| serde_json::json!({"normal": o.normal_tier.name(), "stretch": o.stretch_tier.name(), "nd": o.normal_dest, "sd": o.stretch_dest})),
                     "stretchOn": g.cfg.stretch,
                     "sc": g.players.iter().map(|p| vec![p.stretch_offered, p.stretch_taken, p.stretch_hits]).collect::<Vec<_>>(),

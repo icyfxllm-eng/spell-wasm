@@ -924,5 +924,11 @@
   "spz.star.ear": "예리한 귀",
   "spz.star.code": "암호 해독가",
   "spz.clear": "단어 지우기",
-  "spz.runeLabel": "룬 {k}"
+  "spz.runeLabel": "룬 {k}",
+  "bg.boost.tailwind": "순풍 +3",
+  "bg.boost.extra": "추가 굴리기",
+  "bg.boost.ward": "방어 획득",
+  "bg.wardBlocked": "방어가 막음: {trap}",
+  "bg.streak": "연속 {n}",
+  "bg.streakBonus": "다음 굴리기에 +1"
 }

@@ -1,6 +1,6 @@
 # TEST-REPORT — Web E2E (app build)
 
-**239/239 passed** across 36 areas.
+**289/289 passed** across 38 areas.
 
 ## drawer — 21/21
 - ✅ every drawer row presses something that can receive it (en)
@@ -211,6 +211,60 @@
 - ✅ spell_cross_launch_set
 - ✅ spell_cross_spell_jr_gets_jr_only
 - ✅ spell_cross_daily_is_the_same_for_everyone
+
+## boardgame — 40/40
+- ✅ boardgame_pass_and_play_handoff_hit_and_miss
+- ✅ boardgame_pass_and_play_reaches_the_podium
+- ✅ boardgame_npc_run_is_fast_and_never_shows_keys
+- ✅ boardgame_landing_callout_names_tier_and_trap
+- ✅ boardgame_layout_every_language_every_phone
+- ✅ boardgame_setup_screen_has_top_right_exit
+- ✅ boardgame_board_state_fills_height_and_exit_works
+- ✅ boardgame_spell_state_exit_works
+- ✅ boardgame_ja_modifier_keys
+- ✅ boardgame_unrolled_track_en
+- ✅ boardgame_unrolled_track_ar
+- ✅ boardgame_compact_strip_when_space_is_short
+- ✅ boardgame_polish_A-P11_layout_375x667
+- ✅ boardgame_polish_A-P11_layout_393x852
+- ✅ boardgame_polish_A-P11_layout_820x1180
+- ✅ boardgame_polish_A-P11_grayscale_tiers_start_finish_revealed
+- ✅ boardgame_polish_tile_numbers_are_on_the_interior_side
+- ✅ boardgame_polish_A-P12_6_tile_hop_within_1200ms
+- ✅ boardgame_polish_A-P12_12_tile_hop_within_2000ms
+- ✅ boardgame_polish_A-P12_reduce_motion_has_no_hops_and_no_ticks
+- ✅ boardgame_polish_A-P12_real_move_hops_tile_by_tile_inside_the_budget
+- ✅ boardgame_polish_A-P12_tap_cancels_hops_and_the_npc_run_stays_inside_the_step
+- ✅ boardgame_polish_centre_stage_die_label_and_tile_line
+- ✅ boardgame_polish_tier_pill_is_the_fallback_when_there_is_no_stage
+- ✅ boardgame_polish_ja_stage_and_pieces_at_430x932
+- ✅ boardgame_sprint_solo_defaults_to_sprint_and_can_pick_full
+- ✅ boardgame_sprint_pass_and_play_opens_on_full_and_remembers
+- ✅ boardgame_sprint_spell_jr_has_no_size_picker
+- ✅ boardgame_sprint_ring_fit_375x667
+- ✅ boardgame_sprint_ring_fit_393x852
+- ✅ boardgame_sprint_ring_fit_820x1180
+- ✅ boardgame_stretch_choice_precedes_every_word_and_pays_two
+- ✅ boardgame_stretch_is_never_offered_from_expert_or_in_spell_jr
+- ✅ boardgame_stretch_podium_counter_and_flag_off_has_none
+- ✅ boardgame_boost_streak_chips_count_then_show_the_plus_one_marker
+- ✅ boardgame_boost_ward_marker_and_blocked_trap_named_in_the_stage
+- ✅ boardgame_boost_effects_are_named_in_the_stage_and_resolve
+- ✅ boardgame_boost_grayscale_boost_diamond_vs_trap_circle
+- ✅ boardgame_boost_four_chips_with_markers_fit_375
+- ✅ boardgame_boost_npc_runs_stay_inside_the_budget_and_tap_applies_final_positions
+
+## spelluzzle — 10/10
+- ✅ spelluzzle_exit_is_top_left_and_leaves
+- ✅ spelluzzle_first_board_shows_the_explainer_once
+- ✅ spelluzzle_untouched_board_shows_runes_never_letters
+- ✅ spelluzzle_typing_a_word_decodes_the_others_and_a_clash_is_amber
+- ✅ spelluzzle_solves_and_the_secret_is_said_once_at_the_end
+- ✅ spelluzzle_layout_floor_at_375x667
+- ✅ spelluzzle_no_red_anywhere
+- ✅ spelluzzle_jr_gets_jr_boards_only
+- ✅ spelluzzle_leaving_saves_and_playing_again_resumes
+- ✅ spelluzzle_a_clip_that_will_not_load_replaces_the_board_then_says_unavailable
 
 ## translate-screen — 10/10
 - ✅ translate_state_matrix_holds_the_action_row_still

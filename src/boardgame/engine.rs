@@ -39,7 +39,7 @@ pub fn new_game(seed: u64, cfg: GameConfig, pools: TierPools) -> Result<BoardGam
     }
 
     let mut rng = Rng::new(seed);
-    let board = generate(&mut rng, cfg.variant);
+    let board = generate(&mut rng, cfg.variant, cfg.boosts);
     let start = (rng.next_u64() % n as u64) as usize;
     let order: Vec<u8> = (0..n).map(|k| ((start + k) % n) as u8).collect();
 
@@ -52,7 +52,7 @@ pub fn new_game(seed: u64, cfg: GameConfig, pools: TierPools) -> Result<BoardGam
     let players = cfg
         .seats
         .iter()
-        .map(|&seat| Player { seat, pos: 0, skip: false, rolls: 0, attempts: 0, hits: 0, spelled: Vec::new(), missed: Vec::new(), stretch_offered: 0, stretch_taken: 0, stretch_hits: 0 })
+        .map(|&seat| Player { seat, pos: 0, skip: false, rolls: 0, attempts: 0, hits: 0, spelled: Vec::new(), missed: Vec::new(), stretch_offered: 0, stretch_taken: 0, stretch_hits: 0, ward: false, streak: 0, bonus: false })
         .collect();
 
     Ok(BoardGameState {
@@ -64,6 +64,7 @@ pub fn new_game(seed: u64, cfg: GameConfig, pools: TierPools) -> Result<BoardGam
         phase: Phase::AwaitRoll,
         pending: None,
         offer: None,
+        effect_used: false,
         rng,
         pools: Arc::new(pools),
         queues,
@@ -167,6 +168,22 @@ enum Src {
     Long,
 }
 
+/// What the tile a piece arrived on does.
+enum TileFx {
+    Nothing,
+    Trap(Trap),
+    Boost(Boost),
+}
+
+/// What happens to the turn after a boost.
+enum Flow {
+    End,
+    /// Extra Roll: the same seat rolls again.
+    Again,
+    /// The boost carried the piece to the finish.
+    Done,
+}
+
 impl BoardGameState {
     fn roll_d6(&mut self) -> u8 {
         1 + (self.rng.next_u64() % 6) as u8
@@ -238,6 +255,7 @@ impl BoardGameState {
     /// skip (the calibration sim counts a skipped turn as a turn).
     fn end_turn(&mut self) {
         self.pending = None;
+        self.effect_used = false;
         self.phase = Phase::AwaitRoll;
         let n = self.order.len();
         for _ in 0..=n {
@@ -259,12 +277,97 @@ impl BoardGameState {
         }
     }
 
+    /// Feature 3: the pending streak bonus goes onto the roll being taken now (and is spent
+    /// whether or not that roll's spelling turns out right). A turn that is skipped takes no roll,
+    /// so it leaves the bonus waiting.
+    fn take_bonus(&mut self, seat: u8) -> u32 {
+        if !(self.cfg.streak && self.players[seat as usize].bonus) {
+            return 0;
+        }
+        self.players[seat as usize].bonus = false;
+        self.push(Event::StreakBonusUsed { seat });
+        self.cfg.variant.cfg().streak_bonus
+    }
+
+    /// Feature 3 (D-P3): every graded spelling counts, Stretch and trap words included. A right
+    /// one adds 1; at `streak_length` the counter resets and the bonus is pending; a wrong one resets.
+    fn graded(&mut self, seat: u8, ok: bool) {
+        if !self.cfg.streak {
+            return;
+        }
+        let len = self.cfg.variant.cfg().streak_length;
+        let p = &mut self.players[seat as usize];
+        if !ok {
+            p.streak = 0;
+            return;
+        }
+        p.streak += 1;
+        if p.streak >= len {
+            p.streak = 0;
+            p.bonus = true;
+            self.push(Event::StreakEarned { seat });
+        }
+    }
+
+    /// I-P4: the tile effect for a piece that has just arrived by its own spelling. At most one
+    /// trap or boost resolves per turn, the first one reached; once `effect_used` is set (a Tailwind
+    /// landing on another special, an Extra Roll's second roll) nothing further triggers and the
+    /// tile stays hidden. A held Ward turns the trap into a revealed no-op and is spent.
+    fn tile_effect(&mut self, seat: u8, tile: u32) -> TileFx {
+        if self.effect_used {
+            return TileFx::Nothing;
+        }
+        if let Some(trap) = self.board.trap_at(tile) {
+            self.reveal(tile);
+            self.effect_used = true;
+            if self.players[seat as usize].ward {
+                self.players[seat as usize].ward = false;
+                self.push(Event::TrapBlocked { seat, tile, trap });
+                return TileFx::Nothing;
+            }
+            self.push(Event::TrapHit { seat, tile, trap });
+            return TileFx::Trap(trap);
+        }
+        if let Some(boost) = self.board.boost_at(tile) {
+            self.reveal(tile);
+            self.effect_used = true;
+            self.push(Event::BoostHit { seat, tile, boost });
+            return TileFx::Boost(boost);
+        }
+        TileFx::Nothing
+    }
+
+    /// Resolve a triggered boost. Tailwind moves on (clamped at the finish, which wins the game),
+    /// Extra Roll keeps the turn, Ward is collected (one charge at most).
+    fn apply_boost(&mut self, seat: u8, tile: u32, boost: Boost) -> Flow {
+        match boost {
+            Boost::Tailwind => {
+                let to = (tile + self.cfg.variant.cfg().tailwind_tiles).min(self.board.last());
+                self.players[seat as usize].pos = to;
+                self.push(Event::Moved { seat, from: tile, to });
+                if to == self.board.last() {
+                    self.finish(seat);
+                    Flow::Done
+                } else {
+                    Flow::End
+                }
+            }
+            Boost::ExtraRoll => Flow::Again,
+            Boost::Ward => {
+                self.players[seat as usize].ward = true;
+                self.push(Event::WardGained { seat });
+                Flow::End
+            }
+        }
+    }
+
     // ---------------------------------------------------------------- human
 
     fn human_roll(&mut self, seat: u8) {
         let roll = self.roll_d6();
         let from = self.players[seat as usize].pos;
-        let dest = (from + roll as u32).min(self.board.last());
+        let bonus = self.take_bonus(seat);
+        let dest = (from + roll as u32 + bonus).min(self.board.last());
         self.players[seat as usize].rolls += 1;
         self.push(Event::Rolled { seat, roll, dest });
         if dest == self.board.last() {
@@ -317,6 +420,7 @@ impl BoardGameState {
     fn human_spell(&mut self, seat: u8, typed: &str) {
         let sp = self.pending.take().expect("checked by apply");
         let ok = self.grade(typed, &sp);
+        self.graded(seat, ok);
         match sp.kind {
             SpellKind::Landing => {
                 let from = self.players[seat as usize].pos;
@@ -389,12 +493,25 @@ impl BoardGameState {
             self.finish(seat);
             return;
         }
-        let Some(trap) = self.board.trap_at(dest) else {
-            self.end_turn();
-            return;
+        let trap = match self.tile_effect(seat, dest) {
+            TileFx::Nothing => {
+                self.end_turn();
+                return;
+            }
+            TileFx::Boost(b) => {
+                match self.apply_boost(seat, dest, b) {
+                    Flow::End => self.end_turn(),
+                    // The same seat rolls again; the turn (and its one tile effect) carries on.
+                    Flow::Again => {
+                        self.pending = None;
+                        self.phase = Phase::AwaitRoll;
+                    }
+                    Flow::Done => {}
+                }
+                return;
+            }
+            TileFx::Trap(t) => t,
         };
-        self.reveal(dest);
-        self.push(Event::TrapHit { seat, tile: dest, trap });
         match trap {
             Trap::BackToStart => {
                 self.players[seat as usize].pos = 0;
@@ -446,19 +563,32 @@ impl BoardGameState {
 
     /// One whole NPC turn. NPCs draw no words (I11): their outcomes come from
     /// the seeded stream, the adaptive formula and the state (I9), and they are
-    /// subject to every trap (I10).
+    /// subject to every trap (I10). An Extra Roll keeps the turn: the NPC rolls again inside
+    /// the same `AdvanceNpc` (at most twice, since only one tile effect resolves per turn).
     fn npc_turn(&mut self, seat: u8) {
+        loop {
+            match self.npc_roll(seat) {
+                Flow::Again => continue,
+                Flow::End => self.end_turn(),
+                Flow::Done => {}
+            }
+            return;
+        }
+    }
+
+    fn npc_roll(&mut self, seat: u8) -> Flow {
         let p = self.npc_acc_milli();
         let roll = self.roll_d6();
         let from = self.players[seat as usize].pos;
-        let dest = (from + roll as u32).min(self.board.last());
+        let bonus = self.take_bonus(seat);
+        let dest = (from + roll as u32 + bonus).min(self.board.last());
         self.players[seat as usize].rolls += 1;
         self.push(Event::Rolled { seat, roll, dest });
         if dest == self.board.last() {
             self.players[seat as usize].pos = dest;
             self.push(Event::Moved { seat, from, to: dest });
             self.finish(seat);
-            return;
+            return Flow::Done;
         }
         // Feature 1 (D-P10, D-P21). Stretch is considered only when it is on and offered AND the NPC
         // can pay the penalty without hitting the accuracy floor (`p - penalty >= floor`): an NPC
@@ -480,10 +610,11 @@ impl BoardGameState {
             }
         }
         let p_spell = if stretched { p - penalty } else { p };
-        if !self.chance(p_spell) {
+        let ok = self.chance(p_spell);
+        self.graded(seat, ok);
+        if !ok {
             self.push(Event::Missed { seat, at: from, word: None });
-            self.end_turn();
-            return;
+            return Flow::End;
         }
         if stretched {
             self.players[seat as usize].stretch_hits += 1;
@@ -492,21 +623,22 @@ impl BoardGameState {
         self.push(Event::Moved { seat, from, to: dest });
         if dest == self.board.last() {
             self.finish(seat);
-            return;
+            return Flow::Done;
         }
-        let Some(trap) = self.board.trap_at(dest) else {
-            self.end_turn();
-            return;
+        let trap = match self.tile_effect(seat, dest) {
+            TileFx::Nothing => return Flow::End,
+            TileFx::Boost(b) => return self.apply_boost(seat, dest, b),
+            TileFx::Trap(t) => t,
         };
-        self.reveal(dest);
-        self.push(Event::TrapHit { seat, tile: dest, trap });
         match trap {
             Trap::BackToStart => {
                 self.players[seat as usize].pos = 0;
                 self.push(Event::Teleported { seat, from: dest, to: 0 });
             }
             Trap::LongWord => {
-                if !self.chance(p) {
+                let ok = self.chance(p);
+                self.graded(seat, ok);
+                if !ok {
                     let to = dest.saturating_sub(6);
                     self.players[seat as usize].pos = to;
                     self.push(Event::Teleported { seat, from: dest, to });
@@ -534,7 +666,14 @@ impl BoardGameState {
             }
             Trap::DoubleExpert => {
                 // Both required; the second draw is not made once the first fails.
-                if !self.chance(p) || !self.chance(p) {
+                let first = self.chance(p);
+                self.graded(seat, first);
+                let both = first && {
+                    let second = self.chance(p);
+                    self.graded(seat, second);
+                    second
+                };
+                if !both {
                     self.players[seat as usize].skip = true;
                     self.push(Event::SkipSet { seat });
                 } else {
@@ -542,6 +681,6 @@ impl BoardGameState {
                 }
             }
         }
-        self.end_turn();
+        Flow::End
     }
 }

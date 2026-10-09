@@ -924,5 +924,11 @@
   "spz.star.ear": "Sikio makini",
   "spz.star.code": "Mvunja Siri",
   "spz.clear": "Futa neno",
-  "spz.runeLabel": "Runi {k}"
+  "spz.runeLabel": "Runi {k}",
+  "bg.boost.tailwind": "Upepo mzuri +3",
+  "bg.boost.extra": "Kete la ziada",
+  "bg.boost.ward": "Ulinzi umepatikana",
+  "bg.wardBlocked": "Ulinzi ulizuia: {trap}",
+  "bg.streak": "Mfululizo {n}",
+  "bg.streakBonus": "+1 kwenye kete ijayo"
 }

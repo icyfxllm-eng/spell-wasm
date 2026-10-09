@@ -924,5 +924,11 @@
   "spz.star.ear": "Dobry słuch",
   "spz.star.code": "Łamacz szyfrów",
   "spz.clear": "Wyczyść słowo",
-  "spz.runeLabel": "Runa {k}"
+  "spz.runeLabel": "Runa {k}",
+  "bg.boost.tailwind": "Wiatr w plecy +3",
+  "bg.boost.extra": "Dodatkowy rzut",
+  "bg.boost.ward": "Ochrona zdobyta",
+  "bg.wardBlocked": "Ochrona zablokowała: {trap}",
+  "bg.streak": "Seria {n}",
+  "bg.streakBonus": "+1 przy następnym rzucie"
 }

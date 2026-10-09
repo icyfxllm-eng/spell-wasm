@@ -924,5 +924,11 @@
   "spz.star.ear": "तेज़ कान",
   "spz.star.code": "कोडब्रेकर",
   "spz.clear": "शब्द मिटाएँ",
-  "spz.runeLabel": "रून {k}"
+  "spz.runeLabel": "रून {k}",
+  "bg.boost.tailwind": "अनुकूल हवा +3",
+  "bg.boost.extra": "अतिरिक्त पासा",
+  "bg.boost.ward": "सुरक्षा मिली",
+  "bg.wardBlocked": "सुरक्षा ने रोका: {trap}",
+  "bg.streak": "लगातार {n}",
+  "bg.streakBonus": "अगली चाल पर +1"
 }

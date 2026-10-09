@@ -924,5 +924,11 @@
   "spz.star.ear": "Чуткое ухо",
   "spz.star.code": "Взломщик",
   "spz.clear": "Стереть слово",
-  "spz.runeLabel": "Руна {k}"
+  "spz.runeLabel": "Руна {k}",
+  "bg.boost.tailwind": "Попутный ветер +3",
+  "bg.boost.extra": "Дополнительный бросок",
+  "bg.boost.ward": "Защита получена",
+  "bg.wardBlocked": "Защита остановила: {trap}",
+  "bg.streak": "Серия {n}",
+  "bg.streakBonus": "+1 к следующему броску"
 }

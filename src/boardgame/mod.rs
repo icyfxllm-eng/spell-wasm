@@ -102,6 +102,30 @@ impl Trap {
 }
 
 /// D18 / F5. Standard only; Jr has one fixed delta and shows no setting.
+/// Feature 2: the three boost kinds. Hidden until triggered, then marked (D-P2).
+#[derive(Clone, Copy, Debug, PartialEq, Eq, Hash)]
+pub enum Boost {
+    /// Move forward `tailwind_tiles` more tiles.
+    Tailwind,
+    /// Roll and spell again this turn.
+    ExtraRoll,
+    /// Hold one charge that cancels the next trap landed on.
+    Ward,
+}
+
+impl Boost {
+    pub const ALL: [Boost; 3] = [Boost::Tailwind, Boost::ExtraRoll, Boost::Ward];
+
+    /// The locale key suffix (`bg.boost.<key>`).
+    pub fn key(self) -> &'static str {
+        match self {
+            Boost::Tailwind => "tailwind",
+            Boost::ExtraRoll => "extra",
+            Boost::Ward => "ward",
+        }
+    }
+}
+
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
 pub enum Difficulty {
     Easy,
@@ -142,6 +166,11 @@ pub struct GameConfig {
     /// `boardStretch` flag once) so the reducer stays pure and a replay is exact. Off, the
     /// engine is move for move what it was before Stretch existed (A-P9).
     pub stretch: bool,
+    /// Feature 2 / D-P16: boost tiles. Captured here like `stretch`. Off, no boost is placed, no
+    /// RNG is drawn for them, and the game is move for move what it was before (A-P9).
+    pub boosts: bool,
+    /// Feature 3 / D-P16: hot streak, captured here too.
+    pub streak: bool,
 }
 
 // A function pointer has no stable identity to compare or print.
@@ -153,6 +182,8 @@ impl PartialEq for GameConfig {
             && self.kid == o.kid
             && self.seats == o.seats
             && self.stretch == o.stretch
+            && self.boosts == o.boosts
+            && self.streak == o.streak
     }
 }
 
@@ -179,7 +210,7 @@ impl GameConfig {
             }
             p += 1;
         }
-        GameConfig { variant, difficulty, lang: lang.to_string(), kid, seats, grader, stretch: false }
+        GameConfig { variant, difficulty, lang: lang.to_string(), kid, seats, grader, stretch: false, boosts: false, streak: false }
     }
 
     /// Turn Stretch on (the flag) for this game. Ignored by variants that have none (Jr).
@@ -188,10 +219,22 @@ impl GameConfig {
         self
     }
 
+    /// Turn boost tiles on for this game (ignored by nothing: every variant has boosts).
+    pub fn with_boosts(mut self, on: bool) -> Self {
+        self.boosts = on;
+        self
+    }
+
+    /// Turn the hot streak on for this game.
+    pub fn with_streak(mut self, on: bool) -> Self {
+        self.streak = on;
+        self
+    }
+
     /// F7: 2-4 humans on one phone, pieces in seat order.
     pub fn pass_and_play(variant: Variant, humans: u8, lang: &str, kid: bool, grader: Grader) -> Self {
         let seats = (0..humans).map(|piece| Seat { piece, npc: false }).collect();
-        GameConfig { variant, difficulty: Difficulty::Normal, lang: lang.to_string(), kid, seats, grader, stretch: false }
+        GameConfig { variant, difficulty: Difficulty::Normal, lang: lang.to_string(), kid, seats, grader, stretch: false, boosts: false, streak: false }
     }
 }
 
@@ -298,6 +341,16 @@ pub struct Offer {
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub enum Event {
     Rolled { seat: u8, roll: u8, dest: u32 },
+    /// Feature 3: the third correct spelling in a row; the next roll taken gets +1.
+    StreakEarned { seat: u8 },
+    /// Feature 3: the pending bonus went onto the roll that follows.
+    StreakBonusUsed { seat: u8 },
+    /// Feature 2: a hidden boost was triggered (it stays marked from now on).
+    BoostHit { seat: u8, tile: u32, boost: Boost },
+    /// Feature 2: Ward collected (a second pickup while holding one changes nothing).
+    WardGained { seat: u8 },
+    /// Feature 2: a held Ward cancelled the trap on `tile`; the charge is spent.
+    TrapBlocked { seat: u8, tile: u32, trap: Trap },
     /// Feature 1: the move that follows (Moved, Missed, trap events) was a Stretch.
     Stretched { seat: u8 },
     Moved { seat: u8, from: u32, to: u32 },
@@ -330,6 +383,12 @@ pub struct Player {
     pub stretch_offered: u32,
     pub stretch_taken: u32,
     pub stretch_hits: u32,
+    /// Feature 2: holds a Ward charge (at most one).
+    pub ward: bool,
+    /// Feature 3: correct spellings in a row, 0..streak_length-1.
+    pub streak: u32,
+    /// Feature 3: the next roll actually taken gets the streak bonus.
+    pub bonus: bool,
 }
 
 #[derive(Clone, Debug, PartialEq, Eq)]
@@ -338,6 +397,8 @@ pub struct Board {
     pub tiers: Vec<Option<Tier>>,
     /// Empty when the variant has no traps (Jr): there is no trap table to index (I2).
     pub traps: Vec<Option<Trap>>,
+    /// Feature 2: empty unless the game has boosts on. Never on tile 0, the finish or a trap tile.
+    pub boosts: Vec<Option<Boost>>,
     /// The canonical ring's width (Full 22 of 22x22, Sprint 11 of 11x12, Jr 11 of 11x11).
     /// Presentation picks the drawn shape (`boardgame_ring`); this only feeds the digest.
     pub grid: u32,
@@ -360,6 +421,14 @@ impl Board {
         self.traps.get(tile as usize).copied().flatten()
     }
 
+    pub fn boost_at(&self, tile: u32) -> Option<Boost> {
+        self.boosts.get(tile as usize).copied().flatten()
+    }
+
+    pub fn boost_count(&self) -> usize {
+        self.boosts.iter().flatten().count()
+    }
+
     pub fn trap_count(&self) -> usize {
         self.traps.iter().flatten().count()
     }
@@ -378,6 +447,9 @@ pub struct BoardGameState {
     pub pending: Option<Spell>,
     /// Feature 1: set only while `phase == AwaitStretch`.
     pub offer: Option<Offer>,
+    /// I-P4: a trap or boost has already resolved this turn. Reset when the turn passes; an Extra
+    /// Roll keeps the turn, so its second roll resolves no further tile effect.
+    pub effect_used: bool,
     pub(crate) rng: Rng,
     pub(crate) pools: Arc<TierPools>,
     /// Indices into `pools`, popped from the back.
@@ -474,6 +546,17 @@ impl BoardGameState {
             }
             for p in &self.players {
                 push(&mut b, p.stretch_offered as u64 | (p.stretch_taken as u64) << 20 | (p.stretch_hits as u64) << 40);
+            }
+        }
+        // Boost and streak state joins the digest only in a game that has either on (A-P9).
+        if self.cfg.boosts || self.cfg.streak {
+            push(&mut b, 0xB005_7);
+            push(&mut b, self.effect_used as u64);
+            for (i, bo) in self.board.boosts.iter().enumerate() {
+                push(&mut b, bo.map(|x| x as u64 + 1).unwrap_or(0) | (i as u64) << 8);
+            }
+            for p in &self.players {
+                push(&mut b, p.ward as u64 | (p.streak as u64) << 1 | (p.bonus as u64) << 8);
             }
         }
         if let Some(sp) = &self.pending {

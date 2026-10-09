@@ -924,5 +924,11 @@
   "spz.star.ear": "鋭い耳",
   "spz.star.code": "暗号解読",
   "spz.clear": "単語を消す",
-  "spz.runeLabel": "ルーン {k}"
+  "spz.runeLabel": "ルーン {k}",
+  "bg.boost.tailwind": "追い風 +3",
+  "bg.boost.extra": "もう一回",
+  "bg.boost.ward": "守りを獲得",
+  "bg.wardBlocked": "守りが防いだ: {trap}",
+  "bg.streak": "連続 {n}",
+  "bg.streakBonus": "次のロールで +1"
 }
