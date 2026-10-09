@@ -305,6 +305,25 @@ def build_lang(lang):
                 with _print_lock:
                     print(f"    {lang}: {failed} transient failures — rerun to retry", flush=True)
 
+    # Japanese: JMdict, keyed by reading, built by scripts/build-ja-glosses.py.
+    # en.wiktionary had a Japanese entry for 941 of 4,979 bank words; JMdict has
+    # one for 4,321, because it is a Japanese-English dictionary and Wiktionary
+    # is an English one that happens to carry some Japanese. Preferred over the
+    # cached Wiktionary gloss for the same reason, with Wiktionary kept for what
+    # JMdict misses -- so this can only add coverage, never remove it.
+    if lang == "ja":
+        jpath = os.path.join(ROOT, "backend", "ja_glosses.json")
+        if not os.path.exists(jpath):
+            raise SystemExit("build-def-pools: ja needs backend/ja_glosses.json — "
+                             "run scripts/build-ja-glosses.py first. Refusing to "
+                             "build a thinner Japanese pool without saying so.")
+        jm = json.load(open(jpath, encoding="utf-8"))
+        want = set(all_words)
+        for w, g in jm.items():
+            if w in want and g.get("definition"):
+                cache[w] = {"word": w, "found": True, "pos": g.get("pos", ""),
+                            "definition": g["definition"], "form_of": False}
+
     # Blocklist screen for definition TEXT (words themselves already screened).
     block = set()
     bl = os.path.join(ROOT, "backend", "blocklist.txt")
