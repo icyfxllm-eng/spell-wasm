@@ -15,6 +15,7 @@ pub mod bank;
 pub mod gates;
 pub mod gen;
 pub mod lex;
+pub mod play;
 pub mod types;
 pub mod view;
 

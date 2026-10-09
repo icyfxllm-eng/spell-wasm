@@ -907,5 +907,22 @@
   "bg.sprint": "Szybka",
   "bg.full": "Pełna",
   "bg.stretch": "Wyzwanie",
-  "bg.stretchStat": "Wyzwanie: podjęto {taken} z {offered}, trafnie {hits}"
+  "bg.stretchStat": "Wyzwanie: podjęto {taken} z {offered}, trafnie {hits}",
+  "spz.name": "Spelluzzle",
+  "spz.tagline": "Posłuchaj, przeliteruj, odkryj runy.",
+  "spz.how.runes": "Każda runa to jedna litera. Ta sama runa to zawsze ta sama litera.",
+  "spz.how.tap": "Dotknij słowa, by je usłyszeć, a potem je przeliteruj. Jego litery pojawią się wszędzie tam, gdzie są te runy.",
+  "spz.how.amber": "Bursztynowe runy oznaczają, że dwa twoje słowa się wykluczają. Jedno z nich jest błędne.",
+  "spz.how.silent": "Niektóre słowa milczą. Odgadnij je z liter, które już masz.",
+  "spz.secret": "Tajne słowo",
+  "spz.listen": "Posłuchaj",
+  "spz.listenCost": "Słuchanie kosztuje gwiazdkę Łamacza szyfrów.",
+  "spz.off": "Błędnych słów: {n}",
+  "spz.offOne": "1 słowo jest błędne",
+  "spz.new": "Nowa plansza",
+  "spz.star.solved": "Rozwiązane",
+  "spz.star.ear": "Dobry słuch",
+  "spz.star.code": "Łamacz szyfrów",
+  "spz.clear": "Wyczyść słowo",
+  "spz.runeLabel": "Runa {k}"
 }

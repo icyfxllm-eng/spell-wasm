@@ -907,5 +907,22 @@
   "bg.sprint": "Mabilis",
   "bg.full": "Buo",
   "bg.stretch": "Hamon",
-  "bg.stretchStat": "Hamon: {taken} sa {offered} ang kinuha, {hits} ang tama"
+  "bg.stretchStat": "Hamon: {taken} sa {offered} ang kinuha, {hits} ang tama",
+  "spz.name": "Spelluzzle",
+  "spz.tagline": "Pakinggan, baybayin, lutasin ang mga rune.",
+  "spz.how.runes": "Isang titik ang bawat rune. Ang parehong rune ay laging parehong titik.",
+  "spz.how.tap": "I-tap ang salita para marinig ito, saka baybayin. Lalabas ang mga titik nito saanman naroon ang mga rune na iyon.",
+  "spz.how.amber": "Ang mga amber na rune ay nangangahulugang magkasalungat ang dalawa mong salita. May mali sa isa sa kanila.",
+  "spz.how.silent": "May mga salitang tahimik. Alamin ang mga ito mula sa mga titik na mayroon ka.",
+  "spz.secret": "Lihim na salita",
+  "spz.listen": "Pakinggan",
+  "spz.listenCost": "Ang pakikinig ay may kapalit na bituin ng Tagapag-decode.",
+  "spz.off": "{n} salita ang mali",
+  "spz.offOne": "1 salita ang mali",
+  "spz.new": "Bagong board",
+  "spz.star.solved": "Nalutas",
+  "spz.star.ear": "Matalas na tainga",
+  "spz.star.code": "Tagapag-decode",
+  "spz.clear": "Burahin ang salita",
+  "spz.runeLabel": "Runa {k}"
 }

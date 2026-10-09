@@ -907,5 +907,22 @@
   "bg.sprint": "Schnell",
   "bg.full": "Voll",
   "bg.stretch": "Wagnis",
-  "bg.stretchStat": "Wagnis: {taken} von {offered} genommen, {hits} richtig"
+  "bg.stretchStat": "Wagnis: {taken} von {offered} genommen, {hits} richtig",
+  "spz.name": "Spelluzzle",
+  "spz.tagline": "Hör es, buchstabiere es, knack die Runen.",
+  "spz.how.runes": "Jede Rune steht für einen Buchstaben. Dieselbe Rune ist immer derselbe Buchstabe.",
+  "spz.how.tap": "Tippe auf ein Wort, um es zu hören, und buchstabiere es. Seine Buchstaben erscheinen überall, wo diese Runen stehen.",
+  "spz.how.amber": "Bernsteinfarbene Runen bedeuten: Zwei deiner Wörter widersprechen sich. Eines davon ist falsch.",
+  "spz.how.silent": "Manche Wörter bleiben stumm. Finde sie mit den Buchstaben heraus, die du hast.",
+  "spz.secret": "Geheimwort",
+  "spz.listen": "Anhören",
+  "spz.listenCost": "Anhören kostet den Codeknacker-Stern.",
+  "spz.off": "{n} Wörter stimmen nicht",
+  "spz.offOne": "1 Wort stimmt nicht",
+  "spz.new": "Neues Brett",
+  "spz.star.solved": "Gelöst",
+  "spz.star.ear": "Feines Gehör",
+  "spz.star.code": "Codeknacker",
+  "spz.clear": "Wort löschen",
+  "spz.runeLabel": "Rune Nr. {k}"
 }

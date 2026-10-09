@@ -907,5 +907,22 @@
   "bg.sprint": "Sprint",
   "bg.full": "Full",
   "bg.stretch": "Stretch",
-  "bg.stretchStat": "Stretch: {taken} of {offered} taken, {hits} right"
+  "bg.stretchStat": "Stretch: {taken} of {offered} taken, {hits} right",
+  "spz.name": "Spelluzzle",
+  "spz.tagline": "Hear it, spell it, crack the runes.",
+  "spz.how.runes": "Each rune is one letter. The same rune is always the same letter.",
+  "spz.how.tap": "Tap a word to hear it, then spell it. Its letters appear wherever those runes are.",
+  "spz.how.amber": "Amber runes mean two of your words disagree. One of them is wrong.",
+  "spz.how.silent": "Some words stay silent. Work them out from the letters you have.",
+  "spz.secret": "Secret word",
+  "spz.listen": "Listen",
+  "spz.listenCost": "Listening costs the Codebreaker star.",
+  "spz.off": "{n} words are off",
+  "spz.offOne": "1 word is off",
+  "spz.new": "New board",
+  "spz.star.solved": "Solved",
+  "spz.star.ear": "Sharp ear",
+  "spz.star.code": "Codebreaker",
+  "spz.clear": "Clear word",
+  "spz.runeLabel": "Rune {k}"
 }

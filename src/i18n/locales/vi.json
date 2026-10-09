@@ -907,5 +907,22 @@
   "bg.sprint": "Nhanh",
   "bg.full": "Đầy đủ",
   "bg.stretch": "Thử thách",
-  "bg.stretchStat": "Thử thách: chọn {taken}/{offered}, đúng {hits}"
+  "bg.stretchStat": "Thử thách: chọn {taken}/{offered}, đúng {hits}",
+  "spz.name": "Spelluzzle",
+  "spz.tagline": "Nghe, đánh vần, giải mã các ký tự rune.",
+  "spz.how.runes": "Mỗi rune là một chữ cái. Cùng một rune luôn là cùng một chữ cái.",
+  "spz.how.tap": "Chạm vào một từ để nghe, rồi đánh vần nó. Các chữ cái của từ sẽ hiện ở mọi nơi có những rune đó.",
+  "spz.how.amber": "Rune màu hổ phách nghĩa là hai từ của bạn mâu thuẫn nhau. Một trong hai từ đó sai.",
+  "spz.how.silent": "Một số từ im lặng. Hãy suy ra chúng từ những chữ cái bạn có.",
+  "spz.secret": "Từ bí mật",
+  "spz.listen": "Nghe",
+  "spz.listenCost": "Nghe sẽ mất sao Giải mã.",
+  "spz.off": "{n} từ chưa đúng",
+  "spz.offOne": "1 từ chưa đúng",
+  "spz.new": "Bảng mới",
+  "spz.star.solved": "Đã giải",
+  "spz.star.ear": "Tai thính",
+  "spz.star.code": "Giải mã",
+  "spz.clear": "Xóa từ",
+  "spz.runeLabel": "Chữ rune {k}"
 }

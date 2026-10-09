@@ -907,5 +907,22 @@
   "bg.sprint": "Rápido",
   "bg.full": "Completo",
   "bg.stretch": "Reto",
-  "bg.stretchStat": "Reto: {taken} de {offered} aceptados, {hits} acertados"
+  "bg.stretchStat": "Reto: {taken} de {offered} aceptados, {hits} acertados",
+  "spz.name": "Spelluzzle",
+  "spz.tagline": "Escúchala, deletréala, descifra las runas.",
+  "spz.how.runes": "Cada runa es una letra. La misma runa es siempre la misma letra.",
+  "spz.how.tap": "Toca una palabra para oírla y luego deletréala. Sus letras aparecen donde estén esas runas.",
+  "spz.how.amber": "Las runas ámbar significan que dos de tus palabras se contradicen. Una de ellas está mal.",
+  "spz.how.silent": "Algunas palabras permanecen en silencio. Deduce cuáles son con las letras que tienes.",
+  "spz.secret": "Palabra secreta",
+  "spz.listen": "Escuchar",
+  "spz.listenCost": "Escuchar cuesta la estrella de Descifrador.",
+  "spz.off": "{n} palabras no cuadran",
+  "spz.offOne": "1 palabra no cuadra",
+  "spz.new": "Tablero nuevo",
+  "spz.star.solved": "Resuelto",
+  "spz.star.ear": "Buen oído",
+  "spz.star.code": "Descifrador",
+  "spz.clear": "Borrar palabra",
+  "spz.runeLabel": "Runa {k}"
 }

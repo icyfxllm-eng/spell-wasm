@@ -907,5 +907,22 @@
   "bg.sprint": "スプリント",
   "bg.full": "フル",
   "bg.stretch": "ストレッチ",
-  "bg.stretchStat": "ストレッチ: {offered}回中{taken}回挑戦、{hits}回正解"
+  "bg.stretchStat": "ストレッチ: {offered}回中{taken}回挑戦、{hits}回正解",
+  "spz.name": "Spelluzzle",
+  "spz.tagline": "聞いて、つづって、ルーンを解読しよう。",
+  "spz.how.runes": "ルーン1つが文字1つ。同じルーンはいつも同じ文字です。",
+  "spz.how.tap": "単語をタップして聞き、つづってみよう。その文字は、同じルーンがある場所すべてに表示されます。",
+  "spz.how.amber": "琥珀色のルーンは、2つの単語が食い違っているしるし。どちらかが間違っています。",
+  "spz.how.silent": "音のない単語もあります。持っている文字から推理しよう。",
+  "spz.secret": "秘密の単語",
+  "spz.listen": "聞く",
+  "spz.listenCost": "聞くと「暗号解読」の星を失います。",
+  "spz.off": "間違っている単語が{n}個",
+  "spz.offOne": "間違っている単語が1個",
+  "spz.new": "新しい盤面",
+  "spz.star.solved": "クリア",
+  "spz.star.ear": "鋭い耳",
+  "spz.star.code": "暗号解読",
+  "spz.clear": "単語を消す",
+  "spz.runeLabel": "ルーン {k}"
 }

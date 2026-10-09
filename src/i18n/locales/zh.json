@@ -907,5 +907,22 @@
   "bg.sprint": "冲刺",
   "bg.full": "完整",
   "bg.stretch": "挑战",
-  "bg.stretchStat": "挑战：{offered} 次中选了 {taken} 次，答对 {hits} 次"
+  "bg.stretchStat": "挑战：{offered} 次中选了 {taken} 次，答对 {hits} 次",
+  "spz.name": "Spelluzzle",
+  "spz.tagline": "听一听，拼一拼，破解符文。",
+  "spz.how.runes": "每个符文代表一个字母。相同的符文始终是同一个字母。",
+  "spz.how.tap": "点按单词听发音，然后拼写出来。它的字母会出现在所有相同符文的位置。",
+  "spz.how.amber": "琥珀色符文表示你的两个单词互相矛盾，其中一个是错的。",
+  "spz.how.silent": "有些单词没有声音。请根据已有的字母推理出来。",
+  "spz.secret": "秘密单词",
+  "spz.listen": "听",
+  "spz.listenCost": "听发音会失去“破译者”星星。",
+  "spz.off": "有 {n} 个单词不对",
+  "spz.offOne": "有 1 个单词不对",
+  "spz.new": "新棋盘",
+  "spz.star.solved": "已解决",
+  "spz.star.ear": "灵敏耳朵",
+  "spz.star.code": "破译者",
+  "spz.clear": "清除单词",
+  "spz.runeLabel": "符文 {k}"
 }

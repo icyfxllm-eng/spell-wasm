@@ -907,5 +907,22 @@
   "bg.sprint": "스프린트",
   "bg.full": "풀",
   "bg.stretch": "스트레치",
-  "bg.stretchStat": "스트레치: {offered}회 중 {taken}회 선택, {hits}회 정답"
+  "bg.stretchStat": "스트레치: {offered}회 중 {taken}회 선택, {hits}회 정답",
+  "spz.name": "Spelluzzle",
+  "spz.tagline": "듣고, 철자를 맞추고, 룬을 풀어 보세요.",
+  "spz.how.runes": "룬 하나는 글자 하나예요. 같은 룬은 항상 같은 글자예요.",
+  "spz.how.tap": "단어를 눌러 들은 다음 철자를 맞춰 보세요. 그 글자들이 같은 룬이 있는 모든 곳에 나타나요.",
+  "spz.how.amber": "호박색 룬은 두 단어가 서로 맞지 않는다는 뜻이에요. 둘 중 하나는 틀렸어요.",
+  "spz.how.silent": "어떤 단어는 소리가 나지 않아요. 가진 글자로 추리해 보세요.",
+  "spz.secret": "비밀 단어",
+  "spz.listen": "듣기",
+  "spz.listenCost": "듣기를 쓰면 암호 해독가 별을 잃어요.",
+  "spz.off": "틀린 단어 {n}개",
+  "spz.offOne": "틀린 단어 1개",
+  "spz.new": "새 판",
+  "spz.star.solved": "해결",
+  "spz.star.ear": "예리한 귀",
+  "spz.star.code": "암호 해독가",
+  "spz.clear": "단어 지우기",
+  "spz.runeLabel": "룬 {k}"
 }

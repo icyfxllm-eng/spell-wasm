@@ -907,5 +907,22 @@
   "bg.sprint": "Haraka",
   "bg.full": "Kamili",
   "bg.stretch": "Changamoto",
-  "bg.stretchStat": "Changamoto: {taken} kati ya {offered}, sahihi {hits}"
+  "bg.stretchStat": "Changamoto: {taken} kati ya {offered}, sahihi {hits}",
+  "spz.name": "Spelluzzle",
+  "spz.tagline": "Sikia, tamka herufi, vunja siri za runi.",
+  "spz.how.runes": "Kila runi ni herufi moja. Runi ile ile ni herufi ile ile daima.",
+  "spz.how.tap": "Gusa neno iliulisikie, kisha litamke herufi zake. Herufi zake huonekana popote ambapo runi hizo zipo.",
+  "spz.how.amber": "Runi za kahawia-dhahabu humaanisha maneno yako mawili yanapingana. Mojawapo si sahihi.",
+  "spz.how.silent": "Baadhi ya maneno hukaa kimya. Yagundue kwa herufi ulizonazo.",
+  "spz.secret": "Neno la siri",
+  "spz.listen": "Sikiliza",
+  "spz.listenCost": "Kusikiliza kunagharimu nyota ya Mvunja Siri.",
+  "spz.off": "Maneno {n} si sahihi",
+  "spz.offOne": "Neno 1 si sahihi",
+  "spz.new": "Ubao mpya",
+  "spz.star.solved": "Imetatuliwa",
+  "spz.star.ear": "Sikio makini",
+  "spz.star.code": "Mvunja Siri",
+  "spz.clear": "Futa neno",
+  "spz.runeLabel": "Runi {k}"
 }

@@ -907,5 +907,22 @@
   "bg.sprint": "Rapide",
   "bg.full": "Complet",
   "bg.stretch": "Défi",
-  "bg.stretchStat": "Défi : {taken} sur {offered} tentés, {hits} réussis"
+  "bg.stretchStat": "Défi : {taken} sur {offered} tentés, {hits} réussis",
+  "spz.name": "Spelluzzle",
+  "spz.tagline": "Écoute, épelle, perce le code des runes.",
+  "spz.how.runes": "Chaque rune est une lettre. Une même rune est toujours la même lettre.",
+  "spz.how.tap": "Touche un mot pour l’entendre, puis épelle-le. Ses lettres apparaissent partout où se trouvent ces runes.",
+  "spz.how.amber": "Les runes ambre signalent que deux de tes mots se contredisent. L’un des deux est faux.",
+  "spz.how.silent": "Certains mots restent muets. Déduis-les à partir des lettres que tu as.",
+  "spz.secret": "Mot secret",
+  "spz.listen": "Écouter",
+  "spz.listenCost": "Écouter coûte l’étoile Décodeur.",
+  "spz.off": "{n} mots sont faux",
+  "spz.offOne": "1 mot est faux",
+  "spz.new": "Nouvelle grille",
+  "spz.star.solved": "Résolu",
+  "spz.star.ear": "Oreille fine",
+  "spz.star.code": "Décodeur",
+  "spz.clear": "Effacer le mot",
+  "spz.runeLabel": "Rune n° {k}"
 }
