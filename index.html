@@ -2124,7 +2124,7 @@
     <div class="vs-side" id="vsP1">
       <div class="vs-name" id="vsP1Name">Player 1</div>
       <div class="vs-cur" id="vsP1Cur">0</div>
-      <div class="vs-best">best <b id="vsP1Best">0</b></div>
+      <div class="vs-best"><span data-i18n="chains.best">best</span> <b id="vsP1Best">0</b></div>
     </div>
     <div class="vs-mid">
       <span class="vs-vs">vs</span>
@@ -2133,7 +2133,7 @@
     <div class="vs-side" id="vsP2">
       <div class="vs-name" id="vsP2Name">Player 2</div>
       <div class="vs-cur" id="vsP2Cur">0</div>
-      <div class="vs-best">best <b id="vsP2Best">0</b></div>
+      <div class="vs-best"><span data-i18n="chains.best">best</span> <b id="vsP2Best">0</b></div>
     </div>
   </div>
 
@@ -2427,7 +2427,7 @@
       <p id="modalMsg">Words spelled in a row. Add your name to the board.</p>
       <input id="nameInput" type="text" maxlength="14" placeholder="your name" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" />
       <div class="row">
-        <button class="btn btn-icon" id="skipSave" style="flex:1;border-radius:12px">Skip</button>
+        <button class="btn btn-icon" id="skipSave" data-i18n="placement.skip" style="flex:1;border-radius:12px">Skip</button>
         <button class="btn btn-check" id="saveScore">Save to board</button>
       </div>
     </div>
@@ -3287,9 +3287,9 @@
     <div class="modal wide">
       <h3>🏔 The Climb</h3>
       <div class="climb-tabs">
-        <button class="pill climb-tab on" id="climbTab-medium">Medium</button>
-        <button class="pill climb-tab" id="climbTab-hard">Hard</button>
-        <button class="pill climb-tab" id="climbTab-expert">Expert</button>
+        <button class="pill climb-tab on" id="climbTab-medium" data-i18n="level.medium">Medium</button>
+        <button class="pill climb-tab" id="climbTab-hard" data-i18n="level.hard">Hard</button>
+        <button class="pill climb-tab" id="climbTab-expert" data-i18n="level.expert">Expert</button>
       </div>
       <div class="climb-list" id="climbList"></div>
       <button class="ghost" id="climbClose" data-i18n="aria.close" style="width:100%;margin-top:10px">Close</button>
