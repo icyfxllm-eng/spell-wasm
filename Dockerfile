@@ -15,6 +15,12 @@ COPY assets ./assets
 RUN cargo build --release --target wasm32-unknown-unknown --features web \
     && wasm-bindgen target/wasm32-unknown-unknown/release/spell_wasm.wasm \
        --out-dir /out/pkg --target web --no-typescript
+# App-only markup/CSS never ships on the site (I1, I13): cut the same
+# sentinel regions scripts/build-web.sh cuts. perl, not python: the caddy
+# stage has neither, and this stage's base is guaranteed perl.
+COPY index.html /tmp/index.html
+RUN perl -0pe 's{<!-- (SPELL-PICTURE|BOARDGAME):BEGIN.*?<!-- \1:END -->}{}gs; s{/\* (SPELL-PICTURE|BOARDGAME):BEGIN.*?/\* \1:END \*/}{}gs' /tmp/index.html > /out/index.html \
+    && ! grep -q 'SPELL-PICTURE:\|BOARDGAME:' /out/index.html
 
 # Stage 2: serve the static site with Caddy (automatic HTTPS included).
 FROM caddy:2-alpine
@@ -24,7 +30,7 @@ COPY Caddyfile /etc/caddy/Caddyfile
 # NOTICES.md by scripts/build-notices.mjs and committed, because this serve
 # stage has no Node or Python to render it; notices-ship-check.mjs fails the
 # push if it drifts from its source or stops being copied here.
-COPY index.html privacy.html notices.html audio-native.js telemetry-schema.js manifest.json sw.js /srv/
+COPY privacy.html notices.html audio-native.js telemetry-schema.js manifest.json sw.js /srv/
 COPY icons /srv/icons
 # Self-hosted web fonts (FIX 1): index.html loads ./fonts/*.woff2 locally
 # instead of Google Fonts / jsdelivr, so the site makes zero external font
@@ -36,6 +42,7 @@ COPY fonts /srv/fonts
 COPY assets/human-audio /srv/human-audio
 # Android App Links verification file, served at /.well-known/assetlinks.json.
 COPY .well-known /srv/.well-known
+COPY --from=build /out/index.html /srv/index.html
 COPY --from=build /out/pkg /srv/pkg
 # Cache-bust the WASM/glue by content hash so a new deploy can never serve a
 # stale glue against a fresh .wasm (or vice versa) through Cloudflare/browser
