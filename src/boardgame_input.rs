@@ -25,6 +25,60 @@ pub enum Key {
     Unit(String),
     /// Vietnamese tone mark applied to the last vowel (`viet::retone`).
     Tone(char),
+    /// Japanese modifier: dakuten, handakuten or small kana, applied to the last
+    /// typed kana (D29: modifier keys are allowed for Japanese in this mode's own
+    /// key grid; the shared game keyboard still uses long-press).
+    Mod(Modifier),
+}
+
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+pub enum Modifier {
+    Dakuten,
+    Handakuten,
+    Small,
+}
+
+const DAKUTEN: char = '\u{3099}';
+const HANDAKUTEN: char = '\u{309a}';
+/// Large kana and the small form it takes (the small-kana key swaps them).
+const SMALL_PAIRS: [(char, char); 10] = [('あ', 'ぁ'), ('い', 'ぃ'), ('う', 'ぅ'), ('え', 'ぇ'), ('お', 'ぉ'), ('つ', 'っ'), ('や', 'ゃ'), ('ゆ', 'ゅ'), ('よ', 'ょ'), ('わ', 'ゎ')];
+
+/// What the modifier makes of `c`, or None when `c` cannot take it. Voicing and
+/// semi-voicing toggle (は ば は; は ぱ は); the small key swaps large and small.
+pub fn apply_mod(c: char, m: Modifier) -> Option<char> {
+    match m {
+        Modifier::Small => SMALL_PAIRS.iter().find_map(|&(big, small)| if c == big { Some(small) } else if c == small { Some(big) } else { None }),
+        Modifier::Dakuten | Modifier::Handakuten => {
+            let mark = if m == Modifier::Dakuten { DAKUTEN } else { HANDAKUTEN };
+            let d: Vec<char> = c.nfd().collect();
+            let single = |v: &[char]| -> Option<char> {
+                let n: Vec<char> = v.iter().copied().nfc().collect();
+                (n.len() == 1).then(|| n[0])
+            };
+            match d.as_slice() {
+                [base, x] if *x == mark => Some(*base),
+                [base] => single(&[*base, mark]).filter(|r| *r != c),
+                _ => None,
+            }
+        }
+    }
+}
+
+/// How to type kana `c` from the base rows: the base kana and the modifier presses.
+fn kana_reach(c: char, rows: &BTreeSet<char>) -> Option<(char, Vec<Modifier>)> {
+    for m in [Modifier::Small, Modifier::Dakuten, Modifier::Handakuten] {
+        // The base is whatever the modifier undoes in `c`.
+        if let Some(b) = apply_mod(c, m) {
+            let undone = match m {
+                Modifier::Small => SMALL_PAIRS.iter().any(|&(_, s)| s == c),
+                _ => c.nfd().count() == 2,
+            };
+            if undone && rows.contains(&b) {
+                return Some((b, vec![m]));
+            }
+        }
+    }
+    None
 }
 
 impl Key {
@@ -34,6 +88,9 @@ impl Key {
             Key::Unit(u) if u == " " => "\u{2423}".to_string(),
             Key::Unit(u) => u.clone(),
             Key::Tone(m) => format!("\u{25cc}{m}"),
+            Key::Mod(Modifier::Dakuten) => "\u{309b}".to_string(),
+            Key::Mod(Modifier::Handakuten) => "\u{309c}".to_string(),
+            Key::Mod(Modifier::Small) => "\u{5c0f}".to_string(),
         }
     }
 
@@ -42,12 +99,21 @@ impl Key {
         match self {
             Key::Unit(u) => format!("u:{u}"),
             Key::Tone(m) => format!("t:{:x}", *m as u32),
+            Key::Mod(Modifier::Dakuten) => "m:d".to_string(),
+            Key::Mod(Modifier::Handakuten) => "m:h".to_string(),
+            Key::Mod(Modifier::Small) => "m:s".to_string(),
         }
     }
 
     pub fn parse(d: &str) -> Option<Key> {
         if let Some(u) = d.strip_prefix("u:") {
             return Some(Key::Unit(u.to_string()));
+        }
+        match d {
+            "m:d" => return Some(Key::Mod(Modifier::Dakuten)),
+            "m:h" => return Some(Key::Mod(Modifier::Handakuten)),
+            "m:s" => return Some(Key::Mod(Modifier::Small)),
+            _ => {}
         }
         let hex = d.strip_prefix("t:")?;
         char::from_u32(u32::from_str_radix(hex, 16).ok()?).map(Key::Tone)
@@ -60,16 +126,19 @@ struct Spec {
     tone_row: bool,
     /// Korean: syllables are composed from jamo by `hangul::feed`.
     hangul: bool,
+    /// Japanese: voiced, semi-voiced and small kana are typed with the modifier keys.
+    kana: bool,
     /// A letter the grader accepts typed as another (pinyin: lu-umlaut as v).
     alias: &'static [(char, char)],
 }
 
 fn spec(lang: &str) -> Spec {
     match lang {
-        l if l == consts::VI => Spec { tone_row: true, hangul: false, alias: &[] },
-        l if l == consts::KO => Spec { tone_row: false, hangul: true, alias: &[] },
-        l if l == consts::ZH => Spec { tone_row: false, hangul: false, alias: &[('\u{fc}', 'v')] },
-        _ => Spec { tone_row: false, hangul: false, alias: &[] },
+        l if l == consts::VI => Spec { tone_row: true, kana: false, hangul: false, alias: &[] },
+        l if l == consts::KO => Spec { tone_row: false, kana: false, hangul: true, alias: &[] },
+        l if l == consts::ZH => Spec { tone_row: false, kana: false, hangul: false, alias: &[('\u{fc}', 'v')] },
+        l if l == consts::JA => Spec { tone_row: false, kana: true, hangul: false, alias: &[] },
+        _ => Spec { tone_row: false, kana: false, hangul: false, alias: &[] },
     }
 }
 
@@ -122,6 +191,8 @@ fn needed(lang: &str, kid: bool, entry: &str) -> Vec<char> {
         return out;
     }
     let folded: String = if kid && lang != consts::ZH { crate::norm::fold_lenient(cite) } else { cite.nfc().collect::<String>().to_lowercase() };
+    // The lenient fold leaves kana decomposed (base + combining mark); the player types the whole kana.
+    let folded: String = if sp.kana { folded.nfc().collect() } else { folded };
     for c in folded.chars().filter(|c| !c.is_whitespace()) {
         let c = sp.alias.iter().find(|(from, _)| *from == c).map(|(_, to)| *to).unwrap_or(c);
         if sp.tone_row {
@@ -142,7 +213,7 @@ pub fn layout(lang: &str, kid: bool, entries: &[String]) -> Vec<Vec<Key>> {
     let mut extra: BTreeSet<char> = BTreeSet::new();
     for e in entries {
         for c in needed(lang, kid, e) {
-            if !rows.contains(&c) {
+            if !rows.contains(&c) && !(sp.kana && kana_reach(c, &rows).is_some()) {
                 extra.insert(c);
             }
         }
@@ -152,7 +223,15 @@ pub fn layout(lang: &str, kid: bool, entries: &[String]) -> Vec<Vec<Key>> {
     }
     let mut out: Vec<Vec<Key>> = crate::keyboard::unit_rows(lang).iter().map(|r| r.chars().map(|c| Key::Unit(c.to_string())).collect()).collect();
     let width = crate::keyboard::unit_rows(lang).iter().map(|r| r.chars().count()).max().unwrap_or(10).max(8);
-    let extra: Vec<char> = extra.into_iter().collect();
+    let mut extra: Vec<char> = extra.into_iter().collect();
+    if sp.kana {
+        // The modifier row: the three modifier keys, then any unit the bank needs
+        // that no base kana plus modifier makes (the prolonged-sound mark, katakana).
+        let mut row = vec![Key::Mod(Modifier::Dakuten), Key::Mod(Modifier::Handakuten), Key::Mod(Modifier::Small)];
+        let room = width.saturating_sub(row.len()).min(extra.len());
+        row.extend(extra.drain(..room).map(|c| Key::Unit(c.to_string())));
+        out.push(row);
+    }
     for chunk in extra.chunks(width) {
         out.push(chunk.iter().map(|c| Key::Unit(c.to_string())).collect());
     }
@@ -211,6 +290,8 @@ pub fn type_word(lang: &str, kid: bool, rows: &[Vec<Key>], entry: &str) -> Optio
         return Some(typed);
     }
     let folded: String = if kid && lang != consts::ZH { crate::norm::fold_lenient(cite) } else { cite.nfc().collect::<String>().to_lowercase() };
+    // The lenient fold leaves kana decomposed (base + combining mark); the player types the whole kana.
+    let folded: String = if sp.kana { folded.nfc().collect() } else { folded };
     for c in folded.chars().filter(|c| !c.is_whitespace()) {
         let c = sp.alias.iter().find(|(from, _)| *from == c).map(|(_, to)| *to).unwrap_or(c);
         if sp.tone_row {
@@ -224,6 +305,18 @@ pub fn type_word(lang: &str, kid: bool, rows: &[Vec<Key>], entry: &str) -> Optio
             }
             if let Some(t) = tone {
                 let k = Key::Tone(t);
+                if !find(rows, &k) {
+                    return None;
+                }
+                typed = press(lang, &typed, &k);
+            }
+        } else if sp.kana && !find(rows, &Key::Unit(c.to_string())) {
+            let (b, mods) = kana_reach(c, &row_chars(lang))?;
+            if !unit(&mut typed, b) {
+                return None;
+            }
+            for m in mods {
+                let k = Key::Mod(m);
                 if !find(rows, &k) {
                     return None;
                 }
@@ -267,6 +360,14 @@ pub fn press(lang: &str, typed: &str, key: &Key) -> String {
             } else {
                 format!("{typed}{u}")
             }
+        }
+        Key::Mod(m) => {
+            let mut s = typed.to_string();
+            if let Some(r) = s.chars().last().and_then(|last| apply_mod(last, *m)) {
+                s.pop();
+                s.push(r);
+            }
+            s
         }
         Key::Tone(m) => {
             let mut s = typed.to_string();
@@ -346,6 +447,45 @@ mod tests {
         assert_eq!(backspace("ko", &s), "하");
         let s = press("vi", "ma", &Key::Tone('\u{301}'));
         assert_eq!(s, "má");
+    }
+
+    /// D29: the Japanese modifier keys act on the last typed kana, do nothing when
+    /// it cannot take them, and a backspace removes the modified char whole.
+    #[test]
+    fn japanese_modifier_keys() {
+        let d = Key::Mod(Modifier::Dakuten);
+        let h = Key::Mod(Modifier::Handakuten);
+        let sm = Key::Mod(Modifier::Small);
+        let k = |c: &str| Key::Unit(c.to_string());
+        assert_eq!(press("ja", &press("ja", "", &k("か")), &d), "が");
+        assert_eq!(press("ja", &press("ja", "", &k("は")), &h), "ぱ");
+        assert_eq!(press("ja", &press("ja", "", &k("つ")), &sm), "っ");
+        assert_eq!(press("ja", "き", &sm), "き", "no small form: unchanged");
+        assert_eq!(press("ja", "あ", &d), "あ", "no voiced form: unchanged");
+        assert_eq!(press("ja", "", &d), "", "nothing typed yet");
+        assert_eq!(press("ja", "う", &d), "ゔ");
+        assert_eq!(press("ja", "や", &sm), "ゃ");
+        assert_eq!(press("ja", "ぱ", &d), "ぱ", "semi-voiced takes no dakuten");
+        assert_eq!(press("ja", "ば", &d), "は", "dakuten toggles back");
+        assert_eq!(press("ja", "ば", &h), "ば", "voiced takes no handakuten");
+        let typed = press("ja", &press("ja", "し", &k("か")), &d);
+        assert_eq!(typed, "しが");
+        assert_eq!(backspace("ja", &typed), "し", "backspace removes the modified char whole");
+        for key in [d, h, sm] {
+            assert_eq!(Key::parse(&key.data()), Some(key.clone()));
+        }
+    }
+
+    #[test]
+    fn japanese_grid_is_five_rows_plus_one_modifier_row() {
+        for kid in [false, true] {
+            let v = variant_for(kid);
+            let entries: Vec<String> = tiers_of(v).iter().flat_map(|&t| bank("ja", t, kid)).collect();
+            let rows = layout("ja", kid, &entries);
+            eprintln!("JA kid={kid}: {:?}", rows.iter().map(|r| r.iter().map(|k| k.face()).collect::<String>()).collect::<Vec<_>>());
+            assert!(rows.len() <= 6, "ja kid={kid}: {} rows", rows.len());
+            assert!(rows.last().unwrap().contains(&Key::Mod(Modifier::Dakuten)));
+        }
     }
 
     #[test]

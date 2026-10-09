@@ -63,9 +63,31 @@ const measureDock = (ins) => {
   const keys = r('bgKeys'), hud = document.querySelector('.bg-hud').getBoundingClientRect(), view = r('bgView'), ex = r('bgExit');
   const problems = [];
   if (hud.top < ins.top - 0.5) problems.push(`hud top ${hud.top} is inside the top inset ${ins.top}`);
+  // The title row sits right under the inset: not more than ~24pt of gap (a fixed min-height or stacked margin put it ~100pt down).
+  const title = document.getElementById('bgTitle').getBoundingClientRect();
+  if (title.top < ins.top - 0.5 || title.top > ins.top + 24) problems.push(`title top ${title.top.toFixed(0)} is not within 24pt under the top inset ${ins.top}`);
+  // The bottom action row ends at the home-indicator inset (6pt of air at most 8): no dead band under it.
+  const act = r('bgAct');
+  const under = (H - ins.bottom) - act.bottom;
+  if (under < -0.5 || under > 8) problems.push(`bottom action row is ${under.toFixed(0)}pt above the safe bottom (dead space)`);
+  // The keys never overlap the exit.
+  if (keys.bottom > ex.top + 0.5 && keys.right > ex.left && keys.left < ex.right) problems.push('keys overlap the exit');
   const gap = (H - ins.bottom) - keys.bottom;
   if (gap < -0.5 || gap > 70) problems.push(`keys are not docked: ${gap.toFixed(0)}px above the safe bottom`);
   return { problems, viewH: view.height, viewW: view.width, vb: document.getElementById('bgBoard').getAttribute('viewBox'), exit: { w: ex.width, h: ex.height, r: W - ex.right, b: (H - ins.bottom) - ex.bottom, cx: ex.left + ex.width / 2, cy: ex.top + ex.height / 2 }, keysTop: keys.top, keysBottom: keys.bottom };
+};
+/// The board panel shows either the whole ring or the unrolled track; a track must span at
+/// least 80% of the panel width (the old fallback was a thin sliver at the panel edge).
+const measureTrack = () => {
+  const view = document.getElementById('bgView').getBoundingClientRect();
+  const strip = document.getElementById('bgView').classList.contains('strip');
+  if (!strip) return { mode: 'ring', problem: /^0 0 /.test(document.getElementById('bgBoard').getAttribute('viewBox')) ? null : 'ring mode without a full viewBox' };
+  const tiles = [...document.querySelectorAll('#bgBoard .bg-t')].map((t) => t.getBoundingClientRect());
+  if (tiles.length < 8) return { mode: 'track', problem: `track shows only ${tiles.length} tiles` };
+  const l = Math.min(...tiles.map((t) => t.left)), r = Math.max(...tiles.map((t) => t.right));
+  const span = (r - l) / view.width;
+  const inside = tiles.every((t) => t.left >= view.left - 0.5 && t.right <= view.right + 0.5 && t.top >= view.top - 0.5 && t.bottom <= view.bottom + 0.5);
+  return { mode: 'track', span, problem: span < 0.8 ? `track spans ${(span * 100).toFixed(0)}% of the panel width` : !inside ? 'track tiles leave the panel' : null };
 };
 const setInsets = (page, top, bottom) => page.evaluate(([t, b]) => {
   const el = document.getElementById('bgScreen');
@@ -97,6 +119,11 @@ export async function run(browser, base, suite) {
             const m = await page.evaluate(measure);
             const id = `${lang}${kid ? '/jr' : ''}@${w}x${h}`;
             checked++;
+            if (lang === 'ja' && m.rows > 6) failed.push(`${id}: ${m.rows} key rows (kana grid is 5 base rows plus one modifier row)`);
+            if (lang === 'ja' && (w === 375 || w === 430)) {
+              const tr = await page.evaluate(measureTrack);
+              if (tr.problem) failed.push(`${id}: ${tr.problem}`);
+            }
             const known = KNOWN.has(id);
             if (m.problems.length && !known) failed.push(`${id} (${m.rows} rows, ${m.keys} keys): ${m.problems.slice(0, 3).join('; ')}`);
             if (!m.problems.length && known) failed.push(`${id}: listed as not fitting but it fits now`);
@@ -111,6 +138,10 @@ export async function run(browser, base, suite) {
               checked++;
               const rowsN = m.rows;
               const bad = [...mi.problems, ...di.problems];
+              if (lang === 'ja') {
+                const tr = await page.evaluate(measureTrack);
+                if (tr.problem) failed.push(`${id}+insets: ${tr.problem}`);
+              }
               if (bad.length) failed.push(`${id}+insets: ${bad.slice(0, 3).join('; ')}`);
               // Tall room means the whole ring, big: a full viewBox and a board far taller than the old strip.
               if (rowsN <= 4 && !/^0 0 /.test(di.vb)) failed.push(`${id}: spell state fell back to the strip on a tall phone (${di.vb}, view ${Math.round(di.viewH)})`);
@@ -187,15 +218,80 @@ async function runMore(browser, base, suite) {
       assert(!(await shown(page)), 'exit from the spell state did not leave the Board Game');
     } finally { await ctx.close(); }
   });
+  await suite.test('boardgame_ja_modifier_keys', async () => {
+    const o = await openApp(browser, base, { lang: 'ja', viewport: { width: 390, height: 844 }, init: FLAG });
+    const { ctx, page } = o;
+    try {
+      await page.evaluate(() => document.getElementById('bgOpenBtn').click());
+      await page.waitForSelector('#bgScreen.show', { timeout: 8000 });
+      await page.click('[data-bg="mode:pass"]');
+      await page.click('#bgStart');
+      await page.waitForSelector('#bgHand:not([hidden])', { timeout: 8000 });
+      await page.click('#bgHandGo');
+      await page.click('#bgOrb');
+      await page.waitForFunction(() => JSON.parse(window.__spelltest.boardgameState() || 'null')?.phase === 'AwaitSpelling', null, { timeout: 5000 });
+      await domSettled(page);
+      const field = () => page.$eval('#bgField', (f) => f.textContent);
+      const key = (k) => page.click(`#bgKeys [data-k="${k}"]`);
+      assert(await page.$$eval('#bgKeys .bg-key.mod', (ks) => ks.length) === 3, 'expected three tinted modifier keys');
+      const tint = await page.evaluate(() => [getComputedStyle(document.querySelector('#bgKeys .bg-key.mod')).backgroundColor, getComputedStyle(document.querySelector('#bgKeys .bg-key:not(.mod)')).backgroundColor]);
+      assert(tint[0] !== tint[1], 'modifier keys are not tinted apart from kana keys');
+      await key('u:か'); await key('m:d');
+      assert((await field()) === 'が', `か + dakuten gave ${await field()}`);
+      await page.click('#bgDel');
+      assert((await field()) === '', `backspace left ${JSON.stringify(await field())} (must remove the modified char whole)`);
+      await key('u:は'); await key('m:h');
+      assert((await field()) === 'ぱ', `は + handakuten gave ${await field()}`);
+      await page.click('#bgDel');
+      await key('u:つ'); await key('m:s');
+      assert((await field()) === 'っ', `つ + small gave ${await field()}`);
+      await key('u:き'); await key('m:s');
+      assert((await field()) === 'っき', 'a modifier on a kana that cannot take it must do nothing');
+      const rows = await page.$$eval('#bgKeys .bg-row', (r) => r.length);
+      assert(rows <= 6, `${rows} key rows`);
+    } finally { await ctx.close(); }
+  });
+  for (const lang of ['en', 'ar']) {
+    await suite.test(`boardgame_unrolled_track_${lang}`, async () => {
+      const { ctx, page } = await openApp(browser, base, { lang, viewport: { width: 375, height: 540 }, init: FLAG });
+      try {
+        await page.evaluate(() => document.getElementById('bgOpenBtn').click());
+        await page.waitForSelector('#bgScreen.show', { timeout: 8000 });
+        await page.click('[data-bg="mode:pass"]');
+        await page.click('#bgStart');
+        await page.waitForSelector('#bgHand:not([hidden])', { timeout: 8000 });
+        await page.click('#bgHandGo');
+        await page.click('#bgOrb');
+        await page.waitForFunction(() => JSON.parse(window.__spelltest.boardgameState() || 'null')?.phase === 'AwaitSpelling', null, { timeout: 5000 });
+        await domSettled(page);
+        const m = await page.evaluate(() => {
+          const tiles = [...document.querySelectorAll('#bgBoard .bg-t')].map((t) => ({ slot: Number(t.getAttribute('data-slot')), l: t.getBoundingClientRect().left }));
+          const me = document.querySelector('#bgBoard .bg-me')?.getBoundingClientRect();
+          return { strip: document.getElementById('bgView').classList.contains('strip'), tiles, rtl: getComputedStyle(document.getElementById('bgView')).direction === 'rtl', me: me && me.left + me.width / 2, dest: document.querySelectorAll('#bgBoard .bg-t.dest').length, pill: !!document.querySelector('#bgLand .bg-pill') };
+        });
+        assert(m.strip && m.tiles.length >= 8 && m.tiles.length <= 12, `expected a track of 8-12 tiles, got ${JSON.stringify({ strip: m.strip, n: m.tiles.length })}`);
+        const n = m.tiles.length;
+        const want = (k) => (lang === 'ar' ? n - 1 - k : k);
+        assert(m.tiles.every((t, k) => t.slot === want(k)), `path direction wrong for ${lang}: ${m.tiles.map((t) => t.slot)}`);
+        // The path advances left to right for ltr and right to left for rtl: screen x of tile k.
+        const xs = m.tiles.map((t) => t.l);
+        assert(xs.every((x, k) => k === 0 || (lang === 'ar' ? x < xs[k - 1] : x > xs[k - 1])), 'tiles are not in reading order on screen');
+        assert(m.dest === 1, `destination tile outlined ${m.dest} times`);
+        assert(m.pill, 'the tier pill is missing');
+        const tr = await page.evaluate(measureTrack);
+        assert(!tr.problem, tr.problem);
+      } finally { await ctx.close(); }
+    });
+  }
   await suite.test('boardgame_compact_strip_when_space_is_short', async () => {
-    // Not a device name: a viewport too short for a legible ring (and the keys at full size) must fall back to the strip, with nothing lost.
+    // Not a device name: a viewport too short for a legible ring (and the keys at full size) must fall back to the unrolled track, with nothing lost.
     const { ctx, page } = await open({ width: 375, height: 600 });
     try {
       await page.click('#bgOrb');
       await page.waitForFunction(() => JSON.parse(window.__spelltest.boardgameState() || 'null')?.phase === 'AwaitSpelling', null, { timeout: 5000 });
       await domSettled(page);
-      const m = await page.evaluate(() => ({ strip: document.getElementById('bgView').classList.contains('strip'), vb: document.getElementById('bgBoard').getAttribute('viewBox') }));
-      assert(m.strip && !/^0 0 /.test(m.vb), `expected the compact strip at 375x600, got ${JSON.stringify(m)}`);
+      const m = await page.evaluate(() => ({ strip: document.getElementById('bgView').classList.contains('strip'), tiles: document.querySelectorAll('#bgBoard .bg-t').length }));
+      assert(m.strip && m.tiles >= 8 && m.tiles <= 12, `expected the unrolled track at 375x600, got ${JSON.stringify(m)}`);
     } finally { await ctx.close(); }
   });
 }

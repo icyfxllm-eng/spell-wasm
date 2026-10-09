@@ -580,18 +580,16 @@ fn hud(u: &Ui) -> String {
 const MIN_FULL_CELL_PX: f64 = 12.0;
 
 /// One layout function for both states: give the board the height that is left,
-/// then show the whole ring if it fits at a legible size, else the strip.
+/// then show the whole ring if it fits at a legible size, else the unrolled track
+/// (the next tiles along the path, in one row, full panel width).
 fn fit_view() {
-    let Some((g, spelling, dest)) = with_ui(|u| {
-        let spelling = u.game.phase == Phase::AwaitSpelling && !u.game.is_npc_turn();
-        let dest = u.game.pending.as_ref().map(|sp| tile_to_grid(sp.dest, u.game.board.grid));
-        (u.game.board.grid as f64, spelling, dest)
-    }) else {
+    let Some((g, spelling)) = with_ui(|u| (u.game.board.grid as f64, u.game.phase == Phase::AwaitSpelling && !u.game.is_npc_turn())) else {
         return;
     };
     let view = dom::el("bgView");
     let board = dom::el("bgBoard");
     // Measure with the strip class off: the view then takes all the leftover height.
+    let was_strip = view.class_list().contains("strip");
     let _ = view.class_list().remove_1("strip");
     let (w, h) = (view.client_width() as f64, view.client_height() as f64);
     if w <= 0.0 || h <= 0.0 {
@@ -599,19 +597,81 @@ fn fit_view() {
     }
     let full = !spelling || w.min(h) / g >= MIN_FULL_CELL_PX;
     if full {
+        if was_strip {
+            let _ = with_ui(|u| dom::set_html("bgBoard", &board_svg(u)));
+        }
+        let _ = board.remove_attribute("class");
         let _ = board.set_attribute("viewBox", &format!("0 0 {g} {g}"));
         let _ = board.set_attribute("preserveAspectRatio", "xMidYMid meet");
         return;
     }
     let _ = view.class_list().add_1("strip");
-    let (x, y) = dest.unwrap_or(((g / 2.0) as u32, (g / 2.0) as u32));
-    // A window 12 cells wide, as tall as the leftover height allows (never under 4 cells).
-    let vw = 12.0_f64.min(g);
-    let vh = (h / w * vw).clamp(4.0, g);
-    let vx = (x as f64 + 0.5 - vw / 2.0).clamp(0.0, g - vw);
-    let vy = (y as f64 + 0.5 - vh / 2.0).clamp(0.0, g - vh);
-    let _ = board.set_attribute("viewBox", &format!("{vx} {vy} {vw} {vh}"));
-    let _ = board.set_attribute("preserveAspectRatio", "xMidYMid slice");
+    let _ = board.set_attribute("class", "tr");
+    // The svg is the leftover panel under the pill; its own size sets the track's proportions.
+    let (sw, sh) = (board.client_width() as f64, board.client_height() as f64);
+    let (sw, sh) = (if sw > 0.0 { sw } else { w }, if sh > 0.0 { sh } else { h });
+    let (n, vh) = track_dims(sw, sh);
+    let _ = with_ui(|u| dom::set_html("bgBoard", &track_svg(u, n, vh)));
+    // A little air each side, so the mover's ring is not clipped at the end tile.
+    let _ = board.set_attribute("viewBox", &format!("{} 0 {} {vh}", -TRACK_PAD, n as f64 + 2.0 * TRACK_PAD));
+    let _ = board.set_attribute("preserveAspectRatio", "xMidYMid meet");
+}
+
+const TRACK_PAD: f64 = 0.2;
+
+/// How many tiles the unrolled track shows and the viewBox height, from the
+/// measured panel only: about 32 css px a tile, 8 to 12 of them. The viewBox
+/// has the panel's own aspect ratio, so the track always spans the full width.
+fn track_dims(w: f64, h: f64) -> (u32, f64) {
+    let n = ((w / 32.0).floor() as u32).clamp(8, 12);
+    (n, ((n as f64 + 2.0 * TRACK_PAD) * h / w).max(0.5))
+}
+
+/// The unrolled track: tiles `pos .. pos + n` of the ring (wrapping at the
+/// finish), one row. The path runs the way the language reads: left to right,
+/// and right to left for Arabic, so the mover's tile is where reading begins.
+fn track_svg(u: &Ui, n: u32, vh: f64) -> String {
+    let b = &u.game.board;
+    let len = b.len() as u32;
+    let n = n.min(len);
+    let rtl = crate::consts::dir_attr(&u.lang) == "rtl";
+    let slot = |k: u32| if rtl { n - 1 - k } else { k } as f64;
+    let start = u.game.players[u.game.current_seat() as usize].pos;
+    let at = |tile: u32| -> Option<u32> {
+        let k = (tile + len - start % len) % len;
+        (k < n).then_some(k)
+    };
+    let th = (vh * 0.9).min(0.9);
+    let y0 = (vh - th) / 2.0;
+    let dest = u.game.pending.as_ref().filter(|p| p.kind == SpellKind::Landing).map(|p| p.dest);
+    let mut s = String::new();
+    for k in 0..n {
+        let i = (start + k) % len;
+        let class = match b.tiers[i as usize] {
+            Some(t) => format!("bg-t t-{}", t.name()),
+            None => "bg-t end".to_string(),
+        };
+        let dcl = if dest == Some(i) { " dest" } else { "" };
+        s.push_str(&format!("<rect class=\"{class}{dcl}\" x=\"{}\" y=\"{y0}\" width=\"0.9\" height=\"{th}\" rx=\"0.16\" data-slot=\"{}\"/>", slot(k) + 0.05, slot(k)));
+    }
+    let cy = vh / 2.0;
+    let fs = th * 0.8;
+    for &t in &u.game.revealed {
+        if let Some(k) = at(t) {
+            s.push_str(&format!("<text class=\"bg-trap\" style=\"font-size:{}px\" x=\"{}\" y=\"{cy}\">\u{26a0}</text>", th * 0.62, slot(k) + 0.5));
+        }
+    }
+    if u.game.phase != Phase::Finished {
+        s.push_str(&format!("<circle class=\"bg-me\" cx=\"{}\" cy=\"{cy}\" r=\"{}\"/>", slot(0) + 0.5, (th * 0.62).min(vh / 2.0 - 0.04).max(0.1)));
+    }
+    const OFF: [(f64, f64); 4] = [(-0.2, -0.2), (0.2, -0.2), (-0.2, 0.2), (0.2, 0.2)];
+    for (i, p) in u.game.players.iter().enumerate() {
+        let Some(k) = at(p.pos) else { continue };
+        let shared = u.game.players.iter().enumerate().any(|(j, q)| j != i && q.pos == p.pos);
+        let (dx, dy) = if shared { OFF[i % 4] } else { (0.0, 0.0) };
+        s.push_str(&format!("<text class=\"bg-p\" style=\"font-size:{fs}px\" x=\"{}\" y=\"{}\">{}</text>", slot(k) + 0.5 + dx, cy + dy * th, piece(p.seat.piece)));
+    }
+    s
 }
 
 fn board_svg(u: &Ui) -> String {
@@ -655,7 +715,7 @@ fn render_keys() {
             .map(|row| {
                 let keys: String = row
                     .iter()
-                    .map(|k| format!("<button type=\"button\" class=\"bg-key\" data-k=\"{}\">{}</button>", dom::escape_html(&k.data()), dom::escape_html(&k.face())))
+                    .map(|k| format!("<button type=\"button\" class=\"bg-key{}\" data-k=\"{}\">{}</button>", if matches!(k, Key::Mod(_)) { " mod" } else { "" }, dom::escape_html(&k.data()), dom::escape_html(&k.face())))
                     .collect();
                 format!("<div class=\"bg-row\">{keys}</div>")
             })

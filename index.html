@@ -462,9 +462,10 @@
     --bg-key-h:46px;--bg-gap:4px;
     /* The notch / status bar and the home indicator: content stays inside them. */
     --bg-inset-top:env(safe-area-inset-top,0px);--bg-inset-bottom:env(safe-area-inset-bottom,0px);
-    padding:calc(var(--bg-inset-top) + 8px) 12px calc(var(--bg-inset-bottom) + 8px)}
+    /* Top: the title row starts 4px under the inset. Bottom: exactly the inset (6px when there is none). */
+    padding:calc(var(--bg-inset-top) + 4px) 12px max(6px,var(--bg-inset-bottom))}
   .bg-screen.show{display:flex}
-  .bg-hud{display:flex;align-items:center;gap:8px;min-height:48px;flex:none}
+  .bg-hud{display:flex;align-items:center;gap:8px;min-height:32px;flex:none}
   /* The exit lives in the bottom action row, at its physical right end (direction:ltr pins it
      there for Arabic too), above the home-indicator inset. The top corner is under the iOS
      status bar, which swallows taps (it did, on a real phone). In the spell state that row
@@ -507,8 +508,14 @@
      draw a legible ring (boardgame_screen::fit_view), the view shows a zoomed window on the destination. */
   .bg-view{position:relative;flex:1 1 auto;min-height:0;background:#ffffff0a;border-radius:12px;overflow:hidden}
   .bg-screen.spelling .bg-view{min-height:112px}
-  @media (max-height:700px){.bg-screen.spelling .bg-view{min-height:44px}.bg-screen.spelling .bg-chip{padding-block:1px}.bg-hud{min-height:32px}}
+  @media (max-height:700px){.bg-screen.spelling .bg-view{min-height:44px}.bg-screen.spelling .bg-chip{padding-block:1px}}
   .bg-view svg{position:absolute;inset:0;display:block;width:100%;height:100%}
+  /* The unrolled track (fit_view's fallback): the pill sits in flow above the one-row path. */
+  .bg-view.strip{display:flex;flex-direction:column;align-items:stretch}
+  .bg-view.strip .bg-land{position:static;margin:4px auto 0;flex:none}
+  .bg-view.strip svg{position:relative;inset:auto;flex:1 1 0;min-height:0;height:auto}
+  .bg-view svg.tr .bg-t.dest{stroke-width:.14}
+  .bg-view svg.tr .bg-me{stroke-width:.07}
   .bg-t{fill:#ffffff1c}.bg-t.t-easy{fill:#3f8f6a}.bg-t.t-medium{fill:#4a79b8}
   .bg-t.t-hard{fill:#b8803a}.bg-t.t-expert{fill:#a24a5a}
   .bg-t.end{fill:#f2c14e}
@@ -541,6 +548,7 @@
   .bg-key{flex:1 1 0;min-width:0;max-width:46px;height:var(--bg-key-h);padding:0;border:none;border-radius:9px;
     background:#ffffff14;color:inherit;font:inherit;font-size:1.05rem;font-weight:600;cursor:pointer;
     touch-action:manipulation}
+  .bg-key.mod{background:#f2c14e30;color:var(--amber,#f2c14e);font-weight:700;font-size:1.5rem}
   .bg-key:active{background:var(--amber,#f2c14e);color:#36210a}
   .bg-swap{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;flex:none}
   .bg-card{position:absolute;inset:0;z-index:2;background:var(--bg,#0e1420);display:flex;flex-direction:column;
