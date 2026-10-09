@@ -23,6 +23,8 @@ Run this, then scripts/build-draft-wordbanks.py to re-emit src/word_data_audit.r
 Usage:  python3 scripts/build-draft-banks.py [--target N]   (default 200 per tier)
 """
 import os, sys, unicodedata, importlib.util
+sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "tools", "bank"))
+from purity_admit import admit, admit_new  # CC-BANK-PURITY F6: F1 runs before any row is written
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 DRAFT = os.path.join(ROOT, "assets", "words-draft")
@@ -89,6 +91,7 @@ def build(lang, target):
             continue
         banks[tier].append(w)
         seen.add(w)
+    banks = admit_new(lang, banks)
     outdir = os.path.join(DRAFT, lang)
     os.makedirs(outdir, exist_ok=True)
     for tier in TIERS:

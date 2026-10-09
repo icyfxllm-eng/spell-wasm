@@ -17,6 +17,8 @@ Run, then add "hi" to build-wordlists.py LANGS and re-run it:
     python3 scripts/build-wordlists.py
 """
 import os, sys, unicodedata, importlib.util
+sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "tools", "bank"))
+from purity_admit import admit, admit_new  # CC-BANK-PURITY F6: F1 runs before any row is written
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 OUT = os.path.join(ROOT, "assets", "words", "hi")
@@ -75,6 +77,7 @@ def main():
         seen.add(w)
         if all(len(banks[t]) >= TARGET for t in TIERS):
             break
+    banks = admit_new("hi", banks)
     os.makedirs(OUT, exist_ok=True)
     for tier in TIERS:
         with open(os.path.join(OUT, f"{tier}.txt"), "w", encoding="utf-8") as f:

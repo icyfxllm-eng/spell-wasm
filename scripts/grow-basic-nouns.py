@@ -20,6 +20,8 @@ import os
 import re
 import sys
 import unicodedata
+sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "tools", "bank"))
+from purity_admit import admit, admit_new  # CC-BANK-PURITY F6: F1 runs before any row is written
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 spec = importlib.util.spec_from_file_location(
@@ -85,6 +87,7 @@ def main():
     for lang, adds in added.items():
         if not adds:
             continue
+        adds, _rejected = admit(lang, adds)
         if lang == "zh":
             p = os.path.join(ROOT, "src", "words.rs")
             src = open(p, encoding="utf-8").read()

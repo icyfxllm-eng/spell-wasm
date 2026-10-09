@@ -29,8 +29,55 @@ from collections import defaultdict
 
 ROOT = pathlib.Path(__file__).resolve().parent.parent
 CMU = ROOT / "tools/wordpipe/sources/cmudict.dict"
+# The English table has THREE inputs, and two of them used to be invisible.
+# WEB2 is a macOS SYSTEM file that does not exist on Linux at all, and FREQ_EN
+# is gitignored, so a fresh clone and every CI runner lack them. Both were read
+# as `... if path.exists() else set()`, which did not fail -- it silently
+# skipped the unbanked-homophone expansion and wrote a SMALLER table.
+#
+# That is the whole mechanism behind ebd6a673: an English table regenerated at
+# 80 sets where it had been 239 to 264, pushed, and live for a day marking
+# learners wrong for real words the audio cannot tell apart. It was read as one
+# unlucky worktree. It is not -- it is this fallback, and there were two more
+# instances of it right here.
+#
+# So: a missing input is a FAILURE now, never a quietly smaller answer. This
+# does not make the table reproducible off a Mac (that needs the inputs
+# themselves, and is a separate decision); it makes the irreproducibility
+# impossible to miss.
+WEB2 = pathlib.Path("/usr/share/dict/web2")
+FREQ_EN = ROOT / "tools/wordpipe/sources/freq_en.txt"
 OUT = ROOT / "assets/words"
 TIERS = ("EASY", "MEDIUM", "HARD", "EXPERT")
+
+
+def _shortpath(p):
+    """Repo-relative when it can be, absolute otherwise. relative_to RAISES on a
+    path outside ROOT, and an error reporter that can itself throw turns a clear
+    failure into a traceback."""
+    try:
+        return str(p.relative_to(ROOT))
+    except ValueError:
+        return str(p)
+
+
+def missing_en_inputs():
+    """Every English input that is absent, named with what its absence costs."""
+    out = []
+    if not CMU.exists():
+        out.append(f"cmudict is missing at {_shortpath(CMU)} — without it there "
+                   f"are no English pronunciations, so there is no table at all. "
+                   f"It is committed as of f7399143; a clone should have it.")
+    if not WEB2.exists():
+        out.append(f"{WEB2} is missing — it is a macOS system file and does not exist "
+                   f"on Linux, so this table cannot be built or verified there. "
+                   f"Without it the unbanked-homophone expansion is skipped and the "
+                   f"table comes out SMALLER, which reads as 'stale'.")
+    if not FREQ_EN.exists():
+        out.append(f"{_shortpath(FREQ_EN)} is missing — it is gitignored, so no "
+                   f"fresh clone has it. Without it the unbanked-homophone expansion "
+                   f"is skipped and the table comes out SMALLER.")
+    return out
 
 
 def bank(lang):
@@ -134,6 +181,15 @@ FIXTURE_RU = [("луг", "лук"), ("плот", "плод"), ("код", "кот
 
 
 def build(lang):
+    # Before anything reads an input. key_en() returns None when cmudict is
+    # absent, and the old path then printed a note and RETURNED -- a silent
+    # skip rather than a silent shrink, but silent either way, and the caller
+    # exited 0. Every missing English input refuses here, in one place.
+    if lang == "en":
+        gone = missing_en_inputs()
+        if gone:
+            raise SystemExit("build_collisions: refusing to build the English table "
+                             "from missing inputs:\n  " + "\n  ".join(gone))
     k = key_en() if lang == "en" else KEYS.get(lang)
     if k is None:
         print(f"  {lang}: no key function (or cmudict missing)")
@@ -168,12 +224,10 @@ def build(lang):
         # list alone admits proper names (ahn, ann, anne, ame) -- it is corpus
         # frequency, not a dictionary. A candidate must be a real dictionary
         # word AND common enough that a learner could actually produce it.
-        w2 = pathlib.Path("/usr/share/dict/web2")
-        freq = ROOT / "tools/wordpipe/sources/freq_en.txt"
-        dictw = ({l.strip().lower() for l in w2.read_text(errors="ignore").splitlines()
-                  if l.strip().isalpha() and l.strip()[0].islower()} if w2.exists() else set())
-        common = ({l.split()[0].lower() for l in freq.read_text(errors="ignore").splitlines()
-                   if l.split()} if freq.exists() else set())
+        dictw = {l.strip().lower() for l in WEB2.read_text(errors="ignore").splitlines()
+                 if l.strip().isalpha() and l.strip()[0].islower()}
+        common = {l.split()[0].lower() for l in FREQ_EN.read_text(errors="ignore").splitlines()
+                  if l.split()}
         real = dictw & common
         if real:
             banked = set(words)
@@ -277,10 +331,12 @@ def check():
     # table went stale (the bank-variety cleanup removed four pairs) and no
     # gate run in a worktree could see it. Absence of the input is now a
     # failure, not a pass.
-    if not CMU.exists():
-        bad.append(f"en: {CMU.relative_to(ROOT)} is missing, so the English table cannot be "
-                   f"checked at all. That path is gitignored, so a fresh worktree never has "
-                   f"it -- fetch it before trusting this gate.")
+    gone = missing_en_inputs()
+    if gone:
+        # A check that cannot verify must not report OK.
+        for g in gone:
+            bad.append(f"en: {g}")
+        return bad
     src = (ROOT / "src/homophones.rs").read_text()
     for lang in ("en", "es", "ru"):
         path = OUT / lang / "homophones.txt"
