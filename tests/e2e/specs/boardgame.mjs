@@ -232,8 +232,28 @@ export async function run(browser, base, suite) {
               }, TIERS[st.tier], { timeout: 3000 });
               const sw = await page.$eval('#bgView [data-tier]', (e) => e.previousElementSibling.className);
               assert(sw.includes(`t-${st.tier}`), `the swatch matches the tier: ${sw}`);
-              const shown = await page.$eval('#bgView', (e) => e.textContent);
-              assert(!shown.toLowerCase().includes(cite(st.word).toLowerCase()), 'the callout never shows the word');
+              // Everything EXCEPT the tier label, and then by token.
+              //
+              // The point is that the callout must not LEAK THE ANSWER, and
+              // the old substring test over the whole callout could not tell
+              // a leak from a coincidence. The callout states its tier, and
+              // each tier's own bank contains words inside that label: Easy
+              // has "as" and "easy", Medium has "medium". So the assertion
+              // fired whenever the dice put one of those on a Landing tile
+              // -- roughly one gate run in four, passing every time anyone
+              // re-ran it alone, which is exactly how a latent flake hides.
+              //
+              // Dropping [data-tier] removes the only legitimate source of
+              // the word, so what remains is a genuine leak. Tokenising on
+              // top keeps "as" from matching inside some future label.
+              const shown = await page.$eval('#bgView', (e) => {
+                const clone = e.cloneNode(true);
+                clone.querySelectorAll('[data-tier]').forEach((n) => n.remove());
+                return clone.textContent;
+              });
+              const tokens = shown.toLowerCase().split(/[^\p{L}\p{N}']+/u).filter(Boolean);
+              assert(!tokens.includes(cite(st.word).toLowerCase()),
+                `the callout never shows the word (saw ${JSON.stringify(shown)})`);
               sawTier++;
             }
             await typeIt(page, cite(st.word));
