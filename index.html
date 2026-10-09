@@ -470,6 +470,8 @@
      status bar, which swallows taps (it did, on a real phone). In the spell state that row
      sits under the key grid, so the keys stay at full size and nothing is added to the column. */
   .bg-act{direction:ltr}
+  .bg-setup-exit{margin-left:auto}
+  .bg-screen.playing .bg-setup-exit{display:none}
   .bg-exit{width:56px;height:48px;min-width:56px;font-size:24px;position:relative;z-index:3}
   .bg-screen.spelling .bg-act{order:9}
   .bg-hud h2{margin:0;font-size:1.05rem;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
@@ -2677,6 +2679,7 @@
   <div class="bg-screen" id="bgScreen" role="dialog" aria-modal="true" aria-labelledby="bgTitle">
     <div class="bg-hud">
       <h2 id="bgTitle" data-i18n="bg.name">Board Game</h2>
+      <button type="button" class="ghost mode-exit bg-setup-exit" id="bgSetupExit" aria-label="Exit" data-i18n-aria="aria.exit">✕</button>
     </div>
     <div class="bg-setup" id="bgSetup">
       <div class="bg-opt" id="bgOptMode"><span data-i18n="bg.name">Board Game</span></div>

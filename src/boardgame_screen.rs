@@ -118,6 +118,7 @@ pub fn wire(app: &App) {
         dom::on_click("bgOpenBtn", move || open(&a));
     }
     dom::on_click("bgExit", close);
+    dom::on_click("bgSetupExit", close);
     dom::on_click("bgStart", start);
     dom::on_click("bgOrb", orb);
     dom::on_click("bgDel", delete);

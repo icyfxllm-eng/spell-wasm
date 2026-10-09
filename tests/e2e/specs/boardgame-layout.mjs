@@ -139,6 +139,23 @@ async function runMore(browser, base, suite) {
     return o;
   };
   const shown = (page) => page.evaluate(() => document.getElementById('bgScreen').classList.contains('show'));
+  await suite.test('boardgame_setup_screen_has_top_right_exit', async () => {
+    const o = await openApp(browser, base, { lang: 'en', viewport: { width: 390, height: 844 }, init: FLAG });
+    try {
+      await o.page.evaluate(() => document.getElementById('bgOpenBtn').click());
+      await o.page.waitForSelector('#bgScreen.show', { timeout: 8000 });
+      const m = await o.page.evaluate(() => {
+        const b = document.getElementById('bgSetupExit').getBoundingClientRect();
+        const top = document.elementFromPoint(b.left + b.width / 2, b.top + b.height / 2);
+        return { r: b.toJSON(), W: innerWidth, hit: !!top && !!top.closest('#bgSetupExit') };
+      });
+      assert(m.r.width >= 44 && m.r.height >= 44, `setup exit too small ${JSON.stringify(m.r)}`);
+      assert(m.r.right > m.W - 40 && m.r.top < 120, `setup exit is not top-right ${JSON.stringify(m.r)}`);
+      assert(m.hit, 'something covers the setup exit button');
+      await o.page.click('#bgSetupExit');
+      assert(!(await o.page.evaluate(() => document.getElementById('bgScreen').classList.contains('show'))), 'setup exit did not leave the Board Game');
+    } finally { await o.ctx.close(); }
+  });
   await suite.test('boardgame_board_state_fills_height_and_exit_works', async () => {
     const { ctx, page } = await open({ width: 430, height: 932 });
     try {
