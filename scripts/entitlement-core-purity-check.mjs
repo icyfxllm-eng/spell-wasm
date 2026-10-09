@@ -37,6 +37,25 @@ const ALLOWLIST = [
   'ios/App/AppTests/StoreKit',
 ];
 
+// NOT CODE. Generated dictionary data, served verbatim to players, where an
+// English word in a gloss is a WORD and not a leak. Deliberately separate from
+// ALLOWLIST: that list means "a legal home for entitlement logic", and these
+// files are not a home for logic at all -- nothing in them is executed.
+//
+// Found 2026-10-08 when the Japanese definitions landed. JMdict glosses
+// てんとう (shop front) as "shopfront; storefront; shopwindow", which is simply
+// correct, and the gate read it as a storefront check leaking out of the core.
+// The alternative was editing a dictionary to satisfy a grep, which would make
+// the data wrong to keep a tool quiet.
+//
+// Narrow on purpose: backend/*.py and every other backend file stay scanned,
+// so an actual adapter leak is still caught.
+const NOT_CODE = [
+  'backend/def_pools',      // per-language definition pools (/api/defpool)
+  'backend/ja_glosses.json', // JMdict extract
+  'backend/zh_glosses.json', // CC-CEDICT extract
+];
+
 const IGNORE_DIRS = new Set(['node_modules', 'target', 'dist', 'dist-test', 'pkg', 'pkg-test', '.git']);
 const TEXT_EXT = /\.(rs|js|mjs|ts|swift|py|html|json|kt|java|xml)$/i;
 
@@ -63,6 +82,7 @@ for (const rootName of SCAN_ROOTS) {
   for (const file of files) {
     const rel = relative(ROOT, file);
     if (allowed(rel)) continue;
+    if (NOT_CODE.some((d) => rel === d || rel.startsWith(d + '/'))) continue;
     const text = readFileSync(file, 'utf8');
     for (const needle of NEEDLES) {
       if (text.includes(needle)) {

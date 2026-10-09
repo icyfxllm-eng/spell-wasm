@@ -58,8 +58,24 @@ const JUNK = [
   [/^\s*$/, "empty"],
 ];
 
-export function check(dir, bankDir) {
+// The def-match pool floor, read from the Rust that enforces it rather than
+// copied. src/defmatch.rs:185 turns a tier OFF when it has fewer than this
+// many prompt-grade rows -- silently, because a mode with nothing to draw
+// simply does not open. Nothing announces it, so a tier can go dark from a
+// content change and look like a UI bug months later.
+export function poolFloor() {
+  const src = fs.readFileSync(path.join(ROOT, "src/defmatch.rs"), "utf8");
+  const m = src.match(/pub const POOL_FLOOR: usize = (\d+);/);
+  // A check that cannot verify must not report OK.
+  if (!m) throw new Error("def-pool-check: POOL_FLOOR not found in src/defmatch.rs");
+  return Number(m[1]);
+}
+
+export function check(dir, bankDir, opts = {}) {
   const bad = [];
+  // 0 disables the ratchet, which the fixture cases below need: they carry one
+  // or two rows on purpose and are about other laws entirely.
+  const floor = opts.floor === undefined ? poolFloor() : opts.floor;
   // Mirrors build-wordlists.py: accent-sensitive for the languages whose marks
   // are lexical, lenient elsewhere. Kept in step by `exclusion_fold_parity`.
   const ACCENT_SENSITIVE = new Set(["vi"]);
@@ -80,7 +96,7 @@ export function check(dir, bankDir) {
         .map(fold),
     );
   };
-  let rows = 0, files = 0, offBank = 0;
+  let rows = 0, files = 0, offBank = 0, thinnest = null;
   const files_ = fs.existsSync(dir)
     ? fs.readdirSync(dir).filter((f) => f.endsWith(".json")).sort()
     : [];
@@ -169,9 +185,24 @@ export function check(dir, bankDir) {
           bad.push(`${lang}/${tier}: ${pg.length} prompt_grade rows share one definition — ${pg.map((r) => r.word).join(", ")}`);
         }
       }
+      // THE RATCHET. Every one of the 60 (lang, tier) pairs clears the floor
+      // today; none may stop. Hindi expert is the thin one at 50 against 40,
+      // and it got there by a bank sweep removing words rather than by anyone
+      // deciding to -- which is exactly the shape of change that would take it
+      // under without a word. Crossing this is allowed, but it has to be a
+      // decision: say so here, with the reason, the way the wordgrid pin does.
+      if (floor > 0 && list.length) {
+        const pg = list.filter((r) => r && r.prompt_grade).length;
+        if (!thinnest || pg < thinnest.pg) thinnest = { pg, lang, tier };
+        if (pg < floor) {
+          bad.push(`${lang}/${tier}: ${pg} prompt-grade rows, under the def-match floor of ${floor} — `
+            + `definition-match goes DARK for this tier, silently (src/defmatch.rs:185). `
+            + `Every tier cleared it as of 2026-10-08; if this one is meant to stop, pin it here with why.`);
+        }
+      }
     }
   }
-  return { bad, rows, files, offBank };
+  return { bad, rows, files, offBank, thinnest, floor };
 }
 
 // The bank as the pools must key on it. Chinese stores `pinyin|hanzi` pairs
@@ -219,6 +250,12 @@ if (process.argv.includes("--selftest")) {
     form_of_pointer: { rows: [row({ word: "pear", definition: "plural of apple" })], want: /grammar cross-reference/ },
     form_of_compound: { rows: [row({ word: "pear", definition: "simple past and past participle of hold" })], want: /grammar cross-reference/ },
     composed_inflection: { rows: [row({ word: "pear", definition: "plural: a round fruit" })], want: null },
+    // The ratchet, both directions. Hindi expert sits 10 over the floor, so
+    // the case that matters most is that it BITES rather than that it passes.
+    under_floor: { rows: [row(), row({ word: "pear", definition: "A green fruit." })],
+                   floor: 3, want: /under the def-match floor of 3/ },
+    at_floor: { rows: [row(), row({ word: "pear", definition: "A green fruit." })],
+                floor: 2, want: null },
   };
   let failed = 0;
   for (const [name, c] of Object.entries(cases)) {
@@ -233,7 +270,7 @@ if (process.argv.includes("--selftest")) {
       fs.mkdirSync(path.join(bankDir, "en"), { recursive: true });
       fs.writeFileSync(path.join(bankDir, "en", "easy.txt"), "# a comment\napple\npear\ncat\nin\nas\nkana\n");
     }
-    const { bad } = check(d, bankDir);
+    const { bad } = check(d, bankDir, { floor: c.floor ?? 0 });
     let ok, why = "";
     if (c.want === null) {
       ok = bad.length === 0;
@@ -254,9 +291,9 @@ if (process.argv.includes("--selftest")) {
     fs.writeFileSync(path.join(d, "bank", "zh", "easy.txt"), "ai4|\u7231\nba1|\u516b\n");
     const mk = (w) => JSON.stringify({ lang: "zh", tiers: { easy: [{ word: w, definition: "love", pos: "noun", prompt_grade: true, kid_register: true }] }, exclusions: {} });
     fs.writeFileSync(path.join(d, "zh.json"), mk("\u7231"));
-    const hanzi = check(d, path.join(d, "bank")).bad.length === 0;
+    const hanzi = check(d, path.join(d, "bank"), { floor: 0 }).bad.length === 0;
     fs.writeFileSync(path.join(d, "zh.json"), mk("ai4|\u7231"));
-    const pair = check(d, path.join(d, "bank")).bad.some((b) => /not in the zh bank/.test(b));
+    const pair = check(d, path.join(d, "bank"), { floor: 0 }).bad.some((b) => /not in the zh bank/.test(b));
     console.log(`  ${hanzi ? "clean  " : "MISSED "} zh_hanzi_key_accepted`);
     console.log(`  ${pair ? "caught " : "MISSED "} zh_pipe_key_rejected`);
     if (!hanzi || !pair) failed++;
@@ -274,11 +311,11 @@ if (process.argv.includes("--selftest")) {
     fs.writeFileSync(path.join("assets", "words", "exclusions", "vi.txt"), "# seed\n\u0111\u00e9o\n");
     const row = (w) => JSON.stringify({ lang: "vi", tiers: { easy: [{ word: w, definition: "a meaning", pos: "noun", prompt_grade: true, kid_register: true }] }, exclusions: {} });
     fs.writeFileSync(path.join(d, "vi.json"), row("\u0111\u00e9o"));
-    const caught = check(d, undefined).bad.some((b) => /on the vi exclusion list/.test(b));
+    const caught = check(d, undefined, { floor: 0 }).bad.some((b) => /on the vi exclusion list/.test(b));
     fs.writeFileSync(path.join(d, "vi.json"), row("\u0111i"));
     // vi matches ACCENT-SENSITIVELY: đi (to go) must survive a seed holding đĩ.
     fs.writeFileSync(path.join("assets", "words", "exclusions", "vi.txt"), "\u0111\u0129\n");
-    const spared = check(d, undefined).bad.every((b) => !/exclusion list/.test(b));
+    const spared = check(d, undefined, { floor: 0 }).bad.every((b) => !/exclusion list/.test(b));
     process.chdir(cwd);
     console.log(`  ${caught ? "caught " : "MISSED "} excluded_word_keeps_a_definition`);
     console.log(`  ${spared ? "clean  " : "MISSED "} accent_sensitive_spares_di`);
@@ -291,7 +328,7 @@ if (process.argv.includes("--selftest")) {
 }
 
 const POOLS = `${ROOT}/backend/def_pools`;
-const { bad, rows, files, offBank } = check(POOLS, `${ROOT}/assets/words`);
+const { bad, rows, files, offBank, thinnest, floor: floorUsed } = check(POOLS, `${ROOT}/assets/words`);
 if (bad.length) {
   console.error("def-pool-check: FAILED");
   for (const b of bad.slice(0, 40)) console.error("  " + b);
@@ -305,4 +342,7 @@ if (bad.length) {
   console.error("\n  Rebuild with: python3 scripts/build-def-pools.py <lang>");
   process.exit(1);
 }
-console.log(`def-pool-check: OK — ${rows} rows in ${files} language(s), every definition a meaning, every word still in the bank`);
+const margin = thinnest
+  ? ` Thinnest tier: ${thinnest.lang}/${thinnest.tier} at ${thinnest.pg} prompt-grade, ${thinnest.pg - floorUsed} over the def-match floor of ${floorUsed}.`
+  : "";
+console.log(`def-pool-check: OK — ${rows} rows in ${files} language(s), every definition a meaning, every word still in the bank.${margin}`);
