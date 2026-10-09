@@ -38,6 +38,8 @@ export async function run(browser, base, suite) {
     try {
       const r = await page.evaluate(() => { const b = document.getElementById('szExit').getBoundingClientRect(); return b.toJSON(); });
       assert(r.left < 40 && r.top < 120 && r.width >= 44 && r.height >= 44, `exit not a top-left target ${JSON.stringify(r)}`);
+      const label = await page.evaluate(() => document.getElementById('szExit').textContent.trim());
+      assert(label.length > 1 && !/[✕×x]/i.test(label.slice(0, 1) === 'E' ? '' : label), `exit must be a word, not a glyph: ${label}`);
       await page.click('#szExit');
       assert(!(await page.evaluate(() => document.getElementById('szScreen').classList.contains('show'))), 'exit did not leave');
     } finally { await ctx.close(); }
