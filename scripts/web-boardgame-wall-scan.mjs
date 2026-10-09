@@ -21,7 +21,7 @@ const patterns = [];
 const add = (label, re) => patterns.push({ label, re });
 
 for (const sym of ["boardgame", "BOARDGAME", "bgOpenBtn", "bgScreen", "bg-screen", "bg-key", "bg-orb",
-                   "bgSetup", "bgHand", "bgOver", "bgBoard", "bgKeys", "spell_flag_boardgame"]) {
+                   "bgSetup", "bgHand", "bgOver", "bgBoard", "bgKeys", "spell_flag_boardgame", "bg_size_pass_v1", "bgOptSize"]) {
   add(`symbol ${sym}`, new RegExp(sym.replace(/[-]/g, "\\-"), "g"));
 }
 // The locale namespace: the keys themselves, as they sit in the wasm's tables.

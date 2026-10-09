@@ -902,5 +902,8 @@
   "bg.tileOf": "المربع {n} من {m}",
   "bg.turnOf": "الدور: {piece} {n}",
   "bg.rolled": "رمية {n}",
-  "bg.toTile": "إلى المربع {n}"
+  "bg.toTile": "إلى المربع {n}",
+  "bg.size": "الحجم",
+  "bg.sprint": "سريعة",
+  "bg.full": "كاملة"
 }

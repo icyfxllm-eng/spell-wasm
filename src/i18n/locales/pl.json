@@ -902,5 +902,8 @@
   "bg.tileOf": "Pole {n} z {m}",
   "bg.turnOf": "Tura: {piece} {n}",
   "bg.rolled": "Wyrzucono {n}",
-  "bg.toTile": "Na pole {n}"
+  "bg.toTile": "Na pole {n}",
+  "bg.size": "Rozmiar",
+  "bg.sprint": "Szybka",
+  "bg.full": "Pełna"
 }

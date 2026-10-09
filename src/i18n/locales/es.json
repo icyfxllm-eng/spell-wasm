@@ -902,5 +902,8 @@
   "bg.tileOf": "Casilla {n} de {m}",
   "bg.turnOf": "Turno: {piece} {n}",
   "bg.rolled": "Sacó {n}",
-  "bg.toTile": "A la casilla {n}"
+  "bg.toTile": "A la casilla {n}",
+  "bg.size": "Tamaño",
+  "bg.sprint": "Rápido",
+  "bg.full": "Completo"
 }

@@ -902,5 +902,8 @@
   "bg.tileOf": "{m} में से खाना {n}",
   "bg.turnOf": "बारी: {piece} {n}",
   "bg.rolled": "पासा: {n}",
-  "bg.toTile": "खाना {n} पर"
+  "bg.toTile": "खाना {n} पर",
+  "bg.size": "आकार",
+  "bg.sprint": "स्प्रिंट",
+  "bg.full": "पूर्ण"
 }

@@ -902,5 +902,8 @@
   "bg.tileOf": "Ô {n} trên {m}",
   "bg.turnOf": "Lượt của {piece} {n}",
   "bg.rolled": "Tung được {n}",
-  "bg.toTile": "Đến ô {n}"
+  "bg.toTile": "Đến ô {n}",
+  "bg.size": "Kích thước",
+  "bg.sprint": "Nhanh",
+  "bg.full": "Đầy đủ"
 }

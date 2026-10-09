@@ -902,5 +902,8 @@
   "bg.tileOf": "{m}칸 중 {n}번째 칸",
   "bg.turnOf": "차례: {piece} {n}",
   "bg.rolled": "주사위 {n}",
-  "bg.toTile": "{n}번 칸으로"
+  "bg.toTile": "{n}번 칸으로",
+  "bg.size": "크기",
+  "bg.sprint": "스프린트",
+  "bg.full": "풀"
 }

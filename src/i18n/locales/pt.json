@@ -902,5 +902,8 @@
   "bg.tileOf": "Casa {n} de {m}",
   "bg.turnOf": "Vez de {piece} {n}",
   "bg.rolled": "Tirou {n}",
-  "bg.toTile": "Para a casa {n}"
+  "bg.toTile": "Para a casa {n}",
+  "bg.size": "Tamanho",
+  "bg.sprint": "Rápido",
+  "bg.full": "Completo"
 }

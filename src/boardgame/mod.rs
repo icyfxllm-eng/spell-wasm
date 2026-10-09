@@ -33,6 +33,8 @@ pub mod engine;
 pub mod golden;
 pub mod rules;
 
+pub use rules::{Variant, LONG_WORD_FLOOR};
+
 #[cfg(test)]
 mod balance;
 #[cfg(test)]
@@ -46,17 +48,9 @@ use crate::spelldoku::rng::Rng;
 #[allow(unused_imports)]
 pub use engine::{apply, applied, new_game};
 
-/// Standard: 22 x 22 grid perimeter. Jr: 11 x 11. (D3, I1)
-pub const STANDARD_TILES: usize = 84;
-pub const JR_TILES: usize = 40;
-
-/// F9: the unique words each tier of the mode's pool must supply. The engine
-/// enforces it as well as the screen (I8): a pool that cannot serve the game is
-/// refused rather than recycled.
-pub const MIN_POOL_STANDARD: usize = 150;
-pub const MIN_POOL_JR: usize = 60;
-/// D25: the Long Word band's floor.
-pub const LONG_WORD_FLOOR: usize = 20;
+// Tile counts, pool minimums, tier weights, trap rules and the NPC delta ladder
+// all live in ONE config block per variant: `rules::VariantCfg` (I-P10). Nothing
+// outside it matches on `Variant` to pick a number.
 
 /// The four bank tiers, in the ladder's order. Names come from
 /// `consts::TIER_ORDER` and nowhere else (F2; `tier-list-check.mjs`).
@@ -107,12 +101,6 @@ impl Trap {
     }
 }
 
-#[derive(Clone, Copy, Debug, PartialEq, Eq)]
-pub enum Variant {
-    Standard,
-    Jr,
-}
-
 /// D18 / F5. Standard only; Jr has one fixed delta and shows no setting.
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
 pub enum Difficulty {
@@ -123,6 +111,10 @@ pub enum Difficulty {
 
 impl Difficulty {
     pub const ALL: [Difficulty; 3] = [Difficulty::Easy, Difficulty::Normal, Difficulty::Tough];
+
+    pub fn ix(self) -> usize {
+        self as usize
+    }
 }
 
 /// One piece on the board. `piece` is the icon index (D23); the seat is the
@@ -307,9 +299,10 @@ pub struct Player {
 pub struct Board {
     /// Index 0 (Start) and the last tile (Finish) are `None`.
     pub tiers: Vec<Option<Tier>>,
-    /// Empty for Jr: there is no trap table to index (I2).
+    /// Empty when the variant has no traps (Jr): there is no trap table to index (I2).
     pub traps: Vec<Option<Trap>>,
-    /// Cells per side of the square the ring is the perimeter of.
+    /// The canonical ring's width (Full 22 of 22x22, Sprint 11 of 11x12, Jr 11 of 11x11).
+    /// Presentation picks the drawn shape (`boardgame_ring`); this only feeds the digest.
     pub grid: u32,
 }
 
@@ -376,7 +369,7 @@ impl BoardGameState {
         self.phase != Phase::Finished && self.players[self.current_seat() as usize].seat.npc
     }
 
-    /// D13/D27: `(3 + hits) / (2 + attempts)` of the human, in thousandths. It
+    /// D13/D27/D-P20: `(prior_hits + hits) / (prior_attempts + attempts)` (3 and 2 except Sprint) of the human, in thousandths. It
     /// starts at 1.5 and the NPC clamp holds it to 0.95 until attempts accumulate. In
     /// solo there is exactly one human; in pass-and-play nothing reads it.
     pub fn human_acc_milli(&self) -> i64 {
@@ -386,7 +379,8 @@ impl BoardGameState {
             .find(|p| !p.seat.npc)
             .map(|p| (p.hits as i64, p.attempts as i64))
             .unwrap_or((0, 0));
-        (3 + h) * 1000 / (2 + a)
+        let (ph, pa) = self.cfg.variant.cfg().prior();
+        (ph + h * 1000) * 1000 / (pa + a * 1000)
     }
 
     /// The seats from first to last: a finisher first, then by position

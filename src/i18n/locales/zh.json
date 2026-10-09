@@ -902,5 +902,8 @@
   "bg.tileOf": "第{n}格，共{m}格",
   "bg.turnOf": "轮到：{piece} {n}",
   "bg.rolled": "掷出 {n}",
-  "bg.toTile": "前往第{n}格"
+  "bg.toTile": "前往第{n}格",
+  "bg.size": "大小",
+  "bg.sprint": "冲刺",
+  "bg.full": "完整"
 }

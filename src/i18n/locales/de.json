@@ -902,5 +902,8 @@
   "bg.tileOf": "Feld {n} von {m}",
   "bg.turnOf": "Am Zug: {piece} {n}",
   "bg.rolled": "Gewürfelt: {n}",
-  "bg.toTile": "Weiter auf Feld {n}"
+  "bg.toTile": "Weiter auf Feld {n}",
+  "bg.size": "Länge",
+  "bg.sprint": "Schnell",
+  "bg.full": "Voll"
 }

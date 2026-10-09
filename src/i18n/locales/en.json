@@ -902,5 +902,8 @@
   "bg.tileOf": "Tile {n} of {m}",
   "bg.turnOf": "Turn: {piece} {n}",
   "bg.rolled": "Rolled {n}",
-  "bg.toTile": "To tile {n}"
+  "bg.toTile": "To tile {n}",
+  "bg.size": "Size",
+  "bg.sprint": "Sprint",
+  "bg.full": "Full"
 }

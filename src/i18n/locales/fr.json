@@ -902,5 +902,8 @@
   "bg.tileOf": "Case {n} sur {m}",
   "bg.turnOf": "Tour : {piece} {n}",
   "bg.rolled": "Dé : {n}",
-  "bg.toTile": "Vers la case {n}"
+  "bg.toTile": "Vers la case {n}",
+  "bg.size": "Taille",
+  "bg.sprint": "Rapide",
+  "bg.full": "Complet"
 }

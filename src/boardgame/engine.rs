@@ -4,34 +4,16 @@ use std::collections::BTreeSet;
 use std::sync::Arc;
 
 use super::board::generate;
-use super::rules::{Jr, Ruleset, Standard};
 use super::*;
 use crate::spelldoku::rng::Rng;
 
-/// D18 / F5. Spell Jr has one fixed delta.
-const JR_DELTA_MILLI: i64 = 250;
 const NPC_FLOOR_MILLI: i64 = 300;
 const NPC_CEIL_MILLI: i64 = 950;
-
-fn delta_milli(variant: Variant, d: Difficulty) -> i64 {
-    match (variant, d) {
-        (Variant::Jr, _) => JR_DELTA_MILLI,
-        (_, Difficulty::Easy) => 300,
-        (_, Difficulty::Normal) => 200,
-        (_, Difficulty::Tough) => 100,
-    }
-}
 
 /// A fresh game. All randomness comes from `seed`, in a fixed order: board
 /// tiers, traps, first player, then each tier's word order.
 pub fn new_game(seed: u64, cfg: GameConfig, pools: TierPools) -> Result<BoardGameState, ConfigError> {
-    match cfg.variant {
-        Variant::Standard => build::<Standard>(seed, cfg, pools),
-        Variant::Jr => build::<Jr>(seed, cfg, pools),
-    }
-}
-
-fn build<R: Ruleset>(seed: u64, cfg: GameConfig, pools: TierPools) -> Result<BoardGameState, ConfigError> {
+    let c = cfg.variant.cfg();
     let n = cfg.seats.len();
     if !(2..=MAX_SEATS).contains(&n) {
         return Err(ConfigError::SeatCount);
@@ -47,25 +29,25 @@ fn build<R: Ruleset>(seed: u64, cfg: GameConfig, pools: TierPools) -> Result<Boa
         }
         seen[s.piece as usize] = true;
     }
-    for &(t, _) in R::WEIGHTS {
-        if pools.tiers[t.ix()].len() < R::MIN_POOL {
+    for t in c.tiers() {
+        if pools.tiers[t.ix()].len() < c.min_pool {
             return Err(ConfigError::PoolTooSmall(t));
         }
     }
-    if R::HAS_TRAPS && pools.long_word.len() < LONG_WORD_FLOOR {
+    if c.has_traps() && pools.long_word.len() < LONG_WORD_FLOOR {
         return Err(ConfigError::LongPoolTooSmall);
     }
 
     let mut rng = Rng::new(seed);
-    let board = generate::<R>(&mut rng);
+    let board = generate(&mut rng, cfg.variant);
     let start = (rng.next_u64() % n as u64) as usize;
     let order: Vec<u8> = (0..n).map(|k| ((start + k) % n) as u8).collect();
 
     let mut queues: [Vec<u32>; 4] = Default::default();
-    for &(t, _) in R::WEIGHTS {
+    for t in c.tiers() {
         queues[t.ix()] = shuffled(&mut rng, pools.tiers[t.ix()].len());
     }
-    let long_queue = if R::HAS_TRAPS { shuffled(&mut rng, pools.long_word.len()) } else { Vec::new() };
+    let long_queue = if c.has_traps() { shuffled(&mut rng, pools.long_word.len()) } else { Vec::new() };
 
     let players = cfg
         .seats
@@ -403,7 +385,7 @@ impl BoardGameState {
 
     /// D13: `clamp(human_acc - delta, 0.30, 0.95)`, in thousandths.
     pub fn npc_acc_milli(&self) -> i64 {
-        (self.human_acc_milli() - delta_milli(self.cfg.variant, self.cfg.difficulty)).clamp(NPC_FLOOR_MILLI, NPC_CEIL_MILLI)
+        (self.human_acc_milli() - self.cfg.variant.cfg().delta(self.cfg.difficulty)).clamp(NPC_FLOOR_MILLI, NPC_CEIL_MILLI)
     }
 
     /// One whole NPC turn. NPCs draw no words (I11): their outcomes come from

@@ -25,13 +25,24 @@ pub fn rng_1000() -> u64 {
     fnv(&bytes)
 }
 
+/// The 84-tile Full game: unchanged by Phase B, so its pinned digest is the proof
+/// that Full is still bit-for-bit what it was.
 pub fn game() -> u64 {
+    game_of(Variant::Full)
+}
+
+/// Phase B's witness: one scripted Sprint game (42 tiles, 3 traps).
+pub fn game_sprint() -> u64 {
+    game_of(Variant::Sprint)
+}
+
+fn game_of(variant: Variant) -> u64 {
     let mut pools = TierPools::default();
     for t in Tier::ALL {
-        pools.tiers[t.ix()] = (0..MIN_POOL_STANDARD).map(|i| format!("{}{i:04}", t.name())).collect();
+        pools.tiers[t.ix()] = (0..variant.cfg().min_pool).map(|i| format!("{}{i:04}", t.name())).collect();
     }
     pools.long_word = (0..30).map(|i| format!("long{i:04}")).collect();
-    let cfg = GameConfig::solo(Variant::Standard, Difficulty::Normal, 3, 1, "en", false, exact);
+    let cfg = GameConfig::solo(variant, Difficulty::Normal, 3, 1, "en", false, exact);
     let mut s = new_game(0xB0A4_D6A3, cfg, pools).unwrap();
     // A fixed script with no test-side randomness: every third landing is wrong.
     let mut k = 0u64;

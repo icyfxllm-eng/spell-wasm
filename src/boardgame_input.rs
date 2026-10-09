@@ -409,9 +409,9 @@ mod tests {
     fn every_bank_word_can_be_answered_from_the_keys() {
         for lang in crate::consts::BUILTIN_LANGS.iter().map(|l| l.0) {
             for kid in [false, true] {
-                let v = variant_for(kid);
+                let v = variant_for(kid, false);
                 let mut all: Vec<(Tier, String)> = Vec::new();
-                for &t in tiers_of(v) {
+                for t in tiers_of(v) {
                     for w in bank(lang, t, kid) {
                         all.push((t, w));
                     }
@@ -479,8 +479,8 @@ mod tests {
     #[test]
     fn japanese_grid_is_five_rows_plus_one_modifier_row() {
         for kid in [false, true] {
-            let v = variant_for(kid);
-            let entries: Vec<String> = tiers_of(v).iter().flat_map(|&t| bank("ja", t, kid)).collect();
+            let v = variant_for(kid, false);
+            let entries: Vec<String> = tiers_of(v).into_iter().flat_map(|t| bank("ja", t, kid)).collect();
             let rows = layout("ja", kid, &entries);
             eprintln!("JA kid={kid}: {:?}", rows.iter().map(|r| r.iter().map(|k| k.face()).collect::<String>()).collect::<Vec<_>>());
             assert!(rows.len() <= 6, "ja kid={kid}: {} rows", rows.len());

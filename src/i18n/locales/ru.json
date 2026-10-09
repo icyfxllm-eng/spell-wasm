@@ -902,5 +902,8 @@
   "bg.tileOf": "Клетка {n} из {m}",
   "bg.turnOf": "Ход: {piece} {n}",
   "bg.rolled": "Выпало {n}",
-  "bg.toTile": "На клетку {n}"
+  "bg.toTile": "На клетку {n}",
+  "bg.size": "Размер",
+  "bg.sprint": "Спринт",
+  "bg.full": "Полная"
 }

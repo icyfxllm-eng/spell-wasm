@@ -902,5 +902,8 @@
   "bg.tileOf": "{m}マス中 {n}マス目",
   "bg.turnOf": "{piece} {n}のばん",
   "bg.rolled": "出た目: {n}",
-  "bg.toTile": "{n}マス目へ"
+  "bg.toTile": "{n}マス目へ",
+  "bg.size": "サイズ",
+  "bg.sprint": "スプリント",
+  "bg.full": "フル"
 }

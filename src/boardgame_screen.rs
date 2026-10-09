@@ -20,7 +20,7 @@ use std::collections::VecDeque;
 
 use wasm_bindgen::JsCast;
 
-use crate::boardgame::{self, Action, BoardGameState, Difficulty, Event, GameConfig, Phase, SpellKind, Variant};
+use crate::boardgame::{self, Action, BoardGameState, Difficulty, Event, GameConfig, Phase, SpellKind};
 use crate::boardgame_input::{self as input, Key};
 use crate::boardgame_ring as ring;
 use crate::boardgame_pools as pools;
@@ -43,11 +43,22 @@ struct Setup {
     count: u8,
     diff: Difficulty,
     piece: u8,
+    /// D-P4 / D-P15: Sprint (42 tiles) or Full (84). Solo opens on Sprint; pass-and-play
+    /// opens on Full and remembers the last choice. Spell Jr has no picker and ignores it.
+    sprint: bool,
+}
+
+/// D-P15: the last size picked in pass-and-play ("sprint" or "full"). Solo is not
+/// remembered: it always opens on Sprint. `bg_` keeps it inside the wall scan's reach.
+const PASS_SIZE_KEY: &str = "bg_size_pass_v1";
+
+fn pass_sprint() -> bool {
+    storage::get_raw(PASS_SIZE_KEY).as_deref() == Some("sprint")
 }
 
 impl Setup {
     fn fresh() -> Self {
-        Setup { solo: true, count: 3, diff: Difficulty::Normal, piece: 0 }
+        Setup { solo: true, count: 3, diff: Difficulty::Normal, piece: 0, sprint: true }
     }
 }
 
@@ -241,10 +252,7 @@ pub fn open(app: &App) {
             let _ = e.set_attribute("dir", dir);
         }
     }
-    let ok = pools::gate(&lang, kid).is_ok();
-    GATE.with(|g| g.set(ok));
-    dom::set_text("bgNote", &if ok { String::new() } else { i18n::t("bg.soon") });
-    dom::set_disabled("bgStart", !ok);
+    refresh_gate();
     dom::set_hidden("bgSetup", false);
     dom::set_hidden("bgPlay", true);
     dom::remove_class("bgScreen", "playing");
@@ -255,6 +263,17 @@ pub fn open(app: &App) {
     dom::remove_class("bgScreen", "spelling");
     render_setup();
     dom::add_class("bgScreen", "show");
+}
+
+/// F9 / I8 for the variant the setup screen is about to start. Sprint needs half of
+/// Full's unique words per tier, so a language can open Sprint before it opens Full.
+fn refresh_gate() {
+    let (lang, kid) = LANG.with(|l| l.borrow().clone());
+    let sprint = SETUP.with(|s| s.borrow().sprint);
+    let ok = pools::gate(&lang, pools::variant_for(kid, sprint)).is_ok();
+    GATE.with(|g| g.set(ok));
+    dom::set_text("bgNote", &if ok { String::new() } else { i18n::t("bg.soon") });
+    dom::set_disabled("bgStart", !ok);
 }
 
 fn close() {
@@ -297,6 +316,14 @@ fn render_setup() {
         h.push_str(&opt_btn(&format!("count:{n}"), s.count == n, &n.to_string()));
     }
     dom::set_html("bgOptCount", &h);
+    // D-P4: the size row. Spell Jr has one fixed size and shows no picker.
+    let mut z = String::new();
+    if !kid {
+        z.push_str(&format!("<span>{}</span>", i18n::t("bg.size")));
+        z.push_str(&opt_btn("size:sprint", s.sprint, &i18n::t("bg.sprint")));
+        z.push_str(&opt_btn("size:full", !s.sprint, &i18n::t("bg.full")));
+    }
+    dom::set_html("bgOptSize", &z);
     // F5: the difficulty setting is Standard only; Spell Jr has one fixed delta
     // and shows none.
     let mut d = String::new();
@@ -333,6 +360,13 @@ fn setup_tap(e: web_sys::MouseEvent) {
             "mode" => {
                 s.solo = val == "solo";
                 s.count = if s.solo { 3 } else { 2 };
+                s.sprint = s.solo || pass_sprint();
+            }
+            "size" => {
+                s.sprint = val == "sprint";
+                if !s.solo {
+                    storage::set_raw(PASS_SIZE_KEY, if s.sprint { "sprint" } else { "full" });
+                }
             }
             "count" => s.count = val.parse().unwrap_or(s.count),
             "diff" => {
@@ -346,6 +380,7 @@ fn setup_tap(e: web_sys::MouseEvent) {
             _ => {}
         }
     });
+    refresh_gate();
     render_setup();
 }
 
@@ -359,11 +394,11 @@ fn start() {
     let seed = now_ms() as u64 ^ (js_sys::Math::random() * 4_294_967_296.0) as u64;
     let ledger = load_ledger();
     let d = day();
-    let Ok(sup) = pools::supply(&lang, kid, &ledger, d, seed) else {
+    let variant = pools::variant_for(kid, s.sprint);
+    let Ok(sup) = pools::supply(&lang, variant, &ledger, d, seed) else {
         dom::set_text("bgNote", &i18n::t("bg.soon"));
         return;
     };
-    let variant = pools::variant_for(kid);
     let cfg = if s.solo {
         GameConfig::solo(variant, s.diff, s.count, s.piece, &lang, kid, crate::boardgame_grade::grade)
     } else {
@@ -699,7 +734,7 @@ fn render() {
         }
         dom::set_text("bgField", &u.typed);
         // D16: a soft 30 s ring in Standard, never an auto-fail.
-        let timed = spelling && g.cfg.variant == Variant::Standard;
+        let timed = spelling && g.cfg.variant.cfg().timed;
         dom::remove_class("bgTimer", "run");
         dom::set_hidden("bgTimer", !timed);
     });
@@ -1410,7 +1445,7 @@ fn start_spelling() {
 }
 
 fn restart_timer() {
-    let std = with_ui(|u| u.game.cfg.variant == Variant::Standard).unwrap_or(false);
+    let std = with_ui(|u| u.game.cfg.variant.cfg().timed).unwrap_or(false);
     if std {
         dom::after_ms(30, || dom::add_class("bgTimer", "run"));
     }
@@ -1600,6 +1635,7 @@ pub fn seam_state() -> String {
                     "hand": u.pass && g.phase != Phase::Finished && u.shown_seat != Some(g.current_seat()),
                     "variant": format!("{:?}", g.cfg.variant),
                     "traps": g.board.trap_count(),
+                    "tiles": g.board.len(),
                 })
                 .to_string()
             })

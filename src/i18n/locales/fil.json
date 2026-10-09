@@ -902,5 +902,8 @@
   "bg.tileOf": "Parisukat {n} sa {m}",
   "bg.turnOf": "Turn ni {piece} {n}",
   "bg.rolled": "Lumabas ang {n}",
-  "bg.toTile": "Papunta sa parisukat {n}"
+  "bg.toTile": "Papunta sa parisukat {n}",
+  "bg.size": "Laki",
+  "bg.sprint": "Mabilis",
+  "bg.full": "Buo"
 }

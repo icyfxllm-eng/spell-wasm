@@ -24,3 +24,8 @@ pub extern "C" fn golden_rng_1000() -> u64 {
 pub extern "C" fn golden_game() -> u64 {
     boardgame::golden::game()
 }
+
+#[no_mangle]
+pub extern "C" fn golden_game_sprint() -> u64 {
+    boardgame::golden::game_sprint()
+}

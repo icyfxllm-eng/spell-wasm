@@ -4,7 +4,6 @@
 //! `boardgame_grade.rs`.
 
 use super::board::{generate, tile_to_grid};
-use super::rules::{Jr, Standard};
 use super::*;
 use crate::spelldoku::rng::{fnv, Rng};
 use std::collections::BTreeSet;
@@ -23,22 +22,21 @@ pub(crate) fn pools(per_tier: usize, long: usize) -> TierPools {
 }
 
 fn std_pools() -> TierPools {
-    pools(MIN_POOL_STANDARD, 30)
+    pools_for(Variant::Full)
 }
 
 fn jr_pools() -> TierPools {
-    pools(MIN_POOL_JR, 0)
+    pools_for(Variant::Jr)
 }
 
 fn solo(variant: Variant, d: Difficulty, npcs: u8) -> GameConfig {
     GameConfig::solo(variant, d, npcs, 0, "en", false, exact)
 }
 
-fn pools_for(v: Variant) -> TierPools {
-    match v {
-        Variant::Standard => std_pools(),
-        Variant::Jr => jr_pools(),
-    }
+/// Synthetic pools at exactly the variant's minimum (the tightest the gate allows).
+pub(crate) fn pools_for(v: Variant) -> TierPools {
+    let c = v.cfg();
+    pools(c.min_pool, if c.has_traps() { 30 } else { 0 })
 }
 
 /// One scripted human: spells right with chance `acc_milli`, a test-side
@@ -93,7 +91,9 @@ fn perimeter(grid: u32) -> BTreeSet<(u32, u32)> {
 
 #[test]
 fn a1_tile_to_grid_is_a_bijection_onto_the_perimeter() {
-    for (n, grid) in [(STANDARD_TILES as u32, 22u32), (JR_TILES as u32, 11)] {
+    // The engine's own square map serves the variants whose canonical ring is a square.
+    for v in [Variant::Full, Variant::Jr] {
+        let (n, grid) = (v.cfg().tiles as u32, v.cfg().grid);
         let cells: Vec<(u32, u32)> = (0..n).map(|i| tile_to_grid(i, grid)).collect();
         let set: BTreeSet<(u32, u32)> = cells.iter().copied().collect();
         assert_eq!(set.len() as u32, n, "two tiles share a cell on the {grid} grid");
@@ -113,61 +113,128 @@ fn a1_tile_to_grid_is_a_bijection_onto_the_perimeter() {
     }
 }
 
+/// A1 for every variant on every ring shape the screen may draw (11x12 and 10x13 for
+/// Sprint, and transposed): `2w + 2h - 4` is the tile count, the map is a bijection onto
+/// the perimeter of the rectangle, tile 0 is the bottom-left corner, indices run
+/// clockwise, and the finish sits beside tile 0.
 #[test]
-fn a1_ten_thousand_boards_per_mode_hold_i1_and_i2() {
-    for k in 0..10_000u64 {
-        let mut r = Rng::new(k.wrapping_mul(0x9E37_79B9));
-        let b = generate::<Standard>(&mut r);
-        assert_eq!(b.len(), STANDARD_TILES);
-        assert_eq!(b.grid, 22);
-        assert!(b.tiers[0].is_none() && b.tiers[83].is_none());
-        for t in &b.tiers[1..83] {
-            assert!(matches!(t, Some(Tier::Medium | Tier::Hard | Tier::Expert)), "Standard tile outside its pool");
-        }
-        let at: Vec<usize> = (0..b.len()).filter(|&i| b.traps[i].is_some()).collect();
-        assert_eq!(at.len(), 6, "board {k}: trap count");
-        for &i in &at {
-            assert!(!(0..=6).contains(&i) && !(77..=83).contains(&i), "board {k}: trap at {i}");
-        }
-        for w in at.windows(2) {
-            assert!(w[1] - w[0] > 3, "board {k}: traps {} and {} too close", w[0], w[1]);
-        }
-
-        let mut r = Rng::new(k.wrapping_mul(0x9E37_79B9) ^ 1);
-        let j = generate::<Jr>(&mut r);
-        assert_eq!(j.len(), JR_TILES);
-        assert_eq!(j.grid, 11);
-        assert!(j.traps.is_empty(), "Jr has a trap table");
-        assert_eq!(j.trap_count(), 0);
-        assert!(j.tiers[0].is_none() && j.tiers[39].is_none());
-        for t in &j.tiers[1..39] {
-            assert!(matches!(t, Some(Tier::Easy | Tier::Medium)), "Jr tile outside its pool");
+fn a1_every_variant_ring_shape_is_a_clockwise_bijection() {
+    for v in Variant::ALL {
+        let n = v.cfg().tiles;
+        let shapes = crate::boardgame_ring::shapes_for(n);
+        assert!(!shapes.is_empty());
+        for &(a, b) in shapes {
+            for (w, h) in [(a, b), (b, a)] {
+                assert_eq!((2 * w + 2 * h - 4) as usize, n, "{v:?}: {w}x{h}");
+                let cells: Vec<(u32, u32)> = (0..n as u32).map(|i| crate::boardgame_ring::tile_to_cell(i, w, h)).collect();
+                let set: BTreeSet<(u32, u32)> = cells.iter().copied().collect();
+                assert_eq!(set.len(), n, "{v:?} {w}x{h}: two tiles share a cell");
+                let mut per = BTreeSet::new();
+                for x in 0..w {
+                    per.insert((x, 0));
+                    per.insert((x, h - 1));
+                }
+                for y in 0..h {
+                    per.insert((0, y));
+                    per.insert((w - 1, y));
+                }
+                assert_eq!(set, per, "{v:?} {w}x{h}: not the perimeter");
+                assert_eq!(cells[0], (0, h - 1), "{v:?} {w}x{h}: tile 0 is not the bottom-left corner");
+                for pair in cells.windows(2) {
+                    assert_eq!(pair[0].0.abs_diff(pair[1].0) + pair[0].1.abs_diff(pair[1].1), 1);
+                }
+                let (lx, ly) = cells[n - 1];
+                assert_eq!(lx + (h - 1 - ly), 1, "{v:?} {w}x{h}: the finish is not beside tile 0");
+                if h > 1 {
+                    assert_eq!(cells[1], (0, h - 2), "{v:?} {w}x{h}: the first step is not up the left edge");
+                }
+            }
         }
     }
 }
 
+/// A-P3 (Sprint and the other rows) and I1/I2: over 10,000 boards per variant the tile
+/// count, tier pool, trap count, trap window and trap spacing all come from the one
+/// config block; nothing on tile 0 or the finish; no tile holds two specials (a board
+/// has one trap table, and boosts do not exist yet).
 #[test]
-fn a1_tier_mix_is_near_its_weights() {
-    let (mut m, mut h, mut x, mut n) = (0u64, 0u64, 0u64, 0u64);
-    for k in 0..2_000u64 {
-        let b = generate::<Standard>(&mut Rng::new(k));
-        for t in b.tiers.iter().flatten() {
-            n += 1;
-            match t {
-                Tier::Medium => m += 1,
-                Tier::Hard => h += 1,
-                _ => x += 1,
+fn a1_ten_thousand_boards_per_variant_hold_i1_and_i2() {
+    for v in Variant::ALL {
+        let c = v.cfg();
+        let pool: Vec<Tier> = c.tiers().collect();
+        for k in 0..10_000u64 {
+            let mut r = Rng::new(k.wrapping_mul(0x9E37_79B9) ^ (v as u64));
+            let b = generate(&mut r, v);
+            let last = b.last() as usize;
+            assert_eq!(b.len(), c.tiles);
+            assert_eq!(b.grid, c.grid);
+            assert!(b.tiers[0].is_none() && b.tiers[last].is_none(), "{v:?} board {k}: a tier on start or finish");
+            for t in &b.tiers[1..last] {
+                assert!(t.is_some_and(|t| pool.contains(&t)), "{v:?} board {k}: tile outside its pool");
+            }
+            if !c.has_traps() {
+                assert!(b.traps.is_empty(), "{v:?}: has a trap table");
+                assert_eq!(b.trap_count(), 0);
+                continue;
+            }
+            assert_eq!(b.traps.len(), c.tiles);
+            let at: Vec<usize> = (0..b.len()).filter(|&i| b.traps[i].is_some()).collect();
+            assert_eq!(at.len(), c.trap_count, "{v:?} board {k}: trap count");
+            let m = c.trap_margin as usize;
+            for &i in &at {
+                assert!(i != 0 && i != last, "{v:?} board {k}: a trap on start or finish");
+                assert!(i >= m && i < c.tiles - m, "{v:?} board {k}: trap at {i}");
+            }
+            for w in at.windows(2) {
+                assert!(w[1] - w[0] > c.trap_gap as usize, "{v:?} board {k}: traps {} and {} too close", w[0], w[1]);
             }
         }
     }
-    let pct = |c: u64| c as f64 * 100.0 / n as f64;
-    assert!((pct(m) - 40.0).abs() < 1.0 && (pct(h) - 40.0).abs() < 1.0 && (pct(x) - 20.0).abs() < 1.0);
+}
+
+/// The signed numbers, once, spelled out (D3, D-P4, D-P12): a change to the config block
+/// has to change this on purpose.
+#[test]
+fn the_config_block_holds_the_signed_numbers() {
+    let (f, s, j) = (Variant::Full.cfg(), Variant::Sprint.cfg(), Variant::Jr.cfg());
+    assert_eq!((f.tiles, s.tiles, j.tiles), (84, 42, 40));
+    assert_eq!((f.trap_count, s.trap_count, j.trap_count), (6, 3, 0));
+    assert_eq!(s.tiers().collect::<Vec<_>>(), vec![Tier::Medium, Tier::Hard, Tier::Expert]);
+    assert_eq!(s.weights, f.weights, "Sprint uses the Standard tiers 40/40/20");
+    assert_eq!(s.delta_milli, f.delta_milli, "Sprint keeps the Standard ladder (D18)");
+    assert_eq!((s.trap_margin, f.trap_margin), (7, 7), "Sprint traps: not in [0,6] or [35,41]");
+    assert_eq!(s.min_pool * 2, f.min_pool);
+    assert_eq!(j.delta_milli, [250, 250, 250]);
+    // D27 stays for Full and Jr; D-P20 gives Sprint its own starting counts.
+    assert_eq!((f.prior_hits_milli, f.prior_attempts_milli), (3000, 2000));
+    assert_eq!((j.prior_hits_milli, j.prior_attempts_milli), (3000, 2000));
+    assert_eq!((s.prior_hits_milli, s.prior_attempts_milli), (750, 500));
+}
+
+#[test]
+fn a1_tier_mix_is_near_its_weights() {
+    for v in [Variant::Full, Variant::Sprint] {
+        let (mut m, mut h, mut x, mut n) = (0u64, 0u64, 0u64, 0u64);
+        for k in 0..4_000u64 {
+            let b = generate(&mut Rng::new(k), v);
+            for t in b.tiers.iter().flatten() {
+                n += 1;
+                match t {
+                    Tier::Medium => m += 1,
+                    Tier::Hard => h += 1,
+                    _ => x += 1,
+                }
+            }
+        }
+        let pct = |c: u64| c as f64 * 100.0 / n as f64;
+        assert!((pct(m) - 40.0).abs() < 1.0 && (pct(h) - 40.0).abs() < 1.0 && (pct(x) - 20.0).abs() < 1.0, "{v:?}");
+    }
 }
 
 // ------------------------------------------------------------------ A2 / A3
 
 fn random_cfg(r: &mut Rng) -> GameConfig {
-    let variant = if r.next_u64() % 2 == 0 { Variant::Standard } else { Variant::Jr };
+    let variant = Variant::ALL[(r.next_u64() % 3) as usize];
     let diff = Difficulty::ALL[(r.next_u64() % 3) as usize];
     if r.next_u64() % 2 == 0 {
         let npcs = 1 + (r.next_u64() % 3) as u8;
@@ -275,7 +342,7 @@ fn a3_fuzz_one_hundred_thousand_actions() {
 
 #[test]
 fn a3_the_pure_wrapper_leaves_its_input_alone() {
-    let s = new_game(5, GameConfig::pass_and_play(Variant::Standard, 2, "en", false, exact), std_pools()).unwrap();
+    let s = new_game(5, GameConfig::pass_and_play(Variant::Full, 2, "en", false, exact), std_pools()).unwrap();
     let before = s.clone();
     assert_eq!(applied(&s, Action::SubmitSpelling("x".into())).unwrap_err(), Rejected::WrongPhase);
     assert_eq!(s, before);
@@ -283,7 +350,7 @@ fn a3_the_pure_wrapper_leaves_its_input_alone() {
 
 #[test]
 fn rejections_name_the_rule_broken() {
-    let mut s = new_game(5, solo(Variant::Standard, Difficulty::Normal, 3), std_pools()).unwrap();
+    let mut s = new_game(5, solo(Variant::Full, Difficulty::Normal, 3), std_pools()).unwrap();
     // Roll out of turn: whoever is NPC cannot be rolled for.
     while !s.is_npc_turn() {
         // Player 0 is the human; spend its turn to reach an NPC.
@@ -300,7 +367,7 @@ fn rejections_name_the_rule_broken() {
 
 #[test]
 fn spelling_with_no_pending_word_and_switch_with_no_switch_are_rejected() {
-    let mut s = new_game(9, GameConfig::pass_and_play(Variant::Standard, 2, "en", false, exact), std_pools()).unwrap();
+    let mut s = new_game(9, GameConfig::pass_and_play(Variant::Full, 2, "en", false, exact), std_pools()).unwrap();
     assert_eq!(apply(&mut s, Action::SubmitSpelling("a".into())), Err(Rejected::WrongPhase));
     assert_eq!(apply(&mut s, Action::ChooseSwitchTarget(None)), Err(Rejected::WrongPhase));
     assert_eq!(apply(&mut s, Action::AdvanceNpc), Err(Rejected::NotNpcTurn));
@@ -308,7 +375,7 @@ fn spelling_with_no_pending_word_and_switch_with_no_switch_are_rejected() {
 
 #[test]
 fn a_switch_target_must_be_another_seat() {
-    let mut s = new_game(9, GameConfig::pass_and_play(Variant::Standard, 3, "en", false, exact), std_pools()).unwrap();
+    let mut s = new_game(9, GameConfig::pass_and_play(Variant::Full, 3, "en", false, exact), std_pools()).unwrap();
     s.phase = Phase::AwaitSwitchTarget;
     let me = s.current_seat();
     let before = s.clone();
@@ -331,7 +398,7 @@ fn a_finished_game_takes_nothing_but_skip() {
 
 #[test]
 fn i4_a_wrong_spelling_never_moves_anyone() {
-    let mut s = new_game(11, GameConfig::pass_and_play(Variant::Standard, 3, "en", false, exact), std_pools()).unwrap();
+    let mut s = new_game(11, GameConfig::pass_and_play(Variant::Full, 3, "en", false, exact), std_pools()).unwrap();
     for _ in 0..300 {
         if s.phase == Phase::Finished {
             break;
@@ -357,10 +424,13 @@ fn i4_a_wrong_spelling_never_moves_anyone() {
     }
 }
 
+/// The variants that carry traps (the rest of the table is the same engine).
+const TRAPPED: [Variant; 2] = [Variant::Full, Variant::Sprint];
+
 #[test]
 fn i5_no_word_repeats_and_every_word_matches_its_tier() {
-    for seed in 0..300u64 {
-        let s = play(seed, solo(Variant::Standard, Difficulty::Normal, 3), 800);
+    for (v, seed) in TRAPPED.iter().flat_map(|&v| (0..300u64).map(move |s| (v, s))) {
+        let s = play(seed, solo(v, Difficulty::Normal, 3), 800);
         let mut seen = BTreeSet::new();
         for p in &s.players {
             for w in p.spelled.iter().chain(p.missed.iter()) {
@@ -368,14 +438,14 @@ fn i5_no_word_repeats_and_every_word_matches_its_tier() {
             }
         }
         assert_eq!(seen.len(), s.used.len(), "used set and per-player words disagree");
-        assert_eq!(s.recycled, 0);
+        assert_eq!(s.recycled, 0, "{v:?}");
     }
 }
 
 #[test]
 fn i7_seat_order_never_changes_after_turn_one() {
     for seed in 0..100u64 {
-        let mut s = new_game(seed, GameConfig::pass_and_play(Variant::Standard, 4, "en", false, exact), std_pools()).unwrap();
+        let mut s = new_game(seed, GameConfig::pass_and_play(Variant::Full, 4, "en", false, exact), std_pools()).unwrap();
         let order = s.order.clone();
         let mut r = Rng::new(seed);
         while s.phase != Phase::Finished {
@@ -401,28 +471,34 @@ fn first_player_is_drawn_from_the_seed_and_varies() {
 
 #[test]
 fn the_engine_refuses_a_pool_that_cannot_serve_the_game() {
-    let cfg = solo(Variant::Standard, Difficulty::Normal, 3);
-    let mut p = std_pools();
-    p.tiers[Tier::Hard.ix()].truncate(MIN_POOL_STANDARD - 1);
-    assert_eq!(new_game(1, cfg.clone(), p).unwrap_err(), ConfigError::PoolTooSmall(Tier::Hard));
-    let mut p = std_pools();
-    p.long_word.truncate(LONG_WORD_FLOOR - 1);
-    assert_eq!(new_game(1, cfg, p).unwrap_err(), ConfigError::LongPoolTooSmall);
+    for v in TRAPPED {
+        let need = v.cfg().min_pool;
+        let cfg = solo(v, Difficulty::Normal, 3);
+        let mut p = pools_for(v);
+        p.tiers[Tier::Hard.ix()].truncate(need - 1);
+        assert_eq!(new_game(1, cfg.clone(), p).unwrap_err(), ConfigError::PoolTooSmall(Tier::Hard), "{v:?}");
+        let mut p = pools_for(v);
+        p.long_word.truncate(LONG_WORD_FLOOR - 1);
+        assert_eq!(new_game(1, cfg.clone(), p).unwrap_err(), ConfigError::LongPoolTooSmall);
+        assert!(new_game(1, cfg, pools_for(v)).is_ok());
+    }
+    // Sprint's floor is below Full's: a pool that is enough for Sprint is refused for Full.
+    assert_eq!(new_game(1, solo(Variant::Full, Difficulty::Normal, 3), pools_for(Variant::Sprint)).unwrap_err(), ConfigError::PoolTooSmall(Tier::Medium));
     // Jr needs no long band and a smaller floor; Standard-only tiers can be empty.
     assert!(new_game(1, solo(Variant::Jr, Difficulty::Normal, 3), jr_pools()).is_ok());
     let mut p = jr_pools();
-    p.tiers[Tier::Easy.ix()].truncate(MIN_POOL_JR - 1);
+    p.tiers[Tier::Easy.ix()].truncate(Variant::Jr.cfg().min_pool - 1);
     assert_eq!(new_game(1, solo(Variant::Jr, Difficulty::Normal, 3), p).unwrap_err(), ConfigError::PoolTooSmall(Tier::Easy));
 }
 
 #[test]
 fn bad_configs_are_refused() {
     let bad = |c: GameConfig| new_game(1, c, std_pools()).unwrap_err();
-    assert_eq!(bad(GameConfig::pass_and_play(Variant::Standard, 1, "en", false, exact)), ConfigError::SeatCount);
-    let mut c = solo(Variant::Standard, Difficulty::Normal, 3);
+    assert_eq!(bad(GameConfig::pass_and_play(Variant::Full, 1, "en", false, exact)), ConfigError::SeatCount);
+    let mut c = solo(Variant::Full, Difficulty::Normal, 3);
     c.seats[1].npc = false;
     assert_eq!(bad(c), ConfigError::MixedSeats);
-    let mut c = solo(Variant::Standard, Difficulty::Normal, 2);
+    let mut c = solo(Variant::Full, Difficulty::Normal, 2);
     c.seats[1].piece = 0;
     assert_eq!(bad(c), ConfigError::BadPiece);
 }
@@ -444,12 +520,12 @@ fn overshoot_finishes_without_a_word() {
 // ------------------------------------------------------------------ traps
 
 fn forced_trap_state(trap: Trap, human: bool) -> BoardGameState {
-    let cfg = if human {
-        GameConfig::pass_and_play(Variant::Standard, 2, "en", false, exact)
-    } else {
-        solo(Variant::Standard, Difficulty::Normal, 3)
-    };
-    let mut s = new_game(7, cfg, std_pools()).unwrap();
+    forced_trap_state_v(Variant::Full, trap, human)
+}
+
+fn forced_trap_state_v(v: Variant, trap: Trap, human: bool) -> BoardGameState {
+    let cfg = if human { GameConfig::pass_and_play(v, 2, "en", false, exact) } else { solo(v, Difficulty::Normal, 3) };
+    let mut s = new_game(7, cfg, pools_for(v)).unwrap();
     for t in 1..=6 {
         s.board.traps[t] = Some(trap);
     }
@@ -567,9 +643,8 @@ fn traps_stay_armed_and_stay_revealed() {
 
 // ------------------------------------------------------------------ A11 / I10
 
-fn npc_on_trap_strip(seed: u64, others_at: u32, trap: Trap) -> BoardGameState {
-    let mut s = forced_trap_state(trap, false);
-    s = new_game(seed, solo(Variant::Standard, Difficulty::Normal, 3), std_pools()).unwrap();
+fn npc_on_trap_strip(v: Variant, seed: u64, others_at: u32, trap: Trap) -> BoardGameState {
+    let mut s = new_game(seed, solo(v, Difficulty::Normal, 3), pools_for(v)).unwrap();
     for t in 1..=6 {
         s.board.traps[t] = Some(trap);
     }
@@ -583,58 +658,83 @@ fn npc_on_trap_strip(seed: u64, others_at: u32, trap: Trap) -> BoardGameState {
 
 #[test]
 fn a11_an_npc_in_last_place_swaps_with_the_leader() {
-    let mut hits = 0;
-    for seed in 0..200u64 {
-        let mut s = npc_on_trap_strip(seed, 0, Trap::SwitchTiles);
-        let me = s.current_seat() as usize;
-        // Make one rival the clear leader and the NPC last.
-        let rival = (0..s.players.len()).find(|&i| i != me).unwrap();
-        s.players[rival].pos = 40;
-        apply(&mut s, Action::AdvanceNpc).unwrap();
-        if let Some(Event::Swapped { a, b }) = s.events.iter().find(|e| matches!(e, Event::Swapped { .. })).cloned() {
-            hits += 1;
-            assert_eq!((a as usize, b as usize), (me, rival));
-            assert_eq!(s.players[me].pos, 40, "the NPC should hold the leader's old square");
-            assert!(s.players[rival].pos < 7);
+    for v in TRAPPED {
+        let lead = v.cfg().tiles as u32 / 2;
+        let mut hits = 0;
+        for seed in 0..200u64 {
+            let mut s = npc_on_trap_strip(v, seed, 0, Trap::SwitchTiles);
+            let me = s.current_seat() as usize;
+            // Make one rival the clear leader and the NPC last.
+            let rival = (0..s.players.len()).find(|&i| i != me).unwrap();
+            s.players[rival].pos = lead;
+            apply(&mut s, Action::AdvanceNpc).unwrap();
+            if let Some(Event::Swapped { a, b }) = s.events.iter().find(|e| matches!(e, Event::Swapped { .. })).cloned() {
+                hits += 1;
+                assert_eq!((a as usize, b as usize), (me, rival));
+                assert_eq!(s.players[me].pos, lead, "the NPC should hold the leader's old square");
+                assert!(s.players[rival].pos < 7);
+            }
         }
+        assert!(hits > 40, "{v:?}: the NPC rarely reached the trap ({hits})");
     }
-    assert!(hits > 40, "the NPC rarely reached the trap ({hits})");
 }
 
 #[test]
 fn a11_an_npc_leader_picks_nobody() {
-    let mut declined = 0;
-    for seed in 0..200u64 {
-        let mut s = npc_on_trap_strip(seed, 0, Trap::SwitchTiles);
-        apply(&mut s, Action::AdvanceNpc).unwrap();
-        assert!(!s.events.iter().any(|e| matches!(e, Event::Swapped { .. })), "a leader swapped backwards");
-        if s.events.iter().any(|e| matches!(e, Event::SwitchDeclined { .. })) {
-            declined += 1;
+    for v in TRAPPED {
+        let mut declined = 0;
+        for seed in 0..200u64 {
+            let mut s = npc_on_trap_strip(v, seed, 0, Trap::SwitchTiles);
+            apply(&mut s, Action::AdvanceNpc).unwrap();
+            assert!(!s.events.iter().any(|e| matches!(e, Event::Swapped { .. })), "a leader swapped backwards");
+            if s.events.iter().any(|e| matches!(e, Event::SwitchDeclined { .. })) {
+                declined += 1;
+            }
         }
+        assert!(declined > 40, "{v:?}");
     }
-    assert!(declined > 40);
 }
 
 #[test]
 fn i10_npcs_are_subject_to_every_trap() {
-    for trap in Trap::ALL {
-        let mut saw = false;
-        for seed in 0..120u64 {
-            let mut s = npc_on_trap_strip(seed, 20, trap);
-            apply(&mut s, Action::AdvanceNpc).unwrap();
-            if s.events.iter().any(|e| matches!(e, Event::TrapHit { trap: t, .. } if *t == trap)) {
-                saw = true;
-                assert!(s.pending.is_none() && s.phase != Phase::AwaitSwitchTarget, "{trap:?} left an NPC waiting on input");
+    for v in TRAPPED {
+        for trap in Trap::ALL {
+            let mut saw = false;
+            for seed in 0..120u64 {
+                let mut s = npc_on_trap_strip(v, seed, 20, trap);
+                apply(&mut s, Action::AdvanceNpc).unwrap();
+                if s.events.iter().any(|e| matches!(e, Event::TrapHit { trap: t, .. } if *t == trap)) {
+                    saw = true;
+                    assert!(s.pending.is_none() && s.phase != Phase::AwaitSwitchTarget, "{v:?} {trap:?} left an NPC waiting on input");
+                }
             }
+            assert!(saw, "{v:?} {trap:?} never fired for an NPC");
         }
-        assert!(saw, "{trap:?} never fired for an NPC");
+    }
+}
+
+/// A Sprint human resolves every trap kind exactly as a Full human does.
+#[test]
+fn sprint_humans_resolve_every_trap_kind() {
+    for trap in Trap::ALL {
+        let mut s = forced_trap_state_v(Variant::Sprint, trap, true);
+        human_lands(&mut s);
+        assert!(s.revealed.len() == 1 && s.board.trap_at(s.revealed[0]) == Some(trap), "{trap:?}");
+        match trap {
+            Trap::BackToStart => {
+                assert!(s.events.iter().any(|e| matches!(e, Event::Teleported { to: 0, .. })));
+            }
+            Trap::LongWord | Trap::DoubleExpert => assert_eq!(s.phase, Phase::AwaitSpelling),
+            Trap::SwitchTiles => assert_eq!(s.phase, Phase::AwaitSwitchTarget),
+            Trap::LoseRoll => assert!(s.players.iter().any(|p| p.skip)),
+        }
     }
 }
 
 #[test]
 fn i11_npc_turns_draw_no_word_and_show_none() {
-    for seed in 0..200u64 {
-        let mut s = new_game(seed, solo(Variant::Standard, Difficulty::Normal, 3), std_pools()).unwrap();
+    for (v, seed) in TRAPPED.iter().flat_map(|&v| (0..200u64).map(move |s| (v, s))) {
+        let mut s = new_game(seed, solo(v, Difficulty::Normal, 3), pools_for(v)).unwrap();
         for _ in 0..400 {
             if s.phase == Phase::Finished {
                 break;
@@ -669,9 +769,9 @@ fn i11_npc_turns_draw_no_word_and_show_none() {
 
 #[test]
 fn a6_npc_switch_never_looks_behind() {
-    for seed in 0..50u64 {
-        let cfg = solo(Variant::Standard, Difficulty::Normal, 3);
-        let mut s = new_game(seed + 1000, cfg, std_pools()).unwrap();
+    for (v, seed) in TRAPPED.iter().flat_map(|&v| (0..50u64).map(move |s| (v, s))) {
+        let cfg = solo(v, Difficulty::Normal, 3);
+        let mut s = new_game(seed + 1000, cfg, pools_for(v)).unwrap();
         let mut guard = 0;
         while s.phase != Phase::Finished {
             guard += 1;
@@ -704,36 +804,41 @@ fn a6_npc_switch_never_looks_behind() {
     }
 }
 
-/// A6 as D28 restates it: over 2,000 fixed-seed games, a 100% human vs 3 Normal
-/// NPCs finishes within 35 human turns at least 90% of the time, and never
-/// takes more than 200. (Back to Start resets a perfect player, so "every
-/// game within 35" is not achievable.)
+/// A6 as D28 restates it: over 2,000 fixed-seed games, a 100% human vs 3 Normal NPCs
+/// finishes within `within` human turns at least 90% of the time, and never takes more
+/// than 200. (Back to Start resets a perfect player, so "every game within N" is not
+/// achievable.) Full: 35 (D28). Sprint: 18, Full's 35 scaled to half the ring and rounded
+/// up; the measured share is printed so the margin is visible.
 #[test]
-fn a6_perfect_human_finishes_within_35_turns_in_90_percent_of_games() {
-    let (mut within, mut worst) = (0u32, 0u32);
-    for seed in 0..2000u64 {
-        let s = play(seed, solo(Variant::Standard, Difficulty::Normal, 3), 1000);
-        let r = s.players.iter().find(|p| !p.seat.npc).unwrap().rolls;
-        within += (r <= 35) as u32;
-        worst = worst.max(r);
+fn a6_perfect_human_finishes_within_the_turn_budget_in_90_percent_of_games() {
+    for (v, within_turns) in [(Variant::Full, 35u32), (Variant::Sprint, 18)] {
+        let (mut within, mut worst) = (0u32, 0u32);
+        for seed in 0..2000u64 {
+            let s = play(seed, solo(v, Difficulty::Normal, 3), 1000);
+            let r = s.players.iter().find(|p| !p.seat.npc).unwrap().rolls;
+            within += (r <= within_turns) as u32;
+            worst = worst.max(r);
+        }
+        eprintln!("A6 {v:?}: {within}/2000 within {within_turns} human turns ({:.1}%), worst {worst}", within as f64 / 20.0);
+        assert!(within >= 1800, "{v:?}: only {within}/2000 within {within_turns} human turns");
+        assert!(worst <= 200, "{v:?}: a game took {worst} human turns");
     }
-    eprintln!("A6: {within}/2000 within 35 human turns ({:.1}%), worst {worst}", within as f64 / 20.0);
-    assert!(within >= 1800, "only {within}/2000 within 35 human turns");
-    assert!(worst <= 200, "a game took {worst} human turns");
 }
 
 #[test]
 fn d13_npc_accuracy_tracks_the_human_and_clamps() {
-    let mut s = new_game(2, solo(Variant::Standard, Difficulty::Normal, 3), std_pools()).unwrap();
-    // D27: (3+0)/(2+0) = 1.5; the NPC clamp holds it to 0.95.
-    assert_eq!(s.human_acc_milli(), 1500);
-    assert_eq!(s.npc_acc_milli(), 950);
-    s.players[0].hits = 1000;
-    s.players[0].attempts = 1000;
-    assert_eq!(s.npc_acc_milli(), 800, "(1003/1002) less 0.20");
-    s.players[0].hits = 0;
-    s.players[0].attempts = 1000;
-    assert_eq!(s.npc_acc_milli(), 300, "floor");
+    for v in TRAPPED {
+        let mut s = new_game(2, solo(v, Difficulty::Normal, 3), pools_for(v)).unwrap();
+        // D27: (3+0)/(2+0) = 1.5; the NPC clamp holds it to 0.95.
+        assert_eq!(s.human_acc_milli(), 1500);
+        assert_eq!(s.npc_acc_milli(), 950);
+        s.players[0].hits = 1000;
+        s.players[0].attempts = 1000;
+        assert_eq!(s.npc_acc_milli(), 800, "{v:?}: (1003/1002) less 0.20");
+        s.players[0].hits = 0;
+        s.players[0].attempts = 1000;
+        assert_eq!(s.npc_acc_milli(), 300, "floor");
+    }
     // Jr is fixed at 0.25 whatever the difficulty field says.
     let mut j = new_game(2, solo(Variant::Jr, Difficulty::Tough, 3), jr_pools()).unwrap();
     j.players[0].hits = 8;
@@ -748,12 +853,15 @@ fn d13_npc_accuracy_tracks_the_human_and_clamps() {
 /// print the same two numbers.
 pub(crate) const GOLDEN_RNG_1000: u64 = 11818870969550119401;
 pub(crate) const GOLDEN_GAME: u64 = 12092315625649832955;
+/// Phase B (D-P19): the one deliberate addition, a scripted 42-tile Sprint game.
+pub(crate) const GOLDEN_GAME_SPRINT: u64 = 10168540050936118820;
 
 #[test]
 fn a15_golden_sequence_and_game_hash() {
-    eprintln!("golden rng = {}, golden game = {}", super::golden::rng_1000(), super::golden::game());
+    eprintln!("golden rng = {}, golden game = {}, golden sprint = {}", super::golden::rng_1000(), super::golden::game(), super::golden::game_sprint());
     assert_eq!(super::golden::rng_1000(), GOLDEN_RNG_1000, "the splitmix stream changed");
-    assert_eq!(super::golden::game(), GOLDEN_GAME, "the engine's outcome for the golden game changed");
+    assert_eq!(super::golden::game(), GOLDEN_GAME, "the engine's outcome for the golden game changed (Full must stay bit-for-bit)");
+    assert_eq!(super::golden::game_sprint(), GOLDEN_GAME_SPRINT, "the engine's outcome for the Sprint golden game changed");
 }
 
 // ------------------------------------------------------------------ I12 / I14

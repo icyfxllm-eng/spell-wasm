@@ -17,40 +17,34 @@
 
 use std::collections::BTreeSet;
 
-use crate::boardgame::{BoardGameState, Tier, TierPools, Variant, JR_TILES, LONG_WORD_FLOOR, MIN_POOL_JR, MIN_POOL_STANDARD, STANDARD_TILES};
+use crate::boardgame::{BoardGameState, Tier, TierPools, Variant, LONG_WORD_FLOOR};
 use crate::spelldoku::rng::Rng;
 use crate::wordsearch::ledger::Ledger;
 use crate::wordsearch::lexicon::graphemes;
 
-/// Spell Jr is the Jr variant (F2); everyone else plays Standard.
-pub fn variant_for(kid: bool) -> Variant {
+/// Spell Jr is the Jr variant (F2) and has no size picker; everyone else plays Sprint or
+/// Full (D-P4).
+pub fn variant_for(kid: bool, sprint: bool) -> Variant {
     if kid {
         Variant::Jr
+    } else if sprint {
+        Variant::Sprint
     } else {
-        Variant::Standard
+        Variant::Full
     }
 }
 
-/// The tiers a variant draws tile words from.
-pub fn tiers_of(v: Variant) -> &'static [Tier] {
-    match v {
-        Variant::Standard => &[Tier::Medium, Tier::Hard, Tier::Expert],
-        Variant::Jr => &[Tier::Easy, Tier::Medium],
-    }
+/// The tiers a variant draws tile words from, lowest first.
+pub fn tiers_of(v: Variant) -> Vec<Tier> {
+    v.cfg().tiers().collect()
 }
 
 pub fn min_pool(v: Variant) -> usize {
-    match v {
-        Variant::Standard => MIN_POOL_STANDARD,
-        Variant::Jr => MIN_POOL_JR,
-    }
+    v.cfg().min_pool
 }
 
 pub fn tiles(v: Variant) -> usize {
-    match v {
-        Variant::Standard => STANDARD_TILES,
-        Variant::Jr => JR_TILES,
-    }
+    v.cfg().tiles
 }
 
 /// D19: the ledger key.
@@ -67,7 +61,7 @@ pub fn bank(lang: &str, tier: Tier, kid: bool) -> Vec<String> {
     }
     // Korean only: drop words the composition automaton cannot take.
     let mut all: Vec<String> = Vec::new();
-    for &t in tiers_of(variant_for(kid)) {
+    for t in tiers_of(variant_for(kid, false)) {
         all.extend(raw_bank(lang, t, kid));
     }
     let rows = crate::boardgame_input::layout(lang, kid, &all);
@@ -92,15 +86,15 @@ pub struct Short {
 }
 
 /// F9 / I8 / A8. `Err` means "coming soon" for this language and audience.
-pub fn gate(lang: &str, kid: bool) -> Result<(), Short> {
-    let v = variant_for(kid);
-    for &tier in tiers_of(v) {
+pub fn gate(lang: &str, v: Variant) -> Result<(), Short> {
+    let kid = v == Variant::Jr;
+    for tier in tiers_of(v) {
         let have = bank(lang, tier, kid).len();
         if have < min_pool(v) {
             return Err(Short { tier, have, need: min_pool(v) });
         }
     }
-    if v == Variant::Standard {
+    if v.cfg().has_traps() {
         // The Long Word band is a slice of Expert, so it exists whenever Expert
         // does; the floor is what could still fail.
         let have = long_band(&bank(lang, Tier::Expert, kid)).len();
@@ -132,20 +126,20 @@ pub struct Supply {
 /// D19: build the engine's `TierPools` for one new game. `day` is the ledger's
 /// day number; `seed` only orders the fresh words, the engine reshuffles from
 /// its own seed.
-pub fn supply(lang: &str, kid: bool, ledger: &Ledger, day: u32, seed: u64) -> Result<Supply, Short> {
-    gate(lang, kid)?;
-    let v = variant_for(kid);
+pub fn supply(lang: &str, v: Variant, ledger: &Ledger, day: u32, seed: u64) -> Result<Supply, Short> {
+    gate(lang, v)?;
+    let kid = v == Variant::Jr;
     let need = min_pool(v);
     let mut rng = Rng::new(seed ^ 0xB0A4_D5B1);
     let mut pools = TierPools::default();
     let mut relaxed = 0;
-    for &tier in tiers_of(v) {
+    for tier in tiers_of(v) {
         let all = bank(lang, tier, kid);
         let mut picked: Vec<String> = Vec::new();
         relaxed += ledger.select(&ledger_key(lang, tier), &all, &mut picked, need, day, &mut rng, &|_, _| true);
         pools.tiers[tier.ix()] = picked;
     }
-    if v == Variant::Standard {
+    if v.cfg().has_traps() {
         let band = long_band(&bank(lang, Tier::Expert, kid));
         let key = ledger_key(lang, Tier::Expert);
         let fresh: Vec<String> = band.iter().filter(|w| !ledger.holds(&key, w, day)).cloned().collect();
@@ -177,17 +171,17 @@ mod tests {
     #[test]
     fn a8_every_builtin_language_either_meets_the_counts_or_is_coming_soon() {
         for lang in BUILTIN_LANGS.iter().map(|l| l.0) {
-            for kid in [false, true] {
-                let v = variant_for(kid);
-                let verdict = gate(lang, kid);
+            for v in Variant::ALL {
+                let kid = v == Variant::Jr;
+                let verdict = gate(lang, v);
                 let counts: Vec<usize> = tiers_of(v).iter().map(|&t| bank(lang, t, kid).len()).collect();
                 let meets = counts.iter().all(|&c| c >= min_pool(v))
-                    && (v == Variant::Jr || long_band(&bank(lang, Tier::Expert, kid)).len() >= LONG_WORD_FLOOR);
-                assert_eq!(verdict.is_ok(), meets, "{lang} kid={kid}: gate disagrees with the counts {counts:?}");
+                    && (!v.cfg().has_traps() || long_band(&bank(lang, Tier::Expert, kid)).len() >= LONG_WORD_FLOOR);
+                assert_eq!(verdict.is_ok(), meets, "{lang} {v:?}: gate disagrees with the counts {counts:?}");
                 if let Err(s) = verdict {
                     assert!(s.have < s.need);
                 }
-                eprintln!("A8 {lang} kid={kid}: {counts:?} -> {}", if meets { "playable" } else { "coming soon" });
+                eprintln!("A8 {lang} {v:?}: {counts:?} -> {}", if meets { "playable" } else { "coming soon" });
             }
         }
     }
@@ -195,8 +189,8 @@ mod tests {
     #[test]
     fn a8_on_current_banks_every_language_passes() {
         for lang in BUILTIN_LANGS.iter().map(|l| l.0) {
-            for kid in [false, true] {
-                assert!(gate(lang, kid).is_ok(), "{lang} kid={kid}: {:?}", gate(lang, kid));
+            for v in Variant::ALL {
+                assert!(gate(lang, v).is_ok(), "{lang} {v:?}: {:?}", gate(lang, v));
             }
         }
     }
@@ -227,8 +221,9 @@ mod tests {
     }
 
     fn solo_game(lang: &str, kid: bool, led: &Ledger, day: u32, seed: u64) -> (BoardGameState, usize) {
-        let sup = supply(lang, kid, led, day, seed).unwrap();
-        let cfg = GameConfig::solo(variant_for(kid), Difficulty::Normal, 3, 0, lang, kid, crate::boardgame_grade::grade);
+        let v = variant_for(kid, false);
+        let sup = supply(lang, v, led, day, seed).unwrap();
+        let cfg = GameConfig::solo(v, Difficulty::Normal, 3, 0, lang, kid, crate::boardgame_grade::grade);
         (new_game(seed, cfg, sup.pools).unwrap(), sup.relaxed)
     }
 
@@ -298,14 +293,14 @@ mod tests {
             }
         }
         led.record_many(&entries, 50, 0);
-        let sup = supply("en", true, &led, 50, 3).unwrap();
+        let sup = supply("en", Variant::Jr, &led, 50, 3).unwrap();
         assert!(sup.relaxed > 0);
-        assert!(sup.pools.tiers[Tier::Easy.ix()].len() >= MIN_POOL_JR);
+        assert!(sup.pools.tiers[Tier::Easy.ix()].len() >= min_pool(Variant::Jr));
     }
 
     #[test]
     fn jr_pools_are_kid_safe_and_easy_medium_only() {
-        let sup = supply("en", true, &Ledger::default(), 1, 1).unwrap();
+        let sup = supply("en", Variant::Jr, &Ledger::default(), 1, 1).unwrap();
         assert!(sup.pools.tiers[Tier::Hard.ix()].is_empty() && sup.pools.tiers[Tier::Expert.ix()].is_empty());
         for t in [Tier::Easy, Tier::Medium] {
             for w in &sup.pools.tiers[t.ix()] {
