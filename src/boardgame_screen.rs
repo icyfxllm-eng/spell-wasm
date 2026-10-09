@@ -879,3 +879,25 @@ pub fn seam_state() -> String {
     })
 }
 
+
+#[cfg(test)]
+mod tests {
+    /// I15 / D22: this mode adds no telemetry. No event, no `Mode` variant, no
+    /// `set_mode` call, and nothing from the mode reaches the telemetry module.
+    #[test]
+    fn i15_the_mode_calls_no_telemetry() {
+        for (name, src) in [
+            ("boardgame_screen.rs", include_str!("boardgame_screen.rs")),
+            ("boardgame_pools.rs", include_str!("boardgame_pools.rs")),
+            ("boardgame_input.rs", include_str!("boardgame_input.rs")),
+            ("boardgame_grade.rs", include_str!("boardgame_grade.rs")),
+        ] {
+            let code: String = src.split("#[cfg(test)]").next().unwrap().lines().filter(|l| !l.trim_start().starts_with("//")).collect::<Vec<_>>().join("\n");
+            for banned in ["telemetry::", "set_mode", "schema::Mode"] {
+                assert!(!code.contains(banned), "{name} uses {banned}");
+            }
+        }
+        let schema = include_str!("telemetry/schema.rs");
+        assert!(!schema.to_lowercase().contains("boardgame"), "the telemetry Mode enum grew a Board Game variant");
+    }
+}
