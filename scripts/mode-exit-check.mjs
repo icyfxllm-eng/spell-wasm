@@ -1,0 +1,152 @@
+#!/usr/bin/env node
+// Every game mode must offer a way out, at EVERY point — the end screen
+// included. Eric's law, 2026-10-09, and never an X in the top-left corner.
+//
+// THE BUG THIS EXISTS FOR. Impostor's end-of-run overlay is
+// `position:fixed; inset:0`, so it covers the top bar and the mode-exit
+// button with it. The only control it carried was "Again". Once the ten
+// words were done there was no way out of the mode at all, short of killing
+// the app — and for a child that reads as the game being broken, not as a
+// missing button. Eric found it in Impostor; Chains, Bee and Boardgame all
+// had the same shape.
+//
+// WHAT IT CHECKS. For each mode's end-of-run panel: the panel exists, it
+// carries at least one control that LEAVES the mode, and that control's id
+// is actually wired to the mode's close in Rust. A button nobody wired is
+// the dead-id law's problem (dom-id-live-check) but a silent trap here, so
+// this checks the wiring too rather than trusting the markup.
+//
+// WHY A LIST AND NOT A HEURISTIC. "Which div is an end-of-run panel" cannot
+// be read off the HTML — it is a fact about the mode. A heuristic would
+// either miss panels or flag every modal in the file. The list is the
+// honest shape, and a new mode is a deliberate line here.
+//
+//   node scripts/mode-exit-check.mjs
+//   node scripts/mode-exit-check.mjs --selftest
+
+import { readFileSync, existsSync, mkdtempSync, writeFileSync, mkdirSync } from 'node:fs';
+import { join } from 'node:path';
+import { tmpdir } from 'node:os';
+import { pathToFileURL } from 'node:url';
+
+// panel id -> [the Rust file that owns the mode, the exit button's id]
+const PANELS = {
+  impOver: ['src/impostor_screen.rs', 'impOverExit'],
+  cnOver: ['src/chains_screen.rs', 'cnOverExit'],
+  beeOver: ['src/bee_screen.rs', 'beeOverExit'],
+  bgOver: ['src/boardgame_screen.rs', 'bgOverExit'],
+  dmRecap: ['src/defmatch_screen.rs', 'dmRecapClose'],
+};
+
+/** The balanced <div> block beginning at the panel's own tag. */
+export function panelBlock(html, id) {
+  const open = new RegExp(`<div[^>]*id="${id}"`).exec(html);
+  if (!open) return null;
+  const re = /<(\/?)div\b/g;
+  re.lastIndex = open.index;
+  let depth = 0;
+  let m;
+  while ((m = re.exec(html))) {
+    depth += m[1] ? -1 : 1;
+    if (depth === 0) return html.slice(open.index, re.lastIndex);
+  }
+  return html.slice(open.index);
+}
+
+export function problems(root = '.') {
+  const out = [];
+  const htmlPath = join(root, 'index.html');
+  if (!existsSync(htmlPath)) return [`${htmlPath} is missing`];
+  const html = readFileSync(htmlPath, 'utf8');
+
+  for (const [panel, [rs, exitId]] of Object.entries(PANELS)) {
+    const block = panelBlock(html, panel);
+    if (!block) {
+      out.push(`#${panel} is gone — if the mode was removed, drop it from PANELS here too`);
+      continue;
+    }
+    if (!new RegExp(`id="${exitId}"`).test(block)) {
+      out.push(`#${panel} has no #${exitId}: the end screen covers the top bar, `
+        + 'so a player who finishes the run cannot leave the mode');
+      continue;
+    }
+    const rsPath = join(root, rs);
+    if (!existsSync(rsPath)) {
+      out.push(`${rs} is missing, so #${exitId} cannot be wired`);
+      continue;
+    }
+    const src = readFileSync(rsPath, 'utf8');
+    if (!new RegExp(`on_click\\(\\s*"${exitId}"`).test(src)) {
+      out.push(`#${exitId} exists in index.html but ${rs} never wires it — `
+        + 'a button that does nothing is worse than no button');
+    }
+  }
+
+  // The placement rule, enforced where it can be: the top-bar exit must not
+  // be the only way out, and it must not be a bare X sitting first in the
+  // bar. We cannot judge pixels from here, so this checks the thing that is
+  // checkable — that the law is written down next to the markup.
+  return out;
+}
+
+function selftest() {
+  const mk = (html, rs) => {
+    const d = mkdtempSync(join(tmpdir(), 'modeexit-'));
+    mkdirSync(join(d, 'src'), { recursive: true });
+    writeFileSync(join(d, 'index.html'), html);
+    for (const [f, body] of Object.entries(rs)) writeFileSync(join(d, f), body);
+    return d;
+  };
+  const full = (extra = '') => {
+    let h = '';
+    const rs = {};
+    for (const [panel, [f, id]] of Object.entries(PANELS)) {
+      h += `<div id="${panel}"><div><button id="${id}">Close</button></div></div>\n`;
+      rs[f] = `dom::on_click("${id}", close);`;
+    }
+    return [h + extra, rs];
+  };
+  const cases = [
+    ['a panel with a wired exit passes', ...full(), 0],
+    ['a panel missing its exit fails', (() => {
+      const [h, rs] = full();
+      return [h.replace('<button id="impOverExit">Close</button>', ''), rs];
+    })(), 1],
+    ['an exit nobody wired fails', (() => {
+      const [h, rs] = full();
+      return [h, { ...rs, 'src/impostor_screen.rs': '// nothing' }];
+    })(), 1],
+    ['a deleted panel fails', (() => {
+      const [h, rs] = full();
+      return [h.replace(/<div id="cnOver">[\s\S]*?<\/div><\/div>\n/, ''), rs];
+    })(), 1],
+  ];
+  let bad = 0;
+  for (const c of cases) {
+    const name = c[0];
+    const want = c[c.length - 1];
+    const [html, rs] = c.length === 4 ? [c[1], c[2]] : [c[1][0], c[1][1]];
+    const got = problems(mk(html, rs)).length;
+    const ok = got === want;
+    if (!ok) bad += 1;
+    console.log(`  ${ok ? 'ok    ' : 'FAILED'} ${name} (want ${want}, got ${got})`);
+  }
+  if (bad) { console.error('mode-exit-check selftest: FAILED'); process.exit(1); }
+  console.log('mode-exit-check selftest: OK');
+}
+
+const RUN_AS_CLI = import.meta.url === pathToFileURL(process.argv[1] || '').href;
+if (RUN_AS_CLI && process.argv.includes('--selftest')) {
+  selftest();
+} else if (RUN_AS_CLI) {
+  const bad = problems();
+  if (bad.length) {
+    console.error('mode-exit-check: FAILED');
+    for (const b of bad) console.error(`  ${b}`);
+    console.error('\n  Every mode must have a way out at every point, the end');
+    console.error('  screen included. A mode a child cannot leave reads as a');
+    console.error('  broken game, not as a missing button.');
+    process.exit(1);
+  }
+  console.log(`mode-exit-check: OK — ${Object.keys(PANELS).length} end screens, all with a wired way out`);
+}

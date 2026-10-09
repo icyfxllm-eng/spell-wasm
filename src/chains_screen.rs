@@ -82,6 +82,10 @@ pub fn wire(app: &App) {
     let a = app.clone();
     dom::on_click("chainsOpen", move || open(&a));
     dom::on_click("cnExit", close);
+    // The end-of-run overlay covers the top bar, so the exit has to
+    // be re-offered on it. Without this the mode is a trap once the
+    // last word is done -- every other button there plays on.
+    dom::on_click("cnOverExit", close);
     dom::on_click("cnDelete", delete);
     dom::on_click("cnSubmit", submit);
     dom::on_click("cnPass", pass);

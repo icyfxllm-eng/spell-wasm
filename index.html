@@ -1217,6 +1217,11 @@
   .btn{flex:1;border:none;border-radius:12px;padding:14px;font-family:var(--body);font-size:15px;font-weight:600;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;gap:8px;transition:filter .15s,transform .1s,opacity .15s}
   .btn:active{transform:translateY(1px)}
   .btn-check{background:var(--amber);color:#36210a}
+  /* The way out of a finished run. Deliberately quieter than .btn-check:
+     playing again is the expected choice, leaving is the one that must
+     always be THERE. An outline reads as a control without competing. */
+  .mode-leave{background:transparent;border:1px solid #ffffff3d;color:inherit}
+  .mode-leave:active{background:#ffffff14}
   .btn-check:hover{filter:brightness(1.06)}
   .btn-icon{flex:0 0 auto;background:var(--panel);color:var(--ink);border:1px solid var(--edge);font-size:17px}
   .btn-icon:hover{border-color:var(--amber)}
@@ -2670,6 +2675,7 @@
           <div class="cn-stat"><b id="cnOverLongest"></b><span data-i18n="chains.over.longest">longest word</span></div>
         </div>
         <button class="btn btn-check" id="cnReplay" data-i18n="chains.replay" style="width:100%">Again</button>
+        <button class="btn mode-leave" id="cnOverExit" data-i18n="import.close" style="width:100%;margin-top:8px">Close</button>
       </div>
     </div>
   </div>
@@ -2696,6 +2702,7 @@
           <div class="imp-stat"><b id="impOverStreak">0</b><span data-i18n="imp.over.streak">best streak</span></div>
         </div>
         <button class="btn btn-check" id="impReplay" data-i18n="imp.replay" style="width:100%">Again</button>
+        <button class="btn mode-leave" id="impOverExit" data-i18n="import.close" style="width:100%;margin-top:8px">Close</button>
       </div>
     </div>
   </div>
@@ -2732,6 +2739,7 @@
         <p class="bee-place" id="beeOverPlace"></p>
         <div class="bee-stat"><b id="beeOverClean">0</b><span data-i18n="bee.clean">clean words</span></div>
         <button class="btn btn-check" id="beeNext" style="width:100%"><span id="beeOverNext"></span></button>
+        <button class="btn mode-leave" id="beeOverExit" data-i18n="import.close" style="width:100%;margin-top:8px">Close</button>
       </div>
     </div>
   </div>
@@ -2791,6 +2799,7 @@
       <div class="bg-podium" id="bgPodium"></div>
       <button class="btn btn-check" id="bgAgain" data-i18n="bg.again">Play again</button>
       <button class="btn" id="bgShare" data-i18n="bg.share" hidden>Share</button>
+        <button class="btn mode-leave" id="bgOverExit" data-i18n="import.close" style="margin-top:8px">Close</button>
     </div>
   </div>
   <!-- BOARDGAME:END -->

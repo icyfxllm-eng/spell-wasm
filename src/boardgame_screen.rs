@@ -188,6 +188,10 @@ pub fn wire(app: &App) {
         dom::on_click("bgOpenBtn", move || open(&a));
     }
     dom::on_click("bgExit", close);
+    // The end-of-run overlay covers the top bar, so the exit has to
+    // be re-offered on it. Without this the mode is a trap once the
+    // last word is done -- every other button there plays on.
+    dom::on_click("bgOverExit", close);
     dom::on_click("bgSetupExit", close);
     dom::on_click("bgStart", start);
     dom::on_click("bgOrb", orb);

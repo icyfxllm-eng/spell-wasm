@@ -68,6 +68,10 @@ pub fn wire(app: &App) {
     let a = app.clone();
     dom::on_click("impostorOpen", move || open(&a));
     dom::on_click("impExit", close);
+    // The end-of-run overlay covers the top bar, so the exit has to
+    // be re-offered on it. Without this the mode is a trap once the
+    // last word is done -- every other button there plays on.
+    dom::on_click("impOverExit", close);
     let a = app.clone();
     dom::on_click("impReplay", move || open(&a));
     let a = app.clone();

@@ -79,6 +79,10 @@ pub fn wire(app: &App) {
     let a = app.clone();
     dom::on_click("beeOpen", move || open(&a));
     dom::on_click("beeExit", close);
+    // The end-of-run overlay covers the top bar, so the exit has to
+    // be re-offered on it. Without this the mode is a trap once the
+    // last word is done -- every other button there plays on.
+    dom::on_click("beeOverExit", close);
     let a = app.clone();
     dom::on_click("beeRepeat", move || request_repeat(&a, 0.9));
     let a = app.clone();
