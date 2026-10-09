@@ -411,10 +411,6 @@ mod tests {
     /// an entry here is the opposite, so it must name who decided and when.
     const DELIBERATELY_DARK: &[(&str, &str)] = &[
         ("translate", "Eric, 2026-09-14: Phase A ships behind its flag, off, until Phase B"),
-        // NOT a ruling: the executor of CC-BOARD-GAME Phase 1 left the flag off
-        // because the phase is built and tested but not signed for release. Eric
-        // flips it (or deletes this line and defaults the flag on) when he ships.
-        ("boardgame", "CC-BOARD-GAME Phase 1: built, release not signed; dark until Eric flips it"),
     ];
 
     /// A deliberately dark mode is dark by DEFAULT only: its flag has a real

@@ -98,14 +98,14 @@ pub fn bee_sim() -> bool {
     resolve(stored("bee_sim").as_deref(), true)
 }
 
-/// CC-BOARD-GAME v1.2 -- the roll-and-spell board race. **Default OFF**: Phase 1
-/// is built and tested but not signed for release, and a tile that is not
-/// shipped is a dead end. Flip with `localStorage['spell_flag_boardgame'] =
-/// 'on'` to develop. Compiled out with the mode on the site build (I13): a
-/// kill-switch for an absent mode is a string leak and nothing else.
+/// CC-BOARD-GAME v1.2 -- the roll-and-spell board race. **Default ON** (Eric,
+/// 2026-10-08: released to TestFlight). Kill-switch with
+/// `localStorage['spell_flag_boardgame'] = 'off'`. Compiled out with the mode
+/// on the site build (I13): a kill-switch for an absent mode is a string leak
+/// and nothing else.
 #[cfg(not(feature = "web"))]
 pub fn boardgame() -> bool {
-    resolve(stored("boardgame").as_deref(), false)
+    resolve(stored("boardgame").as_deref(), true)
 }
 
 /// F5 "Word stories" — etymology cards. **Default OFF**: dark until the CC BY-SA
