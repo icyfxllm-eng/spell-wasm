@@ -164,6 +164,8 @@ mod spelldoku_tier_census; // CC-SPELLDOKU v1.3 §0: measurement only
 #[cfg(all(test, not(feature = "web")))]
 mod spelldoku_tier_preview; // CC-SPELLDOKU v1.3 Done #11: the Gig B audit sheet
 #[cfg(not(feature = "web"))]
+mod spelluzzle; // CC-SPELLUZZLE v1 Phase A — rune cipher core (app only, O1)
+#[cfg(not(feature = "web"))]
 mod spelldoku_ui; // CC-SPELLDOKU v1 — the screen (app only)
 #[cfg(test)]
 mod human_audio_census; // CC-HUMAN-AUDIO Phase A: bank dump for the census
