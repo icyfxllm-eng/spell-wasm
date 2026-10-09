@@ -905,5 +905,7 @@
   "bg.toTile": "Vers la case {n}",
   "bg.size": "Taille",
   "bg.sprint": "Rapide",
-  "bg.full": "Complet"
+  "bg.full": "Complet",
+  "bg.stretch": "Défi",
+  "bg.stretchStat": "Défi : {taken} sur {offered} tentés, {hits} réussis"
 }

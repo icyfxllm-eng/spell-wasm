@@ -905,5 +905,7 @@
   "bg.toTile": "To tile {n}",
   "bg.size": "Size",
   "bg.sprint": "Sprint",
-  "bg.full": "Full"
+  "bg.full": "Full",
+  "bg.stretch": "Stretch",
+  "bg.stretchStat": "Stretch: {taken} of {offered} taken, {hits} right"
 }

@@ -905,5 +905,7 @@
   "bg.toTile": "खाना {n} पर",
   "bg.size": "आकार",
   "bg.sprint": "स्प्रिंट",
-  "bg.full": "पूर्ण"
+  "bg.full": "पूर्ण",
+  "bg.stretch": "चुनौती",
+  "bg.stretchStat": "चुनौती: {offered} में से {taken} ली, {hits} सही"
 }

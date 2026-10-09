@@ -905,5 +905,7 @@
   "bg.toTile": "A la casilla {n}",
   "bg.size": "Tamaño",
   "bg.sprint": "Rápido",
-  "bg.full": "Completo"
+  "bg.full": "Completo",
+  "bg.stretch": "Reto",
+  "bg.stretchStat": "Reto: {taken} de {offered} aceptados, {hits} acertados"
 }

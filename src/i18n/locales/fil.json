@@ -905,5 +905,7 @@
   "bg.toTile": "Papunta sa parisukat {n}",
   "bg.size": "Laki",
   "bg.sprint": "Mabilis",
-  "bg.full": "Buo"
+  "bg.full": "Buo",
+  "bg.stretch": "Hamon",
+  "bg.stretchStat": "Hamon: {taken} sa {offered} ang kinuha, {hits} ang tama"
 }

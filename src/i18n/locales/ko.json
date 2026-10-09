@@ -905,5 +905,7 @@
   "bg.toTile": "{n}번 칸으로",
   "bg.size": "크기",
   "bg.sprint": "스프린트",
-  "bg.full": "풀"
+  "bg.full": "풀",
+  "bg.stretch": "스트레치",
+  "bg.stretchStat": "스트레치: {offered}회 중 {taken}회 선택, {hits}회 정답"
 }

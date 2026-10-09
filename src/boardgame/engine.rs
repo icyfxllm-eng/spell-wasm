@@ -52,7 +52,7 @@ pub fn new_game(seed: u64, cfg: GameConfig, pools: TierPools) -> Result<BoardGam
     let players = cfg
         .seats
         .iter()
-        .map(|&seat| Player { seat, pos: 0, skip: false, rolls: 0, attempts: 0, hits: 0, spelled: Vec::new(), missed: Vec::new() })
+        .map(|&seat| Player { seat, pos: 0, skip: false, rolls: 0, attempts: 0, hits: 0, spelled: Vec::new(), missed: Vec::new(), stretch_offered: 0, stretch_taken: 0, stretch_hits: 0 })
         .collect();
 
     Ok(BoardGameState {
@@ -63,6 +63,7 @@ pub fn new_game(seed: u64, cfg: GameConfig, pools: TierPools) -> Result<BoardGam
         turn: 0,
         phase: Phase::AwaitRoll,
         pending: None,
+        offer: None,
         rng,
         pools: Arc::new(pools),
         queues,
@@ -124,6 +125,16 @@ pub fn apply(s: &mut BoardGameState, action: Action) -> Result<(), Rejected> {
                 return Err(Rejected::WrongPhase);
             }
             s.human_spell(seat, &typed);
+            Ok(())
+        }
+        Action::ChooseStretch(take) => {
+            if npc {
+                return Err(Rejected::NotHumanTurn);
+            }
+            if s.phase != Phase::AwaitStretch || s.offer.is_none() {
+                return Err(Rejected::WrongPhase);
+            }
+            s.human_stretch(seat, take);
             Ok(())
         }
         Action::ChooseSwitchTarget(target) => {
@@ -264,8 +275,38 @@ impl BoardGameState {
             return;
         }
         let tier = self.board.tiers[dest as usize].expect("a non-end tile has a tier");
+        if let Some(harder) = self.stretch_tier(tier) {
+            // Feature 1 (I-P6): stop here. Neither word is drawn until the choice is committed.
+            let bonus = self.cfg.variant.cfg().stretch_bonus;
+            let stretch_dest = (dest + bonus).min(self.board.last());
+            self.players[seat as usize].stretch_offered += 1;
+            self.offer = Some(Offer { roll, normal_dest: dest, normal_tier: tier, stretch_dest, stretch_tier: harder });
+            self.phase = Phase::AwaitStretch;
+            return;
+        }
         let word = self.draw(Src::Tier(tier));
-        self.pending = Some(Spell { kind: SpellKind::Landing, tier, word, dest, step: 0 });
+        self.pending = Some(Spell { kind: SpellKind::Landing, tier, word, dest, step: 0, stretch: false });
+        self.phase = Phase::AwaitSpelling;
+    }
+
+    /// Feature 1: the tier a Stretch from a tile of `tier` would use, if Stretch is on in this
+    /// game and a harder tier exists in this variant's pool (never from Expert, never in Jr).
+    fn stretch_tier(&self, tier: Tier) -> Option<Tier> {
+        let c = self.cfg.variant.cfg();
+        if !(self.cfg.stretch && c.stretch) {
+            return None;
+        }
+        c.harder(tier)
+    }
+
+    fn human_stretch(&mut self, seat: u8, take: bool) {
+        let o = self.offer.take().expect("checked by apply");
+        let (tier, dest) = if take { (o.stretch_tier, o.stretch_dest) } else { (o.normal_tier, o.normal_dest) };
+        if take {
+            self.players[seat as usize].stretch_taken += 1;
+        }
+        let word = self.draw(Src::Tier(tier));
+        self.pending = Some(Spell { kind: SpellKind::Landing, tier, word, dest, step: 0, stretch: take });
         self.phase = Phase::AwaitSpelling;
     }
 
@@ -280,9 +321,19 @@ impl BoardGameState {
             SpellKind::Landing => {
                 let from = self.players[seat as usize].pos;
                 let p = &mut self.players[seat as usize];
-                p.attempts += 1;
+                // D-P11: a Stretch spelling is not an attempt at the tile's own tier, so it stays
+                // out of the running accuracy the NPCs track.
+                if sp.stretch {
+                    p.stretch_hits += ok as u32;
+                } else {
+                    p.attempts += 1;
+                    p.hits += ok as u32;
+                }
+                if sp.stretch {
+                    self.push(Event::Stretched { seat });
+                }
+                let p = &mut self.players[seat as usize];
                 if ok {
-                    p.hits += 1;
                     p.spelled.push(sp.word.clone());
                     self.land(seat, from, sp.dest);
                 } else {
@@ -318,7 +369,7 @@ impl BoardGameState {
                 } else if sp.step == 0 {
                     self.players[seat as usize].spelled.push(sp.word.clone());
                     let word = self.draw(Src::Tier(Tier::Expert));
-                    self.pending = Some(Spell { kind: SpellKind::DoubleExpert, tier: Tier::Expert, word, dest: sp.dest, step: 1 });
+                    self.pending = Some(Spell { kind: SpellKind::DoubleExpert, tier: Tier::Expert, word, dest: sp.dest, step: 1, stretch: false });
                     self.phase = Phase::AwaitSpelling;
                 } else {
                     self.players[seat as usize].spelled.push(sp.word.clone());
@@ -333,6 +384,11 @@ impl BoardGameState {
     fn land(&mut self, seat: u8, from: u32, dest: u32) {
         self.players[seat as usize].pos = dest;
         self.push(Event::Moved { seat, from, to: dest });
+        if dest == self.board.last() {
+            // Feature 1: a Stretch bonus can carry a piece onto the finish.
+            self.finish(seat);
+            return;
+        }
         let Some(trap) = self.board.trap_at(dest) else {
             self.end_turn();
             return;
@@ -352,12 +408,12 @@ impl BoardGameState {
             }
             Trap::LongWord => {
                 let word = self.draw(Src::Long);
-                self.pending = Some(Spell { kind: SpellKind::LongWord, tier: Tier::Expert, word, dest, step: 0 });
+                self.pending = Some(Spell { kind: SpellKind::LongWord, tier: Tier::Expert, word, dest, step: 0, stretch: false });
                 self.phase = Phase::AwaitSpelling;
             }
             Trap::DoubleExpert => {
                 let word = self.draw(Src::Tier(Tier::Expert));
-                self.pending = Some(Spell { kind: SpellKind::DoubleExpert, tier: Tier::Expert, word, dest, step: 0 });
+                self.pending = Some(Spell { kind: SpellKind::DoubleExpert, tier: Tier::Expert, word, dest, step: 0, stretch: false });
                 self.phase = Phase::AwaitSpelling;
             }
             Trap::SwitchTiles => {
@@ -404,13 +460,40 @@ impl BoardGameState {
             self.finish(seat);
             return;
         }
-        if !self.chance(p) {
+        // Feature 1 (D-P10, D-P21). Stretch is considered only when it is on and offered AND the NPC
+        // can pay the penalty without hitting the accuracy floor (`p - penalty >= floor`): an NPC
+        // that cannot lose accuracy by stretching never stretches, and makes no draw for it. Eligible
+        // NPCs take it with chance `base + slope * (p - 500) / 1000` (clamped 0..=1000): one draw,
+        // then one spelling draw at `p - penalty`. Off or ineligible, the turn draws exactly as before.
+        let mut dest = dest;
+        let (base, slope, penalty) = self.cfg.variant.cfg().npc_stretch();
+        let eligible = self.stretch_tier(self.board.tiers[dest as usize].expect("a non-end tile has a tier")).is_some() && p - penalty >= NPC_FLOOR_MILLI;
+        let mut stretched = false;
+        if eligible {
+            self.players[seat as usize].stretch_offered += 1;
+            let rate = (base + slope * (p - 500) / 1000).clamp(0, 1000);
+            if self.chance(rate) {
+                stretched = true;
+                self.players[seat as usize].stretch_taken += 1;
+                self.push(Event::Stretched { seat });
+                dest = (dest + self.cfg.variant.cfg().stretch_bonus).min(self.board.last());
+            }
+        }
+        let p_spell = if stretched { p - penalty } else { p };
+        if !self.chance(p_spell) {
             self.push(Event::Missed { seat, at: from, word: None });
             self.end_turn();
             return;
         }
+        if stretched {
+            self.players[seat as usize].stretch_hits += 1;
+        }
         self.players[seat as usize].pos = dest;
         self.push(Event::Moved { seat, from, to: dest });
+        if dest == self.board.last() {
+            self.finish(seat);
+            return;
+        }
         let Some(trap) = self.board.trap_at(dest) else {
             self.end_turn();
             return;

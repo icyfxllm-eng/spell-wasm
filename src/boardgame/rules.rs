@@ -49,6 +49,17 @@ pub struct VariantCfg {
     /// Sprint, whose games end before that prior washes out, has its own.
     pub prior_hits_milli: i64,
     pub prior_attempts_milli: i64,
+    /// Feature 1 (O-P2): whether this variant can offer Stretch at all. Off for Spell Jr.
+    pub stretch: bool,
+    /// D-P1: extra tiles a correct Stretch spelling adds.
+    pub stretch_bonus: u32,
+    /// D-P21: an NPC's chance to take Stretch is `base + slope * (acc - 500) / 1000` thousandths,
+    /// clamped to 0..=1000, where `acc` is its current spelling accuracy in thousandths.
+    pub npc_stretch_rate_base_milli: i64,
+    pub npc_stretch_rate_slope_milli: i64,
+    /// D-P10: how far an NPC's accuracy drops on a Stretch word, in thousandths. D-P21: an NPC
+    /// whose `acc - penalty` would fall below the accuracy floor does not take Stretch at all.
+    pub npc_stretch_penalty_milli: i64,
     /// D16: a soft 30 s ring on the screen while spelling (never an auto-fail).
     pub timed: bool,
 }
@@ -65,6 +76,11 @@ const FULL: VariantCfg = VariantCfg {
     delta_milli: [300, 200, 100],
     prior_hits_milli: 3000,
     prior_attempts_milli: 2000,
+    stretch: true,
+    stretch_bonus: 2,
+    npc_stretch_rate_base_milli: 75,
+    npc_stretch_rate_slope_milli: 1200,
+    npc_stretch_penalty_milli: 250,
     timed: true,
 };
 
@@ -83,6 +99,11 @@ const SPRINT: VariantCfg = VariantCfg {
     delta_milli: [300, 200, 100],
     prior_hits_milli: 750,
     prior_attempts_milli: 500,
+    stretch: true,
+    stretch_bonus: 2,
+    npc_stretch_rate_base_milli: 75,
+    npc_stretch_rate_slope_milli: 1200,
+    npc_stretch_penalty_milli: 250,
     timed: true,
 };
 
@@ -98,6 +119,11 @@ const JR: VariantCfg = VariantCfg {
     delta_milli: [250, 250, 250],
     prior_hits_milli: 3000,
     prior_attempts_milli: 2000,
+    stretch: false,
+    stretch_bonus: 0,
+    npc_stretch_rate_base_milli: 0,
+    npc_stretch_rate_slope_milli: 0,
+    npc_stretch_penalty_milli: 0,
     timed: false,
 };
 
@@ -132,6 +158,22 @@ impl VariantCfg {
         (self.prior_hits_milli, self.prior_attempts_milli)
     }
 
+    /// The tier one above `t` IN THIS VARIANT'S POOL (not `Tier::ALL`), if any.
+    pub fn harder(&self, t: Tier) -> Option<Tier> {
+        let mut ts: Vec<Tier> = self.tiers().collect();
+        ts.sort();
+        ts.iter().position(|&x| x == t).and_then(|i| ts.get(i + 1).copied())
+    }
+
+    /// (rate base, rate slope, penalty) in thousandths, with a test-only override for the A-P14 search.
+    pub fn npc_stretch(&self) -> (i64, i64, i64) {
+        #[cfg(test)]
+        if let Some(p) = STRETCH_OVERRIDE.with(|c| c.get()) {
+            return p;
+        }
+        (self.npc_stretch_rate_base_milli, self.npc_stretch_rate_slope_milli, self.npc_stretch_penalty_milli)
+    }
+
     pub fn delta(&self, d: Difficulty) -> i64 {
         self.delta_milli[d.ix()]
     }
@@ -162,5 +204,6 @@ impl VariantCfg {
 
 #[cfg(test)]
 thread_local! {
+    pub(crate) static STRETCH_OVERRIDE: std::cell::Cell<Option<(i64, i64, i64)>> = const { std::cell::Cell::new(None) };
     pub(crate) static PRIOR_OVERRIDE: std::cell::Cell<Option<(i64, i64)>> = const { std::cell::Cell::new(None) };
 }

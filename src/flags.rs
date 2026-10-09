@@ -108,6 +108,14 @@ pub fn boardgame() -> bool {
     resolve(stored("boardgame").as_deref(), true)
 }
 
+/// CC-BOARD-GAME-POLISH v1 Feature 1 (D-P16) -- Stretch words in the Board Game.
+/// **Default OFF** until Eric turns it on (it needs O-P1, signed, and A-P13 green).
+/// `localStorage['spell_flag_boardStretch'] = 'on'`. Compiled out with the mode.
+#[cfg(not(feature = "web"))]
+pub fn board_stretch() -> bool {
+    resolve(stored("boardStretch").as_deref(), false)
+}
+
 /// F5 "Word stories" — etymology cards. **Default OFF**: dark until the CC BY-SA
 /// attribution approach is approved.
 pub fn word_stories() -> bool {

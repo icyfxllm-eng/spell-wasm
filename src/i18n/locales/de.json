@@ -905,5 +905,7 @@
   "bg.toTile": "Weiter auf Feld {n}",
   "bg.size": "Länge",
   "bg.sprint": "Schnell",
-  "bg.full": "Voll"
+  "bg.full": "Voll",
+  "bg.stretch": "Wagnis",
+  "bg.stretchStat": "Wagnis: {taken} von {offered} genommen, {hits} richtig"
 }

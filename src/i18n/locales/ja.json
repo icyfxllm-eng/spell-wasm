@@ -905,5 +905,7 @@
   "bg.toTile": "{n}マス目へ",
   "bg.size": "サイズ",
   "bg.sprint": "スプリント",
-  "bg.full": "フル"
+  "bg.full": "フル",
+  "bg.stretch": "ストレッチ",
+  "bg.stretchStat": "ストレッチ: {offered}回中{taken}回挑戦、{hits}回正解"
 }

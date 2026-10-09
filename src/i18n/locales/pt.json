@@ -905,5 +905,7 @@
   "bg.toTile": "Para a casa {n}",
   "bg.size": "Tamanho",
   "bg.sprint": "Rápido",
-  "bg.full": "Completo"
+  "bg.full": "Completo",
+  "bg.stretch": "Desafio",
+  "bg.stretchStat": "Desafio: {taken} de {offered} aceitos, {hits} certos"
 }

@@ -905,5 +905,7 @@
   "bg.toTile": "Đến ô {n}",
   "bg.size": "Kích thước",
   "bg.sprint": "Nhanh",
-  "bg.full": "Đầy đủ"
+  "bg.full": "Đầy đủ",
+  "bg.stretch": "Thử thách",
+  "bg.stretchStat": "Thử thách: chọn {taken}/{offered}, đúng {hits}"
 }

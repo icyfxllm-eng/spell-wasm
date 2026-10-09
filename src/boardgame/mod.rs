@@ -138,6 +138,10 @@ pub struct GameConfig {
     pub kid: bool,
     pub seats: Vec<Seat>,
     pub grader: Grader,
+    /// Feature 1 / D-P16: Stretch words. Captured here at `new_game` (the screen reads the
+    /// `boardStretch` flag once) so the reducer stays pure and a replay is exact. Off, the
+    /// engine is move for move what it was before Stretch existed (A-P9).
+    pub stretch: bool,
 }
 
 // A function pointer has no stable identity to compare or print.
@@ -148,6 +152,7 @@ impl PartialEq for GameConfig {
             && self.lang == o.lang
             && self.kid == o.kid
             && self.seats == o.seats
+            && self.stretch == o.stretch
     }
 }
 
@@ -174,13 +179,19 @@ impl GameConfig {
             }
             p += 1;
         }
-        GameConfig { variant, difficulty, lang: lang.to_string(), kid, seats, grader }
+        GameConfig { variant, difficulty, lang: lang.to_string(), kid, seats, grader, stretch: false }
+    }
+
+    /// Turn Stretch on (the flag) for this game. Ignored by variants that have none (Jr).
+    pub fn with_stretch(mut self, on: bool) -> Self {
+        self.stretch = on;
+        self
     }
 
     /// F7: 2-4 humans on one phone, pieces in seat order.
     pub fn pass_and_play(variant: Variant, humans: u8, lang: &str, kid: bool, grader: Grader) -> Self {
         let seats = (0..humans).map(|piece| Seat { piece, npc: false }).collect();
-        GameConfig { variant, difficulty: Difficulty::Normal, lang: lang.to_string(), kid, seats, grader }
+        GameConfig { variant, difficulty: Difficulty::Normal, lang: lang.to_string(), kid, seats, grader, stretch: false }
     }
 }
 
@@ -215,6 +226,9 @@ pub enum Phase {
     AwaitSpelling,
     AwaitSwitchTarget,
     Finished,
+    /// Feature 1: the roll has landed and the player has not yet chosen the normal move or
+    /// Stretch. No word has been drawn (I-P6). Appended last so existing discriminants hold.
+    AwaitStretch,
 }
 
 #[derive(Clone, Debug, PartialEq, Eq)]
@@ -228,6 +242,9 @@ pub enum Action {
     SkipAnimation,
     /// Play the current NPC seat's whole turn.
     AdvanceNpc,
+    /// Feature 1: commit to Stretch (`true`) or the normal move (`false`). Valid only in
+    /// `AwaitStretch`; the word is drawn from the committed tier after this (I-P6).
+    ChooseStretch(bool),
 }
 
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
@@ -261,6 +278,19 @@ pub struct Spell {
     /// Landing: the tile a correct answer moves to. Traps: the trap's tile.
     pub dest: u32,
     pub step: u8,
+    /// Feature 1: a Stretch landing word. `dest` already includes the bonus (clamped).
+    pub stretch: bool,
+}
+
+/// Feature 1: what a human sees between the die and the word. Nothing about either word
+/// exists yet, only the two tiers and the two destinations.
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+pub struct Offer {
+    pub roll: u8,
+    pub normal_dest: u32,
+    pub normal_tier: Tier,
+    pub stretch_dest: u32,
+    pub stretch_tier: Tier,
 }
 
 /// What happened, in order. The screen turns these into chips and animation;
@@ -268,6 +298,8 @@ pub struct Spell {
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub enum Event {
     Rolled { seat: u8, roll: u8, dest: u32 },
+    /// Feature 1: the move that follows (Moved, Missed, trap events) was a Stretch.
+    Stretched { seat: u8 },
     Moved { seat: u8, from: u32, to: u32 },
     /// `word` is `Some` for a human (shown only to that player, F7) and `None`
     /// for an NPC, which never has a word (I11).
@@ -293,6 +325,11 @@ pub struct Player {
     pub hits: u32,
     pub spelled: Vec<String>,
     pub missed: Vec<String>,
+    /// Feature 1 / D-P19: the on-device counters behind the podium line. Stretch spellings are
+    /// kept OUT of `attempts`/`hits` (D-P11); these three are their own.
+    pub stretch_offered: u32,
+    pub stretch_taken: u32,
+    pub stretch_hits: u32,
 }
 
 #[derive(Clone, Debug, PartialEq, Eq)]
@@ -339,6 +376,8 @@ pub struct BoardGameState {
     pub turn: usize,
     pub phase: Phase,
     pub pending: Option<Spell>,
+    /// Feature 1: set only while `phase == AwaitStretch`.
+    pub offer: Option<Offer>,
     pub(crate) rng: Rng,
     pub(crate) pools: Arc<TierPools>,
     /// Indices into `pools`, popped from the back.
@@ -425,8 +464,20 @@ impl BoardGameState {
         }
         push(&mut b, self.turn as u64);
         push(&mut b, self.phase as u64);
+        // Stretch state joins the digest only in a game that has Stretch on, so a game with the
+        // flag off digests exactly as it did before the feature existed (A-P9).
+        if self.cfg.stretch {
+            push(&mut b, 0x5742_C7);
+            if let Some(o) = &self.offer {
+                push(&mut b, o.roll as u64 | (o.normal_tier as u64) << 8 | (o.stretch_tier as u64) << 16);
+                push(&mut b, o.normal_dest as u64 | (o.stretch_dest as u64) << 32);
+            }
+            for p in &self.players {
+                push(&mut b, p.stretch_offered as u64 | (p.stretch_taken as u64) << 20 | (p.stretch_hits as u64) << 40);
+            }
+        }
         if let Some(sp) = &self.pending {
-            push(&mut b, sp.kind as u64 | (sp.tier as u64) << 8 | (sp.step as u64) << 16);
+            push(&mut b, sp.kind as u64 | (sp.tier as u64) << 8 | (sp.step as u64) << 16 | (sp.stretch as u64) << 24);
             push(&mut b, sp.dest as u64);
             pstr(&mut b, &sp.word);
         }

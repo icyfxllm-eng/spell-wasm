@@ -905,5 +905,7 @@
   "bg.toTile": "إلى المربع {n}",
   "bg.size": "الحجم",
   "bg.sprint": "سريعة",
-  "bg.full": "كاملة"
+  "bg.full": "كاملة",
+  "bg.stretch": "تحدٍّ",
+  "bg.stretchStat": "تحدٍّ: {taken} من {offered}، صحيح {hits}"
 }

@@ -28,30 +28,41 @@ pub fn rng_1000() -> u64 {
 /// The 84-tile Full game: unchanged by Phase B, so its pinned digest is the proof
 /// that Full is still bit-for-bit what it was.
 pub fn game() -> u64 {
-    game_of(Variant::Full)
+    game_of(Variant::Full, false)
 }
 
 /// Phase B's witness: one scripted Sprint game (42 tiles, 3 traps).
 pub fn game_sprint() -> u64 {
-    game_of(Variant::Sprint)
+    game_of(Variant::Sprint, false)
 }
 
-fn game_of(variant: Variant) -> u64 {
+/// Phase C's witness: the Sprint game with Stretch on (flag-ON; the two above stay flag-off, which
+/// is what keeps A-P9 honest). The script takes Stretch on every other offer.
+pub fn game_stretch() -> u64 {
+    game_of(Variant::Sprint, true)
+}
+
+fn game_of(variant: Variant, stretch: bool) -> u64 {
     let mut pools = TierPools::default();
     for t in Tier::ALL {
         pools.tiers[t.ix()] = (0..variant.cfg().min_pool).map(|i| format!("{}{i:04}", t.name())).collect();
     }
     pools.long_word = (0..30).map(|i| format!("long{i:04}")).collect();
-    let cfg = GameConfig::solo(variant, Difficulty::Normal, 3, 1, "en", false, exact);
+    let cfg = GameConfig::solo(variant, Difficulty::Normal, 3, 1, "en", false, exact).with_stretch(stretch);
     let mut s = new_game(0xB0A4_D6A3, cfg, pools).unwrap();
     // A fixed script with no test-side randomness: every third landing is wrong.
     let mut k = 0u64;
+    let mut offers = 0u64;
     while s.phase != Phase::Finished {
         let a = if s.is_npc_turn() {
             Action::AdvanceNpc
         } else {
             match s.phase {
                 Phase::AwaitRoll => Action::Roll,
+                Phase::AwaitStretch => {
+                    offers += 1;
+                    Action::ChooseStretch(offers % 2 == 0)
+                }
                 Phase::AwaitSpelling => {
                     k += 1;
                     let w = s.pending.as_ref().unwrap().word.clone();

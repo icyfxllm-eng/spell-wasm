@@ -29,3 +29,8 @@ pub extern "C" fn golden_game() -> u64 {
 pub extern "C" fn golden_game_sprint() -> u64 {
     boardgame::golden::game_sprint()
 }
+
+#[no_mangle]
+pub extern "C" fn golden_game_stretch() -> u64 {
+    boardgame::golden::game_stretch()
+}

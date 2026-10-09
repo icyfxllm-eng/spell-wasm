@@ -905,5 +905,7 @@
   "bg.toTile": "前往第{n}格",
   "bg.size": "大小",
   "bg.sprint": "冲刺",
-  "bg.full": "完整"
+  "bg.full": "完整",
+  "bg.stretch": "挑战",
+  "bg.stretchStat": "挑战：{offered} 次中选了 {taken} 次，答对 {hits} 次"
 }

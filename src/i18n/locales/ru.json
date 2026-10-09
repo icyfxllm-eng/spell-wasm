@@ -905,5 +905,7 @@
   "bg.toTile": "На клетку {n}",
   "bg.size": "Размер",
   "bg.sprint": "Спринт",
-  "bg.full": "Полная"
+  "bg.full": "Полная",
+  "bg.stretch": "Рывок",
+  "bg.stretchStat": "Рывок: взято {taken} из {offered}, верно {hits}"
 }

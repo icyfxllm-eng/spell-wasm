@@ -67,6 +67,7 @@ fn play(seed: u64, cfg: GameConfig, acc_milli: u64) -> BoardGameState {
                     let lead = (0..s.players.len() as u8).max_by_key(|&i| (s.players[i as usize].pos, std::cmp::Reverse(i))).unwrap();
                     Action::ChooseSwitchTarget((lead != me && s.players[lead as usize].pos > s.players[me as usize].pos).then_some(lead))
                 }
+                Phase::AwaitStretch => Action::ChooseStretch(pr.next_u64() % 2 == 0),
                 Phase::Finished => unreachable!(),
             }
         };
@@ -236,12 +237,13 @@ fn a1_tier_mix_is_near_its_weights() {
 fn random_cfg(r: &mut Rng) -> GameConfig {
     let variant = Variant::ALL[(r.next_u64() % 3) as usize];
     let diff = Difficulty::ALL[(r.next_u64() % 3) as usize];
+    let stretch = r.next_u64() % 2 == 0;
     if r.next_u64() % 2 == 0 {
         let npcs = 1 + (r.next_u64() % 3) as u8;
         let piece = (r.next_u64() % 4) as u8;
-        GameConfig::solo(variant, diff, npcs, piece, "en", false, exact)
+        GameConfig::solo(variant, diff, npcs, piece, "en", false, exact).with_stretch(stretch)
     } else {
-        GameConfig::pass_and_play(variant, 2 + (r.next_u64() % 3) as u8, "en", false, exact)
+        GameConfig::pass_and_play(variant, 2 + (r.next_u64() % 3) as u8, "en", false, exact).with_stretch(stretch)
     }
 }
 
@@ -267,6 +269,7 @@ fn valid_action(s: &BoardGameState, r: &mut Rng) -> Action {
             let k = (r.next_u64() % (others.len() as u64 + 1)) as usize;
             Action::ChooseSwitchTarget(others.get(k).copied())
         }
+        Phase::AwaitStretch => Action::ChooseStretch(r.next_u64() % 2 == 0),
         Phase::Finished => Action::SkipAnimation,
     }
 }
@@ -323,6 +326,7 @@ fn a3_fuzz_one_hundred_thousand_actions() {
             3 => Action::ChooseSwitchTarget(Some((r.next_u64() % 7) as u8)),
             4 => Action::SkipAnimation,
             5 => Action::AdvanceNpc,
+            6 => Action::ChooseStretch(r.next_u64() % 2 == 0),
             _ => valid_action(&state, &mut r),
         };
         let before = state.clone();
@@ -418,6 +422,9 @@ fn i4_a_wrong_spelling_never_moves_anyone() {
             }
             Phase::AwaitSwitchTarget => {
                 apply(&mut s, Action::ChooseSwitchTarget(None)).unwrap();
+            }
+            Phase::AwaitStretch => {
+                apply(&mut s, Action::ChooseStretch(false)).unwrap();
             }
             Phase::Finished => {}
         }
@@ -855,12 +862,15 @@ pub(crate) const GOLDEN_RNG_1000: u64 = 11818870969550119401;
 pub(crate) const GOLDEN_GAME: u64 = 12092315625649832955;
 /// Phase B (D-P19): the one deliberate addition, a scripted 42-tile Sprint game.
 pub(crate) const GOLDEN_GAME_SPRINT: u64 = 10168540050936118820;
+/// Phase C: the Sprint game with Stretch ON. The three above are flag-off and did not move (A-P9).
+pub(crate) const GOLDEN_GAME_STRETCH: u64 = 2364432690874214226;
 
 #[test]
 fn a15_golden_sequence_and_game_hash() {
-    eprintln!("golden rng = {}, golden game = {}, golden sprint = {}", super::golden::rng_1000(), super::golden::game(), super::golden::game_sprint());
+    eprintln!("golden rng = {}, golden game = {}, golden sprint = {}, golden stretch = {}", super::golden::rng_1000(), super::golden::game(), super::golden::game_sprint(), super::golden::game_stretch());
     assert_eq!(super::golden::rng_1000(), GOLDEN_RNG_1000, "the splitmix stream changed");
     assert_eq!(super::golden::game(), GOLDEN_GAME, "the engine's outcome for the golden game changed (Full must stay bit-for-bit)");
+    assert_eq!(super::golden::game_stretch(), GOLDEN_GAME_STRETCH, "the engine's outcome for the Stretch-on golden game changed");
     assert_eq!(super::golden::game_sprint(), GOLDEN_GAME_SPRINT, "the engine's outcome for the Sprint golden game changed");
 }
 
@@ -890,3 +900,245 @@ fn i12_i14_the_engine_source_has_no_forbidden_tokens() {
     }
 }
 
+
+// ------------------------------------------------------------------ Feature 1: Stretch
+
+fn stretch_game(v: Variant, seed: u64, on: bool) -> BoardGameState {
+    let mut s = new_game(seed, solo(v, Difficulty::Normal, 3).with_stretch(on), pools_for(v)).unwrap();
+    // A clean board: no traps, so a landing resolves nothing. Tiles 1..=20 are all one tier.
+    for t in s.board.traps.iter_mut() {
+        *t = None;
+    }
+    to_current(&mut s, false);
+    s
+}
+
+fn set_tier(s: &mut BoardGameState, t: Tier) {
+    for i in 1..=20 {
+        s.board.tiers[i] = Some(t);
+    }
+}
+
+/// A-P1: Stretch is offered iff Stretch is on in the game, the variant has it, and a harder tier
+/// exists IN THE VARIANT'S POOL: never from Expert, never in Jr, never with the flag off.
+#[test]
+fn a_p1_stretch_is_offered_iff_a_harder_tier_exists() {
+    for (v, tier, on, want) in [
+        (Variant::Full, Tier::Medium, true, Some(Tier::Hard)),
+        (Variant::Full, Tier::Hard, true, Some(Tier::Expert)),
+        (Variant::Full, Tier::Expert, true, None),
+        (Variant::Sprint, Tier::Medium, true, Some(Tier::Hard)),
+        (Variant::Sprint, Tier::Hard, true, Some(Tier::Expert)),
+        (Variant::Sprint, Tier::Expert, true, None),
+        (Variant::Full, Tier::Medium, false, None),
+        (Variant::Sprint, Tier::Hard, false, None),
+    ] {
+        let mut s = stretch_game(v, 3, on);
+        set_tier(&mut s, tier);
+        apply(&mut s, Action::Roll).unwrap();
+        match want {
+            Some(h) => {
+                assert_eq!(s.phase, Phase::AwaitStretch, "{v:?} {tier:?}");
+                let o = s.offer.unwrap();
+                assert_eq!((o.normal_tier, o.stretch_tier), (tier, h));
+                assert_eq!(o.stretch_dest, (o.normal_dest + 2).min(s.board.last()));
+                assert!(s.pending.is_none(), "a word was drawn before the choice");
+            }
+            None => assert_eq!(s.phase, Phase::AwaitSpelling, "{v:?} {tier:?} on={on}"),
+        }
+    }
+    // Spell Jr: Easy has Medium above it in its pool, but Jr has no Stretch (O-P2).
+    for tier in [Tier::Easy, Tier::Medium] {
+        let mut s = new_game(3, solo(Variant::Jr, Difficulty::Normal, 3).with_stretch(true), pools_for(Variant::Jr)).unwrap();
+        to_current(&mut s, false);
+        for i in 1..=20 {
+            s.board.tiers[i] = Some(tier);
+        }
+        apply(&mut s, Action::Roll).unwrap();
+        assert_eq!(s.phase, Phase::AwaitSpelling, "Jr {tier:?} offered Stretch");
+    }
+}
+
+/// A-P1 (moves) and A-P2 (engine half): nothing is drawn before the commit; a correct Stretch
+/// moves roll + 2 and spells the harder tier; a wrong one moves 0; the normal choice is unchanged.
+#[test]
+fn a_p1_a_p2_the_choice_comes_before_the_word_and_pays_two() {
+    for v in [Variant::Full, Variant::Sprint] {
+        for seed in 0..60u64 {
+            for (take, right) in [(true, true), (true, false), (false, true)] {
+                let mut s = stretch_game(v, seed, true);
+                set_tier(&mut s, Tier::Medium);
+                let me = s.current_seat() as usize;
+                apply(&mut s, Action::Roll).unwrap();
+                let o = s.offer.unwrap();
+                let drawn0 = s.drawn.len();
+                assert_eq!(s.drawn.len(), drawn0);
+                // Rolling again, or spelling, is refused while the choice is open.
+                assert_eq!(applied(&s, Action::Roll).unwrap_err(), Rejected::WrongPhase);
+                assert_eq!(applied(&s, Action::SubmitSpelling("x".into())).unwrap_err(), Rejected::WrongPhase);
+                apply(&mut s, Action::ChooseStretch(take)).unwrap();
+                assert_eq!(s.drawn.len(), drawn0 + 1, "exactly one word, after the choice");
+                let want_tier = if take { Tier::Hard } else { Tier::Medium };
+                assert_eq!(s.drawn.last().unwrap().0, want_tier);
+                let sp = s.pending.clone().unwrap();
+                assert_eq!((sp.tier, sp.stretch), (want_tier, take));
+                let (att, hits) = (s.players[me].attempts, s.players[me].hits);
+                let typed = if right { sp.word.clone() } else { "nope".to_string() };
+                apply(&mut s, Action::SubmitSpelling(typed)).unwrap();
+                let pos = s.players[me].pos;
+                match (take, right) {
+                    (true, true) => assert_eq!(pos, o.normal_dest + 2, "{v:?}: roll + 2"),
+                    (false, true) => assert_eq!(pos, o.normal_dest),
+                    (_, false) => assert_eq!(pos, 0, "a wrong spelling moves 0"),
+                }
+                // D-P11: a Stretch spelling is not an attempt at the tile's tier.
+                if take {
+                    assert_eq!((s.players[me].attempts, s.players[me].hits), (att, hits));
+                    assert_eq!(s.players[me].stretch_taken, 1);
+                    assert_eq!(s.players[me].stretch_hits, right as u32);
+                    assert!(s.events.iter().any(|e| matches!(e, Event::Stretched { .. })));
+                } else {
+                    assert_eq!((s.players[me].attempts, s.players[me].hits), (att + 1, hits + right as u32));
+                }
+                assert_eq!(s.players[me].stretch_offered, 1);
+            }
+        }
+    }
+}
+
+/// A stretch bonus that reaches the last tile finishes the game, and the bonus never overshoots it.
+#[test]
+fn a_correct_stretch_can_finish_the_game() {
+    let mut finished = 0;
+    for seed in 0..80u64 {
+        let mut s = stretch_game(Variant::Sprint, seed, true);
+        let me = s.current_seat() as usize;
+        let last = s.board.last();
+        s.players[me].pos = last - 7;
+        for t in (last - 6)..last {
+            s.board.tiers[t as usize] = Some(Tier::Medium);
+        }
+        apply(&mut s, Action::Roll).unwrap();
+        let Some(o) = s.offer else { continue };
+        if o.stretch_dest != last {
+            continue;
+        }
+        apply(&mut s, Action::ChooseStretch(true)).unwrap();
+        let w = s.pending.as_ref().unwrap().word.clone();
+        assert_eq!(s.pending.as_ref().unwrap().dest, last);
+        apply(&mut s, Action::SubmitSpelling(w)).unwrap();
+        assert_eq!(s.phase, Phase::Finished);
+        assert_eq!(s.winner, Some(me as u8));
+        assert_eq!(s.players[me].pos, last);
+        finished += 1;
+    }
+    assert!(finished > 10, "only {finished} finishing stretches seen");
+}
+
+/// A Stretch landing resolves the tile the piece ENDS on, under the normal rules.
+#[test]
+fn a_stretch_resolves_the_tile_it_ends_on() {
+    let mut hits = 0;
+    for seed in 0..120u64 {
+        let mut s = stretch_game(Variant::Full, seed, true);
+        set_tier(&mut s, Tier::Medium);
+        apply(&mut s, Action::Roll).unwrap();
+        let o = s.offer.unwrap();
+        // A trap two tiles beyond the rolled tile, none on the rolled tile itself.
+        s.board.traps[o.stretch_dest as usize] = Some(Trap::BackToStart);
+        apply(&mut s, Action::ChooseStretch(true)).unwrap();
+        let w = s.pending.as_ref().unwrap().word.clone();
+        apply(&mut s, Action::SubmitSpelling(w)).unwrap();
+        assert!(s.events.iter().any(|e| matches!(e, Event::TrapHit { tile, .. } if *tile == o.stretch_dest)));
+        hits += 1;
+    }
+    assert_eq!(hits, 120);
+}
+
+/// Eligible NPCs take Stretch at a rate set by their accuracy (D-P21), draw no word (I11), and the
+/// flag-off NPC never reaches the branch.
+#[test]
+fn npcs_take_stretch_at_the_configured_rate_and_draw_no_word() {
+    for v in [Variant::Full, Variant::Sprint] {
+        let (mut offered, mut taken) = (0u32, 0u32);
+        for seed in 0..120u64 {
+            let mut s = new_game(seed, solo(v, Difficulty::Normal, 3).with_stretch(true), pools_for(v)).unwrap();
+            for _ in 0..600 {
+                if s.phase == Phase::Finished {
+                    break;
+                }
+                if s.is_npc_turn() {
+                    let used = s.used.len();
+                    apply(&mut s, Action::AdvanceNpc).unwrap();
+                    assert_eq!(s.used.len(), used, "an NPC drew a word");
+                } else {
+                    let a = valid_action(&s, &mut Rng::new(seed));
+                    let a = match a {
+                        Action::SubmitSpelling(_) => Action::SubmitSpelling(s.pending.as_ref().unwrap().word.clone()),
+                        o => o,
+                    };
+                    apply(&mut s, a).unwrap();
+                }
+            }
+            for p in s.players.iter().filter(|p| p.seat.npc) {
+                offered += p.stretch_offered;
+                taken += p.stretch_taken;
+            }
+        }
+        let rate = taken as f64 / offered as f64;
+        assert!(offered > 500 && rate > 0.05 && rate < 0.7, "{v:?}: NPC took {taken} of {offered} ({rate:.3})");
+    }
+}
+
+/// A-P7 (as far as Phase C goes): over many simulated turns no forward move from one roll exceeds
+/// 6 + 2, and a wrong spelling never moves a piece forward.
+#[test]
+fn a_p7_no_forward_move_exceeds_eight_and_no_miss_moves_forward() {
+    let mut r = Rng::new(0xA7);
+    let mut turns = 0u64;
+    for g in 0..400u64 {
+        let v = [Variant::Full, Variant::Sprint][(g % 2) as usize];
+        let mut s = new_game(g, solo(v, Difficulty::Normal, 3).with_stretch(true), pools_for(v)).unwrap();
+        let mut guard = 0;
+        while s.phase != Phase::Finished {
+            guard += 1;
+            assert!(guard < 20_000);
+            let before: Vec<u32> = s.players.iter().map(|p| p.pos).collect();
+            let seat = s.current_seat() as usize;
+            let wrong = s.phase == Phase::AwaitSpelling && r.next_u64() % 3 == 0;
+            let a = if s.is_npc_turn() {
+                Action::AdvanceNpc
+            } else {
+                match s.phase {
+                    Phase::AwaitSpelling => Action::SubmitSpelling(if wrong { "nope".into() } else { s.pending.as_ref().unwrap().word.clone() }),
+                    _ => valid_action(&s, &mut r),
+                }
+            };
+            let landing = s.pending.as_ref().is_some_and(|p| p.kind == SpellKind::Landing);
+            apply(&mut s, a).unwrap();
+            let after: Vec<u32> = s.players.iter().map(|p| p.pos).collect();
+            let fwd = after[seat] as i64 - before[seat] as i64;
+            if s.events.iter().any(|e| matches!(e, Event::Teleported { .. } | Event::Swapped { .. })) {
+                continue; // a trap or a swap is not a roll's move
+            }
+            turns += 1;
+            assert!(fwd <= 8, "{v:?}: a roll moved {fwd}");
+            if wrong && landing {
+                assert!(fwd <= 0, "a wrong spelling moved forward");
+            }
+        }
+    }
+    assert!(turns > 10_000);
+}
+
+/// A-P9: with the flag off the engine never enters the Stretch phase, makes no Stretch draw and
+/// keeps the Stretch counters at zero; the pinned goldens (a15) and the A9 tables prove the rest.
+#[test]
+fn a_p9_with_the_flag_off_there_is_no_stretch_anywhere() {
+    for seed in 0..40u64 {
+        let s = play(seed, solo(Variant::Full, Difficulty::Normal, 3), 800);
+        assert!(s.players.iter().all(|p| p.stretch_offered == 0 && p.stretch_taken == 0 && p.stretch_hits == 0));
+        assert!(!s.events.iter().any(|e| matches!(e, Event::Stretched { .. })));
+        assert!(s.offer.is_none());
+    }
+}

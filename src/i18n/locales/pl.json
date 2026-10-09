@@ -905,5 +905,7 @@
   "bg.toTile": "Na pole {n}",
   "bg.size": "Rozmiar",
   "bg.sprint": "Szybka",
-  "bg.full": "Pełna"
+  "bg.full": "Pełna",
+  "bg.stretch": "Wyzwanie",
+  "bg.stretchStat": "Wyzwanie: podjęto {taken} z {offered}, trafnie {hits}"
 }

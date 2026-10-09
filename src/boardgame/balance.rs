@@ -32,6 +32,8 @@ struct Cell {
     win_rate: f64,
     /// The round (1-based) each game ended in; a skipped turn still counts as a turn.
     rounds: Vec<u32>,
+    /// Games in which a word queue ran dry and a word was reused (Stretch draws harder tiers faster).
+    recycled_games: u64,
 }
 
 impl Cell {
@@ -42,13 +44,34 @@ impl Cell {
     }
 }
 
+/// The two reference humans of A-P13. `None` in `simulate_with` is the flag off.
+#[derive(Clone, Copy, PartialEq, Eq, Debug)]
+enum Policy {
+    /// Takes the normal move every time.
+    Never,
+    /// Takes Stretch whenever it raises expected distance: the Stretch word is spelled `STRETCH_DROP`
+    /// less accurately, so it pays when `(acc - drop) * (roll + 2) > acc * roll`.
+    /// The payload is the accuracy drop on a Stretch word, in thousandths.
+    Smart(u64),
+}
+
+/// The reference human is 0.20 less accurate one tier up (the spec's section 8 model); a second
+/// sensitivity row uses 0.35.
+const STRETCH_DROP: u64 = 200;
+const STRETCH_DROP_HARD: u64 = 350;
+
 fn simulate(variant: Variant, difficulty: Difficulty, npcs: u8, acc_milli: u64, seed0: u64, games: u64) -> Cell {
+    simulate_with(variant, difficulty, npcs, acc_milli, seed0, games, None)
+}
+
+fn simulate_with(variant: Variant, difficulty: Difficulty, npcs: u8, acc_milli: u64, seed0: u64, games: u64, stretch: Option<Policy>) -> Cell {
     let mut wins = 0u64;
     let pl = pools_for(variant);
     let mut rounds = Vec::with_capacity(games as usize);
+    let mut recycled = 0u64;
     let mut pr = Rng::new(seed0);
     for g in 0..games {
-        let cfg = GameConfig::solo(variant, difficulty, npcs, 0, "en", false, exact);
+        let cfg = GameConfig::solo(variant, difficulty, npcs, 0, "en", false, exact).with_stretch(stretch.is_some());
         let mut s = new_game(seed0.wrapping_mul(0x9E37_79B9).wrapping_add(g), cfg, pl.clone()).unwrap();
         while s.phase != Phase::Finished {
             let a = if s.is_npc_turn() {
@@ -56,9 +79,14 @@ fn simulate(variant: Variant, difficulty: Difficulty, npcs: u8, acc_milli: u64, 
             } else {
                 match s.phase {
                     Phase::AwaitRoll => Action::Roll,
+                    Phase::AwaitStretch => {
+                        let roll = s.offer.unwrap().roll as u64;
+                        Action::ChooseStretch(matches!(stretch, Some(Policy::Smart(d)) if acc_milli.saturating_sub(d) * (roll + 2) > acc_milli * roll))
+                    }
                     Phase::AwaitSpelling => {
                         let w = s.pending.as_ref().unwrap().word.clone();
-                        if pr.next_u64() % 1000 < acc_milli {
+                        let acc_now = if s.pending.as_ref().unwrap().stretch { acc_milli.saturating_sub(match stretch { Some(Policy::Smart(d)) => d, _ => STRETCH_DROP }) } else { acc_milli };
+                        if pr.next_u64() % 1000 < acc_now {
                             Action::SubmitSpelling(w)
                         } else {
                             Action::SubmitSpelling(format!("{w}!"))
@@ -81,11 +109,12 @@ fn simulate(variant: Variant, difficulty: Difficulty, npcs: u8, acc_milli: u64, 
             apply(&mut s, a).unwrap();
         }
         // (the prior search sweeps settings that can run games long enough to reuse a word)
-        assert!(s.recycled == 0 || super::rules::PRIOR_OVERRIDE.with(|c| c.get()).is_some());
+        assert!(s.recycled == 0 || super::rules::PRIOR_OVERRIDE.with(|c| c.get()).is_some() || stretch.is_some());
+        recycled += (s.recycled > 0) as u64;
         wins += (s.winner == Some(0)) as u64;
         rounds.push(s.turns / s.players.len() as u32 + 1);
     }
-    Cell { win_rate: wins as f64 / games as f64, rounds }
+    Cell { win_rate: wins as f64 / games as f64, rounds, recycled_games: recycled }
 }
 
 fn human_wins(variant: Variant, difficulty: Difficulty, npcs: u8, acc_milli: u64, seed0: u64, games: u64) -> f64 {
@@ -218,4 +247,119 @@ fn sprint_prior_search() {
         let cs: Vec<String> = c.iter().map(|r| format!("{:.1}", r * 100.0)).collect();
         eprintln!("PRIOR {ph}/{pa} (milli): margin {:+.1} pts {} cells E100,E70,E50,N100,N70,N50,T100,T70,T50 = {}", worst * 100.0, if *worst >= 0.0 { "PASS" } else { "fail" }, cs.join(" "));
     }
+}
+
+/// A-P13 / D-P17: Sprint and Full, each NPC difficulty, two reference humans, 20,000 games a cell,
+/// every NPC rival playing Stretch at the configured rate and penalty. The never-stretch human
+/// must stay within 0.05 BELOW the D18 range (>= lo - 0.05); the stretching human may sit up to
+/// 0.15 ABOVE it (<= hi + 0.15). Also prints the stretch-vs-never gap and the share of games that
+/// had to reuse a word, so a thin pool shows up. A-P14: if this fails, tune only the NPC rate and
+/// penalty (see `stretch_tuning_search`); never D18 or the prior.
+#[test]
+fn a_p13_stretch_balance_both_reference_humans() {
+    let mut ok = true;
+    let mut out = format!("A-P13 (Stretch on for everyone, {GAMES_NEW} games per cell, seed {SEED}, 3 NPCs; D18 range, never >= lo-5, smart <= hi+15)\n");
+    for v in [Variant::Sprint, Variant::Full] {
+        out.push_str(&format!("{v:?}\n"));
+        for (name, d, lo, hi) in D18 {
+            for (label, acc) in HUMANS {
+                let never = simulate_with(v, d, 3, acc, SEED, GAMES_NEW, Some(Policy::Never));
+                let smart = simulate_with(v, d, 3, acc, SEED, GAMES_NEW, Some(Policy::Smart(STRETCH_DROP)));
+                let bad_n = never.win_rate < lo - 0.05;
+                let bad_s = smart.win_rate > hi + 0.15;
+                ok &= !(bad_n || bad_s);
+                out.push_str(&format!(
+                    "  {name:6} human {label:>4}: never {:5.1}% [>= {:.0}%]{}  smart {:5.1}% [<= {:.0}%]{}  gap {:+.1}  reuse {}/{}\n",
+                    never.win_rate * 100.0,
+                    (lo - 0.05) * 100.0,
+                    if bad_n { " <-- LOW" } else { "" },
+                    smart.win_rate * 100.0,
+                    (hi + 0.15) * 100.0,
+                    if bad_s { " <-- HIGH" } else { "" },
+                    (smart.win_rate - never.win_rate) * 100.0,
+                    never.recycled_games,
+                    smart.recycled_games
+                ));
+            }
+        }
+    }
+    eprintln!("{out}");
+    assert!(ok, "A-P13 FAIL (tune only the NPC Stretch rate and penalty, A-P14):\n{out}");
+}
+
+/// A-P14 / D-P21 (run by hand: `cargo test --lib stretch_tuning_search -- --ignored --nocapture`):
+/// sweep ONLY the NPC Stretch rate base, rate slope and penalty, 20,000 games per cell, all 18 A-P13
+/// cells for both reference humans, and print every setting with the smallest margin to an A-P13
+/// limit (negative = a cell is outside). D18 deltas, ranges, the Sprint prior and the bonus are fixed.
+#[test]
+#[ignore]
+fn stretch_tuning_search() {
+    use super::rules::STRETCH_OVERRIDE;
+    let mut combos = Vec::new();
+    for base in [0i64, 25, 50, 75, 100] {
+        for slope in [800i64, 900, 1000, 1200, 1500] {
+            for pen in [175i64, 200, 225, 250] {
+                combos.push((base, slope, pen));
+            }
+        }
+    }
+    let handles: Vec<_> = (0..8)
+        .map(|k| {
+            let chunk: Vec<(i64, i64, i64)> = combos.iter().copied().skip(k).step_by(8).collect();
+            std::thread::spawn(move || {
+                let mut out = Vec::new();
+                for (base, slope, pen) in chunk {
+                    STRETCH_OVERRIDE.with(|c| c.set(Some((base, slope, pen))));
+                    let mut worst = f64::MAX;
+                    let mut worst_at = String::new();
+                    for v in [Variant::Sprint, Variant::Full] {
+                        for (name, d, lo, hi) in D18 {
+                            for (label, acc) in HUMANS {
+                                let n = simulate_with(v, d, 3, acc, SEED, GAMES_NEW, Some(Policy::Never)).win_rate - (lo - 0.05);
+                                let s = (hi + 0.15) - simulate_with(v, d, 3, acc, SEED, GAMES_NEW, Some(Policy::Smart(STRETCH_DROP))).win_rate;
+                                for (m, kind) in [(n, "never"), (s, "smart")] {
+                                    if m < worst {
+                                        worst = m;
+                                        worst_at = format!("{v:?} {name} {label} {kind}");
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    out.push((base, slope, pen, worst, worst_at));
+                }
+                out
+            })
+        })
+        .collect();
+    let mut all: Vec<_> = handles.into_iter().flat_map(|h| h.join().unwrap()).collect();
+    all.sort_by_key(|a| (a.0, a.1, a.2));
+    for (b, sl, pen, worst, at) in &all {
+        eprintln!("STRETCH base {b} slope {sl} penalty {pen}: margin {:+.1} pts {}  worst cell: {at}", worst * 100.0, if *worst >= 0.0 { "PASS" } else { "fail" });
+    }
+}
+
+/// Sensitivity (reported, not gated): the smart human at a 0.35 Stretch-accuracy drop.
+#[test]
+fn a_p13_sensitivity_smart_human_at_a_035_drop() {
+    let mut out = format!("A-P13 sensitivity: smart human, Stretch accuracy drop 0.35 ({GAMES_NEW} games per cell)\n");
+    for v in [Variant::Sprint, Variant::Full] {
+        out.push_str(&format!("{v:?}\n"));
+        for (name, d, lo, hi) in D18 {
+            for (label, acc) in HUMANS {
+                let never = simulate_with(v, d, 3, acc, SEED, GAMES_NEW, Some(Policy::Never)).win_rate;
+                let smart = simulate_with(v, d, 3, acc, SEED, GAMES_NEW, Some(Policy::Smart(STRETCH_DROP_HARD))).win_rate;
+                out.push_str(&format!(
+                    "  {name:6} human {label:>4}: never {:5.1}%  smart(0.35) {:5.1}% [<= {:.0}%]{}  gap {:+.1}\n",
+                    never * 100.0,
+                    smart * 100.0,
+                    (hi + 0.15) * 100.0,
+                    if smart > hi + 0.15 { " <-- HIGH" } else { "" },
+                    (smart - never) * 100.0
+                ));
+                let _ = lo;
+            }
+        }
+    }
+    eprintln!("{out}");
 }

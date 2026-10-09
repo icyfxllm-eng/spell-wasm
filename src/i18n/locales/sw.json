@@ -905,5 +905,7 @@
   "bg.toTile": "Hadi kisanduku {n}",
   "bg.size": "Ukubwa",
   "bg.sprint": "Haraka",
-  "bg.full": "Kamili"
+  "bg.full": "Kamili",
+  "bg.stretch": "Changamoto",
+  "bg.stretchStat": "Changamoto: {taken} kati ya {offered}, sahihi {hits}"
 }

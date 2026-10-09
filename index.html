@@ -494,7 +494,7 @@
   .bg-chip.on{border-color:var(--amber,#f2c14e);background:#ffffff22}
   .bg-chip b{font-variant-numeric:tabular-nums}
   .bg-setup{display:flex;flex-direction:column;gap:12px;align-items:stretch;flex:1 1 auto;min-height:0;overflow-y:auto}
-  .bg-setup[hidden],.bg-play[hidden],.bg-card[hidden],.bg-spell[hidden],.bg-swap[hidden]{display:none}
+  .bg-setup[hidden],.bg-play[hidden],.bg-card[hidden],.bg-spell[hidden],.bg-swap[hidden],.bg-stretch[hidden]{display:none}
   .bg-opt{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
   .bg-opt>span{min-width:100%;font-size:.8rem;opacity:.7}
   .bg-btn{min-height:44px;padding:8px 14px;border:2px solid transparent;border-radius:10px;background:#ffffff14;
@@ -601,6 +601,9 @@
     touch-action:manipulation}
   .bg-key.mod{background:#f2c14e30;color:var(--amber,#f2c14e);font-weight:700;font-size:1.5rem}
   .bg-key:active{background:var(--amber,#f2c14e);color:#36210a}
+  .bg-stretch{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;flex:none}
+  .bg-st-opt{display:flex;align-items:center;gap:6px;min-height:44px}
+  .bg-st-opt.star{outline:2px solid var(--amber,#f2c14e)}
   .bg-swap{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;flex:none}
   .bg-card{position:absolute;inset:0;z-index:2;background:var(--bg,#0e1420);display:flex;flex-direction:column;
     align-items:center;justify-content:center;gap:16px;padding:24px;text-align:center}
@@ -2763,6 +2766,7 @@
         <div class="bg-results" id="bgResults"></div>
         <button type="button" class="ghost mode-exit bg-exit" id="bgExit" aria-label="Exit" data-i18n-aria="aria.exit">✕</button>
       </div>
+      <div class="bg-stretch" id="bgStretch" hidden></div>
       <div class="bg-swap" id="bgSwap" hidden></div>
       <div class="bg-spell" id="bgSpell" hidden>
         <div class="bg-line">

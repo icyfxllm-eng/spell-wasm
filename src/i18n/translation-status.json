@@ -46,7 +46,9 @@
     "bg.toTile",
     "bg.size",
     "bg.sprint",
-    "bg.full"
+    "bg.full",
+    "bg.stretch",
+    "bg.stretchStat"
   ],
   "do_not_translate": {
     "sd.name": "SpellDoku — brand name (D5, signed). Do not re-propose.",
@@ -97,7 +99,9 @@
       "bg.toTile",
       "bg.size",
       "bg.sprint",
-      "bg.full"
+      "bg.full",
+      "bg.stretch",
+      "bg.stretchStat"
     ],
     "fr": [
       "hub.group.spell_it",
@@ -142,7 +146,9 @@
       "bg.toTile",
       "bg.size",
       "bg.sprint",
-      "bg.full"
+      "bg.full",
+      "bg.stretch",
+      "bg.stretchStat"
     ],
     "de": [
       "hub.group.spell_it",
@@ -187,7 +193,9 @@
       "bg.toTile",
       "bg.size",
       "bg.sprint",
-      "bg.full"
+      "bg.full",
+      "bg.stretch",
+      "bg.stretchStat"
     ],
     "pt": [
       "hub.group.spell_it",
@@ -232,7 +240,9 @@
       "bg.toTile",
       "bg.size",
       "bg.sprint",
-      "bg.full"
+      "bg.full",
+      "bg.stretch",
+      "bg.stretchStat"
     ],
     "pl": [
       "hub.group.spell_it",
@@ -277,7 +287,9 @@
       "bg.toTile",
       "bg.size",
       "bg.sprint",
-      "bg.full"
+      "bg.full",
+      "bg.stretch",
+      "bg.stretchStat"
     ],
     "ru": [
       "hub.group.spell_it",
@@ -322,7 +334,9 @@
       "bg.toTile",
       "bg.size",
       "bg.sprint",
-      "bg.full"
+      "bg.full",
+      "bg.stretch",
+      "bg.stretchStat"
     ],
     "vi": [
       "hub.group.spell_it",
@@ -367,7 +381,9 @@
       "bg.toTile",
       "bg.size",
       "bg.sprint",
-      "bg.full"
+      "bg.full",
+      "bg.stretch",
+      "bg.stretchStat"
     ],
     "ko": [
       "hub.group.spell_it",
@@ -412,7 +428,9 @@
       "bg.toTile",
       "bg.size",
       "bg.sprint",
-      "bg.full"
+      "bg.full",
+      "bg.stretch",
+      "bg.stretchStat"
     ],
     "ja": [
       "hub.group.spell_it",
@@ -457,7 +475,9 @@
       "bg.toTile",
       "bg.size",
       "bg.sprint",
-      "bg.full"
+      "bg.full",
+      "bg.stretch",
+      "bg.stretchStat"
     ],
     "zh": [
       "hub.group.spell_it",
@@ -502,7 +522,9 @@
       "bg.toTile",
       "bg.size",
       "bg.sprint",
-      "bg.full"
+      "bg.full",
+      "bg.stretch",
+      "bg.stretchStat"
     ],
     "ar": [
       "hub.group.spell_it",
@@ -547,7 +569,9 @@
       "bg.toTile",
       "bg.size",
       "bg.sprint",
-      "bg.full"
+      "bg.full",
+      "bg.stretch",
+      "bg.stretchStat"
     ],
     "hi": [
       "hub.group.spell_it",
@@ -592,7 +616,9 @@
       "bg.toTile",
       "bg.size",
       "bg.sprint",
-      "bg.full"
+      "bg.full",
+      "bg.stretch",
+      "bg.stretchStat"
     ],
     "sw": [
       "hub.group.spell_it",
@@ -637,7 +663,9 @@
       "bg.toTile",
       "bg.size",
       "bg.sprint",
-      "bg.full"
+      "bg.full",
+      "bg.stretch",
+      "bg.stretchStat"
     ],
     "fil": [
       "hub.group.spell_it",
@@ -682,7 +710,9 @@
       "bg.toTile",
       "bg.size",
       "bg.sprint",
-      "bg.full"
+      "bg.full",
+      "bg.stretch",
+      "bg.stretchStat"
     ]
   }
 }

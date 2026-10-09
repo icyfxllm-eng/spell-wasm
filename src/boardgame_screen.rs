@@ -98,6 +98,8 @@ struct Ui {
     /// dev-build test seam writes this (it lets a layout test see a revealed mark without
     /// playing to a trap); the game never reads or changes it.
     marks: Vec<u32>,
+    /// Feature 1: the seat whose next Moved/Missed chip carries a star (a Stretch move).
+    star: Option<u8>,
 }
 
 #[derive(Clone, Copy)]
@@ -189,6 +191,7 @@ pub fn wire(app: &App) {
     dom::on_click("bgSetupExit", close);
     dom::on_click("bgStart", start);
     dom::on_click("bgOrb", orb);
+    dom::on::<web_sys::MouseEvent, _>("bgStretch", "click", stretch_tap);
     dom::on_click("bgDel", delete);
     dom::on_click("bgGo", submit);
     dom::on_click("bgHandGo", hand_go);
@@ -403,7 +406,9 @@ fn start() {
         GameConfig::solo(variant, s.diff, s.count, s.piece, &lang, kid, crate::boardgame_grade::grade)
     } else {
         GameConfig::pass_and_play(variant, s.count, &lang, kid, crate::boardgame_grade::grade)
-    };
+    }
+    // Feature 1 / D-P16: the flag is read once, here, and travels in the config.
+    .with_stretch(crate::flags::board_stretch());
     // The keys come from every word that can be served this game.
     let mut entries: Vec<String> = sup.pools.tiers.iter().flatten().cloned().collect();
     entries.extend(sup.pools.long_word.iter().cloned());
@@ -440,6 +445,7 @@ fn start() {
             roll_id: 0,
             roll_at: 0.0,
             marks: Vec::new(),
+            star: None,
         })
     });
     render_keys();
@@ -607,6 +613,7 @@ fn after_apply(animate: bool) -> i32 {
                     u.roll_at = now_ms();
                 }
                 Event::Missed { .. } => u.land = None,
+                Event::Stretched { seat } => u.star = Some(*seat),
                 Event::Teleported { seat, to, .. } => segs.push(Seg::Jump(*seat, *to)),
                 Event::Swapped { a, b } => {
                     segs.push(Seg::Jump(*a, u.game.players[*a as usize].pos));
@@ -614,8 +621,12 @@ fn after_apply(animate: bool) -> i32 {
                 }
                 _ => {}
             }
-            if let Some(c) = chip_for(u, e) {
+            let starred = matches!(e, Event::Moved { seat, .. } | Event::Missed { seat, .. } if u.star == Some(*seat));
+            if let Some(c) = chip_for(u, e, starred) {
                 u.chips.push(c);
+            }
+            if matches!(e, Event::Moved { .. } | Event::Missed { .. }) {
+                u.star = None;
             }
             // F7: a human's miss is shown to that human alone, before the hand-off.
             if let Event::Missed { seat, word: Some(w), .. } = e {
@@ -659,12 +670,15 @@ fn seat_piece(u: &Ui, seat: u8) -> &'static str {
     piece(u.game.players[seat as usize].seat.piece)
 }
 
-fn chip_for(u: &Ui, e: &Event) -> Option<String> {
+fn chip_for(u: &Ui, e: &Event, star: bool) -> Option<String> {
     let p = |s: u8| seat_piece(u, s);
+    // Feature 1: a Stretch move reads "<piece> ★ ✓ 6→10".
+    let st = if star { " \u{2605}" } else { "" };
     Some(match e {
+        Event::Stretched { .. } => return None,
         Event::Rolled { seat, roll, .. } => format!("{} \u{1f3b2} {roll}", p(*seat)),
-        Event::Moved { seat, from, to } => format!("{} \u{2713} {from}\u{2192}{to}", p(*seat)),
-        Event::Missed { seat, at, .. } => format!("{} \u{2717} {at}", p(*seat)),
+        Event::Moved { seat, from, to } => format!("{}{st} \u{2713} {from}\u{2192}{to}", p(*seat)),
+        Event::Missed { seat, at, .. } => format!("{}{st} \u{2717} {at}", p(*seat)),
         Event::TrapHit { seat, trap, .. } => format!("{} \u{26a0} {}", p(*seat), i18n::t(&format!("bg.trap.{}", trap.key()))),
         Event::TrapSpellOk { seat, .. } => format!("{} \u{2713}", p(*seat)),
         Event::Teleported { seat, from, to } => format!("{} \u{21a9} {from}\u{2192}{to}", p(*seat)),
@@ -712,6 +726,24 @@ fn render() {
 
         // I11: the key grid exists on screen for a human's spelling only.
         dom::set_hidden("bgSpell", !spelling);
+        // Feature 1: the Stretch choice, shown after the die and before any word (I-P6, A-P2).
+        let choosing = human_turn && g.phase == Phase::AwaitStretch;
+        dom::set_hidden("bgStretch", !choosing);
+        if let (true, Some(o)) = (choosing, g.offer) {
+            let rtl = crate::consts::dir_attr(&u.lang) == "rtl";
+            let arrow = if rtl { "\u{2190}" } else { "\u{2192}" };
+            let btn = |data: &str, star: bool, t: boardgame::Tier, dest: u32| {
+                format!(
+                    "<button type=\"button\" class=\"bg-btn bg-st-opt{}\" data-st=\"{data}\"><i class=\"bg-sw t-{}\"></i><span>{}{}</span><span dir=\"ltr\">{arrow} {dest}</span></button>",
+                    if star { " star" } else { "" },
+                    t.name(),
+                    if star { format!("\u{2605} {} \u{b7} ", dom::escape_html(&i18n::t("bg.stretch"))) } else { String::new() },
+                    dom::escape_html(&tier_name(t))
+                )
+            };
+            let h = format!("{}{}", btn("0", false, o.normal_tier, o.normal_dest), btn("1", true, o.stretch_tier, o.stretch_dest));
+            dom::set_html("bgStretch", &h);
+        }
         dom::set_hidden("bgSwap", !(human_turn && g.phase == Phase::AwaitSwitchTarget));
         if human_turn && g.phase == Phase::AwaitSwitchTarget {
             let me = g.current_seat();
@@ -1432,6 +1464,26 @@ fn after_roll(walk: i32) {
         });
         return;
     }
+    // Feature 1: a Stretch offer is waiting. Nothing is spoken until the player commits.
+    if with_ui(|u| u.game.phase == Phase::AwaitStretch).unwrap_or(false) {
+        return;
+    }
+    start_spelling();
+}
+
+/// Feature 1: the player committed to the normal move (`0`) or to Stretch (`1`). Only now is
+/// the word drawn (inside the engine) and spoken.
+fn stretch_tap(e: web_sys::MouseEvent) {
+    RUN_AT.with(|r| r.set(now_ms()));
+    let Some(el) = e.target().and_then(|t| t.dyn_into::<web_sys::Element>().ok()).and_then(|t| t.closest("[data-st]").ok().flatten()) else {
+        return;
+    };
+    let take = el.get_attribute("data-st").as_deref() == Some("1");
+    let ok = with_ui(|u| boardgame::apply(&mut u.game, Action::ChooseStretch(take)).is_ok()).unwrap_or(false);
+    if !ok {
+        return;
+    }
+    haptics::key_tap();
     start_spelling();
 }
 
@@ -1577,11 +1629,25 @@ fn show_over() {
             let p = &g.players[seat as usize];
             let medal = ["\u{1f947}", "\u{1f948}", "\u{1f949}"].get(rank).copied().unwrap_or("");
             let mut tail = i18n::tp("bg.turns", &[("n", &p.rolls.to_string())]);
-            if !p.seat.npc && p.attempts > 0 {
+            // Words spelled counts every correct landing word, Stretch ones included; the percentage
+            // is accuracy at the tiles' own tiers only (D-P11), the number the NPCs track.
+            if !p.seat.npc && p.attempts + p.stretch_taken > 0 {
+                let acc = if p.attempts > 0 { p.hits * 100 / p.attempts } else { 0 };
                 tail = format!(
                     "{} · {} · {}",
-                    i18n::tp("bg.words", &[("n", &p.hits.to_string())]),
-                    i18n::tp("bg.acc", &[("n", &(p.hits * 100 / p.attempts).to_string())]),
+                    i18n::tp("bg.words", &[("n", &(p.hits + p.stretch_hits).to_string())]),
+                    i18n::tp("bg.acc", &[("n", &acc.to_string())]),
+                    tail
+                );
+            }
+            // D-P19: the on-device Stretch counter (no telemetry): taken of offered, and right.
+            if !p.seat.npc && g.cfg.stretch && p.stretch_offered > 0 {
+                tail = format!(
+                    "{} · {}",
+                    i18n::tp(
+                        "bg.stretchStat",
+                        &[("taken", &p.stretch_taken.to_string()), ("offered", &p.stretch_offered.to_string()), ("hits", &p.stretch_hits.to_string())]
+                    ),
                     tail
                 );
             }
@@ -1636,6 +1702,10 @@ pub fn seam_state() -> String {
                     "variant": format!("{:?}", g.cfg.variant),
                     "traps": g.board.trap_count(),
                     "tiles": g.board.len(),
+                    "offer": g.offer.map(|o| serde_json::json!({"normal": o.normal_tier.name(), "stretch": o.stretch_tier.name(), "nd": o.normal_dest, "sd": o.stretch_dest})),
+                    "stretchOn": g.cfg.stretch,
+                    "sc": g.players.iter().map(|p| vec![p.stretch_offered, p.stretch_taken, p.stretch_hits]).collect::<Vec<_>>(),
+                    "stretchSpell": g.pending.as_ref().map(|p| p.stretch),
                 })
                 .to_string()
             })
