@@ -43,10 +43,21 @@ build inputs and are not redistributed.
 - **OpenCC** (build tool) — normalizes corpus hanzi to Simplified before pinyin.
   Apache-2.0. Not shipped; only the Simplified output is.
 
-Derived works (definitions shown in-app) are shared under CC BY-SA 4.0 where
-CC-CEDICT-derived, per that license's share-alike terms.
+Derived works (definitions shown in-app) are shared under CC BY-SA 4.0 wherever
+they come from a CC BY-SA source, per those licenses' share-alike terms. That
+is the Chinese definitions (CC-CEDICT), the Japanese definitions (JMdict), and
+the Wiktionary-derived glosses for every other language. This line named only
+CC-CEDICT until 2026-10-08, when JMdict became the Japanese source and made the
+omission visible; Wiktionary was always covered and never listed.
 
 ## Japanese (ja)
+- **JMdict** (EDRDG) — Japanese-English dictionary, the source of the ja
+  definitions. Extracted by `scripts/build-ja-glosses.py` into
+  `backend/ja_glosses.json` and served by `/api/defpool`. Keyed by READING,
+  because the ja bank is hiragana. © James William Breen and the Electronic
+  Dictionary Research and Development Group, **CC BY-SA 4.0**.
+  https://www.edrdg.org/jmdict/j_jmdict.html
+  Build input: only the extracted glosses for banked words ship.
 - **JLPT word lists** — via `elzup/jlpt-word-list` (GitHub): word + reading +
   meaning + JLPT level. Meanings are JMdict-derived (EDRDG, CC BY-SA).
 - **KANJIDIC2** — © EDRDG, **Creative Commons BY-SA**. Kyōiku school grade per kanji.
