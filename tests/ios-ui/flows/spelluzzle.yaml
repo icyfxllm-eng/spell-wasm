@@ -1,0 +1,94 @@
+# Maestro flow: CC-SPELLUZZLE on a real WKWebView -- the native-only things the web
+# suite cannot see: the top-left exit under the notch, the key grid at touch size, and a
+# board that survives the app being killed and relaunched.
+#
+# Run: maestro test tests/ios-ui/flows/spelluzzle.yaml
+#
+# PRECONDITIONS (the :ui_tests harness provides them; Maestro cannot write WKWebView
+# localStorage, same as offline-native-audio.yaml):
+#   * an adult profile (past the age gate),
+#   * localStorage['spell_flag_spelluzzle'] = 'on'  (the flag ships OFF until Eric's
+#     device pass; this flow is how that pass is repeated every build once it is on),
+#   * the app reaches the hub with English as the study language.
+#
+# WHAT THIS DOES NOT DO. Spec A14 asks for a scripted solve of a fixed board. A release
+# app has no way to be told which board to draw, and the answers are never in the page
+# (I3), so a solve cannot be scripted here. That flow -- every step of Appendix B, with
+# the finale's single audio play -- runs in the web suite, which reads the answers from
+# the observation-only test seam: tests/e2e/specs/spelluzzle.mjs,
+# `spelluzzle_solves_and_the_secret_is_said_once_at_the_end`.
+appId: net.spellgame.app
+---
+- launchApp
+- tapOn:
+    id: "navBurger"
+- scrollUntilVisible:
+    element:
+      id: "navRow_spelluzzle"
+    direction: DOWN
+- tapOn:
+    id: "navRow_spelluzzle"
+- assertVisible:
+    id: "szScreen"
+# The exit is a word at the top left, under the status bar and tappable.
+- assertVisible:
+    id: "szExit"
+- assertVisible: "Exit"
+- takeScreenshot: spelluzzle-start
+- tapOn:
+    id: "szStart"
+- assertVisible:
+    id: "szBoard"
+- assertVisible:
+    id: "szRow0"
+# The first board shows the one-time explainer; dismiss it as a player does.
+- runFlow:
+    when:
+      visible:
+        id: "szHowOk"
+    commands:
+      - tapOn:
+          id: "szHowOk"
+- takeScreenshot: spelluzzle-board
+# Tap a word: the orb says it and the keyboard opens.
+- tapOn:
+    id: "szRow0"
+- assertVisible:
+    id: "szKb"
+# Type two letters and delete one: the keys are real touch targets.
+- tapOn: "e"
+- tapOn: "t"
+- tapOn: "Delete last letter"
+- takeScreenshot: spelluzzle-typing
+# Leave mid-board. The exit is instant because progress is already saved.
+- tapOn:
+    id: "szExit"
+- assertNotVisible:
+    id: "szScreen"
+# Kill and relaunch: the same board is waiting (resume replaces, never appends).
+- stopApp
+- launchApp
+- tapOn:
+    id: "navBurger"
+- scrollUntilVisible:
+    element:
+      id: "navRow_spelluzzle"
+    direction: DOWN
+- tapOn:
+    id: "navRow_spelluzzle"
+- tapOn:
+    id: "szStart"
+- assertVisible:
+    id: "szBoard"
+- assertVisible:
+    id: "szRow0"
+- takeScreenshot: spelluzzle-resumed
+# New board is always available, free.
+- tapOn:
+    id: "szNew"
+- assertVisible:
+    id: "szRow0"
+- tapOn:
+    id: "szExit"
+- assertNotVisible:
+    id: "szScreen"

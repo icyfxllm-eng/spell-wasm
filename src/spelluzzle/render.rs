@@ -91,7 +91,7 @@ pub fn board_html(p: &Play, tr: Tr) -> String {
         if off.contains(&i) {
             class.push_str(" off");
         }
-        h.push_str(&format!("<div class=\"{class}\" data-slot=\"{i}\" data-kind=\"{kind}\">"));
+        h.push_str(&format!("<div class=\"{class}\" id=\"szRow{i}\" data-slot=\"{i}\" data-kind=\"{kind}\">"));
         let mut head = String::new();
         if s.kind == SlotKind::Secret {
             head.push_str(&format!("<span class=\"sz-label\">{}</span>", esc(&tr("spz.secret", &[]))));
