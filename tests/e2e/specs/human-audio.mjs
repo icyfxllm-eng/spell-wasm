@@ -72,6 +72,24 @@ async function serveWord(page) {
   // value and the play log at the moment of failure rather than assuming
   // this closed it.
   //
+  // IT FLAKED AGAIN, 2026-10-09, and the capture above was taken. The
+  // theory is WRONG. Site suite only, machine at load ~14-19:
+  //
+  //     note = "NO SOURCE -- every source failed"
+  //     log  = []
+  //
+  // The note was WRITTEN, so the router ran and settled -- this is not the
+  // stale-note race the paragraph above hypothesises, and the settle-first
+  // mitigation cannot have closed anything. What actually happened is that
+  // every source in the chain failed and the router correctly reported so;
+  // the play log is empty because nothing ever played. So the question is
+  // not "did the note race the click" but "why did the bundled fixture clip
+  // fail to load on the SITE build under load", which is a different bug in
+  // a different place. It passed 17/17 on an immediate retry at load 4.
+  //
+  // Do not delete the mitigation -- the race it closes is real in the code.
+  // Do stop believing it explains D2.
+  //
   // It is tolerant because there may be nothing pending.
   await page
     .waitForFunction(
