@@ -330,24 +330,6 @@ pub fn type_word(lang: &str, kid: bool, rows: &[Vec<Key>], entry: &str) -> Optio
 }
 
 
-/// Whether a word can be answered from `rows` and the grader accepts the
-/// result. For every language but Korean this is true by construction of
-/// `layout` (and a test proves it); Korean is the one place it can fail, so the
-/// pool builder asks (see `needs_check`).
-pub fn answerable(lang: &str, kid: bool, rows: &[Vec<Key>], entry: &str, tier: crate::boardgame::Tier) -> bool {
-    type_word(lang, kid, rows, entry).is_some_and(|typed| crate::boardgame_grade::grade(lang, kid, &typed, entry, tier))
-}
-
-/// True for the languages whose composition automaton can lose a keystroke.
-/// `hangul::feed` drops a tense initial (ㄸ ㅃ ㅉ) typed straight after an open
-/// syllable (it tries to make it a final, finds none, and writes nothing), so
-/// about 10 Korean words cannot be typed in ANY mode that uses it. Not fixed
-/// here (the shared automaton is out of scope); those words are left out of this
-/// mode's pools instead of being served unanswerable.
-pub fn needs_check(lang: &str) -> bool {
-    spec(lang).hangul
-}
-
 /// Apply one press to the typed string.
 pub fn press(lang: &str, typed: &str, key: &Key) -> String {
     match key {

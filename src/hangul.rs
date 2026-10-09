@@ -160,8 +160,14 @@ pub fn feed(answer: &str, jamo: char) -> String {
 
         // ---- consonant input ----
         (Last::Im(i, m), false) => {
-            // CV + consonant -> add a final
-            out.push(syl(i, m, jamo));
+            // CV + consonant -> add a final, unless the consonant cannot be a
+            // final (tense initials ㄸ ㅃ ㅉ): then it starts a new syllable.
+            if idx(&FINALS, jamo).is_some() {
+                out.push(syl(i, m, jamo));
+            } else {
+                out.push(syl(i, m, '\0'));
+                out.push(jamo);
+            }
         }
         (Last::Imf(i, m, f), false) => {
             // CVC + consonant -> grow into a compound final, else new syllable
@@ -273,6 +279,53 @@ mod tests {
     fn compound_vowel_backspace_reduces() {
         let s = type_seq("ㄱㅗㅏ"); // 과
         assert_eq!(backspace(&s), "고");
+    }
+
+    #[test]
+    fn tense_initial_after_open_syllable_is_kept() {
+        assert_eq!(type_seq("ㅇㅏㄸ"), "아ㄸ");
+        assert_eq!(type_seq("ㅇㅏㅃㅏ"), "아빠");
+        assert_eq!(type_seq("ㅇㅏㅉㅣ"), "아찌");
+        // a tense initial typed first-in-word and after a closed syllable still works
+        assert_eq!(type_seq("ㄸㅏ"), "따");
+        assert_eq!(type_seq("ㅇㅣㄴㅃㅏ"), "인빠");
+        // backspace walks back through it stepwise
+        assert_eq!(backspace(&type_seq("ㅇㅏㅃㅏ")), "아ㅃ");
+        assert_eq!(backspace("아ㅃ"), "아");
+    }
+
+    #[test]
+    fn every_korean_bank_word_can_be_typed() {
+        let mut bad = Vec::new();
+        for tier in ["easy", "medium", "hard", "expert"] {
+            for w in crate::words::tier_for("ko", tier) {
+                // Spell the word out as jamo, then compose it back.
+                let mut seq = String::new();
+                for c in w.chars() {
+                    match parts(c) {
+                        Some((i, m, f)) => {
+                            seq.push(i);
+                            // compound medials/finals are typed as their two parts
+                            match split_medial(m) {
+                                Some((a, b)) => { seq.push(a); seq.push(b); }
+                                None => seq.push(m),
+                            }
+                            if f != '\0' {
+                                match split_final(f) {
+                                    Some((a, b)) => { seq.push(a); seq.push(b); }
+                                    None => seq.push(f),
+                                }
+                            }
+                        }
+                        None => seq.push(c),
+                    }
+                }
+                if type_seq(&seq) != *w {
+                    bad.push(format!("{w} -> {}", type_seq(&seq)));
+                }
+            }
+        }
+        assert!(bad.is_empty(), "untypeable Korean bank words: {bad:?}");
     }
 
     #[test]
