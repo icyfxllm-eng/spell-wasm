@@ -61,26 +61,7 @@ async function serveWord(page) {
   // window, because once the load-time playback has written its note there
   // is no pending write left to mistake for ours.
   //
-  // WHAT THE CAPTURE SHOWED, 2026-10-09. The note below was added on the
-// instruction in the paragraph after this one, and D2 then failed in a full
-// gate run carrying it:
-//
-//     note="NO SOURCE — every source failed"; log: []
-//
-// A NON-EMPTY note means the router finished and found nothing, so the theory
-// in the paragraph below -- that serveWord's 10s wait times out and its
-// .catch swallows it -- is WRONG. The wait completed. Every audio source
-// genuinely failed at once, and the I6 test ("a failed clip falls through to
-// TTS") failed in the same run, so the SERVER source was gone too, not only
-// the local clips.
-//
-// That points at the test server under full-suite load, not at the router and
-// not at timing. The shape fits every sighting: 1 failure in 18 isolated runs
-// across 2026-10-08/09, but a failure inside gate runs where dozens of browser
-// contexts are live. Disbelieve THIS paragraph in turn if the next failure
-// carries an empty note.
-//
-// HONESTY NOTE. That race is real in the code, but it is NOT established
+  // HONESTY NOTE. That race is real in the code, but it is NOT established
   // as the cause of the failure that prompted this. D2 failed on one gate
   // run (app and site both) with an empty play log while two other test
   // suites had the CPU, and passed three times alone on the same commit --
@@ -108,6 +89,13 @@ async function serveWord(page) {
   //
   // Do not delete the mitigation -- the race it closes is real in the code.
   // Do stop believing it explains D2.
+  //
+  // One correction to the above, from a second sighting the same day: it is
+  // NOT site-only. A full gate run at 23:xx failed D2 in the APP suite with
+  // the same note, and I6 ("a failed clip falls through to TTS") failed
+  // beside it -- so the SERVER source was unreachable too, not just the
+  // bundled fixture. Both pass 3/3 in isolation on that tree. Whatever is
+  // starving the sources starves all of them, on both builds.
   //
   // It is tolerant because there may be nothing pending.
   await page
