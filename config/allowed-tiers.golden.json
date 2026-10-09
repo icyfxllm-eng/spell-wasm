@@ -269,6 +269,18 @@
         "expert"
       ]
     },
+    "boardgame": {
+      "junior": [
+        "easy",
+        "medium"
+      ],
+      "standard": [
+        "easy",
+        "medium",
+        "hard",
+        "expert"
+      ]
+    },
     "versus": {
       "junior": [
         "easy",

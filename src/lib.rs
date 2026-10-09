@@ -66,6 +66,8 @@ mod chains_screen; // CC-WORD-CHAINS F1 chain screen
 mod impostor_screen; // CC-IMPOSTOR F1/F5 round loop
 #[cfg(not(feature = "web"))]
 mod bee_screen; // CC-BEE-SIM F1 stage
+#[cfg(not(feature = "web"))]
+mod boardgame_screen; // CC-BOARD-GAME F6/F7/F10 -- the screen
 mod drawing;
 mod ru_stress_data; // GENERATED — tools/ru_stress_ingest.py
 mod ru_stress; // CC-RUSSIAN-STRESS Phase 1 — the only two functions that know U+0301
@@ -410,6 +412,10 @@ fn wire(app: &App) {
     #[cfg(not(feature = "web"))]
     if flags::bee_sim() {
         bee_screen::wire(app); // CC-BEE-SIM F1 (dark by default)
+    }
+    #[cfg(not(feature = "web"))]
+    if flags::boardgame() {
+        boardgame_screen::wire(app); // CC-BOARD-GAME Phase 1 (dark by default)
     }
     practice_screen::wire(app); // CC-PRACTICE (visible where consts::practice holds — en first)
     // CC-PICTURE-PLATFORM D1: compile-out, not runtime-hide. The site build

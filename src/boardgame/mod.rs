@@ -43,6 +43,7 @@ use std::sync::Arc;
 
 use crate::spelldoku::rng::Rng;
 
+#[allow(unused_imports)]
 pub use engine::{apply, applied, new_game};
 
 /// Standard: 22 x 22 grid perimeter. Jr: 11 x 11. (D3, I1)

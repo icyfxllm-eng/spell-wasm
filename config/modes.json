@@ -428,6 +428,22 @@
       "juniorPolicy": "ceiling:easy"
     },
     {
+      "id": "boardgame",
+      "group": "spell_it",
+      "nameKey": "bg.name",
+      "descKey": "bg.desc",
+      "icon": "\ud83c\udfb2",
+      "status": "live",
+      "kidSafe": true,
+      "platforms": ["ios"],
+      "entitlementLevel": "preview",
+      "requiresPremium": null,
+      "languages": null,
+      "$note": "CC-BOARD-GAME v1.2 D26: roll-and-spell race on a ring of tiles. App only (I13): cfg, registry strip, BOARDGAME markup sentinels and the bg. locale prefix. Spell Jr is the same mode with the Jr variant (ceiling:medium). The group is PROVISIONAL (spell_it): D26 leaves it to Eric at build time, and choosing one edits the signed d_n6_membership_is_what_was_signed test. Per-language availability is boardgame_pools::gate (F9): a language short of the unique-word floor shows coming soon.",
+      "exitStyle": "instant",
+      "juniorPolicy": "ceiling:medium"
+    },
+    {
       "id": "standard",
       "group": "unlisted",
       "nameKey": "top.spellIt",

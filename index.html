@@ -456,6 +456,76 @@
   .bee-stat b{font-size:1.7rem}
   .bee-stat span{font-size:.78rem;opacity:.7}
 
+  /* BOARDGAME:BEGIN CC-BOARD-GAME v1.2 -- stripped from the site build (I13) */
+  .bg-screen{position:fixed;inset:0;z-index:60;background:var(--bg,#0e1420);color:inherit;
+    display:none;flex-direction:column;gap:6px;padding:8px 12px;overflow:hidden;
+    --bg-key-h:46px;--bg-gap:4px}
+  .bg-screen.show{display:flex}
+  .bg-hud{display:flex;align-items:center;gap:8px;min-height:48px;flex:none}
+  .bg-hud h2{margin:0;font-size:1.05rem}
+  .bg-chips{margin-inline-start:auto;display:flex;gap:6px;overflow-x:auto;overflow-y:hidden;min-height:0}
+  .bg-chip{display:inline-flex;align-items:center;gap:4px;padding:3px 8px;border-radius:999px;
+    background:#ffffff12;font-size:.85rem;white-space:nowrap;border:2px solid transparent}
+  .bg-chip.on{border-color:var(--amber,#f2c14e);background:#ffffff22}
+  .bg-chip b{font-variant-numeric:tabular-nums}
+  .bg-setup{display:flex;flex-direction:column;gap:12px;align-items:stretch;flex:1 1 auto;min-height:0;overflow-y:auto}
+  .bg-setup[hidden],.bg-play[hidden],.bg-card[hidden],.bg-spell[hidden],.bg-swap[hidden]{display:none}
+  .bg-opt{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+  .bg-opt>span{min-width:100%;font-size:.8rem;opacity:.7}
+  .bg-btn{min-height:44px;padding:8px 14px;border:2px solid transparent;border-radius:10px;background:#ffffff14;
+    color:inherit;font:inherit;cursor:pointer;touch-action:manipulation}
+  .bg-btn.on{border-color:var(--amber,#f2c14e)}
+  .bg-btn:disabled{opacity:.4}
+  .bg-note{min-height:1.3em;font-size:.9rem;opacity:.85}
+  .bg-play{display:flex;flex-direction:column;gap:6px;flex:1 1 auto;min-height:0}
+  .bg-view{flex:none;height:240px;background:#ffffff0a;border-radius:12px;overflow:hidden;cursor:pointer;touch-action:manipulation}
+  .bg-screen.spelling .bg-view{height:112px}
+  /* F6: on a short phone the viewport strip shrinks first (the keys never do). */
+  @media (max-height:700px){.bg-screen.spelling .bg-view{height:68px}}
+  .bg-view.big{height:min(100vw - 24px,60vh)}
+  .bg-view svg{display:block;width:100%;height:100%}
+  .bg-t{fill:#ffffff1c}.bg-t.t-easy{fill:#3f8f6a}.bg-t.t-medium{fill:#4a79b8}
+  .bg-t.t-hard{fill:#b8803a}.bg-t.t-expert{fill:#a24a5a}
+  .bg-t.end{fill:#f2c14e}
+  .bg-t.dest{stroke:#fff;stroke-width:.12}
+  .bg-p{font-size:.78px;text-anchor:middle;dominant-baseline:central}
+  .bg-trap{font-size:.62px;text-anchor:middle;dominant-baseline:central}
+  .bg-feed{flex:none;min-height:1.4em;font-size:.95rem;text-align:center}
+  .bg-feed:empty{display:none}
+  .bg-act{display:flex;align-items:center;justify-content:center;gap:10px;flex:none;min-height:64px}
+  .bg-orb{width:64px;height:64px;border-radius:50%;border:none;background:var(--amber,#f2c14e);color:#36210a;
+    font-size:1.1rem;font-weight:700;cursor:pointer;touch-action:manipulation;display:grid;place-items:center}
+  .bg-orb[data-state="wait"]{opacity:.45}
+  .bg-screen.spelling .bg-orb{width:48px;height:48px;font-size:.9rem}
+  .bg-screen.spelling .bg-act{min-height:48px}
+  .bg-results{display:flex;gap:6px;overflow-x:auto;overflow-y:hidden;min-height:0;max-width:calc(100% - 80px)}
+  .bg-res{padding:4px 8px;border-radius:999px;background:#ffffff14;font-size:.85rem;white-space:nowrap}
+  .bg-timer{height:3px;border-radius:2px;background:var(--amber,#f2c14e);transform-origin:left;flex:none}
+  .bg-timer.run{animation:bg-timer 30s linear forwards}
+  @keyframes bg-timer{from{transform:scaleX(1)}to{transform:scaleX(0)}}
+  .bg-spell{display:flex;flex-direction:column;gap:6px;flex:1 1 auto;min-height:0}
+  .bg-line{display:flex;gap:var(--bg-gap);align-items:stretch;flex:none}
+  .bg-field{flex:1 1 auto;min-width:0;min-height:56px;display:flex;align-items:center;justify-content:center;
+    font-size:1.5rem;font-weight:700;background:#ffffff10;border-radius:10px;padding:0 8px;overflow:hidden;
+    white-space:nowrap}
+  .bg-line .bg-btn{min-width:56px;font-size:1.3rem}
+  .bg-keys{display:flex;flex-direction:column;gap:var(--bg-gap);min-height:0;flex:none}
+  .bg-row{display:flex;gap:var(--bg-gap);justify-content:center}
+  .bg-key{flex:1 1 0;min-width:0;max-width:46px;height:var(--bg-key-h);padding:0;border:none;border-radius:9px;
+    background:#ffffff14;color:inherit;font:inherit;font-size:1.05rem;font-weight:600;cursor:pointer;
+    touch-action:manipulation}
+  .bg-key:active{background:var(--amber,#f2c14e);color:#36210a}
+  .bg-swap{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;flex:none}
+  .bg-card{position:absolute;inset:0;z-index:2;background:var(--bg,#0e1420);display:flex;flex-direction:column;
+    align-items:center;justify-content:center;gap:16px;padding:24px;text-align:center}
+  .bg-card[hidden]{display:none}
+  .bg-card h3{margin:0}
+  .bg-big{font-size:2.2rem;font-weight:700}
+  .bg-podium{display:flex;flex-direction:column;gap:8px;width:100%;max-width:340px}
+  .bg-pod{display:flex;align-items:center;gap:10px;padding:8px 12px;border-radius:10px;background:#ffffff10;font-size:.95rem}
+  .bg-pod b{margin-inline-start:auto;font-variant-numeric:tabular-nums}
+  /* BOARDGAME:END */
+
   /* CC-IMPOSTOR F1 */
   .imp-screen{position:fixed;inset:0;background:var(--bg,#0e1420);z-index:60;
     display:none;flex-direction:column;gap:12px;padding:12px}
@@ -2577,6 +2647,57 @@
     </div>
   </div>
   <button id="beeOpen" class="btn-hide" aria-hidden="true" tabindex="-1"></button>
+  <!-- BOARDGAME:BEGIN CC-BOARD-GAME v1.2 (app only, I13) -- stripped from the site build -->
+  <button id="bgOpenBtn" hidden aria-hidden="true"></button>
+  <div class="bg-screen" id="bgScreen" role="dialog" aria-modal="true" aria-labelledby="bgTitle">
+    <div class="bg-hud">
+      <button class="ghost mode-exit" id="bgExit" aria-label="Exit" data-i18n-aria="aria.exit">✕</button>
+      <h2 id="bgTitle" data-i18n="bg.name">Board Game</h2>
+      <div class="bg-chips" id="bgChips"></div>
+    </div>
+    <div class="bg-setup" id="bgSetup">
+      <div class="bg-opt" id="bgOptMode"><span data-i18n="bg.name">Board Game</span></div>
+      <div class="bg-opt" id="bgOptCount"></div>
+      <div class="bg-opt" id="bgOptDiff"></div>
+      <div class="bg-opt" id="bgOptPiece"></div>
+      <div class="bg-note" id="bgNote" aria-live="polite"></div>
+      <button class="btn btn-check" id="bgStart" data-i18n="bg.start">Start</button>
+    </div>
+    <div class="bg-play" id="bgPlay" hidden>
+      <div class="bg-view" id="bgView"><svg id="bgBoard" viewBox="0 0 22 22" preserveAspectRatio="xMidYMid meet" role="img" aria-label="Board" data-i18n-aria="aria.board"></svg></div>
+      <div class="bg-timer" id="bgTimer"></div>
+      <div class="bg-feed" id="bgFeed" aria-live="polite"></div>
+      <div class="bg-act" id="bgAct">
+        <button type="button" class="bg-orb" id="bgOrb" data-state="roll" data-i18n="bg.roll">Roll</button>
+        <div class="bg-results" id="bgResults"></div>
+      </div>
+      <div class="bg-swap" id="bgSwap" hidden></div>
+      <div class="bg-spell" id="bgSpell" hidden>
+        <div class="bg-line">
+          <div class="bg-field" id="bgField" aria-live="polite"></div>
+          <button type="button" class="bg-btn" id="bgDel" aria-label="Delete last letter" data-i18n-aria="aria.backspace">⌫</button>
+          <button type="button" class="bg-btn" id="bgGo" aria-label="Spell it" data-i18n-aria="bee.submit">✓</button>
+        </div>
+        <div class="bg-keys" id="bgKeys"></div>
+      </div>
+    </div>
+    <div class="bg-card" id="bgHand" hidden>
+      <div class="bg-big" id="bgHandIcon"></div>
+      <p id="bgHandText"></p>
+      <button class="btn btn-check" id="bgHandGo" data-i18n="bg.ready">Ready</button>
+    </div>
+    <div class="bg-card" id="bgMiss" hidden>
+      <p id="bgMissText"></p>
+      <button class="btn btn-check" id="bgMissGo" data-i18n="bg.continue">Continue</button>
+    </div>
+    <div class="bg-card" id="bgOver" hidden>
+      <h3 data-i18n="bg.over">Game over</h3>
+      <div class="bg-podium" id="bgPodium"></div>
+      <button class="btn btn-check" id="bgAgain" data-i18n="bg.again">Play again</button>
+      <button class="btn" id="bgShare" data-i18n="bg.share" hidden>Share</button>
+    </div>
+  </div>
+  <!-- BOARDGAME:END -->
 
   <!-- CC-DEF-MATCH P3: the Definition Match screen. Cards float bottom→top in
        lanes; the orb speaks the word and replays on tap. No visible timer (D2). -->

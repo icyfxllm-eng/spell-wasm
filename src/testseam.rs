@@ -210,6 +210,10 @@ pub fn install(app: &App) {
         // CC-WORDGRID Phase B: the served crossword.
         let cb = Closure::<dyn Fn() -> String>::new(move || crate::wordcross_ui::seam_board());
         set(&obj, "spellCrossBoard", cb.into_js_value());
+
+        // CC-BOARD-GAME: where the game stands, and the word a human owes.
+        let cb = Closure::<dyn Fn() -> String>::new(move || crate::boardgame_screen::seam_state());
+        set(&obj, "boardgameState", cb.into_js_value());
     }
     let _ = js_sys::Reflect::set(win.as_ref(), &JsValue::from_str("__spelltest"), obj.as_ref());
     web_sys::console::warn_1(&"[testseam] window.__spelltest installed (DEV build only)".into());

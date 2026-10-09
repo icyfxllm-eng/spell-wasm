@@ -98,6 +98,16 @@ pub fn bee_sim() -> bool {
     resolve(stored("bee_sim").as_deref(), true)
 }
 
+/// CC-BOARD-GAME v1.2 -- the roll-and-spell board race. **Default OFF**: Phase 1
+/// is built and tested but not signed for release, and a tile that is not
+/// shipped is a dead end. Flip with `localStorage['spell_flag_boardgame'] =
+/// 'on'` to develop. Compiled out with the mode on the site build (I13): a
+/// kill-switch for an absent mode is a string leak and nothing else.
+#[cfg(not(feature = "web"))]
+pub fn boardgame() -> bool {
+    resolve(stored("boardgame").as_deref(), false)
+}
+
 /// F5 "Word stories" — etymology cards. **Default OFF**: dark until the CC BY-SA
 /// attribution approach is approved.
 pub fn word_stories() -> bool {
@@ -331,6 +341,8 @@ pub fn is_on(name: &str) -> bool {
         "spell_search" => spell_search(),
         #[cfg(not(feature = "web"))]
         "spell_cross" => spell_cross(),
+        #[cfg(not(feature = "web"))]
+        "boardgame" => boardgame(),
         _ => false,
     }
 }
