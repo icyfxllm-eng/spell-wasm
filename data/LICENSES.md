@@ -72,3 +72,20 @@ judgement, not a certainty: frequency counts and reading pairs are facts, and
 the shipped artifact is this project's own word list in a different order. If
 it does count, the Settings → About → Data Sources screen named above becomes
 a shipping prerequisite, and it is not built.
+
+## Ingested 2026-10-09 — English validity list for Spelluzzle (build time only)
+
+CC-SPELLUZZLE G8 and G9 prove a board has one answer by checking it against a
+list of English words larger than the bank. Eric's posture (2026-10-09): **the
+list is consumed at build time and never ships.** Boards for the tiers that need
+it (Medium to Expert) are verified offline, and only the verified seed numbers
+ship; the device regenerates each board from its seed using the bank alone.
+Spell Jr and Easy need no list at all, because their boards have no silent word.
+
+| Source | Used for | Ships? |
+|---|---|---|
+| Hunspell `en_US` (SCOWL-derived; the packaged licence file is GPL v2) | G8/G9 uniqueness check at build time | No |
+
+Nothing derived from it ships except seed numbers. Record the exact licence
+text and version here when the seed-verification build is added. This is a
+build-time input in the same sense as wordfreq and EDICT2 above.
