@@ -149,6 +149,7 @@ fn home_html(lists: &Lists) -> String {
 struct Pq<'a> {
     list: &'a str,
     active: Option<String>,
+    kid: bool,
 }
 
 fn entry_row(idx: usize, e: &ListEntry, editable: bool, ordered: bool, last: bool, pq: Option<&Pq>) -> String {
@@ -176,7 +177,19 @@ fn entry_row(idx: usize, e: &ListEntry, editable: bool, ordered: bool, last: boo
     // D3: in the player's own order, each word can be starred to the front or
     // nudged up and down. In Mixed those controls would promise something the
     // adaptive draw does not honour, so they are absent.
-    let ordering = if ordered {
+    // CC-PICK-QUEUE Phase B: with the stars flag on, the shared star (top-right
+    // of the row, every order, Standard only) replaces this one -- it is the
+    // same `starred` field, so there is still exactly one star per word. Flag
+    // off: this block is today's, untouched.
+    let shared_stars = pq.map(|_| crate::pick_stars::enabled()).unwrap_or(false);
+    let ordering = if ordered && shared_stars {
+        format!(
+            "<button type=\"button\" class=\"ghost\" data-e-up=\"{idx}\"{}>↑</button>\
+             <button type=\"button\" class=\"ghost\" data-e-down=\"{idx}\"{}>↓</button>",
+            if idx == 0 { " disabled" } else { "" },
+            if last { " disabled" } else { "" },
+        )
+    } else if ordered {
         format!(
             "<button type=\"button\" class=\"ghost\" data-e-star=\"{idx}\" aria-pressed=\"{}\">{}</button>\
              <button type=\"button\" class=\"ghost\" data-e-up=\"{idx}\"{}>↑</button>\
@@ -194,8 +207,16 @@ fn entry_row(idx: usize, e: &ListEntry, editable: bool, ordered: bool, last: boo
         Some(p) => {
             let ok = p.active.as_ref().map(|l| *l == e.lang).unwrap_or(true);
             (
-                row_cls(crate::pick_ui::row_class(crate::pick_queue::SURFACE_MINE, p.list, &e.lang, &e.text, ok)),
-                crate::pick_ui::word_html(crate::pick_queue::SURFACE_MINE, p.list, &e.lang, &e.text, ok),
+                format!(
+                    "{}{}",
+                    row_cls(crate::pick_ui::row_class(crate::pick_queue::SURFACE_MINE, p.list, &e.lang, &e.text, ok)),
+                    crate::pick_ui::star_row_class(p.kid),
+                ),
+                format!(
+                    "{}{}",
+                    crate::pick_ui::word_html(crate::pick_queue::SURFACE_MINE, p.list, &e.lang, &e.text, ok),
+                    crate::pick_ui::star_html(crate::pick_queue::SURFACE_MINE, p.list, &e.lang, &e.text, e.starred, p.kid),
+                ),
             )
         }
         None => (String::new(), format!("<span class=\"le-word\">{}</span>", esc(&e.text))),
@@ -266,7 +287,7 @@ fn detail_html(lists: &Lists, id: &str, kid: bool) -> String {
     let pq = if crate::pick_queue::enabled() {
         let live: Vec<(String, String)> = l.entries.iter().map(|e| (e.text.clone(), e.lang.clone())).collect();
         crate::pick_ui::prune_mine(&l.id, &live);
-        Some(Pq { list: &l.id, active: crate::pick_ui::active_lang(crate::pick_queue::SURFACE_MINE, &l.id) })
+        Some(Pq { list: &l.id, active: crate::pick_ui::active_lang(crate::pick_queue::SURFACE_MINE, &l.id), kid })
     } else {
         None
     };
@@ -469,7 +490,7 @@ pub fn wire(app: &App) {
                  [data-l-play],[data-l-play-all],[data-l-order],[data-l-puzzle],[data-l-cross],\
                  [data-e-edit],[data-e-save],[data-e-cancel],[data-e-remove],\
                  [data-e-star],[data-e-up],[data-e-down],\
-                 [data-pq-toggle],[data-pq-start],[data-pq-just]",
+                 [data-pq-toggle],[data-pq-star],[data-pq-start],[data-pq-just]",
             )
             .ok()
             .flatten()
@@ -478,7 +499,10 @@ pub fn wire(app: &App) {
         };
 
         if crate::pick_queue::enabled()
-            && (el.has_attribute("data-pq-toggle") || el.has_attribute("data-pq-start") || el.has_attribute("data-pq-just"))
+            && (el.has_attribute("data-pq-toggle")
+                || el.has_attribute("data-pq-star")
+                || el.has_attribute("data-pq-start")
+                || el.has_attribute("data-pq-just"))
         {
             if crate::pick_ui::handle_click(&a, &el, &|| close()) {
                 render(&a);

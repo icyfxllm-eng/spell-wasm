@@ -130,7 +130,10 @@ pub fn saved_note(name: &str, n: usize) -> String {
 pub fn refresh_pool(app: &App) {
     let lists = word_lists::load();
     let chosen = word_lists::play_selection(&lists);
-    let entries = word_lists::play_entries(&lists, &chosen);
+    // CC-PICK-QUEUE Phase B: Spell Jr shows no stars, so with the stars flag on
+    // a persisted star does not lead its list (I7). Flag off: exactly as before.
+    let honour_stars = !(crate::pick_stars::enabled() && app.borrow().kid);
+    let entries = word_lists::play_entries_with(&lists, &chosen, honour_stars);
     let sequential = chosen.len() == 1
         && lists
             .lists
@@ -158,6 +161,12 @@ pub fn play(app: &App, chosen: &[String]) {
     crate::game::build_source_options(app);
     crate::game::build_level_options(app);
     crate::keyboard::rebuild(app);
+    // Phase B: each play is a fresh session for the focus stars to lead (a
+    // lineup session begun by the lineup's own start button is kept).
+    {
+        let s = app.borrow();
+        crate::pick_queue::begin_star_session(s.kid, crate::consts::MINE);
+    }
     crate::game::next_word(app);
 }
 

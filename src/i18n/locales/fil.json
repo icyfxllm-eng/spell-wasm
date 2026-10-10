@@ -978,5 +978,9 @@
   "pick.running": "Sinasanay ang iyong linya — {n} ang napili.",
   "pick.done": "Iyon na ang huli mong pinili.",
   "pick.end": "Tapusin ang linya",
-  "pick.ended": "Tapos na ang linya."
+  "pick.ended": "Tapos na ang linya.",
+  "star.add": "Lagyan ng bituin ang {word} para laging unahin itong pag-aralan",
+  "star.remove": "Alisin ang bituin sa {word}",
+  "star.hint": "Lagyan ng bituin ang isang salita para unahin ito sa bawat sesyon hanggang matutunan mo ito.",
+  "star.cap": "Sampung bituin ang pinakamarami para sa isang wika. Alisin ang bituin ng isang salita para makapaglagay ng iba."
 }

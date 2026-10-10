@@ -196,14 +196,37 @@ pub enum Serve {
 /// been served this session and still exists. When there is none, "Just these"
 /// ends the session; otherwise the normal queue takes over.
 pub fn decide(picks: &[Pick], served: &[String], just_these: bool, live: impl Fn(&Pick) -> bool) -> Serve {
+    decide_with_stars(picks, &[], served, just_these, live)
+}
+
+/// CC-PICK-QUEUE Phase B -- the ONE ordering rule when lineup picks and focus
+/// stars both exist (I2/I3):
+///
+/// 1. the lineup's picks, in tap order;
+/// 2. then the stars that are not already picked, in the order they were
+///    starred (a star that is also a pick was served as a pick and is in
+///    `served`, so it never comes round twice);
+/// 3. then the normal queue (`Open`).
+///
+/// "Just these" means just the picks: once they are served the session ends and
+/// stars do not extend it. With no stars this is `decide` exactly.
+pub fn decide_with_stars(
+    picks: &[Pick],
+    stars: &[Pick],
+    served: &[String],
+    just_these: bool,
+    live: impl Fn(&Pick) -> bool,
+) -> Serve {
     if let Some(p) = picks.iter().find(|p| !served.contains(&p.key) && live(p)) {
         return Serve::Pick(p.clone());
     }
     if just_these {
-        Serve::Exhausted
-    } else {
-        Serve::Open
+        return Serve::Exhausted;
     }
+    if let Some(p) = stars.iter().find(|p| !served.contains(&p.key) && live(p)) {
+        return Serve::Pick(p.clone());
+    }
+    Serve::Open
 }
 
 // ---------- runtime state ----------
@@ -229,6 +252,9 @@ struct Session {
     /// The word the lineup served last, so a correct answer can be told apart
     /// from an ordinary serve (D3).
     last_word: Option<String>,
+    /// Phase B: the language whose Misses stars lead this session. Empty for a
+    /// My Words session (its stars come from the lists, each in its own language).
+    star_lang: String,
 }
 
 fn ensure_loaded(s: &mut Store) {
@@ -313,7 +339,14 @@ pub fn effective_just_these(stored: bool, kid: bool) -> bool {
 pub fn begin_session(scope: &str, kid: bool) {
     let just = effective_just_these(read(|l| l.just_these(scope)), kid);
     SESSION.with(|c| {
-        *c.borrow_mut() = Some(Session { scope: scope.to_string(), just_these: just, served: Vec::new(), served_words: Vec::new(), last_word: None })
+        *c.borrow_mut() = Some(Session {
+            scope: scope.to_string(),
+            just_these: just,
+            served: Vec::new(),
+            served_words: Vec::new(),
+            last_word: None,
+            star_lang: read(|l| l.scopes.get(scope).map(|s| s.lang.clone()).unwrap_or_default()),
+        })
     });
 }
 
@@ -325,13 +358,59 @@ pub fn session_scope() -> Option<String> {
     SESSION.with(|c| c.borrow().as_ref().map(|s| s.scope.clone()))
 }
 
+/// A LINEUP session is running (not merely a star session, whose scope is empty).
 pub fn session_active() -> bool {
-    enabled() && SESSION.with(|c| c.borrow().is_some())
+    enabled() && SESSION.with(|c| c.borrow().as_ref().map(|s| !s.scope.is_empty()).unwrap_or(false))
+}
+
+/// Phase B: a session with no lineup, so focus stars can lead and not repeat.
+/// It carries an EMPTY scope, which no lineup ever has, and an existing lineup
+/// session is left alone. Stars off (flag, or Spell Jr): nothing is created.
+pub fn begin_star_session(kid: bool, lang: &str) {
+    if !crate::pick_stars::active(kid) {
+        return;
+    }
+    SESSION.with(|c| {
+        let mut b = c.borrow_mut();
+        if b.as_ref().map(|s| !s.scope.is_empty()).unwrap_or(false) {
+            return;
+        }
+        *b = Some(Session {
+            scope: String::new(),
+            just_these: false,
+            served: Vec::new(),
+            served_words: Vec::new(),
+            last_word: None,
+            star_lang: lang.to_string(),
+        });
+    });
+}
+
+/// Point a running star session at another language (the Misses sheet's chip).
+pub fn set_star_lang(lang: &str) {
+    SESSION.with(|c| {
+        if let Some(s) = c.borrow_mut().as_mut() {
+            if s.scope.is_empty() {
+                s.star_lang = lang.to_string();
+            }
+        }
+    });
+}
+
+/// Called at the top of every draw: "the word the session served last" must
+/// not outlive the serve it described, or a later ordinary answer on the same
+/// text would be mistaken for a pick (D3). No session: nothing to do.
+pub fn clear_last_served() {
+    SESSION.with(|c| {
+        if let Some(s) = c.borrow_mut().as_mut() {
+            s.last_word = None;
+        }
+    });
 }
 
 /// The player explicitly ended the session: the lineup it ran goes with it.
 pub fn clear_session_scope() {
-    if let Some(sc) = session_scope() {
+    if let Some(sc) = session_scope().filter(|s| !s.is_empty()) {
         write(|l| l.clear(&sc));
     }
     end_session();
@@ -345,16 +424,18 @@ pub fn session_pick_count() -> usize {
     }
 }
 
-fn next_from(scope: &str, live: impl Fn(&Pick) -> bool) -> Serve {
+fn next_from(scope: &str, use_picks: bool, stars: &[Pick], live: impl Fn(&Pick) -> bool) -> Serve {
     // Graduated / removed / evicted words leave the lineup silently (O-C/O-D).
-    write_if_changed(scope, &live);
-    let picks: Vec<Pick> = read(|l| l.picks(scope).to_vec());
+    if !scope.is_empty() {
+        write_if_changed(scope, &live);
+    }
+    let picks: Vec<Pick> = if use_picks && !scope.is_empty() { read(|l| l.picks(scope).to_vec()) } else { Vec::new() };
     let (served, just) = SESSION.with(|c| {
         let b = c.borrow();
         let s = b.as_ref().expect("session");
         (s.served.clone(), s.just_these)
     });
-    let r = decide(&picks, &served, just, &live);
+    let r = decide_with_stars(&picks, stars, &served, just && use_picks, &live);
     SESSION.with(|c| {
         if let Some(s) = c.borrow_mut().as_mut() {
             match &r {
@@ -378,7 +459,9 @@ fn write_if_changed(scope: &str, live: &impl Fn(&Pick) -> bool) {
 }
 
 /// Misses guard. `exists` says whether a pick still has a miss entry behind it.
-pub fn next_for_misses(exists: impl Fn(&Pick) -> bool) -> Serve {
+/// `kid` and `study_lang` are for the focus stars (Phase B): Standard players
+/// only, and only the stars of the session's language lead.
+pub fn next_for_misses(kid: bool, study_lang: &str, exists: impl Fn(&Pick) -> bool) -> Serve {
     if !enabled() {
         return Serve::Open;
     }
@@ -386,32 +469,74 @@ pub fn next_for_misses(exists: impl Fn(&Pick) -> bool) -> Serve {
     if read(|l| l.scopes.get(&sc).map(|s| s.surface != SURFACE_MISSES).unwrap_or(false)) {
         return Serve::Open;
     }
-    next_from(&sc, exists)
+    let stars: Vec<Pick> = if crate::pick_stars::active(kid) {
+        let lang = SESSION.with(|c| c.borrow().as_ref().map(|s| s.star_lang.clone())).unwrap_or_default();
+        let lang = if lang.is_empty() { study_lang.to_string() } else { lang };
+        // A graduated starred miss is pruned here too, silently (O-D).
+        crate::pick_stars::prune_misses(&exists);
+        crate::pick_stars::read(|s| s.of_lang(&lang))
+    } else {
+        Vec::new()
+    };
+    next_from(&sc, true, &stars, exists)
 }
 
 /// My Words guard. `list_words` is the pool the draw would use; `selected` is
 /// the list(s) the draw is reading. A lineup only speaks for the ONE list it
-/// was made in (D9).
-pub fn next_for_mine(list_words: &[String], selected: impl FnOnce() -> Vec<String>) -> Serve {
+/// was made in (D9). `starred` is the focus stars of the chosen lists (Phase B,
+/// Standard only); `in_order` is "In my order", where the pool already puts
+/// starred words first so a second lead would only repeat them.
+pub fn next_for_mine(
+    kid: bool,
+    list_words: &[String],
+    in_order: bool,
+    selected: impl FnOnce() -> Vec<String>,
+    starred: impl FnOnce() -> Vec<Pick>,
+) -> Serve {
     if !enabled() {
         return Serve::Open;
     }
+    // A My Words draw with no session yet (booting straight into My Words, or
+    // the language picker): the stars still lead, so open a star session.
+    if session_scope().is_none() {
+        begin_star_session(kid, crate::consts::MINE);
+    }
     let Some(sc) = session_scope() else { return Serve::Open };
-    let list = match read(|l| l.scopes.get(&sc).map(|s| (s.surface.clone(), s.list.clone()))) {
-        Some((surface, list)) if surface == SURFACE_MINE => list,
-        _ => return Serve::Open,
+    let lineup_list = match read(|l| l.scopes.get(&sc).map(|s| (s.surface.clone(), s.list.clone()))) {
+        Some((surface, list)) if surface == SURFACE_MINE => Some(list),
+        Some(_) => return Serve::Open,
+        None => None,
     };
     let sel = selected();
-    if sel.len() != 1 || sel[0] != list {
+    let use_picks = match &lineup_list {
+        Some(list) => sel.len() == 1 && sel[0] == *list,
+        None => false,
+    };
+    let stars: Vec<Pick> = if crate::pick_stars::active(kid) && !in_order { starred() } else { Vec::new() };
+    if !use_picks && stars.is_empty() {
         return Serve::Open;
     }
-    next_from(&sc, |p| list_words.contains(&p.word))
+    next_from(&sc, use_picks, &stars, |p| list_words.contains(&p.word))
 }
 
 /// I3: a word the lineup already served this session must not come round again
 /// from the ordinary queue (a miss may; that is a fresh miss, not a repeat).
 pub fn already_served(word: &str) -> bool {
-    enabled() && SESSION.with(|c| c.borrow().as_ref().map(|s| s.served_words.iter().any(|w| w == word)).unwrap_or(false))
+    enabled()
+        && SESSION.with(|c| {
+            c.borrow().as_ref().map(|s| !s.scope.is_empty() && s.served_words.iter().any(|w| w == word)).unwrap_or(false)
+        })
+}
+
+/// Phase B, I3: a word a STAR already led this My Words session must not come
+/// round again from the deck. Separate from `already_served` because a star
+/// session can outlive My Words and must never filter another mode's draw; the
+/// caller asks only inside the My Words draw.
+pub fn star_served(word: &str) -> bool {
+    enabled()
+        && SESSION.with(|c| {
+            c.borrow().as_ref().map(|s| s.scope.is_empty() && s.served_words.iter().any(|w| w == word)).unwrap_or(false)
+        })
 }
 
 /// D3/I6: was this word just served BY the lineup? Only then does a correct
@@ -577,15 +702,15 @@ mod tests {
         set_for_test(l);
         begin_session(&id, false);
         let live = |_: &Pick| true;
-        assert_eq!(next_for_misses(live), Serve::Pick(pk("cat")));
+        assert_eq!(next_for_misses(false, "en", live), Serve::Pick(pk("cat")));
         assert!(served_by_lineup("cat"));
         assert!(!served_by_lineup("dog"));
-        assert_eq!(next_for_misses(live), Serve::Pick(pk("dog")));
-        assert_eq!(next_for_misses(live), Serve::Open);
+        assert_eq!(next_for_misses(false, "en", live), Serve::Pick(pk("dog")));
+        assert_eq!(next_for_misses(false, "en", live), Serve::Open);
         assert!(!served_by_lineup("dog"));
         // Flag OFF: the guard is silent whatever the stored lineup says (dual config).
         crate::flags::set_test_override(Some("off"));
-        assert_eq!(next_for_misses(live), Serve::Open);
+        assert_eq!(next_for_misses(false, "en", live), Serve::Open);
         assert!(!served_by_lineup("cat"));
         crate::flags::set_test_override(None);
     }
@@ -602,12 +727,12 @@ mod tests {
         begin_session(&id, false);
         let pool: Vec<String> = ["ant", "cat", "dog", "eel"].iter().map(|s| s.to_string()).collect();
         // A different list is selected: the lineup says nothing (D9).
-        assert_eq!(next_for_mine(&pool, || vec!["l2".into()]), Serve::Open);
-        assert_eq!(next_for_mine(&pool, || vec!["l1".into(), "l2".into()]), Serve::Open);
+        assert_eq!(next_for_mine(false, &pool, false, || vec!["l2".into()], Vec::new), Serve::Open);
+        assert_eq!(next_for_mine(false, &pool, false, || vec!["l1".into(), "l2".into()], Vec::new), Serve::Open);
         // The right list: tap order, not pool order.
-        assert_eq!(next_for_mine(&pool, || vec!["l1".into()]), Serve::Pick(pk("dog")));
-        assert_eq!(next_for_mine(&pool, || vec!["l1".into()]), Serve::Pick(pk("cat")));
-        assert_eq!(next_for_mine(&pool, || vec!["l1".into()]), Serve::Open);
+        assert_eq!(next_for_mine(false, &pool, false, || vec!["l1".into()], Vec::new), Serve::Pick(pk("dog")));
+        assert_eq!(next_for_mine(false, &pool, false, || vec!["l1".into()], Vec::new), Serve::Pick(pk("cat")));
+        assert_eq!(next_for_mine(false, &pool, false, || vec!["l1".into()], Vec::new), Serve::Open);
         assert!(already_served("dog") && already_served("cat") && !already_served("ant"));
         // A word removed from the list is not served (O-D), and just-these ends.
         let mut l = Lineups::default();
@@ -615,10 +740,149 @@ mod tests {
         l.set_just_these(&id, true);
         set_for_test(l);
         begin_session(&id, false);
-        assert_eq!(next_for_mine(&pool, || vec!["l1".into()]), Serve::Exhausted);
+        assert_eq!(next_for_mine(false, &pool, false, || vec!["l1".into()], Vec::new), Serve::Exhausted);
         // No session at all (zero picks, never started): untouched queue (A2).
         end_session();
-        assert_eq!(next_for_mine(&pool, || vec!["l1".into()]), Serve::Open);
+        assert_eq!(next_for_mine(false, &pool, false, || vec!["l1".into()], Vec::new), Serve::Open);
+        crate::flags::set_test_override(None);
+    }
+
+    // ---------- Phase B: focus stars ----------
+
+    fn st(w: &str) -> Pick {
+        pk(w)
+    }
+
+    /// The ordering rule when both exist: picks (tap order), then stars not
+    /// already picked, then the normal queue.
+    #[test]
+    fn picks_lead_then_stars_then_the_normal_queue() {
+        let picks = vec![pk("dog"), pk("cat")];
+        let stars = vec![st("cat"), st("eel"), st("fox")]; // cat is both picked and starred
+        let live = |_: &Pick| true;
+        let mut served: Vec<String> = Vec::new();
+        let mut order = Vec::new();
+        while let Serve::Pick(p) = decide_with_stars(&picks, &stars, &served, false, live) {
+            served.push(p.key.clone());
+            order.push(p.word);
+        }
+        assert_eq!(order, vec!["dog", "cat", "eel", "fox"], "picks in tap order, then unpicked stars; cat once");
+        assert_eq!(decide_with_stars(&picks, &stars, &served, false, live), Serve::Open, "then today's queue");
+    }
+
+    #[test]
+    fn stars_alone_lead_in_the_order_they_were_starred_and_do_not_repeat() {
+        let stars = vec![st("fox"), st("ant")];
+        let mut served: Vec<String> = Vec::new();
+        let mut order = Vec::new();
+        while let Serve::Pick(p) = decide_with_stars(&[], &stars, &served, false, |_| true) {
+            served.push(p.key.clone());
+            order.push(p.word);
+        }
+        assert_eq!(order, vec!["fox", "ant"]); // I2, I3
+    }
+
+    #[test]
+    fn just_these_means_just_the_picks_stars_do_not_extend_it() {
+        let picks = vec![pk("dog")];
+        let stars = vec![st("eel")];
+        assert_eq!(decide_with_stars(&picks, &stars, &[], true, |_| true), Serve::Pick(pk("dog")));
+        assert_eq!(decide_with_stars(&picks, &stars, &["en::dog".to_string()], true, |_| true), Serve::Exhausted);
+    }
+
+    /// A dead star (graduated / removed) is never served.
+    #[test]
+    fn a_star_whose_word_is_gone_is_skipped() {
+        let stars = vec![st("gone"), st("eel")];
+        let r = decide_with_stars(&[], &stars, &[], false, |p| p.word != "gone");
+        assert_eq!(r, Serve::Pick(st("eel")));
+    }
+
+    /// I4: zero stars is `decide` exactly.
+    #[test]
+    fn zero_stars_is_byte_identical_to_the_lineup_guard() {
+        let picks = vec![pk("cat"), pk("dog")];
+        for served in [vec![], vec!["en::cat".to_string()], vec!["en::cat".to_string(), "en::dog".to_string()]] {
+            for just in [false, true] {
+                assert_eq!(
+                    decide(&picks, &served, just, |_| true),
+                    decide_with_stars(&picks, &[], &served, just, |_| true)
+                );
+            }
+        }
+        assert_eq!(decide_with_stars(&[], &[], &[], false, |_| true), Serve::Open);
+    }
+
+    #[cfg(not(feature = "web"))]
+    #[test]
+    fn a_star_session_leads_misses_stars_once_and_gates_the_answer() {
+        crate::flags::set_test_override(Some("on"));
+        crate::pick_stars::set_for_test(crate::pick_stars::Stars {
+            v: 1,
+            stars: vec![st("cat"), Pick { key: "de::hund".into(), word: "hund".into(), lang: "de".into() }],
+        });
+        set_for_test(Lineups::default());
+        begin_star_session(false, "en");
+        let live = |_: &Pick| true;
+        // Only the session's language leads (D9/A11).
+        assert_eq!(next_for_misses(false, "en", live), Serve::Pick(st("cat")));
+        assert!(served_by_lineup("cat"), "D3: the star-led serve is gated like a pick");
+        assert_eq!(next_for_misses(false, "en", live), Serve::Open, "once, then today's queue");
+        assert!(!served_by_lineup("cat"));
+        // Spell Jr: stars are ignored even though they are persisted (I7).
+        begin_star_session(true, "en");
+        end_session();
+        begin_star_session(false, "en");
+        assert_eq!(next_for_misses(true, "en", live), Serve::Open);
+        // The star session is not a lineup session: no End control, no "running" copy.
+        assert!(!session_active());
+        // Flag off: nothing leads and no session is made.
+        crate::flags::set_test_override(Some("off"));
+        end_session();
+        begin_star_session(false, "en");
+        assert!(session_scope().is_none());
+        assert_eq!(next_for_misses(false, "en", live), Serve::Open);
+        crate::flags::set_test_override(None);
+    }
+
+    #[cfg(not(feature = "web"))]
+    #[test]
+    fn my_words_stars_lead_after_picks_skip_in_order_lists_and_never_repeat() {
+        crate::flags::set_test_override(Some("on"));
+        set_for_test(Lineups::default());
+        end_session();
+        let pool: Vec<String> = ["ant", "cat", "dog", "eel"].iter().map(|s| s.to_string()).collect();
+        let sel = || vec!["l1".to_string()];
+        let starred = || vec![st("eel"), st("ant")];
+        // No session at all yet: the draw opens a star session itself.
+        assert_eq!(next_for_mine(false, &pool, false, sel, starred), Serve::Pick(st("eel")));
+        assert!(already_served("eel") == false, "star words are tracked apart from a lineup's");
+        assert!(star_served("eel") && !star_served("ant"));
+        assert_eq!(next_for_mine(false, &pool, false, sel, starred), Serve::Pick(st("ant")));
+        assert_eq!(next_for_mine(false, &pool, false, sel, starred), Serve::Open);
+        // "In my order" already puts starred words first: no second lead.
+        end_session();
+        assert_eq!(next_for_mine(false, &pool, true, sel, starred), Serve::Open);
+        // Spell Jr: ignored.
+        end_session();
+        assert_eq!(next_for_mine(true, &pool, false, sel, starred), Serve::Open);
+        // A word removed from the list is not led (O-D).
+        end_session();
+        let gone = || vec![st("zzz")];
+        assert_eq!(next_for_mine(false, &pool, false, sel, gone), Serve::Open);
+        // Lineup picks precede stars in the list the lineup was made in.
+        let mut l = Lineups::default();
+        let id = scope_id(SURFACE_MINE, "l1", "en");
+        l.toggle(&id, SURFACE_MINE, "l1", "en", pk("dog"), None);
+        set_for_test(l);
+        begin_session(&id, false);
+        assert_eq!(next_for_mine(false, &pool, false, sel, starred), Serve::Pick(st("dog")));
+        assert_eq!(next_for_mine(false, &pool, false, sel, starred), Serve::Pick(st("eel")));
+        assert_eq!(next_for_mine(false, &pool, false, sel, starred), Serve::Pick(st("ant")));
+        assert_eq!(next_for_mine(false, &pool, false, sel, starred), Serve::Open);
+        // A different list selected: the picks stay silent, the stars still lead.
+        begin_session(&id, false);
+        assert_eq!(next_for_mine(false, &pool, false, || vec!["l2".into()], starred), Serve::Pick(st("eel")));
         crate::flags::set_test_override(None);
     }
 

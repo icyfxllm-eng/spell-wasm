@@ -978,5 +978,9 @@
   "pick.running": "Tu travailles ta sélection — {n} choisis.",
   "pick.done": "C'était ton dernier choix.",
   "pick.end": "Terminer la sélection",
-  "pick.ended": "Sélection terminée."
+  "pick.ended": "Sélection terminée.",
+  "star.add": "Mettre une étoile à {word} pour la travailler en premier à chaque fois",
+  "star.remove": "Retirer l’étoile de {word}",
+  "star.hint": "Mets une étoile à un mot pour le travailler en premier à chaque séance, jusqu’à ce que tu le saches.",
+  "star.cap": "Dix étoiles, c’est le maximum pour une langue. Retire l’étoile d’un mot pour en marquer un autre."
 }

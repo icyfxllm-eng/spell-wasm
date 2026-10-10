@@ -1932,6 +1932,12 @@
     font-size:12px;font-weight:700;display:flex;align-items:center;justify-content:center;unicode-bidi:isolate}
   .pq-note{color:var(--amber);font-size:.85em;margin-block:4px}
   .pq-end{margin-block-start:6px}
+  /* Phase B focus stars: top-right of the row (START is the badge's corner, so
+     the star takes the END corner and both mirror in RTL). Logical properties. */
+  .pq-row.pq-s{padding-inline-end:36px}
+  .pq-star{position:absolute;inset-block-start:4px;inset-inline-end:0;min-width:32px;height:32px;
+    background:none;border:0;border-radius:8px;color:var(--muted-2);font-size:20px;line-height:1;cursor:pointer}
+  .pq-star.on{color:var(--amber)}
   /* PICKQUEUE:END */
   .lists-screen input[type=text]{flex:1;min-width:0;background:var(--panel-2);border:1.5px solid var(--edge);
     border-radius:10px;padding:10px;color:var(--ink);font-family:var(--body);font-size:16px}

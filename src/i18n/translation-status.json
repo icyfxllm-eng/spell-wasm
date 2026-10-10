@@ -116,7 +116,11 @@
     "pick.running",
     "pick.done",
     "pick.end",
-    "pick.ended"
+    "pick.ended",
+    "star.add",
+    "star.remove",
+    "star.hint",
+    "star.cap"
   ],
   "do_not_translate": {
     "spz.type.par": "Par — golf term, kept as the Latin word in every locale (it equals English in most). Do not re-propose.",
@@ -240,7 +244,11 @@
       "pick.running",
       "pick.done",
       "pick.end",
-      "pick.ended"
+      "pick.ended",
+      "star.add",
+      "star.remove",
+      "star.hint",
+      "star.cap"
     ],
     "fr": [
       "hub.group.spell_it",
@@ -355,7 +363,11 @@
       "pick.running",
       "pick.done",
       "pick.end",
-      "pick.ended"
+      "pick.ended",
+      "star.add",
+      "star.remove",
+      "star.hint",
+      "star.cap"
     ],
     "de": [
       "hub.group.spell_it",
@@ -470,7 +482,11 @@
       "pick.running",
       "pick.done",
       "pick.end",
-      "pick.ended"
+      "pick.ended",
+      "star.add",
+      "star.remove",
+      "star.hint",
+      "star.cap"
     ],
     "pt": [
       "hub.group.spell_it",
@@ -585,7 +601,11 @@
       "pick.running",
       "pick.done",
       "pick.end",
-      "pick.ended"
+      "pick.ended",
+      "star.add",
+      "star.remove",
+      "star.hint",
+      "star.cap"
     ],
     "pl": [
       "hub.group.spell_it",
@@ -700,7 +720,11 @@
       "pick.running",
       "pick.done",
       "pick.end",
-      "pick.ended"
+      "pick.ended",
+      "star.add",
+      "star.remove",
+      "star.hint",
+      "star.cap"
     ],
     "ru": [
       "hub.group.spell_it",
@@ -815,7 +839,11 @@
       "pick.running",
       "pick.done",
       "pick.end",
-      "pick.ended"
+      "pick.ended",
+      "star.add",
+      "star.remove",
+      "star.hint",
+      "star.cap"
     ],
     "vi": [
       "hub.group.spell_it",
@@ -930,7 +958,11 @@
       "pick.running",
       "pick.done",
       "pick.end",
-      "pick.ended"
+      "pick.ended",
+      "star.add",
+      "star.remove",
+      "star.hint",
+      "star.cap"
     ],
     "ko": [
       "hub.group.spell_it",
@@ -1045,7 +1077,11 @@
       "pick.running",
       "pick.done",
       "pick.end",
-      "pick.ended"
+      "pick.ended",
+      "star.add",
+      "star.remove",
+      "star.hint",
+      "star.cap"
     ],
     "ja": [
       "hub.group.spell_it",
@@ -1160,7 +1196,11 @@
       "pick.running",
       "pick.done",
       "pick.end",
-      "pick.ended"
+      "pick.ended",
+      "star.add",
+      "star.remove",
+      "star.hint",
+      "star.cap"
     ],
     "zh": [
       "hub.group.spell_it",
@@ -1275,7 +1315,11 @@
       "pick.running",
       "pick.done",
       "pick.end",
-      "pick.ended"
+      "pick.ended",
+      "star.add",
+      "star.remove",
+      "star.hint",
+      "star.cap"
     ],
     "ar": [
       "hub.group.spell_it",
@@ -1390,7 +1434,11 @@
       "pick.running",
       "pick.done",
       "pick.end",
-      "pick.ended"
+      "pick.ended",
+      "star.add",
+      "star.remove",
+      "star.hint",
+      "star.cap"
     ],
     "hi": [
       "hub.group.spell_it",
@@ -1505,7 +1553,11 @@
       "pick.running",
       "pick.done",
       "pick.end",
-      "pick.ended"
+      "pick.ended",
+      "star.add",
+      "star.remove",
+      "star.hint",
+      "star.cap"
     ],
     "sw": [
       "hub.group.spell_it",
@@ -1620,7 +1672,11 @@
       "pick.running",
       "pick.done",
       "pick.end",
-      "pick.ended"
+      "pick.ended",
+      "star.add",
+      "star.remove",
+      "star.hint",
+      "star.cap"
     ],
     "fil": [
       "hub.group.spell_it",
@@ -1735,7 +1791,11 @@
       "pick.running",
       "pick.done",
       "pick.end",
-      "pick.ended"
+      "pick.ended",
+      "star.add",
+      "star.remove",
+      "star.hint",
+      "star.cap"
     ]
   }
 }

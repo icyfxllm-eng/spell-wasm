@@ -978,5 +978,9 @@
   "pick.running": "Đang luyện hàng của bạn — đã chọn {n}.",
   "pick.done": "Đó là lựa chọn cuối cùng của bạn.",
   "pick.end": "Kết thúc hàng",
-  "pick.ended": "Đã kết thúc hàng."
+  "pick.ended": "Đã kết thúc hàng.",
+  "star.add": "Gắn sao cho {word} để luôn luyện từ này trước",
+  "star.remove": "Bỏ sao khỏi {word}",
+  "star.hint": "Gắn sao cho một từ để luyện từ đó trước trong mỗi buổi, cho đến khi bạn thuộc.",
+  "star.cap": "Mỗi ngôn ngữ có tối đa mười sao. Hãy bỏ sao một từ để gắn sao từ khác."
 }

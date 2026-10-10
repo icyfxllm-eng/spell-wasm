@@ -12,6 +12,7 @@
 use std::cell::{Cell, RefCell};
 
 use crate::pick_queue::{self as pq, Pick, Toggled, SURFACE_MINE, SURFACE_MISSES};
+use crate::pick_stars::{self as stars, StarToggled};
 use crate::{dom, i18n, i18n::t, App};
 use wasm_bindgen::JsCast;
 
@@ -21,6 +22,8 @@ thread_local! {
     static MISS_LANG: RefCell<Option<String>> = const { RefCell::new(None) };
     /// Set when Jr's cap refused a pick; the next render says why, once.
     static REFUSED: Cell<bool> = const { Cell::new(false) };
+    /// Set when the ten-star cap refused a star (A6); the next render says why.
+    static STAR_REFUSED: Cell<bool> = const { Cell::new(false) };
 }
 
 const SCREEN: &str = "pickScreen";
@@ -70,6 +73,41 @@ pub fn word_html(surface: &str, list: &str, lang: &str, word: &str, enabled: boo
     )
 }
 
+// ---------- focus stars (Phase B) ----------
+
+/// The star control, top-right of the word row. Standard players with the flag
+/// on only: for Spell Jr, or flag off, this is the empty string -- absent, not
+/// locked. Both surfaces call this one function (D10).
+pub fn star_html(surface: &str, list: &str, lang: &str, word: &str, on: bool, kid: bool) -> String {
+    if !stars::active(kid) {
+        return String::new();
+    }
+    let label = i18n::tp(if on { "star.remove" } else { "star.add" }, &[("word", word)]);
+    format!(
+        "<button type=\"button\" class=\"pq-star{on_cls}\" data-pq-star \
+           data-pq-surface=\"{surface}\" data-pq-list=\"{list}\" data-pq-lang=\"{lang}\" data-pq-word=\"{word}\" \
+           aria-pressed=\"{pressed}\" aria-label=\"{label}\"><span aria-hidden=\"true\">{glyph}</span></button>",
+        on_cls = if on { " on" } else { "" },
+        surface = esc(surface),
+        list = esc(list),
+        lang = esc(lang),
+        word = esc(word),
+        pressed = if on { "true" } else { "false" },
+        label = esc(&label),
+        glyph = if on { "\u{2605}" } else { "\u{2606}" },
+    )
+}
+
+/// Extra row class that reserves the star's corner (empty when no star shows).
+pub fn star_row_class(kid: bool) -> &'static str {
+    if stars::active(kid) { " pq-s" } else { "" }
+}
+
+/// Whether a Misses word is starred (the one read of that store for the UI).
+pub fn miss_starred(lang: &str, word: &str) -> bool {
+    stars::read(|s| s.has(&key_of(lang, word)))
+}
+
 pub fn row_class(surface: &str, list: &str, lang: &str, word: &str, enabled: bool) -> &'static str {
     let scope = pq::scope_id(surface, list, lang);
     let on = pq::read(|l| l.number_of(&scope, &key_of(lang, word)).is_some());
@@ -88,6 +126,12 @@ pub fn footer_html(surface: &str, list: &str, lang: &str, kid: bool) -> String {
     let mut html = format!("<div class=\"lists-head\" role=\"note\">{}</div>", esc(&t("pick.hint")));
     if REFUSED.with(|c| c.replace(false)) {
         html.push_str(&format!("<div class=\"pq-note\" role=\"status\">{}</div>", esc(&t("pick.capJr"))));
+    }
+    if stars::active(kid) {
+        html.push_str(&format!("<div class=\"lists-head\" role=\"note\">{}</div>", esc(&t("star.hint"))));
+        if STAR_REFUSED.with(|c| c.replace(false)) {
+            html.push_str(&format!("<div class=\"pq-note\" role=\"status\">{}</div>", esc(&t("star.cap"))));
+        }
     }
     if n > 0 {
         html.push_str(&format!(
@@ -152,6 +196,8 @@ fn prune_misses(app: &App) {
             l.prune(&id, |p| live.contains(&p.key));
         });
     }
+    // A starred miss that graduated or was evicted loses its star silently (O-D).
+    stars::prune_misses(|p| live.contains(&p.key));
 }
 
 // ---------- tap handling (both surfaces) ----------
@@ -168,6 +214,25 @@ pub fn handle_click(app: &App, el: &web_sys::Element, close: &dyn Fn()) -> bool 
         let kid = app.borrow().kid;
         if pq::toggle(&id, &surface, &list, &lang, pick, kid) == Toggled::Refused {
             REFUSED.with(|c| c.set(true));
+        }
+        return true;
+    }
+    if has("data-pq-star") {
+        let (surface, list, lang, word) = (attr("data-pq-surface"), attr("data-pq-list"), attr("data-pq-lang"), attr("data-pq-word"));
+        // Spell Jr has no stars (I7); a stray tap changes nothing.
+        if !stars::active(app.borrow().kid) {
+            return true;
+        }
+        let r = if surface == SURFACE_MINE {
+            toggle_mine_star(app, &list, &lang, &word)
+        } else {
+            let live: Vec<String> =
+                app.borrow().misses.iter().map(|m| crate::misses::miss_key(&m.word, &m.lang)).collect();
+            let pick = Pick { key: key_of(&lang, &word), word, lang };
+            stars::toggle_miss(pick, |p| live.contains(&p.key))
+        };
+        if r == StarToggled::Refused {
+            STAR_REFUSED.with(|c| c.set(true));
         }
         return true;
     }
@@ -195,9 +260,36 @@ pub fn handle_click(app: &App, el: &web_sys::Element, close: &dyn Fn()) -> bool 
     if has("data-pq-all") {
         close();
         crate::game::enter_review(app);
+        // Stars lead in the language the sheet was showing.
+        if let Some(l) = MISS_LANG.with(|c| c.borrow().clone()) {
+            pq::set_star_lang(&l);
+        }
         return true;
     }
     false
+}
+
+/// A My Words star IS `ListEntry.starred` (O-A): the same field "In my order"
+/// has always read, written through the same `set_star`. The cap counts the
+/// language's distinct starred words across every live list.
+fn toggle_mine_star(app: &App, list: &str, lang: &str, word: &str) -> StarToggled {
+    let mut lists = crate::word_lists::load();
+    let Some((idx, on)) = lists
+        .lists
+        .iter()
+        .find(|l| l.id == list && l.live())
+        .and_then(|l| l.entries.iter().position(|e| e.text == word && e.lang == lang).map(|i| (i, !l.entries[i].starred)))
+    else {
+        return StarToggled::Unstarred;
+    };
+    if on && !stars::cap_allows(crate::word_lists::starred_count(&lists, lang)) {
+        return StarToggled::Refused;
+    }
+    crate::word_lists::set_star(&mut lists, list, idx, on, js_sys::Date::now());
+    crate::word_lists::store(&lists);
+    // The pool's order follows the star under "In my order".
+    crate::lists_ui::refresh_pool(app);
+    if on { StarToggled::Starred } else { StarToggled::Unstarred }
 }
 
 /// "Practice N first". The order is changed; nothing else is (I1).
@@ -273,7 +365,7 @@ fn ensure_screen() {
         let Some(app) = APP.with(|a| a.borrow().clone()) else { return };
         let Some(target) = ev.target().and_then(|t| t.dyn_into::<web_sys::Element>().ok()) else { return };
         let Some(el) = target
-            .closest("[data-pq-toggle],[data-pq-start],[data-pq-just],[data-pq-langchip],[data-pq-all]")
+            .closest("[data-pq-toggle],[data-pq-star],[data-pq-start],[data-pq-just],[data-pq-langchip],[data-pq-all]")
             .ok()
             .flatten()
         else {
@@ -344,10 +436,12 @@ fn render_misses(app: &App) {
     html.push_str(&footer_html(SURFACE_MISSES, "", &lang, s.kid));
     for m in rows {
         html.push_str(&format!(
-            "<div class=\"lists-entry {}\">{}<span class=\"lists-chip\">{}</span></div>",
+            "<div class=\"lists-entry {}{}\">{}<span class=\"lists-chip\">{}</span>{}</div>",
             row_class(SURFACE_MISSES, "", &m.lang, &m.word, true),
+            star_row_class(s.kid),
             word_html(SURFACE_MISSES, "", &m.lang, &m.word, true),
             esc(&m.lang),
+            star_html(SURFACE_MISSES, "", &m.lang, &m.word, miss_starred(&m.lang, &m.word), s.kid),
         ));
     }
     html.push_str(&format!(
