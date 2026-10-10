@@ -295,3 +295,475 @@ Budget for the board with keyboard up, rune key hidden: chrome ~129 pt (pad 8 + 
 - Horizontal: 9 cells in 355 pt (10 pt side padding), 3 pt gap: cell <= (355-24)/9 = 36.8 pt (37.2 with 8 pt padding, 37.7 with 2 pt gaps).
 - Max cell that fits = WIDTH-bound 36.8 pt in every case (height has >=3 pt spare even in the worst case). >=32: YES. >=28: YES.
 - Caveats: if each row also carries a left gutter (play button / role marker), usable width shrinks: 28 pt gutter+6 gap -> 33.0 pt, 44 pt gutter+6 gap -> 31.2 pt (fails 32, passes 28). Big Text/Kid on the main keyboard (keys 56 high, ~261 pt with margin) leaves grid height 277 -> height-bound cell 37.0, so still ~36.8 overall (zero spare; with a 20 pt top inset it drops to ~34). On a 320x568 (SE 1st gen): width-bound 30.7, still >=28 but <32.
+
+---
+
+# CC-SPELLUZZLE v1.1 census additions (run 2026-10-10, origin/main 27280a81)
+
+**Read-only: no repo code changed.** Trials ran as throwaway ignored tests in scratch copies of `origin/main`, using the real v1 lexicon, `bank::load` and `gates::count_solutions`. English only. **STOP: no v1.1 feature phase starts until Eric has reviewed this section.**
+
+## Summary
+
+| Item | Result | Detail |
+|---|---|---|
+| C12 | pass, with gaps | v1 is in the repo and built (phases A to C, 2026-10-09). The v1 census section header still says "STOP", which is stale. The CC-SPELLUZZLE spec files themselves are not in the repo. v1.1 rev 2 signs D26 to D32, but no file in the repo records that sign-off. |
+| C13 | pass | English clears 400 at every tier (lowest: Expert 529, Easy 533). ru clears every tier since its bank was regrown. **es Easy is 232, below the floor.** fr de pt pl fil sw vi have no collision table, so P1 cannot be evaluated for them. |
+| C14 Par | pass, no stop | 10,000 of 10,000 at Hard and Expert; Mac time p95 5.1 ms and 3.3 ms (the iPhone cannot be measured here). **Expert is par 2 on 97.8% of boards**, so it plays no harder than Hard. "Most cells first" reaches par 47% to 48% if it means the longest word and 67% to 71% if it means the Listen that decodes most hidden cells; the spec's 74% matches only the second reading. Which reading is meant is Eric's call. |
+| C15 Expeditions | **STOP (strict)** | Success 10,000/10,000 only with a "guided" generator (silent picks weighted toward runes not yet carried). **Unguided Expert is 8,920 of 10,000.** Runes per run have a median of 24 at Expert, the X1 cap, so it has no headroom. Expert redraws 72% of runs, and its Vault is a window of about 3 percentage points. Mac run time p95: 0.85 s (one thread) to 1.45 s (nine threads) at Expert; if the iPhone is about 4x slower that lands near the 3 s limit. The Mac was heavily loaded, so the times are pessimistic. |
+| C16 Duel | pass, no stop | All 12 equal-NPC rows hold the leg-1 starter at 48.7% to 50.7%. Single-board starter edge 63.6% to 85.1%, which is why D27 chose two legs. Draws 2.6% to 12.6%; **Easy draws up to 12.6%**, above the desk 3.5% to 7.6%, because Easy boards are small. No double claims in 20,000 legs per row. |
+| C17 My Words | **STOP** | A stored row carries no bank match or id (`ListEntry {text, lang, added_at, starred}`). The match would have to be computed at board-build time through `word_index::canonical`. That is feasible (app-only) but it is a decision, not an assumption. The base game does not apply `kid_filter` to My Words, so a Jr profile sees every list word; Spelluzzle would have to filter itself (this is O5). My Words is free (preview) and Jr policy is ungated. |
+| C18 My Words | pass | A fair board for essentially every list of 5 or more words (0 to 0.8% unserved); size 3 is 0.9% to 5.6% unserved depending on the draw budget. Lists of 8 or more words average 5 list words per board. Jr is as good: 91% to 100% fair. |
+| C19 Sound | **STOP** | There is no per-rune tick, no pitch ladder and no combo state anywhere. The only synthesized sound is a fixed 880/1320 Hz completion chime. A tick would be a new oscillator function (no asset file), but it is new sound code, not reuse. |
+| C20 NPC reuse | **STOP** | The NPC accuracy is a method on `BoardGameState` and the clamp constants are private. Reuse as it stands means copying it, or a small visibility edit in `src/boardgame/engine.rs` (extract a public `npc_accuracy_milli`). There is no NPC turn length concept and no NPC names. |
+| C21 Layout | **STOP (conditional)** | Cells never drop below 28 pt (minimum 32.9 pt at 10 cells). **A clean pencil mark is 9 pt on the v1 glyph**, under the 11 pt floor; 11 pt needs the glyph at 52% or smaller, or the mark replacing the glyph. **With the keyboard up, Par and Duel boards overflow** (the board scrolls 57 to 126 pt) because every word carries a Listen head. The measured fix is a single shared action bar above the keyboard. A 16-entry rune strip fits only stacked, scrolling, or hidden while typing. |
+| C22 Long-press | note | Nothing binds long-press on Spelluzzle cells today. `user-select` is not set, so a long-press on a typed or decoded letter would start the iOS selection callout. A cell long-press needs `user-select:none`, `-webkit-touch-callout:none`, a contextmenu guard, click suppression after the hold, and a button route for VoiceOver and Switch Control. |
+
+## What needs Eric
+
+1. **C15, Expert Expeditions:** the 24-rune cap is binding at Expert and the generator needs guidance to pass. Options: raise the cap (needs more glyphs; the sheet has 28), drop Expert Expeditions, or accept the redraw load and measure on a device first.
+2. **C17 and O5:** how a My Words row finds its bank match (compute at build time, or add a stored id), and who applies the kid filter.
+3. **C19:** is a new tick function acceptable (D37 assumed an existing sound)? Or drop the ripple sound.
+4. **C20:** edit the Board Game module (extract the accuracy function) or copy it?
+5. **C21:** pencil mark design (shrink the glyph in marked cells, or replace it), and the shared action bar for Par and Duel.
+6. **C14:** which "most cells first" reading is meant, and whether Expert par should be raised (97.8% are par 2).
+7. **C16:** Easy Duel draws up to 12.6%. Accept, or score tie-breaks.
+8. **C13:** es Easy is below the floor, so Par and Duel on Easy are not offered for Spanish.
+
+## Notes on the data
+
+- The earlier v1 trials' Python prototype directory was not available to the agents that ran C14, C15, C16 and C18. They rebuilt the large validity list: C14 used `/usr/share/dict/words` plus the bank with seedgen's suffix rules (2,586,198 strings, stricter than the Hunspell list); C15 and C16 used the Hunspell `en_US.dic` with the same expansion (469,516 words, the list `seeds-en.json` records). The C14 re-run on the Hunspell list is one environment variable (`PAR_VALIDITY_FILE`).
+- Two rules in the spec were ambiguous and the Duel agent assumed readings: a wrong Listen marks the slot heard but leaves it open to Listen again; a wrong unheard spell leaves the slot unheard and open.
+- C18 results depend on the generator's draw budget, which the spec does not state (the headline used 150 draws per list-word count and secret kind).
+
+
+---
+
+## v1.1 appendix: c12-13-17-19-20-22
+
+# Census C12, C13, C17, C19, C20, C22  (origin/main 27280a81, worktree spell-wasm-spz11, read-only)
+
+## C12 v1 in repo, signed, census reviewed
+- In repo: src/spelluzzle/{bank,fresh,gates,gen,lex,mod,offer,play,render,seedgen,seeds,store,tests,types,view}.rs (2,764 lines), src/spelluzzle_screen.rs, assets/spelluzzle/{runes.svg,seeds-en.json}, tests/fixtures/spelluzzle/golden-en.json, tests/e2e/specs/spelluzzle.mjs, tests/ios-ui/flows/spelluzzle.yaml, reports/spelluzzle_census.md (297 lines), reports/spelluzzle-device-pass.md. Phases A, B, C landed 2026-10-09 (d61e03d9, bae81849, 14ac1fec; Maestro flow 4b235a50). Registry row config/modes.json "spelluzzle": status live, ios only, languages ["en"], entitlementLevel preview. Flag src/flags.rs:126 defaults ON.
+- Signed: reports/spelluzzle_census.md:8-20 "Decisions recorded (Eric, 2026-10-09)", 9 items (English only Easy-Expert + Jr; Expert 6-10 cells; fix generator not gates; history store; audio prefetch amendment; O1-O3 defaults; later languages).
+- GAPS (report these, none block):
+  1. reports/spelluzzle_census.md:4 still carries "STOP - Phases A-D are blocked on Eric's review and on O1-O3". Stale: the decisions section below it answers it. Needs an edit when you append.
+  2. The spec file itself (CC-SPELLUZZLE.md) is NOT in the repo (decision 8 says so; git ls-files finds none). v1.1 spec exists only in the excerpt/chat.
+  3. Table at census.md:~230-243 (C4/C5 by language) predates the 2026-10-09 ru/ko bank growth (4303e52f); ru Easy there is 219, now 746 (see C13).
+  4. Decisions cover v1 only. Nothing in the report records sign-off of v1.1 (F15 Par, F19 Expeditions, F20 Duel, F21 My Words). That is the thing the new census is for.
+
+## C13 eligible words with NO collision group, per language and tier
+Method: throwaway ignored test in a scratch copy (repo untouched): per tier, bands from Tier::bands() (Jr = easy+medium), length range from Tier::shape() (Jr 3-6, Easy 3-6, Medium 4-8, Hard 5-9, Expert 6-10 chars), not profanity::is_blocked, audio_verdict::servable(lang, w, "normal"), Jr also kid_filter::kid_allowed; words distinct; "no collision group" = homophones::group_members(lang,w) empty (same test bank::load uses). Format: no-collision / eligible-before-collision-filter.
+Caveat: counts chars, not keyboard-reachability or Lexicon::is_word; matches bank::load semantics. Run time 0.7 s.
+
+| lang | Jr | Easy | Medium | Hard | Expert (6-10) | collision table |
+|---|---|---|---|---|---|---|
+| en | 1191/1443 | 533/715 | 709/783 | 756/773 | 529/536 | 266 lines |
+| es | 975/981 | 232/234 | 824/828 | 1563/1567 | 1810/1810 | 14 |
+| ru | 1536/1587 | 708/746 | 879/892 | 1578/1584 | 1897/1900 | 37 |
+| fr | (999) | (235) | (833) | (1563) | (1783) | none, count unchecked |
+| de | (1045) | (240) | (895) | (1481) | (1644) | none |
+| pt | (1025) | (238) | (854) | (1515) | (1771) | none |
+| pl | (1036) | (218) | (904) | (1550) | (1870) | none |
+| fil | (779) | (207) | (577) | (872) | (992) | none |
+| sw | (906) | (241) | (671) | (1034) | (480) | none |
+| vi | (1480) | (663) | (826) | (1500) | (1983) | none, fails C3 anyway |
+
+- English: ALL tiers at or above 400. Lowest is Expert 529 (margin 129), then Easy 533. No STOP on English. Jr 1191 is on the union of Easy+Medium.
+- es: Easy 232 below floor (bank holds only 268 Easy rows). Jr/Medium/Hard/Expert clear.
+- ru: clears every tier now, incl. Easy 708. Reason: ru easy.txt grew 2026-10-09 (4303e52f, now 833 rows) after the census table was computed (it said 219). Flag as a change to the earlier C4 verdict.
+- fr de pt pl fil sw vi: no collision table, so P1 cannot be evaluated; numbers in brackets are only an upper bound. Easy is under 400 in all of them (207-241) except vi (663, fails C3). sw Expert 480 only just clears.
+- en Easy 533 means 182 of 715 Easy words are collision members (25%); P1 removes them from Par boards (Hard 17, Expert 7 members) so Par is unaffected in practice.
+
+## C17 My Words storage, bank anchor, Jr serving, entitlement
+- Storage: src/word_lists.rs. Key byear_word_lists_v1 (LISTS_KEY, line ~17). struct ListEntry {text, lang, added_at, starred} (lines ~49-58). WordList {id, profile (empty, reserved), name, entries, source Photo|Translate|Manual|Migrated, order, deleted_at}. Per DEVICE (signed 2026-09-17 in docs/CC-MYWORDS-LISTS.md), no profile scoping. Legacy flat set is model::CustomSet (src/model.rs:74) {words, speak_lang, word_lang, word_batch, custom_marks}.
+- Bank anchor: NONE. docs/CC-SNAP-DOC1-census.md sections 2-3: "bank_id appears zero times in code", ListEntry has "No anchor field, and no second structure holding one". CC-SNAP-ROADMAP.md:265-270 says the same. What exists is src/word_index.rs::canonical(lang, word) -> Option<String> (app-only: lib.rs `#[cfg(not(feature="web"))] mod word_index`), a validity index that returns the bank's spelling, with a known identity flaw for zh (372/6182 rows unreachable) and fa (70). snap_clean.rs:459 bank_lookup wraps it, returns None on web.
+- STOP flag: a stored My Words row carries NO bank match. F21's "bank match to an audited row" must be computed at board-build time (canonical lookup, English, app-only, which fits Spelluzzle being ios-only) and cannot be read from the row. If F21 wants a stored id, that is a schema addition no file owns (DOC-1 census section 5). Also note custom_marks flags photo words that are OUT of dictionary.
+- Kid/Jr serving in the base game: game.rs:112-130 active_word_list: when lang == MINE the pool is state.list_words / custom.words (pool_for_tier game.rs:90-110, filtered by length_tier), and the kid_filter is NOT applied (comment: "My Words is parent-curated (and still runs the global profanity filter)"). A Jr/kid profile therefore sees every list word. Jr cannot delete a list without parent gate (D4/D7), but can create lists and add words. Spelluzzle itself ignores My Words today: spelluzzle_screen.rs:123 and boardgame_screen.rs:248 map lang MINE -> EN.
+- Consequence for F21 Jr: the base game gives no Jr kid-filter precedent for My Words, so "Jr: also v1 I12 and top-ups the Jr resolver serves" needs kid_filter::kid_allowed applied by Spelluzzle itself to list words (the function exists, src/kid_filter.rs).
+- Entitlement: config/modes.json:277 my_words: entitlementLevel "preview" (free), requiresPremium null, languages null, kidSafe true, platforms ios+web, juniorPolicy "ungated", status core (a surface, not a tile). Photo import is the paid piece: entitlements.rs:99 photo_ocr (Complete parent-premium); docs/CC-MYWORDS-LISTS.md D6: no cap on lists for payers; free-tier word cap still open, FREE_CUSTOM_LISTS_CAP unenforced. spelluzzle row is entitlementLevel preview, so a My Words board in Spelluzzle needs no new entitlement.
+
+## C19 CC-FEEDBACK sound / pitch ladder
+- src/feedback.rs is ONLY an outcome->State mapping (Success/Close/Miss/Neutral; From<game::Outcome>, From<spelldoku Verdict>, From<spelluzzle::play::Outcome> at line 91). It produces no sound.
+- Sound code that exists: src/audio_boost.rs only. chime() (line 118): fixed two-partial Web Audio chime, 880 Hz + 1320 Hz, 20 ms attack, <1 s, routed through the shared gain/limiter (ensure_ctx line ~38); parameters are const CHIME_PARTIALS, no frequency argument. Callers: bee_screen.rs:393, wordpic_screen.rs:2537, calendar.rs:226, c3_probe.rs. src/haptics.rs: correct(), key_tap() (LIGHT impact), incorrect(kid): Capacitor haptics, native only, no sound. Word audio is clips (api.rs).
+- NO pitch ladder, NO combo state, NO tick, NO sfx assets: grep for pitch/ladder/combo finds nothing relevant (only game.rs/bee ladders of word tiers); no .mp3/.wav/.caf/.ogg in the repo except human-audio fixtures. The file docs/CC-FEEDBACK is not in the repo.
+- Usable as a per-rune tick as it stands: nothing audible. haptics::key_tap() is a tactile tick today (and a stated "tactile substitute" because "the game has no key sound effect"). chime() is a completion chime, wrong shape for a tick and fixed pitch.
+- STOP flag: a pitch-ladder step needs new code; to keep it asset-free it can be a new oscillator function next to chime() with a frequency parameter (no .caf/.mp3 needed), but that is a new sound (new code, new sign-off per the "soft" bounds that chime_tests pin). Asking for a ladder step "without touching combo state" is trivially possible only because no combo state exists. If CC-FEEDBACK spec assumes an existing ladder, it does not exist in this tree.
+
+## C20 CC-BOARD-GAME NPC code reuse
+- Module: src/boardgame/ (mod, engine, rules, board, golden, balance, tests), `mod boardgame` in lib.rs:25 is private to the crate and `#[cfg(not(feature = "web"))]` (app only); other modes in the crate can reach it as crate::boardgame::...
+- Public pieces: boardgame::Difficulty {Easy, Normal, Tough} + ALL + ix() (mod.rs:130-143); boardgame::rules::Variant {Full, Sprint, Jr}.cfg() -> &'static VariantCfg; VariantCfg::delta(&self, d: Difficulty) -> i64 (rules.rs:233; delta_milli Full/Sprint [300,200,100], Jr 250 flat, rules.rs:88,116,141); VariantCfg::prior(&self) -> (i64,i64) (3000/2000; Sprint 750/500); VariantCfg::npc_stretch(&self) -> (i64,i64,i64); GameConfig::solo(...) (mod.rs:204).
+- The accuracy formula is NOT a free function. It is `BoardGameState::npc_acc_milli(&self) -> i64` (engine.rs:560) = (human_acc_milli - variant.delta(difficulty)).clamp(NPC_FLOOR_MILLI, NPC_CEIL_MILLI), and `BoardGameState::human_acc_milli(&self) -> i64` (mod.rs:486) = (prior_hits + hits*1000)*1000 / (prior_attempts + attempts*1000), reading the human's players[].hits/attempts. NPC_FLOOR_MILLI = 300 and NPC_CEIL_MILLI = 950 are PRIVATE consts (engine.rs:10-11). The roll is a private `fn chance(&mut self, milli)` using the state's own RNG (engine.rs:193); NPC turn logic `npc_turn`/`npc_roll` are private (engine.rs:568,579) and inseparable from board movement, traps and stretch.
+- NPC turn length: there is no such concept. An NPC turn is one d6 roll plus one spelling roll (plus one extra roll on Extra Roll boost); driven by Action::AdvanceNpc. NPC names: none; seats carry only a piece icon index (Seat {piece, npc}), no names.
+- Verdict: usable from another mode only by (a) building a whole BoardGameState (new_game needs a TierPools and a Grader) to call npc_acc_milli, or (b) re-implementing the 3-line formula with VariantCfg::delta and ::prior (pub) plus the 300/950 clamp.
+- STOP flag: yes. As it stands reuse means COPYING (the formula, the two clamp constants, the (hits,attempts) prior bookkeeping) or making a small visibility change (a pub free fn `npc_accuracy_milli(variant, difficulty, hits, attempts)` and pub consts) in src/boardgame/engine.rs. Spec F20's "Easy/Normal/Tough adaptive" matches D13/D18 exactly. Recommend the pub-fn extraction (golden-tested engine, change must keep digest golden stable), which is an edit to boardgame code, so ask Eric.
+
+## C22 long-press on Spelluzzle cells
+What the page does today:
+- Long-press binding in the app is KEYBOARD ONLY: src/keyboard.rs:367 wire_long_press attaches a window pointerdown that acts only when target.closest(".kb-key[data-acc]") matches (350 ms HOLD_MS, line 360; accent popover #kbPop). Spelluzzle keys are `.sz-key` (spelluzzle_screen.rs:384) and cells are `<span class="sz-cell">` (render.rs:39); neither matches `.kb-key`, so there is no long-press accent popover on the Spelluzzle keyboard (relevant to non-en: es fr de pt pl ru accents are reachable only through the main keyboard) and none on cells.
+- Board handlers: a single delegated "click" on #szBoard (spelluzzle_screen.rs:116, board_tap), #szKb click (117), #szTiers click (115). Nothing on pointerdown/touchstart/contextmenu/pointerup in this screen. Rows have `cursor:pointer` (index.html .sz-row). A new long-press on a cell would add a pointer timer; the existing click would also fire on release unless suppressed (keyboard.rs does this with suppress_click).
+- OS/page bindings that a cell long-press can hit:
+  - -webkit-touch-callout: NOT set anywhere in index.html, ios/, or src (grep: zero hits). Default iOS WKWebView behaviour applies: long-press on a non-link, non-image span gives no callout.
+  - user-select: NOT set on .sz-screen, .sz-board, .sz-row, .sz-cell. Only .game-kb (index.html:1238), .orb-wrap, voice-spell-mic and the wordsearch grid (line ~1812) set user-select:none. So text in .sz-cell (and .sz-k, .sz-msg) is selectable: on iOS a long-press on a cell that holds text (typed letter, decoded letter) starts the word-selection loupe/callout (Copy, Look Up, Share). Cells showing runes are inline SVG with aria-hidden and give no text to select, but the decoded/typed letter cells are text spans.
+  - contextmenu: no handler anywhere (grep contextmenu: zero hits). On Mac Catalyst/iPad pointer, right-click/long-press gives the system menu.
+  - touch-action: only `touch-action:manipulation` on button, .kb-key, .pill, .ghost, .btn (index.html:158). `.sz-cell`/`.sz-row` are spans/divs, not covered, so double-tap-zoom is not suppressed for them (the viewport lock is a separate matter).
+  - -webkit-tap-highlight-color: transparent only on .kb-key (line 1254); not on .sz-*.
+  - Scrolling: #szBoard is overflow-y:auto (.sz-board), so a long-press that drifts becomes a scroll; pointercancel fires.
+  - iOS accessibility: no doc covers it. docs has no Spelluzzle accessibility note; reports/spelluzzle-device-pass.md has no long-press item. Known OS bindings: VoiceOver double-tap-and-hold gesture, Switch Control and AssistiveTouch "long press" are system-level and would reach the element as a pointer long press only if the control is focusable; cells are non-focusable spans (aria-label set, role none), so a VoiceOver user cannot long-press a cell at all, which means anything on long-press MUST also have a button route.
+- Verdict: no app binding conflicts, but there IS an OS binding to defeat: selectable text in .sz-cell gives the iOS selection callout on hold. A long-press feature would need `-webkit-user-select:none; user-select:none; -webkit-touch-callout:none` on .sz-cell (or .sz-board) and preventDefault on contextmenu, plus a click-suppression after the hold fires, plus a visible non-gesture route for VoiceOver/Switch Control. Not a STOP; a CSS-only + small JS addition. Not measured on a device (cannot here).
+
+---
+
+## v1.1 appendix: c21
+
+# C21 layout census, 375x667 pt (Chromium, real index.html CSS, DOM mocked to match render.rs)
+Harness: run.mjs / pencil.mjs / pm.mjs / ov.py in this folder. Screenshots: shot-expert-kbup-par-stripB.png, shot-expert-idle-duel-stripA.png, shot-base-expert9-kbup.png, shot-pencil-marks.png.
+
+## v1 baseline (measured)
+- Cell width is set by screen width, not fixed: 9 cells = 36.8 pt, 10 cells = 32.9 pt (screen pad 8, board pad 2, row pad 4, gap 2). Both >= 28. 10-cell cell is only 4.9 pt above 32.
+- The keyboard is the in-app .sz-kb (3 rows x 40 + gaps = 120 pt, bottom at 659). It is NOT the OS keyboard, so "keyboard up" is deterministic. The v1 rune key (.sz-runekey, 16 entries = 2 wrapped rows, 58 pt, entries 35/42.6 wide x 26 tall) is HIDDEN while typing.
+- HUD is Exit 48 | title | New board 91 | ? 48. New board is visible during play (begin() unhides it), the streak span is display:none while .playing. Title gets 147.7 pt.
+- Board area: 471 pt with keyboard up, 533 pt with keyboard down (top inset 0). Top inset 20 takes 20 off both.
+- Content height of the board column (7 rows): v1 Expert (3 silent rows with Listen head, 10 cells) 423 pt; Hard 9 cells x2 silent 415; 9 cells x3 silent 450. All FIT with keyboard up (21-56 pt spare).
+
+## (a) Rune strip, 16 entries (glyph + count + letter)
+- One row at 375 pt: 359 usable / 16 = 22.4 pt per entry (21.5 with gaps). Only a STACKED entry fits (16 pt glyph over 11 px "3 a" caption, 44 pt tall). Width 21.5 is below any touch target: display-only. Inline glyph+count+letter needs ~34-50 pt per entry (measured 40.6-50.4), so it does not fit one row.
+- Two rows of 8 (inline, 18 pt glyph, 12 px text): entry 43 pt wide, strip 62 pt tall. Legible, touch-able.
+- Single row scrolling horizontally: 32 pt tall, 825 pt wide (2.3 screens): 7 of 16 visible at once. Legible but hides state.
+- Folded to a one-line toggle bar: 36 pt.
+- Cost with keyboard up (strip kept visible while typing): A (1-row stacked) 44 pt, B (2x8) 62, C (scroll) 32, D (2x8 at 44 tall touch size) 92, E (fold) 36.
+  Expert 3-silent, 10 cells, no other additions: A scrolls 4 pt, B 22, C fits, D 52, E fits.
+  With the strip hidden while typing (as v1 does) all variants cost nothing with keyboard up; idle space is ample (547 vs 423 needed).
+
+## (b) Pencil mark inside a 32 pt cell
+Rendered 28 runes x 5 letters (a g w m y) in the top-right corner, pixel overlap test with the 68%-glyph at 32 pt:
+| glyph size | 9px | 10px | 11px | 12px | 13px |  (combos touching of 140)
+| 68% (v1) | 6 | 10 | 24 | 42 | 62 |
+| 60% | 2 | 2 | 7 | 22 | 41 |
+| 52% | 0 | 0 | 0 | 7 | 25 |
+| 44% | 0 | 0 | 0 | 2 | 10 |
+- With the v1 glyph (68%) the largest CLEAN mark is 9 pt (4% touch); an 11 pt mark touches the glyph in 17% of combos (24/140), 12 pt in 30%.
+- Clean 11 pt mark requires the glyph at <= 52% (about 17 pt in a 32.9 cell) while a mark is present, or the mark replacing the glyph. 12 pt clean needs <= 44% (14.5 pt glyph).
+- Ink size at 11 px bold: x-height letters 5.3-5.8 pt tall, 'g/y' 8 pt. Legible in the screenshot at 11 px; 9 px marks look cramped.
+- So >= 11 pt IS reachable, but only by shrinking the glyph to ~52% in cells carrying a mark (or by showing the mark centered at 19 px as a dimmed "typed" letter, which has no overlap at all). It is not reachable by simply overlaying a corner letter on the v1 68% glyph.
+- 9-cell rows (36.8 pt) have 4.8 pt more room: 11 px at 60% glyph is clean-ish; the 10-cell Expert row is the binding case.
+
+## (c) Par header 'Listens n · Par p'
+- Inline in the HUD slot where the streak span lives: with New board visible the title is squeezed to 49 pt (natural 80, ellipsised) and the Par text takes 90 pt. NOT acceptable (title clipped; also v1 title = 147.7 with no Par).
+- Replacing the title text with 'Listens 1 · Par 2' inside the existing h2: fits at 147.7 pt, no clipping, 0 pt cost (title is redundant in play; note this removes the mode name from the HUD).
+- Separate centred line under the HUD: 28 pt (20 line + 8 gap).
+
+## (d) Duel header (two scores, whose turn, Board k of 2)
+- One extra line (You 12 | Your turn . Board 1 of 2 | Sam 9, 0.85rem): 30 pt; fits 359 pt.
+- Replacing the title with 'You 12 . Sam 9 . Bd 1/2': fits 147.7 pt, but whose-turn then needs its own place. Two-line block (scores+board / turn + instruction): 42 pt.
+
+## Vertical budget, the real finding
+Par and Duel start with every word silent, so every spoken row gets the 32 pt Listen head (rows grow from ~41 to ~76 pt). Measured content, 7 rows all with heads:
+- 10 cells: 528 pt. 9 cells: 555 pt.
+- Keyboard up: avail 471 -> scrolls by 57 (10 cells) / 84 (9 cells); with a Par line 85 / 112; Duel one line 87; Duel two lines 99 / 126.
+- Keyboard down: avail 533 -> 10 cells fits (528, 5 spare); 9 cells scrolls 22; with Par/Duel line scrolls 23-64.
+- Top inset 20: 423 avail with keyboard up (scroll 105).
+So with the current per-row Listen head 7 rows do NOT stay visible with the keyboard up for Par or Duel at 375x667. Fixes measured:
+ 1. One shared action bar above the keyboard (Listen / Spell unheard for the selected row, 44 pt tall), no per-row heads: content 300 pt (10 cells) / 327 pt (9 cells), avail 389-419 with Par/Duel line + bar, keyboard up. FITS everywhere, even with the strip variant A or E (avail 339-347 vs 300-327). Leaves rows tappable to select (they already are).
+ 2. Compact 24 pt Listen button in each row: 480/507 pt, scrolls 9-36 kbUp (37-64 with Par line): does not fit, and 24 pt is below the 32 pt button v1 already uses.
+ 3. Letting the board scroll: it already does (overflow-y:auto), cells stay 32.9; selected row can be scrolled into view.
+
+## STOP flags
+- Cells < 28 pt: NONE. Min is 32.9 pt (Expert 10 cells), unchanged by any addition (all additions are vertical only; screen width is the constraint).
+- Pencil mark < 11 pt: STOP-conditional. At the v1 glyph size (68%) a clean mark tops out at 9 pt. 11 pt needs glyph <= 52% (or centered mark replacing the glyph). Spec must say which, or the 11 pt floor is breached.
+- Not a STOP but a hard conflict: per-row Listen heads + Par/Duel header + keyboard up overflows by 57-126 pt at 667 pt height; needs the shared-action-bar layout (fix 1) or accepted scrolling.
+- Title ellipsis: inline Par/Duel text in the HUD streak slot squeezes the title to 49 pt; put the text in the title or a separate line.
+- The existing v1 rune key hides while typing; a strip that stays visible with keyboard up costs 32-92 pt more (see (a)); only C/E fit the Expert row with no header addition, none fit with a header unless fix 1 is applied.
+
+---
+
+## v1.1 appendix: c14
+
+# C14 Par trial (Hard, Expert), English, 10,000 seeds per tier
+
+Verdict: no STOP. Both tiers 10,000/10,000; time p95 5.1 ms (Hard), 3.3 ms (Expert) on this Mac (Apple Silicon dev Mac, release build, single thread, includes pool filter + every failed attempt + par + gates + P5). iPhone p95 CANNOT be measured here; a Mac number only. Even at a 10x slower phone the p95 is ~50 ms, far under 1.5 s.
+
+Code: scratch worktree off origin/main 27280a81, throwaway test src/spelluzzle/par_trial.rs (copy kept at scratchpad/spz11/par_trial.rs.txt), reuses crate::spelluzzle::{bank, lex, gates::count_solutions (v1 G8 solver), types}. No repo file modified; scratch worktree removed.
+
+## Input caveat (read this)
+The prototype dir and validity.txt named in the brief (scratchpad/spz/) did not exist, and there is no en_US.dic on this Mac. Stand-in large validity list = /usr/share/dict/words (Webster's 2nd, 235,976 lines, lowercase a-z kept) plus bank, with v1 seedgen's `expand` (s, es, ed, d, ing, er, ers, est, ly, y, ies...). That list is 2,586,198 strings: far larger and junkier than Hunspell would give, so it is the STRICT end. Three lists run, all 10,000/10,000:
+ A web2 expanded (2.59M, primary), B web2 stems only (211k), C bank only (3,434).
+Real Hunspell-derived list lies between A and C; Eric/peer should re-run with the real en_US.dic: `PAR_VALIDITY_FILE=<dic> cargo test --release --lib par_trial -- --ignored --nocapture` in a copy (the loader strips "/flags").
+
+## Results, primary run A (validity 2,586,198; P5 checked for EVERY par set)
+| | Hard | Expert | desk Hard | desk Expert |
+|---|---|---|---|---|
+| success | 10000/10000 | 10000/10000 | 1000/1000 | - |
+| attempts p50/p95/max (cap 2000) | 6 / 23 / 63 | 8 / 34 / 90 | 31/131/362 | 36/157/428 |
+| time per board p50/p95/p99/max, ms (Mac) | 2.1 / 5.1 / 7.2 / 34 | 0.9 / 3.3 / 7.7 / 46 | - | - |
+| par 2 / par 3 | 84.8% / 15.2% | 97.8% / 2.2% | 78.0/22.0 | 82.8/17.2 |
+| par sets min/median/max | 2 / 3 / 8 | 2 / 4 / 8 | 2/3/8 | - |
+| most-cells-first reaches par, longest word | 47.2% (+0.59 Listens) | 48.4% (+0.56) | 74.3% (0.26) | 73.5% (0.27) |
+| most-cells-first reaches par, greedy newly-decoded cells | 67.0% (+0.34) | 71.2% (+0.29) | same row | same row |
+| random order, avg Listens over par | 0.95 | 0.87 | 0.93 | 0.93 |
+| runes avg / max (min) | 15.19 / 16 (12) | 15.79 / 16 (12) | 15.7 | - |
+| cells avg | 52.3 | 65.7 | | |
+Pools: Hard 773 words in band+length 5-9, 756 with no collision group; Expert 536 in band+length 6-10, 529 with none (C13 eligible-with-no-group counts for hard/expert in this metric; both above the 400 floor).
+
+Other lists (success all 10000/10000; attempts p50/p95/max Hard 6/23/63 in all three, Expert 8-9/34-36/90-93):
+ B web2 stems: Hard par2 90.1% par3 9.9%, Expert 98.1/1.9; p95 1.0 / 0.7 ms; greedy reaches par 69.0 / 71.9%; longest 49.2 / 49.4%.
+ C bank only: Hard par2 91.0 / par3 9.0, Expert 98.2/1.8; p95 0.5 / 0.6 ms.
+ P5 "first par set only" instead of "all": identical boards (no board ever failed P5).
+
+## Gates rejecting most (first failing gate, attempts incl. accepted; run A)
+Hard (80,618 attempts, 10,000 accepted = 12.4%): construction stuck (no candidate word closes the 16-rune / single-held-rune constraint) 49.2%; G6b (one word decodes >60% of the secret) 32.8%; P4 too few par sets 3.7%; P4 more than 40% of sets are par sets 1.8%; P3 par<2 0.05%; P3 par>3 0.002%.
+Expert (116,321 attempts, 8.6% accepted): G6b 55.7%; stuck 31.8%; P4 many 3.1%; P4 few 0.7%; P3 par<2 0.1%.
+G1, G2, G4, P1, P2, G6a never fire (by construction: pool is already no-group, in band, length, <=16 runes, every rune in >=2 words). P5 never rejected a board in 20,000: it is implied by par (a one-short step fires only when exactly one validity word fits, which forces a unique full assignment), so P5 is a redundant cross-check of the par computation, not a filter. G6b is the real rejector; the 'stuck' share is a generator inefficiency not a gate (v1 counts it as an attempt too).
+
+## Findings vs desk model
+- Success, attempts, time all comfortably inside; attempts are LOWER than the desk (6/23/63 vs 31/131/362) because the sequential, single-held-weighted draw closes P2 quickly; time is dominated by the memoised one-short check.
+- Par skews easier than desk: Hard 84.8% par 2 (desk 78.0), Expert 97.8% par 2 (desk 82.8). Par 3 is rare in Expert (2.2%): if Expert should feel harder the par-3 share is 2%, a design point (P3 allows 2 or 3 but the generator rarely produces 3 there). More rune sharing (avg 15.8 of 16 runes in Expert) makes every word one-short quickly.
+- "Most cells first" is NOT 74% under my reading when it means the longest word: 47-48%, with 0.56-0.59 Listens over par vs random 0.87-0.95, i.e. barely better than random on Listens. Under the reading "Listen the word that decodes most still-hidden cells" it is 67.0% / 71.2%, 0.34 / 0.29 over par, close to the desk's 74.3/73.5% and 0.26/0.27. The desk number therefore matches the greedy-gain reading, not the longest-word reading. Eric should say which one the spec means.
+- Par-set count: median 3 (Hard) / 4 (Expert), max 8 = the P4 cap for par 3 (<=40% of 20) so some boards are near the cap; the cap for par 2 is 6 of 15.
+
+## Exact definitions implemented
+Board: 7 words from the tier's pool (6 listenable + the secret, always the last drawn); runes = seeded permutation of the distinct units; runes <=16.
+Listen: decodes every rune of that word (it is then finished). The secret has no Listen but is a word that must be finished.
+Decoded set K = union of runes of listened words and of finished words.
+ONE-SHORT STEP on an unfinished word w (secret included), given K:
+ - u = distinct runes of w not in K.
+ - u = 0 (zero undecoded runes): w is finished with no fit test (it is fully read; the only fit is the answer itself, which is in the validity list, so the exactly-one test would pass anyway).
+ - u = 1 (a repeated rune counts once): finished iff EXACTLY ONE validity-list string fits. Fit = same isomorphism pattern as w; at every position whose rune is in K the unit equals the answer unit; at every undecoded position the unit is not any unit already decoded (units are one-to-one with runes). The validity list = bank (all tiers) + extra list (large list when supplied) + collision-set members; the answer itself always counts, so a 'fit' is any other string on the list that matches. Two fits (the answer plus any other validity word) = the step is blocked.
+ - u >= 2: blocked.
+Closure: repeat steps (finished words add their runes to K) until no progress; board is "finished" when all 7 are finished.
+PAR = size of the smallest subset of the 6 listenable words whose closure finishes all 7. PAR SETS = every subset of that size that works (all 2^6 subsets tried, smallest first).
+Gates (checker order): G1 (alphabetic, length in tier range 5-9 / 6-10, in the tier band, 7 distinct), G2 (<=16 runes), G4 (each word shares >=2 runes with the other six), G6a (every secret rune in another word), G6b (no single other word decodes >60% of secret cells), P1 (no word has a collision group), P2 (every rune in >=2 words, including secret), P3 (par 2 or 3), P4 (>=2 par sets and par sets <= 40% of C(6,par): <=6 of 15, <=8 of 20), P5 (v1 G8 solver gates::count_solutions with the par set as heard, other words must read as validity-list words, exactly 1 assignment; run for EVERY par set in the primary run, first only in a variant: no difference).
+Generator: pool = lex.pool(tier) minus words with a collision group; first word uniform; each next word weighted k^3 (k = 1 + new coverage of runes held by only one word so far), union <=16 runes, >=2 runes shared with union; the 7th word must add no new rune and cover every single-held rune. One draw = one attempt (a stuck draw counts), cap 2000, seeds 0..9999, per-seed RNG mix(seed ^ fnv("en:par:<tier>"), 1).
+Players: both deduce every available one-short step before each Listen. (1) longest-word: Listen the unfinished listenable word with most cells (tie: more undecoded cells, then lowest slot). (2) greedy: Listen the word maximising newly decoded cells across all unfinished words. Random: 10 random orders per board, Listens averaged. Listens over par counted until all 7 finished.
+Time: wall clock around pool filter + whole generate loop + checker; the player simulation is excluded.
+
+---
+
+## v1.1 appendix: c15
+
+# C15 Expedition trial (English, Medium / Hard / Expert, 10,000 seeded runs per tier)
+
+Read-only for the repo. Scratch copy: worktree spell-wasm-spz15 at origin/main 27280a81 (removed at the end). Code kept as
+`c15_run_trial.rs.txt` beside this file (a throwaway `#[cfg(test)] mod run_trial` in src/spelluzzle). Raw logs: `c15-guided.log`, `c15-unguided.log`.
+
+## Verdict
+
+- STOP does NOT fire for the generator with new-rune-weighted picks ("guided"): 10,000/10,000 at all three tiers, 0 runs above 24 runes, Mac run-time p95 0.02 / 0.13 / 0.85 s.
+- STOP DOES fire for the plain v1-style generator ("unguided", the same cube weighting on single-held runes, nothing else): Expert 8,920/10,000 (1,080 runs never finished inside 40 redraws). Medium and Hard are 10,000/10,000 either way.
+- Things the gates do to Expert, whichever generator: median 24 runes per run (the X1 ceiling itself), 72% of runs need at least one redraw from board 1, 26,302 cap hits in 10,000 runs, and the Vault is a ~1-in-500 to 1-in-4,000 draw. See "Findings".
+- iPhone time cannot be measured here. Mac numbers only, and the Mac was shared with other sessions during the runs (load average 14-24), so the times are pessimistic.
+
+## Setup
+
+- Bank: real English bank via `bank::load("en", extra)`. Validity list: the Hunspell en_US.dic stems (38,406; sha256 f0b1a234...3647, the same file seeds-en.json records) with the seedgen expansion, plus bank and collision members = 469,516 words (identical count to `validity_words` in seeds-en.json). The file named in the brief (scratchpad/spz/validity.txt) did not exist; I rebuilt it from the Hunspell file in ~/repos/spell-wasm-purity/.corpus-cache/dicts/en/.
+- Pools (G1, tier band, tier length range): Medium 783 words (4-8), Hard 773 (5-9), Expert 536 (6-10; Eric's amendment).
+- Seeds: run k of a thread's chain uses seed k; `previous` = the words of the run before it in that chain (9 chains of ~1,112 runs, in-order). RNG is spelldoku::rng. Redraw policy as spec: 2,000 draws per board; a later board hitting the cap redraws the run from board 1; board 1 hitting the cap just keeps drawing a new run. My own bound: 40 redraws per run, then the run counts as a failure (that is what the 1,080 Expert failures are). Word sharing with the previous run is held to <=4 for the first 3 redraws of a run and then dropped ("fewest possible if thin" was not implementable literally; this is my reading).
+- A "draw" = one construct call plus, if it produced 5/6/5 words, the check. A construct that finds no candidate counts as a draw.
+
+## Definitions implemented (checker: independent of the generator; generator and checker share only the Lexicon API)
+
+Run = 16 words: board 1 = S1..S4 spoken + K1 secret; board 2 = A1..A3 spoken + B1,B2 silent + K2 secret; Vault = V1..V4 silent + K3 secret. Unit = one rune across the whole run (a rune is identified with its unit; the seeded permutation of glyph numbers is irrelevant to every gate). `C1` = units of board 1; `C2` = units of boards 1+2 ("carried"; assumes the earlier boards were solved completely, secret included). Cells of a board = all cells of all its words including the secret.
+
+- X1: every board <=16 units (board 1 uses its tier cap, below); whole run <=24 units.
+- X2 (new words vs earlier words and each other): each word alphabetic, length in the tier's range, in the tier's band (v1 G1); all 16 distinct; no pair in one collision group (`lex.group`); no two share their first four units.
+- X3 (board 1, 4 spoken + secret), in this order: unit count <=10 Medium / 11 Hard / 12 Expert; G4 each word shares >=2 distinct units with the union of the other four; G5 every unit of a spoken word is in >=2 of the five words; G6a every unit of K1 is in some other word; G6b no single non-secret word's units cover more than 60% of K1's cells (d*10 > 6*len fails); G10 earned share >= 2/5, earned = sum over units of (cells of the unit in the 4 spoken words / spoken words holding it) / spoken cells, exact (denominator 12); G11 mean over the 4 spoken words of (cells of the other 4 words decoded by that word's units / those cells) >= 1/4, exact rationals; G8 exactly one full assignment (below). G3 is the X2 collision rule applied to the five. G1 is X2. G7/G9 have no silent word on board 1 and are not applied.
+- X4: board 2 has >=4 units not in C1; Vault has >=3 units not in C2.
+- X5: units of C1 decode <=60% of board 2's cells (d*5 <= 3*cells); K2 not fully decoded by C1. Vault: C2 decodes <=75% of its cells (d*4 <= 3*cells); no Vault word (secret included) fully decoded by C2.
+- X6: every board-2 spoken-word unit is in C1 or in >=2 words of board 2.
+- X7: silent word decoded cells / its cells >= tier share (Medium 6/10, Hard 5/10, Expert 4/10, from `Shape.silent_share`) and < all. Board 2: B1,B2 against C1 + units of A1..A3. Vault: V1..V4 against C2 alone (no spoken word exists).
+- X8: v1 G10's earned sum over spoken words of board 2 with every unit of C1 skipped (counted as decoded), divided by spoken cells, >= 1/4 (12*spc <= 4*sum, exact).
+- X9: board 2 and Vault: every unit of the secret is carried or in another word of that board.
+- X10 (own solver, `count_assign`): with every carried unit fixed to itself, the number of injective assignments of the other units such that each spoken word reads as a member of its answer's collision group of the same isomorphism pattern (or itself if none) and each silent/secret word reads as a validity-list word of the same pattern, with no free unit taking a carried unit, is exactly 1 (counted to 2). Board 2: spoken = A1..A3. Vault: all five from the list. Board 1's G8 is the same function with nothing carried.
+- X11: `one_fit(w, known)` = exactly one validity-list word of w's pattern equals w on every known unit and uses no known unit in an unknown position. Closure from the starting `known`: take any unsolved silent word whose decoded share >= tier share and that has exactly one fit; add its units; repeat. Vault: known = C2, all 4 silent words must close and the secret's units must then be all known. Board 2: known = C1 + A1..A3's units, both silent words must close. "Vault finishes with no Listen" is this closure run on the final run: all 10,000 per tier (it is a gate, so it equals the success count).
+- Gate order (so the "first failing gate" columns mean what they say): X2, X1/cap, X3 gates in the order listed, then for board 2: X1, X4, X5, X6, X9, X7, X8, X10, X11; Vault: X1, X4, X5, X9, X7, X10, X11.
+- Whole-run check (`check_run`): re-runs all three board checkers with no short-circuit on the 16 final words from scratch plus the 24-unit rule. It agreed with the generator on 10,000/10,000 at every tier and mode.
+
+Generator: v1's construct generalised. Per pick: words in the tier pool, not banned (picked, collision-group mates of picked, same first four units), sharing <=4 with the previous run, board unit union within the board cap and run union within 24; B1 and B2 words must share >=2 units with the words already chosen; B2 and Vault silent words must meet the X7 share and be < all decoded; the secret must lie inside union + carried (X9) and, on B1/B2, close every unit still held by one spoken word; weight (1 + |units held by only one spoken word|)^3. "Guided" additionally multiplies the weight of every non-secret B2 pick by (1 + new units)^2 and Vault silent picks by (1 + new units)^3 (new = not carried). A mask-level screen of X4/X5 runs before the checker (the checker still decides). This is a generator choice, not a spec change; the spec's own search method is unspecified.
+
+Self-checks: my solver vs `gates::count_solutions` (carried emulated by an extra spoken pseudo-slot, restricted to carried units present on the board) on 600 candidate boards per tier, 0 mismatches (e.g. Medium 173/228/199 on board 1/2/Vault; Vault Expert only 97, rest hit the >16-unit skip). One-fit vs a linear scan of the whole validity list: 1,800 per tier, 0 disagreements.
+
+## Results, guided generator (the numbers to use)
+
+| | Medium | Hard | Expert |
+|---|---|---|---|
+| success of 10,000 | 10,000 | 10,000 | 10,000 |
+| no redraw needed | 9,956 | 9,249 | 2,755 |
+| runs needing >=1 redraw / max redraws | 44 / 1 | 751 / 4 | 7,245 / 36 |
+| cap hits (2,000-draw board failures) | 44 | 805 | 26,302 |
+| runs sharing >4 words with previous run | 0 | 0 | 34 (max 7) |
+| attempts board 1, accepted pass, p50/p95/max | 4 / 14 / 37 | 11 / 47 / 172 | 36 / 152 / 505 |
+| attempts board 2, accepted pass | 1 / 5 / 22 | 2 / 10 / 153 | 22 / 668 / 2,000 |
+| attempts Vault, accepted pass | 8 / 77 / 1,838 | 50 / 773 / 1,998 | 481 / 1,777 / 2,000 |
+| attempts board 1, summed over redraws | 4 / 14 / 57 | 12 / 52 / 172 | 130 / 553 / 2,168 |
+| attempts board 2, summed over redraws | 2 / 5 / 22 | 2 / 11 / 153 | 164 / 3,067 / 12,161 |
+| attempts Vault, summed over redraws | 8 / 82 / 2,175 | 61 / 2,029 / 8,010 | 4,016 / 16,798 / 69,480 |
+| run time p50 / p95 / max, one thread, 300 runs (Mac) | 0.002 / 0.023 / 0.214 s | 0.006 / 0.128 / 0.292 s | 0.250 / 0.846 / 1.875 s |
+| run time p50 / p95 / max, 9 threads, all 10,000 | 0.003 / 0.042 / 0.315 s | 0.013 / 0.190 / 0.776 s | 0.323 / 1.452 / 5.451 s |
+| runes per run median / max | 22 / 24 | 23 / 24 | 24 / 24 |
+| runs >24 runes | 0 | 0 | 0 |
+| board 2 decoded at load, p10 / p50 / p90 | 35.3 / 45.9 / 55.6 % | 44.4 / 53.3 / 58.7 % | 52.7 / 57.7 / 59.6 % |
+| Vault decoded at load, p10 / p50 / p90 | 69.2 / 73.3 / 75.0 % | 71.4 / 74.3 / 75.0 % | 72.7 / 74.4 / 75.0 % |
+| Vault finished with no Listen (X11) | 10,000 | 10,000 | 10,000 |
+
+Gate that rejects most (first failing gate; counts over all drawn candidates):
+
+| | Medium | Hard | Expert |
+|---|---|---|---|
+| board 1 | construct 23,655 / X3 G6b 18,420 (G10 16, G8 5) | G6b 103,999 / construct 59,551 (G10 413) | G6b 1,215,673 / construct 606,301 (G10 10,346) |
+| board 2 | X10 4,151 / X5 60% 2,071 / X8 1,480 | X5 60% 16,421 / X8 4,752 | X5 60% 5,612,984 / construct 1,727,241 / X8 60,658 |
+| Vault | X5 75% 185,434 / X4 131,637 | X5 75% 2,263,255 / X4 981,571 | X5 75% 33,681,482 / X4 21,613,791 |
+
+X8, X10 and X11 are rare rejectors at Hard and Expert; X10 on the Vault rejected 1 candidate in 55 million at Expert (so uniqueness is not the binding gate; the carried-share window is).
+
+## Results, unguided generator (v1 weighting only)
+
+| | Medium | Hard | Expert |
+|---|---|---|---|
+| success of 10,000 | 10,000 | 10,000 | **8,920** |
+| no redraw needed | 9,970 | 7,951 | 545 |
+| cap hits | 30 | 2,582 | 153,764 |
+| attempts Vault, accepted pass p50/p95/max | 19 / 185 / 1,988 | 227 / 1,533 / 1,998 | (summed) 17,518 / 56,640 / 75,035 |
+| attempts board 2, summed | 2 / 9 / 65 | 5 / 49 / 1,051 | 4,983 / 18,398 / 31,690 |
+| run time p95 one thread (Mac, loaded) | 0.040 s | -- | 2.609 s (max 3.148 s) |
+| runes per run median / max | 21 / 24 | 22 / 24 | 23 / 24 |
+| board 2 decoded p50 | 50.0 % | 55.6 % | 58.2 % |
+| Vault decoded p50 | 74.1 % | 74.4 % | 74.4 % |
+
+## Desk model beside mine (guided)
+
+| | Desk | Mine |
+|---|---|---|
+| board 2 decoded at load p50 (M/H/E) | 49 / 52 / 54 % | 45.9 / 53.3 / 57.7 % |
+| Vault decoded at load p50 | 69 / 70 / 72 % | 73.3 / 74.3 / 74.4 % |
+| runes per run median (max) | 18 (20) / 19 (21) / 20 (22) | 22 (24) / 23 (24) / 24 (24) |
+| run time (Python desk, Mac Rust mine) | 0.2 / 0.7 / 2.1 s | p95 0.023 / 0.128 / 0.846 s (one thread) |
+| success | not stated (1000/1000 style) | 10,000 / 10,000 / 10,000 |
+
+The desk model is off in the direction that matters: it has the Vault 3-5 points below the 75% X5 ceiling, mine sits against it. Runes are 4 higher at every tier, and Expert is at the 24 ceiling.
+
+## Findings
+
+1. Expert is at the rune ceiling. Median 24 runes, max 24, and the unguided version also 23 / 24. The 26-letter alphabet leaves the Vault at most 2-6 letters that no earlier board used, X4 asks for >=3 of them, X7 asks each Vault word to be >=40% decoded from carried, and X5 keeps the Vault <=75% decoded. Together they make the Vault a window of ~3 pp wide at the top of carried share (p10/p50/p90 = 72.7 / 74.4 / 75.0%). No run broke 24 because X1 forbids it, but there is no headroom: any tier or word-length change that lifts board 1 above 12 runes will make Expert infeasible.
+2. Expert cost is draws, not seconds. A full Expert run draws a median ~4,300 and p95 ~20,000 candidates summed over redraws; that is cheap on the Mac only because my checker rejects X4/X5 from masks in microseconds. The accepted pass of the Vault is p95 1,777 draws and hits the 2,000 cap on a visible share of runs, so the cap, not the gates, decides how many runs redraw from board 1 (72% at Expert). If the cap stays at 2,000 per board, expect the iPhone to spend about 5x the Mac time (my guess; not measured), i.e. Expert p95 on the order of 4 s with the cheap screen and worse without it. That is over the 3 s line IF the iPhone is ~4x slower. This is the main open risk.
+3. A smarter generator buys a lot: guided moves Expert from 8,920 to 10,000, cuts Vault summed-attempts p50 from 17,518 to 4,016 and unguided one-thread p95 from 2.6 s to 0.85 s. The remaining cost is picking silent words toward the 72-75% window; picking toward "decoded share just under 75%" explicitly (not tried) would likely cut Vault draws further.
+4. X10/X11 are not the problem. After the share and new-rune gates pass, uniqueness and the stepwise solve almost never reject (Expert Vault: 3 rejections of 55 million). X8 matters on board 2 at Hard/Expert (4,752 / 60,658 rejections) but is minor.
+5. Word reuse: at Expert, 34 runs (0.34%) shared 5-7 words with the previous run after 3 redraws because the "<=4" rule was relaxed to finish; Medium and Hard never needed it.
+6. Medium and Hard are comfortable: board 2 median 1-2 draws, Vault median 8 / 50, 99.6% / 92.5% of runs finish without a redraw.
+
+## STOP flags (strict reading of the brief)
+
+- Any tier <10,000/10,000: not for guided; YES for the unguided generator at Expert (8,920).
+- A run >24 runes: none.
+- Run time p95 >3 s (Mac): no (Expert guided 0.85 s one-thread, 1.45 s with 9 threads on a loaded machine; unguided Expert one-thread p95 2.6 s, max 3.1 s).
+- Not measured: iPhone time; Spanish/other languages (only English was asked).
+
+---
+
+## v1.1 appendix: c16-c18
+
+# C16 Duel and C18 My Words census (2026-10-10)
+
+Method: throwaway ignored Rust tests in a private scratch worktree of origin/main (27280a81), release build, run through the real v1 `Lexicon`, `bank::load("en", extra)` and `gates::count_solutions`. Repo worktree spz11 untouched; scratch worktree removed. Test source kept at `scratchpad/spz11/c1618.rs.txt`; raw output `c16-raw.txt`, `c18-raw-{30,150,600,2000}.txt`.
+
+Deviations to know:
+- The Python prototype dir (`.../scratchpad/spz/`, validity.txt) does not exist in this session. Large list = Hunspell en_US.dic stems + the same suffix expansion `seedgen.rs` uses (`/Users/eric/repos/spell-wasm/.corpus-cache/dicts/en/en_US.dic`, the same source as `assets/spelluzzle/seeds-en.json`).
+- English only. Bank words after the v1 G1 filters (profanity, audio servable) are the pool.
+
+## C16 Duel
+
+### Definitions implemented
+- Board: 6 spoken-slot words + secret = 7 words, one rune per unit. Gates: v1 G1 (alphabetic, in the tier's band, length in the tier's `shape().lo..=hi`: Easy 3-6, Medium 4-8, Hard 5-9, Expert 6-10, no duplicates), G2 (<=16 runes), G4 (each word shares >=2 distinct runes with the rest), G6a (every secret rune appears in another word), G6b (no single word decodes more than 60% of the secret's cells), P1 (no word has a collision group). Checker is separate from the generator (generator: sequential weighted draw, share>=2 with the union, union<=16, cube weight on shared runes, secret must be a subset of the union; cap 2,000 draws).
+- Pool per tier: no-collision words in band and length: Easy 533, Medium 709, Hard 756, Expert 529. 2,000 boards generated per tier; a match draws two different boards at random from that tier's 2,000 (1,000+ distinct words reused, so a leg repeats words across matches; boards are not repeated within a match).
+- Turn (assumed readings, spec was ambiguous): every slot starts unheard, nothing decoded. Listen-and-spell on any non-secret open slot: correct -> slot solved, its newly decoded runes claimed by the player at 1 point each; wrong -> entry cleared, slot marked heard, but it STAYS open and can be listened to again by either player (assumption). Spell unheard (only slots never listened to, including the secret): correct -> 2 points per newly decoded rune (3 for the secret); wrong -> nothing changes, slot stays unheard and can be tried again. A slot whose runes are all decoded closes unscored. Leg ends when all runes are decoded (equivalent to every slot solved or locked), or two passes in a row.
+- NPC: each turn takes the visible-state option with the highest expected points: Listen = acc x undecoded runes of that slot; Unheard = 0.8 x acc x 2 (3 for secret) x undecoded runes, allowed only when the slot was never listened to, <=2 runes undecoded and exactly one validity-list word fits (same pattern, decoded runes match, undecoded runes take units not already decoded: the v1 G9 `solvable_given` rule on the large list). Ties broken at random. Success drawn at random with p = acc (heard) or 0.8 acc (unheard). The choice never touches the answer; a unique fit is by construction the answer.
+- Match: two legs, scores carried, other player starts leg 2, leg-1 starter random. Draws count half. 10,000 matches per tier and accuracy, 3 accuracies.
+- Claim check: ledger per rune; a rune claimed twice, or a decoded rune with no claimant, or a fully solved leg with a rune unclaimed, counts as a violation.
+
+### Equal NPCs (10,000 matches per row)
+| tier | acc | leg-1 starter match win (draw 1/2) | draw rate (match) | starter win, leg 1 alone (draw 1/2) | single-board draw | turns per match | claim violations | legs fully solved |
+|---|---|---|---|---|---|---|---|---|
+| Easy | 0.60 | 50.7% | 6.6% | 63.6% | 8.5% | 15.1 | 0 | 20000/20000 |
+| Easy | 0.75 | 49.5% | 8.3% | 69.7% | 8.5% | 12.2 | 0 | 20000/20000 |
+| Easy | 0.90 | 49.7% | 12.6% | 81.3% | 8.4% | 10.1 | 0 | 20000/20000 |
+| Medium | 0.60 | 49.4% | 4.5% | 64.9% | 4.6% | 17.1 | 0 | 20000/20000 |
+| Medium | 0.75 | 50.3% | 4.9% | 72.1% | 4.9% | 13.7 | 0 | 20000/20000 |
+| Medium | 0.90 | 48.7% | 7.1% | 80.6% | 4.7% | 11.4 | 0 | 20000/20000 |
+| Hard | 0.60 | 50.6% | 3.7% | 65.4% | 4.0% | 16.5 | 0 | 20000/20000 |
+| Hard | 0.75 | 50.5% | 4.3% | 72.5% | 3.7% | 13.3 | 0 | 20000/20000 |
+| Hard | 0.90 | 49.7% | 6.2% | 82.0% | 3.2% | 11.1 | 0 | 20000/20000 |
+| Expert | 0.60 | 49.7% | 3.5% | 66.3% | 3.6% | 15.1 | 0 | 20000/20000 |
+| Expert | 0.75 | 49.5% | 4.5% | 74.9% | 3.3% | 12.0 | 0 | 20000/20000 |
+| Expert | 0.90 | 49.6% | 6.2% | 85.1% | 2.6% | 10.1 | 0 | 20000/20000 |
+
+Board generation: 2,000/2,000 per tier, attempts p50/p95/max Easy 3/10/25, Medium 2/7/15, Hard 5/21/57, Expert 13/51/118. Runes per board avg 10.7 / 14.2 / 15.3 / 15.7; cells 27 / 40 / 52 / 66.
+
+**STOP: not triggered.** All equal-NPC match rows lie in 48.7%-50.7% (standard error about 0.5 points). Versus the desk model: two-leg 49.8-51.0% desk, measured 48.7-50.7%, within noise except Medium 0.90 (48.7%, about 2.6 SE below 50, not a stop). Single board 63.6-85.1% vs desk 63-83%: Expert 0.90 is 2 points above the desk top. Draw rate 2.6%-12.6% (match 3.5%-12.6%) vs desk 3.5-7.6%: Easy at 0.75/0.90 (8.3%, 12.6%) is above the desk band because Easy boards are small (10.7 runes, 27 cells), so equal totals come up more often. Flag for Eric: Easy 0.90 draws 1 match in 8.
+
+### O6: simulated player (fixed accuracy) vs NPC level, player match win rate (draw 1/2) / draw rate
+NPC accuracy = clamp((prior_hits + player hits)/(prior_attempts + player attempts) - delta, 0.30, 0.95), re-read every NPC turn from the player's running record. This is `npc_acc_milli` (`src/boardgame/engine.rs:559-562`) over `human_acc_milli` (`src/boardgame/mod.rs:486-495`), floor/ceiling 300/950 at `engine.rs:10-11`, deltas Easy/Normal/Tough = 300/200/100 thousandths and Full prior 3.0/2.0 (`src/boardgame/rules.rs:44-52`, FULL at rules.rs:99-125; Sprint prior 0.75/0.5 at rules.rs:~138-155; Jr's flat 250 not used). NOT called: `npc_acc_milli` is a method on `BoardGameState` and needs a whole game state with players, so I copied the formula and constants (see C20). The player's record counts every spell attempt of the Duel (heard and unheard). Record starts fresh per match and carries into leg 2.
+
+Full prior (3 hits / 2 attempts, i.e. NPC starts at the 0.95 clamp and decays toward player accuracy minus delta):
+| tier | player acc | vs Easy | vs Normal | vs Tough |
+|---|---|---|---|---|
+| Easy | 0.60 | 41.8% / 9.3% | 30.0% / 8.8% | 20.0% / 7.0% |
+| Easy | 0.75 | 49.9% / 11.1% | 38.9% / 11.6% | 30.8% / 9.9% |
+| Easy | 0.90 | 58.6% / 13.8% | 50.5% / 15.0% | 46.0% / 14.7% |
+| Medium | 0.60 | 47.4% / 5.6% | 35.4% / 5.5% | 23.9% / 4.9% |
+| Medium | 0.75 | 54.8% / 6.5% | 44.0% / 7.0% | 34.5% / 6.3% |
+| Medium | 0.90 | 62.9% / 7.3% | 54.7% / 8.3% | 48.3% / 8.0% |
+| Hard | 0.60 | 47.5% / 4.9% | 35.2% / 4.9% | 25.1% / 4.0% |
+| Hard | 0.75 | 55.3% / 5.4% | 44.4% / 5.6% | 34.9% / 5.2% |
+| Hard | 0.90 | 63.7% / 6.1% | 55.4% / 7.1% | 49.7% / 6.9% |
+| Expert | 0.60 | 46.1% / 4.7% | 34.5% / 4.7% | 25.0% / 4.2% |
+| Expert | 0.75 | 52.9% / 5.7% | 43.8% / 5.8% | 35.8% / 5.7% |
+| Expert | 0.90 | 62.6% / 6.4% | 54.5% / 6.6% | 48.4% / 6.8% |
+
+Sprint prior (0.75/0.5; NPC tracks the player faster, so it is stronger early... and the NPC reaches the clamp-less steady state sooner):
+| tier | player acc | vs Easy | vs Normal | vs Tough |
+|---|---|---|---|---|
+| Easy | 0.60 | 67.6% | 57.8% | 47.1% |
+| Easy | 0.75 | 73.8% | 61.6% | 51.7% |
+| Easy | 0.90 | 76.5% | 65.3% | 56.2% |
+| Medium | 0.60 | 70.7% | 63.2% | 51.4% |
+| Medium | 0.75 | 77.4% | 66.8% | 57.0% |
+| Medium | 0.90 | 80.0% | 71.5% | 61.6% |
+| Hard | 0.60 | 70.3% | 62.3% | 52.5% |
+| Hard | 0.75 | 76.9% | 67.7% | 57.5% |
+| Hard | 0.90 | 80.3% | 71.7% | 63.6% |
+| Expert | 0.60 | 69.4% | 61.4% | 51.7% |
+| Expert | 0.75 | 74.1% | 65.6% | 56.0% |
+| Expert | 0.90 | 78.6% | 70.6% | 61.8% |
+
+Reading for O6: the choice of prior is the whole story. With the Full prior a player at 0.75 beats Easy about half the time and Normal/Tough only 35-44%; with the Sprint prior the same player wins 52-77%. In the Full rows the NPC begins at 0.95 and takes about 10 of the player's spells to settle, which is a whole Duel (10-17 turns), so the Duel NPC never reaches its nominal trailing accuracy; the adaptive formula was designed for 80+ tile games. A 0.90 player at Tough is a coin flip (48-50%) under Full. If the Duel is to use the board game's NPC as it stands, pick a prior deliberately (one extra constant). Easy/Normal/Tough ordering holds in every row.
+
+## C18 My Words
+
+### Definitions implemented
+- Real English bank: all four bands (easy, medium, hard, expert), v1 G1 eligibility (profanity, audio servable), 3-9 alphabetic cells, deduplicated: 2,606 list-candidate words. Top-up pool (Easy+Medium bands, 3-9 cells): 1,507. Jr top-up pool (words in the `Tier::Jr` eligible set, i.e. kid filter passed, Easy+Medium): 1,493, of which 1,240 have no collision group. Each synthetic list: N distinct words drawn uniformly from the candidates.
+- Board: 5 spoken + secret. Gates implemented independently: G2, G3 (no two words in one collision group), G4, G5, G6a, G6b, G10 (earned >= 2/5, exact integer), G11 (cascade >= 1/4), G8 via `gates::count_solutions` on the large list (spoken slots read as their collision group, secret as any validity word). G1, G7, G9 not applied (list words are not band-limited; no silent words).
+- Generator: for k = min(6, N) down to 3 list words; for each k try a top-up as the secret first (k <= 5), then a list word as the secret; each attempt draws k list words at random and fills the rest with top-ups chosen by weight (cube of 1 + single-held spoken runes covered + secret runes still needed), union <= 16 runes, share >= 2 runes with the words so far, last pick must close G5/G6a; then the full gate check. First success is served; none at k=3 means no board.
+- Jr variant: board words (list and top-ups) must have no collision group (v1 G3 Jr rule), and top-ups come from the Jr-served set. "Jr + kid-allowed" additionally requires the list words themselves to pass the kid filter.
+- 1,000 lists per size, per variant.
+
+### The result depends on the draw budget (not given in the spec). Standard variant, share of lists by list words on the board (none / 3 / 4 / 5 / 6):
+| size | 30 draws per (k, secret kind) | 150 draws | 600 draws | 2,000 draws |
+|---|---|---|---|---|
+| 3 | 19.1 / 80.9 / - / - / - | 5.6 / 94.4 / - / - / - | 1.9 / 98.1 / - / - / - | 0.9 / 99.1 / - / - / - |
+| 5 | 7.6 / 29.2 / 59.4 / 3.8 / - | 0.8 / 19.2 / 76.2 / 3.8 / - | 0.1 / 13.5 / 82.6 / 3.8 / - | 0.0 / 11.7 / 84.5 / 3.8 / - |
+| 8 | 0.9 / 12.8 / 43.7 / 42.5 / 0.1 | 0.0 / 1.5 / 38.5 / 59.8 / 0.2 | 0.0 / 0.0 / 37.0 / 62.8 / 0.2 | 0.0 / 0.0 / 36.3 / 63.5 / 0.2 |
+| 12 | 0.7 / 7.0 / 35.2 / 57.0 / 0.1 | 0.0 / 0.0 / 8.5 / 90.7 / 0.8 | 0.0 / 0.0 / 1.6 / 94.6 / 3.8 | 0.0 / 0.0 / 0.7 / 90.2 / 9.1 |
+| 20 | 0.1 / 4.3 / 27.5 / 67.6 / 0.5 | 0.0 / 0.0 / 2.0 / 95.9 / 2.1 | 0.0 / 0.0 / 0.0 / 92.8 / 7.2 | 0.0 / 0.0 / 0.0 / 80.7 / 19.3 |
+
+(A draw budget of 150 per (k, secret kind) is about 1,350 draws worst case for a size-20 list, the nearest match to v1's 2,000-draw cap; 2,000 per phase is a generous ceiling. Columns are "no board / 3 / 4 / 5 / 6" as % of lists; none = fewer than 3.)
+
+Headline at 150 draws (all three variants, % of lists: fair board | 3 / 4 / 5 / 6 list words):
+| size | Standard fair / mix | Jr fair / mix | Jr + kid fair / mix |
+|---|---|---|---|
+| 3 | 94.4% | 3 only: 94.4 | 91.0% | 3 only: 91.0 | 92.8% | 3 only: 92.8 |
+| 5 | 99.2% | 19.2 / 76.2 / 3.8 / 0 | 99.7% | 15.3 / 78.8 / 5.6 / 0 | 99.6% | 18.2 / 76.5 / 4.9 / 0 |
+| 8 | 100% | 1.5 / 38.5 / 59.8 / 0.2 | 100% | 1.7 / 38.6 / 59.4 / 0.3 | 100% | 1.7 / 37.6 / 59.9 / 0.8 |
+| 12 | 100% | 0 / 8.5 / 90.7 / 0.8 | 100% | 0.3 / 8.0 / 89.7 / 2.0 | 100% | 0 / 9.9 / 88.2 / 1.9 |
+| 20 | 100% | 0 / 2.0 / 95.9 / 2.1 | 100% | 0 / 1.9 / 95.9 / 2.2 | 100% | 0.1 / 3.1 / 94.5 / 2.3 |
+
+Versus the desk model (3/4/5/6): size 3 no board 5% desk, measured 5.6% at 150 draws (0.9% at 2,000); size 5 19/71/10 desk vs 19.2/76.2/3.8 (5-of-5 is never above 3.8%; the extra 5-word boards in the desk are not reached); size 8 10/62.5/26.5/1 vs 1.5/38.5/59.8/0.2 (generator finds 5 far more often than the desk expected); size 12 1/54.5/43.5/1 vs 0/8.5/90.7/0.8; size 20 2.5/44.5/48.5/4.5 vs 0/2.0/95.9/2.1. The desk model was pessimistic about how many list words fit; with real search the typical board holds 5 list words for any list of 8 or more, and a 3-word list gets 4+ never (a 3-word list holds exactly 3 and one top-up set). A size-5 list can never hold 6 words (the secret is the 6th word only if a sixth list word exists). Jr costs 3 to 5 points at size 3 and almost nothing elsewhere.
+
+Reading: no size is below 91% fair at 150 draws, and every size of 5 or more is at least 99.2%. The only weak case is a 3-word list (5.6-9.0% unserved at 150 draws; 0.9-3.0% with 2,000 draws), so a policy of "3 words is the minimum list" works but ask for 5.
